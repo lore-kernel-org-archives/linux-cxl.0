@@ -1,46 +1,46 @@
-Received: from esa14.fujitsucc.c3s2.iphmx.com (esa14.fujitsucc.c3s2.iphmx.com [68.232.156.101])
+Received: from esa18.fujitsucc.c3s2.iphmx.com (esa18.fujitsucc.c3s2.iphmx.com [216.71.158.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58499652
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Jun 2024 00:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5128BEC
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Jun 2024 00:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.158.38
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718238700; cv=fail; b=ZB7wfvk/3cMIcqXkcdGumTVpgz1Wo3yNyvesBbKNYeFcL9oqL1p57PW5cUkJ2u1gvhCwuF4vjNbruGvYswB+MHyrcS4d9z2PnPSf+f3gMn+XubXZA4rYSZOEV6ZaIlsVqHu8Z7CpzgfevvBdXnmvb1z4vXIgv2X33H7Ubh/6DRE=
+	t=1718238974; cv=fail; b=LbH8IRfgKzTaIzp+2pPhZ56t35Fgwn7cwHCSYHWSOKrU8X52i37k8UKgkDyfzG61/jrnu9CUcLopfk87qijK2g864aGVM/NbCWZZpsK8V7FXzbez0nzjWQoJBmylrM083i859/kR/Ab/IVByXhKVObqOZpi3791iLeI9mMmq6iE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718238700; c=relaxed/simple;
-	bh=MrYOjt/ihYUEWz9f00wcTt+HGS4ucYP5L2Ye0bFfkQc=;
+	s=arc-20240116; t=1718238974; c=relaxed/simple;
+	bh=ER0dK7O2Gzdjf35xZz+f7XzjATt0jDVhAOlLYEGgw0g=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VSruN5/SszSr6U0Q9l3YzRXyTHK+Em45tdZBUXyC7EQ5cFsKGKaGovdIl5WB+r/ymzy+j6wO/xJm9SnhkW5mcyiMINyMXwFRG/smgyMqodwYWgFUyqPVsWJuqAWNiLFw7XPsoq7vzJb25YZsby41DFMkYlagfp79QsfKIFuy8rw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=FOCHLZh3; arc=fail smtp.client-ip=68.232.156.101
+	 Content-Type:MIME-Version; b=DvIAijIicFOmTDAZTE15W3gWufQ0gS7vE6SGPXQCmdRqzvt4oLGrBHU90cKVqy0UgYjfqNG4CIjntcA2ivHSM6WiW35OZdX7mBZ+9CbM6H2DtBKJXl7So9nvXbfDf2urIFgFV3cruDhObPyjMxLj0eVEGAFkC5xGKjvNqSzxkkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=ZgBwa+HK; arc=fail smtp.client-ip=216.71.158.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="FOCHLZh3"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="ZgBwa+HK"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1718238697; x=1749774697;
+  t=1718238972; x=1749774972;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=MrYOjt/ihYUEWz9f00wcTt+HGS4ucYP5L2Ye0bFfkQc=;
-  b=FOCHLZh3dvdyHzOTOjN4U/N95ePKrjhTeumg990eibR+PaEYDZWjBM82
-   KwuIRL8SDQbrPlGGDzSFztgUSrvW1R+ZyVNrv7TiXDt+iMk6iI8rZAv0O
-   IQRRDMAvcEMzEfyjBFHHg/ckpLxW/8o1oQ5gpDkiIR8kRWVtcqQJg1IgZ
-   C70R94YvQ6ps9AZhfi4K9bqkcNszgixJfa2yigSI2ykQMaAJzQJnHE81D
-   zA5N7umOheBIBnpghSrUKbGDalvVK6SE+k6250qslqSvE9eoxKRIuIK1C
-   9Uw7WUQud/caQIx2PxXM4LnKM9W34L5kJ6RD8kLkUIzLCcmwoOqBD2WoC
-   A==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="121747211"
+  bh=ER0dK7O2Gzdjf35xZz+f7XzjATt0jDVhAOlLYEGgw0g=;
+  b=ZgBwa+HKBwRtfZ00fu3I7bVlNjDQTavSve5qLSauy0ZpSF3TpOvHn6e9
+   FbvIHRRxt9kccQvkG+pca7JpHlbbMSWZGbaXaDeWfb8AombGm6eATWoLX
+   z0jjkG5Ezp/Hu7slOOr1k6wFM1/HPWNgBGnqQuhsoNKlsVAx43+E5rb7I
+   CQVdvm4JqzvI8chLwAdcQjDLbX8o6EXfrTGI+MQDyJ9HhuAqm4UGhv0ko
+   qOywhcMpqvrcB7EbY5nL1d88LnJbisIkDX97/uBqtJGBflq/VrEWjYl1I
+   yS4I7QItTFf9Z4FRBwXBSIaY3Q8PyANnSxVw4ceqbenbEFDsq/OFqJjS6
+   g==;
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="126935040"
 X-IronPort-AV: E=Sophos;i="6.08,234,1712588400"; 
-   d="scan'208";a="121747211"
-Received: from mail-os0jpn01lp2110.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.110])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:31:32 +0900
+   d="scan'208";a="126935040"
+Received: from mail-os0jpn01lp2106.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.106])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:34:56 +0900
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J0dRHByrs1eOz7sG+Lk+xyM2It0GcTQo6LrZZbQwtZ/iqWL5OvRgD0fkf3Jzik9fg7jiy0goZjToo8ZSAhRW2c0CqsP8vOepyUfIKN+zpmZ+1xU4M9K+8sh8NaBL1RE4RbCreu26PMYFab3BUpL5gwdCuEfDAb53CFLp4ODkULjMHw3hnKgaGFSWRGh2zoZXK8kRfkL7Z72MNJdXEbeBElPboEhzVaZkOFpemXwZtvNtMMLgvnmnt3ax2OYPhxOPiq375MBI9gtqEn9Jk9SYEhBLdUjlkTRM9zKWsPyujEF3DNG4iVwUmyclXY4pOsYrCd/3T3d9B3wzUYgTFPypLA==
+ b=ZyLDskOcoLzq4LGxigHHKW5TwHFw8OHgm/cIIt+w+uZMl+IYdojz9H30TsNGWpg7qQXe5pnzxAqnq3mW4ixHYMsUgbXq8n7KILOcwN7cno1kj6ZhE+qXpgRnLUA+OLW2l7ou6WZQA6D/JgrhrjdHLeDSnKTijjsS2wzqVndgoG7MtAXDc4iw9oi8X/ABqI/KqQN/VC4qlwaOVTCaceM0LBuf/VQjOFlaTIHDKNEgroPp+gqv2mTBx/a4tRmtPCwUo6YTmEmQ646TTe/gfH+fpLYnBTXxVA0oZ5l6iL+vbkcnoKgi3jvb2PI4lL9U6Wyq7ajK6P/rx7spCjASjZtLpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9aGrts9W8mh3ejBSJeCYG3Td2p4rQIGX3ErAfjIMU7w=;
- b=jq+BHGKjb2RW1MALpBbx+K7orC28KCrK6IoGOrwCTUJpVrSJXt1DLqDVMmWPIU5ET5nXm6SjoykbJ5lfJBsBaBBb92esiPj1GXm79m+DtyM4iTZjVc6Q2fzgA4NKCh0ojY/CTcyiNEWuspabZ1i81Owjz2hji4O7P0qpAZ8u3oL/qPEE6QIWbVEia4c3Ilbp1O6p7wPOqTWnKD1MqY2+l3ey6QX+llr/Ycb8T0dQvN8hsSuQ9/QJWOhas2R9ujnt9YEjhMZpEng45Z9/zkQpS/yi/AjgLEIv0N18hm/GCnlS62sJwwE4oEpHl4LY81CkWq61JEjczKLoS0u5vX0z+w==
+ bh=9LP8CnbMgbRUUCqleXItytMgrvuKluBBsGQ05Vb0Wbc=;
+ b=lbIq2Zrkwc5ywpQEZumxzfcUHVvGS/T1TqcefsoDIIWKeJJ9SPuyzM+8f89KlqetOnPrb41gKuOq8/uFAKNRNhCOfOJI7rKHHs63KZaICxLVmhZfknXMo1EWUoByFc0tJMiOOo/9w2pBWFdEK4Q/trXMx4mQx7WPcRN5TcMGkqBZHrWovCx62aMCcFTPRHSqv6awaQ+FYgX4wvOHARxqh7+JviiRPDOe11p7HUteBLfnQKZ+F3bp31cK/o4EMfBfu2AuE5oAM6Ur4IZ4TYz+euHupQFEDqSnY8RQtSC3Qzdcb03ywaTcUdzt0FbY3iErON/cj+Zpq4EnOa1Q7df8vA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
  dkim=pass header.d=fujitsu.com; arc=none
@@ -48,122 +48,123 @@ Received: from OSZPR01MB6453.jpnprd01.prod.outlook.com (2603:1096:604:ed::14)
  by OSOPR01MB12313.jpnprd01.prod.outlook.com (2603:1096:604:2df::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.22; Thu, 13 Jun
- 2024 00:31:28 +0000
+ 2024 00:34:53 +0000
 Received: from OSZPR01MB6453.jpnprd01.prod.outlook.com
  ([fe80::9ef5:e83:9047:de11]) by OSZPR01MB6453.jpnprd01.prod.outlook.com
  ([fe80::9ef5:e83:9047:de11%4]) with mapi id 15.20.7677.024; Thu, 13 Jun 2024
- 00:31:28 +0000
+ 00:34:53 +0000
 From: "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>
-To: Alison Schofield <alison.schofield@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>
 CC: "dave@stgolabs.net" <dave@stgolabs.net>, "jonathan.cameron@huawei.com"
 	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
 	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"jim.harris@samsung.com" <jim.harris@samsung.com>,
+	<ira.weiny@intel.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
 	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
 Subject: RE: [PATCH v7] cxl/region: check interleave capability
 Thread-Topic: [PATCH v7] cxl/region: check interleave capability
-Thread-Index: AQHavHg+kayOu0TIlUazgRKg5v7PCLHEXCaAgAB3HyA=
-Date: Thu, 13 Jun 2024 00:31:28 +0000
+Thread-Index: AQHavHg+kayOu0TIlUazgRKg5v7PCLHDgwyAgAEqsoCAACvLwA==
+Date: Thu, 13 Jun 2024 00:34:53 +0000
 Message-ID:
- <OSZPR01MB64535881EDC218CC208542168DC12@OSZPR01MB6453.jpnprd01.prod.outlook.com>
+ <OSZPR01MB6453604FBB697F13FBA270DD8DC12@OSZPR01MB6453.jpnprd01.prod.outlook.com>
 References: <20240612032544.39149-1-yaoxt.fnst@fujitsu.com>
- <ZmnVCxoMissgIPxA@aschofie-mobl2>
-In-Reply-To: <ZmnVCxoMissgIPxA@aschofie-mobl2>
+ <66691eedbe8_31012947f@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZmoZfZPcGNYCqQGL@aschofie-mobl2>
+In-Reply-To: <ZmoZfZPcGNYCqQGL@aschofie-mobl2>
 Accept-Language: zh-CN, en-US
 Content-Language: zh-CN
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=8fa5b8aa-64b8-4c23-8c25-d218c1858918;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-06-13T00:10:38Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=3f5ea8fe-23b6-4edc-8301-373e7870294d;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-06-13T00:33:04Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=fujitsu.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: OSZPR01MB6453:EE_|OSOPR01MB12313:EE_
-x-ms-office365-filtering-correlation-id: 11227227-b23e-4801-fa21-08dc8b402a5d
+x-ms-office365-filtering-correlation-id: ba644f5e-6d44-4f66-93f0-08dc8b40a458
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
  BCL:0;ARA:13230034|376008|1800799018|366010|38070700012|1580799021;
 x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?MlpwT3dqa0dNZFgzZDlBNVZONFZyNEhxblZreko0QWhnQ3p1TmNpSkw1?=
- =?iso-2022-jp?B?S0VUZVEybW5zRHZ4ZmRNZ0pQWFZ5UHNrZU8ySTN5TlNTblRxNDR1cGhB?=
- =?iso-2022-jp?B?UEFrekVrUm03eEVFck9mQU1MU2pLd2k3amV3eHRkWnlOVFVNdlpXally?=
- =?iso-2022-jp?B?SFN3d2MyU1UvMmV5LzMwdzJmK3BFRWl0eC9jaXc3eUdBUHowbHRpU1RV?=
- =?iso-2022-jp?B?Q2h4Nm9nbEg1Mm53UGRSZWc4ZmhKYkhiUFF2WHlrZ3pxUzJNOVVQcm1S?=
- =?iso-2022-jp?B?NXJOQmxsMnNsUExnK2xWejhndHI3U0FheE5xWEdEaHAzY1pDdUxVWkNE?=
- =?iso-2022-jp?B?SzQ3YkRsbU02OWpQNUprd0FXcTFXQkFTdURNckdLRTFvS3NkKzU1QlZS?=
- =?iso-2022-jp?B?UWNlZ3hoWnQraXpoWmhvYlFnM3NzS280MnBaUFBubXNjaXlFaVFFekNv?=
- =?iso-2022-jp?B?TGkxYnFVUDdKNFRNbmlqc2psVlZhV003cmp2dWRNL2hVK3BSRlFTY0Qy?=
- =?iso-2022-jp?B?NzNKM2hnOUU4c0wwYmxTMzQxeXVzMXNCQnFpeWhKNG9PSGpoK1FqQkhC?=
- =?iso-2022-jp?B?Q3IyOE1IT2tSQjdwY0pNeS9SRXRkMTI2dUt1QTV5cllvbHgxTXRwUUF6?=
- =?iso-2022-jp?B?Qk5WZXNIK2k0SEJTY2VQbHZZclZiRXJSblRDVmdWVlg2VnEvbXY4ZnBr?=
- =?iso-2022-jp?B?REJiQ01XVExnMVVBUTBCNU5VbGRkZDEwYnBOdzdkYkEyNEJTMGxHeFd4?=
- =?iso-2022-jp?B?dmkxd25wcHNwZXo4M29KaFFPdCtRQ2ZWckN0ajJpZG5YaVBDMDgvNDJl?=
- =?iso-2022-jp?B?TWZhN1RSNGpuZDhQcURGREpxRTRmVzNLeGtCcEJCRE1TcDFqbXh3MnRl?=
- =?iso-2022-jp?B?c0xFUUMyZ0EwUzlTdllld3h4bXJZSmYzT2RaSU4wS01aZlRKQzBBOFZX?=
- =?iso-2022-jp?B?TFB2UHBJQWtBRnNkUnBndU1sS3NBdDhFNExwbVQ0eTBRWGZoT3g0WWxt?=
- =?iso-2022-jp?B?dHRuVWxpVnZJbWMwWTBhM0t1TkxnRjVtWXRpeE5RcG1aelZoM0dJVjdN?=
- =?iso-2022-jp?B?STNCNkNhRkg5RXN6MVUrSysyNmtyNmpsOXBJOHNzUnFnbnlWQ1BTTUdM?=
- =?iso-2022-jp?B?NGx4TnZzQTkreWZQUXUxMmZqaVlhOEt4L3VnSGE1Q0ZwK2xHMkZ6MXdL?=
- =?iso-2022-jp?B?S1pZelo1RXY1VkVIQlFUTEpoK1E5NWpLcjZmRkxmdHcvb2xBdDI4UENT?=
- =?iso-2022-jp?B?VnIzZUswb1Y3R01iQ1huelI1aDVhVVA0eGNRRzIvSExyOGZXY09kZGdQ?=
- =?iso-2022-jp?B?aXN6OVpvTmU4dGJmYkFLVXZFTmJOeW1MK3E2ZjVqVGk0c3hJVUV1YkQw?=
- =?iso-2022-jp?B?TExpaUhoWjFEQ2MzWEhsV1k0M1lqdnhreVBOeG5RSGFJbkNLcERCT3Zy?=
- =?iso-2022-jp?B?a3N6Vlg4YkhwdnA1SkMwQXZoOGdkNUo1aFUwTEMvZ1FqYTk0SHJZZDZk?=
- =?iso-2022-jp?B?aEthSm5EWEFBeEljQlZiRStzWk5GOGJCaENDN05lSVZVQzVMOGpvNVM2?=
- =?iso-2022-jp?B?WFlSUUFsQXNMVkRMY0labmpneUtPZTRkOHBna0dFTEFrMHJqRVdVYlBE?=
- =?iso-2022-jp?B?WTU2V3ZrZVpsWFVyTjJodmNIOHZsTXZzNXoyQ0JYT3FlNjltd2x2YmE5?=
- =?iso-2022-jp?B?NEMzK3c4NnFERzY0Q2JRa3Vpa0x3d1FPcFVYWitHT0RpMzIrVjdQOUR4?=
- =?iso-2022-jp?B?SGxZWXBHQXVVZXJhTXhLOTVNRVRmcy90SjlDb1dPVHRKY1VNK1JJVVR1?=
- =?iso-2022-jp?B?Z1hrMnBvSVJsZHo1d2k1Vk1hUFJIc1hBREIxNzFFQXZMNTlFb0N0ZnNY?=
- =?iso-2022-jp?B?bUxwWlg0RFBzRStoWGlybUtpSTk0RjFDcWxHcTUzS1JYd1RkZWpPK2F0?=
- =?iso-2022-jp?B?am92Slg5eDZpM041SnJlbVljZGtCanpxandqdTNuQVZaejIrVW9tcGZO?=
- =?iso-2022-jp?B?UjVvYlAwcjQ1bHNqUkh4QmZObksyT0J6emlTMmVGcC93MjE5VGtnNVk3?=
- =?iso-2022-jp?B?cmc9PQ==?=
+ =?iso-2022-jp?B?ckxnc29LV2pmb3duemltbVVnbW9KVEdXazM2M2pBU1FRcC9FaXd1RUd5?=
+ =?iso-2022-jp?B?U1h2QmY3T1Jxbk5oUkVnaG9jSUI3TWhBYXlWN2JraGNtSHREWHVhZ2RW?=
+ =?iso-2022-jp?B?Z29JWDh6eGFwaU51MmpRY0l2YUZOdE5OU0dJM3FOQ25xMWNXcVNXUkdO?=
+ =?iso-2022-jp?B?ZWtQdUhiUUtidVRrUlVJUVFZVTJ3YVRCdi9nZGhiV0ROcVBpVDJxYnI2?=
+ =?iso-2022-jp?B?TWJNVEd0cXlwbU4vNUY5bitTVkRjUXo4dTl2NkJYQ3FFaERla1FkL3cw?=
+ =?iso-2022-jp?B?L25HbHlPU1dxYjQwdzFXQ1NFY1pWSXNMeHZsWFo2aUpXTDBmTUdlQ3Bu?=
+ =?iso-2022-jp?B?RTZCSS9GWXNuNTlLUjNDckRtOC9nOTRMWnFlNWQzSlpRZ0RWRXp4SHoy?=
+ =?iso-2022-jp?B?NGd0OUhwQzlmaWEzeHc3QTVDZk02WmNZUGk2NXpaVlNxSkJXOVptZ2NM?=
+ =?iso-2022-jp?B?Tm5pbkY2WkczS3llLzFiNjh5SGRSQ09wSHVvQTJLNFYzRjhmQnZhLzBn?=
+ =?iso-2022-jp?B?OHpPOEFIbVo2b3NGZGVsZ3k1aTFGaUdQL1ZnU1VnQklzVVJzQU1xYStZ?=
+ =?iso-2022-jp?B?aUZzdVZUb2pXaHVNbnJTbi8wZktHaWpWenBocmFZRkhSQXU3aVVXL2c0?=
+ =?iso-2022-jp?B?bGx0VHRJa0J0UzNuaVk4VXZaSkZ1UGpxRkpHbm0xU1RvdHhFYytaS0Rq?=
+ =?iso-2022-jp?B?U3dOdEpvamJIaEZ6UXB5K0FXcXlrS3RZMkNOcVp4ZElBclVuWkQwelMw?=
+ =?iso-2022-jp?B?VzJJVjdsZGtwVm4xNG5rR1pSV3J2a1pZYkg1ZUh4TzZoUC82UE1NbTVl?=
+ =?iso-2022-jp?B?R2V4MzNhb1cxOU44ZkhKTklnYVhXM3FGcnRuMnZNZ09TUXlWTmt6M1Nt?=
+ =?iso-2022-jp?B?OWVTSEUxS0VwZUJ0NjRQYUl6NGJNVVZVdkJNSTl4SnBkdDhMcUgrOEpz?=
+ =?iso-2022-jp?B?cFV2N1plZU9Eck4yWHJUdDJsZXdsZmVaZUZaRXYxNXRZSUQvRUg0VHR1?=
+ =?iso-2022-jp?B?aWE3MjRnb0k5YlExZ0dFL3poaTJ0alRsS0t5NHlhWWs2K0haUVBKbnRL?=
+ =?iso-2022-jp?B?NURzKzdISFBRd1VCcUdiVWlPTjRza2pNSTNBRjd4TFNVUjJtL1R6cXMw?=
+ =?iso-2022-jp?B?YlpPY25zTVRJZ0R5V1RxL1ltN0E4YlZYeXp2U0poTTRLT0QvdTNuTXBD?=
+ =?iso-2022-jp?B?aUVPbFROWjlURWdBblBhYW9BWWNrejFZeU4vUlluMWw4cUZCcTNXOS9r?=
+ =?iso-2022-jp?B?SnNoMEs3elJOVDVkWHJMK1l0WUFkQ2o2K0REOUNBcWo3K3lvSDgzRTBz?=
+ =?iso-2022-jp?B?RTBSK3lCSDNQMmppYTljY3RzWFZRd2JMWGpKTDFhUWxPL3JUTlc3QitP?=
+ =?iso-2022-jp?B?VTVWdTdjU24zcERSbUsyTUNRanFqVDcycnNnbGttMm52eit0NnVOZFdj?=
+ =?iso-2022-jp?B?NFJUbGxMditFYy81SGlOTHNjSHlLcTlWRHRkcG54UGFrL09DeHJPM2NJ?=
+ =?iso-2022-jp?B?RkdYYjhKVms3QUxaaE1vdXJxWks3MFpTejF6b0x2N3Q1SHhnYStXMWZH?=
+ =?iso-2022-jp?B?cVlocFFmS09zUm1ueEVGdWlBSmVQY2EyRW1zQTZPY2Vzd00vUytkT1Nr?=
+ =?iso-2022-jp?B?UnpYTjY2MlNzV2V2QTFxSEtCTHl3Y2ZBYjNyT3RxZmxHMFBTWjdOMkJj?=
+ =?iso-2022-jp?B?WXVZTW5LRDRaWXVZN2RNajZvU1NiYWs3TkYzMWcycXpETDd0YlhZeDZN?=
+ =?iso-2022-jp?B?NE43R3lSWS92Z0s3V2Fva0hDNGs1QkdaWkxoMVJwdGExZDZTK1RjbkRR?=
+ =?iso-2022-jp?B?a1pxL1ZuNTh3Ti9HWWR1SGttN3A4VmFuOVdsQmh0c2RsbjhMN2NEUDlN?=
+ =?iso-2022-jp?B?dVpFYjhqNDFFM2t3TDNNYm5wUEJNMVNmWThjblROd1pzVW0zVUdRVVEz?=
+ =?iso-2022-jp?B?SWtqWDJaWjUxVXFLOVBjWTdKVkM1MHBOK3FhcXlPR2JnVEhsVlVsR3lH?=
+ =?iso-2022-jp?B?WlJ4b3NmWHg4bWNzSEFhcnBJYlF4T21kcDFTMGlwc2kwelZaWHVQVVE3?=
+ =?iso-2022-jp?B?Vnc9PQ==?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB6453.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230034)(376008)(1800799018)(366010)(38070700012)(1580799021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?UUNtZzNMRmREL3RxRE1rTTFxZnlYTlpqYjNZZWRVbUMyNlJldmh5alhV?=
- =?iso-2022-jp?B?ci8vTzVneVhMK2g5VGFpTzhPVTBDNE9NRUV4WnhjTFFOWWhYQWJrVzdT?=
- =?iso-2022-jp?B?WnU0eFJQN1oyeEROVUFKVVRNc1h3NVh3bjl5YnhLcVdpK2JoQzFjYkVk?=
- =?iso-2022-jp?B?KytjVGRKNDJqNGI5N09RQVh4U01DVVJnNXBOVzVuZjRpUzZQTWlFSmZT?=
- =?iso-2022-jp?B?dmNnb0ZSVXRIc3RhOVJtc0VPelhHcVl3dnZjcmtjL250WUF5WWtYaDRm?=
- =?iso-2022-jp?B?dVpxTEwzWVBkQU5BYVZKUDM4b0ZRdTdZNzhHZi92UGdYbGtUTGU2Kzdh?=
- =?iso-2022-jp?B?VENSbFkzU2RCbW1CSFhaTEV6alplL2dxN1ZacU14QkFia2h6bkRzUTAw?=
- =?iso-2022-jp?B?UWpqSjZkSWpQMWo4TUdueTVkQXZ1OEE0Qmc1ZzZvL1dUc293NlcycVlT?=
- =?iso-2022-jp?B?Vm11WG9WblYrTjFzTWIyeDdGczB5bWozdXREOE9Dcm9LNEpGcmhsZ0dN?=
- =?iso-2022-jp?B?MkZCYmo4cXVhemVxWFFIQ3JBWEZFZG9ZWkNDdWEvejM2SlNjaGU2QXUx?=
- =?iso-2022-jp?B?ZGorbXFEV0hod21RenIzMDN5ZHUxZWoyS2hJSk1DTXV6ckJwVFU4REUx?=
- =?iso-2022-jp?B?VFZiMW1aRTkrRnJ2SFlUMjE3OXFJZnRnd3RNcndLV1JpcEFNbkllM1lW?=
- =?iso-2022-jp?B?NnBRN3ZHRDIwZUs4dG95cXZxWTBnM3dKZmUzQ05rMGFNODZYQXhCVE9E?=
- =?iso-2022-jp?B?VHhRWmV1allJRE10RWY2THNMRnFLcDhMR1BOYis4NzZwRjF0T3JHYVJJ?=
- =?iso-2022-jp?B?Ykp0c290K295MCsvNzQzcVNsRzhYdUNLWmxrZSttcHNBN0Y4UlIrTzBz?=
- =?iso-2022-jp?B?Z1pwS05Kcmhlc0R6SnZsTlVtY3pkN1Ztd0tTeGJsemlHSGlDN09CNkZ1?=
- =?iso-2022-jp?B?b3V3a3MySnEzelJEUVNCbHZoY3BwUWlGRlBkVy9mdzFaN1JlZDVPWXVQ?=
- =?iso-2022-jp?B?SkJpbGNEUTdaeER2NDBVN1FrR1J6RG1IZGsvM2xQZG1OWk1xVWNIam56?=
- =?iso-2022-jp?B?S3REQldwZDNlcmdTdU9BMnlvZkhwTER0MGJXSVhQaFBXQVRJUEUxc2ph?=
- =?iso-2022-jp?B?Ynh2VENqM0tGSTZzMS9pOXh2TkFnUys0OC8vUjFldDc1ZkcrSFFYREE5?=
- =?iso-2022-jp?B?RnlicHBYTDhSNWxnZWNvb0NhNzBFdWRwS0tKWmFxNklWS0FZNmtaSmdL?=
- =?iso-2022-jp?B?YmlCbFY0NTA5TUQ1bzlUMzFSVkJncFAyMnNJVEI4YmN4UzhkWTNFb1Z5?=
- =?iso-2022-jp?B?MGJYODlYMmpFNThDY3BLakdtZjNBSHptZHlIdktETHd1STRiQ1dWNnJs?=
- =?iso-2022-jp?B?UUpTWVJsRkczN3VDTGxIUkswMDIyRFpVajI3U0lQemkzQzd4Ykk2N1Vh?=
- =?iso-2022-jp?B?R3QrMGVsYktpU3hBNUQvbUFENlhaNnp1d3BhaGxQblZGUWJFV3RrQXF0?=
- =?iso-2022-jp?B?ZUpxYmFOZnZBeERGUlNrcWZIbVV5ZTQ3TUtuWjZGdmhsWExiVVZFb1lD?=
- =?iso-2022-jp?B?UEROUCtkeldjRTg1V245QS81TXNSSEJ0RmFwVXlnTi9HUUR4T0RTZk5C?=
- =?iso-2022-jp?B?RGZ0M3NYN05IWWxZaGY2WGhwODlPS1U4NldrL056cjc1bS9ydllLek5G?=
- =?iso-2022-jp?B?WHFYTGtIWlRiQVBUUVQyQkYrRCtoRWVtWDBpdk0zMDNvM1pRangvZnhm?=
- =?iso-2022-jp?B?eE1oTjRNUXZ0cG1MRGFjVUY1by9lbks2VG1ZZ1kyYW56QmJTeVhKSlRZ?=
- =?iso-2022-jp?B?RGdqU1liRm1wTTlrMjdJQm5yQlltUWM2V09zdzNWK2sxUEVCZy9jM0kw?=
- =?iso-2022-jp?B?UlRIMkNYaElIbC9SMjhmcjhHMSthUWVOVWdWV0wzWjU3SzArZUVKcFMr?=
- =?iso-2022-jp?B?ajhEaDdpNVUrd1BRWVE1L1kwY2l3OTFMQ0dha1V5NVhsbm04T0dQWGQ0?=
- =?iso-2022-jp?B?VzEyQmtUV3FFUW96eTd2Rk1hUWlUL1hWK1NIK0c0dk1LMnc1UUNrMWla?=
- =?iso-2022-jp?B?UTBmZmxiMFlOTExNTXFuOTVFdjEzVGJIZlYrUzk5RlN0NE5iSDJGVXM2?=
- =?iso-2022-jp?B?MjZJT0xiY2FsajhhNVBaNEdObG1CYXExUC8rNjNxRGsvaWRLVWozVmND?=
- =?iso-2022-jp?B?dWVCYm1IOWdyamFmOXExU3lEVWtzdks5L0ZJSE05MTR5cmhjcytCaUdi?=
- =?iso-2022-jp?B?b2Fua3NadVIyNzZTL3pUYkk1Y2R0M0I0WEdQcjlyZ2c5TUVlRGRCYWFX?=
- =?iso-2022-jp?B?cmRFWg==?=
+ =?iso-2022-jp?B?Q0RJdmw4aUxsMlp5ajg4a2JmejNibDBpQm5CNEtGejBTaVd0NW5zajlE?=
+ =?iso-2022-jp?B?aXBraWxUdlFDaG9ndFNBMEJrM0Z3dEN2a2VNSFptWVFiUFRGZ3EybUh4?=
+ =?iso-2022-jp?B?TCtGRFU0U2FMbWRWR2ZNWGtZMFMxN21rdXROWkc1VkVKMlVqd0M1MmZG?=
+ =?iso-2022-jp?B?V1dLdnBpZHAvclI2ckIrd2xLYzUvTEV1VmZRZjRmTFVCNmxjVXBNMndr?=
+ =?iso-2022-jp?B?RnY5RjdvNVZnUjR1YmR6RWcxLzBXWGs4VTRmZ2Z5ODUxYnRvejVIOEk1?=
+ =?iso-2022-jp?B?Uk5ueHBGR0RRcXQ0RlNBUHp2N09LYVpiRjdUc2ZPaVA5OFYwUFFGTlRl?=
+ =?iso-2022-jp?B?bHI1M0JNNmtVa1ZZUUJJUHFMZjF1aENuNG1qSTFkNGNwQmREMDVRakpu?=
+ =?iso-2022-jp?B?NVFHMlpBdGNjclVqRzVTRTJMbGRRcWQ4cE9ldlo5Ynl1eEJTLzFZWGJr?=
+ =?iso-2022-jp?B?RzZVQzdQK3JjZ2hvc0I5ZjhaSWJ4OWxrbllOUStscHZoNjVvY1BzNHhV?=
+ =?iso-2022-jp?B?alVTeGd6ZlpUdjQraVdxMXVLYlFBZlllUnhwQVl5aDVyMmpsOXkzenpG?=
+ =?iso-2022-jp?B?S056UHRLK1dmZ1QwclphS2xhdU9Kb1BnbUloRUd0T3RJSndtZ0lTTzdy?=
+ =?iso-2022-jp?B?d0pYNkdKRDN6S2dXVXlZUlFZZWlITnMyUWJSUzM5cGcxeElneGdTNkZX?=
+ =?iso-2022-jp?B?VjMwQmFHekVPT2JNNXVQQXJSN3Z0Qnc2d0ZyKzNxTFNNcnJsNlVNS25j?=
+ =?iso-2022-jp?B?SG9tS3RxSkRTUk5wVXo2OGJoRGFKTlZOUW1WYlpXZnBkN1VuUnBieGpR?=
+ =?iso-2022-jp?B?ZEZPT00rRFU2S01XQVFMaTdvMVVIcy9FdlFpa2ZnS2hFeEd1aVdlcHdM?=
+ =?iso-2022-jp?B?NDd1NStXeHpiU2l3U29KY0I1ZDFrWkVnRGUrTStjRW0zeVpkcFVWNEpI?=
+ =?iso-2022-jp?B?Q0w2b2xWd2F3eVNZTkxPYitiK2tTYUl3WHdKMnlkWGJtZW1UZk5JZTM0?=
+ =?iso-2022-jp?B?YTNLeHU3Z25Jb2MvWXlhS1BBTjBjeGR2YU1PaXlxSTV6cjQvdG5WWmJw?=
+ =?iso-2022-jp?B?U1Q5d285eVZJWE9wR2lvT0F0cVZwNS9pM0JYZzcrYWFTN0UzSnMxaVp5?=
+ =?iso-2022-jp?B?UU9tekRTeXQzcFlHNFJ0U0VnS3M3NXI0WDdtM2cxQmRvN2lpREpsR2hi?=
+ =?iso-2022-jp?B?TjJiTmVwR3hEVGVsdS9rV1VCbnVmNndUNGlFNHdGZ201Y1Q0aWxpWm1o?=
+ =?iso-2022-jp?B?VGdya0ltWk5UT1g2aWtRQ1V5RVdvVXd3emR6S3Q4U0xXMFJUdXBKOVhX?=
+ =?iso-2022-jp?B?YUJza242MGprazJiQTNUQmRtU0RxQkQxWjBwSG5STnZ4Ry9vdUF4aHl4?=
+ =?iso-2022-jp?B?OHVxUU1qZytRbXoydVNtYStHZXpIZ1hEREZVNWlVWElmc3IvRVhEMTdN?=
+ =?iso-2022-jp?B?TUZCNHphWU8zdGtTWWpySzlIaHQ4TkRkbWsrMzQ4MUJxTzFqcTJSdTcv?=
+ =?iso-2022-jp?B?eklYS3ZCYUJKTUFHNnZkdlNzaHhBRFNYTjNNM0dkL2Uxa1BwV2hVODRE?=
+ =?iso-2022-jp?B?R3RrOTlzelBxMFlISy9PSlFueWNSblNYSUJPQXdiWHlRNjZobGJweDNa?=
+ =?iso-2022-jp?B?WDBCcXM3eDNtZ1hINXEyQlk2SGhEei9jTzJNY2FUdkVGNk9hQXkrQ0hx?=
+ =?iso-2022-jp?B?Nkl0OVhUWGM2WEdudXJoaVJRblBFK1ZuSk9ZN1hhNXFhRzBtbXZqQVB2?=
+ =?iso-2022-jp?B?T1phaHIwVys4bWFIVTVwcU52Y0pXaE56OFFxVkxSeFgxRTN3dUMwckFL?=
+ =?iso-2022-jp?B?a1hmdnhRSitZZTdyMUtOQXFEQ1FaeThybnN3K2REaGZ3WDRMOEhVMzlr?=
+ =?iso-2022-jp?B?K0tnYjZvNExzZ3NYdGZ3My9VTk92SXFvU2JLL3owc1RWNW1GeWpKNDZj?=
+ =?iso-2022-jp?B?QXdIMjBzRmpWU0FmR2IveWZWa2RURDFoVnN3bGNwSzNjdmJPYmg0Mml0?=
+ =?iso-2022-jp?B?RFFMQi9XYVA5RHVDSmhxK2JnTXB6Tzd2ai9LNkRwSHhvbWM5eWcyMTB5?=
+ =?iso-2022-jp?B?akVkQjFkejVHcmw4UEZpcVVoL01yREhkUGsxK2xQMWtyMzBQTGk1K08r?=
+ =?iso-2022-jp?B?SmYzbmV4YzdPUWsrazFVSlJtdjhndzhJLzJoTnY1ZWRmTElleFZGRjJS?=
+ =?iso-2022-jp?B?VVQrRkpSN1R6eWdHQ0FrNXhXdnFHbHdaVmxWeXY1VkdDSUtkRVY0VzJL?=
+ =?iso-2022-jp?B?L09FTmRqN0NQalBXK1A3TXNRRXdtQ1RWajA5SUhGT0Z5U3I2Sk9vSUlE?=
+ =?iso-2022-jp?B?MjBEUw==?=
 Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -174,216 +175,134 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/7ScxRMcchnx4LVpGNWOku/cOHWb0XU6CtxlGnarCX/AEUG8C4flYqTNvu0SBiq+zSGdkvKUGUQArpo2lnRchbfjRkfG1ZXrcJUL8m+M9HxgM0VuK5tJjsvGEAEkp4egv4iJU39ClumKRHc6f/TC4790NWnbt/jV1wXKFg86/lOe8+VKyFNdEJd/gz77TQm2H7mJn7kWRge+uJeZGWMCnujzr3LcShxJ7AvZODGIUjYW5IE3cnvWU8AqF0HMeY1YUlho1H36HG44IflUgNlynFkOklkMDGPyuUB/sOyKUCbgAuKQxzfXotpT1O3AHuebydQgwgmqJcnqVSNFJkQyCiYVji0udlocizzmtwigaXnkFo6TWKQv3K0PzXv9jtoBEQb3ho1CLXJ8zA7Y+Kx3FMOJ34/6qYiW5/uZqxVFyiPrMHuiZwPGHTygWD044gQlfuGF42nJDqLEWNQoAvxIaHemBL1tL3L9bA5MlReFzB+nfJRDzEu/rVTfk0qTa+hvtMCf9QKyEivteNCQbuy+/iQfEZuvGEdzzp4L7kJzKqZs4mxe/46RoUOUO0jf5CgejaGe1srN4WP9AoHgIBepwoSXNzQq6r6RE75wSlQB+DEt4k3UHYIgk1Mb8G2P5G55
+	MNZbadDDQiiRZ9ib0qzPhGt09PkcYEnIhiRloQzTjifJYQAZOkW8A27E/mSxMmZvHy2sW9eVkAN9L0YgYFqnfmMCy3GrXwinfEhg6tLr3+GPXuXhopLFP4yNWjiI6i6AWgzMvEw0iShVa8Vh/apn8mPdy4dtc6lyrBLTfJfAfU+C9MuKJEM9gEl/l1Op4Dxj4ivjY9eFnn+/iX/cb6xc4uhN2GRaAvI8n3/9lfOirXXEvwTLAwJDFUoCJ8CZIwXtQjDAI9R3GJOijlZRWiHWI9KL+w2tLcEbymMd2ESyScgRpEGGhfcUpmC5FxjosNH1l8NJE/T5TgUDFnYFtCS3wiBfh2g4i5patzKWcvy3jBYxVAHkELPN6kiNt09LeiMelrYYuchDD+HzZNP8jmkvb+eJVi7/7+ZTetFnewuYK7poVS6lccVTLlg9S6NAm9Sf9Ui4KuTCEM1g7e7kb2ksReIozOCTDSMZGBiMECvoReHe1o+Hw44FfLEe9QZVwU4dzXL/xmigRchFeoGL2nQksEkowfbDiL0pehsNVRPAO4oegKvnGQFLjvhOL467/FfeROf/Mj8a4BewTe8GoX86o+/mxO/BsmC1PRLKvxW9aZ2Z9n4hwFJpW3Gp524qY0k4
 X-OriginatorOrg: fujitsu.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB6453.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11227227-b23e-4801-fa21-08dc8b402a5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2024 00:31:28.4276
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba644f5e-6d44-4f66-93f0-08dc8b40a458
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2024 00:34:53.0782
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9CPUMBywiefoaC27aaOChIURQ9Sxc1WbFsI1CiiWU9/gp+98ZFiX8lCjlDGs8NqPGSJNsB1HlhmAzw2omxlnAw==
+X-MS-Exchange-CrossTenant-userprincipalname: tANARlKt94+8zF3a9cBABqj/etz3f5nJvBj8C6++Skx6ALBvkv+yhuWiF/96u5q+vNZ0Ah89y+k2DVvTo8zsmg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSOPR01MB12313
 
 
 
 > -----Original Message-----
 > From: Alison Schofield <alison.schofield@intel.com>
-> Sent: Thursday, June 13, 2024 1:04 AM
-> To: Yao, Xingtao/=1B$BU-=1B(B =1B$B9,Es=1B(B <yaoxt.fnst@fujitsu.com>
-> Cc: dave@stgolabs.net; jonathan.cameron@huawei.com; dave.jiang@intel.com;
-> vishal.l.verma@intel.com; ira.weiny@intel.com; dan.j.williams@intel.com;
-> jim.harris@samsung.com; linux-cxl@vger.kernel.org
+> Sent: Thursday, June 13, 2024 5:56 AM
+> To: Dan Williams <dan.j.williams@intel.com>
+> Cc: Yao, Xingtao/=1B$BU-=1B(B =1B$B9,Es=1B(B <yaoxt.fnst@fujitsu.com>; da=
+ve@stgolabs.net;
+> jonathan.cameron@huawei.com; dave.jiang@intel.com; vishal.l.verma@intel.c=
+om;
+> ira.weiny@intel.com; jim.harris@samsung.com; linux-cxl@vger.kernel.org
 > Subject: Re: [PATCH v7] cxl/region: check interleave capability
 >=20
-> On Tue, Jun 11, 2024 at 11:25:44PM -0400, Yao Xingtao wrote:
-> > Since interleave capability is not verified, if the interleave
-> > capability of a target does not match the region need, committing decod=
-er
-> > should have failed at the device end.
->=20
-> This needs some fixups to pass the cxl unit tests.
-thanks, will fix.
->=20
-> snip...
->=20
+> On Tue, Jun 11, 2024 at 09:07:09PM -0700, Dan Williams wrote:
+> > Yao Xingtao wrote:
+> > > Since interleave capability is not verified, if the interleave
+> > > capability of a target does not match the region need, committing dec=
+oder
+> > > should have failed at the device end.
+> > >
+> > > In order to checkout this error as quickly as possible, driver needs
+> > > to check the interleave capability of target during attaching it to
+> > > region.
+> > >
+> > > Per CXL specification r3.1(8.2.4.20.1 CXL HDM Decoder Capability Regi=
+ster),
+> > > bits 11 and 12 indicate the capability to establish interleaving in 3=
+, 6,
+> > > 12 and 16 ways. If these bits are not set, the target cannot be attac=
+hed to
+> > > a region utilizing such interleave ways.
+> > >
+> > > Additionally, bits 8 and 9 represent the capability of the bits used =
+for
+> > > interleaving in the address, Linux tracks this in the cxl_port
+> > > interleave_mask.
+> > >
+> > > Per CXL specification r3.1(8.2.4.20.13 Decoder Protection):
+> > >   eIW means encoded Interleave Ways.
+> > >   eIG means encoded Interleave Granularity.
+> > >
+> > >   in HPA:
+> > >   if eIW is 0 or 8 (interleave ways: 1, 3), all the bits of HPA are u=
+sed,
+> > >   the interleave bits are none, the following check is ignored.
+> > >
+> > >   if eIW is less than 8 (interleave ways: 2, 4, 8, 16), the interleav=
+e bits
+> > >   start at bit position eIG + 8 and end at eIG + eIW + 8 - 1.
+> > >
+> > >   if eIW is greater than 8 (interleave ways: 6, 12), the interleave b=
+its
+> > >   start at bit position eIG + 8 and end at eIG + eIW - 1.
+> > >
+> > >   if the interleave mask is insufficient to cover the required interl=
+eave
+> > >   bits, the target cannot be attached to the region.
+> > >
+> > > Fixes: 384e624bb211 ("cxl/region: Attach endpoint decoders")
+> > > Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+> > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > [..]
+> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > index 36cee9c30ceb..7fe617122d33 100644
+> > > --- a/drivers/cxl/cxlmem.h
+> > > +++ b/drivers/cxl/cxlmem.h
+> > > @@ -848,11 +848,21 @@ static inline void cxl_mem_active_dec(void)
+> > >
+> > >  int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+> > >
+> > > +/*
 > >
-> > +static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int =
-ig)
-> > +{
-> > +	struct cxl_port *port =3D to_cxl_port(cxld->dev.parent);
-> > +	struct cxl_hdm *cxlhdm =3D dev_get_drvdata(&port->dev);
+> > Minor detail that can come in a follow-on patch is that this needs to
+> > be:
+> >
+> > /**
+> >
+> > ...in order for the kernel-doc system to autoformat it like it does
+> > other 'struct' documentation:
+> >
+> > https://docs.kernel.org/driver-api/cxl/memory-devices.html
+> >
+> > However, the reason it needs to be a follow-on patch is that this file
+> > is not currently included for parsing and needs something like this:
 >=20
-> Tried this out with cxl-test and NULL ptr deref trying to load
-> the cxl-test module. Needs something like this:
+> We'll need another revision of this patch to address the cxl-test module
+> dependencies so how about adding the "/**" in the next revision.
 >=20
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 3482248aa344..f7ed3dd19992 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -630,11 +630,13 @@ static struct cxl_hdm *mock_cxl_setup_hdm(struct
-> cxl_port *port,
->                                           struct cxl_endpoint_dvsec_info =
-*info)
->  {
->         struct cxl_hdm *cxlhdm =3D devm_kzalloc(&port->dev, sizeof(*cxlhd=
-m),
-> GFP_KERNEL);
-> +       struct device *dev =3D &port->dev;
+> I'm suggesting this because cxl_mem.h contains other kernel doc
+> comments that are not being picked up because cxl_mem.h is missing
+> in Documentation/driver-api/cxl/memory-devices.rst. There also seem
+> to be other ommissions when compared with the kernel doc notations
+> in drivers/cxl/ :  core/cdat.c, core/hdm.c. I say 'seems' because
+> I guess it could be intentional.
 >=20
->         if (!cxlhdm)
->                 return ERR_PTR(-ENOMEM);
->=20
->         cxlhdm->port =3D port;
-> +       dev_set_drvdata(dev, cxlhdm);
->         return cxlhdm;
->  }
->=20
->=20
-> After that, we do load the cxl-test module but the autoconf region
-> fails to set up and other unit tests fail trying to setup regions.
-> I didn't go further into those, seems all failing here:
-OK, I will find the reason and fix it.
->=20
-> cxl_region_attach()
-> 	dev_dbg(&cxlr->dev, "%s iw: %d ig: %d is not supported\n",
->                        dev_name(&cxled->cxld.dev), p->interleave_ways,
->                        p->interleave_granularity);
->=20
+> Can Yao add the kernel doc notation in the next rev of this patch
+> and then come back soon and sync memory-devices.rst for all of
+> drivers/cxl/ ?
+ok, my pleasure.
 >=20
 > -- Alison
 >=20
-> > +	unsigned int interleave_mask;
-> > +	u8 eiw;
-> > +	u16 eig;
-> > +	int rc, high_pos, low_pos;
-> > +
-> > +	rc =3D ways_to_eiw(iw, &eiw);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	if (!test_bit(iw, &cxlhdm->iw_cap_mask))
-> > +		return -ENXIO;
-> > +
-> > +	rc =3D granularity_to_eig(ig, &eig);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	/*
-> > +	 * Per CXL specification r3.1(8.2.4.20.13 Decoder Protection),
-> > +	 * if eiw < 8:
-> > +	 *   DPAOFFSET[51: eig + 8] =3D HPAOFFSET[51: eig + 8 + eiw]
-> > +	 *   DPAOFFSET[eig + 7: 0]  =3D HPAOFFSET[eig + 7: 0]
-> > +	 *
-> > +	 *   when the eiw is 0, all the bits of HPAOFFSET[51: 0] are used, th=
-e
-> > +	 *   interleave bits are none.
-> > +	 *
-> > +	 * if eiw >=3D 8:
-> > +	 *   DPAOFFSET[51: eig + 8] =3D HPAOFFSET[51: eig + eiw] / 3
-> > +	 *   DPAOFFSET[eig + 7: 0]  =3D HPAOFFSET[eig + 7: 0]
-> > +	 *
-> > +	 *   when the eiw is 8, all the bits of HPAOFFSET[51: 0] are used, th=
-e
-> > +	 *   interleave bits are none.
-> > +	 */
-> > +	if (eiw =3D=3D 0 || eiw =3D=3D 8)
-> > +		return 0;
-> > +
-> > +	if (eiw > 8)
-> > +		high_pos =3D eiw + eig - 1;
-> > +	else
-> > +		high_pos =3D eiw + eig + 7;
-> > +	low_pos =3D eig + 8;
-> > +	interleave_mask =3D GENMASK(high_pos, low_pos);
-> > +	if (interleave_mask & ~cxlhdm->interleave_mask)
-> > +		return -ENXIO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int cxl_port_setup_targets(struct cxl_port *port,
-> >  				  struct cxl_region *cxlr,
-> >  				  struct cxl_endpoint_decoder *cxled)
-> > @@ -1360,6 +1431,15 @@ static int cxl_port_setup_targets(struct cxl_por=
-t *port,
-> >  			return -ENXIO;
-> >  		}
-> >  	} else {
-> > +		rc =3D check_interleave_cap(cxld, iw, ig);
-> > +		if (rc) {
-> > +			dev_dbg(&cxlr->dev,
-> > +				"%s:%s iw: %d ig: %d is not supported\n",
-> > +				dev_name(port->uport_dev),
-> > +				dev_name(&port->dev), iw, ig);
-> > +			return rc;
-> > +		}
-> > +
-> >  		cxld->interleave_ways =3D iw;
-> >  		cxld->interleave_granularity =3D ig;
-> >  		cxld->hpa_range =3D (struct range) {
-> > @@ -1796,6 +1876,15 @@ static int cxl_region_attach(struct cxl_region *=
-cxlr,
-> >  	struct cxl_dport *dport;
-> >  	int rc =3D -ENXIO;
 > >
-> > +	rc =3D check_interleave_cap(&cxled->cxld, p->interleave_ways,
-> > +				  p->interleave_granularity);
-> > +	if (rc) {
-> > +		dev_dbg(&cxlr->dev, "%s iw: %d ig: %d is not supported\n",
-> > +			dev_name(&cxled->cxld.dev), p->interleave_ways,
-> > +			p->interleave_granularity);
-> > +		return rc;
-> > +	}
+> > diff --git a/Documentation/driver-api/cxl/memory-devices.rst
+> b/Documentation/driver-api/cxl/memory-devices.rst
+> > index 5149ecdc53c7..e33ee67ac1a2 100644
+> > --- a/Documentation/driver-api/cxl/memory-devices.rst
+> > +++ b/Documentation/driver-api/cxl/memory-devices.rst
+> > @@ -325,6 +325,9 @@ CXL Memory Device
+> >  .. kernel-doc:: drivers/cxl/pci.c
+> >     :internal:
+> >
+> > +.. kernel-doc:: drivers/cxl/cxlmem.h
+> > +   :internal:
 > > +
-> >  	if (cxled->mode !=3D cxlr->mode) {
-> >  		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
-> >  			dev_name(&cxled->cxld.dev), cxlr->mode,
-> cxled->mode);
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 036d17db68e0..dc8e46a1fe82 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -45,6 +45,8 @@
-> >  #define   CXL_HDM_DECODER_TARGET_COUNT_MASK GENMASK(7, 4)
-> >  #define   CXL_HDM_DECODER_INTERLEAVE_11_8 BIT(8)
-> >  #define   CXL_HDM_DECODER_INTERLEAVE_14_12 BIT(9)
-> > +#define   CXL_HDM_DECODER_INTERLEAVE_3_6_12_WAY BIT(11)
-> > +#define   CXL_HDM_DECODER_INTERLEAVE_16_WAY BIT(12)
-> >  #define CXL_HDM_DECODER_CTRL_OFFSET 0x4
-> >  #define   CXL_HDM_DECODER_ENABLE BIT(1)
-> >  #define CXL_HDM_DECODER0_BASE_LOW_OFFSET(i) (0x20 * (i) + 0x10)
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 36cee9c30ceb..7fe617122d33 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -848,11 +848,21 @@ static inline void cxl_mem_active_dec(void)
-> >
-> >  int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
-> >
-> > +/*
-> > + * struct cxl_hdm - HDM Decoder registers and cached / decoded capabil=
-ities
-> > + * @regs: mapped registers, see devm_cxl_setup_hdm()
-> > + * @decoder_count: number of decoders for this port
-> > + * @target_count: for switch decoders, max downstream port targets
-> > + * @interleave_mask: interleave granularity capability, see
-> check_interleave_cap()
-> > + * @iw_cap_mask: bitmask of supported interleave ways, see
-> check_interleave_cap()
-> > + * @port: mapped cxl_port, see devm_cxl_setup_hdm()
-> > + */
-> >  struct cxl_hdm {
-> >  	struct cxl_component_regs regs;
-> >  	unsigned int decoder_count;
-> >  	unsigned int target_count;
-> >  	unsigned int interleave_mask;
-> > +	unsigned long iw_cap_mask;
-> >  	struct cxl_port *port;
-> >  };
-> >
-> > --
-> > 2.37.3
+> >  .. kernel-doc:: drivers/cxl/mem.c
+> >     :doc: cxl mem
 > >
