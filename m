@@ -1,287 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBB0137923;
-	Thu, 13 Jun 2024 22:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718319557; cv=fail; b=qgS4qqrqV6z/ujAFpHM157wwuCNSsKau+he2t57uRnTcnJ6lFYqZK4RaXrlYSA45bKKYIdUPNU+Spdqzv8rEokigL+RaYd9CmUc0uN0QIj46uSjMmlGTrswNs0Qio6atP3BdacPjWtak3sbAJqdLbru6HNGt+b/zs8ISPJ+HFOg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718319557; c=relaxed/simple;
-	bh=ygOxfbs6RfxKnIqS2m54kMFikQivDyQw1LJw9f0EvBU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ocTGg0GqG7SMtUKiQZLaLoa/OwqDV5zaZYh9pgTfIwArUmFny+5c1hMUZogxQAPDFuACIOE3oQVRGHrekeYRHBaVzW4HgrBQcAPQNCmbf/7hagOjW/gHSzYXGxK4N4AZd3UAArefMe++deh+KfnOf9w9YdNr8pVYoRRzbTsJfy0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NRwUgnME; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2F9155CBE;
+	Thu, 13 Jun 2024 23:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718321571; cv=none; b=JfW6bK/6rtEg0cM/NWpXnshrHj87sKyC1lW4AOMkxFnjEpjMmBU2IbWI4jIBTttMngZaPeHsBg4N3WUWT5EUuxL+0X1YoPet2kLxOS6e5czKKNXFFxCCA++R6JnMZsrT+B/jdfH4CSVPegDskhS0BPfcXQi0hmcRNKnHLe4LEeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718321571; c=relaxed/simple;
+	bh=M8o41hq2y/cLCRJOH2p4sk/4nnWqpAlctqY1GvPsGqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fd0LfhURlDfZja/ljsIhBiqBcItZ9M1xonSsuvdW4L8aJVgDMYzzAVv76Np7ptM7Clq5a5WN+26E4st+cf7xJ09lsUXSEtnppOaPIt0pSY/fYGaKdU9UFHeiW7wt/nRgi+5n5onaPXv7KlQQpBuscpALCzZwD5WfwM4VwlgV3Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Etfs7nim; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRwUgnME"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Etfs7nim"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718319556; x=1749855556;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ygOxfbs6RfxKnIqS2m54kMFikQivDyQw1LJw9f0EvBU=;
-  b=NRwUgnMEr6OCtq+0RXJFzJK77q2T+JLhKQo+JkYdxDQkXCYxO6zxm0YO
-   TArn/QI2AAuQrS/JpO7+h3ZBIBzep9beexwsHNcbVzmu2BMuUWfzeD7By
-   mNwgKypSbuKxXjAAneg9w4+7uufbJJ9AGoUDh1Rp+akChN6/P7yH5tEZ7
-   Ff/8N5XhEa15ZP3Er9a3ilFjHGS4kcaLbq/LMY+QMHB127V+lEyPlbqqk
-   RW9T+O2iu6Ob8mI5Vs9aQn91VSt/YmkueFjDuV2T2b83COwiNMEzv3nom
-   RSZax6357qlJhXRIODkV5S7+moLDIxAVzLyVefQW7/CumIDzDAoYgdSRa
+  t=1718321568; x=1749857568;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=M8o41hq2y/cLCRJOH2p4sk/4nnWqpAlctqY1GvPsGqQ=;
+  b=Etfs7nimWfOGysal62eGhEH0YtXUotXHp+gUX+L7ICKiUsyACEQ/1EnO
+   kOwixTLEQ6P4tkffa/XrD0PgukV7yiMeWSVfzC4e4CeWVmo1B0znJHSGi
+   juqjU2DCokNSUB00AfMU/RSQIgRZgCVHqi8F5hb1pgofFZch/RKs7LvPr
+   pnr7/Ca7AejvWMITNaYZARNQpmm2KVL41M4kJfmizeY7X6Dn8bHwFjVdY
+   OXkDFEEmm9hh6iLKuAasIaC151VqH5pAk4tLTu5fC6QPjxb5W1/2ucMJb
+   pIEJ+jFEAp+46G/tGdTvbbtUO/qcN4stsw8HdFNkUwewogI5v5gmVRMXH
    A==;
-X-CSE-ConnectionGUID: zn4noow5SXm9NcbxXojBrQ==
-X-CSE-MsgGUID: +cby7M6CSSyiq6sQ2dPxeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="25761620"
+X-CSE-ConnectionGUID: iBSSWmzHQTKXbrJd7/6I3w==
+X-CSE-MsgGUID: 3FCla71jQRaNzMQpQ5s+Cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="40600287"
 X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="25761620"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 15:59:15 -0700
-X-CSE-ConnectionGUID: RWr2uBKzSHut9uTL5Un5hg==
-X-CSE-MsgGUID: zqz2Qj4mQsSEaPgUnhSfXw==
+   d="scan'208";a="40600287"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 16:32:47 -0700
+X-CSE-ConnectionGUID: 6CCGTarnRZGv3VPNn1kTfg==
+X-CSE-MsgGUID: euhTvjf/Q9iUmBVZzwfelg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="45264038"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Jun 2024 15:59:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 13 Jun 2024 15:59:13 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 13 Jun 2024 15:59:13 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.174)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 13 Jun 2024 15:59:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q5uEWKJkeHAax+LO2v1rvjU+QR19LH0CJq+yGoDm8Yrg6UxYDY2rks1KhrnFpwfP4btrgIqsI6Zk6zS6yDi3btDEMyz+bPQecrV/gVW2sm6gchQHzVWXl3dofsxw3U8CGgooeHASaU804aX5BvS3laePweWBb593dPhRDGWrrfWUT4PNYKsYW2dJ1RWrpIEbOArmgfZqImDpJijpyDitxq+xCOIR0nZ6eJqDqBIv6QihKYZbzJCAhFQazI6muV+CPmM2J8r8aHKjQNvGGhRjlFHyyVrklrjgmjR2C6aZIbl8K3n3DhU/uPO9kapPN/AetdAKGwzWdAwZWYnP37fMdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=unaTORv6P235m0eVXFaGwF9ce47kBYDjaju/jbLYw7A=;
- b=XFR1S8euq577xdhBO6rytfI3ifCVDdUGga6v0qLVjyKSilw0g5q3QmytlZcLbtNRCOaYGyjT8/hMO7PmvblVqw1RWcSb5olmW19iXmNEyFxmhgowySqrOr3t4lwZ2Bppd3PBFZC+zHihMNic4hvjsoSaAJkqSNuJrMhbymDrcacwkQjQlL56rsjOjmcOsI8Mr+hop66HQmsDuDM/EOw3nvtCxgh55nt8GOlMyT6rQyMq1pjMdWg9dcwApaw8QZXenowLhaU/09BysAJIz9npuHF1Qfh188iFlGfQ7PVVCbgVhROD6joyQK5n3RZDSjq8ZdATqpmkX9lKlsg5yaTKUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8279.namprd11.prod.outlook.com (2603:10b6:806:25c::10)
- by DS0PR11MB7264.namprd11.prod.outlook.com (2603:10b6:8:13b::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.22; Thu, 13 Jun
- 2024 22:59:05 +0000
-Received: from SA1PR11MB8279.namprd11.prod.outlook.com
- ([fe80::c677:a64:79d5:b55b]) by SA1PR11MB8279.namprd11.prod.outlook.com
- ([fe80::c677:a64:79d5:b55b%6]) with mapi id 15.20.7633.036; Thu, 13 Jun 2024
- 22:59:05 +0000
-Message-ID: <9ce06552-79d9-4bd9-9a3e-2ffd72c4cf4a@intel.com>
-Date: Thu, 13 Jun 2024 15:59:00 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] PCI/AER: Clear UNCOR_STATUS bits that might be
- ANFE
-To: Zhenzhong Duan <zhenzhong.duan@intel.com>, <linux-pci@vger.kernel.org>
-CC: <linuxppc-dev@lists.ozlabs.org>, <linux-acpi@vger.kernel.org>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <bhelgaas@google.com>, <helgaas@kernel.org>,
-	<mahesh@linux.ibm.com>, <oohall@gmail.com>, <linmiaohe@huawei.com>,
-	<shiju.jose@huawei.com>, <adam.c.preble@intel.com>, <lukas@wunner.de>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <erwin.tsaur@intel.com>,
-	<dan.j.williams@intel.com>, <feiting.wanyan@intel.com>,
-	<yudong.wang@intel.com>, <chao.p.peng@intel.com>,
-	<qingshun.wang@linux.intel.com>
-References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
- <20240509084833.2147767-4-zhenzhong.duan@intel.com>
-Content-Language: en-US
-From: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-In-Reply-To: <20240509084833.2147767-4-zhenzhong.duan@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY3PR05CA0011.namprd05.prod.outlook.com
- (2603:10b6:a03:254::16) To SA1PR11MB8279.namprd11.prod.outlook.com
- (2603:10b6:806:25c::10)
+   d="scan'208";a="40272567"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.43]) ([10.125.111.43])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 16:32:45 -0700
+Message-ID: <358d2e11-59e2-46eb-a7f4-3c69e6befe02@intel.com>
+Date: Thu, 13 Jun 2024 16:32:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8279:EE_|DS0PR11MB7264:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd529c19-a843-4be3-9a3a-08dc8bfc6c89
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230035|376009|7416009|1800799019|366011;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NmJ6L0JmakhiVXZCQU5Tdmw5cW94Nit6UmZBR2doSjlFMjJTaUVVdXVaNzhI?=
- =?utf-8?B?ZXJ0OXlVUFZyRWhXcWxPRjFqQ2VmWGozN2cwZDBTazJIZ3NFemNYRHlOdlZF?=
- =?utf-8?B?RDhLYTdMUXNDanFVMHA4cW5kalhKN2krZTVIOGV0Uk5mZlVLVUtrV1VHekg5?=
- =?utf-8?B?MEFoUlFPRFNBaVRmVVl0eXZ2YkFJallPQ3ZPMElkd1FIWGcyaVdLd1R6dGIy?=
- =?utf-8?B?eVVLZDBuQVVHNVkwZFNVVTYxeXFEWUFCMGh5UldjWU05aEFhcnZRY2ZLT0JS?=
- =?utf-8?B?R0pQSW9LR1ZWNExweDBGeVN0SW1WRUpCYmlGbDluaXlDZW8ra29lQkI1WGJh?=
- =?utf-8?B?d3ZEV3V4RWFaQmR6a3hiY3gwK1BBNm11Uk42TmxCNjRJa3p0NWdUMnY1YzNj?=
- =?utf-8?B?VVZ0NDlYLzdtVUNRRXdwdFM0dDFLd242aHpDd3VRelJlaHdqZi83Yk5oc1p0?=
- =?utf-8?B?TlVPME1HdWZ2QXAyVVZBVDQxajNJNlI3dk1Dd3dqS3hob1BhWFB3Zm9JOUdW?=
- =?utf-8?B?VmJzdmxDdUlvR1V0cXZWRXpUdzAyKzZETDg5UkFybnRYRmpGMktGd2pzRDlC?=
- =?utf-8?B?NDhZZE45bmd4Z0VkbityWFo2SDlpRmZZTjdEZnQ0M1c0ZFhHSEkvR1BKQjVE?=
- =?utf-8?B?bS9aYkhEbmlkZSs4SnEwM3ZyT3gvMVhRWk15NnI5b3R4UitHakpGNS9KMGZV?=
- =?utf-8?B?b1B5UytLLzcrN3B6Z0pyL3N6K1ZUWnQ0OHlpekJTWlBORXRVSXZTbkNaNzds?=
- =?utf-8?B?NlpoN3lzTmxUMzgweDI1YS96NW5yVVZtSnFzM2Vuc044VURmVVJsYVdrM2lo?=
- =?utf-8?B?Q2tTSHdJelFTdHZoV0NObW1qcUs0NVBadWRRcnRDaG5RMng2RytRNllsb3F6?=
- =?utf-8?B?QXhxOWF1OWZUWGNVVzlGOTV0VW5YMitjUmFzZDZwekR0Vjd1NXlCWDh2eDdL?=
- =?utf-8?B?SWt6MjhJL1IrdVJHbTZCem5XQXZSSm5CYXlNRVptRXc5L3hSOEJXb2lFNHdl?=
- =?utf-8?B?cjdwQmgzdXMxMzdNZlJqTFJ2Vy9MeGxSOU93cEFXNk13djE2cHd6TEdyN0g4?=
- =?utf-8?B?RVhWT25CZXg2Q21ONTR3VityWEFqYnZIS3pEcDRsejVKdjJoSWFaYkc2WVBa?=
- =?utf-8?B?QmIwVVdoTWtINW1VZ2owdEkrMVhMS3g1b2ZIR0xCSG5QZWlBRXI3Tnh1SGlt?=
- =?utf-8?B?TDJPcWhlRUwxSnY1V1hqbkFnVUxzYnd1TlI0eDZxTllJVjNZMFBPcThyME56?=
- =?utf-8?B?YnNCU2ZJRnVXVFhRcWVNNWpuRWlwTklKcmpRZ1BrTVJud2ZJbFRsS2xkTkNt?=
- =?utf-8?B?MDFQUERzZ3JtSG5iVzV6N0tyVjJKdWhEWTBuY0ZUQXo5b04vSzdNeFd0L0tG?=
- =?utf-8?B?bDlnWUU5Uk1rd0EzYmdXMWJ5TXhhOTUxTERWV3ZhdGtTaU10UVNnUkY2NXdz?=
- =?utf-8?B?d240cExXWUZaOXg3a1VRM3RJaHpHQUZWVmdzUktLM250SVQyTzB2bEhONk9m?=
- =?utf-8?B?bUt2Uk1uZ2pGeHJ4b0g3OEs4dlhSRHNRTTBkZ1lGaUhIbTNLN0xxRHRuYS9J?=
- =?utf-8?B?RVVDditkRERZdm9paDY3QmVIdWZHbUhrdHJWZjZHUUx5TDMwQUQyUTU5NWc3?=
- =?utf-8?B?SFlUbERHc2MvZDdibXgzLzBLek1mSXZReVd4cjR6TzBKK1pXWDFYQVdqTEs1?=
- =?utf-8?B?UEZNSnVLdkhZWEhEOG5SbkUxVFVCZGViTzh2QTNoYS81eFR3OWdwOExINmJR?=
- =?utf-8?Q?5OTSiPjEqRchI/XRfvPTsQJdlizIDXoejp78q+P?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8279.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(376009)(7416009)(1800799019)(366011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dUYyVUNTRStpSVY2bzYwVmp3cnZvZ2tmU2dFN01GWm5RbnJVQlcxQ0tOeG5T?=
- =?utf-8?B?Z3FPYmYvNDYrais3RmtMdi9XV1BwK2lLWnM5UjlQRVJHcUZxMGFldTBoZitT?=
- =?utf-8?B?cHdpZVVsVGtQWTdnQnErbHZjTklEQUc1VGYrZGJFZDhnUHI3anRSN1U2VkNY?=
- =?utf-8?B?d0NrWFdtRk0yWFhQUEl4d2ZQWXgxbjRmRHJReE5sRCtzdlRST3JvT0NQVnM3?=
- =?utf-8?B?L3l3Y1hjd2dPMDBrRE85NkloN0hFVzNYbytaOWpWWE9ncGtoalNyaXB4UU5t?=
- =?utf-8?B?c3M0cUF6TVpkbVhDdDEwczZLWFJURnBMdVBLVU15Z2t2THM2RjB6VTQyWE8r?=
- =?utf-8?B?eFhjSisxamhKUFRoczhxYXBCK3NuN0tIc3o4WDlJaVZVZ0xiRStKT2F3US9v?=
- =?utf-8?B?SzBCKzR1MndwaXUvVm94VndrTVNPbEkreGtwaGM3RGNGWnE1eDZTQkloQzVs?=
- =?utf-8?B?dm56NHFyRzZIT2ttUVBGZDhNYjIxamlibDl6K3FJajdhTmRUaFl6dGVGZDdn?=
- =?utf-8?B?RTEzd2IyM1kyZnFOdS9DcDRpcnU0eTJmSkx6WjJBQm1DeVptWWZURjVmRmVq?=
- =?utf-8?B?aUxEMzlHZlowRTFreU8zeVo3V1o5SlVTbkxEcGhtcy9ueU5iK2pYQjhMVllF?=
- =?utf-8?B?U09QWUN0alZnalFuL1BYZ093OFJHVlRIOHU1Tmk3dTVkdWE3ZVFpUmJOMW8z?=
- =?utf-8?B?SnJ1cXhiUVN0Wlhhd2VJdmVoRTN2K2o5VHNQUkZ3UzFJWk8wRVc4VjB2eUhF?=
- =?utf-8?B?VS9Hb1R0dllnUU5GaXhYbFY1d3d2blpjQnVWNDNtYytpWHNSVVFpN3NUUnpU?=
- =?utf-8?B?Uk1WOFNKUFR3cm42ZlZOL2VrQ3JaV2dOTVc5Qlc4Rityd2dqR2JjaWp1QXhp?=
- =?utf-8?B?NHVLZm9ZUXdyTkdlQ3lNS0V0Q2pJdTZBUGhBUXJOa0NlSmtxU2RSbkt1RjUr?=
- =?utf-8?B?NkFuN1p6ZFlLdTNvdW1qMkJjbVFobXM4V3o0ejR2aVRYUHFGZDNLVHl6Wndt?=
- =?utf-8?B?UW5acjFXZjQzZE84RzBUbXczV25KbXJpMDRsZlQ2UklhdWtnU21sdTJjU0tO?=
- =?utf-8?B?ZWo5aTZUREFDTWhPQ2tFVTFVNDMwQUhhUW9oNmFGcXJDanAvSlF4WVNwMEl5?=
- =?utf-8?B?eHdnNURaOVlsWjdWdXVmR0RMdDVDV1libnNBNldyTVhMcXIyelVUbXViVEdn?=
- =?utf-8?B?R01OY1EwQ2NZSFRZbCtQbm5sakZDbi9PeDBHaTB6b1NmWENQeW1WOEZwdHB3?=
- =?utf-8?B?M3REbzcwWGpreTl1eWFvM1o3VTg2RzNuNGM5Q2xNUmxMUGdVNy8xa081dzl5?=
- =?utf-8?B?U3lNTGVtQ01Hei9mZ3g4QTRmeGZZUVF1WWxPOE9vclhNL1dJSFNsdzZxUE10?=
- =?utf-8?B?bmJFQi9IcGZZTzJYbk54N1Z6Rm84Y1Vwci9sbDRPektuZjZNRlBPMHZ4SGMz?=
- =?utf-8?B?S2FTQmF1d0xXYk01WTcyL1VaVERraEJTREZGRnprSTZTalpzU1RmdkJkVDk3?=
- =?utf-8?B?TjBNNmRETndpa0hZbXFTU21qNjNJNS9hUXVDaTNQTUtrb1BCWS9HckxYZThv?=
- =?utf-8?B?K1o1TGphQ3lFSWxjSVU4SkNseFV0eVJuMmVIUUpZUG01ODFFOTFkakRYYmNt?=
- =?utf-8?B?TTBpdnJpMEltV2xqTEg2UVJPeERhUS9wU3dORmFjUkpaUldGd2lZQTdsL0RO?=
- =?utf-8?B?YTRQTmFJSld5bWdpM2R1ekxxZzF4bmFNNVFQckNYQUNGNHNsZ0h2eEdsT2U3?=
- =?utf-8?B?WGlJa3VHNFRpemxzcUxBVDlibFhPWGhQS3FNemc5OWZobVVaWTlUbXdBeHVo?=
- =?utf-8?B?ZEQ4RnpHNHYrOEJQQk5UZDgxT3Zqc09iTXNIWURaR08zdnRxdjNqeDhrb2lO?=
- =?utf-8?B?N1F4WDJwNXV2TGZNYjNyRnl0VndYODl0TWltL0tuL3AxVFRrcUZxWFZVUVhV?=
- =?utf-8?B?MUJvSHdZTUdjNThmRlJJcE5IUWtCUTA5UFFadXFDY2lqZ3ViKzZHNGh6ajVy?=
- =?utf-8?B?VHhzbHpvdDd1UlFtbUJ3Nm52V3FKWHlXcFdsNGZyY3BKK0VGTmduMTRJWjlq?=
- =?utf-8?B?MU1oVXNlKzREeklhR2lJTzhnZzlncXp1OHE2aWRReWR5cmFlc2tzOUhjTXNR?=
- =?utf-8?B?UEpFZmVoNmRDMFd0R3lkTTRpS0lmS3JlTTBRVWRTNkg1VzVtWTNDZTVUMG5a?=
- =?utf-8?B?RFFMUC9iTXdJK0t5SWE5SmpvT0p3NWR0SlVoVng1WVlWWWxKdHpKTyt6cHRv?=
- =?utf-8?Q?DbdtJFtWaH7snVMpPC6y91XItSxO8R6s1P7IOwzn7s=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd529c19-a843-4be3-9a3a-08dc8bfc6c89
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8279.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 22:59:05.0101
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X2ZhrNd+RLXPy04k4D5pS7ErDABemK2XPuEQmn8YYrwIitZZohhEeDO++coTrFRk+tQol1m6ucWguCoBFQk4vdGngyCerbj0666qI9yvU9aE8kU04FLQ51gvnZO6a3ql
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7264
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] fwctl: FWCTL_INFO to return basic information about
+ the device
+To: Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+ Itay Avraham <itayavr@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
+ Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+ Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Tariq Toukan <tariqt@nvidia.com>
+Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+ Aron Silverton <aron.silverton@oracle.com>,
+ Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+ Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-cxl@vger.kernel.org, patches@lists.linux.dev
+References: <3-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <3-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 5/9/24 1:48 AM, Zhenzhong Duan wrote:
-> When processing an ANFE, ideally both correctable error(CE) status and
-> uncorrectable error(UE) status should be cleared. However, there is no
-> way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
-> Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
-> NFE will bring some issues, i.e., breaking softwore probing; treating
-/s/softwore/software
 
-May be this is already discussed. But can you explain why treating
-AFNE as non-fatal error will bring probing issues?
-> NFE as ANFE will make us ignoring some UEs which need active recover
-/s/ignoring/ignore
-> operation. To avoid clearing UEs that are not ANFE by accident, the
-> most conservative route is taken here: If any of the NFE Detected bits
-> is set in Device Status, do not touch UE status, they should be cleared
-> later by the UE handler. Otherwise, a specific set of UEs that may be
-> raised as ANFE according to the PCIe specification will be cleared if
-> their corresponding severity is Non-Fatal.
->
-> For instance, previously when kernel receives an ANFE with Poisoned TLP
-> in OS native AER mode, only status of CE will be reported and cleared:
->
->   AER: Correctable error message received from 0000:b7:02.0
->   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00002000/00000000
->      [13] NonFatalErr
->
-> If the kernel receives a Malformed TLP after that, two UEs will be
-> reported, which is unexpected. Malformed TLP Header is lost since
-> the previous ANFE gated the TLP header logs:
->
->   PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00041000/00180020
->      [12] TLP                    (First)
->      [18] MalfTLP
->
-> Now, for the same scenario, both CE status and related UE status will be
-> reported and cleared after ANFE:
->
->   AER: Correctable error message received from 0000:b7:02.0
->   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->     device [8086:0db0] error status/mask=00002000/00000000
->      [13] NonFatalErr
->     Uncorrectable errors that may cause Advisory Non-Fatal:
->      [18] TLP
->
-> Tested-by: Yudong Wang <yudong.wang@intel.com>
-> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
+On 6/3/24 8:53 AM, Jason Gunthorpe wrote:
+> Userspace will need to know some details about the fwctl interface being
+> used to locate the correct userspace code to communicate with the
+> kernel. Provide a simple device_type enum indicating what the kernel
+> driver is.
+> 
+> Allow the device to provide a device specific info struct that contains
+> any additional information that the driver may need to provide to
+> userspace.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
->  drivers/pci/pcie/aer.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ed435f09ac27..6a6a3a40569a 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1115,9 +1115,14 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  		 * Correctable error does not need software intervention.
->  		 * No need to go through error recovery process.
->  		 */
-> -		if (aer)
-> +		if (aer) {
->  			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->  					info->status);
-> +			if (info->anfe_status)
-> +				pci_write_config_dword(dev,
-> +						       aer + PCI_ERR_UNCOR_STATUS,
-> +						       info->anfe_status);
-> +		}
-
-Why split the handling part and storing part into two patches? Why not merge
-this part of patch 1/3.
-
->  		if (pcie_aer_is_native(dev)) {
->  			struct pci_driver *pdrv = dev->driver;
+>  drivers/fwctl/main.c       | 54 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/fwctl.h      |  8 ++++++
+>  include/uapi/fwctl/fwctl.h | 29 ++++++++++++++++++++
+>  3 files changed, 91 insertions(+)
+> 
+> diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
+> index 7ecdabdd9dcb1e..10e3f504893892 100644
+> --- a/drivers/fwctl/main.c
+> +++ b/drivers/fwctl/main.c
+> @@ -17,6 +17,8 @@ enum {
+>  static dev_t fwctl_dev;
+>  static DEFINE_IDA(fwctl_ida);
 >  
+> +DEFINE_FREE(kfree_errptr, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T));
+> +
+>  struct fwctl_ucmd {
+>  	struct fwctl_uctx *uctx;
+>  	void __user *ubuffer;
+> @@ -24,8 +26,59 @@ struct fwctl_ucmd {
+>  	u32 user_size;
+>  };
+>  
+> +static int ucmd_respond(struct fwctl_ucmd *ucmd, size_t cmd_len)
+> +{
+> +	if (copy_to_user(ucmd->ubuffer, ucmd->cmd,
+> +			 min_t(size_t, ucmd->user_size, cmd_len)))
+> +		return -EFAULT;
+> +	return 0;
+> +}
+> +
+> +static int copy_to_user_zero_pad(void __user *to, const void *from,
+> +				 size_t from_len, size_t user_len)
+> +{
+> +	size_t copy_len;
+> +
+> +	copy_len = min(from_len, user_len);
+> +	if (copy_to_user(to, from, copy_len))
+> +		return -EFAULT;
+> +	if (copy_len < user_len) {
+> +		if (clear_user(to + copy_len, user_len - copy_len))
+> +			return -EFAULT;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int fwctl_cmd_info(struct fwctl_ucmd *ucmd)
+> +{
+> +	struct fwctl_device *fwctl = ucmd->uctx->fwctl;
+> +	struct fwctl_info *cmd = ucmd->cmd;
+> +	size_t driver_info_len = 0;
+> +
+> +	if (cmd->flags)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (cmd->device_data_len) {
+> +		void *driver_info __free(kfree_errptr) = NULL;
+> +
+> +		driver_info = fwctl->ops->info(ucmd->uctx, &driver_info_len);
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Hi Jason,
+Are you open to pass in potential user input for the info query? I'm working on plumbing fwctl for CXL. The current CXL query command [1] takes a number of commands as input for its ioctl. For fwctl_cmd_info(), the current implementation is when ->info() is called no information about the user buffer length or an input buffer is provided. To make things work I can just return everything each ioctl call and user can sort it out by calling the ioctl twice and provide a u32 size buffer first to figure out the total number of commands and then provide a larger buffer for all the command info. Just trying to see if you are open to something a bit more cleaner than depending on a side effect of the ioctl to retrieve all the information.  
 
+[1] https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/cxl/core/mbox.c#L526
+
+DJ
+
+> +		if (IS_ERR(driver_info))
+> +			return PTR_ERR(driver_info);
+> +
+> +		if (copy_to_user_zero_pad(u64_to_user_ptr(cmd->out_device_data),
+> +					  driver_info, driver_info_len,
+> +					  cmd->device_data_len))
+> +			return -EFAULT;
+> +	}
+> +
+> +	cmd->out_device_type = fwctl->ops->device_type;
+> +	cmd->device_data_len = driver_info_len;
+> +	return ucmd_respond(ucmd, sizeof(*cmd));
+> +}
+> +
+>  /* On stack memory for the ioctl structs */
+>  union ucmd_buffer {
+> +	struct fwctl_info info;
+>  };
+>  
+>  struct fwctl_ioctl_op {
+> @@ -45,6 +98,7 @@ struct fwctl_ioctl_op {
+>  		.execute = _fn,                                       \
+>  	}
+>  static const struct fwctl_ioctl_op fwctl_ioctl_ops[] = {
+> +	IOCTL_OP(FWCTL_INFO, fwctl_cmd_info, struct fwctl_info, out_device_data),
+>  };
+>  
+>  static long fwctl_fops_ioctl(struct file *filp, unsigned int cmd,
+> diff --git a/include/linux/fwctl.h b/include/linux/fwctl.h
+> index 1d9651de92fc19..9a906b861acf3a 100644
+> --- a/include/linux/fwctl.h
+> +++ b/include/linux/fwctl.h
+> @@ -7,12 +7,14 @@
+>  #include <linux/device.h>
+>  #include <linux/cdev.h>
+>  #include <linux/cleanup.h>
+> +#include <uapi/fwctl/fwctl.h>
+>  
+>  struct fwctl_device;
+>  struct fwctl_uctx;
+>  
+>  /**
+>   * struct fwctl_ops - Driver provided operations
+> + * @device_type: The drivers assigned device_type number. This is uABI
+>   * @uctx_size: The size of the fwctl_uctx struct to allocate. The first
+>   *	bytes of this memory will be a fwctl_uctx. The driver can use the
+>   *	remaining bytes as its private memory.
+> @@ -20,11 +22,17 @@ struct fwctl_uctx;
+>   *	used.
+>   * @close_uctx: Called when the uctx is destroyed, usually when the FD is
+>   *	closed.
+> + * @info: Implement FWCTL_INFO. Return a kmalloc() memory that is copied to
+> + *	out_device_data. On input length indicates the size of the user buffer
+> + *	on output it indicates the size of the memory. The driver can ignore
+> + *	length on input, the core code will handle everything.
+>   */
+>  struct fwctl_ops {
+> +	enum fwctl_device_type device_type;
+>  	size_t uctx_size;
+>  	int (*open_uctx)(struct fwctl_uctx *uctx);
+>  	void (*close_uctx)(struct fwctl_uctx *uctx);
+> +	void *(*info)(struct fwctl_uctx *uctx, size_t *length);
+>  };
+>  
+>  /**
+> diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+> index 0bdce95b6d69d9..39db9f09f8068e 100644
+> --- a/include/uapi/fwctl/fwctl.h
+> +++ b/include/uapi/fwctl/fwctl.h
+> @@ -36,6 +36,35 @@
+>   */
+>  enum {
+>  	FWCTL_CMD_BASE = 0,
+> +	FWCTL_CMD_INFO = 0,
+> +	FWCTL_CMD_RPC = 1,
+>  };
+>  
+> +enum fwctl_device_type {
+> +	FWCTL_DEVICE_TYPE_ERROR = 0,
+> +};
+> +
+> +/**
+> + * struct fwctl_info - ioctl(FWCTL_INFO)
+> + * @size: sizeof(struct fwctl_info)
+> + * @flags: Must be 0
+> + * @out_device_type: Returns the type of the device from enum fwctl_device_type
+> + * @device_data_len: On input the length of the out_device_data memory. On
+> + *	output the size of the kernel's device_data which may be larger or
+> + *	smaller than the input. Maybe 0 on input.
+> + * @out_device_data: Pointer to a memory of device_data_len bytes. Kernel will
+> + *	fill the entire memory, zeroing as required.
+> + *
+> + * Returns basic information about this fwctl instance, particularly what driver
+> + * is being used to define the device_data format.
+> + */
+> +struct fwctl_info {
+> +	__u32 size;
+> +	__u32 flags;
+> +	__u32 out_device_type;
+> +	__u32 device_data_len;
+> +	__aligned_u64 out_device_data;
+> +};
+> +#define FWCTL_INFO _IO(FWCTL_TYPE, FWCTL_CMD_INFO)
+> +
+>  #endif
