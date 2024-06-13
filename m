@@ -1,186 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9619476;
-	Thu, 13 Jun 2024 13:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA7753E31
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Jun 2024 15:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718286946; cv=none; b=MzNxSYWCFM5jfKf57yUc2c2EtGg3JcgK1a+PxJRsUDjQ+VYctjm9w5AYcVy9BDK0XV2MTj7kHjOfOQ5yFmS+1DSzmyTtr+9wMh7OzYTO+T9Wssadt27rTyLx2977yp7sJWB9Z4t7yUfjUjScNCQsZ/cog7W9VwAGDShqDyb9MyE=
+	t=1718291276; cv=none; b=sTyf3594D+HucAVH6WSZ/eiQajBSBkXTRpGTLtNFyLN+1irE6xM3gjMWYBL1VYRE0umgkgTqBOHZMRroAxIbMeLqCeA+MdsPpqjUwbMZBlGtlzXCToeuZThIQRZYbNjwMLG+KOPm99FupZF9TJp1N3NDiv9oVoCYqBOpY21BWjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718286946; c=relaxed/simple;
-	bh=u1DajbW7oUtOx74DBLX0ZPOjMtqIm5yVgGA3dX4bi0E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=g/RDWS6pdpHMoZ6xTmoix4f3Xq/xJ5jjYH4wjm54CheRjwmDP9D9I+J+EE3o6EyedFvMOJIZQMI+Kgftj1bZO4tYEMR5n8CQgCkRgDf3RxT3O+7jyWB5GrKKWrNCyf/USEahYGtM5xq4eWzDVmFta7PqGbSAe95nBI+WJo0KPxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZnyKaN3a; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZnyKaN3a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718286944; x=1749822944;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=u1DajbW7oUtOx74DBLX0ZPOjMtqIm5yVgGA3dX4bi0E=;
-  b=ZnyKaN3aA64F/9OKEiC10I539baswxjitM5sUuMYFVgq8iRg4uWWwGnH
-   RBxAZ5WtoIJqdHYmK3K2NVgrzETQg/9piWdhc3NBqpLju7iAlbm9iMtyE
-   qUiuqHFDZ2to8p0NxvnFC0oSgMITjOi/tPN0jJCrc4669s3yW/wdFT6L8
-   sLwj5JMmHqYeGiOyBTU079N2jPgurQTHKUaLWYin9N5lUBLi6D82mThzg
-   4UBKDpSJJiLLYbGa8YWv4dbPhhYoT9So27+mIp3e0xzK3BU3YVb97Vyd+
-   fIuBMc6AmL1Hq8eCLng2c2+fX5kIl5CMfCoQrnNs69dbR9b/FntIEq4fw
-   A==;
-X-CSE-ConnectionGUID: QCdhTQI8RdWn3ddO2fENSQ==
-X-CSE-MsgGUID: vF6Vnb9wTna4qg0hYrDmjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="18889941"
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="18889941"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 06:55:43 -0700
-X-CSE-ConnectionGUID: 8p2jxRSWQsSOquJyVui+vg==
-X-CSE-MsgGUID: UkphOpaQTqCpQK01l29b8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="40791406"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 06:55:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Jun 2024 16:55:35 +0300 (EEST)
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Jonathan Hunter <jonathanh@nvidia.com>, 
-    linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, 
-    Robert Richter <rric@kernel.org>, 
-    Thierry Reding <thierry.reding@gmail.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] resource: Add resource set range and size helpers
-In-Reply-To: <20240613142820.00005c77@Huawei.com>
-Message-ID: <efab7a75-b01d-0649-dbbe-0154ab2b8587@linux.intel.com>
-References: <20240612085629.5015-1-ilpo.jarvinen@linux.intel.com> <20240612085629.5015-2-ilpo.jarvinen@linux.intel.com> <20240613142820.00005c77@Huawei.com>
+	s=arc-20240116; t=1718291276; c=relaxed/simple;
+	bh=/cnLWSt5C75RbdrNEkuYjd+svyPXtwFI4skckvjQs5Y=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jvtuE/UfFtpSl2HVxaom/15URb6/fM/QS4251lv3oq8AXNWJvD7Z65ueWAfUbSTFE0jvZerkiy2oyrOiQxD3IoKl5j9bb0bT540p6MEAqhIvd82C/iXO4x3egTeQLbnchw1TYdNCcv4dJqsFtiTPsmzmTXp80GMbGXTHEpTWUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W0Qcy5Cs3z6HJZX;
+	Thu, 13 Jun 2024 23:02:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 78E931400CF;
+	Thu, 13 Jun 2024 23:07:24 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Jun
+ 2024 16:07:23 +0100
+Date: Thu, 13 Jun 2024 16:07:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+CC: <kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>,
+	<y-goto@fujitsu.com>, <mj@ucw.cz>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH v11 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Message-ID: <20240613160722.00000e67@Huawei.com>
+In-Reply-To: <20240612075940.92500-2-kobayashi.da-06@fujitsu.com>
+References: <20240612075940.92500-1-kobayashi.da-06@fujitsu.com>
+	<20240612075940.92500-2-kobayashi.da-06@fujitsu.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1916017572-1718286144=:8853"
-Content-ID: <e9c1c694-3b3b-4459-418d-34ff8f88abba@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 12 Jun 2024 16:59:38 +0900
+"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
 
---8323328-1916017572-1718286144=:8853
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <0d32d090-d629-878a-fbd5-e965710d3b5a@linux.intel.com>
+> Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
+> device link status information. By caching it, avoid the walking 
+> memory map area to find the offset when output the register value.
+> 
+> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 
-On Thu, 13 Jun 2024, Jonathan Cameron wrote:
+Getting close, but I a few PCI general things look like they are CXL
+specific in here and we should fix that and some error handling
+has ended up incorrect.
 
-> On Wed, 12 Jun 2024 11:56:27 +0300
-> Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
->=20
-> > Setting the end address for a resource with a given size lacks a helper
-> > and is therefore open coded unlike the getter side which has a helper
-> > for resource size calculation. Also, almost all callsites that
-> > calculate end address for a resource also set the start address right
-> > before it like this:
-> >=20
-> > =09res->start =3D start_addr;
-> > =09res->end =3D res->start + size - 1;
-> >=20
-> > Thus, add resource_set_range(res, start_addr, size) that sets the start
-> > address and calculates the end address to simplify this often repeated
-> > fragment. In addition, introduce resource_set_size() for the cases
-> > where setting the start address of the resource is not necessary but
-> > note resource_set_range() is preferred.
-> >=20
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> We have a bunch of cases of this in CXL. Adding this helper seems like
-> a good idea to me.
-
-Sadly this won't help struct range cases which feature the same math.
-
-> I'm not sure the odd semantics of resource_set_size() are a good idea.
-> Maybe it could by naming hint that it's relying internally on
-> size already being set.
->=20
-> resource_update_size() for instance might make people think or perhaps
-> that's just more obscure.  Meh, I've argued myself around to there
-> not being a better name.
-
-Yeah, I tried to figure out solution to this very challenge too, but alas,
-couldn't really find any good solution to it.
-
-__ prefix would have kind of conveyed the meaning that you better know=20
-what you're doing but as some people oppose __ too, I didn't want to stir=
-=20
-that pot. So it is what it is.
-
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>`
-
-FYI, I dropped the extra ` from that (no need to reply because of it).
-
-Thanks for the reviews.
-
---=20
- i.
+Jonathan
 
 
-> > ---
-> >  include/linux/ioport.h | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >=20
-> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > index db7fe25f3370..2a1d33ad151c 100644
-> > --- a/include/linux/ioport.h
-> > +++ b/include/linux/ioport.h
-> > @@ -216,6 +216,38 @@ struct resource *lookup_resource(struct resource *=
-root, resource_size_t start);
-> >  int adjust_resource(struct resource *res, resource_size_t start,
-> >  =09=09    resource_size_t size);
-> >  resource_size_t resource_alignment(struct resource *res);
-> > +
-> > +/**
-> > + * resource_set_size - Calculates resource end address from size and s=
-tart address
-> > + * @res: The resource descriptor
-> > + * @size: The size of the resource
-> > + *
-> > + * Calculates the end address for @res based on @size.
-> > + *
-> > + * Note: The start address of @res must be set when calling this funct=
-ion.
-> > + * Use resource_set_range() if setting both the start address and @siz=
-e.
-> > + */
-> > +static inline void resource_set_size(struct resource *res, resource_si=
-ze_t size)
-> > +{
-> > +=09res->end =3D res->start + size - 1;
-> > +}
-> > +
-> > +/**
-> > + * resource_set_range - Sets resource start and end addresses
-> > + * @res: The resource descriptor
-> > + * @start: The start address for the resource
-> > + * @size: The size of the resource
-> > + *
-> > + * Sets @res start address and calculates the end address based on @si=
-ze.
-> > + */
-> > +static inline void resource_set_range(struct resource *res,
-> > +=09=09=09=09      resource_size_t start,
-> > +=09=09=09=09      resource_size_t size)
-> > +{
-> > +=09res->start =3D start;
-> > +=09resource_set_size(res, size);
-> > +}
-> > +
-> >  static inline resource_size_t resource_size(const struct resource *res=
-)
-> >  {
-> >  =09return res->end - res->start + 1;
->=20
---8323328-1916017572-1718286144=:8853--
+> ---
+>  drivers/cxl/core/core.h |  6 ++++
+>  drivers/cxl/core/regs.c | 62 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       | 10 +++++++
+>  drivers/cxl/pci.c       |  4 ++-
+>  4 files changed, 81 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 3b64fb1b9ed0..e71600380a22 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device *dev,
+>  				    struct cxl_rcrb_info *ri,
+>  				    enum cxl_rcrb which);
+>  u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+> +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport);
+> +
+> +#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
+
+> +#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
+> +#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
+> +#define RCRB_PCIECAP_LEN		0x3c
+
+this is normal PCI Express capability stuff.  Currently PCI doesn't
+have defines for these, bt I think that's an omission rather than a feature!
+
+So __pci_find_next_cap_ttl() for instance should use masks to get the
+various fields and those should be in include/uapi/linux/pci_regs.h
+
+I'd prefer to see that done as part of this patch set but we could move
+form a local define in the c file, not this head to a global definition
+in a future patch set.
+
+I'd include a PCI_CAP_EXP_SIZEOF 0x3c
+to be inline with the existing equivalents.
+ 
+>  
+>  extern struct rw_semaphore cxl_dpa_rwsem;
+>  extern struct rw_semaphore cxl_region_rwsem;
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 372786f80955..d86ac9c64e0c 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -505,6 +505,68 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
+>  	return offset;
+>  }
+>  
+> +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
+> +{
+> +	resource_size_t rcrb = dport->rcrb.base;
+> +	void __iomem *addr;
+> +	u32 cap_hdr;
+> +	u16 offset;
+> +
+> +	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
+> +		return CXL_RESOURCE_NONE;
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr) {
+> +		dev_err(dev, "Failed to map region %pr\n", addr);
+> +		release_mem_region(rcrb, SZ_4K);
+> +		return CXL_RESOURCE_NONE;
+> +	}
+> +
+> +	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
+> +	cap_hdr = readl(addr + offset);
+> +	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
+> +		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
+> +		if (offset == 0 || offset > SZ_4K) {
+> +			offset = 0;
+> +			break;
+> +		}
+> +		cap_hdr = readl(addr + offset);
+> +	}
+> +	if (offset)
+> +		dport->rcrb.rcd_pcie_cap = offset;
+> +
+> +	iounmap(addr);
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return offset;
+> +}
+> +
+> +int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev)
+> +{
+> +	void __iomem *dport_pcie_cap = NULL;
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct cxl_rcrb_info *ri;
+> +	resource_size_t rcd_pcie_offset;
+
+Local style thing: CXL tends to do reverse xmas tree.
+
+> +
+> +	port = cxl_pci_find_port(pdev, &dport);
+> +	if (!port)
+> +		return -EPROBE_DEFER;
+> +
+> +	cxl_rcrb_to_linkcap(&pdev->dev, dport);
+> +
+> +	ri = &dport->rcrb;
+> +	if (dport->rcrb.rcd_pcie_cap) {
+> +		rcd_pcie_offset = ri->base + ri->rcd_pcie_cap;
+> +		dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev, rcd_pcie_offset,
+> +						      sizeof(u8) * RCRB_PCIECAP_LEN);
+sizeof(u8) isn't particularly helpful so I'd drop that.
+
+Is the PCIECAP a different length from normal?   I'd drop the RCRB prefix if not.
+
+> +	}
+> +
+> +	dport->regs.rcd_pcie_cap = dport_pcie_cap;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
+
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 2ff361e756d6..8e7674c1b8f0 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -512,8 +512,10 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	 * is an RCH and try to extract the Component Registers from
+>  	 * an RCRB.
+>  	 */
+> -	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
+> +	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
+>  		rc = cxl_rcrb_get_comp_regs(pdev, map);
+If the above errored out we should not continue.
+
+		if (rc)
+			return rc;
+
+> +		cxl_dport_map_rcd_linkcap(pdev);
+
+		
+
+> +	}
+	} else if (rc) {
+		return rc;
+	}
+>  
+>  	if (rc)
+>  		return rc;
+
