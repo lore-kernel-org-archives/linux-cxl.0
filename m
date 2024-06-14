@@ -1,158 +1,109 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981C9DDAA
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 14:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5255449638;
+	Fri, 14 Jun 2024 16:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718376058; cv=none; b=qw0OEYJK5cDxFTD/A1uMynFW4bOKJlFly3z+sfDcONbp5T/wEY+iAkJX6KLrLHxi8zCcqtN3/suwPTS/dz4ioDMZEmvN9o18t13fEEXycSCbIV6wavwx5BJn5/VoWDDf6AjMtMHLtNdgTL6KhgOm3qPsCOabz4ygIlG67fA7Ln4=
+	t=1718383326; cv=none; b=cG5uWAEVCXDlla8pMFqgX7vplGUCzncMLK8N+N4Ptd0eXw1adt7Ir5dx3tcOxgOaVr4W0GqBHFYBSJZrDefnNjDXbRCt2GGyow+7/kS+0szpo4WTq5Sv0FekiunKClm7p0hDjMvFZvTcf3UylEK1Ad/5Iimsjz+ibP+v3kIQpQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718376058; c=relaxed/simple;
-	bh=acLLDU5J/j9NED2zRaeZzYw7B5HzPe/JXtIrBlGH10I=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N7AWQRgobhZk5395VYYBxLlNnk7D+8ZfyKZfn04gCpmX8J3xk6aU6TMs0+1aV+/E1DEoedmQuBoimX+C0cBk30EwjZ3DMGrqy7PoJ4UUep3jyccbpjaNP7C2+sq5AMEmKwWvgEeAJh8beoEm1ffS7/ya/wgNBVcEOUSAAnCiSDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W11zr5q2Sz6HJtF;
-	Fri, 14 Jun 2024 22:36:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5816414065C;
-	Fri, 14 Jun 2024 22:40:53 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Jun
- 2024 15:40:52 +0100
-Date: Fri, 14 Jun 2024 15:40:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Yasunori Gotou
- (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v12 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
-Message-ID: <20240614154051.00001c47@Huawei.com>
-In-Reply-To: <OSAPR01MB7182B37FB0600712947C6C2CBAC22@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240614045611.58658-1-kobayashi.da-06@fujitsu.com>
-	<20240614045611.58658-2-kobayashi.da-06@fujitsu.com>
-	<20240614093027.0000251f@Huawei.com>
-	<OSAPR01MB7182B37FB0600712947C6C2CBAC22@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718383326; c=relaxed/simple;
+	bh=Tu5NT+/HC6v33/UcbBllxGhe377ayPb6xdMlPgPUz4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ed9I+dUdLGIICsWmyzB2whKsBJZnR9LsTyhgjcpGuxJylRBSUu7wdlxKjpGGecK6NDTa46eAn2nY9P+g2kgn2EGRDgXkAQrsUEUS2M/8kwPrfVEdA0SdhA2qoEhsxHbGL3t6zqBQ3oZQaoQBQ1+l+c7tn4zpRyIOv/1T80f1ks8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=da2wXT2I; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="da2wXT2I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718383324; x=1749919324;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Tu5NT+/HC6v33/UcbBllxGhe377ayPb6xdMlPgPUz4Q=;
+  b=da2wXT2I8MdrDCYJS4zeeHNOSEZcIvYFOhgLWQJcjg/Wcm7QPG2vRz2T
+   ff+R48K2QZEjNztk/nnXQJR86CMFqweFVzlybziNFWtxjPfgVKAbeR0H1
+   Z1Ko+Kh1eDFLpAx8NJQlBtiL9aI7IU1COWCODrha4bQpif2q1aX1A1R/K
+   JoFVFHADXPik/2zG5b4mtUNZPAPLLl3pMIYq03fXxBb5MNTPPtfPT7CWI
+   HiTkmXTSEVms658Lhz18hfcdWVONwFBjgxf+KbQGfRD2sAbBPH1qSGKw7
+   ZXf2teVb1wbYhnn3tS1/L9CVMvsdtzCuXbFaOcFktVAj8rdsFsG7I60jO
+   g==;
+X-CSE-ConnectionGUID: LX1TCqNpTfOjjRl/Q9DCBw==
+X-CSE-MsgGUID: pEvqF8N/QoKPZiRtmZZJrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="15114716"
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="15114716"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 09:37:53 -0700
+X-CSE-ConnectionGUID: xAAM0oc6R0qoOzVa51X18A==
+X-CSE-MsgGUID: MWl63vUuR+mg54xeFXB5wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="44921621"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.95]) ([10.125.111.95])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 09:37:51 -0700
+Message-ID: <8078be0c-58cb-4288-bbee-639483675501@intel.com>
+Date: Fri, 14 Jun 2024 09:37:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] fwctl: FWCTL_INFO to return basic information about
+ the device
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
+ Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+ Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+ Aron Silverton <aron.silverton@oracle.com>,
+ Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
+ Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
+ Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-cxl@vger.kernel.org, patches@lists.linux.dev
+References: <3-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com>
+ <358d2e11-59e2-46eb-a7f4-3c69e6befe02@intel.com>
+ <20240613234002.GH19897@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240613234002.GH19897@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 14 Jun 2024 09:51:55 +0000
-"Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Fri, 14 Jun 2024 13:56:10 +0900
-> > "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
-> >   
-> > > Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1
-> > > device link status information. By caching it, avoid the walking
-> > > memory map area to find the offset when output the register value.
-> > >
-> > > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>  
-> > Hi.
-> > 
-> > A couple more change inline.  Problem with evolving code is that as a reviewer
-> > I sometime forget to check my expectations.  This now stores a variable in a
-> > core structure just to use it once a few lines later. No point in keeping it.
-> > Looking at that made me notice the error returns were wrong and unhandled.
-> >   
-> Thank you for your kind review. I can't post the next version this week, 
-> but let me check if my understanding is correct.
+
+On 6/13/24 4:40 PM, Jason Gunthorpe wrote:
+> On Thu, Jun 13, 2024 at 04:32:44PM -0700, Dave Jiang wrote:
+> 
+>> Are you open to pass in potential user input for the info query? I'm
+>> working on plumbing fwctl for CXL. 
+> 
+> Neat!
+> 
+>> The current CXL query command [1] takes a number of commands as
+>> input for its ioctl. For fwctl_cmd_info(), the current
+>> implementation is when ->info() is called no information about the
+>> user buffer length or an input buffer is provided. 
+> 
+> Right, the purpose of info is to report information about the fwctl
+> driver. It is to allow the userspace to connect to the correct
+> userspace driver. It shouldn't be doing much with the device.
+> 
+> If you want to execute a info command *to the fw* then I'd expect
+> you'd execute the command through the normal RPC channel? Does
+> something prevent this?
+
+Ok that makes sense. I should be able to do it through RPC with some tweaks. 
 
 > 
-> > > ---
-> > >  drivers/cxl/core/core.h |  6 ++++
-> > >  drivers/cxl/core/regs.c | 62  
-> > +++++++++++++++++++++++++++++++++++++++++  
-> > >  drivers/cxl/cxl.h       | 10 +++++++
-> > >  drivers/cxl/pci.c       |  7 +++--
-> > >  4 files changed, 83 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h index
-> > > 3b64fb1b9ed0..69006bde7ad5 100644
-> > > --- a/drivers/cxl/core/core.h
-> > > +++ b/drivers/cxl/core/core.h
-> > > @@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device  
-> > *dev,  
-> > >  				    struct cxl_rcrb_info *ri,
-> > >  				    enum cxl_rcrb which);
-> > >  u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
-> > > +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct
-> > > +cxl_dport *dport);
-> > > +
-> > > +#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-> > > +#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-> > > +#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-> > > +#define PCI_CAP_EXP_SIZEOF		0x3c  
-> > 
-> > I'd like a follow up patch making these defines apply for all usage of these fields
-> > in the PCI core code.  Right now there are pointless hard coded values.
-> >   
-> Does this mean that you want me to post another patch later that 
-> defines PCI_CAP_EXP_SIZEOF to replace the hardcoded value in the PCI core code?
-> If so, I'll create a follow-up patch in the future.
-
-Yes but also include the masks for the fields of a PCI capability.
-So definitely the last 3 defines. For the first one is the PCIExpress
-Capabilities pointer mask, but it is carefully constructed
-to line up with the pointers in the PCI capabilities themselves
-so you can probably share a define for the first 2.
-
-
-
+> This is how the mlx5 driver is working where there are many info
+> (called CAP) commands that return data, and they all run over the rpc
+> channel.
 > 
-> > >
-> > >  extern struct rw_semaphore cxl_dpa_rwsem;  extern struct rw_semaphore
-> > > cxl_region_rwsem; diff --git a/drivers/cxl/core/regs.c
-> > > b/drivers/cxl/core/regs.c index 372786f80955..96c2a289cfb7 100644
-> > > --- a/drivers/cxl/core/regs.c
-> > > +++ b/drivers/cxl/core/regs.c
-> > > @@ -505,6 +505,68 @@ u16 cxl_rcrb_to_aer(struct device *dev,  
-> > resource_size_t rcrb)  
-> > >  	return offset;
-> > >  }
-> > >
-> > > +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct
-> > > +cxl_dport *dport) {
-> > > +	resource_size_t rcrb = dport->rcrb.base;
-> > > +	void __iomem *addr;
-> > > +	u32 cap_hdr;
-> > > +	u16 offset;
-> > > +
-> > > +	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-> > > +		return CXL_RESOURCE_NONE;
-> > > +
-> > > +	addr = ioremap(rcrb, SZ_4K);
-> > > +	if (!addr) {
-> > > +		dev_err(dev, "Failed to map region %pr\n", addr);
-> > > +		release_mem_region(rcrb, SZ_4K);
-> > > +		return CXL_RESOURCE_NONE;  
-> > 
-> > If you hit this then the value returned will be all fs.
-> > We are treating and offset of 0 as the error return below.
-> >   
-> I will change the return type to int and return 0 on error. Does this match your intent?
-
-I was suggesting returning CXL_RESOURCE_NONE on error rather than 0
-0 is normally success in Linux, you could have used an int and returned < 0
-for the error paths -EINVAL or similar.  I don't really mind which
-you chose between that and returning CXL_RESOURCE_NONE in all the failure
-paths.
-
-
-Jonathan
-
-
+> Thanks,
+> Jason
