@@ -1,278 +1,439 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2078.outbound.protection.outlook.com [40.107.237.78])
+Received: from esa16.fujitsucc.c3s2.iphmx.com (esa16.fujitsucc.c3s2.iphmx.com [216.71.158.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A96D14B940
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 08:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB82A1946CA
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 09:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.158.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718355296; cv=fail; b=NAO6hASHQLrQhrED7QiCbV6yi5OzrBFIbVmu/pX39xi029zcr9FdOIXqhw/HI/84PMrBcDgqLyuNclKjm+vEMLxbmrctfqUm1QFuvrH3ABKLp1ocl2eXwswisPeRPq50jGR+uAJ39favI9YFNow3GtqV+L3Wpn7sJMzexe03IJg=
+	t=1718358727; cv=fail; b=Y3l2zogH/c6QFG1ALMJ2w/4Ulh0exbKxZ5oCodpfxy6rVHiCHynWa3zRE/eZHpNJO0F4IikYTUCsdj9jp50u6avwO75ql+t5V7Z3XwJD7Y98p0JyqbrJQjhBXEC9QBY19tDieqKKetgIZFNTRnAK8euRYaxHEfUfoTo8hZTmpY0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718355296; c=relaxed/simple;
-	bh=+PqjbMfRKQ8JKP1QOa+ZLLmR7C09c5NgZssrKSckWnc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IH+LJWCjHfSkagHpBxiQCg7N6G9kabzOcGI9tsbLX1yXVQ1x/y89zVTogJq/UXxkf3n/V0kfhUVrFDXiaawjR7I3AdzcpsqgqnXYaDH6wXXRzVKs1f4PyzkZ3t8ob6aBwjNHlLzbRscUm0UWpJZqTtMx06Yq1OzYCff4bAsYp8o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EFM2SS5r; arc=fail smtp.client-ip=40.107.237.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1718358727; c=relaxed/simple;
+	bh=xuyiNR/m92xOAfanXLabeTAtrjPeGHCmOLHBic47pLo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lvwb1b9DUAzBSYEKw8jgR3XNaFOV3hrKwa43/IG8Huag4xwo5rqPyC8BH1PDrT3cCYQqkdoD0rnBhRIWGiQw5jB/kvmGjRIBUdGmmtnTtW3mBXAiFxoyDzjwufb30RKLxS+EGiImGG2+kSTq20D8g+JFqPPj4Gw5ZHE43ZYPpeo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=FEueNXF8; arc=fail smtp.client-ip=216.71.158.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EFM2SS5r"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="FEueNXF8"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1718358724; x=1749894724;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xuyiNR/m92xOAfanXLabeTAtrjPeGHCmOLHBic47pLo=;
+  b=FEueNXF81T0SEudSzBdbwPj6YQK4Y22OzL4tgAnX7jucChqzXjtujeck
+   KWMaBJGviw89rVA+E7UWYOAtoulnXjTBXHrPugU8HQbE08Hl+cFA332UG
+   V/Pdg6VF+BDIK6cQhjXR7Ef/J3C49TEH77KKGazaPFbAYpkbDVI89wGPT
+   k5UxnYeLycDXOiAJIeQiqtT7QK+HreCxNYbeSCsnFt/KTIaH0sfkPJgAb
+   JqLThHw2iB0vqlICe+CxriD11JeOC2BT3nJtzL3EZ3H+uRUNVJrTx3c9z
+   jMIRAlm5ksVRNnFEwJsGpTq7PvOnEjOxmlA8nHnil4AYL0xK0fhlUN71v
+   A==;
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="122315668"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712588400"; 
+   d="scan'208";a="122315668"
+Received: from mail-tycjpn01lp2168.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.168])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 18:52:00 +0900
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cyw7Q/Kn8tRmW4CxhuML6NSwVJG7vb07RbGpbhHDrP2OUALSNULJarqU9cRIPUph8a1QBFu3STFdG/h9pqTVFtE8yplva/AXiEDMNxJOBLj5J4C/NT07BFgxaW4OIjRSsQTMjd1bWmwtl/N7grsS21CobnaiK4ZAU5n+/t8XKMMZWe6hV/qu4etRooj0NdMZz5WXoNA7k/vGqHqCIpG420HUg31ysSQyjIGcKKY9BlzHgMPdg+KwX0H4HA0aWUrBJ9tSk7mQi0+qUj+3MW4QAOhWg8PUaZiqgfxqC9KCyFVGnHO00yQovoLKqGFUocDKonJZyAJlLUvxow9vPtFFiw==
+ b=DfSkOituP+nEHkfpu6lI7p0TwFR8c7VnuRcIiC6SMZkOHdVmJdZ/hBOT83/xDJm2xjDcb7M1b6TOG69eqHORXNdCgv4RJQ1oVJ2CARAsQI9yRXooOxYMmjnO2w1vWSEhowG3swqk4PzAQJUlLH0JKISgL/2Xu9CeVgTVF1IVhV8rlFyc3UVh6fnI9XROgQ6v3OK0jf3dWd4kVXClXNLQT/ClmmVkAfJndCCa+AiSvbvPrVkuAuaMog7Z6HW8DWyQ5zyxEDa6hAGYzquNa2xqjWOHU1UC6+BNg2RYAVgXqSZoHhtiSjlIL3hOROlVxnO4KUXkZSclltKI/khgtKw9Nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jRWoUpRjqoQAFQx7D3gIKdLW1e1jPjSvV7wIfnFB4lw=;
- b=au2a2ACDlA4cjbeXDD79oNXkvDZc6YJ7rX9TKwuPWIQPhH9InMTRhU4WL1vkIJKrRHNriIHf7GYz86uFwI4IYLUB305FFTA5ent8hT6qM+FQlEUbz87JJddYCB2HqF+47OQE4gnglx0i/mT3ZFQsf5ENUImndAmXHlYem9cwCC5rcUZxU4QgeuSaYTYUDQe8pxgA/Zt++LWPQ/cVRhC007vXxMnBWSjnmVNMAJnvRgAYvebxsRtTjshGe+QgrCP1EC6YGHD+JGk2C5FzTjqJBms7cjyHy66Ll8n/Vn2qcLI+ysuWWtAbcZTkoOOQ+CeKGEHl1Zb5CE/EM+oj2ZSrSg==
+ bh=Oi+uSqvg8oDW2QBu14Cn3QoIN7fiP/sZQC3XV/n6xiA=;
+ b=KHvmusjJYjPCmW5Xb88mVyeP7wH0QcNW+JWww06uA3G2KvLlvmaqTbBLK0Ax1RsQMc2126JCX4FgBKvqt4XNYN1cfDNyE81M/ye1+dQZbN06neaihsUGvx3milQgYjlZ4mzU3iZ65GsNqJTciMKFXKIY9NegQFuM/i1hXVNgq3mgbNT6mPlAOIZW7sEGXxB0cRjwGDitMdtKRQ+PEQjXzmWur/+ajtRhHHKes2kIhePD2C2krdF1CGFK3EydvNbC3v/DwX8igbBHk75fstJJ/LcZ4lGPlGaHxruyzXd78eE6q0lENt4MPOliTi49OT1TR0ZJn976DwuA4MOKKgQv3Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRWoUpRjqoQAFQx7D3gIKdLW1e1jPjSvV7wIfnFB4lw=;
- b=EFM2SS5rLXDI2tWwQaX+UNi8hFMR5ppOj6KPjfIsw8mLuwBdPA3Zc8ik+kpb6caZ8ALnGb/SLDk622hQzMj/fXiWoCe5mOGxUqgLT4wJHhQ2HacayVicG4SS7XYZkaPHw2meogtHBTAZyigRdncYgj8Prpfz6gFIUfElxN/u08Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SA1PR12MB6703.namprd12.prod.outlook.com (2603:10b6:806:253::18) with
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
+ by TYCPR01MB8343.jpnprd01.prod.outlook.com (2603:1096:400:152::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Fri, 14 Jun
- 2024 08:54:51 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 08:54:51 +0000
-Message-ID: <c31ef5fe-43ac-f83a-d4a3-90982e2c9ff6@amd.com>
-Date: Fri, 14 Jun 2024 09:54:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [RFC PATCH 01/13] cxl: move header files for absolute references
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>,
- Christoph Hellwig <hch@infradead.org>
-Cc: linux-cxl@vger.kernel.org, pieter.jansen-van-vuuren@amd.com,
- richard.hughes@amd.com, dinan.gunawardena@amd.com
-References: <20240516081202.27023-1-alucerop@amd.com>
- <20240516081202.27023-2-alucerop@amd.com>
- <666923ba32ac7_3101294dc@dwillia2-xfh.jf.intel.com.notmuch>
- <ZmkkaOTUFuzIr2cG@infradead.org>
- <666a1099c94e6_1fcf294e9@dwillia2-xfh.jf.intel.com.notmuch>
- <b51be5ca-cf7e-bd93-108f-1713e04301c3@amd.com>
- <666b9b54d59bf_1fcf29499@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <666b9b54d59bf_1fcf29499@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0427.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::31) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.20; Fri, 14 Jun
+ 2024 09:51:56 +0000
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba%4]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
+ 09:51:55 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: 'Jonathan Cameron' <Jonathan.Cameron@Huawei.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Yasunori Gotou
+ (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: RE: [PATCH v12 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Thread-Topic: [PATCH v12 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Thread-Index: AQHavhbGmolzw6IKrEWJ6qyZMfCnzbHG7gqAgAANr+A=
+Date: Fri, 14 Jun 2024 09:51:55 +0000
+Message-ID:
+ <OSAPR01MB7182B37FB0600712947C6C2CBAC22@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240614045611.58658-1-kobayashi.da-06@fujitsu.com>
+	<20240614045611.58658-2-kobayashi.da-06@fujitsu.com>
+ <20240614093027.0000251f@Huawei.com>
+In-Reply-To: <20240614093027.0000251f@Huawei.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=072e9b2e-a886-4512-a83d-43abfd8dbbf3;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-06-14T09:19:32Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYCPR01MB8343:EE_
+x-ms-office365-filtering-correlation-id: 099284a8-c482-46fc-222c-08dc8c57a03e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230036|366012|376010|1800799020|1580799023|38070700014;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?dmkwS2V0U290YnZrTXVYc3Q0SHBwUW01MDYrSVh3TkM3R0dWSTVCSXFT?=
+ =?iso-2022-jp?B?RDkxT1FrQ3lMN25Pd05maEpPaTRZYVo4R2ozM2xLMGR5c2luYzZHdjZC?=
+ =?iso-2022-jp?B?YnNMNEVWMnRwZlhzYkJ5U1FkUXVUK0NIdjlxZ205aEJpYnpmL05YL05C?=
+ =?iso-2022-jp?B?WTRTdDRMbGQzalBCb3NPR0ZONUNLTjJnZFEzSWVqQVRDMTNXeExwLzVq?=
+ =?iso-2022-jp?B?RHgrLzRKMThDcFFCdG5hdzFNVmRMc2dsYTc3dHI1d3J3TExYWEZzQ2NJ?=
+ =?iso-2022-jp?B?Zk16U2p0QWNwcGFRM3JKTWdPMkUwMUQrUUkyaHcvWTEreGRweFV2Mmht?=
+ =?iso-2022-jp?B?TG10VXFRVWZqcjJoQk5VNWcrRWlLWkp6OEs0T0Z0NXpsWVRabUlYUUJp?=
+ =?iso-2022-jp?B?N1lFTDNXbHk2TVVLTWJmSGtaV1dIdHhtcHRzZUZBcE53NjlHcXBOUFFY?=
+ =?iso-2022-jp?B?cDNRcUhibWVKb2ZaMVl5YS9GYS9ZbGNMY3JQYTBTaVp5TXEvN3NUeFYx?=
+ =?iso-2022-jp?B?TktKb3g4SjdkRnpyVTRPZnQwZ3kwdkl6cTFYc1BxaWhoai9RakRtUmlC?=
+ =?iso-2022-jp?B?aUFLQXlEaUtOeVAyUWo5UkRDdGlRUFNJeitscGxhRFBWK3k0a0F0OHJU?=
+ =?iso-2022-jp?B?eHVzbkxVbWd4WHRIR2JYMUl5cTBza2JDQ1IxMkNsS1pnODg4T05tUHpx?=
+ =?iso-2022-jp?B?YUpuTTQ4ZFg3UTdlYk1ydE1BRnRpeDdWR21mSWZvT04xK1YzcVZNQlZ5?=
+ =?iso-2022-jp?B?MXBQdnB0Q3hWQ0tnUGZYcC9qc3QzenVQWDViS3hOMlZWNnRJTFkrcXZk?=
+ =?iso-2022-jp?B?ZklHb1FSa1FQQm9jTEJ1UDYyUTcvdWdHRWF2Zk9HNkNNSHF5elU5Mnc2?=
+ =?iso-2022-jp?B?ZThFMm5KaGk3UFFqR2ZQQkJpNjY0dmRYVWx2WWUwempFNW5JZXNyOE1Q?=
+ =?iso-2022-jp?B?aXl4aHNsY1kvdWpQT1ZSVlZzWm9IVWN3bGQ5b2JiQS9GTkJQejBSWXhR?=
+ =?iso-2022-jp?B?NVVSZWwvckhidm1lODZCb1lzcUZWeXR2RktFNzNmN2x6UDJQQ21zUlIw?=
+ =?iso-2022-jp?B?R25yUnNQQ2YwN2crU241TnB1aVF4N2lLVHB5aXR3c0hMd1MzNCtOLyt0?=
+ =?iso-2022-jp?B?aGdmV3ZaUVNGUFF5aktQcUdCWlFzVzY2aXpXbVhZbG15Si9nbWhmM2ln?=
+ =?iso-2022-jp?B?dndqaFFmdDlVcG1hdklJZ1ArOStCWHZUaUV5VG01SEIzOUhMSEZoOWJs?=
+ =?iso-2022-jp?B?UGtYNnRiMVlEL3NCZFZKdHZqRCtPd0ExVVhWMU0xOUpUbzRNSVcrYXE1?=
+ =?iso-2022-jp?B?TldJVnJ0MmRoZ2VQREtHaUQwLzI1MU9MT0MyQUdmWThxZmNqTjlhZEp2?=
+ =?iso-2022-jp?B?Tkw4S0syOWQzaktsckxOMmFXZHgrQUlsZjlvbWYxSG5pQWF2MHFiL2JV?=
+ =?iso-2022-jp?B?WFNzOUFGNVRlekhlWmt4Nk4wT0NGZmVzSS85S0FWL2VoQVRYd2pZNlYx?=
+ =?iso-2022-jp?B?TC9Za0FzZGxjZzVGU2pDcHlKSlBDcTFIajRYbUhlcUZZL2NJK1FGNUR0?=
+ =?iso-2022-jp?B?UXo4ZTZpeXBkVUtSQ2ZUQjNhUlZxNnYxcmppWS9XYUZSZngzbVRnOTRN?=
+ =?iso-2022-jp?B?L0hQZWRaL1N1cTVMemhOUFpHRDNqSkVIVVRhWkM4NCtna2E2S0NNWFYr?=
+ =?iso-2022-jp?B?RXc3QXpBMDlFV05wNnpwaUdvN0g4RjcvZkpMSkdCY3RJaFFSVm5lbHdh?=
+ =?iso-2022-jp?B?aURVS1E2Q2IwZkRiZ0kydTJCVTN3R2RSaWNXRFlDaVRoM1QwNVdPRGVq?=
+ =?iso-2022-jp?B?VGRjOVZSSlNiclZocHE0Y21TSHduTlBMb1NvU3lxSytmcUFtOE5iVlBq?=
+ =?iso-2022-jp?B?YUxFcXRFa3ZWSzZTbEZaOUZUNmh2dnFrSjh2Q1RYRHJiZnR6WnN3ckFP?=
+ =?iso-2022-jp?B?UXY0dEhsY0crV0R5R3M3QlhCNEdnMEd4MjVBSmRYeXpVRWd4bmxUUHp3?=
+ =?iso-2022-jp?B?WmZQRVJZeWN4dm1WU29lOWIzZ1JobjZhYXZnZzhJRWNKV25EeHhUbTlw?=
+ =?iso-2022-jp?B?Qmc9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230036)(366012)(376010)(1800799020)(1580799023)(38070700014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?enBJWisyVk9aSGhSdjBpeU5LTDRWd2NmMk1La0E5ckhvdkZndHQ3b2JD?=
+ =?iso-2022-jp?B?alo4bTBxNU5vVjdtMlJZQzBneFd0Njgya1dMMC92Vk1wVWVQWXFqN3N2?=
+ =?iso-2022-jp?B?dVNoZkR6ZWlKWHBuNUNwZ0N1ZWVVSEp4NnVDVVZnRjdJVzlSc0haQzFl?=
+ =?iso-2022-jp?B?UW5WWGhqckJVUGcwNnFwYi94QUhycUdhTElBbVlwUnpqcDBRR3lmTXN3?=
+ =?iso-2022-jp?B?WXg5R0NwZHd5SDNDNVlLVzBIRnIxNDluelc5RHhhZXIveWhCUFlMYnBz?=
+ =?iso-2022-jp?B?QnBzNTZ2dHNvcHlIMzlYYTJ1SkJJVEQ5Z2k1dXJubUJYakpMTjljNzVw?=
+ =?iso-2022-jp?B?dk9UUDFiNUdNaHRkdEdBMHNlVFIwQ3dGYlpIa05CbGFyYVVubG1KOWdw?=
+ =?iso-2022-jp?B?TEl6RXdMRDQwYXhxMEt3eDMxVGtHOUdSNm9iUUdnVFd3ZG9lQldxbXZ5?=
+ =?iso-2022-jp?B?cnBlWVZFcytwYXorc3BkZWZuSmk0dmJUK0IzSURyUnNQOGorbnQvQXM5?=
+ =?iso-2022-jp?B?cCtTYkhnUW1UM214YXptSzQ2M3hobzVDZEZIdXdQekxZR1h5YVROQ2Fu?=
+ =?iso-2022-jp?B?TlVud0tFSE1McmxGQUdsSWN0cjRmU0gzVW9aUmFXN3hBNXYwaXNUaXZ2?=
+ =?iso-2022-jp?B?TTVORkJuU2M1UzhiTUZVZVk5VXp1bzNJRVBFR3ZzSW83ZlJYRWhTcThs?=
+ =?iso-2022-jp?B?eVQzYm1BS01oRTVlWUVxWm1XZDN3K3hxVXU1QWVkWWppcFlKM2NJeEVy?=
+ =?iso-2022-jp?B?TEJYczEyQ251eW4rem1WWUp0UG9JdzM3Q09NU0F4aDFZYWFhNW9sWnk0?=
+ =?iso-2022-jp?B?Zms5N2lISE5iU3l6dnVmNEh1bzdvS2w5KzB5YW5IMnBGQ0RxL0o1NWwv?=
+ =?iso-2022-jp?B?Q2EyRkNkWk1yTWJXVzIvV3ZlTDZ3dlByU1AvMFVxK21nTGFnZEVQaWc2?=
+ =?iso-2022-jp?B?eFRhbjZCSjJ1djRVWFFvdXJjanlmL3BQRERqTWZVc0Fxc0gvLzVCVEVu?=
+ =?iso-2022-jp?B?Vm4rY3hQWDgvaTBpMTczSndIMmZHZlF4VVJuZzRYb3lTWkpwN3Nzb2g1?=
+ =?iso-2022-jp?B?WlRPVFBiL3FFY0NUV3ZQbGVJMzZKTE5yaVRNcHloLzhENGpnb25pcUZm?=
+ =?iso-2022-jp?B?RkVha09xWHp6b003Uzlta3NaYmFTUXhLYmVrajltSjUvODFYQXlOTWk1?=
+ =?iso-2022-jp?B?QmxJdEVqOXNVVWZZckVaMzExYVV0OFpLRUtSZHJ5aVZPb3hvMlJBakRk?=
+ =?iso-2022-jp?B?UVRWUUI0SW52eXJRZUdOR0l6VkNlbWlFblNwUXB6NGR0bnRITDJNbk55?=
+ =?iso-2022-jp?B?b3ZtUzB1M3hmN3BNOWp5WFlSWVcrMDJySWFTWDhlRGRKcUJERzkrTHlT?=
+ =?iso-2022-jp?B?T1R2eThOam56ZVZ1SWlJMDNhMWJTVTRoQmEzNE9BRkNPUFlsNXlzeVZ3?=
+ =?iso-2022-jp?B?VENzcjhaUVZTUm5lZzBpMWt3S0d5Y3NoS3FLK20ycDFTV1VUNm80Z2hG?=
+ =?iso-2022-jp?B?K2ZKRFRyUEx2RDh0MFdLaWNGUHhpQmRDUEE1K3V6Y1M2bE1td3JMVTJs?=
+ =?iso-2022-jp?B?RHowSEMwRytHVCt0SWs5QWtqeHBVd2ljKzBWK1ErWTZGUzVTVHNDaHdW?=
+ =?iso-2022-jp?B?Vzljakhrd1pCdmsrVGlyMEJZdDlNZUdvOW5NODBUN01NRUdyRDgxZmx1?=
+ =?iso-2022-jp?B?TVhuOEFzbFo5cUxtUW9zNGs3b2o5THF2dnU0RVUrTitqTWJjbVNoZTRP?=
+ =?iso-2022-jp?B?bWM4Z2tOS0RlMTg4bGhnTkZiZ1NhMXRiTTA0aG1TSkVLR05nWXl4YzQy?=
+ =?iso-2022-jp?B?UzF1YkJMUCtHQVpZMjRnZnZrcnpZb0ZzaEdLZTRkc3lYUmZuV05OQ3N2?=
+ =?iso-2022-jp?B?YVpuSkZ2UEhkQkkzNlp0eVNrN2toRE5zaEJxeEE0UVhBNmQ0a2dXVXl0?=
+ =?iso-2022-jp?B?V0J4NC90ZTRiT05yc2E2aDdTa2RIWFlmaWhEZXpzdk8wNHRxR2d3VU02?=
+ =?iso-2022-jp?B?MktTRFhtdGhON29idVRWR0F1TkpTRkFJb29BVmd3Y1ArTWY2K2RobFBV?=
+ =?iso-2022-jp?B?R01SU2dDWGNVQnprRll4bHNiV3k3dm16ZEx0UUEvM0QwYkpPaU03VXYw?=
+ =?iso-2022-jp?B?V3ZaUXhtc2xlNHhCRGR1Z0lVT1JEYVVFNnNRaTdZa2pMVzNXVCtZVm1p?=
+ =?iso-2022-jp?B?T2hseXN5Y0dLcWZsM1hLdE5SUTNoc09YaTVjaWtyK0hUTUpsMjJZRmtt?=
+ =?iso-2022-jp?B?d0F5d1ppUDhvV1RPM3JIZU9SQ0JBcVVaUVNQdFVYRzROanA4eElMREY4?=
+ =?iso-2022-jp?B?ZWZNNE1qUlpMYlRiVzZQZmlDaGpyUk9Kcmc9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SA1PR12MB6703:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4ba4e3e-acbc-4bcc-dead-08dc8c4fa6e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230035|376009|1800799019|366011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SnZKZE5QSjh0RlFnZFVXT1BKM3NkRjJXczFlRmFzSTJlTVUydFplMjZWTmJL?=
- =?utf-8?B?TXppV3FqVXhncmhaRTA2azNRYkFEdkc3TFlUTHljWWoxWGVFVnZnaFNkQ1dK?=
- =?utf-8?B?Y1dQdnFoY0hrYlV6czZidmw4LzEzcjhhZ0c2RFFCQXpPclZ2b2dCOUVabXZL?=
- =?utf-8?B?dVRhd1YxV1dNM0lSMTZHVVJ0S1dpdlllVVk5MmJBVXJsL1EzWG9tS0p6NjVT?=
- =?utf-8?B?WnFGWmZueVFpdDZ4a1BnUDZwU2MvcnZ3S0gydUZ5OHlmd0M0UGdVUDF4NGt5?=
- =?utf-8?B?SXRENVpWYXRXNy90dWQrZ1FEamFwZ0pJTXFTZkhvdXdScDVlM00xY3ZWUUgw?=
- =?utf-8?B?SGFhUi9YSG80NnNoTFA5MHZVSDNtUlBmbzBQdTA1a29SRkliRVF1R0kvU2VV?=
- =?utf-8?B?UkpBUlFJYldmQ3hmSlFzOEY4RXpBUXdKL0tXTm1ZcEpIR25QVGVKcjRFUldF?=
- =?utf-8?B?dVNlVis3dytwdCtQQjlHQjVDc3RCVS9FS0I2UUtnRFBQcDk3Z3N3Y2dyZjRS?=
- =?utf-8?B?S3NmUE5SR2JveHpiK1ZRSkRoNlp2dnlGMnBlRE9Ub0RwaXdQWm55Tko5aTF1?=
- =?utf-8?B?UVRtT1JSWmJ2NDhPOE9CQzNxMVhKcGhodFE1QUtITDkvaUxUZnVyVEhyTHFw?=
- =?utf-8?B?MTduOVpJVGFXVEdXR0s5NU1jeGlkZ0FlaW03MG5za2ZhM3hwZFQ0WG1id1NH?=
- =?utf-8?B?VStYdlpSVHAwLzVRSndndkdJakw2NEorVlZNWGNEdE1iL2FtOURJNWk2WnVy?=
- =?utf-8?B?aGhYbG1zNmlsbkRXT3dDWWd4NnV6emdmQVorck9DdDRqMUdhL2FXbk1zb3Br?=
- =?utf-8?B?dll5bFZMd0lVVHJJdzlrU2FLekxLR3RER25aT1JzMi93c0JYWVZ1N29CSmY4?=
- =?utf-8?B?WHdSL241RlN5RUN2UnpmTy9NUHBBWm1kbVFWc1hVQTZXcUhvdnNvVmNMdGJR?=
- =?utf-8?B?MXJKOEZ4aXBEbEkvcC9va2s1bUc2cFVmdnJnRTNQa2NMWDJad2FNdm5rbk5I?=
- =?utf-8?B?NmppRnBnL055dGY3UUJVNUxmTUQrdU45a2FkaTNxZ2tFZTM4MHlBNkNjN01z?=
- =?utf-8?B?VzlESU1SOW1GbmdlU0RFTFFYN2pneXl2WVE0LzNCOXBOMlBRbU1maVY2UlRC?=
- =?utf-8?B?ZzNNT0sxaW4xRDFadExZWWU1WHJqMGIyWDVkUGVEK2lpUW10eU1FVVU4SnA0?=
- =?utf-8?B?RktYeDRvMi9iaUMxQldDVFgvaHZTR2UrUnBtNWtwVS9BOTE0aitYQjdodnB0?=
- =?utf-8?B?djlhZVFNc1ByMWF0ekI5QkJ6bHUxMTMzS0ZVdXMyYS96cHZkZVRJV1B1OVJw?=
- =?utf-8?B?cFpTSS8vNTJVU1cyZWpKenJMSklqb240V0NvZzRuRlJTV1dGRTBvRTlKVUlC?=
- =?utf-8?B?NTN1Yll1bERwSEtLYVVvQVhzWERGbWNka0wxOVp3Q1pZeVAwRTdNc1dmdkNN?=
- =?utf-8?B?TGZVbTViNDE0dmFNMG8za201T1lIeHk1Q25OZmZIaEt2NzQwTWRzQ3dzMTBx?=
- =?utf-8?B?RnVDODJ1VG5xM3lOMGxXVEVhTlNsMlpwcDQvRWtrM0tJYkRUTDJhZjI3K0t1?=
- =?utf-8?B?U1d0QkQxa09UQVJ6UnZuTXhhMGJsQTRDVWU3MDgwalM1eE8zVUN6MElqZHdw?=
- =?utf-8?B?cDhZUGdreURoZklRMDBNNXNJM05aTHBPZ2JlQ2NoRTRURjlYVU1nenJqWC9E?=
- =?utf-8?B?MUV0RmhNS1FKNHY0cVl2WEhHWEU3SEtZVWhscHdKTEU0SXMra1o5NlFFL1Nz?=
- =?utf-8?Q?1SSRm4E4ZLPE8wHVat5024Ga+JyAerl+kMADFyg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(376009)(1800799019)(366011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?akUwTlNkNktjc2Uzd0lwTmhNYmlOWW5TMkltWUI5WjZMNlRhTjhqSmRBdkxh?=
- =?utf-8?B?UlViSEVQVnZBek5rOHlKRE5waU13UjBOOUJsRzkvVGRGVFB4OGRiVkxQeHk5?=
- =?utf-8?B?Y2lWRDI4RmdlSUNDVG9vR09qeVNqWXd3aDZjYU01MjlwMjN1Y09hLzVHUlcz?=
- =?utf-8?B?Uk5ieTE0cHQ5RmJxRzl5N092RFROaTRDT3BkNGl2RnQ1WGl1K1RQcXIzOHBn?=
- =?utf-8?B?YUVCQlI0Nk5rVXBUem1EeUV2S1FLc24vT2NoalVvYjJoNUpmZGEzdE5LaUtx?=
- =?utf-8?B?d2xYTFIyYXRoNGVhMTNtK0lJVVJ0aGZGOE5Ndk1YTm1YTGg4ZHF4d0JGR2Zp?=
- =?utf-8?B?WE1LMWNDTTRyWmduaEVkYUN3d0VFcEJra0ZkYm0wdmlRa29MMERqRzYvSXlW?=
- =?utf-8?B?SmdHQ0o5NExiSEFTUnROK1RKZFJxUTRJdDZNVkVtS2pJS0ZrRHl0RVQvZ0ZG?=
- =?utf-8?B?a2RqWjNHaEk0WnBoNUdLSHBnTXB2OVdySTVYOGFGdDAwS2NyQkRiNlRVMGQ5?=
- =?utf-8?B?ZU9HdEQxWWxXbDhCOG5mWW5FclRaYmN3bUc5cU85T1ZqaFFNNUh4aEVFVDVp?=
- =?utf-8?B?d1BPY2EveWM1Vm9IbkRrTzBNZ1ZqcDNna082RFkzZ3pPRllkL0NKUFo1ZTIy?=
- =?utf-8?B?VzQzVmxwVVM1MGt1T0NHV1Z0UWVySlFvMHJUWkE4QkM1STVUTGtLcC9PaUxC?=
- =?utf-8?B?N0Q2czhGRUpON2F2WVJKN1BnVEU0ZGlvNlpxWXRVZkdaZEpkMHhRNFRMbnk5?=
- =?utf-8?B?WUtETHpDQzl2U1crekViYWthZlY0SkIvN2J6djZNWGdjQVVrT3FWb2Fwa2Jk?=
- =?utf-8?B?UHRxU0VOcFFKODBFZ3RGSDRIdFJ2a21HRUI3WStudmFLSWpReGpsbDRYQUp6?=
- =?utf-8?B?ZW0zQ3pmdlFIaUlwdFlxNzd4NlNoSFJ1VHNkajhvdlZmTG1pa1B3S2l6Q0o0?=
- =?utf-8?B?RmppQ3pqS21tYTJTcGtUVkIwVmZKVUlLOWZRU1FOcGlmbm4wNVVRWUl2VVpG?=
- =?utf-8?B?Tk9xWS9sZEFRdmFnOXdtaFZQZWJUbkY4UTEvc21iaEFaQVBUbHNua3RjTVFM?=
- =?utf-8?B?cjdEV25rNFljTXE0Z2xwbi9zK1pPU29WbEZweVk3enBKTm5nVW5rOUxWeVZq?=
- =?utf-8?B?a2JTeUtJRjFrMnFlTFc2ZzhHR3dnN3RTMjZxcW92K21DYVBuSVBHUStsU2ph?=
- =?utf-8?B?SUJhcWtXc2t5cDZBV251a1ZjQkZoYmJWWmVLYWNRZENHRStrOFB6cklwQmxu?=
- =?utf-8?B?aVRsaWRvbXZkcEFhQTc3dm56RWI4Q2piVStqNmFOOXkyb245NC9CZjFvOW1F?=
- =?utf-8?B?aTRURnAzaXZMUDRTeU9ibm1FTXM3bWtnUFh6elppQzE5YjFoM1BNdXdoVUtR?=
- =?utf-8?B?WWNNdVZPWG5NczIrUllDT1ppb1FUUzE4NldIb3hSTjZGb1FibldFNDQ5by9O?=
- =?utf-8?B?dDRVUExsMjQ3RG9zN0pWRHo4ZThLYXBHa0tBUVQyV0twSnJZN0hGUC9FdDJC?=
- =?utf-8?B?b3Bra3V0cllCZU9UZDRuS0RtcjNzQ09GaVNtYm01M3JCcERHaS9obEw0K09J?=
- =?utf-8?B?NlQ4VGYrQVFETzFaL0hyaW9WWW5BcTVOV1plS0s0czZldGQ4eXJQU3VxaXhr?=
- =?utf-8?B?Y1R4cnFQaDdkM2tncEhBZElCbitYcWpsK0g4bnZRdHhNSzdBQlJ1M3NjN2VB?=
- =?utf-8?B?ZzNncWN6K0p2M0hEdHlLYnZGdlZpejRQTUhkZ05aY3p6KzJpQUhrWUxjWERS?=
- =?utf-8?B?V1lScTduVWJrRUU1MnNYYVFhY3ZZc0pIWGFMUXZFZHByUFBOVTlVTFh4L1l3?=
- =?utf-8?B?eVd2Q1YvZG1aTGw1MjkzbURHV2MyVzdub29lSHp2WUhzby9rL2FXdDNzY0Ru?=
- =?utf-8?B?djNQMC9ZMzRmUkZBbHNBWkdmRGNlbjZTdURWY0VoQ0REb0NjYjU5eExGVi8r?=
- =?utf-8?B?ZmhERENMSm9HOGFVVHZXb0Q1emdrVkV1MmJXdjVvQWtoZStjME9GVGF6U0ls?=
- =?utf-8?B?RmN5RHZwWGF1aEVVMTk3V3BrR1Z4bWxxaS8yVlBlSkZtMy9zWFQwMlVNeXp2?=
- =?utf-8?B?YmZEbDBzRTNZUDF0MlYvZ3NEVkt2andGRVpqTy83d0tGZGhQMUM1SWVXK1V4?=
- =?utf-8?Q?VpQ7PbbxI0WeUnKxhTEMb+79o?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4ba4e3e-acbc-4bcc-dead-08dc8c4fa6e8
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	a/mJ6BmTePwftAo2s/a+z45tOlGRgg9TA0SDXZ1bb200Jf3FtfdL2TOA+FkAhJAtEFHjR24uaiozlr3Ain2zgx2ZYrg6IAiZod+usBCSXOZClOQ+WR72zT5vISy1qA55Eanej1Gp68eIT2X9daObb3m5mPsU7NMwyWsrIVK9rP9qpURQMxZdZEYmi9D/MfGhKppGF0GRINEwOiBI4Pr7U1lxHCm4+9g5MuNUPdeRi9U56qbloscilahDPxlnxQ45qrRVfCwbj+rfrzT5vVjIqu3a+bY7CGNaIwVgkEI1wgr+HLr6vRdDXzlBJiVhnN3OICMgj0avtnMzseNhxdw36kMXUspsMC+yhVQscVofBi4+Q/ZyMl60RXB1Xa8OXAgYTnjQg9aKbjZWeCGf0CKWQsTjAumlOVTg52uRUhFsZ3f7CJaeH6itnwaynkbm4kLXt2IYjelf9/TSuFgwOLWy8ws9I0oQB5W5jBDEOjzjMtgQbiHW6kGRD8AwbJqvHXSpimCsc4sRpSWtGTtONmps0q1HqI/hirY0nAMsMfMNbjvG6ggIXtFu2YdgrqZY6gUWw/uN74xGQ8PKIWcr+gOs28yuMOGB4Zw5U5JWIREQ4NqSJcp+VVgNCQTBEGi3VWA7
+X-OriginatorOrg: fujitsu.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 08:54:51.2773
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 099284a8-c482-46fc-222c-08dc8c57a03e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2024 09:51:55.7739
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GsKOJ93MAT8j2i0Y5cOuwlElR2OX2NJXKOgas+XSGXvJvsRotsug2j5L+Z5JCWSoxQ3Xc7rdzVe9XcNc2xCUbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6703
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YS+A5xdqvwh0mNsyIX0NkU+mrCwUmowZBNuErpC82o/nZ/nsrwf62HpGPbST38ZMucGfh68CvyYUkM2MmOpslY2F5Zm9jLMzw8G7rF0NUeQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8343
 
 
-On 6/14/24 02:22, Dan Williams wrote:
-> Alejandro Lucero Palau wrote:
-> [..]
->> On 6/12/24 22:18, Dan Williams wrote:
->>> Christoph Hellwig wrote:
->>>> On Tue, Jun 11, 2024 at 09:27:38PM -0700, Dan Williams wrote:
->>>>> alucerop@ wrote:
->>>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>>
->>>>>> CXL Type 2 devices imply specific vendor drivers binding to those
->>>>>> devices instead of generic ones offered by CXL core like the PCI driver.
->>>> No, it absolutelt does not.  There is no such thing as a vendor driver
->>>> in Linux.
->>>>
->>>>> So I don't like this approach, there are details that are private to the
->>>>> CXL generic memory-expander use case, and some that are suitable for
->>>>> CXL.mem and CXL.cache capabilities in other drivers. That distinct
->>>>> subset should move to include/linux/. I.e. I want to see the incremental
->>>>> conversion of what 3rd party drivers need compared to the generic
->>>>> expander case, and consider when and where new shared infrastructure
->>>>> needs to be refactored.
->>>> And I'd much rather keep all these drivers in drivers/cxl/ anyway so
->>>> that we can keep a tight control over them.
->>> Yeah, especially for the common pieces like CXL memory where the
->>> endpoint driver is responsible for registering a 'struct cxl_memdev' and
->>> the existing 'cxl_mem' driver just grows to accommodate device-memory
->>> alongside host-only memory expansion.
->>>
->>> For CXL accelerator use case that's where more specifics are needed
->>> because CXL.cache operation gets entangled with IOMMU / DMA mapping
->>> policy for ATS.
->> I think we all agree the central pieces should be in CXL core and other
->> drivers requiring CXL setup going through such central management.
->>
->> But this can be implemented as I thought and tried
-> Like I said earlier, start by minimizing the definitions to just what is
-> needed as that may trip over things that need to be refactored.
+Jonathan Cameron wrote:
+> On Fri, 14 Jun 2024 13:56:10 +0900
+> "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
+>=20
+> > Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1
+> > device link status information. By caching it, avoid the walking
+> > memory map area to find the offset when output the register value.
+> >
+> > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> Hi.
+>=20
+> A couple more change inline.  Problem with evolving code is that as a rev=
+iewer
+> I sometime forget to check my expectations.  This now stores a variable i=
+n a
+> core structure just to use it once a few lines later. No point in keeping=
+ it.
+> Looking at that made me notice the error returns were wrong and unhandled=
+.
+>=20
+Thank you for your kind review. I can't post the next version this week,=20
+but let me check if my understanding is correct.
 
+> > ---
+> >  drivers/cxl/core/core.h |  6 ++++
+> >  drivers/cxl/core/regs.c | 62
+> +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h       | 10 +++++++
+> >  drivers/cxl/pci.c       |  7 +++--
+> >  4 files changed, 83 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h index
+> > 3b64fb1b9ed0..69006bde7ad5 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device
+> *dev,
+> >  				    struct cxl_rcrb_info *ri,
+> >  				    enum cxl_rcrb which);
+> >  u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+> > +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct
+> > +cxl_dport *dport);
+> > +
+> > +#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
+> > +#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
+> > +#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
+> > +#define PCI_CAP_EXP_SIZEOF		0x3c
+>=20
+> I'd like a follow up patch making these defines apply for all usage of th=
+ese fields
+> in the PCI core code.  Right now there are pointless hard coded values.
+>=20
+Does this mean that you want me to post another patch later that=20
+defines PCI_CAP_EXP_SIZEOF to replace the hardcoded value in the PCI core c=
+ode?
+If so, I'll create a follow-up patch in the future.
 
-Yes, I agree the headers treatment in the patch was too much coarse 
-work. I'll work on that for v2.
+> >
+> >  extern struct rw_semaphore cxl_dpa_rwsem;  extern struct rw_semaphore
+> > cxl_region_rwsem; diff --git a/drivers/cxl/core/regs.c
+> > b/drivers/cxl/core/regs.c index 372786f80955..96c2a289cfb7 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -505,6 +505,68 @@ u16 cxl_rcrb_to_aer(struct device *dev,
+> resource_size_t rcrb)
+> >  	return offset;
+> >  }
+> >
+> > +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct
+> > +cxl_dport *dport) {
+> > +	resource_size_t rcrb =3D dport->rcrb.base;
+> > +	void __iomem *addr;
+> > +	u32 cap_hdr;
+> > +	u16 offset;
+> > +
+> > +	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
+> > +		return CXL_RESOURCE_NONE;
+> > +
+> > +	addr =3D ioremap(rcrb, SZ_4K);
+> > +	if (!addr) {
+> > +		dev_err(dev, "Failed to map region %pr\n", addr);
+> > +		release_mem_region(rcrb, SZ_4K);
+> > +		return CXL_RESOURCE_NONE;
+>=20
+> If you hit this then the value returned will be all fs.
+> We are treating and offset of 0 as the error return below.
+>=20
+I will change the return type to int and return 0 on error. Does this match=
+ your intent?
 
+> > +	}
+> > +
+> > +	offset =3D FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr +
+> PCI_CAPABILITY_LIST));
+> > +	cap_hdr =3D readl(addr + offset);
+> > +	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) !=3D
+> PCI_CAP_ID_EXP) {
+> > +		offset =3D FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK,
+> cap_hdr);
+> > +		if (offset =3D=3D 0 || offset > SZ_4K) {
+> > +			offset =3D 0;
+>=20
+> 			offset =3D CXL_RESOURCE_NONE;
+>=20
+> > +			break;
+> > +		}
+> > +		cap_hdr =3D readl(addr + offset);
+> > +	}
+> > +	if (offset)
+> > +		dport->rcrb.rcd_pcie_cap =3D offset;
+>=20
+> As below - this storage in the rcrb structure no longer has any purpose. =
+We can
+> use the returned value from this function to get to it in the one place i=
+t is used.
+>=20
+>=20
+>=20
+> > +
+> > +	iounmap(addr);
+> > +	release_mem_region(rcrb, SZ_4K);
+> > +
+> > +	return offset;
+> > +}
+> > +
+> > +int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev) {
+> > +	void __iomem *dport_pcie_cap =3D NULL;
+> > +	resource_size_t rcd_pcie_offset;
+> > +	struct cxl_rcrb_info *ri;
+> > +	struct cxl_dport *dport;
+> > +	struct cxl_port *port;
+> > +
+> > +	port =3D cxl_pci_find_port(pdev, &dport);
+> > +	if (!port)
+> > +		return -EPROBE_DEFER;
+> > +
+> > +	cxl_rcrb_to_linkcap(&pdev->dev, dport);
+>=20
+> Sorry - with all the changes I'd missed this previously.
+> There is no longer any point in storing the rcd_pcie_cap in ri.  Just use=
+ the
+> return value from the above to fill a local variable and map that here.
+>=20
+I was too focused on fixing the issue. I'll remove the variable.
 
-> For example, we had a similar conversation about how to support the CXL
-> mailbox which appears to be showing up in more than just generic CXL
-> memory expanders. In that case the observation is that all the APIs that
-> currently assume a 'struct cxl_memdev_state *' probably need to be
-> refactored into something that takes a new 'struct cxl_mbox *'.
->
->> and Jonathan has also suggested, that is an API with opaque structs,
-> Opaque structs is even nicer, but first step is "don't make the entirety
-> of the current definitions public" because that violates 'least
-> privilege' for many of these structures.
->
->> or through a more disjointed way from a client/driver perspective
->> using an approach like auxbus.
-> What? No, I see no need for auxbus. "cxl" is already a bus.
->> Maybe there is another approach for "keep all these drivers in
->> drivers/cxl/ anyway so that we can keep a tight control over them"
->> which needs to be more explicitly elaborated.
-> For now lets interpret that to mean that any driver that wants to
-> enumerate or provision a topology of CXL HDM decoders should be looking
-> to register a 'struct cxl_memdev' object which is driven by the cxl_mem
-> driver in drivers/cxl/. The client driver that registers that need not be
-> located in drivers/cxl/.
+> 	ri =3D &dport->rcrb;
+> 	rcd_pcie_offset =3D cxl_rcrb_to_link_cap(&pdev->dev, dpor);
+> 	if (rcd_pcie_offset !=3D CXL_RESOURCE_NONE)
+> 		dport_pcie_cap =3D devm_cxl_iomap_block(&pdev->dev,
+> 						      ri->base +
+> rcd_pcie_offset,
+>=20
+> PCI_CAP_EXP_SIZEOF);
+>=20
+> 	dport->regs.rcd_pcie_cap =3D dport_pcie_cap;
+>=20
+> 	return 0;
+>=20
+>=20
+> > +
+> > +	ri =3D &dport->rcrb;
+> > +	if (dport->rcrb.rcd_pcie_cap) {
+> > +		rcd_pcie_offset =3D ri->base + ri->rcd_pcie_cap;
+> > +		dport_pcie_cap =3D devm_cxl_iomap_block(&pdev->dev,
+> rcd_pcie_offset,
+> > +
+> PCI_CAP_EXP_SIZEOF);
+> > +	}
+> > +
+> > +	dport->regs.rcd_pcie_cap =3D dport_pcie_cap;
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
+> > +
+> >  resource_size_t __rcrb_to_component(struct device *dev, struct
+> cxl_rcrb_info *ri,
+> >  				    enum cxl_rcrb which)
+> >  {
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h index
+> > 003feebab79b..b1fca98ddf8c 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -230,6 +230,14 @@ struct cxl_regs {
+> >  	struct_group_tagged(cxl_rch_regs, rch_regs,
+> >  		void __iomem *dport_aer;
+> >  	);
+> > +
+> > +	/*
+> > +	 * RCD upstream port specific PCIe cap register
+> > +	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
+> > +	 */
+> > +	struct_group_tagged(cxl_rcd_regs, rcd_regs,
+> > +		void __iomem *rcd_pcie_cap;
+> > +	);
+> >  };
+> >
+> >  struct cxl_reg_map {
+> > @@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
+> > struct cxl_dport;  resource_size_t cxl_rcd_component_reg_phys(struct
+> > device *dev,
+> >  					   struct cxl_dport *dport);
+> > +int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev);
+> >
+> >  #define CXL_RESOURCE_NONE ((resource_size_t) -1)  #define
+> > CXL_TARGET_STRLEN 20 @@ -646,6 +655,7 @@
+> cxl_find_dport_by_dev(struct
+> > cxl_port *port, const struct device *dport_dev)
+> >
+> >  struct cxl_rcrb_info {
+> >  	resource_size_t base;
+> > +	u16 rcd_pcie_cap;
+>=20
+> This is no longer needed I think after the suggested change above.
+>=20
+> >  	u16 aer_cap;
+> >  };
+> >
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c index
+> > 2ff361e756d6..62343a5a39ff 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -512,10 +512,13 @@ static int cxl_pci_setup_regs(struct pci_dev *pde=
+v,
+> enum cxl_regloc_type type,
+> >  	 * is an RCH and try to extract the Component Registers from
+> >  	 * an RCRB.
+> >  	 */
+> > -	if (rc && type =3D=3D CXL_REGLOC_RBI_COMPONENT &&
+> is_cxl_restricted(pdev))
+> > +	if (rc && type =3D=3D CXL_REGLOC_RBI_COMPONENT &&
+> > +is_cxl_restricted(pdev)) {
+> >  		rc =3D cxl_rcrb_get_comp_regs(pdev, map);
+> > +		if (rc)
+> > +			return rc;
+> >
+> > -	if (rc)
+> > +		cxl_dport_map_rcd_linkcap(pdev);
+> > +	} else if (rc)
+> >  		return rc;
+> Style wise, I'd put {} round this second leg as well.  It's common to do =
+this
+> when we have a mixture of single line and multiline legs.
+> There are several examples of this in this file already so we should matc=
+h local
+> style.
+>=20
+Thank you. I'll fix it
 
+> >
+> >  	return cxl_setup_regs(map);
 
-Great. This needed clarification after your previous email.
-
-
->> My plan is for a v2 removing the test/mock driver and adding the sfc
->> driver as a client,
-> Oh, as in CONFIG_SFC? Can you say anything about the use case for
-> CXL.cache and CXL.mem so that we make sure the code architecture lines
-> are being drawn at the right level?
-
-
-I did briefly comment on that in the cover-letter discussion exchange.
-
-We got some hardware buffers now mapped from BAR regions which are 
-written by the driver for low latency sending versus descriptor + packet 
-through DMA.
-
-The idea is those buffers being CXL.mem mappings now.
-
-CXL.cache will be for receiving. It will not be part of the first 
-products though.
-
-
->> but only if the original approach with the CXL core
->> exporting functions is the approved one.
-> Not sure what you mean here? Exporting common CXL core functions is how
-> the cxl_mem driver itself gets enabled. So there is no other path
-> besides refactoring the core to be useful outside of the general memory
-> expansion use case. This is analogous to how the PCI core provides
-> infrastructure for PCI drivers.
-
-
-OK. This is all related to that comment/suggestion for keeping all CXL 
-capable drivers in the CXL core directory.
-
-The only way I could envision such an approach was through a driver 
-creating auxiliary devices for CXL.mem and CXL.cache which could bind to 
-generic CXL drivers (with the appropriate support in current CXL core). 
-Doable but probably too much complicated.
-
-
-I think it is all clear now.
-
-Thanks
-
-
->> If auxbus or other way is the way to go, it will be just a new
->> patchset and requiring more time.
-> Mainline has the time to get it right.
