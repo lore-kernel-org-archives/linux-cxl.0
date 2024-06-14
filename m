@@ -1,219 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3728413A41A;
-	Fri, 14 Jun 2024 03:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2195CB8
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 03:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718335129; cv=none; b=jmbGamxLcodJEwPHLXa/2cLRd2vNPLGT+qe05c3kcyawZ+sUUDq7jn367sw83KLWZ0HNZP//msMGhKfw1Ag+YoVqCCswaSD2xvb7EnJJaPpGthP3b1bhqSOmM5SHUDD0Ii5Bc2zqpfOguPPEA2qH042+3aNw2nMkgZwBLbjlJVw=
+	t=1718335310; cv=none; b=J+24F37FkNmtI1P0gwgSILZZnVOtkri89dRkpU4M2lEu4sWbfq4aLk6sKNmvPjGZ/mBBJ/6NKU+se3xztBMime+alF2p0qgQmHQ5zBBRf1tjHbGRu9Oz/hgmc+sOGH6iNmtwLnJmzmDwl6lwiZyeWBGWJIoLyvZ9eamgm3vDvo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718335129; c=relaxed/simple;
-	bh=bfC7ZFdSGlt/iPNEFIyEnRVpEJMH7HcVEFcs2hs1+I4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZdbZeeSq49F2gUBjQ8dCyvxXc91CcDiFIulHSjNjMuYuDlu9R5PV6UH9pOBO2KkjYllwfHYdG3vVR28nex62aBBVyqrpK9oEVs6PFN9UM6NfsYA2dw5fm3PgJ4ieuI9WMvmEf3gabFxpTUVdpFrYMjxy3DEBLI+CrVE+Xa5iyZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UOG2vPQE; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718335310; c=relaxed/simple;
+	bh=GgNqY0mHozLL6/U+YP0dcaJTH5h+5zyuMZvOkgJpk7w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WGsqSVkxRjCCH19FkCcjq3+uEG0MsNHmYkHnPUqd7+wWL5Zr1ptDU7DDwngBQWvboMvdRYiS3Ni5whiI+z683Exs4dq28jK6oXlMHeGB0JQm/V6mk9/c3aqswxc9uFDpyGd+9PEjNEfT+nQ1GyToFfTCZJ5aZ1xyTOWOz7VOAxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GiqbY4At; arc=none smtp.client-ip=68.232.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UOG2vPQE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718335127; x=1749871127;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bfC7ZFdSGlt/iPNEFIyEnRVpEJMH7HcVEFcs2hs1+I4=;
-  b=UOG2vPQE9FRVDDX/lTLnT3k5JyrPD6qP5Fo90Y1fQxEEcZlTuYEFEsvA
-   zuybMWWY37WqYstwD0GtnIYD8JLCkXIurdLpc5TpelLjSlgrDvZYVseBF
-   wh6kEpPZP7NBMIhI3kmZsPJxoGkpnkfl06rMEZJU9FK6zQ21rxVnEt9by
-   aATqyT3VYi0KwiuMaO0LGWd3M7J+hLG2tnVUWtpQ/043ob9XZqu5mpnA5
-   +2Lja9GBH8kboRm6lLFjYSeIu+uvczyfp6wEuGeCPO2UmDeAwbi/Q3My9
-   /0zUDC7DMrp2gwKkbJClE7vr1KW7FWsh5XbayXL2d59drAUtkNFVTZHcg
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GiqbY4At"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1718335308; x=1749871308;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GgNqY0mHozLL6/U+YP0dcaJTH5h+5zyuMZvOkgJpk7w=;
+  b=GiqbY4AtZUSpAWSgMn9eMK2z+nDc8PWs0AgXyQEL8lY7tW9HMoHp2zxk
+   i1NPa5Sc6fYdZObn04PUdPGUQtfU1aAKXjE5iWhfVyNCaTBIDDsWMXouj
+   8QBmmwqB2VBvQ8QTAV7/PWlMwFmOMQdTncPU9L/Uf81WR4TjW/iwzuV4v
+   iT8pqEvLFErZFNSY5T2UBXVdntyde2yejHfEgnc8JjieM+m64ar2D0JMx
+   FCMEempW21JIBOnnryCS8hDE4aep3wpsFp90BPzl5b1vACsegXHmmfWnw
+   EY7dZMQsZzefPTiDEpXqFKlQPTyYsrdOH5SZCrVdhHEOrylPjM6JPMsGi
    g==;
-X-CSE-ConnectionGUID: a9hJu7ScQae0sKUpbZf6Ew==
-X-CSE-MsgGUID: I0Jikjg/TQ6NGfaIBuBPrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="26604014"
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="26604014"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 20:18:46 -0700
-X-CSE-ConnectionGUID: CB/YVIa+RBajDCpGR50kBQ==
-X-CSE-MsgGUID: qmQSFax3S4GrkcYS5R16Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
-   d="scan'208";a="71142877"
-Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.37]) ([10.124.223.37])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 20:18:44 -0700
-Message-ID: <1e04a69d-225d-4e62-9ca9-fb7fbbc16f67@linux.intel.com>
-Date: Thu, 13 Jun 2024 20:18:43 -0700
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="163243912"
+X-IronPort-AV: E=Sophos;i="6.08,236,1712588400"; 
+   d="scan'208";a="163243912"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 12:21:39 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id C0463C9160
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 12:21:36 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 08704D5606
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 12:21:36 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 6D800E51A8
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Jun 2024 12:21:35 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.225.88])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 6190A1A0002;
+	Fri, 14 Jun 2024 11:21:34 +0800 (CST)
+From: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	jim.harris@samsung.com
+Cc: linux-cxl@vger.kernel.org,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>
+Subject: [PATCH v8 0/3] check interleave capability
+Date: Thu, 13 Jun 2024 23:21:30 -0400
+Message-Id: <20240614032133.45365-1-yaoxt.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] PCI/AER: Clear UNCOR_STATUS bits that might be
- ANFE
-To: "Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>,
- "Luck, Tony" <tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave@stgolabs.net" <dave@stgolabs.net>,
- "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
- "Jiang, Dave" <dave.jiang@intel.com>,
- "Schofield, Alison" <alison.schofield@intel.com>,
- "Verma, Vishal L" <vishal.l.verma@intel.com>,
- "Weiny, Ira" <ira.weiny@intel.com>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "helgaas@kernel.org" <helgaas@kernel.org>,
- "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
- "oohall@gmail.com" <oohall@gmail.com>,
- "linmiaohe@huawei.com" <linmiaohe@huawei.com>,
- "shiju.jose@huawei.com" <shiju.jose@huawei.com>,
- "Preble, Adam C" <adam.c.preble@intel.com>, "lukas@wunner.de"
- <lukas@wunner.de>,
- "Smita.KoralahalliChannabasappa@amd.com"
- <Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
- <rrichter@amd.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Tsaur, Erwin" <erwin.tsaur@intel.com>,
- "Williams, Dan J" <dan.j.williams@intel.com>,
- "Wanyan, Feiting" <feiting.wanyan@intel.com>,
- "Wang, Yudong" <yudong.wang@intel.com>, "Peng, Chao P"
- <chao.p.peng@intel.com>,
- "qingshun.wang@linux.intel.com" <qingshun.wang@linux.intel.com>
-References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
- <20240509084833.2147767-4-zhenzhong.duan@intel.com>
- <9ce06552-79d9-4bd9-9a3e-2ffd72c4cf4a@intel.com>
- <SJ0PR11MB674404B356BFEB3E3E099CFC92C22@SJ0PR11MB6744.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <SJ0PR11MB674404B356BFEB3E3E099CFC92C22@SJ0PR11MB6744.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28452.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28452.004
+X-TMASE-Result: 10--8.369800-10.000000
+X-TMASE-MatchedRID: vUS6K+jSHAsc0dnT9XswpR1kSRHxj+Z5g8vk+C7vzx6a9Zo7TJaDsIr/
+	BixjtpkT10Vp4KHcMAFiJsbEDHUAbTMH3wWOx57nqhcdnP91eXH0swHSFcVJ6Ez5vzLEGq8DWPB
+	5gJ72ENYw1PYcQ48wS9hesu+M4ONN7yClTVv2c3a/mux8PsfamZHcXE2JOFJtyPRAwD/3abaUfD
+	H3TE2AyGqREDgJ0Nwm7icOXRyDqaoS5iXdhf8hbrnHu4BcYSmtrzl8sNiWClKbKItl61J/yZ+in
+	TK0bC9eKrauXd3MZDWvl10AkC/AxfEtlPIoiPZVZj1NpsIClh6GWAlp9IWXKKwc4u02WcQC
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
+Currently, the cxl driver does not check the interleave capability of
+devices (such as host bridges, switches, cxl_mem, etc.) when creating
+a region.
 
-On 6/13/24 7:40 PM, Duan, Zhenzhong wrote:
->
->> -----Original Message-----
->> From: Kuppuswamy, Sathyanarayanan
->> Subject: Re: [PATCH v4 3/3] PCI/AER: Clear UNCOR_STATUS bits that might
->> be ANFE
->>
->>
->> On 5/9/24 1:48 AM, Zhenzhong Duan wrote:
->>> When processing an ANFE, ideally both correctable error(CE) status and
->>> uncorrectable error(UE) status should be cleared. However, there is no
->>> way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
->>> Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
->>> NFE will bring some issues, i.e., breaking softwore probing; treating
->> /s/softwore/software
-> Good catch, will fix. It's strange 'checkpatch --codespell' doesn't catch this.
->
->> May be this is already discussed. But can you explain why treating
->> AFNE as non-fatal error will bring probing issues?
-> Copied below from spec 6.1, 6.2.3.2.4, says it can results in a System Error.
->
-> In some cases the detector of a non-fatal error is not the most appropriate agent to determine whether the error is
-> recoverable or not, or if it even needs any recovery action at all. For example, if software attempts to perform a
-> configuration read from a non-existent device or Function, the resulting UR Status in the Completion will signal the error
-> to software, and software does not need for the Completer in addition to signal the error by sending an ERR_NONFATAL
-> Message. In fact, on some platforms, signaling the error with ERR_NONFATAL results in a System Error, which breaks
-> normal software probing.
->
->>> NFE as ANFE will make us ignoring some UEs which need active recover
->> /s/ignoring/ignore
-> Will fix.
->
->>> operation. To avoid clearing UEs that are not ANFE by accident, the
->>> most conservative route is taken here: If any of the NFE Detected bits
->>> is set in Device Status, do not touch UE status, they should be cleared
->>> later by the UE handler. Otherwise, a specific set of UEs that may be
->>> raised as ANFE according to the PCIe specification will be cleared if
->>> their corresponding severity is Non-Fatal.
->>>
->>> For instance, previously when kernel receives an ANFE with Poisoned TLP
->>> in OS native AER mode, only status of CE will be reported and cleared:
->>>
->>>   AER: Correctable error message received from 0000:b7:02.0
->>>   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->>>     device [8086:0db0] error status/mask=00002000/00000000
->>>      [13] NonFatalErr
->>>
->>> If the kernel receives a Malformed TLP after that, two UEs will be
->>> reported, which is unexpected. Malformed TLP Header is lost since
->>> the previous ANFE gated the TLP header logs:
->>>
->>>   PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer,
->> (Receiver ID)
->>>     device [8086:0db0] error status/mask=00041000/00180020
->>>      [12] TLP                    (First)
->>>      [18] MalfTLP
->>>
->>> Now, for the same scenario, both CE status and related UE status will be
->>> reported and cleared after ANFE:
->>>
->>>   AER: Correctable error message received from 0000:b7:02.0
->>>   PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
->>>     device [8086:0db0] error status/mask=00002000/00000000
->>>      [13] NonFatalErr
->>>     Uncorrectable errors that may cause Advisory Non-Fatal:
->>>      [18] TLP
->>>
->>> Tested-by: Yudong Wang <yudong.wang@intel.com>
->>> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
->>> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
->>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
->>> ---
->>>  drivers/pci/pcie/aer.c | 7 ++++++-
->>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index ed435f09ac27..6a6a3a40569a 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -1115,9 +1115,14 @@ static void pci_aer_handle_error(struct
->> pci_dev *dev, struct aer_err_info *info)
->>>  		 * Correctable error does not need software intervention.
->>>  		 * No need to go through error recovery process.
->>>  		 */
->>> -		if (aer)
->>> +		if (aer) {
->>>  			pci_write_config_dword(dev, aer +
->> PCI_ERR_COR_STATUS,
->>>  					info->status);
->>> +			if (info->anfe_status)
->>> +				pci_write_config_dword(dev,
->>> +						       aer +
->> PCI_ERR_UNCOR_STATUS,
->>> +						       info->anfe_status);
->>> +		}
->> Why split the handling part and storing part into two patches? Why not
->> merge
->> this part of patch 1/3.
-> This is based on Bjorn's suggestion at https://www.spinics.net/lists/linux-pci/msg149012.html,
-> clearing UNCOR_STATUS might be more important, deserve to raise out.
+When the driver adds a device to the region and sets its decoder, if the
+device does not support the specified interleave ways or interleave
+granularity, the device may ignore unsupported bits, causing the
+configured decoder to be inconsistent with expectations.
 
-I think Bjorn's suggestion is to divide it into two logical patches.
-One for printing the error and another to clear the UNCOR_STATUS
-properly. But currently you have split the UNCOR_STATUS status caching and
-clearing process into two patches. IMO, your first patch can store ANFE
-status and clear it. You can add print support in the second patch. 
+During memory access, the decoder may decode the HPA into an incorrect DPA,
+ultimately leading to memory access failure.
 
+Checking the interleave capability of a device early in the process of
+adding it to a region can quickly prevent this issue from occurring.
 
-Code wise it looks fine to me. You can add my Reviewed-by after fixing
-the typos
+Changes:
+V7[7] -> V8:
+-- drop the redundant check in check_interleave_cap()
+-- add cxlmem.h to kernel-doc (newly add)
+-- fixup cxl_test (newly add)
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+V6[6] -> V7:
+-- update comment.
 
->
-> Thanks
-> Zhenzhong
+V5[5] -> V6:
+-- fix some typo.
+-- update comment.
+-- set rc when check failed in cxl_port_attach_region().
+
+V4[4] -> V5:
+-- update comment.
+-- add nr_targets check while attaching a port to switch.
+-- delete passthrough flag and allow all the capabilities for passthrough
+   decoders.
+
+V3[3] -> V4:
+-- update comment.
+-- optimize the code.
+-- add a passthrough flag to mark the passthrough decoder.
+
+V2[2] -> V3:
+-- revert ig_cap_mask to interleave_mask.
+-- fix the interleave bits check logical.
+
+V1[1] -> V2:
+-- rename interleave_mask to ig_cap_mask.
+-- add a check for interleave granularity.
+-- update commit.
+-- move hdm caps init to parse_hdm_decoder_caps().
+
+[1]
+https://lore.kernel.org/linux-cxl/20240401075635.9333-1-yaoxt.fnst@fujitsu.com
+
+[2]
+https://lore.kernel.org/linux-cxl/20240403021747.17260-1-yaoxt.fnst@fujitsu.com
+
+[3]
+https://lore.kernel.org/linux-cxl/20240409022621.29115-1-yaoxt.fnst@fujitsu.com
+
+[4]
+https://lore.kernel.org/linux-cxl/20240422091350.4701-1-yaoxt.fnst@fujitsu.com
+
+[5]
+https://lore.kernel.org/linux-cxl/20240524092740.4260-1-yaoxt.fnst@fujitsu.com
+
+[6]
+https://lore.kernel.org/linux-cxl/20240611021511.35315-1-yaoxt.fnst@fujitsu.com
+
+[7]
+https://lore.kernel.org/linux-cxl/20240612032544.39149-1-yaoxt.fnst@fujitsu.com
+
+Yao Xingtao (3):
+  cxl/region: check interleave capability
+  cxl: documentation: add cxlmem.h to cxl driver-api
+  cxl_test: fix the 'create region failed' error
+
+ .../driver-api/cxl/memory-devices.rst         |  3 +
+ drivers/cxl/core/hdm.c                        | 13 +++
+ drivers/cxl/core/region.c                     | 89 +++++++++++++++++++
+ drivers/cxl/cxl.h                             |  2 +
+ drivers/cxl/cxlmem.h                          | 10 +++
+ tools/testing/cxl/test/cxl.c                  |  4 +
+ 6 files changed, 121 insertions(+)
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.37.3
 
