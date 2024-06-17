@@ -1,93 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5416D1C7
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 10:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B5717FAA2
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 12:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718621348; cv=none; b=GbzdadqryP1Wkz/SDBOCobG8CnDer3aomq8F1pKWpS82E1YFwGDr4T7HcLtdavnpl+CkU6A1HyO6OnYu+88fArhSlAxtfrwHgohw1W1GWeQOPiTHqKNHqmQ0gXnMk/Al6uwJPTovPiCYcbe6ogVSDkcARvrR55QBemS8zTL4NbQ=
+	t=1718625923; cv=none; b=OMtRfPWTqgvsXYJ/HVEYy4KdpFQaYF2vryOimJUfFsGsduVyzSe72My4gLXifLdvREFgQQ3t38E84xWeyXC3zDH0g4/fga0gAnUbYP4Z07PmmhYEHHaVTvxYRVmcwaukzuuNVyN/FamxoxZWP1CeyY5dEDMLKLyyOTwjSzg1YUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718621348; c=relaxed/simple;
-	bh=KW00EwSh6wceJSdyeyGxM3XzMloKSwNJFhVkfonTb+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P1taLGLJZ42plqEb0O2Y9PNlQSyU8fp9geFktqYiSKYngHpVY+9Bmh/3AKjdqeFqn7Mm5HWFde15x+Xcw3JPxTdfs6Do+h4sFW88fByvn3u16FUhcYVOc64o8T1anH/bdjOj5nmHb48SIdBvo8LUUYP13xyT2V8VhzpWd+YVw9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xj62MYlP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xj62MYlP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718621345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OeLOrYdqNIe9xnia3NPaYjN4cLPbwMTRo24zrDjzKuY=;
-	b=Xj62MYlP8Zn5idiINo7+veGvrUxsfNEGDh1I58BTdQ+4cbFmTk1x4J1kA9K5GiJh4WryDy
-	CKk6wi8I31njeOuHNuh4dwhkTmZnk0mFvNJXqXBoAvQI5obditAeOjdBH9fGzZjlOnf34J
-	euDSw8YkWEtaKDmn0lZv4Z5BeR8b7KI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-459-OwSK4u1sNC2bVw4mjTebLg-1; Mon, 17 Jun 2024 06:49:04 -0400
-X-MC-Unique: OwSK4u1sNC2bVw4mjTebLg-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42181c64596so25621055e9.1
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 03:49:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718621343; x=1719226143;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OeLOrYdqNIe9xnia3NPaYjN4cLPbwMTRo24zrDjzKuY=;
-        b=l9T+VDyq1zfv1CRFQin7J2oEgAaLwNX5lh5BwG2Sba4T4L6Ny9AphNfVu9vQuvpEkr
-         JehZ5M+/rprcLkoffSBGgcH4Pvw7vhPlFieLiYh76YndFoxxYcuOpRwqIBZzt3tsQ5Aw
-         ciIoTKedodSDB1G+vGZJUgZ8cA53M71xwhO+4EW+8eUAstYVZHExzRLBNbV8o/laO+5g
-         IQUbqxzUAjkZAu2aFRC5V3Rq2E+J63XEvggHHQVInKqdEVX/eoBsEyR0jGkPV9ypu/P7
-         bcdpp/nO0VTWuzeFFxKv/pAjJTGR7dfxmDZtOgABgjiDHheZF2+8siufRk+j8FK9zZ1a
-         a7eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtU71czgN6TwJv1WinRh0KJP+KMhPxWh+txzL4dijrzWVZlLqmK1VYXYTHBUxX6BGzBTX72UIRafRKT3wVIXMWVqxJ2uZuoVeC
-X-Gm-Message-State: AOJu0YwQlkC+mH/oq8M34CTPLjUX7vwX09mB3SovgFkcv+R7CdyAuLjH
-	RltNmpCS9mpxOI53JCqKP3x67rCdlLQ1QPC8ewdZTON1ZMdaoaDhyDPJEIQe+PjUv2HOTGJEz0E
-	NDWtLB/4ilBYXa2ggDg7HluOiHHUM4ihA8kFv3/Uy9mOnqLaYU+lAm6BjAg==
-X-Received: by 2002:a05:600c:4749:b0:422:fdae:b687 with SMTP id 5b1f17b1804b1-4230482bcf3mr84277735e9.17.1718621342933;
-        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxo4epXBkaJ/SEuKW7JNXupVHhBKXiqldSRQvefBXXsQeA607huJvrQkfyEKRH7LWmQsf9Yw==
-X-Received: by 2002:a05:600c:4749:b0:422:fdae:b687 with SMTP id 5b1f17b1804b1-4230482bcf3mr84277605e9.17.1718621342459;
-        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870e9676sm189887695e9.24.2024.06.17.03.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
-Date: Mon, 17 Jun 2024 12:49:01 +0200
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
- <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <philmd@linaro.org>, "Richard
- Henderson" <richard.henderson@linaro.org>, Dave Jiang
- <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo Bonzini
- <pbonzini@redhat.com>, <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>,
- <linuxarm@huawei.com>, Michael Roth <michael.roth@amd.com>, Ani Sinha
- <anisinha@redhat.com>
+	s=arc-20240116; t=1718625923; c=relaxed/simple;
+	bh=RCCuiFzAS+2hQMlb905lrYdGMLRXN3rFcLDuR79W5uU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Um+di3g6heHTeilUGm29gAKDaSFsnwzlqMlsACbs3iqrgdFXUplkToqvTB7u3nBpZuqXBfNNwNGEJDRFwyOj9sPg4k+5uGnQNPhynZlVzWfw4YOnAmIeXUbO8ivz/m3R6QBvipTuFR3vZabduQliOffrgVfaicWd3Jy/FpFnyjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W2pSh43zjz6K9FT;
+	Mon, 17 Jun 2024 20:03:48 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5FD51140A1B;
+	Mon, 17 Jun 2024 20:05:17 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 17 Jun
+ 2024 13:05:16 +0100
+Date: Mon, 17 Jun 2024 13:05:15 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Igor Mammedov <imammedo@redhat.com>
+CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <philmd@linaro.org>, "Richard
+ Henderson" <richard.henderson@linaro.org>, Dave Jiang <dave.jiang@intel.com>,
+	Huang Ying <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
 Subject: Re: [PATCH qemu ] hw/acpi: Fix big endian host creation of Generic
  Port Affinity Structures
-Message-ID: <20240617124901.1414a93f@imammedo.users.ipa.redhat.com>
+Message-ID: <20240617130515.000020fb@Huawei.com>
 In-Reply-To: <20240614150835.00000674@Huawei.com>
 References: <20240605180455.18193-1-Jonathan.Cameron@huawei.com>
 	<20240606160653.27226def@imammedo.users.ipa.redhat.com>
 	<20240606184716.00000708@Huawei.com>
 	<20240614125725.730f8914@imammedo-mac>
 	<20240614150835.00000674@Huawei.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
 On Fri, 14 Jun 2024 15:08:35 +0100
 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
@@ -227,8 +193,19 @@ Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 > coming from pci->devfn in that form anyway and they both forms get encoded
 > into a byte anyway.
 
-ack, 
-as long as acpi API user doesn't have to worry about byte order it should be fine
+I guess it was inevitable (and perhaps you had this thought).  QEMU ordering
+of BDF has the bytes swapped wrt to the ACPI ordering.  With them split the
+test was failing.  I'll also tweak the test to ensure we have a non 0 bus
+number (by inserting a root port rather than having the generic initiator
+on the root bridge bus 0).
+
+Ankit.  Can you confirm if you were seeing these reversed?
+
+https://elixir.bootlin.com/qemu/v9.0.1/source/hw/acpi/acpi_generic_initiator.c#L134
+uses PCI_BUIILD_BDF() which has bus << 8
+The ACPI write is little endian, so bus ends up in byte 3 but should be in byte 2.
+
+Jonathan
 
 > 
 > Jonathan
@@ -271,5 +248,6 @@ as long as acpi API user doesn't have to worry about byte order it should be fin
 > > >     
 > > 
 > >   
+> 
 > 
 
