@@ -1,270 +1,275 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87B318F2DC;
-	Mon, 17 Jun 2024 07:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5416D1C7
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 10:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718607813; cv=none; b=gnGwzJkMxtEnI8y4o6P0BKobf97FnaQEbwqwecSGg3vhX93x/vqfMWDQtRfORKJUStk+0VCx5Ti8pKPx8XxJF1rQkokg5A2kw6aLmF36S7ljWz4CADG6OD3u3491H4IhCqaz0O1sZVyom4sqS/SveVVedu/NhlJS2t3P+d2YUvA=
+	t=1718621348; cv=none; b=GbzdadqryP1Wkz/SDBOCobG8CnDer3aomq8F1pKWpS82E1YFwGDr4T7HcLtdavnpl+CkU6A1HyO6OnYu+88fArhSlAxtfrwHgohw1W1GWeQOPiTHqKNHqmQ0gXnMk/Al6uwJPTovPiCYcbe6ogVSDkcARvrR55QBemS8zTL4NbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718607813; c=relaxed/simple;
-	bh=QYz9yWQJa1DCtpUvl8YdCNZEaqQD8OrQPjvvlnmkLr8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jy0weANpImmxKG7pIaIpmH7iQRLtb3l4RGW/kVis5EB7DWkoJf1+orrhAvzBW+kqXwU94J0o+VkVBaNgMyfJh0dMrpVfVZqvHnczBgOkLAAXcs0n0L1yzqE3zJIkd4HF07MlyHZVascmaGidqmQ5uN3lh7LHm0BvJbDMB53K1Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kCMAnsko; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718621348; c=relaxed/simple;
+	bh=KW00EwSh6wceJSdyeyGxM3XzMloKSwNJFhVkfonTb+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P1taLGLJZ42plqEb0O2Y9PNlQSyU8fp9geFktqYiSKYngHpVY+9Bmh/3AKjdqeFqn7Mm5HWFde15x+Xcw3JPxTdfs6Do+h4sFW88fByvn3u16FUhcYVOc64o8T1anH/bdjOj5nmHb48SIdBvo8LUUYP13xyT2V8VhzpWd+YVw9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xj62MYlP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kCMAnsko"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718607812; x=1750143812;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QYz9yWQJa1DCtpUvl8YdCNZEaqQD8OrQPjvvlnmkLr8=;
-  b=kCMAnsko/KLh1S5T653nbfFJphmW+2nMq+FfdO14ompa3CJwtizsJYRY
-   XWzc57NsMdikRMjEgKb5j5XRDZkJT/ROvpT72pBxZs1yJOD3SSoz6OaWZ
-   rYH/WrZUVNAGf5er7evCJRDIbWovwMbXjmWzQ1Vn997N3BAV1f7dEpdaK
-   Fw9bawoC5xmtNj3pXM6PIoiT70m1pOM2WrgR95ZKffAdaxra4WlVDQZZr
-   75Kb8ixDaP2aMWbdUYfjqeY1gyjvzcPUzK/+RqI1oRgnidM8ILC/J2zV0
-   HVLvjUBATC/gmPmaEHs9s1UyCqqiWcRXskv3TAzS0Xx714TMeHrryYcRi
-   g==;
-X-CSE-ConnectionGUID: SArWUtvkSUuMP1cICDjfwg==
-X-CSE-MsgGUID: aPh2gOO6S3aMnb6dR1YExA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="32963349"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="32963349"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 00:03:29 -0700
-X-CSE-ConnectionGUID: D7X8ChCoSm6e+HzKFmWelg==
-X-CSE-MsgGUID: LPkf39AVTwus5ME0Xpf17w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="72311292"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.247])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 00:03:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 17 Jun 2024 10:03:21 +0300 (EEST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xj62MYlP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718621345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OeLOrYdqNIe9xnia3NPaYjN4cLPbwMTRo24zrDjzKuY=;
+	b=Xj62MYlP8Zn5idiINo7+veGvrUxsfNEGDh1I58BTdQ+4cbFmTk1x4J1kA9K5GiJh4WryDy
+	CKk6wi8I31njeOuHNuh4dwhkTmZnk0mFvNJXqXBoAvQI5obditAeOjdBH9fGzZjlOnf34J
+	euDSw8YkWEtaKDmn0lZv4Z5BeR8b7KI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-459-OwSK4u1sNC2bVw4mjTebLg-1; Mon, 17 Jun 2024 06:49:04 -0400
+X-MC-Unique: OwSK4u1sNC2bVw4mjTebLg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42181c64596so25621055e9.1
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 03:49:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718621343; x=1719226143;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OeLOrYdqNIe9xnia3NPaYjN4cLPbwMTRo24zrDjzKuY=;
+        b=l9T+VDyq1zfv1CRFQin7J2oEgAaLwNX5lh5BwG2Sba4T4L6Ny9AphNfVu9vQuvpEkr
+         JehZ5M+/rprcLkoffSBGgcH4Pvw7vhPlFieLiYh76YndFoxxYcuOpRwqIBZzt3tsQ5Aw
+         ciIoTKedodSDB1G+vGZJUgZ8cA53M71xwhO+4EW+8eUAstYVZHExzRLBNbV8o/laO+5g
+         IQUbqxzUAjkZAu2aFRC5V3Rq2E+J63XEvggHHQVInKqdEVX/eoBsEyR0jGkPV9ypu/P7
+         bcdpp/nO0VTWuzeFFxKv/pAjJTGR7dfxmDZtOgABgjiDHheZF2+8siufRk+j8FK9zZ1a
+         a7eA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtU71czgN6TwJv1WinRh0KJP+KMhPxWh+txzL4dijrzWVZlLqmK1VYXYTHBUxX6BGzBTX72UIRafRKT3wVIXMWVqxJ2uZuoVeC
+X-Gm-Message-State: AOJu0YwQlkC+mH/oq8M34CTPLjUX7vwX09mB3SovgFkcv+R7CdyAuLjH
+	RltNmpCS9mpxOI53JCqKP3x67rCdlLQ1QPC8ewdZTON1ZMdaoaDhyDPJEIQe+PjUv2HOTGJEz0E
+	NDWtLB/4ilBYXa2ggDg7HluOiHHUM4ihA8kFv3/Uy9mOnqLaYU+lAm6BjAg==
+X-Received: by 2002:a05:600c:4749:b0:422:fdae:b687 with SMTP id 5b1f17b1804b1-4230482bcf3mr84277735e9.17.1718621342933;
+        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxo4epXBkaJ/SEuKW7JNXupVHhBKXiqldSRQvefBXXsQeA607huJvrQkfyEKRH7LWmQsf9Yw==
+X-Received: by 2002:a05:600c:4749:b0:422:fdae:b687 with SMTP id 5b1f17b1804b1-4230482bcf3mr84277605e9.17.1718621342459;
+        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870e9676sm189887695e9.24.2024.06.17.03.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jun 2024 03:49:02 -0700 (PDT)
+Date: Mon, 17 Jun 2024 12:49:01 +0200
+From: Igor Mammedov <imammedo@redhat.com>
 To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linuxarm@huawei.com, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org, 
-    linux-pci@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>, 
-    Dave Jiang <dave.jiang@intel.com>, 
-    Alison Schofield <alison.schofield@intel.com>, 
-    Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-    Dan Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, terry.bowman@amd.com, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-In-Reply-To: <20240605213910.00003034@huawei.com>
-Message-ID: <f4b23710-059a-51b7-9d27-b62e8b358b54@linux.intel.com>
-References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com> <20240605180409.GA520888@bhelgaas> <20240605204428.00001cb2@Huawei.com> <20240605213910.00003034@huawei.com>
+Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+ <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <philmd@linaro.org>, "Richard
+ Henderson" <richard.henderson@linaro.org>, Dave Jiang
+ <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>,
+ <linuxarm@huawei.com>, Michael Roth <michael.roth@amd.com>, Ani Sinha
+ <anisinha@redhat.com>
+Subject: Re: [PATCH qemu ] hw/acpi: Fix big endian host creation of Generic
+ Port Affinity Structures
+Message-ID: <20240617124901.1414a93f@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240614150835.00000674@Huawei.com>
+References: <20240605180455.18193-1-Jonathan.Cameron@huawei.com>
+	<20240606160653.27226def@imammedo.users.ipa.redhat.com>
+	<20240606184716.00000708@Huawei.com>
+	<20240614125725.730f8914@imammedo-mac>
+	<20240614150835.00000674@Huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Jun 2024, Jonathan Cameron wrote:
+On Fri, 14 Jun 2024 15:08:35 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> On Wed, 5 Jun 2024 20:44:28 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> On Fri, 14 Jun 2024 12:57:25 +0200
+> Igor Mammedov <imammedo@redhat.com> wrote:
 > 
-> > On Wed, 5 Jun 2024 13:04:09 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > 
-> > > On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:  
-> > > > Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
-> > > > Switch USP and DSPs.
+> > On Thu, 6 Jun 2024 18:47:16 +0100
+> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> >   
+> > > On Thu, 6 Jun 2024 16:06:53 +0200
+> > > Igor Mammedov <imammedo@redhat.com> wrote:
+> > >     
+> > > > On Wed, 5 Jun 2024 19:04:55 +0100
+> > > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> > > >     
+> > > > > Treating the HID as an integer caused it to get bit reversed
+> > > > > on big endian hosts running little endian guests.  Treat it
+> > > > > as a character array instead.
+> > > > > 
+> > > > > Fixes hw/acpi: Generic Port Affinity Structure Support
+> > > > > Tested-by: Richard Henderson <richard.henderson@linaro.org>
+> > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > > 
+> > > > > ---
+> > > > > Richard ran the version posted in the thread on an s390 instance.
+> > > > > Thanks for the help!
+> > > > > 
+> > > > > Difference from version in thread:
+> > > > > - Instantiate i in the for loop.
+> > > > > 
+> > > > > Sending out now so Michael can decide whether to fold this in, or
+> > > > > drop the GP series for now from his pull request (in which case
+> > > > > I'll do an updated version with this and Markus' docs feedback
+> > > > > folded in.)
+> > > > > 
+> > > > > ---
+> > > > >  include/hw/acpi/acpi_generic_initiator.h | 2 +-
+> > > > >  hw/acpi/acpi_generic_initiator.c         | 4 +++-
+> > > > >  2 files changed, 4 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/acpi_generic_initiator.h
+> > > > > index 1a899af30f..5baefda33a 100644
+> > > > > --- a/include/hw/acpi/acpi_generic_initiator.h
+> > > > > +++ b/include/hw/acpi/acpi_generic_initiator.h
+> > > > > @@ -61,7 +61,7 @@ typedef struct PCIDeviceHandle {
+> > > > >              uint16_t bdf;
+> > > > >          };
+> > > > >          struct {
+> > > > > -            uint64_t hid;
+> > > > > +            char hid[8];
+> > > > >              uint32_t uid;
+> > > > >          };
+> > > > >      };      
 > > > > 
-> > > > The final patch moving AER to the aux bus is in the category of 'why
-> > > > not try this' rather than something I feel is a particularly good idea.
-> > > > I would like to get opinions on the various ways to avoid the double bus
-> > > > situation introduced here. Some comments on other options for those existing
-> > > > 'pci_express' bus devices at the end of this cover letter.
-> > > > 
-> > > > The primary problem this RFC tries to solve is providing a means to
-> > > > register the CXL PMUs found in devices which will be bound to the
-> > > > PCIe portdrv. The proposed solution is to avoid the limitations of
-> > > > the existing pcie service driver approach by bolting on support
-> > > > for devices registered on the auxiliary_bus.
-> > > > 
-> > > > Background
-> > > > ==========
-> > > > 
-> > > > When the CXL PMU driver was added, only the instances found in CXL type 3
-> > > > memory devices (end points) were supported. These PMUs also occur in CXL
-> > > > root ports, and CXL switch upstream and downstream ports.  Adding
-> > > > support for these was deliberately left for future work because theses
-> > > > ports are all bound to the pcie portdrv via the appropriate PCI class
-> > > > code.  Whilst some CXL support of functionality on RP and Switch Ports
-> > > > is handled by the CXL port driver, that is not bound to the PCIe device,
-> > > > is only instantiated as part of enumerating endpoints, and cannot use
-> > > > interrupts because those are in control of the PCIe portdrv. A PMU with
-> > > > out interrupts would be unfortunate so a different solution is needed.
-> > > > 
-> > > > Requirements
-> > > > ============
-> > > > 
-> > > > - Register multiple CXL PMUs (CPMUs) per portdrv instance.    
+> > > > not sure on top of what this patch applies but I have some generic comments wrt it    
 > > > 
-> > > What resources do CPMUs use?  BARs?  Config space registers in PCI
-> > > Capabilities?  Interrupts?  Are any of these resources
-> > > device-specific, or are they all defined by the CXL specs?  
-> > 
-> > Uses the whole lot (there isn't a toy out there that the CXL
-> > spec doesn't like to play with :). Discoverable via a CXL defined DVSEC
-> > in config space. Registers are in a BAR (discovered from the DVSEC).
-> > MSI/MSIX, number in a register in the BAR.
-> > 
-> > All the basic infrastructure and some performance event definitions
-> > are in the CXL spec.  It's all discoverable. 
-> > 
-> > The events are even tagged with VID so a vendor can implement
-> > someone else's definitions or those coming from another specification.
-> > A bunch of CXL VID tagged ones exist for protocol events etc.
-> > 
-> > It's a really nice general spec.  If I were more of a dreamer and had
-> > the time I'd try to get PCI-SIG to adopt it and we'd finally have
-> > something generic for PCI performance counting.
-> > 
+> > > https://lore.kernel.org/qemu-devel/20240524100507.32106-1-Jonathan.Cameron@huawei.com/
 > > > 
-> > > The "device" is a nice way to package those up and manage ownership
-> > > since there are often interdependencies.
+> > > Comments are all on elements of the existing upstream code, but I'm touching it
+> > > anyway so will look at making the improvements you suggest as new precursors
+> > > to v3 given we are going around again anyway.
+> > >     
+> > > > 
+> > > > why PCIDeviceHandle is in header file? is there plan for it
+> > > > being used outside of acpi_generic_initiator.c?    
 > > > 
-> > > I wish portdrv was directly implemented as part of the PCI core,
-> > > without binding to the device as a "driver".  We handle some other
-> > > pieces of functionality that way, e.g., the PCIe Capability itself,
-> > > PM, VPD, MSI/MSI-X,   
+> > > I'll add a precursor patch to my series that moves
+> > > it and anything else that should be more local.  May well move
+> > > to being local in aml_build.c given your later comments with the
+> > > various fields passed in as parameters.
+> > >     
+> > > > 
+> > > >     
+> > > > > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
+> > > > > index 78b80dcf08..f064753b67 100644
+> > > > > --- a/hw/acpi/acpi_generic_initiator.c
+> > > > > +++ b/hw/acpi/acpi_generic_initiator.c
+> > > > > @@ -151,7 +151,9 @@ build_srat_generic_node_affinity(GArray *table_data, int node,
+> > > > >          build_append_int_noprefix(table_data, 0, 12);
+> > > > >      } else {
+> > > > >          /* Device Handle - ACPI */
+> > > > > -        build_append_int_noprefix(table_data, handle->hid, 8);
+> > > > > +        for (int i = 0; i < sizeof(handle->hid); i++) {
+> > > > > +            build_append_int_noprefix(table_data, handle->hid[i], 1);
+> > > > > +        }
+> > > > >          build_append_int_noprefix(table_data, handle->uid, 4);
+> > > > >          build_append_int_noprefix(table_data, 0, 4);      
+> > > > 
+> > > > instead of open codding structure
+> > > > 
+> > > > it might be better to introduce helper in aml_build.c
+> > > > something like 
+> > > >   /* proper reference to spec as we do for other ACPI primitives */
+> > > >   build_append_srat_acpi_device_handle(GArray *table_data, char* hid, unit32_t uid)
+> > > >       assert(strlen(hid) ...
+> > > >       for() {
+> > > >             build_append_byte()
+> > > >       }          
+> > > >       ...
+> > > > 
+> > > > the same applies to "Device Handle - PCI" structure    
+> > > 
+> > > I'll look at moving that stuff and the affinity structure creation
+> > > code themselves in there. I think they ended up in this file because
+> > > of the other infrastructure needed to create these nodes and it
+> > > will have felt natural to keep this together.
+> > > 
+> > > Putting it in aml_build.c will put it with similar code though
+> > > which makes sense to me.    
 > > 
-> > Understood, though I would guess that even then there needs to
-> > be a pci_driver binding to the class code to actually query all those
-> > facilities and get interrupts registered etc.
+> > the point of moving handle packing to aml-build.c,
+> > is to isolate primitives that likely could be reused later on elsewhere
+> > and hide little endiannes from API user.
+> > So shuch errors as you are fixing wouldn't be easy to introduce
+> > (as long as API does it right)
+> > 
+> > 
+> > Also this API probably should take not packed BDF, i.e. something like this:
+> >     build_append_srat_pci_device_handle(GArray *table_data, bus, dev, func)
+> > 
+> > Or a packed BDF as you suggest in the later email, but then API function wold have
+> > to 'decode' that before putting numbers into table, which complicates things
+> > and likely would pull in PCI deps to unpack BDF, which I'd rather avoid in
+> > generic aml-build.c  
 > 
-> Or are you thinking we can make something like the following work
-> (even when we can't do dynamic msix)?
+> Ok. I can split it up. My motivation for the encoded version was that
+> the spec field is defined as a 2 byte field, but it is also broken out
+> in the description into byte 2 then various bits of byte 3 so we can construct
+> it that way instead. (were it defined as bits in the 16 bit field this would
+> make less sense).  Should still be obvious enough to anyone trying to
+> correlate the two.
 > 
-> Core bring up facilities and interrupt etc.  That includes bus master
-> so msi/msix can be issued (which makes me nervous - putting aside other
-> concerns as IIRC there are drivers where you have to be careful to
-> tweak registers to ensure you don't get a storm of traffic when you
-> hit bus master enable.
-> 
-> Specific driver may bind later - everything keeps running until 
-> the specific driver calls pci_alloc_irq_vectors(), then we have to disable all
-> interrupts for core managed services, change the number of vectors and
-> then move them to wherever they end up before starting them again.
-> We have to do the similar in the unwind path.
-> 
-> I can see we might make something like that work, but I'd be very worried
-> we'd hit devices that didn't behave correctly under this flow even if
-> there aren't any specification caused problems.
-> 
-> Even if this is a possible long term plan, maybe we don't want to try and
-> get there in one hop?
+> Splitting the devfn bit up though is tricky as that doesn't really
+> have a separate meaning in PCI any more given ARI where it becomes an 8 bit
+> function ID. So probably makes more sense to keep that as devfn as it's
+> coming from pci->devfn in that form anyway and they both forms get encoded
+> into a byte anyway.
 
-I've just a small bit of detail to add here (but I'm far from expert when 
-it comes to the driver model, rpm, etc. areas so please keep that in mind
-if something I say doesn't make sense).
-
-One problematic thing with current portdrv model and interrupts is that
-portdrv resumes too late from hotplug's point of view.
-
-When resuming, the PCI core tries to ensure downstream port's bus and 
-devices there are in usable state by waiting for the devices before 
-portdrv is resumed. For hotplug case, this is problematic because if 
-devices were unplugged during suspend or are unplugged during that wait, 
-hotplug cannot notice the unplug before the wait times out because hotplug 
-is not yet resumed.
-
--- 
- i.
-
+ack, 
+as long as acpi API user doesn't have to worry about byte order it should be fine
 
 > 
 > Jonathan
 > 
-> > 
-> > >   
-> > > > - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
-> > > >   covers any PCI-Express port.
-> > > > - PCI MSI / MSIX message based interrupts must be registered by one driver -
-> > > >   in this case it's the portdrv.    
-> > > 
-> > > The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
-> > > is a really annoying part of PCIe because bridges may have a BAR or
-> > > two and are allowed to have device-specific endpoint-like behavior, so
-> > > we may have to figure out how to share those interrupts between the
-> > > PCIe-architected stuff and the device-specific stuff.  I guess that's
-> > > messy no matter whether portdrv is its own separate driver or it's
-> > > integrated into the core.  
-> > 
-> > Yes, the interrupt stuff is the tricky bit.  I think whatever happens
-> > we end up with a pci device driver that binds to the class code.
-> > Maybe we have a way to switch in alternative drivers if that turns
-> > out to be necessary.
-> > 
-> > Trying to actually manage the interrupts in the core (without a driver binding)
-> > is really tricky.  Maybe we'll get there one day, but I don't think
-> > it is the first target.  We should however make sure not to do anything
-> > that would make that harder such as adding ABI in the wrong places.
-> > 
-> > >   
-> > > > Side question.  Does anyone care if /sys/bus/pci_express goes away?
-> > > > - in theory it's ABI, but in practice it provides very little
-> > > >   actual ABI.    
-> > > 
-> > > I would *love* to get rid of /sys/bus/pci_express, but I don't know
-> > > what, if anything, would break if we removed it.  
-> > 
-> > Could try it and see who screams ;) or fake it via symlinks or similar
-> > (under a suitable 'legacy' config variable that is on by default.)
-> > 
-> > How about I try the following steps:
-> > 0) An experiment to make sure I can fake /sys/bus/pci_express so it's
-> >    at least hard to tell there aren't real 'devices' registered on that
-> >    bus. Even if we decide not to do that long term, we need to know
-> >    we can if a regressions report comes in.
-> >    Worst comes to the worse we can register fake devices that fake
-> >    drivers bind to that don't do anything beyond fill in sysfs.
-> > 1) Replace the bus/pci_express with direct functional calls in
-> >    portdrv.  
-> >    I'm thinking we have a few calls for each:
-> >     bool aer_present(struct pci_dev *pci);
-> >     aer_query_max_message_num() etc - used so we can do the msi/msix bit.
-> >     aer_initialize()
-> >     aer_finalize()
-> >     aer_runtime_suspend() (where relevant for particular services)
-> > 
-> >    at the cost of a few less loops and a few more explicit calls
-> >    that should simplify how things fit together.
-> > 
-> > 2) Fix up anything in all that functionality that really cares
-> >    that they are part of portdrv.  Not sure yet, but we may need
-> >    a few additional things in struct pci_dev, or a to pass in some
-> >    state storage in the ae_initialize() call or similar.
-> > 3) Consider moving that functionality to a more appropriate place.
-> >    At this point we'll have services that can be used by other
-> >    drivers - though I'm not yet sure how useful that will be.
-> > 4) End up with a small pci_driver that binds to pci devices with
-> >    the appropriate class code. Should even be able to make it
-> >    a module.
-> > 5) (maybe do this first) carry my auxiliary_bus + cpmu stuff
-> >    and allow adopting other similar cases alongside the other
-> >    parts.
-> > 
-> > Of course, no statements on 'when' I'll make progress if this seems
-> > like a step forwards, but probably sometime this summer. Maybe sooner.
-> > 
-> > Jonathan
-> > 
-> > > 
-> > > Bjorn  
-> > 
-> > 
 > 
+> >   
+> > >     
+> > > > 
+> > > > Also get rid of PCI deps in acpi_generic_initiator.c 
+> > > > move build_all_acpi_generic_initiators/build_srat_generic_pci_initiator into
+> > > > hw/acpi/pci.c    
+> > > 
+> > > Today it's used only for PCI devices, but that's partly an artifact
+> > > of how we get to the root complex via the bus below it.
+> > > 
+> > > Spec wise, it's just as applicable to platform devices etc, but maybe
+> > > we can move it to pci.c for now and move it out again if it gains other
+> > > users. Or leave it in acpi_generic_initiator.c but have all the aml
+> > > stuff in aml_build.c as you suggest. 
+> > >     
+> > > > file if it has to access PCI code/structures directly
+> > > > (which I'm not convinced it should, can we get/expose what it needs as QOM properties?)    
+> > > 
+> > > Maybe. I'll see what I can come up with.  This feels involved
+> > > however so I'm more doubtful about this as a precursor.
+> > >     
+> > > > 
+> > > > btw:
+> > > > build_all_acpi_generic_initiators() name doesn't match what it's doing.
+> > > > it composes only one initiator entry.    
+> > > 
+> > > I'll look at tidying up all the relevant naming.
+> > > 
+> > > Jonathan
+> > >     
+> > > >     
+> > > > >      }      
+> > > > 
+> > > >     
+> > >     
+> > 
+> >   
+> 
+
