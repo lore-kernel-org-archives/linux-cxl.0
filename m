@@ -1,48 +1,47 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+Received: from esa10.hc1455-7.c3s2.iphmx.com (esa10.hc1455-7.c3s2.iphmx.com [139.138.36.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2F1D688
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 04:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BECA819
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 04:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718598870; cv=none; b=I0svYaQlL4fdHbt+dilsImpDQKfZYlynel/goOykMwYMJrkgRsfh1RoBijcmI6XawLjNQGkBF0B6shVDvWyfkVK9pYkpywdbWTcoSuj9YhOXItGlXZeb+aBq3XUKPC5bP+CaWHvlk7KOs3/m8MslXOAuqpHtJu897o4k5HMMEq8=
+	t=1718599053; cv=none; b=sDWlWriA5fXWbrXRZ1qXk0nR7MP7eOVbG9DE2Mny1r/AGWA4c8PNjIwLQZa/7UGdbikvFDquT4viXi470uky0HQ6ITtIePqh5bMxtjtq/KXnFwzt/ba67Wqqp8GYzYTEud+MeaQZKY/UV3QIHPKWYGs4xofBnF3qQS3ws1u5Z+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718598870; c=relaxed/simple;
-	bh=3sdVCTNbhT6QCih0j6GcEDHKEd4WNeoMx94wAaUews0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pE9PdhGYBPVIHEpq9H+arTWpWcr166bRYQfs6SVMC7DdFYOGg77zQoJuliNDlWTvrrLBj7fo4/eIyD1QTt6OtlsDuPzQDYnRmjqmL0yF0oqNLtUddp0/vkK2A11RsqUxhWMT1d25yNfthj5q5Bq6Pcxca/U3rBKx8alAO7X+22U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=BNAHMYAF; arc=none smtp.client-ip=68.232.139.130
+	s=arc-20240116; t=1718599053; c=relaxed/simple;
+	bh=UE5FFzIWZhQ83Dyv/W4Kup1RU9Qqr3+YPLj2K3Mlr9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P4/G8kGRnQK+qPJzKwSITW0G5x/5xSM7yluz0WBknMRGRRYMBHPwvc/yHyscfdrZ9weg7ZxB9TqoSy94RpiBayIvvgTyZ4Hu3S/BAWYbl2M9AvbXxmCUYKSWHknztvcFQ0reKdSKZ1+U7yhAJRra+YMw8KRg4G4XiLSxU6UjKxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=V+npieBg; arc=none smtp.client-ip=139.138.36.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="BNAHMYAF"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="V+npieBg"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1718598867; x=1750134867;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3sdVCTNbhT6QCih0j6GcEDHKEd4WNeoMx94wAaUews0=;
-  b=BNAHMYAFpLeDVyXcyM3HBeLWmQ1zXW9Rhs6ZNIytFt0s5ztN7KxYF4uB
-   QmfVKsJwM4XiSk9LUXS59RWfm4W6TokV7BhQ5xImmmvi60rNSo/Yb9EX/
-   cH+X7mS4R1jbHvRMp9gFvDTqhT85pUiZkDsTfgATJw3TonZOAfxjdzx/t
-   MrnL7PXl7dImJD0ozCsadYo4zJdGL24OWnPw/9o5CAuNruFOLHdtDp/ur
-   4vUU0taTXZVqIGxBJjbXFavm8989+Gk9TAE6IxQWSHkRdkT4NrXlTS2Lo
-   b5WgdPmxOvdvVQ6VDQjRgTXmdbtQswJ58PIqiz9jP6q4ZViLc+eXZN8SG
+  t=1718599050; x=1750135050;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UE5FFzIWZhQ83Dyv/W4Kup1RU9Qqr3+YPLj2K3Mlr9k=;
+  b=V+npieBgdp3OlVcYvGOrvnEm7hGlbVuGsSft6+12vZ9vjBy7lHHWAvg+
+   p0V/kMD5hggfxHYKJEpUre+ne7shBxueswK+F3KnehZnZZj7Y6z9TTdoa
+   SsOgg35zqFtu73CAFu2nFylXT0wnOX2ikwEPG/gbi0uty1Yuv/jyHz0pM
+   2paf4MqCacx9ESzM7XzkPm7w7Jv+9KPMnff2pNL6ptMV0+rj+srS3mqWN
+   x1fVONCcbYN5rsrizLt3A2f/uFCv+IReQ+QtRJLt7tjr1TorzIkkjyhn1
+   XSa7RqKJzqLkmN7slQBMLkwGzRZ2eZxuLMAmsyk79odEEDypg0RrQFQJR
    w==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="162856351"
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="151045147"
 X-IronPort-AV: E=Sophos;i="6.08,244,1712588400"; 
-   d="scan'208";a="162856351"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 13:34:18 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8CBC5D4250
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:16 +0900 (JST)
+   d="scan'208";a="151045147"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 13:34:14 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 60EB5CC142
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:12 +0900 (JST)
 Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id D0F9AD73B9
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:15 +0900 (JST)
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 9D272D52F1
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:11 +0900 (JST)
 Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 927B22020F93;
-	Mon, 17 Jun 2024 13:34:15 +0900 (JST)
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 5DD092020F93;
+	Mon, 17 Jun 2024 13:34:11 +0900 (JST)
 From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 To: kobayashi.da-06@jp.fujitsu.com,
 	linux-cxl@vger.kernel.org
@@ -51,12 +50,10 @@ Cc: y-goto@fujitsu.com,
 	dan.j.williams@intel.com,
 	jonathan.cameron@huawei.com,
 	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [PATCH v13 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
-Date: Mon, 17 Jun 2024 13:37:01 +0900
-Message-ID: <20240617043702.62028-2-kobayashi.da-06@fujitsu.com>
+Subject: [PATCH v13 0/2] Export cxl1.1 device link status register value to pci device sysfs.
+Date: Mon, 17 Jun 2024 13:37:00 +0900
+Message-ID: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
-References: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,156 +63,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 
-Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
-device link status information. By caching it, avoid the walking 
-memory map area to find the offset when output the register value.
+CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+the link status can be output in the same way as traditional PCIe.
+However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+different method to obtain the link status from traditional PCIe.
+This is because the link status of the CXL1.1 device is not mapped
+in the configuration space (as per cxl3.0 specification 8.1).
+Instead, the configuration space containing the link status is mapped
+to the memory mapped register region (as per cxl3.0 specification 8.2,
+Table 8-18). Therefore, the current lspci has a problem where it does
+not display the link status of the CXL1.1 device. 
+Solve these issues with sysfs attributes to export the status
+registers hidden in the RCRB.
 
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/core/core.h |  6 ++++
- drivers/cxl/core/regs.c | 61 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |  9 ++++++
- drivers/cxl/pci.c       |  8 ++++--
- 4 files changed, 82 insertions(+), 2 deletions(-)
+The procedure is as follows:
+First, obtain the RCRB address within the cxl driver, then access 
+the configuration space. Next, output the link status information from
+the configuration space to sysfs. Ultimately, the expectation is that
+this sysfs file will be consumed by PCI user tools to utilize link status
+information.
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..69006bde7ad5 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device *dev,
- 				    struct cxl_rcrb_info *ri,
- 				    enum cxl_rcrb which);
- u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
-+resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport);
-+
-+#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-+#define PCI_CAP_EXP_SIZEOF		0x3c
- 
- extern struct rw_semaphore cxl_dpa_rwsem;
- extern struct rw_semaphore cxl_region_rwsem;
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 372786f80955..a5d1ae09bded 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -505,6 +505,67 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
- 	return offset;
- }
- 
-+resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
-+{
-+	resource_size_t rcrb = dport->rcrb.base;
-+	void __iomem *addr;
-+	u32 cap_hdr;
-+	u16 offset;
-+
-+	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-+		return CXL_RESOURCE_NONE;
-+
-+	addr = ioremap(rcrb, SZ_4K);
-+	if (!addr) {
-+		dev_err(dev, "Failed to map region %pr\n", addr);
-+		release_mem_region(rcrb, SZ_4K);
-+		return CXL_RESOURCE_NONE;
-+	}
-+
-+	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-+	cap_hdr = readl(addr + offset);
-+	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-+		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-+		if (offset == 0 || offset > SZ_4K) {
-+			offset = 0;
-+			break;
-+		}
-+		cap_hdr = readl(addr + offset);
-+	}
-+
-+	iounmap(addr);
-+	release_mem_region(rcrb, SZ_4K);
-+	if (offset > 0)
-+		return offset;
-+	else
-+		return CXL_RESOURCE_NONE;
-+}
-+
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev)
-+{
-+	void __iomem *dport_pcie_cap = NULL;
-+	resource_size_t rcd_pcie_offset;
-+	struct cxl_rcrb_info *ri;
-+	struct cxl_dport *dport;
-+	struct cxl_port *port;
-+
-+	port = cxl_pci_find_port(pdev, &dport);
-+	if (!port)
-+		return -EPROBE_DEFER;
-+
-+	ri = &dport->rcrb;
-+	rcd_pcie_offset = cxl_rcrb_to_linkcap(&pdev->dev, dport);
-+	if (rcd_pcie_offset > 0)
-+		dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev,
-+						      ri->base + rcd_pcie_offset,
-+						      PCI_CAP_EXP_SIZEOF);
-+
-+	dport->regs.rcd_pcie_cap = dport_pcie_cap;
-+	
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
-+
- resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
- 				    enum cxl_rcrb which)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..7e37ad6d84d6 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -230,6 +230,14 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_rch_regs, rch_regs,
- 		void __iomem *dport_aer;
- 	);
-+
-+	/*
-+	 * RCD upstream port specific PCIe cap register
-+	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
-+	 */
-+	struct_group_tagged(cxl_rcd_regs, rcd_regs,
-+		void __iomem *rcd_pcie_cap;
-+	);
- };
- 
- struct cxl_reg_map {
-@@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
- struct cxl_dport;
- resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
- 					   struct cxl_dport *dport);
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev);
- 
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..bbc55732d6c1 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -512,11 +512,15 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	 * is an RCH and try to extract the Component Registers from
- 	 * an RCRB.
- 	 */
--	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
-+	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
- 		rc = cxl_rcrb_get_comp_regs(pdev, map);
-+		if (rc)
-+			return rc;
- 
--	if (rc)
-+		cxl_dport_map_rcd_linkcap(pdev);
-+	} else if (rc) {
- 		return rc;
-+	}
- 
- 	return cxl_setup_regs(map);
- }
+
+Changes
+v1[1] -> v2:
+- Modified to perform rcrb access within the CXL driver.
+- Added new attributes to the sysfs of the PCI device.
+- Output the link status information to the sysfs of the PCI device.
+- Retrieve information from sysfs as the source when displaying information in lspci.
+
+v2[2] -> v3:
+- Fix unnecessary initialization and wrong types (Bjohn).
+- Create a helper function for getting a PCIe capability offset (Bjohn).
+- Move platform-specific implementation to the lib directory in pciutils (Martin).
+
+v3[3] -> v4:
+- RCRB register values are read once and cached.
+- Added a new attribute to the sysfs of the PCI device.
+- Separate lspci implementation from this patch.
+
+v4[4] -> v5:
+- Use macros for bitwise operations
+- Fix RCRB access to use cxl_memdev
+
+v5[5] -> v6:
+- Add and use masks for RCRB register values
+
+v6[6] -> v7:
+- Fix comments on white space inline
+
+v7[7] -> v8:
+- Change the cache value to offset
+- Access memory map area in rcd_*_show() functions
+
+v8[8] -> v9:
+- Map the pcie cap in for all the time the driver is bound to the device.
+- Add mapping the pcie cap in cxl_rcd_component_reg_phys().
+
+v9[9] -> v10:
+- Change a utility function for getting PCIe capability.
+- Fix tab alignment issue, error handling, and apply suggestions from Jonathan.
+
+v10[10] -> v11:
+- Add functions to have one function do only one thing.
+- Add a size parameter to utility function arguments and consolidated them into one.
+
+v11[11] -> v12:
+- Fix the error handling in cxl_pci_setup_regs().
+- Fix and clean up some details.
+
+v12[12] -> v13:
+- Fix and clean up some details.
+
+
+Kobayashi,Daisuke (2):
+  cxl/core/regs: Add rcd_pcie_cap initialization
+  cxl/pci: Add sysfs attribute for CXL 1.1 device link status
+
+ drivers/cxl/core/core.h |  6 +++
+ drivers/cxl/core/regs.c | 61 ++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |  9 +++++
+ drivers/cxl/pci.c       | 89 ++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 163 insertions(+), 2 deletions(-)
+
 -- 
 2.44.0
 
