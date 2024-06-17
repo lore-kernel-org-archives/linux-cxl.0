@@ -1,137 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452C129D19;
-	Mon, 17 Jun 2024 02:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2F1D688
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 04:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718590322; cv=none; b=X/awC+Y2IDBW9TpMwx2ICqS/eywVPKAsr10cUCuJktzUBAPn36JKzC3F83vZNvvd1QrycDU2YchozjEix8MhPaU7woqXo7eaeh+6/QQGQvmShu54PzrYcwfsQFHu6TMBZNSF1J2oF3hcgYEK/Uapj07edtKpy4SDL+bz8qSRWLg=
+	t=1718598870; cv=none; b=I0svYaQlL4fdHbt+dilsImpDQKfZYlynel/goOykMwYMJrkgRsfh1RoBijcmI6XawLjNQGkBF0B6shVDvWyfkVK9pYkpywdbWTcoSuj9YhOXItGlXZeb+aBq3XUKPC5bP+CaWHvlk7KOs3/m8MslXOAuqpHtJu897o4k5HMMEq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718590322; c=relaxed/simple;
-	bh=itwsVa10Pb4Iql/zli9eOmB+/Xbz4VCqkvBFU09kQo8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MMrTwlhSHn2pCgq6NnHEQLlKCiwWQoHZn3FSP0V6mvtBULdtPjmHneF1NoeJwGKbRAnsF1R5r7yzzpKqUI7Xdfkbnqsl3uokxxMmYH5H/nWcuWAMjQe2Z+wAcesrqpmwKzi5rP9RB8QmycefAZyvSrHR/82R5gS+DAyGQz8L7wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqc1uP7r; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718598870; c=relaxed/simple;
+	bh=3sdVCTNbhT6QCih0j6GcEDHKEd4WNeoMx94wAaUews0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pE9PdhGYBPVIHEpq9H+arTWpWcr166bRYQfs6SVMC7DdFYOGg77zQoJuliNDlWTvrrLBj7fo4/eIyD1QTt6OtlsDuPzQDYnRmjqmL0yF0oqNLtUddp0/vkK2A11RsqUxhWMT1d25yNfthj5q5Bq6Pcxca/U3rBKx8alAO7X+22U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=BNAHMYAF; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqc1uP7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718590320; x=1750126320;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=itwsVa10Pb4Iql/zli9eOmB+/Xbz4VCqkvBFU09kQo8=;
-  b=hqc1uP7r2qzD0rySLPNZzikTqZzk7elksR411udrfhqPRv/9nVrfKol8
-   4Px62JLVCxFgyaN+IyJqSgXY3s55/0kh7+huNCixtSv2hAN3WRIX2RNPd
-   TbHot0gff9qDLyb4768b/X/B0xo1z3cK09F8kD2i+UpX0iq47NnR7WyZT
-   vz35xx64iNUuCUmVUxuinAbJBqYiDAC5AwhfyZ/sLK82VGFfBIFZcEbXL
-   2OhWnNk/YFT7Fxg7snoibvdEyR9xrdpBgCzJZjpLmYOotcyY1wWSATNgp
-   cPOk/yM3zlAn6jAGUgdUwuTBWUIj5V3NmgVPEkuAA5tsSAGOm7MvWTkmF
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="BNAHMYAF"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1718598867; x=1750134867;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3sdVCTNbhT6QCih0j6GcEDHKEd4WNeoMx94wAaUews0=;
+  b=BNAHMYAFpLeDVyXcyM3HBeLWmQ1zXW9Rhs6ZNIytFt0s5ztN7KxYF4uB
+   QmfVKsJwM4XiSk9LUXS59RWfm4W6TokV7BhQ5xImmmvi60rNSo/Yb9EX/
+   cH+X7mS4R1jbHvRMp9gFvDTqhT85pUiZkDsTfgATJw3TonZOAfxjdzx/t
+   MrnL7PXl7dImJD0ozCsadYo4zJdGL24OWnPw/9o5CAuNruFOLHdtDp/ur
+   4vUU0taTXZVqIGxBJjbXFavm8989+Gk9TAE6IxQWSHkRdkT4NrXlTS2Lo
+   b5WgdPmxOvdvVQ6VDQjRgTXmdbtQswJ58PIqiz9jP6q4ZViLc+eXZN8SG
    w==;
-X-CSE-ConnectionGUID: AxMJ1nybSS6ZRe92CoN0pw==
-X-CSE-MsgGUID: 1cE1bNYZRmu/9WnZBB3iLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="26038109"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="26038109"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 19:11:59 -0700
-X-CSE-ConnectionGUID: 999u2h2dQjiv9bTlFQfcKg==
-X-CSE-MsgGUID: y1E7LXt1SeKrOE9Ku0BjnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="45499818"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 19:11:56 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Bharata B Rao <bharata@amd.com>,  Alistair
- Popple <apopple@nvidia.com>,  "Aneesh Kumar K . V"
- <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH -V2] cxl/region: Support to calculate memory tier
- abstract distance
-In-Reply-To: <ZmjBfcaosIlOODFR@aschofie-mobl2> (Alison Schofield's message of
-	"Tue, 11 Jun 2024 14:28:29 -0700")
-References: <20240611055423.470574-1-ying.huang@intel.com>
-	<ZmjBfcaosIlOODFR@aschofie-mobl2>
-Date: Mon, 17 Jun 2024 10:10:05 +0800
-Message-ID: <87v8285ngi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="162856351"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712588400"; 
+   d="scan'208";a="162856351"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 13:34:18 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8CBC5D4250
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:16 +0900 (JST)
+Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
+	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id D0F9AD73B9
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 13:34:15 +0900 (JST)
+Received: from cxl-test.. (unknown [10.118.236.45])
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 927B22020F93;
+	Mon, 17 Jun 2024 13:34:15 +0900 (JST)
+From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+To: kobayashi.da-06@jp.fujitsu.com,
+	linux-cxl@vger.kernel.org
+Cc: y-goto@fujitsu.com,
+	mj@ucw.cz,
+	dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com,
+	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Subject: [PATCH v13 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Date: Mon, 17 Jun 2024 13:37:01 +0900
+Message-ID: <20240617043702.62028-2-kobayashi.da-06@fujitsu.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
+References: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 
-Alison Schofield <alison.schofield@intel.com> writes:
+Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
+device link status information. By caching it, avoid the walking 
+memory map area to find the offset when output the register value.
 
-> On Tue, Jun 11, 2024 at 01:54:23PM +0800, Ying Huang wrote:
+Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+---
+ drivers/cxl/core/core.h |  6 ++++
+ drivers/cxl/core/regs.c | 61 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |  9 ++++++
+ drivers/cxl/pci.c       |  8 ++++--
+ 4 files changed, 82 insertions(+), 2 deletions(-)
 
-[snip]
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 3b64fb1b9ed0..69006bde7ad5 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -74,6 +74,12 @@ resource_size_t __rcrb_to_component(struct device *dev,
+ 				    struct cxl_rcrb_info *ri,
+ 				    enum cxl_rcrb which);
+ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
++resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport);
++
++#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
++#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
++#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
++#define PCI_CAP_EXP_SIZEOF		0x3c
+ 
+ extern struct rw_semaphore cxl_dpa_rwsem;
+ extern struct rw_semaphore cxl_region_rwsem;
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 372786f80955..a5d1ae09bded 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -505,6 +505,67 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
+ 	return offset;
+ }
+ 
++resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
++{
++	resource_size_t rcrb = dport->rcrb.base;
++	void __iomem *addr;
++	u32 cap_hdr;
++	u16 offset;
++
++	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
++		return CXL_RESOURCE_NONE;
++
++	addr = ioremap(rcrb, SZ_4K);
++	if (!addr) {
++		dev_err(dev, "Failed to map region %pr\n", addr);
++		release_mem_region(rcrb, SZ_4K);
++		return CXL_RESOURCE_NONE;
++	}
++
++	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
++	cap_hdr = readl(addr + offset);
++	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
++		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
++		if (offset == 0 || offset > SZ_4K) {
++			offset = 0;
++			break;
++		}
++		cap_hdr = readl(addr + offset);
++	}
++
++	iounmap(addr);
++	release_mem_region(rcrb, SZ_4K);
++	if (offset > 0)
++		return offset;
++	else
++		return CXL_RESOURCE_NONE;
++}
++
++int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev)
++{
++	void __iomem *dport_pcie_cap = NULL;
++	resource_size_t rcd_pcie_offset;
++	struct cxl_rcrb_info *ri;
++	struct cxl_dport *dport;
++	struct cxl_port *port;
++
++	port = cxl_pci_find_port(pdev, &dport);
++	if (!port)
++		return -EPROBE_DEFER;
++
++	ri = &dport->rcrb;
++	rcd_pcie_offset = cxl_rcrb_to_linkcap(&pdev->dev, dport);
++	if (rcd_pcie_offset > 0)
++		dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev,
++						      ri->base + rcd_pcie_offset,
++						      PCI_CAP_EXP_SIZEOF);
++
++	dport->regs.rcd_pcie_cap = dport_pcie_cap;
++	
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
++
+ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
+ 				    enum cxl_rcrb which)
+ {
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 003feebab79b..7e37ad6d84d6 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -230,6 +230,14 @@ struct cxl_regs {
+ 	struct_group_tagged(cxl_rch_regs, rch_regs,
+ 		void __iomem *dport_aer;
+ 	);
++
++	/*
++	 * RCD upstream port specific PCIe cap register
++	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
++	 */
++	struct_group_tagged(cxl_rcd_regs, rcd_regs,
++		void __iomem *rcd_pcie_cap;
++	);
+ };
+ 
+ struct cxl_reg_map {
+@@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
+ struct cxl_dport;
+ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+ 					   struct cxl_dport *dport);
++int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev);
+ 
+ #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+ #define CXL_TARGET_STRLEN 20
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 2ff361e756d6..bbc55732d6c1 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -512,11 +512,15 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	 * is an RCH and try to extract the Component Registers from
+ 	 * an RCRB.
+ 	 */
+-	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
++	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
+ 		rc = cxl_rcrb_get_comp_regs(pdev, map);
++		if (rc)
++			return rc;
+ 
+-	if (rc)
++		cxl_dport_map_rcd_linkcap(pdev);
++	} else if (rc) {
+ 		return rc;
++	}
+ 
+ 	return cxl_setup_regs(map);
+ }
+-- 
+2.44.0
 
->> ---
->>  drivers/cxl/core/region.c | 40 +++++++++++++++++++++++++++++++++++----
->>  drivers/cxl/cxl.h         |  2 ++
->>  2 files changed, 38 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 3c2b6144be23..81d0910c0a02 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/uuid.h>
->>  #include <linux/sort.h>
->>  #include <linux/idr.h>
->> +#include <linux/memory-tiers.h>
->>  #include <cxlmem.h>
->>  #include <cxl.h>
->>  #include "core.h"
->> @@ -2304,14 +2305,20 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->>  	return true;
->>  }
->>  
->> +static int cxl_region_nid(struct cxl_region *cxlr)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	struct cxl_endpoint_decoder *cxled = p->targets[0];
->> +	struct cxl_decoder *cxld = &cxled->cxld;
->> +
->> +	return phys_to_target_node(cxld->hpa_range.start);
->> +}
->> +
->
-> I believe it's OK to send a resource_size_t to phys_to_target_node()
-> like this:
->
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2308,10 +2308,8 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->  static int cxl_region_nid(struct cxl_region *cxlr)
->  {
->         struct cxl_region_params *p = &cxlr->params;
-> -       struct cxl_endpoint_decoder *cxled = p->targets[0];
-> -       struct cxl_decoder *cxld = &cxled->cxld;
->
-> -       return phys_to_target_node(cxld->hpa_range.start);
-> +       return phys_to_target_node(p->res->start);
->  }
->
-
-Read the related code again, it appears that there's a theoretical race
-condition here.  The register_memory_notifier() is called in
-devm_cxl_add_region(), where p->targets[] and p->res haven't been
-setupped yet.  And, IIUC, p->targets[] or p->res may be gone during the
-life cycle of regions too.  If so, we need to use
-guard(rwsem_read)(&cxl_region_rwsem) to protect p->targets[] and p->res
-references.  Because the memory notifier may be called for other nodes
-online/offline.
-
---
-Best Regards,
-Huang, Ying
