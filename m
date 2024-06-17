@@ -1,600 +1,254 @@
-Received: from bumble.maple.relay.mailchannels.net (bumble.maple.relay.mailchannels.net [23.83.214.25])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC45817F397
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 19:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70294E542;
+	Mon, 17 Jun 2024 20:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718653047; cv=pass; b=jn9Ls80oJnXH+uiFVklht/QFXIlz8RbWqBmsVInjLpGrUJFIEUKr0m0F+Xs+xzSYAG702YWynrbPoF+SDWPnvfYdmrllyDDr9iFdZkoOD+tCBmnPTo1Iy5EtSW4fhQ/146KMCAUbraKf7KMZVQux6wIBkcnAm2l3taeh+F3fs2A=
+	t=1718654672; cv=fail; b=cUq8K3cKVUcR2ceeZhb2udrsaV9tDeY3r3YDaJ/oyx/3OByah29St8BIb4pBgBsRoEun7rCsHA8I1Nq8+86/rpyEvo0v8Ib/VjpRIXEWsXMKcfyBfSPlabX/tHvF0rRoeQX5sUFfv5hJtYMH4YUGXI9Evh4QxybB4vmI8qiYJkI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718653047; c=relaxed/simple;
-	bh=Ly3qNvwAMxiYn7oXp8K1UQiJcA/yhuO/mJssiN8s3zM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tmSkwlTXKlZEF98UiNR4WeaSaYc91BVaZUmyvVDUEblPGs6P2Kz/DYb70r/2oqvFdtwtlvq6JoifmpdxpjGj5xTtFK3ozwpXuDibPOYQxQ/cnCXjDyAnt2hWxVcOcXRHIU14RuapDpiahQzcqtAmBBX6LMRBXjxToiDIDMRAgTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=f7rHmjia; arc=pass smtp.client-ip=23.83.214.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1718654672; c=relaxed/simple;
+	bh=XQb46Ix0gGSQX2LzYyDfH1Fs5Su7QEPauicT/EEbws8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JTwFFWQtcp8RowdwFBptDcEJa/13AQ79VAKdOwOVHFOEbZyv1aBrcK+u7+dkwqS6aYvC3enmTw75V233uVK4QL5WiznyIJ51y7S6KZtvb0HzENqp5giQYWnmxPI42QWYSf+HC27XnC4GdvjUyaCeK0j4aSn60JnryOTair8UWrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NL3iuQVd; arc=fail smtp.client-ip=40.107.92.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="f7rHmjia"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id C15DD505B75;
-	Mon, 17 Jun 2024 19:37:14 +0000 (UTC)
-Received: from pdx1-sub0-mail-a226.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 3210F505C75;
-	Mon, 17 Jun 2024 19:37:14 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1718653034; a=rsa-sha256;
-	cv=none;
-	b=qERyO/pAmQiA0R8ceFhxQVw/5JLINPtNhhmtMdnYkmJnrVAihQPrNEN0MTdbiLCBqSFcm4
-	X/tZa6OZGC9WSv5kOsOvp5yi7zNrpMV9HM8Zzbzvy9tovdBhPgDUfEptbrYEAkoHeitCL9
-	Z12PUeh38I6b780Qb+CT9DT2bJZtfCQBBOVDoju8un1e3jJeSnnrqX06zUBDcL0/G+DkAW
-	iy8bvc6XYOgFag30Gobjd+JRaOcc4OBqFgU13jPruW/7LnhdQBzKT8tYvjvdo2rsbOn2B7
-	PDxl5zfGBmKN3GkyCdjHXCFkjYE94i4laEbuLJx1VJjE0mU1LM7heiQ4iM/IOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1718653034;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=i8YCQafUoGMSlXZXG8oJSQcFhkxTFfDarcJGjdiCwps=;
-	b=PDRvpkeMpYPu0VoXVabIxk8vC8EcTo7+QFe553F6RfJ1GjQbqf7yt53vTjd/xY5TmQRMV6
-	mEztNy+u8UHdVVgsJJW5l0B9/VGy8fIryfw1SbKPmfQ6FpCJgvtvT/81mtQOMhnYidPI2V
-	2RQo2f+h3g+ACBE9fFF+Byha6oWwOdvmUACjIQfNJl8wwNMXpQaay67Bz4TGeB9oq8pHtz
-	KGX0XoQe+3mMsYl3JhXfGrd27O8IVZZOe7+SVhggS5LF95KMYcmRsp9oWSeWQiaRyMqdrT
-	sKaJ8u3ITdK2p2WqmxGz0D5y+NaunAkLfShxe9OYyug4OmH0vEkrwJgI4mJIqA==
-ARC-Authentication-Results: i=1;
-	rspamd-79677bdb95-kt8wt;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Wiry-Abortive: 3d1a1e5813c2f222_1718653034711_1573792860
-X-MC-Loop-Signature: 1718653034710:761866797
-X-MC-Ingress-Time: 1718653034710
-Received: from pdx1-sub0-mail-a226.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.121.33.136 (trex/6.9.2);
-	Mon, 17 Jun 2024 19:37:14 +0000
-Received: from offworld (unknown [172.56.183.242])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a226.dreamhost.com (Postfix) with ESMTPSA id 4W30Ws1Thdz9t;
-	Mon, 17 Jun 2024 12:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1718653034;
-	bh=i8YCQafUoGMSlXZXG8oJSQcFhkxTFfDarcJGjdiCwps=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=f7rHmjia3Mu86ILqu0qkIyEOOqdKIpG6Pfzlhd1QqmMaq3I0QriczqbjnaqqYtLMF
-	 OmHiCUguh6Ebj7U9pyPFCyLHjTC7judqTWYLZ9M36s3vZgH6237Pl9ca0TMkWuWXGL
-	 e7SQ0Kbo0hAfrWvaK5rfm+fDkD6v9FeTonvsioBKY3a1afpjPC7bNvR5CVj/JEvebC
-	 UZyYNw0ebqseL3GaboMuIEEnEtAI7udlMhgigaPLklFR13gUB77W5i/3+IwKcxU3m/
-	 +JhWnI0Vc7Ah2C3acCtxBdG/mH3aVQlO4pORlgNdax3+MabctkctZ6U3/5oQUyFGik
-	 IwgnFyCCPrDSg==
-Date: Mon, 17 Jun 2024 12:37:00 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: vishal.l.verma@intel.com, fan.ni@samsung.com, a.manzanares@samsung.com, 
-	linux-cxl@vger.kernel.org, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 -qemu] hw/cxl: Support firmware updates
-Message-ID: <o54dzo3ofnyov7hhh2kcktjfsvvu7oxfqyilu5vl4wrdnzl3ma@iy447qho7kit>
-References: <20240205172942.13343-1-dave@stgolabs.net>
- <20240422165126.00006567@Huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NL3iuQVd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bTx9AOSJXOgjGIDsYfOq3p362vT/DjOg31KOegaH6ayPEoOUySQlAw1RsdKO8Ppl9/D0mlvl7igPbnQwVgfMXwFNj6TSX3QEpZTV0KLroYeeE4S0bqxsf5467BTnHv30PWopEHGBb9jD0JV+4uGUqyBvPawNdpeX2+WgJ+1vpBW+vsWs9IaUIjgVPCPzAKUtPnYGYm561WifmRH9hX3BVkKTWxEGjAONuF+PCG7mt88oyg7oCnDK819e9Ojskwafq0TgAM1KpEIwK8lOBZp2frtowhH/5oizkPIPCkFbXCTqDaMsH2mPOqdbdj3+lmkaqQ0widAtpiJGKsGf/v2qTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cUSvfOMDeXE3IfIsty1uipApshKFeTCggpkkRuuM7Yc=;
+ b=B+Dv9LEw94vhbzXVbvjefoQ4u9m8lKuO0qoOKoQJEo+8lxR7dujajFlnu3+YY3E96rvld55/XeKtCAmQCrUIRDekJGQBQzRCvt5bZ6sbnNnAUrTL4gLSY+22tx52Kyg1yGiyKrdHO/W0UAM315zU2BteTM7MXyrkh+u4/vS2TxHZMWsEX+D1WHFUSsuJJs0zyIOwfWz3rKaEm4RwkoRb70DrnOi3VCtzo1cjgRuYV9SwgSOMdGG+QsKFHQOwjUVDWlNgGTKGsBF85bwiFEX3BsURJto4n/MWClWrpG4jOhKZDXzTDRYr6qdhrE8T1OYHL9GTGym5CqZsHp8egAZiEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cUSvfOMDeXE3IfIsty1uipApshKFeTCggpkkRuuM7Yc=;
+ b=NL3iuQVdInrgFukRZKqTBOVXm2rl2escrw6krzIBPG0QhX39C7YXGzO70yV1LnuaJPAwvmN+pWGgIfl+1hi8XCV4dGPF+3r/LL/dRok36g7VH4m7qbZxlxXBiuKp9fr7fHedI6Yn8CpUoIEy3jl9lyevguV/KHwhB3o3JtjOMFQ=
+Received: from SJ0PR03CA0088.namprd03.prod.outlook.com (2603:10b6:a03:331::33)
+ by MN2PR12MB4063.namprd12.prod.outlook.com (2603:10b6:208:1dc::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 20:04:25 +0000
+Received: from CO1PEPF000044F5.namprd05.prod.outlook.com
+ (2603:10b6:a03:331:cafe::c2) by SJ0PR03CA0088.outlook.office365.com
+ (2603:10b6:a03:331::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30 via Frontend
+ Transport; Mon, 17 Jun 2024 20:04:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F5.mail.protection.outlook.com (10.167.241.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Mon, 17 Jun 2024 20:04:24 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Jun
+ 2024 15:04:23 -0500
+From: Terry Bowman <terry.bowman@amd.com>
+To: <dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
+	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
+	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <terry.bowman@amd.com>,
+	<Yazen.Ghannam@amd.com>, <Robert.Richter@amd.com>
+Subject: [RFC PATCH 0/9] Add RAS support for CXL root ports, CXL downstream switch ports, and CXL upstream switch ports
+Date: Mon, 17 Jun 2024 15:04:02 -0500
+Message-ID: <20240617200411.1426554-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240422165126.00006567@Huawei.com>
-User-Agent: NeoMutt/20240416
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F5:EE_|MN2PR12MB4063:EE_
+X-MS-Office365-Filtering-Correlation-Id: f45d355d-05cb-4df6-9734-08dc8f08afb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|36860700010|376011|7416011|82310400023|1800799021|921017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GvTv9XudbpTeSJ8JDWGAaRs63XqOYQGD+nLiFPdCdPJf/Py38h2VzY9MbSqN?=
+ =?us-ascii?Q?acstaix3j71GJgMlApZzRnC7RnPVGSgTdtG7NIC5jGnxbzs8uqGa42eVUsZ8?=
+ =?us-ascii?Q?K3oGMENZdvM1JQSjk30ubj+51csOLlqEC/epUNWHH3RcZ1MGDhzDcl0hY7dp?=
+ =?us-ascii?Q?zkLf67JgfRH1qESrHElWxDa+jog9WO2gA3gkNGiGjTopSq8Q+qfXHHgakbpd?=
+ =?us-ascii?Q?oW4C2VhCra/Bb2xfBw3RDEY4zlVIgkOU9Zjsl7isQzTE3ngsbo0erqFFx9+A?=
+ =?us-ascii?Q?6e9UELyi6jtFMnWKoQpLwGQLC0L+wWYlJMwJ9A3hKmeJWWkaY/pGHnbYrIGt?=
+ =?us-ascii?Q?ifi3MNjv+Epg/AMEmNghZKXb2jMOj4Gk6NyfLUJvRCM41+bLcvdBiLPfdpTx?=
+ =?us-ascii?Q?yOMRRdbFkSUdmcHt2W8An5eqkDX26pjcldMHeNuPnShj8N66PfjahHF2lTtB?=
+ =?us-ascii?Q?MN/5vt4OVfL0Y9fjSyGlIlj+9Wf70X55HSHXP3gs//6KBqLI9kwQSeOo9+y4?=
+ =?us-ascii?Q?Rx15SEKsyC1CSi04oo6gAvixcC9HpbZd1rzFuHBQPaQUw5Vcr2bgMhkZy87O?=
+ =?us-ascii?Q?bFpyKvFAQUO/oVxevDhG+d0bEC7Gt2S+6AJyjr0lM3G7tQDGwjqYY3fGIHEL?=
+ =?us-ascii?Q?+rGNd2nIaFq8dEWkYcoA8TQU3pS1+f2Fp2PcVyU89Qs/vqMpQ/kFysl0PxRG?=
+ =?us-ascii?Q?D/TXG+WwXWsWVWzznrsmRcVJMrIfrh61ySUK92hi2sFaPQUgeN8wBAz3kOK3?=
+ =?us-ascii?Q?kxvi6mHLL34j7oO1ATbCG+W6THpwbrFBjn6ZSC4LV6Q9N2qgTqvdVSGyplYy?=
+ =?us-ascii?Q?NUWIE1NZj0kegCf/1bN/Y6nMUgSiuKEBCmFkwx2iS6V2P217BlIBuSC18+/n?=
+ =?us-ascii?Q?2PbXm/twcjfLX1263pS9LgMq8gplRfIYSDVYnmkXA0np/bXbSoDdEblwEWmf?=
+ =?us-ascii?Q?KW8OutN8+0utc4bezp1VcWdSPhtKFAop3/XwPIl02UZOZT2XGOTrdjFu3rQb?=
+ =?us-ascii?Q?pFs11lyh0egEP/zseoRx/KJLs7Uyxl5okVY7+xKwn4q7P3WQaLvniLpnU6CX?=
+ =?us-ascii?Q?GfljanTV+gwsj4gGNf0pJXD1WNi0Jy9cQLHqQECzzZ6Wo7EvEiY/tq92abQD?=
+ =?us-ascii?Q?6ke3CsPlojtDP4IY4BwCg2yWkQLmga/kaxRxoH4nTdwvO2IMy9g2kZ/PlpYn?=
+ =?us-ascii?Q?cwuzSXSHDqhQuLr61DzcD0/1h55g4tjksZKgiX314DQ/mY170iuGwiDE7EDh?=
+ =?us-ascii?Q?Mawp5UvTmthA2y35UVJB5sKhnZOqQy24s1ClihrOQ5UtMsfGi7Lgqk6OZkm5?=
+ =?us-ascii?Q?LOtw7nLbexXjAgYzlJ2n/PJVtZDw4J3hxVi9rapvBXiSRoXp/GWhWStNHRv8?=
+ =?us-ascii?Q?g809uDUOmXOotMQ088FpHym1aq4k?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(36860700010)(376011)(7416011)(82310400023)(1800799021)(921017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 20:04:24.8367
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f45d355d-05cb-4df6-9734-08dc8f08afb1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4063
 
-Hi Jonathan,
+This patchset provides RAS logging for CXL root ports, CXL downstream
+switch ports, and CXL upstream switch ports. This includes changes to
+use a portdrv notifier chain to communicate CXL AER/RAS errors to a
+cxl_pci callback.
 
-Just now had some cycles to return to this.
+The first 3 patches prepare for and add an atomic notifier chain to the
+portdrv driver. The portdrv's notifier chain reports the port device's
+AER internal errors to the registered callback(s). The preparation changes
+include a portdrv update to call the uncorrectable handler for PCIe root
+ports and PCIe downstream switch ports. Also, the AER correctable error
+(CE) status is made available to the AER CE handler.
 
-And I was not able to reproduce the overlapping behavior I
-mentioned in the kernel support - I guess this might be an
-incorrect test I had in place. So sorry for the false alarm,
-and for the record, below is the pasted actual byte ranges
-sent by the driver for a 52k image.
+The next 4 patches are in preparation for adding an atomic notification
+callback in the cxl_pci driver. This is for receiving AER internal error
+events from the portdrv notifier chain. Preparation includes adding RAS
+register block mapping, adding trace functions for logging, and
+refactoring cxl_pci RAS functions for reuse.
 
-prev range: 0-0 ... this range: 0-1920
-prev range: 0-1920 ... this range: 1920-3840
-prev range: 1920-3840 ... this range: 3840-5760
-prev range: 3840-5760 ... this range: 5760-7680
-prev range: 5760-7680 ... this range: 7680-9600
-prev range: 7680-9600 ... this range: 9600-11520
-prev range: 9600-11520 ... this range: 11520-13440
-prev range: 11520-13440 ... this range: 13440-15360
-prev range: 13440-15360 ... this range: 15360-17280
-prev range: 15360-17280 ... this range: 17280-19200
-prev range: 17280-19200 ... this range: 19200-21120
-prev range: 19200-21120 ... this range: 21120-23040
-prev range: 21120-23040 ... this range: 23040-24960
-prev range: 23040-24960 ... this range: 24960-26880
-prev range: 24960-26880 ... this range: 26880-28800
-prev range: 26880-28800 ... this range: 28800-30720
-prev range: 28800-30720 ... this range: 30720-32640
-prev range: 30720-32640 ... this range: 32640-34560
-prev range: 32640-34560 ... this range: 34560-36480
-prev range: 34560-36480 ... this range: 36480-38400
-prev range: 36480-38400 ... this range: 38400-40320
-prev range: 38400-40320 ... this range: 40320-42240
-prev range: 40320-42240 ... this range: 42240-44160
-prev range: 42240-44160 ... this range: 44160-46080
-prev range: 44160-46080 ... this range: 46080-48000
-prev range: 46080-48000 ... this range: 48000-49920
-prev range: 48000-49920 ... this range: 49920-51200
+The final 2 patches enable the AER internal error interrupts.
 
-On Mon, 22 Apr 2024, Jonathan Cameron wrote:\n
->On Mon,  5 Feb 2024 09:29:42 -0800
->Davidlohr Bueso <dave@stgolabs.net> wrote:
->
->> Implement transfer and activate functionality per 3.1 spec for
->> supporting update metadata (no actual buffers). Transfer times
->> are arbitrarily set to ten and two seconds for full and part
->> transfers, respectively.
->>
->> Testing for both a successful part fw package transfer success
->> and abort/cancel cases:
->>
->> // on-going partial xfer
->> {
->>   "firmware":{
->>     "num_slots":2,
->>     "active_slot":1,
->>     "staged_slot":1,
->>     "online_activate_capable":true,
->>     "slot_1_version":"BWFW VERSION 0",
->>     "fw_update_in_progress":true,
->>     "remaining_size":1280
->>   }
->> }
->>
->> // xfer complete
->> {
->>   "firmware":{
->>     "num_slots":2,
->>     "active_slot":1,
->>     "staged_slot":2,
->>     "online_activate_capable":true,
->>     "slot_1_version":"BWFW VERSION 0",
->>     "slot_2_version":"BWFW VERSION 1",
->>     "fw_update_in_progress":false
->>   }
->> }
->>
->> // on-going (new) partial xfer
->> {
->>   "firmware":{
->>     "num_slots":2,
->>     "active_slot":1,
->>     "staged_slot":1,
->>     "online_activate_capable":true,
->>     "slot_1_version":"BWFW VERSION 0",
->>     "fw_update_in_progress":false
->>   }
->> }
->>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->Hi Davidlohr,
->
->I was going to just pick this up and make the tweaks Fan suggested,
->but there are more issues vs the spec that I think should be resolved
->first.  If you are busy shout and I'll just make the changes and send
->a v3.
->
->Thanks,
->
->Jonathan
->
->> ---
->> Changes from v1:
->>  - robustify part transfer checking (Jonathan)
->>  - implement abort
->>  - increase runtime for full transfer
->>  - no longer prematurely mark the slot
->>  - fold both cmds into a single patch
->>
->>  hw/cxl/cxl-mailbox-utils.c  | 217 +++++++++++++++++++++++++++++++++++-
->>  include/hw/cxl/cxl_device.h |  16 +++
->>  2 files changed, 228 insertions(+), 5 deletions(-)
->>
->> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index 80a80f1ec29b..74054855b1fa 100644
->> --- a/hw/cxl/cxl-mailbox-utils.c
->> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -60,6 +60,8 @@ enum {
->>          #define SET_INTERRUPT_POLICY   0x3
->>      FIRMWARE_UPDATE = 0x02,
->>          #define GET_INFO      0x0
->> +        #define TRANSFER      0x1
->> +        #define ACTIVATE      0x2
->>      TIMESTAMP   = 0x03,
->>          #define GET           0x0
->>          #define SET           0x1
->> @@ -815,6 +817,9 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
->>      return CXL_MBOX_SUCCESS;
->>  }
->>
->> +#define CXL_FW_SLOTS 2
->> +#define CXL_FW_SIZE  0x02000000 /* 32 mb */
->> +
->>  /* CXL r3.1 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
->>  static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
->>                                                 uint8_t *payload_in,
->> @@ -846,15 +851,204 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
->>      fw_info = (void *)payload_out;
->>      memset(fw_info, 0, sizeof(*fw_info));
->>
->> -    fw_info->slots_supported = 2;
->> -    fw_info->slot_info = BIT(0) | BIT(3);
->> -    fw_info->caps = 0;
->> -    pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
->> +    fw_info->slots_supported = CXL_FW_SLOTS;
->> +    fw_info->slot_info = (cci->fw.active_slot & 0x7) |
->> +            ((cci->fw.staged_slot & 0x7) << 3);
->> +    fw_info->caps = BIT(0);
->
->I'd add a comment on this one for what it is. "Online update supported"
->Given this is trivial I amend the patch on my tree.
+Testing RAS CE/UCE:
+  QEMU was used for testing CXL root port, CXL downstream switch port, and
+  CXL upstream switch port. The aer-inject tool was used to inject AER and
+  a test patch was used to set the AER CIE/UIE and RAS CE/UCE status during
+  testing. Testing passed with no issues.
+ 
+  An AMD platform with the AMD RAS error injection tool was used for
+  testing CXL root port injection. Testing passed with no issues.
 
-Sure.
+  TODO - regression test CXL1.1 RCH handling.
 
->
->> +
->> +    if (cci->fw.slot[0]) {
->> +        pstrcpy(fw_info->fw_rev1, sizeof(fw_info->fw_rev1), "BWFW VERSION 0");
->Hmm. Maybe we should fake something up in the way of an ID that changes as fw's are
->uploaded.  Maybe as simple as not initiating slot[1] until a firmware has bee
->uploaded.  I just want to see this change with an upload.
+Solutions Considered (1-4):
+  Below are solutions that were considered. Solution #4 is
+  implemented in this patchset. 
 
-Sure.
+  1.) Reassigning portdrv error handler for CXL port devices
+  
+  This solution was based on reassigning the portdrv's CE/UCE err_handler
+  to be CXL cxl_pci driver functions.
+  
+  I started with this solution and once the flow was working I realized
+  the endpoint removal would have to be addressed as well. While this
+  could be resolved it does highlight the odd coupling and dependency
+  between the CXL port devices error handling with cxl_pci endpoint's
+  handlers. Also, the err_handler re-assignment at runtime required
+  ignoring the 'const' definition. I don't believe this should be
+  considered as a possible solution.
+  
+  2.) Update the AER driver to call cxl_pci driver's error handler before
+  calling pci_aer_handle_error()
 
->> +    }
->> +    if (cci->fw.slot[1]) {
->> +        pstrcpy(fw_info->fw_rev2, sizeof(fw_info->fw_rev2), "BWFW VERSION 1");
->> +    }
->>
->>      *len_out = sizeof(*fw_info);
->>      return CXL_MBOX_SUCCESS;
->>  }
->>
->> +/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
->> +#define CXL_FW_XFER_ALIGNMENT   128
->> +
->> +#define CXL_FW_XFER_ACTION_FULL	    0x0
->> +#define CXL_FW_XFER_ACTION_INIT	    0x1
->> +#define CXL_FW_XFER_ACTION_CONTINUE 0x2
->> +#define CXL_FW_XFER_ACTION_END	    0x3
->> +#define CXL_FW_XFER_ACTION_ABORT    0x4
->> +
->> +static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
->> +                                               uint8_t *payload_in,
->> +                                               size_t len,
->> +                                               uint8_t *payload_out,
->> +                                               size_t *len_out,
->> +                                               CXLCCI *cci)
->> +{
->> +    struct {
->> +        uint8_t action;
->> +        uint8_t slot;
->> +        uint8_t caps;
->
->Dropped caps as per Fan's comment.
->
->> +        uint8_t rsvd1[2];
->> +        uint32_t offset;
->> +        uint8_t rsvd2[0x78];
->> +        uint8_t data[];
->> +    } QEMU_PACKED *fw_transfer = (void *)payload_in;
->> +    size_t offset, length;
->> +
->> +    if (fw_transfer->action == CXL_FW_XFER_ACTION_ABORT) {
->> +        /*
->> +         * At this point there aren't any on-going transfers
->> +         * running in the bg - this is serialized before this
->> +         * call altogether. Just mark the state machine and
->> +         * disregard any other input.
->> +         */
->> +        cci->fw.transferring = false;
->> +        return CXL_MBOX_SUCCESS;
->> +    }
->> +
->> +    offset = fw_transfer->offset * CXL_FW_XFER_ALIGNMENT;
->> +    length = len - sizeof(*fw_transfer);
->> +    if (offset + length > CXL_FW_SIZE) {
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->> +
->> +    if (cci->fw.transferring) {
->> +        if (fw_transfer->action == CXL_FW_XFER_ACTION_FULL ||
->> +            fw_transfer->action == CXL_FW_XFER_ACTION_INIT) {
->> +            return CXL_MBOX_FW_XFER_IN_PROGRESS;
->> +        }
->> +        /*
->> +         * Abort partitioned package transfer if over 30 secs
->> +         * between parts. As opposed to the explicit ABORT action,
->> +         * semantically treat this condition as an error - as
->> +         * if a part action were passed without a previous INIT.
->> +         */
->> +        if (difftime(time(NULL), cci->fw.last_partxfer) > 30.0) {
->> +            cci->fw.transferring = false;
->> +            return CXL_MBOX_INVALID_INPUT;
->> +        }
->> +    } else if (fw_transfer->action == CXL_FW_XFER_ACTION_CONTINUE ||
->> +               fw_transfer->action == CXL_FW_XFER_ACTION_END) {
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->> +
->> +    /* allow back-to-back retransmission */
->> +    if ((offset != cci->fw.prev_offset || length != cci->fw.prev_len) &&
->> +        (fw_transfer->action == CXL_FW_XFER_ACTION_CONTINUE ||
->> +         fw_transfer->action == CXL_FW_XFER_ACTION_END)) {
->> +        /*
->> +         * XXX: Linux is happy to send overlapping chunks,
->> +         * so just verify no gaps.
->> +         */
->
->Does the CXL spec allow overlapping?  I see text about parts being
->in order (with an exception for back to band transfer). So I think
->we need to reject any overlap and make sure Linux doesn't do it!
->
->
->The 3rd example in the imp note implies that overlap definitely isn't
->allowed.
+  This is similar to the existing RCH port error approach in aer.c.
+  In this solution the AER driver searches for a downstream CXL endpoint
+  to 'handle' detected CXL port protocol errors.
 
-Yep, hence the above comment, which also happens to be wrong. And, per
-the examples in the imp notes, it looks like gaps are in fact allowed
-(0-100h, 160h-260h is considered valid, for example).
+  This is a good solution to consider if the one presented in this patchset
+  is not acceptable. I was initially reluctant to this approach because it
+  adds more CXL coupling to the AER driver. But, I think this solution
+  would technically work. I believe Ming was working towards this
+  solution.
 
->
->> +        if (offset > cci->fw.prev_offset + cci->fw.prev_len) {
+  3.) Refactor portdrv
+  The portdrv refactoring solution is to change the portdrv service drivers
+  into PCIe auxiliary drivers. With this change the facility drivers can be
+  associated with a PCIe driver instead fixed bound to the portdrv driver.
 
-So this really turns into 'offset < ...'
+  In this case the CXL port functionality would be added either as a CXL
+  auxiliary driver or as a CXL specific port driver
+  (PCI_CLASS_BRIDGE_PCI_NORMAL).
 
->> +            return CXL_MBOX_FW_XFER_OUT_OF_ORDER;
->> +        }
->> +    }
->> +
->> +    switch (fw_transfer->action) {
->> +    case CXL_FW_XFER_ACTION_FULL: /* ignores offset */
->> +    case CXL_FW_XFER_ACTION_END:
->> +        if (fw_transfer->slot == 0 ||
->> +            fw_transfer->slot == cci->fw.active_slot ||
->> +            fw_transfer->slot > CXL_FW_SLOTS) {
->> +            return CXL_MBOX_FW_INVALID_SLOT;
->> +        }
->> +
->> +        /* mark the slot used upon bg completion */
->> +        break;
->> +    case CXL_FW_XFER_ACTION_INIT:
->> +        if (offset != 0) {
->> +            return CXL_MBOX_INVALID_INPUT;
->> +        }
->> +
->> +        cci->fw.transferring = true;
->> +        cci->fw.prev_slot = fw_transfer->slot;
->
->Why?  This is only valid for Full and End.
+  This solution has challenges in the interrupt allocation by separate
+  auxiliary drivers and in binding of a specific driver. Binding is
+  currently based on PCIe class and would require extending the binding
+  logic to support multiple drivers for the same class.
 
-oh it occurred to me that the spec was implying that partial
-transfers do want to be the same (Slot=X) regardless of only
-caring about the actual value at the End transfer. I wasn't
-sure, so took the cautious side.
+  Jonathan Cameron is working towards this solution by initially solving
+  for the PMU service driver.[1] It is using the auxiliary bus to associate
+  what were service drivers with the portdrv driver. Using a CXL auxiliary
+  for handling CXL port RAS errors would result in RAS logic called from
+  the cxl_pci and CXL auxiliary drivers. This may need a library driver.
 
-But if this is not the case, it might be useful to update
-the spec and be more explicit.
+  4.) Using a portdrv notifier chain/callback for CIE/UIE
+  (Implemented in this patchset)
 
->
->> +        cci->fw.prev_offset = offset;
->> +        cci->fw.prev_len = length;
->> +        break;
->> +    case CXL_FW_XFER_ACTION_CONTINUE:
->> +        /* forbid slot interleaving */
->
->From 3.1 spec the slot is only specified in the final transfer.
+  This solution uses a portdrv atomic chain notifier and a cxl_pci
+  callback to handle and log CXL port RAS errors.
+  
+  I chose this after trying solution#1 above. I see a couple advantages to
+  this solution are:
+  - Is general port implementation for CIE/UIE specific handling mentioned
+  in the PCIe spec.[2]
+  - Notifier is used in RAS MCE driver as an existing example.
+  - Does not introduce further CXL dependencies into the AER driver.
+  - The notifier chain provides registration/unregistration and
+  synchronization.
 
-See above.
+  A disadvantage of this approach is coupling still exists between the CXL
+  port's driver (portdrv) and the cxl_pci driver. The CXL port device's RAS
+  is handled by a notifier callback in the cxl_pci endpoint driver.
 
->
->> +        if (cci->fw.prev_slot != fw_transfer->slot) {
->> +            return CXL_MBOX_FW_XFER_IN_PROGRESS;
->> +        }
->> +
->> +        cci->fw.prev_offset = offset;
->> +        cci->fw.prev_len = length;
->> +        break;
->> +    default:
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->> +
->> +    if (fw_transfer->action == CXL_FW_XFER_ACTION_FULL) {
->> +        cci->bg.runtime = 10 * 1000UL;
->> +    } else {
->> +        cci->bg.runtime = 2 * 1000UL;
->> +    }
->> +    /* keep relevant context for bg completion */
->> +    cci->fw.curr_action = fw_transfer->action;
->> +    cci->fw.curr_slot = fw_transfer->slot;
->> +    *len_out = 0;
->> +
->> +    return CXL_MBOX_BG_STARTED;
->> +}
->> +
->> +static void __do_firmware_xfer(CXLCCI *cci)
->> +{
->> +    switch (cci->fw.curr_action) {
->> +    case CXL_FW_XFER_ACTION_FULL:
->> +    case CXL_FW_XFER_ACTION_END:
->> +        cci->fw.slot[cci->fw.curr_slot - 1] = true;
->> +        cci->fw.transferring = false;
->> +        break;
->
->return early would be my preference.
->
->> +    case CXL_FW_XFER_ACTION_INIT:
->> +    case CXL_FW_XFER_ACTION_CONTINUE:
->> +        time(&cci->fw.last_partxfer);
->> +        break;
->> +    default:
->> +        break;
->> +    }
->> +}
->> +
->> +/* CXL r3.1 section 8.2.9.3.3: Activate FW (Opcode 0202h) */
->> +static CXLRetCode cmd_firmware_update_activate(const struct cxl_cmd *cmd,
->> +                                               uint8_t *payload_in,
->> +                                               size_t len,
->> +                                               uint8_t *payload_out,
->> +                                               size_t *len_out,
->> +                                               CXLCCI *cci)
->> +{
->> +    struct {
->> +        uint8_t action;
->> +        uint8_t slot;
->> +    } QEMU_PACKED *fw_activate = (void *)payload_in;
->> +
->> +    if (fw_activate->slot == 0 ||
->> +        fw_activate->slot == cci->fw.active_slot ||
->
->Whilst I don't see spec text on this case, I can't see a request
->for clarification resulting in an errata for this given it's
->nonsense to do it so software shouldn't care if this is an error
->return or a noop 'sure I'll set the firmware to the firmware I'm
->running - it'll be really quick!'.
->
->> +        fw_activate->slot > CXL_FW_SLOTS) {
->> +        return CXL_MBOX_FW_INVALID_SLOT;
->> +    }
->> +
->> +    /*
->> +     * XXX: Check that an actual fw package is there - spec
->> +     * does not mention this case.
->Obviously and error, so I guess you mean which one?
->Between this an Invalid Input.
->
->Given it's an error case software shouldn't hit anyway another
->one where an errata is unlikely.  Maybe worth asking the question
->however..
->
->> +     */
->> +    if (!cci->fw.slot[fw_activate->slot - 1]) {
->> +        return CXL_MBOX_FW_INVALID_SLOT;
->> +    }
->> +
->> +    switch (fw_activate->action) {
->> +    case 0: /* online */
->> +        cci->fw.active_slot = fw_activate->slot;
->> +        break;
->> +    case 1: /* reset */
->> +        cci->fw.staged_slot = fw_activate->slot;
->> +        break;
->> +    default:
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->> +
->> +    return CXL_MBOX_SUCCESS;
->> +}
->> +
->>  /* CXL r3.1 Section 8.2.9.4.1: Get Timestamp (Opcode 0300h) */
->>  static CXLRetCode cmd_timestamp_get(const struct cxl_cmd *cmd,
->>                                      uint8_t *payload_in,
->> @@ -2160,6 +2354,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->>                                        ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE },
->>      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
->>          cmd_firmware_update_get_info, 0, 0 },
->> +    [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
->> +        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
->> +    [FIRMWARE_UPDATE][ACTIVATE] = { "FIRMWARE_UPDATE_ACTIVATE",
->> +        cmd_firmware_update_activate, 2, CXL_MBOX_BACKGROUND_OPERATION },
->>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
->>      [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
->>                           8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
->> @@ -2275,7 +2473,9 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
->>              h == cmd_media_get_poison_list ||
->>              h == cmd_media_inject_poison ||
->>              h == cmd_media_clear_poison ||
->> -            h == cmd_sanitize_overwrite) {
->> +            h == cmd_sanitize_overwrite ||
->> +            h == cmd_firmware_update_transfer ||
->> +            h == cmd_firmware_update_activate) {
->
->This clashed with an updated fix in my tree to avoid accessing
->fields that don't exist on non type 3 CCIs (Switch-cci etC).
->
->The overall check is currently using state in the type3 device
->structure.  Ultimately we should make this work for switches
->as well but that can be a job for another day.
+  Most of the patches in this patchset could be reused to work with
+  solution#3 or solution#2. The atomic notifier could be dropped and
+  instead use an auxiliary device or AER driver awareness. The other
+  changes in this patchset could possibly be reused.
 
-Yeah, will address separately.
+  [1] Kernel.org -
+  https://lore.kernel.org/all/f4b23710-059a-51b7-9d27-b62e8b358b54@linux.intel.com
+  [2] PCI6.0 - 6.2.10 Internal errors
 
->
->>              return CXL_MBOX_MEDIA_DISABLED;
->>          }
->>      }
->> @@ -2319,6 +2519,9 @@ static void bg_timercb(void *opaque)
->>          cci->bg.complete_pct = 100;
->>          cci->bg.ret_code = ret;
->>          switch (cci->bg.opcode) {
->> +        case 0x0201: /* fw transfer */
->> +            __do_firmware_xfer(cci);
->> +            break;
->>          case 0x4400: /* sanitize */
->>          {
->>              CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->> @@ -2390,6 +2593,10 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
->>      cci->bg.runtime = 0;
->>      cci->bg.timer = timer_new_ms(QEMU_CLOCK_VIRTUAL,
->>                                   bg_timercb, cci);
->> +
->> +    memset(&cci->fw, 0, sizeof(cci->fw));
->> +    cci->fw.active_slot = cci->fw.staged_slot = 1;
->
->Why not set staged_slot to 0 on init?
->
->"If 0, no FW is currently staged for activation."
+ drivers/cxl/core/core.h    |   4 +
+ drivers/cxl/core/pci.c     | 153 ++++++++++++++++++++++++++++++++-----
+ drivers/cxl/core/port.c    |   6 +-
+ drivers/cxl/core/trace.h   |  34 +++++++++
+ drivers/cxl/cxl.h          |  10 +++
+ drivers/cxl/cxlpci.h       |   2 +
+ drivers/cxl/mem.c          |  32 +++++++-
+ drivers/cxl/pci.c          |  19 ++++-
+ drivers/pci/pcie/aer.c     |  10 ++-
+ drivers/pci/pcie/err.c     |  20 +++++
+ drivers/pci/pcie/portdrv.c |  32 ++++++++
+ drivers/pci/pcie/portdrv.h |   2 +
+ include/linux/aer.h        |   6 ++
+ 13 files changed, 303 insertions(+), 27 deletions(-)
 
-I prefer following the spec convention directly here.
 
->
->> +    cci->fw.slot[cci->fw.active_slot - 1] = true;
->>  }
->>
->>  static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[256])
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index d38391b26f0e..8c17ba9d2131 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -203,7 +203,22 @@ typedef struct CXLCCI {
->>          uint64_t runtime;
->>          QEMUTimer *timer;
->>      } bg;
->> +
->> +    /* firmware update */
->> +    struct {
->> +        uint8_t active_slot;
->> +        uint8_t staged_slot;
->> +        bool slot[4];
->> +        uint8_t curr_action;
->> +        uint8_t curr_slot;
->> +        /* handle partial transfers */
->> +        bool transferring;
->> +        uint8_t prev_slot;
->> +        size_t prev_offset;
->> +        size_t prev_len;
->> +        time_t last_partxfer;
->> +    } fw;
->> +
->>      size_t payload_max;
->>      /* Pointer to device hosting the CCI */
->>      DeviceState *d;
->> --
->> 2.43.0
+base-commit: ca3d4767c8054447ac2a58356080e299a59e05b8
+-- 
+2.34.1
+
