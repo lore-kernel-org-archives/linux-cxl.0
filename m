@@ -1,39 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC55515B966
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 16:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B4F15B142
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Jun 2024 16:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642375; cv=none; b=dyjw7tKnxmLWSzckrwhkySQo8qA8MVhtH/cPZCx/3WPKEpQU1BD4uMr1qPvrNCa8OuUJeWfqoec0kO0CNhVLtyqgy+hQBbLg9/bq5t1SlOfVicKivumu4ufB7fy2pLP8LwJ2goJgadgcPKz38rI6ZybBTReju+2ETQNRExVqv10=
+	t=1718642559; cv=none; b=XEOpIoqEB8advqOo95jAsntwMNv4vDBtiToQA8GiRGgJP3S0LyiVUpTjS+cj4uN7+fb+4GjmlkH209lU54dDThPU/TF0FakOS+MucH/cGMZKJ+RcfKuHReu8R+MUCnFVyGqFf/CsTN29HGGKECDj7qk8LlepFqjrifRJJswQPdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642375; c=relaxed/simple;
-	bh=WHveyJ20wxhfoESLpsERR5XVOJOTO0WYH3E4mLe02Zw=;
+	s=arc-20240116; t=1718642559; c=relaxed/simple;
+	bh=zTgYN3hwyeYhMobLchNJ0N25eGkRkK7+/WD5oBZxXr0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H6ecg6E7hC68q2tBjLyJe87E/bqcOgHwdcb3R16Iu37/4SwKEbKUPLS88ZTo/4BARk15SnKn4YqUOPgX7VThz9zsjCBbuniLzj6z5D53LBFwAt9zwTuT9o4SvuZ0MSfayjFh7SzrfybFfRIibidRv3eAAsxbX1+IPZ2jEBMpQBg=
+	 MIME-Version:Content-Type; b=OrNjBxdnW6tYC0iVlczhwHt6C2GR3ls1AU/0RzBr6MOJ7XKVU1+t4lxEEnetwaOxW+4KWVK+tyHYh2sO8rMMiY1lFoyAGFvbdomMeHFpg2r9w/U/bBbm/5Uk3K2j61r/0YNR2I34HVyAOIZNeKA+BW6JB/hDwq55LrgeWiZ4jmk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W2wT664fNz6JBSP;
-	Tue, 18 Jun 2024 00:34:34 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W2wcd1Yqtz6K9JJ;
+	Tue, 18 Jun 2024 00:41:05 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 01A22140B3C;
-	Tue, 18 Jun 2024 00:39:28 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C513140736;
+	Tue, 18 Jun 2024 00:42:34 +0800 (CST)
 Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 17 Jun
- 2024 17:39:27 +0100
-Date: Mon, 17 Jun 2024 17:39:26 +0100
+ 2024 17:42:33 +0100
+Date: Mon, 17 Jun 2024 17:42:33 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-CC: <kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>,
-	<y-goto@fujitsu.com>, <mj@ucw.cz>, <dan.j.williams@intel.com>
-Subject: Re: [PATCH v13 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
-Message-ID: <20240617173926.00003b84@Huawei.com>
-In-Reply-To: <20240617043702.62028-2-kobayashi.da-06@fujitsu.com>
-References: <20240617043702.62028-1-kobayashi.da-06@fujitsu.com>
-	<20240617043702.62028-2-kobayashi.da-06@fujitsu.com>
+To: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <jim.harris@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v9 1/2] cxl/region: check interleave capability
+Message-ID: <20240617174233.000051ca@Huawei.com>
+In-Reply-To: <20240614084755.59503-2-yaoxt.fnst@fujitsu.com>
+References: <20240614084755.59503-1-yaoxt.fnst@fujitsu.com>
+	<20240614084755.59503-2-yaoxt.fnst@fujitsu.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -47,68 +49,68 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 17 Jun 2024 13:37:01 +0900
-"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com> wrote:
+On Fri, 14 Jun 2024 04:47:54 -0400
+Yao Xingtao <yaoxt.fnst@fujitsu.com> wrote:
 
-> Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
-> device link status information. By caching it, avoid the walking 
-> memory map area to find the offset when output the register value.
+> Since interleave capability is not verified, if the interleave
+> capability of a target does not match the region need, committing decoder
+> should have failed at the device end.
 > 
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Hi.
+> In order to checkout this error as quickly as possible, driver needs
+> to check the interleave capability of target during attaching it to
+> region.
+> 
+> Per CXL specification r3.1(8.2.4.20.1 CXL HDM Decoder Capability Register),
+> bits 11 and 12 indicate the capability to establish interleaving in 3, 6,
+> 12 and 16 ways. If these bits are not set, the target cannot be attached to
+> a region utilizing such interleave ways.
+> 
+> Additionally, bits 8 and 9 represent the capability of the bits used for
+> interleaving in the address, Linux tracks this in the cxl_port
+> interleave_mask.
+> 
+> Per CXL specification r3.1(8.2.4.20.13 Decoder Protection):
+>   eIW means encoded Interleave Ways.
+>   eIG means encoded Interleave Granularity.
+> 
+>   in HPA:
+>   if eIW is 0 or 8 (interleave ways: 1, 3), all the bits of HPA are used,
+>   the interleave bits are none, the following check is ignored.
+> 
+>   if eIW is less than 8 (interleave ways: 2, 4, 8, 16), the interleave bits
+>   start at bit position eIG + 8 and end at eIG + eIW + 8 - 1.
+> 
+>   if eIW is greater than 8 (interleave ways: 6, 12), the interleave bits
+>   start at bit position eIG + 8 and end at eIG + eIW - 1.
+> 
+>   if the interleave mask is insufficient to cover the required interleave
+>   bits, the target cannot be attached to the region.
+> 
+> Fixes: 384e624bb211 ("cxl/region: Attach endpoint decoders")
+> Signed-off-by: Yao Xingtao <yaoxt.fnst@fujitsu.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-One minor style change inline. With that done,
+Trivial comment inline. Either way
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 372786f80955..a5d1ae09bded 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -505,6 +505,67 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  	return offset;
->  }
 >  
-> +resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
+>  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3c2b6144be23..034cc0a90e8f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+
+>  
+> +static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
 > +{
-> +	resource_size_t rcrb = dport->rcrb.base;
-> +	void __iomem *addr;
-> +	u32 cap_hdr;
-> +	u16 offset;
+> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+> +	unsigned int interleave_mask;
+> +	u8 eiw;
+> +	u16 eig;
+> +	int high_pos, low_pos;
 > +
-> +	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	addr = ioremap(rcrb, SZ_4K);
-> +	if (!addr) {
-> +		dev_err(dev, "Failed to map region %pr\n", addr);
-> +		release_mem_region(rcrb, SZ_4K);
-> +		return CXL_RESOURCE_NONE;
-> +	}
-> +
-> +	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-> +	cap_hdr = readl(addr + offset);
-> +	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-> +		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-> +		if (offset == 0 || offset > SZ_4K) {
-> +			offset = 0;
-> +			break;
-> +		}
-> +		cap_hdr = readl(addr + offset);
-> +	}
-> +
-> +	iounmap(addr);
-> +	release_mem_region(rcrb, SZ_4K);
-> +	if (offset > 0)
-> +		return offset;
-> +	else
-> +		return CXL_RESOURCE_NONE;
+Possibly reorder to be reverse xmas tree.
 
-Have the error handling case first
 
-	if (!offset)
-		return CXL_RESOURCE_NONE;
-
-	return offset; 
-> +}
 
