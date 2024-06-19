@@ -1,164 +1,150 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C248F7D07F
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Jun 2024 09:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE604C74;
+	Wed, 19 Jun 2024 13:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718789075; cv=none; b=fJfW3uuJOKeQnghaqxy5VB03LjAyJu2WKsAhlGkBgSPpdA97M1l9uxTgq6k7hR2kU/+TSMDkPyVlEbbdYSPmHXWzyjAp0EqSvXZqTyupxN01E4cMF+wZ1livlI4QKuqYYzE5isLRjMRPweOGwZ4BD1sgZRMXbvkZC1h0F6KHPrM=
+	t=1718802010; cv=none; b=S30g4A1IC2wGgUX6xi3CW5K/OtgZnesPK76MYrBnrQXsXAmUkU1C8yKQtI7Ng4wYNaOVb8sGDBCT8AwEW0eXr3w1ZRP5m1dXnSdKqFIPF79UFVkKnPzegHsumYFxumK+P3VL999X3rkwfPLMYrVWDuJn6nZ5HHlx7yt8X+77rco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718789075; c=relaxed/simple;
-	bh=P5qUMmTvxRhRm+xvXml4/gq2sDOAqp/7/NAm9NbVRRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EkwypoWPXOtRgmpaVXn5qNMVUT9tFIMjPHrScjvq4yoz6voTLczKo7q/RfiY4UBK8DoBM12NyM4awtcNIGp+0yXM1XUlND6o+Ww0cACdUKd+R9AGEuGIHey89eyv+N2fgGQ8NfEymzfDnD48xBiTMs7NU+/V7OsyMHLnD7TzNIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=gm+dCSjl; arc=none smtp.client-ip=68.232.139.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1718802010; c=relaxed/simple;
+	bh=dUF7xar2mLM2PTNG/U4sGslKcRPjmrXUFHC6uCB2Fys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9HMyv+SpQIEbNqsGM52A8/fXThPihyq/CNKaEs52//hi122rwTcIYjwTonDmYtZbSZRr9smUQ7S2r8aDxrYhqBT9hlwfTyxU+lcaneuRt1dCipQ5v6CcQKXTL/uH7bmBr2fmb3i88hIbx87c45ZvY0NkFSc6i/W0q+EkRI3OpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjY4ibRm; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="gm+dCSjl"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1718789073; x=1750325073;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=P5qUMmTvxRhRm+xvXml4/gq2sDOAqp/7/NAm9NbVRRo=;
-  b=gm+dCSjlJFIT6TkKC7otMpPAuHyoJkN02QZrVTvzTGF1Bn9hbQfiuXgb
-   BolMrBGpoXiL3P38hkcZXkpBxap09wspt1HDQkAoIdHLs4WK7HKIUSi2V
-   YU/yvNYeK9dRIViYJlazKyN5doPbtvaiUODVtMPS+mKF7KYaSLbx5CORE
-   Y6bk4ocEZ8MFzJ3vzO9lA8oyNnp2FHgoUznIyGyKSd5SbwNz9u75AcbSq
-   mREYhk5avFQpDNeZsv3sZDVctWY9pFPg8bzY881CpuQlqUxrzPxPGYeDc
-   T0eU2/U4BEalfKyiovq4TIyjUx6/BgU/n+LFbZG5a2ORTAmCY82zWPxzp
-   g==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="163387116"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712588400"; 
-   d="scan'208";a="163387116"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 18:24:25 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 06F7FD647A
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Jun 2024 18:24:22 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 28CEDD4BE9
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Jun 2024 18:24:16 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id A2515E369F
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Jun 2024 18:24:15 +0900 (JST)
-Received: from [192.168.50.5] (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 840D11A0002;
-	Wed, 19 Jun 2024 17:24:14 +0800 (CST)
-Message-ID: <b9bbf3bc-9125-4cbb-b127-613b841dc9a8@fujitsu.com>
-Date: Wed, 19 Jun 2024 17:24:14 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjY4ibRm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718802009; x=1750338009;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dUF7xar2mLM2PTNG/U4sGslKcRPjmrXUFHC6uCB2Fys=;
+  b=DjY4ibRmXNNDsSuQNzyzDfDJrYMbX3ORY6kxkMQ+jwkYUlPZcabWV5Tq
+   UZoa0Wn868yTeHhoFDNlpFP1hXSrDfCulyuWBJOfpJq/7smREFIXosiQ/
+   6Xwgip31/NUoxF3HrJBhpd6seud4gaEZXt0mKN6FnuVloTn6eeMaLSBux
+   3kwXtZdQKyy08Bv7WgVnjzd2s4yAYv2zR+mLz71+aM5aKrshrK16fQMVP
+   9h5jMCyvKntL/3dFGtrdPdL5SNUwStz585d15/YWuBrb7pGQk/UqcLW3u
+   ZXzC+j3HvplZiVkpHuUZx5s1hIXjn15nMNVpimBXYxGEYIqgky9VNjg8S
+   Q==;
+X-CSE-ConnectionGUID: 2LWK8G5HTl+J+q7MmOjjmg==
+X-CSE-MsgGUID: USwPlYeHTvGa4L3SEeDI0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="12147504"
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="12147504"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 06:00:08 -0700
+X-CSE-ConnectionGUID: v96991b5Q2qKojuDqI3v0A==
+X-CSE-MsgGUID: 0RNK1CVzRqaPBCv2wZHM1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
+   d="scan'208";a="79396303"
+Received: from mklonows-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.32])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 06:00:04 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH] cxl/acpi: Warn on unsupported platform config detection
+Date: Wed, 19 Jun 2024 14:59:41 +0200
+Message-ID: <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] cxl: avoid duplicating report from MCE & device
-To: Dave Jiang <dave.jiang@intel.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dan.j.williams@intel.com, dave@stgolabs.net,
- ira.weiny@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com
-References: <20240618165310.877974-1-ruansy.fnst@fujitsu.com>
- <be14ee00-6d43-4db1-ad63-beac6aacb814@intel.com>
-From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-In-Reply-To: <be14ee00-6d43-4db1-ad63-beac6aacb814@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28462.006
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28462.006
-X-TMASE-Result: 10--16.853000-10.000000
-X-TMASE-MatchedRID: NuHz/06ZeuaPvrMjLFD6eKn9fPsu8s0a2q80vLACqaeqvcIF1TcLYLBk
-	jjdoOP1bp3Z/y3zTL9+zN6XcSN8uuHerlGbz8OXFolVO7uyOCDUXivwflisSrEJsNXD374+pO+W
-	Rk1kOc5MCcJ+0x3yT8twnF1a+MpDfC5dVqsgzBjuOFfLQqF6P0tUEOicf335WUoV94zwLp3VJ9L
-	43nm/22bqZhYf6F5ZElyW1ZrZx68b/awIuxLRW1EhwlOfYeSqxlDt5PQMgj00zAwv94MqCLh8aR
-	hKglPt8mNVEdxRO2BKiQrGQ0QrIUcfdkIlEiI2knVTWWiNp+v9AApRfVHzqNN9RlPzeVuQQunqB
-	IQj+1Jm8HpxVQnR8jFIgVt7sAjKWDOQhvAmAT8UDccazfMVOqLFcDzCo2ZtWmWGz8DF0pgYRRLf
-	e6UPgvOt2gGXLArR6zG7gfWFsstqR9GF2J2xqM4MbH85DUZXyudR/NJw2JHcNYpvo9xW+mI6HM5
-	rqDwqtjBK61ITomYqktjwv041Qk/+6+AIb3vIoeBQZ5OZ7tJxxR93z5vKGpA==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
+Each Host Bridge instance has a corresponding CXL Host Bridge Structure
+(CHBS) ACPI table that identifies its capabilities. CHBS tables can be
+two types: RCRB and CHBCR.
 
+If a Host Bridge is attached to a device that is operating in Restricted
+CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
+registers that describe its capabilities.
 
-在 2024/6/19 7:35, Dave Jiang 写道:
-> 
-> 
-> On 6/18/24 9:53 AM, Shiyang Ruan wrote:
->> Background:
->> Since CXL device is a memory device, while CPU consumes a poison page of
->> CXL device, it always triggers a MCE by interrupt (INT18), no matter
->> which-First path is configured.  This is the first report.  Then
->> currently, in FW-First path, the poison event is transferred according
->> to the following process: CXL device -> firmware -> OS:ACPI->APEI->GHES
->>   -> CPER -> trace report.  This is the second one.  These two reports
->> are indicating the same poisoning page, which is the so-called "duplicate
->> report"[1].  And the memory_failure() handling I'm trying to add in
->> OS-First path could also be another duplicate report.
->>
->> Hope the flow below could make it easier to understand:
->> CPU accesses bad memory on CXL device, then
->>   -> MCE (INT18), *always* report (1)
->>   -> * FW-First (implemented now)
->>        -> CXL device -> FW
->> 	      -> OS:ACPI->APEI->GHES->CPER -> trace report (2.a)
->>      * OS-First (not implemented yet, I'm working on it)
->>        -> CXL device -> MSI
->> 	      -> OS:CXL driver -> memory_failure() (2.b)
->> so, the (1) and (2.a/b) are duplicated.
->>
->> (I didn't get response in my reply for [1] while I have to make patch to
->> solve this problem, so please correct me if my understanding is wrong.)
->>
->> This patch adds a new notifier_block and MCE_PRIO_CXL, for CXL memdev
->> to check whether the current poison page has been reported (if yes,
->> stop the notifier chain, won't call the following memory_failure()
->> to report), into `x86_mce_decoder_chain`.  In this way, if the poison
->> page already handled(recorded and reported) in (1) or (2), the other one
->> won't duplicate the report.  The record could be clear when
->> cxl_clear_poison() is called.
->>
->> [1] https://lore.kernel.org/linux-cxl/664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch/
->>
+However, the new (CXL 2.0+) Component registers (e.g., Extended Security
+Capability), can only be accessed by means of a base address published
+with a CHBCR.
 
-...
+An algorithm to locate a CHBCR associated with an RCRB would be too
+invasive to land without some concrete motivation.
 
->> +
->> +static bool cxl_contains_hpa(const struct cxl_memdev *cxlmd, u64 hpa)
->> +{
->> +	struct cxl_contains_hpa_context ctx = {
->> +		.contains = false,
->> +		.hpa = hpa,
->> +	};
->> +	struct cxl_port *port;
->> +
->> +	port = cxlmd->endpoint;
->> +	if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
-> 
-> Maybe no need to check is_cxl_endpoint() if the port is retrieved from cxlmd->endpoint.
+Therefore, just print a message to inform of unsupported config.
 
-OK, I'll remove this.
+Count how many different CHBS "Version" types are detected by
+cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that sum
+is greater than 1.
 
-> 
-> Also, in order to use cxl_num_decoders_committed(), cxl_region_rwsem must be held. See the lockdep_assert_held() in the function. Maybe add a
-> guard(cxl_regoin_rwsem);
-> before the if statement above.
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
+ drivers/cxl/acpi.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-Got it.  I didn't realize it before.  Will add it.
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 571069863c62..9e226a65a5ea 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -482,6 +482,7 @@ struct cxl_chbs_context {
+ 	unsigned long long uid;
+ 	resource_size_t base;
+ 	u32 cxl_version;
++	int count;
+ };
+ 
+ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+@@ -490,10 +491,17 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+ 	struct cxl_chbs_context *ctx = arg;
+ 	struct acpi_cedt_chbs *chbs;
+ 
+-	if (ctx->base != CXL_RESOURCE_NONE)
++	chbs = (struct acpi_cedt_chbs *) header;
++
++	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
++	    chbs->length != CXL_RCRB_SIZE)
+ 		return 0;
+ 
+-	chbs = (struct acpi_cedt_chbs *) header;
++	if (ctx->cxl_version != chbs->cxl_version)
++		ctx->count++;
++
++	if (ctx->base != CXL_RESOURCE_NONE)
++		return 0;
+ 
+ 	if (ctx->uid != chbs->uid)
+ 		return 0;
+@@ -502,10 +510,6 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+ 	if (!chbs->base)
+ 		return 0;
+ 
+-	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+-	    chbs->length != CXL_RCRB_SIZE)
+-		return 0;
+-
+ 	ctx->base = chbs->base;
+ 
+ 	return 0;
+@@ -533,6 +537,10 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
+ 
+ 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs_iter, ctx);
+ 
++	if (ctx->count > 1)
++		/* Disclaim eRCD support given some component register may only be found via CHBCR */
++		dev_info(dev, "Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.");
++
+ 	return 0;
+ }
+ 
+-- 
+2.45.2
 
-
-BTW, may I have your opinion on this proposal?  I'm not sure if the 
-Background and problem described above are correct or not.  If not, it 
-could lead me in the wrong direction.
-
-Thank you very much!
-
-
---
-Ruan.
-
-> 
-> DJ
-> 
