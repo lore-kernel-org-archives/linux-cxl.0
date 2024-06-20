@@ -1,45 +1,46 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A011AAE11;
-	Thu, 20 Jun 2024 11:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73621AB52F;
+	Thu, 20 Jun 2024 11:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718882123; cv=none; b=ATE9Z0sskS27i06PiEfPtrpRz+3Zq/ht6yIw7y+vIA/K7hKzM3uYkKikY4Mj2xiPJA79PZcKmJtQ7vV6oBIH2FhIouSSjlVnAxPY+LtbNdA8J+hohJ+8GxFwsoZc6T0vMlFuBWerBQkxJxEFHVML27zbPk5aXAQRZ33B+1a2ErU=
+	t=1718882510; cv=none; b=oh1zh6Y7eZjwglBoQq+X2081GoRB1qs/5r/wXdO8uBX18HRtPDf9jHDo5TtxRmiO0L/LW3tNGBOsVrFQZJWAO1oST+viq73C28kD0aNmflfWHb/iiZYJbACeijMWSWycHC3y7acIE1ABVKveULDJ8tkcgomTMi16Mtb2BWIVh5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718882123; c=relaxed/simple;
-	bh=8/Se5HsIJIn0bf7XIDA1NA5bOEV8j/nuQs1YIB1bZYI=;
+	s=arc-20240116; t=1718882510; c=relaxed/simple;
+	bh=U0kwcyz9v99F81JpNcMNKchuWwka57MsNC+7Ka7V14s=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kiaIMClun1v10D/EjGxbBCRhRwOZxUqliLQ6ZnA4VXe+yqtXpwxmKiw9AT+qa0BjqXo1s7uyCO8zZRSNTnprpuAPcLCfoR9h3rukWaqwGHbrvsNDHMJd96uAz0gLOXA8DL3vPObmrXKKnVn9NzSSdV7NvRcWQzimRRlrcE+3MSE=
+	 MIME-Version:Content-Type; b=OfVzUqzu0UVceAUf6fk9u33vIHGIKP0R+fQIRlR7itpeSXIqUSM2DFYxKWVlHiXMLjcxltmJuMmWkPHaLu9kVmNoVyPNHPwY3qOM+6mR2wnDcyj8ty4mJxclfOHXZmRY4TQUpnH6/1L/mynWP3nJjr5W0rq36IT0trXiQLG33jo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4dCY1nQdz6K9JD;
-	Thu, 20 Jun 2024 19:13:45 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4dNm1v3sz6JBHX;
+	Thu, 20 Jun 2024 19:21:44 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6808E140D1D;
-	Thu, 20 Jun 2024 19:15:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F4059140D1D;
+	Thu, 20 Jun 2024 19:21:45 +0800 (CST)
 Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 12:15:17 +0100
-Date: Thu, 20 Jun 2024 12:15:17 +0100
+ 2024 12:21:45 +0100
+Date: Thu, 20 Jun 2024 12:21:44 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Huang Ying <ying.huang@intel.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Alison Schofield
-	<alison.schofield@intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Bharata B Rao <bharata@amd.com>, Alistair Popple <apopple@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH v3 3/3] cxl/region: Simplify cxl_region_nid()
-Message-ID: <20240620121517.00006e3e@Huawei.com>
-In-Reply-To: <20240618084639.1419629-4-ying.huang@intel.com>
-References: <20240618084639.1419629-1-ying.huang@intel.com>
-	<20240618084639.1419629-4-ying.huang@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
+	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
+	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <Yazen.Ghannam@amd.com>,
+	<Robert.Richter@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port
+ and downstream port UCE handlers
+Message-ID: <20240620122144.00000faa@Huawei.com>
+In-Reply-To: <20240617200411.1426554-2-terry.bowman@amd.com>
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+	<20240617200411.1426554-2-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -53,55 +54,62 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 18 Jun 2024 16:46:39 +0800
-Huang Ying <ying.huang@intel.com> wrote:
+On Mon, 17 Jun 2024 15:04:03 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The node ID of the region can be gotten via resource start address
-> directly.  This simplifies the implementation of cxl_region_nid().
+> The AER service driver does not currently call a handler for AER
+> uncorrectable errors (UCE) detected in root ports or downstream
+> ports. This is not needed in most cases because common PCIe port
+> functionality is handled by portdrv service drivers.
 > 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Bharata B Rao <bharata@amd.com>
-> Cc: Alistair Popple <apopple@nvidia.com>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
+> CXL root ports include CXL specific RAS registers that need logging
+> before starting do_recovery() in the UCE case.
+> 
+> Update the AER service driver to call the UCE handler for root ports
+> and downstream ports. These PCIe port devices are bound to the portdrv
+> driver that includes a CE and UCE handler to be called.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
 > ---
->  drivers/cxl/core/region.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index dc15ceba7ab7..605efe3562c6 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2309,15 +2309,13 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
->  static int cxl_region_nid(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
-> -	struct cxl_endpoint_decoder *cxled;
-> -	struct cxl_decoder *cxld;
-> +	struct resource *res;
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 705893b5f7b0..a4db474b2be5 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
 >  
->  	guard(rwsem_read)(&cxl_region_rwsem);
-> -	cxled = p->targets[0];
-> -	if (!cxled)
-> +        res = p->res;
+> +	/*
+> +	 * PCIe ports may include functionality beyond the standard
+> +	 * extended port capabilities. This may present a need to log and
+> +	 * handle errors not addressed in this driver. Examples are CXL
+> +	 * root ports and CXL downstream switch ports using AER UIE to
+> +	 * indicate CXL UCE RAS protocol errors.
+> +	 */
+> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> +		struct pci_driver *pdrv = dev->driver;
+> +
+> +		if (pdrv && pdrv->err_handler &&
+> +		    pdrv->err_handler->error_detected) {
+> +			const struct pci_error_handlers *err_handler;
+> +
+> +			err_handler = pdrv->err_handler;
+> +			status = err_handler->error_detected(dev, state);
 
-Odd indent - I think spaces rather than tab.  Otherwise seems reasonable.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This status is going to get overridden by one of the pci_walk_bridge()
+calls.  Should it be kept around and acted on, or dropped silently?
+(I'd guess no for silent!).
 
-
-> +	if (!res)
->  		return NUMA_NO_NODE;
-> -	cxld = &cxled->cxld;
-> -	return phys_to_target_node(cxld->hpa_range.start);
-> +	return phys_to_target_node(res->start);
->  }
->  
->  static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+>  	 * or RCiEP, recovery runs on the device itself.  For Ports, that
 
