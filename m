@@ -1,152 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E281AF6AA
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Jun 2024 15:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CCE1AED4A
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Jun 2024 16:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718898701; cv=none; b=A4PcJPNXxNfx4JLJsUVgxuWsTHPnAGlpNFoUwVFKM8seP5dudsG77JEjfL1dg4lKPzQRy5U/fwurc8eHMbj7VSoN9kGb+ry4bUZvMp/itMPndKPPhZYR2nkov84nI2qdXIhxQgae8051CaOhT0uoipjk5ChccFlKN3hFBCjUZyE=
+	t=1718899417; cv=none; b=uSDClmjNtdgAWN5E8cyoa+9QxFBZ1fvHdDcPQlmEoHHQOz1LDbbwQ/Nvn8ByrhfCW/DXchCkarb2ff3FSncKhmSjKoY/TdVlRIbpNvlJv647P8fPJMU1+eDThulPcGKGo8A+JY31FenoSqsW9ZuIcROotJXbkUUp94z9dEWdBJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718898701; c=relaxed/simple;
-	bh=agCwqOeNiTlCBNAJlb/Z1ovWMBbWxNCSgy7+apBHXNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hnO4zrUDSKggvJ27n6tNq0AsqusUYc0v1YLtwH+84TFFloen0S5j5WjN+ZtFv1Fs9UKJbk1ycuVUI9jyJI8IPz5rJp8rx7Qa1n2CY8JkI9VUgudVeaISfq3TpiOP8gVvt67DZ9C6lF8YIAQVcjW0iSCmHQTg2+DR/LU8SwulFzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hhMr87vh; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hhMr87vh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718898700; x=1750434700;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=agCwqOeNiTlCBNAJlb/Z1ovWMBbWxNCSgy7+apBHXNs=;
-  b=hhMr87vhiIELmi3YAf4CGPlEWlp+QY9h+bSePAbdEfkfwU+poIT9KW6s
-   eEO9xlKgySoaX4teK2R3tqRtbwPge84YoBUpa1b62jJD3PxZDonoVvmC1
-   TWwhqFyfmjXE9gU6zXi0NaOb60HrMzvZJBKfMsR/J+X8P1TNmRcwGy4kP
-   JSwE5lMCoaKgL6eGYrbam9aIJDus7A6rDFKl6i50dEBJ3k2nlMnvzMlAL
-   Ac82G66Op4Lo5upwrvz4XKQBfkJzFoAr9mdj/GjQJzHM6TF2aZOdbRx3X
-   WnLmwYg6VNCMa/++Kb2v1z90zLiBdP0p7K85hP+DbUrhMrm9kxYjzGlSb
-   w==;
-X-CSE-ConnectionGUID: +zAswfrVQICbY+7xBjj7qg==
-X-CSE-MsgGUID: 3KPX3rDITJ23u0NsNIQXHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="16120106"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="16120106"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 08:51:39 -0700
-X-CSE-ConnectionGUID: 7uaMk55MQxiho9lCN0+/jA==
-X-CSE-MsgGUID: Qo6DET4hSGWqdbX+PQo4hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="47234517"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.70]) ([10.125.108.70])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 08:51:38 -0700
-Message-ID: <e6b3a936-9c45-4d34-bf7c-2b68e2ad79ae@intel.com>
-Date: Thu, 20 Jun 2024 08:51:37 -0700
+	s=arc-20240116; t=1718899417; c=relaxed/simple;
+	bh=XhPGwk55vOpDw/ySDGufHdVpqOn0buyLKaZ0fWkk5SU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=si3TkytdQA/jdgFvvIrgpuStUxG0tHQALcv1PHoGpeWRzSz7nLuPAznIaDzpwUDXvgWYHqYaTipmA32eWlPqfOmfFyYnu1pdNMI9cCfNZKMNilowyiDBaquC0WPcmOQkLByQwppb2p1m5XhMf8rBz5hU6rQMMa/i3TkFVMLU+gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4ldK4gBNz6K6jw;
+	Fri, 21 Jun 2024 00:03:01 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5E5BD1409EA;
+	Fri, 21 Jun 2024 00:03:25 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 20 Jun 2024 17:03:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <imammedo@redhat.com>, <mst@redhat.com>, Markus Armbruster
+	<armbru@redhat.com>, <qemu-devel@nongnu.org>, <ankita@nvidia.com>,
+	<marcel.apfelbaum@gmail.com>, <philmd@linaro.org>, Richard Henderson
+	<richard.henderson@linaro.org>
+CC: <linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: [PATCH v3 qemu 00/11] acpi: NUMA nodes for CXL HB as GP + complex NUMA test
+Date: Thu, 20 Jun 2024 17:03:08 +0100
+Message-ID: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] cxl: avoid duplicating report from MCE & device
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dan.j.williams@intel.com, dave@stgolabs.net,
- ira.weiny@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com
-References: <20240618165310.877974-1-ruansy.fnst@fujitsu.com>
- <be14ee00-6d43-4db1-ad63-beac6aacb814@intel.com>
- <b9bbf3bc-9125-4cbb-b127-613b841dc9a8@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <b9bbf3bc-9125-4cbb-b127-613b841dc9a8@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+
+v3: Thanks to Richard for help debugging BE issue and to Igor for
+    finding a bunch of other thing to improve via the context in
+    the fix patch.
+    
+- Fix the big endian host/little endian guest issue in the HID being
+  written to the Generic Port Affinity Structure ACPI Device Handle.
+- Fix a bug in the ordering of bus vs devfn in the BDF field which is
+  reversed in the ACPI table wrt to QEMU's internal handling. Note the
+  fix is minimal and refactored later in the series.
+- Move original GI code to hw/acpi/aml-build.c and hw/acpi/pc.c as
+  no need for a separate file and this keeps the SRAT entry building
+  all in one place.
+- Use properties for the pci bus number and the ACPI UID to avoid
+  using pci internal implementation details in hw/acpi.
+- Drop the GenericNode base object as much less code is unified with
+  the new approach to the aml building and that approach did not bring
+  sufficient advantages to be worthwhile after other refactors.
+  A little more duplication occurs in v3 but the code is easier to read.
+
+ACPI 6.5 introduced Generic Port Affinity Structures to close a system
+description gap that was a problem for CXL memory systems.
+It defines an new SRAT Affinity structure (and hence allows creation of an
+ACPI Proximity Node which can only be defined via an SRAT structure)
+for the boundary between a discoverable fabric and a non discoverable
+system interconnects etc.
+
+The HMAT data on latency and bandwidth is combined with discoverable
+information from the CXL bus (link speeds, lane counts) and CXL devices
+(switch port to port characteristics and USP to memory, via CDAT tables
+read from the device).  QEMU has supported the rest of the elements
+of this chain for a while but now the kernel has caught up and we need
+the missing element of Generic Ports (this code has been used extensively
+in testing and debugging that kernel support, some resulting fixes
+currently under review).
+
+Generic Port Affinity Structures are very similar to the recently
+added Generic Initiator Affinity Structures (GI) so this series
+factors out and reuses much of that infrastructure for reuse
+There are subtle differences (beyond the obvious structure ID change).
+
+- The ACPI spec example (and linux kernel support) has a Generic
+  Port not as associated with the CXL root port, but rather with
+  the CXL Host bridge. As a result, an ACPI handle is used (rather
+  than the PCI SBDF option for GIs). In QEMU the easiest way
+  to get to this is to target the root bridge PCI Bus, and
+  conveniently the root bridge bus number is used for the UID allowing
+  us to construct an appropriate entry.
+
+A key addition of this series is a complex NUMA topology example that
+stretches the QEMU emulation code for GI, GP and nodes with just
+CPUS, just memory, just hot pluggable memory, mixture of memory and CPUs.
+
+A similar test showed up a few NUMA related bugs with fixes applied for
+9.0 (note that one of these needs linux booted to identify that it
+rejects the HMAT table and this test is a regression test for the
+table generation only).
+
+https://lore.kernel.org/qemu-devel/2eb6672cfdaea7dacd8e9bb0523887f13b9f85ce.1710282274.git.mst@redhat.com/
+https://lore.kernel.org/qemu-devel/74e2845c5f95b0c139c79233ddb65bb17f2dd679.1710282274.git.mst@redhat.com/
 
 
+Jonathan Cameron (11):
+  hw/acpi: Fix ordering of BDF in Generic Initiator PCI Device Handle.
+  hw/acpi/GI: Fix trivial parameter alignment issue.
+  hw/acpi: Move AML building code for Generic Initiators to aml_build.c
+  hw/acpi: Rename build_all_acpi_generic_initiators() to
+    build_acpi_generic_initiator()
+  hw/pci: Add a bus property to pci_props and use for acpi/gi
+  acpi/pci: Move Generic Initiator object handling into acpi/pci.*
+  hw/pci-bridge: Add acpi_uid property to CXL PXB
+  hw/acpi: Generic Port Affinity Structure support
+  bios-tables-test: Allow for new acpihmat-generic-x test data.
+  bios-tables-test: Add complex SRAT / HMAT test for GI GP
+  bios-tables-test: Add data for complex numa test (GI, GP etc)
 
-On 6/19/24 2:24 AM, Shiyang Ruan wrote:
-> 
-> 
-> 在 2024/6/19 7:35, Dave Jiang 写道:
->>
->>
->> On 6/18/24 9:53 AM, Shiyang Ruan wrote:
->>> Background:
->>> Since CXL device is a memory device, while CPU consumes a poison page of
->>> CXL device, it always triggers a MCE by interrupt (INT18), no matter
->>> which-First path is configured.  This is the first report.  Then
->>> currently, in FW-First path, the poison event is transferred according
->>> to the following process: CXL device -> firmware -> OS:ACPI->APEI->GHES
->>>   -> CPER -> trace report.  This is the second one.  These two reports
->>> are indicating the same poisoning page, which is the so-called "duplicate
->>> report"[1].  And the memory_failure() handling I'm trying to add in
->>> OS-First path could also be another duplicate report.
->>>
->>> Hope the flow below could make it easier to understand:
->>> CPU accesses bad memory on CXL device, then
->>>   -> MCE (INT18), *always* report (1)
->>>   -> * FW-First (implemented now)
->>>        -> CXL device -> FW
->>>           -> OS:ACPI->APEI->GHES->CPER -> trace report (2.a)
->>>      * OS-First (not implemented yet, I'm working on it)
->>>        -> CXL device -> MSI
->>>           -> OS:CXL driver -> memory_failure() (2.b)
->>> so, the (1) and (2.a/b) are duplicated.
->>>
->>> (I didn't get response in my reply for [1] while I have to make patch to
->>> solve this problem, so please correct me if my understanding is wrong.)
->>>
->>> This patch adds a new notifier_block and MCE_PRIO_CXL, for CXL memdev
->>> to check whether the current poison page has been reported (if yes,
->>> stop the notifier chain, won't call the following memory_failure()
->>> to report), into `x86_mce_decoder_chain`.  In this way, if the poison
->>> page already handled(recorded and reported) in (1) or (2), the other one
->>> won't duplicate the report.  The record could be clear when
->>> cxl_clear_poison() is called.
->>>
->>> [1] https://lore.kernel.org/linux-cxl/664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch/
->>>
-> 
-> ...
-> 
->>> +
->>> +static bool cxl_contains_hpa(const struct cxl_memdev *cxlmd, u64 hpa)
->>> +{
->>> +    struct cxl_contains_hpa_context ctx = {
->>> +        .contains = false,
->>> +        .hpa = hpa,
->>> +    };
->>> +    struct cxl_port *port;
->>> +
->>> +    port = cxlmd->endpoint;
->>> +    if (port && is_cxl_endpoint(port) && cxl_num_decoders_committed(port))
->>
->> Maybe no need to check is_cxl_endpoint() if the port is retrieved from cxlmd->endpoint.
-> 
-> OK, I'll remove this.
-> 
->>
->> Also, in order to use cxl_num_decoders_committed(), cxl_region_rwsem must be held. See the lockdep_assert_held() in the function. Maybe add a
->> guard(cxl_regoin_rwsem);
->> before the if statement above.
-> 
-> Got it.  I didn't realize it before.  Will add it.
-> 
-> 
-> BTW, may I have your opinion on this proposal?  I'm not sure if the Background and problem described above are correct or not.  If not, it could lead me in the wrong direction.
+ qapi/qom.json                               |  34 +++
+ include/hw/acpi/acpi_generic_initiator.h    |  30 +--
+ include/hw/acpi/aml-build.h                 |   8 +
+ include/hw/acpi/pci.h                       |   7 +
+ include/hw/pci/pci_bridge.h                 |   1 +
+ hw/acpi/acpi_generic_initiator.c            | 132 +++++++++---
+ hw/acpi/aml-build.c                         |  84 ++++++++
+ hw/acpi/pci.c                               | 226 ++++++++++++++++++++
+ hw/arm/virt-acpi-build.c                    |   3 +-
+ hw/i386/acpi-build.c                        |   3 +-
+ hw/pci-bridge/pci_expander_bridge.c         |  18 +-
+ hw/pci/pci.c                                |  14 ++
+ tests/qtest/bios-tables-test.c              |  96 +++++++++
+ hw/acpi/meson.build                         |   1 -
+ tests/data/acpi/q35/APIC.acpihmat-generic-x | Bin 0 -> 136 bytes
+ tests/data/acpi/q35/CEDT.acpihmat-generic-x | Bin 0 -> 68 bytes
+ tests/data/acpi/q35/DSDT.acpihmat-generic-x | Bin 0 -> 10849 bytes
+ tests/data/acpi/q35/HMAT.acpihmat-generic-x | Bin 0 -> 360 bytes
+ tests/data/acpi/q35/SRAT.acpihmat-generic-x | Bin 0 -> 520 bytes
+ 19 files changed, 597 insertions(+), 60 deletions(-)
+ create mode 100644 tests/data/acpi/q35/APIC.acpihmat-generic-x
+ create mode 100644 tests/data/acpi/q35/CEDT.acpihmat-generic-x
+ create mode 100644 tests/data/acpi/q35/DSDT.acpihmat-generic-x
+ create mode 100644 tests/data/acpi/q35/HMAT.acpihmat-generic-x
+ create mode 100644 tests/data/acpi/q35/SRAT.acpihmat-generic-x
 
-Patch looks ok to me, but I'm no RAS expert in this area. Lets wait for comments from Jonathan and Dan. 
-> 
-> Thank you very much!
-> 
-> 
-> -- 
-> Ruan.
-> 
->>
->> DJ
->>
+-- 
+2.43.0
+
