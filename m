@@ -1,204 +1,139 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEC3320D;
-	Fri, 21 Jun 2024 01:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69DB83CD4;
+	Fri, 21 Jun 2024 02:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718934406; cv=none; b=LLCgRBUAvMsh3tGGpaJJaxJspBFRjF2QCIrVtcHefq1PXAmqusAoDGPULYlqMktSMZIAj1jVq5SFXy6dB5NVAtcrDUTUdim6i5YzXTpBAojavle7a6un6pnRs+FKf1a3/e7v7Cln6FevL8GJ7fFXfjpzC3m7Iv3S4a/tajFpaBw=
+	t=1718936844; cv=none; b=IEfWvYEC2JleJ9BnV5ejMhGhaKjQ/NX4FWbcqGMOfmO1zI77HD4xRcybGjmPQvGYWIfFwqfS15ZUbsDlsiQCpHb53X1bMqtA3zN2OmCBJeKR8zca+mP+h81BXZ0eIRDvXY0IB3Kouu31p5DeE/LY+WP0fSEin/vTuFXwdV0pSJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718934406; c=relaxed/simple;
-	bh=g9wFIOUe31e7KQZu85oPvjCDZVaP6z97vUNHFjIt1pk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=oKEZbrSz4pHxNRHFZSNtqJfm4TaNB9fC5eSCBlcGJiyTGnCGqzKq3R6VlNIdSKx2m6ryD2Qykc9k8gBAtjdOk312hS0rMYcCg6T65VfIte0pC+nTNjPizhp3J6U4DqR8X0dgSGvGlunq3C/Ane0U5lYIf2oDVDe4Tnw4rdkBfaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gATimv92; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718936844; c=relaxed/simple;
+	bh=Wptugyt91HQIamfAU4jbgvpcqaICqBPYTL6Zjz5rPqw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ivfoA47PPjZVwe15NjSJWOTF9bNc86wgtZJD+x7DtLy2ttFgBgjPhwYP8YMOSzHzX6dVciwyk55SKuKl96F0GjVFOrhQtIMn/i4wh3G8b1doIzIpP/mZgsWrof8VtkP9CM4pyyg04oAuJDJacfqFvhgfJZMWYq0mab+uw11oyO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BnfQMtAV; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gATimv92"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHBI0M010235;
-	Fri, 21 Jun 2024 01:46:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=TclNKue+IKkkkwLJcx8IRo
-	8lKJjNie/t8kqGm1oP1Y8=; b=gATimv926I9kp1UhoYBCkObjr0xZ/4i+omtSbi
-	Jr1yjYTjKvManKKUosjvHaLzsLWOUvYldfCoffL1sc6CZ29W6Y9n/SQNM8/jXM/B
-	bXPxG6r/OCD2ryortubVX9EVZ9ts8YYtbJGrms2X4YG4+3kUSY3Z7pidiI+PRqA+
-	NRMvJR/4UG4M8V077ggZSKKDJkYjSZtgea3cLXipB7JtyDx938SdRu4miroSCwJZ
-	ubE2CWR0MNBKAu3aADyFphYaMlqMvA9tn4wZ8fJbxwgxCLizdXceR3ntiFklLA7A
-	ImwtpdL2hFiY2hXzRZnG4Xs66yj1hytr8pgH+QNKINhLtcHw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvrkvh2ty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 01:46:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45L1kCvZ029846
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Jun 2024 01:46:12 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
- 2024 18:46:12 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 20 Jun 2024 18:46:09 -0700
-Subject: [PATCH v2] perf: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BnfQMtAV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718936843; x=1750472843;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Wptugyt91HQIamfAU4jbgvpcqaICqBPYTL6Zjz5rPqw=;
+  b=BnfQMtAV8Su+6KOnbIGJmV5AcG+n1MzGX/2hAT3x4ZgQhP7dpM/r/Zkn
+   Eg0OXXaqkHees5nQywAtVoac0iIrwUlGNOdSZTz6pjXVotDdPCRz6LnuI
+   peTy0SYn0dEvtnbGkCJR8I+dpNmwNjsiuhcFq2i+jBBK0HJxcra6CDEBZ
+   wynoor8CjmN+WcX754x8SOoJf9spi2r4oiAIAguRVwo2k95Qk9v3G1sCD
+   xdDHpBKZyhWro8wuPPVKF0mlSV0aqFlp4Jza+XqEaypDsVJn2tn/KhDed
+   H1m7GKbBJMwFqUvQLDjAcLzLFtUqYxHyVD42quvxFYhDUjpXjhDguf/J5
+   Q==;
+X-CSE-ConnectionGUID: fCLb9dEnQ6O4sdK4ael6+Q==
+X-CSE-MsgGUID: e2owq4iFTDGUm+FwUozdXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="26548763"
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="26548763"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 19:27:22 -0700
+X-CSE-ConnectionGUID: 3lfHA8SQRRG1Ez3N4P3YeQ==
+X-CSE-MsgGUID: IkC/uqcYTyChInZcq2PBjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
+   d="scan'208";a="42896215"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 19:27:17 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,  Dave Jiang
+ <dave.jiang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,  <linux-cxl@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  Alison Schofield
+ <alison.schofield@intel.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  Bharata B Rao <bharata@amd.com>,  Alistair Popple <apopple@nvidia.com>,
+  "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,  Davidlohr Bueso
+ <dave@stgolabs.net>,  Vishal Verma <vishal.l.verma@intel.com>,  Ira Weiny
+ <ira.weiny@intel.com>
+Subject: Re: [PATCH v3 3/3] cxl/region: Simplify cxl_region_nid()
+In-Reply-To: <20240620121517.00006e3e@Huawei.com> (Jonathan Cameron's message
+	of "Thu, 20 Jun 2024 12:15:17 +0100")
+References: <20240618084639.1419629-1-ying.huang@intel.com>
+	<20240618084639.1419629-4-ying.huang@intel.com>
+	<20240620121517.00006e3e@Huawei.com>
+Date: Fri, 21 Jun 2024 10:25:24 +0800
+Message-ID: <87wmmj117v.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240620-md-drivers-perf-v2-1-1f88f8a08e48@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGDbdGYC/3WNQQ6CMBBFr0K6dkxbgaAr72FYlHaQSaTAFBoM4
- e4W9i5f8v97mwjIhEE8sk0wRgo0+AT6kgnbGf9GIJdYaKlzWSoFvQPHFJEDjMgtFK665VpW9zJ
- 3Ir1GxpbW0/iqEzcmIDRsvO0Oz4f8skJvwox8zDsK88Dfsx/VcfqfigoUWClVY7B0prDPaSFL3
- l7t0It63/cfwwxCnc8AAAA=
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Frank Li <Frank.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam
-	<festevam@gmail.com>,
-        Yicong Yang <yangyicong@hisilicon.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <imx@lists.linux.dev>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.14.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: N4_fmCvKfjRnJCulBGS6JCPrjvZU-w7P
-X-Proofpoint-ORIG-GUID: N4_fmCvKfjRnJCulBGS6JCPrjvZU-w7P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_12,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=0 impostorscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406210011
+Content-Type: text/plain; charset=ascii
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm-ccn.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/fsl_imx8_ddr_perf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/marvell_cn10k_ddr_pmu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/arm_cspmu_module.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/nvidia_cspmu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/ampere_cspmu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/cxl_pmu.o
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro to all
-files which have a MODULE_LICENSE().
+> On Tue, 18 Jun 2024 16:46:39 +0800
+> Huang Ying <ying.huang@intel.com> wrote:
+>
+>> The node ID of the region can be gotten via resource start address
+>> directly.  This simplifies the implementation of cxl_region_nid().
+>> 
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Bharata B Rao <bharata@amd.com>
+>> Cc: Alistair Popple <apopple@nvidia.com>
+>> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> ---
+>>  drivers/cxl/core/region.c | 10 ++++------
+>>  1 file changed, 4 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index dc15ceba7ab7..605efe3562c6 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2309,15 +2309,13 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
+>>  static int cxl_region_nid(struct cxl_region *cxlr)
+>>  {
+>>  	struct cxl_region_params *p = &cxlr->params;
+>> -	struct cxl_endpoint_decoder *cxled;
+>> -	struct cxl_decoder *cxld;
+>> +	struct resource *res;
+>>  
+>>  	guard(rwsem_read)(&cxl_region_rwsem);
+>> -	cxled = p->targets[0];
+>> -	if (!cxled)
+>> +        res = p->res;
+>
+> Odd indent - I think spaces rather than tab.  Otherwise seems
+> reasonable.
 
-This includes drivers/perf/hisilicon/hisi_uncore_pmu.c which, although
-it did not produce a warning with the x86 allmodconfig configuration,
-may cause this warning with arm64 configurations.
+Good catch!  I used spaces accidently.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-Changes in v2:
-- Updated hisi_uncore_pmu.c description per Yicong Yang
-- Link to v1: https://lore.kernel.org/r/20240611-md-drivers-perf-v1-1-c001bae6da5c@quicinc.com
----
- drivers/perf/arm-ccn.c                   | 1 +
- drivers/perf/arm_cspmu/ampere_cspmu.c    | 1 +
- drivers/perf/arm_cspmu/arm_cspmu.c       | 1 +
- drivers/perf/arm_cspmu/nvidia_cspmu.c    | 1 +
- drivers/perf/cxl_pmu.c                   | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c         | 1 +
- drivers/perf/hisilicon/hisi_uncore_pmu.c | 1 +
- drivers/perf/marvell_cn10k_ddr_pmu.c     | 1 +
- 8 files changed, 8 insertions(+)
+Hi, Dave,
 
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 86ef31ac7503..65f4882531db 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1561,4 +1561,5 @@ module_init(arm_ccn_init);
- module_exit(arm_ccn_exit);
- 
- MODULE_AUTHOR("Pawel Moll <pawel.moll@arm.com>");
-+MODULE_DESCRIPTION("ARM CCN (Cache Coherent Network) driver support");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/perf/arm_cspmu/ampere_cspmu.c b/drivers/perf/arm_cspmu/ampere_cspmu.c
-index f146a455e838..426b3cfcb52e 100644
---- a/drivers/perf/arm_cspmu/ampere_cspmu.c
-+++ b/drivers/perf/arm_cspmu/ampere_cspmu.c
-@@ -269,4 +269,5 @@ static void __exit ampere_cspmu_exit(void)
- module_init(ampere_cspmu_init);
- module_exit(ampere_cspmu_exit);
- 
-+MODULE_DESCRIPTION("Ampere SoC PMU (Performance Monitor Unit) driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index c318dc909767..c21c564840d6 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -1427,4 +1427,5 @@ EXPORT_SYMBOL_GPL(arm_cspmu_impl_unregister);
- module_init(arm_cspmu_init);
- module_exit(arm_cspmu_exit);
- 
-+MODULE_DESCRIPTION("ARM CoreSight Architecture PMU driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/perf/arm_cspmu/nvidia_cspmu.c b/drivers/perf/arm_cspmu/nvidia_cspmu.c
-index 5b84b701ad62..0dea47e48ac5 100644
---- a/drivers/perf/arm_cspmu/nvidia_cspmu.c
-+++ b/drivers/perf/arm_cspmu/nvidia_cspmu.c
-@@ -417,4 +417,5 @@ static void __exit nvidia_cspmu_exit(void)
- module_init(nvidia_cspmu_init);
- module_exit(nvidia_cspmu_exit);
- 
-+MODULE_DESCRIPTION("NVIDIA Coresight Architecture PMU driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 1f93a66eff5b..8b6ce9ea5a55 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -972,6 +972,7 @@ static __exit void cxl_pmu_exit(void)
- 	cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
- }
- 
-+MODULE_DESCRIPTION("CXL Performance Monitoring Unit driver");
- MODULE_LICENSE("GPL");
- MODULE_IMPORT_NS(CXL);
- module_init(cxl_pmu_init);
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 1bbdb29743c4..a6683b38315c 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -850,4 +850,5 @@ static struct platform_driver imx_ddr_pmu_driver = {
- };
- 
- module_platform_driver(imx_ddr_pmu_driver);
-+MODULE_DESCRIPTION("Freescale i.MX8 DDR PMU driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-index 6392cbedcd06..0ac5182a5e45 100644
---- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-@@ -537,4 +537,5 @@ void hisi_pmu_init(struct hisi_pmu *hisi_pmu, struct module *module)
- }
- EXPORT_SYMBOL_GPL(hisi_pmu_init);
- 
-+MODULE_DESCRIPTION("HiSilicon SoC uncore PMU driver framework");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index e2abca188dbe..94f1ebcd2a27 100644
---- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-+++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -763,4 +763,5 @@ module_init(cn10k_ddr_pmu_init);
- module_exit(cn10k_ddr_pmu_exit);
- 
- MODULE_AUTHOR("Bharat Bhushan <bbhushan2@marvell.com>");
-+MODULE_DESCRIPTION("Marvell CN10K DRAM Subsystem (DSS) Performance Monitor Driver");
- MODULE_LICENSE("GPL v2");
+Do you need me to send a new version?  Or you can change it?
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240611-md-drivers-perf-5d834208964d
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+Thank you very much for your review!
+
+--
+Best Regards,
+Huang, Ying
+
+>
+>> +	if (!res)
+>>  		return NUMA_NO_NODE;
+>> -	cxld = &cxled->cxld;
+>> -	return phys_to_target_node(cxld->hpa_range.start);
+>> +	return phys_to_target_node(res->start);
+>>  }
+>>  
+>>  static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
