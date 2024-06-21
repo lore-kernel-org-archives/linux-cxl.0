@@ -1,44 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D96910A39
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 16:20:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B18DDC4
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 16:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718986831; cv=none; b=nOBIC+kc6z1cgd6v3ZPLnbGqpxJsF2HlIE1k60mapSqSY/sdk7YI8eOum/eLA/R6vLR/r86pWWPJ5jEmyJPdXEz/xJ134Mwa3foUqp4yfefD1zGeNz+ajFkNY9cCuSM68KhV5rClEtA8PK4RhAUE2o6jVYTh0cls5lMCR4Ttsq4=
+	t=1718989105; cv=none; b=SidltihNVc0KPaybCSmCZVRPusyglZm07wJyNie4ACXv2+x5aw250DZL0vs4H9HtqVldhm5ogVEV2HIlu6+mrPyQFCDdBuQgXeUaYGanb6pP19b9O4C6hvgvg3uOrUpmVTIsgmPdGqdsXFg2DYplNS4jg4WxfjF+LUa9ITGzkDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718986831; c=relaxed/simple;
-	bh=/Co0zMQI/Spa310mO0fkZ0PfkTB0P56AUmfD1wRkgIM=;
+	s=arc-20240116; t=1718989105; c=relaxed/simple;
+	bh=hbLByqnK/AVXgZaaAmfOI9Qtli1gHliDCiHqGFXBX/Q=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tNiCHv2qJZQmVin4y7d3qf/Jxpy4yBs8z0Wm0M9A30WLxZvyI9LJ5qZmjYnzUEWzGHxKr44YWvxs7bCRRcYavXr0n4AVimWDZVT6Je98yOxnJ8t5sbEbpU7AnOrhklCjVp8PBqwwcHP/bMAAVarst8GMfWgb1BB3QMD8yPDptp4=
+	 MIME-Version:Content-Type; b=Xo+gUbhv/7r7jbt2VfciPCXn/M+BDQDGlwnUXtApQ0gbgAz53IIbOAwoVKorFcOFyI3g9dDOpE4dRsnMr+J+FhywjTqcnXdyoJZEiI9VBtzpxQ2P1/6VBqdBS8GAAX170J8N0RNGYq+SadyvlOjcCWqY1bxqRE8zhOgwvfxHQ34=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W5Mwx2tcSz6K98T;
-	Sat, 22 Jun 2024 00:18:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W5Nms01pzz6K9BG;
+	Sat, 22 Jun 2024 00:56:45 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 59172140B38;
-	Sat, 22 Jun 2024 00:20:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 017C2140A30;
+	Sat, 22 Jun 2024 00:58:20 +0800 (CST)
 Received: from localhost (10.122.19.247) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 21 Jun
- 2024 17:20:15 +0100
-Date: Fri, 21 Jun 2024 17:20:14 +0100
+ 2024 17:58:19 +0100
+Date: Fri, 21 Jun 2024 17:58:18 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <imammedo@redhat.com>, <mst@redhat.com>, Markus Armbruster
-	<armbru@redhat.com>, <qemu-devel@nongnu.org>, <ankita@nvidia.com>,
-	<marcel.apfelbaum@gmail.com>, <philmd@linaro.org>, Richard Henderson
-	<richard.henderson@linaro.org>
-CC: <linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
-	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
-	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v3 qemu 00/11] acpi: NUMA nodes for CXL HB as GP +
- complex NUMA test
-Message-ID: <20240621172014.00007b7c@huawei.com>
-In-Reply-To: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
-References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: fan <nifan.cxl@gmail.com>, <vishal.l.verma@intel.com>,
+	<fan.ni@samsung.com>, <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 -qemu] hw/cxl: Support firmware updates
+Message-ID: <20240621175818.00007705@huawei.com>
+In-Reply-To: <20240319204818.p6qbkyktgsadmkhi@offworld>
+References: <20240205172942.13343-1-dave@stgolabs.net>
+	<ZfnR1jTLG_e5KCIE@debian>
+	<20240319204818.p6qbkyktgsadmkhi@offworld>
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,19 +44,45 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 20 Jun 2024 17:03:08 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, 19 Mar 2024 13:48:18 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> v3: Thanks to Richard for help debugging BE issue and to Igor for
->     finding a bunch of other thing to improve via the context in
->     the fix patch.
+> On Tue, 19 Mar 2024, fan wrote:
+> 
+> >> +/* CXL r3.1 section 8.2.9.3.2: Transfer FW (Opcode 0201h) */
+> >> +#define CXL_FW_XFER_ALIGNMENT   128
+> >> +
+> >> +#define CXL_FW_XFER_ACTION_FULL	    0x0
+> >> +#define CXL_FW_XFER_ACTION_INIT	    0x1
+> >> +#define CXL_FW_XFER_ACTION_CONTINUE 0x2
+> >> +#define CXL_FW_XFER_ACTION_END	    0x3
+> >> +#define CXL_FW_XFER_ACTION_ABORT    0x4  
+> >
+> >The above definitions have "tab" used, cannot pass checkpatch check.  
+> 
+> I was not aware of a checkpatch for qemu, will clean up.
+> 
+> >> +
+> >> +static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
+> >> +                                               uint8_t *payload_in,
+> >> +                                               size_t len,
+> >> +                                               uint8_t *payload_out,
+> >> +                                               size_t *len_out,
+> >> +                                               CXLCCI *cci)
+> >> +{
+> >> +    struct {
+> >> +        uint8_t action;
+> >> +        uint8_t slot;
+> >> +        uint8_t caps;  
+> >
+> >Based on table 8-66, I cannot find the field "caps" and it is unused.  
+> 
+> Hmm yep don't know how that snuck in, will get rid of it.
+> 
+> Thanks,
+> Davidlohr
 
-I forgot to mention that his time I ran the bios tables test on
-an emulated x86_64 machine on top of an emulated s390 (with the timeouts
-massively increased as it took about 2 hours).
-
-Hopefully no more surprises!
-
+I fixed both on my tree.
