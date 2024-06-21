@@ -1,318 +1,206 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4AA12BF23
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 04:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F21B168C20
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 07:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718945343; cv=none; b=OCwKn4xdFWIx+VghHJxdxWYQXx48ogjHrFcUhd66VyNGlQAfjnr+E9lXhNjrBoy4467HKzQa93iYRSpMtpUhHReKCZwpiFlz3VG19z1da1Le8S8z3EAGOzePsxT44TBlNyPKiRSbxVb1pT1VV2yd2kXv+PVYTV8gtvuX0P6b5Is=
+	t=1718953958; cv=none; b=iuVmoGHcdnOuCQQ1aqpqx2Nf6OhKK3Sehlzyy9HB2CcOXyIrzZosL27ENhcl/Iee6353Hnn6P1x8RPB5vMWYR1VlH69trNORyBIn2ArVUtKiOAk6gKXzZJ36TzUK7ZwLo0XFFRLrfuiO+nPJk4+0Y4rfX3ONWbAUj5cIudxhfjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718945343; c=relaxed/simple;
-	bh=TCPacvnCWz7s5clHdFkwrUvdCTd4ZOnWaywsuVYSOX0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m1AX537iRdYiodqapgvBYoNlhqWc+k08zu4ZmVEId+7INgm7zq6DhnwJiZZg0OO8V+oNZT3YYcmePhm1dBBKCcLHbLmfq/b9R9vLJYSftAw5R2801yavsT1N2RmxILtkgChtWb6I1pWe/i4LLuNzl/fjWyUVvge0VTKEVKyY38Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xlNesRog; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718953958; c=relaxed/simple;
+	bh=t4qq/jMiGnxrp5BYlBkmNLXJVDdDBuIgqirUGO8bPfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mDPciCxBSC9fvm7ef9gEkg8ZHc1S8rWKD4oti2nD6dV7M0OFZaefPj82JmGHks/4C/FDGPiNsAPwdGZZVn7xexY4lhCz3CwD3m/n2ryrMRQk7d3QhEqFsM8lN6kzHLdPfw+mYSWKLZp+SzkAdtkf76XiV6MmusSDpoRt4AAadEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pjYE0fcm; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xlNesRog"
-X-Envelope-To: jonathan.cameron@huawei.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718945338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MHqjrp/J71xTPNaI1MwO3a2W28iDrpymS2xOCSCUunM=;
-	b=xlNesRogcVQ7UCsKLg+Ogm+GK+e/Dv+fLy2OymPuFDkL9y8h71k7f/EexM7rgPTPzRywcK
-	4ahAuv4czmsSnSBcd2lMKb+HLqLZz+5EEOCPmFGbQurVlwIWPTrFeKLUwYQvUCG5f9Q2yB
-	DkQyXIbF78bGok7AlAKmdklsu3ZfbZo=
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: gourry.memverge@gmail.com
-X-Envelope-To: aneesh.kumar@linux.ibm.com
-X-Envelope-To: mhocko@suse.com
-X-Envelope-To: tj@kernel.org
-X-Envelope-To: john@jagalactic.com
-X-Envelope-To: emirakhur@micron.com
-X-Envelope-To: vtavarespetr@micron.com
-X-Envelope-To: ravis.opensrc@micron.com
-X-Envelope-To: apopple@nvidia.com
-X-Envelope-To: sthanneeru@micron.com
-X-Envelope-To: sj@kernel.org
-X-Envelope-To: rafael@kernel.org
-X-Envelope-To: lenb@kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: dave.jiang@intel.com
-X-Envelope-To: dan.j.williams@intel.com
-X-Envelope-To: jonathan.cameron@huawei.com
-X-Envelope-To: horen.chuang@linux.dev
-X-Envelope-To: linux-acpi@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: horenc@vt.edu
-X-Envelope-To: horenchuang@bytedance.com
-X-Envelope-To: horenchuang@gmail.com
-X-Envelope-To: linux-cxl@vger.kernel.org
-X-Envelope-To: qemu-devel@nongnu.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
-To: "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	"Gregory Price" <gourry.memverge@gmail.com>,
-	aneesh.kumar@linux.ibm.com,
-	mhocko@suse.com,
-	tj@kernel.org,
-	john@jagalactic.com,
-	"Eishan Mirakhur" <emirakhur@micron.com>,
-	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
-	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
-	"Alistair Popple" <apopple@nvidia.com>,
-	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
-	"SeongJae Park" <sj@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH v1] memory tier: consolidate the initialization of memory tiers
-Date: Fri, 21 Jun 2024 04:48:30 +0000
-Message-Id: <20240621044833.3953055-1-horen.chuang@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pjYE0fcm"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6ef64b092cso189127666b.1
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 00:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718953954; x=1719558754; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+X3r3iWIZnsDCFWQKHQoaKS+fjEdqxnm5cTkv/byPH8=;
+        b=pjYE0fcmHaw0T1EhtX1EyqPa7iLeaNSiGlErlAJj5QqxB4F49QtdgP3PM1ozWTBawS
+         rT8v1T0s9lNZ79XCeCv5r/Q2A/lu6gZc8mxi7kSjBgu7euo4D/6gUGpD8tEc1qG0AnAn
+         tl3leXOV5GVCaG27FpiiegWPnDX+8UekaEPHVXEKaTG0oKBXtCcfdAtTSiypTqRYD4Ot
+         lTsfOWgowyp4iT7R9KTXciB0SeXdMfwn/GOn8aunBpf+K4MNpKh2dNmQMgsCW6ZMOBHZ
+         04RXvKdD66fIq6ggHOdsV/Nem6ap6KT4zQsC+fP96HDGbwl2hGWXv/FZPK6T8EjQjoH0
+         dxCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718953954; x=1719558754;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+X3r3iWIZnsDCFWQKHQoaKS+fjEdqxnm5cTkv/byPH8=;
+        b=AkwnPQdXP+dfBGXF3wE+OCAXADL5fwzp9zmyMwH31gS6RpvooUVaenTwco5cFR0kY7
+         2+Z053BneG1p1SNU3uaONr0ZUSEyXt6oWchroNJLZUvtNBqhgZBNjnEPcbg2OMiCkipC
+         ItOwCdZpzsRU+mJDjvTqggFrThqDL40q0f5g2bkNFpvzAXNnXcFFyQnIENa0MxjhUwx+
+         BmSh+mrZ6cSoYa1yk50FruYX8tHhiHJJ6U3srCh0yFqpCGZ/fK0MUEFwKDKR2lSvLyu8
+         HrNii3YQF/a3/P100UzJpyQvEqqLUBFqMKw+CXwurxS5+dn1/6LkCnbUEBMWSJpnE3ZD
+         2NBQ==
+X-Gm-Message-State: AOJu0YzvsZBYbUqGxg6RwXzCNxpU6KEVbzy72utJ6KT8iSVkQWNmi+FP
+	1GGy7rK9EmSeSV3mklJKbid2E0xIDD/5sSuVPyX6SKjH4qP+lAHeDUOe0yr1sKE=
+X-Google-Smtp-Source: AGHT+IGDJt4eeNhXv751/YEEHTjXvtvEWkZD5alLeIkIR1Kuc8t5AALKvfHYqcG3IrFQoZbVt7a9rQ==
+X-Received: by 2002:a17:907:1888:b0:a6f:ae81:174 with SMTP id a640c23a62f3a-a6fae81070dmr532101366b.18.1718953954206;
+        Fri, 21 Jun 2024 00:12:34 -0700 (PDT)
+Received: from [192.168.69.100] ([176.176.128.209])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf5490eesm50524766b.111.2024.06.21.00.10.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jun 2024 00:12:33 -0700 (PDT)
+Message-ID: <140c112f-450c-4cc8-a57c-36a96d29130c@linaro.org>
+Date: Fri, 21 Jun 2024 09:10:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/4] bswap: Add the ability to store to an unaligned 24
+ bit field
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
+ Michael Tsirkin <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>
+Cc: linux-cxl@vger.kernel.org, linuxarm@huawei.com,
+ Ira Weiny <ira.weiny@intel.com>, Michael Roth <michael.roth@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>, Markus Armbruster <armbru@redhat.com>,
+ =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+ Eric Blake <eblake@redhat.com>, Mike Maslenkin <mike.maslenkin@gmail.com>,
+ =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>,
+ Thomas Huth <thuth@redhat.com>
+References: <20230526170010.574-1-Jonathan.Cameron@huawei.com>
+ <20230526170010.574-2-Jonathan.Cameron@huawei.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20230526170010.574-2-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-If we simply move the set_node_memory_tier() from memory_tier_init() to
-late_initcall(), it will result in HMAT not registering the
-mt_adistance_algorithm callback function, because set_node_memory_tier()
-is not performed during the memory tiering initialization phase,
-leading to a lack of correct default_dram information.
+Hi Ira & Jonathan,
 
-Therefore, we introduced a nodemask to pass the information of the
-default DRAM nodes. The reason for not choosing to reuse
-default_dram_type->nodes is that it is not clean enough. So in the end,
-we use a __initdata variable, which is a variable that is released once
-initialization is complete, including both CPU and memory nodes for HMAT
-to iterate through.
+On 26/5/23 19:00, Jonathan Cameron wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> CXL has 24 bit unaligned fields which need to be stored to.  CXL is
+> specified as little endian.
+> 
+> Define st24_le_p() and the supporting functions to store such a field
+> from a 32 bit host native value.
+> 
+> The use of b, w, l, q as the size specifier is limiting.  So "24" was
+> used for the size part of the function name.
+> 
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   docs/devel/loads-stores.rst |  2 ++
+>   include/qemu/bswap.h        | 25 +++++++++++++++++++++++++
+>   2 files changed, 27 insertions(+)
+> 
+> diff --git a/docs/devel/loads-stores.rst b/docs/devel/loads-stores.rst
+> index d2cefc77a2..dab6dfa0ac 100644
+> --- a/docs/devel/loads-stores.rst
+> +++ b/docs/devel/loads-stores.rst
+> @@ -36,6 +36,7 @@ store: ``st{size}_{endian}_p(ptr, val)``
+>   ``size``
+>    - ``b`` : 8 bits
+>    - ``w`` : 16 bits
+> + - ``24`` : 24 bits
+>    - ``l`` : 32 bits
+>    - ``q`` : 64 bits
+>   
+> @@ -65,6 +66,7 @@ of size ``sz`` bytes.
+>   Regexes for git grep
+>    - ``\<ld[us]\?[bwlq]\(_[hbl]e\)\?_p\>``
+>    - ``\<st[bwlq]\(_[hbl]e\)\?_p\>``
+> + - ``\<st24\(_[hbl]e\)\?_p\>``
 
-Besides, since default_dram_type may be checked/used during the
-initialization process of HMAT and drivers, it is better to keep the
-allocation of default_dram_type in memory_tier_init().
+Interestingly this regexp mentions st24_be_p() but this patch
+only adds st24_le_p() and st24_he_p().
 
-Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
----
-Hi all,
+No need to update the regexp, I'll post a patch with st24_be_p()
+since I have use for it.
 
-The current memory tier initialization process is distributed across two
-different functions, memory_tier_init() and memory_tier_late_init(). This
-design is hard to maintain. Thus, this patch is proposed to reduce the
-possible code paths by consolidating different initialization patches into one.
-
-The earlier discussion with Jonathan and Ying is listed here:
-https://lore.kernel.org/lkml/20240405150244.00004b49@Huawei.com/
-
-If we want to put these two initializations together, they must be placed
-together in the later function. Because only at that time, the HMAT information
-will be ready, adist between nodes can be calculated, and memory tiering can be
-established based on the adist. So we position the initialization at
-memory_tier_init() to the memory_tier_late_init() call.
-
-Moreover, it's natural to keep memory_tier initialization in drivers at
-device_initcall() level.
-
-This patchset is based on commits cf93be18fa1b and a72a30af550c:
-[0/2] https://lkml.kernel.org/r/20240405000707.2670063-1-horenchuang@bytedance.com
-[1/2] https://lkml.kernel.org/r/20240405000707.2670063-2-horenchuang@bytedance.com
-[1/2] https://lkml.kernel.org/r/20240405000707.2670063-3-horenchuang@bytedance.com
-
-Thanks,
-Ho-Ren (Jack) Chuang
-
- drivers/acpi/numa/hmat.c     |  4 ++-
- include/linux/memory-tiers.h |  6 ++++
- mm/memory-tiers.c            | 70 ++++++++++++++++++------------------
- 3 files changed, 44 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c8ccc91ebe6..31a77a3324a8 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -939,11 +939,13 @@ static int hmat_set_default_dram_perf(void)
- 	int nid, pxm;
- 	struct memory_target *target;
- 	struct access_coordinate *attrs;
-+	nodemask_t default_dram_nodes;
- 
- 	if (!default_dram_type)
- 		return -EIO;
- 
--	for_each_node_mask(nid, default_dram_type->nodes) {
-+	default_dram_nodes = mt_get_default_dram_nodemask();
-+	for_each_node_mask(nid, default_dram_nodes) {
- 		pxm = node_to_pxm(nid);
- 		target = find_mem_target(pxm);
- 		if (!target)
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 0d70788558f4..1567db7bd40e 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -51,6 +51,7 @@ int mt_perf_to_adistance(struct access_coordinate *perf, int *adist);
- struct memory_dev_type *mt_find_alloc_memory_type(int adist,
- 						  struct list_head *memory_types);
- void mt_put_memory_types(struct list_head *memory_types);
-+nodemask_t mt_get_default_dram_nodemask(void);
- #ifdef CONFIG_MIGRATION
- int next_demotion_node(int node);
- void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
-@@ -149,5 +150,10 @@ static inline struct memory_dev_type *mt_find_alloc_memory_type(int adist,
- static inline void mt_put_memory_types(struct list_head *memory_types)
- {
- }
-+
-+static inline nodemask_t mt_get_default_dram_nodemask(void)
-+{
-+	return NODE_MASK_NONE;
-+}
- #endif	/* CONFIG_NUMA */
- #endif  /* _LINUX_MEMORY_TIERS_H */
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 6632102bd5c9..7d4b7f53dd8f 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
- static LIST_HEAD(default_memory_types);
- static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
- struct memory_dev_type *default_dram_type;
-+static nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
- 
- static const struct bus_type memory_tier_subsys = {
- 	.name = "memory_tiering",
-@@ -125,6 +126,11 @@ static inline struct memory_tier *to_memory_tier(struct device *device)
- 	return container_of(device, struct memory_tier, dev);
- }
- 
-+nodemask_t __init mt_get_default_dram_nodemask(void)
-+{
-+	return default_dram_nodes;
-+}
-+
- static __always_inline nodemask_t get_memtier_nodemask(struct memory_tier *memtier)
- {
- 	nodemask_t nodes = NODE_MASK_NONE;
-@@ -671,27 +677,38 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
- 
- /*
-  * This is invoked via `late_initcall()` to initialize memory tiers for
-- * CPU-less memory nodes after driver initialization, which is
-- * expected to provide `adistance` algorithms.
-+ * memory nodes, both with and without CPUs. After the initialization of
-+ * firmware and devices, adistance algorithms are expected to be provided.
-  */
- static int __init memory_tier_late_init(void)
- {
- 	int nid;
-+	struct memory_tier *memtier;
- 
- 	guard(mutex)(&memory_tier_lock);
-+	/*
-+	 * Look at all the existing and uninitialized N_MEMORY nodes and
-+	 * add them to default memory tier or to a tier if we already have
-+	 * memory types assigned.
-+	 */
- 	for_each_node_state(nid, N_MEMORY) {
--		/*
--		 * Some device drivers may have initialized memory tiers
--		 * between `memory_tier_init()` and `memory_tier_late_init()`,
--		 * potentially bringing online memory nodes and
--		 * configuring memory tiers. Exclude them here.
--		 */
--		if (node_memory_types[nid].memtype)
--			continue;
-+		if (!node_state(nid, N_CPU))
-+			/*
-+			 * Some device drivers may have initialized
-+			 * memory tiers, potentially bringing memory nodes
-+			 * online and configuring memory tiers.
-+			 * Exclude them here.
-+			 */
-+			if (node_memory_types[nid].memtype)
-+				continue;
- 
--		set_node_memory_tier(nid);
-+		memtier = set_node_memory_tier(nid);
-+		if (IS_ERR(memtier))
-+			/*
-+			 * Continue with memtiers we are able to setup.
-+			 */
-+			break;
- 	}
--
- 	establish_demotion_targets();
- 
- 	return 0;
-@@ -876,7 +893,6 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
- static int __init memory_tier_init(void)
- {
- 	int ret, node;
--	struct memory_tier *memtier;
- 
- 	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
- 	if (ret)
-@@ -887,7 +903,8 @@ static int __init memory_tier_init(void)
- 				GFP_KERNEL);
- 	WARN_ON(!node_demotion);
- #endif
--	mutex_lock(&memory_tier_lock);
-+
-+	guard(mutex)(&memory_tier_lock);
- 	/*
- 	 * For now we can have 4 faster memory tiers with smaller adistance
- 	 * than default DRAM tier.
-@@ -898,28 +915,11 @@ static int __init memory_tier_init(void)
- 		panic("%s() failed to allocate default DRAM tier\n", __func__);
- 
- 	/*
--	 * Look at all the existing N_MEMORY nodes and add them to
--	 * default memory tier or to a tier if we already have memory
--	 * types assigned.
-+	 * Record nodes with memory and CPU to set default DRAM performance.
- 	 */
--	for_each_node_state(node, N_MEMORY) {
--		if (!node_state(node, N_CPU))
--			/*
--			 * Defer memory tier initialization on
--			 * CPUless numa nodes. These will be initialized
--			 * after firmware and devices are initialized.
--			 */
--			continue;
--
--		memtier = set_node_memory_tier(node);
--		if (IS_ERR(memtier))
--			/*
--			 * Continue with memtiers we are able to setup
--			 */
--			break;
--	}
--	establish_demotion_targets();
--	mutex_unlock(&memory_tier_lock);
-+	for_each_node_state(node, N_MEMORY)
-+		if (node_state(node, N_CPU))
-+			node_set(node, default_dram_nodes);
- 
- 	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
- 	return 0;
--- 
-Ho-Ren (Jack) Chuang
+>    - ``\<ldn_\([hbl]e\)?_p\>``
+>    - ``\<stn_\([hbl]e\)?_p\>``
+>   
+> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
+> index 15a78c0db5..933a66ee87 100644
+> --- a/include/qemu/bswap.h
+> +++ b/include/qemu/bswap.h
+> @@ -8,11 +8,23 @@
+>   #undef  bswap64
+>   #define bswap64(_x) __builtin_bswap64(_x)
+>   
+> +static inline uint32_t bswap24(uint32_t x)
+> +{
+> +    return (((x & 0x000000ffU) << 16) |
+> +            ((x & 0x0000ff00U) <<  0) |
+> +            ((x & 0x00ff0000U) >> 16));
+> +}
+> +
+>   static inline void bswap16s(uint16_t *s)
+>   {
+>       *s = __builtin_bswap16(*s);
+>   }
+>   
+> +static inline void bswap24s(uint32_t *s)
+> +{
+> +    *s = bswap24(*s & 0x00ffffffU);
+> +}
+> +
+>   static inline void bswap32s(uint32_t *s)
+>   {
+>       *s = __builtin_bswap32(*s);
+> @@ -26,11 +38,13 @@ static inline void bswap64s(uint64_t *s)
+>   #if HOST_BIG_ENDIAN
+>   #define be_bswap(v, size) (v)
+>   #define le_bswap(v, size) glue(__builtin_bswap, size)(v)
+> +#define le_bswap24(v) bswap24(v)
+>   #define be_bswaps(v, size)
+>   #define le_bswaps(p, size) \
+>               do { *p = glue(__builtin_bswap, size)(*p); } while (0)
+>   #else
+>   #define le_bswap(v, size) (v)
+> +#define le_bswap24(v) (v)
+>   #define be_bswap(v, size) glue(__builtin_bswap, size)(v)
+>   #define le_bswaps(v, size)
+>   #define be_bswaps(p, size) \
+> @@ -176,6 +190,7 @@ CPU_CONVERT(le, 64, uint64_t)
+>    * size is:
+>    *   b: 8 bits
+>    *   w: 16 bits
+> + *   24: 24 bits
+>    *   l: 32 bits
+>    *   q: 64 bits
+>    *
+> @@ -248,6 +263,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
+>       __builtin_memcpy(ptr, &v, sizeof(v));
+>   }
+>   
+> +static inline void st24_he_p(void *ptr, uint32_t v)
+> +{
+> +    __builtin_memcpy(ptr, &v, 3);
+> +}
+> +
+>   static inline int ldl_he_p(const void *ptr)
+>   {
+>       int32_t r;
+> @@ -297,6 +317,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
+>       stw_he_p(ptr, le_bswap(v, 16));
+>   }
+>   
+> +static inline void st24_le_p(void *ptr, uint32_t v)
+> +{
+> +    st24_he_p(ptr, le_bswap24(v));
+> +}
+> +
+>   static inline void stl_le_p(void *ptr, uint32_t v)
+>   {
+>       stl_he_p(ptr, le_bswap(v, 32));
 
