@@ -1,206 +1,179 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F21B168C20
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 07:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC41171068;
+	Fri, 21 Jun 2024 10:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718953958; cv=none; b=iuVmoGHcdnOuCQQ1aqpqx2Nf6OhKK3Sehlzyy9HB2CcOXyIrzZosL27ENhcl/Iee6353Hnn6P1x8RPB5vMWYR1VlH69trNORyBIn2ArVUtKiOAk6gKXzZJ36TzUK7ZwLo0XFFRLrfuiO+nPJk4+0Y4rfX3ONWbAUj5cIudxhfjM=
+	t=1718964989; cv=none; b=Dk9r/iFeb6M584HiKBEOPy8P636x+B9FtWwtH0JxpbzIzWINAD9bsfb1awyties8waGZGa4AMDrz7FnjIn03dI+tHlBgOqW3AQVVBUQvc+D/qyGKIsJtmRPki6SnbTDzJL6kKybZ10GOeT2Yyyoph02L/V+Z7mPFonpgLU5be18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718953958; c=relaxed/simple;
-	bh=t4qq/jMiGnxrp5BYlBkmNLXJVDdDBuIgqirUGO8bPfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDPciCxBSC9fvm7ef9gEkg8ZHc1S8rWKD4oti2nD6dV7M0OFZaefPj82JmGHks/4C/FDGPiNsAPwdGZZVn7xexY4lhCz3CwD3m/n2ryrMRQk7d3QhEqFsM8lN6kzHLdPfw+mYSWKLZp+SzkAdtkf76XiV6MmusSDpoRt4AAadEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pjYE0fcm; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pjYE0fcm"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6ef64b092cso189127666b.1
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Jun 2024 00:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718953954; x=1719558754; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+X3r3iWIZnsDCFWQKHQoaKS+fjEdqxnm5cTkv/byPH8=;
-        b=pjYE0fcmHaw0T1EhtX1EyqPa7iLeaNSiGlErlAJj5QqxB4F49QtdgP3PM1ozWTBawS
-         rT8v1T0s9lNZ79XCeCv5r/Q2A/lu6gZc8mxi7kSjBgu7euo4D/6gUGpD8tEc1qG0AnAn
-         tl3leXOV5GVCaG27FpiiegWPnDX+8UekaEPHVXEKaTG0oKBXtCcfdAtTSiypTqRYD4Ot
-         lTsfOWgowyp4iT7R9KTXciB0SeXdMfwn/GOn8aunBpf+K4MNpKh2dNmQMgsCW6ZMOBHZ
-         04RXvKdD66fIq6ggHOdsV/Nem6ap6KT4zQsC+fP96HDGbwl2hGWXv/FZPK6T8EjQjoH0
-         dxCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718953954; x=1719558754;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+X3r3iWIZnsDCFWQKHQoaKS+fjEdqxnm5cTkv/byPH8=;
-        b=AkwnPQdXP+dfBGXF3wE+OCAXADL5fwzp9zmyMwH31gS6RpvooUVaenTwco5cFR0kY7
-         2+Z053BneG1p1SNU3uaONr0ZUSEyXt6oWchroNJLZUvtNBqhgZBNjnEPcbg2OMiCkipC
-         ItOwCdZpzsRU+mJDjvTqggFrThqDL40q0f5g2bkNFpvzAXNnXcFFyQnIENa0MxjhUwx+
-         BmSh+mrZ6cSoYa1yk50FruYX8tHhiHJJ6U3srCh0yFqpCGZ/fK0MUEFwKDKR2lSvLyu8
-         HrNii3YQF/a3/P100UzJpyQvEqqLUBFqMKw+CXwurxS5+dn1/6LkCnbUEBMWSJpnE3ZD
-         2NBQ==
-X-Gm-Message-State: AOJu0YzvsZBYbUqGxg6RwXzCNxpU6KEVbzy72utJ6KT8iSVkQWNmi+FP
-	1GGy7rK9EmSeSV3mklJKbid2E0xIDD/5sSuVPyX6SKjH4qP+lAHeDUOe0yr1sKE=
-X-Google-Smtp-Source: AGHT+IGDJt4eeNhXv751/YEEHTjXvtvEWkZD5alLeIkIR1Kuc8t5AALKvfHYqcG3IrFQoZbVt7a9rQ==
-X-Received: by 2002:a17:907:1888:b0:a6f:ae81:174 with SMTP id a640c23a62f3a-a6fae81070dmr532101366b.18.1718953954206;
-        Fri, 21 Jun 2024 00:12:34 -0700 (PDT)
-Received: from [192.168.69.100] ([176.176.128.209])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf5490eesm50524766b.111.2024.06.21.00.10.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 00:12:33 -0700 (PDT)
-Message-ID: <140c112f-450c-4cc8-a57c-36a96d29130c@linaro.org>
-Date: Fri, 21 Jun 2024 09:10:09 +0200
+	s=arc-20240116; t=1718964989; c=relaxed/simple;
+	bh=tvFkEouXFKKtc7kniYd3ifcNhvOpKScmMlR6pCekqn0=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WmljYqYxDfZtKORhIs5eMtinJEVH/unOblUjth4EdhrSRSFKFR13auVprXDXUlkw2vICIc3DUdULIgDjLNohzY/EsBwdvfvokt8K24h7WHqXFClT1fXWdU8mSedpfcKxLDDsSXkMnBQa/ujxt0lJmAOHqh/6/SAVq+ItfSFLrt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W5Cny0SG2z1SCyb;
+	Fri, 21 Jun 2024 18:12:06 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 851E618001C;
+	Fri, 21 Jun 2024 18:16:23 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 21 Jun 2024 18:16:22 +0800
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <imx@lists.linux.dev>,
+	<kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH v2] perf: add missing MODULE_DESCRIPTION() macros
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Frank Li <Frank.li@nxp.com>, Shawn Guo
+	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	Yicong Yang <yangyicong@hisilicon.com>
+References: <20240620-md-drivers-perf-v2-1-1f88f8a08e48@quicinc.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <6d9e17f7-80e6-e616-d3b8-719de73875f3@huawei.com>
+Date: Fri, 21 Jun 2024 18:16:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/4] bswap: Add the ability to store to an unaligned 24
- bit field
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
- Michael Tsirkin <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>
-Cc: linux-cxl@vger.kernel.org, linuxarm@huawei.com,
- Ira Weiny <ira.weiny@intel.com>, Michael Roth <michael.roth@amd.com>,
- Dave Jiang <dave.jiang@intel.com>, Markus Armbruster <armbru@redhat.com>,
- =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
- Eric Blake <eblake@redhat.com>, Mike Maslenkin <mike.maslenkin@gmail.com>,
- =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>,
- Thomas Huth <thuth@redhat.com>
-References: <20230526170010.574-1-Jonathan.Cameron@huawei.com>
- <20230526170010.574-2-Jonathan.Cameron@huawei.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-In-Reply-To: <20230526170010.574-2-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240620-md-drivers-perf-v2-1-1f88f8a08e48@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-Hi Ira & Jonathan,
-
-On 26/5/23 19:00, Jonathan Cameron wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On 2024/6/21 9:46, Jeff Johnson wrote:
+> With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm-ccn.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/fsl_imx8_ddr_perf.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/marvell_cn10k_ddr_pmu.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/arm_cspmu_module.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/nvidia_cspmu.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm_cspmu/ampere_cspmu.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/cxl_pmu.o
 > 
-> CXL has 24 bit unaligned fields which need to be stored to.  CXL is
-> specified as little endian.
+> Add the missing invocation of the MODULE_DESCRIPTION() macro to all
+> files which have a MODULE_LICENSE().
 > 
-> Define st24_le_p() and the supporting functions to store such a field
-> from a 32 bit host native value.
+> This includes drivers/perf/hisilicon/hisi_uncore_pmu.c which, although
+> it did not produce a warning with the x86 allmodconfig configuration,
+> may cause this warning with arm64 configurations.
 > 
-> The use of b, w, l, q as the size specifier is limiting.  So "24" was
-> used for the size part of the function name.
-> 
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > ---
->   docs/devel/loads-stores.rst |  2 ++
->   include/qemu/bswap.h        | 25 +++++++++++++++++++++++++
->   2 files changed, 27 insertions(+)
+> Changes in v2:
+> - Updated hisi_uncore_pmu.c description per Yicong Yang
+> - Link to v1: https://lore.kernel.org/r/20240611-md-drivers-perf-v1-1-c001bae6da5c@quicinc.com
+> ---
+>  drivers/perf/arm-ccn.c                   | 1 +
+>  drivers/perf/arm_cspmu/ampere_cspmu.c    | 1 +
+>  drivers/perf/arm_cspmu/arm_cspmu.c       | 1 +
+>  drivers/perf/arm_cspmu/nvidia_cspmu.c    | 1 +
+>  drivers/perf/cxl_pmu.c                   | 1 +
+>  drivers/perf/fsl_imx8_ddr_perf.c         | 1 +
+>  drivers/perf/hisilicon/hisi_uncore_pmu.c | 1 +
+>  drivers/perf/marvell_cn10k_ddr_pmu.c     | 1 +
+>  8 files changed, 8 insertions(+)
 > 
-> diff --git a/docs/devel/loads-stores.rst b/docs/devel/loads-stores.rst
-> index d2cefc77a2..dab6dfa0ac 100644
-> --- a/docs/devel/loads-stores.rst
-> +++ b/docs/devel/loads-stores.rst
-> @@ -36,6 +36,7 @@ store: ``st{size}_{endian}_p(ptr, val)``
->   ``size``
->    - ``b`` : 8 bits
->    - ``w`` : 16 bits
-> + - ``24`` : 24 bits
->    - ``l`` : 32 bits
->    - ``q`` : 64 bits
->   
-> @@ -65,6 +66,7 @@ of size ``sz`` bytes.
->   Regexes for git grep
->    - ``\<ld[us]\?[bwlq]\(_[hbl]e\)\?_p\>``
->    - ``\<st[bwlq]\(_[hbl]e\)\?_p\>``
-> + - ``\<st24\(_[hbl]e\)\?_p\>``
+> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+> index 86ef31ac7503..65f4882531db 100644
+> --- a/drivers/perf/arm-ccn.c
+> +++ b/drivers/perf/arm-ccn.c
+> @@ -1561,4 +1561,5 @@ module_init(arm_ccn_init);
+>  module_exit(arm_ccn_exit);
+>  
+>  MODULE_AUTHOR("Pawel Moll <pawel.moll@arm.com>");
+> +MODULE_DESCRIPTION("ARM CCN (Cache Coherent Network) driver support");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/perf/arm_cspmu/ampere_cspmu.c b/drivers/perf/arm_cspmu/ampere_cspmu.c
+> index f146a455e838..426b3cfcb52e 100644
+> --- a/drivers/perf/arm_cspmu/ampere_cspmu.c
+> +++ b/drivers/perf/arm_cspmu/ampere_cspmu.c
+> @@ -269,4 +269,5 @@ static void __exit ampere_cspmu_exit(void)
+>  module_init(ampere_cspmu_init);
+>  module_exit(ampere_cspmu_exit);
+>  
+> +MODULE_DESCRIPTION("Ampere SoC PMU (Performance Monitor Unit) driver");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+> index c318dc909767..c21c564840d6 100644
+> --- a/drivers/perf/arm_cspmu/arm_cspmu.c
+> +++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+> @@ -1427,4 +1427,5 @@ EXPORT_SYMBOL_GPL(arm_cspmu_impl_unregister);
+>  module_init(arm_cspmu_init);
+>  module_exit(arm_cspmu_exit);
+>  
+> +MODULE_DESCRIPTION("ARM CoreSight Architecture PMU driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/perf/arm_cspmu/nvidia_cspmu.c b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> index 5b84b701ad62..0dea47e48ac5 100644
+> --- a/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> +++ b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> @@ -417,4 +417,5 @@ static void __exit nvidia_cspmu_exit(void)
+>  module_init(nvidia_cspmu_init);
+>  module_exit(nvidia_cspmu_exit);
+>  
+> +MODULE_DESCRIPTION("NVIDIA Coresight Architecture PMU driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 1f93a66eff5b..8b6ce9ea5a55 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -972,6 +972,7 @@ static __exit void cxl_pmu_exit(void)
+>  	cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
+>  }
+>  
+> +MODULE_DESCRIPTION("CXL Performance Monitoring Unit driver");
+>  MODULE_LICENSE("GPL");
+>  MODULE_IMPORT_NS(CXL);
+>  module_init(cxl_pmu_init);
+> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+> index 1bbdb29743c4..a6683b38315c 100644
+> --- a/drivers/perf/fsl_imx8_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
+> @@ -850,4 +850,5 @@ static struct platform_driver imx_ddr_pmu_driver = {
+>  };
+>  
+>  module_platform_driver(imx_ddr_pmu_driver);
+> +MODULE_DESCRIPTION("Freescale i.MX8 DDR PMU driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> index 6392cbedcd06..0ac5182a5e45 100644
+> --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> @@ -537,4 +537,5 @@ void hisi_pmu_init(struct hisi_pmu *hisi_pmu, struct module *module)
+>  }
+>  EXPORT_SYMBOL_GPL(hisi_pmu_init);
+>  
+> +MODULE_DESCRIPTION("HiSilicon SoC uncore PMU driver framework");
 
-Interestingly this regexp mentions st24_be_p() but this patch
-only adds st24_le_p() and st24_he_p().
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com> # for HiSilicon PMU
 
-No need to update the regexp, I'll post a patch with st24_be_p()
-since I have use for it.
-
->    - ``\<ldn_\([hbl]e\)?_p\>``
->    - ``\<stn_\([hbl]e\)?_p\>``
->   
-> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
-> index 15a78c0db5..933a66ee87 100644
-> --- a/include/qemu/bswap.h
-> +++ b/include/qemu/bswap.h
-> @@ -8,11 +8,23 @@
->   #undef  bswap64
->   #define bswap64(_x) __builtin_bswap64(_x)
->   
-> +static inline uint32_t bswap24(uint32_t x)
-> +{
-> +    return (((x & 0x000000ffU) << 16) |
-> +            ((x & 0x0000ff00U) <<  0) |
-> +            ((x & 0x00ff0000U) >> 16));
-> +}
-> +
->   static inline void bswap16s(uint16_t *s)
->   {
->       *s = __builtin_bswap16(*s);
->   }
->   
-> +static inline void bswap24s(uint32_t *s)
-> +{
-> +    *s = bswap24(*s & 0x00ffffffU);
-> +}
-> +
->   static inline void bswap32s(uint32_t *s)
->   {
->       *s = __builtin_bswap32(*s);
-> @@ -26,11 +38,13 @@ static inline void bswap64s(uint64_t *s)
->   #if HOST_BIG_ENDIAN
->   #define be_bswap(v, size) (v)
->   #define le_bswap(v, size) glue(__builtin_bswap, size)(v)
-> +#define le_bswap24(v) bswap24(v)
->   #define be_bswaps(v, size)
->   #define le_bswaps(p, size) \
->               do { *p = glue(__builtin_bswap, size)(*p); } while (0)
->   #else
->   #define le_bswap(v, size) (v)
-> +#define le_bswap24(v) (v)
->   #define be_bswap(v, size) glue(__builtin_bswap, size)(v)
->   #define le_bswaps(v, size)
->   #define be_bswaps(p, size) \
-> @@ -176,6 +190,7 @@ CPU_CONVERT(le, 64, uint64_t)
->    * size is:
->    *   b: 8 bits
->    *   w: 16 bits
-> + *   24: 24 bits
->    *   l: 32 bits
->    *   q: 64 bits
->    *
-> @@ -248,6 +263,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
->       __builtin_memcpy(ptr, &v, sizeof(v));
->   }
->   
-> +static inline void st24_he_p(void *ptr, uint32_t v)
-> +{
-> +    __builtin_memcpy(ptr, &v, 3);
-> +}
-> +
->   static inline int ldl_he_p(const void *ptr)
->   {
->       int32_t r;
-> @@ -297,6 +317,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
->       stw_he_p(ptr, le_bswap(v, 16));
->   }
->   
-> +static inline void st24_le_p(void *ptr, uint32_t v)
-> +{
-> +    st24_he_p(ptr, le_bswap24(v));
-> +}
-> +
->   static inline void stl_le_p(void *ptr, uint32_t v)
->   {
->       stl_he_p(ptr, le_bswap(v, 32));
-
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
+> index e2abca188dbe..94f1ebcd2a27 100644
+> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
+> @@ -763,4 +763,5 @@ module_init(cn10k_ddr_pmu_init);
+>  module_exit(cn10k_ddr_pmu_exit);
+>  
+>  MODULE_AUTHOR("Bharat Bhushan <bbhushan2@marvell.com>");
+> +MODULE_DESCRIPTION("Marvell CN10K DRAM Subsystem (DSS) Performance Monitor Driver");
+>  MODULE_LICENSE("GPL v2");
+> 
+> ---
+> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+> change-id: 20240611-md-drivers-perf-5d834208964d
+> 
+> .
+> 
