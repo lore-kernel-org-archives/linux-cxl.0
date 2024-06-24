@@ -1,296 +1,517 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B19E1BC2A;
-	Mon, 24 Jun 2024 20:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719262269; cv=fail; b=OQUrWsrtlkXlu2ICASHg/U1kw/kuRORaRvp07ulivFTIThfTRpAHDJ62zXu1IgqD4Q6Nypt69ftRMiz4EHOSf0jyZFC8WcQtmsdlAr16Kdmi8GDrHl/ZgE3z6jpgXLteix0nd0IwXjwKj9fZJi4pJlixXAEGlSZ4Et02ROrRZ/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719262269; c=relaxed/simple;
-	bh=1RVy7WC4aVUEY8OVlLuFDASOX9C3Q1o2TrzOKkZsejE=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o/Y5nFwiMF91bp6t+2egIrd+5Ob3P8CIcix3HmO4+0PxLSA1QEHp1z1tBig1AZXnF3XUEN3nx4YKDWMbXtZkftOZotqLDjHKvdy39Y+iwOff1aim8K5kXQ9spu15Ar53Msx+QSQB3oslQCExZ+nA+Ad0aSJ1qhojkXwVdNJoPfQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Aoh/Lf14; arc=fail smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD26FBEF
+	for <linux-cxl@vger.kernel.org>; Mon, 24 Jun 2024 21:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719263212; cv=none; b=iV273GhgmaZVzdRj8KTC5OnFaVrq5aLTuMXZFl1t4jCeBYINf5xreEu+HqiP88WqOeH9IKXePjlrZHx9ZbcTsk4zMAayqRwHiZuSO9n7AxTpgyRTL7UhEOcUkmoNyNNKCKOebJ2rQvS0N3nCIwZ3Zo1b5HODVVaOSkwm1CBt/j8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719263212; c=relaxed/simple;
+	bh=R/t899kMVsz1GCvL9hdaUVDf3S5y9/adwOitnAB34uo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d7socP/ctvDR0DHs45x3LjFqp1nBUtLaLnPBFPXNbDAmB+I2niHvLizSW9hyWAq5v0sgspxizxBjgaGef86kljraO/qihglpssr3FUPHbTPMeSj4q57zBwxr0fHT5QG8yEjz9a5Q9GI+uD0QvgAqpwaNwJa+maU7EePt6Ztefbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FjSiz7Dp; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Aoh/Lf14"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FjSiz7Dp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719262267; x=1750798267;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=1RVy7WC4aVUEY8OVlLuFDASOX9C3Q1o2TrzOKkZsejE=;
-  b=Aoh/Lf143oG4fsEpJqgAoXmlelMcOgyW5OAMV8HvjZ0ACD9wOIrzxk3K
-   4tFOx1bf2Rfl0p7trTFqFq3sGLkcH/7ob66F7uiSDPXFVrVXRC/Jqv+yw
-   SoBW7aZe6qBwhfcgNxyZ9/KR/q17lsYZX6j/cC+Y6chrCNJIBjIqFl1W4
-   QVg0SisaZMDG012hx+x7hxBbHRT+AVR80lNyCCUMExj4wH8rAjKCKLT/u
-   Z6Qw9YfxFS0k4j53w6GwfE5JG+17d/6A+4qf84kkBvIf+nzuUkMkzuf1U
-   wRkJB3F5Tw7jgSSfhmC7dGhUGWTxxxwxl/NV0aa1RT6cxp4UTWzvxr7SD
-   A==;
-X-CSE-ConnectionGUID: JT4Jin0dSimu0WDEioQWng==
-X-CSE-MsgGUID: wB/qZ1tXQACRHGQl+vgd3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="27664881"
+  t=1719263209; x=1750799209;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R/t899kMVsz1GCvL9hdaUVDf3S5y9/adwOitnAB34uo=;
+  b=FjSiz7DpJ03NBCYSx6LNyvi2gsX1UAHN6xCVb8dp5gi60xbdrQtBRlDX
+   enso0YsvBq/zg+8+coVVzYdmwm9WWOA+2xnawUzUsIoG0nvWwaG9ZJH0P
+   EDVuUJFnYR2FDeQXREjgwbzfpkLwuOQRumnMdPyNL+NXJjddcS2UMzZCk
+   R2jESowVBScY0qdK5hd5Ur20LLolhIozLRlJHmw8itNwmyLyRvb5Qoyy/
+   VY2YktXalo18z7n3bYlojpwG8jzDzgFj+r1n3+HHyCRi6knjsK50ae3a8
+   w0xgbItz7CRKwJbJjWX5FFm/M21g3w9UMb+cNx9dGShN3hyntkooO0+mD
+   g==;
+X-CSE-ConnectionGUID: iTS1dY0zTqy4lsrc/9ng3Q==
+X-CSE-MsgGUID: EAihpcO7TZ2eLAi3Fhm+wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="26845248"
 X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="27664881"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 13:51:06 -0700
-X-CSE-ConnectionGUID: uyVbtAhPRL+nweXrjfh5DQ==
-X-CSE-MsgGUID: gM3SohPRSrO1EZphsfbAkw==
+   d="scan'208";a="26845248"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 14:06:48 -0700
+X-CSE-ConnectionGUID: +yVwtFwWRkmD90DfK1IjsQ==
+X-CSE-MsgGUID: H97FnB23SQ2Bn3HUxuhVBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="43228178"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jun 2024 13:51:06 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 24 Jun 2024 13:51:05 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 24 Jun 2024 13:51:05 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Jun 2024 13:51:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lVgoAZTYqm0CJSSgaF4zQzRBUG4D3ne0t2uk50P7kQu+jpDFjwqb7dup2KztEZz1B5iBavSHo217WUU66RtpR+aQyFZb/83W/dCszvBxhnYqg+6OSITQuAmUACvIwZit9oS7IPjFp/b+nX7ytYnQJiZ/siXWHET2ZWF9HolkXZIpBnN3p+4Bc1xmkE6qlIYhWa4pDfVKrtqODw/cSUa+7z2npSu2wLQz+eTBOHz6WHbKWPm2ult4OUOrLakfi9yQniwQT04qcn/PXrzoQAuAa9huyIr5/i7+cKP3EIrc0QMJTPC1exJCwqKCUXMxVFeKjG48cR5YVpWAvR35JMtXDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NpB7dXwnz6lP5jVol28R/FNIrgseMQ3LZkVFhJY1Qp0=;
- b=f/F2rSP87cKgSRs2LD1PdupgTkOE8bZvsp5jhBZvf5BdaAe88GD93UVDsy19X0LVqKeOxmnZTVKSfMt4Iy35v8FHsy3NoK80HK7pV5UbMYc2LVQEJ8WMc3UoqhCROVJw6OgnDEHCYYWNKQwzLKAJThuPX02Zn+i6oYeoxF4gkW6sFvaDXR/mSmdIyBCk3LHg0McCI0/vOPSP67L94jWXieowH9v0VrWvSR9Xmr0N+z8OCzN2/FUpdtQcqqKjyhl+h/e3HByX9T+boc0ZumTO0fzRXxJUAJRtg+/HrP4PkmS57fxJdl+VQwZhMFgTW+7k7UMOUpA/2zQ3mHy9AdP4cQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA2PR11MB4796.namprd11.prod.outlook.com (2603:10b6:806:117::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
- 2024 20:51:03 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 20:51:03 +0000
-Date: Mon, 24 Jun 2024 13:51:00 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Terry Bowman <Terry.Bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
-	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
-	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <Yazen.Ghannam@amd.com>,
-	<Robert.Richter@amd.com>
-Subject: Re: [RFC PATCH 0/9] Add RAS support for CXL root ports, CXL
- downstream switch ports, and CXL upstream switch ports
-Message-ID: <6679dc345fd4c_5639294a5@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240617200411.1426554-1-terry.bowman@amd.com>
- <6675cece52eaf_57ac294ea@dwillia2-xfh.jf.intel.com.notmuch>
- <f4dffe22-b383-4118-bd3b-a3afb2df835e@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f4dffe22-b383-4118-bd3b-a3afb2df835e@amd.com>
-X-ClientProxiedBy: MW4PR03CA0014.namprd03.prod.outlook.com
- (2603:10b6:303:8f::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="66640108"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.55.37])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 14:06:47 -0700
+From: alison.schofield@intel.com
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>
+Subject: [ndctl PATCH] cxl/test: add cxl_translate unit test
+Date: Mon, 24 Jun 2024 14:06:44 -0700
+Message-Id: <20240624210644.495563-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA2PR11MB4796:EE_
-X-MS-Office365-Filtering-Correlation-Id: 891cd948-99ba-4870-2b53-08dc948f5c95
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|1800799021|376011|7416011|921017;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8Lnu66Lb5NEEkaFi6CTzcFcmwaF19nrQZJLFcK7a8XvxsNW3HYscYVuxNDtz?=
- =?us-ascii?Q?7b/5tOjPNxNZ+WbtivftGQUh9XS6lTjLWa5kcx38+efMDpKTLAM7Oh7L3ZtE?=
- =?us-ascii?Q?bG+BrXMqGWQsIz6z6U77TX+cXQvhJMZE729gPyV+jHAr+EKstoY0vtpScxpj?=
- =?us-ascii?Q?Vhe2dbvYTJ8LF8UgrDlf+4rjHKe0+ztR8nVepuCEGgmlNo3Z9ihnhikxPBzX?=
- =?us-ascii?Q?C3Lhg2m20FU8jXF59bzOoeOtMN6N6x/BHUymYlHrolqPuFt5Qautz1rQBjHz?=
- =?us-ascii?Q?gG0U7BAi5/I1afL0qzXLUAMk8Zt9HKGWM8RAUgX7UhY5ELlegtw6DY3gNAFB?=
- =?us-ascii?Q?bQvwPiIvcqDzu7ENwConXQFd8aFrzdev4NNtVRvdQAFkBo9ojnm3iUeHEwaV?=
- =?us-ascii?Q?iSBX8OMY7VUr3VNIH8AkNB82INwZ5otvsHBFlzR2t69iUkdO5aL0JaPFQKk/?=
- =?us-ascii?Q?SUPYroPs0V9HfrlkgBCn/RSHQfG9QxLLNCXjZjlQizsFvuGhrQYLGrAF6+7w?=
- =?us-ascii?Q?vujJdsnaO+sUxdWcYsPmA2v5tO10FIAfTxncI5IPSfm6YePnBL7cH/bGFO0E?=
- =?us-ascii?Q?mb6gPdXL0i+vWZNO5Tu59JUWZlk71UPK8g+N7lfRR1maX81FxlCtKnQ4iwKY?=
- =?us-ascii?Q?QbmJnAGGTYw0d9b7gxDKF65Wwl/GqjokHnRn6OzvC4mnHRSID6f8WCZVjULv?=
- =?us-ascii?Q?KjWmJdg27WLmh5CTjvXISFHTu0f4YScP87Xx/cnO3Zd1Cy9DhVIzm9ZTbZ0H?=
- =?us-ascii?Q?h5QyX3MXYGbEZEyyG7khCVIYI06XITD4OUPL14KCrnnbInrWwrwavoqlzSYu?=
- =?us-ascii?Q?ciJ4CvizvUL6qAbSI89qrWE/RbAoF+H0j4ODEvdcf56vcaoHPBlrTw0Z9D/8?=
- =?us-ascii?Q?8klyBKVt5AVTaxfD1fBXmtxPxiemSOIZiS9HgaP27WBfoInZnICgDFzfcBuD?=
- =?us-ascii?Q?dQjUKN2HKe1ktWkKktkqbtr8alxGwxZ9BYLB98NUuRBZVyMHB01PU53hYts3?=
- =?us-ascii?Q?VkaKrUXs8wwiI6uPtTiC/OtlT1OyZyOsFETwlLHFh1AHTo7VSMKUzZ2fjai6?=
- =?us-ascii?Q?ahK0Ez0s1g7eNV7f0RELAQRHojgmIHkJHe/k3xP2UPy8KiCCxMtYsjUnry0X?=
- =?us-ascii?Q?ftu8W9mYEj9bOpKP5/NzIztGmIvN411E2IAXIiZWqdb2yzpmoTvfqfZW69TH?=
- =?us-ascii?Q?0Hqi9E4AlSfgx8acmKs0pw2ywZFY1aXzygqF5jxaPI0jG8edIdO4PuOUN1d9?=
- =?us-ascii?Q?5NSZKEGw5Bn/eExqAmPuW0bDHxcg27wCpCQVPP8kdfo3qgtRq/UXt2EoDPXa?=
- =?us-ascii?Q?xLS7Pnhu1ytjrJw4wMkFpFMYa2763PaKU5W+gEhoFMDISJ5lPBBa1zpyQdGr?=
- =?us-ascii?Q?wmhDqIs=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(376011)(7416011)(921017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cAiy0696ynQIg+s9Hdbjn5Jzq2raJipz9as/c52EX6Slc6G3toWwGwVB+w9X?=
- =?us-ascii?Q?VSNV2TwsnO97SmsYwptc2tDiv8wuWNHjhXLIGWZkqFCQRfQlmACS7JCYIUCe?=
- =?us-ascii?Q?GRcHzu4dh7Y3U1rz1N7J9xJOUW5mDJQ7SpTjTMwon9X4JoRaiklgM6cy0gmT?=
- =?us-ascii?Q?c6oR6RCWL3SzFw/RSApDR+jLW7Do4WD1jB7/L4g+U3KqilsCH1lo48c/kJ61?=
- =?us-ascii?Q?JHp9zVsVmr9/2r23tmQX5CXpcCi3TOGOosP5EZQeXlsuZiGtHR66VjqCSW+U?=
- =?us-ascii?Q?YcNW5qfZb672CAsTw/Lfd29OtGmUgAc4thUfLXaRSphD8Yyi5zqX/ECZY0xN?=
- =?us-ascii?Q?zkCLhGKT2tW7ILGeyPVTaJxem6BPlfGEKrU/DNbTbHJ9DWQeK1qBM1+OFp3z?=
- =?us-ascii?Q?K7696GWM4GBZV6JW+ilh+1eLhboHYJLtklfJajWn+9lFSRaWJpAw0jnq9INF?=
- =?us-ascii?Q?Y3hIu+7zIKd2EsZqboEThsdIZyPcyaIgp3yrSZl8gEd7GW3AmK0gnqtfPfna?=
- =?us-ascii?Q?43nv3wnS//ljEc4Q8ZMKEqIi0KIOK4MJKzVukSBiRQOvyDPmwtKFi35QfsMw?=
- =?us-ascii?Q?dkPgtETBQNY9yMluuI0C5hhWlQ1gBZZHa6SzBU/XOHOGjNvaMUoRJlhsuaET?=
- =?us-ascii?Q?9UFS7ND2xeGjh+3hrdHxsu4UHo1tBSTwhbz3km661iSUHiHAitnTjm/Wchxm?=
- =?us-ascii?Q?fPHScxtEjNrki63wxCbdcxx5Gy85B3Qw1zj0idX/fXQO/3JmCydRGUs4rMeG?=
- =?us-ascii?Q?IkhIlaNMs/ABQxB6oy1WhhueYop/6h9IDApz9uZdI92Em6E30zOkObXaME3u?=
- =?us-ascii?Q?k8EQFpPklgRJqKXHznZu6R3ZKJhosDTvK6oezV8YMkNJYX6RHVFZHZfCEEqS?=
- =?us-ascii?Q?tB9yIJf+ScOZ8BZWZMQdgfHJyiRc91NvsBl2CEfihfiUOG8wm70VwemShvD6?=
- =?us-ascii?Q?QY0EJh8Pxr1x1Cit6otiGoxui8VlmTctYu+GEOrNQQbpBbF5t+hRoLqLUmfv?=
- =?us-ascii?Q?yBluVk+7VFWsswRhihvdEv+CulBfYXnl1l7fXrGxkSu1bEwXlN+ydnctRIYp?=
- =?us-ascii?Q?zKhxhfC66ZYeYpuTgj8DiEqtw6vTXsocI2ERxWvH8IwC09txN+3lLI4zaOgp?=
- =?us-ascii?Q?bLCPaxeLX33LIccUFWZpXACqNpu9akef/Vdby4ALVAlkckJQxgaF4g5jne7l?=
- =?us-ascii?Q?+8V/L3a7Rj5hy9UAWdPk4CzLrWDHnV3LsryHEO48mxuq9X9htnOpt0iJkysK?=
- =?us-ascii?Q?S0lTMSdN4X6rASWfqBUYbNN5RuA4XObr7iCZSvPVTLe+SNgmUho66RKRqVKi?=
- =?us-ascii?Q?AtQTKoz8MNmHUzG8CNsdXoB1frSqYRmNn3KFCbhTNsu1SsrT3TSBwoZ4wX1g?=
- =?us-ascii?Q?sme5f4y+q63dWzblgACUVExoV9ktx47wiqDpS2Ll5sWEZpuouwqo0CdfnlXS?=
- =?us-ascii?Q?pXfAZGDP7AqFYUJoCEeThRRhS4X88a7GEMc9YlHLP8zZb8d939+Z0glLCo7l?=
- =?us-ascii?Q?W6Qf6amyjQKx8jQdB2RQmvklFUIVkC7h7uatTYXIe5rgehw5lMCrt3hXmlTP?=
- =?us-ascii?Q?ocGffJ0NkZpkXcyJMHW63wrU+FWoU5BnBhIQIbxfH4qiCOOQ3vzYfSj6KdvX?=
- =?us-ascii?Q?rg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 891cd948-99ba-4870-2b53-08dc948f5c95
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 20:51:03.5757
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XOsupbD3DUdIiHx56LNtjbSNMzVbK0HsB+6+Ma+4hYb6pDiKH1KYnP4e1Ykl7iFBLITYxsYEtWud9rn/gSGvP42/M+MevTdp0NCYoDFZbPo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4796
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Terry Bowman wrote:
-> Hi Dan,
-> 
-> I added responses below.
-> 
-> On 6/21/24 14:04, Dan Williams wrote:
-> > Terry Bowman wrote:
-> >> This patchset provides RAS logging for CXL root ports, CXL downstream
-> >> switch ports, and CXL upstream switch ports. This includes changes to
-> >> use a portdrv notifier chain to communicate CXL AER/RAS errors to a
-> >> cxl_pci callback.
-> >>
-> >> The first 3 patches prepare for and add an atomic notifier chain to the
-> >> portdrv driver. The portdrv's notifier chain reports the port device's
-> >> AER internal errors to the registered callback(s). The preparation changes
-> >> include a portdrv update to call the uncorrectable handler for PCIe root
-> >> ports and PCIe downstream switch ports. Also, the AER correctable error
-> >> (CE) status is made available to the AER CE handler.
-> >>
-> >> The next 4 patches are in preparation for adding an atomic notification
-> >> callback in the cxl_pci driver. This is for receiving AER internal error
-> >> events from the portdrv notifier chain. Preparation includes adding RAS
-> >> register block mapping, adding trace functions for logging, and
-> >> refactoring cxl_pci RAS functions for reuse.
-> >>
-> >> The final 2 patches enable the AER internal error interrupts.
-> > [..] 
-> >>
-> >> Solutions Considered (1-4):
-> >>   Below are solutions that were considered. Solution #4 is
-> >>   implemented in this patchset. 
-> > [..]
-> >>  2.) Update the AER driver to call cxl_pci driver's error handler before
-> >>  calling pci_aer_handle_error()
-> >>
-> >>  This is similar to the existing RCH port error approach in aer.c.
-> >>  In this solution the AER driver searches for a downstream CXL endpoint
-> >>  to 'handle' detected CXL port protocol errors.
-> >>
-> >>  This is a good solution to consider if the one presented in this patchset
-> >>  is not acceptable. I was initially reluctant to this approach because it
-> >>  adds more CXL coupling to the AER driver. But, I think this solution
-> >>  would technically work. I believe Ming was working towards this
-> >>  solution.
-> > 
-> > I feel like the coupling is warranted because these things *are* PCIe
-> > and CXL ports, but it means solving the interrupt distribution problem.
-> > 
-> 
-> I understand the service driver interrupt issue but it is not clear how it 
-> applies to the CXL port error handling. Can you help me understand how the 
-> interrupt issue affects CXL port AER UIE/CIE handling in the AER driver.
+From: Alison Schofield <alison.schofield@intel.com>
 
-Just the case of the AER MSI/-X vector being multiplexed with other CXL
-functionality on the same device. If the CXL interrupt vector is to be
-enabled later then it means MSI/-X vector enabling needs to be dynamic.
+cxl_translate.sh is added to the CXL unit test suite along with
+a C program 'translate' that performs the address translations.
 
-...but yeah, not a problem now as we are only talking about PCIe AER
-events and not multiplexing yet. I.e. that problem can be solved later.
+The test program performs the same calculations as the CXL driver
+while the script feeds the test program trusted samples.
 
-> 
-> 
-> >>   3.) Refactor portdrv
-> >>   The portdrv refactoring solution is to change the portdrv service drivers
-> >>   into PCIe auxiliary drivers. With this change the facility drivers can be
-> >>   associated with a PCIe driver instead fixed bound to the portdrv driver.
-> >>
-> >>   In this case the CXL port functionality would be added either as a CXL
-> >>   auxiliary driver or as a CXL specific port driver
-> >>   (PCI_CLASS_BRIDGE_PCI_NORMAL).
-> >>
-> >>   This solution has challenges in the interrupt allocation by separate
-> >>   auxiliary drivers and in binding of a specific driver. Binding is
-> >>   currently based on PCIe class and would require extending the binding
-> >>   logic to support multiple drivers for the same class.
-> >>
-> >>   Jonathan Cameron is working towards this solution by initially solving
-> >>   for the PMU service driver.[1] It is using the auxiliary bus to associate
-> >>   what were service drivers with the portdrv driver. Using a CXL auxiliary
-> >>   for handling CXL port RAS errors would result in RAS logic called from
-> >>   the cxl_pci and CXL auxiliary drivers. This may need a library driver.
-> > 
-> > I don't think auxiliary bus is a fundamental step forward from pcie
-> > portdrv, it's just a s/pcie_port_bus_type/auxiliary_bus_type/ rename,
-> > but with all the same problems around how to distribute interrupt
-> > services to different interested parties.
-> > 
-> > So I think notifiers are interesting from the perspective of a software
-> > hack to enable interrupt distribution. However, given that dynamic MSI-X
-> > support is within reach I am interested in exploring that path and
-> > mandating that archs that want to handle CXL protocol errors natively
-> > need to enable dynamic MSI-X. Otherwise, those platforms should disclaim
-> > native protocol error handling support via CXL _OSC.
-> > 
-> > In other words, I expect native dynamic MSI-X support is more
-> > maintainable in the sense of keeping all the code in one notification
-> > domain.
-> > 
-> >>   4.) Using a portdrv notifier chain/callback for CIE/UIE
-> >>   (Implemented in this patchset)
-> >>
-> >>   This solution uses a portdrv atomic chain notifier and a cxl_pci
-> >>   callback to handle and log CXL port RAS errors.
-> > 
-> > Oh, I will need to look that the cxl_pci tie in for this, I was
-> > expecting cxl_pci only gets involved in the RCH case because the port
-> > and the endpoint are one in the same object. in the VH case I would only
-> > expect cxl_pci to get involved for its own observed protocol errors, not
-> > those reported upstream from that endpoint.
-> > 
-> 
-> The CXL port error handling needs a place to live with few options at the moment.
-> Where do you want the CXL port error handlers to reside? 
+The trusted samples are either from the CXL Driver Writers
+Guide[1] or from another source that has been verified. ie a
+spreadsheet reviewed by CXL developers.
 
-I need to go understand exactly why cxl_pci is involved in this current
-proposal, but I was thinking it is probably more natural for cxl_port to
-have error handlers.
+[1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+More sample data is wanted. If you have a sample set or would be
+willing to review sample sets I generate, please reach out.
+
+The CXL Drivers Writers Guide update that includes the tables used
+here is under review and not yet available at the provided link.
+
+
+ test/cxl-translate.sh | 215 ++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build      |   6 ++
+ test/translate.c      | 163 ++++++++++++++++++++++++++++++++
+ 3 files changed, 384 insertions(+)
+ create mode 100755 test/cxl-translate.sh
+ create mode 100644 test/translate.c
+
+diff --git a/test/cxl-translate.sh b/test/cxl-translate.sh
+new file mode 100755
+index 000000000000..be6d7f43a136
+--- /dev/null
++++ b/test/cxl-translate.sh
+@@ -0,0 +1,215 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2024 Intel Corporation. All rights reserved.
++
++. $(dirname $0)/common
++
++set -ex
++trap 'err $LINENO' ERR
++
++rc=1
++
++TEST=$TEST_PATH/translate
++MODULO=0
++XOR=1
++
++# Test against 'Sample Sets' and 'XOR Tables'
++#
++# Sample Set's have a pattern and the expected HPAs have been verified
++# although maybe not published. They verify Modulo and XOR translations.
++#
++# XOR Table's are extracted from the CXL Driver Writers Guide [1].
++# Although the XOR Tables do not include an explicit check of the Modulo
++# translation result, a Modulo calculation is always the first step in
++# any XOR calculation. ie. if Modulo fails so does XOR.
++#
++# [1] https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-sw-guide.html
++
++
++# Sample Sets
++#
++# params_#: dpa, region eiw, region eig, host bridge eiw
++# expect_[modulo|xor]_#: expected hpa for each position in the region
++# 	interleave set for the modulo|xor math.
++#
++# Feeds the parameters with an expected hpa for each position in the
++# region interleave to TEST. The test performs the same calculations
++# as the CXL Driver and returns success if its calculation matches
++# the expected hpa.
++
++# 1+1+1+1
++# 4 way region interleave using 4 host bridges
++declare -A Sample_4R_4H=(
++	["params_0"]="0 2 0 2"
++	["expect_modulo_0"]="0 256 512 768"
++	["expect_xor_0"]="0 256 512 768"
++	["params_1"]="256 2 0 2"
++	["expect_modulo_1"]="1024 1280 1536 1792"
++	["expect_xor_1"]="1024 1280 1536 1792"
++	["params_2"]="2048 2 0 2"
++	["expect_modulo_2"]="8192 8448 8704 8960"
++	["expect_xor_2"]="8192 8448 8704 8960"
++)
++
++# 1+1+1+1+1+1+1+1+1+1+1+1
++# 12 way region interleave using 12 host bridges
++declare -A Sample_12R_12H=(
++	["params_0"]="0 10 0 10"
++	["expect_modulo_0"]="0 256 512 768 1024 1280 1536 1792 2048 2304 2560 2816"
++	["expect_xor_0"]="0 256 512 768 1024 1280 1536 1792 2304 2048 2816 2560"
++	["params_1"]="512 10 0 10"
++	["expect_modulo_1"]="6144 6400 6656 6912 7168 7424 7680 7936 8192 8448 8704 8960"
++	["expect_xor_1"]="6912 6656 6400 6144 7936 7680 7424 7168 8192 8448 8704 8960"
++)
++
++decode_r_eiw()
++{
++	case $1 in
++		0) echo 1 ;;
++		1) echo 2 ;;
++		2) echo 4 ;;
++		3) echo 8 ;;
++		4) echo 16 ;;
++		8) echo 3 ;;
++		9) echo 6 ;;
++		10) echo 12 ;;
++		*) echo "Invalid r_eiw value: $1" ; err "$LINENO" ;;
++	esac
++}
++
++test_sample_set()
++{
++	local -n sample_set=$1
++	local sample_count=$((${#sample_set[@]} / 3))
++
++	for i in $(seq 0 $((sample_count - 1))); do
++		# Split the parameters and expected hpa values
++		IFS=' ' read -r dpa r_eiw r_eig hb_eiw <<< "${sample_set["params_$i"]}"
++		IFS=' ' read -r -a expect_modulo_values <<< "${sample_set["expect_modulo_$i"]}"
++		IFS=' ' read -r -a expect_xor_values <<< "${sample_set["expect_xor_$i"]}"
++
++		ways=$(decode_r_eiw "$r_eiw")
++		for ((pos = 0; pos < ways; pos++)); do
++			expect_hpa_modulo=${expect_modulo_values[$pos]}
++			expect_hpa_xor=${expect_xor_values[$pos]}
++
++			"$TEST" "$dpa" "$pos" "$r_eiw" "$r_eig" "$hb_eiw" $MODULO "$expect_hpa_modulo" || {
++				err "$LINENO"
++			}
++			"$TEST" "$dpa" "$pos" "$r_eiw" "$r_eig" "$hb_eiw" $XOR "$expect_hpa_xor" || {
++				err "$LINENO"
++			}
++		done
++	done
++}
++
++# XOR Tables
++#
++# The tables that follow are the XOR translation examples in the
++# CXL Driver Writers Guide Sections 2.13.24.1 and 25.1
++#
++# Format: "dpa pos r_eiw r_eig h_eiw xor_hpa:
++
++# 1+1+1+1
++# 4 way region interleave using 4 host bridges
++XOR_Table_4R_4H=(
++	"248 0 2 0 2 248"
++	"16 1  2 0 2 272"
++	"16 2  2 0 2 528"
++	"32 3  2 0 2 800"
++	"288 0 2 0 2 1056"
++	"288 1 2 0 2 1312"
++	"288 2 2 0 2 1568"
++	"288 3 2 0 2 1824"
++	"544 1 2 0 2 2080"
++	"544 0 2 0 2 2336"
++	"544 3 2 0 2 2592"
++	"1040 2 2 0 2 4112"
++	"1568 3 2 0 2 6176"
++	"32784 1 2 0 2 131088"
++	"65552 2 2 0 2 262160"
++	"98336 3 2 0 2 393248"
++	"98328 2 2 0 2 393496"
++	"98352 2 2 0 2 393520"
++	"443953523 0 2 0 2 1775813747"
++)
++
++# 2+2+2+2
++# 8 way region interleave using 4 host bridges
++XOR_Table_8R_4H=(
++	"248 0 3 0 2 248"
++	"16  2 3 0 2 528"
++	"16  4 3 0 2 1040"
++	"32  6 3 0 2 1568"
++	"272 2 3 0 2 2832"
++	"528 4 3 0 2 5648"
++	"800 6 3 0 2 7456"
++	"16400 1 3 0 2 131088"
++	"32784 2 3 0 2 262160"
++	"49184 3 3 0 2 393248"
++	"49176 2 3 0 2 393496"
++	"49200 2 3 0 2 393520"
++	"116520373 3 3 0 2 932162229"
++	"244690459 5 3 0 2 1957525275"
++	"292862215 5 3 0 2 2342899463"
++	"30721158  4 3 0 2 245769350"
++	"246386959 4 3 0 2 1971096847"
++	"72701249  5 3 0 2 581610561"
++	"529382429 5 3 0 2 4235060509"
++	"191132300 2 3 0 2 1529057420"
++	"18589081  1 3 0 2 148712089"
++	"344295715 7 3 0 2 2754367011"
++)
++
++# 1+1+1+1+1+1+1+1+1+1+1+1
++# 12 way region interleave using 12 host bridges
++XOR_Table_12R_12H=(
++	"224 0 10 0 10 224"
++	"16  1 10 0 10 272"
++	"16  2 10 0 10 528"
++	"32  3 10 0 10 800"
++	"32  4 10 0 10 1056"
++	"32  5 10 0 10 1312"
++	"32  6 10 0 10 1568"
++	"32  7 10 0 10 1824"
++	"32  9 10 0 10 2080"
++	"32  8 10 0 10 2336"
++	"32 11 10 0 10 2592"
++	"32 10 10 0 10 2848"
++	"288 0 10 0 10 3360"
++	"299017087 7 10 0 10 3588205439"
++	"329210435 0 10 0 10 3950524995"
++	"151050637 11 10 0 10 1812608653"
++	"145169214  2 10 0 10 1742030654"
++	"328998732 10 10 0 10 3947985996"
++	"159252439  3 10 0 10 1911027415"
++	"342098916  5 10 0 10 4105186020"
++	"97970344   8 10 0 10 1175645096"
++	"214995572  8 10 0 10 2579948404"
++	"101289661  7 10 0 10 1215475645"
++	"40424079   7 10 0 10 485088911"
++	"231458716  7 10 0 10 2777503900"
++)
++
++test_xor_table()
++{
++	local -n samples=$1
++
++	for sample in "${samples[@]}"; do
++		IFS=' ' read -r dpa pos r_eiw r_eig hb_eiw xor_hpa <<< "$sample"
++
++		"$TEST" "$dpa" "$pos" "$r_eiw" "$r_eig" "$hb_eiw" $XOR "$xor_hpa" || {
++			err "$LINENO"
++		}
++	done
++}
++
++# Process Samples
++test_sample_set Sample_4R_4H
++test_sample_set Sample_12R_12H
++
++test_xor_table XOR_Table_4R_4H
++test_xor_table XOR_Table_8R_4H
++test_xor_table XOR_Table_12R_12H
++
++echo "All samples processed successfully"
+diff --git a/test/meson.build b/test/meson.build
+index a965a79fd6cb..f15a97a12b47 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -132,6 +132,10 @@ revoke_devmem = executable('revoke_devmem', testcore + [
+ 
+ mmap = executable('mmap', 'mmap.c',)
+ 
++translate = executable('translate', 'translate.c',
++  include_directories : root_inc,
++)
++
+ create = find_program('create.sh')
+ clear = find_program('clear.sh')
+ pmem_errors = find_program('pmem-errors.sh')
+@@ -160,6 +164,7 @@ cxl_events = find_program('cxl-events.sh')
+ cxl_sanitize = find_program('cxl-sanitize.sh')
+ cxl_destroy_region = find_program('cxl-destroy-region.sh')
+ cxl_qos_class = find_program('cxl-qos-class.sh')
++cxl_translate = find_program('cxl-translate.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -192,6 +197,7 @@ tests = [
+   [ 'cxl-sanitize.sh',        cxl_sanitize,       'cxl'   ],
+   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
++  [ 'cxl-translate.sh',       cxl_translate,      'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
+diff --git a/test/translate.c b/test/translate.c
+new file mode 100644
+index 000000000000..e39637d6a8e1
+--- /dev/null
++++ b/test/translate.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2024 Intel Corporation. All rights reserved.
++#include <inttypes.h>
++#include <limits.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include <ccan/short_types/short_types.h>
++
++/* Mimic kernel macros */
++#define BITS_PER_LONG_LONG 64
++#define GENMASK_ULL(h, l) \
++	(((~(0)) - ((1) << (l)) + 1) & (~(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++
++#define XOR_MATH 1
++
++static int hweight64(u64 value)
++{
++	int count = 0;
++
++	while (value) {
++		count += value & 1;
++		value >>= 1;
++	}
++	return count;
++}
++
++static u64 __restore_xor_pos(u64 hpa, u64 map)
++{
++	u64 val;
++	int pos;
++
++	if (!map)
++		return hpa;
++
++	/* XOR of all set bits */
++	val = (hweight64(hpa & map)) & 1;
++
++	/* Find the lowest set bit in the map */
++	pos = ffs(map) - 1;
++
++	/* Set bit at hpa[pos] to val */
++	hpa = (hpa & ~(1ULL << pos)) | (val << pos);
++
++	return hpa;
++}
++
++static u64 restore_xor_pos(u64 hpa_offset, u8 eiw)
++{
++	u64 temp_a, temp_b, temp_c;
++
++	switch (eiw) {
++	case 0: /* 1-way */
++	case 8: /* 3-way */
++		return hpa_offset;
++
++	/*
++	 * These map values were selected to match the samples
++	 * in the CXL Drivers Writers Guide for Host Bridge
++	 * Interleaves at HBIG 0: 0x2020900, 0x4041200
++	 *
++	 * TODO Add the xormaps as test parameters.
++	 */
++	case 1: /* 2-way */
++		return __restore_xor_pos(hpa_offset, 0x2020900);
++
++	case 2: /* 4-way */
++		temp_a = __restore_xor_pos(hpa_offset, 0x2020900);
++		return __restore_xor_pos(temp_a, 0x4041200);
++
++	case 3: /* 8-way */
++		temp_a = __restore_xor_pos(hpa_offset, 0x2020900);
++		temp_b = __restore_xor_pos(temp_a, 0x4041200);
++		return __restore_xor_pos(temp_b, 0x1010400);
++
++	case 4: /* 16-way */
++		temp_a = __restore_xor_pos(hpa_offset, 0x2020900);
++		temp_b = __restore_xor_pos(temp_a, 0x4041200);
++		temp_c = __restore_xor_pos(temp_b, 0x1010400);
++		return __restore_xor_pos(temp_c, 0x800);
++
++	case 9: /* 6-way */
++		return __restore_xor_pos(hpa_offset, 0x2020900);
++
++	case 10: /* 12-way */
++		temp_a = __restore_xor_pos(hpa_offset, 0x2020900);
++		return __restore_xor_pos(temp_a, 0x4041200);
++
++	default:
++		return ULLONG_MAX;
++	}
++
++	return ULLONG_MAX;
++}
++
++static u64 to_hpa(u64 dpa_offset, int pos, u8 eiw, u16 eig, u8 hb_eiw, u8 math)
++{
++	u64 mask_upper, mask_lower;
++	u64 bits_upper, bits_lower;
++	u64 hpa_offset;
++
++	/*
++	 * Translate DPA->HPA by reversing the HPA->DPA decoder logic
++	 * defined in CXL Spec 3.0 Section 8.2.4.19.13  Implementation
++	 * Note: Device Decode Logic
++	 *
++	 * Insert the 'pos' to construct the HPA.
++	 */
++	mask_upper = GENMASK_ULL(51, eig + 8);
++
++	if (eiw < 8) {
++		hpa_offset = (dpa_offset & mask_upper) << eiw;
++		hpa_offset |= pos << (eig + 8);
++	} else {
++		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
++		bits_upper = bits_upper * 3;
++		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
++	}
++
++	/* Lower bits don't change */
++	mask_lower = (1 << (eig + 8)) - 1;
++	bits_lower = dpa_offset & mask_lower;
++	hpa_offset += bits_lower;
++
++	if (math == XOR_MATH)
++		hpa_offset = restore_xor_pos(hpa_offset, hb_eiw);
++
++	return hpa_offset;
++}
++
++int main(int argc, char *argv[])
++{
++	u8 region_eiw, hostbridge_eiw;
++	u64 dpa, expect_hpa, hpa;
++	u16 region_eig;
++	int math, pos;
++
++	if (argc != 8) {
++		printf("Usage: %s <dpa> <pos> <region_eiw> <region_eig> <host_eiw> <math> <hpa>\n",
++		       argv[0]);
++		return EXIT_FAILURE;
++	}
++
++	dpa = strtoull(argv[1], NULL, 0);
++	pos = atoi(argv[2]);
++	region_eiw = strtoul(argv[3], NULL, 0);
++	region_eig = strtoul(argv[4], NULL, 0);
++	hostbridge_eiw = strtoul(argv[5], NULL, 0);
++	math = atoi(argv[6]);
++	expect_hpa = strtoull(argv[7], NULL, 0);
++
++	hpa = to_hpa(dpa, pos, region_eiw, region_eig, hostbridge_eiw, math);
++
++	if (hpa != expect_hpa) {
++		printf("Fail: expected_hpa %lu translated_hpa:%lu\n",
++		       expect_hpa, hpa);
++		return EXIT_FAILURE;
++	}
++	printf("Pass: expected_hpa %lu translated_hpa:%lu\n", expect_hpa, hpa);
++
++	return 0;
++}
+
+base-commit: 16f45755f991f4fb6d76fec70a42992426c84234
+-- 
+2.37.3
+
