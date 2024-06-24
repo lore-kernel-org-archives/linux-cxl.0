@@ -1,138 +1,236 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E322913C8E8;
-	Mon, 24 Jun 2024 12:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719233031; cv=none; b=fSrH3m3zS/3Ry4MZWrV1pJ+r3kWPLY3Sl6ZgmfvgRrc7l1BW0Sth3rC3pIRR9vgqoLKYu+qNefy5xQCdeJzDRaWwpzHBiqKoanX7Ww0COpWys+L6w6ra5e6PPyLcXHnB2gtgI4Da/cs57n8RGSETDDxySXWr2EIDmZqFm2Jyfok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719233031; c=relaxed/simple;
-	bh=jApaBCYVztKacSl0tD+xU7VMd3kepWna98tjFc2atXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/2ukfNJGOWddPgioz9TXmcSatVsjnWR+a8oKS9zRtxgy3i13r/TRes5bqBmvS9Go/nDBvOwPp+BDEw5Hw77GwRbrPFq2EMKLdhWG7MNGJuPFDfLyWCI/141gJSweoGoOv+uof1LW4RD50yNR2yuDu3vGEoaQqJb+mu3OCBp7a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+Xb7Eqj; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1911219B3C4;
+	Mon, 24 Jun 2024 14:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719241091; cv=fail; b=P7z5mdlF3+UCzqhi82Ja55iCrjNuOu/V6ygHEh7QMiQuAKTqAv1ql3nCTzNyPyA9gIusnFfKTAXq+x6LR96hI/e2PbwiLYTWk9UQdu1d8ZsubvEaNotNisCFe2Y3G3LSXzTmjssu1eMiR+hEJyJZlRQ5UkCxG+ZOx9WRZb7nbaU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719241091; c=relaxed/simple;
+	bh=sFNDdVgEKACp8cl0Eue2qEWyjU6rhc68y6C4BB3nqPQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oxDtZ8zLson1tLBb8ypYE4HEzsPjPB+YzoSjTGt6e6MQg4j9VAnvNbX+wiEqg3BzQly9oydK7KAPPF/Pa/3TjB1yOBcjxrWWYPApDQAMiYedlianF6W9jXIgy3jBTWlU6hR240P1m7R4WrWrxNVFmFvPpBhCxq3xm+SafsAzMw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4uAj0npH; arc=fail smtp.client-ip=40.107.101.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+Xb7Eqj"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-70024655285so2526972a34.0;
-        Mon, 24 Jun 2024 05:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719233029; x=1719837829; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bBWUBcLCVdqut0FXaHBFebSPJlfehSuxQfvsdHPCuNs=;
-        b=S+Xb7EqjVxc3j3OoCJTYc54j11b3C4cb6lIr7QTpudNbDtnEdEj+s9NLS3LlxrUYii
-         hBSUQtIGshHm6GjQBRlFsCBISGB69EMt0F5UYANMw5q5Ug/4dd2gDXu4y3khnEmNxxa+
-         sP1xjDu/4MEn5Sc3lAncEzeYDFC2zhIpMNi3WJrqiZaj/X+USMn68RD5NpRVJxEOPH9J
-         2WM47z8CzwO+E8cMAEHga8wMUFz87dXrs74MCZb0zHpF4/X/3LDgFZpN1t3/FWxZKo0J
-         +2LahXjsIcrS6eEqbaZlVsgUWvzIfTAduQnB28XNqsf04BlEYJQ92sbjAucxMgpsZdiV
-         luyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719233029; x=1719837829;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bBWUBcLCVdqut0FXaHBFebSPJlfehSuxQfvsdHPCuNs=;
-        b=S18PyGBUQch1qXLh0W7dBBdChUqPm/WFjlbnfMBxdCUhO8ctw4EqmckyNZFYKvCULT
-         YhvzNX49nzhwWQNY5vE4zPDO6GhgQclnnhcx8XX7brvCfrnSP/7CCa3PP+XiETFba+ka
-         p1ycRUGV8gIL58J12CtgPM8jAkeEJoeBN6vw41UjAXYh0STneDzKhZ1Mp1K5egQILG7O
-         MiYPv9xNkbtIxI9de0Zz6hP9mhZoEN/YbJ2/QL6B6AvBz/Azigcp3luKhreBnAvD1Web
-         wQ9GCktUtJEy1WGyFt48l8YeJgQN06GfLR4e+1xz6d2/wG+AbWwwWQJqq3DT0jzdC9ft
-         shBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGuaG6ff2V6feO4rT4/mvHI3GqRxnHn5meNZpLUYEhUY+BD0sYfZzp9VH6DiBrnqn1fuCewqC1ADi45RFhu4/721ozL4iUwg8df/5DSA8B99t7Bci7PFqkEKzckq3ck3nAPwxQfn6TFwpqPA==
-X-Gm-Message-State: AOJu0YyZYN0pvVBki/2UnSac0XhiV7GyRx9WY79/8sVuW6M1aPVikVel
-	QdUniOXPkdLFDjT3j1UUMS6LYE8mRSLD12KWrd9g2SPSMf1xghBukMzl1Q==
-X-Google-Smtp-Source: AGHT+IHPKGaTZmBW+rU8cmPJFtr0bAvrNnbe4mzzl1KvoXfv+a11ztewBoNJxWmG2lMzzhvIIdBv+w==
-X-Received: by 2002:a9d:7385:0:b0:6f9:6065:5253 with SMTP id 46e09a7af769-700b1301e32mr4701499a34.38.1719233028841;
-        Mon, 24 Jun 2024 05:43:48 -0700 (PDT)
-Received: from Borg-110.local (syn-070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7009c658d2fsm1166374a34.56.2024.06.24.05.43.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 05:43:48 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 24 Jun 2024 07:43:47 -0500
-From: John Groves <John@groves.net>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
-Message-ID: <w47upqsgruckx6i43gaqkdr7lhgacggonr2uwodapfb7n2byqr@yeiiri5wluob>
-References: <cover.1708709155.git.john@groves.net>
- <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
- <CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com>
- <CAOQ4uxg9WyQ_Ayh7Za_PJ2u_h-ncVUafm5NZqT_dt4oHBMkFQg@mail.gmail.com>
- <kejfka5wyedm76eofoziluzl7pq3prys2utvespsiqzs3uxgom@66z2vs4pe22v>
- <CAJfpegvQefgKOKMWC8qGTDAY=qRmxPvWkg2QKzNUiag1+q5L+Q@mail.gmail.com>
- <l2zbsuyxzwcozrozzk2ywem7beafmidzp545knnrnkxlqxd73u@itmqyy4ao43i>
- <CAJfpegsr-5MU-S4obTsu89=SazuG8zXmO6ymrjn5_BLofSRXdg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4uAj0npH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tsb74Do05/vBuIzFhhpY9Vwfm3mI0BsjZBFWYb0ppCGVlgBDU+I+oOdNPT9losXLT8O6IVRE7UT0yLRKtswLOMPvojkLmmobmMGLu4pCQE7abf1XXPV01iV+pyk8WmssrzROtT/9W++TFnMpXFMskardCMRDR3/RK2qzSnyUfdjQsb3O9smjsJRWHLAG8KBqko/0L5hEKVBUEhr82xlSh9PmEnFiwX0z360l+nEjqaZTCVFZqWnSk6Eon8/zDQgafh4+ett9lFnJxVZxH5UVMaswxJCClTvlnFIQwJmbsDE6+5hJEWCsjNHojGQX7ySgXFt3pll1teBbj6H5p3Xipw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d77xWLKFXAEoEuzbH3oRL/viJUml0HhZbOJIYy3sfXo=;
+ b=Mi0LCl4cg5zYg/aqoMwrpHQJ3ILDGiXN/L1gIMSPxjCxWIXGixkRuuHXEfslUT4NPM1DM61h0DUJ7ozsFazWy3H5sUubCadh+UnKIyHCE/KCrC94dBZuull7oRdmYcf37HdT7TBQwd3EFVgG2kYM3vhTvGpnEQClwbr7ZJcsqgS6EYhn0sn282U/WLExwiChy9pna9SeVvClocFnSFVBRf5t+0Kn8MRXDpHdg2+Pd/Gvx7HPdpMirgAkcV/nZ3ONONkAXznFPtDtXbADhaP9FpfUS38YRZ1E/KFbxh7XGodBZZKqUQVn6gFZQYFQ3sUzPo8VcY7LfSyfBTuFgGoKyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d77xWLKFXAEoEuzbH3oRL/viJUml0HhZbOJIYy3sfXo=;
+ b=4uAj0npH9yDrvBmtztbSWfY7J5PEmJPcJOQPiHKeimYXTe75fv+pbmgF3G0jJQ3B4AxMzc8mHjUG1CLceWUZZUCk0b/EFadW+Ozu+gq5FBL7sMde6oNALFztC0aMwblIoLU0uKZbrxQGe8KTEltxAZ6KpaFc3x+y/ki/L4/r+6s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com (2603:10b6:208:38d::18)
+ by MN0PR12MB5905.namprd12.prod.outlook.com (2603:10b6:208:379::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
+ 2024 14:58:05 +0000
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::66cf:5409:24d1:532b]) by BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::66cf:5409:24d1:532b%7]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 14:58:05 +0000
+Message-ID: <49673ec5-b1dc-4544-935f-650cb9f3d112@amd.com>
+Date: Mon, 24 Jun 2024 09:58:02 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
+ downstream port UCE handlers
+Content-Language: en-US
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, ming4.li@intel.com,
+ vishal.l.verma@intel.com, jim.harris@samsung.com,
+ ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+ <20240617200411.1426554-2-terry.bowman@amd.com>
+ <20240620122144.00000faa@Huawei.com>
+From: Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <20240620122144.00000faa@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR18CA0008.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::32) To BL3PR12MB6380.namprd12.prod.outlook.com
+ (2603:10b6:208:38d::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsr-5MU-S4obTsu89=SazuG8zXmO6ymrjn5_BLofSRXdg@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB6380:EE_|MN0PR12MB5905:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a5d03e1-1665-493c-2711-08dc945e0d57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|7416011|376011|1800799021;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WDh0eUhDc011MjU3S1FHaUxGNGhVRVZaTWFkRVM0Nng0VTVQVUV6RDlpRmdT?=
+ =?utf-8?B?TzNjcWZQYjgrNTMzMHFwcVA5U0xZZThaTHNGTmVhWDRLRHphUG1YdnlXRjJk?=
+ =?utf-8?B?a2pYNzUrOVhxWHM5bGpjdWlDWGZ5aTZmYUZQNGhmbGlMVXdDak1uanJhUmxH?=
+ =?utf-8?B?SkErUlhOWUZGSXYwdWdHbTZZZ1NuRjdrbURGM0UzOElHVFNoUktlOWE5b0p0?=
+ =?utf-8?B?QVAvNWI1OHlRMGVMT2NXaXhkT0xoKzZSMUJlTk85RFNRakUvNnUrUW5hYkp2?=
+ =?utf-8?B?YkdVWmVITjhGME5lYnErNlgyN01XcGEvQlJVT0lxRFJyUENZclhvNzJDeTlh?=
+ =?utf-8?B?aWY2N25CRkVDOEh6c3VlUXI0QzlPd3E2MHd2VVdtdGJtNkxwREFtT3RubkVY?=
+ =?utf-8?B?UnFROUFlWWo0V3U1bFRGSEhuS01pRVgwL3oxVWg1aE1Fb3pRSUg0TnIvbGxj?=
+ =?utf-8?B?NktPcUZtbGxNemVsRFhyS1FTRmJSdDAyV3pNS3NYSlMzRGlOVGJKM2tQd0o0?=
+ =?utf-8?B?SmRscmRzaHZYUHR2cUcyaFJ2MEI2QktGK3VzazdjTW5IVnRqOGJkNS9PVmNi?=
+ =?utf-8?B?RXJxWm1rMk13TEFlbFMxdGFVOXB3S3p5YndoUmpxZnRpZSsyTFRIeU9wcTdz?=
+ =?utf-8?B?UlR3UFVNc0VIYkpGRnZwVE80RkRPczV3SVkxN0szUHJLRCtxM3I4YXlhNytV?=
+ =?utf-8?B?WXZGWUhLTnJWVHZGTmRSZWRlcmZSSVo4bVFhK0RieFJvNkhlSlBLUTloTWlV?=
+ =?utf-8?B?M3BUazYxc1dMTklxUlVTbnFDc3RFK0ppU1hzNkdCZldCbXNUZWc5OVZSNTJD?=
+ =?utf-8?B?bUlhQytvTTQvdzJuR2h1OXcxT0hJRDE3cE9EWnZnM2NhS2hMeW5RdFI2Z1FO?=
+ =?utf-8?B?RW1waHNPOHdtb25kUzhZdTVqTlkzYVdRcUxJVHRESHBpZ2hWUTN3d3gzRUJR?=
+ =?utf-8?B?VzlxbjA4Z3loTDZqWEl2VkpON1RhSTlWSEJrdVlyREs1ZW1oWUJEWXp6T0wr?=
+ =?utf-8?B?bXpsTDZsY1JBN3FnbDc4T3Rmanh6VDYrek9QVW9Sb3RhaTlsamM3amlRTTFG?=
+ =?utf-8?B?Y1NSSE5xZ2tXbTMyVklVYWtaaHJndkpVMHhXbndCNW93anY2aHZWRkVpRUNa?=
+ =?utf-8?B?NmVRdmg1NW1IWUlzZkViL2JoWFczOEhueFpOb0g1VDdYak84QWVvK09CZ09i?=
+ =?utf-8?B?WlowcnhiajNNNDZ4Zk90ZEszbUhBbnBXaGZ6NzY3UHhxeEF1MnpneUw0ZHZr?=
+ =?utf-8?B?aVVqV25saVBkVFlOMkc1emNDdSt2QlFJU0VFbE1SRExZWUlpazdhVk1relZp?=
+ =?utf-8?B?MFdWOVdTVnN5YUdxOTluSkVIbDZqZVhYNnQ4MW85blRkWUU4RE9sa3VXbFhW?=
+ =?utf-8?B?TThTSGhiNXV5cERsaUpsdHROb2w4eW51b3NyOVNQUUhIUSsxcTFnOGxnVDh6?=
+ =?utf-8?B?V0dpc0lXL1FWSktoU3hFM0h2cDRwRlhCVjhLNTFBcmR4ci9BT0xzZzRjRUVQ?=
+ =?utf-8?B?aFNoMGQ2RmFjY09jQzY0SmFoY2dObjdnZWpVUWo3ZG1vWXArZVFDWk1GR0VI?=
+ =?utf-8?B?aVZJUFhUbkl5MjJXOCs5Ukg4bDZLVnJmTllMeGF3R09xNGc3VkErbFRxdi9O?=
+ =?utf-8?B?TUl0OE1ZMytLZjA1akp6N21kdlc2bGV5TU9VQWI4bmo3eXRwYzFCanUvQ1Np?=
+ =?utf-8?B?YWo3Z05IOWVUZkNvajJXWmVlSVFvb0ZUcVhZLzhlczNRZzkvMkgvaU9BaUFI?=
+ =?utf-8?Q?k+rrUf4XMA5+HgCFIw8eRbdRBCLrLmWEzLq+HRv?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(7416011)(376011)(1800799021);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cXArR2ZXTEhFck9QWlJ1L1VrV2hUbDJGazJDNkVlU1RUMUpmMGl6YmZRQjlT?=
+ =?utf-8?B?YjAyNFVvUEhrMXR1ejlKWko1TkpnbWVhN1lxeDJuN1g3WTExaGU3cVNSTjcr?=
+ =?utf-8?B?dkErN3NhYVN0aHhwZksyVTcycW1VVUVML0R1UzR6NlliNjFRd04rUENVVDlI?=
+ =?utf-8?B?d1dtWGJ2QlZydnhvYzhxZEQzK3pZZEVKd2FYdytobzRCQXlmckcvNUEwc0tx?=
+ =?utf-8?B?M3RPMzF4ZXlzMlJVTFR3MEhyYzBta3MxeHQ0S3RUWS9pak1iSmpsUjZHLzJ1?=
+ =?utf-8?B?VUZjcmRQWUpxYnhZUG4vMFRDTHo3S0FRaTZmRDJSWXNLNm5NQUxhV25xZURh?=
+ =?utf-8?B?L3gxRlVQMEtlU1RoS3NrcGEvR3hWbm1lV1RwWW9UVWplZXZCV2JDT2NsSFAv?=
+ =?utf-8?B?ay92RVRvVTB0SXVTUEdhVUpITW1lSXVQUWNMNlpaZ0NSRjM4V2RtZDE5OTF3?=
+ =?utf-8?B?R2NwdVBrZGFwdlJKUTZtS0w0RG9ZeXJTbWNQQXdrZDZ1QURaMDE2OWc3cm9r?=
+ =?utf-8?B?MHRDbnA4N0FFQjRyRCtpVzhnTWFaVDkzdlp3R3dPNm1XZnZrcThzbTBlU2Nw?=
+ =?utf-8?B?TUhlZVdTUFR6Ti9tc3RlQUl2VUhzdllmUHNobTYvOHRlY2ZoNm4vakhmNDVM?=
+ =?utf-8?B?T1FueER6WDNWbnVEUHAxN3VZV3RENHVZc2syeTlqeStuSUx3VDNLU1ZXNytJ?=
+ =?utf-8?B?YXJJSHdibkhMazUzR2NSQnBpdnBhTWdCYitTcTJhK29VVEdxc3N6WVdydDI4?=
+ =?utf-8?B?VXJDL2NPVVVzcW5VdDRCbUF2RlFXdWRPWGMrRDl5ellLNnE4ZUY0THI3dFJo?=
+ =?utf-8?B?NzZTalpkSzZjRG0rYytHbzZkOUsva2RGdXB0eEo2YklNY2lEZjNwUTZyUTRS?=
+ =?utf-8?B?TFRjTVNjb1h5Y3B2UWRCV0xnNndUaWZ2bjFIUkt1OHdYVFY4di9uRHZXaWJN?=
+ =?utf-8?B?NXdJR3N5cmZKMnRsSndCMXdTNW1lSkNCN3FFWWxCVnV3MTJsNmcxWEFKeWt2?=
+ =?utf-8?B?dHNmOGFWZ011SzhoUnBSdmZnWGJwVkNWSUg5U2t1d1VmMUF3Y3NkVDI0Rzlu?=
+ =?utf-8?B?NElsVHcrT1d6V1FsNDJiUjJVL3hPdHdWakdBZzgxMDdBWFJKQVhDTm1JekVy?=
+ =?utf-8?B?eHJidllOUDVSQ0c2SmdnTUxMeWtBVVlGUkdNTGZZdTFnTm9qdWVGbEhUMXhi?=
+ =?utf-8?B?cy9LMUdOc3N5ZzJKTjdSR1dGR1NWUHRTelJsZXpJRklFa1ZNaUFvVXgyM2ZO?=
+ =?utf-8?B?QWY0VFptaVUyNm43bVpIamMySWlIQ0Yydy9mZG55NEtQemZXRURINllvZ1JY?=
+ =?utf-8?B?eTdxS20weFI0Q1BxeDVTQjFQZ0k1L2NGRlphY05NSlhSci9pYndLOC9Ldk5G?=
+ =?utf-8?B?LzRmTnJmbnJGSGd5dFR0TTlzOTJHY1BPYVlqVTVjTGdpVitjWWlKVHlqRnhq?=
+ =?utf-8?B?ay9qN0NRVms3QWJUQWxWYmg1aVNDUk80ZXRsNEhRQm80VWZMTXVQbEhnQ3Jo?=
+ =?utf-8?B?MTZ3bHI3aHZFQ2VYekViZS8yNkl6bXJLRXNubmRld1J4NmZCVjNIc2ZVdWxR?=
+ =?utf-8?B?M0V2QVloQVNvWkZkZ0pHZ3ZYeXlHa2ZHMTZ1THpRQ2tUdnhmV3dXeFlBWlBy?=
+ =?utf-8?B?dGQ4eGIvOEx1WnVXQ1BpeWkrOGY4S0VQNUFoc2xsN0RtVGYvdUdhTDE2NzBD?=
+ =?utf-8?B?MEtLNjk5dDNwdzRUTDBlcEY5aTFGZnhNN1BhWmRzcHJ3U1RBUkcvRXpFcWZk?=
+ =?utf-8?B?a1pRSHpVMTc5R2pYMHFPSUF3WWZSUDZlVllzMDhzK09md091eHpmTHBsOUFB?=
+ =?utf-8?B?SldRdXdsbjMyd3RvRmNDS2xIU1k2d2ZxM0w1QStWMG5EVllCV3hjK28rZUtj?=
+ =?utf-8?B?QTBKRHNxUmxhd1FXZXhJcFVPTnQyVkhpZ2tJZ29qZlU5TURxN2Z5dk56UXlN?=
+ =?utf-8?B?ckRyVGcyWUpGdm9vcytQaTdQSmh2MmhhZ245R25OdEVMaG9jZW45ZDFtZUVa?=
+ =?utf-8?B?SVljbzF3bDErWndiNzZndU5QNk12TnpEYldvMjBMajIvTWtOc1pVVzFOWThI?=
+ =?utf-8?B?L0x6MjV0STJFbXRBdVFFU3RLMlpKSDdJby95L2Vnbmcyc0ZybnhFU1lHQlBh?=
+ =?utf-8?Q?ZxDXB8iykGTCABPS9K1D0jIhJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a5d03e1-1665-493c-2711-08dc945e0d57
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6380.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 14:58:05.3545
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XgJ0naY+XGojXEWX5PGZ53t3u0scM8RKejkpKCAEKreD+Rcs8jL7sh4vCg/KnXVfFQV0a0PuHclWl99ICdNQnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5905
 
-On 24/05/23 03:57PM, Miklos Szeredi wrote:
-> [trimming CC list]
-> 
-> On Thu, 23 May 2024 at 04:49, John Groves <John@groves.net> wrote:
-> 
-> > - memmap=<size>!<hpa_offset> will reserve a pretend pmem device at <hpa_offset>
-> > - memmap=<size>$<hpa_offset> will reserve a pretend dax device at <hpa_offset>
-> 
-> Doesn't get me a /dev/dax or /dev/pmem
-> 
-> Complete qemu command line:
-> 
-> qemu-kvm -s -serial none -parallel none -kernel
-> /home/mszeredi/git/linux/arch/x86/boot/bzImage -drive
-> format=raw,file=/home/mszeredi/root_fs,index=0,if=virtio -drive
-> format=raw,file=/home/mszeredi/images/ubd1,index=1,if=virtio -chardev
-> stdio,id=virtiocon0,signal=off -device virtio-serial -device
-> virtconsole,chardev=virtiocon0 -cpu host -m 8G -net user -net
-> nic,model=virtio -fsdev local,security_model=none,id=fsdev0,path=/home
-> -device virtio-9p-pci,fsdev=fsdev0,mount_tag=hostshare -device
-> virtio-rng-pci -smp 4 -append 'root=/dev/vda console=hvc0
-> memmap=4G$4G'
-> 
-> root@kvm:~/famfs# scripts/chk_efi.sh
-> This system is neither Ubuntu nor Fedora. It is identified as debian.
-> /sys/firmware/efi not found; probably not efi
->  not found; probably nof efi
-> /boot/efi/EFI not found; probably not efi
-> /boot/efi/EFI/BOOT not found; probably not efi
-> /boot/efi/EFI/ not found; probably not efi
-> /boot/efi/EFI//grub.cfg not found; probably nof efi
-> Probably not efi; errs=6
-> 
-> Thanks,
-> Miklos
+Hi Jonathan,
+I added a response below.
 
-I'm baffled as to why the memmap thing is not working for you. I don't see
-anything amiss in your config file, but the actual plumbing of that kernel 
-option isn't anything I've worked on. Out of curiosity, are you running on x86?
+On 6/20/24 06:21, Jonathan Cameron wrote:
+> On Mon, 17 Jun 2024 15:04:03 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+> 
+>> The AER service driver does not currently call a handler for AER
+>> uncorrectable errors (UCE) detected in root ports or downstream
+>> ports. This is not needed in most cases because common PCIe port
+>> functionality is handled by portdrv service drivers.
+>>
+>> CXL root ports include CXL specific RAS registers that need logging
+>> before starting do_recovery() in the UCE case.
+>>
+>> Update the AER service driver to call the UCE handler for root ports
+>> and downstream ports. These PCIe port devices are bound to the portdrv
+>> driver that includes a CE and UCE handler to be called.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-pci@vger.kernel.org
+>> ---
+>>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 705893b5f7b0..a4db474b2be5 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>>  
+>> +	/*
+>> +	 * PCIe ports may include functionality beyond the standard
+>> +	 * extended port capabilities. This may present a need to log and
+>> +	 * handle errors not addressed in this driver. Examples are CXL
+>> +	 * root ports and CXL downstream switch ports using AER UIE to
+>> +	 * indicate CXL UCE RAS protocol errors.
+>> +	 */
+>> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+>> +		struct pci_driver *pdrv = dev->driver;
+>> +
+>> +		if (pdrv && pdrv->err_handler &&
+>> +		    pdrv->err_handler->error_detected) {
+>> +			const struct pci_error_handlers *err_handler;
+>> +
+>> +			err_handler = pdrv->err_handler;
+>> +			status = err_handler->error_detected(dev, state);
+> 
+> This status is going to get overridden by one of the pci_walk_bridge()
+> calls.  Should it be kept around and acted on, or dropped silently?
+> (I'd guess no for silent!).
+> 
 
-Have you tried the 's/$/!/' method with memmap? That should give you a pmem
-device instead, which you will see with 'ndctl list', and can convert to
-devdax with ndctl (recipe above in this thread). Note that 4GiB is the minimum
-size that famfs supports.
+It should be used later.
 
-A quick status on where I am with famfs: I've made progress on my substantial
-learning curve with fuse, and have come up with a strategy for the famfs fuse 
-daemon to access metadata in a way that leverages the current famfs user space 
-without excessive re-writing (which is encouraging). 
+According to PCI spec "The only method of recovering from an Uncorrectable
+Internal Error is reset or hardware replacement."
 
-I haven't started test-hacking dax_iomap_* enabled files into the fuse
-kmod yet; initial RFCs in that area are probably a few weeks out, but 
-definitely coming - undoubtedly with a lot of questions.
+I need to make certain that carries through below.
 
 Regards,
-John
+Terry
 
-
+>> +		}
+>> +	}
+>> +
+>>  	/*
+>>  	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+>>  	 * or RCiEP, recovery runs on the device itself.  For Ports, that
+> 
