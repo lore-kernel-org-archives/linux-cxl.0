@@ -1,388 +1,273 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F0E8F48;
-	Tue, 25 Jun 2024 22:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719353086; cv=none; b=bGTyP6pCJ0OuCi34im8/yrw5WzX/xwCjRSEZEhnQZN/tofcFdL9J//CK9yJS1tHqA8hytFjPnEX0Bb4RVWWny0NUv/gbFjkXQhyVsJxCSkViU9/7xhY228GpbL5rv2tDQmW7AOrgMSmPtV0Cb17o3oGksAm0u60I1cPwzm4yN0E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719353086; c=relaxed/simple;
-	bh=I/D2QvQoE2kta0WVeaFzuVfLBeWDwZFrI12HQ5zsbjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JMXR8kyT2As5YA3nBS4V2x2cPZLaJqJP8m5UXjjZJ4Y3jvI2sI1K8jczyIBgvWe1krTw1OKX8hua7RQ+XuJGKaP/uanpdH63CFn2D1rOdlrB7iiblK7fby5LTPxddmsXtpb+mhn9sfs7M6vdQLfUyAHV7RdqJym5sugm7YB4jIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fTnV3MDG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605DE176AC2;
+	Tue, 25 Jun 2024 23:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719357270; cv=fail; b=t2M1cKzTzGfxQeVHE+oN31iHytuhpHN696C2bmCLIN5sAJm88JfDtoGnlnEAaM0OxRuUt0hagZx4GUsvAkJH1EZZHJwjC/Fkw33DBe466Ekr+hshBVinPIjVLeoZSpoPfE9uuW1xTyB9TSV7lhO5pr8WhOq7IaO/muhWvAN8cfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719357270; c=relaxed/simple;
+	bh=YpI69UPm9GTqCtaKPvQJ3+1jQJoD+SO3z1PVO+3/Gf4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ahVKY4Bym5+ZUPaDXt6PuyQBUAjQwovyA01ypdyObuGNCVSd8f3RVnEJERIS2WuEDTQRdVjq+RfDzFgbxUfiC0pSVCQN0VoxGGyhWQPabKSF1J/M640GDVjFhWbosDt8/NhG+lxxzKvY17lAYl+HdgqukRY5Vhy74QQaI7Nmggw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=By3IVdFp; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fTnV3MDG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=kcXPLgMJLNRDZzPibo4O3IPk7PzeAe4CstBHJMaL444=; b=fTnV3MDG1Et71xFHDwcT0Lbyc6
-	RpZshHl17/mkZH5z4/v+N6XC8FavVd/QYIZ0jRIyaRW4LIBcSjz4oNU+IZPQaAH0etLLTIvISCADd
-	ZOeRbJPGTbLRGi7NHkAzrT+AjapTNqtL5G9ayELuLB4x+DZ4fVFqxm+k8pbvaZTxeKreID4M+H4nV
-	95rhD+P0+qv9wdw3AxLxT/SGOEFnY8RnmgfZRG2RXdnNXM1c1GfgUaGbZ66NvpFShSjY+FerkCbAV
-	Ro1HM8lkMBBw62q1eLXe3ZwNSMw9hO1LyHplP1hUL0W5sJUxiPdtNfyYNI+Qs0WDzRwkKZINQmhYo
-	w+Rmpa+g==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMEHL-00000004eTI-264u;
-	Tue, 25 Jun 2024 22:04:43 +0000
-Message-ID: <c1a2b518-f258-41f2-8b0c-173f32756f49@infradead.org>
-Date: Tue, 25 Jun 2024 15:04:42 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="By3IVdFp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719357267; x=1750893267;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=YpI69UPm9GTqCtaKPvQJ3+1jQJoD+SO3z1PVO+3/Gf4=;
+  b=By3IVdFpSNnx6koRjsNO3eGIm+PBVpYIVj+ZRyFN5Gr/RU528rMzAswD
+   kmSyhLuI3LSfXZMsNVhzNdByPQRUC6wp5UxXiRmdzV9OYpATh6j3LvdcM
+   i9wr87RM/+6dWJzrNpkFWaWSa+c4xRdy13aCouhZfkITmSFvH8NN4iTQt
+   M2FarZ1ZdD0l7WISke82FYDs2KfAWEJTFJpMVCNP4Gn+IEjq/blYC0OJ5
+   9yyCxmYfuV8dit4a2nfpaWbzaBgTNU3dVYmVlZqQ+2aGeNNQPG4LHTes+
+   xtnXp4wYxL162OzuQsfjRuf9FaMfpNZ8oiEbtkp2BoKjD2pHiOSncSo6h
+   w==;
+X-CSE-ConnectionGUID: 3hxCc8FhTWqWCy2gTaRcYQ==
+X-CSE-MsgGUID: +RRJ/ntHSk2qcrfwcJbmGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16549693"
+X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
+   d="scan'208";a="16549693"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 16:14:27 -0700
+X-CSE-ConnectionGUID: WyGL478/QVeHCd2g7Qxb2w==
+X-CSE-MsgGUID: R3FSJ97CQsG9Wi6Vk5lP+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
+   d="scan'208";a="43914289"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jun 2024 16:14:27 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 25 Jun 2024 16:14:26 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 25 Jun 2024 16:14:26 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 25 Jun 2024 16:14:26 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 25 Jun 2024 16:14:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CShnSHkamSUy57nXCENs2eRFCY9iY7Tvbt3QfVQMrsJ9GO0zyomp55TjrNVs+J2ja/fYMUZ4fo4XT8qNkYcPu9HiR9+H96GS9RzI67J00A+krIP6jjI3+z7ATDxvWuuAGR+c5ovpuDCSUIO8iTDEyCo0+2w3TOkiStiU1KYRH5vo/EJIp2JsAD12jv2M5czJ0x4BNmMvrUxllrF9bNdEUS4ze18vsQ7D3532johZj/mZgiOYjmnnKYvxfwOec8jZxOSnuiyk/bhkNZ+GB3S4NRtBkiWugX7necLCbyrjTTJwZr9FY7/tRmxbM6x7phoAzGNa7U8wo7eImJHeO4twNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gZ8xWSGavCO28937ugMqfQlrKaP8S+nG25FzGZ9S5WY=;
+ b=C70J7LPtjXEJWbjaZ3xmdXVdo/liHi3KFE88NPe/krA4BqgF6YWwDbGnDQ3gOjWLxHHY3yAmhJAIlRAPzAUQgnupbqjnihpV4h6/oDfz/ytlvrAdp4oueH2PDAX6zYfDOwtzGC5RFX/ZsT0BECSwq/kntnd6N15Ag+Ad2m1y5wnFcSS/wKoUMch5VvSxqb/KqlS4bMq9xIgBuFsr80xgm9HtKk/eep2RpE6clwlafaGAUr6FTHoF05Y1FEEvmNckV2A+gm+TaOUc1KF7fYTx1n0UG08+N2LxbVL5qKi6MMxw1yrIDk3kFW31V0yPvyk3oPtKPW5fuXzv2tCxZ+GiIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB4824.namprd11.prod.outlook.com (2603:10b6:510:38::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Tue, 25 Jun
+ 2024 23:14:23 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
+ 23:14:21 +0000
+Date: Tue, 25 Jun 2024 16:14:18 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH] cxl/acpi: Warn on unsupported platform config detection
+Message-ID: <667b4f4a46cc6_563929472@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
+X-ClientProxiedBy: MW4P220CA0005.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::10) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] fwctl: Add documentation
-To: Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
- Itay Avraham <itayavr@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
- Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- linux-cxl@vger.kernel.org, patches@lists.linux.dev
-References: <6-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <6-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44dadb47-a621-42ca-80a5-08dc956c8b9e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230038|366014|376012|1800799022|921018;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xLNFcY6VJKOrgCvPLoHbidn981TQaOt8F879RdoJoLo89duEMRckB40UXpgV?=
+ =?us-ascii?Q?ZZien6G/KVhw/XpS4kVD1lLlMIKwbUfNwHg7bf/ixFfpW1ilkAvs/PxvyZUl?=
+ =?us-ascii?Q?HXc8qICDh+xe1HH8XkxaziZag8IrHhuIJYNfbGVyghV8AYSZW/k2vIljtNVq?=
+ =?us-ascii?Q?FfcrgWyUXbQq9ni31AQCGDvZGZdK0fOMpZmBWQcbLKR0d9yMS7+oXo2EFOI+?=
+ =?us-ascii?Q?ZqQp1xQPNZdqSdELGkJTcz6HwmgbfPW8ass7BPvqhQOqKnLS4SwFzuJNSVcC?=
+ =?us-ascii?Q?JZh0CVefFc/aLeu38bNS2Cm1eHms7OJ4f13lT6/+QmUiTJfd+THvUFVEzJvp?=
+ =?us-ascii?Q?AnTH1JNq/UkkRRJ+dYLte7uDPzSs6GmfTG9fk77EjQhOCuOLrED/avV4foRr?=
+ =?us-ascii?Q?WtaDi7fNElUXPtkmuNLDRk6By3cJ53cQIBWplkhoPp7pGMhzlU6sGj3ahVq9?=
+ =?us-ascii?Q?fZJcLI3HcF/TbLT3nf1QB7I0eDSkCgmGI2e58DbvvbucUkWOaJMvlGr4ou5c?=
+ =?us-ascii?Q?6rVPywmNnpWZ0fGBvWKXQJAb5fOLjOE+1dr7cr2Sy7w7BXpqu+mlfsH93+c8?=
+ =?us-ascii?Q?tkStFwcePgH99MBz42qVy+SVGfTqLdJMeUA8qqdseSbMnhKktAdACm6yVhyl?=
+ =?us-ascii?Q?o5VKh0Sebb1Leg5oMqhcpUGqpBQ9WGdDZtuNMMxpEyxajQfNhLC7EpoBoTB4?=
+ =?us-ascii?Q?cN1p1Eu0eKA1zDQvd1ToJ3KvT2xjnIzi703gsyAwEOoAmvqVXUrRZ+cxVVkE?=
+ =?us-ascii?Q?Q7EIqGB30utngRHF0pka4Whqr1fxMhmNo3i4hSLT635XcSILedy7Re5BlOmR?=
+ =?us-ascii?Q?kBZUDTmGZeDz0NT4nQTiZcgaax6wQ90e8w036jU8rX2898Xrtau1TvUc3FxL?=
+ =?us-ascii?Q?9GfSKRzrjwO4fG/Mwz2t+xvKMCyzq3VPQ5KPKjjSHmH/vJE3H35pDFuckfDo?=
+ =?us-ascii?Q?rULCS9244E8y19oapRlYSgJ2OJGAdGWwTUY6EupfYEhQptwKeOyU4AlqYsHD?=
+ =?us-ascii?Q?he+9Dd82U38M5Yda+XFxPJr5UrTLwxaAzbZ1Gc9cNtbhdAlrZNiSBZ02FLs8?=
+ =?us-ascii?Q?YY50EA3sYNG4G7zz0CShPUiAkqs0KMXFQOhnLp3u96HDGqhgPW5AYCZbW2O5?=
+ =?us-ascii?Q?YlROumPFrBGnCoXuouSfVPargQiiiUMBtTluYrPQsba/uyowhTa2cnOtxoz7?=
+ =?us-ascii?Q?ixIeHaAyafx4EatdFFi0sskcjuexI3TI094yf2uBQIrMQrC1UNqTRMLKxF5u?=
+ =?us-ascii?Q?xRgAopOSYTUlXvFXp9tnN/wB0vuBqCXw2wrivvfG+duo2TwnTKArpshRVtuR?=
+ =?us-ascii?Q?rGD9FGlrdvwBFMch/3dUDvXnBruMRgdSBGS5fgwkdzmV3osMFaEVVteLoRqV?=
+ =?us-ascii?Q?dZ71kCvxtJ/8ZAhl8qqxlDiCxR/z?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(376012)(1800799022)(921018);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8O/nkk1kSVFyWv+r7HHE9n32K70B6FEtmqsB6BABXjGWiLfPTnUHAdVdvkHr?=
+ =?us-ascii?Q?hNm0BSNRKvf3wqe+IZV3EjiUTp1DxZtcQFUXRmd+kHsxpdD0sYPDXC4NLxpN?=
+ =?us-ascii?Q?5qymlK0/sgCvzeELpkEqjPHA7l9zahYlFkHYlHdVcB9vQTXBydz5S9LWNhHl?=
+ =?us-ascii?Q?+Wh2plLDkURgSMYiNHacRrWlIdJ958UwTKvhkpOkEXbW3Il4XoiQVe1iITFk?=
+ =?us-ascii?Q?7UOhNnrTkXByP60R1bbEcCrszA/PaYgqpRFJKkvUwwqnqoxVkHj7CtgEqDJ2?=
+ =?us-ascii?Q?Crnywe8RSOg7Xrfkc8pEgmM2B4V4Nt1h7/JvUSkferyjH+9nYhoG4yYZo0Vk?=
+ =?us-ascii?Q?jrW+qtceTbwBBAKHCAjYs6yKpV++gieLM24h8eKofVLoD58myEhVTZjjls5Y?=
+ =?us-ascii?Q?cXSIxy80EBDiBABCI7kCnaUxzyfMOIUc+xtvCpaI/P0PiuD0/klHWbbE+PKw?=
+ =?us-ascii?Q?IiZYzNSh5q1EkCzZL30NjNw5WkPb9gRQAiUSV0FEu8JsN9strOObqNRCMxF6?=
+ =?us-ascii?Q?f6WwgKhRouf9HmLs8fI/8ms9HqoPOpdQW9R03gXSLAYn1wytalxTB02h8Rib?=
+ =?us-ascii?Q?M35cbllVpNRXOfX6sXlvbiiu6UVDvkPCW3tAlcxTQiaKFvc8hiRdypU4dx1h?=
+ =?us-ascii?Q?H5X+xlOW5q8GaKln2LgKtnCVK7A8pdaBG1NcasMo9mA5gm03jc1D0oq3RWtf?=
+ =?us-ascii?Q?9zu6CkiTXSJh+YYyVJdfVOSTWgc+3mdOogvxuPt+0w7IXw108GTckZ2BmHM7?=
+ =?us-ascii?Q?ajAszaZ6c3O8PDgRSzBVAMh2jfmSU1yOcsRwnOYnwPc8GMxUkYk8jt0wup05?=
+ =?us-ascii?Q?wIEKp84HQauGIDtIeT9i4JinQF+IuzkwyPV72vi2gz4DPYIj3eqw0fE7OFd4?=
+ =?us-ascii?Q?We+mLiNw9EHSrFKzBdr0eOIOVTMt/Xw/uP0BgedphZD7kjahDRJJPMvs4b4r?=
+ =?us-ascii?Q?0WTrgLk+WTFskpH7YSlR28m5/O4+ZCWJeR5LL76RJQ3uAQ3bVHQBWexRSaN8?=
+ =?us-ascii?Q?1YW14s97i+IpAVQuXka7HVymOAEG3C+1TnvHzN43pmeJHXvbMMnLDZjEaCoU?=
+ =?us-ascii?Q?rQMUnpNlxP4lw5/jsIyQo9KVJUuIDBtBzoLtT0cqqsPAgaYzh+Sz3LjZmJmN?=
+ =?us-ascii?Q?zSEGrbnrNMi5BIkn2w+H5C8PyYZwB3uxghMzwbUgDlZu2lZlbEn8hOBw61pH?=
+ =?us-ascii?Q?GHfRpbOkA6YdN5L/VmEymPdD0R8VyKZP46gpTXwSgWjkEgoiNHOrNHBwAGdl?=
+ =?us-ascii?Q?pQb3B6FlgUcVVBJI6fDgm3qU1IArFN607L0DpybMTeZcEFWYNMAvViFkI7dc?=
+ =?us-ascii?Q?qKr44wTM8XDuMk5Da6C9CXZ9O1nPBHOINVmiEJ1FA0fkq+q1pPymUsWQgt8x?=
+ =?us-ascii?Q?kAVnmtlhIoldev6xEfwnKW0t2X42r/VSeF3hPLKyiWSzB+ZiJ3Ppu0JUeKJx?=
+ =?us-ascii?Q?7tef3i6Is8kfFeFYlYRGYU5lvMqn/poWj166gF/h7fLWIHZHgzl9NrrzWW0j?=
+ =?us-ascii?Q?tbNxTsLVsI11t7++isvPFaYfhSAfqIwWgDZ4ESNW0OO5YRjTR2TcTnTTWe/G?=
+ =?us-ascii?Q?WlNgAmxnt+9ZWdBaJsyUfEc5KBhdepFBwk12jYPd6KADtLCh+suCegMXSmEB?=
+ =?us-ascii?Q?zA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44dadb47-a621-42ca-80a5-08dc956c8b9e
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 23:14:21.2397
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XViSpwaQPzJCpeGzME3q8ADagHqVktmf0sRzC0ze7R5Eovu5AuJ2DOjo7oytA/5bSkGDbbzOGokx4j1eUHHWsQVwN8o1KsNedrheUY6R0D0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4824
+X-OriginatorOrg: intel.com
 
-
-
-On 6/24/24 3:47 PM, Jason Gunthorpe wrote:
-> Document the purpose and rules for the fwctl subsystem.
+Fabio M. De Francesco wrote:
+> Each Host Bridge instance has a corresponding CXL Host Bridge Structure
+> (CHBS) ACPI table that identifies its capabilities. CHBS tables can be
+> two types: RCRB and CHBCR.
 > 
-> Link in kdocs to the doc tree.
+> If a Host Bridge is attached to a device that is operating in Restricted
+> CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
+> registers that describe its capabilities.
 > 
-> Nacked-by: Jakub Kicinski <kuba@kernel.org>
-> Link: https://lore.kernel.org/r/20240603114250.5325279c@kernel.org
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> However, the new (CXL 2.0+) Component registers (e.g., Extended Security
+> Capability), can only be accessed by means of a base address published
+> with a CHBCR.
+> 
+> An algorithm to locate a CHBCR associated with an RCRB would be too
+> invasive to land without some concrete motivation.
+> 
+> Therefore, just print a message to inform of unsupported config.
+> 
+> Count how many different CHBS "Version" types are detected by
+> cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that sum
+> is greater than 1.
+> 
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
->  Documentation/userspace-api/fwctl.rst | 269 ++++++++++++++++++++++++++
->  Documentation/userspace-api/index.rst |   1 +
->  2 files changed, 270 insertions(+)
->  create mode 100644 Documentation/userspace-api/fwctl.rst
+>  drivers/cxl/acpi.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/userspace-api/fwctl.rst b/Documentation/userspace-api/fwctl.rst
-> new file mode 100644
-> index 00000000000000..ece2db2530502f
-> --- /dev/null
-> +++ b/Documentation/userspace-api/fwctl.rst
-> @@ -0,0 +1,269 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 571069863c62..9e226a65a5ea 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -482,6 +482,7 @@ struct cxl_chbs_context {
+>  	unsigned long long uid;
+>  	resource_size_t base;
+>  	u32 cxl_version;
+> +	int count;
+>  };
+>  
+>  static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+> @@ -490,10 +491,17 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+>  	struct cxl_chbs_context *ctx = arg;
+>  	struct acpi_cedt_chbs *chbs;
+>  
+> -	if (ctx->base != CXL_RESOURCE_NONE)
+> +	chbs = (struct acpi_cedt_chbs *) header;
 > +
-> +===============
-> +fwctl subsystem
-> +===============
+> +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+> +	    chbs->length != CXL_RCRB_SIZE)
+>  		return 0;
+>  
+> -	chbs = (struct acpi_cedt_chbs *) header;
+> +	if (ctx->cxl_version != chbs->cxl_version)
+> +		ctx->count++;
 > +
-> +:Author: Jason Gunthorpe
-> +
-> +Overview
-> +========
-> +
-> +Modern devices contain extensive amounts of FW, and in many cases, are largely
-> +software-defined pieces of hardware. The evolution of this approach is largely a
-> +reaction to Moore's Law where a chip tape out is now highly expensive, and the
-> +chip design is extremely large. Replacing fixed HW logic with a flexible and
-> +tightly coupled FW/HW combination is an effective risk mitigation against chip
-> +respin. Problems in the HW design can be counteracted in device FW. This is
-> +especially true for devices which present a stable and backwards compatible
-> +interface to the operating system driver (such as NVMe).
-> +
-> +The FW layer in devices has grown to incredible sizes and devices frequently
-> +integrate clusters of fast processors to run it. For example, mlx5 devices have
-> +over 30MB of FW code, and big configurations operate with over 1GB of FW managed
-> +runtime state.
-> +
-> +The availability of such a flexible layer has created quite a variety in the
-> +industry where single pieces of silicon are now configurable software-defined
-> +devices and can operate in substantially different ways depending on the need.
-> +Further, we often see cases where specific sites wish to operate devices in ways
-> +that are highly specialized and require applications that have been tailored to
-> +their unique configuration.
-> +
-> +Further, devices have become multi-functional and integrated to the point they
-> +no longer fit neatly into the kernel's division of subsystems. Modern
-> +multi-functional devices have drivers, such as bnxt/ice/mlx5/pds, that span many
-> +subsystems while sharing the underlying hardware using the auxiliary device
-> +system.
-> +
-> +All together this creates a challenge for the operating system, where devices
-> +have an expansive FW environment that needs robust device-specific debugging
-> +support, and FW-driven functionality that is not well suited to “generic”
-> +interfaces. fwctl seeks to allow access to the full device functionality from
-> +user space in the areas of debuggability, management, and first-boot/nth-boot
-> +provisioning.
-> +
-> +fwctl is aimed at the common device design pattern where the OS and FW
-> +communicate via an RPC message layer constructed with a queue or mailbox scheme.
-> +In this case the driver will typically have some layer to deliver RPC messages
-> +and collect RPC responses from device FW. The in-kernel subsystem drivers that
-> +operate the device for its primary purposes will use these RPCs to build their
-> +drivers, but devices also usually have a set of ancillary RPCs that don't really
-> +fit into any specific subsystem. For example, a HW RAID controller is primarily
-> +operated by the block layer but also comes with a set of RPCs to administer the
-> +construction of drives within the HW RAID.
-> +
-> +In the past when devices were more single function, individual subsystems would
-> +grow different approaches to solving some of these common problems. For instance
-> +monitoring device health, manipulating its FLASH, debugging the FW,
-> +provisioning, all have various unique interfaces across the kernel.
-> +
-> +fwctl's purpose is to define a common set of limited rules, described below,
-> +that allow user space to securely construct and execute RPCs inside device FW.
-> +The rules serve as an agreement between the operating system and FW on how to
-> +correctly design the RPC interface. As a uAPI the subsystem provides a thin
-> +layer of discovery and a generic uAPI to deliver the RPCs and collect the
-> +response. It supports a system of user space libraries and tools which will
-> +use this interface to control the device using the device native protocols.
-> +
-> +Scope of Action
-> +---------------
-> +
-> +fwctl drivers are strictly restricted to being a way to operate the device FW.
-> +It is not an avenue to access random kernel internals, or other operating system
-> +SW states.
-> +
-> +fwctl instances must operate on a well-defined device function, and the device
-> +should have a well-defined security model for what scope within the physical
-> +device the function is permitted to access. For instance, the most complex PCIe
-> +device today may broadly have several function-level scopes:
-> +
-> + 1. A privileged function with full access to the on-device global state and
-> +    configuration
-> +
-> + 2. Multiple hypervisor functions with control over itself and child functions
-> +    used with VMs
-> +
-> + 3. Multiple VM functions tightly scoped within the VM
-> +
-> +The device may create a logical parent/child relationship between these scopes.
-> +For instance a child VM's FW may be within the scope of the hypervisor FW. It is
-> +quite common in the VFIO world that the hypervisor environment has a complex
-> +provisioning/profiling/configuration responsibility for the function VFIO
-> +assigns to the VM.
-> +
-> +Further, within the function, devices often have RPC commands that fall within
-> +some general scopes of action:
-> +
-> + 1. Access to function & child configuration, FLASH, etc/ that becomes live at a
+> +	if (ctx->base != CXL_RESOURCE_NONE)
+> +		return 0;
+>  
+>  	if (ctx->uid != chbs->uid)
+>  		return 0;
+> @@ -502,10 +510,6 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+>  	if (!chbs->base)
+>  		return 0;
+>  
+> -	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+> -	    chbs->length != CXL_RCRB_SIZE)
+> -		return 0;
+> -
+>  	ctx->base = chbs->base;
+>  
+>  	return 0;
+> @@ -533,6 +537,10 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
+>  
+>  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs_iter, ctx);
+>  
+> +	if (ctx->count > 1)
+> +		/* Disclaim eRCD support given some component register may only be found via CHBCR */
+> +		dev_info(dev, "Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.");
 
-                                                        etc.
+I believe this is already queued, but my personal preference is that
+multiline statements include brackets, or move the comment above the "if
+()", so either:
 
-> +    function reset.
-> +
-> + 2. Access to function & child runtime configuration that kernel drivers can
-> +    discover at runtime.
-> +
-> + 3. Read only access to function debug information that may report on FW objects
+	/* Disclaim eRCD support given some component register may only be found via CHBCR */
+	if (ctx->count > 1)
+		dev_info(dev, "Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.");
 
-       Read-only
+...or:
 
-> +    in the function & child, including FW objects owned by other kernel
-> +    subsystems.
-> +
-> + 4. Write access to function & child debug information strictly compatible with
-> +    the principles of kernel lockdown and kernel integrity protection. Triggers
-> +    a kernel Taint.
-> +
-> + 5. Full debug device access. Triggers a kernel Taint, requires CAP_SYS_RAWIO.
-> +
-> +Userspace will provide a scope label on each RPC and the kernel must enforce the
+	if (ctx->count > 1) {
+		/* Disclaim eRCD support given some component register may only be found via CHBCR */
+		dev_info(dev, "Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.");
+	}
 
-Some places (above/below here) say "user space" instead of "userspace". Please choose one
-and stick with it.
-
-> +above CAP's and taints based on that scope. A combination of kernel and FW can
-
-         CAPs
-
-
-> +enforce that RPCs are placed in the correct scope by userspace.
-> +
-> +Denied behavior
-> +---------------
-> +
-> +There are many things this interface must not allow user space to do (without a
-> +Taint or CAP), broadly derived from the principles of kernel lockdown. Some
-> +examples:
-> +
-> + 1. DMA to/from arbitrary memory, hang the system, run code in the device, or
-
-An RPC message is going to run code in the device. Should this say something instead
-like:
-
-download [or load] code to be executed in the device,
-
-> +    otherwise compromise device or system security and integrity.
-> +
-> + 2. Provide an abnormal “back door” to kernel drivers. No manipulation of kernel
-> +    objects owned by kernel drivers.
-> +
-> + 3. Directly configure or otherwise control kernel drivers. A subsystem kernel
-> +    driver can react to the device configuration at function reset/driver load
-> +    time, but otherwise should not be coupled to fwctl.
-> +
-> + 4. Operate the HW in a way that overlaps with the core purpose of another
-> +    primary kernel subsystem, such as read/write to LBAs, send/receive of
-> +    network packets, or operate an accelerator's data plane.
-> +
-> +fwctl is not a replacement for device direct access subsystems like uacce or
-> +VFIO.
-> +
-> +fwctl User API
-> +==============
-> +
-> +.. kernel-doc:: include/uapi/fwctl/fwctl.h
-> +.. kernel-doc:: include/uapi/fwctl/mlx5.h
-> +
-> +sysfs Class
-> +-----------
-> +
-> +fwctl has a sysfs class (/sys/class/fwctl/fwctlNN/) and character devices
-> +(/dev/fwctl/fwctlNN) with a simple numbered scheme. The character device
-> +operates the iotcl uAPI described above.
-> +
-> +fwctl devices can be related to driver components in other subsystems through
-> +sysfs::
-> +
-> +    $ ls /sys/class/fwctl/fwctl0/device/infiniband/
-> +    ibp0s10f0
-> +
-> +    $ ls /sys/class/infiniband/ibp0s10f0/device/fwctl/
-> +    fwctl0/
-> +
-> +    $ ls /sys/devices/pci0000:00/0000:00:0a.0/fwctl/fwctl0
-> +    dev  device  power  subsystem  uevent
-> +
-> +User space Community
-> +--------------------
-> +
-> +Drawing inspiration from nvme-cli, participating in the kernel side must come
-> +with a user space in a common TBD git tree, at a minimum to usefully operate the
-> +kernel driver. Providing such an implementation is a pre-condition to merging a
-> +kernel driver.
-> +
-> +The goal is to build user space community around some of the shared problems
-> +we all have, and ideally develop some common user space programs with some
-> +starting themes of:
-> +
-> + - Device in-field debugging
-> +
-> + - HW provisioning
-> +
-> + - VFIO child device profiling before VM boot
-> +
-> + - Confidential Compute topics (attestation, secure provisioning)
-> +
-> +That stretch across all subsystems in the kernel. fwupd is a great example of
-
-   that
-
-> +how an excellent user space experience can emerge out of kernel-side diversity.
-> +
-> +fwctl Kernel API
-> +================
-> +
-> +.. kernel-doc:: drivers/fwctl/main.c
-> +   :export:
-> +.. kernel-doc:: include/linux/fwctl.h
-> +
-> +fwctl Driver design
-> +-------------------
-> +
-> +In many cases a fwctl driver is going to be part of a larger cross-subsystem
-> +device possibly using the auxiliary_device mechanism. In that case several
-> +subsystems are going to be sharing the same device and FW interface layer so the
-> +device design must already provide for isolation and cooperation between kernel
-> +subsystems. fwctl should fit into that same model.
-> +
-> +Part of the driver should include a description of how its scope restrictions
-> +and security model work. The driver and FW together must ensure that RPCs
-> +provided by user space are mapped to the appropriate scope. If the validation is
-> +done in the driver then the validation can read a 'command effects' report from
-> +the device, or hardwire the enforcement. If the validation is done in the FW,
-> +then the driver should pass the fwctl_rpc_scope to the FW along with the command.
-> +
-> +The driver and FW must cooperate to ensure that either fwctl cannot allocate
-> +any FW resources, or any resources it does allocate are freed on FD closure.  A
-> +driver primarily constructed around FW RPCs may find that its core PCI function
-> +and RPC layer belongs under fwctl with auxiliary devices connecting to other
-> +subsystems.
-> +
-> +Each device type must represent a stable FW ABI, such that the userspace
-> +components have the same general stability we expect from the kernel. FW upgrade
-> +should not break the userspace tools.
-> +
-> +Security Response
-> +=================
-> +
-> +The kernel remains the gatekeeper for this interface. If violations of the
-> +scopes, security or isolation principles are found, we have options to let
-> +devices fix them with a FW update, push a kernel patch to parse and block RPC
-
-fwctl does not do FW updates, is that correct?
-
-> +commands or push a kernel patch to block entire firmware versions/devices.
-> +
-> +While the kernel can always directly parse and restrict RPCs, it is expected
-> +that the existing kernel pattern of allowing drivers to delegate validation to
-> +FW to be a useful design.
-> +
-> +Existing Similar Examples
-> +=========================
-> +
-> +The approach described in this document is not a new idea. Direct, or near
-> +direct device access has been offered by the kernel in different areas for
-> +decades. With more devices wanting to follow this design pattern it is becoming
-> +clear that it is not entirely well understood and, more importantly, the
-> +security considerations are not well defined or agreed upon.
-> +
-> +Some examples:
-> +
-> + - HW RAID controllers. This includes RPCs to do things like compose drives into
-> +   a RAID volume, configure RAID parameters, monitor the HW and more.
-> +
-> + - Baseboard managers. RPCs for configuring settings in the device and more
-> +
-> + - NVMe vendor command capsules. nvme-cli provides access to some monitoring
-> +   functions that different products have defined, but more exists.
-
-                                                               exist.
-
-> +
-> + - CXL also has a NVMe-like vendor command system.
-> +
-> + - DRM allows user space drivers to send commands to the device via kernel
-> +   mediation
-> +
-> + - RDMA allows user space drivers to directly push commands to the device
-> +   without kernel involvement
-> +
-> + - Various “raw” APIs, raw HID (SDL2), raw USB, NVMe Generic Interface, etc
-
-                                                                           etc.
-
-> +
-> +The first 4 are examples of areas that fwctl intends to cover.
-> +
-> +Some key lessons learned from these past efforts are the importance of having a
-> +common user space project to use as a pre-condition for obtaining a kernel
-> +driver. Developing good community around useful software in user space is key to
-> +getting companies to fund participation to enable their products.
-
-
--- 
-~Randy
+...but don't spin the patch just for that fixup.
