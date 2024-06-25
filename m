@@ -1,153 +1,178 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047245023;
-	Tue, 25 Jun 2024 04:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE3D145FE3
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 06:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719290837; cv=none; b=gqdKoHbvAT0F5kYUmUK8dK2vuNx2fkOUpQ8FdOahVID8zZ1LWPz8SU58z8dU0GC8TZT7FWppiMTSYoRTT9ot3f9340hQVUqMilrzypR0c6Cl6fruVqu9cgPK3VGk+fPektWTKIlsonAcO7lBSHbr7sjEBvK+M9QLeVLWaA+vba8=
+	t=1719296659; cv=none; b=rnqkcnONrnUmWjc7qLtpcMSeOpz0uUJoutcTVD79QM47JJJhoWINI+ywCjHroRVJaOh7Ydc6PXf3ArTo/1Gno8hxpCBN75B/IDaQgRvZPAsgf1pPCOPqX8QP5KFYTXyg7nIySXC/aJHAfKKtnh9GDyQl4wZSgMZYX5jTvDHkFbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719290837; c=relaxed/simple;
-	bh=Qq60K9uBm/y/DS9p0kw9MthIKTXDk3frdtVp/7N7oSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ownVohDwX64EKc34qdbzB7n71XgR0ymjKLGyGjoDncrHMcryaa4J7IlnZHx9e/9zfGyOQr8qR+/H1tjCBZgqh5FsaJStiChZuOpsKyhH/CEOVUamwvi2N2oDHKOG5x1NnXgKoM+hF0W02dGlFFMh7VhiN6KW7zv2mXhnJYkPhow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHl6SKSJ; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719296659; c=relaxed/simple;
+	bh=fEXCEnroSXAYBbJBA50IuH7sIV8SQp85V0rc8smZn84=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Ujm9EhjU2MDYAtRKfBY9hJg4XLci4DoIeGzlYIoXRJOrZNqnYLKgHD5Ell5I5UfpGlEyDH0K9tSbG5bJ4VWfpCZs1y4au2QWaxfrsuYpxabQleQGsCxLvZFNQKAj9p+VLxJ6VfBG35naH/9zDNCKMu2QBXbQKzhai/ogWSIiiYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CN5gE+Eq; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHl6SKSJ"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-681ad26f4a5so3022852a12.2;
-        Mon, 24 Jun 2024 21:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719290835; x=1719895635; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ET8p4ZwbaktWKrn1b5eMaR4bScMUPPuup2Ir2dcizeY=;
-        b=fHl6SKSJ5x2BN34pluT7MKrWHc+wG21ErHtfJdzAbFG8PIXc8m5CVW0hdkcR5miJlg
-         EjqxaykDPw20gkuWJZCSqFIxdCgHRspOZ2OAI6F9VvldjY21oXc9ytnImu0nU2vqmj/I
-         nr2jevhIm6cD8z7TANSa4pD1+muO8aJ1iLH/kj9ikdpKFZB3AApY5TsqNdnBc+uFnkfH
-         5nO5k3ChKICrgYbhyxjURQKP0+LEMten9YireaZyUz7bpH8YjNhUKI+sG4eGfdkaxyrb
-         d+N1wjQ8DibGKFYge+SDaEVu0KymmSBjtVFVzkhogaSyNbpMgouR7rX6k/wSHJ+DNbaW
-         LGGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719290835; x=1719895635;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ET8p4ZwbaktWKrn1b5eMaR4bScMUPPuup2Ir2dcizeY=;
-        b=VTnsET3iQ1D6lY/s+bV87alCcz4/T84dW1/izFtJ1gPW7xq/+706QF/9dPJbq/xtt7
-         TYlE5oWLY7C1d8bbogR/M+TS4Y/Nva7cJ5dnx/aNv06xbUtQeDqYgpZQ6J5e6CPqsw+u
-         X2tJY7yNmTsZyxlhzpaJNT0I/Ncve53KhYSevyPh/wAMXFLvROeXzz0b8gwCeIsDNp8N
-         UKGs5BgY7k0Qe2/g26/DcKuaazpDBshxu/74D6o41y6jg1lvz3U7bNi+J6avRZjpFSuH
-         1PtOouSYiWVYcN/SZxT1t6/uONopBvtmrXWy9wE8u17v5fVl32X0En1Q5d5FxM8biqih
-         XQMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXEqobsh29J2akSOyViNdZ1C9cEIV6Q44RZAmHXRPLgl6pqjNowUT1ft1sQdMAwJor5RP8qx3ffxR4of2+fDt81sED8vrm+1MaC/HGfNDgGnw3cH5dvh926lmunZmTv2+OERA5hulrZpBShRiifzWktA537ALIA+udyal2BXeifs9O3BhTVCilDbVNBqADXRyeJU9VlryW3w==
-X-Gm-Message-State: AOJu0YxBqu/LAh/K/BJo58zSOSl73OqzUvE+oYEpSGXMgT6dkFa4KiKq
-	anQvn7Y58D6Ni9rxD4GCrB7Ib6r1s1/tZiJ4ajgeTlFJeaJNkPoj
-X-Google-Smtp-Source: AGHT+IG0sebUeJQpuk9+1T7kODbDmbzQzYQvAA+fXGNUTHhxYQMrZTAru7EJUh2kkRifOwgpdBBbcA==
-X-Received: by 2002:a17:90a:1286:b0:2a4:b831:5017 with SMTP id 98e67ed59e1d1-2c861435644mr5105992a91.48.1719290835238;
-        Mon, 24 Jun 2024 21:47:15 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e64a2bc8sm9674004a91.54.2024.06.24.21.47.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 21:47:14 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 47CFA195E2806; Tue, 25 Jun 2024 11:47:12 +0700 (WIB)
-Date: Tue, 25 Jun 2024 11:47:11 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Itay Avraham <itayavr@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Ahern <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 1/8] fwctl: Add basic structure for a class subsystem
- with a cdev
-Message-ID: <ZnpLz_w0sKmYNVFt@archie.me>
-References: <0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
- <1-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CN5gE+Eq"
+X-Envelope-To: akpm@linux-foundation.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719296654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j4bxxUAJuq2rr3KPobPQOBQilwLNETOz0MjNzojnBtM=;
+	b=CN5gE+Eq2magNWdd8QrK1zOC3R8bf1KbPZ3NH9ELjsQfumrMQ5gnwKYAZAkzWgr2EYAqBM
+	2yVj5cKUrvfKzBc8H6TkGnWbAf8q9duzXXHPtXGf69fs6rCVGhRFZQqAgEZE11RZLM6GES
+	5MsvgxqkJjLjP90OPOw5Zo/n8pxt1uM=
+X-Envelope-To: jonathan.cameron@huawei.com
+X-Envelope-To: ying.huang@intel.com
+X-Envelope-To: gourry.memverge@gmail.com
+X-Envelope-To: aneesh.kumar@linux.ibm.com
+X-Envelope-To: mhocko@suse.com
+X-Envelope-To: tj@kernel.org
+X-Envelope-To: john@jagalactic.com
+X-Envelope-To: emirakhur@micron.com
+X-Envelope-To: vtavarespetr@micron.com
+X-Envelope-To: ravis.opensrc@micron.com
+X-Envelope-To: apopple@nvidia.com
+X-Envelope-To: sthanneeru@micron.com
+X-Envelope-To: sj@kernel.org
+X-Envelope-To: rafael@kernel.org
+X-Envelope-To: lenb@kernel.org
+X-Envelope-To: dave.jiang@intel.com
+X-Envelope-To: dan.j.williams@intel.com
+X-Envelope-To: linux-acpi@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: horenc@vt.edu
+X-Envelope-To: horenchuang@bytedance.com
+X-Envelope-To: horenchuang@gmail.com
+X-Envelope-To: linux-cxl@vger.kernel.org
+X-Envelope-To: qemu-devel@nongnu.org
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6pUg5LYy9ZFeyzko"
-Content-Disposition: inline
-In-Reply-To: <1-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
-
-
---6pUg5LYy9ZFeyzko
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date: Tue, 25 Jun 2024 06:24:11 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: horen.chuang@linux.dev
+Message-ID: <acf41fe2246f3696a6fe267b8a23bdb4f855cb4e@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v1] memory tier: consolidate the initialization of memory
+ tiers
+To: "Andrew Morton" <akpm@linux-foundation.org>
+Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Huang, Ying"
+ <ying.huang@intel.com>, "Gregory Price" <gourry.memverge@gmail.com>,
+ aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org,
+ john@jagalactic.com, "Eishan Mirakhur" <emirakhur@micron.com>, "Vinicius
+ Tavares Petrucci" <vtavarespetr@micron.com>, "Ravis OpenSrc"
+ <Ravis.OpenSrc@micron.com>, "Alistair Popple" <apopple@nvidia.com>,
+ "Srinivasulu Thanneeru" <sthanneeru@micron.com>, "SeongJae Park"
+ <sj@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown"
+ <lenb@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>, "Dan Williams"
+ <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, "Ho-Ren (Jack) Chuang"
+ <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+ "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+ linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
+In-Reply-To: <20240621183413.1638e7453a0bed2af5f44273@linux-foundation.org>
+References: <20240621044833.3953055-1-horen.chuang@linux.dev>
+ <20240621183413.1638e7453a0bed2af5f44273@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 24, 2024 at 07:47:25PM -0300, Jason Gunthorpe wrote:
-> +/**
-> + * fwctl_alloc_device - Allocate a fwctl
-> + * @parent: Physical device that provides the FW interface
-> + * @ops: Driver ops to register
-> + * @drv_struct: 'struct driver_fwctl' that holds the struct fwctl_device
-> + * @member: Name of the struct fwctl_device in @drv_struct
-> + *
-> + * This allocates and initializes the fwctl_device embedded in the drv_s=
-truct.
-> + * Upon success the pointer must be freed via fwctl_put(). Returns NULL =
-on
-> + * failure. Returns a 'drv_struct *' on success, NULL on error.
-> + */
+June 21, 2024 at 6:34 PM, "Andrew Morton" <akpm@linux-foundation.org> wro=
+te:
 
-Sphinx reports htmldocs warning:
+Hi Andrew,
 
-Documentation/userspace-api/fwctl:195: ./include/linux/fwctl.h:72: WARNING:=
- Inline emphasis start-string without end-string.
+Thanks for the feedback. I will send a v2 with the patch description
+written in a cover letter.
 
-I have to escape the pointer (while also cleaning up redundant wordings on
-error case):
-
----- >8 ----
-diff --git a/include/linux/fwctl.h b/include/linux/fwctl.h
-index 294cfbf63306a2..ddadbe15189b45 100644
---- a/include/linux/fwctl.h
-+++ b/include/linux/fwctl.h
-@@ -70,8 +70,8 @@ struct fwctl_device *_fwctl_alloc_device(struct device *p=
-arent,
-  * @member: Name of the struct fwctl_device in @drv_struct
-  *
-  * This allocates and initializes the fwctl_device embedded in the drv_str=
-uct.
-- * Upon success the pointer must be freed via fwctl_put(). Returns NULL on
-- * failure. Returns a 'drv_struct *' on success, NULL on error.
-+ * Upon success the pointer must be freed via fwctl_put(). Returns a
-+ * 'drv_struct \*' on success, NULL on error.
-  */
- #define fwctl_alloc_device(parent, ops, drv_struct, member)               =
-   \
- 	container_of(_fwctl_alloc_device(                                    \
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---6pUg5LYy9ZFeyzko
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZnpLzAAKCRD2uYlJVVFO
-o1kVAQCH1QHvokEmFRkQR2mgHs8K7Dlhtwzt3YYY/nU5W7068gD8CRCDUZcTmGzG
-DoBud1vig/RrySo6o0mtkufVgkx1qA8=
-=WNas
------END PGP SIGNATURE-----
-
---6pUg5LYy9ZFeyzko--
+>=20
+>=20On Fri, 21 Jun 2024 04:48:30 +0000 "Ho-Ren (Jack) Chuang" <horen.chua=
+ng@linux.dev> wrote:
+>=20
+>=20>=20
+>=20> If we simply move the set_node_memory_tier() from memory_tier_init(=
+) to
+> >=20
+>=20>  late_initcall(), it will result in HMAT not registering the
+> >=20
+>=20>  mt_adistance_algorithm callback function,
+> >=20
+>=20
+> Immediate reaction: then don't do that!
+>=20
+>=20>=20
+>=20> because set_node_memory_tier()
+> >=20
+>=20>  is not performed during the memory tiering initialization phase,
+> >=20
+>=20>  leading to a lack of correct default_dram information.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Therefore, we introduced a nodemask to pass the information of the
+> >=20
+>=20>  default DRAM nodes. The reason for not choosing to reuse
+> >=20
+>=20>  default_dram_type->nodes is that it is not clean enough. So in the=
+ end,
+> >=20
+>=20>  we use a __initdata variable, which is a variable that is released=
+ once
+> >=20
+>=20>  initialization is complete, including both CPU and memory nodes fo=
+r HMAT
+> >=20
+>=20>  to iterate through.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Besides, since default_dram_type may be checked/used during the
+> >=20
+>=20>  initialization process of HMAT and drivers, it is better to keep t=
+he
+> >=20
+>=20>  allocation of default_dram_type in memory_tier_init().
+> >=20
+>=20
+> What is this patch actually aiming to do? Is it merely a code cleanup,
+>=20
+>=20or are there functional changes?
+>=20
+>=20>=20
+>=20> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> >=20
+>=20>  ---
+> >=20
+>=20>  Hi all,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  The current memory tier initialization process is distributed acro=
+ss two
+> >=20
+>=20>  different functions, memory_tier_init() and memory_tier_late_init(=
+). This
+> >=20
+>=20>  design is hard to maintain. Thus, this patch is proposed to reduce=
+ the
+> >=20
+>=20>  possible code paths by consolidating different initialization patc=
+hes into one.
+> >=20
+>=20
+> Ah, there it is. Please make this the opening paragraph, not an aside
+>=20
+>=20buried below the ^---$.
+>=20
+>=20I'll await review input before proceeding with this, thanks.
+>
