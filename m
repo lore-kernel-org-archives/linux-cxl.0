@@ -1,129 +1,186 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C071DDF8;
-	Tue, 25 Jun 2024 19:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719342225; cv=none; b=kdI+xmzv/7YTah28rSH5h752UvSzpVh6R2MgYtrHlwpRJuCPjkEqj2LCWg4Ih1bBHw5k4JEIxEopA/Q8IGONOO9FRa5CkUhy8Aid4qGWHQ3H/pI1lAN6ofAKNwO/Qmt1r0Tq0nRsbCzPR+3HmrTj5qHZdYMmPngG9pGE1qKac4c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719342225; c=relaxed/simple;
-	bh=JI9GDj3ulVpvf2zTRea2Df/zqs1xKQepL3nAf2RdH9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kT6dr4WwFghh8DOwxLuebCGs7l3TL+UWtsTVNlPdSMG/XUET/3kaVep1Bmvv634A2YlTFWtus2ccBJJzLFVXx/aZXUjXM4i4woREFJGtebnsZxD8mlgLDKXcnG8ml0KU70tBxS3gPtGqVGDPyK9OnrT7IyO8dnkiCvYqdqn5wQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ITKHN6zT; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6930B1369B6
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 21:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719351384; cv=fail; b=dgHWu3wAZQ386PtESfq+yM8mXHxcTBFiAd+N/UXag+K3xWHeYONoWZ2h5kS8AxLQ8nXDfF1GeqAKJTWiBYHO38hE8j56mCN9eSrwsJeaRRJJXVMUVCrPvDae6I5JHrl4UH+Mf+jB+LSCtIXqWNb6n/fZRheEaH858IOqB9D3sVU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719351384; c=relaxed/simple;
+	bh=6oKdCRbXXnPUsIIPHCr+edvflw2zd08Fpwbdp0rhstg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bZFFs9Q/F8Bx+pe58CEOz88WgWd2I0ScRDQzJdKJvy96TNQq9LQ3RtXoCjBHg1wXCzgP3DOvg2tRpaZYQzVmEL783lxgCXdF1GopjriBzTL73wbUcC2E92b9W/1XYZDh4OQ3SaCUgX06en27DVn1ne2Pnfz12ofKLXp02g0snEY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrYGpm6n; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ITKHN6zT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=del2IawhL2LDxT1v3/P46ZsGeJnPo7oM5A0i38LokGg=; b=ITKHN6zT66z8ErRMCTqE+jVNdm
-	aifAPFQ/TeaYHXcVhjDil4jV+s0oZ5UpLaOxBpRNT+cYkoXOIsy3jd61cwgPeY0VYGgt3NSd72fxm
-	c/rYxKsxctjYar4GbZzJWayRJkBHDb7+RQCAyPEclG9lr3QQ9/HiDETaBa6H7M3Ddspedc5EIPWDz
-	EgqGueUTMLj4QKShGJTfXUl/00UozYDKiBmIyiTe/pI+YlD24pDkJvl20cEDAyNTVSi/CYxnKo60h
-	t6sg2Epolbj3KXWz1SRq47WcLM2EAiH3h2TtjlTG/xRl08xv258cjuNwITZ8rX6NDmlEix0Gs11c+
-	I17vseCg==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMBS7-00000004CWp-0nMl;
-	Tue, 25 Jun 2024 19:03:39 +0000
-Message-ID: <0120d73a-0d15-440f-99bd-4c3e0a925183@infradead.org>
-Date: Tue, 25 Jun 2024 12:03:35 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrYGpm6n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719351382; x=1750887382;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=6oKdCRbXXnPUsIIPHCr+edvflw2zd08Fpwbdp0rhstg=;
+  b=VrYGpm6nMW9heeefEWt4CE7AK2x54XOaMstIQscfsMGhU5ZgZs3K3yvN
+   yoqmdZrLM9xKQPEyUfUGF8TUoCv11w4w9BlTmAAeYnU5GNEqq4mUxXTnP
+   rg6HXlK7SC5L2ApXCnwPxg0EstEABOlfgeA5O1PPgTpOapa0l0dXV8ErO
+   Mc+caOPiONiSz+BAHt0Y/CkF5FVM8rp7Fg8QhKBB09WXa/trgAnhrlrns
+   yFognkcjXh4RySmojOhuWXErchm5UFt0LJkScxCcknRXCMp7nr2vS9GKD
+   9F+o0xcTJmmSyYVDz2r9P5iCo5RuxjZMROg/ehS+GYrO2N2cd5m3hxIaW
+   g==;
+X-CSE-ConnectionGUID: vg9ABZ5jSn67bGwKMlo+pg==
+X-CSE-MsgGUID: AoYfLITRR3+gKzTuSszpjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16273425"
+X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
+   d="scan'208";a="16273425"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 14:36:22 -0700
+X-CSE-ConnectionGUID: urdCZvl8R6umtYZjNtofSw==
+X-CSE-MsgGUID: msos1xQLQqezeO63YBqDwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
+   d="scan'208";a="44499593"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jun 2024 14:36:21 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 25 Jun 2024 14:36:21 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 25 Jun 2024 14:36:21 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 25 Jun 2024 14:36:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GUcWSq/yKiUaAMweTzVwGGMXGf1KSu3IbtUazE8+cQfpP49LPnGrmW5OUKNftxqQWMeqCNajzWpKtswC8W6PNRrgZYtVk1s6Twy1MW5Z8I/fO97QArQ9N0D/Wfzx4ChFObS9bwlxR5nny8v2v5zVtgIHRxwjNG0ft5sC1HBGzb98voIYyxBoz5ARzHjNhNR6APSqGmDzbhJhdiA6OYOlHM+bUPpAprsU8wTcHHdty7x9FyU40B6e+qFeLDy86rl7idmfcch2k8oMMKVpI0mbFrkYz4FKbUeP0plro7iNWT4yhJmXrxy5JQIf3iSLAbxMST6qbXqXc6ahAwuUoCCJkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nB9er8bc/S4ojlBmBqhVAGrwjADad4+QvGT3q9v//Go=;
+ b=avvSLjueQous+VkXO+xhmxGTi5qBp92+V2n1p/ocPyzsli2OZpE9lvHaruDjqJV849ws7qvstZmpYsPw8/sdgF4Tab3WKh2zd3XkZMEzrqiO3/fEwAAV2yOj5uMDIbRfJ1PeNB5III/dFwxbCNnzM9GDZYLxhU26OhAW2X6EYWJXwt4ba68Kf9mNSbWRuqWaHr1kLJ7LxYFDE4XoPu3ohVy4B6bumMKxUBJxZ+QthaaCO9nDI1hd7hFiU98qDlSGimPcdNay4lMQL+Hx/hoPad1kSMJI8RqYtFMTPr/YbBfMxV3s8bByC8TLmRUhaIVRBystwozG23cdDFC/IffTrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by LV3PR11MB8725.namprd11.prod.outlook.com (2603:10b6:408:21e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Tue, 25 Jun
+ 2024 21:36:19 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
+ 21:36:19 +0000
+Date: Tue, 25 Jun 2024 16:36:15 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+CC: Alison Schofield <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [ndctl PATCH] cxl/test: Add test case for region info to
+ cxl-events.sh
+Message-ID: <667b384fd15e_32bf79294bc@iweiny-mobl.notmuch>
+References: <20240328043727.2186722-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240328043727.2186722-1-alison.schofield@intel.com>
+X-ClientProxiedBy: SJ0PR03CA0167.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::22) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/8] taint: Add TAINT_FWCTL
-To: Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
- Itay Avraham <itayavr@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
- Leon Romanovsky <leon@kernel.org>, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- linux-cxl@vger.kernel.org, patches@lists.linux.dev
-References: <4-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <4-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV3PR11MB8725:EE_
+X-MS-Office365-Filtering-Correlation-Id: da6805e6-e32d-48b2-4130-08dc955ed944
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230038|1800799022|366014|376012;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?bIPuk36K89L5RjtEQ0veHMb72BoNHCAdstqep+13QUpT0daTrBEN3MaLu5S1?=
+ =?us-ascii?Q?w1TxkXx6AFgu1Mq9y4POXmMBtGkavelvGPcqtXl4n/cptZE8hthB1NkL/XpV?=
+ =?us-ascii?Q?9r3FGPf1J9kwXzGuMo4JAPd5gDI8gbBOeqSHpXS4kRH+rKqFZH3/A6pxSrHD?=
+ =?us-ascii?Q?Jwxkni/gLJRpl1ii+4dBp3Aa0h5Df3EtWKztvpwHBB7cQvPlDL3lmdS8M6vC?=
+ =?us-ascii?Q?Wy0FnIS5N9aE3AK/EvdeTJMDhLpQKYq/jl4CgeUWmT4w+ijFWQHqK8FgCEoo?=
+ =?us-ascii?Q?e/Lj5tPTyCsUWK/jB0L6vqla5a2/xvjT0uVy7WbJlAxY4kSjXAJDVMls0mv9?=
+ =?us-ascii?Q?IeRtY6GfUtOxZnPr8fYGDIhBWoPaeEa75p8sSKckXfRaB6iPYresIIxuenvp?=
+ =?us-ascii?Q?W+iWvZ+pOajcIUJtB423+6YA+7cfNeMbsra+FYS4zUGMX24ZoRsV/4r9ruUr?=
+ =?us-ascii?Q?bdfcf780ckI90zklk3ubigApG2/6kWrRI0eq6CtsPZoAKgTPh9FuBiMopqAf?=
+ =?us-ascii?Q?AV+mlO/jFKqLYcEbTg+9OANLBVCeiE8EUBlPhyv9c6FC+1gBeTVF4tslBu7e?=
+ =?us-ascii?Q?9RPONZtJxxbR+4GwJFyQi0raOVa4iclt7jtwUOLUQMxf43LaUY9rppFFCqGd?=
+ =?us-ascii?Q?sZJJ2JdYGVp3J+TMYwVabB8TYgydgRNUSOYn3d4H4Waq3cB6rzXKK8vqp0Da?=
+ =?us-ascii?Q?RCS2VAMNoIgjTBq1PHwpzrlRffFOI1UnGbiHnWycnXLL/fUpoN9aJy+D7yM8?=
+ =?us-ascii?Q?ssjOZW6kttBsdh3dhMTYEyEjoYByQQ+7oYsyRb8wBsCkYutCKPFxnVsikYxF?=
+ =?us-ascii?Q?ZxW7+ywFeYWvDFpA2/Su7KrUXW+Q7VmytRMO2/+OnEPY5eo7FZ1u4F8EE++e?=
+ =?us-ascii?Q?Riof3cPETNlRzU1XODLsdnPTmZkbrqpuGGWzIgh/CdiOWb0RT/xYCTM02i9g?=
+ =?us-ascii?Q?bKViDxVMEZkxSI7U7AIgfyDuJNWbxHmgIPtJopuHNIDjStCaUBlNT6sajai6?=
+ =?us-ascii?Q?o2QLoAqxdULES7O1q9ZAIOn9QHQwr/DQjfgRLVqX2eGuQGDyVEev+z5i0X06?=
+ =?us-ascii?Q?MLqIUWLhztcsjmAIv6sMA0LpnXWh2Gfha6ANCb3XUGygDHxYd9vTt5ryKqy7?=
+ =?us-ascii?Q?OtWby3h1Bq4ONnSNwP7QJ4a4GBi7BHW0NnQ6lhq+yfGAXs3ePztar9JJLcL2?=
+ =?us-ascii?Q?ZQOTg1f5jUeKZ6nYfuGLJdFlhm8PwZQyAssZ9fBiohcXrSmgwYGhKy6Nsigs?=
+ =?us-ascii?Q?IGfKNfccj3zmAKYtYNnDNrjSGFMLgaF9uPa+uRZHij4q/ZBi0O1TM74L/2IK?=
+ =?us-ascii?Q?6DfHwQgiQ/DljcuNui5LZ82cXMEJYfMNSIKGonegFeh88A=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(1800799022)(366014)(376012);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?O/GagVtJT52Xb1n73RCNbtXUhpTluyUcOzfYf0y3pULKMZb38P/OjlMDEItg?=
+ =?us-ascii?Q?GcoAmM00+LPeBT9G4dK/Y+DlEEbriM9rs/O9wCWANFLkpXa04Fep5MW5TiRo?=
+ =?us-ascii?Q?FJ8LQ4VTaG7U/H/pLQgp7wUmH+0mYiw8piucgHa/Y0hEl+aRrG6PUkDLQBIe?=
+ =?us-ascii?Q?zzvNnGjRQrl+7zG0KCaiZVVKHCwWIrIj5cEZcyNLhbLhDdbtA4Wv3+ulKpG0?=
+ =?us-ascii?Q?wQL5xsFPrkNUqvCcwgaMGwoz7XXmZgOxqt9rhy1wkdgVZAEOm8bW1WapaXb9?=
+ =?us-ascii?Q?bz/tRZCN9Ha7fb0pXMcHq8GjNoiCE7/K4M3CaorVgh8JmleFEp+7C/Q0KpU0?=
+ =?us-ascii?Q?ZxExNA6E99rqXXMShj7NXiJHVZCxxCWV/1taNqWM8k6hLoFfsCzsMJ/GPIV5?=
+ =?us-ascii?Q?CMzxsbjpEDbXdB9MFjZcOk3KDOdPAeknVAmR33iHUwexNxbI9O04h8+uhGkJ?=
+ =?us-ascii?Q?UPvxwpOkKDFk2INrgdkFI3KOSuzeW9r1hEsL+U7Q96VPHEC4Tivcp95v3Wec?=
+ =?us-ascii?Q?jTzRBn19echwWNL8625jxg9TiFUl3k4FZwXCF5Tm/2ZwPee0hPfidkcYIsoO?=
+ =?us-ascii?Q?+mxg1ecDWRytjNnM6NtfkZVPLJIo+HFGReH7QbVwUxCWNkZWVtpR+ZUEV+6J?=
+ =?us-ascii?Q?8eeqOaPD3unxc0r8op1GtEn4te+1mFMi6TVAyqNsz6BFZjxraEP8q/mCyx35?=
+ =?us-ascii?Q?DW337lLvhCSI3O0RhqoIJ7Xu/pFUy5ZV3NbryW+MR+mP7d3+Eh/UDQjE5Soh?=
+ =?us-ascii?Q?dTz48DeW2m7oaojtr6dSDwflnx8AtFfhclFLDbmjpTwund5re7gKH8N1DZMi?=
+ =?us-ascii?Q?c8vj69bqASh8EX00bslLZtXGZ11iIEdBl4o7kWyRoxI5pyG1ISyArYxk6kab?=
+ =?us-ascii?Q?9chuay72BnnsLomlfiTOjq+h3XYJdFykhrpaSjt6xSSXBqM6692qgQVF1Sm+?=
+ =?us-ascii?Q?d4a1HwgQuUMK8o2Cr0+NVn+oQgigHlpfFDH2aQYwtJp4yl6fHcL7kP81QeaK?=
+ =?us-ascii?Q?XTIPQ8mARIhpfLoPf9o+wP2rxWj/gZOEH9KqRtrvmBQfV5MV2SwidTt6ALVu?=
+ =?us-ascii?Q?i7p2pQQ0nGt67r+FajSqTEO1RUlcyfE5I4kNORBY1kCWL9kc9Pdy3OLgTa+b?=
+ =?us-ascii?Q?pCeTQxefTW2gkP2ah68NawB2PPVsTQDF6zJ24O8dPXteb/UgsffS6UKdhhR4?=
+ =?us-ascii?Q?RvrezhJXTO0PELdFkTzqSdUv3FbmA33kFwIygV4Z2RfH7ddAZkZyaoUfTw1G?=
+ =?us-ascii?Q?ejQ6cKFqBAnZrG9uahXZXXlsl2YMvlUuDGaUr94XQswoE+Qrh0cC0lkSa4nQ?=
+ =?us-ascii?Q?Kux5EHi3Ina/8/IkFnImWViz4OOO9225ECZq64dw7EoJmQK3efsngFJ8TWet?=
+ =?us-ascii?Q?Xl6onJOnf4HO7+ltsXvyqlDsSbg1dmvaHL8A9VrDKgKWQhJQjXfB/43d8R3y?=
+ =?us-ascii?Q?uOYgy/qetdczLtUKXvD441YFNx/8NyZFshIUjiZCTUKf069Zcu8WWJs7txlR?=
+ =?us-ascii?Q?xy3sqNsdRr1VDFfG8gA/99//zv3p1Tcr44HgsWdlUGRsv2K0RBog5TIK58fK?=
+ =?us-ascii?Q?GixPW6e/9u5OsSWO8NcP92MAAeQPYsAaKql2pb1Y?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: da6805e6-e32d-48b2-4130-08dc955ed944
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 21:36:18.9289
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R5+sPGohVSNEAWeaJDGP54QsT0zeKUnBQIG/wvEK/1OVauUGytP6FaUEQ5y2LMWviZp32OHvEmc+Qs2sDZahNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8725
+X-OriginatorOrg: intel.com
 
-
-
-On 6/24/24 3:47 PM, Jason Gunthorpe wrote:
-> Requesting a fwctl scope of access that includes mutating device debug
-> data will cause the kernel to be tainted. Changing the device operation
-> through things in the debug scope may cause the device to malfunction in
-> undefined ways. This should be reflected in the TAINT flags to help any
-> debuggers understand that something has been done.
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Please also update tools/debugging/kernel-chktaint.
-
-> ---
->  Documentation/admin-guide/tainted-kernels.rst | 5 +++++
->  include/linux/panic.h                         | 3 ++-
->  kernel/panic.c                                | 1 +
->  3 files changed, 8 insertions(+), 1 deletion(-)
+> Events cxl_general_media and cxl_dram both report DPAs that may
+> be mapped in a region. If the DPA is mapped, the trace event will
+> include the HPA translation, region name and region uuid in the
+> trace event.
 > 
-> diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
-> index f92551539e8a66..f91a54966a9719 100644
-> --- a/Documentation/admin-guide/tainted-kernels.rst
-> +++ b/Documentation/admin-guide/tainted-kernels.rst
-> @@ -101,6 +101,7 @@ Bit  Log  Number  Reason that got the kernel tainted
->   16  _/X   65536  auxiliary taint, defined for and used by distros
->   17  _/T  131072  kernel was built with the struct randomization plugin
->   18  _/N  262144  an in-kernel test has been run
-> + 19  _/J  524288  userspace used a mutating debug operation in fwctl
->  ===  ===  ======  ========================================================
->  
->  Note: The character ``_`` is representing a blank in this table to make reading
-> @@ -182,3 +183,7 @@ More detailed explanation for tainting
->       produce extremely unusual kernel structure layouts (even performance
->       pathological ones), which is important to know when debugging. Set at
->       build time.
-> +
-> + 18) ``J`` if userpace opened /dev/fwctl/* and performed a FWTCL_RPC_DEBUG_WRITE
-> +     to use the devices debugging features. Device debugging features could
-> +     cause the device to malfunction in undefined ways.
-> diff --git a/include/linux/panic.h b/include/linux/panic.h
-> index 6717b15e798c38..5dfd5295effd40 100644
-> --- a/include/linux/panic.h
-> +++ b/include/linux/panic.h
-> @@ -73,7 +73,8 @@ static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
->  #define TAINT_AUX			16
->  #define TAINT_RANDSTRUCT		17
->  #define TAINT_TEST			18
-> -#define TAINT_FLAGS_COUNT		19
-> +#define TAINT_FWCTL			19
-> +#define TAINT_FLAGS_COUNT		20
->  #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
->  
->  struct taint_flag {
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 8bff183d6180e7..b71f573ec7c5fc 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -494,6 +494,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
->  	[ TAINT_AUX ]			= { 'X', ' ', true },
->  	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
->  	[ TAINT_TEST ]			= { 'N', ' ', true },
-> +	[ TAINT_FWCTL ]			= { 'J', ' ', true },
->  };
->  
->  /**
+> Add a test case that triggers these events with DPAs that map
+> into a region. Verify the region is included in the trace event.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
--- 
-~Randy
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+[snip]
