@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54CD10A35
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 00:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DFBD2FF
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 00:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719276962; cv=none; b=D0A4tGt93QVmc26b68KMbTVFGrCYNvw0CWpytQQxhIMY5oeCTG4cyWC0GvUMP9ISX59zoqLhd+72H8LXj58BGiLmKH7hX30atZvYbc5P3d3Ipz7T0rPBc0aNQgq44hzPkdnJsD1l6yAquGTmwyhxxCnrQ6jg5gf/46iwve6Xxdg=
+	t=1719276963; cv=none; b=h/ZMg4mXWecOKP+B3GQFOLR9YY6eCtArgvUQ88zJ0GjrDZbdtiSN+rjlwoEFZH3UWR0vprFasEXsPZLqQfoERGN6LrjtrKPDUdxX0kqp4mbQOAQoQ1vTa/6ggtcVA77Iq6F9xXyt0aA01zyg/E0bVqbZbnEIcOMwWDhfTe/TCyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719276962; c=relaxed/simple;
-	bh=Z5l2JaJqXhRbUO4BRBgkhLxsWnAyzZZp3IqJbFHXSa0=;
+	s=arc-20240116; t=1719276963; c=relaxed/simple;
+	bh=ziJH6VzCKYvUHo6ToiJYU3lJBMNpHKtjClrUMlZql0U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S3HWdBkfYSJG3z1+Su143saBsJZOD9RxPK0LUNjmip3HSCzsPITR1Nwrh8VWgtruycQh+HG6i64oGOjJR9pLxvjpy8LmMOAqnyEiE9QvH215uanM2s2W1P5V7TltW5c+ILhaoWKSIP5YwPKgDnWW9uxGKuyuIO8iELi2l1EjXl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhLDhlpQ; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=eh1Pk3nQO1WAA1AFAvo9GK44Wo5kYXF/s7YFZYQlKx58l5xaTeVj9SQQ+EWNaX6ncjks8lSIWcO5PFTOt+T52PxoN/zk0jGzxFdSGSWrp6+/sBp/4rqMacjnF6XBk15xqk5GYLWWWE3gGbx+snetK81jIsJM5jfqWqIPCQAJafo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nn8wXzx5; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhLDhlpQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nn8wXzx5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719276961; x=1750812961;
+  t=1719276962; x=1750812962;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Z5l2JaJqXhRbUO4BRBgkhLxsWnAyzZZp3IqJbFHXSa0=;
-  b=WhLDhlpQ3k1182vWF9x5D+qv7Wtr/HgrtdOtgHV526Z5ovhRMP04NG87
-   VNU+V2Yv9PaZtxl34pU202g8IjE9vuxmrJMBm8p2cZhxjPnzC4mKyJhwy
-   SdjP3kZsFwcp9/DTtXcXdUiuOyKV94/6eBdHp4SAuN1Mod4zl2rvkGq/S
-   36Mc7SlTnuTfaY996CbpcdZxi2Zrr+ecufnR8O/ffBnydTFkPCqmdUBjI
-   rEpPD3II1elm11aB0DlNSoBSjBmGbgijNn3Rwl78Uu/kylvP6W49Rpu62
-   U9oKXC8KMviUrXZfocAFeOkEHFG6l3CeyuhqxDVSLQhCyQQe7M5NDOv8F
-   Q==;
-X-CSE-ConnectionGUID: 9bp2x7DcSEOPIYe3HE3WFQ==
-X-CSE-MsgGUID: 8B2fTjYeTkecSmaBUoNTVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16028467"
+  bh=ziJH6VzCKYvUHo6ToiJYU3lJBMNpHKtjClrUMlZql0U=;
+  b=Nn8wXzx5t8V/mlHwOoheQV2gBtjnkCZoIKkp+iyM5Us3AaEsFaXn63R1
+   UCWl7jrLUkTgIMLQpvCdadzEyEi3V0lalMdEx0GD356swsLjIlfYioao9
+   7hfAycwSReLzYfabgLVtCQehEkwoeu/PcztizMh9eAgFFxUcfnY9Z5Ww1
+   TCmgQYqpvX7HRRZfTVSVLjgQRiO3Yj2Wun8mRK/MpkTMhtq4YDSCUGwb0
+   QKpsnCABOIbxrLQkl3uEiV4BwrCHqEXMSVv2ztHvTpfC3anyIlqNKOBLn
+   uYCRFTWL62/uOREVvc7mzUlXv23nsIEs+wpXGNftZrHsqGnpmj3e8Pum9
+   w==;
+X-CSE-ConnectionGUID: vfIfmsRyToiSV9i6g2UBDg==
+X-CSE-MsgGUID: yoGxXaejQEW7dV9YEdNhNw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16028472"
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="16028467"
+   d="scan'208";a="16028472"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:56:00 -0700
-X-CSE-ConnectionGUID: l/LRICaiRIikfyCPzZORVQ==
-X-CSE-MsgGUID: cv+gjihUQCqlp+l1yzaMwg==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:56:01 -0700
+X-CSE-ConnectionGUID: OK91dNr0R9aq+R10c3MvtQ==
+X-CSE-MsgGUID: WcbP0vNITCSm20NBGZ0nwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="66697316"
+   d="scan'208";a="66697320"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.55.37])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:55:59 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:56:00 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -51,10 +51,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 1/4] cxl/core: Rename cxl_trace_hpa() to cxl_dpa_to_hpa()
-Date: Mon, 24 Jun 2024 17:55:52 -0700
-Message-Id: <3ed59646c9f1400432520845e482fb0341af4d56.1719275633.git.alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Diego Garcia Rodriguez <diego.garcia.rodriguez@intel.com>
+Subject: [PATCH v3 2/4] cxl: Restore XOR'd position bits during address translation
+Date: Mon, 24 Jun 2024 17:55:53 -0700
+Message-Id: <e36eabffe2c2e1a7611cf8ba9ba8bee435bceb1c.1719275633.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1719275633.git.alison.schofield@intel.com>
 References: <cover.1719275633.git.alison.schofield@intel.com>
@@ -68,125 +69,239 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Although cxl_trace_hpa() is used to populate TRACE EVENTs with HPA
-addresses, the work it performs is a DPA to HPA translation, not a
-trace. Rename it.
+When a device reports a DPA in events like poison, general_media,
+and dram, the driver translates that DPA back to an HPA. Presently,
+the CXL driver translation only considers the Modulo position and
+will report the wrong HPA for XOR configured root decoders.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Add a helper function that restores the XOR'd bits during DPA->HPA
+address translation. Plumb a root decoder callback to the new helper
+when XOR interleave arithmetic is in use. For Modulo arithmetic, just
+let the callback be NULL - as in no extra work required.
+
+Upon completion of a DPA->HPA translation a couple of checks are
+performed on the result. One simply confirms that the calculated
+HPA is within the address range of the region. That test is useful
+for both Modulo and XOR interleave arithmetic decodes.
+
+A second check confirms that the HPA is within an expected chunk
+based on the endpoints position in the region and the region
+granularity. An XOR decode disrupts the Modulo pattern making the
+chunk check useless.
+
+To align the checks with the proper decode, pull the region range
+check inline and use the helper to do the chunk check for Modulo
+decodes only.
+
+A cxl-test unit test of address translations is in upstream review.
+
+Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Diego Garcia Rodriguez <diego.garcia.rodriguez@intel.com>
 ---
- drivers/cxl/core/core.h   |  8 ++++----
- drivers/cxl/core/mbox.c   |  2 +-
- drivers/cxl/core/region.c | 33 +++++++++++++--------------------
- drivers/cxl/core/trace.h  |  4 ++--
- 4 files changed, 20 insertions(+), 27 deletions(-)
+ drivers/cxl/acpi.c        | 48 ++++++++++++++++++++++++++++++++++++---
+ drivers/cxl/core/port.c   |  5 +++-
+ drivers/cxl/core/region.c | 22 ++++++++++--------
+ drivers/cxl/cxl.h         |  6 ++++-
+ 4 files changed, 67 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 625394486459..72a506c9dbd0 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -28,12 +28,12 @@ int cxl_region_init(void);
- void cxl_region_exit(void);
- int cxl_get_poison_by_endpoint(struct cxl_port *port);
- struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
--u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
--		  u64 dpa);
-+u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-+		   u64 dpa);
- 
- #else
--static inline u64
--cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd, u64 dpa)
-+static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
-+				 const struct cxl_memdev *cxlmd, u64 dpa)
- {
- 	return ULLONG_MAX;
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 571069863c62..010741da0176 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -74,6 +74,43 @@ static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
+ 	return cxlrd->cxlsd.target[n];
  }
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 2626f3fff201..eb0b08e5136f 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -878,7 +878,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
- 		cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 		if (cxlr)
--			hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-+			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
  
- 		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
- 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
++static u64 cxl_xor_translate(struct cxl_root_decoder *cxlrd, u64 hpa)
++{
++	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
++	int hbiw = cxlrd->cxlsd.nr_targets;
++	u64 val;
++	int pos;
++
++	/* No xormaps for host bridge interleave ways of 1 or 3 */
++	if (hbiw == 1 || hbiw == 3)
++		return hpa;
++
++	/*
++	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) restore
++	 * the position bit to its value before the xormap was applied at
++	 * HPA->DPA translation.
++	 *
++	 * pos is the lowest set bit in an XORMAP
++	 * val is the XORALLBITS(HPA & XORMAP)
++	 *
++	 * XORALLBITS: The CXL spec (3.1 Table 9-22) defines XORALLBITS
++	 * as an operation that outputs a single bit by XORing all the
++	 * bits in the input (hpa & xormap). Implement XORALLBITS using
++	 * hweight64(). If the hamming weight is even the XOR of those
++	 * bits results in val==0, if odd the XOR result is val==1.
++	 */
++
++	for (int i = 0; i < cximsd->nr_maps; i++) {
++		if (!cximsd->xormaps[i])
++			continue;
++		pos = __ffs(cximsd->xormaps[i]);
++		val = (hweight64(hpa & cximsd->xormaps[i]) & 1);
++		hpa = (hpa & ~(1ULL << pos)) | (val << pos);
++	}
++
++	return hpa;
++}
++
+ struct cxl_cxims_context {
+ 	struct device *dev;
+ 	struct cxl_root_decoder *cxlrd;
+@@ -362,6 +399,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	struct cxl_cxims_context cxims_ctx;
+ 	struct device *dev = ctx->dev;
+ 	cxl_calc_hb_fn cxl_calc_hb;
++	cxl_translate_fn translate;
+ 	struct cxl_decoder *cxld;
+ 	unsigned int ways, i, ig;
+ 	int rc;
+@@ -389,13 +427,17 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 	if (rc)
+ 		return rc;
+ 
+-	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
++	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO) {
+ 		cxl_calc_hb = cxl_hb_modulo;
+-	else
++		translate = NULL;
++
++	} else {
+ 		cxl_calc_hb = cxl_hb_xor;
++		translate = cxl_xor_translate;
++	}
+ 
+ 	struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
+-		cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb);
++		cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb, translate);
+ 	if (IS_ERR(cxlrd))
+ 		return PTR_ERR(cxlrd);
+ 
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 887ed6e358fb..e5d5f7783857 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1808,6 +1808,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  * @port: owning CXL root of this decoder
+  * @nr_targets: static number of downstream targets
+  * @calc_hb: which host bridge covers the n'th position by granularity
++ * @translate: decoder specific address translation function
+  *
+  * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
+  * 'CXL root' decoder is one that decodes from a top-level / static platform
+@@ -1816,7 +1817,8 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  */
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 						unsigned int nr_targets,
+-						cxl_calc_hb_fn calc_hb)
++						cxl_calc_hb_fn calc_hb,
++						cxl_translate_fn translate)
+ {
+ 	struct cxl_root_decoder *cxlrd;
+ 	struct cxl_switch_decoder *cxlsd;
+@@ -1839,6 +1841,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 	}
+ 
+ 	cxlrd->calc_hb = calc_hb;
++	cxlrd->translate = translate;
+ 	mutex_init(&cxlrd->range_lock);
+ 
+ 	cxld = &cxlsd->cxld;
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3c2b6144be23..237c28d5f2cc 100644
+index 237c28d5f2cc..bdb06dbe98a8 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -2749,15 +2749,25 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
- 	return false;
+@@ -2723,20 +2723,13 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+ 	return ctx.cxlr;
  }
  
--static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
--			  struct cxl_endpoint_decoder *cxled)
-+u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-+		   u64 dpa)
+-static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
++static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
  {
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	int gran = p->interleave_granularity;
+ 	int ways = p->interleave_ways;
+ 	u64 offset;
+ 
+-	/* Is the hpa within this region at all */
+-	if (hpa < p->res->start || hpa > p->res->end) {
+-		dev_dbg(&cxlr->dev,
+-			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+-		return false;
+-	}
+-
+ 	/* Is the hpa in an expected chunk for its pos(-ition) */
+ 	offset = hpa - p->res->start;
+ 	offset = do_div(offset, gran * ways);
+@@ -2752,6 +2745,7 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		   u64 dpa)
+ {
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
  	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
  	struct cxl_region_params *p = &cxlr->params;
--	int pos = cxled->pos;
-+	struct cxl_endpoint_decoder *cxled = NULL;
- 	u16 eig = 0;
- 	u8 eiw = 0;
-+	int pos;
+ 	struct cxl_endpoint_decoder *cxled = NULL;
+@@ -2801,7 +2795,17 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	/* Apply the hpa_offset to the region base address */
+ 	hpa = hpa_offset + p->res->start;
  
-+	for (int i = 0; i < p->nr_targets; i++) {
-+		cxled = p->targets[i];
-+		if (cxlmd == cxled_to_memdev(cxled))
-+			break;
-+	}
-+	if (!cxled || cxlmd != cxled_to_memdev(cxled))
-+		return ULLONG_MAX;
+-	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
++	/* Root decoder translation overrides typical modulo decode */
++	if (cxlrd->translate)
++		hpa = cxlrd->translate(cxlrd, hpa);
 +
-+	pos = cxled->pos;
- 	ways_to_eiw(p->interleave_ways, &eiw);
- 	granularity_to_eig(p->interleave_granularity, &eig);
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_dbg(&cxlr->dev,
++			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
++		return ULLONG_MAX;
++	}
++
++	if (!cxlrd->translate && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
+ 		return ULLONG_MAX;
  
-@@ -2797,23 +2807,6 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
  	return hpa;
- }
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 603c0120cff8..3678235fc9ce 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -434,12 +434,14 @@ struct cxl_switch_decoder {
+ struct cxl_root_decoder;
+ typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxlrd,
+ 					    int pos);
++typedef u64 (*cxl_translate_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
  
--u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
--		  u64 dpa)
--{
--	struct cxl_region_params *p = &cxlr->params;
--	struct cxl_endpoint_decoder *cxled = NULL;
--
--	for (int i = 0; i <  p->nr_targets; i++) {
--		cxled = p->targets[i];
--		if (cxlmd == cxled_to_memdev(cxled))
--			break;
--	}
--	if (!cxled || cxlmd != cxled_to_memdev(cxled))
--		return ULLONG_MAX;
--
--	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
--}
--
- static struct lock_class_key cxl_pmem_region_key;
- 
- static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index ee5cd4eb2f16..21b76e9c5c60 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -704,8 +704,8 @@ TRACE_EVENT(cxl_poison,
- 		if (cxlr) {
- 			__assign_str(region);
- 			memcpy(__entry->uuid, &cxlr->params.uuid, 16);
--			__entry->hpa = cxl_trace_hpa(cxlr, cxlmd,
--						     __entry->dpa);
-+			__entry->hpa = cxl_dpa_to_hpa(cxlr, cxlmd,
-+						      __entry->dpa);
- 		} else {
- 			__assign_str(region);
- 			memset(__entry->uuid, 0, 16);
+ /**
+  * struct cxl_root_decoder - Static platform CXL address decoder
+  * @res: host / parent resource for region allocations
+  * @region_id: region id for next region provisioning event
+  * @calc_hb: which host bridge covers the n'th position by granularity
++ * @translate: decoder specific address translation function
+  * @platform_data: platform specific configuration data
+  * @range_lock: sync region autodiscovery by address range
+  * @qos_class: QoS performance class cookie
+@@ -449,6 +451,7 @@ struct cxl_root_decoder {
+ 	struct resource *res;
+ 	atomic_t region_id;
+ 	cxl_calc_hb_fn calc_hb;
++	cxl_translate_fn translate;
+ 	void *platform_data;
+ 	struct mutex range_lock;
+ 	int qos_class;
+@@ -773,7 +776,8 @@ bool is_switch_decoder(struct device *dev);
+ bool is_endpoint_decoder(struct device *dev);
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 						unsigned int nr_targets,
+-						cxl_calc_hb_fn calc_hb);
++						cxl_calc_hb_fn calc_hb,
++						cxl_translate_fn translate);
+ struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos);
+ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 						    unsigned int nr_targets);
 -- 
 2.37.3
 
