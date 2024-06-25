@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98307101EE
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 00:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54CD10A35
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Jun 2024 00:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719276961; cv=none; b=Kev9dOd2gu0XvJGCHNYjCTwz7oMSN2WaQBEoJ7B+xzlaIq2OyThH1jPzQUGBcST5lvktD7UDSDPivouB0m7dEoIQEi0E/QDR7+gXTh0Kr7HBWKWLAYVpFnyR9F/tDRwAg4bd3AW5WvGAdOPDiql3IAvNhImyVg0fZXfJsmR3mmE=
+	t=1719276962; cv=none; b=D0A4tGt93QVmc26b68KMbTVFGrCYNvw0CWpytQQxhIMY5oeCTG4cyWC0GvUMP9ISX59zoqLhd+72H8LXj58BGiLmKH7hX30atZvYbc5P3d3Ipz7T0rPBc0aNQgq44hzPkdnJsD1l6yAquGTmwyhxxCnrQ6jg5gf/46iwve6Xxdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719276961; c=relaxed/simple;
-	bh=D7oc/Tlpz+T8PTOCiP6meM7v0boVWqcgCjle4UuBQNI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jqbDio6/qYrpYI4tfbQqgZ9i+kXDtVn1l8lmJK9gsvDN/okSzp7PGIhhPV6U0YZsv0v5agAzbUe6G0gGu9wUwpyePAj4AbS1r/cxylw92CprLCGk6wc6Vxxs9LMDXTLwPaYHNGSy6F0UGmgHZmBwFbqxUWuXUgex9k7O19VQVCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khSrV1/m; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1719276962; c=relaxed/simple;
+	bh=Z5l2JaJqXhRbUO4BRBgkhLxsWnAyzZZp3IqJbFHXSa0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S3HWdBkfYSJG3z1+Su143saBsJZOD9RxPK0LUNjmip3HSCzsPITR1Nwrh8VWgtruycQh+HG6i64oGOjJR9pLxvjpy8LmMOAqnyEiE9QvH215uanM2s2W1P5V7TltW5c+ILhaoWKSIP5YwPKgDnWW9uxGKuyuIO8iELi2l1EjXl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhLDhlpQ; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khSrV1/m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhLDhlpQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719276960; x=1750812960;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=D7oc/Tlpz+T8PTOCiP6meM7v0boVWqcgCjle4UuBQNI=;
-  b=khSrV1/mesZX86AWXTUz7qgcIjxWITCYHMQgrbg5vB/81qJ6WHY+4jz8
-   fHMTvFr5HEaQfaORuiyCJKottySRv33NRkmLguv10ZbKFqNJMKBUdEbQ+
-   bOJF3Bg0S/Dv/nIDCIgO3uOLT/U8rTa4WSCUaOCeCeRK3zi9pTOfOaLAb
-   8Uw4fxflTKuk/Tann6Y26PDIi0KJVDMjifUNLA1MyN4qIt730PzVzWOyG
-   GkcSbvQq/E+BETt2yHhQqhkUmS/bCrMZTHqkl52L575qMPqkIWXdQuU3T
-   R3Da7AQwJKakdMDrhdSspzstmx0N2oxDMrT/DnXxW5/dyFpriJawCwGPD
-   A==;
-X-CSE-ConnectionGUID: CGsr7uYoQnemCkfzC/K63Q==
-X-CSE-MsgGUID: WXdvZGkIQLu6XiEMrAWBvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16028464"
+  t=1719276961; x=1750812961;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Z5l2JaJqXhRbUO4BRBgkhLxsWnAyzZZp3IqJbFHXSa0=;
+  b=WhLDhlpQ3k1182vWF9x5D+qv7Wtr/HgrtdOtgHV526Z5ovhRMP04NG87
+   VNU+V2Yv9PaZtxl34pU202g8IjE9vuxmrJMBm8p2cZhxjPnzC4mKyJhwy
+   SdjP3kZsFwcp9/DTtXcXdUiuOyKV94/6eBdHp4SAuN1Mod4zl2rvkGq/S
+   36Mc7SlTnuTfaY996CbpcdZxi2Zrr+ecufnR8O/ffBnydTFkPCqmdUBjI
+   rEpPD3II1elm11aB0DlNSoBSjBmGbgijNn3Rwl78Uu/kylvP6W49Rpu62
+   U9oKXC8KMviUrXZfocAFeOkEHFG6l3CeyuhqxDVSLQhCyQQe7M5NDOv8F
+   Q==;
+X-CSE-ConnectionGUID: 9bp2x7DcSEOPIYe3HE3WFQ==
+X-CSE-MsgGUID: 8B2fTjYeTkecSmaBUoNTVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16028467"
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="16028464"
+   d="scan'208";a="16028467"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:55:59 -0700
-X-CSE-ConnectionGUID: ugBbTVKZSHWibPwvQYImHw==
-X-CSE-MsgGUID: DLz1TAGQTfmVOdJ1dP3Stg==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:56:00 -0700
+X-CSE-ConnectionGUID: l/LRICaiRIikfyCPzZORVQ==
+X-CSE-MsgGUID: cv+gjihUQCqlp+l1yzaMwg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="66697308"
+   d="scan'208";a="66697316"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.55.37])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:55:58 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:55:59 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -51,10 +52,12 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 0/4] XOR Math Fixups: translation & position
-Date: Mon, 24 Jun 2024 17:55:51 -0700
-Message-Id: <cover.1719275633.git.alison.schofield@intel.com>
+Subject: [PATCH v3 1/4] cxl/core: Rename cxl_trace_hpa() to cxl_dpa_to_hpa()
+Date: Mon, 24 Jun 2024 17:55:52 -0700
+Message-Id: <3ed59646c9f1400432520845e482fb0341af4d56.1719275633.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1719275633.git.alison.schofield@intel.com>
+References: <cover.1719275633.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,65 +68,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Changes in v3:
-- Patch 2: Perform the 'chunk' check on Modulo decodes only
-- Patch 1: Fold cxl_translate() into cxl_dpa_to_hpa()	(Jonathan)
-  Jonathan asked for a rename of cxl_translate to cxl_dpa_to_hpa()
-  but the latter already existed and the work of cxl_translate() was
-  minimal. They are now one.
-- Remove the mention of XOR's purpose in Patch 2 commit log (Dan)
-- Reword hamming weight wrt XORALLBITS code comment (Jonathan)
-- Post a unit test upstream[1]  (Dan, Jonathan)
-- Remove Reviewed-by Tags on Patch 1 & 2 due to rework
-- Add Diego's Tested-by tag to Patch 2,3
+Although cxl_trace_hpa() is used to populate TRACE EVENTs with HPA
+addresses, the work it performs is a DPA to HPA translation, not a
+trace. Rename it.
 
-Link to v2:
-https://lore.kernel.org/cover.1714159486.git.alison.schofield@intel.com/
-
-[1] https://lore.kernel.org/20240624210644.495563-1-alison.schofield@intel.com/
-
-
-Begin cover letter:
-
-Rather than repeat the individual patch commit message content,
-let me describe the flow of this set:
-
-Patch 1: Rename an existing fn - cxl_trace_hpa()-> cxl_dpa_to_hpa()
-A tiny, yet essential cleanup to take first.
-
-Patch 2: cxl: Restore XOR'd position bits during address translation
-The problem fixed in this patch, bad HPA translations with XOR math,
-came to my attention recently. 
-
-Patch 3 & Patch 4 are paired. Patch 3 presents the new method for
-verifying a target position in the list and Patch 4 removes the
-old method. These could be squashed.
-
-FYI - the reason I don't present the code removal first is because
-I think it is easier to read the diff if I leave in the old root
-decoder call back setup for calc_hb, insert the new call back along
-the same path, and then rip out the defunct calc_hb. That's the
-way I created the patchset and it may be an easier way for reviewers
-to follow along with the root decoder callback setup.
-
-
-Alison Schofield (4):
-  cxl/core: Rename cxl_trace_hpa() to cxl_dpa_to_hpa()
-  cxl: Restore XOR'd position bits during address translation
-  cxl/region: Verify target positions using the ordered target list
-  cxl: Remove defunct code calculating host bridge target positions
-
- drivers/cxl/acpi.c        | 80 ++++++++++++++++-----------------------
- drivers/cxl/core/core.h   |  8 ++--
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ drivers/cxl/core/core.h   |  8 ++++----
  drivers/cxl/core/mbox.c   |  2 +-
- drivers/cxl/core/port.c   | 21 ++--------
- drivers/cxl/core/region.c | 60 ++++++++++++++---------------
- drivers/cxl/core/trace.h  |  4 +-
- drivers/cxl/cxl.h         | 10 ++---
- 7 files changed, 77 insertions(+), 108 deletions(-)
+ drivers/cxl/core/region.c | 33 +++++++++++++--------------------
+ drivers/cxl/core/trace.h  |  4 ++--
+ 4 files changed, 20 insertions(+), 27 deletions(-)
 
-
-base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 625394486459..72a506c9dbd0 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -28,12 +28,12 @@ int cxl_region_init(void);
+ void cxl_region_exit(void);
+ int cxl_get_poison_by_endpoint(struct cxl_port *port);
+ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
+-u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+-		  u64 dpa);
++u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
++		   u64 dpa);
+ 
+ #else
+-static inline u64
+-cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd, u64 dpa)
++static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
++				 const struct cxl_memdev *cxlmd, u64 dpa)
+ {
+ 	return ULLONG_MAX;
+ }
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 2626f3fff201..eb0b08e5136f 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -878,7 +878,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 		dpa = le64_to_cpu(evt->common.phys_addr) & CXL_DPA_MASK;
+ 		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+ 		if (cxlr)
+-			hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
++			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+ 
+ 		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+ 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3c2b6144be23..237c28d5f2cc 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2749,15 +2749,25 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+ 	return false;
+ }
+ 
+-static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+-			  struct cxl_endpoint_decoder *cxled)
++u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
++		   u64 dpa)
+ {
+ 	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+ 	struct cxl_region_params *p = &cxlr->params;
+-	int pos = cxled->pos;
++	struct cxl_endpoint_decoder *cxled = NULL;
+ 	u16 eig = 0;
+ 	u8 eiw = 0;
++	int pos;
+ 
++	for (int i = 0; i < p->nr_targets; i++) {
++		cxled = p->targets[i];
++		if (cxlmd == cxled_to_memdev(cxled))
++			break;
++	}
++	if (!cxled || cxlmd != cxled_to_memdev(cxled))
++		return ULLONG_MAX;
++
++	pos = cxled->pos;
+ 	ways_to_eiw(p->interleave_ways, &eiw);
+ 	granularity_to_eig(p->interleave_granularity, &eig);
+ 
+@@ -2797,23 +2807,6 @@ static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+ 	return hpa;
+ }
+ 
+-u64 cxl_trace_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+-		  u64 dpa)
+-{
+-	struct cxl_region_params *p = &cxlr->params;
+-	struct cxl_endpoint_decoder *cxled = NULL;
+-
+-	for (int i = 0; i <  p->nr_targets; i++) {
+-		cxled = p->targets[i];
+-		if (cxlmd == cxled_to_memdev(cxled))
+-			break;
+-	}
+-	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+-		return ULLONG_MAX;
+-
+-	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
+-}
+-
+ static struct lock_class_key cxl_pmem_region_key;
+ 
+ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index ee5cd4eb2f16..21b76e9c5c60 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -704,8 +704,8 @@ TRACE_EVENT(cxl_poison,
+ 		if (cxlr) {
+ 			__assign_str(region);
+ 			memcpy(__entry->uuid, &cxlr->params.uuid, 16);
+-			__entry->hpa = cxl_trace_hpa(cxlr, cxlmd,
+-						     __entry->dpa);
++			__entry->hpa = cxl_dpa_to_hpa(cxlr, cxlmd,
++						      __entry->dpa);
+ 		} else {
+ 			__assign_str(region);
+ 			memset(__entry->uuid, 0, 16);
 -- 
 2.37.3
 
