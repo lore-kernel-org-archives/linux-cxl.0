@@ -1,64 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AAA18A92B;
-	Wed, 26 Jun 2024 10:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F45A179957;
+	Wed, 26 Jun 2024 10:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719397707; cv=none; b=rj9j5/UHEeoW/H97kQ1cTGy7IpZrDZDASQc4uH8F/kT/ofIC8d3T7Zb3L3o4JIJDqwI4Wof26TNHDTTLqjHt70IivPsri7OICickYXSMREuxCiiDQ1kq6KzHTO59H5dMI0cV6mnxTBWJlHICppbAgAEIAj4jKCvPOEDiBi2EKzg=
+	t=1719397923; cv=none; b=EyzhTcqQG0JkhZXgTH1ecmEc4w3dwNZFPsdE+q61jOhKmRBGuu7Ao+U+/UhdfbVMY4CBt+B4US2z0F3dIBNTR1S56veYVTH+0lg/OJMPpaqEzjhT+Nxwi20JCmfyY94/Hf2kIlJUJwyRAVPt3O6o4Zhy5suBu+Ycvcxi9dPbopA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719397707; c=relaxed/simple;
-	bh=R8koNdIOIs1xSzrQoGWQfGJPVAZmC0McFmOxHDebHL8=;
+	s=arc-20240116; t=1719397923; c=relaxed/simple;
+	bh=vpptSYzNXJVzy4Ii/5nsfkQ0IldCISPnS6J6SkA+I54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HzZsOLlryCBiSbiMg0JYsUHqjaqqiDqz8IZvs7Eev2fbXN7tTi/iHWbsHEYZb09os5qWIzeUpXfqXF+XEGnBFvYfgjrWBmmckfH89qCFEIAFDGPo7ItAiAmhtLgdyWbVLctzWsz+6evs4GFu7fAfHMtaMXdJqZ2HMCwe0N3C4QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmx56Hm8; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=BnQi2fFjoAyKZaO9C7KA9Ri5SxpE3UxpWMjYOj+GC2EIzmn7qdA8J3t0JEk2R2WL+5DAeYPnxr0wVsQDYS+3uYxrz3Ef74UwWnAPpvElt5sxAsPmJTP4Ubo6rn/hY9Uy89WxutfhxIQwaEWh29KJkseEvnbZFWkwZszB07yLqu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6HJIGsk; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmx56Hm8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6HJIGsk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719397706; x=1750933706;
+  t=1719397922; x=1750933922;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R8koNdIOIs1xSzrQoGWQfGJPVAZmC0McFmOxHDebHL8=;
-  b=jmx56Hm8CWLf562Fih0J+If8vsIVIaD8Ej1+2nWww1zpVdnkhttEf2il
-   6pc85vpjXA3/MRt1vPUgzyoTXyCWdkzx0UfedZxn5wFSjYNXIj5NTWwzU
-   2HkP99wuEfA7NgNsW8pOi+SRFGEf21mCkQJOqxZY/e36ukEba8oKsfhhp
-   mnerc/bRPpGi8N3kxBNs9JKPDOhcKbX9S2jJ5OV6IBqOf0GB14Jv9kgJD
-   VeKmBXj866yoRjPgGX7xe2xqN1TmoUW9TfwwyuA33mM33JGbwzSXpHfph
-   Ouzn1Swn2+9VL0ZAqKQTQ0725bzA52nAT0UH7qgY9REVCCa/zIStLKQvr
-   A==;
-X-CSE-ConnectionGUID: yRUAwlIqQhCsDHxgZD0nRA==
-X-CSE-MsgGUID: TX4BljKTS2+os3mxwG1mTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="19351636"
+  bh=vpptSYzNXJVzy4Ii/5nsfkQ0IldCISPnS6J6SkA+I54=;
+  b=R6HJIGsk5tb8AZxNpgvJmOPsWKPuGri8XPyKdKQhrHF+HZJ6W1nZWqaP
+   qE4AuDe6TrUkjvd+liDDzv8Jy/tl58OJH7EHM7nHR1JsWUaa9/teIR/8t
+   NxkBlJkqUyoJ6KYfdba0zFI44rxbGdNwXqy71mCEIk5xL9FHN7ezWZ4Wl
+   5O7rdwIteslgWTJtY0Oltdu202RRHzMkCi3f1xtZE7xWWq5tYPODJhbnq
+   2iyl1hLt7cNU6Ru+Y0opGuvA1vRX+difBB4lkLqpcxTeVHgrNN40ttWNA
+   mZtfvqI+uDIvj8/2ECFLnVUZ73K1j5TpNw2oRSMh4mEYzwDChF6JQm7++
+   g==;
+X-CSE-ConnectionGUID: RgjabHvaQGWykFYGMPiB/A==
+X-CSE-MsgGUID: 6mUA69OERGWPE+5IPASVpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16608282"
 X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="19351636"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:28:26 -0700
-X-CSE-ConnectionGUID: tJoVEplgSQeDKyi7EUs7qQ==
-X-CSE-MsgGUID: nPmW/HKWQ1Gw4O20Z0Xhgg==
+   d="scan'208";a="16608282"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:32:02 -0700
+X-CSE-ConnectionGUID: U/2pJQCPRJC4ITskhWN2LQ==
+X-CSE-MsgGUID: 4XtqxsDcS3CZf5M+vywxFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="44611032"
+   d="scan'208";a="75162876"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.93])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:28:22 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:31:58 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
  Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] cxl/acpi: Warn on unsupported platform config detection
-Date: Wed, 26 Jun 2024 12:28:19 +0200
-Message-ID: <21841700.4csPzL39Zc@fdefranc-mobl3>
-In-Reply-To: <667b4f4a46cc6_563929472@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Wed, 26 Jun 2024 12:31:54 +0200
+Message-ID: <5714543.ZASKD2KPVS@fdefranc-mobl3>
+In-Reply-To: <667b649a3a2d_5639294a3@dwillia2-xfh.jf.intel.com.notmuch>
 References:
  <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
- <667b4f4a46cc6_563929472@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZntcWQ7pMtOpuT4a@aschofie-mobl2>
+ <667b649a3a2d_5639294a3@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,84 +68,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-On Wednesday, June 26, 2024 1:14:18=E2=80=AFAM GMT+2 Dan Williams wrote:
+On Wednesday, June 26, 2024 2:45:14=E2=80=AFAM GMT+2 Dan Williams wrote:
+> Alison Schofield wrote:
+> > On Wed, Jun 19, 2024 at 02:59:41PM +0200, Fabio M. De Francesco wrote:
+> >=20
+> > Fabio,
+> >=20
+> > cxl/acpi does a lot of platform config work. "...unsupported platform
+> > config detection" gives no hint that this is about CHBS's or an eRCD.
+> > Please offer something more specific. Thanks.
+>=20
+> The message specifies "mixed Virtual Host and Restricted CXL Host
+> hierarchy" as the conflict. The relationship between RCH and eRCDs is an
+> exercise for the reader, and CHBS is an ACPI detail that really should
+> not be emitted in an error message. So I am struggling to imagine what a
+> more specific error message would be without paragraphs of backstory.
+>=20
+> All that is needed here is just enough words for when someone posts a
+> problem to the list that someone savvy can go "ah, you fell into this
+> specification hole where CXL 2.0 root port registers are difficult to
+> associate with an RCH config, thanks for the report now we know that
+> Linux needs to worry about this case".
+>=20
+I think that Alison raised a good point.
 
-Hi Dan,
-
-> Fabio M. De Francesco wrote:
-> > Each Host Bridge instance has a corresponding CXL Host Bridge Structure
-> > (CHBS) ACPI table that identifies its capabilities. CHBS tables can be
-> > two types: RCRB and CHBCR.
-> >=20
-> > If a Host Bridge is attached to a device that is operating in Restricted
-> > CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
-> > registers that describe its capabilities.
-> >=20
-> > However, the new (CXL 2.0+) Component registers (e.g., Extended Security
-> > Capability), can only be accessed by means of a base address published
-> > with a CHBCR.
-> >=20
-> > An algorithm to locate a CHBCR associated with an RCRB would be too
-> > invasive to land without some concrete motivation.
-> >=20
-> > Therefore, just print a message to inform of unsupported config.
-> >=20
-> > Count how many different CHBS "Version" types are detected by
-> > cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that s=
-um
-> > is greater than 1.
-> >=20
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/cxl/acpi.c | 20 ++++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
-> >=20
-
-snip
-
-> > @@ -533,6 +537,10 @@ static int cxl_get_chbs(struct device *dev, struct=
+If you have nothing against it, I'll change the subject line to: "cxl/acpi:=
 =20
-acpi_device *hb,
-> > =20
-> >  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs_iter,=20
-ctx);
-> > =20
-> > +	if (ctx->count > 1)
-> > +		/* Disclaim eRCD support given some component register=20
-may only be found via CHBCR */
-> > +		dev_info(dev, "Unsupported platform config, mixed=20
-Virtual Host and Restricted CXL Host hierarchy.");
->=20
-> I believe this is already queued, but my personal preference is that
-> multiline statements include brackets, or move the comment above the "if
-> ()", so either:
->=20
-> 	/* Disclaim eRCD support given some component register may only be=20
-found via CHBCR */
-> 	if (ctx->count > 1)
-> 		dev_info(dev, "Unsupported platform config, mixed Virtual=20
-Host and Restricted CXL Host hierarchy.");
->=20
-> ...or:
->=20
-> 	if (ctx->count > 1) {
-> 		/* Disclaim eRCD support given some component register=20
-may only be found via CHBCR */
-> 		dev_info(dev, "Unsupported platform config, mixed Virtual=20
-Host and Restricted CXL Host hierarchy.");
-> 	}
->=20
-> ...but don't spin the patch just for that fixup.
->=20
-I'll send v2 mainly for Alison's comments and so I will also add brackets h=
-ere=20
-(the second solution meets my preferences).
+Warn on mixed VH and eRCH hierarchies"
 
-Thank you,
+How about that change?
 
 =46abio
-
 
 
 
