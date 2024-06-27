@@ -1,241 +1,303 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930BC148820;
-	Thu, 27 Jun 2024 11:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A492A15ECDB
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Jun 2024 12:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719488020; cv=none; b=VgUkakwS7gy1tzHjiFNtiXx1uLV24tUtcx4EE4xMl7Ji+u7v3U1OKHboR9jJJmOlH6K+r8yPi9RdzWd0ajdMw+gKmVtRPG1/mu7Z71ywq/jCwSH+6yia0G4murUHcbTt1V7eIvyIvIWhFlPqMfbdOcabkfwQrAzUDKVrGq+k0pE=
+	t=1719492172; cv=none; b=d5FY18YhDplvbxR1pEzWt0bm/Njk0hDlKpeeaORTpumY2zUEW4pQ8x1r/AU1tmTtt1T/Vx1Q61QoR6leVhjauEiidVl3XwSpOV1DIHOckhOj1fIGLt/Zd28XYHP87W6R6gQz9VDg/T0Fw7i0cwc69ePOmnp3+U5Lwlz3aiK6Dwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719488020; c=relaxed/simple;
-	bh=u+k5a/2uqKJqfAihXtIvotddpIjx40GhhPHNZ53sBA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIgJbEsaeh1uUE6rfZzSA/kj4h4fmadO6EmcBNPkbesjL7OnZJ3Ja6c+0cn6hn56ijnSjGTD2IbSPYQ64o6tdX79KoY8ea8NAfPL7X0YbodP5XoCli4BAnkraHoz4lR0mjEQZetd0KPg46KFhqfD9uv/EKOICvO3Y/ZLE6nRLhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=luN+Tp9s; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FU/ogiTf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=luN+Tp9s; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FU/ogiTf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1719492172; c=relaxed/simple;
+	bh=KuSue5tuC9+mERblKbHaYaZdvjpu/VGJxQZzFn8VdtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xi+3sgNCsOaOu/5bj295rBu/ryMOllpixOyd4311WI+/OfoYIH4nd0T6QF3IdmQiWDJkuRJroSOrSg0FZtYzBF4Qpc1JM7hGlOA96wcXpiupvBM+eS3x0cZEpbyohzZe6mksOdtWt+Ka/Ix4xrFrJC1/KY2LAk5dNuQVLrlupds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eaekHEfj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="luN+Tp9s";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FU/ogiTf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="luN+Tp9s";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FU/ogiTf"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 63CBB210E4;
-	Thu, 27 Jun 2024 11:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719488010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaekHEfj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719492169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=t01R90XdldGO7anUbxHaqX31mDL54qz2uJ5POgVrV3w=;
-	b=luN+Tp9sneSe5aIFXVa7+ZSq0Oicz+3+MOwfHde/chD8438+KoisRUxzvb8D1z4WP3bOQz
-	VxJXxQobcBj2OgTk3kz6J+e5QHxwgaxsWTIxJyPUOxJrU9S0zo664JUIdm1g2C1oMaT2Eo
-	5OG+LDM1yT8dr4qZJCGZuc9F2nevJak=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719488010;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t01R90XdldGO7anUbxHaqX31mDL54qz2uJ5POgVrV3w=;
-	b=FU/ogiTfDgFmO7Vi9yS/KUQgM4cVEziltRx8Qob1nx8hoAQ2muOpZewJqlBhXE0NAdErzT
-	HKrH1hm28QpHz1Bg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=luN+Tp9s;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="FU/ogiTf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719488010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t01R90XdldGO7anUbxHaqX31mDL54qz2uJ5POgVrV3w=;
-	b=luN+Tp9sneSe5aIFXVa7+ZSq0Oicz+3+MOwfHde/chD8438+KoisRUxzvb8D1z4WP3bOQz
-	VxJXxQobcBj2OgTk3kz6J+e5QHxwgaxsWTIxJyPUOxJrU9S0zo664JUIdm1g2C1oMaT2Eo
-	5OG+LDM1yT8dr4qZJCGZuc9F2nevJak=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719488010;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t01R90XdldGO7anUbxHaqX31mDL54qz2uJ5POgVrV3w=;
-	b=FU/ogiTfDgFmO7Vi9yS/KUQgM4cVEziltRx8Qob1nx8hoAQ2muOpZewJqlBhXE0NAdErzT
-	HKrH1hm28QpHz1Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4A5F81384C;
-	Thu, 27 Jun 2024 11:33:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AmAgEgpOfWYhPwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 27 Jun 2024 11:33:30 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 988C8A08A2; Thu, 27 Jun 2024 13:33:28 +0200 (CEST)
-Date: Thu, 27 Jun 2024 13:33:28 +0200
-From: Jan Kara <jack@suse.cz>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
-	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
-	will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
-	dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
-Subject: Re: [PATCH 06/13] mm/memory: Add dax_insert_pfn
-Message-ID: <20240627113328.ozqkzhloufrpsdcr@quack3>
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <50013c1ee52b5bb1213571bff66780568455f54c.1719386613.git-series.apopple@nvidia.com>
+	bh=96xxGAOlLM6RcLKK7JVH3YWaxAXCN1qD6bLmnHwpP9w=;
+	b=eaekHEfj99HjCTu/aiZsokgGBqIz9Fy1UWQculiHkKbZPYlAW+W9mXYDpd0QLEvJwQ76/8
+	JH9Oyu5Ev985mS4ZYcXJrGkH8jOnwCOffOgjU+H2mmj83QwdzzUzt50k2dkdC9nOhqc41m
+	QQArplAnm8hCNtoXueS6wv5Ol/Tsxto=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-Oju9R-FYMUm3xdWlTe708w-1; Thu, 27 Jun 2024 08:42:48 -0400
+X-MC-Unique: Oju9R-FYMUm3xdWlTe708w-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-366e087a1e8so4119211f8f.1
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jun 2024 05:42:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719492166; x=1720096966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9ud/uQiAuYG/yErmjqEEC4JbOOjXx62yX+ti0vETMa4=;
+        b=Abky9gcza91wCwCHsIT3du7y+rdEmYi4l6V5woXKnWdZtEpKmbZP6sxQFToqNDtNbc
+         lycWwwGT/txkeoqoFlYPHxD5L1Q9SfGuVFLK6/HubWcQvrS7buX5piYbqGZu5hNgx+Xg
+         mLGNPYQAhHC/Ak/qtdy+GPppZgHJYfhdvtUJ9+wOaN8aaFo8F4W+CrGfpyDPK9rSQF/l
+         wYNurQvxozxXt8vfmDXQNTmGSML/CsviZzplReVu+vPgYDpVM5NbAqgOkUxXW80MEasH
+         sayR1t9yhxBoxCaOLFf9GSMsQdrWk/9ML54mOW6UXZcdeA8MVaX9tovXVCTElZRYZmqw
+         BMag==
+X-Forwarded-Encrypted: i=1; AJvYcCV3YfhT2BQNdIAhclamgNkWiAc/kXKGDIFL2xAVQI5gD2xJi2tffPJQapPKB/KvfSNgUE49vVuaXuCkRa5VnWcYN/64kkj2aPJo
+X-Gm-Message-State: AOJu0YzEmBss0bpjaTr2laahb+F2LTauU6Ue2EPOwBgG9A9GmLyuRujz
+	RtcmTVkRzDtCtEHRdmoK361adIUR/RqkFdeg8eHEi+opt2HnLYOytda1Wd0Kpaj0vMJ/i8bz9vu
+	RQ131xZwEmWFLiNxt6v3rAglcBWExkCqD1EtKHyHZBt0rzkAsnDp+CYgEJA==
+X-Received: by 2002:a05:6000:178f:b0:366:ee01:30d6 with SMTP id ffacd0b85a97d-366ee0134b8mr13801266f8f.49.1719492166075;
+        Thu, 27 Jun 2024 05:42:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGi4M28RQ7G+nNIOa63jszPtkUbL0i85I1grdzJ47TU94N/Yvxp+ZjoFF6ELbprBr588NWf0w==
+X-Received: by 2002:a05:6000:178f:b0:366:ee01:30d6 with SMTP id ffacd0b85a97d-366ee0134b8mr13801222f8f.49.1719492165589;
+        Thu, 27 Jun 2024 05:42:45 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c12esm1752427f8f.15.2024.06.27.05.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 05:42:45 -0700 (PDT)
+Date: Thu, 27 Jun 2024 14:42:44 +0200
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+ <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
+ <philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
+ <linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+ <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+ <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v3 03/11] hw/acpi: Move AML building code for Generic
+ Initiators to aml_build.c
+Message-ID: <20240627144244.27473a32@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240620160324.109058-4-Jonathan.Cameron@huawei.com>
+References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
+	<20240620160324.109058-4-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50013c1ee52b5bb1213571bff66780568455f54c.1719386613.git-series.apopple@nvidia.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL7pfqg7h1m44jupjp7nguhfec)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[intel.com,deltatee.com,google.com,suse.cz,ziepe.ca,arm.com,kernel.org,ellerman.id.au,gmail.com,linux.intel.com,infradead.org,mit.edu,huawei.com,redhat.com,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.linux.dev,kvack.org,nvidia.com,lst.de,fromorbit.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 63CBB210E4
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Spam-Level: 
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 27-06-24 10:54:21, Alistair Popple wrote:
-> Currently to map a DAX page the DAX driver calls vmf_insert_pfn. This
-> creates a special devmap PTE entry for the pfn but does not take a
-> reference on the underlying struct page for the mapping. This is
-> because DAX page refcounts are treated specially, as indicated by the
-> presence of a devmap entry.
-> 
-> To allow DAX page refcounts to be managed the same as normal page
-> refcounts introduce dax_insert_pfn. This will take a reference on the
-> underlying page much the same as vmf_insert_page, except it also
-> permits upgrading an existing mapping to be writable if
-> requested/possible.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+On Thu, 20 Jun 2024 17:03:11 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Overall this looks good to me. Some comments below.
+> Rather than attempting to create a generic function with mess of the two
+> different device handle types, use a PCI handle specific variant.  If the
+> ACPI handle form is needed then that can be introduced alongside this
+> with little duplicated code.
+>=20
+> Drop the PCIDeviceHandle in favor of just passing the bus, devfn
+> and segment directly.  devfn kept as a single byte because ARI means
+> that in cases this is just an 8 bit function number.
+>=20
+> Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> Link: https://lore.kernel.org/qemu-devel/20240618142333.102be976@imammedo=
+.users.ipa.redhat.com/
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+with typo fixed
+
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+
+>=20
 > ---
->  include/linux/mm.h |  4 ++-
->  mm/memory.c        | 79 ++++++++++++++++++++++++++++++++++++++++++-----
->  2 files changed, 76 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 9a5652c..b84368b 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1080,6 +1080,8 @@ int vma_is_stack_for_current(struct vm_area_struct *vma);
->  struct mmu_gather;
->  struct inode;
->  
-> +extern void prep_compound_page(struct page *page, unsigned int order);
+> v3: New patch based on Igor's comments on the endian fix.
+> ---
+>  include/hw/acpi/acpi_generic_initiator.h | 23 -------------
+>  include/hw/acpi/aml-build.h              |  4 +++
+>  hw/acpi/acpi_generic_initiator.c         | 39 ++-------------------
+>  hw/acpi/aml-build.c                      | 44 ++++++++++++++++++++++++
+>  4 files changed, 51 insertions(+), 59 deletions(-)
+>=20
+> diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/a=
+cpi_generic_initiator.h
+> index a304bad73e..7b98676713 100644
+> --- a/include/hw/acpi/acpi_generic_initiator.h
+> +++ b/include/hw/acpi/acpi_generic_initiator.h
+> @@ -19,29 +19,6 @@ typedef struct AcpiGenericInitiator {
+>      uint16_t node;
+>  } AcpiGenericInitiator;
+> =20
+> -/*
+> - * ACPI 6.3:
+> - * Table 5-81 Flags =E2=80=93 Generic Initiator Affinity Structure
+> - */
+> -typedef enum {
+> -    /*
+> -     * If clear, the OSPM ignores the contents of the Generic
+> -     * Initiator/Port Affinity Structure. This allows system firmware
+> -     * to populate the SRAT with a static number of structures, but only
+> -     * enable them as necessary.
+> -     */
+> -    GEN_AFFINITY_ENABLED =3D (1 << 0),
+> -} GenericAffinityFlags;
+> -
+> -/*
+> - * ACPI 6.3:
+> - * Table 5-80 Device Handle - PCI
+> - */
+> -typedef struct PCIDeviceHandle {
+> -    uint16_t segment;
+> -    uint16_t bdf;
+> -} PCIDeviceHandle;
+> -
+>  void build_srat_generic_pci_initiator(GArray *table_data);
+> =20
+>  #endif
+> diff --git a/include/hw/acpi/aml-build.h b/include/hw/acpi/aml-build.h
+> index a3784155cb..9ba3a21c13 100644
+> --- a/include/hw/acpi/aml-build.h
+> +++ b/include/hw/acpi/aml-build.h
+> @@ -486,6 +486,10 @@ Aml *build_crs(PCIHostState *host, CrsRangeSet *rang=
+e_set, uint32_t io_offset,
+>  void build_srat_memory(GArray *table_data, uint64_t base,
+>                         uint64_t len, int node, MemoryAffinityFlags flags=
+);
+> =20
+> +void build_srat_pci_generic_initiator(GArray * table_date, int node,
+
+s/table_date/table_data/
+
+> +                                      uint16_t segment, uint8_t bus,
+> +                                      uint8_t devfn);
 > +
-
-You don't seem to use this function in this patch?
-
-> diff --git a/mm/memory.c b/mm/memory.c
-> index ce48a05..4f26a1f 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1989,14 +1989,42 @@ static int validate_page_before_insert(struct page *page)
+>  void build_slit(GArray *table_data, BIOSLinker *linker, MachineState *ms=
+,
+>                  const char *oem_id, const char *oem_table_id);
+> =20
+> diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_init=
+iator.c
+> index 4a02c19468..7665b16107 100644
+> --- a/hw/acpi/acpi_generic_initiator.c
+> +++ b/hw/acpi/acpi_generic_initiator.c
+> @@ -74,40 +74,11 @@ static void acpi_generic_initiator_class_init(ObjectC=
+lass *oc, void *data)
+>          acpi_generic_initiator_set_node, NULL, NULL);
 >  }
->  
->  static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
-> -			unsigned long addr, struct page *page, pgprot_t prot)
-> +			unsigned long addr, struct page *page, pgprot_t prot, bool mkwrite)
+> =20
+> -/*
+> - * ACPI 6.3:
+> - * Table 5-78 Generic Initiator Affinity Structure
+> - */
+> -static void
+> -build_srat_generic_pci_initiator_affinity(GArray *table_data, int node,
+> -                                          PCIDeviceHandle *handle)
+> -{
+> -    uint8_t index;
+> -
+> -    build_append_int_noprefix(table_data, 5, 1);  /* Type */
+> -    build_append_int_noprefix(table_data, 32, 1); /* Length */
+> -    build_append_int_noprefix(table_data, 0, 1);  /* Reserved */
+> -    build_append_int_noprefix(table_data, 1, 1);  /* Device Handle Type:=
+ PCI */
+> -    build_append_int_noprefix(table_data, node, 4);  /* Proximity Domain=
+ */
+> -
+> -    /* Device Handle - PCI */
+> -    build_append_int_noprefix(table_data, handle->segment, 2);
+> -    build_append_int_noprefix(table_data, PCI_BUS_NUM(handle->bdf), 1);
+> -    build_append_int_noprefix(table_data, PCI_BDF_TO_DEVFN(handle->bdf),=
+ 1);
+> -    for (index =3D 0; index < 12; index++) {
+> -        build_append_int_noprefix(table_data, 0, 1);
+> -    }
+> -
+> -    build_append_int_noprefix(table_data, GEN_AFFINITY_ENABLED, 4); /* F=
+lags */
+> -    build_append_int_noprefix(table_data, 0, 4);     /* Reserved */
+> -}
+> -
+>  static int build_all_acpi_generic_initiators(Object *obj, void *opaque)
 >  {
->  	struct folio *folio = page_folio(page);
-> +	pte_t entry = ptep_get(pte);
->  
-> -	if (!pte_none(ptep_get(pte)))
-> +	if (!pte_none(entry)) {
-> +		if (mkwrite) {
-> +			/*
-> +			 * For read faults on private mappings the PFN passed
-> +			 * in may not match the PFN we have mapped if the
-> +			 * mapped PFN is a writeable COW page.  In the mkwrite
-> +			 * case we are creating a writable PTE for a shared
-> +			 * mapping and we expect the PFNs to match. If they
-> +			 * don't match, we are likely racing with block
-> +			 * allocation and mapping invalidation so just skip the
-> +			 * update.
-> +			 */
-> +			if (pte_pfn(entry) != page_to_pfn(page)) {
-> +				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(entry)));
-> +				return -EFAULT;
-> +			}
-> +			entry = maybe_mkwrite(entry, vma);
-> +			entry = pte_mkyoung(entry);
-> +			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-> +				update_mmu_cache(vma, addr, pte);
-> +			return 0;
-> +		}
->  		return -EBUSY;
-
-If you do this like:
-
-		if (!mkwrite)
-			return -EBUSY;
-
-You can reduce indentation of the big block and also making the flow more
-obvious...
-
-> +	}
+>      MachineState *ms =3D MACHINE(qdev_get_machine());
+>      AcpiGenericInitiator *gi;
+>      GArray *table_data =3D opaque;
+> -    PCIDeviceHandle dev_handle;
+>      PCIDevice *pci_dev;
+>      Object *o;
+> =20
+> @@ -130,13 +101,9 @@ static int build_all_acpi_generic_initiators(Object =
+*obj, void *opaque)
+>      }
+> =20
+>      pci_dev =3D PCI_DEVICE(o);
+> -
+> -    dev_handle.segment =3D 0;
+> -    dev_handle.bdf =3D PCI_BUILD_BDF(pci_bus_num(pci_get_bus(pci_dev)),
+> -                                   pci_dev->devfn);
+> -
+> -    build_srat_generic_pci_initiator_affinity(table_data,
+> -                                              gi->node, &dev_handle);
+> +    build_srat_pci_generic_initiator(table_data, gi->node, 0,
+> +                                     pci_bus_num(pci_get_bus(pci_dev)),
+> +                                     pci_dev->devfn);
+> =20
+>      return 0;
+>  }
+> diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
+> index 6d4517cfbe..968b654e58 100644
+> --- a/hw/acpi/aml-build.c
+> +++ b/hw/acpi/aml-build.c
+> @@ -1938,6 +1938,50 @@ void build_srat_memory(GArray *table_data, uint64_=
+t base,
+>      build_append_int_noprefix(table_data, 0, 8); /* Reserved */
+>  }
+> =20
+> +/*
+> + * ACPI Spec Revision 6.3
+> + * Table 5-80 Device Handle - PCI
+> + */
+> +static void build_append_srat_pci_device_handle(GArray *table_data,
+> +                                                uint16_t segment,
+> +                                                uint8_t bus, uint8_t dev=
+fn)
+> +{
+> +    /* PCI segment number */
+> +    build_append_int_noprefix(table_data, segment, 2);
+> +    /* PCI Bus Device Function */
+> +    build_append_int_noprefix(table_data, bus, 1);
+> +    build_append_int_noprefix(table_data, devfn, 1);
+> +    /* Reserved */
+> +    build_append_int_noprefix(table_data, 0, 12);
+> +}
 > +
->  	/* Ok, finally just insert the thing.. */
->  	folio_get(folio);
-> +	if (mkwrite)
-> +		entry = maybe_mkwrite(mk_pte(page, prot), vma);
-> +	else
-> +		entry = mk_pte(page, prot);
+> +/*
+> + * ACPI spec, Revision 6.3
+> + * 5.2.16.6 Generic Initiator Affinity Structure
+> + *    With PCI Device Handle.
+> + */
+> +void build_srat_pci_generic_initiator(GArray *table_data, int node,
+> +                                      uint16_t segment, uint8_t bus,
+> +                                      uint8_t devfn)
+> +{
+> +    /* Type */
+> +    build_append_int_noprefix(table_data, 5, 1);
+> +    /* Length */
+> +    build_append_int_noprefix(table_data, 32, 1);
+> +    /* Reserved */
+> +    build_append_int_noprefix(table_data, 0, 1);
+> +    /* Device Handle Type: PCI */
+> +    build_append_int_noprefix(table_data, 1, 1);
+> +    /* Proximity Domain */
+> +    build_append_int_noprefix(table_data, node, 4);
+> +    /* Device Handle */
+> +    build_append_srat_pci_device_handle(table_data, segment, bus, devfn)=
+;
+> +    /* Flags - GI Enabled */
+> +    build_append_int_noprefix(table_data, 1, 4);
+> +    /* Reserved */
+> +    build_append_int_noprefix(table_data, 0, 4);
+> +}
+> +
+>  /*
+>   * ACPI spec 5.2.17 System Locality Distance Information Table
+>   * (Revision 2.0 or later)
 
-I'd prefer:
-
-	entry = mk_pte(page, prot);
-	if (mkwrite)
-		entry = maybe_mkwrite(entry, vma);
-
-but I don't insist. Also insert_pfn() additionally has pte_mkyoung() and
-pte_mkdirty(). Why was it left out here?
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
