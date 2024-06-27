@@ -1,173 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2084.outbound.protection.outlook.com [40.107.92.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A811A0B1A;
-	Thu, 27 Jun 2024 22:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719527239; cv=none; b=YT1XbLcO8bDK7TFDG3l8QSsfye2kGfsfJs5dAmZ1Zqwz8/IhVJEudq/5J679fJNQ0VJ+mKgsMt1qhe0qDQl9l2f0M5W11HiXbbqOusOIL65BWiBBIxUcMaNkcf569gtoiN+YLIBFj9MXTWAbSkhIKH2I/LdFxu8PqMpO6KYjRkw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719527239; c=relaxed/simple;
-	bh=6ZRjC23wobObDdFfd8zFQZZ9Z3PFbjqgjYHg7T/vNQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3tRlmK9locKzllgeKTYnqqAGZBEgMOyR85QBastr6v6CW3uCynoyPDvmItjonLNCKCFTjlN+j/StE7GC/wj89LjMAAcnOlLdlSeT5zf1wtqO7d9qr+eH6Sa3rnoZtx6iUhDZSDoyUCUHQbwAHyOg35pIg2Vic/w17gRILsblfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdGaOk7T; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798C9266D4;
+	Thu, 27 Jun 2024 22:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719528412; cv=fail; b=HT8p2hgXyJl82wkUfroZ4oDl2XFmWv2jYzVvzp7aLSjb9KvgjRcQYGs+2pWCWppItamCAhOD+SNxNs5N4YuCU/hNAV/FunXHnfUF3Jyj5Uj2R61Xn3W0BDoteJKVpJ/fIyMF119d7ehcZ79ta3en2mFHH0x4Wu0Bgwnr9OtvPBI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719528412; c=relaxed/simple;
+	bh=Xk/U/COJhE9KQ8F3vHYU89biH/MAN18+WnuE7KJ8zV8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gMLGsTejEYjx1RIn1B5+GhylKL+reWg63zjEVD8Nre+Aub6+Tx3cetTqkr1JQdLuiLPHDsDISRKBuT4hOVfJPtKjezkrKyt6F7pD29imwfuRu/Yabe7CwZEUKY4AIPnd1Sh9lDf5naho/YON0jt+4KUA1H63waE0kQEnSVjFmXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nFNTT1xm; arc=fail smtp.client-ip=40.107.92.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdGaOk7T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719527238; x=1751063238;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6ZRjC23wobObDdFfd8zFQZZ9Z3PFbjqgjYHg7T/vNQU=;
-  b=fdGaOk7TauulQ2l/YNo97fXu0aFQxvtFw3EOuRxdQa9FwvjCk054Z0xL
-   8Ti4IaU56K7y/Jk8/hKmbgRSHfNHALle0L1F7Gew5EOzceKqMEw5Jt918
-   +XJu2A8asLzmCxmSTHAW3j7KQ8RpgeR8e93LQPyEXLRRvl1eenjABYLxg
-   dUCvT6yhpjflRTQTB4kjKiozDkvNDX4gqQ/oN76MEC8bWGGz+zIGd7WY7
-   jjcwvSCgKWW6kJAVRXKdBgppMyqMIjjWIcZQwBeDynEeGwvQ5KmK/s454
-   m26I30sUUoOAsD36Adymlj3LvKsnsVpLEawraNmCm4b6ueCYyc0p1Cpde
-   Q==;
-X-CSE-ConnectionGUID: JGpX81p4QiyXlcNTi6+wOw==
-X-CSE-MsgGUID: i5cLKlcRQn2IIYmfAyVBCA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16369833"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16369833"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 15:27:17 -0700
-X-CSE-ConnectionGUID: zkBVUXQWQjyqQHVWEEfu0Q==
-X-CSE-MsgGUID: fngSrsCqRteimFpQDSTiSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="44625380"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Jun 2024 15:27:10 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMxa7-000Gb0-24;
-	Thu, 27 Jun 2024 22:27:07 +0000
-Date: Fri, 28 Jun 2024 06:26:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH 07/13] huge_memory: Allow mappings of PUD sized pages
-Message-ID: <202406280637.147dyRrV-lkp@intel.com>
-References: <bd332b0d3971b03152b3541f97470817c5147b51.1719386613.git-series.apopple@nvidia.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nFNTT1xm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a0c0dkuClZu9+hZLoNdJUEBd1DJIickn7WW8rE0N+Hr++L0MFjq/8ZFUxwsgON56Z+7Xfx36bSK6PkO7bfhhJZY+JpmsHym4s8Pc1+aedf+ORAgxZiVrsPedZS1frqOfdRGxycLAJcKzHErfbEnv77HjzxHPBSpX1FLKUu3ugGQIn7Xm1pwF+H7DkSxO1yBjdXjwaDFiB+MIYY5cG8CVb+zlGPlgudM94n94jusHx7kCLHJ1iwPgnjHloEdvWzGMuARmvkxqAckD3GvNLRly1UYYntVbHCq2IqsfSrgw0x9mIMwhBVPSXyeL3sK3+7caPuPeqOPG/DxUojFf60km3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vvzG004Bs3u6FDd5r8RPyGB8JMXt5AqgJZax6DeWGU8=;
+ b=KLLHQqv1IXK/1Xrq9Er8cmausL2n9CuE41dbFlO8YpUZMf9jCkHNgKn7pBFHzGu8UQaDWU7qQpwl8op23/5kWB9QU62qAByhSoqd/J1ThaZ56OCKNUJtSGYP2qFd3OlUt87TWXRS1ankLixWUxJDVGPzTxgpYVQhBFVX6zx06sCcFM5FEG6Hx1hLThkJKl1Bjo71g5UZeNypCHh+G3Nc6A874uWoJGXDvhd9LuWuU9+3h9zVkYnYJS3H95jV7bCtyHFeklsoZika2y2CVoQ+BH4pMPlc0f4isGubxltPFXI9jw1NHrhOg5Vx6TO8/4XYhcwRAAhvooGFCaQI+lS2CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vvzG004Bs3u6FDd5r8RPyGB8JMXt5AqgJZax6DeWGU8=;
+ b=nFNTT1xmQBJn84ODjCQv7BL7W9UmdeFqERMGm6zHX9ZlNxWEXLfsuArayIyMOY6pkvFihznq12l8SgyVUlMZ0899yEvJ786zIz4tbKiU1S5v1DO06i8jHaevwHQDr6Miy38NixyAdWceIfbACB/EJTY3MsZxP0zeLZMmtNOIX+8=
+Received: from DS7PR03CA0290.namprd03.prod.outlook.com (2603:10b6:5:3ad::25)
+ by MW3PR12MB4395.namprd12.prod.outlook.com (2603:10b6:303:5c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.35; Thu, 27 Jun
+ 2024 22:46:47 +0000
+Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
+ (2603:10b6:5:3ad:cafe::2c) by DS7PR03CA0290.outlook.office365.com
+ (2603:10b6:5:3ad::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.25 via Frontend
+ Transport; Thu, 27 Jun 2024 22:46:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 22:46:47 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Jun
+ 2024 17:46:44 -0500
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Alison Schofield <alison.schofield@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Robert Richter
+	<rrichter@amd.com>
+Subject: [PATCH 0/5] cxl: Address translation for HDM decoding
+Date: Fri, 28 Jun 2024 00:46:09 +0200
+Message-ID: <20240627224615.854162-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd332b0d3971b03152b3541f97470817c5147b51.1719386613.git-series.apopple@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|MW3PR12MB4395:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc1205ec-81dd-4aef-4b56-08dc96fb069a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SPANVFQSluY8PPs2GSQ3TOGJ6RvrZsp2aKpFNjrHaKAEqh+ily9IK9+G17+k?=
+ =?us-ascii?Q?cUymrHdSSi1sAlmFsEtqfBNOzYwEgBPjIM1e4ZCG3nQKbEnOu7MQ6vDl7+71?=
+ =?us-ascii?Q?QpaHOx8XpCMXvQkkBq1Zb2ugHKVlHGNJKv2YuCfv1FMf+hjjvkssSqjBxKBC?=
+ =?us-ascii?Q?mbXN02UFzil8JMjnuZNcqiz3subvDw4t4KRVe2iMYAWcK8AIft/uVFZ+8zan?=
+ =?us-ascii?Q?ALcWhu3QXwUbb/Mvx+dCOV//TYA3zocdiIr11vee7hHzm0C+a2QQfQWDdYVa?=
+ =?us-ascii?Q?vuVfWXSXKMhTbr7qOh6E6TMOrkc9UiyokE85gY1CML73uwlxKTlm9AqLelKR?=
+ =?us-ascii?Q?NFOIAceBFsHGo38MyxNP5DA7koIxACPynzi07dRz38ZZf9Cirq6g9N9IBUbU?=
+ =?us-ascii?Q?6DcFGhJICWC6jc9oHksDt6IolsPOa2qIcuujZ+leY+KKuCTS5RMrh9Ty9rAd?=
+ =?us-ascii?Q?lscPByp5LbDDYmY0SMBhuftkXx5iXv9OE5mCyZnqHMqFwPzsC919/NAptog+?=
+ =?us-ascii?Q?CvtuThxxQ4TL3Hd1yE2ly8USVdA2n1DiJU1Gv4kneUCnUVDA8s/bKwKd6/x4?=
+ =?us-ascii?Q?cGzXjorQybZS8na5aemkjah5MCJr2zyKJor6X0GgH+TtlbccqFJ0U1Nyc8Wr?=
+ =?us-ascii?Q?QgTeywDU7aqj9XsKOZJimCR2j6NoGXJIkg0pMh4VJNtBleom3D2SoVVfOysg?=
+ =?us-ascii?Q?gPsPiKvEhlghPSWf6jAXR+3WAh1xGGlApiN5gcVSye69jH2ZL27vdn0wa9AD?=
+ =?us-ascii?Q?dxZOn8dcG4N+p0SSjw3kgiSchYPU6BBvkd5SMZ9Nk76hFQUaxkGVCh/MSqA0?=
+ =?us-ascii?Q?scLhmqkmScJyawjYk3h1n3hGa20GtTr4InFYTKcWZjVvhqaCpdWoj4+PP2oW?=
+ =?us-ascii?Q?FdEJuOS7uPXx7zn7yAdDxySlaM66NwbDzIMGQR4x5KKLdNjLQd8/Pw6ALpNt?=
+ =?us-ascii?Q?12aQrXj0Xr0DbH0ltrC4nxeBNsEOppdMOwpiRnMAE51j2ptoQkWVafbN2twk?=
+ =?us-ascii?Q?KcBtt6yyInJ+slzMWpdbGoc+HW1zv46g9YzPInedS2nWgTWkhfOtlVaYEzmE?=
+ =?us-ascii?Q?SM+vozVwf/Q2aye2JA7Bi6JnoAGSycue0ca0cK/SB+ru3nK53IHFI5eW9Pwe?=
+ =?us-ascii?Q?yNhiox2SRZpUyJ/ujG6H3RBtyQtSWIHf12lf/pN49N5/tpl4PutMKWvxHwST?=
+ =?us-ascii?Q?R4XJFS3DJJTGHbNv6B2dcwOh8KFKKokJkp6SfiWfxk9y6/tm4tcshWK0VwQL?=
+ =?us-ascii?Q?b66FTbG8vX0nUNIE6Akef7UpOPB5T07/kbvmkM4BLVtB0L2Xo3pglBShLzJR?=
+ =?us-ascii?Q?8KpGH0/mX0iH6wA5ccEX+kJkX6u8vJg0OWVQt95TcW3xmvpQQqKecfYFtuv2?=
+ =?us-ascii?Q?Jpc8cq1xqokjyfpmnQ8YAsh8ifcT4NPE9p87KrjPSBw3OFJ1seDOmyyb+m5o?=
+ =?us-ascii?Q?s9HAVux0hbAXHDRTstXnX5mFS59g4Olw?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 22:46:47.0406
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc1205ec-81dd-4aef-4b56-08dc96fb069a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000014A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4395
 
-Hi Alistair,
+Default expectation of Linux is that HPA == SPA, which means that
+hardware addresses in the decoders are the same as the kernel sees
+them. However, there are platforms where this is not the case and an
+address translation between decoder's (HPA) and the system's physical
+addresses (SPA) is needed.
 
-kernel test robot noticed the following build errors:
+This series implements address translation for HDM decoding. The
+implementation follows the rule that the representation of hardware
+address ranges in the kernel are all SPA. If decoder registers (HDM
+decoder cap or register range) are not SPA, a base offset must be
+applied. Translation happens when accessing the registers back and
+forth. After a read access an address will be converted to SPA and
+before a write access the programmed address is translated from an
+SPA. The decoder register access can be easily encapsulated by address
+translation and thus there are only a few places where translation is
+needed and the code must be changed. This is implemented in patch #2,
+patch #1 is a prerequisite.
 
-[auto build test ERROR on f2661062f16b2de5d7b6a5c42a9a5c96326b8454]
+Address translation is restricted to platforms that need it. As such a
+platform check is needed and a flag is introduced for this (patch #3).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Popple/mm-gup-c-Remove-redundant-check-for-PCI-P2PDMA-page/20240627-191709
-base:   f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-patch link:    https://lore.kernel.org/r/bd332b0d3971b03152b3541f97470817c5147b51.1719386613.git-series.apopple%40nvidia.com
-patch subject: [PATCH 07/13] huge_memory: Allow mappings of PUD sized pages
-config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20240628/202406280637.147dyRrV-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280637.147dyRrV-lkp@intel.com/reproduce)
+For address translation the base offset must be determined for the
+memory domain. Depending on the platform there are various options for
+this. The address range in the CEDT's CFWMS entry of the CXL host
+bridge can be used to determine the decoder's base address (patch
+#4). This is enabled for AMD Zen4 platforms (patch #5).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406280637.147dyRrV-lkp@intel.com/
+Robert Richter (5):
+  cxl/hdm: Moving HDM specific code to core/hdm.c.
+  cxl/hdm: Implement address translation for HDM decoding
+  cxl/acpi: Add platform flag for HPA address translation
+  cxl/hdm: Setup HPA base for address translation using the HPA window
+    in CFMWS
+  cxl/acpi: Enable address translation for Zen4 platforms
 
-All errors (new ones prefixed by >>):
-
->> mm/rmap.c:1513:37: error: call to '__compiletime_assert_279' declared with 'error' attribute: BUILD_BUG failed
-    1513 |         __folio_add_file_rmap(folio, page, HPAGE_PUD_NR, vma, RMAP_LEVEL_PUD);
-         |                                            ^
-   include/linux/huge_mm.h:111:26: note: expanded from macro 'HPAGE_PUD_NR'
-     111 | #define HPAGE_PUD_NR (1<<HPAGE_PUD_ORDER)
-         |                          ^
-   include/linux/huge_mm.h:110:26: note: expanded from macro 'HPAGE_PUD_ORDER'
-     110 | #define HPAGE_PUD_ORDER (HPAGE_PUD_SHIFT-PAGE_SHIFT)
-         |                          ^
-   include/linux/huge_mm.h:97:28: note: expanded from macro 'HPAGE_PUD_SHIFT'
-      97 | #define HPAGE_PUD_SHIFT ({ BUILD_BUG(); 0; })
-         |                            ^
-   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:498:2: note: expanded from macro '_compiletime_assert'
-     498 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^
-   include/linux/compiler_types.h:491:4: note: expanded from macro '__compiletime_assert'
-     491 |                         prefix ## suffix();                             \
-         |                         ^
-   <scratch space>:72:1: note: expanded from here
-      72 | __compiletime_assert_279
-         | ^
-   mm/rmap.c:1660:35: error: call to '__compiletime_assert_280' declared with 'error' attribute: BUILD_BUG failed
-    1660 |         __folio_remove_rmap(folio, page, HPAGE_PUD_NR, vma, RMAP_LEVEL_PUD);
-         |                                          ^
-   include/linux/huge_mm.h:111:26: note: expanded from macro 'HPAGE_PUD_NR'
-     111 | #define HPAGE_PUD_NR (1<<HPAGE_PUD_ORDER)
-         |                          ^
-   include/linux/huge_mm.h:110:26: note: expanded from macro 'HPAGE_PUD_ORDER'
-     110 | #define HPAGE_PUD_ORDER (HPAGE_PUD_SHIFT-PAGE_SHIFT)
-         |                          ^
-   include/linux/huge_mm.h:97:28: note: expanded from macro 'HPAGE_PUD_SHIFT'
-      97 | #define HPAGE_PUD_SHIFT ({ BUILD_BUG(); 0; })
-         |                            ^
-   note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
-   include/linux/compiler_types.h:498:2: note: expanded from macro '_compiletime_assert'
-     498 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^
-   include/linux/compiler_types.h:491:4: note: expanded from macro '__compiletime_assert'
-     491 |                         prefix ## suffix();                             \
-         |                         ^
-   <scratch space>:79:1: note: expanded from here
-      79 | __compiletime_assert_280
-         | ^
-   2 errors generated.
+ drivers/cxl/acpi.c      |  16 +++
+ drivers/cxl/core/core.h |   2 +
+ drivers/cxl/core/hdm.c  | 245 ++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/core/pci.c  | 119 +------------------
+ drivers/cxl/cxl.h       |   2 +
+ drivers/cxl/cxlmem.h    |   4 +
+ drivers/cxl/cxlpci.h    |   3 -
+ 7 files changed, 262 insertions(+), 129 deletions(-)
 
 
-vim +1513 mm/rmap.c
-
-  1498	
-  1499	/**
-  1500	 * folio_add_file_rmap_pud - add a PUD mapping to a page range of a folio
-  1501	 * @folio:	The folio to add the mapping to
-  1502	 * @page:	The first page to add
-  1503	 * @vma:	The vm area in which the mapping is added
-  1504	 *
-  1505	 * The page range of the folio is defined by [page, page + HPAGE_PUD_NR)
-  1506	 *
-  1507	 * The caller needs to hold the page table lock.
-  1508	 */
-  1509	void folio_add_file_rmap_pud(struct folio *folio, struct page *page,
-  1510			struct vm_area_struct *vma)
-  1511	{
-  1512	#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> 1513		__folio_add_file_rmap(folio, page, HPAGE_PUD_NR, vma, RMAP_LEVEL_PUD);
-  1514	#else
-  1515		WARN_ON_ONCE(true);
-  1516	#endif
-  1517	}
-  1518	
-
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
