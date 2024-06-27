@@ -1,170 +1,138 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2047.outbound.protection.outlook.com [40.107.94.47])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553481A38F7;
-	Thu, 27 Jun 2024 22:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719528431; cv=fail; b=UFgJPWBcueLW7tyVOHcvsGWSwJidSCchDiSHeqoUHLoEpPFwik3p2h8OrPBqmhLjxnQ/UgG96YrSylKhLdirUxuIkc12ptHI0jtAABqWVwRDZ85LGv0UZqqrTT5SS8qyOmnyipSJunqcMJEns0IYI2EFMzfyHFWH20LOvTZhu8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719528431; c=relaxed/simple;
-	bh=y1YlIocZOLHYqs64W3MaAOtOak9da4X81375izGzd3I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bHubQ4MQDTrJZsnp5MwP1Yr3p93lSEaQXAooLMKIPIfclyKOl4FrEumBlEaXeq10Fo+qHlBTOE1216kiTyQaUzeaFtpizN9RtKbgrSLkBPj6ZdlytVSmdLtGAwgJ2OMJBfLulwcUH4xt991Id/SzHjGKRvL2rakz+SekGW+uy4M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YtEcPvVP; arc=fail smtp.client-ip=40.107.94.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BABF50297;
+	Thu, 27 Jun 2024 23:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719529531; cv=none; b=Ep3xYoUSzKuDaRQoJTUVztyxbE3LMhkbNMsNPmzQo2JB8X1EAwegib/u2p1PZfWMCd/ffuojAXG7qdv5G9n4Z1CM9MrGdhMs1TFdJlntB2AFSYMo/h6b+ILrkvgf52plt5JgXDMUgEQHWjHjcEmW4f+Wx3b0H5c8Ro3UWNDNKDY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719529531; c=relaxed/simple;
+	bh=+naB5/Q042PFFIXI5mElAZ8RiZyXqp0O9pcDtXADfas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfxDymuN7P8wRZY8ytb9LO4N55W+FQrQmM94GsqDmIe8vpVuZTbAJ1iTYOBUL+Pzg+oqV2EhDFa8x0bfKSDwZVrGtU8ix9rH7R4BcdxXWVncegYCNZbuONGA3uZ8NSI+lJ+W06Y5flxfvQ3j9FZuL49UdnGIY0XGkkR3RjEsPuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxNCqxjM; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YtEcPvVP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mvly4M6+pCTXo33+CTuwcgFB9OtgacpNsgt9jEInHL9+JmEy6cWmlTzUTALCquMLOCWRvHh75Ai5ICkcFmF5eC7Dhrcwzw53cnr97u2OURAVSAlcj4ymziSfBlSE5BYK7lZDYtfTT4eTyjAF0VwpW41SdnMpnLamMgiYSZz9+Ho8eaP9+49zZ67ejrmgrdBlB3SL7UP2HOoS7+9964XOEpZFiiT9dMVzmRzNWvRJKI4a+2iC9kJhKmaquEW3XerHI/tnXMiQb8NnP3hH1IXNd3IhMt45XP7aHUBFcn6m2brvtXBSUfHGqzDAeIe/wvaUnA2NE97wjhcvl6iMxO95ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F3qmXz4gZ0HjkEfCB1zzSsXWEpHs2j4+MXlhD9tpE/o=;
- b=NuFDhVm5477tjniJX8iPrnrQc5Fu2WX4KHE/TpK0cw7IHy7baQA+6k2vyY0LevyRCuB+ZQnTv4Q7I4sGE8IFdGJQcDum25gP+H1KIFCGuzBdPrn4XwuZbLzCbd7ZfM6mthMBabEUG+egOs9l1IYlkVvP3zEkL+AEZ+VReH3CtxcGBPlz6EX7xXVBI4/Q6FWZHbWx5cqO+i0HaB2C2b5I8ct9VheZzrVMJ4qZoh6HaVnyocFZfMZt7UMOpx8HnfTrRUAeAydco+jK4fYSA/8eKoHfQ6FeE2LLMJLzBWL/Yyy1kaNXyC0KA6syYr8XAgjHsfM6OYLenZdKs4aUCKwumg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3qmXz4gZ0HjkEfCB1zzSsXWEpHs2j4+MXlhD9tpE/o=;
- b=YtEcPvVP1gpkc04ID59+AmY5b5Tj3YpHlkno1z3tLZkqwc9ne3RuZw/uMREaZ4A7IUJARxb/JhCfmHlzUUGXxRRuOPz5XgrIYTt2IHN+A8dyQzdwUe0qpXRFSJhXzRzAXiBZ4a7wG6J7bD/MXWC5bMYIlccp5t2woKlZfXr+nK4=
-Received: from DS7PR03CA0279.namprd03.prod.outlook.com (2603:10b6:5:3ad::14)
- by DM4PR12MB6086.namprd12.prod.outlook.com (2603:10b6:8:b2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Thu, 27 Jun
- 2024 22:47:04 +0000
-Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
- (2603:10b6:5:3ad:cafe::2d) by DS7PR03CA0279.outlook.office365.com
- (2603:10b6:5:3ad::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26 via Frontend
- Transport; Thu, 27 Jun 2024 22:47:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 22:47:04 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Jun
- 2024 17:47:01 -0500
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Robert
- Richter" <rrichter@amd.com>
-Subject: [PATCH 5/5] cxl/acpi: Enable address translation for Zen4 platforms
-Date: Fri, 28 Jun 2024 00:46:14 +0200
-Message-ID: <20240627224615.854162-6-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240627224615.854162-1-rrichter@amd.com>
-References: <20240627224615.854162-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxNCqxjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719529528; x=1751065528;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+naB5/Q042PFFIXI5mElAZ8RiZyXqp0O9pcDtXADfas=;
+  b=YxNCqxjMvp1TVv7e3RYGxMe58CoF8hDaViA99vtgjL3Ayb2qrcuBRkBf
+   jm9l2uCveUeuOtzn8GV5AYj7ppHnAMr6+CJNLF9otqYy4KM+AcIpW1jdz
+   Uepw/2PsytLcUf5xlF7yHjIvxJ2Bk0pz3dDficHb+HfsmYuUq+InOoK32
+   acUmlERiksdhNd8aZVzJBGyTS9mmD+dHtsAWI9ir9f0b8YKxosAGHUZbb
+   a2W4aK1Tw0CsgxKI4qCV82rO4IOAoXEMbElRoXicHa9BVblb004NC7APT
+   e0UBSZoOEjKvspZBKoUXGeJ2iaezWf31jHsct5W38yHhnH237HEOib99x
+   Q==;
+X-CSE-ConnectionGUID: ruzR2WtBQnaWSwcH2/CGiw==
+X-CSE-MsgGUID: LABWpI5EQliDTtgJutK6lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="20456938"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="20456938"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 16:05:27 -0700
+X-CSE-ConnectionGUID: TA8xWjJQSumhP3m4MOnxKA==
+X-CSE-MsgGUID: DnUjlU0JRaaOI2HUnzZ+pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="44384637"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 27 Jun 2024 16:05:20 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sMyB4-000Gbt-16;
+	Thu, 27 Jun 2024 23:05:18 +0000
+Date: Fri, 28 Jun 2024 07:04:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
+Cc: oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
+	mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+	ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
+	tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com,
+	peterx@redhat.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com
+Subject: Re: [PATCH 13/13] mm: Remove devmap related functions and page table
+ bits
+Message-ID: <202406280658.1pp5cW2f-lkp@intel.com>
+References: <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|DM4PR12MB6086:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0ba8ae8-6b44-40c4-a03e-08dc96fb1108
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KL5JbvHaL3EkObqoU/CKLea0OSeDxxcwamqYeCfLOd0lneLL1VfsVlcFTjaz?=
- =?us-ascii?Q?2rsU43Q6yvbQOZqpTqov13W3oiq7swmy2FnRC8QMWTgF5CjpvxL99b5omzP/?=
- =?us-ascii?Q?qcGoMmZ0KPrZJomUbgBUzSu67DDa+CgL534Y4JbhsuAeQg/tyLezWo4JLPy8?=
- =?us-ascii?Q?jO0pPL5l+5okdSo7/uHwW/BmKqkGjHDcKs8dOr4mYR2HR1rvdhwAcvBXxjlu?=
- =?us-ascii?Q?PBM8D252tvvoYdZXDWMM7s4drG9A8jW7Qo7Kk3hzHb5nO1SsPRDgOZ9cNtax?=
- =?us-ascii?Q?VBNAf/kIz2v7MQlERGNXz6b0GL6gTh8WLNn9eA2b79T5aTUIypaM+F4DhnT+?=
- =?us-ascii?Q?R+rem2LgxeM3+rU1sACRK7IRD1ak7utyjbhdZuEStvULoRLPrsmennE3FaZk?=
- =?us-ascii?Q?4kE02X9BObgaRIMehj9qQpkn8at8se7lRhmY3nT2iYlMA670ZCvIYibsCJxR?=
- =?us-ascii?Q?UEyTovAV9zYueo2N/DkqwLWDAXjGQheeFQiARz3Ei3LD6IOKk99rUfV0wiL7?=
- =?us-ascii?Q?EVyZl3cnKz3gtBeLbPL6T6M+OCBe81JW6bJTSeWu478jZf7633t3U8RUtCvy?=
- =?us-ascii?Q?56uJiNsG1QLUltEkh9oRKNl7YY/UMX4+QjQJd8KRpCoP5KTTtBkTK8XGvL9q?=
- =?us-ascii?Q?oPNpbLUhXqGo1x7BCnUy+uEm1HKa950dM5SNt1Z/bx/RbnV30VRLYMZtWSCG?=
- =?us-ascii?Q?7W0F9M6BpDIfpgbwspxzCtuK9hCnQHbg2SOOVe+Cz7mIxZXHcnZ3lDHJc1sB?=
- =?us-ascii?Q?4rrN8vxeNWvSPoYBvC076aXWnQviMM3wcK3kYRkp7vf1/veMlJmIx6ygj83V?=
- =?us-ascii?Q?XokOiSxLNRiZhw2v2GuHdWHPZVL6vLkTJy0IQAgVLZljy1y5YTtb2yGKRlkh?=
- =?us-ascii?Q?WHsF+d579WFxoY3UhSOLOYmwkA9CTaRzoi9FevjsKGtwvX4agZVQcZ+F3Iu2?=
- =?us-ascii?Q?Fh0IZgCdZ1Uv09gJZhF5pSs8OHX7Q+sym6x2Pgbyn/4RlG0OksNOW0BDozEj?=
- =?us-ascii?Q?lipaI45sx1wgT8P6xbi6TDWYQTdJjbFzNfkpirn2+ee2WRcEhDocGGjtAc9Y?=
- =?us-ascii?Q?6a9RAOZ6g54g8QFw0Dn8OKjhGOCbJro6kf3BowrkWBRoVW1WWVSE9Y9T89XK?=
- =?us-ascii?Q?kLdEKEOKdU4xVfKSJk/2rQ7LO5Axod4Of7w4+KE53287PCq1zZqS9XsDljnD?=
- =?us-ascii?Q?pf1GPG8ewfAPcQyeWhlpUo1JESTXe1N5Y3GSANTtQ1gMEz6VWdSvK9y3DrNz?=
- =?us-ascii?Q?nmXHYSTb9qqVPue4QUCmdEFoSBWMlxtkTp9hrwbYXesYY2VzNIyC4Jq9D+JJ?=
- =?us-ascii?Q?QV6NnJmKu7sk1TYOug8Isf/C0+2Y1uUJPi5BhMoopj0SCOQ5ufkR3XZ1QXEF?=
- =?us-ascii?Q?YGxCtRilxIUWu+OCa6lWIOidPVH8sfyuDHzkEzmVVzbFyrwJ8A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 22:47:04.5565
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0ba8ae8-6b44-40c4-a03e-08dc96fb1108
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000014A.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
 
-Enable address translation for Zen4 platforms.
+Hi Alistair,
 
-Link: https://lore.kernel.org/all/65c68969903b1_afa429460@dwillia2-xfh.jf.intel.com.notmuch/
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/acpi.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 67f73a831bd3..9e7b9629b98d 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -11,6 +11,10 @@
- #include "cxlpci.h"
- #include "cxl.h"
- 
-+#ifdef CONFIG_X86
-+#include <asm/cpu.h>
-+#endif
-+
- #define CXL_RCRB_SIZE	SZ_8K
- 
- struct cxl_cxims_data {
-@@ -536,9 +540,14 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
- 	return 0;
- }
- 
-+static bool is_amd_zen4(void)
-+{
-+	return (IS_ENABLED(CONFIG_X86) && boot_cpu_has(X86_FEATURE_ZEN4));
-+}
-+
- static void setup_platform_quirks(struct cxl_root *root)
- {
--	root->hpa_xlat_enable = 0;
-+	root->hpa_xlat_enable = is_amd_zen4();
- }
- 
- static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
+[auto build test ERROR on f2661062f16b2de5d7b6a5c42a9a5c96326b8454]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Popple/mm-gup-c-Remove-redundant-check-for-PCI-P2PDMA-page/20240627-191709
+base:   f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+patch link:    https://lore.kernel.org/r/47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple%40nvidia.com
+patch subject: [PATCH 13/13] mm: Remove devmap related functions and page table bits
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20240628/202406280658.1pp5cW2f-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280658.1pp5cW2f-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406280658.1pp5cW2f-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
+                    from arch/powerpc/include/asm/book3s/64/mmu.h:32,
+                    from arch/powerpc/include/asm/mmu.h:385,
+                    from arch/powerpc/include/asm/paca.h:18,
+                    from arch/powerpc/include/asm/current.h:13,
+                    from include/linux/thread_info.h:23,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/powerpc/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:79,
+                    from include/linux/alloc_tag.h:11,
+                    from include/linux/rhashtable-types.h:12,
+                    from include/linux/ipc.h:7,
+                    from include/uapi/linux/sem.h:5,
+                    from include/linux/sem.h:5,
+                    from include/linux/compat.h:14,
+                    from arch/powerpc/kernel/asm-offsets.c:12:
+>> arch/powerpc/include/asm/book3s/64/pgtable.h:1371:1: error: expected identifier or '(' before '}' token
+    1371 | }
+         | ^
+   make[3]: *** [scripts/Makefile.build:117: arch/powerpc/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1208: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +1371 arch/powerpc/include/asm/book3s/64/pgtable.h
+
+953c66c2b22a30 Aneesh Kumar K.V  2016-12-12  1370  
+ebd31197931d75 Oliver O'Halloran 2017-06-28 @1371  }
+6a1ea36260f69f Aneesh Kumar K.V  2016-04-29  1372  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ebd31197931d75 Oliver O'Halloran 2017-06-28  1373  
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
