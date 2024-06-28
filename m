@@ -1,277 +1,166 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C9D4D5BF;
-	Fri, 28 Jun 2024 06:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D052158213
+	for <linux-cxl@vger.kernel.org>; Fri, 28 Jun 2024 11:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719554986; cv=none; b=AYjELh+lkOKJDIV88pGwSx93ca5e+7rNiaoz9KLYSJsA5ZN8qS6j++tCKCdCsjKZEoqWW8g12wnIomULeoHVe37ia+c7icBj2oGuRIzCqMtKIKWdvy9d4tbDYnRwfeqF2i3bSKOxB3ncWIcrl7546czKBLEFhsxa0FzJOk8OYsQ=
+	t=1719575734; cv=none; b=gHOKLUxZKR4yh8am3rsC+wQmZLaVrtmy3NR3oJZhRygRFxDx5dO2GhM9T+Eg5PMZaLdpCH7ZBnJPRBvlWoXpv1yHXJeAR6RuogOz2uV8XD+0mmadbOZP5q6fHH+EZOk74zY3Mv87r21HbAI4z15JljJI5MAGisU++P5yr96yQUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719554986; c=relaxed/simple;
-	bh=rJbP0H6zcyNnEPT7nMCo+39TVYBfeqvk4CvyUuvHmhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PJAmT8Vw9xZ6z4ZcwVNw2GaT/uHQK05uQNmcwe/tOukO0999iHCfjyP3m/qVBbPEZ1txyi11OVILdAv2WX/+ao55v2k2tsIr+v671VmX7hIn0wrHxPBNOm0yCxCOtCcaRccMxZt22XCZe2gBHmEENQFXUfD3iLxP913EfDC8CYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ozNmNKLx; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719575734; c=relaxed/simple;
+	bh=+E6XSEAm/dPQ6chm2lKMyozB9QZ7HlWBqJjYmm896+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OQB/OQ7wVQZXzFcMbMsVSnBiLjeH81I3/F7p5fbn/+G/yW9LYOcOUk7CIICYeP1+yXha9wfzc4Nu7+jrRxb3S1EkdQ8LwolD+sxvkkFKjlZy6VFmUfWKmwGFYJ1tsgczUr/Yi9HgyfC3bYpTnoEoA+kwxGGHuN5njCCSDJlpVZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BsCmVsgS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ozNmNKLx"
-X-Envelope-To: jonathan.cameron@huawei.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719554982;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsCmVsgS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719575730;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o/wXQWGav/NessrnFMRHKMQL87wUrpOC9eqQBIItt68=;
-	b=ozNmNKLx7zHsfjGoKtTomX6lQR3xt4PbhMXFd8+/mQLV7/CTmKoDozleczUMPTB7/2URCA
-	bJoZ4hvC8inLmZOIMrtIoltwu3L3JUXgkNLZaOV5fWa5q8EAkQizAhl00ojXGtM0CK/tnT
-	KnuB2zFDjyF2eMZLo9Y6cbO0VB3/Eo0=
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: gourry.memverge@gmail.com
-X-Envelope-To: aneesh.kumar@linux.ibm.com
-X-Envelope-To: mhocko@suse.com
-X-Envelope-To: tj@kernel.org
-X-Envelope-To: john@jagalactic.com
-X-Envelope-To: emirakhur@micron.com
-X-Envelope-To: vtavarespetr@micron.com
-X-Envelope-To: ravis.opensrc@micron.com
-X-Envelope-To: apopple@nvidia.com
-X-Envelope-To: sthanneeru@micron.com
-X-Envelope-To: sj@kernel.org
-X-Envelope-To: rafael@kernel.org
-X-Envelope-To: lenb@kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: dave.jiang@intel.com
-X-Envelope-To: dan.j.williams@intel.com
-X-Envelope-To: jonathan.cameron@huawei.com
-X-Envelope-To: horen.chuang@linux.dev
-X-Envelope-To: linux-acpi@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: horenc@vt.edu
-X-Envelope-To: horenchuang@bytedance.com
-X-Envelope-To: horenchuang@gmail.com
-X-Envelope-To: linux-cxl@vger.kernel.org
-X-Envelope-To: qemu-devel@nongnu.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
-To: "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	"Gregory Price" <gourry.memverge@gmail.com>,
-	aneesh.kumar@linux.ibm.com,
-	mhocko@suse.com,
-	tj@kernel.org,
-	john@jagalactic.com,
-	"Eishan Mirakhur" <emirakhur@micron.com>,
-	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
-	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
-	"Alistair Popple" <apopple@nvidia.com>,
-	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
-	"SeongJae Park" <sj@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org
-Subject: [PATCH v2 1/1] memory tier: consolidate the initialization of memory tiers
-Date: Fri, 28 Jun 2024 06:09:23 +0000
-Message-Id: <20240628060925.303309-2-horen.chuang@linux.dev>
-In-Reply-To: <20240628060925.303309-1-horen.chuang@linux.dev>
-References: <20240628060925.303309-1-horen.chuang@linux.dev>
+	bh=MIdgxHEBhDpm1AmrQ07hyskJ/f/Dw+Jr6uTrIO5O4XI=;
+	b=BsCmVsgS5j2obTyIqtgc05P7cg/cVyqJ5/UI3XwExRJ8LqepcLT9UtxgVE1Bbdds7l5h/H
+	9xtEmoR+gi5x5O76xKnOIkVJ1IxN8Y1Zw2F0LfWCu6f9dF6gGso0VrcIwNv2a9sSiAWRSo
+	T1CrOXOMs9BJXt+NtLqew1276LOQWBI=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-6RA9f-ahMtqKbrqJVtJsdg-1; Fri, 28 Jun 2024 07:55:28 -0400
+X-MC-Unique: 6RA9f-ahMtqKbrqJVtJsdg-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ec5e1ee629so5905241fa.0
+        for <linux-cxl@vger.kernel.org>; Fri, 28 Jun 2024 04:55:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719575727; x=1720180527;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MIdgxHEBhDpm1AmrQ07hyskJ/f/Dw+Jr6uTrIO5O4XI=;
+        b=Sp/TfUwb3Bl7zbqR/ndyyyvBnm8ihgBnCsgJak/Wo/xmAerTM2WWfgIOGlSgdvWwT6
+         nQoYhdV7UTXZPUukLwXcl9J6YjPYSWIUgg8gIl3NoCrox3LbiwjcfN6iz5hjj8mDOTun
+         uc7iRe7mpv3qzVzE/A9c9Pp0+lkgV0Dt81++N/ry26zfhtB9sQhwHQzz9a95xZ3BAhBR
+         TGOIDiTu5hOwDf0UW233YQgwmyHq6bLoA0NOLNu8H1pdOeqSnFP5enR+KnKld1t3v5Fe
+         uz+PtsXcUC2sFaQRbQISepvlF/ahSHNuOUREiJf2NeqXKynNT/Tk64kCc1eOFEoRJ1sX
+         oFHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEVUaaBtc9oKz+wrCXwxRbgSWMPHWxuOOzDO4KzVSgJERlANgEVEmQNi+LBJr4CaulUY1ybCE4LqX3wY+RRI/1rHYVacip44lL
+X-Gm-Message-State: AOJu0YzD2L4JHhApJJRE1y3R/t3rDIWLFxDayszEpRbBO4FlJc2v+kDH
+	NUG3tOvQeIn3Uasoup79Us1wIfu0ffvNTbrI0WKCAsd974TRQU1eYYmah286kvLx0GqavJH2anz
+	qvA1maHED/aBajLbCqHEAFUrxGv9Tt8iVgSYrQWS614dvcw57iPZLp7lJuA==
+X-Received: by 2002:ac2:58c3:0:b0:52c:ec68:6165 with SMTP id 2adb3069b0e04-52cec6861e8mr8380574e87.33.1719575727332;
+        Fri, 28 Jun 2024 04:55:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFR4g586qIFOLmfhPhJ17znzEeUJZNpf05zPTnVrdOudzmojqCKmDvtnj2d7cZUyaUjvC6Rig==
+X-Received: by 2002:ac2:58c3:0:b0:52c:ec68:6165 with SMTP id 2adb3069b0e04-52cec6861e8mr8380561e87.33.1719575726892;
+        Fri, 28 Jun 2024 04:55:26 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0da004sm2094482f8f.45.2024.06.28.04.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 04:55:26 -0700 (PDT)
+Date: Fri, 28 Jun 2024 13:55:25 +0200
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+ <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
+ <philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
+ <linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+ <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+ <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v3 07/11] hw/pci-bridge: Add acpi_uid property to CXL
+ PXB
+Message-ID: <20240628135525.0c131846@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240627144614.00004358@Huawei.com>
+References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
+	<20240620160324.109058-8-Jonathan.Cameron@huawei.com>
+	<20240627152758.5eafb402@imammedo.users.ipa.redhat.com>
+	<20240627144614.00004358@Huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-If we simply move the set_node_memory_tier() from memory_tier_init()
-to late_initcall(), it will result in HMAT not registering
-the mt_adistance_algorithm callback function, because
-set_node_memory_tier() is not performed during the memory tiering
-initialization phase, leading to a lack of correct default_dram
-information.
+On Thu, 27 Jun 2024 14:46:14 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-Therefore, we introduced a nodemask to pass the information of the
-default DRAM nodes. The reason for not choosing to reuse
-default_dram_type->nodes is that it is not clean enough. So in the end,
-we use a __initdata variable, which is a variable that is released once
-initialization is complete, including both CPU and memory nodes for HMAT
-to iterate through.
+> On Thu, 27 Jun 2024 15:27:58 +0200
+> Igor Mammedov <imammedo@redhat.com> wrote:
+> 
+> > On Thu, 20 Jun 2024 17:03:15 +0100
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >   
+> > > This allows the ACPI SRAT Generic Port Affinity Structure
+> > > creation to be independent of PCI internals. Note that
+> > > the UID is currently the PCI bus number.
+> > > 
+> > > Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > 
+> > > ---
+> > > v3: New patch
+> > > ---
+> > >  hw/pci-bridge/pci_expander_bridge.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+> > > index 0411ad31ea..92d39b917a 100644
+> > > --- a/hw/pci-bridge/pci_expander_bridge.c
+> > > +++ b/hw/pci-bridge/pci_expander_bridge.c
+> > > @@ -93,6 +93,21 @@ static void pxb_bus_class_init(ObjectClass *class, void *data)
+> > >      pbc->numa_node = pxb_bus_numa_node;
+> > >  }
+> > >  
+> > > +static void prop_pxb_cxl_uid_get(Object *obj, Visitor *v, const char *name,
+> > > +                             void *opaque, Error **errp)
+> > > +{
+> > > +    uint32_t uid = pci_bus_num(PCI_BUS(obj));
+> > > +
+> > > +    visit_type_uint32(v, name, &uid, errp);
+> > > +}
+> > > +
+> > > +static void pxb_cxl_bus_class_init(ObjectClass *class, void *data)
+> > > +{
+> > > +    pxb_bus_class_init(class, data);
+> > > +    object_class_property_add(class, "acpi_uid", "uint32",
+> > > +                              prop_pxb_cxl_uid_get, NULL, NULL, NULL);
+> > > +}
+> > > +
+> > >  static const TypeInfo pxb_bus_info = {
+> > >      .name          = TYPE_PXB_BUS,
+> > >      .parent        = TYPE_PCI_BUS,
+> > > @@ -111,7 +126,7 @@ static const TypeInfo pxb_cxl_bus_info = {
+> > >      .name          = TYPE_PXB_CXL_BUS,
+> > >      .parent        = TYPE_CXL_BUS,
+> > >      .instance_size = sizeof(PXBBus),
+> > > -    .class_init    = pxb_bus_class_init,
+> > > +    .class_init    = pxb_cxl_bus_class_init,    
+> > 
+> > why it's CXL only, doesn't the same UID rules apply to other PCI buses?  
+> 
+> In principle, yes.  My nervousness is that we can only test anything
+> using this infrastructure today with CXL root bridges.
+> 
+> So I was thinking we should keep it limited and broaden the scope
+> if anyone ever cares.  I don't mind broadening it from the start though.
 
-Besides, since default_dram_type may be checked/used during the
-initialization process of HMAT and drivers, it is better to keep the
-allocation of default_dram_type in memory_tier_init().
-
-Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/numa/hmat.c     |  5 +--
- include/linux/memory-tiers.h |  2 ++
- mm/memory-tiers.c            | 59 +++++++++++++++---------------------
- 3 files changed, 28 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c8ccc91ebe6..a2f9e7a4b479 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
- 	struct memory_target *target;
- 	struct access_coordinate *attrs;
+Then I'd use it everywhere and cleanup ACPI code to use it as well
+just to be consistent.
  
--	if (!default_dram_type)
--		return -EIO;
--
--	for_each_node_mask(nid, default_dram_type->nodes) {
-+	for_each_node_mask(nid, default_dram_nodes) {
- 		pxm = node_to_pxm(nid);
- 		target = find_mem_target(pxm);
- 		if (!target)
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 0d70788558f4..fa61ad9c4d75 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -38,6 +38,7 @@ struct access_coordinate;
- #ifdef CONFIG_NUMA
- extern bool numa_demotion_enabled;
- extern struct memory_dev_type *default_dram_type;
-+extern nodemask_t default_dram_nodes __initdata;
- struct memory_dev_type *alloc_memory_type(int adistance);
- void put_memory_type(struct memory_dev_type *memtype);
- void init_node_memory_type(int node, struct memory_dev_type *default_type);
-@@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
- 
- #define numa_demotion_enabled	false
- #define default_dram_type	NULL
-+#define default_dram_nodes NODE_MASK_NONE
- /*
-  * CONFIG_NUMA implementation returns non NULL error.
-  */
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 6632102bd5c9..a19a90c3ad36 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
- static LIST_HEAD(default_memory_types);
- static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
- struct memory_dev_type *default_dram_type;
-+nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
- 
- static const struct bus_type memory_tier_subsys = {
- 	.name = "memory_tiering",
-@@ -671,28 +672,38 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
- 
- /*
-  * This is invoked via `late_initcall()` to initialize memory tiers for
-- * CPU-less memory nodes after driver initialization, which is
-- * expected to provide `adistance` algorithms.
-+ * memory nodes, both with and without CPUs. After the initialization of
-+ * firmware and devices, adistance algorithms are expected to be provided.
-  */
- static int __init memory_tier_late_init(void)
- {
- 	int nid;
-+	struct memory_tier *memtier;
- 
-+	get_online_mems();
- 	guard(mutex)(&memory_tier_lock);
-+	/*
-+	 * Look at all the existing and uninitialized N_MEMORY nodes and
-+	 * add them to default memory tier or to a tier if we already have
-+	 * memory types assigned.
-+	 */
- 	for_each_node_state(nid, N_MEMORY) {
- 		/*
--		 * Some device drivers may have initialized memory tiers
--		 * between `memory_tier_init()` and `memory_tier_late_init()`,
--		 * potentially bringing online memory nodes and
--		 * configuring memory tiers. Exclude them here.
-+		 * Some device drivers may have initialized
-+		 * memory tiers, potentially bringing memory nodes
-+		 * online and configuring memory tiers.
-+		 * Exclude them here.
- 		 */
- 		if (node_memory_types[nid].memtype)
- 			continue;
- 
--		set_node_memory_tier(nid);
-+		memtier = set_node_memory_tier(nid);
-+		if (IS_ERR(memtier))
-+			/* Continue with memtiers we are able to setup. */
-+			break;
- 	}
--
- 	establish_demotion_targets();
-+	put_online_mems();
- 
- 	return 0;
- }
-@@ -875,8 +886,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
- 
- static int __init memory_tier_init(void)
- {
--	int ret, node;
--	struct memory_tier *memtier;
-+	int ret;
- 
- 	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
- 	if (ret)
-@@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
- 				GFP_KERNEL);
- 	WARN_ON(!node_demotion);
- #endif
--	mutex_lock(&memory_tier_lock);
-+
-+	guard(mutex)(&memory_tier_lock);
- 	/*
- 	 * For now we can have 4 faster memory tiers with smaller adistance
- 	 * than default DRAM tier.
-@@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
- 	if (IS_ERR(default_dram_type))
- 		panic("%s() failed to allocate default DRAM tier\n", __func__);
- 
--	/*
--	 * Look at all the existing N_MEMORY nodes and add them to
--	 * default memory tier or to a tier if we already have memory
--	 * types assigned.
--	 */
--	for_each_node_state(node, N_MEMORY) {
--		if (!node_state(node, N_CPU))
--			/*
--			 * Defer memory tier initialization on
--			 * CPUless numa nodes. These will be initialized
--			 * after firmware and devices are initialized.
--			 */
--			continue;
--
--		memtier = set_node_memory_tier(node);
--		if (IS_ERR(memtier))
--			/*
--			 * Continue with memtiers we are able to setup
--			 */
--			break;
--	}
--	establish_demotion_targets();
--	mutex_unlock(&memory_tier_lock);
-+	/* Record nodes with memory and CPU to set default DRAM performance. */
-+	nodes_and(default_dram_nodes, node_states[N_MEMORY],
-+		  node_states[N_CPU]);
- 
- 	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
- 	return 0;
--- 
-Ho-Ren (Jack) Chuang
+> Jonathan
+> 
+> 
+> > >  };
+> > >  
+> > >  static const char *pxb_host_root_bus_path(PCIHostState *host_bridge,    
+> > 
+> >   
+> 
 
