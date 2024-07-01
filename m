@@ -1,196 +1,370 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02B2145B09
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 08:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A568002A
+	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 09:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719824383; cv=none; b=aPwNWIZfvUThu/Dppux2WLBBIxlx9zO0kB0gItLiQLUK0DKH+joBAJJGdGOm4uK/qSkcFWRVtPgad83e4NTHi1edgjBlS1VerN5Vp50IM07/IV0iJGc1gcqR3/5jLkui+7uI1OX0llVL0OOvjLkmYfse8/i7n0Pk9+wZ8CxLZMc=
+	t=1719826246; cv=none; b=Jz7HfMf87wZxosGDA/VgMFaQ7w07F26YfOWVIlXVJPkxxI8K62OTlY6bVm+Mngj8ZxK7wHKWCMvgNjj5TDfvpSG29pZaU8O4NneDJecMdQo/9Z9SeCgyTNJRJBF7tTmEfOTUzJ1Fha4v+99tBULSq026Olvot+t8P+ZBpeVFM0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719824383; c=relaxed/simple;
-	bh=gb4GYBnseT0zYSIXW/OQkRlmWRyZlNNQokVjDjbIAag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rf+JBSA5EFYlcOcMyCT2PGZUWq56POO2ckvl9Fvhc14HnHmGVA8WwXM0WLS46rMQAFOg9HRv8x02Z5GUmKyf0ZCOAVTMPLC83b6ZUJE2CMGV5ZRBCuxqBGfaZpy5hiipnzvq0lEBCPJBwhLlizPCwZXySXW1BaO5uJA7l4pThMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eiHdo74A; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719826246; c=relaxed/simple;
+	bh=8Ww1grGaz6A0HKPmLVy95/OVc/KB5h/y5nRPd/2Vmpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XpJ89G8W++JR3KYRTj69UR3tUfok6OO6uAwIiKYx3Q9O0nCL5bROmzSH7xIb09kBN12EVSTpKUzRF7ewIBPRbRnFBu64BXoUSvdiuTGzuH9A4DYDIvcwliRDMTgqwLf9TgR7Rm/ZfIcbav4n+7BzV7BHh3Qq/j5H8Ev8/T1UMgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjNK6oPM; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eiHdo74A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719824380;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9uYOVYe/S8vLD+pbmxnWXeRCdyZnIcQi9ch5IcOoz4I=;
-	b=eiHdo74AvxZZ+o4fJ/YEKifR0NnQpmqskgRUGEY/+bUviSc99QtJONIFJCA+D8NLiqlDcG
-	SqfA8AWoBvpk48KM+1nB4bPYSHj2Edh7Puv+bocJpydJNagXCS3H86xdGqv0dHDshvzScM
-	v73RLVvahOc/j+GsBu0yEo2WLAQ19/8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-zJ4WKptoPtyX7UDNvhleuQ-1; Mon, 01 Jul 2024 04:59:37 -0400
-X-MC-Unique: zJ4WKptoPtyX7UDNvhleuQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a72716df71eso209414266b.1
-        for <linux-cxl@vger.kernel.org>; Mon, 01 Jul 2024 01:59:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719824376; x=1720429176;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9uYOVYe/S8vLD+pbmxnWXeRCdyZnIcQi9ch5IcOoz4I=;
-        b=bvQypyVoiFA3075BbYH3pIMONsg1QP+reb/24JaK02vyB9PubaCwUOyWrpFsfMcVEi
-         wKwpNog/LGJyraePxZHqNJJ/k2V/5ErGZLID3L64hPJoSbqVCSVko+tYXM8tXh23Zwkf
-         L4UU5FF/fsDZL/wSuVBAcyXOxD+1Hw5DtAldKTu/X7HkZTvKJv0k6DeHy9O+TSOARKEY
-         iJQDpZk8cCINo3gJmHCgDboX+zHn3eIuDawOBDsJzoM3EKIh13Ym0jxSReLYyMn6GKnp
-         w3qWKuwh0Y6z/35OBmYm4yF6u3QESBD1TGC3Er4yIUWb51FWvest4EGIfCcVjVFM+nHH
-         3xag==
-X-Forwarded-Encrypted: i=1; AJvYcCUAJi+TVRjbljCZUE6/o7D4TLDNrX5pjE4jvg3dOu+v02mgKv5RFQdXN4q85qhSiPmsQrVSkHDsHe6TA1z+VLtvoEXPTDATZDmG
-X-Gm-Message-State: AOJu0YweaXnolFC1ZKIgQGe4ezvIeRyz2f2R+Q1+REiymTv09TNBh9+O
-	xZJVCXHBIkHv1j3eZ2GEhtn9G67xn+bjKMBXHKUaM6peI7AyCeoOVmD7V/olPif9EQ/GkhwkvFG
-	U4vevFyQ2huRUiu+9Xa0hQXEmdijxbrOij3Go7p8zEiOI3bobdb7GlRKvCg==
-X-Received: by 2002:a17:907:3e9f:b0:a6f:50ae:e02 with SMTP id a640c23a62f3a-a751446803fmr478916766b.4.1719824376387;
-        Mon, 01 Jul 2024 01:59:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHM3czGdSGmbeNbLrkMbgpMQyqMRvlRY7ksZCrI83uQ/r1Cugdq08d/zn9Zqwxvl5smKMdCgg==
-X-Received: by 2002:a17:907:3e9f:b0:a6f:50ae:e02 with SMTP id a640c23a62f3a-a751446803fmr478913666b.4.1719824375888;
-        Mon, 01 Jul 2024 01:59:35 -0700 (PDT)
-Received: from [100.81.188.195] ([178.24.249.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab06565csm311746366b.103.2024.07.01.01.59.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 01:59:35 -0700 (PDT)
-Message-ID: <f9539968-4b76-41a9-92d5-00082c7d1e96@redhat.com>
-Date: Mon, 1 Jul 2024 10:59:33 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjNK6oPM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719826244; x=1751362244;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8Ww1grGaz6A0HKPmLVy95/OVc/KB5h/y5nRPd/2Vmpk=;
+  b=PjNK6oPM0ZV9U57MCris2IlEW125R6Mnh+Qvm9SUFPLh8sHMaP5dpSZr
+   UM42DA6UHDTWyEEOEhYWPzL9+pxR2M6s2JU2XLRhEv4xliaKWwejfNB/e
+   eIp5sd3BpjrtE7Ax7juymMjVwh47ISVpSXINXhZs6P8WJc5QhmLNOkgCQ
+   A1mrOir+AaauGT6VZTKuQdaHzfZnkAe6BE+86WleYWnVJOIWcHMyelDkG
+   uZCbKHZ3/uzYTbjySCvCcXcayKGdiH5d9lIXzdagfptJkOJh16vrfM1gm
+   /S5CuN322IamJxN0SWnVo+LllQNCYYukTBnFPhY6/lQMDLUc5jNA4LirC
+   g==;
+X-CSE-ConnectionGUID: hrHxqdWpRdW4JxDrKOT8Ow==
+X-CSE-MsgGUID: iQzAoIr3SCS/e2hitc5kIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="17071448"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="17071448"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:30:38 -0700
+X-CSE-ConnectionGUID: IRzAm5ddSWetDd5QxBiekA==
+X-CSE-MsgGUID: RjHP9hSyRBCTAnVJxZbKnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="49785344"
+Received: from sbutnari-mobl1.ti.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.112])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:30:35 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, alison.schofield@intel.com
+Cc: linux-cxl@vger.kernel.org,
+ Diego Garcia Rodriguez <diego.garcia.rodriguez@intel.com>
+Subject:
+ Re: [PATCH v3 2/4] cxl: Restore XOR'd position bits during address
+ translation
+Date: Mon, 01 Jul 2024 11:28:24 +0200
+Message-ID: <3568032.dWV9SEqChM@fdefranc-mobl3>
+In-Reply-To:
+ <e36eabffe2c2e1a7611cf8ba9ba8bee435bceb1c.1719275633.git.alison.schofield@intel.com>
+References:
+ <cover.1719275633.git.alison.schofield@intel.com>
+ <e36eabffe2c2e1a7611cf8ba9ba8bee435bceb1c.1719275633.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/13] gup: Don't allow FOLL_LONGTERM pinning of FS DAX
- pages
-To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
-Cc: catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
- npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
- willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com,
- peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
- hch@lst.de, david@fromorbit.com
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <74a9fc9e018e54d7afbeae166479e2358e0a1225.1719386613.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <74a9fc9e018e54d7afbeae166479e2358e0a1225.1719386613.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 27.06.24 02:54, Alistair Popple wrote:
-> Longterm pinning of FS DAX pages should already be disallowed by
-> various pXX_devmap checks. However a future change will cause these
-> checks to be invalid for FS DAX pages so make
-> folio_is_longterm_pinnable() return false for FS DAX pages.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+On Tuesday, June 25, 2024 2:55:53=E2=80=AFAM GMT+2 alison.schofield@intel.c=
+om wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+>=20
+
+Hi Alison,
+
+Below I have two questions...=20
+
+> When a device reports a DPA in events like poison, general_media,
+> and dram, the driver translates that DPA back to an HPA. Presently,
+> the CXL driver translation only considers the Modulo position and
+> will report the wrong HPA for XOR configured root decoders.
+>=20
+> Add a helper function that restores the XOR'd bits during DPA->HPA
+> address translation. Plumb a root decoder callback to the new helper
+> when XOR interleave arithmetic is in use. For Modulo arithmetic, just
+> let the callback be NULL - as in no extra work required.
+>=20
+> Upon completion of a DPA->HPA translation a couple of checks are
+> performed on the result. One simply confirms that the calculated
+> HPA is within the address range of the region. That test is useful
+> for both Modulo and XOR interleave arithmetic decodes.
+>=20
+> A second check confirms that the HPA is within an expected chunk
+> based on the endpoints position in the region and the region
+> granularity. An XOR decode disrupts the Modulo pattern making the
+> chunk check useless.
+>=20
+> To align the checks with the proper decode, pull the region range
+> check inline and use the helper to do the chunk check for Modulo
+> decodes only.
+>=20
+> A cxl-test unit test of address translations is in upstream review.
+
+Would it be helpful to provide a link to the test?
+
+> Fixes: 28a3ae4ff66c ("cxl/trace: Add an HPA to cxl_poison trace events")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Tested-by: Diego Garcia Rodriguez <diego.garcia.rodriguez@intel.com>
 > ---
->   include/linux/memremap.h | 11 +++++++++++
->   include/linux/mm.h       |  4 ++++
->   2 files changed, 15 insertions(+)
-> 
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index 6505713..19a448e 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -193,6 +193,17 @@ static inline bool folio_is_device_coherent(const struct folio *folio)
->   	return is_device_coherent_page(&folio->page);
->   }
->   
-> +static inline bool is_device_dax_page(const struct page *page)
+>  drivers/cxl/acpi.c        | 48 ++++++++++++++++++++++++++++++++++++---
+>  drivers/cxl/core/port.c   |  5 +++-
+>  drivers/cxl/core/region.c | 22 ++++++++++--------
+>  drivers/cxl/cxl.h         |  6 ++++-
+>  4 files changed, 67 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 571069863c62..010741da0176 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -74,6 +74,43 @@ static struct cxl_dport *cxl_hb_xor(struct=20
+cxl_root_decoder *cxlrd, int pos)
+>  	return cxlrd->cxlsd.target[n];
+>  }
+> =20
+> +static u64 cxl_xor_translate(struct cxl_root_decoder *cxlrd, u64 hpa)
 > +{
-> +	return is_zone_device_page(page) &&
-> +		page_dev_pagemap(page)->type == MEMORY_DEVICE_FS_DAX;
+> +	struct cxl_cxims_data *cximsd =3D cxlrd->platform_data;
+> +	int hbiw =3D cxlrd->cxlsd.nr_targets;
+> +	u64 val;
+> +	int pos;
+> +
+> +	/* No xormaps for host bridge interleave ways of 1 or 3 */
+> +	if (hbiw =3D=3D 1 || hbiw =3D=3D 3)
+> +		return hpa;
+> +
+> +	/*
+> +	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) restore
+> +	 * the position bit to its value before the xormap was applied at
+> +	 * HPA->DPA translation.
+> +	 *
+> +	 * pos is the lowest set bit in an XORMAP
+> +	 * val is the XORALLBITS(HPA & XORMAP)
+> +	 *
+> +	 * XORALLBITS: The CXL spec (3.1 Table 9-22) defines XORALLBITS
+> +	 * as an operation that outputs a single bit by XORing all the
+> +	 * bits in the input (hpa & xormap). Implement XORALLBITS using
+> +	 * hweight64(). If the hamming weight is even the XOR of those
+> +	 * bits results in val=3D=3D0, if odd the XOR result is val=3D=3D1.
+> +	 */
+> +
+> +	for (int i =3D 0; i < cximsd->nr_maps; i++) {
+> +		if (!cximsd->xormaps[i])
+> +			continue;
+> +		pos =3D __ffs(cximsd->xormaps[i]);
+> +		val =3D (hweight64(hpa & cximsd->xormaps[i]) & 1);
+> +		hpa =3D (hpa & ~(1ULL << pos)) | (val << pos);
+> +	}
+> +
+> +	return hpa;
 > +}
 > +
-> +static inline bool folio_is_device_dax(const struct folio *folio)
-> +{
-> +	return is_device_dax_page(&folio->page);
-> +}
+>  struct cxl_cxims_context {
+>  	struct device *dev;
+>  	struct cxl_root_decoder *cxlrd;
+> @@ -362,6 +399,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws=20
+*cfmws,
+>  	struct cxl_cxims_context cxims_ctx;
+>  	struct device *dev =3D ctx->dev;
+>  	cxl_calc_hb_fn cxl_calc_hb;
+> +	cxl_translate_fn translate;
+>  	struct cxl_decoder *cxld;
+>  	unsigned int ways, i, ig;
+>  	int rc;
+> @@ -389,13 +427,17 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws=
+=20
+*cfmws,
+>  	if (rc)
+>  		return rc;
+> =20
+> -	if (cfmws->interleave_arithmetic =3D=3D=20
+ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
+> +	if (cfmws->interleave_arithmetic =3D=3D=20
+ACPI_CEDT_CFMWS_ARITHMETIC_MODULO) {
+>  		cxl_calc_hb =3D cxl_hb_modulo;
+> -	else
+> +		translate =3D NULL;
 > +
->   #ifdef CONFIG_ZONE_DEVICE
->   void zone_device_page_init(struct page *page);
->   void *memremap_pages(struct dev_pagemap *pgmap, int nid);
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index b84368b..4d1cdea 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2032,6 +2032,10 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
->   	if (folio_is_device_coherent(folio))
->   		return false;
->   
-> +	/* DAX must also always allow eviction. */
-> +	if (folio_is_device_dax(folio))
-> +		return false;
+> +	} else {
+>  		cxl_calc_hb =3D cxl_hb_xor;
+> +		translate =3D cxl_xor_translate;
+> +	}
+> =20
+>  	struct cxl_root_decoder *cxlrd __free(put_cxlrd) =3D
+> -		cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb);
+> +		cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb,=20
+translate);
+>  	if (IS_ERR(cxlrd))
+>  		return PTR_ERR(cxlrd);
+> =20
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 887ed6e358fb..e5d5f7783857 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1808,6 +1808,7 @@ static int cxl_switch_decoder_init(struct cxl_port=
+=20
+*port,
+>   * @port: owning CXL root of this decoder
+>   * @nr_targets: static number of downstream targets
+>   * @calc_hb: which host bridge covers the n'th position by granularity
+> + * @translate: decoder specific address translation function
+>   *
+>   * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
+>   * 'CXL root' decoder is one that decodes from a top-level / static=20
+platform
+> @@ -1816,7 +1817,8 @@ static int cxl_switch_decoder_init(struct cxl_port=
+=20
+*port,
+>   */
+>  struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>  						unsigned=20
+int nr_targets,
+> -					=09
+cxl_calc_hb_fn calc_hb)
+> +					=09
+cxl_calc_hb_fn calc_hb,
+> +					=09
+cxl_translate_fn translate)
+>  {
+>  	struct cxl_root_decoder *cxlrd;
+>  	struct cxl_switch_decoder *cxlsd;
+> @@ -1839,6 +1841,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(str=
+uct=20
+cxl_port *port,
+>  	}
+> =20
+>  	cxlrd->calc_hb =3D calc_hb;
+> +	cxlrd->translate =3D translate;
+>  	mutex_init(&cxlrd->range_lock);
+> =20
+>  	cxld =3D &cxlsd->cxld;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 237c28d5f2cc..bdb06dbe98a8 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2723,20 +2723,13 @@ struct cxl_region *cxl_dpa_to_region(const struct=
+=20
+cxl_memdev *cxlmd, u64 dpa)
+>  	return ctx.cxlr;
+>  }
+> =20
+> -static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int po=
+s)
+> +static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int po=
+s)
+>  {
+>  	struct cxl_region_params *p =3D &cxlr->params;
+>  	int gran =3D p->interleave_granularity;
+>  	int ways =3D p->interleave_ways;
+>  	u64 offset;
+> =20
+> -	/* Is the hpa within this region at all */
+> -	if (hpa < p->res->start || hpa > p->res->end) {
+> -		dev_dbg(&cxlr->dev,
+> -			"Addr trans fail: hpa 0x%llx not in=20
+region\n", hpa);
+> -		return false;
+> -	}
+> -
+>  	/* Is the hpa in an expected chunk for its pos(-ition) */
+>  	offset =3D hpa - p->res->start;
+>  	offset =3D do_div(offset, gran * ways);
+> @@ -2752,6 +2745,7 @@ static bool cxl_is_hpa_in_range(u64 hpa, struct=20
+cxl_region *cxlr, int pos)
+>  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxl=
+md,
+>  		   u64 dpa)
+>  {
+> +	struct cxl_root_decoder *cxlrd =3D to_cxl_root_decoder(cxlr-
+>dev.parent);
+>  	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+>  	struct cxl_region_params *p =3D &cxlr->params;
+>  	struct cxl_endpoint_decoder *cxled =3D NULL;
+> @@ -2801,7 +2795,17 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const=
+=20
+struct cxl_memdev *cxlmd,
+>  	/* Apply the hpa_offset to the region base address */
+>  	hpa =3D hpa_offset + p->res->start;
+> =20
+> -	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
+> +	/* Root decoder translation overrides typical modulo decode */
+> +	if (cxlrd->translate)
+> +		hpa =3D cxlrd->translate(cxlrd, hpa);
 > +
->   	/* Otherwise, non-movable zone folios can be pinned. */
->   	return !folio_is_zone_movable(folio);
->   
+> +	if (hpa < p->res->start || hpa > p->res->end) {
+> +		dev_dbg(&cxlr->dev,
+> +			"Addr trans fail: hpa 0x%llx not in=20
+region\n", hpa);
+> +		return ULLONG_MAX;
+> +	}
+> +
+> +	if (!cxlrd->translate && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
+>  		return ULLONG_MAX;
 
-Why is the check in check_vma_flags() insufficient? GUP-fast maybe?
+I needed some time to understand this. It was not immediately clear why, fo=
+r=20
+XOR translations, this chunk check is skipped.
 
--- 
-Cheers,
+Wouldn't it be helpful to add a comment to explain why that check is skippe=
+d?
 
-David / dhildenb
+Thanks,
+
+=46abio
+
+>=20
+>  	return hpa;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 603c0120cff8..3678235fc9ce 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -434,12 +434,14 @@ struct cxl_switch_decoder {
+>  struct cxl_root_decoder;
+>  typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxl=
+rd,
+>  					    int pos);
+> +typedef u64 (*cxl_translate_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+> =20
+>  /**
+>   * struct cxl_root_decoder - Static platform CXL address decoder
+>   * @res: host / parent resource for region allocations
+>   * @region_id: region id for next region provisioning event
+>   * @calc_hb: which host bridge covers the n'th position by granularity
+> + * @translate: decoder specific address translation function
+>   * @platform_data: platform specific configuration data
+>   * @range_lock: sync region autodiscovery by address range
+>   * @qos_class: QoS performance class cookie
+> @@ -449,6 +451,7 @@ struct cxl_root_decoder {
+>  	struct resource *res;
+>  	atomic_t region_id;
+>  	cxl_calc_hb_fn calc_hb;
+> +	cxl_translate_fn translate;
+>  	void *platform_data;
+>  	struct mutex range_lock;
+>  	int qos_class;
+> @@ -773,7 +776,8 @@ bool is_switch_decoder(struct device *dev);
+>  bool is_endpoint_decoder(struct device *dev);
+>  struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>  						unsigned=20
+int nr_targets,
+> -					=09
+cxl_calc_hb_fn calc_hb);
+> +					=09
+cxl_calc_hb_fn calc_hb,
+> +					=09
+cxl_translate_fn translate);
+>  struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos);
+>  struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *por=
+t,
+>  						   =20
+unsigned int nr_targets);
+>=20
+
+
+
 
