@@ -1,189 +1,717 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2081.outbound.protection.outlook.com [40.107.101.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DE654F87;
-	Mon,  1 Jul 2024 08:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822878; cv=fail; b=Hb820ioNbNAB282BbX0hyFGYS06pub+FwJVV9CBPMWpwIfKIjNL1ykBPgpPKmkoalU8vc8Y0aPA6vN8FkXEoJh1YrMdav1OsgTzrVyBm8qR4F09X+DDHVqHvhabYIdmqg3AEz0GwI2ocK/I8TainkkofZDQGfIgC/gr026hBVJ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822878; c=relaxed/simple;
-	bh=Z+eZqxll3oRjGhDzRgOcZCV2QjGU0/IJG2a4qNc44As=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=ZpeCuPvanC04He1Qru8xKOVqKaS9VsTvrRo/ivIItC3vssj8oI2TqtEXmhOJGBMDQZqDYaYF2NQMOhTuNoGsT8EbXughGoHADmJv5+sm+J9cFrfGbXoYTkoaMbDlINtij6bwYeSgRTrXq5z9q3qDcMBgMiPARjW6D8IvTKN44V4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lu1ZoyDB; arc=fail smtp.client-ip=40.107.101.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4EE8405D
+	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 08:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719823948; cv=none; b=n/wKaWF8ki2KGSGt9pxYx5hKi2GAZDyxk9I3NyvdFc0WKCMUc8IYs98480YpVPTTls6UhUZHM0Vj5WBl44LqXwuBKkiH+TVF/pOY03gm9mVZmCBKZk2JXTqYfMWg9nofcuNeGAg4xsuJ9bSMhr5h3ULmS5/KjhYsAoMaQknCcjU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719823948; c=relaxed/simple;
+	bh=i+wTLxo8goxmshI3NJSMjnDdCekKxNfvmMCwtZRqzCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZSxptqNdNO0kVHS6fGXTNkCQJzDumlemIra9aU5ZgGkvwMIsfrsR+lO/m+D4WMqJy9cMe9ajyzM70ZOXChf/bJOrB5GULQ/G9mbYrjp9bapOvjk0qprSt3xAnt//m6FD/gVnKxjWIAs8JyppKoIATir8zJ9RLdQ+UN+8Rbt+iEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y3RTu3ZM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lu1ZoyDB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOtaD0mKyNYxfRgwRv6CaAM+t3Qx3G3Iq7eu1N0SYeAD48y4avhoqNpLWw+dRXmo4KNuBfAXFpeDZVHByYxgq3GU3B1yvQ0hP+Iegcke0hvOlbKdzy5httEsc/4UUksR/owwEsuD7kjFcjRl+2/NqXzcxWmwJXGp5lTT5js1S0GOig4/cJyiXT7xc5eQ2SS9VZdlNkWRi+0UbbHqfg4BRIkgl1tB2tSdAPPBirYZze3o2xaSfkKnFVpAWkaYlWI+0zaJR76RRAKm57dh3KqBBPEBekWeG0uY8WCUBhk6Vy6yi5PB/X5SobBK29XtblkNhrYD+nIMDE/SeDaQD0imhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PFNw5m7TevX7O32FT2B4WhapzTHm6yB0PYh9fZOVVe0=;
- b=fb1izYFoHe+9UwvN0OQgTc9CY4eCpD2uuLhDXw9y+ChiymaFVDB+2rVlXlHRk8uoW4BfwNvmOJiY97riyVf72tk0Ob8XSLCBVjSO+lwwnga6ZOcgsGUSQjVIz0M4I9QVXR8d9exoGRjWdHVL3IRAGEowF7my62WFW+AFL1FFWsgQZ0I/y0HptBptUlFjJ8yHFb2YcKRmXvs7f6SoMQP3afTyXE5mJf29t3bem8ZyHeQFuThcLAUUrcIDeFUyEd6DdFoMwbwY3xDqPV/lzENPHFL1JwKW/DKZ/irtkcllPhGsuz06knAFFxFaO6CQ1PPLdNmhbASPKRp9yMTlJePfDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PFNw5m7TevX7O32FT2B4WhapzTHm6yB0PYh9fZOVVe0=;
- b=Lu1ZoyDBnGLn1frb6qiyltBSFMlR5Iwin46tZX2tghr8stvR2GBq6yw50/hQcQmsYYOU6lumh5Ns/SxGSWbTobzmmA7bzpM4hnN1HCDNCtQ1u7isogDu3I3Zv1dfEtABY4jEmDj5HpsopECWJS9o3QKnZx6Oldvq+TimPxkgEIMoHrnZSiO0qA/ehBygY/U6RUETVlPXOftp7b31rYOCPW0qlTOCOfsPHzrFjjzAjp14HUzbunDSI9V3QtNgSNaf8o3TmFE0wuMQ3ETK+GikFcbPYrqit2keyUVGs2yOEfuvupGjd9BlXT1j75b/On2HX94rZOITgFO0XWjkhniKDA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- CY5PR12MB6526.namprd12.prod.outlook.com (2603:10b6:930:31::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7719.29; Mon, 1 Jul 2024 08:34:31 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7719.028; Mon, 1 Jul 2024
- 08:34:31 +0000
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <ZoIvhDvzMCw28VBI@dread.disaster.area>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Alistair Popple <apopple@nvidia.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
- tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- jhubbard@nvidia.com, hch@lst.de
-Subject: Re: [PATCH 00/13] fs/dax: Fix FS DAX page reference counts
-Date: Mon, 01 Jul 2024 18:33:34 +1000
-In-reply-to: <ZoIvhDvzMCw28VBI@dread.disaster.area>
-Message-ID: <87plrxo6i5.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SY5P282CA0054.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:20a::13) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3RTu3ZM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719823945;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YRVEDXTdNlFKmz4YCovzLKk9fuFunRyAXDljDw8v6w0=;
+	b=Y3RTu3ZMUZXntPe6bejBU7y2ePV99xubor9gXX6HwizK7UipqjrUUd1KFHqCzFaibwHbNN
+	JZatXeIq06IMA3hXEddtDBLkbIrT2iYEoCdhemYBDRIREc3BdmUcAQ7FVpoGjZnJeZGSE5
+	/Z1iltZezLhKpn8yTFj7NmM5wB6Ngy8=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-QfX8SZS5OC-Cyjr2XtF4Bg-1; Mon, 01 Jul 2024 04:52:23 -0400
+X-MC-Unique: QfX8SZS5OC-Cyjr2XtF4Bg-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52cdd8ca5a8so2632755e87.3
+        for <linux-cxl@vger.kernel.org>; Mon, 01 Jul 2024 01:52:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719823941; x=1720428741;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YRVEDXTdNlFKmz4YCovzLKk9fuFunRyAXDljDw8v6w0=;
+        b=BR2gM4Hff3Lfsm5w0hW6Ikx2LPjjisBnjnRQbs8yEq14hmzvAHcqprWPJ3VT+JLWGz
+         i4Vt9ANpkUxPFjPQq+SYll6riYTRFswRNQ5hWvJ6vbToyRAr2U4NZJo0f5khISkrDElV
+         /oyClRWlEY6cqDcRZUMzJnCac7Lnb9c++oRdyY2+Nr+Ye+cEBmLA42IXEYqrveXr3nqf
+         sUdnAEBsBplEEZwg6v2wHe4zypUN50rXIDNjhuAwPTrOOtDkRwBak2ffsofI2/Bf30K8
+         B8I5ElBi8mqC4hPy2hkJirk2DPyxAbsJcCCcmwnh6tcv5LYh53bprKcuoH5h48XARKNq
+         omhA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9L8H1kWnmkOCZAaCJdwJMPxGMH8esIJmerzHpeQsZg8ayl/7clMXbMDbYwn3MgBHH3ytBswzYJW7iG2TkTCkgFqTLWfwhRH7x
+X-Gm-Message-State: AOJu0YyvjzIB0Vpl4L/ueVOeO3xqxDFeM4qIF3NwjydjIkIxNVOY01JB
+	Y57cjdiAZWzsto7875ZFWPlm7YuwKRdgIl8rScjIGXW4Qwhj+HMXEkUk/tW6vC1gIc+GEm1+GDp
+	Ia+3JzK0eOjGtO5Q/6WDKbpcgaDz+obOkH6tAfQJ4gTxzYnjLSCv8qTmR34YiZ302nw==
+X-Received: by 2002:a05:6512:2203:b0:52c:dbd9:45e7 with SMTP id 2adb3069b0e04-52e82733f0emr2984136e87.57.1719823941544;
+        Mon, 01 Jul 2024 01:52:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmKCiyhziEd0xSgbRZFS60ruI6lPbmiK/Gnw6f0eVwYH4U9u4JUF4X8S0UoKuI3DY82Jhcnw==
+X-Received: by 2002:a05:6512:2203:b0:52c:dbd9:45e7 with SMTP id 2adb3069b0e04-52e82733f0emr2984121e87.57.1719823941075;
+        Mon, 01 Jul 2024 01:52:21 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d8df0sm9449780f8f.29.2024.07.01.01.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 01:52:20 -0700 (PDT)
+Date: Mon, 1 Jul 2024 10:52:19 +0200
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+ <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
+ <philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
+ <linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+ <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+ <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v3 08/11] hw/acpi: Generic Port Affinity Structure
+ support
+Message-ID: <20240701105219.09f2b1fd@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240620160324.109058-9-Jonathan.Cameron@huawei.com>
+References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
+	<20240620160324.109058-9-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|CY5PR12MB6526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29db7317-e6ac-45d7-d4ae-08dc99a8a116
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XLlxJb1lVvo85rezcGTpc3hCUtIhEW+5GVosS3jRLn3OyQiKcj0IB0KBeL8P?=
- =?us-ascii?Q?HBbiLmoJpBL2LjBsuMFC7ZwlSVPdNUjngHkCc/DuEKnsF93aEufM6ViwNjiQ?=
- =?us-ascii?Q?gxPkOTQ11h9e9i1HEoPSMXleTt4IeNO/VrxZ1PIN5mfnx2lGNNOjN6sc3aLJ?=
- =?us-ascii?Q?cZxEOW4OpbcK20TaBLMoi0KKdCtMYSUwG9Nye6NE+hANzL+kGdHOmjATmCto?=
- =?us-ascii?Q?Y6NIEKiYhrlOETALl5xvI/leurEe9T9PxkYnVSkzFp5gZe/PnXO+mYjTXupI?=
- =?us-ascii?Q?cRcDZuxQosInHDLiUR5GLK6Ihhj7usG0UQR6PAXwFmdT1IYGhUm+YC+bvhNc?=
- =?us-ascii?Q?gHmLRB9oj2sRgAy0mupZwTU1mKIQ8YsYDHb8sJ64LDn5FjR+xJ9xp9oj5HPg?=
- =?us-ascii?Q?7y2NU977dXameYCFf5ckK89qUdaIXnDwYyfpI5xw0g4Y0dQgCd5pduIda2qh?=
- =?us-ascii?Q?87KKbYiFb5tbZ3F1UCdUH2J19hMVMjBw7k1uxsaFe3K4MBLiMgC0gBTsvQEe?=
- =?us-ascii?Q?F86a0IyRrBDAqgm80TxVxlx10NZX2wgdIxn+bQ4VHptvjnRb4P67H1FaVZyH?=
- =?us-ascii?Q?xnn+fKA3ECj+Hw2YXQlBdNacLsxAkivvSOBdBG6F7gB1JsPajZsqkN8kEejW?=
- =?us-ascii?Q?OSWj/kZMQ6DAl3/onhS0e+D6B3kJdPwbCKS3DGAufg4gqHYxuDysRfSMWsTr?=
- =?us-ascii?Q?to9hpnzLjv7gQABniPQzFjwR94COSMzDyhGLas2Iuqa9ytdlsmXtxGMh+yxG?=
- =?us-ascii?Q?fTGGL5G7gqW/vcJTMG986oIk9THVT/vr2E/g7SE1uT/XSbozdNwFsu7oWe+e?=
- =?us-ascii?Q?Ubcf5gBi04G4+Hmg8BBfsD0w67Ln5gA+lWUvhT+2UsJoweYctVuD83gq7Xlh?=
- =?us-ascii?Q?pV4vioT4DYH7K7r2IpWxGIBcvHrIaJXh1KsVHNeIktP+gBLWrpCiYYQqDXPv?=
- =?us-ascii?Q?Ou+lziSiNUP24xkZkwv8zLliAHBTkLrwU4gzkee7+cj2+RTcaDuuNAWQzRvd?=
- =?us-ascii?Q?gmtkOq00+QIqnvn7Jnc1iQpZm1vn0AouCvZr85l6wYrHjYyoa8nkpAsd21m3?=
- =?us-ascii?Q?VFnlOeoXktWr99FWu2F/4tfCauwmDgaGeoLB35t52j9PhwdeXiKKDoKDiKlK?=
- =?us-ascii?Q?SNQEnqI75DbHOdm0OpLO0VyyZdUtHLpP5gE3XD19+Bxad6NnPbMllYMm6yhx?=
- =?us-ascii?Q?orwhD+mic7wj4RHM8DINSdqOUG0fbzOI0iFl012VwJDV7QBrdh5siC0WttXo?=
- =?us-ascii?Q?R8gM0cojS1C2K7oDnQskZTjohHhKR1ZEiHUoSBPbMRs89wai54hg8bGrRmZT?=
- =?us-ascii?Q?rlCe2gDBasWQHi8lpgbb+uO/puXDmW4G4nWOO4IB+eJZkMz4qEt9QTKZKlLh?=
- =?us-ascii?Q?XX9O7Tk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tFQ1gux8lhIoMOxgG12dVbV3IjEixEbFCya2zDeqA7Orl+5w8POA3N6+XYp5?=
- =?us-ascii?Q?EBnm3HmGXIxDuxrXll+y4oArT5SVdky9Kd2zGnw3uBmDbpJKozGCE9y26FW7?=
- =?us-ascii?Q?ZspaICZcg6l+jpXUMtG/gYeHwPrlrvgmfa4A3MCk651rf4a1BIQl0Qckzl7Z?=
- =?us-ascii?Q?nSInxSfUo6o64b5w5sxpTpyh+mHjroZlPZW58X7PKat2Kp5ctckQoxxQldDZ?=
- =?us-ascii?Q?jXWb1R8JOn6ZFrCSUJHZhdMSM9bgwZLCIQGw7YA27qOpK9ZvAb8RSpVsZxuC?=
- =?us-ascii?Q?5vPdZkqwM3Tyt4XXOX1NvcIRmypLg0pu7dJnsgm4CqhUsMq8REIsvGzoGcDZ?=
- =?us-ascii?Q?Arz3aruv+SOI7Zw9VZFueiZVKte7QCT11JJJW9hoK5hlvg04dneQO+2IFlTQ?=
- =?us-ascii?Q?M+Jk/LO0ZsnSD2AuD/AjT4V//cPYr0RGt2cDu3vlMB3NjAu0xxN9sfH/QOdO?=
- =?us-ascii?Q?One1KqFR+yUs9Hx4airaQOI1xiEaJMTdexj9QTX/Z7ZMD7edsLFPolCWsvbh?=
- =?us-ascii?Q?orB+a/gOy9zXbFEFxh5FTmZiUhz6CK9lax9W205ZsAMP8ZYG3bCYcDMAyZdn?=
- =?us-ascii?Q?8EJ11DJVweFI9mUn8FO9iPNZWwpxwt0yQzzAvJ/ebMLXfwDwCgTQ6leJrm1M?=
- =?us-ascii?Q?a/xt5uchTAkQj9aQgKo1yIo199/ktYUJE6aY+HVkTEHHX4Jf0Lq+yZam/wZj?=
- =?us-ascii?Q?4sVeIy+KAvzpQr1oDT59ilgT42ghDINQAhB/2aSpd6dCHT2WJk4oc7fQI6Ke?=
- =?us-ascii?Q?Kc6iyj6if7RqB+Twxm+J9R3lbZdsDiGX9lQSE34X90zee+KIcUwM+oZLtyc+?=
- =?us-ascii?Q?YHXl3XqGsoClGTAKb4GYCMLt2t8mSmkHW4FOpwPMpCg8BPFAmhP06ClcrFrW?=
- =?us-ascii?Q?YboMkd0QM0oGPDNuquXnxxfyGKmeI1ma77yPI6Vg+KCYMU+D1mF8yWq3TQ+J?=
- =?us-ascii?Q?TqB6njFNO6axruAyge0UWXX6j0WIxloq+P1xlX1qj6PKW7R+fwvA1GCpOtbG?=
- =?us-ascii?Q?WLcao/idEaCQggecL7Qn1916/xUAK68a28MuET7lRLIDfOr/dlfYjzYcwgN1?=
- =?us-ascii?Q?NYm62zYMQGoGCTpE0L+Pp+b7jRNVtTDlgNTjV/dIFlfEe4KfZw/wN8rCJwW+?=
- =?us-ascii?Q?ZxeHQ2jO7uz9ZbjNL+KSxKSFNVxm9fOb9+7jVAzp+I3OAxErqULN9nnF+SYH?=
- =?us-ascii?Q?yl/RGUAM6xqvZsWDXpCg9SC4ZiE+q/qU1kws7Z6YONqgSdZhU4h7acUNd7cH?=
- =?us-ascii?Q?iYDnfKL7XlBwSKhVhsABAgtPwEfIXrLvFTHibmp19XdIEPJ+RopZ+5ltZzUn?=
- =?us-ascii?Q?lZYUfZfrBQLtzVrfRjd2+c6dj72SKWRZfiDrCfLSyeeJW9mQ8MwrOcTEsfvC?=
- =?us-ascii?Q?nhVhEFpMCHTG1Is3dPrzYGTrIzRNjDuYbiKnxOYw0eJdkFFm9QvDCg6jj3Ji?=
- =?us-ascii?Q?EcceJ2gc9EsweHEM0/WEbR48iP/s0cJV9BYRnh+CV9jhRWGRchApxQL+LhVD?=
- =?us-ascii?Q?jlhWnELEbKsB0UB4/P27LAcZie692+WLWTOc6DGb3YuO9a5OmulzjLOrA6NC?=
- =?us-ascii?Q?4bqComHfNsKOyhbEx6R64vfYMofF8FFC5tq85w0y?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29db7317-e6ac-45d7-d4ae-08dc99a8a116
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 08:34:31.7356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HNHem0PUDLSPzeTvb/VE3gWOqSKXF3DLTDKZ/Gzpie8bR+30UlTlRjb/XsQ8R+oyKrPvSnnD2HeTGWdx5zkKQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6526
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 20 Jun 2024 17:03:16 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-Dave Chinner <david@fromorbit.com> writes:
+> These are very similar to the recently added Generic Initiators
+> but instead of representing an initiator of memory traffic they
+> represent an edge point beyond which may lie either targets or
+> initiators.  Here we add these ports such that they may
+> be targets of hmat_lb records to describe the latency and
+> bandwidth from host side initiators to the port.  A discoverable
+> mechanism such as UEFI CDAT read from CXL devices and switches
+> is used to discover the remainder of the path, and the OS can build
+> up full latency and bandwidth numbers as need for work and data
+> placement decisions.
+> 
+> Acked-by: Markus Armbruster <armbru@redhat.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v3: Move to hw/acpi/pci.c
+>     Rename the funciton to actually registers both types
+>     of generic nodes to reflect it isn't GI only.
+>     Note that the qom part is unchanged and other changes are mostly
+>     code movement so I've kept Markus' Ack.
+> ---
+>  qapi/qom.json                            |  34 ++++
+>  include/hw/acpi/acpi_generic_initiator.h |  35 ++++
+>  include/hw/acpi/aml-build.h              |   4 +
+>  include/hw/acpi/pci.h                    |   3 +-
+>  include/hw/pci/pci_bridge.h              |   1 +
+>  hw/acpi/acpi_generic_initiator.c         | 216 +++++++++++++++++++++++
+>  hw/acpi/aml-build.c                      |  40 +++++
+>  hw/acpi/pci.c                            | 110 +++++++++++-
+>  hw/arm/virt-acpi-build.c                 |   2 +-
+>  hw/i386/acpi-build.c                     |   2 +-
+>  hw/pci-bridge/pci_expander_bridge.c      |   1 -
+>  11 files changed, 443 insertions(+), 5 deletions(-)
 
-> On Thu, Jun 27, 2024 at 10:54:15AM +1000, Alistair Popple wrote:
->> FS DAX pages have always maintained their own page reference counts
->> without following the normal rules for page reference counting. In
->> particular pages are considered free when the refcount hits one rather
->> than zero and refcounts are not added when mapping the page.
->> 
->> Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
->> mechanism for allowing GUP to hold references on the page (see
->> get_dev_pagemap). However there doesn't seem to be any reason why FS
->> DAX pages need their own reference counting scheme.
->> 
->> By treating the refcounts on these pages the same way as normal pages
->> we can remove a lot of special checks. In particular pXd_trans_huge()
->> becomes the same as pXd_leaf(), although I haven't made that change
->> here. It also frees up a valuable SW define PTE bit on architectures
->> that have devmap PTE bits defined.
->> 
->> It also almost certainly allows further clean-up of the devmap managed
->> functions, but I have left that as a future improvment.
->> 
->> This is an update to the original RFC rebased onto v6.10-rc5. Unlike
->> the original RFC it passes the same number of ndctl test suite
->> (https://github.com/pmem/ndctl) tests as my current development
->> environment does without these patches.
->
-> I strongly suggest running fstests on pmem devices with '-o
-> dax=always' mount options to get much more comprehensive fsdax test
-> coverage. That exercises a lot of the weird mmap corner cases that
-> cause problems so it would be good to actually test that nothing new
-> got broken in FSDAX by this patchset.
+this is quite large patch, is it possible to split into
+a set of smaller patches?
 
-Thanks Dave, I will do that and report back. I suspect it will turn up
-something, given Dan was seeing a crash with these patches.
-
- - Alistair
-
-> -Dave.
+> diff --git a/qapi/qom.json b/qapi/qom.json
+> index 8bd299265e..8fa6bbd9a7 100644
+> --- a/qapi/qom.json
+> +++ b/qapi/qom.json
+> @@ -826,6 +826,38 @@
+>    'data': { 'pci-dev': 'str',
+>              'node': 'uint32' } }
+>  
+> +##
+> +# @AcpiGenericPortProperties:
+> +#
+> +# Properties for acpi-generic-port objects.
+> +#
+> +# @pci-bus: QOM path of the PCI bus of the hostbridge associated with
+> +#     this SRAT Generic Port Affinity Structure.  This is the same as
+> +#     the bus parameter for the root ports attached to this host
+> +#     bridge.  The resulting SRAT Generic Port Affinity Structure will
+> +#     refer to the ACPI object in DSDT that represents the host bridge
+> +#     (e.g.  ACPI0016 for CXL host bridges).  See ACPI 6.5 Section
+> +#     5.2.16.7 for more information.
+> +#
+> +# @node: Similar to a NUMA node ID, but instead of providing a
+> +#     reference point used for defining NUMA distances and access
+> +#     characteristics to memory or from an initiator (e.g. CPU), this
+> +#     node defines the boundary point between non-discoverable system
+> +#     buses which must be described by firmware, and a discoverable
+> +#     bus.  NUMA distances and access characteristics are defined to
+> +#     and from that point.  For system software to establish full
+> +#     initiator to target characteristics this information must be
+> +#     combined with information retrieved from the discoverable part
+> +#     of the path.  An example would use CDAT (see UEFI.org)
+> +#     information read from devices and switches in conjunction with
+> +#     link characteristics read from PCIe Configuration space.
+> +#
+> +# Since: 9.1
+> +##
+> +{ 'struct': 'AcpiGenericPortProperties',
+> +  'data': { 'pci-bus': 'str',
+> +            'node': 'uint32' } }
+> +
+>  ##
+>  # @RngProperties:
+>  #
+> @@ -1019,6 +1051,7 @@
+>  { 'enum': 'ObjectType',
+>    'data': [
+>      'acpi-generic-initiator',
+> +    'acpi-generic-port',
+>      'authz-list',
+>      'authz-listfile',
+>      'authz-pam',
+> @@ -1092,6 +1125,7 @@
+>    'discriminator': 'qom-type',
+>    'data': {
+>        'acpi-generic-initiator':     'AcpiGenericInitiatorProperties',
+> +      'acpi-generic-port':          'AcpiGenericPortProperties',
+>        'authz-list':                 'AuthZListProperties',
+>        'authz-listfile':             'AuthZListFileProperties',
+>        'authz-pam':                  'AuthZPAMProperties',
+> diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/acpi_generic_initiator.h
+> new file mode 100644
+> index 0000000000..92a39ad303
+> --- /dev/null
+> +++ b/include/hw/acpi/acpi_generic_initiator.h
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> + */
+> +
+> +#ifndef ACPI_GENERIC_INITIATOR_H
+> +#define ACPI_GENERIC_INITIATOR_H
+> +
+> +#include "qom/object_interfaces.h"
+> +
+> +#define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+> +
+> +typedef struct AcpiGenericInitiator {
+> +    /* private */
+> +    Object parent;
+> +
+> +    /* public */
+> +    char *pci_dev;
+> +    uint16_t node;
+> +} AcpiGenericInitiator;
+> +
+> +#define TYPE_ACPI_GENERIC_PORT "acpi-generic-port"
+> +
+> +typedef struct AcpiGenericPort {
+> +    /* private */
+> +    Object parent;
+> +
+> +    /* public */
+> +    char *pci_bus;
+> +    uint16_t node;
+> +} AcpiGenericPort;
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data);
+> +
+> +#endif
+> diff --git a/include/hw/acpi/aml-build.h b/include/hw/acpi/aml-build.h
+> index 9ba3a21c13..fb8cf6c415 100644
+> --- a/include/hw/acpi/aml-build.h
+> +++ b/include/hw/acpi/aml-build.h
+> @@ -490,6 +490,10 @@ void build_srat_pci_generic_initiator(GArray *table_date, int node,
+>                                        uint16_t segment, uint8_t bus,
+>                                        uint8_t devfn);
+>  
+> +void build_srat_acpi_generic_port(GArray *table_data, int node,
+> +                                  const char *hid,
+> +                                  uint32_t uid);
+> +
+>  void build_slit(GArray *table_data, BIOSLinker *linker, MachineState *ms,
+>                  const char *oem_id, const char *oem_table_id);
+>  
+> diff --git a/include/hw/acpi/pci.h b/include/hw/acpi/pci.h
+> index 9adf1887da..182095d104 100644
+> --- a/include/hw/acpi/pci.h
+> +++ b/include/hw/acpi/pci.h
+> @@ -43,7 +43,8 @@ void build_append_pci_bus_devices(Aml *parent_scope, PCIBus *bus);
+>  void build_pci_bridge_aml(AcpiDevAmlIf *adev, Aml *scope);
+>  
+>  #define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+> +#define TYPE_ACPI_GENERIC_PORT "acpi-generic-port"
+>  
+> -void build_srat_generic_pci_initiator(GArray *table_data);
+> +void build_srat_generic_affinity_structures(GArray *table_data);
+>  
+>  #endif
+> diff --git a/include/hw/pci/pci_bridge.h b/include/hw/pci/pci_bridge.h
+> index 5cd452115a..5456e24883 100644
+> --- a/include/hw/pci/pci_bridge.h
+> +++ b/include/hw/pci/pci_bridge.h
+> @@ -102,6 +102,7 @@ typedef struct PXBPCIEDev {
+>      PXBDev parent_obj;
+>  } PXBPCIEDev;
+>  
+> +#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
+>  #define TYPE_PXB_DEV "pxb"
+>  OBJECT_DECLARE_SIMPLE_TYPE(PXBDev, PXB_DEV)
+>  
+> diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
+> new file mode 100644
+> index 0000000000..8491aaf5ec
+> --- /dev/null
+> +++ b/hw/acpi/acpi_generic_initiator.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> + */
+> +
+> +#include "qemu/osdep.h"
+> +#include "hw/acpi/acpi_generic_initiator.h"
+> +#include "hw/acpi/aml-build.h"
+> +#include "hw/boards.h"
+> +#include "hw/pci/pci_bridge.h"
+> +#include "hw/pci/pci_device.h"
+> +#include "qemu/error-report.h"
+> +#include "qapi/error.h"
+> +
+> +typedef struct AcpiGenericInitiatorClass {
+> +    ObjectClass parent_class;
+> +} AcpiGenericInitiatorClass;
+> +
+> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
+> +                   ACPI_GENERIC_INITIATOR, OBJECT,
+> +                   { TYPE_USER_CREATABLE },
+> +                   { NULL })
+> +
+> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
+> +
+> +static void acpi_generic_initiator_init(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->node = MAX_NODES;
+> +    gi->pci_dev = NULL;
+> +}
+> +
+> +static void acpi_generic_initiator_finalize(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    g_free(gi->pci_dev);
+> +}
+> +
+> +static void acpi_generic_initiator_set_pci_device(Object *obj, const char *val,
+> +                                                  Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->pci_dev = g_strdup(val);
+> +}
+> +
+> +static void acpi_generic_initiator_set_node(Object *obj, Visitor *v,
+> +                                            const char *name, void *opaque,
+> +                                            Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    uint32_t value;
+> +
+> +    if (!visit_type_uint32(v, name, &value, errp)) {
+> +        return;
+> +    }
+> +
+> +    if (value >= MAX_NODES) {
+> +        error_printf("%s: Invalid NUMA node specified\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    gi->node = value;
+> +    ms->numa_state->nodes[gi->node].has_gi = true;
+> +}
+> +
+> +static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
+> +{
+> +    object_class_property_add_str(oc, "pci-dev", NULL,
+> +        acpi_generic_initiator_set_pci_device);
+> +    object_class_property_add(oc, "node", "int", NULL,
+> +        acpi_generic_initiator_set_node, NULL, NULL);
+> +}
+> +
+> +typedef struct AcpiGenericPortClass {
+> +    ObjectClass parent_class;
+> +} AcpiGenericPortClass;
+> +
+> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericPort, acpi_generic_port,
+> +                   ACPI_GENERIC_PORT, OBJECT,
+> +                   { TYPE_USER_CREATABLE },
+> +                   { NULL })
+> +
+> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericPort, ACPI_GENERIC_PORT)
+> +
+> +static void acpi_generic_port_init(Object *obj)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    gp->node = MAX_NODES;
+> +    gp->pci_bus = NULL;
+> +}
+> +
+> +static void acpi_generic_port_finalize(Object *obj)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    g_free(gp->pci_bus);
+> +}
+> +
+> +static void acpi_generic_port_set_pci_bus(Object *obj, const char *val,
+> +                                          Error **errp)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    gp->pci_bus = g_strdup(val);
+> +}
+> +
+> +static void acpi_generic_port_set_node(Object *obj, Visitor *v,
+> +                                       const char *name, void *opaque,
+> +                                       Error **errp)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +    uint32_t value;
+> +
+> +    if (!visit_type_uint32(v, name, &value, errp)) {
+> +        return;
+> +    }
+> +
+> +    if (value >= MAX_NODES) {
+> +        error_printf("%s: Invalid NUMA node specified\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    gp->node = value;
+> +}
+> +
+> +static void acpi_generic_port_class_init(ObjectClass *oc, void *data)
+> +{
+> +    object_class_property_add_str(oc, "pci-bus", NULL,
+> +        acpi_generic_port_set_pci_bus);
+> +    object_class_property_add(oc, "node", "int", NULL,
+> +        acpi_generic_port_set_node, NULL, NULL);
+> +}
+> +
+> +static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> +{
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    AcpiGenericInitiator *gi;
+> +    GArray *table_data = opaque;
+> +    uint8_t bus, devfn;
+> +    Object *o;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> +        return 0;
+> +    }
+> +
+> +    gi = ACPI_GENERIC_INITIATOR(obj);
+> +    if (gi->node >= ms->numa_state->num_nodes) {
+> +        error_printf("%s: Specified node %d is invalid.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR, gi->node);
+> +        exit(1);
+> +    }
+> +
+> +    o = object_resolve_path_type(gi->pci_dev, TYPE_PCI_DEVICE, NULL);
+> +    if (!o) {
+> +        error_printf("%s: Specified device must be a PCI device.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    bus = object_property_get_uint(o, "bus", &error_fatal);
+> +    devfn = object_property_get_uint(o, "addr", &error_fatal);
+> +
+> +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> +
+> +    return 0;
+> +}
+> +
+> +static int build_acpi_generic_port(Object *obj, void *opaque)
+> +{
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    const char *hid = "ACPI0016";
+> +    GArray *table_data = opaque;
+> +    AcpiGenericPort *gp;
+> +    uint32_t uid;
+> +    Object *o;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_PORT)) {
+> +        return 0;
+> +    }
+> +
+> +    gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    if (gp->node >= ms->numa_state->num_nodes) {
+> +        error_printf("%s: node %d is invalid.\n",
+> +                     TYPE_ACPI_GENERIC_PORT, gp->node);
+> +        exit(1);
+> +    }
+> +
+> +    o = object_resolve_path_type(gp->pci_bus, TYPE_PXB_CXL_BUS, NULL);
+> +    if (!o) {
+> +        error_printf("%s: device must be a CXL host bridge.\n",
+> +                     TYPE_ACPI_GENERIC_PORT);
+> +        exit(1);
+> +    }
+> +
+> +    uid = object_property_get_uint(o, "acpi_uid", &error_fatal);
+> +    build_srat_acpi_generic_port(table_data, gp->node, hid, uid);
+> +
+> +    return 0;
+> +}
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data)
+> +{
+> +    object_child_foreach_recursive(object_get_root(),
+> +                                   build_acpi_generic_initiator,
+> +                                   table_data);
+> +    object_child_foreach_recursive(object_get_root(), build_acpi_generic_port,
+> +                                   table_data);
+> +}
+> diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
+> index 968b654e58..4067100dd6 100644
+> --- a/hw/acpi/aml-build.c
+> +++ b/hw/acpi/aml-build.c
+> @@ -1955,6 +1955,19 @@ static void build_append_srat_pci_device_handle(GArray *table_data,
+>      build_append_int_noprefix(table_data, 0, 12);
+>  }
+>  
+> +static void build_append_srat_acpi_device_handle(GArray *table_data,
+> +                                                 const char *hid,
+> +                                                 uint32_t uid)
+> +{
+> +    assert(strlen(hid) == 8);
+> +    /* Device Handle - ACPI */
+> +    for (int i = 0; i < sizeof(hid); i++) {
+> +        build_append_int_noprefix(table_data, hid[i], 1);
+> +    }
+> +    build_append_int_noprefix(table_data, uid, 4);
+> +    build_append_int_noprefix(table_data, 0, 4);
+> +}
+> +
+>  /*
+>   * ACPI spec, Revision 6.3
+>   * 5.2.16.6 Generic Initiator Affinity Structure
+> @@ -1982,6 +1995,33 @@ void build_srat_pci_generic_initiator(GArray *table_data, int node,
+>      build_append_int_noprefix(table_data, 0, 4);
+>  }
+>  
+> +/*
+> + * ACPI spec, Revision 6.5
+> + * 5.2.16.7 Generic Port Affinity Structure
+> + *   With ACPI Device Handle.
+> + */
+> +void build_srat_acpi_generic_port(GArray *table_data, int node,
+> +                                  const char *hid,
+> +                                  uint32_t uid)
+> +{
+> +    /* Type */
+> +    build_append_int_noprefix(table_data, 6, 1);
+> +    /* Length */
+> +    build_append_int_noprefix(table_data, 32, 1);
+> +    /* Reserved */
+> +    build_append_int_noprefix(table_data, 0, 1);
+> +    /* Device Handle Type: ACPI */
+> +    build_append_int_noprefix(table_data, 0, 1);
+> +    /* Proximity Domain */
+> +    build_append_int_noprefix(table_data, node, 4);
+> +    /* Device Handle */
+> +    build_append_srat_acpi_device_handle(table_data, hid, uid);
+> +    /* Flags - GP Enabled */
+> +    build_append_int_noprefix(table_data, 1, 4);
+> +    /* Reserved */
+> +    build_append_int_noprefix(table_data, 0, 4);
+> +}
+> +
+>  /*
+>   * ACPI spec 5.2.17 System Locality Distance Information Table
+>   * (Revision 2.0 or later)
+> diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
+> index f68be9ea17..b9e2776966 100644
+> --- a/hw/acpi/pci.c
+> +++ b/hw/acpi/pci.c
+> @@ -29,6 +29,7 @@
+>  #include "hw/boards.h"
+>  #include "hw/acpi/aml-build.h"
+>  #include "hw/acpi/pci.h"
+> +#include "hw/pci/pci_bridge.h"
+>  #include "hw/pci/pci_device.h"
+>  #include "hw/pci/pcie_host.h"
+>  
+> @@ -171,9 +172,116 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
+>      return 0;
+>  }
+>  
+> -void build_srat_generic_pci_initiator(GArray *table_data)
+> +typedef struct AcpiGenericPort {
+> +    /* private */
+> +    Object parent;
+> +
+> +    /* public */
+> +    char *pci_bus;
+> +    uint16_t node;
+> +} AcpiGenericPort;
+> +
+> +typedef struct AcpiGenericPortClass {
+> +    ObjectClass parent_class;
+> +} AcpiGenericPortClass;
+> +
+> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericPort, acpi_generic_port,
+> +                   ACPI_GENERIC_PORT, OBJECT,
+> +                   { TYPE_USER_CREATABLE },
+> +                   { NULL })
+> +
+> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericPort, ACPI_GENERIC_PORT)
+> +
+> +static void acpi_generic_port_init(Object *obj)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    gp->node = MAX_NODES;
+> +    gp->pci_bus = NULL;
+> +}
+> +
+> +static void acpi_generic_port_finalize(Object *obj)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    g_free(gp->pci_bus);
+> +}
+> +
+> +static void acpi_generic_port_set_pci_bus(Object *obj, const char *val,
+> +                                          Error **errp)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    gp->pci_bus = g_strdup(val);
+> +}
+> +
+> +static void acpi_generic_port_set_node(Object *obj, Visitor *v,
+> +                                       const char *name, void *opaque,
+> +                                       Error **errp)
+> +{
+> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
+> +    uint32_t value;
+> +
+> +    if (!visit_type_uint32(v, name, &value, errp)) {
+> +        return;
+> +    }
+> +
+> +    if (value >= MAX_NODES) {
+> +        error_printf("%s: Invalid NUMA node specified\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    gp->node = value;
+> +}
+> +
+> +static void acpi_generic_port_class_init(ObjectClass *oc, void *data)
+> +{
+> +    object_class_property_add_str(oc, "pci-bus", NULL,
+> +        acpi_generic_port_set_pci_bus);
+> +    object_class_property_add(oc, "node", "int", NULL,
+> +        acpi_generic_port_set_node, NULL, NULL);
+> +}
+> +
+> +static int build_acpi_generic_port(Object *obj, void *opaque)
+> +{
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    const char *hid = "ACPI0016";
+> +    GArray *table_data = opaque;
+> +    AcpiGenericPort *gp;
+> +    uint32_t uid;
+> +    Object *o;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_PORT)) {
+> +        return 0;
+> +    }
+> +
+> +    gp = ACPI_GENERIC_PORT(obj);
+> +
+> +    if (gp->node >= ms->numa_state->num_nodes) {
+> +        error_printf("%s: node %d is invalid.\n",
+> +                     TYPE_ACPI_GENERIC_PORT, gp->node);
+> +        exit(1);
+> +    }
+> +
+> +    o = object_resolve_path_type(gp->pci_bus, TYPE_PXB_CXL_BUS, NULL);
+> +    if (!o) {
+> +        error_printf("%s: device must be a CXL host bridge.\n",
+> +                     TYPE_ACPI_GENERIC_PORT);
+> +       exit(1);
+> +    }
+> +
+> +    uid = object_property_get_uint(o, "acpi_uid", &error_fatal);
+> +    build_srat_acpi_generic_port(table_data, gp->node, hid, uid);
+> +
+> +    return 0;
+> +}
+> +
+> +void build_srat_generic_affinity_structures(GArray *table_data)
+>  {
+>      object_child_foreach_recursive(object_get_root(),
+>                                     build_acpi_generic_initiator,
+>                                     table_data);
+> +    object_child_foreach_recursive(object_get_root(), build_acpi_generic_port,
+> +                                   table_data);
+>  }
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index 1a5aa0d55d..31956410ed 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -504,7 +504,7 @@ build_srat(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
+>          }
+>      }
+>  
+> -    build_srat_generic_pci_initiator(table_data);
+> +    build_srat_generic_affinity_structures(table_data);
+>  
+>      if (ms->nvdimms_state->is_enabled) {
+>          nvdimm_build_srat(table_data);
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index 0d37b9238a..446adcc602 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -2046,7 +2046,7 @@ build_srat(GArray *table_data, BIOSLinker *linker, MachineState *machine)
+>          build_srat_memory(table_data, 0, 0, 0, MEM_AFFINITY_NOFLAGS);
+>      }
+>  
+> -    build_srat_generic_pci_initiator(table_data);
+> +    build_srat_generic_affinity_structures(table_data);
+>  
+>      /*
+>       * Entry is required for Windows to enable memory hotplug in OS
+> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+> index 92d39b917a..1c51f3f5b6 100644
+> --- a/hw/pci-bridge/pci_expander_bridge.c
+> +++ b/hw/pci-bridge/pci_expander_bridge.c
+> @@ -38,7 +38,6 @@ DECLARE_INSTANCE_CHECKER(PXBBus, PXB_BUS,
+>  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_PCIE_BUS,
+>                           TYPE_PXB_PCIE_BUS)
+>  
+> -#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
+>  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_CXL_BUS,
+>                           TYPE_PXB_CXL_BUS)
+>  
 
