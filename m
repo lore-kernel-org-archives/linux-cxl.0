@@ -1,97 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2063.outbound.protection.outlook.com [40.107.96.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9746F86131;
-	Mon,  1 Jul 2024 22:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C439116F0DD;
+	Mon,  1 Jul 2024 23:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719874491; cv=fail; b=pCQDltmAnEoKpE4ueVsbghg45DWVeUrMQEKuYNRUdM+GWSo+oCojjZ/1Td2rkv+Fnz2govCaNuV+Q2dMk700/fuAKMfFUgBmWoswz+hC/l/ie8+tTpehJzuK7a44OQyvl9hg7H21OyREc8cdfWm7zs3tvUbcg0WUlT2Zd0btfLU=
+	t=1719878010; cv=fail; b=uC5mJUJ18F4qbJQE1A1LrV71iV+CBY1gN+8JSSIu77D9zD3fvFHtYjApsn2GkMObdw4RjAFXimlaI/TKSApMXbGHfgsayAmtJY+qWo6YRTKTM3MlfcTSiIEC9at7tNcRl7T+AxxXcGNrwCz43DvAH+FVvwBf97cEZySGXhmmQ3s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719874491; c=relaxed/simple;
-	bh=DB6OX4p7GAbBQ6LYeZrnS7c88h3zqostNR9Xqttxzdk=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=g3EnnK5qL4W2wlBQvEf/J81Csrc9FQ678H49irIh7nHcTxgMSFs5u6l5YTPEA4uHs+wzuuWiLIhuRLsMbGWVW+epgc1J5dIJSkUtPZPJSD8n5nE54H3gelspftZcg1KsdZkveh6Vhl5pfcflKhHXQTzApfmJ3AbyHj1NyDzFHR4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFl5Z1Zh; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719878010; c=relaxed/simple;
+	bh=Gu1zydKx8BvrqcPz8f811s2PKkip9bG3/r6ipqK8s1c=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=VnCo4vsuDog7dU7lf0dK7iv1o3lapBJECzvzAI1NP9i/iArMWWINGiVtZq9vwvWq701C5I7U6AsLndNhEMtI8ff0Bgel0hyBsR7RS74yZzX7gOKrzL4zQ8Pyf5WValaT8ngC7RFy0GuBsUDQHHpct8mrTyt/PlajDmElSQrWBCQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=No4ehdGc; arc=fail smtp.client-ip=40.107.96.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFl5Z1Zh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719874489; x=1751410489;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DB6OX4p7GAbBQ6LYeZrnS7c88h3zqostNR9Xqttxzdk=;
-  b=gFl5Z1ZhcxH16QQVUbm79C60+4W3tq+vaJhJWngX52GcW1uuEu8iv2Bt
-   ysvnZzjYsDtIokjVe5rEqDGTNHpPrG1cWSxlnfKAzfO8T3xCdRV3CSavs
-   30vx2OmYQrXeNIPPvaoVBPh2bf9wxJGdgw63MEql/7ebyuxfIveagS9BA
-   +M/fQUR4nXglwwDifBg+I+RAQOlJSmc3NMoAGGfkZFseQMtgvZ8g2z7Sf
-   V1O45bSPLLkgheB2sXWuR8cpTWS8OohhQ25WYPQ3NBoKYaIijFM75nyLK
-   uGElvEQL2iORJK/42VdCbIFjrHUmjGI4mcIO1bWnWtUIH5xM1m4ZH13X2
-   g==;
-X-CSE-ConnectionGUID: xOgzs3CQRaiNtHF7LtWQTQ==
-X-CSE-MsgGUID: ODTFPz/VSTOu2kxXmsSy3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="27707563"
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="27707563"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 15:54:48 -0700
-X-CSE-ConnectionGUID: gPklWhAaSLStWid9EmkT8Q==
-X-CSE-MsgGUID: IWR4ejklT2uXL2NJSuu5jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="45477108"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Jul 2024 15:54:48 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 1 Jul 2024 15:54:48 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 1 Jul 2024 15:54:47 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 1 Jul 2024 15:54:47 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 1 Jul 2024 15:54:47 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="No4ehdGc"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C19+3B2TNJSnCMcLrhCFIyFs4M8ub6l6elPOPTIctpeyPtYl/BmXgRoOUg7V8HIetMGvnnt08IPO7y6Yy6V/noKGQytTPA4SbKJgI7Dryddo5/SacmxzFuF45Ef3s0O5zSfG5Fsw74u2a0QobP33R7w9RmaZLY86GJwkYndKfHhe6TJhhEsSmWTIfFpAlArphvN9I6Aesc4eVD04bl4cGoQJzaMLnLmB1JM9JSFQlL1BS8u1ONe4wc18ktgXAlYqLcYcQ/L5x9SKzR7Yq1riQ4ddfKmHtrjFj23X8L0tKDHGb/ZvxZw4B7KUIk02QcMTwnV11WDVwJDMXfak8YBDBQ==
+ b=FzkbgFLDG83aigF8U7vWLtW00L0Fno1uhQwXZH0J1CPuinPqN7sO9THJCaiwUL8MLpGM0uc06ZcAO/F7uBv/CS3DSfmKSGGmHM5u2Dujy+nBEiskMZwZbmgokPATB0RMeC6OKF/4l5rYvgclFd7joqBT5Yrcpg8Hld4pev9EyeKMNRnkgwzl/BEx3xLk+Qz/El5RmAxvd9qGTUVcrF03tIYYuIHf5IeEh6ajW+cRzx8QoPQzJXdubOBcPZ7gFyO4ZGTXCL1vABWqc1GgOsUF2PPbBbDNm5p6LSyk2QeEoNNpwrvy0aQ7hv6WNzJ8zjNOrQolwWpMAZH3U6IrdZqNTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OVrg4gARuPQCOwi9r2BCUfjwJ+iMTaYLSVFB2ux6Tb4=;
- b=B4i/qnkGSbe5dL+c40B6fKvFjj7ZJPMG2/c8/xG2tDXeW+/VHctwtIsjC5eAbnnChu3uFFSsNOeRJq3OOUsSUqHIk/6h+Hacg9cLmU2dPl8aRuIuT3Jzzep7L58FMpl2e9Chr22g39CMWmt1ZMwu+XuyE5UlyI5blQ0yBnYIP8eVSXLJBPq4Uf6+oNZ9Hs85YtVoVd080/PVTmjJTkXu9sEhFC0/lLaZbIVSYn5HMv5n0Ro+yhM3Dsbcy8ouYDU4G8WgXOXOOPPeRBSi7oV2cQBcbGI9RccqbGDIhEonFdEahcTf2vG9V6K/vXvmGoECsCwEYPz1TNzFH9yUgm4naw==
+ bh=vz7haZsFj1gyNIs9Hvqqy12vPgWsa7xrQknuTdinxv0=;
+ b=IrmCrVMA6GT6bHmYvJx9YM61JGo7MCbAu166m+H/qUnMWeqWmwc6Lbu8sn7OXVG9S7iOIaIyD9ZE5AS045oPVGrXyl03Yx/8FYKGztd70GIi/292gVVy+5IvD7Kl+vFFcWcOcjWLZf2Ai+JPDtsQbzsZB5JtomvYRUFcEwYmpstry9su1USXQD6YFVD9bCBGgJvkPtuZgSM8bv/1EL2fqY3BrzeXm5Ct1QsMrPtw7ReNKCkZ56fD5qfrXZ04IhWl4J7zV1Spn1MjrdXdc+zCncQtdNF4yXc134CmRKJjgUO9yTn8Y8fzCEqw++n8t3j8P91Dp8VNLwKy/FyJDuLozw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vz7haZsFj1gyNIs9Hvqqy12vPgWsa7xrQknuTdinxv0=;
+ b=No4ehdGc74tkhPesz0WG8j+03OUgrdaLCpdJtbi3UeXD5Bu3k81AsI/QRjmQ8RAPLAptmnl769wu5ZFhIF86G67MI3aV3dqh04ZC081/boFdSTsF04bolYu+begF9+jzET8W/JqTEX7LwxlnLlfM2xPac1GWqT9ZuFFhq6GU+7MNF1W8PUiL5senZxv8rEtWXOQYUcmMpwJ3nc1tUU7E9C2fpdz+cWht0vrmiVGne20fpjRIaDjvYu9V0nSIbvdSIdmshYToq/sXSVgxGe3y7bnkKp0ewdIMAmqv0P3j8yJN8gR6XsLGQSW/e4YEWuj5IjL8Si7zEYL0ewX0ci+ZWA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH8PR11MB6927.namprd11.prod.outlook.com (2603:10b6:510:225::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
- 2024 22:54:45 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7719.022; Mon, 1 Jul 2024
- 22:54:43 +0000
-Date: Mon, 1 Jul 2024 15:54:41 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-CC: <mahesh.natu@intel.com>, <rafael@kernel.org>,
-	<Jonathan.Cameron@huawei.com>
-Subject: [ACPI Code First ECN v4] "Extended-linear" addressing for
- direct-mapped memory-side caches
-Message-ID: <668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: MW4PR03CA0143.namprd03.prod.outlook.com
- (2603:10b6:303:8c::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ DM4PR12MB6326.namprd12.prod.outlook.com (2603:10b6:8:a3::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.29; Mon, 1 Jul 2024 23:53:21 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7719.028; Mon, 1 Jul 2024
+ 23:53:21 +0000
+References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
+ <74a9fc9e018e54d7afbeae166479e2358e0a1225.1719386613.git-series.apopple@nvidia.com>
+ <f9539968-4b76-41a9-92d5-00082c7d1e96@redhat.com>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+ jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
+ mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
+ tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+ jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
+Subject: Re: [PATCH 09/13] gup: Don't allow FOLL_LONGTERM pinning of FS DAX
+ pages
+Date: Tue, 02 Jul 2024 09:47:03 +1000
+In-reply-to: <f9539968-4b76-41a9-92d5-00082c7d1e96@redhat.com>
+Message-ID: <87le2klleb.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY5P282CA0115.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:20b::20) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -99,198 +75,129 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6927:EE_
-X-MS-Office365-Filtering-Correlation-Id: 529eff4d-4405-497a-ef95-08dc9a20cc3a
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DM4PR12MB6326:EE_
+X-MS-Office365-Filtering-Correlation-Id: af2a5d09-3cd5-4c37-1ec5-08dc9a28fcee
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Q47bNxelcwoMkCWYpAwLWlrO2OOOOYI7an5KFkODac+g9KkkNY/D+g/Zamwt?=
- =?us-ascii?Q?smbWsqinqvixyTY8c3w71xSF/RF6ljsmaRxVFD/9zZvASH7Ft6d3O7a7imjQ?=
- =?us-ascii?Q?Ku1HcsBLm6NR8HUPliC0seS9nAqAjs7Vm6VlYWGvpJU/mSsHrLWQkK1Aams3?=
- =?us-ascii?Q?KAB5Zy/5v+oH/cLrqAH/+2a1EtDwe/y6d5gpirUJba1vBTYScX1GbYeYMPX+?=
- =?us-ascii?Q?iT4YJwEKDThDr2DipPtsIVVruhRv0wUMBE+WvdqQ1B3t8EB33auoo4xx8fD2?=
- =?us-ascii?Q?dUQ3NEk5MdQx7v3ckKZUs0rFZECty0/Cd3Wj782kZIxx2j15cDv+qe8RWWmZ?=
- =?us-ascii?Q?NC58vyYtsRLgGTA1uxJ4hIvz5tx+/VQsejJkKS3JCflVIE3OVKffKRnrqyEK?=
- =?us-ascii?Q?pHMBv13pydWfAqPff3hFwnCU6HpAWLAR5tN6VTqOE3YZtSxmk0aXvqyCUoFg?=
- =?us-ascii?Q?U0QSfYqmgGipjJYZIsBFuouNJI/AMPLW6j0+BraYLDhZCVIZal7UL7YLWwR5?=
- =?us-ascii?Q?hKzLrLLQrUREoyV5ja1XhhWYwF7Wt6CGWoWv7IpNK0v1GJYaBYGI/tmohcb3?=
- =?us-ascii?Q?6BZ/hSUU5wmVQdCI2JZgyZC34LTvBEQ020q9MZj55GdqL02hlZkVj4XBkMpF?=
- =?us-ascii?Q?az/ZxlIPbA4+sie7oePdG+C5y2XejHwN9iE+WlI869AK3jsEdYLFMrjRxZb/?=
- =?us-ascii?Q?5Sx6BwEpuUIkHmkN3xmpI5RjlN2rNJwSVgbJHy9DlgB301TpXLvHQc9Cb/GW?=
- =?us-ascii?Q?RDx9i1eazYlRt8DqwTbZbqY2VKJYbccAnWh6fcPmaBzv95zXl7zR1NaAqOFL?=
- =?us-ascii?Q?NcoS6vMyOZNKAfuq6QblgR1NFzCOnkpfF8LDTwry4MCx6SvBjsPsmPodyQ3z?=
- =?us-ascii?Q?f+xJ1O/BsrK10K8Yj+miX1p8tALuZ4iVx6BOoTbXYrdbyjGLdhQydNyNmTZT?=
- =?us-ascii?Q?nhMICq9lFnskzg54hZ3TOXIX1S3hhm70apUO6p8GhgQeetJs1qD1JKYkk8mD?=
- =?us-ascii?Q?HEUVs8yAPpmq160lTPbnTaN4gHnHs7fojPwOAQ0cb+Uequo+69fRblvm7lFT?=
- =?us-ascii?Q?lZ+XVR419rVk5asWIslJJmf97Q7yKmSiW4wmEkuZSSbR+6rUuS4AHw6Zkmxv?=
- =?us-ascii?Q?5PLpjDpwH7utxMmPmsnv5LcprBgsHOEnZbj2KKjmZAw1T3cYAp0RUbBuN0/u?=
- =?us-ascii?Q?QyRFnisU4xlttHpxtds22iDT+tq08Mm44HKIMZDUo38UE3UIxIPWuiNj5dlq?=
- =?us-ascii?Q?pp9Cv6PMtYoR4AXS0Lhjf39uo67oSrGKBBnaHnI3kvrjfhneTAaqrXuPAff2?=
- =?us-ascii?Q?VV4=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?awaVA54tfcgdrNViR3wcYggMjMJylzTwaIHx8amfkRN/kHRD4lR/PQWRkg4r?=
+ =?us-ascii?Q?hu2rVPneL6Sd14HEvEPjSBRI8eS6NUOXJYjB+2f1FJ4zsYjokL86+qpWqhyH?=
+ =?us-ascii?Q?UG8fxCnFWhRYBMmVxxUR5ixxQWV/WWa1u3VGDo1wNy7TCsGrfkHizDR7/N59?=
+ =?us-ascii?Q?o+0RWH5enMp8PtdVUEY9lCKarECrdsrHQjc8DQShUByHxNGjh1deC+UwNKE4?=
+ =?us-ascii?Q?NgCpcVuolJvtEsILMbOt6XKa1/LlPG6pcRKcC68Wa9w00Az7cuXz4McEMMpI?=
+ =?us-ascii?Q?qTlahGDrKCrUANeHKbL2mLLgiNRF1Wl2m8cHKasvb6X0HiqXWKw4+qwYULUb?=
+ =?us-ascii?Q?2RdKckaPD38Q1ErKSU1b7w+dXzGjeMDWw+MRrFniBRyUfQ106dr9ekcspdmz?=
+ =?us-ascii?Q?LWf/Komt77AGpfBs2Gx9onfG9gNtxvRhupwxH5yVslqSawKIay+j6kTz45tf?=
+ =?us-ascii?Q?w3gVC+bKcDB5Rc5kdrq7g2LM8I1dS+dJr/8uQq9Y0qKG73DfG1L1KTDp187A?=
+ =?us-ascii?Q?f/4caSBAo21Q7+0wbim+8a3re9fw8PKsz0BlcrF1qVBbAHxQgGXovhq015jY?=
+ =?us-ascii?Q?Y7m9LF/nvWLfxkJFq5G2sOsCgDF6e0Wi38qAPxmJ7eCVIKg/zjeZgX4RMKrw?=
+ =?us-ascii?Q?GJHMGd1oH454LnqTrOMyiiko5Nku62JaD/xWIlU+zCI6YLcD5Y0A8Au8QbIS?=
+ =?us-ascii?Q?QHaKI+CB2PFnrFAMy5+PDOR0lOYqS4IzFVHyBz4YkjtttFWx7AAnnLu2KLO6?=
+ =?us-ascii?Q?BeKrD2f9F7Lyn4QlgU0/4Oq/7q1BnpUDzTylYoYHlAvOkzJdFHWEsOJ1xLpU?=
+ =?us-ascii?Q?qJ2KT0ysFSHLHN3FQ/aS3SifgYxJXHrdSg2RkLzi8YOGf8C44UZsSi0f2u53?=
+ =?us-ascii?Q?V3zaKvBBcRWe9ZH/fpHSANWlJXqSIIw3MTbrZmCdBVJWDsfwFB9pZy2H3BRx?=
+ =?us-ascii?Q?LUnKUbx3/33qo6XHLZYrZwq+M0N1H2/0mGrxKvRmyWaunYElSWIK0ZacCdXi?=
+ =?us-ascii?Q?CVcj/aCqATNYQ5iqrttTj+jMH9PaWMutiHvE0QHL3adabicD0cnHi32gB13i?=
+ =?us-ascii?Q?rqmk/eiyBDUxRoVMJSBnn/xYBFFBncTdKpmPK7F/1Jn5Wn3pKCpZ22Lgq9GB?=
+ =?us-ascii?Q?iNT58jOovrSaCQR/hd74z8deRAVK/LjJrbf5cN2vaN6w/au+/qK2OheRKy/Z?=
+ =?us-ascii?Q?DwtOBZ3zgULwCN6nbPd/djOC09OkU+q6b+XC89Xv3Di5vCRNXTvKBvK4y1Ly?=
+ =?us-ascii?Q?Rd1u3EIbPcudAP876elljGcc56g2sLQSbgPxnWMItzwlYIduj1c7IIvIZPz4?=
+ =?us-ascii?Q?zbfq5BKbBH8PtyJcuPeJwH3p34BILVeBQ16bMGRXI+gmuA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?e16kfweJDklIm9KA05Fc7AHCG9ddwWTUurMUyl1iXcKsw2bmwbdkDBoH9pAG?=
- =?us-ascii?Q?U8yHNfSPqdO4Yzmqp3SEwqsN0KJ5MEJlrGniDCppVgx32F1EtX7Yi675DuX3?=
- =?us-ascii?Q?uyL6i6SDsC5BajjvNgRXFuEQPp3vwDSIuAor4G3e3BE7tbHFWEjfBLFrtCSG?=
- =?us-ascii?Q?GC2zsv+UDeiCiGk7ScGmp72Y63HdipQqOyhuvrgEYaEBrzq878w/lfOOpFpn?=
- =?us-ascii?Q?qq7UgbfHzM7Jw3YolGt3I1FVIkXU2lJmomGs9ZhSSCvlX54wfb2KaMBuybhf?=
- =?us-ascii?Q?vSYrYVqjM4jvz93uxR93Vj5bUu/a9Vsp9z7bKjb1Gs/CV688UHY3KuiRNxTy?=
- =?us-ascii?Q?+Uc/Wgh3DR42AsCaLwXJp8bES9f37bQrcrrfd8b8CcKWWXTU8io459jPx0av?=
- =?us-ascii?Q?CueQEOw3/aFtWJHG7jRr22DVYMow/XkOfS7Lf9qoZD+seVTj2N2wYeHw3PC4?=
- =?us-ascii?Q?82cfFgnLf5tTBLwT9qSPP/FihA2UqoAh2NMccohwRjGgA0h/7JT9dKFqNDZq?=
- =?us-ascii?Q?GNxA1F08gGZm61lBHapchg0X/Np1U+pzXnUyB7LIPFuMWoRqYf2Tl/9R3GFK?=
- =?us-ascii?Q?sqFKJCADjYlgOC6iuMwZZRLfo+rnBc15kFtvXoCO1XTz8KG1qcr+fZQjCZUP?=
- =?us-ascii?Q?u+u10C7WyrC5HNPGiODDaJdtpkO69AcJukv9qxCzFnlDMLoMtfEDGBJ8dCAu?=
- =?us-ascii?Q?FWheQD8zfWHTZlHRwUMkHrk+HM/ba6T6AgbdbcjwtwPHHLQy5Enpe+RGx+2B?=
- =?us-ascii?Q?IqHNSIv/mTQwNabVvSyYYFQxFmRYPP93+Ew1QTnvevX0s0xtHPozHUaqeGcj?=
- =?us-ascii?Q?bL5XvzlHLVPlZ3Q6EUugniutRo+6IzhEt4TrjQVOicIDN9FfHXHBax/7QzM2?=
- =?us-ascii?Q?ruOGtSSQq9MnCkflvEtg2zoEotRv1DbS1EgBSNqqXO8YvI39wSORlx+tQvnw?=
- =?us-ascii?Q?SaxDWpPgIPtapxQpXSrPF6PXJ2Lol0xpcnuWVqeC2jQuwCM7X4aAqc6LeJ54?=
- =?us-ascii?Q?m8h3OzzSwt0ycRtPflJpVgwNf5C7SOyH1ekIcVGm3H4jYiaXppPT/4TQuaDg?=
- =?us-ascii?Q?e7S71txhlRQClcUtlLHtgKpR+FLXHGx4FHbl6AL25FVCCNhtm6wKLkc88RJH?=
- =?us-ascii?Q?zr5Y6f3PfWT5hCPP6W4euLISMHtUywd27EL1IhZzYmvs3m/z72OwnFqXEVzn?=
- =?us-ascii?Q?YlsUYb91VlpV/TizI+p53Yuz2dC1JNTkGoSz9JAyYewMYIenwtTyJsMKic6Z?=
- =?us-ascii?Q?pZ/RYf3LeTNEicOywL8f2W2T+a1HycOO13DDFCSmIEViv35G5ZV4rwl3/Kus?=
- =?us-ascii?Q?xc8Q1HUc0WXUdcma/mXbQjR+VqVxBytCeFQFQ9orj9RXMgdNDWIPZSewxcVi?=
- =?us-ascii?Q?QHPCz6mtlVxdzfTKx07K8vYJb0xsA5PH8d2BSSwyA4Ac3tQnB7FIBlFoANZy?=
- =?us-ascii?Q?Ww8cuW8pOMOvyi61VQdlFgoPa+DmVy5CprMnvK/ZReAu8xmf637wKUE4OBQ7?=
- =?us-ascii?Q?4ycZ36jeO9AggWea5Ce62yb5Skb97HELwuGl/HCOWeaqtZ5wpu4oF5da8usZ?=
- =?us-ascii?Q?0Fqi0m+hNQ3DrGgyvMN2OijVmpPaiH4qsWskQbFeg2pS+DtHeLgQTe9lIWX3?=
- =?us-ascii?Q?Ug=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 529eff4d-4405-497a-ef95-08dc9a20cc3a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xe0yQIRcPVBK0BwbP3AnvC996VouGtgurZz7olMWyshhM0MlGosOHOKVXnMK?=
+ =?us-ascii?Q?l44GPmfyEcUE6VJe+i8sPKMYA22bfA3c2oZfJJdHEwKKE1wTtjSoXJ7+5BNP?=
+ =?us-ascii?Q?qZIANRbGNOinQzmrzAk6zQeKDT/OAep2HRASCCcDG7b4tQteKgd1zmU2nEjw?=
+ =?us-ascii?Q?bUaTC5+64mBoBQ90DISCls+wjHhbs4i7Cuqu4b/sXUHV7QUbMx4z+BY6i5na?=
+ =?us-ascii?Q?yk+OWU8owCwCpSakFeiem10YiofqX4ZuLWdGaQDa+VUnbfwhYYhJdzwEN3HV?=
+ =?us-ascii?Q?6GYgAlxOouhAjbThmY8EBH7s35AvfMqd1rQL1kSi20cOZNJXAS6uApgQQzgh?=
+ =?us-ascii?Q?ocBMtmcSWv+Eskb7irEd1jDUOexMUf7S847CzZoM/+XZdxRkl9UKITPIPneJ?=
+ =?us-ascii?Q?hju5x1oa0ULBr0uJNqkZqKhBVoQeLQpUHQEnLQo+oXcdvaJqdWqYh+PPmS/e?=
+ =?us-ascii?Q?HOUmrX1n4NzDh1GkInfBG3Zkbov1+YUoVGph749oM2jUCkFdcy2pCQfUR6v6?=
+ =?us-ascii?Q?N4vrYh9iCYFgFwvQgcxe8pF64HEC6wfOxDClqTKxOn+kObUPHZ70f22Yuf3w?=
+ =?us-ascii?Q?UhU7RsC3S9qtTfYrpcQIMQM5SxAyHhKhWvm2K+Vk10HeaROuOXKeWI/pA49s?=
+ =?us-ascii?Q?XslsDJFA4apDksDCRXzWdQ4+iSQvNdGXB9s/84T6FIAv4jUVL1RSLgX6Ly5o?=
+ =?us-ascii?Q?QuUJ/Vg+leQtxk5sIdQkjfZnsDhOHAwA0y1n7Moxp7IIvDCZ6CKnDruHyHgE?=
+ =?us-ascii?Q?bZzE+n7YWmAsl1gZBsyVlbHZD8ivUXpXDG6gStJX/9udBKP9WH7AMe9SxDlo?=
+ =?us-ascii?Q?dib+CySsSkCRCxQY36bTprlvK5yIDDhkP+TEdsocJU5++cYWuXUwmEXLOG/S?=
+ =?us-ascii?Q?wxlLnNEpAgAqbQU4O9ZUBdLZDgIfHhUFP6gVz6plven09QyeDEiKU55F1g1Z?=
+ =?us-ascii?Q?HMcvfO0nRJDgd5Sm8KE+BT+0rHmPJxnVkdV0taLtsfmnjufUdzmqTWoNrBXH?=
+ =?us-ascii?Q?bf61DdRDD2AqzjyEdPtvoHhZ06BEWdwzAqy0/STbBUdvfGr2XBylzJGxnloU?=
+ =?us-ascii?Q?XZRz8jq5sALAwxy4NlQxoS1L9ynbBXhVliFwvz9J8CeVqnXq7PWpYwWnogmL?=
+ =?us-ascii?Q?UPEnNz99RFHIiAVesDSTCB71dL0SWmOM14cqWwBbyl+trGTdxuJNVwG7RRa/?=
+ =?us-ascii?Q?GOc8y/i1cthGIxQ3B9DzNOmj0QgGMCFbjISO9BMmyh3ye454MjR9O16ur1/Q?=
+ =?us-ascii?Q?Y/PaNeXw87ERGIND85Oh2f+fsI5os0R1zk39zasYFTNdjlf3XyRgR/PCbCLE?=
+ =?us-ascii?Q?Q5hSTEmE1Ig854vXDsOC9NtXYxMJU1bscYDeTsbUuVVFRcC8OkBCOI0N2F5q?=
+ =?us-ascii?Q?BjcnkqLR5mmghRu4R/cpTEKAJ4OATTm4+YLiiM8GqSYjwUrm7iACk3BhHZDb?=
+ =?us-ascii?Q?/jYCSyUuXLiD7//i4wgVBCCoRRxC7AFeaWZiWkMIvlwbP5F+TOeC7wBXqOJq?=
+ =?us-ascii?Q?noSkT7KvoEGGBNQy6pX98KiuGWn4txb0y5yivll0eAtj2mTd8DlgH1RgJsYh?=
+ =?us-ascii?Q?z4rBH8KGkudiktw2rRUTjjcEPAet9pK5Rb/3J0zR?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af2a5d09-3cd5-4c37-1ec5-08dc9a28fcee
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 22:54:43.7339
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 23:53:21.3940
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rDjqf/5YAsVS0lSeHKub4RApYMF2EEmQk7Qy4yt2/okzmZaGs0egp4mgBX+ar0Mf2P1PRR/9f4Ad56tvEVj/Z5O0qSssgLnBG/n5CtxMJpI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6927
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: O8MokSv5MtbPOkmJIu4uqpiS0O32Vb/43yvJvOacsjjLmmAEhpdVC1H1GGdGxtUGRUJDgEioe82oNVgO8lSsYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6326
 
-# Title: "Extended-linear" addressing for direct-mapped memory-side caches
 
-# Status: v4
+David Hildenbrand <david@redhat.com> writes:
 
-# Document: ACPI Specification 6.6
+> On 27.06.24 02:54, Alistair Popple wrote:
+>> Longterm pinning of FS DAX pages should already be disallowed by
+>> various pXX_devmap checks. However a future change will cause these
+>> checks to be invalid for FS DAX pages so make
+>> folio_is_longterm_pinnable() return false for FS DAX pages.
+>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+>> ---
+>>   include/linux/memremap.h | 11 +++++++++++
+>>   include/linux/mm.h       |  4 ++++
+>>   2 files changed, 15 insertions(+)
+>> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+>> index 6505713..19a448e 100644
+>> --- a/include/linux/memremap.h
+>> +++ b/include/linux/memremap.h
+>> @@ -193,6 +193,17 @@ static inline bool folio_is_device_coherent(const struct folio *folio)
+>>   	return is_device_coherent_page(&folio->page);
+>>   }
+>>   +static inline bool is_device_dax_page(const struct page *page)
+>> +{
+>> +	return is_zone_device_page(page) &&
+>> +		page_dev_pagemap(page)->type == MEMORY_DEVICE_FS_DAX;
+>> +}
+>> +
+>> +static inline bool folio_is_device_dax(const struct folio *folio)
+>> +{
+>> +	return is_device_dax_page(&folio->page);
+>> +}
+>> +
+>>   #ifdef CONFIG_ZONE_DEVICE
+>>   void zone_device_page_init(struct page *page);
+>>   void *memremap_pages(struct dev_pagemap *pgmap, int nid);
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index b84368b..4d1cdea 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -2032,6 +2032,10 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
+>>   	if (folio_is_device_coherent(folio))
+>>   		return false;
+>>   +	/* DAX must also always allow eviction. */
+>> +	if (folio_is_device_dax(folio))
+>> +		return false;
+>> +
+>>   	/* Otherwise, non-movable zone folios can be pinned. */
+>>   	return !folio_is_zone_movable(folio);
+>>   
+>
+> Why is the check in check_vma_flags() insufficient? GUP-fast maybe?
 
-# License
-SPDX-License Identifier: CC-BY-4.0
-
-# Submitter:
-* Sponsor: Dan Williams, Intel
-* Creators/Contributors:
-    * Andy Rudoff, retired
-    * Mahesh Natu, Intel
-    * Ishwar Agarwal, Intel
-
-# Changelog
-* v4: Drop "improved cache utilization" claim (Jonathan)
-* v4: Clarify SPA vs HPA terminology
-* v4: Clarify possibility and difficulty of multiple CPER records to
-  communicate aliases (Jonathan)
-* v4: Clarify that N is expected to be an integer ration of "near" to
-  "far" memory. (Jonathan)
-* v3: Replace "Inclusive Linear" with "Extended-linear" term, and
-  clarify the SPA vs HPA behavior of this cache addressing mode.
-  (Jonathan)
-* v2: Clarify the "Inclusive" term as "including the capacity of the cache
-  in the SRAT range length"
-* v2: Clarify that 0 is an undeclared / transparent Address Mode, and
-  that Address Mode values other than 1 are Reserved.
-
-v3: http://lore.kernel.org/6650e4f835a0e_195e294a8@dwillia2-mobl3.amr.corp.intel.com.notmuch
-v2: http://lore.kernel.org/663ea70884cfd_db82d29414@dwillia2-xfh.jf.intel.com.notmuch
-
-# Summary of the Change
-Recall that one of the modes available with persistent memory (PMEM) was a
-direct-mapped memory-side cache where DDR-memory transparently cached
-PMEM. This article has more details:
-
-https://thessdguy.com/intels-optane-two-confusing-modes-part-2-memory-mode/
-
-...but the main takeaway of that article that is relevant for this ECN
-is:
-
-    "[PMEM] is paired with a DRAM that behaves as a cache, and,
-     like a cache, it is invisible to the user. [..] A typical system
-     might combine a 64GB DRAM DIMM with a 512GB Optane DIMM, but the
-     total memory size will appear to the software as only 512GB."
-
-Instead, this new "extended-linear" direct-mapped memory-side cache
-addressing mode would make the memory-size that appears to software in
-the above example as 576GB, an increase of addressable capacity.
-
-A primary motivation for updating HMAT to explicitly enumerate this
-addressing mode is due to the OSPM's increased role for RAS and
-address-translation with CXL topologies. With CXL and OS native RAS
-flows OSPM is responsible for understanding and navigating the
-relationship between System-Physical-Address (SPA) ranges published
-ACPI.SRAT.MemoryAffinity, Host-Physical-Address ranges (HPA) published
-in the ACPI.CEDT.CFMWS, and HPAs programmed in CXL memory expander
-endpoints.
-
-Enable an OSPM to enumerate that the capacity for a memory-side cache
-extends an SRAT range. Typically the "Memory Side Cache Size" enumerated
-in the HMAT is "excluded" from the SRAT range length because it is a
-transparent cache of the SRAT capacity. I.e. typical systems present 1:1
-SPA:HPA, extended-linear memory-side-cache systems alias multiple SPAs
-to a single CXL HPA.  The enumeration of this addressing mode enables
-OSPM-memory-RAS (Reliability, Availability, and Serviceability) flows.
-
-# Benefits of the Change
-Without this change an OSPM that encounters a memory-side cache
-configuration of DDR fronting CXL may not understand that an SRAT range
-extended by cache capacity should be maintained as one contiguous SPA
-range even though the CXL HPA decode configuration only maps a subset of
-the SRAT SPA range. In other words the memory-side-cache dynamically
-maps access to that SPA range to either a CXL or DDR HPA.
-
-Without this change the only way for system software to become aware of
-the fact that one memory poison event implicates multiple address
-locations would be for multiple error records (CPER) to be emitted
-per-poison consumption event. That may surprise existing OSPM
-implementations.
-
-With this change, the OSPM can enumerate aliases and take actions like
-quarantine / offline all the impacted aliased pages to prevent further
-consumption of poison, or run repair operations on all the affected
-targets. The OSPM is enabled to identify the HPA associated with a given
-CXL endpoint DPA event, and understand how SPAs map to CXL HPAs.
-
-# Impact of the Change
-The proposed "Address Mode" field consumes the 2 Reserved bytes
-following the "Cache Attributes" field in the "Memory Side Cache
-Information Structure". The default reserved value of 0 indicates the
-status quo of an undeclared addressing mode where the expectation is
-that it is safe to assume the cache-capacity is transparent to the SRAT
-range capacity. An OSPM that knows about new values can consider SPA to
-HPA relationships according to the address-layout definition proposed
-below. A legacy OSPM will ignore it as a Reserved field.
-
-# References
-* Compute Express Link Specification v3.1,
-<https://www.computeexpresslink.org/>
-
-# Detailed Description of the Change
-
-* Section Table 5.149: Memory Side Cache Information Structure redefine
-  the 2 Reserved bytes starting at offset 28 as "Address Mode":
-
-    * 0 - Reserved (Unknown Address Mode)
-    * 1 - Extended-linear (N direct-map aliases linearly mapped)
-    * 2..65535 - Reserved (Unknown Address Mode)
-
-* Extend the implementation note after Table 5.149 to explain how to
-  interpret the "Extended-linear" mode.
-
-  * When Address Mode is 1 'Extended-Linear' it indicates that the
-    associated address range (SRAT.MemoryAffinityStructure.Length) is
-    comprised of the backing store capacity extended by the cache
-    capacity. It is arranged such that there are N directly addressable
-    aliases of a given cacheline where N is an integer ratio of target memory
-    proximity domain size and the memory side cache size. Where the N
-    aliased addresses for a given cacheline all share the same result
-    for the operation 'address modulo cache size'. This setting is only
-    allowed when 'Cache Associativity' is 'Direct Map'."
+Right. This came up when I was changing the code for GUP-fast, but also
+they shouldn't be longterm pinnable and adding the case to
+folio_is_longterm_pinnable() is an excellent way of documenting that.
