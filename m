@@ -1,92 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07327381C4
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 21:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E115A2C1BA;
+	Mon,  1 Jul 2024 21:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719867648; cv=none; b=EkvVIoy0z4HNgW2MOMjWDc2ZPohOxd+cucHgjeGhyWbFkstOBg1F8bVLo70HG8qC4HPC6OzZ7WxKYkvZOcUjSvsEHvn+vRja9XOXOJ99fw7z9pXEB3DAMoWq1f11sld1YBA12J/aO5oIR1DOj3lDuIri6oJfaDuj1MeolpgE+vU=
+	t=1719870622; cv=none; b=gHHEnzVJxu9iIKFg+gOy9/K4vb/7aZOdVyMKFPP+cBTPxYcMy+bR5jqfbY7tNDHZFWVbSxF/f/Pej+lRzhdGaXZ8ebjSJ+pm9V0fT3UtzyMbYpIh+aLDxDdDW3g0XyO0TDe4pKe71Rui4sBFhA/CroRSG4WPsANbv8LLPwK0xDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719867648; c=relaxed/simple;
-	bh=Xe+QehI/xDSxbQtukrr+ULu9KwUqTMOaMtr2CddF6Zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DBaQB9HR3iJ7NpvlOsxmLf1pyrLETDBxRunusRltgJ+tAVhQziqWAKMhFKBzquBokWZ3ogFLsMGynO31qp0YqnYAuYKJ225GKg6HxrXqt2l0gsWh1tF2cgEInATnpWIB5mV2Tn5gcUZ1mzaDM/OX08a4MkAObUgVFgnTP2v6dDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ys+de/VL; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ys+de/VL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719867647; x=1751403647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Xe+QehI/xDSxbQtukrr+ULu9KwUqTMOaMtr2CddF6Zs=;
-  b=Ys+de/VLdqY9RsfdDHft0CAsfBKbpouuqy3aZzvIil3vatRutRERd2Un
-   HExhPwZ5+KtfpG37t+owdboojxuSgl/iScMA/8kqDYwwGA+epUa3gC1p7
-   po4hvlXzR/vykcKXVY9eImX23aX8zZJ4GW52UI5Yud2M+fPzM2T1J8mwu
-   uVXzLxUjjz8Ftz858oWiwQ5c59S/8n/JK6xMS/1354PRCJGK34VE0Y12y
-   iNrCnzot69Vkdah37VCiR8OE5sQVSW7aB0o6BLcVcT8gHiH7YlXkZq3z/
-   QJO6X9fPRab20M8tCTecRM0F2RYVkQMVbgqwDLC7dAkJ1w9PlumslJ+xY
-   g==;
-X-CSE-ConnectionGUID: 0MgbVA33RReskLciCCqg+A==
-X-CSE-MsgGUID: Fv6YA2D5Th2RtW93OZqyzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16971733"
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="16971733"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 14:00:47 -0700
-X-CSE-ConnectionGUID: dP6sjnaeSeSmXT8eboIMvg==
-X-CSE-MsgGUID: EKx1meAMSIGiOYWN0IHQVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
-   d="scan'208";a="50526130"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.46]) ([10.125.111.46])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 14:00:46 -0700
-Message-ID: <562321ea-19bb-456b-b94e-a523afdb13e8@intel.com>
-Date: Mon, 1 Jul 2024 14:00:45 -0700
+	s=arc-20240116; t=1719870622; c=relaxed/simple;
+	bh=1No+RehntL8i97yFgG0xqOB1/dapQSlfQDkzPdig/n8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p8u5gVAzJsgJnO4fFWWnVueFuhjM1Lcanyev2uYLSSFwWvnBSCVe44iqjhldxhhwT2U9Qiwa8S3+RipWvxutQkEgw5AWj6srHmFvLIZPE9KUrcaYp4hAvX77odo305MsqyLYjZom27OUpOiXsJyOr0bsDJSZnFKI9Oa2eXaY7hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7F3C116B1;
+	Mon,  1 Jul 2024 21:50:22 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net
+Subject: [PATCH v6 0/2] cxl: Region bandwidth calculation for targets with shared upstream link
+Date: Mon,  1 Jul 2024 14:49:13 -0700
+Message-ID: <20240701215020.3813275-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 6.10-rc7
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-References: <e5477d05-93e0-4268-90ca-581e3f492b4e@intel.com>
- <CAHk-=whQ1LH40w-iSkXq7EbCDfnt5_Z4rLvDa4awrqMOTZqy-Q@mail.gmail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <CAHk-=whQ1LH40w-iSkXq7EbCDfnt5_Z4rLvDa4awrqMOTZqy-Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+v6:
+- Update kdoc in comments. (Ira)
+- Various rearranging and cleanup of variable declarations. (Jonathan)
 
+This series provides recalculation of the CXL region bandwidth when the targets have
+shared upstream link by walking the toplogy from bottom up and clamp the bandwdith
+as the code traverses up the tree. An example topology:
 
-On 7/1/24 1:12 PM, Linus Torvalds wrote:
-> On Mon, 1 Jul 2024 at 10:53, Dave Jiang <dave.jiang@intel.com> wrote:
->>
->> A fix to add proper checking for CXL region interleave capability during assembly.
-> 
-> I pulled this, but this should not have been a post-rc6 "fix".
+ An example topology from Jonathan:
 
-Thank you
-> 
-> That code is absolutely new development. Any interleave mis-match has
-> never worked in the past afaik, and this really looks like a new
-> feature to me.
-> 
-> So I think this should have been a "next merge window development"
-> thing. Fixes are for things that have broken or cause acute problems.
-> Not for "this never worked and nobody even reported it".
+                 CFMWS 0
+                   |
+          _________|_________
+         |                   |
+     ACPI0017-0            ACPI0017-1
+   GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
+     |          |        |           |
+    RP0        RP1      RP2         RP3
+     |          |        |           |
+   SW 0       SW 1     SW 2        SW 3
+   |   |      |   |    |   |       |   |
+  EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
 
-I contemplated whether this is a fix or should be left to the next merge window. Next time in doubt, I'll leave it to the next merge window. Sorry about that. 
+ Computation for the example topology:
 
-> 
->              Linus
+ Min (GP0 to CPU BW,
+      Min(SW 0 Upstream Link to RP0 BW,
+          Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Link) +
+          Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream link)) +
+      Min(SW 1 Upstream Link to RP1 BW,
+          Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Link) +
+          Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream link))) +
+ Min (GP1 to CPU BW,
+      Min(SW 2 Upstream Link to RP2 BW,
+          Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Link) +
+          Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream link)) +
+      Min(SW 3 Upstream Link to RP3 BW,
+          Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Link) +
+          Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream link))))
+
