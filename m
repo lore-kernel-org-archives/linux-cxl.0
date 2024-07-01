@@ -1,46 +1,46 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAFC16EC0E;
-	Mon,  1 Jul 2024 17:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E0416EC19;
+	Mon,  1 Jul 2024 17:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719856115; cv=fail; b=UWYUfm/2jmkvxvGqK2Xocet+DtwnLpV1OMjq1YKopCrRV7hYzq8J2VZxMjEwvqEN8o8GOaF0rpz9S+PR5J2gDCmvv+j1Fg2L+3F3poEiEaphMucHg4LQW5cv6wNBOaGcMuzZVHDbbBatiTV20sPsX8pd/coSPqBUNCw2RH382n8=
+	t=1719856117; cv=fail; b=UbLouoT1d8ie8QXLHKgIAXb0DTVD/KF2CGLWJRqjWyHJpZOSC2m8LnxcTPxq9zJ22cIOkFxfb3SRq3ngzDcCd0JTjCGHIK0zHzQldHwCjeaPPF3IJ+RAM1HRyXN+XlThTvpFPVzTiXKeIrKnnsyyRYJWe8dBbwlM5X7RkW2dWsA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719856115; c=relaxed/simple;
-	bh=CSUBmafGC/wwdSnalGy7Y+ViTsiZtqFnkD3xzP8Vx6c=;
+	s=arc-20240116; t=1719856117; c=relaxed/simple;
+	bh=i1Isd+rAPjpLFj73cHX5Iy78ewxgsubyerpMCUB8Exg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EOWpvYjP1anpStAHcmUCM7PTfcYRD5bbLlNPNjx88/nBnSdpa/bx5PtVGVt8lUYFMw0btriMz9VYr2wDoJsy4jm5vxzig4PV6nXvAusIQjFl1yZGREAB3H57Wp82Ur7dqwJDmfgq0hXYfqiduF7LhS+MbDOSkIT1R/JQ8vvqjck=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5IQ1jVNG; arc=fail smtp.client-ip=40.107.223.60
+	 MIME-Version:Content-Type; b=ZirtSsnmGsupHT39nH0r1bmSlvPxkuB9qYOh6mbgSZomKjZGSPGAntlrJkQ9apsXiGG98jOC5FawBDjBL+pnWfHqKl9RvZ29jcbE5HGWRahAaiDtiq41gv9Clu0TfWm1L8pSrIdNZfyiwfpeFCsccD7LO+pS5pFU5gQdSj0LKaE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wi3L4vSj; arc=fail smtp.client-ip=40.107.93.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5IQ1jVNG"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wi3L4vSj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M0dJcKHa8FqX8/ZsHDkvJTL7Js4Wk0BqrFYO4BDN9P8JhQdtm5/Tk/S60lT37Oqb5P0oNl6PwdOVZ54erZX6E+/wrFl0tXs3M80lUGJX1KD7Ihhk5ZkRmWhf6535GpLjOMnSAelXsf5f1ORvtQoUnkK4hPZfA9XrNOvTHDVoodavQcN5olO8bjAjiBWSVKugiXqMI76Um2hQDcJpOVdFsp8azb1JLO2ZRpaZyFArKXyDw9qKTfURtHMBokN9KFdRnxvnZw83Z/KtBhDeGBaQzPoi0A1Hd4afTtnbKMNG1hl4dcp1sYYEZwSa0fSjbTRkjNWBQnYc0thitAlv5PZs8w==
+ b=k2SO3ziq3KL2n7Of7HLWjwszAPkBvYLI03nqrjzGhZHRQa4Lksc3EyYu4kP0Vt8GlNhH1sQVeYEmIaLf2817ISCBStb82gRy/Gz1i831d+UOcRpt1XVa15luSxd2nyLvPbHWXDiW7qfOYdMjCeilo2ajUzzbvpVLxKi/7cb74wg9anptd+nCqqsj9HV0JZXWo3EznAGV/fYXMINwNJfqPsl2qX2JmheKas3nfuGoiTYe9SvT9eZnlp0vn98vn7PNSKHOQMyZ/i+ln8xcKp7/JF1Wr06gRGEXKXF68EFQphwTvcDe2ikhLsAFdEEDb/1eDg4KiYHJXfs5JJ9PFJjlAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XvTHDYS5g3rvFskiyopebg68RQxdzwYWGUVzm2Z7aB8=;
- b=PeKdAan3+sZn+XDIBWG7d6oChql24CSN/KTLXBmT6bERjjSCdaRu1LaVKT564Fbsmgqsd+1SzHA9yiYtjN4AwvJ14O1Rh9wPOEaz2cap3CQ16F1408hPdfRMsPUPfjlYmROnZJVB1Rg6f9q9ZKMQwWfJKz3OqgkPMfpqe6lJXoy4PNCCcNkoYbxyNFLuiuF363BDOndU9wgL78lewkhElO8n/z2f/fkkRa0kh4LZciqRXwYfvqcyhPPVw2im0mIXvgx4Wum9TuegauacinMaOF3qPxj4eTt49uoZHEirsI3MUXggcxI7olpIy2K6YZNQCmseCmDvj4SaAXvR5D/uPg==
+ bh=Xgrn84JS7zg+8EfybpCUjXN8siRMFlFrd5niEZIv09s=;
+ b=m3fP99Xcfe8QQFsf7fwOBB3owo6tGsKGOXt0V+UODXHYN4SS/eyzUIjqlgg8xyQj4ajH41xVdEpzJ9HGFVI/tlS8hgkornsZw0TTMfH/URseqsNLcaJNy6XLCHT8y/4GLEVGLxyG2vVu4G9r1HAxXF6o1503P3j1wKVkqycVKc3EsUE4+ED8VhIBKKshyVISBDg+rFnJTJjmqzKCAIt1fySGW87BSx9UihhHTl1M63mkStkI2m1UJ3YmDebBBpgYnnoWPVLW5hdA/GG4VV1+nQ4lq3AJCSkcHakBTnpm+wZbQh4psURPbJzQa5qSLnFeWI9HhTPXkhIhD+B5w2aavQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XvTHDYS5g3rvFskiyopebg68RQxdzwYWGUVzm2Z7aB8=;
- b=5IQ1jVNGojE8/YEv9mFtRMydxiag6VPsgLE84kfXKdj+FVr7tMFdgWn/b9v5KBFS0J0O2QdGuMrdyn05EZCQ9i8FYZJcD5iClZ8PXOlkDaV0LBL/bGOTt08HMd77yoS/D4CROdDr7aOE4qvX3rPocEkjBlICC2FyjsRKgkLNlEE=
-Received: from SA1P222CA0023.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:22c::15)
- by BY5PR12MB4211.namprd12.prod.outlook.com (2603:10b6:a03:20f::19) with
+ bh=Xgrn84JS7zg+8EfybpCUjXN8siRMFlFrd5niEZIv09s=;
+ b=wi3L4vSjVM/B074EAEx928eb6vHO1iJRN3YSsnJjYU97hhjnHp8iHcNqAuFmBHYhJWnbmOk/oRVzvjITOGFgGlNhUOwQnsX99UwlGhBnXMIVF3vIuYaSYEexAwWAnikA+RHxo0N4roSCtTDCtPkls53IF0TvBs5co/W0COgseRo=
+Received: from SA1P222CA0029.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:22c::24)
+ by SN7PR12MB8817.namprd12.prod.outlook.com (2603:10b6:806:347::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
- 2024 17:48:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Mon, 1 Jul
+ 2024 17:48:33 +0000
 Received: from SN1PEPF000397B1.namprd05.prod.outlook.com
- (2603:10b6:806:22c:cafe::a6) by SA1P222CA0023.outlook.office365.com
- (2603:10b6:806:22c::15) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:806:22c:cafe::89) by SA1P222CA0029.outlook.office365.com
+ (2603:10b6:806:22c::24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33 via Frontend
- Transport; Mon, 1 Jul 2024 17:48:28 +0000
+ Transport; Mon, 1 Jul 2024 17:48:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SN1PEPF000397B1.mail.protection.outlook.com (10.167.248.55) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7741.18 via Frontend Transport; Mon, 1 Jul 2024 17:48:28 +0000
+ 15.20.7741.18 via Frontend Transport; Mon, 1 Jul 2024 17:48:32 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 1 Jul
- 2024 12:48:25 -0500
+ 2024 12:48:28 -0500
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
@@ -62,9 +62,9 @@ To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
 CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Robert
  Richter" <rrichter@amd.com>
-Subject: [PATCH v2 3/5] cxl/acpi: Add platform flag for HPA address translation
-Date: Mon, 1 Jul 2024 19:47:51 +0200
-Message-ID: <20240701174754.967954-4-rrichter@amd.com>
+Subject: [PATCH v2 4/5] cxl/hdm: Setup HPA base for address translation using the HPA window in CFMWS
+Date: Mon, 1 Jul 2024 19:47:52 +0200
+Message-ID: <20240701174754.967954-5-rrichter@amd.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240701174754.967954-1-rrichter@amd.com>
 References: <20240701174754.967954-1-rrichter@amd.com>
@@ -80,108 +80,170 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|BY5PR12MB4211:EE_
-X-MS-Office365-Filtering-Correlation-Id: 739c98c4-4f18-48e3-c057-08dc99f603bb
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|SN7PR12MB8817:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd4a8632-51cc-4b16-191c-08dc99f6067b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jXRG2Gmh0rGf7dbZS2fCK94dSrleT71TJ3VOfFwR6d0c+nD24FXRG9xmAQTx?=
- =?us-ascii?Q?VB3ZmbUrzlioYF4NO3SVylFXZwax3CWVDcaoXel+2iKOYTxMQD+H/13OM85b?=
- =?us-ascii?Q?i/2s3zHBTZvg8O4gGoNlfwPAbSZj3KoHKQ5vbSzQpqe+cuYqt2fjOJeQPW8J?=
- =?us-ascii?Q?okLK9H/XvmGbU1VJiedDqIm3U8THWL/3B38WHAREymfp1qWQzNmf2hXOuB3L?=
- =?us-ascii?Q?Az9jhGLioWUZ43VjMt9vacFiiuaIsw+rB1QmGoZrQqptoouYSBmumod/NFKz?=
- =?us-ascii?Q?osu5y5WygFXOUubrWaSmA6rQGfxI3GQZHSqQeeDbg9YTpiE4beXzEZl05RZw?=
- =?us-ascii?Q?FhVtXdkfmyIyj4jlUgP8bBBoWDkuOgBxzMsbKGZ9iAkLbLeqgKarCatMQsq0?=
- =?us-ascii?Q?sFu9RV7shKSv7kkGStmuschHnypr/6To+CKVte5eeK2g/2SJ7HeZ8UzqgJcf?=
- =?us-ascii?Q?07nbSuCOUXlKtos9s7GngLqn30uVR8Z6jgWhf34YYl2gFK13upCVoCSEzpqJ?=
- =?us-ascii?Q?/C/V9cUpk/++qwIepowUX1dYoSsoYL7e7+sjnlyXUnNSoyXSJYDmT0ajadTE?=
- =?us-ascii?Q?LjXoYFnCdvSVgeouR/QoUCoLsc1GNz1f55B+/4QLl1bCf0gx/lu647xCy7iz?=
- =?us-ascii?Q?d0faFlaS3jwGgWKt1XU4Jn3LvnFS9ZbYz/C43/4P7Rg2ib4B6L2jm18B+Dab?=
- =?us-ascii?Q?br7nT0vwNZ1HlGO2nU9PDVEMRCiklD5Kt1VY4RW+sRR225vdbdqT1GVonYPH?=
- =?us-ascii?Q?ZzAhp1MBM49RV7xHbTSsQ+uteu0obmddR6Pm8DZh11N9r2Iu8YJXWv3KXGCx?=
- =?us-ascii?Q?HS9u0qwmArK+cjZD0J0MG2uIYgex3LEt1xcHn+ViAIG5Sk4DGLCl4GrpSw1c?=
- =?us-ascii?Q?2AJilLFLhIjdxZGxXFBvpL3VJGcEdnGXJe/UERYFK85/IHcw9aHwT73gqEl+?=
- =?us-ascii?Q?6IwF2MSV5PzKKXQX/dlNwvTxEBtPZMRg84LO+zSmTwfafA60Hq4GIN/IthBb?=
- =?us-ascii?Q?F2J+kC8yenllg9zkjiMNf+ABkJjMTOgQJ4pFpUU8diBgw0UYbFhwY714ULXP?=
- =?us-ascii?Q?OcSbK0hIdk4VxrtkBOuqzY0cx0Pg3+NvyTgcXHNAqRt+g8jvPbORbnYo9ieD?=
- =?us-ascii?Q?+ScQDlHUgzTjLZiwt5dT8xkjAmbmbqeGqDOOW2w7rX/1PjdkJ+FX83vpv3pK?=
- =?us-ascii?Q?dYlziPJ41GUuYvvex+thJ78LXZYDrO6So5ZBaVnDDyUuJC1SonlQYldhN6on?=
- =?us-ascii?Q?bz5dJJAWCZa+6vWCywWEAQjTOJrD/EVjRTW47foHNbq2sBfIL+r4/0vATX1E?=
- =?us-ascii?Q?7aC3omd9NAMCs0IvtXw2p8cH8LGEyJqUQPsvwhOda6H6lb6fQA36ty/1WjxD?=
- =?us-ascii?Q?tBW4ypxcAhx/vdhKN1AAKqd+3QQTgLtBhPUdhC874Ym2uNcCbw=3D=3D?=
+	=?us-ascii?Q?pTdL0kt00QjL6G2HPW4gavFqFbWhCX3hVqQO/Jxm6qdlGN40JmCYDXvqLXHt?=
+ =?us-ascii?Q?o1xs5xJVssephvFLTxX8YgRK33fccIfzqsguEtm9RB55Li8Ug8g7v/gazoJd?=
+ =?us-ascii?Q?xA02JAUTnKNzYaEc0aUy/8fVjal+85Ig2jP2yz6dDS7pSGEbYufyOjz0FZ2Q?=
+ =?us-ascii?Q?PX9VtAeQNVXdK4HKNF0fADJL1LwmOUOkI5VHPyONtK8jF3hY4q7Xpax1vj1O?=
+ =?us-ascii?Q?hlB5AIca0c+xHTRjq0EOKULNXOdUBUfCccxDWWurM8uPpnK18uWhWHxH3i7o?=
+ =?us-ascii?Q?gcmTpYxFOY3GVv5CYRcn9oMSuAJPlLvnK/TxEVZ4tvJezYfzez2QNj2r99Ju?=
+ =?us-ascii?Q?Ob/1HdpYUYuvaPNuyaOVwrc1iOzxk4ESPYE6OHnLs3+DVeHI3e/0sGwt4h5S?=
+ =?us-ascii?Q?H8Aa/LoSknJaA3RCAJBqfQbiCf62UfepJVk8HJSjsPFnHkOPhFkyqoNn8tuq?=
+ =?us-ascii?Q?AlrR3aXsuRqNIMhJ17GdD2GoBzDhKca2wCEtUhL9NUG+h+k1VYH0r0AhGx0f?=
+ =?us-ascii?Q?kCDSLXG/sfw7Em3CeQW49xovz1jnE+NKUgeJgbedhcmtafb1OysI6qbZcmBm?=
+ =?us-ascii?Q?A+P89JKE17p2mE1nigNbJOtL2zs6Rsws2m5p88TL7ff7zG+Pz60XMyOk3Zm9?=
+ =?us-ascii?Q?ElOkhROywvVl54522mhMXWmDuiJDl7KzLZUoDW48BfmVkFiedN9AhSSvnxiX?=
+ =?us-ascii?Q?MsdnezISXXebgtzTIYEwHPwHBCY0P01xPCutyhfLO7AvMx6ig0f7ImzR/rVb?=
+ =?us-ascii?Q?dfbELrJB7mUVxKSDZU85anpcnTWqTNgzD2m0Wu/rje0w9CutshhnhPWjpZqM?=
+ =?us-ascii?Q?X1JJ8KY7cIiL1MBFBF1z1jZCj7eOl7shR98L4mIVWs/B8GypD0LZ3kXtL74n?=
+ =?us-ascii?Q?HE1gYkl+NFmfW5E0GF9x+KfXeohwMGFu4ER1OkbZMKDxsYw5xl14jeKH4hR8?=
+ =?us-ascii?Q?T5+43mTYtYNTmm+fKTEiDcJB85QMA8I7p6N3pOGddQhmmeNE4BIJxofPfdZT?=
+ =?us-ascii?Q?XFQg/mKhTG10C0nmy7N65zUhDCpq83xSUrF+yI6C8lb/fZlnoip0Z75AdSpg?=
+ =?us-ascii?Q?QyrRUkcgXqfmh6O550zKxnuVnom9SfLg401xDkS2VgMlsBpOG5izj5WzOK7d?=
+ =?us-ascii?Q?BMwdfYV70FSN6T/CEpbJ5UzXIRLNO4uhxuGiMEGN4p+SPZbmPxOWz8Xa3xPL?=
+ =?us-ascii?Q?0dfL4LeNjTeJMGPSU/p40pi8hhasphcnTuCrTcPsMvgkr9xAYOlQSm+P2mcV?=
+ =?us-ascii?Q?kOyifODvpxuaVXkci/zZGjoPQMbWZIg6zyMBWsZNapGraZdgKL/lQmqjQxCL?=
+ =?us-ascii?Q?Kky9ypKyvXcv2UoMjY6UO5YputrbNxXvYkrB/oMdEzYx2vR69AGpgGIkp6YY?=
+ =?us-ascii?Q?cXhFomRW6KY+NzrxO0w77YONN5m2jlT2w4QTsqSVZJ0edulSQ1w9DivViSPu?=
+ =?us-ascii?Q?V8C1dwY8MiEdPu8wb/LeJdGG4qTk+5sJ?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 17:48:28.2627
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 17:48:32.8721
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 739c98c4-4f18-48e3-c057-08dc99f603bb
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd4a8632-51cc-4b16-191c-08dc99f6067b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SN1PEPF000397B1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4211
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8817
 
-Adding an early check to detect platform specifics to (later) enable
-HPA address translation. The cxl_root structure is used to store that
-information.
+There are platforms where an address translation between decoder's
+(HPA) and the system's physical addresses (SPA) is needed. The HPA
+window in the CFMWS can be used to determine the address offset for
+the translation. Each CXL endpoint or switch is uniquely attached to a
+CXL host bridge. The host bridge is assigned a unique HPA window in an
+CFMWS entry of the CEDT (host bridge is in target list). The hardware
+base addresses of a CFMWS is an SPA. With that, the offset can be
+determined using the HDM decoder's base address from the registers and
+the HPA window in the CFMWS entry of the corresponding CXL host
+bridge.
 
-Note: The platform check will be added later when enabling address
-translation.
+The CFMWS entries are parsed during host bridge enablement and set up
+in the CXL root decoder during CXL decoder enumeration before a CXL
+endpoint is enabled. That is, the endpoint's host bridge's root
+decoder can be determined. The HPA range of it marks the beginning of
+the HDM decoder's base address and the offset between both can be used
+for later address translation.
 
-Link: https://lore.kernel.org/all/65c68969903b1_afa429460@dwillia2-xfh.jf.intel.com.notmuch/
-Cc: Dan Williams <dan.j.williams@intel.com>
+Setup HPA base address (@base_hpa) of a struct cxl_hdm by determining
+the offset as described. Use the port's host bridge and CXL root port
+to find the corresponding CXL root decoder containing the HPA window
+in the bridge's CFMWS entry. Only enable this for platforms with the
+@hpa_xlat_enable flag set.
+
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/acpi.c | 7 +++++++
- drivers/cxl/cxl.h  | 2 ++
- 2 files changed, 9 insertions(+)
+ drivers/cxl/core/hdm.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 571069863c62..67f73a831bd3 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -536,6 +536,11 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
- 	return 0;
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 50078013f4e3..5164ff807537 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -125,8 +125,73 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 	return true;
  }
  
-+static void setup_platform_quirks(struct cxl_root *root)
++static int match_root_decoder(struct device *dev, void *dport_dev)
 +{
-+	root->hpa_xlat_enable = 0;
++	struct cxl_switch_decoder *cxlsd;
++
++	if (!is_switch_decoder(dev))
++		return 0;
++
++	cxlsd = to_cxl_switch_decoder(dev);
++
++	guard(rwsem_read)(&cxl_region_rwsem);
++
++	for (int i = 0; i < cxlsd->nr_targets; i++) {
++		if (dport_dev == cxlsd->target[i]->dport_dev)
++			return 1;
++	}
++
++	return 0;
 +}
 +
- static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
- {
- 	struct acpi_device *hb = to_cxl_host_bridge(NULL, dev);
-@@ -838,6 +843,8 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 		return PTR_ERR(cxl_root);
- 	root_port = &cxl_root->port;
- 
-+	setup_platform_quirks(cxl_root);
++static struct cxl_decoder *find_root_decoder(struct cxl_port *port,
++					     struct device *dport_dev)
++{
++	struct device *dev;
 +
- 	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
- 			      add_host_bridge_dport);
- 	if (rc < 0)
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 603c0120cff8..95d054dc1af0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -627,10 +627,12 @@ struct cxl_port {
-  *
-  * @port: cxl_port member
-  * @ops: cxl root operations
-+ * @hpa_xlat_enable: enable HPA translation
-  */
- struct cxl_root {
- 	struct cxl_port port;
- 	const struct cxl_root_ops *ops;
-+	bool hpa_xlat_enable;
- };
++	dev = device_find_child(&port->dev, dport_dev, match_root_decoder);
++
++	return dev ? to_cxl_decoder(dev) : NULL;
++}
++
++static void setup_base_hpa_cfmws(struct cxl_hdm *cxlhdm,
++				 struct cxl_root *cxl_root)
++{
++	struct cxl_port *port = cxlhdm->port;
++	struct cxl_decoder *cxld;
++	u64 base;
++
++	if (!port->host_bridge) {
++		dev_dbg(&port->dev, "No host bridge found for port.\n");
++		return;
++	}
++
++	cxld = find_root_decoder(&cxl_root->port, port->host_bridge);
++	if (!cxld) {
++		dev_dbg(&port->dev,
++			"CFMWS missing for host bridge %s, HPA range not found.\n",
++			dev_name(port->host_bridge));
++		return;
++	}
++
++	base = cxld->hpa_range.start;
++	dev_dbg(&port->dev,
++		"HPA translation for decoders enabled, base 0x%08llx\n",
++		base);
++	put_device(&cxld->dev);
++
++	cxlhdm->base_hpa = base;
++}
++
+ static void setup_base_hpa(struct cxl_hdm *cxlhdm)
+ {
++	struct cxl_port *port = cxlhdm->port;
++
++	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
++
++	if (!cxl_root)
++		return;
++
+ 	/*
+ 	 * Address translation is not needed on platforms with HPA ==
+ 	 * SPA. HDM decoder addresses all base on system addresses,
+@@ -134,6 +199,10 @@ static void setup_base_hpa(struct cxl_hdm *cxlhdm)
+ 	 * == 0). Nothing to do here as it is already pre-initialized
+ 	 * zero.
+ 	 */
++	if (!cxl_root->hpa_xlat_enable)
++		return;
++
++	setup_base_hpa_cfmws(cxlhdm, cxl_root);
+ }
  
- static inline struct cxl_root *
+ /**
 -- 
 2.39.2
 
