@@ -1,149 +1,124 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4652E16EB67
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 17:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A169215AAC6
+	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 17:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719856331; cv=none; b=uU3nYM0eE5u7jo+ynBXtJbz3ZTTbNEp+YVDglBhEZ9yk+MUiKC0EDugoOyvLaky99C5fv0a0qqcjVBQfgjNSzDNjQzo1vWCkctyvNQq0SIM5mYbVpn32dmq4OoogN2PHKjE/7ugVKF044RRGHqwQYpi9+qq/XkhJfBBqSFlGOBI=
+	t=1719856428; cv=none; b=QT8p6vTwc3XPuXsreMwbwjKpl377RHqYg8VWPAQs1+D25v9//SQr7uYw0eAx/KOo6DYO7ji7/tTgdBxBddEfOPBNyfGt5TOKqjvclIFmq0FbMSJjutyRuasrEhvSOIS4G+ifwv/Juofc0OKWJI61nmV0Vecmp8w24Pe9/4sKmnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719856331; c=relaxed/simple;
-	bh=ToXx2V1JwRrepS8nSmCXt9IeXjAIvDN48nqaiPFIPwo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fTs+6dVaRYXgqzUNnvGRk60Advy/+pc6LhQgAMcbK+UXGxxM40nYqAnekLJBQuawUUKZToAdIK75yhXcg17Yx7hMetuRyc0Ck6HsRQKtPu7Dx/HEP8GiEAsyrJFSekhZK+AIyq99WajQd78HRpvpBj0j9xSUdxJnuZ1Lw79gJjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCYTz3RFQz6K8vp;
-	Tue,  2 Jul 2024 01:50:15 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 813041400D1;
-	Tue,  2 Jul 2024 01:52:05 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 18:52:04 +0100
-Date: Mon, 1 Jul 2024 18:52:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Igor Mammedov <imammedo@redhat.com>
-CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
-	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
-	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
-	<linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
-	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
-	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v3 07/11] hw/pci-bridge: Add acpi_uid property to CXL
- PXB
-Message-ID: <20240701185203.00006159@Huawei.com>
-In-Reply-To: <20240628135525.0c131846@imammedo.users.ipa.redhat.com>
-References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
-	<20240620160324.109058-8-Jonathan.Cameron@huawei.com>
-	<20240627152758.5eafb402@imammedo.users.ipa.redhat.com>
-	<20240627144614.00004358@Huawei.com>
-	<20240628135525.0c131846@imammedo.users.ipa.redhat.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1719856428; c=relaxed/simple;
+	bh=TqICa00hk2wlfl7MJuKZd+BkSLFWbviuyYoTOtIxw70=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=sB+q3JsB/0/0QZXhzc7myH1bby7hKmpZA5ZbjenSLmzifg16NNrkY9lPCVlqaRaBtb05M32XMYiknIWVe8bkFpwAyyI1EjWFR0yzyii3zw6HSbLevu0nKXCUqdufF5/lAgoo0RJpFYHaXqBOCn+gfrDnZbu4PTDIwjoYiarKK68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JPBhtT//; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JPBhtT//"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719856427; x=1751392427;
+  h=message-id:date:mime-version:to:cc:from:subject:
+   content-transfer-encoding;
+  bh=TqICa00hk2wlfl7MJuKZd+BkSLFWbviuyYoTOtIxw70=;
+  b=JPBhtT//1VyYIdH27oHqqNzDkcvm7auQNOsAL1qtV/ufstL72JUVOeVp
+   cy4KIBRRLbSHz+oZe0ilCwaQrgz+qZavGeNXD/sZIIah6Se/3L/2+C/66
+   yYJQ+dqkrTfS2isOth7UFHAk1BWqhx5K+v1Vmusn+c88sZX8HzjFZqP0y
+   reJmlCQp4bAiQH81W9GBegGF/99eZyxysjSlt0c3WKXzPTDS7k5kBwaba
+   VB/OrX8s0LwzrQWcDo1DR0nX2UtuALDlWbzCBZZsuwVLE/nSIX+OW7R3Z
+   y9hcVpBFsrpt0XS++ZjEBAnZvh5IvL7x5iNiIfd27LLolngdayE6qDcrR
+   Q==;
+X-CSE-ConnectionGUID: Vu0fKVJSQV60i7Ug6ENjFQ==
+X-CSE-MsgGUID: tkNTfDuoQHOiBSIcMikF8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="27597175"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="27597175"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:53:46 -0700
+X-CSE-ConnectionGUID: Iv89hjB8R1ijbXfHSIg0kA==
+X-CSE-MsgGUID: RtR/OYc0QYWKxhhEBAs5qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="45576917"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.46]) ([10.125.111.46])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:53:45 -0700
+Message-ID: <e5477d05-93e0-4268-90ca-581e3f492b4e@intel.com>
+Date: Mon, 1 Jul 2024 10:53:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ira Weiny <ira.weiny@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 6.10-rc7
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 28 Jun 2024 13:55:25 +0200
-Igor Mammedov <imammedo@redhat.com> wrote:
+Hi Linus, please pull from
 
-> On Thu, 27 Jun 2024 14:46:14 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Thu, 27 Jun 2024 15:27:58 +0200
-> > Igor Mammedov <imammedo@redhat.com> wrote:
-> >   
-> > > On Thu, 20 Jun 2024 17:03:15 +0100
-> > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > >     
-> > > > This allows the ACPI SRAT Generic Port Affinity Structure
-> > > > creation to be independent of PCI internals. Note that
-> > > > the UID is currently the PCI bus number.
-> > > > 
-> > > > Suggested-by: Igor Mammedov <imammedo@redhat.com>
-> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > 
-> > > > ---
-> > > > v3: New patch
-> > > > ---
-> > > >  hw/pci-bridge/pci_expander_bridge.c | 17 ++++++++++++++++-
-> > > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> > > > index 0411ad31ea..92d39b917a 100644
-> > > > --- a/hw/pci-bridge/pci_expander_bridge.c
-> > > > +++ b/hw/pci-bridge/pci_expander_bridge.c
-> > > > @@ -93,6 +93,21 @@ static void pxb_bus_class_init(ObjectClass *class, void *data)
-> > > >      pbc->numa_node = pxb_bus_numa_node;
-> > > >  }
-> > > >  
-> > > > +static void prop_pxb_cxl_uid_get(Object *obj, Visitor *v, const char *name,
-> > > > +                             void *opaque, Error **errp)
-> > > > +{
-> > > > +    uint32_t uid = pci_bus_num(PCI_BUS(obj));
-> > > > +
-> > > > +    visit_type_uint32(v, name, &uid, errp);
-> > > > +}
-> > > > +
-> > > > +static void pxb_cxl_bus_class_init(ObjectClass *class, void *data)
-> > > > +{
-> > > > +    pxb_bus_class_init(class, data);
-> > > > +    object_class_property_add(class, "acpi_uid", "uint32",
-> > > > +                              prop_pxb_cxl_uid_get, NULL, NULL, NULL);
-> > > > +}
-> > > > +
-> > > >  static const TypeInfo pxb_bus_info = {
-> > > >      .name          = TYPE_PXB_BUS,
-> > > >      .parent        = TYPE_PCI_BUS,
-> > > > @@ -111,7 +126,7 @@ static const TypeInfo pxb_cxl_bus_info = {
-> > > >      .name          = TYPE_PXB_CXL_BUS,
-> > > >      .parent        = TYPE_CXL_BUS,
-> > > >      .instance_size = sizeof(PXBBus),
-> > > > -    .class_init    = pxb_bus_class_init,
-> > > > +    .class_init    = pxb_cxl_bus_class_init,      
-> > > 
-> > > why it's CXL only, doesn't the same UID rules apply to other PCI buses?    
-> > 
-> > In principle, yes.  My nervousness is that we can only test anything
-> > using this infrastructure today with CXL root bridges.
-> > 
-> > So I was thinking we should keep it limited and broaden the scope
-> > if anyone ever cares.  I don't mind broadening it from the start though.  
-> 
-> Then I'd use it everywhere and cleanup ACPI code to use it as well
-> just to be consistent.
-That is easy to do for all the TYPE_PXB_BUS types and they have separate
-handling in the various ACPI table builds from other host bridgesn anyway.
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.10-rc7
 
-Ultimately it might be nice to do for the host bridges in general but
-that needs to be separate I think as there isn't a simple common
-ancestor to use.  For at least some cases (gpex-acpi.c) it's hard
-coded as 0 directly with no look up at all.
+...to receive several fixes for the CXL subsystem.
 
-Jonathan
+A fix to deal with NULL cxl_nvd pointer during persistent memory auto assembly.
 
->  
-> > Jonathan
-> > 
-> >   
-> > > >  };
-> > > >  
-> > > >  static const char *pxb_host_root_bus_path(PCIHostState *host_bridge,      
-> > > 
-> > >     
-> >   
-> 
-> 
+A fix to address NULL pointer dereference in CXL region lookup.
 
+A fix to add proper checking for CXL region interleave capability during assembly.
+
+A kdoc fix for CXL documentation.
+
+This has build success notification from kbuild-robot. It has been in the -next
+for several days with no reported issues.
+
+---
+
+The following changes since commit 6ba59ff4227927d3a8530fc2973b80e94b54d58f:
+
+  Linux 6.10-rc4 (2024-06-16 13:40:16 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.10-rc7
+
+for you to fetch changes up to a0f39d51dbf72c28283bd201b97559ed82bc0fe5:
+
+  cxl: documentation: add missing files to cxl driver-api (2024-06-25 14:45:27 -0700)
+
+----------------------------------------------------------------
+cxl fixes for v6.10-rc7
+
+- Fix no cxl_nvd during pmem region auto-assemble
+- Avoid NULLL pointer dereference in region lookup
+- Add missing checks to interleave capability
+- Add cxl kdoc fix to address document compilation error
+
+----------------------------------------------------------------
+Alison Schofield (1):
+      cxl/region: Avoid null pointer dereference in region lookup
+
+Li Ming (1):
+      cxl/mem: Fix no cxl_nvd during pmem region auto-assembling
+
+Yao Xingtao (2):
+      cxl/region: check interleave capability
+      cxl: documentation: add missing files to cxl driver-api
+
+ Documentation/driver-api/cxl/memory-devices.rst |  15 ++++
+ drivers/cxl/core/hdm.c                          |  13 +++
+ drivers/cxl/core/pmem.c                         |  16 ++--
+ drivers/cxl/core/region.c                       | 103 ++++++++++++++++++++++--
+ drivers/cxl/cxl.h                               |   6 +-
+ drivers/cxl/cxlmem.h                            |  21 +++--
+ drivers/cxl/mem.c                               |  17 ++--
+ tools/testing/cxl/test/cxl.c                    |   4 +
+ 8 files changed, 170 insertions(+), 25 deletions(-)
