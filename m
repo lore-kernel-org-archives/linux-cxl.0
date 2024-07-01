@@ -1,134 +1,180 @@
-Received: from cockroach.ash.relay.mailchannels.net (cockroach.ash.relay.mailchannels.net [23.83.222.37])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239631EB2A;
-	Mon,  1 Jul 2024 16:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ABD16E88E;
+	Mon,  1 Jul 2024 17:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719850012; cv=pass; b=NDDzLFgh0KUMWEzcagf9G/JZ//47FxLiBXDaXBM0crS8K6Yi953lGZNKI0J3AZbBvmRpRE7mWYvrqr0r38XfWCnMZip06PFtXjEcwQvyxImM86QfMzItmWq3XRZHylcZGhwu39w6UOATdTLbEDcPOH9v+rSOkOBcORF5HTQgVGA=
+	t=1719856101; cv=fail; b=j1fWpoTt4XVEe5ElPVZsQpr6D2Pc7I09sUEfG57JTT8MTUM83+eK2HI7CFMTqqTOnb7/C7gpvsz8HTuNu7Bc2QMN4oiDZhgH48vIAqAHZpeB+bJ6SIE2upjbMpbbWH+/X1gOcIa51LOAaIeVtVh/1m4DPW91SxQtXi4X83PEAu0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719850012; c=relaxed/simple;
-	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujqJCJdjYtWqNcZtOks2dsaEEcPCOzt81g5EzAXKUEJkpqXrdKnwnlST/M0TDOiqashvxz0eRSACEyrRBWSuAQObZsW4Mn0otVwe7tpBX8q/RMqn+AGmfpraj+ebSydRLG+HYGpe1YQM3Ca6WSKrtgfJPWsNU5Dm6Cdl1MesSf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GbO6gM1T; arc=pass smtp.client-ip=23.83.222.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1719856101; c=relaxed/simple;
+	bh=9lqicBwBn5yaavz+XmeBH1EuLvW07GF6DaNIMTv2sJk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uf4kHCk4/aB/5XElWcGR3H9L5jg85WADxnA3Y4BwnTQLeXwO4zolkDZWP7sixMUXBzcU/GpxrSJxhR8OnHQ1ivMJCzSn0bniKMwdAVzATqbiNA2zn5RW33nbQdyaKnKVF9E4hbtfMakNdphZG7x7E04UhXmV3agv6P3Xzco+Yxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MoIAxjrP; arc=fail smtp.client-ip=40.107.243.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GbO6gM1T"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D2A325C0F88;
-	Mon,  1 Jul 2024 15:49:36 +0000 (UTC)
-Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5EBEC5C1B6A;
-	Mon,  1 Jul 2024 15:49:36 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1719848976; a=rsa-sha256;
-	cv=none;
-	b=K3vskIPsaEkbKlZ+39JXhK2UUI9c/I3mL84BX9hqW/MatdflI6hMygskfFIILcGFVUMLHb
-	DsaLsVfmmWMe2L8pOkMT3cvuuucNtBB/CFwS/N+urnbaMe90kAJCHgDgx1PZPLIo3vH+JT
-	774vGH7aqG3Ya1x2zyqBRYJo+0OOLcWxnrYtns5S8ddCQZQWy87EtvCfzzSs49BsI1tAhx
-	R7x2QbO4qic2iGRLIc/dk1H0gTHwOGCyRCQY0/uYMCUYxWfLngybshkrW6kY31NVASrNlk
-	tVi4NFff2eLK5usRIHEIgvXucirX7M+5nWGhGtz0AL25tXtDDDi4ORMFoQZjLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1719848976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
-	b=M8RCE8/eGI+8lYvaBh9/XG4LZtfhlorho7k8uust2TmjWqFZ7djUm5JMiZkW4pFkhO9gX/
-	oopT+wlqQDrfyV00tkpANt/ItefZ++fq/CQ+KQnDEEwDKXQkjq4QofcIXyI00zrBvyWpxa
-	jo1jLDUdf97EONHenuAVimJxlEgMBSMUJNNN9WtFDdkBe9ylZ/Ovg2O9kapcGRHOrFh2eW
-	H8F5WiLO6FmlYTBgeVO0y0G24+nkCqalAAqPnCWxuOzc9/6YzP/UOSCz6eb/tII9Z1hU+k
-	0+nbcK71431LPCwdBZhJ2VEl5koHjE//83Zra6x0vew838l/zCQ82hxd2k+qGA==
-ARC-Authentication-Results: i=1;
-	rspamd-79677bdb95-txlxl;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stupid-Relation: 0e9670cc4fdd7ace_1719848976681_3504571096
-X-MC-Loop-Signature: 1719848976681:2275360465
-X-MC-Ingress-Time: 1719848976680
-Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.90.83 (trex/6.9.2);
-	Mon, 01 Jul 2024 15:49:36 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4WCVpl55DTz5y;
-	Mon,  1 Jul 2024 08:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1719848976;
-	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=GbO6gM1TUlIgx0XWcNmx8hQX4Uwm9UOl6c8eklzCcOncOSox/lpk8Ihk4/BNrfZJm
-	 RfLL1BjXNuVK8jaRnfKR0Xd6x2n+D3pB+ezdUdEk5I3KLsUCvoXOiGEYPg6Ktwhgzq
-	 zambJdDfJ3hL/MO+VSiejOMg7FqU0W4zHvhvV55lPMKeGqBFk7oNnIRhMUtkV12EEf
-	 zJjYgd3jKp1iTFpW2y3jyFblToD8YEp2AToRlpLZ2l0tjq6uIqjivpJbQ0GSAewxwJ
-	 faIkasgt9BrmuEF7AkmuAo0NzKd4mHlCwatbk1BBxFBdF6EkmMhjB7qeLMW3ZF4+EF
-	 KN00jJMBNkJRg==
-Date: Mon, 1 Jul 2024 08:49:32 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/acpi: Warn on mixed CXL VH and RCH/RCD Hierarchy
-Message-ID: <20240701154932.ch7b75m5xp62oly7@offworld>
-References: <20240628175535.272472-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MoIAxjrP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NP7E6niP0LHjVoDma7Gio29emcwS/Aj7QDnDrZOtgHGFryftNcexqh2oSncz306StRW/ZCQfJr2yP3OZ7Mzy/IwSAPtb75vpWw2y6R81XWRM1eFSl+eoteSZrpW23JVKF68IlFxiw8dwyAvvKBchhVV+GV6F8vF/DrYRyPpavjGH2t9GfC1S4UeNQTXY7nsvLUHdAUUVoxgUFIN4CygFmCkNrC9jIjb6NdmSJ/tNppOU5IvmzemzSFt1RSyicdvzOoU5fCpiwselWSVsbinHUTHTlE2ntKecC9mK+sVxfBZ6PTsH0hgDprTEzC0hBI++YJMknabEGPiDvfAEkMCC2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ie84NQW5PxEGF8XhijxjghJ4NKD8N+jfzaeIilnlnT4=;
+ b=DxIVkBI9vzShxciHKMDv2T/gbxiLct6HRMP/4dBWoleLAh2U7EVJO++4kvSAhjsBVPZkolZ8zq00Q7yUJkXTbrdvtmqB3TlXVMCxmrvW6hPaCgqS0Wt5WNWW64kk8p4jK8vGFOQILSjgpxwwfR+zY0mfSIm/tQ/JJTUcU1EArS3qmVNjUxuw706p4xeAZNgUYMtgmkfWPziF7vE42u90MleLoQMxNiV4G4frHoEFHn1hOFrlJSA+9qj1eXHW+w3bWq7m7HfULw7ifY4LV2iUEGk69iFuKRbHQ+Zv+IkuDtSMmGWc7ZDoyEtkQjPLnwgNPNx1upq3NloQSruzv/DITA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ie84NQW5PxEGF8XhijxjghJ4NKD8N+jfzaeIilnlnT4=;
+ b=MoIAxjrPjfcs55SDC4sEkytB3BavdiCsU9OWQydw/yLC/NmIYxElAs7uY0KAXkhxMGXXITigPfwnNHNCCOLVzVROSxnMiX+Ff/E5Phgq/wUrmjI7O6RI2U2/fvq0tv7pkULbZvDcrbaTzUaHWQgpXVUEZQ1I172Q9u1Cb1tZRwM=
+Received: from PH8PR02CA0007.namprd02.prod.outlook.com (2603:10b6:510:2d0::18)
+ by CH2PR12MB4103.namprd12.prod.outlook.com (2603:10b6:610:7e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 17:48:17 +0000
+Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
+ (2603:10b6:510:2d0:cafe::4b) by PH8PR02CA0007.outlook.office365.com
+ (2603:10b6:510:2d0::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32 via Frontend
+ Transport; Mon, 1 Jul 2024 17:48:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7741.18 via Frontend Transport; Mon, 1 Jul 2024 17:48:16 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 1 Jul
+ 2024 12:48:14 -0500
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Robert
+ Richter" <rrichter@amd.com>
+Subject: [PATCH v2 0/5] Address translation for HDM decoding
+Date: Mon, 1 Jul 2024 19:47:48 +0200
+Message-ID: <20240701174754.967954-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240628175535.272472-1-fabio.m.de.francesco@linux.intel.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|CH2PR12MB4103:EE_
+X-MS-Office365-Filtering-Correlation-Id: edb9eab2-9ae6-4bcf-666e-08dc99f5fcf7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?N454frIMhDGaMVBG4qNijkf17BYqWGpnTt1hFjz5jbVYzpXBjWnnoVEAeXGF?=
+ =?us-ascii?Q?Yy4jqZVuXV/jhRHmt+HmbUV19+oe14vmqWl348e76qQq1eghN5jhalUPmTRq?=
+ =?us-ascii?Q?7D2dkaKylfxv9Goq7ySzqTgmcEYzyLfCGDIlmQWWAD/nxp6IEQ3w0EAMkDcU?=
+ =?us-ascii?Q?hn1TQC/nRLGMJgyvg3UgXmjaYeqiAlS1VgAbznkG98Liv6xKbRb4/Ve/3cnC?=
+ =?us-ascii?Q?LxGI+/69mSAvMfLH1R0sjdqYK9ffkkqgrt2QO2qXwXHbCeTeBB87NnmaXw96?=
+ =?us-ascii?Q?xUlVKvfrs4c7VcFH5KKR2AN52ZvPOP3PIw2Br1am7Gt3lnxXxj7FUWfK6zEx?=
+ =?us-ascii?Q?zLC6n7D+P5iEirbRPEr5Djnsk0CfL5ZcIVyRkatF75I5mEBllrAODCUxgwBX?=
+ =?us-ascii?Q?DBlIP2IG+/xJwTZM1jC/UKdDQBVRTohPfo3zgq8LxHQoci5fr91VAr5gYQXl?=
+ =?us-ascii?Q?WlQuwPHH31RJ6RWRbF1CSbEYG1heGxtfHHgwu2FsiLtmKEZNCI4t/z5MTEwR?=
+ =?us-ascii?Q?ox1X5QVFBvz2azdyb7aWa7yO7DIIADbf+PjF38OBtVJq7qydqkwr9DXchzFc?=
+ =?us-ascii?Q?/9lshOSU3jILXCo6v15DvPGeH0pzw2EkkbJJxfkxleBpJZau6pSZn9+aQSfZ?=
+ =?us-ascii?Q?d2QbWHQPX7hdT449DvPryfK0592uTPF7sKX8hUP5/Ed7FzkSTZRRgGmni3Yg?=
+ =?us-ascii?Q?lx7wFIsLSpRRIH0yKzlCp6ZXre8n861f/Oi3e29tbeAjXWFinA1FdbAOWHhb?=
+ =?us-ascii?Q?LfpssMhNXTnIl/h1sXWMYXLsHr3g3G39tGC9Tqn6w9e/dHO/ftHc271yZN9D?=
+ =?us-ascii?Q?mEQIz7cd52D+mGe+ynwyre40GJASORXfX/deLVOtU2CjxEhR6nyi3ERtfshL?=
+ =?us-ascii?Q?u9K2Q116YcoYDrE+iu2eQzNG3qKUWA4fUA0IiCfVU817q7nCTVfnEyp0g3L6?=
+ =?us-ascii?Q?xuqtVXVn8XdQLHBjYwqvoDCkDuhriSuqV67Je8k9faE1epdJt48T4uJpbhDG?=
+ =?us-ascii?Q?coyriBss/z5BlR0ra5zMu53CjYrfpL298AfK2/bY75C5wz29rSpa1uk/QwNy?=
+ =?us-ascii?Q?7yW5X9Et0e6YMFR8hJlsBzGH+IuF+QfpcnImcPvS6kPQvzla2jV+gYd1nQ2i?=
+ =?us-ascii?Q?9QIEr1jj3Ek0PYGEU16L2GD6AcmLtrfgTcUUxji8TB23t7T6bHt7aLb6ffdk?=
+ =?us-ascii?Q?099FedIorhu7d3JnfEryPj5SNV71m9CTdPOXwHOQ1lrW5NPQw1JPIUVYuq5W?=
+ =?us-ascii?Q?mXumw1rRhXVQGeM16jA68CPmfdppzbV3K6H47oOwojVnsI/pMsvtkKuRpN9t?=
+ =?us-ascii?Q?2UpOh9jBBHK4dqZCmZ2Kv+kiSnevfy+HdVq3lj1F8ScWOgwjgXVLu3ZEBJwl?=
+ =?us-ascii?Q?I+UQ937XL30jY0tChO/ZPbQgiZb9aZzikvT9fymUYMlVKxrA+Ke7+lpmA8t5?=
+ =?us-ascii?Q?G7eCcvgE+NJcoIiguKc8xirPgd7vJBHM?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 17:48:16.9095
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: edb9eab2-9ae6-4bcf-666e-08dc99f5fcf7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4103
 
-On Fri, 28 Jun 2024, Fabio M. De Francesco wrote:
+Default expectation of Linux is that HPA == SPA, which means that
+hardware addresses in the decoders are the same as the kernel sees
+them. However, there are platforms where this is not the case and an
+address translation between decoder's (HPA) and the system's physical
+addresses (SPA) is needed.
 
->Each Host Bridge instance has a corresponding CXL Host Bridge Structure
->(CHBS) ACPI table that identifies its capabilities. CHBS tables can be
->two types (CXL 3.1 Table 9-21): The PCIe Root Complex Register Block
->(RCRB) and CXL Host Bridge Component Registers (CHBCR).
->
->If a Host Bridge is attached to a device that is operating in Restricted
->CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
->registers that describe its capabilities (CXL 3.1 sec. 9.11).
->
->Instead, the new (CXL 2.0+) Component registers can only be accessed
->by means of a base address published with a CHBCR (CXL 3.1 sec. 9.12).
->
->If an eRCD (a device that forces the host-bridge into CXL 1.1 Restricted
->CXL Host mode) is attached to a CXL 2.0+ Host-Bridge, the current CXL
->specification does not define a mechanism for finding CXL-2.0-only
->root-port component registers like HDM decoders and Extended Security
->capability.
->
->An algorithm to locate a CHBCR associated with an RCRB, would be too
->invasive to land without some concrete motivation.
->
->Therefore, just print a message to inform of unsupported config.
->
->Count how many different CHBS "Version" types are detected by
->cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that sum
->is greater than 1.
->
->Tested-by: Alison Schofield <alison.schofield@intel.com>
->Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+This series implements address translation for HDM decoding. The
+implementation follows the rule that the representation of hardware
+address ranges in the kernel are all SPA. If decoder registers (HDM
+decoder cap or register range) are not SPA, a base offset must be
+applied. Translation happens when accessing the registers back and
+forth. After a read access an address will be converted to SPA and
+before a write access the programmed address is translated from an
+SPA. The decoder register access can be easily encapsulated by address
+translation and thus there are only a few places where translation is
+needed and the code must be changed. This is implemented in patch #2,
+patch #1 is a prerequisite.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Address translation is restricted to platforms that need it. As such a
+platform check is needed and a flag is introduced for this (patch #3).
+
+For address translation the base offset must be determined for the
+memory domain. Depending on the platform there are various options for
+this. The address range in the CEDT's CFWMS entry of the CXL host
+bridge can be used to determine the decoder's base address (patch
+#4). This is enabled for AMD Zen4 platforms (patch #5).
+
+Changelog:
+
+v2:
+ * Fixed build error for other archs [kbot]
+
+
+Robert Richter (5):
+  cxl/hdm: Moving HDM specific code to core/hdm.c.
+  cxl/hdm: Implement address translation for HDM decoding
+  cxl/acpi: Add platform flag for HPA address translation
+  cxl/hdm: Setup HPA base for address translation using the HPA window
+    in CFMWS
+  cxl/acpi: Enable address translation for Zen4 platforms
+
+ drivers/cxl/acpi.c      |  16 +++
+ drivers/cxl/core/core.h |   2 +
+ drivers/cxl/core/hdm.c  | 245 ++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/core/pci.c  | 119 +------------------
+ drivers/cxl/cxl.h       |   2 +
+ drivers/cxl/cxlmem.h    |   4 +
+ drivers/cxl/cxlpci.h    |   3 -
+ 7 files changed, 262 insertions(+), 129 deletions(-)
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.39.2
+
