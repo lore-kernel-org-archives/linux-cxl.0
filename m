@@ -1,169 +1,134 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from cockroach.ash.relay.mailchannels.net (cockroach.ash.relay.mailchannels.net [23.83.222.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99604126F1E
-	for <linux-cxl@vger.kernel.org>; Mon,  1 Jul 2024 15:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719849576; cv=none; b=Ti17OmjRAEUjkKc7oucEiUDATQF1Sm942gKsYxA4AKCKnDunZ29jCFQvMNlTl5PAtBxB41TXLm/4ttqY8L+PMzZGQlMNMKYE+910PKe5VemS2aulGfQD2JUTzhomkY8/m5AMC+YpsTbKPC+7OwqUlM5011WLpOuf3RrUuj9BZng=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719849576; c=relaxed/simple;
-	bh=wKBImBZq2LrLwv/DkBDIr61NrgRgVQXQ54cTWDbZPes=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mh3XKdklm8O/Gu7QILRnyERd4urp8hxWVuG0WPq6cP+DXkXUrKtL/NLYKikcbEgB/50/L5qTa2J3m8UHasNKbnpcFcrfum9uHBCv/vmcxqzKBxHqVlsbVA3VhSynR+U1Jmg7MFgKl64cpw4BNt6DOxLl1P2imj5GV/ATf5OZQ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCW141DR0z6K62D;
-	Mon,  1 Jul 2024 23:58:32 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D7CDE140B63;
-	Mon,  1 Jul 2024 23:59:29 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 16:59:29 +0100
-Date: Mon, 1 Jul 2024 16:59:28 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Igor Mammedov <imammedo@redhat.com>
-CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
-	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
-	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
-	<linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
-	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
-	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v3 05/11] hw/pci: Add a bus property to pci_props and
- use for acpi/gi
-Message-ID: <20240701165928.00006213@Huawei.com>
-In-Reply-To: <20240628135804.12434f5e@imammedo.users.ipa.redhat.com>
-References: <20240620160324.109058-1-Jonathan.Cameron@huawei.com>
-	<20240620160324.109058-6-Jonathan.Cameron@huawei.com>
-	<20240627150912.6ce774b1@imammedo.users.ipa.redhat.com>
-	<20240628135804.12434f5e@imammedo.users.ipa.redhat.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239631EB2A;
+	Mon,  1 Jul 2024 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719850012; cv=pass; b=NDDzLFgh0KUMWEzcagf9G/JZ//47FxLiBXDaXBM0crS8K6Yi953lGZNKI0J3AZbBvmRpRE7mWYvrqr0r38XfWCnMZip06PFtXjEcwQvyxImM86QfMzItmWq3XRZHylcZGhwu39w6UOATdTLbEDcPOH9v+rSOkOBcORF5HTQgVGA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719850012; c=relaxed/simple;
+	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ujqJCJdjYtWqNcZtOks2dsaEEcPCOzt81g5EzAXKUEJkpqXrdKnwnlST/M0TDOiqashvxz0eRSACEyrRBWSuAQObZsW4Mn0otVwe7tpBX8q/RMqn+AGmfpraj+ebSydRLG+HYGpe1YQM3Ca6WSKrtgfJPWsNU5Dm6Cdl1MesSf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GbO6gM1T; arc=pass smtp.client-ip=23.83.222.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GbO6gM1T"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D2A325C0F88;
+	Mon,  1 Jul 2024 15:49:36 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 5EBEC5C1B6A;
+	Mon,  1 Jul 2024 15:49:36 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1719848976; a=rsa-sha256;
+	cv=none;
+	b=K3vskIPsaEkbKlZ+39JXhK2UUI9c/I3mL84BX9hqW/MatdflI6hMygskfFIILcGFVUMLHb
+	DsaLsVfmmWMe2L8pOkMT3cvuuucNtBB/CFwS/N+urnbaMe90kAJCHgDgx1PZPLIo3vH+JT
+	774vGH7aqG3Ya1x2zyqBRYJo+0OOLcWxnrYtns5S8ddCQZQWy87EtvCfzzSs49BsI1tAhx
+	R7x2QbO4qic2iGRLIc/dk1H0gTHwOGCyRCQY0/uYMCUYxWfLngybshkrW6kY31NVASrNlk
+	tVi4NFff2eLK5usRIHEIgvXucirX7M+5nWGhGtz0AL25tXtDDDi4ORMFoQZjLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1719848976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
+	b=M8RCE8/eGI+8lYvaBh9/XG4LZtfhlorho7k8uust2TmjWqFZ7djUm5JMiZkW4pFkhO9gX/
+	oopT+wlqQDrfyV00tkpANt/ItefZ++fq/CQ+KQnDEEwDKXQkjq4QofcIXyI00zrBvyWpxa
+	jo1jLDUdf97EONHenuAVimJxlEgMBSMUJNNN9WtFDdkBe9ylZ/Ovg2O9kapcGRHOrFh2eW
+	H8F5WiLO6FmlYTBgeVO0y0G24+nkCqalAAqPnCWxuOzc9/6YzP/UOSCz6eb/tII9Z1hU+k
+	0+nbcK71431LPCwdBZhJ2VEl5koHjE//83Zra6x0vew838l/zCQ82hxd2k+qGA==
+ARC-Authentication-Results: i=1;
+	rspamd-79677bdb95-txlxl;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Stupid-Relation: 0e9670cc4fdd7ace_1719848976681_3504571096
+X-MC-Loop-Signature: 1719848976681:2275360465
+X-MC-Ingress-Time: 1719848976680
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.104.90.83 (trex/6.9.2);
+	Mon, 01 Jul 2024 15:49:36 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4WCVpl55DTz5y;
+	Mon,  1 Jul 2024 08:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1719848976;
+	bh=Fmfy/xanfD84Dr+3FY7udGrsBHHaal7DeaKVvneRcQ4=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=GbO6gM1TUlIgx0XWcNmx8hQX4Uwm9UOl6c8eklzCcOncOSox/lpk8Ihk4/BNrfZJm
+	 RfLL1BjXNuVK8jaRnfKR0Xd6x2n+D3pB+ezdUdEk5I3KLsUCvoXOiGEYPg6Ktwhgzq
+	 zambJdDfJ3hL/MO+VSiejOMg7FqU0W4zHvhvV55lPMKeGqBFk7oNnIRhMUtkV12EEf
+	 zJjYgd3jKp1iTFpW2y3jyFblToD8YEp2AToRlpLZ2l0tjq6uIqjivpJbQ0GSAewxwJ
+	 faIkasgt9BrmuEF7AkmuAo0NzKd4mHlCwatbk1BBxFBdF6EkmMhjB7qeLMW3ZF4+EF
+	 KN00jJMBNkJRg==
+Date: Mon, 1 Jul 2024 08:49:32 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/acpi: Warn on mixed CXL VH and RCH/RCD Hierarchy
+Message-ID: <20240701154932.ch7b75m5xp62oly7@offworld>
+References: <20240628175535.272472-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240628175535.272472-1-fabio.m.de.francesco@linux.intel.com>
+User-Agent: NeoMutt/20220429
 
-On Fri, 28 Jun 2024 13:58:04 +0200
-Igor Mammedov <imammedo@redhat.com> wrote:
+On Fri, 28 Jun 2024, Fabio M. De Francesco wrote:
 
-> On Thu, 27 Jun 2024 15:09:12 +0200
-> Igor Mammedov <imammedo@redhat.com> wrote:
-> 
-> > On Thu, 20 Jun 2024 17:03:13 +0100
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >   
-> > > Using a property allows us to hide the internal details of the PCI device
-> > > from the code to build a SRAT Generic Initiator Affinity Structure with
-> > > PCI Device Handle.
-> > > 
-> > > Suggested-by: Igor Mammedov <imammedo@redhat.com>
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > 
-> > > ---
-> > > V3: New patch
-> > > ---
-> > >  hw/acpi/acpi_generic_initiator.c | 11 ++++++-----
-> > >  hw/pci/pci.c                     | 14 ++++++++++++++
-> > >  2 files changed, 20 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-> > > index 73bafaaaea..34284359f0 100644
-> > > --- a/hw/acpi/acpi_generic_initiator.c
-> > > +++ b/hw/acpi/acpi_generic_initiator.c
-> > > @@ -9,6 +9,7 @@
-> > >  #include "hw/boards.h"
-> > >  #include "hw/pci/pci_device.h"
-> > >  #include "qemu/error-report.h"
-> > > +#include "qapi/error.h"
-> > >  
-> > >  typedef struct AcpiGenericInitiatorClass {
-> > >      ObjectClass parent_class;
-> > > @@ -79,7 +80,7 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
-> > >      MachineState *ms = MACHINE(qdev_get_machine());
-> > >      AcpiGenericInitiator *gi;
-> > >      GArray *table_data = opaque;
-> > > -    PCIDevice *pci_dev;
-> > > +    uint8_t bus, devfn;
-> > >      Object *o;
-> > >  
-> > >      if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
-> > > @@ -100,10 +101,10 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
-> > >          exit(1);
-> > >      }
-> > >  
-> > > -    pci_dev = PCI_DEVICE(o);
-> > > -    build_srat_pci_generic_initiator(table_data, gi->node, 0,
-> > > -                                     pci_bus_num(pci_get_bus(pci_dev)),
-> > > -                                     pci_dev->devfn);
-> > > +    bus = object_property_get_uint(o, "bus", &error_fatal);
-> > > +    devfn = object_property_get_uint(o, "addr", &error_fatal);
-> > > +
-> > > +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
-> > >  
-> > >      return 0;
-> > >  }
-> > > diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-> > > index 324c1302d2..b4b499b172 100644
-> > > --- a/hw/pci/pci.c
-> > > +++ b/hw/pci/pci.c
-> > > @@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
-> > >  static void pcibus_reset_hold(Object *obj, ResetType type);
-> > >  static bool pcie_has_upstream_port(PCIDevice *dev);
-> > >  
-> > > +static void prop_pci_bus_get(Object *obj, Visitor *v, const char *name,
-> > > +                             void *opaque, Error **errp)
-> > > +{
-> > > +    uint8_t bus = pci_dev_bus_num(PCI_DEVICE(obj));
-> > > +
-> > > +    visit_type_uint8(v, name, &bus, errp);
-> > > +}
-> > > +
-> > > +static const PropertyInfo prop_pci_bus = {
-> > > +    .name = "bus",    
-> > 
-> > /me confused,
-> > didn't we have 'bus' property for PCI devices already?
-> > 
-> > i.e. I can add PCI device like this
-> >   -device e1000,bus=pci.0,addr=0x6,...  
-> 
-> to avoid confusion, I'd suggest to name it to 'busnr'
-> (or be more specific (primary|secondary)_busnr if applicable)
-For generic initiators we are always dealing with an EP so I think
-busnr alone is appropriate. If we need similar for bridges we
-can add that later.
+>Each Host Bridge instance has a corresponding CXL Host Bridge Structure
+>(CHBS) ACPI table that identifies its capabilities. CHBS tables can be
+>two types (CXL 3.1 Table 9-21): The PCIe Root Complex Register Block
+>(RCRB) and CXL Host Bridge Component Registers (CHBCR).
+>
+>If a Host Bridge is attached to a device that is operating in Restricted
+>CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
+>registers that describe its capabilities (CXL 3.1 sec. 9.11).
+>
+>Instead, the new (CXL 2.0+) Component registers can only be accessed
+>by means of a base address published with a CHBCR (CXL 3.1 sec. 9.12).
+>
+>If an eRCD (a device that forces the host-bridge into CXL 1.1 Restricted
+>CXL Host mode) is attached to a CXL 2.0+ Host-Bridge, the current CXL
+>specification does not define a mechanism for finding CXL-2.0-only
+>root-port component registers like HDM decoders and Extended Security
+>capability.
+>
+>An algorithm to locate a CHBCR associated with an RCRB, would be too
+>invasive to land without some concrete motivation.
+>
+>Therefore, just print a message to inform of unsupported config.
+>
+>Count how many different CHBS "Version" types are detected by
+>cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that sum
+>is greater than 1.
+>
+>Tested-by: Alison Schofield <alison.schofield@intel.com>
+>Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-
-> 
-> >   
-> >   
-> > > +    .get = prop_pci_bus_get,
-> > > +};
-> > > +
-> > >  static Property pci_props[] = {
-> > >      DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
-> > >      DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
-> > > @@ -85,6 +98,7 @@ static Property pci_props[] = {
-> > >                      QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
-> > >      DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
-> > >                      QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
-> > > +    { .name = "bus", .info = &prop_pci_bus },
-> > >      DEFINE_PROP_END_OF_LIST()
-> > >  };
-> > >      
-> >   
-> 
-> 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
