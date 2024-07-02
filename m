@@ -1,519 +1,514 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1411E335B5
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 05:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598E77E792
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 07:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719898679; cv=none; b=RDWc0LHJnjVEBG5k3+X4wpEwSP6HyNPTmNJ2g32sMO/CfvorwU4YWDXHDpG9ruZfBRzrO/Wp+8v7uHJm7Ufw7bUnJpcdrXD0q6ngITGoNTqAMpTYwmS9o9ulFPIKK7uiYPxw6P3wZuMZ9pJyZUwHsC04c/W5ldrMJMacZHC4taE=
+	t=1719904591; cv=none; b=Gg/TPlngXXSuEo9JZDuXJm4jNPqdLALalpyUto6Fc0c/0B7glG6pAweqY7URhiOh8PtJuKysc4A1M1DibjSL9ML3qm6b5dK4ZcPCL9nfyMbMd/mOQd/7HMxA466HOvMQmm1D1q8sYCmBzoMNMKx9eb5IKmUx/P+ph8cvJFyRNEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719898679; c=relaxed/simple;
-	bh=XPgd9odMqUx3qiZpRzCeyqipM38IXfdj9CgZf+m9zi8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=heapn+mRkRV11y9uxwMEB98/EXnmXFHyrQppFIbc7WjynhUPJDQekkcYrPMWwKwsvPgCckCbCB0QxOiyLwJ3tlbHJAlu8wUS7+Y090szq1gseFJNWHo5Kzq8Oi8TmPzKjLzOAgNuDrOH7r76PMm3G8lAxD3MTT5vFlbf0ogjLrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wzkLo0iN; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719904591; c=relaxed/simple;
+	bh=hNk8P7frBgquGt6kQACNyumrV+5mP5wFDBGJ2vt/lxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YT+VF2yyfdDgLeibHBJReZ2pSLT1iYcCSSiAOQYLGggkzx2+cbOOKqerN0F0dPh7jeEzpnwXXbbKyyOXuzKTKD9S2gPZ4uFiIMEVZPAW1OzdVnA2MZeLZLWiKXr0OzBLwUz7HV9NTDTux0IShohGCnDN7sCC8D+QlZmRzC21Rm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PKXWLHBC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wzkLo0iN"
-X-Envelope-To: ying.huang@intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719898673;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKXWLHBC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719904588;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=73xYp2UvuuiTqq3Dx4h6CO2Kz6sGNd96n78O6ol2uyA=;
-	b=wzkLo0iNP5B95/q8zo3yui0WSwg4gSn0wJwWhEOfkCDJAZx7/Sg1xvt2+Rp1MKooX6Rfym
-	tULVAT1RgSHPe71YnGh9mQ3vUmzVjOndjK6u4cSIfT4vdU2L0HDluE68B8y772SQ/Jc8wA
-	y80wW74TTj5XFkLKMDZyi0wvp7qin6E=
-X-Envelope-To: jonathan.cameron@huawei.com
-X-Envelope-To: gourry.memverge@gmail.com
-X-Envelope-To: aneesh.kumar@linux.ibm.com
-X-Envelope-To: mhocko@suse.com
-X-Envelope-To: tj@kernel.org
-X-Envelope-To: john@jagalactic.com
-X-Envelope-To: emirakhur@micron.com
-X-Envelope-To: vtavarespetr@micron.com
-X-Envelope-To: ravis.opensrc@micron.com
-X-Envelope-To: apopple@nvidia.com
-X-Envelope-To: sthanneeru@micron.com
-X-Envelope-To: sj@kernel.org
-X-Envelope-To: rafael@kernel.org
-X-Envelope-To: lenb@kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: dave.jiang@intel.com
-X-Envelope-To: dan.j.williams@intel.com
-X-Envelope-To: linux-acpi@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: horenc@vt.edu
-X-Envelope-To: horenchuang@bytedance.com
-X-Envelope-To: horenchuang@gmail.com
-X-Envelope-To: linux-cxl@vger.kernel.org
-X-Envelope-To: qemu-devel@nongnu.org
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=THPgxYYie/sQY58xXcz3AEaUmfYRCcFXiKgZmNLUlT8=;
+	b=PKXWLHBCCIThR74THKXM5yd8Z34GUhJs+9kVvDvuGV3Msi0cLl0cLac1WmG6OwP/5AydSf
+	b7TIXGLvDrvNsjVqADHasdeukTZYhIAM24vcGP1g9SWTV5gcaFiJ0L0mhNU+M8sKOKal++
+	t4S+3k+o2Z5yhCxF6sqb8yATT1o67ww=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-630-K30-xej5P8q911vq5Hb6LQ-1; Tue, 02 Jul 2024 03:16:26 -0400
+X-MC-Unique: K30-xej5P8q911vq5Hb6LQ-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52cdbc21fa2so4096452e87.0
+        for <linux-cxl@vger.kernel.org>; Tue, 02 Jul 2024 00:16:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719904585; x=1720509385;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=THPgxYYie/sQY58xXcz3AEaUmfYRCcFXiKgZmNLUlT8=;
+        b=BwcCHo4oP+wD846vGJkoQVZF0ReWU6Dn1FjorNr9Apng7SP1zntm5gkSVWRGko3csB
+         C66XIxvq6SofUPwSgES+N+//vQ1P+LpWVapG1g8VghPFn8ygMT6vYEKzJlDHhfH3rcC/
+         v1P3VVUCu7JXpYVADD3BtGKGEIztjjumGVp77QC1gxrbq15hCZPu/Y1qdK+/SFjujkq6
+         yH1SNrNwSwFcU9F/tcLlPNv3K7eqqG/r+TC8+fZnu+HQ/vtYA6f4isA0RwwIrje/SPRQ
+         VgBID2oyVJSCNq2pdJDatZBZKnEHuOXtatuIeNv5ho+FC4IHyNzW8MZ2zUHW2vGVJcPr
+         KlFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Zk6FvHtApJlYT1dDYefykDHflhbDYyhXnlOSptMOduDAr74UvN4NwlLMAqyBlJttBlu8ok5iiDdPZGbwRdEriUTsurdf6uRR
+X-Gm-Message-State: AOJu0YxGyCsBznqlvZW/rPuucY7dmk2ktxGDS+GUif4O5C0h5HEVM2E4
+	Tf7sJ7R87Hu6kQqZd+yGwj1rFdDlDUv6rqLkJ+aZ0ajfi7mQMV6gcM2/Gf7HIEhD0vEQfToP5c2
+	oYgOSmRqqZInPdjPNyUV36eC4ibvlzGUas38GZhMOUi67n0QUACqWIXAF3w==
+X-Received: by 2002:a05:6512:b1c:b0:52c:e54e:f84b with SMTP id 2adb3069b0e04-52e82648e0fmr5797428e87.14.1719904584867;
+        Tue, 02 Jul 2024 00:16:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEPXrEdPBuf5zhp9prHvkeXcvRHabYz3pU1YFpQpMtW5xNn0ykKqaLHsvOJk0yStaW8FvoIKQ==
+X-Received: by 2002:a05:6512:b1c:b0:52c:e54e:f84b with SMTP id 2adb3069b0e04-52e82648e0fmr5797404e87.14.1719904584307;
+        Tue, 02 Jul 2024 00:16:24 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c739:2400:78ac:64bb:a39e:2578? (p200300cbc739240078ac64bba39e2578.dip0.t-ipconnect.de. [2003:cb:c739:2400:78ac:64bb:a39e:2578])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af3cf90sm183791075e9.5.2024.07.02.00.16.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 00:16:23 -0700 (PDT)
+Message-ID: <cf572c69-a754-4d41-b9c4-7a079b25b3c3@redhat.com>
+Date: Tue, 2 Jul 2024 09:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 02 Jul 2024 05:37:47 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
-Message-ID: <970686ea8a7aba6f5daa752a39609f5ab7a48a06@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v2 1/1] memory tier: consolidate the initialization of
- memory tiers
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Gregory Price"
- <gourry.memverge@gmail.com>, aneesh.kumar@linux.ibm.com, mhocko@suse.com,
- tj@kernel.org, john@jagalactic.com, "Eishan Mirakhur"
- <emirakhur@micron.com>, "Vinicius Tavares Petrucci"
- <vtavarespetr@micron.com>, "Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
- "Alistair Popple" <apopple@nvidia.com>, "Srinivasulu Thanneeru"
- <sthanneeru@micron.com>, "SeongJae Park" <sj@kernel.org>, "Rafael J. 
- Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, "Dave Jiang" <dave.jiang@intel.com>,
- "Dan  Williams" <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, "Ho-Ren (Jack)  Chuang"
- <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
- "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
- linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
-In-Reply-To: <87tth9ofsi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-References: <20240628060925.303309-1-horen.chuang@linux.dev>
- <20240628060925.303309-2-horen.chuang@linux.dev>
- <87tth9ofsi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/13] huge_memory: Allow mappings of PUD sized pages
+To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
+Cc: catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+ npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
+ willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com,
+ peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
+ hch@lst.de, david@fromorbit.com
+References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
+ <bd332b0d3971b03152b3541f97470817c5147b51.1719386613.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <bd332b0d3971b03152b3541f97470817c5147b51.1719386613.git-series.apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Huang, Ying,
+On 27.06.24 02:54, Alistair Popple wrote:
+> Currently DAX folio/page reference counts are managed differently to
+> normal pages. To allow these to be managed the same as normal pages
+> introduce dax_insert_pfn_pud. This will map the entire PUD-sized folio
+> and take references as it would for a normally mapped page.
+> 
+> This is distinct from the current mechanism, vmf_insert_pfn_pud, which
+> simply inserts a special devmap PUD entry into the page table without
+> holding a reference to the page for the mapping.
 
-Thanks for your feedback and helpful suggestions. Replies inlined.
+Do we really have to involve mapcounts/rmap for daxfs pages at this 
+point? Or is this only "to make it look more like other pages" ?
+
+I'm asking this because:
+
+(A) We don't support mixing PUD+PMD mappings yet. I have plans to change
+     that in the future, but for now you can only map using a single PUD
+     or by PTEs. I suspect that's good enoug for now for dax fs?
+(B) As long as we have subpage mapcounts, this prevents vmemmap
+     optimizations [1]. Is that only used for device-dax for now and are
+     there no plans to make use of that for fs-dax?
+(C) We managed without so far :)
 
 
-June 30, 2024 at 10:13 PM, "Huang, Ying" <ying.huang@intel.com> wrote:
->=20
->=20Hi, Jack,
->=20
->=20"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev> writes:
->=20
->=20I suggest you to merge the [0/1] with the change log here. [0/1]
->=20
->=20describes why do we need the patch. The below text describes some
->=20
->=20details. Just don't use "---" to separate them. We need both parts in
->=20
->=20the final commit message.
->=20
+Having that said, with folio->_large_mapcount things like 
+folio_mapcount() are no longer terribly slow once we weould PTE-map a 
+PUD-sized folio.
 
-Sounds=20good! I will merge them into 1 patch in the v3.
+Also, all ZONE_DEVICE pages should currently be marked PG_reserved, 
+translating to "don't touch the memmap". I think we might want to tackle 
+that first.
 
-> >=20
->=20> If we simply move the set_node_memory_tier() from memory_tier_init(=
-)
-> >=20
->=20>  to late_initcall(), it will result in HMAT not registering
-> >=20
->=20>  the mt_adistance_algorithm callback function, because
-> >=20
->=20>  set_node_memory_tier() is not performed during the memory tiering
-> >=20
->=20>  initialization phase, leading to a lack of correct default_dram
-> >=20
->=20>  information.
-> >=20
->=20>  Therefore, we introduced a nodemask to pass the information of the
-> >=20
->=20>  default DRAM nodes. The reason for not choosing to reuse
-> >=20
->=20>  default_dram_type->nodes is that it is not clean enough. So in the=
- end,
-> >=20
->=20>  we use a __initdata variable, which is a variable that is released=
- once
-> >=20
->=20>  initialization is complete, including both CPU and memory nodes fo=
-r HMAT
-> >=20
->=20>  to iterate through.
-> >=20
->=20>  Besides, since default_dram_type may be checked/used during the
-> >=20
->=20>  initialization process of HMAT and drivers, it is better to keep t=
-he
-> >=20
->=20>  allocation of default_dram_type in memory_tier_init().
-> >=20
->=20
-> Why do we need it? IIRC, we have deleted its usage in hmat.c.
->=20
+[1] https://lwn.net/Articles/860218/
+[2] 
+https://lkml.kernel.org/r/b0adbb0c-ad59-4bc5-ba0b-0af464b94557@redhat.com
 
-Although=20default_dram_type is still used in set_node_memory_tier(),
-I can totally remove this description to remove confusion.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> ---
+>   include/linux/huge_mm.h |   4 ++-
+>   include/linux/rmap.h    |  14 +++++-
+>   mm/huge_memory.c        | 108 ++++++++++++++++++++++++++++++++++++++---
+>   mm/rmap.c               |  48 ++++++++++++++++++-
+>   4 files changed, 168 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 2aa986a..b98a3cc 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -39,6 +39,7 @@ int change_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   
+>   vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+>   vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+> +vm_fault_t dax_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+>   
+>   enum transparent_hugepage_flag {
+>   	TRANSPARENT_HUGEPAGE_UNSUPPORTED,
+> @@ -106,6 +107,9 @@ extern struct kobj_attribute shmem_enabled_attr;
+>   #define HPAGE_PUD_MASK	(~(HPAGE_PUD_SIZE - 1))
+>   #define HPAGE_PUD_SIZE	((1UL) << HPAGE_PUD_SHIFT)
+>   
+> +#define HPAGE_PUD_ORDER (HPAGE_PUD_SHIFT-PAGE_SHIFT)
+> +#define HPAGE_PUD_NR (1<<HPAGE_PUD_ORDER)
+> +
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>   
+>   extern unsigned long transparent_hugepage_flags;
+> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+> index 7229b9b..c5a0205 100644
+> --- a/include/linux/rmap.h
+> +++ b/include/linux/rmap.h
+> @@ -192,6 +192,7 @@ typedef int __bitwise rmap_t;
+>   enum rmap_level {
+>   	RMAP_LEVEL_PTE = 0,
+>   	RMAP_LEVEL_PMD,
+> +	RMAP_LEVEL_PUD,
+>   };
+>   
+>   static inline void __folio_rmap_sanity_checks(struct folio *folio,
+> @@ -225,6 +226,13 @@ static inline void __folio_rmap_sanity_checks(struct folio *folio,
+>   		VM_WARN_ON_FOLIO(folio_nr_pages(folio) != HPAGE_PMD_NR, folio);
+>   		VM_WARN_ON_FOLIO(nr_pages != HPAGE_PMD_NR, folio);
+>   		break;
+> +	case RMAP_LEVEL_PUD:
+> +		/*
+> +		 * Asume that we are creating * a single "entire" mapping of the folio.
+> +		 */
+> +		VM_WARN_ON_FOLIO(folio_nr_pages(folio) != HPAGE_PUD_NR, folio);
+> +		VM_WARN_ON_FOLIO(nr_pages != HPAGE_PUD_NR, folio);
+> +		break;
+>   	default:
+>   		VM_WARN_ON_ONCE(true);
+>   	}
+> @@ -248,12 +256,16 @@ void folio_add_file_rmap_ptes(struct folio *, struct page *, int nr_pages,
+>   	folio_add_file_rmap_ptes(folio, page, 1, vma)
+>   void folio_add_file_rmap_pmd(struct folio *, struct page *,
+>   		struct vm_area_struct *);
+> +void folio_add_file_rmap_pud(struct folio *, struct page *,
+> +		struct vm_area_struct *);
+>   void folio_remove_rmap_ptes(struct folio *, struct page *, int nr_pages,
+>   		struct vm_area_struct *);
+>   #define folio_remove_rmap_pte(folio, page, vma) \
+>   	folio_remove_rmap_ptes(folio, page, 1, vma)
+>   void folio_remove_rmap_pmd(struct folio *, struct page *,
+>   		struct vm_area_struct *);
+> +void folio_remove_rmap_pud(struct folio *, struct page *,
+> +		struct vm_area_struct *);
+>   
+>   void hugetlb_add_anon_rmap(struct folio *, struct vm_area_struct *,
+>   		unsigned long address, rmap_t flags);
+> @@ -338,6 +350,7 @@ static __always_inline void __folio_dup_file_rmap(struct folio *folio,
+>   		atomic_add(orig_nr_pages, &folio->_large_mapcount);
+>   		break;
+>   	case RMAP_LEVEL_PMD:
+> +	case RMAP_LEVEL_PUD:
+>   		atomic_inc(&folio->_entire_mapcount);
+>   		atomic_inc(&folio->_large_mapcount);
+>   		break;
+> @@ -434,6 +447,7 @@ static __always_inline int __folio_try_dup_anon_rmap(struct folio *folio,
+>   		atomic_add(orig_nr_pages, &folio->_large_mapcount);
+>   		break;
+>   	case RMAP_LEVEL_PMD:
+> +	case RMAP_LEVEL_PUD:
+>   		if (PageAnonExclusive(page)) {
+>   			if (unlikely(maybe_pinned))
+>   				return -EBUSY;
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index db7946a..e1f053e 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1283,6 +1283,70 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+>   	return VM_FAULT_NOPAGE;
+>   }
+>   EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
+> +
+> +/**
+> + * dax_insert_pfn_pud - insert a pud size pfn backed by a normal page
+> + * @vmf: Structure describing the fault
+> + * @pfn: pfn of the page to insert
+> + * @write: whether it's a write fault
+> + *
+> + * Return: vm_fault_t value.
+> + */
+> +vm_fault_t dax_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+> +{
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	unsigned long addr = vmf->address & PUD_MASK;
+> +	pud_t *pud = vmf->pud;
+> +	pgprot_t prot = vma->vm_page_prot;
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	pud_t entry;
+> +	spinlock_t *ptl;
+> +	struct folio *folio;
+> +	struct page *page;
+> +
+> +	if (addr < vma->vm_start || addr >= vma->vm_end)
+> +		return VM_FAULT_SIGBUS;
+> +
+> +	track_pfn_insert(vma, &prot, pfn);
+> +
+> +	ptl = pud_lock(mm, pud);
+> +	if (!pud_none(*pud)) {
+> +		if (write) {
+> +			if (pud_pfn(*pud) != pfn_t_to_pfn(pfn)) {
+> +				WARN_ON_ONCE(!is_huge_zero_pud(*pud));
+> +				goto out_unlock;
+> +			}
+> +			entry = pud_mkyoung(*pud);
+> +			entry = maybe_pud_mkwrite(pud_mkdirty(entry), vma);
+> +			if (pudp_set_access_flags(vma, addr, pud, entry, 1))
+> +				update_mmu_cache_pud(vma, addr, pud);
+> +		}
+> +		goto out_unlock;
+> +	}
+> +
+> +	entry = pud_mkhuge(pfn_t_pud(pfn, prot));
+> +	if (pfn_t_devmap(pfn))
+> +		entry = pud_mkdevmap(entry);
+> +	if (write) {
+> +		entry = pud_mkyoung(pud_mkdirty(entry));
+> +		entry = maybe_pud_mkwrite(entry, vma);
+> +	}
+> +
+> +	page = pfn_t_to_page(pfn);
+> +	folio = page_folio(page);
+> +	folio_get(folio);
+> +	folio_add_file_rmap_pud(folio, page, vma);
+> +	add_mm_counter(mm, mm_counter_file(folio), HPAGE_PUD_NR);
+> +
+> +	set_pud_at(mm, addr, pud, entry);
+> +	update_mmu_cache_pud(vma, addr, pud);
+> +
+> +out_unlock:
+> +	spin_unlock(ptl);
+> +
+> +	return VM_FAULT_NOPAGE;
+> +}
+> +EXPORT_SYMBOL_GPL(dax_insert_pfn_pud);
+>   #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
+>   
+>   void touch_pmd(struct vm_area_struct *vma, unsigned long addr,
+> @@ -1836,7 +1900,8 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   			zap_deposited_table(tlb->mm, pmd);
+>   		spin_unlock(ptl);
+>   	} else if (is_huge_zero_pmd(orig_pmd)) {
+> -		zap_deposited_table(tlb->mm, pmd);
+> +		if (!vma_is_dax(vma) || arch_needs_pgtable_deposit())
+> +			zap_deposited_table(tlb->mm, pmd);
+>   		spin_unlock(ptl);
+>   	} else {
+>   		struct folio *folio = NULL;
+> @@ -2268,20 +2333,34 @@ spinlock_t *__pud_trans_huge_lock(pud_t *pud, struct vm_area_struct *vma)
+>   int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   		 pud_t *pud, unsigned long addr)
+>   {
+> +	pud_t orig_pud;
+>   	spinlock_t *ptl;
+>   
+>   	ptl = __pud_trans_huge_lock(pud, vma);
+>   	if (!ptl)
+>   		return 0;
+>   
+> -	pudp_huge_get_and_clear_full(vma, addr, pud, tlb->fullmm);
+> +	orig_pud = pudp_huge_get_and_clear_full(vma, addr, pud, tlb->fullmm);
+>   	tlb_remove_pud_tlb_entry(tlb, pud, addr);
+> -	if (vma_is_special_huge(vma)) {
+> +	if (!vma_is_dax(vma) && vma_is_special_huge(vma)) {
+>   		spin_unlock(ptl);
+>   		/* No zero page support yet */
+>   	} else {
+> -		/* No support for anonymous PUD pages yet */
+> -		BUG();
+> +		struct page *page = NULL;
+> +		struct folio *folio;
+> +
+> +		/* No support for anonymous PUD pages or migration yet */
+> +		BUG_ON(vma_is_anonymous(vma) || !pud_present(orig_pud));
+> +
+> +		page = pud_page(orig_pud);
+> +		folio = page_folio(page);
+> +		folio_remove_rmap_pud(folio, page, vma);
+> +		VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+> +		VM_BUG_ON_PAGE(!PageHead(page), page);
+> +		add_mm_counter(tlb->mm, mm_counter_file(folio), -HPAGE_PUD_NR);
+> +
+> +		spin_unlock(ptl);
+> +		tlb_remove_page_size(tlb, page, HPAGE_PUD_SIZE);
+>   	}
+>   	return 1;
+>   }
+> @@ -2289,6 +2368,8 @@ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   static void __split_huge_pud_locked(struct vm_area_struct *vma, pud_t *pud,
+>   		unsigned long haddr)
+>   {
+> +	pud_t old_pud;
+> +
+>   	VM_BUG_ON(haddr & ~HPAGE_PUD_MASK);
+>   	VM_BUG_ON_VMA(vma->vm_start > haddr, vma);
+>   	VM_BUG_ON_VMA(vma->vm_end < haddr + HPAGE_PUD_SIZE, vma);
+> @@ -2296,7 +2377,22 @@ static void __split_huge_pud_locked(struct vm_area_struct *vma, pud_t *pud,
+>   
+>   	count_vm_event(THP_SPLIT_PUD);
+>   
+> -	pudp_huge_clear_flush(vma, haddr, pud);
+> +	old_pud = pudp_huge_clear_flush(vma, haddr, pud);
+> +	if (is_huge_zero_pud(old_pud))
+> +		return;
+> +
+> +	if (vma_is_dax(vma)) {
+> +		struct page *page = pud_page(old_pud);
+> +		struct folio *folio = page_folio(page);
+> +
+> +		if (!folio_test_dirty(folio) && pud_dirty(old_pud))
+> +			folio_mark_dirty(folio);
+> +		if (!folio_test_referenced(folio) && pud_young(old_pud))
+> +			folio_set_referenced(folio);
+> +		folio_remove_rmap_pud(folio, page, vma);
+> +		folio_put(folio);
+> +		add_mm_counter(vma->vm_mm, mm_counter_file(folio), -HPAGE_PUD_NR);
+> +	}
+>   }
+>   
+>   void __split_huge_pud(struct vm_area_struct *vma, pud_t *pud,
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index e8fc5ec..e949e4f 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1165,6 +1165,7 @@ static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
+>   		atomic_add(orig_nr_pages, &folio->_large_mapcount);
+>   		break;
+>   	case RMAP_LEVEL_PMD:
+> +	case RMAP_LEVEL_PUD:
+>   		first = atomic_inc_and_test(&folio->_entire_mapcount);
+>   		if (first) {
+>   			nr = atomic_add_return_relaxed(ENTIRELY_MAPPED, mapped);
+> @@ -1306,6 +1307,12 @@ static __always_inline void __folio_add_anon_rmap(struct folio *folio,
+>   		case RMAP_LEVEL_PMD:
+>   			SetPageAnonExclusive(page);
+>   			break;
+> +		case RMAP_LEVEL_PUD:
+> +			/*
+> +			 * Keep the compiler happy, we don't support anonymous PUD mappings.
+> +			 */
+> +			WARN_ON_ONCE(1);
+> +			break;
+>   		}
+>   	}
+>   	for (i = 0; i < nr_pages; i++) {
+> @@ -1489,6 +1496,26 @@ void folio_add_file_rmap_pmd(struct folio *folio, struct page *page,
+>   #endif
+>   }
+>   
+> +/**
+> + * folio_add_file_rmap_pud - add a PUD mapping to a page range of a folio
+> + * @folio:	The folio to add the mapping to
+> + * @page:	The first page to add
+> + * @vma:	The vm area in which the mapping is added
+> + *
+> + * The page range of the folio is defined by [page, page + HPAGE_PUD_NR)
+> + *
+> + * The caller needs to hold the page table lock.
+> + */
+> +void folio_add_file_rmap_pud(struct folio *folio, struct page *page,
+> +		struct vm_area_struct *vma)
+> +{
+> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> +	__folio_add_file_rmap(folio, page, HPAGE_PUD_NR, vma, RMAP_LEVEL_PUD);
+> +#else
+> +	WARN_ON_ONCE(true);
+> +#endif
+> +}
+> +
+>   static __always_inline void __folio_remove_rmap(struct folio *folio,
+>   		struct page *page, int nr_pages, struct vm_area_struct *vma,
+>   		enum rmap_level level)
+> @@ -1521,6 +1548,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>   		partially_mapped = nr && atomic_read(mapped);
+>   		break;
+>   	case RMAP_LEVEL_PMD:
+> +	case RMAP_LEVEL_PUD:
+>   		atomic_dec(&folio->_large_mapcount);
+>   		last = atomic_add_negative(-1, &folio->_entire_mapcount);
+>   		if (last) {
+> @@ -1615,6 +1643,26 @@ void folio_remove_rmap_pmd(struct folio *folio, struct page *page,
+>   #endif
+>   }
+>   
+> +/**
+> + * folio_remove_rmap_pud - remove a PUD mapping from a page range of a folio
+> + * @folio:	The folio to remove the mapping from
+> + * @page:	The first page to remove
+> + * @vma:	The vm area from which the mapping is removed
+> + *
+> + * The page range of the folio is defined by [page, page + HPAGE_PUD_NR)
+> + *
+> + * The caller needs to hold the page table lock.
+> + */
+> +void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+> +		struct vm_area_struct *vma)
+> +{
+> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> +	__folio_remove_rmap(folio, page, HPAGE_PUD_NR, vma, RMAP_LEVEL_PUD);
+> +#else
+> +	WARN_ON_ONCE(true);
+> +#endif
+> +}
+> +
+>   /*
+>    * @arg: enum ttu_flags will be passed to this argument
+>    */
 
-> >=20
->=20> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> >=20
->=20>  Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >=20
->=20>  ---
-> >=20
->=20>  drivers/acpi/numa/hmat.c | 5 +--
-> >=20
->=20>  include/linux/memory-tiers.h | 2 ++
-> >=20
->=20>  mm/memory-tiers.c | 59 +++++++++++++++---------------------
-> >=20
->=20>  3 files changed, 28 insertions(+), 38 deletions(-)
-> >=20
->=20>  diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> >=20
->=20>  index 2c8ccc91ebe6..a2f9e7a4b479 100644
-> >=20
->=20>  --- a/drivers/acpi/numa/hmat.c
-> >=20
->=20>  +++ b/drivers/acpi/numa/hmat.c
-> >=20
->=20>  @@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
-> >=20
->=20>  struct memory_target *target;
-> >=20
->=20>  struct access_coordinate *attrs;
-> >=20
->=20>=20=20
->=20>=20
->=20>  - if (!default_dram_type)
-> >=20
->=20>  - return -EIO;
-> >=20
->=20>  -
-> >=20
->=20>  - for_each_node_mask(nid, default_dram_type->nodes) {
-> >=20
->=20>  + for_each_node_mask(nid, default_dram_nodes) {
-> >=20
->=20>  pxm =3D node_to_pxm(nid);
-> >=20
->=20>  target =3D find_mem_target(pxm);
-> >=20
->=20>  if (!target)
-> >=20
->=20>  diff --git a/include/linux/memory-tiers.h b/include/linux/memory-t=
-iers.h
-> >=20
->=20>  index 0d70788558f4..fa61ad9c4d75 100644
-> >=20
->=20>  --- a/include/linux/memory-tiers.h
-> >=20
->=20>  +++ b/include/linux/memory-tiers.h
-> >=20
->=20>  @@ -38,6 +38,7 @@ struct access_coordinate;
-> >=20
->=20>  #ifdef CONFIG_NUMA
-> >=20
->=20>  extern bool numa_demotion_enabled;
-> >=20
->=20>  extern struct memory_dev_type *default_dram_type;
-> >=20
->=20
-> Can we remove the above line?
->=20
+-- 
+Cheers,
 
-Yes,=20you are right. Good catch, thanks! Will remove it in the v3.
+David / dhildenb
 
-> >=20
->=20> +extern nodemask_t default_dram_nodes __initdata;
-> >=20
->=20
-> We don't need to use __initdata in variable declaration.
->=20
-
-Thank=20you for your guidance! Will remove __initdata it in the v3.
-
-> >=20
->=20> struct memory_dev_type *alloc_memory_type(int adistance);
-> >=20
->=20>  void put_memory_type(struct memory_dev_type *memtype);
-> >=20
->=20>  void init_node_memory_type(int node, struct memory_dev_type *defau=
-lt_type);
-> >=20
->=20>  @@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
-> >=20
->=20>=20=20
->=20>=20
->=20>  #define numa_demotion_enabled false
-> >=20
->=20>  #define default_dram_type NULL
-> >=20
->=20>  +#define default_dram_nodes NODE_MASK_NONE
-> >=20
->=20
-> Should we use <tab> after "default_dram_nodes"?
->=20
-
-Yes,=20thanks for the reminder. Will fix it in the v3.
-
-> >=20
->=20> /*
-> >=20
->=20>  * CONFIG_NUMA implementation returns non NULL error.
-> >=20
->=20>  */
-> >=20
->=20>  diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> >=20
->=20>  index 6632102bd5c9..a19a90c3ad36 100644
-> >=20
->=20>  --- a/mm/memory-tiers.c
-> >=20
->=20>  +++ b/mm/memory-tiers.c
-> >=20
->=20>  @@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
-> >=20
->=20>  static LIST_HEAD(default_memory_types);
-> >=20
->=20>  static struct node_memory_type_map node_memory_types[MAX_NUMNODES]=
-;
-> >=20
->=20>  struct memory_dev_type *default_dram_type;
-> >=20
->=20>  +nodemask_t default_dram_nodes __initdata =3D NODE_MASK_NONE;
-> >=20
->=20>=20=20
->=20>=20
->=20>  static const struct bus_type memory_tier_subsys =3D {
-> >=20
->=20>  .name =3D "memory_tiering",
-> >=20
->=20>  @@ -671,28 +672,38 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
-> >=20
->=20>=20=20
->=20>=20
->=20>  /*
-> >=20
->=20>  * This is invoked via `late_initcall()` to initialize memory tiers=
- for
-> >=20
->=20>  - * CPU-less memory nodes after driver initialization, which is
-> >=20
->=20>  - * expected to provide `adistance` algorithms.
-> >=20
->=20>  + * memory nodes, both with and without CPUs. After the initializa=
-tion of
-> >=20
->=20>  + * firmware and devices, adistance algorithms are expected to be =
-provided.
-> >=20
->=20>  */
-> >=20
->=20>  static int __init memory_tier_late_init(void)
-> >=20
->=20>  {
-> >=20
->=20>  int nid;
-> >=20
->=20>  + struct memory_tier *memtier;
-> >=20
->=20>=20=20
->=20>=20
->=20>  + get_online_mems();
-> >=20
->=20>  guard(mutex)(&memory_tier_lock);
-> >=20
->=20>  + /*
-> >=20
->=20>  + * Look at all the existing and uninitialized N_MEMORY nodes and
-> >=20
->=20>  + * add them to default memory tier or to a tier if we already hav=
-e
-> >=20
->=20>  + * memory types assigned.
-> >=20
->=20>  + */
-> >=20
->=20
-> If the memory type of the node has been assigned, we will skip it in th=
-e
->=20
->=20following code. So, I think that we need to revise the comments.
->=20
-
-You=20are right, the new version in the v3 will be:
-/* Assign each uninitialized N_MEMORY node to a memory tier. */
-
-> >=20
->=20> for_each_node_state(nid, N_MEMORY) {
-> >=20
->=20>  /*
-> >=20
->=20>  - * Some device drivers may have initialized memory tiers
-> >=20
->=20>  - * between `memory_tier_init()` and `memory_tier_late_init()`,
-> >=20
->=20>  - * potentially bringing online memory nodes and
-> >=20
->=20>  - * configuring memory tiers. Exclude them here.
-> >=20
->=20>  + * Some device drivers may have initialized
-> >=20
->=20>  + * memory tiers, potentially bringing memory nodes
-> >=20
->=20>  + * online and configuring memory tiers.
-> >=20
->=20>  + * Exclude them here.
-> >=20
->=20>  */
-> >=20
->=20>  if (node_memory_types[nid].memtype)
-> >=20
->=20>  continue;
-> >=20
->=20>=20=20
->=20>=20
->=20>  - set_node_memory_tier(nid);
-> >=20
->=20>  + memtier =3D set_node_memory_tier(nid);
-> >=20
->=20>  + if (IS_ERR(memtier))
-> >=20
->=20>  + /* Continue with memtiers we are able to setup. */
-> >=20
->=20>  + break;
-> >=20
->=20>  }
-> >=20
->=20>  -
-> >=20
->=20>  establish_demotion_targets();
-> >=20
->=20>  + put_online_mems();
-> >=20
->=20>=20=20
->=20>=20
->=20>  return 0;
-> >=20
->=20>  }
-> >=20
->=20>  @@ -875,8 +886,7 @@ static int __meminit memtier_hotplug_callback(=
-struct notifier_block *self,
-> >=20
->=20>=20=20
->=20>=20
->=20>  static int __init memory_tier_init(void)
-> >=20
->=20>  {
-> >=20
->=20>  - int ret, node;
-> >=20
->=20>  - struct memory_tier *memtier;
-> >=20
->=20>  + int ret;
-> >=20
->=20>=20=20
->=20>=20
->=20>  ret =3D subsys_virtual_register(&memory_tier_subsys, NULL);
-> >=20
->=20>  if (ret)
-> >=20
->=20>  @@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
-> >=20
->=20>  GFP_KERNEL);
-> >=20
->=20>  WARN_ON(!node_demotion);
-> >=20
->=20>  #endif
-> >=20
->=20>  - mutex_lock(&memory_tier_lock);
-> >=20
->=20>  +
-> >=20
->=20>  + guard(mutex)(&memory_tier_lock);
-> >=20
->=20>  /*
-> >=20
->=20>  * For now we can have 4 faster memory tiers with smaller adistance
-> >=20
->=20>  * than default DRAM tier.
-> >=20
->=20>  @@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
-> >=20
->=20>  if (IS_ERR(default_dram_type))
-> >=20
->=20>  panic("%s() failed to allocate default DRAM tier\n", __func__);=0D
-> >=20
->=20>=20=20
->=20>=20
->=20>  - /*
-> >=20
->=20>  - * Look at all the existing N_MEMORY nodes and add them to
-> >=20
->=20>  - * default memory tier or to a tier if we already have memory
-> >=20
->=20>  - * types assigned.
-> >=20
->=20>  - */
-> >=20
->=20>  - for_each_node_state(node, N_MEMORY) {
-> >=20
->=20>  - if (!node_state(node, N_CPU))
-> >=20
->=20>  - /*
-> >=20
->=20>  - * Defer memory tier initialization on
-> >=20
->=20>  - * CPUless numa nodes. These will be initialized
-> >=20
->=20>  - * after firmware and devices are initialized.
-> >=20
->=20>  - */
-> >=20
->=20>  - continue;
-> >=20
->=20>  -
-> >=20
->=20>  - memtier =3D set_node_memory_tier(node);
-> >=20
->=20>  - if (IS_ERR(memtier))
-> >=20
->=20>  - /*
-> >=20
->=20>  - * Continue with memtiers we are able to setup
-> >=20
->=20>  - */
-> >=20
->=20>  - break;
-> >=20
->=20>  - }
-> >=20
->=20>  - establish_demotion_targets();
-> >=20
->=20>  - mutex_unlock(&memory_tier_lock);
-> >=20
->=20>  + /* Record nodes with memory and CPU to set default DRAM performa=
-nce. */
-> >=20
->=20>  + nodes_and(default_dram_nodes, node_states[N_MEMORY],
-> >=20
->=20>  + node_states[N_CPU]);
-> >=20
->=20>=20=20
->=20>=20
->=20>  hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_=
-PRI);
-> >=20
->=20>  return 0;
-> >=20
->=20
-> --
->=20
->=20Best Regards,
->=20
->=20Huang, Ying
->
-
---
-Best Regards,
-Ho-Ren (Jack) Chuang
