@@ -1,255 +1,519 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D98C129
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 02:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1411E335B5
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 05:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719886401; cv=none; b=D7MdeVS9eMe6Z3bXkpn39DzrCfrgy5kjV/ahaC+hCfHzEswP/1uI1l5X2PbjQMqW+t9bzhFnya7NMuNcIXxeMXuo056YbLoYWHOZz+0RSK/4JaXA8jbVPtcv2xJNQoblZio2nvbSmSnO8fXTmcHBBVNgxNv5HimVe37ci6cMMFo=
+	t=1719898679; cv=none; b=RDWc0LHJnjVEBG5k3+X4wpEwSP6HyNPTmNJ2g32sMO/CfvorwU4YWDXHDpG9ruZfBRzrO/Wp+8v7uHJm7Ufw7bUnJpcdrXD0q6ngITGoNTqAMpTYwmS9o9ulFPIKK7uiYPxw6P3wZuMZ9pJyZUwHsC04c/W5ldrMJMacZHC4taE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719886401; c=relaxed/simple;
-	bh=P0c36FUeZiCc9g+24qcIraZdLU8Djm8lhJdaciP5RMg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=usRx3Dqm90T4PxiXanDHw7D7mUWryReQoJBkGpIrohImY9Lq7jTmAl5EXuMQo3NqjoepCT6/P2ZEdEH84I6ur71W9vdYsWQ6Sa8mcFnpN/PsgEjuWaXAnIrNJVzUADU2112YGYXUSz2OZNRESKCgIn+j71Jn6vovLYWBL6ytA90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Auyp5SMy; arc=none smtp.client-ip=68.232.139.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1719898679; c=relaxed/simple;
+	bh=XPgd9odMqUx3qiZpRzCeyqipM38IXfdj9CgZf+m9zi8=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=heapn+mRkRV11y9uxwMEB98/EXnmXFHyrQppFIbc7WjynhUPJDQekkcYrPMWwKwsvPgCckCbCB0QxOiyLwJ3tlbHJAlu8wUS7+Y090szq1gseFJNWHo5Kzq8Oi8TmPzKjLzOAgNuDrOH7r76PMm3G8lAxD3MTT5vFlbf0ogjLrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wzkLo0iN; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Auyp5SMy"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1719886399; x=1751422399;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=P0c36FUeZiCc9g+24qcIraZdLU8Djm8lhJdaciP5RMg=;
-  b=Auyp5SMylZt0ngyIaw6pQy6OlyziOobGMMXp1D/cllSX+FSVlbw6FmcJ
-   hRq8jWpOTlcMgTp1iTVzv0Rmhvo0XUL67L9EQitywZxaJ355FTkud50rF
-   8P9mA6OofsTvwK31XxLtUEtdVjT9JdFEsoIpbgc5NG3ukDRkqNO+U/SDc
-   26S7vUdAL1Z5ktwS9nsh6bxQ5n9cTEZ8xHERV26+lVLU7lcMvSwWj7jiJ
-   6smwcDEbeEsyGRGbz5NDPNhsROCQ3fS8ISO5+flMc8zOlkdtq4fLgFwyQ
-   jQhv0Bb3V1S4uw29fkdXTtMEcg+aREFYJ+e0crqD4KmV7LijfJECKTvt8
-   A==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="164804699"
-X-IronPort-AV: E=Sophos;i="6.09,177,1716217200"; 
-   d="scan'208";a="164804699"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 11:12:08 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 52D12C9443
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 11:12:05 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 7F9D6D50ED
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 11:12:04 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 076A41EBBC0
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 11:12:04 +0900 (JST)
-Received: from [192.168.50.5] (unknown [10.167.226.114])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 20B531A000B;
-	Tue,  2 Jul 2024 10:12:03 +0800 (CST)
-Message-ID: <1fab087b-eb6c-485e-a2ed-f86e8dfacc5d@fujitsu.com>
-Date: Tue, 2 Jul 2024 10:12:01 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wzkLo0iN"
+X-Envelope-To: ying.huang@intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719898673;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=73xYp2UvuuiTqq3Dx4h6CO2Kz6sGNd96n78O6ol2uyA=;
+	b=wzkLo0iNP5B95/q8zo3yui0WSwg4gSn0wJwWhEOfkCDJAZx7/Sg1xvt2+Rp1MKooX6Rfym
+	tULVAT1RgSHPe71YnGh9mQ3vUmzVjOndjK6u4cSIfT4vdU2L0HDluE68B8y772SQ/Jc8wA
+	y80wW74TTj5XFkLKMDZyi0wvp7qin6E=
+X-Envelope-To: jonathan.cameron@huawei.com
+X-Envelope-To: gourry.memverge@gmail.com
+X-Envelope-To: aneesh.kumar@linux.ibm.com
+X-Envelope-To: mhocko@suse.com
+X-Envelope-To: tj@kernel.org
+X-Envelope-To: john@jagalactic.com
+X-Envelope-To: emirakhur@micron.com
+X-Envelope-To: vtavarespetr@micron.com
+X-Envelope-To: ravis.opensrc@micron.com
+X-Envelope-To: apopple@nvidia.com
+X-Envelope-To: sthanneeru@micron.com
+X-Envelope-To: sj@kernel.org
+X-Envelope-To: rafael@kernel.org
+X-Envelope-To: lenb@kernel.org
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: dave.jiang@intel.com
+X-Envelope-To: dan.j.williams@intel.com
+X-Envelope-To: linux-acpi@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: horenc@vt.edu
+X-Envelope-To: horenchuang@bytedance.com
+X-Envelope-To: horenchuang@gmail.com
+X-Envelope-To: linux-cxl@vger.kernel.org
+X-Envelope-To: qemu-devel@nongnu.org
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] cxl: avoid duplicating report from MCE & device
-From: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-To: Dan Williams <dan.j.williams@intel.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dave@stgolabs.net, ira.weiny@intel.com,
- alison.schofield@intel.com, dave.jiang@intel.com, vishal.l.verma@intel.com
-References: <20240618165310.877974-1-ruansy.fnst@fujitsu.com>
- <6675bd86ea005_57ac29411@dwillia2-xfh.jf.intel.com.notmuch>
- <965e2c27-6147-4237-b4b6-6aaf74363aa2@fujitsu.com>
-In-Reply-To: <965e2c27-6147-4237-b4b6-6aaf74363aa2@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28496.002
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28496.002
-X-TMASE-Result: 10--22.554500-10.000000
-X-TMASE-MatchedRID: OnXFgg5KIq2PvrMjLFD6eKn9fPsu8s0a2q80vLACqaeeT9kASxo4MUbg
-	XczvLJKOZrChzCJ9VmyNZCQJKjBBDgMPXi5ZiyFvVnzlQiaE21r4h+uI7dxXxOjMOEZ5AL0SsJs
-	JK5IfvnZTx0o+4nb1whJ+INVehs+97IFOpFOFSvixaW0fY4IMuDqu3dM+YhFRVxk27EKh25K0pv
-	xdZww2r8T+c55jUI9At1K/UeVR3qjWNSt25psfwjz6L+U/pejxpSwAzAEivMea9Zo7TJaDsJgUL
-	y4zAbFBOQzI/xUtTVxfahmBw9cTVoke/R2iCaQjn6y0mNkW0aSlY4F8r0vXP6Y5ZGw7wyeHsDBn
-	W53+2jl755lTx6LDRs9gc1n8GYlrmcUNCy5hvn9kBXeGzp60+nZljA0Gozoih2WtnORUKg685QX
-	45szp96KnDnwlJfeMOyOCKgT1VIsqr12s6iu4vArcxrzwsv5uf70KM8eatUjfc2Xd6VJ+ym+tWV
-	Fb8XYlPJEa0PzdsXmikrdCCR3aDe/i00nUfc4wnVTWWiNp+v8Jlr1xKkE5ucC5DTEMxpeQfiq1g
-	j2xET/FG6rPbKnpuqrlqe9TaLwsJfmEcyk6uEa3D7EeeyZCM9fgqdEINwWeVgkL9epqBvGxpN5W
-	P+PXywGRC3bBIF8owlUW6AAzaVaR9GF2J2xqM4MbH85DUZXyudR/NJw2JHcNYpvo9xW+mI6HM5r
-	qDwqtlExlQIQeRG0=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Date: Tue, 02 Jul 2024 05:37:47 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
+Message-ID: <970686ea8a7aba6f5daa752a39609f5ab7a48a06@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v2 1/1] memory tier: consolidate the initialization of
+ memory tiers
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Gregory Price"
+ <gourry.memverge@gmail.com>, aneesh.kumar@linux.ibm.com, mhocko@suse.com,
+ tj@kernel.org, john@jagalactic.com, "Eishan Mirakhur"
+ <emirakhur@micron.com>, "Vinicius Tavares Petrucci"
+ <vtavarespetr@micron.com>, "Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
+ "Alistair Popple" <apopple@nvidia.com>, "Srinivasulu Thanneeru"
+ <sthanneeru@micron.com>, "SeongJae Park" <sj@kernel.org>, "Rafael J. 
+ Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, "Dave Jiang" <dave.jiang@intel.com>,
+ "Dan  Williams" <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, "Ho-Ren (Jack)  Chuang"
+ <horenc@vt.edu>, "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+ "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+ linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
+In-Reply-To: <87tth9ofsi.fsf@yhuang6-desk2.ccr.corp.intel.com>
+References: <20240628060925.303309-1-horen.chuang@linux.dev>
+ <20240628060925.303309-2-horen.chuang@linux.dev>
+ <87tth9ofsi.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-Migadu-Flow: FLOW_OUT
+
+Hi Huang, Ying,
+
+Thanks for your feedback and helpful suggestions. Replies inlined.
 
 
+June 30, 2024 at 10:13 PM, "Huang, Ying" <ying.huang@intel.com> wrote:
+>=20
+>=20Hi, Jack,
+>=20
+>=20"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev> writes:
+>=20
+>=20I suggest you to merge the [0/1] with the change log here. [0/1]
+>=20
+>=20describes why do we need the patch. The below text describes some
+>=20
+>=20details. Just don't use "---" to separate them. We need both parts in
+>=20
+>=20the final commit message.
+>=20
 
-在 2024/6/25 21:56, Shiyang Ruan 写道:
-> 
-> 
-> 在 2024/6/22 1:51, Dan Williams 写道:
->> Shiyang Ruan wrote:
->>> Background:
->>> Since CXL device is a memory device, while CPU consumes a poison page of
->>> CXL device, it always triggers a MCE by interrupt (INT18), no matter
->>> which-First path is configured.  This is the first report.  Then
->>> currently, in FW-First path, the poison event is transferred according
->>> to the following process: CXL device -> firmware -> OS:ACPI->APEI->GHES
->>>   -> CPER -> trace report.  This is the second one.  These two reports
->>> are indicating the same poisoning page, which is the so-called 
->>> "duplicate
->>> report"[1].  And the memory_failure() handling I'm trying to add in
->>> OS-First path could also be another duplicate report.
->>>
->>> Hope the flow below could make it easier to understand:
->>> CPU accesses bad memory on CXL device, then
->>>   -> MCE (INT18), *always* report (1)
->>>   -> * FW-First (implemented now)
->>>        -> CXL device -> FW
->>>           -> OS:ACPI->APEI->GHES->CPER -> trace report (2.a)
->>>      * OS-First (not implemented yet, I'm working on it)
->>>        -> CXL device -> MSI
->>>           -> OS:CXL driver -> memory_failure() (2.b)
->>> so, the (1) and (2.a/b) are duplicated.
->>>
->>> (I didn't get response in my reply for [1] while I have to make patch to
->>> solve this problem, so please correct me if my understanding is wrong.)
->>
->> The CPU MCE may not be in the loop. Consider the case of patrol scrub,
->> or device-DMA accessing poison. In that case the device will signal a
->> component event and the CPU may never issue the MCE.
-> 
-> My other patch: "cxl/core: add poison creation event handler", adds 
-> calling memory_failure() when an event is received form device, which 
-> checks the poison record (insert if not exists) to make sure poison 
-> would be reported/handled, but not twice, no matter CPU issues the MCE 
-> later or earlier.  And the lock of poison record makes sure that it's 
-> fine even in race condition.
-> 
->>
->> What is missing for me from this description is *why* does the duplicate
->> report matter in practice? If all that happens is that the kernel
->> repeats the lookup to offline the page and set the HWPoison bit, is that
->> duplicated work worth adding more tracking?
-> 
-> Besides setting the HWPoison bit for the poison page, memory_failure() 
-> also finds and notifies those processes who are accessing the poison 
-> page, and tries to recovery the page.  And there seems no lock to 
-> prevent the 2nd memory_failure() and clearing poison operation from 
-> being called in race, then the HWPoison bit could be unsure.  I think 
-> that's the problem.
-> 
->  > So, I think all CXL poison notification events should trigger an
->  > action optional memory_failure(). I expect this needs to make sure
->  > that duplicates re not a problem. I.e. in the case of CPU consumption
->  > of CXL poison, that causes a synchronous MF_ACTION_REQUIRED event via
->  > the MCE path *and* it may trigger the device to send an error record
->  > for the same page. As far as I can see, duplicate reports (MCE + CXL
->  > device) are unavoidable.
-> 
-> As you mentioned in my other patch, this problem should be solved at 
-> first.  My patch adds the poison record (tracking, which might not 
-> become very large) to prevent duplicating report.
+Sounds=20good! I will merge them into 1 patch in the v3.
 
-Ping~
+> >=20
+>=20> If we simply move the set_node_memory_tier() from memory_tier_init(=
+)
+> >=20
+>=20>  to late_initcall(), it will result in HMAT not registering
+> >=20
+>=20>  the mt_adistance_algorithm callback function, because
+> >=20
+>=20>  set_node_memory_tier() is not performed during the memory tiering
+> >=20
+>=20>  initialization phase, leading to a lack of correct default_dram
+> >=20
+>=20>  information.
+> >=20
+>=20>  Therefore, we introduced a nodemask to pass the information of the
+> >=20
+>=20>  default DRAM nodes. The reason for not choosing to reuse
+> >=20
+>=20>  default_dram_type->nodes is that it is not clean enough. So in the=
+ end,
+> >=20
+>=20>  we use a __initdata variable, which is a variable that is released=
+ once
+> >=20
+>=20>  initialization is complete, including both CPU and memory nodes fo=
+r HMAT
+> >=20
+>=20>  to iterate through.
+> >=20
+>=20>  Besides, since default_dram_type may be checked/used during the
+> >=20
+>=20>  initialization process of HMAT and drivers, it is better to keep t=
+he
+> >=20
+>=20>  allocation of default_dram_type in memory_tier_init().
+> >=20
+>=20
+> Why do we need it? IIRC, we have deleted its usage in hmat.c.
+>=20
 
-And I had some problems when using xarray, please see below.
+Although=20default_dram_type is still used in set_node_memory_tier(),
+I can totally remove this description to remove confusion.
 
-> 
->>
->>> This patch adds a new notifier_block and MCE_PRIO_CXL, for CXL memdev
->>> to check whether the current poison page has been reported (if yes,
->>> stop the notifier chain, won't call the following memory_failure()
->>> to report), into `x86_mce_decoder_chain`.  In this way, if the poison
->>> page already handled(recorded and reported) in (1) or (2), the other one
->>> won't duplicate the report.  The record could be clear when
->>> cxl_clear_poison() is called.
->>>
->>> [1] 
->>> https://lore.kernel.org/linux-cxl/664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch/
->>>
->>> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
->>> ---
->>>   arch/x86/include/asm/mce.h |   1 +
->>>   drivers/cxl/core/mbox.c    | 130 +++++++++++++++++++++++++++++++++++++
->>>   drivers/cxl/core/memdev.c  |   6 +-
->>>   drivers/cxl/cxlmem.h       |   3 +
->>>   4 files changed, 139 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
->>> index dfd2e9699bd7..d8109c48e7d9 100644
->>> --- a/arch/x86/include/asm/mce.h
->>> +++ b/arch/x86/include/asm/mce.h
->>> @@ -182,6 +182,7 @@ enum mce_notifier_prios {
->>>       MCE_PRIO_NFIT,
->>>       MCE_PRIO_EXTLOG,
->>>       MCE_PRIO_UC,
->>> +    MCE_PRIO_CXL,
->>>       MCE_PRIO_EARLY,
->>>       MCE_PRIO_CEC,
->>>       MCE_PRIO_HIGHEST = MCE_PRIO_CEC
->>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->>> index 2626f3fff201..0eb3c5401e81 100644
->>> --- a/drivers/cxl/core/mbox.c
->>> +++ b/drivers/cxl/core/mbox.c
->>> @@ -4,6 +4,8 @@
->>>   #include <linux/debugfs.h>
->>>   #include <linux/ktime.h>
->>>   #include <linux/mutex.h>
->>> +#include <linux/notifier.h>
->>> +#include <asm/mce.h>
->>>   #include <asm/unaligned.h>
->>>   #include <cxlpci.h>
->>>   #include <cxlmem.h>
->>> @@ -880,6 +882,9 @@ void cxl_event_trace_record(const struct 
->>> cxl_memdev *cxlmd,
->>>           if (cxlr)
->>>               hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
->>> +        if (hpa != ULLONG_MAX && cxl_mce_recorded(hpa))
->>> +            return;
->>> +
->>>           if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
->>>               trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->>>                           &evt->gen_media);
->>> @@ -1408,6 +1413,127 @@ int cxl_poison_state_init(struct 
->>> cxl_memdev_state *mds)
->>>   }
->>>   EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
->>> +struct cxl_mce_record {
->>> +    struct list_head node;
->>> +    u64 hpa;
->>> +};
->>> +LIST_HEAD(cxl_mce_records);
->>> +DEFINE_MUTEX(cxl_mce_mutex);
->>
->> I would recommend an xarray for this use case as that already has its
->> own internal locking and efficient memory allocation for new nodes.
->>
->> However, the "why" question needs to be answered first.
-> 
-> xarray does look better.  I didn't think of it befre.  Thanks for 
-> suggestion.
+> >=20
+>=20> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> >=20
+>=20>  Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >=20
+>=20>  ---
+> >=20
+>=20>  drivers/acpi/numa/hmat.c | 5 +--
+> >=20
+>=20>  include/linux/memory-tiers.h | 2 ++
+> >=20
+>=20>  mm/memory-tiers.c | 59 +++++++++++++++---------------------
+> >=20
+>=20>  3 files changed, 28 insertions(+), 38 deletions(-)
+> >=20
+>=20>  diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> >=20
+>=20>  index 2c8ccc91ebe6..a2f9e7a4b479 100644
+> >=20
+>=20>  --- a/drivers/acpi/numa/hmat.c
+> >=20
+>=20>  +++ b/drivers/acpi/numa/hmat.c
+> >=20
+>=20>  @@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
+> >=20
+>=20>  struct memory_target *target;
+> >=20
+>=20>  struct access_coordinate *attrs;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  - if (!default_dram_type)
+> >=20
+>=20>  - return -EIO;
+> >=20
+>=20>  -
+> >=20
+>=20>  - for_each_node_mask(nid, default_dram_type->nodes) {
+> >=20
+>=20>  + for_each_node_mask(nid, default_dram_nodes) {
+> >=20
+>=20>  pxm =3D node_to_pxm(nid);
+> >=20
+>=20>  target =3D find_mem_target(pxm);
+> >=20
+>=20>  if (!target)
+> >=20
+>=20>  diff --git a/include/linux/memory-tiers.h b/include/linux/memory-t=
+iers.h
+> >=20
+>=20>  index 0d70788558f4..fa61ad9c4d75 100644
+> >=20
+>=20>  --- a/include/linux/memory-tiers.h
+> >=20
+>=20>  +++ b/include/linux/memory-tiers.h
+> >=20
+>=20>  @@ -38,6 +38,7 @@ struct access_coordinate;
+> >=20
+>=20>  #ifdef CONFIG_NUMA
+> >=20
+>=20>  extern bool numa_demotion_enabled;
+> >=20
+>=20>  extern struct memory_dev_type *default_dram_type;
+> >=20
+>=20
+> Can we remove the above line?
+>=20
 
-I'm trying using xarray but but I'm running into two problems.
+Yes,=20you are right. Good catch, thanks! Will remove it in the v3.
 
-The first one is: xarray stores an entry with a specified index, but 
-here we only need to store the PFN.  I'm not sure how to specific an 
-index for a PFN.  So I think xarray might not suitable for my case.
-The second one: because we only need to store/search PFN, the list node 
-only contains a list_head and a PFN. But xarray seems to require more 
-memory for each node, which causes more overhead.
+> >=20
+>=20> +extern nodemask_t default_dram_nodes __initdata;
+> >=20
+>=20
+> We don't need to use __initdata in variable declaration.
+>=20
 
-Maybe I'm overthinking this?
+Thank=20you for your guidance! Will remove __initdata it in the v3.
 
+> >=20
+>=20> struct memory_dev_type *alloc_memory_type(int adistance);
+> >=20
+>=20>  void put_memory_type(struct memory_dev_type *memtype);
+> >=20
+>=20>  void init_node_memory_type(int node, struct memory_dev_type *defau=
+lt_type);
+> >=20
+>=20>  @@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  #define numa_demotion_enabled false
+> >=20
+>=20>  #define default_dram_type NULL
+> >=20
+>=20>  +#define default_dram_nodes NODE_MASK_NONE
+> >=20
+>=20
+> Should we use <tab> after "default_dram_nodes"?
+>=20
+
+Yes,=20thanks for the reminder. Will fix it in the v3.
+
+> >=20
+>=20> /*
+> >=20
+>=20>  * CONFIG_NUMA implementation returns non NULL error.
+> >=20
+>=20>  */
+> >=20
+>=20>  diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> >=20
+>=20>  index 6632102bd5c9..a19a90c3ad36 100644
+> >=20
+>=20>  --- a/mm/memory-tiers.c
+> >=20
+>=20>  +++ b/mm/memory-tiers.c
+> >=20
+>=20>  @@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
+> >=20
+>=20>  static LIST_HEAD(default_memory_types);
+> >=20
+>=20>  static struct node_memory_type_map node_memory_types[MAX_NUMNODES]=
+;
+> >=20
+>=20>  struct memory_dev_type *default_dram_type;
+> >=20
+>=20>  +nodemask_t default_dram_nodes __initdata =3D NODE_MASK_NONE;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  static const struct bus_type memory_tier_subsys =3D {
+> >=20
+>=20>  .name =3D "memory_tiering",
+> >=20
+>=20>  @@ -671,28 +672,38 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  /*
+> >=20
+>=20>  * This is invoked via `late_initcall()` to initialize memory tiers=
+ for
+> >=20
+>=20>  - * CPU-less memory nodes after driver initialization, which is
+> >=20
+>=20>  - * expected to provide `adistance` algorithms.
+> >=20
+>=20>  + * memory nodes, both with and without CPUs. After the initializa=
+tion of
+> >=20
+>=20>  + * firmware and devices, adistance algorithms are expected to be =
+provided.
+> >=20
+>=20>  */
+> >=20
+>=20>  static int __init memory_tier_late_init(void)
+> >=20
+>=20>  {
+> >=20
+>=20>  int nid;
+> >=20
+>=20>  + struct memory_tier *memtier;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  + get_online_mems();
+> >=20
+>=20>  guard(mutex)(&memory_tier_lock);
+> >=20
+>=20>  + /*
+> >=20
+>=20>  + * Look at all the existing and uninitialized N_MEMORY nodes and
+> >=20
+>=20>  + * add them to default memory tier or to a tier if we already hav=
+e
+> >=20
+>=20>  + * memory types assigned.
+> >=20
+>=20>  + */
+> >=20
+>=20
+> If the memory type of the node has been assigned, we will skip it in th=
+e
+>=20
+>=20following code. So, I think that we need to revise the comments.
+>=20
+
+You=20are right, the new version in the v3 will be:
+/* Assign each uninitialized N_MEMORY node to a memory tier. */
+
+> >=20
+>=20> for_each_node_state(nid, N_MEMORY) {
+> >=20
+>=20>  /*
+> >=20
+>=20>  - * Some device drivers may have initialized memory tiers
+> >=20
+>=20>  - * between `memory_tier_init()` and `memory_tier_late_init()`,
+> >=20
+>=20>  - * potentially bringing online memory nodes and
+> >=20
+>=20>  - * configuring memory tiers. Exclude them here.
+> >=20
+>=20>  + * Some device drivers may have initialized
+> >=20
+>=20>  + * memory tiers, potentially bringing memory nodes
+> >=20
+>=20>  + * online and configuring memory tiers.
+> >=20
+>=20>  + * Exclude them here.
+> >=20
+>=20>  */
+> >=20
+>=20>  if (node_memory_types[nid].memtype)
+> >=20
+>=20>  continue;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  - set_node_memory_tier(nid);
+> >=20
+>=20>  + memtier =3D set_node_memory_tier(nid);
+> >=20
+>=20>  + if (IS_ERR(memtier))
+> >=20
+>=20>  + /* Continue with memtiers we are able to setup. */
+> >=20
+>=20>  + break;
+> >=20
+>=20>  }
+> >=20
+>=20>  -
+> >=20
+>=20>  establish_demotion_targets();
+> >=20
+>=20>  + put_online_mems();
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  return 0;
+> >=20
+>=20>  }
+> >=20
+>=20>  @@ -875,8 +886,7 @@ static int __meminit memtier_hotplug_callback(=
+struct notifier_block *self,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  static int __init memory_tier_init(void)
+> >=20
+>=20>  {
+> >=20
+>=20>  - int ret, node;
+> >=20
+>=20>  - struct memory_tier *memtier;
+> >=20
+>=20>  + int ret;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ret =3D subsys_virtual_register(&memory_tier_subsys, NULL);
+> >=20
+>=20>  if (ret)
+> >=20
+>=20>  @@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
+> >=20
+>=20>  GFP_KERNEL);
+> >=20
+>=20>  WARN_ON(!node_demotion);
+> >=20
+>=20>  #endif
+> >=20
+>=20>  - mutex_lock(&memory_tier_lock);
+> >=20
+>=20>  +
+> >=20
+>=20>  + guard(mutex)(&memory_tier_lock);
+> >=20
+>=20>  /*
+> >=20
+>=20>  * For now we can have 4 faster memory tiers with smaller adistance
+> >=20
+>=20>  * than default DRAM tier.
+> >=20
+>=20>  @@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
+> >=20
+>=20>  if (IS_ERR(default_dram_type))
+> >=20
+>=20>  panic("%s() failed to allocate default DRAM tier\n", __func__);=0D
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  - /*
+> >=20
+>=20>  - * Look at all the existing N_MEMORY nodes and add them to
+> >=20
+>=20>  - * default memory tier or to a tier if we already have memory
+> >=20
+>=20>  - * types assigned.
+> >=20
+>=20>  - */
+> >=20
+>=20>  - for_each_node_state(node, N_MEMORY) {
+> >=20
+>=20>  - if (!node_state(node, N_CPU))
+> >=20
+>=20>  - /*
+> >=20
+>=20>  - * Defer memory tier initialization on
+> >=20
+>=20>  - * CPUless numa nodes. These will be initialized
+> >=20
+>=20>  - * after firmware and devices are initialized.
+> >=20
+>=20>  - */
+> >=20
+>=20>  - continue;
+> >=20
+>=20>  -
+> >=20
+>=20>  - memtier =3D set_node_memory_tier(node);
+> >=20
+>=20>  - if (IS_ERR(memtier))
+> >=20
+>=20>  - /*
+> >=20
+>=20>  - * Continue with memtiers we are able to setup
+> >=20
+>=20>  - */
+> >=20
+>=20>  - break;
+> >=20
+>=20>  - }
+> >=20
+>=20>  - establish_demotion_targets();
+> >=20
+>=20>  - mutex_unlock(&memory_tier_lock);
+> >=20
+>=20>  + /* Record nodes with memory and CPU to set default DRAM performa=
+nce. */
+> >=20
+>=20>  + nodes_and(default_dram_nodes, node_states[N_MEMORY],
+> >=20
+>=20>  + node_states[N_CPU]);
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_=
+PRI);
+> >=20
+>=20>  return 0;
+> >=20
+>=20
+> --
+>=20
+>=20Best Regards,
+>=20
+>=20Huang, Ying
+>
 
 --
-Thanks
-Ruan.
-
-> 
-> -- 
-> Thanks
-> Ruan.
+Best Regards,
+Ho-Ren (Jack) Chuang
