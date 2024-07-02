@@ -1,160 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE775C8EF
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 07:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB2E14E2C2
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 08:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719904718; cv=none; b=MyYLpnWuujCE/n5Q9bRZDEqBhi7NGkEs9oUrp2ZUdaZBEtdIWZ1b4H7K6mTNLbAXOumDlF9liBNsyplF2Go0H24pxeENkbOQjacoSOWnhawQpVnPiHk0P070f3UizVTGVAJQ0m11i8ocRflDFz36YopOk25a1PhGvyUW156E2M0=
+	t=1719910008; cv=none; b=ZMrq1U4/OnlZQx+MJ9R7HyheVF+xyI5DLDO7yelRCNKZ6tIjvzySzA6xLRfKarrwCu+MzHecQYwl8Nd48NzIVF5atSPJkcpCZhVNEq457vc5BhStmFEweelz57xDhiHA/KHTxbvFZB8LishSDQ6+zuyOLr7Kmls92XSMKeK6SSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719904718; c=relaxed/simple;
-	bh=DremaBMYVS0LhXSvp/Yt7wGNwV9NOyoWKozRCWpchBI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=orRlGEjWRrgJvQHvOwFQB0uQMBprmVGaNsMFrwSMmJ9BF+AfKteEkQuxA7JGXPQ9ac35P+oGMz+opyRqQsAtccTGVEmNVD7slb5L9oLe65lDV2ISfEfpU89L+akAnCZLMQs1uJIutcBwSJFwvYyAuCWIgPWCKPnwW3Sv7vWxIJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C2VH50vd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C2VH50vd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719904716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jooiWfPemUvMpiImGZEPJDFdWpBVTUluLJM85HVIgf8=;
-	b=C2VH50vdNMdh/crCTqqLxCKZVdqSQCcAVlrm/nEN7SfvsNCuHvNBtip3/9HAQwHxJgRmQt
-	zJa/+yVVdnE5uFUXXTUGCxMnplGoZQhTFnp2EaLyk95w5epOEDkAkX8Tea/ex7vFEfkJVR
-	DQvv8BUIQxMjy1jcbIDWuiqBTvTSSc8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-kMK27R7ANgiGL1sBLpGyjA-1; Tue, 02 Jul 2024 03:18:35 -0400
-X-MC-Unique: kMK27R7ANgiGL1sBLpGyjA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42566e8a995so28849035e9.0
-        for <linux-cxl@vger.kernel.org>; Tue, 02 Jul 2024 00:18:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719904714; x=1720509514;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jooiWfPemUvMpiImGZEPJDFdWpBVTUluLJM85HVIgf8=;
-        b=TRWzgjWqu40KJQL31rJXcYm9mNOWiSPFvQ5nc75pBhyHWjesvEpXZBio2UU0MsgsZP
-         3C7ROeDgIOuZ7JeCiGUPS5cMczziKPLIg1N0Zvm1n4Tr6zZP3S5XWqXn8fH7SOFX7LeE
-         X1ZhPXGwRBMwKgrWUK3J2SLCX3Kc4HkWKoRi+3mjDwF56sMR3HF2sxz+Ln3AS6sHaKm1
-         Z+lu50nhLO83F1ho34Aw4nFTfXbp50pHh4yPwh1B87jCWTvhbywphvspPwwFQcEMpLnD
-         ckpL29Levasc30q+ji3APj07FBUClKBlNu2y5BNTp+A2MEY13RsAYXDrjtIhB/j+pr3r
-         UIkw==
-X-Forwarded-Encrypted: i=1; AJvYcCX96OQQpfym7aOIxeqkctQqW/+mNAWGvih3Mp6ahDgE1Tj2C/aKrYO4AuEIkcagfX6MewsF9DegeTDmDtzUKBxiEqNjQNcvJxeN
-X-Gm-Message-State: AOJu0YwCoE37yoxCAqHNcBcDBfQa4ir+h5e+jgPyEFUhCP9MLpOnGRmV
-	UnwTOHe2deK62TSVJ4KgU7Fh/z6ijzJIUTNqgiNFfD8nAJ/5uYVN4NNE0GjLEQYoYHHYNxeOLcZ
-	L0xmtvraWglpKGn4KpK3e2u0fRdMCCnTv0vqzFVtJL6smFsSRhk16wS9PvA==
-X-Received: by 2002:a05:600c:181b:b0:421:7bed:5274 with SMTP id 5b1f17b1804b1-4257a02f7f0mr56194105e9.10.1719904714133;
-        Tue, 02 Jul 2024 00:18:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzz5o3kOQcATmNnqgXuFo5zFXlMg5tD+q0qWYrXcGunrf20m6/A/WfizHYhPadayXK53FB3w==
-X-Received: by 2002:a05:600c:181b:b0:421:7bed:5274 with SMTP id 5b1f17b1804b1-4257a02f7f0mr56193815e9.10.1719904713708;
-        Tue, 02 Jul 2024 00:18:33 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c739:2400:78ac:64bb:a39e:2578? (p200300cbc739240078ac64bba39e2578.dip0.t-ipconnect.de. [2003:cb:c739:2400:78ac:64bb:a39e:2578])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42578578b69sm133608745e9.42.2024.07.02.00.18.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 00:18:33 -0700 (PDT)
-Message-ID: <eb3120fd-44db-4cb3-af3c-a13f9e71380b@redhat.com>
-Date: Tue, 2 Jul 2024 09:18:31 +0200
+	s=arc-20240116; t=1719910008; c=relaxed/simple;
+	bh=ZiU59mxp9tbpVxyHLThXQoZtI+f4W4Sd8qQJuDibjd8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TH2qQ74f4OknG3BWoDQrlRsPCc+zNpgN1HDxpxclB73eaYj9KHc3uAo5thetSqHE/G3OCo4YuISbyfZx593NUz0GaY7nwA925pO6Q7/WlRfCHbUbUISUZ+SyPm76vVu3xe1/W6tvCh3T6e7VIlj5KPgEcZFEM+MqsJdIVjDSehU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCxMh29P6z6JBDC;
+	Tue,  2 Jul 2024 16:46:08 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7FF171400CA;
+	Tue,  2 Jul 2024 16:46:43 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 2 Jul
+ 2024 09:46:43 +0100
+Date: Tue, 2 Jul 2024 09:46:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>
+CC: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+Subject: Re: [BUG REPORT] cxl process in infinity loop
+Message-ID: <20240702094642.00000fd8@Huawei.com>
+In-Reply-To: <OSZPR01MB6453BC61D2FF4035F18084EF8DDC2@OSZPR01MB6453.jpnprd01.prod.outlook.com>
+References: <OSZPR01MB6453BC61D2FF4035F18084EF8DDC2@OSZPR01MB6453.jpnprd01.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/13] mm/memory: Add dax_insert_pfn
-To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
-Cc: catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
- npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
- willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com,
- peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
- hch@lst.de, david@fromorbit.com
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <50013c1ee52b5bb1213571bff66780568455f54c.1719386613.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <50013c1ee52b5bb1213571bff66780568455f54c.1719386613.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 27.06.24 02:54, Alistair Popple wrote:
-> Currently to map a DAX page the DAX driver calls vmf_insert_pfn. This
-> creates a special devmap PTE entry for the pfn but does not take a
-> reference on the underlying struct page for the mapping. This is
-> because DAX page refcounts are treated specially, as indicated by the
-> presence of a devmap entry.
-> 
-> To allow DAX page refcounts to be managed the same as normal page
-> refcounts introduce dax_insert_pfn. This will take a reference on the
-> underlying page much the same as vmf_insert_page, except it also
-> permits upgrading an existing mapping to be writable if
-> requested/possible.
+On Tue, 2 Jul 2024 00:30:06 +0000
+"Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com> wrote:
 
-We have this comparably nasty vmf_insert_mixed() that FS dax abused to 
-insert into !VM_MIXED VMAs. Is that abuse now stopping and are there 
-maybe ways to get rid of vmf_insert_mixed()?
+> Hi, all
+>=20
+> When I did the cxl memory hot-plug test on QEMU, I accidentally connected=
+=20
+> two memdev to the same downstream port, the command like below:
+>=20
+> > -object memory-backend-ram,size=3D262144k,share=3Don,id=3Dvmem0 \
+> > -object memory-backend-ram,size=3D262144k,share=3Don,id=3Dvmem1 \
+> > -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> > -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port0,chassis=3D0,slot=3D=
+0 \
+> > -device cxl-upstream,bus=3Droot_port0,id=3Dus0 \
+> > -device cxl-downstream,port=3D0,bus=3Dus0,id=3Dswport00,chassis=3D0,slo=
+t=3D5 \
+> > -device cxl-downstream,port=3D0,bus=3Dus0,id=3Dswport01,chassis=3D0,slo=
+t=3D7 \ =20
+> same downstream port but has different slot!
+>=20
+> > -device cxl-type3,bus=3Dswport00,volatile-memdev=3Dvmem0,id=3Dcxl-vmem0=
+ \
+> > -device cxl-type3,bus=3Dswport01,volatile-memdev=3Dvmem1,id=3Dcxl-vmem1=
+ \
+> > -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D64G,cxl-fmw.0.interleav=
+e-granularity=3D4k \ =20
+>=20
+> There is no error occurred when vm start, but when I executed the =E2=80=
+=9Ccxl list=E2=80=9D command to view
+> the CXL objects info, the process can not end properly.
 
--- 
-Cheers,
+I'd be happy to look preventing this on QEMU side if you send one,
+but in general there are are lots of ways to shoot yourself in the
+foot with CXL and PCI device emulation in QEMU so I'm not going
+to rush to solve this specific one.
 
-David / dhildenb
+Likewise, some hardening in kernel / userspace probably makes sense but
+this is a non compliant switch so priority of a fix is probably fairly low.
+
+Jonathan
+
+>=20
+> Then I used strace to trace the process, I found that the process is in i=
+nfinity loop:
+> # strace cxl list
+> ......
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D0, tv_nsec=3D1000000}, NULL)=
+ =3D 0
+> openat(AT_FDCWD, "/sys/bus/cxl/flush", O_WRONLY|O_CLOEXEC) =3D 3
+> write(3, "1\n\0", 3)                    =3D 3
+> close(3)                                =3D 0
+> access("/run/udev/queue", F_OK)         =3D 0
+>=20
+> [Environment]:
+> linux: V6.10-rc3
+> QEMU: V9.0.0
+> ndctl: v79
+>=20
+> I know this is because of the wrong use of the QEMU command, but I think =
+we should=20
+> be aware of this error in one of the QEMU, OS or ndctl side at least.
+>=20
+> Thanks
+> Xingtao
 
