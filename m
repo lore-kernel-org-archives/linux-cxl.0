@@ -1,37 +1,37 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B081E50F
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 14:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A8A1B4C40
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jul 2024 14:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930937; cv=none; b=b4EheJl0+awXdijLIxqjNS9OBNQcMgXtXEQRJ+A17uPJEYIc4fKJy2QU4qFJrkVGdxMfjpLFakO8ldcv7kpe8Q5MysO6EQ0HzI4bCokrTLAcZIvkjMQuFu6ZPalYu/hP1lrk00bdNYWZ5mpHxlKr2fanlGbjrAxCdeNTinWBsnc=
+	t=1719930962; cv=none; b=hHnZZHXGEhgkqNte7FfblAP4IDoqCyx2ciLHD5i9VHBrpBemU5YinyhZrKMHHisdcUUozN5HltnMt0wl9gleJCeq8EnzSdDjH+3DfjE2/GfBgqgcIiC3P6loGQKiA5bntqDtqTNpExuWOva0xss/5QeyYH0Xrq/Am0i50PiDcNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930937; c=relaxed/simple;
-	bh=O3S9nsjPtoAcZUEfHwcOazmRVJ4HDKZcFz0TOrRzxn0=;
+	s=arc-20240116; t=1719930962; c=relaxed/simple;
+	bh=4KahiP0wCMZ63CxXh5nFl1Qt8CgGnBPbdFJqZxafbos=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dssncLhqZOd116yGZrkP4ojSOyCtv2nYRa/Y5ItDpOsMo5ciJHeyS3TBublRZPOkUL7FbfIAG9rWqTgXFyt93AsGoWq+ogv8BEHXk+BAf1rkOPbzwx7t77mSqxSfj3ShS3JEg9PqTjYd4BmHHWD3LTZW+KHY0LRofe810kaPzMs=
+	 MIME-Version:Content-Type; b=hcbFfu3QLImJDQ7l9esf2Ro/YHJrQSGi5Q5o2OMvqvbZM1jCsT/MKE8CxloH8qC1tv0bLjBHTm+l8ZCXv9NhCIB4mWAuVb/gJvgxaech9tHWsZNejwdMMZDLNgE+K0wjyynPvH35nifv9jFkWCLVJySVrVWJZ82q9kE0dW+DHcM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WD56850lFz6JBYT;
-	Tue,  2 Jul 2024 22:34:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WD5692g20z6J6pg;
+	Tue,  2 Jul 2024 22:34:57 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 95B04140684;
-	Tue,  2 Jul 2024 22:35:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 21F16140A70;
+	Tue,  2 Jul 2024 22:35:58 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 2 Jul 2024 15:35:27 +0100
+ 15.1.2507.39; Tue, 2 Jul 2024 15:35:57 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <mst@redhat.com>, Markus Armbruster
 	<armbru@redhat.com>, <qemu-devel@nongnu.org>, Li Zhijian
 	<lizhijian@fujitsu.com>
 CC: <linuxarm@huawei.com>
-Subject: [PATCH 2/3] hw/cxl/cxl-mailbox-utils: remove unneeded mailbox output payload space zeroing
-Date: Tue, 2 Jul 2024 15:34:24 +0100
-Message-ID: <20240702143425.717452-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 3/3] hw/cxl: Check for multiple mappings of memory backends.
+Date: Tue, 2 Jul 2024 15:34:25 +0100
+Message-ID: <20240702143425.717452-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240702143425.717452-1-Jonathan.Cameron@huawei.com>
 References: <20240702143425.717452-1-Jonathan.Cameron@huawei.com>
@@ -46,80 +46,58 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Fan Ni <fan.ni@samsung.com>
+Similar protection to that provided for -numa memdev=x
+to make sure that memory used to back a type3 device is not also mapped
+as normal RAM, or for multiple type3 devices.
 
-The whole mailbox output payload space is already zeroed after copying
-out the input payload, which happens before processing the specific mailbox
-command:
-https://elixir.bootlin.com/qemu/v8.2.1/source/hw/cxl/cxl-device-utils.c#L204
+This is an easy footgun to remove and seems multiple people have
+run into it.
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Link: https://lore.kernel.org/r/20240221221824.1092966-1-nifan.cxl@gmail.com
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/cxl/cxl-mailbox-utils.c | 7 -------
- 1 file changed, 7 deletions(-)
+ hw/mem/cxl_type3.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 74eeb6fde7..facec42dc8 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -235,7 +235,6 @@ static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
-     log_type = payload_in[0];
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 35ac59883a..e7fbbb4d51 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -737,6 +737,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             error_setg(errp, "volatile memdev must have backing device");
+             return false;
+         }
++        if (host_memory_backend_is_mapped(ct3d->hostvmem)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->hostvmem)));
++            return false;
++        }
+         memory_region_set_nonvolatile(vmr, false);
+         memory_region_set_enabled(vmr, true);
+         host_memory_backend_set_mapped(ct3d->hostvmem, true);
+@@ -760,6 +765,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             error_setg(errp, "persistent memdev must have backing device");
+             return false;
+         }
++        if (host_memory_backend_is_mapped(ct3d->hostpmem)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->hostpmem)));
++            return false;
++        }
+         memory_region_set_nonvolatile(pmr, true);
+         memory_region_set_enabled(pmr, true);
+         host_memory_backend_set_mapped(ct3d->hostpmem, true);
+@@ -790,6 +800,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             return false;
+         }
  
-     pl = (CXLGetEventPayload *)payload_out;
--    memset(pl, 0, sizeof(*pl));
- 
-     max_recs = (cxlds->payload_size - CXL_EVENT_PAYLOAD_HDR_SIZE) /
-                 CXL_EVENT_RECORD_SIZE;
-@@ -273,7 +272,6 @@ static CXLRetCode cmd_events_get_interrupt_policy(const struct cxl_cmd *cmd,
-     CXLEventLog *log;
- 
-     policy = (CXLEventInterruptPolicy *)payload_out;
--    memset(policy, 0, sizeof(*policy));
- 
-     log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
-     if (log->irq_enabled) {
-@@ -372,7 +370,6 @@ static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
-     QEMU_BUILD_BUG_ON(sizeof(*is_identify) != 18);
- 
-     is_identify = (void *)payload_out;
--    memset(is_identify, 0, sizeof(*is_identify));
-     is_identify->pcie_vid = class->vendor_id;
-     is_identify->pcie_did = class->device_id;
-     if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_USP)) {
-@@ -606,7 +603,6 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
-     QEMU_BUILD_BUG_ON(sizeof(*bg_op_status) != 8);
- 
-     bg_op_status = (void *)payload_out;
--    memset(bg_op_status, 0, sizeof(*bg_op_status));
-     bg_op_status->status = cci->bg.complete_pct << 1;
-     if (cci->bg.runtime > 0) {
-         bg_op_status->status |= 1U << 0;
-@@ -647,7 +643,6 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
-     }
- 
-     fw_info = (void *)payload_out;
--    memset(fw_info, 0, sizeof(*fw_info));
- 
-     fw_info->slots_supported = 2;
-     fw_info->slot_info = BIT(0) | BIT(3);
-@@ -805,7 +800,6 @@ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
-     }
- 
-     id = (void *)payload_out;
--    memset(id, 0, sizeof(*id));
- 
-     snprintf(id->fw_revision, 0x10, "BWFW VERSION %02d", 0);
- 
-@@ -1095,7 +1089,6 @@ static CXLRetCode cmd_media_get_poison_list(const struct cxl_cmd *cmd,
-     out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-     assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
- 
--    memset(out, 0, out_pl_len);
-     QLIST_FOREACH(ent, poison_list, node) {
-         uint64_t start, stop;
- 
++        if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->dc.host_dc)));
++            return false;
++        }
+         /*
+          * Set DC regions as volatile for now, non-volatile support can
+          * be added in the future if needed.
 -- 
 2.43.0
 
