@@ -1,136 +1,317 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9E2F23
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 06:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263441A2571
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 07:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720073873; cv=none; b=QLuYJAoGrHAqPfdDh3mz+DeHKeOtlb3l92txf77SWbH4y6GXGxuJDHiB+LSJjdeDRe6NIUm5lPgNwC6CuoWwa/6UgyEX9W6J8bqqWpz8mBzXsR+SxG83rVkoR+oHxA5lY1Hsb+X2VH1mEw22fuot7jqEZ8e0wYCuQIs/4CFejtM=
+	t=1720078035; cv=none; b=giuFXH5FE3ajFgPtmIQdMoYdC3/z5uBbyDTJapdvJ0VZFYLan+NLdkiuGwUymDUlcCm0DCXt73Yq8PjcOob89SLxxHK0WLXUN353ODPkAxwI9gtx+DtcakJO2xfENgrZXPL8kpsYxZSaHhrgF8lMjmc5awe+Z+P1fDzari7/Yis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720073873; c=relaxed/simple;
-	bh=tIoIFIuVtGWmcIxY4zT7aQym89zCBej5DDe7j7nrZh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CkIPpZufXmk73yJJVCVJ3cX+RJubIrYKa5Kyogy3A1LkH++XHS9u8GqeNa8wycoGLEL14xZKaomaDjb2kdgg/0jr3AO4S/c6xljja94EJEsOADMrdex6ZiRCI9A9aUVhnBKCh5YpqTTuS/fbz+nJSkmOHNTfaIu4oROOQr4os8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C9LCPTe9; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720078035; c=relaxed/simple;
+	bh=QdSghjnKr/7DFwZ4ePCA6PriHD/0YvbuZjTGoAVgIEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uWIE2NZPPz8eR+7BfLteUEM2ZMEoZpw5Vl545TD1KYjn4s0mQUQQYwT4knkcTJ9DWhalZIaF3ZgVN6EkBKUhEJCoZnzH/9LT8ywB27mCrxDWXcmom4LtPnhedfmEUbL5S+P/NT8h83/z+/Z56IHGOKdGto9LVxzujZhwObhE6Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jFb5jbGf; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C9LCPTe9"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e9a920e73so229486e87.2
-        for <linux-cxl@vger.kernel.org>; Wed, 03 Jul 2024 23:17:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720073869; x=1720678669; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8d10IcpAzYXVQD0pAR7omm2jt8iBA4V9wulewUkpkms=;
-        b=C9LCPTe9m6JbYnp5x92c/RXbX1Z4Pmmh3BWdlhqjvi6lEcB4y7zDc1OH8jwD7OXKPP
-         vBvVMQHuOvEkGN92Ch/mPxpxPSt1jUSZ6eM0UxHadAFydVScsS0BeyHZBbjmqNLFriJG
-         imNmbZKYNHhNWJEM3VIOwSrLhaOKISRG4jog+7PmQCzU9zuWxcS3A2u+xpswgzwUEnHu
-         U6WRINNtY6/UCELU+jtPKxl3YTwu9QbCBwZu+n0kFE6zv1rSwpr2pfQPCPh0cf0GvnfO
-         k1jRbY0bXOGcCjtRf7BQEAlkzo6G4lpL6biUx5MEHCqybqILByEsapNkHgiSkJhsdOk6
-         DaLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720073869; x=1720678669;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8d10IcpAzYXVQD0pAR7omm2jt8iBA4V9wulewUkpkms=;
-        b=hqzQWB55+N+NvH+Wd3vaI7qJQP1k9aY7T9EEKQFrdJIBF0sMvNftVof7lhxMwDA3yD
-         ILtgZX6K3VNgvQgbfS6KhcuM34HT9iRVa3ozR7nBgtSra/yuHbajLm4XHz3fNDvy3eJ0
-         qVwEsq67zQxtDw4t2Rd2mVyk0wFDK/9RKK8Xt0D+wvIwCTrdz8MvuwTCWVoYp6XIv3wA
-         HpqFqweq4DO92/ljbjcnzeQp/dL40PvkSSUAmYqo4ONn2byeckjfUWVLufqA9FofoD3E
-         FMPIdsZoEW9ybw4N67/EBy+s8BBVhYqCXlQ66VyB83FozYrtJQKhIZ1CrBiYW4pgb62q
-         17pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtBe7Jn3JxdgYrD3kZvL0XXWsWmAlvnlaPmdgEx8Ak7PuEbfJBcfUGkhj0jZEVXodtojlfp+ukmh3yDGP+RsNCrst+p4HmJTAT
-X-Gm-Message-State: AOJu0YxzJSZo2mh9wn28j1/UEKz9ovSozQ6QstW0djJE9aF5Y0zXE2tx
-	PIZkyQlNymK20j8cqzQ5mPLJq/re6GqguyTmLWnM6U0GxFIEzK9y2z5RjKPdA+Y=
-X-Google-Smtp-Source: AGHT+IFnh2TC8Yqy/VZnGtLWvX37QrA6MmWBGG/L7hu0wumlnpmcoDWqzSqqakjWAqpjZkXNURA5wQ==
-X-Received: by 2002:ac2:5b83:0:b0:52e:9ba5:9853 with SMTP id 2adb3069b0e04-52ea062de5cmr381853e87.24.1720073867264;
-        Wed, 03 Jul 2024 23:17:47 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2519b6sm10184105e9.33.2024.07.03.23.17.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jul 2024 23:17:46 -0700 (PDT)
-Message-ID: <1b45247a-1dcf-46a2-9270-4fd3a0b0da22@linaro.org>
-Date: Thu, 4 Jul 2024 08:17:44 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jFb5jbGf"
+X-Envelope-To: jonathan.cameron@huawei.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720078029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MO3v9qXHL/MIw9o3oD6srViY/P9B0uYsNO58dPExvA4=;
+	b=jFb5jbGfH9erZMINJ+BCsgQn5f6gL9dND+JMjrjyWElj6FAYb4Eu3LLSHNucAimwOxxuxh
+	13FaH9rhoa6WKlcQhnoxfKt0zbZxYSLwqkhuMze6WjAW7fE4izUk9dLYpfzY02znLre12B
+	1eRijWfILU6qEmm5BDU/ptzX1W/un8c=
+X-Envelope-To: ying.huang@intel.com
+X-Envelope-To: gourry.memverge@gmail.com
+X-Envelope-To: aneesh.kumar@linux.ibm.com
+X-Envelope-To: mhocko@suse.com
+X-Envelope-To: tj@kernel.org
+X-Envelope-To: john@jagalactic.com
+X-Envelope-To: emirakhur@micron.com
+X-Envelope-To: vtavarespetr@micron.com
+X-Envelope-To: ravis.opensrc@micron.com
+X-Envelope-To: apopple@nvidia.com
+X-Envelope-To: sthanneeru@micron.com
+X-Envelope-To: sj@kernel.org
+X-Envelope-To: rafael@kernel.org
+X-Envelope-To: lenb@kernel.org
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: dave.jiang@intel.com
+X-Envelope-To: dan.j.williams@intel.com
+X-Envelope-To: jonathan.cameron@huawei.com
+X-Envelope-To: horen.chuang@linux.dev
+X-Envelope-To: linux-acpi@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: horenc@vt.edu
+X-Envelope-To: horenchuang@bytedance.com
+X-Envelope-To: horenchuang@gmail.com
+X-Envelope-To: linux-cxl@vger.kernel.org
+X-Envelope-To: qemu-devel@nongnu.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
+To: "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	"Gregory Price" <gourry.memverge@gmail.com>,
+	aneesh.kumar@linux.ibm.com,
+	mhocko@suse.com,
+	tj@kernel.org,
+	john@jagalactic.com,
+	"Eishan Mirakhur" <emirakhur@micron.com>,
+	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
+	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
+	"Alistair Popple" <apopple@nvidia.com>,
+	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
+	"SeongJae Park" <sj@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+	linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org
+Subject: [PATCH v3] memory tier: consolidate the initialization of memory tiers
+Date: Thu,  4 Jul 2024 07:26:44 +0000
+Message-Id: <20240704072646.437579-1-horen.chuang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/acpi: simplify returning pointer without cleanup
-To: Dan Williams <dan.j.williams@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240703083055.95864-1-krzysztof.kozlowski@linaro.org>
- <668577378cd31_4fe7f29441@dwillia2-xfh.jf.intel.com.notmuch>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <668577378cd31_4fe7f29441@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 03/07/2024 18:07, Dan Williams wrote:
-> Krzysztof Kozlowski wrote:
->> Use 'return_ptr' helper for returning a pointer without cleanup for
->> shorter code.
-> 
-> No, thank you. For CXL, I am not a fan of macros with hidden 'return'
-> statements.
+The current memory tier initialization process is distributed across
+two different functions, memory_tier_init() and memory_tier_late_init().
+This design is hard to maintain. Thus, this patch is proposed to reduce
+the possible code paths by consolidating different
+initialization patches into one.
 
-Sure, maybe the macro is not helpful in the first place.
+The earlier discussion with Jonathan and Ying is listed here:
+https://lore.kernel.org/lkml/20240405150244.00004b49@Huawei.com/
 
-Best regards,
-Krzysztof
+If we want to put these two initializations together, they must be
+placed together in the later function. Because only at that time,
+the HMAT information will be ready, adist between nodes can be
+calculated, and memory tiering can be established based on the adist.
+So we position the initialization at memory_tier_init() to the
+memory_tier_late_init() call. Moreover, it's natural to keep
+memory_tier initialization in drivers at device_initcall() level.
+
+If we simply move the set_node_memory_tier() from memory_tier_init()
+to late_initcall(), it will result in HMAT not registering
+the mt_adistance_algorithm callback function, because
+set_node_memory_tier() is not performed during the memory tiering
+initialization phase, leading to a lack of correct default_dram
+information.
+
+Therefore, we introduced a nodemask to pass the information of the
+default DRAM nodes. The reason for not choosing to reuse
+default_dram_type->nodes is that it is not clean enough. So in the end,
+we use a __initdata variable, which is a variable that is released once
+initialization is complete, including both CPU and memory nodes for HMAT
+to iterate through.
+
+This patchset is based on commits <cf93be18fa1b> ("memory tier: create
+CPUless memory tiers after obtaining HMAT info") and
+<a72a30af550c> ("memory tier: dax/kmem: introduce an abstract layer for
+finding, allocating, and putting memory types"):
+[0/2] https://lkml.kernel.org/r/20240405000707.2670063-1-horenchuang@bytedance.com
+[1/2] https://lkml.kernel.org/r/20240405000707.2670063-2-horenchuang@bytedance.com
+[1/2] https://lkml.kernel.org/r/20240405000707.2670063-3-horenchuang@bytedance.com
+
+Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+- v3:
+ * Combine the cover letter and the patch.
+ * Remove extern default_dram_type
+ * Remove __initdata in a extern variable
+ * Roll back coding style, fix comment description
+- v2:
+ Thanks to Huang, Ying's and Andrew's comments
+ * Add a cover letter
+ * Add Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ * Add get/put_online_mems() protection in memory_tier_late_init()
+ * If memtype is set, skip initializing its node
+ * Remove redundant code/comments or rewrite code in a cleaner manner
+ * https://lore.kernel.org/all/20240628060925.303309-1-horen.chuang@linux.dev/
+- v1:
+ * https://lore.kernel.org/all/20240621044833.3953055-1-horen.chuang@linux.dev/
+
+- Open to discussion:
+ * Should we use `continue` or `break` if set_node_memory_tier() fails in
+   memory_tier_late_init()? I've changed it to `continue` in v3.
+ * Compute the default_dram_nodes mask in hmat when needed? Currently,
+   it still remains in memory-tiers.c
+ * Instead of using guard(mutex)(), use mutex_lock() as it was to make a
+   cleaner diff?
+
+Thanks,
+Ho-Ren (Jack) Chuang
+
+ drivers/acpi/numa/hmat.c     |  5 +---
+ include/linux/memory-tiers.h |  2 ++
+ mm/memory-tiers.c            | 54 ++++++++++++++----------------------
+ 3 files changed, 24 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 2c8ccc91ebe6..a2f9e7a4b479 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
+ 	struct memory_target *target;
+ 	struct access_coordinate *attrs;
+ 
+-	if (!default_dram_type)
+-		return -EIO;
+-
+-	for_each_node_mask(nid, default_dram_type->nodes) {
++	for_each_node_mask(nid, default_dram_nodes) {
+ 		pxm = node_to_pxm(nid);
+ 		target = find_mem_target(pxm);
+ 		if (!target)
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 0d70788558f4..0dc0cf2863e2 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -38,6 +38,7 @@ struct access_coordinate;
+ #ifdef CONFIG_NUMA
+ extern bool numa_demotion_enabled;
+ extern struct memory_dev_type *default_dram_type;
++extern nodemask_t default_dram_nodes;
+ struct memory_dev_type *alloc_memory_type(int adistance);
+ void put_memory_type(struct memory_dev_type *memtype);
+ void init_node_memory_type(int node, struct memory_dev_type *default_type);
+@@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
+ 
+ #define numa_demotion_enabled	false
+ #define default_dram_type	NULL
++#define default_dram_nodes	NODE_MASK_NONE
+ /*
+  * CONFIG_NUMA implementation returns non NULL error.
+  */
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index 6632102bd5c9..4775b3a3dabe 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
+ static LIST_HEAD(default_memory_types);
+ static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+ struct memory_dev_type *default_dram_type;
++nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
+ 
+ static const struct bus_type memory_tier_subsys = {
+ 	.name = "memory_tiering",
+@@ -671,28 +672,35 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
+ 
+ /*
+  * This is invoked via `late_initcall()` to initialize memory tiers for
+- * CPU-less memory nodes after driver initialization, which is
+- * expected to provide `adistance` algorithms.
++ * memory nodes, both with and without CPUs. After the initialization of
++ * firmware and devices, adistance algorithms are expected to be provided.
+  */
+ static int __init memory_tier_late_init(void)
+ {
+ 	int nid;
++	struct memory_tier *memtier;
+ 
++	get_online_mems();
+ 	guard(mutex)(&memory_tier_lock);
++
++	/* Assign each uninitialized N_MEMORY node to a memory tier. */
+ 	for_each_node_state(nid, N_MEMORY) {
+ 		/*
+-		 * Some device drivers may have initialized memory tiers
+-		 * between `memory_tier_init()` and `memory_tier_late_init()`,
+-		 * potentially bringing online memory nodes and
+-		 * configuring memory tiers. Exclude them here.
++		 * Some device drivers may have initialized
++		 * memory tiers, potentially bringing memory nodes
++		 * online and configuring memory tiers.
++		 * Exclude them here.
+ 		 */
+ 		if (node_memory_types[nid].memtype)
+ 			continue;
+ 
+-		set_node_memory_tier(nid);
++		memtier = set_node_memory_tier(nid);
++		if (IS_ERR(memtier))
++			continue;
+ 	}
+ 
+ 	establish_demotion_targets();
++	put_online_mems();
+ 
+ 	return 0;
+ }
+@@ -875,8 +883,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
+ 
+ static int __init memory_tier_init(void)
+ {
+-	int ret, node;
+-	struct memory_tier *memtier;
++	int ret;
+ 
+ 	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
+ 	if (ret)
+@@ -887,7 +894,8 @@ static int __init memory_tier_init(void)
+ 				GFP_KERNEL);
+ 	WARN_ON(!node_demotion);
+ #endif
+-	mutex_lock(&memory_tier_lock);
++
++	guard(mutex)(&memory_tier_lock);
+ 	/*
+ 	 * For now we can have 4 faster memory tiers with smaller adistance
+ 	 * than default DRAM tier.
+@@ -897,29 +905,9 @@ static int __init memory_tier_init(void)
+ 	if (IS_ERR(default_dram_type))
+ 		panic("%s() failed to allocate default DRAM tier\n", __func__);
+ 
+-	/*
+-	 * Look at all the existing N_MEMORY nodes and add them to
+-	 * default memory tier or to a tier if we already have memory
+-	 * types assigned.
+-	 */
+-	for_each_node_state(node, N_MEMORY) {
+-		if (!node_state(node, N_CPU))
+-			/*
+-			 * Defer memory tier initialization on
+-			 * CPUless numa nodes. These will be initialized
+-			 * after firmware and devices are initialized.
+-			 */
+-			continue;
+-
+-		memtier = set_node_memory_tier(node);
+-		if (IS_ERR(memtier))
+-			/*
+-			 * Continue with memtiers we are able to setup
+-			 */
+-			break;
+-	}
+-	establish_demotion_targets();
+-	mutex_unlock(&memory_tier_lock);
++	/* Record nodes with memory and CPU to set default DRAM performance. */
++	nodes_and(default_dram_nodes, node_states[N_MEMORY],
++		  node_states[N_CPU]);
+ 
+ 	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
+ 	return 0;
+-- 
+Ho-Ren (Jack) Chuang
 
