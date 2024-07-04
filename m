@@ -1,42 +1,51 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295962F37;
-	Thu,  4 Jul 2024 14:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D905E1A0711;
+	Thu,  4 Jul 2024 16:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720101839; cv=none; b=fwJL8Mo9R3MYPb3i2MEQJRwy2dpl5VAfL3tenKIFZNNAAroVcpfG0KSpJgWF2Kpg2xduUPrQBXg7PMuc6UURqKx9PWAX09AFphtc4+QPUefN0iLx4eEIGu2AjcZrUz9rDAb0YCF7r0pNrUFAwg3uL/rwKgCZdm2r16sA9nm1fbk=
+	t=1720109683; cv=none; b=mTCqV4bxJz8PgC46V1LTfz59CIyKc960njwWGAGq7LkW9GYYTPV0ETcQExKxgphumAXtJoRvo/zXZVCdM1y28SG+p5bM73afg/FSMt/ggPGAQWqAOoVdCkD1Z+V3sUBnCLtLemUFipMHFLVxTxXUlDWEZDPGdoRw3hD0T/stoYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720101839; c=relaxed/simple;
-	bh=MVrBqmDA7ChNGeqJBxGNH6p6O8C0qTo2ty+kIsd+RT4=;
+	s=arc-20240116; t=1720109683; c=relaxed/simple;
+	bh=uQlL+tNagVhJLhuj/Y2eOdtJ8ILwyDcKD+TbGWQFVhg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvhW2aEbukvsNeK2+VDQPS8fqNW5mDjpN1yXsyLwMRd7P8aeeW1Jfm5SZ/64nTQu5dU1RzR6FgwWGH7MXQhaPhXc9WjN83kfY/176hbPFdFZat2Hs/JSrfORejcgsx7Mpxkv+N+F3lSUSvvLF9VLlzewjyexgEWehwjNrosiP7Q=
+	 MIME-Version:Content-Type; b=SO9NV7HTvZFHnCjQl/44DvisUSAJuVb1cKfJlVhfI6a+375HSt5BrARntHFhp2XAu+VmOFDC1wjJNKxva6jE/bvV+gepN9WVrhrRb8I/DeWJvS/pWa2/9xMKITu9Zti7NI5pB5i2BzBiPUidOUqs8r7KnuslQ+5yKgK43Ijeq+E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFJJ52gxsz6K65F;
-	Thu,  4 Jul 2024 22:02:45 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFM9x2ZyNz6K9KL;
+	Fri,  5 Jul 2024 00:12:37 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id DAF781400D1;
-	Thu,  4 Jul 2024 22:03:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B806C140D1A;
+	Fri,  5 Jul 2024 00:14:31 +0800 (CST)
 Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
- 2024 15:03:45 +0100
-Date: Thu, 4 Jul 2024 15:03:44 +0100
+ 2024 17:14:15 +0100
+Date: Thu, 4 Jul 2024 17:14:13 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v6 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240704150344.00007f46@Huawei.com>
-In-Reply-To: <6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240701215020.3813275-1-dave.jiang@intel.com>
-	<20240701215020.3813275-3-dave.jiang@intel.com>
-	<6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
+To: Bjorn Helgaas <helgaas@kernel.org>, <linuxarm@huawei.com>,
+	<linuxarm@huawei.com>
+CC: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
+ CXL PMUs (and aer)
+Message-ID: <20240704171340.00004294@huawei.com>
+In-Reply-To: <20240605213910.00003034@huawei.com>
+References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
+	<20240605180409.GA520888@bhelgaas>
+	<20240605204428.00001cb2@Huawei.com>
+	<20240605213910.00003034@huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -47,141 +56,198 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 3 Jul 2024 17:58:35 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, 6 Jun 2024 13:57:56 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> Dave Jiang wrote:
-> > The current bandwidth calculation aggregates all the targets. This simple
-> > method does not take into account where multiple targets sharing under
-> > a switch where the aggregated bandwidth can be less or greater than the
-> > upstream link of the switch.
-> > 
-> > To accurately account for the shared upstream uplink cases, a new update
-> > function is introduced by walking from the leaves to the root of the
-> > hierarchy and adjust the bandwidth in the process. This process is done
-> > when all the targets for a region are present but before the final values
-> > are send to the HMAT handling code cached access_coordinate targets.
-> > 
-> > The original perf calculation path was kept to calculate the latency
-> > performance data that does not require the shared link consideration.
-> > The shared upstream link calculation is done as a second pass when all
-> > the endpoints have arrived.  
+> On Wed, 5 Jun 2024 20:44:28 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 > 
-> The complication of this algorithm really wants some Documentation for
-> regression testing it. Can you include some "how to test this" or how it
-> was tested notes?
+> > On Wed, 5 Jun 2024 13:04:09 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >   
+> > > On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:    
+> > > > Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
+> > > > Switch USP and DSPs.
+> > > > 
+> > > > The final patch moving AER to the aux bus is in the category of 'why
+> > > > not try this' rather than something I feel is a particularly good idea.
+> > > > I would like to get opinions on the various ways to avoid the double bus
+> > > > situation introduced here. Some comments on other options for those existing
+> > > > 'pci_express' bus devices at the end of this cover letter.
+> > > > 
+> > > > The primary problem this RFC tries to solve is providing a means to
+> > > > register the CXL PMUs found in devices which will be bound to the
+> > > > PCIe portdrv. The proposed solution is to avoid the limitations of
+> > > > the existing pcie service driver approach by bolting on support
+> > > > for devices registered on the auxiliary_bus.
+> > > > 
+> > > > Background
+> > > > ==========
+> > > > 
+> > > > When the CXL PMU driver was added, only the instances found in CXL type 3
+> > > > memory devices (end points) were supported. These PMUs also occur in CXL
+> > > > root ports, and CXL switch upstream and downstream ports.  Adding
+> > > > support for these was deliberately left for future work because theses
+> > > > ports are all bound to the pcie portdrv via the appropriate PCI class
+> > > > code.  Whilst some CXL support of functionality on RP and Switch Ports
+> > > > is handled by the CXL port driver, that is not bound to the PCIe device,
+> > > > is only instantiated as part of enumerating endpoints, and cannot use
+> > > > interrupts because those are in control of the PCIe portdrv. A PMU with
+> > > > out interrupts would be unfortunate so a different solution is needed.
+> > > > 
+> > > > Requirements
+> > > > ============
+> > > > 
+> > > > - Register multiple CXL PMUs (CPMUs) per portdrv instance.      
+> > > 
+> > > What resources do CPMUs use?  BARs?  Config space registers in PCI
+> > > Capabilities?  Interrupts?  Are any of these resources
+> > > device-specific, or are they all defined by the CXL specs?    
+> > 
+> > Uses the whole lot (there isn't a toy out there that the CXL
+> > spec doesn't like to play with :). Discoverable via a CXL defined DVSEC
+> > in config space. Registers are in a BAR (discovered from the DVSEC).
+> > MSI/MSIX, number in a register in the BAR.
+> > 
+> > All the basic infrastructure and some performance event definitions
+> > are in the CXL spec.  It's all discoverable. 
+> > 
+> > The events are even tagged with VID so a vendor can implement
+> > someone else's definitions or those coming from another specification.
+> > A bunch of CXL VID tagged ones exist for protocol events etc.
+> > 
+> > It's a really nice general spec.  If I were more of a dreamer and had
+> > the time I'd try to get PCI-SIG to adopt it and we'd finally have
+> > something generic for PCI performance counting.
+> >   
+> > > 
+> > > The "device" is a nice way to package those up and manage ownership
+> > > since there are often interdependencies.
+> > > 
+> > > I wish portdrv was directly implemented as part of the PCI core,
+> > > without binding to the device as a "driver".  We handle some other
+> > > pieces of functionality that way, e.g., the PCIe Capability itself,
+> > > PM, VPD, MSI/MSI-X,     
+> > 
+> > Understood, though I would guess that even then there needs to
+> > be a pci_driver binding to the class code to actually query all those
+> > facilities and get interrupts registered etc.  
+> 
+> Or are you thinking we can make something like the following work
+> (even when we can't do dynamic msix)?
+> 
+> Core bring up facilities and interrupt etc.  That includes bus master
+> so msi/msix can be issued (which makes me nervous - putting aside other
+> concerns as IIRC there are drivers where you have to be careful to
+> tweak registers to ensure you don't get a storm of traffic when you
+> hit bus master enable.
+> 
+> Specific driver may bind later - everything keeps running until 
+> the specific driver calls pci_alloc_irq_vectors(), then we have to disable all
+> interrupts for core managed services, change the number of vectors and
+> then move them to wherever they end up before starting them again.
+> We have to do the similar in the unwind path.
+> 
+> I can see we might make something like that work, but I'd be very worried
+> we'd hit devices that didn't behave correctly under this flow even if
+> there aren't any specification caused problems.
+> 
+> Even if this is a possible long term plan, maybe we don't want to try and
+> get there in one hop?
 
-Hi Dave, Dan,
+In the spirit of 'conference driven' development. I'm planning to put in a
+proposal for a discussion of portdrv issues for the LPC VFIO/IOMMU/PCI uconf
+having prototyped some options.  A key bit will be agreeing what the
+actual requirements are and how we might meet them.
 
-FWIW I finally managed to get a flexible QEMU setup for testing this
-and it looks almost prefect wrt to reported BW. Note I can't
-do 2 layer switches without fixing some other assumptions in
-the CXL QEMU emualation (shortcuts we took a long time ago) +
-I'm hoping your maths is good for any thing that isn't 1 or 2
-devices at each level.
-
-I've got one case that isn't giving right answer.
-
-Imagine system with a CPU Die between two IO dies (each in their
-own NUMA nodes - typically because there are multiple CPU dies
-and we care about the latencies / bandwidths from each to the
-Host bridges).  If we always interleaved then we would just
-make one magic GP node, but we might not for reasons of what else
-is below those ports.  Equal distance, opposite direction on
-interconnect so separate BW. Topology wise this isn't a fairy tale
-btw so we should make it work.  Also can easily end up with this
-if people are doing cross socket interleave.
-
-   _____________  ____________  ____________
-  |             ||            ||            |
-  |   IO Die    ||   CPU Die  ||   IO Die   |
-  |             ||            ||            |
-  |   HB A      ||            ||   HB B     |
-  |_____________||____________||____________|
-        |                            |
-
-etc.
-
-ACPI / Discoverable components.
-
-
-                 _____________
-                |             |
-                |  CPU node 0 |
-                |_____________|
-                  |         |
-         _________|___    __|__________
-        |             |  |             |
-        |   GP Node 1 |  | GP Node 2   |
-        |             |  |             |
-        |   HB A      |  | HB B        |
-        |_____________|  |_____________|
-              |                |
-             RPX              RPY
-              |                |
-            Type3J           Type3K
-
-If the minimum BW is the sum of the CPU0 to GP Node 1 and GP Node 2
-I'm currently seeing it reported as just one of those (so half what
-is expected) I've checked the ACPI tables and it's all correct.
-
-I'm not 100% sure why yet but suspect it's the bit under the comment
-/*
- * Take the min of the downstream aggregated bandwidth and the
- * GP provided bandwidth if the parent is CXL Root.
- */
-In case of multiple GP Nodes being involved, need to aggregate
-across them and I don't think that is currently done.
-
-Tests run.
-
-CPU and GI (GI nearer to GP so access 0 and access 1 are slightly different)
-
-GP/ 1HB / 2RP / 2Direct Connect Type 3
-- Minimum BW at GP
-- Minimum BW as Sum of Links.
-- Minimum BW as Sum of read / write at devices.
-
-2GP in one numa node/ 2HB/ 1RP per HB / 1 type 3 per RP. (should be same as above)
-- Minimum BW at GP
-
-2GP in separate numa node - rest as previous
-- Minimum BW at GP (should be double previous one as no sharing of the HMAT
-  described part - but it's not :()
-
-GP / 1HB / 1RP / Shared Link / SW USP / 2 SW DSP / Separate Link / Type 3.
-- Minimum BW at GP
-- Minimum BW on the shared link.
-- Minimum BW on the sum of the SSLBIS values for the switch.
-- Minimum BW as sum of separate links.
-- Minimum BW on the type 3.
-
-I'll post the patches that add x-speed and x-width controls to
-the various downstream ends of links (QEMU link negotiation is
-minimalist to put it lightly and if your USP is no capable
-will merrily let it appear to train with the DSP end faster
-than the USP end) and also sets all the USPs to
-support up to 64G / 16X
-
-To actually poke the corners I'm hacking the CDAT tables
-as don't have properties to control of those bandwidths yet.
-I guess that needs to be part of a series intended to allow
-general testing of this functionality.
-
-I've only been focusing on BW in these tests given that's
-what matters here.
-
-The algorithm you have to make this work is complex so
-I'd definitely be keen on hearing if you think it could
-be simplified - took me a while to figure out what was
-going on in this series.
+If it's not selected I'd still be keen to discuss whatever state things
+are in come September - I'll just have a less busy summer ;)
 
 Jonathan
 
-p.s. Anyone like writing tests?  Lots more tests we could
-write for this.  I'll include some docs in cover letter for
-the QEMU RFC.
+> 
+> Jonathan
+> 
+> >   
+> > >     
+> > > > - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
+> > > >   covers any PCI-Express port.
+> > > > - PCI MSI / MSIX message based interrupts must be registered by one driver -
+> > > >   in this case it's the portdrv.      
+> > > 
+> > > The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
+> > > is a really annoying part of PCIe because bridges may have a BAR or
+> > > two and are allowed to have device-specific endpoint-like behavior, so
+> > > we may have to figure out how to share those interrupts between the
+> > > PCIe-architected stuff and the device-specific stuff.  I guess that's
+> > > messy no matter whether portdrv is its own separate driver or it's
+> > > integrated into the core.    
+> > 
+> > Yes, the interrupt stuff is the tricky bit.  I think whatever happens
+> > we end up with a pci device driver that binds to the class code.
+> > Maybe we have a way to switch in alternative drivers if that turns
+> > out to be necessary.
+> > 
+> > Trying to actually manage the interrupts in the core (without a driver binding)
+> > is really tricky.  Maybe we'll get there one day, but I don't think
+> > it is the first target.  We should however make sure not to do anything
+> > that would make that harder such as adding ABI in the wrong places.
+> >   
+> > >     
+> > > > Side question.  Does anyone care if /sys/bus/pci_express goes away?
+> > > > - in theory it's ABI, but in practice it provides very little
+> > > >   actual ABI.      
+> > > 
+> > > I would *love* to get rid of /sys/bus/pci_express, but I don't know
+> > > what, if anything, would break if we removed it.    
+> > 
+> > Could try it and see who screams ;) or fake it via symlinks or similar
+> > (under a suitable 'legacy' config variable that is on by default.)
+> > 
+> > How about I try the following steps:
+> > 0) An experiment to make sure I can fake /sys/bus/pci_express so it's
+> >    at least hard to tell there aren't real 'devices' registered on that
+> >    bus. Even if we decide not to do that long term, we need to know
+> >    we can if a regressions report comes in.
+> >    Worst comes to the worse we can register fake devices that fake
+> >    drivers bind to that don't do anything beyond fill in sysfs.
+> > 1) Replace the bus/pci_express with direct functional calls in
+> >    portdrv.  
+> >    I'm thinking we have a few calls for each:
+> >     bool aer_present(struct pci_dev *pci);
+> >     aer_query_max_message_num() etc - used so we can do the msi/msix bit.
+> >     aer_initialize()
+> >     aer_finalize()
+> >     aer_runtime_suspend() (where relevant for particular services)
+> > 
+> >    at the cost of a few less loops and a few more explicit calls
+> >    that should simplify how things fit together.
+> > 
+> > 2) Fix up anything in all that functionality that really cares
+> >    that they are part of portdrv.  Not sure yet, but we may need
+> >    a few additional things in struct pci_dev, or a to pass in some
+> >    state storage in the ae_initialize() call or similar.
+> > 3) Consider moving that functionality to a more appropriate place.
+> >    At this point we'll have services that can be used by other
+> >    drivers - though I'm not yet sure how useful that will be.
+> > 4) End up with a small pci_driver that binds to pci devices with
+> >    the appropriate class code. Should even be able to make it
+> >    a module.
+> > 5) (maybe do this first) carry my auxiliary_bus + cpmu stuff
+> >    and allow adopting other similar cases alongside the other
+> >    parts.
+> > 
+> > Of course, no statements on 'when' I'll make progress if this seems
+> > like a step forwards, but probably sometime this summer. Maybe sooner.
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > Bjorn    
+> > 
+> >   
+> 
 
