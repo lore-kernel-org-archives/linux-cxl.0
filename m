@@ -1,198 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC5F2F32
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 01:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720054846; cv=fail; b=ZRSfurefC1Rq1p9tEhR0ynEPh4Rmp4QenMPcX5rqKN33y54rZdMhWMxV+nPQxDsPKq8TytHkDTx3gLSV4FSE5vql6b/WLmG4ZHGnnV7L1SYLDNQ1qPblJG7CUHg8mSvZCT4r+GH/plbdgLsrpTKyb+dfkV5nsdf/ZqVYYxdeJI4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720054846; c=relaxed/simple;
-	bh=y+MTFzftvdkA3t/vxZXXHVhOAuSVhDR5tyya/CS7vxo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gUgksL4yweZ42HU4jNmYKdjf11f8ExYKPEac/X6zGxdSNGPbyOJ4oYZkTsJVUaHkLI1bqb0KcElAoN3Xt2N58i6cJnj4Wr8RqTuTijq6eOPLMWSr8AI0InFkM60e7ITajoPoqHc1TdsPiBkZRFXJUllYO8AwFZnk1oY2c2hPZuc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDv8I+gK; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA682F32
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 01:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720054983; cv=none; b=OZwIEBijaguJBW6XMhxiFeIK973CEqqPJvz3QKUOtm8fEFlkSqP/KgG5wyqJmXiT7CA3TgmkYv0coz9LH0ihraRlHnT+GUtkR2vzSNdZSlRkiyXPkFAZD+8CJPTap0tVWNNVn6GuUmPmYnoMQT2sWpdBO09t3E9E4vHWDn61C3M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720054983; c=relaxed/simple;
+	bh=2ggi9rU13mE+4ncBcAw6CnTjbXBlGVnylHl9JXkzMaY=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=eiOWP0e1GDirhkWXjI7ehhWMyFmGZ/Yb/15y9992oPVl6WokzRs5pls5oIxiIsj/s2GDXwuzJyOdppzLgYFlenJQNEiuaoJqsZHTRF4kMCX1WP6blbdQXvm6fEAq00ASLMj7oYzxiGKUA8x2sfbRT655F9qRMUPI6rucPi589os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZ0KEfqP; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDv8I+gK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZ0KEfqP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720054845; x=1751590845;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=y+MTFzftvdkA3t/vxZXXHVhOAuSVhDR5tyya/CS7vxo=;
-  b=GDv8I+gK4O6e+NTJwTWRmATAJPjVAcl0Nx3SBuZLMzxoq93x1jeKV2uk
-   F0kXzSI/BmUQUf1jhUUz8p28cq/p5SR/mNLC1kBfP7GgtSBjHuot1qu99
-   0o+Ij6UoFv9bdLdCCPtzsORA4Cyt4PSFNrGlrYEwiOKYlouUGhYYVewh6
-   T6eSAw9Zww+KnmMC20veceWfdB9Kv+Gs9LEnkPII9Qj5+e0w1qW7ziv2r
-   4rIRXblg0YocA1hWN49TJRZ+v3P4CUxaOg7RO+Oyhde29KkCy7qXWJS3i
-   hNhKCi5HoyA4YuJ28bIuDebuWmVlQyaL3SX2aBpU0wm8Awm8dcwps+oBy
-   Q==;
-X-CSE-ConnectionGUID: 05mG/vUMTDqpOznseh+pBw==
-X-CSE-MsgGUID: MXR4F+RLRY+1/CW9BvkT7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="27915255"
+  t=1720054981; x=1751590981;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2ggi9rU13mE+4ncBcAw6CnTjbXBlGVnylHl9JXkzMaY=;
+  b=WZ0KEfqPhs1V8ikzNBt9+a2EgxdbSLbTaEi+fUNjaiONETZ/25v19i2w
+   2nsfiqzfrJIveX0AFdqzc3bB3fH/jD56pxNnRjP6lIDiAfI/wz6BN+EwH
+   1drCjRYu/09CDqO8kcJLm18kN5Q30kG6nNdxYUwtQeC9tJ+sxdPmt/wwZ
+   ZOVBwkpv5A5itFfvxz4AqZ0Pc5oE1Ux+va4fjLRROlKY1aYxy8ry25wAU
+   4HFmsKnZlNd/HvXq3RageguVp/yFFP8Zzeugm3qeHrzxLAu4hrjBZ6LIE
+   jW61jBh7EX04pfJRupZKkLdZFMsjGrbSH/pyeNiCZKeYRKt+dqx+u7DVu
+   w==;
+X-CSE-ConnectionGUID: o+g8TO0CTQKQNa4Vb3uF4g==
+X-CSE-MsgGUID: duiqplqrT2+l7lbI9HTqSQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17449031"
 X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="27915255"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 18:00:45 -0700
-X-CSE-ConnectionGUID: L65TWUfYTumnlhhO/w6ibg==
-X-CSE-MsgGUID: SjYgElnVRAm0/RM2X+uBQg==
+   d="scan'208";a="17449031"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 18:03:00 -0700
+X-CSE-ConnectionGUID: 5Jd8X60AR0SbKfuKhfA3KQ==
+X-CSE-MsgGUID: dRYl8QjjRwOkm/Sg00gFOA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="51296140"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jul 2024 18:00:45 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 3 Jul 2024 18:00:43 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 3 Jul 2024 18:00:43 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 3 Jul 2024 18:00:43 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 3 Jul 2024 18:00:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mifQGn2HWzX5HGbXTWvU30DOQQoMokTd37nMq1fh/WtqOcFiLw5X5RuARRyIEqWiU5bnwRgBr7NR3nyze8tQ4t4cQxIdJ9jI45HiOe7xQhEaqO62Uas9S5uqIYqtJ51Vk4jumt8FNh0UpkC8Bp5CH0MOQXcna5HU2TaBPKSetfx1n0+9XOku7XVhBiaxu8y7HmQI/+NXMdNH7Re6zUVJhLROtvsRCfJqGba3SFdXuloBAN6XsqeFQ415/50W2uCDx8+s/FIEBRngcF4nzbDpvvBJpISIVb0tuqkACc2Z05j9sUtCAykirxtAFr8IwBxfTxGCiC2Eup9c/2ykYGnDVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jlwAVOqQafTBTnUXLT+XI7g1cMXNVg42vT534zFkKIs=;
- b=EgcrvLGJ3C7QKgPMoB4ZKnmDbS6yri1OhYo/EMgaIvVwYIppa9gEwCD1P2sLPE/QU0dTRaBtXaVmcz6rbbfuuz8NIBYO+z862YbbXPHGT9tOXkruOhLB4KPDBrHP2w/LLBpwgguDv+G7ruUHpLOQQ4YEh3SRubvkF1zdkunOjowH3qqGd5tAd/yzr8AM20JdZNoBGqviHhOfVQx0HXo7NdEXRZ00YdvIenu2CsH2A6dRbklZY9Cx4pKKwUEtKzR9XeUFxQSPso2hTJ7SMJdUGGRUdGQimjD4VhBZLMsxAdWg7Kg0XY4ZSwvWOEgppg9fUwjwKSM5jm9HBZ5NJLVsgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB7641.namprd11.prod.outlook.com (2603:10b6:510:27b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Thu, 4 Jul
- 2024 01:00:41 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7719.022; Thu, 4 Jul 2024
- 01:00:41 +0000
-Date: Wed, 3 Jul 2024 18:00:39 -0700
+   d="scan'208";a="50751742"
+Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.111.244])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 18:03:00 -0700
+Subject: [PATCH v2] Documentation: CXL Maturity Map
 From: Dan Williams <dan.j.williams@intel.com>
-To: <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny
-	<ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Return EBUSY on inject poison limit reached
-Message-ID: <6685f4371c47c_4fe7f294b4@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1720052137.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1720052137.git.alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR03CA0083.namprd03.prod.outlook.com
- (2603:10b6:303:b6::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+To: linux-cxl@vger.kernel.org
+Cc: Adam Manzanares <a.manzanares@samsung.com>, dave.jiang@intel.com,
+ Jonathan.Cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com
+Date: Wed, 03 Jul 2024 18:01:35 -0700
+Message-ID: <172005486862.2048248.6668794717827294862.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7641:EE_
-X-MS-Office365-Filtering-Correlation-Id: 061ef65f-f755-4cc1-ca03-08dc9bc4b9c8
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?cLwC6XWtS5FyFQH2g6u0HlnqCavd3H0ynihs+GR2BWQXnvf76sk7c67Ew0Er?=
- =?us-ascii?Q?yf+M3CkQEz1cEXEfMvRGg+KYOko7fB+shIa3/9q5V8wIZExXHkebvFqEi5rj?=
- =?us-ascii?Q?3LbTX8xKxq+lEV0547t++Fo8K2UI4qweS1/FhpcVYeJzSvbd5D8mGNnIllbF?=
- =?us-ascii?Q?BDo+ZW90Sp1eEiVCJPDfh1fQ2f9Lo11Nm0tjx8rEZtx2swIlcRhGaMtBOs6J?=
- =?us-ascii?Q?rB0wow+mADge69hCTbXA41gUAjOQW6TD83RhSMSzOUufxSXlrBPxGC8KROeU?=
- =?us-ascii?Q?n0l5n3+ZhohlUabZVs0FJypa+OviyUMz4AIdfSa3lhz02uMspoNBzzBlESEE?=
- =?us-ascii?Q?k+XY4E8QH7N6cCsuskh6kVxTRMggZS1niDfyco9f0W5epI7vyMH2Agm5p90a?=
- =?us-ascii?Q?4Zc7p+FQ4g3mXdd2Xt5PJ4C+Ija6QQnAA4+xTtEZs4R1VQZthwKhZH8ls4Hi?=
- =?us-ascii?Q?ob0Hnm/kl+fhP09Ky0TeikiFZtnJswerz9hF43Rv6JphNy02WSXcInwxYXlY?=
- =?us-ascii?Q?LmksirVGChRu8p252PmhzebJq2C9BZKpzKR3QEFSfX/Z9I9DyWsXX36PfFSf?=
- =?us-ascii?Q?xtKSBRxfT4A2EpHayN9hTFklHddUZCMjSgIModpI+2k/wPDqBUoe3Bn8Btnz?=
- =?us-ascii?Q?X+Bxgw6E35BTvB/1SE1LW9GkrQNcezMzm/I/KmL/IlGz0KxAWFsHRkWK5W00?=
- =?us-ascii?Q?T8dEpkqd4+Rg6LmUWw8aFn4h8TqS5MxXlSUVlNkRyGxGJjbIGSPMnKuz8XxB?=
- =?us-ascii?Q?346GS8ylz/T2rZITUjuSIrE24J+2dbx860jMmQkgBHib7H3ovHXUPfTzaRVN?=
- =?us-ascii?Q?SLdbgAZ+Jp5TyqI8LJznW7G80hanUPjZzRgDod4Qf/NQHHDSoEgS4+nX+twQ?=
- =?us-ascii?Q?xzgNSR8Gg2EfM1iMkjwyKlTtLeX0FSeyRPjRflJ1FGL/MM6l373HF1WYLNHf?=
- =?us-ascii?Q?Ffz51+UU1XYTAg8Oxy61IUrtjWosg9h8IsMuhtMGXyFXRTfSDwFPc/uxHq7U?=
- =?us-ascii?Q?f4TPPf7C4vK8u+szV2OSGCAH4JRaXtHFFZ/yLivQ9A39LOvxK1KCDrFSc0wL?=
- =?us-ascii?Q?wpwXabaSKYGV3JsMPab6FmyibeipU2Kv1BV2c5rHJdC7OqjqMpTEc0nm8ku3?=
- =?us-ascii?Q?4G1JE0N3zde+f3W+nb2KB7dBoeIg9NjAVynyO46ysIFtxAdUGvIRX9zb/6o1?=
- =?us-ascii?Q?vP3WSllwVsHr1UGMjvg65MPw9cBGytgfOM5IjY4ok4QnZTyr9mDnCirsuZ1M?=
- =?us-ascii?Q?LR7GgQ9MvvpkEmX6yLGxyllL5F4DJOQZLfx03ZG2WJ6R35AlW001cTTDupcc?=
- =?us-ascii?Q?a/iHn4AsAcsWPeY/SPrIEKDcbxFOoTZiVWPLFcddh/QEpw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sA4CEmvAJ2+k2D8oeKS6/+f4oRXNPAtmlI8cGjuFHXW96/Rf0nS5RIU8mS76?=
- =?us-ascii?Q?gRZnOMUdtb6f/trh9Ycm2mLaGEYeVdTy1tflWaQnvAShWbgrgW/q1mhBZJJj?=
- =?us-ascii?Q?zsEfPxy5Pj3nSwD+ApWdBHzn7V7OPuOBD3+ojfSQOdzkEkGgoWCD2ykZp/df?=
- =?us-ascii?Q?vNAotWaYdcNqqFPqkFGAUNPJcAjzYNmU/h4gP22sVVE2YeH+N20X6AQzlQbs?=
- =?us-ascii?Q?X3ZG/LX3oftTgUXDOv2a9oMWHViwA3G/rbHeqDBSLURlfgoToq9Che0PY29R?=
- =?us-ascii?Q?poPvuMTwnKrwL1oHnXRLi49FaJTYYXZIM+2upNZlO9KRlJl4JgWoAPb+tTzR?=
- =?us-ascii?Q?HLl0HjwhgRWsfx5e0ewxYwSK7hy4DqUYykUgOg26zaJpfSg1lJRjqawna/Ry?=
- =?us-ascii?Q?cJhesI0C6exdB7PjK8LVlaur3JrRxEi1wZh8rqaB2sOy/RHEODRlC2TX8ssA?=
- =?us-ascii?Q?SaNbfV3RtqOTngDrZYKDaYWTYCOM/Qu0X5jqHiVSzGwOPThBqWODgQbJOdRl?=
- =?us-ascii?Q?fG7tn1dqxxoeJXlcPLMIkQnv26Cmf9cU9ObqMcy5PoLgng07KxqilPhGjiey?=
- =?us-ascii?Q?3ZOJNJ1SIyBVrv+YMJtZdYi5dP57B0lZIDR2WjZwLRG6FVo1n51EOpvyR6Wf?=
- =?us-ascii?Q?wmdKKSJhblT3Zd6PBYsaRI8jIpf0DyaxGPmU+4mBOFTlooo4hgFN6PPo+Ql7?=
- =?us-ascii?Q?6d3FOReMmBC2ovy0Ue3oM7XdhB49UNCw6iNptqD0D6J+a1xS2v2wKthCxlFA?=
- =?us-ascii?Q?Adr4xv9/3J//Rcj8iyQR2IN2+XFOQamgp44/BtA7A+Lm5H9jtY5Q2BKPW1o1?=
- =?us-ascii?Q?eEYzglPvOF68jrO0mxzDHk15Yog2gJB5wpoAEuRFdLmUHBKINw48xHJlbrza?=
- =?us-ascii?Q?EPAYmzU55CQGnp0mZd1TUid++xistqUbjWoZ8kXG9KcqN+XPf77fzmdO5pUX?=
- =?us-ascii?Q?u8dh2f3KA3oFoZQGmeXnHWwgej09cR8EjrEpR1qWEMwphidA+tNDrutEAHsD?=
- =?us-ascii?Q?EHntaLkkhpxyvrvDmL4NiXZeBF4bW5s/9A8HBxFjD8CapsYKHKPNsfok+lMW?=
- =?us-ascii?Q?lDEs+jNjqyAKiYaKevoTHT69DTPP+YLj0TGpBX6WAxVXe1dq1MT/SPuzHQfh?=
- =?us-ascii?Q?BujTop4YOHSk/DdBliHp7uMJDdtZH8jyp42nU4CoolNb9XdyptvHRkCIPJS4?=
- =?us-ascii?Q?DOFPw7paKctVBapxfCDsFM7IhUX9CkfcEM8UV/PWyXhlAN+anPRCsiJcA6An?=
- =?us-ascii?Q?Knnv3vm4ykzzJVoa8Y2YWLRRb03HTVayOAnO8uwlxAcc60f1cvL5211Gh/fQ?=
- =?us-ascii?Q?SvTSWCHmFXPEu34AEtNg2YivOs3KPw3NUBxBW2AvJg458/9E0BffmPZPt92V?=
- =?us-ascii?Q?xURXp2mwn37GWe4uGsZyhiF0y8tzN3vSh2AcZ3mSDecyZkiCx+B2A7GtBzSe?=
- =?us-ascii?Q?OV2gJasbC/Pb1jAjcOuxeXWJJDBh1VUz0My0MyW4mQ4hpVwPZgB2xnlqw/uB?=
- =?us-ascii?Q?aNpOsf4cTR/Z+RtM562UwgUiRwElYVk7D8Rhz206+qKa80i04WdCHGUArcNH?=
- =?us-ascii?Q?lxY9h8HpKRY5cDqsM92z4iwPwGTU6eWR0V8y3uJtXMwv3Ki/cY3uc9SnH0NC?=
- =?us-ascii?Q?SQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 061ef65f-f755-4cc1-ca03-08dc9bc4b9c8
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 01:00:41.3387
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YYlQdzK7l8dxwFdOnQ12mxCdMQ46W2ZEjOk48ceG/Eo5QeUyTvqoxA2D+TlbmAfAabcF6FbYe5SOJRNEMQ3UDJJ5P5v1CB1MNI8F6CyfN6M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7641
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> Validation users are asking for the ability to recognize when
-> their injection testing has hit the limit of the device.
-> 
-> Change the drivers error code for this failure to EBUSY and do
-> the same in the cxl-test mock of inject poison.
-> 
-> 
-> Alison Schofield (2):
->   cxl/memdev: Replace ENXIO with EBUSY for inject poison limit reached
->   cxl/test: Replace ENXIO with EBUSY for inject poison limit reached
-> 
->  Documentation/ABI/testing/debugfs-cxl |  7 ++++---
->  drivers/cxl/cxlmem.h                  |  2 +-
->  tools/testing/cxl/test/mem.c          | 13 ++++++-------
->  3 files changed, 11 insertions(+), 11 deletions(-)
+Provide a survey of the work-in-progress maturity (implementation
+status) of various aspects of the CXL subsystem.
 
-Looks good to me:
+Clarify that in addition to ongoing upkeep relative to specification
+updates, there are some long running themes in the driver that respond
+to the discovery of new corner cases (bugs) and new use cases (feature
+extensions).
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+The primary audience is distribution maintainers, but it also serves as
+a guide for kernel developers to understand what aspects of the CXL
+subsystem need more help. It is a landing page to document ongoing
+progress, and a guide to discern exposure to work-in-progress features.
+
+Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v1 [1]:
+* Add Scan Media (Alison)
+* Add Fabrics (Jonathan)
+* Add CPU arch dependencies for performance enumeration (Jonathan)
+* Update status of "Shared Link" performance enumeration (Jonathan)
+* Add PPR. Sparing, BiST (Jonathan)
+* Add PMU (Jonathan)
+* Clarify pooling vs sharing (Jonathan)
+* Grammar fixups (Adam)
+
+[1]: http://lore.kernel.org/171659842954.843002.8140957498380360424.stgit@dwillia2-xfh.jf.intel.com
+
+ Documentation/driver-api/cxl/index.rst        |    2 
+ Documentation/driver-api/cxl/maturity-map.rst |  202 +++++++++++++++++++++++++
+ MAINTAINERS                                   |    1 
+ 3 files changed, 205 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/maturity-map.rst
+
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index 036e49553542..12b82725d322 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -9,4 +9,6 @@ Compute Express Link
+ 
+    memory-devices
+ 
++   maturity-map
++
+ .. only::  subproject and html
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+new file mode 100644
+index 000000000000..df8e2ac2a320
+--- /dev/null
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -0,0 +1,202 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++===========================================
++Compute Express Link Subsystem Maturity Map
++===========================================
++
++The Linux CXL subsystem tracks the dynamic `CXL specification
++<https://computeexpresslink.org/cxl-specification-landing-page>`_ that
++continues to respond to new use cases with new features, capability
++updates and fixes. At any given point some aspects of the subsystem are
++more mature than others. While the periodic pull requests summarize the
++`work being incorporated each merge window
++<https://lore.kernel.org/linux-cxl/?q=s%3APULL+s%3ACXL+tc%3Atorvalds+NOT+s%3ARe>`_,
++those do not always convey progress relative to a starting point and a
++future end goal.
++
++What follows is a coarse breakdown of the subsystem's major
++responsibilities along with a maturity score. The expectation is that
++the change-history of this document provides an overview summary of the
++subsystem maturation over time.
++
++The maturity scores are:
++
++- [3] Mature: Work in this area is complete and no changes on the horizon.
++  Note that this score can regress from one kernel release to the next
++  based on new test results or end user reports.
++
++- [2] Stabilizing: Major functionality operational, common cases are
++  mature, but known corner cases are still a work in progress.
++
++- [1] Initial: Capability that has exited the Proof of Concept phase, but
++  may still have significant gaps to close and fixes to apply as real
++  world testing occurs.
++
++- [0] Known gap: Feature is on a medium to long term horizon to
++  implement.  If the specification has a feature that does not even have
++  a '0' score in this document, there is a good chance that no one in
++  the linux-cxl@vger.kernel.org community has started to look at it.
++
++- X: Out of scope for kernel enabling, or kernel enabling not required
++
++Feature and Capabilities
++========================
++
++Enumeration / Provisioning
++--------------------------
++All of the fundamental enumeration an object model of the subsystem is
++in place, but there are several corner cases that are pending closure.
++
++
++* [2] CXL Window Enumeration
++
++  * [0] :ref:`Extended-linear memory-side cache <extended-linear>`
++  * [0] Low Memory-hole
++  * [0] Hetero-interleave
++
++* [2] Switch Enumeration
++
++  * [0] CXL register enumeration link-up dependency
++
++* [2] HDM Decoder Configuration
++
++  * [0] Decoder target and granularity constraints
++
++* [2] Performance enumeration
++
++  * [3] Endpoint CDAT
++  * [3] Switch CDAT
++  * [1] CDAT to Core-mm integration
++
++    * [1] x86
++    * [0] Arm64
++    * [0] All other arch.
++
++  * [0] Shared link
++
++* [2] Hotplug
++  (see CXL Window Enumeration)
++
++  * [0] Handle Soft Reserved conflicts
++
++* [0] :ref:`RCH link status <rch-link-status>`
++* [0] Fabrics / G-FAM (chapter 7)
++* [0] Global Access Endpoint
++
++
++RAS
++---
++In many ways CXL can be seen as a standardization of what would normally
++be handled by custom EDAC drivers. The open development here is
++mainly caused by the enumeration corner cases above.
++
++* [3] Component events (OS)
++* [2] Component events (FFM)
++* [1] Endpoint protocol errors (OS)
++* [1] Endpoint protocol errors (FFM)
++* [0] Switch protocol errors (OS)
++* [1] Switch protocol errors (FFM)
++* [2] DPA->HPA Address translation
++
++    * [1] XOR Interleave translation
++      (see CXL Window Enumeration)
++
++* [1] Memory Failure coordination
++* [0] Scrub control
++* [2] ACPI error injection EINJ
++
++  * [0] EINJ v2
++  * [X] Compliance DOE
++
++* [2] Native error injection
++* [3] RCH error handling
++* [1] VH error handling
++* [0] PPR
++* [0] Sparing
++* [0] Device built in test
++
++
++Mailbox commands
++----------------
++
++* [3] Firmware update
++* [3] Health / Alerts
++* [1] :ref:`Background commands <background-commands>`
++* [3] Sanitization
++* [3] Security commands
++* [3] RAW Command Debug Passthrough
++* [0] CEL-only-validation Passthrough
++* [0] Switch CCI
++* [3] Timestamp
++* [1] PMEM labels
++* [0] PMEM GPF / Dirty Shutdown
++* [0] Scan Media
++
++PMU
++---
++* [1] Type 3 PMU
++* [0] Switch USP/ DSP, Root Port
++
++Security
++--------
++
++* [X] CXL Trusted Execution Environment Security Protocol (TSP)
++* [X] CXL IDE (subsumed by TSP)
++
++Memory-pooling
++--------------
++
++* [1] Hotplug of LDs (via PCI hotplug)
++* [0] Dynamic Capacity Device (DCD) Support
++
++Multi-host sharing
++------------------
++
++* [0] Hardware coherent shared memory
++* [0] Software managed coherency shared memory
++
++Multi-host memory
++-----------------
++
++* [0] Dynamic Capacity Device Support
++* [0] Sharing
++
++Accelerator
++-----------
++
++* [0] Accelerator memory enumeration HDM-D (CXL 1.1/2.0 Type-2)
++* [0] Accelerator memory enumeration HDM-DB (CXL 3.0 Type-2)
++* [0] CXL.cache 68b (CXL 2.0)
++* [0] CXL.cache 256b Cache IDs (CXL 3.0)
++
++User Flow Support
++-----------------
++
++* [0] HPA->DPA Address translation (need xormaps export solution)
++
++Details
++=======
++
++.. _extended-linear:
++
++* **Extended-linear memory-side cache**: An HMAT proposal to enumerate the presence of a
++  memory-side cache where the cache capacity extends the SRAT address
++  range capacity. `See the ECN
++  <https://lore.kernel.org/linux-cxl/6650e4f835a0e_195e294a8@dwillia2-mobl3.amr.corp.intel.com.notmuch/>`_
++  for more details:
++
++.. _rch-link-status:
++
++* **RCH Link Status**: RCH (Restricted CXL Host) topologies, end up
++  hiding some standard registers like PCIe Link Status / Capabilities in
++  the CXL RCRB (Root Complex Register Block).
++
++.. _background-commands:
++
++* **Background commands**: The CXL background command mechanism is
++  awkward as the single slot is monopolized potentially indefinitely by
++  various commands. A `cancel on conflict
++  <http://lore.kernel.org/r/66035c2e8ba17_770232948b@dwillia2-xfh.jf.intel.com.notmuch>`_
++  facility is needed to make sure the kernel can ensure forward progress
++  of priority commands.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ca8f35dfe03..cebb492a4b85 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5484,6 +5484,7 @@ M:	Ira Weiny <ira.weiny@intel.com>
+ M:	Dan Williams <dan.j.williams@intel.com>
+ L:	linux-cxl@vger.kernel.org
+ S:	Maintained
++F:	Documentation/driver-api/cxl
+ F:	drivers/cxl/
+ F:	include/linux/einj-cxl.h
+ F:	include/linux/cxl-event.h
+
