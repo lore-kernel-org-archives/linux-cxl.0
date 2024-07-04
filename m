@@ -1,327 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA682F32
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 01:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9E2F23
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 06:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720054983; cv=none; b=OZwIEBijaguJBW6XMhxiFeIK973CEqqPJvz3QKUOtm8fEFlkSqP/KgG5wyqJmXiT7CA3TgmkYv0coz9LH0ihraRlHnT+GUtkR2vzSNdZSlRkiyXPkFAZD+8CJPTap0tVWNNVn6GuUmPmYnoMQT2sWpdBO09t3E9E4vHWDn61C3M=
+	t=1720073873; cv=none; b=QLuYJAoGrHAqPfdDh3mz+DeHKeOtlb3l92txf77SWbH4y6GXGxuJDHiB+LSJjdeDRe6NIUm5lPgNwC6CuoWwa/6UgyEX9W6J8bqqWpz8mBzXsR+SxG83rVkoR+oHxA5lY1Hsb+X2VH1mEw22fuot7jqEZ8e0wYCuQIs/4CFejtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720054983; c=relaxed/simple;
-	bh=2ggi9rU13mE+4ncBcAw6CnTjbXBlGVnylHl9JXkzMaY=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=eiOWP0e1GDirhkWXjI7ehhWMyFmGZ/Yb/15y9992oPVl6WokzRs5pls5oIxiIsj/s2GDXwuzJyOdppzLgYFlenJQNEiuaoJqsZHTRF4kMCX1WP6blbdQXvm6fEAq00ASLMj7oYzxiGKUA8x2sfbRT655F9qRMUPI6rucPi589os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZ0KEfqP; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720073873; c=relaxed/simple;
+	bh=tIoIFIuVtGWmcIxY4zT7aQym89zCBej5DDe7j7nrZh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CkIPpZufXmk73yJJVCVJ3cX+RJubIrYKa5Kyogy3A1LkH++XHS9u8GqeNa8wycoGLEL14xZKaomaDjb2kdgg/0jr3AO4S/c6xljja94EJEsOADMrdex6ZiRCI9A9aUVhnBKCh5YpqTTuS/fbz+nJSkmOHNTfaIu4oROOQr4os8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C9LCPTe9; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZ0KEfqP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720054981; x=1751590981;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2ggi9rU13mE+4ncBcAw6CnTjbXBlGVnylHl9JXkzMaY=;
-  b=WZ0KEfqPhs1V8ikzNBt9+a2EgxdbSLbTaEi+fUNjaiONETZ/25v19i2w
-   2nsfiqzfrJIveX0AFdqzc3bB3fH/jD56pxNnRjP6lIDiAfI/wz6BN+EwH
-   1drCjRYu/09CDqO8kcJLm18kN5Q30kG6nNdxYUwtQeC9tJ+sxdPmt/wwZ
-   ZOVBwkpv5A5itFfvxz4AqZ0Pc5oE1Ux+va4fjLRROlKY1aYxy8ry25wAU
-   4HFmsKnZlNd/HvXq3RageguVp/yFFP8Zzeugm3qeHrzxLAu4hrjBZ6LIE
-   jW61jBh7EX04pfJRupZKkLdZFMsjGrbSH/pyeNiCZKeYRKt+dqx+u7DVu
-   w==;
-X-CSE-ConnectionGUID: o+g8TO0CTQKQNa4Vb3uF4g==
-X-CSE-MsgGUID: duiqplqrT2+l7lbI9HTqSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17449031"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17449031"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 18:03:00 -0700
-X-CSE-ConnectionGUID: 5Jd8X60AR0SbKfuKhfA3KQ==
-X-CSE-MsgGUID: dRYl8QjjRwOkm/Sg00gFOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="50751742"
-Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.111.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 18:03:00 -0700
-Subject: [PATCH v2] Documentation: CXL Maturity Map
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Adam Manzanares <a.manzanares@samsung.com>, dave.jiang@intel.com,
- Jonathan.Cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com
-Date: Wed, 03 Jul 2024 18:01:35 -0700
-Message-ID: <172005486862.2048248.6668794717827294862.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C9LCPTe9"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e9a920e73so229486e87.2
+        for <linux-cxl@vger.kernel.org>; Wed, 03 Jul 2024 23:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720073869; x=1720678669; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8d10IcpAzYXVQD0pAR7omm2jt8iBA4V9wulewUkpkms=;
+        b=C9LCPTe9m6JbYnp5x92c/RXbX1Z4Pmmh3BWdlhqjvi6lEcB4y7zDc1OH8jwD7OXKPP
+         vBvVMQHuOvEkGN92Ch/mPxpxPSt1jUSZ6eM0UxHadAFydVScsS0BeyHZBbjmqNLFriJG
+         imNmbZKYNHhNWJEM3VIOwSrLhaOKISRG4jog+7PmQCzU9zuWxcS3A2u+xpswgzwUEnHu
+         U6WRINNtY6/UCELU+jtPKxl3YTwu9QbCBwZu+n0kFE6zv1rSwpr2pfQPCPh0cf0GvnfO
+         k1jRbY0bXOGcCjtRf7BQEAlkzo6G4lpL6biUx5MEHCqybqILByEsapNkHgiSkJhsdOk6
+         DaLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720073869; x=1720678669;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8d10IcpAzYXVQD0pAR7omm2jt8iBA4V9wulewUkpkms=;
+        b=hqzQWB55+N+NvH+Wd3vaI7qJQP1k9aY7T9EEKQFrdJIBF0sMvNftVof7lhxMwDA3yD
+         ILtgZX6K3VNgvQgbfS6KhcuM34HT9iRVa3ozR7nBgtSra/yuHbajLm4XHz3fNDvy3eJ0
+         qVwEsq67zQxtDw4t2Rd2mVyk0wFDK/9RKK8Xt0D+wvIwCTrdz8MvuwTCWVoYp6XIv3wA
+         HpqFqweq4DO92/ljbjcnzeQp/dL40PvkSSUAmYqo4ONn2byeckjfUWVLufqA9FofoD3E
+         FMPIdsZoEW9ybw4N67/EBy+s8BBVhYqCXlQ66VyB83FozYrtJQKhIZ1CrBiYW4pgb62q
+         17pg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtBe7Jn3JxdgYrD3kZvL0XXWsWmAlvnlaPmdgEx8Ak7PuEbfJBcfUGkhj0jZEVXodtojlfp+ukmh3yDGP+RsNCrst+p4HmJTAT
+X-Gm-Message-State: AOJu0YxzJSZo2mh9wn28j1/UEKz9ovSozQ6QstW0djJE9aF5Y0zXE2tx
+	PIZkyQlNymK20j8cqzQ5mPLJq/re6GqguyTmLWnM6U0GxFIEzK9y2z5RjKPdA+Y=
+X-Google-Smtp-Source: AGHT+IFnh2TC8Yqy/VZnGtLWvX37QrA6MmWBGG/L7hu0wumlnpmcoDWqzSqqakjWAqpjZkXNURA5wQ==
+X-Received: by 2002:ac2:5b83:0:b0:52e:9ba5:9853 with SMTP id 2adb3069b0e04-52ea062de5cmr381853e87.24.1720073867264;
+        Wed, 03 Jul 2024 23:17:47 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2519b6sm10184105e9.33.2024.07.03.23.17.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jul 2024 23:17:46 -0700 (PDT)
+Message-ID: <1b45247a-1dcf-46a2-9270-4fd3a0b0da22@linaro.org>
+Date: Thu, 4 Jul 2024 08:17:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/acpi: simplify returning pointer without cleanup
+To: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240703083055.95864-1-krzysztof.kozlowski@linaro.org>
+ <668577378cd31_4fe7f29441@dwillia2-xfh.jf.intel.com.notmuch>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <668577378cd31_4fe7f29441@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Provide a survey of the work-in-progress maturity (implementation
-status) of various aspects of the CXL subsystem.
+On 03/07/2024 18:07, Dan Williams wrote:
+> Krzysztof Kozlowski wrote:
+>> Use 'return_ptr' helper for returning a pointer without cleanup for
+>> shorter code.
+> 
+> No, thank you. For CXL, I am not a fan of macros with hidden 'return'
+> statements.
 
-Clarify that in addition to ongoing upkeep relative to specification
-updates, there are some long running themes in the driver that respond
-to the discovery of new corner cases (bugs) and new use cases (feature
-extensions).
+Sure, maybe the macro is not helpful in the first place.
 
-The primary audience is distribution maintainers, but it also serves as
-a guide for kernel developers to understand what aspects of the CXL
-subsystem need more help. It is a landing page to document ongoing
-progress, and a guide to discern exposure to work-in-progress features.
-
-Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v1 [1]:
-* Add Scan Media (Alison)
-* Add Fabrics (Jonathan)
-* Add CPU arch dependencies for performance enumeration (Jonathan)
-* Update status of "Shared Link" performance enumeration (Jonathan)
-* Add PPR. Sparing, BiST (Jonathan)
-* Add PMU (Jonathan)
-* Clarify pooling vs sharing (Jonathan)
-* Grammar fixups (Adam)
-
-[1]: http://lore.kernel.org/171659842954.843002.8140957498380360424.stgit@dwillia2-xfh.jf.intel.com
-
- Documentation/driver-api/cxl/index.rst        |    2 
- Documentation/driver-api/cxl/maturity-map.rst |  202 +++++++++++++++++++++++++
- MAINTAINERS                                   |    1 
- 3 files changed, 205 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/maturity-map.rst
-
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index 036e49553542..12b82725d322 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -9,4 +9,6 @@ Compute Express Link
- 
-    memory-devices
- 
-+   maturity-map
-+
- .. only::  subproject and html
-diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
-new file mode 100644
-index 000000000000..df8e2ac2a320
---- /dev/null
-+++ b/Documentation/driver-api/cxl/maturity-map.rst
-@@ -0,0 +1,202 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
-+
-+===========================================
-+Compute Express Link Subsystem Maturity Map
-+===========================================
-+
-+The Linux CXL subsystem tracks the dynamic `CXL specification
-+<https://computeexpresslink.org/cxl-specification-landing-page>`_ that
-+continues to respond to new use cases with new features, capability
-+updates and fixes. At any given point some aspects of the subsystem are
-+more mature than others. While the periodic pull requests summarize the
-+`work being incorporated each merge window
-+<https://lore.kernel.org/linux-cxl/?q=s%3APULL+s%3ACXL+tc%3Atorvalds+NOT+s%3ARe>`_,
-+those do not always convey progress relative to a starting point and a
-+future end goal.
-+
-+What follows is a coarse breakdown of the subsystem's major
-+responsibilities along with a maturity score. The expectation is that
-+the change-history of this document provides an overview summary of the
-+subsystem maturation over time.
-+
-+The maturity scores are:
-+
-+- [3] Mature: Work in this area is complete and no changes on the horizon.
-+  Note that this score can regress from one kernel release to the next
-+  based on new test results or end user reports.
-+
-+- [2] Stabilizing: Major functionality operational, common cases are
-+  mature, but known corner cases are still a work in progress.
-+
-+- [1] Initial: Capability that has exited the Proof of Concept phase, but
-+  may still have significant gaps to close and fixes to apply as real
-+  world testing occurs.
-+
-+- [0] Known gap: Feature is on a medium to long term horizon to
-+  implement.  If the specification has a feature that does not even have
-+  a '0' score in this document, there is a good chance that no one in
-+  the linux-cxl@vger.kernel.org community has started to look at it.
-+
-+- X: Out of scope for kernel enabling, or kernel enabling not required
-+
-+Feature and Capabilities
-+========================
-+
-+Enumeration / Provisioning
-+--------------------------
-+All of the fundamental enumeration an object model of the subsystem is
-+in place, but there are several corner cases that are pending closure.
-+
-+
-+* [2] CXL Window Enumeration
-+
-+  * [0] :ref:`Extended-linear memory-side cache <extended-linear>`
-+  * [0] Low Memory-hole
-+  * [0] Hetero-interleave
-+
-+* [2] Switch Enumeration
-+
-+  * [0] CXL register enumeration link-up dependency
-+
-+* [2] HDM Decoder Configuration
-+
-+  * [0] Decoder target and granularity constraints
-+
-+* [2] Performance enumeration
-+
-+  * [3] Endpoint CDAT
-+  * [3] Switch CDAT
-+  * [1] CDAT to Core-mm integration
-+
-+    * [1] x86
-+    * [0] Arm64
-+    * [0] All other arch.
-+
-+  * [0] Shared link
-+
-+* [2] Hotplug
-+  (see CXL Window Enumeration)
-+
-+  * [0] Handle Soft Reserved conflicts
-+
-+* [0] :ref:`RCH link status <rch-link-status>`
-+* [0] Fabrics / G-FAM (chapter 7)
-+* [0] Global Access Endpoint
-+
-+
-+RAS
-+---
-+In many ways CXL can be seen as a standardization of what would normally
-+be handled by custom EDAC drivers. The open development here is
-+mainly caused by the enumeration corner cases above.
-+
-+* [3] Component events (OS)
-+* [2] Component events (FFM)
-+* [1] Endpoint protocol errors (OS)
-+* [1] Endpoint protocol errors (FFM)
-+* [0] Switch protocol errors (OS)
-+* [1] Switch protocol errors (FFM)
-+* [2] DPA->HPA Address translation
-+
-+    * [1] XOR Interleave translation
-+      (see CXL Window Enumeration)
-+
-+* [1] Memory Failure coordination
-+* [0] Scrub control
-+* [2] ACPI error injection EINJ
-+
-+  * [0] EINJ v2
-+  * [X] Compliance DOE
-+
-+* [2] Native error injection
-+* [3] RCH error handling
-+* [1] VH error handling
-+* [0] PPR
-+* [0] Sparing
-+* [0] Device built in test
-+
-+
-+Mailbox commands
-+----------------
-+
-+* [3] Firmware update
-+* [3] Health / Alerts
-+* [1] :ref:`Background commands <background-commands>`
-+* [3] Sanitization
-+* [3] Security commands
-+* [3] RAW Command Debug Passthrough
-+* [0] CEL-only-validation Passthrough
-+* [0] Switch CCI
-+* [3] Timestamp
-+* [1] PMEM labels
-+* [0] PMEM GPF / Dirty Shutdown
-+* [0] Scan Media
-+
-+PMU
-+---
-+* [1] Type 3 PMU
-+* [0] Switch USP/ DSP, Root Port
-+
-+Security
-+--------
-+
-+* [X] CXL Trusted Execution Environment Security Protocol (TSP)
-+* [X] CXL IDE (subsumed by TSP)
-+
-+Memory-pooling
-+--------------
-+
-+* [1] Hotplug of LDs (via PCI hotplug)
-+* [0] Dynamic Capacity Device (DCD) Support
-+
-+Multi-host sharing
-+------------------
-+
-+* [0] Hardware coherent shared memory
-+* [0] Software managed coherency shared memory
-+
-+Multi-host memory
-+-----------------
-+
-+* [0] Dynamic Capacity Device Support
-+* [0] Sharing
-+
-+Accelerator
-+-----------
-+
-+* [0] Accelerator memory enumeration HDM-D (CXL 1.1/2.0 Type-2)
-+* [0] Accelerator memory enumeration HDM-DB (CXL 3.0 Type-2)
-+* [0] CXL.cache 68b (CXL 2.0)
-+* [0] CXL.cache 256b Cache IDs (CXL 3.0)
-+
-+User Flow Support
-+-----------------
-+
-+* [0] HPA->DPA Address translation (need xormaps export solution)
-+
-+Details
-+=======
-+
-+.. _extended-linear:
-+
-+* **Extended-linear memory-side cache**: An HMAT proposal to enumerate the presence of a
-+  memory-side cache where the cache capacity extends the SRAT address
-+  range capacity. `See the ECN
-+  <https://lore.kernel.org/linux-cxl/6650e4f835a0e_195e294a8@dwillia2-mobl3.amr.corp.intel.com.notmuch/>`_
-+  for more details:
-+
-+.. _rch-link-status:
-+
-+* **RCH Link Status**: RCH (Restricted CXL Host) topologies, end up
-+  hiding some standard registers like PCIe Link Status / Capabilities in
-+  the CXL RCRB (Root Complex Register Block).
-+
-+.. _background-commands:
-+
-+* **Background commands**: The CXL background command mechanism is
-+  awkward as the single slot is monopolized potentially indefinitely by
-+  various commands. A `cancel on conflict
-+  <http://lore.kernel.org/r/66035c2e8ba17_770232948b@dwillia2-xfh.jf.intel.com.notmuch>`_
-+  facility is needed to make sure the kernel can ensure forward progress
-+  of priority commands.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ca8f35dfe03..cebb492a4b85 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5484,6 +5484,7 @@ M:	Ira Weiny <ira.weiny@intel.com>
- M:	Dan Williams <dan.j.williams@intel.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
-+F:	Documentation/driver-api/cxl
- F:	drivers/cxl/
- F:	include/linux/einj-cxl.h
- F:	include/linux/cxl-event.h
+Best regards,
+Krzysztof
 
