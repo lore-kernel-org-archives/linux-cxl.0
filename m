@@ -1,303 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F41D1A0B07;
-	Thu,  4 Jul 2024 07:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF4F1A3BBD
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jul 2024 08:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720079870; cv=none; b=Nsm7x9r5OPirq5rGXt0B8KwhTvaPmjcIEeYRnSiGv2v9k/YyufUC1H00U5vvZSOJ8lQ/Lf+xQb1fesVZ8njciIlVtUmt304Ufmc9uPT2yOwJH2PW78aAPKOWxVoBy98FuNrLjk+h8+dx5imfIUo2l677YtvzOlv0+eU4ZD6nrRk=
+	t=1720080881; cv=none; b=hO1JPryhhxulladOW5KnuxuCQIWv6KK0MIaux9wUblenJZf/dozlWsT9aon8x6px5pmV6psVLbAhdLjr5tkKBw6RkmbXIE+ffcLYCEYwZtW0wcmT0llbdRXf3IM3oPS2NxGfNvY6Uxn5Mz2/Ke19N1HnZLrpE9XKkIsuhDZXEw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720079870; c=relaxed/simple;
-	bh=+nlEZm29FY0yjN+onfpT9t6OyQeU1Kx/26D0jQA3u8A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=faXjqVm4ZR8j4lU5jG0x0Iq0bTuu+AnhKtt5NBT2bX7TSFywNmG18tH+SaXKBL6H/6Ut86zkPBuKl6ABsHREyK0jThCLfg5+iXsH3skG6VUJ2OFxoElWmo5qBHVBhoy7tSx2jNkS3YpucI1KH+VQE8mXjnYRIwr/zTIMuwU1Bqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QI/uwYg7; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720080881; c=relaxed/simple;
+	bh=E6cTkbd+Uo1iApHe8+Rt8ePbTv4sO/QA5EfP/gLEz+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bf6P7kdFYx1r2+7M0djEf8bhRgLBVjX5/0aDcR8sPSl0unC5hiuKy6rDlh8Oc9BeqWaEg94RTGgvZZa47Iazy/kyQnK0kORumc8h1NZKIEf+ezY6ueWuvA47f5P3QLhH632F2kUNe+Ao6zscUSX0ESpd7vC0A9kqSObgHMXmzog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LnmuG3pS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QI/uwYg7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720079869; x=1751615869;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=+nlEZm29FY0yjN+onfpT9t6OyQeU1Kx/26D0jQA3u8A=;
-  b=QI/uwYg7OCntj5U4EMgxSUXaQpYxdy8HlwrsfeWou4OQtpmxYi57Ie7L
-   eXl2qiDtZHBuD0v1fB+M4G9Co1oeAvynVQudC6tfu+Qr3fR0JFpZBm/Z+
-   n4HQHuYBXaDiVc7im/4zlqKXTQCyiI6o3iMPXPhhNwS6HlQPvXmPVqkcd
-   O7ZCwGvL+HV+/qhrq6jJ+UqJIXX5BjOxCfn0TVZ96UHxJVt2ZZSvTl+Ub
-   5SYuIFFIz/NIOasJ6TYZsuoI1jSkLK4TBGcbyFbf0vEaZOCKSogyDoXef
-   MsFq+KIYm/Of2FQ/OVAU/Fsc9b4d/Aex7pEZlbO2t5KD0Vh3aK6x3LIue
-   w==;
-X-CSE-ConnectionGUID: 1oJzSpjJS9S9ZP0x2wfN6g==
-X-CSE-MsgGUID: jJaxD5VXRtSVjyfrJv/l0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17484922"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17484922"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:57:40 -0700
-X-CSE-ConnectionGUID: zZCUaaKITQGaYrZ7AzctJg==
-X-CSE-MsgGUID: 2WZ2FzmURDqjsTbeqHjHSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="46932661"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 00:57:30 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
-Cc: "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,  "Gregory Price"
- <gourry.memverge@gmail.com>,  aneesh.kumar@linux.ibm.com,
-  mhocko@suse.com,  tj@kernel.org,  john@jagalactic.com,  "Eishan Mirakhur"
- <emirakhur@micron.com>,  "Vinicius Tavares Petrucci"
- <vtavarespetr@micron.com>,  "Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
-  "Alistair Popple" <apopple@nvidia.com>,  "Srinivasulu Thanneeru"
- <sthanneeru@micron.com>,  "SeongJae Park" <sj@kernel.org>,  "Rafael J.
- Wysocki" <rafael@kernel.org>,  Len Brown <lenb@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Dave Jiang <dave.jiang@intel.com>,  Dan
- Williams <dan.j.williams@intel.com>,  linux-acpi@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  "Ho-Ren (Jack)
- Chuang" <horenc@vt.edu>,  "Ho-Ren (Jack) Chuang"
- <horenchuang@bytedance.com>,  "Ho-Ren (Jack) Chuang"
- <horenchuang@gmail.com>,  linux-cxl@vger.kernel.org,
-  qemu-devel@nongnu.org
-Subject: Re: [PATCH v3] memory tier: consolidate the initialization of
- memory tiers
-In-Reply-To: <20240704072646.437579-1-horen.chuang@linux.dev> (Ho-Ren Chuang's
-	message of "Thu, 4 Jul 2024 07:26:44 +0000")
-References: <20240704072646.437579-1-horen.chuang@linux.dev>
-Date: Thu, 04 Jul 2024 15:55:39 +0800
-Message-ID: <87tth5h9qc.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnmuG3pS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720080878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NKAYwbOeNVx8H+U7NIZc3NPeZvy7lixprbWwSSr80cM=;
+	b=LnmuG3pSz7rWPHYDuRCGNN5Csb+ilI3Airh0vn5C22MM+FimdSt3oxQ9wxOxg9xqoDtKJN
+	KzbL+xJnLRf9qt5a9IzLz6qqESoQAHRrwgaXYmfrRgpal02k2ivkJ6UV7fQPnzlWRY2IDM
+	kemviesn0gVSGv26pqgjITDvMYu38I0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-SHeVYp0RMLOwVsDiE1yoZA-1; Thu, 04 Jul 2024 04:14:35 -0400
+X-MC-Unique: SHeVYp0RMLOwVsDiE1yoZA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42490ae735dso3934145e9.0
+        for <linux-cxl@vger.kernel.org>; Thu, 04 Jul 2024 01:14:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720080874; x=1720685674;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NKAYwbOeNVx8H+U7NIZc3NPeZvy7lixprbWwSSr80cM=;
+        b=i2Y/b1EgVP1jasgcI0yxCEPUAOsUXi/y9zA63Vqi8rcu+Urvfykoy/qacMVOHfxah0
+         m+34vnGkXpL1c0jnq47XI/W3NNkate8uA+OSUpINkQDtiFA4wXvpfJ6B1UV+PfOVVasJ
+         RLVkAiwaSeBlm9JtXSnwYVyu4I4EMsS6kV9dQHNkvpjyBpj5JTNvAP84Qizf3zxFQtXT
+         tSY2nTN7YihNCSVx355tgKeBk3K3PCNJvbG/aIA/6ZL2wwLZ2saCxPogImeASDhwpeDP
+         PPHzlsXycU/4PsSXmgSnTt1LjNFKEzxZEXY1v8eWfKEYN8+vHJmbSF/eCJibV5dC6hR/
+         g2gA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRT8btIi2X7yCdOIBDcbBN3Wx8uhAlgrEA7jQHLNwmSIk1K5N/Hrt4EA54iC2Rc+2wDn95ytz0cSHQy3uWBmNAfscDoIWGmQtQ
+X-Gm-Message-State: AOJu0YzdRer96U0OA7v5JYroyZpTv2+XL+CEvcbFvOHXYnqMKzKBDUD4
+	EUQFdrT1HO6Ke3Ujw9Y8Y6CdIKomQSJyC0/oqK+CleX5NA82tA50EExpWUqHEGNMnzlB8ErISiV
+	uMDrc1iU2YlLdwzz/biSLkjA8kJlSZibGH9HfMNtIAYsWynIB2vssJBanWg==
+X-Received: by 2002:a05:600c:12d2:b0:425:73ba:e012 with SMTP id 5b1f17b1804b1-4264a3bc309mr7821645e9.7.1720080873817;
+        Thu, 04 Jul 2024 01:14:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFysbtV4lijwjoywVl2Jz+9M+2rwRqroz1OcadDG27qREV/kETxgRExJ8TK56vfC6S7eartCQ==
+X-Received: by 2002:a05:600c:12d2:b0:425:73ba:e012 with SMTP id 5b1f17b1804b1-4264a3bc309mr7821345e9.7.1720080873353;
+        Thu, 04 Jul 2024 01:14:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c715:8600:f05d:97b6:fb98:2bc1? (p200300cbc7158600f05d97b6fb982bc1.dip0.t-ipconnect.de. [2003:cb:c715:8600:f05d:97b6:fb98:2bc1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2b4976sm13581405e9.48.2024.07.04.01.14.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 01:14:32 -0700 (PDT)
+Message-ID: <95b2bba5-7652-48d8-b6ec-bae7faeed501@redhat.com>
+Date: Thu, 4 Jul 2024 10:14:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG ?] Offline Memory gets stuck in offline_pages()
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>, Zi Yan <ziy@nvidia.com>,
+ Johannes Weiner <hannes@cmpxchg.org>
+References: <6a07125f-e720-404c-b2f9-e55f3f166e85@fujitsu.com>
+ <5a4ef056-73c7-42e9-a839-43d42f8b7eab@fujitsu.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <5a4ef056-73c7-42e9-a839-43d42f8b7eab@fujitsu.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev> writes:
+On 04.07.24 09:43, Zhijian Li (Fujitsu) wrote:
+> All,
+> 
+> Some progress updates
+> 
+> When issue occurs, calling __drain_all_pages() can make offline_pages() escape from the loop.
+> 
+>>
+>> Jun 28 15:29:26 linux kernel: page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7980dd
+>> Jun 28 15:29:26 linux kernel: flags: 0x9fffffc0000000(node=2|zone=3|lastcpupid=0x1fffff)
+>> Jun 28 15:29:26 linux kernel: raw: 009fffffc0000000 ffffdfbd9e603788 ffffd4f0ffd97ef0 0000000000000000
+>> Jun 28 15:29:26 linux kernel: raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+>> Jun 28 15:29:26 linux kernel: page dumped because: trouble page...
+>>
+> 
+> With this problematic page structure contents, it seems that the
+> list_head = {ffffdfbd9e603788, ffffd4f0ffd97ef0} is valid.
+> 
+> I guess it was linking to the pcp_list, so I dumped the per_cpu_pages[cpu].count
+> in every in critical timings.
 
-> The current memory tier initialization process is distributed across
-> two different functions, memory_tier_init() and memory_tier_late_init().
-> This design is hard to maintain. Thus, this patch is proposed to reduce
-> the possible code paths by consolidating different
-> initialization patches into one.
->
-> The earlier discussion with Jonathan and Ying is listed here:
-> https://lore.kernel.org/lkml/20240405150244.00004b49@Huawei.com/
->
-> If we want to put these two initializations together, they must be
-> placed together in the later function. Because only at that time,
-> the HMAT information will be ready, adist between nodes can be
-> calculated, and memory tiering can be established based on the adist.
-> So we position the initialization at memory_tier_init() to the
-> memory_tier_late_init() call. Moreover, it's natural to keep
-> memory_tier initialization in drivers at device_initcall() level.
->
-> If we simply move the set_node_memory_tier() from memory_tier_init()
-> to late_initcall(), it will result in HMAT not registering
-> the mt_adistance_algorithm callback function, because
-> set_node_memory_tier() is not performed during the memory tiering
-> initialization phase, leading to a lack of correct default_dram
-> information.
->
-> Therefore, we introduced a nodemask to pass the information of the
-> default DRAM nodes. The reason for not choosing to reuse
-> default_dram_type->nodes is that it is not clean enough. So in the end,
-> we use a __initdata variable, which is a variable that is released once
-> initialization is complete, including both CPU and memory nodes for HMAT
-> to iterate through.
->
-> This patchset is based on commits <cf93be18fa1b> ("memory tier: create
-> CPUless memory tiers after obtaining HMAT info") and
-> <a72a30af550c> ("memory tier: dax/kmem: introduce an abstract layer for
-> finding, allocating, and putting memory types"):
-> [0/2] https://lkml.kernel.org/r/20240405000707.2670063-1-horenchuang@bytedance.com
-> [1/2] https://lkml.kernel.org/r/20240405000707.2670063-2-horenchuang@bytedance.com
-> [1/2] https://lkml.kernel.org/r/20240405000707.2670063-3-horenchuang@bytedance.com
->
-> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+So, is your reproducer getting fixed when you call __drain_all_pages() 
+in the loop? (not that it's the right fix, but a could datapoint :) )
 
-LGTM, Thanks!
+> 
+> An example is as below,
+> offline_pages()
+> {
+> 	// per_cpu_pages[1].count = 0
+> 	zone_pcp_disable() // will call __drain_all_pages()
+> 	// per_cpu_pages[1].count = 188
+> 	do {
+> 		do {
+> 			scan_movable_pages()
+> 			ret = do_migrate_range()
+> 		} while (!ret)
+> 
+> 		ret = test_pages_isolated()
+> 
+> 		if(is the 1st iteration)
+> 			// per_cpu_pages[1].count = 182
+> 
+> 		if (issue occurs) { /* if the loop take beyond 10 seconds */
+> 			// per_cpu_pages[1].count = 61
+> 			__drain_all_pages()
+> 			// per_cpu_pages[1].count = 0
+> 			/* will escape from the outer loop in later iterations */
+> 		}
+> 	} while (ret)
+> }
+> 
+> Some interesting points:
+>    - After the 1st __drain_all_pages(), per_cpu_pages[1].count increased to 188 from 0,
+>      does it mean it's racing with something...?
+>    - per_cpu_pages[1].count will decrease but not decrease to 0 during iterations
+>    - when issue occurs, calling __drain_all_pages() will decrease per_cpu_pages[1].count to 0.
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+That's indeed weird. Maybe there is a race, or zone_pcp_disable() is not 
+fully effective for a zone?
 
-> ---
-> - v3:
->  * Combine the cover letter and the patch.
->  * Remove extern default_dram_type
->  * Remove __initdata in a extern variable
->  * Roll back coding style, fix comment description
-> - v2:
->  Thanks to Huang, Ying's and Andrew's comments
->  * Add a cover letter
->  * Add Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->  * Add get/put_online_mems() protection in memory_tier_late_init()
->  * If memtype is set, skip initializing its node
->  * Remove redundant code/comments or rewrite code in a cleaner manner
->  * https://lore.kernel.org/all/20240628060925.303309-1-horen.chuang@linux.dev/
-> - v1:
->  * https://lore.kernel.org/all/20240621044833.3953055-1-horen.chuang@linux.dev/
->
-> - Open to discussion:
->  * Should we use `continue` or `break` if set_node_memory_tier() fails in
->    memory_tier_late_init()? I've changed it to `continue` in v3.
->  * Compute the default_dram_nodes mask in hmat when needed? Currently,
->    it still remains in memory-tiers.c
->  * Instead of using guard(mutex)(), use mutex_lock() as it was to make a
->    cleaner diff?
->
-> Thanks,
-> Ho-Ren (Jack) Chuang
->
->  drivers/acpi/numa/hmat.c     |  5 +---
->  include/linux/memory-tiers.h |  2 ++
->  mm/memory-tiers.c            | 54 ++++++++++++++----------------------
->  3 files changed, 24 insertions(+), 37 deletions(-)
->
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 2c8ccc91ebe6..a2f9e7a4b479 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
->  	struct memory_target *target;
->  	struct access_coordinate *attrs;
->  
-> -	if (!default_dram_type)
-> -		return -EIO;
-> -
-> -	for_each_node_mask(nid, default_dram_type->nodes) {
-> +	for_each_node_mask(nid, default_dram_nodes) {
->  		pxm = node_to_pxm(nid);
->  		target = find_mem_target(pxm);
->  		if (!target)
-> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-> index 0d70788558f4..0dc0cf2863e2 100644
-> --- a/include/linux/memory-tiers.h
-> +++ b/include/linux/memory-tiers.h
-> @@ -38,6 +38,7 @@ struct access_coordinate;
->  #ifdef CONFIG_NUMA
->  extern bool numa_demotion_enabled;
->  extern struct memory_dev_type *default_dram_type;
-> +extern nodemask_t default_dram_nodes;
->  struct memory_dev_type *alloc_memory_type(int adistance);
->  void put_memory_type(struct memory_dev_type *memtype);
->  void init_node_memory_type(int node, struct memory_dev_type *default_type);
-> @@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
->  
->  #define numa_demotion_enabled	false
->  #define default_dram_type	NULL
-> +#define default_dram_nodes	NODE_MASK_NONE
->  /*
->   * CONFIG_NUMA implementation returns non NULL error.
->   */
-> diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> index 6632102bd5c9..4775b3a3dabe 100644
-> --- a/mm/memory-tiers.c
-> +++ b/mm/memory-tiers.c
-> @@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
->  static LIST_HEAD(default_memory_types);
->  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
->  struct memory_dev_type *default_dram_type;
-> +nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
->  
->  static const struct bus_type memory_tier_subsys = {
->  	.name = "memory_tiering",
-> @@ -671,28 +672,35 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
->  
->  /*
->   * This is invoked via `late_initcall()` to initialize memory tiers for
-> - * CPU-less memory nodes after driver initialization, which is
-> - * expected to provide `adistance` algorithms.
-> + * memory nodes, both with and without CPUs. After the initialization of
-> + * firmware and devices, adistance algorithms are expected to be provided.
->   */
->  static int __init memory_tier_late_init(void)
->  {
->  	int nid;
-> +	struct memory_tier *memtier;
->  
-> +	get_online_mems();
->  	guard(mutex)(&memory_tier_lock);
-> +
-> +	/* Assign each uninitialized N_MEMORY node to a memory tier. */
->  	for_each_node_state(nid, N_MEMORY) {
->  		/*
-> -		 * Some device drivers may have initialized memory tiers
-> -		 * between `memory_tier_init()` and `memory_tier_late_init()`,
-> -		 * potentially bringing online memory nodes and
-> -		 * configuring memory tiers. Exclude them here.
-> +		 * Some device drivers may have initialized
-> +		 * memory tiers, potentially bringing memory nodes
-> +		 * online and configuring memory tiers.
-> +		 * Exclude them here.
->  		 */
->  		if (node_memory_types[nid].memtype)
->  			continue;
->  
-> -		set_node_memory_tier(nid);
-> +		memtier = set_node_memory_tier(nid);
-> +		if (IS_ERR(memtier))
-> +			continue;
->  	}
->  
->  	establish_demotion_targets();
-> +	put_online_mems();
->  
->  	return 0;
->  }
-> @@ -875,8 +883,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
->  
->  static int __init memory_tier_init(void)
->  {
-> -	int ret, node;
-> -	struct memory_tier *memtier;
-> +	int ret;
->  
->  	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
->  	if (ret)
-> @@ -887,7 +894,8 @@ static int __init memory_tier_init(void)
->  				GFP_KERNEL);
->  	WARN_ON(!node_demotion);
->  #endif
-> -	mutex_lock(&memory_tier_lock);
-> +
-> +	guard(mutex)(&memory_tier_lock);
->  	/*
->  	 * For now we can have 4 faster memory tiers with smaller adistance
->  	 * than default DRAM tier.
-> @@ -897,29 +905,9 @@ static int __init memory_tier_init(void)
->  	if (IS_ERR(default_dram_type))
->  		panic("%s() failed to allocate default DRAM tier\n", __func__);
->  
-> -	/*
-> -	 * Look at all the existing N_MEMORY nodes and add them to
-> -	 * default memory tier or to a tier if we already have memory
-> -	 * types assigned.
-> -	 */
-> -	for_each_node_state(node, N_MEMORY) {
-> -		if (!node_state(node, N_CPU))
-> -			/*
-> -			 * Defer memory tier initialization on
-> -			 * CPUless numa nodes. These will be initialized
-> -			 * after firmware and devices are initialized.
-> -			 */
-> -			continue;
-> -
-> -		memtier = set_node_memory_tier(node);
-> -		if (IS_ERR(memtier))
-> -			/*
-> -			 * Continue with memtiers we are able to setup
-> -			 */
-> -			break;
-> -	}
-> -	establish_demotion_targets();
-> -	mutex_unlock(&memory_tier_lock);
-> +	/* Record nodes with memory and CPU to set default DRAM performance. */
-> +	nodes_and(default_dram_nodes, node_states[N_MEMORY],
-> +		  node_states[N_CPU]);
->  
->  	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
->  	return 0;
+> 
+> So I wonder if it's fine to call __drain_all_pages() in the loop?
+> 
+> Looking forward to your insights.
+
+So, in free_unref_page(), we make sure to never place MIGRATE_ISOLATE 
+onto the PCP. All pageblocks we are going to offline should be isolated 
+at this point, so no page that is getting freed and part of the 
+to-be-offlined range should end up on the PCP. So far the theory.
+
+
+In offlining code we do
+
+1) Set MIGRATE_ISOLATE
+2) zone_pcp_disable() -> set high-and-batch to 0  and drain
+
+Could there be a race in free_unref_page(), such that although 
+zone_pcp_disable() succeeds, we would still end up with a page in the 
+pcp? (especially, one that has MIGRATE_ISOLATE set for its pageblock?)
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
