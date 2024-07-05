@@ -1,86 +1,103 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9192146A96
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 11:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DB3146A96
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 11:41:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720179670; cv=none; b=FT1GNQpphzyr8cTYnoBVyPyGtD22uw5OLkn1mqNo09A91gaeMTuW6Lwqo9ZRbNtAScW9ghZqaJBhSZtaEe791lapBhDlGKkLgwGAgxsaL0Ryvy1397ivvg4su/9+87EdasEvp/N1GglHlY0eJkn7WddojLK3xCHfdQR1WXbNOWY=
+	t=1720179692; cv=none; b=PWeYuxm8UV6Ifl8UUdG0EaTFQ5lDot0Qn93kaQsqEeNRPgBQFlrb3I69M7tYEaoGT3oQs2RebOqGMvulzhyArixXUTge/pEUXrbHjYVhO9SRot6SRojSFzTct5a97qMaxPLQDONwKztINOYwdTouecwknca/O+Mpex4+EOUZD2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720179670; c=relaxed/simple;
-	bh=stbT2Lz7fSlZxFF3tPHSgKGkqVfNAIkp/07z4taLkuA=;
-	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHQNSAg9kTWStbx/uPg3/JGkh6Kd5ubOBwXjfy8C+rSeqHc8Vq3Wmw3FIM2wPjAKL66GBLGLKp/O9RpewYNjyquLwLdaeEeB3WhMiaDwAGxKguJJLBHN+4Ins0ldCX5EZs5pEjKwnDuXIqJxyeiLTOMqpfTxbB+UAa4mXmGB2oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1720179692; c=relaxed/simple;
+	bh=4KahiP0wCMZ63CxXh5nFl1Qt8CgGnBPbdFJqZxafbos=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M59OIu8u28QsAic9b9whwSeaGbiQdGPT4MaZjdmzJBrf1Dbnc6kIhMC4lI8qjLD2WYf4KKpaaCIwxCZLnxXPzRUh7m4k7ndlYtnn9hwK2zHTgL2RqFBwTmGBAxro03RckOXDumC6SJ+SLralus0yKpw7bHKDXbBXF8OplsOvid8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFs5L1wLXz6JBW1;
-	Fri,  5 Jul 2024 19:40:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFs5m69Hpz6JBWB;
+	Fri,  5 Jul 2024 19:40:44 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 66FD5140B55;
-	Fri,  5 Jul 2024 19:41:06 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 5 Jul
- 2024 12:41:06 +0100
-Date: Fri, 5 Jul 2024 12:41:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <linux-cxl@vger.kernel.org>, <mst@redhat.com>, Markus Armbruster
-	<armbru@redhat.com>, <qemu-devel@nongnu.org>, Li Zhijian
-	<lizhijian@fujitsu.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH qemu 0/3] hw/cxl: Misc minor improvements
-Message-ID: <20240705123930.000064e8@huawei.com>
-In-Reply-To: <20240702143425.717452-1-Jonathan.Cameron@huawei.com>
-References: <20240702143425.717452-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by mail.maildlp.com (Postfix) with ESMTPS id D6138140B18;
+	Fri,  5 Jul 2024 19:41:28 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 5 Jul 2024 12:41:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <mst@redhat.com>, <qemu-devel@nongnu.org>
+CC: <linux-cxl@vger.kernel.org>, Markus Armbruster <armbru@redhat.com>, Li
+ Zhijian <lizhijian@fujitsu.com>, <linuxarm@huawei.com>, Zhao Liu
+	<zhao1.liu@linux.intel.com>, Xingtao Yao <yaoxt.fnst@fujitsu.com>
+Subject: [PATCH v2 3/3] hw/cxl: Check for multiple mappings of memory backends.
+Date: Fri, 5 Jul 2024 12:39:56 +0100
+Message-ID: <20240705113956.941732-4-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240705113956.941732-1-Jonathan.Cameron@huawei.com>
+References: <20240705113956.941732-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 2 Jul 2024 15:34:22 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+Similar protection to that provided for -numa memdev=x
+to make sure that memory used to back a type3 device is not also mapped
+as normal RAM, or for multiple type3 devices.
 
-> Before pushing on to more significant features a few unrelated patches
-> doing tidying up + one to avoid people setting the memory backend both
-> for a CXL type 3 device and as normal RAM in an attempt to get SRAT to
-> cover it correctly.  We've had multiple 'bug' reports from this and if
-> nothing else I'd like to stop getting those!
-> 
-> Based on master + the two DCD series Michael Tsirkin has queued.
-> 
-> Based-on: [PATCH v8 00/14] Enabling DCD emulation support in Qemu
-> Based-on: https://lore.kernel.org/qemu-devel/20240523174651.1089554-1-nifan.cxl@gmail.com/
-> Based-on: [PATCH qemu 0/2] hw/cxl: DCD tweaks and improvements.
-> Based-on: https://lore.kernel.org/qemu-devel/20240625170805.359278-1-Jonathan.Cameron@huawei.com/
+This is an easy footgun to remove and seems multiple people have
+run into it.
 
-I'll send a v2 that replaces the unused cfmw_list with the fix
-that makes us of it to avoid a crash.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ hw/mem/cxl_type3.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-
-> 
-> Fan Ni (1):
->   hw/cxl/cxl-mailbox-utils: remove unneeded mailbox output payload space
->     zeroing
-> 
-> Jonathan Cameron (1):
->   hw/cxl: Check for multiple mappings of memory backends.
-> 
-> Li Zhijian (1):
->   hw/cxl: Get rid of unused cfmw_list
-> 
->  include/hw/cxl/cxl.h       |  1 -
->  hw/cxl/cxl-host.c          |  1 -
->  hw/cxl/cxl-mailbox-utils.c |  7 -------
->  hw/mem/cxl_type3.c         | 15 +++++++++++++++
->  4 files changed, 15 insertions(+), 9 deletions(-)
-> 
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 35ac59883a..e7fbbb4d51 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -737,6 +737,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             error_setg(errp, "volatile memdev must have backing device");
+             return false;
+         }
++        if (host_memory_backend_is_mapped(ct3d->hostvmem)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->hostvmem)));
++            return false;
++        }
+         memory_region_set_nonvolatile(vmr, false);
+         memory_region_set_enabled(vmr, true);
+         host_memory_backend_set_mapped(ct3d->hostvmem, true);
+@@ -760,6 +765,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             error_setg(errp, "persistent memdev must have backing device");
+             return false;
+         }
++        if (host_memory_backend_is_mapped(ct3d->hostpmem)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->hostpmem)));
++            return false;
++        }
+         memory_region_set_nonvolatile(pmr, true);
+         memory_region_set_enabled(pmr, true);
+         host_memory_backend_set_mapped(ct3d->hostpmem, true);
+@@ -790,6 +800,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+             return false;
+         }
+ 
++        if (host_memory_backend_is_mapped(ct3d->dc.host_dc)) {
++            error_setg(errp, "memory backend %s can't be used multiple times.",
++               object_get_canonical_path_component(OBJECT(ct3d->dc.host_dc)));
++            return false;
++        }
+         /*
+          * Set DC regions as volatile for now, non-volatile support can
+          * be added in the future if needed.
+-- 
+2.43.0
 
