@@ -1,37 +1,37 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCA1146A96
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 11:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0A6146A96
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 11:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720179633; cv=none; b=gnLqeAF04mfKoe23s/wQn6fjKTVawJn0HmyCAbwhvSj39rXKgJGsMaLe5F4fbEkfGbsa+oexXwOVHCifnknWPXc9qFPQ3RVBdvu93mtfWG6JuDv/dUCB6PI3Fpg+fqyPd/Yp8Boixsok5zGQLO3l/D3o274XRNP/LEJB41kdCP4=
+	t=1720179663; cv=none; b=R/zmdnJNGNp6h9zgO8mjVJaCwv/SXc5WNr5Wajt0m0h8SETnK9NMQ5WpPry6/dL6lgdr98XKPDRLi9mK1NK5ffEYwAapiTX02GxJ+3i+H/YVjymTb8ySSuI10HAEXBA6S1U12Q5h3cb97mapHWtTxz0zJRcREZSuZYt8MGZ4aOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720179633; c=relaxed/simple;
-	bh=D5L0XreID7lO9XFtEGZBiFGZz/tbBZpKAoEjN44xON4=;
+	s=arc-20240116; t=1720179663; c=relaxed/simple;
+	bh=O3S9nsjPtoAcZUEfHwcOazmRVJ4HDKZcFz0TOrRzxn0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7+agr0iQfk0Zb9eef+S64HLKQN3+txB82bHufqqqMT0oFDKm96YwyeQvTxVPh3OJmQ3GAn0bPrkfweQOq62nDLY2piauv6sbD8NleLI3U9WQngZHQgum5XzXZX0CwDuUQXin/J9aYrlY2R3EwnA4RCq3vxcq0/uXsJ3O08s/MM=
+	 MIME-Version:Content-Type; b=sykejlRfOZG/1oyGjOVlV4UkEHO06I1sN+SOILbZXQWnDZ5WOEzBTZ1vNphC6AzaOy08uQHlJEyTCxL9jlErd7YZVbJrST+XzxRAnc5H/E1ZJaz3EvuiqiIDrCaH6gnWzumy7uzOq/eBG0EfPzXMG3g9b/TyfVzNDfJlaoZxyQM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFs4b4R1nz6JBWG;
-	Fri,  5 Jul 2024 19:39:43 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFs3p5tbSz6K9Pc;
+	Fri,  5 Jul 2024 19:39:02 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id BDBF81400D1;
-	Fri,  5 Jul 2024 19:40:27 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BB4E140B18;
+	Fri,  5 Jul 2024 19:40:58 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 5 Jul 2024 12:40:27 +0100
+ 15.1.2507.39; Fri, 5 Jul 2024 12:40:57 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <mst@redhat.com>, <qemu-devel@nongnu.org>
 CC: <linux-cxl@vger.kernel.org>, Markus Armbruster <armbru@redhat.com>, Li
  Zhijian <lizhijian@fujitsu.com>, <linuxarm@huawei.com>, Zhao Liu
 	<zhao1.liu@linux.intel.com>, Xingtao Yao <yaoxt.fnst@fujitsu.com>
-Subject: [PATCH v2 1/3] hw/cxl/cxl-host: Fix segmentation fault when getting cxl-fmw property
-Date: Fri, 5 Jul 2024 12:39:54 +0100
-Message-ID: <20240705113956.941732-2-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 2/3] hw/cxl/cxl-mailbox-utils: remove unneeded mailbox output payload space zeroing
+Date: Fri, 5 Jul 2024 12:39:55 +0100
+Message-ID: <20240705113956.941732-3-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240705113956.941732-1-Jonathan.Cameron@huawei.com>
 References: <20240705113956.941732-1-Jonathan.Cameron@huawei.com>
@@ -46,47 +46,80 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Zhao Liu <zhao1.liu@intel.com>
+From: Fan Ni <fan.ni@samsung.com>
 
-QEMU crashes (Segmentation fault) when getting cxl-fmw property via
-qmp:
+The whole mailbox output payload space is already zeroed after copying
+out the input payload, which happens before processing the specific mailbox
+command:
+https://elixir.bootlin.com/qemu/v8.2.1/source/hw/cxl/cxl-device-utils.c#L204
 
-(QEMU) qom-get path=machine property=cxl-fmw
-
-This issue is caused by accessing wrong callback (opaque) type in
-machine_get_cfmw().
-
-cxl_machine_init() sets the callback as `CXLState *` type but
-machine_get_cfmw() treats the callback as
-`CXLFixedMemoryWindowOptionsList **`.
-
-Fix this error by casting opaque to `CXLState *` type in
-machine_get_cfmw().
-
-Fixes: 03b39fcf64bc ("hw/cxl: Make the CXL fixed memory window setup a machine parameter.")
-Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
-Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
-Reviewed-by: Xingtao Yao <yaoxt.fnst@fujitsu.com>
-Link: https://lore.kernel.org/r/20240704093404.1848132-1-zhao1.liu@linux.intel.com
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Link: https://lore.kernel.org/r/20240221221824.1092966-1-nifan.cxl@gmail.com
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/cxl/cxl-host.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ hw/cxl/cxl-mailbox-utils.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index c5f5fcfd64..e9f2543c43 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -315,7 +315,8 @@ static void machine_set_cxl(Object *obj, Visitor *v, const char *name,
- static void machine_get_cfmw(Object *obj, Visitor *v, const char *name,
-                              void *opaque, Error **errp)
- {
--    CXLFixedMemoryWindowOptionsList **list = opaque;
-+    CXLState *state = opaque;
-+    CXLFixedMemoryWindowOptionsList **list = &state->cfmw_list;
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 74eeb6fde7..facec42dc8 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -235,7 +235,6 @@ static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
+     log_type = payload_in[0];
  
-     visit_type_CXLFixedMemoryWindowOptionsList(v, name, list, errp);
- }
+     pl = (CXLGetEventPayload *)payload_out;
+-    memset(pl, 0, sizeof(*pl));
+ 
+     max_recs = (cxlds->payload_size - CXL_EVENT_PAYLOAD_HDR_SIZE) /
+                 CXL_EVENT_RECORD_SIZE;
+@@ -273,7 +272,6 @@ static CXLRetCode cmd_events_get_interrupt_policy(const struct cxl_cmd *cmd,
+     CXLEventLog *log;
+ 
+     policy = (CXLEventInterruptPolicy *)payload_out;
+-    memset(policy, 0, sizeof(*policy));
+ 
+     log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
+     if (log->irq_enabled) {
+@@ -372,7 +370,6 @@ static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
+     QEMU_BUILD_BUG_ON(sizeof(*is_identify) != 18);
+ 
+     is_identify = (void *)payload_out;
+-    memset(is_identify, 0, sizeof(*is_identify));
+     is_identify->pcie_vid = class->vendor_id;
+     is_identify->pcie_did = class->device_id;
+     if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_USP)) {
+@@ -606,7 +603,6 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
+     QEMU_BUILD_BUG_ON(sizeof(*bg_op_status) != 8);
+ 
+     bg_op_status = (void *)payload_out;
+-    memset(bg_op_status, 0, sizeof(*bg_op_status));
+     bg_op_status->status = cci->bg.complete_pct << 1;
+     if (cci->bg.runtime > 0) {
+         bg_op_status->status |= 1U << 0;
+@@ -647,7 +643,6 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+     }
+ 
+     fw_info = (void *)payload_out;
+-    memset(fw_info, 0, sizeof(*fw_info));
+ 
+     fw_info->slots_supported = 2;
+     fw_info->slot_info = BIT(0) | BIT(3);
+@@ -805,7 +800,6 @@ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
+     }
+ 
+     id = (void *)payload_out;
+-    memset(id, 0, sizeof(*id));
+ 
+     snprintf(id->fw_revision, 0x10, "BWFW VERSION %02d", 0);
+ 
+@@ -1095,7 +1089,6 @@ static CXLRetCode cmd_media_get_poison_list(const struct cxl_cmd *cmd,
+     out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+     assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+ 
+-    memset(out, 0, out_pl_len);
+     QLIST_FOREACH(ent, poison_list, node) {
+         uint64_t start, stop;
+ 
 -- 
 2.43.0
 
