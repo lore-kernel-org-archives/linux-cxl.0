@@ -1,36 +1,36 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF20F145B0F
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 12:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2C7145B0F
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jul 2024 12:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720181272; cv=none; b=UiXI1A2IDfbXiJl0DkNSXUT3j0LmKGgbGJWj55uW+WRwKUJchtgmeuPb4CxeBW5ctrnYYrU+cYU88XmvxD+Lc9+hmwgXs6h3COkHKmDsXxPB+Fr6/MVfWEDXzCn0b9AiR0XI+3hiC9KQyosTPW56ze6FaEf0kw/p6Y2nbxqTqvY=
+	t=1720181300; cv=none; b=ZRWkV7icr3MaALasU5Fi3ma4L9fbfjq94M5NnOPA/Ry2lGOCK89ZO22dCE6fYxNMnvFz7RadSQ5Y7PUNXWkKldLINQuP3kbkHogGfsKTADsiurFyIp+QzoanlMraUpEfb4I7uaGRJNbs2F4JpUV0Bc2OncsNrWMk6ywFXE96AbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720181272; c=relaxed/simple;
-	bh=B5S/5PzAh6ipJodWeFLphqT28krDJUYgEO6AalTTHa4=;
+	s=arc-20240116; t=1720181300; c=relaxed/simple;
+	bh=10pQ0Yc4Qsvk/VBIGWFTC5Yo8+BwiVsBd7Vnswaqc/Y=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FGMN6gRB1XYXX7gO+JNvaYU20Tm3bQma28FCHh5Cjz950vBBNUBvpxGfdFpFoClfommjSBqcA7RpXrv1Pmr1iylkEguF/aOXDAMls2SwBQQHWXHS+SyT/ToxJOIAyZjMQj0xbMrJjjbdJYJBn15+geKGid3qyAOaonSv2I5LU80=
+	 MIME-Version:Content-Type; b=dEneqaguElKxeZsExMiBrcMv4HCEwJcEleF/Q72ePVKLUQUwkS1kzR+K7MXxOuItz4H2EKLZtfEX994u+tTRsEb1yt6H9yT0fcAcxq/FJCGykcJu4u4aEBWEC2bpbBDS6ezhcT9WR/Yfca4tv7uYT5xWJ6W7PoM7zcf0W+nWQys=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFsh65v07z6HJcl;
-	Fri,  5 Jul 2024 20:07:02 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFshB0QLKz6K6f3;
+	Fri,  5 Jul 2024 20:07:06 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4CC9D140C98;
-	Fri,  5 Jul 2024 20:07:45 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1AE38140C72;
+	Fri,  5 Jul 2024 20:08:16 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 5 Jul 2024 13:07:44 +0100
+ 15.1.2507.39; Fri, 5 Jul 2024 13:08:15 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <mst@redhat.com>, <qemu-devel@nongnu.org>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
 	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH 2/4] hw/cxl/mbox: replace sanitize_running() with cxl_dev_media_disabled()
-Date: Fri, 5 Jul 2024 13:06:41 +0100
-Message-ID: <20240705120643.959422-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 3/4] hw/cxl/events: discard all event records during sanitation
+Date: Fri, 5 Jul 2024 13:06:42 +0100
+Message-ID: <20240705120643.959422-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240705120643.959422-1-Jonathan.Cameron@huawei.com>
 References: <20240705120643.959422-1-Jonathan.Cameron@huawei.com>
@@ -47,123 +47,73 @@ X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
 
 From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-The spec states that reads/writes should have no effect and a part of
-commands should be ignored when the media is disabled, not when the
-sanitize command is running.
+Per CXL r3.1 Section 8.2.9.9.5.1: Sanitize (Opcode 4400h), the
+sanitize command should delete all event logs. Introduce
+cxl_discard_all_event_logs() and call
+this in __do_sanitization().
 
-Introduce cxl_dev_media_disabled() to check if the media is disabled and
-replace sanitize_running() with it.
-
-Make sure that the media has been correctly disabled during sanitation
-by adding an assert to __toggle_media(). Now, enabling when already
-enabled or vice versa results in an assert() failure.
-
-Suggested-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Link: https://lore.kernel.org/r/20231222090051.3265307-4-42.hyeyoo@gmail.com
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Link: https://lore.kernel.org/r/20231222090051.3265307-5-42.hyeyoo@gmail.com
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 ---
-Fix added to ensure the state sanity check only applies on type3 devices
+Tweaks: Made the reference in this description clearly refer to the 3.1
+specification version.
 ---
- include/hw/cxl/cxl_device.h | 10 +++++-----
- hw/cxl/cxl-mailbox-utils.c  | 29 +++++++++++++++++------------
- hw/mem/cxl_type3.c          |  4 ++--
- 3 files changed, 24 insertions(+), 19 deletions(-)
+ include/hw/cxl/cxl_device.h |  1 +
+ hw/cxl/cxl-events.c         | 13 +++++++++++++
+ hw/cxl/cxl-mailbox-utils.c  |  1 +
+ 3 files changed, 15 insertions(+)
 
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index b5beb7f90e..42a622197e 100644
+index 42a622197e..0509d961c3 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -397,14 +397,14 @@ static inline void __toggle_media(CXLDeviceState *cxl_dstate, int val)
- #define cxl_dev_enable_media(cxlds)                     \
-         do { __toggle_media((cxlds), 0x1); } while (0)
+@@ -562,6 +562,7 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+                                  size_t *len);
+ CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
+                                    CXLClearEventPayload *pl);
++void cxl_discard_all_event_records(CXLDeviceState *cxlds);
  
--static inline bool scan_media_running(CXLCCI *cci)
-+static inline bool cxl_dev_media_disabled(CXLDeviceState *cxl_dstate)
- {
--    return !!cci->bg.runtime && cci->bg.opcode == 0x4304;
-+    uint64_t dev_status_reg = cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS];
-+    return FIELD_EX64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS) == 0x3;
- }
--
--static inline bool sanitize_running(CXLCCI *cci)
-+static inline bool scan_media_running(CXLCCI *cci)
- {
--    return !!cci->bg.runtime && cci->bg.opcode == 0x4400;
-+    return !!cci->bg.runtime && cci->bg.opcode == 0x4304;
+ void cxl_event_irq_assert(CXLType3Dev *ct3d);
+ 
+diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+index d397718b1b..12dee2e467 100644
+--- a/hw/cxl/cxl-events.c
++++ b/hw/cxl/cxl-events.c
+@@ -139,6 +139,19 @@ bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
+     return cxl_event_count(log) == 1;
  }
  
- typedef struct CXLError {
++void cxl_discard_all_event_records(CXLDeviceState *cxlds)
++{
++    CXLEventLogType log_type;
++    CXLEventLog *log;
++
++    for (log_type = 0; log_type < CXL_EVENT_TYPE_MAX; log_type++) {
++        log = &cxlds->event_logs[log_type];
++        while (!cxl_event_empty(log)) {
++            cxl_event_delete_head(cxlds, log_type, log);
++        }
++    }
++}
++
+ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+                                  uint8_t log_type, int max_recs,
+                                  size_t *len)
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 6a60f81794..adeb71071c 100644
+index adeb71071c..e3d3575b02 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -2115,6 +2115,7 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-     int ret;
-     const struct cxl_cmd *cxl_cmd;
-     opcode_handler h;
-+    CXLDeviceState *cxl_dstate;
- 
-     *len_out = 0;
-     cxl_cmd = &cci->cxl_cmd_set[set][cmd];
-@@ -2135,18 +2136,22 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-         return CXL_MBOX_BUSY;
-     }
- 
--    /* forbid any selected commands while overwriting */
--    if (sanitize_running(cci)) {
--        if (h == cmd_events_get_records ||
--            h == cmd_ccls_get_partition_info ||
--            h == cmd_ccls_set_lsa ||
--            h == cmd_ccls_get_lsa ||
--            h == cmd_logs_get_log ||
--            h == cmd_media_get_poison_list ||
--            h == cmd_media_inject_poison ||
--            h == cmd_media_clear_poison ||
--            h == cmd_sanitize_overwrite) {
--            return CXL_MBOX_MEDIA_DISABLED;
-+    /* forbid any selected commands while the media is disabled */
-+    if (object_dynamic_cast(OBJECT(cci->d), TYPE_CXL_TYPE3)) {
-+        cxl_dstate = &CXL_TYPE3(cci->d)->cxl_dstate;
-+
-+        if (cxl_dev_media_disabled(cxl_dstate)) {
-+            if (h == cmd_events_get_records ||
-+                h == cmd_ccls_get_partition_info ||
-+                h == cmd_ccls_set_lsa ||
-+                h == cmd_ccls_get_lsa ||
-+                h == cmd_logs_get_log ||
-+                h == cmd_media_get_poison_list ||
-+                h == cmd_media_inject_poison ||
-+                h == cmd_media_clear_poison ||
-+                h == cmd_sanitize_overwrite) {
-+                return CXL_MBOX_MEDIA_DISABLED;
-+            }
+@@ -955,6 +955,7 @@ static void __do_sanitization(CXLType3Dev *ct3d)
+             memset(lsa, 0, memory_region_size(mr));
          }
      }
++    cxl_discard_all_event_records(&ct3d->cxl_dstate);
+ }
  
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 62956a0403..925c88ac5d 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1127,7 +1127,7 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-         return MEMTX_ERROR;
-     }
- 
--    if (sanitize_running(&ct3d->cci)) {
-+    if (cxl_dev_media_disabled(&ct3d->cxl_dstate)) {
-         qemu_guest_getrandom_nofail(data, size);
-         return MEMTX_OK;
-     }
-@@ -1149,7 +1149,7 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
-         return MEMTX_ERROR;
-     }
- 
--    if (sanitize_running(&ct3d->cci)) {
-+    if (cxl_dev_media_disabled(&ct3d->cxl_dstate)) {
-         return MEMTX_OK;
-     }
- 
+ /*
 -- 
 2.43.0
 
