@@ -1,52 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E2A101E2;
-	Mon,  8 Jul 2024 11:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8407E56C;
+	Mon,  8 Jul 2024 11:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720438534; cv=none; b=rMtvLvHfDZuy2QKdzSjWgf3x4wsSLdifFPctKND5vRswnjbDScJN+2iWXv8Mf+e3/49HDM09N1RdB6QGJ/zIGeo75wYYAzmR4rW2Vf3NoDYQH9HMuAFTHx7D+CWILNeZYWZwjgaaBs9d2ThcHqAbsExYpjCgpqb7S3Gim3W4Wq4=
+	t=1720439833; cv=none; b=E8iHQ6W+v9jXVs5ehVJdqBx90RcIIyHNSWm2++quxYPGmHuVHqvUH4YPZdJDFuDyIxpizhdid7UMomOrHqcrs/wwHdZ8gihu4OPMnIrwebHnMYjf2V9vat0P41afmtXbOxlE8Z4BLnCB7nsWaZU+TdV7K8KY88b6k9XymqAeNs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720438534; c=relaxed/simple;
-	bh=0q5Ds8WIeOv5Y3nTVZNg0tKqv7bBejypl3Rg0QFJqmI=;
+	s=arc-20240116; t=1720439833; c=relaxed/simple;
+	bh=BTVqtRoqBiMT7TmYf0E1RNhYJ/Rx2jW4ev3SgIlcX94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9WPUCZY0oh592sGKdXVmYB6fysso1qerFhGIAPUJh4200o+E8PqYUocBDGYAYM6hCDUuEZ8HBowjmDAE7wMy55GCmRT8/lB0SaQHuBfaPv5GGtjdzfexNiVY9UH50adyBn8yjEMZJASz8MnInqoHhL6xqYE32nYXBs0Rf1rZLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsDoAPbD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U0elBDw1T/hqWIZvb9k2i085iDtGuinnnSyro4FPRZSluo/ovIzKUv9NKXTwXW492+3X0phkOowZB1AucUi10hAQz7ZdWnfjP2NRJhc1jkwfshJWlkMIMrq81YZIZ2QuGm2uuVd5jruytIn81u0GKxue5QrNYNqQ5EJ4iRCzDI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sT6Tsgh0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsDoAPbD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDD9C116B1;
-	Mon,  8 Jul 2024 11:35:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sT6Tsgh0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFAE0C116B1;
+	Mon,  8 Jul 2024 11:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720438534;
-	bh=0q5Ds8WIeOv5Y3nTVZNg0tKqv7bBejypl3Rg0QFJqmI=;
+	s=k20201202; t=1720439833;
+	bh=BTVqtRoqBiMT7TmYf0E1RNhYJ/Rx2jW4ev3SgIlcX94=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XsDoAPbDuJawip0mO7VPHOcAtC8umkEX+3mruYsdiHMQTMSnCjk6khCQQhBFOVU2q
-	 szsII3oJXeXPXn/TD1fBgYjrRriwN7ffC0ijh8PvFS/JWshQeFdlZKBesvFDDo5JNp
-	 ebFxkePURnK0zM1B3jsYHT4MNNEkTpuSUbDOJ0wqE7eJfaQfSWxRo0vWoC5QTabCIW
-	 I9ZALOcwRGl2VBpOZP15lKg6qpE8NWgViVA291vGz6q0ajZOlvg0o3swDvw0f3PyCc
-	 eOMz086l52tHH0De4Ngoa9ZI+DYKXoJrjaUifAz9HtEFirAu5kGY4AnRE4k3HNrj2S
-	 wF50L1Ci27E9g==
-Date: Mon, 8 Jul 2024 12:35:25 +0100
+	b=sT6Tsgh07pJROr8oru58JD/L03h0+t3wg9bFnty8ES53I5GMc6kr9ZM7MO1vweWIp
+	 UgBf1O/9NCkjUMZzhSrfmoJb6eri/BknEYDOkUW8Yh15j433czhvXNrmHn1vlSZwiY
+	 22FLGRfZMbs0/PkVLrDogzKBl2W8G9avqdqvCa0VLjThlDH8oHV/1GbDwXzGH0Ytx+
+	 bmgZmPPXatFAlaSgNhJupAxW70KNMwKzCLc8z1RBXwlUqrte7ki/SO4V4pzsRHN+FU
+	 bCR+3UESRafcp8+ro/JdlgfADAgaKyQ5TIZkfcMjcBys168S6XIE7rH9qYUOF/n5S7
+	 JjjT0yFPmOYWg==
+Date: Mon, 8 Jul 2024 12:57:07 +0100
 From: Will Deacon <will@kernel.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
-	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
-	ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
-	tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com,
-	peterx@redhat.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com
-Subject: Re: [PATCH 13/13] mm: Remove devmap related functions and page table
- bits
-Message-ID: <20240708113524.GD11567@willie-the-truck>
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Frank Li <Frank.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, imx@lists.linux.dev,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] perf: add missing MODULE_DESCRIPTION() macros
+Message-ID: <20240708115707.GB11771@willie-the-truck>
+References: <20240620-md-drivers-perf-v2-1-1f88f8a08e48@quicinc.com>
+ <20240701140521.GF2250@willie-the-truck>
+ <aac18765-4278-4ce0-a0f9-d249ba1d6872@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,25 +52,38 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
+In-Reply-To: <aac18765-4278-4ce0-a0f9-d249ba1d6872@quicinc.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Jun 27, 2024 at 10:54:28AM +1000, Alistair Popple wrote:
-> Now that DAX and all other reference counts to ZONE_DEVICE pages are
-> managed normally there is no need for the special devmap PTE/PMD/PUD
-> page table bits. So drop all references to these, freeing up a
-> software defined page table bit on architectures supporting it.
+On Mon, Jul 01, 2024 at 08:38:02AM -0700, Jeff Johnson wrote:
+> On 7/1/2024 7:05 AM, Will Deacon wrote:
+> > On Thu, Jun 20, 2024 at 06:46:09PM -0700, Jeff Johnson wrote:
+> >> diff --git a/drivers/perf/arm_cspmu/nvidia_cspmu.c b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> >> index 5b84b701ad62..0dea47e48ac5 100644
+> >> --- a/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> >> +++ b/drivers/perf/arm_cspmu/nvidia_cspmu.c
+> >> @@ -417,4 +417,5 @@ static void __exit nvidia_cspmu_exit(void)
+> >>  module_init(nvidia_cspmu_init);
+> >>  module_exit(nvidia_cspmu_exit);
+> >>  
+> >> +MODULE_DESCRIPTION("NVIDIA Coresight Architecture PMU driver");
+> >>  MODULE_LICENSE("GPL v2");
+> >> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> >> index 1f93a66eff5b..8b6ce9ea5a55 100644
+> >> --- a/drivers/perf/cxl_pmu.c
+> >> +++ b/drivers/perf/cxl_pmu.c
+> >> @@ -972,6 +972,7 @@ static __exit void cxl_pmu_exit(void)
+> >>  	cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
+> >>  }
+> >>  
+> >> +MODULE_DESCRIPTION("CXL Performance Monitoring Unit driver");
+> > 
+> > Similarly here, we now have a conflicting expansion of the acronym.
 > 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> ---
->  Documentation/mm/arch_pgtable_helpers.rst     |  6 +--
->  arch/arm64/Kconfig                            |  1 +-
->  arch/arm64/include/asm/pgtable-prot.h         |  1 +-
->  arch/arm64/include/asm/pgtable.h              | 24 +--------
+> I'll make them consistent in the MODULE_DESCRIPTION()s.
+> Do you have a preference for expanding or not expanding?
 
-Not only do you exclusively remove code, but you also give us back a
-pte bit! What's not to like?
-
-Acked-by: Will Deacon <will@kernel.org> # arm64
+PMU is a terrible acronym, so I probably prefer expanding it unless it
+causes problems.
 
 Will
