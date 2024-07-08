@@ -1,117 +1,91 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CC47E56B;
-	Mon,  8 Jul 2024 13:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED49142E80;
+	Mon,  8 Jul 2024 15:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445750; cv=none; b=HrnWaFkTVAzwdy9/K2YcJZkkvgFzUrV0al77r93WFa3j2dyTq7qTdBxVDZand2NShRrNOB4q+h7Y3Ot/xwbWpC1oivC0cspGYtwh4Ppci3gxbsVeYDRqmW4iIkmna51A7a4L90Q4RqlYNkSg+flpMpRgLjSPoyJBjzw2PPoZ42Q=
+	t=1720452571; cv=none; b=rF3B97KaFtUIuGqyhhe5JkKEr897wXl2BMiAD0DTg9/JqSDRdTmVks6udxka1f7ZvEfnl/fZ+jSwIToz21OboFR7G+Uq6eb1lc+mW4JXntQx9udiidEAFJTUM1iFoOsDSKjlyPdLGcZdCpMzpb95CpAS696WPfLPKdp9ePhdWX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445750; c=relaxed/simple;
-	bh=wgD9a4DNK3P6VEZab1/0rPVhR9Z/fDFUP3wzihfV+GE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DNi7HA2B7uV2Z6A59Qy0yGCL5u8Pkzx3dyvUi/SqCTDQM3G26qqPoQDCyPCBafpz0qIvfQx38Y0BCNUbukSNOTTKk3qSgmXvJC45ju7TFDvUTPkN10MTneC/cV85R+UPWVh4r1pmE6K8MC91OFUXIso/4S3Z9ggkLOq9B+zOEwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id F044A100D9438;
-	Mon,  8 Jul 2024 15:35:39 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BF9321F5CA; Mon,  8 Jul 2024 15:35:39 +0200 (CEST)
-Date: Mon, 8 Jul 2024 15:35:39 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2 00/18] PCI device authentication
-Message-ID: <ZovrK7GsDpOMp3Bz@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
- <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com>
+	s=arc-20240116; t=1720452571; c=relaxed/simple;
+	bh=pHGrU06dDgIohfOZNyTOXRGFIfPJGLhM05zDRXQwlIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ABwqTDGga2U8aIBMS9VoUC2/DsSYHqHK7ucekrAHld9XZiTL2vhWZlmCaWADTSJ2ZylFh+IQYlqZzlcXqOG7viunLqrb32k4STw9n/PJfXvGWeb4OUXXuW1teKjYpDhXUP6Apr6vXQUkg1VsUaDzgc/Cv16B3b6CbTLFQZbh71I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=KU5FpEh8; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="KU5FpEh8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
+	Message-ID:MIME-Version:Content-Transfer-Encoding; bh=jpG9/lUJIA
+	huGAbBRSauqWsUisuORJ+1OpZD4Zt02hY=; b=KU5FpEh8pSwVYDeS0VgumKDCGA
+	FxgPTXY0PVxaILalUASm/BRhtyLBT/H7Jwc30mK0MXkoJeHeueR4TqYf4H3WXTKd
+	P5/nlgik4La5rxsQP9xidv3mtSamvCZe1b/tFnvJnbbtu6ZwEYxVgtqnsKmXkDTT
+	W1jc71x0WrPQh4MJw=
+Received: from gp-VMware-Virtual-Platform.localdomain (unknown [139.227.253.190])
+	by coremail-app2 (Coremail) with SMTP id Nyz+CgD3UfXABYxmOvOYAA--.32315S2;
+	Mon, 08 Jul 2024 23:29:18 +0800 (CST)
+From: peng guo <engguopeng@buaa.edu.cn>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wyguopeng@163.com,
+	peng guo <engguopeng@buaa.edu.cn>
+Subject: [PATCH] cxl core:wrong value of macro definition
+Date: Mon,  8 Jul 2024 23:29:02 +0800
+Message-ID: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Nyz+CgD3UfXABYxmOvOYAA--.32315S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4DZFWxZr4kKF4fury8Zrb_yoW3Wrg_Gr
+	1rWrZxZa1FvF9rKFnIgr4rC3yS9a1kXr1FvFn5Kr4akayakrs8Wry09r47ZrW2vrW8tr1D
+	J34DJr18tr47tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbakFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+	vE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+	XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+	14v_XrWl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW7tr1UJr1l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjfU5Q6JUUUUU
+X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
 
-On Mon, Jul 08, 2024 at 07:47:51PM +1000, Alexey Kardashevskiy wrote:
-> On 1/7/24 05:35, Lukas Wunner wrote:
-> > PCI device authentication v2
-> > 
-> > Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
-> > expose the result in sysfs.
-> 
-> What is it based on?
+The first value of the macro definition DEFINE_CXL_VENDOR_DEBUG_UUID
+does not match the definition in the CXL 2.0 specification table 170.
 
-This series is based on v6.10-rc1.
+Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+---
+ drivers/cxl/cxlmem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I also successfully cherry-picked the patches onto v6.10-rc6 and
-linux-next 20240628 (no merge conflicts and no issues reported by 0-day).
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index af8169ccdbc0..feb1106559d2 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -563,7 +563,7 @@ enum cxl_opcode {
+ 		  0x3b, 0x3f, 0x17)
+ 
+ #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
+-	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
++	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+ 		  0x40, 0x3d, 0x86)
+ 
+ struct cxl_mbox_get_supported_logs {
+-- 
+2.43.0
 
-Older kernels than v6.10-rc1 won't work because they're missing
-ecdsa-nist-p521 support as well as a few preparatory sysfs patches
-of mine that went into v6.10-rc1.
-
-
-> I am using https://github.com/l1k/linux.git branch cma_v2 for now but wonder
-> if that's the right one.
-
-Yes that's fine.
-
-There's now also a kernel.org repository with a testing branch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/devsec/spdm.git/
-
-Future maintenance of the SPDM library is intended to be happening
-in that repo.  I assumed that Bjorn may not be keen on having to
-deal with SPDM patches forever, so creating a dedicated repo seemed
-to make sense.
-
-Most patches in this series with a "PCI/CMA: " subject actually
-only change very few lines in the PCI core.  The bulk of the changes
-is in the SPDM library instead.  I used that subject merely to
-highlight that at least an ack from Bjorn is required.  The only
-patches containing PCI core changes to speak of are patches 8, 9, 10.
-
-The devsec group (short for Device Security Alphabet Soup) currently
-only contains the spdm.git repo.  Going forward, further repos may be
-added below the devsec umbrella, such as tsm.git to deal with a
-vendor-neutral interface between kernel and Trusted Security Module.
-
-Thanks,
-
-Lukas
