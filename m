@@ -1,333 +1,443 @@
-Received: from esa13.fujitsucc.c3s2.iphmx.com (esa13.fujitsucc.c3s2.iphmx.com [68.232.156.96])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFB93D69
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Jul 2024 03:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D187345B;
+	Mon,  8 Jul 2024 09:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720407924; cv=fail; b=KTzGPHHAjao3zVQQ1XIE2lBI9lqUOq3a4sNjJinBIR9nefuaqbHZnldkUkhYFs00c1xj1TVIr6r0VL6/YI71axl2AOlhv76KxPhE5yR/6SiJY9uvkunf/ft6DJMF2fx4/CBDRtbzddjjCmxDEfweXHawI6I33mvzHprAF9ulmjo=
+	t=1720432092; cv=fail; b=CU42kzaco7ZZ4R9IYT1Nlj1K/oXZQMvhgebkhx8Q85VU//vjjedNAxUEtrgn3VkKSvs7OUzDBXg9YWoezSlvPypUSZqCidGobCde6oVDvegGT7Zs1G56d5k4ztNU4MRFXgMqMoH7syeamGbeb0099vKJ16nnntvuT/O5Qg9GV/k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720407924; c=relaxed/simple;
-	bh=nDEeGnCVDSJGbYMizfZAlAbuKxCxCMgq1NZJSqKk8Fc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fdjrec/mYekScvUHmekqt27fTfNs4wVGz3oZAFIFy5+uBFSjCV3xXIFX65s/OLniufaT6G78kxp8kz9wF6AtR/xxqOQ90tL0LO5Uh8sQz+6pzdTxRyR0chUvpFKxrRh5LW9io8ASEagQQHNeDhwZgWLYR1e0rlVfRPLn9ionAj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GQktRvRN; arc=fail smtp.client-ip=68.232.156.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1720432092; c=relaxed/simple;
+	bh=4ZRWbnu9170+EwkVyUWpmZB2t7pf9x8b4Vfj1U6IqkA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C+qpRkf8HrCFthnDtWp0VjOJDug56sXFee5ETp2MXymMtkQPJwZg5Cirw1y8h1O9hT/YFE0c5hu/ROfk60Xlovcz9OQt+uPaVfyIkkn4pN8T/sclkdTKTVBYtu35U4xfvoOJztdDlonIyBz1q/3EqVjjzD8cmawmjkcjnmoFndg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eD2s0Eni; arc=fail smtp.client-ip=40.107.244.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GQktRvRN"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1720407922; x=1751943922;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=nDEeGnCVDSJGbYMizfZAlAbuKxCxCMgq1NZJSqKk8Fc=;
-  b=GQktRvRNiIfMfK9cBskJS5eCisDwr5WURBaVKTPCkIZhWEF3wgF8GifM
-   tokPBUi0fX7iQs3//hh4kqRRBPZimihkCu6aabNeDui1ttgOwygr7WXnn
-   J1lqOsjwPcsTut/AId2URSXPpihqzcDhPa/0wRJA06EYw92SEwosDgqJz
-   iifpwz6AEMhZWbGKZXSfPvGi8unrd5ZdWXItCw25WFY0HBpHo0bb0ALgm
-   q1mqYEoZu8fXbqFk3WnPZoBjw0pos6RXV2/iVEurdiy7xL2bcqonMud70
-   cEWNyRKtzq7Ly0npJYPx+fEXO9Vzux4tTN/xzaEX+QgYN+GE2CU/XJkEA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="124025980"
-X-IronPort-AV: E=Sophos;i="6.09,191,1716217200"; 
-   d="scan'208";a="124025980"
-Received: from mail-japanwestazlp17010000.outbound.protection.outlook.com (HELO OS0P286CU011.outbound.protection.outlook.com) ([40.93.130.0])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 12:05:12 +0900
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eD2s0Eni"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dGGEO57sJ/QeUo5U5G1ifXDVgip8jFymQ2wPAXn0iiDHzvG/wzyzz+seKO+0xqPEPXXulPjiGrQS0Afzs3oTOB5b51rDC/a7mdUoOR1AG44uOLxlDrGyHlee2yL+ldY/uZ7PC/aW07HI/Wrtw/PZFJFfulQECS6FUStUg03cIGwvBkgF91LrHPudRuMW4+iCa9i/qMOAMOG+CeoX1+U1JBTByhq12q3vY/xigUcWqsE9Tg7RFvwvyWt/qpCQMbp42llpOUD4zbsi/x8HM9O3nP2rmg2JGWbaGfK7txcpiEj+pAVEiyKgLnXzuW7a2xRweO9EqOObCR2RfS0zNS0CLw==
+ b=NvK1Ku5FF8rYEekpxN5+upmS2myYcK1uhtn2w+2kdwWOUz6ay4GZVskJ4Dlwj9X8KG/9O1OusRo9TFBRSMKc7Pcu5D1zbQevPZDf9Q7gio7OLgxL/37UAMK2KmlLYe/0kTrgOMuPrtWYDCVGUHXfAonHlH9URt5CMhqXvtNZ5VAeP+DlNg74HrRMlF1s61D3DX4AVbDTnjeHhadcudcRHkelR/FYc09fLbQ+SZyDTLK2ezC2bCeEWT0mcqhNX+QIfO3rBO+2uPIb397MGu4jszctOEiIlBkhWwYSTXTmwhRFlWbDUmDw/GiV7uWrJcYne14sWZCFZC6ALhNdvmyb5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=23i3w3HMvWOu9FBKSa5lkq+6nK0SqzjZs7N1N9xwWtI=;
- b=jVJficNmJY9/+eyAMSiJWQnr8KE0x/wAJ1Qi1task+DccBid0ohaalV/ors7frpxoMTcVEkohenhL5rF+6rQjeCA4C/s9mjLQwY0b+mFqOMbK8HJThgZ+S2ry68duZVOiXUioVdXjk1mTmHLMioJRbSYP6D3c4v4gdwviOmDy6PtmlD7iZm46ZJG2A+aPJhs4gHdGf90SPanMpbIuTmwf52BiZPVe5h8b3j7LdOQgQe/6/eH3VNpYy1Rn/oq3Arfa1RYzJQV4L8C+n+ncnA/+wQdbKLZs03d0JdkRlST9nwrd0r7kInU9JgyQUCHYrPi1OxN3ppr2qRroD4JU6aHVg==
+ bh=VSMsT1pIeFf5YylBpKs7jDf8LZnl+Qag/3GVwodO97U=;
+ b=TgC2CxuHgKk61OEzNPlbL4XcNyCdbq+rD1BenXnMPG3z9XjhVZMY3bZqRI01BuBPvJViN/d+CQaZLyahHJx+cCLqyFhPlP3IkK2mSdGvA6650whIoW9nQpisQbSnQzGzfbSc30lvuRphPyiktQS1VyN9TRxpcboT3ixdS/3d0DVC7uyRxhhbR4X/SwWTuZW+VD/Ra6w6DAxKA5DUuTn5Fvxm9hDJoA+r7CVuc9FK5S2c7aBT94+kdvtV3z6xOa3bK26PjiHxfbGshfBR3KvDVE3l1Jjzi4GRHe4ZBGfvy1eno05GA0dIIY0iP16SiL+rcgmk461rwhHcjS4si+Mo4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
- by TYYPR01MB8133.jpnprd01.prod.outlook.com (2603:1096:400:115::13) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VSMsT1pIeFf5YylBpKs7jDf8LZnl+Qag/3GVwodO97U=;
+ b=eD2s0EniDEY29c5foz/1xaH8dtPrcO2/J+2Huu2YhEhNs2xU5j7rUcOzu8Z3Ql5gCtdXKd3z7XDl2pp3sdnYlQday/Kd5QwbyCG8+Ufjhm2b9qLRroF/SIbMSzFsn1TqZO/Ugifb2Vcpks3UhgFLec2ohq+MRbBhsyAN4C8qqvw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by CH3PR12MB9078.namprd12.prod.outlook.com (2603:10b6:610:196::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
- 2024 03:05:08 +0000
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba%5]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
- 03:05:08 +0000
-From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>
-Subject: RE: [PATCH v14 0/2] Export cxl1.1 device link status register value
- to pci device sysfs.
-Thread-Topic: [PATCH v14 0/2] Export cxl1.1 device link status register value
- to pci device sysfs.
-Thread-Index: AQHawTfBafIA1J3zbUG5l0nqYOxKFbHsRIdg
-Date: Mon, 8 Jul 2024 03:05:07 +0000
-Message-ID:
- <OSAPR01MB71825385034CD33C732EB878BADA2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240618042941.96893-1-kobayashi.da-06@fujitsu.com>
-In-Reply-To: <20240618042941.96893-1-kobayashi.da-06@fujitsu.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=31b81284-b420-4322-85f2-00eb3938977f;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-07-08T03:04:07Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYYPR01MB8133:EE_
-x-ms-office365-filtering-correlation-id: b50e872e-33c0-4d72-8d57-08dc9efac5f8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?SUl2K2NIcTlVNDAvODJtWTRQYUpya3I5OTQ1TzA0WTJCajcrNFE4MFFU?=
- =?iso-2022-jp?B?MUtaSXd1VTNreUZ5NnZtUGdaQ0oyaHdQK2Vsc0psMXN0UFk2T1hGTGd0?=
- =?iso-2022-jp?B?aWxPUlBocVRCczIvSkJ4ajhEaW14MUp2Mk1VWnQrdXcveVh4MCsyQjND?=
- =?iso-2022-jp?B?K1pPQjVrS3JXZmZUZ0lLSU5ESjBweDhhRHNWM1Rkc0RVU0FUOWFDUWZy?=
- =?iso-2022-jp?B?WDJ3NHQ1QjhmQklCc1l4aWhYNzBFTG9DSlVmeVFzUGFiRm9iKy96QjVw?=
- =?iso-2022-jp?B?dDhBNlRVUHFNWlIvSE1uZDhHTVhHaUFzMTNSQWM4UDB3QVRRNldSdE1N?=
- =?iso-2022-jp?B?aVp0bnJJVkVyZS8xR3ZnYnhha2tKRzJTbG5hSUE2T2tTOE1ENi9PU1lP?=
- =?iso-2022-jp?B?RmlEa1FuMklKV0FFMGFLT0JVbGp3d1UwT3doRFRQVGJlZDBkTzdHbEhq?=
- =?iso-2022-jp?B?V1daN0hsQ011ckFOTTlGVWwveGk4dHhReC9laVB2M0pWdTQ2S1ZHR1RJ?=
- =?iso-2022-jp?B?anlyR0JtWmg5MHJJeHJOdlNPaTdzNXFrc2NwYVRPNVJzZGF0UmdnWHRr?=
- =?iso-2022-jp?B?RHFTWllXNkdxY3czdHErY1hPQzhwUDBWcktNblhvdHJ4YTBodkVHU3I3?=
- =?iso-2022-jp?B?OVd1cUFFWTAxRzMzcEsyTjRCNTNxUnZRQitMeEpraGo4ZGlyVXRRdUJk?=
- =?iso-2022-jp?B?a2I2K1BpK3NJeXBrclVpbHFmbEJoczFGbk5ZSjFkRWdaVEFNeTEvV2lk?=
- =?iso-2022-jp?B?NGNpUEkwb2VoSTZENXVRcVorY3RVakdxK0pNZUNPenJwc0VXNDVxKzE0?=
- =?iso-2022-jp?B?Y0VGMjlBdHJUcHMwV05ZeU9LQmo3Q3JQS1NOallocFJTV2F3R0NPeWEv?=
- =?iso-2022-jp?B?V3NaSzlrNyszb1IvL0xJOEpXUER1TUhjaEpUOXpqdTl0R0l3aitoNDg3?=
- =?iso-2022-jp?B?UEZ3VlFWcnBMRFp1K3pCOXRRbGJXNUFzYU1ueU9YdGEwWHFoTmtTTm5F?=
- =?iso-2022-jp?B?WWphNmsyS0swMTFGdHkza2RHN1hGSjI2dkNzakwxZUQ2TnZkUTdOWlpx?=
- =?iso-2022-jp?B?bjErQUxJQ3lnVElGZ09GeXhEOEdzZ3JtMkNKYkIzWGZmK1J1M3oydWtN?=
- =?iso-2022-jp?B?UWl1TFBGRG5OamhIT3hEOG5rb0kzRGJjU1ZVQ09jNnpHUCtLdzB6cnpE?=
- =?iso-2022-jp?B?WW1NeTJWeXgzTzNueC9FSGdvN2ZMK0hMdTFnUmFkekhjNVhqN1BOYmtE?=
- =?iso-2022-jp?B?dWNlNkQ2WUEzS3REREZsRDFOODZCbW9waDY2SkE4MTcvcFZ0dE1iS056?=
- =?iso-2022-jp?B?czAwR2RadmIwWkNLYUpaSmN3N0pvczVZTUVtY2lnTW5sVGZkQU90Sm5J?=
- =?iso-2022-jp?B?NlNSaHZCWTlZaGlrZWdFRnZ3Y0pDV0JoUjVCY2NEaXllMFRGSUpQUk9C?=
- =?iso-2022-jp?B?QmluRHZpMHJyMnZSUnlZcWswdnZqM285OW9zOTVBMnZwSEFCZDYzYU4w?=
- =?iso-2022-jp?B?MEdKTS9uV2c2YXNYZTd6cEtZYUsxaGM1TmwxbURPN211QTFvSzVRNUp2?=
- =?iso-2022-jp?B?RmVVdytGQnFJWloyTTA2LzhidWdRTEd4YWVNVGtIVnM2NzFTdjJnRVlR?=
- =?iso-2022-jp?B?d3UzUzcxWUw0Y0tvQnN6WW5WbzVXNko4SHQ3WVE2ZzM3bC9pQis1Rzkr?=
- =?iso-2022-jp?B?ZEIrZ1BmaVN2Z0RLS1hBelpqMDh2MUtDNW03bWFRbC9QMVdHbjA0aDZJ?=
- =?iso-2022-jp?B?SUFiQlZDUVl1MkFFQVN6U2VwcEVnY0Y4bW52RGNEbUxqQkYxMUxOMXhE?=
- =?iso-2022-jp?B?U1RUZmdaL29iaG5Pc21OcWFNMFRGTm9Sa1hsR1ZOVUFLU2IrOHIyYkRV?=
- =?iso-2022-jp?B?NnpUZlJpdUh2SUhDR0FWU2szMGpqZ3V1WndqbWRNV3piRjRGZ0NpdzJS?=
- =?iso-2022-jp?B?Ui80V0tDYnluTUtSZ3hYbDhuUlBwWmZEejZRTzhiR3ZmNlpCNVN2YUht?=
- =?iso-2022-jp?B?R2NWdyt0Zjk5YXpuTnl0L3hZSFBhcG56ZkovRXdpQW4xTHRGT0NQdnIz?=
- =?iso-2022-jp?B?ZGc9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?SGJiSzA0N0k0Zi9zVTRFN1Jxb1FaUk4rNVFsTDIvTUl2QmVUdXZEa2RG?=
- =?iso-2022-jp?B?Q3ROOWhaaG0yc0tiMnlyZE1CLytPRE1VaDR1U1Y1aEw0T2d0TncyYkJn?=
- =?iso-2022-jp?B?V09WL0pBT0IrYU56QXRhelBVVlVLd1ovNzA5KzNCaGhteUlIOXhrNzVr?=
- =?iso-2022-jp?B?ZXJ6dWdkNkE0Y0Q1UWpNTGVncUhwekVPMlNuNmQ5cTNsdGdsMERSdC8y?=
- =?iso-2022-jp?B?RXJIUFJsUzJZUjZmblhETmF4bE00cWI1R2FhTS9uUlM0Yml1OTRiamNL?=
- =?iso-2022-jp?B?WXd4azJzNzhoTzAwSkkyUjdvSXU3NWRZbEpqa0hoZklqWXo5TXN6QWZq?=
- =?iso-2022-jp?B?cDZ3cnNya1RHU0E3QlQ1ZldQN0ZMRTRmZWZqM010amppQ2NyL21VS0ho?=
- =?iso-2022-jp?B?Zjc4QitNbnIzdmJvYVluUmRXR09sNXhYdHNtTzhzZjUyZkFrWTQwK0xR?=
- =?iso-2022-jp?B?M2dSc3dpZVdIcVdTa0o1eFk1VFJza3k4UjhhZTlaSmdlV2ZOZzZzUWhr?=
- =?iso-2022-jp?B?M1FNWDdRWlJUU1REZzRMS04wOFNNSW1oQlpoS0RiS09yUTVPdkorWGJN?=
- =?iso-2022-jp?B?SjZSWmM0Rk0zVkMwbU5iWGFhS0kyN2JUYStpY1ViVTFpNTBDb1lTemdY?=
- =?iso-2022-jp?B?MitqM08rRU41cWZQS09taXFrbiswKzE5UmRTR2YyaDBPK3VZc2hsMHo5?=
- =?iso-2022-jp?B?TFZmZXMxQWcxMEVFcGdsZTZUZ21NK2UxZGI1OUtXWTFGQWxBSnUwNm9r?=
- =?iso-2022-jp?B?aTEzZ2UvaU1UaVhvZHQ4S1VLRkk2c21sQXZ5N3JnSEl1UWJZRXg2blRQ?=
- =?iso-2022-jp?B?MmJmemxwY29oeTJsTVA0WnY0QUYvS0VSOXdqQWhuVktiTlRKS29DWkt3?=
- =?iso-2022-jp?B?aTBwMHJrMmlvNk5LNFVVanhHSTNYV2dDQXRLS3pXKzVOcWlqSVhXMk4r?=
- =?iso-2022-jp?B?NVgyVDk0Q2VzOXMxTXpLb1l6VU8zbFFkK3ovYWFjR0x6TzR0NHBWaWZC?=
- =?iso-2022-jp?B?VTFWZ0lxREd2alEvZzlKUk1jdHFTenhLRFd0V09tK1E0cUgxanR5aHRk?=
- =?iso-2022-jp?B?UlUwVmk0TklVTHc5WkdxZ0NEMHZZM3hWTnQ0VmlrRTM3YXlOeVlQdTVu?=
- =?iso-2022-jp?B?NWU2Qk9jOTFESm8xaC9GeDZQMmNKOU5FaldBYzlrc0xpZE9lemtGclBB?=
- =?iso-2022-jp?B?MnU3R0RxckFSOWwxd25qK1lNSTJSOFZtRWU0TXMwS0tOY1ZhZXZySklh?=
- =?iso-2022-jp?B?dk0xbitqaG1kUzdUMUhMTXRtWllKUDdQaEFlcFdudlpxNFdKemJKMUFS?=
- =?iso-2022-jp?B?SkhlKys5YThqMXRKNHFSdDhIbmdoazQ2SEs3blpSMGNhYUNxNjRSZFFk?=
- =?iso-2022-jp?B?ZVMyZkhJRnhycVBaY3FlRlhiK01FSjBkTmFQQ1lKaVNkZTdNTHBPeWpX?=
- =?iso-2022-jp?B?NUFFcFl4dGpzV2dseFRPM2tDS1ZDa1Zzb2lNUXA2cThEam1kTzRmRzN1?=
- =?iso-2022-jp?B?Nys0RmVyNmRSaDg1WTNBdWw1L3U5VkNVRjRtdVNmbWdFZU5jWnRCR3hy?=
- =?iso-2022-jp?B?U1FKR0greHpmVDF4TitIMkRqL21WVGozWkFrQkZnTzZVdmY3cXpRbjB6?=
- =?iso-2022-jp?B?VGlVWVRKM2RlWGpQU2hWMTg0b1NpNDB3TGFHMmp5UW1SeUlvamJQeWNw?=
- =?iso-2022-jp?B?YXR5aFJCd1JnY0U4QUM2QWNWOThnY01Tb2dmNmZNRWlaKzRKdXJOeTk2?=
- =?iso-2022-jp?B?MUtLMStDYklDa1hhRENpbHZpNnpTdDlsSG5xK1VoMEVIc3VmeXVDTU9t?=
- =?iso-2022-jp?B?R2Q1dWRnZkVZbzgybTRzV2tDejNtWFhiNys2bjk5eUVmWmVuVFZ6THlo?=
- =?iso-2022-jp?B?dVNUTVFjQW5QQkppeW11c2lZcG9WeUVkcDhvSXYrS0NuMlFqMkphTGsx?=
- =?iso-2022-jp?B?MXJuL3hoaDZlUmxqTnI0NGFySDE0eWRpTzdjSzJJL0dGc2lCS0VDMjll?=
- =?iso-2022-jp?B?VUt0MmsyOUZIckhOdFRJdDQwNFozSlFiUlQxaVkyT05wRjRaMDZNOElz?=
- =?iso-2022-jp?B?R3BMWlUzUnpRdlFxNXFETnBUc3U5bDRyYm5iZG9RUzNMT1hFSGc2MkI5?=
- =?iso-2022-jp?B?a2FIUGVtV0xDZGJ3NWRTdmI1cVJpTzRKcFB0QjFabVIvbDZUWCtLTEdF?=
- =?iso-2022-jp?B?WUQvTE5DeHJqc0tZRHZFT1lpUHR6YjhEZ0l2T1JvQ01uQkZEVXdwV1hK?=
- =?iso-2022-jp?B?OXVyTlZyOVFGaXh4MWFuWWlVQnhtNlpBczFaa0JSTEFGOFFTcVVacmU5?=
- =?iso-2022-jp?B?NjVhUlRMaEszSHBZMzlveStYelF4ZWpDdXc9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ 2024 09:48:06 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%7]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 09:48:05 +0000
+Message-ID: <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com>
+Date: Mon, 8 Jul 2024 19:47:51 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 00/18] PCI device authentication
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ David Woodhouse <dwmw2@infradead.org>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+Cc: linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
+ Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+ Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+ Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ Eric Biggers <ebiggers@google.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <cover.1719771133.git.lukas@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <cover.1719771133.git.lukas@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY8P282CA0009.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:29b::11) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	RhjNEqehM8uZ/qwLsINdLtOJOATO5OOSBg7uH7fAlgQUR0fKpYXZI1RQ5F3pp3cfSk5UIYlqJhGiz5YMiERKjXx1mNDYlC52nblupdVQgaQ35HFc621n9lptH+ZR5j4ww1XQ91SBSWXjm/AeBiXudZE1r0HRwatu1mbHVItzFmrLXQtCz1/dmMMZz5D2QEIdfxB7CG7pIcu48TeEr2IDnWC2IoxUkqPSNlSIMAHEwLWTeCGf7TI+9PzVWEafPmdrNHHU8KxnZhdvXJ93vrtROD6+hdyEf9/Ms9cl1IXsbIE4oraEUUtQ708GkW4nCO94leLefachVH24WNgVB8SyE461ozmXaCNMoTDZ6wSEGwNFS3PAL2xxFoYXN90pNYqvyIXSr6JkgAmWrs5lUAnPm1rxlyKgode5nVQdZksW5IibPZXSKoSO7uDMLUkaiXjx7azQpsWipnz60rKrIWpZMyA+o512xY/mTZL06JeylI55A1fODlsSz47KOJJUJ+7056jXOSQvVg4PIeWex48Ii0IJgMuR3tVj7WBHarOTuLskYc6MkRmUkbrVRKFxtUfnxtdCi6QPCUiHo5GQeo6NHHQQZcCbYYpmfJDvMbd+dU8+hVtvfIFKJJPPI/hR9W24
-X-OriginatorOrg: fujitsu.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CH3PR12MB9078:EE_
+X-MS-Office365-Filtering-Correlation-Id: 844a84ed-5ff4-4c4a-ba41-08dc9f3310a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Qm9GNVZnNG43S1JncE5Lb3BhSElNaWRCdjhnV0F0VGw1RUJUdTEyYXE4N0Ri?=
+ =?utf-8?B?RCttZldIL3FvYVFFakQ0UmUvejE4V0Y2MVI0NStnZ0YzNURtbkNJOUg2dDRG?=
+ =?utf-8?B?Y3JKdXIyUkRhcXFmUzk1ckxKb0IrU1JlY2p3UmdBZXdpUVZrOURqK25mTFVl?=
+ =?utf-8?B?VDBuK0FhMWtKa00wcFRlT2RyaE83VzdYOVBHdjBPWmRNc1lzZFBOMnB2NGZZ?=
+ =?utf-8?B?VjlaZktsL0x6OTJpZ3A0M3VZYTk0RTFQa1UwQnYxbnVwQ2tpbHZVdXNCQzBQ?=
+ =?utf-8?B?WlJRZ1QxMTA5VDZ5ak94bC9yTlVvNDBKbHBkU3pLU09LZGYyUmRYSlBmRGhi?=
+ =?utf-8?B?Y0NPV1dka3lzN1dYajE1ODcva3pIM2FjSGpOU0hiTnZ3OENCWmNUWmJWd3lJ?=
+ =?utf-8?B?cnREcVpWak5SRDQ5L3R4S1RSM1ExdFNxVEhOVHljNWlqY0dTWE13VWJ2RUc2?=
+ =?utf-8?B?Q0wrRUhoR25CMmRFQ3RpelA5UG1WUnozdFdrNVJkbklqbnBaSE1PRnFUNEh5?=
+ =?utf-8?B?NGZmeEJGWG5YOVdUWW9RYThkWnpRK3hkeDBOZ2RYWVJPOEVzT0VQT2VmQmhP?=
+ =?utf-8?B?WEVrbk5CenloaDZwSEw5R3c1YmpWNnFsUSs0ZjdyWUsxN2JlM1Rwb09KSHdJ?=
+ =?utf-8?B?OGRsem5rTVh2M2Z2UXFqVjFzNVdhdC8wQlVDc0JpV2NrcUhvYWhKOHByZW1w?=
+ =?utf-8?B?TjBJemluZlFYZTZzL1ZsQU8xcUplRVJobERVc1FqanZMVDl6bFhxNHV4RU9U?=
+ =?utf-8?B?TWU0U3VKUUdRK0tjTk5aZURhd2w5enJKc3BQeDI4bHMrWDk0TXArMTRSUUFn?=
+ =?utf-8?B?NmY0Szg5N3B3ZFh0TkUvRUdZK3haUE9RVyt3Y0Z6RFc3cDZKRE1MVzhVZmdK?=
+ =?utf-8?B?NmRpSnJ6aVh6WkNXLzN4UXZTckZTVFBzNTBpdHdSUEVTRThDSG83dXR0MXF5?=
+ =?utf-8?B?U3dsSGtabjkxcVkvS0RpTWxEV2xpNFRzcEVjcnAwY3R3d2tkMmxUTEJnS3NJ?=
+ =?utf-8?B?TlU5cDJDQTJqM0Q0enVncE4rSUFpdG1wRU9sdEJSdDFhdzFtbVZZeHhWMlhY?=
+ =?utf-8?B?MjcyaEwwVWpsblpHZ01kLzd3dTUvbVNtZm4zSkJvMjNXUm9mcFUwVTM1QmF6?=
+ =?utf-8?B?dlNWbWdVYmp1TE5ZRnV0Q25EdUx0QkM0aVdlcUJxMEpHNHljSUVZMEVwVjBX?=
+ =?utf-8?B?eURZc0NmT0FGakZRRWxvYVBNVTBCOE45NzBNaG1XbzY3Y21GWU9yK1ZicW9x?=
+ =?utf-8?B?a20rd1k5cm9UanZxZk1BTUdLU0xjU0pzRmVqZ0tjSmFzZHVFZ3RMTUNhTGtr?=
+ =?utf-8?B?SS9hamR2dHM4ekFuR2hEeEdpUmlad3RYSVY2eUtrN0dJR0U4L2FOSFlHUytV?=
+ =?utf-8?B?NGNuVytBMWQxU3NkdUZuTUVZbWVlUUxpUU5taGorUjl4UUMxQWZqd0t0SE9G?=
+ =?utf-8?B?aGVta21PRWRoTnJGRXE2Zkx6UmM4RmNhU3Nxa2FqSFBGaEwzKyszOGFoRmxv?=
+ =?utf-8?B?d1lGb3BZeHR6dkxRQml2ajIyM2lxemhoc0lOWk1WeEsxVHVZWlVPdFZKeitx?=
+ =?utf-8?B?ZTA3V0h4bzdaY0c3ektlamU1cUc2dWZFT0xObFlZSHhHcXJaZzV1RUpNY1BD?=
+ =?utf-8?B?WExWaS9hdUE0ZlBkcmZxWmhIampRa3A2L2hMM1hUa0tKSVV3VXM2TTl2Zm1u?=
+ =?utf-8?B?M1c0WStHSXUxTW9sQTRIS0l4RTQvVDMwMnllSDBnV3dXYXFkZmtWcWJZUm81?=
+ =?utf-8?B?YTkzbWpWUTFLd3VBQjh0WVpGZUZ3SHE1b2xPUm5ncFNoT0xXRU4rRGp3TUhX?=
+ =?utf-8?B?aEZ2cUxOS2tneFBlZS9ZQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d2d5bXY0SktDWVgyZ2k5MlkxTGVGWklic09pRElEUzJRZHpkckg3R0JQWVJZ?=
+ =?utf-8?B?SjBpRURNd3NzQmVSWVVVRDhRQWVaeXZUTWFVRE93YVpaRm50Y2cvTUtGMUND?=
+ =?utf-8?B?Um5PNjA0ZDFFc01mNk16dTJMZWhKbk1Kdk9uaWpIRnpmS0JTOEpzelBHRUx5?=
+ =?utf-8?B?b3hOck9vYnBxc0U5d2RDU2V2ZXJobFlQL1RZTUUvc2UrN3F2enF1cmpwSVRw?=
+ =?utf-8?B?SXM5U2pOZ2Flb1FRMlRQMFVTaHFLam10NFQyR2dxM1JPZXgyUXJaRWtEdzl6?=
+ =?utf-8?B?YTFwY0hYZGhheURrSFhJSCtkUURFbUtJMzBta3VyQVdyNTBCeU1tSTNxeE9x?=
+ =?utf-8?B?ek9lK0FSQXNSZ0N2WThLT0NwNC85LzlKT3ZPczdnR1BrV2NtOHA4WUY1MGZD?=
+ =?utf-8?B?L25hUzl6dWlJRGgrQVpjRWkwYkpnaDM2bHhDdC9GZ0FPdzlqV01hckYrbFN6?=
+ =?utf-8?B?dDAvSDdmWHZRa01NWDMvT3BlZzdtZzc5VU1mdXRBMTNJSUxBMndVLzIxRnZq?=
+ =?utf-8?B?cmFxTXZOUVpQN1VwYUlrQTdqK2p1TlNSbGdvT1VGdWpkaWhLSW9VbU53bDVC?=
+ =?utf-8?B?SWpQbjdTT0R1VUpQTkdxS2wzMVA0MnorMHdjaCtQSGxFMlVnZWlXNFBNaS9I?=
+ =?utf-8?B?RDI0N29iNVA3VXA5SW1wSlZiaWVMcll5WFlsemkzQjV0WWFpTlJYSURQNTNJ?=
+ =?utf-8?B?V2p4RWNVSXluYUVLNVFnNVA5bTRPbDQ2Q0RLdlNTQmRONWJtUUJHQnNKSUNn?=
+ =?utf-8?B?UWpSOTgvVVo0d1JyVFZSRnlMdE1GQ0xkQmIvZHVCT0M3UlQrek4zc1lhSUlK?=
+ =?utf-8?B?Y004MTVzSVkzczhDNVBraUYraTFFOGtDMjNPNDVjVUpseUMyaUhVN3ArK0tS?=
+ =?utf-8?B?Y2J2WVlxakxpdC9taEpkKzRyY2RseklGbVgycmxjWnMrU1RXdC9QWXdOZGh1?=
+ =?utf-8?B?dzIvV0J1R0N4RG9wK045b0NMREdSZ1R3RXJSVGRXSHdTMVNjcEF5N3BVWW0x?=
+ =?utf-8?B?UC9iZnR3eHZULzlDV2Zma1BxUzhKTHNwRWs2Yk8zd1FsbGdjL0pQcExlaUE0?=
+ =?utf-8?B?dUIrNXB0NWFrZXhpVUluZ3Yza0pyWU5OM0xiMDFGNFFRYm51TW5wUVhUKzlB?=
+ =?utf-8?B?R3loY3J1d0w0Mk1FMUFVVDhDT1huaHhmV0FSQWEwNEE1bkpEc0N6emlxWk1Z?=
+ =?utf-8?B?Yk1kek1PMWdyZ3ltOElqRlVIUGtqdUpWUjB5aHI0akNuOTkyV3VQTnBYRFVK?=
+ =?utf-8?B?VWhzejFvejhxMjdtaWQ1T3Jhd0JpZG5YYU1jbUpxa2wxZW1wT1lwRHFKM21F?=
+ =?utf-8?B?RzhxS1M3NGhNNGVTaU5qaUVaVWp3TWFjV2QvMnRiN0YxaHpxeDlrS3F3Y2F5?=
+ =?utf-8?B?SGtmNE16SnNHVXk1UlBoYXlTaUI3NHdGUng2enppMTFUa0FFVVRUQU9vODcv?=
+ =?utf-8?B?a3lRRi9tRHJ0UnNWa0h5V01zZllzTjllN1lHQk1Ya1c1MUwzM1kyTERzVk44?=
+ =?utf-8?B?OU96SzlKN0wzUkVhcUZhcllHeDl4d1Z5RDFmenRNc3ROeEkvYTRrT3NVbk9h?=
+ =?utf-8?B?MU0zdWhYZURMYS93eGFGU2JLa1A4Nk9HQklKTnpReXJYdGtWbVRBMVk5V09T?=
+ =?utf-8?B?ekdsVEtKMjFIMWlENzV3ODdiY3JIVnNqRnc1L0VaVFkzczlzcWluODNVNHdH?=
+ =?utf-8?B?WVg3UTB1R0VvbXNhenl0enlHbWM2N1ZRYkhkWllmTnRmQUJUYUpHcmhXKzFr?=
+ =?utf-8?B?NlM0REtHdzl2a1VHNVpCWlR2MkRMZHhsNUhQNEs0bHlwckI0bmtCZ3VEamNI?=
+ =?utf-8?B?YmI3Tjl6OXNRaE1LN3VFVzRVVjh6NitIOWtwdmZKKzYvV3F3NURWR0lXUkMz?=
+ =?utf-8?B?dEcwV2pDUzNuOEVrMzdiODNDdUZ1U3h6LzlCZisvQnVLZ1plMVBsc1RwYVNJ?=
+ =?utf-8?B?cUNWZENOcFQxdnpFdUpjdWQ1a21yK3dnOVh5QWlqK0J1U2JXL0cwSGpBL2Ex?=
+ =?utf-8?B?QTZUQWFQZXdpZjdPck1IelA0a0MyeXgxNDVWQWFxSGtsYy9iT29oK2laZzhv?=
+ =?utf-8?B?N2FaNUNxWXdYUTB1STQrcFZ6OGlmNW5IYjdYc0JxOFdGSUFiUlF1K25OTnpM?=
+ =?utf-8?Q?AD4ZUhVsZzBUO2ho7gTh7bpPC?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 844a84ed-5ff4-4c4a-ba41-08dc9f3310a9
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b50e872e-33c0-4d72-8d57-08dc9efac5f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2024 03:05:07.9863
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 09:48:05.2885
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +3IlaLQfU00aTbubx9xoM9QdPwW92WCrt4S+4UuJFLQgsw0U52kYHii9ou4WTXX1L4Nm4Nhtgjv4hnz7Rs4n/hfWLwFmkk93jjXn2UhhfjU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB8133
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DCCckViU2lUVW+pdZMOCQHzc9MBy1zR3tC39IvN9tNwPDtyHtSCDe8Jr5d+gDLgXdxDS9zlRTxSmeOEvH4Sy7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9078
 
 
-Kobayashi Daisuke wrote:
-> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards, the l=
-ink
-> status can be output in the same way as traditional PCIe.
-> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a different
-> method to obtain the link status from traditional PCIe.
-> This is because the link status of the CXL1.1 device is not mapped in the
-> configuration space (as per cxl3.0 specification 8.1).
-> Instead, the configuration space containing the link status is mapped to =
-the
-> memory mapped register region (as per cxl3.0 specification 8.2, Table 8-1=
-8).
-> Therefore, the current lspci has a problem where it does not display the =
-link
-> status of the CXL1.1 device.
-> Solve these issues with sysfs attributes to export the status registers h=
-idden in
-> the RCRB.
->=20
-> The procedure is as follows:
-> First, obtain the RCRB address within the cxl driver, then access the
-> configuration space. Next, output the link status information from the
-> configuration space to sysfs. Ultimately, the expectation is that this sy=
-sfs file
-> will be consumed by PCI user tools to utilize link status information.
->=20
->=20
-> Changes
-> v1[1] -> v2:
-> - Modified to perform rcrb access within the CXL driver.
-> - Added new attributes to the sysfs of the PCI device.
-> - Output the link status information to the sysfs of the PCI device.
-> - Retrieve information from sysfs as the source when displaying informati=
-on in
-> lspci.
->=20
-> v2[2] -> v3:
-> - Fix unnecessary initialization and wrong types (Bjohn).
-> - Create a helper function for getting a PCIe capability offset (Bjohn).
-> - Move platform-specific implementation to the lib directory in pciutils
-> (Martin).
->=20
-> v3[3] -> v4:
-> - RCRB register values are read once and cached.
-> - Added a new attribute to the sysfs of the PCI device.
-> - Separate lspci implementation from this patch.
->=20
-> v4[4] -> v5:
-> - Use macros for bitwise operations
-> - Fix RCRB access to use cxl_memdev
->=20
-> v5[5] -> v6:
-> - Add and use masks for RCRB register values
->=20
-> v6[6] -> v7:
-> - Fix comments on white space inline
->=20
-> v7[7] -> v8:
-> - Change the cache value to offset
-> - Access memory map area in rcd_*_show() functions
->=20
-> v8[8] -> v9:
-> - Map the pcie cap in for all the time the driver is bound to the device.
-> - Add mapping the pcie cap in cxl_rcd_component_reg_phys().
->=20
-> v9[9] -> v10:
-> - Change a utility function for getting PCIe capability.
-> - Fix tab alignment issue, error handling, and apply suggestions from Jon=
-athan.
->=20
-> v10[10] -> v11:
-> - Add functions to have one function do only one thing.
-> - Add a size parameter to utility function arguments and consolidated the=
-m into
-> one.
->=20
-> v11[11] -> v12:
-> - Fix the error handling in cxl_pci_setup_regs().
-> - Fix and clean up some details.
->=20
-> v12[12] -> v13:
-> - Fix and clean up some details.
->=20
-> v13[13] -> v14:
-> - Fix and clean up some details.
->=20
-> [1]
-> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06
-> @fujitsu.com/
-> [2]
-> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@
-> fujitsu.com/
-> [3]
-> https://lore.kernel.org/linux-cxl/20240312080559.14904-1-kobayashi.da-06@
-> fujitsu.com/
-> [4]
-> https://lore.kernel.org/linux-cxl/20240409073528.13214-1-kobayashi.da-06@
-> fujitsu.com/
-> [5]
-> https://lore.kernel.org/linux-cxl/20240412070715.16160-1-kobayashi.da-06@
-> fujitsu.com/
-> [6]
-> https://lore.kernel.org/linux-cxl/20240424050102.26788-1-kobayashi.da-06@
-> fujitsu.com/
-> [7]
-> https://lore.kernel.org/linux-cxl/20240510073710.98953-1-kobayashi.da-06@
-> fujitsu.com/
-> [8]
-> https://lore.kernel.org/linux-cxl/20240606074814.5633-1-kobayashi.da-06@f
-> ujitsu.com/
-> [9]
-> https://lore.kernel.org/linux-cxl/20240610082222.22772-1-kobayashi.da-06@
-> fujitsu.com/
-> [10]
-> https://lore.kernel.org/linux-cxl/20240611055254.61203-1-kobayashi.da-06@
-> fujitsu.com/
-> [11]
-> https://lore.kernel.org/linux-cxl/20240612075940.92500-1-kobayashi.da-06@
-> fujitsu.com/
-> [12]
-> https://lore.kernel.org/linux-cxl/20240614045611.58658-1-kobayashi.da-06@
-> fujitsu.com/
-> [13]
-> https://lore.kernel.org/linux-cxl/20240617043702.62028-1-kobayashi.da-06@
-> fujitsu.com/
->=20
-> Kobayashi,Daisuke (2):
->   cxl/core/regs: Add rcd_pcie_cap initialization
->   cxl/pci: Add sysfs attribute for CXL 1.1 device link status
->=20
->  drivers/cxl/core/core.h |  6 +++
->  drivers/cxl/core/regs.c | 61 ++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h       |  9 +++++
->  drivers/cxl/pci.c       | 89
-> ++++++++++++++++++++++++++++++++++++++++-
->  4 files changed, 163 insertions(+), 2 deletions(-)
->=20
-> --
-> 2.44.0
 
-Can you merge this patch into the next kernel?
-It has been reviewed and I believe it is ready to be merged.
-If it is already in process, please let me know as it is my fault for not c=
-hecking thoroughly.
+On 1/7/24 05:35, Lukas Wunner wrote:
+> PCI device authentication v2
+> 
+> Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
+> expose the result in sysfs.
+
+
+What is it based on?
+I am using https://github.com/l1k/linux.git branch cma_v2 for now but 
+wonder if that's the right one. Thanks,
+
+> 
+> Five big changes since v1 (and many smaller ones, full list at end):
+> 
+> * Certificates presented by a device are now exposed in sysfs
+>    (new patch 12).
+> 
+> * Per James Bottomley's request at Plumbers, a log of signatures
+>    received from a device is exposed in sysfs (new patches 13-18),
+>    allowing for re-verification by remote attestation services.
+>    Comments welcome whether the proposed ABI makes sense.
+> 
+> * Per Damien Le Moal's request at Plumbers, sysfs attributes are
+>    now implemented in the SPDM library instead of in the PCI core.
+>    Thereby, ATA and SCSI will be able to re-use them seamlessly.
+> 
+> * I've dropped a controversial patch to grant guests exclusive control
+>    of authentication of passed-through devices (old patch 12 in v1).
+>    People were more interested in granting the TSM exclusive control
+>    instead of the guest.  Dan Williams is driving an effort to negotiate
+>    SPDM control between kernel and TSM.
+> 
+> * The SPDM library (in patch 7) has undergone significant changes
+>    to enable the above-mentioned sysfs exposure of certificates and
+>    signatures:  It retrieves and caches all certificates from a device
+>    and collects all exchanged SPDM messages in a transcript buffer.
+>    To ease future maintenance, the code has been split into multiple
+>    files in lib/spdm/.
+> 
+> 
+> Link to v1 and subsequent Plumbers discussion:
+> https://lore.kernel.org/all/cover.1695921656.git.lukas@wunner.de/
+> https://lpc.events/event/17/contributions/1558/
+> 
+> How to test with qemu:
+> https://github.com/twilfredo/qemu-spdm-emulation-guide
+> 
+> 
+> Changes v1 -> v2:
+> 
+> * [PATCH 01/18] X.509: Make certificate parser public
+>    * Add include guard #ifndef + #define to <keys/x509-parser.h> (Ilpo).
+> 
+> * [PATCH 02/18] X.509: Parse Subject Alternative Name in certificates
+>    * Return -EBADMSG instead of -EINVAL on duplicate Subject Alternative
+>      Name, drop error message for consistency with existing code.
+> 
+> * [PATCH 03/18] X.509: Move certificate length retrieval into new helper
+>    * Use ssize_t instead of int (Ilpo).
+>    * Amend commit message to explain why the helper is exported (Dan).
+> 
+> * [PATCH 06/18] crypto: ecdsa - Support P1363 signature encoding
+>    * Use idiomatic &buffer[keylen] notation.
+>    * Rebase on NIST P521 curve support introduced with v6.10-rc1
+> 
+> * [PATCH 07/18] spdm: Introduce library to authenticate devices
+>    New features:
+>    * In preparation for exposure of certificate chains in sysfs, retrieve
+>      the certificates from *all* populated slots instead of stopping on
+>      the first valid slot.  Cache certificate chains in struct spdm_state.
+>    * Collect all exchanged messages of an authentication sequence in a
+>      transcript buffer for exposure in sysfs.  Compute hash over this
+>      transcript rather than peacemeal over each exchanged message.
+>    * Support NIST P521 curve introduced with v6.10-rc1.
+>    Bugs:
+>    * Amend spdm_validate_cert_chain() to cope with zero length chain.
+>    * Print correct error code returned from x509_cert_parse().
+>    * Emit error if there are no common supported algorithms.
+>    * Implicitly this causes an error if responder selects algorithms
+>      not supported by requester during NEGOTIATE_ALGORITHMS exchange,
+>      previously this was silently ignored (Jonathan).
+>    * Refine checks of Basic Constraints and Key Usage certificate fields.
+>    * Add code comment explaining those checks (Jonathan).
+>    Usability:
+>    * Log informational message on successful authentication (Tomi Sarvela).
+>    Style:
+>    * Split spdm_requester.c into spdm.h, core.c and req-authenticate.c.
+>    * Use __counted_by() in struct spdm_get_version_rsp (Ilpo).
+>    * Return ssize_t instead of int from spdm_transport (Ilpo).
+>    * Downcase hex characters, vertically align SPDM_REQ macro (Ilpo).
+>    * Upcase spdm_error_code enum, vertically align it (Ilpo).
+>    * Return -ECONNRESET instead of -ERESTART from spdm_err() (Ilpo).
+>    * Access versions with le16_to_cpu() instead of get_unaligned_le16()
+>      in spdm_get_version() because __packed attribute already implies
+>      byte-wise access (Ilpo).
+>    * Add code comment in spdm_start_hash() that shash and desc
+>      allocations are freed by spdm_reset(), thus seemingly leaked (Ilpo).
+>    * Rename "s" and "h" members of struct spdm_state to "sig_len" and
+>      "hash_len" for clarity (Ilpo).
+>    * Use FIELD_GET() in spdm_create_combined_prefix() for clarity (Ilpo).
+>    * Add SPDM_NONCE_SZ macro (Ilpo).
+>    * Reorder error path of spdm_authenticate() for symmetry (Jonathan).
+>    * Fix indentation of Kconfig entry (Jonathan).
+>    * Annotate capabilities introduced with SPDM 1.1 (Jonathan).
+>    * Annotate algorithms introduced with SPDM 1.2 (Jonathan).
+>    * Annotate errors introduced with SPDM 1.1 and 1.2 (Jonathan).
+>    * Amend algorithm #ifdef's to avoid trailing "|" (Jonathan).
+>    * Add code comment explaining that some SPDM messages are enlarged
+>      by fields added in new SPDM versions whereas others use reserved
+>      space for new fields (Jonathan).
+>    * Refine code comments on various fields in SPDM messages (Jonathan).
+>    * Duplicate spdm_get_capabilities_reqrsp into separate structs (Jonathan).
+>    * Document SupportedAlgorithms field at end of spdm_get_capabilities_rsp,
+>      introduced with SPDM 1.3 (Jonathan).
+>    * Use offsetofend() rather than offsetof() to set SPDM message size
+>      based on SPDM version (Jonathan).
+>    * Use cleanup.h to unwind heap allocations (Jonathan).
+>    * In spdm_verify_signature(), change code comment to refer to "SPDM 1.0
+>      and 1.1" instead of "Until SPDM 1.1" (Jonathan).
+>    * Use namespace "SPDM" for exported symbols (Jonathan).
+>    * Drop __spdm_exchange().
+>    * In spdm_exchange(), do not return an error on truncation of
+>      spdm_header so that callers can take care of it.
+>    * Rename "SPDM_CAPS" macro to "SPDM_REQ_CAPS" to prepare for later
+>      addition of responder support.
+>    * Rename "SPDM_MIN_CAPS" macro to "SPDM_RSP_MIN_CAPS" and
+>      rename "responder_caps" member of struct spdm_state to "rsp_caps".
+>    * Rename "SPDM_REQUESTER" Kconfig symbol to "SPDM".  There is actually
+>      no clear-cut separation between requester and responder code because
+>      mutual authentication will require the responder to invoke requester
+>      functions.
+>    * Rename "slot_mask" member of struct spdm_state to "provisioned_slots"
+>      to follow SPDM 1.3 spec language.
+> 
+> * [PATCH 08/18] PCI/CMA: Authenticate devices on enumeration
+>    * In pci_cma_init(), check whether pci_cma_keyring is an ERR_PTR
+>      rather than checking whether it's NULL.  keyring_alloc() never
+>      returns NULL.
+>    * On failure to allocate keyring, emit "PCI: " and ".cma" as part of
+>      error message for clarity (Bjorn).
+>    * Drop superfluous curly braces around two if-blocks (Jonathan, Bjorn).
+>    * Add code comment explaining why spdm_state is kept despite initial
+>      authentication failure (Jonathan).
+>    * Rename PCI_DOE_PROTOCOL_CMA to PCI_DOE_FEATURE_CMA for DOE r1.1
+>      compliance.
+> 
+> * [PATCH 09/18] PCI/CMA: Validate Subject Alternative Name in certificates
+>    * Amend commit message with note on Reference Integrity Manifest (Jonathan).
+>    * Amend commit message and code comment with note on PCIe r6.2 changes.
+>    * Add SPDX identifer and IETF copyright to cma.asn1 per section 4 of:
+>      https://trustee.ietf.org/documents/trust-legal-provisions/tlp-5/
+>    * Pass slot number to ->validate() callback and emit it in error messages.
+>    * Move all of cma-x509.c into cma.c (Bjorn).
+> 
+> * [PATCH 10/18] PCI/CMA: Reauthenticate devices on reset and resume
+>    * Drop "cma_capable" bit in struct pci_dev and instead check whether
+>      "spdm_state" is a NULL pointer.  Only difference:  Devices which
+>      didn't support the minimum set of capabilities on enumeration
+>      are now attempted to be reauthenticated.  The rationale being that
+>      they may have gained new capabilities due to a runtime firmware update.
+>    * Add kernel-doc for pci_cma_reauthenticate().
+> 
+> * [PATCH 11/18] PCI/CMA: Expose in sysfs whether devices are authenticated
+>    * Change write semantics of sysfs attribute such that reauthentication
+>      is triggered by writing "re" (instead of an arbitrary string).
+>      This allows adding other commands down the road.
+>    * Move sysfs attribute from PCI core to SPDM library for reuse by other
+>      bus types such as SCSI/ATA (Damien).
+>    * If DOE or CMA initialization fails, set pci_dev->spdm_state to ERR_PTR
+>      instead of using additional boolean flags.
+>    * Amend commit message to mention downgrade attack prevention (Ilpo,
+>      Jonathan).
+>    * Amend ABI documentation to mention reauthentication after downloading
+>      firmware to an FPGA device.
+> 
+> * [PATCH 12/18 to 18/18] are new in v2
+> 
+> 
+> Jonathan Cameron (2):
+>    spdm: Introduce library to authenticate devices
+>    PCI/CMA: Authenticate devices on enumeration
+> 
+> Lukas Wunner (16):
+>    X.509: Make certificate parser public
+>    X.509: Parse Subject Alternative Name in certificates
+>    X.509: Move certificate length retrieval into new helper
+>    certs: Create blacklist keyring earlier
+>    crypto: akcipher - Support more than one signature encoding
+>    crypto: ecdsa - Support P1363 signature encoding
+>    PCI/CMA: Validate Subject Alternative Name in certificates
+>    PCI/CMA: Reauthenticate devices on reset and resume
+>    PCI/CMA: Expose in sysfs whether devices are authenticated
+>    PCI/CMA: Expose certificates in sysfs
+>    sysfs: Allow bin_attributes to be added to groups
+>    sysfs: Allow symlinks to be added between sibling groups
+>    PCI/CMA: Expose a log of received signatures in sysfs
+>    spdm: Limit memory consumed by log of received signatures
+>    spdm: Authenticate devices despite invalid certificate chain
+>    spdm: Allow control of next requester nonce through sysfs
+> 
+>   Documentation/ABI/testing/sysfs-devices-spdm | 247 ++++++
+>   Documentation/admin-guide/sysctl/index.rst   |   2 +
+>   Documentation/admin-guide/sysctl/spdm.rst    |  33 +
+>   MAINTAINERS                                  |  14 +
+>   certs/blacklist.c                            |   4 +-
+>   crypto/akcipher.c                            |   2 +-
+>   crypto/asymmetric_keys/public_key.c          |  44 +-
+>   crypto/asymmetric_keys/x509_cert_parser.c    |   9 +
+>   crypto/asymmetric_keys/x509_loader.c         |  38 +-
+>   crypto/asymmetric_keys/x509_parser.h         |  40 +-
+>   crypto/ecdsa.c                               |  18 +-
+>   crypto/internal.h                            |   1 +
+>   crypto/rsa-pkcs1pad.c                        |  11 +-
+>   crypto/sig.c                                 |   6 +-
+>   crypto/testmgr.c                             |   8 +-
+>   crypto/testmgr.h                             |  20 +
+>   drivers/pci/Kconfig                          |  13 +
+>   drivers/pci/Makefile                         |   4 +
+>   drivers/pci/cma.asn1                         |  41 +
+>   drivers/pci/cma.c                            | 247 ++++++
+>   drivers/pci/doe.c                            |   5 +-
+>   drivers/pci/pci-driver.c                     |   1 +
+>   drivers/pci/pci-sysfs.c                      |   5 +
+>   drivers/pci/pci.c                            |  12 +-
+>   drivers/pci/pci.h                            |  17 +
+>   drivers/pci/pcie/err.c                       |   3 +
+>   drivers/pci/probe.c                          |   3 +
+>   drivers/pci/remove.c                         |   1 +
+>   fs/sysfs/file.c                              |  69 +-
+>   fs/sysfs/group.c                             |  33 +
+>   include/crypto/akcipher.h                    |  10 +-
+>   include/crypto/sig.h                         |   6 +-
+>   include/keys/asymmetric-type.h               |   2 +
+>   include/keys/x509-parser.h                   |  55 ++
+>   include/linux/kernfs.h                       |   2 +
+>   include/linux/oid_registry.h                 |   3 +
+>   include/linux/pci-doe.h                      |   4 +
+>   include/linux/pci.h                          |  16 +
+>   include/linux/spdm.h                         |  46 ++
+>   include/linux/sysfs.h                        |  29 +
+>   lib/Kconfig                                  |  15 +
+>   lib/Makefile                                 |   2 +
+>   lib/spdm/Makefile                            |  11 +
+>   lib/spdm/core.c                              | 442 +++++++++++
+>   lib/spdm/req-authenticate.c                  | 765 +++++++++++++++++++
+>   lib/spdm/req-sysfs.c                         | 619 +++++++++++++++
+>   lib/spdm/spdm.h                              | 560 ++++++++++++++
+>   47 files changed, 3436 insertions(+), 102 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-devices-spdm
+>   create mode 100644 Documentation/admin-guide/sysctl/spdm.rst
+>   create mode 100644 drivers/pci/cma.asn1
+>   create mode 100644 drivers/pci/cma.c
+>   create mode 100644 include/keys/x509-parser.h
+>   create mode 100644 include/linux/spdm.h
+>   create mode 100644 lib/spdm/Makefile
+>   create mode 100644 lib/spdm/core.c
+>   create mode 100644 lib/spdm/req-authenticate.c
+>   create mode 100644 lib/spdm/req-sysfs.c
+>   create mode 100644 lib/spdm/spdm.h
+> 
+
+-- 
+Alexey
+
