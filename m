@@ -1,78 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E301E876;
-	Mon,  8 Jul 2024 16:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DCF14BFA8;
+	Mon,  8 Jul 2024 18:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720456312; cv=none; b=ECB7P7dXsGeXZ1XakNO3JoC9vuLlehFgSdR8u0vWjRBVe/HRDvxy7f433V/YLCuaDkqOQQfcgUej/Uku0LwcXp96nVl0wJJf4bSTLEi/4A2OMvitDHCO1ka28NYrVwij4NFboyGTZpVOXkWUDoy5LIioUMLZf96UuydxM87F9z0=
+	t=1720464392; cv=none; b=Pv64waKKN4tDd/yRyNAE3/DWEPKFyHFX61ToIKjfb8GfN+Vzza4fy4VrZWZriwmVox2L0tm2NVG3biq0EL5YAXRTdgI1rWuCyIM6b1Uzs8Au6wzFf4wsHdVrPJS9mCdzfsbBBiFmipmG0yKUgGSGDwDk6klXrHsql19huMpPrhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720456312; c=relaxed/simple;
-	bh=OIY7mAKliXOrSwkWIU8gDcsma9imTxj14l4XNTy5SdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n28YTjFViPriMACbnp+B8oDzA2c+RWuKy7SehKHSlc51qoNsntpMSbFBTaLphMPrPnxxcP8fIUbfNhF1KXMEcndQWe2Dhl8ae1tCcvTu+yZFUmgJm+/MuLESWIUgcZpbT9uV9mz+XgxBezOhTg9PFuvbMlgMHqk8nsbESaNh59M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/aaHGSE; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1720464392; c=relaxed/simple;
+	bh=nWsKkWowCIBu+p5sjvVUVjNIp23bl9SMKEPKGmLp4tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsD08Ls0r1mJV4hgX1NslexkUq+mUWsgbejYGP4o30urF+mK6NT0//ZOEizU646D6Ky9rAuTMHkCl+XA47wFV5hA+dRO+4lm0Tx8BDCu9Z4EI/QkCpAM/g4mjwRKZ3BEGoGJDs/04oYF9S1cwoKX0iRMpmbaiD0JseSMw4uNFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=axskcSQs; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/aaHGSE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axskcSQs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720456311; x=1751992311;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OIY7mAKliXOrSwkWIU8gDcsma9imTxj14l4XNTy5SdI=;
-  b=M/aaHGSE/Ne41bS0j0GYxKGhThR6buGOx1AhXNVRGI/yJuyD50ccvczl
-   GI7dYQNuM9/Ip6qiWG5amJ5gEjhSZEeA6QmEAvgVFlnO2dZHRQgbRGpD5
-   74kR59sgDirxGPH0qc07yjKOwlVbbs5qfoH0ZFZZabY7cn1qtjJmf6dwo
-   JBVxRy2ExFGQABFRiW7m3xaxQcuLs2n3GA8wh1ot1xhb3WVqC8mSXoD8B
-   UlJ0P6hgV9Aexr0oL6lb64zVeuAl4BvX/I5LXv9QuSgOo8KSK6x6BABKl
-   c6TafGGS3sloKgxjFDKhXopDDvnhitGzgH8AMPcS3IkEV8sCNl0V62H7k
-   Q==;
-X-CSE-ConnectionGUID: /HS5tWg0TFewRRuiKJTSBg==
-X-CSE-MsgGUID: RYp3gOkLTkC9gUm09oC/wQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28275805"
+  t=1720464390; x=1752000390;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nWsKkWowCIBu+p5sjvVUVjNIp23bl9SMKEPKGmLp4tc=;
+  b=axskcSQszyy9taC6iLt7nKXnhU7imk7ovy84sB3UFRYPWriWLOTsVLJ5
+   LcJNBi83fu6cwGCV+WVsD3UGaiW7J0afN/z8gENfO2hcbjv2A6hKpbbRg
+   7n+rEqWnyHWAkX3PW8NrCx1SlcgdENGUsNMC53HqLhtKqpyBCM2dbxW2c
+   FEL3A91er620EHWZGQjXpJjcy5CkhWal5zGHu6uEvGzvoKwg0y49/jWg8
+   +IO3BoIwRI8Pi+qmnPOXRk+/PtwUaWd72dlJ77+P6EJb90VOu16RSafHN
+   2JFXtiSHFL1EyKCMjQ90Fm5wmzS8j/xoTjpJNcQMePBnNrBaybk1uhEdy
+   g==;
+X-CSE-ConnectionGUID: /4mzYbb8RvedRjCFGFlGtA==
+X-CSE-MsgGUID: luO3H9uWT42Pd7Cn1bZuRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="40194942"
 X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="28275805"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 09:31:50 -0700
-X-CSE-ConnectionGUID: MJNGz0qSTHakYub2nmsH9A==
-X-CSE-MsgGUID: UKtqXDqdS1OtluFW6HoMag==
+   d="scan'208";a="40194942"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 11:46:29 -0700
+X-CSE-ConnectionGUID: 6zaTBzB8TcKx8bpQm7yTCg==
+X-CSE-MsgGUID: mUB86ChdRU6fPZ2trmZSvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="52498124"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.203]) ([10.125.108.203])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 09:31:49 -0700
-Message-ID: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
-Date: Mon, 8 Jul 2024 09:31:48 -0700
+   d="scan'208";a="48327202"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.105.241])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 11:46:29 -0700
+Date: Mon, 8 Jul 2024 11:46:27 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: peng guo <engguopeng@buaa.edu.cn>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, wyguopeng@163.com
+Subject: Re: [PATCH] cxl core:wrong value of macro definition
+Message-ID: <Zow0Aw+vrXShXv+n@aschofie-mobl2>
+References: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl core:wrong value of macro definition
-To: peng guo <engguopeng@buaa.edu.cn>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, wyguopeng@163.com
-References: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240708152902.5853-1-engguopeng@buaa.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-
-
-On 7/8/24 8:29 AM, peng guo wrote:
+On Mon, Jul 08, 2024 at 11:29:02PM +0800, peng guo wrote:
 > The first value of the macro definition DEFINE_CXL_VENDOR_DEBUG_UUID
 > does not match the definition in the CXL 2.0 specification table 170.
 
-Thank you for the fix. Please use latest spec to identify. CXL spec r3.1 Table 8-71 I think?
+Please update commit message format and make it specific, like:
+cxl/core: Support mbox op clear log of vendor debug logs
 
-Also, can you please provide a Fixes tag for this issue? Thanks!
+Isn't that what this is actually doing? It's correcting a typo to enable
+the clearing of those logs. If that's true, let's not bury the impact
+in a typo headline.
+
+See cxl_payload_from_user_allowed(). I'm guessing that's how you
+found this.
+
+--Alison
+
 > 
 > Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
 > ---
@@ -92,3 +98,6 @@ Also, can you please provide a Fixes tag for this issue? Thanks!
 >  		  0x40, 0x3d, 0x86)
 >  
 >  struct cxl_mbox_get_supported_logs {
+> -- 
+> 2.43.0
+> 
