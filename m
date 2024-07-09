@@ -1,62 +1,47 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BD4168497
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jul 2024 13:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A7B257D;
+	Tue,  9 Jul 2024 14:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720530273; cv=none; b=JJj2zRoCWcUDMjf7ptP4fg95xXd8fQDFUaSDAPwVAx9Bj5rb6xiToSayGwc66GEEmW+jzX8HMgDR6gmeLnRdOHkVuB3aa7jRmBCXuxo54hHcUJOyu5V9/zNY1cuNcxRDBKPv79XdkWiLGhR6PpObXrOwlZWF4poDkvibHwR5YWY=
+	t=1720534382; cv=none; b=fonzTF7mLb+vrnLBrjVwb06oWJsp7anuaB4g5AYcWzCcxMB3Zv8uq+6mN/TTTKDV6aoD40N4mMa9kyFEmElu1yyu8CDIaci5a/CHfmRSFACM7H0EJ1sQGsX7BY/B/lqlFBR9ASZWEk1mKZintxKH+YqzSEJktlA9j5mhdvOBFzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720530273; c=relaxed/simple;
-	bh=ISZfsX1sdR8oYMUfg9cddXkliIBzshRgiXFd855cu5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m2rssFbVoJepPN3PFsPD+9t0LBI3hTD9jMFVnc66sU0U5Q7WXBy+HgRxEtNzjWgVGPZg7wwq3OhxHlXc2f8pX3J1bfKQ874eCtFb35KOeDnIP0MzWUG6WL3+cpjtipLMDyCzyBm/+F5cLtln7DlvQEI4SD7wjitNPcjeaGva/N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cujlNaFv; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1720534382; c=relaxed/simple;
+	bh=REUN238YloUXsB58VaHbrHn7J9PWVHNTx9d72CTCeCA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NinLdiIfc0Nk6fozII/sTZYfeHZXO4yWYIE14iZpJKSPN/UqhqDA5S47AWhNXVre/R3H+TNcg+EtsZLCIDd1qkhk6/kauS0drlU/zXy+C0U5sYrAF9+F2WVzwSGYRUOIWLl1XX8k8RvotxYBhZ4WDyer2IvcMF85YBsoy2E7Vt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=elFsQjvD; arc=none smtp.client-ip=20.231.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cujlNaFv"
-X-Envelope-To: axboe@kernel.dk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1720530270;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qIq//PVyAZav9RH/O/YvXvb4luJfe+YlS74Qx3jJG5g=;
-	b=cujlNaFvYcbREiHVbZGK1ZduR03z82mwda/PzKcqsUKu7Dl5kxKjxfPRM+ra28RllQqkZI
-	0QtnjXN3qefLz4VJ2ZtV+Pb6t0FBwkcF9nDZLlwJn4+lZMq9AE+lGluYM/sF4vzBb4sRPi
-	vzbu42IT2zfsxzHuRwlT4YwDafyYe0g=
-X-Envelope-To: dan.j.williams@intel.com
-X-Envelope-To: gregory.price@memverge.com
-X-Envelope-To: john@groves.net
-X-Envelope-To: jonathan.cameron@huawei.com
-X-Envelope-To: bbhushan2@marvell.com
-X-Envelope-To: chaitanyak@nvidia.com
-X-Envelope-To: rdunlap@infradead.org
-X-Envelope-To: linux-block@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-cxl@vger.kernel.org
-X-Envelope-To: dongsheng.yang@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: axboe@kernel.dk,
-	dan.j.williams@intel.com,
-	gregory.price@memverge.com,
-	John@groves.net,
-	Jonathan.Cameron@Huawei.com,
-	bbhushan2@marvell.com,
-	chaitanyak@nvidia.com,
-	rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="elFsQjvD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
+	Message-ID:In-Reply-To:References:MIME-Version:
+	Content-Transfer-Encoding; bh=fY/ybTvHed6MNaKpWv3DmQPhPOmMZSa+Cv
+	/Avwj2tGQ=; b=elFsQjvD50wAQ07Ua4n2XyiNmqvn6htCrVw/GzU31aS8hCtzUR
+	yA3KgA0Izj8mB3FYP2c+DcQDNFTv2L/+7JXIFwMK/6Y02mCwMsq8xHokgIrCgKsF
+	tqo+U8TROFhX2H+xkbDnBrLZNDM3yNZ6HkuEWIharia99Amghzwq/eVME=
+Received: from gp-VMware-Virtual-Platform.localdomain (unknown [139.227.253.190])
+	by coremail-app2 (Coremail) with SMTP id Nyz+CgBHovVZRY1m2YGkAA--.53442S2;
+	Tue, 09 Jul 2024 22:12:42 +0800 (CST)
+From: peng guo <engguopeng@buaa.edu.cn>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [PATCH v1 7/7] block: Init for CBD(CXL Block Device) module
-Date: Tue,  9 Jul 2024 13:03:43 +0000
-Message-Id: <20240709130343.858363-8-dongsheng.yang@linux.dev>
-In-Reply-To: <20240709130343.858363-1-dongsheng.yang@linux.dev>
-References: <20240709130343.858363-1-dongsheng.yang@linux.dev>
+	wyguopeng@163.com,
+	peng guo <engguopeng@buaa.edu.cn>
+Subject: [PATCH v2] cxl/core: Fix the UUID of CXL vendor debug Log identifier
+Date: Tue,  9 Jul 2024 22:12:39 +0800
+Message-ID: <20240709141239.10737-1-engguopeng@buaa.edu.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
+References: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,351 +49,59 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:Nyz+CgBHovVZRY1m2YGkAA--.53442S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Xr1UtrW7JryUXrWUXryxKrg_yoW8JF4UpF
+	WrKFy0yFZ5Wa47twn2q348WFWruasakryUC3ZF9w48Za93Z3W0qry5KayUJF90vr95J3Wj
+	qr4vkr15Ga10kw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvq1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
+	0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26F1DJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+	ZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
 
-As shared memory is supported in CXL3.0 spec, we can transfer data
-via CXL shared memory. CBD means CXL block device, it use CXL shared memory
-to transfer command and data to access block device in different
-host, as shown below:
+Fix the definition value of DEFINE_CXL_VENDOR_DEBUG_UUID to match the
+CXL r3.1 specification, although this value is not currently used.
 
-     +-------------------------------+                               +------------------------------------+
-     |          node-1               |                               |              node-2                |
-     +-------------------------------+                               +------------------------------------+
-     |                               |                               |                                    |
-     |                       +-------+                               +---------+                          |
-     |                       | cbd0  |                               | backend0+------------------+       |
-     |                       +-------+                               +---------+                  |       |
-     |                       | pmem0 |                               | pmem0   |                  v       |
-     |               +-------+-------+                               +---------+----+     +---------------+
-     |               |    cxl driver |                               | cxl driver   |     |   /dev/sda    |
-     +---------------+--------+------+                               +-----+--------+-----+---------------+
-                              |                                            |
-                              |                                            |
-                              |        CXL                         CXL     |
-                              +----------------+               +-----------+
-                                               |               |
-                                               |               |
-                                               |               |
-                                           +---+---------------+-----+
-                                           |   shared memory device  |
-                                           +-------------------------+
+All CXL devices that support a debug log shall support the Vendor Debug
+Log to allow the log to be accessed through a common host driver, for any
+device, all versions of the CXL specification define the same value with
+Log Identifier of: 5e1819d9-11a9-400c-811f-d60719403d86
 
-any read/write to cbd0 on node-1 will be transferred to node-2 /dev/sda. It works similar with
-nbd (network block device), but it transfer data via CXL shared memory rather than network.
+refer to:
+CXL spec r2.0 Table 169
+CXL spec r3.0 Table 8-62
+CXL spec r3.1 Table 8-71
 
-The "cbd_backend" is responsible for exposing a local block device (such
-as "/dev/sda") through the "cbd_transport" to other hosts.
-
-Any host that registers this transport can map this backend to a local
-"cbd device"(such as "/dev/cbd0"). All reads and writes to "cbd0" are transmitted
-through the channel inside the transport to the backend. The handler
-inside the backend is responsible for processing these read and write
-requests, converting them into read and write requests corresponding to "sda".
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+Fixes: 49be6dd80751 ("cxl/mbox: Move command definitions to common location")
+Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
 ---
- drivers/block/Kconfig        |   2 +
- drivers/block/Makefile       |   2 +
- drivers/block/cbd/Kconfig    |  23 ++++
- drivers/block/cbd/Makefile   |   3 +
- drivers/block/cbd/cbd_main.c | 224 +++++++++++++++++++++++++++++++++++
- 5 files changed, 254 insertions(+)
- create mode 100644 drivers/block/cbd/Kconfig
- create mode 100644 drivers/block/cbd/Makefile
- create mode 100644 drivers/block/cbd/cbd_main.c
+ v1 -> v2: update commit message  and addressed review comments
 
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 5b9d4aaebb81..1f6376828af9 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -219,6 +219,8 @@ config BLK_DEV_NBD
+ drivers/cxl/cxlmem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index af8169ccdbc0..feb1106559d2 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -563,7 +563,7 @@ enum cxl_opcode {
+ 		  0x3b, 0x3f, 0x17)
  
- 	  If unsure, say N.
+ #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
+-	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
++	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+ 		  0x40, 0x3d, 0x86)
  
-+source "drivers/block/cbd/Kconfig"
-+
- config BLK_DEV_RAM
- 	tristate "RAM block device support"
- 	help
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 101612cba303..8be2a39f5a7c 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -39,4 +39,6 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- 
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
-+obj-$(CONFIG_BLK_DEV_CBD)	+= cbd/
-+
- swim_mod-y	:= swim.o swim_asm.o
-diff --git a/drivers/block/cbd/Kconfig b/drivers/block/cbd/Kconfig
-new file mode 100644
-index 000000000000..5171ddd9eab8
---- /dev/null
-+++ b/drivers/block/cbd/Kconfig
-@@ -0,0 +1,23 @@
-+config BLK_DEV_CBD
-+	tristate "CXL Block Device"
-+	help
-+	  CBD allows you to register a CXL memory device as a CBD transport.
-+	  This enables you to expose any block device through this CBD
-+	  transport for access by others. Any machine that has registered
-+	  the same CXL memory device can see the block devices exposed
-+	  through this CBD transport and can map them locally, allowing
-+	  remote block devices to be accessed as if they were local block
-+	  devices.
-+
-+	  Select 'y' to build this module directly into the kernel.
-+	  Select 'm' to build this module as a loadable kernel module.
-+
-+	  If unsure say 'N'.
-+
-+config CBD_CRC
-+	bool "Enable CBD checksum"
-+	help
-+	  When CBD_CRC is enabled, all data sent by CBD will include
-+	  a checksum. This includes a data checksum, a submit entry checksum,
-+	  and a completion entry checksum. This ensures the integrity of the
-+	  data transmitted through the CXL memory device.
-diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
-new file mode 100644
-index 000000000000..646d087ae058
---- /dev/null
-+++ b/drivers/block/cbd/Makefile
-@@ -0,0 +1,3 @@
-+cbd-y := cbd_main.o cbd_transport.o cbd_channel.o cbd_host.o cbd_backend.o cbd_handler.o cbd_blkdev.o cbd_queue.o cbd_segment.o
-+
-+obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
-diff --git a/drivers/block/cbd/cbd_main.c b/drivers/block/cbd/cbd_main.c
-new file mode 100644
-index 000000000000..bbc268676694
---- /dev/null
-+++ b/drivers/block/cbd/cbd_main.c
-@@ -0,0 +1,224 @@
-+/*
-+ * Copyright(C) 2024, Dongsheng Yang <dongsheng.yang@linux.dev>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/blk-mq.h>
-+#include <linux/blkdev.h>
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/bio.h>
-+#include <linux/module.h>
-+#include <linux/blk-mq.h>
-+#include <linux/fs.h>
-+#include <linux/blkdev.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <linux/workqueue.h>
-+#include <linux/delay.h>
-+#include <net/genetlink.h>
-+
-+#include <linux/types.h>
-+
-+#include "cbd_internal.h"
-+
-+struct workqueue_struct	*cbd_wq;
-+
-+enum {
-+	CBDT_REG_OPT_ERR		= 0,
-+	CBDT_REG_OPT_FORCE,
-+	CBDT_REG_OPT_FORMAT,
-+	CBDT_REG_OPT_PATH,
-+	CBDT_REG_OPT_HOSTNAME,
-+};
-+
-+static const match_table_t register_opt_tokens = {
-+	{ CBDT_REG_OPT_FORCE,		"force=%u" },
-+	{ CBDT_REG_OPT_FORMAT,		"format=%u" },
-+	{ CBDT_REG_OPT_PATH,		"path=%s" },
-+	{ CBDT_REG_OPT_HOSTNAME,	"hostname=%s" },
-+	{ CBDT_REG_OPT_ERR,		NULL	}
-+};
-+
-+static int parse_register_options(
-+		char *buf,
-+		struct cbdt_register_options *opts)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *o, *p;
-+	int token, ret = 0;
-+
-+	o = buf;
-+
-+	while ((p = strsep(&o, ",\n")) != NULL) {
-+		if (!*p)
-+			continue;
-+
-+		token = match_token(p, register_opt_tokens, args);
-+		switch (token) {
-+		case CBDT_REG_OPT_PATH:
-+			if (match_strlcpy(opts->path, &args[0],
-+				CBD_PATH_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		case CBDT_REG_OPT_FORCE:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->force = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_FORMAT:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->format = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_HOSTNAME:
-+			if (match_strlcpy(opts->hostname, &args[0],
-+				CBD_NAME_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		default:
-+			pr_err("unknown parameter or missing value '%s'\n", p);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+static ssize_t transport_unregister_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	u32 transport_id;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (sscanf(ubuf, "transport_id=%u", &transport_id) != 1)
-+		return -EINVAL;
-+
-+	ret = cbdt_unregister(transport_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static ssize_t transport_register_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	struct cbdt_register_options opts = { 0 };
-+	char *buf;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
-+	if (IS_ERR(buf)) {
-+		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
-+		return PTR_ERR(buf);
-+	}
-+	buf[size] = '\0';
-+
-+	ret = parse_register_options(buf, &opts);
-+	if (ret < 0) {
-+		kfree(buf);
-+		return ret;
-+	}
-+	kfree(buf);
-+
-+	ret = cbdt_register(&opts);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static BUS_ATTR_WO(transport_unregister);
-+static BUS_ATTR_WO(transport_register);
-+
-+static struct attribute *cbd_bus_attrs[] = {
-+	&bus_attr_transport_unregister.attr,
-+	&bus_attr_transport_register.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cbd_bus_group = {
-+	.attrs = cbd_bus_attrs,
-+};
-+__ATTRIBUTE_GROUPS(cbd_bus);
-+
-+const struct bus_type cbd_bus_type = {
-+	.name		= "cbd",
-+	.bus_groups	= cbd_bus_groups,
-+};
-+
-+static void cbd_root_dev_release(struct device *dev)
-+{
-+}
-+
-+struct device cbd_root_dev = {
-+	.init_name =    "cbd",
-+	.release =      cbd_root_dev_release,
-+};
-+
-+static int __init cbd_init(void)
-+{
-+	int ret;
-+
-+	cbd_wq = alloc_workqueue(CBD_DRV_NAME, WQ_MEM_RECLAIM, 0);
-+	if (!cbd_wq)
-+		return -ENOMEM;
-+
-+	ret = device_register(&cbd_root_dev);
-+	if (ret < 0) {
-+		put_device(&cbd_root_dev);
-+		goto destroy_wq;
-+	}
-+
-+	ret = bus_register(&cbd_bus_type);
-+	if (ret < 0)
-+		goto device_unregister;
-+
-+	ret = cbd_blkdev_init();
-+	if (ret < 0)
-+		goto bus_unregister;
-+
-+	return 0;
-+
-+bus_unregister:
-+	bus_unregister(&cbd_bus_type);
-+device_unregister:
-+	device_unregister(&cbd_root_dev);
-+destroy_wq:
-+	destroy_workqueue(cbd_wq);
-+
-+	return ret;
-+}
-+
-+static void cbd_exit(void)
-+{
-+	cbd_blkdev_exit();
-+	bus_unregister(&cbd_bus_type);
-+	device_unregister(&cbd_root_dev);
-+
-+	destroy_workqueue(cbd_wq);
-+}
-+
-+MODULE_AUTHOR("Dongsheng Yang <dongsheng.yang@linux.dev>");
-+MODULE_DESCRIPTION("CXL(Compute Express Link) Block Device");
-+MODULE_LICENSE("GPL v2");
-+module_init(cbd_init);
-+module_exit(cbd_exit);
+ struct cxl_mbox_get_supported_logs {
 -- 
-2.34.1
+2.43.0
 
