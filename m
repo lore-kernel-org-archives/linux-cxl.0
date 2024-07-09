@@ -1,96 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50A71B86D9;
-	Tue,  9 Jul 2024 22:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191F1FA3;
+	Tue,  9 Jul 2024 23:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720563321; cv=fail; b=q8BA+TW8hctqhU2yPmhi693R4uxYpEEDiC5kFgwXfa2alzHi3ezKSVWcZZKgvcIRvjIGcHauTe39yA3acWH7dyYreRVQMPd5dn/apcmXSddxIcQdsVqcawW9g3LA6NyWU5LnbhxZK9sl/NhFawlJ6Gzx+nnVmY/vIK/9jP8oPTM=
+	t=1720567903; cv=fail; b=mWFL08exNarbSwNC/KyMv/aK2W/O/Q0BA/GtwwVjRGyfs8ZeIrfR+4gDUFu8kypjmzywRAvH+qR1THefjdo7qyfiGBndox8I4HETjKAmRpNoG9KCB4vtL0oVWlCEYfgw2B84ExmRAAc5qqP7RJAZ7r1No1g7Jb8PLVMjp+P/u0c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720563321; c=relaxed/simple;
-	bh=xQrqE0h3H0wIm3V7tWoWC+qcPsx8VmOJjHvs2dChHtw=;
+	s=arc-20240116; t=1720567903; c=relaxed/simple;
+	bh=mBe/fY5WEU2mRdpqAzgao79YKlOQlYf0OnompptBC5g=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=k/a1Gn4gfA9qXIAq6X7LAj8ZqcWRox8IR3Xm/tSfS+5x1ssKv4SAcpPuZnDLQvO/ErJXT9ifgAyw8DwA7b9+aIJ7eJfZbasnnlX0AOfONaET3iCnY6ln24vqGx3KAiDCXHTY3SH0UERkKAfRNOLGeigHH/FY6HJUiMbdeabsR/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkZz7Plg; arc=fail smtp.client-ip=192.198.163.19
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jNEpFxhzqVR+NcSVfxhkd+SpiMv+VKlAnQMXCveg1TSubR+EssBeePDn78Bh2qRWH36qIWxebGzkpey31Y+OsyxFn8spqcSIHTsdIHw4oeFnIlcu04DSII29qGM/wCYh4FRSjTOWoMyTtlbBtVlVWKUPPRYlibWww8kMIf/yebk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fL/j/LMi; arc=fail smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkZz7Plg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fL/j/LMi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720563319; x=1752099319;
+  t=1720567900; x=1752103900;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=xQrqE0h3H0wIm3V7tWoWC+qcPsx8VmOJjHvs2dChHtw=;
-  b=AkZz7Plg9Zxkd5bqP6Ok2eA2FPSL0a9LgZQSgn4BsZjbUAyggORk63+C
-   Rge3LLxTe/4VBRmHPEGT1a1nr6U3NR/ExK9+dmdktmgymnEF3ekO1Rax+
-   7BI3flGcMDH3stfrU6VdazJTFi0ZW886Ux8OzJ0WLkZIvaXL9OXSKXTxS
-   RavzNSs2qcXIDNXkrnrRBJe0mssc4SW0ojGLIClcR2qvAy3E9TQnj822S
-   RP8k5sBNA+5L2/9RIZsqdHJ3m9vqbfjI68jY7inqBSWR5TvwppQ+Au24V
-   tVl8NTH8NI9f+glxZRVZRe7BX4nn460mxNVnJA9MR/t4hbdVml8Bq+IYq
+  bh=mBe/fY5WEU2mRdpqAzgao79YKlOQlYf0OnompptBC5g=;
+  b=fL/j/LMiA+TeiLQjlVEC7pXo/SeEYFh/Ol5F9fEY0vsEJZb+K/VE2GoC
+   ZCXbpZ/+2ECJHq+j1p/jxJsIvZTTLCvI45Z19CozCcKItvZhmk0s+lsn1
+   j0ciZbnTxul7+JXSOoMujC/S/Do10bxbgWrVld6TdPyPCi4pGf6KvXRW9
+   DhlFmq9qGaxP2o1dvn+i4u6ZfpcXb6AFxgQMDn01M4Vfj+AP/8w/We019
+   xxXnt20ewqUPXO93JU7eZ8wGP4aVcPpp8Askp3lZCI6eSKDCtRMSP6tpl
+   Z0/88Hsv9rbkiYJR5fZI3VOmBvyfzlrTBYTLU39CuIKBtPkkNXM16IRk6
    A==;
-X-CSE-ConnectionGUID: ANHeKQ2OQGWsqoAHubwtTA==
-X-CSE-MsgGUID: VcKp+EihQWaT/9WMNp/qZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="17558169"
+X-CSE-ConnectionGUID: tFxrg50YRCC7EofEkrS+YA==
+X-CSE-MsgGUID: BomEf8kjTFCgIJMPGEum2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="18001937"
 X-IronPort-AV: E=Sophos;i="6.09,196,1716274800"; 
-   d="scan'208";a="17558169"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 15:15:19 -0700
-X-CSE-ConnectionGUID: tOSIs7IeTMqCV354o0VkjQ==
-X-CSE-MsgGUID: UosAF7yfRyGPWVl8uQYUdw==
+   d="scan'208";a="18001937"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 16:31:39 -0700
+X-CSE-ConnectionGUID: BSlmd9v1TMytV4bExzBbqQ==
+X-CSE-MsgGUID: v2p3oTLzQoKdVazosLcxTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,196,1716274800"; 
-   d="scan'208";a="71225871"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jul 2024 15:15:19 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="52414426"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jul 2024 16:31:39 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 9 Jul 2024 15:15:18 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.39; Tue, 9 Jul 2024 16:31:38 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 9 Jul 2024 15:15:18 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Tue, 9 Jul 2024 16:31:38 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 9 Jul 2024 15:15:18 -0700
+ 15.1.2507.39; Tue, 9 Jul 2024 16:31:38 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DduFhe2MKtO03hWkL63O5leowesQ+m5gUs9+BK1tnMficcZiZx80DOViY5vGYY9M1BxrpvBB4qCExD5zbvm8YodLBPexUoxNzizn7Wu2DlJ/QuYV5Ca3J5fl+Egoklg4FJn+mUN5oH8sLPnFPovbgKIGPzr4J5HKpQT1DinVDVdmO++T+UpVEy9HWgvSKs4ixqSEuXKiFdUKua6UQ+sMLDx5id4PLvmY2YhpcGMxjShyVBhZbA2zDam7KZ5dNHzS4n2JDmokaYKYY+I9vnc+oSBJv+AkPICYgbPubc/llTy0V1WkTnKqZy1cTsX95ksZq7nPHl2axVS7iFhkvrXD5w==
+ b=RmMCrByHmMdrYeUWG0pmjiOB+CWbEJ0qgX0Bm7/I0cmvRz/KMsppamdhQ7/bGLJJlhzO0E6oVMVRw5aORg1b8rkk0RDjqytmz29fAxbOQGGDSB0Wwi6bROWEyIcK/+wXT5Wz+ydpwI2LvN5JcYP905IH1N3WWazrYPe6w0XdDnB+5uccLlbpPamwGU9Tr2rLfq+mlupy2okKKfLWmtRcrwIjKpQBfFwsjEqTMEtwgiEK52tCPcCqK7LaIdHK5A7AD2p83avaZgHM+vbWkIdVn/6tt5yMu9aqGKgxu2U/WcipAhRUWKuMUnY6K7zAG1Db/JSbgcK7DIXFF8sw8M4sqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dB90T1SVaWsoc46+1rY9/RnMAHAwc7j6oWr5P9P2yko=;
- b=WeX6/9WX2Fl601jR75GK9HTB/LlTam6BRVXNNuqlVMhSKP5TXJ9hfj9hVhC0eOx6sGYvTRO15wqxq26wSxa0EWYXIMiyUpCWBwlVCgjQLlgUvgGkuCau9CEgjDzyjm/y8s76HaSNxAWvpEtRGJ9b/NK3XnypVoJp/O1LAXxRN9ZMVZVa0Y/s2SbQ4btRrDyQK0gHDeiWBscDchyeWeLHABh+zfuJc/L8UKrbeO2Gpk7YkVg5h3Ydo1pXhPBU/K/kSzYJVToGcFO4l5dwkgRdbioL5BdLi066X2ppb21d98ReXY33oiXbbvUfAUbKwBj1Ppl2FcrpFgxwl9hyFr2XnQ==
+ bh=M/Pa1EnCqmkt5yFbTWfnw5iqep3e2JX3XDQ6Uyu32d0=;
+ b=hXrN3NZEf/T11Px8tTOYmnL0c9wbd0fD/a4+PbZ6N3RHuT/ouB8UWopwGhORHwN4bNNJua7kk1Jqzt25EJ/WGTqBdo4MZ+S9eUda//RAO0hzHy0jtNErCTLJ+6Ozl0kJCtNhmc+bSloa6jG9xjjD2TRyhrhLLD2xaHxwgrfYHpKlSz5z9DP86DLmT4mfn8g4e4tUtsgYJmQjoA35mxy1PNe+IqqkbFtog8O/H0ItvoBqWReRqL6V8j/M84QI32kQt5SKT3D8jkJvgnjknw6RBQHDkuhSqK2SLQ/v91bNHsK3PBVUAbUUPyCiZEf1HhTryoe4aurPcHhq0avIRKE2Mw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SN7PR11MB8041.namprd11.prod.outlook.com (2603:10b6:806:2ec::22) with
+ by MW4PR11MB8290.namprd11.prod.outlook.com (2603:10b6:303:20f::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Tue, 9 Jul
- 2024 22:15:15 +0000
+ 2024 23:31:34 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7741.027; Tue, 9 Jul 2024
- 22:15:15 +0000
-Date: Tue, 9 Jul 2024 15:15:13 -0700
+ 23:31:34 +0000
+Date: Tue, 9 Jul 2024 16:31:30 -0700
 From: Dan Williams <dan.j.williams@intel.com>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>, Dan Williams
-	<dan.j.williams@intel.com>, <ksummit@lists.linux.dev>
-CC: <linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <jgg@nvidia.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <668db67196ca3_1bc8329416@dwillia2-xfh.jf.intel.com.notmuch>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
+To: Lukas Wunner <lukas@wunner.de>, Dan Williams <dan.j.williams@intel.com>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas
+	<helgaas@kernel.org>, David Howells <dhowells@redhat.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+	"David Woodhouse" <dwmw2@infradead.org>, James Bottomley
+	<James.Bottomley@hansenpartnership.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<linuxarm@huawei.com>, David Box <david.e.box@intel.com>, "Li, Ming"
+	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	"Alistair Francis" <alistair.francis@wdc.com>, Wilfred Mallawa
+	<wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
+	"Gobikrishna Dhanuskodi" <gdhanuskodi@nvidia.com>, Jason Gunthorpe
+	<jgg@nvidia.com>, "Peter Gonda" <pgonda@google.com>, Jerome Glisse
+	<jglisse@google.com>, "Sean Christopherson" <seanjc@google.com>, Alexander
+ Graf <graf@amazon.com>, "Samuel Ortiz" <sameo@rivosinc.com>
+Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
+Message-ID: <668dc8525d9e7_102cc294f8@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <6d4361f13a942efc4b4d33d22e56b564c4362328.1719771133.git.lukas@wunner.de>
+ <668d7d318082b_102cc2942f@dwillia2-xfh.jf.intel.com.notmuch>
+ <Zo2QZ_4xkMR_Nmsf@wunner.de>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
-X-ClientProxiedBy: MW4PR04CA0108.namprd04.prod.outlook.com
- (2603:10b6:303:83::23) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <Zo2QZ_4xkMR_Nmsf@wunner.de>
+X-ClientProxiedBy: MW4P220CA0003.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::8) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -99,111 +114,180 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB8041:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d253541-f7e5-4ef8-1c22-08dca0649c19
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB8290:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1fa5d96-07a7-45dd-6ae0-08dca06f4537
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?6q/If2kLXjvAepu55qfw4YSwMYxNUUBIQEPfeqc3uF5rgXMP6K1GjJkR2UDV?=
- =?us-ascii?Q?ToDMO/zmczkn2L6m00vfiBt6USidLbIY4vrVQrhz3153EmNsie5XSv2OOnfi?=
- =?us-ascii?Q?PhlioJ9uz65ho7QYQqWKsLlikT8y72m0dlqLVYVVrARO/5LBjQoPDeMBW0AR?=
- =?us-ascii?Q?HePiyujArCtJpqyROPY03TA5JsO0rA8fyZ9jjBMknQyXaxGAeS1FCgeB5Rzm?=
- =?us-ascii?Q?c63p3clIWMF5MppVy/Uo++cC101He3hxU2h5cei2QCu81D38CKigzURD9fF/?=
- =?us-ascii?Q?V3B8uhIpc9311XNPxBw3sm8s9DrvrfNSF+fNIu4MqUQanW70o7U2X83QKfbc?=
- =?us-ascii?Q?8HhAkPN5d5llHxHNOAojeQ1QmLN2FZICR3tPFqgRnasQ6TYo0RP4fi17vVx4?=
- =?us-ascii?Q?CQLglwAz0H4nsto7ZB+kOfGooFOBO8FGjuDgbA9/VoqF6kBZsC+XvJmpGHBg?=
- =?us-ascii?Q?XeNiRLl8Kt0stdX4s2tFekibMHcqhJnGeRIcU4RMGWoP9w1qEIcAkNt0drt3?=
- =?us-ascii?Q?0yWiD4a1w1CMlg4ojze1LyuPUM2niUzhdFR1fMr6BiBBqMvDJCE6yii2dfbx?=
- =?us-ascii?Q?UtT1kvGOqM8LFDwVcbTZtIQP+4iqKhbG0V0+f4USkRV6yp9x5IGlAFf6j9vR?=
- =?us-ascii?Q?tyBwqzmt6VLcSJ3T2LIaD9ibj42fHVpQPQAbiWIUNNiBUQCuHcpykYagzm1z?=
- =?us-ascii?Q?5CtRL8G53hZWjKJ86oxZTHBsJ6qMoceQmde4Bdjmw6m2cq0zVYJiZ4RTLj3n?=
- =?us-ascii?Q?WnBwUT1ZOddlpExHNxmZuEs626Jc+oac3fCMfODCMCDVAsMz/Z4bld2kRSVT?=
- =?us-ascii?Q?3W99W0rwxMhehe5FCBnK9kjAO4Du7MqoEWBL6gKPUIIoqANNdXTKFh66956w?=
- =?us-ascii?Q?zew2pmffqw5dvxOsuJQOp0rabHIVcaPG7A/VMHmxoawHh9+CL1ba1D36ufK1?=
- =?us-ascii?Q?dI8OScryhTVnp5B44c+2dKAxNKOCLj4KNZnVfP8TGaZk2MqQ+FYXmQHrw1MX?=
- =?us-ascii?Q?4JhfALm+r4jWqPC+v4gcdEgdawCPwc3d29UhqvSwqcaCP2XUzCCP8a82pRDh?=
- =?us-ascii?Q?sk3GZlvTrdQMtw2miewhOXp89xd6rGG0knX0oGcQfLEyB5SXr+J6D1KnfSiW?=
- =?us-ascii?Q?Fu1qq6CvT4cEkZJJAilFSgkAlyQsJ8oSCWglFnkkMCKGf+D/NrZhIn4RoBIN?=
- =?us-ascii?Q?KZ2UYpsXBN9t5FNiHIf/2de8p9OVMc65gqE5R4AhhIxr5zPvp/7HK5g/K0ok?=
- =?us-ascii?Q?1ZAVgLagtWOiEAz2EdHZcDZIM3Aj2noXi9cWvDLP2NBc6JYz17Gbk0h5rNCk?=
- =?us-ascii?Q?3lk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?BN5gmSzBtdhqc91F1JQ07A7Y2ozNcCyOBKmKW5+iWrQ+Ft/YprrzVE+ivSNG?=
+ =?us-ascii?Q?8tVuvqhoHEwJ0OdOjSIdbyVhv6emeDbvc0bENIaEVz1kFf6L8qJkCZuJ0sVo?=
+ =?us-ascii?Q?fQFGSpFUs9WxcXpWhrFBgoELZCsw2Nqx3QTHf7lX/aKdIb7b9khe83znZegx?=
+ =?us-ascii?Q?78yCmkoeNt/sfr1LMRsmht4rJUknpEDjKw4nkW3fDheCIBbUFtSA2ihznVMz?=
+ =?us-ascii?Q?6kuZFyluRU5s5tE8nJjETfacFSM2V54H2hPDHB3XVUTScc4lQYTTaH/a27rf?=
+ =?us-ascii?Q?BzueBXDKixWUgtTn8bJkd/lMeQPSu2MJawbwJ6xINcSxmLCb7u4yan+uJRHB?=
+ =?us-ascii?Q?JlLk7TYXqg3UOZSG3k7TFMN677LUPm1QMAsrpxx5zKGNcjlLuZAcO0B8NlcN?=
+ =?us-ascii?Q?CwT3ayru+bRhkV0rEToRmniZdxcNnFmC+IFl1cxE0I4DqH4F71lsHTzIJTBu?=
+ =?us-ascii?Q?FZTBtkd5Aufh7BS9HBBlv1c+e5idDpGk37vyQpB/FyMFP3EEwwOzUL/vJAgR?=
+ =?us-ascii?Q?Q4MWVLfUtx3zd78SkVnuSyKwPauoPy/fQo6NcuQiWT6lEmT7mMkq7lEFDIOM?=
+ =?us-ascii?Q?fR9wTmZniQf5dvO7ukzUyF4osVbhb5x43Xj8vkkac6aQEgnWevksMlpPtuy5?=
+ =?us-ascii?Q?loVdmkri6jygCJ508NSRJo0nNiPeZKYQsA1Kq2xSf23P7jDiSbXeaI5vbZaE?=
+ =?us-ascii?Q?ZQeWcepnAJWrNGEutEHtVlaEYMGU28q+ArA7QPg+hE/pLUAC9JeirXpIAQOP?=
+ =?us-ascii?Q?QapEvg4jb9RINAJ2uqUAVZ5YxTgM/jJqPCyeDzz2W8G5J3Iy8i3Twl8Y72ll?=
+ =?us-ascii?Q?OmLOSzj6xwB1g3+OSa7NehVsoGB5G4oCmwCURPnrJIsO6USdSQZClcGaju5M?=
+ =?us-ascii?Q?dILOzKNJ6/28HAydCpwF1YI6sogo4Qec5I6znp9AJV6PFIpSq3RuahfNciuq?=
+ =?us-ascii?Q?pIPRJlN6IaPJJZyEeRUSIBOR64RibxHvbBiPMpIfc0LGLz5aBtKHiw7ShZAN?=
+ =?us-ascii?Q?suVMK9rSRgA3ff0IMF6xQ1bPu55gng4kmALtclsT46mZaALjEcMmTT4Sy5sl?=
+ =?us-ascii?Q?2TibS+YbwaFLFODAu7vLErMZCT5f8SxAqaJwHwuwDJ+XtecvCJoTf9Xzx8lU?=
+ =?us-ascii?Q?oO3EGf4+yfpmLDbMvCdfmtwqLNzAjulGQxEAyBhbAnrCJEu4RMFGCyD74lFw?=
+ =?us-ascii?Q?WDxeFWOqz+dld7ZBmuDH1toXyXD0Qh4Ave7AJXKJXbgeTe/IWpLMPrpMNouS?=
+ =?us-ascii?Q?vRKfvAA/4/sTCG+VziaSxP8NQvMpa22ti82KUG/dGZc1uwqTBy05EH4qToYH?=
+ =?us-ascii?Q?wqQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bdi9RK67KLwwICDCl6iW5ZzCh3kZSyaaG5b8hV0mrH+SyNQ5iAjuArTkwU7N?=
- =?us-ascii?Q?qam2BjW4nO2jDbtl5vq3i3FnCWrpTqRhCh68rXwCpuZyKUYrp6xHa9Yfa6nf?=
- =?us-ascii?Q?wxnCbe1ddZp17/f3q8lL+JeOCieAwRsdLr0rSyUmpTSKsfZW/OF+ni8xeV6J?=
- =?us-ascii?Q?nhqGWCdIOSBdfIrr1Mv5oB6QLLS41yd/016RPoElfZmbbQfqb9HUlCr8+ErJ?=
- =?us-ascii?Q?umK9K8PqILAx7IgZlfZF17gorVS1KiPp5j+uGobzHjP8er6/zJRn/I3DUZ9J?=
- =?us-ascii?Q?Lx5cqHHmT+beoq+18T1XpnQnlVAbCOCZ/EOnWMJ4Bk/RETbwDdSyzlWREsTc?=
- =?us-ascii?Q?3SYe5YZdBOJV8HWF+7cpviUaqflOvmwgkBvwGxh1fWS0QoetyOY+Uvtn0tWx?=
- =?us-ascii?Q?t5VbeLcLwELyJdFtguL/tsjpPyGLk/3Zn2XxZIzmWAvGU54PKLXFolxM40iS?=
- =?us-ascii?Q?XKJiRdCep8/033ys8FR+E8cmgoLGgaoFmeyW+eN96pNwga8+OCdR8jol2Ovm?=
- =?us-ascii?Q?e0mySAEbLeoMW6dotlJaQsex2OONWPN61YC9j5l8PT0VFjbWnAPwdyG2WWwv?=
- =?us-ascii?Q?aFV1f4gp83uHO3maQeQDyWsRe9M2Mm6vEQw0WByCpLW/7Gt5A4XwZF25UlJ7?=
- =?us-ascii?Q?0ssO7ee0SPC7tM6SZXVSxs5L27NxHaAQDgvWZWvl6pLP/a+ECRgOYz3wtjOo?=
- =?us-ascii?Q?7lbv7f/33oF1tSQJP5MkYHejx4RP5UhvNEOkEU35wZ1n8gdgJzgTUJH+2/Hx?=
- =?us-ascii?Q?Ex1ZlerWZrTmwWrq8NYk4gGqxdmD0Kz0J+z09xIl28xPaqKrj5yKXBpL3G2K?=
- =?us-ascii?Q?QwUZE1A4J5wz5CkEDkyY42J9fsoSuJ/uvgBt3GB3NhMWscdQVukALxLmBg6c?=
- =?us-ascii?Q?dlNPzDBJwJnEeLaKU9oJnuQyyY5ebfmJQXevQOeN5gZM79hywskiQX0dW8aO?=
- =?us-ascii?Q?8kJZMhlQEoqW3zKVPAE07PxE2KdgAqxMup9wdYrkI+L0wO+OIX+bacNHBRmx?=
- =?us-ascii?Q?GD+d8UV5kpEBLfYej/PuUKrCamxqY40l0ZCAufq7KDu2PPHQHPaymZ9Aoia8?=
- =?us-ascii?Q?pPLgZtxLsez+Bw1uTJ000yilhyFFwepQR4qJJ6yTpskeZ5i3W6Z4nPq5MaS+?=
- =?us-ascii?Q?U3fr82x8XJV6GwvrUjLnkiu3w3mRyEsC6+0vHT8Hne2DC2e/jqjV35u7drQ8?=
- =?us-ascii?Q?al4ij8RPN9nFFvhUoQoHBtXALPDk5g0VedM0KnS3pLB3XefvE6VMlCzN2Kcl?=
- =?us-ascii?Q?p0/iKYy8x3QDoNBK5Hfxt+ireUp+MPp0rMH7bD66lVkMzmVHH7qxmsehATuV?=
- =?us-ascii?Q?/+jcMrZ/MHpsCbWO74O9NSXWC5Pd/px9WcNHwEIFdc3VCXhOAHyqwoGuFRqZ?=
- =?us-ascii?Q?6K69CDqNlzBmm43fNQ/TltU2zt9m+AEikSqtS1yu+dyvoWXX2q6HruVpQ3oI?=
- =?us-ascii?Q?Imqr594dOc70BOzXx1ndeLXanFiTPnji/CmenCEktwQ9PMGDUr8JifuUZFjB?=
- =?us-ascii?Q?e0Sipas3i11gaEh+DBpAGjcCdaVEdyMYYJvpHdzsfkGlMbP41Scqx1oIWEmX?=
- =?us-ascii?Q?qd9LDoEBXStLTpkwejWhrkk7voDnnX16bYzaPCXgYL1D9sLKfAo08kQQjuLh?=
- =?us-ascii?Q?Hw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d253541-f7e5-4ef8-1c22-08dca0649c19
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fDV2WUpHkBuKl/hQs/hzALnNS9Nweg4TvXWNt6Tu1oKjlLp5uxMB65fsBfjc?=
+ =?us-ascii?Q?uhIAoFya9m+DUqegBJQPpVTGRa3Iwi/bKHKETwGsBXt8Dqg3ARsekL8YhSqe?=
+ =?us-ascii?Q?015M9dhffm5jc/6y8d9Iy0D4SlIiwUqSeQe501os7GYj7otXsdt5vXKr8kE0?=
+ =?us-ascii?Q?cq9DYbC5ySn5ykVc8GAe1uzXmMzQZ5NKA+9Ca8x0KvSW9NCkbpuo+DXHoPYL?=
+ =?us-ascii?Q?Qyjs+XW93KBxVPulHxQPeYz5ojzdn289t65UnLL9j3HHarkaxrTJ+CzjKc6A?=
+ =?us-ascii?Q?xjcb5GhenKzev2WU7GWJ8keJC8PLtAqeRAlU3SWHeh2VLg/QPJoro/ST72bb?=
+ =?us-ascii?Q?ccUfskQWCJg2yWQpoK3xAMxHp0UqoNx0BZiiKnhCJjH3KS1HTCvwkxpIOdvv?=
+ =?us-ascii?Q?UixEhmlRFNd0g8to52bTP9/+xVyg/VgsVZH5JoJ3NbsD9l17iugW5Mr1ugAT?=
+ =?us-ascii?Q?AwLyIQDYkwNAREVVO4vlEgarRpczyxqBROgFW/Wh8vCiJJpP8u7fQxIyYr4b?=
+ =?us-ascii?Q?Ee/pMGdKwShkLvm+cMfUp3vQS79VzeDWcCZf55r3KQiejPeBajjfVKw8Q4VH?=
+ =?us-ascii?Q?jD/kaYj4lRPBG7wXrN23+hN5nJiYytkFYG0rYrgtSpdb2RwmK95L2GhCZ+Bu?=
+ =?us-ascii?Q?cxF2Re3C3qaxuI73WgH8ZRm13GVbSwaz88F5wlgGnR35YmfTp3xx6ASHx5DA?=
+ =?us-ascii?Q?eROPAdIi2OmhUntrYsdi1Q3YLJFwvmU5tVy3PuZk5em5a8o7uGn85isOkU2C?=
+ =?us-ascii?Q?4E4VPiahs/py6Lkzbx1E9V9hPkboiIb7xlLheAuabwRantST3oe7bC3TLsmm?=
+ =?us-ascii?Q?59OI7YkcjKAC4lknIgcHdwmWTzqtt2r7Trv+XI5zqYBvDk6bkMyPq9xQzHMC?=
+ =?us-ascii?Q?F2+zvwKOxNCmMX6/piDUNL8tBCvqx2bt/U0Gt5y3akxEpEn9DMYBe9Z9XXBR?=
+ =?us-ascii?Q?mfQxOFxjqwqfulEVLwWmvxRwUWZPvuYPVsTqTZpziqWpTG/LtoDAeRldKYNt?=
+ =?us-ascii?Q?feQJIY6R8Tzqlie6ZwIAwgHe6WimwFSTibc7yLqi2EwLXexzHQpeZIcMoYWF?=
+ =?us-ascii?Q?dVbBZiFjocHBIIgy+MizFugRf9YcGRXkDVtq+7slJpQoexL05xVBLwj9MEVI?=
+ =?us-ascii?Q?8iw/xebeh41mELMjcJbKLdKlmus7yzbpPtX7m9xbbuAkgt8jAEdD5pnfdnkO?=
+ =?us-ascii?Q?7ulwrxew9DVwk+i7k4XFgK+LaUxVxOG2FWKmFwHFN/Qys27RVWMsJCS44Q/P?=
+ =?us-ascii?Q?X38Wu14Aiw1g3DArrr442HMlNL+aNQbnuAdJl8r4bq+IRBghiP+8jgEZ07Ah?=
+ =?us-ascii?Q?IuEZncRA6Lodz4cehpFssQYh9qy8ZYQS6rrDesA35tMl26v3y/EHB2z1I5S9?=
+ =?us-ascii?Q?JUllOoCg+W0/7A62YhtnyyFx6ZAHsi3gx4bJXTIi0KJCUyET5WJj5Fh/xZtn?=
+ =?us-ascii?Q?roN4qdMmmq8Sk8EgweRkBtZWrc+lxvdfAZZi8HbEw9o5sNk63pmB/L6ZhYyL?=
+ =?us-ascii?Q?NkKKbPf7EsTZfcO/5EwRfBDNDnFiMy1cjC/lWA4OtUS4LTO0I6AsVbfDiOX4?=
+ =?us-ascii?Q?HDJ25cwJeofvGk80rptfMgcqPKhxJbfQ/sLoo8nID26y0sf0XT6tHbXMPk0x?=
+ =?us-ascii?Q?OA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1fa5d96-07a7-45dd-6ae0-08dca06f4537
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 22:15:15.7118
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 23:31:34.4346
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qtuBp3nrwGFoAKrH+0YLalzRpR8ce00e8+N5xJfvAgXbYcm9o5YOPnRPlHAks1bhxklIx3pT3W3iaYy8qdEn2/QGpyFsr54wqL0yt6G1vto=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8041
+X-MS-Exchange-CrossTenant-UserPrincipalName: moMJsUixbg0iIpf3/2VsXOK5yTAFOX0DX48pYGPArSPMYsgCweglKXbOn6/K4aQe36SHs+o8tTD8/SVUQ0XQdaXnDYqdLSJR7cajS6JhMmQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB8290
 X-OriginatorOrg: intel.com
 
-James Bottomley wrote:
-> > The upstream discussion has yielded the full spectrum of positions on
-> > device specific functionality, and it is a topic that needs cross-
-> > kernel consensus as hardware increasingly spans cross-subsystem
-> > concerns. Please consider it for a Maintainers Summit discussion.
+Lukas Wunner wrote:
+> On Tue, Jul 09, 2024 at 11:10:57AM -0700, Dan Williams wrote:
+> > Lukas Wunner wrote:
+> > > --- a/drivers/pci/Kconfig
+> > > +++ b/drivers/pci/Kconfig
+> > > @@ -121,6 +121,19 @@ config XEN_PCIDEV_FRONTEND
+> > >  config PCI_ATS
+> > >  	bool
+> > >  
+> > > +config PCI_CMA
+> > > +	bool "Component Measurement and Authentication (CMA-SPDM)"
+> > 
+> > What is driving the requirement for CMA to be built-in?
 > 
-> I'm with Greg on this ... can you point to some of the contrary
-> positions?
+> There is no way to auto-load modules needed for certain PCI features.
 
-This thread has that discussion:
+TSM is taking the approach of dynamically adjusting the visibility of
+TSM attributes when the platform TSM driver registers with the PCI core.
+It is forced to do this because a TSM controller may itself be a PCI
+that needs a driver to load before the PCI core attributes are usable.
 
-http://lore.kernel.org/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
+For native functionality, yes, it would indeed take synthetic device to
+play the same role.
 
-I do not want to speak for others on the saliency of their points, all I
-can say is that the contrary positions have so far not moved me to drop
-consideration of fwctl for CXL.
+> We'd have to call request_module() on PCI bus enumeration when
+> encountering devices with specific PCI features.  But what do we do
+> if module loading fails?  The PCI bus is enumerated in a subsys_initcall,
+> when neither the root filesystem has been mounted nor run_init_process()
+> has been called.  So any PCI core modules would have to be in the initrd.
+> What if they aren't?  Kernel panic?  That question seems particularly
+> pertinent for a security feature like CMA.
 
-Where CXL has a Command Effects Log that is a reasonable protocol for
-making decisions about opaque command codes, and that CXL already has a
-few years of experience with the commands that *do* need a Linux-command
-wrapper.
+Non-authenticated operation is the status quo. CMA is a building block
+to other security features. Nothing currently cares about CMA being
+established before a driver loads and it is not clear that now is the
+time to for the kernel to paint itself into a corner to make that
+guarantee.
 
-Some open questions from that thread are: what does it mean for the fate
-of a proposal if one subsystem Acks the ABI and another Naks it for a
-device that crosses subsystem functionality? Would a cynical hardware
-response just lead to plumbing an NVME admin queue, or CXL mailbox to
-get device-specific commands past another subsystem's objection?
+> So we've made PCI core features non-modular by default.
+> In seven cases we even switched from tristate to bool because building
+> as modules turned out not to be working properly:
+> 
+> 82280f7af729 ("PCI: shpchp: Convert SHPC to be builtin only")
+> a4959d8c1eaa ("PCI: Remove DPC tristate module option")
+> 774104399459 ("PCI: Convert ioapic to be builtin only, not modular")
+> 67f43f38eeb3 ("s390/pci/hotplug: convert to be builtin only")
+> c10cc483bf3f ("PCI: pciehp: Convert pciehp to be builtin only, not modular")
+> 7cd29f4b22be ("PCI: hotplug: Convert to be builtin only, not modular")
+> 6037a803b05e ("PCI: acpiphp: Convert acpiphp to be builtin only, not modular")
+> 
+> There has not been a single case where we switched from bool to tristate,
+> with the exception of PCI_IOAPIC with commit b95a7bd70046, but that was
+> subsequently reverted back to bool with the above-listed 774104399459.
 
-My reconsideration of the "debug-build only" policy for CXL
-device-specific commands was influenced by a conversation with a distro
-developer where they asserted, paraphrasing: "at what point is a device
-vendor incentivized to ship an out-of-tree module just to restore their
-passthrough functionality?. At that point upstream has lost out on
-collaboration and distro kernel ABI has gained another out-of-tree
-consumer."
+That's good history that I was not aware, thanks for that.
 
-So the tension is healthy, but it has diminishing returns past a certain
-point.
+However, most of those seem to be knock-on effects of:
+
+https://lore.kernel.org/all/20121207062454.11051.12739.stgit@amt.stowe/
+
+...where init order constraints between ACPI and PCI functionality led
+to modules not being viable. The DPC one does not fit that model, but
+DPC is small enough and entangled with AER to not really justify it
+being a standalone module.
+
+> > All of the use cases I know about to date are built around userspace
+> > policy auditing devices after the fact.
+> 
+> I think we should also support use cases where user space sets a policy
+> (e.g. not to bind devices to a driver unless they authenticate) and lets
+> the kernel do the rest (i.e. autonomously authenticate devices based on
+> a set of trusted root certificates).  User space does not *have* to be
+> the one auditing each device on a case-by-case basis, although I do see
+> the usefulness of such scenarios and am open to supporting them.  In fact
+> this v2 takes a step in that direction by exposing signatures received
+> from the device to user space and doing so even if the kernel cannot
+> validate the device's certificate chains as well-formed and trusted.
+
+Userspace validation of authentication and measurement is separate from
+whether the functionality is built-in or not.
+
+> In other words, I'm trying to support both:  Fully autonomous in-kernel
+> authentication of certificates, but also allowing user space to make a
+> decision if it wants to.  It's simply not clear to me at the moment
+> what the use cases will be.  I can very well imagine that, say,
+> ChromeBooks will want to authenticate Thunderbolt-attached PCI devices
+> based on a keyring of trusted vendor certificates.  The fully autonomous
+> in-kernel authentication caters to such a use case.
+
+I think you are conflating automatic authentication and built-in
+functionality. There are counter examples of security features like
+encrypted root filesystems built on top of module drivers.
+
+What I am trying to avoid is CMA setting unnecessary expectations that
+can not be duplicated by TSM like "all authentication capable PCI
+devices will be authenticated prior to driver attach".
+
+Now, might there be a reason for native TSM and CMA to diverge on this
+policy / capability in the future, maybe? It certainly is not here
+today.
+
+> preclude such use cases just because Confidential Computing in the
+> cloud happens to be the buzzword du jour.
+
+As if CMA is somehow not part of the "buzzword du jour" of Confidential
+Computing?
