@@ -1,120 +1,97 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4842153814;
-	Tue,  9 Jul 2024 08:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540714D2AB
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jul 2024 09:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720514981; cv=none; b=JUA9DRf2rreRveVIFyR/zQsfQBJBmsAGmPFyT+t5lMYSXlXB7w3S2Jqw03+pNJrqiM+IhoPI4bf14ZJ+uDgLwEz7Sv7L8YBiXjZWbkUkg12eWgQiYp3thjBds6wjzLnY7xJif3wwuuIPOOgjGkC9IdYcTgxlAqyOutmmVGDUjhU=
+	t=1720517525; cv=none; b=SQaSOaPir0K3gQqNL9x0cWEiGw+gnxqNmHeUoJJYX8GPXZc7QFXm1eqphSYT70dD0P5KCdg25vjD/GYdnq0KRJZZtj0CpWDkEZ8IQX9UVY7buYBbz2dc8GbIKPUEPtcBncrQG/51jr33VTypMLBTJgANBhy906K1M8aMA62KXgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720514981; c=relaxed/simple;
-	bh=1LGGttV5i62yDKUecr8vz54XeY4DPh2JWDsYY1rJrOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UZNNbMf5Cg+qVVNZxuneJn4qX8WZbc6h/BTW1pA7KtrxLc2oHHnUFRGU+eXxyw81OwZzXSKaxbKqzjDlcUgy3LZqPGcJ5ExRmFY/mF1GX69hhaqSJ3P6OYxVG0R5aQQTunBCaTXt/ndv1zyeS7ADPF1O/L8LenNey3UWA4O3ivg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id AF9F21025A944;
-	Tue,  9 Jul 2024 10:49:36 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7265B2D31A; Tue,  9 Jul 2024 10:49:36 +0200 (CEST)
-Date: Tue, 9 Jul 2024 10:49:36 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v2 07/18] spdm: Introduce library to authenticate devices
-Message-ID: <Zoz5oHx8HxYLTftQ@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
- <bbbea6e1b7d27463243a0fcb871ad2953312fe3a.1719771133.git.lukas@wunner.de>
- <26715537-5dc4-46c1-bdcd-c760696dd418@amd.com>
- <Zovha33CS76PwAMF@wunner.de>
- <ad7b3e48-2e61-476f-8fea-28424f46d306@amd.com>
+	s=arc-20240116; t=1720517525; c=relaxed/simple;
+	bh=3mXKb1+knItv/RtaKpfs//ZAYpMupLlXyOK3WNyOufQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N09T3r+eVyhobFBIJNgGM4qpHScDa8cmM+7wYD++ONZ72/ZD+N/muoKoWo5QcCCpnx/XhuanZR3+nxClYba2at1nkZ/zNAiD8OSoWadOOhK6CkdsGU4VlATq2feAW8aQCz7k9WrSxCnC+aHRWAQhIpTV1kiTA1gp09SJrs+H+Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2Gxf7Z+; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2Gxf7Z+"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e03c6892e31so4576751276.1
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jul 2024 02:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720517523; x=1721122323; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HFbI0eXuU+3N+siSsIHyXx6zMuPHmoMBHk2P9BoQkeA=;
+        b=W2Gxf7Z+R0VrXslUwxDc2Jr7oVSjWde9OxquTR4NBpFjVf5RK7VNf4VAvfOW4mvmLZ
+         EDv7Akafvamcd1sPXKH/+umM4yefzZBqKJVHYJdFePs+DqE+Xz/OSXMe8MXphki8VpD2
+         1G4oyuLLVH1cASntZiXHKUOMKl4ETEB/9LZBg6fXsOxgoRHIVBzAW2XU+YyultEA4rYS
+         +5Qx1VJVVAzsJtP0l73dBEj35Jpx2NNbkF+wWMI/I51kDF9PlvH1QqyGh5CcVWFfbS5r
+         HqubXnliUwYIMa+SaBjeiCNFZ/J6XN2+0NV8PCL/BoPev+kkj3rwBXzTmrpEkNKlatqt
+         ykVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720517523; x=1721122323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HFbI0eXuU+3N+siSsIHyXx6zMuPHmoMBHk2P9BoQkeA=;
+        b=rvcb/cqlIJhMnfpSVaV7Vi6YCbIawerWUVWyrIz3Y2K3sn1UK5VwrLr4Rif/Zahgw8
+         e59BobPD638KBilUD+W3OqGzV2Ege8GzxcZi45dn/5GvHaO5lNVo12W0XthHjT9GxfDu
+         s6dldm+xohK6Ucfd+GBuTkljyjEp3K4QsFokwntd1DykwCIIAOMjYXQb/jVFZCGtj7e9
+         BmEK3bq3WQ+ZhD0o6BQXCOWdb4u7E7Br/Ojqcj0ILAD7u76BhVx7xdrM7+AsxPArAfin
+         64C1kzVwmfDIkUeSJDPF7YcMFObE+35b1JcgpJFLdwTgk4o70breqvPRWnk5demHI4SY
+         pd4g==
+X-Gm-Message-State: AOJu0YyGBQ4uySO7R9zCyUgSlZCxlFIVJjN+kDK3zDjzh1ZgrOxtDpn0
+	IKbLnFSS9cop+R1UOfYVIVLQ3xo1k/UfzvDOgndoP1ECCFV+ixKrV8rRLNlHPgzrjlnwCvpTZJ+
+	VHkby7Cqw4cK9kMLjky1LFnxDz+oQ1j7pCqLqRg==
+X-Google-Smtp-Source: AGHT+IE92SutnR1o7Ozw4MQxiEw2Vr0nnnM+nKfnyMjW2lChchcD4mevNq28vRkFdry0g9IxFlrK+TGy3NQhZg4U9Fk=
+X-Received: by 2002:a25:a345:0:b0:e03:a60f:4f98 with SMTP id
+ 3f1490d57ef6-e041b03d10emr2139957276.1.1720517523129; Tue, 09 Jul 2024
+ 02:32:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad7b3e48-2e61-476f-8fea-28424f46d306@amd.com>
+References: <CALX8JfQ1F+DJ1woPP=gFvnEyy4qHqGkN+94CKG5ONQy+L3C5_A@mail.gmail.com>
+ <668c877f86daf_102cc2941b@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZozTTpbMjff82vO0@infradead.org> <CALX8JfQwCFsF4AvCwiui_7J08j41jJiSTLMVCQTx++EseguEdg@mail.gmail.com>
+ <ZozoWwm2v246szTu@infradead.org>
+In-Reply-To: <ZozoWwm2v246szTu@infradead.org>
+From: Yee Li <seven.yi.lee@gmail.com>
+Date: Tue, 9 Jul 2024 17:31:27 +0800
+Message-ID: <CALX8JfS5kpY4P0r3QUmDxwoST=d3yR8gzmxK6NSyXr6bRiBo7g@mail.gmail.com>
+Subject: Re: Is there any plan to support CXL GPF in Linux
+To: Christoph Hellwig <hch@infradead.org>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 09, 2024 at 10:45:27AM +1000, Alexey Kardashevskiy wrote:
-> On 8/7/24 22:54, Lukas Wunner wrote:
-> > The short answer is, it's a bug in libspdm and the issue should
-> > go away once you update libspdm to version 3.1.0 or newer.
-> 
-> Easier to hack lib/spdm/req-authenticate.c just to see how far I can get
-> with my device, now it is "Malformed certificate at slot 0 offset 0".
+Dear Christoph,
 
-In that case all (up to 8) certificate chains should have been retrieved
-and are available for examination in the certificates/ directory in sysfs
-(below the PCI device's directory).
+I agree with you.
+cxl pmem device should process the GPF event well by itself which is sent
+from Host or Switch.
 
-You can use ordinary openssl tooling to examine the certificates and
-see what's wrong with them, see the ABI documentation in patch [12/18]
-for examples:
+Dear Dan,
 
-https://lore.kernel.org/all/e42905e3e5f1d5be39355e833fefc349acb0b03c.1719771133.git.lukas@wunner.de/
+ACPI.FADT.PERSISTENT_CPU_CACHES flag is not recognized by Linux.
+Does it mean "cxl pmem flush operations reference the NFIT Platform
+Capabilities"? Or, support the flag and cap in the future.
 
-The "Malformed certificate at slot 0 offset 0" message means that the
-first certificate in the chain in slot 0 does not comply with
-requirements set forth in the SPDM spec.  (E.g. Basic Constraints CA
-value shall be false for leaf cert, true for intermediate and root certs
-per SPDM 1.3.0 table 42.)
+Christoph Hellwig <hch@infradead.org> =E4=BA=8E2024=E5=B9=B47=E6=9C=889=E6=
+=97=A5=E5=91=A8=E4=BA=8C 15:35=E5=86=99=E9=81=93=EF=BC=9A
 
-The expectation is that vendors will test their devices and fix issues
-like this, so that end users never see those messages.
-
-The error message is emitted by spdm_validate_cert_chain().
-The implementation calls that to identify a certificate chain which is
-considered valid by the kernel.  The first one found is used for
-challenge-response authentication.  If none is found valid, the kernel
-will try to perform challenge-response authentication with the first
-*provisioned* slot, regardless of its validity.  That is done to
-expose a signature in sysfs about which user space can make up its
-own mind, see patch [17/18]:
-
-https://lore.kernel.org/all/dff8bcb091a3123e1c7c685f8149595e39bbdb8f.1719771133.git.lukas@wunner.de/
-
-So despite the error message you should see a signature with full SPDM
-transcript and other ancillary data in the signatures/ directory in sysfs.
-
-Not sure yet whether that feature (exposing a signature despite
-cert chains' invalidity from the kernel POV) makes sense.
-We can also discuss adding ABI which allows user space to force
-challenge-response with a specific slot, or to declare a specific
-slot valid.
-
-Thanks,
-
-Lukas
+>
+> On Tue, Jul 09, 2024 at 03:22:53PM +0800, Yee Li wrote:
+> > As I know, for cxl pmem, the DRAM cache is very large (even equal to
+> > NAND flash). The data is stored in the DRAM cache. Data sync during
+> > power loss or some sync operations. Data is stored in the DRAM cache
+> > for most of the time.
+>
+> If the device can't provide enough power on it's own to take care of
+> the DRAM flushing then it's simply broken.  All these details are
+> something the manufacturer needs to take care off.
+>
