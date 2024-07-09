@@ -1,107 +1,141 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A7B257D;
-	Tue,  9 Jul 2024 14:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15B419D89B;
+	Tue,  9 Jul 2024 15:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720534382; cv=none; b=fonzTF7mLb+vrnLBrjVwb06oWJsp7anuaB4g5AYcWzCcxMB3Zv8uq+6mN/TTTKDV6aoD40N4mMa9kyFEmElu1yyu8CDIaci5a/CHfmRSFACM7H0EJ1sQGsX7BY/B/lqlFBR9ASZWEk1mKZintxKH+YqzSEJktlA9j5mhdvOBFzU=
+	t=1720537405; cv=none; b=SKRjN6ucFv5kqt0E1D9IOmSQBjHUbMoAYG6oOC2ORoGNiQZuPWpvu73kOKX9SoVOXl9GQyR98n//Ty12fPQnoSeLr2Zn0yeAH3f1VbT6/QUoSbBoLQwt1HrJLlh+qGbxgmacSd5oGzmxmzH6pxkyS9QoxW5y+INwj8oyeODVWOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720534382; c=relaxed/simple;
-	bh=REUN238YloUXsB58VaHbrHn7J9PWVHNTx9d72CTCeCA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NinLdiIfc0Nk6fozII/sTZYfeHZXO4yWYIE14iZpJKSPN/UqhqDA5S47AWhNXVre/R3H+TNcg+EtsZLCIDd1qkhk6/kauS0drlU/zXy+C0U5sYrAF9+F2WVzwSGYRUOIWLl1XX8k8RvotxYBhZ4WDyer2IvcMF85YBsoy2E7Vt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=elFsQjvD; arc=none smtp.client-ip=20.231.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
+	s=arc-20240116; t=1720537405; c=relaxed/simple;
+	bh=Pve8kD2qR5k9am//RgaYXCPw5RIktwMh8PvUr5OnbUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RBYs8Lx7rRTeY3W7K6CKsUxR2LAIbGxeN3MEMvMy69UL8gUCJ5550Nwo315vK8/hVd4V497Hs4cy81PrNtIgT8h1RB/TyEBPLHaWhAivJx2elLkUagCsFpXOol95yd4C4X2rYDz1H9bEmvgrXHb1W1Cui5hvCxVFbpJFqCqxCVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IpIVAZdU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="elFsQjvD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
-	Message-ID:In-Reply-To:References:MIME-Version:
-	Content-Transfer-Encoding; bh=fY/ybTvHed6MNaKpWv3DmQPhPOmMZSa+Cv
-	/Avwj2tGQ=; b=elFsQjvD50wAQ07Ua4n2XyiNmqvn6htCrVw/GzU31aS8hCtzUR
-	yA3KgA0Izj8mB3FYP2c+DcQDNFTv2L/+7JXIFwMK/6Y02mCwMsq8xHokgIrCgKsF
-	tqo+U8TROFhX2H+xkbDnBrLZNDM3yNZ6HkuEWIharia99Amghzwq/eVME=
-Received: from gp-VMware-Virtual-Platform.localdomain (unknown [139.227.253.190])
-	by coremail-app2 (Coremail) with SMTP id Nyz+CgBHovVZRY1m2YGkAA--.53442S2;
-	Tue, 09 Jul 2024 22:12:42 +0800 (CST)
-From: peng guo <engguopeng@buaa.edu.cn>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wyguopeng@163.com,
-	peng guo <engguopeng@buaa.edu.cn>
-Subject: [PATCH v2] cxl/core: Fix the UUID of CXL vendor debug Log identifier
-Date: Tue,  9 Jul 2024 22:12:39 +0800
-Message-ID: <20240709141239.10737-1-engguopeng@buaa.edu.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
-References: <045fb08e-6d18-4558-b7b2-b83c412307da@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IpIVAZdU"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469AX5Bj021735;
+	Tue, 9 Jul 2024 15:00:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vrRha6v1MS8bhWVcMku5sIvVckGeI7S6pxyAygH9t40=; b=IpIVAZdU289FVNpJ
+	tZYXIkp4i6652FCJtThP3Q+1S9qxa49qSkbCGQRBUJVKi8Qtuvqxud1xlSDKIpKd
+	NwZ9fyFD0GhC8rmR/7YMm6JYPOlVqkuwkCwTv7zq5WZnwZuXdNSNH9Nvs+pPvYzS
+	fry2xreqboUesoD9BsQ4GrL6F1zxSgGLLG/DJz1cQF/KLKigFdrHgGMwPGER626n
+	iztoZr/HJpJs7aZxncaluxbjHKDzjaaqx/gPXehk++PqnOw2pqbPvSFFc+hLc1dy
+	Rc9mqTpX3fmUklcqH5f9i1FH0+LPQIr+0iQXQjOaLqftU7blP9Sa1bfxD4US/M8H
+	nZTOpg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wgwprf7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 15:00:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469F0toM025538
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 15:00:55 GMT
+Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
+ 08:00:54 -0700
+Message-ID: <647515b7-e5a2-46d8-9c03-a2b68c434070@quicinc.com>
+Date: Tue, 9 Jul 2024 08:00:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Nyz+CgBHovVZRY1m2YGkAA--.53442S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Xr1UtrW7JryUXrWUXryxKrg_yoW8JF4UpF
-	WrKFy0yFZ5Wa47twn2q348WFWruasakryUC3ZF9w48Za93Z3W0qry5KayUJF90vr95J3Wj
-	qr4vkr15Ga10kw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
-	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26F1DJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/18] spdm: Introduce library to authenticate devices
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>,
+        Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David
+ Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Woodhouse
+	<dwmw2@infradead.org>,
+        James Bottomley
+	<James.Bottomley@HansenPartnership.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>
+CC: <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dan Williams
+	<dan.j.williams@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>,
+        Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Damien Le Moal
+	<dlemoal@kernel.org>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Dhaval Giani
+	<dhaval.giani@amd.com>,
+        Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+        Jerome
+ Glisse <jglisse@google.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+        Eric
+ Biggers <ebiggers@google.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <bbbea6e1b7d27463243a0fcb871ad2953312fe3a.1719771133.git.lukas@wunner.de>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <bbbea6e1b7d27463243a0fcb871ad2953312fe3a.1719771133.git.lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yjb8rUAeZdBFm13IhaXy-1T20LJa1kbO
+X-Proofpoint-ORIG-GUID: yjb8rUAeZdBFm13IhaXy-1T20LJa1kbO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=787 mlxscore=0
+ adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090098
 
-Fix the definition value of DEFINE_CXL_VENDOR_DEBUG_UUID to match the
-CXL r3.1 specification, although this value is not currently used.
+On 6/30/24 12:42, Lukas Wunner wrote:
+...
+> diff --git a/lib/spdm/core.c b/lib/spdm/core.c
+> new file mode 100644
+> index 000000000000..f06402f6d127
+> --- /dev/null
+> +++ b/lib/spdm/core.c
+> @@ -0,0 +1,425 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * DMTF Security Protocol and Data Model (SPDM)
+> + * https://www.dmtf.org/dsp/DSP0274
+> + *
+> + * Core routines for message exchange, message transcript,
+> + * signature verification and session state lifecycle
+> + *
+> + * Copyright (C) 2021-22 Huawei
+> + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> + *
+> + * Copyright (C) 2022-24 Intel Corporation
+> + */
+...
+> +
+> +MODULE_LICENSE("GPL");
 
-All CXL devices that support a debug log shall support the Vendor Debug
-Log to allow the log to be accessed through a common host driver, for any
-device, all versions of the CXL specification define the same value with
-Log Identifier of: 5e1819d9-11a9-400c-811f-d60719403d86
+This is missing a MODULE_DESCRIPTION().
 
-refer to:
-CXL spec r2.0 Table 169
-CXL spec r3.0 Table 8-62
-CXL spec r3.1 Table 8-71
-
-Fixes: 49be6dd80751 ("cxl/mbox: Move command definitions to common location")
-Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
----
- v1 -> v2: update commit message  and addressed review comments
-
- drivers/cxl/cxlmem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index af8169ccdbc0..feb1106559d2 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -563,7 +563,7 @@ enum cxl_opcode {
- 		  0x3b, 0x3f, 0x17)
- 
- #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
--	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
-+	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
- 		  0x40, 0x3d, 0x86)
- 
- struct cxl_mbox_get_supported_logs {
--- 
-2.43.0
-
+Building a module without a MODULE_DESCRIPTION() will result in a 
+warning when building with make W=1.
