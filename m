@@ -1,97 +1,95 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540714D2AB
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jul 2024 09:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430CD149C79;
+	Tue,  9 Jul 2024 10:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517525; cv=none; b=SQaSOaPir0K3gQqNL9x0cWEiGw+gnxqNmHeUoJJYX8GPXZc7QFXm1eqphSYT70dD0P5KCdg25vjD/GYdnq0KRJZZtj0CpWDkEZ8IQX9UVY7buYBbz2dc8GbIKPUEPtcBncrQG/51jr33VTypMLBTJgANBhy906K1M8aMA62KXgc=
+	t=1720519269; cv=none; b=CIP1stV+1Robn6f6zfDCXGqTx2DTxx6d+Mrpjla/nZHA5hch1y/T8YWRdBaKyroVQ8AQyzEDuSN2Nqvr5KBe/lDpSIX2nUUWyWFBX2FaOYZMZZ/JRyQFXm7WUd1WzrY6R5e5c0T/xRZ2Tstcm9Avt89m/xAzpGm44Duo3QkXN9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517525; c=relaxed/simple;
-	bh=3mXKb1+knItv/RtaKpfs//ZAYpMupLlXyOK3WNyOufQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N09T3r+eVyhobFBIJNgGM4qpHScDa8cmM+7wYD++ONZ72/ZD+N/muoKoWo5QcCCpnx/XhuanZR3+nxClYba2at1nkZ/zNAiD8OSoWadOOhK6CkdsGU4VlATq2feAW8aQCz7k9WrSxCnC+aHRWAQhIpTV1kiTA1gp09SJrs+H+Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2Gxf7Z+; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720519269; c=relaxed/simple;
+	bh=ui8XHzfOQJ8J4zxO9mnLpxuTi3HJgK//7LeJrv4Io0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmyqCWST6o9fC2JZsp7JRKArp+VWTEtOKQK+f4U5k5bcIO7UbXLlfnbNi7OshTjaMIj4zh+yiZJaFNIRmUB8g8l/x3l8qXAk/UfN/VumY//juqAWkNzfeUGyvIsXoGC448RBP9qxqWnJZPsVFx0DXXL5H/O05WIeGg2sqx9A390=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wca/OejK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2Gxf7Z+"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e03c6892e31so4576751276.1
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jul 2024 02:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720517523; x=1721122323; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFbI0eXuU+3N+siSsIHyXx6zMuPHmoMBHk2P9BoQkeA=;
-        b=W2Gxf7Z+R0VrXslUwxDc2Jr7oVSjWde9OxquTR4NBpFjVf5RK7VNf4VAvfOW4mvmLZ
-         EDv7Akafvamcd1sPXKH/+umM4yefzZBqKJVHYJdFePs+DqE+Xz/OSXMe8MXphki8VpD2
-         1G4oyuLLVH1cASntZiXHKUOMKl4ETEB/9LZBg6fXsOxgoRHIVBzAW2XU+YyultEA4rYS
-         +5Qx1VJVVAzsJtP0l73dBEj35Jpx2NNbkF+wWMI/I51kDF9PlvH1QqyGh5CcVWFfbS5r
-         HqubXnliUwYIMa+SaBjeiCNFZ/J6XN2+0NV8PCL/BoPev+kkj3rwBXzTmrpEkNKlatqt
-         ykVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720517523; x=1721122323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HFbI0eXuU+3N+siSsIHyXx6zMuPHmoMBHk2P9BoQkeA=;
-        b=rvcb/cqlIJhMnfpSVaV7Vi6YCbIawerWUVWyrIz3Y2K3sn1UK5VwrLr4Rif/Zahgw8
-         e59BobPD638KBilUD+W3OqGzV2Ege8GzxcZi45dn/5GvHaO5lNVo12W0XthHjT9GxfDu
-         s6dldm+xohK6Ucfd+GBuTkljyjEp3K4QsFokwntd1DykwCIIAOMjYXQb/jVFZCGtj7e9
-         BmEK3bq3WQ+ZhD0o6BQXCOWdb4u7E7Br/Ojqcj0ILAD7u76BhVx7xdrM7+AsxPArAfin
-         64C1kzVwmfDIkUeSJDPF7YcMFObE+35b1JcgpJFLdwTgk4o70breqvPRWnk5demHI4SY
-         pd4g==
-X-Gm-Message-State: AOJu0YyGBQ4uySO7R9zCyUgSlZCxlFIVJjN+kDK3zDjzh1ZgrOxtDpn0
-	IKbLnFSS9cop+R1UOfYVIVLQ3xo1k/UfzvDOgndoP1ECCFV+ixKrV8rRLNlHPgzrjlnwCvpTZJ+
-	VHkby7Cqw4cK9kMLjky1LFnxDz+oQ1j7pCqLqRg==
-X-Google-Smtp-Source: AGHT+IE92SutnR1o7Ozw4MQxiEw2Vr0nnnM+nKfnyMjW2lChchcD4mevNq28vRkFdry0g9IxFlrK+TGy3NQhZg4U9Fk=
-X-Received: by 2002:a25:a345:0:b0:e03:a60f:4f98 with SMTP id
- 3f1490d57ef6-e041b03d10emr2139957276.1.1720517523129; Tue, 09 Jul 2024
- 02:32:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wca/OejK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77256C3277B;
+	Tue,  9 Jul 2024 10:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720519268;
+	bh=ui8XHzfOQJ8J4zxO9mnLpxuTi3HJgK//7LeJrv4Io0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wca/OejKLoc2PQwILBcdNGYrfLZ3cxvnQYN6dtC5HXPgrG9UZVNOcwL/rVckQvvOL
+	 mNlyD+2T9/ZvyQIRioEUoZZFoF2uzysmsxh6DdJJzSisyX7/NaJfPAGbUHsXBbR1uj
+	 TY6hAhb/SkaZe4z/UVCZNfN59EiJh6Hv0FycLP5A=
+Date: Tue, 9 Jul 2024 12:01:06 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <2024070910-rumbling-unrigged-97ba@gregkh>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALX8JfQ1F+DJ1woPP=gFvnEyy4qHqGkN+94CKG5ONQy+L3C5_A@mail.gmail.com>
- <668c877f86daf_102cc2941b@dwillia2-xfh.jf.intel.com.notmuch>
- <ZozTTpbMjff82vO0@infradead.org> <CALX8JfQwCFsF4AvCwiui_7J08j41jJiSTLMVCQTx++EseguEdg@mail.gmail.com>
- <ZozoWwm2v246szTu@infradead.org>
-In-Reply-To: <ZozoWwm2v246szTu@infradead.org>
-From: Yee Li <seven.yi.lee@gmail.com>
-Date: Tue, 9 Jul 2024 17:31:27 +0800
-Message-ID: <CALX8JfS5kpY4P0r3QUmDxwoST=d3yR8gzmxK6NSyXr6bRiBo7g@mail.gmail.com>
-Subject: Re: Is there any plan to support CXL GPF in Linux
-To: Christoph Hellwig <hch@infradead.org>, Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
 
-Dear Christoph,
+On Mon, Jul 08, 2024 at 03:26:43PM -0700, Dan Williams wrote:
+> Enter the fwctl proposal [1]. From the CXL subsystem perspective it
+> looks like a long-term solution to the problem of managing expectations
+> between hardware vendors and mainline subsystems. It disclaims support
+> for the fast-path (data-plane) and is targeted at the long tail of
+> slow-path (config/debug plane) device-specific operations that are often
+> uninteresting to mainline.
 
-I agree with you.
-cxl pmem device should process the GPF event well by itself which is sent
-from Host or Switch.
+That's not true at all, device-specific operations are very interesting
+to mainline, and I would argue that the "slow-path" is the most
+important thing for the kernel to manage as that is where the security
+and unification layers can be properly enforced.
 
-Dear Dan,
+Vendors that think the control plane should just be allowed to be
+accessed by userspace "blindly" are not saying outloud that they just
+want to circumvent the security layer entirely like they previously were
+doing by directly accessing /dev/mem which is one of the strongest
+reasons to keep enforcing this through the kernel as Christoph points
+out.
 
-ACPI.FADT.PERSISTENT_CPU_CACHES flag is not recognized by Linux.
-Does it mean "cxl pmem flush operations reference the NFIT Platform
-Capabilities"? Or, support the flag and cap in the future.
+It's the cumulation of multiple vendors of semi-alike config paths that
+allow us to standardize them to provide the most important thing of all,
+a unified view to userspace where a user does not care about what type
+of hardware is running, which is really the goal of Linux as well, but
+directly goes against what a vendor wants to have happen.
 
-Christoph Hellwig <hch@infradead.org> =E4=BA=8E2024=E5=B9=B47=E6=9C=889=E6=
-=97=A5=E5=91=A8=E4=BA=8C 15:35=E5=86=99=E9=81=93=EF=BC=9A
+> It sets expectations that the device must
+> advertise the effect of all commands so that the kernel can deploy
+> reasonable Kernel Lockdown policy, or otherwise require CAP_SYS_RAWIO
+> for commands that may affect user-data.
 
->
-> On Tue, Jul 09, 2024 at 03:22:53PM +0800, Yee Li wrote:
-> > As I know, for cxl pmem, the DRAM cache is very large (even equal to
-> > NAND flash). The data is stored in the DRAM cache. Data sync during
-> > power loss or some sync operations. Data is stored in the DRAM cache
-> > for most of the time.
->
-> If the device can't provide enough power on it's own to take care of
-> the DRAM flushing then it's simply broken.  All these details are
-> something the manufacturer needs to take care off.
->
+Yes, this is a good start, but it might still be too "vendor-specific"
+at this point in time.
+
+> It sets common expectations for
+> device designers, distribution maintainers, and kernel developers. It is
+> complimentary to the Linux-command path for operations that need deeper
+> kernel coordination.
+
+Yes, it's a good start, BUT by circumventing the network control plane,
+the network driver maintainers rightfully are worried about this as
+their review comments seem to be ignored here.  The rest of us
+maintainers can't ignore that objection, sorry.
+
+> The upstream discussion has yielded the full spectrum of positions on
+> device specific functionality, and it is a topic that needs cross-kernel
+> consensus as hardware increasingly spans cross-subsystem concerns.
+> Please consider it for a Maintainers Summit discussion.
+
+SHould be a fun discussion, thanks for proposing this.
+
+greg k-h
