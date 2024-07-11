@@ -1,179 +1,230 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8303D158216
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 15:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107C015957E
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 16:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720712632; cv=none; b=R+hCVzQzY+N6sC00Po2jLUl7CCQmGdB1u/oCSfhRqaWQcKhqsFymFETCHcN5o41djVFSjCc1qon1aM8XUtIVRsuxvqfsbfWfFR3cz2+Scuq+lhDjjNIlXYw5rWyAqbKn3uom57aw+SG2oG4qxS/03+/fEKl481yCrA6MKNylqQQ=
+	t=1720713608; cv=none; b=p8wEfLrirbAzl4101gLDGSV174NvgtkPg/q0mcOJkFvm9PYW8IjXcuuirifutWaMIQgbi/tq7+6RVAJHVMbbzYDyIVSRF/ZMTTh5/fiHM7BFKgFHfd/2tqiI5dDALqqOBt0rF8+T4syWfgrFtyBuiufl9UNPij/j2BWWXc6WvMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720712632; c=relaxed/simple;
-	bh=PrVemtHVSKbCe4Cz28RjwZD3IlgKuIUqUcUE0YGV3KY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tCuTbX3uRdRozFARqRuksJ32wK9V9RdB+s6GrRvtLconST3n3XqWlugsAUV9zGYpuJRrrmzqWGTvgqZJG57noyiXYBi3tDkHgg9W4BlJEfvS9U6iJunOx9/xBd0oGewjDp+9t77zh6m802dnE4JC7kaWjaJdublb9n2J2gByI38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WKf912ZYfz6H7X0;
-	Thu, 11 Jul 2024 23:41:41 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E49151406AC;
-	Thu, 11 Jul 2024 23:43:46 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
- 2024 16:43:46 +0100
-Date: Thu, 11 Jul 2024 16:43:45 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Igor Mammedov <imammedo@redhat.com>
-CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
-	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
-	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
-	<linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
-	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
-	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v4 05/13] hw/pci: Add a busnr property to pci_props and
- use for acpi/gi
-Message-ID: <20240711164345.00005952@Huawei.com>
-In-Reply-To: <20240711142316.1150870e@imammedo.users.ipa.redhat.com>
-References: <20240702131428.664859-1-Jonathan.Cameron@huawei.com>
-	<20240702131428.664859-6-Jonathan.Cameron@huawei.com>
-	<20240711135331.6f0e4639@imammedo.users.ipa.redhat.com>
-	<20240711142316.1150870e@imammedo.users.ipa.redhat.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720713608; c=relaxed/simple;
+	bh=VIrGBbPtCzX5zZuVtIA285cQGoAa1katLVvvl/dLzrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VuT4fPTgbq4nTrtMHQnKGV6SBuQbLK+9bVrPMTZUb9ZocwDpDjkg4uQr31d5uYo+Cb0EXuuzpkWkZtYqjo2ywhKDdb6Llok2atm7zXX1dkla1S448JmaTzcm+qh5fPuSAWjL5ot7BNToTZwQMOBgDzRnvbQUc9ILYi60/ilvvek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bps2sWBh; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bps2sWBh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720713607; x=1752249607;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VIrGBbPtCzX5zZuVtIA285cQGoAa1katLVvvl/dLzrI=;
+  b=bps2sWBhjavpRbJxXOhUNy4qIuZly3p5AZyR6nLLghnMlTB/9feealaH
+   hV7x6Fcm/4qfUbHyqisu+XEpDBWPjGobBmpsLOicnn9YcsY6JeJoHSkcG
+   svSMr1bc2vPECt8guPZ+TlrxizfVCEK7RfSFDtctU245NQZ0/heWQjFSd
+   zJ8cCkB+E4jnjophZAIZepMfQfrpTwXKQqvPWlprb9fCw6I3lxSV5JrPM
+   Q7oAYMQob55ZoG7O1tmtwtBpCMZdHbv9I6+hXIHnnhbU/m37lACwJ5BJX
+   h+WyqMTxSD3ABbWFG6TGGlU46b1cLdxQoUpnZBRCyLdmrbeXVcTxXxUos
+   A==;
+X-CSE-ConnectionGUID: 7dlzTXR9Q56T8lPVvZ+GvA==
+X-CSE-MsgGUID: KBXsBUxjQCGYctDJLZFZIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="35543186"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="35543186"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 09:00:07 -0700
+X-CSE-ConnectionGUID: FT5qDi66SEeEr/77lg7Hhw==
+X-CSE-MsgGUID: 9lFczmA4Sz69AqA/CuQ9uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="48672935"
+Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO [10.125.110.51]) ([10.125.110.51])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 09:00:05 -0700
+Message-ID: <2052d49f-cd24-4d96-ab15-93afc303a3ba@intel.com>
+Date: Thu, 11 Jul 2024 09:00:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/3] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
+References: <20240710222716.797267-1-dave.jiang@intel.com>
+ <20240710222716.797267-3-dave.jiang@intel.com>
+ <Zo8317DPRkLOsOlH@aschofie-mobl2>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Zo8317DPRkLOsOlH@aschofie-mobl2>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 11 Jul 2024 14:23:16 +0200
-Igor Mammedov <imammedo@redhat.com> wrote:
 
-> On Thu, 11 Jul 2024 13:53:31 +0200
-> Igor Mammedov <imammedo@redhat.com> wrote:
-> 
-> > On Tue, 2 Jul 2024 14:14:10 +0100
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >   
-> > > Using a property allows us to hide the internal details of the PCI device
-> > > from the code to build a SRAT Generic Initiator Affinity Structure with
-> > > PCI Device Handle.
-> > > 
-> > > Suggested-by: Igor Mammedov <imammedo@redhat.com>
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > 
-> > > ---
-> > > V4: Avoid confusion with device creation parameter bus but renaming to
-> > >     busnr
-> > > ---
-> > >  hw/acpi/acpi_generic_initiator.c | 11 ++++++-----
-> > >  hw/pci/pci.c                     | 14 ++++++++++++++
-> > >  2 files changed, 20 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-> > > index 73bafaaaea..f2711c91ef 100644
-> > > --- a/hw/acpi/acpi_generic_initiator.c
-> > > +++ b/hw/acpi/acpi_generic_initiator.c
-> > > @@ -9,6 +9,7 @@
-> > >  #include "hw/boards.h"
-> > >  #include "hw/pci/pci_device.h"
-> > >  #include "qemu/error-report.h"
-> > > +#include "qapi/error.h"
-> > >  
-> > >  typedef struct AcpiGenericInitiatorClass {
-> > >      ObjectClass parent_class;
-> > > @@ -79,7 +80,7 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
-> > >      MachineState *ms = MACHINE(qdev_get_machine());
-> > >      AcpiGenericInitiator *gi;
-> > >      GArray *table_data = opaque;
-> > > -    PCIDevice *pci_dev;
-> > > +    uint8_t bus, devfn;
-> > >      Object *o;
-> > >  
-> > >      if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
-> > > @@ -100,10 +101,10 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
-> > >          exit(1);
-> > >      }
-> > >  
-> > > -    pci_dev = PCI_DEVICE(o);
-> > > -    build_srat_pci_generic_initiator(table_data, gi->node, 0,
-> > > -                                     pci_bus_num(pci_get_bus(pci_dev)),
-> > > -                                     pci_dev->devfn);
-> > > +    bus = object_property_get_uint(o, "busnr", &error_fatal);
-> > > +    devfn = object_property_get_uint(o, "addr", &error_fatal);    
-> > 
-> > devfn in PCI code is 32bit, while here it's declared as unit8_t,
-> > which seems wrong.
-> > It likely would work in case of PCIe root ports/switches where slot is 0,
-> > but should quickly break elsewhere as soon as slot is more than 0.
-> > 
-> > If it's intentional, there should be fat comment here about why it this way
-> > and an assert to catch silent cropping of the value.   
-> 
-> Ignore that, obviously the rest of the QEMU does not care about this downcast.
-It's indeed odd that the storage is 32 bits.
-> 
-> Maybe add assert anyways to catch too big devfn returned,
-> which unlikely to happen ever.
 
-Will do. 
-assert(devfn >= 0 && devfn < PCI_DEVFN_MAX);
-with devfn locally as an int32_t and object_property_get_int()
-to match with the type.
+On 7/10/24 6:39 PM, Alison Schofield wrote:
+> On Wed, Jul 10, 2024 at 03:24:01PM -0700, Dave Jiang wrote:
+>> The current bandwidth calculation aggregates all the targets. This simple
+>> method does not take into account where multiple targets sharing under
+>> a switch or a root port where the aggregated bandwidth can be greater than
+>> the upstream link of the switch.
+>>
+>> To accurately account for the shared upstream uplink cases, a new update
+>> function is introduced by walking from the leaves to the root of the
+>> hierarchy and clamp the bandwidth in the process as needed. This process
+>> is done when all the targets for a region are present but before the
+>> final values are send to the HMAT handling code cached access_coordinate
+>> targets.
+>>
+>> The original perf calculation path was kept to calculate the latency
+>> performance data that does not require the shared link consideration.
+>> The shared upstream link calculation is done as a second pass when all
+>> the endpoints have arrived.
+>>
+>> Testing is done via qemu with CXL hierachy. run_qemu[1] is modified to
+>> support several CXL hierachy layouts. The following layouts are tested:
+>>
+>> HB: Host Bridge
+>> RP: Root Port
+>> SW: Switch
+>> EP: End Point
+>>
+>> 2 HB 2 RP 2 EP: resulting bandwidth: 624
+>> 1 HB 2 RP 2 EP: resulting bandwidth: 624
+>> 2 HB 2 RP 2 SW 4 EP: resulting bandwidth: 624
+>>
+>> Current testing, perf number from SRAT/HMAT is hacked into the kernel
+>> code. However with new QEMU support of Generic Target Port that's
+>> incoming, the perf data injection is no longer needed.
+>>
+>> [1]: https://github.com/pmem/run_qemu
+>>
+>> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> ---
+>> v7:
+>> - Add test notes in commit log. (Dan)
+>> - Move cxl_memdev_get_dpa_perf() to cxled_memdev_get_dpa_perf(). (Dan)
+>> - Add a DEFINE_FREE(free_perf_xa). (Dan)
+>> - Address 2hb2rp2ep issue Jonathan reported. (Jonathan)
+>> - Added more kdoc comment headers. (Dan)
+> 
+> Looks like potential kdocs are not annotated w /** 
+
+Ooof yeah I missed them all. Will fix.
 
 > 
-> anyways:
 > 
-> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+>> - Rename helper functions to be more clear on what they do. (Dan)
+>> - Move activiation point to after cxl_region_setup_targets(). (Dan)
+>> ---
 > 
-> >   
-> > > +
-> > > +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
-> > >  
-> > >      return 0;
-> > >  }
-> > > diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-> > > index 50b86d5790..29d4852c21 100644
-> > > --- a/hw/pci/pci.c
-> > > +++ b/hw/pci/pci.c
-> > > @@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
-> > >  static void pcibus_reset_hold(Object *obj, ResetType type);
-> > >  static bool pcie_has_upstream_port(PCIDevice *dev);
-> > >  
-> > > +static void prop_pci_busnr_get(Object *obj, Visitor *v, const char *name,
-> > > +                             void *opaque, Error **errp)
-> > > +{
-> > > +    uint8_t busnr = pci_dev_bus_num(PCI_DEVICE(obj));
-> > > +
-> > > +    visit_type_uint8(v, name, &busnr, errp);
-> > > +}
-> > > +
-> > > +static const PropertyInfo prop_pci_busnr = {
-> > > +    .name = "busnr",
-> > > +    .get = prop_pci_busnr_get,
-> > > +};
-> > > +
-> > >  static Property pci_props[] = {
-> > >      DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
-> > >      DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
-> > > @@ -85,6 +98,7 @@ static Property pci_props[] = {
-> > >                      QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
-> > >      DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
-> > >                      QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
-> > > +    { .name = "busnr", .info = &prop_pci_busnr },
-> > >      DEFINE_PROP_END_OF_LIST()
-> > >  };
-> > >      
-> >   
+> snip
 > 
+>> +/*
+>> + * cxl_region_shared_upstream_perf_update - Recalculate the bandwidth for the region
+>> + * @cxl_region: the cxl region to recalculate
+>> + *
+>> + * The function walks the topology from bottom up and calculates the bandwidth. It
+>> + * starts at the endpoints, processes at the switches if any, processes at the rootport
+>> + * level, at the host bridge level, and finally aggregates at the region.
+>> + */
+>> +void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
+>> +{
+>> +	struct xarray *usp_xa, *working_xa;
+>> +	int root_count = 0;
+>> +	bool is_root;
+>> +	int rc;
+>> +
+>> +	lockdep_assert_held(&cxl_dpa_rwsem);
+>> +
+>> +	usp_xa = kzalloc(sizeof(*usp_xa), GFP_KERNEL);
+>> +	if (!usp_xa)
+>>  		return;
+>> +
+>> +	xa_init(usp_xa);
+>> +
+>> +	/* Collect bandwidth data from all the endpoints. */
+>> +	for (int i = 0; i < cxlr->params.nr_targets; i++) {
+>> +		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
+>> +
+>> +		is_root = false;
+>> +		rc = cxl_endpoint_gather_bandwidth(cxlr, cxled, usp_xa, &is_root);
+>> +		if (rc) {
+>> +			free_perf_xa(usp_xa);
+>> +			return;
+>> +		}
+>> +		root_count += is_root;
+>>  	}
+>>  
+>> +	/* Detect asymmetric hierachy with some direct attached endpoints. */
+>> +	if (root_count && root_count != cxlr->params.nr_targets) {
+>> +		dev_dbg(&cxlr->dev,
+>> +			"Asymmetric hierachy detected, bandwidth not updated\n");
+>> +		return;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Walk up one or more switches to deal with the bandwidth of the
+>> +	 * switches if they exist. Endpoints directly attached to RPs skip
+>> +	 * over this part.
+>> +	 */
+>> +	if (!root_count) {
+>> +		do {
+>> +			working_xa = cxl_switch_gather_bandwidth(cxlr, usp_xa,
+>> +								 &is_root);
+>> +			if (IS_ERR(working_xa))
+>> +				goto out;
+>> +			free_perf_xa(usp_xa);
+>> +			usp_xa = working_xa;
+>> +		} while (!is_root);
+>> +	}
+>> +
+>> +	/* Handle the bandwidth at the root port of the hierachy */
+>> +	working_xa = cxl_rp_gather_bandwidth(usp_xa);
+>> +	if (rc)
+>> +		goto out;
+>> +	free_perf_xa(usp_xa);
 > 
+> I was going to say something about getting rid of the goto's
+> and just freeing and returning in line like was done ~36 lines
+> above..but then realize something went astray here in the code
+> movement.  Here and below, rc isn't set.
 
+Copy paste mistake looks like. Will fix. Also will remove the gotos. 
+
+> 
+> 
+>> +	usp_xa = working_xa;
+>> +
+>> +	/* Handle the bandwidth at the host bridge of the hierachy */
+>> +	working_xa = cxl_hb_gather_bandwidth(usp_xa);
+>> +	if (rc)
+>> +		goto out;
+>> +	free_perf_xa(usp_xa);
+>> +	usp_xa = working_xa;
+>> +
+>> +	/*
+>> +	 * Aggregate all the bandwidth collected per CFMWS (ACPI0017) and
+>> +	 * update the region bandwidth with the final calculated values.
+>> +	 */
+>> +	cxl_region_update_bandwidth(cxlr, usp_xa);
+>> +
+>> +out:
+>> +	free_perf_xa(usp_xa);
+>> +}
+> 
+> snip
+> 
+>>
+>>
+> 
