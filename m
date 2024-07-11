@@ -1,218 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6716E8479
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 01:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8969C15A4B7;
+	Thu, 11 Jul 2024 11:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720661980; cv=none; b=W3RpCkOoWtVon9FM9jFQf+r4KwMPirZ+xpFBhHFMxZaNkuIUlZembkdPw2Na67sTTbNUfAasQCgGDgOZio9G6IDllUbS6S5rYTk0zccNWYOfNjHmUWWEH9EokJ6TZZZCCAW2FCNzmZgGXaB9pUta5o8hA07KCmsp609QeP3azkA=
+	t=1720695639; cv=none; b=aowg6z5kBqQ8qRp0xlIzFimn91DgC4yORKLyoDS2qIx2E5uvRk+QvZEULT7pv5/Vj1bawqc09dY1BHsQmGKt/FWjx2iPOQn5J5lIZOcOzsuJghRfENTddYGixWYNQ62fnyco6S5KUnUPQv/nZaZU3TcOGtL4JwP/lBl89ZTqSUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720661980; c=relaxed/simple;
-	bh=6QGZAkPAP9pG+aBMVh1V+Bn8bRxDlsv3pnO8eW4GX8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UArxm9pk8vJh02eb4bajLhMVdMLo7pLJaV7eiXD1THilYkq3WEXMecgNzyRiR6H8ckTMd+tj7hUFQ24uHhHXMGuautGAX9mXrgjwEoPmrbXpzDFQtRPqt0wQc/2k5EIMQJEZM8TroSZ++11r8Y/tv0Fddw7E1p/DewMu5ZU4/ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpxPazn8; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpxPazn8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720661978; x=1752197978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6QGZAkPAP9pG+aBMVh1V+Bn8bRxDlsv3pnO8eW4GX8Q=;
-  b=gpxPazn8vER4sh6mDjnKTMt/Hzg/V7vBzNV1J/IQjBaTd5dKfNSGGqEe
-   nQd3i7DuetNXcBRprZM8JblQm3A+nGbxgxQLND7tJePTYQVRzuU5jsxw1
-   vccgO7pDlheileQJuTMsn5PleF1lWjWG5BZboJd7mbFVxnbvIQIkw2JX0
-   FwjfoG2FXPiiIwfmIbJas263/jPjBh9fYITzXjZCavu3edVHsN5WKMAFN
-   lxpxrNI0VYwv87bFiLzEUSgPQOqXls/YS072EGf1V4X2lliW+oal0goha
-   O35YH428UaueA+xe0fkSQEbxwHiCHFzEP8nkewZgSpb01Wob3wg0hFRdW
-   Q==;
-X-CSE-ConnectionGUID: IVb6wUAISnKU2jNMcvh0wg==
-X-CSE-MsgGUID: vSSxL0iSSTWOCEykEoPfeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="35558892"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="35558892"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 18:39:37 -0700
-X-CSE-ConnectionGUID: aYIbbmKsRVWURkXQFh+TbQ==
-X-CSE-MsgGUID: owCvSTAcTQGEG4dLQOkxgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="53347479"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.164])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 18:39:38 -0700
-Date: Wed, 10 Jul 2024 18:39:35 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	ira.weiny@intel.com, vishal.l.verma@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Subject: Re: [PATCH v7 2/3] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <Zo8317DPRkLOsOlH@aschofie-mobl2>
-References: <20240710222716.797267-1-dave.jiang@intel.com>
- <20240710222716.797267-3-dave.jiang@intel.com>
+	s=arc-20240116; t=1720695639; c=relaxed/simple;
+	bh=d+wMvdLVf+YR9DIyh4LVaJL8/YmjqFApmIjGfxbQ41E=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BVNam3T+Qsz2Fw7SlMfMSpfftKS3chNSsRRSc9kwB6GYrejNWsGMrtYpxQPrb4BOar5UIh5H+hmxFZIN6Zh07LbBrVnYQRACAmHxcd2fV3r37kzv65mRfI0KUx/l+Bhb/duCLNKLJykpY7FIIu0qEIANT6BUWavKgPLCsL4cxyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WKWt71LLrz67Q86;
+	Thu, 11 Jul 2024 18:58:23 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6E8AB1400C9;
+	Thu, 11 Jul 2024 19:00:28 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
+ 2024 12:00:27 +0100
+Date: Thu, 11 Jul 2024 12:00:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: James Bottomley <James.Bottomley@hansenpartnership.com>,
+	<ksummit@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, <jgg@nvidia.com>,
+	<admiyo@os.amperecomputing.com>, Jeremy Kerr <jk@codeconstruct.com.au>, "Matt
+ Johnston" <matt@codeconstruct.com.au>
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240711120027.000079b2@Huawei.com>
+In-Reply-To: <20240710142238.00007295@Huawei.com>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+	<3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
+	<668db67196ca3_1bc8329416@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240710142238.00007295@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710222716.797267-3-dave.jiang@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Jul 10, 2024 at 03:24:01PM -0700, Dave Jiang wrote:
-> The current bandwidth calculation aggregates all the targets. This simple
-> method does not take into account where multiple targets sharing under
-> a switch or a root port where the aggregated bandwidth can be greater than
-> the upstream link of the switch.
+On Wed, 10 Jul 2024 14:22:38 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+
+> On Tue, 9 Jul 2024 15:15:13 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> To accurately account for the shared upstream uplink cases, a new update
-> function is introduced by walking from the leaves to the root of the
-> hierarchy and clamp the bandwidth in the process as needed. This process
-> is done when all the targets for a region are present but before the
-> final values are send to the HMAT handling code cached access_coordinate
-> targets.
+> > James Bottomley wrote:  
+> > > > The upstream discussion has yielded the full spectrum of positions on
+> > > > device specific functionality, and it is a topic that needs cross-
+> > > > kernel consensus as hardware increasingly spans cross-subsystem
+> > > > concerns. Please consider it for a Maintainers Summit discussion.    
+> > > 
+> > > I'm with Greg on this ... can you point to some of the contrary
+> > > positions?    
+> > 
+> > This thread has that discussion:
+> > 
+> > http://lore.kernel.org/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
+> > 
+> > I do not want to speak for others on the saliency of their points, all I
+> > can say is that the contrary positions have so far not moved me to drop
+> > consideration of fwctl for CXL.  
 > 
-> The original perf calculation path was kept to calculate the latency
-> performance data that does not require the shared link consideration.
-> The shared upstream link calculation is done as a second pass when all
-> the endpoints have arrived.
-> 
-> Testing is done via qemu with CXL hierachy. run_qemu[1] is modified to
-> support several CXL hierachy layouts. The following layouts are tested:
-> 
-> HB: Host Bridge
-> RP: Root Port
-> SW: Switch
-> EP: End Point
-> 
-> 2 HB 2 RP 2 EP: resulting bandwidth: 624
-> 1 HB 2 RP 2 EP: resulting bandwidth: 624
-> 2 HB 2 RP 2 SW 4 EP: resulting bandwidth: 624
-> 
-> Current testing, perf number from SRAT/HMAT is hacked into the kernel
-> code. However with new QEMU support of Generic Target Port that's
-> incoming, the perf data injection is no longer needed.
-> 
-> [1]: https://github.com/pmem/run_qemu
-> 
-> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> v7:
-> - Add test notes in commit log. (Dan)
-> - Move cxl_memdev_get_dpa_perf() to cxled_memdev_get_dpa_perf(). (Dan)
-> - Add a DEFINE_FREE(free_perf_xa). (Dan)
-> - Address 2hb2rp2ep issue Jonathan reported. (Jonathan)
-> - Added more kdoc comment headers. (Dan)
+> I was resisting rat holing. Oh well...
 
-Looks like potential kdocs are not annotated w /** 
+To throw another 'fun' one in there.  For anything integrated with the host
+there is a proposal to provide a MCTP via PCC (ACPI described mailbox). [1]
+I don't think it makes sense to rule that out as it's logically no
+different from MCTP in general (e.g. a host controller for PCI VDM, or
+I2C etc)
 
+Anyone who has a suitable firmware can do whatever they like with that
+and the interfaces is exposed directly to userspace. Adam, perhaps you can
+describe your use case a little?  Is it applicable to general server distros?
 
-> - Rename helper functions to be more clear on what they do. (Dan)
-> - Move activiation point to after cxl_region_setup_targets(). (Dan)
-> ---
+We might suggest distributions don't enable MCTP but does that
+actually get us anywhere?  Anyhow, I suspect there are other similar routes, but
+this one happens to be under review at the moment.
 
-snip
-
-> +/*
-> + * cxl_region_shared_upstream_perf_update - Recalculate the bandwidth for the region
-> + * @cxl_region: the cxl region to recalculate
-> + *
-> + * The function walks the topology from bottom up and calculates the bandwidth. It
-> + * starts at the endpoints, processes at the switches if any, processes at the rootport
-> + * level, at the host bridge level, and finally aggregates at the region.
-> + */
-> +void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
-> +{
-> +	struct xarray *usp_xa, *working_xa;
-> +	int root_count = 0;
-> +	bool is_root;
-> +	int rc;
-> +
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
-> +
-> +	usp_xa = kzalloc(sizeof(*usp_xa), GFP_KERNEL);
-> +	if (!usp_xa)
->  		return;
-> +
-> +	xa_init(usp_xa);
-> +
-> +	/* Collect bandwidth data from all the endpoints. */
-> +	for (int i = 0; i < cxlr->params.nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
-> +
-> +		is_root = false;
-> +		rc = cxl_endpoint_gather_bandwidth(cxlr, cxled, usp_xa, &is_root);
-> +		if (rc) {
-> +			free_perf_xa(usp_xa);
-> +			return;
-> +		}
-> +		root_count += is_root;
->  	}
->  
-> +	/* Detect asymmetric hierachy with some direct attached endpoints. */
-> +	if (root_count && root_count != cxlr->params.nr_targets) {
-> +		dev_dbg(&cxlr->dev,
-> +			"Asymmetric hierachy detected, bandwidth not updated\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Walk up one or more switches to deal with the bandwidth of the
-> +	 * switches if they exist. Endpoints directly attached to RPs skip
-> +	 * over this part.
-> +	 */
-> +	if (!root_count) {
-> +		do {
-> +			working_xa = cxl_switch_gather_bandwidth(cxlr, usp_xa,
-> +								 &is_root);
-> +			if (IS_ERR(working_xa))
-> +				goto out;
-> +			free_perf_xa(usp_xa);
-> +			usp_xa = working_xa;
-> +		} while (!is_root);
-> +	}
-> +
-> +	/* Handle the bandwidth at the root port of the hierachy */
-> +	working_xa = cxl_rp_gather_bandwidth(usp_xa);
-> +	if (rc)
-> +		goto out;
-> +	free_perf_xa(usp_xa);
-
-I was going to say something about getting rid of the goto's
-and just freeing and returning in line like was done ~36 lines
-above..but then realize something went astray here in the code
-movement.  Here and below, rc isn't set.
-
-
-> +	usp_xa = working_xa;
-> +
-> +	/* Handle the bandwidth at the host bridge of the hierachy */
-> +	working_xa = cxl_hb_gather_bandwidth(usp_xa);
-> +	if (rc)
-> +		goto out;
-> +	free_perf_xa(usp_xa);
-> +	usp_xa = working_xa;
-> +
-> +	/*
-> +	 * Aggregate all the bandwidth collected per CFMWS (ACPI0017) and
-> +	 * update the region bandwidth with the final calculated values.
-> +	 */
-> +	cxl_region_update_bandwidth(cxlr, usp_xa);
-> +
-> +out:
-> +	free_perf_xa(usp_xa);
-> +}
-
-snip
+[1] https://lore.kernel.org/all/20240702225845.322234-1-admiyo@os.amperecomputing.com/
 
 > 
+> For a 'subset' of CXL.  There are a wide range of controls that are highly
+> destructive, potentially to other hosts (simplest one is a command that
+> will surprise remove someone else's memory). For those I'm not sure
+> fwctl gets us anywhere - but we still need a solution (Subject to
+> config gates etc as typically this is BMCs not hosts).
+> Maybe fwctl eventually ends up with levels of 'safety' (beyond the
+> current read vs write vs write_full, or maybe those are enough).
 > 
+> Complexities such as message tunneling to multiple components are also
+> going to be fun, but we want the non destructive bits of those to work
+> as part of the safe set, so we can get telemetry from downstream devices.
+> 
+> Good to cover the debug and telemetry usecase, but it still leaves us with
+> gaping holes were we need to solve the permissions problem, perhaps that
+> is layered on top of fwctl, perhaps something else is needed.
+> 
+> So if fwctl is adopted, I do want the means to use it for the highly
+> destructive stuff as well!  Maybe that's a future discussion.
+> 
+> 
+> > 
+> > Where CXL has a Command Effects Log that is a reasonable protocol for
+> > making decisions about opaque command codes, and that CXL already has a
+> > few years of experience with the commands that *do* need a Linux-command
+> > wrapper.  
+> 
+> Worth asking if this will incorporate unknown but not vendor defined
+> commands.  There is a long tail of stuff in the spec we haven't caught up
+> with yet.  Or you thinking keep this for the strictly vendor defined stuff?
+> 
+> > 
+> > Some open questions from that thread are: what does it mean for the fate
+> > of a proposal if one subsystem Acks the ABI and another Naks it for a
+> > device that crosses subsystem functionality? Would a cynical hardware
+> > response just lead to plumbing an NVME admin queue, or CXL mailbox to
+> > get device-specific commands past another subsystem's objection?
+> > 
+> > My reconsideration of the "debug-build only" policy for CXL
+> > device-specific commands was influenced by a conversation with a distro
+> > developer where they asserted, paraphrasing: "at what point is a device
+> > vendor incentivized to ship an out-of-tree module just to restore their
+> > passthrough functionality?. At that point upstream has lost out on
+> > collaboration and distro kernel ABI has gained another out-of-tree
+> > consumer."
+> > 
+> > So the tension is healthy, but it has diminishing returns past a certain
+> > point.
+> >   
+> 
+> 
+> 
+
