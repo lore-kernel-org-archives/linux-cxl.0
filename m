@@ -1,62 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1821C14;
-	Thu, 11 Jul 2024 00:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD2610A36;
+	Thu, 11 Jul 2024 01:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720657621; cv=none; b=HWS9N96wifThCwJR4qcqhEAe9hVIqGn8zmr/Xz9u75Ywk/c4NaMTagOs4ZjicsFbzADp50reDeTcRepsK4r1O1znKIG84jXnqXCZcLsQ8n/kDAxrjRjSWMQNezR3x2RZagyMc4aYYrlQ65ZI+RBXaGuvZS2HX50JAMI8lMoVUt0=
+	t=1720660483; cv=none; b=Ai9ryazEBVve/EMowsjAvjOby7YUAa0IAUrfLUdfDCvjfoXTtoTR41IK3ejbZaT88vHRUIWj7aG1piNMr0VYHXg9nToRFQwvaqPmUep1UdbjVvVz1bHwcM3cE76CIM3psSSmNYzwt3TU5VYjCu1Wn7ReLd//y4wrNbCE8EXK/xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720657621; c=relaxed/simple;
-	bh=UULG4kMeS44p/RRr8g5q9aIR1TLkUQFBx3QaxoMQq4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9kiQI4+PMdCwMKCCsquwlb0Tuh1oHMwoXjUK9YsLozXCh8N82FDdU+xDBAZ48fW3z5KtTML78j3zx8fMiDSFRkm9kSQgMM/ocAB16Z67dl7ZpAEwE0fVZcb9EV+GiM86Rm7z87r/ZcWBuPVel0qh33yPUQ0hYj5K1LiTBdh5eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTpPN5R6; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720660483; c=relaxed/simple;
+	bh=6/zkEDXjZjxv6dDfH3KWAd0N7AnaFH1Zmp5aws/7dQk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sI7rDliEmEIRyR5Yy1kW8j+Pgu2K/HF+Wom7MBVSQf2QcKt7XEg/UZYiWLzz4Kwzk5JYWxgKh9ITZ4lsml1FaCkTe/QuhCIOP9urhUrVzqYZEHM/QqYdUiQi21cdHzyVOFzueYI9LfHi6Wd2k5KEc7Wf+nIJQXZSSKHy3RpatuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAUiNpn4; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTpPN5R6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720657619; x=1752193619;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UULG4kMeS44p/RRr8g5q9aIR1TLkUQFBx3QaxoMQq4Y=;
-  b=MTpPN5R62N9+H9sRrGSrBzCEMJJUex7sQeYuiSmhyv3mmW/kzTGu4zCD
-   c/4qGA/Xbm5CbWD3uRahphUSOztMvWVlUWvVX5kf5DC2bs0fTMB9XfTTO
-   /HVVlOM5I9bbc9NPLuDCrFHGU67ijDT13euhUjKETXW4YjSMe7nVpZ601
-   PtmzzXHUQsdnMFtEOyioZBfILsiSUaLRm9uv5bzHqzHdrghdDJZJyOy13
-   uuiBGbYC7T5cBztvmxDkDzSebygYn0EG3t1lddWPeTJDXyl0JNDGlA+CA
-   n7QoCiOBh6vuGtN0/txS3lnfbghDG5vtmbffS+tN25eC+ait4bfxlBi/f
-   A==;
-X-CSE-ConnectionGUID: 5MXozepuTzGp/vaKvMRLRw==
-X-CSE-MsgGUID: lQiHLWqnSZamLc/yJqzUdg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="21886745"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="21886745"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:26:58 -0700
-X-CSE-ConnectionGUID: Lo3xxtleTIesld7r1eYkWQ==
-X-CSE-MsgGUID: pJOn2XBiRYOcqGdRYH9Q9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="48470956"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.164])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:26:58 -0700
-Date: Wed, 10 Jul 2024 17:26:55 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Address translation for HDM decoding
-Message-ID: <Zo8mz6uyQBCxsuJ3@aschofie-mobl2>
-References: <20240701174754.967954-1-rrichter@amd.com>
- <Zo8hJm7y9VIwhiDk@aschofie-mobl2>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAUiNpn4"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fafc9e07f8so2504905ad.0;
+        Wed, 10 Jul 2024 18:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720660481; x=1721265281; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
+        b=jAUiNpn4e5i8hbgW/V9nHh1y59tzaQH2MI3E39ZRSwTckpsbUPo6zdDi0M7Qj1H1Ew
+         sHrPSR4u8vPArEXfIe4QSskottINLFSo3J1CCphBTdUoRgiOeg9oAPxEk76DJcVY1x2I
+         YcI6sfZRVVs09dEVw8O9gdFaoVO0OGQRCGjXMyrC7VVf1/8g/Lwc4lLNr/6LrLHHoJvB
+         +z2FuTKpxJ4D2kMufB/PS0heZs6wMCE/bZIlAhMNBBDHzNmdq6QgZHBr0ZzxKVmOjQXS
+         4vZOTwCQYbQA9jDkLG3+erjcGabcObbLsJATKHnQHHX14MLW+SuTCbHQG/mkzPsLX7fd
+         Pq0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720660481; x=1721265281;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
+        b=oXBvrlDHANZWtoLM326Sf/ZiLS7s7E65/KZSacRuwDgT4rBhCXbi96P79mmLuqVSuf
+         lFwcsmsOqKnw7JUuj12wAXZ/QLWCB0HaO3sxpwJUibaH5RrNRxcNPFU3G3x/InTXdPvD
+         4yfihOVH4EkKWDQaO7S5LKpQwULORcfA9qDwXXskLKli06RPWFjgtUqBt7ed8TMd3B6x
+         XgrDZHhXca3/7F9wmtDdPdS95pgt//bk1CwneDENy71NXcXS3rhH+e0mZ0BerMDNgrsu
+         sqXM/NSWPtH+DdUE+zLyk8Kt+2GzzrCRqBylGWrqhkM9CxsOWLEgLNpdMF4lIq/Va1p9
+         8OBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPzrKGNiHpTDhGHvBmm0J+KZgcnYo4JbEabFLCgv8aZdPYF4pxt7eW+zEYyXFXyr3V52NIFlzhckrRVFLkNsar0U4seuGxv+QvK+gX7t9xoovjgkz1YsA/QV0533QVOk8Hh6vH5sNnqsG9qi/l/G2auppb6UOv5KPE9Y1MUxaJsYUZ
+X-Gm-Message-State: AOJu0YxAfNFHfRgMIXFrZyleiHeykJdquZ7fuCEdxD7nbJmM1A3HCPdP
+	jrNrIv7zvjVgClvTPxB1//KMRL/ZF2H2Xc2+s+vHmv2rrzuIrkxU
+X-Google-Smtp-Source: AGHT+IFJUeFA3eAzgk0yLfvuWC7HhHDzJ0TYJRTj/e7EpBNO4Fa5aqAl/Zb3JcJpxWMpURw+W2y5RA==
+X-Received: by 2002:a17:903:2bcb:b0:1f8:5a64:b468 with SMTP id d9443c01a7336-1fbb6ed9d22mr62847735ad.47.1720660480788;
+        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:398f:325f:a0e2:200f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7c66sm39383215ad.121.2024.07.10.18.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Wed, 10 Jul 2024 18:14:25 -0700
+To: Terry Bowman <Terry.Bowman@amd.com>
+Cc: nifan.cxl@gmail.com, Dan Williams <dan.j.williams@intel.com>,
+	ira.weiny@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, ming4.li@intel.com,
+	vishal.l.verma@intel.com, jim.harris@samsung.com,
+	ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
+ downstream port UCE handlers
+Message-ID: <Zo8x8YvdHSgcjGcR@debian>
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+ <20240617200411.1426554-2-terry.bowman@amd.com>
+ <6675d1cc5d08_57ac294d5@dwillia2-xfh.jf.intel.com.notmuch>
+ <ecc5fbd0-52e1-443f-8e5a-2546328319b2@amd.com>
+ <668ef3a2.050a0220.96a0c.4f5c@mx.google.com>
+ <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -65,65 +81,112 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo8hJm7y9VIwhiDk@aschofie-mobl2>
+In-Reply-To: <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
 
-On Wed, Jul 10, 2024 at 05:02:46PM -0700, Alison Schofield wrote:
-> On Mon, Jul 01, 2024 at 07:47:48PM +0200, Robert Richter wrote:
-> > Default expectation of Linux is that HPA == SPA, which means that
-> > hardware addresses in the decoders are the same as the kernel sees
-> > them. However, there are platforms where this is not the case and an
-> > address translation between decoder's (HPA) and the system's physical
-> > addresses (SPA) is needed.
+On Wed, Jul 10, 2024 at 04:48:09PM -0500, Terry Bowman wrote:
+> Hi Fan,
+> 
+> On 7/10/24 15:48, nifan.cxl@gmail.com wrote:
+> > On Mon, Jun 24, 2024 at 12:56:29PM -0500, Terry Bowman wrote:
+> >> Hi Dan,
+> >>
+> >> I added a response below.
+> >>
+> >> On 6/21/24 14:17, Dan Williams wrote:
+> >>> Terry Bowman wrote:
+> >>>> The AER service driver does not currently call a handler for AER
+> >>>> uncorrectable errors (UCE) detected in root ports or downstream
+> >>>> ports. This is not needed in most cases because common PCIe port
+> >>>> functionality is handled by portdrv service drivers.
+> >>>>
+> >>>> CXL root ports include CXL specific RAS registers that need logging
+> >>>> before starting do_recovery() in the UCE case.
+> >>>>
+> >>>> Update the AER service driver to call the UCE handler for root ports
+> >>>> and downstream ports. These PCIe port devices are bound to the portdrv
+> >>>> driver that includes a CE and UCE handler to be called.
+> >>>>
+> >>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>>> Cc: linux-pci@vger.kernel.org
+> >>>> ---
+> >>>>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
+> >>>>  1 file changed, 20 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> >>>> index 705893b5f7b0..a4db474b2be5 100644
+> >>>> --- a/drivers/pci/pcie/err.c
+> >>>> +++ b/drivers/pci/pcie/err.c
+> >>>> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> >>>>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> >>>>  
+> >>>> +	/*
+> >>>> +	 * PCIe ports may include functionality beyond the standard
+> >>>> +	 * extended port capabilities. This may present a need to log and
+> >>>> +	 * handle errors not addressed in this driver. Examples are CXL
+> >>>> +	 * root ports and CXL downstream switch ports using AER UIE to
+> >>>> +	 * indicate CXL UCE RAS protocol errors.
+> >>>> +	 */
+> >>>> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> >>>> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> >>>> +		struct pci_driver *pdrv = dev->driver;
+> >>>> +
+> >>>> +		if (pdrv && pdrv->err_handler &&
+> >>>> +		    pdrv->err_handler->error_detected) {
+> >>>> +			const struct pci_error_handlers *err_handler;
+> >>>> +
+> >>>> +			err_handler = pdrv->err_handler;
+> >>>> +			status = err_handler->error_detected(dev, state);
+> >>>> +		}
+> >>>> +	}
+> >>>> +
+> >>>
+> >>> Would not a more appropriate place for this be pci_walk_bridge() where
+> >>> the ->subordinate == NULL and these type-check cases are unified?
+> >>
+> >> It does. I can take a look at moving that.
 > > 
-> > This series implements address translation for HDM decoding. The
-> > implementation follows the rule that the representation of hardware
-> > address ranges in the kernel are all SPA. If decoder registers (HDM
-> > decoder cap or register range) are not SPA, a base offset must be
-> > applied. Translation happens when accessing the registers back and
-> > forth. After a read access an address will be converted to SPA and
-> > before a write access the programmed address is translated from an
-> > SPA. The decoder register access can be easily encapsulated by address
-> > translation and thus there are only a few places where translation is
-> > needed and the code must be changed. This is implemented in patch #2,
-> > patch #1 is a prerequisite.
+> > Has that already been handled in pci_walk_bridge?
 > > 
-> > Address translation is restricted to platforms that need it. As such a
-> > platform check is needed and a flag is introduced for this (patch #3).
+> > The function pci_walk_bridge() will call report_error_detected, where
+> > the err handler will be called. 
+> > https://elixir.bootlin.com/linux/v6.10-rc6/source/drivers/pci/pcie/err.c#L80
 > > 
-> > For address translation the base offset must be determined for the
-> > memory domain. Depending on the platform there are various options for
-> > this. The address range in the CEDT's CFWMS entry of the CXL host
-> > bridge can be used to determine the decoder's base address (patch
-> > #4). This is enabled for AMD Zen4 platforms (patch #5).
+> > Fan
+> > 
 > 
+> You would think so but the UCE handler was not called in my testing for the PCIe 
+> ports (RP,USP,DSP). The pci_walk_bridge() function has 2 cases:
+> - If there is a subordinate/secondary bus then the callback is called for
+> those downstream devices but not the port itself.
+> - If there is no subordinate/secondary bus then the callback is invoked for the 
+> port itself.
 > 
-> Hi Robert,
+> The function header comment may explain it better:
+> /**                                                                                                                                                                                                                
+>  * pci_walk_bridge - walk bridges potentially AER affected                                                                                                                                                         
+>  * @bridge:     bridge which may be a Port, an RCEC, or an RCiEP                                                                                                                                                   
+>  * @cb:         callback to be called for each device found                                                                                                                                                        
+>  * @userdata:   arbitrary pointer to be passed to callback                                                                                                                                                         
+>  *                                                             
+>  * If the device provided is a bridge, walk the subordinate bus, including                                                                                                                                         
+>  * any bridged devices on buses under this bus.  Call the provided callback                                                                                                                                        
+>  * on each device found.                                                                                                                                                                                           
+>  *                                                                                                                                                                                                                 
+>  * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,                                                                                                                                          
+>  * call the callback on the device itself. 
+>  */
 > 
-> This HPA->SPA work needs to be done for addresses reported directly by
-> devices, ie DPAs in poison and other events - right?
-> 
-> For the XOR case, we discover the need for HPA->SPA while parsing the
-> CFMWS and add a cxl_hpa_to_spa_fn to the struct cxl_root_decoder. Later,
-> when the driver wants to translate a DPA (to include in a TRACE_EVENT)
-> it uses that 'extra mile' HPA->SPA function.
-> 
-> See Patch 2 in this series:
-> https://lore.kernel.org/cover.1719980933.git.alison.schofield@intel.com/T/#m9206e1f872ef252dbb54ce7f0365f0b267179fda
+> Regards,
+> Terry
 
-Better link:
-https://lore.kernel.org/linux-cxl/cover.1719980933.git.alison.schofield@intel.com/
+OK, interesting.
+Btw, what is the "state" passed to pcie_do_recovery(...state...)?
+
+Fan
 
 > 
-> It seems the Zen4 extra mile is a simple offset from the base calc.
-> Do you think a zen4 hpa->spa function will fit in with what I've done?
-> 
-> FWIW I took this code for a spin through cxl-test on it's own and combined
-> w the xor address tranlation patch set and no collisions, all humming along
-> nicely (for non-zen config).
-> 
-> --Alison
-> 
-> > 
-> snip
-> > 
-> 
+> >>
+> >> Regards,
+> >> Terry
