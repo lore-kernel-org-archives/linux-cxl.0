@@ -1,123 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987A128FF
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 15:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8303D158216
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 15:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720712458; cv=none; b=nnsQgM5upp0/CuNbQoG37BohG/WzQuIYtrv8YnBkfyLZf4/g40BmY37FRtYmT6ldO0esX2kRxTE+BxkCGNorUHfk+u1Frm8ddFSiKzkpmeFtXu8K5fexuy7eA6BDW2rlYFgHuJuseQVkuX4j6c5W3ZVBGgi7qv93kUTdFT7yhjo=
+	t=1720712632; cv=none; b=R+hCVzQzY+N6sC00Po2jLUl7CCQmGdB1u/oCSfhRqaWQcKhqsFymFETCHcN5o41djVFSjCc1qon1aM8XUtIVRsuxvqfsbfWfFR3cz2+Scuq+lhDjjNIlXYw5rWyAqbKn3uom57aw+SG2oG4qxS/03+/fEKl481yCrA6MKNylqQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720712458; c=relaxed/simple;
-	bh=rBkthWhcvQScir+tmHNx/hP5nmcCufgKFaMkLDKze2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=LY5b1OcOFrzH3thio2jvHcYkzDTukBHWH/AzaOEl45rW3GLr8USGZm1WjVhFtbBEQ1OB8UrWkXcJFusBk0O+YkhxLxTz9/7ZrARFnpL2QtsPDuSRwFnV3S7SQWkJuZiuK467siC11ksSyuAmsoQ1TQaD40TWxdAHmzfETkHnYDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RKwYWXat; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RKwYWXat"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720712455;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OsjfsTlsj/Ghe1NV6WpqPyLw4t3Xvvi5gxbEOGMofqU=;
-	b=RKwYWXatQ9ELhN7hO34Bm/j0Lt11d954pfp5X7U88o7tYhjyTEaFUFbbh8Z3K9uAC5geyq
-	fkjV/uQr5KGkn4gv/azqzgu+UGi+Iut9PmIACpBUePzNOe7oUQh4xspIToLA1Y5QAeaqfk
-	jBQdERauogyw/yPZgmkxqPnfhe7Adu8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-6xrogOPONRGzRepJ9TI3_A-1; Thu, 11 Jul 2024 11:40:54 -0400
-X-MC-Unique: 6xrogOPONRGzRepJ9TI3_A-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42667cc80e8so6464995e9.2
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 08:40:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720712453; x=1721317253;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsjfsTlsj/Ghe1NV6WpqPyLw4t3Xvvi5gxbEOGMofqU=;
-        b=lNVJtK0bakyGjFoJ8Lac7vegaBJgD7l0EQsX1SbTCS4VsP4sdabqnPKEBCrrCbZUu4
-         +hEahLFP1FCKZWffxsknLrIAwrycA6IhzwBXX3eygmEcAZs7LjDoZDDjP4WXdg6Vb3Qn
-         Jhl3univPLXN82F8JhYI2caP2eZAVh/hSE0vxwr/qbU03hWbPWuKtCJS300/BnphH/Uy
-         BWVPjfXDJ/dfUOjxp8/nmGypszwDjvuD9vI1ZE2AvDYiSD2qOWxUYv0ssE3Es0N1lDcJ
-         aT2CiKLbtdyEwxosPwKtorjPCB5qRN1voxndLIh2IPpfvDV1bqVzUODi33/sPWwN+yTf
-         p6rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVO1DWvePtSx1dslOI2g+HY/7x02HvmW4KZdPSYdpxiKNXdmEhHyN4CvWhX4dIr2W1sIMJf72f38JLVie65u+p47oeuQgBBTB9o
-X-Gm-Message-State: AOJu0Yy42/ywQ/DYIkdapmu0cQrcoAoBk50sBgPpCEckf80D4l3DsL5K
-	8P6b+f7SF5ITkkwVuVfqisHxWI922B3C0odG/4tEWx1BbByUymmqWF2ugxsyrVegnGCUrZi6lTg
-	PMPC4bZVuVt3O+iUw4Ijs+v04pIJkq1TTp1eQlo8oE9PoL+NBMeeQih/5wQ==
-X-Received: by 2002:a05:600c:17c7:b0:426:654e:16d0 with SMTP id 5b1f17b1804b1-4267018b105mr74065675e9.0.1720712453025;
-        Thu, 11 Jul 2024 08:40:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHRjy+TOeaReztYTSjC/8SCGznQL2TkFSPfZoMqe2yvPzpSmQoBY88yy1Yd7PIYFZg0fPeDJQ==
-X-Received: by 2002:a05:600c:17c7:b0:426:654e:16d0 with SMTP id 5b1f17b1804b1-4267018b105mr74065465e9.0.1720712452473;
-        Thu, 11 Jul 2024 08:40:52 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc7:341:761e:f82:fc9a:623b:3fd1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42662315363sm201463505e9.26.2024.07.11.08.40.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 08:40:51 -0700 (PDT)
-Date: Thu, 11 Jul 2024 11:40:47 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Igor Mammedov <imammedo@redhat.com>,
-	Markus Armbruster <armbru@redhat.com>, qemu-devel@nongnu.org,
-	ankita@nvidia.com, marcel.apfelbaum@gmail.com, philmd@linaro.org,
-	Richard Henderson <richard.henderson@linaro.org>,
-	linuxarm@huawei.com, Dave Jiang <dave.jiang@intel.com>,
-	Huang Ying <ying.huang@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, eduardo@habkost.net,
-	linux-cxl@vger.kernel.org, Michael Roth <michael.roth@amd.com>,
-	Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v4 06/13] acpi/pci: Move Generic Initiator object
- handling into acpi/pci.*
-Message-ID: <20240711114034-mutt-send-email-mst@kernel.org>
+	s=arc-20240116; t=1720712632; c=relaxed/simple;
+	bh=PrVemtHVSKbCe4Cz28RjwZD3IlgKuIUqUcUE0YGV3KY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCuTbX3uRdRozFARqRuksJ32wK9V9RdB+s6GrRvtLconST3n3XqWlugsAUV9zGYpuJRrrmzqWGTvgqZJG57noyiXYBi3tDkHgg9W4BlJEfvS9U6iJunOx9/xBd0oGewjDp+9t77zh6m802dnE4JC7kaWjaJdublb9n2J2gByI38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WKf912ZYfz6H7X0;
+	Thu, 11 Jul 2024 23:41:41 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id E49151406AC;
+	Thu, 11 Jul 2024 23:43:46 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
+ 2024 16:43:46 +0100
+Date: Thu, 11 Jul 2024 16:43:45 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Igor Mammedov <imammedo@redhat.com>
+CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
+	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
+	<linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v4 05/13] hw/pci: Add a busnr property to pci_props and
+ use for acpi/gi
+Message-ID: <20240711164345.00005952@Huawei.com>
+In-Reply-To: <20240711142316.1150870e@imammedo.users.ipa.redhat.com>
 References: <20240702131428.664859-1-Jonathan.Cameron@huawei.com>
- <20240702131428.664859-7-Jonathan.Cameron@huawei.com>
- <20240711141240.0ec77fd2@imammedo.users.ipa.redhat.com>
- <20240711163851.00002f93@Huawei.com>
+	<20240702131428.664859-6-Jonathan.Cameron@huawei.com>
+	<20240711135331.6f0e4639@imammedo.users.ipa.redhat.com>
+	<20240711142316.1150870e@imammedo.users.ipa.redhat.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240711163851.00002f93@Huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Jul 11, 2024 at 04:38:51PM +0100, Jonathan Cameron wrote:
+On Thu, 11 Jul 2024 14:23:16 +0200
+Igor Mammedov <imammedo@redhat.com> wrote:
+
+> On Thu, 11 Jul 2024 13:53:31 +0200
+> Igor Mammedov <imammedo@redhat.com> wrote:
 > 
-> > > diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
-> > > index 20b70dcd81..174b490e5f 100644
-> > > --- a/hw/acpi/pci.c
-> > > +++ b/hw/acpi/pci.c
-> > > @@ -24,8 +24,12 @@
-> > >   */
+> > On Tue, 2 Jul 2024 14:14:10 +0100
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >   
+> > > Using a property allows us to hide the internal details of the PCI device
+> > > from the code to build a SRAT Generic Initiator Affinity Structure with
+> > > PCI Device Handle.
+> > > 
+> > > Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > 
+> > > ---
+> > > V4: Avoid confusion with device creation parameter bus but renaming to
+> > >     busnr
+> > > ---
+> > >  hw/acpi/acpi_generic_initiator.c | 11 ++++++-----
+> > >  hw/pci/pci.c                     | 14 ++++++++++++++
+> > >  2 files changed, 20 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
+> > > index 73bafaaaea..f2711c91ef 100644
+> > > --- a/hw/acpi/acpi_generic_initiator.c
+> > > +++ b/hw/acpi/acpi_generic_initiator.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include "hw/boards.h"
+> > >  #include "hw/pci/pci_device.h"
+> > >  #include "qemu/error-report.h"
+> > > +#include "qapi/error.h"
 > > >  
-> > >  #include "qemu/osdep.h"
-> > > +#include "qemu/error-report.h"  
-> > 
-> > > +#include "qapi/error.h"  
-> > is this necessary? 
-> > it seems to be compiling just fine without it.
-> The error_fatal extern is in there.
-> 
-> I guess there is a non obvious path via which that's getting included
-> anyway. is in there and it's not obvious how it is included I'd rather
-> keep it as an explicit include to reduce fragility if the chain of
-> includes involved gets changed.
-> 
-
-+1
-
-> > 
-> > > +#include "hw/boards.h"
-> > >  #include "hw/acpi/aml-build.h"
-> > >  #include "hw/acpi/pci.h"
-> > > +#include "hw/pci/pci_device.h"
-> > >  #include "hw/pci/pcie_host.h"
+> > >  typedef struct AcpiGenericInitiatorClass {
+> > >      ObjectClass parent_class;
+> > > @@ -79,7 +80,7 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> > >      MachineState *ms = MACHINE(qdev_get_machine());
+> > >      AcpiGenericInitiator *gi;
+> > >      GArray *table_data = opaque;
+> > > -    PCIDevice *pci_dev;
+> > > +    uint8_t bus, devfn;
+> > >      Object *o;
 > > >  
+> > >      if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> > > @@ -100,10 +101,10 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> > >          exit(1);
+> > >      }
+> > >  
+> > > -    pci_dev = PCI_DEVICE(o);
+> > > -    build_srat_pci_generic_initiator(table_data, gi->node, 0,
+> > > -                                     pci_bus_num(pci_get_bus(pci_dev)),
+> > > -                                     pci_dev->devfn);
+> > > +    bus = object_property_get_uint(o, "busnr", &error_fatal);
+> > > +    devfn = object_property_get_uint(o, "addr", &error_fatal);    
+> > 
+> > devfn in PCI code is 32bit, while here it's declared as unit8_t,
+> > which seems wrong.
+> > It likely would work in case of PCIe root ports/switches where slot is 0,
+> > but should quickly break elsewhere as soon as slot is more than 0.
+> > 
+> > If it's intentional, there should be fat comment here about why it this way
+> > and an assert to catch silent cropping of the value.   
+> 
+> Ignore that, obviously the rest of the QEMU does not care about this downcast.
+It's indeed odd that the storage is 32 bits.
+> 
+> Maybe add assert anyways to catch too big devfn returned,
+> which unlikely to happen ever.
+
+Will do. 
+assert(devfn >= 0 && devfn < PCI_DEVFN_MAX);
+with devfn locally as an int32_t and object_property_get_int()
+to match with the type.
+
+> 
+> anyways:
+> 
+> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+> 
+> >   
+> > > +
+> > > +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> > >  
+> > >      return 0;
+> > >  }
+> > > diff --git a/hw/pci/pci.c b/hw/pci/pci.c
+> > > index 50b86d5790..29d4852c21 100644
+> > > --- a/hw/pci/pci.c
+> > > +++ b/hw/pci/pci.c
+> > > @@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
+> > >  static void pcibus_reset_hold(Object *obj, ResetType type);
+> > >  static bool pcie_has_upstream_port(PCIDevice *dev);
+> > >  
+> > > +static void prop_pci_busnr_get(Object *obj, Visitor *v, const char *name,
+> > > +                             void *opaque, Error **errp)
+> > > +{
+> > > +    uint8_t busnr = pci_dev_bus_num(PCI_DEVICE(obj));
+> > > +
+> > > +    visit_type_uint8(v, name, &busnr, errp);
+> > > +}
+> > > +
+> > > +static const PropertyInfo prop_pci_busnr = {
+> > > +    .name = "busnr",
+> > > +    .get = prop_pci_busnr_get,
+> > > +};
+> > > +
+> > >  static Property pci_props[] = {
+> > >      DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
+> > >      DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
+> > > @@ -85,6 +98,7 @@ static Property pci_props[] = {
+> > >                      QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
+> > >      DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
+> > >                      QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
+> > > +    { .name = "busnr", .info = &prop_pci_busnr },
+> > >      DEFINE_PROP_END_OF_LIST()
+> > >  };
+> > >      
+> >   
+> 
+> 
 
