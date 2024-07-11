@@ -1,64 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84A915885E
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 11:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB51459E3
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 12:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720698821; cv=none; b=nZKcfOBnEDV4sYjlTbJm0yRodPw4FSxx60NTERcuXIGWMNmkClm2255sPPtokcUo/xIg+CBVywijY83RbGyfzagJhYJ8t317YC3+/HWzS0KZdR4dJIKrQADZkoTVekB1ZJgrahA/yH/ezeqvfbepe292p755WEjLNK270b9veEQ=
+	t=1720699969; cv=none; b=IM+4B/fZXA5EcRXalI3JGAVp5x5RRaNHOwrt3WGSCgMVLq8QkzrmL9bjOWa06GjKV6774XR/NxMDliq3SYXWVBODzaG7rHZWcexPd/XcqsoH+VFPt6ASimomuisAuJuqF4EJ4qkpKeoWOyB/lceutIthlb3QEJe6RlpxGYsSZ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720698821; c=relaxed/simple;
-	bh=L9x3XZczKEPi5Uj70eCYmCtnAStf8Jp1xVhnwRZwRjo=;
+	s=arc-20240116; t=1720699969; c=relaxed/simple;
+	bh=RUmTcqEpc91zZMXWINjBg9BCM0jW43idFojURQVDZ6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hR51lmHzd+JUYiUeMiGlguMWxOzNbjiBY9ql9JXB09aRvujrWtzDNEAOzXPpodzizJ5SGrfpcPQtEpFtQ5OStf3QH/kG///CXQxaWwm/+B+s7Xq2ikGkvie2dklfFFwSirUoPE/3ixgQ6lsKIjg/vsgLVtNqI2bJXK6VDPyF4EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ia+SqqG+; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=lSgH5NIdJouIHLw1NpLawWOGByrR40pIMXHX/sSF++6srYqAQE0hfMJTnlcbKdn1RhulEju09XnFKMrY2oLlTIJdV1COsGlcBl3yLDtf+qMiTuvlEP05qM3b2060xBf/w+qNKyJTlD/qCWFZexMEkdE5AxdWSVCvQpFGqVd/SwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H09TItFE; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ia+SqqG+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H09TItFE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720698818;
+	s=mimecast20190719; t=1720699965;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OcoUcKqb44Xm9OFgCdxhrIPGvhgw6cygk4oO4wMZsgU=;
-	b=Ia+SqqG+Q63G2W1s7yBEaH4STaSJhXvh1pjYbX3wVBs8QeGGC6KQlmpfQqgesM3q3Wr/cK
-	LMM1IUSXK5uxSEZwkdLL7n68W76OsuL3DSlJDE004aGZz9dwwnzBd+UsfL5gP8F0UgHDUu
-	XZun0/1IlcezIL0+cc6tKNUm2AbFg8o=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=vv5NTnJoowLB9Po9W64tEIIxmWAKOLu+98q44yY8x+0=;
+	b=H09TItFEhzlB1h1V1PqLy0ddUrF9x08u5EtlnnxN3XpSx/UQ3MRUuQBJhv4w8u8TVA4by+
+	hnDGSrAnVn8qwvUAcKSMSsE+PnZtv0uf96x4Lb9Z7oq5RfKJI2//E1xbRImgh4vNHUv6nJ
+	mvayOZ/UdFUM8gQLxsxLHOL+F+IWX3I=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-4CoYfjIHPNOBgELw7N7eiA-1; Thu, 11 Jul 2024 07:53:35 -0400
-X-MC-Unique: 4CoYfjIHPNOBgELw7N7eiA-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-367f95ed73aso370423f8f.3
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 04:53:35 -0700 (PDT)
+ us-mta-294--FuEvKqfMJyOs0b1JspQPw-1; Thu, 11 Jul 2024 08:12:44 -0400
+X-MC-Unique: -FuEvKqfMJyOs0b1JspQPw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4265b751469so9714895e9.1
+        for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 05:12:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720698814; x=1721303614;
+        d=1e100.net; s=20230601; t=1720699962; x=1721304762;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OcoUcKqb44Xm9OFgCdxhrIPGvhgw6cygk4oO4wMZsgU=;
-        b=Vd6qgK6l05gi41sAqdEkWEYyyHxThSqnzkQL2j+3iMHzVLPm80GezOU8EL2WBtJ17b
-         u3/++xLSP5s/Rfc0MAjN48ytMTzfZVV+8U08jjh54snJyIUMppCpTWW4cGtFvNOyD7sl
-         YdQVeyqT94eujeU//qOvBsF96Gj6RfDQvS3oQvVOUgH6Eo0cCmIXflEh+B6M0wGFoyhN
-         pCIej29N5DVK3mk69QliYFwqKz+UrFAlDzcm7sZCCbvwNjc+nagoGxNlbRWP0k4Vw6w1
-         GexpA+JAg5EVfEkrZ4A5Je6n6MJijMNi2fkWQFVcfQnWygkFLqZarbGqT2+eQPcE59gJ
-         LlkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUlRqG89PD2uRfrwUozN+VPdTwa9jJrbH7YmH2mZ9rs13pQC26rzlAwXQSxKeBUB36zf6TeWkzo6fTN4h5/nd/AejMgfhvOeVK
-X-Gm-Message-State: AOJu0YytpEPGBSRkIcjDIT76j2Yc/9EguXp5VtD6IYjonSHQu8jxJdH8
-	WrJIdRDlTV8NgTVMNaQdF3bWspf7/3JsbDpHb+QmSzd8VN4ZwdAzsilScahTAPJifObSwRC+Pj9
-	dqA1aH4+XghLWKXSRtDVmXdM71GFyRndvqSjzShqHFtSeJs3wzsXGPw3qzw==
-X-Received: by 2002:a7b:cc97:0:b0:426:5d63:24c4 with SMTP id 5b1f17b1804b1-426708f1dcamr48196035e9.27.1720698814410;
-        Thu, 11 Jul 2024 04:53:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWzLvX4c7bSDw7L1OcwNfUEEyNHzMjOERqj1EaDSdjsW5EOZALOPplWmLwxAz1Wgq8i6QD9w==
-X-Received: by 2002:a7b:cc97:0:b0:426:5d63:24c4 with SMTP id 5b1f17b1804b1-426708f1dcamr48195905e9.27.1720698814044;
-        Thu, 11 Jul 2024 04:53:34 -0700 (PDT)
+        bh=vv5NTnJoowLB9Po9W64tEIIxmWAKOLu+98q44yY8x+0=;
+        b=SiZthfbOHd01AZecLkeiGyG9N2LeEXOKcl+Fqx9XkP35o3wlQfw/k4NFLetlbj9Jjq
+         57EceCZIy3f9ockdbR/c4L75s37F/6RUSKHiW/sgNI41k9q1Le8+Cngi9MMQp90tdNlO
+         OcbnI+VYDp5jjNELysfC1Q9uGuDhpRVVrk/YVnh4Sau+SFGDu/rLhjPWF6rcPNrEDP/K
+         MRCf+6PLa+FFuGmXlKudqs/Fkb7cbgStXmJxS5YgGegaa8LGXTabu7ZNtRWm45Uv8Zuh
+         /4ftaDzoH5JyvK3xzRHEoncn+9UXfkEPY7s6JstWBeml8yzflXZK1ytnkqtKYu4FHyV9
+         n0Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXXPQ3+koPrKGIyoNEnAaXHAky4MYlHJAUu368aAD3mgAL68XmjvSZd3HNWng9LOSsbglk9sjrGRNe+2Aqj+lNOr8aCadaHVpMc
+X-Gm-Message-State: AOJu0Yzi5Gcd7VLk8H/UQAfSOFjHn/TFoEJ1sYQdZC6+v+n4k+YBYQ3d
+	F3imFqrHxF3okemQsf4Lj1RtQPa5ftd1B8KJpnOFUv7q6iqLK3kJhy6tPaZhsF7EpzIwLF3cnGZ
+	aw1klbhoB75sG59bVKE2r0ILP9/68o1uCBcmmWCWd40tO4mwZoGwk4/p4MAz0KgEV+g==
+X-Received: by 2002:a05:600c:2297:b0:426:706c:a55a with SMTP id 5b1f17b1804b1-427981b2265mr22358355e9.2.1720699962455;
+        Thu, 11 Jul 2024 05:12:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGwEPCamNUNUNQAYP2H6/A2vbZTgDFgbv7Bkc+kZHDW20GC/zNT9z44VnRcdcxSL7xbZoVnUw==
+X-Received: by 2002:a05:600c:2297:b0:426:706c:a55a with SMTP id 5b1f17b1804b1-427981b2265mr22358065e9.2.1720699962034;
+        Thu, 11 Jul 2024 05:12:42 -0700 (PDT)
 Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42797100f55sm43738255e9.1.2024.07.11.04.53.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f7362d9sm113730155e9.30.2024.07.11.05.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 04:53:33 -0700 (PDT)
-Date: Thu, 11 Jul 2024 13:53:31 +0200
+        Thu, 11 Jul 2024 05:12:41 -0700 (PDT)
+Date: Thu, 11 Jul 2024 14:12:40 +0200
 From: Igor Mammedov <imammedo@redhat.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
@@ -68,12 +68,12 @@ Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
  <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
  <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
  <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v4 05/13] hw/pci: Add a busnr property to pci_props and
- use for acpi/gi
-Message-ID: <20240711135331.6f0e4639@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20240702131428.664859-6-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 06/13] acpi/pci: Move Generic Initiator object
+ handling into acpi/pci.*
+Message-ID: <20240711141240.0ec77fd2@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240702131428.664859-7-Jonathan.Cameron@huawei.com>
 References: <20240702131428.664859-1-Jonathan.Cameron@huawei.com>
-	<20240702131428.664859-6-Jonathan.Cameron@huawei.com>
+	<20240702131428.664859-7-Jonathan.Cameron@huawei.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -86,99 +86,380 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2 Jul 2024 14:14:10 +0100
+On Tue, 2 Jul 2024 14:14:11 +0100
 Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> Using a property allows us to hide the internal details of the PCI device
-> from the code to build a SRAT Generic Initiator Affinity Structure with
-> PCI Device Handle.
+> Whilst ACPI SRAT Generic Initiator Afinity Structures are able to refer to
+> both PCI and ACPI Device Handles, the QEMU implementation only implements
+> the PCI Device Handle case.  For now move the code into the existing
+> hw/acpi/pci.c file and header.  If support for ACPI Device Handles is
+> added in the future, perhaps this will be moved again.
+> 
+> Also push the struct AcpiGenericInitiator down into the c file as not
+> used outside pci.c.
 > 
 > Suggested-by: Igor Mammedov <imammedo@redhat.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
 > ---
-> V4: Avoid confusion with device creation parameter bus but renaming to
->     busnr
+> v4: Update busnr naming
 > ---
->  hw/acpi/acpi_generic_initiator.c | 11 ++++++-----
->  hw/pci/pci.c                     | 14 ++++++++++++++
->  2 files changed, 20 insertions(+), 5 deletions(-)
+>  include/hw/acpi/acpi_generic_initiator.h |  24 -----
+>  include/hw/acpi/pci.h                    |   6 ++
+>  hw/acpi/acpi_generic_initiator.c         | 117 ----------------------
+>  hw/acpi/pci.c                            | 118 +++++++++++++++++++++++
+>  hw/arm/virt-acpi-build.c                 |   1 -
+>  hw/i386/acpi-build.c                     |   1 -
+>  hw/acpi/meson.build                      |   1 -
+>  7 files changed, 124 insertions(+), 144 deletions(-)
 > 
+> diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/acpi_generic_initiator.h
+> deleted file mode 100644
+> index 7b98676713..0000000000
+> --- a/include/hw/acpi/acpi_generic_initiator.h
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> - */
+> -
+> -#ifndef ACPI_GENERIC_INITIATOR_H
+> -#define ACPI_GENERIC_INITIATOR_H
+> -
+> -#include "qom/object_interfaces.h"
+> -
+> -#define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+> -
+> -typedef struct AcpiGenericInitiator {
+> -    /* private */
+> -    Object parent;
+> -
+> -    /* public */
+> -    char *pci_dev;
+> -    uint16_t node;
+> -} AcpiGenericInitiator;
+> -
+> -void build_srat_generic_pci_initiator(GArray *table_data);
+> -
+> -#endif
+> diff --git a/include/hw/acpi/pci.h b/include/hw/acpi/pci.h
+> index 467a99461c..9adf1887da 100644
+> --- a/include/hw/acpi/pci.h
+> +++ b/include/hw/acpi/pci.h
+> @@ -28,6 +28,7 @@
+>  
+>  #include "hw/acpi/bios-linker-loader.h"
+>  #include "hw/acpi/acpi_aml_interface.h"
+> +#include "qom/object_interfaces.h"
+...
+> +
+> +#define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+
+why object_interfaces.h  and type name is in header,
+at this point I don't see it used elsewhere beside the single C file.
+If they must be exported, than mention in commit message where it will
+be used.
+
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data);
+> +
+>  #endif
 > diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-> index 73bafaaaea..f2711c91ef 100644
+> deleted file mode 100644
+> index f2711c91ef..0000000000
 > --- a/hw/acpi/acpi_generic_initiator.c
-> +++ b/hw/acpi/acpi_generic_initiator.c
-> @@ -9,6 +9,7 @@
->  #include "hw/boards.h"
->  #include "hw/pci/pci_device.h"
->  #include "qemu/error-report.h"
+> +++ /dev/null
+> @@ -1,117 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> - */
+> -
+> -#include "qemu/osdep.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+> -#include "hw/acpi/aml-build.h"
+> -#include "hw/boards.h"
+> -#include "hw/pci/pci_device.h"
+> -#include "qemu/error-report.h"
+> -#include "qapi/error.h"
+> -
+> -typedef struct AcpiGenericInitiatorClass {
+> -    ObjectClass parent_class;
+> -} AcpiGenericInitiatorClass;
+> -
+> -OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
+> -                   ACPI_GENERIC_INITIATOR, OBJECT,
+> -                   { TYPE_USER_CREATABLE },
+> -                   { NULL })
+> -
+> -OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
+> -
+> -static void acpi_generic_initiator_init(Object *obj)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    gi->node = MAX_NODES;
+> -    gi->pci_dev = NULL;
+> -}
+> -
+> -static void acpi_generic_initiator_finalize(Object *obj)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    g_free(gi->pci_dev);
+> -}
+> -
+> -static void acpi_generic_initiator_set_pci_device(Object *obj, const char *val,
+> -                                                  Error **errp)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    gi->pci_dev = g_strdup(val);
+> -}
+> -
+> -static void acpi_generic_initiator_set_node(Object *obj, Visitor *v,
+> -                                            const char *name, void *opaque,
+> -                                            Error **errp)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -    MachineState *ms = MACHINE(qdev_get_machine());
+> -    uint32_t value;
+> -
+> -    if (!visit_type_uint32(v, name, &value, errp)) {
+> -        return;
+> -    }
+> -
+> -    if (value >= MAX_NODES) {
+> -        error_printf("%s: Invalid NUMA node specified\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR);
+> -        exit(1);
+> -    }
+> -
+> -    gi->node = value;
+> -    ms->numa_state->nodes[gi->node].has_gi = true;
+> -}
+> -
+> -static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
+> -{
+> -    object_class_property_add_str(oc, "pci-dev", NULL,
+> -        acpi_generic_initiator_set_pci_device);
+> -    object_class_property_add(oc, "node", "int", NULL,
+> -        acpi_generic_initiator_set_node, NULL, NULL);
+> -}
+> -
+> -static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> -{
+> -    MachineState *ms = MACHINE(qdev_get_machine());
+> -    AcpiGenericInitiator *gi;
+> -    GArray *table_data = opaque;
+> -    uint8_t bus, devfn;
+> -    Object *o;
+> -
+> -    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> -        return 0;
+> -    }
+> -
+> -    gi = ACPI_GENERIC_INITIATOR(obj);
+> -    if (gi->node >= ms->numa_state->num_nodes) {
+> -        error_printf("%s: Specified node %d is invalid.\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR, gi->node);
+> -        exit(1);
+> -    }
+> -
+> -    o = object_resolve_path_type(gi->pci_dev, TYPE_PCI_DEVICE, NULL);
+> -    if (!o) {
+> -        error_printf("%s: Specified device must be a PCI device.\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR);
+> -        exit(1);
+> -    }
+> -
+> -    bus = object_property_get_uint(o, "busnr", &error_fatal);
+> -    devfn = object_property_get_uint(o, "addr", &error_fatal);
+> -
+> -    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> -
+> -    return 0;
+> -}
+> -
+> -void build_srat_generic_pci_initiator(GArray *table_data)
+> -{
+> -    object_child_foreach_recursive(object_get_root(),
+> -                                   build_acpi_generic_initiator,
+> -                                   table_data);
+> -}
+> diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
+> index 20b70dcd81..174b490e5f 100644
+> --- a/hw/acpi/pci.c
+> +++ b/hw/acpi/pci.c
+> @@ -24,8 +24,12 @@
+>   */
+>  
+>  #include "qemu/osdep.h"
+> +#include "qemu/error-report.h"
+
 > +#include "qapi/error.h"
->  
->  typedef struct AcpiGenericInitiatorClass {
->      ObjectClass parent_class;
-> @@ -79,7 +80,7 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
->      MachineState *ms = MACHINE(qdev_get_machine());
->      AcpiGenericInitiator *gi;
->      GArray *table_data = opaque;
-> -    PCIDevice *pci_dev;
-> +    uint8_t bus, devfn;
->      Object *o;
->  
->      if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
-> @@ -100,10 +101,10 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
->          exit(1);
->      }
->  
-> -    pci_dev = PCI_DEVICE(o);
-> -    build_srat_pci_generic_initiator(table_data, gi->node, 0,
-> -                                     pci_bus_num(pci_get_bus(pci_dev)),
-> -                                     pci_dev->devfn);
-> +    bus = object_property_get_uint(o, "busnr", &error_fatal);
-> +    devfn = object_property_get_uint(o, "addr", &error_fatal);
+is this necessary? 
+it seems to be compiling just fine without it.
 
-devfn in PCI code is 32bit, while here it's declared as unit8_t,
-which seems wrong.
-It likely would work in case of PCIe root ports/switches where slot is 0,
-but should quickly break elsewhere as soon as slot is more than 0.
-
-If it's intentional, there should be fat comment here about why it this way
-and an assert to catch silent cropping of the value. 
-
-> +
-> +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> +#include "hw/boards.h"
+>  #include "hw/acpi/aml-build.h"
+>  #include "hw/acpi/pci.h"
+> +#include "hw/pci/pci_device.h"
+>  #include "hw/pci/pcie_host.h"
 >  
->      return 0;
+>  /*
+> @@ -59,3 +63,117 @@ void build_mcfg(GArray *table_data, BIOSLinker *linker, AcpiMcfgInfo *info,
+>  
+>      acpi_table_end(linker, &table);
 >  }
-> diff --git a/hw/pci/pci.c b/hw/pci/pci.c
-> index 50b86d5790..29d4852c21 100644
-> --- a/hw/pci/pci.c
-> +++ b/hw/pci/pci.c
-> @@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
->  static void pcibus_reset_hold(Object *obj, ResetType type);
->  static bool pcie_has_upstream_port(PCIDevice *dev);
->  
-> +static void prop_pci_busnr_get(Object *obj, Visitor *v, const char *name,
-> +                             void *opaque, Error **errp)
-> +{
-> +    uint8_t busnr = pci_dev_bus_num(PCI_DEVICE(obj));
 > +
-> +    visit_type_uint8(v, name, &busnr, errp);
+> +typedef struct AcpiGenericInitiator {
+> +    /* private */
+> +    Object parent;
+> +
+> +    /* public */
+> +    char *pci_dev;
+> +    uint16_t node;
+> +} AcpiGenericInitiator;
+> +
+> +typedef struct AcpiGenericInitiatorClass {
+> +    ObjectClass parent_class;
+> +} AcpiGenericInitiatorClass;
+> +
+> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
+> +                   ACPI_GENERIC_INITIATOR, OBJECT,
+> +                   { TYPE_USER_CREATABLE },
+> +                   { NULL })
+> +
+> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
+> +
+> +static void acpi_generic_initiator_init(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->node = MAX_NODES;
+> +    gi->pci_dev = NULL;
 > +}
 > +
-> +static const PropertyInfo prop_pci_busnr = {
-> +    .name = "busnr",
-> +    .get = prop_pci_busnr_get,
-> +};
+> +static void acpi_generic_initiator_finalize(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
 > +
->  static Property pci_props[] = {
->      DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
->      DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
-> @@ -85,6 +98,7 @@ static Property pci_props[] = {
->                      QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
->      DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
->                      QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
-> +    { .name = "busnr", .info = &prop_pci_busnr },
->      DEFINE_PROP_END_OF_LIST()
->  };
+> +    g_free(gi->pci_dev);
+> +}
+> +
+> +static void acpi_generic_initiator_set_pci_device(Object *obj, const char *val,
+> +                                                  Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->pci_dev = g_strdup(val);
+> +}
+> +
+> +static void acpi_generic_initiator_set_node(Object *obj, Visitor *v,
+> +                                            const char *name, void *opaque,
+> +                                            Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    uint32_t value;
+> +
+> +    if (!visit_type_uint32(v, name, &value, errp)) {
+> +        return;
+> +    }
+> +
+> +    if (value >= MAX_NODES) {
+> +        error_printf("%s: Invalid NUMA node specified\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    gi->node = value;
+> +    ms->numa_state->nodes[gi->node].has_gi = true;
+> +}
+> +
+> +static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
+> +{
+> +    object_class_property_add_str(oc, "pci-dev", NULL,
+> +        acpi_generic_initiator_set_pci_device);
+> +    object_class_property_add(oc, "node", "int", NULL,
+> +        acpi_generic_initiator_set_node, NULL, NULL);
+> +}
+> +
+> +static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> +{
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    AcpiGenericInitiator *gi;
+> +    GArray *table_data = opaque;
+> +    uint8_t bus, devfn;
+> +    Object *o;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> +        return 0;
+> +    }
+> +
+> +    gi = ACPI_GENERIC_INITIATOR(obj);
+> +    if (gi->node >= ms->numa_state->num_nodes) {
+> +        error_printf("%s: Specified node %d is invalid.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR, gi->node);
+> +        exit(1);
+> +    }
+> +
+> +    o = object_resolve_path_type(gi->pci_dev, TYPE_PCI_DEVICE, NULL);
+> +    if (!o) {
+> +        error_printf("%s: Specified device must be a PCI device.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    bus = object_property_get_uint(o, "busnr", &error_fatal);
+> +    devfn = object_property_get_uint(o, "addr", &error_fatal);
+> +
+> +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> +
+> +    return 0;
+> +}
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data)
+> +{
+> +    object_child_foreach_recursive(object_get_root(),
+> +                                   build_acpi_generic_initiator,
+> +                                   table_data);
+> +}
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index b2366f24f9..138514b26a 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -57,7 +57,6 @@
+>  #include "migration/vmstate.h"
+>  #include "hw/acpi/ghes.h"
+>  #include "hw/acpi/viot.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+>  #include "hw/virtio/virtio-acpi.h"
+>  #include "target/arm/multiprocessing.h"
 >  
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index f4e366f64f..ee92783836 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -68,7 +68,6 @@
+>  #include "hw/acpi/utils.h"
+>  #include "hw/acpi/pci.h"
+>  #include "hw/acpi/cxl.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+>  
+>  #include "qom/qom-qobject.h"
+>  #include "hw/i386/amd_iommu.h"
+> diff --git a/hw/acpi/meson.build b/hw/acpi/meson.build
+> index fa5c07db90..5441c9b1e4 100644
+> --- a/hw/acpi/meson.build
+> +++ b/hw/acpi/meson.build
+> @@ -1,6 +1,5 @@
+>  acpi_ss = ss.source_set()
+>  acpi_ss.add(files(
+> -  'acpi_generic_initiator.c',
+>    'acpi_interface.c',
+>    'aml-build.c',
+>    'bios-linker-loader.c',
 
