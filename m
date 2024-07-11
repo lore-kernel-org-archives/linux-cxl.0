@@ -1,230 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107C015957E
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 16:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713608; cv=none; b=p8wEfLrirbAzl4101gLDGSV174NvgtkPg/q0mcOJkFvm9PYW8IjXcuuirifutWaMIQgbi/tq7+6RVAJHVMbbzYDyIVSRF/ZMTTh5/fiHM7BFKgFHfd/2tqiI5dDALqqOBt0rF8+T4syWfgrFtyBuiufl9UNPij/j2BWWXc6WvMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713608; c=relaxed/simple;
-	bh=VIrGBbPtCzX5zZuVtIA285cQGoAa1katLVvvl/dLzrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VuT4fPTgbq4nTrtMHQnKGV6SBuQbLK+9bVrPMTZUb9ZocwDpDjkg4uQr31d5uYo+Cb0EXuuzpkWkZtYqjo2ywhKDdb6Llok2atm7zXX1dkla1S448JmaTzcm+qh5fPuSAWjL5ot7BNToTZwQMOBgDzRnvbQUc9ILYi60/ilvvek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bps2sWBh; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776F716CD39;
+	Thu, 11 Jul 2024 16:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720715378; cv=fail; b=V8TahJGLdIINNa/PpvKf69MPNWdSaC/GWe8r1flvHveoGRl+R248UET8L4K1bAlKTD3nQkadKM4U+KtfqvhSoKh5PTRORjM/ZvHUkfglX1W/NkVfLTWBu+4HCNHZFkBVGYov2OlrGLUp1D7+rrj23FQfTtdXz0gRad7tIVpuiis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720715378; c=relaxed/simple;
+	bh=e1MScWFzLT2KW91VMQBjHLiEZQP27FZJ5+NzTvzd/J8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cmPage3R7tXy2kE1kNd6aC0TV9AX8fHtN6erQJmQKzqKJBSxFY/POCB0izJWbiu/gldjJrrS2oskGzPVifghbUGZ/7XB73JeofohwBncrz6b/qTbkodPfRLh7mqm1Fh/V8AdE37z+RO1+Jlv+h5JfIoMGCZIhH/xIwHZ1p6X3FA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=khMGCCbD; arc=fail smtp.client-ip=40.107.237.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bps2sWBh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720713607; x=1752249607;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VIrGBbPtCzX5zZuVtIA285cQGoAa1katLVvvl/dLzrI=;
-  b=bps2sWBhjavpRbJxXOhUNy4qIuZly3p5AZyR6nLLghnMlTB/9feealaH
-   hV7x6Fcm/4qfUbHyqisu+XEpDBWPjGobBmpsLOicnn9YcsY6JeJoHSkcG
-   svSMr1bc2vPECt8guPZ+TlrxizfVCEK7RfSFDtctU245NQZ0/heWQjFSd
-   zJ8cCkB+E4jnjophZAIZepMfQfrpTwXKQqvPWlprb9fCw6I3lxSV5JrPM
-   Q7oAYMQob55ZoG7O1tmtwtBpCMZdHbv9I6+hXIHnnhbU/m37lACwJ5BJX
-   h+WyqMTxSD3ABbWFG6TGGlU46b1cLdxQoUpnZBRCyLdmrbeXVcTxXxUos
-   A==;
-X-CSE-ConnectionGUID: 7dlzTXR9Q56T8lPVvZ+GvA==
-X-CSE-MsgGUID: KBXsBUxjQCGYctDJLZFZIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="35543186"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="35543186"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 09:00:07 -0700
-X-CSE-ConnectionGUID: FT5qDi66SEeEr/77lg7Hhw==
-X-CSE-MsgGUID: 9lFczmA4Sz69AqA/CuQ9uQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="48672935"
-Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO [10.125.110.51]) ([10.125.110.51])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 09:00:05 -0700
-Message-ID: <2052d49f-cd24-4d96-ab15-93afc303a3ba@intel.com>
-Date: Thu, 11 Jul 2024 09:00:04 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="khMGCCbD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W8WMf7h1IiaSOycWpa3hILeN5bkbfpJc3iEHOSRKV79CWcgH82yvsvQ/w66Kijis/0xObRdlwjxk3f17uN5J+SpNOteehif9W0NKn8Rom1Pkz7RIsu3J8NvP5FLcdafMAOqnWrD5UyxF2+VlUmM2GYBF2JC/CXAkL1GBRci1517fTrqz7lQV3T8mpanQJkLI2swTGnpLY289gamGbrxAPye5IfwjGfMF5YvW5iTY9x+Opjugn281FJj11HT31LL9vqNl6+u0Ygqu93XSx61bdyhA1Orb26lNVDf43aaoyaxItQtHUJYAhYuzew44XE7qS22ceUEHyACnoE32/efPYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cdA0mhTXLZnGHOJOBXWD5Q1PppE3u7ACdzRj8kSTKPk=;
+ b=bGcmaOmqs5w+vL5nVLZAgR/Am85lL7n2iMAw3w+gFqVHRyFfcrcADVxX+PFSKFRzBbRnvBs9dlEhUb4LqVYUqWVVEVFgyfF6Gv9srdOOvOIQWLmWQjNlYVlIlE3HvJN1ZzeYOHzecXGcXce9E8OCgRyJ89p7X3GNEE+/HrRsZ5Et0YZN8KKp+gSdCHYQJ7Kmls2V7cl55lwsTS5NKnuQw7RNXsvV7Za0D5E279UY4qvfh5YKZxWnxRkhqhxAKSKNdnHKH2syHfgE3kuKeayvMuz/olw7Nm3fseLBZq1SAJxy+W3L9mrB2v9BDj02t+9t14XT8YrP9E8Qes5PQpdj3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cdA0mhTXLZnGHOJOBXWD5Q1PppE3u7ACdzRj8kSTKPk=;
+ b=khMGCCbDPmSprqhljyBPKnDzfhBmcYcONdGNiIScmLNOCibNmhC7nSkmNs88R6jK7gd95ioTtb4rY8wDCy4g6Kb28Cr+WDvGp3XfldB/vGHBu+VtTQ5WF/bPl5QI8pIbUdVNgRhUtNcONwb4Z+a3+4dfrOesWYU3aCkac4IAEv3iH7wIGOJCTX3uKHa0c3s4Raeoo8U1nJgRHT8bZ8Bir0Xj7NqF+CM/gZ+FC+OsqSWEQNN8YMJ8HB3s4r36/fDuO9EUOoRMCigrjEwRTAee60XdL1pZ1DFN67rBT9JufINJ0suGTQqJaJkhoUUSRC1KEBGyOSphHSCt1Cgt5Va0eQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by DM6PR12MB4074.namprd12.prod.outlook.com (2603:10b6:5:218::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.21; Thu, 11 Jul
+ 2024 16:29:30 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%5]) with mapi id 15.20.7741.033; Thu, 11 Jul 2024
+ 16:29:30 +0000
+Date: Thu, 11 Jul 2024 13:29:27 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240711162927.GG1482543@nvidia.com>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
+ <20240711135030.GD1482543@nvidia.com>
+ <3ea7076089590e1d2bed139c256dbc077ecd6984.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ea7076089590e1d2bed139c256dbc077ecd6984.camel@HansenPartnership.com>
+X-ClientProxiedBy: MN2PR20CA0046.namprd20.prod.outlook.com
+ (2603:10b6:208:235::15) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/3] cxl: Calculate region bandwidth of targets with
- shared upstream link
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net
-References: <20240710222716.797267-1-dave.jiang@intel.com>
- <20240710222716.797267-3-dave.jiang@intel.com>
- <Zo8317DPRkLOsOlH@aschofie-mobl2>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Zo8317DPRkLOsOlH@aschofie-mobl2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|DM6PR12MB4074:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7621c9d0-b18f-4d06-eec8-08dca1c6a3c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SjFHbTRhYkcyUmd3SjRLMUhBZ3lERmZqSVI5alh6b2tiYmpEQU1iWmswOVRK?=
+ =?utf-8?B?aTg3bGh0MDhRcGJqMkFKVG9hM0V6TXl5eEhMSjRuMlpwY0M5ai95Z1hJc3Za?=
+ =?utf-8?B?ZGo2TU9LZmlNMmJWdFlYUmwrWjBEVGFLT2trZGI0SllwYWJndzhucEx0Skhm?=
+ =?utf-8?B?cm0vSi9XeHc3U1h5QUpaVGhsZmdBWmNiVkI0Mng4aXAveDFyNjU4d0dpLzkw?=
+ =?utf-8?B?SnA5ckpBL2xEdFZ1M0dlTkNDSE9TaHRQTDV2bGxjZDU1WWxhdGhJcnZYL1Zk?=
+ =?utf-8?B?L1htMU16blBaZThMaVJXcThuYXM3RERzQzJiWHNZZGxPWHBUYjRLcFZxYUdZ?=
+ =?utf-8?B?OGw3VTJvTS9lbU9ndWJRc0kzakZLMVF3UWh5dlQ5a3grbFN5Y2QwZDJhamtS?=
+ =?utf-8?B?OFQ2TXJCeUlrdHVGbWVOMkVRU1c0bmZMSGluay81V0NWRllQK3VZaVplZE9j?=
+ =?utf-8?B?SFQxelN0Ri9uL1A5b0Z0SzJkd2xXcGRWbThhdHI4MGhOSU43NnY3OVRxYVla?=
+ =?utf-8?B?UEs0UkxmWjVqT2R3ZjI3TmgvaUlkUGNNNnA0TlpraERwK2c4dUptKy82QnBu?=
+ =?utf-8?B?dnVodU5KMys2cm9YRnJENkt3alNjY0VJOGdJSUx4ZGVEbWdweTdNTTU5ZitF?=
+ =?utf-8?B?VjVFOHk1Q0FTK1hSa1ZxMXF1blQ0LzkvWDN4ZlE1MEhvK3NKYXhNSGxnY2U3?=
+ =?utf-8?B?RUloNUNYT25iRFJ1d0hlYlZPUEtPUDZuUU9EcDdQd241QmVKL1A5NjVaZkNa?=
+ =?utf-8?B?dlFMd1Y1dFJrQ0pVZU9IUUJYMW5KZUZjeDZudnpCbGJsYUJQOWlZV1FiTTcv?=
+ =?utf-8?B?emJzcXBaWXpyak53VmhUS2Qyckx2QnQ4KzQyTDVacWpSVkNFdUZzVVBlZ29u?=
+ =?utf-8?B?VEVidW9GVys5WHB2ckFENW4yUXVabVhOZzZFWXlYWStLM1pMeXFQeVU1OXZX?=
+ =?utf-8?B?YW02SERURytXSWY5OERGZWxIVlhjVVhuR09vQlZ1cEN5NGRlbHZja05TNlRH?=
+ =?utf-8?B?bU5IVDRuNnI3OUFXbmVvOUhXSzJHclFqQjFGYWdNaitaK0VWSTFMSW85OEhG?=
+ =?utf-8?B?cmYwaFpVQmFFdUwwUkhSS1Q3bkFDa29GRWpzOTJPeUhGRFhRRC9Hb1dndWk0?=
+ =?utf-8?B?SEN2eTkxV3dGMjY0M05hOEtyT0Vod0E5NHVqVlFFNnovaENYS1N3NndRRWc5?=
+ =?utf-8?B?VVRxOVIxT2ZpUXpVeVNJcEljQSsyaFA1RXNxNEZpRVZXck5zY1Y0YTNzeDFs?=
+ =?utf-8?B?SXNrMGxSbWNEajhsNmh6T0YxcjVnVXlBSmUycHJiUWxwemhXR01mTVhhbkVQ?=
+ =?utf-8?B?dytHM2NtSjhKY0MzMlNkalZOdnBTbkllbkcyL2swYXI0QXpJekVqUFlOUy9F?=
+ =?utf-8?B?QVdtSEptRXlLWDZodkVhOVlBTXdGTVNSU3NUS2xaSG5XcXJMM1o4Q2VLVnF6?=
+ =?utf-8?B?WUhNVDg5ZU1jbVlOUGQ5SUlTNlQ4K29YdGNjYTcvZzQwT1J5R1ByK25ZT2xB?=
+ =?utf-8?B?Y2VKN084V0lmWjloT1ZETHRmRmVFWExMUU9CVDY1R3I3ZkQrWDVLLzRLVFZJ?=
+ =?utf-8?B?MVZsb2VmUGJzMjNZamtSaFAvaUZZZUJTNnZuMng4bmxFYWdDMWp5S2FIaXZ0?=
+ =?utf-8?B?RUVVOXcrYmkxYlFQbGdOdnoyTWh3NTFQQkc0NlA1OGNCT0FyZExiaTdWakhC?=
+ =?utf-8?B?bGlka2V5RUxDdnAwaWhKbk44WjR0WGZoVy95a1pHV0tqUDJWNE1DQnFBTHZH?=
+ =?utf-8?B?UHZSOUNoM1M0d2FrMC9HUHlnOXNTZTFkS2VLRFowdDl3a2RFY3hhMWpFMzV3?=
+ =?utf-8?B?RjV0WXpkZmtsTFljUE05dz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cVVocHVrdmtBVGY1Y1d3cnRLWEhzckhhRWRaVGxTb1R3Qk9XbUJGblAyMjVK?=
+ =?utf-8?B?cUVFVGtjYm1HdzZrMXRzNmZwRDVwUy83NG43WldJU2t0Z2MwVGFNcXBWcnpQ?=
+ =?utf-8?B?bm9jdE1RZUY5Vll3MU9TMVFma20zYnJHZThNSGswaEtaeXVTYnllbExqazRs?=
+ =?utf-8?B?WXVkdnJTWGZ1LzcvWjM4Ykdtdk45YXdCZHB0K0tZa0VvdjNqdEpHRVltaHRK?=
+ =?utf-8?B?bFZhc0NvQjkwTzFOaEZlVWNlZS93WktCZ0EvZE4ybm9ZREY0U3NIM0IwWWJq?=
+ =?utf-8?B?ajMwZ2JUTTZua0V3d1FtQWRPeW8vU3F3bGVMa2toVzhkWEhyVmJNTmhYUDdU?=
+ =?utf-8?B?WmhLR2kzWnZtWDBvam81eVJha29ZVFpCcG81WXdoT2NNdHg3enFFdC9MNnJB?=
+ =?utf-8?B?c2p5cEIwbEI2ZUNQNTl4VDlYUENjMzlOT1NNRlZXckxjd0l1RjVFbGhMeUZS?=
+ =?utf-8?B?Z2Q3eW9tQS8rbnFIM0FWdjUyeWYxOEpjejNxbjBSbzBObjlBcWJvZUdLekt2?=
+ =?utf-8?B?ZXM2OTVRMGhTWGxybEIyZGNpTTBiQTk5aHcxbXVkTFA2RCtLbzVSY2pBcUlG?=
+ =?utf-8?B?Mk9IVGp5OHNsV09BMHNCNjdYSnlyZ0pZejBCN0l3aU1udDA1SkgrcVdJWmVQ?=
+ =?utf-8?B?Vy8wWmFIcWVIMTNXMEN6Zkx3eTR3aldqZzI1SDRaeWVIMHNHKzVrMkJ1cmUz?=
+ =?utf-8?B?ZHh6Q29UOXowRTlsTnV0UWtXbnZIdEFmNVRrSEdCaW9kMHRSSGx1TE1LcDFq?=
+ =?utf-8?B?UjU1VGJMeW93WHdoamZ3WW5yaVRLWnBSdnRaZXVEeVo2dWh3Y0lwNkxYbFRL?=
+ =?utf-8?B?WldaYisrOGNYc09VMXREbTN3NWxtMEQ3R2tOY1B4SmNHQUlqQmhXZm1mTXM4?=
+ =?utf-8?B?VVFEUFV3VFBGaFk3cEpmOEJYdDBoTTJpSE9tSy84Sm51T0praUdNWnowWjh5?=
+ =?utf-8?B?b1RyR2ZNdFZzbFNsY3YwNzJoblpodEZzVVdkOEpteWs3Ti90ZW82NE5zN2Iw?=
+ =?utf-8?B?MldPVUJzVmM3MEhBYitaMVRnK1VrQllFVVUzaVVVRVBLcng2aWYvZW13Rlpn?=
+ =?utf-8?B?WVN1TjBhK0ljb3IxOXY4QU9kczJQaW5iUG1BY3ZXRWhQMmlrY08yQlQyUm1V?=
+ =?utf-8?B?VU9LR3JYRkpXdTNFSEZ6V043QmlKWHlIbGw0Rlp6SmZsWnlEd1NlZDdtcVlD?=
+ =?utf-8?B?M0pGenNZWEJkeTZpYTBUZ20vK2hOeVdrQWcrdms3RG9kaWZ0NDJraGpjK1dF?=
+ =?utf-8?B?SUw5T2tVbitHOEFwMFdwTXRYNmZpLzRQREpKM0pmcDVmamF6ZFo0ZHJEMlVv?=
+ =?utf-8?B?QTZpYWxVZ1J3S0cxbDlhV2x6Z3NZWUJjaVA3WHM1dUU0VElvTDJCaVhBSkln?=
+ =?utf-8?B?NHVEbWU3OVMwcmxGTzNIT25JdzZXck9va005T0IyTGtKT2ZnWVlLMVRKbnhh?=
+ =?utf-8?B?MkF6YkJ3QlhqYmZtZGRjZFpQMytlK2Z6V2M4NkJCbERzQVhvVEhqK2puT3VZ?=
+ =?utf-8?B?OTZJZTBXMzlkNWRHYTlzVkRRZTdqWkk5aUk5SEJiS0dtV20zbWJrZXNNclBR?=
+ =?utf-8?B?cnhYQmkyakFpOGVZOXNHNFNFZmp1blk1M3lScmpObDdEdExBRlRjd2dLZDhW?=
+ =?utf-8?B?ZTJiQVluMnRiR0p5d3ptZG9qM0FOK2g1OTdFSEdZbEhCVmFVRkhEVnBqQmRW?=
+ =?utf-8?B?dDJBNmZ4QmJ1VklvaUFSWmphZGI5VzNkSklXTTUrbHpHUWllUkNOaEtVYm9z?=
+ =?utf-8?B?UTNlRXFwNGcvYUtXbmhVQ2p1ZTY0ZXM3eWdodmVEVG5BUlRiQW5tNk5GbURz?=
+ =?utf-8?B?RENTMnlHUVZhWlAxTmxTWWUvdERzMFgzZGQwVVBVeXRjREJKenRBRzN3U2Nv?=
+ =?utf-8?B?bUlNSmlwSmlFanEzTHFNQzg2MHQvVFpDWEVpL0xXQlBIWVZNTDRvRkJub2N5?=
+ =?utf-8?B?QTFxaVhDYVBFeWpjSERVM1ZXVU5UMlhtTmtPSFEvRFU4QW5EU1Q4b25YQU8v?=
+ =?utf-8?B?S25YMWtndHhYaWM1K05zZlhyZkQvWlRkRVJuemVxTUtKTWIvVG5MN1pGMFRH?=
+ =?utf-8?B?Sk1zK05JckRwUlVJN2pBSmtaRUtlaDltME5wM2ZHeml3N2tpdHYxS1JiZ3Jj?=
+ =?utf-8?Q?5oueIoexEA54z0M8NT5pTdwxJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7621c9d0-b18f-4d06-eec8-08dca1c6a3c1
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 16:29:30.3867
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yzaPIQ0KBVRi+MR3TG4BJ+RdbnpJ0FrQFBB9PwEznFzzoSG+Reyhmm8COrJfXIsf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4074
 
+On Thu, Jul 11, 2024 at 08:16:55AM -0700, James Bottomley wrote:
 
+> > > What all of the prior pass through's taught us is that if the use
+> > > case is big enough it will get pulled into the kernel and the
+> > > kernel will usually manage it better (DB users).  If it remains a
+> > > niche use case it will likely remain out of the kernel, but we
+> > > won't be hurt by it (NVME KV protocol) and sometimes it doesn't
+> > > really matter and the device manufacturers will sort it out on
+> > > their own (USB tokens).
+> > 
+> > I don't see it as being linked to big enough use case at all.
+> 
+> 'it' being fwctl?  
 
-On 7/10/24 6:39 PM, Alison Schofield wrote:
-> On Wed, Jul 10, 2024 at 03:24:01PM -0700, Dave Jiang wrote:
->> The current bandwidth calculation aggregates all the targets. This simple
->> method does not take into account where multiple targets sharing under
->> a switch or a root port where the aggregated bandwidth can be greater than
->> the upstream link of the switch.
->>
->> To accurately account for the shared upstream uplink cases, a new update
->> function is introduced by walking from the leaves to the root of the
->> hierarchy and clamp the bandwidth in the process as needed. This process
->> is done when all the targets for a region are present but before the
->> final values are send to the HMAT handling code cached access_coordinate
->> targets.
->>
->> The original perf calculation path was kept to calculate the latency
->> performance data that does not require the shared link consideration.
->> The shared upstream link calculation is done as a second pass when all
->> the endpoints have arrived.
->>
->> Testing is done via qemu with CXL hierachy. run_qemu[1] is modified to
->> support several CXL hierachy layouts. The following layouts are tested:
->>
->> HB: Host Bridge
->> RP: Root Port
->> SW: Switch
->> EP: End Point
->>
->> 2 HB 2 RP 2 EP: resulting bandwidth: 624
->> 1 HB 2 RP 2 EP: resulting bandwidth: 624
->> 2 HB 2 RP 2 SW 4 EP: resulting bandwidth: 624
->>
->> Current testing, perf number from SRAT/HMAT is hacked into the kernel
->> code. However with new QEMU support of Generic Target Port that's
->> incoming, the perf data injection is no longer needed.
->>
->> [1]: https://github.com/pmem/run_qemu
->>
->> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
->> ---
->> v7:
->> - Add test notes in commit log. (Dan)
->> - Move cxl_memdev_get_dpa_perf() to cxled_memdev_get_dpa_perf(). (Dan)
->> - Add a DEFINE_FREE(free_perf_xa). (Dan)
->> - Address 2hb2rp2ep issue Jonathan reported. (Jonathan)
->> - Added more kdoc comment headers. (Dan)
-> 
-> Looks like potential kdocs are not annotated w /** 
+Sorry I ment "it" as "if the use case is big enough it will get pulled
+into the kernel"
 
-Ooof yeah I missed them all. Will fix.
+> I'm in the camp that doesn't squash a novel proposal because the kernel
+> should be controlling it.  I'm confident that if the use case becomes
+> big enough the kernel will likely do it in the end.
 
-> 
-> 
->> - Rename helper functions to be more clear on what they do. (Dan)
->> - Move activiation point to after cxl_region_setup_targets(). (Dan)
->> ---
-> 
-> snip
-> 
->> +/*
->> + * cxl_region_shared_upstream_perf_update - Recalculate the bandwidth for the region
->> + * @cxl_region: the cxl region to recalculate
->> + *
->> + * The function walks the topology from bottom up and calculates the bandwidth. It
->> + * starts at the endpoints, processes at the switches if any, processes at the rootport
->> + * level, at the host bridge level, and finally aggregates at the region.
->> + */
->> +void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
->> +{
->> +	struct xarray *usp_xa, *working_xa;
->> +	int root_count = 0;
->> +	bool is_root;
->> +	int rc;
->> +
->> +	lockdep_assert_held(&cxl_dpa_rwsem);
->> +
->> +	usp_xa = kzalloc(sizeof(*usp_xa), GFP_KERNEL);
->> +	if (!usp_xa)
->>  		return;
->> +
->> +	xa_init(usp_xa);
->> +
->> +	/* Collect bandwidth data from all the endpoints. */
->> +	for (int i = 0; i < cxlr->params.nr_targets; i++) {
->> +		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
->> +
->> +		is_root = false;
->> +		rc = cxl_endpoint_gather_bandwidth(cxlr, cxled, usp_xa, &is_root);
->> +		if (rc) {
->> +			free_perf_xa(usp_xa);
->> +			return;
->> +		}
->> +		root_count += is_root;
->>  	}
->>  
->> +	/* Detect asymmetric hierachy with some direct attached endpoints. */
->> +	if (root_count && root_count != cxlr->params.nr_targets) {
->> +		dev_dbg(&cxlr->dev,
->> +			"Asymmetric hierachy detected, bandwidth not updated\n");
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * Walk up one or more switches to deal with the bandwidth of the
->> +	 * switches if they exist. Endpoints directly attached to RPs skip
->> +	 * over this part.
->> +	 */
->> +	if (!root_count) {
->> +		do {
->> +			working_xa = cxl_switch_gather_bandwidth(cxlr, usp_xa,
->> +								 &is_root);
->> +			if (IS_ERR(working_xa))
->> +				goto out;
->> +			free_perf_xa(usp_xa);
->> +			usp_xa = working_xa;
->> +		} while (!is_root);
->> +	}
->> +
->> +	/* Handle the bandwidth at the root port of the hierachy */
->> +	working_xa = cxl_rp_gather_bandwidth(usp_xa);
->> +	if (rc)
->> +		goto out;
->> +	free_perf_xa(usp_xa);
-> 
-> I was going to say something about getting rid of the goto's
-> and just freeing and returning in line like was done ~36 lines
-> above..but then realize something went astray here in the code
-> movement.  Here and below, rc isn't set.
+Yes, I agree as well. If there is technical excellence to draw
+someting into the kernel then it will definitely happen regardless if
+other options are available.
 
-Copy paste mistake looks like. Will fix. Also will remove the gotos. 
+> > While DPDK shows the opposite, userspace is the technically better
+> > option. This is now shown at scale. DPDK is not some niche. A big
+> > chunk of internet traffic is going through DPDKs, especially for
+> > mobile. Many ORAN solutions include DPDK on Linux.
+> 
+> ORAN being Open Radio Access Network?  
 
-> 
-> 
->> +	usp_xa = working_xa;
->> +
->> +	/* Handle the bandwidth at the host bridge of the hierachy */
->> +	working_xa = cxl_hb_gather_bandwidth(usp_xa);
->> +	if (rc)
->> +		goto out;
->> +	free_perf_xa(usp_xa);
->> +	usp_xa = working_xa;
->> +
->> +	/*
->> +	 * Aggregate all the bandwidth collected per CFMWS (ACPI0017) and
->> +	 * update the region bandwidth with the final calculated values.
->> +	 */
->> +	cxl_region_update_bandwidth(cxlr, usp_xa);
->> +
->> +out:
->> +	free_perf_xa(usp_xa);
->> +}
-> 
-> snip
-> 
->>
->>
-> 
+Yes
+
+> But that's a case in point: the kernel doesn't have a LTE stack or
+> APN handling for networking.
+
+That isn't really the main point of ORAN, a native LTE stack is
+interesting separately but is a different problem space than ORAN.
+
+ORAN is about doing all the complex maths for RF signal processing in
+software disaggregated from the antennae hardware, in realtime. It is
+some bonkers combination of >= 100G networking and hard realtime
+packet processing with incredible math using dedicated accelerator HW.
+
+> I don't disagree: there are many novel protocols and other use cases
+> that will never make it into the kernel simply because they won't get
+> the adoption;
+
+My point is that prefering userspace/kernel isn't about NOVEL, it is
+about technical excellence.
+
+DPDK running a >= 100G NIC with extensive HW packet processing
+offloads is technically excellent at doing proprietary traffic
+processing work in mobile and cloud networks.
+
+We are already running these DPDK things at near perfect performance
+with minimal integration hurdles, there is not a lot of room to
+actually be *better* with an in-kernel alternative.
+
+This is what I mean, technically good displaces technically bad, it
+has nothing to do with kernel=good userspace=bad.
+
+The design of DPDK, with reduced kernel involvment, is a technically
+correct approach to achiving it's goal, and it's goal is legitimate.
+
+To expand a bit, Mellanox has supported both paths for a long time, a
+lot of work has been done to improve the netstack and mlx5 to give
+matching performance compared to DPDK in some use cases. Yet, I think
+the market has spoken and DPDK seems to have much more popularity in
+some very big verticals.
+
+Yes, using DPDK carries a heavy development cost and people should
+avoid it if they don't see a 5-10x improvment, IMHO.
+
+Jason
