@@ -1,64 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3B4156F3C
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 12:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B3915D5BB
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 12:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720700873; cv=none; b=BRi1UXAGdS5w0Mn7ijonB7613g4N1CfWzVC61I5I4Qe1P53oCb/9hkWL59HJjGBqT8GdwKiR0oVgjwiQ/IkzxCK/Cldiunv9HDNyz9idv1cIcZIM5CghHRA+fCcU/LjmD3EqrVFbH1DeqxOe5wcXDkSOkrzAQLybToudaaPert8=
+	t=1720701283; cv=none; b=euzw9H56/tIYqOV2cgikhhUSgW0u2ZBMDuznOjSjl5TWW7ftrurJ7euUQ9hhNeWy0p+hfWuMCVg+LuIE9v3lNJ3dLm/+EkZcS+IBBQFmb7BymO3UH3PMlqq3OEEUsNhWroAiQDVUfZCGWBjyw4rgl2siT/aNa8pDQB7EKvM39SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720700873; c=relaxed/simple;
-	bh=Bc0MPURvONZnAkScf+YcSuwASHtTIysB6qwffHXTgrU=;
+	s=arc-20240116; t=1720701283; c=relaxed/simple;
+	bh=LETC9v2SFll+ZF53jPbwsNEiIVzsHX9z22QC6eaSJvs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KHwxCSd7o1pXbhBB4TfjDdaMD2g8ZoVe0usF1kdrLWJPLn75SjhGhgcHe6HeEi4YCl1loUdTFbBfQ9neLFXyRp1lyZtkyWAXh9fHI5Oxzf7UzBA2Mrjy3VfQb6wOw2GWncBH+RI/gyYWOE0gacinxVECwJICJG4MjwyFiLIhYr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HMRbc6z/; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=jfnKnUNq+JlkjACxFgCqSX/6judFhOy4zSBitpVeYXWG9XFfdGe3wrU6ByYkFZXX0+s13mMUVeNVLpl6TPNEmI1S/WocNK/55v0actpzb32VoWmS6cw7/pf9TCe1OHjwS3Nxf3CWqctQkazBFaWzicw8r6E+rIzQ4ZKzuJ6J8Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G76LY4Ny; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HMRbc6z/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G76LY4Ny"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720700870;
+	s=mimecast20190719; t=1720701281;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WHI/4wPP8R2+ilKy81OFpjP4p8f9UonN9Xj6JbRjkNk=;
-	b=HMRbc6z/P9Rtdx4a1htTg5Sapz3eqSDWYc19VENaZ/uAC7Ac/rQzBe7sm4qx8+xJvxwhDI
-	1Sq39he5awmIRLqY8Y3ddU8VDcATdl36Trvk+GhNyeOxCfWFvGsvD0nYdMrxTKyX10rml+
-	DVqnyNbXLahmGl1bZlwTdfDXu7gT5Y4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Bxb/8w4DES5aJg9E5ei3A2woovHRbaf3PI/9QzkhEVE=;
+	b=G76LY4NyV3CBcZwUgStj/FweLkNRyljI+f7lr2P1swdIya2819N9hW0zlCiTEecLgPf0Lo
+	xakCLjx4pDZ+4Dt1I6kOhatwMXVXpMW69qrojxE/QBoNu9Wx0xqam+zsUsqfT04k+EP/pj
+	3GOnOlGhSaNbDrSM12qjUW1ibsIMAto=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-gOWuyp7mNRixXc23CyL2MA-1; Thu, 11 Jul 2024 08:27:47 -0400
-X-MC-Unique: gOWuyp7mNRixXc23CyL2MA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4265b751469so9785125e9.1
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 05:27:47 -0700 (PDT)
+ us-mta-260-83GQNPHGO5u7sN87umACCg-1; Thu, 11 Jul 2024 08:34:39 -0400
+X-MC-Unique: 83GQNPHGO5u7sN87umACCg-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52ea965188eso1189399e87.1
+        for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 05:34:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720700866; x=1721305666;
+        d=1e100.net; s=20230601; t=1720701278; x=1721306078;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WHI/4wPP8R2+ilKy81OFpjP4p8f9UonN9Xj6JbRjkNk=;
-        b=cn71UeDsBJ5Vo/PZNJicVhVACb8fzZJ306USN8xkRPFMjGgBJ0IvnPnxCRGfjrLaAO
-         axESQsQJgpic2MH1krMelXV6nlywhI0GwoUlT8pEj5//3861Or/JoV72Viz0Tq401vEL
-         lQx2Tn41K6Wz5TaU/joYdXOKgcXOtnHOmbxG3hvl6gBSTDmWM3OBlotJyoTV0kmHjQI7
-         n6Vb8KLDOMMyWwyxgISXVS1iQjzo4gutquhKli3f9prZcoO6Sy87BZe9HVBP09AEZT8m
-         pn1ji1OtiBf/Avre2LKwf32rUUbvWQU7w5wkbheDUzfihJmXMhlsfxSEC1txi4m1ObiS
-         fKlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsmO/NcboGd8Tup4QNT1qUdYnmOGdEJxL4D13dSmFRzDtxlbT0WgH7PEn+wnA8t0HHCp8NOpwGt2IYkAuOGfohCCcvEk7RGBNd
-X-Gm-Message-State: AOJu0Yz5sg5/nU4KyeD3NWOceA2n5rB3BTvntjx9pKjKYL4u/PuSAo1y
-	lNw/F4EioLuW3XLWDKqal0exaAqKe9FCGI9xHFEFViGaTax5wPqFJhvvIMh5tEfLF3m9YE24FSU
-	PznpEMoGhDq44j7qI5PJnahm/6s978B+LBldlYnHYJq8WMibwsfqvMDonlQ==
-X-Received: by 2002:a05:600c:181c:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-427981f2dd6mr21542305e9.17.1720700866561;
-        Thu, 11 Jul 2024 05:27:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYXeTwwrqg0QrhxkyzXKVN89bw3IsN5quyO9A3wdmCPi1B8HD3wtsQt5kI60Q2uvLyiovT2Q==
-X-Received: by 2002:a05:600c:181c:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-427981f2dd6mr21542185e9.17.1720700866187;
-        Thu, 11 Jul 2024 05:27:46 -0700 (PDT)
+        bh=Bxb/8w4DES5aJg9E5ei3A2woovHRbaf3PI/9QzkhEVE=;
+        b=QVc9PlP8woaJKb35PMT3s7KSBPDHs/Lc6ixJmMLgSpXobzvUx3bqVXhSfi7537WCdO
+         OpNjHrm9mxdKPKKzsS2hV4JIxX7CZ0ebNObqsNXqxZk7Y/sOoeVciN3KQsKkT5UdvPBF
+         +1zklI1FgS3lflkYIpsKJOV4loZBfd8Eoth64NUi5d+HFhpr9uoNG/2EZuhdX6a4NUEU
+         48GrKmgpSpDlSPYcPD1IRwFPZqA0fsW5AZTuTUeIerV/dFFEx9VGhd/qFA3fIviXYm1/
+         FJbc4sn92NYC7qm8dbdTTTt7vpW5ypKLBqIDmllLDLDNgUBkuX69G2tM1qKZWqBgGH6S
+         4noQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8zWaR1inyr3M2/YktaHOXQl3yLtRJ2J57POx/sd9d+GWQLWvBYnO/socT0kMUYZWcIkEdUnavavmwpiFS7su0SgNu58cMV6GU
+X-Gm-Message-State: AOJu0YzR31teZFg2HRyjla0Voh0JPHytNPZecYX+nKIRWDwk3XZuR2WV
+	suo40QWbVOm90kdQZuvdD/WQi6lL0LI8S8rI+yJYaHy2DN7kzkNYJq5s0WC+4GcfZ6q+Ts94aWH
+	2twlGp0fJnuVlQEjW425aAnmCdA310N51pBHjlc+EcV7cplcqwT3cDlqPKw==
+X-Received: by 2002:a05:6512:3e19:b0:52e:93d1:57a6 with SMTP id 2adb3069b0e04-52eb998e483mr6103949e87.6.1720701278326;
+        Thu, 11 Jul 2024 05:34:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGt5dnrspIs4beSaN9giDzz5Dhq9xTuLYc24NNSTl+lKF/RRpQXbzbbcNFjHF8swmRuzya+Ww==
+X-Received: by 2002:a05:6512:3e19:b0:52e:93d1:57a6 with SMTP id 2adb3069b0e04-52eb998e483mr6103936e87.6.1720701277823;
+        Thu, 11 Jul 2024 05:34:37 -0700 (PDT)
 Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42793dc2bcesm66002165e9.29.2024.07.11.05.27.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f741624sm113560185e9.41.2024.07.11.05.34.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 05:27:45 -0700 (PDT)
-Date: Thu, 11 Jul 2024 14:27:44 +0200
+        Thu, 11 Jul 2024 05:34:37 -0700 (PDT)
+Date: Thu, 11 Jul 2024 14:34:35 +0200
 From: Igor Mammedov <imammedo@redhat.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
@@ -68,12 +68,12 @@ Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
  <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
  <eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
  <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
-Subject: Re: [PATCH v4 07/13] hw/pci-bridge: Add acpi_uid property to
- TYPE_PXB_BUS
-Message-ID: <20240711142744.1178daec@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20240702131428.664859-8-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 08/13] hw/i386/acpi: Use TYPE_PXB_BUS property
+ acpi_uid for DSDT
+Message-ID: <20240711143435.1e5f33b0@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240702131428.664859-9-Jonathan.Cameron@huawei.com>
 References: <20240702131428.664859-1-Jonathan.Cameron@huawei.com>
-	<20240702131428.664859-8-Jonathan.Cameron@huawei.com>
+	<20240702131428.664859-9-Jonathan.Cameron@huawei.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -86,53 +86,59 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2 Jul 2024 14:14:12 +0100
+On Tue, 2 Jul 2024 14:14:13 +0100
 Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> Enable ACPI table creation for PCI Expander Bridges to be independent
-> of PCI internals.  Note that the UID is currently the PCI bus number.
-> This is motivated by the forthcoming ACPI Generic Port SRAT entries
-> which can be made completely independent of PCI internals.
+> Rather than relying on PCI internals, use the new acpi_property
+> to obtain the ACPI _UID values.  These are still the same
+> as the PCI Bus numbers so no functional change.
 > 
 > Suggested-by: Igor Mammedov <imammedo@redhat.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 > ---
-> v4: Generalize to all TYPE_PXB_BUS.  The handling for primary root
->     bridges is separate and doesn't overlap with this change.
+> v4: New patch.
 > ---
->  hw/pci-bridge/pci_expander_bridge.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  hw/i386/acpi-build.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> index 0411ad31ea..d71eb4b175 100644
-> --- a/hw/pci-bridge/pci_expander_bridge.c
-> +++ b/hw/pci-bridge/pci_expander_bridge.c
-> @@ -85,12 +85,23 @@ static uint16_t pxb_bus_numa_node(PCIBus *bus)
->      return pxb->numa_node;
->  }
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index ee92783836..cc32f1e6d4 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -1550,6 +1550,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>          QLIST_FOREACH(bus, &bus->child, sibling) {
+>              uint8_t bus_num = pci_bus_num(bus);
+>              uint8_t numa_node = pci_bus_numa_node(bus);
+> +            uint8_t uid;
 >  
-> +static void prop_pxb_uid_get(Object *obj, Visitor *v, const char *name,
-> +                             void *opaque, Error **errp)
-> +{
-> +    uint32_t uid = pci_bus_num(PCI_BUS(obj));
-> +
-> +    visit_type_uint32(v, name, &uid, errp);
-> +}
-> +
->  static void pxb_bus_class_init(ObjectClass *class, void *data)
->  {
->      PCIBusClass *pbc = PCI_BUS_CLASS(class);
+>              /* look only for expander root buses */
+>              if (!pci_bus_is_root(bus)) {
+> @@ -1560,14 +1561,16 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>                  root_bus_limit = bus_num - 1;
+>              }
 >  
->      pbc->bus_num = pxb_bus_num;
->      pbc->numa_node = pxb_bus_numa_node;
-> +
-> +    object_class_property_add(class, "acpi_uid", "uint32",
-> +                              prop_pxb_uid_get, NULL, NULL, NULL);
+> +            uid = object_property_get_uint(OBJECT(bus), "acpi_uid",
+> +                                           &error_fatal);
 
-missing related object_class_property_set_description()
+theoretically acpi_uid is 32bit, so if we are expecting 
+only 256 buses here, then having and assert to catch truncation
+would be good.
+alternatively if this UID can't ever be more than 8bit, I'd use
+ visit_type_uint8() in previous patch to make sure too large value
+won't be silently ignored.
 
->  }
+>              scope = aml_scope("\\_SB");
 >  
->  static const TypeInfo pxb_bus_info = {
+>              if (pci_bus_is_cxl(bus)) {
+> -                dev = aml_device("CL%.02X", bus_num);
+> +                dev = aml_device("CL%.02X", uid);
+>              } else {
+> -                dev = aml_device("PC%.02X", bus_num);
+> +                dev = aml_device("PC%.02X", uid);
+>              }
+> -            aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
+> +            aml_append(dev, aml_name_decl("_UID", aml_int(uid)));
+>              aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+>              if (pci_bus_is_cxl(bus)) {
+>                  struct Aml *aml_pkg = aml_package(2);
 
