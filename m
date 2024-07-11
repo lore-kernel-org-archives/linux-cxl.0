@@ -1,145 +1,85 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A70323D;
-	Thu, 11 Jul 2024 15:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D6128FF
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jul 2024 15:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711021; cv=none; b=Lb3edopO3Mej+M+jFro41GZWcEF6zlFU2T5rShcpmcc7pSMGE2KwSYslOFG/1B7Loih1HLBEctMIuSKlizsZkB+kb+dfuPwaLHAdhAAYnEE4dVPJyGkH5uCXB+R/1B46SoFQb8MfxrOSau1ZrAvmuZl6ik8D1mhlzrlWt6RnVIQ=
+	t=1720712339; cv=none; b=UqZsEQbGvAz2plCTzVl5D2mpazK4Yfi+c1f3cZ+yxP4Rp6fBP7vOGr3uEjhbXA7TQKzfbX3I8Uk/P7AYlPrhMw3iR/xhWY2uKh8HJeUEJj193VounajRaQL+912iaA7CPg3EtCU3DADhY0sxO3IneqceDAgiLLRTB/cLIczRkOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711021; c=relaxed/simple;
-	bh=+4/Ed8e5LpNGHu6fjmM6KG9TewhrzuoHvHSpE1FxXC8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bJZHg8Idu4Ikqhr7ubere3CR/sDnNOBfqPEHxolk+t2+5FWa7pux2VGSBqzD+/YciaUgwGUWcfK562s9Z8UcbBiOkMyzIxraTJy7DOsRT/C+lxAC/zAJkGiYbK4B1kKB9InyeJzEyDNfgMPrV/g9Bnlw3cCIRVrpvsZgvsNku3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=V6kGLkj5; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=I6jIY0vt; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="V6kGLkj5";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="I6jIY0vt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1720711018;
-	bh=+4/Ed8e5LpNGHu6fjmM6KG9TewhrzuoHvHSpE1FxXC8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=V6kGLkj53izvMyRJqdIRmQqcaJXLkAULYOTmUxFRoz2HTVYdYarWTTixz4tWvcyqE
-	 H/g9Fj7IJmgrfXjUASqF9vWCqj/VOlsAB59sYiZ/m/Mmi+uIEPJCEr7vOHacERWqvi
-	 z31714kWRoEldezato4yyZ6hRGU7gCRhJAwQIHEA=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 352C312860F0;
-	Thu, 11 Jul 2024 11:16:58 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id kFLXZY8IdDPn; Thu, 11 Jul 2024 11:16:58 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1720711017;
-	bh=+4/Ed8e5LpNGHu6fjmM6KG9TewhrzuoHvHSpE1FxXC8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=I6jIY0vtQKlms1zpDA6KWeWhoijYFO4Lf7Ts/A5OvewqqQ5PS1VLoNdiVX7TbiLrc
-	 vkQPX0ZKXfRKD38uAPsYFmMWew3mFrsrdmWEjn/B/zdHP9vK4cv7ARsOL1Hyisz/5y
-	 dRzETE/mHfNOz2cccubSvCy0JGy0T7bIqulrjRjs=
-Received: from [172.20.11.192] (unknown [74.85.233.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id A7AC21285DF9;
-	Thu, 11 Jul 2024 11:16:57 -0400 (EDT)
-Message-ID: <3ea7076089590e1d2bed139c256dbc077ecd6984.camel@HansenPartnership.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev, 
- linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Date: Thu, 11 Jul 2024 08:16:55 -0700
-In-Reply-To: <20240711135030.GD1482543@nvidia.com>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
-	 <3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
-	 <20240711135030.GD1482543@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1720712339; c=relaxed/simple;
+	bh=WNIY3qyKdEanCd2lydV2Xnhtp8tIaHBlGopTKUH8+vc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qHwm3Z/vaQnYTrBHTnd2i8gMYq2Md9/pGVwyV2jB0/4HHUObLPw0mnxoyXjAoku8nm8AzkJh1h5HfBr1npEVxK6TLtWEtYQh6kCNtBghxmhEDZWbtbFDFJmX25ca7p/OWeK7jaCIMUGsyUYTsqAFvj3XJLSU7GM2hl/QZ6MW1+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WKf3M3f8Dz67y8R;
+	Thu, 11 Jul 2024 23:36:47 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0D2C91400D3;
+	Thu, 11 Jul 2024 23:38:53 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
+ 2024 16:38:52 +0100
+Date: Thu, 11 Jul 2024 16:38:51 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Igor Mammedov <imammedo@redhat.com>
+CC: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <marcel.apfelbaum@gmail.com>,
+	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>,
+	<linuxarm@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Huang Ying
+	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, <linux-cxl@vger.kernel.org>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v4 06/13] acpi/pci: Move Generic Initiator object
+ handling into acpi/pci.*
+Message-ID: <20240711163851.00002f93@Huawei.com>
+In-Reply-To: <20240711141240.0ec77fd2@imammedo.users.ipa.redhat.com>
+References: <20240702131428.664859-1-Jonathan.Cameron@huawei.com>
+	<20240702131428.664859-7-Jonathan.Cameron@huawei.com>
+	<20240711141240.0ec77fd2@imammedo.users.ipa.redhat.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 2024-07-11 at 10:50 -0300, Jason Gunthorpe wrote:
-> On Tue, Jul 09, 2024 at 09:02:25AM -0700, James Bottomley wrote:
+
+> > diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
+> > index 20b70dcd81..174b490e5f 100644
+> > --- a/hw/acpi/pci.c
+> > +++ b/hw/acpi/pci.c
+> > @@ -24,8 +24,12 @@
+> >   */
+> >  
+> >  #include "qemu/osdep.h"
+> > +#include "qemu/error-report.h"  
 > 
-> > For NVMe and net we do have SPDK and DPDK.  What I find is that
-> > people tend to use them for niche use cases (like the NVMe KV
-> > command set) or obscure network routers.  Even though the claim
-> > they both make is to get the kernel out of the way and do stuff
-> > "way faster" the difficulty they create by bypassing everything is
-> > quite a high burden.
+> > +#include "qapi/error.h"  
+> is this necessary? 
+> it seems to be compiling just fine without it.
+The error_fatal extern is in there.
+
+I guess there is a non obvious path via which that's getting included
+anyway. is in there and it's not obvious how it is included I'd rather
+keep it as an explicit include to reduce fragility if the chain of
+includes involved gets changed.
+
+
 > 
-> [..]
->  
-> > What all of the prior pass through's taught us is that if the use
-> > case is big enough it will get pulled into the kernel and the
-> > kernel will usually manage it better (DB users).  If it remains a
-> > niche use case it will likely remain out of the kernel, but we
-> > won't be hurt by it (NVME KV protocol) and sometimes it doesn't
-> > really matter and the device manufacturers will sort it out on
-> > their own (USB tokens).
-> 
-> I don't see it as being linked to big enough use case at all.
-
-'it' being fwctl?  I'm happy to take a wait and see approach with that.
-I'm in the camp that doesn't squash a novel proposal because the kernel
-should be controlling it.  I'm confident that if the use case becomes
-big enough the kernel will likely do it in the end.
-
-> The kernel gets involved if there are good technical reasons to do
-> so. Databases running over real filesystems with O_DIRECT is really
-> technically better than raw block devices.
-
-Exactly for a whole host of performance and more particularly
-management reasons.
-
-> While DPDK shows the opposite, userspace is the technically better
-> option. This is now shown at scale. DPDK is not some niche. A big
-> chunk of internet traffic is going through DPDKs, especially for
-> mobile. Many ORAN solutions include DPDK on Linux.
-
-ORAN being Open Radio Access Network?  But that's a case in point: the
-kernel doesn't have a LTE stack or APN handling for networking.  RAN
-hardware is not very widespread outside of cell providers, meaning it
-doesn't get a lot of widespread exposure.  However, I believe Osmocom
-is trying to change this (giving linux a native stack instead of DPDK)
-and they're on record as referring to DPDK as the "Rabbit Hole".
-
-To look at a counter example: how many linux based router boxes (i.e.
-hardware based not cloud based) actually use DPDK?  I have a huge list
-of cloud projects that overran and got cancelled because they decided
-to use DPDK to replace a function the kernel was already doing (because
-faster) and then found that if you replace function X in the kernel
-generally the rest of the alphabet needs replacing as well, which blows
-your project deadlines.
-
-That's not to say there aren't a whole host of uses for DPDK: novel
-protocols, traffic classification experiments, etc.  It's just that
-it's like this honeytrap for the unwary and any project that comes
-along with DPDK somewhere in its spec immediately gets extra scrutiny
-(it's not that we don't do them, just that we make sure there's a
-genuine use case that isn't reinventing what the kernel already does).
-
-> What has been improved kernel-side is the intergation. DPDK
-> deployments now often use RDMA raw queue pairs instead of VFIO, which
-> laregly eliminates the "high burden".
-> 
-> There are many other cases, like DPDK, where the right answer is to
-> reduce the kernel involvement. It is not so simple that things always
-> get pulled into the kernel.
-
-I don't disagree: there are many novel protocols and other use cases
-that will never make it into the kernel simply because they won't get
-the adoption; they're all ideal candidates for DPDK.  However, I do
-take issue with "reduce kernel involvement" that's what gives rise to
-projects that start by rewriting a piece of kernel networking in DPDK
-and get sucked down the Rabbit Hole and never come out the other side.
-
-James
-
+> > +#include "hw/boards.h"
+> >  #include "hw/acpi/aml-build.h"
+> >  #include "hw/acpi/pci.h"
+> > +#include "hw/pci/pci_device.h"
+> >  #include "hw/pci/pcie_host.h"
+> >  
