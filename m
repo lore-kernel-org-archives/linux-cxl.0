@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386E4433C7
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 11:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A85B433C7
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 11:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720782644; cv=none; b=NjqFxwU5Eo27pNzsHpVRSx8DA+mqbRiizkV6TkO2bIxbstJX1YwgQCXKR6T4jiW/7oB2wNMYPGjzX2o9um7wGyON7r++9I4irLYirpvazUE/kd1oO+SmRi313JYnXFck05CniVrzeFYSAR2xd1FiGqYYIc6Uc+APamWrUVQlL7o=
+	t=1720782675; cv=none; b=dWqdv4Q6RIhuIzs7tAYQFfKRHxDs3vpu0DH2tK6jtHtNNtSO8aOEPpsixYFslqO2i/ugYJhFCl44crBJOUohSAklCng+28wkQqiegENzHmEHtw5oDe4ah6oq4w4e64lJE+PG2XFt+6+YAO8jA4/jeurbKKTcTnXaboY1bhcuD3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720782644; c=relaxed/simple;
-	bh=s6UNhHX6yrNSittUzaN5LPLu/x6nCP4V5qakY7/DTPg=;
+	s=arc-20240116; t=1720782675; c=relaxed/simple;
+	bh=2eVJktb7xcJ0pIryoRK0svE9KcrQpwI/x79Fv/Bwl1c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ray0WSNqVuYW4C+/wlCYc181teNEh0C4HbH/0aqIXT0+yM3az8kqtxANgK5+ZSHDnAyKBSXyDbrSGhLdNfrWq8PibId3ZK/4wKM2fmHqcVmUwacymz4qM0ibGEQ43rfzGeoI4UInJ2jEWUo+c0itNqRNXPmW+hNA1DL36TBYEtw=
+	 MIME-Version:Content-Type; b=FCkPaVo3MSrjntDuK1qaCM212SZ4qvDZk+w/zmx9LtJ0y1ZOBhRILBRVg1LdIBes/hcGd3F/874rperGh35tQvuxUnpoqqpLkt01ikJ6ORFuexbP7ZvgtPhfvdCNVRw+ZVimQvxlfP6X0uI9sYsoocKxaRrt4NyZCY23oCbQPZc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WL83P5Brlz6K92L;
-	Fri, 12 Jul 2024 19:08:33 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WL85C0qbqz6JB4X;
+	Fri, 12 Jul 2024 19:10:07 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 80DDD140B2A;
-	Fri, 12 Jul 2024 19:10:40 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 122B014058E;
+	Fri, 12 Jul 2024 19:11:11 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 12 Jul 2024 12:10:40 +0100
+ 15.1.2507.39; Fri, 12 Jul 2024 12:11:10 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <imammedo@redhat.com>, <mst@redhat.com>, Markus Armbruster
 	<armbru@redhat.com>, <qemu-devel@nongnu.org>, <ankita@nvidia.com>
@@ -33,9 +33,9 @@ CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>,
 	<ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
 	<eduardo@habkost.net>, Michael Roth <michael.roth@amd.com>, Ani Sinha
 	<anisinha@redhat.com>
-Subject: [PATCH v5 04/13] hw/acpi: Rename build_all_acpi_generic_initiators() to build_acpi_generic_initiator()
-Date: Fri, 12 Jul 2024 12:08:08 +0100
-Message-ID: <20240712110837.1439736-5-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 05/13] hw/pci: Add a busnr property to pci_props and use for acpi/gi
+Date: Fri, 12 Jul 2024 12:08:09 +0100
+Message-ID: <20240712110837.1439736-6-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
 References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
@@ -50,41 +50,93 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Igor noted that this function only builds one instance, so was rather
-misleadingly named. Fix that.
+Using a property allows us to hide the internal details of the PCI device
+from the code to build a SRAT Generic Initiator Affinity Structure with
+PCI Device Handle.
 
 Suggested-by: Igor Mammedov <imammedo@redhat.com>
 Reviewed-by: Igor Mammedov <imammedo@redhat.com>
-Tested-by: "Huang, Ying" <ying.huang@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 ---
-v5: No change
+V5: Add assert() to catch if devfn is out of permissible range of
+    0 to 255.
 ---
- hw/acpi/acpi_generic_initiator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ hw/acpi/acpi_generic_initiator.c | 14 +++++++++-----
+ hw/pci/pci.c                     | 14 ++++++++++++++
+ 2 files changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-index 7665b16107..73bafaaaea 100644
+index 73bafaaaea..365feb527f 100644
 --- a/hw/acpi/acpi_generic_initiator.c
 +++ b/hw/acpi/acpi_generic_initiator.c
-@@ -74,7 +74,7 @@ static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
-         acpi_generic_initiator_set_node, NULL, NULL);
- }
+@@ -9,6 +9,7 @@
+ #include "hw/boards.h"
+ #include "hw/pci/pci_device.h"
+ #include "qemu/error-report.h"
++#include "qapi/error.h"
  
--static int build_all_acpi_generic_initiators(Object *obj, void *opaque)
-+static int build_acpi_generic_initiator(Object *obj, void *opaque)
- {
+ typedef struct AcpiGenericInitiatorClass {
+     ObjectClass parent_class;
+@@ -79,7 +80,8 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
      MachineState *ms = MACHINE(qdev_get_machine());
      AcpiGenericInitiator *gi;
-@@ -111,6 +111,6 @@ static int build_all_acpi_generic_initiators(Object *obj, void *opaque)
- void build_srat_generic_pci_initiator(GArray *table_data)
- {
-     object_child_foreach_recursive(object_get_root(),
--                                   build_all_acpi_generic_initiators,
-+                                   build_acpi_generic_initiator,
-                                    table_data);
+     GArray *table_data = opaque;
+-    PCIDevice *pci_dev;
++    int32_t devfn;
++    uint8_t bus;
+     Object *o;
+ 
+     if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+@@ -100,10 +102,12 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
+         exit(1);
+     }
+ 
+-    pci_dev = PCI_DEVICE(o);
+-    build_srat_pci_generic_initiator(table_data, gi->node, 0,
+-                                     pci_bus_num(pci_get_bus(pci_dev)),
+-                                     pci_dev->devfn);
++    bus = object_property_get_uint(o, "busnr", &error_fatal);
++    devfn = object_property_get_int(o, "addr", &error_fatal);
++    /* devfn is constrained in PCI to be 8 bit but storage is an int32_t */
++    assert(devfn >= 0 && devfn < PCI_DEVFN_MAX);
++
++    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+ 
+     return 0;
  }
+diff --git a/hw/pci/pci.c b/hw/pci/pci.c
+index 4c7be52951..e3d1a83e31 100644
+--- a/hw/pci/pci.c
++++ b/hw/pci/pci.c
+@@ -67,6 +67,19 @@ static char *pcibus_get_fw_dev_path(DeviceState *dev);
+ static void pcibus_reset_hold(Object *obj, ResetType type);
+ static bool pcie_has_upstream_port(PCIDevice *dev);
+ 
++static void prop_pci_busnr_get(Object *obj, Visitor *v, const char *name,
++                             void *opaque, Error **errp)
++{
++    uint8_t busnr = pci_dev_bus_num(PCI_DEVICE(obj));
++
++    visit_type_uint8(v, name, &busnr, errp);
++}
++
++static const PropertyInfo prop_pci_busnr = {
++    .name = "busnr",
++    .get = prop_pci_busnr_get,
++};
++
+ static Property pci_props[] = {
+     DEFINE_PROP_PCI_DEVFN("addr", PCIDevice, devfn, -1),
+     DEFINE_PROP_STRING("romfile", PCIDevice, romfile),
+@@ -85,6 +98,7 @@ static Property pci_props[] = {
+                     QEMU_PCIE_ERR_UNC_MASK_BITNR, true),
+     DEFINE_PROP_BIT("x-pcie-ari-nextfn-1", PCIDevice, cap_present,
+                     QEMU_PCIE_ARI_NEXTFN_1_BITNR, false),
++    { .name = "busnr", .info = &prop_pci_busnr },
+     DEFINE_PROP_END_OF_LIST()
+ };
+ 
 -- 
 2.43.0
 
