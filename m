@@ -1,360 +1,272 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED4116C69E
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 14:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49711741FA
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 15:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792832; cv=none; b=M2ypj4eh1CnexW93zzJmV6d+PQoDF2p0SfOvHYMW9rUpjR0kNaBCdWo5D+ij+6U/GXYak9Yw3OYymkL4/ZSaOZ0JVOQnBKJZC7yUnbkmz35EQVYceF/w+CfJdXhlBuGa1EsoIyQleNP6G8XXXwjePyi8vXnGE6z4KAjaMEeDzqM=
+	t=1720799557; cv=none; b=fAkudWM1ejSm8uPhNIyoOuhTowz5VKxrednJ6NgcJIwD0Rbtm5lEaN996N9TAOxB+0EtxjNoe6bRPM1nM1ePM4UzWDNEbJxLBL/DiPJfc9oNbsqlehhPSFuju1qb56uQuSRPX79yDWnvDttO90ZgwBfa9MII60aNu3ON13co+Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792832; c=relaxed/simple;
-	bh=0Lq/zWnaoeTj+mEdLrgzYT8eMmP6ufIRqhBSFVRoJwY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NzwzJMrNoUv9PdBRBe+COSZzzGbRmJFb/wDy03+DVXGHEvPP2GpWlCvn32vJ39AFGJLmkSuJxN+Tp4dNfUAHaSyVDKsGjR8AlUvyl/otC7OiONxPkKYnfPPytEvwe2v0e0Y5H7XDnUqb4tSpWl9K0zxzT4taiyPy1wDJa3NfUSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cl7COIcX; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720799557; c=relaxed/simple;
+	bh=ZnYtEwQmRhSInSuZM5bGERSfZOhYNMj6nDH2d7KOFRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=Hqnd0EPnmoTffk1GRhC/8SbqeCsWym88U4+VQ/ki/aQGUEFzZvWOXlpyMGwBzgCZ9A4sjhd5WRLA0LiZOMzl9+5ZM+hHaEcEraWisKAGGWmtAeBZ+GU5H2Iqr1RYbmUtBqzd/iPZydjVvb6sVyzCTfH7c1RT1ngT6aLTQbbcuFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PmgWxvM6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cl7COIcX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720792830; x=1752328830;
-  h=date:from:to:cc:subject:message-id;
-  bh=0Lq/zWnaoeTj+mEdLrgzYT8eMmP6ufIRqhBSFVRoJwY=;
-  b=cl7COIcXR7LmUQBxTXsihvH9f0h7llzjbeUocWOqPKFQRNmQOZQ2KNcl
-   YXXaTk/3oKoxMu0PzK/OU5e2jMT1LU6+SJH5sK6ZlZ/3g9x6hwjRcBpPZ
-   lco8CnIulYEbliuWLFaiUKWTCoRWPEOVZoJ7QMFqQVzToGZFISWk/VbP+
-   h9sbsJikZm+qnepBtaUMjsqayk2FQQnCyo/NECDnHey0neKdQFUShAwa+
-   lEBF9bobKQdiqv3bJdXAMJVT+u+7N1iaGm8Cl2GfXn+7Cc62Fn3h6HkD7
-   rnKUcMbJptETbB+AQFNNFkSYyXo6g7WSf5vh1gtQP9B5NF/SUpG1jYP1K
-   Q==;
-X-CSE-ConnectionGUID: cKjEJ4P8R+qrZKp29ia/Sg==
-X-CSE-MsgGUID: nrHy1ZNzSBeCWsYnWjVxqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="18375391"
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="18375391"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 07:00:29 -0700
-X-CSE-ConnectionGUID: VDRQt4AYRFWof3FhWMudig==
-X-CSE-MsgGUID: ABd9wG2qTLmm7jHabigkNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="48826945"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 12 Jul 2024 07:00:26 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sSGoy-000apg-1T;
-	Fri, 12 Jul 2024 14:00:24 +0000
-Date: Fri, 12 Jul 2024 22:00:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 56478475560bde71dd3ef944b5013900272db273
-Message-ID: <202407122207.t9JtYHqp-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PmgWxvM6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720799554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CBPZJXhtPTYw9uGWwBpC8EVMxJRjwQ/Iz+iND+SW6sA=;
+	b=PmgWxvM6EAtMenNTAoVwv7W1mM4igF78kfNKy8xvpx2q7dWoVO4rxrJMgEE1CNP8gMpLdx
+	fxJL1qPAA1I9W9VMMFNivK/+6SxnrDYuLCmyI1Q4pnPF5K1gyayTcAIbvYbP+F2uRlIs/l
+	feDCZyHcGPHXqBMK3qGG6XtnElhqilc=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-36-tIuUBJ34MVSeXx8nVRgD-Q-1; Fri, 12 Jul 2024 11:52:32 -0400
+X-MC-Unique: tIuUBJ34MVSeXx8nVRgD-Q-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3d8476cb195so22702b6e.1
+        for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 08:52:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720799552; x=1721404352;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CBPZJXhtPTYw9uGWwBpC8EVMxJRjwQ/Iz+iND+SW6sA=;
+        b=BE7TvdYHjqtpnSOMsFVekCya47xYq8DmQagg1L5GXLlXz4EGipajofwkBbmOtdIobu
+         Wj9Bd9iyI9RXhQg/1XAS5aVS0aXU2gQnv3JSS2HpzdgiFk9/NJAVF3eFCXaw77xr9ttD
+         ZNZl4J345Mdm+2z/M+6g4mNf6LiYvV7KeQp8NO9Wbg2jD7GNcTDdshq8Dhz7CzyILaNs
+         rThR1wY9ZVzMV1sN8qYpMjtbjTsqZTGxyEDohIK51ZDJKaYyctJaEP8uaj2oXUJ0COup
+         UHtqMVxD2dutdulMfrFxheZePQ0UjLrGo/D6fMyS0Kkwuf1feCo2BDVgQVDZ8OLjfjY8
+         1knQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSox0wUMjdHXpXkQqzB4ZaPD5Z7Cv3xnlMhbKWcr+0Bp4ciCDqx28tc3WgSEz4DJHoylJKBXLnsFin4+UY2F7bsgJlAlxQA1QI
+X-Gm-Message-State: AOJu0Yw9E/wFv4Er1Xqr6OmUJ4gzhfftiyneU6BkzD6vK9Ks0RWWjLJc
+	0Od8kfs1sVg512ZEC2pkRc8LQY4cICgnwb71+Ad7riNYD0f11xwCdlPqyomcDzsPP1zgMHWUu5C
+	qIGmDaFLeEKGIl4dBFK+dlflV/llh3pg4quGBRtLG/yV2JTwsVIJd8Lgzbw==
+X-Received: by 2002:a05:6808:18a4:b0:3d9:3f72:7147 with SMTP id 5614622812f47-3daa0cc727emr5077561b6e.3.1720799551959;
+        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/ZIrWNSDLGpdOzmVtr7gg5txILa2tK9NGlD5tHXAm+7q1klaoYYw+zZj//kgznCBpBAfzHQ==
+X-Received: by 2002:a05:6808:18a4:b0:3d9:3f72:7147 with SMTP id 5614622812f47-3daa0cc727emr5077526b6e.3.1720799551507;
+        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f19012fa9sm414621985a.46.2024.07.12.08.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
+Date: Fri, 12 Jul 2024 11:52:27 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
+	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+	will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+	dave.hansen@linux.intel.com, ira.weiny@intel.com,
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+	linmiaohe@huawei.com, david@redhat.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	david@fromorbit.com, Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH 11/13] huge_memory: Remove dead vmf_insert_pXd code
+Message-ID: <ZpFROxbDINDc43m_@x1n>
+References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
+ <400a4584f6f628998a7093aee49d9f86c592754b.1719386613.git-series.apopple@nvidia.com>
+ <ZogCDpfSyCcjVXWH@x1n>
+ <87zfqrw69i.fsf@nvdebian.thelocal>
+ <Zo1dqTPLn_gosrSO@x1n>
+ <87sewf48s6.fsf@nvdebian.thelocal>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <87sewf48s6.fsf@nvdebian.thelocal>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 56478475560bde71dd3ef944b5013900272db273  Merge branch 'for-6.11/xor_fixes' into cxl-for-next
+On Fri, Jul 12, 2024 at 12:40:39PM +1000, Alistair Popple wrote:
+> 
+> Peter Xu <peterx@redhat.com> writes:
+> 
+> > On Tue, Jul 09, 2024 at 02:07:31PM +1000, Alistair Popple wrote:
+> >> 
+> >> Peter Xu <peterx@redhat.com> writes:
+> >> 
+> >> > Hi, Alistair,
+> >> >
+> >> > On Thu, Jun 27, 2024 at 10:54:26AM +1000, Alistair Popple wrote:
+> >> >> Now that DAX is managing page reference counts the same as normal
+> >> >> pages there are no callers for vmf_insert_pXd functions so remove
+> >> >> them.
+> >> >> 
+> >> >> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> >> >> ---
+> >> >>  include/linux/huge_mm.h |   2 +-
+> >> >>  mm/huge_memory.c        | 165 +-----------------------------------------
+> >> >>  2 files changed, 167 deletions(-)
+> >> >> 
+> >> >> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> >> >> index 9207d8e..0fb6bff 100644
+> >> >> --- a/include/linux/huge_mm.h
+> >> >> +++ b/include/linux/huge_mm.h
+> >> >> @@ -37,8 +37,6 @@ int change_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >> >>  		    pmd_t *pmd, unsigned long addr, pgprot_t newprot,
+> >> >>  		    unsigned long cp_flags);
+> >> >>  
+> >> >> -vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+> >> >> -vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+> >> >>  vm_fault_t dax_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+> >> >>  vm_fault_t dax_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+> >> >
+> >> > There's a plan to support huge pfnmaps in VFIO, which may still make good
+> >> > use of these functions.  I think it's fine to remove them but it may mean
+> >> > we'll need to add them back when supporting pfnmaps with no memmap.
+> >> 
+> >> I'm ok with that. If we need them back in future it shouldn't be too
+> >> hard to add them back again. I just couldn't find any callers of them
+> >> once DAX stopped using them and the usual policy is to remove unused
+> >> functions.
+> >
+> > True.  Currently the pmd/pud helpers are only used in dax.
+> >
+> >> 
+> >> > Is it still possible to make the old API generic to both service the new
+> >> > dax refcount plan, but at the meantime working for pfn injections when
+> >> > there's no page struct?
+> >> 
+> >> I don't think so - this new dax refcount plan relies on having a struct
+> >> page to take references on so I don't think it makes much sense to
+> >> combine it with something that doesn't have a struct page. It sounds
+> >> like the situation is the analogue of vm_insert_page()
+> >> vs. vmf_insert_pfn() - it's possible for both to exist but there's not
+> >> really anything that can be shared between the two APIs as one has a
+> >> page and the other is just a raw PFN.
+> >
+> > I still think most of the codes should be shared on e.g. most of sanity
+> > checks, pgtable injections, pgtable deposits (for pmd) and so on.
+> 
+> Yeah, it was mostly the BUG_ON's that weren't applicable once pXd_devmap
+> went away.
+> 
+> > To be explicit, I wonder whether something like below diff would be
+> > applicable on top of the patch "huge_memory: Allow mappings of PMD sized
+> > pages" in this series, which introduced dax_insert_pfn_pmd() for dax:
+> >
+> > $ diff origin new
+> > 1c1
+> > < vm_fault_t dax_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+> > ---
+> >> vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+> > 55,58c55,60
+> > <       folio = page_folio(page);
+> > <       folio_get(folio);
+> > <       folio_add_file_rmap_pmd(folio, page, vma);
+> > <       add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
+> > ---
+> >>         if (page) {
+> >>                 folio = page_folio(page);
+> >>                 folio_get(folio);
+> >>                 folio_add_file_rmap_pmd(folio, page, vma);
+> >>                 add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
+> >>         }
+> 
+> We get the page from calling pfn_t_to_page(pfn). This is safe for the
+> DAX case but is it safe to use a page returned by this more generally?
 
-elapsed time: 801m
+Good question.  I thought it should work when the caller doesn't set any
+bit in PFN_FLAGS_MASK, but it turns out it's not the case?  As I just
+notice:
 
-configs tested: 280
-configs skipped: 7
+static inline bool pfn_t_has_page(pfn_t pfn)
+{
+	return (pfn.val & PFN_MAP) == PFN_MAP || (pfn.val & PFN_DEV) == 0;
+}
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So it looks like "no PFN_FLAGS" case should also fall into this category of
+"(pfn.val & PFN_DEV) == 0"..
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.3.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240712   gcc-13.2.0
-arc                   randconfig-002-20240712   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-19
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-14.1.0
-arm                        clps711x_defconfig   clang-19
-arm                                 defconfig   clang-14
-arm                                 defconfig   gcc-13.2.0
-arm                          exynos_defconfig   clang-17
-arm                         lpc18xx_defconfig   clang-17
-arm                         lpc18xx_defconfig   clang-19
-arm                        multi_v7_defconfig   clang-17
-arm                   randconfig-001-20240712   clang-19
-arm                   randconfig-001-20240712   gcc-13.2.0
-arm                   randconfig-002-20240712   clang-19
-arm                   randconfig-002-20240712   gcc-13.2.0
-arm                   randconfig-003-20240712   gcc-13.2.0
-arm                   randconfig-003-20240712   gcc-14.1.0
-arm                   randconfig-004-20240712   clang-15
-arm                   randconfig-004-20240712   gcc-13.2.0
-arm                         s5pv210_defconfig   gcc-14.1.0
-arm64                            allmodconfig   clang-19
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-13.2.0
-arm64                               defconfig   gcc-14.1.0
-arm64                 randconfig-001-20240712   gcc-13.2.0
-arm64                 randconfig-001-20240712   gcc-14.1.0
-arm64                 randconfig-002-20240712   gcc-13.2.0
-arm64                 randconfig-002-20240712   gcc-14.1.0
-arm64                 randconfig-003-20240712   clang-19
-arm64                 randconfig-003-20240712   gcc-13.2.0
-arm64                 randconfig-004-20240712   clang-17
-arm64                 randconfig-004-20240712   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-13.2.0
-csky                                defconfig   gcc-14.1.0
-csky                  randconfig-001-20240712   gcc-13.2.0
-csky                  randconfig-001-20240712   gcc-14.1.0
-csky                  randconfig-002-20240712   gcc-13.2.0
-csky                  randconfig-002-20240712   gcc-14.1.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang-19
-hexagon                          allyesconfig   clang-19
-hexagon                             defconfig   clang-19
-hexagon               randconfig-001-20240712   clang-14
-hexagon               randconfig-002-20240712   clang-19
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240712   gcc-9
-i386         buildonly-randconfig-002-20240712   clang-18
-i386         buildonly-randconfig-002-20240712   gcc-9
-i386         buildonly-randconfig-003-20240712   clang-18
-i386         buildonly-randconfig-003-20240712   gcc-9
-i386         buildonly-randconfig-004-20240712   clang-18
-i386         buildonly-randconfig-004-20240712   gcc-9
-i386         buildonly-randconfig-005-20240712   gcc-11
-i386         buildonly-randconfig-005-20240712   gcc-9
-i386         buildonly-randconfig-006-20240712   clang-18
-i386         buildonly-randconfig-006-20240712   gcc-9
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240712   clang-18
-i386                  randconfig-001-20240712   gcc-9
-i386                  randconfig-002-20240712   clang-18
-i386                  randconfig-002-20240712   gcc-9
-i386                  randconfig-003-20240712   clang-18
-i386                  randconfig-003-20240712   gcc-9
-i386                  randconfig-004-20240712   clang-18
-i386                  randconfig-004-20240712   gcc-9
-i386                  randconfig-005-20240712   clang-18
-i386                  randconfig-005-20240712   gcc-9
-i386                  randconfig-006-20240712   clang-18
-i386                  randconfig-006-20240712   gcc-9
-i386                  randconfig-011-20240712   clang-18
-i386                  randconfig-011-20240712   gcc-9
-i386                  randconfig-012-20240712   clang-18
-i386                  randconfig-012-20240712   gcc-9
-i386                  randconfig-013-20240712   clang-18
-i386                  randconfig-013-20240712   gcc-9
-i386                  randconfig-014-20240712   gcc-10
-i386                  randconfig-014-20240712   gcc-9
-i386                  randconfig-015-20240712   gcc-10
-i386                  randconfig-015-20240712   gcc-9
-i386                  randconfig-016-20240712   gcc-12
-i386                  randconfig-016-20240712   gcc-9
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-14.1.0
-loongarch             randconfig-001-20240712   gcc-13.2.0
-loongarch             randconfig-001-20240712   gcc-14.1.0
-loongarch             randconfig-002-20240712   gcc-13.2.0
-loongarch             randconfig-002-20240712   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-14.1.0
-m68k                        stmark2_defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-14.1.0
-mips                          ath79_defconfig   clang-17
-mips                           ci20_defconfig   clang-17
-mips                     decstation_defconfig   gcc-13.2.0
-mips                            gpr_defconfig   clang-19
-mips                        omega2p_defconfig   clang-17
-mips                      pic32mzda_defconfig   gcc-13.2.0
-mips                       rbtx49xx_defconfig   gcc-14.1.0
-mips                   sb1250_swarm_defconfig   gcc-14.1.0
-nios2                         10m50_defconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-13.2.0
-nios2                               defconfig   gcc-14.1.0
-nios2                 randconfig-001-20240712   gcc-13.2.0
-nios2                 randconfig-001-20240712   gcc-14.1.0
-nios2                 randconfig-002-20240712   gcc-13.2.0
-nios2                 randconfig-002-20240712   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240712   gcc-13.2.0
-parisc                randconfig-001-20240712   gcc-14.1.0
-parisc                randconfig-002-20240712   gcc-13.2.0
-parisc                randconfig-002-20240712   gcc-14.1.0
-parisc64                            defconfig   gcc-13.2.0
-parisc64                            defconfig   gcc-14.1.0
-powerpc                      acadia_defconfig   clang-19
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   clang-19
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      cm5200_defconfig   clang-19
-powerpc                        fsp2_defconfig   clang-17
-powerpc                  iss476-smp_defconfig   gcc-14.1.0
-powerpc                      mgcoge_defconfig   clang-19
-powerpc                 mpc8313_rdb_defconfig   clang-17
-powerpc                 mpc834x_itx_defconfig   clang-19
-powerpc               randconfig-001-20240712   clang-15
-powerpc               randconfig-001-20240712   gcc-13.2.0
-powerpc               randconfig-002-20240712   clang-19
-powerpc               randconfig-002-20240712   gcc-13.2.0
-powerpc               randconfig-003-20240712   clang-19
-powerpc               randconfig-003-20240712   gcc-13.2.0
-powerpc64                        alldefconfig   clang-17
-powerpc64             randconfig-001-20240712   clang-19
-powerpc64             randconfig-001-20240712   gcc-13.2.0
-powerpc64             randconfig-002-20240712   clang-19
-powerpc64             randconfig-002-20240712   gcc-13.2.0
-powerpc64             randconfig-003-20240712   gcc-13.2.0
-powerpc64             randconfig-003-20240712   gcc-14.1.0
-riscv                            alldefconfig   gcc-14.1.0
-riscv                            allmodconfig   clang-19
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   clang-19
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   clang-19
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240712   clang-19
-riscv                 randconfig-001-20240712   gcc-13.2.0
-riscv                 randconfig-002-20240712   gcc-13.2.0
-riscv                 randconfig-002-20240712   gcc-14.1.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   clang-19
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240712   gcc-13.2.0
-s390                  randconfig-001-20240712   gcc-14.1.0
-s390                  randconfig-002-20240712   gcc-13.2.0
-s390                  randconfig-002-20240712   gcc-14.1.0
-s390                       zfcpdump_defconfig   clang-17
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                    randconfig-001-20240712   gcc-13.2.0
-sh                    randconfig-001-20240712   gcc-14.1.0
-sh                    randconfig-002-20240712   gcc-13.2.0
-sh                    randconfig-002-20240712   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240712   gcc-13.2.0
-sparc64               randconfig-001-20240712   gcc-14.1.0
-sparc64               randconfig-002-20240712   gcc-13.2.0
-sparc64               randconfig-002-20240712   gcc-14.1.0
-um                               allmodconfig   clang-19
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   clang-19
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-13
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240712   clang-19
-um                    randconfig-001-20240712   gcc-13.2.0
-um                    randconfig-002-20240712   clang-15
-um                    randconfig-002-20240712   gcc-13.2.0
-um                           x86_64_defconfig   clang-15
-um                           x86_64_defconfig   clang-17
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240712   clang-18
-x86_64       buildonly-randconfig-002-20240712   clang-18
-x86_64       buildonly-randconfig-003-20240712   clang-18
-x86_64       buildonly-randconfig-004-20240712   clang-18
-x86_64       buildonly-randconfig-005-20240712   clang-18
-x86_64       buildonly-randconfig-006-20240712   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240712   clang-18
-x86_64                randconfig-001-20240712   gcc-12
-x86_64                randconfig-002-20240712   clang-18
-x86_64                randconfig-002-20240712   gcc-13
-x86_64                randconfig-003-20240712   clang-18
-x86_64                randconfig-003-20240712   gcc-12
-x86_64                randconfig-004-20240712   clang-18
-x86_64                randconfig-005-20240712   clang-18
-x86_64                randconfig-005-20240712   gcc-13
-x86_64                randconfig-006-20240712   clang-18
-x86_64                randconfig-011-20240712   clang-18
-x86_64                randconfig-012-20240712   clang-18
-x86_64                randconfig-013-20240712   clang-18
-x86_64                randconfig-014-20240712   clang-18
-x86_64                randconfig-014-20240712   gcc-13
-x86_64                randconfig-015-20240712   clang-18
-x86_64                randconfig-016-20240712   clang-18
-x86_64                randconfig-071-20240712   clang-18
-x86_64                randconfig-071-20240712   gcc-13
-x86_64                randconfig-072-20240712   clang-18
-x86_64                randconfig-072-20240712   gcc-11
-x86_64                randconfig-073-20240712   clang-18
-x86_64                randconfig-074-20240712   clang-18
-x86_64                randconfig-074-20240712   gcc-9
-x86_64                randconfig-075-20240712   clang-18
-x86_64                randconfig-076-20240712   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                          iss_defconfig   gcc-14.1.0
-xtensa                randconfig-001-20240712   gcc-13.2.0
-xtensa                randconfig-001-20240712   gcc-14.1.0
-xtensa                randconfig-002-20240712   gcc-13.2.0
-xtensa                randconfig-002-20240712   gcc-14.1.0
+I'm not sure whether my understanding is correct, though.  Maybe we'd want
+to double check with pfn_valid() when it's a generic function.
+
+> 
+> From an API perspective it would make more sense for the DAX code to
+> pass the page rather than the pfn. I didn't do that because device DAX
+> just had the PFN and this was DAX-specific code. But if we want to make
+> it generic I'd rather have callers pass the page in.
+> 
+> Of course that probably doesn't help you, because then the call would be
+> vmf_insert_page_pmd() rather than a raw pfn, but as you point out there
+> might be some common code we could share.
+
+It'll be fine if it needs page*, then it'll be NULL for VFIO.
+
+So far it looks cleaner if it has the pgtable entry anyway to me, as that
+indeed contains the pfn.  But I'd trust you more on what should it look
+like, as I didn't read the whole series here.
+
+> 
+> >
+> > As most of the rest look very similar to what pfn injections would need..
+> > and in the PoC of ours we're using vmf_insert_pfn_pmd/pud().
+> 
+> Do you have the PoC posted anywhere so I can get an understanding of how
+> this might be used?
+
+https://github.com/xzpeter/linux/commits/vfio-pfnmap-all/
+
+Specifically Alex's commit here:
+
+https://github.com/xzpeter/linux/commit/afd05f1082bc78738e280f1fc1937da52b2572ed
+
+Just a note that it's still work in progress.  Alex did run it through (not
+this tree, but an older one) and it works pretty well so far.
+
+I think it's because so far nothing involves the pfn flags, the only one
+has it involved is (taking pmd as example):
+
+insert_pfn_pmd():
+	if (!pmd_none(*pmd)) {
+		if (write) {
+			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
+				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+				goto out_unlock;
+			}
+			entry = pmd_mkyoung(*pmd);
+			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
+				update_mmu_cache_pmd(vma, addr, pmd);
+		}
+
+		goto out_unlock;
+	}
+
+But for VFIO it'll definitely be pmd_none() here, so the whole path ignores
+pfn flags so far here, I assume.
+
+> 
+> > That also reminds me on whether it'll be easier to implement the new dax
+> > support for page struct on top of vmf_insert_pfn_pmd/pud, rather than
+> > removing the 1st then adding the new one.  Maybe it'll reduce code churns,
+> > and would that also make reviews easier?
+> 
+> Yeah, that's a good observation. I think it was just a quirk of how I
+> was developing this and also not caring about the PFN case so I'll see
+> what that looks like.
+
+Great!  I hope it'll reduce the diff for this series too, so it could be a
+win-win.
+
+Thanks,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Peter Xu
+
