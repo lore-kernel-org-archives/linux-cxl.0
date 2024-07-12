@@ -1,272 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49711741FA
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 15:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AF52032A;
+	Fri, 12 Jul 2024 19:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720799557; cv=none; b=fAkudWM1ejSm8uPhNIyoOuhTowz5VKxrednJ6NgcJIwD0Rbtm5lEaN996N9TAOxB+0EtxjNoe6bRPM1nM1ePM4UzWDNEbJxLBL/DiPJfc9oNbsqlehhPSFuju1qb56uQuSRPX79yDWnvDttO90ZgwBfa9MII60aNu3ON13co+Tk=
+	t=1720813334; cv=none; b=R2VzcApKeqJeNMwI90+HN+lF0Qm1wqFuF2gy6UQL+OTWHNvkj6D9oJkfFi/zfUg2kIjfFfQD7m6ExnJ0xKo32xJDLzu4bALT0dP4PlLHhzEM5g0/mYxyuIa+bEvu38rRtNuEsiJg2q04TAokhlzlHP3+1HVd3Cdsad1OV21MlH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720799557; c=relaxed/simple;
-	bh=ZnYtEwQmRhSInSuZM5bGERSfZOhYNMj6nDH2d7KOFRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=Hqnd0EPnmoTffk1GRhC/8SbqeCsWym88U4+VQ/ki/aQGUEFzZvWOXlpyMGwBzgCZ9A4sjhd5WRLA0LiZOMzl9+5ZM+hHaEcEraWisKAGGWmtAeBZ+GU5H2Iqr1RYbmUtBqzd/iPZydjVvb6sVyzCTfH7c1RT1ngT6aLTQbbcuFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PmgWxvM6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720813334; c=relaxed/simple;
+	bh=TgRCdc2jdk93faAJSlXtDv3nImud6PYYBQfTIb7ydxE=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=DC1qeBT2qhlNumxAUUxDIHZZJZN/OTnu6/sz5iaicB3/AdD/egImUTCmW/MQB56bU+korZkABcJ/UPu4316k/YMbd3YP005BDcSbk660qKFjJnsSw8bDmg0AOaKzUCfF+Cc4HYRcx8xkz1S9DjCnbs07IDVlQEt4ij2H07WXEc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cktrqCsx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PmgWxvM6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720799554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CBPZJXhtPTYw9uGWwBpC8EVMxJRjwQ/Iz+iND+SW6sA=;
-	b=PmgWxvM6EAtMenNTAoVwv7W1mM4igF78kfNKy8xvpx2q7dWoVO4rxrJMgEE1CNP8gMpLdx
-	fxJL1qPAA1I9W9VMMFNivK/+6SxnrDYuLCmyI1Q4pnPF5K1gyayTcAIbvYbP+F2uRlIs/l
-	feDCZyHcGPHXqBMK3qGG6XtnElhqilc=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-36-tIuUBJ34MVSeXx8nVRgD-Q-1; Fri, 12 Jul 2024 11:52:32 -0400
-X-MC-Unique: tIuUBJ34MVSeXx8nVRgD-Q-1
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3d8476cb195so22702b6e.1
-        for <linux-cxl@vger.kernel.org>; Fri, 12 Jul 2024 08:52:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720799552; x=1721404352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CBPZJXhtPTYw9uGWwBpC8EVMxJRjwQ/Iz+iND+SW6sA=;
-        b=BE7TvdYHjqtpnSOMsFVekCya47xYq8DmQagg1L5GXLlXz4EGipajofwkBbmOtdIobu
-         Wj9Bd9iyI9RXhQg/1XAS5aVS0aXU2gQnv3JSS2HpzdgiFk9/NJAVF3eFCXaw77xr9ttD
-         ZNZl4J345Mdm+2z/M+6g4mNf6LiYvV7KeQp8NO9Wbg2jD7GNcTDdshq8Dhz7CzyILaNs
-         rThR1wY9ZVzMV1sN8qYpMjtbjTsqZTGxyEDohIK51ZDJKaYyctJaEP8uaj2oXUJ0COup
-         UHtqMVxD2dutdulMfrFxheZePQ0UjLrGo/D6fMyS0Kkwuf1feCo2BDVgQVDZ8OLjfjY8
-         1knQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSox0wUMjdHXpXkQqzB4ZaPD5Z7Cv3xnlMhbKWcr+0Bp4ciCDqx28tc3WgSEz4DJHoylJKBXLnsFin4+UY2F7bsgJlAlxQA1QI
-X-Gm-Message-State: AOJu0Yw9E/wFv4Er1Xqr6OmUJ4gzhfftiyneU6BkzD6vK9Ks0RWWjLJc
-	0Od8kfs1sVg512ZEC2pkRc8LQY4cICgnwb71+Ad7riNYD0f11xwCdlPqyomcDzsPP1zgMHWUu5C
-	qIGmDaFLeEKGIl4dBFK+dlflV/llh3pg4quGBRtLG/yV2JTwsVIJd8Lgzbw==
-X-Received: by 2002:a05:6808:18a4:b0:3d9:3f72:7147 with SMTP id 5614622812f47-3daa0cc727emr5077561b6e.3.1720799551959;
-        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/ZIrWNSDLGpdOzmVtr7gg5txILa2tK9NGlD5tHXAm+7q1klaoYYw+zZj//kgznCBpBAfzHQ==
-X-Received: by 2002:a05:6808:18a4:b0:3d9:3f72:7147 with SMTP id 5614622812f47-3daa0cc727emr5077526b6e.3.1720799551507;
-        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f19012fa9sm414621985a.46.2024.07.12.08.52.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 08:52:31 -0700 (PDT)
-Date: Fri, 12 Jul 2024 11:52:27 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
-	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
-	will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
-	dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH 11/13] huge_memory: Remove dead vmf_insert_pXd code
-Message-ID: <ZpFROxbDINDc43m_@x1n>
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <400a4584f6f628998a7093aee49d9f86c592754b.1719386613.git-series.apopple@nvidia.com>
- <ZogCDpfSyCcjVXWH@x1n>
- <87zfqrw69i.fsf@nvdebian.thelocal>
- <Zo1dqTPLn_gosrSO@x1n>
- <87sewf48s6.fsf@nvdebian.thelocal>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cktrqCsx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720813332; x=1752349332;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TgRCdc2jdk93faAJSlXtDv3nImud6PYYBQfTIb7ydxE=;
+  b=cktrqCsxk6s/BTAqzq5X094L3D/Eguh5LF3Vf7N62aAYm0O4trwuUINI
+   iI7Cuzrqy22piQ61cnKj3FwNqupP+8608iWZ11K+VROsiqfRwkddFzViv
+   tcYVKdyPKhIZSLRaOyF9LL2HtVUU+dkD39FhRPsdyFrXuu8ToqvFRK6Ns
+   b7Xe3/Xs4iUrtslUzA6eWkHZqbxdo5OklMg6WhEchNirIF032oxTlJ7lP
+   x4mRn4u3hb40bYD5LwqMPprQdxARU05vkAIKDYh9ddwe8lZGeN+W/GbnI
+   85hKaBY9QysM3PHLl1wqzJDBFmP6wbLCTLoZTeG+Xwnh9PyNuP2md1xiQ
+   Q==;
+X-CSE-ConnectionGUID: YeMiUY/1SmSRffp0DNnr2g==
+X-CSE-MsgGUID: uuWnC/y5Rju/cQ+sNasEow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="35813289"
+X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
+   d="scan'208";a="35813289"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 12:42:12 -0700
+X-CSE-ConnectionGUID: +FGsCYj1TGWmcg4WjdjiCg==
+X-CSE-MsgGUID: vjGVLZT5TvaFY6q+LMl7qA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
+   d="scan'208";a="53366204"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.110.177])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 12:42:11 -0700
+Subject: [PATCH] driver core: Fix uevent_show() vs driver detach race
+From: Dan Williams <dan.j.williams@intel.com>
+To: gregkh@linuxfoundation.org
+Cc: syzbot+4762dd74e32532cda5ff@syzkaller.appspotmail.com,
+ Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, stable@vger.kernel.org,
+ Ashish Sangwan <a.sangwan@samsung.com>, Namjae Jeon <namjae.jeon@samsung.com>,
+ Dirk Behme <dirk.behme@de.bosch.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Date: Fri, 12 Jul 2024 12:42:09 -0700
+Message-ID: <172081332794.577428.9738802016494057132.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87sewf48s6.fsf@nvdebian.thelocal>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 12, 2024 at 12:40:39PM +1000, Alistair Popple wrote:
-> 
-> Peter Xu <peterx@redhat.com> writes:
-> 
-> > On Tue, Jul 09, 2024 at 02:07:31PM +1000, Alistair Popple wrote:
-> >> 
-> >> Peter Xu <peterx@redhat.com> writes:
-> >> 
-> >> > Hi, Alistair,
-> >> >
-> >> > On Thu, Jun 27, 2024 at 10:54:26AM +1000, Alistair Popple wrote:
-> >> >> Now that DAX is managing page reference counts the same as normal
-> >> >> pages there are no callers for vmf_insert_pXd functions so remove
-> >> >> them.
-> >> >> 
-> >> >> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> >> >> ---
-> >> >>  include/linux/huge_mm.h |   2 +-
-> >> >>  mm/huge_memory.c        | 165 +-----------------------------------------
-> >> >>  2 files changed, 167 deletions(-)
-> >> >> 
-> >> >> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> >> >> index 9207d8e..0fb6bff 100644
-> >> >> --- a/include/linux/huge_mm.h
-> >> >> +++ b/include/linux/huge_mm.h
-> >> >> @@ -37,8 +37,6 @@ int change_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
-> >> >>  		    pmd_t *pmd, unsigned long addr, pgprot_t newprot,
-> >> >>  		    unsigned long cp_flags);
-> >> >>  
-> >> >> -vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
-> >> >> -vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
-> >> >>  vm_fault_t dax_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
-> >> >>  vm_fault_t dax_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
-> >> >
-> >> > There's a plan to support huge pfnmaps in VFIO, which may still make good
-> >> > use of these functions.  I think it's fine to remove them but it may mean
-> >> > we'll need to add them back when supporting pfnmaps with no memmap.
-> >> 
-> >> I'm ok with that. If we need them back in future it shouldn't be too
-> >> hard to add them back again. I just couldn't find any callers of them
-> >> once DAX stopped using them and the usual policy is to remove unused
-> >> functions.
-> >
-> > True.  Currently the pmd/pud helpers are only used in dax.
-> >
-> >> 
-> >> > Is it still possible to make the old API generic to both service the new
-> >> > dax refcount plan, but at the meantime working for pfn injections when
-> >> > there's no page struct?
-> >> 
-> >> I don't think so - this new dax refcount plan relies on having a struct
-> >> page to take references on so I don't think it makes much sense to
-> >> combine it with something that doesn't have a struct page. It sounds
-> >> like the situation is the analogue of vm_insert_page()
-> >> vs. vmf_insert_pfn() - it's possible for both to exist but there's not
-> >> really anything that can be shared between the two APIs as one has a
-> >> page and the other is just a raw PFN.
-> >
-> > I still think most of the codes should be shared on e.g. most of sanity
-> > checks, pgtable injections, pgtable deposits (for pmd) and so on.
-> 
-> Yeah, it was mostly the BUG_ON's that weren't applicable once pXd_devmap
-> went away.
-> 
-> > To be explicit, I wonder whether something like below diff would be
-> > applicable on top of the patch "huge_memory: Allow mappings of PMD sized
-> > pages" in this series, which introduced dax_insert_pfn_pmd() for dax:
-> >
-> > $ diff origin new
-> > 1c1
-> > < vm_fault_t dax_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
-> > ---
-> >> vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
-> > 55,58c55,60
-> > <       folio = page_folio(page);
-> > <       folio_get(folio);
-> > <       folio_add_file_rmap_pmd(folio, page, vma);
-> > <       add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
-> > ---
-> >>         if (page) {
-> >>                 folio = page_folio(page);
-> >>                 folio_get(folio);
-> >>                 folio_add_file_rmap_pmd(folio, page, vma);
-> >>                 add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
-> >>         }
-> 
-> We get the page from calling pfn_t_to_page(pfn). This is safe for the
-> DAX case but is it safe to use a page returned by this more generally?
+uevent_show() wants to de-reference dev->driver->name. There is no clean
+way for a device attribute to de-reference dev->driver unless that
+attribute is defined via (struct device_driver).dev_groups. Instead, the
+anti-pattern of taking the device_lock() in the attribute handler risks
+deadlocks with code paths that remove device attributes while holding
+the lock.
 
-Good question.  I thought it should work when the caller doesn't set any
-bit in PFN_FLAGS_MASK, but it turns out it's not the case?  As I just
-notice:
+This deadlock is typically invisible to lockdep given the device_lock()
+is marked lockdep_set_novalidate_class(), but some subsystems allocate a
+local lockdep key for @dev->mutex to reveal reports of the form:
 
-static inline bool pfn_t_has_page(pfn_t pfn)
-{
-	return (pfn.val & PFN_MAP) == PFN_MAP || (pfn.val & PFN_DEV) == 0;
-}
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 6.10.0-rc7+ #275 Tainted: G           OE    N
+ ------------------------------------------------------
+ modprobe/2374 is trying to acquire lock:
+ ffff8c2270070de0 (kn->active#6){++++}-{0:0}, at: __kernfs_remove+0xde/0x220
 
-So it looks like "no PFN_FLAGS" case should also fall into this category of
-"(pfn.val & PFN_DEV) == 0"..
+ but task is already holding lock:
+ ffff8c22016e88f8 (&cxl_root_key){+.+.}-{3:3}, at: device_release_driver_internal+0x39/0x210
 
-I'm not sure whether my understanding is correct, though.  Maybe we'd want
-to double check with pfn_valid() when it's a generic function.
+ which lock already depends on the new lock.
 
-> 
-> From an API perspective it would make more sense for the DAX code to
-> pass the page rather than the pfn. I didn't do that because device DAX
-> just had the PFN and this was DAX-specific code. But if we want to make
-> it generic I'd rather have callers pass the page in.
-> 
-> Of course that probably doesn't help you, because then the call would be
-> vmf_insert_page_pmd() rather than a raw pfn, but as you point out there
-> might be some common code we could share.
 
-It'll be fine if it needs page*, then it'll be NULL for VFIO.
+ the existing dependency chain (in reverse order) is:
 
-So far it looks cleaner if it has the pgtable entry anyway to me, as that
-indeed contains the pfn.  But I'd trust you more on what should it look
-like, as I didn't read the whole series here.
+ -> #1 (&cxl_root_key){+.+.}-{3:3}:
+        __mutex_lock+0x99/0xc30
+        uevent_show+0xac/0x130
+        dev_attr_show+0x18/0x40
+        sysfs_kf_seq_show+0xac/0xf0
+        seq_read_iter+0x110/0x450
+        vfs_read+0x25b/0x340
+        ksys_read+0x67/0xf0
+        do_syscall_64+0x75/0x190
+        entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-> 
-> >
-> > As most of the rest look very similar to what pfn injections would need..
-> > and in the PoC of ours we're using vmf_insert_pfn_pmd/pud().
-> 
-> Do you have the PoC posted anywhere so I can get an understanding of how
-> this might be used?
+ -> #0 (kn->active#6){++++}-{0:0}:
+        __lock_acquire+0x121a/0x1fa0
+        lock_acquire+0xd6/0x2e0
+        kernfs_drain+0x1e9/0x200
+        __kernfs_remove+0xde/0x220
+        kernfs_remove_by_name_ns+0x5e/0xa0
+        device_del+0x168/0x410
+        device_unregister+0x13/0x60
+        devres_release_all+0xb8/0x110
+        device_unbind_cleanup+0xe/0x70
+        device_release_driver_internal+0x1c7/0x210
+        driver_detach+0x47/0x90
+        bus_remove_driver+0x6c/0xf0
+        cxl_acpi_exit+0xc/0x11 [cxl_acpi]
+        __do_sys_delete_module.isra.0+0x181/0x260
+        do_syscall_64+0x75/0x190
+        entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-https://github.com/xzpeter/linux/commits/vfio-pfnmap-all/
+The observation though is that driver objects are typically much longer
+lived than device objects. It is reasonable to perform lockless
+de-reference of a @driver pointer even if it is racing detach from a
+device. Given the infrequency of driver unregistration, use
+synchronize_rcu() in module_remove_driver() to close any potential
+races.  It is potentially overkill to suffer synchronize_rcu() just to
+handle the rare module removal racing uevent_show() event.
 
-Specifically Alex's commit here:
+Thanks to Tetsuo Handa for the debug analysis of the syzbot report [1].
 
-https://github.com/xzpeter/linux/commit/afd05f1082bc78738e280f1fc1937da52b2572ed
+Fixes: c0a40097f0bc ("drivers: core: synchronize really_probe() and dev_uevent()")
+Reported-by: syzbot+4762dd74e32532cda5ff@syzkaller.appspotmail.com
+Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Closes: http://lore.kernel.org/5aa5558f-90a4-4864-b1b1-5d6784c5607d@I-love.SAKURA.ne.jp [1]
+Link: http://lore.kernel.org/669073b8ea479_5fffa294c1@dwillia2-xfh.jf.intel.com.notmuch
+Cc: stable@vger.kernel.org
+Cc: Ashish Sangwan <a.sangwan@samsung.com>
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/base/core.c   |   13 ++++++++-----
+ drivers/base/module.c |    4 ++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-Just a note that it's still work in progress.  Alex did run it through (not
-this tree, but an older one) and it works pretty well so far.
-
-I think it's because so far nothing involves the pfn flags, the only one
-has it involved is (taking pmd as example):
-
-insert_pfn_pmd():
-	if (!pmd_none(*pmd)) {
-		if (write) {
-			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
-				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
-				goto out_unlock;
-			}
-			entry = pmd_mkyoung(*pmd);
-			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
-			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
-				update_mmu_cache_pmd(vma, addr, pmd);
-		}
-
-		goto out_unlock;
-	}
-
-But for VFIO it'll definitely be pmd_none() here, so the whole path ignores
-pfn flags so far here, I assume.
-
-> 
-> > That also reminds me on whether it'll be easier to implement the new dax
-> > support for page struct on top of vmf_insert_pfn_pmd/pud, rather than
-> > removing the 1st then adding the new one.  Maybe it'll reduce code churns,
-> > and would that also make reviews easier?
-> 
-> Yeah, that's a good observation. I think it was just a quirk of how I
-> was developing this and also not caring about the PFN case so I'll see
-> what that looks like.
-
-Great!  I hope it'll reduce the diff for this series too, so it could be a
-win-win.
-
-Thanks,
-
--- 
-Peter Xu
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 2b4c0624b704..b5399262198a 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -25,6 +25,7 @@
+ #include <linux/mutex.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/netdevice.h>
++#include <linux/rcupdate.h>
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
+ #include <linux/string_helpers.h>
+@@ -2640,6 +2641,7 @@ static const char *dev_uevent_name(const struct kobject *kobj)
+ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+ {
+ 	const struct device *dev = kobj_to_dev(kobj);
++	struct device_driver *driver;
+ 	int retval = 0;
+ 
+ 	/* add device node properties if present */
+@@ -2668,8 +2670,12 @@ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+ 	if (dev->type && dev->type->name)
+ 		add_uevent_var(env, "DEVTYPE=%s", dev->type->name);
+ 
+-	if (dev->driver)
+-		add_uevent_var(env, "DRIVER=%s", dev->driver->name);
++	/* Synchronize with module_remove_driver() */
++	rcu_read_lock();
++	driver = READ_ONCE(dev->driver);
++	if (driver)
++		add_uevent_var(env, "DRIVER=%s", driver->name);
++	rcu_read_unlock();
+ 
+ 	/* Add common DT information about the device */
+ 	of_device_uevent(dev, env);
+@@ -2739,11 +2745,8 @@ static ssize_t uevent_show(struct device *dev, struct device_attribute *attr,
+ 	if (!env)
+ 		return -ENOMEM;
+ 
+-	/* Synchronize with really_probe() */
+-	device_lock(dev);
+ 	/* let the kset specific function add its keys */
+ 	retval = kset->uevent_ops->uevent(&dev->kobj, env);
+-	device_unlock(dev);
+ 	if (retval)
+ 		goto out;
+ 
+diff --git a/drivers/base/module.c b/drivers/base/module.c
+index a1b55da07127..b0b79b9c189d 100644
+--- a/drivers/base/module.c
++++ b/drivers/base/module.c
+@@ -7,6 +7,7 @@
+ #include <linux/errno.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/rcupdate.h>
+ #include "base.h"
+ 
+ static char *make_driver_name(struct device_driver *drv)
+@@ -97,6 +98,9 @@ void module_remove_driver(struct device_driver *drv)
+ 	if (!drv)
+ 		return;
+ 
++	/* Synchronize with dev_uevent() */
++	synchronize_rcu();
++
+ 	sysfs_remove_link(&drv->p->kobj, "module");
+ 
+ 	if (drv->owner)
 
