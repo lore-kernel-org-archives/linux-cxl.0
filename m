@@ -1,64 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2DF18EFF0
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 14:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9A918F2CC
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 14:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721053711; cv=none; b=bx+W2mMI27c0deRd0II7ga+v+0tmKgyCmshczftTjvDiGjtLIilwmFzJQCcIB/9WF4zr/9eYwf50FfGCgD9fmnNb+rYxlB/37DGeIMHLVFDkQC6mmVJv5IlUOQdW+HVE04AcrvYyUGbCRR/SuWvYDA6qyGilr5C0PT8LLpd9D1E=
+	t=1721053730; cv=none; b=BsyoSwZPy1Aodj14adzcPIb/snnWnMHTFeBrYr7KqvGR/qz8R0gwp1Ll231VPk0ReEVIU97zVsye4GxTS6IxmuyAe6tnIIc6j4K4U6Ee/gYH3wX0n0SdIHrB0W2MgYToSoafSTPT+GKtAE9wT3GESvuD3Jm9rZ0bL6IVnaKLifY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721053711; c=relaxed/simple;
+	s=arc-20240116; t=1721053730; c=relaxed/simple;
 	bh=9YXmWUifIXj3HU5m5pHEDjQYNCnD2zH1KTaBOm+AX2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=spezwbcJRJ1I0J4O8I0rPND5LjBK7nXjJzjNp2rOukfo79m2Xq+tj+jEaKRWdJDglH0FhT7eTGCcyxZPU/E1+c6BdpK+Hfs54fjzfcEaUUj7wtvJskpvIk6uJwO+VMAqqQaxjA0r4/LF675cmllsXbyFx4j7CN6kTyQowjKVmCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dAg0F9JB; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=JVHG0y2toHeEYf6K1k5d2PPJKshIuxlcR7w+9Gq8kOyb1CPyThF3XQEJyfzjWmYJweR8oS6k0HGwiROFYorcC1gR96xZfTeOnFw8z4ir8ilmuZ9JKu41AhvhLP4gc+495QKpdoPc8R5ZepP0Bg0acZafKXuT4G3uSCVIoOGCRbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eigDa2v0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAg0F9JB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eigDa2v0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721053708;
+	s=mimecast20190719; t=1721053727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=Q5W1KE42WuOYIQBeRTA987gly7BCI2Uoj3YSvsHDuLw=;
-	b=dAg0F9JBlpjPqw1v5xbx8oTvFjl2Vew1BPVzMeSl1UDhqIVHJukyGxxG4FjX+pq/HWvkxd
-	1yGdvs0x8X+BU8ztqLy0Ic4hXdSrrmlDS4cG9nWbQsFFAfm5sHS3EoFGQWNt4Pi1mGujCc
-	iI4UYxCLmKcHM0fdeURRjX1m6ZIItMY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	b=eigDa2v0Su1TqjJbDhmUPVgzfrCCPCzC+MmwrdnD9BTCzg4w8ZsgobsJOl8y77GjK/nsAL
+	tSwOUTTcNmB8A8NN9G46xILVfUrisLQ9QVQubvrVzvp1P2cK8YAfVUaQiGrEUvZj8hgK9N
+	nTAxMfw44kjSDTsSmZY3I97CUxwB1R8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-KgLqIJG3PpOKblmBLBjrnw-1; Mon, 15 Jul 2024 10:28:27 -0400
-X-MC-Unique: KgLqIJG3PpOKblmBLBjrnw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-426d0bead0aso32596585e9.1
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 07:28:27 -0700 (PDT)
+ us-mta-345-ID2DaX2ENoSs1Q8SqHRmPw-1; Mon, 15 Jul 2024 10:28:46 -0400
+X-MC-Unique: ID2DaX2ENoSs1Q8SqHRmPw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4266d0183feso28336535e9.0
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 07:28:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721053706; x=1721658506;
+        d=1e100.net; s=20230601; t=1721053725; x=1721658525;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=Q5W1KE42WuOYIQBeRTA987gly7BCI2Uoj3YSvsHDuLw=;
-        b=X1tvjE+/mwW9126SLEDcVXbdHp2sS3/DoTb3IWom1JXN39HU2w9r7QV6MJ1XLtZvl6
-         yd8XbER+2OhNBb1+/qpHC48VQ5A3q1DyBUAF7Pp8R5y+DaqlUQBfhyIMZWv/cLz5WU0P
-         EzbEZ2VRrapife2tlmHechYn84V/FLLyX589+n35mQG2azudlDg2DNvyfOfqru9f9FHn
-         vocwAjiWxcqAV6Lwp8A54ftsvCWrbRi/CeyKsHu3op7wWDRCMtaITNc9oHnx8NwJ9ghb
-         wa/0xDasRIX24kl9PUsFoSadRJvlwCXhRDpamKWeH+8RgEtCoLChyuojHj6nmGMgJ4BQ
-         iIyg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ZlyFHooDDvcuTdD3a5KkbvRXkzghvCFt/PncsPfkQFYQdqjyDjG5/PI1dASOuYkpZAE+LcTQATyodAYTir+rpI6eSBJQo9Ko
-X-Gm-Message-State: AOJu0YxSeV3L/RnQ/cQnF5C4BXdMTa/vH3TGSBgnsG8bhzPTMaBczgWv
-	DLsz66aERs89bXDNBt3Shq1oRxNRopSrH4eyQTTfx1UUaqwqhpe036vw4ktM09Jw8HiHm+ykNH5
-	mIrQyPUaJwN/dS7IVx95JEp1taR83p7NktBSaCLAUbCiV0kO3DhAE6f8ctQ==
-X-Received: by 2002:a05:600c:6541:b0:426:6364:c2c4 with SMTP id 5b1f17b1804b1-426707cf9c4mr109759775e9.14.1721053706156;
-        Mon, 15 Jul 2024 07:28:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkiSdAJsZ4KS92/uHf4ztmPgpbLaqjZGDB4NeQ2JUrQ2mgfwWqLJF/auE8r3dQQuDRKP7/4g==
-X-Received: by 2002:a05:600c:6541:b0:426:6364:c2c4 with SMTP id 5b1f17b1804b1-426707cf9c4mr109759545e9.14.1721053705704;
-        Mon, 15 Jul 2024 07:28:25 -0700 (PDT)
+        b=SZpfk/ySCJ3ZKPrmo64Ppz1o4fz+hOWVfd61OissxX4McbF38Rn78n6cqgO/RSpuy5
+         tWJP6i4cUQoF6jFrkEERwC702hif1ns6Q+68427D+jgLof77Vjmc/y+GbY/iFLHvUeGo
+         wmrd4mwgPiBs4Yt79sXkAVYcoVIB1jnoucYHsqysVtYXrUI3j+9e4zkm/UAz7sDH2Ew/
+         4Cmc3S+HEklIXk99kJLIG3wYFeQia0eUr4SOrAD4UcMDY1lZLDagBA9S4CnztuKUqr45
+         FzRqEDxJsoHt0P02l+VXdW8+oJDgjxfULXXTHJIomvrUhYYGXHf6iLqn72NgBaGs0d4J
+         cL9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXgaVcfioh5mVJJurYyNnGeBQUbnYhzoaz14UZfthmMtBgRCiRQnxI7SdNZragiAe1rCSOPVlYamdLPs5D2SG+RAXAlqUWf+z3R
+X-Gm-Message-State: AOJu0YxBKmtAcA6Ox1zwZdzQxsWhrn0ma22q58FZFMZkSoAO7c0y56YZ
+	W2WyzoGa4ZL9Kx1sq3s5sSv2tkVULsBQfDcbk4NHyvcjF3gynN1GVrqoyuvYciBAl2f30/la9Cx
+	b5rtYJmGj6y7rY4+MfTuUm2VZK8D7Bbgxzrl+gAUARP7z5jwN9p0WkAhkAw==
+X-Received: by 2002:a05:600c:54c3:b0:426:5440:854a with SMTP id 5b1f17b1804b1-426707cca09mr130783465e9.1.1721053725614;
+        Mon, 15 Jul 2024 07:28:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG60JwFIeCIkXmkvcbmjGNXrDQUTJH7EjzTXjvabqLtTv3joxiy0itkzIjjwhsh+XOiNJXIBw==
+X-Received: by 2002:a05:600c:54c3:b0:426:5440:854a with SMTP id 5b1f17b1804b1-426707cca09mr130783385e9.1.1721053725207;
+        Mon, 15 Jul 2024 07:28:45 -0700 (PDT)
 Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4793sm89451105e9.43.2024.07.15.07.28.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77a55sm89639475e9.10.2024.07.15.07.28.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 07:28:25 -0700 (PDT)
-Date: Mon, 15 Jul 2024 16:28:24 +0200
+        Mon, 15 Jul 2024 07:28:44 -0700 (PDT)
+Date: Mon, 15 Jul 2024 16:28:43 +0200
 From: Igor Mammedov <imammedo@redhat.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
@@ -70,7 +70,7 @@ Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
  <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
 Subject: Re: [PATCH v5 06/13] acpi/pci: Move Generic Initiator object
  handling into acpi/pci.*
-Message-ID: <20240715162824.6574fcd9@imammedo.users.ipa.redhat.com>
+Message-ID: <20240715162843.35f8dfe8@imammedo.users.ipa.redhat.com>
 In-Reply-To: <20240712110837.1439736-7-Jonathan.Cameron@huawei.com>
 References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
 	<20240712110837.1439736-7-Jonathan.Cameron@huawei.com>
