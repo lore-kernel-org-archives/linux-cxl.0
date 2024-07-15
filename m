@@ -1,184 +1,466 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F36D1755A;
-	Sun, 14 Jul 2024 16:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720975781; cv=fail; b=S1HO7GnJHfLU144KpykrFFQMInchjiXBmRuvGFbylkpnvQGhOCJToNlhinwtxKR6L3UgV466CqdqWxEg9NlsCZGtkOpxd5RaTAurYWg11cZGlvRZr/aBTGeUG9rgJk1Q7K3mg4sH73xW3IMWOj0xaIiIdtorGx1DXO4MeH9XW3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720975781; c=relaxed/simple;
-	bh=0NrCe2ep3GizlXyaOwwrJk0lXyOfUX2nfGo7VgDyH+I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Apkexq0i57nCtcQem8rwJsIxhishlG09gmvKJyHyz0I0KWyzPOh0uTviGeX9Q8LQ7oog9zozyTKllG+e9LFxc0j8cAxNtwNcmuWuAylznuqxchzS4XsikWmmEUOwZTFIKZfc6ToIvFLbjD2PfYlSY5ep4hgwOZQmpI25LbL2CKE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RuHROwi0; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2DF18EFF0
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 14:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721053711; cv=none; b=bx+W2mMI27c0deRd0II7ga+v+0tmKgyCmshczftTjvDiGjtLIilwmFzJQCcIB/9WF4zr/9eYwf50FfGCgD9fmnNb+rYxlB/37DGeIMHLVFDkQC6mmVJv5IlUOQdW+HVE04AcrvYyUGbCRR/SuWvYDA6qyGilr5C0PT8LLpd9D1E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721053711; c=relaxed/simple;
+	bh=9YXmWUifIXj3HU5m5pHEDjQYNCnD2zH1KTaBOm+AX2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=spezwbcJRJ1I0J4O8I0rPND5LjBK7nXjJzjNp2rOukfo79m2Xq+tj+jEaKRWdJDglH0FhT7eTGCcyxZPU/E1+c6BdpK+Hfs54fjzfcEaUUj7wtvJskpvIk6uJwO+VMAqqQaxjA0r4/LF675cmllsXbyFx4j7CN6kTyQowjKVmCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dAg0F9JB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RuHROwi0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720975780; x=1752511780;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=0NrCe2ep3GizlXyaOwwrJk0lXyOfUX2nfGo7VgDyH+I=;
-  b=RuHROwi0mEHIGpd7A4IPhNzUP6Tk2VZ2WSM5iCzUQFlNHNP5rbcjCmgI
-   vR0l54Vibxk6V7Epi4X8SgUgMY9fyiPxgX1cEcWfh6n4PUBCXMS+7txoF
-   GnHiQkj3Qj2CbANl970UMvjhlGolymDt+SjwRT47hqd/LGimf3bSPiwD9
-   Y/PO1CiIX0mOi7sbmNT3vnqlDXb3cwAiaaqVCbCwynG7UxyF4AzolLtwE
-   pTRb1JiW09r25unCfmD0qtxXOhhi4wFai1SWqgGOEoJM++1xDuywHSWyT
-   Cm3vtt2xoY1HetM4J9S27BBrz6hyTLsbKe6MhpFVxOBTswEP948yN7Fjt
-   A==;
-X-CSE-ConnectionGUID: CjuF1SU8TFSugECQdKYg9g==
-X-CSE-MsgGUID: ElP4r12vR4qpucVp2l+YbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="43767294"
-X-IronPort-AV: E=Sophos;i="6.09,208,1716274800"; 
-   d="scan'208";a="43767294"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2024 09:49:40 -0700
-X-CSE-ConnectionGUID: ykmWolzqSOeJ7fZ8poq83g==
-X-CSE-MsgGUID: ye0z89bKSLSG3mHFpnpT/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,208,1716274800"; 
-   d="scan'208";a="72614666"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Jul 2024 09:49:39 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 14 Jul 2024 09:49:38 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Sun, 14 Jul 2024 09:49:38 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sun, 14 Jul 2024 09:49:37 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CCfCkZiNxTqTjGpybifFl89RXyyEI2JOYqkMWEemK9kgjXe5JuOaG+esTXNT5Hjw1ux4IBRQsw00ZS0rF21SU9csNG75PicFechqlKUfTJ7HdBNNaU4LVQtVopxgu/xNwWRF/G4hhGiq3+tyKaE688gW9qCc+W/p16kICO/xNeoeIGBTVe7SorSTf18JYidqfx87prhzkv8XSDaH81ngr0V6HNKxCj4fxPE13Gx5KLMbQ3GxSEmJpKvmVHwTsq0kD68dnuPts1CVO8J3EGC1VccBfACEVK5DwZkSFkPJuSHuORoGSF8/tCHh8LEjjPER+d1A9uXHux4iNkPJ9rIyzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PEQdY7JLgOM5nbNuPKnQYT7aT3MMHPXSSm58TLbix5k=;
- b=kARFKt+kiklaKeTn2s/uSKI80nyzLQjYjwK7vr3xpYwB5GFaUyhS078GiCHyeIUhzm/deu6gvSSVqoGUaoCPFGZK6CkBZXK5rKGXrKjG9QFq6F94zC6NRmXL61wnnlVXelPjDY1Zq5qLXdRBqDkuugMkfb8cIBu981s4WhP00v0m/X6xs2VGHNG4PwWMpDgm95tiRHCHffKNFTpCwKnqwyLwB694XaWH0TqCC4O2F3Y6QJeoM3sgf1jH+6SfgKa4cN8xWJ4+n5yWSN033TbdQwa1bQO38/Sgo/N6fMKjE++NJuzVqUSC9DIbSZC225chErhy/bgO8ha345StGbtF8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB8211.namprd11.prod.outlook.com (2603:10b6:610:15f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.24; Sun, 14 Jul
- 2024 16:49:35 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7762.027; Sun, 14 Jul 2024
- 16:49:34 +0000
-Date: Sun, 14 Jul 2024 09:49:30 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <syzbot+4762dd74e32532cda5ff@syzkaller.appspotmail.com>, Tetsuo Handa
-	<penguin-kernel@i-love.sakura.ne.jp>, <stable@vger.kernel.org>, "Ashish
- Sangwan" <a.sangwan@samsung.com>, Namjae Jeon <namjae.jeon@samsung.com>,
-	"Dirk Behme" <dirk.behme@de.bosch.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] driver core: Fix uevent_show() vs driver detach race
-Message-ID: <66940199e8592_8f74d294a0@dwillia2-xfh.jf.intel.com.notmuch>
-References: <172081332794.577428.9738802016494057132.stgit@dwillia2-xfh.jf.intel.com>
- <2024071438-perceive-earache-db11@gregkh>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2024071438-perceive-earache-db11@gregkh>
-X-ClientProxiedBy: MW4PR03CA0318.namprd03.prod.outlook.com
- (2603:10b6:303:dd::23) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAg0F9JB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721053708;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5W1KE42WuOYIQBeRTA987gly7BCI2Uoj3YSvsHDuLw=;
+	b=dAg0F9JBlpjPqw1v5xbx8oTvFjl2Vew1BPVzMeSl1UDhqIVHJukyGxxG4FjX+pq/HWvkxd
+	1yGdvs0x8X+BU8ztqLy0Ic4hXdSrrmlDS4cG9nWbQsFFAfm5sHS3EoFGQWNt4Pi1mGujCc
+	iI4UYxCLmKcHM0fdeURRjX1m6ZIItMY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-588-KgLqIJG3PpOKblmBLBjrnw-1; Mon, 15 Jul 2024 10:28:27 -0400
+X-MC-Unique: KgLqIJG3PpOKblmBLBjrnw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-426d0bead0aso32596585e9.1
+        for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 07:28:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721053706; x=1721658506;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q5W1KE42WuOYIQBeRTA987gly7BCI2Uoj3YSvsHDuLw=;
+        b=X1tvjE+/mwW9126SLEDcVXbdHp2sS3/DoTb3IWom1JXN39HU2w9r7QV6MJ1XLtZvl6
+         yd8XbER+2OhNBb1+/qpHC48VQ5A3q1DyBUAF7Pp8R5y+DaqlUQBfhyIMZWv/cLz5WU0P
+         EzbEZ2VRrapife2tlmHechYn84V/FLLyX589+n35mQG2azudlDg2DNvyfOfqru9f9FHn
+         vocwAjiWxcqAV6Lwp8A54ftsvCWrbRi/CeyKsHu3op7wWDRCMtaITNc9oHnx8NwJ9ghb
+         wa/0xDasRIX24kl9PUsFoSadRJvlwCXhRDpamKWeH+8RgEtCoLChyuojHj6nmGMgJ4BQ
+         iIyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ZlyFHooDDvcuTdD3a5KkbvRXkzghvCFt/PncsPfkQFYQdqjyDjG5/PI1dASOuYkpZAE+LcTQATyodAYTir+rpI6eSBJQo9Ko
+X-Gm-Message-State: AOJu0YxSeV3L/RnQ/cQnF5C4BXdMTa/vH3TGSBgnsG8bhzPTMaBczgWv
+	DLsz66aERs89bXDNBt3Shq1oRxNRopSrH4eyQTTfx1UUaqwqhpe036vw4ktM09Jw8HiHm+ykNH5
+	mIrQyPUaJwN/dS7IVx95JEp1taR83p7NktBSaCLAUbCiV0kO3DhAE6f8ctQ==
+X-Received: by 2002:a05:600c:6541:b0:426:6364:c2c4 with SMTP id 5b1f17b1804b1-426707cf9c4mr109759775e9.14.1721053706156;
+        Mon, 15 Jul 2024 07:28:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFkiSdAJsZ4KS92/uHf4ztmPgpbLaqjZGDB4NeQ2JUrQ2mgfwWqLJF/auE8r3dQQuDRKP7/4g==
+X-Received: by 2002:a05:600c:6541:b0:426:6364:c2c4 with SMTP id 5b1f17b1804b1-426707cf9c4mr109759545e9.14.1721053705704;
+        Mon, 15 Jul 2024 07:28:25 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4793sm89451105e9.43.2024.07.15.07.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 07:28:25 -0700 (PDT)
+Date: Mon, 15 Jul 2024 16:28:24 +0200
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <mst@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+ <qemu-devel@nongnu.org>, <ankita@nvidia.com>, <linuxarm@huawei.com>,
+ <linux-cxl@vger.kernel.org>, <marcel.apfelbaum@gmail.com>,
+ <philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>, Dave
+ Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, <eduardo@habkost.net>, Michael Roth
+ <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v5 06/13] acpi/pci: Move Generic Initiator object
+ handling into acpi/pci.*
+Message-ID: <20240715162824.6574fcd9@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20240712110837.1439736-7-Jonathan.Cameron@huawei.com>
+References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
+	<20240712110837.1439736-7-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8211:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc29cca7-c28e-4c14-0a07-08dca424f062
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5D8HxpbkJWGeoaaJnIiXX6ePOzXs5/osObPGtHOISYMMX7RBc9wimbwikQYZ?=
- =?us-ascii?Q?1mjib59yrhV5VE8ht6KrkiHLzrmma27Ne+FgnVdbiJZL4wzPTBvCZb5foN01?=
- =?us-ascii?Q?oElCpZOpE4QlcOSGiJz7DXYYGwMyBNloaMp7GpbR8S1UvqZQVr/XOEuCHk6c?=
- =?us-ascii?Q?NXu7cKbhYW2JI/s01yd7fe4DDX36luWheagT2Ton5qA+w8EIAkIHFI1TIyUL?=
- =?us-ascii?Q?qhX/V3eF8BLxYebZK8nkUF+V8BcEYeVBaeL7m5+ZcxBVVNTkajeHOszu3CxE?=
- =?us-ascii?Q?DL4pMCkm+iw6sGyQnF+DbdVuL1wwNUVSF9PrKfMQ0R5W/3X0kYYVDjdw0DBi?=
- =?us-ascii?Q?be7HLXDzRvHRBlSg8v8x5F06XB03QgR7Cp9y6uesYJSmCLntHU6SepQ5Y1gD?=
- =?us-ascii?Q?SdjgVpOLQ6vXlVU+/Kr7WU8yjH3r2h5OVfCtl1KHiPfqFWM9A7AaOHApQpfE?=
- =?us-ascii?Q?gyq6DGNDTxIUC4/QLjsq8DCQUEOkvzaQVzy/E8LDAwTytfZc5iyUFrE4GlXS?=
- =?us-ascii?Q?u12j079+G1mF0uXQQ/jR4iSqQQHqQIJF+rSygzfBgExzv2JSxhX5N8MhRDVx?=
- =?us-ascii?Q?+rsdiPkLCik0+HdtfVG3lWodm2PfCQ8VHggl/utDUVbsvvRde2jcYKLsG8Ns?=
- =?us-ascii?Q?lX74WiRhl0BvBRfZFVZm5er6LFxr7E7+i2U3SaRUmh1LXp5gMVviBBuQFgcm?=
- =?us-ascii?Q?skikn9/3o8T0SeuffGo0IHBpKtdojNc0RcNguIucjszEZngu/zBp/ptryUrR?=
- =?us-ascii?Q?EvNgA7PAGeBXn15LkhPxR6iP5uXMhyVHEDRANpFa6mnCgXJL7VdMOoj63TLL?=
- =?us-ascii?Q?jAyCZHZswn4+FiosAu41ZPFmMjk6GnXtH+kDLuNBAmWnQe2gRkT1FVdrGMf8?=
- =?us-ascii?Q?KHJoxZKk0pyxMfVjYZiaSsLqNxspyejbkOBXVR4ML6XgJCx/+PKdIxmIfjZK?=
- =?us-ascii?Q?YPRx3/Cb+8TKk7TPyRhgy6XM038bwpk/y6Kc13jqDLpWXv6yqjLjgM2DaU+q?=
- =?us-ascii?Q?7sxARKFkie9GowFT6oJuVk4slnPCnk9henxiQViqxHEOQwxdQVaXGHVMEctL?=
- =?us-ascii?Q?2CJT20wZA9FZEva12tdILYIfcDpa5ER8udKFGmjst/aXKbH1jC6EoTMKfIeT?=
- =?us-ascii?Q?ZU9BkZUt3JtekGZ4NljK+yxs6eTE5Gmnzmg1f38ro4B8o7FOlt7O1u6YbFlq?=
- =?us-ascii?Q?YFABJOpbBKb93BkKj6oiasaWF7OwJ6ZntAYK8wp3fe6rKssfFLnKt5RRaHh+?=
- =?us-ascii?Q?r4bVWAaXKfQ/hpVA8oSWWuTlwlUeYCX/aF196/2vgxksSOzqFvBdwRfYc9YP?=
- =?us-ascii?Q?y71wOrL0PmiIubWIVtjUH70QOvzqDMVbnLwFP1I05v1JNg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hvGfcxnqLFclbhMTtQEC2/a2MRNVfb2o2pw7c74735zIieRqgUZkX7h0Sxf+?=
- =?us-ascii?Q?kh1Nr2noGfqgNjGsBW+XD1pYj1U+Ucxh+TTkxBXnaysbpejimnLuj91t2Jef?=
- =?us-ascii?Q?Ci/IzmvrK9SNieUE2lCCL+OxI5UgoK2c91HUCTs58CvJ2w6tHKcNc+LqiamP?=
- =?us-ascii?Q?EIY/cenVmrmql/KFVi/8lcNAZOImy5V1O9/LtuN20G6wLTjSTZhtyWS0JSdO?=
- =?us-ascii?Q?qu4EyqHay1SwWM5iWcU4uBEessZd2r/8dXvaKxelCoSxeR25n4kMzu8TW1Hb?=
- =?us-ascii?Q?gnrIE4YjICrBBycc9AkGYxGWXqjUnaLnCSm7nyOBH81qd8mtTfF5yRhpCUfh?=
- =?us-ascii?Q?HH31OYySzXhs4b8IAdeT2JfrzupXSoZ8uXk89kC48lueD4vBmJ6yDCicrZO3?=
- =?us-ascii?Q?Mqar/++yBxaOkWR+IpkTrMfQy/ipYF7aCtY8CU/M/YZDuIJzjftoLzy5PBoO?=
- =?us-ascii?Q?+z4QawKPGhPHsBTBr3IASvbzEKsuAUCx0mK5p6gd4nLMUiWlaRnxQBu/s31o?=
- =?us-ascii?Q?vKqGoV9PWb0o2z78m4ddi4eCBpFfZ537MrSjcACyNxQ08VAi6Iudj03hQS8N?=
- =?us-ascii?Q?stshTRX7IF+YVAUuZ8WZR4TQ5AVX/n6ILM48yu9UcFKqACJde8Xpcjyh7d9S?=
- =?us-ascii?Q?IYT6Fd+9PN1J7HRoeNxrhwqHnEfD22B2izgz2+R7BkVZzoOrVygqslnkXToj?=
- =?us-ascii?Q?0hI+Xe4/t5YtHl1BZ0tiwjA638kX7Lz46pK2qejde2RquhExGiEDnb4VdfiH?=
- =?us-ascii?Q?HhXSaKozCh5wMujGJGlEL7GBBjW5dJJIhlR+WwI4iVnpuOIcPjSIQ8du8+Fb?=
- =?us-ascii?Q?9RxuaT6JDagFCHdzQ3y/0pqRKB9AasHw4A75qa4AAgfQQUUiS5CIX5J24j6k?=
- =?us-ascii?Q?YlfFiRusgs3ghhekfcxKe3oTeL+a3WA/+srsVUR316nFT9Oz+216DfyJC/yC?=
- =?us-ascii?Q?TuPhFZxWu7jlclNtkFS2cLp4M9MOgvCOvlq1HXsM+nJOv5dv2Zh/MBCBzaZy?=
- =?us-ascii?Q?It90QfeOg+3lzEqkJix36LViUkVIT6MISQ+oXVROAh0rgisf/H4YnNed+cQl?=
- =?us-ascii?Q?G32AJanbOJh5ilnK2xaa16+o8ONOESMiX61Nk2TkivDx74oPRdA466bZ2wV+?=
- =?us-ascii?Q?Sf2qpxW9VFXHBocNvUmOTSgxAhRBoDJHF+gUPXfIJD/mYTpfuJut2SNNGGcj?=
- =?us-ascii?Q?dmwD8ocU5p+QTmDjBC23yGnogj+9s/6zzqXs7geKFch1PMahuETMbLj1F/li?=
- =?us-ascii?Q?9P9olEPAex5YygG+zxNCltYlQeVDwb+gNIuLhK5JF0u9d49dDbCOh0YXrJ3h?=
- =?us-ascii?Q?31ZqPV6zyp9UwrIZtGob0D/cb8rvrjld+iv7NG1jRhI1KGj1UdX0tDUY593z?=
- =?us-ascii?Q?MRZo8bwexD6DfibBN9dhl4FyuEH4lCY89vPeVZkKD/0SjwGPAqUvqyp3UQ0x?=
- =?us-ascii?Q?XAZeyQgwvyvti5hEzKk2Cgg7tuPqbLS/bX7FWYf/QvfeBdmzQsiSTo4qug2b?=
- =?us-ascii?Q?L1pPH43fybQN2zM/cHMl/4g46zBPMyr+9iUoE4cCPN1mBVrMbSlyRHLrYrXP?=
- =?us-ascii?Q?zGj6YuRv20zKY5iJ30MNaznO3kgPZQnUHnWMdMVsxQVbbWSOgkelAIcV7ZKp?=
- =?us-ascii?Q?SQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc29cca7-c28e-4c14-0a07-08dca424f062
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2024 16:49:33.9635
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fB+AZjSYxLVA5881+9ahqspSZB86tE1TmqdQsPAWb9JZeVvGB8/YNN95kamFMFlMW6hqW4wfMU/apksw3C2aJLwd+SbI7ILyMuzEEmhTXf0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8211
-X-OriginatorOrg: intel.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Greg KH wrote:
-[..]
-> It's a lot of work for a "simple" thing of just "tell userspace what
-> happened" type of thing.  But it makes sense.
+On Fri, 12 Jul 2024 12:08:10 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+
+> Whilst ACPI SRAT Generic Initiator Afinity Structures are able to refer to
+> both PCI and ACPI Device Handles, the QEMU implementation only implements
+> the PCI Device Handle case.  For now move the code into the existing
+> hw/acpi/pci.c file and header.  If support for ACPI Device Handles is
+> added in the future, perhaps this will be moved again.
 > 
-> I'll queue this up after -rc1 is out, there's no rush before then as
-> it's only lockdep warnings happening now, right?
+> Also push the struct AcpiGenericInitiator down into the c file as not
+> used outside pci.c.
+> 
+> Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> Tested-by: "Huang, Ying" <ying.huang@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Right, only theoretical lockup reports so far, no rush that I can see.
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+
+> 
+> ---
+> v5: Carry forward changes from previous patch.
+>     Move the TYPE_ACPI_GENERIC_INTIATOR define down into the c file
+>     along with include qom/object_interfaces.h
+> ---
+>  include/hw/acpi/acpi_generic_initiator.h |  24 -----
+>  include/hw/acpi/pci.h                    |   3 +
+>  hw/acpi/acpi_generic_initiator.c         | 120 ----------------------
+>  hw/acpi/pci.c                            | 124 +++++++++++++++++++++++
+>  hw/arm/virt-acpi-build.c                 |   1 -
+>  hw/i386/acpi-build.c                     |   1 -
+>  hw/acpi/meson.build                      |   1 -
+>  7 files changed, 127 insertions(+), 147 deletions(-)
+> 
+> diff --git a/include/hw/acpi/acpi_generic_initiator.h b/include/hw/acpi/acpi_generic_initiator.h
+> deleted file mode 100644
+> index 7b98676713..0000000000
+> --- a/include/hw/acpi/acpi_generic_initiator.h
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> - */
+> -
+> -#ifndef ACPI_GENERIC_INITIATOR_H
+> -#define ACPI_GENERIC_INITIATOR_H
+> -
+> -#include "qom/object_interfaces.h"
+> -
+> -#define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+> -
+> -typedef struct AcpiGenericInitiator {
+> -    /* private */
+> -    Object parent;
+> -
+> -    /* public */
+> -    char *pci_dev;
+> -    uint16_t node;
+> -} AcpiGenericInitiator;
+> -
+> -void build_srat_generic_pci_initiator(GArray *table_data);
+> -
+> -#endif
+> diff --git a/include/hw/acpi/pci.h b/include/hw/acpi/pci.h
+> index 467a99461c..3015a8171c 100644
+> --- a/include/hw/acpi/pci.h
+> +++ b/include/hw/acpi/pci.h
+> @@ -40,4 +40,7 @@ Aml *aml_pci_device_dsm(void);
+>  
+>  void build_append_pci_bus_devices(Aml *parent_scope, PCIBus *bus);
+>  void build_pci_bridge_aml(AcpiDevAmlIf *adev, Aml *scope);
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data);
+> +
+>  #endif
+> diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
+> deleted file mode 100644
+> index 365feb527f..0000000000
+> --- a/hw/acpi/acpi_generic_initiator.c
+> +++ /dev/null
+> @@ -1,120 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
+> - */
+> -
+> -#include "qemu/osdep.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+> -#include "hw/acpi/aml-build.h"
+> -#include "hw/boards.h"
+> -#include "hw/pci/pci_device.h"
+> -#include "qemu/error-report.h"
+> -#include "qapi/error.h"
+> -
+> -typedef struct AcpiGenericInitiatorClass {
+> -    ObjectClass parent_class;
+> -} AcpiGenericInitiatorClass;
+> -
+> -OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
+> -                   ACPI_GENERIC_INITIATOR, OBJECT,
+> -                   { TYPE_USER_CREATABLE },
+> -                   { NULL })
+> -
+> -OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
+> -
+> -static void acpi_generic_initiator_init(Object *obj)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    gi->node = MAX_NODES;
+> -    gi->pci_dev = NULL;
+> -}
+> -
+> -static void acpi_generic_initiator_finalize(Object *obj)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    g_free(gi->pci_dev);
+> -}
+> -
+> -static void acpi_generic_initiator_set_pci_device(Object *obj, const char *val,
+> -                                                  Error **errp)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -
+> -    gi->pci_dev = g_strdup(val);
+> -}
+> -
+> -static void acpi_generic_initiator_set_node(Object *obj, Visitor *v,
+> -                                            const char *name, void *opaque,
+> -                                            Error **errp)
+> -{
+> -    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> -    MachineState *ms = MACHINE(qdev_get_machine());
+> -    uint32_t value;
+> -
+> -    if (!visit_type_uint32(v, name, &value, errp)) {
+> -        return;
+> -    }
+> -
+> -    if (value >= MAX_NODES) {
+> -        error_printf("%s: Invalid NUMA node specified\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR);
+> -        exit(1);
+> -    }
+> -
+> -    gi->node = value;
+> -    ms->numa_state->nodes[gi->node].has_gi = true;
+> -}
+> -
+> -static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
+> -{
+> -    object_class_property_add_str(oc, "pci-dev", NULL,
+> -        acpi_generic_initiator_set_pci_device);
+> -    object_class_property_add(oc, "node", "int", NULL,
+> -        acpi_generic_initiator_set_node, NULL, NULL);
+> -}
+> -
+> -static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> -{
+> -    MachineState *ms = MACHINE(qdev_get_machine());
+> -    AcpiGenericInitiator *gi;
+> -    GArray *table_data = opaque;
+> -    int32_t devfn;
+> -    uint8_t bus;
+> -    Object *o;
+> -
+> -    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> -        return 0;
+> -    }
+> -
+> -    gi = ACPI_GENERIC_INITIATOR(obj);
+> -    if (gi->node >= ms->numa_state->num_nodes) {
+> -        error_printf("%s: Specified node %d is invalid.\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR, gi->node);
+> -        exit(1);
+> -    }
+> -
+> -    o = object_resolve_path_type(gi->pci_dev, TYPE_PCI_DEVICE, NULL);
+> -    if (!o) {
+> -        error_printf("%s: Specified device must be a PCI device.\n",
+> -                     TYPE_ACPI_GENERIC_INITIATOR);
+> -        exit(1);
+> -    }
+> -
+> -    bus = object_property_get_uint(o, "busnr", &error_fatal);
+> -    devfn = object_property_get_int(o, "addr", &error_fatal);
+> -    /* devfn is constrained in PCI to be 8 bit but storage is an int32_t */
+> -    assert(devfn >= 0 && devfn < PCI_DEVFN_MAX);
+> -
+> -    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> -
+> -    return 0;
+> -}
+> -
+> -void build_srat_generic_pci_initiator(GArray *table_data)
+> -{
+> -    object_child_foreach_recursive(object_get_root(),
+> -                                   build_acpi_generic_initiator,
+> -                                   table_data);
+> -}
+> diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
+> index 20b70dcd81..3e1db161cc 100644
+> --- a/hw/acpi/pci.c
+> +++ b/hw/acpi/pci.c
+> @@ -24,8 +24,13 @@
+>   */
+>  
+>  #include "qemu/osdep.h"
+> +#include "qemu/error-report.h"
+> +#include "qom/object_interfaces.h"
+> +#include "qapi/error.h"
+> +#include "hw/boards.h"
+>  #include "hw/acpi/aml-build.h"
+>  #include "hw/acpi/pci.h"
+> +#include "hw/pci/pci_device.h"
+>  #include "hw/pci/pcie_host.h"
+>  
+>  /*
+> @@ -59,3 +64,122 @@ void build_mcfg(GArray *table_data, BIOSLinker *linker, AcpiMcfgInfo *info,
+>  
+>      acpi_table_end(linker, &table);
+>  }
+> +
+> +typedef struct AcpiGenericInitiator {
+> +    /* private */
+> +    Object parent;
+> +
+> +    /* public */
+> +    char *pci_dev;
+> +    uint16_t node;
+> +} AcpiGenericInitiator;
+> +
+> +typedef struct AcpiGenericInitiatorClass {
+> +    ObjectClass parent_class;
+> +} AcpiGenericInitiatorClass;
+> +
+> +#define TYPE_ACPI_GENERIC_INITIATOR "acpi-generic-initiator"
+> +
+> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericInitiator, acpi_generic_initiator,
+> +                   ACPI_GENERIC_INITIATOR, OBJECT,
+> +                   { TYPE_USER_CREATABLE },
+> +                   { NULL })
+> +
+> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericInitiator, ACPI_GENERIC_INITIATOR)
+> +
+> +static void acpi_generic_initiator_init(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->node = MAX_NODES;
+> +    gi->pci_dev = NULL;
+> +}
+> +
+> +static void acpi_generic_initiator_finalize(Object *obj)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    g_free(gi->pci_dev);
+> +}
+> +
+> +static void acpi_generic_initiator_set_pci_device(Object *obj, const char *val,
+> +                                                  Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +
+> +    gi->pci_dev = g_strdup(val);
+> +}
+> +
+> +static void acpi_generic_initiator_set_node(Object *obj, Visitor *v,
+> +                                            const char *name, void *opaque,
+> +                                            Error **errp)
+> +{
+> +    AcpiGenericInitiator *gi = ACPI_GENERIC_INITIATOR(obj);
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    uint32_t value;
+> +
+> +    if (!visit_type_uint32(v, name, &value, errp)) {
+> +        return;
+> +    }
+> +
+> +    if (value >= MAX_NODES) {
+> +        error_printf("%s: Invalid NUMA node specified\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    gi->node = value;
+> +    ms->numa_state->nodes[gi->node].has_gi = true;
+> +}
+> +
+> +static void acpi_generic_initiator_class_init(ObjectClass *oc, void *data)
+> +{
+> +    object_class_property_add_str(oc, "pci-dev", NULL,
+> +        acpi_generic_initiator_set_pci_device);
+> +    object_class_property_add(oc, "node", "int", NULL,
+> +        acpi_generic_initiator_set_node, NULL, NULL);
+> +}
+> +
+> +static int build_acpi_generic_initiator(Object *obj, void *opaque)
+> +{
+> +    MachineState *ms = MACHINE(qdev_get_machine());
+> +    AcpiGenericInitiator *gi;
+> +    GArray *table_data = opaque;
+> +    int32_t devfn;
+> +    uint8_t bus;
+> +    Object *o;
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_INITIATOR)) {
+> +        return 0;
+> +    }
+> +
+> +    gi = ACPI_GENERIC_INITIATOR(obj);
+> +    if (gi->node >= ms->numa_state->num_nodes) {
+> +        error_printf("%s: Specified node %d is invalid.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR, gi->node);
+> +        exit(1);
+> +    }
+> +
+> +    o = object_resolve_path_type(gi->pci_dev, TYPE_PCI_DEVICE, NULL);
+> +    if (!o) {
+> +        error_printf("%s: Specified device must be a PCI device.\n",
+> +                     TYPE_ACPI_GENERIC_INITIATOR);
+> +        exit(1);
+> +    }
+> +
+> +    bus = object_property_get_uint(o, "busnr", &error_fatal);
+> +    devfn = object_property_get_uint(o, "addr", &error_fatal);
+> +    /* devfn is constrained in PCI to be 8 bit but storage is an int32_t */
+> +    assert(devfn >= 0 && devfn < PCI_DEVFN_MAX);
+> +
+> +    build_srat_pci_generic_initiator(table_data, gi->node, 0, bus, devfn);
+> +
+> +    return 0;
+> +}
+> +
+> +void build_srat_generic_pci_initiator(GArray *table_data)
+> +{
+> +    object_child_foreach_recursive(object_get_root(),
+> +                                   build_acpi_generic_initiator,
+> +                                   table_data);
+> +}
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index e10cad86dd..a50b00b7c1 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -57,7 +57,6 @@
+>  #include "migration/vmstate.h"
+>  #include "hw/acpi/ghes.h"
+>  #include "hw/acpi/viot.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+>  #include "hw/virtio/virtio-acpi.h"
+>  #include "target/arm/multiprocessing.h"
+>  
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index f4e366f64f..ee92783836 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -68,7 +68,6 @@
+>  #include "hw/acpi/utils.h"
+>  #include "hw/acpi/pci.h"
+>  #include "hw/acpi/cxl.h"
+> -#include "hw/acpi/acpi_generic_initiator.h"
+>  
+>  #include "qom/qom-qobject.h"
+>  #include "hw/i386/amd_iommu.h"
+> diff --git a/hw/acpi/meson.build b/hw/acpi/meson.build
+> index fa5c07db90..5441c9b1e4 100644
+> --- a/hw/acpi/meson.build
+> +++ b/hw/acpi/meson.build
+> @@ -1,6 +1,5 @@
+>  acpi_ss = ss.source_set()
+>  acpi_ss.add(files(
+> -  'acpi_generic_initiator.c',
+>    'acpi_interface.c',
+>    'aml-build.c',
+>    'bios-linker-loader.c',
+
