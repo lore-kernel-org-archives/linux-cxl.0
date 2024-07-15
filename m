@@ -1,481 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C201818EFE5
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 14:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B544D5BD;
+	Mon, 15 Jul 2024 17:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721054930; cv=none; b=uFGAPsfxu6NiUYm76j4w0670NZ0uDi4K9h/h6b+vuo/eXUhyLuBnKC2SMCxCKGCLbPAbd7kiQmmFaQNnNCRsEx4AEegX/5JoS/Uh53VsnPCDV8cfHIAONS5SnRTT6hr9ro+6Lp2O9MtsFWkPD5dzCR8dXDrK5nCZVZxtrQ98Dvk=
+	t=1721064109; cv=none; b=qzPqEnQDSsuYxQmME/Bv5yOj28oC+6gRV76QDfeg7CMhnx3kKlZs9yVDI9fRENPfSwW8mIPv9k/69FHKKmKkfAAUtHk1hjoLeJZcoXBG7Dw9WDkEI3SxN7XcsHNiYns6E/uYAZAizTaPc9JYQb262UFNb9+DgIXXDOjaekLmMO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721054930; c=relaxed/simple;
-	bh=a1VXZBgcfxxtf/8aazM2YcCne/Y26qC+iji1nxTTwE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BYWZGJnUvA0MOe3i49o66s1GoeZ5G8ZQW/9YY9h89sEVrzkj2Ir20EOhyWzNqEjeH5ELyVBRwkhucz6LQA4HfxCofaBitFuYhD841d5TJHGviWI+GC+6iwDg4EZiZfJA0LwOu/UAXFCan0U/vDl4kR8sr3Rd7VJx1m+sU50RPtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eNe7ALSG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721064109; c=relaxed/simple;
+	bh=M4qDMU3Hq3kx+y4SC+whQpJUYyfwWTVo+aynzafuUHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVdO9TNfCXBsWGKXLfx/zULaL+QUyYzLamrbScdeNbfuEQwOJZNl6jJdjhaATNC0QAI6ZyBJaD/hY/2wetWGRfbVMmrNmXInKvUpnU5rPJbcZ05C2ZmV1+pt10NJveyj/jc13+XI9Q0FUJ5zmsgpfLHJJlIxHntv1Vn6DE54VBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ti+72qJA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eNe7ALSG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721054927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8hjOBwScs6Y159MlmdMvnyA8iJHd/1eRdc8iKf3WuJg=;
-	b=eNe7ALSGHErDyHnHizI04YacDMcLXbVUQwW3r4mEiYGBXETnADuIAqcq1pW78CwLzO388C
-	/+ERLOpaV3bWkZNXk0S9PPmaDSTzqD05UGV9YKhlzToR2ef0muzsy/dQolgLjZGbtwRf77
-	NYJtzPo5baPCy8b2pAggnGPQi87VYuY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-510-xk3dvcYkNfWTmCLB53lMlQ-1; Mon, 15 Jul 2024 10:48:44 -0400
-X-MC-Unique: xk3dvcYkNfWTmCLB53lMlQ-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3678e523e32so4363289f8f.1
-        for <linux-cxl@vger.kernel.org>; Mon, 15 Jul 2024 07:48:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721054923; x=1721659723;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8hjOBwScs6Y159MlmdMvnyA8iJHd/1eRdc8iKf3WuJg=;
-        b=T5to//bIdFmgOEa5x0GJSiNNI7efcQjs8du5JYKfDw8hftU61HugwAXXJTDXORMAPX
-         ZZuOYUD5YLSDGOsFG4VFUKD3IE/ePAHqh4thEXGygWhjltM4kVEKqcIDrITuI1fac620
-         KWoBwkUaXgMUk01+CX/0dX/C9TMS/evCkhYjPf25FP0/oC/+YhCbG91jtMhdy7gotiuw
-         /WiIqgpb2YAwey+QNGo5OkYAuYAgkmaA1OcNEsiarHRgok9U+3mK9bvJVZLVHZJIYjaK
-         Zpd4HxWVt5O3YWkUixRobsNplmhCSpAuuhRrM5zrRVTDAL5R41V+r/NdR3Wp7E2rJBMw
-         sjpA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0JiQYznuhYT7csb8QQAe+r/FhRCd5aRtfXgjpOl/x/Mk8DIvjZY9o+shZ9zsXdaJhzVegFzpvHIuRDG8c6rn1zl8SErIVzm1H
-X-Gm-Message-State: AOJu0YyQRAR+BK3D4UhRpRwH6LG3ciqmEVjiJzjl6YF4N7vExE6HHtzr
-	9dqM7tOlKonRGxuaBlb4Hd9/OgIMzyrvoph/ka+6L3LsVr5ZAaRvKtaxHQwh4EiERYnejgCMDk1
-	TYrHA8g/0cAHG6Cnf5u8r2tcHx2te/lCo0bMHOvcc1q0Zbtq536iPRv7LqA==
-X-Received: by 2002:a5d:4cd2:0:b0:367:9801:9c67 with SMTP id ffacd0b85a97d-367cead15c3mr15919211f8f.48.1721054923010;
-        Mon, 15 Jul 2024 07:48:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvo1BL8O24IggWGu4Fjt3lZuBhXRP2ZXF0fOsIrWPscfm99RTZvhO2hWCDAZCq3gWRZTWsng==
-X-Received: by 2002:a5d:4cd2:0:b0:367:9801:9c67 with SMTP id ffacd0b85a97d-367cead15c3mr15919178f8f.48.1721054922582;
-        Mon, 15 Jul 2024 07:48:42 -0700 (PDT)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm91062235e9.9.2024.07.15.07.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 07:48:42 -0700 (PDT)
-Date: Mon, 15 Jul 2024 16:48:41 +0200
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Markus Armbruster
- <armbru@redhat.com>
-Cc: <mst@redhat.com>, <qemu-devel@nongnu.org>, <ankita@nvidia.com>,
- <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>,
- <marcel.apfelbaum@gmail.com>, <philmd@linaro.org>, Richard Henderson
- <richard.henderson@linaro.org>, Dave Jiang <dave.jiang@intel.com>, Huang
- Ying <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
- <eduardo@habkost.net>, Michael Roth <michael.roth@amd.com>, Ani Sinha
- <anisinha@redhat.com>
-Subject: Re: [PATCH v5 10/13] hw/acpi: Generic Port Affinity Structure
- support
-Message-ID: <20240715164841.1979fdea@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20240712110837.1439736-11-Jonathan.Cameron@huawei.com>
-References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
-	<20240712110837.1439736-11-Jonathan.Cameron@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ti+72qJA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E65CC32782;
+	Mon, 15 Jul 2024 17:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721064109;
+	bh=M4qDMU3Hq3kx+y4SC+whQpJUYyfwWTVo+aynzafuUHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ti+72qJAmoeHrwIXCoFgfFRT+GueF1MvYq0ladD08zsp6iD7ujiP8iqWRW+9Lmyez
+	 /rhYrrau2gfBtC5wP3Skg1HlscbJSBuoh+mhi/w+f+CEcT06cMXdAwA4JDFaAucVsC
+	 HtSDcO1EVSiGYVQRf3aTo9jvNzA6MtUJLsHabspDW76+wlnuxyOUKG38EyeJS5oRe/
+	 HGlyZK1++TBstxocf+Cl5jaW8sDxqRC+I1XOZpqHfgcPkRyF6lzPnMzeC9GPYz4dsi
+	 TKPYv/U3gCIXKEOGL04YJwdQSJOB6WmgC/lL6cLbGw6SZx59tcrHCDqNXziUV87dgq
+	 /w+rT5POzzPBw==
+Date: Mon, 15 Jul 2024 10:21:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Woodhouse <dwmw2@infradead.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+	David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+	Jerome Glisse <jglisse@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
+Message-ID: <202407151005.15C1D4C5E8@keescook>
+References: <Zo_zivacyWmBuQcM@wunner.de>
+ <66901b646bd44_1a7742941d@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZpOPgcXU6eNqEB7M@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZpOPgcXU6eNqEB7M@wunner.de>
 
-On Fri, 12 Jul 2024 12:08:14 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Sun, Jul 14, 2024 at 10:42:41AM +0200, Lukas Wunner wrote:
+> It's probably too early to decide which actions to take if a device fails
+> authentication, whether to offer a variety of actions (only prevent driver
+> binding) or just stick to the harshest one (firewall off the device),
+> when to perform those actions and which knobs to offer to users for
+> controlling policy and overriding actions.  We may need more real-world
+> experience before we can make those decisions and we may need to ask
+> security folks such as Kees Cook and Jann Horn for their perspective.
 
-> These are very similar to the recently added Generic Initiators
-> but instead of representing an initiator of memory traffic they
-> represent an edge point beyond which may lie either targets or
-> initiators.  Here we add these ports such that they may
-> be targets of hmat_lb records to describe the latency and
-> bandwidth from host side initiators to the port.  A discoverable
-> mechanism such as UEFI CDAT read from CXL devices and switches
-> is used to discover the remainder of the path, and the OS can build
-> up full latency and bandwidth numbers as need for work and data
-> placement decisions.
-> 
-> Acked-by: Markus Armbruster <armbru@redhat.com>
-> Tested-by: "Huang, Ying" <ying.huang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I don't know PCI internals well enough to have any actionable opinion on
+many of the aspects of this thread, but I can try to give my perspective
+on the mitigation behavior at least.
 
-ACPI tables generation LGTM
-As for the rest my review is perfunctory mostly.
+My main observation is that the CC threat model of "we can't trust what
+is attached to the bus" is an extremely high bar, and is not the common
+threat model for most deployments.
 
-> ---
-> v5: Push the definition of TYPE_ACPI_GENERIC_PORT down into the
->     c file (similar to TYPE_ACPI_GENERIC_INITIATOR in earlier patch)
-> ---
->  qapi/qom.json                       |  34 +++++++++
->  include/hw/acpi/aml-build.h         |   4 +
->  include/hw/acpi/pci.h               |   2 +-
->  include/hw/pci/pci_bridge.h         |   1 +
->  hw/acpi/aml-build.c                 |  40 ++++++++++
->  hw/acpi/pci.c                       | 112 +++++++++++++++++++++++++++-
->  hw/arm/virt-acpi-build.c            |   2 +-
->  hw/i386/acpi-build.c                |   2 +-
->  hw/pci-bridge/pci_expander_bridge.c |   1 -
->  9 files changed, 193 insertions(+), 5 deletions(-)
-> 
-> diff --git a/qapi/qom.json b/qapi/qom.json
-> index 8e75a419c3..b97c031b73 100644
-> --- a/qapi/qom.json
-> +++ b/qapi/qom.json
-> @@ -838,6 +838,38 @@
->    'data': { 'pci-dev': 'str',
->              'node': 'uint32' } }
->  
-> +##
-> +# @AcpiGenericPortProperties:
-> +#
-> +# Properties for acpi-generic-port objects.
-> +#
-> +# @pci-bus: QOM path of the PCI bus of the hostbridge associated with
-> +#     this SRAT Generic Port Affinity Structure.  This is the same as
-> +#     the bus parameter for the root ports attached to this host
-> +#     bridge.  The resulting SRAT Generic Port Affinity Structure will
-> +#     refer to the ACPI object in DSDT that represents the host bridge
-> +#     (e.g.  ACPI0016 for CXL host bridges).  See ACPI 6.5 Section
-> +#     5.2.16.7 for more information.
-> +#
+As such, it seems like any associated behaviors need to defer to common
+deployments. It may just be as simple as making it a Kconfig option. That
+said, the best practice for such specialized behaviors is actually best
+put behind a static branch so that distros can able a given feature
+without making it on by default. (e.g. see the randomize_kstack_offset
+boot param[1].) Given the "module or builtin" question, I would expect
+this will end up being strictly a Kconfig, though.
 
-> +# @node: Similar to a NUMA node ID, but instead of providing a
-> +#     reference point used for defining NUMA distances and access
-> +#     characteristics to memory or from an initiator (e.g. CPU), this
-> +#     node defines the boundary point between non-discoverable system
-> +#     buses which must be described by firmware, and a discoverable
-> +#     bus.  NUMA distances and access characteristics are defined to
-> +#     and from that point.  For system software to establish full
-> +#     initiator to target characteristics this information must be
-> +#     combined with information retrieved from the discoverable part
-> +#     of the path.  An example would use CDAT (see UEFI.org)
-> +#     information read from devices and switches in conjunction with
-> +#     link characteristics read from PCIe Configuration space.
+Anyway, following the threat model, it doesn't seem like half measures
+make any sense. If the threat model is "we cannot trust bus members" and
+authentication is being used to establish trust, then anything else must
+be explicitly excluded. If this can only be done via the described
+firewalling, then that really does seem to be the right choice.
 
-you lost me here (even reading this several time doesn't help).
-Perhaps I lack specific domain knowledge, but is there a way to make it
-more comprehensible for layman?
+Now given what a high bar it is to not trust the bus, there are a lot of
+attack methodologies that likely need to be examined. For example, the
+bus has a different lifetime than the kernel, so it may be possible that
+members are attacking each other/the CPU/DMA etc, before Linux has even
+started running. If that can't be mitigated, then it doesn't matter what
+Linux is doing.
 
-> +#
-> +# Since: 9.1
-> +##
-> +{ 'struct': 'AcpiGenericPortProperties',
-> +  'data': { 'pci-bus': 'str',
-> +            'node': 'uint32' } }
-> +
->  ##
->  # @RngProperties:
->  #
-> @@ -1031,6 +1063,7 @@
->  { 'enum': 'ObjectType',
->    'data': [
->      'acpi-generic-initiator',
-> +    'acpi-generic-port',
->      'authz-list',
->      'authz-listfile',
->      'authz-pam',
-> @@ -1106,6 +1139,7 @@
->    'discriminator': 'qom-type',
->    'data': {
->        'acpi-generic-initiator':     'AcpiGenericInitiatorProperties',
-> +      'acpi-generic-port':          'AcpiGenericPortProperties',
->        'authz-list':                 'AuthZListProperties',
->        'authz-listfile':             'AuthZListFileProperties',
->        'authz-pam':                  'AuthZPAMProperties',
-> diff --git a/include/hw/acpi/aml-build.h b/include/hw/acpi/aml-build.h
-> index 33eef85791..9e30c735bb 100644
-> --- a/include/hw/acpi/aml-build.h
-> +++ b/include/hw/acpi/aml-build.h
-> @@ -490,6 +490,10 @@ void build_srat_pci_generic_initiator(GArray *table_data, int node,
->                                        uint16_t segment, uint8_t bus,
->                                        uint8_t devfn);
->  
-> +void build_srat_acpi_generic_port(GArray *table_data, int node,
-> +                                  const char *hid,
-> +                                  uint32_t uid);
-> +
->  void build_slit(GArray *table_data, BIOSLinker *linker, MachineState *ms,
->                  const char *oem_id, const char *oem_table_id);
->  
-> diff --git a/include/hw/acpi/pci.h b/include/hw/acpi/pci.h
-> index 3015a8171c..6359d574fd 100644
-> --- a/include/hw/acpi/pci.h
-> +++ b/include/hw/acpi/pci.h
-> @@ -41,6 +41,6 @@ Aml *aml_pci_device_dsm(void);
->  void build_append_pci_bus_devices(Aml *parent_scope, PCIBus *bus);
->  void build_pci_bridge_aml(AcpiDevAmlIf *adev, Aml *scope);
->  
-> -void build_srat_generic_pci_initiator(GArray *table_data);
-> +void build_srat_generic_affinity_structures(GArray *table_data);
->  
->  #endif
-> diff --git a/include/hw/pci/pci_bridge.h b/include/hw/pci/pci_bridge.h
-> index 5cd452115a..5456e24883 100644
-> --- a/include/hw/pci/pci_bridge.h
-> +++ b/include/hw/pci/pci_bridge.h
-> @@ -102,6 +102,7 @@ typedef struct PXBPCIEDev {
->      PXBDev parent_obj;
->  } PXBPCIEDev;
->  
-> +#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
->  #define TYPE_PXB_DEV "pxb"
->  OBJECT_DECLARE_SIMPLE_TYPE(PXBDev, PXB_DEV)
->  
-> diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
-> index 968b654e58..4067100dd6 100644
-> --- a/hw/acpi/aml-build.c
-> +++ b/hw/acpi/aml-build.c
-> @@ -1955,6 +1955,19 @@ static void build_append_srat_pci_device_handle(GArray *table_data,
->      build_append_int_noprefix(table_data, 0, 12);
->  }
->  
-> +static void build_append_srat_acpi_device_handle(GArray *table_data,
-> +                                                 const char *hid,
-> +                                                 uint32_t uid)
-> +{
-> +    assert(strlen(hid) == 8);
-> +    /* Device Handle - ACPI */
-> +    for (int i = 0; i < sizeof(hid); i++) {
-> +        build_append_int_noprefix(table_data, hid[i], 1);
-> +    }
-> +    build_append_int_noprefix(table_data, uid, 4);
-> +    build_append_int_noprefix(table_data, 0, 4);
-> +}
-> +
->  /*
->   * ACPI spec, Revision 6.3
->   * 5.2.16.6 Generic Initiator Affinity Structure
-> @@ -1982,6 +1995,33 @@ void build_srat_pci_generic_initiator(GArray *table_data, int node,
->      build_append_int_noprefix(table_data, 0, 4);
->  }
->  
-> +/*
-> + * ACPI spec, Revision 6.5
-> + * 5.2.16.7 Generic Port Affinity Structure
-> + *   With ACPI Device Handle.
-> + */
-> +void build_srat_acpi_generic_port(GArray *table_data, int node,
+This is why I've kind of tried to stay out of CC discussions: the threat
+models can be extremely hard to wrangle, and much of it depends on
+hardware design. :) I have enough to worry about just trying to protect
+the kernel from userspace. ;)
 
-shouldn't node be uint32_t?
+-Kees
 
-> +                                  const char *hid,
-> +                                  uint32_t uid)
-> +{
-> +    /* Type */
-> +    build_append_int_noprefix(table_data, 6, 1);
-> +    /* Length */
-> +    build_append_int_noprefix(table_data, 32, 1);
-> +    /* Reserved */
-> +    build_append_int_noprefix(table_data, 0, 1);
-> +    /* Device Handle Type: ACPI */
-> +    build_append_int_noprefix(table_data, 0, 1);
-> +    /* Proximity Domain */
-> +    build_append_int_noprefix(table_data, node, 4);
-> +    /* Device Handle */
-> +    build_append_srat_acpi_device_handle(table_data, hid, uid);
-> +    /* Flags - GP Enabled */
-> +    build_append_int_noprefix(table_data, 1, 4);
-> +    /* Reserved */
-> +    build_append_int_noprefix(table_data, 0, 4);
-> +}
-> +
->  /*
->   * ACPI spec 5.2.17 System Locality Distance Information Table
->   * (Revision 2.0 or later)
-> diff --git a/hw/acpi/pci.c b/hw/acpi/pci.c
-> index 3e1db161cc..020ad53c03 100644
-> --- a/hw/acpi/pci.c
-> +++ b/hw/acpi/pci.c
-> @@ -30,6 +30,7 @@
->  #include "hw/boards.h"
->  #include "hw/acpi/aml-build.h"
->  #include "hw/acpi/pci.h"
-> +#include "hw/pci/pci_bridge.h"
->  #include "hw/pci/pci_device.h"
->  #include "hw/pci/pcie_host.h"
->  
-> @@ -177,9 +178,118 @@ static int build_acpi_generic_initiator(Object *obj, void *opaque)
->      return 0;
->  }
->  
-> -void build_srat_generic_pci_initiator(GArray *table_data)
-> +typedef struct AcpiGenericPort {
-> +    /* private */
-> +    Object parent;
-> +
-> +    /* public */
-> +    char *pci_bus;
-> +    uint16_t node;
+[1] https://docs.kernel.org/admin-guide/kernel-parameters.html?highlight=randomize_kstack_offset
 
-ditto
-
-> +} AcpiGenericPort;
-> +
-> +typedef struct AcpiGenericPortClass {
-> +    ObjectClass parent_class;
-> +} AcpiGenericPortClass;
-> +
-> +#define TYPE_ACPI_GENERIC_PORT "acpi-generic-port"
-> +
-> +OBJECT_DEFINE_TYPE_WITH_INTERFACES(AcpiGenericPort, acpi_generic_port,
-> +                   ACPI_GENERIC_PORT, OBJECT,
-> +                   { TYPE_USER_CREATABLE },
-> +                   { NULL })
-> +
-> +OBJECT_DECLARE_SIMPLE_TYPE(AcpiGenericPort, ACPI_GENERIC_PORT)
-> +
-> +static void acpi_generic_port_init(Object *obj)
-> +{
-> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
-> +
-> +    gp->node = MAX_NODES;
-> +    gp->pci_bus = NULL;
-> +}
-> +
-> +static void acpi_generic_port_finalize(Object *obj)
-> +{
-> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
-> +
-> +    g_free(gp->pci_bus);
-> +}
-> +
-> +static void acpi_generic_port_set_pci_bus(Object *obj, const char *val,
-> +                                          Error **errp)
-> +{
-> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
-> +
-> +    gp->pci_bus = g_strdup(val);
-> +}
-> +
-> +static void acpi_generic_port_set_node(Object *obj, Visitor *v,
-> +                                       const char *name, void *opaque,
-> +                                       Error **errp)
-> +{
-> +    AcpiGenericPort *gp = ACPI_GENERIC_PORT(obj);
-> +    uint32_t value;
-> +
-> +    if (!visit_type_uint32(v, name, &value, errp)) {
-> +        return;
-> +    }
-> +
-> +    if (value >= MAX_NODES) {
-> +        error_printf("%s: Invalid NUMA node specified\n",
-> +                     TYPE_ACPI_GENERIC_INITIATOR);
-> +        exit(1);
-> +    }
-> +
-> +    gp->node = value;
-
-as long as gp->node is uint32_t it should be fine.
-otherwise it's too fragile. 
-
-> +}
-> +
-> +static void acpi_generic_port_class_init(ObjectClass *oc, void *data)
-> +{
-> +    object_class_property_add_str(oc, "pci-bus", NULL,
-> +        acpi_generic_port_set_pci_bus);
-> +    object_class_property_add(oc, "node", "int", NULL,
-> +        acpi_generic_port_set_node, NULL, NULL);
-
-missing property description calls.
-
-> +}
-> +
-> +static int build_acpi_generic_port(Object *obj, void *opaque)
-> +{
-> +    MachineState *ms = MACHINE(qdev_get_machine());
-> +    const char *hid = "ACPI0016";
-> +    GArray *table_data = opaque;
-> +    AcpiGenericPort *gp;
-> +    uint32_t uid;
-> +    Object *o;
-> +
-> +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_PORT)) {
-> +        return 0;
-> +    }
-> +
-> +    gp = ACPI_GENERIC_PORT(obj);
-> +
-> +    if (gp->node >= ms->numa_state->num_nodes) {
-
-> +        error_printf("%s: node %d is invalid.\n",
-> +                     TYPE_ACPI_GENERIC_PORT, gp->node);
-> +        exit(1);
-
-not sure, 
-maybe use error_fatal instead of using exit(1)?
-
-CCing Markus to check if it's ok.
-
-
-> +    }
-> +
-> +    o = object_resolve_path_type(gp->pci_bus, TYPE_PXB_CXL_BUS, NULL);
-> +    if (!o) {
-> +        error_printf("%s: device must be a CXL host bridge.\n",
-> +                     TYPE_ACPI_GENERIC_PORT);
-> +       exit(1);
-> +    }
-ditto
-
-> +
-> +    uid = object_property_get_uint(o, "acpi_uid", &error_fatal);
-> +    build_srat_acpi_generic_port(table_data, gp->node, hid, uid);
-> +
-> +    return 0;
-> +}
-> +
-> +void build_srat_generic_affinity_structures(GArray *table_data)
->  {
->      object_child_foreach_recursive(object_get_root(),
->                                     build_acpi_generic_initiator,
->                                     table_data);
-> +    object_child_foreach_recursive(object_get_root(), build_acpi_generic_port,
-> +                                   table_data);
->  }
-> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-> index a50b00b7c1..d98651df55 100644
-> --- a/hw/arm/virt-acpi-build.c
-> +++ b/hw/arm/virt-acpi-build.c
-> @@ -510,7 +510,7 @@ build_srat(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
->          }
->      }
->  
-> -    build_srat_generic_pci_initiator(table_data);
-> +    build_srat_generic_affinity_structures(table_data);
->  
->      if (ms->nvdimms_state->is_enabled) {
->          nvdimm_build_srat(table_data);
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index 2eaa4c9203..7f5ca188c1 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -2048,7 +2048,7 @@ build_srat(GArray *table_data, BIOSLinker *linker, MachineState *machine)
->          build_srat_memory(table_data, 0, 0, 0, MEM_AFFINITY_NOFLAGS);
->      }
->  
-> -    build_srat_generic_pci_initiator(table_data);
-> +    build_srat_generic_affinity_structures(table_data);
->  
->      /*
->       * Entry is required for Windows to enable memory hotplug in OS
-> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> index b94cb85cfb..cd7f2d5423 100644
-> --- a/hw/pci-bridge/pci_expander_bridge.c
-> +++ b/hw/pci-bridge/pci_expander_bridge.c
-> @@ -38,7 +38,6 @@ DECLARE_INSTANCE_CHECKER(PXBBus, PXB_BUS,
->  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_PCIE_BUS,
->                           TYPE_PXB_PCIE_BUS)
->  
-> -#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
->  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_CXL_BUS,
->                           TYPE_PXB_CXL_BUS)
->  
-
+-- 
+Kees Cook
