@@ -1,209 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB3A4A32;
-	Tue, 16 Jul 2024 00:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721091262; cv=none; b=Q3wrV7PqAX2GCk1+76+SoT+lc+4Vwd0oSfos1Ly60YG3RFQXJ60XMatYJS6HRzNYN9UuTeTbZVaBdW1H2pLt5CAM/lTZQ2YHlhY3D1ql257sLs4AH5+i3CFGYoSIit1lOf5hcWSwwXCfoqWmVvG5724qXSueP/lICy4yH7kLxyk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721091262; c=relaxed/simple;
-	bh=AlcLkl3ZckSTetDqtkbewgaIlrmC0fd1HpPyOnPIDOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jpVPqVe7iCrlh3YDbvHd+bLgmVEf4hB12qktHNbyUuKaW84O8qkrtS2XxQc3lNXXD6lGoHczOXpfXQYaA+8RXP7kXNgD7OF0hppQnA81Kxbt3A/noe5yJA/BK+8SABhGxi7yOwgoYdIaU7X1dsusI2iXMv4AZd26EKZmHlz3m+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcLeNty4; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29BC4A1D;
+	Tue, 16 Jul 2024 01:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721093002; cv=fail; b=Ffak1PJSo9/t6jZT3yNY5156J5dLw/hnfmQ7jSA88lk30lwGcQVrFi8t0QoONGz2PaqQ9ZwYIWGUq91NSjnMW9fwqzG+JG5+xqB2p3jUxHQadbzb+n5WCmApYNJx1F53XkCxhxlIBb83TRjih5saRf44fpNfMVNSyZWURTG9PLI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721093002; c=relaxed/simple;
+	bh=e503xErVD5+0yLbOCaW3uCbcQ/GWFyxg3tgrGnSVwI8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eJiN637TyYcSAONIRqCytPxpHWbcPjk4hX5ryYhhKhXba5aY2HEpiNMcUJuEejNDjdXCRB+I8i045IubaTFzkeqRvBE1BJDKqWfD5OlJR8WlsRxPV47sZoYwDvjqZ/YHmXgAY5iY58MuzfA7PTvnoIS0CtrUFYBjxfxPxQx69BA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mtfpO+OG; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcLeNty4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mtfpO+OG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721091261; x=1752627261;
+  t=1721093001; x=1752629001;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AlcLkl3ZckSTetDqtkbewgaIlrmC0fd1HpPyOnPIDOY=;
-  b=fcLeNty4gachm/QAf+C34YoA5aWRnQEdXL9M65DlntQxphUR0+uwE+S7
-   GBJrFHw6b5W0cYoH7Q8ElXPyUdJmFR8Z10QXaK6M6emWUa0OF7Hv9R86n
-   griNzwxMIyQsODnStNbF/KWeR/tzJQVhe16KL3pfcxagRCHZZ82o5o6SJ
-   detH0otubmzxRLnTsIG+mcbUg6PaEcILdh7XcoRxGokcPzT4HoXQ4/bxe
-   7ctPnTcwIgT/CmndfJ99SE2HfI361EPZxLt2URHyYoB3N36ogWcPPJsxf
-   6uKMZvPYcdO2Bn/6T+9UyQkRFTVNkDDL7GOBh/UZBy6hcW/fZiYLiUX1+
+   in-reply-to:mime-version;
+  bh=e503xErVD5+0yLbOCaW3uCbcQ/GWFyxg3tgrGnSVwI8=;
+  b=mtfpO+OG80SPB7ht1JdpQdwM7jj/foQrTEkZ2MiHEaXQWej8390VOTMh
+   CBb6OhXt08RdE/bN1yjK7seoZZ/j9FLvbx+OOdER5jrMuud/pDR4/vtmH
+   PncWpmvv/Z6mZKYVQTydw5uErv6g2sVQv2BQRIXIddkYP3LbyXf4wf3SS
+   Co81G74NV1VW4Ay3bEgvHP8NM/cJdhApjFyJh65ehgMhWAB5MIOHIzMWq
+   TjkSEOKaJp/hfdk9f1jI3GQzHmIvLGdrk4+nzGrClxaKgCVkmhMxMnOK5
+   8BwmP8q35frfbgXH0HwN6TJR1+PjllZtx7f7+rmfzqMgV6P9/nVu/klT3
    A==;
-X-CSE-ConnectionGUID: 93vqPGZLQkyK+1RI9tBqrQ==
-X-CSE-MsgGUID: 3Lq3RKmsSFmeiZZqV2jmHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18642260"
+X-CSE-ConnectionGUID: eUUix+bHR6iaW2mEbYDGNg==
+X-CSE-MsgGUID: XDM8g4N5S02iZKGp35SLmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="29655299"
 X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18642260"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 17:54:20 -0700
-X-CSE-ConnectionGUID: lF6M1kDsQcupE5CgB6cnNw==
-X-CSE-MsgGUID: EmctZzIbRMavmTAEQvtPpQ==
+   d="scan'208";a="29655299"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 18:23:20 -0700
+X-CSE-ConnectionGUID: Y9eT8BoERpCjMgOtqN6A5g==
+X-CSE-MsgGUID: FcKmoOS1SeqFG1E0x9f6/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="49900247"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 15 Jul 2024 17:54:16 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTWSM-000eiJ-1i;
-	Tue, 16 Jul 2024 00:54:14 +0000
-Date: Tue, 16 Jul 2024 08:53:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	richard.hughes@amd.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v2 09/15] cxl: define a driver interface for HPA free
- space enumaration
-Message-ID: <202407160818.7GrterxM-lkp@intel.com>
-References: <20240715172835.24757-10-alejandro.lucero-palau@amd.com>
+   d="scan'208";a="54987443"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jul 2024 18:23:20 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 15 Jul 2024 18:23:19 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 15 Jul 2024 18:23:19 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 15 Jul 2024 18:23:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o1CTIPeNnqrbtqxzPrcZk2YZEpsWNykPBijOy9Gu0EfzT0De2BvNgwRyX3rp2wqJYuG0Fzr4J5O3+vXTE1B+Bd+OLMot0/+e6GL5rTiP7134fpHDCRY2vzTxzO64By9tVwcO1IGss1rIwgHYVaSEwiE8c3rN795qEdyIwBgvQTYxScv+AH3glqAjo3KToP66CZjJSIuQU+7Dny/VSrF9SFwe2bl5Wks0CoSmK/TVOk+3LLHYD/bJWFj/8QIc5PSL02gDFd40N/hq/RuwipIt6K6/XIEMDirCmt35x4ZFJ4rzzjkB1asQA8O/bvLqE7zapgPy8w3mGDXLJEzo4ylXqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1t2H/XaTJ99uEun5I1WevgZMbg1+NyZiDEZmZJetjz8=;
+ b=xWnOBAx76Wd7jzhlGvWqmWf+i9IKLwQkrwlp5uPxyjCXeIZm+/ZvpjaHyHYvBOwbQUIibXghHJ72otGy3zSRzClA7zuzCvFb/yS/Ak7c5KH5Aen0ZnGeCmP73IzU93fsKZCLRDvkgqKl1SKEuaXw+hE7Ec4ADSPFbhZdCf1csH4uj4Na6koKZV0M1NCw7A/baA+hafm+KViBSqds8tVJDrAIRJXSGhjsMO8GCv3Mm0PkrJCsHXlZXQqiyDt9I5mVOaFRQNZgz3tpAW0L3KsbBbAzGYJ9tGxSSZAeMJMl7LyVqoIo+DaRKFEaOpei/P9mZLRoNqBNVYlPyGu6PQREcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA1PR11MB7941.namprd11.prod.outlook.com (2603:10b6:208:3ff::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Tue, 16 Jul
+ 2024 01:23:15 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
+ 01:23:15 +0000
+Date: Mon, 15 Jul 2024 18:23:10 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, Damien Le Moal <dlemoal@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Bjorn Helgaas <helgaas@kernel.org>, "David
+ Howells" <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, David Woodhouse
+	<dwmw2@infradead.org>, James Bottomley
+	<James.Bottomley@hansenpartnership.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<linuxarm@huawei.com>, David Box <david.e.box@intel.com>, "Li, Ming"
+	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	"Alistair Francis" <alistair.francis@wdc.com>, Wilfred Mallawa
+	<wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, Dhaval Giani
+	<dhaval.giani@amd.com>, Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+	Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>, "Sean
+ Christopherson" <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
+	"Samuel Ortiz" <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
+Message-ID: <6695cb7eb7bc1_8f74d29483@dwillia2-xfh.jf.intel.com.notmuch>
+References: <202407151005.15C1D4C5E8@keescook>
+ <20240715181252.GU1482543@nvidia.com>
+ <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240715220206.GV1482543@nvidia.com>
+ <57791455-5c70-4ede-97d9-d5784eef7abe@kernel.org>
+ <20240715230333.GX1482543@nvidia.com>
+ <f228526a-984f-4754-8ade-3f998a8b436a@kernel.org>
+ <20240715234259.GZ1482543@nvidia.com>
+ <5f7fca8b-ab74-4fba-8df8-152ad6f94227@kernel.org>
+ <20240716001142.GB1482543@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240716001142.GB1482543@nvidia.com>
+X-ClientProxiedBy: MW4PR04CA0046.namprd04.prod.outlook.com
+ (2603:10b6:303:6a::21) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715172835.24757-10-alejandro.lucero-palau@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB7941:EE_
+X-MS-Office365-Filtering-Correlation-Id: 935d422b-2055-405c-763f-08dca535dd89
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?iUp2WjNbRSuk71RdOKjF0MjVxEMjpAvQo3HLXcaNUHvGzTUv1c+2B3TStVa4?=
+ =?us-ascii?Q?f8EU3757UzZi6uCFz+JjEnoAjxe60CPsbq7ngyVwzAhCtQaxy/lyJ04FwWet?=
+ =?us-ascii?Q?J6Y9ekpRHW8TdFNKWZ8bvVR1gWvUKgGmi7ItNZENsI6SDZzzlBY5AWjkmRKi?=
+ =?us-ascii?Q?snKOeZ9BTcdVvaghSa4oiAvGPq6qOIbO5ctRouhEz32CPV/NJq7myk4KmFfn?=
+ =?us-ascii?Q?QdgAMrq7f9tzRsUlGi/s1HYHNRSetJg0CX5cW8mB28O5nvm7886wNRI4c6BY?=
+ =?us-ascii?Q?+nHbZdcKEyOdUPM5wUlGB1bmsIojkSMsJOfNS3jocBMlBLmFOV5DbuzU3DfE?=
+ =?us-ascii?Q?ITPi1HXMp9H8rkrc0Q4j5XKR7le5eXBLHHML7NKxe26nZypESHAYMpNWhH93?=
+ =?us-ascii?Q?i7L9B1bZ/VWQRAcrEzHC/DN7ilQiIz8h/kZMsJKBFmjueUc4oqOmt2asw+9c?=
+ =?us-ascii?Q?MT60mYKWyapL4MpagFxRlxqN/eU436ZqffkF+pPOLDBetl/uZxydqxqYY3tp?=
+ =?us-ascii?Q?2Oo0zRJCfqPQA9cM/1Sqbe64/mwFxWFcStT6rgk0Ym20BBDZNYLi0mdocGMl?=
+ =?us-ascii?Q?+CjmmNVrpCbcd4QyBgmnIAIuRFKnJZkfA5kNbMJbFYj1IAmaAPapSFDOHdWa?=
+ =?us-ascii?Q?1CjhfUDkVV9P2D6nCgXKO+6UrV6ws7G4JZLz5iogFu6oKYmMztQm0x/XX+y2?=
+ =?us-ascii?Q?mmtOk8wdnPdd/Qqk4SCaPLDI4HFdmEvGmfUdQDnI2SeGAsaA2pxeW9mr/E2Z?=
+ =?us-ascii?Q?8YDdfAEtdMnU0n+rS8Zi/VX0dxtIL8kob8u0BNYiQRmNP1ADzJDjbGXsfSiK?=
+ =?us-ascii?Q?7XsBxfiiHpGP2wuQc9pIPQu+YzP7EDaCcqEC6wUYk6AuOpIUvlnr9lb2Iklq?=
+ =?us-ascii?Q?JDHoNGLBdeo1QxGvWTGNV4/HheWfoxvdzYIoQYnMoE4UlQzdj0g2L1LviIry?=
+ =?us-ascii?Q?yLLOGw7gA6TQhWszwL3CaM2HlsUDXJ+5Q44r6Wxe52PtfTeOZ4uD79GpwiPa?=
+ =?us-ascii?Q?uSrhHrdiuSqvWq+cPFVBgXQ9scSUSj7nuEl6jQu25iXieIrHeKdlQR3VABNv?=
+ =?us-ascii?Q?1rbdbApyiLRdaYNzpBC5us0TeQe+nzGj9DAnI3rTA5iSwZ3Dobil61o6aAgp?=
+ =?us-ascii?Q?l1+QL1X9Dq5pSTJKFmzeYeMN8A2tMDktYL2qytEPzQCWho3hb30npZhJSe/+?=
+ =?us-ascii?Q?V7o0Wu4GX+6ko05A6R4WNyfEC3CMp0a/onVBquJLWs+8ba5bKMF9arUVptoS?=
+ =?us-ascii?Q?IASVdMgMzZZteduFLl0RiuhaYEGJPQUWyDsHKDXlM0BfDsXQfScw0cmVnPte?=
+ =?us-ascii?Q?LSJuDIXuTrEJ3+Z1rgm5h/vvAeL7MkMinNzva7oQANb4tQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?C1f9O1cM4+UlbkfACk9DctIHEbUgVbSM/5uuXjbk5uTJRGSd5HCWp3nhcxzr?=
+ =?us-ascii?Q?SUuaHgBImH4U42PdEehB9E9fQzUcdpKEcX0nNQ+tVoPJsxry8WW4MdjqSlAy?=
+ =?us-ascii?Q?N4h0tNXtIpKC4gL63gaqW9JFvYjNRRz++ULFDR4RQkOQGtC4+KK1qkey6xOQ?=
+ =?us-ascii?Q?ZmhIEAhIaIzUTBubTjOpcs13NINo9KuX+DX8X4AdfQpK9fFSqxk8mOMVhHp1?=
+ =?us-ascii?Q?sQ6Vw9xKsyKtMyj6y32NVqNnqE7X4gLD787an+7rRe8W1DLK8WIN2vbe4Ga7?=
+ =?us-ascii?Q?lNZ/0tLhrHV6CM3hiSBycHkFWbHa+4u2wii8eS8OGdJV4QGSbOMffvzZe87z?=
+ =?us-ascii?Q?MLhT6DwH1krOGYupYu75mH5lxmrYB20oL3XNJAPDq8Lb3t6REitSkTp2YRBQ?=
+ =?us-ascii?Q?nJ3aF4HvhtcaYTAKoez6mTiCzenBKM2SQqXmvIJIYJO+bsJjr+kkOTrs2rV0?=
+ =?us-ascii?Q?GXSixoMoY0l9iNV9LJzCZz+5YnoA4G1Ur2SDmteethU4ExKQy2NqQlbEWnRu?=
+ =?us-ascii?Q?b0eGWLXbwrWR6FknqjuB17nLExShgZU7DKpCgqTJU+Lqt+pSLPo4o59imEtY?=
+ =?us-ascii?Q?cMI1B58ZFZ9yDv6RumyiZ49XHoJnf1lM+Qk4msz461YVUPDI22g0bubAC4gi?=
+ =?us-ascii?Q?qsYLi0l4V78UbzUvz1fxgkWeOUOz+LMppLTLuOm3ErMrFf5s7Eg+/mTB5vv/?=
+ =?us-ascii?Q?TPoB+2OdeiRdnI3U4CEmyBGacMtMxLuxgB03YawBXYIQevah7IsQBXdgBUZw?=
+ =?us-ascii?Q?VuVMBZasDqi7KVcWm7WUjsYPNC+tnsibtsUBDHOgujV28yucWQtNV2vt3QXJ?=
+ =?us-ascii?Q?Sx1+aRYhoIa6VtfXGwV7iHIcLExrA2NOT5joArcbknQlN0F+fFaHAgpEHJXN?=
+ =?us-ascii?Q?HOcA9BZdMY3+r3JPKKFAEVbnfYPEMlru2PXjfeVNy0Dnu8Hkx4Q7QevyMtTw?=
+ =?us-ascii?Q?J9+BT+GjcuYZ+ExWekrQ5gTdOq7dWM0/EtEa8pPut3ZW5RlzaBOycW6a1Di2?=
+ =?us-ascii?Q?NON1ZcvDkoz5d7UZOv+CIPvv7xtwQz+SyygrEP8yLdA7EH/KEztIOqEVzsgh?=
+ =?us-ascii?Q?Rp8h7lViCiQ4TplV/JOP0IDm1yK2+9428uv41btJRtLLXKtUc5T5RjWiTSdD?=
+ =?us-ascii?Q?1b7tf9+u5lxFE/fqZiX/YSHB+ggW8i/HNqEAu7XTFErGP5eg497tfHT+bnP7?=
+ =?us-ascii?Q?4XelJsqXsxnOp0O1NxVsrXe+09+18UKBejhJSuDe7ItliN3PFxLfNNHK54i+?=
+ =?us-ascii?Q?TtaqN/BURotra10FM3Q96Pq8cU+ClOdwQC0v5m6/JFK+HGouXqYCiXgTHysN?=
+ =?us-ascii?Q?8GUFWgs5ErwKtQYxLKiP1zwhz+cSdh9vXzUMAJuiZBgqdEulltEH4Zcr3zMt?=
+ =?us-ascii?Q?rcln4UCVnUir30+HWpkykVlx/9uhnVbdtB7ZM6pgg4hDP41LvD6LVWPcJPxQ?=
+ =?us-ascii?Q?KreeBIDjh9xhGTCYuscvLUBYZSHPw7p+RRyhnoET3/CF6m2hyjbB37/zy9su?=
+ =?us-ascii?Q?5tviyNXyxzkCnPpvO1UXc1M+PVRtsYha6i44RcfzEo+ltb+fUfEYnQg0J/Be?=
+ =?us-ascii?Q?hTe/epuTKltpsOvlw9T8FtNiQONp08msPmrIBLGM49msbC9HLcArXPfQz9xi?=
+ =?us-ascii?Q?nA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 935d422b-2055-405c-763f-08dca535dd89
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 01:23:14.9480
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Iv8KRFHSQYTG5ACYmfOzC/u2p21TYOj1uZL8Is3nhKQvyXdtbbKaeUUisd+neVsHtBMnSxX8jBz9X8jEDB6esysCQTklFdmBpcAp1XyNegE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7941
+X-OriginatorOrg: intel.com
 
-Hi,
+Jason Gunthorpe wrote:
+[..]
+> If the TVM would like to have the storage device do the encryption
+> with something like OPAL then:
+>  - Attest and trust the PCI function, this lets you load the HBA driver
+>  - Attest and trust the "media"
+>  - Use the media attestation to load an encrypted copy of the media
+>    key from the secure keyserver into the drive
+> 
+> The split view of "media" and PCI function seems appropriate. The
+> keyserver should only release keys to media that has the correct
+> attested ID, while a controller may have many different media attached
+> to it.
+> 
+> Attesting the controller is probably not enough to release the keys?
 
-kernel test robot noticed the following build warnings:
+Right, I think key release is going to be based on measurement of the
+entire VM and accepted device topology state.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.10 next-20240715]
-[cannot apply to cxl/next cxl/pending horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20240716-015920
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240715172835.24757-10-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v2 09/15] cxl: define a driver interface for HPA free space enumaration
-config: i386-buildonly-randconfig-004-20240716 (https://download.01.org/0day-ci/archive/20240716/202407160818.7GrterxM-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240716/202407160818.7GrterxM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407160818.7GrterxM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/net/ethernet/sfc/efx_cxl.c:17:
-   drivers/net/ethernet/sfc/efx_cxl.h:11:9: warning: 'EFX_CXL_H' is used as a header guard here, followed by #define of a different macro [-Wheader-guard]
-      11 | #ifndef EFX_CXL_H
-         |         ^~~~~~~~~
-   drivers/net/ethernet/sfc/efx_cxl.h:12:9: note: 'EFX_CLX_H' is defined here; did you mean 'EFX_CXL_H'?
-      12 | #define EFX_CLX_H
-         |         ^~~~~~~~~
-         |         EFX_CXL_H
->> drivers/net/ethernet/sfc/efx_cxl.c:89:7: warning: format specifies type 'unsigned long long' but the argument has type 'resource_size_t' (aka 'unsigned int') [-Wformat]
-      88 |                 pci_info(pci_dev, "CXL accel not enough free HPA space %llu < %u\n",
-         |                                                                        ~~~~
-         |                                                                        %u
-      89 |                                   max, EFX_CTPIO_BUFFER_SIZE);
-         |                                   ^~~
-   include/linux/pci.h:2683:67: note: expanded from macro 'pci_info'
-    2683 | #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
-         |                                                                ~~~    ^~~
-   include/linux/dev_printk.h:160:67: note: expanded from macro 'dev_info'
-     160 |         dev_printk_index_wrap(_dev_info, KERN_INFO, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                                  ~~~     ^~~~~~~~~~~
-   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                              ~~~    ^~~~~~~~~~~
-   2 warnings generated.
-
-
-vim +89 drivers/net/ethernet/sfc/efx_cxl.c
-
-    15	
-    16	#include "net_driver.h"
-  > 17	#include "efx_cxl.h"
-    18	
-    19	#define EFX_CTPIO_BUFFER_SIZE	(1024*1024*256)
-    20	
-    21	void efx_cxl_init(struct efx_nic *efx)
-    22	{
-    23		struct pci_dev *pci_dev = efx->pci_dev;
-    24		struct efx_cxl *cxl = efx->cxl;
-    25		resource_size_t max = 0;
-    26		struct resource res;
-    27		u16 dvsec;
-    28	
-    29		dvsec = pci_find_dvsec_capability(pci_dev, PCI_VENDOR_ID_CXL,
-    30						  CXL_DVSEC_PCIE_DEVICE);
-    31	
-    32		if (!dvsec)
-    33			return;
-    34	
-    35		pci_info(pci_dev, "CXL CXL_DVSEC_PCIE_DEVICE capability found");
-    36	
-    37		cxl->cxlds = cxl_accel_state_create(&pci_dev->dev,
-    38						    CXL_ACCEL_DRIVER_CAP_HDM);
-    39		if (IS_ERR(cxl->cxlds)) {
-    40			pci_info(pci_dev, "CXL accel device state failed");
-    41			return;
-    42		}
-    43	
-    44		cxl_accel_set_dvsec(cxl->cxlds, dvsec);
-    45		cxl_accel_set_serial(cxl->cxlds, pci_dev->dev.id);
-    46	
-    47		res = DEFINE_RES_MEM(0, EFX_CTPIO_BUFFER_SIZE);
-    48		cxl_accel_set_resource(cxl->cxlds, res, CXL_ACCEL_RES_DPA);
-    49	
-    50		res = DEFINE_RES_MEM_NAMED(0, EFX_CTPIO_BUFFER_SIZE, "ram");
-    51		cxl_accel_set_resource(cxl->cxlds, res, CXL_ACCEL_RES_RAM);
-    52	
-    53		if (cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds)) {
-    54			pci_info(pci_dev, "CXL accel setup regs failed");
-    55			return;
-    56		}
-    57	
-    58		if (cxl_accel_request_resource(cxl->cxlds, true))
-    59			pci_info(pci_dev, "CXL accel resource request failed");
-    60	
-    61		if (!cxl_await_media_ready(cxl->cxlds)) {
-    62			cxl_accel_set_media_ready(cxl->cxlds);
-    63		} else {
-    64			pci_info(pci_dev, "CXL accel media not active");
-    65			return;
-    66		}
-    67	
-    68		cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, cxl->cxlds);
-    69		if (IS_ERR(cxl->cxlmd)) {
-    70			pci_info(pci_dev, "CXL accel memdev creation failed");
-    71			return;
-    72		}
-    73	
-    74		cxl->endpoint = cxl_acquire_endpoint(cxl->cxlmd);
-    75		if (IS_ERR(cxl->endpoint))
-    76			pci_info(pci_dev, "CXL accel acquire endpoint failed");
-    77	
-    78		cxl->cxlrd = cxl_get_hpa_freespace(cxl->endpoint, 1,
-    79						    CXL_DECODER_F_RAM | CXL_DECODER_F_TYPE2,
-    80						    &max);
-    81	
-    82		if (IS_ERR(cxl->cxlrd)) {
-    83			pci_info(pci_dev, "CXL accel get HPA failed");
-    84			goto out;
-    85		}
-    86	
-    87		if (max < EFX_CTPIO_BUFFER_SIZE)
-    88			pci_info(pci_dev, "CXL accel not enough free HPA space %llu < %u\n",
-  > 89					  max, EFX_CTPIO_BUFFER_SIZE);
-    90	out:
-    91		cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
-    92	}
-    93	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Also, if the storage volume itself is accessed through dm-{crypt,verity}
+it is not clear that the storage controller needs be attested to ensure
+confidentiality of those transfers.
