@@ -1,185 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8921218633;
-	Tue, 16 Jul 2024 03:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C4510A11
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Jul 2024 04:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721100750; cv=none; b=rJ9xwPGMhXj622etkbdbrElbUEZ2CSeYFhMYJiMmIyjZ0a8v6yZlKcuwSEaYY7kAiB+ecfftAjOOB8TifmbUdn4B/PYHm1l6And4z1hwnl0EFXPvcEbjmNkMe4gpbHoz4JUFqdGc11mpc2EIr+Lwg8/NsDNkimlHCHbqCgULI/k=
+	t=1721103797; cv=none; b=s6o8dDZfalZ/xzWbHu3ueSu3Yfs0d5Am8MApI/kxK0scM0G8IN288xQLq0IMyYYYoaWipPo3vrE24r1FnRqQCiSALnOFGW3m4cwiptnCzX36xhiGSA9FWtKrQS8+njDbrxgFguOqQWmmz7CFzqyyr7bjTN/tFkCgxN3mXNJ6oMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721100750; c=relaxed/simple;
-	bh=GY/1zz50NBZ5rMHvmCnJe4c5+oCSLR2igpJJdQM9su0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jqyWetfIdjpaWqlJ8yBbPzCo7BOMedWP1dHhmfqzTyemHG4qDfqpb6xhTUNp2aEvGczWrhXYbb9DCZlKQaffyx8Iwb3wbCRaB6I04lprOnREb5F/nn/kN6VFXGbtI0T16FjYlPvrJuF5bJGvTPnR+ChbO0pF3lcP6JQBVDrTi5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mmht6lpg; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721103797; c=relaxed/simple;
+	bh=Nt7v1XQWHRgVNqBZENcaG0jvttPfkk/8FcTJsnqbISQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=axlou/dVMzLyxuCeg0qH7cOWBd7gLIW5WDC8aB1PhyOylV0EGoP6lGaoCM7STiqwGrMY9HyC5kAZ9cwWkZtjx6BNPraeNb63NxiYWcugFTnOXsEHvwxmuBbcITCHJM5vQDa+kHe9j9QtvRM4O/dSJYA/N5cl79TFD+sIEh7MYxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=os1cXjRI; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mmht6lpg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721100748; x=1752636748;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GY/1zz50NBZ5rMHvmCnJe4c5+oCSLR2igpJJdQM9su0=;
-  b=Mmht6lpg7SHxkVrodfYoG8hRF0g5QuhPTmEM8YrEqTHyXjnOqOF6R0mf
-   RDJnUZfBnaj9fay/0gulaZYoaZgiwWrhOMCDVVKnXo24tCMycpItmDRRG
-   9keF6DDKW9g9++aW9jga8AjM13oBWWMAR8hk3CvlepchJ5iY77nj3m4xh
-   ey2dK5HKRldOIKikirltrd7bNvfrIeW773KnXBAC/gHC3fgLTfsaKmnZu
-   PdtwQcutk9m8NtQVe66imOgj1dxqM8YGMMwNbgzH+JW4A6vUJDkkUOW7C
-   7dSt817aIeKD9Kyw1DeFEeX17lqnYuefBc6dyid3UfOoCH5xWXTbEuAhE
-   Q==;
-X-CSE-ConnectionGUID: 4mw17WovQU+TyEwh4i7BFQ==
-X-CSE-MsgGUID: KPGB6VfrRtCkPwX9SKMgmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18646216"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18646216"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 20:32:28 -0700
-X-CSE-ConnectionGUID: DyVHE1PWQhCwnPJdTEGnnA==
-X-CSE-MsgGUID: sodaZD6uRwSgia+JRpf+oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="50482525"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 15 Jul 2024 20:32:24 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTYvO-000ery-05;
-	Tue, 16 Jul 2024 03:32:22 +0000
-Date: Tue, 16 Jul 2024 11:32:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	richard.hughes@amd.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v2 10/15] cxl: define a driver interface for DPA
- allocation
-Message-ID: <202407161159.KA2METLk-lkp@intel.com>
-References: <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="os1cXjRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1721103794; x=1752639794;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Nt7v1XQWHRgVNqBZENcaG0jvttPfkk/8FcTJsnqbISQ=;
+  b=os1cXjRIT1pQNCIpi8c5HjFEGQmbO9qd4oJg9gowY3vQGgdFtLGi9SCn
+   3RN2Hhtx3YTIUOZvGG1mJozCXXcrZ98PvXav4uWP3Ud0OFvkTx9Nq+MO9
+   BlTjY2dEUhyltq1/zvGPXajpNie02AFAqjxXyp1nvSepCFpk3tYqpfce1
+   BARQXtOLI7erq6C9TyQno+G/CsH/aYXb7pgqz3Cu8hrkbEyI6OMU3Akf7
+   4Vj2XohIHC3DZAp0Dm81BCfMNy2QJnAeRTCGTjL2kQg1IUo+hrKsc3p4M
+   +8W7wYgT4EP7i0zikzTiRZYNiYSSsQtO6h1VNcbD4MjVzTqsks4w6Zo6t
+   w==;
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="166525501"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716217200"; 
+   d="scan'208";a="166525501"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 13:23:05 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id B937DC68E2
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Jul 2024 13:23:02 +0900 (JST)
+Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 03322D3F0F
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Jul 2024 13:23:02 +0900 (JST)
+Received: from cxl-test.. (unknown [10.118.236.45])
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id C035120521FB;
+	Tue, 16 Jul 2024 13:23:01 +0900 (JST)
+From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+To: linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com
+Cc: y-goto@fujitsu.com,
+	mj@ucw.cz,
+	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v15 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Date: Tue, 16 Jul 2024 13:25:39 +0900
+Message-ID: <20240716042540.89639-2-kobayashi.da-06@fujitsu.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240716042540.89639-1-kobayashi.da-06@fujitsu.com>
+References: <20240716042540.89639-1-kobayashi.da-06@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 
-Hi,
+Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
+device link status information. By caching it, avoid the walking 
+memory map area to find the offset when output the register value.
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+---
+ drivers/cxl/core/core.h |  5 ++++
+ drivers/cxl/core/regs.c | 56 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |  9 +++++++
+ drivers/cxl/pci.c       | 33 +++++++++++++++---------
+ 4 files changed, 91 insertions(+), 12 deletions(-)
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.10 next-20240715]
-[cannot apply to cxl/next cxl/pending horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20240716-015920
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240715172835.24757-11-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v2 10/15] cxl: define a driver interface for DPA allocation
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240716/202407161159.KA2METLk-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project a0c6b8aef853eedaa0980f07c0a502a5a8a9740e)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240716/202407161159.KA2METLk-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407161159.KA2METLk-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/cxl/core/hdm.c:612: warning: Function parameter or struct member 'is_ram' not described in 'cxl_request_dpa'
->> drivers/cxl/core/hdm.c:612: warning: Excess function parameter 'mode' description in 'cxl_request_dpa'
-
-
-vim +612 drivers/cxl/core/hdm.c
-
-   589	
-   590	/**
-   591	 * cxl_request_dpa - search and reserve DPA given input constraints
-   592	 * @endpoint: an endpoint port with available decoders
-   593	 * @mode: DPA operation mode (ram vs pmem)
-   594	 * @min: the minimum amount of capacity the call needs
-   595	 * @max: extra capacity to allocate after min is satisfied
-   596	 *
-   597	 * Given that a region needs to allocate from limited HPA capacity it
-   598	 * may be the case that a device has more mappable DPA capacity than
-   599	 * available HPA. So, the expectation is that @min is a driver known
-   600	 * value for how much capacity is needed, and @max is based the limit of
-   601	 * how much HPA space is available for a new region.
-   602	 *
-   603	 * Returns a pinned cxl_decoder with at least @min bytes of capacity
-   604	 * reserved, or an error pointer. The caller is also expected to own the
-   605	 * lifetime of the memdev registration associated with the endpoint to
-   606	 * pin the decoder registered as well.
-   607	 */
-   608	struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-   609						     bool is_ram,
-   610						     resource_size_t min,
-   611						     resource_size_t max)
- > 612	{
-   613		struct cxl_endpoint_decoder *cxled;
-   614		enum cxl_decoder_mode mode;
-   615		struct device *cxled_dev;
-   616		resource_size_t alloc;
-   617		int rc;
-   618	
-   619		if (!IS_ALIGNED(min | max, SZ_256M))
-   620			return ERR_PTR(-EINVAL);
-   621	
-   622		down_read(&cxl_dpa_rwsem);
-   623	
-   624		cxled_dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
-   625		if (!cxled_dev)
-   626			cxled = ERR_PTR(-ENXIO);
-   627		else
-   628			cxled = to_cxl_endpoint_decoder(cxled_dev);
-   629	
-   630		up_read(&cxl_dpa_rwsem);
-   631	
-   632		if (IS_ERR(cxled))
-   633			return cxled;
-   634	
-   635		if (is_ram)
-   636			mode = CXL_DECODER_RAM;
-   637		else
-   638			mode = CXL_DECODER_PMEM;
-   639	
-   640		rc = cxl_dpa_set_mode(cxled, mode);
-   641		if (rc)
-   642			goto err;
-   643	
-   644		down_read(&cxl_dpa_rwsem);
-   645		alloc = cxl_dpa_freespace(cxled, NULL, NULL);
-   646		up_read(&cxl_dpa_rwsem);
-   647	
-   648		if (max)
-   649			alloc = min(max, alloc);
-   650		if (alloc < min) {
-   651			rc = -ENOMEM;
-   652			goto err;
-   653		}
-   654	
-   655		rc = cxl_dpa_alloc(cxled, alloc);
-   656		if (rc)
-   657			goto err;
-   658	
-   659		return cxled;
-   660	err:
-   661		put_device(cxled_dev);
-   662		return ERR_PTR(rc);
-   663	}
-   664	EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, CXL);
-   665	
-
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 3b64fb1b9ed0..95d94ec14eb6 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -75,6 +75,11 @@ resource_size_t __rcrb_to_component(struct device *dev,
+ 				    enum cxl_rcrb which);
+ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+ 
++#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
++#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
++#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
++#define PCI_CAP_EXP_SIZEOF		0x3c
++
+ extern struct rw_semaphore cxl_dpa_rwsem;
+ extern struct rw_semaphore cxl_region_rwsem;
+ 
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 372786f80955..b1ab0d9bcbcb 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -505,6 +505,62 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
+ 	return offset;
+ }
+ 
++static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
++{
++	resource_size_t rcrb = dport->rcrb.base;
++	void __iomem *addr;
++	u32 cap_hdr;
++	u16 offset;
++
++	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
++		return CXL_RESOURCE_NONE;
++
++	addr = ioremap(rcrb, SZ_4K);
++	if (!addr) {
++		dev_err(dev, "Failed to map region %pr\n", addr);
++		release_mem_region(rcrb, SZ_4K);
++		return CXL_RESOURCE_NONE;
++	}
++
++	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
++	cap_hdr = readl(addr + offset);
++	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
++		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
++		if (offset == 0 || offset > SZ_4K) {
++			offset = 0;
++			break;
++		}
++		cap_hdr = readl(addr + offset);
++	}
++
++	iounmap(addr);
++	release_mem_region(rcrb, SZ_4K);
++	if (!offset)
++		return CXL_RESOURCE_NONE;
++
++	return offset;
++}
++
++int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport)
++{
++	void __iomem *dport_pcie_cap = NULL;
++	resource_size_t pos;
++	struct cxl_rcrb_info *ri;
++
++	ri = &dport->rcrb;
++	pos = cxl_rcrb_to_linkcap(&pdev->dev, dport);
++	if (pos == CXL_RESOURCE_NONE)
++		return -ENXIO;
++
++	dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev,
++					      ri->base + pos,
++					      PCI_CAP_EXP_SIZEOF);
++	dport->regs.rcd_pcie_cap = dport_pcie_cap;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
++
+ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
+ 				    enum cxl_rcrb which)
+ {
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 003feebab79b..839c5a20cc33 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -230,6 +230,14 @@ struct cxl_regs {
+ 	struct_group_tagged(cxl_rch_regs, rch_regs,
+ 		void __iomem *dport_aer;
+ 	);
++
++	/*
++	 * RCD upstream port specific PCIe cap register
++	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
++	 */
++	struct_group_tagged(cxl_rcd_regs, rcd_regs,
++		void __iomem *rcd_pcie_cap;
++	);
+ };
+ 
+ struct cxl_reg_map {
+@@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
+ struct cxl_dport;
+ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+ 					   struct cxl_dport *dport);
++int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
+ 
+ #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+ #define CXL_TARGET_STRLEN 20
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 2ff361e756d6..5e7e66f28420 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -471,10 +471,9 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
+ }
+ 
+ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+-				  struct cxl_register_map *map)
++				  struct cxl_register_map *map,
++				  struct cxl_dport *dport)
+ {
+-	struct cxl_port *port;
+-	struct cxl_dport *dport;
+ 	resource_size_t component_reg_phys;
+ 
+ 	*map = (struct cxl_register_map) {
+@@ -482,14 +481,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+ 		.resource = CXL_RESOURCE_NONE,
+ 	};
+ 
+-	port = cxl_pci_find_port(pdev, &dport);
+-	if (!port)
+-		return -EPROBE_DEFER;
+-
+ 	component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
+ 
+-	put_device(&port->dev);
+-
+ 	if (component_reg_phys == CXL_RESOURCE_NONE)
+ 		return -ENXIO;
+ 
+@@ -503,6 +496,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 			      struct cxl_register_map *map)
+ {
++	struct cxl_dport *dport;
++	struct cxl_port *port;
+ 	int rc;
+ 
+ 	rc = cxl_find_regblock(pdev, type, map);
+@@ -512,11 +507,25 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	 * is an RCH and try to extract the Component Registers from
+ 	 * an RCRB.
+ 	 */
+-	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
+-		rc = cxl_rcrb_get_comp_regs(pdev, map);
++	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
++		port = cxl_pci_find_port(pdev, &dport);
++		if (!port)
++			return -EPROBE_DEFER;
+ 
+-	if (rc)
++		rc = cxl_rcrb_get_comp_regs(pdev, map, dport);
++		if (rc) {
++			put_device(&port->dev);
++			return rc;
++		}
++
++		rc = cxl_dport_map_rcd_linkcap(pdev, dport);
++		if (rc) {
++			put_device(&port->dev);
++			return rc;
++		}
++	} else if (rc) {
+ 		return rc;
++	}
+ 
+ 	return cxl_setup_regs(map);
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.0
+
