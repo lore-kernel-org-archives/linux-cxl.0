@@ -1,244 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D105418132E
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Jul 2024 14:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F305E3A27B
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Jul 2024 15:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721227377; cv=none; b=F/mRj6v/CyDTEjlBUCeNTOVLJ+vcgJnjvTGxDkmtqwjCiaVa4IyTimaingswLJrUZRwXHWURz+Is1fP3NroavW4Tveb8ing0unly7FCzy4upmT4jL+t4U5UKIPAZq4ny/j0JLiyqMOYP5PqaCe8l/A2ezwmjj3+GXZPJzpKsKRk=
+	t=1721228587; cv=none; b=sXi+IA4aWiqvXer+5yPSHIb0nzaM+J7FnOlZaewzUDoQ7WKeuvOIrMuDfa/BrpW2j7qcp5kfqEPDJMh7XiDgVhWv+7HhNBnSiS7G6UkDDtcHvBJ2vMnFTV0WFKAzAP8+aeTgOUGe8O5aBPig4aPTmgYELiYQ7dnTBnVkWRUdWik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721227377; c=relaxed/simple;
-	bh=zUVIvHCsTCCXlgAEsrezINakY7JgduDyy2tKWsIjEJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rdoEnqgnz3XWWI4QWVSR1Qj8hK5YNBK3UwhAfzwuc3Zp6O81wpRLzOwvQwTyzX8nexFGTcHHZ2Mj4pGh9CygkXbM69M6O1xSJ1VHlgasYpZ94RXkEY647Z846hmJjfAUKrU3fZu4bMZhXkZnsCR9VhVloiyshUCKsm3R8SEXjV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEJC5mgE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEJC5mgE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721227374;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=M2vL8rRc69gotddfUAFMWYk4nVzDmp9tj4adCdBDziU=;
-	b=TEJC5mgEqqLu+j5SkvTipJT3CBFqO6gWUNsYjXWc1qS5Jju1GXl9Kp3enqyRCML9siWLCM
-	3tlfqdFwQONyuuPuC+PT2rcmqBF86/tquI2PeGpCTG61OcSUrcGDaqcRULov4+YKvDkOyp
-	WyCZ5Nw5Rgk180NYLALDBdlgSgQH+S8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-471-OPY9ixl9PWWKmkeNxXt6QQ-1; Wed, 17 Jul 2024 10:42:53 -0400
-X-MC-Unique: OPY9ixl9PWWKmkeNxXt6QQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7535875ab7so131509566b.0
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Jul 2024 07:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721227372; x=1721832172;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=M2vL8rRc69gotddfUAFMWYk4nVzDmp9tj4adCdBDziU=;
-        b=isjAL3I0g8sO+hbTJM1Nrwi/uFEPcobnpZ4mKIeA+miQ8w7WeNOoGH59lFVNVfxLkM
-         3xTHrNP+0p9EkfUoLnErG4OlB2RAqTt7IUdabbisnjVYfzDmVz2XPIOq8nGHvBIpllZ+
-         MR6kO14Snd2pctQJjMldLD9MdPB5YK2CVRv7Kukk6nILLcJrhBgCqSiyj4s4AqBfXx2E
-         t7R0p51BU0yCuBn8ltDlxF8GOssn+2WAyJM76G3cIS+rHFg/mTru0WTRqNpfWMei5v3C
-         qkjGduJZJ/hpo44iHda/nD9LrcYQ4bXqRNnXbgftrXfeYDWtoD5w0I/K/sIE8D2HD2IG
-         54VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKGFZKI9l52sPV4IY8zJBfxv9dxQDNfa9hV0T/5W5RkpOdFc7JNHJLp5nZ91ApWXsYBZU/DBXWAZ3FbR4dJlm9wW3/Tma1pyKA
-X-Gm-Message-State: AOJu0Yw0EMLfLy3LzzHsagNzWSf+P8RYrk8YeK1Yg9bWjrIKmz1sbmc0
-	ugPmRdkpQKZ3SE+HEalig2ho98Ivo4rH85UqJh2mI9R1tq+8XvxHwvR6gbPlXciZsVvweBtKX/v
-	tlRaNPqSxPiFC5G0mrL8dnS3q+0p4asDIBeWHdNMhe9CPKTPEBn32qh4jVQ==
-X-Received: by 2002:a17:906:1c0f:b0:a6f:46f1:5434 with SMTP id a640c23a62f3a-a79eda04168mr521684466b.6.1721227372348;
-        Wed, 17 Jul 2024 07:42:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEi6DrDSqxxObcD+4KvqZEIVIf6XCAhrJ0LWIBdtNZjezxwhMU5bcwwGQ0tRJ1krbBOftaEqw==
-X-Received: by 2002:a17:906:1c0f:b0:a6f:46f1:5434 with SMTP id a640c23a62f3a-a79eda04168mr521682366b.6.1721227371866;
-        Wed, 17 Jul 2024 07:42:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c714:c00:b08b:a871:ce99:dfde? (p200300cbc7140c00b08ba871ce99dfde.dip0.t-ipconnect.de. [2003:cb:c714:c00:b08b:a871:ce99:dfde])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5d2018sm453924466b.85.2024.07.17.07.42.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 07:42:51 -0700 (PDT)
-Message-ID: <220da8ed-337a-4b1e-badf-2bff1d36e6c3@redhat.com>
-Date: Wed, 17 Jul 2024 16:42:48 +0200
+	s=arc-20240116; t=1721228587; c=relaxed/simple;
+	bh=reVv+HM0EV+jyS8TOGif5Xm2WZwGFj3tfACS4wjvoV8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GRhfXA8TgUrIYa/Fs3htZTUVb8p2W+/4dLPjtd4xL/H0dNEO8rKzLkikNmJnTLjykmh9jrJKZX+Fq23hW5P5kxPY+/lF8yRrb6CuQYK+yCXv3bfwEnU403JlTZm17qJyRPvlUu1W9Eg+h2Cpc+sIenO/hVYLJ7bm2CIPW2K6mxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WPJz16KBtz6DB74;
+	Wed, 17 Jul 2024 23:00:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 495BC140B2F;
+	Wed, 17 Jul 2024 23:03:00 +0800 (CST)
+Received: from localhost (10.122.19.247) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Jul
+ 2024 16:02:59 +0100
+Date: Wed, 17 Jul 2024 16:02:58 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Igor Mammedov <imammedo@redhat.com>
+CC: Markus Armbruster <armbru@redhat.com>, <mst@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <linuxarm@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <marcel.apfelbaum@gmail.com>,
+	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>, Dave
+ Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, <eduardo@habkost.net>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v5 10/13] hw/acpi: Generic Port Affinity Structure
+ support
+Message-ID: <20240717160258.00006893@huawei.com>
+In-Reply-To: <20240715164841.1979fdea@imammedo.users.ipa.redhat.com>
+References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
+	<20240712110837.1439736-11-Jonathan.Cameron@huawei.com>
+	<20240715164841.1979fdea@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/17] arch, mm: pull out allocation of NODE_DATA to
- generic code
-To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org,
- x86@kernel.org
-References: <20240716111346.3676969-1-rppt@kernel.org>
- <20240716111346.3676969-6-rppt@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240716111346.3676969-6-rppt@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 16.07.24 13:13, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Mon, 15 Jul 2024 16:48:41 +0200
+Igor Mammedov <imammedo@redhat.com> wrote:
+
+> On Fri, 12 Jul 2024 12:08:14 +0100
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> Architectures that support NUMA duplicate the code that allocates
-> NODE_DATA on the node-local memory with slight variations in reporting
-> of the addresses where the memory was allocated.
+> > These are very similar to the recently added Generic Initiators
+> > but instead of representing an initiator of memory traffic they
+> > represent an edge point beyond which may lie either targets or
+> > initiators.  Here we add these ports such that they may
+> > be targets of hmat_lb records to describe the latency and
+> > bandwidth from host side initiators to the port.  A discoverable
+> > mechanism such as UEFI CDAT read from CXL devices and switches
+> > is used to discover the remainder of the path, and the OS can build
+> > up full latency and bandwidth numbers as need for work and data
+> > placement decisions.
+> > 
+> > Acked-by: Markus Armbruster <armbru@redhat.com>
+> > Tested-by: "Huang, Ying" <ying.huang@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
 > 
-> Use x86 version as the basis for the generic alloc_node_data() function
-> and call this function in architecture specific numa initialization.
+> ACPI tables generation LGTM
+> As for the rest my review is perfunctory mostly.
+
+The node type points and missing descriptor applying equally to generic
+initiators. I'll add a couple of patches cleaning that up as well as 
+fixing them up for generic ports.
+
+For the exit(1) that was copying other similar locations. I don't
+mind changing it though if something else is preferred.
+
+Given tight timescales (and I was away for a few days which didn't
+help), I'll send out a v6 with changes as below.
+
+Jonathan
+
+
 > 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
+> > ---
+> > v5: Push the definition of TYPE_ACPI_GENERIC_PORT down into the
+> >     c file (similar to TYPE_ACPI_GENERIC_INITIATOR in earlier patch)
+> > ---
+> >  qapi/qom.json                       |  34 +++++++++
+> >  include/hw/acpi/aml-build.h         |   4 +
+> >  include/hw/acpi/pci.h               |   2 +-
+> >  include/hw/pci/pci_bridge.h         |   1 +
+> >  hw/acpi/aml-build.c                 |  40 ++++++++++
+> >  hw/acpi/pci.c                       | 112 +++++++++++++++++++++++++++-
+> >  hw/arm/virt-acpi-build.c            |   2 +-
+> >  hw/i386/acpi-build.c                |   2 +-
+> >  hw/pci-bridge/pci_expander_bridge.c |   1 -
+> >  9 files changed, 193 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/qapi/qom.json b/qapi/qom.json
+> > index 8e75a419c3..b97c031b73 100644
+> > --- a/qapi/qom.json
+> > +++ b/qapi/qom.json
+> > @@ -838,6 +838,38 @@
+> >    'data': { 'pci-dev': 'str',
+> >              'node': 'uint32' } }
+> >  
+> > +##
+> > +# @AcpiGenericPortProperties:
+> > +#
+> > +# Properties for acpi-generic-port objects.
+> > +#
+> > +# @pci-bus: QOM path of the PCI bus of the hostbridge associated with
+> > +#     this SRAT Generic Port Affinity Structure.  This is the same as
+> > +#     the bus parameter for the root ports attached to this host
+> > +#     bridge.  The resulting SRAT Generic Port Affinity Structure will
+> > +#     refer to the ACPI object in DSDT that represents the host bridge
+> > +#     (e.g.  ACPI0016 for CXL host bridges).  See ACPI 6.5 Section
+> > +#     5.2.16.7 for more information.
+> > +#  
+> 
+> > +# @node: Similar to a NUMA node ID, but instead of providing a
+> > +#     reference point used for defining NUMA distances and access
+> > +#     characteristics to memory or from an initiator (e.g. CPU), this
+> > +#     node defines the boundary point between non-discoverable system
+> > +#     buses which must be described by firmware, and a discoverable
+> > +#     bus.  NUMA distances and access characteristics are defined to
+> > +#     and from that point.  For system software to establish full
+> > +#     initiator to target characteristics this information must be
+> > +#     combined with information retrieved from the discoverable part
+> > +#     of the path.  An example would use CDAT (see UEFI.org)
+> > +#     information read from devices and switches in conjunction with
+> > +#     link characteristics read from PCIe Configuration space.  
+> 
+> you lost me here (even reading this several time doesn't help).
+> Perhaps I lack specific domain knowledge, but is there a way to make it
+> more comprehensible for layman?
 
-[...]
+This is far from the first version (which Markus really didn't like ;)
+It is really easy to draw as a sequence of diagrams and really tricky
+to put in text!  Not so easy to get the kernel code right either
+as it turns out but that's another story.
 
-> diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-> index 9208eaadf690..909f6cec3a26 100644
-> --- a/arch/mips/loongson64/numa.c
-> +++ b/arch/mips/loongson64/numa.c
-> @@ -81,12 +81,8 @@ static void __init init_topology_matrix(void)
->   
->   static void __init node_mem_init(unsigned int node)
->   {
-> -	struct pglist_data *nd;
->   	unsigned long node_addrspace_offset;
->   	unsigned long start_pfn, end_pfn;
-> -	unsigned long nd_pa;
-> -	int tnid;
-> -	const size_t nd_size = roundup(sizeof(pg_data_t), SMP_CACHE_BYTES);
+Perhaps if I add something to the end to say what you do with it
+that might help?
 
-One interesting change is that we now always round up to full pages on 
-architectures where we previously rounded up to SMP_CACHE_BYTES.
+"To get the full path latency, from CPU to CXL attached DRAM on a type 3
+ CXL device:  Add the latency from CPU to Generic Port (from HMAT indexed
+ via the the node ID in this SRAT structure) to that for CXL bus links, the
+ latency across intermediate switches and from the EP port to the
+ actual memory.  Bandwidth is more complex as there may be interleaving
+ across multiple devices and shared links in the path."
 
-I assume we don't really expect a significant growth in memory 
-consumption that we care about, especially because most systems with 
-many nodes also have  quite some memory around.
+> 
+> > +#
+> > +# Since: 9.1
+> > +##
+> > +{ 'struct': 'AcpiGenericPortProperties',
+> > +  'data': { 'pci-bus': 'str',
+> > +            'node': 'uint32' } }
+> > +
 
-
-> -/* Allocate NODE_DATA for a node on the local memory */
-> -static void __init alloc_node_data(int nid)
-> -{
-> -	const size_t nd_size = roundup(sizeof(pg_data_t), PAGE_SIZE);
-> -	u64 nd_pa;
-> -	void *nd;
-> -	int tnid;
-> -
-> -	/*
-> -	 * Allocate node data.  Try node-local memory and then any node.
-> -	 * Never allocate in DMA zone.
-> -	 */
-> -	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-> -	if (!nd_pa) {
-> -		pr_err("Cannot find %zu bytes in any node (initial node: %d)\n",
-> -		       nd_size, nid);
-> -		return;
-> -	}
-> -	nd = __va(nd_pa);
-> -
-> -	/* report and initialize */
-> -	printk(KERN_INFO "NODE_DATA(%d) allocated [mem %#010Lx-%#010Lx]\n", nid,
-> -	       nd_pa, nd_pa + nd_size - 1);
-> -	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
-> -	if (tnid != nid)
-> -		printk(KERN_INFO "    NODE_DATA(%d) on node %d\n", nid, tnid);
-> -
-> -	node_data[nid] = nd;
-> -	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-> -
-> -	node_set_online(nid);
-> -}
-> -
->   /**
->    * numa_cleanup_meminfo - Cleanup a numa_meminfo
->    * @mi: numa_meminfo to clean up
-> @@ -571,6 +538,7 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
->   			continue;
->   
->   		alloc_node_data(nid);
-> +		node_set_online(nid);
->   	}
-
-I can spot that we only remove a single node_set_online() call from x86.
-
-What about all the other architectures? Will there be any change in 
-behavior for them? Or do we simply set the nodes online later once more?
-
--- 
-Cheers,
-
-David / dhildenb
 
