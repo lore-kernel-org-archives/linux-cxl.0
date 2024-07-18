@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257A681751
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Jul 2024 21:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B4B81219
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jul 2024 21:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721338501; cv=none; b=brJJ0DHCkwExfODnitKLyBNhmHD93Z10a8LyXBA4ldYsPuaiP0OmkJSJc4x935sbZGvRrysOYQbq9H5iSev1gM4hKiqAo1LNVAgLopF5fcv+cnN4UdmXnnQfnV+vKxSjO0JSnCnJqg4YtMt2Tnq8LPx+EkJjAPiV5k49fdIksms=
+	t=1721338502; cv=none; b=CmoDmTLt5SgIt8Xu87e0NJ86IDwZzOcTbVF7rHTjcNpCnjIhOHYSUB+Xhq3x+a3EFf7UeaQGskf1JkQ6IlzJBin2ndo9Qnq2CTf7NNXdjA5NRgtYuV2jf0PJrorRfZbrbDIjT2fOxYEb7q6bqFpRsLQPmZ/zmHJkRrLp7a3Wf+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721338501; c=relaxed/simple;
-	bh=7lpqQo20VHbR0ZHrNqOhPq0IIPMIeG77uCSLvt9+9f8=;
+	s=arc-20240116; t=1721338502; c=relaxed/simple;
+	bh=88XMW+ArlhbwSSxJTeIF4sdiTGUwgV2EhkazfHHXUAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=knJFNXwog/5ED47yixqoqObtWjljc6ndYZZWlBWzwaiOhpwgo1IMQ/37lmb4Rc3NgdWxoMnAinpxGGINeyfcl4bEx/N8Bz6NYPaIvreRrwf181GRNOThXHBbVBelFDGkstd1X8i0bG8BCVljf1GLH6DbnaZIyx66qPf7xmv0vxY=
+	 MIME-Version; b=aOLlBdJsJ44vE/G1/uBbw3X0oXMwgigf6Axn1vWnHOJTrSB95Ow2dPi7wP3XXH5VMuip+1woINGsk3bppki0VQaeUWT+CWi4qI+03LJi38XeQ5/O3f/haMEceN44MUlPd19AlyyyO9UY2choiVAWJqD76NE2n9jj+fPMA2eXZ5s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8FF1C116B1;
-	Thu, 18 Jul 2024 21:35:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282D9C4AF09;
+	Thu, 18 Jul 2024 21:35:02 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [RFC PATCH 07/13] cxl: Add Set Feature command support
-Date: Thu, 18 Jul 2024 14:32:25 -0700
-Message-ID: <20240718213446.1750135-8-dave.jiang@intel.com>
+Subject: [RFC PATCH 08/13] fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
+Date: Thu, 18 Jul 2024 14:32:26 -0700
+Message-ID: <20240718213446.1750135-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240718213446.1750135-1-dave.jiang@intel.com>
 References: <20240718213446.1750135-1-dave.jiang@intel.com>
@@ -38,56 +38,251 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add enumeration of Set Feature mailbox command for the kernel to recognize
-the command being passed in from user space.
-
-CXL spec r3.1 8.2.9.6.3 Set Feature (Opcode 0502h)
-
-The feature requested is identified by specific UUID.
+Add an fwctl (auxiliary bus) driver to allow sending of CXL feature
+commands from userspace through as ioctls. Create a driver skeleton for
+initial setup.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/mbox.c      | 1 +
- drivers/cxl/cxlmem.h         | 1 +
- include/uapi/linux/cxl_mem.h | 1 +
- 3 files changed, 3 insertions(+)
+ MAINTAINERS                |   7 +++
+ drivers/cxl/core/memdev.c  |  19 +++++++
+ drivers/fwctl/Kconfig      |   9 ++++
+ drivers/fwctl/Makefile     |   1 +
+ drivers/fwctl/cxl/Makefile |   4 ++
+ drivers/fwctl/cxl/cxl.c    | 103 +++++++++++++++++++++++++++++++++++++
+ include/uapi/fwctl/fwctl.h |   1 +
+ 7 files changed, 144 insertions(+)
+ create mode 100644 drivers/fwctl/cxl/Makefile
+ create mode 100644 drivers/fwctl/cxl/cxl.c
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index b58b8cc517c9..14ebe69c47bf 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -69,6 +69,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
- 	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
- 	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
- 	CXL_CMD(GET_FEATURE, 0x15, CXL_VARIABLE_PAYLOAD, 0),
-+	CXL_CMD(SET_FEATURE, CXL_VARIABLE_PAYLOAD, 0, 0),
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e1934b7e044..5d6c470c06ea 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9073,6 +9073,13 @@ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/fwctl/mlx5/
+ 
++FWCTL CXL DRIVER
++M:	Dave Jiang <dave.jiang@intel.com>
++R:	Dan Williams <dan.j.williams@intel.com>
++L:	linux-cxl@vger.kernel.org
++S:	Maintained
++F:	drivers/fwctl/cxl/
++
+ GALAXYCORE GC0308 CAMERA SENSOR DRIVER
+ M:	Sebastian Reichel <sre@kernel.org>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 9f0fe698414d..0f6ec85ef9c4 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -13,6 +13,8 @@
+ 
+ static DECLARE_RWSEM(cxl_memdev_rwsem);
+ 
++#define CXL_ADEV_NAME "fwctl-cxl"
++
+ /*
+  * An entire PCI topology full of devices should be enough for any
+  * config
+@@ -1030,6 +1032,7 @@ static const struct file_operations cxl_memdev_fops = {
+ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+ 				       struct cxl_dev_state *cxlds)
+ {
++	struct auxiliary_device *adev;
+ 	struct cxl_memdev *cxlmd;
+ 	struct device *dev;
+ 	struct cdev *cdev;
+@@ -1056,11 +1059,27 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+ 	if (rc)
+ 		goto err;
+ 
++	adev = &cxlds->cxl_mbox.adev;
++	adev->id = cxlmd->id;
++	adev->name = CXL_ADEV_NAME;
++	adev->dev.parent = dev;
++
++	rc = auxiliary_device_init(adev);
++	if (rc)
++		goto err;
++
++	rc = auxiliary_device_add(adev);
++	if (rc)
++		goto aux_err;
++
+ 	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+ 	if (rc)
+ 		return ERR_PTR(rc);
+ 	return cxlmd;
+ 
++aux_err:
++	auxiliary_device_uninit(adev);
++
+ err:
+ 	/*
+ 	 * The cdev was briefly live, shutdown any ioctl operations that
+diff --git a/drivers/fwctl/Kconfig b/drivers/fwctl/Kconfig
+index e5ee2d46d431..e49903a9d0d3 100644
+--- a/drivers/fwctl/Kconfig
++++ b/drivers/fwctl/Kconfig
+@@ -19,5 +19,14 @@ config FWCTL_MLX5
+ 	  This will allow configuration and debug tools to work out of the box on
+ 	  mainstream kernel.
+ 
++	  If you don't know what to do here, say N.
++
++config FWCTL_CXL
++	tristate "CXL fwctl driver"
++	depends on CXL_BUS
++	help
++	  CXLCTL provides interface for the user process to access user allowed
++	  mailbox commands for CXL device.
++
+ 	  If you don't know what to do here, say N.
+ endif
+diff --git a/drivers/fwctl/Makefile b/drivers/fwctl/Makefile
+index 1c535f694d7f..bd356e6f2e5a 100644
+--- a/drivers/fwctl/Makefile
++++ b/drivers/fwctl/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_FWCTL) += fwctl.o
+ obj-$(CONFIG_FWCTL_MLX5) += mlx5/
++obj-$(CONFIG_FWCTL_CXL) += cxl/
+ 
+ fwctl-y += main.o
+diff --git a/drivers/fwctl/cxl/Makefile b/drivers/fwctl/cxl/Makefile
+new file mode 100644
+index 000000000000..623194521572
+--- /dev/null
++++ b/drivers/fwctl/cxl/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_FWCTL_CXL) += cxl_fwctl.o
++
++cxl_fwctl-y += cxl.o
+diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
+new file mode 100644
+index 000000000000..518ba2afada8
+--- /dev/null
++++ b/drivers/fwctl/cxl/cxl.c
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2024, Intel Corporation
++ */
++#include <linux/fwctl.h>
++#include <linux/auxiliary_bus.h>
++#include <linux/cxl/mailbox.h>
++#include <linux/auxiliary_bus.h>
++
++struct cxlctl_uctx {
++	struct fwctl_uctx uctx;
++	u32 uctx_caps;
++	u32 uctx_uid;
++};
++
++struct cxlctl_dev {
++	struct fwctl_device fwctl;
++	struct cxl_mailbox *mbox;
++};
++
++DEFINE_FREE(cxlctl, struct cxlctl_dev *, if (_T) fwctl_put(&_T->fwctl))
++
++static int cxlctl_open_uctx(struct fwctl_uctx *uctx)
++{
++	return 0;
++}
++
++static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
++{
++}
++
++static void *cxlctl_info(struct fwctl_uctx *uctx, size_t *length)
++{
++	/* Place holder */
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
++static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
++			   void *rpc_in, size_t in_len, size_t *out_len)
++{
++	/* Place holder */
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
++static const struct fwctl_ops cxlctl_ops = {
++	.device_type = FWCTL_DEVICE_TYPE_CXL,
++	.uctx_size = sizeof(struct cxlctl_uctx),
++	.open_uctx = cxlctl_open_uctx,
++	.close_uctx = cxlctl_close_uctx,
++	.info = cxlctl_info,
++	.fw_rpc = cxlctl_fw_rpc,
++};
++
++static int cxlctl_probe(struct auxiliary_device *adev,
++			const struct auxiliary_device_id *id)
++{
++	struct cxl_mailbox *mbox = container_of(adev, struct cxl_mailbox, adev);
++	struct cxlctl_dev *cxlctl __free(cxlctl) =
++		fwctl_alloc_device(mbox->host, &cxlctl_ops,
++				   struct cxlctl_dev, fwctl);
++	int rc;
++
++	if (!cxlctl)
++		return -ENOMEM;
++
++	cxlctl->mbox = mbox;
++
++	rc = fwctl_register(&cxlctl->fwctl);
++	if (rc)
++		return rc;
++
++	auxiliary_set_drvdata(adev, no_free_ptr(cxlctl));
++
++	return 0;
++}
++
++static void cxlctl_remove(struct auxiliary_device *adev)
++{
++	struct cxlctl_dev *ctldev __free(cxlctl) = auxiliary_get_drvdata(adev);
++
++	fwctl_unregister(&ctldev->fwctl);
++}
++
++static const struct auxiliary_device_id cxlctl_id_table[] = {
++	{ .name = "CXL.fwctl", },
++	{},
++};
++MODULE_DEVICE_TABLE(auxiliary, cxlctl_id_table);
++
++static struct auxiliary_driver cxlctl_driver = {
++	.name = "cxl_fwctl",
++	.probe = cxlctl_probe,
++	.remove = cxlctl_remove,
++	.id_table = cxlctl_id_table,
++};
++
++module_auxiliary_driver(cxlctl_driver);
++
++MODULE_IMPORT_NS(CXL);
++MODULE_IMPORT_NS(FWCTL);
++MODULE_DESCRIPTION("CXL fwctl driver");
++MODULE_AUTHOR("Intel Corporation");
++MODULE_LICENSE("GPL");
+diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+index 49a357e1bc71..6edcc38a6eee 100644
+--- a/include/uapi/fwctl/fwctl.h
++++ b/include/uapi/fwctl/fwctl.h
+@@ -43,6 +43,7 @@ enum {
+ enum fwctl_device_type {
+ 	FWCTL_DEVICE_TYPE_ERROR = 0,
+ 	FWCTL_DEVICE_TYPE_MLX5 = 1,
++	FWCTL_DEVICE_TYPE_CXL = 2,
  };
  
- /*
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 317cb92b0bfb..5e190f941e58 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -484,6 +484,7 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
- 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
- 	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
-+	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 90dcb9723997..469dd481795f 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -52,6 +52,7 @@
- 	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
- 	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
- 	___C(GET_FEATURE, "Get Feature"),				  \
-+	___C(SET_FEATURE, "Set Feature"),				  \
- 	___C(MAX, "invalid / last command")
- 
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+ /**
 -- 
 2.45.2
 
