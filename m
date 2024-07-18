@@ -1,169 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E96145B26
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Jul 2024 21:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE66145A10
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jul 2024 21:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721338510; cv=none; b=J9bdOlNZ6HudJiKIl5Un/imcQcTJAvZ+ToVFhG31HCqB9L5noGajj5t75IX9rLHJ3KtHqU1Xfx5lqYuUnmKbPXkMm27MQifbWvYl8tUqYUty2/+XQWruauvQKli2Azdl4lHkZ2DWRtuuAB/U6VoDguKtlitvO+JMoG8zOjxSRKI=
+	t=1721339184; cv=none; b=Id3JL+JNd3NzVfgAN2f4zJi027kapsf7BnkqI1ltEzFLX50SfWhDm7g5ASrMIJFZYKEiQ2riDykRp3uKcqQ8ZvNAFocP+AIoQ/TdadNCdN1no780UZhNBFf0dKtIxuvSWewwbTmgKXdsJUksr4Gyp/SfODS/lVu0Tpvg0RpPBBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721338510; c=relaxed/simple;
-	bh=vcPQBzcVpSJiEq7v3sqykVrw7W2mqBYzGNbbDIDAzk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iy03jQ6wHcBGLQSpIz+0wEiFNGLQobKWAKZX7KDv33ThydzWt6rzWVRRELl5SleE86xmSLh3VizSKW+MA/yfe5WFEm10PTR316kQkvKwuoQevE4UhzBIj7QKim9yeRBKqeYc/Ua5miVpvu4xZR0ombA3i3YmcAUmMQp+TcletEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF831C4AF0C;
-	Thu, 18 Jul 2024 21:35:09 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	jgg@nvidia.com,
-	shiju.jose@huawei.com
-Subject: [RFC PATCH 13/13] cxl/test: Add Set Feature support to cxl_test
-Date: Thu, 18 Jul 2024 14:32:31 -0700
-Message-ID: <20240718213446.1750135-14-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240718213446.1750135-1-dave.jiang@intel.com>
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1721339184; c=relaxed/simple;
+	bh=QIe/2kbFHCA11Q9TL7mLMduOjYNsGQd/Tv+tn4jIdAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o88TpfJ6TvzOhFTXNB2cGN8DzahoTPDnS8VI3acMYtcIHf9Eh/t5+NkZcRZu2+35gQjtp1Toy7DPW9F45VzmopSvoQiI1i7VzJUqhbZIe3QN6mozUxPOQo7jdzZt+wDa3kaMroCAt6TQwT12t609b7pehCygmb8JhZX7bA64dv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=U+I4x50K; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="U+I4x50K"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7f684af6af1so53053739f.2
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Jul 2024 14:46:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1721339181; x=1721943981; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b/3KVXgmf69sNo7YCAFBU75fVyP3kLvsv8BGm2iEjzc=;
+        b=U+I4x50KPl4X8RHNN5WKXgaZlEHjW1XglGeBCiLPeDrA3B+KPiBhvahd+FDuWPjb3+
+         87XEXsm4pfnSHwtps3MIP+TEfZCsdspc+yTjRy2CuGXrEoam95Al6g0CygaBSnC7ExCA
+         RyHihQX9Zo7+MvnRzEr8pj4uCXjohr23/SwVBcsrkRfsRX2fqDkhdWkK11O/eSelP+eL
+         /d3uDT3c4Ryb2bL0kMYavtCuYoMYn2E5sOc6EGM3M2zuFmF625pNWCLDfHfN8m1dypcR
+         YCbJlYmcrqMljxJYDSm/J4J+WSao69397c5/M406TScUTHCJTPHsBmberRIPN7VbEQzd
+         3+aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721339181; x=1721943981;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b/3KVXgmf69sNo7YCAFBU75fVyP3kLvsv8BGm2iEjzc=;
+        b=W6xGEUGEAk4OFm6WGoOrOaQVz8BT+zlvlh3dOq5cNynV5XER/XkVjHbKawXBl/OUNL
+         lA3s8T9PZTRKiROjxqCg6H0KLjI4LNreQnUSinCq2zySL633ZyIV7Mf7Q1/SVWvKATny
+         3z29285c+fXxFvZpT9Xo2G/tHKZVeNSdUAv+rQ0RtmMIpFLJBCv+033f9vS8tCFr3rAI
+         LamjeHo+pgmTXwpFE7LECwAjoRjBDFdarkHlSDr6o5Be8kU298bighUeS466Y2zWqbOp
+         qrcFXXO0m0j8ZaV2dx1JJh+KJfgYiHHQ4mERI6veEowov9GnvehgzVfXq8DmhzVK9ifx
+         UxrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEyDyqGXXU5Nkd7IZ5rkCE6kEND164E9wnf1sskUKnmjHGWRRrpQiI6GaADbz95p3sXGcqKjUhK9VvB68CN+EbubNsYum6pCfY
+X-Gm-Message-State: AOJu0Yy1wFbfUEx1LCUnhF+tMByzZHOFyJ/VtFsUMRESZmen7vts4nHY
+	dXhe69N0prMJBIc+7u5xPSLosS06xaCo2IaBkIZs3CVKEPXCo/MfaC/H3iznatA=
+X-Google-Smtp-Source: AGHT+IFfmYe/UsMSfgkCsdMUFOYZdCp937Ia8bMlaDCUPuHT0PtpOJmSb9jac6FVvVir80F2WXRXbQ==
+X-Received: by 2002:a05:6602:26c7:b0:806:7f5a:1fb7 with SMTP id ca18e2360f4ac-81710605dacmr801576939f.5.1721339181354;
+        Thu, 18 Jul 2024 14:46:21 -0700 (PDT)
+Received: from [100.64.0.1] ([147.124.94.167])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c2342f164esm35433173.69.2024.07.18.14.46.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jul 2024 14:46:20 -0700 (PDT)
+Message-ID: <8b402e92-d874-4b30-9108-f521bd20d36c@sifive.com>
+Date: Thu, 18 Jul 2024 16:46:17 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/17] mm: move numa_distance and related code from x86 to
+ numa_memblks
+To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+ Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ x86@kernel.org
+References: <20240716111346.3676969-1-rppt@kernel.org>
+ <20240716111346.3676969-14-rppt@kernel.org>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <20240716111346.3676969-14-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add emulation to support Set Feature mailbox command to cxl_test.
-The only feature supported is the device patrol scrub feature. The
-set feature allows activation of patrol scrub for the cxl_test
-emulated device. The command does not support partial data transfer
-even though the spec allows it. This restriction is to reduce complexity
-of the emulation given the patrol scrub feature is very minimal.
+On 2024-07-16 6:13 AM, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Move code dealing with numa_distance array from arch/x86 to
+> mm/numa_memblks.c
+> 
+> This code will be later reused by arch_numa.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/x86/mm/numa.c                   | 101 ---------------------------
+>  arch/x86/mm/numa_internal.h          |   2 -
+>  include/linux/numa_memblks.h         |   4 ++
+>  {arch/x86/mm => mm}/numa_emulation.c |   0
+>  mm/numa_memblks.c                    | 101 +++++++++++++++++++++++++++
+>  5 files changed, 105 insertions(+), 103 deletions(-)
+>  rename {arch/x86/mm => mm}/numa_emulation.c (100%)
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- tools/testing/cxl/test/mem.c | 89 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
-
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index c779640cb610..c2018d894719 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -52,6 +52,10 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FEATURE),
- 		.effect = CXL_CMD_EFFECT_NONE,
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_FEATURE),
-+		.effect = cpu_to_le16(EFFECT(CONF_CHANGE_IMMEDIATE)),
-+	},
- 	{
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_IDENTIFY),
- 		.effect = CXL_CMD_EFFECT_NONE,
-@@ -1445,6 +1449,88 @@ static int mock_get_feature(struct cxl_mockmem_data *mdata,
- 	return -EOPNOTSUPP;
- }
- 
-+struct scrub_feat_data {
-+	u8 cycle;
-+#define SCRUB_DATA_F_ENABLE		BIT(0)
-+	u8 flags;
-+};
-+#define SCRUB_DATA_CYCLE_OFFSET		0
-+#define SCRUB_DATA_FLAGS_OFFSET		1
-+
-+struct set_feat_input {
-+	uuid_t uuid;
-+	__le32 flags;
-+	__le16 offset;
-+	u8 version;
-+	u8 rsvd[9];
-+	u8 data[];
-+} __packed;
-+
-+enum set_feature_flags {
-+	SET_FEATURE_F_FULL_XFER = 0,
-+	SET_FEATURE_F_INIT_XFER,
-+	SET_FEATURE_F_CONT_XFER,
-+	SET_FEATURE_F_FIN_XFER,
-+	SET_FEATURE_F_ABORT_XFER,
-+};
-+
-+#define SET_FEATURE_F_ACTION_MASK	GENMASK(2, 0)
-+
-+static int mock_set_patrol_scrub(struct cxl_mockmem_data *mdata,
-+				 struct cxl_mbox_cmd *cmd)
-+{
-+	struct set_feat_input *input = cmd->payload_in;
-+	struct scrub_feat_data *data;
-+	u32 action;
-+
-+	action = FIELD_GET(SET_FEATURE_F_ACTION_MASK,
-+			   le32_to_cpu(input->flags));
-+	/*
-+	 * While it is spec compliant to support other set actions, it is not
-+	 * necessary to add the complication in the emulation currently. Reject
-+	 * anything besides full xfer.
-+	 */
-+	if (action != SET_FEATURE_F_FULL_XFER) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
-+		return -EINVAL;
-+	}
-+
-+	/* Offset should be reserved when doing full transfer */
-+	if (input->offset) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
-+		return -EINVAL;
-+	}
-+
-+	data = (struct scrub_feat_data *)input->data;
-+	/* Does not support changing cycle, should be reserved */
-+	if (data->cycle) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
-+		return -EINVAL;
-+	}
-+
-+	/* Check reserved fields */
-+	if (data->flags & ~SCRUB_DATA_F_ENABLE) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
-+		return -EINVAL;
-+	}
-+	mdata->patrol_feat.flags = data->flags & SCRUB_DATA_F_ENABLE;
-+
-+	return 0;
-+}
-+
-+static int mock_set_feature(struct cxl_mockmem_data *mdata,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct set_feat_input *input = cmd->payload_in;
-+
-+	if (uuid_equal(&input->uuid, &DEV_PATROL_SCRUB_FEAT_UUID))
-+		return mock_set_patrol_scrub(mdata, cmd);
-+
-+	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
-+
-+	return -EOPNOTSUPP;
-+}
-+
- static int mock_get_supported_features(struct cxl_mockmem_data *mdata,
- 				       struct cxl_mbox_cmd *cmd)
- {
-@@ -1580,6 +1666,9 @@ static int cxl_mock_mbox_send(struct cxl_mailbox *cxl_mbox,
- 	case CXL_MBOX_OP_GET_FEATURE:
- 		rc = mock_get_feature(mdata, cmd);
- 		break;
-+	case CXL_MBOX_OP_SET_FEATURE:
-+		rc = mock_set_feature(mdata, cmd);
-+		break;
- 	default:
- 		break;
- 	}
--- 
-2.45.2
+The numa_emulation.c rename looks like it should be part of the next commit, not
+this one.
 
