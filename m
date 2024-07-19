@@ -1,136 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614DF1B86D5
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Jul 2024 15:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83141B86D5;
+	Fri, 19 Jul 2024 15:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721404113; cv=none; b=XZdgXEVBgNARnnTbD7THiEuTrhjfk3O5pZdjG042Und6iQ8pStoDCZgPubDRFvkvKPbTTN/ZXm8jjwsh4JdWA0DKf8o4Tdqzb7Hpf0sUCrpZCc7G1DgsvqXwdduoQPZKd5E4SakipyCcyfxEFYP3ihjkfqcjGAIJVE9GGIF4BUg=
+	t=1721404312; cv=none; b=NlkCBFxFr+WW6RMCXTdwnq/O4AxgjJHp5B2n4jGGLHQxxg/ptC+d1nI4LbYSKrwefaOWA2rgjuhtowlufWT6z1dIvop1U4AMh6j5oV1D5eALpJ8tWMaFg/NZd0eqNa/22oUHIUyKa7kmPS8kcAdFxLkvqI1fZtNIiLyZvahCsYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721404113; c=relaxed/simple;
-	bh=CqmhVZNzp+/cmZLkywbdswripGKhUIE1hT1pc/hGnlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nf9t2m6riBMquZ5Jaie58aF5MBu2lZPcqfz/76nFPBw9wMHpP6MFofwYx+6KdHZRt/ICtks46s8yGe+RDMARDobNwe7y3QtZqbo5Wta1dOpXOI8tWKlI6l8cshsdAPO59lcq8AASpFRE8feHvKFkHsZ6i/SVCF4pTTOFfPANF3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KG0HojtA; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KG0HojtA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721404111; x=1752940111;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CqmhVZNzp+/cmZLkywbdswripGKhUIE1hT1pc/hGnlc=;
-  b=KG0HojtAag91Lw9u749+vPK5+WHxcaqj039OVUKukZTs65VE0uks9VHx
-   mIrRAS4QJlOABWFdrmPXXxHH+uJkSO4Va6mOYMxXTTkdJ2AxExfhNdmOp
-   fM+FBvhzovV1j+VD9dPTsD5MCT5Zom+WQhNot1a5WXLhtzxlfmTj5SEc2
-   VWH/iegoduhsIT5t40GIUeXIND5CEXOYAT4eCtumGihTG88b/+Helg/pY
-   Ea7eDC2Sds0fQ1obMDJH+YA1UgNfhYZ5IFrj1MQ8zcJhqsHOb1hv4a95B
-   vvGP7K65nrNwuz5w6cuJL8yYzQQ2vn6i4Ts53WV8eTP2PbgsUPpNhBfdD
-   A==;
-X-CSE-ConnectionGUID: b6t8n3xgQKCRX77tDKC2kQ==
-X-CSE-MsgGUID: 4Lu2V9UnR7uwWg9E4sjsIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="18982750"
-X-IronPort-AV: E=Sophos;i="6.09,220,1716274800"; 
-   d="scan'208";a="18982750"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 08:48:31 -0700
-X-CSE-ConnectionGUID: w8xJ/4g0T8GFLH97YGMoaQ==
-X-CSE-MsgGUID: Dfg63QHYTie9EQHD8XSMiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,220,1716274800"; 
-   d="scan'208";a="51221606"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.46]) ([10.125.109.46])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 08:48:30 -0700
-Message-ID: <daff158a-fe11-48a7-a13d-080950ebf54e@intel.com>
-Date: Fri, 19 Jul 2024 08:48:28 -0700
+	s=arc-20240116; t=1721404312; c=relaxed/simple;
+	bh=AlQm9yZ2sFI01jHgI7WArkoI84hOnV0JYdzW/8DBq5k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L21f8rchkOuk+7SDWprPMSywKoyI+itAYQYjkZwLSmFozI7XUzJ6K7vnMFuq7H6Q0oSi07KjrfrL1Z6vx84tYadluAoD/eXf8vLis80DPF+Q4D7VvG6VmMQMu/fyf5JSP8PAxX4wWGVilikR52SmWSdud3/HFNDf6gevr7GWgqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WQYyl1P08z6J67T;
+	Fri, 19 Jul 2024 23:49:51 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id BC470140517;
+	Fri, 19 Jul 2024 23:51:45 +0800 (CST)
+Received: from localhost (10.48.157.16) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 19 Jul
+ 2024 16:51:44 +0100
+Date: Fri, 19 Jul 2024 16:51:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: David Hildenbrand <david@redhat.com>
+CC: Mike Rapoport <rppt@kernel.org>, <linux-kernel@vger.kernel.org>,
+	"Alexander Gordeev" <agordeev@linux.ibm.com>, Andreas Larsson
+	<andreas@gaisler.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd
+ Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Catalin Marinas
+	<catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Heiko Carstens
+	<hca@linux.ibm.com>, "Huacai Chen" <chenhuacai@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, John Paul Adrian
+ Glaubitz <glaubitz@physik.fu-berlin.de>, Michael Ellerman
+	<mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH 05/17] arch, mm: pull out allocation of NODE_DATA to
+ generic code
+Message-ID: <20240719165143.0000002e@Huawei.com>
+In-Reply-To: <96850252-a49f-4d78-a94b-a9a25e3f2bd5@redhat.com>
+References: <20240716111346.3676969-1-rppt@kernel.org>
+	<20240716111346.3676969-6-rppt@kernel.org>
+	<220da8ed-337a-4b1e-badf-2bff1d36e6c3@redhat.com>
+	<Zpi-HAb7EBxrZBtK@kernel.org>
+	<96850252-a49f-4d78-a94b-a9a25e3f2bd5@redhat.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support via
- fwctl
-To: Alejandro Lucero Palau <alucerop@amd.com>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
- <6182d104-808f-1edb-9ea2-387c7844dfc5@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <6182d104-808f-1edb-9ea2-387c7844dfc5@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Fri, 19 Jul 2024 17:07:35 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
+> >>> -	 * Allocate node data.  Try node-local memory and then any node.
+> >>> -	 * Never allocate in DMA zone.
+> >>> -	 */
+> >>> -	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> >>> -	if (!nd_pa) {
+> >>> -		pr_err("Cannot find %zu bytes in any node (initial node: %d)\n",
+> >>> -		       nd_size, nid);
+> >>> -		return;
+> >>> -	}
+> >>> -	nd = __va(nd_pa);
+> >>> -
+> >>> -	/* report and initialize */
+> >>> -	printk(KERN_INFO "NODE_DATA(%d) allocated [mem %#010Lx-%#010Lx]\n", nid,
+> >>> -	       nd_pa, nd_pa + nd_size - 1);
+> >>> -	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+> >>> -	if (tnid != nid)
+> >>> -		printk(KERN_INFO "    NODE_DATA(%d) on node %d\n", nid, tnid);
+> >>> -
+> >>> -	node_data[nid] = nd;
+> >>> -	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+> >>> -
+> >>> -	node_set_online(nid);
+> >>> -}
+> >>> -
+> >>>    /**
+> >>>     * numa_cleanup_meminfo - Cleanup a numa_meminfo
+> >>>     * @mi: numa_meminfo to clean up
+> >>> @@ -571,6 +538,7 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
+> >>>    			continue;
+> >>>    		alloc_node_data(nid);
+> >>> +		node_set_online(nid);
+> >>>    	}  
+> >>
+> >> I can spot that we only remove a single node_set_online() call from x86.
+> >>
+> >> What about all the other architectures? Will there be any change in behavior
+> >> for them? Or do we simply set the nodes online later once more?  
+> > 
+> > On x86 node_set_online() was a part of alloc_node_data() and I moved it
+> > outside so it's called right after alloc_node_data(). On other
+> > architectures the allocation didn't include that call, so there should be
+> > no difference there.  
+> 
+> But won't their arch code try setting the nodes online at a later stage?
+> 
+> And I think, some architectures only set nodes online conditionally
+> (see most other node_set_online() calls).
+> 
+> Sorry if I'm confused here, but with now unconditional node_set_online(), won't
+> we change the behavior of other architectures?
+This is moving x86 code to x86 code, not a generic location
+so how would that affect anyone else? Their onlining should be same as
+before.
 
-On 7/18/24 11:23 PM, Alejandro Lucero Palau wrote:
-> 
-> On 7/18/24 22:32, Dave Jiang wrote:
->> This series add support for CXL feature commands using the FWCTL framework [1].
->> The code is untested and I'm looking for architectural and implementation feedback.
->> While CXL currently has a chardev for user ioctls to send some mailbox
->> commands to a memory device, the fwctl framework provides more security policies
->> that can be a potential vehicle to move CXL ioctl path to that.
->>
->> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
->> "Set Feature" commands are implemented. The "get" commands under the
->> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
->> on the effect of the feature. All mailbox commands for CXL provides an effects
->> table that describes the effects of a command when performed on the device.
->> For CXL features, there is also an effects field that describes the effects
->> a feature write operation has on the device per feature. The security policy
->> is checked against this feature specific effects field. Looking for discussion
->> on matching the CXL spec defined effects with the FWCTL security policy.
->>
->> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
->>
->> ---
->>
->> Dave Jiang (13):
->>        cxl: Move mailbox related bits to the same context
->>        cxl: Fix comment regarding cxl_query_cmd() return data
->>        cxl: Refactor user ioctl command path from mds to mailbox
->>        cxl: Add Get Supported Features command for kernel usage
->>        cxl/test: Add Get Supported Features mailbox command support
->>        cxl: Add Get Feature command support
->>        cxl: Add Set Feature command support
->>        fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
->>        fwctl/cxl: Add support for get driver information
->>        fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
->>        fwctl/cxl: Add query commands software command for ->fw_rpc()
->>        cxl/test: Add Get Feature support to cxl_test
->>        cxl/test: Add Set Feature support to cxl_test
->>
->>   MAINTAINERS                  |   8 +
->>   drivers/cxl/core/core.h      |   9 +-
->>   drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
->>   drivers/cxl/core/memdev.c    |  78 +++++---
->>   drivers/cxl/cxlmem.h         | 141 +++------------
->>   drivers/cxl/pci.c            |  68 ++++---
->>   drivers/cxl/pmem.c           |  10 +-
->>   drivers/cxl/security.c       |  18 +-
->>   drivers/fwctl/Kconfig        |   9 +
->>   drivers/fwctl/Makefile       |   1 +
->>   drivers/fwctl/cxl/Makefile   |   4 +
->>   drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
->>   include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
->>   include/uapi/fwctl/cxl.h     |  92 ++++++++++
->>   include/uapi/fwctl/fwctl.h   |   1 +
->>   include/uapi/linux/cxl_mem.h |   3 +
->>   tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
->>   17 files changed, 1515 insertions(+), 275 deletions(-)
->>
-> 
-> I can not see any documentation change in that file list.
-> 
-> I would say for something like what this patchset does, it is mandatory. Isn't it?
+The node onlining difference are a pain (I recall that fun from adding
+generic initiators) as different ordering on x86 and arm64 at least.
 
-Yeah I will write some documentation to detail the new ioctl API. Thanks for the reminder. 
+Jonathan
+
 > 
+
