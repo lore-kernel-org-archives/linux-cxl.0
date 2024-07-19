@@ -1,589 +1,318 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37B9146A99;
-	Fri, 19 Jul 2024 18:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216FB8C06;
+	Fri, 19 Jul 2024 19:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721414607; cv=none; b=ZKSNmMeOir7q6/WyCcRsdYgH3YE141qbHJ96Mj5wNBALFINmxd1zAuGb03o87BoEBsTWG7ayrjjvPaSINnHyVVt1QQM6CCCfCw7DQEwyIr5kZtm/9WFs6qWO0uQ3cbQ7z80Wkt+fDScrIM9vDqGHhhdGbwPpmV6oGQBbg9yUCzM=
+	t=1721415684; cv=none; b=cmYvzXof64grxolZCX4WuJ3LCiGS/UiYBFgstwevunLMpiTa+Sm9OWwGHE0A7DrdOWqQELk2jTX4qQOTvD9A54FgdtV9AkZzKhkYHpBbwQ1CoyArquAynM5v8XCViwiFSUNN++z90tVA0wW/z1kMy385TpOTCJEnJLx8N6HErt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721414607; c=relaxed/simple;
-	bh=980I7JE8pwMbWxdyvIMeDofdQkvaYQiknQYCZc+7jVQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmnPuyeFfHlSoEyMhlAsXwJpv4W7o+1XNs95W/wMROMFGS10csxLQuzlGImfdntB+Lx2j/eTMbcj8Du3ktHd4HqHmeay1htXABNFs691Lo5XaTfVdd08lEZwemS0n7heeS+FWrL2/4u6o51SqOeg8cU4lmK4oD5npwTa7lEDZmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nn5jNWfz; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721415684; c=relaxed/simple;
+	bh=t8wJxfySrx9yT+L43uDzmQbZIng5UQmL699Jdm9hlDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hlIcu2VjQpxwX5MFIHiiRmsQfzjpv+9sXy+sZR1vt4k54ppddmN7vusEb7QRvfG59JkJMw9B6dAdOKHR4i81mOuG/xrA29U4YDVSgZw+3S70w+A+fl1VVabPtUy6oV7xWhbx56r1v3uWstLpOnHoQocnXOWTpqrUhb8aVPj7KtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GXjt3SrC; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nn5jNWfz"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70aec66c936so898000b3a.0;
-        Fri, 19 Jul 2024 11:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721414605; x=1722019405; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ksl0r9CZ72zWVwuRHRRlhsOPiNmz7I0PeyEzWPG0ok=;
-        b=nn5jNWfzOTcWwjzHHsyGqmMgL8wweWylUzgRqZDq2IRa84vVDSSQPffZRO0TpKN/JX
-         HdIuA/8gb+gszcUv7lwNZ1dRo3zXH3xTDatTdLHGHuObT8SoWwnemejly1oVRfA8GZ7B
-         o4ZvhTDccYg+RSwyMA4/hvh/d26XnlkY0yX4SRUIX0yoErTc+g3wH50S0BCrN7ukgAag
-         dQTeLOba2/NQK0yE4Zf3OAHVZWRsYURVu8O71e70R8gfe+eVnBi2z/RsbDlPRwWTvirX
-         3Ohxbr6m6DW23wyHJOP+xT93OSg8F/Zrb2uKJyqWP+ov4cy5SIfM5u6gaSvgr99lSYxA
-         qV5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721414605; x=1722019405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ksl0r9CZ72zWVwuRHRRlhsOPiNmz7I0PeyEzWPG0ok=;
-        b=AHI0r8WrASW/oxSAVoRRCpfx6Vp+As7/L9zj4nnB/E6uUUYjFiaVJVxJZAHwX5x6KL
-         xJ/u1a3pX6xgdLWbdpxSgqO/o4tFcaUMm808w7dQwEgrUFrwnXH0kyheJMIhwkDjdTTB
-         K5iB7rbY+4+vGw8IBElR+YTZSqoASLtjgQVP2i66yWl8Etss/59fwYbsgKOSrYHkWO7p
-         8C89XSCKL8qcWF/OwMiGcT7qu5hCUSuW92YiXHorBDpgNlrWEapBMrhRAOLQN5AEZxz/
-         8aBXvyk//NQyBKFpSrK1rfOntFKWnc3b+RBVDwtKAAJpChyqnqVsxydk1mhA8JnCJO0q
-         8cww==
-X-Forwarded-Encrypted: i=1; AJvYcCWa8F6kiH63Cs0Cp9kUVhM530G6ePj5ElQbtHpSZbHM4VyMmG/afvrdL6n1RNHlp9e3sLT89ubABpm35v0G5bKAi/surocDAJmoSQyXLaEqzq+qaq+J72Xtlf/vB8TQII4NrjS02A0EyGMshdUoC1QpNjYU4gkisnDNt0Gm9Gkq3WYLaw==
-X-Gm-Message-State: AOJu0Yz2wT31XoRaqQOIRevlC1TF+Y9yq7txDzhxufaKdJTWIcv3RWEE
-	1ocAIbEuO7YizcWBLLUiGboVIw4ess1g+X/Ys0l7sVfWK0HuDZJ5
-X-Google-Smtp-Source: AGHT+IF4jBurPQ43jlcuXJ1lkHKfqgHilWGPcN1XXaq1uTTlU2xKFSddeNcpR+3dxoUPoTYOQnTopw==
-X-Received: by 2002:a05:6a20:a11e:b0:1bd:253e:28e with SMTP id adf61e73a8af0-1c3fdc962c8mr11541516637.16.1721414605167;
-        Fri, 19 Jul 2024 11:43:25 -0700 (PDT)
-Received: from gpd ([2601:646:8f03:9fee:d888:5d2b:51bf:885e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f31bd9bsm7932015ad.157.2024.07.19.11.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jul 2024 11:43:24 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@gpd>
-Date: Fri, 19 Jul 2024 11:43:02 -0700
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [RFC PATCH v9 08/11] cxl/memscrub: Add CXL memory device ECS
- control feature
-Message-ID: <ZpqztkrEPw3lrku5@gpd>
-References: <20240716150336.2042-1-shiju.jose@huawei.com>
- <20240716150336.2042-9-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GXjt3SrC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721415682; x=1752951682;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=t8wJxfySrx9yT+L43uDzmQbZIng5UQmL699Jdm9hlDs=;
+  b=GXjt3SrCJDrYaxpmYplcHw+LCkwXy1afUOErDQZvpy0kyemwM2hls5/E
+   FFxu82739P3e7IFvISRj0hrkuoLa+AkT5b1tZhelKrOz58cA+42SBlVXM
+   C3pf0oND2GVlo4EMTMgWMHp3vo837ckUMsZgHKNKAwZm/cI6CuLCinH1v
+   Qnl8wKSdy2DZGY10NPHR/R3leLzad6IKHU3TK8ZMvwGzWv/wqBRfBxfIV
+   MiHGPV7JU3lxilaad6cGwMKiIKdDcIEZTbBTUcmZt+VnBn7qwnBrFhb3r
+   Fz9voag7mMKl3MGp3hN19IWfJetbrcWLaWmg5tJWl0UsYw6nCMqck/RNm
+   A==;
+X-CSE-ConnectionGUID: kg4VJkajRS6x+5n89laq+A==
+X-CSE-MsgGUID: dns5tlWfQZ+DDarDMb5QKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="41574091"
+X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
+   d="scan'208";a="41574091"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 12:01:21 -0700
+X-CSE-ConnectionGUID: rCxvpFuyRYCM0C2p0GJP4w==
+X-CSE-MsgGUID: wZlS/KHrRiacth6tuS/O9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
+   d="scan'208";a="56046735"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.46]) ([10.125.109.46])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 12:01:20 -0700
+Message-ID: <e3ea1b1a-8439-40c6-99bf-4151ecf4d04f@intel.com>
+Date: Fri, 19 Jul 2024 12:01:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716150336.2042-9-shiju.jose@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/15] cxl: add capabilities field to cxl_dev_state
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
+ <20240715172835.24757-5-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240715172835.24757-5-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 16, 2024 at 04:03:32PM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+
+
+On 7/15/24 10:28 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check
-> Scrub (ECS) control feature.
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts.
+> Type2 devices have some Type3 functionalities as optional like an mbox
+> or an hdm decoder, and CXL core needs a way to know what a CXL accelerator
+> implements.
 > 
-> The ECS control allows the requester to change the log entry type, the ECS
-> threshold count provided that the request is within the definition
-> specified in DDR5 mode registers, change mode between codeword mode and
-> row count mode, and reset the ECS counter.
+> Add a new field for keeping device capabilities to be initialised by
+> Type2 drivers. Advertise all those capabilities for Type3.
 > 
-> Register with EDAC RAS control feature driver, which gets the ECS attr
-> descriptors from the EDAC ECS and expose sysfs ECS control attributes
-> to the userspace.
-> For example ECS control for the memory media FRU 0 in CXL mem0 device is
-> in /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
-> 
-> Note: The documentation can be added if necessary.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > ---
-
-Some lines are too long. And some other comments inline.
-
->  drivers/cxl/core/memscrub.c | 429 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 429 insertions(+)
+>  drivers/cxl/core/mbox.c            |  1 +
+>  drivers/cxl/core/memdev.c          |  4 +++-
+>  drivers/cxl/core/port.c            |  2 +-
+>  drivers/cxl/core/regs.c            | 11 ++++++-----
+>  drivers/cxl/cxl.h                  |  2 +-
+>  drivers/cxl/cxlmem.h               |  4 ++++
+>  drivers/cxl/pci.c                  | 15 +++++++++------
+>  drivers/net/ethernet/sfc/efx_cxl.c |  3 ++-
+>  include/linux/cxl_accel_mem.h      |  5 ++++-
+>  9 files changed, 31 insertions(+), 16 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
-> index 430f85b01f6c..9be230ea989a 100644
-> --- a/drivers/cxl/core/memscrub.c
-> +++ b/drivers/cxl/core/memscrub.c
-> @@ -351,13 +351,411 @@ static const struct edac_scrub_ops cxl_ps_scrub_ops = {
->  	.cycle_in_hours_range = cxl_patrol_scrub_read_scrub_cycle_hrs_range,
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 2626f3fff201..2ba7d36e3f38 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1424,6 +1424,7 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>  	mds->cxlds.reg_map.host = dev;
+>  	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+>  	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+> +	mds->cxlds.capabilities = CXL_DRIVER_CAP_HDM | CXL_DRIVER_CAP_MBOX;
+>  	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>  	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>  
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 04c3a0f8bc2e..b4205ecca365 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -616,7 +616,7 @@ static void detach_memdev(struct work_struct *work)
+>  
+>  static struct lock_class_key cxl_memdev_key;
+>  
+> -struct cxl_dev_state *cxl_accel_state_create(struct device *dev)
+> +struct cxl_dev_state *cxl_accel_state_create(struct device *dev, uint8_t caps)
+>  {
+>  	struct cxl_dev_state *cxlds;
+>  
+> @@ -631,6 +631,8 @@ struct cxl_dev_state *cxl_accel_state_create(struct device *dev)
+>  	cxlds->ram_res = DEFINE_RES_MEM_NAMED(0, 0, "ram");
+>  	cxlds->pmem_res = DEFINE_RES_MEM_NAMED(0, 0, "pmem");
+>  
+> +	cxlds->capabilities = caps;
+> +
+>  	return cxlds;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_accel_state_create, CXL);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 887ed6e358fb..d66c6349ed2d 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -763,7 +763,7 @@ static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map
+>  	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
+>  	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+>  
+> -	return cxl_setup_regs(map);
+> +	return cxl_setup_regs(map, 0);
+>  }
+>  
+>  static int cxl_port_setup_regs(struct cxl_port *port,
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index e1082e749c69..9d218ebe180d 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -421,7 +421,7 @@ static void cxl_unmap_regblock(struct cxl_register_map *map)
+>  	map->base = NULL;
+>  }
+>  
+> -static int cxl_probe_regs(struct cxl_register_map *map)
+> +static int cxl_probe_regs(struct cxl_register_map *map, uint8_t caps)
+>  {
+>  	struct cxl_component_reg_map *comp_map;
+>  	struct cxl_device_reg_map *dev_map;
+> @@ -437,11 +437,12 @@ static int cxl_probe_regs(struct cxl_register_map *map)
+>  	case CXL_REGLOC_RBI_MEMDEV:
+>  		dev_map = &map->device_map;
+>  		cxl_probe_device_regs(host, base, dev_map);
+> -		if (!dev_map->status.valid || !dev_map->mbox.valid ||
+> +		if (!dev_map->status.valid ||
+> +		    ((caps & CXL_DRIVER_CAP_MBOX) && !dev_map->mbox.valid) ||
+>  		    !dev_map->memdev.valid) {
+>  			dev_err(host, "registers not found: %s%s%s\n",
+>  				!dev_map->status.valid ? "status " : "",
+> -				!dev_map->mbox.valid ? "mbox " : "",
+> +				((caps & CXL_DRIVER_CAP_MBOX) && !dev_map->mbox.valid) ? "mbox " : "",
+
+According to the r3.1 8.2.8.2.1, the device status registers and the primary mailbox registers are both mandatory if regloc id=3 block is found. So if the type2 device does not implement a mailbox then it shouldn't be calling cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map) to begin with from the driver init right? If the type2 device defines a regblock with id=3 but without a mailbox, then isn't that a spec violation?
+
+DJ
+
+>  				!dev_map->memdev.valid ? "memdev " : "");
+>  			return -ENXIO;
+>  		}
+> @@ -455,7 +456,7 @@ static int cxl_probe_regs(struct cxl_register_map *map)
+>  	return 0;
+>  }
+>  
+> -int cxl_setup_regs(struct cxl_register_map *map)
+> +int cxl_setup_regs(struct cxl_register_map *map, uint8_t caps)
+>  {
+>  	int rc;
+>  
+> @@ -463,7 +464,7 @@ int cxl_setup_regs(struct cxl_register_map *map)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = cxl_probe_regs(map);
+> +	rc = cxl_probe_regs(map, caps);
+>  	cxl_unmap_regblock(map);
+>  
+>  	return rc;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index a6613a6f8923..9973430d975f 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -300,7 +300,7 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  			       struct cxl_register_map *map, int index);
+>  int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  		      struct cxl_register_map *map);
+> -int cxl_setup_regs(struct cxl_register_map *map);
+> +int cxl_setup_regs(struct cxl_register_map *map, uint8_t caps);
+>  struct cxl_dport;
+>  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+>  					   struct cxl_dport *dport);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index af8169ccdbc0..8f2a820bd92d 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -405,6 +405,9 @@ struct cxl_dpa_perf {
+>  	int qos_class;
 >  };
 >  
-> +/* CXL DDR5 ECS control definitions */
-> +#define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
-> +#define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
+> +#define CXL_DRIVER_CAP_HDM	0x1
+> +#define CXL_DRIVER_CAP_MBOX	0x2
 > +
-> +static const uuid_t cxl_ecs_uuid =
-> +	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,     \
-> +		  0x89, 0x33, 0x86);
-> +
-> +struct cxl_ecs_context {
-> +	u16 num_media_frus;
-> +	u16 get_feat_size;
-> +	u16 set_feat_size;
-> +	struct cxl_memdev *cxlmd;
-> +};
-> +
-> +/**
-> + * struct cxl_ecs_params - CXL memory DDR5 ECS parameter data structure.
-> + * @log_entry_type: ECS log entry type, per DRAM or per memory media FRU.
-> + * @threshold: ECS threshold count per GB of memory cells.
-> + * @mode:	codeword/row count mode
-> + *		0 : ECS counts rows with errors
-> + *		1 : ECS counts codeword with errors
-> + * @reset_counter: [IN] reset ECC counter to default value.
-> + */
-> +struct cxl_ecs_params {
-> +	u8 log_entry_type;
-> +	u16 threshold;
-> +	u8 mode;
-
-An enum is defined below, why not directly use enum type here?
-
-> +	bool reset_counter;
-> +};
-> +
-> +enum {
-> +	CXL_ECS_PARAM_LOG_ENTRY_TYPE,
-> +	CXL_ECS_PARAM_THRESHOLD,
-> +	CXL_ECS_PARAM_MODE,
-> +	CXL_ECS_PARAM_RESET_COUNTER,
-> +};
-> +
-> +#define	CXL_ECS_LOG_ENTRY_TYPE_MASK	GENMASK(1, 0)
-> +#define	CXL_ECS_REALTIME_REPORT_CAP_MASK	BIT(0)
-> +#define	CXL_ECS_THRESHOLD_COUNT_MASK	GENMASK(2, 0)
-> +#define	CXL_ECS_MODE_MASK	BIT(3)
-> +#define	CXL_ECS_RESET_COUNTER_MASK	BIT(4)
-> +
-> +static const u16 ecs_supp_threshold[] = { 0, 0, 0, 256, 1024, 4096 };
-> +
-> +enum {
-> +	ECS_LOG_ENTRY_TYPE_DRAM = 0x0,
-> +	ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU = 0x1,
-> +};
-> +
-> +enum {
-> +	ECS_THRESHOLD_256 = 3,
-> +	ECS_THRESHOLD_1024 = 4,
-> +	ECS_THRESHOLD_4096 = 5,
-> +};
-> +
-> +enum {
-> +	ECS_MODE_COUNTS_ROWS = 0,
-> +	ECS_MODE_COUNTS_CODEWORDS = 1,
-> +};
-> +
-> +struct cxl_ecs_rd_attrs {
-> +	u8 ecs_log_cap;
-> +	u8 ecs_cap;
-> +	__le16 ecs_config;
-> +	u8 ecs_flags;
-> +}  __packed;
-> +
-> +struct cxl_ecs_wr_attrs {
-> +	u8 ecs_log_cap;
-> +	__le16 ecs_config;
-> +}  __packed;
-> +
-> +/* CXL DDR5 ECS control functions */
-> +static int cxl_mem_ecs_get_attrs(struct device *dev, void *drv_data, int fru_id,
-> +				 struct cxl_ecs_params *params)
-> +{
-> +	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-> +	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	size_t rd_data_size;
-> +	u8 threshold_index;
-> +	size_t data_size;
-> +
-> +	rd_data_size = cxl_ecs_ctx->get_feat_size;
-> +
-> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =
-> +					kmalloc(rd_data_size, GFP_KERNEL);
-> +	if (!rd_attrs)
-> +		return -ENOMEM;
-> +
-> +	params->log_entry_type = 0;
-> +	params->threshold = 0;
-> +	params->mode = 0;
-> +	data_size = cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
-> +				    rd_data_size, CXL_GET_FEAT_SEL_CURRENT_VALUE);
-> +	if (!data_size)
-> +		return -EIO;
-> +
-> +	params->log_entry_type = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-> +					   rd_attrs[fru_id].ecs_log_cap);
-> +	threshold_index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +				    rd_attrs[fru_id].ecs_config);
-> +	params->threshold = ecs_supp_threshold[threshold_index];
-> +	params->mode = FIELD_GET(CXL_ECS_MODE_MASK,
-> +				 rd_attrs[fru_id].ecs_config);
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_ecs_set_attrs(struct device *dev, void *drv_data, int fru_id,
-> +				 struct cxl_ecs_params *params, u8 param_type)
-> +{
-> +	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-> +	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	size_t rd_data_size, wr_data_size;
-> +	u16 num_media_frus, count;
-> +	size_t data_size;
-> +	int ret;
-> +
-> +	num_media_frus = cxl_ecs_ctx->num_media_frus;
-> +	rd_data_size = cxl_ecs_ctx->get_feat_size;
-> +	wr_data_size = cxl_ecs_ctx->set_feat_size;
-> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =
-> +				kmalloc(rd_data_size, GFP_KERNEL);
-> +	if (!rd_attrs)
-> +		return -ENOMEM;
-> +
-> +	data_size = cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
-> +				    rd_data_size, CXL_GET_FEAT_SEL_CURRENT_VALUE);
-> +	if (!data_size)
-> +		return -EIO;
-> +	struct cxl_ecs_wr_attrs *wr_attrs __free(kfree) =
-> +					kmalloc(wr_data_size, GFP_KERNEL);
-> +	if (!wr_attrs)
-> +		return -ENOMEM;
-> +
-> +	/* Fill writable attributes from the current attributes read for all the media FRUs */
-> +	for (count = 0; count < num_media_frus; count++) {
-> +		wr_attrs[count].ecs_log_cap = rd_attrs[count].ecs_log_cap;
-> +		wr_attrs[count].ecs_config = rd_attrs[count].ecs_config;
-> +	}
-> +
-> +	/* Fill attribute to be set for the media FRU */
-> +	switch (param_type) {
-> +	case CXL_ECS_PARAM_LOG_ENTRY_TYPE:
-> +		if (params->log_entry_type != ECS_LOG_ENTRY_TYPE_DRAM &&
-> +		    params->log_entry_type != ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU) {
-> +			dev_err(dev,
-> +				"Invalid CXL ECS scrub log entry type(%d) to set\n",
-> +			       params->log_entry_type);
-> +			dev_err(dev,
-> +				"Log Entry Type 0: per DRAM  1: per Memory Media FRU\n");
-> +			return -EINVAL;
-> +		}
-> +		wr_attrs[fru_id].ecs_log_cap = FIELD_PREP(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-> +							  params->log_entry_type);
-> +		break;
-> +	case CXL_ECS_PARAM_THRESHOLD:
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_THRESHOLD_COUNT_MASK;
-> +		switch (params->threshold) {
-> +		case 256:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-> +					CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						ECS_THRESHOLD_256);
-> +			break;
-> +		case 1024:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-> +						CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						ECS_THRESHOLD_1024);
-> +			break;
-> +		case 4096:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-> +						CXL_ECS_THRESHOLD_COUNT_MASK,
-> +						ECS_THRESHOLD_4096);
-> +			break;
-> +		default:
-> +			dev_err(dev,
-> +				"Invalid CXL ECS scrub threshold count(%d) to set\n",
-> +				params->threshold);
-> +			dev_err(dev,
-> +				"Supported scrub threshold count: 256,1024,4096\n");
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case CXL_ECS_PARAM_MODE:
-> +		if (params->mode != ECS_MODE_COUNTS_ROWS &&
-> +		    params->mode != ECS_MODE_COUNTS_CODEWORDS) {
-> +			dev_err(dev,
-> +				"Invalid CXL ECS scrub mode(%d) to set\n",
-> +				params->mode);
-> +			dev_err(dev,
-> +				"Mode 0: ECS counts rows with errors"
-> +				" 1: ECS counts codewords with errors\n");
-> +			return -EINVAL;
-> +		}
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_MODE_MASK;
-> +		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_MODE_MASK,
-> +							  params->mode);
-> +		break;
-> +	case CXL_ECS_PARAM_RESET_COUNTER:
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_RESET_COUNTER_MASK;
-> +		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK,
-> +							  params->reset_counter);
-> +		break;
-> +	default:
-> +		dev_err(dev, "Invalid CXL ECS parameter to set\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = cxl_set_feature(mds, cxl_ecs_uuid, CXL_MEMDEV_ECS_SET_FEAT_VERSION,
-> +			      wr_attrs, wr_data_size,
-> +			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET);
-> +	if (ret) {
-> +		dev_err(dev, "CXL ECS set feature failed ret=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type(struct device *dev, void *drv_data, int fru_id, u64 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.log_entry_type;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_log_entry_type(struct device *dev, void *drv_data, int fru_id, u64 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.log_entry_type = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_LOG_ENTRY_TYPE);
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type_per_dram(struct device *dev, void *drv_data,
-> +					       int fru_id, u64 *val)
-
-I may have missed something. We have cxl_ecs_get_log_entry_type, and what is
-cxl_ecs_get_log_entry_type_per_memory_media and cxl_ecs_get_log_entry_type_per_dram for? 
-
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_DRAM)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type_per_memory_media(struct device *dev, void *drv_data,
-> +						       int fru_id, u64 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_mode(struct device *dev, void *drv_data, int fru_id, u64 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_mode(struct device *dev, void *drv_data, int fru_id, u64 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.mode = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_MODE);
-> +}
-> +
-> +static int cxl_ecs_get_mode_counts_rows(struct device *dev, void *drv_data, int fru_id, u64 *val)
-As above, what is cxl_ecs_get_mode_counts_codewords and
-cxl_ecs_get_mode_counts_rows for?
-
-Fan
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.mode == ECS_MODE_COUNTS_ROWS)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_mode_counts_codewords(struct device *dev, void *drv_data,
-> +					     int fru_id, u64 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.mode == ECS_MODE_COUNTS_CODEWORDS)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_reset(struct device *dev, void *drv_data, int fru_id, u64 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.reset_counter = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_RESET_COUNTER);
-> +}
-> +
-> +static int cxl_ecs_get_threshold(struct device *dev, void *drv_data, int fru_id, u64 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.threshold;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_threshold(struct device *dev, void *drv_data, int fru_id, u64 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.threshold = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_THRESHOLD);
-> +}
-> +
-> +static int cxl_ecs_get_name(struct device *dev, void *drv_data, int fru_id, char *name)
-> +{
-> +	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-> +	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-> +
-> +	return sysfs_emit(name, "cxl_%s_ecs_fru%d\n", dev_name(&cxlmd->dev), fru_id);
-> +}
-> +
-> +static const struct edac_ecs_ops cxl_ecs_ops = {
-> +	.get_log_entry_type = cxl_ecs_get_log_entry_type,
-> +	.set_log_entry_type = cxl_ecs_set_log_entry_type,
-> +	.get_log_entry_type_per_dram = cxl_ecs_get_log_entry_type_per_dram,
-> +	.get_log_entry_type_per_memory_media = cxl_ecs_get_log_entry_type_per_memory_media,
-> +	.get_mode = cxl_ecs_get_mode,
-> +	.set_mode = cxl_ecs_set_mode,
-> +	.get_mode_counts_codewords = cxl_ecs_get_mode_counts_codewords,
-> +	.get_mode_counts_rows = cxl_ecs_get_mode_counts_rows,
-> +	.reset = cxl_ecs_reset,
-> +	.get_threshold = cxl_ecs_get_threshold,
-> +	.set_threshold = cxl_ecs_set_threshold,
-> +	.get_name = cxl_ecs_get_name,
-> +};
-> +
->  int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  {
->  	struct edac_ras_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
->  	struct cxl_patrol_scrub_context *cxl_ps_ctx;
->  	struct cxl_mbox_supp_feat_entry feat_entry;
->  	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
-> +	struct cxl_ecs_context *cxl_ecs_ctx;
->  	int rc, i, num_ras_features = 0;
-> +	int num_media_frus;
+>  /**
+>   * struct cxl_dev_state - The driver device state
+>   *
+> @@ -438,6 +441,7 @@ struct cxl_dev_state {
+>  	struct resource ram_res;
+>  	u64 serial;
+>  	enum cxl_devtype type;
+> +	uint8_t capabilities;
+>  };
 >  
->  	if (cxlr) {
->  		struct cxl_region_params *p = &cxlr->params;
-> @@ -407,6 +805,37 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  	ras_features[num_ras_features].scrub_ctx = cxl_ps_ctx;
->  	num_ras_features++;
->  
-> +	if (!cxlr) {
-> +		rc = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_ecs_uuid, &feat_entry);
-> +		if (rc < 0)
-> +			goto feat_register;
-> +
-> +		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
-> +			goto feat_register;
-> +		num_media_frus = feat_entry.get_size/
-> +					sizeof(struct cxl_ecs_rd_attrs);
-> +		if (!num_media_frus)
-> +			goto feat_register;
-> +
-> +		cxl_ecs_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx), GFP_KERNEL);
-> +		if (!cxl_ecs_ctx)
-> +			goto feat_register;
-> +		*cxl_ecs_ctx = (struct cxl_ecs_context) {
-> +			.get_feat_size = feat_entry.get_size,
-> +			.set_feat_size = feat_entry.set_size,
-> +			.num_media_frus = num_media_frus,
-> +			.cxlmd = cxlmd,
-> +		};
-> +
-> +		ras_features[num_ras_features].feat = ras_feat_ecs;
-> +		ras_features[num_ras_features].ecs_ops = &cxl_ecs_ops;
-> +		ras_features[num_ras_features].ecs_ctx = cxl_ecs_ctx;
-> +		ras_features[num_ras_features].ecs_info.num_media_frus = num_media_frus;
-> +		num_ras_features++;
-> +	}
-> +
-> +feat_register:
-> +
->  	return edac_ras_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->  				     num_ras_features, ras_features);
+>  /**
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index b34d6259faf4..e2a978312281 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -502,7 +502,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
 >  }
-> -- 
-> 2.34.1
-> 
+>  
+>  static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> -			      struct cxl_register_map *map)
+> +			      struct cxl_register_map *map,
+> +			      uint8_t cxl_dev_caps)
+>  {
+>  	int rc;
+>  
+> @@ -519,7 +520,7 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	if (rc)
+>  		return rc;
+>  
+> -	return cxl_setup_regs(map);
+> +	return cxl_setup_regs(map, cxl_dev_caps);
+>  }
+>  
+>  int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds)
+> @@ -527,7 +528,8 @@ int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds)
+>  	struct cxl_register_map map;
+>  	int rc;
+>  
+> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
+> +				cxlds->capabilities);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -536,7 +538,7 @@ int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds)
+>  		return rc;
+>  
+>  	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> -				&cxlds->reg_map);
+> +				&cxlds->reg_map, cxlds->capabilities);
+>  	if (rc)
+>  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+>  
+> @@ -850,7 +852,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		dev_warn(&pdev->dev,
+>  			 "Device DVSEC not present, skip CXL.mem init\n");
+>  
+> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
+> +				cxlds->capabilities);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -863,7 +866,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	 * still be useful for management functions so don't return an error.
+>  	 */
+>  	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> -				&cxlds->reg_map);
+> +				&cxlds->reg_map, cxlds->capabilities);
+>  	if (rc)
+>  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+>  	else if (!cxlds->reg_map.component_map.ras.valid)
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index 9cefcaf3caca..37d8bfdef517 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -33,7 +33,8 @@ void efx_cxl_init(struct efx_nic *efx)
+>  
+>  	pci_info(pci_dev, "CXL CXL_DVSEC_PCIE_DEVICE capability found");
+>  
+> -	cxl->cxlds = cxl_accel_state_create(&pci_dev->dev);
+> +	cxl->cxlds = cxl_accel_state_create(&pci_dev->dev,
+> +					    CXL_ACCEL_DRIVER_CAP_HDM);
+>  	if (IS_ERR(cxl->cxlds)) {
+>  		pci_info(pci_dev, "CXL accel device state failed");
+>  		return;
+> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
+> index c7b254edc096..0ba2195b919b 100644
+> --- a/include/linux/cxl_accel_mem.h
+> +++ b/include/linux/cxl_accel_mem.h
+> @@ -12,8 +12,11 @@ enum accel_resource{
+>  	CXL_ACCEL_RES_PMEM,
+>  };
+>  
+> +#define CXL_ACCEL_DRIVER_CAP_HDM	0x1
+> +#define CXL_ACCEL_DRIVER_CAP_MBOX	0x2
+> +
+>  typedef struct cxl_dev_state cxl_accel_state;
+> -cxl_accel_state *cxl_accel_state_create(struct device *dev);
+> +cxl_accel_state *cxl_accel_state_create(struct device *dev, uint8_t caps);
+>  
+>  void cxl_accel_set_dvsec(cxl_accel_state *cxlds, u16 dvsec);
+>  void cxl_accel_set_serial(cxl_accel_state *cxlds, u64 serial);
