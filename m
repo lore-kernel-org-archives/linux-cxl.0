@@ -1,223 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2062.outbound.protection.outlook.com [40.107.237.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB381A269
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Jul 2024 16:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721405099; cv=none; b=Q4WMhzhpbsNrkxoW/Rdf0ctIGoHGNeOIpl7sHc7sJS3m+2waI4IWoo4HSxDYPw5oYkjAIXyh7KOOOdXssTyJpGSaTfj8kN5NEVljgpdAinF4WRuQvKsvqNE7+jdDeOsfSj7nScIKRDukiuxQ+AqC/K70voaJPS1vpGb9P3hFsw4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721405099; c=relaxed/simple;
-	bh=kYt4UDBdOF6BsVwzu2b5IEEajWkfjXkFEJSvTAgkhSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z0F2LexQtc00XUH9M5mFWXIUjHrzqMeoVfWN+OidAImV0+WC34zr1BOosQHR1n1g8XcbmDHTmoOrunhY1//xUY8NaNYi7IuKrar+uPNgNZL7usQPLIaubi9G484igQeFYgzLNOsr1xshv6NfR3IwkQwvAHkxeo3F4HQQ3T+yul0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3LlFKgR; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF8514600C
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Jul 2024 16:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721405250; cv=fail; b=HNIjuozYRjcmx0T7XgI2lMYWSV3Yph2kUbS3B+K1XlbhJOn1SHwSh3BC6BxhtGqPh4QWRh+3gOZJeXjuKQJcC9R0o/LqXoOdBPDXnZyJnKarSD4iOibkgqOVox66i285jeXSvoM6Gw5ES0d35/e6keIaneXzebi2J6PutxTQ4w0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721405250; c=relaxed/simple;
+	bh=WS+jcveAHFwtK2Gv3XAK2WFYJa354IyOa4qg+kuygKk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DCyOKH7G839mNanBHOur6brTW/RP3Jz5CTZTRNJLUx8xIAO3AQy72EtCofHZea5GieQvYNEz19Eu5moaAig5H5n03WPGrxgDN91p6IFkYQVWc7ysVphel8U3tg8qlTquh4B/gb9kdPMSlQCfsqwSKpWukEy6hoR5a+15jv4xoNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S2Xf7txl; arc=fail smtp.client-ip=40.107.237.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3LlFKgR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721405097; x=1752941097;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kYt4UDBdOF6BsVwzu2b5IEEajWkfjXkFEJSvTAgkhSA=;
-  b=C3LlFKgR9Ev7D70ElcXEFNjVftL6+Sp2e6U9S/qg4pf71aucssxVKEnf
-   18S/cJx9vdUxRDi6q0FaWmhzUA8E0SK2ZPOUeQSm8NqM90EEYNxmD4yZA
-   SfGHmSrVOiwhGL55/MDV2bCWvNphyk7KooGLHPiAUR/3Jevds6V5UEjES
-   lxbP/5jLBnEVdzl68QuX8WOpURDipTjTMz7rQnDB0iRVzaF8tLQ1jBCDX
-   dT8rXXhAe4DN1NDGbB1m1qmgYmuiLdOCpCE7c2seQ32SYRt4AM6yMA7QT
-   cA8gLmvw075zYVAW6fDuavpRMQIgXxJEJLkHCuowPahqBPf+nE8A1SLTl
-   A==;
-X-CSE-ConnectionGUID: Fe+YRcMbTo+29y96zu8CWg==
-X-CSE-MsgGUID: 76ZeqeZOQzWdI/OmPqPv6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="41548715"
-X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
-   d="scan'208";a="41548715"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 09:04:52 -0700
-X-CSE-ConnectionGUID: 67IU+5wqQlK14ipapRYxvg==
-X-CSE-MsgGUID: xaZ7BVu5TseJHcJomKBn4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
-   d="scan'208";a="50896205"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.46]) ([10.125.109.46])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 09:04:51 -0700
-Message-ID: <ec0f2e8d-e783-4211-8d41-2b9a6df67049@intel.com>
-Date: Fri, 19 Jul 2024 09:04:50 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S2Xf7txl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Lkak5S09BndddxSLOnqGhGLq3sD0jhf6vXtVIbmRriMYHb47Wk7yu4IE0MCQSRJ8IvNZOHQDunD77V5uKD5ijO0aWEPGHp51WzMH59BYSNQGLLrvbgh1funIbxYed/x7L+a8Pnkkmhga08yidf/x4ypciEU/P2G+e0CvhPAVBCspyzHPD09RvF7RJBko45mDvsMjXg2C8/yFlAOKQSkWN2CDTqCZIsSUcm/4bg+lBIkGH/+RjAyjXLKxOG7C3TIeLEB+fVfJN51qZn0iijKEFOjBCGHA8dlUdpnuX3LFxbTjVV8DQ+UqecrPXmDRYC1mYvcDSs365dp8Ob1PcuTC+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=juDliP8sNKjxdHFbIVO22ka9Dj4ixpAZ6f/D9+2d8c0=;
+ b=W45ExwOllaeCQ+66AOM37OrojErJ3WTC0DHmoZdd9qdDgvdA5aR1v3pY2OjLPW/PUShR8QPjHa8cA66Ggc47D7pYBrpiBompn/XoS1PsD+NddHBJX/DXr5e6j+pc/FHq/H67GbogxZ8PS3GqWAOQyxJ6NDv3WTDvNjUTs8g87ZIbVMvQxPq5ioOVapecz/+nnxlBOhqT93fU5xocY8WXe74rlGkm7ybsyGFHwppc+Q22Q5OLBndLG1pKuBkvQd+aXSj3FPNeiMU+sP2jkXt6HNd7jBIoER1apyA355k8YhDMHTBbPqchARBfMixeynEnnXMqLqMtTyP0cygKdzzfxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=juDliP8sNKjxdHFbIVO22ka9Dj4ixpAZ6f/D9+2d8c0=;
+ b=S2Xf7txlDdWvQnvo0PKyU0r2T9qioPSknv39+Q/E1dXDVqtO7geOz3joWN77DVLJG2EAplavcW7FF7hwPrLDfZoZR75vmIVzPwoOqi7oG6sYoXJ4RiMMlTuz2s1ugBtDWsghl6L2so1VuAUs0EXJfY1+7ov20YmfDIV0b/khtxg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by CH3PR12MB7690.namprd12.prod.outlook.com (2603:10b6:610:14e::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14; Fri, 19 Jul
+ 2024 16:07:26 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.7784.013; Fri, 19 Jul 2024
+ 16:07:26 +0000
+Message-ID: <d69f1df9-a879-cec2-192b-5fec7d507e68@amd.com>
+Date: Fri, 19 Jul 2024 17:07:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [RFC PATCH 01/13] cxl: Move mailbox related bits to the same
+ context
+Content-Language: en-US
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240718213446.1750135-2-dave.jiang@intel.com>
+ <6f0a4aaa-c555-ae7e-2614-f15871e5725a@amd.com>
+ <0d9e88e2-e79a-4ce6-87ec-3cd33b4afeed@intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <0d9e88e2-e79a-4ce6-87ec-3cd33b4afeed@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LNXP265CA0095.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:76::35) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] cxl: avoid duplicating report from MCE & device
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>,
- Dan Williams <dan.j.williams@intel.com>, qemu-devel@nongnu.org,
- linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com, dave@stgolabs.net, ira.weiny@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com
-References: <20240618165310.877974-1-ruansy.fnst@fujitsu.com>
- <6675bd86ea005_57ac29411@dwillia2-xfh.jf.intel.com.notmuch>
- <965e2c27-6147-4237-b4b6-6aaf74363aa2@fujitsu.com>
- <1fab087b-eb6c-485e-a2ed-f86e8dfacc5d@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <1fab087b-eb6c-485e-a2ed-f86e8dfacc5d@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CH3PR12MB7690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e3ad543-6732-4712-2d41-08dca80ce1be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aG15dkFrTkF1bzVjTWEwWmhLUlYvaUFmd1JROTdrR1YrR0JoZXdSNEFOZTV4?=
+ =?utf-8?B?YnFBd1B2VnhMZ3RacnZNWktwK09RK1lHY2Nmd3pBaXNQTEhobzNuWlNhZ1BB?=
+ =?utf-8?B?TDRnSldqWkdKNHNOVEIwYllMT09EL256NXdCTDg4Mm5UcjJvdnZkNzlwUE1v?=
+ =?utf-8?B?em9BMFlWMGFDRWsrM3h0TVVaVkVwRHJqQi9SemlSNHp2NEVySHl1aCtTeTVY?=
+ =?utf-8?B?ZjJlNE5CVWpCaEViK1pJcXVtOW05SllTY2kvK25LU1VpNmZnSDNCblNXYjN0?=
+ =?utf-8?B?VUVpYlFUZHNXVEE2Y1FVUHJGZnNGb2VnOFozM2pPK1hGVnFuenltVVFBd2g2?=
+ =?utf-8?B?OFlUTHMzUUdPUmgzNlRJWlA3TmRxeVdYc1ZxaVpFNjJhT2lRSGxIRThFTXJm?=
+ =?utf-8?B?dG4xTXg3MTNacnQ3YW8vUTRKalZ1d1BMZ1NaMkdwUGg1RG5GUDdlS2xuTUIx?=
+ =?utf-8?B?dDM4ZnNVWWNkVTh2KzlQWXpkL0Ftdjloc1BzSmp1SnZCQ2M4SzR6M2tYcWhJ?=
+ =?utf-8?B?MUZBcmo4Wlk5cXZrY0pMWllkRUVWMTNRbHI3dWswMERMRi9ZaG4rbklORGhj?=
+ =?utf-8?B?WnA0aXIxVXlHY0s3N2x4MGlxWTNaS1IwQk5MYTgxdEhYNUc1OUVUTXQxT1Vm?=
+ =?utf-8?B?U3BRdGVvRGs1U0NscjdTbmNhdm5YUEtJd1NFNlpVRTM3dmFwOFd5VjFNTXJY?=
+ =?utf-8?B?NW5JQ3BiQ0tnci9oNnk2cGNGVFhtam9uNkFpVXVLS2YyUjlNSVBUMDk2T1oz?=
+ =?utf-8?B?blYzbDVZLytMVlJYWHdSaHlOQkpEN216V3NhUXRMWCtNYzc1a2N6NS8zWHRF?=
+ =?utf-8?B?cjBCT3dDcWpXMzlreEg3b0hCQjNMcmgvRDdoZFBaenZ0ZW5SUS93dFE4Ym0w?=
+ =?utf-8?B?TnhyVlN2dll5QW5mMkdWeWcrdzZDL0VTOGx6amV5WkdNeGNsUnJFMkR2dXNY?=
+ =?utf-8?B?bXJVYjk3SDZ6UGZMUWc3dXVFS1ZkR3hPc1VpaW5Jd3YveU5yRWFmYUNpM2R6?=
+ =?utf-8?B?d0ROT1dvRDZMZHpEUFc5Z1ZCcnFhNFFYY2d0VnNhNGV3RzVob0hQYjcwRTFR?=
+ =?utf-8?B?NjlGUGFTUkpGcXNiYVFuNkQ0SnowNTRnV2loWkJhUlJNQTJzc2VOMlRRNldL?=
+ =?utf-8?B?UHdGdFdKbHl5RkFJN0xmVFQ0YzBwZXZJQUh2ZlgrOUZCc2JHWnVGT0gxSVNI?=
+ =?utf-8?B?SExaQytXMkdLOUpQOUdVMjVhZU4zTFhid0FUWHBHWmNQc2FQZWdXWE1mTFdi?=
+ =?utf-8?B?YUJ5dGN1VCsvQWEyblIyWlR2ZExWN2ZNT1cyaWVjSWVXdVNmemtlRzRLdnM5?=
+ =?utf-8?B?R3JHT0RyV0RyeHpXNmRVYTdFUHNmUjNyajZBR2lPUG5KbFY1SU9vM3B1N2lx?=
+ =?utf-8?B?Tk85SVA1VmxpMW9rVlpBSEFwaXZaRGNnenMyWjFvWmVVVFgreHh5dWtobE9J?=
+ =?utf-8?B?WVJJT2pWTklYcGFGdER3WnVzSWp1N2N2SDFMQzVQQTcrTjIyS0V3YTVSNklp?=
+ =?utf-8?B?Y2UzanRzYWVTZ0dSR3lETTdYQU55d3JGNmxvRFFQTEdKUVBZK2Nrdm1CZmpv?=
+ =?utf-8?B?NVFNSUV5b3lic3orMisrVU5jWWh6UDFxWTVIMUZzazNpTndoTXZCY1pwZDJZ?=
+ =?utf-8?B?d0YxUGlIWDlRYnlBUkRLWmNxY1J3a2Q5Ukt1ZnpZNGV4d000Z0xDNTZqZ2JR?=
+ =?utf-8?B?TGVkMlFHektKME1hc2dVY2pPL0Q2b0QyY1U5UDNNbkYycUFKOGJubHdBU1lu?=
+ =?utf-8?B?SFNpSTBOT1NISEFya3hDTFQrMDc2S2lGT3hObUpUZUZRZ0xLOXhZSy9PK3dq?=
+ =?utf-8?B?VlRyRWd4SXpLdStNcjBpdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXlZZ1YxMDhXcWtiQjl6L0FJeVh2RGVqNG1SdkhsUTRTTzExenJZT2JDM1dZ?=
+ =?utf-8?B?RTQ3VG12VmFRbzVkVXdzbVhsNE9zRDAyNmozUHI3SHlndi9Fb3VZQ1Z1UnNp?=
+ =?utf-8?B?bUhqN2M0V093d2tSQlJ1ZGVVRkRaUXdtc0RGVWs3UEliWnFnbERpMXFieXBt?=
+ =?utf-8?B?VDU2eVZpZDVUZDNnSkFuUlo3VDh3UjdLalNrd1JFb1RYM2lRbWxnMks1N1B5?=
+ =?utf-8?B?UWtjYXVxWTYvMUhNZEd5KzJOQUJNd3RJTGlFS1g4MHUwMHpycFo3OTZrUjNh?=
+ =?utf-8?B?dnZJOTNmTFJxWW5udWpYcVhzbURQSGNsa1czUU5saEdIOUQ4d3B5cERUb0RM?=
+ =?utf-8?B?NS8yTDJVSWkrTXcvdjBnN0kzMjdVb2grSDA2WTViQWE1VWszYXBPVWNibEt2?=
+ =?utf-8?B?UXgxL0RtY3k1ZVhyWUdSMWNzZktNN0ZxSHpwNU1RZktuUHNxek43MkpjR3Vu?=
+ =?utf-8?B?ZU9BbW1pdGorbzNRU1A3bWtyaWUzeU5sYUtxOVhKekZZc1M3YVdLNmFhcFcz?=
+ =?utf-8?B?aUhsVWxTaWp0dUdac0Z0Q3RUb3JGcnVUeVhkNjlsMVdhdnRjSStUVkRiK3NF?=
+ =?utf-8?B?V2pMYjlKREtBeUhiRGw1cDdpM0phZ2s5dVcwY05NRGxqWGdDSGJrUjY0cVFm?=
+ =?utf-8?B?WFNUQ1VsekF2empxYWVhbGRUQ3BEL2JIVVF5SnRpL3VvOUhTcnJJOHBlNnJC?=
+ =?utf-8?B?YWxaUWRRNDBSU2o1WmhjUDBtNnVVY0FraU1ITFFNQzBpRWJFOTJ4ZldmSGJl?=
+ =?utf-8?B?QytzcVhhTzFXQWNzWnJQUFdKV3h0SlFsS3dIWWRhVDRxanM4V2t1U2VKK081?=
+ =?utf-8?B?bkpDdzRMK2NQYmxpS3FOOVY2bTFWbnJRbTFrNEpSRVRlaDJ5dVpNMjhqNUx3?=
+ =?utf-8?B?aFE2dG8xcW5yOWEyS0dwdFYycVlobWJ1TFNreTdRcmlUUHRMRkl2OWtjcTFK?=
+ =?utf-8?B?SEtKb3ZsQkJMdWlVZUgzK2ZFWGpFRExpSStBUUlLWElmK3Vqay9xeG4yUkRt?=
+ =?utf-8?B?RUl2UnJTYklUSk53M3EyZWlOQnNaemMrZGlMOVdDSU5xMThZVmxkUEIybnIv?=
+ =?utf-8?B?eXZpbGRGcGkzTG1jYVZ4MlAxeWExUUh3MUNsMXJKSG9DT29jUHd2dVZjWm5R?=
+ =?utf-8?B?ekRhY212TnB6M1FEVTNIaFQ5OGtvZ2RURkRRVCsrK3AzZmNPWUF5ZDBQM0xa?=
+ =?utf-8?B?V1F1b2RvSkFyQWhmZFYwMUhremlPYzFxeWpZSHZjZ0JmMnFhSlBXcEYra2pW?=
+ =?utf-8?B?QmVmM2dDbHFkYTNseUR6T2RhSjVCOTBveFc0bi81NGsxblRXbGtDNDE5YnVE?=
+ =?utf-8?B?M2s4R3hFK0tFeURlNzdHcTRIaWMveW1uanp2NldtVDN6U1FORWl2TEszNndx?=
+ =?utf-8?B?UWNhVGVBb1JRMEdvLys4MWxNSUIvdU1TbjF1Sk9qcEtGMlJ2b1VabFRvVkl5?=
+ =?utf-8?B?Z3lYazBFYWNWVHBmUThHWG9UMmpDWDZaTHA0ZWlWTlZmcmJxTm5sUS9KeGpx?=
+ =?utf-8?B?MERjb284NHpnZmEyZ0RiSFBOVDJ5MnlLT1hVbHBRY2RSNHkySDBqYkkrNDFP?=
+ =?utf-8?B?cGV3b2tDSFZCVWc3OG5IL2FJZlBmVHpNVVhkbjdIa0JIUklReFJhQk9lNTNF?=
+ =?utf-8?B?VmtOTmdaSC84S2wvNXg4STJDMis4Z3RuSWhxclFlK3VFVEY3aTVOT3ErUksx?=
+ =?utf-8?B?dHZsZmtuTkxkWVRVRi9aSU1ZTDUxRHlCc3djUnZuNXduU1ozLzdiVUNtZVMw?=
+ =?utf-8?B?Vk44SFhqV0RROVRLY0htOWtCeUNOMjZwYnVqUXhrVlhMMnN1L1ltU0pxUzM3?=
+ =?utf-8?B?RFVDY3dRVDVtWEFkZU5pUTFiRlh1c1pMMUx3TG1iSitiU1BmM1l2UVZnUXVv?=
+ =?utf-8?B?ZUlQZk1xdzhMMTZ6VW5KR0l5V3hwOTc2WGtCakRrMFdvYjdMUFozUmF1aGdE?=
+ =?utf-8?B?ZStGaDFqYXBSTlRhMXBEdGZ1L0RIcjAydFI1bUFOdWlNcjNwNmJ2MDd5VUh1?=
+ =?utf-8?B?R0hYY1BIRDEyb2Y1MmtjbXovbEovOWxQbmVsSHV4N0ExRWFoZGduVGErdDVW?=
+ =?utf-8?B?STFrdlFGaFNxSDk1NTVSUllrU1ZXOHFLeW0yYjJDSjVOT0g5bTZ5V0FOV2pl?=
+ =?utf-8?Q?rPq/KpovpnFkuEcwC9f1Tsx0c?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e3ad543-6732-4712-2d41-08dca80ce1be
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2024 16:07:26.2464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lWN29oJhpQ+2RFWi3oS1Yx3CwdJ+J3+V1PbtCPdHAdw7MuBPsbokL3roAPAOg1kcMupPJvRqvb1umTqIFaAjHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7690
 
 
+On 7/19/24 16:47, Dave Jiang wrote:
+> On 7/18/24 11:31 PM, Alejandro Lucero Palau wrote:
+>> On 7/18/24 22:32, Dave Jiang wrote:
+> <snip>
+>
+>>>    /*
+>>>     * Per CXL 3.0 Section 8.2.8.4.5.1
+>>>     */
+>>> @@ -438,6 +403,7 @@ struct cxl_dev_state {
+>>>        struct resource ram_res;
+>>>        u64 serial;
+>>>        enum cxl_devtype type;
+>>> +    struct cxl_mailbox cxl_mbox;
+>>>    };
+>>>    
+>>
+>> Being a mailbox an optional capability for Type2, not sure it should be here. Maybe it should but as a pointer for dynamically creating the struct if needed.
+>>
+>>
+> Yes.... Which actually also ties in with your Type2 work. I talked to Dan last night while looking at your patch where the a software cap mask gets passed in for mailbox and HDM enumeration. The conclusion was that we need to refactor the code to deal with the optional component enumeration. For mailbox, it needs to be independent of memdev device state and the enumeration needs to be split out. I'm going to try to take a crack at it, unless you want to do it. :)
+>
 
-On 7/1/24 7:12 PM, Shiyang Ruan wrote:
-> 
-> 
-> 在 2024/6/25 21:56, Shiyang Ruan 写道:
->>
->>
->> 在 2024/6/22 1:51, Dan Williams 写道:
->>> Shiyang Ruan wrote:
->>>> Background:
->>>> Since CXL device is a memory device, while CPU consumes a poison page of
->>>> CXL device, it always triggers a MCE by interrupt (INT18), no matter
->>>> which-First path is configured.  This is the first report.  Then
->>>> currently, in FW-First path, the poison event is transferred according
->>>> to the following process: CXL device -> firmware -> OS:ACPI->APEI->GHES
->>>>   -> CPER -> trace report.  This is the second one.  These two reports
->>>> are indicating the same poisoning page, which is the so-called "duplicate
->>>> report"[1].  And the memory_failure() handling I'm trying to add in
->>>> OS-First path could also be another duplicate report.
->>>>
->>>> Hope the flow below could make it easier to understand:
->>>> CPU accesses bad memory on CXL device, then
->>>>   -> MCE (INT18), *always* report (1)
->>>>   -> * FW-First (implemented now)
->>>>        -> CXL device -> FW
->>>>           -> OS:ACPI->APEI->GHES->CPER -> trace report (2.a)
->>>>      * OS-First (not implemented yet, I'm working on it)
->>>>        -> CXL device -> MSI
->>>>           -> OS:CXL driver -> memory_failure() (2.b)
->>>> so, the (1) and (2.a/b) are duplicated.
->>>>
->>>> (I didn't get response in my reply for [1] while I have to make patch to
->>>> solve this problem, so please correct me if my understanding is wrong.)
->>>
->>> The CPU MCE may not be in the loop. Consider the case of patrol scrub,
->>> or device-DMA accessing poison. In that case the device will signal a
->>> component event and the CPU may never issue the MCE.
->>
->> My other patch: "cxl/core: add poison creation event handler", adds calling memory_failure() when an event is received form device, which checks the poison record (insert if not exists) to make sure poison would be reported/handled, but not twice, no matter CPU issues the MCE later or earlier.  And the lock of poison record makes sure that it's fine even in race condition.
->>
->>>
->>> What is missing for me from this description is *why* does the duplicate
->>> report matter in practice? If all that happens is that the kernel
->>> repeats the lookup to offline the page and set the HWPoison bit, is that
->>> duplicated work worth adding more tracking?
->>
->> Besides setting the HWPoison bit for the poison page, memory_failure() also finds and notifies those processes who are accessing the poison page, and tries to recovery the page.  And there seems no lock to prevent the 2nd memory_failure() and clearing poison operation from being called in race, then the HWPoison bit could be unsure.  I think that's the problem.
->>
->>  > So, I think all CXL poison notification events should trigger an
->>  > action optional memory_failure(). I expect this needs to make sure
->>  > that duplicates re not a problem. I.e. in the case of CPU consumption
->>  > of CXL poison, that causes a synchronous MF_ACTION_REQUIRED event via
->>  > the MCE path *and* it may trigger the device to send an error record
->>  > for the same page. As far as I can see, duplicate reports (MCE + CXL
->>  > device) are unavoidable.
->>
->> As you mentioned in my other patch, this problem should be solved at first.  My patch adds the poison record (tracking, which might not become very large) to prevent duplicating report.
-> 
-> Ping~
-> 
-> And I had some problems when using xarray, please see below.
-> 
->>
->>>
->>>> This patch adds a new notifier_block and MCE_PRIO_CXL, for CXL memdev
->>>> to check whether the current poison page has been reported (if yes,
->>>> stop the notifier chain, won't call the following memory_failure()
->>>> to report), into `x86_mce_decoder_chain`.  In this way, if the poison
->>>> page already handled(recorded and reported) in (1) or (2), the other one
->>>> won't duplicate the report.  The record could be clear when
->>>> cxl_clear_poison() is called.
->>>>
->>>> [1] https://lore.kernel.org/linux-cxl/664d948fb86f0_e8be294f8@dwillia2-mobl3.amr.corp.intel.com.notmuch/
->>>>
->>>> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
->>>> ---
->>>>   arch/x86/include/asm/mce.h |   1 +
->>>>   drivers/cxl/core/mbox.c    | 130 +++++++++++++++++++++++++++++++++++++
->>>>   drivers/cxl/core/memdev.c  |   6 +-
->>>>   drivers/cxl/cxlmem.h       |   3 +
->>>>   4 files changed, 139 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
->>>> index dfd2e9699bd7..d8109c48e7d9 100644
->>>> --- a/arch/x86/include/asm/mce.h
->>>> +++ b/arch/x86/include/asm/mce.h
->>>> @@ -182,6 +182,7 @@ enum mce_notifier_prios {
->>>>       MCE_PRIO_NFIT,
->>>>       MCE_PRIO_EXTLOG,
->>>>       MCE_PRIO_UC,
->>>> +    MCE_PRIO_CXL,
->>>>       MCE_PRIO_EARLY,
->>>>       MCE_PRIO_CEC,
->>>>       MCE_PRIO_HIGHEST = MCE_PRIO_CEC
->>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->>>> index 2626f3fff201..0eb3c5401e81 100644
->>>> --- a/drivers/cxl/core/mbox.c
->>>> +++ b/drivers/cxl/core/mbox.c
->>>> @@ -4,6 +4,8 @@
->>>>   #include <linux/debugfs.h>
->>>>   #include <linux/ktime.h>
->>>>   #include <linux/mutex.h>
->>>> +#include <linux/notifier.h>
->>>> +#include <asm/mce.h>
->>>>   #include <asm/unaligned.h>
->>>>   #include <cxlpci.h>
->>>>   #include <cxlmem.h>
->>>> @@ -880,6 +882,9 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>>>           if (cxlr)
->>>>               hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
->>>> +        if (hpa != ULLONG_MAX && cxl_mce_recorded(hpa))
->>>> +            return;
->>>> +
->>>>           if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
->>>>               trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->>>>                           &evt->gen_media);
->>>> @@ -1408,6 +1413,127 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
->>>>   }
->>>>   EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
->>>> +struct cxl_mce_record {
->>>> +    struct list_head node;
->>>> +    u64 hpa;
->>>> +};
->>>> +LIST_HEAD(cxl_mce_records);
->>>> +DEFINE_MUTEX(cxl_mce_mutex);
->>>
->>> I would recommend an xarray for this use case as that already has its
->>> own internal locking and efficient memory allocation for new nodes.
->>>
->>> However, the "why" question needs to be answered first.
->>
->> xarray does look better.  I didn't think of it befre.  Thanks for suggestion.
-> 
-> I'm trying using xarray but but I'm running into two problems.
-> 
-> The first one is: xarray stores an entry with a specified index, but here we only need to store the PFN.  I'm not sure how to specific an index for a PFN.  So I think xarray might not suitable for my case.
-> The second one: because we only need to store/search PFN, the list node only contains a list_head and a PFN. But xarray seems to require more memory for each node, which causes more overhead.
+That sounds good. I think your work with current mailbox needs gives you 
+a better position than mine, but happy to help/discuss/review. An happy 
+to know my concerns about current core struct not unfounded.
 
-Use PFN as the index of the xarray since it's unique. And that makes finding the entry easy with xarray because you just pass in the PFN as the key. You can store an xarray entry with no data. At this point you are just detecting whether the entry has been stored (valid) or not. Hope that helps.  
-
-> 
-> Maybe I'm overthinking this?
-> 
-> 
-> -- 
-> Thanks
-> Ruan.
-> 
->>
->> -- 
->> Thanks
->> Ruan.
