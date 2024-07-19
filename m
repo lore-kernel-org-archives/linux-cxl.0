@@ -1,141 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB362AF18;
-	Thu, 18 Jul 2024 23:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A678A35;
+	Fri, 19 Jul 2024 05:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721345764; cv=none; b=kwXMJbG2WXlgE+Nka3lHu5uIxUMjwftdSLCXFkHRJoAtwyhJwNCakiIIb9IsjNLZNLxUZeUwrAc+TBMTmCmaP94LoHzKMEPTaoh8p5FnpraEU8p8CoEAUl359Wce5HZIbHHbc8GXOoB+NjzJAVIeXpIUC1zfE9IgawuowUwRcxk=
+	t=1721368713; cv=none; b=XP3ID2nPSH2aLtgUDGiUiaUwOhPe0Jd6W+INdwDqAA4FOBlIs05+6Rl2aXjjhAXN9fgFp3u775emQ9VQWL5Dide918X1FfzW0ZVL5AMFkilCiClxhOVgW7k85u6SJJ9cgHbaOS4ZkO58bzSYqWxo/0OcX8Qs5pLvkxdTnGEcGTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721345764; c=relaxed/simple;
-	bh=ep5eWrhAXKMT3a1EI4DLi3Mu5MhwEqP3OAgzzQUi5xo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aDn1TeEURlJZn3Ce9+IhzJoO/9M0XlRKaZJR0urmObEhn7aJizGFyWjCy5dUOOErdg0ikBSqLFwXWyh5fOmyJf43lwvglvpaJzjz1eOp05zlauPJ2o1FsW0HN2Xdg7CcR0eoAfDMSzgKRlvn3fEwhkCXbM2k6MwAHS9HKljRiZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3azep9B; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721368713; c=relaxed/simple;
+	bh=UQznUIdoHoSsnmJ9kRgND1mWM0Wr77U9QEYTciDIo28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZguJpHnX8fe8y7f/Qsn9brJu52qV8u2yaL50sznIj20S6Yvwl+AtUlL6yj9kgVEg6SoJT1sky3xSw9eq2410xHQaeJPFn7M4gpzEY2uFDb61IjzPKpNRp7mIeuz+sljKXjAka1KP0IneJmvv5NwCqdey6kKs3u+WMVmTpbFqQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRFthwaJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3azep9B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721345762; x=1752881762;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ep5eWrhAXKMT3a1EI4DLi3Mu5MhwEqP3OAgzzQUi5xo=;
-  b=a3azep9BRUj2UMLjvO/9JwBqtl+s/QaHK45i1wQEFceLUfztPQAypG6X
-   G3aH7mffTPwaQr5KP9dSfuuxguTzIoLNG9/tSEwv09wpB7Z6Y8hj0LCMB
-   0yXCXDTMyKtrTFALgFAuiUla6/jTaTwDbuBjMnVcn1ZUagiEsJyPmeswt
-   symHVH4UUl8XlXshBgr1ljf0AYsh8rle6Jnyv5Gfpn05pzCwW9Nqe6RF0
-   x3CWeoGiX3BFSmzEK5nT2aNiHxxAhHSE/+6B9xmdG/ylVThhnusmifbno
-   wmGOYSDyac4YdY80OLPGJwFFVpriSW0YBqfUuwYUItV+mErxEDQ/KvUmv
-   g==;
-X-CSE-ConnectionGUID: 1oSghVNnR8aLdFwz8ZOXQw==
-X-CSE-MsgGUID: DtWISr8sQoe7H4JNnamjog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="36380985"
-X-IronPort-AV: E=Sophos;i="6.09,219,1716274800"; 
-   d="scan'208";a="36380985"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 16:36:01 -0700
-X-CSE-ConnectionGUID: 9QbGHwy+Q/GOIGQqvzaYcw==
-X-CSE-MsgGUID: rIBhblh5QxWij0HjDc9PXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,219,1716274800"; 
-   d="scan'208";a="55786036"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.184]) ([10.125.108.184])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 16:36:00 -0700
-Message-ID: <abff9def-a878-47e9-b9c8-27cf3c008c29@intel.com>
-Date: Thu, 18 Jul 2024 16:36:00 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRFthwaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BCBC32782;
+	Fri, 19 Jul 2024 05:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721368712;
+	bh=UQznUIdoHoSsnmJ9kRgND1mWM0Wr77U9QEYTciDIo28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YRFthwaJnqijAayKx7Nr5Wz+cg7XtkKFYmu9Y+J8JOSZNkKtcyO0oPxjnmHQb5MAT
+	 +SzEDWjweXYNk8r/wQxrhgFgyaJzF2zS7ds36V+HfUkLd39/F0Jm+9Xel/QgVHiXrN
+	 u8dtVDBEcxTLfuJ09zphSq9TFj0SodZS5yh/iSTnCqMAmk0l0hgKZ81y9JEQyQLhxw
+	 sglzaaOKdzC/1FVu4YR8/PhMdvuoqPLRhEF6pZyxCI7bcLrHj8JLnnhhcpRX6xDDkZ
+	 xqyY0lHVXYowiKXrRiLwZxIMlHLP+cfRIEOh0c7+hIF8r+/xRAu73hBTRRXaUjI764
+	 7OCKjCrNEM7Gw==
+Date: Fri, 19 Jul 2024 08:55:27 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH 13/17] mm: move numa_distance and related code from x86
+ to numa_memblks
+Message-ID: <Zpn_z_NgzTl_db5t@kernel.org>
+References: <20240716111346.3676969-1-rppt@kernel.org>
+ <20240716111346.3676969-14-rppt@kernel.org>
+ <8b402e92-d874-4b30-9108-f521bd20d36c@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/15] cxl: add function for type2 resource request
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-4-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240715172835.24757-4-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b402e92-d874-4b30-9108-f521bd20d36c@sifive.com>
 
-
-
-On 7/15/24 10:28 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Thu, Jul 18, 2024 at 04:46:17PM -0500, Samuel Holland wrote:
+> On 2024-07-16 6:13 AM, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > Move code dealing with numa_distance array from arch/x86 to
+> > mm/numa_memblks.c
+> > 
+> > This code will be later reused by arch_numa.
+> > 
+> > No functional changes.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > ---
+> >  arch/x86/mm/numa.c                   | 101 ---------------------------
+> >  arch/x86/mm/numa_internal.h          |   2 -
+> >  include/linux/numa_memblks.h         |   4 ++
+> >  {arch/x86/mm => mm}/numa_emulation.c |   0
+> >  mm/numa_memblks.c                    | 101 +++++++++++++++++++++++++++
+> >  5 files changed, 105 insertions(+), 103 deletions(-)
+> >  rename {arch/x86/mm => mm}/numa_emulation.c (100%)
 > 
-> Create a new function for a type2 device requesting a resource
-> passing the opaque struct to work with.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/memdev.c          | 13 +++++++++++++
->  drivers/net/ethernet/sfc/efx_cxl.c |  7 ++++++-
->  include/linux/cxl_accel_mem.h      |  1 +
->  3 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 61b5d35b49e7..04c3a0f8bc2e 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -744,6 +744,19 @@ void cxl_accel_set_resource(struct cxl_dev_state *cxlds, struct resource res,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_accel_set_resource, CXL);
->  
-> +int cxl_accel_request_resource(struct cxl_dev_state *cxlds, bool is_ram)
-Maybe declare a common enum like cxl_resource_type instead of 'enum accel_resource' and use here instead of bool?
+> The numa_emulation.c rename looks like it should be part of the next commit, not
+> this one.
 
-> +{
-> +	int rc;
-> +
-> +	if (is_ram)
-> +		rc = request_resource(&cxlds->dpa_res, &cxlds->ram_res);
-> +	else
-> +		rc = request_resource(&cxlds->dpa_res, &cxlds->pmem_res);
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_request_resource, CXL);
-> +
->  static int cxl_memdev_release_file(struct inode *inode, struct file *file)
->  {
->  	struct cxl_memdev *cxlmd =
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 10c4fb915278..9cefcaf3caca 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -48,8 +48,13 @@ void efx_cxl_init(struct efx_nic *efx)
->  	res = DEFINE_RES_MEM_NAMED(0, EFX_CTPIO_BUFFER_SIZE, "ram");
->  	cxl_accel_set_resource(cxl->cxlds, res, CXL_ACCEL_RES_RAM);
->  
-> -	if (cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds))
-> +	if (cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds)) {
->  		pci_info(pci_dev, "CXL accel setup regs failed");
-> +		return;
-> +	}
-> +
-> +	if (cxl_accel_request_resource(cxl->cxlds, true))
-> +		pci_info(pci_dev, "CXL accel resource request failed");
+Right, thanks!
 
-pci_warn()? also emitting the errno would be nice. 
-
->  }
->  
->  
-> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
-> index ca7af4a9cefc..c7b254edc096 100644
-> --- a/include/linux/cxl_accel_mem.h
-> +++ b/include/linux/cxl_accel_mem.h
-> @@ -20,4 +20,5 @@ void cxl_accel_set_serial(cxl_accel_state *cxlds, u64 serial);
->  void cxl_accel_set_resource(struct cxl_dev_state *cxlds, struct resource res,
->  			    enum accel_resource);
->  int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
-> +int cxl_accel_request_resource(struct cxl_dev_state *cxlds, bool is_ram);
->  #endif
+-- 
+Sincerely yours,
+Mike.
