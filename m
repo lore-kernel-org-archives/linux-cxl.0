@@ -1,237 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A956E1B86DD;
-	Sat, 20 Jul 2024 12:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9DF1EB27;
+	Sun, 21 Jul 2024 18:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721478949; cv=none; b=Tc1PMcTBhyKRCzC5lfK73Ynw19W0kAYi6nYSQEtXvsqMEHExC67V0EBh3ZvvZt9t1yZpNSVGkZJJWBvg4jO6+6BBh24+hlJTb9pzpYmgMv4Y45iRsGnL0AvxRqOgsOXIbLB43/3ApkcUfvKusinsNwzSpm05mnJwU2jw1kB7h+k=
+	t=1721587886; cv=none; b=UfSVgbeoOX+U3EU6jRPA29LKfRqQsADwoVw1EaEwKJ7hyFdbOlE4ryM3GoYDckmY0+qEB3flrG5Wq+bA92CcSdSHFj8h1ApZhmZNOgJUqX6Q5JtjT5Iuvf6enV1WJPvnwtUdtmY53mDPYCU+YxeWhgQtIIhUaOlIb2rKIfdUfYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721478949; c=relaxed/simple;
-	bh=V1Mnl7GTUOfk7ipXzRO+FVNDqKlKteMfA0VSzXpSXNc=;
+	s=arc-20240116; t=1721587886; c=relaxed/simple;
+	bh=QV7Z7Dgz2cbHCnbdSbMO++Aw71Fq/tm61ZB+qVEdwLk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mbaYle++bNoMOEKuN9g/UVPxcwhqZYjkVS9RGhUFMyUKy9DSeTdejDP2v67ScovYVv6nyh6y8zvMWoy+LPLSxhijPLNs0BQTeSfm0d0jIEV7xJ8reOtUGIezr1OMBEFFsqRvRDSqptTl/8gUqRcgtHpTYn9cOgXlUqaO1EgI+tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cu7ixXhd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EW8eoSJarcwqapGxOocSuIbNSSRdHrma6UeAN78/m/FnnR3cF8Hd2D9N9QBwtiXOoiim0P1nY53RAvk2V/QwibMMZsr16DyoEoqD2o9zSvOKOQLTbkPObJpNymX0TBgVNlVG8Z8Sg1+Wvz/yak6v1qyJtffe1qSDdroAFGxArEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DZG7ORp9; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cu7ixXhd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907FAC2BD10;
-	Sat, 20 Jul 2024 12:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721478949;
-	bh=V1Mnl7GTUOfk7ipXzRO+FVNDqKlKteMfA0VSzXpSXNc=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DZG7ORp9"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 48400220;
+	Sun, 21 Jul 2024 20:50:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1721587842;
+	bh=QV7Z7Dgz2cbHCnbdSbMO++Aw71Fq/tm61ZB+qVEdwLk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cu7ixXhdpKHX3WYl+oqtYrBp4FSGOrMfYS7JdXXFb+TW6Nk+7hUsvPSx3dhiTlklx
-	 eISAI9h3FnpKkm3821iYqQYW+t5vM3j/rQSfaM2c5ZSvkOS0dtVgUTa7UFD6+6Fd+V
-	 Swzw7lpBQ3cR8gtADz0+ZYCaj8cVNbhDnVWIeoGj2CAcdZJxya924itwrRRURR8D7p
-	 gdO9A2rVCcGxCsCfqgN6GjXc2Q+wsd6OQeVFtI5v6JPBQOlHrsAizNhEVEwpmqQI8J
-	 i+jsVT9EkWlzCyda1fYMGW9njAt5+hODmpTx/amSTJslyC8uufTXXBFDjlNyKbHrDE
-	 CHtZSP6W18ryg==
-Date: Sat, 20 Jul 2024 15:32:34 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 15/17] mm: make numa_memblks more self-contained
-Message-ID: <ZpuuYnMCd8RRZEcH@kernel.org>
-References: <20240716111346.3676969-1-rppt@kernel.org>
- <20240716111346.3676969-16-rppt@kernel.org>
- <20240719190712.00001307@Huawei.com>
+	b=DZG7ORp9d12kdlX/2GcgX7SMvcEgFhtQi70Oda1pezFs3f0HWu+7KTI/FVfFC+LPr
+	 1ujzzGuVT6T5KbFdPYDeHr2MCSgLyyIRYj7tZSN23mKG87FoGA+USc4mXFL3gPa0sh
+	 eCc//Q/q+w34jMQWVq706Ae2jZWSPR0ZiPAADnew=
+Date: Sun, 21 Jul 2024 21:51:05 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@infradead.org>, ksummit@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240721185105.GC23783@pendragon.ideasonboard.com>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZozUJepl9_gnKnlv@infradead.org>
+ <668d92f68916f_102cc2947b@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240710130514.GQ107163@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240719190712.00001307@Huawei.com>
+In-Reply-To: <20240710130514.GQ107163@nvidia.com>
 
-On Fri, Jul 19, 2024 at 07:07:12PM +0100, Jonathan Cameron wrote:
-> On Tue, 16 Jul 2024 14:13:44 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
+On Wed, Jul 10, 2024 at 10:05:14AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jul 09, 2024 at 12:43:50PM -0700, Dan Williams wrote:
 > 
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > Introduce numa_memblks_init() and move some code around to avoid several
-> > global variables in numa_memblks.
+> > A "Command Effects Log" seems like that starting point, with trust that
+> > cynical abuses of that contract have a higher cost than benefit, and
+> > trust that the protocol limits the potential damage of such abuse.
 > 
-> Hi Mike,
+> I've taken the view that companies are now very vigilant about
+> security and often have their own internal incentives and procedures
+> to do secure things.
 > 
-> Adding the effectively always on memblock_force_top_down
-> deserves a comment on why. I assume because you are going to do
-> something with it later? 
+> If someone does a cynical security breaking thing and deploys it to a
+> wide user base they are likely to be caught by a security researcher
+> and embarassed with a CVE and a web site with a snappy name.
 
-Yes, arch_numa sets it to false. I'll add a note in the changelog.
+That may be the case in the server world, and for protocols such as
+NVMe. My experience in the media world differs. I've seen too many
+horrors to list them all here, so I'll only mention one of the worst
+examples coming to my mind, of an (BSP) driver taking a physical address
+from unpriviledged userspace and giving it to a DMA engine without any
+filtering. I think this was mostly to be blamed on the developer not
+knowing better, there was no malicious intent.
 
-> There also seems to be more going on in here such as the change to
-> get_pfn_range_for_nid()  Perhaps break this up so each
-> change can have an explanation. 
- 
-Ok.
- 
-> > 
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  arch/x86/mm/numa.c           | 53 ++++---------------------
-> >  include/linux/numa_memblks.h |  9 +----
-> >  mm/numa_memblks.c            | 77 +++++++++++++++++++++++++++---------
-> >  3 files changed, 68 insertions(+), 71 deletions(-)
-> > 
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index 3848e68d771a..16bc703c9272 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -115,30 +115,19 @@ void __init setup_node_to_cpumask_map(void)
-> >  	pr_debug("Node to cpumask map for %u nodes\n", nr_node_ids);
-> >  }
-> >  
-> > -static int __init numa_register_memblks(struct numa_meminfo *mi)
-> > +static int __init numa_register_nodes(void)
-> >  {
-> > -	int i, nid, err;
-> > -
-> > -	err = numa_register_meminfo(mi);
-> > -	if (err)
-> > -		return err;
-> > +	int nid;
-> >  
-> >  	if (!memblock_validate_numa_coverage(SZ_1M))
-> >  		return -EINVAL;
-> >  
-> >  	/* Finally register nodes. */
-> >  	for_each_node_mask(nid, node_possible_map) {
-> > -		u64 start = PFN_PHYS(max_pfn);
-> > -		u64 end = 0;
-> > -
-> > -		for (i = 0; i < mi->nr_blks; i++) {
-> > -			if (nid != mi->blk[i].nid)
-> > -				continue;
-> > -			start = min(mi->blk[i].start, start);
-> > -			end = max(mi->blk[i].end, end);
-> > -		}
-> > +		unsigned long start_pfn, end_pfn;
-> >  
-> > -		if (start >= end)
-> > +		get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
-> 
-> It's not immediately obvious to me that this code is equivalent so I'd
-> prefer it in a separate patch with some description of why
-> it is a valid change.
+In general, can we trust closed-source firmwares when they document the
+side effects of pass-through commands ? Again, I think the answer
+differs between different classes of devices, the security culture is
+not uniform across the whole IT industry.
 
-Will do.
- 
-> > +		if (start_pfn >= end_pfn)
-> >  			continue;
-> >  
-> >  		alloc_node_data(nid);
-> > @@ -178,39 +167,11 @@ static int __init numa_init(int (*init_func)(void))
-> >  	for (i = 0; i < MAX_LOCAL_APIC; i++)
-> >  		set_apicid_to_node(i, NUMA_NO_NODE);
-> >  
-> > -	nodes_clear(numa_nodes_parsed);
-> > -	nodes_clear(node_possible_map);
-> > -	nodes_clear(node_online_map);
-> > -	memset(&numa_meminfo, 0, sizeof(numa_meminfo));
-> > -	WARN_ON(memblock_set_node(0, ULLONG_MAX, &memblock.memory,
-> > -				  NUMA_NO_NODE));
-> > -	WARN_ON(memblock_set_node(0, ULLONG_MAX, &memblock.reserved,
-> > -				  NUMA_NO_NODE));
-> > -	/* In case that parsing SRAT failed. */
-> > -	WARN_ON(memblock_clear_hotplug(0, ULLONG_MAX));
-> > -	numa_reset_distance();
-> > -
-> > -	ret = init_func();
-> > -	if (ret < 0)
-> > -		return ret;
-> > -
-> > -	/*
-> > -	 * We reset memblock back to the top-down direction
-> > -	 * here because if we configured ACPI_NUMA, we have
-> > -	 * parsed SRAT in init_func(). It is ok to have the
-> > -	 * reset here even if we did't configure ACPI_NUMA
-> > -	 * or acpi numa init fails and fallbacks to dummy
-> > -	 * numa init.
-> > -	 */
-> > -	memblock_set_bottom_up(false);
-> > -
-> > -	ret = numa_cleanup_meminfo(&numa_meminfo);
-> > +	ret = numa_memblks_init(init_func, /* memblock_force_top_down */ true);
-> The comment in parameter list seems unnecessary.
-> Maybe add a comment above the call instead if need to call that out?
-
-I'll drop it for now.
- 
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > -	numa_emulation(&numa_meminfo, numa_distance_cnt);
-> > -
-> > -	ret = numa_register_memblks(&numa_meminfo);
-> > +	ret = numa_register_nodes();
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
+> Not 100% of course, but it is certainly not a wild west of people just
+> doing whatever they want.
 > 
-> > diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-> > index e0039549aaac..640f3a3ce0ee 100644
-> > --- a/mm/numa_memblks.c
-> > +++ b/mm/numa_memblks.c
-> > @@ -7,13 +7,27 @@
-> >  #include <linux/numa.h>
-> >  #include <linux/numa_memblks.h>
-> >  
-> 
-> > +/*
-> > + * Set nodes, which have memory in @mi, in *@nodemask.
-> > + */
-> > +static void __init numa_nodemask_from_meminfo(nodemask_t *nodemask,
-> > +					      const struct numa_meminfo *mi)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(mi->blk); i++)
-> > +		if (mi->blk[i].start != mi->blk[i].end &&
-> > +		    mi->blk[i].nid != NUMA_NO_NODE)
-> > +			node_set(mi->blk[i].nid, *nodemask);
-> > +}
-> 
-> The code move doesn't have an obvious purpose. Maybe call that
-> out in the patch description if it is needed for a future patch.
-> Or do it in two goes so first just adds the static, 2nd shuffles
-> the code.
- 
-Before the move numa_nodemask_from_meminfo() was global so it was ok to
-define it after its callers.
-I'll split this into a separate commit.
+> The other half of this bargin is we have to be much clearer about what
+> the security model is and what is security breaking. Like Christoph I
+> often have conversations with people who don't understand the basics
+> of how the Linux security models should work and are doing device-side
+> work that has to fit into it.
 
 -- 
-Sincerely yours,
-Mike.
+Regards,
+
+Laurent Pinchart
