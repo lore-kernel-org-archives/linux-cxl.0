@@ -1,263 +1,175 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B2223DE;
-	Mon, 22 Jul 2024 10:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721643582; cv=fail; b=RR618w+NiDiSLHPROAYZVr9VRFijOl40B2ILgBWvSg8WtKwOuFHI7C8UVNfLDtB7+t68XZ4BHu02zISft0n8t6qJHoQksODKYNNnRWpRum37WrvElSY0vkNLMUysWiP4Vi6AHY/U269UCM3XJkiGFYJzU1P401xLPYTEZ6u5/aE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721643582; c=relaxed/simple;
-	bh=hnYcXklOuZGM+Qe3XmH8lXSWMYlF7tnlR6zNgTNaaH0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fnvjqCKPdww9oHozVQ4H3NPN86MTLruISAaoLJbHmOque9MqjJA0fyuoEUtds/YSk+H61pBcBVihTxcfvXAgG1lRpm0NYNygKqbIaeAjynwEn/h3n/r0mxjAFYy9cOhNgVJt5AjVYnIJYurEqcB+WHcQuvuaWWbrjTt9FUo+hS0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2S74D6kx; arc=fail smtp.client-ip=40.107.223.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8DC16A399;
+	Mon, 22 Jul 2024 10:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721644992; cv=none; b=IMV0NLKlcLih4w+Nbeocg4EUXxSniND4E3KVBXkhC5OXaiRizFoKxlquMu/byJya2shjFZ9qvuqZS892Hw03iQjtzu9CTmfy3Mlcq5HmfpFodMSDCnELrckQfTSaug1jtF+67OhYDrQRAHpMMA1hImQTSuHiP3wVf8JZcl7SJoc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721644992; c=relaxed/simple;
+	bh=i2aicMWrmaQuMvS/7Vlq9vUnRfVdITWeWRbf7ny+PJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F7ZJY6pS3Rs/rQnK5cRiqcW017ba4ZPnst17Y9cldT6SX1wBu99PIohDk5MmVMjEhlEcVCjNkYQsE3mAe8DFLPGKgq2r+jUDyDfQiYCtytNgwKdcrL5Jey2b9Cn5CGGf9sX98HTL9GEVNkXLlVxgZEgkdkYmxlssHGIMJk+IOu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kwBbXJ+f; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2S74D6kx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BgV42fZJdYrodKgi9DUFP7ipgQ7Yhz1T7A4QXuQuJRa0hq3u6DeYWwC1Tpnmb0PGE1BRDVEO2yYDkez3W6Up/OySgxC0GXgMnAGA6yniCXIX8XCHX2gl1iaLP7dmvoF+dra/hoYDTMf4GNSZEMgS7JUSdsXOh11fQPSgdnuTmmyd2gV5Vcq0G3keJLou1wzDmLi6j5SFFTbd/C5fCKJvC+xcsdlfSeFH5ZgG1rfNOH/GqlYw426ikuT8CmYr4nS1clbpOOaegt9VeImqTJOPTLq6+AWNj+JzTvmzc+xAYJk1Z21T1nzzrpE2zM5NgC76ufpzp7RqmSVs1uTx85VXrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KEY/fktG2zU2k5fzQHmOSgvSebazxwVY/j0frRA9MNg=;
- b=X/BXS+YJ+iAHBxsGCUIsAOnCGtbrEYCNU6SZuY4eTcqYO1cgzzfW4OufhYoWggnrYNk1A9+tZQLl8CT/FcMKg3/nxs03tpvoGwT38Ad0slyX2FXs8xIRUOaFKY0+JPpq//sDPEGtXLGl7WrAysioKUvoidXTbbkifYEyx/ePsbOfTkxfyaU2p8XcCiwpBJpYnarp7M/w7wp1CVkMNh0B0xP3TOaBCIg4Hz+6hrjcbiXgUg7BQpoalsb/9tVr1PK0i0EoKm2ZkjUmpL5OvBVLP0zSNXK7xwMX4DoCddUc37iSBV5OnkRXiisuijIB5p2HSeeiHUZa2dppKzX/2kdJmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KEY/fktG2zU2k5fzQHmOSgvSebazxwVY/j0frRA9MNg=;
- b=2S74D6kxwtPTLoae4um/pQv3ZlLk/9aIiuJVFBF8GGDKtO+v9qhLIWp3b0e5powUPBPSmOOGeZt9H9koKuNTBtg0JVPeWSUGwE2q+PbBJ+pLK8sXgTEDfHad7TaAv9B0AdcRV08k7+o99a6J6mR2KnieHvB01P1z7XLpvRjTEBw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by SA1PR12MB7176.namprd12.prod.outlook.com (2603:10b6:806:2bd::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Mon, 22 Jul
- 2024 10:19:37 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.7762.032; Mon, 22 Jul 2024
- 10:19:36 +0000
-Message-ID: <b297cfe0-c54f-4205-b102-ba53ec40344b@amd.com>
-Date: Mon, 22 Jul 2024 20:19:23 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- David Woodhouse <dwmw2@infradead.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linuxarm@huawei.com,
- David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Alistair Francis <alistair.francis@wdc.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>,
- Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
- Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
- Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>,
- Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
- Samuel Ortiz <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
-References: <Zo_zivacyWmBuQcM@wunner.de>
- <66901b646bd44_1a7742941d@dwillia2-xfh.jf.intel.com.notmuch>
- <ZpOPgcXU6eNqEB7M@wunner.de> <202407151005.15C1D4C5E8@keescook>
- <20240715181252.GU1482543@nvidia.com>
- <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715220206.GV1482543@nvidia.com>
- <6695a7b4a1c14_1bc83294c1@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715232149.GY1482543@nvidia.com>
- <6695b29d204e4_8f74d294f8@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715235510.GA1482543@nvidia.com>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20240715235510.GA1482543@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY5P300CA0013.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:10:1fb::12) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwBbXJ+f"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-82c30468266so168531241.0;
+        Mon, 22 Jul 2024 03:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721644990; x=1722249790; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i2aicMWrmaQuMvS/7Vlq9vUnRfVdITWeWRbf7ny+PJ4=;
+        b=kwBbXJ+fiLADZ7/A6BSSKi8Y5mNZIkErKV0Qy4mGd8AL2+akIhTJ0hdHaq/dYslX+6
+         MW22RhLg34PDFvFbrMmwKeIzaYTB8C98QILsGrJ5XYe8ae6H/wrfQvV7M74lwlHzMQdO
+         H6w/xdzaCLI8EgUWTeZJQx1Kzhs56KB5vuwczy5EgwVtOWtkz4vxWYeHZI6/ZE0zai2J
+         GuWlQDcpQ+CCfmq2Hxr16E0MvXqPlK4zi19ulmTve9gEE41/8k2g2U5bAI+joulnqUFf
+         +ZNM/cVV+eCRNFMNVbe5USl0MQp6XSJocmmqx3QKvrcUX+WaftAeYrBDTqkgGtQ2lSJA
+         lx3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721644990; x=1722249790;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i2aicMWrmaQuMvS/7Vlq9vUnRfVdITWeWRbf7ny+PJ4=;
+        b=KQPV8eEwjQ/QAil6YbC9fVrj0gNa9a10FqkpG4OyKwxIOl2EH75eiiA+tnlGTun3eo
+         Pudb9VXQKGGYy8YaoHVi5T/gxiX2nCswNopLqO1OZo5WQH+3Xf6RAqMVf3ud8MVzZe2h
+         ROSeCeJcY65vNIJwlr0UFMa3z+55loAyeRaAhsoGgroOfAVqNC7kgDFj4uzfi90dtEFN
+         QeUhF7Gh04fnwbvOOhUdkgONnDhWPbo7p1vqa7UcpmF827zquiL6pKqVL3uoF8WCDz2I
+         o3QBIJmrX0cUMzo9W8GpuRZT73jf2S00jDDYKD1Wl8POSVKcHLr4GW3Xl09Q/9roUdZF
+         Wo7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWdD6zrEMq9Y8Mcb7RFgsr5xUtksP5KHuIVciOQqDRCoydYzJmaCgPuv5XIM6FFz5TeayOeIe/pUgX4UcQZf6YelhCN0o+rv92nMUPHajJPe0V6C9Pw6Ls8w5pOIAQM0/BO7Z9/K3XnpDB8qzFWWBOKTZodkCjl46NMoR1XtQ==
+X-Gm-Message-State: AOJu0YwoAN+v84Ke6A3HVxMTXIy5cAhwGBrQ5wpY64CnFIsiBTpArHl1
+	7PL2adw/51cbI9t+ioEKMHqaIyZo90m4/6wZYdFWQNDBbKZDb6+b8bjM5I49a0wqVjwTCwaPKVP
+	hY+/4qMUYnoH+crsxDAk9wKwabgs=
+X-Google-Smtp-Source: AGHT+IFhScItchLF1iJqQ4iYhnptQKfT2dckty3sGEo+32YHCTWlDw7U1UawqMZL5QB26JIAFxLk/CC80jRRXwZTRGE=
+X-Received: by 2002:a05:6102:809a:b0:48f:4bba:778c with SMTP id
+ ada2fe7eead31-49283dfaf76mr8861012137.8.1721644990072; Mon, 22 Jul 2024
+ 03:43:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SA1PR12MB7176:EE_
-X-MS-Office365-Filtering-Correlation-Id: c82da6c9-a348-464c-8c73-08dcaa37c98f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YmVwNHpuaGpzTEFJWVJsYzJPZk5BRlVnU2NkTkh3MkxKZEwvV0xjNmVrcEJO?=
- =?utf-8?B?TGNMQ0dSdWVPT3l1Nk5IQ1VLaElyZlJka3IwaGM4UUNvWlltTTlnMTVDRkg0?=
- =?utf-8?B?b2U2cDJLekhhWDJ1aldVdnlNNkhnNmJ1Snd6Kzl1cTRTNDZmVjFteU1oZDRS?=
- =?utf-8?B?cGQ5KzZjSnNDNWpwaDNaQTNFSzlLamk4cG5MeXNmV0RGaDlvZll6TFVJeHRN?=
- =?utf-8?B?SDNOdWFJWDJjVHRrbE5QdG43U2JsNWM4dzlGTXlYWW85NFhlR1N3TWlUUm5K?=
- =?utf-8?B?NGF4TGJwTFNTcmRXeGNZT0JjNUJBcG9EZFJVM2hZbXZOcUJLL0RKZVNmUldw?=
- =?utf-8?B?VmhLTDZNUTlPeDRoZ2VXcGF1VGlhTHVDdlBtWlBDOWtxeXNRcHhweWRqeW1W?=
- =?utf-8?B?Sy9hM0ZSUUhacUZOOTlCdHhqNjVKcHdIK0tNc3BKVVpBWVU2azFaNzY0Mjgw?=
- =?utf-8?B?VWdiTW9rTWlGRkhTTjdkOWlCenZRQm5GeGR2dk5yQUtlTk9BQllOZ0txWExn?=
- =?utf-8?B?dzcyOGhBNXF0Y3plaTRsb056S3RHOXdOMzFYcGdrckNNN1p2c09oNmFyM2Fa?=
- =?utf-8?B?RzlDUXdrNFp2Qk9SeWVzdk42RjRxb0tKM2FFNzFYby9GK3hCZk95ZjhCY3VP?=
- =?utf-8?B?bFp1QUxraGVwY2t2aDdsM0tuZkFjR1JsSDR4WWdwajA1MG94STlZWFRtYmtq?=
- =?utf-8?B?TGdLemlLeVNsKzIrT2hpalU4SWcrVEFkRDJ3eUV5ZHZsT0lXRVZpU2xiQXRK?=
- =?utf-8?B?WUdjcVlvbFFOdWVvM2pYRnVzcFB2ZitINTF0QW1UTzVGRTBBNnE1LzQ4UEtz?=
- =?utf-8?B?d1FIa2hKUHErUWlzSVYwR0RscWJqTkx5bk4zVEJhK1ZCYmRlNTBwalZLcGdZ?=
- =?utf-8?B?VkRVOVNRalBmN3J5RUtpSVpsR2VpNWpUVnlIcWRQY2trRlRCTXBwU1p3Um1j?=
- =?utf-8?B?eHhKQlhlUkZHU3poWHpSam53eC9FMThwRDlIcVNxSERNS2poanFGanFneUFm?=
- =?utf-8?B?RExwNldBZ0wrek1HODhpOUdMK0JudzljbzAvcGRHWEQ5R2swbTdOOVdBV2NI?=
- =?utf-8?B?TlVMQnZwQXJPeEgvSC9mK1JxZUZNazlpTWJrZnpBNCs3QlZ4UVd1R2VwODB1?=
- =?utf-8?B?L0pncUdRNkJ1UTFkYlpZNXNvM2JpMkdYWTRiOVFzTU0waEluZVI2ZkR5M2dz?=
- =?utf-8?B?aElVNjBTYklWNzFmeVd0dEZQWlo5b0ZVSWoxbVVYV0xDMjBFMWNTWE1HR3FN?=
- =?utf-8?B?VEovWGJycVlpTEIxeFZmSDRyNW13N1R1ajNxY1pDZm8weDI4TFZPTTJQZmo3?=
- =?utf-8?B?cXUrTmRJY0VVMGNQUXhIRWtsY2g5Zmh3NFVmcUdBZ0srMXZGZEJQTVJ5NDFy?=
- =?utf-8?B?VTJCQUpWelEyVXFXcnJvSjdzalIxUzdoblFoS1YrazhGamYxUExMc1VEVzBU?=
- =?utf-8?B?Mk9xR1Q0MzhuU3ZZdXhIcnBoSjlTY0pybjhMS2FsSGhTRmpVZzhiK3A5T2lx?=
- =?utf-8?B?eXZDSXJTVDlxTldmZHN4a3ZPLzZXWENqcWFSejkvREZ3QU5DRUhNWHNwRU5Y?=
- =?utf-8?B?L3k3Z0ZKcTdaSnBkU3NiNGNtYndqNGxhQ1NSZHVzeDBpaU4wSmVDN1RBbXly?=
- =?utf-8?B?K1daRWtrRklzUHV3QUdoMnUyQ3hrYWtDUWUyNXBlN3k2THBNR05nbGR1U2dO?=
- =?utf-8?B?R0RNRkJFWWZIeEpJYkY0U1RETmZkS2hZNFBoVFZudkNueFptUzh4RVBXZXNn?=
- =?utf-8?B?Z0g5RjZ1eStBd21CTyttR2NKc0l4SmFzUEVENFVydnNKQXJWZUtFYmhyZGJL?=
- =?utf-8?B?WkUvcnoyWnJwZXRsQTZZUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dkdMNnM3cWhEOGVTcEwrODRaakRUT2Q2SzhvSW1naXdmbzhSeW1rNDFhVGFB?=
- =?utf-8?B?TlhNSVkrcUNTbGM5NHFkbkxsdmNqcGNCVURVTHZsdXZrMEJvbEI2WjFoQ3pO?=
- =?utf-8?B?ci9mU0FsK3RWVFdEZy9zR2kwWmEzOENsUTJFcThuSHB1Qk02MGZhc3owbTBS?=
- =?utf-8?B?VjRKeTJxV3h3aUxwU1NwQWM5Vmo3SG5XWkFsU2N3V0F1dXhteTFFdjlKd250?=
- =?utf-8?B?N1hRZkIyWFF1SWdDQ0hzWlZjeEs3YStScjlKbzRXWGtlekRHWk9YY3E2dFBa?=
- =?utf-8?B?eWI1VWxka05Ka2hBUXhXWWZNQ0JyeXhwNVF4YTRJTVBwUE9YdDhFRGxrL2l2?=
- =?utf-8?B?cndtMEZydk9aK0NXYnpuNE1Wb1ludDg2cldOdk9PRnJldDFEeHFoNnZkdWp4?=
- =?utf-8?B?N3VWZXBXZ2c3end1eUxsbXZiZ0hrZms1WVZOcElHbkxoV0NDdTlNN25Oci9r?=
- =?utf-8?B?dm9TZEQxTnhzN1R6ZW96TXZHZG13Ym1BUksxazZSMjFZK2wyTm9yQjM3YW8w?=
- =?utf-8?B?NXlmU0haK1EyR0tVM2VSTEl1bGlsdE52MmlzRmVHT05GSlhNT1NnSWdOeFlI?=
- =?utf-8?B?YkZ0ZW82N1FSRjBSK0hxYzJvUm9JWnpvVHU5d0V0R3h2dm1HL0U1bjVhNGcw?=
- =?utf-8?B?aHpCbXk0aUtoVFBieXl1V0dSYXliemNWbEFRSmtvaEtMVEs0YlJzSjBucmxK?=
- =?utf-8?B?SlpaU0IyZUx6RDZ3ekRYNzhabEVHTVFubUhaQ2wwelNoZDRFWXhxOVYxVk5K?=
- =?utf-8?B?bG4wK2sxdFlaSU9YZllGUEEwZnQ5U1JPOHNNamJzSHRwMktsNllOZThzRitY?=
- =?utf-8?B?elNpV3ZjU2hWeWJyOWlKQTVuazZzdmVJdjZHbkQyTU1FMlB1L1hRZ3ErZm9B?=
- =?utf-8?B?Z3Q1YUduRmZqeW91WUpLSVpaTWxrbDhySys1d0EyVkF2WkppU2t4MnVaYUY4?=
- =?utf-8?B?bklsTmE0ZVpZRzN3WGV5Y29DWUJtcC9EQ2EwK3ZtSHlNdFN3bFNaRVowNith?=
- =?utf-8?B?R29SUytUcnVHc0czMzB5RGxYcVNSczZGRSszaXhXSlFsYXZqU2FlVjJRTUww?=
- =?utf-8?B?YkYrVTZ1Yzc2LzNvUHB0b2wrNjZvWVV3OVpNU25RdDVvSmUzQ041cnhEdHNr?=
- =?utf-8?B?R0daSUJuWXZ2cGljWVFBY0F3UFdDRmRiNE9EQUJ2NzBON3djdVp6b1g2a01S?=
- =?utf-8?B?R2JNbXdsZ1lobGFCRXd0NjBQK2FsQkU5QTBBakh5NzE1UzJnT3RISmVBazkr?=
- =?utf-8?B?YVFxeTlEekxSL1RESFY0czZWU09OK001NUZ4aGgzN1BoOFJHOXBCbWRLWEN5?=
- =?utf-8?B?SG1XU3ZRTWdjVmNUbXZmaWxzTnB1ejhaTzEyTUY1NCtLNnZUU3hpUDBoUkZT?=
- =?utf-8?B?QWxraFBzY2puVlF2eXVZN1daVzBoYzdjZFB6L3l3Nk9Vb2I0WUx6TVNHRlpn?=
- =?utf-8?B?aTFPZzdrMUVTMzNZbExuQnFWc1JTTUdzbk0wQU5uOG5vWURaTFZiQlVUak54?=
- =?utf-8?B?ZHJaUFEydDJiZDJuYjFzNnRnSWxWcFlOWnp4TkRXdSs3RGhxSWV6T2RwRVhH?=
- =?utf-8?B?M1hSM05USERBYzJNdDJOQWxYcG9GVXRnSjBQZ2VzeU9sK0hzNDFPamZEbmMz?=
- =?utf-8?B?cEVHb0d6bk9ENGd0Q1VjWU9ydklLQ2M3VlIrUVVvWjRRL2xxNGc4MXViNzR0?=
- =?utf-8?B?ZWdTZDZYYzQ2UXYxU2kxeSt5RGFVTUpIc0JIWTNySjdpVWdBaFhIQWFKR3Q3?=
- =?utf-8?B?U1J3VG9JQklnVEIyay9nRm9CWXZEa2J2eFJ2SERTaVBtdy9KZEdqcnFhKytP?=
- =?utf-8?B?R1BsSUdtWGdJc2RRc2NLcGlFWU91MEZ3M3JmL1hyZ29nQlF5bk50RXIrVGhC?=
- =?utf-8?B?ZWwzd0RadHBvQlhhM29GdFBlbjhWSW9xWktSYjgxSDFxMTVCVGVVUzhKOEpC?=
- =?utf-8?B?dnZKMDdib21KSEgxMklVMnJEa1dQU3h2b2pxWjZzWURoejloZ1QrMGk4c1Ry?=
- =?utf-8?B?cG1TbDNZRmFmTW8yQXRjYUtYU2svQmVVclZ5ekxzWnZZWkxEZHUwYkRVWExn?=
- =?utf-8?B?Z2d2bmdvcHJtdVBHNTF6ZEl3OHh0dGlDa3YrVWtoRE1iWXpkY0tBbUZOOXA1?=
- =?utf-8?Q?OeMh0NBMLmZ9xR7SErzrAXxYJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c82da6c9-a348-464c-8c73-08dcaa37c98f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2024 10:19:36.4067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3S6lxEkTvQbLjTYo4qrZRHmdzA/YG5BrsXn1nWlB554irp/9zZeceIM+0vsqZpFis1sNlirfZGznKQl1j+HVog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7176
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <3b9631cf12f451fc08f410255ebbba23081ada7c.camel@HansenPartnership.com>
+ <668db67196ca3_1bc8329416@dwillia2-xfh.jf.intel.com.notmuch> <20240721192530.GD23783@pendragon.ideasonboard.com>
+In-Reply-To: <20240721192530.GD23783@pendragon.ideasonboard.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date: Mon, 22 Jul 2024 12:42:52 +0200
+Message-ID: <CAPybu_2tUmYtNiSExNGpsxcF=7EO+ZHR8eGammBsg8iFh3B3wg@mail.gmail.com>
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, ksummit@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
+	jgg@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jul 21, 2024 at 9:25=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Tue, Jul 09, 2024 at 03:15:13PM -0700, Dan Williams wrote:
+> > James Bottomley wrote:
+> > > > The upstream discussion has yielded the full spectrum of positions =
+on
+> > > > device specific functionality, and it is a topic that needs cross-
+> > > > kernel consensus as hardware increasingly spans cross-subsystem
+> > > > concerns. Please consider it for a Maintainers Summit discussion.
+> > >
+> > > I'm with Greg on this ... can you point to some of the contrary
+> > > positions?
+> >
+> > This thread has that discussion:
+> >
+> > http://lore.kernel.org/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
+> >
+> > I do not want to speak for others on the saliency of their points, all =
+I
+> > can say is that the contrary positions have so far not moved me to drop
+> > consideration of fwctl for CXL.
+> >
+> > Where CXL has a Command Effects Log that is a reasonable protocol for
+> > making decisions about opaque command codes, and that CXL already has a
+> > few years of experience with the commands that *do* need a Linux-comman=
+d
+> > wrapper.
+> >
+> > Some open questions from that thread are: what does it mean for the fat=
+e
+> > of a proposal if one subsystem Acks the ABI and another Naks it for a
+> > device that crosses subsystem functionality? Would a cynical hardware
+> > response just lead to plumbing an NVME admin queue, or CXL mailbox to
+> > get device-specific commands past another subsystem's objection?
+>
+> My default answer would be to trust the maintainers of the relevant
+> subsystems (or try to convince them when you disagree :-)). Not only
+> should they know the technical implications best, they should also have
+> a good view of the whole vertical stack, and the implications of
+> pass-through for their ecosystem. This may result in a single NAK
+> overriding ACKs, but we could also try to find technical solutions when
+> we'll face such issues, to enforce different sets of rules for the
+> different functions of a device.
+>
+> Subsystem hopping is something we're recently noticed for camera ISPs,
+> where a vendor wanted to move from V4L2 to DRM. Technical reasons for
+> doing so were given, and they were (in my opinion) rather excuses. The
+> unspoken real (again in my opinion) reason was to avoid documenting the
+> firmware interface and ship userspace binary blobs with no way for free
+> software to use all the device's features. That's something we have been
+> fighting against for years, trying to convince vendors that they can
+> provide better and more open camera support without the world
+> collapsing, with increasing success recently. Saying amen to
+> pass-through in this case would be a huge step back that would hurt
+> users and the whole ecosystem in the short and long term.
+
+In my view, DRM is a more suitable model for complex ISPs than V4L2:
+
+- Userspace Complexity: ISPs demand a highly complex and evolving API,
+similar to Vulkan or OpenGL. Applications typically need a framework
+like libcamera to utilize ISPs effectively, much like Mesa for
+graphics cards.
+
+- Lack of Standardization: There's no universal standard for ISPs;
+each vendor implements unique features and usage patterns. DRM
+addresses this through vendor-specific IOCTLs
+
+- Proprietary Architectures: Vendors often don't fully disclose their
+hardware architectures. DRM cleverly only necessitates a Mesa
+implementation, not comprehensive documentation.
+
+
+Our current approach of pushing back against vendors, instead of
+seeking compromise, has resulted in the vast majority of the market
+(99% if not more) relying on out-of-tree drivers. This leaves users
+with no options for utilizing their cameras outside of Android.
+
+DRM allows a hybrid model, where:
+- Open Source Foundation: Standard use cases are covered by a fully
+open-source stack.
+- Vendor Differentiation: Vendors retain the freedom to implement
+proprietary features (e.g., automatic makeup) as closed source.
+
+This approach would allow billions of users to access their hardware
+more securely and with in-tree driver support. Our current stubborn
+pursuit of an idealistic goal has already negatively impacted both
+users and the ecosystem.
+
+The late wins, in my opinion, cannot scale to the consumer market, and
+Linux will remain a niche market for ISPs.
+
+
+If such a hybrid model goes against Linux goals, this is something
+that should be agreed upon by the whole community, so we have the same
+criteria for all subsystems.
 
 
 
-On 16/7/24 09:55, Jason Gunthorpe wrote:
-> On Mon, Jul 15, 2024 at 04:37:01PM -0700, Dan Williams wrote:
->>> So from a Linux VM perspective we have a PCI device with an IOMMU,
->>> except that IOMMU flips into IDENTITY if T=0 is used.
->>>
->>>  From a driver model and DMA API this is totally nutzo :)
->>>
->>> Being able to flip from trusted/untrusted and keep IOMMU/DMA/etc
->>> unaffected requires that the vIOMMU can always walk the same IO page
->>> tables stored in trusted VM memory, regardless if the device sends a
->>> T=0/1 TLP.
->>
->> "Keep IOMMU/DMA/etc unaffected" is the hard part.
-> 
-> Yes, but that is not just "unaffected" but it is implying that there
-> is state in the VM's iommu layer too. If T=0 goes to a different
-> translation then the DMA API must change behavior while a driver is
-> bound, which is not something we do today.
-> 
->> Implementations that want something more complicated than that, like
->> interleave T=0 and T=1 traffic, need to demonstrate how that is possible
->> given the iommufd maintainer declares it, *checks notes*, "totally
->> nutzo".
-> 
-> Oh we can make the iommufd side work out, it is the VM's kernel that
-> is going to be trouble :)
-> 
-> Even in the simpler case of no-interleave but the same driver will
-> start with T=0 and change to T=1 is pretty complex:
-> 
->   dma_addr1 = dma_map()   <== Must return a bypass address because T=0
->   goto_t_1()              <== Now dma_addr1 stops being usable
->   dma_addr2 = dma_map()   <== Must return a translated address through the vIOMMU
->   dma_unmap(dma_addr1)    <== Well now you've done it. Your kernel explodes.
-> 
-> Maybe the "violance" is we have to unbind the PCI driver and rebind it
-> to get the goto_t_1() effect..
-
-(uff, quite a thread, I am catching up)
-
-Why flipping?
-
-If there is vIOMMU, then the driver in the VM can decide whether it 
-wants private or shared memory for DMA, pass that new flag to dma_map() 
-and 1) have DMA memory allocated from the private pool (== no page state 
-changes) and 2) have C-bit set in the vIOMMU page table (which is in the 
-VM memory).
-
-It is without vIOMMU when flipping is sort of a problem but the driver 
-in the VM can decide on type of DMA, talk to the TSM and only then 
-enable DMA (==bus master) but by then the things in the HV are settled 
-so we are ok.
-
-Talking to the TSM does not really require DMA but even if it did, we 
-could enable untrusted DMA, do this attestation step, then disable DMA, 
-tell the HV/TSM to switch DMA to secure and enable DMA, all in the 
-driver's probe().
-
-> Changing the underlying behavior of the DMA API "in flight" while a
-> driver is bound seems really dangerous.
-
-Hard to imagine why would a driver want this :)
-
-> My point is if we start baking in the assumption that drivers can do
-> things like the above without addressing how the VIOMMU integration
-> works we are going to have a *huge mess* to try and introduce VIOMMU
-> down the road.
-> 
-> I'd be happy if V1 forbade the above entirely.
-
-My V1 says "all IOVA below X are private and above - shared" (which is a 
-hw knob in absence of vIOMMU) and I set the X to all '1's just to mark 
-it all private.
-
-> 
-> Jason
-
--- 
-Alexey
-
+--
+Ricardo Ribalda
