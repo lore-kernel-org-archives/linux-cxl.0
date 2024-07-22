@@ -1,37 +1,50 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004BD17BD5;
-	Mon, 22 Jul 2024 20:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF0C1CAB5
+	for <linux-cxl@vger.kernel.org>; Mon, 22 Jul 2024 21:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721680831; cv=none; b=qJkhxImFORyzLzqhDKHktO5SnY6MJTO11VlyfEDMMM3oTx7LM0ScvykJqfcBmZDZdjqzM+BVezYnEbevnFl3ubcCEdNtmjs71WgHNvPnvi0K3FLB5tYthG2SFlTwR0B69oFP9S87gf/hyf8DKzKS9K6ypAo2DpDQZMoDlNCqHl8=
+	t=1721684537; cv=none; b=QzwgzCII6fCE0Ssz7PXTpS8CJUeuQ9qQuJ2ffLifGDbx3TdDcasL9TRDuCLuuLf706U6h/2eCAuz33dcNethWuMa7kN8ufVTLjXFBnmnDxH56L3aDwE5KvCMKy/bj6speNkxGNWZJR168nVOocX7yp+fgAAn1jzROApdjbqJ8Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721680831; c=relaxed/simple;
-	bh=ZM0TEKHIPTb9upIze52L+kcVfI1EmrENKGNYYSecqTI=;
+	s=arc-20240116; t=1721684537; c=relaxed/simple;
+	bh=3XT4TMHcGHo48P9GsevC6OJEgTXBJzE9oJF2WDWINw8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eTBIMEL9XT8pk1TXlQxkqzXeAt0jcZxsbcxmz6Lgniy5OaQkDkpOsIAulwKvtcuGYcUexGWY2kaKeAhf0TJ4DCvNxR+vB6d/9zapmVQaBSbnoR4J+F64/Q0oz1JNX0ZGoIpnD9Bq4TWohCJHI9JKv83v+bE7i1KSED94vNg86Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ymsfcAQz; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=YC3JLkus22wPgZxQe5yBiRfxGr2qdkItMJjhjHcm6MTsylfcjF3umw5oc6mubGU5M6JfopXWI69PRbSeEN4QKx55+fT7fftitGiwm/6cvi2eWrWe8paqXhmot5PiiblMg2I8p7iHd715GvnEDPKUYdm0bL5RpluXWMB0ci/9F0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5WiQO9y; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ymsfcAQz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=+GiUc2WmyvgkUASQSnB2Oz3syL/kRQ02gJ1uI6Lrwko=; b=ymsfcAQzaJhIg7/WsKWlP+nAAu
-	JWd8mlnq+xTX2yQ07mTgWQaujGtdVS/TtZ09hW3xc9F0yCLSWALGdnpK5NATRyYcjYjZVdombE83z
-	t/Hh77YIzpwCwaSNGgFd3mXfvP226OgerVrKrBIwmCnfxCn6V+/bH6V3d0HDvyRA5jw6AfUdmVdo0
-	I0FQg6RUdfeqt5QPSwxAdNxoPbJ5o41YacI+dQFRqaYKP5MS+K7NTVsX50maNGEU/fQbFtUD9ylly
-	3tzMNSFQFAj91Fa0Sm0jaYZMk0QBWcbTJGBAiy1TVi4ZOYW2bENmTO9iO3IJl74ynnmU2TVU9y+Ab
-	hbN5Bqtw==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sVzpb-0000000AVjU-2qib;
-	Mon, 22 Jul 2024 20:40:27 +0000
-Message-ID: <4e02ac87-2e00-4399-9f6c-a10ef828592b@infradead.org>
-Date: Mon, 22 Jul 2024 13:40:26 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5WiQO9y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721684536; x=1753220536;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3XT4TMHcGHo48P9GsevC6OJEgTXBJzE9oJF2WDWINw8=;
+  b=S5WiQO9y9gjsjBfTXK0sluHiwTEzzgu/UqYtnegKwqljuQ1+6s9qrdEX
+   zIcmn4E244mA5iChTx8DU8PKpqXKuXRePUq8DNq8RIC1+1WFtW/ypl7pi
+   uyBjbYXRXlC5yuY+IVUPKy5IbRsS8+s6v/H97zbyJGHRnmQcvBOTEKbZZ
+   WGZxFBv35RcgOGsgtWI+Tp/AS3j+HQDQtDIMXJrtIhRAMC9PBxf7XEDXe
+   9O9K0ULAw12DIHA2EWb6OcbvYB4dhEEemK7aE7XBXwEZ7k/ux6vrQUMU+
+   32BooInaLJlTyix+TqCMBVisnKeGxUXu4Ptw2hmaPailcGIVHaiijFNC3
+   Q==;
+X-CSE-ConnectionGUID: MdNGY6biRr6MMcjm0x3poA==
+X-CSE-MsgGUID: XJqikSALQu2Fi10/aJ7e4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="23149727"
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="23149727"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 14:42:15 -0700
+X-CSE-ConnectionGUID: i0xuohBeQdygntKkNVGVXw==
+X-CSE-MsgGUID: TY0rKlIJRC2pegy7H4N7+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="51903414"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.188]) ([10.125.109.188])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 14:42:14 -0700
+Message-ID: <bed7cc94-559e-4843-8215-8ad528804e15@intel.com>
+Date: Mon, 22 Jul 2024 14:42:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,83 +52,60 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] fwctl: Add documentation
+Subject: Re: [RFC PATCH 08/13] fwctl/cxl: Add driver for CXL mailbox for
+ handling CXL features commands
 To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>, David Ahern <dsahern@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- linux-cxl@vger.kernel.org, patches@lists.linux.dev
-References: <6-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
- <c1a2b518-f258-41f2-8b0c-173f32756f49@infradead.org>
- <20240722161818.GK3371438@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, shiju.jose@huawei.com
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240718213446.1750135-9-dave.jiang@intel.com>
+ <20240722153104.GE3371438@nvidia.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240722161818.GK3371438@nvidia.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240722153104.GE3371438@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 7/22/24 9:18 AM, Jason Gunthorpe wrote:
-> On Tue, Jun 25, 2024 at 03:04:42PM -0700, Randy Dunlap wrote:
->>> +There are many things this interface must not allow user space to do (without a
->>> +Taint or CAP), broadly derived from the principles of kernel lockdown. Some
->>> +examples:
->>> +
->>> + 1. DMA to/from arbitrary memory, hang the system, run code in the device, or
->>
->> An RPC message is going to run code in the device. Should this say something instead
->> like:
->>
->> download [or load] code to be executed in the device,
-> 
-> Yeah, it is a hard concept. It is kind of murky as even today's
-> devlink flash will let you load untrusted code into the device under
-> lockdown AFAICR.
-> 
-> How about:
-> 
->  1. DMA to/from arbitrary memory, hang the system, compromise FW integrity with
->     untrusted code, or otherwise compromise device or system security and
->     integrity.
-> 
-> Which is a little broader I suppose.
-
-OK, somewhat better.
-
->>> +The kernel remains the gatekeeper for this interface. If violations of the
->>> +scopes, security or isolation principles are found, we have options to let
->>> +devices fix them with a FW update, push a kernel patch to parse and block RPC
->>
->> fwctl does not do FW updates, is that correct?
-> 
-> I think it is up to the specific RPCs the device supports. Given there
-> is currently no way to marshal a large amount of data it is not a good
-> interface for FW update.
-> 
-> I'd encourage people to use devlink flash more broadly, but I also
-> wouldn't go out of the way to block FW update RPCs that might exist
-> from here.
-> 
-> I certainly wouldn't want people to make their own FW update ioctls
-> (as still seems to be happening) out of fear they shouldn't use
-> fwctl :\
-
-fair enough.
-
-> Looking particularly at mlx5, we've had devlink flash for a long time
-> now, but it hasn't suceeded to displace the mlx5 specific tools, for
-> whatever reason.
-> 
-> I grabbed all the changes here thanks!
 
 
--- 
-~Randy
+On 7/22/24 8:31 AM, Jason Gunthorpe wrote:
+> On Thu, Jul 18, 2024 at 02:32:26PM -0700, Dave Jiang wrote:
+> 
+>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>> index 9f0fe698414d..0f6ec85ef9c4 100644
+>> --- a/drivers/cxl/core/memdev.c
+>> +++ b/drivers/cxl/core/memdev.c
+>> @@ -13,6 +13,8 @@
+>>  
+>>  static DECLARE_RWSEM(cxl_memdev_rwsem);
+>>  
+>> +#define CXL_ADEV_NAME "fwctl-cxl"
+>> +
+> 
+> This should be in a header?
+
+yes. will fix.
+
+> 
+>> @@ -1056,11 +1059,27 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>>  	if (rc)
+>>  		goto err;
+>>  
+>> +	adev = &cxlds->cxl_mbox.adev;
+>> +	adev->id = cxlmd->id;
+>> +	adev->name = CXL_ADEV_NAME;
+>> +	adev->dev.parent = dev;
+> 
+> It goes there
+> 
+>> +static const struct auxiliary_device_id cxlctl_id_table[] = {
+>> +	{ .name = "CXL.fwctl", },
+>> +	{},
+> 
+> But then how does this match work? Shouldn't it be CXL_ADEV_NAME ?
+
+Yes will fix.
+
+> 
+> Jason
