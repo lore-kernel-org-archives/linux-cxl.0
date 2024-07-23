@@ -1,210 +1,239 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1490161FE1;
-	Tue, 23 Jul 2024 04:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721708802; cv=fail; b=tfYU4jJjubmXlDKmIWGHjD5rLwiU5cvVbCGFBvTG47I366KDAW+BfLoIxBYnlrXDY82DNYNi7N6JEUwU9l8jIoRIFWXz9P908boaQVvOfVmE9z35b6klRDII3mY4jpnKhPtce+0ebodCYwbBmpc0vZebso4XvHPgxILO0DcTUEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721708802; c=relaxed/simple;
-	bh=e61On6m6dF/5KiRdTyXF3Ld+xwJme8LARgHlozjUUz8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rIlYaHrkdKJu0YTO8z9Bmoh9+3lQghXou7I94yaFzun9Uy1OHZ1/O/1XSQ1gYzk0GA0ylWYYn9kH5SSyxP2uOPBbPxdrgYvmElcEx/9NdeOKmv4Qkyj89ByuQCfXZ53TkRBjnv7zGCSp+1XbHl593mkyEWR/7gYL85GgPEncU6Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PxYCqLOu; arc=fail smtp.client-ip=40.107.93.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D8713CF85;
+	Tue, 23 Jul 2024 06:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721716937; cv=none; b=MIfC/2JopYBN3s7xz3j+xmWBKxsHz/OWqseIdPaDjcecpkhI2UM7zN1xF1b2dAND2nUsUPwNS6/0ScxIe/Qkj8S7fBwoqoXWAPkwbc33Rp9mGXqX7ADmJbjPQ7lk+AXEKCU1CHSXo+HSfW0m4qdAqKqk+HleKcaT4BMwjaAm2kg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721716937; c=relaxed/simple;
+	bh=kClsaodBCvsJ+OpWo0SvlYVKVW681tzmFQcaGnY0oe0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P+baqEabyv3gvuWZYQGoox6YVcyASEuuv4pRNm95ksbKSDk/GWgjLMS5QnxTOVzV0God6Ys+5dwFYkO6RSHT7CzDdDPMOuKBIhKWCYvTJthxd3Ig/AaYIW6GCjL381sP8WT3RiUGM93MDU3LAObbRV9UNKckPSdXBkBO9GDnMdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJhNstXj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PxYCqLOu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kl/yPgMkMBVq3TTWE2iTTy2X6V3DoeicWOZxcQ68PK6Ta+2sa9EsKMKswbNpjDhLEyRE1zCmflaVDfQxXs+RCp1KHK/tpjXyFDR5hE0NRLSLjLemOz2RKoqE7JTF5jXi16ig6h0fb1Dz7U42tjnPoCRVGqxtOEoNTxRQSL9rLDPC8XtPRMHkqXtgy3qT/tOfEbaVsXE9rczwoBhWQb/01KuOQ7c2ryY0Ka9zbwwYlKRtWBJrfFiDtJAPrGTFOLXSHNxfL5iYtI4mHvGy90tikUEb5Nu9iQtFdB0sL+AfRMC5r1t7EVZ2GFZ2i1AT3cm2eDUd9ADaHqzcyZhr1teYPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8TGROUxPvSJkYfyB0Pn+qgfE4jGUky3H4j54Ymi6mCI=;
- b=QLxn7o3fJtHA7UBmTaeORix/BhZ56AmjWLSyRVcpR7oF+x12Xs3jQdYs6JuqAaNN+dvUje5KoWCQpgsCDYDMXaCi+IK6EdqcO2lOnkJAD0AYAj9Bk5v4JZspAtat8rFsGoEnKYZhbCRq63B00Dx+97ibRjkSxmNlNUlsYFz3dt3kjeo3N3VBUXpl2lzAfGnVmKq6ZQgB7hb46NbMwiqSNztylA8WE0lzhcv8uCM2jEMByac/tUaipQkNK+rbVO4ShwWf3ycGs/nYrEQwmL7DjPFnrug00jFnEq88KZbFFNmwJRld/p0tmiy0w/dvJ19uenDorlNtQDa7bj7xlBVAaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TGROUxPvSJkYfyB0Pn+qgfE4jGUky3H4j54Ymi6mCI=;
- b=PxYCqLOuwlAhpZc3jVHfsMAQoobizIjNbql+haQlhqoyGPJo4LvWO8Twi1nQFt2ZgMoAoUY5/Rn9Vg4fO9UuRyo4Wkp0HjiKYalgg87Zx1OHcIYK2d9V0GUNL0YILQG1Lcw1w40mSLP0MOQha2NI2vrGgo4+kPXgq02REB5olns=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DS0PR12MB8576.namprd12.prod.outlook.com (2603:10b6:8:165::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Tue, 23 Jul
- 2024 04:26:38 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.7762.032; Tue, 23 Jul 2024
- 04:26:37 +0000
-Message-ID: <de1ca8d1-b876-4b0f-9151-9303317b4d2b@amd.com>
-Date: Tue, 23 Jul 2024 14:26:23 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- David Woodhouse <dwmw2@infradead.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linuxarm@huawei.com,
- David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Alistair Francis <alistair.francis@wdc.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>,
- Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
- Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
- Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>,
- Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
- Samuel Ortiz <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
-References: <ZpOPgcXU6eNqEB7M@wunner.de> <202407151005.15C1D4C5E8@keescook>
- <20240715181252.GU1482543@nvidia.com>
- <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715220206.GV1482543@nvidia.com>
- <6695a7b4a1c14_1bc83294c1@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715232149.GY1482543@nvidia.com>
- <6695b29d204e4_8f74d294f8@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715235510.GA1482543@nvidia.com>
- <b297cfe0-c54f-4205-b102-ba53ec40344b@amd.com>
- <20240722120642.GI1482543@nvidia.com>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20240722120642.GI1482543@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR01CA0002.jpnprd01.prod.outlook.com
- (2603:1096:404:a::14) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJhNstXj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06589C4AF0B;
+	Tue, 23 Jul 2024 06:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721716937;
+	bh=kClsaodBCvsJ+OpWo0SvlYVKVW681tzmFQcaGnY0oe0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RJhNstXjyeErh8almzQWDcVec+nPCxdrDaPLjMXrZ1wfgN+p+xMkq+Z2flxT67llB
+	 uc/c4HxmWMPBHNUO+6ahMcmt5W+n0WlsVglZcY5IvNNFQu7ypuakv8uc8IriFywgdg
+	 x1RhMP169bh8Gqo+f5hFY41at8mycpcf9CWJnwEedQYl2fIFUMkcSXigbqKWlgNPYL
+	 gyRbdB+et87yqzHXzKC+HNgsHBV5tTxpNd9VwiyB7Nl5BwzeH5pVg+5xNzV+HjZi5D
+	 +iZFJrwpyLXCzg+mlZUEGgRf2J6fe2GSQ6lnI0upcC/Nk3wKusFqJ0/RM0Y0GUsbXY
+	 5JwJi+f3DixvA==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v2 00/25] mm: introduce numa_memblks
+Date: Tue, 23 Jul 2024 09:41:31 +0300
+Message-ID: <20240723064156.4009477-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB8576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c065df3-2abb-42c2-6bc3-08dcaacfa47d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RC9TaVFzcmdnOU5GUFIwSXQ5M3p0NkljUXVJRzd6S0NyalhyTzVCaityK09U?=
- =?utf-8?B?L0dxWnh1N0Rodm9IZGIxWWhKQThvMXBOT29uajE0SjVkRU1uQnd4RWlkYnpX?=
- =?utf-8?B?WXF6bCtrZTdDc3d2VDVqZGp0UHVuS1FWY2hQQ0dZVElldTZRbXEvMHBudGor?=
- =?utf-8?B?QUE5a0M5bHRZTkR2MEp4eWp0UEk5WFNnUVB6SHQyYkFKOEFaaG5wQzEyNG5n?=
- =?utf-8?B?Z1ZONTVKWXZqVXJjcE5zZVVweWYvcGVRcVFWTWFsMFpSZW9NaXVDMElkK3Vh?=
- =?utf-8?B?dlp2aXRPK3VsOUVSTG96OHpJc3R2TnZXQ1ZLQzV3bVF6OUhaTW9iWFUvajFC?=
- =?utf-8?B?eEF4RnZxQUE1VEhNaTJRcDdMMmMrSTNSM0RLR3RYTnlBVGtFcWNmRyt0MGV5?=
- =?utf-8?B?Q1pKMjBEZzMxeDI5VVBKY09xdnpGYmN2azJVWVdrVEgyWERiYm5LQjJyMks4?=
- =?utf-8?B?YW9kNUdhZkZTMnVWb0N4Y3c2c25IMGRQVG1lNVpmM3JpOElVenFzMDBOQW8v?=
- =?utf-8?B?dHZ6b1JDK3pHRWpHakxrbTIzR3F6b0xpeldJY05NQzBSNkE2MkdINENiTFZI?=
- =?utf-8?B?ODNFbDNBVG96SEVaRWFXV1lucFpsYnlGV0NoRUpXY2ZVbURSV21zdVhxN1Ew?=
- =?utf-8?B?QnAwUW50ay84UGUrSjV4ZDE0M0tFaGxLc0VjSWs2ZllrTXhzQTM0LzVrczZJ?=
- =?utf-8?B?VUloeGJtQUlkV0hsUlZzU0F5N3BhUFZockxzSzFSQjlXbXRNekhhekt0blJp?=
- =?utf-8?B?NWd0WUw1dkpjNS9zNmcxTHNhUW9NMVAzd1V0V25qenNBZy8yWlZqbHByZ1Rw?=
- =?utf-8?B?RGQwNVlhZ1gxNEpNbDRDbm1NMExHd05pSHZXWWR4cGlJYzdvcGRoQTFZN1JX?=
- =?utf-8?B?VmRoNlhNMmpPY0pZektmZ0ZOZjBPZ0JyMUQwOVBiZW5EUW5SclZTbzZhQjFL?=
- =?utf-8?B?SVhIcFZzalpJbmQ0YmY0WGNIYnE4VFN2MXR4ZUlYdldxM1oxcDZZTWRYSTlY?=
- =?utf-8?B?OGJ6NXg4V3ZuM2czSHBudXZOMjZJc25HTjkyMlVuU2NKdUIrNm1ObjMwdWt3?=
- =?utf-8?B?cXg5US82T3NQQ0wzeEJTemdwY2RRSTZoYjBPRGNWTFd3ZHZ5czJVSlhmRWk3?=
- =?utf-8?B?Y2sydVAwVjZPWjFQUUM0YjJZakg1TzNIeWxVZEYycVUyRkFJdUZtVml2WjRI?=
- =?utf-8?B?Z0xGQkFROVJLcUhUQnVMR1BFU29PZEtiak1OOTNCTzJtYXB2NWRIVURYSUlC?=
- =?utf-8?B?NUIxMno2ZVpOZWZubVJkY2xJMy9TYS9yVnJMU1g4WDhvUG5zTnJpMXFvUk9h?=
- =?utf-8?B?MDJ1UlVlSERFNkJGTXB2ZzdTQnUvdk9WdkdtVy8wVkNndkVLcVlIZmhVd2tm?=
- =?utf-8?B?NVJDY2x1L3VkdHI5VnptTTJDZTloQmlVMVcyRVdIaVo3czFHejVKdXlSVjgw?=
- =?utf-8?B?VlFGQXdQcjZqRHcwekZKK1JKaEJDZUdyTitPY2JTbjB0RzM5OHVyRWZQTEdP?=
- =?utf-8?B?WWtKMGhXRUY2Q3NXMitCVUxqTFBtUVFrb3EzSTBkbVFKL1ZoaWRJVkF4Qkk5?=
- =?utf-8?B?MU5TKzVEQXlKMFUrTXYzckFnWUNaMzNlQ0ZBanBrRTZsaG1MYUdGTWsvM09F?=
- =?utf-8?B?QTNqT1N6a2FmVHZkbmxGVzJITFp5VlZ5YTJReE9HQ2RiYjRGZ204T3k2MUZ5?=
- =?utf-8?B?MUtHanM3SXkzTzRxaGJEQmdCTjcwUys1SEhiY2RFclplc3czd3QzSWk5aHVR?=
- =?utf-8?B?U2JUYWNaRHplM09mcSt0d1pTOUZNU0laMlprZkdISnpkU2N0YUZWVXQ0Wmh0?=
- =?utf-8?B?T0p4dktsZk9JU0d2YnZ5UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YlRrNnptbzd6SEdIYkpWUkwyTDNjQkI3WTMyT0hHZXdxdDgwQ09DMXBaUFE0?=
- =?utf-8?B?Z3RKTVh6RS80eGRNNjhvZGxIVGZzTVpXNFJLNVJXN2N6VURNakxGcUhGZjBz?=
- =?utf-8?B?VHNWSVlGV1VnWWpsc3ZnQmNjM05QY2pwOUYza2xkbDFIeXhUZUhwaUplaUpK?=
- =?utf-8?B?V0dqbDZtRFNySEV2VVFkbXFLZm1udWRPbWNoQ3R5RHU5d1cvdDJOZlhRNHRC?=
- =?utf-8?B?bmZPN2tDNHVPZjZ4L29zZitDck9zTzRYUUFHK3FpUSt6ZFJBc3FTTXFYd3V3?=
- =?utf-8?B?ZnNqTFVDeUI2bXBsRmdVSnEwTmN3V1pnSDlJa0JmK2hhTDUvZ09ta252My8x?=
- =?utf-8?B?OGwyRG9aNmlBU2xJalhvaElydExpTlVldGRsTTNOZmFiOWZibnpVdm1lTk1w?=
- =?utf-8?B?RWxOSXR2aHQ5dHAxVTR6NzZWWHJBTzZrTHFuSG1aNTlHQTNSb3pUSEQ3NTVU?=
- =?utf-8?B?eHN5SlNtNC9QcWhlcFpPbS9RekkvWTQ1bWZOUE82ZUoyckhBaElmRzdSYVFD?=
- =?utf-8?B?aDhRSzgzT3ZuMkYvZ1pJcEkzWjR5Z1NjbjRxVm1ReWFaMUxEREF6MVpRTXQr?=
- =?utf-8?B?aSt6aGtIZkJhR243OTlXWllFTU5PYTdzSDAvUldydVBjVjdhOXhIMDFYUGJO?=
- =?utf-8?B?RGZNUC9aZmY4L2xYRlRzbFR5eUxUUHV4NHVlYUEzYm5aUExoSm8zd05HS3o3?=
- =?utf-8?B?MUpFaXlyeVB1ak5JUjBqZXhSWnZnRTBvRjdNYmJiUTJyeFllRzJSSHYxTzZM?=
- =?utf-8?B?YzVyZCs2bWlaeGprRTBZalloQ2F1Vjhod2syaHpoak5mRmhBSjcvaUYvUzNP?=
- =?utf-8?B?TUEzMVpJUjY4NXdZcTlWZ0JxTHR4NDIreEVTK3crd1gwRFVTSFpBNy9pTlp5?=
- =?utf-8?B?NUtmQWhJUFhYWEYyMXFvYTdZZm0rNlZjRGgzTENQbzUvL0RNYzB5QXlwbG9y?=
- =?utf-8?B?VVJPVkJvQnc4aHZGZTBGTjQ2b0J0MWJ4eTJMbDdwOTVmOExZTmgzUG1DcHY3?=
- =?utf-8?B?L3RWMElxMUZNck9kQ1FqZEdJempEVzZvbFdGbWJxMWJGRi8vUEN3Vjhua2Z3?=
- =?utf-8?B?bG54dzlwd0ROZzU1RVhrVmEwVWhpRW5yQ0hTN1F1U3VRZnBwRGhnQWFWeWd1?=
- =?utf-8?B?UXZJZkg5MDFnVzIvcDU1VnV4bWlyb2hsQ05POENZeC91T1pwajk3VzhEdk9T?=
- =?utf-8?B?ckhxQUcrek1NdVdPako2MEU3cGUrYU9KcERIbHNIWHJpZWdSZzVnMkx2eFIy?=
- =?utf-8?B?OTdZRTRDbnJCRE9tSHZIVnBQZ2NkRTgreC8xYklaYWczQXhoczZTdnNTS3J0?=
- =?utf-8?B?VUF4dkt2MVVqbzlIMitZUnJFNnBqdzg3eWYxT2k1MndqRW1VS05nS2hTbjNP?=
- =?utf-8?B?K2I3ZXhJVTVjdUVjMEhCOTRMbEdEcEp2dXEyL3BTK1o4aXRVOVczUHRPMTlQ?=
- =?utf-8?B?NkJ1RXh0bmd2N1g3U08raHg4QlFuRVg4ejY1ZHFQdGIzcjhZWTdGQ0hPSDUw?=
- =?utf-8?B?SXh0b2N0SGVwYUdOcWJWenJvZkh1Qnp2US9taW1WQmRYZWpub1dTK1g3U2NS?=
- =?utf-8?B?bnNxWmc1aHR4UlJBcWxpOGptM21RWDhVSDBiY0puaGh4VWZQWGMwV3BneFVN?=
- =?utf-8?B?SndqMVlmYVZoMm1vM1Q5ckVTSFdXeCtGb1ZHd0J4WW1CeUJEaEk4eDltcnR0?=
- =?utf-8?B?bmVTODNnTUdrL2RTd1g2VWpiaVBPemdsMk45NHpaeFVaNXA2YmVNQ2p3cUts?=
- =?utf-8?B?R0dPeStxRXNDbUVxNFZ4dG1qZFBXRXpsNzJzbnVFcjBYYkU4blVHcEFuWEZT?=
- =?utf-8?B?N3dqUEt5bmZhekZoYldIdGdmU2dlZHQrRTJsbklYUk5BSUw4dzg5Q3ZKYVpj?=
- =?utf-8?B?bnRWWDhrODRaZC94b0dkVHNZb0ZTTmtqb1lLdncwRm96UFdiV1FJUmtiblJN?=
- =?utf-8?B?WURoWTJYZkVhaFZPWHJMc0ZZUTREWXZoMFJLSGNPeWZFc3ltUGVRY3pBK1lx?=
- =?utf-8?B?ditneDhVZm1wbE5HbmZRUEQ1VmNtSHdIenFxVlp2dmNPV1hnclZ0K0ZGMkIz?=
- =?utf-8?B?RnVPajYyaFF1OVFEYlczbTQydjZFWEI2clQvbEhXVmhJZllvclF0dzdyME1I?=
- =?utf-8?Q?P1wHysWBzwg61wtA6ci4X0Y4l?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c065df3-2abb-42c2-6bc3-08dcaacfa47d
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2024 04:26:37.6890
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1RwbfmKfAh1BBSIzbXxfSY5bHKDIPxLnC3sCf9xNZZh1KpwJx3TkixTqRFvMY3lnmWLKQU0PnTvMyvjWl3/hqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8576
+Content-Transfer-Encoding: 8bit
+
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+
+Hi,
+
+Following the discussion about handling of CXL fixed memory windows on
+arm64 [1] I decided to bite the bullet and move numa_memblks from x86 to
+the generic code so they will be available on arm64/riscv and maybe on
+loongarch sometime later.
+
+While it could be possible to use memblock to describe CXL memory windows,
+it currently lacks notion of unpopulated memory ranges and numa_memblks
+does implement this.
+
+Another reason to make numa_memblks generic is that both arch_numa (arm64
+and riscv) and loongarch use trimmed copy of x86 code although there is no
+fundamental reason why the same code cannot be used on all these platforms.
+Having numa_memblks in mm/ will make it's interaction with ACPI and FDT
+more consistent and I believe will reduce maintenance burden.
+
+And with generic numa_memblks it is (almost) straightforward to enable NUMA
+emulation on arm64 and riscv.
+
+The first 9 commits in this series are cleanups that are not strictly
+related to numa_memblks.
+Commits 10-16 slightly reorder code in x86 to allow extracting numa_memblks
+and NUMA emulation to the generic code.
+Commits 17-19 actually move the code from arch/x86/ to mm/ and commits 20-22
+does some aftermath cleanups.
+Commit 23 switches arch_numa to numa_memblks.
+Commit 24 enables usage of phys_to_target_node() and
+memory_add_physaddr_to_nid() with numa_memblks.
+Commit 25 moves the description for numa=fake from x86 to admin-guide
+
+[1] https://lore.kernel.org/all/20240529171236.32002-1-Jonathan.Cameron@huawei.com/
+
+v1: https://lore.kernel.org/all/20240716111346.3676969-1-rppt@kernel.org
+* add cleanup for arch_alloc_nodedata and HAVE_ARCH_NODEDATA_EXTENSION
+* add patch that moves description of numa=fake kernel parameter from
+  x86 to admin-guide
+* reduce rounding up of node_data allocations from PAGE_SIZE to
+  SMP_CACHE_BYTES
+* restore single allocation attempt of numa_distance
+* fix several comments
+* added review tags
+
+Mike Rapoport (Microsoft) (25):
+  mm: move kernel/numa.c to mm/
+  MIPS: sgi-ip27: make NODE_DATA() the same as on all other architectures
+  MIPS: sgi-ip27: ensure node_possible_map only contains valid nodes
+  MIPS: sgi-ip27: drop HAVE_ARCH_NODEDATA_EXTENSION
+  MIPS: loongson64: rename __node_data to node_data
+  MIPS: loongson64: drop HAVE_ARCH_NODEDATA_EXTENSION
+  mm: drop CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
+  arch, mm: move definition of node_data to generic code
+  arch, mm: pull out allocation of NODE_DATA to generic code
+  x86/numa: simplify numa_distance allocation
+  x86/numa: use get_pfn_range_for_nid to verify that node spans memory
+  x86/numa: move FAKE_NODE_* defines to numa_emu
+  x86/numa_emu: simplify allocation of phys_dist
+  x86/numa_emu: split __apicid_to_node update to a helper function
+  x86/numa_emu: use a helper function to get MAX_DMA32_PFN
+  x86/numa: numa_{add,remove}_cpu: make cpu parameter unsigned
+  mm: introduce numa_memblks
+  mm: move numa_distance and related code from x86 to numa_memblks
+  mm: introduce numa_emulation
+  mm: numa_memblks: introduce numa_memblks_init
+  mm: numa_memblks: make several functions and variables static
+  mm: numa_memblks: use memblock_{start,end}_of_DRAM() when sanitizing
+    meminfo
+  arch_numa: switch over to numa_memblks
+  mm: make range-to-target_node lookup facility a part of numa_memblks
+  docs: move numa=fake description to kernel-parameters.txt
+
+ .../admin-guide/kernel-parameters.txt         |  15 +
+ .../arch/x86/x86_64/boot-options.rst          |  12 -
+ arch/arm64/include/asm/Kbuild                 |   1 +
+ arch/arm64/include/asm/mmzone.h               |  13 -
+ arch/arm64/include/asm/topology.h             |   1 +
+ arch/loongarch/include/asm/Kbuild             |   1 +
+ arch/loongarch/include/asm/mmzone.h           |  16 -
+ arch/loongarch/include/asm/topology.h         |   1 +
+ arch/loongarch/kernel/numa.c                  |  21 -
+ arch/mips/Kconfig                             |   5 -
+ arch/mips/include/asm/mach-ip27/mmzone.h      |   1 -
+ .../mips/include/asm/mach-loongson64/mmzone.h |   4 -
+ arch/mips/loongson64/numa.c                   |  28 +-
+ arch/mips/sgi-ip27/ip27-memory.c              |  12 +-
+ arch/mips/sgi-ip27/ip27-smp.c                 |   2 +
+ arch/powerpc/include/asm/mmzone.h             |   6 -
+ arch/powerpc/mm/numa.c                        |  26 +-
+ arch/riscv/include/asm/Kbuild                 |   1 +
+ arch/riscv/include/asm/mmzone.h               |  13 -
+ arch/riscv/include/asm/topology.h             |   4 +
+ arch/s390/include/asm/Kbuild                  |   1 +
+ arch/s390/include/asm/mmzone.h                |  17 -
+ arch/s390/kernel/numa.c                       |   3 -
+ arch/sh/include/asm/mmzone.h                  |   3 -
+ arch/sh/mm/init.c                             |   7 +-
+ arch/sh/mm/numa.c                             |   3 -
+ arch/sparc/include/asm/mmzone.h               |   4 -
+ arch/sparc/mm/init_64.c                       |  11 +-
+ arch/x86/Kconfig                              |   9 +-
+ arch/x86/include/asm/Kbuild                   |   1 +
+ arch/x86/include/asm/mmzone.h                 |   6 -
+ arch/x86/include/asm/mmzone_32.h              |  17 -
+ arch/x86/include/asm/mmzone_64.h              |  18 -
+ arch/x86/include/asm/numa.h                   |  26 +-
+ arch/x86/include/asm/sparsemem.h              |   9 -
+ arch/x86/mm/Makefile                          |   1 -
+ arch/x86/mm/amdtopology.c                     |   1 +
+ arch/x86/mm/numa.c                            | 618 +-----------------
+ arch/x86/mm/numa_internal.h                   |  24 -
+ drivers/acpi/numa/srat.c                      |   1 +
+ drivers/base/Kconfig                          |   1 +
+ drivers/base/arch_numa.c                      | 223 ++-----
+ drivers/cxl/Kconfig                           |   2 +-
+ drivers/dax/Kconfig                           |   2 +-
+ drivers/of/of_numa.c                          |   1 +
+ include/asm-generic/mmzone.h                  |   5 +
+ include/asm-generic/numa.h                    |   6 +-
+ include/linux/memory_hotplug.h                |  48 --
+ include/linux/numa.h                          |   5 +
+ include/linux/numa_memblks.h                  |  58 ++
+ kernel/Makefile                               |   1 -
+ kernel/numa.c                                 |  26 -
+ mm/Kconfig                                    |  11 +
+ mm/Makefile                                   |   3 +
+ mm/mm_init.c                                  |   3 +-
+ mm/numa.c                                     |  57 ++
+ {arch/x86/mm => mm}/numa_emulation.c          |  42 +-
+ mm/numa_memblks.c                             | 568 ++++++++++++++++
+ 58 files changed, 867 insertions(+), 1158 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/mmzone.h
+ delete mode 100644 arch/loongarch/include/asm/mmzone.h
+ delete mode 100644 arch/riscv/include/asm/mmzone.h
+ delete mode 100644 arch/s390/include/asm/mmzone.h
+ delete mode 100644 arch/x86/include/asm/mmzone.h
+ delete mode 100644 arch/x86/include/asm/mmzone_32.h
+ delete mode 100644 arch/x86/include/asm/mmzone_64.h
+ create mode 100644 include/asm-generic/mmzone.h
+ create mode 100644 include/linux/numa_memblks.h
+ delete mode 100644 kernel/numa.c
+ create mode 100644 mm/numa.c
+ rename {arch/x86/mm => mm}/numa_emulation.c (94%)
+ create mode 100644 mm/numa_memblks.c
 
 
-
-On 22/7/24 22:06, Jason Gunthorpe wrote:
-> On Mon, Jul 22, 2024 at 08:19:23PM +1000, Alexey Kardashevskiy wrote:
-> 
->> If there is vIOMMU, then the driver in the VM can decide whether it wants
->> private or shared memory for DMA, pass that new flag to dma_map() and 1)
->> have DMA memory allocated from the private pool (== no page state changes)
->> and 2) have C-bit set in the vIOMMU page table (which is in the VM memory).
-> 
-> Not all HW supports a flow like that.
-
-Fair point but still, under what imaginary circumstance a driver could 
-decide to flip T=0/1 when up and running?
-
-
->> My V1 says "all IOVA below X are private and above - shared" (which is a hw
->> knob in absence of vIOMMU) and I set the X to all '1's just to mark it all
->> private.
-> Is that portable to other implementations?
-
-Well, when used as a big knob - 0 or the max (== flip private/shared), 
-then yes :)
-
-
+base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
 -- 
-Alexey
+2.43.0
 
