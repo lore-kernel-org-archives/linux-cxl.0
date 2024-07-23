@@ -1,57 +1,57 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561C013B599
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Jul 2024 14:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EF156C6C
+	for <linux-cxl@vger.kernel.org>; Tue, 23 Jul 2024 14:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721746157; cv=none; b=ngUN7Yb2Lj7hWJdAoELlJbxjQUvjobnY+Dzh1JILaZJ0NuKcZnYS3HShey4KjOwy79lRiIausQL+GawJn+LBM6Zb8B58kHcossZTxoeSbhed3cpIA97CRqvemdwASAeFeDHOB0/CRNVsDdiJrtv/nCu+bhEFv4s3KoEZpfaebXQ=
+	t=1721746234; cv=none; b=bSB5U8ractieSYPthd2fyxNikhwRBmOf+vDthIaqT0wSmoifBayy+qMEWwo9KJXmmoo3G6Ey2ODYIYgmSv3qQy4IqeJ4JR0Jdz/XSHOwnpXFl9FCoLfwo8DNU4wEV91si4Q/rLOHfvyTro3R4DlWJIDpNXBYnJWwT75mKIzLhn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721746157; c=relaxed/simple;
-	bh=D/WnwQTW9BFVaG/Xs5CjUVRukgZHnyylEbhaayuJB0g=;
+	s=arc-20240116; t=1721746234; c=relaxed/simple;
+	bh=Kb5NJNrq1tXYwAFQccq2XyaIJ0jDceX3+10qvJtuDtI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMle/4u9AsWpA6QjaSYqxb3y2WNDY9IVKeal4lqp1BYqGYF1OVmGJeeMOj8tTVvXyX1KaAjffg4lqix+w05rPKAY3/RIJtiyIEiEGsyUe4n6ZR+X64PUnlQjiUtTvTkVccwqzA/AncoCDrB1ouLgMi50Vz2R6n2Lo6lCZj9wiZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KqhEj8lj; arc=none smtp.client-ip=209.85.219.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=PE64AtRAumikFF4auRlpcpSRqd/TkcSEOIE9a2zb+6Ap8FIdTcBJ6bVjn6xBQiySUHQCG7L1Y6geiJGspueA3iw9zQeRuTexrSe+j7bzCIRL2YvqcSWsajBW9T28snxKIIpKSXSysYcqjycTkMptlpLgRId+zh6LVC/BPrqQYmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=YXzleEDs; arc=none smtp.client-ip=209.85.219.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KqhEj8lj"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0871f82ff8so3271056276.3
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Jul 2024 07:49:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="YXzleEDs"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e05ecb3dbf6so5417839276.0
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Jul 2024 07:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1721746155; x=1722350955; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1721746232; x=1722351032; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HF7Q8BYVpApn5PT3KGRPJc84HSwFTLHmpZNdfKhD7M=;
-        b=KqhEj8ljztHAcVYelWEfGYgYE+6Lid9oTyUXtpBkGCglU/heroFUoD0GgPtblaLixR
-         NrdAuDRAUFJB8792mjbVwLeZwig7uC3oeCts3njx2OsEXEpCF2PtkHnJT+/duCn6v78Q
-         62mqlaVPxeO4B6f0CPHUt4wp05bZg4CeWdFuY4DWLuU+x8mjAko6PF/hi3TBOvJpPwYe
-         T4mLF/WWlz44JHP4X7w7pfzYEJ8jc4AwYzGj6jA8ixZ0hf995SmZjE/xS07Zx/VNHblB
-         e9vJIfPuOAXxeRVkU1EMDOBImykB/WG4WGdAMfPTafI7kTorYL32pgW3OWOGZQ150svc
-         kY5g==
+        bh=IUDQDkdWLmyDd8onjNy+ZW06VmBfzLOoZpzptDXN9wU=;
+        b=YXzleEDsE2jE1Qbw7g1mEN1OFEAd80EVbOvic4UAtnYuef/sLTY+dnVqDivLJDojdV
+         Ig85Ww3KE15NzaEUTEYfpuYXd18Do+FAgz2Xy/QwVTRZmzjpdkI3xKwhYXCBVSklzE2X
+         kOxwr353ew6/dD9lt5Wzz7kiuqVsRKa+OITTPPbnXp8WKblHuGo0Q+m1XHMraSURBW1Q
+         uEzCAaQa+zT/2ZN0h2eX+Es2xxJopu2zBPUF/94PTUwOUTneeA56AJ4Y/9J8lR3wroV5
+         S/ZNQX6uBZxXbsz7Zo6SxDj+MWljFrHJRm8ks0wmDBaopkEg+KwBT9jv6jyvTh2uWJyM
+         gddw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721746155; x=1722350955;
+        d=1e100.net; s=20230601; t=1721746232; x=1722351032;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9HF7Q8BYVpApn5PT3KGRPJc84HSwFTLHmpZNdfKhD7M=;
-        b=QE2EqRzy4SytHCiW3JRRLppigo05V2STfklzu5Gl7jHlO1BoIajTPAFF0tDwJ/4HKd
-         Mzl+s1MlCZ0l5gRiJLlsm1uOBQid6Np5cKqLOq9vs1BpYBQrKosjfuG6cFPj79lNcRPF
-         DLtvmOeeBNqOgIEeOe8JidKVcHnuBROOU7gdvq42YdF65PKrWZWyq0zBpYW0B+GO5d0Z
-         tW2hshpwvkavkvXkmaiVeaTOa8dh8bsYINYm8bNFPKqzPXpTtQa6PdYIfrR8sQw0fjrh
-         aS6IsF2NnPhS/o+3tTi1woTlEy1nYB9w3I/1Ii9bbxGrMAhee0bt6yVx9ap7MB3cPUDD
-         WxwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUohHZaSarQAa7t5L7Ke1G5AMSe148FCs+ZTYTAGXUFWGk1LaMJeZaABfZf6y9OAmnKXQDHeQIMMZEQd1XYTTjYT6p+e4f4Ejyd
-X-Gm-Message-State: AOJu0YyuXo2zhScs2aGu6YN78nTBYxWwfr5qivsUs3vSsIK7xHSlpmvf
-	V9MupSJe8XqCGDo20N39byFfL653VVFAu3jA9gKBZcdNe3t3Z2VG5sHua/HaHic=
-X-Google-Smtp-Source: AGHT+IHw8bzuJOKqHhNWSkL//t6fUYsEYjxn7Hjm93jAzR3sIFR1CZp1IMh8tpB9hciLHpE5Kdag+w==
-X-Received: by 2002:a05:6902:2611:b0:e05:eabd:62e4 with SMTP id 3f1490d57ef6-e08706a4df0mr13359623276.36.1721746155371;
-        Tue, 23 Jul 2024 07:49:15 -0700 (PDT)
-Received: from devbig133.nha1.facebook.com (fwdproxy-nha-114.fbsv.net. [2a03:2880:25ff:72::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e08609f765bsm1891063276.33.2024.07.23.07.49.14
+        bh=IUDQDkdWLmyDd8onjNy+ZW06VmBfzLOoZpzptDXN9wU=;
+        b=hqnIBau8UfqNdwuTvAtuFBSwofDIf31Ajmbx5zmGxQWZw5R5aFkpKqe1WR20iiIKry
+         lIkyrX7cihy8wmPGBxs163u38jVCEYyBAcFNYZka1p3MyUJRNm/DjAJ3Nq9QojI3cjOc
+         NGcBmy70cNp5mZQR0rEarKOeMlbu9O4rDsuNXAS9Dn2oehiRDEuSP2u2zPZoTxXhDUsb
+         Pc2/aucEFshHTo/x8IJQryahzuQiry3zBzSB7cdWQ6yXL2crg4VcEGmzkGFNbg+sp5qF
+         Zlvm1iMyLRZUT7mZA5g8KFWi4IaBn9ynupjlIV8hR2uzmuOuzNBweGjOFY1UHL2cgdfy
+         xmbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB7nkVuNH+ZtQM8ojpZaVIMi3DzT+/GKajq0gvfNIvE1ntmDqwdY3QDiKGv0zQu/qJCW+ewmgA69ExyswNBCD7aybFBS1cqPYn
+X-Gm-Message-State: AOJu0YxdJYz8UmJdaKthFy7eVOvZ8zNK/eaI3BREcZsAtmjEaLfgTlgX
+	AWxTIAd3geN6Whp+6Zk+azVL5jGBl8oSnZEVz5dBPo13t8mtinYuSw+GJjrKh/w=
+X-Google-Smtp-Source: AGHT+IHLfNRZJV2zPo6ahJW6piWzOpYhIOrEWiTfSMlQH6SvuQOGoZaaz51/4d4J+c4TG14W35pJow==
+X-Received: by 2002:a05:6902:2511:b0:e05:fc91:8940 with SMTP id 3f1490d57ef6-e0870181352mr12957269276.22.1721746231888;
+        Tue, 23 Jul 2024 07:50:31 -0700 (PDT)
+Received: from devbig133.nha1.facebook.com (fwdproxy-nha-113.fbsv.net. [2a03:2880:25ff:71::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e087ca677a1sm1220770276.27.2024.07.23.07.50.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jul 2024 07:49:15 -0700 (PDT)
-Date: Tue, 23 Jul 2024 07:49:13 -0700
+        Tue, 23 Jul 2024 07:50:31 -0700 (PDT)
+Date: Tue, 23 Jul 2024 07:50:30 -0700
 From: Gregory Price <gourry@gourry.net>
 To: Huang Ying <ying.huang@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>,
@@ -66,11 +66,10 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
 	Davidlohr Bueso <dave@stgolabs.net>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v3 2/3] cxl/region: Support to calculate memory tier
- abstract distance
-Message-ID: <Zp/C6YgwiK9r0l4w@devbig133.nha1.facebook.com>
+Subject: Re: [PATCH v3 3/3] cxl/region: Simplify cxl_region_nid()
+Message-ID: <Zp/DNhIP543wx9u2@devbig133.nha1.facebook.com>
 References: <20240618084639.1419629-1-ying.huang@intel.com>
- <20240618084639.1419629-3-ying.huang@intel.com>
+ <20240618084639.1419629-4-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -79,19 +78,13 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240618084639.1419629-3-ying.huang@intel.com>
+In-Reply-To: <20240618084639.1419629-4-ying.huang@intel.com>
 
-On Tue, Jun 18, 2024 at 04:46:38PM +0800, Huang Ying wrote:
-> An abstract distance value must be assigned by the driver that makes
-> the memory available to the system. It reflects relative performance
-> and is used to place memory nodes backed by CXL regions in the appropriate
-> memory tiers allowing promotion/demotion within the existing memory tiering
-> mechanism.
-> 
-> The abstract distance is calculated based on the memory access latency
-> and bandwidth of CXL regions.
+On Tue, Jun 18, 2024 at 04:46:39PM +0800, Huang Ying wrote:
+> The node ID of the region can be gotten via resource start address
+> directly.  This simplifies the implementation of cxl_region_nid().
 > 
 > Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
 
 Reviewed-by: Gregory Price <gourry@gourry.net>
