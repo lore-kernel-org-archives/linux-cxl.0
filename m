@@ -1,136 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5226F068
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jul 2024 20:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C84513B2B0;
+	Wed, 24 Jul 2024 21:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721854513; cv=none; b=HN/XaToQdIN7PGkNzY29XQovZhC2aFoiFGXbVrUdgzrYV2QQkPgOOnaVCQc/YincrZHfDKYsedqphVxjrsPyhmlH26nqrq+7G9PtUzJwuuDOfnYHo+GQmXWXwQESE2AO909BL0/7HKSitC7o1wpCUvaEqImQwT5BS2q44+LiU+I=
+	t=1721855404; cv=none; b=G6GnGSoAiSJcZ0UBOHNGH5zTtIoB4zqmQyjC/rbn20WhZIfWxXArS3/L0cclvrQXLvvTrYFV143XMpHMlBcJuze+3bm4yDIqesNXL8wDIL3aYy384ZfhNbzkDluYICpzhei065txvTktmilrM+n71k33oYyJw5n6i+i7SLpPwKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721854513; c=relaxed/simple;
-	bh=ipotZBOPZTagpFBEudJ3ESRaxCn9j/hIT/fn4wAXbuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fQi7X71oFyLcR3jWbkJmhSjVr6Lnvm04yJa0BCnr9iFuLoT4yPbbAgCtVPsNQ8hLuNS7UdAFmu5JpcXsK6yYQuPKj+0THeWgHdA/XRaUKwSvAeEW+nR3PHsUaCtQ9YKw0Jxd8ImCPKocTNbdBz8eZIPK8cYV2Xguau/vk0XLeAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FrdhneCh; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FrdhneCh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721854511; x=1753390511;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=ipotZBOPZTagpFBEudJ3ESRaxCn9j/hIT/fn4wAXbuY=;
-  b=FrdhneChl/3L8FV5FEQyGjxsU0uUYuB5pYYurnFneqXDna7OALlIzIks
-   AJVDHpVhcDtVg0JqppIt1s5pUq91e9Bh+c0pibzW0PSJ09BR0xpZhGxpp
-   lWIYXbeg298IErbwJ4SA6vkG1iakzGxQBPDwRPjPx3T0NXZrUamtmiGxx
-   eOhaDhwTxpZC0eZPfsNOXloLQmz3z0FjRc/ZcLh6iVqkXmpnklU2cRWC9
-   0Gt45H44kvqo4FxNNvdjJLrbJexVCKvzsXuCxhvVT8UraJOeM1l8S038A
-   8PtOCEBcirMf+XxQRqjMwemebTN8WvwnJ75ttrYyiWSJ2JxAPFqOgf7PE
-   A==;
-X-CSE-ConnectionGUID: Ldspd1PUTfaIiQCpvLF9BQ==
-X-CSE-MsgGUID: 2BDRoy6pQQyaeGw+RVmPDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="30226813"
-X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
-   d="scan'208";a="30226813"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 13:55:10 -0700
-X-CSE-ConnectionGUID: U0yjK1cIR1i/Ie9yNeWJXg==
-X-CSE-MsgGUID: YoExdQfvT16GnmF3ToEAqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
-   d="scan'208";a="52623614"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.208]) ([10.125.110.208])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 13:55:11 -0700
-Message-ID: <041104c0-ac92-4819-a511-3fa6655b94ef@intel.com>
-Date: Wed, 24 Jul 2024 13:55:09 -0700
+	s=arc-20240116; t=1721855404; c=relaxed/simple;
+	bh=iecHcjgY45N2onErv+rBPVHXu+Da7UgJDK2xSAz9nR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fnz39EvTtLZf+dCtCX9zrfcb6aABnouePxeMgGoXURqxT+Oj1l/r8ySwZovf69sNXg9IPZ/7s1JNyDftNHOdvAajiwIPr0iiURwRborcTMGP+lG64yhoDJtr8zu+/8IZtKw2GQhDcnIASynjK4zzb55RLpJzN2xguT1Lcwuks2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFB9C32781;
+	Wed, 24 Jul 2024 21:10:02 +0000 (UTC)
+Date: Wed, 24 Jul 2024 17:10:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jiri Kosina
+ <jikos@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240724171021.05fbbadd@gandalf.local.home>
+In-Reply-To: <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+	<nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm>
+	<1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
+	<20240724200012.GA23293@pendragon.ideasonboard.com>
+	<a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v13 3/8] util/trace: pass an event_ctx to its own
- parse_event method
-To: alison.schofield@intel.com, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org
-References: <cover.1720241079.git.alison.schofield@intel.com>
- <da9be6ff7edcaef18470cc1579343fc08bc1dc1e.1720241079.git.alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <da9be6ff7edcaef18470cc1579343fc08bc1dc1e.1720241079.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 24 Jul 2024 16:37:21 -0400
+James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
 
+> > The first point is that hardware gets more complicated over time, and
+> > in some markets there's also an increase in the number of vendors and
+> > devices. There's a perceived (whether true or not) danger that we
+> > won't be able to keep up with just reverse engineering and a
+> > development model relying on hobyists. Getting vendors involved is
+> > important if we want to scale.  
+> 
+> Yes, but there are lots of not very useful complex devices being
+> produced every day that fail to capture market share.  Not having
+> reverse engineered drivers for them is no real loss.  If a device does
+> gain market share, it gains a huge pool of users some of whom become
+> interested in reverse engineering, so I think market forces actually
+> work in our favour: we get reverse engineering mostly where the devices
+> are actually interesting and capture market share.  It's self scaling.
 
-On 7/5/24 11:24 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> Tidy-up the calling convention used in trace event parsing by
-> passing the entire event_ctx to its parse_event method. This
-> makes it explicit that a parse_event operates on an event_ctx
-> object and it allows the parse_event function to access any
-> members of the event_ctx structure.
-> 
-> This is in preparation for adding a private parser requiring more
-> context for cxl_poison events.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+I agree with this. If a small vendor with low market share has a
+proprietary device where they could easily port to Linux via a pass
+through, they may do that. But if they don't have that, and require
+engineering resources to port to Linux, they will not bother. As they would
+only care about the Windows market. So the device becomes useless for the
+Linux system. There's not enough Linux users to make a small vendor care
+about losing us. That just shrinks the number of devices that are available
+to Linux.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  util/event_trace.c | 9 ++++-----
->  util/event_trace.h | 2 +-
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/util/event_trace.c b/util/event_trace.c
-> index 57318e2adace..1f5c180a030b 100644
-> --- a/util/event_trace.c
-> +++ b/util/event_trace.c
-> @@ -60,7 +60,7 @@ static struct json_object *num_to_json(void *num, int elem_size, unsigned long f
->  }
->  
->  static int event_to_json(struct tep_event *event, struct tep_record *record,
-> -			 struct list_head *jlist_head)
-> +			 struct event_ctx *ctx)
->  {
->  	struct json_object *jevent, *jobj, *jarray;
->  	struct tep_format_field **fields;
-> @@ -190,7 +190,7 @@ static int event_to_json(struct tep_event *event, struct tep_record *record,
->  		}
->  	}
->  
-> -	list_add_tail(jlist_head, &jnode->list);
-> +	list_add_tail(&ctx->jlist_head, &jnode->list);
->  	return 0;
->  
->  err_jevent:
-> @@ -220,10 +220,9 @@ static int event_parse(struct tep_event *event, struct tep_record *record,
->  	}
->  
->  	if (event_ctx->parse_event)
-> -		return event_ctx->parse_event(event, record,
-> -					      &event_ctx->jlist_head);
-> +		return event_ctx->parse_event(event, record, event_ctx);
->  
-> -	return event_to_json(event, record, &event_ctx->jlist_head);
-> +	return event_to_json(event, record, event_ctx);
->  }
->  
->  int trace_event_parse(struct tracefs_instance *inst, struct event_ctx *ectx)
-> diff --git a/util/event_trace.h b/util/event_trace.h
-> index 6586e1dc254d..9c53eba7533f 100644
-> --- a/util/event_trace.h
-> +++ b/util/event_trace.h
-> @@ -17,7 +17,7 @@ struct event_ctx {
->  	const char *event_name; /* optional */
->  	int event_pid; /* optional */
->  	int (*parse_event)(struct tep_event *event, struct tep_record *record,
-> -			   struct list_head *jlist_head); /* optional */
-> +			   struct event_ctx *ctx);
->  };
->  
->  int trace_event_parse(struct tracefs_instance *inst, struct event_ctx *ectx);
+My guess is that vendors want to write one piece of code. If it they only
+need to modify a small portion to get it to another OS, they would do that.
+But if it takes more effort than that, there's not enough cost incentive to
+bother.
+
+For devices with a larger market share, it would make it more worth their
+while to open source their work, otherwise there's more incentive for us to
+reverse engineer it anyway.
+
+-- Steve
