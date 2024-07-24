@@ -1,464 +1,683 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2067.outbound.protection.outlook.com [40.107.244.67])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C63AD23;
-	Wed, 24 Jul 2024 08:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721809520; cv=fail; b=imLhgyGhrUpfrjn/asPevUXAXMV4rrQtv5bceEYgLxN3nLQ5FeGlXe7NAUw/LuY1vHKKH8Ih7ZDgqM6GY3z5rPZtruofWDq/odNEH83i6nS5WZIiTIJORijxB3ub+JAGU9COa3KjMIl0NvOBnaOwplVk9h7lfQq2zBRxnp6onr0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721809520; c=relaxed/simple;
-	bh=3/UV+RWmCe8UJdZaT8sPrEHgV0yhPgKs3SFsysnasS4=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sIuuyz9Jt3//p3Y1QGaVClUxldaZ7yVWH+SpFxHEofdesMS8Ll+dqs7zt++TYUHWFoi4JVlsoLimg+F4dhTZqjIxKCsZ4B5ECVkWUjyWy8yRSEDIxXm3mChAOHHHCXIuJFHyOwHEdVnNCdsAEa2dLveJkpnIbid2CFunw1O1avg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Tn/Ldqv2; arc=fail smtp.client-ip=40.107.244.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Tn/Ldqv2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I8Hn2NWOv4XV4OFUp/4RP+JZDsdWEj/vgQmHwVXr7cnt98f+7Oy9uUq6Y14GID4ANQ7SbYrRJtGjEYEQldFYkl+YZvaQOJtKWIZBccCncGciA9ock6pLPtxclvmzRgWUHs2CrqNQHxqM/+YP9NyejEiiOw37P3OfQqVZI+Dt/tPBAnBRJlecKkT3e28hjfDgL9w0fMxxn37E2b0l1q1v/SbdoNt1S3eOAD6ct366X1a41F0xisOEp0XUs6OrZ9fs3+2D0XY1Kub9IxokFC5Q2F29TfIoKX3ANcNJ0zTHvTs3oOAyhgKTPz0q3oWdoVfzHYuj4dt3sZMjQz52RFAJlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w71eBTfLtYSGYpS+Qw1AggejR1MoUEQe6+4NQvKhbf0=;
- b=klDoPE/JD6d23CQkj0xa2trFsffgmaiTtOsWPMnG8siGJdtx6fdNSLVmmweCEp8JCNe+9ucBki++3oRZ75Rips+6NGirtQjvU11M20orKFXQ88zm+LKsKueCqJmPhmfIkD8+8U7tnbJx1SXyqIgVZDJU+fAmY3jAdlZ6ZQGENEt3pl1d4u+UtVJjlEWl7L6nS0Xb71BBVPz1wZAzpPAFHyVsZRdLfKEhlZ5Higs5I2o0d/90WGi0nC1PeSTmWqgbGv/ewNmzBdddXUmoGRgoq2Sq/WQ4EP3jWTdOle369m/r5rbkFZ5oaXNEtgMIDv/NQvHogSuLOn/lBnHEsDK7RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w71eBTfLtYSGYpS+Qw1AggejR1MoUEQe6+4NQvKhbf0=;
- b=Tn/Ldqv2WIbklQKJ+bCi+5xLtmLd2L7e9mtU5TkdiuIhDfwExKyY4LN/80M0sCfb0NXXmybnHGrVww6xfg7LRzUl21TV0+iewhVnJjGsJizeZVtZHHGE7UGIz4/2GZLRVkDjUuj/SiHYeFDbpfmFjRQyKOY9Ws55yyIl7M6LTLA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by IA0PR12MB8086.namprd12.prod.outlook.com (2603:10b6:208:403::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Wed, 24 Jul
- 2024 08:25:14 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.7784.013; Wed, 24 Jul 2024
- 08:25:12 +0000
-Message-ID: <f40312b1-8ac7-973b-5519-ee185eec8560@amd.com>
-Date: Wed, 24 Jul 2024 09:24:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 09/15] cxl: define a driver interface for HPA free
- space enumaration
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC9A2C1A5;
+	Wed, 24 Jul 2024 09:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721812246; cv=none; b=cip/kd8+RnMQsv0Ajstnf4phwz+lu7IMZfABdFhWQYZMfOOkkDyCqNy6RQy8lnrM8LPusgGWeBT4e0CXULujE19ah1FvLmG3qUXsXCXyRDuz1r6Wc49K1kez8KyNWyyQ/u+r/3XHHwldUFV0ucAZ59Yg2P3DJ/zcDtLqz3wXJ9o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721812246; c=relaxed/simple;
+	bh=QwhbyJdkohqp1Bc9PBQve8ej348OHnUuptgBlZ22oyM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=j8pEGQqZH9GEIz1wpU3WnIJdT6spP2Nb/G+bdq++zBLTkOciWABS5/UUs0MF+e3Ay8UNunpTqAm68XVv6PMqD+0LCJ8ucrAyTMsYniUu2y3t1LZ5wKWTAZSEGgsSff76VzqkkIVJJpCZFJi0Fw1JbG4ddixQoI4wf1WHw59uRus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WTSq31kJgz6K91h;
+	Wed, 24 Jul 2024 17:08:15 +0800 (CST)
+Received: from lhrpeml100004.china.huawei.com (unknown [7.191.162.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8B282140257;
+	Wed, 24 Jul 2024 17:10:39 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml100004.china.huawei.com (7.191.162.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 24 Jul 2024 10:10:39 +0100
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
+ Wed, 24 Jul 2024 10:10:39 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: fan <nifan.cxl@gmail.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [RFC PATCH v9 08/11] cxl/memscrub: Add CXL memory device ECS
+ control feature
+Thread-Topic: [RFC PATCH v9 08/11] cxl/memscrub: Add CXL memory device ECS
+ control feature
+Thread-Index: AQHa15F8cRMbgzFJWUOG7wcOX/vnVrH+VxEAgAdFNsA=
+Date: Wed, 24 Jul 2024 09:10:38 +0000
+Message-ID: <ef1f281d36924c6ebaedc61238269656@huawei.com>
+References: <20240716150336.2042-1-shiju.jose@huawei.com>
+ <20240716150336.2042-9-shiju.jose@huawei.com> <ZpqztkrEPw3lrku5@gpd>
+In-Reply-To: <ZpqztkrEPw3lrku5@gpd>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To: "Li, Ming4" <ming4.li@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
- richard.hughes@amd.com
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-10-alejandro.lucero-palau@amd.com>
- <73311003-6b8e-4140-935a-55bd63a723e6@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <73311003-6b8e-4140-935a-55bd63a723e6@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0663.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:316::10) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA0PR12MB8086:EE_
-X-MS-Office365-Filtering-Correlation-Id: b35dffa3-c33b-44a8-5eda-08dcabba235b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?REwvRENiZzcwVWhvK3gyR0V4N2tkd2JWZWwyVmlIbTEzVnp4cUJFN3hDajRG?=
- =?utf-8?B?dDR1L1RTeWNPQVF3dlo0MnBEQVR4Wnp1WTJSd0Q3TjUrdHlYMGJQWkZMeHhS?=
- =?utf-8?B?eisrZzh4Y3BNNFVhaUk1MnNZUkkwYXBhY0l6VTl5c0NEdkJXWFJWclVFR2dG?=
- =?utf-8?B?L3crNGV0cjFvUXVNRk1xcjllYnJvUzBtT3YycGMrU1BhWjBSdlVmTzZEYkM2?=
- =?utf-8?B?ZGFzcmRFa0IrakxjTFE0YTZHUVdjR05BTktXazc1WEo5NjV0RDJHRjd0RlFu?=
- =?utf-8?B?ajZBeW1HRzQ2SmROK0VUaWFhNk9iY0hFZVkxMG9QZlB3WTY1My9PVm1QaU9L?=
- =?utf-8?B?NVdxOGlrZlpKb1RmM1dJMUh5TVEvTHpCRjNHbng0dXl0WEgvaDF3ZmxNVFpv?=
- =?utf-8?B?d2NlZkFuY1N4SzJwQzhKUDlKeHdMTTg5amVXWldwc3VLaGxnMXBDK3p0K1J3?=
- =?utf-8?B?akNrbEw0ckgrdFk0a3NDQjJWMHFuT2taWFh3aXlxdEtXZ2o5OWtBcEVsUE9F?=
- =?utf-8?B?NXQ5TGhFMWg4VVp1aTd4RStuUW84T1NWN0p0UTJHc21LQ1pvR1g0UHdYRFlm?=
- =?utf-8?B?c2drVnBqY2NEcjhUbGtweUxtMEpjSFNRL0FYNzZpblBLekl5RFo4VG1ueXV5?=
- =?utf-8?B?aG5Jd0xVdEttMksxR1BLLzgwbU8yZ0ZwTWp2bzBQL2NiTG52cW1GVGdwNkpa?=
- =?utf-8?B?TElEb1VPWjh6TWJYL29JTHJSVXptNEMwRGlkZ253L3FldlZpK2ZaSmdzbXdE?=
- =?utf-8?B?cjRHdGJzTnUzRU9WT3RMUlU2RjdOSm9KS2ZvbkQzQ1dJUDgrTnlWa3QxOERv?=
- =?utf-8?B?YnI1Mjh3blFPSzdJTFhNbHkrdnUvT0hlU3Q5YjhTakJ5ME1mV0NTb1dNaVc4?=
- =?utf-8?B?ai9vSHR3N0VwbS8yMHFoOEI1RnJxV3FIWVlLbFZDNjF2Zlk1UnMxZVlmVytK?=
- =?utf-8?B?eGRvVmRCeXFPTFFDNUxqbmcyUU9NNGRUTEhZSDd0M1pUY25LTXA5YjQ0Nkdo?=
- =?utf-8?B?dEwwaVg2ZFNRcHRMdkdjaDcvUkJETGxXSkZPeWlkWEQxZ2ZVNGZBSEFuVFNa?=
- =?utf-8?B?dnhYUm5EaXZPc0tiNHd5ZWJEOHNYcW02NVJGNzVPeEtJTkxpdFg1TllSR2dL?=
- =?utf-8?B?R2NBWnVmL3hLMVFNREI4emo1ZStoTTVxemNrUU9iU3JWbDlzRENHYUorc3pR?=
- =?utf-8?B?eHk5emhxYnFIMTNSUStrcjhIbWQ1c0R1REpPNHJ5ZE1BR0l5TTlGNjVWWGln?=
- =?utf-8?B?UUJ6WG5zdjVPZVlGWnR2K0I5RnBsYWV5MTRWL2gxUFpXcytVLzNpRXozV0h4?=
- =?utf-8?B?cXpPbmlPRTZlSEx1NCtVNDFmaExBb2dybnVPR1MwNWN5RW1RT0ZtWjQzaElW?=
- =?utf-8?B?WHlCQThyS3NYSk02bEN1L2lyNGczN1JwUm1BVGx5U2FpckhtMm4zMWtBeUlR?=
- =?utf-8?B?TUJ1c05TWDJmNXZQam1iVDEvb1I3bEZGRjdmRUY0VFl5ZjdrOVlEQ2hhZHdK?=
- =?utf-8?B?bkdkWTY3dFNBOURleTVwcjFkYkQ4eFV0cUpQci9zeVV5aFdYcm1IWkgrYzda?=
- =?utf-8?B?K2JlL2M4cGt4UU1BUzBObjlYcHBOSDhHTUZyTFIzUCtMRHMrS3dZY3dMY3NY?=
- =?utf-8?B?V3pRZ1pjbllQVmJuSkJCenYxUmZRWGg5My9QQnhuZ0lhODU1bmRNZXpaYVph?=
- =?utf-8?B?MFJHSU93ek1SWmJqU0NyK0kwWVlyQ1hPUDJqU21aeFZhNkE4cEZPZjNOdlBC?=
- =?utf-8?B?WmluR2hrUFBIZXNhNzlYVFNXWmVQd01sV1gyOHpqMmR6VTlyQTE1aFU5WVl0?=
- =?utf-8?B?N3dOemZITnRiRXdaTkR6UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHhHQ0JCM2VIV3ZzNmNwcmdNVlBzUCtIV1JCbGFVSi9IOWhlMFZTRStuemNO?=
- =?utf-8?B?YXpmaC9JNkEwZitPaVRVWVRLUmZwV0VhT01PL3ZuczRad1ZRVXBucjNiSXp4?=
- =?utf-8?B?ckhmbjd6YTBBNjhDd2tzc3IwYWNsZC9vNkNZckluc3g5eUdPajBMQ1d0NmRS?=
- =?utf-8?B?T29MU0ZnQ3A3czFHczJrblgrZ3VGUjBvcWNjcGxSSk9MbTRCZUFnZElwRWhH?=
- =?utf-8?B?d1ZlMDlpbGhCTkx5WWJnUXRHSmRjaTNFeHRYVVBtK2RHUnpSKzY3TDRwdE1F?=
- =?utf-8?B?cEhJREVoZEFPQmR6ZlJhclA3Umo4amN1dUQyQUZ1QjNsbS96VU5rcFZNZ0Vp?=
- =?utf-8?B?ZXZjbHVxZWVZRWNlVmM5RG51SVhIejV3OXBFbTRaY0NCWGZ5c0VJZ0k1elVF?=
- =?utf-8?B?NWNIM2RNNjF4QThlNUNZVllYQVdTZWhaU1dhaTA5ZVhZeEtiVXJjeHQ0Mmx1?=
- =?utf-8?B?NzN2WEQvbGlDWllVRUNRK1d5UVVaazBIWWtJMmFEYy9lRW0xSC9MN2UrK2tC?=
- =?utf-8?B?YWllVmk4OUV6aFRrMk9YRG5VZjVXV2w5NURsVWtZbmZsMXc1UjBzRTluUmc0?=
- =?utf-8?B?SGRVYVRNa1JhdjdGQk01eHFpaDdCOUd2K25PTjdESjJFdkcrUUI3WjBiYlJF?=
- =?utf-8?B?YlVodG1mdmdsbWtBZEpIaTluSVd5eG0rVDFYYXcrMlFsNUptUE9PeXkvSUJu?=
- =?utf-8?B?b3NZSDRUQkQyQlhtNk1HS2RFOXBuOGRSakZYdGtJR3I2bk04c3NnMWRVSHN6?=
- =?utf-8?B?ZWZIUG5LZVFqMEg0RDZJTUVZdzNqL1lxWVdFN2VFZWhZalpWdE1Ea2Y3SXNE?=
- =?utf-8?B?RVhyblJZMjN6a2FWQmhDVVNVR1dwMUZXekZGV0VmRVZNRTFXZXorS1FFSmdn?=
- =?utf-8?B?bndVSEI4NHRZVnhWMUdKUUErbHIxcEo4Yy9rMWtxTkJGOHZ5SVpmQStZTWdP?=
- =?utf-8?B?V3Y3RldYdWJza3c3VTFLeHdmSUxiOWFKeWhXZWIvajdkenAwUW1ZaHpLck9n?=
- =?utf-8?B?NXRsSDNxY3JxaWhwMHNGSmF2Qm01aGsyMnRiZllRd010Ti9hNmJxdmsyeXll?=
- =?utf-8?B?Lzk2MmtGcVJIWWNkZUJsUHMvamRnTVJrazAxZTl0a0t1OU5nUTRLUVVyM0tS?=
- =?utf-8?B?Tmx4Y00wck1VM2ZpZXBBZmxlc2VHMDZhMjVCOGhWNmNvT3pmNEZzei9jNU9x?=
- =?utf-8?B?dXlSMC9QTHlnYnB4NkFFRHNFY0xWVC9xQnRUWWFNL080dm5xRHdHek4yUHRY?=
- =?utf-8?B?L083UnI0clUxVkFwd0RvOC9nQWpvdmdMcEdyVC9hMWlCR1FSdmpkb1VBK0dl?=
- =?utf-8?B?R0tzcXhsTUd4TnRONnp2Y2FCMXZMOWc5Q0tpMlFuazVRRmJsTnFmRHZ2YWNV?=
- =?utf-8?B?RldpYXhMVlFqdGJ2ZXdRa055cVl6M2V5YXFReWFrYTYyY1BWZDlvejZ1Y054?=
- =?utf-8?B?NFFRR3B1cVdzdXRrUklDOVJFV1BKNkRmcnN6Sm1VWHorR1YzQjIyaW10ZFhh?=
- =?utf-8?B?RHNsWUpDZ3hVL0lQdWpLd1U4NnZwSHhOTjBtS1ZHMEJoeXowbFJheFM0bUZm?=
- =?utf-8?B?ZjRnejRQSjhNSVVSWXlUZyttclJXWmYxUkpTNWZaUzJBYnU3a05scDBHMEVU?=
- =?utf-8?B?K3c2cHBOOGo5MzVpMFlkNC9IZkYvTS9lZzM0QmpmbXkzSG56Z2wwbkFWNzVR?=
- =?utf-8?B?cHk5K01NTVBKdVROYm0yZmRudVQ1a1dCcnZUbXNTYU5hSGkwUHlSZ2tOMWZt?=
- =?utf-8?B?MXFjcVVPclFIc2Z1MllrR24zUHU1ZVRQK2ZsN09rRVVNdTcxbVJ1R1NJTm5N?=
- =?utf-8?B?aUVpL1ZhT2RhZzAydUlBY0owNHJWZHkvc2k2SXBLZVZRS2U1eXNMc3JBUXg4?=
- =?utf-8?B?R2RHN3plRmlrLzBiT1ZQdWQ1R0xJN3dady95cWMyUVNFcEJPQVdoNzZ6RlJK?=
- =?utf-8?B?S0hDWUlzZ2FEcVcrR04zcDBFVjljTzNtUVpOQ0V0Q1V1bDN1SlNwZmZwTytj?=
- =?utf-8?B?V0wrV1kwMmVFeXpqeCtSeEQzUVZDdi8vM3JMS3JtdjRNNWpRZzIyQTl0cEZK?=
- =?utf-8?B?Uk56T2FRWjVnSmZRdzc2K25WbkRPQUw2eFh4dS9CbGprWjRVM0lvK3lpTHBu?=
- =?utf-8?Q?3PLyCFu7b9b2NQYyv3RffEwLo?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b35dffa3-c33b-44a8-5eda-08dcabba235b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2024 08:25:12.8092
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aKLszZkHb5bVH8wtLR3YKyp5Xavp0PkEGMwmcn9KUXsijOnHPY9FcGc7nGhM7kRe1rFhcARMVqHyI7fR8L+MUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8086
 
+Hi Fan,
 
-On 7/16/24 07:06, Li, Ming4 wrote:
-> On 7/16/2024 1:28 AM, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
+Thanks for the comments.
+Sorry for the delay.
+
+>-----Original Message-----
+>From: fan <nifan.cxl@gmail.com>
+>Sent: 19 July 2024 19:43
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+>bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
+>mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
+>Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; mike.malvestuto@intel.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [RFC PATCH v9 08/11] cxl/memscrub: Add CXL memory device ECS
+>control feature
+>
+>On Tue, Jul 16, 2024 at 04:03:32PM +0100, shiju.jose@huawei.com wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
 >>
->> CXL region creation involves allocating capacity from device DPA
->> (device-physical-address space) and assigning it to decode a given HPA
->> (host-physical-address space). Before determining how much DPA to
->> allocate the amount of available HPA must be determined. Also, not all
->> HPA is create equal, some specifically targets RAM, some target PMEM,
->> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
->> is host-only (HDM-H).
+>> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub
+>> (ECS) control feature.
+>> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
+>> Specification (JESD79-5) and allows the DRAM to internally read,
+>> correct single-bit errors, and write back corrected data bits to the
+>> DRAM array while providing transparency to error counts.
 >>
->> Wrap all of those concerns into an API that retrieves a root decoder
->> (platform CXL window) that fits the specified constraints and the
->> capacity available for a new region.
+>> The ECS control allows the requester to change the log entry type, the
+>> ECS threshold count provided that the request is within the definition
+>> specified in DDR5 mode registers, change mode between codeword mode
+>> and row count mode, and reset the ECS counter.
 >>
->> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m6fbe775541da3cd477d65fa95c8acdc347345b4f
+>> Register with EDAC RAS control feature driver, which gets the ECS attr
+>> descriptors from the EDAC ECS and expose sysfs ECS control attributes
+>> to the userspace.
+>> For example ECS control for the memory media FRU 0 in CXL mem0 device
+>> is in /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
 >>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+>> Note: The documentation can be added if necessary.
+>>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 >> ---
->>   drivers/cxl/core/region.c          | 161 +++++++++++++++++++++++++++++
->>   drivers/cxl/cxl.h                  |   3 +
->>   drivers/cxl/cxlmem.h               |   5 +
->>   drivers/net/ethernet/sfc/efx_cxl.c |  14 +++
->>   include/linux/cxl_accel_mem.h      |   9 ++
->>   5 files changed, 192 insertions(+)
+>
+>Some lines are too long. And some other comments inline.
+Wil fix.
+>
+>>  drivers/cxl/core/memscrub.c | 429
+>> ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 429 insertions(+)
 >>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 538ebd5a64fd..ca464bfef77b 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -702,6 +702,167 @@ static int free_hpa(struct cxl_region *cxlr)
->>   	return 0;
->>   }
->>   
+>> diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
+>> index 430f85b01f6c..9be230ea989a 100644
+>> --- a/drivers/cxl/core/memscrub.c
+>> +++ b/drivers/cxl/core/memscrub.c
+>> @@ -351,13 +351,411 @@ static const struct edac_scrub_ops
+>cxl_ps_scrub_ops =3D {
+>>  	.cycle_in_hours_range =3D cxl_patrol_scrub_read_scrub_cycle_hrs_range,
+>>  };
+>>
+>> +/* CXL DDR5 ECS control definitions */
+>> +#define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
+>> +#define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
 >> +
->> +struct cxlrd_max_context {
->> +	struct device * const *host_bridges;
->> +	int interleave_ways;
->> +	unsigned long flags;
->> +	resource_size_t max_hpa;
->> +	struct cxl_root_decoder *cxlrd;
+>> +static const uuid_t cxl_ecs_uuid =3D
+>> +	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,
+>\
+>> +		  0x89, 0x33, 0x86);
+>> +
+>> +struct cxl_ecs_context {
+>> +	u16 num_media_frus;
+>> +	u16 get_feat_size;
+>> +	u16 set_feat_size;
+>> +	struct cxl_memdev *cxlmd;
 >> +};
 >> +
->> +static int find_max_hpa(struct device *dev, void *data)
+>> +/**
+>> + * struct cxl_ecs_params - CXL memory DDR5 ECS parameter data structure=
+.
+>> + * @log_entry_type: ECS log entry type, per DRAM or per memory media
+>FRU.
+>> + * @threshold: ECS threshold count per GB of memory cells.
+>> + * @mode:	codeword/row count mode
+>> + *		0 : ECS counts rows with errors
+>> + *		1 : ECS counts codeword with errors
+>> + * @reset_counter: [IN] reset ECC counter to default value.
+>> + */
+>> +struct cxl_ecs_params {
+>> +	u8 log_entry_type;
+>> +	u16 threshold;
+>> +	u8 mode;
+>
+>An enum is defined below, why not directly use enum type here?
+Will do.
+>
+>> +	bool reset_counter;
+>> +};
+>> +
+>> +enum {
+>> +	CXL_ECS_PARAM_LOG_ENTRY_TYPE,
+>> +	CXL_ECS_PARAM_THRESHOLD,
+>> +	CXL_ECS_PARAM_MODE,
+>> +	CXL_ECS_PARAM_RESET_COUNTER,
+>> +};
+>> +
+>> +#define	CXL_ECS_LOG_ENTRY_TYPE_MASK	GENMASK(1, 0)
+>> +#define	CXL_ECS_REALTIME_REPORT_CAP_MASK	BIT(0)
+>> +#define	CXL_ECS_THRESHOLD_COUNT_MASK	GENMASK(2, 0)
+>> +#define	CXL_ECS_MODE_MASK	BIT(3)
+>> +#define	CXL_ECS_RESET_COUNTER_MASK	BIT(4)
+>> +
+>> +static const u16 ecs_supp_threshold[] =3D { 0, 0, 0, 256, 1024, 4096 };
+>> +
+>> +enum {
+>> +	ECS_LOG_ENTRY_TYPE_DRAM =3D 0x0,
+>> +	ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU =3D 0x1, };
+>> +
+>> +enum {
+>> +	ECS_THRESHOLD_256 =3D 3,
+>> +	ECS_THRESHOLD_1024 =3D 4,
+>> +	ECS_THRESHOLD_4096 =3D 5,
+>> +};
+>> +
+>> +enum {
+>> +	ECS_MODE_COUNTS_ROWS =3D 0,
+>> +	ECS_MODE_COUNTS_CODEWORDS =3D 1,
+>> +};
+>> +
+>> +struct cxl_ecs_rd_attrs {
+>> +	u8 ecs_log_cap;
+>> +	u8 ecs_cap;
+>> +	__le16 ecs_config;
+>> +	u8 ecs_flags;
+>> +}  __packed;
+>> +
+>> +struct cxl_ecs_wr_attrs {
+>> +	u8 ecs_log_cap;
+>> +	__le16 ecs_config;
+>> +}  __packed;
+>> +
+>> +/* CXL DDR5 ECS control functions */
+>> +static int cxl_mem_ecs_get_attrs(struct device *dev, void *drv_data, in=
+t
+>fru_id,
+>> +				 struct cxl_ecs_params *params)
 >> +{
->> +	struct cxlrd_max_context *ctx = data;
->> +	struct cxl_switch_decoder *cxlsd;
->> +	struct cxl_root_decoder *cxlrd;
->> +	struct resource *res, *prev;
->> +	struct cxl_decoder *cxld;
->> +	resource_size_t max;
->> +	int found;
+>> +	struct cxl_ecs_context *cxl_ecs_ctx =3D drv_data;
+>> +	struct cxl_memdev *cxlmd =3D cxl_ecs_ctx->cxlmd;
+>> +	struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
+>> +	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
+>> +	size_t rd_data_size;
+>> +	u8 threshold_index;
+>> +	size_t data_size;
 >> +
->> +	if (!is_root_decoder(dev))
->> +		return 0;
+>> +	rd_data_size =3D cxl_ecs_ctx->get_feat_size;
 >> +
->> +	cxlrd = to_cxl_root_decoder(dev);
->> +	cxld = &cxlrd->cxlsd.cxld;
->> +	if ((cxld->flags & ctx->flags) != ctx->flags) {
->> +		dev_dbg(dev, "find_max_hpa, flags not matching: %08lx vs %08lx\n",
->> +			      cxld->flags, ctx->flags);
->> +		return 0;
->> +	}
+>> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =3D
+>> +					kmalloc(rd_data_size, GFP_KERNEL);
+>> +	if (!rd_attrs)
+>> +		return -ENOMEM;
 >> +
->> +	/* A Host bridge could have more interleave ways than an
->> +	 * endpoint, couldn´t it?
->> +	 *
->> +	 * What does interleave ways mean here in terms of the requestor?
->> +	 * Why the FFMWS has 0 interleave ways but root port has 1?
->> +	 */
->> +	if (cxld->interleave_ways != ctx->interleave_ways) {
->> +		dev_dbg(dev, "find_max_hpa, interleave_ways  not matching\n");
->> +		return 0;
->> +	}
+>> +	params->log_entry_type =3D 0;
+>> +	params->threshold =3D 0;
+>> +	params->mode =3D 0;
+>> +	data_size =3D cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
+>> +				    rd_data_size,
+>CXL_GET_FEAT_SEL_CURRENT_VALUE);
+>> +	if (!data_size)
+>> +		return -EIO;
 >> +
->> +	cxlsd = &cxlrd->cxlsd;
->> +
->> +	guard(rwsem_read)(&cxl_region_rwsem);
->> +	found = 0;
->> +	for (int i = 0; i < ctx->interleave_ways; i++)
->> +		for (int j = 0; j < ctx->interleave_ways; j++)
->> +			if (ctx->host_bridges[i] ==
->> +					cxlsd->target[j]->dport_dev) {
->> +				found++;
->> +				break;
->> +			}
->> +
->> +	if (found != ctx->interleave_ways) {
->> +		dev_dbg(dev, "find_max_hpa, no interleave_ways found\n");
->> +		return 0;
->> +	}
->> +
->> +	/*
->> +	 * Walk the root decoder resource range relying on cxl_region_rwsem to
->> +	 * preclude sibling arrival/departure and find the largest free space
->> +	 * gap.
->> +	 */
->> +	lockdep_assert_held_read(&cxl_region_rwsem);
->> +	max = 0;
->> +	res = cxlrd->res->child;
->> +	if (!res)
->> +		max = resource_size(cxlrd->res);
->> +	else
->> +		max = 0;
->> +
->> +	for (prev = NULL; res; prev = res, res = res->sibling) {
->> +		struct resource *next = res->sibling;
->> +		resource_size_t free = 0;
->> +
->> +		if (!prev && res->start > cxlrd->res->start) {
->> +			free = res->start - cxlrd->res->start;
->> +			max = max(free, max);
->> +		}
->> +		if (prev && res->start > prev->end + 1) {
->> +			free = res->start - prev->end + 1;
->> +			max = max(free, max);
->> +		}
->> +		if (next && res->end + 1 < next->start) {
->> +			free = next->start - res->end + 1;
->> +			max = max(free, max);
->> +		}
->> +		if (!next && res->end + 1 < cxlrd->res->end + 1) {
->> +			free = cxlrd->res->end + 1 - res->end + 1;
->> +			max = max(free, max);
->> +		}
->> +	}
->> +
->> +	if (max > ctx->max_hpa) {
->> +		if (ctx->cxlrd)
->> +			put_device(CXLRD_DEV(ctx->cxlrd));
->> +		get_device(CXLRD_DEV(cxlrd));
->> +		ctx->cxlrd = cxlrd;
->> +		ctx->max_hpa = max;
->> +		dev_info(CXLRD_DEV(cxlrd), "found %pa bytes of free space\n", &max);
->> +	}
+>> +	params->log_entry_type =3D
+>FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK,
+>> +					   rd_attrs[fru_id].ecs_log_cap);
+>> +	threshold_index =3D FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK,
+>> +				    rd_attrs[fru_id].ecs_config);
+>> +	params->threshold =3D ecs_supp_threshold[threshold_index];
+>> +	params->mode =3D FIELD_GET(CXL_ECS_MODE_MASK,
+>> +				 rd_attrs[fru_id].ecs_config);
 >> +	return 0;
 >> +}
 >> +
->> +/**
->> + * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
->> + * @endpoint: an endpoint that is mapped by the returned decoder
->> + * @interleave_ways: number of entries in @host_bridges
->> + * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and HDM-H vs HDM-D[B]
->> + * @max: output parameter of bytes available in the returned decoder
->> + *
->> + * The return tuple of a 'struct cxl_root_decoder' and 'bytes available (@max)'
->> + * is a point in time snapshot. If by the time the caller goes to use this root
->> + * decoder's capacity the capacity is reduced then caller needs to loop and
->> + * retry.
->> + *
->> + * The returned root decoder has an elevated reference count that needs to be
->> + * put with put_device(cxlrd_dev(cxlrd)). Locking context is with
->> + * cxl_{acquire,release}_endpoint(), that ensures removal of the root decoder
->> + * does not race.
->> + */
->> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
->> +					       int interleave_ways,
->> +					       unsigned long flags,
->> +					       resource_size_t *max)
->> +{
+>> +static int cxl_mem_ecs_set_attrs(struct device *dev, void *drv_data, in=
+t
+>fru_id,
+>> +				 struct cxl_ecs_params *params, u8
+>param_type) {
+>> +	struct cxl_ecs_context *cxl_ecs_ctx =3D drv_data;
+>> +	struct cxl_memdev *cxlmd =3D cxl_ecs_ctx->cxlmd;
+>> +	struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
+>> +	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
+>> +	size_t rd_data_size, wr_data_size;
+>> +	u16 num_media_frus, count;
+>> +	size_t data_size;
+>> +	int ret;
 >> +
->> +	struct cxlrd_max_context ctx = {
->> +		.host_bridges = &endpoint->host_bridge,
->> +		.interleave_ways = interleave_ways,
->> +		.flags = flags,
->> +	};
->> +	struct cxl_port *root_port;
->> +	struct cxl_root *root;
+>> +	num_media_frus =3D cxl_ecs_ctx->num_media_frus;
+>> +	rd_data_size =3D cxl_ecs_ctx->get_feat_size;
+>> +	wr_data_size =3D cxl_ecs_ctx->set_feat_size;
+>> +	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =3D
+>> +				kmalloc(rd_data_size, GFP_KERNEL);
+>> +	if (!rd_attrs)
+>> +		return -ENOMEM;
 >> +
->> +	if (!is_cxl_endpoint(endpoint)) {
->> +		dev_dbg(&endpoint->dev, "hpa requestor is not an endpoint\n");
->> +		return ERR_PTR(-EINVAL);
+>> +	data_size =3D cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
+>> +				    rd_data_size,
+>CXL_GET_FEAT_SEL_CURRENT_VALUE);
+>> +	if (!data_size)
+>> +		return -EIO;
+>> +	struct cxl_ecs_wr_attrs *wr_attrs __free(kfree) =3D
+>> +					kmalloc(wr_data_size, GFP_KERNEL);
+>> +	if (!wr_attrs)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Fill writable attributes from the current attributes read for all t=
+he
+>media FRUs */
+>> +	for (count =3D 0; count < num_media_frus; count++) {
+>> +		wr_attrs[count].ecs_log_cap =3D rd_attrs[count].ecs_log_cap;
+>> +		wr_attrs[count].ecs_config =3D rd_attrs[count].ecs_config;
 >> +	}
 >> +
->> +	root = find_cxl_root(endpoint);
-> Could use scope-based resource management  __free() here to drop below put_device(&root_port->dev);
->
-> e.g. struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(endpoint);
->
-
-I need to admit not familiar yet with scope-based macros, but I think 
-these are different things. The scope of the pointer is inside this 
-function, but the data referenced is likely to persist.
-
-
-  get_device, inside find_cxl_root, is needed to avoid the 
-device-related data disappearing while referenced by the code inside 
-this function, and at the time of put_device, the data will be freed if 
-ref counter reaches 0. Am I missing something?
-
-
->> +	if (!root) {
->> +		dev_dbg(&endpoint->dev, "endpoint can not be related to a root port\n");
->> +		return ERR_PTR(-ENXIO);
+>> +	/* Fill attribute to be set for the media FRU */
+>> +	switch (param_type) {
+>> +	case CXL_ECS_PARAM_LOG_ENTRY_TYPE:
+>> +		if (params->log_entry_type !=3D ECS_LOG_ENTRY_TYPE_DRAM
+>&&
+>> +		    params->log_entry_type !=3D
+>ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU) {
+>> +			dev_err(dev,
+>> +				"Invalid CXL ECS scrub log entry type(%d) to
+>set\n",
+>> +			       params->log_entry_type);
+>> +			dev_err(dev,
+>> +				"Log Entry Type 0: per DRAM  1: per Memory
+>Media FRU\n");
+>> +			return -EINVAL;
+>> +		}
+>> +		wr_attrs[fru_id].ecs_log_cap =3D
+>FIELD_PREP(CXL_ECS_LOG_ENTRY_TYPE_MASK,
+>> +							  params-
+>>log_entry_type);
+>> +		break;
+>> +	case CXL_ECS_PARAM_THRESHOLD:
+>> +		wr_attrs[fru_id].ecs_config &=3D
+>~CXL_ECS_THRESHOLD_COUNT_MASK;
+>> +		switch (params->threshold) {
+>> +		case 256:
+>> +			wr_attrs[fru_id].ecs_config |=3D FIELD_PREP(
+>> +					CXL_ECS_THRESHOLD_COUNT_MASK,
+>> +						ECS_THRESHOLD_256);
+>> +			break;
+>> +		case 1024:
+>> +			wr_attrs[fru_id].ecs_config |=3D FIELD_PREP(
+>> +
+>	CXL_ECS_THRESHOLD_COUNT_MASK,
+>> +						ECS_THRESHOLD_1024);
+>> +			break;
+>> +		case 4096:
+>> +			wr_attrs[fru_id].ecs_config |=3D FIELD_PREP(
+>> +
+>	CXL_ECS_THRESHOLD_COUNT_MASK,
+>> +						ECS_THRESHOLD_4096);
+>> +			break;
+>> +		default:
+>> +			dev_err(dev,
+>> +				"Invalid CXL ECS scrub threshold count(%d) to
+>set\n",
+>> +				params->threshold);
+>> +			dev_err(dev,
+>> +				"Supported scrub threshold count:
+>256,1024,4096\n");
+>> +			return -EINVAL;
+>> +		}
+>> +		break;
+>> +	case CXL_ECS_PARAM_MODE:
+>> +		if (params->mode !=3D ECS_MODE_COUNTS_ROWS &&
+>> +		    params->mode !=3D ECS_MODE_COUNTS_CODEWORDS) {
+>> +			dev_err(dev,
+>> +				"Invalid CXL ECS scrub mode(%d) to set\n",
+>> +				params->mode);
+>> +			dev_err(dev,
+>> +				"Mode 0: ECS counts rows with errors"
+>> +				" 1: ECS counts codewords with errors\n");
+>> +			return -EINVAL;
+>> +		}
+>> +		wr_attrs[fru_id].ecs_config &=3D ~CXL_ECS_MODE_MASK;
+>> +		wr_attrs[fru_id].ecs_config |=3D
+>FIELD_PREP(CXL_ECS_MODE_MASK,
+>> +							  params->mode);
+>> +		break;
+>> +	case CXL_ECS_PARAM_RESET_COUNTER:
+>> +		wr_attrs[fru_id].ecs_config &=3D
+>~CXL_ECS_RESET_COUNTER_MASK;
+>> +		wr_attrs[fru_id].ecs_config |=3D
+>FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK,
+>> +							  params-
+>>reset_counter);
+>> +		break;
+>> +	default:
+>> +		dev_err(dev, "Invalid CXL ECS parameter to set\n");
+>> +		return -EINVAL;
 >> +	}
 >> +
->> +	root_port = &root->port;
->> +	down_read(&cxl_region_rwsem);
->> +	device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
->> +	up_read(&cxl_region_rwsem);
->> +	put_device(&root_port->dev);
+>> +	ret =3D cxl_set_feature(mds, cxl_ecs_uuid,
+>CXL_MEMDEV_ECS_SET_FEAT_VERSION,
+>> +			      wr_attrs, wr_data_size,
 >> +
->> +	if (!ctx.cxlrd)
->> +		return ERR_PTR(-ENOMEM);
+>CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET);
+>> +	if (ret) {
+>> +		dev_err(dev, "CXL ECS set feature failed ret=3D%d\n", ret);
+>> +		return ret;
+>> +	}
 >> +
->> +	*max = ctx.max_hpa;
->> +	return ctx.cxlrd;
+>> +	return 0;
 >> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, CXL);
 >> +
+>> +static int cxl_ecs_get_log_entry_type(struct device *dev, void
+>> +*drv_data, int fru_id, u64 *val) {
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
 >> +
->>   static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->>   			  const char *buf, size_t len)
->>   {
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 9973430d975f..d3fdd2c1e066 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -770,6 +770,9 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
->>   struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->>   struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
->>   struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +#define CXLRD_DEV(cxlrd) &cxlrd->cxlsd.cxld.dev
+>> +	*val =3D params.log_entry_type;
 >> +
->>   bool is_root_decoder(struct device *dev);
->>   bool is_switch_decoder(struct device *dev);
->>   bool is_endpoint_decoder(struct device *dev);
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->> index 8f2a820bd92d..a0e0795ec064 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -877,4 +877,9 @@ struct cxl_hdm {
->>   struct seq_file;
->>   struct dentry *cxl_debugfs_create_dir(const char *dir);
->>   void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
->> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
->> +					       int interleave_ways,
->> +					       unsigned long flags,
->> +					       resource_size_t *max);
+>> +	return 0;
+>> +}
 >> +
->>   #endif /* __CXL_MEM_H__ */
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
->> index 2cf4837ddfc1..6d49571ccff7 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->> @@ -22,6 +22,7 @@ void efx_cxl_init(struct efx_nic *efx)
->>   {
->>   	struct pci_dev *pci_dev = efx->pci_dev;
->>   	struct efx_cxl *cxl = efx->cxl;
->> +	resource_size_t max = 0;
->>   	struct resource res;
->>   	u16 dvsec;
->>   
->> @@ -74,6 +75,19 @@ void efx_cxl_init(struct efx_nic *efx)
->>   	if (IS_ERR(cxl->endpoint))
->>   		pci_info(pci_dev, "CXL accel acquire endpoint failed");
->>   
->> +	cxl->cxlrd = cxl_get_hpa_freespace(cxl->endpoint, 1,
->> +					    CXL_DECODER_F_RAM | CXL_DECODER_F_TYPE2,
->> +					    &max);
+>> +static int cxl_ecs_set_log_entry_type(struct device *dev, void
+>> +*drv_data, int fru_id, u64 val) {
+>> +	struct cxl_ecs_params params =3D {
+>> +		.log_entry_type =3D val,
+>> +	};
 >> +
->> +	if (IS_ERR(cxl->cxlrd)) {
->> +		pci_info(pci_dev, "CXL accel get HPA failed");
->> +		goto out;
+>> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params,
+>> +CXL_ECS_PARAM_LOG_ENTRY_TYPE); }
+>> +
+>> +static int cxl_ecs_get_log_entry_type_per_dram(struct device *dev, void
+>*drv_data,
+>> +					       int fru_id, u64 *val)
+>
+>I may have missed something. We have cxl_ecs_get_log_entry_type, and what =
+is
+>cxl_ecs_get_log_entry_type_per_memory_media and
+>cxl_ecs_get_log_entry_type_per_dram for?
+Reason for adding these readonly attributes to avoid user need to check the=
+ spec to
+interpret the value set or the supported options for ECS log type.
+From spec,
+Common DDR5 ECS Log Capabilities
+* Bits[1:0]: Log Entry Type: The log entry type of how the ECS log is
+reported. The entry type is defined commonly for all memory media FRUs
+within the device.
+- 00b =3D Per DRAM
+- 01b =3D Per Memory Media FRU
+- All other encodings are reserved=20
+>
+>> +{
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (params.log_entry_type =3D=3D ECS_LOG_ENTRY_TYPE_DRAM)
+>> +		*val =3D 1;
+>> +	else
+>> +		*val =3D 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_get_log_entry_type_per_memory_media(struct device
+>*dev, void *drv_data,
+>> +						       int fru_id, u64 *val)
+>> +{
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (params.log_entry_type =3D=3D
+>ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
+>> +		*val =3D 1;
+>> +	else
+>> +		*val =3D 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_get_mode(struct device *dev, void *drv_data, int
+>> +fru_id, u64 *val) {
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*val =3D params.mode;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_set_mode(struct device *dev, void *drv_data, int
+>> +fru_id, u64 val) {
+>> +	struct cxl_ecs_params params =3D {
+>> +		.mode =3D val,
+>> +	};
+>> +
+>> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params,
+>> +CXL_ECS_PARAM_MODE); }
+>> +
+>> +static int cxl_ecs_get_mode_counts_rows(struct device *dev, void
+>> +*drv_data, int fru_id, u64 *val)
+>As above, what is cxl_ecs_get_mode_counts_codewords and
+>cxl_ecs_get_mode_counts_rows for?
+Reason for adding these readonly attributes to avoid user need to check the=
+ spec to
+interpret the value set or the supported options for mode.
+From spec,
+Bit[3]: Codeword/Row Count Mode:
+- 0 =3D ECS counts rows with errors
+- 1 =3D ECS counts codewords with errors
+>
+>Fan
+>> +{
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (params.mode =3D=3D ECS_MODE_COUNTS_ROWS)
+>> +		*val =3D 1;
+>> +	else
+>> +		*val =3D 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_get_mode_counts_codewords(struct device *dev, void
+>*drv_data,
+>> +					     int fru_id, u64 *val)
+>> +{
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (params.mode =3D=3D ECS_MODE_COUNTS_CODEWORDS)
+>> +		*val =3D 1;
+>> +	else
+>> +		*val =3D 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_reset(struct device *dev, void *drv_data, int
+>> +fru_id, u64 val) {
+>> +	struct cxl_ecs_params params =3D {
+>> +		.reset_counter =3D val,
+>> +	};
+>> +
+>> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params,
+>> +CXL_ECS_PARAM_RESET_COUNTER); }
+>> +
+>> +static int cxl_ecs_get_threshold(struct device *dev, void *drv_data,
+>> +int fru_id, u64 *val) {
+>> +	struct cxl_ecs_params params;
+>> +	int ret;
+>> +
+>> +	ret =3D cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*val =3D params.threshold;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cxl_ecs_set_threshold(struct device *dev, void *drv_data,
+>> +int fru_id, u64 val) {
+>> +	struct cxl_ecs_params params =3D {
+>> +		.threshold =3D val,
+>> +	};
+>> +
+>> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params,
+>> +CXL_ECS_PARAM_THRESHOLD); }
+>> +
+>> +static int cxl_ecs_get_name(struct device *dev, void *drv_data, int
+>> +fru_id, char *name) {
+>> +	struct cxl_ecs_context *cxl_ecs_ctx =3D drv_data;
+>> +	struct cxl_memdev *cxlmd =3D cxl_ecs_ctx->cxlmd;
+>> +
+>> +	return sysfs_emit(name, "cxl_%s_ecs_fru%d\n", dev_name(&cxlmd-
+>>dev),
+>> +fru_id); }
+>> +
+>> +static const struct edac_ecs_ops cxl_ecs_ops =3D {
+>> +	.get_log_entry_type =3D cxl_ecs_get_log_entry_type,
+>> +	.set_log_entry_type =3D cxl_ecs_set_log_entry_type,
+>> +	.get_log_entry_type_per_dram =3D
+>cxl_ecs_get_log_entry_type_per_dram,
+>> +	.get_log_entry_type_per_memory_media =3D
+>cxl_ecs_get_log_entry_type_per_memory_media,
+>> +	.get_mode =3D cxl_ecs_get_mode,
+>> +	.set_mode =3D cxl_ecs_set_mode,
+>> +	.get_mode_counts_codewords =3D cxl_ecs_get_mode_counts_codewords,
+>> +	.get_mode_counts_rows =3D cxl_ecs_get_mode_counts_rows,
+>> +	.reset =3D cxl_ecs_reset,
+>> +	.get_threshold =3D cxl_ecs_get_threshold,
+>> +	.set_threshold =3D cxl_ecs_set_threshold,
+>> +	.get_name =3D cxl_ecs_get_name,
+>> +};
+>> +
+>>  int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct
+>> cxl_region *cxlr)  {
+>>  	struct edac_ras_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
+>>  	struct cxl_patrol_scrub_context *cxl_ps_ctx;
+>>  	struct cxl_mbox_supp_feat_entry feat_entry;
+>>  	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
+>> +	struct cxl_ecs_context *cxl_ecs_ctx;
+>>  	int rc, i, num_ras_features =3D 0;
+>> +	int num_media_frus;
+>>
+>>  	if (cxlr) {
+>>  		struct cxl_region_params *p =3D &cxlr->params; @@ -407,6
+>+805,37 @@
+>> int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_regio=
+n
+>*cxlr)
+>>  	ras_features[num_ras_features].scrub_ctx =3D cxl_ps_ctx;
+>>  	num_ras_features++;
+>>
+>> +	if (!cxlr) {
+>> +		rc =3D cxl_mem_get_supported_feature_entry(cxlmd,
+>&cxl_ecs_uuid, &feat_entry);
+>> +		if (rc < 0)
+>> +			goto feat_register;
+>> +
+>> +		if (!(feat_entry.attr_flags &
+>CXL_FEAT_ENTRY_FLAG_CHANGABLE))
+>> +			goto feat_register;
+>> +		num_media_frus =3D feat_entry.get_size/
+>> +					sizeof(struct cxl_ecs_rd_attrs);
+>> +		if (!num_media_frus)
+>> +			goto feat_register;
+>> +
+>> +		cxl_ecs_ctx =3D devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx),
+>GFP_KERNEL);
+>> +		if (!cxl_ecs_ctx)
+>> +			goto feat_register;
+>> +		*cxl_ecs_ctx =3D (struct cxl_ecs_context) {
+>> +			.get_feat_size =3D feat_entry.get_size,
+>> +			.set_feat_size =3D feat_entry.set_size,
+>> +			.num_media_frus =3D num_media_frus,
+>> +			.cxlmd =3D cxlmd,
+>> +		};
+>> +
+>> +		ras_features[num_ras_features].feat =3D ras_feat_ecs;
+>> +		ras_features[num_ras_features].ecs_ops =3D &cxl_ecs_ops;
+>> +		ras_features[num_ras_features].ecs_ctx =3D cxl_ecs_ctx;
+>> +		ras_features[num_ras_features].ecs_info.num_media_frus =3D
+>num_media_frus;
+>> +		num_ras_features++;
 >> +	}
 >> +
->> +	if (max < EFX_CTPIO_BUFFER_SIZE)
->> +		pci_info(pci_dev, "CXL accel not enough free HPA space %llu < %u\n",
->> +				  max, EFX_CTPIO_BUFFER_SIZE);
->> +out:
->>   	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
->>   }
->>   
->> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
->> index 701910021df8..f3e77688ffe0 100644
->> --- a/include/linux/cxl_accel_mem.h
->> +++ b/include/linux/cxl_accel_mem.h
->> @@ -6,6 +6,10 @@
->>   #ifndef __CXL_ACCEL_MEM_H
->>   #define __CXL_ACCEL_MEM_H
->>   
->> +#define CXL_DECODER_F_RAM   BIT(0)
->> +#define CXL_DECODER_F_PMEM  BIT(1)
->> +#define CXL_DECODER_F_TYPE2 BIT(2)
+>> +feat_register:
 >> +
->>   enum accel_resource{
->>   	CXL_ACCEL_RES_DPA,
->>   	CXL_ACCEL_RES_RAM,
->> @@ -32,4 +36,9 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
->>   
->>   struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd);
->>   void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
->> +
->> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
->> +					       int interleave_ways,
->> +					       unsigned long flags,
->> +					       resource_size_t *max);
->>   #endif
->
+>>  	return edac_ras_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
+>>  				     num_ras_features, ras_features);  }
+>> --
+>> 2.34.1
+>>
+Thanks,
+Shiju
