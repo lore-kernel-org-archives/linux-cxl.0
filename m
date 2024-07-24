@@ -1,151 +1,251 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFB04AEF6;
-	Wed, 24 Jul 2024 20:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC85139588
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jul 2024 20:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721853445; cv=none; b=irk7nABfOSOuhn+Cj30wyZM9pG3UAPy1ANzN8+qYN4hEv9kvQQ9cl+DfhLwSSfFXdcCXedNa9ifuNXeHydfXCRkirkblRXCgImZU6bNXLpOEjqZiuFcQ54MVUpesa4Wnr2e0zVbAUtETXOXNHRCXEIWi/bX6wFwgYV2EU9TSiyg=
+	t=1721854243; cv=none; b=inwon3ElDLijWdyQ3quWxVrG/r5CY1SzMHZsHIEmeWuzRS56tO/brfGxozg5O9VNXn16QnI46dG0BZm64VgDYFvo9jkcU3Caf3yKgtCmgVsMpRoZreB5BQYM6DNE2EYNRGnilvVb79Vp2DGx9Jqfcz4oX5cWMTORJdAmVATUxmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721853445; c=relaxed/simple;
-	bh=lPZvqySYXn0Ih/XTQwAHKD1AQY0p+922RJESktRa07s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YbZ2U52erzHoyGlmD2Fp8Lbx3u+a9XXDhdmIiFb9q4NRpmgC4PiJcyIxQTiLDh3vIQT/uGNJhJxqM3nUV/6FixFkVXgpiwglgXvENYKVPsFLNuY+cJ33GnT9kz1VMxL3F7ka5Gkk03EK/zDdrRnD41DXjf/FskIQFODdYKOZfq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=ZcNps47e; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=ZcNps47e; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1721854243; c=relaxed/simple;
+	bh=gTlVP5kxfwsy5bDuSCzkOtNXwSnU7XBdO9ythG+0WaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y+6PTFAzo3UyYtfMrjSCwuKd3ISwd4O80Lj+cooxwbH1VHdliUO76Hxi5DDKz95udQKIcs5HoOsCsrC+3Q610SEdM/SAsLWGnEG+xLmkJlK8rD+fR/9FZ2J2MhiDjF0rRZ2VnULscXOlXnycLvQIbktNseeyy3iHIOO0JRakiUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=auu3hJCI; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ZcNps47e";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ZcNps47e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="auu3hJCI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1721853443;
-	bh=lPZvqySYXn0Ih/XTQwAHKD1AQY0p+922RJESktRa07s=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=ZcNps47eri30xAk1Tju9WWaFYf3akmDYtLb32+G5m/O4Lk3zpSUL0gbmCVR30VgdP
-	 yuf5V7oV17But2SQmo+j69gHNcqTM4jJsnWTAdTZHNYgelQ5Q0bEqtlzCNYuTGb7HS
-	 zNk+ZWw6URN4qIHekyPhmzpA3fFwZ7uw+uAsM29A=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8CD2812868A3;
-	Wed, 24 Jul 2024 16:37:23 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id ZP4tu15uyvwQ; Wed, 24 Jul 2024 16:37:23 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1721853443;
-	bh=lPZvqySYXn0Ih/XTQwAHKD1AQY0p+922RJESktRa07s=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=ZcNps47eri30xAk1Tju9WWaFYf3akmDYtLb32+G5m/O4Lk3zpSUL0gbmCVR30VgdP
-	 yuf5V7oV17But2SQmo+j69gHNcqTM4jJsnWTAdTZHNYgelQ5Q0bEqtlzCNYuTGb7HS
-	 zNk+ZWw6URN4qIHekyPhmzpA3fFwZ7uw+uAsM29A=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::db7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B23201286899;
-	Wed, 24 Jul 2024 16:37:22 -0400 (EDT)
-Message-ID: <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-  ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-rdma@vger.kernel.org,  netdev@vger.kernel.org, jgg@nvidia.com
-Date: Wed, 24 Jul 2024 16:37:21 -0400
-In-Reply-To: <20240724200012.GA23293@pendragon.ideasonboard.com>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
-	 <nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm>
-	 <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
-	 <20240724200012.GA23293@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721854242; x=1753390242;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=gTlVP5kxfwsy5bDuSCzkOtNXwSnU7XBdO9ythG+0WaU=;
+  b=auu3hJCI5bWxCNDhVPIErpGK2HyO7MynK3+xnn4BAELuUV2GStrHOyjT
+   cVd1D4mqfFN4kRw2/pSYvWWeMkzJdVME0obYi3s5PxaANHQGm6xZTFYG/
+   6s6FZahbOvjaPxObo+fbmSL2/nDwChcYAgCqlgm8+YAm1MH3DLYoFe6+V
+   Dn8kyrtepZiy0SSaKAOQZkMHZPgUpZV8pYKcSDL4Y89+7UQ8EEetfwymo
+   gwbc03KjSsUTsiVUCIOStvQJBnYZwpjbwC70a2oK+BoTfLEi+L3w6y+QQ
+   YL7cMZ/KP1dLv3lq7R3iGJI9qHZ/9cRwg1lnlmXgyavzt57AT2DSYJjgj
+   g==;
+X-CSE-ConnectionGUID: arkx8libTiiZWCBnoLW5Cg==
+X-CSE-MsgGUID: ADzGBxg8T2m5e6FJTo14hA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="19521409"
+X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
+   d="scan'208";a="19521409"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 13:50:41 -0700
+X-CSE-ConnectionGUID: wWVUhU1YQeavsCXN557VDg==
+X-CSE-MsgGUID: 5ubJDRfeSwSBecAhri7wZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
+   d="scan'208";a="83710383"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.208]) ([10.125.110.208])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 13:50:41 -0700
+Message-ID: <4b9d1b30-e23b-41eb-a6b5-16a97d0f08c4@intel.com>
+Date: Wed, 24 Jul 2024 13:50:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v13 1/8] util/trace: move trace helpers from
+ ndctl/cxl/ to ndctl/util/
+To: alison.schofield@intel.com, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+References: <cover.1720241079.git.alison.schofield@intel.com>
+ <d1d60f8f475684e398fd0c415358c48105b42b45.1720241079.git.alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <d1d60f8f475684e398fd0c415358c48105b42b45.1720241079.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2024-07-24 at 23:00 +0300, Laurent Pinchart wrote:
-[...]
-> What I get from the discussions I've followed or partcipated in over
-> the years is that the main worry of free software communities is
-> being forced to use closed-source userspace components, whether that
-> would be to make the device usable at all, or to achieve decent level
-> of performance or full feature set. We've been through years of
-> mostly closed-source GPU support, of printer "windrivers", and quite
-> a few other horrors. The good news is that we've so far overcome lots
-> (most) of those challenges. Reverse engineering projects paid off,
-> and so did working hand-in-hand with industry actors in multiple ways
-> (both openly and behind the scenes). One could then legitimately ask
-> why we're still scared.
 
-I don't think I am.  We're mostly fully capable of expounding at length
-on the business rationale for being open if the thing they're hiding
-isn't much of a differentiator anyway (or they're simply hiding it to
-try to retain some illusion of control), so we shouldn't have any fear
-of being able to make our case in language business people understand.
 
-I also think this fear is partly a mindset problem on our part.  We
-came out of the real fight for openness and we do embrace things like a
-licence that forces open code (GPL) and symbols that discourage
-proprietary drivers (EXPORT_SYMBOL_GPL), so we've somewhat drunk the
-FSF coolaid that if we don't stand over manufacturers every second and
-force them they'll slide back to their old proprietary ways.  However,
-if you look at the entirely permissive ecosystem that grew up after we
-did (openstack, docker, kubernetes, etc.) they don't have any such fear
-and yet they still have large amounts of uncompelled openness and give
-back.
-
-> I can't fully answer that question, but there are two points that I
-> think are relevant. Note that due to my background and experience,
-> this will be heavily biased towards consumer and embedded hardware,
-> not data centre-grade devices. Some technologies from the latter
-> however have a tendency to migrate to the former over time, so the
-> distinction isn't necessarily as relevant as one may consider.
+On 7/5/24 11:24 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> The first point is that hardware gets more complicated over time, and
-> in some markets there's also an increase in the number of vendors and
-> devices. There's a perceived (whether true or not) danger that we
-> won't be able to keep up with just reverse engineering and a
-> development model relying on hobyists. Getting vendors involved is
-> important if we want to scale.
+> A set of helpers used to parse kernel trace events were introduced
+> in ndctl/cxl/ in support of the CXL monitor command. The work these
+> helpers perform may be useful beyond CXL.
+> 
+> Move them to the ndctl/util/ where other generic helpers reside.
+> Replace cxl-ish naming with generic names and update the single
+> user, cxl/monitor.c, to match.
+> 
+> This move is in preparation for extending the helpers in support
+> of cxl_poison trace events.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Yes, but there are lots of not very useful complex devices being
-produced every day that fail to capture market share.  Not having
-reverse engineered drivers for them is no real loss.  If a device does
-gain market share, it gains a huge pool of users some of whom become
-interested in reverse engineering, so I think market forces actually
-work in our favour: we get reverse engineering mostly where the devices
-are actually interesting and capture market share.  It's self scaling.
-
-> Second, I think there's a fear of regression. For some categories of
-> devices, we have made slow but real progress to try and convince the
-> industry to be more open. This sometimes took a decade of work,
-> patiently building bridges and creating ecosystems brick by brick.
-> Some of those ecosystems are sturdy, some not so. Giving pass-through
-> a blank check will likely have very different effects in different
-> areas. I don't personally believe it will shatter everything, but I'm
-> convinced it carries risk in areas where cooperation with vendors is
-> in its infancy or is fragile for any other reason.
-
-I also think we're on the rise in this space.  Since most cloud
-workloads are on Linux, there's huge market pressure on most "found in
-the cloud" devices (like accelerators and GPUs) to have an easy to
-consume Linux story.  Nvidia is a case in point.  When it only cared
-about fast games on some other OS, we get shafted with a proprietary
-graphics drivers.  Now it's under pressure to be the number one AI
-accelerator provider for the cloud it's suddenly wondering about open
-source drivers to make adoption easier.
-
-> Finally, let's not forget that pass-through APIs are not an all or
-> nothing option. To cite that example only, DRM requires GPU drivers
-> to have an open-source userspace implementation to merge the kernel
-> driver, and the same subsystems strongly pushes for API
-> standardization for display controllers. We can set different rules
-> for different cases.
-
-I certainly think we can afford to experiment here, yes.
-
-James
-
+> ---
+>  cxl/meson.build             |  2 +-
+>  cxl/monitor.c               | 11 +++++------
+>  {cxl => util}/event_trace.c | 21 ++++++++++-----------
+>  {cxl => util}/event_trace.h | 12 ++++++------
+>  4 files changed, 22 insertions(+), 24 deletions(-)
+>  rename {cxl => util}/event_trace.c (88%)
+>  rename {cxl => util}/event_trace.h (61%)
+> 
+> diff --git a/cxl/meson.build b/cxl/meson.build
+> index 61b4d8762b42..e4d1683ce8c6 100644
+> --- a/cxl/meson.build
+> +++ b/cxl/meson.build
+> @@ -27,7 +27,7 @@ deps = [
+>  
+>  if get_option('libtracefs').enabled()
+>    cxl_src += [
+> -    'event_trace.c',
+> +    '../util/event_trace.c',
+>      'monitor.c',
+>    ]
+>    deps += [
+> diff --git a/cxl/monitor.c b/cxl/monitor.c
+> index a85452a4dc82..2066f984668d 100644
+> --- a/cxl/monitor.c
+> +++ b/cxl/monitor.c
+> @@ -28,8 +28,7 @@
+>  #define ENABLE_DEBUG
+>  #endif
+>  #include <util/log.h>
+> -
+> -#include "event_trace.h"
+> +#include <util/event_trace.h>
+>  
+>  static const char *cxl_system = "cxl";
+>  const char *default_log = "/var/log/cxl-monitor.log";
+> @@ -87,9 +86,9 @@ static int monitor_event(struct cxl_ctx *ctx)
+>  		goto epoll_ctl_err;
+>  	}
+>  
+> -	rc = cxl_event_tracing_enable(inst, cxl_system, NULL);
+> +	rc = trace_event_enable(inst, cxl_system, NULL);
+>  	if (rc < 0) {
+> -		err(&monitor, "cxl_trace_event_enable() failed: %d\n", rc);
+> +		err(&monitor, "trace_event_enable() failed: %d\n", rc);
+>  		goto event_en_err;
+>  	}
+>  
+> @@ -112,7 +111,7 @@ static int monitor_event(struct cxl_ctx *ctx)
+>  		}
+>  
+>  		list_head_init(&ectx.jlist_head);
+> -		rc = cxl_parse_events(inst, &ectx);
+> +		rc = trace_event_parse(inst, &ectx);
+>  		if (rc < 0)
+>  			goto parse_err;
+>  
+> @@ -129,7 +128,7 @@ static int monitor_event(struct cxl_ctx *ctx)
+>  	}
+>  
+>  parse_err:
+> -	if (cxl_event_tracing_disable(inst) < 0)
+> +	if (trace_event_disable(inst) < 0)
+>  		err(&monitor, "failed to disable tracing\n");
+>  event_en_err:
+>  epoll_ctl_err:
+> diff --git a/cxl/event_trace.c b/util/event_trace.c
+> similarity index 88%
+> rename from cxl/event_trace.c
+> rename to util/event_trace.c
+> index 1b5aa09de8b2..16013412bc06 100644
+> --- a/cxl/event_trace.c
+> +++ b/util/event_trace.c
+> @@ -59,8 +59,8 @@ static struct json_object *num_to_json(void *num, int elem_size, unsigned long f
+>  	return json_object_new_int64(val);
+>  }
+>  
+> -static int cxl_event_to_json(struct tep_event *event, struct tep_record *record,
+> -			     struct list_head *jlist_head)
+> +static int event_to_json(struct tep_event *event, struct tep_record *record,
+> +			 struct list_head *jlist_head)
+>  {
+>  	struct json_object *jevent, *jobj, *jarray;
+>  	struct tep_format_field **fields;
+> @@ -200,8 +200,8 @@ err_jnode:
+>  	return rc;
+>  }
+>  
+> -static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+> -			   int cpu, void *ctx)
+> +static int event_parse(struct tep_event *event, struct tep_record *record,
+> +		       int cpu, void *ctx)
+>  {
+>  	struct event_ctx *event_ctx = (struct event_ctx *)ctx;
+>  
+> @@ -218,10 +218,10 @@ static int cxl_event_parse(struct tep_event *event, struct tep_record *record,
+>  		return event_ctx->parse_event(event, record,
+>  					      &event_ctx->jlist_head);
+>  
+> -	return cxl_event_to_json(event, record, &event_ctx->jlist_head);
+> +	return event_to_json(event, record, &event_ctx->jlist_head);
+>  }
+>  
+> -int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx)
+> +int trace_event_parse(struct tracefs_instance *inst, struct event_ctx *ectx)
+>  {
+>  	struct tep_handle *tep;
+>  	int rc;
+> @@ -230,14 +230,13 @@ int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx)
+>  	if (!tep)
+>  		return -ENOMEM;
+>  
+> -	rc = tracefs_iterate_raw_events(tep, inst, NULL, 0, cxl_event_parse,
+> -					ectx);
+> +	rc = tracefs_iterate_raw_events(tep, inst, NULL, 0, event_parse, ectx);
+>  	tep_free(tep);
+>  	return rc;
+>  }
+>  
+> -int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system,
+> -		const char *event)
+> +int trace_event_enable(struct tracefs_instance *inst, const char *system,
+> +		       const char *event)
+>  {
+>  	int rc;
+>  
+> @@ -252,7 +251,7 @@ int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system,
+>  	return 0;
+>  }
+>  
+> -int cxl_event_tracing_disable(struct tracefs_instance *inst)
+> +int trace_event_disable(struct tracefs_instance *inst)
+>  {
+>  	return tracefs_trace_off(inst);
+>  }
+> diff --git a/cxl/event_trace.h b/util/event_trace.h
+> similarity index 61%
+> rename from cxl/event_trace.h
+> rename to util/event_trace.h
+> index ec6267202c8b..37c39aded871 100644
+> --- a/cxl/event_trace.h
+> +++ b/util/event_trace.h
+> @@ -1,7 +1,7 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  /* Copyright (C) 2022 Intel Corporation. All rights reserved. */
+> -#ifndef __CXL_EVENT_TRACE_H__
+> -#define __CXL_EVENT_TRACE_H__
+> +#ifndef __UTIL_EVENT_TRACE_H__
+> +#define __UTIL_EVENT_TRACE_H__
+>  
+>  #include <json-c/json.h>
+>  #include <ccan/list/list.h>
+> @@ -19,9 +19,9 @@ struct event_ctx {
+>  			   struct list_head *jlist_head); /* optional */
+>  };
+>  
+> -int cxl_parse_events(struct tracefs_instance *inst, struct event_ctx *ectx);
+> -int cxl_event_tracing_enable(struct tracefs_instance *inst, const char *system,
+> -		const char *event);
+> -int cxl_event_tracing_disable(struct tracefs_instance *inst);
+> +int trace_event_parse(struct tracefs_instance *inst, struct event_ctx *ectx);
+> +int trace_event_enable(struct tracefs_instance *inst, const char *system,
+> +		       const char *event);
+> +int trace_event_disable(struct tracefs_instance *inst);
+>  
+>  #endif
