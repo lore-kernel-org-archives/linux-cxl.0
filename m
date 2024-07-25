@@ -1,95 +1,102 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E406519CD15
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jul 2024 16:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3560219D889;
+	Thu, 25 Jul 2024 17:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721926489; cv=none; b=MFtQ/0HifgbQ0/hCapaDKZiB3NABdmQt1YkbdujVumJ0D5RFFLc0BsMKruhY2KtHToaXbWRAf0vWjg15ndH3NS2ru/hPmP8Jaqn2K3yMqDBqZGQaOg23AcZT3Hn0DUFk8ipjZLsuF096/0JdZCl/ESw7MEPokT3Xfl6kEA1yF4Q=
+	t=1721929074; cv=none; b=tqS4V8cZ0v6sivgkQmehCx5Z7DrcqaLOblGsAZ8snaebEtF3SHKML04XAXAJUQxOPfGL7qW6PRXnCyOE/6UEF/8Wp9T6Zwuhn33jcQROiDG+S/gpKfgJD3WaaYwkSo8gAUSrkVBJkfpXnG71U/N+Fz3HSsv7Ybl19qugiyYRMvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721926489; c=relaxed/simple;
-	bh=AurTfS9wOJhr+M6Xg7gs5pcvQxuS7AXFUmEK243iqrM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PNP9DAi8SufW86mX408RXPpMFuzGlSIQOmkyfxoTntSt8B+jia0WpSJFXzv/f/MArs0sXoxTEix4T2RI9W+OWG3RX7RQ+t/T345OrJvVP1fOyqgSl+DFOftw4WKvw2XegxcVlP+Ri8GIs6AB2EKD1eQExpkzZK5g1ey8V0WK7XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVH3z6ysMz6K9GJ;
-	Fri, 26 Jul 2024 00:52:15 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3F206140A34;
-	Fri, 26 Jul 2024 00:54:42 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 25 Jul
- 2024 17:54:41 +0100
-Date: Thu, 25 Jul 2024 17:54:40 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Michael Tokarev <mjt@tls.msk.ru>
-CC: <mst@redhat.com>, <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	Markus Armbruster <armbru@redhat.com>, Li Zhijian <lizhijian@fujitsu.com>,
-	<linuxarm@huawei.com>, Zhao Liu <zhao1.liu@linux.intel.com>, Xingtao Yao
-	<yaoxt.fnst@fujitsu.com>, qemu-stable <qemu-stable@nongnu.org>
-Subject: Re: [PATCH v2 1/3] hw/cxl/cxl-host: Fix segmentation fault when
- getting cxl-fmw property
-Message-ID: <20240725175440.00005ed4@Huawei.com>
-In-Reply-To: <1c89931e-d800-452b-8dbd-5c433149f723@tls.msk.ru>
-References: <20240705113956.941732-1-Jonathan.Cameron@huawei.com>
-	<20240705113956.941732-2-Jonathan.Cameron@huawei.com>
-	<1c89931e-d800-452b-8dbd-5c433149f723@tls.msk.ru>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1721929074; c=relaxed/simple;
+	bh=kYShI7202uUqTsxcN5MLRjtETtPxifWaKs6rENWee6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6fU67Hc5KbWpvmCi9aw+Thsyb5blAS1+gJxm+HXfUMuGIx+ShTj0ieu86aCYyZJPBS18XjIR8fuTun89IRZdv2sQ8EcfuNNCPCNCZkBvu0pQzdWgh2oaY20ZI6MUmX2yWJ9UXk3ZQd6cApBT5gNlwJObGSQCM6NEGf80gqRn/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUdpgeVf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUdpgeVf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03AC5C116B1;
+	Thu, 25 Jul 2024 17:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721929073;
+	bh=kYShI7202uUqTsxcN5MLRjtETtPxifWaKs6rENWee6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OUdpgeVf4TqbnNYWNppOKDILDNSQAaEdVDXpl2EsTyNzhhGygo/kFj/d+wI+sscM0
+	 USrlUhS2r1Z3JgL0W+t6bgswvscmjwi2r+WJGLVpHPhHOSqU8jVRv4d/hfXcB+49hv
+	 VhsPsAVnDbAp5uNRKhMtFX11+udtP3xbLd1exGD3u58jg95lUExGERgvPLnVugRxF6
+	 A86ORSKdm8/OeZl+s9lw6mTw+yLcw16vsYwhb8mSTcXkvxgUxTacl92hDF9sW4C4Sn
+	 br+/bjXtGotEsrmnGZyKDRgMFYtANjuysqTBR/ot/hdxsMCI4Iti1pJAiQTZy49E7+
+	 LGiAhS9mV5kHg==
+Date: Thu, 25 Jul 2024 20:37:47 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240725173747.GH7022@unreal>
+References: <nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm>
+ <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
+ <20240724200012.GA23293@pendragon.ideasonboard.com>
+ <CAPybu_0SN7m=m=+z5hu_4M+STGh2t0J-hFEmtDTgx6fYWKzk3A@mail.gmail.com>
+ <20240725122315.GE7022@unreal>
+ <CAPybu_1XsNq=ExrO+8XLqnV_KvSaqooM=yNy5iuzcD=-k5CdGA@mail.gmail.com>
+ <20240725132035.GF7022@unreal>
+ <1d7a4437-d072-42c4-b5fe-21e097eb5b9c@sirena.org.uk>
+ <20240725141856.GG7022@unreal>
+ <b30aa2afd015a4f957a6c0b2353ef7b99716d240.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b30aa2afd015a4f957a6c0b2353ef7b99716d240.camel@HansenPartnership.com>
 
-On Wed, 24 Jul 2024 07:53:48 +0300
-Michael Tokarev <mjt@tls.msk.ru> wrote:
-
-> 05.07.2024 14:39, Jonathan Cameron via wrote:
-> > From: Zhao Liu <zhao1.liu@intel.com>
+On Thu, Jul 25, 2024 at 10:22:48AM -0400, James Bottomley wrote:
+> On Thu, 2024-07-25 at 17:18 +0300, Leon Romanovsky wrote:
+> > On Thu, Jul 25, 2024 at 02:29:36PM +0100, Mark Brown wrote:
+> > > On Thu, Jul 25, 2024 at 04:20:35PM +0300, Leon Romanovsky wrote:
+> > > > On Thu, Jul 25, 2024 at 03:02:13PM +0200, Ricardo Ribalda Delgado
+> > > > wrote:
+> > > 
+> > > > > As a user, and as an open source Distro developer I have a
+> > > > > small hint.  But you could also ask users what they think about
+> > > > > not being able to use their notebook's cameras. The last time
+> > > > > that I could not use some basic hardware from a notebook with
+> > > > > Linux was 20 years ago.
+> > > 
+> > > > Lucky you, I still have consumer hardware (speaker) that doesn't
+> > > > work with Linux, and even now, there is basic hardware in my
+> > > > current laptop (HP docking station) that doesn't work reliably in
+> > > > Linux.
+> > > 
+> > > FWIW for most audio issues (especially built in stuff) with laptops
+> > > if you report it upstream it'll generally be relatively easy to
+> > > quirk. Unfortunately it's idiomatic for ACPI systems to quirk off
+> > > DMI information for almost everything which means a constant stream
+> > > of per system quirks for subsystems like audio.
 > > 
-> > QEMU crashes (Segmentation fault) when getting cxl-fmw property via
-> > qmp:
-> > 
-> > (QEMU) qom-get path=machine property=cxl-fmw
-> > 
-> > This issue is caused by accessing wrong callback (opaque) type in
-> > machine_get_cfmw().
-> > 
-> > cxl_machine_init() sets the callback as `CXLState *` type but
-> > machine_get_cfmw() treats the callback as
-> > `CXLFixedMemoryWindowOptionsList **`.
-> > 
-> > Fix this error by casting opaque to `CXLState *` type in
-> > machine_get_cfmw().
-> > 
-> > Fixes: 03b39fcf64bc ("hw/cxl: Make the CXL fixed memory window setup a machine parameter.")
-> > Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
-> > Reviewed-by: Li Zhijian <lizhijian@fujitsu.com>
-> > Reviewed-by: Xingtao Yao <yaoxt.fnst@fujitsu.com>
-> > Link: https://lore.kernel.org/r/20240704093404.1848132-1-zhao1.liu@linux.intel.com
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> > It is Jabra USB speaker. One day, I will have time to debug it :).
 > 
-> Is this a stable@ material?
+> Those actually do work with Linux.  It's the speakers Plumbers has
+> provided to BoF/Hack sessions that needed remote attendees.  There was
+> a pulseaudio issue a while ago that any Mic/Speaker combination that
+> exported HFP instead of HSP didn't work, but that's fixed upstream (but
+> you might need to upgrade your pulseaudio).
 
-Yes please
+I don't want to hijack this thread, but I tried now my two Jabra
+speakers (one is used and another is brand new which I got from IT)
+and both don't work on my FC40 laptop.
 
-Thanks,
-
-Jonathan
+Thanks
 
 > 
-> Thanks,
+> James
 > 
-> /mjt
 > 
-
