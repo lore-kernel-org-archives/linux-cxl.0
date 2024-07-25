@@ -1,358 +1,401 @@
-Received: from esa4.fujitsucc.c3s2.iphmx.com (esa4.fujitsucc.c3s2.iphmx.com [68.232.151.214])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13584A39
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jul 2024 23:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.151.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AB080C;
+	Thu, 25 Jul 2024 00:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721864369; cv=fail; b=tuaEeN5rnY5su2c3pCVHzW0UwFfKB4AdP3NXh4+OQm81FeoAZDCh5+/VGu0rsE1qXn07mTIn9dpZ8Q4hdmRB4py3HnAOejm6SK4605Wr25GkQ8XGb98UobNGwRKxr8fdligAb1DAVEqUw4jjI/CVGLfPt/pL1n2bqz2/Pxsfvo8=
+	t=1721867763; cv=fail; b=UqzdccvWoOd9GbByYACQ7jY209UDFXNhxM+BG9MlVlWg47ZB+UK4or1AQXAZ/Ah4pKuRNABgDhRerSFrYySt27a8Awh313CpkdMhwqRTrplnxq00ky/2HD7j710/Lqadb16+NmZ0aWugK6P0Kup6Q7KtcF1EfxjMH9GxZGRd59c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721864369; c=relaxed/simple;
-	bh=JE902e9a+ll1uwhjBki+yp+MFOIZQZx04gNOWPFDeVg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UTEOVueNHGfNQObu1PzRv/8u9lre8riCyiHZA8nZaBejnLP5H6WWyxK9UmwMD5+ehM/v0TQy7VHVDkF/AtpBD2V5GTwK8+HcKop3UyBW5DqK4VBzDRBk9c+brq38aN395UG8T8bTuBCVagf1EGV264WVUiygHHXf3OV8HtqYm7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=LVb+1vj7; arc=fail smtp.client-ip=68.232.151.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1721867763; c=relaxed/simple;
+	bh=vwNTV2405fK6xuUJfj8WD8ZqZ7npJMRLNp6/YM3Pyng=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H7baKEjJrscYR09tJlVh3Kw5/3omXmpcxEAe/6niFIbDoO5Eqa8U6ubYoJ3jqo/CAlOEyKZkx14iXekanmGIr/irqs94keYUhhncebvme5ErqSnYS7NGu+kzNj3ljQXkSG0wn/jHuZFGOL3KD0bxi7EbwN4E1Ueu6Itnz+Ki9jY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hWpdNJIL; arc=fail smtp.client-ip=40.107.244.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="LVb+1vj7"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1721864364; x=1753400364;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=JE902e9a+ll1uwhjBki+yp+MFOIZQZx04gNOWPFDeVg=;
-  b=LVb+1vj7BOCX8ep364MjcuWwzIjOakZGz8870CeDEyoRMoZDJ/l98D3v
-   U0hn3wSsSc036wVbbsT2/346iRhOQJabw6eMGZPw0GcH6qshHl2aNIDfc
-   ugb41eJYMAHSehJE+rVOVAdoZReLC+9g64/G4Cr/FRdT8vuCg7vVvHmUV
-   saMrU9vXw2rIgZMVNxZcaz56F54EoZA5GTVSdvG3sGNeE49XDBWB1qEaG
-   sxrejXSs3yPWcxiMsjKzoB4tLxg6xuibclldzciD12IrUHzBtTBsikVzH
-   K/a5D5IO0EqYeGsURBoBmwVJldQONk1qZg5++TPIWcNSl5lCFo59OWYQv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="39124286"
-X-IronPort-AV: E=Sophos;i="6.09,234,1716217200"; 
-   d="scan'208";a="39124286"
-Received: from mail-japanwestazlp17010005.outbound.protection.outlook.com (HELO OS0P286CU011.outbound.protection.outlook.com) ([40.93.130.5])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 08:38:11 +0900
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hWpdNJIL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OFwb7McYveQE/NIXO1QN0uNTG851KQ5XshmJpivNz0KWzoNoEgnv55k5yPVYCH+WUMNycoE6NJZJXv9KCN6f7bg5ZGU/ggBb2AUYoJ+WeB9T0iu2fHMSN1LMzsm/dkXO8jTFdbzP4VVocbAM4Xnm58Z2AUJ4+OP2x38zZhhwdUEjHM/UOvOvgTccf2UvfyNGO8MoXNO6TNiS10qiDHtGn4dt7/lol2vFfbYPqvHYCEb4dmCmSlBtMkqqxNbO2az1DlWYjyV6Co2vDNROMIKIi054ewVxvckGGXENeeBh+5LGw0OyzZcfBEcZpgZA0lJNFrSzmEWZCFXRpZHJGWaa1w==
+ b=ql2kQs/nrB1x3RngwzaEsYgV2E7zITfyigh8wJkXK+emLxOe2S+yl0l1JLOzO+lLpKClu/ecEkuDS5w1TSMmMc/l6P0FBexiUjrQrGLnEdLyzkjH78+V+vy3EDKNKJt4mzvFfvQEmFSjGPsp9WmBMUkkV0qoevclNPtXTSwmj8dVNmPIUMiTnyI7OgANEhiQvuZExYoxxYG2LKW0IsCAMFP62ALUjufIMtZZPSwH//9DQ8v5KUGkF36MMwyy2PPS+ITuMshHzlN10UL+wcvfzSNa/s72vHz/bGBmMNBmTQ5/17OpJAs9twHHkjAEtlS0En5XLGRr9AlJWD2gLEa+Vw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3oFodyPgKI8ABl81GKbXN74OFWVg6ktEkgG4k1HJRsY=;
- b=FaqLxZLYA2XTZr/lUAuP0exfxmQavWvbQHrHNDdkDyI0Cl8E5sxWORgi8yP3ChUyJa99enM1k9afq8UGs4Lrh+Q2+Gej8alhxpLOklJhVtIbRrUyr7QwLucr3Fh0tfoGkdLl1n8Fp62lP0qZ6Q5Gx7dpFUFxFkLDsIMXqT4w8Z84IAEO6xsNvQI7n/x+g69s2mpnFpHvlq8WMWy1OLPoijV7rGO3int5Db6ZDqQiROhOND6mdaMQCMIrWoB0D5bn42CA/9xsfXHVuac2Zsvrexz2hOAy6LdSWxbnLTGA2u0/J1wCQPS7M4zJxBWxfEL4G+su9T1GYWzRXFTTqR0rfQ==
+ bh=puczn/Plvra1c85dji4K9vrlyWEUgXDf8mOWU9BkLB0=;
+ b=WG6kF6teJD2vxyd1Z00JQ0D7v8IJNSdtMfc3jpIz/8iuz3PUiQ6OaaxOIoJaBi0z1xDLBYvSW+wD7fYUty6cnR80V+qxmkLn501OFV20KyKvELh1arGiux2FpMfT8LtfB56rsiSmeAY8jfuIsiG4r0MOgsevXb2uqQUsfLYnbVvjY+0eb3+SdNAIsP1K/1nHBEJotTgsXbbG9TO+V7T1gYZyfweqP7f9FSrhd8eUaEt0TVDcKP1pG+jI3zajbGUiWI6FoXzR+4tpcApa0WtR59J5rJ2CA+9A5+KeJFbd492CJ7jjSplGwsG27y34yvKSsypGcyZZP0MOx1BT9WYjCQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
- by TYCPR01MB8644.jpnprd01.prod.outlook.com (2603:1096:400:159::13) with
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=puczn/Plvra1c85dji4K9vrlyWEUgXDf8mOWU9BkLB0=;
+ b=hWpdNJILJpAVIZDvejy+cbKEracGKV0LTQ6UUgJxG7q+54hJjR5qyEsD8sN3Sad97DFQRHPbUUzj/wWic6Mzb4k8QhHjXdMsYc5Ownw4TY14poUNzSOMmKmCVUTf25SMWukFCBX6auimKoQFWhCIqas2A4HguD43yJcISUQBC25iqj8fwXTZfud58ZBLwK0Iimj6jfAu0u51oCZTSkS+/S22vaQrUWBTaJPdYfdGGyTUcybuOHOlfWvWmDdUaWBB8GGerK9KIk36DmZ8gOxG1fwswWBVtwn3o8lYch/+b0XMmWYVFAshsSHFtgJ8fL9CYh5sDqOd6U7qOA1HkZZ/Cw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
+ MW4PR12MB7484.namprd12.prod.outlook.com (2603:10b6:303:212::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.20; Wed, 24 Jul
- 2024 23:38:08 +0000
-Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
- ([fe80::357a:7bf5:8d95:3cba%5]) with mapi id 15.20.7784.020; Wed, 24 Jul 2024
- 23:38:08 +0000
-From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-To: "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Daisuke Kobayashi
- (Fujitsu)" <kobayashi.da-06@fujitsu.com>
-Subject: RE: [PATCH v15 0/2] Export cxl1.1 device link status register value
- to pci device sysfs.
-Thread-Topic: [PATCH v15 0/2] Export cxl1.1 device link status register value
- to pci device sysfs.
-Thread-Index: AQHa1zfXlIHI+eTXY0SvmFtj6emi9rIFZTvw
-Date: Wed, 24 Jul 2024 23:38:08 +0000
-Message-ID:
- <OSAPR01MB718256D5D21504C488ED267CBAAA2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-References: <20240716042540.89639-1-kobayashi.da-06@fujitsu.com>
-In-Reply-To: <20240716042540.89639-1-kobayashi.da-06@fujitsu.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=True;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-07-24T23:38:08.043Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYCPR01MB8644:EE_
-x-ms-office365-filtering-correlation-id: 1dfb90af-e0e0-41c1-7546-08dcac39ac3f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?elRXZkw3YTE4c3NVeWE3SmVWclg1SCtXVTYzQ1haWURic3VBc2gxeDdi?=
- =?iso-2022-jp?B?Y29ITm9QT3FlUTF2d2twam0yd2NSQkZOUERhdnljYW9tcU54aGpocndj?=
- =?iso-2022-jp?B?MmN0RElZSUFOK1RYc2ltVFFwemdwT0hiRmIzTE0xSGt6V3AvOUZneDVT?=
- =?iso-2022-jp?B?WlloR1FPb3hkMG9RL0VzdVNPRk01b1ZVN1F3T0JPenpJcTI4bkVJckZE?=
- =?iso-2022-jp?B?VWhLTWVBZjNkdVkwZVBwWDZ5UDNKL2RSRkhiWkhXcExCbko0MDFCenh5?=
- =?iso-2022-jp?B?eFVCVHpTZXlESDU3clNjZkx0TC8vd1l6b2tFM0Nnb2VKSHhQQWVFOG1R?=
- =?iso-2022-jp?B?MDZmcncrYk4xUGpqekRqelRkejUrT0xwRVcyejBvWmIzVTRsNGp6THoz?=
- =?iso-2022-jp?B?b0R2U2hHWERReTluYkRlUjd3d2ltR2RUOTZEU0JEeHBpVDdnTEpKM25I?=
- =?iso-2022-jp?B?Y3pZZDJaWlV3OEN4Nm4xN0VLeERHNHBjZjcwMEpZSlM5WTVrcFNIVHdZ?=
- =?iso-2022-jp?B?VDI5TjJvd0V0RjlQRFNySVZsdHdDMm13bGkybEI3NkdWTlZIUUw5ZzIz?=
- =?iso-2022-jp?B?UlE4L3J1ZkJ1YXgxMm5lTlhGNi8vSm9GMUtMMytzZmdTV1RkRWRVbllE?=
- =?iso-2022-jp?B?ajV5YmtjQXg1Q2wrTmkrWlcwclJ2T09xd0t0ZmlXT293UlJxM1FoTC8x?=
- =?iso-2022-jp?B?c0hMdm9ocEdFV21Lak1IMlBUblg2Y3hFRU1ac2M0d2ZhaGUwRlQxUDVl?=
- =?iso-2022-jp?B?NE12RXFaWHFrcjVQTVJiejMxcWhjT0RReWtpV21ZalhlZUZaaEs2ZXdn?=
- =?iso-2022-jp?B?WFpwbjFpK2pVNjRNMzdGUHJHZU9DWTdmUExMcDFaam1pcW04TU5hL0Vw?=
- =?iso-2022-jp?B?ajVJZ2swNzJQc3lMRDZYbk52N1VvdUtaRS8yNWZzeGhMdkNxamQwVGwr?=
- =?iso-2022-jp?B?cC9VWkVTQ240Z0NnZVZKZTBHSjZWUDMvVzhkQVhMUDZZbEdwMkFxU1Vq?=
- =?iso-2022-jp?B?cktqdkxHUFdmbVZWTThGSXF3SmhnVE55aXpjL1I5bGdmNTdpYWRoRjIr?=
- =?iso-2022-jp?B?N2ZtYW95U3J4UjY2QnZtNGxEMkNaM2JuWmRZS1R3LzQxTldqTDNZRjNj?=
- =?iso-2022-jp?B?K01CUGhRa1J3NHF0R1htNGljQ0ZCQnJVME5MaEZHVGtJSTk2YVVLK3VW?=
- =?iso-2022-jp?B?QWVVSm1JbWEwbVBPQXRIejhUWnZseGUxWm1Gc25qSTlyOVFydEV4b1Jp?=
- =?iso-2022-jp?B?SG5mejVIamcvSTZyemVhajlrNHRwSzI3Q1J2aUdmMEQ0QWJzVUVFYmZI?=
- =?iso-2022-jp?B?R0M5dkFvR3laUzZDVE5aS2V3Yi84cFVwM2MxNEJZZ0pGMmcxTEFhWWxx?=
- =?iso-2022-jp?B?ZjArbVYxeFhiRjZGUlhkaGJJdXJITlFnREtCSEtHek9IKzJrNEZ6cmwr?=
- =?iso-2022-jp?B?Z08wK1d3OFhDM3RDcEZWcmFKZU5RR1NHc3YzZGc3ZHNlZ0dIZXZtSFEz?=
- =?iso-2022-jp?B?NGtlQlZNcmVaS2xIYmxrNnJYMWc3MDcyYVBmeGYyTkZvYWVmSUZkUndy?=
- =?iso-2022-jp?B?NCtpYUE5aGt4bExibkFIdnAwb011U0xwU29XUlVuUnVzNUszcDl3OUlu?=
- =?iso-2022-jp?B?cjJXUUE0Q29wcFI4Z3NkM0ExcUhOVTlxZUFWWkplOFNnamFacWtiS3Zj?=
- =?iso-2022-jp?B?Tk9uZkFxTjhnR3ZacUdWV2ZUM3gwVnVCM3FoVTR3Qk95RnNuR3E2OWpp?=
- =?iso-2022-jp?B?ZzdpUFVCdDdjQ2gxOUpNZ1QyaUI3bDQyZUlTUXBuUlZVWHIxeWM3b05k?=
- =?iso-2022-jp?B?NWFsWnJpZWpyZ1J2L3ExZzNsR3FZRjArdklBL2FEcDVqcGVkaWErSXgy?=
- =?iso-2022-jp?B?eTFwOFlQSU9NUEFmVjJMaXQ5cytwWHpRV2pHcW9ybS9pOFh1bGNPOFZw?=
- =?iso-2022-jp?B?RkpDeUU3NG5Ha00rQkFSMGxzQlFKc3dpU2h1L2FPWVNFY0cyTHNuY09D?=
- =?iso-2022-jp?B?b0JjdXY1cCtnWkthSGFsNTU5Z1FEcGxQVG45V0hOZWpzZm9aVUdIV05Z?=
- =?iso-2022-jp?B?ZUE9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?b0prN3FUaG5uL3BHRFVldFArVDVROW9FcWswSzlMaUFuVnVvakkvS054?=
- =?iso-2022-jp?B?SjRvdGF1Sk44QVlLV25RVWwrbnJDdEpzSmkyZGZMSlNwTWFXZGRzWHFK?=
- =?iso-2022-jp?B?UmZqTW9iS2czSFhMSzdvTXN0UHpZamVuS1BuWXJGV3lBa1ZFNmovTE5w?=
- =?iso-2022-jp?B?dzNWN0pXNHFIdlc4STNpWHRxZlB5MGRlZ3k0ZE16Q21FMjNkeFNSSFM1?=
- =?iso-2022-jp?B?OWJBRCtWelVFN05pM2grcDVwb200KzBEUnYzMUZNdGduTEZvZ2l1UHVH?=
- =?iso-2022-jp?B?SVNjU1FMVTNPTVZNM0ZucFhvTFhDc29UWHlGQnhXR21PT1VQRWZadk42?=
- =?iso-2022-jp?B?R2JNOU9GVlVCQm9mZG5SRzI4RS85M0p2d2VWdm84RSsxNUJxdXpwS1Zh?=
- =?iso-2022-jp?B?ZFV5UW94N25SV1BFUDh2TkRKUTVmRlFxSjhENFZ4cG1QVVY0ejN1T1hM?=
- =?iso-2022-jp?B?c1pHMGxZY3oyRktzUk1qOENSYVhYWU91aUJkNkFhVHh5L2dIbU1IWkJV?=
- =?iso-2022-jp?B?ZjRYWTg5QWtlY0l3QXpYYTlkNHptNEw4QkFHbFFpL01PUmphMFZOSmJP?=
- =?iso-2022-jp?B?bTZnQlZGVC9uRUJWZ29KTm4xVFRhbTVjTzNGTGN1cjJEV3BCbXFBL1pn?=
- =?iso-2022-jp?B?RW13c0tqSFBpR3hWdkh0YmZTejh5VVp3NGNSMGwwUHRaQlBKQ0lDeFpK?=
- =?iso-2022-jp?B?M1ZuUHZHVFpoU0JVOXFuazZpcFBYcHg1QjJ4V3pDb09jZlA3d1FHWWJn?=
- =?iso-2022-jp?B?TnA3bmk2dUozQ0NKS2p5L05qd2VkVi9FZWdoMmx1N3lUVnRxZ1dSb2Z3?=
- =?iso-2022-jp?B?RnZSU01DczZmMnRuaFVnOFFvT3dPVFV6T3NOV0I0dzFxSHdRZXlyZ2ht?=
- =?iso-2022-jp?B?TVZKTlBQZXlxdjNNa2E5M0EyWEpwYTRvYklUMC80Qk9VT081UTN4cWRy?=
- =?iso-2022-jp?B?UjJzWVMveC80d2NJMXNOUllLamRVczhQZzVpdjZhcDNPL3JCRGdQSnI3?=
- =?iso-2022-jp?B?bDZ2SkxNSnFrTk1mR1lUUXBNUTI3cWNpc28wYjY2Q2I5T1NGeXpMbHpX?=
- =?iso-2022-jp?B?ZjhTWVBYNnY4Syt3K3dGMFF2WHdpR1p0ZTdHYUlLYnhKNzN0cTdTdXNz?=
- =?iso-2022-jp?B?eVNUdXEwNG9xbGFmZGJOOUwvUlQzK1BGbnJpQlFZSXJpZkNaNUp5aUlU?=
- =?iso-2022-jp?B?M2pxN2JvOTluS1lSTGd1WVBSdFZPaklxUHBnL1JWZEtLeWswa3ViSDRo?=
- =?iso-2022-jp?B?a1g2UkxhQ3BqREFVUVlkTkpMWkhUSml3dWV3Zjg2bCtISHdFL1A4NFcz?=
- =?iso-2022-jp?B?TUl5ekRFVWZuejJkR2QrUmtzTEVmOVVJNWdYZytkU2R3VTM4cWtSMjhx?=
- =?iso-2022-jp?B?N3N6SVBGY0VVUzV1cUZJcUtqd3lRdWIxN1AvaVpZR1AyZXRkZkRBb3FQ?=
- =?iso-2022-jp?B?bGNiUm54OGFTSm1QVmtIcHNJUkJlS2J6cjREWTR6cTdlK0J1M1dnd3VS?=
- =?iso-2022-jp?B?WE1qUXQ2N3RWU0pYOG5jZ3VUd1VQS1Fnc21WemM5OUg5NWw3SGdlUmlm?=
- =?iso-2022-jp?B?NVJDMkNIcU1TejJjOTgyeEMwWVRKcHhMZmV3TWJIQm9IRWtMbzMxUDg0?=
- =?iso-2022-jp?B?SkYzdklhNjZ2Lzcyb1pqaTFrM3VNQTdMR0lsMkdrSmtKbEUxM3F1VTV1?=
- =?iso-2022-jp?B?N3dBMUVmbmV0R3g0QnJ1Y0Y0OGc5SmJobHhNVS9FeHlIK1lVeWo0L3lC?=
- =?iso-2022-jp?B?S2lWWFRJVDcvU0krQzJ4NWtpeU9rRnpIbFQ4Z0NqdFpWdEN2MTcwZHBR?=
- =?iso-2022-jp?B?a2xYZmZ5MHhFZnRnK20yRkxwRnBwdkpSRXZhTDdYSjdDc1N1WFNYbWt4?=
- =?iso-2022-jp?B?WkNvL293WUJTZWIwRzZ5Vkg3SndoS0Q2eXlBdjh0Q2JHN3gvVFk3VTkr?=
- =?iso-2022-jp?B?eHZ1TzQ2Y2lZRW5tcUhuckZoTjNiTEpTSnliOXlHLy9GZFFucXZrQ0Zo?=
- =?iso-2022-jp?B?My9IR05OLzhQYWdMWFkrVThuZ2p4RTNVQ0licEdwL2YzUHRaQXl2ZU43?=
- =?iso-2022-jp?B?RnhTSGtoWXlNZFhIN0pSd2ZNUXEwSW5RRXIybUJ4bElrWTF3SXFnZnBN?=
- =?iso-2022-jp?B?d1NocUs0WDJmdngrWmV2cVlVckdPVWF2RFhmSkJxWVhERTdKVGJsRGl5?=
- =?iso-2022-jp?B?WVBRZ0hUTmxpS3F3dmVHQ2JaVTMzQS9TREtkcU5aQm9Sd1p1SnVBQW15?=
- =?iso-2022-jp?B?WmNZSHd5OGVReGpFS1FwRi9xc1V4QndMY3VHQUV2d3Z3UzZsRUJPenN6?=
- =?iso-2022-jp?B?NEsyR29GQ2xiK3JLWStmT0x3SnF4SFM2WlE9PQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.28; Thu, 25 Jul
+ 2024 00:35:57 +0000
+Received: from DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::f018:13a9:e165:6b7e]) by DS7PR12MB5744.namprd12.prod.outlook.com
+ ([fe80::f018:13a9:e165:6b7e%4]) with mapi id 15.20.7784.017; Thu, 25 Jul 2024
+ 00:35:57 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso <dave@stgolabs.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>,
+ Palmer Dabbelt <palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Rob Herring <robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
+ Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, nvdimm@lists.linux.dev,
+ sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 00/25] mm: introduce numa_memblks
+Date: Wed, 24 Jul 2024 20:35:53 -0400
+X-Mailer: MailMate (1.14r6038)
+Message-ID: <6336C276-113E-4D93-A09E-13420A6438D8@nvidia.com>
+In-Reply-To: <1D474894-F8AC-427B-8F90-5A6808E77CC5@nvidia.com>
+References: <20240723064156.4009477-1-rppt@kernel.org>
+ <1D474894-F8AC-427B-8F90-5A6808E77CC5@nvidia.com>
+Content-Type: multipart/signed;
+ boundary="=_MailMate_0F561B29-1B56-4DB1-964E-7E202A4B673B_=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+X-ClientProxiedBy: MN2PR07CA0015.namprd07.prod.outlook.com
+ (2603:10b6:208:1a0::25) To DS7PR12MB5744.namprd12.prod.outlook.com
+ (2603:10b6:8:73::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	AmFay+bemlbOkZUrhkg3c9aXCgSJO5uX+6t50inTBXPChH5ZBlgguINvcgZgMQolxFegF0Pt7WiWebopNZEyEL5UBil8LP/UxkFqQY4VnLUrGE1cDgO66wTYNPSepHSmDYDTOo3FgAM3VCIMd/+JIWX+7vhHsij4W7oushUlUxpECBsl17+15YEPM5B6q0fAuu+42rfIRxLHC/3ZtOEEuPyCojLJ8b05fVnyJL5XJnc0qnivuDCk/uLa+nqnImrBADOGl459nZprShXFku2m7pS898Ru9DjLoXfttfvtD18cKaj+wmjexA/up4USmDTWXofwNwZDknywoS0Tsut7iIE9WZ5qp1icGP6Oq0X3qZVhx33Uwq+PWrk8c+dcyZA0hswcfHd8kxDPKnawPLQF2Zoswkk3lqoKR/3CHM+brFCs1kioaJ5fJ5001N7HtJ/X0k8ZX7BGXnNdbcZ4uLLotm4Cxwzo/A5Z7MQfmpczNhdXed9yJhns3d24IJO4hcJZ1CQ/DqjsYlUAkGYviULv6iFhGz2U/Qn0+fbXwHUVlJRI1PnGQZr1vlTxgNtvXWlx5B8MlkPy2400Et0shUFZ5ng2LJHTq2nv+wfORoN9RI7hKL9rAnNhjfGn6kr+661A
-X-OriginatorOrg: fujitsu.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|MW4PR12MB7484:EE_
+X-MS-Office365-Filtering-Correlation-Id: b00e961b-1ed9-4fc9-7d72-08dcac41c020
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UEQXi1MXIgOm1aM3RiyjXJlXmZOZaqLT2V8uSuz9Cbf2rjo3wM6iyTrT4j3O?=
+ =?us-ascii?Q?H54v2O1XISyG1nVe3kbMjS37hTS4i+asyndqWx2aFYNCEeEyaEBp/tdOTdXm?=
+ =?us-ascii?Q?EaJcXBXsd5kSLNbXiThf5h7PMK+NqDnJYZBcMwSQEChgCD1WYwQ80VIsSnmX?=
+ =?us-ascii?Q?XogmRWDb+wt+35+BOv7asQR3NQPUjyUcc7EUdFaD43qSlW0RqPYQkwKnarHK?=
+ =?us-ascii?Q?pxcQEK1X+eRJh+kyatAoIS+HwYMm7ZiL0FxRaF8ZF4Y8Q/1MKS3QNlIlzo5N?=
+ =?us-ascii?Q?I1f9bPPENtuMYoOi6p7jK4bHj6ZTsjKkf3IbrEU0DT/ANvNI/yWyBMcKNof7?=
+ =?us-ascii?Q?DJ512UZqYym7fuhbPeAvEWQxUQb/rJqpWT4q6YBWMLfBlNIk8ymXKKmLnY4E?=
+ =?us-ascii?Q?bD+UJHPp76tdurk4ejtNvMCGc7k6aFlZWp3IkHjKOl3amtX39dou6P71X+yi?=
+ =?us-ascii?Q?jH/luSe5fp3YXhrlI0VXV5Y1yQJIkeqwWH3qT41W5LuXBeVtlI1GJoExd+yt?=
+ =?us-ascii?Q?p+uYmW1fCn6oRcT9NSMMvLUv4TVYhUEG1r8ucg2m9kNPU9YPqrOwl//JEyQ0?=
+ =?us-ascii?Q?CdiW/5YDYnogUU5J2YMoYSm56x5wtskRWZz7tOMocL+l3JArPLIb/JmcjJ3S?=
+ =?us-ascii?Q?6lLeXhdaad4Jx84KjmY3bIC2AD7cl20+mv0hc3Jsn+mgtdKPxoZ3l75ChBG8?=
+ =?us-ascii?Q?byc3uBxd5A//DDDOhM9qtNjXkBCODDiqTsxcTDKTSVs7mP39/ieUJBGHJsC8?=
+ =?us-ascii?Q?yEgyl4ltt0ZvfwqBHf3Wb16Ytw7IwdkVxUqQ0A2Qaxnmb2vR/nxhMgjlf9WS?=
+ =?us-ascii?Q?e5+KKmsfdj4Ytzz4iRW8uxULYTUQYDFlGwsQXNgbBgo0Q5XocyjfxyulnNT5?=
+ =?us-ascii?Q?gLbA8u3kCfpCF7PtbYWKHrxIfFdlUm8x9Pljp669M0+7xNYCZ5aBn+VA3GYO?=
+ =?us-ascii?Q?sYgmMVr7LFe8eGmXc4WadoSY9oyU68JTAvVRu9tRpNcKsKdMtunZKUC4UHOu?=
+ =?us-ascii?Q?rJAABLzuNy/PPAT7pWdaVa7Cr+DHmm3AKb2oySQI/7oPMh1l0Y9LaUitVnyg?=
+ =?us-ascii?Q?OBrw8GhIbJtMTbCJ4bl9r7OLLm8J0qPc/deR/8xa63bfC3fcSGC9thZT3+mg?=
+ =?us-ascii?Q?9tT52qpFax4XYg+mA2rajFCU1wKnBfW6x8ukYoOkxzmAEIV1G2/6+R83tW4Y?=
+ =?us-ascii?Q?wB7thchh3Qt+Bn9H0CUDo/QytfY8EexEDZi4TyfGuCbbB/CXYRYe2RTfuJNo?=
+ =?us-ascii?Q?yrsknjiegZl9n3v5374i0o45UdjD65YTHmZWBdaj2gAD2+74Q1LzbAhEjHlu?=
+ =?us-ascii?Q?E4Rm0zgk7LwT2WUopQmvDtV2s+xQBbkr1QxLFFbm4JhbyreH+20C0o+ORMOp?=
+ =?us-ascii?Q?HcHFcqs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?UEsv3FlW8LVidPVPWv/90sGVkaqGQ+ZEbdZlhWXe/wtU9RlqLpGMhCLF5rch?=
+ =?us-ascii?Q?s5SA2lMNXvbNybnU5sUMjEu+e4S2hagZ5VE6YnNlPXRqRAeN+BqoLt2RIKIW?=
+ =?us-ascii?Q?pey2iy2+iuFEYfcRqCo4TWHssFNamBvjanLWhh62QSI7mIaXvjB+nUxVpZUt?=
+ =?us-ascii?Q?JWhumU5Z2Nu9UJgFVo+3T/DBDj/JTuoIXcXQzPTnBQu3iSEgejwZIn2X5ejG?=
+ =?us-ascii?Q?Ii1vgjKZLuYTsslJJ95mJfXmYx4BxWQfwlHxy7H4bRNlm+NuowndZX1rRkcn?=
+ =?us-ascii?Q?cSCaRiBg9IRmYMzzq8FXPgWL1uKpdSihsTYPcTh7YlLgG4YcteWHnWZYp8xp?=
+ =?us-ascii?Q?isXF3oq1ngbTa2lvcQ99FFu80QppOQI/JGExZ6QIbjPq0SYni2vagX66M1NQ?=
+ =?us-ascii?Q?rDbfOWs6QME5ZZ3oNS3attYJiuzoRKQVucgye3tmJdMR+JaTbnwC7FSsnUXM?=
+ =?us-ascii?Q?122Q4jYG1/HzgIPbMHPYGKqmEZIJn6/oAdTLk28CYBr8JLMzSIgRhC+z1QLr?=
+ =?us-ascii?Q?l/3V/0v0fpFHkEDltbJlYdTmjXUJjT7XECDwWjKwJW4A8TzdeYvC3WfA/Qah?=
+ =?us-ascii?Q?mGeUUmGiDjENF92yjVm38ODm3NPlcd+IN8gBn233xF0SlfVsnBRqSSw9PUt3?=
+ =?us-ascii?Q?fBs5HYxTkyjCiBU0RYIAjjSeqHDhAwaMX6Z8SPwcnTpsqUxtF5C1VQVJGTp0?=
+ =?us-ascii?Q?Q2280epUAWrFPiJ9l8zR9I2bJo06gq7PNz2VLOc9oWuXoQIm2/dhoyy7IMJ8?=
+ =?us-ascii?Q?ryVWD2dc/e/YeiPzBeXuAIw9r1G81skVA7tp4uU6bgLhidAOZBB/7537rMIi?=
+ =?us-ascii?Q?N+iOwxnRk18uYlF4F5NbTzWHzDJdb4C6Ommhr3an8fDgiAB1nLL7vydlLlFK?=
+ =?us-ascii?Q?TVKoEItAlHnLpheqFYyQYNfC9IwfiMlAgHsLtrgCSbBohMZ/sPeDLZ3ZEpAz?=
+ =?us-ascii?Q?HXdJXUxh0m+7aRyK1OfSwFqRj3gW3irczLzpRZTVsgc2MQhJ5Wmb51UoTp6d?=
+ =?us-ascii?Q?wJ5V3er1hczCDOr9vYfysSHBK+CMKGwBOU12faVlFjI/XgICCT/wBemmSiKE?=
+ =?us-ascii?Q?v5/vqdCAJmql1qCEsszzDcpi2oXBvZG0sm+T7bYn80dc77PJmybB8RflEEao?=
+ =?us-ascii?Q?5SJxHV2Dhg66B2ugohMEOzS3ZoqHdkmDa+lAOWxsqlLgjmjYXdYMHXQAUeVN?=
+ =?us-ascii?Q?DZW1X9PNNR/bX3Z+8KLwZiY5hCODsdNZ3gX4IlkqQMdIILHAUvmn87IlZzAG?=
+ =?us-ascii?Q?b1eGRayfLtVDyBTAmSCUGijUfyGZmrZmzWOraoNVCTarsqIADVfdVPEONiWA?=
+ =?us-ascii?Q?QxZM2cEEo9V0lUqJ6Yr8t55jZpH4Ak7KjHesnV/0waulmjeDN83NsME4VOFr?=
+ =?us-ascii?Q?l9rsqewyc8RoP/AQGBmZvqbVJ9s2hBLGqA0ibTNGWvjWLgw9K6xkIirWDGZ7?=
+ =?us-ascii?Q?fwGCWRLfNGSsu55gEbNRiOs+Fe+2OP7pDxqqXlzBCO0TnHSPgzuV5nAk5eAq?=
+ =?us-ascii?Q?KhQy1BtSjYggKa0b7yByUHQTXbVzDQt1CXJ/wk06Jfs39b+vvkBnokufUa2J?=
+ =?us-ascii?Q?0d8bxPUlqFmVXhswEYGtjv/tohUIJypvoeSOohpg?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b00e961b-1ed9-4fc9-7d72-08dcac41c020
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1dfb90af-e0e0-41c1-7546-08dcac39ac3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2024 23:38:08.2441
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2024 00:35:57.7342
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H4dJ8K1CGcwETYODHxzG9KfYUGLs8hxYU9KOYC9y2MJzoGOmWXmK3KO2EO2qHiXywhA6+4X6UEXSlkLkegv9QjisHtxXm1GbmyBif7hodew=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8644
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QK+rn9sLxym9rS/RFQjmNGqbhsvb1t1q656c7qz9/1Y4HHPzMxuVRfeqXlr3dlrx
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7484
 
-Kobayashi Daisuke wrote:=0A=
-> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards, the l=
-ink=0A=
-> status can be output in the same way as traditional PCIe.=0A=
-> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a different=
-=0A=
-> method to obtain the link status from traditional PCIe.=0A=
-> This is because the link status of the CXL1.1 device is not mapped in the=
-=0A=
-> configuration space (as per cxl3.0 specification 8.1).=0A=
-> Instead, the configuration space containing the link status is mapped to =
-the=0A=
-> memory mapped register region (as per cxl3.0 specification 8.2, Table 8-1=
-8).=0A=
-> Therefore, the current lspci has a problem where it does not display the =
-link=0A=
-> status of the CXL1.1 device.=0A=
-> Solve these issues with sysfs attributes to export the status registers h=
-idden in=0A=
-> the RCRB.=0A=
-> =0A=
-> The procedure is as follows:=0A=
-> First, obtain the RCRB address within the cxl driver, then access the=0A=
-> configuration space. Next, output the link status information from the=0A=
-> configuration space to sysfs. Ultimately, the expectation is that this sy=
-sfs file=0A=
-> will be consumed by PCI user tools to utilize link status information.=0A=
-> =0A=
-> =0A=
-> Changes=0A=
-> v1[1] -> v2:=0A=
-> - Modified to perform rcrb access within the CXL driver.=0A=
-> - Added new attributes to the sysfs of the PCI device.=0A=
-> - Output the link status information to the sysfs of the PCI device.=0A=
-> - Retrieve information from sysfs as the source when displaying informati=
-on in=0A=
-> lspci.=0A=
-> =0A=
-> v2[2] -> v3:=0A=
-> - Fix unnecessary initialization and wrong types (Bjohn).=0A=
-> - Create a helper function for getting a PCIe capability offset (Bjohn).=
-=0A=
-> - Move platform-specific implementation to the lib directory in pciutils=
-=0A=
-> (Martin).=0A=
-> =0A=
-> v3[3] -> v4:=0A=
-> - RCRB register values are read once and cached.=0A=
-> - Added a new attribute to the sysfs of the PCI device.=0A=
-> - Separate lspci implementation from this patch.=0A=
-> =0A=
-> v4[4] -> v5:=0A=
-> - Use macros for bitwise operations=0A=
-> - Fix RCRB access to use cxl_memdev=0A=
-> =0A=
-> v5[5] -> v6:=0A=
-> - Add and use masks for RCRB register values=0A=
-> =0A=
-> v6[6] -> v7:=0A=
-> - Fix comments on white space inline=0A=
-> =0A=
-> v7[7] -> v8:=0A=
-> - Change the cache value to offset=0A=
-> - Access memory map area in rcd_*_show() functions=0A=
-> =0A=
-> v8[8] -> v9:=0A=
-> - Map the pcie cap in for all the time the driver is bound to the device.=
-=0A=
-> - Add mapping the pcie cap in cxl_rcd_component_reg_phys().=0A=
-> =0A=
-> v9[9] -> v10:=0A=
-> - Change a utility function for getting PCIe capability.=0A=
-> - Fix tab alignment issue, error handling, and apply suggestions from Jon=
-athan.=0A=
-> =0A=
-> v10[10] -> v11:=0A=
-> - Add functions to have one function do only one thing.=0A=
-> - Add a size parameter to utility function arguments and consolidated the=
-m into=0A=
-> one.=0A=
-> =0A=
-> v11[11] -> v12:=0A=
-> - Fix the error handling in cxl_pci_setup_regs().=0A=
-> - Fix and clean up some details.=0A=
-> =0A=
-> v12[12] -> v13:=0A=
-> - Fix and clean up some details.=0A=
-> =0A=
-> v13[13] -> v14:=0A=
-> - Fix and clean up some details.=0A=
-> =0A=
-> v14[14] -> v15:=0A=
-> - Change dport lookup to be done only once.=0A=
-> - Fix the visibility of cxl_rcrb_to_linkcap().=0A=
-> =0A=
-> [1]=0A=
-> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06=
-=0A=
-> @fujitsu.com/=0A=
-> [2]=0A=
-> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [3]=0A=
-> https://lore.kernel.org/linux-cxl/20240312080559.14904-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [4]=0A=
-> https://lore.kernel.org/linux-cxl/20240409073528.13214-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [5]=0A=
-> https://lore.kernel.org/linux-cxl/20240412070715.16160-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [6]=0A=
-> https://lore.kernel.org/linux-cxl/20240424050102.26788-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [7]=0A=
-> https://lore.kernel.org/linux-cxl/20240510073710.98953-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [8]=0A=
-> https://lore.kernel.org/linux-cxl/20240606074814.5633-1-kobayashi.da-06@f=
-=0A=
-> ujitsu.com/=0A=
-> [9]=0A=
-> https://lore.kernel.org/linux-cxl/20240610082222.22772-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [10]=0A=
-> https://lore.kernel.org/linux-cxl/20240611055254.61203-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [11]=0A=
-> https://lore.kernel.org/linux-cxl/20240612075940.92500-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [12]=0A=
-> https://lore.kernel.org/linux-cxl/20240614045611.58658-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [13]=0A=
-> https://lore.kernel.org/linux-cxl/20240617043702.62028-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> [14]=0A=
-> https://lore.kernel.org/linux-cxl/20240618042941.96893-1-kobayashi.da-06@=
-=0A=
-> fujitsu.com/=0A=
-> =0A=
-> =0A=
-> Kobayashi,Daisuke (2):=0A=
->   cxl/core/regs: Add rcd_pcie_cap initialization=0A=
->   cxl/pci: Add sysfs attribute for CXL 1.1 device link status=0A=
-> =0A=
->  drivers/cxl/core/core.h |   5 ++=0A=
->  drivers/cxl/core/regs.c |  56 ++++++++++++++++++++=0A=
->  drivers/cxl/cxl.h       |   9 ++++=0A=
->  drivers/cxl/pci.c       | 114=0A=
-> +++++++++++++++++++++++++++++++++++-----=0A=
->  4 files changed, 172 insertions(+), 12 deletions(-)=0A=
-> =0A=
-> --=0A=
-> 2.45.0=0A=
-=0A=
-Hi, Dan. Could you please review this patch?=0A=
-I think I've fixed the issues you mentioned.=0A=
-=0A=
-Thank you.=0A=
+--=_MailMate_0F561B29-1B56-4DB1-964E-7E202A4B673B_=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On 24 Jul 2024, at 18:44, Zi Yan wrote:
+
+> On 23 Jul 2024, at 2:41, Mike Rapoport wrote:
+>
+>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>
+>> Hi,
+>>
+>> Following the discussion about handling of CXL fixed memory windows on=
+
+>> arm64 [1] I decided to bite the bullet and move numa_memblks from x86 =
+to
+>> the generic code so they will be available on arm64/riscv and maybe on=
+
+>> loongarch sometime later.
+>>
+>> While it could be possible to use memblock to describe CXL memory wind=
+ows,
+>> it currently lacks notion of unpopulated memory ranges and numa_memblk=
+s
+>> does implement this.
+>>
+>> Another reason to make numa_memblks generic is that both arch_numa (ar=
+m64
+>> and riscv) and loongarch use trimmed copy of x86 code although there i=
+s no
+>> fundamental reason why the same code cannot be used on all these platf=
+orms.
+>> Having numa_memblks in mm/ will make it's interaction with ACPI and FD=
+T
+>> more consistent and I believe will reduce maintenance burden.
+>>
+>> And with generic numa_memblks it is (almost) straightforward to enable=
+ NUMA
+>> emulation on arm64 and riscv.
+>>
+>> The first 9 commits in this series are cleanups that are not strictly
+>> related to numa_memblks.
+>> Commits 10-16 slightly reorder code in x86 to allow extracting numa_me=
+mblks
+>> and NUMA emulation to the generic code.
+>> Commits 17-19 actually move the code from arch/x86/ to mm/ and commits=
+ 20-22
+>> does some aftermath cleanups.
+>> Commit 23 switches arch_numa to numa_memblks.
+>> Commit 24 enables usage of phys_to_target_node() and
+>> memory_add_physaddr_to_nid() with numa_memblks.
+>> Commit 25 moves the description for numa=3Dfake from x86 to admin-guid=
+e
+>>
+>> [1] https://lore.kernel.org/all/20240529171236.32002-1-Jonathan.Camero=
+n@huawei.com/
+>>
+>> v1: https://lore.kernel.org/all/20240716111346.3676969-1-rppt@kernel.o=
+rg
+>> * add cleanup for arch_alloc_nodedata and HAVE_ARCH_NODEDATA_EXTENSION=
+
+>> * add patch that moves description of numa=3Dfake kernel parameter fro=
+m
+>>   x86 to admin-guide
+>> * reduce rounding up of node_data allocations from PAGE_SIZE to
+>>   SMP_CACHE_BYTES
+>> * restore single allocation attempt of numa_distance
+>> * fix several comments
+>> * added review tags
+>>
+>> Mike Rapoport (Microsoft) (25):
+>>   mm: move kernel/numa.c to mm/
+>>   MIPS: sgi-ip27: make NODE_DATA() the same as on all other architectu=
+res
+>>   MIPS: sgi-ip27: ensure node_possible_map only contains valid nodes
+>>   MIPS: sgi-ip27: drop HAVE_ARCH_NODEDATA_EXTENSION
+>>   MIPS: loongson64: rename __node_data to node_data
+>>   MIPS: loongson64: drop HAVE_ARCH_NODEDATA_EXTENSION
+>>   mm: drop CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
+>>   arch, mm: move definition of node_data to generic code
+>>   arch, mm: pull out allocation of NODE_DATA to generic code
+>>   x86/numa: simplify numa_distance allocation
+>>   x86/numa: use get_pfn_range_for_nid to verify that node spans memory=
+
+>>   x86/numa: move FAKE_NODE_* defines to numa_emu
+>>   x86/numa_emu: simplify allocation of phys_dist
+>>   x86/numa_emu: split __apicid_to_node update to a helper function
+>>   x86/numa_emu: use a helper function to get MAX_DMA32_PFN
+>>   x86/numa: numa_{add,remove}_cpu: make cpu parameter unsigned
+>>   mm: introduce numa_memblks
+>>   mm: move numa_distance and related code from x86 to numa_memblks
+>>   mm: introduce numa_emulation
+>>   mm: numa_memblks: introduce numa_memblks_init
+>>   mm: numa_memblks: make several functions and variables static
+>>   mm: numa_memblks: use memblock_{start,end}_of_DRAM() when sanitizing=
+
+>>     meminfo
+>>   arch_numa: switch over to numa_memblks
+>>   mm: make range-to-target_node lookup facility a part of numa_memblks=
+
+>>   docs: move numa=3Dfake description to kernel-parameters.txt
+>>
+> Hi,
+>
+> I have tested this series on both x86_64 and arm64. It works fine on x8=
+6_64.
+> All numa=3Dfake=3D options work as they did before the series.
+>
+> But I am not able to boot the kernel (no printout at all) on arm64 VM
+> (Mac mini M1 VMWare). By git bisecting, arch_numa: switch over to numa_=
+memblks
+> is the first patch causing the boot failure. I see the warning:
+>
+> WARNING: modpost: vmlinux: section mismatch in reference: numa_add_cpu+=
+0x1c (section: .text) -> early_cpu_to_node (section: .init.text)
+>
+> I am not sure if it is red herring or not, since changing early_cpu_to_=
+node
+> to cpu_to_node in numa_add_cpu() from mm/numa_emulation.c did get rid o=
+f the
+> warning, but the system still failed to boot.
+>
+> Please note that you need binutils 2.40 to build the arm64 kernel, sinc=
+e there
+> is a bug(https://sourceware.org/bugzilla/show_bug.cgi?id=3D31924) in 2.=
+42 preventing
+> arm64 kernel from booting as well.
+>
+> My config is attached.
+
+I get more info after adding earlycon to the boot option.
+pgdat is NULL, causing issues when free_area_init_node() is dereferencing=
+
+it at first WARN_ON.
+
+FYI, my build is this series on top of v6.10 instead of the base commit,
+where the series applies cleanly on top v6.10.
+
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000ffd82fff]
+[    0.000000]   node   0: [mem 0x00000000ffd83000-0x00000000fffb5fff]
+[    0.000000]   node   0: [mem 0x00000000fffb6000-0x000000017befffff]
+[    0.000000]   node   0: [mem 0x000000017bf00000-0x000000017bfbffff]
+[    0.000000]   node   0: [mem 0x000000017bfc0000-0x000000017c02ffff]
+[    0.000000]   node   0: [mem 0x000000017c030000-0x000000017c03ffff]
+[    0.000000]   node   0: [mem 0x000000017c040000-0x000000017c09ffff]
+[    0.000000]   node   0: [mem 0x000000017c0a0000-0x000000017c13ffff]
+[    0.000000]   node   0: [mem 0x000000017c140000-0x000000017f41ffff]
+[    0.000000]   node   0: [mem 0x000000017f420000-0x000000017f4affff]
+[    0.000000]   node   0: [mem 0x000000017f4b0000-0x000000017f5bffff]
+[    0.000000]   node   0: [mem 0x000000017f5c0000-0x000000017f5dffff]
+[    0.000000]   node   0: [mem 0x000000017f5e0000-0x000000017fffffff]
+[    0.000000] pgdat: 0000000000000000, nid: 0
+[    0.000000] Unable to handle kernel paging request at virtual address =
+0000000000002220
+[    0.000000] Mem abort info:
+[    0.000000]   ESR =3D 0x0000000096000004
+[    0.000000]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[    0.000000]   SET =3D 0, FnV =3D 0
+[    0.000000]   EA =3D 0, S1PTW =3D 0
+[    0.000000]   FSC =3D 0x04: level 0 translation fault
+[    0.000000] Data abort info:
+[    0.000000]   ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
+[    0.000000]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+[    0.000000]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+[    0.000000] [0000000000002220] user address but active_mm is swapper
+[    0.000000] Internal error: Oops: 0000000096000004 [#1] SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.10.0+ #17
+[    0.000000] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+[    0.000000] pc : free_area_init+0x720/0xf90
+[    0.000000] lr : free_area_init+0x714/0xf90
+[    0.000000] sp : ffff800081eb3c20
+[    0.000000] x29: ffff800081eb3c20 x28: 000000017b5e710c x27: ffff80008=
+2158000
+[    0.000000] x26: 000000017ffff168 x25: ffff800081ecc000 x24: 000000000=
+0000000
+[    0.000000] x23: 0000000000000000 x22: 0000000000000000 x21: ffff80008=
+21f0480
+[    0.000000] x20: 0000000000000000 x19: ffff8000818863f0 x18: 000000000=
+0000006
+[    0.000000] x17: 00000000007fb000 x16: 000000017f805000 x15: ffff80008=
+1eb36b0
+[    0.000000] x14: 0000000000000000 x13: 30203a64696e202c x12: ffff80008=
+1f3ef10
+[    0.000000] x11: 0000000000000001 x10: 0000000000000001 x9 : 000000000=
+0017fe8
+[    0.000000] x8 : c0000000ffffefff x7 : ffff800081ee6d40 x6 : 000000000=
+0057fa8
+[    0.000000] x5 : ffff800081f3eeb8 x4 : 0000000000000000 x3 : 000000000=
+0000000
+[    0.000000] x2 : 0000000000000000 x1 : ffff800081ec8c40 x0 : 000000000=
+000001f
+[    0.000000] Call trace:
+[    0.000000]  free_area_init+0x720/0xf90
+[    0.000000]  bootmem_init+0x158/0x218
+[    0.000000]  setup_arch+0x220/0x650
+[    0.000000]  start_kernel+0x74/0x7e0
+[    0.000000]  __primary_switched+0x80/0x90
+[    0.000000] Code: 97a64606 b940b7f6 a90dffff f876dab4 (b9622280)
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Attempted to kill the idle tas=
+k!
+[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the=
+ idle task! ]---
+
+--
+Best Regards,
+Yan, Zi
+
+--=_MailMate_0F561B29-1B56-4DB1-964E-7E202A4B673B_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename=signature.asc
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmahneoPHHppeUBudmlk
+aWEuY29tAAoJEOJ/noEUByhUlwUQAJhiW3WWTu3PREnDrPSG03Ni98AT5kE27HQs
+kZfZpevoam3PiqHoTYaJz02RxXnfY/8qp2JwPiTSCkDJfMuncNS+JC9tEykJzxdw
+15Y+zyIufYtDgu80/xlyvj4qBqkxliiAhG50K8iZOWEYBdu4GpAM87AWY3Ff0Iv+
+niUUJ/vmsNUH1R3ZYdyP2b2PfSC3Ok9kfFlwE5Jm4LXY9Ju4ixrU5Ku9C1UtxyDb
+CGRv/et2yGKPbzM34rR6u6/JAAFbXoQW3uJrUmSr2UnTbFITW51gqDQ7urvUwxPA
+pnnqqUCNLGLfR7inpVqC0EOs4AMVfnj4ZkOxWihSD73lnUz5tE8kTrt3yf7+qVO5
+Q2GTniU/D9l38KVu8yuX9Z3/DULpJN/La58dWMxPKAQlOU21eFhufMAX8sNLga/j
+VeJTo8tVpqMyJLJuT4gP0sXlZknYhCmV4RzWc5s8QT54TfcIbaAx5I2LhRJwmuu9
+Gze5NXEqCyEQ4guQ6t2oEfmf8+Eanax26jFgm08ZfUuZwfsgynTnYAyo8JtAj4az
+VIGf+kKnKOQDiojSMBABaQoiBk6h6Sh5U1AXirqeSvNrmKISkEdydul9NijMidjN
+aC97As4te+mPqJ1QyZNdudbYCtrZZ6+X+88HoDMKgB9uHhXmGpdnSsjDJ89LD9tk
+ROfMsB3E
+=mFe0
+-----END PGP SIGNATURE-----
+
+--=_MailMate_0F561B29-1B56-4DB1-964E-7E202A4B673B_=--
