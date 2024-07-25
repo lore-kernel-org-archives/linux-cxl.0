@@ -1,139 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80059FC18
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jul 2024 20:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EB955E48
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jul 2024 22:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721938538; cv=none; b=aEhAQF6EWK/y4W3tN008jysjMhnt9bnhv/laYhdfoXi7yqqUoEp79U/quVYrbdYddzsZpaSui+t7qZoTBXHY4CQOHt+IZUNGpXWqfdloa7GTfLWORFKwNbPrTggBBc0KtOF+V0ru7Ia1kJ8hQAEuJ/7sU7sG0wrSp+POBNRUqnw=
+	t=1721944809; cv=none; b=CW/QsJd6vOAMfxrDewfY3EKwsyJ5lRdQMmfJps6mZ/a+o71irVW+YLrZc6+w4qYr9aKjd37Zwn86Rfvk0KqgpCq6+VgxLuRnPTh7022EhsejuuRfxUJ+/9qWK+ukdluVutgYKFBxqIuuLwxf2XI00yPL98A/yydR8Awem+r4A1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721938538; c=relaxed/simple;
-	bh=Hh/HkPyGDOjX7U5SfwlDgHuJTyUQUXXI9h4fV/zSzc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T2qRwvSs6aB6lW2kgWaE9G1aDk2Z4Ytv6ePR+mwX0Eq9mv65wupndm65mt2LCRjpfYBJe9fIV2+DLijx/cPtdmmIz53WWpNyqky6RDbWvI4y9H8cv+oPMa6t4y/ewaQ1cm71raP6MNX2qlLGvIqPe4Is0RvcyE/m+4VhzZp5YVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ro9uQE2z; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721944809; c=relaxed/simple;
+	bh=KSjDde/wW6D5zE3NvMhyq254W+T5OiyoyXE8khJZn6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fz0rA1QomcoIjex9E4VkMtq0OaSYMBWLf/PIATJZimXrCinS/BU3a6F3rs0slDe2tdq51XYfxuGwF9fns/Y0MWDY0Od/4nmfsXFpJXQ84tMWNgZmfmzxRMmQwvl2As23fOGhJNECrpCZWVqZOyXacNa8xAOThAtVZi0aNmPjtpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bJnv0gPs; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ro9uQE2z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721938537; x=1753474537;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Hh/HkPyGDOjX7U5SfwlDgHuJTyUQUXXI9h4fV/zSzc4=;
-  b=Ro9uQE2znbsM5b0/dkM0UTBGrq0M8y+6G0YXfoGRXjhiT+9P/rngE++G
-   JKOvXUkZ40ealsQhPbzHn/mKqBSBLa0R8nCkiB+qZrBjT20PJG7BktdZQ
-   oHIEG/2mr6LAPYOcCbcXh5+7E7tVfMapPVbC6BaGj6fsbYBiJ/0TrPWAw
-   nhymDV49TPwNjn694tWJklLvGjZb4SC+43iCmKE8Oo5Rd1f6rxhTRQORC
-   yS20bBoUGpdEX+5ZwvXJ3G5D4JzWfjYiWFTIk16nnDatsiVAD/lomaSlE
-   vl0hnbAC6b4hu1TbuRKzFwt5utvCtY7cJmKcd8+72Z2SRuSLdVOiCo1FC
-   A==;
-X-CSE-ConnectionGUID: R4AC/fqKQEuKe+UW5p8RWQ==
-X-CSE-MsgGUID: 8VJyKzccRBCEwlHOmq+Ttw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="19668900"
-X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="19668900"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 13:15:37 -0700
-X-CSE-ConnectionGUID: fy6c6UjcR3qqqhkCG0HOag==
-X-CSE-MsgGUID: W6j3iL25T2eizBZO82DXbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="53282220"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.91]) ([10.125.111.91])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 13:15:35 -0700
-Message-ID: <67d14b15-fd3d-48b8-b9c2-fdd6379cd0ff@intel.com>
-Date: Thu, 25 Jul 2024 13:15:35 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bJnv0gPs"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-654cf0a069eso14249427b3.1
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jul 2024 15:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1721944807; x=1722549607; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tMAd4iLmUv8odVu7JAFB9ApmQQP3eAOg2M6CjRWnesE=;
+        b=bJnv0gPs/bY+9s1BKhucvuZ5epkajJkx2a5xicKqaEfVcjq5BHM6EPvmaLJ0cGTb0Z
+         zUwhGsc95FED1+3Rrj+YxQjwzIxzcd25/kgyfoMgAcl6nHE+ilJEQddgpVcJfLF2Zt3r
+         ByYcacxTqB9gxSfUevjXjBvptE80H5wudG6UJHTKuaGXJwpj/PKdj0OH3Hgo0grISq00
+         P4wjaLjNYkdNwMOOa5NRwm7sEE2+BVo+prG9tNrVH3GNLHkruoq3OwpshiZs3v5eyU4V
+         LKC1mWl2N8PmjfDNhjcfwPxhCcWR2gWgFaObqHaxQ8S6HN3eyoH3utj7M2KPkhQcV7AT
+         wB4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721944807; x=1722549607;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tMAd4iLmUv8odVu7JAFB9ApmQQP3eAOg2M6CjRWnesE=;
+        b=SDFdgLIX1ZTg3TfIWz5CARXvHH5Ja7n6L8KCkuXdQJWBNhzFIpk7paBzRI5CMW8Cxm
+         f79/wPyAyQJN6pUmsc1raWXKI3I1Pz3ZN670bTCeF2vH6FBNyPSNBqjwZLC085b2EU4D
+         YCMNQICWC4nGJT3a+xZcVkgFGR8pe8BG8pA99N1d1c1SkuVjjCqQH2iwq4b9lcdLiqII
+         h2Bu5CwOPGSewsJbLoyMP1281/MhFTlVFRHCZNeqHK6l/lG+tIk9eJ7hOys7cwlh8Szi
+         WYboaVy8dYuzXiRMHvmiILvfUF1ahPboIAhuBa75oEK+nGb+Ustyo70YEiUErfi8vQWW
+         uWig==
+X-Forwarded-Encrypted: i=1; AJvYcCXw7IpB8jG1Uo14T6j3cUwll864PRu7me29OuzLGmJYUvsGGlrKXM1s4eBfHI/EVw0albmxaf69rIwyfob39EiCNGGgCYzZuUlI
+X-Gm-Message-State: AOJu0YzMFXcniDAhTXYiDXqgYtgZZhPbauNUDOCWBzDosM9kzK9nGCY7
+	UapOznsg8mAiVCtGepL6O7BPJCx2Rq2WO6SqXk8ojLgqsV2cWSUibXzXZmGRO/s=
+X-Google-Smtp-Source: AGHT+IHdUxAEWXGqn6foo0jARHDLvQtDiKUbJMw+adb16WFCsoSLyl/dUufXXzE7h2ov1yGNj9pzHQ==
+X-Received: by 2002:a0d:ed03:0:b0:64b:630f:9f85 with SMTP id 00721157ae682-675113b347dmr45040387b3.12.1721944806711;
+        Thu, 25 Jul 2024 15:00:06 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb3fac10e3sm10707486d6.109.2024.07.25.15.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jul 2024 15:00:06 -0700 (PDT)
+Date: Thu, 25 Jul 2024 18:00:00 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Address translation for HDM decoding
+Message-ID: <ZqLK4CpSg4PfAdGx@PC2K9PVX.TheFacebook.com>
+References: <20240701174754.967954-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH] cxl/list: add firmware_version to default memdev
- listing
-To: alison.schofield@intel.com, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>
-References: <20240725073050.219952-1-alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240725073050.219952-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701174754.967954-1-rrichter@amd.com>
 
+On Mon, Jul 01, 2024 at 07:47:48PM +0200, Robert Richter wrote:
+> Default expectation of Linux is that HPA == SPA, which means that
+> hardware addresses in the decoders are the same as the kernel sees
+> them. However, there are platforms where this is not the case and an
+> address translation between decoder's (HPA) and the system's physical
+> addresses (SPA) is needed.
+> 
+> This series implements address translation for HDM decoding. The
+> implementation follows the rule that the representation of hardware
+> address ranges in the kernel are all SPA. If decoder registers (HDM
+> decoder cap or register range) are not SPA, a base offset must be
+> applied. Translation happens when accessing the registers back and
+> forth. After a read access an address will be converted to SPA and
+> before a write access the programmed address is translated from an
+> SPA. The decoder register access can be easily encapsulated by address
+> translation and thus there are only a few places where translation is
+> needed and the code must be changed. This is implemented in patch #2,
+> patch #1 is a prerequisite.
+> 
+> Address translation is restricted to platforms that need it. As such a
+> platform check is needed and a flag is introduced for this (patch #3).
+> 
+> For address translation the base offset must be determined for the
+> memory domain. Depending on the platform there are various options for
+> this. The address range in the CEDT's CFWMS entry of the CXL host
+> bridge can be used to determine the decoder's base address (patch
+> #4). This is enabled for AMD Zen4 platforms (patch #5).
+> 
+> Changelog:
+> 
+> v2:
+>  * Fixed build error for other archs [kbot]
+> 
 
+Hi Robert,
 
-On 7/25/24 12:30 AM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> cxl list users may discover the firmware revision of a memory
-> device by using the -F option to cxl list. That option uses
-> the CXL GET_FW_INFO command and emits this json:
-> 
-> "firmware":{
->       "num_slots":2,
->       "active_slot":1,
->       "staged_slot":1,
->       "online_activate_capable":false,
->       "slot_1_version":"BWFW VERSION 0",
->       "fw_update_in_progress":false
->     }
-> 
-> Since device support for GET_FW_INFO is optional, the above method
-> is not guaranteed. However, the IDENTIFY command is mandatory and
-> provides the current firmware revision.
-> 
-> Accessors already exist for retrieval from sysfs so simply add
-> the new json member to the default memdev listing.
-> 
-> This means users of the -F option will get the same info twice if
-> GET_FW_INFO is supported.
-> 
-> [
->   {
->     "memdev":"mem9",
->     "pmem_size":268435456,
->     "serial":0,
->     "host":"0000:c0:00.0"
->     "firmware_version":"BWFW VERSION 00",
->   }
-> ]
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+I'm looking to test this patch series but saw you were looking at
+reworking a portion of it.  Just wanted to inquire as to whether
+you think I should wait for a v3 given this is a few weeks old now.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  cxl/json.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/cxl/json.c b/cxl/json.c
-> index 0c27abaea0bd..0b0b186a2594 100644
-> --- a/cxl/json.c
-> +++ b/cxl/json.c
-> @@ -577,6 +577,7 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
->  	const char *devname = cxl_memdev_get_devname(memdev);
->  	struct json_object *jdev, *jobj;
->  	unsigned long long serial, size;
-> +	const char *fw_version;
->  	int numa_node;
->  	int qos_class;
->  
-> @@ -646,6 +647,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
->  	if (jobj)
->  		json_object_object_add(jdev, "host", jobj);
->  
-> +	fw_version = cxl_memdev_get_firmware_version(memdev);
-> +	if (fw_version) {
-> +		jobj = json_object_new_string(fw_version);
-> +		if (jobj)
-> +			json_object_object_add(jdev, "firmware_version", jobj);
-> +	}
-> +
->  	if (!cxl_memdev_is_enabled(memdev)) {
->  		jobj = json_object_new_string("disabled");
->  		if (jobj)
+Thanks!
+~Gregory
