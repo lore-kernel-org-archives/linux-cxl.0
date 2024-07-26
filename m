@@ -1,132 +1,281 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043117C9EE
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 17:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7F339FC6
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 17:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722015220; cv=none; b=jwxwMjnXF2FUFL0wNqI6yoRZxRxP+o1pM8ASoJCQjVvKsGSIMVzWXKXgUOeMI68eL+f8aPn7Uoh5Smb+fng/JjrF4E5Tqsp00GOCzkXyQ1PYeTKICAOXZUXXLjMxYsHiwftbzfGd9Xaaqfdj6yDiqngxwTdwBw87M0md8XKzDpg=
+	t=1722016217; cv=none; b=Ukpf7Gob+mA/ltu+VEoXJJTY0uW178ESilpuLsC2xV47cUF7fixosdSrmMx0fKLhFtaRKtuAv9n8wpkzk9+az3ZqP5/uhziVRye03Xog8Np+CU2WSGHh732pmiRtBSsktpdkw7Iaiz0INxU3k/Jm+CxsrAmKQpd1ylvbIU2fh2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722015220; c=relaxed/simple;
-	bh=e3N5bWu4r8Swl4BzWy7i9jr2amOi1C9JqeLg+IveS6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CB3JSCK97Qb2kkBTSFqXBFhvXQ1ZfT0gRfbW2k2yxHykoZA77/wfXGSz+jEaQJT6l+RguN/nEEVnGO2bIYko7bFBL/+RXWXx9J+1aayggSpc/GzPkNL873Lpmr1f3PiuKB76V3133JZezX67ytZ8kuDkZIuiNwpKJJVsv81X1kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=L/AxQ2X/; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="L/AxQ2X/"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3684b48d586so177066f8f.0
-        for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 10:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1722015217; x=1722620017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c/B7g0UHHGpKr5sLCW2cjeH3RTgEO1uT2YFJABG6Bsg=;
-        b=L/AxQ2X/vE1foV9AVQePKmFWvxkRMHronlqCPy6jXR/gyJELOmzyDLNeyI6VRBvaku
-         oQMl7tjz6k3zcRCvZN+wmSk3ZYyrga5l2odxYIe9VuIY/GDNigCm2+SWhBd8lZYRA5ZC
-         aaRsduoOGrqWQ6HqDTHLMI/YlcbG9KQAZnhFU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722015217; x=1722620017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c/B7g0UHHGpKr5sLCW2cjeH3RTgEO1uT2YFJABG6Bsg=;
-        b=Z0+sbozQXG6Ju80jfOiCcVu46o1+ZEQPQNmF1vJwZg0nAMkJH44nepYbuPsKnjJlIo
-         1sCy2qem+RJ/jFWmi9FgSICbhkxI5N791lYKgo7jVbFhgMGFN+fqiLMhImNxXr/lZch1
-         Zd6jQnhge6r2T/EOG88WqZwsBwMdIqCBwkrGxQxyqdObKmbGJ76VlvQFNon8qhZH536z
-         GlFNbNjVpNboQwD3eXk/EXeJICk8jx+EBzcAKH6AYpFUPAIFZw5HTxwIfyF4QHOuaaUw
-         v8afgx+4TLBtF5aoGHBCSbp+KZYFR37i3v69ErKQOHliKuF9cB85ufmGSMM0t8Hehfpw
-         yxAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbHu2NxLhBa8rGQZ6aoWU0/Omct46BsRqyIqmWE5J4qsEJC9JTRs8+KG8jNyRtgJvosbg+/Neg2oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt/8Jy+hs1GzHRZ3Px0vc3wFtlpREv7ha/ftpuDNenMWJWrPfT
-	Ypt0sjbKFndTfFLfFnm0O07yDfgeWI+CD3AY8FC7GA3cOsfDG8xpL2ApyFA/0k0=
-X-Google-Smtp-Source: AGHT+IG3ue2Wp3NAwG+80cC1hBEBaxqYkh1o6tYlzluNcJg5ps4z/XxOoMXpw4ib8InHKvN9IoLe0A==
-X-Received: by 2002:a5d:59a2:0:b0:367:95e3:e4c6 with SMTP id ffacd0b85a97d-36b34cec909mr2845449f8f.1.1722015216751;
-        Fri, 26 Jul 2024 10:33:36 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b36858179sm5684617f8f.88.2024.07.26.10.33.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 10:33:36 -0700 (PDT)
-Date: Fri, 26 Jul 2024 19:33:34 +0200
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, jgg@nvidia.com
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <ZqPd7i22_oyPB2UN@phenom.ffwll.local>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm>
- <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
- <20240724200012.GA23293@pendragon.ideasonboard.com>
- <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
+	s=arc-20240116; t=1722016217; c=relaxed/simple;
+	bh=VXYna4Wz2bCUSeWDV1wwuoI8KrLvPcr7a9cs/9BtBrM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z9p2H1fV/MHPP0HuF51vTB2AYoQy5HGU5nhvsvAW4skCQyFxW+IURD/aTo4s9LWKPylNs3hUqRN5ivhz1BfA2ueySiRKmyMTeIMXNf9M8ukwn1u2L4Je/lEWOmPsKJewmY5pTqDkeHYAEtogLixA4D9mtpoxnV2UXARAOKAYrtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVwGM2Vlxz6K5rH;
+	Sat, 27 Jul 2024 01:48:27 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id ED42B1404FC;
+	Sat, 27 Jul 2024 01:50:11 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
+ 2024 18:50:11 +0100
+Date: Fri, 26 Jul 2024 18:50:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [RFC PATCH 04/13] cxl: Add Get Supported Features command for
+ kernel usage
+Message-ID: <20240726185010.0000295c@Huawei.com>
+In-Reply-To: <20240718213446.1750135-5-dave.jiang@intel.com>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+	<20240718213446.1750135-5-dave.jiang@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
-X-Operating-System: Linux phenom 6.9.7-amd64 
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Jul 24, 2024 at 04:37:21PM -0400, James Bottomley wrote:
-> On Wed, 2024-07-24 at 23:00 +0300, Laurent Pinchart wrote:
-> [...]
-> > What I get from the discussions I've followed or partcipated in over
-> > the years is that the main worry of free software communities is
-> > being forced to use closed-source userspace components, whether that
-> > would be to make the device usable at all, or to achieve decent level
-> > of performance or full feature set. We've been through years of
-> > mostly closed-source GPU support, of printer "windrivers", and quite
-> > a few other horrors. The good news is that we've so far overcome lots
-> > (most) of those challenges. Reverse engineering projects paid off,
-> > and so did working hand-in-hand with industry actors in multiple ways
-> > (both openly and behind the scenes). One could then legitimately ask
-> > why we're still scared.
+On Thu, 18 Jul 2024 14:32:22 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+> The command retrieve the list of supported device-specific features
+> (identified by UUID) and general information about each Feature.
 > 
-> I don't think I am.  We're mostly fully capable of expounding at length
-> on the business rationale for being open if the thing they're hiding
-> isn't much of a differentiator anyway (or they're simply hiding it to
-> try to retain some illusion of control), so we shouldn't have any fear
-> of being able to make our case in language business people understand.
+> The driver will retrieve the feature entries in order to make checks and
+> provide information for the Get Feature and Set Feature command. One of
+> the main piece of information retrieved are the effects a Set Feature
+> command would have for a particular feature.
 > 
-> I also think this fear is partly a mindset problem on our part.  We
-> came out of the real fight for openness and we do embrace things like a
-> licence that forces open code (GPL) and symbols that discourage
-> proprietary drivers (EXPORT_SYMBOL_GPL), so we've somewhat drunk the
-> FSF coolaid that if we don't stand over manufacturers every second and
-> force them they'll slide back to their old proprietary ways.  However,
-> if you look at the entirely permissive ecosystem that grew up after we
-> did (openstack, docker, kubernetes, etc.) they don't have any such fear
-> and yet they still have large amounts of uncompelled openness and give
-> back.
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-This matches my experience. Legal and technical roadblocks help a bit in
-the margins, but they don't matter. The open gpu stack is 90% MIT, and
-nvidia and all the others have demonstrated for years how easy it is to
-ignore the GPL'ed part.
+Already a fairly well reviewed implementation of this in 
 
-What gets vendors involved is a successful project that drives revenue,
-where they have a clear need for a seat at the table to make sure the good
-times for them continue. Clear rules what it takes to get that seat is in
-my experience really the driving force for private discussions with
-vendors, and from that pov the most important thing I've ever done for the
-open gpu stack is this little documentation section:
+https://lore.kernel.org/linux-cxl/20240726160556.2079-5-shiju.jose@huawei.com/
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+Though it wasn't focused on providing userspace access to it and doesn't handle
+large feature lists which would be eventually needed.
 
-Unlike laws you can legalese around and code you can trick with hacks for
-an endless game of whack-a-mole the above doc was the real stick. And it
-absolutely needed the carrot of the successful project that financially
-matters to work.
+I'd have preferred to see review on that rather than another version
+of the same functionality.
 
-Cheers, Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Note the QEMU testing used for that set will be useable here too
+and is now upstream.
+
+A few comments inline.
+
+Jonathan
+
+
+> +int cxl_get_supported_features(struct cxl_mailbox *cxl_mbox)
+> +{
+> +	int remain_feats, max_size, max_feats, start, rc;
+> +	int feat_size = sizeof(struct cxl_feat_entry);
+> +	struct cxl_mbox_get_sup_feats_out *mbox_out;
+> +	struct cxl_mbox_get_sup_feats_in mbox_in;
+> +	int hdr_size = sizeof(*mbox_out);
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	struct cxl_mem_command *cmd;
+> +	void *ptr;
+> +
+> +	/* Get supported features is optional, need to check */
+> +	cmd = cxl_mem_find_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
+> +	if (!cmd)
+> +		return -EOPNOTSUPP;
+> +	if (!test_bit(cmd->info.id, cxl_mbox->enabled_cmds))
+> +		return -EOPNOTSUPP;
+> +
+> +	rc = cxl_get_supported_features_count(cxl_mbox);
+> +	if (rc)
+> +		return rc;
+> +
+> +	struct cxl_feat_entry *entries __free(kvfree) =
+> +		kvmalloc(cxl_mbox->num_features * feat_size, GFP_KERNEL);
+> +
+> +	if (!entries)
+> +		return -ENOMEM;
+> +
+> +	cxl_mbox->entries = no_free_ptr(entries);
+
+Hmm. Not srue I'd bother with __free(kvfree) for one line that doesn't
+do the free.
+
+> +	rc = devm_add_action_or_reset(cxl_mbox->host, cxl_free_features,
+> +				      cxl_mbox->entries);
+> +	if (rc)
+> +		return rc;
+> +
+> +	max_size = cxl_mbox->payload_size - hdr_size;
+> +	/* max feat entries that can fit in mailbox max payload size */
+> +	max_feats = max_size / feat_size;
+> +	ptr = &cxl_mbox->entries[0];
+> +
+> +	mbox_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+Freed?
+
+> +	if (!mbox_out)
+> +		return -ENOMEM;
+> +
+> +	start = 0;
+> +	remain_feats = cxl_mbox->num_features;
+> +	do {
+> +		int retrieved, alloc_size, copy_feats;
+> +
+> +		if (remain_feats > max_feats) {
+> +			alloc_size = sizeof(*mbox_out) + max_feats * feat_size;
+> +			remain_feats = remain_feats - max_feats;
+> +			copy_feats = max_feats;
+> +		} else {
+> +			alloc_size = sizeof(*mbox_out) + remain_feats * feat_size;
+> +			copy_feats = remain_feats;
+> +			remain_feats = 0;
+> +		}
+> +
+> +		memset(&mbox_in, 0, sizeof(mbox_in));
+> +		mbox_in.count = alloc_size;
+> +		mbox_in.start_idx = start;
+> +		memset(mbox_out, 0, alloc_size);
+> +		mbox_cmd = (struct cxl_mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
+> +			.size_in = sizeof(mbox_in),
+> +			.payload_in = &mbox_in,
+> +			.size_out = alloc_size,
+> +			.payload_out = mbox_out,
+> +			.min_out = hdr_size,
+> +		};
+> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		if (mbox_cmd.size_out <= hdr_size) {
+> +			rc = -ENXIO;
+> +			goto err;
+> +		}
+> +
+> +		/*
+> +		 * Make sure retrieved out buffer is multiple of feature
+> +		 * entries.
+> +		 */
+> +		retrieved = mbox_cmd.size_out - hdr_size;
+> +		if (retrieved % sizeof(struct cxl_feat_entry)) {
+> +			rc = -ENXIO;
+> +			goto err;
+> +		}
+> +
+> +		/*
+> +		 * If the reported output entries * defined entry size !=
+> +		 * retrieved output bytes, then the output package is incorrect.
+> +		 */
+> +		if (mbox_out->num_entries * feat_size != retrieved) {
+> +			rc = -ENXIO;
+> +			goto err;
+> +		}
+> +
+> +		memcpy(ptr, mbox_out->ents, retrieved);
+> +		ptr += retrieved;
+> +		/*
+> +		 * If the number of output entries is less than expected, add the
+> +		 * remaining entries to the next batch.
+> +		 */
+> +		remain_feats += copy_feats - mbox_out->num_entries;
+> +		start += mbox_out->num_entries;
+> +	} while (remain_feats);
+> +
+> +	return 0;
+> +
+> +err:
+> +	cxl_mbox->num_features = 0;
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
+> +
+>  /**
+>   * cxl_enumerate_cmds() - Enumerate commands for a device.
+>   * @mds: The driver data for the operation
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index efdf833f2c51..4d3690aa2f3b 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+> +struct cxl_mbox_get_sup_feats_out {
+> +	__le16 num_entries;
+> +	__le16 supported_feats;
+> +	__le32 reserved;
+> +	struct cxl_feat_entry ents[] __counted_by(le32_to_cpu(supported_feats));
+
+I didn't know __counted_by worked with function calls. Interesting.
+
+> +} __packed;
+> +
+
+>  #endif /* __CXL_MEM_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 7e26da706921..6a00238446f9 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -872,6 +872,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_get_supported_features(&cxlds->cxl_mbox);
+
+I would separate no features from an error in trying to enumerate them.
+
+> +	if (rc)
+> +		dev_dbg(&pdev->dev, "No features enumerated.\n");
+> +
+>  	rc = cxl_set_timestamp(mds);
+>  	if (rc)
+>  		return rc;
+> diff --git a/include/linux/cxl/mailbox.h b/include/linux/cxl/mailbox.h
+> index 2380b22d7a12..570864239b8f 100644
+> --- a/include/linux/cxl/mailbox.h
+> +++ b/include/linux/cxl/mailbox.h
+> @@ -53,6 +53,7 @@ struct cxl_mbox_cmd {
+>   * @mbox_mutex: mutex protects device mailbox and firmware
+>   * @mbox_wait: rcuwait for mailbox
+>   * @mbox_send: @dev specific transport for transmitting mailbox commands
+> + * @features: number of supported features
+
+missing docs for entries.
+
+>   */
+>  struct cxl_mailbox {
+>  	struct device *host;
+> @@ -63,6 +64,8 @@ struct cxl_mailbox {
+>  	struct mutex mbox_mutex; /* lock to protect mailbox context */
+>  	struct rcuwait mbox_wait;
+>  	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
+> +	int num_features;
+> +	struct cxl_feat_entry *entries;
+>  };
+>  
+>  #endif
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index c6c0fe27495d..bd2535962f70 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -50,6 +50,7 @@
+>  	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
+>  	___C(CLEAR_LOG, "Clear Log"),					  \
+>  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
+> +	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
+>  	___C(MAX, "invalid / last command")
+>  
+>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+
