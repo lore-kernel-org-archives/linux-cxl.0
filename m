@@ -1,105 +1,180 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF5517623E;
-	Fri, 26 Jul 2024 17:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C073987B
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 18:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722016616; cv=none; b=Z7tTtUDy3Mk4Q1C2plP5IlU37ar90UC+mvvG8JPWSkEI5GNB/lfKSUlPYvbwbvhIqRNB5+qF27lLGxFtOgYFVTY+c9NKuHh9gqXfg3ErOsfXWaFdbKR1Q0UtPsQIor5Wg1+9+md9D7y9ixAyql2Kz/NJnzM8jtnxmNProZJ+vjM=
+	t=1722016983; cv=none; b=gy4AvsHPSlOg8ZLTF96HXR5t8JrbrogyTVxpD9M5nBLKBpXjaJQSGG3qWtDNGZG43R5N6cDS+SsPOqGvXvG4eQwill7ia/7LlWLlBmcrKm4ZiP2A07LK6YmlByS+Ughoh0IewjgCXI2uC4tPvRJA6Whpi3IFIXlvqlDIkUrfHNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722016616; c=relaxed/simple;
-	bh=Vb6TdxLXCEMbvYGaarnLF0tJk7RSaAlMSzr7nZ+xvxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHeLJqBsR03Z6qhCaHY3IvO99Xc6QHXUBaDpLMi3UzCqOS5siAo4tSF0uKbpptVYdD2uZz4st3aa4FJb9IP0rTjXzrt0fPoH3YNwtLLnmrjmGvzImddXre8VjgsZks/I1aJgRde2PNcDpM3goc+NpG4rr3VWaunYlcHOLw4aKXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PNcjKj2x; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PNcjKj2x"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 515C383F;
-	Fri, 26 Jul 2024 19:56:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1722016568;
-	bh=Vb6TdxLXCEMbvYGaarnLF0tJk7RSaAlMSzr7nZ+xvxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PNcjKj2xkUM0C/IxqfxYc+NrimiB9/hV/OWUT7kKC0J9ewRR94beT329a5yMU/AYC
-	 uPeIC6bFIl9XVPgrOUQ8WaNSa4t0zSwRoJkHRxJ0T+TM9kmst8/UMhjBRDceBKu0vQ
-	 gaWLITNF2htEudcFV4ANVQA/PVFhox/yeTOzkTQc=
-Date: Fri, 26 Jul 2024 20:56:33 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-	Leon Romanovsky <leon@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, jgg@nvidia.com
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <20240726175633.GA12773@pendragon.ideasonboard.com>
-References: <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
- <20240724200012.GA23293@pendragon.ideasonboard.com>
- <CAPybu_0SN7m=m=+z5hu_4M+STGh2t0J-hFEmtDTgx6fYWKzk3A@mail.gmail.com>
- <20240725122315.GE7022@unreal>
- <CAPybu_1XsNq=ExrO+8XLqnV_KvSaqooM=yNy5iuzcD=-k5CdGA@mail.gmail.com>
- <20240725132035.GF7022@unreal>
- <20240725194202.GE14252@pendragon.ideasonboard.com>
- <CAPybu_3T8JNkZxf3pgCo4E4VJ3AZvY7NzeXdd7w9Qqe8=eV=9A@mail.gmail.com>
- <20240726131110.GD28621@pendragon.ideasonboard.com>
- <8d83a9a69c10bab0e4e39994c58c290f6dc5586b.camel@HansenPartnership.com>
+	s=arc-20240116; t=1722016983; c=relaxed/simple;
+	bh=WEGo8+r9A9RO/3HbXIyamqfuDUdtHHoASqrso2f5VP0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J1lrj1ix+H5uK4+k9J7IQfGRUyeWmize/wiEuB+FI9k8plySAl7tN1Itwkw1c4f9m6f0nHGIa3vp2v1iLU5a8u9gAkH0XHxzbYX4i/SbtPd58CjHwqBGrHcu8VpdWeR1rY4FdElBjJu6Qiv0v29zAdvdoX2lwmxh96nSTt3V7t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVwXV0r8rz6K662;
+	Sat, 27 Jul 2024 02:00:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 140E01404FC;
+	Sat, 27 Jul 2024 02:02:59 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
+ 2024 19:02:58 +0100
+Date: Fri, 26 Jul 2024 19:02:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [RFC PATCH 08/13] fwctl/cxl: Add driver for CXL mailbox for
+ handling CXL features commands
+Message-ID: <20240726190257.00003a60@Huawei.com>
+In-Reply-To: <20240718213446.1750135-9-dave.jiang@intel.com>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+	<20240718213446.1750135-9-dave.jiang@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8d83a9a69c10bab0e4e39994c58c290f6dc5586b.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Jul 26, 2024 at 12:01:00PM -0400, James Bottomley wrote:
-> On Fri, 2024-07-26 at 16:11 +0300, Laurent Pinchart wrote:
-> > On Fri, Jul 26, 2024 at 10:02:27AM +0200, Ricardo Ribalda Delgado wrote:
-> [...]
-> > > Describing how they implement those algorithms is a patent
-> > > minefield and their differentiating factor.
+On Thu, 18 Jul 2024 14:32:26 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> Add an fwctl (auxiliary bus) driver to allow sending of CXL feature
+> commands from userspace through as ioctls. Create a driver skeleton for
+> initial setup.
 > 
-> Just on this argument: The Patent Shield around Linux provided by OIN
-> is pretty strong and allows us (and entities that contribute to Linux)
-> to ignore most patent problems because someone else is looking out for
-> them.  OIN is actually free to join if any company would like to
-> benefit directly from the Linux Patent Shield:
-> 
-> https://openinventionnetwork.com/about-us/member-benefits/
-> 
-> > Those are also arguments I've heard many times before. The
-> > differentiating factor for cameras today is mostly in userspace ISP
-> > control algorithms, and nobody is telling vendors they need to open
-> > all that.
-> > 
-> > When it comes to patents, we all know how software patents is a
-> > minefield, and hardware is also affected. I can't have much sympathy
-> > for this argument though, those patents mostly benefit the largest
-> > players in the market, and those are the ones who currently claim
-> > they can't open anything due to patents.
-> 
-> In order to get a patent, the claimed invention has to be made public,
-> so if they hold the patent there should be no problem.  If there is a
-> problem opening something because it infringes on someone else's patent
-> and they might see it, then OIN, above, is usually a good answer if the
-> patent is owned by another ecosystem contributor or an OIN signatory. 
-> For patent contortia (like MPEG) and patent trolls, it's more
-> problematic, but, again, OIN can provide help.
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-While I agree with the above in theory, in practice the patent argument
-is raised by large SoC vendors. There's one particular company well
-known for having engineering managed by lawyers...
+Main question is why auxiliary bus?
+We already do similar stuff in CXL on the cxl bus (e.g.
+the CPMU devices etc) that then register a class
+device with another subsystem.
 
-As I said, I don't sympathize with their arguments. The patent mess has
-been mostly created by those large actors who benefit the most from it.
-They can't at the same time claim that they can't disclose anything due
-to fear of patent infringement.
+>  GALAXYCORE GC0308 CAMERA SENSOR DRIVER
+>  M:	Sebastian Reichel <sre@kernel.org>
+>  L:	linux-media@vger.kernel.org
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 9f0fe698414d..0f6ec85ef9c4 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -13,6 +13,8 @@
+>  
+>  static DECLARE_RWSEM(cxl_memdev_rwsem);
+>  
+> +#define CXL_ADEV_NAME "fwctl-cxl"
+> +
+>  /*
+>   * An entire PCI topology full of devices should be enough for any
+>   * config
+> @@ -1030,6 +1032,7 @@ static const struct file_operations cxl_memdev_fops = {
+>  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>  				       struct cxl_dev_state *cxlds)
+>  {
+> +	struct auxiliary_device *adev;
 
--- 
-Regards,
+Why an auxdev? It can be any convienient dev to which a driver
+will bind. Why not spin one on the CXL bus for this purpose?
 
-Laurent Pinchart
+Maybe that creates and implied relationship you don't want, but
+we already spin lots of devices there like the pmus, so not sure
+why one more is a problem.
+
+>  	struct cxl_memdev *cxlmd;
+>  	struct device *dev;
+>  	struct cdev *cdev;
+> @@ -1056,11 +1059,27 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>  	if (rc)
+>  		goto err;
+>  
+> +	adev = &cxlds->cxl_mbox.adev;
+> +	adev->id = cxlmd->id;
+> +	adev->name = CXL_ADEV_NAME;
+> +	adev->dev.parent = dev;
+> +
+> +	rc = auxiliary_device_init(adev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = auxiliary_device_add(adev);
+> +	if (rc)
+> +		goto aux_err;
+> +
+>  	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+>  	return cxlmd;
+>  
+> +aux_err:
+> +	auxiliary_device_uninit(adev);
+> +
+>  err:
+>  	/*
+>  	 * The cdev was briefly live, shutdown any ioctl operations that
+
+> diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
+> new file mode 100644
+> index 000000000000..518ba2afada8
+> --- /dev/null
+> +++ b/drivers/fwctl/cxl/cxl.c
+> @@ -0,0 +1,103 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024, Intel Corporation
+> + */
+> +#include <linux/fwctl.h>
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/cxl/mailbox.h>
+> +#include <linux/auxiliary_bus.h>
+
+Pick a standard ordering for header.
+Any ordering is fine.
+
+> +
+> +static void cxlctl_remove(struct auxiliary_device *adev)
+> +{
+> +	struct cxlctl_dev *ctldev __free(cxlctl) = auxiliary_get_drvdata(adev);
+> +
+> +	fwctl_unregister(&ctldev->fwctl);
+
+Same question on reference counting I asked in the set Jason posted
+I don't get why we need the __free()
+
+> +}
+> +
+> +static const struct auxiliary_device_id cxlctl_id_table[] = {
+> +	{ .name = "CXL.fwctl", },
+> +	{},
+No trailing ,
+
+> +};
+> +MODULE_DEVICE_TABLE(auxiliary, cxlctl_id_table);
+> +
+> +static struct auxiliary_driver cxlctl_driver = {
+> +	.name = "cxl_fwctl",
+> +	.probe = cxlctl_probe,
+> +	.remove = cxlctl_remove,
+> +	.id_table = cxlctl_id_table,
+> +};
+> +
+> +module_auxiliary_driver(cxlctl_driver);
+> +
+> +MODULE_IMPORT_NS(CXL);
+> +MODULE_IMPORT_NS(FWCTL);
+> +MODULE_DESCRIPTION("CXL fwctl driver");
+> +MODULE_AUTHOR("Intel Corporation");
+> +MODULE_LICENSE("GPL");
+
