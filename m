@@ -1,148 +1,155 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295021741FB;
-	Fri, 26 Jul 2024 08:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1B41A286;
+	Fri, 26 Jul 2024 09:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721981108; cv=none; b=Xkk3JHq25YQ3RVQ9a6nuqRI2viQb/Poj5gXAITb7CNcsXTVy83DmRoeZ+zIhZ7nmMdYFFtckFmdNy+pcc8X2f6Iop3vrjgXDO+y/9XP8nw5dItu69Uq/FfQMdd/OBVXJNj39kG4EBLV1QltUyOPdmN6rnKPO8DJd6uCbCezzwGU=
+	t=1721986831; cv=none; b=cSKIVcGjEuOI9NDHxWdnPFSYJGadddiqw0Bw/0X10KKNQXsK+T586XWkmjViHLQBi75JLWTcx9H8jD/kPQa1zuF3d+av7WhxwGg7eOxlMiDVNHR1rTzuAL+3Qb/YC/yfXZCT/5G/nII3OjHukfkaWkPJm2ERsBsTgwytbSaoGUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721981108; c=relaxed/simple;
-	bh=GfulG0t9WbtzwIHjpbSdV8fiy8kLPHEJcxxQ+VKbRbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nC6ATyCf/AXAdpvFHdcNx7H8pJEoBv1JhwH9Ig5JTAaDoq62kPkrExNC7tO8fK0HTcK/jI93jyLYl44kDiDvcwlR4v6M9pmNg1a8gAqHVxw0Ps5ROZFb9hLGJVu6tQLUKgjNFdOENCn6JAXH5hmh3LDi0ikVXdEtp6sk+mSu3eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CV0tk0Fc; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721986831; c=relaxed/simple;
+	bh=/W5kbKWSvcsVRYIH6lNhUURaeOalcNxprGj7xwqXc8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EBFRF6w5Vc95asL3rDHbR9IyvGpyJW8RyLF4m8jvJfeiZ9TbNfkxFXhNTkEgyb2EfbKzOkhe8itvQ8yDnIc34LaRSjJTPpRK1uaaclvpze6DmYhMZ1ytM4j6x22UoK01mD6eCTSao2XH4fzP6WxwehwuZW3EQQVd+ba9Yh5W9zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erbBnHVt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CV0tk0Fc"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4928da539c3so520206137.1;
-        Fri, 26 Jul 2024 01:05:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721981106; x=1722585906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GfulG0t9WbtzwIHjpbSdV8fiy8kLPHEJcxxQ+VKbRbk=;
-        b=CV0tk0FcDzvYWxhscQWOesk5WFKWSlCKysNG7yFoqJdOKvbh90r2h0UoP7k1FzttTP
-         t+GPcKaln1EC9frVbpIG/ucfSPaywkKG1+Qe/rPWREmTPe1ExFDgrgoF9OjAJMKdsDVm
-         kh1yHs94NntUJx3Nqb8ggbtbQMCbakOT9gt/IFSHT+jDsk6UN3zrPBNyZCRpCeOKzEiY
-         v0BqrmELHj+2jl8cjmYYHxnMuNrc5abIhS/qESGpJNlF5FWwLzTVN9MyV9tMyI4qWn5y
-         tMOVMIPm0t6VSnTjjG8vA5kL6mkJ8b+MeCuyZ+wuc94Ol4DsIeQClnnfeKx87KPFCDJp
-         RUzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721981106; x=1722585906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GfulG0t9WbtzwIHjpbSdV8fiy8kLPHEJcxxQ+VKbRbk=;
-        b=l8KcxayddFfYvPYSGrWeV+VywJFAeOa0ra2qI2aGz/4F/MFvKJXhlsXIQJw4xtalw6
-         8xIf+ohd7cKKqB1xOsHy8PvdYm6GwbhPdQel3epd4y+zD+126Q9Pl520J4xesVZ/MEV+
-         PdglNNvzlBrztR75zDhNzR0o6IIopbQC2xM4b5p9R2kBtfluZ9redH8rM7n0oCiL7dVS
-         K1s+GMJed2OUotCpRPjkA680hJdFhuWI7l5YG4uSia46bjXg/3BeIKDrZKYQ8jD8YunL
-         E/XudmHZAvuLxg+WcMivyBC8C7qmH7s8vviuwlB0gjFB1RXCVfldYJHSfYWm4y9qzlF1
-         F9AA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZGS2hROEnairOSDplXyTkxs59JZf8DzfjlwUKCfAu2Pit9arwnWP6wE/y51Ac0vg0K3gV9uMm4qjS59k/hrsu177XCdHuRseH9KHulQaVwoxC1My9TZCaZfwXTcrGjMthiT5JRvP6gGjFBEKa00R1uJgeWXRJ0T2mQSjvkQ==
-X-Gm-Message-State: AOJu0YxOoVxOFyVwEX+3TDLJWYpAVMp2e8QcPDJJLsbpWIl9ndeU+b/2
-	nHXPdwil+zR0EBePkdd3tTKCxsOyJ7cI9gwMnGGUzdFCLMJKdioDe7UriUIpzbygEnPOQVREnrj
-	hoF/wDOHEvWqvY+JNcpKakpVsdU0=
-X-Google-Smtp-Source: AGHT+IER20+OH20FeNofjZbNSg5YSO4uu2dsN1XaOxb4vENmdqxfMdxAVIy8F71gyOTt7gr/ZbKk6MdsE0ObKrXjlQk=
-X-Received: by 2002:a67:e708:0:b0:48f:4778:9299 with SMTP id
- ada2fe7eead31-493d9b6d27emr5949947137.28.1721981106078; Fri, 26 Jul 2024
- 01:05:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erbBnHVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9535FC32782;
+	Fri, 26 Jul 2024 09:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721986830;
+	bh=/W5kbKWSvcsVRYIH6lNhUURaeOalcNxprGj7xwqXc8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=erbBnHVtheMUAGs7sb6st1OpVR9FaIVHYj78yec90OKFphlkSZV5k/wAOzf9v7bHw
+	 qD/B4sk/oLODwsgv3p0XiErsiTqRDrNBJUfunPPt2ly/fcLhz146SfXfrJeznvLkZe
+	 U5MzHL6oELYwecQ5CE2FRGA7zc5ak6Om4kOHFE+xDor4Bpwaxj+6BMtxs9zpKRb0zj
+	 t0frO2fOt1mK8tuZJlZLn78/gGZpvARM3U+4DMaFSKK7j8fCZBwVSU2h9+v0uuhWmf
+	 doJp2N540bOFVoqeMi8DgOk/gCs4xM/TGYVOkNqWaGGBNobmAGDB5q2iYuCtHTHaiN
+	 kQwqqR1cv6trg==
+Date: Fri, 26 Jul 2024 12:40:03 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, nvdimm@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 00/25] mm: introduce numa_memblks
+Message-ID: <ZqNu8zwjhiTkbpIB@kernel.org>
+References: <20240723064156.4009477-1-rppt@kernel.org>
+ <1D474894-F8AC-427B-8F90-5A6808E77CC5@nvidia.com>
+ <6336C276-113E-4D93-A09E-13420A6438D8@nvidia.com>
+ <231F6DF6-96C8-4149-92CF-4FC03C9FE357@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm> <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
- <20240724200012.GA23293@pendragon.ideasonboard.com> <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
- <20240725193125.GD14252@pendragon.ideasonboard.com> <20240725194314.GS3371438@nvidia.com>
- <20240725200703.GG14252@pendragon.ideasonboard.com>
-In-Reply-To: <20240725200703.GG14252@pendragon.ideasonboard.com>
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Date: Fri, 26 Jul 2024 10:04:48 +0200
-Message-ID: <CAPybu_0C44q+d33LN8yKGSyv6HKBMPNy0AG4LkCOqxc87w3WrQ@mail.gmail.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Jiri Kosina <jikos@kernel.org>, Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <231F6DF6-96C8-4149-92CF-4FC03C9FE357@nvidia.com>
 
-Hi Laurent
-
-On Thu, Jul 25, 2024 at 10:07=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Jason,
->
-> On Thu, Jul 25, 2024 at 04:43:14PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Jul 25, 2024 at 10:31:25PM +0300, Laurent Pinchart wrote:
+On Wed, Jul 24, 2024 at 10:48:42PM -0400, Zi Yan wrote:
+> On 24 Jul 2024, at 20:35, Zi Yan wrote:
+> > On 24 Jul 2024, at 18:44, Zi Yan wrote:
+> >>
+> >> Hi,
+> >>
+> >> I have tested this series on both x86_64 and arm64. It works fine on x86_64.
+> >> All numa=fake= options work as they did before the series.
+> >>
+> >> But I am not able to boot the kernel (no printout at all) on arm64 VM
+> >> (Mac mini M1 VMWare). By git bisecting, arch_numa: switch over to numa_memblks
+> >> is the first patch causing the boot failure. I see the warning:
+> >>
+> >> WARNING: modpost: vmlinux: section mismatch in reference: numa_add_cpu+0x1c (section: .text) -> early_cpu_to_node (section: .init.text)
+> >>
+> >> I am not sure if it is red herring or not, since changing early_cpu_to_node
+> >> to cpu_to_node in numa_add_cpu() from mm/numa_emulation.c did get rid of the
+> >> warning, but the system still failed to boot.
+> >>
+> >> Please note that you need binutils 2.40 to build the arm64 kernel, since there
+> >> is a bug(https://sourceware.org/bugzilla/show_bug.cgi?id=31924) in 2.42 preventing
+> >> arm64 kernel from booting as well.
+> >>
+> >> My config is attached.
 > >
-> > > I don't think those are necessarily relevant examples, as far as devi=
-ce
-> > > pass-through goes. Vendors have many times reverted to proprietary wa=
-ys,
-> > > and they still do, at least in the areas of the kernel I'm most activ=
-e
-> > > in. I've seen first hand a large SoC vendor very close to opening a
-> > > significant part of their camera stack and changing their mind at the
-> > > last minute when they heard they could possibly merge their code thro=
-ugh
-> > > a different subsystem with a pass-through blank cheque.
+> > I get more info after adding earlycon to the boot option.
+> > pgdat is NULL, causing issues when free_area_init_node() is dereferencing
+> > it at first WARN_ON.
 > >
-> > If someone came with a fully open source framework for (say) some
-> > camera,
->
-> We have such a framework, it's called libcamera :-) Multiple vendors are
-> already collaborating.
->
-> > with a passthrough kernel driver design, would you reject it
-> > soley because it is passthrough based and you are scared that
-> > something else will use it to do something not open source?
->
-> It depends what "passthrough kernel driver design" means. If it means
-> accessing the PCI registers directly from userspace, yes. That's what X
-> used to do before KMS, and I'm glad it's now a distant past.
+> > FYI, my build is this series on top of v6.10 instead of the base commit,
+> > where the series applies cleanly on top v6.10.
+> 
+> OK, the issue comes from that my arm64 VM has no ACPI but x86_64 VM has it,
+> thus on arm64 VM numa_init(arch_acpi_numa_ini) failed in arch_numa_init()
+> and the code falls back to numa_init(dummy_numa_init). In dummy_numa_init(),
+> before patch 23 "arch_numa: switch over to numa_memblks", numa_add_memblk()
+> from drivers/base/arch_numa.c is called on arm64, which unconditionally
+> set 0 to numa_nodes_parsed. This is missing in the x86 version of
+> numa_add_memblk(), which is now used by all arch. By adding the patch
+> below, my arm64 kernel boots in the VM.
+> 
+> 
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 806550239d08..354f15b8d9b7 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -279,6 +279,7 @@ static int __init dummy_numa_init(void)
+>                 pr_err("NUMA init failed\n");
+>                 return ret;
+>         }
+> +       node_set(0, numa_nodes_parsed);
+> 
+>         numa_off = true;
+>         return 0;
+> 
+> 
+> Feel free to add
+> 
+> Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
+> 
+> after you incorporate the fix.
 
-
-Nobody has suggested giving PCI register access to userspace.
-
-
->
-> If it means a kernel driver that takes the majority of its runtime
-> parameters from a buffer blob assembled by userspace, while controlling
-> clocks, power domains and performing basic validation in kernelspace,
-> then I've already acked multiple drivers with such a design, exactly
-> because they have open-source userspace that doesn't try to keep many
-> device features proprietary and usable by closed-source userspace only.
-
-If that was an option we would not be having this discussion.
-
-Vendors cannot have vendor access in v4l2.
-"""
-It is not an option to upstream a driver that has support for
-undocumented closed features. Basically maintainers can't put their
-name on something that contains unverifiable (for them) and unusable
-(by all except the vendor) features.
-"""
-https://linuxtv.org/news.php?entry=3D2022-11-14-1.hverkuil
-
-
->
-> > I wouldn't agree with that position, I think denying users useful open
-> > source solutions out of fear is not what Linux should be doing.
->
+Thanks a lot for testing, debugging and fixing! 
+> 
 > --
-> Regards,
->
-> Laurent Pinchart
->
+> Best Regards,
+> Yan, Zi
 
 
---
-Ricardo Ribalda
+
+-- 
+Sincerely yours,
+Mike.
