@@ -1,79 +1,132 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C574A21364
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 17:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043117C9EE
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 17:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722014971; cv=none; b=XBwIohNSY2Emj00vqTbP5QU8q091oJ0WpOSIAWgEoX8QEaszZRKHLwVE2g/Pa6XjFj9yoMbhKdDgDO4AdR0RPGSy/f08e1aA2lyP1TGyK2lWsFDZzLSsdlyNXh3kIQZfifvYNysZuObhdcaDJDz0u6IWQ/3TFZs1jT0PDthLptQ=
+	t=1722015220; cv=none; b=jwxwMjnXF2FUFL0wNqI6yoRZxRxP+o1pM8ASoJCQjVvKsGSIMVzWXKXgUOeMI68eL+f8aPn7Uoh5Smb+fng/JjrF4E5Tqsp00GOCzkXyQ1PYeTKICAOXZUXXLjMxYsHiwftbzfGd9Xaaqfdj6yDiqngxwTdwBw87M0md8XKzDpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722014971; c=relaxed/simple;
-	bh=CyMOs75Zjais8uvFJJxXT7C3jBQP9J3MQ2Aql28UC2E=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lyTylxtNBpvFFrJUJDWbexJZdEoDfmcVRTCdAZrxqvPR94m1bDxiETtc5NBA9OcS3UbGssjvPSyTP3eAVOQOGGe+/axyczFZTobbUSnqWfh0QrOxIlkwD9TDfy6fEyGHcicTtlzMa9vYWtUvbrYwZvpfqf/m0kW40Tg2pPnKsD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WVvpR0N4tz6K5rH;
-	Sat, 27 Jul 2024 01:27:43 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9979E140B2A;
-	Sat, 27 Jul 2024 01:29:27 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 26 Jul
- 2024 18:29:27 +0100
-Date: Fri, 26 Jul 2024 18:29:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [RFC PATCH 02/13] cxl: Fix comment regarding cxl_query_cmd()
- return data
-Message-ID: <20240726182926.000050b7@Huawei.com>
-In-Reply-To: <20240718213446.1750135-3-dave.jiang@intel.com>
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
-	<20240718213446.1750135-3-dave.jiang@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1722015220; c=relaxed/simple;
+	bh=e3N5bWu4r8Swl4BzWy7i9jr2amOi1C9JqeLg+IveS6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CB3JSCK97Qb2kkBTSFqXBFhvXQ1ZfT0gRfbW2k2yxHykoZA77/wfXGSz+jEaQJT6l+RguN/nEEVnGO2bIYko7bFBL/+RXWXx9J+1aayggSpc/GzPkNL873Lpmr1f3PiuKB76V3133JZezX67ytZ8kuDkZIuiNwpKJJVsv81X1kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=L/AxQ2X/; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="L/AxQ2X/"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3684b48d586so177066f8f.0
+        for <linux-cxl@vger.kernel.org>; Fri, 26 Jul 2024 10:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1722015217; x=1722620017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/B7g0UHHGpKr5sLCW2cjeH3RTgEO1uT2YFJABG6Bsg=;
+        b=L/AxQ2X/vE1foV9AVQePKmFWvxkRMHronlqCPy6jXR/gyJELOmzyDLNeyI6VRBvaku
+         oQMl7tjz6k3zcRCvZN+wmSk3ZYyrga5l2odxYIe9VuIY/GDNigCm2+SWhBd8lZYRA5ZC
+         aaRsduoOGrqWQ6HqDTHLMI/YlcbG9KQAZnhFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722015217; x=1722620017;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/B7g0UHHGpKr5sLCW2cjeH3RTgEO1uT2YFJABG6Bsg=;
+        b=Z0+sbozQXG6Ju80jfOiCcVu46o1+ZEQPQNmF1vJwZg0nAMkJH44nepYbuPsKnjJlIo
+         1sCy2qem+RJ/jFWmi9FgSICbhkxI5N791lYKgo7jVbFhgMGFN+fqiLMhImNxXr/lZch1
+         Zd6jQnhge6r2T/EOG88WqZwsBwMdIqCBwkrGxQxyqdObKmbGJ76VlvQFNon8qhZH536z
+         GlFNbNjVpNboQwD3eXk/EXeJICk8jx+EBzcAKH6AYpFUPAIFZw5HTxwIfyF4QHOuaaUw
+         v8afgx+4TLBtF5aoGHBCSbp+KZYFR37i3v69ErKQOHliKuF9cB85ufmGSMM0t8Hehfpw
+         yxAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbHu2NxLhBa8rGQZ6aoWU0/Omct46BsRqyIqmWE5J4qsEJC9JTRs8+KG8jNyRtgJvosbg+/Neg2oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt/8Jy+hs1GzHRZ3Px0vc3wFtlpREv7ha/ftpuDNenMWJWrPfT
+	Ypt0sjbKFndTfFLfFnm0O07yDfgeWI+CD3AY8FC7GA3cOsfDG8xpL2ApyFA/0k0=
+X-Google-Smtp-Source: AGHT+IG3ue2Wp3NAwG+80cC1hBEBaxqYkh1o6tYlzluNcJg5ps4z/XxOoMXpw4ib8InHKvN9IoLe0A==
+X-Received: by 2002:a5d:59a2:0:b0:367:95e3:e4c6 with SMTP id ffacd0b85a97d-36b34cec909mr2845449f8f.1.1722015216751;
+        Fri, 26 Jul 2024 10:33:36 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b36858179sm5684617f8f.88.2024.07.26.10.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jul 2024 10:33:36 -0700 (PDT)
+Date: Fri, 26 Jul 2024 19:33:34 +0200
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <ZqPd7i22_oyPB2UN@phenom.ffwll.local>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <nycvar.YFH.7.76.2407231320210.11380@cbobk.fhfr.pm>
+ <1e82a5c97e915144e01dd65575929c15bc0db397.camel@HansenPartnership.com>
+ <20240724200012.GA23293@pendragon.ideasonboard.com>
+ <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a75782218f34ae3cff725cbcfb321527f6aa2e14.camel@HansenPartnership.com>
+X-Operating-System: Linux phenom 6.9.7-amd64 
 
-On Thu, 18 Jul 2024 14:32:20 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> The code indicates that the min of n_commands and total commands
-> is returned. The comment incorrectly says it's the max(). Correct
-> comment to min().
+On Wed, Jul 24, 2024 at 04:37:21PM -0400, James Bottomley wrote:
+> On Wed, 2024-07-24 at 23:00 +0300, Laurent Pinchart wrote:
+> [...]
+> > What I get from the discussions I've followed or partcipated in over
+> > the years is that the main worry of free software communities is
+> > being forced to use closed-source userspace components, whether that
+> > would be to make the device usable at all, or to achieve decent level
+> > of performance or full feature set. We've been through years of
+> > mostly closed-source GPU support, of printer "windrivers", and quite
+> > a few other horrors. The good news is that we've so far overcome lots
+> > (most) of those challenges. Reverse engineering projects paid off,
+> > and so did working hand-in-hand with industry actors in multiple ways
+> > (both openly and behind the scenes). One could then legitimately ask
+> > why we're still scared.
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Send this one separately.
-> ---
->  drivers/cxl/core/mbox.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I don't think I am.  We're mostly fully capable of expounding at length
+> on the business rationale for being open if the thing they're hiding
+> isn't much of a differentiator anyway (or they're simply hiding it to
+> try to retain some illusion of control), so we shouldn't have any fear
+> of being able to make our case in language business people understand.
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 783cb5ed823f..433819ac36b7 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -547,7 +547,7 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
->  		return put_user(ARRAY_SIZE(cxl_mem_commands), &q->n_commands);
->  
->  	/*
-> -	 * otherwise, return max(n_commands, total commands) cxl_command_info
-> +	 * otherwise, return min(n_commands, total commands) cxl_command_info
->  	 * structures.
->  	 */
->  	cxl_for_each_cmd(cmd) {
+> I also think this fear is partly a mindset problem on our part.  We
+> came out of the real fight for openness and we do embrace things like a
+> licence that forces open code (GPL) and symbols that discourage
+> proprietary drivers (EXPORT_SYMBOL_GPL), so we've somewhat drunk the
+> FSF coolaid that if we don't stand over manufacturers every second and
+> force them they'll slide back to their old proprietary ways.  However,
+> if you look at the entirely permissive ecosystem that grew up after we
+> did (openstack, docker, kubernetes, etc.) they don't have any such fear
+> and yet they still have large amounts of uncompelled openness and give
+> back.
 
+This matches my experience. Legal and technical roadblocks help a bit in
+the margins, but they don't matter. The open gpu stack is 90% MIT, and
+nvidia and all the others have demonstrated for years how easy it is to
+ignore the GPL'ed part.
+
+What gets vendors involved is a successful project that drives revenue,
+where they have a clear need for a seat at the table to make sure the good
+times for them continue. Clear rules what it takes to get that seat is in
+my experience really the driving force for private discussions with
+vendors, and from that pov the most important thing I've ever done for the
+open gpu stack is this little documentation section:
+
+https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+
+Unlike laws you can legalese around and code you can trick with hacks for
+an endless game of whack-a-mole the above doc was the real stick. And it
+absolutely needed the carrot of the successful project that financially
+matters to work.
+
+Cheers, Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
