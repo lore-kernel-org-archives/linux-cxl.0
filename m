@@ -1,77 +1,64 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C9155751;
-	Mon, 29 Jul 2024 14:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE02E1534EC;
+	Mon, 29 Jul 2024 14:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722263389; cv=none; b=IQ7vIgePolfuXnYPlqbVnfBE7LXO0faiSdvs0HDE5PMWZQV8aAwEnzSn8ak3vLVxn3p+SXTRk125BUWjTgB2YGTJLMsHOyk841LBVLR4ePERV6/nUiRamEA/6zrqweEG9jCpEmEgXJuq7PFt8m/OhEKwlgGz3pXye7Ir8EjalG0=
+	t=1722264969; cv=none; b=F+ZCiGCecvNWOUVgAsyJ9KBv8pxJutk4eOBjFZEGJmOiOHAxG6uBbZjKWfr8RE//Sfxu1YSfuZW5tfAUTU7gw2rlZLfSy8bZLMo/G4+kUP8QgfZwt9hUdFSf81RDHuv0rN+tfV/+Rb29qKMXzhVmpauY7s9LnmL1avtIfnEDBYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722263389; c=relaxed/simple;
-	bh=uCvVv6yXucHR1Y2yaWt2UAblfSqvE+gWtsWYbiOx0H4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lSe/TPwvq0xU22AzAq9PFx7p3aeTX+sY2/gX/+3RljCPWSuGXOkKJ+a3GGLI6uqRQJoYAFE2AbGLzV09Oi+H5ggrSlk8K7DwVlS52qoe50F0MxLWscIeVvjGjYFKmPgEi+z/o2yeJFe7jr5+IDcvjCCkUd42ORQBDGDrEni1lec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WXgfn1CPNz6K9jB;
-	Mon, 29 Jul 2024 22:27:13 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D6467140B30;
-	Mon, 29 Jul 2024 22:29:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 29 Jul
- 2024 15:29:44 +0100
-Date: Mon, 29 Jul 2024 15:29:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: Dan Williams <dan.j.williams@intel.com>, <ksummit@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <jgg@nvidia.com>, <shiju.jose@huawei.com>, "Mauro
- Carvalho Chehab" <mchehab@kernel.org>
+	s=arc-20240116; t=1722264969; c=relaxed/simple;
+	bh=EJcJUuQRZXR3rf8lFMt6F/i5OksdABevOMJW7PKpBZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P44r+ogVT+uOdbUu3tjzhs+2OS/B9d9SPX8w/mJwHqLU5WNUwmnwDqDiL2QRz7/ewJ3nD91yefVbe9WivSeopilQrHmZI0Qg+Jp97RQNFZjrit7dxTq7/sWcC9f2S5fuk+TesEMVCGWainLyctLg573RbssdkU704imsJkenWms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbkXG6U6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbkXG6U6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B09C32786;
+	Mon, 29 Jul 2024 14:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722264969;
+	bh=EJcJUuQRZXR3rf8lFMt6F/i5OksdABevOMJW7PKpBZA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jbkXG6U6nH4UA+G7ZfU70c0ljD+B1u2nDArdVs8uhB+F5Yd4orXP5uiYEYbcvOE2H
+	 eoMmmchEb7HmRJ/Ptgmtvfpg5JWq7gg4f9hYaVjM6poY4H4X6KV8aITwOC4Wm3tpVu
+	 OFzR3zGhD1gEkm90iW6saiWmnWAlq5rCGC2GS1x5d/DJTwKF4AUKnRQSkc0aKXS7oQ
+	 EIgVa9PRYC2XkxsexIvKtjYikNAA3rREFzcRBKXdFT8t9Hmkf0Av5TRyQ3shSwNI4z
+	 EqBfW9Kmvta8lbXM3Plm6VoFZiiMQyZkMufUERafs1FHwHLXjcWhyvjHQoEK2bZXgp
+	 RoARF17Dljgsg==
+Date: Mon, 29 Jul 2024 07:56:07 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Laurent Pinchart 
+ <laurent.pinchart@ideasonboard.com>, Dan Williams
+ <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org, jgg@nvidia.com
 Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <20240729152943.000009af@Huawei.com>
-In-Reply-To: <20240729133839.GDZqebX1LXB-Pt7_iO@fat_crate.local>
+Message-ID: <20240729075607.71ca5150@kernel.org>
+In-Reply-To: <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
 References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
-	<20240729134512.0000487f@Huawei.com>
-	<20240729133839.GDZqebX1LXB-Pt7_iO@fat_crate.local>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	<20240726142731.GG28621@pendragon.ideasonboard.com>
+	<66a43c48cb6cc_200582942d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240728111826.GA30973@pendragon.ideasonboard.com>
+	<2024072802-amendable-unwatched-e656@gregkh>
+	<2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 29 Jul 2024 15:38:39 +0200
-Borislav Petkov <bp@alien8.de> wrote:
+On Sun, 28 Jul 2024 11:49:44 -0400 James Bottomley wrote:
+> cross subsystem NAKs
 
-> On Mon, Jul 29, 2024 at 01:45:12PM +0100, Jonathan Cameron wrote:
-> > One of the key bits of feedback we've had on that series is that it
-> > should be integrated with EDAC.  Part of the reason being need to get
-> > appropriate RAS expert review.  
-> 
-> If you mean me with that, my only question back then was: if you're going to
-> integrate it somewhere and instead of defining something completely new - you
-> can simply reuse what's there. That's why I suggested EDAC.
+Could y'all please stop saying "cross subsystem NAKs"..
+It makes it sound like networking is nacking an addition to RDMA 
+or storage. The problem is that nVidia insists on making their
+proprietary gateway a "misc driver" usable in all subsystems.
 
-Ah fair enough. I'd taken stronger meaning from what you said than
-you intended. Thanks for the clarification.
-
-> 
-> IOW, the question becomes, why should it be a completely new thing and not
-> part of EDAC?
-
-So that particular feedback perhaps doesn't apply here.
-
-I still have a concern with things ending up in fwctl that
-are later generalized and how that process can happen.
-
-Jonathan
+If they want to add something at the top level, all affected
+subsystems should have a say.
