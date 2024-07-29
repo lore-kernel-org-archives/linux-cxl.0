@@ -1,118 +1,115 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE741B86D6
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jul 2024 02:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2DA7E1;
+	Mon, 29 Jul 2024 06:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722219892; cv=none; b=g8GiyspHuaO54eRMU9RH72yRPMYhrP48FAZkROgKLKRsxpom9TN4kIuRKUMRoeVuWwWAOkQm9npUsvY4G25LUI04jjRSEzWyYZxk3/q2Ex5IgVPXb4lJkRdTB6HJWyUFzGQuLQ5FQ4jsfOSGIr2i9b9ZKWcNtBqWW6v+yQBNQPs=
+	t=1722233425; cv=none; b=UxA4mtxS+YQf654tThSjziMsxUdMj2Shty/D3LD28j3jxZCW+t1YR/tkvWDfx5TWoxb6A9HyVnvUM/9H5lPM6eBq52toxYMLC1qLhDXWkKnMHm9QRQw95yZ6wxa5mTdhJ381LLq3yDKQTcxuZDV6FuWmliRJF1fCtd0ScOsTTEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722219892; c=relaxed/simple;
-	bh=7ZJr2qPLfzGOtmLOuiFRhw+vwX2H4pAlmFj8krEKhEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOetHluFmes4bMvLieg6oDLqMYVc1VwFFUdHoWcBs9OATUVRX31zmJjdFQl8bv+YsdKavuMd1BsDoqrBX3s0PPAjgvv4n6eJ2z+Dwgs/G9eV15AcFSYNuQ3UVFWL3YQREi49yjnCaLaN/WKFwrFpFwuk6u6RZ8v8fQJLMsBKrZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=IdFl1slG; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1722233425; c=relaxed/simple;
+	bh=v8r0oj5pxZ/f1A2KMLBc/ks194Mzk+Lfe5T2JFsUn7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmRYfRDvhhbFuqgD+L6CI0iHemFokaksX6y4cSTCfrOCmgBR2+nGc7uljFDhYZusUMW7eRPHH1EGvRanwYJN1JPVAIbnnJrUf6LqgkQWQGkdkfjT8btf3jsJQU0RBxMs+nsAqKjzez0dVu8u8+68CjyKwCg8bfDxWeSuBEDrBV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=moqZAd/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="IdFl1slG"
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 0BF5F3F2A0
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jul 2024 02:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1722219882;
-	bh=CmV/ggYFbpcIV+CZdy96FFABIX7/zLLVJz8oRkArprU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=IdFl1slGPgpBr9Zc6tU6L0nGoAatNqDrUoyPTYNOdPoH0hr+DWuNhQLR16VUlnU92
-	 HQ4Hj7TTKXXw+/rziF/5dHcHjEP41+34apbt+iT/P/8g4pxnhmmiVJiOR1+BuwgOsy
-	 YmqVTX9rWb3JnyGBd5dl4K/xplr7CgzxFLZEYwlUxDkN9tfHLazDfdAv8dThb+82zD
-	 mbBlyMhEMMcVscQ06iwBdkonH0GK/50DK5jZEOUQwk9zoRYdJT042Kwn5iCqZIqSz2
-	 PN7Oeasardd9wopOQjOB3M7m+HnFHhfBrIMoxC4+2B1Xt4e07FmKAAg05OowCrsCN2
-	 3szr8ZrHp9wHA==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2cb576921b6so2647081a91.1
-        for <linux-cxl@vger.kernel.org>; Sun, 28 Jul 2024 19:24:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722219880; x=1722824680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CmV/ggYFbpcIV+CZdy96FFABIX7/zLLVJz8oRkArprU=;
-        b=j//aszOV0fK/8BA5G98If6wafF/VnbcoxEWoaCfknwx34Bm4itOZ7C5JyWZGc9O22D
-         nP1FvEXG30e+9FXxEGs2je6QjEMsV40vIn9yNZe20uglxx3MNepJJzizELsKSXsKMhEF
-         q/FQeQTjpGKiQGmGpTcJlOc7tMDbs8IpT3cFJnZ0Tbp1Cf5LrWsjerTDQLcqcnMyZJYe
-         H81EOcTQ9ahdVFLdsmNMPeKgblJpsURPFxoNg5RjDI1yZJpeRMSbJcWTuX8y0A7kgCaq
-         o6Reftf6D0spws8ASoQXa40YSZ4gn6xjhqHY3cPto1IfDu0BioZ3TuNQwxoKu2m/DGeX
-         ANVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDIJhmgGfzvSSXLECuOJfU48v4z6j0xxt6Ftbaq5DohwB0+1U5geYZij0jmym5s8QzT4/o84Rv0PEuhaCCSUkt7s/UIR7ai3IO
-X-Gm-Message-State: AOJu0YxKBfC99u0rG9MX7cZ0E6n+nnFqdLEfwuqBWnE9Qp1QI9mvHb9x
-	/YHpzIpkk+1QZJ+PqUe/rGBNoziH4AGRUmVOm867tN2fWGGFy3oK32KYKHBGwrkXrx52eRd9V/h
-	K2WwZVN1UTbtzJgDEs/QE/sPIlBsKwKxatS3oTVvBYLdh/MCBXQIlrWgn7+htoF9bjjpHp18xnL
-	u/EW5F2996AV5r90BO/ZIXpwyztnIxFV4yHEolJTMoKDU4L1gr
-X-Received: by 2002:a17:90a:930f:b0:2c9:9f06:bb2f with SMTP id 98e67ed59e1d1-2cf7e1a1d9amr4142252a91.6.1722219880413;
-        Sun, 28 Jul 2024 19:24:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH/6WcZAQCL48dKOKCaO7rysDJm1KdMhDjjZ+PcVCXVbVJvY9ZRBK8MHlWuqjtJ3TTvSJhg7qG5dMGCJwVj/sM=
-X-Received: by 2002:a17:90a:930f:b0:2c9:9f06:bb2f with SMTP id
- 98e67ed59e1d1-2cf7e1a1d9amr4142241a91.6.1722219880067; Sun, 28 Jul 2024
- 19:24:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="moqZAd/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85718C32786;
+	Mon, 29 Jul 2024 06:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1722233425;
+	bh=v8r0oj5pxZ/f1A2KMLBc/ks194Mzk+Lfe5T2JFsUn7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=moqZAd/O37KHuwsIWKtDuCE9PjAq3oWyuRUdvZAhCjcAvgPgu9LrRpMqzSJKA7YAH
+	 BAARQYeCwFR50p1D5YkrsRDEJiOFqH9M9PfDjk5teZ/YTSP7Pplhe36fBX9HUwY4AT
+	 ust6C5KTYgozcmulR6zVkacC2nlZIWBDjFNMOeKM=
+Date: Mon, 29 Jul 2024 08:10:21 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <2024072909-stopwatch-quartet-b65c@gregkh>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240726142731.GG28621@pendragon.ideasonboard.com>
+ <66a43c48cb6cc_200582942d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240728111826.GA30973@pendragon.ideasonboard.com>
+ <2024072802-amendable-unwatched-e656@gregkh>
+ <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715214529.GA447149@bhelgaas>
-In-Reply-To: <20240715214529.GA447149@bhelgaas>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 29 Jul 2024 10:24:28 +0800
-Message-ID: <CAAd53p4pr5GPKj3RKbBScDFqUJ+2eCb+t3tuALKuhCigLfeeHg@mail.gmail.com>
-Subject: Re: Lack of _HPX after reset, DPC
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Austin Bolen <Austin.Bolen@dell.com>, Alex Williamson <alex.williamson@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
 
-Hi Bjorn,
+On Sun, Jul 28, 2024 at 11:49:44AM -0400, James Bottomley wrote:
+> On Sun, 2024-07-28 at 17:16 +0200, Greg KH wrote:
+> > On Sun, Jul 28, 2024 at 02:18:26PM +0300, Laurent Pinchart wrote:
+> > > Hi Dan,
+> > > 
+> > > On Fri, Jul 26, 2024 at 05:16:08PM -0700, Dan Williams wrote:
+> > > > Laurent Pinchart wrote:
+> > > > > I know this is a topic proposed for the maintainers summit, but
+> > > > > given the number of people who seem to have an opinion and be
+> > > > > interested in dicussing it, would a session at LPC be a better
+> > > > > candidate ? I don't expect the maintainer summit to invite all
+> > > > > relevant experts from all subsystems, that would likely
+> > > > > overflow the room.
+> > > > > 
+> > > > > The downside of an LPC session is that it could easily turn
+> > > > > into a heated stage fight, and there are probably also quite a
+> > > > > few arguments that can't really be made in the open :-S
+> > > > 
+> > > > A separate LPC session for a subsystem or set of subsystems to
+> > > > explore local passthrough policy makes sense, but that is not the
+> > > > primary motivation for also requesting a Maintainer Summit topic
+> > > > slot. The primary motivation is discussing the provenance and
+> > > > navigation of cross-subsystem NAKs especially in an environment
+> > > > where the lines between net, mem, and storage are increasingly
+> > > > blurry at the device level.
+> > > 
+> > > Would there be enough space at the maintainers' summit for all the
+> > > relevant people to join the discussion ?
+> > 
+> > Who exactly would you consider the "relevant people" here?  It's been
+> > a wide-ranging conversation/thread :)
+> 
+> This is a bit of a trick question, since there seem to be three
+> separate but intertwined things here
+> 
+>    1. What to do about cross subsystem NAKs (as in how far does one
+>       subsystem have the ability to NAK something another does because
+>       they fear it will impact them ... passthrough being only one
+>       example).
+>    2. Industry education to help manufacturers making bad decisions
+>       about openness and APIs make better ones that actually benefit
+>       their business in the long run.
+>    3. Standards for open drivers (i.e. is passthrough always evil).
+> 
+> 1. is definitely Maintainer Summit material.
 
-On Tue, Jul 16, 2024 at 5:45=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> I think Linux is missing some important _HPX functionality.  Per ACPI
-> r6.5, sec 6.2.9,
->
->   OSPM uses the information returned by _HPX to determine how to
->   configure PCI Functions that are hot-plugged into the system, to
->   configure Functions not configured by the platform firmware during
->   initial system boot, and to configure Functions any time they lose
->   configuration space settings (e.g. OSPM issues a Secondary Bus
->   Reset/Function Level Reset or Downstream Port Containment is
->   triggered).
->
-> Linux currently *does* process _HPX for hot-added devices.
->
-> The spec doesn't call it out for boot-time enumeration, except for
-> "Functions not configured by the platform firmware during initial
-> system boot", but Linux does process _HPX for all devices enumerated
-> at boot-time because it's not clear how to identify devices that
-> weren't configured by firmware.
->
-> But AFAICT, Linux does not do anything with _HPX in the device reset,
-> AER, or DPC flows.  I don't have any problem reports that I can say
-> are caused by lack of _HPX after reset, but it seems like something we
-> should fix.
+And to ask again, who do you should participate in this?
 
-The consumer grade devices I checked don't have _HPX in the ACPI ASL.
-So I can't really delve into it any further.
+> 2. was something the LF used to help us with but seems to have
+> foundered of late (I think on the general assumption that CNCF gets it
+> right, so we can stop pushing)
 
-Kai-Heng
+Based on the number of meetings and trips I keep having with different
+companies over the past years, 2. is not something that the LF is no
+longer doing, as they fund me doing this all the time.  Including
+visiting and educating your current employer about these very issues
+recently :)
 
->
-> If we could find a system with _HPX that does something interesting,
-> we might be able to demonstrate a defect by looking at a device before
-> and after a reset.
->
-> Bjorn
+So don't fall into the "because it's not done in a loud way it must not
+be happening" trap here please.
+
+thanks,
+
+greg k-h
