@@ -1,115 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2DA7E1;
-	Mon, 29 Jul 2024 06:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C3612C46F;
+	Mon, 29 Jul 2024 08:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722233425; cv=none; b=UxA4mtxS+YQf654tThSjziMsxUdMj2Shty/D3LD28j3jxZCW+t1YR/tkvWDfx5TWoxb6A9HyVnvUM/9H5lPM6eBq52toxYMLC1qLhDXWkKnMHm9QRQw95yZ6wxa5mTdhJ381LLq3yDKQTcxuZDV6FuWmliRJF1fCtd0ScOsTTEI=
+	t=1722242791; cv=none; b=Ev94O3kERTOX9fqBpvWGNFRKl3hGemjyNU5G7tUFQEA7B6YcAjHqpZoupC+eCJk8dPCMwshXKb+8OnI8mE9ST0P4exH5dZ+wn6KOYrAEXGfU0AN6iAMlRNLSrziy94srB/UhjMHFsrBi8/ycYz4qMlwLAonhOMkZYH7tX7gVht0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722233425; c=relaxed/simple;
-	bh=v8r0oj5pxZ/f1A2KMLBc/ks194Mzk+Lfe5T2JFsUn7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmRYfRDvhhbFuqgD+L6CI0iHemFokaksX6y4cSTCfrOCmgBR2+nGc7uljFDhYZusUMW7eRPHH1EGvRanwYJN1JPVAIbnnJrUf6LqgkQWQGkdkfjT8btf3jsJQU0RBxMs+nsAqKjzez0dVu8u8+68CjyKwCg8bfDxWeSuBEDrBV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=moqZAd/O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722242791; c=relaxed/simple;
+	bh=a6B+dCRi2PAONa4H8S+XgrCIRQhl0Ec9gLy7s9X1va4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LKpn727phvB1qdRItyF1hnqhC3OHIcxXoEIofmyFNQZmgQTrndxiW2fXvy85L7/A86BJ8LtNtBr8AZovIcWBfgy6JENxS4HhxBjv0vbhqvEYPmjCF9tdg/dRRqSrHLhpZKdSKExGAkML2uf3fV+D8ROin/Wr3h3C5J9uMyw442A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BJgdD0jV; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="moqZAd/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85718C32786;
-	Mon, 29 Jul 2024 06:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1722233425;
-	bh=v8r0oj5pxZ/f1A2KMLBc/ks194Mzk+Lfe5T2JFsUn7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=moqZAd/O37KHuwsIWKtDuCE9PjAq3oWyuRUdvZAhCjcAvgPgu9LrRpMqzSJKA7YAH
-	 BAARQYeCwFR50p1D5YkrsRDEJiOFqH9M9PfDjk5teZ/YTSP7Pplhe36fBX9HUwY4AT
-	 ust6C5KTYgozcmulR6zVkacC2nlZIWBDjFNMOeKM=
-Date: Mon, 29 Jul 2024 08:10:21 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, jgg@nvidia.com
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <2024072909-stopwatch-quartet-b65c@gregkh>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <20240726142731.GG28621@pendragon.ideasonboard.com>
- <66a43c48cb6cc_200582942d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240728111826.GA30973@pendragon.ideasonboard.com>
- <2024072802-amendable-unwatched-e656@gregkh>
- <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BJgdD0jV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722242789; x=1753778789;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=a6B+dCRi2PAONa4H8S+XgrCIRQhl0Ec9gLy7s9X1va4=;
+  b=BJgdD0jV4Lk3+1oJA2x5qaXzgKCpZT1nHr20lybJKUoEED+iOjI12VDJ
+   WxInrrqBrvc9FPqCwHSe6uwLUL3ju2UNOGWcODRL7DC3ajxDVMpsvV6QN
+   Ty5CE0LN6GRxPRhXjk3Vj9KEgeAIUzwlFGT42OX5dQ6pWBlCtQKO/2VWt
+   hx7k53TDycy7AWde+3MxTjFSbmb+G/Wg4GHUPtne8f7+ohU31dlOSy3Fj
+   mCi0frJQ6LPsggYVrHCb1sZ5kBw3b4fNLfXuTGofmf10h6KJ69E7zhfBn
+   2KHyzpTxKwYBHJK8jCop2/niwdgndzZrupzAyAku3sZonVz+ei2GMW1md
+   A==;
+X-CSE-ConnectionGUID: zirG0IIxSomVC03MNnO89g==
+X-CSE-MsgGUID: wPujGb7JTHSOmNI3djJQqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="30647111"
+X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
+   d="scan'208";a="30647111"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:29 -0700
+X-CSE-ConnectionGUID: Bn5LF74zRXqxiQOz+KA1wg==
+X-CSE-MsgGUID: ZR6lCvJBQo+i8zR52hgixQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
+   d="scan'208";a="84856207"
+Received: from yhuang6-mobl2.sh.intel.com ([10.238.6.133])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:26 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH 0/3] cxl: Preparation of type2 accelerators support
+Date: Mon, 29 Jul 2024 16:46:08 +0800
+Message-Id: <20240729084611.502889-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
 
-On Sun, Jul 28, 2024 at 11:49:44AM -0400, James Bottomley wrote:
-> On Sun, 2024-07-28 at 17:16 +0200, Greg KH wrote:
-> > On Sun, Jul 28, 2024 at 02:18:26PM +0300, Laurent Pinchart wrote:
-> > > Hi Dan,
-> > > 
-> > > On Fri, Jul 26, 2024 at 05:16:08PM -0700, Dan Williams wrote:
-> > > > Laurent Pinchart wrote:
-> > > > > I know this is a topic proposed for the maintainers summit, but
-> > > > > given the number of people who seem to have an opinion and be
-> > > > > interested in dicussing it, would a session at LPC be a better
-> > > > > candidate ? I don't expect the maintainer summit to invite all
-> > > > > relevant experts from all subsystems, that would likely
-> > > > > overflow the room.
-> > > > > 
-> > > > > The downside of an LPC session is that it could easily turn
-> > > > > into a heated stage fight, and there are probably also quite a
-> > > > > few arguments that can't really be made in the open :-S
-> > > > 
-> > > > A separate LPC session for a subsystem or set of subsystems to
-> > > > explore local passthrough policy makes sense, but that is not the
-> > > > primary motivation for also requesting a Maintainer Summit topic
-> > > > slot. The primary motivation is discussing the provenance and
-> > > > navigation of cross-subsystem NAKs especially in an environment
-> > > > where the lines between net, mem, and storage are increasingly
-> > > > blurry at the device level.
-> > > 
-> > > Would there be enough space at the maintainers' summit for all the
-> > > relevant people to join the discussion ?
-> > 
-> > Who exactly would you consider the "relevant people" here?  It's been
-> > a wide-ranging conversation/thread :)
-> 
-> This is a bit of a trick question, since there seem to be three
-> separate but intertwined things here
-> 
->    1. What to do about cross subsystem NAKs (as in how far does one
->       subsystem have the ability to NAK something another does because
->       they fear it will impact them ... passthrough being only one
->       example).
->    2. Industry education to help manufacturers making bad decisions
->       about openness and APIs make better ones that actually benefit
->       their business in the long run.
->    3. Standards for open drivers (i.e. is passthrough always evil).
-> 
-> 1. is definitely Maintainer Summit material.
+There have been 2 series to add type 2 accelerators support in [1] and [2].
 
-And to ask again, who do you should participate in this?
+[1] https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
+[2] https://lore.kernel.org/linux-cxl/20240516081202.27023-1-alucerop@amd.com/
 
-> 2. was something the LF used to help us with but seems to have
-> foundered of late (I think on the general assumption that CNCF gets it
-> right, so we can stop pushing)
+Both provide relative complete support, but both are long too.  To
+make it easier to review, some preparation of type2 accelerators
+support is implemented in this series.  More complete support can be
+implemented based on it.
 
-Based on the number of meetings and trips I keep having with different
-companies over the past years, 2. is not something that the LF is no
-longer doing, as they fund me doing this all the time.  Including
-visiting and educating your current employer about these very issues
-recently :)
+This series has been tested with cxl_test via mocking a type2
+accelerator as in [1] above.  Because more type2 accelerators support
+than that provided by this series is needed to simulate the device,
+the cxl_test patch isn't included in the series.
 
-So don't fall into the "because it's not done in a loud way it must not
-be happening" trap here please.
+Huang Ying (3):
+  cxl: Set target type of root decoder based on CFMWS restrictions
+  cxl: Set target type of region with that of root decoder
+  cxl: Avoid to create dax regions for type2 accelerators
 
-thanks,
+ drivers/cxl/acpi.c        |  5 ++++-
+ drivers/cxl/core/region.c | 11 ++++++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-greg k-h
+Best Regards,
+Huang, Ying
