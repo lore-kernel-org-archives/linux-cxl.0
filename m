@@ -1,156 +1,219 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88626146015
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jul 2024 12:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722254740; cv=none; b=UKYjsVLkTfk5GlHOCFtl0MZdGYG86CwWBUqsqHWl5Hyc2yskL0bk0QHluEU/6jTAG4BcgDtpW/98BpLJC0gOeRr7tQNh9j3/fr0Xj8gQ6PyyaQzr1AxERs16MEFxBh3K+1QLD9Q3E8tOEMFOiM/QhwXhxFxsK57bmPNnCgekl9M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722254740; c=relaxed/simple;
-	bh=zrXzOpC/nrJ/n9YpbC9VIDgqary76C4ztHQbd6xGebA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FesfNwGN6AGv4kZXG5kZLjguKliLnuQ4u9x8NxCgZpn0g22agI7dbEPobGmqu8kcXCVa8b+W3kmSQKSsp7kB3INa9WheF164TG4t2FzIGpXHR0oCIgSU0afNIa6l9iYXpF8xCRcfBWpP04Uh+H+CPwwg026GIK6Vm6ZupzN0K+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WXcSL4JBQz6K9YP;
-	Mon, 29 Jul 2024 20:02:58 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 25EDC1409EA;
-	Mon, 29 Jul 2024 20:05:30 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 29 Jul
- 2024 13:05:29 +0100
-Date: Mon, 29 Jul 2024 13:05:28 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>, Borislav Petkov <bp@alien8.de>, Tony Luck
-	<tony.luck@intel.com>, James Morse <james.morse@arm.com>, "Mauro Carvalho
- Chehab" <mchehab@kernel.org>, Robert Richter <rric@kernel.org>
-Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support
- via fwctl
-Message-ID: <20240729130528.0000139b@Huawei.com>
-In-Reply-To: <20240718213446.1750135-1-dave.jiang@intel.com>
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59481474CF;
+	Mon, 29 Jul 2024 12:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722255904; cv=fail; b=f4ijTqf+uhwglkpmTqnJNfDtuilXGSgh9+cCgzgrZwJoH7WOMswKnFbbLEYUD8PWLMrqtZ2tncdn9maeWZxZr0UaXTSmMtUTYErZWUDfabL7V1EWYxE/31xcv3q7g6M7gfG80z0f4ZSW1Kt7XcFP8TCOB4Hoif776uz4y8KxxMY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722255904; c=relaxed/simple;
+	bh=63uhS99GLHjBsVaxf5rqBaK2pMdVMjpoww4YXzhmV9Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=E+TmHhwZn17LEvrvojopg0W0xuyQ+n3JUHQtL7HZLvtdcmyL1KTbLaya2uC8PnrX3znTnPwaOOIt7/lxqE/KimVsU1WOUPh2TGq3MqEEOmfJtjfMo2ciydzwuX11ZolOdfmpgSRPJGWZyfcmQ0sdUxD5rFAuoDb9BTo3gGUB3WY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNPUd89h; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNPUd89h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722255903; x=1753791903;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=63uhS99GLHjBsVaxf5rqBaK2pMdVMjpoww4YXzhmV9Q=;
+  b=fNPUd89hSYeaMOV0dDLw3+YLWgNgNEuIv+ceRok7tYAETQ8N4EI8zJ2z
+   iTY7jVBzpbcWUvBfoIXO6Sw0ULXkLKy/wIryEDJ+aoBqNw7NZbgshJeES
+   lqsgWtlHyz7MzCq3KYSNfuvFp7332xPRtoXRlwWwRGEaoaArDKxQgh0ey
+   u85303PQp7oRdyY5rBAr7PYkmtQMOU+mJN/stmyYV9lBThD0HjTbBt/sc
+   0eBpO+58oYK3aUxcPsuBHoi2ISQqKFj54LLav9mU8Jll0f2rCTs07WM8/
+   jtaamfPmjG+E8ZrdjbODN6wtO1NatYLZyXQFeWpnNAYyBNSNvilUEVTyT
+   w==;
+X-CSE-ConnectionGUID: /TxHmx+tQG2aiApSCVTzhg==
+X-CSE-MsgGUID: ii5QczRlQfu0CUvAhS2fuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11148"; a="20135378"
+X-IronPort-AV: E=Sophos;i="6.09,246,1716274800"; 
+   d="scan'208";a="20135378"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 05:24:36 -0700
+X-CSE-ConnectionGUID: 9tJqL3mZTee11F6DgofRag==
+X-CSE-MsgGUID: Q4wbITHoSoy5fbJ743MftQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,246,1716274800"; 
+   d="scan'208";a="58283282"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jul 2024 05:24:35 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 29 Jul 2024 05:24:35 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 29 Jul 2024 05:24:34 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 29 Jul 2024 05:24:34 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 29 Jul 2024 05:24:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FjwymTJce56AYqqG5/3pPdDxGHgXFAnT7d1fC4ydrmjq5yXFhIR9zU78qh5ppHjzkhr7uPgoAurKEL1KJ4X77vPNO8r2YPgBhpeWZfnsfcG19E80w8+IBIWzc0WQw5GVb2Qq9c044Pt2hTIOQ/op5kmamLhDF/0PAKDBVEbzNsarX8ur5gsKpPKgD2Tdkm/0qC3vtbU8MqeA24jj+mxQix6P17knU1VwKsIIscvsGuBtmuyOOUEmgaOhfi51rKYvqPLp2VVVKtiZTo/DttgyM6AsTDavZRAermte2OsQV/yK6IlE/Ok3dF2TT/4wkkgx3yhgofYtOb2X+ZizL1AA/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gLLHKvWxGgIKhph5omi3GeXG0H38Ia/ffV5WUjnWRyA=;
+ b=DNDM7Nqo0AFVC1QVfGuIWtF3Sak1IaUJTNMS/f50UNRCwljOe/zA+ebT456hT/+6UCx1DY9nkIj1OeSbkfH6dxp39t7yba7XfNjFd7bZXHHJL+/ADsGwiu3N1obFKJQ4Wd+/lae8hfeLTqAipnf/Xg0yEZY/E1HcaBVHHlDtad5MYCmAjCz9wQ7hHHDRM+2MTU6vj9TLOrL6RGv/iL9ZqpxZWUkacn3GL7jpE5mMRWiZ4pcbJfyzJS2kyEEVPJ0BDVAEAzpc1gqXhBZwC95D7t36/i5TPpYq6jiofKXEJoZKFsJIjiwJx+E448CY67wsxX+p0xdhwm3DXYERFr8PzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by DS0PR11MB7458.namprd11.prod.outlook.com (2603:10b6:8:145::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.28; Mon, 29 Jul
+ 2024 12:24:32 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%6]) with mapi id 15.20.7807.026; Mon, 29 Jul 2024
+ 12:24:32 +0000
+Date: Mon, 29 Jul 2024 07:24:27 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Dave Jiang
+	<dave.jiang@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-janitors@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] cxl: add missing MODULE_DESCRIPTION() macros
+Message-ID: <66a789fbbdda7_2c6e48294a9@iweiny-mobl.notmuch>
+References: <20240607-md-drivers-cxl-v2-1-0c61d95ee7a7@quicinc.com>
+ <20240607151046.00002ae2@Huawei.com>
+ <aef7c12f-cefa-4823-b3a2-920c12990afa@quicinc.com>
+ <73d13869-cb80-4226-b8fe-3e45fb7d2518@intel.com>
+ <cafa6bbf-446b-4b4c-9b6e-f4db6a19ae55@quicinc.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cafa6bbf-446b-4b4c-9b6e-f4db6a19ae55@quicinc.com>
+X-ClientProxiedBy: MW4P222CA0022.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::27) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DS0PR11MB7458:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4717bd35-b1bc-48ec-5943-08dcafc96660
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?U0fRPEU4gE+DtSQPXcHBy+s54G79Zgcx4x8hpEVkh5EK/IoX1+joukA6hzS0?=
+ =?us-ascii?Q?7MYv+bMssCxsqKW0VXfxoWj4LXC6yBGuEk6MhyRFeS7q8khLkl1kFyViafk9?=
+ =?us-ascii?Q?nsDnPDoTP0o8AkqSY0b4nUMZKI443FneoLn/7PJzJUxiyfI5qTBpEqhpFcgK?=
+ =?us-ascii?Q?9fgRD7oYtbz27aTo765muSirrN7KqrXPKPZZAZMQS+wkleBryqndTY1EMYhM?=
+ =?us-ascii?Q?GcJUqaS1qQSjZjY3xdMt7HCocx9THcUBv2at3MxjtSwAHtL8PS8UDRs5CDis?=
+ =?us-ascii?Q?Q+q57kLnbK8auIFe74MPcQlcikWEXYkpKolRhnkJ6yfsH0leLO7vgGSNt5yR?=
+ =?us-ascii?Q?xvIBsb6tMOAueAiIdHaQZx6UIO72Mfa+Cx1cf0jvScmv0bPcXFjMenW2logS?=
+ =?us-ascii?Q?woHfP+UqGRLGMQmosDaPHYH5BjM+OpC1mgSZQUBJIhT1A6tNiV0wuxSj9Uu+?=
+ =?us-ascii?Q?s/r8f0V2anfFoMV28/081Ge6BzbTsmdiLaX56mlv62KYdTlrEatptw5brdQz?=
+ =?us-ascii?Q?dPZ54rXNj0bwvbdk8+MXVHk40gIDm5Ptw/f4lKYpCcyzUELeK3zTOGbKLSth?=
+ =?us-ascii?Q?OhQDjXZpMFCf8AlK30e8BVeLO647LEk75JbpdFEZRNdNTuytRaq+3C4YJSpq?=
+ =?us-ascii?Q?q9K8QemRHoAlN0i7LYa5EbrLGqxDuhr4yr14/XlNaq+PaU17wB6hvg0+wV4b?=
+ =?us-ascii?Q?sf1HwCLpUFK46Q+NPSy3JffqHh/XJlAJlf7bB0F2RiemEYtYGUSNofC/gR1H?=
+ =?us-ascii?Q?mvZugW7oO6Sj9bYEycB1jHhvDE7W0M7uqGPxLmBy7T8B6gxkTdtO9nNW/Q0W?=
+ =?us-ascii?Q?oyExNhxRCTK+5tzZN128dIPnVryMH477fV6zJv/iVMfzrFuPDadDyoAWwCTF?=
+ =?us-ascii?Q?M9tFYDmspqgD5Kv+U72q+xq9E4mPecgTFWXVdPtHy1JR+hVFkLz2RHMnVR3O?=
+ =?us-ascii?Q?/H2uK313eaujz4xjzOPPz+NI8pjFcGvpN8VjgA46D5r7IFtiD0HyNOGfMga0?=
+ =?us-ascii?Q?TNql4y3a29jsoROQdhAXzsGgG4+bSgtjUSrf0Lu7hZFdOfVDQ8ZFakgAQ/o/?=
+ =?us-ascii?Q?TBai03s+OBw/GCihxtzqNgzdR/Rr3QZGF81VxGPe86FRGFCpskFr+3WYxKgY?=
+ =?us-ascii?Q?PXGoA9tcpugfCHce1rcoGwlTeLFD7ZjeuFFnLVV1A1q2r+BjUVLiqBOt57Fp?=
+ =?us-ascii?Q?oH9z4ufBaUvAkM3g0Hm80naIBmp2ZS9c5lKOlkUm9ZtJ8I76/KEn4D2DV2Zs?=
+ =?us-ascii?Q?rYYLStGzFieFfTqhSQLcC3+hq1OlnWrHsgtX3+KXIT2BKWKn2swDSFl+s+ZC?=
+ =?us-ascii?Q?uBr36Cpz6m9uBNATeufGwwnXL0X4ID2Q1DIydMZkeHxvkg=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3/YDln1lFaQ4kkp2trEx1b98aWg/f4jy/VpD8MgmOHqtNY7fcuwt/4fy29yc?=
+ =?us-ascii?Q?u2hhE1HSHkYW1saM0BCXAJ+cAwGOvmTSKfr7oldAlavQvJhUo7ApFuQvYy+l?=
+ =?us-ascii?Q?1sXrVLKktu1bfG6MR45UAhboWD0yUvI8mNEjQpoGTPYq2kdCSLwNffRTOo27?=
+ =?us-ascii?Q?uREzNM1suGMBXt7/cmjEi+Rz74c+vkuCxA9Viu35+B/X54hgK+W7VlvdDM6e?=
+ =?us-ascii?Q?1l2ZX3njIsrJhwrte7fPDO84tysYMH62SzXTb8G8o3M+u+anryT4IEMD0qll?=
+ =?us-ascii?Q?9lTa3+TF+ooCh7Dr5Oz7/9NqMpcL4KNc+H70Z12sFNYqYWhDDqymCuq6b1n0?=
+ =?us-ascii?Q?OLR0MWp4i4Pf5/34W8pkvnMFMosdGB2QB3gfvukcxYn+CtoqZT/+JEIWEedn?=
+ =?us-ascii?Q?d4GniZF6lDREyGZ7wsBGzwvMHZjSUlF9zF+oSfk1NQUlYY8QL9L+GE6nZc06?=
+ =?us-ascii?Q?C37NABdjqF7O4osKqy1XIpGME10m6i+/j1ocXIdRVo95WFZlXX3m4xNhbkRh?=
+ =?us-ascii?Q?DwHc09zr7iJPjrMvPGT4qnzxBtu0bIri24Zv4QU5FcbB2/l73RdyjzQ+akDN?=
+ =?us-ascii?Q?fY2h+NXAafJZmAsp2rZuL4yvjfqrhJsF41EEzC4JXSZXqr9fHu6OVsvc9ZJk?=
+ =?us-ascii?Q?bvJKk42zGqMa8X49/Lw3k4CqA/Ii4MGQ1AY3x0ctnRV8o4KlzGjj3hUtU2He?=
+ =?us-ascii?Q?MyOlGiUGbX5RBbLoP/jRvGFv0VyaTRrLQ3JOOhxDzXDBd4OPRaRwLIjGQI0b?=
+ =?us-ascii?Q?XLeNnLVtYMmAD6zIZZJHIIv+TskKMsL6z/WAMTD0PSeLSowFVyvawqlu9y3y?=
+ =?us-ascii?Q?PXBMWabfJXpsOdkfyZTDjMJUeZFwiouR1+ZpZeJemUCrYoo6Bwiwq9lNaXTz?=
+ =?us-ascii?Q?+l3QzTUQUo97hdt9k7MR1ehZ7ZMU8XhHom5y9+g6bspZr/60O3ccgOem9OFR?=
+ =?us-ascii?Q?+MuCe0+XUdjNp0LrqlIRG8aLMRF/mso/Gf2bqG88MfuHyUlN+cCCmaoFCCjb?=
+ =?us-ascii?Q?uMbiE+B9y5DyMvopxTr5RTPyi77jxkVANpZ1Mu3qlSCFOwJQqqHECsAUAxJa?=
+ =?us-ascii?Q?Vm43i91stgNO8p81K4vkhDZ2v43yZokbBxPxY3Ghgj6PltLH4TBEW6G1UkoV?=
+ =?us-ascii?Q?LN6RilZI6holWJ+76ggm6wIKNSv+koxmoBf2LJ2cOGlLOE/nZ2V+nR3QJJPA?=
+ =?us-ascii?Q?lCAEgaCHJzKgDUGK929RS1O5PtewCRGzUxfQU+xhBdhXeGb48zDMlndRB+8W?=
+ =?us-ascii?Q?7oX3jCDIvW+DkiYxaWR6aRW1PwKap1pucET+RL2/i7e4kk6viKOOmssUQugZ?=
+ =?us-ascii?Q?IfDQAbj8hvQVA4UBp1/m3R2VzZHun37yekYawjp5NWqQfSrcPxhm/2SJ9AnM?=
+ =?us-ascii?Q?teEcbQbMkt0B5vTpC0GOzts2xp6heKw4zXyfFo4FDXAY35RaGwacNIvN/ySW?=
+ =?us-ascii?Q?ZTu87fWUfUDSSyKXwxSXnfU4gyx5XzbOlhbrjUehbPv2l242A++oVcSx/rad?=
+ =?us-ascii?Q?M6G+Y85unmXw3S4lsWpbGOFv39jk7dCDUqZND7jsLxN7S0HixlQ7HQpqN5Ml?=
+ =?us-ascii?Q?wZzsh3+jW/Bn+ZfXdgbLjvWGL82wRozepM1F8gcJ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4717bd35-b1bc-48ec-5943-08dcafc96660
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2024 12:24:32.2590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gJOfuDYPWgnqE0FuZnwGGL1Uv8X+3RXWNi9gJ6U+N+UX/U6t5GWSf1jVKSEau8aVupc/SSK4TmXGUyBWYVhnaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7458
+X-OriginatorOrg: intel.com
 
-On Thu, 18 Jul 2024 14:32:18 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> This series add support for CXL feature commands using the FWCTL framework [1].
-> The code is untested and I'm looking for architectural and implementation feedback.
-> While CXL currently has a chardev for user ioctls to send some mailbox
-> commands to a memory device, the fwctl framework provides more security policies
-> that can be a potential vehicle to move CXL ioctl path to that.
+Jeff Johnson wrote:
+> On 6/26/2024 9:41 AM, Dave Jiang wrote:
+> > 
+> > 
+> > On 6/26/24 9:02 AM, Jeff Johnson wrote:
+> >> On 6/7/2024 7:10 AM, Jonathan Cameron wrote:
+> >>> On Fri, 7 Jun 2024 06:57:15 -0700
+> >>> Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
+> >>>
+> >>>> make allmodconfig && make W=1 C=1 reports:
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pmem.o
+> >>>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
+> >>>>
+> >>>> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> >>>>
+> >>>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> >>>
+> >>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >>>
+> >>> Thanks,
+> >>
+> >> Following up to see if anything else is needed from me. Hoping to see this in
+> >> linux-next so I can remove it from my tracking spreadsheet :)
+> > 
+> > I have it locally queued, but will probably push to linux-next after rc6 drops. 
 > 
-> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
-> "Set Feature" commands are implemented. The "get" commands under the
-> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
-> on the effect of the feature. All mailbox commands for CXL provides an effects
-> table that describes the effects of a command when performed on the device.
-> For CXL features, there is also an effects field that describes the effects
-> a feature write operation has on the device per feature. The security policy
-> is checked against this feature specific effects field. Looking for discussion
-> on matching the CXL spec defined effects with the FWCTL security policy.
-
-Hi Dave,
-
-Great to have this code.
-
-My main concern is that, once a feature is exposed by fwctl, it becomes ABI.
-Even with the taint, does that mean we can't remove it later? We
-may well have userspace code using fwctl that will break kernel driver
-support.
-
-As you probably know, for the scrub control you are using as an example,
-there is an ongoing effort to generalize that across multiple subsystems.
-It's a convenient test as a simple get/set feature in CXL, so maybe
-I'm reading too much into that choice.
-
-One piece of good feedback we got on that generalization effort was that
-this sort of RAS control should all be in one place (we were proposing
-a RAS control subsystem at the times, separate from EDAC). The key reason
-being to ensure it gets sufficient review by experts in the RAS aspects
-(rather than CXL or other implementation).
-
-Shiju's latest series puts it all in /sys/bus/edac/
-https://lore.kernel.org/linux-cxl/20240726160556.2079-1-shiju.jose@huawei.com/T/#t
-
-Even if we make the driver safe to someone else messing with the state under it
-(so basically make it stateless) we can't make the same guarantees for any
-user space code on top of that interface.  Can we rely on only one path ever
-being used? I'm not sure.
-
-We could in theory decide to expose all the stuff proposed for the EDAC / rascontrol
-as fwctl only, but that's going to get nasty as next set of features we plan to
-implement are memory repair related and in at least some cases those require the
-memory to be offlined if you don't want nasty side effects. I don't think there
-will be appetite for that sort of thing via fwctl.
-
-There are a bunch of other get/set features in the CXL spec and I expect to see
-more over time so I think this will be an ongoing discussion.
-
-Jonathan
-
-+CC Edac maintainers etc, as they may have views on using fwctl for this stuff.
-
-
-
+> Hi Dave,
 > 
-> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
-> 
-> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
-> 
-> ---
-> 
-> Dave Jiang (13):
->       cxl: Move mailbox related bits to the same context
->       cxl: Fix comment regarding cxl_query_cmd() return data
->       cxl: Refactor user ioctl command path from mds to mailbox
->       cxl: Add Get Supported Features command for kernel usage
->       cxl/test: Add Get Supported Features mailbox command support
->       cxl: Add Get Feature command support
->       cxl: Add Set Feature command support
->       fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
->       fwctl/cxl: Add support for get driver information
->       fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
->       fwctl/cxl: Add query commands software command for ->fw_rpc()
->       cxl/test: Add Get Feature support to cxl_test
->       cxl/test: Add Set Feature support to cxl_test
-> 
->  MAINTAINERS                  |   8 +
->  drivers/cxl/core/core.h      |   9 +-
->  drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
->  drivers/cxl/core/memdev.c    |  78 +++++---
->  drivers/cxl/cxlmem.h         | 141 +++------------
->  drivers/cxl/pci.c            |  68 ++++---
->  drivers/cxl/pmem.c           |  10 +-
->  drivers/cxl/security.c       |  18 +-
->  drivers/fwctl/Kconfig        |   9 +
->  drivers/fwctl/Makefile       |   1 +
->  drivers/fwctl/cxl/Makefile   |   4 +
->  drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
->  include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
->  include/uapi/fwctl/cxl.h     |  92 ++++++++++
->  include/uapi/fwctl/fwctl.h   |   1 +
->  include/uapi/linux/cxl_mem.h |   3 +
->  tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
->  17 files changed, 1515 insertions(+), 275 deletions(-)
+> I see this landed in linux-next, but is not currently in Linus' tree for 6.11.
+> Will you be able to have this pulled during the merge window?
+> I'm trying to eradicate all of these warnings before 6.11 rc-final.
 
+This landed yesterday.
+Ira
