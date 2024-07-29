@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8F13D8B8;
-	Mon, 29 Jul 2024 08:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5655D13B597;
+	Mon, 29 Jul 2024 08:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722242796; cv=none; b=WI5yX8RXmyEh0tQVJVV3eLu1QadrGLxs0dmGvJlmPadjgFuoi+mj6M8rwrSwXaGNCRVB3T15HOBpzj+odY3xHEWpdkXZcnW89yURBy5ZYRtwWLRUsZYoJQRsiOGQ4FQg4lgbuDEwcw8A1Ij9I16MAWbxoaiIVf7k16m5MCOJ6G8=
+	t=1722242799; cv=none; b=BSB2boTOS9Y6Qx/6CyFxdLs1+GKco/gGlMzuTM8DhxB0uQMynaUKCIJrEgz3fSEzbYukKONUhoQ26wXgoq7x3k70TR5lkOGlUGLjd9Rqeku+zOhq9ml5s6FGCIichDVlIYyr/gN5mxxGrxAqSOXsXaJpj4AuCr5fdajio3t3muI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722242796; c=relaxed/simple;
-	bh=Rc+FUVCpEEGnIoQecKfuSEkIqJi6i4jv0E4N2CMhCW4=;
+	s=arc-20240116; t=1722242799; c=relaxed/simple;
+	bh=nReScesO0VsDDOh0NefNC0i7f2oCC3fkJxj/Ji3q3E4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lEWIy9FzcDiDEdKLIFG4HXiiUsk+xXlV3xIFVj3fO1zPVo/p1/f9vSruu2/rjc35RBI4+2Do7hH7L66Gu1PPJbtgcYL56xcMsEqkRQKrG+3f6VGiPqWQQ+CPIpWlPdIHBBBlCDlxnpiBkyWIIVrN9VIS7f7tmXk9AS2NH7f8FbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gb/CHhjZ; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=D1+Xl78VMpzmil/I+bsPVePgP42LnywxoTwtDVVWkiydlkcPvdZaAbBnehqE60//CCD3uQhkadfeM/xYNlzHs0CmWQZc+FFQ6U+Q2tIg0Y9HV3Zf5miXqzNehwBIMdBBMpw96NjQIgZmidw3Bv4EiArmm9IJqW24D3nHww1SS1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lCD4ZTFT; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gb/CHhjZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lCD4ZTFT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722242795; x=1753778795;
+  t=1722242797; x=1753778797;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Rc+FUVCpEEGnIoQecKfuSEkIqJi6i4jv0E4N2CMhCW4=;
-  b=Gb/CHhjZSBH/xopGgGwtiEH3x+fwHMWungCjrsHYJA9LN+znfPUKyoUh
-   YkF3aB+l1MUdYwe01Hw3fcpgSXNwUZ/MKdbtEP5iNzbkQuaAGjCfTeQh4
-   wFz58qGqBGQDG63g7HUFuWNtV5E5rQH3w/n1u90XPr58CJfmUxoe7kVvG
-   wG8fg7pkhYDkiVAiFMgU++A496Sv4JUZfz2cUPHn4Gje6sk1gT2G+azby
-   qcVYk2Cy2f+mtfvcZE71BE5+66U8JM5FDWSw5bj7SWpH2c3E/yqX6CLGA
-   NfaYrmSl1wgSRWoe2nDXvQ7USk6UPrz3/Lu3yHJQJerGoOYCr2/BVYK9a
+  bh=nReScesO0VsDDOh0NefNC0i7f2oCC3fkJxj/Ji3q3E4=;
+  b=lCD4ZTFTjFqFFIMqBgfpmC5nCqoJ9iodXOgcSOuFj9+Q/wmq0TmLISmO
+   R/wfBrf5W2thT+yoO6Rpc7f4lT5CxFIpVlEWjsNo3c/NKTchGRjfGgfr0
+   8AE/h5NZrPcNRRtyjcqi89O3nOdsYBJsxjK+rmwWdYdWiz2kghtCdNZDD
+   2oxvxhOsNX78zXtODQ0cs55OF8FatXvM5AUGgQmt3VIrX9B1WrkmzBJPE
+   BGAS7f8r4DOj8q11Hm68TAb4FrD2Rlf9kalKdUjSOgWgRPHif3dYKmraD
+   rD3ja612uxmkHRC5Srs3Gfr5hHD2jjG6CboYyiBhAUDqnRuTDduTMfjnz
    w==;
-X-CSE-ConnectionGUID: JQHScIy+TmK+5DQWQ1yv8w==
-X-CSE-MsgGUID: 2vuZc4JHS1qZahFy1McqUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="30647125"
+X-CSE-ConnectionGUID: 6T4nw+vbRFaFOsv/m4DQ1g==
+X-CSE-MsgGUID: SOD+XaPqTeGChjUszWVoYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="30647134"
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="30647125"
+   d="scan'208";a="30647134"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:34 -0700
-X-CSE-ConnectionGUID: qVZeHLmHQOWYct+DBOfzww==
-X-CSE-MsgGUID: 6Whi9fOuTAW+Skh6HaeD8g==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:37 -0700
+X-CSE-ConnectionGUID: 227TU7ltQGaatZUrsa16QQ==
+X-CSE-MsgGUID: Y8vyPdVCSK2AgiR4IpN52Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="84856215"
+   d="scan'208";a="84856220"
 Received: from yhuang6-mobl2.sh.intel.com ([10.238.6.133])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:32 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:46:35 -0700
 From: Huang Ying <ying.huang@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>,
 	Dave Jiang <dave.jiang@intel.com>
@@ -55,9 +55,9 @@ Cc: linux-cxl@vger.kernel.org,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH 2/3] cxl: Set target type of region with that of root decoder
-Date: Mon, 29 Jul 2024 16:46:10 +0800
-Message-Id: <20240729084611.502889-3-ying.huang@intel.com>
+Subject: [PATCH 3/3] cxl: Avoid to create dax regions for type2 accelerators
+Date: Mon, 29 Jul 2024 16:46:11 +0800
+Message-Id: <20240729084611.502889-4-ying.huang@intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240729084611.502889-1-ying.huang@intel.com>
 References: <20240729084611.502889-1-ying.huang@intel.com>
@@ -69,13 +69,20 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now, the target type of region is hard-coded to HOSTONLYMEM, because
-only type3 expanders are supported.  To support type2 accelerators,
-set the target type of region root decoder with that of the root
-decoder.
+The memory range of a type2 accelerator should be managed by the type2
+accelerator specific driver instead of the common dax region drivers,
+as discussed in [1].
+
+[1] https://lore.kernel.org/linux-cxl/66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch/
+
+So, in this patch, we skip dax regions creation for type2 accelerator
+device memory regions.
+
+Based on: https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
 
 Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
@@ -84,23 +91,28 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
 Cc: Alejandro Lucero <alucerop@amd.com>
 ---
- drivers/cxl/core/region.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cxl/core/region.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 21ad5f242875..9a483c8a32fd 100644
+index 9a483c8a32fd..b37e12bb4a35 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -2545,7 +2545,8 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- 		return ERR_PTR(-EBUSY);
- 	}
- 
--	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
-+	return devm_cxl_add_region(cxlrd, id, mode,
-+				   cxlrd->cxlsd.cxld.target_type);
- }
- 
- static ssize_t create_pmem_region_store(struct device *dev,
+@@ -3435,6 +3435,14 @@ static int cxl_region_probe(struct device *dev)
+ 					p->res->start, p->res->end, cxlr,
+ 					is_system_ram) > 0)
+ 			return 0;
++		/*
++		 * HDM-D[B] (device-memory) regions have accelerator
++		 * specific usage, skip device-dax registration.
++		 */
++		if (cxlr->type == CXL_DECODER_DEVMEM)
++			return 0;
++
++		/* HDM-H routes to device-dax */
+ 		return devm_cxl_add_dax_region(cxlr);
+ 	default:
+ 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
 -- 
 2.39.2
 
