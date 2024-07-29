@@ -1,87 +1,77 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB29B187860;
-	Mon, 29 Jul 2024 14:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C9155751;
+	Mon, 29 Jul 2024 14:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722263278; cv=none; b=me+RYxMksE3VORYmHzJYa2A0hmsM7+Q0ywFgahuYKUiPTOZnQULgPkqBDqFQzFWnnj0X4CW5nWjV0J+pLXeGOzB0O4+Y4T0HQ4xsy69EcWDM4LwAVvzcNcb5FSjKR+egh3HThxQFkRxAbCm47UPkz3JCLSAs73KGf4RikilWJus=
+	t=1722263389; cv=none; b=IQ7vIgePolfuXnYPlqbVnfBE7LXO0faiSdvs0HDE5PMWZQV8aAwEnzSn8ak3vLVxn3p+SXTRk125BUWjTgB2YGTJLMsHOyk841LBVLR4ePERV6/nUiRamEA/6zrqweEG9jCpEmEgXJuq7PFt8m/OhEKwlgGz3pXye7Ir8EjalG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722263278; c=relaxed/simple;
-	bh=vDORW42DYLZQwaRz1JRe/4e0oi7EknicdwRepT7tAko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MSiGP4CiPCbLRVJm64TjTMsGniScpZMKIu/Rj6SMWzrtNZUUZkT5Y9J0167ilTA/htbQHFBN94819haT2CWhXJLBd70hlNaJlgSwI4tPVRaIkWdAvXVzizvkZoLGgitmqu9DIEThEpMhALPuJ2OhYiXAgXteb8QH6AK29IyK+Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 921723000008D;
-	Mon, 29 Jul 2024 16:27:47 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7C259357A59; Mon, 29 Jul 2024 16:27:47 +0200 (CEST)
-Date: Mon, 29 Jul 2024 16:27:47 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v2 06/18] crypto: ecdsa - Support P1363 signature encoding
-Message-ID: <Zqem48z_qluJSI6j@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
- <d143bb81c65064654af926317f69e6578cf0cdb9.1719771133.git.lukas@wunner.de>
- <ZoHXyGwRzVvYkcTP@gondor.apana.org.au>
+	s=arc-20240116; t=1722263389; c=relaxed/simple;
+	bh=uCvVv6yXucHR1Y2yaWt2UAblfSqvE+gWtsWYbiOx0H4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lSe/TPwvq0xU22AzAq9PFx7p3aeTX+sY2/gX/+3RljCPWSuGXOkKJ+a3GGLI6uqRQJoYAFE2AbGLzV09Oi+H5ggrSlk8K7DwVlS52qoe50F0MxLWscIeVvjGjYFKmPgEi+z/o2yeJFe7jr5+IDcvjCCkUd42ORQBDGDrEni1lec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WXgfn1CPNz6K9jB;
+	Mon, 29 Jul 2024 22:27:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id D6467140B30;
+	Mon, 29 Jul 2024 22:29:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 29 Jul
+ 2024 15:29:44 +0100
+Date: Mon, 29 Jul 2024 15:29:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Dan Williams <dan.j.williams@intel.com>, <ksummit@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <jgg@nvidia.com>, <shiju.jose@huawei.com>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240729152943.000009af@Huawei.com>
+In-Reply-To: <20240729133839.GDZqebX1LXB-Pt7_iO@fat_crate.local>
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240729134512.0000487f@Huawei.com>
+	<20240729133839.GDZqebX1LXB-Pt7_iO@fat_crate.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoHXyGwRzVvYkcTP@gondor.apana.org.au>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Jul 01, 2024 at 08:10:16AM +1000, Herbert Xu wrote:
-> This should be implemented as a template.  Change ecdsa to use a
-> "raw" encoding for r/s and then implement x962 and p1363 as templates
-> which converts their respective encodings to the raw one.  You
-> would then use "x962(ecdsa-nist-XXX)" or "p1363(ecdsa-nist-XXX)"
-> to pick the encoding.
+On Mon, 29 Jul 2024 15:38:39 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-Understood, thank you for pointing me in the right direction.
+> On Mon, Jul 29, 2024 at 01:45:12PM +0100, Jonathan Cameron wrote:
+> > One of the key bits of feedback we've had on that series is that it
+> > should be integrated with EDAC.  Part of the reason being need to get
+> > appropriate RAS expert review.  
+> 
+> If you mean me with that, my only question back then was: if you're going to
+> integrate it somewhere and instead of defining something completely new - you
+> can simply reuse what's there. That's why I suggested EDAC.
 
-I've just submitted a separate series for templatizing ecdsa
-signature decoding:
+Ah fair enough. I'd taken stronger meaning from what you said than
+you intended. Thanks for the clarification.
 
-https://lore.kernel.org/r/cover.1722260176.git.lukas@wunner.de/
+> 
+> IOW, the question becomes, why should it be a completely new thing and not
+> part of EDAC?
 
-Please let me know if this is what you had in mind.
+So that particular feedback perhaps doesn't apply here.
 
-Thanks!
+I still have a concern with things ending up in fwctl that
+are later generalized and how that process can happen.
 
-Lukas
+Jonathan
