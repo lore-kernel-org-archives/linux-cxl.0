@@ -1,217 +1,403 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074E618FDC4;
-	Mon, 29 Jul 2024 22:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722292639; cv=fail; b=ZZCN9B0qZUOy44S6S0HIOC3jCUOLZj0LUp3HZf/YmHJ4OHkLTBZ0fTN3ut32aSOQk8AT67+vzK/zwc2s23vTQoahHBWGAbBXGhdO+4CWYvw8y1S/Pk4ztw/8s4p6l+CobV65qbXjaHz3WawdLkgTtfdQ44SXc4mjANsd+YRfZ1Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722292639; c=relaxed/simple;
-	bh=FsXQM/1sNJjXNQH2NGU4UAmYIcwP/NCLarnnykauye8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=H0D8CDil8vR/Be57tY/hf7FcdJX2u1Bas/nRkZkpMUneGYHLavSHd5bMS0cvewjDSGa8rTDKGY4zjH7+Q0H1kVvDqcSIjGbjsQXm9LUeaM/M1Y6JN3D1N2fwYtUhMCADZlHOGZui0SMXb59oDP0HQY9dBAQLoaFrhg2wOzIUPcA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mxEvYNi1; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678F81487D8
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jul 2024 03:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722310926; cv=none; b=cFLJSqh7YoyF/dA/Jwt0QkV6/jlupHUJx3yFuYNYswSlxsTTidHkyiRdxAaKKxEfPuXQ4njJsruvyGx/7VhDSuVLga+u/J0z7VkCZMDhVD2R7bP+mYvP0yev9m9kI9fXTAkWLtaalyZknQt8Fzs0VjIbEQv0p/yoaXU27TjN8pU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722310926; c=relaxed/simple;
+	bh=+Fd4Rh2/h8wz/BpQDpSSIC9geFdOERdLMMWd8XuFmSg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Tnb1LgzjH1VVAWNCK9Drb0m0CqT1gEZ0CcmQYMPXdsP2aSO8/U5xAgCZ6H19JB4dbNVn7uiSi2kSPd9IWJyng/GA892JX9uLmZ2h0z5NxnHnfoTC5f3stsM7+ZntyBTQxKuHAKWMnSYCxnOAiDZppLqkN79KY6Z2stJqR2wVp+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jtq6FR4R; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mxEvYNi1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722292638; x=1753828638;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=FsXQM/1sNJjXNQH2NGU4UAmYIcwP/NCLarnnykauye8=;
-  b=mxEvYNi104ATTwilFfc1jUCnMeFSghxX7FNx8mS4Yq7oDlV0yGIAPpYS
-   +Vlx4upq7wNDmSX3NMFB7wofb6mQayO8MDcOJW54J7hGnw1tbG8Nt7vOo
-   /irB0sDXBbtWXanLFCmj/Qh5yiQks4dez41KvKwZ/hUAA65WhJz97XuRw
-   SP5LMmJqVChqGe8Vh1bh/Y5M1t4T4cgL7PxQsBmukCsADKBE2q110lrHU
-   hYgQLLL4yMpP3Hw2tEoWCYLHT0WSZ9saBpslD1cn1rPvNe5gEfLnnfHEg
-   OAjbUb6y/OS7Nl8VUebUYCNxwYQ+zfdlAoSGXw0lSjMU4osFriOLOBTt/
-   g==;
-X-CSE-ConnectionGUID: ygWsFDEdS1OUKSXJwb3qTA==
-X-CSE-MsgGUID: SMmyKbxvQwS1RpcLfLQbng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11148"; a="20206796"
-X-IronPort-AV: E=Sophos;i="6.09,247,1716274800"; 
-   d="scan'208";a="20206796"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 15:37:18 -0700
-X-CSE-ConnectionGUID: 0vXWiET6SQynTCj88hIrGw==
-X-CSE-MsgGUID: DdCyr1sKRguHW2YvL9LMAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,247,1716274800"; 
-   d="scan'208";a="54006802"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jul 2024 15:37:17 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 29 Jul 2024 15:37:16 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 29 Jul 2024 15:37:16 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 29 Jul 2024 15:37:16 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 29 Jul 2024 15:37:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sdIs3AReN7uKOESr8hd2I8GJV/Axfb+2561ikMFnzurkxvTxskxc2Ajw0GgiMAejW4q0H2gkY7zICVThzSLsrpOtrj0EHkDqRHusoQJzAp+oIBlKA5qx8U4ZyUswiBoj5SXI3fzLXcW7VNf+CRGPkpVl4DIXArU3lXwFdamMrezJTUx2YUrp/8gw+B5FLG9NccWnyVu7ioGP5hK1N/M+ueSxR8CHGhUXKbIFueA0qPToqxR3j7EgAcYfULVfYte8eQ+WdRMhSt0gqi4glOs8qNDrQAEEsrcLidxtcsQVV8PpaQ9JKCp8ZaZZniRF8nRDSe33I5q48C1ATqR7/h+xHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Iq9gHLaFeFeBbHhht+GsDZNBrDe97cq5MS4qBvjBBa8=;
- b=KkpH4wAdT6xgM6NvytqkezI85FiGgCwp6kD/DH2daqWWTWGQo8m/0NWdawrzlxia8RtteIaF3nSrB2jdXtcjHFGh3+0zHaDawaa0I9lOjInOorufKvsj/dhmhqcmbRGV9TdfkIP2TT7UkN00TJVLdneV33ATdEtroItDYaEPszkxXuqYz9okw6px4MYkp5+RtcooJmUh8gJ2bbuDIiuHNd00k7xTh6kp3ox0KFflZxMes4qOli/uSWTx5itWP+XR33o0WO41iQXcp+ChCCpKAzhGhvMQG8u/iZWSpudl7uuuOsQW/J7G7JC3L5cBb4ecoQyNQxKHx7g1fD3zI8wmMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CO1PR11MB5169.namprd11.prod.outlook.com (2603:10b6:303:95::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.28; Mon, 29 Jul
- 2024 22:37:13 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7807.009; Mon, 29 Jul 2024
- 22:37:13 +0000
-Date: Mon, 29 Jul 2024 15:37:10 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-CC: Dan Williams <dan.j.williams@intel.com>, <ksummit@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <shiju.jose@huawei.com>, Borislav Petkov
-	<bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <66a81996d4154_2142c29464@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <20240729134512.0000487f@Huawei.com>
- <20240729154203.GF3371438@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240729154203.GF3371438@nvidia.com>
-X-ClientProxiedBy: MW4PR04CA0074.namprd04.prod.outlook.com
- (2603:10b6:303:6b::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jtq6FR4R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722310923;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=VIurG/I6X1xJGxA4OGGNgZiX3WynN6bnaOib3kjUdN0=;
+	b=Jtq6FR4R/USRmsDdWX2MTELoGV96ydfIAli9yJKV2ZHbFp22AoAL1e+8kWYX+jpbVN3EPH
+	oRipEQA2S2iWyRdWjF3jn9ROJBBqt4BmkDx/qnDa4YUrQIHn97dnjneku+suPAxxV4XU2D
+	bwNoLiqRu3qbVft5f+doLf8+5Xs82fU=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-106-7AM1cBSNP_GjMwmKsK-bew-1; Mon, 29 Jul 2024 23:41:59 -0400
+X-MC-Unique: 7AM1cBSNP_GjMwmKsK-bew-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2cb6b642c49so3932073a91.1
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Jul 2024 20:41:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722310919; x=1722915719;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VIurG/I6X1xJGxA4OGGNgZiX3WynN6bnaOib3kjUdN0=;
+        b=nz6VuHpLI3VkVo7XvgpcfVQpjaFsUalpXPWt+YD0zDwgiJTrVG+b0QNALHofTIo8dB
+         ZrnPhiws1o6FllzeJTaiA0LE8tZw2WoPu4e+KJys8vfJExHKiFWZ4F2pLoeT3JZaXjcY
+         8a+geiUecGsZ1SQStFSuQLATakN9oxq1WgyIHJFdBH3NXX7lQCW1XWcsY4rLlPy4aoNx
+         qTDtG588gS0PUBejBJgRAbhYlskKaSaMy1GeML+g82hA59glIDM+EhIjyB6revSDoKas
+         DRZ6bHl9hB9zVIzmJ6dY7FRVWj3jA9rsZ3QoICDzTU0/o/QRI+7xEWoP6Oe5KJXfY5kp
+         LfFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVJbZb2d27RN1tl3pKwJORwS7cKHs5bAxYqvnaM0WthKFIM3AydCohMWpAoXVyi9AZAZwfz7CiMiAwAG8CisSG1Cugkj/0R3Ha
+X-Gm-Message-State: AOJu0YxZ4TWEDerhEsXRkri03nPgnEgEQOC1iKjuZ/GiZCkmQ7s1URZm
+	1Y0Q69M9TTUxVHF7gn5QWSHiMyZRagqIaFbA03b/J/pcorVahOjHiBuURAe7s4o7VWjqAFHhE/W
+	7PdXCePqTcyL+UC7aMBQaaXKvSRW4cZxM4Su89GGsigOUrvfmT/rMyajTR/0LqZvqC97grZF9yO
+	/I+5DNt8gEZZAhaen3yPeCJ1Au1SkSXbKI
+X-Received: by 2002:a17:90a:8c92:b0:2c2:c3f5:33c3 with SMTP id 98e67ed59e1d1-2cfcaaddff4mr1230440a91.6.1722310918208;
+        Mon, 29 Jul 2024 20:41:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECs9BdnRNCz/YKVJpXFqayCaKI6M7WUPhRBN+ju/SBXUpRcOS7eckZ106hc6Ut74SbtmUjJEVWra/pxTHG8Uk=
+X-Received: by 2002:a17:90a:8c92:b0:2c2:c3f5:33c3 with SMTP id
+ 98e67ed59e1d1-2cfcaaddff4mr1230405a91.6.1722310917667; Mon, 29 Jul 2024
+ 20:41:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB5169:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ded9be8-7b75-47de-ad6d-08dcb01efdd0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?oMNQhL4orPx73ct0kRm8XErXhslReLXpObmcW90pnHJNWMIXo5CGPv+EFnqY?=
- =?us-ascii?Q?6OVytnD/vzVntQJR/rf3gmGu22H4ckCGmF+zVKeB8myKqOtlaDePtLdsq7Sb?=
- =?us-ascii?Q?r6AA7TMJ0WYl+ygIQX/qWDCHJZ2DBYbWoK4S7oLlSVdjOYuqhAbBP37Xv/2W?=
- =?us-ascii?Q?OwNaexYIFj6yZjCpvIuV/t6caAH65sFiUlgRGWexB48eIYA0wnhmGboa2pFh?=
- =?us-ascii?Q?LGKSQnU8Kokvo5Lmg+dTynhS8svqK2xecs3HpkqTjqH1YVorD0xJrVjUidWV?=
- =?us-ascii?Q?YHWAPg87av43fkXuzztpJeZDzSGi8uMSqB3l7bs4W6B1EdV9gEYQMrciKWgS?=
- =?us-ascii?Q?IHKTmELgahXhiYuU2LcRH1TfblP5yXGEd58LKYo04JrocnUQmoXobmvjNz3u?=
- =?us-ascii?Q?oLAX5tbOgEQ8M6p0oiULqMXjYQHm7ab25OEVmzFXmeS8xivK4oN64+y00i5j?=
- =?us-ascii?Q?VL62duldKCaTFNhs73yTYBckD4UsBSbsuU8MLUvP0yjxrgD/RXBtTsfWVNsT?=
- =?us-ascii?Q?837kNy2aEOebIOueIpExpNsA/gb62eojVp+jUpuACWVN/jbHUQuCwbZlQkga?=
- =?us-ascii?Q?9v47Lb2qYUQ6IsvovMOUSB0DJPr+VI4SOHsXl7yBVuZ1vEu3g6EjnP3LKpp0?=
- =?us-ascii?Q?O4I/l70Mm5t51WQvrJeCyEt4SgkWVA73vtzs18UG4W0+hNlsG8geYndm+9uz?=
- =?us-ascii?Q?L5P7RqrpCyLpQ/4Y0Xy5QDY+IWybJirc8Jhpdey6YzQYhK7xe9D6lOMTFus2?=
- =?us-ascii?Q?h+XB+GxNGyxHznYgE4wMxodTddBs9BBi4WdQxrC8qGmHPCvkMh6AP1fC2Z8G?=
- =?us-ascii?Q?fwvQyC0zPn0XS0u8LPKXJFStkxPze2PhCgdhrPMRUXaHBK1r71qXlANzqUUr?=
- =?us-ascii?Q?SKLYQ9EBvk//Qnyr8UjMy2xz7aLlcpimdRBYJyvUkemcvZ51AP7aF8AuavBG?=
- =?us-ascii?Q?+Pdr0A89ILVZwnA9bxCYjLHdOhv8dRfeoCICD0XH6KGeQwqPldwNA4zajg0Z?=
- =?us-ascii?Q?FyoqTIZ2lokfmDGgHe63CdeuTho427KmOlLa9ZYD9YmeVgnIL/9y1Do4cc/C?=
- =?us-ascii?Q?0GyEPm15078huVskEi1AWwYmKKiRVgYt5Vf9UBxHuWLs6rSK4qylF5DsTVYF?=
- =?us-ascii?Q?Mwmxe0B0iJwFwKx/+BaXOvN+sjOWHRS7YxIFeNCN/l1MicD/sgiRgKbAY9Lv?=
- =?us-ascii?Q?ovABNmwHg1lDlK83PCc8fteNflbJurHfvy1kGtXNKop+N89xejilaDUVTog/?=
- =?us-ascii?Q?LvSX94E/p2tzSdrxZ9eKtTWux+/niDtMW+pKN0ymMyhvqaPH0MKosZg8PnpZ?=
- =?us-ascii?Q?eIqa3WovI3hNejWzHgBc4fa7VgFkNBp2ocUAU3e+yzufYg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NKzPXXDgtLh1QBjCc5Y1Jwu5elREMAjzc1vIs9/hCu131LhuUzRh8vohiQIN?=
- =?us-ascii?Q?zKuE/heB9fiyC7+MA8hxIdizx+3N3MN8ZXVx4Dm+z3IuV/W+U4EhJ00hu9eh?=
- =?us-ascii?Q?M+qK2zZp4lg7pwMZZ3dW9CmZNNI5az32E6S6/BF9iwDCG2wSbAr5/SjyqgoM?=
- =?us-ascii?Q?ZuF3+kbwX/DpAArPgb4hSOFr7ilKHVFlKXxlK8dc54+emkvvRmJJRhF5qzmK?=
- =?us-ascii?Q?uT182krzB1qVNeFCooXnyrcUlbZeFwWyFlUcnSHVv5Njku2UoVCo/u1L3Oj5?=
- =?us-ascii?Q?CjsTjTBNWLHg5oaYIgsme79BXPsEEUA9Zb0gLUZe0fZ+l88KntEIoMr699qU?=
- =?us-ascii?Q?hEHMocbNAh0iSzk/KFUXup2dYAJx8DXttieAUywrXo2q/XRVqXizFhXAnKsD?=
- =?us-ascii?Q?KMnF1MGIpUQOiazf5pozR6oI6+PapgeyQ8WfFECDToi7o7i+X5309m2Z8Dja?=
- =?us-ascii?Q?d76vgQVEe7d4oJ4NhjinF5G4YTLzHDyKTbmTCnRIylHEycQ/h5UJSajLLOzr?=
- =?us-ascii?Q?+4HulmDEqRpS0fUXyDzL+qQvtx7c5BfsKySuKF1fz2pomHTAe2A0rNhWJBrn?=
- =?us-ascii?Q?6xhFWWsDXmilH/4O678ovAIiOOlpBv/0gRz+mGuQxgIagIMF3NPwT+6JpOJ9?=
- =?us-ascii?Q?XZptoaXBQeciPjCkFMNJM6oTT0z3/T8lstqgUM3S+6vV9tl3KpRqjJB4M0nE?=
- =?us-ascii?Q?ifhUFIr+4EYpSuZYYaGPuztaNqXZH/pnCTXnUVVKrE77BCAG65NYEsqzR/NI?=
- =?us-ascii?Q?WKyiH7haHte29ivh9nLBHAwUeB4Lm2wrv2ifTfVoupp0DnSvQxMxD7t6lzjF?=
- =?us-ascii?Q?yAUEJ22GNgxrUmhsnORC+ccmhxQXxDVWvZ/thlORON51Si1+/02EA8S1/7JO?=
- =?us-ascii?Q?aPCC+bELl2A6d6LpxjyBrLganp7p8Sbem7mMrRq/aybX2eNP2kSHJWmAvuV8?=
- =?us-ascii?Q?DQ+1hiXDFwjOBYwbNwDVW1yfFNZIyF25u+Vr9WNMSREWEvzn25DRVfEVxkHs?=
- =?us-ascii?Q?IBl6gfNxSSg4egxsT5FgAGzDHu+G52QysQBkqtGT0a9T1iW/7GusIw/Vrcpz?=
- =?us-ascii?Q?hERj+75VrlucesApXrR3b31OtLxLofy1slju0BJrD9v89GTcDmvQAF7YaY4i?=
- =?us-ascii?Q?fFJiAyeEn0j/qzd712zx3in1/AQGYxgpj6XB2i75ZX5O+Da6gau/RlDc4h60?=
- =?us-ascii?Q?EprIvhbcxo0wmUkR2xGfhX6rdfRew2W8xCQwJVJxuoC8LnckhCDQg0bbPuho?=
- =?us-ascii?Q?57l/54BAfjtfMuvwIO3s5u8xfOnpa5esWK9/fOFd2AeR60OhKQm7Qt0R+s42?=
- =?us-ascii?Q?YLNRlPqsnj6px7x2g935G1PA+EiqIf5pjs4RycThx7K3DWb+nJLWE6T1nebR?=
- =?us-ascii?Q?HFg/euU4Q0Qk4e2Bk0e/h8K09V0nwh2yuYRknGw9mj1Aa/5sWZFhImOCnr9M?=
- =?us-ascii?Q?o72vjBwoKjD6CteWU1sJC5dE7+FE3/rRfM72HDqk0VvSQyfMdHKMvh5o5CEY?=
- =?us-ascii?Q?5kz8fsAtQPIh3bvYcqZUbMhDKoo0wAhxSuEi0X20S/7eQ8S4HIenqXraOMz/?=
- =?us-ascii?Q?8FyzDH+g8hBxtNkYjuAa/L6rlWJ2KxO2fUmYSIDXZOArDPoQjBHbCD7d+4nr?=
- =?us-ascii?Q?2g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ded9be8-7b75-47de-ad6d-08dcb01efdd0
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2024 22:37:13.6170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u4z1hbhsZf9RyatyINAulQU2L1B9OfjDg4utrj6/EBdm2BAgL/AM6MzvEMRR4cF42ZSYUYeU9pDvQH+sIH2EkTGrAqFctT9keRtZgURTlic=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5169
-X-OriginatorOrg: intel.com
+From: Yi Zhang <yi.zhang@redhat.com>
+Date: Tue, 30 Jul 2024 11:41:44 +0800
+Message-ID: <CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com>
+Subject: [bug report][regression] Oops: general protection fault observed
+ after destroy the devdax
+To: Linux NVDIMM <nvdimm@lists.linux.dev>, linux-cxl@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Jason Gunthorpe wrote:
-[..]
-> > We could say it can only be used for features we have 'opted' in +
-> > vendor defined features, but I'm not sure that helps.  If a vendor
-> > defines a feature for generation A, and does what we want them to by
-> > proposing a spec addition they use in generation B, we would want a
-> > path to single upstream interface for both generations.  So I don't
-> > think restricting this to particular classes of command helps us.
-> 
-> My expectation for fwctl was that it would own things that are
-> reasonably sharable by the kernel and userspace.
-> 
-> As an example, instead of a turning on a feature dynamically at run
-> time, you'd want to instead tell the FW that on next reboot that
-> feature will be forced on.
-> 
-> Another take would be things that are clearly contained to fwctl
-> multi-instance features where fwctl gets its own private thing that
-> cannot disturb the kernel.
-> 
-> I'm really not familiar with cxl to give any comment here - but
-> dynamically control the single global scrubber unit seems like a poor
-> fit to me.
+Hi
+I reproduced this issue on my two nvdimm servers with 6.11.0-rc1,
+please help check it and let me know if you need any testing for it,
+thanks.
 
-Right, one of the mistakes from NVDIMM that was corrected for CXL was to
-explicitly remove the passthrough capability for global state machine
-controls like scrubbing.
+# ndctl create-namespace -r region0 -m devdax -a 4k -s 12G
+{
+  "dev":"namespace0.0",
+  "mode":"devdax",
+  "map":"dev",
+  "size":"11.81 GiB (12.68 GB)",
+  "uuid":"0ddf6d2d-54cb-4a2b-ac72-bb9aec891bae",
+  "daxregion":{
+    "id":0,
+    "size":"11.81 GiB (12.68 GB)",
+    "align":4096,
+    "devices":[
+      {
+        "chardev":"dax0.0",
+        "size":"11.81 GiB (12.68 GB)",
+        "target_node":0,
+        "align":4096,
+        "mode":"devdax"
+      }
+    ]
+  },
+  "align":4096
+}
+# ndctl destroy-namespace all -r all -f
+Segmentation fault
 
-Many of the "Immediate Configuration Change" CXL commands fall into this
-bucket of things that may want to have a kernel-managed global view
-rather than let userspace and the kernel get into fights about the
-configuration. So, I think it is reasonable to say that scrub has a
-kernel interface that goes through EDAC and not fwctl.
+dmesg:
+[ 1408.632268] Oops: general protection fault, probably for
+non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
+PTI
+[ 1408.644006] KASAN: probably user-memory-access in range
+[0x000000000002b280-0x000000000002b287]
+[ 1408.652699] CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
+[ 1408.659571] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
+2.20.1 09/13/2023
+[ 1408.667136] RIP: 0010:mod_node_page_state+0x2a/0x110
+[ 1408.672112] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
+54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
+83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
+83 ee
+[ 1408.690856] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
+[ 1408.696088] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
+[ 1408.703222] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
+[ 1408.710353] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
+[ 1408.717486] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
+[ 1408.724619] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
+[ 1408.731750] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
+knlGS:0000000000000000
+[ 1408.739834] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1408.745581] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
+[ 1408.752713] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1408.759843] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1408.766976] PKRU: 55555554
+[ 1408.769690] Call Trace:
+[ 1408.772143]  <TASK>
+[ 1408.774248]  ? die_addr+0x3d/0xa0
+[ 1408.777577]  ? exc_general_protection+0x150/0x230
+[ 1408.782297]  ? asm_exc_general_protection+0x22/0x30
+[ 1408.787182]  ? mod_node_page_state+0x2a/0x110
+[ 1408.791548]  section_deactivate+0x519/0x780
+[ 1408.795740]  ? __pfx_section_deactivate+0x10/0x10
+[ 1408.800449]  __remove_pages+0x6c/0xa0
+[ 1408.804119]  arch_remove_memory+0x1a/0x70
+[ 1408.808141]  pageunmap_range+0x2ad/0x5e0
+[ 1408.812067]  memunmap_pages+0x320/0x5a0
+[ 1408.815909]  release_nodes+0xd6/0x170
+[ 1408.819581]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1408.823941]  devres_release_all+0x106/0x170
+[ 1408.828126]  ? __pfx_devres_release_all+0x10/0x10
+[ 1408.832834]  device_unbind_cleanup+0x16/0x1a0
+[ 1408.837198]  device_release_driver_internal+0x3d5/0x530
+[ 1408.842423]  ? klist_put+0xf7/0x170
+[ 1408.845916]  bus_remove_device+0x1ed/0x3f0
+[ 1408.850017]  device_del+0x33b/0x8c0
+[ 1408.853518]  ? __pfx_device_del+0x10/0x10
+[ 1408.857532]  unregister_dev_dax+0x112/0x210
+[ 1408.861722]  release_nodes+0xd6/0x170
+[ 1408.865387]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1408.869749]  devres_release_all+0x106/0x170
+[ 1408.873933]  ? __pfx_devres_release_all+0x10/0x10
+[ 1408.878643]  device_unbind_cleanup+0x16/0x1a0
+[ 1408.883007]  device_release_driver_internal+0x3d5/0x530
+[ 1408.888235]  ? __pfx_sysfs_kf_write+0x10/0x10
+[ 1408.892598]  unbind_store+0xdc/0xf0
+[ 1408.896093]  kernfs_fop_write_iter+0x358/0x530
+[ 1408.900539]  vfs_write+0x9b2/0xf60
+[ 1408.903954]  ? __pfx_vfs_write+0x10/0x10
+[ 1408.907891]  ? __fget_light+0x53/0x1e0
+[ 1408.911646]  ? __x64_sys_openat+0x11f/0x1e0
+[ 1408.915835]  ksys_write+0xf1/0x1d0
+[ 1408.919249]  ? __pfx_ksys_write+0x10/0x10
+[ 1408.923264]  do_syscall_64+0x8c/0x180
+[ 1408.926934]  ? __debug_check_no_obj_freed+0x253/0x520
+[ 1408.931997]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
+[ 1408.937405]  ? kasan_quarantine_put+0x109/0x220
+[ 1408.941944]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1408.946304]  ? kmem_cache_free+0x1a6/0x4c0
+[ 1408.950408]  ? do_sys_openat2+0x10a/0x160
+[ 1408.954424]  ? do_sys_openat2+0x10a/0x160
+[ 1408.958434]  ? __pfx_do_sys_openat2+0x10/0x10
+[ 1408.962794]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1408.967153]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
+[ 1408.972554]  ? __x64_sys_openat+0x11f/0x1e0
+[ 1408.976737]  ? __pfx___x64_sys_openat+0x10/0x10
+[ 1408.981269]  ? rcu_is_watching+0x11/0xb0
+[ 1408.985204]  ? lockdep_hardirqs_on_prepare+0x179/0x400
+[ 1408.990351]  ? do_syscall_64+0x98/0x180
+[ 1408.994191]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1408.998549]  ? do_syscall_64+0x98/0x180
+[ 1409.002386]  ? do_syscall_64+0x98/0x180
+[ 1409.006227]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1409.010585]  ? do_syscall_64+0x98/0x180
+[ 1409.014425]  ? lockdep_hardirqs_on_prepare+0x179/0x400
+[ 1409.019565]  ? do_syscall_64+0x98/0x180
+[ 1409.023401]  ? lockdep_hardirqs_on+0x78/0x100
+[ 1409.027763]  ? do_syscall_64+0x98/0x180
+[ 1409.031600]  ? do_syscall_64+0x98/0x180
+[ 1409.035439]  ? do_syscall_64+0x98/0x180
+[ 1409.039281]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[ 1409.044331] RIP: 0033:0x7f753c0fda57
+[ 1409.047911] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
+0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
+74 24
+[ 1409.066655] RSP: 002b:00007ffc19323e28 EFLAGS: 00000246 ORIG_RAX:
+0000000000000001
+[ 1409.074220] RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 00007f753c0fda57
+[ 1409.081352] RDX: 0000000000000007 RSI: 0000559f5901f740 RDI: 0000000000000003
+[ 1409.088483] RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffc19323d20
+[ 1409.095616] R10: 0000000000000000 R11: 0000000000000246 R12: 0000559f5901f740
+[ 1409.102748] R13: 00007ffc19323e90 R14: 00007f753c219120 R15: 0000559f5901fc30
+[ 1409.109887]  </TASK>
+[ 1409.112082] Modules linked in: kmem device_dax rpcsec_gss_krb5
+auth_rpcgss nfsv4 dns_resolver nfs lockd grace netfs rfkill sunrpc
+dm_multipath intel_rapl_msr intel_rapl_common intel_uncore_frequency
+intel_uncore_frequency_common skx_edac skx_edac_common
+x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm mgag200
+rapl cdc_ether iTCO_wdt dell_pc i2c_algo_bit iTCO_vendor_support
+ipmi_ssif usbnet acpi_power_meter drm_shmem_helper mei_me dell_smbios
+platform_profile intel_cstate dcdbas wmi_bmof dell_wmi_descriptor
+intel_uncore pcspkr mii drm_kms_helper i2c_i801 mei i2c_smbus
+intel_pch_thermal lpc_ich ipmi_si acpi_ipmi dax_pmem ipmi_devintf
+ipmi_msghandler drm fuse xfs libcrc32c sd_mod sg nd_pmem nd_btt
+crct10dif_pclmul crc32_pclmul crc32c_intel ahci ghash_clmulni_intel
+libahci bnxt_en megaraid_sas tg3 libata wmi nfit libnvdimm dm_mirror
+dm_region_hash dm_log dm_mod
+[ 1409.189120] ---[ end trace 0000000000000000 ]---
+[ 1409.245769] RIP: 0010:mod_node_page_state+0x2a/0x110
+[ 1409.250772] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
+54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
+83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
+83 ee
+[ 1409.269539] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
+[ 1409.274786] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
+[ 1409.281944] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
+[ 1409.289095] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
+[ 1409.296251] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
+[ 1409.303410] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
+[ 1409.310567] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
+knlGS:0000000000000000
+[ 1409.318680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1409.324450] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
+[ 1409.331607] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1409.338771] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1409.345936] PKRU: 55555554
+[ 1851.504826] ==================================================================
+[ 1851.512060] BUG: KASAN: slab-use-after-free in
+mutex_can_spin_on_owner+0x192/0x1c0
+[ 1851.519640] Read of size 4 at addr ffff88855e790034 by task
+kworker/u192:1/1821
 
-For the "anonymous" "Features" that advertise an "Immediate
-Configuration Change" effect those need CAP_SYS_RAWIO at a minimum,
-possibly a kernel taint, and/or compile time option to block them. Maybe
-that encourages more "Configuration Change after Reset" Set Feature
-capabilities which carry less risk of confusing a running kernel.
+[ 1851.528446] CPU: 41 UID: 0 PID: 1821 Comm: kworker/u192:1 Tainted:
+G      D            6.11.0-rc1 #1
+[ 1851.537580] Tainted: [D]=DIE
+[ 1851.540464] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
+2.20.1 09/13/2023
+[ 1851.548031] Workqueue: nfit acpi_nfit_scrub [nfit]
+[ 1851.552840] Call Trace:
+[ 1851.555292]  <TASK>
+[ 1851.557399]  dump_stack_lvl+0x7e/0xc0
+[ 1851.561073]  print_address_description.constprop.0+0x2c/0x3d0
+[ 1851.566829]  ? mutex_can_spin_on_owner+0x192/0x1c0
+[ 1851.571627]  print_report+0xb4/0x270
+[ 1851.575207]  ? mutex_can_spin_on_owner+0x192/0x1c0
+[ 1851.579999]  ? kasan_addr_to_slab+0x9/0xa0
+[ 1851.584098]  kasan_report+0x89/0xc0
+[ 1851.587591]  ? mutex_can_spin_on_owner+0x192/0x1c0
+[ 1851.592388]  mutex_can_spin_on_owner+0x192/0x1c0
+[ 1851.597012]  __mutex_lock+0x256/0x14a0
+[ 1851.600770]  ? try_to_wake_up+0x697/0x1060
+[ 1851.604881]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
+[ 1851.609958]  ? rcu_is_watching+0x11/0xb0
+[ 1851.613892]  ? lock_acquire+0x397/0x640
+[ 1851.617730]  ? __pfx___mutex_lock+0x10/0x10
+[ 1851.621916]  ? __pfx_lock_acquire+0x10/0x10
+[ 1851.626104]  ? do_raw_spin_trylock+0xb5/0x180
+[ 1851.630461]  ? __pfx_do_raw_spin_trylock+0x10/0x10
+[ 1851.635254]  ? rcu_is_watching+0x11/0xb0
+[ 1851.639180]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
+[ 1851.644249]  nd_device_notify+0x22/0xa0 [libnvdimm]
+[ 1851.649146]  child_notify+0x3d/0x60 [libnvdimm]
+[ 1851.653703]  ? __pfx_child_notify+0x10/0x10 [libnvdimm]
+[ 1851.658953]  device_for_each_child+0xd8/0x150
+[ 1851.663314]  ? kernfs_notify+0x113/0x2e0
+[ 1851.667248]  ? __pfx_device_for_each_child+0x10/0x10
+[ 1851.672213]  ? rcu_is_watching+0x11/0xb0
+[ 1851.676139]  ? trace_irq_enable.constprop.0+0x151/0x1c0
+[ 1851.681367]  nd_region_notify+0x80/0x1c0 [libnvdimm]
+[ 1851.686357]  ? __pfx_nd_region_notify+0x10/0x10 [libnvdimm]
+[ 1851.691959]  nvdimm_region_notify+0x82/0xb0 [libnvdimm]
+[ 1851.697206]  ars_complete+0x29e/0x410 [nfit]
+[ 1851.701488]  __acpi_nfit_scrub+0x1e8/0xc30 [nfit]
+[ 1851.706200]  ? acpi_nfit_query_poison+0x2ac/0x780 [nfit]
+[ 1851.711523]  ? __pfx___acpi_nfit_scrub+0x10/0x10 [nfit]
+[ 1851.716756]  ? __pfx_lock_acquire+0x10/0x10
+[ 1851.720944]  ? __pfx_acpi_nfit_query_poison+0x10/0x10 [nfit]
+[ 1851.726615]  acpi_nfit_scrub+0x43/0x1f0 [nfit]
+[ 1851.731064]  process_one_work+0x8d3/0x1920
+[ 1851.735178]  ? __pfx_process_one_work+0x10/0x10
+[ 1851.739716]  ? assign_work+0x16c/0x240
+[ 1851.743476]  worker_thread+0x583/0xce0
+[ 1851.747230]  ? __pfx_worker_thread+0x10/0x10
+[ 1851.751509]  kthread+0x2f3/0x3e0
+[ 1851.754748]  ? _raw_spin_unlock_irq+0x24/0x50
+[ 1851.759107]  ? __pfx_kthread+0x10/0x10
+[ 1851.762860]  ret_from_fork+0x2d/0x70
+[ 1851.766446]  ? __pfx_kthread+0x10/0x10
+[ 1851.770200]  ret_from_fork_asm+0x1a/0x30
+[ 1851.774138]  </TASK>
+
+[ 1851.777833] Allocated by task 1830:
+[ 1851.781326]  kasan_save_stack+0x20/0x40
+[ 1851.785164]  kasan_save_track+0x10/0x30
+[ 1851.789004]  __kasan_slab_alloc+0x55/0x70
+[ 1851.793016]  kmem_cache_alloc_node_noprof+0x16c/0x340
+[ 1851.798069]  dup_task_struct+0x34/0x680
+[ 1851.801909]  copy_process+0x358/0x5590
+[ 1851.805661]  kernel_clone+0xba/0x770
+[ 1851.809238]  __do_sys_clone+0xa1/0xe0
+[ 1851.812906]  do_syscall_64+0x8c/0x180
+[ 1851.816570]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+[ 1851.823121] Freed by task 0:
+[ 1851.826007]  kasan_save_stack+0x20/0x40
+[ 1851.829845]  kasan_save_track+0x10/0x30
+[ 1851.833687]  kasan_save_free_info+0x37/0x60
+[ 1851.837872]  __kasan_slab_free+0x109/0x190
+[ 1851.841971]  kmem_cache_free+0x1a6/0x4c0
+[ 1851.845897]  delayed_put_task_struct+0x1f7/0x2a0
+[ 1851.850517]  rcu_do_batch+0x3d6/0xf50
+[ 1851.854179]  rcu_core+0x3dd/0x5a0
+[ 1851.857499]  handle_softirqs+0x200/0x920
+[ 1851.861427]  __irq_exit_rcu+0xbc/0x210
+[ 1851.865177]  irq_exit_rcu+0xa/0x30
+[ 1851.868584]  sysvec_apic_timer_interrupt+0x93/0xc0
+[ 1851.873375]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+
+[ 1851.880015] Last potentially related work creation:
+[ 1851.884892]  kasan_save_stack+0x20/0x40
+[ 1851.888733]  __kasan_record_aux_stack+0x8e/0xa0
+[ 1851.893264]  __call_rcu_common.constprop.0+0xef/0x940
+[ 1851.898316]  wait_task_zombie+0x5b1/0x2050
+[ 1851.902416]  __do_wait+0x18c/0x710
+[ 1851.905820]  do_wait+0x1d2/0x500
+[ 1851.909053]  kernel_wait4+0xf2/0x1d0
+[ 1851.912633]  __do_sys_wait4+0xf4/0x100
+[ 1851.916383]  do_syscall_64+0x8c/0x180
+[ 1851.920050]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+[ 1851.926603] Second to last potentially related work creation:
+[ 1851.932346]  kasan_save_stack+0x20/0x40
+[ 1851.936188]  __kasan_record_aux_stack+0x8e/0xa0
+[ 1851.940720]  task_work_add+0x1dd/0x2a0
+[ 1851.944471]  sched_tick+0x2ac/0x950
+[ 1851.947965]  update_process_times+0x12e/0x190
+[ 1851.952322]  tick_nohz_handler+0x2ac/0x4a0
+[ 1851.956423]  __hrtimer_run_queues+0x558/0xb40
+[ 1851.960781]  hrtimer_interrupt+0x2e9/0x7a0
+[ 1851.964879]  __sysvec_apic_timer_interrupt+0x140/0x540
+[ 1851.970019]  sysvec_apic_timer_interrupt+0x8e/0xc0
+[ 1851.974810]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+
+[ 1851.981448] The buggy address belongs to the object at ffff88855e790000
+                which belongs to the cache task_struct of size 15752
+[ 1851.994126] The buggy address is located 52 bytes inside of
+                freed 15752-byte region [ffff88855e790000, ffff88855e793d88)
+
+[ 1852.007960] The buggy address belongs to the physical page:
+[ 1852.013531] page: refcount:1 mapcount:0 mapping:0000000000000000
+index:0x0 pfn:0x55e790
+[ 1852.021528] head: order:3 mapcount:0 entire_mapcount:0
+nr_pages_mapped:0 pincount:0
+[ 1852.029182] memcg:ffff8885ef0bad41
+[ 1852.032587] flags: 0x17ffffc0000040(head|node=0|zone=2|lastcpupid=0x1fffff)
+[ 1852.039545] page_type: 0xfdffffff(slab)
+[ 1852.043388] raw: 0017ffffc0000040 ffff888100052300 dead000000000122
+0000000000000000
+[ 1852.051124] raw: 0000000000000000 0000000000020002 00000001fdffffff
+ffff8885ef0bad41
+[ 1852.058863] head: 0017ffffc0000040 ffff888100052300
+dead000000000122 0000000000000000
+[ 1852.066687] head: 0000000000000000 0000000000020002
+00000001fdffffff ffff8885ef0bad41
+[ 1852.074514] head: 0017ffffc0000003 ffffea001579e401
+ffffffffffffffff 0000000000000000
+[ 1852.082339] head: 0000000000000008 0000000000000000
+00000000ffffffff 0000000000000000
+[ 1852.090164] page dumped because: kasan: bad access detected
+
+[ 1852.097236] Memory state around the buggy address:
+[ 1852.102027]  ffff88855e78ff00: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[ 1852.109245]  ffff88855e78ff80: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[ 1852.116466] >ffff88855e790000: fa fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[ 1852.123683]                                      ^
+[ 1852.128476]  ffff88855e790080: fb fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[ 1852.135694]  ffff88855e790100: fb fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[ 1852.142913] ==================================================================
+
+-- 
+Best Regards,
+  Yi Zhang
+
