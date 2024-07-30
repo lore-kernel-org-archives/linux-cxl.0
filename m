@@ -1,237 +1,162 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590EC14831F;
-	Tue, 30 Jul 2024 16:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4087C156F30;
+	Tue, 30 Jul 2024 17:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722357847; cv=none; b=UusPATecJ96u8BTZ4kVYFKrq3T0ccFUa9SBeoiDIfz9SRwgForsuB8Y+l1cnOEJg9DONxX7sL5SuJQ2//rZrVzpanS40xQa0YNx9NOPK5JkAkhZEFRIjElvNZujjE/GFkkj7R/flCY6Opi89grvzDSkCe+cFtpgN/uOv16ehePs=
+	t=1722358889; cv=none; b=j/w0ZqSILbYMftvqHH5YqxEdq0KKflG+w5PIR1LkcP1AcuJwARNL8+OMWOiOSPIgSbo0fTb2PEt0B4hXN+WvKKZGzDCkACxgpV/yErVcAcXLMetirh8xTAU2xL3xgi0Tcw3vcNCHXeCKEWKBk987be/aCfY4k89Mr6HBe/BsHI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722357847; c=relaxed/simple;
-	bh=3a6OvZo4Hj14qRFssrmzs6wWYxe5MMQzPlkSR22rbPo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MiTZqJWxpChHn72Y14BsP/vfMEDLPto9UycskV0+FeRJMRiq2JEOVVDPfdKEDCGSMe53Pu4Gb7I3YqsZE4c1xpPu89jPcKjsGByPLKDCVKJgTk947PWR9331qYhuh51jWKEhj4l/hTK793eLoQix6JKzVVYxvOMUjiOt1DQV05U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APykGfmu; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APykGfmu"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-65f9e25fffaso35804437b3.3;
-        Tue, 30 Jul 2024 09:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722357844; x=1722962644; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kp1ZetS0sXF1CjQKcb+ztjQ+Hp2ujG7Nc++ITl8dDtw=;
-        b=APykGfmuesax07hJMvBR1Ad6L4UriNJQc8HZaQKX6StNoSp/xQWohtAb5GSV9f5s+C
-         93nj4vm4v1y0XiOBbrTRQYOSNNtPE6G85ikqxk361ivmAQPQNfyJaZk30FLwkHaYPkE3
-         Xk5c01G+1nhLiQlT0xHu2GprfWLZ9+KG5K3VByjFWXE+7FiIlDMp8la5eX/7QPeO4rs7
-         LUCx5pfNOMV7y0BlQVOOsF7jPP7KOM2grdgUaXpSKZOlprf+OrUbzi3SN0WT6lwNW3jT
-         YFHHdWV3IseLoB6kmHP14y8Ip65FmetdOZjsGKSui6eEh9hwuhKQQry3Cb0VfZFqCk3A
-         026Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722357844; x=1722962644;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kp1ZetS0sXF1CjQKcb+ztjQ+Hp2ujG7Nc++ITl8dDtw=;
-        b=DDtFm0GXxwylRopFbgLMUcIKHP4wLkpTRws8cHRPOaCkqTIWqZb2tFU8+Cqi3K5YNU
-         vJTZocAkS0bNbzk64NYe4xvQfNSw2/wWPyFI2pKXfxWWuEG6emjCgYwgA+tBxJtS25C5
-         1Hd18gX/cIJSvhl/++cDqyRWEwTwzVWCxrnq9v8umUaK6Am/HLmeRWmZ0eeTvFpzX0Nv
-         UQYZtaAm9u1WQrZsaejLv8efXCd/wRZxUeJvGC7r0h76nad9fwRjzJbOsEfisJj3JBDD
-         KkcDyXpkjKp7MCidZew7KKOy1tQI/UxQxcNlHO4aMmkE4moE/Fn1Ujb3LUyGxsTMsNin
-         ikEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRdN4OC9OJrbNwiuTEh0fHncP8ebyAxf6indhcPxu/JR2LP6tMjj6pKlOjHs6nwcJDBkxC27k65DbNvyTFOfq/ly94Yv1a
-X-Gm-Message-State: AOJu0YxMd2ojuj0y9aS0B7j7YFAJM0sITquqy68IQOmF5iuLxqsYSJ1R
-	Yxw4O4ZYJMFPW/mYCXyFSagkITHc1HR/mkAbakUwXPDdB37VuOou
-X-Google-Smtp-Source: AGHT+IFe5PZBuMhFo9qgsnjbZWUpKAIuKDWIOXlpCW214Z62FPN+hpZZUtGFamo1JesAs3jjMXpjaw==
-X-Received: by 2002:a81:c244:0:b0:64b:4a9f:540d with SMTP id 00721157ae682-67a0959294bmr128318997b3.31.1722357844146;
-        Tue, 30 Jul 2024 09:44:04 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-67567869dfbsm26171317b3.35.2024.07.30.09.44.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 09:44:03 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 30 Jul 2024 09:43:49 -0700
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v2 08/15] cxl: indicate probe deferral
-Message-ID: <ZqkYRYsWm2kgtYUt@debian>
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-9-alejandro.lucero-palau@amd.com>
+	s=arc-20240116; t=1722358889; c=relaxed/simple;
+	bh=Fl4YpwZG65rsVJag5s7RbOquj1urRIGQ0o3YX2Yzlp0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SRRx6MwXoBVODab8j4xWnCb6BvSUegp2YI+FYZLfM22H5u2hAxbgLMu/k4Rbduacj0M5ImKFKhT6+wL+iAOAr8Gbn2H3cI6Zg2UzXJqnk9nSzATMhLF5Dqu9nhmpGiWVYvV1vQJGxzjG3nu1zdklMkXkigt2BmkN6ROD3i41V5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WYLz82CnZz6K8qR;
+	Wed, 31 Jul 2024 00:58:44 +0800 (CST)
+Received: from lhrpeml100003.china.huawei.com (unknown [7.191.160.210])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8C0C8140A70;
+	Wed, 31 Jul 2024 01:01:17 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml100003.china.huawei.com (7.191.160.210) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 30 Jul 2024 18:01:17 +0100
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
+ Tue, 30 Jul 2024 18:01:17 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v10 01/11] EDAC: Add generic EDAC RAS control feature
+ driver
+Thread-Topic: [PATCH v10 01/11] EDAC: Add generic EDAC RAS control feature
+ driver
+Thread-Index: AQHa33XRsQYYvx89v0isWis2IAG8f7IPNZuAgABNybA=
+Date: Tue, 30 Jul 2024 17:01:17 +0000
+Message-ID: <f83a17db2c054483a450af73f7b9966b@huawei.com>
+References: <20240726160556.2079-1-shiju.jose@huawei.com>
+	<20240726160556.2079-2-shiju.jose@huawei.com>
+ <20240730131611.GAZqjnm9D4ZJoGBIuZ@fat_crate.local>
+In-Reply-To: <20240730131611.GAZqjnm9D4ZJoGBIuZ@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715172835.24757-9-alejandro.lucero-palau@amd.com>
 
-On Mon, Jul 15, 2024 at 06:28:28PM +0100, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> The first stop for a CXL accelerator driver that wants to establish new
-> CXL.mem regions is to register a 'struct cxl_memdev. That kicks off
-> cxl_mem_probe() to enumerate all 'struct cxl_port' instances in the
-> topology up to the root.
-> 
-> If the root driver has not attached yet the expectation is that the
-> driver waits until that link is established. The common cxl_pci_driver
-> has reason to keep the 'struct cxl_memdev' device attached to the bus
-> until the root driver attaches. An accelerator may want to instead defer
-> probing until CXL resources can be acquired.
-> 
-> Use the @endpoint attribute of a 'struct cxl_memdev' to convey when
-> accelerator driver probing should be defferred vs failed. Provide that
-> indication via a new cxl_acquire_endpoint() API that can retrieve the
-> probe status of the memdev.
-> 
-> The first consumer of this API is a test driver that excercises the CXL
-> Type-2 flow.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m18497367d2ae38f88e94c06369eaa83fa23e92b2
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/memdev.c          | 41 ++++++++++++++++++++++++++++++
->  drivers/cxl/core/port.c            |  2 +-
->  drivers/cxl/mem.c                  |  7 +++--
->  drivers/net/ethernet/sfc/efx_cxl.c | 10 +++++++-
->  include/linux/cxl_accel_mem.h      |  3 +++
->  5 files changed, 59 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index b902948b121f..d51c8bfb32e3 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -1137,6 +1137,47 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, CXL);
->  
-> +/*
-> + * Try to get a locked reference on a memdev's CXL port topology
-> + * connection. Be careful to observe when cxl_mem_probe() has deposited
-> + * a probe deferral awaiting the arrival of the CXL root driver
-> +*/
-> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_port *endpoint;
-> +	int rc = -ENXIO;
-> +
-> +	device_lock(&cxlmd->dev);
-> +	endpoint = cxlmd->endpoint;
-> +	if (!endpoint)
-> +		goto err;
-> +
-> +	if (IS_ERR(endpoint)) {
-> +		rc = PTR_ERR(endpoint);
-> +		goto err;
-> +	}
-> +
-> +	device_lock(&endpoint->dev);
-> +	if (!endpoint->dev.driver)
-> +		goto err_endpoint;
-> +
-> +	return endpoint;
-> +
-> +err_endpoint:
-> +	device_unlock(&endpoint->dev);
-> +err:
-> +	device_unlock(&cxlmd->dev);
-> +	return ERR_PTR(rc);
-> +}
-> +EXPORT_SYMBOL_NS(cxl_acquire_endpoint, CXL);
-> +
-> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port *endpoint)
-> +{
-> +	device_unlock(&endpoint->dev);
-> +	device_unlock(&cxlmd->dev);
-> +}
-> +EXPORT_SYMBOL_NS(cxl_release_endpoint, CXL);
-> +
->  static void sanitize_teardown_notifier(void *data)
->  {
->  	struct cxl_memdev_state *mds = data;
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index d66c6349ed2d..3c6b896c5f65 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1553,7 +1553,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  		 */
->  		dev_dbg(&cxlmd->dev, "%s is a root dport\n",
->  			dev_name(dport_dev));
-> -		return -ENXIO;
-> +		return -EPROBE_DEFER;
->  	}
->  
->  	parent_port = find_cxl_port(dparent, &parent_dport);
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index f76af75a87b7..383a6f4829d3 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -145,13 +145,16 @@ static int cxl_mem_probe(struct device *dev)
->  		return rc;
->  
->  	rc = devm_cxl_enumerate_ports(cxlmd);
-> -	if (rc)
-> +	if (rc) {
-> +		cxlmd->endpoint = ERR_PTR(rc);
->  		return rc;
-> +	}
->  
->  	parent_port = cxl_mem_find_port(cxlmd, &dport);
->  	if (!parent_port) {
->  		dev_err(dev, "CXL port topology not found\n");
-> -		return -ENXIO;
-> +		cxlmd->endpoint = ERR_PTR(-EPROBE_DEFER);
-> +		return -EPROBE_DEFER;
->  	}
->  
->  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 0abe66490ef5..2cf4837ddfc1 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -65,8 +65,16 @@ void efx_cxl_init(struct efx_nic *efx)
->  	}
->  
->  	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, cxl->cxlds);
-> -	if (IS_ERR(cxl->cxlmd))
-> +	if (IS_ERR(cxl->cxlmd)) {
->  		pci_info(pci_dev, "CXL accel memdev creation failed");
-pci_err()?
-> +		return;
-> +	}
-> +
-> +	cxl->endpoint = cxl_acquire_endpoint(cxl->cxlmd);
-> +	if (IS_ERR(cxl->endpoint))
-> +		pci_info(pci_dev, "CXL accel acquire endpoint failed");
-pci_err()?
-> +
-> +	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
->  }
->  
->  
-> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
-> index 442ed9862292..701910021df8 100644
-> --- a/include/linux/cxl_accel_mem.h
-> +++ b/include/linux/cxl_accel_mem.h
-> @@ -29,4 +29,7 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds);
->  
->  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
->  				       struct cxl_dev_state *cxlds);
-> +
-> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd);
-> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
->  #endif
-> -- 
-> 2.17.1
-> 
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
+bGllbjguZGU+DQo+U2VudDogMzAgSnVseSAyMDI0IDE0OjE2DQo+VG86IFNoaWp1IEpvc2UgPHNo
+aWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmFjcGlAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1tbUBrdmFjay5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+dG9ueS5s
+dWNrQGludGVsLmNvbTsgcmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJAa2VybmVsLm9yZzsNCj5tY2hl
+aGFiQGtlcm5lbC5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2ZUBzdGdvbGFicy5u
+ZXQ7IEpvbmF0aGFuDQo+Q2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsgZGF2
+ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZpc2hhbC5s
+LnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZpZEByZWRoYXQuY29t
+OyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGVvLmR1cmFuQGFtZC5jb207DQo+WWF6ZW4uR2hh
+bm5hbUBhbWQuY29tOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBnb29nbGUuY29tOw0K
+Pkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb207DQo+bmFveWEu
+aG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207IGp0aG91Z2h0b25AZ29vZ2xl
+LmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFrdGFzQGdvb2dsZS5jb207IHBn
+b25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsgbWlrZS5tYWx2ZXN0dXRvQGlu
+dGVsLmNvbTsgZ3RoZWxlbkBnb29nbGUuY29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcu
+Y29tOyBkZmVyZ3Vzb25AYW1wZXJlY29tcHV0aW5nLmNvbTsNCj53YnNAb3MuYW1wZXJlY29tcHV0
+aW5nLmNvbTsgbmlmYW4uY3hsQGdtYWlsLmNvbTsgdGFueGlhb2ZlaQ0KPjx0YW54aWFvZmVpQGh1
+YXdlaS5jb20+OyBaZW5ndGFvIChCKSA8cHJpbWUuemVuZ0BoaXNpbGljb24uY29tPjsgUm9iZXJ0
+bw0KPlNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+OyBrYW5na2FuZy5zaGVuQGZ1dHVy
+ZXdlaS5jb207DQo+d2FuZ2h1aXFpYW5nIDx3YW5naHVpcWlhbmdAaHVhd2VpLmNvbT47IExpbnV4
+YXJtDQo+PGxpbnV4YXJtQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MTAgMDEv
+MTFdIEVEQUM6IEFkZCBnZW5lcmljIEVEQUMgUkFTIGNvbnRyb2wgZmVhdHVyZQ0KPmRyaXZlcg0K
+Pg0KPk9uIEZyaSwgSnVsIDI2LCAyMDI0IGF0IDA1OjA1OjQ1UE0gKzAxMDAsIHNoaWp1Lmpvc2VA
+aHVhd2VpLmNvbSB3cm90ZToNCj4+IEZyb206IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2Vp
+LmNvbT4NCj4+DQo+PiBBZGQgZ2VuZXJpYyBFREFDIGRyaXZlciBzdXBwb3J0cyByZWdpc3Rlcmlu
+ZyBSQVMgZmVhdHVyZXMgc3VwcG9ydGVkIGluDQo+PiB0aGUgc3lzdGVtLiBUaGUgZHJpdmVyIGV4
+cG9zZXMgZmVhdHVyZSdzIGNvbnRyb2wgYXR0cmlidXRlcyB0byB0aGUNCj4+IHVzZXJzcGFjZSBp
+biAvc3lzL2J1cy9lZGFjL2RldmljZXMvPGRldi1uYW1lPi88cmFzLWZlYXR1cmU+Lw0KPj4NCj4+
+IENvLWRldmVsb3BlZC1ieTogSm9uYXRoYW4gQ2FtZXJvbiA8Sm9uYXRoYW4uQ2FtZXJvbkBodWF3
+ZWkuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQ2FtZXJvbiA8Sm9uYXRoYW4uQ2Ft
+ZXJvbkBodWF3ZWkuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogU2hpanUgSm9zZSA8c2hpanUuam9z
+ZUBodWF3ZWkuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9lZGFjL01ha2VmaWxlICAgICAgICAg
+ICAgfCAgIDEgKw0KPj4gIGRyaXZlcnMvZWRhYy9lZGFjX3Jhc19mZWF0dXJlLmMgIHwgMTgxDQo+
+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrICBpbmNsdWRlL2xpbnV4L2VkYWNfcmFz
+X2ZlYXR1cmUuaCB8DQo+PiA2NiArKysrKysrKysrKw0KPj4gIDMgZmlsZXMgY2hhbmdlZCwgMjQ4
+IGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA3NTUgZHJpdmVycy9lZGFjL2VkYWNf
+cmFzX2ZlYXR1cmUuYyAgY3JlYXRlIG1vZGUNCj4+IDEwMDc1NSBpbmNsdWRlL2xpbnV4L2VkYWNf
+cmFzX2ZlYXR1cmUuaA0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2VkYWMvTWFrZWZpbGUg
+Yi9kcml2ZXJzL2VkYWMvTWFrZWZpbGUgaW5kZXgNCj4+IDljMDk4OTM2OTViNy4uYzUzMmI1N2E2
+ZDhhIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9lZGFjL01ha2VmaWxlDQo+PiArKysgYi9kcml2
+ZXJzL2VkYWMvTWFrZWZpbGUNCj4+IEBAIC0xMCw2ICsxMCw3IEBAIG9iai0kKENPTkZJR19FREFD
+KQkJCTo9IGVkYWNfY29yZS5vDQo+Pg0KPj4gIGVkYWNfY29yZS15CTo9IGVkYWNfbWMubyBlZGFj
+X2RldmljZS5vIGVkYWNfbWNfc3lzZnMubw0KPj4gIGVkYWNfY29yZS15CSs9IGVkYWNfbW9kdWxl
+Lm8gZWRhY19kZXZpY2Vfc3lzZnMubyB3cS5vDQo+PiArZWRhY19jb3JlLXkJKz0gZWRhY19yYXNf
+ZmVhdHVyZS5vDQo+DQo+RURBQyBhbmQgUkFTIGFuZCBmZWF0dXJlPyENCj4NCj5PaCBib3kuDQo+
+DQo+RURBQyA9PSBSQVMuDQo+DQo+ImZlYXR1cmUiIGlzIHNpbGx5Lg0KPg0KPkxvb2tpbmcgYXQg
+dGhlIGNvZGUgYmVsb3csIHlvdSdyZSByZWdpc3RlcmluZyBhbiBFREFDIGRldmljZS4NCj4tIGVk
+YWNfcmFzX2Rldl9yZWdpc3RlcigpLg0KPg0KPlNvIHdoeSBpc24ndCB0aGlzIHRoaW5nIGluIGVk
+YWNfZGV2aWNlLmM/DQpTdXJlLiBUaGVuIGNhbiBJIGFkZCBkZWZpbml0aW9ucyBpbiBlZGFjX3Jh
+c19mZWF0dXJlLmggdG8gL2xpbnV4L2VkYWMuaD8gICAgDQoNCj4NCj4+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2VkYWNfcmFzX2ZlYXR1cmUuaA0KPj4gYi9pbmNsdWRlL2xpbnV4L2VkYWNf
+cmFzX2ZlYXR1cmUuaA0KPj4gbmV3IGZpbGUgbW9kZSAxMDA3NTUNCj4+IGluZGV4IDAwMDAwMDAw
+MDAwMC4uOGYwZTBjNDdhNjE3DQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9pbmNsdWRlL2xp
+bnV4L2VkYWNfcmFzX2ZlYXR1cmUuaA0KPj4gQEAgLTAsMCArMSw2NiBAQA0KPj4gKy8qIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+PiArLyoNCj4+ICsgKiBFREFDIFJBUyBj
+b250cm9sIGZlYXR1cmVzLg0KPj4gKyAqDQo+PiArICogQ29weXJpZ2h0IChjKSAyMDI0IEhpU2ls
+aWNvbiBMaW1pdGVkLg0KPj4gKyAqLw0KPj4gKw0KPj4gKyNpZm5kZWYgX19FREFDX1JBU19GRUFU
+X0gNCj4+ICsjZGVmaW5lIF9fRURBQ19SQVNfRkVBVF9IDQo+PiArDQo+PiArI2luY2x1ZGUgPGxp
+bnV4L3R5cGVzLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2VkYWMuaD4NCj4+ICsNCj4+ICsjZGVm
+aW5lIEVEQUNfUkFTX05BTUVfTEVOCTEyOA0KPj4gKw0KPj4gK2VudW0gZWRhY19yYXNfZmVhdCB7
+DQo+PiArCVJBU19GRUFUX1NDUlVCLA0KPj4gKwlSQVNfRkVBVF9FQ1MsDQo+PiArCVJBU19GRUFU
+X01BWA0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IGVkYWNfZWNzX2V4X2luZm8gew0KPj4gKwl1
+MTYgbnVtX21lZGlhX2ZydXM7DQo+PiArfTsNCj4+ICsNCj4+ICsvKg0KPj4gKyAqIEVEQUMgUkFT
+IGZlYXR1cmUgaW5mb3JtYXRpb24gc3RydWN0dXJlICAqLyBzdHJ1Y3QgZWRhY19zY3J1Yl9kYXRh
+DQo+PiArew0KPj4gKwljb25zdCBzdHJ1Y3QgZWRhY19zY3J1Yl9vcHMgKm9wczsNCj4+ICsJdm9p
+ZCAqcHJpdmF0ZTsNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0cnVjdCBlZGFjX2Vjc19kYXRhIHsNCj4+
+ICsJY29uc3Qgc3RydWN0IGVkYWNfZWNzX29wcyAqb3BzOw0KPj4gKwl2b2lkICpwcml2YXRlOw0K
+Pj4gK307DQo+DQo+U28gZWFjaCAiZmVhdHVyZSIgd291bGQgcmVxdWlyZSBhIHNlcGFyYXRlIHN0
+cnVjdCB0eXBlPw0KPg0KPldoeSBkb24ndCB5b3UgZGVmaW5lIGEgKnNpbmdsZSogc3RydWN0IHdo
+aWNoIGFjY29tb2RhdGVzIGFueSBSQVMNCj5mdW5jdGlvbmFsaXR5Pw0KRG9uZS4NCg0KPg0KPlRo
+eC4NCj4NCj4tLQ0KPlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0KPmh0dHBzOi8vcGVv
+cGxlLmtlcm5lbC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQo+DQoNClRoYW5rcywN
+ClNoaWp1DQo=
