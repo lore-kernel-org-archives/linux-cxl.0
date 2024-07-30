@@ -1,403 +1,764 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from slategray.cherry.relay.mailchannels.net (slategray.cherry.relay.mailchannels.net [23.83.223.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678F81487D8
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jul 2024 03:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722310926; cv=none; b=cFLJSqh7YoyF/dA/Jwt0QkV6/jlupHUJx3yFuYNYswSlxsTTidHkyiRdxAaKKxEfPuXQ4njJsruvyGx/7VhDSuVLga+u/J0z7VkCZMDhVD2R7bP+mYvP0yev9m9kI9fXTAkWLtaalyZknQt8Fzs0VjIbEQv0p/yoaXU27TjN8pU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722310926; c=relaxed/simple;
-	bh=+Fd4Rh2/h8wz/BpQDpSSIC9geFdOERdLMMWd8XuFmSg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Tnb1LgzjH1VVAWNCK9Drb0m0CqT1gEZ0CcmQYMPXdsP2aSO8/U5xAgCZ6H19JB4dbNVn7uiSi2kSPd9IWJyng/GA892JX9uLmZ2h0z5NxnHnfoTC5f3stsM7+ZntyBTQxKuHAKWMnSYCxnOAiDZppLqkN79KY6Z2stJqR2wVp+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jtq6FR4R; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95537E792
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jul 2024 05:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722315866; cv=pass; b=soZ+ochWfI2n9pyTL7OiARuKllHNfLosEB8EP+i9x2Du9SUPva/E/knCXcTorcqUpZ9csF2dN3+WbUv1GDdukfilC0svTEGmmssNkL2z/v91OGUI9xvEuxK3FvVYS1epZ96hT5A7oZ0P9AHHW41/Qj4IOWBnhepkTTLW5iu9vdU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722315866; c=relaxed/simple;
+	bh=X01QIFPjfGv9VzMdsOrgQMMgVicfkiVbcpJjBupcprA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wk0p+MjAXUy4pyxMJxgAHfQAfHnse0TMcrJbo1gBY8KEAdgBxQyTxIwYMpsyeVblRv1FxY+8eo19WubHcQyNWjiDCwdfM9dmP5ouWnYnCar9TmhhasWYIVpt2P5OajsZjrVatr+fbbPVVv1GiV8lszIOoc/ykK528YHr1zl38Mo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Tp1csRcz; arc=pass smtp.client-ip=23.83.223.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jtq6FR4R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722310923;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Tp1csRcz"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0D6FF9063B8;
+	Tue, 30 Jul 2024 04:57:27 +0000 (UTC)
+Received: from pdx1-sub0-mail-a211.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 987D39038CD;
+	Tue, 30 Jul 2024 04:57:26 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1722315446; a=rsa-sha256;
+	cv=none;
+	b=jGoFwbO5311NcaEOC5EDy0FcloXvYXiMMYzYDbYzQOFC13/cfIsR95lR8uY1N8CORQW5mu
+	EPymfbWyiFShoouIdP47XVCot3zgNLGQml/IP5LT1eehE/w0CYGuymIo3b24CFHeirBYQE
+	i7/Rr5Sjn4+XKojoz3QHeS9jGboQ5hU0FfgUjk/UUeDe/E8/mB+kObsfQAA1uKqrF4JJYp
+	nM6QzNG62yFvIphAEB59JOPYp1wmaiZi8NKaTilRmdQl+DOHhjtrr/tIO/RMtG/Ez29ycM
+	vZd2Jd87wmVu9/arvCcHGq+jKbXQOf+/Aba4Frj6UUKIYi84G5T/1mnzdhlZJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1722315446;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=VIurG/I6X1xJGxA4OGGNgZiX3WynN6bnaOib3kjUdN0=;
-	b=Jtq6FR4R/USRmsDdWX2MTELoGV96ydfIAli9yJKV2ZHbFp22AoAL1e+8kWYX+jpbVN3EPH
-	oRipEQA2S2iWyRdWjF3jn9ROJBBqt4BmkDx/qnDa4YUrQIHn97dnjneku+suPAxxV4XU2D
-	bwNoLiqRu3qbVft5f+doLf8+5Xs82fU=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-106-7AM1cBSNP_GjMwmKsK-bew-1; Mon, 29 Jul 2024 23:41:59 -0400
-X-MC-Unique: 7AM1cBSNP_GjMwmKsK-bew-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2cb6b642c49so3932073a91.1
-        for <linux-cxl@vger.kernel.org>; Mon, 29 Jul 2024 20:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722310919; x=1722915719;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VIurG/I6X1xJGxA4OGGNgZiX3WynN6bnaOib3kjUdN0=;
-        b=nz6VuHpLI3VkVo7XvgpcfVQpjaFsUalpXPWt+YD0zDwgiJTrVG+b0QNALHofTIo8dB
-         ZrnPhiws1o6FllzeJTaiA0LE8tZw2WoPu4e+KJys8vfJExHKiFWZ4F2pLoeT3JZaXjcY
-         8a+geiUecGsZ1SQStFSuQLATakN9oxq1WgyIHJFdBH3NXX7lQCW1XWcsY4rLlPy4aoNx
-         qTDtG588gS0PUBejBJgRAbhYlskKaSaMy1GeML+g82hA59glIDM+EhIjyB6revSDoKas
-         DRZ6bHl9hB9zVIzmJ6dY7FRVWj3jA9rsZ3QoICDzTU0/o/QRI+7xEWoP6Oe5KJXfY5kp
-         LfFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVJbZb2d27RN1tl3pKwJORwS7cKHs5bAxYqvnaM0WthKFIM3AydCohMWpAoXVyi9AZAZwfz7CiMiAwAG8CisSG1Cugkj/0R3Ha
-X-Gm-Message-State: AOJu0YxZ4TWEDerhEsXRkri03nPgnEgEQOC1iKjuZ/GiZCkmQ7s1URZm
-	1Y0Q69M9TTUxVHF7gn5QWSHiMyZRagqIaFbA03b/J/pcorVahOjHiBuURAe7s4o7VWjqAFHhE/W
-	7PdXCePqTcyL+UC7aMBQaaXKvSRW4cZxM4Su89GGsigOUrvfmT/rMyajTR/0LqZvqC97grZF9yO
-	/I+5DNt8gEZZAhaen3yPeCJ1Au1SkSXbKI
-X-Received: by 2002:a17:90a:8c92:b0:2c2:c3f5:33c3 with SMTP id 98e67ed59e1d1-2cfcaaddff4mr1230440a91.6.1722310918208;
-        Mon, 29 Jul 2024 20:41:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECs9BdnRNCz/YKVJpXFqayCaKI6M7WUPhRBN+ju/SBXUpRcOS7eckZ106hc6Ut74SbtmUjJEVWra/pxTHG8Uk=
-X-Received: by 2002:a17:90a:8c92:b0:2c2:c3f5:33c3 with SMTP id
- 98e67ed59e1d1-2cfcaaddff4mr1230405a91.6.1722310917667; Mon, 29 Jul 2024
- 20:41:57 -0700 (PDT)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=LT3e/S/2MpjDkprzR2MplsRcOWmsZe88J6Cf0DRlSLo=;
+	b=E0zY6LkbFNvMZ49IUFcGbIE6JPHi5pmQyPYGU3Ymlt5VZJ2peNsLMIme9+UJPzmMfCFm6u
+	29A7Y+eZ9TSu6X/JOvbtSqIjLZBtMKM56FMZq1bPZrgs+Nddfm2oJt4GTaVUN/EFU979e3
+	XlNQ38ObUgmnckK+12qKG5gBrFdRyTeTbVSAwqUUetWVAwubCI1R7A/jO72njY1iYKVmYK
+	amt/Wm5dlU/yY0ierMlVzR8KozCSeZwurvYF+FPmX/fhf8kSzq1E2uBTz5S4N9yt+vxftR
+	dj0lbiWuP1XOvN0EKxJmeXzAaHiMrChNPUud+UXWgia0Fnn0EpLQGzO6eSXUEA==
+ARC-Authentication-Results: i=1;
+	rspamd-5c76f4b4d4-r6xcr;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Invention-Vacuous: 01b428764e8ad73f_1722315446881_116535850
+X-MC-Loop-Signature: 1722315446881:3714507654
+X-MC-Ingress-Time: 1722315446881
+Received: from pdx1-sub0-mail-a211.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.107.111.73 (trex/7.0.2);
+	Tue, 30 Jul 2024 04:57:26 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a211.dreamhost.com (Postfix) with ESMTPSA id 4WY2ys6wCsz6J;
+	Mon, 29 Jul 2024 21:57:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1722315446;
+	bh=LT3e/S/2MpjDkprzR2MplsRcOWmsZe88J6Cf0DRlSLo=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=Tp1csRczGuu6Exfj5AcxKddxEc2ax/+wd8eQs7O5wqGm9gyhGel2Fjtr5u2wcsBEy
+	 HLpRlD9aCkRwbg4bnK+VcMIrZJqZpUIqR51IFpPGyao/47pxHfThVsn4YvIC2ozNpv
+	 zcHxdDYnO8RingIolS6ppyOxlAMO7tlC84QcPHeu0YQCtJ6zEukdJ/8lKWWMagN2Jo
+	 JYJfbonZvkrx1XqaadoHuTIgt4b0o984jpCo7sm+ffJwDC/DCgIgwbb1n+b0IIy+ek
+	 qeSUsd5UueuJWM+PuEWHajKZv2QeMve9TsPw5p51SyNKYXZ92oDc1/svqZMQpMfw4j
+	 6r+4xPP9H3/XA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jonathan.cameron@huawei.com
+Cc: fan.ni@samsung.com,
+	shiju.jose@huawei.com,
+	a.manzanares@samsung.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v2 -qemu] hw/cxl: Add Maintenance support
+Date: Mon, 29 Jul 2024 21:57:22 -0700
+Message-ID: <20240730045722.71482-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Yi Zhang <yi.zhang@redhat.com>
-Date: Tue, 30 Jul 2024 11:41:44 +0800
-Message-ID: <CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com>
-Subject: [bug report][regression] Oops: general protection fault observed
- after destroy the devdax
-To: Linux NVDIMM <nvdimm@lists.linux.dev>, linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi
-I reproduced this issue on my two nvdimm servers with 6.11.0-rc1,
-please help check it and let me know if you need any testing for it,
-thanks.
+This adds initial support for the Maintenance command, specifically
+the soft and hard PPR operations on a dpa. The implementation allows
+to be executed at runtime, therefore semantically, data is retained
+and CXL.mem requests are correctly processed.
 
-# ndctl create-namespace -r region0 -m devdax -a 4k -s 12G
-{
-  "dev":"namespace0.0",
-  "mode":"devdax",
-  "map":"dev",
-  "size":"11.81 GiB (12.68 GB)",
-  "uuid":"0ddf6d2d-54cb-4a2b-ac72-bb9aec891bae",
-  "daxregion":{
-    "id":0,
-    "size":"11.81 GiB (12.68 GB)",
-    "align":4096,
-    "devices":[
-      {
-        "chardev":"dax0.0",
-        "size":"11.81 GiB (12.68 GB)",
-        "target_node":0,
-        "align":4096,
-        "mode":"devdax"
-      }
-    ]
-  },
-  "align":4096
-}
-# ndctl destroy-namespace all -r all -f
-Segmentation fault
+Keep track of the requests upon a general media or DRAM event.
 
-dmesg:
-[ 1408.632268] Oops: general protection fault, probably for
-non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
-PTI
-[ 1408.644006] KASAN: probably user-memory-access in range
-[0x000000000002b280-0x000000000002b287]
-[ 1408.652699] CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
-[ 1408.659571] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
-2.20.1 09/13/2023
-[ 1408.667136] RIP: 0010:mod_node_page_state+0x2a/0x110
-[ 1408.672112] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
-54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
-83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
-83 ee
-[ 1408.690856] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
-[ 1408.696088] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
-[ 1408.703222] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
-[ 1408.710353] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
-[ 1408.717486] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
-[ 1408.724619] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
-[ 1408.731750] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
-knlGS:0000000000000000
-[ 1408.739834] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1408.745581] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
-[ 1408.752713] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1408.759843] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1408.766976] PKRU: 55555554
-[ 1408.769690] Call Trace:
-[ 1408.772143]  <TASK>
-[ 1408.774248]  ? die_addr+0x3d/0xa0
-[ 1408.777577]  ? exc_general_protection+0x150/0x230
-[ 1408.782297]  ? asm_exc_general_protection+0x22/0x30
-[ 1408.787182]  ? mod_node_page_state+0x2a/0x110
-[ 1408.791548]  section_deactivate+0x519/0x780
-[ 1408.795740]  ? __pfx_section_deactivate+0x10/0x10
-[ 1408.800449]  __remove_pages+0x6c/0xa0
-[ 1408.804119]  arch_remove_memory+0x1a/0x70
-[ 1408.808141]  pageunmap_range+0x2ad/0x5e0
-[ 1408.812067]  memunmap_pages+0x320/0x5a0
-[ 1408.815909]  release_nodes+0xd6/0x170
-[ 1408.819581]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1408.823941]  devres_release_all+0x106/0x170
-[ 1408.828126]  ? __pfx_devres_release_all+0x10/0x10
-[ 1408.832834]  device_unbind_cleanup+0x16/0x1a0
-[ 1408.837198]  device_release_driver_internal+0x3d5/0x530
-[ 1408.842423]  ? klist_put+0xf7/0x170
-[ 1408.845916]  bus_remove_device+0x1ed/0x3f0
-[ 1408.850017]  device_del+0x33b/0x8c0
-[ 1408.853518]  ? __pfx_device_del+0x10/0x10
-[ 1408.857532]  unregister_dev_dax+0x112/0x210
-[ 1408.861722]  release_nodes+0xd6/0x170
-[ 1408.865387]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1408.869749]  devres_release_all+0x106/0x170
-[ 1408.873933]  ? __pfx_devres_release_all+0x10/0x10
-[ 1408.878643]  device_unbind_cleanup+0x16/0x1a0
-[ 1408.883007]  device_release_driver_internal+0x3d5/0x530
-[ 1408.888235]  ? __pfx_sysfs_kf_write+0x10/0x10
-[ 1408.892598]  unbind_store+0xdc/0xf0
-[ 1408.896093]  kernfs_fop_write_iter+0x358/0x530
-[ 1408.900539]  vfs_write+0x9b2/0xf60
-[ 1408.903954]  ? __pfx_vfs_write+0x10/0x10
-[ 1408.907891]  ? __fget_light+0x53/0x1e0
-[ 1408.911646]  ? __x64_sys_openat+0x11f/0x1e0
-[ 1408.915835]  ksys_write+0xf1/0x1d0
-[ 1408.919249]  ? __pfx_ksys_write+0x10/0x10
-[ 1408.923264]  do_syscall_64+0x8c/0x180
-[ 1408.926934]  ? __debug_check_no_obj_freed+0x253/0x520
-[ 1408.931997]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
-[ 1408.937405]  ? kasan_quarantine_put+0x109/0x220
-[ 1408.941944]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1408.946304]  ? kmem_cache_free+0x1a6/0x4c0
-[ 1408.950408]  ? do_sys_openat2+0x10a/0x160
-[ 1408.954424]  ? do_sys_openat2+0x10a/0x160
-[ 1408.958434]  ? __pfx_do_sys_openat2+0x10/0x10
-[ 1408.962794]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1408.967153]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
-[ 1408.972554]  ? __x64_sys_openat+0x11f/0x1e0
-[ 1408.976737]  ? __pfx___x64_sys_openat+0x10/0x10
-[ 1408.981269]  ? rcu_is_watching+0x11/0xb0
-[ 1408.985204]  ? lockdep_hardirqs_on_prepare+0x179/0x400
-[ 1408.990351]  ? do_syscall_64+0x98/0x180
-[ 1408.994191]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1408.998549]  ? do_syscall_64+0x98/0x180
-[ 1409.002386]  ? do_syscall_64+0x98/0x180
-[ 1409.006227]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1409.010585]  ? do_syscall_64+0x98/0x180
-[ 1409.014425]  ? lockdep_hardirqs_on_prepare+0x179/0x400
-[ 1409.019565]  ? do_syscall_64+0x98/0x180
-[ 1409.023401]  ? lockdep_hardirqs_on+0x78/0x100
-[ 1409.027763]  ? do_syscall_64+0x98/0x180
-[ 1409.031600]  ? do_syscall_64+0x98/0x180
-[ 1409.035439]  ? do_syscall_64+0x98/0x180
-[ 1409.039281]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[ 1409.044331] RIP: 0033:0x7f753c0fda57
-[ 1409.047911] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
-0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
-00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
-74 24
-[ 1409.066655] RSP: 002b:00007ffc19323e28 EFLAGS: 00000246 ORIG_RAX:
-0000000000000001
-[ 1409.074220] RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 00007f753c0fda57
-[ 1409.081352] RDX: 0000000000000007 RSI: 0000559f5901f740 RDI: 0000000000000003
-[ 1409.088483] RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffc19323d20
-[ 1409.095616] R10: 0000000000000000 R11: 0000000000000246 R12: 0000559f5901f740
-[ 1409.102748] R13: 00007ffc19323e90 R14: 00007f753c219120 R15: 0000559f5901fc30
-[ 1409.109887]  </TASK>
-[ 1409.112082] Modules linked in: kmem device_dax rpcsec_gss_krb5
-auth_rpcgss nfsv4 dns_resolver nfs lockd grace netfs rfkill sunrpc
-dm_multipath intel_rapl_msr intel_rapl_common intel_uncore_frequency
-intel_uncore_frequency_common skx_edac skx_edac_common
-x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm mgag200
-rapl cdc_ether iTCO_wdt dell_pc i2c_algo_bit iTCO_vendor_support
-ipmi_ssif usbnet acpi_power_meter drm_shmem_helper mei_me dell_smbios
-platform_profile intel_cstate dcdbas wmi_bmof dell_wmi_descriptor
-intel_uncore pcspkr mii drm_kms_helper i2c_i801 mei i2c_smbus
-intel_pch_thermal lpc_ich ipmi_si acpi_ipmi dax_pmem ipmi_devintf
-ipmi_msghandler drm fuse xfs libcrc32c sd_mod sg nd_pmem nd_btt
-crct10dif_pclmul crc32_pclmul crc32c_intel ahci ghash_clmulni_intel
-libahci bnxt_en megaraid_sas tg3 libata wmi nfit libnvdimm dm_mirror
-dm_region_hash dm_log dm_mod
-[ 1409.189120] ---[ end trace 0000000000000000 ]---
-[ 1409.245769] RIP: 0010:mod_node_page_state+0x2a/0x110
-[ 1409.250772] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
-54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
-83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
-83 ee
-[ 1409.269539] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
-[ 1409.274786] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
-[ 1409.281944] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
-[ 1409.289095] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
-[ 1409.296251] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
-[ 1409.303410] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
-[ 1409.310567] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
-knlGS:0000000000000000
-[ 1409.318680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1409.324450] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
-[ 1409.331607] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1409.338771] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1409.345936] PKRU: 55555554
-[ 1851.504826] ==================================================================
-[ 1851.512060] BUG: KASAN: slab-use-after-free in
-mutex_can_spin_on_owner+0x192/0x1c0
-[ 1851.519640] Read of size 4 at addr ffff88855e790034 by task
-kworker/u192:1/1821
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+Only mildly tested through qmp event injection.
 
-[ 1851.528446] CPU: 41 UID: 0 PID: 1821 Comm: kworker/u192:1 Tainted:
-G      D            6.11.0-rc1 #1
-[ 1851.537580] Tainted: [D]=DIE
-[ 1851.540464] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
-2.20.1 09/13/2023
-[ 1851.548031] Workqueue: nfit acpi_nfit_scrub [nfit]
-[ 1851.552840] Call Trace:
-[ 1851.555292]  <TASK>
-[ 1851.557399]  dump_stack_lvl+0x7e/0xc0
-[ 1851.561073]  print_address_description.constprop.0+0x2c/0x3d0
-[ 1851.566829]  ? mutex_can_spin_on_owner+0x192/0x1c0
-[ 1851.571627]  print_report+0xb4/0x270
-[ 1851.575207]  ? mutex_can_spin_on_owner+0x192/0x1c0
-[ 1851.579999]  ? kasan_addr_to_slab+0x9/0xa0
-[ 1851.584098]  kasan_report+0x89/0xc0
-[ 1851.587591]  ? mutex_can_spin_on_owner+0x192/0x1c0
-[ 1851.592388]  mutex_can_spin_on_owner+0x192/0x1c0
-[ 1851.597012]  __mutex_lock+0x256/0x14a0
-[ 1851.600770]  ? try_to_wake_up+0x697/0x1060
-[ 1851.604881]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
-[ 1851.609958]  ? rcu_is_watching+0x11/0xb0
-[ 1851.613892]  ? lock_acquire+0x397/0x640
-[ 1851.617730]  ? __pfx___mutex_lock+0x10/0x10
-[ 1851.621916]  ? __pfx_lock_acquire+0x10/0x10
-[ 1851.626104]  ? do_raw_spin_trylock+0xb5/0x180
-[ 1851.630461]  ? __pfx_do_raw_spin_trylock+0x10/0x10
-[ 1851.635254]  ? rcu_is_watching+0x11/0xb0
-[ 1851.639180]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
-[ 1851.644249]  nd_device_notify+0x22/0xa0 [libnvdimm]
-[ 1851.649146]  child_notify+0x3d/0x60 [libnvdimm]
-[ 1851.653703]  ? __pfx_child_notify+0x10/0x10 [libnvdimm]
-[ 1851.658953]  device_for_each_child+0xd8/0x150
-[ 1851.663314]  ? kernfs_notify+0x113/0x2e0
-[ 1851.667248]  ? __pfx_device_for_each_child+0x10/0x10
-[ 1851.672213]  ? rcu_is_watching+0x11/0xb0
-[ 1851.676139]  ? trace_irq_enable.constprop.0+0x151/0x1c0
-[ 1851.681367]  nd_region_notify+0x80/0x1c0 [libnvdimm]
-[ 1851.686357]  ? __pfx_nd_region_notify+0x10/0x10 [libnvdimm]
-[ 1851.691959]  nvdimm_region_notify+0x82/0xb0 [libnvdimm]
-[ 1851.697206]  ars_complete+0x29e/0x410 [nfit]
-[ 1851.701488]  __acpi_nfit_scrub+0x1e8/0xc30 [nfit]
-[ 1851.706200]  ? acpi_nfit_query_poison+0x2ac/0x780 [nfit]
-[ 1851.711523]  ? __pfx___acpi_nfit_scrub+0x10/0x10 [nfit]
-[ 1851.716756]  ? __pfx_lock_acquire+0x10/0x10
-[ 1851.720944]  ? __pfx_acpi_nfit_query_poison+0x10/0x10 [nfit]
-[ 1851.726615]  acpi_nfit_scrub+0x43/0x1f0 [nfit]
-[ 1851.731064]  process_one_work+0x8d3/0x1920
-[ 1851.735178]  ? __pfx_process_one_work+0x10/0x10
-[ 1851.739716]  ? assign_work+0x16c/0x240
-[ 1851.743476]  worker_thread+0x583/0xce0
-[ 1851.747230]  ? __pfx_worker_thread+0x10/0x10
-[ 1851.751509]  kthread+0x2f3/0x3e0
-[ 1851.754748]  ? _raw_spin_unlock_irq+0x24/0x50
-[ 1851.759107]  ? __pfx_kthread+0x10/0x10
-[ 1851.762860]  ret_from_fork+0x2d/0x70
-[ 1851.766446]  ? __pfx_kthread+0x10/0x10
-[ 1851.770200]  ret_from_fork_asm+0x1a/0x30
-[ 1851.774138]  </TASK>
+Changes from v1:
+ - Applies on top of 'cxl-temp' branch.
+ - Reworked on top of the now-merged Features 
+ - Decoupled soft and hard ppr attribute structures.
 
-[ 1851.777833] Allocated by task 1830:
-[ 1851.781326]  kasan_save_stack+0x20/0x40
-[ 1851.785164]  kasan_save_track+0x10/0x30
-[ 1851.789004]  __kasan_slab_alloc+0x55/0x70
-[ 1851.793016]  kmem_cache_alloc_node_noprof+0x16c/0x340
-[ 1851.798069]  dup_task_struct+0x34/0x680
-[ 1851.801909]  copy_process+0x358/0x5590
-[ 1851.805661]  kernel_clone+0xba/0x770
-[ 1851.809238]  __do_sys_clone+0xa1/0xe0
-[ 1851.812906]  do_syscall_64+0x8c/0x180
-[ 1851.816570]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+ hw/cxl/cxl-mailbox-utils.c  | 194 ++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          |  72 +++++++++++--
+ hw/mem/cxl_type3_stubs.c    |   4 +-
+ include/hw/cxl/cxl_device.h |  80 +++++++++++++++
+ include/hw/cxl/cxl_events.h |   8 +-
+ qapi/cxl.json               |  14 +++
+ 6 files changed, 363 insertions(+), 9 deletions(-)
 
-[ 1851.823121] Freed by task 0:
-[ 1851.826007]  kasan_save_stack+0x20/0x40
-[ 1851.829845]  kasan_save_track+0x10/0x30
-[ 1851.833687]  kasan_save_free_info+0x37/0x60
-[ 1851.837872]  __kasan_slab_free+0x109/0x190
-[ 1851.841971]  kmem_cache_free+0x1a6/0x4c0
-[ 1851.845897]  delayed_put_task_struct+0x1f7/0x2a0
-[ 1851.850517]  rcu_do_batch+0x3d6/0xf50
-[ 1851.854179]  rcu_core+0x3dd/0x5a0
-[ 1851.857499]  handle_softirqs+0x200/0x920
-[ 1851.861427]  __irq_exit_rcu+0xbc/0x210
-[ 1851.865177]  irq_exit_rcu+0xa/0x30
-[ 1851.868584]  sysvec_apic_timer_interrupt+0x93/0xc0
-[ 1851.873375]  asm_sysvec_apic_timer_interrupt+0x16/0x20
-
-[ 1851.880015] Last potentially related work creation:
-[ 1851.884892]  kasan_save_stack+0x20/0x40
-[ 1851.888733]  __kasan_record_aux_stack+0x8e/0xa0
-[ 1851.893264]  __call_rcu_common.constprop.0+0xef/0x940
-[ 1851.898316]  wait_task_zombie+0x5b1/0x2050
-[ 1851.902416]  __do_wait+0x18c/0x710
-[ 1851.905820]  do_wait+0x1d2/0x500
-[ 1851.909053]  kernel_wait4+0xf2/0x1d0
-[ 1851.912633]  __do_sys_wait4+0xf4/0x100
-[ 1851.916383]  do_syscall_64+0x8c/0x180
-[ 1851.920050]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-[ 1851.926603] Second to last potentially related work creation:
-[ 1851.932346]  kasan_save_stack+0x20/0x40
-[ 1851.936188]  __kasan_record_aux_stack+0x8e/0xa0
-[ 1851.940720]  task_work_add+0x1dd/0x2a0
-[ 1851.944471]  sched_tick+0x2ac/0x950
-[ 1851.947965]  update_process_times+0x12e/0x190
-[ 1851.952322]  tick_nohz_handler+0x2ac/0x4a0
-[ 1851.956423]  __hrtimer_run_queues+0x558/0xb40
-[ 1851.960781]  hrtimer_interrupt+0x2e9/0x7a0
-[ 1851.964879]  __sysvec_apic_timer_interrupt+0x140/0x540
-[ 1851.970019]  sysvec_apic_timer_interrupt+0x8e/0xc0
-[ 1851.974810]  asm_sysvec_apic_timer_interrupt+0x16/0x20
-
-[ 1851.981448] The buggy address belongs to the object at ffff88855e790000
-                which belongs to the cache task_struct of size 15752
-[ 1851.994126] The buggy address is located 52 bytes inside of
-                freed 15752-byte region [ffff88855e790000, ffff88855e793d88)
-
-[ 1852.007960] The buggy address belongs to the physical page:
-[ 1852.013531] page: refcount:1 mapcount:0 mapping:0000000000000000
-index:0x0 pfn:0x55e790
-[ 1852.021528] head: order:3 mapcount:0 entire_mapcount:0
-nr_pages_mapped:0 pincount:0
-[ 1852.029182] memcg:ffff8885ef0bad41
-[ 1852.032587] flags: 0x17ffffc0000040(head|node=0|zone=2|lastcpupid=0x1fffff)
-[ 1852.039545] page_type: 0xfdffffff(slab)
-[ 1852.043388] raw: 0017ffffc0000040 ffff888100052300 dead000000000122
-0000000000000000
-[ 1852.051124] raw: 0000000000000000 0000000000020002 00000001fdffffff
-ffff8885ef0bad41
-[ 1852.058863] head: 0017ffffc0000040 ffff888100052300
-dead000000000122 0000000000000000
-[ 1852.066687] head: 0000000000000000 0000000000020002
-00000001fdffffff ffff8885ef0bad41
-[ 1852.074514] head: 0017ffffc0000003 ffffea001579e401
-ffffffffffffffff 0000000000000000
-[ 1852.082339] head: 0000000000000008 0000000000000000
-00000000ffffffff 0000000000000000
-[ 1852.090164] page dumped because: kasan: bad access detected
-
-[ 1852.097236] Memory state around the buggy address:
-[ 1852.102027]  ffff88855e78ff00: fc fc fc fc fc fc fc fc fc fc fc fc
-fc fc fc fc
-[ 1852.109245]  ffff88855e78ff80: fc fc fc fc fc fc fc fc fc fc fc fc
-fc fc fc fc
-[ 1852.116466] >ffff88855e790000: fa fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[ 1852.123683]                                      ^
-[ 1852.128476]  ffff88855e790080: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[ 1852.135694]  ffff88855e790100: fb fb fb fb fb fb fb fb fb fb fb fb
-fb fb fb fb
-[ 1852.142913] ==================================================================
-
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index b752920ec88a..b19225295fa1 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -75,6 +75,8 @@ enum {
+         #define GET_SUPPORTED 0x0
+         #define GET_FEATURE   0x1
+         #define SET_FEATURE   0x2
++    MAINTENANCE = 0x06,
++        #define PERFORM 0x0
+     IDENTIFY    = 0x40,
+         #define MEMORY_DEVICE 0x0
+     CCLS        = 0x41,
+@@ -1008,6 +1010,8 @@ typedef struct CXLSupportedFeatureEntry {
+ enum CXL_SUPPORTED_FEATURES_LIST {
+     CXL_FEATURE_PATROL_SCRUB = 0,
+     CXL_FEATURE_ECS,
++    CXL_FEATURE_SPPR,
++    CXL_FEATURE_HPPR,
+     CXL_FEATURE_MAX
+ };
+ 
+@@ -1049,6 +1053,28 @@ enum CXL_SET_FEATURE_FLAG_DATA_TRANSFER {
+ };
+ #define CXL_SET_FEAT_DATA_SAVED_ACROSS_RESET BIT(3)
+ 
++/* CXL r3.1 section 8.2.9.7.2.1: sPPR Feature Discovery and Configuration */
++static const QemuUUID soft_ppr_uuid = {
++    .data = UUID(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e,
++                 0x69, 0x2c, 0x91, 0x75, 0x68, 0xbb)
++};
++
++typedef struct CXLMemSoftPPRSetFeature {
++        CXLSetFeatureInHeader hdr;
++        CXLMemSoftPPRWriteAttrs feat_data;
++} QEMU_PACKED QEMU_ALIGNED(16) CXLMemSoftPPRSetFeature;
++
++/* CXL r3.1 section 8.2.9.7.2.2: hPPR Feature Discovery and Configuration */
++static const QemuUUID hard_ppr_uuid = {
++    .data = UUID(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1,
++                 0xec, 0x74, 0x59, 0xfb, 0x0e, 0x24)
++};
++
++typedef struct CXLMemHardPPRSetFeature {
++        CXLSetFeatureInHeader hdr;
++        CXLMemHardPPRWriteAttrs feat_data;
++} QEMU_PACKED QEMU_ALIGNED(16) CXLMemHardPPRSetFeature;
++
+ /* CXL r3.1 section 8.2.9.9.11.1: Device Patrol Scrub Control Feature */
+ static const QemuUUID patrol_scrub_uuid = {
+     .data = UUID(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33,
+@@ -1112,6 +1138,38 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
+     for (entry = 0, index = get_feats_in->start_index;
+          entry < req_entries; index++) {
+         switch (index) {
++        case CXL_FEATURE_SPPR:
++            /* Fill supported feature entry for soft-PPR */
++            get_feats_out->feat_entries[entry++] =
++                           (struct CXLSupportedFeatureEntry) {
++                .uuid = soft_ppr_uuid,
++                .feat_index = index,
++                .get_feat_size = sizeof(CXLMemSoftPPRReadAttrs),
++                .set_feat_size = sizeof(CXLMemSoftPPRWriteAttrs),
++                .attr_flags = CXL_FEAT_ENTRY_ATTR_FLAG_CHANGABLE |
++                              CXL_FEAT_ENTRY_ATTR_FLAG_SUPPORT_DEFAULT_SELECTION,
++                .get_feat_version = CXL_MEMDEV_SPPR_GET_FEATURE_VERSION,
++                .set_feat_version = CXL_MEMDEV_SPPR_SET_FEATURE_VERSION,
++                .set_feat_effects = CXL_FEAT_ENTRY_SFE_IMMEDIATE_CONFIG_CHANGE |
++                                    CXL_FEAT_ENTRY_SFE_CEL_VALID,
++            };
++            break;
++        case CXL_FEATURE_HPPR:
++            /* Fill supported feature entry for hard-PPR */
++            get_feats_out->feat_entries[entry++] =
++                           (struct CXLSupportedFeatureEntry) {
++                .uuid = hard_ppr_uuid,
++                .feat_index = index,
++                .get_feat_size = sizeof(CXLMemHardPPRReadAttrs),
++                .set_feat_size = sizeof(CXLMemHardPPRWriteAttrs),
++                .attr_flags = CXL_FEAT_ENTRY_ATTR_FLAG_CHANGABLE |
++                              CXL_FEAT_ENTRY_ATTR_FLAG_SUPPORT_DEFAULT_SELECTION,
++                .get_feat_version = CXL_MEMDEV_HPPR_GET_FEATURE_VERSION,
++                .set_feat_version = CXL_MEMDEV_HPPR_SET_FEATURE_VERSION,
++                .set_feat_effects = CXL_FEAT_ENTRY_SFE_IMMEDIATE_CONFIG_CHANGE |
++                                    CXL_FEAT_ENTRY_SFE_CEL_VALID,
++            };
++            break;
+         case  CXL_FEATURE_PATROL_SCRUB:
+             /* Fill supported feature entry for device patrol scrub control */
+             get_feats_out->feat_entries[entry++] =
+@@ -1215,6 +1273,26 @@ static CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
+         memcpy(payload_out,
+                (uint8_t *)&ct3d->ecs_attrs + get_feature->offset,
+                bytes_to_copy);
++    } else if (qemu_uuid_is_equal(&get_feature->uuid, &soft_ppr_uuid)) {
++        if (get_feature->offset >= sizeof(CXLMemSoftPPRReadAttrs)) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        bytes_to_copy = sizeof(CXLMemSoftPPRReadAttrs) -
++                                             get_feature->offset;
++        bytes_to_copy = MIN(bytes_to_copy, get_feature->count);
++        memcpy(payload_out,
++               (uint8_t *)&ct3d->soft_ppr_attrs + get_feature->offset,
++               bytes_to_copy);
++    } else if (qemu_uuid_is_equal(&get_feature->uuid, &hard_ppr_uuid)) {
++        if (get_feature->offset >= sizeof(CXLMemHardPPRReadAttrs)) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        bytes_to_copy = sizeof(CXLMemHardPPRReadAttrs) -
++                                             get_feature->offset;
++        bytes_to_copy = MIN(bytes_to_copy, get_feature->count);
++        memcpy(payload_out,
++               (uint8_t *)&ct3d->hard_ppr_attrs + get_feature->offset,
++               bytes_to_copy);
+     } else {
+         return CXL_MBOX_UNSUPPORTED;
+     }
+@@ -1233,6 +1311,10 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+                                            CXLCCI *cci)
+ {
+     CXLSetFeatureInHeader *hdr = (void *)payload_in;
++    CXLMemSoftPPRWriteAttrs *sppr_write_attrs;
++    CXLMemSoftPPRSetFeature *sppr_set_feature;
++    CXLMemHardPPRWriteAttrs *hppr_write_attrs;
++    CXLMemHardPPRSetFeature *hppr_set_feature;
+     CXLMemPatrolScrubWriteAttrs *ps_write_attrs;
+     CXLMemPatrolScrubSetFeature *ps_set_feature;
+     CXLMemECSWriteAttrs *ecs_write_attrs;
+@@ -1313,6 +1395,40 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+                                   ct3d->ecs_wr_attrs[count].ecs_config & 0x1F;
+             }
+         }
++    } else if (qemu_uuid_is_equal(&hdr->uuid, &soft_ppr_uuid)) {
++        if (hdr->version != CXL_MEMDEV_SPPR_SET_FEATURE_VERSION) {
++            return CXL_MBOX_UNSUPPORTED;
++        }
++
++        sppr_set_feature = (void *)payload_in;
++        sppr_write_attrs = &sppr_set_feature->feat_data;
++        memcpy((uint8_t *)&ct3d->soft_ppr_wr_attrs + hdr->offset,
++               sppr_write_attrs,
++               bytes_to_copy);
++        set_feat_info->data_size += bytes_to_copy;
++
++        if (data_transfer_flag == CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER ||
++            data_transfer_flag ==  CXL_SET_FEATURE_FLAG_FINISH_DATA_TRANSFER) {
++            ct3d->soft_ppr_attrs.op_mode = ct3d->soft_ppr_wr_attrs.op_mode;
++            ct3d->soft_ppr_attrs.sppr_op_mode = ct3d->soft_ppr_wr_attrs.sppr_op_mode;
++        }
++    } else if (qemu_uuid_is_equal(&hdr->uuid, &hard_ppr_uuid)) {
++        if (hdr->version != CXL_MEMDEV_HPPR_SET_FEATURE_VERSION) {
++            return CXL_MBOX_UNSUPPORTED;
++        }
++
++        hppr_set_feature = (void *)payload_in;
++        hppr_write_attrs = &hppr_set_feature->feat_data;
++        memcpy((uint8_t *)&ct3d->hard_ppr_wr_attrs + hdr->offset,
++               hppr_write_attrs,
++               bytes_to_copy);
++        set_feat_info->data_size += bytes_to_copy;
++
++        if (data_transfer_flag == CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER ||
++            data_transfer_flag ==  CXL_SET_FEATURE_FLAG_FINISH_DATA_TRANSFER) {
++            ct3d->hard_ppr_attrs.op_mode = ct3d->hard_ppr_wr_attrs.op_mode;
++            ct3d->hard_ppr_attrs.hppr_op_mode = ct3d->hard_ppr_wr_attrs.hppr_op_mode;
++        }
+     } else {
+         return CXL_MBOX_UNSUPPORTED;
+     }
+@@ -1325,6 +1441,10 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+             memset(&ct3d->patrol_scrub_wr_attrs, 0, set_feat_info->data_size);
+         } else if (qemu_uuid_is_equal(&hdr->uuid, &ecs_uuid)) {
+             memset(ct3d->ecs_wr_attrs, 0, set_feat_info->data_size);
++        } else if (qemu_uuid_is_equal(&hdr->uuid, &soft_ppr_uuid)) {
++            memset(&ct3d->soft_ppr_wr_attrs, 0, set_feat_info->data_size);
++        } else if (qemu_uuid_is_equal(&hdr->uuid, &hard_ppr_uuid)) {
++            memset(&ct3d->hard_ppr_wr_attrs, 0, set_feat_info->data_size);
+         }
+         set_feat_info->data_transfer_flag = 0;
+         set_feat_info->data_saved_across_reset = false;
+@@ -1335,6 +1455,74 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++static void cxl_perform_ppr(CXLType3Dev *ct3d, uint64_t dpa)
++{
++    CXLMaintenance *ent, *next;
++
++    QLIST_FOREACH_SAFE(ent, &ct3d->maint_list, node, next) {
++        if (dpa == ent->dpa) {
++            QLIST_REMOVE(ent, node);
++            g_free(ent);
++            break;
++        }
++    }
++    /* TODO: produce a Memory Sparing Event Record */
++}
++
++/* CXL r3.1 section 8.2.9.7.1 - Perform Maintenance (Opcode 0600h) */
++#define MAINTENANCE_PPR_QUERY_RESOURCES BIT(0)
++
++static CXLRetCode cmd_media_perform_maintenance(const struct cxl_cmd *cmd,
++                                   uint8_t *payload_in, size_t len_in,
++                                   uint8_t *payload_out, size_t *len_out,
++                                   CXLCCI *cci)
++{
++    struct {
++        uint8_t class;
++        uint8_t subclass;
++        union {
++            struct {
++                uint8_t flags;
++                uint64_t dpa;
++                uint8_t nibble_mask[3];
++            } QEMU_PACKED ppr;
++        };
++    } QEMU_PACKED *maint_in;
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++
++    if (maintenance_running(cci)) {
++        return CXL_MBOX_BUSY;
++    }
++
++    maint_in = (void *)payload_in;
++
++    switch (maint_in->class) {
++    case 0:
++        return CXL_MBOX_SUCCESS; /* nop */
++    case 1:
++        if (maint_in->ppr.flags & MAINTENANCE_PPR_QUERY_RESOURCES) {
++            return CXL_MBOX_SUCCESS;
++        }
++
++        switch (maint_in->subclass) {
++        case 0: /* soft ppr */
++        case 1: /* hard ppr */
++            cxl_perform_ppr(ct3d, ldq_le_p(&maint_in->ppr.dpa));
++            return CXL_MBOX_SUCCESS;
++        default:
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        break;
++    case 2:
++    case 3:
++        return CXL_MBOX_UNSUPPORTED;
++    default:
++        return CXL_MBOX_INVALID_INPUT;
++    }
++
++    return CXL_MBOX_SUCCESS;
++}
++
+ /* CXL r3.1 Section 8.2.9.9.1.1: Identify Memory Device (Opcode 4000h) */
+ static CXLRetCode cmd_identify_memory_device(const struct cxl_cmd *cmd,
+                                              uint8_t *payload_in,
+@@ -2698,6 +2886,12 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+                                  CXL_MBOX_IMMEDIATE_POLICY_CHANGE |
+                                  CXL_MBOX_IMMEDIATE_LOG_CHANGE |
+                                  CXL_MBOX_SECURITY_STATE_CHANGE)},
++    [MAINTENANCE][PERFORM] = { "MAINTENANCE_PERFORM",
++                               cmd_media_perform_maintenance, ~0,
++                               CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
++                               CXL_MBOX_IMMEDIATE_DATA_CHANGE |
++                               CXL_MBOX_IMMEDIATE_LOG_CHANGE |
++                               CXL_MBOX_BACKGROUND_OPERATION },
+     [IDENTIFY][MEMORY_DEVICE] = { "IDENTIFY_MEMORY_DEVICE",
+         cmd_identify_memory_device, 0, 0 },
+     [CCLS][GET_PARTITION_INFO] = { "CCLS_GET_PARTITION_INFO",
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 4114163324bd..b131f32dc840 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -910,6 +910,26 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+     }
+     cxl_event_init(&ct3d->cxl_dstate, 2);
+ 
++    /* Set default values for soft-PPR attributes */
++    ct3d->soft_ppr_attrs.max_maint_latency = 0x5; /* 100 ms */
++    ct3d->soft_ppr_attrs.op_caps = 0; /* require host involvement */
++    ct3d->soft_ppr_attrs.op_mode = 0;
++    ct3d->soft_ppr_attrs.maint_op_class = CXL_MEMDEV_PPR_MAINT_CLASS;
++    ct3d->soft_ppr_attrs.maint_op_subclass = CXL_MEMDEV_SPPR_MAINT_SUBCLASS;
++    ct3d->soft_ppr_attrs.sppr_flags = CXL_MEMDEV_SPPR_DPA_SUPPORT_FLAG;
++    ct3d->soft_ppr_attrs.restriction_flags = 0;
++    ct3d->soft_ppr_attrs.sppr_op_mode = 0;
++
++    /* Set default value for hard-PPR attributes */
++    ct3d->hard_ppr_attrs.max_maint_latency = 0x5; /* 100 ms */
++    ct3d->hard_ppr_attrs.op_caps = 0; /* require host involvement */
++    ct3d->hard_ppr_attrs.op_mode = 0;
++    ct3d->hard_ppr_attrs.maint_op_class = CXL_MEMDEV_PPR_MAINT_CLASS;
++    ct3d->hard_ppr_attrs.maint_op_subclass = CXL_MEMDEV_HPPR_MAINT_SUBCLASS;
++    ct3d->hard_ppr_attrs.hppr_flags = CXL_MEMDEV_HPPR_DPA_SUPPORT_FLAG;
++    ct3d->hard_ppr_attrs.restriction_flags = 0;
++    ct3d->hard_ppr_attrs.hppr_op_mode = 0;
++
+     /* Set default value for patrol scrub attributes */
+     ct3d->patrol_scrub_attrs.scrub_cycle_cap =
+                            CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_DEFAULT |
+@@ -1548,12 +1568,15 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+ 
+ static void cxl_assign_event_header(CXLEventRecordHdr *hdr,
+                                     const QemuUUID *uuid, uint32_t flags,
+-                                    uint8_t length, uint64_t timestamp)
++                                    uint8_t length, uint64_t timestamp,
++                                    uint8_t maint_class, uint8_t maint_subclass)
+ {
+     st24_le_p(&hdr->flags, flags);
+     hdr->length = length;
+     memcpy(&hdr->id, uuid, sizeof(hdr->id));
+     stq_le_p(&hdr->timestamp, timestamp);
++    hdr->maint_op_class = maint_class;
++    hdr->maint_op_subclass = maint_subclass;
+ }
+ 
+ static const QemuUUID gen_media_uuid = {
+@@ -1591,9 +1614,25 @@ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
+         return -EINVAL;
+     }
+ }
++
++static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa)
++{
++    CXLMaintenance *ent, *m;
++
++    QLIST_FOREACH(ent, &ct3d->maint_list, node) {
++        if (dpa == ent->dpa) {
++            return;
++        }
++    }
++    m = g_new0(CXLMaintenance, 1);
++    m->dpa = dpa;
++    QLIST_INSERT_HEAD(&ct3d->maint_list, m, node);
++}
++
+ /* Component ID is device specific.  Define this as a string. */
+ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+-                                        uint8_t flags, uint64_t dpa,
++                                        uint8_t flags, uint8_t class,
++                                        uint8_t subclass, uint64_t dpa,
+                                         uint8_t descriptor, uint8_t type,
+                                         uint8_t transaction_type,
+                                         bool has_channel, uint8_t channel,
+@@ -1627,11 +1666,17 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+         error_setg(errp, "Unhandled error log type");
+         return;
+     }
++    if (rc == CXL_EVENT_TYPE_INFO &&
++        (flags & CXL_EVENT_REC_FLAGS_MAINT_NEEDED)) {
++        error_setg(errp, "Informational event cannot require maintanence");
++        return;
++    }
+     enc_log = rc;
+ 
+     memset(&gem, 0, sizeof(gem));
+     cxl_assign_event_header(hdr, &gen_media_uuid, flags, sizeof(gem),
+-                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
++                            cxl_device_get_timestamp(&ct3d->cxl_dstate),
++                            class, subclass);
+ 
+     stq_le_p(&gem.phys_addr, dpa);
+     gem.descriptor = descriptor;
+@@ -1664,6 +1709,10 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+     if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&gem)) {
+         cxl_event_irq_assert(ct3d);
+     }
++
++    if (flags & CXL_EVENT_REC_FLAGS_MAINT_NEEDED) {
++        cxl_maintenance_insert(ct3d, dpa);
++    }
+ }
+ 
+ #define CXL_DRAM_VALID_CHANNEL                          BIT(0)
+@@ -1676,6 +1725,7 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+ #define CXL_DRAM_VALID_CORRECTION_MASK                  BIT(7)
+ 
+ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
++                               uint8_t class, uint8_t subclass,
+                                uint64_t dpa, uint8_t descriptor,
+                                uint8_t type, uint8_t transaction_type,
+                                bool has_channel, uint8_t channel,
+@@ -1714,11 +1764,17 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+         error_setg(errp, "Unhandled error log type");
+         return;
+     }
++    if (rc == CXL_EVENT_TYPE_INFO &&
++        (flags & CXL_EVENT_REC_FLAGS_MAINT_NEEDED)) {
++        error_setg(errp, "Informational event cannot require maintanence");
++        return;
++    }
+     enc_log = rc;
+ 
+     memset(&dram, 0, sizeof(dram));
+     cxl_assign_event_header(hdr, &dram_uuid, flags, sizeof(dram),
+-                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
++                            cxl_device_get_timestamp(&ct3d->cxl_dstate),
++                            class, subclass);
+     stq_le_p(&dram.phys_addr, dpa);
+     dram.descriptor = descriptor;
+     dram.type = type;
+@@ -1775,7 +1831,9 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+     if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&dram)) {
+         cxl_event_irq_assert(ct3d);
+     }
+-    return;
++    if (flags & CXL_EVENT_REC_FLAGS_MAINT_NEEDED) {
++        cxl_maintenance_insert(ct3d, dpa);
++    }
+ }
+ 
+ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+@@ -1818,7 +1876,7 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+ 
+     memset(&module, 0, sizeof(module));
+     cxl_assign_event_header(hdr, &memory_module_uuid, flags, sizeof(module),
+-                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
++                            cxl_device_get_timestamp(&ct3d->cxl_dstate), 0, 0);
+ 
+     module.type = type;
+     module.health_status = health_status;
+@@ -2058,7 +2116,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+      * Event Log.
+      */
+     cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
+-                            cxl_device_get_timestamp(&dcd->cxl_dstate));
++                            cxl_device_get_timestamp(&dcd->cxl_dstate), 0, 0);
+ 
+     dCap.type = type;
+     /* FIXME: for now, validity flag is cleared */
+diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+index c1a5e4a7c193..8e3b47e00d72 100644
+--- a/hw/mem/cxl_type3_stubs.c
++++ b/hw/mem/cxl_type3_stubs.c
+@@ -14,7 +14,8 @@
+ #include "qapi/qapi-commands-cxl.h"
+ 
+ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+-                                        uint8_t flags, uint64_t dpa,
++                                        uint8_t flags, uint8_t class,
++                                        uint8_t subclass, uint64_t dpa,
+                                         uint8_t descriptor, uint8_t type,
+                                         uint8_t transaction_type,
+                                         bool has_channel, uint8_t channel,
+@@ -24,6 +25,7 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+                                         Error **errp) {}
+ 
+ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
++                               uint8_t class, uint8_t subclass,
+                                uint64_t dpa, uint8_t descriptor,
+                                uint8_t type, uint8_t transaction_type,
+                                bool has_channel, uint8_t channel,
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index e14e56ae4bc2..3e89a074679d 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -417,6 +417,12 @@ static inline bool cxl_dev_media_disabled(CXLDeviceState *cxl_dstate)
+     uint64_t dev_status_reg = cxl_dstate->mbox_reg_state64[R_CXL_MEM_DEV_STS];
+     return FIELD_EX64(dev_status_reg, CXL_MEM_DEV_STS, MEDIA_STATUS) == 0x3;
+ }
++
++static inline bool maintenance_running(CXLCCI *cci)
++{
++    return cci->bg.runtime && cci->bg.opcode == 0x0600;
++}
++
+ static inline bool scan_media_running(CXLCCI *cci)
+ {
+     return !!cci->bg.runtime && cci->bg.opcode == 0x4304;
+@@ -430,6 +436,13 @@ typedef struct CXLError {
+ 
+ typedef QTAILQ_HEAD(, CXLError) CXLErrorList;
+ 
++typedef struct CXLMaintenance {
++    uint64_t dpa;
++    QLIST_ENTRY(CXLMaintenance) node;
++} CXLMaintenance;
++
++typedef QLIST_HEAD(, CXLMaintenance) CXLMaintenanceList;
++
+ typedef struct CXLPoison {
+     uint64_t start, length;
+     uint8_t type;
+@@ -442,6 +455,65 @@ typedef struct CXLPoison {
+ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+ #define CXL_POISON_LIST_LIMIT 256
+ 
++/* CXL memory Post Package Repair control attributes */
++#define CXL_MEMDEV_PPR_MAINT_CLASS 0x1
++#define CXL_MEMDEV_SPPR_MAINT_SUBCLASS 0x0
++#define CXL_MEMDEV_HPPR_MAINT_SUBCLASS 0x1
++
++/*
++ * CXL r3.1 section 8.2.9.7.2.1, Table 8-113 and 8-114:
++ * sPPR Feature Readable/Writable Attributes
++ */
++typedef struct CXLMemSoftPPRReadAttrs {
++    uint8_t max_maint_latency;
++    uint16_t op_caps;
++    uint16_t op_mode;
++    uint8_t maint_op_class;
++    uint8_t maint_op_subclass;
++    uint8_t rsvd[9];
++    uint8_t sppr_flags;
++    uint16_t restriction_flags;
++    uint8_t sppr_op_mode;
++} QEMU_PACKED CXLMemSoftPPRReadAttrs;
++
++typedef struct CXLMemSoftPPRWriteAttrs {
++    uint16_t op_mode;
++    uint8_t sppr_op_mode;
++} QEMU_PACKED CXLMemSoftPPRWriteAttrs;
++
++#define CXL_MEMDEV_SPPR_GET_FEATURE_VERSION    0x02
++#define CXL_MEMDEV_SPPR_SET_FEATURE_VERSION    0x02
++#define CXL_MEMDEV_SPPR_DPA_SUPPORT_FLAG               BIT(0)
++#define CXL_MEMDEV_SPPR_NIBBLE_SUPPORT_FLAG            BIT(1)
++#define CXL_MEMDEV_SPPR_MEM_SPARING_EVENT_REC_CAP_FLAG BIT(2)
++
++/*
++ * CXL r3.1 section 8.2.9.7.2.2, Table 8-116 and 8-117:
++ * hPPR Feature Readable/Writable Attributes
++ */
++typedef struct CXLMemHardPPRReadAttrs {
++    uint8_t max_maint_latency;
++    uint16_t op_caps;
++    uint16_t op_mode;
++    uint8_t maint_op_class;
++    uint8_t maint_op_subclass;
++    uint8_t rsvd[9];
++    uint8_t hppr_flags;
++    uint16_t restriction_flags;
++    uint8_t hppr_op_mode;
++} QEMU_PACKED CXLMemHardPPRReadAttrs;
++
++typedef struct CXLMemHardPPRWriteAttrs {
++    uint16_t op_mode;
++    uint8_t hppr_op_mode;
++} QEMU_PACKED CXLMemHardPPRWriteAttrs;
++
++#define CXL_MEMDEV_HPPR_GET_FEATURE_VERSION    0x02
++#define CXL_MEMDEV_HPPR_SET_FEATURE_VERSION    0x02
++#define CXL_MEMDEV_HPPR_DPA_SUPPORT_FLAG               BIT(0)
++#define CXL_MEMDEV_HPPR_NIBBLE_SUPPORT_FLAG            BIT(1)
++#define CXL_MEMDEV_HPPR_MEM_SPARING_EVENT_REC_CAP_FLAG BIT(2)
++
+ /* CXL memory device patrol scrub control attributes */
+ typedef struct CXLMemPatrolScrubReadAttrs {
+         uint8_t scrub_cycle_cap;
+@@ -559,6 +631,9 @@ struct CXLType3Dev {
+     /* Error injection */
+     CXLErrorList error_list;
+ 
++    /* Keep track of maintenance requests */
++    CXLMaintenanceList maint_list;
++
+     /* Poison Injection - cache */
+     CXLPoisonList poison_list;
+     unsigned int poison_list_cnt;
+@@ -571,6 +646,11 @@ struct CXLType3Dev {
+ 
+     CXLSetFeatureInfo set_feat_info;
+ 
++    /* PPR control attributes */
++    CXLMemSoftPPRReadAttrs soft_ppr_attrs;
++    CXLMemSoftPPRWriteAttrs soft_ppr_wr_attrs;
++    CXLMemHardPPRReadAttrs hard_ppr_attrs;
++    CXLMemHardPPRWriteAttrs hard_ppr_wr_attrs;
+     /* Patrol scrub control attributes */
+     CXLMemPatrolScrubReadAttrs patrol_scrub_attrs;
+     CXLMemPatrolScrubWriteAttrs patrol_scrub_wr_attrs;
+diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+index 38cadaa0f345..0652ab1e0fee 100644
+--- a/include/hw/cxl/cxl_events.h
++++ b/include/hw/cxl/cxl_events.h
+@@ -31,7 +31,12 @@ typedef enum CXLEventLogType {
+  * Common Event Record Format
+  * CXL r3.1 section 8.2.9.2.1: Event Records; Table 8-43
+  */
+-#define CXL_EVENT_REC_HDR_RES_LEN 0xf
++#define CXL_EVENT_REC_HDR_RES_LEN 0xe
++#define CXL_EVENT_REC_FLAGS_PERMANENT_COND BIT(2)
++#define CXL_EVENT_REC_FLAGS_MAINT_NEEDED   BIT(3)
++#define CXL_EVENT_REC_FLAGS_PERF_DEGRADED  BIT(4)
++#define CXL_EVENT_REC_FLAGS_HW_REPLACEMENT_NEEDED BIT(5)
++#define CXL_EVENT_REC_FLAGS_MAINT_OP_SUBCLASS_VALID BIT(6)
+ typedef struct CXLEventRecordHdr {
+     QemuUUID id;
+     uint8_t length;
+@@ -40,6 +45,7 @@ typedef struct CXLEventRecordHdr {
+     uint16_t related_handle;
+     uint64_t timestamp;
+     uint8_t maint_op_class;
++    uint8_t maint_op_subclass;
+     uint8_t reserved[CXL_EVENT_REC_HDR_RES_LEN];
+ } QEMU_PACKED CXLEventRecordHdr;
+ 
+diff --git a/qapi/cxl.json b/qapi/cxl.json
+index bdfac67c473e..58e5c2454882 100644
+--- a/qapi/cxl.json
++++ b/qapi/cxl.json
+@@ -42,6 +42,12 @@
+ # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+ #     Record Format, Event Record Flags for subfield definitions.
+ #
++# @class: Maintenance operation class the device requests to initiate.
++#     See CXL r3.1 Table 8-43 Common Event Record Format.
++#
++# @subclass: Maintenance operation subclass the device requests to
++#     initiate. See CXL r3.1 Table 8-43 Common Event Record Format.
++#
+ # @dpa: Device Physical Address (relative to @path device).  Note
+ #     lower bits include some flags.  See CXL r3.0 Table 8-43 General
+ #     Media Event Record, Physical Address.
+@@ -74,6 +80,7 @@
+ ##
+ { 'command': 'cxl-inject-general-media-event',
+   'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
++            'class':'uint8', 'subclass':'uint8',
+             'dpa': 'uint64', 'descriptor': 'uint8',
+             'type': 'uint8', 'transaction-type': 'uint8',
+             '*channel': 'uint8', '*rank': 'uint8',
+@@ -97,6 +104,12 @@
+ #     lower bits include some flags.  See CXL r3.0 Table 8-44 DRAM
+ #     Event Record, Physical Address.
+ #
++# @class: Maintenance operation class the device requests to initiate.
++#     See CXL r3.1 Table 8-43 Common Event Record Format.
++#
++# @subclass: Maintenance operation subclass the device requests to
++#     initiate. See CXL r3.1 Table 8-43 Common Event Record Format.
++#
+ # @descriptor: Memory Event Descriptor with additional memory event
+ #     information.  See CXL r3.0 Table 8-44 DRAM Event Record, Memory
+ #     Event Descriptor for bit definitions.
+@@ -133,6 +146,7 @@
+ ##
+ { 'command': 'cxl-inject-dram-event',
+   'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
++            'class':'uint8', 'subclass':'uint8',
+             'dpa': 'uint64', 'descriptor': 'uint8',
+             'type': 'uint8', 'transaction-type': 'uint8',
+             '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
 -- 
-Best Regards,
-  Yi Zhang
+2.45.2
 
