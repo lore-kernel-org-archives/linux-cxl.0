@@ -1,752 +1,741 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE338B;
-	Tue, 30 Jul 2024 21:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2B918562A;
+	Wed, 31 Jul 2024 11:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722373271; cv=none; b=F/zvCzJ3yTY+nttj8YpvmoJPFrUnPvVm70lbhfkzpbV2zMGIoK4fz3ORujYKS5u89HaxhwZos5OOz6bEcvC6DqyiWMVFb0LO42hszsxXe2Y823bq07IL3kk52h9SePT+XDwWgUMAACFQ5oAxJD6cgw5nibRiCpbHDE2H6qjBMKE=
+	t=1722425325; cv=none; b=Ya9CVmDGZ44ImLkw5HcaYirjc/4WjdUDZTT+xG2igXDirtUXkLaOt2pc/En4utskUTppYYF0gO8Iw6+VoojxV4g2lJeJ7nfoJZO/1aG7DSdNDD7mvpf8jm0nxi4mOVdOpxUAjHwtNurQntKk1pudJdcN3+/F1DFAVG23aASjd2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722373271; c=relaxed/simple;
-	bh=HVyCwim/rNjoYa7Er1mpPod03MkoVlqti8xGdx7XI00=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Az4dQGLe4YNl4BqD4Ou7giGoVDw3XPC61G65DdW+0YGqDYkiVp/JMxylIPgK6+8x6VChp3anT6/CHzVW6PASi+hOOIPJyo8vgVrTEml7EzvdJWdJtghMmC4fuNJdLDAqTXGbchTm81eL9Zfn0xqVlMuck8CLXWAQQfDmowJLBVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uf7bRsIg; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uf7bRsIg"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-64f4fd64773so39245787b3.0;
-        Tue, 30 Jul 2024 14:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722373267; x=1722978067; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9HEbiK65d0O4x0nutURnHr7ol9LI06hJSM2xxRgUAM8=;
-        b=Uf7bRsIguuhUkbl0J3ENOt5/J+KVMYqIwqb4IHvy8FbgY18GQF8ujgfyLW/N6bz/6T
-         qX2Uwm8ZfofAks5yCqJg7ajdT08igs762BIpi1m2pEQ+E+mTHLv4xVkF6qSkY+M5URUf
-         Hvni+I+jZLEiKdyi1P22zXvvwkwZA4dGtBPkdWvAeO3aa6Sp+68jFWKNMIcv6PR8iDJm
-         +NjAgFEF9eKwJnOOBnOc7bmSO17aIgr6LVHH5iwYmQ082xo0u7Rcm9CHY+nfuEo6PApN
-         eXfVl9vuFaPcY05NqHkjsDEFTAbXnjnOadYJtAJSsvVjyXImAFs2LZu32c5cRbEfHA3H
-         AFuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722373267; x=1722978067;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HEbiK65d0O4x0nutURnHr7ol9LI06hJSM2xxRgUAM8=;
-        b=Oq9jiS9cTxH0zm4b9ZzzH4TwxjHSmFeJ3WdSXxzJBTTGlgx6EDY60hBQ8F0+ETulE2
-         nuRVo0NRhZoNCc8DDj5GJ3pXTSgCTYJYdFwt0Q5WvueIVe3Ma0/lU+NHLRxxpCenRFle
-         kTT9yK9iSsxE96j4CB+pFJO03memT4in7PSTh2GqNoer1pF9CNk904qH27tX3FrmOEip
-         Rizs/jpDmfyyZwDQBCxHLAkjejhWKuvyxTWbaEKzAz5QqUJomwRIwgrGhuce1UWd2LwL
-         vF9sRLbEwfZXdd5S71p8HbssjnYz3859JLk1+CRSH26xAJHvGCuHXgzWKaXQS/A9VPbm
-         JJQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbio+XNdO30ZMtWzWD2mXCN634wOsN5spmTLX/3Okcozc493VBblCuXvR00DY+KW5rMsnPczr/mghQYJ4RpvVOxGUPYd6ebbAI+Aj5NwCRQ2VLcNcAOGSX1mrO0xVnuDGGDhfJ+lxOxYMGTji7T0ozFKJYHbHWzz0oRkgKbqeOnCR74Q==
-X-Gm-Message-State: AOJu0Ywe4DbdGDqo9LLXtgpzButk2NSdTmVdb4GGJoKMCKTiZq1NZc0Q
-	drT6dTXRIhfLeqx22hEsBarPFfFxe+QI/QKcpFsMc6TJpJLvlca5
-X-Google-Smtp-Source: AGHT+IFTfvBkt/NyYd8SkLe2L8jNTtXtVT0UfwgUrJA5EYsRlbeBs4Hpbady5aiaCzmym1J9/3Su1w==
-X-Received: by 2002:a0d:f5c7:0:b0:64a:7e85:9a90 with SMTP id 00721157ae682-67a0813b6d8mr144800607b3.24.1722373266967;
-        Tue, 30 Jul 2024 14:01:06 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6756bab5090sm27001267b3.120.2024.07.30.14.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 14:01:06 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 30 Jul 2024 14:00:55 -0700
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH v10 00/11] EDAC: Scrub: introduce generic EDAC RAS
+	s=arc-20240116; t=1722425325; c=relaxed/simple;
+	bh=ujnFuSUODOc0FjSdcf58GngngYshwdR855zmvOEc8hQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=h7+bxW7QU+vbNtEyzjHJopgvzmHiHLBQdEnWL2CZmlwOeaW3+c5pUrNrJZBdq4RrplKQTE1G16eIdmqHnuKUzqBkEdFV7A9iSJQ4ziXTztdPwWHMl2/p0GrUE9rqi5dTAtij5fLKzlwj1AYSvuDoeRTqQdeAhVRTh5NDcqMVOoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WYqYV20THz6K5Vw;
+	Wed, 31 Jul 2024 19:26:38 +0800 (CST)
+Received: from lhrpeml500004.china.huawei.com (unknown [7.191.163.9])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3EC7E1404FC;
+	Wed, 31 Jul 2024 19:28:36 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml500004.china.huawei.com (7.191.163.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 31 Jul 2024 12:28:35 +0100
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
+ Wed, 31 Jul 2024 12:28:35 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Fan Ni <nifan.cxl@gmail.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v10 00/11] EDAC: Scrub: introduce generic EDAC RAS control
+ feature driver + CXL/ACPI-RAS2 drivers
+Thread-Topic: [PATCH v10 00/11] EDAC: Scrub: introduce generic EDAC RAS
  control feature driver + CXL/ACPI-RAS2 drivers
-Message-ID: <ZqlUh4kL0wK5BnnY@debian>
+Thread-Index: AQHa33XQMgSI02/40kmS48iGh/ojX7IPt3SAgAEAG2A=
+Date: Wed, 31 Jul 2024 11:28:35 +0000
+Message-ID: <2a4f1e0c8c9543caa71a0cb50e65e256@huawei.com>
 References: <20240726160556.2079-1-shiju.jose@huawei.com>
+ <ZqlUh4kL0wK5BnnY@debian>
+In-Reply-To: <ZqlUh4kL0wK5BnnY@debian>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240726160556.2079-1-shiju.jose@huawei.com>
 
-On Fri, Jul 26, 2024 at 05:05:44PM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-Hi Shiju,
-FYI. Not sure if I missed something, but I hit some issue when compiling
-the patch set.
-
-I tried to apply this patch set on top of fixes branch (tag:
-cxl-fixes-6.10-rc7, origin/fixes), and compile, it fails with following
-erors.
-
-fan@DT ~/c/linux-fixes (fixes)> make -j 16
-mkdir -p /home/fan/cxl/linux-fixes/tools/objtool && make O=/home/fan/cxl/linux-fixes subdir=tools/objtool --no-print-directory -C objtool
-  INSTALL libsubcmd_headers
-  CALL    scripts/checksyscalls.sh
-  CC      drivers/ras/acpi_ras2.o
-drivers/ras/acpi_ras2.c: In function ‘ras2_update_patrol_scrub_params_cache’:
-drivers/ras/acpi_ras2.c:64:37: error: implicit declaration of function ‘FIELD_GET’ [-Werror=implicit-function-declaration]
-   64 |         ras2_ctx->min_scrub_cycle = FIELD_GET(RAS2_PATROL_SCRUB_MIN_SCHRS_OUT_MASK,
-      |                                     ^~~~~~~~~
-drivers/ras/acpi_ras2.c: In function ‘ras2_hw_scrub_set_enabled_bg’:
-drivers/ras/acpi_ras2.c:216:50: error: implicit declaration of function ‘FIELD_PREP’ [-Werror=implicit-function-declaration]
-  216 |                 ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-      |                                                  ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make[4]: *** [scripts/Makefile.build:244: drivers/ras/acpi_ras2.o] Error 1
-make[3]: *** [scripts/Makefile.build:485: drivers/ras] Error 2
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [scripts/Makefile.build:485: drivers] Error 2
-make[1]: *** [/home/fan/cxl/linux-fixes/Makefile:1934: .] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-
-It seems we need to include "linux/bitfield.h". Fixed the compiling with
-following change:
-
-fan@DT ~/c/linux-fixes (fixes)> git diff
-diff --git a/drivers/ras/acpi_ras2.c b/drivers/ras/acpi_ras2.c
-index b2381d5b37d0..b4d229e6451f 100644
---- a/drivers/ras/acpi_ras2.c
-+++ b/drivers/ras/acpi_ras2.c
-@@ -11,6 +11,7 @@
- #include <linux/edac_ras_feature.h>
- #include <linux/platform_device.h>
- #include <acpi/ras2_acpi.h>
-+#include <linux/bitfield.h>
- 
- #define RAS2_DEV_NUM_RAS_FEATURES      1
-
-
-
-Fan
-
-> Previously known as "ras: scrub: introduce subsystem + CXL/ACPI-RAS2 drivers".
-> 
-> EDAC based Subsystem for controlling RAS Features
-> =================================================
-> The proposed EDAC based subsystem for controlling RAS features and
-> expose the feature's control attributes to the userspace in sysfs.
-> Some Examples:
->  - Scrub control
->  - Error Check Scrub (ECS) control
->  - ACPI RAS2 features
->  - ACPI Address Range Scrubbing (ARS)
->  - Post Package Repair (PPR) etc.
-> 
-> High level design is illustrated in the following diagram.
->  
->          _______________________________________________
->         |   Userspace - Rasdaemon                       |
->         |  ____________                                 |
->         | | RAS CXL    |       _____________            | 
->         | | Err Handler|----->|             |           |
->         | |____________|      | RAS Dynamic |           |
->         |  ____________       | Scrub       |           |
->         | | RAS Memory |----->| Controller  |           |
->         | | Err Handler|      |_____________|           |
->         | |____________|           |                    |
->         |__________________________|____________________|                              
->                                    |
->                                    |
->     _______________________________|______________________________
->    |   Kernel EDAC based SubSystem | for RAS Features Control     |
->    | ______________________________|____________________________  |
->    || EDAC Core          Sysfs EDAC| Bus                        | |
->    ||    __________________________|_______     _____________   | |
->    ||   |/sys/bus/edac/devices/<dev>/scrub/|   | EDAC Device |  | |
->    ||   |/sys/bus/edac/devices/<dev>/ecs*/ |<->| EDAC MC     |  | |
->    ||   |/sys/bus/edac/devices/<dev>/ars/  |   | EDAC Sysfs  |  | |
->    ||   |/sys/bus/edac/devices/<dev>/ppr/  |   | EDAC Module |  | |
->    ||   |__________________________________|   |_____________|  | |
->    ||                               | EDAC Bus                  | |
->    ||               Get             |                           | |
->    ||    __________ Feature's       |             __________    | |
->    ||   |          |Descs  _________|______      |          |   | |
->    ||   |EDAC Scrub|<-----|    EDAC RAS    |---->| EDAC ARS |   | |
->    ||   |__________|      |Control Feature |     |__________|   | |
->    ||    __________       |    Driver      |      __________    | |
->    ||   |          |<-----|________________|---->|          |   | |
->    ||   |EDAC ECS  |   Register RAS | Features   | EDAC PPR |   | |
->    ||   |__________|                |            |__________|   | |
->    ||         ______________________|___________________        | |
->    ||_________|_____________|_____________|____________|________| |
->    |   _______|____    _____|______   ____|______   ___|_____     |
->    |  |            |  | CXL Mem   |  |           | |         |    |
->    |  | ACPI RAS2  |  | Driver    |  | ACPI ARS  | | PPR     |    |
->    |  | Driver     |  | Scrub,ECS |  | Driver    | | Driver  |    |
->    |  |____________|  |___________|  |___________| |_________|    |
->    |        |              |              |           |           |
->    |________|______________|______________|___________|___________|
->             |              |              |           |          
->      _______|______________|______________|___________|___________
->     |     __|______________|_ ____________|___________|_____      |
->     |    |                                                  |     |
->     |    |            Platform HW and Firmware              |     |
->     |    |__________________________________________________|     |
->     |_____________________________________________________________|                             
-> 
-> 1. EDAC Features components - Create feature specific descriptors.
-> 2. EDAC RAS Feature driver - Get feature's attr descriptors from the 
->    EDAC RAS feature component and registers device's RAS features with
->    EDAC bus and expose the feature's sysfs attributes under the sysfs
->    EDAC bus.
-> 3. RAS dynamic scrub controller - Userspace sample module added in the
->    rasdaemon to start scrubbing when excess number of related errors
->    are reported in a short span of time.
-> 
-> The added EDAC feature specific components (e.g. EDAC scrub, EDAC ECS,
-> EDAC PPR etc) do callbacks to  the parent driver (e.g. CXL driver,
-> ACPI RAS driver etc) for the controls rather than just letting the
-> caller deal with it because of the following reasons.
-> 1. Enforces a common API across multiple implementations can do that
->    via review, but that's not generally gone well in the long run for
->    subsystems that have done it (several have later moved to callback
->    and feature list based approaches).
-> 2. Gives a path for 'intercepting' in the EDAC feature driver.
->    An example for this is that we could intercept PPR repair calls
->    and sanity check that the memory in question is offline before
->    passing back to the underlying code.  Sure we could rely on doing
->    that via some additional calls from the parent driver, but the
->    ABI will get messier.
-> 3. (Speculative) we may get in kernel users of some features in the
->    long run.
-> 
-> More details of the common RAS features are described in the following
-> sections.
-> 
-> Memory Scrubbing
-> ================
-> Increasing DRAM size and cost has made memory subsystem reliability
-> an important concern. These modules are used where potentially
-> corrupted data could cause expensive or fatal issues. Memory errors are
-> one of the top hardware failures that cause server and workload crashes.
-> 
-> Memory scrub is a feature where an ECC engine reads data from
-> each memory media location, corrects with an ECC if necessary and
-> writes the corrected data back to the same memory media location.
-> 
-> The memory DIMMs could be scrubbed at a configurable rate to detect
-> uncorrected memory errors and attempts to recover from detected memory
-> errors providing the following benefits.
-> - Proactively scrubbing memory DIMMs reduces the chance of a correctable
->   error becoming uncorrectable.
-> - Once detected, uncorrected errors caught in unallocated memory pages are
->   isolated and prevented from being allocated to an application or the OS.
-> - The probability of software/hardware products encountering memory
->   errors is reduced.
-> Some details of background can be found in Reference [5].
-> 
-> There are 2 types of memory scrubbing,
-> 1. Background (patrol) scrubbing of the RAM whilest the RAM is otherwise
->    idle.
-> 2. On-demand scrubbing for a specific address range/region of memory.
-> 
-> There are several types of interfaces to HW memory scrubbers
-> identified such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory
-> device patrol scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing.
-> 
-> The scrub control varies between different memory scrubbers. To allow
-> for standard userspace tooling there is a need to present these controls
-> with a standard ABI.
-> 
-> Introduce generic memory EDAC scrub control which allows user to
-> control underlying scrubbers in the system via generic sysfs scrub
-> control interface.
-> 
-> Use case of common scrub control feature
-> ========================================
-> 1. There are several types of interfaces to HW memory scrubbers identified
->    such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory device patrol
->    scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing features and software
->    based memory scrubber(discussed in the community Reference [5]).
->    Also some scrubbers support controlling (background) patrol scrubbing
->    (ACPI RAS2, CXL) and/or on-demand scrubbing(ACPI RAS2, ACPI ARS).
->    However the scrub controls varies between memory scrubbers. Thus there
->    is a requirement for a standard generic sysfs scrub controls exposed
->    to the userspace for the seamless control of the HW/SW scrubbers in
->    the system by admin/scripts/tools etc.
-> 2. Scrub controls in user space allow the user to disable the scrubbing
->    in case disabling of the background patrol scrubbing or changing the
->    scrub rate are needed for other purposes such as performance-aware
->    operations which requires the background operations to be turned off
->    or reduced.
-> 3. Allows to perform on-demand scrubbing for specific address range if
->    supported by the scrubber.
-> 4. User space tools controls scrub the memory DIMMs regularly at a
->    configurable scrub rate using the sysfs scrub controls discussed help,
->    - to detect uncorrectable memory errors early before user accessing memory,
->      which helps to recover the detected memory errors.
->    - reduces the chance of a correctable error becoming uncorrectable.
-> 5. Policy control for hotplugged memory. There is not necessarily a system
->    wide bios or similar in the loop to control the scrub settings on a CXL
->    device that wasn't there at boot. What that setting should be is a policy
->    decision as we are trading of reliability vs performance - hence it should
->    be in control of userspace. As such, 'an' interface is needed. Seems more
->    sensible to try and unify it with other similar interfaces than spin
->    yet another one.
-> 
-> The draft version of userspace code for dynamic scrub control, based
-> on frequency of memory errors reported to the userspace, is added in
-> rasdaemon and enabled, tested for CXL device based patrol scrubbing feature
-> and ACPI RAS2 based scrubbing feature.
-> 
-> https://github.com/shijujose4/rasdaemon/tree/scrub_control_6_june_2024
-> 
-> Comparison of scrubbing features
-> ================================
->  ................................................................
->  .              .   ACPI    . CXL patrol.  CXL ECS  .  ARS      .
->  .  Name        .   RAS2    . scrub     .           .           .
->  ................................................................
->  .              .           .           .           .           .
->  . On-demand    . Supported . No        . No        . Supported .
->  . Scrubbing    .           .           .           .           .
->  .              .           .           .           .           .  
->  ................................................................
->  .              .           .           .           .           .
->  . Background   . Supported . Supported . Supported . No        .
->  . scrubbing    .           .           .           .           .
->  .              .           .           .           .           .
->  ................................................................
->  .              .           .           .           .           .
->  . Mode of      . Scrub ctrl. per device. per memory.  Unknown  .
->  . scrubbing    . per NUMA  .           . media     .           .
->  .              . domain.   .           .           .           .
->  ................................................................
->  .              .           .           .           .           . 
->  . Query scrub  . Supported . Supported . Supported . Supported .       
->  . capabilities .           .           .           .           .
->  .              .           .           .           .           .
->  ................................................................
->  .              .           .           .           .           . 
->  . Setting      . Supported . No        . No        . Supported .       
->  . address range.           .           .           .           .
->  .              .           .           .           .           .
->  ................................................................
->  .              .           .           .           .           . 
->  . Setting      . Supported . Supported . No        . No        .       
->  . scrub rate   .           .           .           .           .
->  .              .           .           .           .           .
->  ................................................................
->  .              .           .           .           .           . 
->  . Unit for     . Not       . in hours  . No        . No        .       
->  . scrub rate   . Defined   .           .           .           .
->  .              .           .           .           .           .
->  ................................................................
->  .              . Supported .           .           .           .
->  . Scrub        . on-demand . No        . No        . Supported .
->  . status/      . scrubbing .           .           .           .
->  . Completion   . only      .           .           .           .
->  ................................................................
->  . UC error     .           .CXL general.CXL general. ACPI UCE  .
->  . reporting    . Exception .media/DRAM .media/DRAM . notify and.
->  .              .           .event/media.event/media. query     .
->  .              .           .scan?      .scan?      . ARS status.
->  ................................................................
->  .              .           .           .           .           .      
->  . Clear UC     .  No       . No        .  No       . Supported .
->  . error        .           .           .           .           .
->  .              .           .           .           .           .  
->  ................................................................
->  .              .           .           .           .           .
->  . Translate    . No        . No        . No        . Supported .
->  . *(1)SPA to   .           .           .           .           .
->  . *(2)DPA      .           .           .           .           .  
->  ................................................................
->  .              .           .           .           .           .
->  . Error inject . No        . Can inject. No        . Supported .
->  .              .           . poison for.           .           .
->  .              .           . CXL       .           .           .  
->  ................................................................
-> *(1) - SPA - System Physical Address. See section 9.19.7.8
->        Function Index 5 - Translate SPA of ACPI spec r6.5.  
-> *(2) - DPA - Device Physical Address. See section 9.19.7.8
->        Function Index 5 - Translate SPA of ACPI spec r6.5.  
-> 
-> CXL Scrubbing features
-> ======================
-> Add support for control CXL patrol scrubber and ACPI RAS2 HW based memory
-> patrol scrubber and register with the EDAC scrub to expose the scrub
-> controls to the userspace tool.
-> 
-> CXL spec r3.1 section 8.2.9.9.11.1 describes the memory device patrol scrub
-> control feature. The device patrol scrub proactively locates and makes
-> corrections to errors in regular cycle. The patrol scrub control allows the
-> request to configure patrol scrubber's input configurations.
-> 
-> The patrol scrub control allows the requester to specify the number of
-> hours in which the patrol scrub cycles must be completed, provided that
-> the requested number is not less than the minimum number of hours for the
-> patrol scrub cycle that the device is capable of. In addition, the patrol
-> scrub controls allow the host to disable and enable the feature in case
-> disabling of the feature is needed for other purposes such as
-> performance-aware operations which require the background operations to be
-> turned off.
-> 
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts.
-> 
-> The DDR5 device contains number of memory media FRUs per device. The
-> DDR5 ECS feature and thus the ECS control driver supports configuring
-> the ECS parameters per FRU.
-> 
-> ACPI RAS2 Hardware-based Memory Scrubbing
-> =========================================
-> ACPI spec 6.5 section 5.2.21 ACPI RAS2 describes ACPI RAS2 table
-> provides interfaces for platform RAS features and supports independent
-> RAS controls and capabilities for a given RAS feature for multiple
-> instances of the same component in a given system.
-> Memory RAS features apply to RAS capabilities, controls and operations
-> that are specific to memory. RAS2 PCC sub-spaces for memory-specific RAS
-> features have a Feature Type of 0x00 (Memory).
-> 
-> The platform can use the hardware-based memory scrubbing feature to expose
-> controls and capabilities associated with hardware-based memory scrub
-> engines. The RAS2 memory scrubbing feature supports following as per spec,
->  - Independent memory scrubbing controls for each NUMA domain, identified
->    using its proximity domain.
->    Note: However AmpereComputing has single entry repeated as they have
->          centralized controls.
->  - Provision for background (patrol) scrubbing of the entire memory system,
->    as well as on-demand scrubbing for a specific region of memory.
-> 
-> ACPI Address Range Scrubbing(ARS)
-> ================================
-> ARS allows the platform to communicate memory errors to system software.
-> This capability allows system software to prevent accesses to addresses
-> with uncorrectable errors in memory. ARS functions manage all NVDIMMs
-> present in the system. Only one scrub can be in progress system wide
-> at any given time.
-> Following functions are supported as per the specification.
-> 1. Query ARS Capabilities for a given address range, indicates platform
->    supports the ACPI NVDIMM Root Device Unconsumed Error Notification.
-> 2. Start ARS triggers an Address Range Scrub for the given memory range.
->    Address scrubbing can be done for volatile memory, persistent memory,
->    or both.
-> 3. Query ARS Status command allows software to get the status of ARS,  
->    including the progress of ARS and ARS error record.
-> 4. Clear Uncorrectable Error.
-> 5. Translate SPA
-> 6. ARS Error Inject etc.
-> Note: Support for ARS is not added in this series because to reduce the
-> line of code for review and could be added after initial code is merged. 
-> We'd like feedback on whether this is of interest to ARS community?
-> 
-> Series adds,
-> 1. Generic EDAC RAS feature driver, EDAC scrub driver, EDAC ECS driver
->    supports memory scrub control, ECS control and other RAS features
->    in the system.
-> 2. Support for CXL feature mailbox commands, which is used by
->    CXL device scrubbing features. 
-> 3. CXL scrub driver supporting patrol scrub control (device and
->    region based).
-> 4. CXL ECS driver supporting ECS control feature.
-> 5. ACPI RAS2 driver adds OS interface for RAS2 communication through
->    PCC mailbox and extracts ACPI RAS2 feature table (RAS2) and
->    create platform device for the RAS memory features, which binds
->    to the memory ACPI RAS2 driver.
-> 7. Memory ACPI RAS2 driver gets the PCC subspace for communicating
->    with the ACPI compliant platform supports ACPI RAS2. Add callback
->    functions and registers with EDAC scrub to support user to
->    control the HW patrol scrubbers exposed to the kernel via the
->    ACPI RAS2 table.
-> 
-> The CXL specific scrub and ECS features are supported in
-> https://gitlab.com/qemu-project/qemu.git
-> 
-> Open Questions based on feedbacks from the community:
-> 1. Leo: Standardize unit for scrub rate, for example ACPI RAS2 does not define
->    unit for the scrub rate. RAS2 clarification needed. 
-> 2. Jonathan: Any need for discoverability of capability to scan different regions,
->    such as global PA space to the userspace. Left as future extension.
-> 3. Jiaqi:
->    - STOP_PATROL_SCRUBBER from RAS2 must be blocked and, must not be exposed to
->      OS/userspace. Stopping patrol scrubber is unacceptable for platform where
->      OEM has enabled patrol scrubber, because the patrol scrubber is a key part
->      of logging and is repurposed for other RAS actions.
->    If the OEM does not want to expose this control, they should lock it down so the
->    interface is not exposed to the OS. These features are optional afterall.
->    - "Requested Address Range"/"Actual Address Range" (region to scrub) is a
->       similarly bad thing to expose in RAS2.
->    If the OEM does not want to expose this, they should lock it down so the
->    interface is not exposed to the OS. These features are optional afterall.
-> 4. Borislav: 
->    - How the scrub control exposed to the userspace will be used?
->      POC added in rasdaemon with dynamic scrub control for CXL memory media
->      errors and memory errors reported to the userspace.
->      https://github.com/shijujose4/rasdaemon/tree/scrub_control_6_june_2024
->    - Is the scrub interface is sufficient for the use cases?
->    - Who is going to use scrub controls tools/admin/scripts?
->      1) Rasdaemon for dynamic control
->      2) Udev script for more static 'defaults' on hotplug etc.
-> 
-> References:
-> 1. ACPI spec r6.5 section 5.2.21 ACPI RAS2.
-> 2. ACPI spec r6.5 section 9.19.7.2 ARS.
-> 3. CXL spec  r3.1 8.2.9.9.11.1 Device patrol scrub control feature
-> 4. CXL spec  r3.1 8.2.9.9.11.2 DDR5 ECS feature
-> 5. Background information about kernel support for memory scan, memory
->    error detection and ACPI RASF.
->    https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.com/
-> 6. Discussions on RASF:
->    https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com/#r 
-> 
-> Changes
-> =======
-> v9 -> v10:
-> 1. Feedback from Mauro Carvalho Chehab:
->    - Changes suggested in EDAC RAS feature driver.
->      use uppercase for enums, if else to switch-case, documentation for
->      static scrub and ecs init functions etc.
->    - Changes suggested in EDAC scrub.
->      unit of scrub cycle hour to seconds.
->      attribute node cycle_in_hours_avaiable to min_cycle_duration and 
->      max_cycle_duration.
->      attribute node cycle_in_hours to current_cycle_duration.
->      Use base 0 for kstrtou64() and kstrtol() functions.
->      etc.
->    - Changes suggested in EDAC ECS.
->      uppercase for enums
->      add ABI documentation. etc
->         
-> 2. Feedback from Fan:
->    - Changes suggested in EDAC RAS feature driver.
->      use uppercase for enums, change if...else to switch-case. 
->      some optimization in edac_ras_dev_register() function
->      add missing goto free_ctx
->    - Changes suggested in the code for feature commands.  
->    - CXL driver scrub and ECS code
->      use uppercase for enums, fix typo, use enum type for mode
->      fix lonf lines etc.
->        
-> v8 -> v9:
-> 1. Feedback from Borislav:
->    - Add scrub control driver to the EDAC on feedback from Borislav.
->    - Changed DEVICE_ATTR_..() static.
->    - Changed the write permissions for scrub control sysfs files as
->      root-only.
-> 2. Feedback from Fan:
->    - Optimized cxl_get_feature() function by using min() and removed
->      feat_out_min_size.
->    - Removed unreached return from cxl_set_feature() function.
->    - Changed the term  "rate" to "cycle_in_hours" in all the
->      scrub control code.
->    - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
->      with just a debug warning.
->       
-> 3. Feedback from Jonathan:
->    - Removed patch __free() based cleanup function for acpi_put_table.
->      and added fix in the acpi ras2 driver.
-> 
-> 4. Feedback from Dan Williams:
->    - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
->      with just a debug warning.
->    - Add support for CXL region based scrub control.
-> 
-> 5. Feedback from Daniel Ferguson on RAS2 drivers:
->     In the ACPI RAS2 driver,
->   - Incorporated the changes given for clearing error reported.
->   - Incorporated the changes given for check the Set RAS Capability
->     status and return an appropriate error.
->     In the RAS2 memory driver,
->   - Added more checks for start/stop bg and on-demand scrubbing
->     so that addr range in cache do not get cleared and restrict
->     permitted operations during scrubbing.
-> 
-> v7 -> v8:
-> 1. Add more detailed cover letter and add info for basic analysis
->    of ACPI ARS for comment from Dan Williams.
-> 2. Changed file name etc from ras2 to acpi_ras2 in memory ACPI RAS2
->    driver for comment from Boris.
-> 3. Add documents for usage for comment from Jonathan.
-> 4. Changed logic in memory/acpi_ras2.c for enable background
->    scrubbing to allow setting the scrub rate.
-> 5. Merged memory/acpi_ras2_common.c with memory/acpi_ras2.c and
->    obselete code, suggested by Jonathan.  
-> 6. Initial optimizations and cleanup especially in the memory/acpi_ras2.
-> 7. Removed CXL ECS support for time being. 
-> 8. Removed support for region based scrub control from the scrub
->    subsytem, which was needed for the CXL ECS, can be added later
->    if required.
-> 9. Fixed the format of few comments and a definition in CXL feature
->     code for the feedbacks from Fan.
-> 11. Jonathan done several optimizations, interface changes and
->     cleanups all over the code.
-> 12. Fixes for feedbacks from Daniel Ferguson(Amperecomputing)
->     for RAS2.
-> 13.  Workaround for a RAS2 case of only one actual controller as
->      reported by Daniel Ferguson(AmpereComputing) in their hardware.
-> 14. Feedback from Yazen, move the common scrub and ras2 changes
->     under /drivers/ras/.
-> 15. Drop patch ACPICA: ACPI 6.5: Add support for RAS2 table because 
->     Rafael queued the patch.
->     https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=9726d821f88e284ecd998b76ae5f2174721cd9dc
->  
-> v6 -> v7:
-> 1. Main changes for comments from Jonathan, Thanks.
-> 1.1. CXL
->  - Changes for deal with small mail box and supporting multipart
->    feature data transfers.
->  - Provide more specific parameters to mbox supported/get/set features
->    interface functions.
->  - kvmalloc -> kmalloc in CXL scrub mem allocation for feature commands.
->  - Changed the way using __free(kfree)
->  - Removed readback and verify for setting CXL scrub patrol and ECS
->    parameters. Could be added later if needed.
->  - In is_visible() callback functions for scrub control sysfs attrs
->    changed to writeback the default attribute mode value instead of
->    setting per attrs.
->  - Add documentation for sysfs interfaces for CXL ECS scrub control. 
-> 1.2. RAS2
->  - In rasf common code, rename rasf to ras2 because RASF seems obselete.
->  - Replace pr_* with dev_* log function calls from ACPI RAS2 and
->    memory RAS2 drivers.
->  - In rasf common code, rename rasf to ras2.
->  - Removed including unnecessary .h file from memory RAS2 driver.
->  - In is_visible() callback functions for scrub control sysfs attrs
->    changed to writeback the default attribute mode value instead of
->    setting per attribute.
-> 
-> 2. Changes for comments from Fan, Thanks.
->  - Add debug message if cxl patrol scrub and ecs init function
->    calls fail.
-> 3. Updated cover letter for feedback from Dan Williams. 
->    
-> v5 -> v6:
-> 1. Changes for comments from Davidlohr, Thanks.
->  - Update CXL feature code based on spec 3.1.
->  - attrb -> attr
->  - Use enums with default counting.  
-> 2. Rebased to the latest kernel.
-> 
-> v4 -> v5:
-> 1. Following are the main changes made based on the feedback from Dan Williams on v4.
-> 1.1. In the scrub subsystem the common scrub control attributes are statically defined
->      instead of dynamically created.
-> 1.2. Add scrub subsystem support externally defined attribute group.
->      Add CXL ECS driver define ECS specific attribute group and pass to
-> 	 the scrub subsystem.
-> 1.3. Move cxl_mem_ecs_init() to cxl/core/region.c so that the CXL region_id
->      is used in the registration with the scrub subsystem. 	 
-> 1.4. Add previously posted RASF common and RAS2 patches to this scrub series.
-> 	 
-> 2. Add support for the 'enable_background_scrub' attribute
->    for RAS2, on request from Bill Schwartz(wschwartz@amperecomputing.com).
-> 
-> v3 -> v4:
-> 1. Fixes for the warnings/errors reported by kernel test robot.
-> 2. Add support for reading the 'enable' attribute of CXL patrol scrub.
-> 
-> Changes
-> v2 -> v3:
-> 1. Changes for comments from Davidlohr, Thanks.
->  - Updated cxl scrub kconfig
->  - removed usage of the flag is_support_feature from
->    the function cxl_mem_get_supported_feature_entry().
->  - corrected spelling error.
->  - removed unnecessary debug message.
->  - removed export feature commands to the userspace.
-> 2. Possible fix for the warnings/errors reported by kernel
->    test robot.
-> 3. Add documentation for the common scrub configure attributes.
-> 
-> v1 -> v2:
-> 1. Changes for comments from Dave Jiang, Thanks.
->  - Split patches.
->  - reversed xmas tree declarations.
->  - declared flags as enums.
->  - removed few unnecessary variable initializations.
->  - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
->  - add auto clean declarations.
->  - replaced while loop with for loop.
->  - Removed allocation from cxl_get_supported_features() and
->    cxl_get_feature() and make change to take allocated memory
->    pointer from the caller.
->  - replaced if/else with switch case.
->  - replaced sprintf() with sysfs_emit() in 2 places.
->  - replaced goto label with return in few functions.
-> 2. removed unused code for supported attributes from ecs.
-> 3. Included following common patch for scrub configure driver
->    to this series.
->    "memory: scrub: Add scrub driver supports configuring memory scrubbers
->     in the system"
-> 
-> 
-> Jonathan Cameron (1):
->   platform: Add __free() based cleanup function for platform_device_put
-> 
-> Shiju Jose (10):
->   EDAC: Add generic EDAC RAS control feature driver
->   EDAC: Add EDAC scrub control driver
->   EDAC: Add EDAC ECS control driver
->   cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
->   cxl/mbox: Add GET_FEATURE mailbox command
->   cxl/mbox: Add SET_FEATURE mailbox command
->   cxl/memscrub: Add CXL memory device patrol scrub control feature
->   cxl/memscrub: Add CXL memory device ECS control feature
->   ACPI:RAS2: Add ACPI RAS2 driver
->   ras: scrub: ACPI RAS2: Add memory ACPI RAS2 driver
-> 
->  Documentation/ABI/testing/sysfs-edac-ecs   |  85 ++
->  Documentation/ABI/testing/sysfs-edac-scrub |  76 ++
->  Documentation/scrub/edac-scrub.rst         | 115 +++
->  drivers/acpi/Kconfig                       |  10 +
->  drivers/acpi/Makefile                      |   1 +
->  drivers/acpi/ras2.c                        | 391 +++++++++
->  drivers/cxl/Kconfig                        |  19 +
->  drivers/cxl/core/Makefile                  |   1 +
->  drivers/cxl/core/mbox.c                    | 139 ++++
->  drivers/cxl/core/memscrub.c                | 873 +++++++++++++++++++++
->  drivers/cxl/core/region.c                  |   6 +
->  drivers/cxl/cxlmem.h                       | 129 +++
->  drivers/cxl/mem.c                          |   4 +
->  drivers/edac/Makefile                      |   1 +
->  drivers/edac/edac_ecs.c                    | 396 ++++++++++
->  drivers/edac/edac_ras_feature.c            | 187 +++++
->  drivers/edac/edac_scrub.c                  | 333 ++++++++
->  drivers/ras/Kconfig                        |  10 +
->  drivers/ras/Makefile                       |   1 +
->  drivers/ras/acpi_ras2.c                    | 415 ++++++++++
->  include/acpi/ras2_acpi.h                   |  59 ++
->  include/linux/edac_ras_feature.h           | 132 ++++
->  include/linux/platform_device.h            |   1 +
->  23 files changed, 3384 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-edac-ecs
->  create mode 100644 Documentation/ABI/testing/sysfs-edac-scrub
->  create mode 100644 Documentation/scrub/edac-scrub.rst
->  create mode 100755 drivers/acpi/ras2.c
->  create mode 100644 drivers/cxl/core/memscrub.c
->  create mode 100755 drivers/edac/edac_ecs.c
->  create mode 100755 drivers/edac/edac_ras_feature.c
->  create mode 100755 drivers/edac/edac_scrub.c
->  create mode 100644 drivers/ras/acpi_ras2.c
->  create mode 100644 include/acpi/ras2_acpi.h
->  create mode 100755 include/linux/edac_ras_feature.h
-> 
-> -- 
-> 2.34.1
-> 
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRmFuIE5pIDxuaWZhbi5jeGxAZ21h
+aWwuY29tPg0KPlNlbnQ6IDMwIEp1bHkgMjAyNCAyMjowMQ0KPlRvOiBTaGlqdSBKb3NlIDxzaGlq
+dS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1jeGxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5hY3BpQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtbW1Aa3ZhY2sub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPmJwQGFsaWVu
+OC5kZTsgdG9ueS5sdWNrQGludGVsLmNvbTsgcmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJAa2VybmVs
+Lm9yZzsNCj5tY2hlaGFiQGtlcm5lbC5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2
+ZUBzdGdvbGFicy5uZXQ7IEpvbmF0aGFuDQo+Q2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3
+ZWkuY29tPjsgZGF2ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5j
+b207IHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZp
+ZEByZWRoYXQuY29tOyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGVvLmR1cmFuQGFtZC5jb207
+DQo+WWF6ZW4uR2hhbm5hbUBhbWQuY29tOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBn
+b29nbGUuY29tOw0KPkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5j
+b207DQo+bmFveWEuaG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207IGp0aG91
+Z2h0b25AZ29vZ2xlLmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFrdGFzQGdv
+b2dsZS5jb207IHBnb25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsgbWlrZS5t
+YWx2ZXN0dXRvQGludGVsLmNvbTsgZ3RoZWxlbkBnb29nbGUuY29tOw0KPndzY2h3YXJ0ekBhbXBl
+cmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25AYW1wZXJlY29tcHV0aW5nLmNvbTsNCj53YnNAb3Mu
+YW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4uY3hsQGdtYWlsLmNvbTsgdGFueGlhb2ZlaQ0KPjx0
+YW54aWFvZmVpQGh1YXdlaS5jb20+OyBaZW5ndGFvIChCKSA8cHJpbWUuemVuZ0BoaXNpbGljb24u
+Y29tPjsgUm9iZXJ0bw0KPlNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+OyBrYW5na2Fu
+Zy5zaGVuQGZ1dHVyZXdlaS5jb207DQo+d2FuZ2h1aXFpYW5nIDx3YW5naHVpcWlhbmdAaHVhd2Vp
+LmNvbT47IExpbnV4YXJtDQo+PGxpbnV4YXJtQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQ
+QVRDSCB2MTAgMDAvMTFdIEVEQUM6IFNjcnViOiBpbnRyb2R1Y2UgZ2VuZXJpYyBFREFDIFJBUw0K
+PmNvbnRyb2wgZmVhdHVyZSBkcml2ZXIgKyBDWEwvQUNQSS1SQVMyIGRyaXZlcnMNCj4NCj5PbiBG
+cmksIEp1bCAyNiwgMjAyNCBhdCAwNTowNTo0NFBNICswMTAwLCBzaGlqdS5qb3NlQGh1YXdlaS5j
+b20gd3JvdGU6DQo+PiBGcm9tOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+
+Pg0KPkhpIFNoaWp1LA0KPkZZSS4gTm90IHN1cmUgaWYgSSBtaXNzZWQgc29tZXRoaW5nLCBidXQg
+SSBoaXQgc29tZSBpc3N1ZSB3aGVuIGNvbXBpbGluZyB0aGUNCj5wYXRjaCBzZXQuDQo+DQo+SSB0
+cmllZCB0byBhcHBseSB0aGlzIHBhdGNoIHNldCBvbiB0b3Agb2YgZml4ZXMgYnJhbmNoICh0YWc6
+DQo+Y3hsLWZpeGVzLTYuMTAtcmM3LCBvcmlnaW4vZml4ZXMpLCBhbmQgY29tcGlsZSwgaXQgZmFp
+bHMgd2l0aCBmb2xsb3dpbmcgZXJvcnMuDQo+DQo+ZmFuQERUIH4vYy9saW51eC1maXhlcyAoZml4
+ZXMpPiBtYWtlIC1qIDE2IG1rZGlyIC1wIC9ob21lL2Zhbi9jeGwvbGludXgtDQo+Zml4ZXMvdG9v
+bHMvb2JqdG9vbCAmJiBtYWtlIE89L2hvbWUvZmFuL2N4bC9saW51eC1maXhlcyBzdWJkaXI9dG9v
+bHMvb2JqdG9vbCAtLQ0KPm5vLXByaW50LWRpcmVjdG9yeSAtQyBvYmp0b29sDQo+ICBJTlNUQUxM
+IGxpYnN1YmNtZF9oZWFkZXJzDQo+ICBDQUxMICAgIHNjcmlwdHMvY2hlY2tzeXNjYWxscy5zaA0K
+PiAgQ0MgICAgICBkcml2ZXJzL3Jhcy9hY3BpX3JhczIubw0KPmRyaXZlcnMvcmFzL2FjcGlfcmFz
+Mi5jOiBJbiBmdW5jdGlvbiDigJhyYXMyX3VwZGF0ZV9wYXRyb2xfc2NydWJfcGFyYW1zX2NhY2hl
+4oCZOg0KPmRyaXZlcnMvcmFzL2FjcGlfcmFzMi5jOjY0OjM3OiBlcnJvcjogaW1wbGljaXQgZGVj
+bGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYRklFTERfR0VU4oCZDQo+Wy1XZXJyb3I9aW1wbGljaXQt
+ZnVuY3Rpb24tZGVjbGFyYXRpb25dDQo+ICAgNjQgfCAgICAgICAgIHJhczJfY3R4LT5taW5fc2Ny
+dWJfY3ljbGUgPQ0KPkZJRUxEX0dFVChSQVMyX1BBVFJPTF9TQ1JVQl9NSU5fU0NIUlNfT1VUX01B
+U0ssDQo+ICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+
+fn4NCj5kcml2ZXJzL3Jhcy9hY3BpX3JhczIuYzogSW4gZnVuY3Rpb24g4oCYcmFzMl9od19zY3J1
+Yl9zZXRfZW5hYmxlZF9iZ+KAmToNCj5kcml2ZXJzL3Jhcy9hY3BpX3JhczIuYzoyMTY6NTA6IGVy
+cm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbg0KPuKAmEZJRUxEX1BSRVDigJkg
+Wy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dDQo+ICAyMTYgfCAgICAgICAg
+ICAgICAgICAgcHNfc20tPnBhcmFtcy5zY3J1Yl9wYXJhbXNfaW4gfD0NCj5GSUVMRF9QUkVQKFJB
+UzJfUEFUUk9MX1NDUlVCX1NDSFJTX0lOX01BU0ssDQo+ICAgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fg0KPmNjMTogYWxsIHdh
+cm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzDQo+bWFrZVs0XTogKioqIFtzY3JpcHRzL01h
+a2VmaWxlLmJ1aWxkOjI0NDogZHJpdmVycy9yYXMvYWNwaV9yYXMyLm9dIEVycm9yIDENCj5tYWtl
+WzNdOiAqKiogW3NjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6NDg1OiBkcml2ZXJzL3Jhc10gRXJyb3Ig
+Mg0KPm1ha2VbM106ICoqKiBXYWl0aW5nIGZvciB1bmZpbmlzaGVkIGpvYnMuLi4uDQo+bWFrZVsy
+XTogKioqIFtzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQ4NTogZHJpdmVyc10gRXJyb3IgMg0KPm1h
+a2VbMV06ICoqKiBbL2hvbWUvZmFuL2N4bC9saW51eC1maXhlcy9NYWtlZmlsZToxOTM0OiAuXSBF
+cnJvciAyDQo+bWFrZTogKioqIFtNYWtlZmlsZToyNDA6IF9fc3ViLW1ha2VdIEVycm9yIDINCj4N
+Cj4NCj5JdCBzZWVtcyB3ZSBuZWVkIHRvIGluY2x1ZGUgImxpbnV4L2JpdGZpZWxkLmgiLiBGaXhl
+ZCB0aGUgY29tcGlsaW5nIHdpdGggZm9sbG93aW5nDQo+Y2hhbmdlOg0KPg0KPmZhbkBEVCB+L2Mv
+bGludXgtZml4ZXMgKGZpeGVzKT4gZ2l0IGRpZmYgZGlmZiAtLWdpdCBhL2RyaXZlcnMvcmFzL2Fj
+cGlfcmFzMi5jDQo+Yi9kcml2ZXJzL3Jhcy9hY3BpX3JhczIuYyBpbmRleCBiMjM4MWQ1YjM3ZDAu
+LmI0ZDIyOWU2NDUxZiAxMDA2NDQNCj4tLS0gYS9kcml2ZXJzL3Jhcy9hY3BpX3JhczIuYw0KPisr
+KyBiL2RyaXZlcnMvcmFzL2FjcGlfcmFzMi5jDQo+QEAgLTExLDYgKzExLDcgQEANCj4gI2luY2x1
+ZGUgPGxpbnV4L2VkYWNfcmFzX2ZlYXR1cmUuaD4NCj4gI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3Jt
+X2RldmljZS5oPg0KPiAjaW5jbHVkZSA8YWNwaS9yYXMyX2FjcGkuaD4NCj4rI2luY2x1ZGUgPGxp
+bnV4L2JpdGZpZWxkLmg+DQo+DQo+ICNkZWZpbmUgUkFTMl9ERVZfTlVNX1JBU19GRUFUVVJFUyAg
+ICAgIDENCj4NCj4NCj4NCj5GYW4NCkhpIEZhbiwNCg0KVGhhbmtzIGZvciBsb29raW5nIGludG8g
+dGhpcyBpc3N1ZSBhbmQgZ2l2aW5nIHRoZSBmaXguDQpUaGUgc2VyaWVzIHdhcyB0ZXN0ZWQgYW5k
+IHByb2R1Y2VkIG9uIG1haW5saW5lIHY2LjEwLXJjMyB3aXRoIGFybTY0IGJ1aWxkLiANCkkgY2hl
+Y2tlZCAgaW4gdGhlIGN4bC1maXhlcy02LjEwLXJjNyBhbmQgbWFpbmxpbmUgdjYuMTAtcmM3IGZv
+ciB0aGlzIGlzc3VlLiANCkZvciBhcm02NCwgYnVpbGQgaXMgc3VjY2Vzc2Z1bCwgaG93ZXZlciBm
+b3IgWDg2LCBidWlsZCByZXByb2R1Y2VkIHRoZSBidWlsZCBlcnJvcnMNCnlvdSByZXBvcnRlZC4N
+Ckkgd2lsbCBpbmNvcnBvcmF0ZSB0aGUgZml4IGluIHRoZSBuZXh0IHZlcnNpb24uIA0KDQpUaGFu
+a3MsDQpTaGlqdQ0KPg0KPj4gUHJldmlvdXNseSBrbm93biBhcyAicmFzOiBzY3J1YjogaW50cm9k
+dWNlIHN1YnN5c3RlbSArIENYTC9BQ1BJLVJBUzINCj5kcml2ZXJzIi4NCj4+DQo+PiBFREFDIGJh
+c2VkIFN1YnN5c3RlbSBmb3IgY29udHJvbGxpbmcgUkFTIEZlYXR1cmVzDQo+PiA9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+PiBUaGUgcHJvcG9zZWQg
+RURBQyBiYXNlZCBzdWJzeXN0ZW0gZm9yIGNvbnRyb2xsaW5nIFJBUyBmZWF0dXJlcyBhbmQNCj4+
+IGV4cG9zZSB0aGUgZmVhdHVyZSdzIGNvbnRyb2wgYXR0cmlidXRlcyB0byB0aGUgdXNlcnNwYWNl
+IGluIHN5c2ZzLg0KPj4gU29tZSBFeGFtcGxlczoNCj4+ICAtIFNjcnViIGNvbnRyb2wNCj4+ICAt
+IEVycm9yIENoZWNrIFNjcnViIChFQ1MpIGNvbnRyb2wNCj4+ICAtIEFDUEkgUkFTMiBmZWF0dXJl
+cw0KPj4gIC0gQUNQSSBBZGRyZXNzIFJhbmdlIFNjcnViYmluZyAoQVJTKQ0KPj4gIC0gUG9zdCBQ
+YWNrYWdlIFJlcGFpciAoUFBSKSBldGMuDQo+Pg0KPj4gSGlnaCBsZXZlbCBkZXNpZ24gaXMgaWxs
+dXN0cmF0ZWQgaW4gdGhlIGZvbGxvd2luZyBkaWFncmFtLg0KPj4NCj4+ICAgICAgICAgIF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+PiAgICAgICAgIHwg
+ICBVc2Vyc3BhY2UgLSBSYXNkYWVtb24gICAgICAgICAgICAgICAgICAgICAgIHwNCj4+ICAgICAg
+ICAgfCAgX19fX19fX19fX19fICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPj4g
+ICAgICAgICB8IHwgUkFTIENYTCAgICB8ICAgICAgIF9fX19fX19fX19fX18gICAgICAgICAgICB8
+DQo+PiAgICAgICAgIHwgfCBFcnIgSGFuZGxlcnwtLS0tLT58ICAgICAgICAgICAgIHwgICAgICAg
+ICAgIHwNCj4+ICAgICAgICAgfCB8X19fX19fX19fX19ffCAgICAgIHwgUkFTIER5bmFtaWMgfCAg
+ICAgICAgICAgfA0KPj4gICAgICAgICB8ICBfX19fX19fX19fX18gICAgICAgfCBTY3J1YiAgICAg
+ICB8ICAgICAgICAgICB8DQo+PiAgICAgICAgIHwgfCBSQVMgTWVtb3J5IHwtLS0tLT58IENvbnRy
+b2xsZXIgIHwgICAgICAgICAgIHwNCj4+ICAgICAgICAgfCB8IEVyciBIYW5kbGVyfCAgICAgIHxf
+X19fX19fX19fX19ffCAgICAgICAgICAgfA0KPj4gICAgICAgICB8IHxfX19fX19fX19fX198ICAg
+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICB8DQo+PiAgICAgICAgIHxfX19fX19fX19fX19f
+X19fX19fX19fX19fX3xfX19fX19fX19fX19fX19fX19fX3wNCj4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8DQo+PiAgICAgX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX3xfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18NCj4+ICAgIHwgICBLZXJuZWwgRURBQyBiYXNlZCBTdWJTeXN0ZW0g
+fCBmb3IgUkFTIEZlYXR1cmVzIENvbnRyb2wgICAgIHwNCj4+ICAgIHwgX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19ffF9fX19fX19fX19fX19fX19fX19fX19fX19fX18gIHwNCj4+ICAgIHx8
+IEVEQUMgQ29yZSAgICAgICAgICBTeXNmcyBFREFDfCBCdXMgICAgICAgICAgICAgICAgICAgICAg
+ICB8IHwNCj4+ICAgIHx8ICAgIF9fX19fX19fX19fX19fX19fX19fX19fX19ffF9fX19fX18gICAg
+IF9fX19fX19fX19fX18gICB8IHwNCj4+ICAgIHx8ICAgfC9zeXMvYnVzL2VkYWMvZGV2aWNlcy88
+ZGV2Pi9zY3J1Yi98ICAgfCBFREFDIERldmljZSB8ICB8IHwNCj4+ICAgIHx8ICAgfC9zeXMvYnVz
+L2VkYWMvZGV2aWNlcy88ZGV2Pi9lY3MqLyB8PC0+fCBFREFDIE1DICAgICB8ICB8IHwNCj4+ICAg
+IHx8ICAgfC9zeXMvYnVzL2VkYWMvZGV2aWNlcy88ZGV2Pi9hcnMvICB8ICAgfCBFREFDIFN5c2Zz
+ICB8ICB8IHwNCj4+ICAgIHx8ICAgfC9zeXMvYnVzL2VkYWMvZGV2aWNlcy88ZGV2Pi9wcHIvICB8
+ICAgfCBFREFDIE1vZHVsZSB8ICB8IHwNCj4+ICAgIHx8ICAgfF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX198ICAgfF9fX19fX19fX19fX198ICB8IHwNCj4+ICAgIHx8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgRURBQyBCdXMgICAgICAgICAgICAgICAgICB8IHwNCj4+
+ICAgIHx8ICAgICAgICAgICAgICAgR2V0ICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IHwNCj4+ICAgIHx8ICAgIF9fX19fX19fX18gRmVhdHVyZSdzICAgICAgIHwgICAg
+ICAgICAgICAgX19fX19fX19fXyAgICB8IHwNCj4+ICAgIHx8ICAgfCAgICAgICAgICB8RGVzY3Mg
+IF9fX19fX19fX3xfX19fX18gICAgICB8ICAgICAgICAgIHwgICB8IHwNCj4+ICAgIHx8ICAgfEVE
+QUMgU2NydWJ8PC0tLS0tfCAgICBFREFDIFJBUyAgICB8LS0tLT58IEVEQUMgQVJTIHwgICB8IHwN
+Cj4+ICAgIHx8ICAgfF9fX19fX19fX198ICAgICAgfENvbnRyb2wgRmVhdHVyZSB8ICAgICB8X19f
+X19fX19fX3wgICB8IHwNCj4+ICAgIHx8ICAgIF9fX19fX19fX18gICAgICAgfCAgICBEcml2ZXIg
+ICAgICB8ICAgICAgX19fX19fX19fXyAgICB8IHwNCj4+ICAgIHx8ICAgfCAgICAgICAgICB8PC0t
+LS0tfF9fX19fX19fX19fX19fX198LS0tLT58ICAgICAgICAgIHwgICB8IHwNCj4+ICAgIHx8ICAg
+fEVEQUMgRUNTICB8ICAgUmVnaXN0ZXIgUkFTIHwgRmVhdHVyZXMgICB8IEVEQUMgUFBSIHwgICB8
+IHwNCj4+ICAgIHx8ICAgfF9fX19fX19fX198ICAgICAgICAgICAgICAgIHwgICAgICAgICAgICB8
+X19fX19fX19fX3wgICB8IHwNCj4+ICAgIHx8ICAgICAgICAgX19fX19fX19fX19fX19fX19fX19f
+X3xfX19fX19fX19fX19fX19fX19fICAgICAgICB8IHwNCj4+ICAgIHx8X19fX19fX19ffF9fX19f
+X19fX19fX198X19fX19fX19fX19fX3xfX19fX19fX19fX198X19fX19fX198IHwNCj4+ICAgIHwg
+ICBfX19fX19ffF9fX18gICAgX19fX198X19fX19fICAgX19fX3xfX19fX18gICBfX198X19fX18g
+ICAgIHwNCj4+ICAgIHwgIHwgICAgICAgICAgICB8ICB8IENYTCBNZW0gICB8ICB8ICAgICAgICAg
+ICB8IHwgICAgICAgICB8ICAgIHwNCj4+ICAgIHwgIHwgQUNQSSBSQVMyICB8ICB8IERyaXZlciAg
+ICB8ICB8IEFDUEkgQVJTICB8IHwgUFBSICAgICB8ICAgIHwNCj4+ICAgIHwgIHwgRHJpdmVyICAg
+ICB8ICB8IFNjcnViLEVDUyB8ICB8IERyaXZlciAgICB8IHwgRHJpdmVyICB8ICAgIHwNCj4+ICAg
+IHwgIHxfX19fX19fX19fX198ICB8X19fX19fX19fX198ICB8X19fX19fX19fX198IHxfX19fX19f
+X198ICAgIHwNCj4+ICAgIHwgICAgICAgIHwgICAgICAgICAgICAgIHwgICAgICAgICAgICAgIHwg
+ICAgICAgICAgIHwgICAgICAgICAgIHwNCj4+DQo+fF9fX19fX19ffF9fX19fX19fX19fX19ffF9f
+X19fX19fX19fX19ffF9fX19fX19fX19ffF9fX19fX19fX19ffA0KPj4gICAgICAgICAgICAgfCAg
+ICAgICAgICAgICAgfCAgICAgICAgICAgICAgfCAgICAgICAgICAgfA0KPj4gICAgICBfX19fX19f
+fF9fX19fX19fX19fX19ffF9fX19fX19fX19fX19ffF9fX19fX19fX19ffF9fX19fX19fX19fDQo+
+PiAgICAgfCAgICAgX198X19fX19fX19fX19fX198XyBfX19fX19fX19fX198X19fX19fX19fX198
+X19fX18gICAgICB8DQo+PiAgICAgfCAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgICB8DQo+PiAgICAgfCAgICB8ICAgICAgICAgICAgUGxh
+dGZvcm0gSFcgYW5kIEZpcm13YXJlICAgICAgICAgICAgICB8ICAgICB8DQo+PiAgICAgfCAgICB8
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX198ICAgICB8
+DQo+Pg0KPnxfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19ffA0KPj4NCj4+IDEuIEVEQUMgRmVhdHVyZXMgY29tcG9uZW50cyAtIENyZWF0
+ZSBmZWF0dXJlIHNwZWNpZmljIGRlc2NyaXB0b3JzLg0KPj4gMi4gRURBQyBSQVMgRmVhdHVyZSBk
+cml2ZXIgLSBHZXQgZmVhdHVyZSdzIGF0dHIgZGVzY3JpcHRvcnMgZnJvbSB0aGUNCj4+ICAgIEVE
+QUMgUkFTIGZlYXR1cmUgY29tcG9uZW50IGFuZCByZWdpc3RlcnMgZGV2aWNlJ3MgUkFTIGZlYXR1
+cmVzIHdpdGgNCj4+ICAgIEVEQUMgYnVzIGFuZCBleHBvc2UgdGhlIGZlYXR1cmUncyBzeXNmcyBh
+dHRyaWJ1dGVzIHVuZGVyIHRoZSBzeXNmcw0KPj4gICAgRURBQyBidXMuDQo+PiAzLiBSQVMgZHlu
+YW1pYyBzY3J1YiBjb250cm9sbGVyIC0gVXNlcnNwYWNlIHNhbXBsZSBtb2R1bGUgYWRkZWQgaW4g
+dGhlDQo+PiAgICByYXNkYWVtb24gdG8gc3RhcnQgc2NydWJiaW5nIHdoZW4gZXhjZXNzIG51bWJl
+ciBvZiByZWxhdGVkIGVycm9ycw0KPj4gICAgYXJlIHJlcG9ydGVkIGluIGEgc2hvcnQgc3BhbiBv
+ZiB0aW1lLg0KPj4NCj4+IFRoZSBhZGRlZCBFREFDIGZlYXR1cmUgc3BlY2lmaWMgY29tcG9uZW50
+cyAoZS5nLiBFREFDIHNjcnViLCBFREFDIEVDUywNCj4+IEVEQUMgUFBSIGV0YykgZG8gY2FsbGJh
+Y2tzIHRvICB0aGUgcGFyZW50IGRyaXZlciAoZS5nLiBDWEwgZHJpdmVyLA0KPj4gQUNQSSBSQVMg
+ZHJpdmVyIGV0YykgZm9yIHRoZSBjb250cm9scyByYXRoZXIgdGhhbiBqdXN0IGxldHRpbmcgdGhl
+DQo+PiBjYWxsZXIgZGVhbCB3aXRoIGl0IGJlY2F1c2Ugb2YgdGhlIGZvbGxvd2luZyByZWFzb25z
+Lg0KPj4gMS4gRW5mb3JjZXMgYSBjb21tb24gQVBJIGFjcm9zcyBtdWx0aXBsZSBpbXBsZW1lbnRh
+dGlvbnMgY2FuIGRvIHRoYXQNCj4+ICAgIHZpYSByZXZpZXcsIGJ1dCB0aGF0J3Mgbm90IGdlbmVy
+YWxseSBnb25lIHdlbGwgaW4gdGhlIGxvbmcgcnVuIGZvcg0KPj4gICAgc3Vic3lzdGVtcyB0aGF0
+IGhhdmUgZG9uZSBpdCAoc2V2ZXJhbCBoYXZlIGxhdGVyIG1vdmVkIHRvIGNhbGxiYWNrDQo+PiAg
+ICBhbmQgZmVhdHVyZSBsaXN0IGJhc2VkIGFwcHJvYWNoZXMpLg0KPj4gMi4gR2l2ZXMgYSBwYXRo
+IGZvciAnaW50ZXJjZXB0aW5nJyBpbiB0aGUgRURBQyBmZWF0dXJlIGRyaXZlci4NCj4+ICAgIEFu
+IGV4YW1wbGUgZm9yIHRoaXMgaXMgdGhhdCB3ZSBjb3VsZCBpbnRlcmNlcHQgUFBSIHJlcGFpciBj
+YWxscw0KPj4gICAgYW5kIHNhbml0eSBjaGVjayB0aGF0IHRoZSBtZW1vcnkgaW4gcXVlc3Rpb24g
+aXMgb2ZmbGluZSBiZWZvcmUNCj4+ICAgIHBhc3NpbmcgYmFjayB0byB0aGUgdW5kZXJseWluZyBj
+b2RlLiAgU3VyZSB3ZSBjb3VsZCByZWx5IG9uIGRvaW5nDQo+PiAgICB0aGF0IHZpYSBzb21lIGFk
+ZGl0aW9uYWwgY2FsbHMgZnJvbSB0aGUgcGFyZW50IGRyaXZlciwgYnV0IHRoZQ0KPj4gICAgQUJJ
+IHdpbGwgZ2V0IG1lc3NpZXIuDQo+PiAzLiAoU3BlY3VsYXRpdmUpIHdlIG1heSBnZXQgaW4ga2Vy
+bmVsIHVzZXJzIG9mIHNvbWUgZmVhdHVyZXMgaW4gdGhlDQo+PiAgICBsb25nIHJ1bi4NCj4+DQo+
+PiBNb3JlIGRldGFpbHMgb2YgdGhlIGNvbW1vbiBSQVMgZmVhdHVyZXMgYXJlIGRlc2NyaWJlZCBp
+biB0aGUgZm9sbG93aW5nDQo+PiBzZWN0aW9ucy4NCj4+DQo+PiBNZW1vcnkgU2NydWJiaW5nDQo+
+PiA9PT09PT09PT09PT09PT09DQo+PiBJbmNyZWFzaW5nIERSQU0gc2l6ZSBhbmQgY29zdCBoYXMg
+bWFkZSBtZW1vcnkgc3Vic3lzdGVtIHJlbGlhYmlsaXR5IGFuDQo+PiBpbXBvcnRhbnQgY29uY2Vy
+bi4gVGhlc2UgbW9kdWxlcyBhcmUgdXNlZCB3aGVyZSBwb3RlbnRpYWxseSBjb3JydXB0ZWQNCj4+
+IGRhdGEgY291bGQgY2F1c2UgZXhwZW5zaXZlIG9yIGZhdGFsIGlzc3Vlcy4gTWVtb3J5IGVycm9y
+cyBhcmUgb25lIG9mDQo+PiB0aGUgdG9wIGhhcmR3YXJlIGZhaWx1cmVzIHRoYXQgY2F1c2Ugc2Vy
+dmVyIGFuZCB3b3JrbG9hZCBjcmFzaGVzLg0KPj4NCj4+IE1lbW9yeSBzY3J1YiBpcyBhIGZlYXR1
+cmUgd2hlcmUgYW4gRUNDIGVuZ2luZSByZWFkcyBkYXRhIGZyb20gZWFjaA0KPj4gbWVtb3J5IG1l
+ZGlhIGxvY2F0aW9uLCBjb3JyZWN0cyB3aXRoIGFuIEVDQyBpZiBuZWNlc3NhcnkgYW5kIHdyaXRl
+cw0KPj4gdGhlIGNvcnJlY3RlZCBkYXRhIGJhY2sgdG8gdGhlIHNhbWUgbWVtb3J5IG1lZGlhIGxv
+Y2F0aW9uLg0KPj4NCj4+IFRoZSBtZW1vcnkgRElNTXMgY291bGQgYmUgc2NydWJiZWQgYXQgYSBj
+b25maWd1cmFibGUgcmF0ZSB0byBkZXRlY3QNCj4+IHVuY29ycmVjdGVkIG1lbW9yeSBlcnJvcnMg
+YW5kIGF0dGVtcHRzIHRvIHJlY292ZXIgZnJvbSBkZXRlY3RlZCBtZW1vcnkNCj4+IGVycm9ycyBw
+cm92aWRpbmcgdGhlIGZvbGxvd2luZyBiZW5lZml0cy4NCj4+IC0gUHJvYWN0aXZlbHkgc2NydWJi
+aW5nIG1lbW9yeSBESU1NcyByZWR1Y2VzIHRoZSBjaGFuY2Ugb2YgYSBjb3JyZWN0YWJsZQ0KPj4g
+ICBlcnJvciBiZWNvbWluZyB1bmNvcnJlY3RhYmxlLg0KPj4gLSBPbmNlIGRldGVjdGVkLCB1bmNv
+cnJlY3RlZCBlcnJvcnMgY2F1Z2h0IGluIHVuYWxsb2NhdGVkIG1lbW9yeSBwYWdlcyBhcmUNCj4+
+ICAgaXNvbGF0ZWQgYW5kIHByZXZlbnRlZCBmcm9tIGJlaW5nIGFsbG9jYXRlZCB0byBhbiBhcHBs
+aWNhdGlvbiBvciB0aGUgT1MuDQo+PiAtIFRoZSBwcm9iYWJpbGl0eSBvZiBzb2Z0d2FyZS9oYXJk
+d2FyZSBwcm9kdWN0cyBlbmNvdW50ZXJpbmcgbWVtb3J5DQo+PiAgIGVycm9ycyBpcyByZWR1Y2Vk
+Lg0KPj4gU29tZSBkZXRhaWxzIG9mIGJhY2tncm91bmQgY2FuIGJlIGZvdW5kIGluIFJlZmVyZW5j
+ZSBbNV0uDQo+Pg0KPj4gVGhlcmUgYXJlIDIgdHlwZXMgb2YgbWVtb3J5IHNjcnViYmluZywgMS4g
+QmFja2dyb3VuZCAocGF0cm9sKQ0KPj4gc2NydWJiaW5nIG9mIHRoZSBSQU0gd2hpbGVzdCB0aGUg
+UkFNIGlzIG90aGVyd2lzZQ0KPj4gICAgaWRsZS4NCj4+IDIuIE9uLWRlbWFuZCBzY3J1YmJpbmcg
+Zm9yIGEgc3BlY2lmaWMgYWRkcmVzcyByYW5nZS9yZWdpb24gb2YgbWVtb3J5Lg0KPj4NCj4+IFRo
+ZXJlIGFyZSBzZXZlcmFsIHR5cGVzIG9mIGludGVyZmFjZXMgdG8gSFcgbWVtb3J5IHNjcnViYmVy
+cw0KPj4gaWRlbnRpZmllZCBzdWNoIGFzIEFDUEkgTlZESU1NIEFSUyhBZGRyZXNzIFJhbmdlIFNj
+cnViKSwgQ1hMIG1lbW9yeQ0KPj4gZGV2aWNlIHBhdHJvbCBzY3J1YiwgQ1hMIEREUjUgRUNTLCBB
+Q1BJIFJBUzIgbWVtb3J5IHNjcnViYmluZy4NCj4+DQo+PiBUaGUgc2NydWIgY29udHJvbCB2YXJp
+ZXMgYmV0d2VlbiBkaWZmZXJlbnQgbWVtb3J5IHNjcnViYmVycy4gVG8gYWxsb3cNCj4+IGZvciBz
+dGFuZGFyZCB1c2Vyc3BhY2UgdG9vbGluZyB0aGVyZSBpcyBhIG5lZWQgdG8gcHJlc2VudCB0aGVz
+ZQ0KPj4gY29udHJvbHMgd2l0aCBhIHN0YW5kYXJkIEFCSS4NCj4+DQo+PiBJbnRyb2R1Y2UgZ2Vu
+ZXJpYyBtZW1vcnkgRURBQyBzY3J1YiBjb250cm9sIHdoaWNoIGFsbG93cyB1c2VyIHRvDQo+PiBj
+b250cm9sIHVuZGVybHlpbmcgc2NydWJiZXJzIGluIHRoZSBzeXN0ZW0gdmlhIGdlbmVyaWMgc3lz
+ZnMgc2NydWINCj4+IGNvbnRyb2wgaW50ZXJmYWNlLg0KPj4NCj4+IFVzZSBjYXNlIG9mIGNvbW1v
+biBzY3J1YiBjb250cm9sIGZlYXR1cmUNCj4+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0NCj4+IDEuIFRoZXJlIGFyZSBzZXZlcmFsIHR5cGVzIG9mIGludGVyZmFjZXMg
+dG8gSFcgbWVtb3J5IHNjcnViYmVycyBpZGVudGlmaWVkDQo+PiAgICBzdWNoIGFzIEFDUEkgTlZE
+SU1NIEFSUyhBZGRyZXNzIFJhbmdlIFNjcnViKSwgQ1hMIG1lbW9yeSBkZXZpY2UgcGF0cm9sDQo+
+PiAgICBzY3J1YiwgQ1hMIEREUjUgRUNTLCBBQ1BJIFJBUzIgbWVtb3J5IHNjcnViYmluZyBmZWF0
+dXJlcyBhbmQgc29mdHdhcmUNCj4+ICAgIGJhc2VkIG1lbW9yeSBzY3J1YmJlcihkaXNjdXNzZWQg
+aW4gdGhlIGNvbW11bml0eSBSZWZlcmVuY2UgWzVdKS4NCj4+ICAgIEFsc28gc29tZSBzY3J1YmJl
+cnMgc3VwcG9ydCBjb250cm9sbGluZyAoYmFja2dyb3VuZCkgcGF0cm9sIHNjcnViYmluZw0KPj4g
+ICAgKEFDUEkgUkFTMiwgQ1hMKSBhbmQvb3Igb24tZGVtYW5kIHNjcnViYmluZyhBQ1BJIFJBUzIs
+IEFDUEkgQVJTKS4NCj4+ICAgIEhvd2V2ZXIgdGhlIHNjcnViIGNvbnRyb2xzIHZhcmllcyBiZXR3
+ZWVuIG1lbW9yeSBzY3J1YmJlcnMuIFRodXMgdGhlcmUNCj4+ICAgIGlzIGEgcmVxdWlyZW1lbnQg
+Zm9yIGEgc3RhbmRhcmQgZ2VuZXJpYyBzeXNmcyBzY3J1YiBjb250cm9scyBleHBvc2VkDQo+PiAg
+ICB0byB0aGUgdXNlcnNwYWNlIGZvciB0aGUgc2VhbWxlc3MgY29udHJvbCBvZiB0aGUgSFcvU1cg
+c2NydWJiZXJzIGluDQo+PiAgICB0aGUgc3lzdGVtIGJ5IGFkbWluL3NjcmlwdHMvdG9vbHMgZXRj
+Lg0KPj4gMi4gU2NydWIgY29udHJvbHMgaW4gdXNlciBzcGFjZSBhbGxvdyB0aGUgdXNlciB0byBk
+aXNhYmxlIHRoZSBzY3J1YmJpbmcNCj4+ICAgIGluIGNhc2UgZGlzYWJsaW5nIG9mIHRoZSBiYWNr
+Z3JvdW5kIHBhdHJvbCBzY3J1YmJpbmcgb3IgY2hhbmdpbmcgdGhlDQo+PiAgICBzY3J1YiByYXRl
+IGFyZSBuZWVkZWQgZm9yIG90aGVyIHB1cnBvc2VzIHN1Y2ggYXMgcGVyZm9ybWFuY2UtYXdhcmUN
+Cj4+ICAgIG9wZXJhdGlvbnMgd2hpY2ggcmVxdWlyZXMgdGhlIGJhY2tncm91bmQgb3BlcmF0aW9u
+cyB0byBiZSB0dXJuZWQgb2ZmDQo+PiAgICBvciByZWR1Y2VkLg0KPj4gMy4gQWxsb3dzIHRvIHBl
+cmZvcm0gb24tZGVtYW5kIHNjcnViYmluZyBmb3Igc3BlY2lmaWMgYWRkcmVzcyByYW5nZSBpZg0K
+Pj4gICAgc3VwcG9ydGVkIGJ5IHRoZSBzY3J1YmJlci4NCj4+IDQuIFVzZXIgc3BhY2UgdG9vbHMg
+Y29udHJvbHMgc2NydWIgdGhlIG1lbW9yeSBESU1NcyByZWd1bGFybHkgYXQgYQ0KPj4gICAgY29u
+ZmlndXJhYmxlIHNjcnViIHJhdGUgdXNpbmcgdGhlIHN5c2ZzIHNjcnViIGNvbnRyb2xzIGRpc2N1
+c3NlZCBoZWxwLA0KPj4gICAgLSB0byBkZXRlY3QgdW5jb3JyZWN0YWJsZSBtZW1vcnkgZXJyb3Jz
+IGVhcmx5IGJlZm9yZSB1c2VyIGFjY2Vzc2luZw0KPm1lbW9yeSwNCj4+ICAgICAgd2hpY2ggaGVs
+cHMgdG8gcmVjb3ZlciB0aGUgZGV0ZWN0ZWQgbWVtb3J5IGVycm9ycy4NCj4+ICAgIC0gcmVkdWNl
+cyB0aGUgY2hhbmNlIG9mIGEgY29ycmVjdGFibGUgZXJyb3IgYmVjb21pbmcgdW5jb3JyZWN0YWJs
+ZS4NCj4+IDUuIFBvbGljeSBjb250cm9sIGZvciBob3RwbHVnZ2VkIG1lbW9yeS4gVGhlcmUgaXMg
+bm90IG5lY2Vzc2FyaWx5IGEgc3lzdGVtDQo+PiAgICB3aWRlIGJpb3Mgb3Igc2ltaWxhciBpbiB0
+aGUgbG9vcCB0byBjb250cm9sIHRoZSBzY3J1YiBzZXR0aW5ncyBvbiBhIENYTA0KPj4gICAgZGV2
+aWNlIHRoYXQgd2Fzbid0IHRoZXJlIGF0IGJvb3QuIFdoYXQgdGhhdCBzZXR0aW5nIHNob3VsZCBi
+ZSBpcyBhIHBvbGljeQ0KPj4gICAgZGVjaXNpb24gYXMgd2UgYXJlIHRyYWRpbmcgb2YgcmVsaWFi
+aWxpdHkgdnMgcGVyZm9ybWFuY2UgLSBoZW5jZSBpdCBzaG91bGQNCj4+ICAgIGJlIGluIGNvbnRy
+b2wgb2YgdXNlcnNwYWNlLiBBcyBzdWNoLCAnYW4nIGludGVyZmFjZSBpcyBuZWVkZWQuIFNlZW1z
+IG1vcmUNCj4+ICAgIHNlbnNpYmxlIHRvIHRyeSBhbmQgdW5pZnkgaXQgd2l0aCBvdGhlciBzaW1p
+bGFyIGludGVyZmFjZXMgdGhhbiBzcGluDQo+PiAgICB5ZXQgYW5vdGhlciBvbmUuDQo+Pg0KPj4g
+VGhlIGRyYWZ0IHZlcnNpb24gb2YgdXNlcnNwYWNlIGNvZGUgZm9yIGR5bmFtaWMgc2NydWIgY29u
+dHJvbCwgYmFzZWQNCj4+IG9uIGZyZXF1ZW5jeSBvZiBtZW1vcnkgZXJyb3JzIHJlcG9ydGVkIHRv
+IHRoZSB1c2Vyc3BhY2UsIGlzIGFkZGVkIGluDQo+PiByYXNkYWVtb24gYW5kIGVuYWJsZWQsIHRl
+c3RlZCBmb3IgQ1hMIGRldmljZSBiYXNlZCBwYXRyb2wgc2NydWJiaW5nDQo+PiBmZWF0dXJlIGFu
+ZCBBQ1BJIFJBUzIgYmFzZWQgc2NydWJiaW5nIGZlYXR1cmUuDQo+Pg0KPj4gaHR0cHM6Ly9naXRo
+dWIuY29tL3NoaWp1am9zZTQvcmFzZGFlbW9uL3RyZWUvc2NydWJfY29udHJvbF82X2p1bmVfMjAy
+NA0KPj4NCj4+IENvbXBhcmlzb24gb2Ygc2NydWJiaW5nIGZlYXR1cmVzDQo+PiA9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KPj4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCj4+ICAuICAgICAgICAgICAgICAu
+ICAgQUNQSSAgICAuIENYTCBwYXRyb2wuICBDWEwgRUNTICAuICBBUlMgICAgICAuDQo+PiAgLiAg
+TmFtZSAgICAgICAgLiAgIFJBUzIgICAgLiBzY3J1YiAgICAgLiAgICAgICAgICAgLiAgICAgICAg
+ICAgLg0KPj4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4NCj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAuICAgICAg
+ICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLiBPbi1kZW1hbmQgICAgLiBTdXBw
+b3J0ZWQgLiBObyAgICAgICAgLiBObyAgICAgICAgLiBTdXBwb3J0ZWQgLg0KPj4gIC4gU2NydWJi
+aW5nICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4N
+Cj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAu
+ICAgICAgICAgICAuDQo+PiAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KPj4gIC4gICAgICAgICAgICAgIC4gICAgICAgICAg
+IC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuIEJhY2tncm91bmQg
+ICAuIFN1cHBvcnRlZCAuIFN1cHBvcnRlZCAuIFN1cHBvcnRlZCAuIE5vICAgICAgICAuDQo+PiAg
+LiBzY3J1YmJpbmcgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAg
+ICAgICAgLg0KPj4gIC4gICAgICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAg
+ICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQo+PiAgLiAgICAgICAgICAgICAgLiAg
+ICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0KPj4gIC4gTW9k
+ZSBvZiAgICAgIC4gU2NydWIgY3RybC4gcGVyIGRldmljZS4gcGVyIG1lbW9yeS4gIFVua25vd24g
+IC4NCj4+ICAuIHNjcnViYmluZyAgICAuIHBlciBOVU1BICAuICAgICAgICAgICAuIG1lZGlhICAg
+ICAuICAgICAgICAgICAuDQo+PiAgLiAgICAgICAgICAgICAgLiBkb21haW4uICAgLiAgICAgICAg
+ICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0KPj4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCj4+ICAuICAgICAgICAg
+ICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+
+PiAgLiBRdWVyeSBzY3J1YiAgLiBTdXBwb3J0ZWQgLiBTdXBwb3J0ZWQgLiBTdXBwb3J0ZWQgLiBT
+dXBwb3J0ZWQgLg0KPj4gIC4gY2FwYWJpbGl0aWVzIC4gICAgICAgICAgIC4gICAgICAgICAgIC4g
+ICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAu
+ICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KPj4gIC4g
+ICAgICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAg
+ICAgIC4NCj4+ICAuIFNldHRpbmcgICAgICAuIFN1cHBvcnRlZCAuIE5vICAgICAgICAuIE5vICAg
+ICAgICAuIFN1cHBvcnRlZCAuDQo+PiAgLiBhZGRyZXNzIHJhbmdlLiAgICAgICAgICAgLiAgICAg
+ICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0KPj4gIC4gICAgICAgICAgICAgIC4gICAg
+ICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+DQo+PiAgLiAgICAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAg
+LiAgICAgICAgICAgLg0KPj4gIC4gU2V0dGluZyAgICAgIC4gU3VwcG9ydGVkIC4gU3VwcG9ydGVk
+IC4gTm8gICAgICAgIC4gTm8gICAgICAgIC4NCj4+ICAuIHNjcnViIHJhdGUgICAuICAgICAgICAg
+ICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLiAgICAgICAgICAg
+ICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0KPj4g
+IC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4NCj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAg
+ICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLiBVbml0IGZvciAgICAgLiBOb3QgICAgICAgLiBp
+biBob3VycyAgLiBObyAgICAgICAgLiBObyAgICAgICAgLg0KPj4gIC4gc2NydWIgcmF0ZSAgIC4g
+RGVmaW5lZCAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuICAg
+ICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAg
+ICAuDQo+PiAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLg0KPj4gIC4gICAgICAgICAgICAgIC4gU3VwcG9ydGVkIC4gICAgICAg
+ICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuIFNjcnViICAgICAgICAuIG9uLWRl
+bWFuZCAuIE5vICAgICAgICAuIE5vICAgICAgICAuIFN1cHBvcnRlZCAuDQo+PiAgLiBzdGF0dXMv
+ICAgICAgLiBzY3J1YmJpbmcgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0K
+Pj4gIC4gQ29tcGxldGlvbiAgIC4gb25seSAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4g
+ICAgICAgICAgIC4NCj4+ICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQo+PiAgLiBVQyBlcnJvciAgICAgLiAgICAgICAgICAg
+LkNYTCBnZW5lcmFsLkNYTCBnZW5lcmFsLiBBQ1BJIFVDRSAgLg0KPj4gIC4gcmVwb3J0aW5nICAg
+IC4gRXhjZXB0aW9uIC5tZWRpYS9EUkFNIC5tZWRpYS9EUkFNIC4gbm90aWZ5IGFuZC4NCj4+ICAu
+ICAgICAgICAgICAgICAuICAgICAgICAgICAuZXZlbnQvbWVkaWEuZXZlbnQvbWVkaWEuIHF1ZXJ5
+ICAgICAuDQo+PiAgLiAgICAgICAgICAgICAgLiAgICAgICAgICAgLnNjYW4/ICAgICAgLnNjYW4/
+ICAgICAgLiBBUlMgc3RhdHVzLg0KPj4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCj4+ICAuICAgICAgICAgICAgICAuICAg
+ICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLiBDbGVh
+ciBVQyAgICAgLiAgTm8gICAgICAgLiBObyAgICAgICAgLiAgTm8gICAgICAgLiBTdXBwb3J0ZWQg
+Lg0KPj4gIC4gZXJyb3IgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAg
+IC4gICAgICAgICAgIC4NCj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAuICAgICAgICAg
+ICAuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KPj4gIC4gICAgICAgICAg
+ICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+
+ICAuIFRyYW5zbGF0ZSAgICAuIE5vICAgICAgICAuIE5vICAgICAgICAuIE5vICAgICAgICAuIFN1
+cHBvcnRlZCAuDQo+PiAgLiAqKDEpU1BBIHRvICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAg
+ICAgICAgICAgLiAgICAgICAgICAgLg0KPj4gIC4gKigyKURQQSAgICAgIC4gICAgICAgICAgIC4g
+ICAgICAgICAgIC4gICAgICAgICAgIC4gICAgICAgICAgIC4NCj4+ICAuLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQo+PiAgLiAg
+ICAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLiAgICAgICAg
+ICAgLg0KPj4gIC4gRXJyb3IgaW5qZWN0IC4gTm8gICAgICAgIC4gQ2FuIGluamVjdC4gTm8gICAg
+ICAgIC4gU3VwcG9ydGVkIC4NCj4+ICAuICAgICAgICAgICAgICAuICAgICAgICAgICAuIHBvaXNv
+biBmb3IuICAgICAgICAgICAuICAgICAgICAgICAuDQo+PiAgLiAgICAgICAgICAgICAgLiAgICAg
+ICAgICAgLiBDWEwgICAgICAgLiAgICAgICAgICAgLiAgICAgICAgICAgLg0KPj4gIC4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4N
+Cj4+ICooMSkgLSBTUEEgLSBTeXN0ZW0gUGh5c2ljYWwgQWRkcmVzcy4gU2VlIHNlY3Rpb24gOS4x
+OS43LjgNCj4+ICAgICAgICBGdW5jdGlvbiBJbmRleCA1IC0gVHJhbnNsYXRlIFNQQSBvZiBBQ1BJ
+IHNwZWMgcjYuNS4NCj4+ICooMikgLSBEUEEgLSBEZXZpY2UgUGh5c2ljYWwgQWRkcmVzcy4gU2Vl
+IHNlY3Rpb24gOS4xOS43LjgNCj4+ICAgICAgICBGdW5jdGlvbiBJbmRleCA1IC0gVHJhbnNsYXRl
+IFNQQSBvZiBBQ1BJIHNwZWMgcjYuNS4NCj4+DQo+PiBDWEwgU2NydWJiaW5nIGZlYXR1cmVzDQo+
+PiA9PT09PT09PT09PT09PT09PT09PT09DQo+PiBBZGQgc3VwcG9ydCBmb3IgY29udHJvbCBDWEwg
+cGF0cm9sIHNjcnViYmVyIGFuZCBBQ1BJIFJBUzIgSFcgYmFzZWQNCj4+IG1lbW9yeSBwYXRyb2wg
+c2NydWJiZXIgYW5kIHJlZ2lzdGVyIHdpdGggdGhlIEVEQUMgc2NydWIgdG8gZXhwb3NlIHRoZQ0K
+Pj4gc2NydWIgY29udHJvbHMgdG8gdGhlIHVzZXJzcGFjZSB0b29sLg0KPj4NCj4+IENYTCBzcGVj
+IHIzLjEgc2VjdGlvbiA4LjIuOS45LjExLjEgZGVzY3JpYmVzIHRoZSBtZW1vcnkgZGV2aWNlIHBh
+dHJvbA0KPj4gc2NydWIgY29udHJvbCBmZWF0dXJlLiBUaGUgZGV2aWNlIHBhdHJvbCBzY3J1YiBw
+cm9hY3RpdmVseSBsb2NhdGVzIGFuZA0KPj4gbWFrZXMgY29ycmVjdGlvbnMgdG8gZXJyb3JzIGlu
+IHJlZ3VsYXIgY3ljbGUuIFRoZSBwYXRyb2wgc2NydWIgY29udHJvbA0KPj4gYWxsb3dzIHRoZSBy
+ZXF1ZXN0IHRvIGNvbmZpZ3VyZSBwYXRyb2wgc2NydWJiZXIncyBpbnB1dCBjb25maWd1cmF0aW9u
+cy4NCj4+DQo+PiBUaGUgcGF0cm9sIHNjcnViIGNvbnRyb2wgYWxsb3dzIHRoZSByZXF1ZXN0ZXIg
+dG8gc3BlY2lmeSB0aGUgbnVtYmVyIG9mDQo+PiBob3VycyBpbiB3aGljaCB0aGUgcGF0cm9sIHNj
+cnViIGN5Y2xlcyBtdXN0IGJlIGNvbXBsZXRlZCwgcHJvdmlkZWQNCj4+IHRoYXQgdGhlIHJlcXVl
+c3RlZCBudW1iZXIgaXMgbm90IGxlc3MgdGhhbiB0aGUgbWluaW11bSBudW1iZXIgb2YgaG91cnMN
+Cj4+IGZvciB0aGUgcGF0cm9sIHNjcnViIGN5Y2xlIHRoYXQgdGhlIGRldmljZSBpcyBjYXBhYmxl
+IG9mLiBJbiBhZGRpdGlvbiwNCj4+IHRoZSBwYXRyb2wgc2NydWIgY29udHJvbHMgYWxsb3cgdGhl
+IGhvc3QgdG8gZGlzYWJsZSBhbmQgZW5hYmxlIHRoZQ0KPj4gZmVhdHVyZSBpbiBjYXNlIGRpc2Fi
+bGluZyBvZiB0aGUgZmVhdHVyZSBpcyBuZWVkZWQgZm9yIG90aGVyIHB1cnBvc2VzDQo+PiBzdWNo
+IGFzIHBlcmZvcm1hbmNlLWF3YXJlIG9wZXJhdGlvbnMgd2hpY2ggcmVxdWlyZSB0aGUgYmFja2dy
+b3VuZA0KPj4gb3BlcmF0aW9ucyB0byBiZSB0dXJuZWQgb2ZmLg0KPj4NCj4+IFRoZSBFcnJvciBD
+aGVjayBTY3J1YiAoRUNTKSBpcyBhIGZlYXR1cmUgZGVmaW5lZCBpbiBKRURFQyBERFI1IFNEUkFN
+DQo+PiBTcGVjaWZpY2F0aW9uIChKRVNENzktNSkgYW5kIGFsbG93cyB0aGUgRFJBTSB0byBpbnRl
+cm5hbGx5IHJlYWQsDQo+PiBjb3JyZWN0IHNpbmdsZS1iaXQgZXJyb3JzLCBhbmQgd3JpdGUgYmFj
+ayBjb3JyZWN0ZWQgZGF0YSBiaXRzIHRvIHRoZQ0KPj4gRFJBTSBhcnJheSB3aGlsZSBwcm92aWRp
+bmcgdHJhbnNwYXJlbmN5IHRvIGVycm9yIGNvdW50cy4NCj4+DQo+PiBUaGUgRERSNSBkZXZpY2Ug
+Y29udGFpbnMgbnVtYmVyIG9mIG1lbW9yeSBtZWRpYSBGUlVzIHBlciBkZXZpY2UuIFRoZQ0KPj4g
+RERSNSBFQ1MgZmVhdHVyZSBhbmQgdGh1cyB0aGUgRUNTIGNvbnRyb2wgZHJpdmVyIHN1cHBvcnRz
+IGNvbmZpZ3VyaW5nDQo+PiB0aGUgRUNTIHBhcmFtZXRlcnMgcGVyIEZSVS4NCj4+DQo+PiBBQ1BJ
+IFJBUzIgSGFyZHdhcmUtYmFzZWQgTWVtb3J5IFNjcnViYmluZw0KPj4gPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4+IEFDUEkgc3BlYyA2LjUgc2VjdGlvbiA1LjIu
+MjEgQUNQSSBSQVMyIGRlc2NyaWJlcyBBQ1BJIFJBUzIgdGFibGUNCj4+IHByb3ZpZGVzIGludGVy
+ZmFjZXMgZm9yIHBsYXRmb3JtIFJBUyBmZWF0dXJlcyBhbmQgc3VwcG9ydHMgaW5kZXBlbmRlbnQN
+Cj4+IFJBUyBjb250cm9scyBhbmQgY2FwYWJpbGl0aWVzIGZvciBhIGdpdmVuIFJBUyBmZWF0dXJl
+IGZvciBtdWx0aXBsZQ0KPj4gaW5zdGFuY2VzIG9mIHRoZSBzYW1lIGNvbXBvbmVudCBpbiBhIGdp
+dmVuIHN5c3RlbS4NCj4+IE1lbW9yeSBSQVMgZmVhdHVyZXMgYXBwbHkgdG8gUkFTIGNhcGFiaWxp
+dGllcywgY29udHJvbHMgYW5kIG9wZXJhdGlvbnMNCj4+IHRoYXQgYXJlIHNwZWNpZmljIHRvIG1l
+bW9yeS4gUkFTMiBQQ0Mgc3ViLXNwYWNlcyBmb3IgbWVtb3J5LXNwZWNpZmljDQo+PiBSQVMgZmVh
+dHVyZXMgaGF2ZSBhIEZlYXR1cmUgVHlwZSBvZiAweDAwIChNZW1vcnkpLg0KPj4NCj4+IFRoZSBw
+bGF0Zm9ybSBjYW4gdXNlIHRoZSBoYXJkd2FyZS1iYXNlZCBtZW1vcnkgc2NydWJiaW5nIGZlYXR1
+cmUgdG8NCj4+IGV4cG9zZSBjb250cm9scyBhbmQgY2FwYWJpbGl0aWVzIGFzc29jaWF0ZWQgd2l0
+aCBoYXJkd2FyZS1iYXNlZCBtZW1vcnkNCj4+IHNjcnViIGVuZ2luZXMuIFRoZSBSQVMyIG1lbW9y
+eSBzY3J1YmJpbmcgZmVhdHVyZSBzdXBwb3J0cyBmb2xsb3dpbmcgYXMNCj4+IHBlciBzcGVjLA0K
+Pj4gIC0gSW5kZXBlbmRlbnQgbWVtb3J5IHNjcnViYmluZyBjb250cm9scyBmb3IgZWFjaCBOVU1B
+IGRvbWFpbiwgaWRlbnRpZmllZA0KPj4gICAgdXNpbmcgaXRzIHByb3hpbWl0eSBkb21haW4uDQo+
+PiAgICBOb3RlOiBIb3dldmVyIEFtcGVyZUNvbXB1dGluZyBoYXMgc2luZ2xlIGVudHJ5IHJlcGVh
+dGVkIGFzIHRoZXkgaGF2ZQ0KPj4gICAgICAgICAgY2VudHJhbGl6ZWQgY29udHJvbHMuDQo+PiAg
+LSBQcm92aXNpb24gZm9yIGJhY2tncm91bmQgKHBhdHJvbCkgc2NydWJiaW5nIG9mIHRoZSBlbnRp
+cmUgbWVtb3J5IHN5c3RlbSwNCj4+ICAgIGFzIHdlbGwgYXMgb24tZGVtYW5kIHNjcnViYmluZyBm
+b3IgYSBzcGVjaWZpYyByZWdpb24gb2YgbWVtb3J5Lg0KPj4NCj4+IEFDUEkgQWRkcmVzcyBSYW5n
+ZSBTY3J1YmJpbmcoQVJTKQ0KPj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4+
+IEFSUyBhbGxvd3MgdGhlIHBsYXRmb3JtIHRvIGNvbW11bmljYXRlIG1lbW9yeSBlcnJvcnMgdG8g
+c3lzdGVtIHNvZnR3YXJlLg0KPj4gVGhpcyBjYXBhYmlsaXR5IGFsbG93cyBzeXN0ZW0gc29mdHdh
+cmUgdG8gcHJldmVudCBhY2Nlc3NlcyB0bw0KPj4gYWRkcmVzc2VzIHdpdGggdW5jb3JyZWN0YWJs
+ZSBlcnJvcnMgaW4gbWVtb3J5LiBBUlMgZnVuY3Rpb25zIG1hbmFnZQ0KPj4gYWxsIE5WRElNTXMg
+cHJlc2VudCBpbiB0aGUgc3lzdGVtLiBPbmx5IG9uZSBzY3J1YiBjYW4gYmUgaW4gcHJvZ3Jlc3MN
+Cj4+IHN5c3RlbSB3aWRlIGF0IGFueSBnaXZlbiB0aW1lLg0KPj4gRm9sbG93aW5nIGZ1bmN0aW9u
+cyBhcmUgc3VwcG9ydGVkIGFzIHBlciB0aGUgc3BlY2lmaWNhdGlvbi4NCj4+IDEuIFF1ZXJ5IEFS
+UyBDYXBhYmlsaXRpZXMgZm9yIGEgZ2l2ZW4gYWRkcmVzcyByYW5nZSwgaW5kaWNhdGVzIHBsYXRm
+b3JtDQo+PiAgICBzdXBwb3J0cyB0aGUgQUNQSSBOVkRJTU0gUm9vdCBEZXZpY2UgVW5jb25zdW1l
+ZCBFcnJvciBOb3RpZmljYXRpb24uDQo+PiAyLiBTdGFydCBBUlMgdHJpZ2dlcnMgYW4gQWRkcmVz
+cyBSYW5nZSBTY3J1YiBmb3IgdGhlIGdpdmVuIG1lbW9yeSByYW5nZS4NCj4+ICAgIEFkZHJlc3Mg
+c2NydWJiaW5nIGNhbiBiZSBkb25lIGZvciB2b2xhdGlsZSBtZW1vcnksIHBlcnNpc3RlbnQgbWVt
+b3J5LA0KPj4gICAgb3IgYm90aC4NCj4+IDMuIFF1ZXJ5IEFSUyBTdGF0dXMgY29tbWFuZCBhbGxv
+d3Mgc29mdHdhcmUgdG8gZ2V0IHRoZSBzdGF0dXMgb2YgQVJTLA0KPj4gICAgaW5jbHVkaW5nIHRo
+ZSBwcm9ncmVzcyBvZiBBUlMgYW5kIEFSUyBlcnJvciByZWNvcmQuDQo+PiA0LiBDbGVhciBVbmNv
+cnJlY3RhYmxlIEVycm9yLg0KPj4gNS4gVHJhbnNsYXRlIFNQQQ0KPj4gNi4gQVJTIEVycm9yIElu
+amVjdCBldGMuDQo+PiBOb3RlOiBTdXBwb3J0IGZvciBBUlMgaXMgbm90IGFkZGVkIGluIHRoaXMg
+c2VyaWVzIGJlY2F1c2UgdG8gcmVkdWNlDQo+PiB0aGUgbGluZSBvZiBjb2RlIGZvciByZXZpZXcg
+YW5kIGNvdWxkIGJlIGFkZGVkIGFmdGVyIGluaXRpYWwgY29kZSBpcyBtZXJnZWQuDQo+PiBXZSdk
+IGxpa2UgZmVlZGJhY2sgb24gd2hldGhlciB0aGlzIGlzIG9mIGludGVyZXN0IHRvIEFSUyBjb21t
+dW5pdHk/DQo+Pg0KPj4gU2VyaWVzIGFkZHMsDQo+PiAxLiBHZW5lcmljIEVEQUMgUkFTIGZlYXR1
+cmUgZHJpdmVyLCBFREFDIHNjcnViIGRyaXZlciwgRURBQyBFQ1MgZHJpdmVyDQo+PiAgICBzdXBw
+b3J0cyBtZW1vcnkgc2NydWIgY29udHJvbCwgRUNTIGNvbnRyb2wgYW5kIG90aGVyIFJBUyBmZWF0
+dXJlcw0KPj4gICAgaW4gdGhlIHN5c3RlbS4NCj4+IDIuIFN1cHBvcnQgZm9yIENYTCBmZWF0dXJl
+IG1haWxib3ggY29tbWFuZHMsIHdoaWNoIGlzIHVzZWQgYnkNCj4+ICAgIENYTCBkZXZpY2Ugc2Ny
+dWJiaW5nIGZlYXR1cmVzLg0KPj4gMy4gQ1hMIHNjcnViIGRyaXZlciBzdXBwb3J0aW5nIHBhdHJv
+bCBzY3J1YiBjb250cm9sIChkZXZpY2UgYW5kDQo+PiAgICByZWdpb24gYmFzZWQpLg0KPj4gNC4g
+Q1hMIEVDUyBkcml2ZXIgc3VwcG9ydGluZyBFQ1MgY29udHJvbCBmZWF0dXJlLg0KPj4gNS4gQUNQ
+SSBSQVMyIGRyaXZlciBhZGRzIE9TIGludGVyZmFjZSBmb3IgUkFTMiBjb21tdW5pY2F0aW9uIHRo
+cm91Z2gNCj4+ICAgIFBDQyBtYWlsYm94IGFuZCBleHRyYWN0cyBBQ1BJIFJBUzIgZmVhdHVyZSB0
+YWJsZSAoUkFTMikgYW5kDQo+PiAgICBjcmVhdGUgcGxhdGZvcm0gZGV2aWNlIGZvciB0aGUgUkFT
+IG1lbW9yeSBmZWF0dXJlcywgd2hpY2ggYmluZHMNCj4+ICAgIHRvIHRoZSBtZW1vcnkgQUNQSSBS
+QVMyIGRyaXZlci4NCj4+IDcuIE1lbW9yeSBBQ1BJIFJBUzIgZHJpdmVyIGdldHMgdGhlIFBDQyBz
+dWJzcGFjZSBmb3IgY29tbXVuaWNhdGluZw0KPj4gICAgd2l0aCB0aGUgQUNQSSBjb21wbGlhbnQg
+cGxhdGZvcm0gc3VwcG9ydHMgQUNQSSBSQVMyLiBBZGQgY2FsbGJhY2sNCj4+ICAgIGZ1bmN0aW9u
+cyBhbmQgcmVnaXN0ZXJzIHdpdGggRURBQyBzY3J1YiB0byBzdXBwb3J0IHVzZXIgdG8NCj4+ICAg
+IGNvbnRyb2wgdGhlIEhXIHBhdHJvbCBzY3J1YmJlcnMgZXhwb3NlZCB0byB0aGUga2VybmVsIHZp
+YSB0aGUNCj4+ICAgIEFDUEkgUkFTMiB0YWJsZS4NCj4+DQo+PiBUaGUgQ1hMIHNwZWNpZmljIHNj
+cnViIGFuZCBFQ1MgZmVhdHVyZXMgYXJlIHN1cHBvcnRlZCBpbg0KPj4gaHR0cHM6Ly9naXRsYWIu
+Y29tL3FlbXUtcHJvamVjdC9xZW11LmdpdA0KPj4NCj4+IE9wZW4gUXVlc3Rpb25zIGJhc2VkIG9u
+IGZlZWRiYWNrcyBmcm9tIHRoZSBjb21tdW5pdHk6DQo+PiAxLiBMZW86IFN0YW5kYXJkaXplIHVu
+aXQgZm9yIHNjcnViIHJhdGUsIGZvciBleGFtcGxlIEFDUEkgUkFTMiBkb2VzIG5vdCBkZWZpbmUN
+Cj4+ICAgIHVuaXQgZm9yIHRoZSBzY3J1YiByYXRlLiBSQVMyIGNsYXJpZmljYXRpb24gbmVlZGVk
+Lg0KPj4gMi4gSm9uYXRoYW46IEFueSBuZWVkIGZvciBkaXNjb3ZlcmFiaWxpdHkgb2YgY2FwYWJp
+bGl0eSB0byBzY2FuIGRpZmZlcmVudCByZWdpb25zLA0KPj4gICAgc3VjaCBhcyBnbG9iYWwgUEEg
+c3BhY2UgdG8gdGhlIHVzZXJzcGFjZS4gTGVmdCBhcyBmdXR1cmUgZXh0ZW5zaW9uLg0KPj4gMy4g
+SmlhcWk6DQo+PiAgICAtIFNUT1BfUEFUUk9MX1NDUlVCQkVSIGZyb20gUkFTMiBtdXN0IGJlIGJs
+b2NrZWQgYW5kLCBtdXN0IG5vdCBiZQ0KPmV4cG9zZWQgdG8NCj4+ICAgICAgT1MvdXNlcnNwYWNl
+LiBTdG9wcGluZyBwYXRyb2wgc2NydWJiZXIgaXMgdW5hY2NlcHRhYmxlIGZvciBwbGF0Zm9ybSB3
+aGVyZQ0KPj4gICAgICBPRU0gaGFzIGVuYWJsZWQgcGF0cm9sIHNjcnViYmVyLCBiZWNhdXNlIHRo
+ZSBwYXRyb2wgc2NydWJiZXIgaXMgYSBrZXkgcGFydA0KPj4gICAgICBvZiBsb2dnaW5nIGFuZCBp
+cyByZXB1cnBvc2VkIGZvciBvdGhlciBSQVMgYWN0aW9ucy4NCj4+ICAgIElmIHRoZSBPRU0gZG9l
+cyBub3Qgd2FudCB0byBleHBvc2UgdGhpcyBjb250cm9sLCB0aGV5IHNob3VsZCBsb2NrIGl0IGRv
+d24gc28NCj50aGUNCj4+ICAgIGludGVyZmFjZSBpcyBub3QgZXhwb3NlZCB0byB0aGUgT1MuIFRo
+ZXNlIGZlYXR1cmVzIGFyZSBvcHRpb25hbCBhZnRlcmFsbC4NCj4+ICAgIC0gIlJlcXVlc3RlZCBB
+ZGRyZXNzIFJhbmdlIi8iQWN0dWFsIEFkZHJlc3MgUmFuZ2UiIChyZWdpb24gdG8gc2NydWIpIGlz
+IGENCj4+ICAgICAgIHNpbWlsYXJseSBiYWQgdGhpbmcgdG8gZXhwb3NlIGluIFJBUzIuDQo+PiAg
+ICBJZiB0aGUgT0VNIGRvZXMgbm90IHdhbnQgdG8gZXhwb3NlIHRoaXMsIHRoZXkgc2hvdWxkIGxv
+Y2sgaXQgZG93biBzbyB0aGUNCj4+ICAgIGludGVyZmFjZSBpcyBub3QgZXhwb3NlZCB0byB0aGUg
+T1MuIFRoZXNlIGZlYXR1cmVzIGFyZSBvcHRpb25hbCBhZnRlcmFsbC4NCj4+IDQuIEJvcmlzbGF2
+Og0KPj4gICAgLSBIb3cgdGhlIHNjcnViIGNvbnRyb2wgZXhwb3NlZCB0byB0aGUgdXNlcnNwYWNl
+IHdpbGwgYmUgdXNlZD8NCj4+ICAgICAgUE9DIGFkZGVkIGluIHJhc2RhZW1vbiB3aXRoIGR5bmFt
+aWMgc2NydWIgY29udHJvbCBmb3IgQ1hMIG1lbW9yeQ0KPm1lZGlhDQo+PiAgICAgIGVycm9ycyBh
+bmQgbWVtb3J5IGVycm9ycyByZXBvcnRlZCB0byB0aGUgdXNlcnNwYWNlLg0KPj4gICAgICBodHRw
+czovL2dpdGh1Yi5jb20vc2hpanVqb3NlNC9yYXNkYWVtb24vdHJlZS9zY3J1Yl9jb250cm9sXzZf
+anVuZV8yMDI0DQo+PiAgICAtIElzIHRoZSBzY3J1YiBpbnRlcmZhY2UgaXMgc3VmZmljaWVudCBm
+b3IgdGhlIHVzZSBjYXNlcz8NCj4+ICAgIC0gV2hvIGlzIGdvaW5nIHRvIHVzZSBzY3J1YiBjb250
+cm9scyB0b29scy9hZG1pbi9zY3JpcHRzPw0KPj4gICAgICAxKSBSYXNkYWVtb24gZm9yIGR5bmFt
+aWMgY29udHJvbA0KPj4gICAgICAyKSBVZGV2IHNjcmlwdCBmb3IgbW9yZSBzdGF0aWMgJ2RlZmF1
+bHRzJyBvbiBob3RwbHVnIGV0Yy4NCj4+DQo+PiBSZWZlcmVuY2VzOg0KPj4gMS4gQUNQSSBzcGVj
+IHI2LjUgc2VjdGlvbiA1LjIuMjEgQUNQSSBSQVMyLg0KPj4gMi4gQUNQSSBzcGVjIHI2LjUgc2Vj
+dGlvbiA5LjE5LjcuMiBBUlMuDQo+PiAzLiBDWEwgc3BlYyAgcjMuMSA4LjIuOS45LjExLjEgRGV2
+aWNlIHBhdHJvbCBzY3J1YiBjb250cm9sIGZlYXR1cmUgNC4NCj4+IENYTCBzcGVjICByMy4xIDgu
+Mi45LjkuMTEuMiBERFI1IEVDUyBmZWF0dXJlIDUuIEJhY2tncm91bmQgaW5mb3JtYXRpb24NCj4+
+IGFib3V0IGtlcm5lbCBzdXBwb3J0IGZvciBtZW1vcnkgc2NhbiwgbWVtb3J5DQo+PiAgICBlcnJv
+ciBkZXRlY3Rpb24gYW5kIEFDUEkgUkFTRi4NCj4+DQo+PiBodHRwczovL2xvcmUua2VybmVsLm9y
+Zy9hbGwvMjAyMjExMDMxNTUwMjkuMjQ1MTEwNS0xLWppYXFpeWFuQGdvb2dsZS5jDQo+PiBvbS8N
+Cj4+IDYuIERpc2N1c3Npb25zIG9uIFJBU0Y6DQo+Pg0KPj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvbGttbC8yMDIzMDkxNTE3MjgxOC43NjEtMS1zaGlqdS5qb3NlQGh1YXdlaS5jbw0KPj4gbS8j
+cg0KPj4NCj4+IENoYW5nZXMNCj4+ID09PT09PT0NCj4+IHY5IC0+IHYxMDoNCj4+IDEuIEZlZWRi
+YWNrIGZyb20gTWF1cm8gQ2FydmFsaG8gQ2hlaGFiOg0KPj4gICAgLSBDaGFuZ2VzIHN1Z2dlc3Rl
+ZCBpbiBFREFDIFJBUyBmZWF0dXJlIGRyaXZlci4NCj4+ICAgICAgdXNlIHVwcGVyY2FzZSBmb3Ig
+ZW51bXMsIGlmIGVsc2UgdG8gc3dpdGNoLWNhc2UsIGRvY3VtZW50YXRpb24gZm9yDQo+PiAgICAg
+IHN0YXRpYyBzY3J1YiBhbmQgZWNzIGluaXQgZnVuY3Rpb25zIGV0Yy4NCj4+ICAgIC0gQ2hhbmdl
+cyBzdWdnZXN0ZWQgaW4gRURBQyBzY3J1Yi4NCj4+ICAgICAgdW5pdCBvZiBzY3J1YiBjeWNsZSBo
+b3VyIHRvIHNlY29uZHMuDQo+PiAgICAgIGF0dHJpYnV0ZSBub2RlIGN5Y2xlX2luX2hvdXJzX2F2
+YWlhYmxlIHRvIG1pbl9jeWNsZV9kdXJhdGlvbiBhbmQNCj4+ICAgICAgbWF4X2N5Y2xlX2R1cmF0
+aW9uLg0KPj4gICAgICBhdHRyaWJ1dGUgbm9kZSBjeWNsZV9pbl9ob3VycyB0byBjdXJyZW50X2N5
+Y2xlX2R1cmF0aW9uLg0KPj4gICAgICBVc2UgYmFzZSAwIGZvciBrc3RydG91NjQoKSBhbmQga3N0
+cnRvbCgpIGZ1bmN0aW9ucy4NCj4+ICAgICAgZXRjLg0KPj4gICAgLSBDaGFuZ2VzIHN1Z2dlc3Rl
+ZCBpbiBFREFDIEVDUy4NCj4+ICAgICAgdXBwZXJjYXNlIGZvciBlbnVtcw0KPj4gICAgICBhZGQg
+QUJJIGRvY3VtZW50YXRpb24uIGV0Yw0KPj4NCj4+IDIuIEZlZWRiYWNrIGZyb20gRmFuOg0KPj4g
+ICAgLSBDaGFuZ2VzIHN1Z2dlc3RlZCBpbiBFREFDIFJBUyBmZWF0dXJlIGRyaXZlci4NCj4+ICAg
+ICAgdXNlIHVwcGVyY2FzZSBmb3IgZW51bXMsIGNoYW5nZSBpZi4uLmVsc2UgdG8gc3dpdGNoLWNh
+c2UuDQo+PiAgICAgIHNvbWUgb3B0aW1pemF0aW9uIGluIGVkYWNfcmFzX2Rldl9yZWdpc3Rlcigp
+IGZ1bmN0aW9uDQo+PiAgICAgIGFkZCBtaXNzaW5nIGdvdG8gZnJlZV9jdHgNCj4+ICAgIC0gQ2hh
+bmdlcyBzdWdnZXN0ZWQgaW4gdGhlIGNvZGUgZm9yIGZlYXR1cmUgY29tbWFuZHMuDQo+PiAgICAt
+IENYTCBkcml2ZXIgc2NydWIgYW5kIEVDUyBjb2RlDQo+PiAgICAgIHVzZSB1cHBlcmNhc2UgZm9y
+IGVudW1zLCBmaXggdHlwbywgdXNlIGVudW0gdHlwZSBmb3IgbW9kZQ0KPj4gICAgICBmaXggbG9u
+ZiBsaW5lcyBldGMuDQo+Pg0KPj4gdjggLT4gdjk6DQo+PiAxLiBGZWVkYmFjayBmcm9tIEJvcmlz
+bGF2Og0KPj4gICAgLSBBZGQgc2NydWIgY29udHJvbCBkcml2ZXIgdG8gdGhlIEVEQUMgb24gZmVl
+ZGJhY2sgZnJvbSBCb3Jpc2xhdi4NCj4+ICAgIC0gQ2hhbmdlZCBERVZJQ0VfQVRUUl8uLigpIHN0
+YXRpYy4NCj4+ICAgIC0gQ2hhbmdlZCB0aGUgd3JpdGUgcGVybWlzc2lvbnMgZm9yIHNjcnViIGNv
+bnRyb2wgc3lzZnMgZmlsZXMgYXMNCj4+ICAgICAgcm9vdC1vbmx5Lg0KPj4gMi4gRmVlZGJhY2sg
+ZnJvbSBGYW46DQo+PiAgICAtIE9wdGltaXplZCBjeGxfZ2V0X2ZlYXR1cmUoKSBmdW5jdGlvbiBi
+eSB1c2luZyBtaW4oKSBhbmQgcmVtb3ZlZA0KPj4gICAgICBmZWF0X291dF9taW5fc2l6ZS4NCj4+
+ICAgIC0gUmVtb3ZlZCB1bnJlYWNoZWQgcmV0dXJuIGZyb20gY3hsX3NldF9mZWF0dXJlKCkgZnVu
+Y3Rpb24uDQo+PiAgICAtIENoYW5nZWQgdGhlIHRlcm0gICJyYXRlIiB0byAiY3ljbGVfaW5faG91
+cnMiIGluIGFsbCB0aGUNCj4+ICAgICAgc2NydWIgY29udHJvbCBjb2RlLg0KPj4gICAgLSBBbGxv
+dyBjeGxfbWVtX3Byb2JlKCkgY29udGludWUgaWYgY3hsX21lbV9wYXRyb2xfc2NydWJfaW5pdCgp
+IGZhaWwsDQo+PiAgICAgIHdpdGgganVzdCBhIGRlYnVnIHdhcm5pbmcuDQo+Pg0KPj4gMy4gRmVl
+ZGJhY2sgZnJvbSBKb25hdGhhbjoNCj4+ICAgIC0gUmVtb3ZlZCBwYXRjaCBfX2ZyZWUoKSBiYXNl
+ZCBjbGVhbnVwIGZ1bmN0aW9uIGZvciBhY3BpX3B1dF90YWJsZS4NCj4+ICAgICAgYW5kIGFkZGVk
+IGZpeCBpbiB0aGUgYWNwaSByYXMyIGRyaXZlci4NCj4+DQo+PiA0LiBGZWVkYmFjayBmcm9tIERh
+biBXaWxsaWFtczoNCj4+ICAgIC0gQWxsb3cgY3hsX21lbV9wcm9iZSgpIGNvbnRpbnVlIGlmIGN4
+bF9tZW1fcGF0cm9sX3NjcnViX2luaXQoKSBmYWlsLA0KPj4gICAgICB3aXRoIGp1c3QgYSBkZWJ1
+ZyB3YXJuaW5nLg0KPj4gICAgLSBBZGQgc3VwcG9ydCBmb3IgQ1hMIHJlZ2lvbiBiYXNlZCBzY3J1
+YiBjb250cm9sLg0KPj4NCj4+IDUuIEZlZWRiYWNrIGZyb20gRGFuaWVsIEZlcmd1c29uIG9uIFJB
+UzIgZHJpdmVyczoNCj4+ICAgICBJbiB0aGUgQUNQSSBSQVMyIGRyaXZlciwNCj4+ICAgLSBJbmNv
+cnBvcmF0ZWQgdGhlIGNoYW5nZXMgZ2l2ZW4gZm9yIGNsZWFyaW5nIGVycm9yIHJlcG9ydGVkLg0K
+Pj4gICAtIEluY29ycG9yYXRlZCB0aGUgY2hhbmdlcyBnaXZlbiBmb3IgY2hlY2sgdGhlIFNldCBS
+QVMgQ2FwYWJpbGl0eQ0KPj4gICAgIHN0YXR1cyBhbmQgcmV0dXJuIGFuIGFwcHJvcHJpYXRlIGVy
+cm9yLg0KPj4gICAgIEluIHRoZSBSQVMyIG1lbW9yeSBkcml2ZXIsDQo+PiAgIC0gQWRkZWQgbW9y
+ZSBjaGVja3MgZm9yIHN0YXJ0L3N0b3AgYmcgYW5kIG9uLWRlbWFuZCBzY3J1YmJpbmcNCj4+ICAg
+ICBzbyB0aGF0IGFkZHIgcmFuZ2UgaW4gY2FjaGUgZG8gbm90IGdldCBjbGVhcmVkIGFuZCByZXN0
+cmljdA0KPj4gICAgIHBlcm1pdHRlZCBvcGVyYXRpb25zIGR1cmluZyBzY3J1YmJpbmcuDQo+Pg0K
+Pj4gdjcgLT4gdjg6DQo+PiAxLiBBZGQgbW9yZSBkZXRhaWxlZCBjb3ZlciBsZXR0ZXIgYW5kIGFk
+ZCBpbmZvIGZvciBiYXNpYyBhbmFseXNpcw0KPj4gICAgb2YgQUNQSSBBUlMgZm9yIGNvbW1lbnQg
+ZnJvbSBEYW4gV2lsbGlhbXMuDQo+PiAyLiBDaGFuZ2VkIGZpbGUgbmFtZSBldGMgZnJvbSByYXMy
+IHRvIGFjcGlfcmFzMiBpbiBtZW1vcnkgQUNQSSBSQVMyDQo+PiAgICBkcml2ZXIgZm9yIGNvbW1l
+bnQgZnJvbSBCb3Jpcy4NCj4+IDMuIEFkZCBkb2N1bWVudHMgZm9yIHVzYWdlIGZvciBjb21tZW50
+IGZyb20gSm9uYXRoYW4uDQo+PiA0LiBDaGFuZ2VkIGxvZ2ljIGluIG1lbW9yeS9hY3BpX3JhczIu
+YyBmb3IgZW5hYmxlIGJhY2tncm91bmQNCj4+ICAgIHNjcnViYmluZyB0byBhbGxvdyBzZXR0aW5n
+IHRoZSBzY3J1YiByYXRlLg0KPj4gNS4gTWVyZ2VkIG1lbW9yeS9hY3BpX3JhczJfY29tbW9uLmMg
+d2l0aCBtZW1vcnkvYWNwaV9yYXMyLmMgYW5kDQo+PiAgICBvYnNlbGV0ZSBjb2RlLCBzdWdnZXN0
+ZWQgYnkgSm9uYXRoYW4uDQo+PiA2LiBJbml0aWFsIG9wdGltaXphdGlvbnMgYW5kIGNsZWFudXAg
+ZXNwZWNpYWxseSBpbiB0aGUgbWVtb3J5L2FjcGlfcmFzMi4NCj4+IDcuIFJlbW92ZWQgQ1hMIEVD
+UyBzdXBwb3J0IGZvciB0aW1lIGJlaW5nLg0KPj4gOC4gUmVtb3ZlZCBzdXBwb3J0IGZvciByZWdp
+b24gYmFzZWQgc2NydWIgY29udHJvbCBmcm9tIHRoZSBzY3J1Yg0KPj4gICAgc3Vic3l0ZW0sIHdo
+aWNoIHdhcyBuZWVkZWQgZm9yIHRoZSBDWEwgRUNTLCBjYW4gYmUgYWRkZWQgbGF0ZXINCj4+ICAg
+IGlmIHJlcXVpcmVkLg0KPj4gOS4gRml4ZWQgdGhlIGZvcm1hdCBvZiBmZXcgY29tbWVudHMgYW5k
+IGEgZGVmaW5pdGlvbiBpbiBDWEwgZmVhdHVyZQ0KPj4gICAgIGNvZGUgZm9yIHRoZSBmZWVkYmFj
+a3MgZnJvbSBGYW4uDQo+PiAxMS4gSm9uYXRoYW4gZG9uZSBzZXZlcmFsIG9wdGltaXphdGlvbnMs
+IGludGVyZmFjZSBjaGFuZ2VzIGFuZA0KPj4gICAgIGNsZWFudXBzIGFsbCBvdmVyIHRoZSBjb2Rl
+Lg0KPj4gMTIuIEZpeGVzIGZvciBmZWVkYmFja3MgZnJvbSBEYW5pZWwgRmVyZ3Vzb24oQW1wZXJl
+Y29tcHV0aW5nKQ0KPj4gICAgIGZvciBSQVMyLg0KPj4gMTMuICBXb3JrYXJvdW5kIGZvciBhIFJB
+UzIgY2FzZSBvZiBvbmx5IG9uZSBhY3R1YWwgY29udHJvbGxlciBhcw0KPj4gICAgICByZXBvcnRl
+ZCBieSBEYW5pZWwgRmVyZ3Vzb24oQW1wZXJlQ29tcHV0aW5nKSBpbiB0aGVpciBoYXJkd2FyZS4N
+Cj4+IDE0LiBGZWVkYmFjayBmcm9tIFlhemVuLCBtb3ZlIHRoZSBjb21tb24gc2NydWIgYW5kIHJh
+czIgY2hhbmdlcw0KPj4gICAgIHVuZGVyIC9kcml2ZXJzL3Jhcy8uDQo+PiAxNS4gRHJvcCBwYXRj
+aCBBQ1BJQ0E6IEFDUEkgNi41OiBBZGQgc3VwcG9ydCBmb3IgUkFTMiB0YWJsZSBiZWNhdXNlDQo+
+PiAgICAgUmFmYWVsIHF1ZXVlZCB0aGUgcGF0Y2guDQo+Pg0KPj4gaHR0cHM6Ly9naXQua2VybmVs
+Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvcmFmYWVsL2xpbnV4LXBtLmdpdC9jbw0KPj4g
+bW1pdC8/aD1ibGVlZGluZy1lZGdlJmlkPTk3MjZkODIxZjg4ZTI4NGVjZDk5OGI3NmFlNWYyMTc0
+NzIxY2Q5ZGMNCj4+DQo+PiB2NiAtPiB2NzoNCj4+IDEuIE1haW4gY2hhbmdlcyBmb3IgY29tbWVu
+dHMgZnJvbSBKb25hdGhhbiwgVGhhbmtzLg0KPj4gMS4xLiBDWEwNCj4+ICAtIENoYW5nZXMgZm9y
+IGRlYWwgd2l0aCBzbWFsbCBtYWlsIGJveCBhbmQgc3VwcG9ydGluZyBtdWx0aXBhcnQNCj4+ICAg
+IGZlYXR1cmUgZGF0YSB0cmFuc2ZlcnMuDQo+PiAgLSBQcm92aWRlIG1vcmUgc3BlY2lmaWMgcGFy
+YW1ldGVycyB0byBtYm94IHN1cHBvcnRlZC9nZXQvc2V0IGZlYXR1cmVzDQo+PiAgICBpbnRlcmZh
+Y2UgZnVuY3Rpb25zLg0KPj4gIC0ga3ZtYWxsb2MgLT4ga21hbGxvYyBpbiBDWEwgc2NydWIgbWVt
+IGFsbG9jYXRpb24gZm9yIGZlYXR1cmUgY29tbWFuZHMuDQo+PiAgLSBDaGFuZ2VkIHRoZSB3YXkg
+dXNpbmcgX19mcmVlKGtmcmVlKQ0KPj4gIC0gUmVtb3ZlZCByZWFkYmFjayBhbmQgdmVyaWZ5IGZv
+ciBzZXR0aW5nIENYTCBzY3J1YiBwYXRyb2wgYW5kIEVDUw0KPj4gICAgcGFyYW1ldGVycy4gQ291
+bGQgYmUgYWRkZWQgbGF0ZXIgaWYgbmVlZGVkLg0KPj4gIC0gSW4gaXNfdmlzaWJsZSgpIGNhbGxi
+YWNrIGZ1bmN0aW9ucyBmb3Igc2NydWIgY29udHJvbCBzeXNmcyBhdHRycw0KPj4gICAgY2hhbmdl
+ZCB0byB3cml0ZWJhY2sgdGhlIGRlZmF1bHQgYXR0cmlidXRlIG1vZGUgdmFsdWUgaW5zdGVhZCBv
+Zg0KPj4gICAgc2V0dGluZyBwZXIgYXR0cnMuDQo+PiAgLSBBZGQgZG9jdW1lbnRhdGlvbiBmb3Ig
+c3lzZnMgaW50ZXJmYWNlcyBmb3IgQ1hMIEVDUyBzY3J1YiBjb250cm9sLg0KPj4gMS4yLiBSQVMy
+DQo+PiAgLSBJbiByYXNmIGNvbW1vbiBjb2RlLCByZW5hbWUgcmFzZiB0byByYXMyIGJlY2F1c2Ug
+UkFTRiBzZWVtcyBvYnNlbGV0ZS4NCj4+ICAtIFJlcGxhY2UgcHJfKiB3aXRoIGRldl8qIGxvZyBm
+dW5jdGlvbiBjYWxscyBmcm9tIEFDUEkgUkFTMiBhbmQNCj4+ICAgIG1lbW9yeSBSQVMyIGRyaXZl
+cnMuDQo+PiAgLSBJbiByYXNmIGNvbW1vbiBjb2RlLCByZW5hbWUgcmFzZiB0byByYXMyLg0KPj4g
+IC0gUmVtb3ZlZCBpbmNsdWRpbmcgdW5uZWNlc3NhcnkgLmggZmlsZSBmcm9tIG1lbW9yeSBSQVMy
+IGRyaXZlci4NCj4+ICAtIEluIGlzX3Zpc2libGUoKSBjYWxsYmFjayBmdW5jdGlvbnMgZm9yIHNj
+cnViIGNvbnRyb2wgc3lzZnMgYXR0cnMNCj4+ICAgIGNoYW5nZWQgdG8gd3JpdGViYWNrIHRoZSBk
+ZWZhdWx0IGF0dHJpYnV0ZSBtb2RlIHZhbHVlIGluc3RlYWQgb2YNCj4+ICAgIHNldHRpbmcgcGVy
+IGF0dHJpYnV0ZS4NCj4+DQo+PiAyLiBDaGFuZ2VzIGZvciBjb21tZW50cyBmcm9tIEZhbiwgVGhh
+bmtzLg0KPj4gIC0gQWRkIGRlYnVnIG1lc3NhZ2UgaWYgY3hsIHBhdHJvbCBzY3J1YiBhbmQgZWNz
+IGluaXQgZnVuY3Rpb24NCj4+ICAgIGNhbGxzIGZhaWwuDQo+PiAzLiBVcGRhdGVkIGNvdmVyIGxl
+dHRlciBmb3IgZmVlZGJhY2sgZnJvbSBEYW4gV2lsbGlhbXMuDQo+Pg0KPj4gdjUgLT4gdjY6DQo+
+PiAxLiBDaGFuZ2VzIGZvciBjb21tZW50cyBmcm9tIERhdmlkbG9ociwgVGhhbmtzLg0KPj4gIC0g
+VXBkYXRlIENYTCBmZWF0dXJlIGNvZGUgYmFzZWQgb24gc3BlYyAzLjEuDQo+PiAgLSBhdHRyYiAt
+PiBhdHRyDQo+PiAgLSBVc2UgZW51bXMgd2l0aCBkZWZhdWx0IGNvdW50aW5nLg0KPj4gMi4gUmVi
+YXNlZCB0byB0aGUgbGF0ZXN0IGtlcm5lbC4NCj4+DQo+PiB2NCAtPiB2NToNCj4+IDEuIEZvbGxv
+d2luZyBhcmUgdGhlIG1haW4gY2hhbmdlcyBtYWRlIGJhc2VkIG9uIHRoZSBmZWVkYmFjayBmcm9t
+IERhbg0KPldpbGxpYW1zIG9uIHY0Lg0KPj4gMS4xLiBJbiB0aGUgc2NydWIgc3Vic3lzdGVtIHRo
+ZSBjb21tb24gc2NydWIgY29udHJvbCBhdHRyaWJ1dGVzIGFyZSBzdGF0aWNhbGx5DQo+ZGVmaW5l
+ZA0KPj4gICAgICBpbnN0ZWFkIG9mIGR5bmFtaWNhbGx5IGNyZWF0ZWQuDQo+PiAxLjIuIEFkZCBz
+Y3J1YiBzdWJzeXN0ZW0gc3VwcG9ydCBleHRlcm5hbGx5IGRlZmluZWQgYXR0cmlidXRlIGdyb3Vw
+Lg0KPj4gICAgICBBZGQgQ1hMIEVDUyBkcml2ZXIgZGVmaW5lIEVDUyBzcGVjaWZpYyBhdHRyaWJ1
+dGUgZ3JvdXAgYW5kIHBhc3MgdG8NCj4+IAkgdGhlIHNjcnViIHN1YnN5c3RlbS4NCj4+IDEuMy4g
+TW92ZSBjeGxfbWVtX2Vjc19pbml0KCkgdG8gY3hsL2NvcmUvcmVnaW9uLmMgc28gdGhhdCB0aGUg
+Q1hMIHJlZ2lvbl9pZA0KPj4gICAgICBpcyB1c2VkIGluIHRoZSByZWdpc3RyYXRpb24gd2l0aCB0
+aGUgc2NydWIgc3Vic3lzdGVtLg0KPj4gMS40LiBBZGQgcHJldmlvdXNseSBwb3N0ZWQgUkFTRiBj
+b21tb24gYW5kIFJBUzIgcGF0Y2hlcyB0byB0aGlzIHNjcnViDQo+c2VyaWVzLg0KPj4NCj4+IDIu
+IEFkZCBzdXBwb3J0IGZvciB0aGUgJ2VuYWJsZV9iYWNrZ3JvdW5kX3NjcnViJyBhdHRyaWJ1dGUN
+Cj4+ICAgIGZvciBSQVMyLCBvbiByZXF1ZXN0IGZyb20gQmlsbA0KPlNjaHdhcnR6KHdzY2h3YXJ0
+ekBhbXBlcmVjb21wdXRpbmcuY29tKS4NCj4+DQo+PiB2MyAtPiB2NDoNCj4+IDEuIEZpeGVzIGZv
+ciB0aGUgd2FybmluZ3MvZXJyb3JzIHJlcG9ydGVkIGJ5IGtlcm5lbCB0ZXN0IHJvYm90Lg0KPj4g
+Mi4gQWRkIHN1cHBvcnQgZm9yIHJlYWRpbmcgdGhlICdlbmFibGUnIGF0dHJpYnV0ZSBvZiBDWEwg
+cGF0cm9sIHNjcnViLg0KPj4NCj4+IENoYW5nZXMNCj4+IHYyIC0+IHYzOg0KPj4gMS4gQ2hhbmdl
+cyBmb3IgY29tbWVudHMgZnJvbSBEYXZpZGxvaHIsIFRoYW5rcy4NCj4+ICAtIFVwZGF0ZWQgY3hs
+IHNjcnViIGtjb25maWcNCj4+ICAtIHJlbW92ZWQgdXNhZ2Ugb2YgdGhlIGZsYWcgaXNfc3VwcG9y
+dF9mZWF0dXJlIGZyb20NCj4+ICAgIHRoZSBmdW5jdGlvbiBjeGxfbWVtX2dldF9zdXBwb3J0ZWRf
+ZmVhdHVyZV9lbnRyeSgpLg0KPj4gIC0gY29ycmVjdGVkIHNwZWxsaW5nIGVycm9yLg0KPj4gIC0g
+cmVtb3ZlZCB1bm5lY2Vzc2FyeSBkZWJ1ZyBtZXNzYWdlLg0KPj4gIC0gcmVtb3ZlZCBleHBvcnQg
+ZmVhdHVyZSBjb21tYW5kcyB0byB0aGUgdXNlcnNwYWNlLg0KPj4gMi4gUG9zc2libGUgZml4IGZv
+ciB0aGUgd2FybmluZ3MvZXJyb3JzIHJlcG9ydGVkIGJ5IGtlcm5lbA0KPj4gICAgdGVzdCByb2Jv
+dC4NCj4+IDMuIEFkZCBkb2N1bWVudGF0aW9uIGZvciB0aGUgY29tbW9uIHNjcnViIGNvbmZpZ3Vy
+ZSBhdHRyaWJ1dGVzLg0KPj4NCj4+IHYxIC0+IHYyOg0KPj4gMS4gQ2hhbmdlcyBmb3IgY29tbWVu
+dHMgZnJvbSBEYXZlIEppYW5nLCBUaGFua3MuDQo+PiAgLSBTcGxpdCBwYXRjaGVzLg0KPj4gIC0g
+cmV2ZXJzZWQgeG1hcyB0cmVlIGRlY2xhcmF0aW9ucy4NCj4+ICAtIGRlY2xhcmVkIGZsYWdzIGFz
+IGVudW1zLg0KPj4gIC0gcmVtb3ZlZCBmZXcgdW5uZWNlc3NhcnkgdmFyaWFibGUgaW5pdGlhbGl6
+YXRpb25zLg0KPj4gIC0gcmVwbGFjZWQgUFRSX0VSUl9PUl9aRVJPKCkgd2l0aCBJU19FUlIoKSBh
+bmQgUFRSX0VSUigpLg0KPj4gIC0gYWRkIGF1dG8gY2xlYW4gZGVjbGFyYXRpb25zLg0KPj4gIC0g
+cmVwbGFjZWQgd2hpbGUgbG9vcCB3aXRoIGZvciBsb29wLg0KPj4gIC0gUmVtb3ZlZCBhbGxvY2F0
+aW9uIGZyb20gY3hsX2dldF9zdXBwb3J0ZWRfZmVhdHVyZXMoKSBhbmQNCj4+ICAgIGN4bF9nZXRf
+ZmVhdHVyZSgpIGFuZCBtYWtlIGNoYW5nZSB0byB0YWtlIGFsbG9jYXRlZCBtZW1vcnkNCj4+ICAg
+IHBvaW50ZXIgZnJvbSB0aGUgY2FsbGVyLg0KPj4gIC0gcmVwbGFjZWQgaWYvZWxzZSB3aXRoIHN3
+aXRjaCBjYXNlLg0KPj4gIC0gcmVwbGFjZWQgc3ByaW50ZigpIHdpdGggc3lzZnNfZW1pdCgpIGlu
+IDIgcGxhY2VzLg0KPj4gIC0gcmVwbGFjZWQgZ290byBsYWJlbCB3aXRoIHJldHVybiBpbiBmZXcg
+ZnVuY3Rpb25zLg0KPj4gMi4gcmVtb3ZlZCB1bnVzZWQgY29kZSBmb3Igc3VwcG9ydGVkIGF0dHJp
+YnV0ZXMgZnJvbSBlY3MuDQo+PiAzLiBJbmNsdWRlZCBmb2xsb3dpbmcgY29tbW9uIHBhdGNoIGZv
+ciBzY3J1YiBjb25maWd1cmUgZHJpdmVyDQo+PiAgICB0byB0aGlzIHNlcmllcy4NCj4+ICAgICJt
+ZW1vcnk6IHNjcnViOiBBZGQgc2NydWIgZHJpdmVyIHN1cHBvcnRzIGNvbmZpZ3VyaW5nIG1lbW9y
+eSBzY3J1YmJlcnMNCj4+ICAgICBpbiB0aGUgc3lzdGVtIg0KPj4NCj4+DQo+PiBKb25hdGhhbiBD
+YW1lcm9uICgxKToNCj4+ICAgcGxhdGZvcm06IEFkZCBfX2ZyZWUoKSBiYXNlZCBjbGVhbnVwIGZ1
+bmN0aW9uIGZvcg0KPj4gcGxhdGZvcm1fZGV2aWNlX3B1dA0KPj4NCj4+IFNoaWp1IEpvc2UgKDEw
+KToNCj4+ICAgRURBQzogQWRkIGdlbmVyaWMgRURBQyBSQVMgY29udHJvbCBmZWF0dXJlIGRyaXZl
+cg0KPj4gICBFREFDOiBBZGQgRURBQyBzY3J1YiBjb250cm9sIGRyaXZlcg0KPj4gICBFREFDOiBB
+ZGQgRURBQyBFQ1MgY29udHJvbCBkcml2ZXINCj4+ICAgY3hsL21ib3g6IEFkZCBHRVRfU1VQUE9S
+VEVEX0ZFQVRVUkVTIG1haWxib3ggY29tbWFuZA0KPj4gICBjeGwvbWJveDogQWRkIEdFVF9GRUFU
+VVJFIG1haWxib3ggY29tbWFuZA0KPj4gICBjeGwvbWJveDogQWRkIFNFVF9GRUFUVVJFIG1haWxi
+b3ggY29tbWFuZA0KPj4gICBjeGwvbWVtc2NydWI6IEFkZCBDWEwgbWVtb3J5IGRldmljZSBwYXRy
+b2wgc2NydWIgY29udHJvbCBmZWF0dXJlDQo+PiAgIGN4bC9tZW1zY3J1YjogQWRkIENYTCBtZW1v
+cnkgZGV2aWNlIEVDUyBjb250cm9sIGZlYXR1cmUNCj4+ICAgQUNQSTpSQVMyOiBBZGQgQUNQSSBS
+QVMyIGRyaXZlcg0KPj4gICByYXM6IHNjcnViOiBBQ1BJIFJBUzI6IEFkZCBtZW1vcnkgQUNQSSBS
+QVMyIGRyaXZlcg0KPj4NCj4+ICBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWVkYWMt
+ZWNzICAgfCAgODUgKysNCj4+ICBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWVkYWMt
+c2NydWIgfCAgNzYgKysNCj4+ICBEb2N1bWVudGF0aW9uL3NjcnViL2VkYWMtc2NydWIucnN0ICAg
+ICAgICAgfCAxMTUgKysrDQo+PiAgZHJpdmVycy9hY3BpL0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDEwICsNCj4+ICBkcml2ZXJzL2FjcGkvTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDEgKw0KPj4gIGRyaXZlcnMvYWNwaS9yYXMyLmMgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDM5MSArKysrKysrKysNCj4+ICBkcml2ZXJzL2N4bC9LY29uZmlnICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgMTkgKw0KPj4gIGRyaXZlcnMvY3hsL2NvcmUvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICB8ICAgMSArDQo+PiAgZHJpdmVycy9jeGwvY29yZS9tYm94LmMgICAgICAgICAg
+ICAgICAgICAgIHwgMTM5ICsrKysNCj4+ICBkcml2ZXJzL2N4bC9jb3JlL21lbXNjcnViLmMgICAg
+ICAgICAgICAgICAgfCA4NzMgKysrKysrKysrKysrKysrKysrKysrDQo+PiAgZHJpdmVycy9jeGwv
+Y29yZS9yZWdpb24uYyAgICAgICAgICAgICAgICAgIHwgICA2ICsNCj4+ICBkcml2ZXJzL2N4bC9j
+eGxtZW0uaCAgICAgICAgICAgICAgICAgICAgICAgfCAxMjkgKysrDQo+PiAgZHJpdmVycy9jeGwv
+bWVtLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICsNCj4+ICBkcml2ZXJzL2VkYWMv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPj4gIGRyaXZlcnMvZWRhYy9l
+ZGFjX2Vjcy5jICAgICAgICAgICAgICAgICAgICB8IDM5NiArKysrKysrKysrDQo+PiAgZHJpdmVy
+cy9lZGFjL2VkYWNfcmFzX2ZlYXR1cmUuYyAgICAgICAgICAgIHwgMTg3ICsrKysrDQo+PiAgZHJp
+dmVycy9lZGFjL2VkYWNfc2NydWIuYyAgICAgICAgICAgICAgICAgIHwgMzMzICsrKysrKysrDQo+
+PiAgZHJpdmVycy9yYXMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsNCj4+
+ICBkcml2ZXJzL3Jhcy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPj4g
+IGRyaXZlcnMvcmFzL2FjcGlfcmFzMi5jICAgICAgICAgICAgICAgICAgICB8IDQxNSArKysrKysr
+KysrDQo+PiAgaW5jbHVkZS9hY3BpL3JhczJfYWNwaS5oICAgICAgICAgICAgICAgICAgIHwgIDU5
+ICsrDQo+PiAgaW5jbHVkZS9saW51eC9lZGFjX3Jhc19mZWF0dXJlLmggICAgICAgICAgIHwgMTMy
+ICsrKysNCj4+ICBpbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RldmljZS5oICAgICAgICAgICAgfCAg
+IDEgKw0KPj4gIDIzIGZpbGVzIGNoYW5nZWQsIDMzODQgaW5zZXJ0aW9ucygrKQ0KPj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWVkYWMtZWNzDQo+
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcvc3lzZnMtZWRh
+Yy1zY3J1Yg0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL3NjcnViL2VkYWMt
+c2NydWIucnN0DQo+PiAgY3JlYXRlIG1vZGUgMTAwNzU1IGRyaXZlcnMvYWNwaS9yYXMyLmMgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NA0KPj4gZHJpdmVycy9jeGwvY29yZS9tZW1zY3J1Yi5jICBjcmVhdGUg
+bW9kZSAxMDA3NTUNCj4+IGRyaXZlcnMvZWRhYy9lZGFjX2Vjcy5jICBjcmVhdGUgbW9kZSAxMDA3
+NTUNCj4+IGRyaXZlcnMvZWRhYy9lZGFjX3Jhc19mZWF0dXJlLmMgIGNyZWF0ZSBtb2RlIDEwMDc1
+NQ0KPj4gZHJpdmVycy9lZGFjL2VkYWNfc2NydWIuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvcmFzL2FjcGlfcmFzMi5jDQo+PiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9hY3BpL3Jh
+czJfYWNwaS5oICBjcmVhdGUgbW9kZSAxMDA3NTUNCj4+IGluY2x1ZGUvbGludXgvZWRhY19yYXNf
+ZmVhdHVyZS5oDQo+Pg0KPj4gLS0NCj4+IDIuMzQuMQ0KPj4NCg0K
