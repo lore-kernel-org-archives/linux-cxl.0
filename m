@@ -1,87 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFFF13D617;
-	Thu,  1 Aug 2024 17:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8331B32D9;
+	Thu,  1 Aug 2024 17:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722533197; cv=none; b=ndXyhzComPK64wK7jPAPUwzUrRr0Ux5DlC1DNAuamhBfBhlciuGmS9NsrXRth93vHKDlvvYR9YNm5iov09skF+mVqzFzTKjhsxtXB9QqZ/gfrYF/mvFeQqi71KaUm0NIdT30+j5ym5TMzxvj/G2XLE/ITQEDftSBjMil2W2OTxI=
+	t=1722534258; cv=none; b=N7E0Zw8SHltXT7EIc0IOO1NnbjIntXvbCFz+oIaJT+qQHO/QEwYM+WvRSLo9BO8dMhWCjDYETA7SvLTBOl8amsRwp88ryWonuEULOenyXzXwgLPFi9OxwYBSPOT2334H35YpSu1PDE10Ximu3cyL3Xhinr+A9veDWZNvsRkys/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722533197; c=relaxed/simple;
-	bh=o7DCCp3FQn1iCJygO3a/7pgwytsbRS5VxIzYzl6e+YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SA8nOY/qaq0z2MJpV42I133aDWHi6Fwk2efnIUkN9TddLKIJZW4ahAWSm+ZUGDrWvJXdJH6pWIFvTNg6Dgxc/guvUcq4oQ1LIA3xkK5HLOalU+m1dVsES5Unn3ukVnXEPsM+90CKx5S1sikvv77TKYq2IkOCgr4hv5Mf+stB23M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4oEPrg9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4oEPrg9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 677D8C32786;
-	Thu,  1 Aug 2024 17:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722533197;
-	bh=o7DCCp3FQn1iCJygO3a/7pgwytsbRS5VxIzYzl6e+YA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p4oEPrg9+DVF6yeVY6KBfcL06gLroS6GHruR5IcZJmRbunZnOwEr/LbC/KL03gH7w
-	 6f9lrd4jIvAgEcdGjGzQPPSRPtFQUkhktyRTrRMgKO2+Qtd0nDCQHc51utYmO0zu+Z
-	 Qae7fhZvWWg62LkxMsq+3zTjV1eShdMM8nziIn51y+GMrZGEj2FUT1aohkgiQ9x5Ub
-	 FdIuMBRSx6ll0aCJ1dObQNIy9uhRfnv/i6IM6GL1hyZAqVWefz3FNrP3TCbHoy6btp
-	 o/Es+Po/e5gG/qeQz+Q8EDdQBH3yq2xfMnaJCJRO0+zPmIzKmlqgDZpjBP80kClv0S
-	 Lg29flwmYdHwQ==
-Date: Thu, 1 Aug 2024 20:26:31 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Ahern <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 5/8] fwctl: FWCTL_RPC to execute a Remote Procedure
- Call to device firmware
-Message-ID: <20240801172631.GI4209@unreal>
-References: <0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
- <5-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
- <20240730080038.GA4209@unreal>
- <20240801125829.GA2809814@nvidia.com>
+	s=arc-20240116; t=1722534258; c=relaxed/simple;
+	bh=wRdCTzlDewZSbPkP8IJ71BjVzwzJ/uMan6/8YvZafK8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uWaegQw3HQxW+sowcYs7B+EJSOUpgfrm95UiRtkid0mgUW6lMrADUZ0eMPEFE6KH+nNzhZ4pJG/ThJ+VSLVgi402JTuv5O3yCL72bfoGGqfYKMw0ZhfLPVB5B1c/ol4kXMSAUlbGfcA9baGbXlEw3J1U4ywBo3oZzgMb0/75bU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WZbqf2c9cz6K6MB;
+	Fri,  2 Aug 2024 01:41:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C75C1400F4;
+	Fri,  2 Aug 2024 01:44:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 1 Aug
+ 2024 18:44:09 +0100
+Date: Thu, 1 Aug 2024 18:44:08 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
+ Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
+	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul
+ Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
+	<corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt
+	<palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring
+	<robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, Zi Yan <ziy@nvidia.com>, <devicetree@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v3 02/26] MIPS: sgi-ip27: make NODE_DATA() the same as
+ on all other architectures
+Message-ID: <20240801184408.00002e8b@Huawei.com>
+In-Reply-To: <20240801060826.559858-3-rppt@kernel.org>
+References: <20240801060826.559858-1-rppt@kernel.org>
+	<20240801060826.559858-3-rppt@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240801125829.GA2809814@nvidia.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Aug 01, 2024 at 09:58:29AM -0300, Jason Gunthorpe wrote:
-> On Tue, Jul 30, 2024 at 11:00:38AM +0300, Leon Romanovsky wrote:
-> > > +
-> > > +	void *inbuf __free(kvfree) =
-> > > +		kvzalloc(cmd->in_len, GFP_KERNEL | GFP_KERNEL_ACCOUNT);
-> > 
-> > 
-> > <...>
-> > 
-> > > +	out_len = cmd->out_len;
-> > > +	void *outbuf __free(kvfree_errptr) = fwctl->ops->fw_rpc(
-> > > +		ucmd->uctx, cmd->scope, inbuf, cmd->in_len, &out_len);
-> > 
-> > I was under impression that declaration of variables in C should be at the beginning
-> > of block. Was it changed for the kernel?
+On Thu,  1 Aug 2024 09:08:02 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
+
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> Yes, the compiler check blocking variables in the body was disabled to
-> allow cleanup.h
+> sgi-ip27 is the only system that defines NODE_DATA() differently than
+> the rest of NUMA machines.
 > 
-> Jonathan said this is the agreed coding style to use for this
-
-I'm said to hear that.
-
-Thanks
-
+> Add node_data array of struct pglist pointers that will point to
+> __node_data[node]->pglist and redefine NODE_DATA() to use node_data
+> array.
 > 
-> Jason
+> This will allow pulling declaration of node_data to the generic mm code
+> in the next commit.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+After staring for a while at the use made of the other part
+of the __node_data I think what you have in this an the next
+two patches is fine.
+
+I'm far from convinced it was correct before though as
+arch_refresh_node_data() called on offline nodes in free_area_init()
+would have replaced __node_data with an allocation of
+size pg_data_t but the hub_data(), visible below, is after that.
+Maybe hub_data() as never called for offline nodes, but
+I couldn't establish that.
+
+After these patches the arch_refresh_node_data() generic
+version will only be replacing the pointer in node_data
+leaving the hub_data where it was in the first place and
+thus is fine.
+
+So with that in mind (and it could be completely wrong ;)
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+
+> ---
+>  arch/mips/include/asm/mach-ip27/mmzone.h | 5 ++++-
+>  arch/mips/sgi-ip27/ip27-memory.c         | 5 ++++-
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/mach-ip27/mmzone.h b/arch/mips/include/asm/mach-ip27/mmzone.h
+> index 08c36e50a860..629c3f290203 100644
+> --- a/arch/mips/include/asm/mach-ip27/mmzone.h
+> +++ b/arch/mips/include/asm/mach-ip27/mmzone.h
+> @@ -22,7 +22,10 @@ struct node_data {
+>  
+>  extern struct node_data *__node_data[];
+>  
+> -#define NODE_DATA(n)		(&__node_data[(n)]->pglist)
+>  #define hub_data(n)		(&__node_data[(n)]->hub)
+>  
+> +extern struct pglist_data *node_data[];
+> +
+> +#define NODE_DATA(nid)		(node_data[nid])
+> +
+>  #endif /* _ASM_MACH_MMZONE_H */
+> diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
+> index b8ca94cfb4fe..c30ef6958b97 100644
+> --- a/arch/mips/sgi-ip27/ip27-memory.c
+> +++ b/arch/mips/sgi-ip27/ip27-memory.c
+> @@ -34,8 +34,10 @@
+>  #define SLOT_PFNSHIFT		(SLOT_SHIFT - PAGE_SHIFT)
+>  #define PFN_NASIDSHFT		(NASID_SHFT - PAGE_SHIFT)
+>  
+> -struct node_data *__node_data[MAX_NUMNODES];
+> +struct pglist_data *node_data[MAX_NUMNODES];
+> +EXPORT_SYMBOL(node_data);
+>  
+> +struct node_data *__node_data[MAX_NUMNODES];
+>  EXPORT_SYMBOL(__node_data);
+>  
+>  static u64 gen_region_mask(void)
+> @@ -361,6 +363,7 @@ static void __init node_mem_init(nasid_t node)
+>  	 */
+>  	__node_data[node] = __va(slot_freepfn << PAGE_SHIFT);
+>  	memset(__node_data[node], 0, PAGE_SIZE);
+> +	node_data[node] = &__node_data[node]->pglist;
+>  
+>  	NODE_DATA(node)->node_start_pfn = start_pfn;
+>  	NODE_DATA(node)->node_spanned_pages = end_pfn - start_pfn;
+
