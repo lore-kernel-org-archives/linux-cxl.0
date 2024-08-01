@@ -1,91 +1,111 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939F91B150C
-	for <linux-cxl@vger.kernel.org>; Wed, 31 Jul 2024 13:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F95C13A249;
+	Thu,  1 Aug 2024 01:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722431752; cv=none; b=G4wXfgiAEXSEzKeqDd2KOkESSS0s24Y3xIsWzAvcMcEYrufOuxDnMgEPu0ICW0OoDIPn3LdeGrxtUuuTQPVi9v7f1KN4vTq8bq0h+ALgpCDSynd6FyXlkWGDbh0W6nzZXKCcS1PEix6pkoK2Jj6xkYyFlu3NdJMJlPxp9GIoMFs=
+	t=1722475354; cv=none; b=u9HoTLTeY3gtSqLixEdxBDCEQJsbnpDjo1tHRwODmG9hk5PLzHwoOrsU28IUy5crVjC68VeJW9Wa7q0dOXKKZgc1/xjTSjLKtgulmHffCvp8JaV6zchxCYgomZd88L26pOzTqOIxispMUKFeoRS56Tft2qumDaokx8+F2W2aM9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722431752; c=relaxed/simple;
-	bh=0qkwQ0MmMQBMbBAsVU4qO+QelNoT7Eax5wkEMJX06Ic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XMmcTHmavznTMjKbgDI9xKtd4QZiDqpjY6b34GJ8J+bOPMFJRjf67C6b7cAKWXkYXSupUPQZBcIzgrp6nJyzFCncSNEJ5xRcIncOsSa0avccuc9xea2ggUj6Ne7lOpdmS+k4ZlD78XkQOLC6kpu2iO9LfHK05JHV96SWYCfQxKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=iE/cdtcb; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1722475354; c=relaxed/simple;
+	bh=pGgzCNEQpoQTVGCg1pM0uGdSwgXRZRMoaaVlghFUpfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sTB1TeIUvTM8p1wkxRUPXNRDyA8hNg3eYIAhgWeqJ3DsAbm7aSTlz4x94R8wucuQzCujZJu0AumQfSDGiYSJYORIKAMlmRQ8uOOEDtbyKO83BPCTVNM2CRvPZ4mz3VCmR+xCQDx8DJG1MsVcnyhT9iZFMHrymPt76VUxy0dyLY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8LWoIin; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iE/cdtcb"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3db165f8211so598809b6e.1
-        for <linux-cxl@vger.kernel.org>; Wed, 31 Jul 2024 06:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1722431750; x=1723036550; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ean7sSS19FfLz1vX4VUsoj/SGZS7nDauOxzT51mpNiw=;
-        b=iE/cdtcbx5TpAW8uFWQybJq0+Ye18m6DIdZ8FASb5OvxoUUx382OJ6sRmHy3Og28tV
-         1OmkL667l8C5T4pPkMvc8POKbzgUZCuA4w4TcJmZL9jtGdrnp1LEIiXAANSx13WhvAzZ
-         HJLheAQXc351cCxAnRedIZTKp83O9vCXzYAo8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722431750; x=1723036550;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ean7sSS19FfLz1vX4VUsoj/SGZS7nDauOxzT51mpNiw=;
-        b=JZZL+w4XvsdQoYOR0MuEjQz/vsQO0LNti6s1H7ydiaBn8ffM9pQAFJvVasrJsGMvSr
-         Ntm7xX3qqdM669SZ1XAUuhijyJ9KWWu6+J/TrFUKCrbpq7bGoPkdypIA4wXvQVgevLhF
-         Q15LyWSQUWGhOF5f0Mi2j51sSog/812s2xGVlprnyd1Ccp07CETItHR5jvSapB+vGWSh
-         U37wPrL80WlMjbLq17Xe2+G6WWyn+W252RjQWUITXCtnsXw+0z2gBMIcxsHmouzYbXt4
-         UTzMUL7YL4t5iBYahMV6gqKYfzIoflDlW03x7E6GXuAYL9pVNT4RmKrrEvIkB6kHgroh
-         lxLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHGh6KoxMgy8fCSc0n40V2o/XKRfu1cgEYzdUDVgA22KcZmHuy8oFEXiPVlJyX4+PLBB6+82fTb2k/wepJCkP16i3uO27VGNv4
-X-Gm-Message-State: AOJu0YzQt1Zmt0KJDGmsQt+igDkuOv3dPAWkiyq7zMYBKkQX0xb4+Mwy
-	kWb5sY/9k3mMsp2hG5RZzIRPUgfQbk11P9sVZ6rBUfBwOjVcca49yNEfM9jli2bD08Mht4yVqaU
-	BlKFZ4q+DuNkkqCQkHIwV1BHAjPFG/kt4C7v6WQ==
-X-Google-Smtp-Source: AGHT+IFRXAg1VLup8Q5b6YTsFY3klhFNVf83mG/k3C+eDgnwe1Nu09nxYmzuT2rekf8aCOwmOO+FFi5mCTeogw6pn3w=
-X-Received: by 2002:a05:6871:9c01:b0:260:f1c4:2fdb with SMTP id
- 586e51a60fabf-264c4479917mr11725728fac.8.1722431750651; Wed, 31 Jul 2024
- 06:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8LWoIin"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722475352; x=1754011352;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pGgzCNEQpoQTVGCg1pM0uGdSwgXRZRMoaaVlghFUpfs=;
+  b=U8LWoIinIpsh6mV5YKbXJlWKwMgFR7vDmuii5lCQ/R8hsdmYSofy8TOq
+   Rs1LVnJimBO41Mbto5rtZiaX+2clfJQHBsbs5vgng3yB4B4vQFYdWlAFm
+   sL9yuxaBqvqswa5Bu7gqJFwWK245Z2jFUi7z9Ktyky4m/OZrX7+Czcden
+   UUHwP14EpSgHb6jDptlFLqlBbYAboUhkTaH9wSDb76YOAhyM7KfQZf1tP
+   tXkBRRYMe/FqaDwMcFPzuglXP/jToMaWkyGpqW5syyyoIbfx50K3BLT1q
+   FAR5/nTD5Lo3UNCvwn5T4HkLI6z24DZMVzTVR7WkkMMq8bOrZvsIijlom
+   w==;
+X-CSE-ConnectionGUID: iniWuk8cTXmWDtDhyVHI8A==
+X-CSE-MsgGUID: BJTWeviMRsOqLAi4G8rw0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="19977149"
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="19977149"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 18:22:30 -0700
+X-CSE-ConnectionGUID: zq/SBxTKRJaZUlCol+8aeg==
+X-CSE-MsgGUID: 4iESZe+ZRc+W5LQKg7DvAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="59655057"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.12.57])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 18:22:30 -0700
+Date: Wed, 31 Jul 2024 18:22:27 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH 1/3] cxl: Set target type of root decoder based on CFMWS
+ restrictions
+Message-ID: <ZqrjU+552rs7VuLy@aschofie-mobl2>
+References: <20240729084611.502889-1-ying.huang@intel.com>
+ <20240729084611.502889-2-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240721192530.GD23783@pendragon.ideasonboard.com>
- <CAPybu_2tUmYtNiSExNGpsxcF=7EO+ZHR8eGammBsg8iFh3B3wg@mail.gmail.com>
- <20240722111834.GC13497@pendragon.ideasonboard.com> <CAPybu_1SiMmegv=4dys+1tzV6=PumKxfB5p12ST4zasCjwzS9g@mail.gmail.com>
- <20240725200142.GF14252@pendragon.ideasonboard.com> <CAPybu_1hZfAqp2uFttgYgRxm_tYzJJr-U3aoD1WKCWQsHThSLw@mail.gmail.com>
- <20240726105936.GC28621@pendragon.ideasonboard.com> <CAPybu_1y7K940ndLZmy+QdfkJ_D9=F9nTPpp=-j9HYpg4AuqqA@mail.gmail.com>
- <20240728171800.GJ30973@pendragon.ideasonboard.com> <CAPybu_3M9GYNrDiqH1pXEvgzz4Wz_a672MCkNGoiLy9+e67WQw@mail.gmail.com>
- <Zqol_N8qkMI--n-S@valkosipuli.retiisi.eu>
-In-Reply-To: <Zqol_N8qkMI--n-S@valkosipuli.retiisi.eu>
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date: Wed, 31 Jul 2024 15:15:39 +0200
-Message-ID: <CAKMK7uGx=VjHCo90htuTE6Oi0b8rt_0NrPsfbZwFKA304m7BdA@mail.gmail.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Dan Williams <dan.j.williams@intel.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, ksummit@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	jgg@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240729084611.502889-2-ying.huang@intel.com>
 
-On Wed, 31 Jul 2024 at 13:55, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> This is also very different from GPUs or accel devices that are built to be
-> user-programmable. If I'd compare ISPs to different devices, then the
-> closest match would probably be video codecs -- which also use V4L2.
+On Mon, Jul 29, 2024 at 04:46:09PM +0800, Ying Huang wrote:
+> Now, the target type of root decoder is hard-coded to HOSTONLYMEM,
+> because only type3 expanders are supported.  To support type2
+> accelerators, set the target type of root decoder based on the
+> window restrictions field of CFMWS entry.
+> 
 
-Really just aside, but I figured I should correct this. DRM supports
-plenty of video codecs. They're all tied to gpus, but the real reason
-really is that the hw has decent command submission support so that
-running the entire codec in userspace except the basic memory and
-batch execution and synchronization handling in the kernel is a
-feasible design. And actually good, because your kernel wont ever blow
-up trying to parse complex media formats because it just doesn't.
--Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/acpi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 82b78e331d8e..40c92ad29122 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -382,7 +382,10 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  
+>  	cxld = &cxlrd->cxlsd.cxld;
+>  	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> -	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> +	if (cxld->flags & CXL_DECODER_F_TYPE2)
+> +		cxld->target_type = CXL_DECODER_DEVMEM;
+> +	else
+> +		cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+>  	cxld->hpa_range = (struct range) {
+>  		.start = cfmws->base_hpa,
+>  		.end = cfmws->base_hpa + cfmws->window_size - 1,
+> -- 
+> 2.39.2
+> 
