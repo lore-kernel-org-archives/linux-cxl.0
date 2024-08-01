@@ -1,165 +1,415 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1E216F0DF;
-	Thu,  1 Aug 2024 14:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722523317; cv=fail; b=UW5ssc7vWvXQUC9imYSzoYNUma/VB1257WGv/wRgFmKQ9xU6zuNAGCoJLP87dvnklbdiwxPkdvARosxp9DZWdr9CbWfqI07yZQQe1nuMu4yetl4e9En6fv0nqCDCFh4HOc/zWTahXWzY4jxykpcKaws30U30n5Cgmxzd1lXZdRM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722523317; c=relaxed/simple;
-	bh=uxC429EKd5Gt/z3hgD0XwruWvhsSVGPRiDqbqlY96TA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=S+uCSrEsMBIz61YfOzmCy/zjEPn41Zu3+LYHozr3GGjYALZT7jL0YlY1Fx0VsrwlSOrprbdJ+KsGEwl5G//Eb4IvUbMEc1ucJW+6jBmi1RA2Dwj09KvjFxRoI66w+5s60CvkGwYrKiNbGIuNOboo9Un2JCgmUCzsvZ+TqEXeqec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YtTMhPnr; arc=fail smtp.client-ip=40.107.244.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AC516F8EB
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Aug 2024 17:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722532324; cv=none; b=Pf4dKHMserKcCbi8XILl80zU7QzZ0+N8F2tw/bPH/PXN2Dngwaowbp2vR5qhNxLaS06tGKd+FzpLAAcRPievVlY01NX16MpZDQpgGT/Is5J0wzOlC+O2sUImKh2KiqL92tftT2+SBwH7wVD1+oiC2xsJ8H+SNxoeE0XntbyoiNY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722532324; c=relaxed/simple;
+	bh=6rUoVb2RJzxf38o25CWIY4Easrm2pTQnCp7Ys04pR84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXQYtF/nnur2J7CXcesx7IBy1csDObgi2HB9MFGZfz67LFriryugoy7jeZuh3EosIvAoJ1FO7xQnQFrwq97aqXazTcUnq/xJ94mKEe2y0DslDBrC3jC+965FwFpZSDa18FjXQ1l5NeaswMjZrBuzd5SIYsgJOBVvO1j4fuMVtbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnVgb9JI; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YtTMhPnr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NTGuVRjhrZWA6IQASyB58ZmhS2rlsh1e57fKsDcUekRBOZETp5wMW0Lxmm+kn0V5lS26XDkOIqTtCTV++khWizKqZAagSfjQd9i5WXO0QnuE7YPP+TMjQEW5iutuEpZnWpG4lYll0ma3BF/8r+veZnfvgYa+R64aI8BzGLqoY2d3xs4rFLRzHd2KzuV3zE7hjQY6CzrnZfeAlmsIuVy7tGXuZhTYP5m7gT89vYz8nidsDHvpldDkq4d6OFTrUaFEnRaGiaLQSJlgOuiFWm5DyWoOJYgS/dLaM2JjA+ACd6jaexRozu7oiWtUWwkgQWYXnqaBcB+RqXxQ+K/v8FlFwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uxC429EKd5Gt/z3hgD0XwruWvhsSVGPRiDqbqlY96TA=;
- b=r2i+Dsc+MGTsyA/eMsAH5JlXe7grOMj2Be7v3iJ0Nkz4XrN/7x34rV9oewzkXXPfXGcWv1xicC/HRKLiBRn9gqvfqpbqN04YXAduRwDlO6gpJ2Jp/sowICjHUvffw75ECvL3ozb0g9BQpgniTT9mZUEorYYwj0BwezlYvzuWdUoW9UkinMWXJjNEWF2HDmlx5ENhDj81cO30qjT+s7PqObEEEVsR8ulil4xPToJDOXMm0PcKcY/nfPSXisGTlx6uB7WF7JMkR0gTLemUATYrgsOefqWq2OI7xzzSEkEPL2m2qR1PV/bm3x4XS3QvHOPX2VRIZn/NjxlxKQvkj3fFLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uxC429EKd5Gt/z3hgD0XwruWvhsSVGPRiDqbqlY96TA=;
- b=YtTMhPnrZsPG7gniYGf5zpfJlurDx9LqiEZWYuflOPAJo4NITXPs+uBGMdCJuYHsAbrdoQpeLgMeStDd2FsH1lv8WtKiy20oQMtbduDqnjOesx+eBWsM6BOLJh4UkBwY+8HhsrnpwqHTMVkbNTt3wq/Pjz2kaogxiAOAZlVi6BeoXMpDKGLh4sec87fVbuNV3I8VFYcvOstXcHR4fIrAVQ8rl8sOKcAe8XhjDmoAsaWZSKPSRNkpQynS2V06i/saMrjvj4WGRPQSLKz3m7TSeg/Wa2hXikqwnkwH/gfuDRTOm00J4Lg/MtV1MAFcZ1nmDchZ6rb4NNp4km5Qns1Bxg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB7763.namprd12.prod.outlook.com (2603:10b6:610:145::10)
- by SA1PR12MB8096.namprd12.prod.outlook.com (2603:10b6:806:326::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.28; Thu, 1 Aug
- 2024 14:41:51 +0000
-Received: from CH3PR12MB7763.namprd12.prod.outlook.com
- ([fe80::8b63:dd80:c182:4ce8]) by CH3PR12MB7763.namprd12.prod.outlook.com
- ([fe80::8b63:dd80:c182:4ce8%4]) with mapi id 15.20.7828.016; Thu, 1 Aug 2024
- 14:41:50 +0000
-Date: Thu, 1 Aug 2024 11:41:49 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Dan Williams <dan.j.williams@intel.com>, ksummit@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <20240801144149.GO3371438@nvidia.com>
-References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
- <20240726142731.GG28621@pendragon.ideasonboard.com>
- <66a43c48cb6cc_200582942d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240728111826.GA30973@pendragon.ideasonboard.com>
- <2024072802-amendable-unwatched-e656@gregkh>
- <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
- <2024072909-stopwatch-quartet-b65c@gregkh>
- <206bf94bb2eb7ca701ffff0d9d45e27a8b8caed3.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <206bf94bb2eb7ca701ffff0d9d45e27a8b8caed3.camel@HansenPartnership.com>
-X-ClientProxiedBy: MN2PR15CA0054.namprd15.prod.outlook.com
- (2603:10b6:208:237::23) To CH3PR12MB7763.namprd12.prod.outlook.com
- (2603:10b6:610:145::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnVgb9JI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722532321; x=1754068321;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6rUoVb2RJzxf38o25CWIY4Easrm2pTQnCp7Ys04pR84=;
+  b=gnVgb9JIlZRDigecG21gKlNVZAkrZWurOQX0E6kcCU+CWk7vbrCpGbT6
+   5A6pZQPSsjgAFked6+q7sNqgbepEHEayzykJsTHXcTy0+kaKRxUd1fq4k
+   qQZ+zkvfbZeTX7nCyPw5xVmi2gyfSEUEP5teT34fzMEf5kbmoSJqn/Uau
+   UsARDAUOvraxseGChdTqEHDL+zrO675luVFFauwsQgx1U2fJT+p1lzY99
+   qcqAGqAGkYyXEF5wwYJsbTTF5IjhMDKvQFdSmy1tpub/OzI1eZOxQJpta
+   10JTK8LLqro70lPU6vwMsCMLHfbCkSb2oPQqZG2ETuAu8FbZTsr7Q83vY
+   g==;
+X-CSE-ConnectionGUID: EkhvL6G7T4KgYuBch6viyA==
+X-CSE-MsgGUID: Eudv9JucQsOi6IzvPX5Cgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11151"; a="20094858"
+X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
+   d="scan'208";a="20094858"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 10:05:48 -0700
+X-CSE-ConnectionGUID: UeztfSK2R3akqPbyZZ+3jQ==
+X-CSE-MsgGUID: vHPilkM2RASZj4f+sdWylw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
+   d="scan'208";a="78384820"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.91.181])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 10:05:47 -0700
+Date: Thu, 1 Aug 2024 10:05:45 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Yi Zhang <yi.zhang@redhat.com>
+Cc: Linux NVDIMM <nvdimm@lists.linux.dev>, linux-cxl@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [bug report][regression] Oops: general protection fault observed
+ after destroy the devdax
+Message-ID: <ZqvAacQGB9Oou5mT@aschofie-mobl2>
+References: <CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB7763:EE_|SA1PR12MB8096:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b38317f-6c67-4805-4820-08dcb2381428
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eUKF4C6bdRDQI0Oma2j4yM4Mrl+2QsD1abqIND1s/yfMRoIRFzmqwuGiwmsO?=
- =?us-ascii?Q?2c6H++EUT/BPpS7t5Y/X6RZaVEm9TRo07LC+Q5ctL7dECQOLjO0vZbFlzerJ?=
- =?us-ascii?Q?RQ+mKaHFrhOIfBfT7vzPfk1J47AVQyvCRHZTMYFP8GHnXGpVf2IoO1qTGf6D?=
- =?us-ascii?Q?eZcS3hZL6rduqhm4vtrbJG37kFB39nFuFpGw1cr3P5V8cKxWOH6P0elQky0C?=
- =?us-ascii?Q?qEfSoosteKeLbBB4wIHXOPNE0Z/4TmR1PMymrxIucuI8IExgxE7SUqL+OYU+?=
- =?us-ascii?Q?50afzrVzgdQKfKrnAm+mQ0xTB3khlyDjUGtiBX0lFIvd8oTjll58YRxbFdEf?=
- =?us-ascii?Q?S5KEHL1IVUxfpC6JcH+P2cXsnZ5f2ITNQ/0ZCXo32oh5u2AKRgOXkAXZwVtx?=
- =?us-ascii?Q?CDJNjGc6Fg0PgYdPnyOpEKck1KISxPeIx4GYbegbFw/hxLlGx1JjI/SVmKbC?=
- =?us-ascii?Q?PMaTc1FFo8PW6EOssrynGLy+tbOJxfRy0WjXuJN0ot03yF8LQmYGXwcxLm6k?=
- =?us-ascii?Q?WXp+Pe5WJ5byJqiQ56mV9rAUb7SGE6j2Z1ZF+HqKvkgZ0sYqcw7eBVOBvL1t?=
- =?us-ascii?Q?i7WYUQTqoOzdPc03NRlZ93TJSz6eVpZ4+ae2US2XwcB6kuSbylHxdXRhbIsA?=
- =?us-ascii?Q?qv9bd4LrCYx+G6L1EW4KcN4lTEzyk/9lGBKHcsNZMmRWmXWrS6Oq88xgP7Rb?=
- =?us-ascii?Q?SIUJRB51NdqG3R1r0BMyPnE2nQn57Ul9KccnY7c+UTj8FkqCAxKKXpP+dB3X?=
- =?us-ascii?Q?te7i8IZajSu2URY/pwEin0/6rjGh/ukrqmbNHoIXG6p1vUBjmaF1LRNTrKEv?=
- =?us-ascii?Q?ZXw9C7ULYMbQy0R5jX+jXvYwLWN06vcHQw5O3qEbE+YcLZT8ivW2ctqaWDr5?=
- =?us-ascii?Q?inlSr0RQJLwC8ASz7Fu67x3ym9HOdWIM5V89bXnX+NWk8+EGb8VMfZFcTcb3?=
- =?us-ascii?Q?SiI6dUlbqvNEdAfDmdRS79QNo9y2hGsIXVKC2W8i4urlyCKioPuaDvhF/hdi?=
- =?us-ascii?Q?MEDHCNWnQZqI3v2ukQnoh25veBQLXIDLroMFNavDf57If3/HCsdsZWrspEIu?=
- =?us-ascii?Q?2uaCYDCb4IE59tx/3sk/vuNp4AA+3u0WveLfjh5A6HcTwdtSd+xeRZVNQH7S?=
- =?us-ascii?Q?O2IJcRrl2SbOhTXa+EPA2rdCJwk238ZRjmclV/GODsgaQHLjphqEqqQUe/SS?=
- =?us-ascii?Q?ObdLzwE/rnR4QRQlEPdnpAgEjYp1Z03MGoNq1ubHw1d8Wb8/nbT9LSXDblk0?=
- =?us-ascii?Q?DwuaojV5ID3S/4JLzkaIP61s4CwrHvvZA/JCS/AxQo+55SnlGznL412nBtcF?=
- =?us-ascii?Q?zDKDJeDZdoZzIBe60lTzU/sy40mYd3907g79n4Y3nrryMg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HkdxrOAuexbRBHeOaM6pfPwii9aOnWWRCwIIdJuexFYtguuQyLoClVGhtWOc?=
- =?us-ascii?Q?0CAvksaJCohkYSweZhyV0wyUbe9zEDyaT6ULUyUpnfJpNRRyxX59Xnw2Kf/u?=
- =?us-ascii?Q?zLe+DeaGnLN6wJ0zYN0GmSCtStSQ3eFOF02OqIZoq5O4qZaXMdCRu4LtJVjV?=
- =?us-ascii?Q?DKagUaLnLc53oYYJgPq/7kBC9hxrTKXb5qeXdMIIzTQo10TZLd7sLS9v1Pt9?=
- =?us-ascii?Q?MpxEVqRYwYDku4Vg0y0VOdSCKLiU3vJRag2RXPnq3ssZ39uTOxa3E+0jZBQk?=
- =?us-ascii?Q?Pj5mPcFUeNE0CnidPKYkVIwgXlI8QX5kn+6GASM5mtNLKD1oYLfbFtpvpCY8?=
- =?us-ascii?Q?RcQpnfAhj42IXdAMZnfWaaIhiPZe7PO5OzdmPopwDNP4lH8qTB0l/0STJhjy?=
- =?us-ascii?Q?jeKmbKhuRLkmaKowzC+BN2KW+SX5yq/5gPhOm0zuErKbievDzgoO3jU1ViiJ?=
- =?us-ascii?Q?DlRiaMHuzy/hR8wGla7+BpQRn2755WHxn5hWp4Rdk17lij4FqObPpt6kU6KJ?=
- =?us-ascii?Q?w8xbhXe9e1GkCuMg4MXdUZhbshn949i/lXnJBHALWTOM+rsyX7lJw2/0GdDw?=
- =?us-ascii?Q?d8b5PCRJA/iNPkM7pu7xBZBV/Nfi/AzsLFRywAUxdczLw3CmEmXYaPrupQCt?=
- =?us-ascii?Q?CMSD5o1L1XOH6Q4iomvySlH1GYS6nTz821j9tWaW58SXB+zJ4n9604FZVGfD?=
- =?us-ascii?Q?+E1CmRKY7d0iqV6r4w8KMUMrxeOCjSKJn9DJyLfXw1K9Tz6FTQtcUtxqjyXO?=
- =?us-ascii?Q?C9X594nXpQpYG/y1R44yuMA7ZRbdH4bKm5nSinl1IKyMhVvqrou9K2UC2cGB?=
- =?us-ascii?Q?e8LEsJoLwjHmkWgH/ImUgcUixrOSpWcZajkSDRui4PLpcPCRhZYuAv9spb+s?=
- =?us-ascii?Q?Wrv38Pgrl8mlQ6VOEiO1MnLrzQkjmwJ4csMQFiy9bMSpgUF6ra2m5GP/sF3g?=
- =?us-ascii?Q?6F9oxRF3RlWKpdwBVXDOMrRbM98Qenp6Mxc6EfGsRQkaZ83VF95fZ0ac1OtQ?=
- =?us-ascii?Q?Utvf8UFFkOt4Jk7eGQCTjSAaQXx8zkUvBMLH3CpFIN7v9VeyTCcTbb7ednq6?=
- =?us-ascii?Q?IQuhIreizN8SD90iT79WVVm0P83otqyQTPUjC1caMiLwlJL+crh2DvqQGXm6?=
- =?us-ascii?Q?aQaXBlt5O3628AEDFuPhhNFUtI7lA1nGSG3mcQHWD1EghfLOT5Qx+FhVYMor?=
- =?us-ascii?Q?fATEtNye1dWASVwKppyT5rfb999zWtrrdM+iIK25N1dxyxod0dqvbwf0W9aR?=
- =?us-ascii?Q?RKhclV8vqears7xuILh7+e4nPZGXMzW7nfbQhhFA/FyN/hDbBDBBip+2PZCf?=
- =?us-ascii?Q?4gIODGd+dxKLzlDWn2kUJUEigYxoDqMGIFXw13X4vogI9gBpOouD7a7Thb7I?=
- =?us-ascii?Q?XcsG2Jo7RizzAX35dpMwppx3f5pJEBG0fxUnktwy6JfUY5i0MggatTTmduHM?=
- =?us-ascii?Q?wYtlmtzG5zrVaVw3aN7bX8Z9duzipttAwofTOsKfwgnmeLrqNH7gB1bK0Ept?=
- =?us-ascii?Q?YVgBdTnzuMIuD9XsHHcrCqWZExplyHbdltyxzDKecPJftynwFQ1J9LPyubaF?=
- =?us-ascii?Q?49+Cyf7v0br+n2CYxn6FHOvU8IQlZ4e31wi2p0d5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b38317f-6c67-4805-4820-08dcb2381428
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7763.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2024 14:41:50.7046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BPEc8S9TGYWHyu8V5oI9K8v4SkEoARDOkjpqyfrPC08b62cZTwwM7q5n4DZvDcFg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com>
 
-On Wed, Jul 31, 2024 at 08:33:36AM -0400, James Bottomley wrote:
+On Tue, Jul 30, 2024 at 11:41:44AM +0800, Yi Zhang wrote:
+> Hi
+> I reproduced this issue on my two nvdimm servers with 6.11.0-rc1,
+> please help check it and let me know if you need any testing for it,
+> thanks.
 
-> For the specific issue of discussing fwctl, the Plumbers session would
-> be better because it can likely gather all interested parties.
+Hi Yi,
 
-Keep in mind fwctl is already at the end of a long journey of
-conference discussions and talks spanning 3 years back now. It now
-represents the generalized consensus between multiple driver
-maintainers for at least one side of the debate.
+Thanks for the report. I haven't been able to reproduce this but it
+is similar to another that has appeared in 6.11-rc1 while unloading
+the cxl-test module. Both failures RIP in mod_node_page_state().
+I found that reverting a vmstat change introduced in 6.11-rc1 is a
+temporary work-around for the module unload problem.
 
-There was also a fwctl presentation at netdev conf a few weeks ago.
+Revert commit 15995a35247442aefa0ffe36a6dad51cb46b0918 
+"mm: report per-page metadata information"
 
-In as far as the cross-subsystem NAK, I don't expect more discussion
-to result in any change to people's opinions. RDMA side will continue
-to want access to the shared device FW, and netdev side will continue
-to want to deny access to the shared device FW.
+Would you be able to try that out?
 
-Jason
+Thanks,
+Alison
+
+> 
+> # ndctl create-namespace -r region0 -m devdax -a 4k -s 12G
+> {
+>   "dev":"namespace0.0",
+>   "mode":"devdax",
+>   "map":"dev",
+>   "size":"11.81 GiB (12.68 GB)",
+>   "uuid":"0ddf6d2d-54cb-4a2b-ac72-bb9aec891bae",
+>   "daxregion":{
+>     "id":0,
+>     "size":"11.81 GiB (12.68 GB)",
+>     "align":4096,
+>     "devices":[
+>       {
+>         "chardev":"dax0.0",
+>         "size":"11.81 GiB (12.68 GB)",
+>         "target_node":0,
+>         "align":4096,
+>         "mode":"devdax"
+>       }
+>     ]
+>   },
+>   "align":4096
+> }
+> # ndctl destroy-namespace all -r all -f
+> Segmentation fault
+> 
+> dmesg:
+> [ 1408.632268] Oops: general protection fault, probably for
+> non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
+> PTI
+> [ 1408.644006] KASAN: probably user-memory-access in range
+> [0x000000000002b280-0x000000000002b287]
+> [ 1408.652699] CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
+> [ 1408.659571] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
+> 2.20.1 09/13/2023
+> [ 1408.667136] RIP: 0010:mod_node_page_state+0x2a/0x110
+> [ 1408.672112] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
+> 54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
+> 83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
+> 83 ee
+> [ 1408.690856] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
+> [ 1408.696088] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
+> [ 1408.703222] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
+> [ 1408.710353] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
+> [ 1408.717486] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
+> [ 1408.724619] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
+> [ 1408.731750] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
+> knlGS:0000000000000000
+> [ 1408.739834] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1408.745581] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
+> [ 1408.752713] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 1408.759843] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 1408.766976] PKRU: 55555554
+> [ 1408.769690] Call Trace:
+> [ 1408.772143]  <TASK>
+> [ 1408.774248]  ? die_addr+0x3d/0xa0
+> [ 1408.777577]  ? exc_general_protection+0x150/0x230
+> [ 1408.782297]  ? asm_exc_general_protection+0x22/0x30
+> [ 1408.787182]  ? mod_node_page_state+0x2a/0x110
+> [ 1408.791548]  section_deactivate+0x519/0x780
+> [ 1408.795740]  ? __pfx_section_deactivate+0x10/0x10
+> [ 1408.800449]  __remove_pages+0x6c/0xa0
+> [ 1408.804119]  arch_remove_memory+0x1a/0x70
+> [ 1408.808141]  pageunmap_range+0x2ad/0x5e0
+> [ 1408.812067]  memunmap_pages+0x320/0x5a0
+> [ 1408.815909]  release_nodes+0xd6/0x170
+> [ 1408.819581]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1408.823941]  devres_release_all+0x106/0x170
+> [ 1408.828126]  ? __pfx_devres_release_all+0x10/0x10
+> [ 1408.832834]  device_unbind_cleanup+0x16/0x1a0
+> [ 1408.837198]  device_release_driver_internal+0x3d5/0x530
+> [ 1408.842423]  ? klist_put+0xf7/0x170
+> [ 1408.845916]  bus_remove_device+0x1ed/0x3f0
+> [ 1408.850017]  device_del+0x33b/0x8c0
+> [ 1408.853518]  ? __pfx_device_del+0x10/0x10
+> [ 1408.857532]  unregister_dev_dax+0x112/0x210
+> [ 1408.861722]  release_nodes+0xd6/0x170
+> [ 1408.865387]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1408.869749]  devres_release_all+0x106/0x170
+> [ 1408.873933]  ? __pfx_devres_release_all+0x10/0x10
+> [ 1408.878643]  device_unbind_cleanup+0x16/0x1a0
+> [ 1408.883007]  device_release_driver_internal+0x3d5/0x530
+> [ 1408.888235]  ? __pfx_sysfs_kf_write+0x10/0x10
+> [ 1408.892598]  unbind_store+0xdc/0xf0
+> [ 1408.896093]  kernfs_fop_write_iter+0x358/0x530
+> [ 1408.900539]  vfs_write+0x9b2/0xf60
+> [ 1408.903954]  ? __pfx_vfs_write+0x10/0x10
+> [ 1408.907891]  ? __fget_light+0x53/0x1e0
+> [ 1408.911646]  ? __x64_sys_openat+0x11f/0x1e0
+> [ 1408.915835]  ksys_write+0xf1/0x1d0
+> [ 1408.919249]  ? __pfx_ksys_write+0x10/0x10
+> [ 1408.923264]  do_syscall_64+0x8c/0x180
+> [ 1408.926934]  ? __debug_check_no_obj_freed+0x253/0x520
+> [ 1408.931997]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
+> [ 1408.937405]  ? kasan_quarantine_put+0x109/0x220
+> [ 1408.941944]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1408.946304]  ? kmem_cache_free+0x1a6/0x4c0
+> [ 1408.950408]  ? do_sys_openat2+0x10a/0x160
+> [ 1408.954424]  ? do_sys_openat2+0x10a/0x160
+> [ 1408.958434]  ? __pfx_do_sys_openat2+0x10/0x10
+> [ 1408.962794]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1408.967153]  ? __pfx___debug_check_no_obj_freed+0x10/0x10
+> [ 1408.972554]  ? __x64_sys_openat+0x11f/0x1e0
+> [ 1408.976737]  ? __pfx___x64_sys_openat+0x10/0x10
+> [ 1408.981269]  ? rcu_is_watching+0x11/0xb0
+> [ 1408.985204]  ? lockdep_hardirqs_on_prepare+0x179/0x400
+> [ 1408.990351]  ? do_syscall_64+0x98/0x180
+> [ 1408.994191]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1408.998549]  ? do_syscall_64+0x98/0x180
+> [ 1409.002386]  ? do_syscall_64+0x98/0x180
+> [ 1409.006227]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1409.010585]  ? do_syscall_64+0x98/0x180
+> [ 1409.014425]  ? lockdep_hardirqs_on_prepare+0x179/0x400
+> [ 1409.019565]  ? do_syscall_64+0x98/0x180
+> [ 1409.023401]  ? lockdep_hardirqs_on+0x78/0x100
+> [ 1409.027763]  ? do_syscall_64+0x98/0x180
+> [ 1409.031600]  ? do_syscall_64+0x98/0x180
+> [ 1409.035439]  ? do_syscall_64+0x98/0x180
+> [ 1409.039281]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [ 1409.044331] RIP: 0033:0x7f753c0fda57
+> [ 1409.047911] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
+> 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
+> 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
+> 74 24
+> [ 1409.066655] RSP: 002b:00007ffc19323e28 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000001
+> [ 1409.074220] RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 00007f753c0fda57
+> [ 1409.081352] RDX: 0000000000000007 RSI: 0000559f5901f740 RDI: 0000000000000003
+> [ 1409.088483] RBP: 0000000000000003 R08: 0000000000000000 R09: 00007ffc19323d20
+> [ 1409.095616] R10: 0000000000000000 R11: 0000000000000246 R12: 0000559f5901f740
+> [ 1409.102748] R13: 00007ffc19323e90 R14: 00007f753c219120 R15: 0000559f5901fc30
+> [ 1409.109887]  </TASK>
+> [ 1409.112082] Modules linked in: kmem device_dax rpcsec_gss_krb5
+> auth_rpcgss nfsv4 dns_resolver nfs lockd grace netfs rfkill sunrpc
+> dm_multipath intel_rapl_msr intel_rapl_common intel_uncore_frequency
+> intel_uncore_frequency_common skx_edac skx_edac_common
+> x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm mgag200
+> rapl cdc_ether iTCO_wdt dell_pc i2c_algo_bit iTCO_vendor_support
+> ipmi_ssif usbnet acpi_power_meter drm_shmem_helper mei_me dell_smbios
+> platform_profile intel_cstate dcdbas wmi_bmof dell_wmi_descriptor
+> intel_uncore pcspkr mii drm_kms_helper i2c_i801 mei i2c_smbus
+> intel_pch_thermal lpc_ich ipmi_si acpi_ipmi dax_pmem ipmi_devintf
+> ipmi_msghandler drm fuse xfs libcrc32c sd_mod sg nd_pmem nd_btt
+> crct10dif_pclmul crc32_pclmul crc32c_intel ahci ghash_clmulni_intel
+> libahci bnxt_en megaraid_sas tg3 libata wmi nfit libnvdimm dm_mirror
+> dm_region_hash dm_log dm_mod
+> [ 1409.189120] ---[ end trace 0000000000000000 ]---
+> [ 1409.245769] RIP: 0010:mod_node_page_state+0x2a/0x110
+> [ 1409.250772] Code: 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 41
+> 54 55 48 89 fd 48 81 c7 80 b2 02 00 53 48 89 f9 89 d3 48 c1 e9 03 48
+> 83 ec 10 <80> 3c 01 00 0f 85 b8 00 00 00 48 8b bd 80 b2 02 00 41 89 f0
+> 83 ee
+> [ 1409.269539] RSP: 0018:ffffc900246d7388 EFLAGS: 00010286
+> [ 1409.274786] RAX: dffffc0000000000 RBX: 00000000fffffe00 RCX: 0000000000005650
+> [ 1409.281944] RDX: fffffffffffffe00 RSI: 000000000000002f RDI: 000000000002b280
+> [ 1409.289095] RBP: 0000000000000000 R08: ffff88a06ffcb1c8 R09: 1ffffffff218c681
+> [ 1409.296251] R10: ffffffff93d922bf R11: ffff88855e790f10 R12: 00000000000003ff
+> [ 1409.303410] R13: 1ffff920048dae7b R14: ffffea0081e00000 R15: ffffffff90c63408
+> [ 1409.310567] FS:  00007f753c219200(0000) GS:ffff889bf2a00000(0000)
+> knlGS:0000000000000000
+> [ 1409.318680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1409.324450] CR2: 0000559f5902a5a8 CR3: 00000001292f0006 CR4: 00000000007706f0
+> [ 1409.331607] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 1409.338771] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 1409.345936] PKRU: 55555554
+> [ 1851.504826] ==================================================================
+> [ 1851.512060] BUG: KASAN: slab-use-after-free in
+> mutex_can_spin_on_owner+0x192/0x1c0
+> [ 1851.519640] Read of size 4 at addr ffff88855e790034 by task
+> kworker/u192:1/1821
+> 
+> [ 1851.528446] CPU: 41 UID: 0 PID: 1821 Comm: kworker/u192:1 Tainted:
+> G      D            6.11.0-rc1 #1
+> [ 1851.537580] Tainted: [D]=DIE
+> [ 1851.540464] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
+> 2.20.1 09/13/2023
+> [ 1851.548031] Workqueue: nfit acpi_nfit_scrub [nfit]
+> [ 1851.552840] Call Trace:
+> [ 1851.555292]  <TASK>
+> [ 1851.557399]  dump_stack_lvl+0x7e/0xc0
+> [ 1851.561073]  print_address_description.constprop.0+0x2c/0x3d0
+> [ 1851.566829]  ? mutex_can_spin_on_owner+0x192/0x1c0
+> [ 1851.571627]  print_report+0xb4/0x270
+> [ 1851.575207]  ? mutex_can_spin_on_owner+0x192/0x1c0
+> [ 1851.579999]  ? kasan_addr_to_slab+0x9/0xa0
+> [ 1851.584098]  kasan_report+0x89/0xc0
+> [ 1851.587591]  ? mutex_can_spin_on_owner+0x192/0x1c0
+> [ 1851.592388]  mutex_can_spin_on_owner+0x192/0x1c0
+> [ 1851.597012]  __mutex_lock+0x256/0x14a0
+> [ 1851.600770]  ? try_to_wake_up+0x697/0x1060
+> [ 1851.604881]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
+> [ 1851.609958]  ? rcu_is_watching+0x11/0xb0
+> [ 1851.613892]  ? lock_acquire+0x397/0x640
+> [ 1851.617730]  ? __pfx___mutex_lock+0x10/0x10
+> [ 1851.621916]  ? __pfx_lock_acquire+0x10/0x10
+> [ 1851.626104]  ? do_raw_spin_trylock+0xb5/0x180
+> [ 1851.630461]  ? __pfx_do_raw_spin_trylock+0x10/0x10
+> [ 1851.635254]  ? rcu_is_watching+0x11/0xb0
+> [ 1851.639180]  ? nd_device_notify+0x22/0xa0 [libnvdimm]
+> [ 1851.644249]  nd_device_notify+0x22/0xa0 [libnvdimm]
+> [ 1851.649146]  child_notify+0x3d/0x60 [libnvdimm]
+> [ 1851.653703]  ? __pfx_child_notify+0x10/0x10 [libnvdimm]
+> [ 1851.658953]  device_for_each_child+0xd8/0x150
+> [ 1851.663314]  ? kernfs_notify+0x113/0x2e0
+> [ 1851.667248]  ? __pfx_device_for_each_child+0x10/0x10
+> [ 1851.672213]  ? rcu_is_watching+0x11/0xb0
+> [ 1851.676139]  ? trace_irq_enable.constprop.0+0x151/0x1c0
+> [ 1851.681367]  nd_region_notify+0x80/0x1c0 [libnvdimm]
+> [ 1851.686357]  ? __pfx_nd_region_notify+0x10/0x10 [libnvdimm]
+> [ 1851.691959]  nvdimm_region_notify+0x82/0xb0 [libnvdimm]
+> [ 1851.697206]  ars_complete+0x29e/0x410 [nfit]
+> [ 1851.701488]  __acpi_nfit_scrub+0x1e8/0xc30 [nfit]
+> [ 1851.706200]  ? acpi_nfit_query_poison+0x2ac/0x780 [nfit]
+> [ 1851.711523]  ? __pfx___acpi_nfit_scrub+0x10/0x10 [nfit]
+> [ 1851.716756]  ? __pfx_lock_acquire+0x10/0x10
+> [ 1851.720944]  ? __pfx_acpi_nfit_query_poison+0x10/0x10 [nfit]
+> [ 1851.726615]  acpi_nfit_scrub+0x43/0x1f0 [nfit]
+> [ 1851.731064]  process_one_work+0x8d3/0x1920
+> [ 1851.735178]  ? __pfx_process_one_work+0x10/0x10
+> [ 1851.739716]  ? assign_work+0x16c/0x240
+> [ 1851.743476]  worker_thread+0x583/0xce0
+> [ 1851.747230]  ? __pfx_worker_thread+0x10/0x10
+> [ 1851.751509]  kthread+0x2f3/0x3e0
+> [ 1851.754748]  ? _raw_spin_unlock_irq+0x24/0x50
+> [ 1851.759107]  ? __pfx_kthread+0x10/0x10
+> [ 1851.762860]  ret_from_fork+0x2d/0x70
+> [ 1851.766446]  ? __pfx_kthread+0x10/0x10
+> [ 1851.770200]  ret_from_fork_asm+0x1a/0x30
+> [ 1851.774138]  </TASK>
+> 
+> [ 1851.777833] Allocated by task 1830:
+> [ 1851.781326]  kasan_save_stack+0x20/0x40
+> [ 1851.785164]  kasan_save_track+0x10/0x30
+> [ 1851.789004]  __kasan_slab_alloc+0x55/0x70
+> [ 1851.793016]  kmem_cache_alloc_node_noprof+0x16c/0x340
+> [ 1851.798069]  dup_task_struct+0x34/0x680
+> [ 1851.801909]  copy_process+0x358/0x5590
+> [ 1851.805661]  kernel_clone+0xba/0x770
+> [ 1851.809238]  __do_sys_clone+0xa1/0xe0
+> [ 1851.812906]  do_syscall_64+0x8c/0x180
+> [ 1851.816570]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> [ 1851.823121] Freed by task 0:
+> [ 1851.826007]  kasan_save_stack+0x20/0x40
+> [ 1851.829845]  kasan_save_track+0x10/0x30
+> [ 1851.833687]  kasan_save_free_info+0x37/0x60
+> [ 1851.837872]  __kasan_slab_free+0x109/0x190
+> [ 1851.841971]  kmem_cache_free+0x1a6/0x4c0
+> [ 1851.845897]  delayed_put_task_struct+0x1f7/0x2a0
+> [ 1851.850517]  rcu_do_batch+0x3d6/0xf50
+> [ 1851.854179]  rcu_core+0x3dd/0x5a0
+> [ 1851.857499]  handle_softirqs+0x200/0x920
+> [ 1851.861427]  __irq_exit_rcu+0xbc/0x210
+> [ 1851.865177]  irq_exit_rcu+0xa/0x30
+> [ 1851.868584]  sysvec_apic_timer_interrupt+0x93/0xc0
+> [ 1851.873375]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> 
+> [ 1851.880015] Last potentially related work creation:
+> [ 1851.884892]  kasan_save_stack+0x20/0x40
+> [ 1851.888733]  __kasan_record_aux_stack+0x8e/0xa0
+> [ 1851.893264]  __call_rcu_common.constprop.0+0xef/0x940
+> [ 1851.898316]  wait_task_zombie+0x5b1/0x2050
+> [ 1851.902416]  __do_wait+0x18c/0x710
+> [ 1851.905820]  do_wait+0x1d2/0x500
+> [ 1851.909053]  kernel_wait4+0xf2/0x1d0
+> [ 1851.912633]  __do_sys_wait4+0xf4/0x100
+> [ 1851.916383]  do_syscall_64+0x8c/0x180
+> [ 1851.920050]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> [ 1851.926603] Second to last potentially related work creation:
+> [ 1851.932346]  kasan_save_stack+0x20/0x40
+> [ 1851.936188]  __kasan_record_aux_stack+0x8e/0xa0
+> [ 1851.940720]  task_work_add+0x1dd/0x2a0
+> [ 1851.944471]  sched_tick+0x2ac/0x950
+> [ 1851.947965]  update_process_times+0x12e/0x190
+> [ 1851.952322]  tick_nohz_handler+0x2ac/0x4a0
+> [ 1851.956423]  __hrtimer_run_queues+0x558/0xb40
+> [ 1851.960781]  hrtimer_interrupt+0x2e9/0x7a0
+> [ 1851.964879]  __sysvec_apic_timer_interrupt+0x140/0x540
+> [ 1851.970019]  sysvec_apic_timer_interrupt+0x8e/0xc0
+> [ 1851.974810]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+> 
+> [ 1851.981448] The buggy address belongs to the object at ffff88855e790000
+>                 which belongs to the cache task_struct of size 15752
+> [ 1851.994126] The buggy address is located 52 bytes inside of
+>                 freed 15752-byte region [ffff88855e790000, ffff88855e793d88)
+> 
+> [ 1852.007960] The buggy address belongs to the physical page:
+> [ 1852.013531] page: refcount:1 mapcount:0 mapping:0000000000000000
+> index:0x0 pfn:0x55e790
+> [ 1852.021528] head: order:3 mapcount:0 entire_mapcount:0
+> nr_pages_mapped:0 pincount:0
+> [ 1852.029182] memcg:ffff8885ef0bad41
+> [ 1852.032587] flags: 0x17ffffc0000040(head|node=0|zone=2|lastcpupid=0x1fffff)
+> [ 1852.039545] page_type: 0xfdffffff(slab)
+> [ 1852.043388] raw: 0017ffffc0000040 ffff888100052300 dead000000000122
+> 0000000000000000
+> [ 1852.051124] raw: 0000000000000000 0000000000020002 00000001fdffffff
+> ffff8885ef0bad41
+> [ 1852.058863] head: 0017ffffc0000040 ffff888100052300
+> dead000000000122 0000000000000000
+> [ 1852.066687] head: 0000000000000000 0000000000020002
+> 00000001fdffffff ffff8885ef0bad41
+> [ 1852.074514] head: 0017ffffc0000003 ffffea001579e401
+> ffffffffffffffff 0000000000000000
+> [ 1852.082339] head: 0000000000000008 0000000000000000
+> 00000000ffffffff 0000000000000000
+> [ 1852.090164] page dumped because: kasan: bad access detected
+> 
+> [ 1852.097236] Memory state around the buggy address:
+> [ 1852.102027]  ffff88855e78ff00: fc fc fc fc fc fc fc fc fc fc fc fc
+> fc fc fc fc
+> [ 1852.109245]  ffff88855e78ff80: fc fc fc fc fc fc fc fc fc fc fc fc
+> fc fc fc fc
+> [ 1852.116466] >ffff88855e790000: fa fb fb fb fb fb fb fb fb fb fb fb
+> fb fb fb fb
+> [ 1852.123683]                                      ^
+> [ 1852.128476]  ffff88855e790080: fb fb fb fb fb fb fb fb fb fb fb fb
+> fb fb fb fb
+> [ 1852.135694]  ffff88855e790100: fb fb fb fb fb fb fb fb fb fb fb fb
+> fb fb fb fb
+> [ 1852.142913] ==================================================================
+> 
+> -- 
+> Best Regards,
+>   Yi Zhang
+> 
+> 
