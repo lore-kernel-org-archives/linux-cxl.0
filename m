@@ -1,139 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE32156F54;
-	Thu,  1 Aug 2024 06:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045A11EB4A6
+	for <linux-cxl@vger.kernel.org>; Thu,  1 Aug 2024 07:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722493954; cv=none; b=h24huzx7DynH8yrTAHfuEwx3aqYUN7OCyPu638o6hu23TDlOPv8iX7+DZAnjFlCiO4dV/IqHMcczWZB8LixZWESn0u93Y+DWYjW7yOaoZhV5Skf+AIEl50KrwaMHIJ57T5a1+uBe7CsFILu6u5NNDQ83EKkh4ZGnAgS8xAbaiyU=
+	t=1722498663; cv=none; b=OPDcNdH+Bd8unFdtPH8av24KahqJ2XqmXNccH5pfvT5/RescVp78hm3nMd3gXYCk+TzzodLyn26AFGSuaPaGX1voDcNYbg3JClY+fWbCDIpKPDYCObG42zpRGfv+oO9ZsDXhYCPF7IHk0/JqVczy3GHeFguWpngpXR8ydUUuXT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722493954; c=relaxed/simple;
-	bh=oxxFndBMVvEyHDztT3sIU4U429uaxVcLaKdlXlUsKYY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XCic14TYR21W4U5tv8EGyhcVck0wVDf3wwoYmJPAuoWDLMZZjUi1Y1NZjpysa9Tg/1T91F/ShbHsVPV/A23Jih4hbYgt1icJ28TpDM/i18Kw0CECOM8FziLgXpcdAWnSdGr+QXyB37yzVp1/0+3Us3SWYbjCmg4gEbbK0KkhRb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5p/Rlda; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5p/Rlda"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722493952; x=1754029952;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=oxxFndBMVvEyHDztT3sIU4U429uaxVcLaKdlXlUsKYY=;
-  b=Q5p/RldaU4jQhbh9s6E+ibAbZHG+3S5Th560JanL0A7x23hj7n6Zx6Mn
-   Ctc5qp2yZc7yEjxpGmsOySZ0A+Dj/ixg+IicCBwYw9A6VI0QHcq44pgX9
-   mre59/aJvR8D4j1h5a8p5fs0lkSX2mTa+NObZOmCH4OKP8RYiYP6OXlni
-   Q59/YwVh4zKLo49EsFEiGPJo9R661AXkv0MN4wjEfKCkmolDfzGhEbNNw
-   yaZE/NqlNJVVB86MeUlThTqaOLqFYM7n/Dwj37SMYWkZ/y878wajo3nFe
-   05xDF107C36aIGTCDJ2jUgC7555Y9v9KyyGJah/Gc1mkd+wGDwWuexhdq
-   g==;
-X-CSE-ConnectionGUID: PTGc0m2bSIqRNHwndfPZtQ==
-X-CSE-MsgGUID: 00rOjEorRnq+eE6cjUH21Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12822778"
-X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="12822778"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 23:32:31 -0700
-X-CSE-ConnectionGUID: Kaek4QVbRyumC9/bnjvXHg==
-X-CSE-MsgGUID: CpheZxaUQZ+hd3QdiUN5hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="85844250"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 23:32:29 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Davidlohr Bueso <dave@stgolabs.net>,
-  "Jonathan Cameron" <jonathan.cameron@huawei.com>,  Vishal Verma
- <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Alejandro
- Lucero <alucerop@amd.com>
-Subject: Re: [PATCH 2/3] cxl: Set target type of region with that of root
- decoder
-In-Reply-To: <ZqrmeC8nKVR3Tksz@aschofie-mobl2> (Alison Schofield's message of
-	"Wed, 31 Jul 2024 18:35:52 -0700")
-References: <20240729084611.502889-1-ying.huang@intel.com>
-	<20240729084611.502889-3-ying.huang@intel.com>
-	<ZqrmeC8nKVR3Tksz@aschofie-mobl2>
-Date: Thu, 01 Aug 2024 14:28:55 +0800
-Message-ID: <87o76ckb88.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1722498663; c=relaxed/simple;
+	bh=svhTqK4DRi1oaUzlcpoAjATc0qe8ekfMr90q1SLkLEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F4FJbaobZq+giigLbR9QGvwfP/OMpLQYdWrkGDKBGJB372zJbgXcUx6zcKhSiiW6ixgOY5axS7D2gIZW4sqDt9M2bWGCiXAy9iWpvgouJosFFYxapfCXp4dfWD0R4x6PAFulY44eRsTEN3f0TW0Mrk1J8GUNkcIuGUea8BHoY24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwCXnVlPPqtmAz+lAw--.52877S2;
+	Thu, 01 Aug 2024 15:50:39 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBnlbVAPqtm9y4KAA--.17938S2;
+	Thu, 01 Aug 2024 15:50:35 +0800 (CST)
+Date: Thu, 1 Aug 2024 15:50:23 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, chenbaozi@phytium.com.cn
+Subject: Re: [RFC PATCH 1/8] arm64: numa: Introduce a
+ memory_add_physaddr_to_nid()
+Message-ID: <Zqs+P/TO01Y3TKcd@phytium.com.cn>
+References: <20240529171236.32002-1-Jonathan.Cameron@huawei.com>
+ <20240529171236.32002-2-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529171236.32002-2-Jonathan.Cameron@huawei.com>
+X-CM-TRANSID:AQAAfwBnlbVAPqtm9y4KAA--.17938S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAEAWaqm98E1AABsd
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWF47KF1UCrWfZryUur4xCrg_yoW5XFyfpF
+	n7uwnxGFy7WFWxAay3JwnxAas8Za1rGF1agrW7Cryq9F1aqryxGr1Fvw4qvrWxWrZFgF4F
+	9a10qF18Wa1DXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Alison Schofield <alison.schofield@intel.com> writes:
-
-> On Mon, Jul 29, 2024 at 04:46:10PM +0800, Ying Huang wrote:
->> Now, the target type of region is hard-coded to HOSTONLYMEM, because
->> only type3 expanders are supported.  To support type2 accelerators,
->> set the target type of region root decoder with that of the root
->> decoder.
+On Wed, May 29, 2024 at 06:12:29PM +0100, Jonathan Cameron wrote:
+> From: Dan Williams <dan.j.williams@intel.com>
+> 
+> Based heavily on Dan William's earlier attempt to introduce this
+> infrastruture for all architectures so I've kept his authorship. [1]
+> 
+> arm64 stores it's numa data in memblock. Add a memblock generic
+> way to interrogate that data for memory_Add_physaddr_to_nid.
+> 
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Jia He <justin.he@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Link: https://lore.kernel.org/r/159457120334.754248.12908401960465408733.stgit@dwillia2-desk3.amr.corp.intel.com [1]
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  arch/arm64/include/asm/sparsemem.h |  4 ++++
+>  arch/arm64/mm/init.c               | 29 +++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/sparsemem.h b/arch/arm64/include/asm/sparsemem.h
+> index 8a8acc220371..8dd1b6a718fa 100644
+> --- a/arch/arm64/include/asm/sparsemem.h
+> +++ b/arch/arm64/include/asm/sparsemem.h
+> @@ -26,4 +26,8 @@
+>  #define SECTION_SIZE_BITS 27
+>  #endif /* CONFIG_ARM64_64K_PAGES */
+>  
+> +#ifndef __ASSEMBLY__
+> +extern int memory_add_physaddr_to_nid(u64 addr);
+> +#define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+> +#endif /* __ASSEMBLY__ */
+>  #endif
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 9b5ab6818f7f..f310cbd349ba 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -48,6 +48,35 @@
+>  #include <asm/alternative.h>
+>  #include <asm/xen/swiotlb-xen.h>
+>  
+> +#ifdef CONFIG_NUMA
+> +
+> +static int __memory_add_physaddr_to_nid(u64 addr)
+> +{
+> +	unsigned long start_pfn, end_pfn, pfn = PHYS_PFN(addr);
+> +	int nid;
+> +
+> +	for_each_online_node(nid) {
+> +		get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
+> +		if (pfn >= start_pfn && pfn <= end_pfn)
+> +			return nid;
+> +	}
+> +	return NUMA_NO_NODE;
+> +}
+> +
+> +int memory_add_physaddr_to_nid(u64 start)
+> +{
+> +	int nid = __memory_add_physaddr_to_nid(start);
+> +
+> +	/* Default to node0 as not all callers are prepared for this to fail */
+> +	if (nid == NUMA_NO_NODE)
+> +		return 0;
+> +
+> +	return nid;
+> +}
+> +EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+> +
+> +#endif /* CONFIG_NUMA */
+> +
+>  /*
+>   * We need to be able to catch inadvertent references to memstart_addr
+>   * that occur (potentially in generic code) before arm64_memblock_init()
+> -- 
+> 2.39.2
 >
-> Hi Ying,
->
-> If the target type of a region is always the same as it's root decoder,
-> (is it?)
 
-IIUC, it is.  Do you know when they may be different?
+Tested-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-> why do we store it as an attribute of the region. Can we look
-> it up when needed?
-
-Yes.  This is possible via to_cxl_root_decoder().  It's just
-a little inconvenient.
-
-> A bit more below -
->
->> 
->> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Cc: Davidlohr Bueso <dave@stgolabs.net>
->> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
->> Cc: Dave Jiang <dave.jiang@intel.com>
->> Cc: Alison Schofield <alison.schofield@intel.com>
->> Cc: Vishal Verma <vishal.l.verma@intel.com>
->> Cc: Ira Weiny <ira.weiny@intel.com>
->> Cc: Alejandro Lucero <alucerop@amd.com>
->> ---
->>  drivers/cxl/core/region.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 21ad5f242875..9a483c8a32fd 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -2545,7 +2545,8 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
->>  		return ERR_PTR(-EBUSY);
->>  	}
->>  
->> -	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
->> +	return devm_cxl_add_region(cxlrd, id, mode,
->> +				   cxlrd->cxlsd.cxld.target_type);
->>  }
->
-> Passing the 'cxlrd' and then a piece of the cxlrd (.target_type) looks
-> redundant.
-
-Yes.  We can remove the parameter.  Will change this if we still need
-cxlr->type.  Thanks!
-
---
-Best Regards,
-Huang, Ying
-
->
-> -- Alison
->
->>  
->>  static ssize_t create_pmem_region_store(struct device *dev,
->> -- 
->> 2.39.2
->> 
