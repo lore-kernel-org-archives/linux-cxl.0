@@ -1,157 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EB3157A61;
-	Thu,  1 Aug 2024 06:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE32156F54;
+	Thu,  1 Aug 2024 06:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722492831; cv=none; b=lhP7zkFDDrjWakGcX/AhiRwpMFOf/TJPEEzyu+oWJKYJdDnSxpuCb2E3miV5SZUUfp4ikjSXSKuihwRKAYyN0uWbdPTpd+oxm9OAMF7H4qzvyRBRMz1kxV9N4R/0MIilawgbG+kvSq6jXkFXdXn7OzMs5E018D66v3e9FjRLPoI=
+	t=1722493954; cv=none; b=h24huzx7DynH8yrTAHfuEwx3aqYUN7OCyPu638o6hu23TDlOPv8iX7+DZAnjFlCiO4dV/IqHMcczWZB8LixZWESn0u93Y+DWYjW7yOaoZhV5Skf+AIEl50KrwaMHIJ57T5a1+uBe7CsFILu6u5NNDQ83EKkh4ZGnAgS8xAbaiyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722492831; c=relaxed/simple;
-	bh=2z4bHnWIWcvxAiFTLgSYfPcGY4CSFltdU+BtR9hEENA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BsHMjGs1DPreEDY+ebC1gSMGjxZotK3FF9xWXvYGcfT/Sn8dk7Gg9GD6X3e7W2vcUMfQodFT5gQLYi/u+t3NYKUJQgOjxZYqDXmL9rc43BC85nramEy7QmDZNnqGh6XwSGT39196WjnajkNIjS7QndicpEUz99UHO91Wujl0n/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Krg1nriO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722493954; c=relaxed/simple;
+	bh=oxxFndBMVvEyHDztT3sIU4U429uaxVcLaKdlXlUsKYY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XCic14TYR21W4U5tv8EGyhcVck0wVDf3wwoYmJPAuoWDLMZZjUi1Y1NZjpysa9Tg/1T91F/ShbHsVPV/A23Jih4hbYgt1icJ28TpDM/i18Kw0CECOM8FziLgXpcdAWnSdGr+QXyB37yzVp1/0+3Us3SWYbjCmg4gEbbK0KkhRb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5p/Rlda; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Krg1nriO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97316C4AF0E;
-	Thu,  1 Aug 2024 06:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722492830;
-	bh=2z4bHnWIWcvxAiFTLgSYfPcGY4CSFltdU+BtR9hEENA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Krg1nriO+eqnJw/SwdbuG3fCazMoLJlQMveWlRkHWmGKjUeBAV7SPEb3qpYrtisDR
-	 zcMTZ9ucUhsZWHm5P0W+e7OwiQbmCzYDNW0O0KB9bpGyPbYgbomgp6evmqSqJK760o
-	 G3tlRtfaCIlHRTSAxX+B6jfurNE/P42/ILnPuKFYuvjt2jr3XDTpBGpJgTe69srkyE
-	 T7HP4P7RrEbKkHv+Z2WcA38kANShZuYnsFLoO9R+x/ze0wRTfzDScZQnHsTT0bkqEp
-	 r3/pInPgL1sn+CE/kAYEoSxGqH/IFD6WOJQ4wImNEhfM2qe3oPpI8DAV+mZ7uJVllq
-	 swnBD4lW/yIiw==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Will Deacon <will@kernel.org>,
-	Zi Yan <ziy@nvidia.com>,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 26/26] docs: move numa=fake description to kernel-parameters.txt
-Date: Thu,  1 Aug 2024 09:08:26 +0300
-Message-ID: <20240801060826.559858-27-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240801060826.559858-1-rppt@kernel.org>
-References: <20240801060826.559858-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5p/Rlda"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722493952; x=1754029952;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=oxxFndBMVvEyHDztT3sIU4U429uaxVcLaKdlXlUsKYY=;
+  b=Q5p/RldaU4jQhbh9s6E+ibAbZHG+3S5Th560JanL0A7x23hj7n6Zx6Mn
+   Ctc5qp2yZc7yEjxpGmsOySZ0A+Dj/ixg+IicCBwYw9A6VI0QHcq44pgX9
+   mre59/aJvR8D4j1h5a8p5fs0lkSX2mTa+NObZOmCH4OKP8RYiYP6OXlni
+   Q59/YwVh4zKLo49EsFEiGPJo9R661AXkv0MN4wjEfKCkmolDfzGhEbNNw
+   yaZE/NqlNJVVB86MeUlThTqaOLqFYM7n/Dwj37SMYWkZ/y878wajo3nFe
+   05xDF107C36aIGTCDJ2jUgC7555Y9v9KyyGJah/Gc1mkd+wGDwWuexhdq
+   g==;
+X-CSE-ConnectionGUID: PTGc0m2bSIqRNHwndfPZtQ==
+X-CSE-MsgGUID: 00rOjEorRnq+eE6cjUH21Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12822778"
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="12822778"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 23:32:31 -0700
+X-CSE-ConnectionGUID: Kaek4QVbRyumC9/bnjvXHg==
+X-CSE-MsgGUID: CpheZxaUQZ+hd3QdiUN5hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="85844250"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 23:32:29 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  <linux-cxl@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  Davidlohr Bueso <dave@stgolabs.net>,
+  "Jonathan Cameron" <jonathan.cameron@huawei.com>,  Vishal Verma
+ <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Alejandro
+ Lucero <alucerop@amd.com>
+Subject: Re: [PATCH 2/3] cxl: Set target type of region with that of root
+ decoder
+In-Reply-To: <ZqrmeC8nKVR3Tksz@aschofie-mobl2> (Alison Schofield's message of
+	"Wed, 31 Jul 2024 18:35:52 -0700")
+References: <20240729084611.502889-1-ying.huang@intel.com>
+	<20240729084611.502889-3-ying.huang@intel.com>
+	<ZqrmeC8nKVR3Tksz@aschofie-mobl2>
+Date: Thu, 01 Aug 2024 14:28:55 +0800
+Message-ID: <87o76ckb88.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Alison Schofield <alison.schofield@intel.com> writes:
 
-NUMA emulation can be now enabled on arm64 and riscv in addition to x86.
+> On Mon, Jul 29, 2024 at 04:46:10PM +0800, Ying Huang wrote:
+>> Now, the target type of region is hard-coded to HOSTONLYMEM, because
+>> only type3 expanders are supported.  To support type2 accelerators,
+>> set the target type of region root decoder with that of the root
+>> decoder.
+>
+> Hi Ying,
+>
+> If the target type of a region is always the same as it's root decoder,
+> (is it?)
 
-Move description of numa=fake parameters from x86 documentation of
-admin-guide/kernel-parameters.txt
+IIUC, it is.  Do you know when they may be different?
 
-Suggested-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
- Documentation/arch/x86/x86_64/boot-options.rst  | 12 ------------
- 2 files changed, 15 insertions(+), 12 deletions(-)
+> why do we store it as an attribute of the region. Can we look
+> it up when needed?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f1384c7b59c9..bcdee8984e1f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4123,6 +4123,21 @@
- 			Disable NUMA, Only set up a single NUMA node
- 			spanning all memory.
- 
-+	numa=fake=<size>[MG]
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as a memory unit, fills all system RAM with
-+			nodes of size interleaved over physical nodes.
-+
-+	numa=fake=<N>
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as an integer, fills all system RAM with N
-+			fake nodes interleaved over physical nodes.
-+
-+	numa=fake=<N>U
-+			[KNL, ARM64, RISCV, X86, EARLY]
-+			If given as an integer followed by 'U', it will
-+			divide each physical node into N emulated nodes.
-+
- 	numa_balancing=	[KNL,ARM64,PPC,RISCV,S390,X86] Enable or disable automatic
- 			NUMA balancing.
- 			Allowed values are enable and disable
-diff --git a/Documentation/arch/x86/x86_64/boot-options.rst b/Documentation/arch/x86/x86_64/boot-options.rst
-index 137432d34109..98d4805f0823 100644
---- a/Documentation/arch/x86/x86_64/boot-options.rst
-+++ b/Documentation/arch/x86/x86_64/boot-options.rst
-@@ -170,18 +170,6 @@ NUMA
-     Don't parse the HMAT table for NUMA setup, or soft-reserved memory
-     partitioning.
- 
--  numa=fake=<size>[MG]
--    If given as a memory unit, fills all system RAM with nodes of
--    size interleaved over physical nodes.
--
--  numa=fake=<N>
--    If given as an integer, fills all system RAM with N fake nodes
--    interleaved over physical nodes.
--
--  numa=fake=<N>U
--    If given as an integer followed by 'U', it will divide each
--    physical node into N emulated nodes.
--
- ACPI
- ====
- 
--- 
-2.43.0
+Yes.  This is possible via to_cxl_root_decoder().  It's just
+a little inconvenient.
 
+> A bit more below -
+>
+>> 
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Cc: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>  drivers/cxl/core/region.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 21ad5f242875..9a483c8a32fd 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2545,7 +2545,8 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+>>  		return ERR_PTR(-EBUSY);
+>>  	}
+>>  
+>> -	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
+>> +	return devm_cxl_add_region(cxlrd, id, mode,
+>> +				   cxlrd->cxlsd.cxld.target_type);
+>>  }
+>
+> Passing the 'cxlrd' and then a piece of the cxlrd (.target_type) looks
+> redundant.
+
+Yes.  We can remove the parameter.  Will change this if we still need
+cxlr->type.  Thanks!
+
+--
+Best Regards,
+Huang, Ying
+
+>
+> -- Alison
+>
+>>  
+>>  static ssize_t create_pmem_region_store(struct device *dev,
+>> -- 
+>> 2.39.2
+>> 
