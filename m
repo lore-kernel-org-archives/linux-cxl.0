@@ -1,80 +1,87 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2021B2101B7;
-	Fri,  2 Aug 2024 15:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3811F61C;
+	Fri,  2 Aug 2024 15:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722611297; cv=none; b=ip1VT1hwY/51U6iHueNQNrNr7Q0vkVi6hgSO8BAMxdM+VcsgseBKMaVHQq4KL0do4OyvM6A/7Mq2fH0aNXAjUZ9wjHI25cyPijs+uaYJqwOBN1l324Thatlh8ybVlMTer6PMH019tdik6ooSl2CL9XjlNJh9opQNW5BHG7y/jQQ=
+	t=1722611402; cv=none; b=kTFmqJ9vaRjic3bv+0sGHxUBuUyxWk8/M1rEZRzwJ3sqKEXMZLVYwyLsZGZwkA6HP3fJO+ckDPCpkhByyr4eM/M/qrqdgLwGnVItUwx21GIMtW59TyBgEsHBuWcNDPaiDBowicpDhJYnsUB9y9aHfQE4ICSAD4gCe2G+aWvjq8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722611297; c=relaxed/simple;
-	bh=9YHLzEBPhAU5AwpROppk2stTQe7p9Sm7x8VdtUFvPA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7h/eLtuqMmL0SNbr1p6zWm4LrkIKJSNfA6XbkC9Yl5dn+pygS7DCekfNDwzrO3KAKWjNzw6Z34NQ+nRqx+4hu1/LEj62X+8n65G31910bTHsd+zMXwhOs9y57BlRByQ2xzYwHeB0ptb04UW7/1y16P+xPgWjzpTULTx+lnbfP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wN8R0xH/; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wN8R0xH/"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B3F24524;
-	Fri,  2 Aug 2024 17:07:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1722611244;
-	bh=9YHLzEBPhAU5AwpROppk2stTQe7p9Sm7x8VdtUFvPA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wN8R0xH/4h5vT6keuaysM6cahOylGdms88O4eQlDOpVO/Gimy1l+Tq8Jf2VrH63Ve
-	 njCPmetacH0fLMeQ3Q3D9W1I15bXqzK4HesZRs+lA+EgTpi0WzXoj2DGdiX2tL+7HF
-	 CwIc3cLb04j7RGu8giXKun3HXgQB4en3xDz5lBQ0=
-Date: Fri, 2 Aug 2024 18:07:53 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>,
-	Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, jgg@nvidia.com
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-Message-ID: <20240802150753.GC2725@pendragon.ideasonboard.com>
-References: <20240722111834.GC13497@pendragon.ideasonboard.com>
- <CAPybu_1SiMmegv=4dys+1tzV6=PumKxfB5p12ST4zasCjwzS9g@mail.gmail.com>
- <20240725200142.GF14252@pendragon.ideasonboard.com>
- <CAPybu_1hZfAqp2uFttgYgRxm_tYzJJr-U3aoD1WKCWQsHThSLw@mail.gmail.com>
- <20240726105936.GC28621@pendragon.ideasonboard.com>
- <CAPybu_1y7K940ndLZmy+QdfkJ_D9=F9nTPpp=-j9HYpg4AuqqA@mail.gmail.com>
- <20240728171800.GJ30973@pendragon.ideasonboard.com>
- <CAPybu_3M9GYNrDiqH1pXEvgzz4Wz_a672MCkNGoiLy9+e67WQw@mail.gmail.com>
- <Zqol_N8qkMI--n-S@valkosipuli.retiisi.eu>
- <CAKMK7uGx=VjHCo90htuTE6Oi0b8rt_0NrPsfbZwFKA304m7BdA@mail.gmail.com>
+	s=arc-20240116; t=1722611402; c=relaxed/simple;
+	bh=SyUkn8fXeribmClhq4AirCvcmHkeCTePbUC5SGN/01k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GMXOPE7zdONsSfEXjWbicTlWvnV6aq22bot50Bf9Od1WQSNQ/AevR2D/9lgankBxYQXJov4uEsRby0sKH2ExtlvWgygyclXTIu52jtFS0QpNE7k1rFjyd4kAfqt/TDJZR3UNMMDk563DuI9K8+VF1li/KQ0QH67sTbVX7W04nVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wb8MC74Tkz6K8xd;
+	Fri,  2 Aug 2024 23:07:19 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 91613140A86;
+	Fri,  2 Aug 2024 23:09:57 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
+ 2024 16:09:56 +0100
+Date: Fri, 2 Aug 2024 16:09:55 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
+ Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
+	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul
+ Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
+	<corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt
+	<palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring
+	<robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, Zi Yan <ziy@nvidia.com>, <devicetree@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v3 26/26] docs: move numa=fake description to
+ kernel-parameters.txt
+Message-ID: <20240802160955.00001093@Huawei.com>
+In-Reply-To: <20240801060826.559858-27-rppt@kernel.org>
+References: <20240801060826.559858-1-rppt@kernel.org>
+	<20240801060826.559858-27-rppt@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGx=VjHCo90htuTE6Oi0b8rt_0NrPsfbZwFKA304m7BdA@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Jul 31, 2024 at 03:15:39PM +0200, Daniel Vetter wrote:
-> On Wed, 31 Jul 2024 at 13:55, Sakari Ailus wrote:
-> > This is also very different from GPUs or accel devices that are built to be
-> > user-programmable. If I'd compare ISPs to different devices, then the
-> > closest match would probably be video codecs -- which also use V4L2.
+On Thu,  1 Aug 2024 09:08:26 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
+
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> Really just aside, but I figured I should correct this. DRM supports
-> plenty of video codecs. They're all tied to gpus, but the real reason
-> really is that the hw has decent command submission support so that
-> running the entire codec in userspace except the basic memory and
-> batch execution and synchronization handling in the kernel is a
-> feasible design. And actually good, because your kernel wont ever blow
-> up trying to parse complex media formats because it just doesn't.
+> NUMA emulation can be now enabled on arm64 and riscv in addition to x86.
+> 
+> Move description of numa=fake parameters from x86 documentation of
+> admin-guide/kernel-parameters.txt
+> 
+> Suggested-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I don't think V4L2 codecs parse the bitstream in the kernel either, at
-least not the recent ones.
 
--- 
-Regards,
-
-Laurent Pinchart
