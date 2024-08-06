@@ -1,406 +1,130 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E469770F3;
-	Tue,  6 Aug 2024 17:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B7929422
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 18:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722965651; cv=none; b=aROc2Cj6QTlcF9UnfjiK8kqHqwPrgMm51sklqujvnua8ZYCZvMWMdBgtcD/wSNDIYhuugi1SgxHhcFB+Zyeg8GY/aZ+t3ZChwXSg2+u6XnGRrvYhHOtWncRh5lbYvfgk/vLEZZ6JF8udGdZmesUwdOTnyBWhdA1oHC3RbQ45zmo=
+	t=1722967236; cv=none; b=WN7cx/B+dILP7K/SXKw+WEgqrFp7thfjX7eYCumKGLjJtw/nwLd9y66NbCZLL+5vKjqVO6uFLAik2cXwrjg99jNIOBDU2IkpDG6NobyASIrv0uk46IyJ4U9/5qzgKaFDN73aV6q26HppowmaMyb7qKQLP011rnvJd087T1VsRuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722965651; c=relaxed/simple;
-	bh=YYt3i1QwaVLEEfc9XdjMd+mLpl+pnz3P4xY+TvknjRI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0+ODSylsRjX4kbva8We3PK8JYZG34wB6jSQlCZRh0VMqsIL31LwZUFRnke///iVKwipYlihsP8nq7hVB2YZ92jP9YLEAUi8lgbP8xFUByD4pDThCihf/pHtRfruNfiYYZcPL0zdxz3rXXVQh5ubMciwOF75pCExYMx4fhMjqls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+YdayeX; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722967236; c=relaxed/simple;
+	bh=f2XjQVAFOMEyAF2He6DfOX7B9yvspDnOResmomHSCGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S1k78u+QiVjs3YgmRl8mnY6841xMJf7mhPClMpGFeEFhwG8BlgZ2RkNrwZcromlzSmvrZo7jNmmM3c2oeM7z141tEkyj9JDxpg+cgbe0a+v667xV9WXRBEbAz/ZvY6ajJ3KL4jljfJnlvZefDbsHAxFQloF0Cpqq4FI/edSqZ8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ZA0r6GAS; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+YdayeX"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-651da7c1531so7117077b3.0;
-        Tue, 06 Aug 2024 10:34:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ZA0r6GAS"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-260209df55dso443098fac.2
+        for <linux-cxl@vger.kernel.org>; Tue, 06 Aug 2024 11:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722965648; x=1723570448; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x/dijiz0EH92ZFCcCib2UX6qOQ2ginxd/v4yrYrYTM4=;
-        b=T+YdayeXn5jzQPqYHL4s86lSPdXZOcHa2wThfPi6ixKXiCOy6NkfCywoI2nnw/E8YZ
-         ouSJ5hDVSM2jjBrcnHnyghoJZFhXs77F4kGCVsxd0OJl3YXrQ4eCu0B00mKyhGC2BJ1b
-         0+4MhfCltwfjILI6xA05C454Xdl4ofcVXbav8bmHUe3spEpdU+kar0YZGVcMRflfKIZ0
-         GGFdD+LUlc48gE8B4eyRrsCm0R71/aWwHRZ8en2yCtXHalTSCjF9of2uaxY0WmxSY2aO
-         O2mf9uQRpqXEYCO261hj6A0T+rLHVSFLDP5nbG2SzviYanpsX5bPQi86FYWFmKp6Ny+P
-         lNtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722965648; x=1723570448;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1722967233; x=1723572033; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x/dijiz0EH92ZFCcCib2UX6qOQ2ginxd/v4yrYrYTM4=;
-        b=Ol0Mvmn46HBmyQ10yWjX8LpSnzmjGYDOYwjIKDGcjmejZEtdKfzwKeyIq+b63noCkQ
-         +5Zbvrz1Eh2I1ORJ6LsTvppTglUnKCOroBSlHU6w3umeCOws7Kgc1/OUwVG/Pw1PubQk
-         WWhoirRaaGcGqybxQPSx8MS5FJd+D6uMgZmRwbSuHOQSx5BHqw7uGhzRjkRcZroYjlGZ
-         FmYUVgMtk1jG+/qVnIBMjdw5KDrazjMvtIGFrxH/sWirEetvUtc6+Obc/rlZYxNpfi6l
-         vm7KhyXuKcvUssjtQSWZ0Xy1jO/vjcGv4y/D3IZ18ei9f9fHDy6u/hFJCeyl+2rXGo46
-         bWUA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7G1RlXRL1c3FMwXrOFln7zsKF4IHEjitlHSL/a6J0Tw7DcXhtGaFKO3aUE3+yZnRdeW8x4NfpdLDLrbJzNMOKZyUN3W+s
-X-Gm-Message-State: AOJu0YwoWtJGrtsIfbsz7jqTT4725itXVNyS2Ou+5FXxewz1a4x5qo1h
-	NYGci/HSosnqzlPXLpD3B65V5DqoYYfumE99c2bMV2os1XW7emaJZr+IRA==
-X-Google-Smtp-Source: AGHT+IHWLSaNIVrQIOJDYWP+LhgakR9Vk3J9gR3irIr/Ht1U3T4MeVRvDSTpH3gz5YgFxF3cA40ZjQ==
-X-Received: by 2002:a0d:e087:0:b0:647:88ba:f91b with SMTP id 00721157ae682-68960777bcemr162128477b3.11.1722965647999;
-        Tue, 06 Aug 2024 10:34:07 -0700 (PDT)
-Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-68a10659fdasm15936567b3.63.2024.08.06.10.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 10:34:07 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 6 Aug 2024 10:33:38 -0700
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v2 10/15] cxl: define a driver interface for DPA
- allocation
-Message-ID: <ZrJecn2KNn_5_Xef@fan>
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
+        bh=QfBptZsetpueoOKsFuJCrA1Xpgd48fPSsjBhDKcmpWw=;
+        b=ZA0r6GAS/SZPM6iVc5LUANeHaMqeRYQpAzDkVVWnaTI/vz7LHQHSQHQe7U+FpO8J2C
+         +QUa3g6xeCyn6vi3DgwxfEIOf+CvDLej3jge4O6D8/bvxFZ34cAeDp5zWYAKmWrCjqRv
+         cqdLwwok7RU0ZcupxJsxgxlzq7RFHXApzQk6Rss4X310UqeeymuKHC0+hOAV3Nl0IcxS
+         xBw5O3Ei7fyxLIVcTJ9jKAvIm227O2xZxf6k971FuhpU+1YIHeIvAdQZatGU1cUh/NLd
+         K+RFR/RvgMfA80CvzXiylg+cvIN+eJw+gT/pafiIhuAVt/s1Q5pSAeTZ3R2BPcAu+2+E
+         ZaDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722967233; x=1723572033;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QfBptZsetpueoOKsFuJCrA1Xpgd48fPSsjBhDKcmpWw=;
+        b=Yv67a0Clo35y1pi4r5arHXoLd+R8ntkJHoR7Nzoeqsp/PSs/IZBcwVOZ0YOMg+elQg
+         gtaV77WgdOjd2zyNjRyQuvfFuOMQ8sruBaEbRl49rJ2Z7t7IRvLcXMEbSt032gCWg92t
+         kuEYo3mxC4Bjwtxyhc+x4iCD5j4/TZYb7DQ8qrha25O8l8bSNTTjet3F8/LfaHf08d+M
+         t4mE4Z0lbyAs2lVP7OR2XhEGCqiTRMQOY7uapuDFlAe8WQEUHUoYLrOEL88YvbWiq7Vd
+         i0o2kODQHH/h2oD1CXsmMt2Pax+7x8gdjN8NsWrrmj4aD7tyaK77+N2Al5od/v6ZtTl3
+         +zKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYBJ4pyeY5XKEn8EUYQl/wFDgfllrX6MspU6H5snnXdhw5GqzbPXszYUpzs7tGer+6MthsAn/NIjre6svPt+k3QNrrY3O64UYW
+X-Gm-Message-State: AOJu0Yx5ee+Ueo84W9zHbiJQW1PM06P7CWhwLo/t3qvVE9EFYgvp+3eW
+	qff4/FcJ/xaxdB2DNnksVdh3jF22i7qc6N+TE3xwgXD9TElChMfGNegCxnfhhj+K1riuvq5p1zq
+	t1e4OzsFISfsDfZ8Iztkki/H+6NCTwrEdpc22Yw==
+X-Google-Smtp-Source: AGHT+IH+na8ZogFWe0lTnYO7BkcAEVsw1QVu/V+B8Fzmh/sUyWoO/L5FA9/YCLYS61YqWW8tMcQfLCj95kNJZH2NdC8=
+X-Received: by 2002:a05:6870:15d5:b0:261:1ad0:5fd1 with SMTP id
+ 586e51a60fabf-26891a96625mr20245193fac.12.1722967233054; Tue, 06 Aug 2024
+ 11:00:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
+References: <20240605222751.1406125-1-souravpanda@google.com>
+ <Zq0tPd2h6alFz8XF@aschofie-mobl2> <CA+CK2bAfgamzFos1M-6AtozEDwRPJzARJOmccfZ=uzKyJ7w=kQ@mail.gmail.com>
+ <66b15addf1a80_c144829473@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <66b15addf1a80_c144829473@dwillia2-xfh.jf.intel.com.notmuch>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 6 Aug 2024 13:59:54 -0400
+Message-ID: <CA+CK2bC1ZsT3cuAMDAAUonys3BUxbb2JdnZXs1Ps3NbYZt5W2Q@mail.gmail.com>
+Subject: Re: [PATCH v13] mm: report per-page metadata information
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>, Sourav Panda <souravpanda@google.com>, corbet@lwn.net, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, akpm@linux-foundation.org, 
+	mike.kravetz@oracle.com, muchun.song@linux.dev, rppt@kernel.org, 
+	david@redhat.com, rdunlap@infradead.org, chenlinxuan@uniontech.com, 
+	yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, bhelgaas@google.com, 
+	ivan@cloudflare.com, yosryahmed@google.com, hannes@cmpxchg.org, 
+	shakeelb@google.com, kirill.shutemov@linux.intel.com, 
+	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, weixugc@google.com, David Rientjes <rientjes@google.com>, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, yi.zhang@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 15, 2024 at 06:28:30PM +0100, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Region creation involves finding available DPA (device-physical-address)
-> capacity to map into HPA (host-physical-address) space. Given the HPA
-> capacity constraint, define an API, cxl_request_dpa(), that has the
-> flexibility to  map the minimum amount of memory the driver needs to
-> operate vs the total possible that can be mapped given HPA availability.
-> 
-> Factor out the core of cxl_dpa_alloc, that does free space scanning,
-> into a cxl_dpa_freespace() helper, and use that to balance the capacity
-> available to map vs the @min and @max arguments to cxl_request_dpa.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m4271ee49a91615c8af54e3ab20679f8be3099393
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/core.h            |   1 +
->  drivers/cxl/core/hdm.c             | 153 +++++++++++++++++++++++++----
->  drivers/net/ethernet/sfc/efx.c     |   2 +
->  drivers/net/ethernet/sfc/efx_cxl.c |  18 +++-
->  drivers/net/ethernet/sfc/efx_cxl.h |   1 +
->  include/linux/cxl_accel_mem.h      |   7 ++
->  6 files changed, 161 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 625394486459..a243ff12c0f4 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -76,6 +76,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->  		     enum cxl_decoder_mode mode);
->  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
->  int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+On Mon, Aug 5, 2024 at 7:06=E2=80=AFPM Dan Williams <dan.j.williams@intel.c=
+om> wrote:
+>
+> Pasha Tatashin wrote:
+> [..]
+> > Thank you for the heads up. Can you please attach a full config file,
+> > also was anyone able to reproduce this problem in qemu with emulated
+> > nvdimm?
+>
+> Yes, I can reproduce the crash just by trying to reconfigure the mode of
+> a pmem namespace:
+>
+> # ndctl create-namespace -m raw -f -e namespace0.0
+>
+> ...where namespace0.0 results from:
+>
+>     memmap=3D4G!4G
+>
+> ...passed on the kernel command line.
+>
+> Kernel config here:
+>
+> https://gist.github.com/djbw/143705077103d43a735c179395d4f69a
 
-Function declared twice here.
+Excellent, I was able to reproduce this problem.
 
-Fan
->  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
->  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
->  
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 4af9225d4b59..3e53ae222d40 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -3,6 +3,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/device.h>
->  #include <linux/delay.h>
-> +#include <linux/cxl_accel_mem.h>
->  
->  #include "cxlmem.h"
->  #include "core.h"
-> @@ -420,6 +421,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->  	up_write(&cxl_dpa_rwsem);
->  	return rc;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_free, CXL);
->  
->  int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->  		     enum cxl_decoder_mode mode)
-> @@ -467,30 +469,17 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
->  	return rc;
->  }
->  
-> -int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-> +static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
-> +					 resource_size_t *start_out,
-> +					 resource_size_t *skip_out)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	resource_size_t free_ram_start, free_pmem_start;
-> -	struct cxl_port *port = cxled_to_port(cxled);
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> -	struct device *dev = &cxled->cxld.dev;
->  	resource_size_t start, avail, skip;
->  	struct resource *p, *last;
-> -	int rc;
-> -
-> -	down_write(&cxl_dpa_rwsem);
-> -	if (cxled->cxld.region) {
-> -		dev_dbg(dev, "decoder attached to %s\n",
-> -			dev_name(&cxled->cxld.region->dev));
-> -		rc = -EBUSY;
-> -		goto out;
-> -	}
->  
-> -	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> -		dev_dbg(dev, "decoder enabled\n");
-> -		rc = -EBUSY;
-> -		goto out;
-> -	}
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
->  
->  	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
->  		last = p;
-> @@ -528,14 +517,45 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
->  			skip_end = start - 1;
->  		skip = skip_end - skip_start + 1;
->  	} else {
-> -		dev_dbg(dev, "mode not set\n");
-> -		rc = -EINVAL;
-> +		avail = 0;
-> +	}
-> +
-> +	if (!avail)
-> +		return 0;
-> +	if (start_out)
-> +		*start_out = start;
-> +	if (skip_out)
-> +		*skip_out = skip;
-> +	return avail;
-> +}
-> +
-> +int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-> +{
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct device *dev = &cxled->cxld.dev;
-> +	resource_size_t start, avail, skip;
-> +	int rc;
-> +
-> +	down_write(&cxl_dpa_rwsem);
-> +	if (cxled->cxld.region) {
-> +		dev_dbg(dev, "EBUSY, decoder attached to %s\n",
-> +			     dev_name(&cxled->cxld.region->dev));
-> +		rc = -EBUSY;
->  		goto out;
->  	}
->  
-> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> +		dev_dbg(dev, "EBUSY, decoder enabled\n");
-> +		rc = -EBUSY;
-> +		goto out;
-> +	}
-> +
-> +	avail = cxl_dpa_freespace(cxled, &start, &skip);
-> +
->  	if (size > avail) {
->  		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
-> -			cxl_decoder_mode_name(cxled->mode), &avail);
-> +			     cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> +			     &avail);
->  		rc = -ENOSPC;
->  		goto out;
->  	}
-> @@ -550,6 +570,99 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
->  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
->  }
->  
-> +static int find_free_decoder(struct device *dev, void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_port *port;
-> +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	port = cxled_to_port(cxled);
-> +
-> +	if (cxled->cxld.id != port->hdm_end + 1) {
-> +		return 0;
-> +	}
-> +	return 1;
-> +}
-> +
-> +/**
-> + * cxl_request_dpa - search and reserve DPA given input constraints
-> + * @endpoint: an endpoint port with available decoders
-> + * @mode: DPA operation mode (ram vs pmem)
-> + * @min: the minimum amount of capacity the call needs
-> + * @max: extra capacity to allocate after min is satisfied
-> + *
-> + * Given that a region needs to allocate from limited HPA capacity it
-> + * may be the case that a device has more mappable DPA capacity than
-> + * available HPA. So, the expectation is that @min is a driver known
-> + * value for how much capacity is needed, and @max is based the limit of
-> + * how much HPA space is available for a new region.
-> + *
-> + * Returns a pinned cxl_decoder with at least @min bytes of capacity
-> + * reserved, or an error pointer. The caller is also expected to own the
-> + * lifetime of the memdev registration associated with the endpoint to
-> + * pin the decoder registered as well.
-> + */
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-> +					     bool is_ram,
-> +					     resource_size_t min,
-> +					     resource_size_t max)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	enum cxl_decoder_mode mode;
-> +	struct device *cxled_dev;
-> +	resource_size_t alloc;
-> +	int rc;
-> +
-> +	if (!IS_ALIGNED(min | max, SZ_256M))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	down_read(&cxl_dpa_rwsem);
-> +
-> +	cxled_dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
-> +	if (!cxled_dev)
-> +		cxled = ERR_PTR(-ENXIO);
-> +	else
-> +		cxled = to_cxl_endpoint_decoder(cxled_dev);
-> +
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	if (IS_ERR(cxled))
-> +		return cxled;
-> +
-> +	if (is_ram)
-> +		mode = CXL_DECODER_RAM;
-> +	else
-> +		mode = CXL_DECODER_PMEM;
-> +
-> +	rc = cxl_dpa_set_mode(cxled, mode);
-> +	if (rc)
-> +		goto err;
-> +
-> +	down_read(&cxl_dpa_rwsem);
-> +	alloc = cxl_dpa_freespace(cxled, NULL, NULL);
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	if (max)
-> +		alloc = min(max, alloc);
-> +	if (alloc < min) {
-> +		rc = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	rc = cxl_dpa_alloc(cxled, alloc);
-> +	if (rc)
-> +		goto err;
-> +
-> +	return cxled;
-> +err:
-> +	put_device(cxled_dev);
-> +	return ERR_PTR(rc);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, CXL);
-> +
->  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
->  {
->  	u16 eig;
-> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-> index cb3f74d30852..9cfe29002d98 100644
-> --- a/drivers/net/ethernet/sfc/efx.c
-> +++ b/drivers/net/ethernet/sfc/efx.c
-> @@ -901,6 +901,8 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
->  
->  	efx_fini_io(efx);
->  
-> +	efx_cxl_exit(efx);
-> +
->  	pci_dbg(efx->pci_dev, "shutdown successful\n");
->  
->  	efx_fini_devlink_and_unlock(efx);
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 6d49571ccff7..b5626d724b52 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -84,12 +84,28 @@ void efx_cxl_init(struct efx_nic *efx)
->  		goto out;
->  	}
->  
-> -	if (max < EFX_CTPIO_BUFFER_SIZE)
-> +	if (max < EFX_CTPIO_BUFFER_SIZE) {
->  		pci_info(pci_dev, "CXL accel not enough free HPA space %llu < %u\n",
->  				  max, EFX_CTPIO_BUFFER_SIZE);
-> +		goto out;
-> +	}
-> +
-> +	cxl->cxled = cxl_request_dpa(cxl->endpoint, true, EFX_CTPIO_BUFFER_SIZE,
-> +				     EFX_CTPIO_BUFFER_SIZE);
-> +	if (IS_ERR(cxl->cxled))
-> +		pci_info(pci_dev, "CXL accel request DPA failed");
->  out:
->  	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
->  }
->  
-> +void efx_cxl_exit(struct efx_nic *efx)
-> +{
-> +	struct efx_cxl *cxl = efx->cxl;
-> +
-> +	if (cxl->cxled)
-> +		cxl_dpa_free(cxl->cxled);
-> + 
-> + 	return;
-> + }
->  
->  MODULE_IMPORT_NS(CXL);
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
-> index 76c6794c20d8..59d5217a684c 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.h
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
-> @@ -26,4 +26,5 @@ struct efx_cxl {
->  };
->  
->  void efx_cxl_init(struct efx_nic *efx);
-> +void efx_cxl_exit(struct efx_nic *efx);
->  #endif
-> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
-> index f3e77688ffe0..d4ecb5bb4fc8 100644
-> --- a/include/linux/cxl_accel_mem.h
-> +++ b/include/linux/cxl_accel_mem.h
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2024 Advanced Micro Devices, Inc. */
->  
->  #include <linux/cdev.h>
-> +#include <linux/pci.h>
->  
->  #ifndef __CXL_ACCEL_MEM_H
->  #define __CXL_ACCEL_MEM_H
-> @@ -41,4 +42,10 @@ struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
->  					       int interleave_ways,
->  					       unsigned long flags,
->  					       resource_size_t *max);
-> +
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-> +					     bool is_ram,
-> +					     resource_size_t min,
-> +					     resource_size_t max);
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->  #endif
-> -- 
-> 2.17.1
-> 
+The problem appear to be caused by this code:
+
+Calling page_pgdat() in depopulate_section_memmap():
+
+static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_p=
+ages,
+                struct vmem_altmap *altmap)
+{
+        unsigned long start =3D (unsigned long) pfn_to_page(pfn);
+        unsigned long end =3D start + nr_pages * sizeof(struct page);
+
+        mod_node_page_state(page_pgdat(pfn_to_page(pfn)), NR_MEMMAP,
+<<<< We cannot do it.
+                            -1L * (DIV_ROUND_UP(end - start, PAGE_SIZE)));
+        vmemmap_free(start, end, altmap);
+}
+
+The page_pgdat() returns NULL starting from:
+pageunmap_range()
+    remove_pfn_range_from_zone() <- page is removed from the zone.
+
+Pasha
