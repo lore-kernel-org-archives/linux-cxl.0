@@ -1,66 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059E1E7A42
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 13:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2672F47A4C
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 16:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722950953; cv=none; b=TR3+afeBFPFPQFTJI+RM8h28hJV901t96IPrwYXlONERvmmhj4hV5w3QZx/YLaqwo8BZ0Zxrg4x4eRaJ5HgjqHy8OMCheE2dlKhfog4yg7jzPo+BIvZKvanGyu8uQZ7gs++FMMXScT+cfOTVWLVdKCrKs8G/n1j65chhmpUIfSU=
+	t=1722962692; cv=none; b=tY3Hkdcdz9uW50sezqD40AwcxnXFOCYZKHY93cPNs//yu53cqJ9tZIE2eBERySGCt/DpMZHuon3fu6mLYjTDenoacHzkAyyxygIKVjbpInTHN7yVBQ79AJFSCNx6S2zOWiR3dKd2oI55gfqagx6taGtpWAw3Me9X8pQhN6l1QjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722950953; c=relaxed/simple;
-	bh=4NJ/yhkOnp0DgwZlQ2ar1giYsnoU0BxjF1CUE59RMzM=;
+	s=arc-20240116; t=1722962692; c=relaxed/simple;
+	bh=OQc2Cz0D/H+isoloEW0zRt8CLnjsk8nDzb1ZMOFCCNI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uxUxnRk8PiYmnlVGSpC+F2T8P5FSOHC9BMIynQ1Xveg+zooKuhYErbYeLG5GWdMfrV0oOpb7uQOVcrHoa2a/O59kd54Y73Ypwpwfm9rYNiAkidylO34lbyDCTKs6JW1Px8b0JEUKhWelF/CoXSYkg6qkCqhJpUr92Dasj8UsvTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=erud61GI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=pwX6YG5tZXj0m5XKMDsG36/m0ZXP6f2zLgKYIvW26tU8J3DNt1GK/jy+oaTMWzjnEWC3kIfZfJ4zJz3tYV1aL7Rrqbq9Qj5POaVVj52Tn4/UMoYO4AbKyB2mUg1DHvPtjwzBWqNRkuri1FwOYSt4/wC+emfN9Tjp+CrG1hz8CcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1jFhZyC; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="erud61GI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722950948;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mg8j1NdkC4QyJoy5NjpxqHT8Z7jh1Oox1ZezxJBmykE=;
-	b=erud61GIjkrT3O6nk3f7OGa8bsnHNzZjDaa90dntzve2LQw+QC4Rdap3fux1nicbi2IaUU
-	zuwhYDdQNWZgqI+Y13gkJGJl6UxCwZpcxHXL7CjoVjEEn8u2TacRh2TlpQSd+17PcQ8jka
-	4YjgR2nX76gq19Cf/H2FV5f4q31bLNs=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-215-j01g27fBMte_1LyKUcx_lw-1; Tue, 06 Aug 2024 09:29:06 -0400
-X-MC-Unique: j01g27fBMte_1LyKUcx_lw-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ef205d48ebso6330561fa.3
-        for <linux-cxl@vger.kernel.org>; Tue, 06 Aug 2024 06:29:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722950943; x=1723555743;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mg8j1NdkC4QyJoy5NjpxqHT8Z7jh1Oox1ZezxJBmykE=;
-        b=HpoAEsc5lpWckicYZ6MPSHxa9MEvafZkEKg6euU2ukh2BBr3lx5hjlt7P6+41iEUcl
-         /VqRLO4Nq1/IsbGcsJEF4AL7wxXER2STmd62kO9toouc4tvtN6/nkBfr2D0yqWLU0iIw
-         nnP+9XEkmBOr1uRXudcjB2FjC8nQxEbdQ3zCxatoGFqlwy33raSpKJgJ0wM1LI3GuwnN
-         lCZe40sKzlsTmmjpCYG3htnl+l1YYkwaLl/CpNNyTthphPhoeDd9y0x5VbSwEjk/VfnK
-         GHor+4FE1liIUE/tbetGi7Pl+8Zm7x9o7zI8D7k1XPlVrXAuWmw77dJtS9/ewqeRYIp4
-         4/Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKmnEFiJJXFEAJlzHP+satq2FF+zQU5OTuNIQnlFlZCU7Tm7LUv5GMd/HVCOwxuHXI0zk08bZJNFcY64quEIc9uOwLu4ZonOiz
-X-Gm-Message-State: AOJu0Yx7Mat+R1HQUwzK3pCiD29vbzQCIeW2IQUsfYaORaUPluTf5hBc
-	0SHvA5kSKYYiF2gg4reKKX/OeM7aFCjaMbXKZoyfeoGJzmJ4WYR55TXvWfLwHogbfOHv7Z6h/le
-	BjnrtgjsZLz/tSJ3aD6uaxOSDDVSRIOnb6MMGw7qyB0SIeK07Ssl5rMmE9w==
-X-Received: by 2002:a2e:8696:0:b0:2ef:228a:1b86 with SMTP id 38308e7fff4ca-2f15aabd05fmr96389221fa.21.1722950943102;
-        Tue, 06 Aug 2024 06:29:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUAkkY1eODz2H49AhHbcgbZMYiCb05Jg7YJ0JX+yoRtVdCbp9tatU0EHzUBQRP+lyJ7u1OEA==
-X-Received: by 2002:a2e:8696:0:b0:2ef:228a:1b86 with SMTP id 38308e7fff4ca-2f15aabd05fmr96388601fa.21.1722950942503;
-        Tue, 06 Aug 2024 06:29:02 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73f:8500:f83c:3602:5300:88af? (p200300cbc73f8500f83c3602530088af.dip0.t-ipconnect.de. [2003:cb:c73f:8500:f83c:3602:5300:88af])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428e6e9cd4esm180274335e9.44.2024.08.06.06.29.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Aug 2024 06:29:02 -0700 (PDT)
-Message-ID: <87ca4550-ed4d-4373-8d4c-3f89ac03df91@redhat.com>
-Date: Tue, 6 Aug 2024 15:28:59 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1jFhZyC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722962690; x=1754498690;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OQc2Cz0D/H+isoloEW0zRt8CLnjsk8nDzb1ZMOFCCNI=;
+  b=n1jFhZyCSPq+bUtGobNJl9FZ+CZnm48/ahr3pNlIn7IQkGSj7puu+FQC
+   nCrwy4CYz82dgHddlY2j6Zr+jhUxnG5j/YA0EbLfRDMXD054SxdzwatQp
+   im+8iWKH+ADdeTqmZI0Ifl0EoOmx7AITQUXWTsUHdLcWb47bL0zL1bnrO
+   29DHUpXpogD4jU8xaH+reLe6lCTpXKSbNeuEhL/aXRXTGORPpTgFKUpr3
+   LNMRFZw+wF6dTtou8kXQenhJcxKPgOMWOqGeEQh8MFLqSp+SUw/MWiBJG
+   LjvSkiNZ2B6k2p7nbcJqXpU3Cx91gbD4s29V6ADZ32+G+xLeCcyNm8GmK
+   w==;
+X-CSE-ConnectionGUID: dCmkxQxUT3qVwPRIEWhqfg==
+X-CSE-MsgGUID: 3loVLo4NQuy/XpIpF+4l/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="31663390"
+X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
+   d="scan'208";a="31663390"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 09:44:32 -0700
+X-CSE-ConnectionGUID: 3Msq+TV2SeGyds7x7itcQA==
+X-CSE-MsgGUID: WYObGMdUTvqbPDIN0/1Utg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
+   d="scan'208";a="61392601"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.83]) ([10.125.111.83])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 09:44:31 -0700
+Message-ID: <89bd36e0-85b1-4a81-8e53-3f610223b273@intel.com>
+Date: Tue, 6 Aug 2024 09:44:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,114 +52,131 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 24/26] arch_numa: switch over to numa_memblks
-To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
- <dave@stgolabs.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>,
- Palmer Dabbelt <palmer@dabbelt.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Will Deacon <will@kernel.org>, Zi Yan <ziy@nvidia.com>,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, nvdimm@lists.linux.dev,
- sparclinux@vger.kernel.org, x86@kernel.org
-References: <20240801060826.559858-1-rppt@kernel.org>
- <20240801060826.559858-25-rppt@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240801060826.559858-25-rppt@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support via
+ fwctl
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com, Borislav Petkov <bp@alien8.de>,
+ Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter <rric@kernel.org>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240729130528.0000139b@Huawei.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240729130528.0000139b@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01.08.24 08:08, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Until now arch_numa was directly translating firmware NUMA information
-> to memblock.
-> 
-> Using numa_memblks as an intermediate step has a few advantages:
-> * alignment with more battle tested x86 implementation
-> * availability of NUMA emulation
-> * maintaining node information for not yet populated memory
-> 
-> Replace current functionality related to numa_add_memblk() and
-> __node_distance() with the implementation based on numa_memblks and add
-> functions required by numa_emulation.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
-> ---
 
-Acked-by: David Hildenbrand <david@redhat.com>
 
--- 
-Cheers,
+On 7/29/24 5:05 AM, Jonathan Cameron wrote:
+> On Thu, 18 Jul 2024 14:32:18 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> This series add support for CXL feature commands using the FWCTL framework [1].
+>> The code is untested and I'm looking for architectural and implementation feedback.
+>> While CXL currently has a chardev for user ioctls to send some mailbox
+>> commands to a memory device, the fwctl framework provides more security policies
+>> that can be a potential vehicle to move CXL ioctl path to that.
+>>
+>> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
+>> "Set Feature" commands are implemented. The "get" commands under the
+>> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
+>> on the effect of the feature. All mailbox commands for CXL provides an effects
+>> table that describes the effects of a command when performed on the device.
+>> For CXL features, there is also an effects field that describes the effects
+>> a feature write operation has on the device per feature. The security policy
+>> is checked against this feature specific effects field. Looking for discussion
+>> on matching the CXL spec defined effects with the FWCTL security policy.
+> 
+> Hi Dave,
+> 
+> Great to have this code.
+> 
+> My main concern is that, once a feature is exposed by fwctl, it becomes ABI.
+> Even with the taint, does that mean we can't remove it later? We
+> may well have userspace code using fwctl that will break kernel driver
+> support.
+> 
+> As you probably know, for the scrub control you are using as an example,
+> there is an ongoing effort to generalize that across multiple subsystems.
+> It's a convenient test as a simple get/set feature in CXL, so maybe
+> I'm reading too much into that choice.
+> 
+> One piece of good feedback we got on that generalization effort was that
+> this sort of RAS control should all be in one place (we were proposing
+> a RAS control subsystem at the times, separate from EDAC). The key reason
+> being to ensure it gets sufficient review by experts in the RAS aspects
+> (rather than CXL or other implementation).
+> 
+> Shiju's latest series puts it all in /sys/bus/edac/
+> https://lore.kernel.org/linux-cxl/20240726160556.2079-1-shiju.jose@huawei.com/T/#t
 
-David / dhildenb
+I didn't see Shiju's patches until I created the RFC. For v1 I just wanted to post upstream to show intent and get some discussion going. I did let Shiju know that I'll pull in his code in a later rev. I expect a lot of churn with this code as we discuss.
 
+It does seem like we may need a per feature (write) list/mask that is exclusive to kernel such as scrub? Also it looks like I need to find a different cxl spec defined feature to use for testing fwctl. 
+
+> 
+> Even if we make the driver safe to someone else messing with the state under it
+> (so basically make it stateless) we can't make the same guarantees for any
+> user space code on top of that interface.  Can we rely on only one path ever
+> being used? I'm not sure.
+> 
+> We could in theory decide to expose all the stuff proposed for the EDAC / rascontrol
+> as fwctl only, but that's going to get nasty as next set of features we plan to
+> implement are memory repair related and in at least some cases those require the
+> memory to be offlined if you don't want nasty side effects. I don't think there
+> will be appetite for that sort of thing via fwctl.
+> 
+> There are a bunch of other get/set features in the CXL spec and I expect to see
+> more over time so I think this will be an ongoing discussion.
+> 
+> Jonathan
+> 
+> +CC Edac maintainers etc, as they may have views on using fwctl for this stuff.
+> 
+> 
+> 
+>>
+>> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
+>>
+>> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
+>>
+>> ---
+>>
+>> Dave Jiang (13):
+>>       cxl: Move mailbox related bits to the same context
+>>       cxl: Fix comment regarding cxl_query_cmd() return data
+>>       cxl: Refactor user ioctl command path from mds to mailbox
+>>       cxl: Add Get Supported Features command for kernel usage
+>>       cxl/test: Add Get Supported Features mailbox command support
+>>       cxl: Add Get Feature command support
+>>       cxl: Add Set Feature command support
+>>       fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
+>>       fwctl/cxl: Add support for get driver information
+>>       fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
+>>       fwctl/cxl: Add query commands software command for ->fw_rpc()
+>>       cxl/test: Add Get Feature support to cxl_test
+>>       cxl/test: Add Set Feature support to cxl_test
+>>
+>>  MAINTAINERS                  |   8 +
+>>  drivers/cxl/core/core.h      |   9 +-
+>>  drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+>>  drivers/cxl/core/memdev.c    |  78 +++++---
+>>  drivers/cxl/cxlmem.h         | 141 +++------------
+>>  drivers/cxl/pci.c            |  68 ++++---
+>>  drivers/cxl/pmem.c           |  10 +-
+>>  drivers/cxl/security.c       |  18 +-
+>>  drivers/fwctl/Kconfig        |   9 +
+>>  drivers/fwctl/Makefile       |   1 +
+>>  drivers/fwctl/cxl/Makefile   |   4 +
+>>  drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
+>>  include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
+>>  include/uapi/fwctl/cxl.h     |  92 ++++++++++
+>>  include/uapi/fwctl/fwctl.h   |   1 +
+>>  include/uapi/linux/cxl_mem.h |   3 +
+>>  tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
+>>  17 files changed, 1515 insertions(+), 275 deletions(-)
+> 
+> 
