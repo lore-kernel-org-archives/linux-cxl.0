@@ -1,182 +1,406 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2672F47A4C
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 16:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E469770F3;
+	Tue,  6 Aug 2024 17:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722962692; cv=none; b=tY3Hkdcdz9uW50sezqD40AwcxnXFOCYZKHY93cPNs//yu53cqJ9tZIE2eBERySGCt/DpMZHuon3fu6mLYjTDenoacHzkAyyxygIKVjbpInTHN7yVBQ79AJFSCNx6S2zOWiR3dKd2oI55gfqagx6taGtpWAw3Me9X8pQhN6l1QjM=
+	t=1722965651; cv=none; b=aROc2Cj6QTlcF9UnfjiK8kqHqwPrgMm51sklqujvnua8ZYCZvMWMdBgtcD/wSNDIYhuugi1SgxHhcFB+Zyeg8GY/aZ+t3ZChwXSg2+u6XnGRrvYhHOtWncRh5lbYvfgk/vLEZZ6JF8udGdZmesUwdOTnyBWhdA1oHC3RbQ45zmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722962692; c=relaxed/simple;
-	bh=OQc2Cz0D/H+isoloEW0zRt8CLnjsk8nDzb1ZMOFCCNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pwX6YG5tZXj0m5XKMDsG36/m0ZXP6f2zLgKYIvW26tU8J3DNt1GK/jy+oaTMWzjnEWC3kIfZfJ4zJz3tYV1aL7Rrqbq9Qj5POaVVj52Tn4/UMoYO4AbKyB2mUg1DHvPtjwzBWqNRkuri1FwOYSt4/wC+emfN9Tjp+CrG1hz8CcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1jFhZyC; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1722965651; c=relaxed/simple;
+	bh=YYt3i1QwaVLEEfc9XdjMd+mLpl+pnz3P4xY+TvknjRI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0+ODSylsRjX4kbva8We3PK8JYZG34wB6jSQlCZRh0VMqsIL31LwZUFRnke///iVKwipYlihsP8nq7hVB2YZ92jP9YLEAUi8lgbP8xFUByD4pDThCihf/pHtRfruNfiYYZcPL0zdxz3rXXVQh5ubMciwOF75pCExYMx4fhMjqls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+YdayeX; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1jFhZyC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722962690; x=1754498690;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OQc2Cz0D/H+isoloEW0zRt8CLnjsk8nDzb1ZMOFCCNI=;
-  b=n1jFhZyCSPq+bUtGobNJl9FZ+CZnm48/ahr3pNlIn7IQkGSj7puu+FQC
-   nCrwy4CYz82dgHddlY2j6Zr+jhUxnG5j/YA0EbLfRDMXD054SxdzwatQp
-   im+8iWKH+ADdeTqmZI0Ifl0EoOmx7AITQUXWTsUHdLcWb47bL0zL1bnrO
-   29DHUpXpogD4jU8xaH+reLe6lCTpXKSbNeuEhL/aXRXTGORPpTgFKUpr3
-   LNMRFZw+wF6dTtou8kXQenhJcxKPgOMWOqGeEQh8MFLqSp+SUw/MWiBJG
-   LjvSkiNZ2B6k2p7nbcJqXpU3Cx91gbD4s29V6ADZ32+G+xLeCcyNm8GmK
-   w==;
-X-CSE-ConnectionGUID: dCmkxQxUT3qVwPRIEWhqfg==
-X-CSE-MsgGUID: 3loVLo4NQuy/XpIpF+4l/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="31663390"
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="31663390"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 09:44:32 -0700
-X-CSE-ConnectionGUID: 3Msq+TV2SeGyds7x7itcQA==
-X-CSE-MsgGUID: WYObGMdUTvqbPDIN0/1Utg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="61392601"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.83]) ([10.125.111.83])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 09:44:31 -0700
-Message-ID: <89bd36e0-85b1-4a81-8e53-3f610223b273@intel.com>
-Date: Tue, 6 Aug 2024 09:44:30 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+YdayeX"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-651da7c1531so7117077b3.0;
+        Tue, 06 Aug 2024 10:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722965648; x=1723570448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x/dijiz0EH92ZFCcCib2UX6qOQ2ginxd/v4yrYrYTM4=;
+        b=T+YdayeXn5jzQPqYHL4s86lSPdXZOcHa2wThfPi6ixKXiCOy6NkfCywoI2nnw/E8YZ
+         ouSJ5hDVSM2jjBrcnHnyghoJZFhXs77F4kGCVsxd0OJl3YXrQ4eCu0B00mKyhGC2BJ1b
+         0+4MhfCltwfjILI6xA05C454Xdl4ofcVXbav8bmHUe3spEpdU+kar0YZGVcMRflfKIZ0
+         GGFdD+LUlc48gE8B4eyRrsCm0R71/aWwHRZ8en2yCtXHalTSCjF9of2uaxY0WmxSY2aO
+         O2mf9uQRpqXEYCO261hj6A0T+rLHVSFLDP5nbG2SzviYanpsX5bPQi86FYWFmKp6Ny+P
+         lNtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722965648; x=1723570448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x/dijiz0EH92ZFCcCib2UX6qOQ2ginxd/v4yrYrYTM4=;
+        b=Ol0Mvmn46HBmyQ10yWjX8LpSnzmjGYDOYwjIKDGcjmejZEtdKfzwKeyIq+b63noCkQ
+         +5Zbvrz1Eh2I1ORJ6LsTvppTglUnKCOroBSlHU6w3umeCOws7Kgc1/OUwVG/Pw1PubQk
+         WWhoirRaaGcGqybxQPSx8MS5FJd+D6uMgZmRwbSuHOQSx5BHqw7uGhzRjkRcZroYjlGZ
+         FmYUVgMtk1jG+/qVnIBMjdw5KDrazjMvtIGFrxH/sWirEetvUtc6+Obc/rlZYxNpfi6l
+         vm7KhyXuKcvUssjtQSWZ0Xy1jO/vjcGv4y/D3IZ18ei9f9fHDy6u/hFJCeyl+2rXGo46
+         bWUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7G1RlXRL1c3FMwXrOFln7zsKF4IHEjitlHSL/a6J0Tw7DcXhtGaFKO3aUE3+yZnRdeW8x4NfpdLDLrbJzNMOKZyUN3W+s
+X-Gm-Message-State: AOJu0YwoWtJGrtsIfbsz7jqTT4725itXVNyS2Ou+5FXxewz1a4x5qo1h
+	NYGci/HSosnqzlPXLpD3B65V5DqoYYfumE99c2bMV2os1XW7emaJZr+IRA==
+X-Google-Smtp-Source: AGHT+IHWLSaNIVrQIOJDYWP+LhgakR9Vk3J9gR3irIr/Ht1U3T4MeVRvDSTpH3gz5YgFxF3cA40ZjQ==
+X-Received: by 2002:a0d:e087:0:b0:647:88ba:f91b with SMTP id 00721157ae682-68960777bcemr162128477b3.11.1722965647999;
+        Tue, 06 Aug 2024 10:34:07 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-68a10659fdasm15936567b3.63.2024.08.06.10.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 10:34:07 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 6 Aug 2024 10:33:38 -0700
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	dan.j.williams@intel.com, martin.habets@xilinx.com,
+	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+	pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v2 10/15] cxl: define a driver interface for DPA
+ allocation
+Message-ID: <ZrJecn2KNn_5_Xef@fan>
+References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
+ <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support via
- fwctl
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com, Borislav Petkov <bp@alien8.de>,
- Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter <rric@kernel.org>
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
- <20240729130528.0000139b@Huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240729130528.0000139b@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715172835.24757-11-alejandro.lucero-palau@amd.com>
 
+On Mon, Jul 15, 2024 at 06:28:30PM +0100, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Region creation involves finding available DPA (device-physical-address)
+> capacity to map into HPA (host-physical-address) space. Given the HPA
+> capacity constraint, define an API, cxl_request_dpa(), that has the
+> flexibility to  map the minimum amount of memory the driver needs to
+> operate vs the total possible that can be mapped given HPA availability.
+> 
+> Factor out the core of cxl_dpa_alloc, that does free space scanning,
+> into a cxl_dpa_freespace() helper, and use that to balance the capacity
+> available to map vs the @min and @max arguments to cxl_request_dpa.
+> 
+> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m4271ee49a91615c8af54e3ab20679f8be3099393
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/core.h            |   1 +
+>  drivers/cxl/core/hdm.c             | 153 +++++++++++++++++++++++++----
+>  drivers/net/ethernet/sfc/efx.c     |   2 +
+>  drivers/net/ethernet/sfc/efx_cxl.c |  18 +++-
+>  drivers/net/ethernet/sfc/efx_cxl.h |   1 +
+>  include/linux/cxl_accel_mem.h      |   7 ++
+>  6 files changed, 161 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 625394486459..a243ff12c0f4 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -76,6 +76,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  		     enum cxl_decoder_mode mode);
+>  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
+>  int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
 
+Function declared twice here.
 
-On 7/29/24 5:05 AM, Jonathan Cameron wrote:
-> On Thu, 18 Jul 2024 14:32:18 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> This series add support for CXL feature commands using the FWCTL framework [1].
->> The code is untested and I'm looking for architectural and implementation feedback.
->> While CXL currently has a chardev for user ioctls to send some mailbox
->> commands to a memory device, the fwctl framework provides more security policies
->> that can be a potential vehicle to move CXL ioctl path to that.
->>
->> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
->> "Set Feature" commands are implemented. The "get" commands under the
->> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
->> on the effect of the feature. All mailbox commands for CXL provides an effects
->> table that describes the effects of a command when performed on the device.
->> For CXL features, there is also an effects field that describes the effects
->> a feature write operation has on the device per feature. The security policy
->> is checked against this feature specific effects field. Looking for discussion
->> on matching the CXL spec defined effects with the FWCTL security policy.
-> 
-> Hi Dave,
-> 
-> Great to have this code.
-> 
-> My main concern is that, once a feature is exposed by fwctl, it becomes ABI.
-> Even with the taint, does that mean we can't remove it later? We
-> may well have userspace code using fwctl that will break kernel driver
-> support.
-> 
-> As you probably know, for the scrub control you are using as an example,
-> there is an ongoing effort to generalize that across multiple subsystems.
-> It's a convenient test as a simple get/set feature in CXL, so maybe
-> I'm reading too much into that choice.
-> 
-> One piece of good feedback we got on that generalization effort was that
-> this sort of RAS control should all be in one place (we were proposing
-> a RAS control subsystem at the times, separate from EDAC). The key reason
-> being to ensure it gets sufficient review by experts in the RAS aspects
-> (rather than CXL or other implementation).
-> 
-> Shiju's latest series puts it all in /sys/bus/edac/
-> https://lore.kernel.org/linux-cxl/20240726160556.2079-1-shiju.jose@huawei.com/T/#t
-
-I didn't see Shiju's patches until I created the RFC. For v1 I just wanted to post upstream to show intent and get some discussion going. I did let Shiju know that I'll pull in his code in a later rev. I expect a lot of churn with this code as we discuss.
-
-It does seem like we may need a per feature (write) list/mask that is exclusive to kernel such as scrub? Also it looks like I need to find a different cxl spec defined feature to use for testing fwctl. 
-
-> 
-> Even if we make the driver safe to someone else messing with the state under it
-> (so basically make it stateless) we can't make the same guarantees for any
-> user space code on top of that interface.  Can we rely on only one path ever
-> being used? I'm not sure.
-> 
-> We could in theory decide to expose all the stuff proposed for the EDAC / rascontrol
-> as fwctl only, but that's going to get nasty as next set of features we plan to
-> implement are memory repair related and in at least some cases those require the
-> memory to be offlined if you don't want nasty side effects. I don't think there
-> will be appetite for that sort of thing via fwctl.
-> 
-> There are a bunch of other get/set features in the CXL spec and I expect to see
-> more over time so I think this will be an ongoing discussion.
-> 
-> Jonathan
-> 
-> +CC Edac maintainers etc, as they may have views on using fwctl for this stuff.
-> 
-> 
-> 
->>
->> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
->>
->> ---
->>
->> Dave Jiang (13):
->>       cxl: Move mailbox related bits to the same context
->>       cxl: Fix comment regarding cxl_query_cmd() return data
->>       cxl: Refactor user ioctl command path from mds to mailbox
->>       cxl: Add Get Supported Features command for kernel usage
->>       cxl/test: Add Get Supported Features mailbox command support
->>       cxl: Add Get Feature command support
->>       cxl: Add Set Feature command support
->>       fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
->>       fwctl/cxl: Add support for get driver information
->>       fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
->>       fwctl/cxl: Add query commands software command for ->fw_rpc()
->>       cxl/test: Add Get Feature support to cxl_test
->>       cxl/test: Add Set Feature support to cxl_test
->>
->>  MAINTAINERS                  |   8 +
->>  drivers/cxl/core/core.h      |   9 +-
->>  drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
->>  drivers/cxl/core/memdev.c    |  78 +++++---
->>  drivers/cxl/cxlmem.h         | 141 +++------------
->>  drivers/cxl/pci.c            |  68 ++++---
->>  drivers/cxl/pmem.c           |  10 +-
->>  drivers/cxl/security.c       |  18 +-
->>  drivers/fwctl/Kconfig        |   9 +
->>  drivers/fwctl/Makefile       |   1 +
->>  drivers/fwctl/cxl/Makefile   |   4 +
->>  drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
->>  include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
->>  include/uapi/fwctl/cxl.h     |  92 ++++++++++
->>  include/uapi/fwctl/fwctl.h   |   1 +
->>  include/uapi/linux/cxl_mem.h |   3 +
->>  tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
->>  17 files changed, 1515 insertions(+), 275 deletions(-)
-> 
+Fan
+>  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
+>  resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
+>  
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 4af9225d4b59..3e53ae222d40 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <linux/cxl_accel_mem.h>
+>  
+>  #include "cxlmem.h"
+>  #include "core.h"
+> @@ -420,6 +421,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
+>  	up_write(&cxl_dpa_rwsem);
+>  	return rc;
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_free, CXL);
+>  
+>  int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  		     enum cxl_decoder_mode mode)
+> @@ -467,30 +469,17 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  	return rc;
+>  }
+>  
+> -int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+> +static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
+> +					 resource_size_t *start_out,
+> +					 resource_size_t *skip_out)
+>  {
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>  	resource_size_t free_ram_start, free_pmem_start;
+> -	struct cxl_port *port = cxled_to_port(cxled);
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> -	struct device *dev = &cxled->cxld.dev;
+>  	resource_size_t start, avail, skip;
+>  	struct resource *p, *last;
+> -	int rc;
+> -
+> -	down_write(&cxl_dpa_rwsem);
+> -	if (cxled->cxld.region) {
+> -		dev_dbg(dev, "decoder attached to %s\n",
+> -			dev_name(&cxled->cxld.region->dev));
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+>  
+> -	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
+> -		dev_dbg(dev, "decoder enabled\n");
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+> +	lockdep_assert_held(&cxl_dpa_rwsem);
+>  
+>  	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
+>  		last = p;
+> @@ -528,14 +517,45 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>  			skip_end = start - 1;
+>  		skip = skip_end - skip_start + 1;
+>  	} else {
+> -		dev_dbg(dev, "mode not set\n");
+> -		rc = -EINVAL;
+> +		avail = 0;
+> +	}
+> +
+> +	if (!avail)
+> +		return 0;
+> +	if (start_out)
+> +		*start_out = start;
+> +	if (skip_out)
+> +		*skip_out = skip;
+> +	return avail;
+> +}
+> +
+> +int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+> +{
+> +	struct cxl_port *port = cxled_to_port(cxled);
+> +	struct device *dev = &cxled->cxld.dev;
+> +	resource_size_t start, avail, skip;
+> +	int rc;
+> +
+> +	down_write(&cxl_dpa_rwsem);
+> +	if (cxled->cxld.region) {
+> +		dev_dbg(dev, "EBUSY, decoder attached to %s\n",
+> +			     dev_name(&cxled->cxld.region->dev));
+> +		rc = -EBUSY;
+>  		goto out;
+>  	}
+>  
+> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
+> +		dev_dbg(dev, "EBUSY, decoder enabled\n");
+> +		rc = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	avail = cxl_dpa_freespace(cxled, &start, &skip);
+> +
+>  	if (size > avail) {
+>  		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+> -			cxl_decoder_mode_name(cxled->mode), &avail);
+> +			     cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
+> +			     &avail);
+>  		rc = -ENOSPC;
+>  		goto out;
+>  	}
+> @@ -550,6 +570,99 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
+>  }
+>  
+> +static int find_free_decoder(struct device *dev, void *data)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		return 0;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	port = cxled_to_port(cxled);
+> +
+> +	if (cxled->cxld.id != port->hdm_end + 1) {
+> +		return 0;
+> +	}
+> +	return 1;
+> +}
+> +
+> +/**
+> + * cxl_request_dpa - search and reserve DPA given input constraints
+> + * @endpoint: an endpoint port with available decoders
+> + * @mode: DPA operation mode (ram vs pmem)
+> + * @min: the minimum amount of capacity the call needs
+> + * @max: extra capacity to allocate after min is satisfied
+> + *
+> + * Given that a region needs to allocate from limited HPA capacity it
+> + * may be the case that a device has more mappable DPA capacity than
+> + * available HPA. So, the expectation is that @min is a driver known
+> + * value for how much capacity is needed, and @max is based the limit of
+> + * how much HPA space is available for a new region.
+> + *
+> + * Returns a pinned cxl_decoder with at least @min bytes of capacity
+> + * reserved, or an error pointer. The caller is also expected to own the
+> + * lifetime of the memdev registration associated with the endpoint to
+> + * pin the decoder registered as well.
+> + */
+> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
+> +					     bool is_ram,
+> +					     resource_size_t min,
+> +					     resource_size_t max)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	enum cxl_decoder_mode mode;
+> +	struct device *cxled_dev;
+> +	resource_size_t alloc;
+> +	int rc;
+> +
+> +	if (!IS_ALIGNED(min | max, SZ_256M))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +
+> +	cxled_dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
+> +	if (!cxled_dev)
+> +		cxled = ERR_PTR(-ENXIO);
+> +	else
+> +		cxled = to_cxl_endpoint_decoder(cxled_dev);
+> +
+> +	up_read(&cxl_dpa_rwsem);
+> +
+> +	if (IS_ERR(cxled))
+> +		return cxled;
+> +
+> +	if (is_ram)
+> +		mode = CXL_DECODER_RAM;
+> +	else
+> +		mode = CXL_DECODER_PMEM;
+> +
+> +	rc = cxl_dpa_set_mode(cxled, mode);
+> +	if (rc)
+> +		goto err;
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +	alloc = cxl_dpa_freespace(cxled, NULL, NULL);
+> +	up_read(&cxl_dpa_rwsem);
+> +
+> +	if (max)
+> +		alloc = min(max, alloc);
+> +	if (alloc < min) {
+> +		rc = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	rc = cxl_dpa_alloc(cxled, alloc);
+> +	if (rc)
+> +		goto err;
+> +
+> +	return cxled;
+> +err:
+> +	put_device(cxled_dev);
+> +	return ERR_PTR(rc);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, CXL);
+> +
+>  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+>  {
+>  	u16 eig;
+> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+> index cb3f74d30852..9cfe29002d98 100644
+> --- a/drivers/net/ethernet/sfc/efx.c
+> +++ b/drivers/net/ethernet/sfc/efx.c
+> @@ -901,6 +901,8 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+>  
+>  	efx_fini_io(efx);
+>  
+> +	efx_cxl_exit(efx);
+> +
+>  	pci_dbg(efx->pci_dev, "shutdown successful\n");
+>  
+>  	efx_fini_devlink_and_unlock(efx);
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index 6d49571ccff7..b5626d724b52 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -84,12 +84,28 @@ void efx_cxl_init(struct efx_nic *efx)
+>  		goto out;
+>  	}
+>  
+> -	if (max < EFX_CTPIO_BUFFER_SIZE)
+> +	if (max < EFX_CTPIO_BUFFER_SIZE) {
+>  		pci_info(pci_dev, "CXL accel not enough free HPA space %llu < %u\n",
+>  				  max, EFX_CTPIO_BUFFER_SIZE);
+> +		goto out;
+> +	}
+> +
+> +	cxl->cxled = cxl_request_dpa(cxl->endpoint, true, EFX_CTPIO_BUFFER_SIZE,
+> +				     EFX_CTPIO_BUFFER_SIZE);
+> +	if (IS_ERR(cxl->cxled))
+> +		pci_info(pci_dev, "CXL accel request DPA failed");
+>  out:
+>  	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
+>  }
+>  
+> +void efx_cxl_exit(struct efx_nic *efx)
+> +{
+> +	struct efx_cxl *cxl = efx->cxl;
+> +
+> +	if (cxl->cxled)
+> +		cxl_dpa_free(cxl->cxled);
+> + 
+> + 	return;
+> + }
+>  
+>  MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
+> index 76c6794c20d8..59d5217a684c 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.h
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
+> @@ -26,4 +26,5 @@ struct efx_cxl {
+>  };
+>  
+>  void efx_cxl_init(struct efx_nic *efx);
+> +void efx_cxl_exit(struct efx_nic *efx);
+>  #endif
+> diff --git a/include/linux/cxl_accel_mem.h b/include/linux/cxl_accel_mem.h
+> index f3e77688ffe0..d4ecb5bb4fc8 100644
+> --- a/include/linux/cxl_accel_mem.h
+> +++ b/include/linux/cxl_accel_mem.h
+> @@ -2,6 +2,7 @@
+>  /* Copyright(c) 2024 Advanced Micro Devices, Inc. */
+>  
+>  #include <linux/cdev.h>
+> +#include <linux/pci.h>
+>  
+>  #ifndef __CXL_ACCEL_MEM_H
+>  #define __CXL_ACCEL_MEM_H
+> @@ -41,4 +42,10 @@ struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_port *endpoint,
+>  					       int interleave_ways,
+>  					       unsigned long flags,
+>  					       resource_size_t *max);
+> +
+> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
+> +					     bool is_ram,
+> +					     resource_size_t min,
+> +					     resource_size_t max);
+> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>  #endif
+> -- 
+> 2.17.1
 > 
