@@ -1,135 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E401C32
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 05:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E8E15D1;
+	Tue,  6 Aug 2024 05:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722922181; cv=none; b=YSh3uVPudfgryrJIrunFVzKamhsd94aWwMJogkWxOihOt+UZ8mWjy6QH4lK3KbposBpj7eur/RW/pY2Lc7v9qEsd6G3P5ku+8stMqUSbiutNqzPeWq9UJqDU0bwecPcV5fS9B6uUz8DFgzUD7uMd7suh8bfug1VH/P2xvrQ6Y+c=
+	t=1722923764; cv=none; b=nQNvf6XMCqE5+TUnYZjiXQDQMCi4eM1HdJZrzW4Hz1LPG0txfn/8AfF7d1YW2olwCHDv6mTmOUyX30OBEoiB8P4nx0mKxADx6h+nUaGeu4pI5YiPk7QhiqX5UXae2amdtZphKDQUq7TJ/44DVhjEaiTyHrrDuDrRWP5eeYJ6Uw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722922181; c=relaxed/simple;
-	bh=NrurBa4eDIiWoNZJViv2ObUTDzaEHpUTfrGzfKjB44g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=God1SIlZ9NKrqz1otaZDDGM0tcWM4suL6mQUG0+u2chCtu9q4RJdNn/JHUz51G8Pduq7o6mK+Uo+b4f9YgbvtlF5v4hf0vPDTT/GUWp4Nlthsmt33LznIL/JqREFegdUuIcZGEof1hgQ9iLrb3Hst5LgT8YWbyc546MlJiUOyP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQB8euXg; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1722923764; c=relaxed/simple;
+	bh=lIGGixSjmNw+yXtMk0pVgzj8pzhnE5r53TrEawaitCY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oxxY0BATauyYeEYK/vAvebCGJV+WgGyDmPcMHEsvircU9TGeO42oGppWBJjoOyO51gDwJB0jRRabHXRX4ZR+C4BN3ERBbbZllv00rqWIuruSUZTShuXB5mcMqX09s8sG3ytyEGcHeQcU1RyXvXIVPtpy4gqUqjMHJtnoUu3LV3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gE2N+W+5; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQB8euXg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gE2N+W+5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722922179; x=1754458179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NrurBa4eDIiWoNZJViv2ObUTDzaEHpUTfrGzfKjB44g=;
-  b=VQB8euXguW/VyNwwOVnYmbuDSrSIp+icCR81ANWUnRScgTRC/ab2wy9L
-   GoNxB5zniJlMqweCk/EMasthuw/uVIU2Fif74CbfDtX4xpQ0tOr7aBXd4
-   juB+xA4H3zLDBlqgQLfdHGav6G4ie+grsaoGKWYEdJb7w+Vbu+pN46zEw
-   ZE1T3+OU/jb/sSKFuensFAKH+RxTiWyhtztRqEv3UApfRYZ09IQno+w/h
-   30i9Vg3DwU/5o8AZyyLJMjUS0z7qq9CWgsZmY5MpOl6iGwfYo596o7Nx/
-   eOMRS//PppTDRnijtjFeu11c9u/yCjSEE0oFg40zqd6Sd2QuDhxkIriqB
-   A==;
-X-CSE-ConnectionGUID: JGIgFWTbTYSBXK8rcAXMmA==
-X-CSE-MsgGUID: eKaQeIkSTmeiOlbh1L+Yuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="46318022"
+  t=1722923760; x=1754459760;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=lIGGixSjmNw+yXtMk0pVgzj8pzhnE5r53TrEawaitCY=;
+  b=gE2N+W+5u/7x1bU5nCyHtHZLfqtdQkdg6FmmEOfDwRFmMWCUTEjpXUID
+   vh0brGHA/PrV1IwWDkRM5TriRnhT6q0UgwVm8y681W5zKiJPzfoydRbOP
+   x7nFqnK0jA72nQRoXJUaXf0urfTaiCizjN/e8mqyERsfGIdZqQtecyvZC
+   ZiGDoLxRUrez77pK5DCihvvICjdSpuYVjX2pXiQPTmWgISAT/5TvdgmDl
+   Gi3+PMlrlIHX75PdrFM+YAmZ+3/j0onHTkyAHq7MWyX9ksboQ2E1UVC0i
+   Rllj5LvJB4SvSzclR32vwFaX21m/J1PkgiB5C2K58BcUbvMoMZorAWPDn
+   g==;
+X-CSE-ConnectionGUID: MMCKHjZjTl+3/YyFl6uevQ==
+X-CSE-MsgGUID: zBxcZZCoTr+Q9RnHkpclpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="23832921"
 X-IronPort-AV: E=Sophos;i="6.09,266,1716274800"; 
-   d="scan'208";a="46318022"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 22:29:38 -0700
-X-CSE-ConnectionGUID: QY5zQoOAQG6vFB0y/uO0AA==
-X-CSE-MsgGUID: nNA7wCBjTpetE6XiS6cyNg==
+   d="scan'208";a="23832921"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 22:56:00 -0700
+X-CSE-ConnectionGUID: f1e7N9nERyCnEP5fu5NIxQ==
+X-CSE-MsgGUID: KSKV4sUyRYWndxRR66R8EA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,266,1716274800"; 
-   d="scan'208";a="56479400"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.27.59])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 22:29:39 -0700
-Date: Mon, 5 Aug 2024 22:29:36 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming4.li@intel.com>
-Cc: linux-cxl@vger.kernel.org, rrichter@amd.com, terry.bowman@amd.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH 1/1] cxl/pci: Get AER capability address from RCRB only
- for RCH dport
-Message-ID: <ZrG0wKU1XgEutEO/@aschofie-mobl2>
-References: <20240806041547.1958787-1-ming4.li@intel.com>
+   d="scan'208";a="61021643"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 22:55:57 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  <linux-cxl@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  Davidlohr Bueso <dave@stgolabs.net>,
+  "Alison Schofield" <alison.schofield@intel.com>,  Vishal Verma
+ <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  "Alejandro
+ Lucero" <alucerop@amd.com>
+Subject: Re: [PATCH 3/3] cxl: Avoid to create dax regions for type2
+ accelerators
+In-Reply-To: <20240804173813.00001018@Huawei.com> (Jonathan Cameron's message
+	of "Sun, 4 Aug 2024 17:38:13 +0100")
+References: <20240729084611.502889-1-ying.huang@intel.com>
+	<20240729084611.502889-4-ying.huang@intel.com>
+	<20240804173813.00001018@Huawei.com>
+Date: Tue, 06 Aug 2024 13:52:25 +0800
+Message-ID: <87v80e9p0m.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240806041547.1958787-1-ming4.li@intel.com>
+Content-Type: text/plain; charset=ascii
 
-On Tue, Aug 06, 2024 at 04:15:47AM +0000, Li Ming wrote:
-> cxl_setup_parent_dport() needs to get RCH dport AER capability address
-> from RCRB to disable AER interrupt. The function does not check if dport
-> is RCH dport, it will get a wrong pci_host_bridge structure by dport_dev
-> in VH case because dport_dev points to a pci device(RP or switch DSP)
-> rather than a pci host bridge device.
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
-Ming,
+> On Mon, 29 Jul 2024 16:46:11 +0800
+> Huang Ying <ying.huang@intel.com> wrote:
+>
+>> The memory range of a type2 accelerator should be managed by the type2
+>> accelerator specific driver instead of the common dax region drivers,
+>> as discussed in [1].
+>> 
+>> [1] https://lore.kernel.org/linux-cxl/66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch/
+>> 
+>> So, in this patch, we skip dax regions creation for type2 accelerator
+>> device memory regions.
+>> 
+>> Based on: https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
+>> 
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Cc: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>  drivers/cxl/core/region.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>> 
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 9a483c8a32fd..b37e12bb4a35 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -3435,6 +3435,14 @@ static int cxl_region_probe(struct device *dev)
+>>  					p->res->start, p->res->end, cxlr,
+>>  					is_system_ram) > 0)
+>>  			return 0;
+>> +		/*
+>> +		 * HDM-D[B] (device-memory) regions have accelerator
+>> +		 * specific usage, skip device-dax registration.
+>> +		 */
+>> +		if (cxlr->type == CXL_DECODER_DEVMEM)
+>> +			return 0;
+>
+> As in previous need to be careful as that may not mean it's
+> an accelerator.
 
-Please add that this leads to a page fault. (from off-list chat)
+Yes.  We need some other way to identify type2 devices.
 
-> 
-> Besides, cxl_setup_parent_dport() can exit simply if a RCH dport in the
-> RCH topology created by cxl-test, in the case, the RCH dport's dport_dev
-> is a platform device, and RCH dport with an available RCRB and AER
-> Capability is not supported yet.
-> 
-> Fixes: f05fd10d138d ("cxl/pci: Add RCH downstream port AER register discovery")
-> Signed-off-by: Li Ming <ming4.li@intel.com>
-> ---
->  drivers/cxl/core/pci.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a663e7566c48..f8a3188f5b17 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -4,6 +4,7 @@
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/device.h>
->  #include <linux/delay.h>
-> +#include <linux/platform_device.h>
->  #include <linux/pci.h>
->  #include <linux/pci-doe.h>
->  #include <linux/aer.h>
-> @@ -834,11 +835,16 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
->  {
->  	struct device *dport_dev = dport->dport_dev;
-> -	struct pci_host_bridge *host_bridge;
->  
-> -	host_bridge = to_pci_host_bridge(dport_dev);
-> -	if (host_bridge->native_aer)
-> -		dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
-> +	if (dev_is_platform(dport_dev))
-> +		return;
+> However, we do need to deal with BI setup for HDM-DB type 3 devices
+> etc and to check the HDM Decoder capability registers to make sure
+> Supported Coherence model is appropriate. (e.g. 11 for host only or
+> device coherency - HDM-H/HDM-DB)
 
-The above, dev_is_plaform(), is the cxl-test only case - right?
-I'm wondering if we need to mock something differently in cxl-test
-because it is unusual to have a cxl-test special case in the driver.
+Yes.  We need to check BI configuration too.
 
-Let's see what others say.
+>> +
+>> +		/* HDM-H routes to device-dax */
+>>  		return devm_cxl_add_dax_region(cxlr);
+>>  	default:
+>>  		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
 
---Alison
-
-
-
-> +
-> +	if (dport->rch) {
-> +		struct pci_host_bridge *host_bridge  = to_pci_host_bridge(dport_dev);
-> +
-> +		if (host_bridge->native_aer)
-> +			dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
-> +	}
->  
->  	dport->reg_map.host = host;
->  	cxl_dport_map_regs(dport);
-> -- 
-> 2.40.1
-> 
-> 
+--
+Best Regards,
+Huang, Ying
