@@ -1,55 +1,54 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B7929422
-	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 18:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD06A14C5A1
+	for <linux-cxl@vger.kernel.org>; Tue,  6 Aug 2024 21:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722967236; cv=none; b=WN7cx/B+dILP7K/SXKw+WEgqrFp7thfjX7eYCumKGLjJtw/nwLd9y66NbCZLL+5vKjqVO6uFLAik2cXwrjg99jNIOBDU2IkpDG6NobyASIrv0uk46IyJ4U9/5qzgKaFDN73aV6q26HppowmaMyb7qKQLP011rnvJd087T1VsRuw=
+	t=1722980285; cv=none; b=H3/6x/hw23pFrDiQV//vg51CuLXDwXRcNkT5BYl8KWVzoBmlp90jTcqVAATUsFKDhdXeTIyjhuzfAWFhoLc7Mnaz+uI8e/HfF02qphgaRbvPm3yj5tAx6lTjQmtZKOQk0H8jXo6m5L+5rYYswTjb0wyCwUvX84l3iPMghu4ZdiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722967236; c=relaxed/simple;
-	bh=f2XjQVAFOMEyAF2He6DfOX7B9yvspDnOResmomHSCGY=;
+	s=arc-20240116; t=1722980285; c=relaxed/simple;
+	bh=P+LlFXVAR3ni2Q9lpbZyAlQdpPzTbV2ToRmZ+4oEOIw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S1k78u+QiVjs3YgmRl8mnY6841xMJf7mhPClMpGFeEFhwG8BlgZ2RkNrwZcromlzSmvrZo7jNmmM3c2oeM7z141tEkyj9JDxpg+cgbe0a+v667xV9WXRBEbAz/ZvY6ajJ3KL4jljfJnlvZefDbsHAxFQloF0Cpqq4FI/edSqZ8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ZA0r6GAS; arc=none smtp.client-ip=209.85.160.50
+	 Cc:Content-Type; b=a2DCUxrKnxuGlOm/nHcxyL4Dbcddg/sfaWP+jUOIzOJZ6nmzVsghlxTAxUqfl0t3IGSy/Kig+sTTEVEJMpP+7OUt3/7HGwxrJsz8yyZD4fQuyo/GNUWCQWOigcGOySOYkZ2UTNaYOCOjPubRazCTkZuHMOPFceD4QMqvyLMusow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=E2f6Y387; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ZA0r6GAS"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-260209df55dso443098fac.2
-        for <linux-cxl@vger.kernel.org>; Tue, 06 Aug 2024 11:00:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="E2f6Y387"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44fe28eb1bfso5645351cf.0
+        for <linux-cxl@vger.kernel.org>; Tue, 06 Aug 2024 14:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1722967233; x=1723572033; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1722980283; x=1723585083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QfBptZsetpueoOKsFuJCrA1Xpgd48fPSsjBhDKcmpWw=;
-        b=ZA0r6GAS/SZPM6iVc5LUANeHaMqeRYQpAzDkVVWnaTI/vz7LHQHSQHQe7U+FpO8J2C
-         +QUa3g6xeCyn6vi3DgwxfEIOf+CvDLej3jge4O6D8/bvxFZ34cAeDp5zWYAKmWrCjqRv
-         cqdLwwok7RU0ZcupxJsxgxlzq7RFHXApzQk6Rss4X310UqeeymuKHC0+hOAV3Nl0IcxS
-         xBw5O3Ei7fyxLIVcTJ9jKAvIm227O2xZxf6k971FuhpU+1YIHeIvAdQZatGU1cUh/NLd
-         K+RFR/RvgMfA80CvzXiylg+cvIN+eJw+gT/pafiIhuAVt/s1Q5pSAeTZ3R2BPcAu+2+E
-         ZaDw==
+        bh=9XmlWe99DKTvSLptoxepSTHSiK1+FbVsnMpcepxt5N8=;
+        b=E2f6Y3875sCi+FUMC4NnDIWYjuAY1SAoH/x5FpJ24DePrabii4oI5FqT8pU7OZgMYF
+         qh/rCJ2vIPK16JkeQNZO7vSs9qTrf5R6HaNzKefw/vdlZQtp/tkEvMO2iJxPFqcZSB8C
+         txvjrUzTdKdHw1TpSGJBnuDAFxEPGmAd4WV8VUk2hG7O/+XAjACvYR62XJdUI+x3VxG8
+         UMaRuBy/ESUFzgrVbGEh0qDkhQb72Y9gjuGhRVDD6cL3Zu3V/gKrLdxyGgo1rOPyI8gU
+         Sm6yvVIxln4bsqIZzlf6+2En2jLGeikoP5Xf/2568/veowAkdTOSykr9dyN5QA/nJ43a
+         Qzrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722967233; x=1723572033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1722980283; x=1723585083;
+        h=content-transfer-encoding:cc:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QfBptZsetpueoOKsFuJCrA1Xpgd48fPSsjBhDKcmpWw=;
-        b=Yv67a0Clo35y1pi4r5arHXoLd+R8ntkJHoR7Nzoeqsp/PSs/IZBcwVOZ0YOMg+elQg
-         gtaV77WgdOjd2zyNjRyQuvfFuOMQ8sruBaEbRl49rJ2Z7t7IRvLcXMEbSt032gCWg92t
-         kuEYo3mxC4Bjwtxyhc+x4iCD5j4/TZYb7DQ8qrha25O8l8bSNTTjet3F8/LfaHf08d+M
-         t4mE4Z0lbyAs2lVP7OR2XhEGCqiTRMQOY7uapuDFlAe8WQEUHUoYLrOEL88YvbWiq7Vd
-         i0o2kODQHH/h2oD1CXsmMt2Pax+7x8gdjN8NsWrrmj4aD7tyaK77+N2Al5od/v6ZtTl3
-         +zKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYBJ4pyeY5XKEn8EUYQl/wFDgfllrX6MspU6H5snnXdhw5GqzbPXszYUpzs7tGer+6MthsAn/NIjre6svPt+k3QNrrY3O64UYW
-X-Gm-Message-State: AOJu0Yx5ee+Ueo84W9zHbiJQW1PM06P7CWhwLo/t3qvVE9EFYgvp+3eW
-	qff4/FcJ/xaxdB2DNnksVdh3jF22i7qc6N+TE3xwgXD9TElChMfGNegCxnfhhj+K1riuvq5p1zq
-	t1e4OzsFISfsDfZ8Iztkki/H+6NCTwrEdpc22Yw==
-X-Google-Smtp-Source: AGHT+IH+na8ZogFWe0lTnYO7BkcAEVsw1QVu/V+B8Fzmh/sUyWoO/L5FA9/YCLYS61YqWW8tMcQfLCj95kNJZH2NdC8=
-X-Received: by 2002:a05:6870:15d5:b0:261:1ad0:5fd1 with SMTP id
- 586e51a60fabf-26891a96625mr20245193fac.12.1722967233054; Tue, 06 Aug 2024
- 11:00:33 -0700 (PDT)
+        bh=9XmlWe99DKTvSLptoxepSTHSiK1+FbVsnMpcepxt5N8=;
+        b=iHKADw9rrSWm4m8lkrk49jNSOPKMMsasPmgb3K9Sc/tVJSRZ+Qe0/AKxTV4s87QI8h
+         aQZSCY8sAOnDyzWEUbxP1vFnr/CEcW8ke5oJDhZ1rJ+4dkDZNvrGF+9CaMqem3jByHF3
+         /kP/DsMxa1SyK/CQepO2sPAM1jXYmmdIZlQszhZs836WuXM66SL3aNTnzqN7snN+iIBq
+         lHbsws+7VzSNUw6uLs+eBdkmT+v5BIRye1AKsRWSEBx2bpw9NRnWzFW4RpiFemKpmyRQ
+         8EpsJGMKXaspOjr1xZGdpJp1WD7TlDCoUfA/HnZxqjJN56py+LjVQlCxKrAeCgt/k9jT
+         Wxgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVO6SQTyLvSvOVTPKtuKmsBoCQn12Ko72Qw6/R4gG8DBYLAHAW5e3Yj5gZ3uK5MV3eMN1pbLGzCqat5kS/RazwQmONIBbG9QB4s
+X-Gm-Message-State: AOJu0YwucvrbpbaBGejMqKY1KMMe4ESt830uqm9C8MPlMuoUAyPx4wld
+	Et7ApBH5MUuie0Dsi3ql7xb7f2Z9nHnQAHdBO7CX2Da+MlLcAYUw63jOSGUUWIyegSF3KiUj9VW
+	ku5kWb/oxvRedTW/gU0vhj+eJMEQouS+HS7Pdqw==
+X-Received: by 2002:a05:622a:1825:b0:447:dc9a:1cea with SMTP id
+ d75a77b69052e-451892561c8mt209894101cf.13.1722980282606; Tue, 06 Aug 2024
+ 14:38:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,72 +58,99 @@ MIME-Version: 1.0
 References: <20240605222751.1406125-1-souravpanda@google.com>
  <Zq0tPd2h6alFz8XF@aschofie-mobl2> <CA+CK2bAfgamzFos1M-6AtozEDwRPJzARJOmccfZ=uzKyJ7w=kQ@mail.gmail.com>
  <66b15addf1a80_c144829473@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <66b15addf1a80_c144829473@dwillia2-xfh.jf.intel.com.notmuch>
+ <CA+CK2bC1ZsT3cuAMDAAUonys3BUxbb2JdnZXs1Ps3NbYZt5W2Q@mail.gmail.com> <ZrKNKRfaH7GliS3C@iweiny-mobl>
+In-Reply-To: <ZrKNKRfaH7GliS3C@iweiny-mobl>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 6 Aug 2024 13:59:54 -0400
-Message-ID: <CA+CK2bC1ZsT3cuAMDAAUonys3BUxbb2JdnZXs1Ps3NbYZt5W2Q@mail.gmail.com>
+Date: Tue, 6 Aug 2024 17:37:24 -0400
+Message-ID: <CA+CK2bDnJsgjK-7H-8qJjdeejKJk7E7m-SDnwXatH4FHr4R0_g@mail.gmail.com>
 Subject: Re: [PATCH v13] mm: report per-page metadata information
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, Sourav Panda <souravpanda@google.com>, corbet@lwn.net, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, akpm@linux-foundation.org, 
-	mike.kravetz@oracle.com, muchun.song@linux.dev, rppt@kernel.org, 
-	david@redhat.com, rdunlap@infradead.org, chenlinxuan@uniontech.com, 
-	yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, bhelgaas@google.com, 
-	ivan@cloudflare.com, yosryahmed@google.com, hannes@cmpxchg.org, 
-	shakeelb@google.com, kirill.shutemov@linux.intel.com, 
-	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
-	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
+Cc: Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Sourav Panda <souravpanda@google.com>, corbet@lwn.net, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, akpm@linux-foundation.org, mike.kravetz@oracle.com, 
+	muchun.song@linux.dev, rppt@kernel.org, david@redhat.com, 
+	rdunlap@infradead.org, chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, 
+	tomas.mudrunka@gmail.com, bhelgaas@google.com, ivan@cloudflare.com, 
+	yosryahmed@google.com, hannes@cmpxchg.org, shakeelb@google.com, 
+	kirill.shutemov@linux.intel.com, wangkefeng.wang@huawei.com, 
+	adobriyan@gmail.com, vbabka@suse.cz, Liam.Howlett@oracle.com, 
+	surenb@google.com, linux-kernel@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
 	willy@infradead.org, weixugc@google.com, David Rientjes <rientjes@google.com>, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, yi.zhang@redhat.com
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, yi.zhang@redhat.com, 
+	ira.weiny@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 5, 2024 at 7:06=E2=80=AFPM Dan Williams <dan.j.williams@intel.c=
-om> wrote:
+On Tue, Aug 6, 2024 at 4:53=E2=80=AFPM Ira Weiny <iweiny@iweiny-mobl> wrote=
+:
 >
-> Pasha Tatashin wrote:
-> [..]
-> > Thank you for the heads up. Can you please attach a full config file,
-> > also was anyone able to reproduce this problem in qemu with emulated
-> > nvdimm?
+> On Tue, Aug 06, 2024 at 01:59:54PM -0400, Pasha Tatashin wrote:
+> > On Mon, Aug 5, 2024 at 7:06=E2=80=AFPM Dan Williams <dan.j.williams@int=
+el.com> wrote:
+> > >
+> > > Pasha Tatashin wrote:
+> > > [..]
+> > > > Thank you for the heads up. Can you please attach a full config fil=
+e,
+> > > > also was anyone able to reproduce this problem in qemu with emulate=
+d
+> > > > nvdimm?
+> > >
+> > > Yes, I can reproduce the crash just by trying to reconfigure the mode=
+ of
+> > > a pmem namespace:
+> > >
+> > > # ndctl create-namespace -m raw -f -e namespace0.0
+> > >
+> > > ...where namespace0.0 results from:
+> > >
+> > >     memmap=3D4G!4G
+> > >
+> > > ...passed on the kernel command line.
+> > >
+> > > Kernel config here:
+> > >
+> > > https://gist.github.com/djbw/143705077103d43a735c179395d4f69a
+> >
+> > Excellent, I was able to reproduce this problem.
+> >
+> > The problem appear to be caused by this code:
+> >
+> > Calling page_pgdat() in depopulate_section_memmap():
+> >
+> > static void depopulate_section_memmap(unsigned long pfn, unsigned long =
+nr_pages,
+> >                 struct vmem_altmap *altmap)
+> > {
+> >         unsigned long start =3D (unsigned long) pfn_to_page(pfn);
+> >         unsigned long end =3D start + nr_pages * sizeof(struct page);
+> >
+> >         mod_node_page_state(page_pgdat(pfn_to_page(pfn)), NR_MEMMAP,
+> > <<<< We cannot do it.
+> >                             -1L * (DIV_ROUND_UP(end - start, PAGE_SIZE)=
+));
+> >         vmemmap_free(start, end, altmap);
+> > }
+> >
+> > The page_pgdat() returns NULL starting from:
+> > pageunmap_range()
+> >     remove_pfn_range_from_zone() <- page is removed from the zone.
 >
-> Yes, I can reproduce the crash just by trying to reconfigure the mode of
-> a pmem namespace:
+> Is there any idea on a fix?  I'm seeing the same error.
 >
-> # ndctl create-namespace -m raw -f -e namespace0.0
+> [  561.867431]  ? mod_node_page_state+0x11/0xa0
+> [  561.867963]  section_deactivate+0x2a0/0x2c0
+> [  561.868496]  __remove_pages+0x59/0x90
+> [  561.868975]  arch_remove_memory+0x1a/0x40
+> [  561.869491]  memunmap_pages+0x206/0x3d0
+> [  561.869972]  devres_release_all+0xa8/0xe0
+> [  561.870466]  device_unbind_cleanup+0xe/0x70
+> [  561.870960]  device_release_driver_internal+0x1ca/0x210
+> [  561.871529]  driver_detach+0x47/0x90
+> [  561.871981]  bus_remove_driver+0x6c/0xf0
 >
-> ...where namespace0.0 results from:
->
->     memmap=3D4G!4G
->
-> ...passed on the kernel command line.
->
-> Kernel config here:
->
-> https://gist.github.com/djbw/143705077103d43a735c179395d4f69a
+> Shall we revert this patch until we figure out a fix?
 
-Excellent, I was able to reproduce this problem.
-
-The problem appear to be caused by this code:
-
-Calling page_pgdat() in depopulate_section_memmap():
-
-static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_p=
-ages,
-                struct vmem_altmap *altmap)
-{
-        unsigned long start =3D (unsigned long) pfn_to_page(pfn);
-        unsigned long end =3D start + nr_pages * sizeof(struct page);
-
-        mod_node_page_state(page_pgdat(pfn_to_page(pfn)), NR_MEMMAP,
-<<<< We cannot do it.
-                            -1L * (DIV_ROUND_UP(end - start, PAGE_SIZE)));
-        vmemmap_free(start, end, altmap);
-}
-
-The page_pgdat() returns NULL starting from:
-pageunmap_range()
-    remove_pfn_range_from_zone() <- page is removed from the zone.
+I am working on a fix, and will send it out in a couple hours.
 
 Pasha
