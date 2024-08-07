@@ -1,305 +1,416 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA2322EE5;
-	Wed,  7 Aug 2024 07:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723016673; cv=none; b=q058bTgLiIYHhPurnnQL3EBeP+KJd7ThiOpTdmIQvtncXNPJAf+hLdHOO7gKDE7lJqOydoanOMWkdwPm4/edxNtm4xPAzFkXHE3Bq+fqFumnsQqtROIZATTgi94TS9FV5P4bnB6ZkRPzYKv+OxNB/2c24lwygqVBCSfUPW0zuYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723016673; c=relaxed/simple;
-	bh=+pIWFznFFBdtsY4jys5bAc3rIq9i0mVsC5Uci68Jjpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snF20xBD4e8AHK2rQ/Xu0TbnvdbPyLJa4MkftXvaQ962yvljbpvPTBguTyNDMpxJQSzxCfsuNQQx9uN+v57/4EmLx+m2z8IY0RaedNGJiZIEQv/55vHROAl3xqsD4LSRQ2mGzBlcQRQJx3ip0x2cAQ+WQoPtQlTUQGIsetfzGSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mu6zHR4L; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D33E13A3F0
+	for <linux-cxl@vger.kernel.org>; Wed,  7 Aug 2024 09:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723021478; cv=fail; b=jzxUcev5KcFBAblUdP/6p9bnHn4Y+hLnn2JEr0fZeSDTufdr845THXshfbSaOYIQc/zGtP5yUFoXaF9VmTZuSxQL23C2uHc8W3SPOKia33pASny2fKmxcKbl9ZjZnl1v+tqALvUpQ9LvE8F7W0EPSaacH/TqyxuqQTarL/mNfo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723021478; c=relaxed/simple;
+	bh=2PIFp+hxo9IplEC3Vl2lXyGymaA9nX8+OZU/rxW0/rY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nLGrws8uaCrxBI8n3hMEdNXHpXZ0vHTry7kQC60SjfyyOyA797bqAsi+OqZ6MIu3FLNSzN1w/8YsZC4FRFFvu2dytjrCoaBoJPlOI+ln4sIHWIEGbfKJk8UowrC3Z3gC9hywOV19KFUJ1u0OdqNswq8jnblUx9yKrwKi2AnE58I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=L0Qc6sOb; arc=fail smtp.client-ip=40.107.223.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mu6zHR4L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BBFC32782;
-	Wed,  7 Aug 2024 07:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723016671;
-	bh=+pIWFznFFBdtsY4jys5bAc3rIq9i0mVsC5Uci68Jjpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mu6zHR4LkxW7exTjoDAKLD8glCoTDeurk8lBsAFNP9psRxCLQmdYOl1lkDLbaF9Fl
-	 2YsjxHJN2xgKY1/HkHi/DtybaZC0k2QNhgm2dYg/3UALnaTi2tVaa1Y8IYR9blYK1d
-	 Bw+TZUPnmRw9P0JkH328vgAuOu4JZDHxaduLF7mrHi/h/NQSNNILvl59V2z4/BVCk1
-	 0VocsdeAm/KEG6b9pLADWzwDetFoLSqHXg5LGnHHib02h9/n+TTHXedOCbYDQtVo37
-	 wVZzbkttn5rF+q6tJq3PxRoD3G8eAy4tH2rKL7iDqqj6iA7xaIS8dVfW+BVv9TYJmc
-	 M2AsBUEcHqFpQ==
-Date: Wed, 7 Aug 2024 10:44:21 +0300
-From: Oded Gabbay <ogabbay@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Itay Avraham <itayavr@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Ahern <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, Jiri Pirko <jiri@nvidia.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 5/8] fwctl: FWCTL_RPC to execute a Remote Procedure
- Call to device firmware
-Message-ID: <ZrMl1bkPP-3G9B4N@T14sgabbay.>
-References: <0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
- <5-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="L0Qc6sOb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uzbTCD9gqA2ICW3H7Tkri4qmEVDQwQ9IVoDaL6X9QqXCizn7auuwudoizDPND65HQjIOk8e8AZaeZLoCqtDciRAfOW6ShEx8XyMTc1J0Ovc5WX1zhsYl2pTaUgNHaS1DDjKVIbuuTS8xomB0x5I+BGaFQY9V35r7N/ER789begwR/YnttKmAGGbAdoALQQ75NH5Z3G6wdSv0C0guP7YThj345ys9gYw1Eg145lJaMx+t187PVzsR48I8FFsAXYLIVJLqdFgcwkYOD6kT+PqYgGthD+3WImEaxDChk+FlV/nJoswucQ9vxPmTuupvnpm2MuooB/5Nx8XE/8XcCz5zJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2PIFp+hxo9IplEC3Vl2lXyGymaA9nX8+OZU/rxW0/rY=;
+ b=Su32ACDKLWBV8N8G/QfZCW1UOK9vddJiu26iqdzQUXz7Xcc/BKidAFRBw+llm3BnQZ2Cm11V66Kao+GJcbfOLUgSsMhPjLNJm4R6hsHObJUN7zbV+LjTdUuYtndgJvru2C4pCLpi+w/5kd9aA4JcUrtSqghY7YVH4pHR8zGINo93iQbFpeExFOP81zdtlaoYbsG3/Y+XV5WeQz9/AVIw6pu8DS5n4xiW4O6RZD8AYsDj37NoTqrD2N0M6Dm4f0SoDV4fX6dKV3Ao6z1kN4djAq6jSY72yPdiT/qodFuHy1MfEogUQ5TSpXnTG6n7gOgbIxMKvmu15apuj0kfQ/1J3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.201.242.130) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=micron.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2PIFp+hxo9IplEC3Vl2lXyGymaA9nX8+OZU/rxW0/rY=;
+ b=L0Qc6sObExQfZRAnSPj1YR9+JEAJAKzfnkdZ4MpMP6PsXeb0YIMzsKR0ObqpSX9GKuFYFnganuJD1MSNQkpTvhLCbHGo+EJldiP60zedwyuC0TjbmEJctlFf3iwUmKubcGKzrtv7VpQrHJG1cX/e9bze5l95d/O/+7YpkwXsmTUFft59BOi7NcJ1spFkIn20O901H1RO/x/41mfTT38edQROrnmsdKD1JiVN1cOxsjFRIMZ8XNzJoEay7QBdEpyG7+5XkmoM4Aji+89nMr78A9xD+n7vkW+mXB0hyjGkBBIkzk4ymbNWyLfF1Q6cFlMpniVa+YAicF8KHH6F0iV5Cg==
+Received: from CH5PR03CA0018.namprd03.prod.outlook.com (2603:10b6:610:1f1::18)
+ by SN4PR0801MB7792.namprd08.prod.outlook.com (2603:10b6:806:207::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.26; Wed, 7 Aug
+ 2024 09:04:30 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:1f1:cafe::65) by CH5PR03CA0018.outlook.office365.com
+ (2603:10b6:610:1f1::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.29 via Frontend
+ Transport; Wed, 7 Aug 2024 09:04:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
+ smtp.mailfrom=micron.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=micron.com;
+Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
+ 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.201.242.130; helo=mail.micron.com; pr=C
+Received: from mail.micron.com (137.201.242.130) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7849.8 via Frontend Transport; Wed, 7 Aug 2024 09:04:29 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW36EX19B.micron.com
+ (137.201.85.154) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 7 Aug 2024
+ 03:04:27 -0600
+Received: from BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3]) by
+ BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3%6]) with mapi id
+ 15.02.1544.004; Wed, 7 Aug 2024 03:04:27 -0600
+From: ajay.opensrc <ajay.opensrc@micron.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "john@jagalactic.com" <john@jagalactic.com>,
+	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
+	Srinivasulu Thanneeru <sthanneeru@micron.com>, Ravis OpenSrc
+	<Ravis.OpenSrc@micron.com>, Aravind Ramesh <arramesh@micron.com>, "Tushar M
+ Mulgund ." <tmmulgund@micron.com>
+Subject: Re: [EXT] Re: [PATCH] hw/cxl: Add support for abort of background
+ operation
+Thread-Topic: [EXT] Re: [PATCH] hw/cxl: Add support for abort of background
+ operation
+Thread-Index: AQHa4aD86ycczZCLvEOQMSi+AkrzQrIPLvaAgATGA3KAA7+4AIAD1PY5
+Date: Wed, 7 Aug 2024 09:04:27 +0000
+Message-ID: <739db69829ed4afead329649fda1d47b@micron.com>
+References: <20240729102010.20996-1-ajay.opensrc@micron.com>
+	<jvbuxqaqjclc5cy5veltygpo4dg3naej456gvphndpdc3ttyoa@p64fmecqr67r>
+	<027f6872f7ae42c4ba97ed1209e50253@micron.com>,<20240804171638.0000291c@Huawei.com>
+In-Reply-To: <20240804171638.0000291c@Huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mt-whitelisted: matched
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|SN4PR0801MB7792:EE_
+X-MS-Office365-Filtering-Correlation-Id: f5456b8e-159f-4555-9c95-08dcb6bff232
+X-EXT-ByPass: 1
+X-MT-RULE-Whitelisted: Triggered
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?MiEYIEzYeJ1rJwUpJG5/oUqJCbu88+q01FFiSfVacenAAJuc5RX6ndbh8Q?=
+ =?iso-8859-1?Q?pdMpBY+H65omf0H3aGis7M8u1hrOMZQH8tvKoUw39RcBrSsQAfIJa3njbz?=
+ =?iso-8859-1?Q?LjPX91RlLjGyU9EMtA/zZbgNm1fWimb4PojH0XbyvSemta7oH/bGt30i0S?=
+ =?iso-8859-1?Q?x68kvG4ePYIQnY/WmZfgw55whzoB5pd2KG/hBkLqGGuIwn5BhkHb1GPeg/?=
+ =?iso-8859-1?Q?/mLSiN0KoP4o7HY6gBcik9EK4AJj4LnymcdRL7+kd8dHk+qYflvbfADD3o?=
+ =?iso-8859-1?Q?iEsPX98seueguUO4LGmhd/0n2122pwpthNj4AwDBPhCeHwMfOfb31JAowJ?=
+ =?iso-8859-1?Q?yGE1hKS01ZrQoVgUKgu4rJPE8ld242kqEToMELisTCGwCNbv8iOz4f7wlW?=
+ =?iso-8859-1?Q?xEDdUKUDLHogFAk4dFRZXggFrrFRsAWPvnqCVrsrGgCGAaB1cOr9OOfJ43?=
+ =?iso-8859-1?Q?DArOiYKXL0G3fBxFLTZZSnLS/fuxJ3tDr37eg3PqXlSWHcj3Jb9B02aSKj?=
+ =?iso-8859-1?Q?RzaWNHkNF/IDgO2Ms5Qj1/5R9D458QIrNMDlDBQzVM8fRWiD+PV4N5k8ch?=
+ =?iso-8859-1?Q?VpQi5Ni+3DAIoB9DYYcxr1AtFcumpg7dyB2kTNQNFFrcPcRfny8tnG+vVh?=
+ =?iso-8859-1?Q?j/sIIDRLWJRN50QyCuPpuwv+f2Ld2OfXIWWd8d4vh8ws4LY+E8Jcmmuss/?=
+ =?iso-8859-1?Q?UwF/RO2ghTgm9m/PQJBmjbclYY0osL5vfjalHWQb1XS3R1gQqyCQK/lB3/?=
+ =?iso-8859-1?Q?cx+YiFFB6+RA5arz+zHYqE5v/HtSP+yZnNjygwog/KDq20TAI7X1NhDHuf?=
+ =?iso-8859-1?Q?YlazYgELqTm0SORR4bZ+0ksxreWY1vqE1YvCeehHvhTCVVV2UZdleemo0U?=
+ =?iso-8859-1?Q?vp0O7ull/Jj9Cu7heDW7B9Wc+hq00jsRXuCLLsChVhgzfkhxVtOvVhzM9q?=
+ =?iso-8859-1?Q?j9L0BeMYl0Ts07rbJFH2YUkRscZDctM5yPXoGIeaLunxD3VURDcODuaHSb?=
+ =?iso-8859-1?Q?ImI+zLHA4ZxyLD0gSjseaLimhm4XQdCSmuSTStDSTWah7GGniSQhGDmXzV?=
+ =?iso-8859-1?Q?iUc7Z9Qar0Ar/iWG11y4pf8PzibdaNWvfhj1ytmGY//tjxgm4CcTfxhvik?=
+ =?iso-8859-1?Q?PbSLv/QwgZI+/ATAe2xK86brJ5sMJOQkTwLCUWbZgvjS0vEAMrkxog4to+?=
+ =?iso-8859-1?Q?DKydWTeFSkVtHLC4E1XnfitDUBuGj9EI6PQKWdLwft0E/jmS/olyrF+zcv?=
+ =?iso-8859-1?Q?lFTbbBIYBGtlELNvxTW3tIG4KaUuH5Pke5CGHgIBHaWDrL8btFM1N6z/qV?=
+ =?iso-8859-1?Q?+yE2WST3et9A+AXgLWjnkkkihX0xaLp+Xmmw4sJO8EA0Kikdo1cifx55MY?=
+ =?iso-8859-1?Q?O8BSthZ9f+sadbJ+LDiVXliAy4dd4fVvzjr5fNalc3cYRLm5CYSpmOf/ih?=
+ =?iso-8859-1?Q?M7yFFCD0VTBYAFVmkXnV6Zl3Fo+iWuUTLSspH0cDCz1HsKdtGyeREyzReL?=
+ =?iso-8859-1?Q?wVZXckr4ANZI/FJ71/lhp+?=
+X-Forefront-Antispam-Report:
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2024 09:04:29.6460
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5456b8e-159f-4555-9c95-08dcb6bff232
+X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
+X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0801MB7792
 
-On Mon, Jun 24, 2024 at 07:47:29PM -0300, Jason Gunthorpe wrote:
-> Add the FWCTL_RPC ioctl which allows a request/response RPC call to device
-> firmware. Drivers implementing this call must follow the security
-> guidelines under Documentation/userspace-api/fwctl.rst
+>From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+>>ajay.opensrc <ajay.opensrc@micron.com> wrote:
 >
-> The core code provides some memory management helpers to get the messages
-> copied from and back to userspace. The driver is responsible for
-> allocating the output message memory and delivering the message to the
-> device.
+>> >From: Davidlohr Bueso <dave@stgolabs.net>
+>> >>From: Ajay Joshi <ajay.opensrc@micron.com>
+>> >>
+>> >>This patch adds the support for aborting the background
+>> >>operation if one is progress(r3.1 8.2.9.1.5)
+>> >>
+>> >>"Request Abort Background Operation" command is requested
+>> >>by the host to cancel an ongoing background operation. When
+>> >>the command is sent, the device will abort the ongoing
+>> >>background operation.=A0 When the operation is aborted,
+>> >>background command status register will maintain a completion
+>> >>percentage value of less then 100. The "Request Abort
+>> >>Background Operation" command support has to be advertised in
+>> >>the Command Effects Log to be honoured.
+>> >
+>> >So I had a patch for this which I had not sent out, and compared
+>> >to this one I think the below is more robust, would you mind
+>> >testing this out?
+>>
+>> Didn't realize you were working on one already.
+>> This looks good to me as well. I tested this and it seems to be
+>> working as expected. Feel free to use:
+>>
+>> Tested-by: Ajay Joshi <ajay.opensrc@micron.com>
+>> Reviewed-by: Ajay Joshi <ajay.opensrc@micron.com>
+>From a quick look Davidlohr's patch looks good to me as well.
+>I 'could' pick it out of the middle of this thread, but
+>probably cleaner if Davlidlohr sends a formal patch
+>(picking up Ajay's tags) - maybe with a link tag to this
+>thread so we can see where those came from.
 >
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/fwctl/main.c       | 62 +++++++++++++++++++++++++++++++++++
->  include/linux/fwctl.h      |  5 +++
->  include/uapi/fwctl/fwctl.h | 66 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 133 insertions(+)
+>One comment inline - feels like a spec hole to me but I'd like some
+>more eyes on it before I query it more formally.
 >
-> diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
-> index f1dec0b590aee4..9506b993a1a56d 100644
-> --- a/drivers/fwctl/main.c
-> +++ b/drivers/fwctl/main.c
-> @@ -8,16 +8,20 @@
->  #include <linux/slab.h>
->  #include <linux/container_of.h>
->  #include <linux/fs.h>
-> +#include <linux/sizes.h>
+>Thanks,
 >
->  #include <uapi/fwctl/fwctl.h>
+>Jonathan
 >
->  enum {
->  	FWCTL_MAX_DEVICES = 256,
-> +	MAX_RPC_LEN = SZ_2M,
->  };
->  static dev_t fwctl_dev;
->  static DEFINE_IDA(fwctl_ida);
-> +static unsigned long fwctl_tainted;
+>>
+>> >Thanks,
+>> >Davidlohr
+>> >
+>> >--8<--------
+>> >[PATCH] hw/cxl: Support aborting background commands
+>> >
+>> >As of 3.1 spec, background commands can be canceled with a new
+>> >abort command. Implement the support, which is advertised in
+>> >the CEL. No ad-hoc context undoing is necessary as all the
+>> >command logic of the running bg command is done upon completion.
+>> >
+>> >Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> >---
+>> >=A0 hw/cxl/cxl-device-utils.c=A0=A0=A0 |=A0 2 +-
+>> >=A0 hw/cxl/cxl-mailbox-utils.c=A0=A0 | 39 +++++++++++++++++++++++++++++=
++++++--
+>> >=A0 include/hw/cxl/cxl_device.h=A0 |=A0 1 +
+>> >=A0 include/hw/cxl/cxl_mailbox.h |=A0 1 +
+>> >=A0 4 files changed, 40 insertions(+), 3 deletions(-)
+>> >
+>> >diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+>> >index 035d034f6dd8..4f4ccfa92d82 100644
+>> >--- a/hw/cxl/cxl-device-utils.c
+>> >+++ b/hw/cxl/cxl-device-utils.c
+>> >@@ -95,7 +95,7 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr=
+ >offset, >unsigned size)
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 }
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 if (offset =3D=3D A_CXL_DEV_MAILBOX_STS) {
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 uint64_t status_reg =3D cxl_dstate=
+->mbox_reg_state64[offset / >size];
+>> >-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cci->bg.complete_pct) {
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cci->bg.complete_pct || cci->bg.=
+aborted) {
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status_reg =3D FIELD_D=
+P64(status_reg, CXL_DEV_MAILBOX_STS, >BG_OP,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 0);
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cxl_dstate->mbox_reg_s=
+tate64[offset / size] =3D status_reg;
+>> >diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> >index 80a80f1ec29b..ae4b3cabbb86 100644
+>> >--- a/hw/cxl/cxl-mailbox-utils.c
+>> >+++ b/hw/cxl/cxl-mailbox-utils.c
+>> >@@ -53,6 +53,7 @@ enum {
+>> >=A0=A0=A0=A0=A0 INFOSTAT=A0=A0=A0 =3D 0x00,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 #define IS_IDENTIFY=A0=A0 0x1
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 #define BACKGROUND_OPERATION_STATUS=A0=A0=A0 0=
+x2
+>> >+=A0=A0=A0=A0=A0=A0=A0 #define BACKGROUND_OPERATION_ABORT=A0=A0=A0=A0 0=
+x5
+>> >=A0=A0=A0=A0=A0 EVENTS=A0=A0=A0=A0=A0 =3D 0x01,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 #define GET_RECORDS=A0=A0 0x0
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 #define CLEAR_RECORDS=A0=A0 0x1
+>> >@@ -815,6 +816,33 @@ static CXLRetCode cmd_infostat_bg_op_sts(const str=
+uct >>cxl_cmd *cmd,
+>> >=A0=A0=A0=A0=A0 return CXL_MBOX_SUCCESS;
+>> >=A0 }
+>> >
+>> >+/* CXL r3.1 Section 8.2.9.1.5: Request Abort Background Operation (Opc=
+ode >>0005h) */
+>> >+static CXLRetCode cmd_infostat_bg_op_abort(const struct cxl_cmd *cmd,
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 uint8_t *payload_=
+in,
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t len_in,
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 uint8_t *payload_=
+out,
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t *len_out,
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 CXLCCI *cci)
+>> >+{
+>> >+=A0=A0=A0 int bg_set =3D cci->bg.opcode >> 8;
+>> >+=A0=A0=A0 int bg_cmd =3D cci->bg.opcode & 0xff;
+>> >+=A0=A0=A0 const struct cxl_cmd *bg_c =3D &cci->cxl_cmd_set[bg_set][bg_=
+cmd];
+>> >+
+>> >+=A0=A0=A0 if (!(bg_c->effect & CXL_MBOX_BACKGROUND_OPERATION_ABORT)) {
+>> >+=A0=A0=A0=A0=A0=A0=A0 return CXL_MBOX_REQUEST_ABORT_NOTSUP;
+>> >+=A0=A0=A0 }
+>> >+
+>> >+=A0=A0=A0 if (cci->bg.runtime) {
+>> >+=A0=A0=A0=A0=A0=A0=A0 assert(cci->bg.complete_pct < 100);
 >
->  DEFINE_FREE(kfree_errptr, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T));
-> +DEFINE_FREE(kvfree_errptr, void *, if (!IS_ERR_OR_NULL(_T)) kvfree(_T));
+>This seems fragile.=A0 I'm not sure what guarantees no races.
+>I'd be tempted to follow the allowed path of just letting
+>the thing complete if that's the case.=A0 Interesting 8.2.9.1.5
+>Request Abort Background operation states
+>"In resposne, the device may choose to interrupt he ongoing
+>background operation or may choose to continue it's
+>execution until completion. If the background operation is
+>interrupted, a Command Return of Success shall be returned..
+>If the ongoing background operation does not support abort
+>capability.. return code shall be set to Request Abort Not supported"
 >
->  struct fwctl_ucmd {
->  	struct fwctl_uctx *uctx;
-> @@ -75,9 +79,66 @@ static int fwctl_cmd_info(struct fwctl_ucmd *ucmd)
->  	return ucmd_respond(ucmd, sizeof(*cmd));
->  }
+>So to my reading if you elect not to stop because it's very
+>nearly done, or indeed it raced and the command is done,
+>the specification doesn't tell us what to return.
+>That operation supports abort, we just didn't.
 >
-> +static int fwctl_cmd_rpc(struct fwctl_ucmd *ucmd)
-> +{
-> +	struct fwctl_device *fwctl = ucmd->uctx->fwctl;
-> +	struct fwctl_rpc *cmd = ucmd->cmd;
-> +	size_t out_len;
-> +
-> +	if (cmd->in_len > MAX_RPC_LEN || cmd->out_len > MAX_RPC_LEN)
-> +		return -EMSGSIZE;
-> +
-> +	switch (cmd->scope) {
-> +	case FWCTL_RPC_CONFIGURATION:
-> +	case FWCTL_RPC_DEBUG_READ_ONLY:
-> +		break;
-> +
-> +	case FWCTL_RPC_DEBUG_WRITE_FULL:
-> +		if (!capable(CAP_SYS_RAWIO))
-> +			return -EPERM;
-> +		fallthrough;
-> +	case FWCTL_RPC_DEBUG_WRITE:
-> +		if (!test_and_set_bit(0, &fwctl_tainted)) {
-> +			dev_warn(
-> +				&fwctl->dev,
-> +				"%s(%d): has requested full access to the physical device device",
-> +				current->comm, task_pid_nr(current));
-> +			add_taint(TAINT_FWCTL, LOCKDEP_STILL_OK);
-> +		}
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	};
-> +
-> +	void *inbuf __free(kvfree) =
-> +		kvzalloc(cmd->in_len, GFP_KERNEL | GFP_KERNEL_ACCOUNT);
-> +	if (!inbuf)
-> +		return -ENOMEM;
-> +	if (copy_from_user(inbuf, u64_to_user_ptr(cmd->in), cmd->in_len))
-> +		return -EFAULT;
-> +
-> +	out_len = cmd->out_len;
-> +	void *outbuf __free(kvfree_errptr) = fwctl->ops->fw_rpc(
-> +		ucmd->uctx, cmd->scope, inbuf, cmd->in_len, &out_len);
-Hi Jason,
-First of all, great work. I fully support this direction. Although I'm not
-working anymore in Habana, I would have definitely moved to this interface
-instead of the custom one we implemented in our driver. I believe this can
-be of use for other accel drivers as well.
+>What do you think should happen here?
 
-Complex devices which contains multiple IPs and FWs, like Habana's Gaudi,
-have some RPCs to the firmware which are not related to the funcationality
-of the IP drivers (the compute and networking drivers in our case).
+IMHO, device should ignore the abort command and=20
+most likely return "Unsupported" code (since, the spec is not=20
+clear on what should be the return code in case the command=20
+is ignored). Does it make sense?
 
-Spreading the RPCs between the drivers required to separate it also among
-the different user-spaces libraries, as each subsystem has its own user-space.
+Agree that it's a spec hole and may need to be clarified.
 
-Disconnecting the RPCs from the drivers and providing a generic interface will
-allow to have a single user-space library which will be able to communicate
-with the firmware for all the IPs in the device. In Habana's case, it was
-mainly for monitoring and debugging purposes.
-
-I do have one question about the rpc ioctl. Are you assuming that the rpc
-is synchronous (we send a message to the firmware and block until we get the
-reply)? If so, what happen if we have an async RPC implementation
-inside the driver? How would you recommend to handle it?
-
-Thanks,
-Oded
-
-> +	if (IS_ERR(outbuf))
-> +		return PTR_ERR(outbuf);
-> +	if (outbuf == inbuf) {
-> +		/* The driver can re-use inbuf as outbuf */
-> +		inbuf = NULL;
-> +	}
-> +
-> +	if (copy_to_user(u64_to_user_ptr(cmd->out), outbuf,
-> +			 min(cmd->out_len, out_len)))
-> +		return -EFAULT;
-> +
-> +	cmd->out_len = out_len;
-> +	return ucmd_respond(ucmd, sizeof(*cmd));
-> +}
-> +
->  /* On stack memory for the ioctl structs */
->  union ucmd_buffer {
->  	struct fwctl_info info;
-> +	struct fwctl_rpc rpc;
->  };
 >
->  struct fwctl_ioctl_op {
-> @@ -98,6 +159,7 @@ struct fwctl_ioctl_op {
->  	}
->  static const struct fwctl_ioctl_op fwctl_ioctl_ops[] = {
->  	IOCTL_OP(FWCTL_INFO, fwctl_cmd_info, struct fwctl_info, out_device_data),
-> +	IOCTL_OP(FWCTL_RPC, fwctl_cmd_rpc, struct fwctl_rpc, out),
->  };
->
->  static long fwctl_fops_ioctl(struct file *filp, unsigned int cmd,
-> diff --git a/include/linux/fwctl.h b/include/linux/fwctl.h
-> index 9a906b861acf3a..294cfbf63306a2 100644
-> --- a/include/linux/fwctl.h
-> +++ b/include/linux/fwctl.h
-> @@ -26,6 +26,9 @@ struct fwctl_uctx;
->   *	out_device_data. On input length indicates the size of the user buffer
->   *	on output it indicates the size of the memory. The driver can ignore
->   *	length on input, the core code will handle everything.
-> + * @fw_rpc: Implement FWCTL_RPC. Deliver rpc_in/in_len to the FW and return
-> + *	the response and set out_len. rpc_in can be returned as the response
-> + *	pointer. Otherwise the returned pointer is freed with kvfree().
->   */
->  struct fwctl_ops {
->  	enum fwctl_device_type device_type;
-> @@ -33,6 +36,8 @@ struct fwctl_ops {
->  	int (*open_uctx)(struct fwctl_uctx *uctx);
->  	void (*close_uctx)(struct fwctl_uctx *uctx);
->  	void *(*info)(struct fwctl_uctx *uctx, size_t *length);
-> +	void *(*fw_rpc)(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
-> +			void *rpc_in, size_t in_len, size_t *out_len);
->  };
->
->  /**
-> diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
-> index 39db9f09f8068e..8bde0d4416fd55 100644
-> --- a/include/uapi/fwctl/fwctl.h
-> +++ b/include/uapi/fwctl/fwctl.h
-> @@ -67,4 +67,70 @@ struct fwctl_info {
->  };
->  #define FWCTL_INFO _IO(FWCTL_TYPE, FWCTL_CMD_INFO)
->
-> +/**
-> + * enum fwctl_rpc_scope - Scope of access for the RPC
-> + */
-> +enum fwctl_rpc_scope {
-> +	/**
-> +	 * @FWCTL_RPC_CONFIGURATION: Device configuration access scope
-> +	 *
-> +	 * Read/write access to device configuration. When configuration
-> +	 * is written to the device remains in a fully supported state.
-> +	 */
-> +	FWCTL_RPC_CONFIGURATION = 0,
-> +	/**
-> +	 * @FWCTL_RPC_DEBUG_READ_ONLY: Read only access to debug information
-> +	 *
-> +	 * Readable debug information. Debug information is compatible with
-> +	 * kernel lockdown, and does not disclose any sensitive information. For
-> +	 * instance exposing any encryption secrets from this information is
-> +	 * forbidden.
-> +	 */
-> +	FWCTL_RPC_DEBUG_READ_ONLY = 1,
-> +	/**
-> +	 * @FWCTL_RPC_DEBUG_WRITE: Writable access to lockdown compatible debug information
-> +	 *
-> +	 * Allows write access to data in the device which may leave a fully
-> +	 * supported state. This is intended to permit intensive and possibly
-> +	 * invasive debugging. This scope will taint the kernel.
-> +	 */
-> +	FWCTL_RPC_DEBUG_WRITE = 2,
-> +	/**
-> +	 * @FWCTL_RPC_DEBUG_WRITE_FULL: Writable access to all debug information
-> +	 *
-> +	 * Allows read/write access to everything. Requires CAP_SYS_RAW_IO, so
-> +	 * it is not required to follow lockdown principals. If in doubt
-> +	 * debugging should be placed in this scope. This scope will taint the
-> +	 * kernel.
-> +	 */
-> +	FWCTL_RPC_DEBUG_WRITE_FULL = 3,
-> +};
-> +
-> +/**
-> + * struct fwctl_rpc - ioctl(FWCTL_RPC)
-> + * @size: sizeof(struct fwctl_rpc)
-> + * @scope: One of enum fwctl_rpc_scope, required scope for the RPC
-> + * @in_len: Length of the in memory
-> + * @out_len: Length of the out memory
-> + * @in: Request message in device specific format
-> + * @out: Response message in device specific format
-> + *
-> + * Deliver a Remote Procedure Call to the device FW and return the response. The
-> + * call's parameters and return are marshaled into linear buffers of memory. Any
-> + * errno indicates that delivery of the RPC to the device failed. Return status
-> + * originating in the device during a successful delivery must be encoded into
-> + * out.
-> + *
-> + * The format of the buffers matches the out_device_type from FWCTL_INFO.
-> + */
-> +struct fwctl_rpc {
-> +	__u32 size;
-> +	__u32 scope;
-> +	__u32 in_len;
-> +	__u32 out_len;
-> +	__aligned_u64 in;
-> +	__aligned_u64 out;
-> +};
-> +#define FWCTL_RPC _IO(FWCTL_TYPE, FWCTL_CMD_RPC)
-> +
->  #endif
-> --
-> 2.45.2
->
->
+>> >+=A0=A0=A0=A0=A0=A0=A0 timer_del(cci->bg.timer);
+>> >+=A0=A0=A0=A0=A0=A0=A0 cci->bg.ret_code =3D CXL_MBOX_ABORTED;
+>> >+=A0=A0=A0=A0=A0=A0=A0 cci->bg.starttime =3D 0;
+>> >+=A0=A0=A0=A0=A0=A0=A0 cci->bg.runtime =3D 0;
+>> >+=A0=A0=A0=A0=A0=A0=A0 cci->bg.aborted =3D true;
+>> >+=A0=A0=A0 }
+>> >+=A0=A0=A0 return CXL_MBOX_SUCCESS;
+>> >+}
+>> >+
+>> >=A0 /* CXL r3.1 Section 8.2.9.3.1: Get FW Info (Opcode 0200h) */
+>> >=A0 static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd=
+ *cmd,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ui=
+nt8_t *payload_in,
+>> >@@ -2149,6 +2177,8 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const s=
+truct >>cxl_cmd *cmd,
+>> >=A0 }
+>> >
+>> >=A0 static const struct cxl_cmd cxl_cmd_set[256][256] =3D {
+>> >+=A0=A0=A0 [INFOSTAT][BACKGROUND_OPERATION_ABORT] =3D { "BACKGROUND_OPE=
+RATION_ABORT",
+>> >+=A0=A0=A0=A0=A0=A0=A0 cmd_infostat_bg_op_abort, 0, 0 },
+>> >=A0=A0=A0=A0=A0 [EVENTS][GET_RECORDS] =3D { "EVENTS_GET_RECORDS",
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cmd_events_get_records, 1, 0 },
+>> >=A0=A0=A0=A0=A0 [EVENTS][CLEAR_RECORDS] =3D { "EVENTS_CLEAR_RECORDS",
+>> >@@ -2176,7 +2206,7 @@ static const struct cxl_cmd cxl_cmd_set[256][256]=
+ =3D {
+>> >=A0=A0=A0=A0=A0 [SANITIZE][OVERWRITE] =3D { "SANITIZE_OVERWRITE", >cmd_=
+sanitize_overwrite, 0,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0 CXL_MBOX_SECURITY_STATE_CHANGE |
+>> >-=A0=A0=A0=A0=A0=A0=A0=A0 CXL_MBOX_BACKGROUND_OPERATION)},
+>> >+=A0=A0=A0=A0=A0=A0=A0=A0 CXL_MBOX_BACKGROUND_OPERATION=A0 | >>CXL_MBOX=
+_BACKGROUND_OPERATION_ABORT)},
+>> >=A0=A0=A0=A0=A0 [PERSISTENT_MEM][GET_SECURITY_STATE] =3D { "GET_SECURIT=
+Y_STATE",
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cmd_get_security_state, 0, 0 },
+>> >=A0=A0=A0=A0=A0 [MEDIA_AND_POISON][GET_POISON_LIST] =3D { >>"MEDIA_AND_=
+POISON_GET_POISON_LIST",
+>> >@@ -2189,7 +2219,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256]=
+ =3D {
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 "MEDIA_AND_POISON_GET_SCAN_MEDIA_CAPABILITIES"=
+,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cmd_media_get_scan_media_capabilities, 16, 0 }=
+,
+>> >=A0=A0=A0=A0=A0 [MEDIA_AND_POISON][SCAN_MEDIA] =3D { "MEDIA_AND_POISON_=
+SCAN_MEDIA",
+>> >-=A0=A0=A0=A0=A0=A0=A0 cmd_media_scan_media, 17, CXL_MBOX_BACKGROUND_OP=
+ERATION },
+>> >+=A0=A0=A0=A0=A0=A0=A0 cmd_media_scan_media, 17,
+>> >+=A0=A0=A0=A0=A0=A0=A0 CXL_MBOX_BACKGROUND_OPERATION | >CXL_MBOX_BACKGR=
+OUND_OPERATION_ABORT},
+>> >=A0=A0=A0=A0=A0 [MEDIA_AND_POISON][GET_SCAN_MEDIA_RESULTS] =3D {
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cmd_media_get_scan_media_results, 0, 0 },
+>> >@@ -2214,6 +2245,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][2=
+56] =3D >{
+>> >=A0=A0=A0=A0=A0 [INFOSTAT][IS_IDENTIFY] =3D { "IDENTIFY", cmd_infostat_=
+identify, 0, 0 },
+>> >=A0=A0=A0=A0=A0 [INFOSTAT][BACKGROUND_OPERATION_STATUS] =3D { >"BACKGRO=
+UND_OPERATION_STATUS",
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cmd_infostat_bg_op_sts, 0, 0 },
+>> >+=A0=A0=A0 [INFOSTAT][BACKGROUND_OPERATION_ABORT] =3D { "BACKGROUND_OPE=
+RATION_ABORT",
+>> >+=A0=A0=A0=A0=A0=A0=A0 cmd_infostat_bg_op_abort, 0, 0 },
+>> >=A0=A0=A0=A0=A0 [TIMESTAMP][GET] =3D { "TIMESTAMP_GET", cmd_timestamp_g=
+et, 0, 0 },
+>> >=A0=A0=A0=A0=A0 [TIMESTAMP][SET] =3D { "TIMESTAMP_SET", cmd_timestamp_s=
+et, 8,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+>> >@@ -2295,6 +2328,7 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t =
+set, >>uint8_t cmd,
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cci->bg.opcode =3D (set << 8) | cmd;
+>> >
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cci->bg.complete_pct =3D 0;
+>> >+=A0=A0=A0=A0=A0=A0=A0 cci->bg.aborted =3D false;
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 cci->bg.ret_code =3D 0;
+>> >
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 now =3D qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+>> >@@ -2386,6 +2420,7 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max=
+)
+>> >=A0=A0=A0=A0=A0 cxl_rebuild_cel(cci);
+>> >
+>> >=A0=A0=A0=A0=A0 cci->bg.complete_pct =3D 0;
+>> >+=A0=A0=A0 cci->bg.aborted =3D false;
+>> >=A0=A0=A0=A0=A0 cci->bg.starttime =3D 0;
+>> >=A0=A0=A0=A0=A0 cci->bg.runtime =3D 0;
+>> >=A0=A0=A0=A0=A0 cci->bg.timer =3D timer_new_ms(QEMU_CLOCK_VIRTUAL,
+>> >diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+>> >index d38391b26f0e..d83b359e9994 100644
+>> >--- a/include/hw/cxl/cxl_device.h
+>> >+++ b/include/hw/cxl/cxl_device.h
+>> >@@ -197,6 +197,7 @@ typedef struct CXLCCI {
+>> >=A0=A0=A0=A0=A0 struct {
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 uint16_t opcode;
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 uint16_t complete_pct;
+>> >+=A0=A0=A0=A0=A0=A0=A0 bool aborted;
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 uint16_t ret_code; /* Current value of retcode=
+ */
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 uint64_t starttime;
+>> >=A0=A0=A0=A0=A0=A0=A0=A0 /* set by each bg cmd, cleared by the bg_timer=
+ when complete */
+>> >diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.=
+h
+>> >index beb048052e1b..9008402d1c46 100644
+>> >--- a/include/hw/cxl/cxl_mailbox.h
+>> >+++ b/include/hw/cxl/cxl_mailbox.h
+>> >@@ -14,5 +14,6 @@
+>> >=A0 #define CXL_MBOX_IMMEDIATE_LOG_CHANGE (1 << 4)
+>> >=A0 #define CXL_MBOX_SECURITY_STATE_CHANGE (1 << 5)
+>> >=A0 #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
+>> >+#define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
+>> >
+>> >=A0 #endif
+>> >--
+>> >2.44.0
+>>
