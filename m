@@ -1,127 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB1D15AD90;
-	Thu,  8 Aug 2024 21:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F50146D6D
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 21:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723151546; cv=none; b=VEjWk7+jh5nsYBGOWphFLaEMhq3KW0xBAnh+h31Z76tVNAF8HLX8kGkMDTHUdoIZzfuT/q1vD0jVYM9Im3Mjhix+JNQBXO2S0nSi7kSqnHdisUPXT8gKS+tzgokE0/HZ2HNOghQPSuJj8AWeDdbW6/zZ8ij+uyaPvVYpgQYh2Uo=
+	t=1723152882; cv=none; b=sBoBk6EKPS7L39Ezb1XNiwXR/FMOGLgBl4H69sHVa5GwdaVJ4pdep7/SIGMn8R0zNElIg3V2QuTTqRqXeTc35lHhocGTkbu/gPC/sOnw+f/Dah03B7STiHHTlVgv8voWziSpk6LBiJ0FHEdMrkdIMK9Bq+DzSm5U8drFTKygRuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723151546; c=relaxed/simple;
-	bh=Vap3umje8kcXqhdxoUlDY+Pkv0QLS2Akuf9ccxkaa/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6K7Lk7t08+jdyZ4qTKCB7u/E7+BtHURMWI3QtmM/t9uf684s3yVepGSOIs7ipG/LmAnmkd6fBcd8dJsWuoTPjn1JehvndPzkqTdBWWWdR4YilNFiVtfxwI2LWhoOeNG/AwAExTqqFpmXrkZg+cnwpTJ8bhtB8cNu188fJWzu9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/OrXuzL; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1723152882; c=relaxed/simple;
+	bh=RbMYgA++9fV0EBRect7rFATXup7VOfQbVaa+QMmyIIo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=fLVt5vkUMP3gGhKXYXa5ZZ3iUTK2MwctI1cevTUKHEs5H9ZYVXB1PnX8P33KzLPGMM0gEbjPfr+C9jc5quOPT9uwjtXXgtkxuWYMg2b7l6tbnuek5YPVZMECgKalgtGTHORd4z02MaQjC2H9zBthOQyxDR84ostjd6aRUVVCl4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=1diaB+tD; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/OrXuzL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723151545; x=1754687545;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Vap3umje8kcXqhdxoUlDY+Pkv0QLS2Akuf9ccxkaa/o=;
-  b=V/OrXuzLmWSxU6KTsK5+oWZFzrH+tRDJuBEQ7JkgfFb6PSN2zIca5ryC
-   R51ARZ806DKTdVgnm4sCPEo2B3cON/rD9P0/15vYIHdaTFEj1rvRNyQ7w
-   eCVLB174sHnxaouJWnVCqn9+ctpcydQWswXhNLUkxFnSjVUQcaDB/p9at
-   AFh9ayY8m97u/idL8M4F405hZoQMkpNDlxeUlLD8TI9Of49h85trrfazk
-   YNV82MWAcFRF7R2dQ4vOfyMT0riFWGNzY/m5zzhj/3fxL6drpksZ/k2ed
-   xsv811Crp3sUYzbtRV/xgej4miphlsbjOeW0XtDTxMvbyoK28GGBThXSZ
-   g==;
-X-CSE-ConnectionGUID: pYcj31G6QqeBcDXJGSQ9og==
-X-CSE-MsgGUID: tefbAkBoTfKoz+BAZ4mhLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="38763724"
-X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="38763724"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 14:12:24 -0700
-X-CSE-ConnectionGUID: BzDutUOWSyCFD7hfEA2EIQ==
-X-CSE-MsgGUID: mEWhHyCeRpm29qPnsqD+5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="62307790"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.12.215])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 14:12:23 -0700
-Date: Thu, 8 Aug 2024 14:12:21 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	cerasuolodomenico@gmail.com, hannes@cmpxchg.org,
-	j.granados@samsung.com, lizhijian@fujitsu.com,
-	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com,
-	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz,
-	willy@infradead.org, dan.j.williams@intel.com, yi.zhang@redhat.com,
-	david@redhat.com, yosryahmed@google.com
-Subject: Re: [PATCH v3 4/4] mm: don't account memmap per-node
-Message-ID: <ZrU0tQw8EwTTrD4E@aschofie-mobl2>
-References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
- <20240808154237.220029-5-pasha.tatashin@soleen.com>
- <ZrUUnm/pEpPS9ltC@aschofie-mobl2>
- <CA+CK2bD6wMh2svqf3vhj=53=EUWYtQJmJXyTRkLBm49q7KJFtg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="1diaB+tD"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b791cddfcbso8462226d6.0
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 14:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723152879; x=1723757679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sR4Q4RBNyDlEyEtMKpSg2raAJFHhcndUnkwyiIaahuQ=;
+        b=1diaB+tD2tnfjkLFy5oNsQx83WdZ4suVKYPD7HWX3jWMOp6wFSqyhyY6ofGUJ0iPFs
+         LAv8ADpMmLYKRnUSDfhXNmOFx/3ChwSWCjajfaNKyfKlscjQ2V3l5i6Rb2YqKuM68/Io
+         OYBFP9wKzRB0UIhRAnfo9imYHwWp68hYSQbG/ZfVFWOJlKuBy7DL6ygWRmbC63JVVmwQ
+         SVusyRFrUpRYY8il4k4qWcSrkQ8a314rlx3NPFvAbwcoFCewge8C2lzytUwW6CJVbq1P
+         Jux4GeEw9/BPhUjN4IqlBDNveFd5OlW/28R7BUd8lmYnDXC4C1NjV6nICfyKwL6mWEXj
+         7RQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723152879; x=1723757679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sR4Q4RBNyDlEyEtMKpSg2raAJFHhcndUnkwyiIaahuQ=;
+        b=jVXn69SbaYHuQ4Nka3e64JiH8Ll8SW85F3Jd/DnXEgc9MZCDB+bSmUhoBAVDPEWxq5
+         plG4uaXkL4l5CNA8p1wHTl3celUykANyXOvvy+O4N5hwRvOgWI+25gfCCCayctj6STMe
+         /0VU0xqA2B9LUbL3TT/zsAJ5tQ9V6eMN+T2+tGfNb261xHY9nf5BUmyiWwzWVXJXDvTr
+         QU2U56nB+HAqm8p9h9GpTgb93QqcWi8fQLtxxZ1yEyNB8fpZwKvKASHYCLRl05IlbeVk
+         b9pa6/v+MyrJdd3k6NuwWOmE9TGD2VBrvFoTUzV3bjkuNyLDVsBcd2CKFEkyI/6EOKLV
+         IX7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9GETYa6i5DPS4fvZoIvbekXFmAt4ptFEMYVEpQpb2toMjZqIqIys7TKfF1gMMJzQ90bv8uYBtzUWBiwp4sU16VY/Er++S5Mo5
+X-Gm-Message-State: AOJu0YwafV6FRQiwWEWQ12ficfnNMBIQYM1erJW5WiZ0ODVJqlZCqI8O
+	T/AhUu1yrg01DFC/rCcF6ormXdkKgws75efL2weMUKgD3AWTNsX6z9ek7Yzar7Q=
+X-Google-Smtp-Source: AGHT+IHhBAY4jB88eZ0nLk17m3lkT6t2c4WPOVLAuUQhNq1gELh0d4mWiwBC5MNPkQLlby32mEfHBg==
+X-Received: by 2002:a05:6214:33c3:b0:6b7:a175:29b7 with SMTP id 6a1803df08f44-6bd6bda2ed6mr42811146d6.51.1723152879490;
+        Thu, 08 Aug 2024 14:34:39 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c762bd1sm70205026d6.29.2024.08.08.14.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Aug 2024 14:34:39 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	cerasuolodomenico@gmail.com,
+	hannes@cmpxchg.org,
+	j.granados@samsung.com,
+	lizhijian@fujitsu.com,
+	muchun.song@linux.dev,
+	nphamcs@gmail.com,
+	pasha.tatashin@soleen.com,
+	rientjes@google.com,
+	rppt@kernel.org,
+	souravpanda@google.com,
+	vbabka@suse.cz,
+	willy@infradead.org,
+	dan.j.williams@intel.com,
+	yi.zhang@redhat.com,
+	alison.schofield@intel.com,
+	david@redhat.com,
+	yosryahmed@google.com
+Subject: [PATCH v4 0/3] Fixes for memmap accounting
+Date: Thu,  8 Aug 2024 21:34:33 +0000
+Message-ID: <20240808213437.682006-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bD6wMh2svqf3vhj=53=EUWYtQJmJXyTRkLBm49q7KJFtg@mail.gmail.com>
 
-On Thu, Aug 08, 2024 at 03:05:32PM -0400, Pasha Tatashin wrote:
-> On Thu, Aug 8, 2024 at 2:55 PM Alison Schofield
-> <alison.schofield@intel.com> wrote:
-> >
-> > On Thu, Aug 08, 2024 at 03:42:37PM +0000, Pasha Tatashin wrote:
-> > > Currently, when memory is hot-plugged or hot-removed the accounting is
-> > > done based on the assumption that memmap is allocated from the same node
-> > > as the hot-plugged/hot-removed memory, which is not always the case.
-> > >
-> > > In addition, there are challenges with keeping the node id of the memory
-> > > that is being remove to the time when memmap accounting is actually
-> > > performed: since this is done after remove_pfn_range_from_zone(), and
-> > > also after remove_memory_block_devices(). Meaning that we cannot use
-> > > pgdat nor walking though memblocks to get the nid.
-> > >
-> >
-> > How about directly include the failing cases and user visible impacts as
-> > reported in the Tags appended below.
-> 
-> Do you mean adding panic backtraces or repro steps to the commit log?
+Memmap accounting provides us with observability of how much memory is
+used for per-page metadata: i.e. "struct page"'s and "struct page_ext".
+It also provides with information of how much was allocated using
+boot allocator (i.e. not part of MemTotal), and how much was allocated
+using buddy allocated (i.e. part of MemTotal).
 
-Yes. Perhaps abbreviated but something that makes the connection,
-like this:
+This small series fixes a few problems that were discovered with the
+original patch.
 
-ndctl users reported a GPF when trying to destroy a namespace:
-# ndctl destroy-namespace all -r all -f
-Segmentation fault
-dmesg:
-[] Oops: general protection fault, probably for
-non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
-PTI
-[] KASAN: probably user-memory-access in range
-[0x000000000002b280-0x000000000002b287]
-[] CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
-[] Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
-2.20.1 09/13/2023
-[] RIP: 0010:mod_node_page_state+0x2a/0x110
+Changes:
+- Removed patch 'mm: update the memmap stat before page is freed', as
+  noticed by Yosry after 3/3 that patch is not needed anymore.
+- renamed nr_memmap to nr_mammp_pages and nr_memmap_boot to
+  nr_memmap_boot_pages as suggested by David Hildenbrand
+- Added the origianl oops information as suggested by Alison Schofield
+- Improved commit log message as suggested by David Hildenbrand
+- Added review-by's, acked-by's, and tested-by's
 
+v3:
+https://lore.kernel.org/linux-mm/20240808154237.220029-1-pasha.tatashin@soleen.com
 
-cxl-test users report a GPF when trying to unload the test module:
-# modrpobe -r cxl-test
-dmesg
-[] BUG: unable to handle page fault for address: 0000000000004200
-[] #PF: supervisor read access in kernel mode
-[] #PF: error_code(0x0000) - not-present page
-[] PGD 0 P4D 0 
-[] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-[] CPU: 0 UID: 0 PID: 1076 Comm: modprobe Tainted: G           O     N 6.11.0-rc1 #197
-[] Tainted: [O]=OOT_MODULE, [N]=TEST
-[] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[] RIP: 0010:mod_node_page_state+0x6/0x90
+Pasha Tatashin (3):
+  mm: don't account memmap on failure
+  mm: add system wide stats items category
+  mm: don't account memmap per-node
 
+ include/linux/mmzone.h |  2 --
+ include/linux/vmstat.h | 22 +++++++-----------
+ mm/hugetlb_vmemmap.c   | 13 +++++------
+ mm/mm_init.c           |  3 +--
+ mm/page_alloc.c        |  1 -
+ mm/page_ext.c          | 18 ++++-----------
+ mm/sparse-vmemmap.c    | 11 ++++-----
+ mm/sparse.c            |  5 ++---
+ mm/vmstat.c            | 51 ++++++++++++++++++++----------------------
+ 9 files changed, 48 insertions(+), 78 deletions(-)
 
+-- 
+2.46.0.76.ge559c4bf1a-goog
 
