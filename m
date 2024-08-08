@@ -1,174 +1,316 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7545A146A83
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 18:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1178C98;
+	Thu,  8 Aug 2024 18:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723141606; cv=none; b=sOfov8vFtFOHJdyM6/D2+9c+EFYsN8GKaSSX/SanFpEKc1jcOnm3yr4x4iX1mMqjvgegn51hqidaENvUitDb6xsTkAsnFXBjUmlviosAYOOPdUe7B5MLPUaTa2LkxKbXwG3cxyjmS7j4UrtsVD3zj6J6m3GbLQJUMWmp2iQW9Aw=
+	t=1723141709; cv=none; b=nkfMU6pfB/g2h7ZbpvFMcY5ILH9H43rqK0aM+fhZvmkdKynJ7C698pHFtPun/KU3n8hjqdjkGv9sAQEeqrmaMkah5f77TDCGjlxKq8XzZGVKQCf4FMcPclcPq3daV+aj3skb47VISrpaP+diphurMOSuIHs7DaZZIB+BCcA1WMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723141606; c=relaxed/simple;
-	bh=aGLgDiP/PDM3aKLvPcBwDM071s82L58DhQMCmBzJaPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NKM+ltMjKnbPp1q40kVttQpuuO/LdzkX7aSK1ZQ4CMpS8fpzql4t/UkTsdFOrF3I3ua5brfE1Z6dX8X+NQSPepa31ladUGL0Afi6X+ifLq4TW/DUIlVaU5hANlBnduJ0EIzAcjSvAa+xinizxtrT+A4LdIchCy57C7e/8afh2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KOX2JyV2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723141709; c=relaxed/simple;
+	bh=DBWdlq8SezUJpQ3Dp+nyDwcDPUROy6hy8Y7XPrskYrM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i6WXYPouyzPWhTDRFKdMwf2OSWNHHjBsulTVzbMf2+eBAZ2KM4gJ5VNBCmW0GTUs25WvPf2e+pl5t7sKEI36c7TZBqcqLL5n+c2USK5sv/4r5WcwelzyhN4p0DfjfbWu3HpiQB+/RjTE/h93fbc6CHczP/ownpaO8loi+H/bVlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltQdlRHO; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOX2JyV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723141603;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=oPdap2Cj58/bdcNangvbuKkQN3ShkoAAH7Mn0q0r4fY=;
-	b=KOX2JyV2Gw5/yhJgR7vxrUfa/2/aDEZifUz0cIlf+ap6l+Nw0D6mzaRaQp2AWPHBaT8IoN
-	g737ap0leMzjZq8yVvqHHZ1siRscpFTRNlafEGc7gXa4euvKRafJh/QdJ1z3i4GAb4ED/C
-	pz8J7hv6Aru1alCfNhdva2682QGcks4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-x4VkJZQBNDG0IliQpKsIEw-1; Thu, 08 Aug 2024 14:26:42 -0400
-X-MC-Unique: x4VkJZQBNDG0IliQpKsIEw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-426624f4ce3so8680615e9.1
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 11:26:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltQdlRHO"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70eaf5874ddso1067973b3a.3;
+        Thu, 08 Aug 2024 11:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723141707; x=1723746507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x/eKB9adD5vtAdH+AHSGnKrabRcrcGFa4QNQ7bMcvU8=;
+        b=ltQdlRHO4p8khJijlWcmci50Y2UD2QBABeJ8mdUrwa1YEILUvq6TY7osH6bd5FBvqy
+         VqAheJMXYZkiGZjnKxr2fHxOyzHE0Rl2BT1QK/vnOtzXylf6ZjUnknnIz+yKJrNcB9rf
+         HgPm601a9OYHEUhm2ENeMqmvE7d8muJVCAjSTSm/Re8RgRZgGlUiKF+J+emcEF5qF3vH
+         rEkYk9UQHdu1cJ0/n9p30PYg9CuuP0sZsAoKtrv17LFwRMRYgcYqXurO9o/ESuH9fsgn
+         Zis4Q+gZsv2Ybp6ywSwfbBBspjbjVYzK4baEYIIDoPpzd/u4sn/4vACJb9BIbc0M+9Vp
+         irww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723141601; x=1723746401;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1723141707; x=1723746507;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oPdap2Cj58/bdcNangvbuKkQN3ShkoAAH7Mn0q0r4fY=;
-        b=M7ZbWUMB0f7p+ze+ei91Dm4vxLrTFhkWE7JlEo4iN730L39lbRN6mXsEFzVGs/UPDg
-         FauEIX5bC9/ArvtgUJO8kaydD/AylOyu1M3N7ny4e+96TsaDEd89OwglEIXQAfL2Pcv2
-         zMgjl9qOB7owFlHeohNKvsPJxPlP6NW7A7xBPaNu/CfAWFXx7y6YyzgEi3HMSzWfgoy4
-         Gu3yjLDMBR/g18dO5yJkuE+YuX3r2SsasH3ymXIgPKbUtcS5mpKDLd5IoA/3OlH7oF6a
-         e8druFCDt2D18YOlpLC0/TTjMVx6Lp8MUAdoHxoWGUNZ9A6L8Lqw14aGu7XkuFs+Hbis
-         P9ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUelIzWBcxD2Xmfvmbs1LpOPhX7OtZbderwVWHEwI/nL71/OKzk91ARhojRjpjKIckl9JXSBarBMrFjFXGOIFPmQLXgby2v1bEE
-X-Gm-Message-State: AOJu0YxanO8FxfMfDr49ceEjZZEEFCDSA2X8IyJQEgdRpeIDg8pyYyRb
-	bsARnyTDuBV+W2oYmHw3rg9usrPfwWYiQ78hQAOO0l9LZw55ONm1ep9fb5P+jaBVzHjqSC36ujA
-	UVU93Cm1AAF170dxeGyI71qxQsE3My5GiLNsnLpK4YodJcHkUh811pa25tQ==
-X-Received: by 2002:a05:600c:8515:b0:428:387:79ac with SMTP id 5b1f17b1804b1-4290d7d74e8mr11427505e9.6.1723141600833;
-        Thu, 08 Aug 2024 11:26:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHP73emNCQDdWv2KlFW9rCMi1DOUNBEBL6z1+LJwr/UDfUfIx6wmqyICQgAwvUcoNjIIDsz1w==
-X-Received: by 2002:a05:600c:8515:b0:428:387:79ac with SMTP id 5b1f17b1804b1-4290d7d74e8mr11427405e9.6.1723141600302;
-        Thu, 08 Aug 2024 11:26:40 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c713:2a00:f151:50f1:7164:32e6? (p200300cbc7132a00f15150f1716432e6.dip0.t-ipconnect.de. [2003:cb:c713:2a00:f151:50f1:7164:32e6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429c19a1fe4sm82155e9.0.2024.08.08.11.26.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Aug 2024 11:26:39 -0700 (PDT)
-Message-ID: <490ae360-50a4-497f-b148-ef077b73e911@redhat.com>
-Date: Thu, 8 Aug 2024 20:26:38 +0200
+        bh=x/eKB9adD5vtAdH+AHSGnKrabRcrcGFa4QNQ7bMcvU8=;
+        b=U+w0962rvqrGpptYfxdnYVNkdmpyUHRK8adjHqRbTxsfLat8uvX9emlbs8rH5fAfzu
+         PcALLZ1Ko40peluAuB09IFXTkGvYw4yD21Juuk0/IfF/hQkcd5nDofvmTEANxGgmdVE2
+         8K4W+fRZJJk9+iGgkjJUwTb1RV2A/BpVO9pvU/kh/oAbYwgrl7rx78aFE7kJaeRKlNiH
+         e0vKmLVc+WA/X4gops706KKgEoQkOL6ZEBDDZZeAXePSYspMLEXnm3i6AHEui1PA4EfG
+         5jSs6L/URgCE2WrEBwVzLVgCTKFygmD8ldR255LVrc9I7/xmN9aPoZHVqcT7+qjlNpHl
+         ES6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUyPsM8Kc2UmtGI6YHWTwCNsNKyVJ0SPn5e+zVj+ZX4ZVjpz2suClvFTpVEYQgWxBsFkOIyzwP+zylJ1y5rhYys4H5rM5q5ZyAHAZKm6Nx/DexYTUSqacf9QY/it+OVjo8dsdtQ+w==
+X-Gm-Message-State: AOJu0YxwOdZ5bC1E3O9AmvUx7bNnIdwO1H98CjH8t/nj/cF0JVH18hM/
+	AwuL7AxW8rq9zdL8kx6hIs8DfJ/fSqozv+3FXJlGZVPBRjCqycxe
+X-Google-Smtp-Source: AGHT+IHhCjRuTNDogtGzrIlZwTbvqVxHATIyO9zKjrlxrDbVkksTgDVka1CaxP0T7jfYts3GQuVkZQ==
+X-Received: by 2002:a05:6a20:4313:b0:1c3:3436:a244 with SMTP id adf61e73a8af0-1c6fceb871emr3559685637.1.1723141706780;
+        Thu, 08 Aug 2024 11:28:26 -0700 (PDT)
+Received: from fan ([2601:646:8f03:9fee:ba5b:a13:cdb6:fb15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710cb2d0355sm1408586b3a.118.2024.08.08.11.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Aug 2024 11:28:26 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 8 Aug 2024 11:28:05 -0700
+To: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-mm@kvack.org,
+	dan.j.williams@intel.com, vishal.l.verma@intel.com,
+	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
+	bp@alien8.de, dave.jiang@intel.com, dave@stgolabs.net,
+	ira.weiny@intel.com, james.morse@arm.com, linmiaohe@huawei.com,
+	mchehab@kernel.org, nao.horiguchi@gmail.com, rric@kernel.org,
+	tony.luck@intel.com
+Subject: Re: [PATCH v4 1/2] cxl/core: introduce device reporting poison
+ hanlding
+Message-ID: <ZrUONRvQf4M6CNCh@fan>
+References: <20240808151328.707869-1-ruansy.fnst@fujitsu.com>
+ <20240808151328.707869-2-ruansy.fnst@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] mm: don't account memmap per-node
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- cerasuolodomenico@gmail.com, hannes@cmpxchg.org, j.granados@samsung.com,
- lizhijian@fujitsu.com, muchun.song@linux.dev, nphamcs@gmail.com,
- rientjes@google.com, rppt@kernel.org, souravpanda@google.com,
- vbabka@suse.cz, willy@infradead.org, dan.j.williams@intel.com,
- yi.zhang@redhat.com, alison.schofield@intel.com, yosryahmed@google.com
-References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
- <20240808154237.220029-5-pasha.tatashin@soleen.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240808154237.220029-5-pasha.tatashin@soleen.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240808151328.707869-2-ruansy.fnst@fujitsu.com>
 
->   #ifdef CONFIG_COMPACTION
->   
->   struct contig_page_info {
-> @@ -1255,11 +1272,11 @@ const char * const vmstat_text[] = {
->   	"pgdemote_kswapd",
->   	"pgdemote_direct",
->   	"pgdemote_khugepaged",
-> -	"nr_memmap",
-> -	"nr_memmap_boot",
->   	/* system-wide enum vm_stat_item counters */
->   	"nr_dirty_threshold",
->   	"nr_dirty_background_threshold",
-> +	"nr_memmap",
-> +	"nr_memmap_boot",
+On Thu, Aug 08, 2024 at 11:13:27PM +0800, Shiyang Ruan wrote:
+> CXL device can find&report memory problems, even before MCE is detected
+> by CPU.  AFAIK, the current kernel only traces POISON error event
+> from FW-First/OS-First path, but it doesn't handle them, neither
+> notify processes who are using the POISON page like MCE does.
+> 
+> Thus, user have to read logs from trace and find out which device
+> reported the error and which applications are affected.  That is not
+> an easy work and cannot be handled in time.  Thus, it is needed to add
+> the feature to make the work done automatically and quickly.  Once CXL
+> device reports the POISON error (via FW-First/OS-First), kernel
+> handles it immediately, similar to the flow when a MCE is triggered.
+> 
+> The current call trace of error reporting&handling looks like this:
+> ```
+> 1.  MCE (interrupt #18, while CPU consuming POISON)
+>      -> do_machine_check()
+>        -> mce_log()
+>          -> notify chain (x86_mce_decoder_chain)
+>            -> memory_failure()
+> 
+> 2.a FW-First (optional, CXL device proactively find&report)
+>      -> CXL device -> Firmware
+>        -> OS: ACPI->APEI->GHES->CPER -> CXL driver -> trace
+>                                                   \-> memory_failure()
+>                                                       ^----- ADD
+> 2.b OS-First (optional, CXL device proactively find&report)
+>      -> CXL device -> MSI
+>        -> OS: CXL driver -> trace
+>                         \-> memory_failure()
+>                             ^------------------------------- ADD
+> ```
+> This patch adds calling memory_failure() while CXL device reporting
+> error is received, marked as "ADD" in figure above.
+> 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+> ---
+>  drivers/cxl/core/mbox.c   | 75 ++++++++++++++++++++++++++++++++-------
+>  drivers/cxl/cxlmem.h      |  8 ++---
+>  drivers/cxl/pci.c         |  4 +--
+>  include/linux/cxl-event.h | 16 ++++++++-
+>  4 files changed, 83 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index e5cdeafdf76e..0cb6ef2e6600 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -849,10 +849,55 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+>  
+> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> -			    enum cxl_event_log_type type,
+> -			    enum cxl_event_type event_type,
+> -			    const uuid_t *uuid, union cxl_event *evt)
+> +static void cxl_report_poison(struct cxl_memdev *cxlmd, u64 hpa)
+> +{
+> +	unsigned long pfn = PHYS_PFN(hpa);
+> +
+> +	memory_failure_queue(pfn, 0);
+> +}
+> +
+> +static void cxl_event_handle_general_media(struct cxl_memdev *cxlmd,
+> +					   enum cxl_event_log_type type,
+> +					   u64 hpa,
+> +					   struct cxl_event_gen_media *rec)
+> +{
+> +	if (type == CXL_EVENT_TYPE_FAIL) {
+> +		switch (rec->media_hdr.transaction_type) {
+> +		case CXL_EVENT_TRANSACTION_READ:
+> +		case CXL_EVENT_TRANSACTION_WRITE:
+> +		case CXL_EVENT_TRANSACTION_SCAN_MEDIA:
+> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
+> +			cxl_report_poison(cxlmd, hpa);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +static void cxl_event_handle_dram(struct cxl_memdev *cxlmd,
+> +				  enum cxl_event_log_type type,
+> +				  u64 hpa,
+> +				  struct cxl_event_dram *rec)
+> +{
+> +	if (type == CXL_EVENT_TYPE_FAIL) {
+> +		switch (rec->media_hdr.transaction_type) {
+> +		case CXL_EVENT_TRANSACTION_READ:
+> +		case CXL_EVENT_TRANSACTION_WRITE:
+> +		case CXL_EVENT_TRANSACTION_SCAN_MEDIA:
+> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
+> +			cxl_report_poison(cxlmd, hpa);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
+> +			     enum cxl_event_log_type type,
+> +			     enum cxl_event_type event_type,
+> +			     const uuid_t *uuid, union cxl_event *evt)
+>  {
+>  	if (event_type == CXL_CPER_EVENT_MEM_MODULE) {
+>  		trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
+> @@ -880,18 +925,22 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  		if (cxlr)
+>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+>  
+> -		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+> +		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
+>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+>  						&evt->gen_media);
+> -		else if (event_type == CXL_CPER_EVENT_DRAM)
+> +			cxl_event_handle_general_media(cxlmd, type, hpa,
+> +						&evt->gen_media);
+> +		} else if (event_type == CXL_CPER_EVENT_DRAM) {
+>  			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
+> +			cxl_event_handle_dram(cxlmd, type, hpa, &evt->dram);
 
-While we're at it (sorry, I should have found more time revieweing this 
-earlier!) ...
+Does it make sense to call the trace function in
+cxl_event_handle_dram/general_media and replace the trace function with
+the handle_* here?
 
-What is the unit here? Should this be "nr_memmap_pages" / 
-"nr_memmap_boot_pages"? Like
+> +		}
+>  	}
+>  }
+> -EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
+> +EXPORT_SYMBOL_NS_GPL(cxl_event_handle_record, CXL);
+>  
+> -static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> -				     enum cxl_event_log_type type,
+> -				     struct cxl_event_record_raw *record)
+> +static void __cxl_event_handle_record(struct cxl_memdev *cxlmd,
+> +				      enum cxl_event_log_type type,
+> +				      struct cxl_event_record_raw *record)
+>  {
+>  	enum cxl_event_type ev_type = CXL_CPER_EVENT_GENERIC;
+>  	const uuid_t *uuid = &record->id;
+> @@ -903,7 +952,7 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
+>  		ev_type = CXL_CPER_EVENT_MEM_MODULE;
+>  
+> -	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
+> +	cxl_event_handle_record(cxlmd, type, ev_type, uuid, &record->event);
+>  }
+>  
+>  static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+> @@ -1012,8 +1061,8 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  			break;
+>  
+>  		for (i = 0; i < nr_rec; i++)
+> -			__cxl_event_trace_record(cxlmd, type,
+> -						 &payload->records[i]);
+> +			__cxl_event_handle_record(cxlmd, type,
+> +						  &payload->records[i]);
+>  
+>  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+>  			trace_cxl_overflow(cxlmd, type, payload);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index afb53d058d62..5c4810dcbdeb 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -826,10 +826,10 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>  				  unsigned long *cmds);
+>  void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
+> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> -			    enum cxl_event_log_type type,
+> -			    enum cxl_event_type event_type,
+> -			    const uuid_t *uuid, union cxl_event *evt);
+> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
+> +			     enum cxl_event_log_type type,
+> +			     enum cxl_event_type event_type,
+> +			     const uuid_t *uuid, union cxl_event *evt);
+>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4be35dc22202..6e65ca89f666 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -1029,8 +1029,8 @@ static void cxl_handle_cper_event(enum cxl_event_type ev_type,
+>  	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
+>  	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
+>  
+> -	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
+> -			       &uuid_null, &rec->event);
+> +	cxl_event_handle_record(cxlds->cxlmd, log_type, ev_type,
+> +				&uuid_null, &rec->event);
+>  }
+>  
+>  static void cxl_cper_work_fn(struct work_struct *work)
+> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> index 0bea1afbd747..be4342a2b597 100644
+> --- a/include/linux/cxl-event.h
+> +++ b/include/linux/cxl-event.h
+> @@ -7,6 +7,20 @@
+>  #include <linux/uuid.h>
+>  #include <linux/workqueue_types.h>
+>  
+> +/*
+> + * Event transaction type
+> + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
 
-$ cat /proc/vmstat  | grep pages
-nr_free_pages 3618323
-nr_zspages 3
-nr_anon_pages 1053316
-nr_file_pages 3199210
-nr_shmem_hugepages 546
-nr_file_hugepages 0
-nr_anon_transparent_hugepages 0
-nr_page_table_pages 15215
-nr_sec_page_table_pages 0
-numa_pages_migrated 0
+Here and below, update the specification reference to reflect cxl 3.1.
 
-
-Nothing else jumped at me.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Fan
+> + */
+> +enum cxl_event_transaction_type {
+> +	CXL_EVENT_TRANSACTION_UNKNOWN = 0X00,
+> +	CXL_EVENT_TRANSACTION_READ,
+> +	CXL_EVENT_TRANSACTION_WRITE,
+> +	CXL_EVENT_TRANSACTION_SCAN_MEDIA,
+> +	CXL_EVENT_TRANSACTION_INJECT_POISON,
+> +	CXL_EVENT_TRANSACTION_MEDIA_SCRUB,
+> +	CXL_EVENT_TRANSACTION_MEDIA_MANAGEMENT,
+> +};
+> +
+>  /*
+>   * Common Event Record Format
+>   * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
+> @@ -26,7 +40,7 @@ struct cxl_event_media_hdr {
+>  	__le64 phys_addr;
+>  	u8 descriptor;
+>  	u8 type;
+> -	u8 transaction_type;
+> +	u8 transaction_type;	/* enum cxl_event_transaction_type */
+>  	/*
+>  	 * The meaning of Validity Flags from bit 2 is
+>  	 * different across DRAM and General Media records
+> -- 
+> 2.34.1
+> 
