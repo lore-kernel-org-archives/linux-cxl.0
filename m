@@ -1,126 +1,120 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DC318F2CA
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A208718F2EB
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723130658; cv=none; b=cB1M/7cv2pUyxcNoUS4sOSy4ilOhfNv77iCD0aau2Wm8zGLdeEGMinFWlsOL6eMJf6d2r2N9/f5hW7oXk25JryBwZ0cVLV1Ewj+0sKiD87c9rf/jl4nhs55L6tM+7P7ETHcc0xsyccl6RqVKdrWCI9h+pjRAAwFRrBYusDW9XMI=
+	t=1723131763; cv=none; b=jaKRQCJdQHqYVoGC/L1r9mbmh3yaYu8piiVHX8GIaxlfnN/8Ow6K50Ka1OkUN/6Bv2n+jmJKd49ARyS5IpmrsvGC8cRf4fSgIfWx9FsVDvkauaruWBO368AWrw9KCjwFwnb/M6iMopGnaqz6OjDymnj3QmARgxqfR10SpJQ4kB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723130658; c=relaxed/simple;
-	bh=kcznI73703eU0ObOZKtq7iR/3T9lbNSBrSC3WrZaDn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mYxIZkp3fB4V5TzyY+I+pQGjoLC6aDy8yGhEiIlK1dTIveughhikNxoQXTkTVCOAMqHjdoidfqUXigJu7SLoC15qOC8lOWvAyuISRDndEiw1Yo8xLEDjE4NwTrLnwJjYVfpu7NV4qQYG41UuHVCKaN1jMFUP/iYtI9op/WFzUA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=fnci0RKG; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1723131763; c=relaxed/simple;
+	bh=RrfqIOuouVyiFfEs/ry+HWzLi1ojcMi58Cj0sWJhrio=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=D1R2iGGpVajMCWhrK7nflQvEBUMfqO9IUJCWXqEaXI1HI+jX40WQMcXY7I0F5Xc9cePcDQX4bOVrkNP82GCwhbh2wNGCme3I4rK4aL1pxYBB/8lyoaZRmQMlvVZTs8Bhsr5lO4ubzgZHuK9mCq1vbkSqOejaUR/I0NMRr0r/3pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=nRyZ0z34; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="fnci0RKG"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52efdf02d13so2109277e87.2
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:24:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="nRyZ0z34"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6bb96ef0e96so5964136d6.2
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723130649; x=1723735449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qx18uaar07tjK8QW0faH95Ubd3Yujuqs2CBIHWPUeWs=;
-        b=fnci0RKG/4fjljLluLOX3a37meRVr+Pa6VipVb/V+o0z42yfmINbUAMpdb7iqYXczy
-         YIW3lMoRG96uNKbi9PJFcO5fNu3RsXCvSoKSE5Gm/4eh8+0Hvdn4PBBGm+RlOqcq+W+K
-         cu0mV8R8wlVcoayIwVJMjXHl2XQQh+xxnsJ7JuQlSSxgHUUbzPdc0A5pagC4G+zsIsmy
-         yKU8JCEI+udgrnnbv5jGe3ZbFbh2FVGuydewhSe6wn8+bhdP6k/3c0CmcNibT53/8hu+
-         a8qydugzMe84EsvJBmM77YNoTjtW/R44eqRyHgTKh4/uCbbLLdHGI46V03sWES+hng8g
-         UH9A==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723131760; x=1723736560; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OoS5c7AqTIEc3lMd5dOxMQfYeBpBDya+0ZxkeiTfX/s=;
+        b=nRyZ0z34N1OIErGtmme6OKx/b0JIDFYuQA702qE4KNDJsmMOFPQQrw+v7NK8l2LADG
+         JVxfGUcyS4Uv5oEcnELN8CheSzLuvB3RYG7otTNVJpiAMzG1DWlPjHKQzE/cZhjdwey/
+         R83h/BJ3t7RU5YFNwzFY1pFirV/SJ70viHzUFlA9Pc0Ozw1KXAc1qlx6qHzSzlkJ43Ir
+         IpDpb5pK3wobseW7VoHCwGgalDuqzkY9rCvMpKWp2XoSW0Z8Nn+BXWSwBQb28MDDZWG3
+         pWw4+WRx6sUnXgO18NnOaXRMxdIPTMgg97Ids06Rt24YvLEBAfS2gqh+oCiyG4uLr052
+         LU+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723130649; x=1723735449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qx18uaar07tjK8QW0faH95Ubd3Yujuqs2CBIHWPUeWs=;
-        b=dhQVFY2oRaMZ4tJLN9e8jGIFnMOc+bBCEkvqTd2Pi3ht06CssILL77YiDdKPWYY1fu
-         +QvWAxC/CRi1xf1dE6mik6lxix4zdtXc2oMZTt7yFZPFZzULSxQZtDeUvs9cFfT6zyQ4
-         ZGxe6VBiEVb3tG1PmInvuNe0xxRU/ihDb4fPnPZA5kBWetUqOHDlG5XKdKKJtQ6YhK2F
-         R01lV9fptGe1mM9E6JiU3oMQuFw8EmWGBfbZmaXW8ONqeZMprn42jqBY3jdDdyqWovAP
-         aEDWI8SHOXAbUe2lQMT9M7Xnr6mltEVtIGrjJKcTlv2Uq0yfn8Ygstr/tQST6WLsiMm8
-         otLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXD/H2AwxfkwczpZfGYlVoorS5VO8gNdQyZxLVhUZuOZ28fSp0D8rlMjICYkjCVWFrIT0fwmH5W2jTFuDOEU7zMj6HlMFe1pQqI
-X-Gm-Message-State: AOJu0YzVhnHa3wvhD6V/F2pYdjtZ1Kx9MS0PGmjLW4jNX5UOpY+KFSyo
-	AWfC2PUz1xPh+HRjbzXVjhuENrtsBHSHfGQuSmqGKK3O8gBWXid3COytEU8HdZHtRbbdDnWIqZk
-	nOKLmaQe7tatHbHKNqPIG3O9HaaHWsN4A+YMA1A==
-X-Google-Smtp-Source: AGHT+IHQfJk4XwPcOfo9+O99r2JxIMlQxBCThMQWtoh/L0V+CtPk6/Rgp2Ne++2MFrhPmJRgmXKE8nv3eif8DzEPJUA=
-X-Received: by 2002:a05:6512:1107:b0:52c:c9e4:3291 with SMTP id
- 2adb3069b0e04-530e589929fmr1646154e87.60.1723130648939; Thu, 08 Aug 2024
- 08:24:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723131760; x=1723736560;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OoS5c7AqTIEc3lMd5dOxMQfYeBpBDya+0ZxkeiTfX/s=;
+        b=owiaH7eQ14GdH4+dMdHuku81oMwARyieUCStxoUO4ho7EZJw2WPKaCsluhbcahQzet
+         9A9IHnfruvPfrEYIs6n6Hj0NMDC7D0TXju53V0xGiIcI9/amTzDCnmklRUv5ovv7ByOL
+         +IzP28QLov8voy4oDCIMj57MW9qLoLMCgMCCspHMUln8fyY7X65VkkWcdT0FCz1sPQYd
+         +oCKmcWQGl+MXDNdlMd+jylgnGRR/2+fONQ37ZZH+gvAzsfMhn9NMAfP3lyYfQGMRQPP
+         rA9WmIc4mkrdVxDsAwSDZqP731UauVKEDYiufnfmniJVmFX5gqJUZnYM3oUp6cQ8iG+s
+         uGtg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFWJG3+TnmCQ76nPGgx9xHRTwuadEaho/TG0wancuUe+S5+8fHXa6iTvmmRw80teCVGH+sSTo2eTah/NQPv4m1kJXNgKIo7Kdf
+X-Gm-Message-State: AOJu0YwFKUSt1S17cJ/sg79Fl1ObL1F/FDMkVmhyzRNMkngHMScGztlm
+	Od/bn0N1f9y8q5oOYfUvCSzZjJPzDDlkyUxwH7wKS83oQf6JuA11nI24o7J5dTk=
+X-Google-Smtp-Source: AGHT+IEcL0yZePXhMPPsTPK8VSthHtq/oqJtvkGQFO/6miHrQpul5UYc/wo62QVWJrz61dTFYt0okw==
+X-Received: by 2002:a05:6214:4886:b0:6b7:99f6:98b0 with SMTP id 6a1803df08f44-6bd6bccdec5mr35072366d6.17.1723131760505;
+        Thu, 08 Aug 2024 08:42:40 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c7b72d9sm67160936d6.60.2024.08.08.08.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Aug 2024 08:42:40 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	cerasuolodomenico@gmail.com,
+	hannes@cmpxchg.org,
+	j.granados@samsung.com,
+	lizhijian@fujitsu.com,
+	muchun.song@linux.dev,
+	nphamcs@gmail.com,
+	pasha.tatashin@soleen.com,
+	rientjes@google.com,
+	rppt@kernel.org,
+	souravpanda@google.com,
+	vbabka@suse.cz,
+	willy@infradead.org,
+	dan.j.williams@intel.com,
+	yi.zhang@redhat.com,
+	alison.schofield@intel.com,
+	david@redhat.com,
+	yosryahmed@google.com
+Subject: [PATCH v3 0/4] Fixes for memmap accounting
+Date: Thu,  8 Aug 2024 15:42:33 +0000
+Message-ID: <20240808154237.220029-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807211929.3433304-1-pasha.tatashin@soleen.com> <66b3fc8d39391_2657d52945e@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <66b3fc8d39391_2657d52945e@dwillia2-xfh.jf.intel.com.notmuch>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 8 Aug 2024 11:23:30 -0400
-Message-ID: <CA+CK2bCrXqnGPvQP86FpFFfEiCpBSyq_DzdP1deyK8vQ_ZYjzg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Fixes for memmap accounting
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, cerasuolodomenico@gmail.com, hannes@cmpxchg.org, 
-	j.granados@samsung.com, lizhijian@fujitsu.com, muchun.song@linux.dev, 
-	nphamcs@gmail.com, rientjes@google.com, rppt@kernel.org, 
-	souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
-	linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 7, 2024 at 7:00=E2=80=AFPM Dan Williams <dan.j.williams@intel.c=
-om> wrote:
->
-> [ add linux-cxl ]
->
-> Pasha Tatashin wrote:
-> > Memmap accounting provides us with observability of how much memory is
-> > used for per-page metadata: i.e. "struct page"'s and "struct page_ext".
-> > It also provides with information of how much was allocated using
-> > boot allocator (i.e. not part of MemTotal), and how much was allocated
-> > using buddy allocated (i.e. part of MemTotal).
-> >
-> > This small series fixes a few problems that were discovered with the
-> > original patch.
-> >
-> > v1: https://lore.kernel.org/all/20240806221454.1971755-1-pasha.tatashin=
-@soleen.com
-> > Changes:
-> >       - Added patch "mm: don't account memmap on failure"
-> >       - Changed from using nid in hot-remove functions to non-pernode
-> >         system-wide accounting for memmap data.
-> >
-> > Pasha Tatashin (3):
-> >   mm: update the memmap stat before page is freed
-> >   mm: don't account memmap on failure
-> >   mm: don't account memmap per node
->
-> Hi Pasha,
->
-> Thanks for jumping on this debug!
->
-> We almost missed these. Can you update your scripts to auto-cc folks on t=
-he
-> Reported-by line, and optionally include the lists where the report origi=
-nated
-> next time?
+Memmap accounting provides us with observability of how much memory is
+used for per-page metadata: i.e. "struct page"'s and "struct page_ext".
+It also provides with information of how much was allocated using
+boot allocator (i.e. not part of MemTotal), and how much was allocated
+using buddy allocated (i.e. part of MemTotal).
 
-Thank  you, I will add them.
+This small series fixes a few problems that were discovered with the
+original patch.
 
->
-> This is looking good from my tests, you can add:
->
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
+Changes:
+	- Added patch "mm: add system wide stats items category"
+	- Changed from using system-wide events to system-wide stats
+v2:
+https://lore.kernel.org/lkml/20240807211929.3433304-1-pasha.tatashin@soleen.com
 
-Thank you for testing
+Pasha Tatashin (4):
+  mm: update the memmap stat before page is freed
+  mm: don't account memmap on failure
+  mm: add system wide stats items category
+  mm: don't account memmap per-node
 
->
-> ...but I still want to take a look at some of the implementation choices.
+ include/linux/mmzone.h |  2 --
+ include/linux/vmstat.h | 22 +++++++-----------
+ mm/hugetlb_vmemmap.c   | 13 +++++------
+ mm/mm_init.c           |  3 +--
+ mm/page_alloc.c        |  1 -
+ mm/page_ext.c          | 15 +++++--------
+ mm/sparse-vmemmap.c    | 11 ++++-----
+ mm/sparse.c            |  5 ++---
+ mm/vmstat.c            | 51 ++++++++++++++++++++----------------------
+ 9 files changed, 49 insertions(+), 74 deletions(-)
 
-I am about to send v3.
+-- 
+2.46.0.76.ge559c4bf1a-goog
 
-Pasha
