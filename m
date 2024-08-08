@@ -1,316 +1,132 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1178C98;
-	Thu,  8 Aug 2024 18:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20AD13F435
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 18:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723141709; cv=none; b=nkfMU6pfB/g2h7ZbpvFMcY5ILH9H43rqK0aM+fhZvmkdKynJ7C698pHFtPun/KU3n8hjqdjkGv9sAQEeqrmaMkah5f77TDCGjlxKq8XzZGVKQCf4FMcPclcPq3daV+aj3skb47VISrpaP+diphurMOSuIHs7DaZZIB+BCcA1WMo=
+	t=1723143317; cv=none; b=GFb/LRc6SPXTaUucjJHwd7OsSVucX23M6XUmxjxabFia2hioc7SVTHUok0zfiQ9I5pLJt3Rqqce24FdgZjoto6rrxBNMLseQZ36ryqraIgcb3ZLLw5l9drG3Si5AgXRaCGBrOr/uBdE0f6LvbzLgBsPKzIMuRVeLBntTMfVw4gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723141709; c=relaxed/simple;
-	bh=DBWdlq8SezUJpQ3Dp+nyDwcDPUROy6hy8Y7XPrskYrM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i6WXYPouyzPWhTDRFKdMwf2OSWNHHjBsulTVzbMf2+eBAZ2KM4gJ5VNBCmW0GTUs25WvPf2e+pl5t7sKEI36c7TZBqcqLL5n+c2USK5sv/4r5WcwelzyhN4p0DfjfbWu3HpiQB+/RjTE/h93fbc6CHczP/ownpaO8loi+H/bVlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltQdlRHO; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723143317; c=relaxed/simple;
+	bh=lfFCBH9xl2pbQz5/RgTr95SckKR16ouqjSGMkA/j2uw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LP34IiVzu3pTaaJ6VOUPk4JBftYA7EmtlhF5oEceM7Zbm9VXNrxTmoU8t8jKQXSXYKk5Nbf0o5wJun/4wiZEN0WqK6xv1fwQeTonPV5UVARouW8qpYu2/Mw8VS148sIHK9j6jbOvgI1Sl3xpnT7nwaECYU+Inyw30rbdss8JRnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=lzBJnmo5; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltQdlRHO"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70eaf5874ddso1067973b3a.3;
-        Thu, 08 Aug 2024 11:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="lzBJnmo5"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-44fe9cf83c7so7111861cf.0
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 11:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723141707; x=1723746507; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x/eKB9adD5vtAdH+AHSGnKrabRcrcGFa4QNQ7bMcvU8=;
-        b=ltQdlRHO4p8khJijlWcmci50Y2UD2QBABeJ8mdUrwa1YEILUvq6TY7osH6bd5FBvqy
-         VqAheJMXYZkiGZjnKxr2fHxOyzHE0Rl2BT1QK/vnOtzXylf6ZjUnknnIz+yKJrNcB9rf
-         HgPm601a9OYHEUhm2ENeMqmvE7d8muJVCAjSTSm/Re8RgRZgGlUiKF+J+emcEF5qF3vH
-         rEkYk9UQHdu1cJ0/n9p30PYg9CuuP0sZsAoKtrv17LFwRMRYgcYqXurO9o/ESuH9fsgn
-         Zis4Q+gZsv2Ybp6ywSwfbBBspjbjVYzK4baEYIIDoPpzd/u4sn/4vACJb9BIbc0M+9Vp
-         irww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723141707; x=1723746507;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723143314; x=1723748114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x/eKB9adD5vtAdH+AHSGnKrabRcrcGFa4QNQ7bMcvU8=;
-        b=U+w0962rvqrGpptYfxdnYVNkdmpyUHRK8adjHqRbTxsfLat8uvX9emlbs8rH5fAfzu
-         PcALLZ1Ko40peluAuB09IFXTkGvYw4yD21Juuk0/IfF/hQkcd5nDofvmTEANxGgmdVE2
-         8K4W+fRZJJk9+iGgkjJUwTb1RV2A/BpVO9pvU/kh/oAbYwgrl7rx78aFE7kJaeRKlNiH
-         e0vKmLVc+WA/X4gops706KKgEoQkOL6ZEBDDZZeAXePSYspMLEXnm3i6AHEui1PA4EfG
-         5jSs6L/URgCE2WrEBwVzLVgCTKFygmD8ldR255LVrc9I7/xmN9aPoZHVqcT7+qjlNpHl
-         ES6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyPsM8Kc2UmtGI6YHWTwCNsNKyVJ0SPn5e+zVj+ZX4ZVjpz2suClvFTpVEYQgWxBsFkOIyzwP+zylJ1y5rhYys4H5rM5q5ZyAHAZKm6Nx/DexYTUSqacf9QY/it+OVjo8dsdtQ+w==
-X-Gm-Message-State: AOJu0YxwOdZ5bC1E3O9AmvUx7bNnIdwO1H98CjH8t/nj/cF0JVH18hM/
-	AwuL7AxW8rq9zdL8kx6hIs8DfJ/fSqozv+3FXJlGZVPBRjCqycxe
-X-Google-Smtp-Source: AGHT+IHhCjRuTNDogtGzrIlZwTbvqVxHATIyO9zKjrlxrDbVkksTgDVka1CaxP0T7jfYts3GQuVkZQ==
-X-Received: by 2002:a05:6a20:4313:b0:1c3:3436:a244 with SMTP id adf61e73a8af0-1c6fceb871emr3559685637.1.1723141706780;
-        Thu, 08 Aug 2024 11:28:26 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:ba5b:a13:cdb6:fb15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710cb2d0355sm1408586b3a.118.2024.08.08.11.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 11:28:26 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 8 Aug 2024 11:28:05 -0700
-To: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-mm@kvack.org,
-	dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
-	bp@alien8.de, dave.jiang@intel.com, dave@stgolabs.net,
-	ira.weiny@intel.com, james.morse@arm.com, linmiaohe@huawei.com,
-	mchehab@kernel.org, nao.horiguchi@gmail.com, rric@kernel.org,
-	tony.luck@intel.com
-Subject: Re: [PATCH v4 1/2] cxl/core: introduce device reporting poison
- hanlding
-Message-ID: <ZrUONRvQf4M6CNCh@fan>
-References: <20240808151328.707869-1-ruansy.fnst@fujitsu.com>
- <20240808151328.707869-2-ruansy.fnst@fujitsu.com>
+        bh=DO/Z3SbablodSUL+R3JeSvJ8+7bDWABWfQskJp837f0=;
+        b=lzBJnmo58WX+zWJhg0ZW48pMzEE1o2F5s36NqfXgMtyCvtriXcDcnw13xw0/QDnP0M
+         thehAZnwpnkiMCjUr3sDXOTi9jrELI5l8xuEGfZoJYn/i3rsUe87GpT1gYanruKtToKb
+         /r/kF1LG9ull8LuJhTsT3Mii0QswVdQH6l7jy0m7wuQw51vUuo4j4NiZdg+BHO7pqGK4
+         7jlSsy/tdPWPnPec7KJuHQFD/Ph6hHL8ZeRsO+MDHEP/oM8I5k1vZEboXF6U+BeY0UYi
+         AQByG+YdAqLfjrc18v1GHR6jWSEF673zMfJCSUk3Sk6k8CLKgojPKghUVFnxn0HinK54
+         FvbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723143314; x=1723748114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DO/Z3SbablodSUL+R3JeSvJ8+7bDWABWfQskJp837f0=;
+        b=kWRz5hkp8xSLkT0m/ZZaPvCZsN2HY2NOezuo1c+Dx4bxG/mR4E/7hfvO8JpJ4KGpNm
+         crvUrkkNNzyoOd5NtJ4w5HhQKT/8+0Rd/DaBnQUWno0paVnIQULdAZWangqmqP2hIovP
+         5+k34e+/LkENI6NCKi2XCs/J33vpeB0Uk2pBZmUFklEheEqLIqvbe+HSYesembkwrjpp
+         ylydmiiAoVl6s9/Ta1YfXfCPR/Of63rmjPUzQOj5YL5GagL0EU5VzCRV20csJDxYsRlr
+         ZZpfnVPo21VdDXD69MHa+vI51Sjd9cYi16ogjE601bRjvmWqjHLwRrYq6PLSdIyp4eP/
+         Fznw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+LXseFq7pH/S+jcYCvMlGdVXtDDy04AwUKpG6zHvpm9GDXQqHv5CSqobnBRxVyDmUcU5rlv5XchKC3rGKmnoN7Bo1lO5Uug0T
+X-Gm-Message-State: AOJu0Yy6WmfoUNqdVlZds+PMkq7ZO+yC5e/KHbCEwb0RAEOcgKYRl9aQ
+	Q2l+M5fBic5HZs3b8fnG3A3NKR447eRzMT+jNTCRc0UtaHNipevddiPt8YE1g+fT4TekDn3dDMd
+	BAZzF6od2pacPDqbTJKP0p3kwOarIWJSVOyKPvw==
+X-Google-Smtp-Source: AGHT+IGCSGjuz41NNdGhYP00jq6qPDxX9zDID06r1oWKzkL+fM3fiKkjBrJ2CXqN+zVBtulvpbY7hra6xTPzoF1wD6c=
+X-Received: by 2002:a05:622a:4ac9:b0:44f:dd52:8aee with SMTP id
+ d75a77b69052e-451d430ab3fmr39557171cf.46.1723143313673; Thu, 08 Aug 2024
+ 11:55:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240808151328.707869-2-ruansy.fnst@fujitsu.com>
+References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
+ <20240808154237.220029-3-pasha.tatashin@soleen.com> <24003526-ba18-42fb-b5c0-7b89872eb61e@redhat.com>
+In-Reply-To: <24003526-ba18-42fb-b5c0-7b89872eb61e@redhat.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 8 Aug 2024 14:54:35 -0400
+Message-ID: <CA+CK2bDvmSq1Wg92TVi6A5jVwxn5Xeo5aTf3sfUafCkiWPPZUw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] mm: don't account memmap on failure
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
+	hannes@cmpxchg.org, j.granados@samsung.com, lizhijian@fujitsu.com, 
+	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com, 
+	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
+	dan.j.williams@intel.com, yi.zhang@redhat.com, alison.schofield@intel.com, 
+	yosryahmed@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 08, 2024 at 11:13:27PM +0800, Shiyang Ruan wrote:
-> CXL device can find&report memory problems, even before MCE is detected
-> by CPU.  AFAIK, the current kernel only traces POISON error event
-> from FW-First/OS-First path, but it doesn't handle them, neither
-> notify processes who are using the POISON page like MCE does.
-> 
-> Thus, user have to read logs from trace and find out which device
-> reported the error and which applications are affected.  That is not
-> an easy work and cannot be handled in time.  Thus, it is needed to add
-> the feature to make the work done automatically and quickly.  Once CXL
-> device reports the POISON error (via FW-First/OS-First), kernel
-> handles it immediately, similar to the flow when a MCE is triggered.
-> 
-> The current call trace of error reporting&handling looks like this:
-> ```
-> 1.  MCE (interrupt #18, while CPU consuming POISON)
->      -> do_machine_check()
->        -> mce_log()
->          -> notify chain (x86_mce_decoder_chain)
->            -> memory_failure()
-> 
-> 2.a FW-First (optional, CXL device proactively find&report)
->      -> CXL device -> Firmware
->        -> OS: ACPI->APEI->GHES->CPER -> CXL driver -> trace
->                                                   \-> memory_failure()
->                                                       ^----- ADD
-> 2.b OS-First (optional, CXL device proactively find&report)
->      -> CXL device -> MSI
->        -> OS: CXL driver -> trace
->                         \-> memory_failure()
->                             ^------------------------------- ADD
-> ```
-> This patch adds calling memory_failure() while CXL device reporting
-> error is received, marked as "ADD" in figure above.
-> 
-> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
-> ---
->  drivers/cxl/core/mbox.c   | 75 ++++++++++++++++++++++++++++++++-------
->  drivers/cxl/cxlmem.h      |  8 ++---
->  drivers/cxl/pci.c         |  4 +--
->  include/linux/cxl-event.h | 16 ++++++++-
->  4 files changed, 83 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index e5cdeafdf76e..0cb6ef2e6600 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -849,10 +849,55 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
->  
-> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -			    enum cxl_event_log_type type,
-> -			    enum cxl_event_type event_type,
-> -			    const uuid_t *uuid, union cxl_event *evt)
-> +static void cxl_report_poison(struct cxl_memdev *cxlmd, u64 hpa)
-> +{
-> +	unsigned long pfn = PHYS_PFN(hpa);
-> +
-> +	memory_failure_queue(pfn, 0);
-> +}
-> +
-> +static void cxl_event_handle_general_media(struct cxl_memdev *cxlmd,
-> +					   enum cxl_event_log_type type,
-> +					   u64 hpa,
-> +					   struct cxl_event_gen_media *rec)
-> +{
-> +	if (type == CXL_EVENT_TYPE_FAIL) {
-> +		switch (rec->media_hdr.transaction_type) {
-> +		case CXL_EVENT_TRANSACTION_READ:
-> +		case CXL_EVENT_TRANSACTION_WRITE:
-> +		case CXL_EVENT_TRANSACTION_SCAN_MEDIA:
-> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-> +			cxl_report_poison(cxlmd, hpa);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +static void cxl_event_handle_dram(struct cxl_memdev *cxlmd,
-> +				  enum cxl_event_log_type type,
-> +				  u64 hpa,
-> +				  struct cxl_event_dram *rec)
-> +{
-> +	if (type == CXL_EVENT_TYPE_FAIL) {
-> +		switch (rec->media_hdr.transaction_type) {
-> +		case CXL_EVENT_TRANSACTION_READ:
-> +		case CXL_EVENT_TRANSACTION_WRITE:
-> +		case CXL_EVENT_TRANSACTION_SCAN_MEDIA:
-> +		case CXL_EVENT_TRANSACTION_INJECT_POISON:
-> +			cxl_report_poison(cxlmd, hpa);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +			     enum cxl_event_log_type type,
-> +			     enum cxl_event_type event_type,
-> +			     const uuid_t *uuid, union cxl_event *evt)
->  {
->  	if (event_type == CXL_CPER_EVENT_MEM_MODULE) {
->  		trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
-> @@ -880,18 +925,22 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  		if (cxlr)
->  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
->  
-> -		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> +		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
->  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->  						&evt->gen_media);
-> -		else if (event_type == CXL_CPER_EVENT_DRAM)
-> +			cxl_event_handle_general_media(cxlmd, type, hpa,
-> +						&evt->gen_media);
-> +		} else if (event_type == CXL_CPER_EVENT_DRAM) {
->  			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
-> +			cxl_event_handle_dram(cxlmd, type, hpa, &evt->dram);
+On Thu, Aug 8, 2024 at 2:12=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 08.08.24 17:42, Pasha Tatashin wrote:
+> > When in alloc_vmemmap_page_list() memmap is failed to allocate, do
+> > not account, the memory is going to be release at the function exit.
+>
+> I would write it as
+>
+> "When we fail to allocate the mmemmap in alloc_vmemmap_page_list(), do
+> not account any already-allocated pages: we're going to free all them
+> before we return from the function."
+>
 
-Does it make sense to call the trace function in
-cxl_event_handle_dram/general_media and replace the trace function with
-the handle_* here?
+Will change.
 
-> +		}
->  	}
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
-> +EXPORT_SYMBOL_NS_GPL(cxl_event_handle_record, CXL);
->  
-> -static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -				     enum cxl_event_log_type type,
-> -				     struct cxl_event_record_raw *record)
-> +static void __cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +				      enum cxl_event_log_type type,
-> +				      struct cxl_event_record_raw *record)
->  {
->  	enum cxl_event_type ev_type = CXL_CPER_EVENT_GENERIC;
->  	const uuid_t *uuid = &record->id;
-> @@ -903,7 +952,7 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
->  		ev_type = CXL_CPER_EVENT_MEM_MODULE;
->  
-> -	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
-> +	cxl_event_handle_record(cxlmd, type, ev_type, uuid, &record->event);
->  }
->  
->  static int cxl_clear_event_record(struct cxl_memdev_state *mds,
-> @@ -1012,8 +1061,8 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  			break;
->  
->  		for (i = 0; i < nr_rec; i++)
-> -			__cxl_event_trace_record(cxlmd, type,
-> -						 &payload->records[i]);
-> +			__cxl_event_handle_record(cxlmd, type,
-> +						  &payload->records[i]);
->  
->  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
->  			trace_cxl_overflow(cxlmd, type, payload);
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index afb53d058d62..5c4810dcbdeb 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -826,10 +826,10 @@ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  				  unsigned long *cmds);
->  void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status);
-> -void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> -			    enum cxl_event_log_type type,
-> -			    enum cxl_event_type event_type,
-> -			    const uuid_t *uuid, union cxl_event *evt);
-> +void cxl_event_handle_record(struct cxl_memdev *cxlmd,
-> +			     enum cxl_event_log_type type,
-> +			     enum cxl_event_type event_type,
-> +			     const uuid_t *uuid, union cxl_event *evt);
->  int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 4be35dc22202..6e65ca89f666 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -1029,8 +1029,8 @@ static void cxl_handle_cper_event(enum cxl_event_type ev_type,
->  	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
->  	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
->  
-> -	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
-> -			       &uuid_null, &rec->event);
-> +	cxl_event_handle_record(cxlds->cxlmd, log_type, ev_type,
-> +				&uuid_null, &rec->event);
->  }
->  
->  static void cxl_cper_work_fn(struct work_struct *work)
-> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-> index 0bea1afbd747..be4342a2b597 100644
-> --- a/include/linux/cxl-event.h
-> +++ b/include/linux/cxl-event.h
-> @@ -7,6 +7,20 @@
->  #include <linux/uuid.h>
->  #include <linux/workqueue_types.h>
->  
-> +/*
-> + * Event transaction type
-> + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Here and below, update the specification reference to reflect cxl 3.1.
+Thank you,
+Pasha
 
-Fan
-> + */
-> +enum cxl_event_transaction_type {
-> +	CXL_EVENT_TRANSACTION_UNKNOWN = 0X00,
-> +	CXL_EVENT_TRANSACTION_READ,
-> +	CXL_EVENT_TRANSACTION_WRITE,
-> +	CXL_EVENT_TRANSACTION_SCAN_MEDIA,
-> +	CXL_EVENT_TRANSACTION_INJECT_POISON,
-> +	CXL_EVENT_TRANSACTION_MEDIA_SCRUB,
-> +	CXL_EVENT_TRANSACTION_MEDIA_MANAGEMENT,
-> +};
-> +
->  /*
->   * Common Event Record Format
->   * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-> @@ -26,7 +40,7 @@ struct cxl_event_media_hdr {
->  	__le64 phys_addr;
->  	u8 descriptor;
->  	u8 type;
-> -	u8 transaction_type;
-> +	u8 transaction_type;	/* enum cxl_event_transaction_type */
->  	/*
->  	 * The meaning of Validity Flags from bit 2 is
->  	 * different across DRAM and General Media records
-> -- 
-> 2.34.1
-> 
+>
+> >
+> > Fixes: 15995a352474 ("mm: report per-page metadata information")
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >   mm/hugetlb_vmemmap.c | 5 +----
+> >   1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+> > index fa83a7b38199..70027869d844 100644
+> > --- a/mm/hugetlb_vmemmap.c
+> > +++ b/mm/hugetlb_vmemmap.c
+> > @@ -392,13 +392,10 @@ static int alloc_vmemmap_page_list(unsigned long =
+start, unsigned long end,
+> >
+> >       for (i =3D 0; i < nr_pages; i++) {
+> >               page =3D alloc_pages_node(nid, gfp_mask, 0);
+> > -             if (!page) {
+> > -                     mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, i)=
+;
+> > +             if (!page)
+> >                       goto out;
+> > -             }
+> >               list_add(&page->lru, list);
+> >       }
+> > -
+> >       mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, nr_pages);
+> >
+> >       return 0;
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
