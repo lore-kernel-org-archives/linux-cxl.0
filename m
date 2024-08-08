@@ -1,55 +1,55 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB6412C7FB
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 19:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F3212C7FB
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 19:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723143746; cv=none; b=mIGYpxsbgNUJWLU9eg0WsAcJlDjTQWRVH5Zc+OIxHOFyo3Ot5d76KYrei+9r6p0VL+r2cqohq5KDJts2dwa1oyPhMyOAf6yKczmgB09LXRKzw7TLme7DL9CLYpOx/lmm7vpK3j3tXypwG54WOCodyZm5kGq665k8P7NRNIZmBmA=
+	t=1723143832; cv=none; b=BZUzkgxUntgS4Pzarziu+sg5+zkLU1ChTRarx5ylWidY9K2/8rUwtnQ6EBcCrCJJVWbEC7ACFwuNncrvvNJeJ3w90wakUDCDcnoT+HH3qItTj/kj7eCDCN04gTOa2jqJrBHbZOsSzN+vtUdKozsYvSO3+TQYDeTlqoLYhVYEswA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723143746; c=relaxed/simple;
-	bh=Y65uf6qqSRpIHJ9WMhbwfu83kOfz3UXQcvs4i5JT3n4=;
+	s=arc-20240116; t=1723143832; c=relaxed/simple;
+	bh=wF3eSR4he3cxhVVV3Kr41yFivYxoCdqFCJsVBQ+Ik64=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TXpxMBuvEjpORw3VTho81WG64NUhY+UawRCK08V0dHJ+IDc51Q/K8+PKK7JQT1jQrBtrDa7Zkcpl1jER0kaXQYFeoAwAs0Tgt47IU+gTcE37gR4B2Jekjie5BD8kjFNGdeMlA7Tgu5D3wDMr0czw5humruj19uCGuUkERHZTLCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=nfTYu4hZ; arc=none smtp.client-ip=209.85.160.170
+	 To:Cc:Content-Type; b=Em0KxkYJrhbYfqGqanU2YRSOEYZOoleRcd6uAe5CjnreIPq73SW1xJtfJ8QJcy+Vn1tps9KlB83e2BJ0Hzar9yNPHeTvwG6Icm3E1H5DqsV4dRbVo/S7OcEkVD2seAZ84bbDCOX7WkawtNvoKD11J1Gi75q7NsfXK2oCxEWzMYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=LuCI0TzI; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="nfTYu4hZ"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44ff6dd158cso7602871cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 12:02:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="LuCI0TzI"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-70943b07c2cso810243a34.1
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 12:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723143744; x=1723748544; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723143830; x=1723748630; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y65uf6qqSRpIHJ9WMhbwfu83kOfz3UXQcvs4i5JT3n4=;
-        b=nfTYu4hZnfFfUGWky2YK78XbUXlSvJb/1z1AjDVDVh8s0rtD049OBx1WHvV6bF5NVf
-         B9VsJkcSob8UFSDdAGsq2H+0RgLPssBItONQN05gmtS+kcfoqtqgYHxKy9bY5d61H4uF
-         qPXDjnLT2jXsus2rV1Qs6kviDvE4qRCfQ9td9G9A6lmznqjZ+1QQnu8CgLfEXwL+A3U6
-         5bHzzlWOXOwRA1cN/WdXdIktAt+KJvrSQAoRrrVft/MqD3j10sRuWz0m2V+4m+xUmbzC
-         WxSbfhN25Umvnughuxfem/ur9qDHIXnTx7ioxvQWdI7a/z2g6P88RF6ZR56Hj1rDPq+P
-         onlg==
+        bh=DJD3NMKxCdaaPWikegeFRbNee15HLPMi9fn1KjdIIdg=;
+        b=LuCI0TzIYnGBrQBHuB2jfaYrUf8Z7BIvdhAdr1mpsTm4PwU2/0BCLqa7HaRFRLb886
+         Lp4vL77TCDYetKC1d6XW6cUZzDc6sSRfGkiY17LauCiDaJ34bRikYQc+SowUj3MTYas2
+         w8cyBc4L0irl7gnyGfrUevtuiQIwlGD6oRs1v6aPT3SM5w9DJ+f3c/P26v3H/FIxcMdk
+         f5OOq7HqzLR9nhzV0OJFScPVN53q6M7pA0iZPnx/k+E/NOE7Xv3YDsSddkOM8HN7VHbV
+         z1Xyc2h4+oaSRiifzh13dNvpMYEQppjwqs6aJLRIdOttwWtk5q4wRVL/RWTf/cSUiGIX
+         BhtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723143744; x=1723748544;
+        d=1e100.net; s=20230601; t=1723143830; x=1723748630;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y65uf6qqSRpIHJ9WMhbwfu83kOfz3UXQcvs4i5JT3n4=;
-        b=BeVYpNcu45etWi9DVigyzkOPpqx8iyVWfZunmyqtEOSTu4mFR6KDqYjgAKEuORTkTc
-         h4B431b7dzvWVNUfAFPZGNq0istQRbQwQXqyIyHV7Opa57ixCv7ajQ68QkznwMRmZgPK
-         tv62eAIX3MbT9MUETEQIFpsZ5AhpAjVAYQtgldKwIAgD9IT03Hwql0ppMkxJ7E6Waa/s
-         RPvwABP2NnY8ZZ/oe0A10fkSAVVTfjpsY0G5ukPpyIhQmF4WRyCm+ZdXTnE4X3JqiSNM
-         xQTRd6QVj5F6WyVG2pZ3je8r5EFCEI50rbjyAPdNyQHhNOIwtLc5T3dTF2x3fua7pccL
-         9CYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnjlIE5OTlsw1Jwd5Rdgkz6kwX7bIA9khWXucwO0URQYhg5k+5ZCyonYJESbZhRsGo9Jz9w+jo6l1rKmh2Jt12pxktUTTT9Oq6
-X-Gm-Message-State: AOJu0Yzt4ftOoJzSfr+Gj45lQAwYJK9Kcil++NHbXusZtuneecjTV3yv
-	Iyvoo/WFFISnm07ifkbRLU5QHTPKawSvwJ86lzh0mIBvT07B84Ik6QlNjgmJxU4fuWlNXSosBcl
-	WYvudJdcMBqn5lC8PKdlLfwVcz/roqL4z6rW4yg==
-X-Google-Smtp-Source: AGHT+IExI0OeHf48EBthOwkTI3aIjxBBaA3Ik679zCw1G8yDECFvltEArNPD+bABqbdLjI6o0QR2sTPYH07apAlR/WI=
-X-Received: by 2002:a05:622a:4a0d:b0:447:eb33:410d with SMTP id
- d75a77b69052e-451d421cefcmr36717101cf.18.1723143743702; Thu, 08 Aug 2024
- 12:02:23 -0700 (PDT)
+        bh=DJD3NMKxCdaaPWikegeFRbNee15HLPMi9fn1KjdIIdg=;
+        b=HVQHg+T8v9Xc3K4E6ZrQSRZwmLbngKi1TYbuB3jDAyR38hKbiY2nDoFm5Jt1FylmM7
+         H6bUD8pOtyKkCTVn+VtZzDhTlXXztQYvmHoyb7gzt9HQvBw5dR6Gauqm49g3hddLv74+
+         hdARG44VpLUA18GwcrO9fQqr19VqOzy5o/emoAvOSmhh1bKRYZnmbj0J7vPLGBqKGig8
+         KzjmvV2AghZj50i2gpX+fQwR9YGN+aQ2B/iRUmfKCAlVXVOwhHaV5sBiU+M+ItAkWWNN
+         dIdl/ZzTlXRM/0Sepbw+BCOy1cU1Oqv6cw4QEVzb1VUtc7d1lchkoVNp3K7q+i54nDxb
+         LFFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0MwDodDTQ2R1GRl0gT/NK6+7GDkyXveJN6b1hgnL7lsj53DMR/oYnVqqRcYeXeGr6RXXXFeRm1J0aziCxRezig6zeR7K9lRUJ
+X-Gm-Message-State: AOJu0Yx/YLJajRmKxisKtfqxKiMw7oG6W3UkChD/5s7YG3P6YXoXtj1N
+	Nj5+iMNLiFJuu8EEDDeonCNYT0yI6ipvJJE5JAz+0QgRUjvDKXY8fMlqgXFZNOvtTH6Jnx2/FRA
+	aiw9mJL8TTkIXK7ac9MljOyXL+cM3N1YuB96Y8w==
+X-Google-Smtp-Source: AGHT+IEQca1KIhdNSUI2/4IjEdXBF2eDVBstcisCNWacbs8Zj90oeDvngeCX/YUYlKJXyS6Mli9xj1i7zvInvyLokXU=
+X-Received: by 2002:a05:6830:d05:b0:709:4578:8e06 with SMTP id
+ 46e09a7af769-70b4fc266damr3494134a34.4.1723143830208; Thu, 08 Aug 2024
+ 12:03:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -57,12 +57,12 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
- <20240808154237.220029-4-pasha.tatashin@soleen.com> <9cf6cbc1-67c0-4ae5-ae5e-5033631e61b6@redhat.com>
-In-Reply-To: <9cf6cbc1-67c0-4ae5-ae5e-5033631e61b6@redhat.com>
+ <20240808154237.220029-5-pasha.tatashin@soleen.com> <490ae360-50a4-497f-b148-ef077b73e911@redhat.com>
+In-Reply-To: <490ae360-50a4-497f-b148-ef077b73e911@redhat.com>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 8 Aug 2024 15:01:46 -0400
-Message-ID: <CA+CK2bD-8W7AP+Oedm0m9EROQZ4euLjZBhqaZJARLW02HWd6iw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] mm: add system wide stats items category
+Date: Thu, 8 Aug 2024 15:03:13 -0400
+Message-ID: <CA+CK2bCxRimZFZkL0CdNhuqD6RmWM6-X3c8+-sUX6NGHn3ULRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] mm: don't account memmap per-node
 To: David Hildenbrand <david@redhat.com>
 Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
@@ -74,25 +74,43 @@ Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 8, 2024 at 2:20=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+On Thu, Aug 8, 2024 at 2:26=E2=80=AFPM David Hildenbrand <david@redhat.com>=
  wrote:
 >
-> On 08.08.24 17:42, Pasha Tatashin wrote:
-> > /proc/vmstat contains events and stats, events can only grow, but stats
-> > can grow and srhink.
+> >   #ifdef CONFIG_COMPACTION
+> >
+> >   struct contig_page_info {
+> > @@ -1255,11 +1272,11 @@ const char * const vmstat_text[] =3D {
+> >       "pgdemote_kswapd",
+> >       "pgdemote_direct",
+> >       "pgdemote_khugepaged",
+> > -     "nr_memmap",
+> > -     "nr_memmap_boot",
+> >       /* system-wide enum vm_stat_item counters */
+> >       "nr_dirty_threshold",
+> >       "nr_dirty_background_threshold",
+> > +     "nr_memmap",
+> > +     "nr_memmap_boot",
 >
-> s/shrink/
-
-Thanks, fixed.
-
+> While we're at it (sorry, I should have found more time revieweing this
+> earlier!) ...
 >
-> I think we discussed exposing this in /proc/meminfo. There, it would be
-> much easier to simply have a global variable, print it, and be done with
-> it. Like we do with TotalCma.
+> What is the unit here? Should this be "nr_memmap_pages" /
+> "nr_memmap_boot_pages"? Like
+>
+> $ cat /proc/vmstat  | grep pages
+> nr_free_pages 3618323
+> nr_zspages 3
+> nr_anon_pages 1053316
+> nr_file_pages 3199210
+> nr_shmem_hugepages 546
+> nr_file_hugepages 0
+> nr_anon_transparent_hugepages 0
+> nr_page_table_pages 15215
+> nr_sec_page_table_pages 0
+> numa_pages_migrated 0
+>
+>
+> Nothing else jumped at me.
 
-Originally, Sourav had proposed adding per-page metadata stat to
-/proc/meminfo, but it was decided against, because all the other stats
-in /proc/meminfo are part of MemTotal, but memmap allocations are not
-always part of MemTotal which makes things confusing.
-
-This is why it makes sense to keep nr_memmap only in /proc/vmstat.
+Good idea, I will add _pages
