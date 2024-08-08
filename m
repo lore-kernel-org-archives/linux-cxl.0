@@ -1,57 +1,57 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99004190055
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F212419007C
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723131765; cv=none; b=PofftBqcsMTyZDaIL0B6pw8HA+P+tR/3SUqA3d45zcN9UHMg9Ec2D/X9Hy3Pw0epVnwBIh7t5m6H3UZrBzZg6pWVY6JkWRK1AZ7SVq3apz1G70zWOSxVsT3nLdFdco61XU5igozK29K6Z0bgKJe4KcSGkYUC5dxcN5ZPNO1DDjA=
+	t=1723131766; cv=none; b=sMF6JoEFTrK6BQSsW0zGb245ZmI5fcEbcm8pcGpk5fo9Lbx0Wf9vBf5ENcbh3Gq3ApHQFP7qbRHltbRVtWhxsZIs/KXzTuzfqufkLNNdJsREnh6E2V2A740aO2k8t69hyJH58HmsN2GxorQnUTRy8z21dAhJIemw/wWPo4rVPc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723131765; c=relaxed/simple;
-	bh=8rI7joosp8awa/gMykJMhXumICc/dwUYMwOKiBmRUD4=;
+	s=arc-20240116; t=1723131766; c=relaxed/simple;
+	bh=KzCccIwCfnqYYKbqVUPtNw8gt5c4QzHqTyrIudH/hWU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lSWMi1IYenJ8Nidm/O759UC+aaNhvgD9ddMnzeYdJxijshNCg3ySfN7gI8vRfPb5oOL9x/5WL52YngoNowYVNzfjo+4QC2tdJuHBfAatd1pjnxBrhUcr2jBw/QW5Y0CZS25zD7ZQPxcbqblTKl3bwcd6BN3H2lzJmjWmYOg///0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=I3DvwFD1; arc=none smtp.client-ip=209.85.219.42
+	 MIME-Version; b=KrDN5wpVEMHnCAPeF8J3weg4NkZtmr33H34XSwhnAWgY+KRRMLtVbx/wKqGlez0oYicF2FDlbp/X//gK1kS9z9ORF4L8UcxdI7rPCt8FjRU70bavBA5/CIau2YM+A9ASPu1oU+r40GJwOws8S0UTLkV4jvaSEjHQNoOYpg+NFX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=odX2AyLr; arc=none smtp.client-ip=209.85.219.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="I3DvwFD1"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6bd6f2c9d52so2940116d6.3
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:42:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="odX2AyLr"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6b7b28442f9so11940086d6.3
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:42:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723131762; x=1723736562; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723131764; x=1723736564; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=y3neo5ZpPv5S0nCnjgNJX6IioRmVVyTly9egBg9Jmdk=;
-        b=I3DvwFD1yhMhHA27hYSf3nIl/t5ZOozebJXKpgalRDOdU9Qu00yO9H8ytGey8tlumc
-         jOh5vejH/4EFFp54iHDfGExLyL/rlWj3dMxal74NrMcyIrkNfIzXXLYvuL37OautftRr
-         Ee7xb5IwGhaBUH4CSmSFzzi19U+viFrk3e9HzIcvGnkpldmFEqKoKTzdEeBUGXtFZKPq
-         Htw4dOxPDuFXEEGTPjmNb+diCNQowH5pDTULCMMtX1SO6OkMLpSAhG3WG49pLICF3Z7o
-         kNmNr/jBSuq+h+AVfpHzz7Fk3cEV/+wzAXfGpeFtg1wg2clPA8632We/y5ecED111U9N
-         7jwg==
+        bh=JDFp22AQxyyflK1t03n9dVCi8P6WDfRZ5X/KyWOrQIc=;
+        b=odX2AyLrot3kgdbhZbBRiCYmdx1Zx8p8TW8nEmTyUYrO24SlNzAdXkx9+H0diWoXfY
+         FAWruzir6KtjcsPh7xLFJo8K5E9T20dZxgUEPNCnE8FAHKfBml71z/BfkIPWt9oynFFS
+         QuipZWInGHZDqQ+YFkPINM+DHDuWoqqpejaF7FqqsMYeXSdpf3ZLD6+dr8pOCz5OsW/o
+         1c4h0lT7B1KD/W1yu26ZXLZpggXgPKw41TWzeVFcrR9z7LAj/oCsb6dObFVjR/5keC8q
+         jkM9wtdCRUBmf/CcraGHny1b0Iuv2wJ7kp7yQB/yYjpzU/hRH7RNaVnW6fZuLmsNl4DC
+         Po+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723131762; x=1723736562;
+        d=1e100.net; s=20230601; t=1723131764; x=1723736564;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y3neo5ZpPv5S0nCnjgNJX6IioRmVVyTly9egBg9Jmdk=;
-        b=oKEZxHs/bWLuV56e9TlPIah9/OILit7eKX7DjbI0jwMu2SIpvcLWPYHB1JSqoqu7Xs
-         MFie42JPJDIkmhO+y3QP8t+9/JTa7Bbt51rRG0Td+G0LYphC2sQmD0h4jIbzAKCArUNu
-         P38v245TjvowWU636R4YIl9SfNVhrzOZVxnb6vSsT5Cq5WlFvGXNcPkvbPGQYApMfW1a
-         RsMrfqj0+xNufTBKJilmejkf3GoPgvnNHUI/iuoClIu13lFQRkOVTRCaJpWMnZv+Yt9O
-         HLh3PZk05xtV2lHzNRHtAJVZGmqJdEG4LGRUbSz6NmDfe9hghBpKVRbcW9pOwVrD3mUW
-         5PiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVz5oVNUEbl0r/4c/t6R29+p7111jwS0UGJF+W73bEJIHOlUElpzFcYBx3v4+odp+594VDF9UUO0EML05zfY5hl9rzRMq7ZXLPz
-X-Gm-Message-State: AOJu0YyVPH9MjLydDf1wN0Qeb3yAE2WcjnqjLk8Qpdj2kV0v8nb8mj54
-	dHKy3Pgkc7zoxCX/RL6HMb9VXOFK9aGDbtfzDHMUgpa1MF16YkQ2udFSuQ1id24=
-X-Google-Smtp-Source: AGHT+IESGfyB5HtXu4zt+BcOgb/gdPZpAEI0Yo2J7Xp64aGcrd7WAVMlzlbxNtl0uyZb/RHkn8qBZg==
-X-Received: by 2002:a05:6214:3bc5:b0:6b4:4470:81a5 with SMTP id 6a1803df08f44-6bd6bcbb55fmr34927436d6.2.1723131762416;
-        Thu, 08 Aug 2024 08:42:42 -0700 (PDT)
+        bh=JDFp22AQxyyflK1t03n9dVCi8P6WDfRZ5X/KyWOrQIc=;
+        b=WbxCh8ORslnLEB9jmg/sqFBBE0OnBq53D3kAAprsvjtsJlwIxkfeQCo+86y4nSFJc8
+         OJPIKLjeliV7xA7mmKrOShAzRREAA7xd9/ICOAfh5gX/kC9nXxxuBvrfLhGNw8QKS4GS
+         w/E6MMJar5FVSp0hhwynrbqV/0mvN82vIg/rTl8Z3XLCIBIiCLUTbI0tbHaTQzeJXJUv
+         yX/3xNGxUhbdRdlHLrnVz6/yInycphJIcDFyrf17K4w9QIFUfCgUHxxV9Yl4HbSqPXOM
+         EqcMCaXBO+NgK6jfjhqyWmONwzishnshW6iCvE4gqnExKuuAMBUb+o1jhu7u3Od++/gQ
+         YBQA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvNg3cSGF17lBuvHy+Zuus31qvh4/tpJcxZT/6ZVRjLlJYtXtbwas480nmJQOZ4kvKW5NBhtXr343O9h0AFb8I218L722Ff/8y
+X-Gm-Message-State: AOJu0YyW/60B5KX0YPvjEyaH6i4RwX4IlUT3cjhrha8m/oOkNboN/RP1
+	7Uz6mfiAOyGmYQDi6WXWlrCua9mkgMaX+xcJBpjHR4j9lSBhp5Apgt2Rwn2r6/s=
+X-Google-Smtp-Source: AGHT+IEX9KsTxhX/Ixnu+CrH4K+4EL15weClfV8tgGdVgFqf5/zGrOX8N7XKxkOKw/LPNvKUtrOSaQ==
+X-Received: by 2002:a05:6214:5d0d:b0:6b5:7e09:970c with SMTP id 6a1803df08f44-6bd6bd227f2mr22276276d6.33.1723131763822;
+        Thu, 08 Aug 2024 08:42:43 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c7b72d9sm67160936d6.60.2024.08.08.08.42.41
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c7b72d9sm67160936d6.60.2024.08.08.08.42.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 08:42:41 -0700 (PDT)
+        Thu, 08 Aug 2024 08:42:42 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
@@ -74,9 +74,9 @@ To: akpm@linux-foundation.org,
 	alison.schofield@intel.com,
 	david@redhat.com,
 	yosryahmed@google.com
-Subject: [PATCH v3 2/4] mm: don't account memmap on failure
-Date: Thu,  8 Aug 2024 15:42:35 +0000
-Message-ID: <20240808154237.220029-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 3/4] mm: add system wide stats items category
+Date: Thu,  8 Aug 2024 15:42:36 +0000
+Message-ID: <20240808154237.220029-4-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 In-Reply-To: <20240808154237.220029-1-pasha.tatashin@soleen.com>
 References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
@@ -88,34 +88,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When in alloc_vmemmap_page_list() memmap is failed to allocate, do
-not account, the memory is going to be release at the function exit.
+/proc/vmstat contains events and stats, events can only grow, but stats
+can grow and srhink.
 
-Fixes: 15995a352474 ("mm: report per-page metadata information")
+vmstat has the following:
+-------------------------
+NR_VM_ZONE_STAT_ITEMS:	per-zone stats
+NR_VM_NUMA_EVENT_ITEMS:	per-numa events
+NR_VM_NODE_STAT_ITEMS:	per-numa stats
+NR_VM_WRITEBACK_STAT_ITEMS:	system-wide background-writeback and
+				dirty-throttling tresholds.
+NR_VM_EVENT_ITEMS:	system-wide events
+-------------------------
+
+Rename NR_VM_WRITEBACK_STAT_ITEMS to NR_VM_STAT_ITEMS, to track the
+system-wide stats, we are going to add per-page metadata stats to this
+category in the next patch.
+
+Also delete unused writeback_stat_name() function.
+
+Suggested-by: Yosry Ahmed <yosryahmed@google.com>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- mm/hugetlb_vmemmap.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/linux/vmstat.h | 15 ++++-----------
+ mm/vmstat.c            |  6 +++---
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index fa83a7b38199..70027869d844 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -392,13 +392,10 @@ static int alloc_vmemmap_page_list(unsigned long start, unsigned long end,
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 23cd17942036..9ab4fa5e09b5 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -34,10 +34,11 @@ struct reclaim_stat {
+ 	unsigned nr_lazyfree_fail;
+ };
  
- 	for (i = 0; i < nr_pages; i++) {
- 		page = alloc_pages_node(nid, gfp_mask, 0);
--		if (!page) {
--			mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, i);
-+		if (!page)
- 			goto out;
--		}
- 		list_add(&page->lru, list);
- 	}
+-enum writeback_stat_item {
++/* Stat data for system wide items */
++enum vm_stat_item {
+ 	NR_DIRTY_THRESHOLD,
+ 	NR_DIRTY_BG_THRESHOLD,
+-	NR_VM_WRITEBACK_STAT_ITEMS,
++	NR_VM_STAT_ITEMS,
+ };
+ 
+ #ifdef CONFIG_VM_EVENT_COUNTERS
+@@ -514,21 +515,13 @@ static inline const char *lru_list_name(enum lru_list lru)
+ 	return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+ }
+ 
+-static inline const char *writeback_stat_name(enum writeback_stat_item item)
+-{
+-	return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+-			   NR_VM_NUMA_EVENT_ITEMS +
+-			   NR_VM_NODE_STAT_ITEMS +
+-			   item];
+-}
 -
- 	mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, nr_pages);
+ #if defined(CONFIG_VM_EVENT_COUNTERS) || defined(CONFIG_MEMCG)
+ static inline const char *vm_event_name(enum vm_event_item item)
+ {
+ 	return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+ 			   NR_VM_NUMA_EVENT_ITEMS +
+ 			   NR_VM_NODE_STAT_ITEMS +
+-			   NR_VM_WRITEBACK_STAT_ITEMS +
++			   NR_VM_STAT_ITEMS +
+ 			   item];
+ }
+ #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 04a1cb6cc636..6f8aa4766f16 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1257,7 +1257,7 @@ const char * const vmstat_text[] = {
+ 	"pgdemote_khugepaged",
+ 	"nr_memmap",
+ 	"nr_memmap_boot",
+-	/* enum writeback_stat_item counters */
++	/* system-wide enum vm_stat_item counters */
+ 	"nr_dirty_threshold",
+ 	"nr_dirty_background_threshold",
  
- 	return 0;
+@@ -1790,7 +1790,7 @@ static const struct seq_operations zoneinfo_op = {
+ #define NR_VMSTAT_ITEMS (NR_VM_ZONE_STAT_ITEMS + \
+ 			 NR_VM_NUMA_EVENT_ITEMS + \
+ 			 NR_VM_NODE_STAT_ITEMS + \
+-			 NR_VM_WRITEBACK_STAT_ITEMS + \
++			 NR_VM_STAT_ITEMS + \
+ 			 (IS_ENABLED(CONFIG_VM_EVENT_COUNTERS) ? \
+ 			  NR_VM_EVENT_ITEMS : 0))
+ 
+@@ -1827,7 +1827,7 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
+ 
+ 	global_dirty_limits(v + NR_DIRTY_BG_THRESHOLD,
+ 			    v + NR_DIRTY_THRESHOLD);
+-	v += NR_VM_WRITEBACK_STAT_ITEMS;
++	v += NR_VM_STAT_ITEMS;
+ 
+ #ifdef CONFIG_VM_EVENT_COUNTERS
+ 	all_vm_events(v);
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
