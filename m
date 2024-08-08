@@ -1,132 +1,107 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20AD13F435
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 18:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A47813F435;
+	Thu,  8 Aug 2024 18:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723143317; cv=none; b=GFb/LRc6SPXTaUucjJHwd7OsSVucX23M6XUmxjxabFia2hioc7SVTHUok0zfiQ9I5pLJt3Rqqce24FdgZjoto6rrxBNMLseQZ36ryqraIgcb3ZLLw5l9drG3Si5AgXRaCGBrOr/uBdE0f6LvbzLgBsPKzIMuRVeLBntTMfVw4gE=
+	t=1723143331; cv=none; b=K8jZ4L4od3V2aE2x7vroxxBtPmhQyZxvnObkpILTpIF3ikTf1uVWEGPC0xIjqRkbmtwkPmA7u+p9+nhkkc3Kyx2k0V8MC6Xo0J+MUOfC5ySJ0WFJ9MPnMKjsNR5rXFtCqiobE7A8J2hUJbZYW3fE0Dk/Ms2rTCtEZ0Vo6YhC5lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723143317; c=relaxed/simple;
-	bh=lfFCBH9xl2pbQz5/RgTr95SckKR16ouqjSGMkA/j2uw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LP34IiVzu3pTaaJ6VOUPk4JBftYA7EmtlhF5oEceM7Zbm9VXNrxTmoU8t8jKQXSXYKk5Nbf0o5wJun/4wiZEN0WqK6xv1fwQeTonPV5UVARouW8qpYu2/Mw8VS148sIHK9j6jbOvgI1Sl3xpnT7nwaECYU+Inyw30rbdss8JRnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=lzBJnmo5; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1723143331; c=relaxed/simple;
+	bh=G32pgusq1KzhckqZqehp2esIUUvD3rdQptDyWQ9E8ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1d9kJ6koa4tO9B4Cs3klo3Um4g8yLBZbHZPoRh2gH26zX3Mxm8szUQlw0p4u058GIK5T+/bSgSN2dmk33FabxwFIo68Eb0xRHuPvxr8syn0vJBwgA4GB+07xswv4LKz8eNBk7X7WYlEJnVk6IWIPLqQwkM7qeKf7qzRJBqXMQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dLHhue2X; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="lzBJnmo5"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-44fe9cf83c7so7111861cf.0
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 11:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723143314; x=1723748114; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DO/Z3SbablodSUL+R3JeSvJ8+7bDWABWfQskJp837f0=;
-        b=lzBJnmo58WX+zWJhg0ZW48pMzEE1o2F5s36NqfXgMtyCvtriXcDcnw13xw0/QDnP0M
-         thehAZnwpnkiMCjUr3sDXOTi9jrELI5l8xuEGfZoJYn/i3rsUe87GpT1gYanruKtToKb
-         /r/kF1LG9ull8LuJhTsT3Mii0QswVdQH6l7jy0m7wuQw51vUuo4j4NiZdg+BHO7pqGK4
-         7jlSsy/tdPWPnPec7KJuHQFD/Ph6hHL8ZeRsO+MDHEP/oM8I5k1vZEboXF6U+BeY0UYi
-         AQByG+YdAqLfjrc18v1GHR6jWSEF673zMfJCSUk3Sk6k8CLKgojPKghUVFnxn0HinK54
-         FvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723143314; x=1723748114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DO/Z3SbablodSUL+R3JeSvJ8+7bDWABWfQskJp837f0=;
-        b=kWRz5hkp8xSLkT0m/ZZaPvCZsN2HY2NOezuo1c+Dx4bxG/mR4E/7hfvO8JpJ4KGpNm
-         crvUrkkNNzyoOd5NtJ4w5HhQKT/8+0Rd/DaBnQUWno0paVnIQULdAZWangqmqP2hIovP
-         5+k34e+/LkENI6NCKi2XCs/J33vpeB0Uk2pBZmUFklEheEqLIqvbe+HSYesembkwrjpp
-         ylydmiiAoVl6s9/Ta1YfXfCPR/Of63rmjPUzQOj5YL5GagL0EU5VzCRV20csJDxYsRlr
-         ZZpfnVPo21VdDXD69MHa+vI51Sjd9cYi16ogjE601bRjvmWqjHLwRrYq6PLSdIyp4eP/
-         Fznw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+LXseFq7pH/S+jcYCvMlGdVXtDDy04AwUKpG6zHvpm9GDXQqHv5CSqobnBRxVyDmUcU5rlv5XchKC3rGKmnoN7Bo1lO5Uug0T
-X-Gm-Message-State: AOJu0Yy6WmfoUNqdVlZds+PMkq7ZO+yC5e/KHbCEwb0RAEOcgKYRl9aQ
-	Q2l+M5fBic5HZs3b8fnG3A3NKR447eRzMT+jNTCRc0UtaHNipevddiPt8YE1g+fT4TekDn3dDMd
-	BAZzF6od2pacPDqbTJKP0p3kwOarIWJSVOyKPvw==
-X-Google-Smtp-Source: AGHT+IGCSGjuz41NNdGhYP00jq6qPDxX9zDID06r1oWKzkL+fM3fiKkjBrJ2CXqN+zVBtulvpbY7hra6xTPzoF1wD6c=
-X-Received: by 2002:a05:622a:4ac9:b0:44f:dd52:8aee with SMTP id
- d75a77b69052e-451d430ab3fmr39557171cf.46.1723143313673; Thu, 08 Aug 2024
- 11:55:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dLHhue2X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723143329; x=1754679329;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=G32pgusq1KzhckqZqehp2esIUUvD3rdQptDyWQ9E8ms=;
+  b=dLHhue2Xy/JyJgAJZDTE92alAfaI+ZwluuMwyXlrAubjHzolK+SbAKoO
+   A50Ua46WOvckJHR66OcZ69jw0rFn+kz0qdGAlb6Ra+FP7YZLD+weBUX9R
+   /SxzfsH2U+SlOL776kKKgLIcC8fL6A1hqcBSZX82GO6FVq46pjXCW8wdX
+   0vf0lzAh2WaXbfxffUS0I1zCpQzPhoAiNJFaaqxU0ZTFlvWUhezjiw8BL
+   7PacEhZquRjYP1YTVGGy17mD1qT1AxztuGaCrh8aFyb5rcbeNAkBbpP/K
+   vZu3bmf6NQkPdWyE3bFfTqrcjcvQ2jx5fM2O44pvNII9+scXC2VDvWiOV
+   w==;
+X-CSE-ConnectionGUID: f7o11Um3TUCR1/ny3nC7UQ==
+X-CSE-MsgGUID: rXvhgK1ORuGOtFiu7iu6Ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="32699441"
+X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
+   d="scan'208";a="32699441"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 11:55:28 -0700
+X-CSE-ConnectionGUID: sGyYPv3aTLaRDrK47+3Owg==
+X-CSE-MsgGUID: 989w6FVzSNG3acFu9LuX4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
+   d="scan'208";a="94850394"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.12.215])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 11:55:28 -0700
+Date: Thu, 8 Aug 2024 11:55:26 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	cerasuolodomenico@gmail.com, hannes@cmpxchg.org,
+	j.granados@samsung.com, lizhijian@fujitsu.com,
+	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com,
+	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz,
+	willy@infradead.org, dan.j.williams@intel.com, yi.zhang@redhat.com,
+	david@redhat.com, yosryahmed@google.com
+Subject: Re: [PATCH v3 4/4] mm: don't account memmap per-node
+Message-ID: <ZrUUnm/pEpPS9ltC@aschofie-mobl2>
+References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
+ <20240808154237.220029-5-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
- <20240808154237.220029-3-pasha.tatashin@soleen.com> <24003526-ba18-42fb-b5c0-7b89872eb61e@redhat.com>
-In-Reply-To: <24003526-ba18-42fb-b5c0-7b89872eb61e@redhat.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 8 Aug 2024 14:54:35 -0400
-Message-ID: <CA+CK2bDvmSq1Wg92TVi6A5jVwxn5Xeo5aTf3sfUafCkiWPPZUw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] mm: don't account memmap on failure
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
-	hannes@cmpxchg.org, j.granados@samsung.com, lizhijian@fujitsu.com, 
-	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com, 
-	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
-	dan.j.williams@intel.com, yi.zhang@redhat.com, alison.schofield@intel.com, 
-	yosryahmed@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240808154237.220029-5-pasha.tatashin@soleen.com>
 
-On Thu, Aug 8, 2024 at 2:12=E2=80=AFPM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 08.08.24 17:42, Pasha Tatashin wrote:
-> > When in alloc_vmemmap_page_list() memmap is failed to allocate, do
-> > not account, the memory is going to be release at the function exit.
->
-> I would write it as
->
-> "When we fail to allocate the mmemmap in alloc_vmemmap_page_list(), do
-> not account any already-allocated pages: we're going to free all them
-> before we return from the function."
+On Thu, Aug 08, 2024 at 03:42:37PM +0000, Pasha Tatashin wrote:
+> Currently, when memory is hot-plugged or hot-removed the accounting is
+> done based on the assumption that memmap is allocated from the same node
+> as the hot-plugged/hot-removed memory, which is not always the case.
+> 
+> In addition, there are challenges with keeping the node id of the memory
+> that is being remove to the time when memmap accounting is actually
+> performed: since this is done after remove_pfn_range_from_zone(), and
+> also after remove_memory_block_devices(). Meaning that we cannot use
+> pgdat nor walking though memblocks to get the nid.
+> 
+
+How about directly include the failing cases and user visible impacts as
+reported in the Tags appended below.
+
+--Alison
+
+> Given all of that, account the memmap overhead system wide instead.
+> 
+> For this we are going to be using global atomic counters, but given that
+> memmap size is rarely modified, and normally is only modified either
+> during early boot when there is only one CPU, or under a hotplug global
+> mutex lock, therefore there is no need for per-cpu optimizations.
+> 
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/linux-cxl/CAHj4cs9Ax1=CoJkgBGP_+sNu6-6=6v=_L-ZBZY0bVLD3wUWZQg@mail.gmail.com
+> Reported-by: Alison Schofield <alison.schofield@intel.com>
+> Closes: https://lore.kernel.org/linux-mm/Zq0tPd2h6alFz8XF@aschofie-mobl2/#t
+> 
+> Fixes: 15995a352474 ("mm: report per-page metadata information")
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> ---
+
+snip
+
 >
 
-Will change.
-
-> Acked-by: David Hildenbrand <david@redhat.com>
-
-Thank you,
-Pasha
-
->
-> >
-> > Fixes: 15995a352474 ("mm: report per-page metadata information")
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >   mm/hugetlb_vmemmap.c | 5 +----
-> >   1 file changed, 1 insertion(+), 4 deletions(-)
-> >
-> > diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-> > index fa83a7b38199..70027869d844 100644
-> > --- a/mm/hugetlb_vmemmap.c
-> > +++ b/mm/hugetlb_vmemmap.c
-> > @@ -392,13 +392,10 @@ static int alloc_vmemmap_page_list(unsigned long =
-start, unsigned long end,
-> >
-> >       for (i =3D 0; i < nr_pages; i++) {
-> >               page =3D alloc_pages_node(nid, gfp_mask, 0);
-> > -             if (!page) {
-> > -                     mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, i)=
-;
-> > +             if (!page)
-> >                       goto out;
-> > -             }
-> >               list_add(&page->lru, list);
-> >       }
-> > -
-> >       mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, nr_pages);
-> >
-> >       return 0;
->
-> --
-> Cheers,
->
-> David / dhildenb
->
