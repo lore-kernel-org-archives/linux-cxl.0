@@ -1,57 +1,57 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606B818FDD1
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99004190055
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 15:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723131765; cv=none; b=IAp8gY4ztlnW9ZkG04QK82rktmJeTrCoTyzr6TlPOW692BsGhhdFABL+DkfIv6se+GRTHwGVAMiFUF8HSsb8VIqUG3pm9aRy9b99pTmZjA3RmdWP3zJZkAg2aT/1Q9K1p5wxzIywXcfHgRV0mNZJJRftt9ddgpk2MHDVUajDJ40=
+	t=1723131765; cv=none; b=PofftBqcsMTyZDaIL0B6pw8HA+P+tR/3SUqA3d45zcN9UHMg9Ec2D/X9Hy3Pw0epVnwBIh7t5m6H3UZrBzZg6pWVY6JkWRK1AZ7SVq3apz1G70zWOSxVsT3nLdFdco61XU5igozK29K6Z0bgKJe4KcSGkYUC5dxcN5ZPNO1DDjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723131765; c=relaxed/simple;
-	bh=mXuho5qRbcIktuppWuhYAb1FR0k6aVabcnCwkyhGc3A=;
+	bh=8rI7joosp8awa/gMykJMhXumICc/dwUYMwOKiBmRUD4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bpVdPg+QvuiaL0FjWPOY0W0vFydCTAon0WWYOdGB1thPMFEpXoScdK/zFVcM3FD+cik+MdfBhqToBejJKDyiOIz6uGFJhLcTOBwuDkBZVKeuZCR4UUOMKsNB/uhfsWa5PL2FQZJiZ76xqSrCPPBeifMadGnUMD/OHvOtgg4Kn7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=LdGvJKYu; arc=none smtp.client-ip=209.85.219.45
+	 MIME-Version; b=lSWMi1IYenJ8Nidm/O759UC+aaNhvgD9ddMnzeYdJxijshNCg3ySfN7gI8vRfPb5oOL9x/5WL52YngoNowYVNzfjo+4QC2tdJuHBfAatd1pjnxBrhUcr2jBw/QW5Y0CZS25zD7ZQPxcbqblTKl3bwcd6BN3H2lzJmjWmYOg///0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=I3DvwFD1; arc=none smtp.client-ip=209.85.219.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="LdGvJKYu"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b79fc76d03so6264466d6.1
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:42:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="I3DvwFD1"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6bd6f2c9d52so2940116d6.3
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 08:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723131761; x=1723736561; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723131762; x=1723736562; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oRSFFXDfNtNVk7lGVeoRIubNta7FSFGwpVVL6fGvxf0=;
-        b=LdGvJKYuAiuXr1Pgwa8qR0Tm1+o6wENHB9veXPs+HxeigAnOegl1HiFAsIovDIUBgp
-         h+Ii9Wi5D8YgTZWvgIcVZRxfYPMkHYkDpaLRGBrsXHzCT4CFCQFLIBhBb7R5BvuSB8cY
-         7AxsT+FjjLsEZwtwoCTptYwdW7lt/s7oJYIWK+CfmK5VgkzR1UaZIxyAo9xI1xhgcKlk
-         Rr80o39Z7jQ+/2tVRCmLdSVX6BaaOfHg8YlFtL1uQ2dw3rDllnVrefMmz0fAV5S/lrQA
-         U7rkln/Xpw8xfffF8w3ySuB+ZA/XATZDxc9FQTBmYuPuUpy1Uubiu7910pMSDZnJFrjK
-         ocHQ==
+        bh=y3neo5ZpPv5S0nCnjgNJX6IioRmVVyTly9egBg9Jmdk=;
+        b=I3DvwFD1yhMhHA27hYSf3nIl/t5ZOozebJXKpgalRDOdU9Qu00yO9H8ytGey8tlumc
+         jOh5vejH/4EFFp54iHDfGExLyL/rlWj3dMxal74NrMcyIrkNfIzXXLYvuL37OautftRr
+         Ee7xb5IwGhaBUH4CSmSFzzi19U+viFrk3e9HzIcvGnkpldmFEqKoKTzdEeBUGXtFZKPq
+         Htw4dOxPDuFXEEGTPjmNb+diCNQowH5pDTULCMMtX1SO6OkMLpSAhG3WG49pLICF3Z7o
+         kNmNr/jBSuq+h+AVfpHzz7Fk3cEV/+wzAXfGpeFtg1wg2clPA8632We/y5ecED111U9N
+         7jwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723131761; x=1723736561;
+        d=1e100.net; s=20230601; t=1723131762; x=1723736562;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oRSFFXDfNtNVk7lGVeoRIubNta7FSFGwpVVL6fGvxf0=;
-        b=dq9YOM/Pv2bNKy9nKI0q9/1NDQUK5bCBbcABFoW8hr9tvnCqycAoSiK3bh/wFqc0w7
-         c/230QVgll1ryVIFSHlVSKNsMKDNV/5l1C/WdVLA8PivOaN93nRKDsQ1bFgyFZNs8unX
-         blwl/fdFF66X8l7kaosrXSDFy00QLIrooaCjlTa7SOVvYxsO2LadAItLT6z7FluBAPHM
-         weTdL0xKx9NaAPwDST8M/WSho6ELKA6297Begki835Xpi8o7D9TO1YZ1h2kEB0BxiBak
-         Xs7x2e4ddWSQipSz2tRY21Z7kOJGHI8IMCltEJz/kjXTq5zDTEgnOVeAPN945PNMt3KG
-         0iDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQH6fmkUcSw/E8zXeOaK49ZFMEj/piLS3xUFBvXB//IFJPKLPRa1wxUwTMmnZxB78XEEtRCDBkSlu3hDAU6KXKaVWA6hUyZAgY
-X-Gm-Message-State: AOJu0YyaygSi5SL8gbwYfd1/KFkkPHPIL1Nx+gFtj7JGPiqyJByZx+tQ
-	XxJh2/C8oeH9GQg3OUDc9AGEgxl7iPjwDviw7/0EehlFKojzhM2MlFuKnbWH4nQ=
-X-Google-Smtp-Source: AGHT+IEedYPnvL6gKHQRQr0wt7cczChz5kQMKQlE59fzWebBtyv5plUCNw68Wg5Sa6xCxlvPXi39qw==
-X-Received: by 2002:a05:6214:4604:b0:6b9:607e:275e with SMTP id 6a1803df08f44-6bd6bd3263bmr24643256d6.34.1723131761187;
-        Thu, 08 Aug 2024 08:42:41 -0700 (PDT)
+        bh=y3neo5ZpPv5S0nCnjgNJX6IioRmVVyTly9egBg9Jmdk=;
+        b=oKEZxHs/bWLuV56e9TlPIah9/OILit7eKX7DjbI0jwMu2SIpvcLWPYHB1JSqoqu7Xs
+         MFie42JPJDIkmhO+y3QP8t+9/JTa7Bbt51rRG0Td+G0LYphC2sQmD0h4jIbzAKCArUNu
+         P38v245TjvowWU636R4YIl9SfNVhrzOZVxnb6vSsT5Cq5WlFvGXNcPkvbPGQYApMfW1a
+         RsMrfqj0+xNufTBKJilmejkf3GoPgvnNHUI/iuoClIu13lFQRkOVTRCaJpWMnZv+Yt9O
+         HLh3PZk05xtV2lHzNRHtAJVZGmqJdEG4LGRUbSz6NmDfe9hghBpKVRbcW9pOwVrD3mUW
+         5PiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVz5oVNUEbl0r/4c/t6R29+p7111jwS0UGJF+W73bEJIHOlUElpzFcYBx3v4+odp+594VDF9UUO0EML05zfY5hl9rzRMq7ZXLPz
+X-Gm-Message-State: AOJu0YyVPH9MjLydDf1wN0Qeb3yAE2WcjnqjLk8Qpdj2kV0v8nb8mj54
+	dHKy3Pgkc7zoxCX/RL6HMb9VXOFK9aGDbtfzDHMUgpa1MF16YkQ2udFSuQ1id24=
+X-Google-Smtp-Source: AGHT+IESGfyB5HtXu4zt+BcOgb/gdPZpAEI0Yo2J7Xp64aGcrd7WAVMlzlbxNtl0uyZb/RHkn8qBZg==
+X-Received: by 2002:a05:6214:3bc5:b0:6b4:4470:81a5 with SMTP id 6a1803df08f44-6bd6bcbb55fmr34927436d6.2.1723131762416;
+        Thu, 08 Aug 2024 08:42:42 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c7b72d9sm67160936d6.60.2024.08.08.08.42.40
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c7b72d9sm67160936d6.60.2024.08.08.08.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 08:42:40 -0700 (PDT)
+        Thu, 08 Aug 2024 08:42:41 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
@@ -74,9 +74,9 @@ To: akpm@linux-foundation.org,
 	alison.schofield@intel.com,
 	david@redhat.com,
 	yosryahmed@google.com
-Subject: [PATCH v3 1/4] mm: update the memmap stat before page is freed
-Date: Thu,  8 Aug 2024 15:42:34 +0000
-Message-ID: <20240808154237.220029-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 2/4] mm: don't account memmap on failure
+Date: Thu,  8 Aug 2024 15:42:35 +0000
+Message-ID: <20240808154237.220029-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 In-Reply-To: <20240808154237.220029-1-pasha.tatashin@soleen.com>
 References: <20240808154237.220029-1-pasha.tatashin@soleen.com>
@@ -88,62 +88,34 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is more logical to update the stat before the page is freed, to avoid
-use after free scenarios.
+When in alloc_vmemmap_page_list() memmap is failed to allocate, do
+not account, the memory is going to be release at the function exit.
 
 Fixes: 15995a352474 ("mm: report per-page metadata information")
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
- mm/hugetlb_vmemmap.c | 4 ++--
- mm/page_ext.c        | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ mm/hugetlb_vmemmap.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 829112b0a914..fa83a7b38199 100644
+index fa83a7b38199..70027869d844 100644
 --- a/mm/hugetlb_vmemmap.c
 +++ b/mm/hugetlb_vmemmap.c
-@@ -185,11 +185,11 @@ static int vmemmap_remap_range(unsigned long start, unsigned long end,
- static inline void free_vmemmap_page(struct page *page)
- {
- 	if (PageReserved(page)) {
--		free_bootmem_page(page);
- 		mod_node_page_state(page_pgdat(page), NR_MEMMAP_BOOT, -1);
-+		free_bootmem_page(page);
- 	} else {
--		__free_page(page);
- 		mod_node_page_state(page_pgdat(page), NR_MEMMAP, -1);
-+		__free_page(page);
- 	}
- }
+@@ -392,13 +392,10 @@ static int alloc_vmemmap_page_list(unsigned long start, unsigned long end,
  
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index c191e490c401..962d45eee1f8 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -330,18 +330,18 @@ static void free_page_ext(void *addr)
- 	if (is_vmalloc_addr(addr)) {
- 		page = vmalloc_to_page(addr);
- 		pgdat = page_pgdat(page);
-+		mod_node_page_state(pgdat, NR_MEMMAP,
-+				    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
- 		vfree(addr);
- 	} else {
- 		page = virt_to_page(addr);
- 		pgdat = page_pgdat(page);
-+		mod_node_page_state(pgdat, NR_MEMMAP,
-+				    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
- 		BUG_ON(PageReserved(page));
- 		kmemleak_free(addr);
- 		free_pages_exact(addr, table_size);
+ 	for (i = 0; i < nr_pages; i++) {
+ 		page = alloc_pages_node(nid, gfp_mask, 0);
+-		if (!page) {
+-			mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, i);
++		if (!page)
+ 			goto out;
+-		}
+ 		list_add(&page->lru, list);
  	}
 -
--	mod_node_page_state(pgdat, NR_MEMMAP,
--			    -1L * (DIV_ROUND_UP(table_size, PAGE_SIZE)));
--
- }
+ 	mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, nr_pages);
  
- static void __free_page_ext(unsigned long pfn)
+ 	return 0;
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
