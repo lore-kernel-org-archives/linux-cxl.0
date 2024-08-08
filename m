@@ -1,52 +1,55 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F50146D6D
-	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 21:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD2D1494CF
+	for <linux-cxl@vger.kernel.org>; Thu,  8 Aug 2024 21:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723152882; cv=none; b=sBoBk6EKPS7L39Ezb1XNiwXR/FMOGLgBl4H69sHVa5GwdaVJ4pdep7/SIGMn8R0zNElIg3V2QuTTqRqXeTc35lHhocGTkbu/gPC/sOnw+f/Dah03B7STiHHTlVgv8voWziSpk6LBiJ0FHEdMrkdIMK9Bq+DzSm5U8drFTKygRuc=
+	t=1723152882; cv=none; b=W6QqX0YBHHUwfgAD1QmY3tyquuI7OHdQRzzhlRJWu9wMUnZCSypsO8kNCSIHaqDlSQ8EwgTa56iT3iQugvRh1wdYsl2N7BDt4wms1/Uj+ZSXIBT1DZz3/A/mT7j7G1VfThsC/PAWXGEHsYmNPo23JWuz7nrJl7EBYMtRobgr3GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723152882; c=relaxed/simple;
-	bh=RbMYgA++9fV0EBRect7rFATXup7VOfQbVaa+QMmyIIo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=fLVt5vkUMP3gGhKXYXa5ZZ3iUTK2MwctI1cevTUKHEs5H9ZYVXB1PnX8P33KzLPGMM0gEbjPfr+C9jc5quOPT9uwjtXXgtkxuWYMg2b7l6tbnuek5YPVZMECgKalgtGTHORd4z02MaQjC2H9zBthOQyxDR84ostjd6aRUVVCl4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=1diaB+tD; arc=none smtp.client-ip=209.85.219.50
+	bh=RJOegQUHcv+I33+qU7btWGqlaiXtgvR83VFZU3SBof8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FgypjC9ohqNMiKsUJkMwrwvdqgGne8VlhWJ28zR/8bJowYKoIKrgsSCyv0QsG1caaxtB05XpQ20/3nOqFYuJTQHDpZFd6xSdj88cG14qCYcZeue4FpS4xWfvkkmqgysPvcUC1PW3yzaOT92UouAaB+jv+Q7R62QHxfxKvPvCmDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=cnCtS0Zm; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="1diaB+tD"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b791cddfcbso8462226d6.0
-        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 14:34:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="cnCtS0Zm"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6b7a3b75133so8968906d6.2
+        for <linux-cxl@vger.kernel.org>; Thu, 08 Aug 2024 14:34:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723152879; x=1723757679; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sR4Q4RBNyDlEyEtMKpSg2raAJFHhcndUnkwyiIaahuQ=;
-        b=1diaB+tD2tnfjkLFy5oNsQx83WdZ4suVKYPD7HWX3jWMOp6wFSqyhyY6ofGUJ0iPFs
-         LAv8ADpMmLYKRnUSDfhXNmOFx/3ChwSWCjajfaNKyfKlscjQ2V3l5i6Rb2YqKuM68/Io
-         OYBFP9wKzRB0UIhRAnfo9imYHwWp68hYSQbG/ZfVFWOJlKuBy7DL6ygWRmbC63JVVmwQ
-         SVusyRFrUpRYY8il4k4qWcSrkQ8a314rlx3NPFvAbwcoFCewge8C2lzytUwW6CJVbq1P
-         Jux4GeEw9/BPhUjN4IqlBDNveFd5OlW/28R7BUd8lmYnDXC4C1NjV6nICfyKwL6mWEXj
-         7RQA==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723152880; x=1723757680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2Zfyh9sb1bnT5AOZDmCrIADGqpbj2HcF73SygbadHf0=;
+        b=cnCtS0ZmTiSzbgaSkNEWrOvGHnFxDvqWb1z6xsgziztfOAHoaKJHUH8X9N3Q5nLBB5
+         w5eS9IFhV/llUsmPlDfq4yq/o2qTccRklbsfMOt38/B0/SCNVEfne8YwIIua4OTnpWM+
+         d7XjnW/t2ncjwyugvoc8AXJ3OkJzBe/4RPNlT92htq+BgHri5nMSNlqBmf9mL7JftlOH
+         nCkrM63w4qbqD5Ra9XObHc7by7wnGTU41XQVM/TvzcNriZWQksPc57+AxNaHCHpA+Gbx
+         KjczxmiUa5waHNYeZTcoz+BQDQnL+44o9yDFBU2RPgK8Dgi1OrIK8K7wRGzEduzySAKV
+         z/iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723152879; x=1723757679;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sR4Q4RBNyDlEyEtMKpSg2raAJFHhcndUnkwyiIaahuQ=;
-        b=jVXn69SbaYHuQ4Nka3e64JiH8Ll8SW85F3Jd/DnXEgc9MZCDB+bSmUhoBAVDPEWxq5
-         plG4uaXkL4l5CNA8p1wHTl3celUykANyXOvvy+O4N5hwRvOgWI+25gfCCCayctj6STMe
-         /0VU0xqA2B9LUbL3TT/zsAJ5tQ9V6eMN+T2+tGfNb261xHY9nf5BUmyiWwzWVXJXDvTr
-         QU2U56nB+HAqm8p9h9GpTgb93QqcWi8fQLtxxZ1yEyNB8fpZwKvKASHYCLRl05IlbeVk
-         b9pa6/v+MyrJdd3k6NuwWOmE9TGD2VBrvFoTUzV3bjkuNyLDVsBcd2CKFEkyI/6EOKLV
-         IX7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV9GETYa6i5DPS4fvZoIvbekXFmAt4ptFEMYVEpQpb2toMjZqIqIys7TKfF1gMMJzQ90bv8uYBtzUWBiwp4sU16VY/Er++S5Mo5
-X-Gm-Message-State: AOJu0YwafV6FRQiwWEWQ12ficfnNMBIQYM1erJW5WiZ0ODVJqlZCqI8O
-	T/AhUu1yrg01DFC/rCcF6ormXdkKgws75efL2weMUKgD3AWTNsX6z9ek7Yzar7Q=
-X-Google-Smtp-Source: AGHT+IHhBAY4jB88eZ0nLk17m3lkT6t2c4WPOVLAuUQhNq1gELh0d4mWiwBC5MNPkQLlby32mEfHBg==
-X-Received: by 2002:a05:6214:33c3:b0:6b7:a175:29b7 with SMTP id 6a1803df08f44-6bd6bda2ed6mr42811146d6.51.1723152879490;
-        Thu, 08 Aug 2024 14:34:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723152880; x=1723757680;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Zfyh9sb1bnT5AOZDmCrIADGqpbj2HcF73SygbadHf0=;
+        b=MKNQ6TlEGNn9Slq2ySUuX2pqJA+WWU5qXHUVBLLws/O8yfSo1pVWZEBSRVkMme161a
+         haO7zqu0iAXYW5dOJZYT5SepxT5+ZSOtPwjg2OKydYpafQc8/NJNjxrU1xfDPAzZJdmT
+         PnnXeEorzbeVJ6MN8VeMPbAwN2105XdhqOsvf6pIhNkRVH/tk88RrF6AjtTNOUB+WJbm
+         pHE2X5T9wdLM9Tja///KcfiuGWMZ1A6r73ZSvAgKu4RmzQhqUl+i3fRvfIq0UgHl3H1t
+         WexkVj89PTJ9Z9GxLlt8OMkfLNlL9AoDDiN6efYwShFvVPKvJxKCxVKyEQF0l8GvodCA
+         2KpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLT9b5SoGZ1LL48ziEfR1nU4yL+iRc2a3mkEJEqELg73AtZ1Xwhs16tJyZVif7t5O4OqN6YydnByByXYKKyIU4ZHXhEER0LOKZ
+X-Gm-Message-State: AOJu0YyC/H3x6VkMLDiO3ZcWilvS3U7j/8/ercBC1eBVGqVKy1v5BzjM
+	TuVvCgbc61MJfugY5l0iJu1mNmAvtdDORHsBZBaV/n7KmgUgG/471btsJiO/4UU=
+X-Google-Smtp-Source: AGHT+IEYrhxVpzTUFHMNv2JCMahxEtnVaIB4zBU/Fd+nkSIIYgPtSTnsyB+XCR6jRJ7P++5L69WPeQ==
+X-Received: by 2002:a05:6214:2b99:b0:6b7:a87b:e9b9 with SMTP id 6a1803df08f44-6bd6bda461fmr32485766d6.48.1723152880168;
+        Thu, 08 Aug 2024 14:34:40 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (118.239.150.34.bc.googleusercontent.com. [34.150.239.118])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c762bd1sm70205026d6.29.2024.08.08.14.34.38
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb9c762bd1sm70205026d6.29.2024.08.08.14.34.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 08 Aug 2024 14:34:39 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
@@ -71,10 +74,12 @@ To: akpm@linux-foundation.org,
 	alison.schofield@intel.com,
 	david@redhat.com,
 	yosryahmed@google.com
-Subject: [PATCH v4 0/3] Fixes for memmap accounting
-Date: Thu,  8 Aug 2024 21:34:33 +0000
-Message-ID: <20240808213437.682006-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 1/3] mm: don't account memmap on failure
+Date: Thu,  8 Aug 2024 21:34:34 +0000
+Message-ID: <20240808213437.682006-2-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+In-Reply-To: <20240808213437.682006-1-pasha.tatashin@soleen.com>
+References: <20240808213437.682006-1-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,43 +88,38 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memmap accounting provides us with observability of how much memory is
-used for per-page metadata: i.e. "struct page"'s and "struct page_ext".
-It also provides with information of how much was allocated using
-boot allocator (i.e. not part of MemTotal), and how much was allocated
-using buddy allocated (i.e. part of MemTotal).
+When we fail to allocate the mmemmap in alloc_vmemmap_page_list(), do
+not account any already-allocated pages: we're going to free all them
+before we return from the function.
 
-This small series fixes a few problems that were discovered with the
-original patch.
+Fixes: 15995a352474 ("mm: report per-page metadata information")
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+ mm/hugetlb_vmemmap.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Changes:
-- Removed patch 'mm: update the memmap stat before page is freed', as
-  noticed by Yosry after 3/3 that patch is not needed anymore.
-- renamed nr_memmap to nr_mammp_pages and nr_memmap_boot to
-  nr_memmap_boot_pages as suggested by David Hildenbrand
-- Added the origianl oops information as suggested by Alison Schofield
-- Improved commit log message as suggested by David Hildenbrand
-- Added review-by's, acked-by's, and tested-by's
-
-v3:
-https://lore.kernel.org/linux-mm/20240808154237.220029-1-pasha.tatashin@soleen.com
-
-Pasha Tatashin (3):
-  mm: don't account memmap on failure
-  mm: add system wide stats items category
-  mm: don't account memmap per-node
-
- include/linux/mmzone.h |  2 --
- include/linux/vmstat.h | 22 +++++++-----------
- mm/hugetlb_vmemmap.c   | 13 +++++------
- mm/mm_init.c           |  3 +--
- mm/page_alloc.c        |  1 -
- mm/page_ext.c          | 18 ++++-----------
- mm/sparse-vmemmap.c    | 11 ++++-----
- mm/sparse.c            |  5 ++---
- mm/vmstat.c            | 51 ++++++++++++++++++++----------------------
- 9 files changed, 48 insertions(+), 78 deletions(-)
-
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 829112b0a914..4f51e0596197 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -392,13 +392,10 @@ static int alloc_vmemmap_page_list(unsigned long start, unsigned long end,
+ 
+ 	for (i = 0; i < nr_pages; i++) {
+ 		page = alloc_pages_node(nid, gfp_mask, 0);
+-		if (!page) {
+-			mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, i);
++		if (!page)
+ 			goto out;
+-		}
+ 		list_add(&page->lru, list);
+ 	}
+-
+ 	mod_node_page_state(NODE_DATA(nid), NR_MEMMAP, nr_pages);
+ 
+ 	return 0;
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
