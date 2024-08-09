@@ -1,212 +1,204 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E582198A1B;
-	Fri,  9 Aug 2024 15:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723217086; cv=fail; b=d1gfYFYfxG/RuhaAGu1uHeW/GDUPvc2KOZJOc/82gbqb0m8idQEW4VxVFIio/KunV/mqostiLzqAdSZQud1PxCAvj5E3cGuLxAY+IuojaJ3tKRqcOIHQCIaEdN8P5x3y7fO+LTkMNWYmhQUloaY3aNT3MQnhbb+FQLprJzbTAJA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723217086; c=relaxed/simple;
-	bh=EUdVDqX+8xysLABg5kmZSY5OeYKmfs2k7vDXrM5cxKc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T/P9pXnh6gO8aK+o8eiXtvcSehbfaD1BcNYGVgSSccb9T2MYm42fpsNOYHm7Q0gl0ZHwTOdn0CUFjYoTwc1Oaxo2NAMM8ICebdGL2ETcHJjw7cDLFdiaPZElLZxUhsBJP4R38jE/SUDYbmXYjlzceEe4ZTdKn7tYRnCoRV1rqo0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BGx/urpG; arc=fail smtp.client-ip=40.107.236.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACCB145FE5
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Aug 2024 18:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723227034; cv=none; b=Ffh7bhSaJ7Xa7uaP6jNe/ZQ0bActfTxtZJwkbRtuNC6ziVbTxR3GBMFnXp7NQDHw0iZH24Npmo2h415v2mg+dPtKTElHhLdQU6PhKmxRgDj15+JUKCPzVBCNXodZH4VvwII6F2XqojD6z2U6DmWDSJSh5JxJyo3dN6KJ06dtuVM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723227034; c=relaxed/simple;
+	bh=hjEkJy4i+WTJzKeWHwYqkdt+dY5dFF47qWBmD1BRAdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HLH2Q7vFjr/cITnEYvOc2Y7nUsZ3nemYf2a1Ygt3xSf+2zWqX8ZMtX/xMyC11g1f6F+IurSrx9aCEFfd+dEglF24X6FwGL/KrEEni6rbmVyaMHXl2Tcg9s5EBnCvSMx4AkGIPHp/7mbHLSOJkk2XvfBY7J7Q0Csx7VB6noe3GIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=oDIKrFDf; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BGx/urpG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p82MDGpMFfh+TzMlIadr4L3KNY8Bnu3gM2nytJ6D05AMuNy/e2PS5sHjxF6YsTlrR5UffVwZ+OiTmJGCm0V32jjHD5lov7Y66/wPN3jCIAQTUqcjVyX89lxxmURBcKcG9B4FHjarZZHT5/3rJrauSbfUYBPB6nBLwosRyaYaKGPzWvknAtTSBEdESvI3H7rVuhb9Qss4qPBzbOP/Z1TGErB4k1EpRYzB3la1bL2d8SSxz4i/bTHs94pSY18DRnbuz7DDPleriFt9ruo+C2pHYMmFeaDdw+exsXYZK+1QPc5LCPFKuwnl8zd5/UieVGunwExO/6IRG/nUYehtIHkWaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kc5Gq47jhQoculGJ0UN4WLv0fAYd9/C+F6rQY3voTiA=;
- b=vvR2ltFCwaySjGJzfAO6UGdqhb5eI5oIzrvmYuW7LNQDRvOxmp8D22tX3edqqCKBi5u605EJgnSljS0f7QAZYycQrOCcnmSOraiu1rgy44cZ7WMh+/1WI6Jjhp6c5CO+z7vJr6Z3TBeXjJKQXHbfvJ8c97zCWKLLDHQCf9aSJr30yDdjdnsVw7D/7z3/pq1x41h2N8+O6g5Ti1gnafoDCXI5jKB6ytqBkRLPCf3dc2qpdTpCeY9cY2aFY6Ak5mU96V8tg0ZnED0lE6bTZ6ICYyG04T67rkSC00YC2CDy892HdNNzKodqEzaV3+qyUpeqe2/s2LNQ85z+677kw6+oKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kc5Gq47jhQoculGJ0UN4WLv0fAYd9/C+F6rQY3voTiA=;
- b=BGx/urpGdylAzEMuFsWAyfsA7uu7egbacaO4yPL3wV09JwM8wBrXwZiw9K2B6c1f4lEYWRwibO5jCcvvBZCgRySYNdEf7efOSOsQXKqT/imEwqk+PA6tQOVx5CxQbQK601g24+B+OeNuTVkSuduTGhDOZgqj6bYQbImYN+1t3cR0d3B4saLJSPF2iqLLscdtWuzMPArLwaaDcXhImwMOBvwTk7Mc9UxWwBgBj8R/ib7EWGKHt3ykaX9QhLnf+rtE62jBUXLsvHuR9fCShF+MVcruRc2aEOKde+c2BnMlmAFq/YBUtK1Z9SKR6thbU7Mnp5oilweUNbX3Oius7DL4BQ==
-Received: from BN9PR03CA0054.namprd03.prod.outlook.com (2603:10b6:408:fb::29)
- by MN6PR12MB8567.namprd12.prod.outlook.com (2603:10b6:208:478::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.15; Fri, 9 Aug
- 2024 15:24:41 +0000
-Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
- (2603:10b6:408:fb:cafe::c4) by BN9PR03CA0054.outlook.office365.com
- (2603:10b6:408:fb::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.32 via Frontend
- Transport; Fri, 9 Aug 2024 15:24:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7875.2 via Frontend Transport; Fri, 9 Aug 2024 15:24:41 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 Aug 2024
- 08:24:23 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 Aug 2024
- 08:24:23 -0700
-Received: from localhost (10.127.8.11) by mail.nvidia.com (10.129.68.9) with
- Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Fri, 9 Aug 2024
- 08:24:20 -0700
-Date: Fri, 9 Aug 2024 18:24:20 +0300
-From: Zhi Wang <zhiw@nvidia.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
-	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <edumazet@google.com>, <richard.hughes@amd.com>,
-	Alejandro Lucero <alucerop@amd.com>, <targupta@nvidia.com>
-Subject: Re: [PATCH v2 14/15] cxl: add function for obtaining params from a
- region
-Message-ID: <20240809182420.00002f9e.zhiw@nvidia.com>
-In-Reply-To: <20240715172835.24757-15-alejandro.lucero-palau@amd.com>
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
-	<20240715172835.24757-15-alejandro.lucero-palau@amd.com>
-Organization: NVIDIA
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="oDIKrFDf"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-44fff73f223so13140171cf.2
+        for <linux-cxl@vger.kernel.org>; Fri, 09 Aug 2024 11:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723227030; x=1723831830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AHqMJlIkWWEgQwJvsxhrebiNG2gW3dBZk5UEyqRtZXk=;
+        b=oDIKrFDfCif18AMcZohRHmD/3S9BjRolPEE46VijU6ypl7O01DBLnxlhbPzh3vulRq
+         ClVLzK0cGcrqdSf3bZuq12MsryX67e4zXHCiBNQYE08y2hHD9B19o8f+nhBLquEJNqQp
+         Rw3T47rury6mFn2lVpvElY7PfdQapKnwm2/MNwfHgrANai6by9uCd9RqxD13WRwl/GDF
+         aR2QCVnkFvKuNjpwFHOGk2FieFw/SifwUgSih1ZN7G8ZNwlfBiwtCPxs+buZE+KOWurI
+         wxwnETOVgWD0si4zIDJm8tmfpXh/VqQadc0ANtn4CywgsGvs6m0VP/pK0fJa+SAyuOgQ
+         d/1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723227030; x=1723831830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AHqMJlIkWWEgQwJvsxhrebiNG2gW3dBZk5UEyqRtZXk=;
+        b=vn4iGVXmtfpi1FMhYZP4iGGPxx0TwTCczrfxNOzYsbdVyqVxth86eAJBY5CewuZOJ9
+         GsghnESm/I4g7WhOZnvvCWwXRjOCWRQEmz3XlrwvY180t7OjkX8VyZRe+MSAJb1JYBIu
+         Tvj/IW8O9hqoIqryjfGpf2B7E7Eg7i1GygYbdfDTuM8jFZVIJlAmOE8TwdbVKARsZ/qh
+         JpCQ8Sk2pmd0p7ke5KcbNzYLOyXbKHdMqIUs/VEO1RU4LKkex9IAujKMGjEKTHI0i55L
+         9mz/q+sALeW21L0FTWjY35aAeZ8pl0CWtl59qSkqaTI5gIewlXycmAR4t/P6lsu7ilZ2
+         aTLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXS4hMODtLDJoeNTn5lt9NK/RX6/dxqQC0itu+1RyZ2R4NrLyQh9gjnxuEcTK4OQL3Ju9ZfIiu6dZGu6y2zZp4NU6CBMv6hJ6o9
+X-Gm-Message-State: AOJu0YxT60Nc/xXZi0yIz2BiZec22T6tSoasXnK0QsivPcDvb+PPgUp3
+	aWIU6ZmD7fqRzJb0fdcPGo53q8y+dmKroPoTxs/aslI3w5EvdhC+8lsew3NbUJJQruV+s5ZiFPe
+	MF9JET3BY/PZ2dkWN5eNgV7wlgyIL00nYnQlmOw==
+X-Google-Smtp-Source: AGHT+IHrNlz+ta25fI4t3VA0/EEbsr27aU89/bZMIE48EJr0+K917c8yN5Fy0ywTD7GNlhd6voyk2Z4+WfWnBsJ9Ua0=
+X-Received: by 2002:a05:622a:4113:b0:451:d70a:80b4 with SMTP id
+ d75a77b69052e-4531251ba01mr31251511cf.4.1723227030003; Fri, 09 Aug 2024
+ 11:10:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|MN6PR12MB8567:EE_
-X-MS-Office365-Filtering-Correlation-Id: d924aafc-749d-4cea-38dc-08dcb88763f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?66D6qcwAInLrHZ6st4pvrIsmT1Dc3k4TkC0M+vMoe2KHSf1fZxf0FbF75K8V?=
- =?us-ascii?Q?vrqjVil++28pWRnOO6b/zhLc3DWfnjcqxGs0cYlnhJBnvOVm1jiGbFDPUom4?=
- =?us-ascii?Q?p7TMKfOien1mtDq0VWPEtgSVheqWMB15AvQx8Lg4udYlCZmsG+x62D5nWryX?=
- =?us-ascii?Q?SqkCje3hlDmoBefPf4NHRfTEWELgV5E5tMLljn1gsA9xz/La2+UdAtRRzU11?=
- =?us-ascii?Q?NfOqylaD/eBkL7E+ZkxoQtXtLXmsHI3HcxwWxdb8rZZxlvXHvoR7S/c1AR1P?=
- =?us-ascii?Q?7RVa9NJgEUXZ9DKmvEE9d8FN4tWScYLiM2+CGSxQyUG0n8hndFnVjqelBGl2?=
- =?us-ascii?Q?Sb5+CljBgxPu+Kd1g1nnM+5RzJggQ7Z/sOR20bSZR9BnKiioXQZ2ADlrpAu8?=
- =?us-ascii?Q?brqb1uwPSvcmdWg0QVFqSow1xJnK/wJRiH3+0PiMjjzRsJKSJ7DJohkE9r2V?=
- =?us-ascii?Q?C0eSB8Rfk88c07TB9UtVbGtgVNDfEiCNvjdGaHhpnwEtGypN07SJn75elBbt?=
- =?us-ascii?Q?JLFONZI6nilrAXsllrpPS/ceYQsCjSgmBQzGcilsbpLahpkf8z3IKWcNRRIu?=
- =?us-ascii?Q?ZoswcWiDLCFnXnXEKZD8j6mv5qPDIh087gE3mGwrLnOzKeiqTj+W2RZUuA5x?=
- =?us-ascii?Q?TB9t02SyrE4fRKdclc9+B0fBBYlu7BBnNLLnJ+YbDLiE3ZOAsqUKpr7r4U+W?=
- =?us-ascii?Q?wyWpLIUPxpmLOhKTiR9SpPSayid0IHg1Rc2v4EJ9YcCelo5V6koSmKqlZWLS?=
- =?us-ascii?Q?Ymu9jkVJ3CMsJCV/UpF/lsNlSUHhr/3XHWmm5QLQVYY3gABmRZfqse2gwuJr?=
- =?us-ascii?Q?1MblcCJk87r/ik4Fslkmb/Tn/2w13j5kbt3j1YaJGxji6Jnaszn7U+4bVldl?=
- =?us-ascii?Q?Lm+yBZ4+WyU0yWpEi4OsUeGhI//2wT6y2WW4NIo7svO7EMcfG05INFotxJ/S?=
- =?us-ascii?Q?lm4HXVpKwwPW6QAGKCVolAVxWDizPqRRtATeG5H11J4zTw7lvRmIbZdH8V09?=
- =?us-ascii?Q?dPj6S8WQfAqttY7t0gbbZ8nKwFDgbRHS5ME8yb3jq9GsS+RBTjg6CKQ12Hjb?=
- =?us-ascii?Q?KgGAeFrsDjgnUYjfeMvdq7AbgXf1B/d3fwfNn7/VnOykE6t4/DjDYRJ+J8v8?=
- =?us-ascii?Q?3uJJHtGDvjO9mjJHsBa5Nodb1srOmBJmOP14FiRPizaccXIbGfiBGg4Ez+XS?=
- =?us-ascii?Q?VWkfZJECOqAu7EUSMxgHjmSXE2zPgesXIkA5gQz0G9+w2aN+UFbp7e/bAUCX?=
- =?us-ascii?Q?aa4rhOMpKI/8zmcVnyu77JBE9q+3CV+3THBtmHYERG5QX6ranW2RPdaYbc66?=
- =?us-ascii?Q?KVtEggOXkUv/lu4bz+bxY1HmGizq2ro8e1IbqsaiIMVQNanV1qsWM27yEga8?=
- =?us-ascii?Q?ImgPyIhcCd3PfVBT/BhAYbUkvIAZLAU8aLEAn7Fhvbkzv5s71Fw4sbmCjZb6?=
- =?us-ascii?Q?oGq8WsZIGzqOyOaRpwM281wf0CkjmFM9?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2024 15:24:41.4782
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d924aafc-749d-4cea-38dc-08dcb88763f4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36D.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8567
+References: <20240808213437.682006-1-pasha.tatashin@soleen.com>
+ <20240808213437.682006-4-pasha.tatashin@soleen.com> <b13cf452-4573-4202-8178-26a33e9f2185@redhat.com>
+In-Reply-To: <b13cf452-4573-4202-8178-26a33e9f2185@redhat.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 9 Aug 2024 14:09:53 -0400
+Message-ID: <CA+CK2bCpay7V=4_AGiTEyX2OG_6rvqR42MkVSJwEhGa7h+5R4g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] mm: don't account memmap per-node
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
+	hannes@cmpxchg.org, j.granados@samsung.com, lizhijian@fujitsu.com, 
+	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com, 
+	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
+	dan.j.williams@intel.com, yi.zhang@redhat.com, alison.schofield@intel.com, 
+	yosryahmed@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 15 Jul 2024 18:28:34 +0100
-<alejandro.lucero-palau@amd.com> wrote:
+On Fri, Aug 9, 2024 at 3:31=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 08.08.24 23:34, Pasha Tatashin wrote:
+> > Fix invalid access to pgdat during hot-remove operation:
+> > ndctl users reported a GPF when trying to destroy a namespace:
+> > $ ndctl destroy-namespace all -r all -f
+> >   Segmentation fault
+> >   dmesg:
+> >   Oops: general protection fault, probably for
+> >   non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
+> >   PTI
+> >   KASAN: probably user-memory-access in range
+> >   [0x000000000002b280-0x000000000002b287]
+> >   CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
+> >   Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
+> >   2.20.1 09/13/2023
+> >   RIP: 0010:mod_node_page_state+0x2a/0x110
+> >
+> > cxl-test users report a GPF when trying to unload the test module:
+> > $ modrpobe -r cxl-test
+> >   dmesg
+> >   BUG: unable to handle page fault for address: 0000000000004200
+> >   #PF: supervisor read access in kernel mode
+> >   #PF: error_code(0x0000) - not-present page
+> >   PGD 0 P4D 0
+> >   Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> >   CPU: 0 UID: 0 PID: 1076 Comm: modprobe Tainted: G O N 6.11.0-rc1 #197
+> >   Tainted: [O]=3DOOT_MODULE, [N]=3DTEST
+> >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/=
+15
+> >   RIP: 0010:mod_node_page_state+0x6/0x90
+> >
+> > Currently, when memory is hot-plugged or hot-removed the accounting is
+> > done based on the assumption that memmap is allocated from the same nod=
+e
+> > as the hot-plugged/hot-removed memory, which is not always the case.
+> >
+> > In addition, there are challenges with keeping the node id of the memor=
+y
+> > that is being remove to the time when memmap accounting is actually
+> > performed: since this is done after remove_pfn_range_from_zone(), and
+> > also after remove_memory_block_devices(). Meaning that we cannot use
+> > pgdat nor walking though memblocks to get the nid.
+> >
+> > Given all of that, account the memmap overhead system wide instead.
+> >
+> > For this we are going to be using global atomic counters, but given tha=
+t
+> > memmap size is rarely modified, and normally is only modified either
+> > during early boot when there is only one CPU, or under a hotplug global
+> > mutex lock, therefore there is no need for per-cpu optimizations.
+> >
+> > Also, while we are here rename nr_memmap to nr_memmap_pages, and
+> > nr_memmap_boot to nr_memmap_boot_pages to be self explanatory that the
+> > units are in page count.
+> >
+> > Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> > Closes: https://lore.kernel.org/linux-cxl/CAHj4cs9Ax1=3DCoJkgBGP_+sNu6-=
+6=3D6v=3D_L-ZBZY0bVLD3wUWZQg@mail.gmail.com
+> > Reported-by: Alison Schofield <alison.schofield@intel.com>
+> > Closes: https://lore.kernel.org/linux-mm/Zq0tPd2h6alFz8XF@aschofie-mobl=
+2/#t
+> >
+> > Fixes: 15995a352474 ("mm: report per-page metadata information")
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > Tested-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+>
+> [...]
+>
+> In general
+>
+> Acked-by: David Hildenbrand <david@redhat.com>
+>
+> Two nits below:
+>
+>
+> >   static void free_map_bootmem(struct page *memmap)
+> > diff --git a/mm/vmstat.c b/mm/vmstat.c
+> > index 6f8aa4766f16..ad82c1bf0e63 100644
+> > --- a/mm/vmstat.c
+> > +++ b/mm/vmstat.c
+> > @@ -1033,6 +1033,23 @@ unsigned long node_page_state(struct pglist_data=
+ *pgdat,
+> >   }
+> >   #endif
+> >
+> > +/*
+> > + * Count number of pages "struct page" and "struct page_ext" consume.
+> > + * nr_memmap_boot: # of pages allocated by boot allocator & not part o=
+f MemTotal
+> > + * nr_memmap: # of pages that were allocated by buddy allocator
+> > + */
+> > +static atomic_long_t nr_memmap_boot, nr_memmap;
+>
+> I *think* the clean and portable way to do it is use ATOMIC_INIT(0) for
+> both. [even though what you have likely works on all archs]
 
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> A CXL region struct contains the physical address to work with.
-> 
-> Add a function for given a opaque cxl region struct returns the params
-> to be used for mapping such memory range.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/region.c     | 16 ++++++++++++++++
->  drivers/cxl/cxl.h             |  3 +++
->  include/linux/cxl_accel_mem.h |  2 ++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c8fc14ac437e..9ff10923e9fc 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3345,6 +3345,22 @@ static int devm_cxl_add_dax_region(struct
-> cxl_region *cxlr) return rc;
->  }
->  
-> +int cxl_accel_get_region_params(struct cxl_region *region,
-> +				resource_size_t *start,
-> resource_size_t *end) +{
-> +	if (!region)
-> +		return -ENODEV;
-> +
-> +	if (!region->params.res) {
-> +		return -ENODEV;
-> +	}
+Yeah, it is not necessary, but I will add ATOMIC_LONG_INIT(0),
 
-Remove the extra {}
+>
+> > +
+> > +void mod_memmap_boot(long delta)
+> > +{
+> > +     atomic_long_add(delta, &nr_memmap_boot);
+> > +}
+> > +
+> > +void mod_memmap(long delta)
+> > +{
+> > +     atomic_long_add(delta, &nr_memmap);
+> > +}
+> > +
+>
+> Nit picking: (up to you)
+>
+> I'd do it similar to totalram_pages_add():
+>
+> memmap_pages_add()
+> memmap_boot_pages_add()
+>
+> And call the variables something like
+>
+> static atomic_long_t memmap_pages_boot, memmap_pages;
 
-> +	*start = region->params.res->start;
-> +	*end = region->params.res->end;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_get_region_params, CXL);
-> +
->  static int match_root_decoder_by_range(struct device *dev, void
-> *data) {
->  	struct range *r1, *r2 = data;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1bf3b74ff959..b4c4c4455ef1 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -906,6 +906,9 @@ void cxl_coordinates_combine(struct
-> access_coordinate *out, bool
-> cxl_endpoint_decoder_reset_detected(struct cxl_port *port); 
->  int cxl_region_detach(struct cxl_endpoint_decoder *cxled);
-> +
-> +int cxl_accel_get_region_params(struct cxl_region *region,
-> +				resource_size_t *start,
-> resource_size_t *end); /*
->   * Unit test builds overrides this to __weak, find the 'strong'
-> version
->   * of these symbols in tools/testing/cxl/.
-> diff --git a/include/linux/cxl_accel_mem.h
-> b/include/linux/cxl_accel_mem.h index a5f9ffc24509..5d715eea6e91
-> 100644 --- a/include/linux/cxl_accel_mem.h
-> +++ b/include/linux/cxl_accel_mem.h
-> @@ -53,4 +53,6 @@ struct cxl_region *cxl_create_region(struct
-> cxl_root_decoder *cxlrd, int ways);
->  
->  int cxl_region_detach(struct cxl_endpoint_decoder *cxled);
-> +int cxl_accel_get_region_params(struct cxl_region *region,
-> +				resource_size_t *start,
-> resource_size_t *end); #endif
+Sure, I will rename them.
 
+Pasha
