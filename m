@@ -1,140 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3DA18FDD0
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Aug 2024 08:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723193910; cv=none; b=Eo+HsikeINaEV2ED1TjvI53OdeYGvvmfUgo929s0JvyRpghv+n7RMjlotETQdJHfhyIgIYeBYi0iB8i7muukZDyfOcVXwiULzRLykG5A7UV7ovxXJ3YBXaZjS8z5pd0A9qklRRov1BqcUcSqoXqPZ/FgG9/vkmA70aZQSjHrAf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723193910; c=relaxed/simple;
-	bh=6pEZquy8orhHZvOHNSun1kxpAHpdMw7xLJAtNs3rRuo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xu2YWZ0liBIxVyCUVvsdmtcTBYK4HE32NwvPFlUR8hO4xOFtEMiDqdtwZf9+I2++n8BpLNrfiN/Ge99f1eh1+FIJGTex+4GRKCnWJ+cdnK0/2RsEMtp+qbN80rQreu0pCB4tYhZAAIOe+0Ridljt4g6Yd2NlPBhp/DZUPsImJdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KCt/YUSp; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1CCC8D1;
+	Fri,  9 Aug 2024 09:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723194112; cv=fail; b=R6ASNDkE23ZyB6pUcsLmrbtOLxsaTUufBa2LEjfenOujJCdofvaDUsmx/BoP8XaAvg8e//QUYYCEQz5gIYUvjVruxMCtRY12rfQxS0FZAxwCMKXnNhZqaGSddBElfhvbh+PRaKqgirgv0+wUPRwOShyCeJIjfL+DFSbCOxzw41Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723194112; c=relaxed/simple;
+	bh=Q1atb1MUgpRZ76xqryJrDdGOjmw+wd2hFCfYJUDKnLI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JAoo1L6o/rCIQOdUdTtPK+1Zj6qOwhKLmn38ZS3hjRVHtTAAx/C/9xdGI6Zh46o8RyR5GPEWytHKX28rfeesgwHfrCnsLcNnEqxZHLSgAY4+IbedQh4gGry7EqZ2kX8YF9r7ULvyDyr9NQzu8k3uw06jyed2fKtWA47BEO9elNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GxeEoRf/; arc=fail smtp.client-ip=40.107.220.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KCt/YUSp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723193909; x=1754729909;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6pEZquy8orhHZvOHNSun1kxpAHpdMw7xLJAtNs3rRuo=;
-  b=KCt/YUSpoGIQYZ13h2WZEPVvkhZ7xHZjlfLwnqkHSOp5bbjJy08s62jk
-   Q7a57Z/Z+2G7dNlX6htezL9A3LnIMM5y01A7U+WxpZD9WvrkIHNYVDgD3
-   XB60o0he39Ov1s5KOCzzjukFtH4N4YoT8W4DS/0cWexhd2G3p3vL3rQII
-   BGFSetevfvxvOnQoOpPIMqIS/t34YcJfQsawjzHToln55V2bDl3uRxe2J
-   JtLhdv7oF4H1ZnK0gAogXg8NGl2+1i9I1RidLgo1/v/6YmdqBu7nzvzWB
-   cz+JBpjXcA8M9hd9YqEg5pSZcpx0buRzNumgEfMmix21OTbJ4W1FsUU8q
-   A==;
-X-CSE-ConnectionGUID: pmVbE8yFRyGoFIvvdHaH3g==
-X-CSE-MsgGUID: TV8WUHJhR1S/9u9Qdm+3GQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="32507240"
-X-IronPort-AV: E=Sophos;i="6.09,275,1716274800"; 
-   d="scan'208";a="32507240"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 01:58:21 -0700
-X-CSE-ConnectionGUID: 9T73IJDgQheA8gSHsdvZvQ==
-X-CSE-MsgGUID: 0z8tthZTSr2WzOp/Epi8tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,275,1716274800"; 
-   d="scan'208";a="57164175"
-Received: from s2600wttr.bj.intel.com ([10.240.192.138])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 01:58:18 -0700
-From: Li Ming <ming4.li@intel.com>
-To: linux-cxl@vger.kernel.org,
-	rrichter@amd.com,
-	terry.bowman@amd.com,
-	dan.j.williams@intel.com,
-	alison.schofield@intel.com,
-	pengfei.xu@intel.com
-Cc: Li Ming <ming4.li@intel.com>
-Subject: [PATCH v2 2/2] cxl/test: Skip cxl_setup_parent_dport() for emulated dports
-Date: Fri,  9 Aug 2024 08:27:50 +0000
-Message-Id: <20240809082750.3015641-3-ming4.li@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240809082750.3015641-1-ming4.li@intel.com>
-References: <20240809082750.3015641-1-ming4.li@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GxeEoRf/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hw/2NiGeEn7XjEu5Zf2x/WycdnQQcDTkR9gsLABBMskLioCTjjOaC6eNed+B/NZqpjmuSFz2qbjOfaHYwDLcltQwcFM8+FYPxQp/UuXpofm0QYaux6+bmUKPVf18a0Td5F17B4nKy4IwyIR6QrVw8oIRxvK8pk8WAJfpfscx5Ngv6PLy2/4ar+B8tKDeGxXCUzl5H8dY5XPiYc6gYqGy0hgfLZ1DtD2AL28q2CG6PLnFZtTg2oKIi5k+e41VaDTUjKfXwObEDSn35/J81xpI91v2decy33x1TeboXzurA+L9oWxkycTd7S2zxVQKh8iDgiS98DNFiXz1jscVTpwFcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gaAgOLY4Cu2/FNQ6lSTBBG3PSilSAKvFVTk2s466QzI=;
+ b=wsv5cN/kmyO5PSUO+GwgWTVzcCY7vdirqeQQTkjOVp6ZcDeRxotW4J3tf4WEA1vrlYQNpQHmI7TJZkg176U3HkMmYPSQLhNMOtc25FQ6pcDmU4iPURXNAgWqQUv0dR16Ev+bhplKGY36gwSvBCpjskq0LSmwDPxFDLeBuGEJOHzZYy8zFh5YL2f1GgSVIkK5tY/JwIy2n0VXZkBhmjTdb4AbcJlTZKlquMLOMTI/335ICAO2dDOtOqpLR7B32Shm0FtbFUI3YFOPhvX0Iyv5h474KyI51Nl82prDGFo8Le5fh0EMPyhjhW69wrDFDdM5T8reTc8fUGPfnI5TxfL39A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gaAgOLY4Cu2/FNQ6lSTBBG3PSilSAKvFVTk2s466QzI=;
+ b=GxeEoRf/IPpFR+lYLF92e5IsMmtXlvUV03GMxt2iW/JQen9drcr+fXTanBv8atg2klJeXa7peNdhRRbmKW3xUhRTqzNarwIP53d/hUtYLDjzJNC7UuIlT7OpBaAYo4g+54gZ6sNrKY4MQYmHK0r3cTrCfoUf61xXqeUT7wzoqiCfznQoj0YS80whBy+NQA9FdntFrE8MPQ24GbtZricTrPNUulkqPxv6LMEVmlj5QILCDqZ2MgoWP4Qt1KwDf4Z0U2wNLqxxt0bc2nd66ayq+sYId3lyQ+Vft1a/iuW0I5OSx+RhpZAGifMDSQF82QQgSwtyMEApqHWWA7dizefriQ==
+Received: from BN9PR03CA0628.namprd03.prod.outlook.com (2603:10b6:408:106::33)
+ by PH7PR12MB6857.namprd12.prod.outlook.com (2603:10b6:510:1af::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.23; Fri, 9 Aug
+ 2024 09:01:47 +0000
+Received: from BL6PEPF0001AB78.namprd02.prod.outlook.com
+ (2603:10b6:408:106:cafe::ac) by BN9PR03CA0628.outlook.office365.com
+ (2603:10b6:408:106::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.32 via Frontend
+ Transport; Fri, 9 Aug 2024 09:01:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL6PEPF0001AB78.mail.protection.outlook.com (10.167.242.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7849.8 via Frontend Transport; Fri, 9 Aug 2024 09:01:46 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 Aug 2024
+ 02:01:29 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 Aug 2024
+ 02:01:28 -0700
+Received: from localhost (10.127.8.11) by mail.nvidia.com (10.129.68.7) with
+ Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Fri, 9 Aug 2024
+ 02:01:25 -0700
+Date: Fri, 9 Aug 2024 12:01:25 +0300
+From: Zhi Wang <zhiw@nvidia.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
+	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <edumazet@google.com>, <richard.hughes@amd.com>,
+	Alejandro Lucero <alucerop@amd.com>, <targupta@nvidia.com>
+Subject: Re: [PATCH v2 03/15] cxl: add function for type2 resource request
+Message-ID: <20240809120125.000019af.zhiw@nvidia.com>
+In-Reply-To: <20240715172835.24757-4-alejandro.lucero-palau@amd.com>
+References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
+	<20240715172835.24757-4-alejandro.lucero-palau@amd.com>
+Organization: NVIDIA
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB78:EE_|PH7PR12MB6857:EE_
+X-MS-Office365-Filtering-Correlation-Id: 790ab876-b6ba-4128-fe1b-08dcb851e5e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Z643ar++OQHWcm8qh5sumEBWTXgFryiPbHtkiddL+55NyTNldh3KIF8FmHTG?=
+ =?us-ascii?Q?5wzDjpG2YQ1ESkMTSHQU3N0ep3I/jwEBnYkswH/t2QUiBMYsFGUGlfRUaGPw?=
+ =?us-ascii?Q?h1mNMJR51tDQtBYMrksUijkdTLPEEw/EIBTC3Tmb5MztF5AE0ItmT4PEmNO8?=
+ =?us-ascii?Q?ll1NR8NtgNpdkrVHByBNjqN9n3vAO6vQEmcJPJdYocdjgxyhLRrj2FKDkz2B?=
+ =?us-ascii?Q?tz8dg4mRGzRCHWvgm0zj+AsNVxU1crM/kXXA6a1vd3R2Vs5IjMBjCbGCdzQS?=
+ =?us-ascii?Q?Elqik9lXsRFgHCy6c5PjxCfzx+Pz9fm4NvP8SSfVxv3PScdXcZNR/HTojqV2?=
+ =?us-ascii?Q?L71IpexPnpqQRtjXNDcO6SA5s2epId1k/clWJBINqkOlN0EvcOp+8l8dk60r?=
+ =?us-ascii?Q?qVjw4SSbWHgwBrGTFiIHD8HryVL4Uhh2KbjARq7FgJb11o4PgVAGbpJ/Z7s3?=
+ =?us-ascii?Q?Yr6H9q5BgrPnhJkxGCFfzygCm9CyOJBGT0PvY908K+RMxUhLyublps933Hp3?=
+ =?us-ascii?Q?nOC2rL+uytPyu5yiHdVxfLalMrUyGsiSvnLny2SNqKzQAMiXgoihMjHuMs1e?=
+ =?us-ascii?Q?Bn7fOeXMDjZHNdSQ98iekh6puWstCjl3Q3qcTbTofffAbnTmw0Ivvlk22mBc?=
+ =?us-ascii?Q?hZqURU1HWyjPxRLlA+LhF+rLP4QKwcT/mmh/5a9062r0vmgPnN7UJ/7d4Zre?=
+ =?us-ascii?Q?V5DGo8V5KGbimxX/ixiXPiyO+BwgREmwM4spgDt+DFN2AqPZRUD/d/1St+tq?=
+ =?us-ascii?Q?PDN8bA5863p3OOXdRsUXtcBgdkVhadUz1o2CcI5NjjRAu0fGMD7jZLF6KVdn?=
+ =?us-ascii?Q?piQqeqtgdoiRH0Wfj2YYRsu2raWXQoQs+x0P/xkjFFUir3++ZkSQx9eJ0Aa0?=
+ =?us-ascii?Q?V8d/gaS5ZjGO+aLlxKkaN93fY8f46o1iAapF+1iJbWVMg4HnCWJ4q4QrYoU0?=
+ =?us-ascii?Q?a1gGFtJjxz6qnh0xb6+Fx/79gBlpc8AWEWQC7f245uYcRMe61pL/hAqTlQnv?=
+ =?us-ascii?Q?VR/78A2SRdsr9Uj1hT3m97ZPj+NbHv8H7ytzyN8YAWKc/+U6pV/FRHnBtUHw?=
+ =?us-ascii?Q?k1r5D8lo9CODl8VWJM7/NAD1ASp8/Hzt+Pw2LLEhNQG5eezA07UKwGgDyAnl?=
+ =?us-ascii?Q?XvirQLME6vPVcDYzOAP8e6nwNqOypupD37m+WiYcm7ulT2cF8exvcvt/u7pq?=
+ =?us-ascii?Q?dEQOba8IK04y/KGVW/X1EWZh9hcoJrJDd8V97izXoXe52pqk7AaAtVa3bR0c?=
+ =?us-ascii?Q?IQ1U7OELCrV+FoaMxU2kw3WXEOZYx0Uts3pHIovd9+M601XrzXS9Zz3Ht3s3?=
+ =?us-ascii?Q?KnFLdy79Bs52PPj0/29X7DeHVnd5/aitdwCBwS+LLYyc+YsI5Q5XnQmsBuOH?=
+ =?us-ascii?Q?X5e8MaIX6zgaAWQVX0m8Gm3OCmT/MioVT3P60Hr/FR+Ofxo4swb+MaNTUTzc?=
+ =?us-ascii?Q?Zk8htpqX+Uk1PiiaxNny+tIGOwEWsXWg?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2024 09:01:46.6628
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 790ab876-b6ba-4128-fe1b-08dcb851e5e7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB78.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6857
 
-The cxl_test unit test environment on qemu always hits below call trace
-with KASAN enabled:
+On Mon, 15 Jul 2024 18:28:23 +0100
+<alejandro.lucero-palau@amd.com> wrote:
 
- BUG: KASAN: slab-out-of-bounds in cxl_setup_parent_dport+0x480/0x530 [cxl_core]
- Read of size 1 at addr ff110000676014f8 by task (udev-worker)/676[   24.424403] CPU: 2 PID: 676 Comm: (udev-worker) Tainted: G           O     N 6.10.0-qemucxl #1
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20240214-2.el9 02/14/2024
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0xea/0x150
-  print_report+0xce/0x610
-  ? kasan_complete_mode_report_info+0x40/0x200
-  kasan_report+0xcc/0x110
-  __asan_report_load1_noabort+0x18/0x20
-  cxl_setup_parent_dport+0x480/0x530 [cxl_core]
-  cxl_mem_probe+0x49b/0xaa0 [cxl_mem]
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Create a new function for a type2 device requesting a resource
+> passing the opaque struct to work with.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/memdev.c          | 13 +++++++++++++
+>  drivers/net/ethernet/sfc/efx_cxl.c |  7 ++++++-
+>  include/linux/cxl_accel_mem.h      |  1 +
+>  3 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 61b5d35b49e7..04c3a0f8bc2e 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -744,6 +744,19 @@ void cxl_accel_set_resource(struct cxl_dev_state
+> *cxlds, struct resource res, }
+>  EXPORT_SYMBOL_NS_GPL(cxl_accel_set_resource, CXL);
+>  
+> +int cxl_accel_request_resource(struct cxl_dev_state *cxlds, bool
+> is_ram) +{
+> +	int rc;
+> +
 
-cxl_test module models a CXL topology for testing, it creates some
-emulated dports with platform devices in the CXL topology, so the
-dport_dev of an emulated dport points to a platform device rather than a
-pci device or a pci host bridge in the case. Currently,
-cxl_setup_parent_dport() is used to set up RAS and AER capability on the
-dport connected to the CXL memory device, but cxl_test does not support
-RAS or AER functionality yet, so the fix is implementing a
-__wrap_cxl_setup_parent_dport() to filter out all emulated dports,
-guarantees only real dports can be handled by cxl_setup_parent_dport().
+In PATCH 1, you got the resource type enumeration. Let's use them here
+instead of a bool. 
 
-Fixes: f05fd10d138d ("cxl/pci: Add RCH downstream port AER register discovery")
-Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-Closes: https://lore.kernel.org/linux-cxl/ZrHTBp2O+HtUe6kt@xpf.sh.intel.com/T/#t
-Signed-off-by: Li Ming <ming4.li@intel.com>
----
- tools/testing/cxl/Kbuild      |  1 +
- tools/testing/cxl/test/mock.c | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+> +	if (is_ram)
+> +		rc = request_resource(&cxlds->dpa_res,
+> &cxlds->ram_res);
+> +	else
+> +		rc = request_resource(&cxlds->dpa_res,
+> &cxlds->pmem_res); +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_accel_request_resource, CXL);
+> +
+>  static int cxl_memdev_release_file(struct inode *inode, struct file
+> *file) {
+>  	struct cxl_memdev *cxlmd =
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
+> b/drivers/net/ethernet/sfc/efx_cxl.c index 10c4fb915278..9cefcaf3caca
+> 100644 --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -48,8 +48,13 @@ void efx_cxl_init(struct efx_nic *efx)
+>  	res = DEFINE_RES_MEM_NAMED(0, EFX_CTPIO_BUFFER_SIZE, "ram");
+>  	cxl_accel_set_resource(cxl->cxlds, res, CXL_ACCEL_RES_RAM);
+>  
+> -	if (cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds))
+> +	if (cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds)) {
+>  		pci_info(pci_dev, "CXL accel setup regs failed");
+> +		return;
+> +	}
+> +
+> +	if (cxl_accel_request_resource(cxl->cxlds, true))
+> +		pci_info(pci_dev, "CXL accel resource request
+> failed"); }
+>  
+> 
 
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 030b388800f0..3d1ca9e38b1f 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -14,6 +14,7 @@ ldflags-y += --wrap=cxl_dvsec_rr_decode
- ldflags-y += --wrap=devm_cxl_add_rch_dport
- ldflags-y += --wrap=cxl_rcd_component_reg_phys
- ldflags-y += --wrap=cxl_endpoint_parse_cdat
-+ldflags-y += --wrap=cxl_setup_parent_dport
- 
- DRIVERS := ../../../drivers
- CXL_SRC := $(DRIVERS)/cxl
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 6f737941dc0e..d619672faa49 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -299,6 +299,18 @@ void __wrap_cxl_endpoint_parse_cdat(struct cxl_port *port)
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_cxl_endpoint_parse_cdat, CXL);
- 
-+void __wrap_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
-+{
-+	int index;
-+	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-+
-+	if (!ops || !ops->is_mock_port(dport->dport_dev))
-+		cxl_setup_parent_dport(host, dport);
-+
-+	put_cxl_mock_ops(index);
-+}
-+EXPORT_SYMBOL_NS_GPL(__wrap_cxl_setup_parent_dport, CXL);
-+
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(ACPI);
- MODULE_IMPORT_NS(CXL);
--- 
-2.40.1
+The guidelines of error reporting from a driver is mostly considered
+from the user perspective. If it is an error, shout, let the user know
+what happened. Otherwise, we usually don't disturb the user other than
+telling them we are loaded and everything works fine.
+
+Please use pci_err() instead. So the user can spot it from a
+message folder filtered by error level in a kernel dmesg logger.
+
+> diff --git a/include/linux/cxl_accel_mem.h
+> b/include/linux/cxl_accel_mem.h index ca7af4a9cefc..c7b254edc096
+> 100644 --- a/include/linux/cxl_accel_mem.h
+> +++ b/include/linux/cxl_accel_mem.h
+> @@ -20,4 +20,5 @@ void cxl_accel_set_serial(cxl_accel_state *cxlds,
+> u64 serial); void cxl_accel_set_resource(struct cxl_dev_state *cxlds,
+> struct resource res, enum accel_resource);
+>  int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct
+> cxl_dev_state *cxlds); +int cxl_accel_request_resource(struct
+> cxl_dev_state *cxlds, bool is_ram); #endif
 
