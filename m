@@ -1,204 +1,190 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACCB145FE5
-	for <linux-cxl@vger.kernel.org>; Fri,  9 Aug 2024 18:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723227034; cv=none; b=Ffh7bhSaJ7Xa7uaP6jNe/ZQ0bActfTxtZJwkbRtuNC6ziVbTxR3GBMFnXp7NQDHw0iZH24Npmo2h415v2mg+dPtKTElHhLdQU6PhKmxRgDj15+JUKCPzVBCNXodZH4VvwII6F2XqojD6z2U6DmWDSJSh5JxJyo3dN6KJ06dtuVM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723227034; c=relaxed/simple;
-	bh=hjEkJy4i+WTJzKeWHwYqkdt+dY5dFF47qWBmD1BRAdE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HLH2Q7vFjr/cITnEYvOc2Y7nUsZ3nemYf2a1Ygt3xSf+2zWqX8ZMtX/xMyC11g1f6F+IurSrx9aCEFfd+dEglF24X6FwGL/KrEEni6rbmVyaMHXl2Tcg9s5EBnCvSMx4AkGIPHp/7mbHLSOJkk2XvfBY7J7Q0Csx7VB6noe3GIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=oDIKrFDf; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3502F56
+	for <linux-cxl@vger.kernel.org>; Fri,  9 Aug 2024 18:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723229759; cv=fail; b=bOsf51IohVNBBBSenI5lpvJBT0T9GwSk/boQQLGTU8/j6cnmuKzTfeoDpOzLWxd0uYW16HPzhEMx6TBDqc8jCkHeH0THR4eXFZRauLxhocT7b5DHYcS6G+ZC4np1ckFwtJdtP/P1d+tqdHtNutQS5Fs0YfPVvLl0OthlevFr5BQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723229759; c=relaxed/simple;
+	bh=wew8f9yqTEFoMQ5zdTJzj/QPzNNj7zu0V+Q/6Fn2AeM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PqJGZAvNP/rdpjSf0p5nlRbA516oRnHMhADsibWqAhfh0l4g+Oz5y6H7eMS0DmeOfI+dSGfLitiDc1UmG/CtkWm9XMkUlzehGmrdqS33GJqLvT75Zw8JwIj9BnRJlWHMGW69lXbolQ6hFOuzXFZijZ2hhbUAWKcAcjbqAFIb/GY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gfl7V35A; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="oDIKrFDf"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-44fff73f223so13140171cf.2
-        for <linux-cxl@vger.kernel.org>; Fri, 09 Aug 2024 11:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1723227030; x=1723831830; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AHqMJlIkWWEgQwJvsxhrebiNG2gW3dBZk5UEyqRtZXk=;
-        b=oDIKrFDfCif18AMcZohRHmD/3S9BjRolPEE46VijU6ypl7O01DBLnxlhbPzh3vulRq
-         ClVLzK0cGcrqdSf3bZuq12MsryX67e4zXHCiBNQYE08y2hHD9B19o8f+nhBLquEJNqQp
-         Rw3T47rury6mFn2lVpvElY7PfdQapKnwm2/MNwfHgrANai6by9uCd9RqxD13WRwl/GDF
-         aR2QCVnkFvKuNjpwFHOGk2FieFw/SifwUgSih1ZN7G8ZNwlfBiwtCPxs+buZE+KOWurI
-         wxwnETOVgWD0si4zIDJm8tmfpXh/VqQadc0ANtn4CywgsGvs6m0VP/pK0fJa+SAyuOgQ
-         d/1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723227030; x=1723831830;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AHqMJlIkWWEgQwJvsxhrebiNG2gW3dBZk5UEyqRtZXk=;
-        b=vn4iGVXmtfpi1FMhYZP4iGGPxx0TwTCczrfxNOzYsbdVyqVxth86eAJBY5CewuZOJ9
-         GsghnESm/I4g7WhOZnvvCWwXRjOCWRQEmz3XlrwvY180t7OjkX8VyZRe+MSAJb1JYBIu
-         Tvj/IW8O9hqoIqryjfGpf2B7E7Eg7i1GygYbdfDTuM8jFZVIJlAmOE8TwdbVKARsZ/qh
-         JpCQ8Sk2pmd0p7ke5KcbNzYLOyXbKHdMqIUs/VEO1RU4LKkex9IAujKMGjEKTHI0i55L
-         9mz/q+sALeW21L0FTWjY35aAeZ8pl0CWtl59qSkqaTI5gIewlXycmAR4t/P6lsu7ilZ2
-         aTLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXS4hMODtLDJoeNTn5lt9NK/RX6/dxqQC0itu+1RyZ2R4NrLyQh9gjnxuEcTK4OQL3Ju9ZfIiu6dZGu6y2zZp4NU6CBMv6hJ6o9
-X-Gm-Message-State: AOJu0YxT60Nc/xXZi0yIz2BiZec22T6tSoasXnK0QsivPcDvb+PPgUp3
-	aWIU6ZmD7fqRzJb0fdcPGo53q8y+dmKroPoTxs/aslI3w5EvdhC+8lsew3NbUJJQruV+s5ZiFPe
-	MF9JET3BY/PZ2dkWN5eNgV7wlgyIL00nYnQlmOw==
-X-Google-Smtp-Source: AGHT+IHrNlz+ta25fI4t3VA0/EEbsr27aU89/bZMIE48EJr0+K917c8yN5Fy0ywTD7GNlhd6voyk2Z4+WfWnBsJ9Ua0=
-X-Received: by 2002:a05:622a:4113:b0:451:d70a:80b4 with SMTP id
- d75a77b69052e-4531251ba01mr31251511cf.4.1723227030003; Fri, 09 Aug 2024
- 11:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gfl7V35A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723229757; x=1754765757;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=wew8f9yqTEFoMQ5zdTJzj/QPzNNj7zu0V+Q/6Fn2AeM=;
+  b=Gfl7V35AVHHFTcJkUDqFU4v6JsttuHFjPbHs7SOXWOpLpB7qlwU6NGkt
+   BPM7fpvJ+t6MIlbHxcDSVC3qt0Hqzsi3og/uacBT5Np3VUNp2ewnEaZE+
+   E3c4MMYuMgE9pvmYNmWIgs3hu3aTdN3lhQuHbnhIjTIhc8P7eRlO/tNAG
+   nCCrw61Nh2p74Wy669/Jp7h4cvlidnshzRMEXY1pLugHpCX/yR+90F+JL
+   SiHCs6BjLLXQQR6QHYBEueDRUanZvxe8/VjWrbcFK1Elkzk1iu9EBL7Te
+   eUs2fOAkhS4oRer1Umr2gyHd24Hatewvdu4a125vd81ol7uZKjBcJRXuH
+   Q==;
+X-CSE-ConnectionGUID: yfc7CtMDRBmxS1+EP0Jpww==
+X-CSE-MsgGUID: j+ZoIxXQTHuftR70f9bOWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21225721"
+X-IronPort-AV: E=Sophos;i="6.09,277,1716274800"; 
+   d="scan'208";a="21225721"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 11:55:56 -0700
+X-CSE-ConnectionGUID: epO+PAwOSwKMlx79csK+MA==
+X-CSE-MsgGUID: 07twIkhjT1mpb04OFmY5YQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,277,1716274800"; 
+   d="scan'208";a="62596340"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Aug 2024 11:55:56 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 9 Aug 2024 11:55:55 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 9 Aug 2024 11:55:55 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 9 Aug 2024 11:55:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ViQLtqSsQit18U/9Ajp6pxp8l/G+5qqkLtLaAOR43HGb070RlQ9iksdPlr5S2X1cueFPN6cbPr7oJgoI+pbD1tO0N+7/O37X51fX/OVzFsurAtAO8sE4AAuremZBoq4mYsEjflSoNc0IDKLg1n/rGAErVsedTfypvKdK0dxS/JsjekFAVJv0lFpAU4MFqlmB3Iq3X2LNWKURk7qEKOulTXQJbriF5MJArnDTfDx+rjfqw6SazCLUvFrY3IF+1341F2tlEzFBiNmOOoUQT+tewuNjMC6Z8+HkDZt6Y2bEsVq6ciRrg6rLa8+ofQ0G1WkvqGC9GJ0fzmA2eBbvMv0s4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wew8f9yqTEFoMQ5zdTJzj/QPzNNj7zu0V+Q/6Fn2AeM=;
+ b=bBpSOCl9Tzc2tJ+aBhYOrFrl/6AkBmkYeMix4Jsoln+VirZsxcWOnj2cN/x5qZ0VZwJnr9giiMnKBh4zFbZ5HvkisjpTd9ISK6Hi0dB84wceCJhC8KbvKKClR5SaipJsE1BUMa+dD4QZyd2jJ2gQozvXnqAp/8Y8wFVyVM80Euu5kXfklpJ4rdkCdhQsPpU0ZPQLjEQRYijSf2iwj3+T5e2Xyf/f5qmHct4vry3/3G/O0APrgtbDLBFVj4wCffeGqXPDegM9Kj0xIbPD1fY9idJa18jyakYfCDdgBI9r51kF+NvBkF/wT+1kW1tZoKD4P4K9qjg+SQexZzK48xnJZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA2PR11MB4842.namprd11.prod.outlook.com (2603:10b6:806:f8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.23; Fri, 9 Aug
+ 2024 18:55:52 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7828.021; Fri, 9 Aug 2024
+ 18:55:52 +0000
+Date: Fri, 9 Aug 2024 11:55:48 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Yanfei Xu <yanfei.xu@intel.com>, <linux-cxl@vger.kernel.org>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <ming4.li@intel.com>, <yanfei.xu@intel.com>
+Subject: Re: [v2 1/4] cxl/pci: Fix to record only non-zero ranges
+Message-ID: <66b66634acec6_25752945e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240809093442.646545-1-yanfei.xu@intel.com>
+ <20240809093442.646545-2-yanfei.xu@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240809093442.646545-2-yanfei.xu@intel.com>
+X-ClientProxiedBy: MW4PR04CA0135.namprd04.prod.outlook.com
+ (2603:10b6:303:84::20) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808213437.682006-1-pasha.tatashin@soleen.com>
- <20240808213437.682006-4-pasha.tatashin@soleen.com> <b13cf452-4573-4202-8178-26a33e9f2185@redhat.com>
-In-Reply-To: <b13cf452-4573-4202-8178-26a33e9f2185@redhat.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 9 Aug 2024 14:09:53 -0400
-Message-ID: <CA+CK2bCpay7V=4_AGiTEyX2OG_6rvqR42MkVSJwEhGa7h+5R4g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] mm: don't account memmap per-node
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
-	hannes@cmpxchg.org, j.granados@samsung.com, lizhijian@fujitsu.com, 
-	muchun.song@linux.dev, nphamcs@gmail.com, rientjes@google.com, 
-	rppt@kernel.org, souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
-	dan.j.williams@intel.com, yi.zhang@redhat.com, alison.schofield@intel.com, 
-	yosryahmed@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA2PR11MB4842:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5c047a2-f82a-4f09-05b3-08dcb8a4e447
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SjF1dcokBLc4mJcyeYUYDFWepN8hn+jnMbNo7NAYeOtaitK7bXLA2EinAtbm?=
+ =?us-ascii?Q?bxzl8ByrKGlS9h7DKGjZva02cAocGYYCmJZUm1BqCfTCzQB5QLC6ugoSRFh2?=
+ =?us-ascii?Q?wKtOaYSWep2N92Mm1WliiUZqhy8xudJDe/Q/HoBLlc4PAK4BagXRIra9ZNJO?=
+ =?us-ascii?Q?DHs405iYS9iZrPQJyqoH0u6NMTGI9oGlvCO7EptdZp+wUUboAXCNTR4/LP+h?=
+ =?us-ascii?Q?vMplSkMnvVdkFmDAFw5ti6mr0wDqu2RsyvUYUC9HFutZnvrzYzwi+FRp83Pv?=
+ =?us-ascii?Q?//6O7OWEgrnKfbt0Z01uoAttGygk0zVWbaMFvrbrczwNkqxuHa94ciYsjWVi?=
+ =?us-ascii?Q?MmNbSAjS334qISb58aXR1g2BmcY5lVIrbvmWz8UG31Z9c+zsNiQlO6haxM6/?=
+ =?us-ascii?Q?Er535Ri9qQLnhm1qmA01KS6CRsOXt50787CsppsZHuNLxQ8k+MfYPF7qi0wT?=
+ =?us-ascii?Q?J8XKC9byzrkn5Q0Mwx6/af9QKpU72QWQQ6G0NmmaH1Fbc7MPy0uNYiGMl5Vx?=
+ =?us-ascii?Q?hWA/FJy+k3dvUYOpsNcKNUJrhEjZPKoXdSVWd3+qecn7fESJmsURpSS+4aYc?=
+ =?us-ascii?Q?FrAlWlgW8hFpzAMDKxsTt4IomyOje1kaHfO7yjjZ1YmuxglATae8qrt+Z6Zj?=
+ =?us-ascii?Q?ZZgxdSpkT+MNQ9qrduGTvYXUgcvQtA8l+b8hOjNNn2EonlsJsKncduYp90Df?=
+ =?us-ascii?Q?MZrsaFW8tS+ZTkaeeOBg3WXYVtRmuuRVUPs8hTsAxysXjxYtpKvQnnPQsVAX?=
+ =?us-ascii?Q?ajYE5ocUX+4wTH1AJYy7eLyYid6t8qu3alkDCpgE0o9RuBeze1Y9+jnF/Edm?=
+ =?us-ascii?Q?gKwPg+M3obONObi1P60+OakvgifMDmu0BHHp1tSWty6wBgIwQGBw5fb40N+c?=
+ =?us-ascii?Q?nO62E4/thxa4KOAmZeFWg7YwSgcA8Bjr0ltGsdWZACXmCLRNdI2ru4CpD5qn?=
+ =?us-ascii?Q?zF/uYPHQubJtngCBamEtTctpGXFor6d9qlV2/md08tB2WqzonLTEcxmCuE57?=
+ =?us-ascii?Q?RTukBZojr0aBTCyssv0lCH2xXD94KeRkBaRejSZz2W22niPOdfh+708uw4cU?=
+ =?us-ascii?Q?M++AsRNczsVTzvKo6sAzlf3VjOgRIGd4Lj08I7GpNvgk+aihJ4Tu5sot5M3G?=
+ =?us-ascii?Q?1V5Uv3blJeZTY3GlxVoXQeZALZt/l6/XcDRF+AmaGUeZKlDq6EGoFlUd+N9f?=
+ =?us-ascii?Q?64Ybb42oE0B5yKoZqCqOjeTitPXgJG/lHAebW0n0QQUjH03F9FMwiYeMKSp4?=
+ =?us-ascii?Q?+ScU+Uzk59+nS76itoL2PVCZfrTsjk9VoucID2l3cv5o9E5q5nZ6pd2mHC71?=
+ =?us-ascii?Q?yJPcfdOh9CRgVTUHmz6ZZ737TIgBgxh8eO/dHvC7OLqEPA=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rVectRmss1GHUhxHuVs4fVzfeoHbBnWQLvc1RxIL3rSZMeCy1X8GzfYRGeAX?=
+ =?us-ascii?Q?UuQZQHBlBUZZHBlDUp9/uGo8Wxbv5QtEsh+zfwTORWUSapjTyEhcPT73OSsB?=
+ =?us-ascii?Q?zWHxFE7fGldDRX6CBfKc4Q+ZsyNe4tchH2/jc3fBM/BCzMyE+vIdALIJkc3z?=
+ =?us-ascii?Q?BtI4u0X17LmKxLbukC9pXoLrBeBIeGbGgUY8qlYGKtMEGMoAan/4otOpHGS4?=
+ =?us-ascii?Q?Z17HUmfLKi+gbTGyTLuOHZETE1L8SUipNYemf6bBqWW55abqCwmN9pookDNP?=
+ =?us-ascii?Q?7kdKLy6maXz3K4Ld316bWvUn8L1c5SHrISusDpEVfwiZgJAAJGGsHbHNKx5s?=
+ =?us-ascii?Q?PmCZWRVFUgx7yt0K3AbLLjYQ9qiUU32sAIaPGPtgYo2ByBvuvssgLRJBGIg4?=
+ =?us-ascii?Q?fK6WaD39oAUKW/HwKDf3dElE2AoiphYyydyKhxE9/kqsd5EDWAiDGYz8NLm8?=
+ =?us-ascii?Q?YdGpJvPFVRvts/xK4gKZvQgzdyxjYW3rKB76dws8y5XNO7nl5MjR14Sv+Afh?=
+ =?us-ascii?Q?7wo+r0fgcohXSMIt3zKibLYyy42L7THGxZ8IAJ6JgHcp/uX1RfUPTJOhN6yh?=
+ =?us-ascii?Q?pGrekoA05mqvp/RsezCNnR2CshDbt9Ho+HmpTAubwwhYrbslmINDkm72r5ta?=
+ =?us-ascii?Q?a3J0d77B2+mJ4zSMknh/Xd+jwBvwHQCamQnY8J6aX3E0Qg1VYcJB5npz94U1?=
+ =?us-ascii?Q?hoGGKbkqmqDgsrSDZwhMLds8RFXdVsA+oGbx6548KGKNJoviOfW8XjebshHy?=
+ =?us-ascii?Q?lQT04ME6/HHkgGeqSjtcBBFBcXFxF2pwJ8eJxFmPO5DDKcFNoz7DpxaH2eoY?=
+ =?us-ascii?Q?21Rdd6lvXVksoqeNMLbjqjpI/TD47n+2zIwxDw0nwJI1EEycFPPBgsdCZGzb?=
+ =?us-ascii?Q?0kyEKD4hX6/G7wwbZudDMpFP2ZgS2XnCWqyq9p2+93D0shMagSibjaL8jT8g?=
+ =?us-ascii?Q?tjxRtMDSSH7F4+hhYcUk/jC4x2Qw/i3BgU+7SaFlgq1UuHdQQLV5jrQ6llqE?=
+ =?us-ascii?Q?wYVeTC5Mru6uFC8LQfVVQQAoIbUPkBRxiALneKo0Ax9ot80YGw1izlB3B42d?=
+ =?us-ascii?Q?0cquCPpN6I9fkXmVNxoZlBPh1f8Ayy6+WrKJ+/JaQgOSO/lmgq3toHzmiBDw?=
+ =?us-ascii?Q?KP2eoxKxZkNfwFkQqPKLJ25CDoPaET9pCd5GHn4pRoLP6aTY45NE45JPjwBs?=
+ =?us-ascii?Q?7bztoT75pDzJ56FgVRGVSkvcTkM14OZ+LvJKcMYDYFd862cEGt6m8qt4hDWq?=
+ =?us-ascii?Q?mb9uOJIBocMbwp3kktKOjSIwbGMNU8kgAVC0rFWzWbVNQwxUxiZ1dJnNkwyW?=
+ =?us-ascii?Q?9toFsZq/fXJCpYbxX/rVORClwEi9YV94Vj6T/rI8cOrCwotdP37EWOXXTjBB?=
+ =?us-ascii?Q?qV18jJufEoKeuFY1b991xiWHLHzqzN3an9hqBIYN1QAUlu+X1qpZ4JGpsfdI?=
+ =?us-ascii?Q?rO/wcRsrx6IsZNrDY3P1hbmfn1xu6m00NxVauwNm1QibWeHxCfzItw/Mn7F+?=
+ =?us-ascii?Q?glQeTzC25GxkdPniKaXyXAc97G6fInUIKRuoaj7O0WSOu+z/AAfe865ed/aM?=
+ =?us-ascii?Q?MdETxXMjtY9KjvQeTEiWqLVFBkTBcAjUA0QBmEpmRzD+Dn8s/2Mj8JikzgdP?=
+ =?us-ascii?Q?tA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5c047a2-f82a-4f09-05b3-08dcb8a4e447
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2024 18:55:52.5302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4ljAmwMaj9fxgxlBo2WPKwCKLf7II2MtNCwDK8WZgda/rudorrj+cr2rMPAz8R+MujP+Sd5KAfpi91tvKIsZOSmRSR5ldt5fr8YLoXJevFQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4842
+X-OriginatorOrg: intel.com
 
-On Fri, Aug 9, 2024 at 3:31=E2=80=AFAM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 08.08.24 23:34, Pasha Tatashin wrote:
-> > Fix invalid access to pgdat during hot-remove operation:
-> > ndctl users reported a GPF when trying to destroy a namespace:
-> > $ ndctl destroy-namespace all -r all -f
-> >   Segmentation fault
-> >   dmesg:
-> >   Oops: general protection fault, probably for
-> >   non-canonical address 0xdffffc0000005650: 0000 [#1] PREEMPT SMP KASAN
-> >   PTI
-> >   KASAN: probably user-memory-access in range
-> >   [0x000000000002b280-0x000000000002b287]
-> >   CPU: 26 UID: 0 PID: 1868 Comm: ndctl Not tainted 6.11.0-rc1 #1
-> >   Hardware name: Dell Inc. PowerEdge R640/08HT8T, BIOS
-> >   2.20.1 09/13/2023
-> >   RIP: 0010:mod_node_page_state+0x2a/0x110
-> >
-> > cxl-test users report a GPF when trying to unload the test module:
-> > $ modrpobe -r cxl-test
-> >   dmesg
-> >   BUG: unable to handle page fault for address: 0000000000004200
-> >   #PF: supervisor read access in kernel mode
-> >   #PF: error_code(0x0000) - not-present page
-> >   PGD 0 P4D 0
-> >   Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-> >   CPU: 0 UID: 0 PID: 1076 Comm: modprobe Tainted: G O N 6.11.0-rc1 #197
-> >   Tainted: [O]=3DOOT_MODULE, [N]=3DTEST
-> >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/=
-15
-> >   RIP: 0010:mod_node_page_state+0x6/0x90
-> >
-> > Currently, when memory is hot-plugged or hot-removed the accounting is
-> > done based on the assumption that memmap is allocated from the same nod=
-e
-> > as the hot-plugged/hot-removed memory, which is not always the case.
-> >
-> > In addition, there are challenges with keeping the node id of the memor=
-y
-> > that is being remove to the time when memmap accounting is actually
-> > performed: since this is done after remove_pfn_range_from_zone(), and
-> > also after remove_memory_block_devices(). Meaning that we cannot use
-> > pgdat nor walking though memblocks to get the nid.
-> >
-> > Given all of that, account the memmap overhead system wide instead.
-> >
-> > For this we are going to be using global atomic counters, but given tha=
-t
-> > memmap size is rarely modified, and normally is only modified either
-> > during early boot when there is only one CPU, or under a hotplug global
-> > mutex lock, therefore there is no need for per-cpu optimizations.
-> >
-> > Also, while we are here rename nr_memmap to nr_memmap_pages, and
-> > nr_memmap_boot to nr_memmap_boot_pages to be self explanatory that the
-> > units are in page count.
-> >
-> > Reported-by: Yi Zhang <yi.zhang@redhat.com>
-> > Closes: https://lore.kernel.org/linux-cxl/CAHj4cs9Ax1=3DCoJkgBGP_+sNu6-=
-6=3D6v=3D_L-ZBZY0bVLD3wUWZQg@mail.gmail.com
-> > Reported-by: Alison Schofield <alison.schofield@intel.com>
-> > Closes: https://lore.kernel.org/linux-mm/Zq0tPd2h6alFz8XF@aschofie-mobl=
-2/#t
-> >
-> > Fixes: 15995a352474 ("mm: report per-page metadata information")
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > Tested-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
->
-> [...]
->
-> In general
->
-> Acked-by: David Hildenbrand <david@redhat.com>
->
-> Two nits below:
->
->
-> >   static void free_map_bootmem(struct page *memmap)
-> > diff --git a/mm/vmstat.c b/mm/vmstat.c
-> > index 6f8aa4766f16..ad82c1bf0e63 100644
-> > --- a/mm/vmstat.c
-> > +++ b/mm/vmstat.c
-> > @@ -1033,6 +1033,23 @@ unsigned long node_page_state(struct pglist_data=
- *pgdat,
-> >   }
-> >   #endif
-> >
-> > +/*
-> > + * Count number of pages "struct page" and "struct page_ext" consume.
-> > + * nr_memmap_boot: # of pages allocated by boot allocator & not part o=
-f MemTotal
-> > + * nr_memmap: # of pages that were allocated by buddy allocator
-> > + */
-> > +static atomic_long_t nr_memmap_boot, nr_memmap;
->
-> I *think* the clean and portable way to do it is use ATOMIC_INIT(0) for
-> both. [even though what you have likely works on all archs]
+Yanfei Xu wrote:
+> The function cxl_dvsec_rr_decode() retrieves and records DVSEC
+> ranges into info->dvsec_range[], regardless of whether it is
+> non-zero range, and the variable info->ranges indicates the number
+> of non-zero ranges. However, in cxl_hdm_decode_init(), the validation
+> for info->dvsec_range[] occurs in a for loop that iterates based
+> on info->ranges. It may result in zero range to be validated but
+> non-zero range not be validated, in turn, the number of allowed
+> ranges is to be 0. Address it by only record non-zero ranges.
 
-Yeah, it is not necessary, but I will add ATOMIC_LONG_INIT(0),
+When applying this should mention the potential impact of the change,
+something like:
 
->
-> > +
-> > +void mod_memmap_boot(long delta)
-> > +{
-> > +     atomic_long_add(delta, &nr_memmap_boot);
-> > +}
-> > +
-> > +void mod_memmap(long delta)
-> > +{
-> > +     atomic_long_add(delta, &nr_memmap);
-> > +}
-> > +
->
-> Nit picking: (up to you)
->
-> I'd do it similar to totalram_pages_add():
->
-> memmap_pages_add()
-> memmap_boot_pages_add()
->
-> And call the variables something like
->
-> static atomic_long_t memmap_pages_boot, memmap_pages;
-
-Sure, I will rename them.
-
-Pasha
+"This fix is not urgent as it requires a configuration that zeroes out
+the first dvsec range while populating the second. This has not been
+observed, but it is theoretically possible. If this gets picked up for
+-stable, no harm done, but there is no urgency to backport."
