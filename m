@@ -1,103 +1,87 @@
-Received: from pv50p00im-ztdg10011201.me.com (pv50p00im-ztdg10011201.me.com [17.58.6.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B99DDDC5
-	for <linux-cxl@vger.kernel.org>; Sun, 11 Aug 2024 00:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BB1158A23
+	for <linux-cxl@vger.kernel.org>; Sun, 11 Aug 2024 20:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723335571; cv=none; b=C9kal8RYlhxLHod7AWJwy7nVJWq4N2LT/rnEeE2XIu+8hoiL8oK7fzecU1wggVsAotqE0GT6V+qptWX5yc1CXJpIPYbhpAyfQOnGqeLgXc/XsJZcJcmKKm0OLfJDjoDiWMZ8tHpAL3YBkvgeFiHulJMssPFQV3y2nl9/v80rlZQ=
+	t=1723407834; cv=none; b=B0fXLixdeodlIRX+KKdPIQUC7PcMNpNd9no0FRWe+rk8zkHj05mWO8N+6X7Yeiz3YjkZGtkbE/SLTlG/8X+RahH2VGSbLz+8PXdTMABAVFg5SShxufbYjBofL0Vfy28E6bZKRPVpPmBRQtoTk4kk934PeZ98nhBsZDKyo2lElsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723335571; c=relaxed/simple;
-	bh=KvOpYbmYWjV+rXzyCv7qf0TDxg/EynZxXUCOxIezkv0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RvTSQ7T4++IBjNuKPtLK6aASdoBF54uxyPMuGnPAIEoAYb2/rhR61i7iXrlgWrmoXbMo5RbP6PZBWmt03jG9/naJc1Cd69eJywHqf6lHh8WbKEVvSzCa02NOBek+FEXTfiyD7gJp+Uq+z93ryn1Kkh4I4LJFWZvNiCPV0GOaM1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=qmYKKRLx; arc=none smtp.client-ip=17.58.6.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1723407834; c=relaxed/simple;
+	bh=My3uMee4xFLSPzftRadt35yXZiJQFUD1laI161zGpnI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=R/1J4NksVrqzkgmF3suE4/7OkrWeZAuE/X6U9aeTyD4bLmdV2pCAd0Ajjs93Kb4zDQ1WXad4tl00TTogHFGLOEPR3FWBc1kVcguuFGvOY9iERNhnY2EhVkaVI6qbCA1PRF9pVbLA0bpIR3UQuv8NiJT/TMoOUL3rDRt/MG3iTLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0V+HuYqp; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="qmYKKRLx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1723335569;
-	bh=g0ifbuA5vAN4F2zvFBRG6+qhsDphBeYH944qW7z03P8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
-	b=qmYKKRLx9Y82CbRQ5af60iWurvgbjfFFy1jHlL2/cDHM7exhNOdzRoXacrnKaVrq0
-	 1GPSIZcgi4HderXO8iiaTSTmoF3eCUvwTgnIDuc1mWACn7xf+0noHRNEtBE+aa3QTp
-	 yeoDztR5HIGyQUBmWZw4PppRM8o4GEldznvFNauP30lg7uBysSzlTOQzNPm2InqyMu
-	 +egkE3WcX1oc5j012t/UVATl3PmYF1JG+Z8iWaZSYOqUdpQ8vCJ09BH8jQ9itxi5lk
-	 1MzKTrnaMON87PrCpyXJsBE39O4pG0pxsQLi6/sEZmjm24fHWDzoKQkZB+7cTc4E6C
-	 srV2ji0zC/vvg==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011201.me.com (Postfix) with ESMTPSA id 701106800FC;
-	Sun, 11 Aug 2024 00:19:22 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sun, 11 Aug 2024 08:18:11 +0800
-Subject: [PATCH 5/5] net: qcom/emac: Prevent device_find_child() from
- modifying caller's match data
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0V+HuYqp"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fed726aefcso174955ad.1
+        for <linux-cxl@vger.kernel.org>; Sun, 11 Aug 2024 13:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723407832; x=1724012632; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5bxH0HIvgBIX62IPBNWvzW2DcCvjALZOS7xYRmAPq4U=;
+        b=0V+HuYqptoMErEgetMT7vEgjAx0aKNtOLaUanC8N7uMQmwCYYYXP4u+nBPgMxwx8eP
+         CBVKRw6Jdc5hyil9Qqq7Bw0hVZFzTA036hJHBlTZndSbm7zOJLrI12M3qA0kqXOw7/SA
+         G+QdasciWELMuONMezZbkiXhGVuLQghK2gUppQdr2KQPOoCVe+CjtfltHkdhf05bT/ir
+         vriN5eeV7dXVcOSC3/imvmtOJdDd+a897c3Oiop3lWfHkVVQ3QIHv5azbdWv2juosN2d
+         G2d+OnobOt4NO7JvQSpDZUCSfsbY2b+YtirqUv9ZawzH0IDWCDEQS+DG1ODyw+N/h/Lb
+         HO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723407832; x=1724012632;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5bxH0HIvgBIX62IPBNWvzW2DcCvjALZOS7xYRmAPq4U=;
+        b=QHRXyEmCLentLcSeVt7RNfaJKp1OAawF71RvlEcmlBM0iwymfy3TzN3QV04JMDZYfO
+         wU+BRvHH9r/gK4ppkWbOp5AGHzgi0mYqGE6LU80JZ2awmMfELM/+QF0iqxfiIYpwW5sZ
+         AojYFpvddGGfFyScV2EhVlFCz8DRduQYdw5tBBp0tfLsQv2hKvllBCWkHF3hycXQGxoN
+         Ia/ld8cgP1kabYfq0845fD0f8q/RSxvZ4RJiiF8St+wsHyhhR1z7lrRf94TznnZGKeLz
+         FexGGRG0sQCH2HRjWLT+yxoN/yaetHiwZrNplRfricbCZaLIw1fOcGQoiluC5ZdkBQBx
+         im9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVU6tntzeu0EOtxvfQ/81N7VUxgr8EMIDwP/fX5dbo0hMgrmiid1uaUWxxU63JhKHWd3ynGOoqJu0chGOOaqi2Wt7fqarLioTQR
+X-Gm-Message-State: AOJu0YwV+F6JYhNNGlztcFtlUmwRE14kYg5sCkxnIph0/Zr3BcU/ULTQ
+	F4pnGA4QvnGWAFpPappLuh4gOWAhdJEAxPLt/UoZ1pYTKkdPrmUD5lOXeKYTuw==
+X-Google-Smtp-Source: AGHT+IFzt+R10qaB9GO91xPW9cFIB/jOO3ilfp+AfFpKq0UrmbSVV8L6fnyPExoeusMwzL1aescGhg==
+X-Received: by 2002:a17:902:e84d:b0:1fb:19fb:a1f0 with SMTP id d9443c01a7336-200bbb56b70mr3361845ad.4.1723407831541;
+        Sun, 11 Aug 2024 13:23:51 -0700 (PDT)
+Received: from [2620:0:1008:15:49ba:9fa:21c6:8a73] ([2620:0:1008:15:49ba:9fa:21c6:8a73])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-200bb7eddedsm25974795ad.49.2024.08.11.13.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Aug 2024 13:23:50 -0700 (PDT)
+Date: Sun, 11 Aug 2024 13:23:49 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+    linux-mm@kvack.org, linux-cxl@vger.kernel.org, cerasuolodomenico@gmail.com, 
+    hannes@cmpxchg.org, j.granados@samsung.com, lizhijian@fujitsu.com, 
+    muchun.song@linux.dev, nphamcs@gmail.com, rppt@kernel.org, 
+    souravpanda@google.com, vbabka@suse.cz, willy@infradead.org, 
+    dan.j.williams@intel.com, yi.zhang@redhat.com, alison.schofield@intel.com, 
+    david@redhat.com, yosryahmed@google.com
+Subject: Re: [PATCH v5 1/3] mm: don't account memmap on failure
+In-Reply-To: <20240809191020.1142142-2-pasha.tatashin@soleen.com>
+Message-ID: <511c4828-cee9-72a8-8e47-ccdf80011a44@google.com>
+References: <20240809191020.1142142-1-pasha.tatashin@soleen.com> <20240809191020.1142142-2-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240811-const_dfc_prepare-v1-5-d67cc416b3d3@quicinc.com>
-References: <20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com>
-In-Reply-To: <20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, linux1394-devel@lists.sourceforge.net, 
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Proofpoint-ORIG-GUID: 6F8FPtT7sCunyxHLCfRp5cxUElMTOGvd
-X-Proofpoint-GUID: 6F8FPtT7sCunyxHLCfRp5cxUElMTOGvd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-10_19,2024-08-07_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408110001
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Fri, 9 Aug 2024, Pasha Tatashin wrote:
 
-It does not make sense for emac_sgmii_acpi_match() as device_find_child()'s
-match function to modify caller's match data, fixed by using
-constify_device_find_child_helper() instead of device_find_child().
+> When we fail to allocate the mmemmap in alloc_vmemmap_page_list(), do
+> not account any already-allocated pages: we're going to free all them
+> before we return from the function.
+> 
+> Fixes: 15995a352474 ("mm: report per-page metadata information")
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-index e4bc18009d08..e53065756a1d 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-@@ -358,8 +358,9 @@ int emac_sgmii_config(struct platform_device *pdev, struct emac_adapter *adpt)
- 	if (has_acpi_companion(&pdev->dev)) {
- 		struct device *dev;
- 
--		dev = device_find_child(&pdev->dev, &phy->sgmii_ops,
--					emac_sgmii_acpi_match);
-+		dev = constify_device_find_child_helper(&pdev->dev,
-+							&phy->sgmii_ops,
-+							emac_sgmii_acpi_match);
- 
- 		if (!dev) {
- 			dev_warn(&pdev->dev, "cannot find internal phy node\n");
-
--- 
-2.34.1
-
+Acked-by: David Rientjes <rientjes@google.com>
