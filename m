@@ -1,150 +1,121 @@
-Received: from pv50p00im-ztbu10011701.me.com (pv50p00im-ztbu10011701.me.com [17.58.6.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B968C13E022
-	for <linux-cxl@vger.kernel.org>; Mon, 12 Aug 2024 15:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B664317C;
+	Mon, 12 Aug 2024 20:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723476784; cv=none; b=ggXRWvtWHqp7xRuTdyirNsLbo34MrgKZ8Y9CERp2U2AT4RxhX7ioeSFmb8uQbR2u3NnkatpK2gpMupsScDwAerEoBX98ld1BjMlGLFrSSMWeBWCmoy4BIW5idD0k95mlU+p2yHpDHLxIyU/6tW8kZXPJzK8NDKl3vffsV7Jwj+4=
+	t=1723496398; cv=none; b=uxNoHu3ozerlbXqo/LJPyzehXc8LTkqbq2zsqOElbhWD2OTol0+aSIkVbyspu4Aj8KiKb4jlc/vwYUCGnMosNEMuqubSPKmzYyuHdunOoBx/ZIFjm+BPyC+skwh8EWamMIyQXkuBSHFbC6p0mNoidrBmRgiRngzopxaTM2zpkwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723476784; c=relaxed/simple;
-	bh=Z8keleVQaZSPYFwF4RDgglZjRMhM2lbfzOkGzyC1PHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=faTKVRYP3fNNEtW865REe+9pDCI+8hXGL6B3CzL1PtqmIKUn5Dr//xJYB2tnfq2+HJYm85tGwaC8hWOqAJf7UyVhW04Cl9plP0qKFB3gEFrw0vQiRmkdDqT7JytNrZs9zMrfYSy4PNff2MMeg6U3ND9mHNaSu2tb4Bt0aHkv+tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=MLGWhQXr; arc=none smtp.client-ip=17.58.6.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1723496398; c=relaxed/simple;
+	bh=ZZY9L6mDJKyULQtLc3eUqFJKAOAzm0Uy8TZQUnDIkF0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyfQfSzFAEYpq/awzkmOgEI3kMbn1d9vqOZYzNbg5R3MhLywBkDbk8YxUG1ZDpSXE0lEg9TPWhwiIroBhyjFGbskRWxyhXQLznjR9g9CuBuKU4XL3dKIjkmGhXIIr+Al4kFRgr7+UhO7TYYJh6/GPnQgrJ03AvXZsOIKYAQJByU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZ8dy8y8; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="MLGWhQXr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1723476781;
-	bh=1ygoIY34DpHpdiG93Vm93P4CtKs9wFvzJlP3kZKA0zk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=MLGWhQXrRrtEmUM+3HR4kjVzQE4DGEIjk3W7wSMIQjAFWm7sY6j1AVLnin//GnPGX
-	 U3iJGrmmtEv3FeZcKDtanpHlrfX42F2KSvfcj5qBa+OvKR0EJTmGc12BPDQlGP0ZFD
-	 dK3x5iSHWgTuyMV+d6XgivQ+tuYL1V6ozvJBo9z2VZuBDGyTxW2cUR8NJ5pvun7EOu
-	 A2vIxzmJQEXvRhRRO3ulSJx5qz2rDtwM/tjqvjLSRSJ13hNGqBrXnfbKkCIF/zcdXU
-	 FnJOMHwCwc8VoXglYrE+7xZdFyH/Mmfyi/Fn26Glbkdb/w2VfaakUURcBWWg+XlU/m
-	 7/pp5f3TGhidA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztbu10011701.me.com (Postfix) with ESMTPSA id 13EC774033A;
-	Mon, 12 Aug 2024 15:32:49 +0000 (UTC)
-Message-ID: <8b8ce122-f16b-4207-b03b-f74b15756ae7@icloud.com>
-Date: Mon, 12 Aug 2024 23:32:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZ8dy8y8"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e0bf9602db6so4626150276.1;
+        Mon, 12 Aug 2024 13:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723496396; x=1724101196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5fnaMf391Fpz4xRHQ8kba7KvsYQNRSauNWK6kJhMao=;
+        b=eZ8dy8y8IEaR0HTq1colBi//Uh4QWr+0ZyMI4bUVfWwqnIADN7QOq+LiBc/kEdkhA1
+         55RTYODdFRogk9Ty2uAQZMFJlbXl6m26jJFt2NhAFkPDL/xoqh9QQhuEoOydEBh/TTkA
+         lKvjgl32oPZ5bCpgOkjcfbIiaY6TPJW2B1xFhMHAZ/rQLggk9vFwpScmlLArGnmsga+i
+         1KjCBh6heCGm8YMXx964pqiU4KFdMhukw83hmaVQ7sehu1hPIZzr9QfDVEhrrov0iFJ8
+         pygE6p13vw98854eG3xTxTkpF4dyOh4D8giQff311wReQY5WbYAYoZfpSzK7zvIlV7AD
+         3xTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723496396; x=1724101196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D5fnaMf391Fpz4xRHQ8kba7KvsYQNRSauNWK6kJhMao=;
+        b=AakouukQojW2lU2tYU8NDHcINMuqIhy+MJ1wrZB9adDt+kKpjuSilDw0nMevuKeC6m
+         2M3Z++N6Rpzuf673nMgPzej/zjLOh0XRD+KkUrbUahffTvh5On/Y33DcizuDm3GTpFNq
+         uN5oZTWoSMlZ/ssYZr4tRpltfB6gqp7rsfkhxiGLU+CYbxtWFRcWgdugV+xG4WLB9kNB
+         fzvyYT3pFe4W6Q8Jk1Ja8KkecG174i4LAKjPlXBQ+3QitblcmlUr1MhDKNIJ4wreYqdv
+         e05zQbsmw+9uOFJOFq0qoMOGCdlpAX81EqYh6RCLz1svdYM/HWnSXwJfzb2OGmQRaHTG
+         PLow==
+X-Forwarded-Encrypted: i=1; AJvYcCXsg4mY7nuZKklQi02uDBYSd+WA/xYeMRL8XTRkX5rjI3dhkwIafWn/SzzFuxlDk+wLBex/8C2hSJBmGoYmwbUhyVnE1GWaJ+IIAdFCcunJ/nwoHO+NKfsJj3l014PZL7ofDi3v4tbo
+X-Gm-Message-State: AOJu0YwARENqfp8BiNP7YsTtoFnJ7m1XLx/ERbirw+rC0Oxdt8HxnwKW
+	vj5U1AHTN8nXOv3MU7PAm77VgjfyGvduQDdEjXmUBIzexh04a2KK
+X-Google-Smtp-Source: AGHT+IHznrVOhF2lXDkThTht/dG8KZpY2MPF58XvF0vs97HEUaAH8iMGdnVVzoCIBkpUSQtUzbKIRQ==
+X-Received: by 2002:a05:6902:1243:b0:e0b:c402:b03f with SMTP id 3f1490d57ef6-e113cec1fa7mr1528924276.27.1723496395751;
+        Mon, 12 Aug 2024 13:59:55 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6a0a15eaf6dsm10190397b3.67.2024.08.12.13.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2024 13:59:55 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Mon, 12 Aug 2024 13:59:48 -0700
+To: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH 1/3] cxl: Set target type of root decoder based on CFMWS
+ restrictions
+Message-ID: <Zrp3pZQ11kqdHjUl@fan>
+References: <20240729084611.502889-1-ying.huang@intel.com>
+ <20240729084611.502889-2-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] cxl/region: Prevent device_find_child() from
- modifying caller's match data
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-References: <20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com>
- <20240811-const_dfc_prepare-v1-3-d67cc416b3d3@quicinc.com>
- <f057f74b-07fa-433d-b906-011186eb86a7@intel.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <f057f74b-07fa-433d-b906-011186eb86a7@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: O7I-WFbO3x8gLaTs8JuaLOQ3i5K4AsDc
-X-Proofpoint-ORIG-GUID: O7I-WFbO3x8gLaTs8JuaLOQ3i5K4AsDc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-12_04,2024-08-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- clxscore=1011 suspectscore=0 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408120115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240729084611.502889-2-ying.huang@intel.com>
 
-On 2024/8/12 20:54, Przemek Kitszel wrote:
-> On 8/11/24 02:18, Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> It does not make sense for match_free_decoder() as device_find_child()'s
->> match function to modify caller's match data, 
+On Mon, Jul 29, 2024 at 04:46:09PM +0800, Huang Ying wrote:
+> Now, the target type of root decoder is hard-coded to HOSTONLYMEM,
+> because only type3 expanders are supported.  To support type2
+> accelerators, set the target type of root decoder based on the
+> window restrictions field of CFMWS entry.
 > 
-> match_free_decoder() is just doing that, treating caller's match data as
-> a piece of memory to store their int.
-> (So it is hard to tell it does not make sense "for [it] ... to").
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
+> ---
+
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+>  drivers/cxl/acpi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-
-Thanks for reply (^^)
-
-The ultimate goal is to make device_find_child() have below prototype:
-
-struct device *device_find_child(struct device *dev, const void *data,
-		int (*match)(struct device *dev, const void *data));
-
-Why ?
-
-(1) It does not make sense, also does not need to, for such device
-finding operation to modify caller's match data which is mainly
-used for comparison.
-
-(2) It will make the API's match function parameter have the same
-signature as all other APIs (bus|class|driver)_find_device().
-
-
-My idea is that:
-use device_find_child() for READ only accessing caller's match data.
-
-use below API if need to Modify caller's data as
-constify_device_find_child_helper() does.
-int device_for_each_child(struct device *dev, void *data,
-                    int (*fn)(struct device *dev, void *data));
-
-
-So match_free_decoder() is not proper as device_find_child()'s
-match function.
-
->> fixed by using
->> constify_device_find_child_helper() instead of device_find_child().
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 82b78e331d8e..40c92ad29122 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -382,7 +382,10 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  
+>  	cxld = &cxlrd->cxlsd.cxld;
+>  	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+> -	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> +	if (cxld->flags & CXL_DECODER_F_TYPE2)
+> +		cxld->target_type = CXL_DECODER_DEVMEM;
+> +	else
+> +		cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+>  	cxld->hpa_range = (struct range) {
+>  		.start = cfmws->base_hpa,
+>  		.end = cfmws->base_hpa + cfmws->window_size - 1,
+> -- 
+> 2.39.2
 > 
-> I don't like the constify... name, I would go with something like
-> device_find_child_mut() or similar.
-> 
-
-What about below alternative option i ever thought about ?
-
-Don't introduce API constify_device_find_child_helper() at all, and
-change in involved driver such as cxl/core/region.c directly.
-
->>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
->>   drivers/cxl/core/region.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 21ad5f242875..266231d69dff 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -849,7 +849,8 @@ cxl_region_find_decoder(struct cxl_port *port,
->>           dev = device_find_child(&port->dev, &cxlr->params,
->>                       match_auto_decoder);
->>       else
->> -        dev = device_find_child(&port->dev, &id, match_free_decoder);
->> +        dev = constify_device_find_child_helper(&port->dev, &id,
->> +                            match_free_decoder);
->>       if (!dev)
->>           return NULL;
->>       /*
->>
-> 
-
