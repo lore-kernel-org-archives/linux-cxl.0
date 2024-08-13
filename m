@@ -1,218 +1,378 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from eastern.ash.relay.mailchannels.net (eastern.ash.relay.mailchannels.net [23.83.222.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021211A4F2E;
-	Tue, 13 Aug 2024 20:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7021AB518
+	for <linux-cxl@vger.kernel.org>; Tue, 13 Aug 2024 22:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723580971; cv=fail; b=HoquuhTGi5yM8ZrTXgflqvRh0bKM16qDmMICJB/lD2O2bMMn2h99UA3oWu7riZwI40uamM3iXMxfgjmhZYaWDyjLzL4VqwiXKtXJ5bvTPyL6Gb3Q/Q3hxvlsw7InbAsETdXsed/BJyJOhAxfIfH/t17Qtvp+kGwtvaTmYAryyak=
+	t=1723588184; cv=pass; b=BIgRLJ+dyy1FfA+BG9D32iWRpdxrU0iA2OyRtmncCwEFeAm3mwJ81XF8fdsBbXRzRdiA8/BL8qxu3rLClUa6VWJVciDVNHnYgFRMXz2jCQkK80rW76SiYrjkNdtVXDr0Dr4gZeY77O/CljnMzyM53T4HtCriLn/CLlg6Ge5lB5w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723580971; c=relaxed/simple;
-	bh=+rvEOH0oSKry5W0emWUo4M7fHkSUZ172TZRVudgnO0U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KCf9OnXrlnSjXY1IGOpMkXWZiFWQuEE0F9wg2G2FZI9UT7MQCSy6rMbUKCp3ndxgkfSfJc/1VpT+Koh6pIIa0FDYfXeyNnxW8mFWeL4oeoxN2HfRNkdNiw9wW+WSnNka8lGlrm2JCpBZqsX33wsI/XboRjB7wZ3mi9WHAI5h2I8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H9/lsMIq; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1723588184; c=relaxed/simple;
+	bh=WcFfrX639y9wOOky3fkEXuqJRG21mK1nV5RKc2xJtdY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dPFFEWkm8hoQSjblWuSgZuvpHcWFNtVhxN+rguKia3I5K3AQxfWPcpnQ+fljVMqWpYZMj0RBtjR0hXAbd5SWSddli3EyET9TejuynefYCmGid8rB89+IHU0DL5tx9sJR+5rlMMDERCnhYX5WIaY4dA0lnKpRn/Oul4yVr5bbaTU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=PG8q4hGn; arc=pass smtp.client-ip=23.83.222.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H9/lsMIq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723580969; x=1755116969;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=+rvEOH0oSKry5W0emWUo4M7fHkSUZ172TZRVudgnO0U=;
-  b=H9/lsMIqsJufMeQ9Ryup4ZtrDxZyG6nPQQb+IA0AM7KC93CgzIWUaQpj
-   oITQHrl15LlOT/1tnCXODYiSeE2w6TfGAd0oYPETubS6wTldkPzOtRSd3
-   ObWeRMYpCNFkKWeMt6xewplpoAeotICxHY7aGAXJQgIiJtEAy0Gd5Y7SW
-   g/BU+z2Ef501XM5AQ/C8LY4InbF8MX3gRCwNhKP+fgJCRCorl2HvSC1Or
-   gMeg7x2u5AL5ILS7ULpLwlFB8WyI6uDa9xupcw/Z8RD2wEUt8vVtbkzeA
-   OMOgWueQOtNODRA/UxubtwjuwKyaUjek2Qm39rpxDJSk+HhrGOUGTxr96
-   w==;
-X-CSE-ConnectionGUID: 3h+c2yUtS9GVRFodGp7vIQ==
-X-CSE-MsgGUID: IWjFj5w+QH6oBan3VRPzaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21902326"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21902326"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 13:29:28 -0700
-X-CSE-ConnectionGUID: G8/d5JNQQJGe7itGYJoMxA==
-X-CSE-MsgGUID: ALCTfUtcTMmeb4GzqsVjQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="58880202"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Aug 2024 13:29:28 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 13 Aug 2024 13:29:27 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 13 Aug 2024 13:29:26 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 13 Aug 2024 13:29:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IDzmlQM3gbBg0mnQ7GpihgY2Kzwh6c+8ajkHoycffEBQkrGe8LD2fO6YQPaInQ+Mj67K7yDP7nAYTQwyz4qMzHCyP8a9Lm3p2+OZh37y5HFtv9CwfTxcHXQFXE6wClbjE0UFVc597HAFDFTvWYbni8k+aN5m8Tk13gQnvwsCTWyc/koGT/sal04+lS8Rn0j0nfw/eriTkWnRPizPi1GGNYs2qH30ioVSRr/PF69NRHAx/ur5W95Zm7lhxzeyA6yGmUNBEob9/w6hJBivhH9V0zJqCrOn16vQVj0s2Us+svamOjd2iyPMecFcXYLwlLBhxO+VHdIj4V0s4ni2GMWzUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3yrLtsxp+6n8nA5oinLcWzPSGH40NFKmxc06u6cQOJg=;
- b=PvDZydz0WkwKqh3Fd0EBDolsZNUd8vgGW+xlUvyQuhO9e8U0WB7F8Py9RZxMSQmBF6V0Smg7+AMa9TFms0ekoP4oEz3kJmN1Lp9SOCTMwvysoX2H7d0XCyqf+V1JRAIAB+L6w1PxQGioVcGy0f7HSbW5HFZg3yEMqm252yfJnQSG9XdSA2P5gPAbtN3tpRmAKnDBruqktwqS6lswWnoIbwLybiBPq9IqlmRgBHszyicolR/gNgTEcFBJ9PNbNFkd3XLJLl13kRBobuaxtckAUPZzERjUQ8Q/yeOYJF7oi0rI/TUhHS3f4+Cke7OEqnYdy7Sxp8s+ABYHX2sWx1FWSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MN6PR11MB8218.namprd11.prod.outlook.com (2603:10b6:208:47c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.27; Tue, 13 Aug
- 2024 20:29:24 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7828.021; Tue, 13 Aug 2024
- 20:29:23 +0000
-Date: Tue, 13 Aug 2024 13:29:19 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	"Vishal Verma" <vishal.l.verma@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ira Weiny
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH] cxl/region: Remove lock from memory notifier callback
-Message-ID: <66bbc21f7cfd3_216829434@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240813-fix-notifiers-v1-1-efd23a18688d@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240813-fix-notifiers-v1-1-efd23a18688d@intel.com>
-X-ClientProxiedBy: MW4P221CA0010.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="PG8q4hGn"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 139284746D;
+	Tue, 13 Aug 2024 22:13:19 +0000 (UTC)
+Received: from pdx1-sub0-mail-a264.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9A9034743A;
+	Tue, 13 Aug 2024 22:13:18 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723587198; a=rsa-sha256;
+	cv=none;
+	b=jyKgJ9LsodWt3JOlDkW5+yAIUGoIiMCxS/sS9UC3CEaIdsLWYrdfwrfhjqDBvdNN+iUndZ
+	NvFBPmC25I0MOrjFCFCIt38PXcK6wgRE9ccDTKrn9SXfLLWL8a4s78g5mdw19/JCVxEza6
+	REsanLY7PkdcVI+dpm0lkBkwNMAWiVC8VEjG3Wid8euzu3xIBsoJ/mYWe7pWjTd7W/4Mba
+	nr9CrHo6wLNXpZM3AhvE+ezAPmTHKJw3pu/WGnaCk4DwT773WnOf1FPP5kXTKHNC4qrm+P
+	wCQwnnup72zaWnfeE/pNG9smZgTpe+6FZMNEeld0SR05+4m/NgccFZTm1+9s3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1723587198;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=Hr3nJl7WCIXLbfgLM9iKt45WWjW2yClKzDTJcq6qj5M=;
+	b=YW8rnnJ+Rl5qr8xbQaweh7VrDVXByZZCm+Akc4HkLCFgPfVQAcGU5MebVHxNTmUFzVXP37
+	9n/awDSl6VUtCKoRh9yru3GS21ZV7AaSLLD5YGmqlpcD38l6nY60tuiD+tqN/OWvagzsHg
+	6EMqDK6YcIwyXghtRjTf25B3Ozq8cBYTByAdG4MQ0mpeICHN54ugmZ56cNAx/DQiHG3ZNw
+	ab+1Kbha6SrnUxwGVU8VnyehVNsqVWHi4WENGOAIvUO9M9HnO/YOprA8b76DvU0aILCNWp
+	4SJHNK/TXdW04XFY79AlqkhvoglM70iXeWJsys+oJP8DFnApriIelzznjLPr4A==
+ARC-Authentication-Results: i=1;
+	rspamd-68c6c69487-9pxmk;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Wiry-Harmony: 584b6a7c083b206e_1723587198958_2497559779
+X-MC-Loop-Signature: 1723587198958:2358817111
+X-MC-Ingress-Time: 1723587198958
+Received: from pdx1-sub0-mail-a264.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.82.141 (trex/7.0.2);
+	Tue, 13 Aug 2024 22:13:18 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a264.dreamhost.com (Postfix) with ESMTPSA id 4Wk5Hd3MM6zfM;
+	Tue, 13 Aug 2024 15:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1723587198;
+	bh=Hr3nJl7WCIXLbfgLM9iKt45WWjW2yClKzDTJcq6qj5M=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=PG8q4hGnvz6UMFCBJ+AIqRbGUlY/sHfpHaEkgYpJtrxvHi0znWcncWFpQwLvX2Jq3
+	 1Mw+TJ+h5v695WtyfvWlxzjf6zT+rOWlbTfIYLTYA+C+8SkIbCe5kPZ8mo0ODJdpLZ
+	 kKpDqp++w+tMhcPiCnVD19Vq7/S9ECZ3q+i4wExZ8IUAJ5LKtewZjNclPpoIoNdLYo
+	 UHIK9jwqIp1HirpfUoFrtsiqtke6f4gYavMQ42dSjTm7KpQWG3KNde8U+6GQJZRee9
+	 5GaTxkiCk842ynodG53MFl1JEJWFVAzDkFbcz+LVCBNvh4j5+6j2kkHRYmlLIw7DlM
+	 KH4DyZBEcwyuA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan.Cameron@Huawei.com
+Cc: ajay.opensrc@micron.com,
+	fan.ni@samsung.com,
+	john@jagalactic.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	sthanneeru@micron.com,
+	ravis.opensrc@micron.com,
+	arramesh@micron.com,
+	tmmulgund@micron.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH] hw/cxl: Support aborting background commands
+Date: Tue, 13 Aug 2024 15:12:55 -0700
+Message-ID: <20240813221255.179200-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN6PR11MB8218:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1be39dfe-8ffc-414b-37c6-08dcbbd69e10
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?DzuXj8NS7gNdElPRKW/sKcT8NG65zushmsB+N8IqDL+SBvxiTXrHKFcTip7f?=
- =?us-ascii?Q?zNz8vgX6wgbCuZZj1C8meH2XmbwqPQRXMPnErIb98FpSn//qeoYDPR90vikH?=
- =?us-ascii?Q?wk2Gj0hXxA4V9mvqlcDplg/cKbwfM9ZCi8XR/UXJeqmjK7JTAy1lXPf7wabF?=
- =?us-ascii?Q?Rkf4IgLH0jwgBAcig5Y73CK69C0ij0PsrCYggn4x+nrFNQcEyzaqzVl35KBV?=
- =?us-ascii?Q?YfQA6JPY+DFlxgTcPkyjcEJGNoaTNW6W5v1aTl1tMoLOVwdhWjaLQxqMcbZq?=
- =?us-ascii?Q?sO/xubR1y/5yUP8GM+Xrr1M8sL1s90Mx+UsP1bv5MLjBXwPOIgUM0usCEyEy?=
- =?us-ascii?Q?DGF/SOYu6/IQVic8haTVuj07nJYJ0MED3W/IR56699TyDRuf2jGnP+oAuLX5?=
- =?us-ascii?Q?deblnaO8xhEVgKU+8Qs7/5VAxCUJiVvcguyAVRdLTKqJHWrGuy/BREIOrYb4?=
- =?us-ascii?Q?VUeKN8X9FlMI9YJMI45QAIVE4RNW5GoaLfzRaE/aZQOdSYjM1uF2cUeKwCLQ?=
- =?us-ascii?Q?PpktRbmMJQQkoNaoHacDfedopNUCsq1hPi+dvTuhM4OdB710l6v4Rq9+SqGH?=
- =?us-ascii?Q?LvcT8UGzXd40WZklZs4XWA7EgooHX7pK1KHwm9SlsnDLG6dYOT0DfsMj6qF5?=
- =?us-ascii?Q?1IrGZRohf8CTp6sLHfHs6EJhkV/XVHkfqFUjKmhxhVw3x7ZjfuPAEp7nF60+?=
- =?us-ascii?Q?p8A27RvYuAdmbmWJ7hCG8bs8gDu6twSFMZ1fYSvjLs17TbZIYOH7DX4cq4v6?=
- =?us-ascii?Q?CnqJRbBrICUXrPY5mtIjEy9If91gCdRKl8Nz0nMp2KdlD7issE796Hvu4dGw?=
- =?us-ascii?Q?nuf4hvhlWvGRbeWSNAPdCqbOS2BC81RufTV6NLZddOVK5FdngQyz6RRIN/Ag?=
- =?us-ascii?Q?npwH38ulim7H7CPRkXGMREKUkOTCrmJewmenNQo/4hrAtM/oi3RE+bVwgJKA?=
- =?us-ascii?Q?vwwV790X5T0JDK+o/gnwB4Mmf6AKevdxqnpTLirZPabwnbogm5QzrGaXL9Wm?=
- =?us-ascii?Q?HLXW9DzSe2pVMQH82ALLZifCFQIVCMPM72816xXxJ9CE2kRGuH1pXOMU6zS1?=
- =?us-ascii?Q?B1i2r4mMNK27C8CqDjDJ5g0IGliQw6n0/6+eYmPXcdwyfo3sJ0zw1921obVM?=
- =?us-ascii?Q?FmfDhJnM3M+6Urqs4hf5QZyC1WW45/bx51vXNoSqVkiJwIj4iO0cFyQtwIEk?=
- =?us-ascii?Q?0OvVO+Ne1bSBiHbjB+YD6sbhq30u9l4FgyihB+CvWtCpsdzHkgwxQi5hqS4g?=
- =?us-ascii?Q?70iBietbHLk8NYIzpWpCo9nSFjzn7wmptV5usoDJ/bdrVSLM6m5unUWQ6ms+?=
- =?us-ascii?Q?Sj0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G62ixc/GsYWXHKdunUejNRH6FLylFaFhy8NkLMUIz1xJteiNyCBcEWVdLHPD?=
- =?us-ascii?Q?USiH8/EksAJkkQVlCYrfxZf5l+2tFIPfLV4bEPuHhSMVDGOPHPh0VuoAAtPW?=
- =?us-ascii?Q?xr59Q8WFQsEXTsIXp06ja7sOtUtOqVc/X6pqYRItkYlwSRotEhna0jRNn+zJ?=
- =?us-ascii?Q?EDil3i26vOGmYYBnnVqsnAUo4EfInyzrRXWswWB0FMmjr7oVUBwq8YX5s/Qx?=
- =?us-ascii?Q?AlNHLYRZzKPOW+Xb3HPbOG7MgwVSidriZp2ys5gWvHsXSAEixFFdbBahQQ6u?=
- =?us-ascii?Q?GmbsLjdzG3maMpVfksY+toq2YEoMPiFlcNO1ZKiGku/3eVjYTHNSasrI9pqi?=
- =?us-ascii?Q?51gFcR9SEM8v6v5YI0TyPSJhQYayqJIQdbYzfi1vt0lPxz1Yd52ibnR9LJRp?=
- =?us-ascii?Q?A+M0Lfy43JkgHlNj/35Jds6euhAVavT5OoUKQ+bg3Bv93CcN31dkqUamT1xe?=
- =?us-ascii?Q?VqbEs7cEaMVq33ta0AgmX7qrSsTZUq1k4wWSCxSEJnMeDoEuB91lrFFYX9GJ?=
- =?us-ascii?Q?ME43vmKsP8cfihsvuT2qx+tpjyR3jEr+eRAZV/TxY9dgEz6r4sYDTZ/z2zJm?=
- =?us-ascii?Q?ZLXg1kcS20fZwPRMs6VahteQetT9tjeur20AkXxluxY0WgVt8HSZCkrDoF/K?=
- =?us-ascii?Q?AjWvA6clVo7M0pA+deE8AyiZqdU3ROa2DzR0Yq/aetb0gJVMi4oREHbygjrE?=
- =?us-ascii?Q?pYmEE6bCfzsZKgyZ0EcR8tUrt39zC1W/K5M1UP2IgblB1WwsqshD3tfrrtOW?=
- =?us-ascii?Q?r6yPf3eoHkFkrNzxFrynCSlz+wtoY81W6SPMP0B9PBWjJfl/mS9LGR5w49ME?=
- =?us-ascii?Q?Elu/h4cS7anGo8KaDyt/EqGtFIzFS+rBxKSLCs6Yp5ky3yZGoq0JPQCfKit9?=
- =?us-ascii?Q?KFi6IyoxOYFs26Zn8PNhtZKMMX2sWU1huBhPTsDwslb/n1VbIifkajvZy7xe?=
- =?us-ascii?Q?7RzyIZ4bM4vqx2nJqSNLY9aJ44D5+iapgsF+ZXp/uI5fzaqB1kpFHrly35uL?=
- =?us-ascii?Q?fOAd87c4eJMNR7rWqL1gXkjRyzb4Dy8FtPkO5mAatDr8fqS6bCul8UOmcPFx?=
- =?us-ascii?Q?UMMEPKkVw35EyKmq+VqutWgmypEavY9KN8XpF7hl7yBorMI2U/sWEiLWfsDD?=
- =?us-ascii?Q?gSOfL0pxODMcaiDUOXOZrByM/Y6k5IkE/LpgsF/t7WrtAqH8t7o3YiWUmYVt?=
- =?us-ascii?Q?xpeb5p/mCOM00hbOGPoygS2m1INf3XjFy2JV9A/rHuK4FMf9zwflvuxpzgsD?=
- =?us-ascii?Q?3rXUuPHdH+lRN6fR9SAHG8wcB8rpHgmfoZz2umL1wxuH9e39tPrryF2X42nx?=
- =?us-ascii?Q?vg6mJBsn7f5aZdnplvkoUY9iK3YNetlCcbbMcJkXPCQxdvQqAKVjAqThOGRb?=
- =?us-ascii?Q?Dom9NyFKdc6CsTT2svMByFZUx0WnissMv9HEwpw/I9bFJtwTAwtw4aX/np4N?=
- =?us-ascii?Q?iXhqv1ATBFohEXbDn8F59DBDtkuhGVufI1dEl1Qp47MIRCMIOVx8W99gLjN8?=
- =?us-ascii?Q?2bd9iutxd/yuO19HfFMTEXuFlVYrNO1k4IWbEXSY0NRoSczY+vZK4enYJs9R?=
- =?us-ascii?Q?PJfoTZVX7dyEGGnc7ga3iIhildZDapNA2ZlayhY8If1fNDxyBppKOSnf6Mif?=
- =?us-ascii?Q?og=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1be39dfe-8ffc-414b-37c6-08dcbbd69e10
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2024 20:29:23.0875
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rzlivq26wRKDRAb+At3OFu2k7nVXj8WwYCs2CPP5UGwyO66xi+pBVsoy0NT/bDdxcvqSxW/VrjZ6LJbD+R4A9P4KGAs1oQvwzb1V98GXi+g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8218
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Ira Weiny wrote:
-> In testing Dynamic Capacity Device (DCD) support, a lockdep splat
-> revealed an ABBA issue between the memory notifiers and the DCD extent
-> processing code.[0]  Changing the lock ordering within DCD proved
-> difficult because regions must be stable while searching for the proper
-> region and then the device lock must be held to properly notify the DAX
-> region driver of memory changes.
-> 
-> Dan points out in the thread that notifiers should be able to trust that
-> it is safe to access static data.  Region data is static once the device
-> is realized and until it's destruction.  Thus it is better to manage the
-> notifiers within the region driver.
-> 
-> Remove the need for a lock by ensuring the notifiers are active only
-> during the region's lifetime.
-> 
-> Link: https://lore.kernel.org/all/66b4cf539a79b_a36e829416@iweiny-mobl.notmuch/ [0]
-> Cc: Huang, Ying <ying.huang@intel.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/cxl/core/region.c | 31 ++++++++++++++++++++-----------
->  1 file changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 21ad5f242875..971a314b6b0e 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-[..]
-> @@ -2396,7 +2394,6 @@ static int cxl_region_nid(struct cxl_region *cxlr)
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct resource *res;
->  
-> -	guard(rwsem_read)(&cxl_region_rwsem);
->  	res = p->res;
->  	if (!res)
->  		return NUMA_NO_NODE;
+As of 3.1 spec, background commands can be canceled with a new
+abort command. Implement the support, which is advertised in
+the CEL. No ad-hoc context undoing is necessary as all the
+command logic of the running bg command is done upon completion.
+Arbitrarily, the on-going background cmd will not be aborted if
+already at least 85% done;
 
-The cxl_region_nid() helper is now completely unnecessary because not
-only is a lock not needed to read cxl_region_params, but p->res is
-guaranteed to be non-NULL.
+A mutex is introduced to stabilize mbox request cancel command vs
+the timer callback being fired scenarios (as well as reading the
+mbox registers). While some operations under critical regions
+may be unnecessary (irq notifying, cmd callbacks), this is not
+a path where performance is important, so simplicity is preferred.
 
-cxl_region_nid() also needs to be killed so that nothing else tries to
-use it that might *need* the lock.
+Tested-by: Ajay Joshi <ajay.opensrc@micron.com>
+Reviewed-by: Ajay Joshi <ajay.opensrc@micron.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+
+Changes based on the following thread:
+https://lore.kernel.org/linux-cxl/20240729102010.20996-1-ajay.opensrc@micron.com
+
+ - Added a mutex (and expanded CCI to have a destroy counterpart).
+   An 'initialized' flag is added for correctly handling the reset()
+   case.
+ - Added the case where cancel is not done.
+ - Picked up Ajay's tags but it would be good to re-review/test if
+   possible.
+
+ hw/cxl/cxl-device-utils.c    |  5 ++-
+ hw/cxl/cxl-mailbox-utils.c   | 63 +++++++++++++++++++++++++++++++++---
+ hw/mem/cxl_type3.c           |  8 ++++-
+ include/hw/cxl/cxl_device.h  |  4 +++
+ include/hw/cxl/cxl_mailbox.h |  1 +
+ 5 files changed, 74 insertions(+), 7 deletions(-)
+
+diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+index 035d034f6dd8..1a9779ed8201 100644
+--- a/hw/cxl/cxl-device-utils.c
++++ b/hw/cxl/cxl-device-utils.c
+@@ -95,11 +95,14 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
+         }
+         if (offset == A_CXL_DEV_MAILBOX_STS) {
+             uint64_t status_reg = cxl_dstate->mbox_reg_state64[offset / size];
+-            if (cci->bg.complete_pct) {
++
++            qemu_mutex_lock(&cci->bg.lock);
++            if (cci->bg.complete_pct == 100 || cci->bg.aborted) {
+                 status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
+                                         0);
+                 cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
+             }
++            qemu_mutex_unlock(&cci->bg.lock);
+         }
+         return cxl_dstate->mbox_reg_state64[offset / size];
+     default:
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index b752920ec88a..ff12dfc3dcc4 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -56,6 +56,7 @@ enum {
+     INFOSTAT    = 0x00,
+         #define IS_IDENTIFY   0x1
+         #define BACKGROUND_OPERATION_STATUS    0x2
++        #define BACKGROUND_OPERATION_ABORT     0x5
+     EVENTS      = 0x01,
+         #define GET_RECORDS   0x0
+         #define CLEAR_RECORDS   0x1
+@@ -624,6 +625,38 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++/* CXL r3.1 Section 8.2.9.1.5: Request Abort Background Operation (Opcode 0005h) */
++static CXLRetCode cmd_infostat_bg_op_abort(const struct cxl_cmd *cmd,
++                                           uint8_t *payload_in,
++                                           size_t len_in,
++                                           uint8_t *payload_out,
++                                           size_t *len_out,
++                                           CXLCCI *cci)
++{
++    int bg_set = cci->bg.opcode >> 8;
++    int bg_cmd = cci->bg.opcode & 0xff;
++    const struct cxl_cmd *bg_c = &cci->cxl_cmd_set[bg_set][bg_cmd];
++
++    if (!(bg_c->effect & CXL_MBOX_BACKGROUND_OPERATION_ABORT)) {
++        return CXL_MBOX_REQUEST_ABORT_NOTSUP;
++    }
++
++    qemu_mutex_lock(&cci->bg.lock);
++    if (cci->bg.runtime) {
++        /* operation is near complete, let it finish */
++        if (cci->bg.complete_pct < 85) {
++            timer_del(cci->bg.timer);
++            cci->bg.ret_code = CXL_MBOX_ABORTED;
++            cci->bg.starttime = 0;
++            cci->bg.runtime = 0;
++            cci->bg.aborted = true;
++        }
++    }
++    qemu_mutex_unlock(&cci->bg.lock);
++
++    return CXL_MBOX_SUCCESS;
++}
++
+ #define CXL_FW_SLOTS 2
+ #define CXL_FW_SIZE  0x02000000 /* 32 mb */
+ 
+@@ -2665,6 +2698,8 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+ }
+ 
+ static const struct cxl_cmd cxl_cmd_set[256][256] = {
++    [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
++        cmd_infostat_bg_op_abort, 0, 0 },
+     [EVENTS][GET_RECORDS] = { "EVENTS_GET_RECORDS",
+         cmd_events_get_records, 1, 0 },
+     [EVENTS][CLEAR_RECORDS] = { "EVENTS_CLEAR_RECORDS",
+@@ -2708,7 +2743,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+     [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+         (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+          CXL_MBOX_SECURITY_STATE_CHANGE |
+-         CXL_MBOX_BACKGROUND_OPERATION)},
++         CXL_MBOX_BACKGROUND_OPERATION |
++         CXL_MBOX_BACKGROUND_OPERATION_ABORT)},
+     [PERSISTENT_MEM][GET_SECURITY_STATE] = { "GET_SECURITY_STATE",
+         cmd_get_security_state, 0, 0 },
+     [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
+@@ -2721,7 +2757,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+         "MEDIA_AND_POISON_GET_SCAN_MEDIA_CAPABILITIES",
+         cmd_media_get_scan_media_capabilities, 16, 0 },
+     [MEDIA_AND_POISON][SCAN_MEDIA] = { "MEDIA_AND_POISON_SCAN_MEDIA",
+-        cmd_media_scan_media, 17, CXL_MBOX_BACKGROUND_OPERATION },
++        cmd_media_scan_media, 17,
++        (CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT)},
+     [MEDIA_AND_POISON][GET_SCAN_MEDIA_RESULTS] = {
+         "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
+         cmd_media_get_scan_media_results, 0, 0 },
+@@ -2745,6 +2782,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+     [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
+     [INFOSTAT][BACKGROUND_OPERATION_STATUS] = { "BACKGROUND_OPERATION_STATUS",
+         cmd_infostat_bg_op_sts, 0, 0 },
++    [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
++        cmd_infostat_bg_op_abort, 0, 0 },
+     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8,
+                          CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+@@ -2831,6 +2870,7 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+         cci->bg.opcode = (set << 8) | cmd;
+ 
+         cci->bg.complete_pct = 0;
++        cci->bg.aborted = false;
+         cci->bg.ret_code = 0;
+ 
+         now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+@@ -2844,10 +2884,12 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+ static void bg_timercb(void *opaque)
+ {
+     CXLCCI *cci = opaque;
+-    uint64_t now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+-    uint64_t total_time = cci->bg.starttime + cci->bg.runtime;
++    uint64_t now, total_time;
++
++    qemu_mutex_lock(&cci->bg.lock);
+ 
+-    assert(cci->bg.runtime > 0);
++    now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
++    total_time = cci->bg.starttime + cci->bg.runtime;
+ 
+     if (now >= total_time) { /* we are done */
+         uint16_t ret = CXL_MBOX_SUCCESS;
+@@ -2899,6 +2941,8 @@ static void bg_timercb(void *opaque)
+             msi_notify(pdev, cxl_dstate->mbox_msi_n);
+         }
+     }
++
++    qemu_mutex_unlock(&cci->bg.lock);
+ }
+ 
+ static void cxl_rebuild_cel(CXLCCI *cci)
+@@ -2927,12 +2971,21 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+     cci->bg.complete_pct = 0;
+     cci->bg.starttime = 0;
+     cci->bg.runtime = 0;
++    cci->bg.aborted = false;
+     cci->bg.timer = timer_new_ms(QEMU_CLOCK_VIRTUAL,
+                                  bg_timercb, cci);
++    qemu_mutex_init(&cci->bg.lock);
+ 
+     memset(&cci->fw, 0, sizeof(cci->fw));
+     cci->fw.active_slot = 1;
+     cci->fw.slot[cci->fw.active_slot - 1] = true;
++    cci->initialized = true;
++}
++
++void cxl_destroy_cci(CXLCCI *cci)
++{
++    qemu_mutex_destroy(&cci->bg.lock);
++    cci->initialized = false;
+ }
+ 
+ static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[256])
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 4114163324bd..f04aa58ea85d 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -961,6 +961,7 @@ static void ct3_exit(PCIDevice *pci_dev)
+     pcie_aer_exit(pci_dev);
+     cxl_doe_cdat_release(cxl_cstate);
+     g_free(regs->special_ops);
++    cxl_destroy_cci(&ct3d->cci);
+     if (ct3d->dc.host_dc) {
+         cxl_destroy_dc_regions(ct3d);
+         address_space_destroy(&ct3d->dc.host_dc_as);
+@@ -1209,12 +1210,17 @@ static void ct3d_reset(DeviceState *dev)
+      * Bring up an endpoint to target with MCTP over VDM.
+      * This device is emulating an MLD with single LD for now.
+      */
++    if (ct3d->vdm_fm_owned_ld_mctp_cci.initialized) {
++        cxl_destroy_cci(&ct3d->vdm_fm_owned_ld_mctp_cci);
++    }
+     cxl_initialize_t3_fm_owned_ld_mctpcci(&ct3d->vdm_fm_owned_ld_mctp_cci,
+                                           DEVICE(ct3d), DEVICE(ct3d),
+                                           512); /* Max payload made up */
++    if (ct3d->ld0_cci.initialized) {
++        cxl_destroy_cci(&ct3d->ld0_cci);
++    }
+     cxl_initialize_t3_ld_cci(&ct3d->ld0_cci, DEVICE(ct3d), DEVICE(ct3d),
+                              512); /* Max payload made up */
+-
+ }
+ 
+ static Property ct3_props[] = {
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index e14e56ae4bc2..c0e8d40053db 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -176,10 +176,12 @@ typedef struct CXLCCI {
+         uint16_t opcode;
+         uint16_t complete_pct;
+         uint16_t ret_code; /* Current value of retcode */
++        bool aborted;
+         uint64_t starttime;
+         /* set by each bg cmd, cleared by the bg_timer when complete */
+         uint64_t runtime;
+         QEMUTimer *timer;
++        QemuMutex lock; /* serializes mbox abort vs timer cb */
+     } bg;
+ 
+     /* firmware update */
+@@ -201,6 +203,7 @@ typedef struct CXLCCI {
+     DeviceState *d;
+     /* Pointer to the device hosting the protocol conversion */
+     DeviceState *intf;
++    bool initialized;
+ } CXLCCI;
+ 
+ typedef struct cxl_device_state {
+@@ -316,6 +319,7 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
+ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+                                   DeviceState *d, size_t payload_max);
+ void cxl_init_cci(CXLCCI *cci, size_t payload_max);
++void cxl_destroy_cci(CXLCCI *cci);
+ void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+                           size_t payload_max);
+ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
+index beb048052e1b..9008402d1c46 100644
+--- a/include/hw/cxl/cxl_mailbox.h
++++ b/include/hw/cxl/cxl_mailbox.h
+@@ -14,5 +14,6 @@
+ #define CXL_MBOX_IMMEDIATE_LOG_CHANGE (1 << 4)
+ #define CXL_MBOX_SECURITY_STATE_CHANGE (1 << 5)
+ #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
++#define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
+ 
+ #endif
+-- 
+2.45.2
+
