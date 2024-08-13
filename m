@@ -1,96 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BD0208AD;
-	Tue, 13 Aug 2024 10:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76282187349;
+	Tue, 13 Aug 2024 10:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723544386; cv=none; b=AtO3M6OqHJ4ea4bIPz+BMxy2sC4exFeJkl5UmL+wZErQBcCTVe8J6CKYf8ySaVTxLSo/aMKGSvhYsdf8pNJ6czIWo5cmK7FCRHs+MKpd6BbIal3K5dpfERHUW0Ub80VlIhaTrCLvye9NKTwX5KoZ3L6gPvp9Hnd9IHsPVuPOVBs=
+	t=1723544826; cv=none; b=i3VVV1zuRQ33nIGvou3zk/H0E8eHa0/yL3pbg36oWuPGsysx0dhcacrnR6TCU5uwxOi2sVqP4tKcHFGyDI4TCT8woZpcm6+jnvrv9j510sdt+1+rornLVHxePMN2WbPMs75SgPMjkozBtQ6Obst1sxUcu3jtRirB3M15sQAR3D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723544386; c=relaxed/simple;
-	bh=YoGj4PVslA6UM46oWJ9gPIURkqWhOyAZEXZGqfEsu8s=;
+	s=arc-20240116; t=1723544826; c=relaxed/simple;
+	bh=H97vjD68G7sSJkuE6lT7jwfJ42j30GU0nTUNZaeE4i0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f4b/obhsIeC4USTAe1g39ZqNFohJ/dSpcCK2vSEHpxHibo9svMawyNUaW94JLl0gKmfmpacew/ZneN5n4SsFNp8jUOsfrJ/S8s4Xob4mASYlwifxxMWxkc0keG29Llu2FekFq67DoGF8JkYg8EuWEIRaQJXuLyyalax8HVuyhJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i6y5LM4K; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjkQvdxpKjbNev+DJloH5HYAVGUFzlbylG5G0EP75TVqeqXACh/x30sbbthlU5Uzee0/tH+RzPNUs0hNFNvtQPaHRr9VJ2fKLcxugW2+vcMHsmvXLEFSNtOPmmXjj2mED9O6nVuRRtnMz9FeBoeoWdzOEtPdE9KeFGG+F8/rnuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=TYDDCwpt; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i6y5LM4K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361F3C4AF09;
-	Tue, 13 Aug 2024 10:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723544385;
-	bh=YoGj4PVslA6UM46oWJ9gPIURkqWhOyAZEXZGqfEsu8s=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TYDDCwpt"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 88238220;
+	Tue, 13 Aug 2024 12:26:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1723544767;
+	bh=H97vjD68G7sSJkuE6lT7jwfJ42j30GU0nTUNZaeE4i0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i6y5LM4K03ldxlqN1WuTNmoc/qebzW8Kn7g7zIOccpgKHITcdwfwcpq0221b7yt74
-	 IE0PQziJKaGrBcwcSKlmaSe0l2Q9kRrwpnUqyaayBZSy8FfpZCi0FoucDvVlmxCMO7
-	 Y76v3B/0QuocahU+tVcatvjd60maZdEWC0WqCMAM=
-Date: Tue, 13 Aug 2024 12:19:42 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: quic_zijuhu <quic_zijuhu@quicinc.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
+	b=TYDDCwptr3b0IcjJ+/Ul0vvBpZCjjNWMrQmxHbc7MHR7tBMHhMuThJ7kNjjwPjTYH
+	 ejqea2d2R/fPFFLcz7vjpmAHeH/xYE0YP9x0S/xOCjWhpKx+2Z/23rfZTj7nAxP00B
+	 pUnif8BvwTi17nYWT+GkvwrX33sIX5cH4TBhx+5A=
+Date: Tue, 13 Aug 2024 13:26:38 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Sakari Ailus <sakari.ailus@iki.fi>,
+	Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Timur Tabi <timur@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
-	Zijun Hu <zijun_hu@icloud.com>
-Subject: Re: [PATCH 1/5] driver core: Add simple parameter checks for APIs
- device_(for_each|find)_child()
-Message-ID: <2024081314-parched-salary-ec68@gregkh>
-References: <20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com>
- <20240811-const_dfc_prepare-v1-1-d67cc416b3d3@quicinc.com>
- <2024081328-blanching-deduce-5cee@gregkh>
- <4f4095a7-2fd1-48df-b3c9-cdb9f7da0e79@quicinc.com>
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, jgg@nvidia.com
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+Message-ID: <20240813102638.GB24634@pendragon.ideasonboard.com>
+References: <CAPybu_1SiMmegv=4dys+1tzV6=PumKxfB5p12ST4zasCjwzS9g@mail.gmail.com>
+ <20240725200142.GF14252@pendragon.ideasonboard.com>
+ <CAPybu_1hZfAqp2uFttgYgRxm_tYzJJr-U3aoD1WKCWQsHThSLw@mail.gmail.com>
+ <20240726105936.GC28621@pendragon.ideasonboard.com>
+ <CAPybu_1y7K940ndLZmy+QdfkJ_D9=F9nTPpp=-j9HYpg4AuqqA@mail.gmail.com>
+ <20240728171800.GJ30973@pendragon.ideasonboard.com>
+ <CAPybu_3M9GYNrDiqH1pXEvgzz4Wz_a672MCkNGoiLy9+e67WQw@mail.gmail.com>
+ <Zqol_N8qkMI--n-S@valkosipuli.retiisi.eu>
+ <CAKMK7uGx=VjHCo90htuTE6Oi0b8rt_0NrPsfbZwFKA304m7BdA@mail.gmail.com>
+ <CA+Ln22E1YXGykjKqVO+tT8d_3-GYSEf-zY0TEHJq3w7HQEhFhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4f4095a7-2fd1-48df-b3c9-cdb9f7da0e79@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+Ln22E1YXGykjKqVO+tT8d_3-GYSEf-zY0TEHJq3w7HQEhFhA@mail.gmail.com>
 
-On Tue, Aug 13, 2024 at 06:00:30PM +0800, quic_zijuhu wrote:
-> On 8/13/2024 5:44 PM, Greg Kroah-Hartman wrote:
-> > On Sun, Aug 11, 2024 at 08:18:07AM +0800, Zijun Hu wrote:
-> >> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> >>
-> >> Add simple parameter checks for APIs device_(for_each|find)_child() and
-> >> device_for_each_child_reverse().
-> > 
-> > Ok, but why?  Who is calling this with NULL as a parent pointer?
-> > 
-> > Remember, changelog text describes _why_ not just _what_ you are doing.
-> > 
-> 
-> For question why ?
-> 
-> The main purpose of this change is to make these APIs have *CONSISTENT*
-> parameter checking (!parent || !parent->p)
-> 
-> currently, 2 of them have checking (!parent->p), the other have checking
-> (!parent), the are INCONSISTENT.
-> 
-> 
-> For question who ?
-> device_find_child() have had such checking (!parent), that maybe mean
-> original author has concern that parent may be NULL.
-> 
-> Moreover, these are core driver APIs, it is worthy checking input
-> parameter strictly.
+Hi Tomasz,
 
-Not always, no, don't check for things that will not happen, otherwise
-you are checking for no reason at all.
+On Tue, Aug 13, 2024 at 07:17:07PM +0900, Tomasz Figa wrote:
+> 2024年7月31日(水) 22:16 Daniel Vetter <daniel.vetter@ffwll.ch>:
+> >
+> > On Wed, 31 Jul 2024 at 13:55, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > > This is also very different from GPUs or accel devices that are built to be
+> > > user-programmable. If I'd compare ISPs to different devices, then the
+> > > closest match would probably be video codecs -- which also use V4L2.
+> >
+> > Really just aside, but I figured I should correct this. DRM supports
+> > plenty of video codecs. They're all tied to gpus, but the real reason
+> > really is that the hw has decent command submission support so that
+> > running the entire codec in userspace except the basic memory and
+> > batch execution and synchronization handling in the kernel is a
+> > feasible design.
+> 
+> FWIW, V4L2 also has an interface for video decoders that require
+> bitstream processing in software, it's called the V4L2 Stateless
+> Decoder interface [1]. It defines low level data structures that map
+> directly to the particular codec specification, so the kernel
+> interface is generic and the userspace doesn't need to have
+> hardware-specific components. Hardware that consumes command buffers
+> can be supported simply by having the kernel driver fill the command
+> buffers as needed (as opposed to writing the registers directly).
+> On the other hand, DRM also has the fixed function (i.e. V4L2-alike)
+> KMS interface for display controllers, rather than a command buffer
+> passthrough, even though some display controllers actually are driven
+> by command buffers.
+> So arguably it's possible and practical to do both command
+> buffer-based and fixed interfaces for both display controllers and
+> video codecs. Do you happen to know some background behind why one or
+> the other was chosen for each of them in DRM?
+> 
+> For how it applies to ISPs, there are both types of ISPs out in the
+> wild, some support command buffers, while some are programmed directly
+> via registers.
 
-thanks,
+Could you provide examples of ISPs that use command buffers ? The
+discussion has remained fairly vague so far, which I think hinders
+progress.
 
-greg k-h
+> For the former, I can see some loss of flexibility if
+> the command buffers are hidden behind a fixed function API, because
+> the userspace would only be able to do what the kernel driver supports
+> internally, which could make some use case-specific optimizations very
+> challenging if not impossible.
+
+Let's try to discuss this with specific examples.
+
+> [1] https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/dev-stateless-decoder.html
+> 
+> > And actually good, because your kernel wont ever blow
+> > up trying to parse complex media formats because it just doesn't.
+
+-- 
+Regards,
+
+Laurent Pinchart
