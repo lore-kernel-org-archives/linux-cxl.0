@@ -1,150 +1,154 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ED718CBEB;
-	Tue, 13 Aug 2024 10:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FA819AA58;
+	Tue, 13 Aug 2024 10:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723545261; cv=none; b=mKmqXl4phqgxsSUgEY6POwBFq6rU6bsWra9aV9vQc2BARqY/AFX0WRblMHGcwGGsLC+mwwOsxlgab7/pAhbOkXtEZ6GZ86nlWM7ElJ2pZmfyh8DZOef27Xbw3PVSFHIqVRaAeU64h8r9d0U+epRCNYuc2RovYxFBklMwFhus84Y=
+	t=1723546567; cv=none; b=iPUKsvNjFqwztL593TVs2XGwyxVP7ZIXL8iBVPagBmEtbEZdRm7UanL7AmEpcDerXgoAvvKY28HNSTUvlqWbHdM92P/fWlZNKcgS6QfKLRSeGOp26+ahMTgy597C8Lj6UDmOlMS0U8XaYhl+EEd450ABf9+jAXAhN3Ewbmu7dEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723545261; c=relaxed/simple;
-	bh=fzXoe1isBjct/QtD2OM5E7SMpJeuXFjqSDl3SsBrgaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BQXSoniujqZNxvlTqX3rR4uYWwd9rlyPbUreLCo4aWImk8vxdefW4+xanyBurpzkPg7f5H+a/alAv6t3ygensMsVUK/75l60t7KK89mD9NJjkTtRpauEM+vrNIINOvirtJdvwH8HimPHd0SEU9Ef/e1NYsEJBdog5TmsrdKgIJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqBOgdaR; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723546567; c=relaxed/simple;
+	bh=KSgLvCgukm7SuRr8aIh2efSvJWw2ykWte/os8g56hB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JencHeUbqOka9xQ12cTEaQqxVpMLkCrLqdA3R6Ky1J2Lpfz11bTKKsGHrbowa68OJSSrNqSfZzyKVCUo12sspfmwGqX3N0FIYCrBHmiB/MmoN0Ffg/lAjtOR01AHGzGK21jBWgM48LA/d0GXZ0U38XYeCp/n3CG3/CPt3i48WOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Et9rKDfQ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqBOgdaR"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2f16d2f2b68so74344241fa.3;
-        Tue, 13 Aug 2024 03:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723545258; x=1724150058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fzXoe1isBjct/QtD2OM5E7SMpJeuXFjqSDl3SsBrgaE=;
-        b=MqBOgdaR+8bt20K1m4Hake7eVGSstG0FonsxGcJEshaceIvNWjq3z03k4IR31oypj1
-         fFN9Hba2/3fvVCoc8gj1Wf6AJwfP6ZZPh0OzGusj02DZN2lxP+8ZqGWsGcdzpsa1GZYV
-         SWe2f3dJkjrVJs3pkR9yRQfO69XgXZU1CsrpKq5uuvXOxIOTGIf3H6lklEimsWu6zkog
-         z4bXJCTOVV9JrshvpC3qH1rebox0fW5aIP5Lhv33+HKuCWo4GrEwaL8L/s/Rd6E91vs5
-         FMJLF+CMVA4CJ/Fr4FwiTqzKRSlYnss/EpJIFK9bPHs3w0/H6U2mtk371GMx2GGOu+FJ
-         N37Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723545258; x=1724150058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fzXoe1isBjct/QtD2OM5E7SMpJeuXFjqSDl3SsBrgaE=;
-        b=OJDbtiurdojINUr2Gr4knN/RWdaZz5Af0uOFeV9qUmfxRT2VnjW+o+JXfnVW6iRohW
-         H8CpjvfO/9sA2DeuKVuhSUDu+fyJOdtQixA9vgs1CuqJp8eUvU9uHHnJVRsLxSII/4V6
-         N8Vm9CKr9UQpw6LUxyDpJEw26sSiaJguxhie2La1L9nlExvE29/98AuiOyGGT4Yj6PJ9
-         43hdHOMx0GYUf4Bk1sphkjtQsLs9U5LYiTAbqXFLxiyj8FJsHNC+3ykcpsgmE9rF9/bS
-         pxgkA71dMUMENC84et+qRxIEktPzIDHimwzWa4mqOpEazfKVl+xcq07CKiZBGrNhZqkY
-         oRtw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Xwj57AIXy8ubMC1Yqi6JXDiQhgcq3JYKOhhSmqcgFSIGfcQnOKyhGZw1OaYRdT3fSXA3R5Qy9IJQ1Q==@vger.kernel.org, AJvYcCUtE0zcueduJGJrBlIjUAgIOBlrZL5w637lQlpTBZotReYTz8qAaUmDFasVQVy/Uow28zra+wTPHko=@vger.kernel.org, AJvYcCWbbB9Hlj2n3272RxpewsoxNB1fWCQOK9i4k2ssZdnu5M3Q5QSnFMwLJYaniv0fYGzRFacUrJcL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB6ITibDAIWyHG1Wvtc59Hui5/S9SF9TzuAToOt9f4EF8aUqk4
-	KnCamk2fOjjNQysqgvzgo4857P5s0zRV5SMRV33JBjbf/OHn+kY8eED22PhcenUU5bb7o4tOlio
-	oErSIQG2z2OAJ5kPnCvpuvp1ORkQ=
-X-Google-Smtp-Source: AGHT+IFQf6uBkibY15otBoNAQq1YHezfZ8+u3cXNIwNpeGJbOjExMfCzxCYaXKDYewH7buD8RCrm5VcdY8XNGaXhT2I=
-X-Received: by 2002:a05:651c:1991:b0:2f1:922f:8751 with SMTP id
- 38308e7fff4ca-2f2b70d3584mr30397801fa.0.1723545257786; Tue, 13 Aug 2024
- 03:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Et9rKDfQ"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47D9abWb031286;
+	Tue, 13 Aug 2024 10:50:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WhlZuS6gpJmDBfj7tUVk06rz347a2fbx1nf1hh7blm4=; b=Et9rKDfQSSidGydp
+	cuoi0XNprRrzTHf+Jczq4U1SRuoncOaYZMD9Pak6MyQblYfqwv+0bA9wgq5jTlaK
+	swWwUsZMvlps3EUVx02KLf9701hH6dFpnEeQ5A7rM/IjMeznH8lyUdCWV+FXLZ/i
+	bQ3uLVdZWd4tI64Z2v8jYs4257v4WHqoBLSRwEIgjYRMlRHtQb2Ue8FUxrutXuAu
+	KmjOXFu7uejJ4kQJfzioyWpHPpTHmZMTEhKkWugatAkjZTcWO5sDy+oued2ZW/q1
+	YQRwUe8OwYahzI0Fq4ENwvaJx9iCbiUNkU5HA2DrDNVmZjwT8bDE2vMShn7fGVTh
+	RTL+nA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40x15e79fp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 10:50:25 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47DAoBqU013789
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 10:50:11 GMT
+Received: from [10.253.34.30] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 13 Aug
+ 2024 03:50:07 -0700
+Message-ID: <3f7e9969-5285-4dba-b16e-65c6b10ee89a@quicinc.com>
+Date: Tue, 13 Aug 2024 18:50:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPybu_1SiMmegv=4dys+1tzV6=PumKxfB5p12ST4zasCjwzS9g@mail.gmail.com>
- <20240725200142.GF14252@pendragon.ideasonboard.com> <CAPybu_1hZfAqp2uFttgYgRxm_tYzJJr-U3aoD1WKCWQsHThSLw@mail.gmail.com>
- <20240726105936.GC28621@pendragon.ideasonboard.com> <CAPybu_1y7K940ndLZmy+QdfkJ_D9=F9nTPpp=-j9HYpg4AuqqA@mail.gmail.com>
- <20240728171800.GJ30973@pendragon.ideasonboard.com> <CAPybu_3M9GYNrDiqH1pXEvgzz4Wz_a672MCkNGoiLy9+e67WQw@mail.gmail.com>
- <Zqol_N8qkMI--n-S@valkosipuli.retiisi.eu> <CAKMK7uGx=VjHCo90htuTE6Oi0b8rt_0NrPsfbZwFKA304m7BdA@mail.gmail.com>
- <CA+Ln22E1YXGykjKqVO+tT8d_3-GYSEf-zY0TEHJq3w7HQEhFhA@mail.gmail.com> <20240813102638.GB24634@pendragon.ideasonboard.com>
-In-Reply-To: <20240813102638.GB24634@pendragon.ideasonboard.com>
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Date: Tue, 13 Aug 2024 19:33:59 +0900
-Message-ID: <CA+Ln22EzL7M+BLXS6dFi0n80XXkQu1CuoUad0EtjZ2ZEnNX=Kg@mail.gmail.com>
-Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Sakari Ailus <sakari.ailus@iki.fi>, 
-	Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Dan Williams <dan.j.williams@intel.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, ksummit@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	jgg@nvidia.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] driver core: Introduce an API
+ constify_device_find_child_helper()
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Zijun Hu
+	<zijun_hu@icloud.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Davidlohr Bueso
+	<dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave
+ Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan
+ Williams <dan.j.williams@intel.com>,
+        Takashi Sakamoto
+	<o-takashi@sakamocchi.jp>,
+        Timur Tabi <timur@kernel.org>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux1394-devel@lists.sourceforge.net>,
+        <netdev@vger.kernel.org>
+References: <20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com>
+ <20240811-const_dfc_prepare-v1-2-d67cc416b3d3@quicinc.com>
+ <2024081314-marbling-clasp-442a@gregkh>
+Content-Language: en-US
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <2024081314-marbling-clasp-442a@gregkh>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BwLEZ1fydPE7qZsoyL-lqd11wCChzbl4
+X-Proofpoint-ORIG-GUID: BwLEZ1fydPE7qZsoyL-lqd11wCChzbl4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-13_02,2024-08-13_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408130078
 
-2024=E5=B9=B48=E6=9C=8813=E6=97=A5(=E7=81=AB) 19:27 Laurent Pinchart <laure=
-nt.pinchart@ideasonboard.com>:
->
-> Hi Tomasz,
->
-> On Tue, Aug 13, 2024 at 07:17:07PM +0900, Tomasz Figa wrote:
-> > 2024=E5=B9=B47=E6=9C=8831=E6=97=A5(=E6=B0=B4) 22:16 Daniel Vetter <dani=
-el.vetter@ffwll.ch>:
-> > >
-> > > On Wed, 31 Jul 2024 at 13:55, Sakari Ailus <sakari.ailus@iki.fi> wrot=
-e:
-> > > > This is also very different from GPUs or accel devices that are bui=
-lt to be
-> > > > user-programmable. If I'd compare ISPs to different devices, then t=
-he
-> > > > closest match would probably be video codecs -- which also use V4L2=
-.
-> > >
-> > > Really just aside, but I figured I should correct this. DRM supports
-> > > plenty of video codecs. They're all tied to gpus, but the real reason
-> > > really is that the hw has decent command submission support so that
-> > > running the entire codec in userspace except the basic memory and
-> > > batch execution and synchronization handling in the kernel is a
-> > > feasible design.
-> >
-> > FWIW, V4L2 also has an interface for video decoders that require
-> > bitstream processing in software, it's called the V4L2 Stateless
-> > Decoder interface [1]. It defines low level data structures that map
-> > directly to the particular codec specification, so the kernel
-> > interface is generic and the userspace doesn't need to have
-> > hardware-specific components. Hardware that consumes command buffers
-> > can be supported simply by having the kernel driver fill the command
-> > buffers as needed (as opposed to writing the registers directly).
-> > On the other hand, DRM also has the fixed function (i.e. V4L2-alike)
-> > KMS interface for display controllers, rather than a command buffer
-> > passthrough, even though some display controllers actually are driven
-> > by command buffers.
-> > So arguably it's possible and practical to do both command
-> > buffer-based and fixed interfaces for both display controllers and
-> > video codecs. Do you happen to know some background behind why one or
-> > the other was chosen for each of them in DRM?
-> >
-> > For how it applies to ISPs, there are both types of ISPs out in the
-> > wild, some support command buffers, while some are programmed directly
-> > via registers.
->
-> Could you provide examples of ISPs that use command buffers ? The
-> discussion has remained fairly vague so far, which I think hinders
-> progress.
->
-> > For the former, I can see some loss of flexibility if
-> > the command buffers are hidden behind a fixed function API, because
-> > the userspace would only be able to do what the kernel driver supports
-> > internally, which could make some use case-specific optimizations very
-> > challenging if not impossible.
->
-> Let's try to discuss this with specific examples.
+On 8/13/2024 5:45 PM, Greg Kroah-Hartman wrote:
+> On Sun, Aug 11, 2024 at 08:18:08AM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Introduce constify_device_find_child_helper() to replace existing
+>> device_find_child()'s usages whose match functions will modify
+>> caller's match data.
+> 
+> Ick, that's not a good name, it should be "noun_verb" with the subsystem being on the prefix always.
+> 
+okay, got it.
 
-AFAIK Intel IPU6 and newer, Qualcomm and MediaTek ISPs use command
-buffers natively.
+is it okay to use device_find_child_mut() suggested by Przemek Kitszel ?
 
->
-> > [1] https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/dev-=
-stateless-decoder.html
-> >
-> > > And actually good, because your kernel wont ever blow
-> > > up trying to parse complex media formats because it just doesn't.
->
-> --
-> Regards,
->
-> Laurent Pinchart
+> But why is this even needed?  Device pointers are NOT const for the
+> obvious reason that they can be changed by loads of different things.
+> Trying to force them to be const is going to be hard, if not impossible.
+> 
+
+[PATCH 3/5] have more discussion about these questions with below link:
+https://lore.kernel.org/all/8b8ce122-f16b-4207-b03b-f74b15756ae7@icloud.com/
+
+
+The ultimate goal is to make device_find_child() have below prototype:
+
+struct device *device_find_child(struct device *dev, const void *data,
+		int (*match)(struct device *dev, const void *data));
+
+Why ?
+
+(1) It does not make sense, also does not need to, for such device
+finding operation to modify caller's match data which is mainly
+used for comparison.
+
+(2) It will make the API's match function parameter have the same
+signature as all other APIs (bus|class|driver)_find_device().
+
+
+My idea is that:
+use device_find_child() for READ only accessing caller's match data.
+
+use below API if need to Modify caller's data as
+constify_device_find_child_helper() does.
+int device_for_each_child(struct device *dev, void *data,
+                    int (*fn)(struct device *dev, void *data));
+
+So the The ultimate goal is to protect caller's *match data* @*data  NOT
+device @*dev.
+
+> thanks,
+> 
+> greg k-h
+
