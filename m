@@ -1,378 +1,265 @@
-Received: from eastern.ash.relay.mailchannels.net (eastern.ash.relay.mailchannels.net [23.83.222.55])
+Received: from esa5.fujitsucc.c3s2.iphmx.com (esa5.fujitsucc.c3s2.iphmx.com [68.232.159.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7021AB518
-	for <linux-cxl@vger.kernel.org>; Tue, 13 Aug 2024 22:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566C017C68
+	for <linux-cxl@vger.kernel.org>; Wed, 14 Aug 2024 01:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723588184; cv=pass; b=BIgRLJ+dyy1FfA+BG9D32iWRpdxrU0iA2OyRtmncCwEFeAm3mwJ81XF8fdsBbXRzRdiA8/BL8qxu3rLClUa6VWJVciDVNHnYgFRMXz2jCQkK80rW76SiYrjkNdtVXDr0Dr4gZeY77O/CljnMzyM53T4HtCriLn/CLlg6Ge5lB5w=
+	t=1723600716; cv=fail; b=maA94169j3eJXCMw3a3s9nFFkRZav3i0Mk1Lc1w8sUvP1HoGcBGJ3FQEg7nPZ9HgwefvY4WmPlVGCrOKwyL64ERQOMYKGgP64nEFzsJ7oTYrpYNUC06cJwwLVTec8sKDZxjNk84Et6MhkpbO34Poebjr1IrSUYBmeUfD6i7LPg8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723588184; c=relaxed/simple;
-	bh=WcFfrX639y9wOOky3fkEXuqJRG21mK1nV5RKc2xJtdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dPFFEWkm8hoQSjblWuSgZuvpHcWFNtVhxN+rguKia3I5K3AQxfWPcpnQ+fljVMqWpYZMj0RBtjR0hXAbd5SWSddli3EyET9TejuynefYCmGid8rB89+IHU0DL5tx9sJR+5rlMMDERCnhYX5WIaY4dA0lnKpRn/Oul4yVr5bbaTU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=PG8q4hGn; arc=pass smtp.client-ip=23.83.222.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1723600716; c=relaxed/simple;
+	bh=qzwNv5D4HeeWvbcNhFqsUniZz1H9GQRMBjoDOliStVA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ok0Ow/ON9hQeYtkbqVHLFAIRejYDRTLftHd70rig4UxlmrTPrbgFwJxwJ9asmQKfdWSn2X+/nHWtuEh6QBwPFtaI79jKkXjfixaLGw1ozJFCqpuQdFyMrGV8sd8mY0TWF930oIuJyrDGAR7P82HtL/7NpGw6WniB44Yw71lCnKo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=jyr8mhil; arc=fail smtp.client-ip=68.232.159.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="PG8q4hGn"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 139284746D;
-	Tue, 13 Aug 2024 22:13:19 +0000 (UTC)
-Received: from pdx1-sub0-mail-a264.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 9A9034743A;
-	Tue, 13 Aug 2024 22:13:18 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723587198; a=rsa-sha256;
-	cv=none;
-	b=jyKgJ9LsodWt3JOlDkW5+yAIUGoIiMCxS/sS9UC3CEaIdsLWYrdfwrfhjqDBvdNN+iUndZ
-	NvFBPmC25I0MOrjFCFCIt38PXcK6wgRE9ccDTKrn9SXfLLWL8a4s78g5mdw19/JCVxEza6
-	REsanLY7PkdcVI+dpm0lkBkwNMAWiVC8VEjG3Wid8euzu3xIBsoJ/mYWe7pWjTd7W/4Mba
-	nr9CrHo6wLNXpZM3AhvE+ezAPmTHKJw3pu/WGnaCk4DwT773WnOf1FPP5kXTKHNC4qrm+P
-	wCQwnnup72zaWnfeE/pNG9smZgTpe+6FZMNEeld0SR05+4m/NgccFZTm1+9s3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1723587198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=Hr3nJl7WCIXLbfgLM9iKt45WWjW2yClKzDTJcq6qj5M=;
-	b=YW8rnnJ+Rl5qr8xbQaweh7VrDVXByZZCm+Akc4HkLCFgPfVQAcGU5MebVHxNTmUFzVXP37
-	9n/awDSl6VUtCKoRh9yru3GS21ZV7AaSLLD5YGmqlpcD38l6nY60tuiD+tqN/OWvagzsHg
-	6EMqDK6YcIwyXghtRjTf25B3Ozq8cBYTByAdG4MQ0mpeICHN54ugmZ56cNAx/DQiHG3ZNw
-	ab+1Kbha6SrnUxwGVU8VnyehVNsqVWHi4WENGOAIvUO9M9HnO/YOprA8b76DvU0aILCNWp
-	4SJHNK/TXdW04XFY79AlqkhvoglM70iXeWJsys+oJP8DFnApriIelzznjLPr4A==
-ARC-Authentication-Results: i=1;
-	rspamd-68c6c69487-9pxmk;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Wiry-Harmony: 584b6a7c083b206e_1723587198958_2497559779
-X-MC-Loop-Signature: 1723587198958:2358817111
-X-MC-Ingress-Time: 1723587198958
-Received: from pdx1-sub0-mail-a264.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.82.141 (trex/7.0.2);
-	Tue, 13 Aug 2024 22:13:18 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a264.dreamhost.com (Postfix) with ESMTPSA id 4Wk5Hd3MM6zfM;
-	Tue, 13 Aug 2024 15:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1723587198;
-	bh=Hr3nJl7WCIXLbfgLM9iKt45WWjW2yClKzDTJcq6qj5M=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=PG8q4hGnvz6UMFCBJ+AIqRbGUlY/sHfpHaEkgYpJtrxvHi0znWcncWFpQwLvX2Jq3
-	 1Mw+TJ+h5v695WtyfvWlxzjf6zT+rOWlbTfIYLTYA+C+8SkIbCe5kPZ8mo0ODJdpLZ
-	 kKpDqp++w+tMhcPiCnVD19Vq7/S9ECZ3q+i4wExZ8IUAJ5LKtewZjNclPpoIoNdLYo
-	 UHIK9jwqIp1HirpfUoFrtsiqtke6f4gYavMQ42dSjTm7KpQWG3KNde8U+6GQJZRee9
-	 5GaTxkiCk842ynodG53MFl1JEJWFVAzDkFbcz+LVCBNvh4j5+6j2kkHRYmlLIw7DlM
-	 KH4DyZBEcwyuA==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan.Cameron@Huawei.com
-Cc: ajay.opensrc@micron.com,
-	fan.ni@samsung.com,
-	john@jagalactic.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	sthanneeru@micron.com,
-	ravis.opensrc@micron.com,
-	arramesh@micron.com,
-	tmmulgund@micron.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH] hw/cxl: Support aborting background commands
-Date: Tue, 13 Aug 2024 15:12:55 -0700
-Message-ID: <20240813221255.179200-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="jyr8mhil"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1723600712; x=1755136712;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=qzwNv5D4HeeWvbcNhFqsUniZz1H9GQRMBjoDOliStVA=;
+  b=jyr8mhilnYbt6RW+hCaXe/e9DS0Qj2f+M5Cl4W7EjEclzy6pDYt2d6Vv
+   PQ9AkfJb91baQon/xOrrM3mB+em5bHOH5vUVInIaAdehDqcAuJApGwkbD
+   gMQ8pZRTsEg+bshoeT7JpT34BTML8AYQAMdDCVZjh1dcBjZVCKGTK4Pkv
+   bRoNhgHvbMaWK2O+vIJ8b2zo1LZak38w43g2y6ZY0XpOJHDQ/e0DOGotx
+   py+sTIHP+0AVLqDxnmN9rkgXvoyTFHxSToUydru6mI0Us5oS0CVmJCEob
+   Okhquk/7sklNe3WnLcAK6EA8yiOJe7klTNg9cu2twn57zdBxdfk3JiaF0
+   Q==;
+X-CSE-ConnectionGUID: HrAe6LUKTeqJUGMhdK0axQ==
+X-CSE-MsgGUID: XQbwhORWSO26uYT1HUka2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="128344679"
+X-IronPort-AV: E=Sophos;i="6.09,287,1716217200"; 
+   d="scan'208";a="128344679"
+Received: from mail-japanwestazlp17010005.outbound.protection.outlook.com (HELO OS0P286CU011.outbound.protection.outlook.com) ([40.93.130.5])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 10:57:19 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lovM4zP8osCPsU58W0doh8cwcmKAlN9J5vqFi8J6XNHwAVV+YhvYrzhptodT0MhULK3OAl+ES/vRexjdUTrbWNefMvdWtDN7FnYqJ6wTtTu3rFoPy5tPisxKCeUEr5OQv9DUpZpntyJeWfyGLphhD1E2EPB0KUq6smQji9WoNCYucvyL67SxThpm3dkQTFaBU7F9/is0uIl9Oq2VRAww9f7viN8g6X3e8bSdeKVES3phklw5FUtiUmLJ+YkBOjGJaR1bWpUpFkqESSRPudKZtYtNmE1BYXaxcSue07TTbeeOCX5UKorDOCHZ4cBAirZkQKX9h+NQfcieKLxJNpoR6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2DTUT0gywbyqg9+mQ9RESoeSt/AlV6+U8MtdqXVKPhs=;
+ b=JAFTjjEIyeGhgmAf5oACojiWW+cfVG2Ew2erTbnTcfpl7CnB5rppWfG9k3aRLY3r35Uay5XyxKu47bcMlW9QMZlxXNsZg8o5jsQbW1d5Z0YJy/2uzD77XYPHO9eyj3czdFNWyc+75J/feyyTLSwB/84udnr6LTPIftL23CDGn/Wr9ytcWbmP/BNNBkRLP+UZLVdMBzMjmJMNAk5WPlc0xbDb9IRpdYmryMVuzyTXkhakG8g3UoitT8lNFYNullKzE3jj2j6R3gearSd+Aud0ocIu1ammVT/icTiwxTLv7gSmvXKu3Nn/NeGK4LHgrY3dBmExIJcWHbDcO/R3MM0N6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
+ by TYCPR01MB8723.jpnprd01.prod.outlook.com (2603:1096:400:18b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.16; Wed, 14 Aug
+ 2024 01:57:16 +0000
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba%5]) with mapi id 15.20.7849.021; Wed, 14 Aug 2024
+ 01:57:16 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: 'Dan Williams' <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: RE: [PATCH v15 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Thread-Topic: [PATCH v15 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
+Thread-Index: AQHa1zfZyJh0Y49NK0aKolaLH17KZbIfuHUAgAZwvoA=
+Date: Wed, 14 Aug 2024 01:57:16 +0000
+Message-ID:
+ <OSAPR01MB7182A970075DC73C660E0DCABA872@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240716042540.89639-1-kobayashi.da-06@fujitsu.com>
+ <20240716042540.89639-2-kobayashi.da-06@fujitsu.com>
+ <66b6a574b9182_25752943f@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <66b6a574b9182_25752943f@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=c1b805b5-7159-4c38-9353-0e5b56394881;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-08-14T01:49:59Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYCPR01MB8723:EE_
+x-ms-office365-filtering-correlation-id: 1a59957f-7010-416a-1a96-08dcbc046c53
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|1580799027|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?ZVcybUpuaDdqQjZsc0I1YnpZZUd0MHhOVjdZMjBleGh5YWNXdjI4bk1x?=
+ =?iso-2022-jp?B?eEJlY2JQQmJMVE9XSmlSVDdiTCtrSEN0WFcxSjhsc05EQ1F2Q05USWYr?=
+ =?iso-2022-jp?B?RU5PZVI4c2Q0cTlkbW1GSlBST29mcmNlb2RwRy9pSnJVM3hLSjAvSWN0?=
+ =?iso-2022-jp?B?N1k2WEY5bzF4RWxmRlpmS1pDNGQ2YkxiSUhsMVIvbnFsWnAyOUI0MTAw?=
+ =?iso-2022-jp?B?K2xmWk1hdGpobXhTOXIrbElIMHhSYzJGR0dXcXZ4RVc3NC9QQTNSQngy?=
+ =?iso-2022-jp?B?ZmR5bEVCVDVEOXM0TFNCZjgwRkMvenkwVWRpRnJuU1hNaVVKQWNxYm9h?=
+ =?iso-2022-jp?B?TnpBcUVRRkg0b2Vibk44V1lPc1NwQ1RmMW9NY002alBUbVh2UnlXeFgv?=
+ =?iso-2022-jp?B?dTk3cDdTR2RrbWJiK1doalRGTFYwOGRXMytsT3htaTlkOWYvVGpyUm0r?=
+ =?iso-2022-jp?B?MHZyeld5VXN0cEdtVGN1VE9qV1lFd3hWVFFOait4eTNNdjBGTURhdWQ1?=
+ =?iso-2022-jp?B?dVNhZE9LUkdqY0dieUhuSEVoMXIwZkJ4Q2N2S05LT3ptYS8rNFFGWGdL?=
+ =?iso-2022-jp?B?VXMwVVNqb2FmNTg2WkxmZU5nYWdTTTZ6Unp2aVlsSjI0VElKdU50Slcw?=
+ =?iso-2022-jp?B?U05SYk5JK0toNVIweklralFlRHR5WDhDYkNQR2o3ditoYXlPbkNqOXBt?=
+ =?iso-2022-jp?B?eGtpVHdNeDdaM0txN0RVQjM3ZTJBNEdCU0dLRjJlaDVxc24zNSt2SEZa?=
+ =?iso-2022-jp?B?aWRMRWdoNU9YbEYxQ2p0R2RHWWVRRUdmck02ejgvZDZRbzJGWUpxOHl4?=
+ =?iso-2022-jp?B?NExCMHVHdFhHZW9WK1NVUjg0WGFTeXg3dThvVmsyelh1N0NHbVd3K1dU?=
+ =?iso-2022-jp?B?WFBhdFl0TUxFQnJPUlpPR05QUnFkLythT3hHUUgrZXFaSXRoaUkxY1NR?=
+ =?iso-2022-jp?B?bEV5bEcxS1BvT1d2QTVtMUpUMk1GQjdjN2pTcldPeGkreU1CaU5PNlFO?=
+ =?iso-2022-jp?B?Vi83R3hhQ3hMVWdGa2tuNDM0ZERZYlNXQ0xIMW5GOWd0cDNhb2FNTDZK?=
+ =?iso-2022-jp?B?L3p4MmdNbXFEa1BMSWloWXhLL2dRQ3JyNEJGNmFvdzZDaVhNR2NTcUY4?=
+ =?iso-2022-jp?B?U3gzQUlBOUhLdkQrenJueXhOZ2pEWDhHVllDanQzUkJ0Nkh3Z1dwK3NC?=
+ =?iso-2022-jp?B?TjZOWFM3WXpsaGZnTGUwT1JQNFA0NWE1N0JtaE91ZjZUdmFTMzU1ank3?=
+ =?iso-2022-jp?B?K2JDVy9SYXpob1FCRGZ3TkQxZVh0dFZlUHIxUzJFR3N4alNDaGh4RHd1?=
+ =?iso-2022-jp?B?ekM3NFZtSkRWSWwvMnFPN3ZkNkVJYm0rbW5rejFzSWtoYTQrbzdYNXlo?=
+ =?iso-2022-jp?B?UEh0RmNmbjU0bFVVblVaMVN5OHBzVGpMOFpkcmtHU1M5dUtnVkJQQUJE?=
+ =?iso-2022-jp?B?eEhjOU1lcnlMclZRVWhicXA3RFNjUUc2Q0lVbGlhdExZYmZ4NVBIUzVV?=
+ =?iso-2022-jp?B?ZDQ5MDR5bWl1dmdWRVRvMlUvZUg3UEZmbmxDRm9CSUZDZVNLNUNsMkdw?=
+ =?iso-2022-jp?B?aTJ6UHRCa1ZDcS9lc3ROYVFDTHhoV01NRmhSb3BIeTlGSjhLSTB6ZVJX?=
+ =?iso-2022-jp?B?OXV6VWVWUWJkeXlBN1VXcEJSbGJGZ2NabUFrVXZiakFlZTBNOWk1c0pW?=
+ =?iso-2022-jp?B?OWhSRjJFcXFJSDd4T1hvaDdTTmVMRHRWZEZqSzY3dkRLMDE1REFIUHZS?=
+ =?iso-2022-jp?B?RW9DUzE1Z3o3RlMyWmtSTjBwZ3lCcFJ3TU5uVHZhMm9DNWRuODFGOGds?=
+ =?iso-2022-jp?B?VzlMbTFhTkgvMUpBSVhSZEhyS0xMc2F2OHpKQWxLZjlTZit0N2tBamty?=
+ =?iso-2022-jp?B?eFh6T1pLejY3UW0wNEtwR0JsdzR0YVBFdS95TEpGMnZzaEE5UUVQM0xH?=
+ =?iso-2022-jp?B?VEl1QlVVUVdsNDhSa284VDAvb3pueGlPd1Voa3VxSU1wTHZCcTlHZjRj?=
+ =?iso-2022-jp?B?TFhFdWROT0swcStWTkdaUXF1ckV0eE5mY1FvSnJrc2dDZ2xjT3U0ZGlx?=
+ =?iso-2022-jp?B?UFdlMU4zNU00T0xmQ2ZZVkpFUXdodFE9?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(1580799027)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?cFBac2xoSzhhSE9CWndpc2xRR1dQb3pwU3Y1VWxGaXV3WndJbkRNUzc0?=
+ =?iso-2022-jp?B?VVBRVEduVW8zL0d4ZmRrMUQ4Sm85VkkrTzRoWFh2czc2ZnhUQmFJaVNK?=
+ =?iso-2022-jp?B?N1h3TkNjb2tpWWlWbVhISTVhZGJVTWJWZG1CT2I5ZHphdnN4SlB3ekZn?=
+ =?iso-2022-jp?B?ajNOdWpad2YyWGQzQnE3dlJ4OFoyS0V4MkhSTE91WXY4Q2tPcDNjaGFw?=
+ =?iso-2022-jp?B?MlBsbjFFY3g3cTd1djVYY0twTmc2R2Z3SnR1cEU5RHhPY0Z2bWM5U1c3?=
+ =?iso-2022-jp?B?ZE8rU1M1NkhOb0FIMkd5M2ljQWpxazVRamx4bmo1NFcyUDdFclZHU0JR?=
+ =?iso-2022-jp?B?QkloOWF2TUU1N29tTVI5TTV3ODBBQk1rTkdkdEVhaHhZa0taR1ByckFX?=
+ =?iso-2022-jp?B?bjlBaEtGUlowWnd2VUtoQlBNY25FWWMrdjR3NjNJSUtOd1QwaXd3aklk?=
+ =?iso-2022-jp?B?aTZNb2NtOWdoOWQxSHlIZzVPeURabXRQeTQycGtIR1ZiTk55ODVyay9v?=
+ =?iso-2022-jp?B?TUUrVEVzaU1hUWNqbkU0SlBVWHh0c0VqazI3THJ6SDlDbGhXQ1hnOG84?=
+ =?iso-2022-jp?B?YXU0eVB5TVpKK2tldkhSNUlIanN4c1dUTk96ZXYwZ3dGMEdkNCs3TnF5?=
+ =?iso-2022-jp?B?NjJXUDVWL0tVbWU1OEpDcWUvRC91enpXa1AvM25LMllXQUdidk5DM0lD?=
+ =?iso-2022-jp?B?aWgrMkxzYjhoRzdFTVN4RzF3S2NlRnNBWEYrT0QrbytDcTlKZm5IQ2oz?=
+ =?iso-2022-jp?B?SkllZHREclhmNlBNd0djcGxvN2huM2x5MmRjbCtOeW92YVFURlNTKzN4?=
+ =?iso-2022-jp?B?L2FpemRVYmtPM3FjSXJ2dTY0dFUxL2pXdWtLcjV1aFl4UnJ1KzdnV0ho?=
+ =?iso-2022-jp?B?RXA2cGVjL2ZjdG9IS2JJOTA3dldRcUlRajdwUXRydHN6RG96TGdzWmt1?=
+ =?iso-2022-jp?B?N1R3Nit4U1NGVjdKbTFQUUNoMFlYVi9KM1VMZ0xsK2Y3MUwxOWROdmhy?=
+ =?iso-2022-jp?B?cXdST05VSXNYbTF0MFVacW1xWWIzNHBPd0FxV0lMdW9Na3hmNHNmV2RQ?=
+ =?iso-2022-jp?B?c1R5MkNmOGpNbVlDRVhzTUNkeXZCTjRhYUhJM0cvSlZOMXIyRXI1b2Yx?=
+ =?iso-2022-jp?B?U2JVNjl1QWFQYm5LNXBGWHU1MDY4dlNlUHN2cG0vTmU3Znd6YzZaOVdz?=
+ =?iso-2022-jp?B?dmk4blJDZEUwSkpSR2JGQVY4T2I1UDJTcmw4VU9BWU11dzZtSnlhNnRS?=
+ =?iso-2022-jp?B?MUszdTJhL2RQQlZWUFFpMTFCUWo4a1VMOWxCcDhYRlU3TkRPUWUrL0pJ?=
+ =?iso-2022-jp?B?YVJaaG13T2dTUm5jazRWMitJWFhwbC81YUVkRlhtWWZmaDhNalRCZVNo?=
+ =?iso-2022-jp?B?WHArV3QyNHRWL1lvN0VHU2VVbjdiQXlGT3NRUVkzVU9rdnhPRncyWTVY?=
+ =?iso-2022-jp?B?QWpZbkVZTzh2QXBJRjZ6WldkazFUak90bU1MSEFscXpCclAzalFNR01I?=
+ =?iso-2022-jp?B?NU9venNFNG1wUjJEc1ZVWXBST203ZTJKN05QVmhtU05URzdpV3hVMG9Q?=
+ =?iso-2022-jp?B?dVRLL1lpbVBteFBMR0ZxOGRaNlc4WjFqQUo0SElzdDk2OW9UempZaUFD?=
+ =?iso-2022-jp?B?MVQwVkREcFZqODRKM3czalJsb0R5Z0c0NTdnai9FUklHWjl6WW9iZzda?=
+ =?iso-2022-jp?B?Yk45UjJUaEhaRkt3YWp1RVVzdjFYYldDZzZLMEo5MTNHVnVobWxhRTM2?=
+ =?iso-2022-jp?B?ZHo1SzJ0VHlnbi9RNGZJaTRRU2t4K1Fta2w5Wk5DYk9MY2dMN3ZGd2o4?=
+ =?iso-2022-jp?B?QmJLek5ac2lyTG5TczREcFE3OU1jM0NPNjVadVg2K1NxK1FadGpaQlhr?=
+ =?iso-2022-jp?B?TlI5Mk5BeEpwaWNQYWRJNW92UGkxYWV3dUx2alBKSE9tb2VhTEQ4RWNz?=
+ =?iso-2022-jp?B?V1FZdWtYOVZ5aXdxWGhQdm4vR0tTNjJyOXJZcGNNbjdhSWFPYzkzVkhu?=
+ =?iso-2022-jp?B?TUJUTG5JTVVWTXFEMlhrVHZ2Y0lRWG1zRWtlK21MalJkVzRLWWlVOE5t?=
+ =?iso-2022-jp?B?R3k1ZnRzTUw0RFNyMC8weTJkaWJQZlB4dEtCWUJvMDkrUlJRZ096K1ZX?=
+ =?iso-2022-jp?B?TThIc1RpdmdmV2JKRDducSt6dnlZOUhmOHNzVlRRR0tXNGVORCtXVnpC?=
+ =?iso-2022-jp?B?eTNPeVd1NWtreUx5emZ2ME0vbGdXNFlJUk0xTnQ5dUdPcllCY2k5WSto?=
+ =?iso-2022-jp?B?SGlqaERaakIvK3RLRDF5d3JjOExHaEJhd09qZFovWjB2SzFSNmtyNS9B?=
+ =?iso-2022-jp?B?UlNqK2RneTh4b3N4UXZyZ29JMmtPWU5Td2c9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	FtqVrI8LQ3hF6oZWBhRlyqH51mn4gnP5Q8R2ZT1zTOypL4wcr7PXgaihyO1gu9t01qurD1ZEzGr9IZmPQPTsyvgnTtZ62aQUl72xwIrl9UhjI90nFZTr0biZFFSArCVmm6Xy1mFDR8dv64NmKZ/s75A9szOS63Y9YVVTVdMB3JD9OFiI0GRnbQzFIz0UtCM4l3D8sOy9ljZG8vmLT+L5KE3rTOzo7jVVkT5eIEmwpZvVWyhwEE7CcgDvow907dNfbwIWicMYtKWRLLgUJwanJe90Ac/joYgcjnvpCNgfOADT6d+H6+rCz882xfh5YNeF4leXE/Enaf2RJ+MFHTpJYwfBBbzeZlaFlReLib7cfWkAtbMvD62ElRvylToztu3NCyPc+Y4gM9jzRcgzvGiKtUPRmKB/3gLPOBEDsktIOEyeB0snkEmKF+s4EM6ghbpAmO363lwQAzqatlxmweT7Z/l27Y8V5z21+mVKWfiTihCFAYBynBo+CnZHK0CEgwAD5h9cxnhA0mjqzGc5rDb3btW0sLaHprt+DAhE1boje0y+HRRzmkjj4uz/r5Ix3mZztxkHKU7yekalBlzarl89hiob7kLR7bTvQGT2kA+Hn4fmogz/z4RvRxETsa1on7g7
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a59957f-7010-416a-1a96-08dcbc046c53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2024 01:57:16.2830
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hgr1etYbN5fAyZgqDkpMr6hPU5Fd8hRegiQMKVK8eu+vZ7XLx4cqjubpP3ahhezAECmbRd9k8GZbxlh34d5LX78ev8vkgE3Zq7S4E3tqPl0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8723
 
-As of 3.1 spec, background commands can be canceled with a new
-abort command. Implement the support, which is advertised in
-the CEL. No ad-hoc context undoing is necessary as all the
-command logic of the running bg command is done upon completion.
-Arbitrarily, the on-going background cmd will not be aborted if
-already at least 85% done;
+Dan Williams wrote:
+> Kobayashi,Daisuke wrote:
+> > Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1
+> > device link status information. By caching it, avoid the walking
+> > memory map area to find the offset when output the register value.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> [..]
+>=20
+> Apologies for the delay.
+>=20
+Thank you for your review.
 
-A mutex is introduced to stabilize mbox request cancel command vs
-the timer callback being fired scenarios (as well as reading the
-mbox registers). While some operations under critical regions
-may be unnecessary (irq notifying, cmd callbacks), this is not
-a path where performance is important, so simplicity is preferred.
+> I notice that patch2 has another port leak bug which means lets take the
+> opportunity to make cxl_pci_find_port() usage safe in this patch.
+>=20
+I will fix the port leak bug included in patch 2.
 
-Tested-by: Ajay Joshi <ajay.opensrc@micron.com>
-Reviewed-by: Ajay Joshi <ajay.opensrc@micron.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
+> Fold in this cover letter update and change:
+>=20
+> "Given that this solution involves port lookups via cxl_pci_find_port()
+> and multiple exit paths where that reference needs to be dropped,
+> introduce a new put_cxl_port() scope-based-free handler."
+>=20
+I'll add it to the cover letter for this patch.
 
-Changes based on the following thread:
-https://lore.kernel.org/linux-cxl/20240729102010.20996-1-ajay.opensrc@micron.com
-
- - Added a mutex (and expanded CCI to have a destroy counterpart).
-   An 'initialized' flag is added for correctly handling the reset()
-   case.
- - Added the case where cancel is not done.
- - Picked up Ajay's tags but it would be good to re-review/test if
-   possible.
-
- hw/cxl/cxl-device-utils.c    |  5 ++-
- hw/cxl/cxl-mailbox-utils.c   | 63 +++++++++++++++++++++++++++++++++---
- hw/mem/cxl_type3.c           |  8 ++++-
- include/hw/cxl/cxl_device.h  |  4 +++
- include/hw/cxl/cxl_mailbox.h |  1 +
- 5 files changed, 74 insertions(+), 7 deletions(-)
-
-diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index 035d034f6dd8..1a9779ed8201 100644
---- a/hw/cxl/cxl-device-utils.c
-+++ b/hw/cxl/cxl-device-utils.c
-@@ -95,11 +95,14 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
-         }
-         if (offset == A_CXL_DEV_MAILBOX_STS) {
-             uint64_t status_reg = cxl_dstate->mbox_reg_state64[offset / size];
--            if (cci->bg.complete_pct) {
-+
-+            qemu_mutex_lock(&cci->bg.lock);
-+            if (cci->bg.complete_pct == 100 || cci->bg.aborted) {
-                 status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
-                                         0);
-                 cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
-             }
-+            qemu_mutex_unlock(&cci->bg.lock);
-         }
-         return cxl_dstate->mbox_reg_state64[offset / size];
-     default:
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index b752920ec88a..ff12dfc3dcc4 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -56,6 +56,7 @@ enum {
-     INFOSTAT    = 0x00,
-         #define IS_IDENTIFY   0x1
-         #define BACKGROUND_OPERATION_STATUS    0x2
-+        #define BACKGROUND_OPERATION_ABORT     0x5
-     EVENTS      = 0x01,
-         #define GET_RECORDS   0x0
-         #define CLEAR_RECORDS   0x1
-@@ -624,6 +625,38 @@ static CXLRetCode cmd_infostat_bg_op_sts(const struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
-+/* CXL r3.1 Section 8.2.9.1.5: Request Abort Background Operation (Opcode 0005h) */
-+static CXLRetCode cmd_infostat_bg_op_abort(const struct cxl_cmd *cmd,
-+                                           uint8_t *payload_in,
-+                                           size_t len_in,
-+                                           uint8_t *payload_out,
-+                                           size_t *len_out,
-+                                           CXLCCI *cci)
-+{
-+    int bg_set = cci->bg.opcode >> 8;
-+    int bg_cmd = cci->bg.opcode & 0xff;
-+    const struct cxl_cmd *bg_c = &cci->cxl_cmd_set[bg_set][bg_cmd];
-+
-+    if (!(bg_c->effect & CXL_MBOX_BACKGROUND_OPERATION_ABORT)) {
-+        return CXL_MBOX_REQUEST_ABORT_NOTSUP;
-+    }
-+
-+    qemu_mutex_lock(&cci->bg.lock);
-+    if (cci->bg.runtime) {
-+        /* operation is near complete, let it finish */
-+        if (cci->bg.complete_pct < 85) {
-+            timer_del(cci->bg.timer);
-+            cci->bg.ret_code = CXL_MBOX_ABORTED;
-+            cci->bg.starttime = 0;
-+            cci->bg.runtime = 0;
-+            cci->bg.aborted = true;
-+        }
-+    }
-+    qemu_mutex_unlock(&cci->bg.lock);
-+
-+    return CXL_MBOX_SUCCESS;
-+}
-+
- #define CXL_FW_SLOTS 2
- #define CXL_FW_SIZE  0x02000000 /* 32 mb */
- 
-@@ -2665,6 +2698,8 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
- }
- 
- static const struct cxl_cmd cxl_cmd_set[256][256] = {
-+    [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
-+        cmd_infostat_bg_op_abort, 0, 0 },
-     [EVENTS][GET_RECORDS] = { "EVENTS_GET_RECORDS",
-         cmd_events_get_records, 1, 0 },
-     [EVENTS][CLEAR_RECORDS] = { "EVENTS_CLEAR_RECORDS",
-@@ -2708,7 +2743,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
-     [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
-         (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
-          CXL_MBOX_SECURITY_STATE_CHANGE |
--         CXL_MBOX_BACKGROUND_OPERATION)},
-+         CXL_MBOX_BACKGROUND_OPERATION |
-+         CXL_MBOX_BACKGROUND_OPERATION_ABORT)},
-     [PERSISTENT_MEM][GET_SECURITY_STATE] = { "GET_SECURITY_STATE",
-         cmd_get_security_state, 0, 0 },
-     [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
-@@ -2721,7 +2757,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
-         "MEDIA_AND_POISON_GET_SCAN_MEDIA_CAPABILITIES",
-         cmd_media_get_scan_media_capabilities, 16, 0 },
-     [MEDIA_AND_POISON][SCAN_MEDIA] = { "MEDIA_AND_POISON_SCAN_MEDIA",
--        cmd_media_scan_media, 17, CXL_MBOX_BACKGROUND_OPERATION },
-+        cmd_media_scan_media, 17,
-+        (CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT)},
-     [MEDIA_AND_POISON][GET_SCAN_MEDIA_RESULTS] = {
-         "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
-         cmd_media_get_scan_media_results, 0, 0 },
-@@ -2745,6 +2782,8 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-     [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
-     [INFOSTAT][BACKGROUND_OPERATION_STATUS] = { "BACKGROUND_OPERATION_STATUS",
-         cmd_infostat_bg_op_sts, 0, 0 },
-+    [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
-+        cmd_infostat_bg_op_abort, 0, 0 },
-     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-     [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set, 8,
-                          CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
-@@ -2831,6 +2870,7 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-         cci->bg.opcode = (set << 8) | cmd;
- 
-         cci->bg.complete_pct = 0;
-+        cci->bg.aborted = false;
-         cci->bg.ret_code = 0;
- 
-         now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
-@@ -2844,10 +2884,12 @@ int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
- static void bg_timercb(void *opaque)
- {
-     CXLCCI *cci = opaque;
--    uint64_t now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
--    uint64_t total_time = cci->bg.starttime + cci->bg.runtime;
-+    uint64_t now, total_time;
-+
-+    qemu_mutex_lock(&cci->bg.lock);
- 
--    assert(cci->bg.runtime > 0);
-+    now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
-+    total_time = cci->bg.starttime + cci->bg.runtime;
- 
-     if (now >= total_time) { /* we are done */
-         uint16_t ret = CXL_MBOX_SUCCESS;
-@@ -2899,6 +2941,8 @@ static void bg_timercb(void *opaque)
-             msi_notify(pdev, cxl_dstate->mbox_msi_n);
-         }
-     }
-+
-+    qemu_mutex_unlock(&cci->bg.lock);
- }
- 
- static void cxl_rebuild_cel(CXLCCI *cci)
-@@ -2927,12 +2971,21 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
-     cci->bg.complete_pct = 0;
-     cci->bg.starttime = 0;
-     cci->bg.runtime = 0;
-+    cci->bg.aborted = false;
-     cci->bg.timer = timer_new_ms(QEMU_CLOCK_VIRTUAL,
-                                  bg_timercb, cci);
-+    qemu_mutex_init(&cci->bg.lock);
- 
-     memset(&cci->fw, 0, sizeof(cci->fw));
-     cci->fw.active_slot = 1;
-     cci->fw.slot[cci->fw.active_slot - 1] = true;
-+    cci->initialized = true;
-+}
-+
-+void cxl_destroy_cci(CXLCCI *cci)
-+{
-+    qemu_mutex_destroy(&cci->bg.lock);
-+    cci->initialized = false;
- }
- 
- static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[256])
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 4114163324bd..f04aa58ea85d 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -961,6 +961,7 @@ static void ct3_exit(PCIDevice *pci_dev)
-     pcie_aer_exit(pci_dev);
-     cxl_doe_cdat_release(cxl_cstate);
-     g_free(regs->special_ops);
-+    cxl_destroy_cci(&ct3d->cci);
-     if (ct3d->dc.host_dc) {
-         cxl_destroy_dc_regions(ct3d);
-         address_space_destroy(&ct3d->dc.host_dc_as);
-@@ -1209,12 +1210,17 @@ static void ct3d_reset(DeviceState *dev)
-      * Bring up an endpoint to target with MCTP over VDM.
-      * This device is emulating an MLD with single LD for now.
-      */
-+    if (ct3d->vdm_fm_owned_ld_mctp_cci.initialized) {
-+        cxl_destroy_cci(&ct3d->vdm_fm_owned_ld_mctp_cci);
-+    }
-     cxl_initialize_t3_fm_owned_ld_mctpcci(&ct3d->vdm_fm_owned_ld_mctp_cci,
-                                           DEVICE(ct3d), DEVICE(ct3d),
-                                           512); /* Max payload made up */
-+    if (ct3d->ld0_cci.initialized) {
-+        cxl_destroy_cci(&ct3d->ld0_cci);
-+    }
-     cxl_initialize_t3_ld_cci(&ct3d->ld0_cci, DEVICE(ct3d), DEVICE(ct3d),
-                              512); /* Max payload made up */
--
- }
- 
- static Property ct3_props[] = {
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index e14e56ae4bc2..c0e8d40053db 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -176,10 +176,12 @@ typedef struct CXLCCI {
-         uint16_t opcode;
-         uint16_t complete_pct;
-         uint16_t ret_code; /* Current value of retcode */
-+        bool aborted;
-         uint64_t starttime;
-         /* set by each bg cmd, cleared by the bg_timer when complete */
-         uint64_t runtime;
-         QEMUTimer *timer;
-+        QemuMutex lock; /* serializes mbox abort vs timer cb */
-     } bg;
- 
-     /* firmware update */
-@@ -201,6 +203,7 @@ typedef struct CXLCCI {
-     DeviceState *d;
-     /* Pointer to the device hosting the protocol conversion */
-     DeviceState *intf;
-+    bool initialized;
- } CXLCCI;
- 
- typedef struct cxl_device_state {
-@@ -316,6 +319,7 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
- void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
-                                   DeviceState *d, size_t payload_max);
- void cxl_init_cci(CXLCCI *cci, size_t payload_max);
-+void cxl_destroy_cci(CXLCCI *cci);
- void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
-                           size_t payload_max);
- int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
-diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
-index beb048052e1b..9008402d1c46 100644
---- a/include/hw/cxl/cxl_mailbox.h
-+++ b/include/hw/cxl/cxl_mailbox.h
-@@ -14,5 +14,6 @@
- #define CXL_MBOX_IMMEDIATE_LOG_CHANGE (1 << 4)
- #define CXL_MBOX_SECURITY_STATE_CHANGE (1 << 5)
- #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
-+#define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
- 
- #endif
--- 
-2.45.2
-
+The following two issues will also be fixed in the next patch.
+>=20
+> > @@ -503,6 +496,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev
+> *pdev,
+> >  static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_ty=
+pe
+> type,
+> >  			      struct cxl_register_map *map)
+> >  {
+> > +	struct cxl_dport *dport;
+> > +	struct cxl_port *port;
+> >  	int rc;
+> >
+> >  	rc =3D cxl_find_regblock(pdev, type, map);
+> > @@ -512,11 +507,25 @@ static int cxl_pci_setup_regs(struct pci_dev *pde=
+v,
+> enum cxl_regloc_type type,
+> >  	 * is an RCH and try to extract the Component Registers from
+> >  	 * an RCRB.
+> >  	 */
+> > -	if (rc && type =3D=3D CXL_REGLOC_RBI_COMPONENT &&
+> is_cxl_restricted(pdev))
+> > -		rc =3D cxl_rcrb_get_comp_regs(pdev, map);
+> > +	if (rc && type =3D=3D CXL_REGLOC_RBI_COMPONENT &&
+> is_cxl_restricted(pdev)) {
+> > +		port =3D cxl_pci_find_port(pdev, &dport);
+>=20
+> ...then this can become:
+>=20
+> 	struct cxl_port *port __free(put_cxl_port) =3D cxl_pci_find_port(pdev,
+> &dport);
+>=20
+> > +		if (!port)
+> > +			return -EPROBE_DEFER;
+> >
+> > -	if (rc)
+> > +		rc =3D cxl_rcrb_get_comp_regs(pdev, map, dport);
+> > +		if (rc) {
+> > +			put_device(&port->dev);
+> > +			return rc;
+> > +		}
+> > +
+> > +		rc =3D cxl_dport_map_rcd_linkcap(pdev, dport);
+> > +		if (rc) {
+> > +			put_device(&port->dev);
+> > +			return rc;
+> > +		}
+>=20
+> ...then these calls to put_device() can be dropped.
