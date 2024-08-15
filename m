@@ -1,155 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901EAA35;
-	Thu, 15 Aug 2024 01:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1C918D630
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 14:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723684418; cv=none; b=O6fckBZskVYczZYqd1jH5gHbU2NC+R2/b9UvlikQfShyB1koVPeZ+bIDDm75SkZ8G9Hfq68/JtzIUKQibcHQWxdrtlC0Uzf58CQaSiHc2C6Sz00gNvYD8mkK0ENHfigLlqVWCoeQZM7dp4mQ+qtvzhCoYs03s3RehWngLTTxV1k=
+	t=1723733903; cv=none; b=dChFs5h+UGw09LACjlNcTagK4FBfuF0taU7fy6+aW7lXnJyDVlwzGhAd93ndVs6bDdTa0mo0qkSN65JwxwlIn51H8ZorH+YLPBi+yglVtXXXgZ3YaIYDrGmz77jQQ6pn60RHSZp3r+8G39shWnIXGbk2nGKgtUsABcuwzsEQuho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723684418; c=relaxed/simple;
-	bh=rTawv10ThaNtV9PGUAG/yHY9BSoQJmH+hsFuxUoVYsk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kGIbHoRQFZLBVRFVa6TxOhamep2962JgyLFIo8WLUYizypRPztEns02TMKUScepwcBlX1Qvnjy2gNN92qftFwCHKHKj/twkxtdHX3fI++70u2KhTVPwx/7TyJuROnzugfsuyprvfldA62eVpTPTvWmjiRBhhy1T/39iq6IcjlAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dy58k/dT; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1723733903; c=relaxed/simple;
+	bh=D5kBlArR3VBj/YNFjLvPshcFzIub8HASCAC5DqTanxk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D9PIhYPdkgcpMYffDlhGA9FYtIfxvyPWdUDtyAcb87QAMG84LmSVv6tE73knuhjl3GhpjJRHRUUEiJbzBUolChwLy43K1asMIumV8IYtQQOpq0mvQdmxAYT49PAQduMhSvfTxs4HraLlnMqNlh0TmaL3DpnZAGRf1lQz476mbvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=RduMliW4; arc=none smtp.client-ip=17.58.6.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dy58k/dT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723684417; x=1755220417;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=rTawv10ThaNtV9PGUAG/yHY9BSoQJmH+hsFuxUoVYsk=;
-  b=dy58k/dTP5Fluj2XdezW1ABr7eBeuRZP5hpgQUaJADobNkN1JztwD37g
-   aax8vgJMtbJ2u/ZbQ9YYeAMKUSf+9vXez116mtTgDv6yg9FI1UdlYBTcz
-   dDEoBJcFZ9JwkjsK/VjngiZLcM02jcED/bicYkTb6RiMr5ld0i15VlWK4
-   L7ZW027I/9ewFFrGJqMJyyxE2GOaUFOOzTrNFIl9el/PYq0bOIVld64ol
-   HX9abTiHejTUfjYL+A0E7IrQ4dMrfJEvjvrVdd5t/gTrej+j0zIhHFa77
-   r3pvIsfOOeCp3lHwnTiI87I3y2/JkHgCpPVWDl4OZizhcA8zPtq/+rQP+
-   Q==;
-X-CSE-ConnectionGUID: igI532nJQd6aPjMMOO+ipg==
-X-CSE-MsgGUID: xw9T8romQ42oDrmL8ihIBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="22081867"
-X-IronPort-AV: E=Sophos;i="6.10,147,1719903600"; 
-   d="scan'208";a="22081867"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 18:13:36 -0700
-X-CSE-ConnectionGUID: 7cj9iZDNRNCs/LMRWoqzfQ==
-X-CSE-MsgGUID: AXp1KBdFSNqAaW4w8o1gHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,147,1719903600"; 
-   d="scan'208";a="59208141"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 18:13:33 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,  Dan Williams
- <dan.j.williams@intel.com>,  Dave Jiang <dave.jiang@intel.com>,
-  <linux-cxl@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  Davidlohr
- Bueso <dave@stgolabs.net>,  "Alison Schofield"
- <alison.schofield@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
-  Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 3/3] cxl: Avoid to create dax regions for type2
- accelerators
-In-Reply-To: <cba1752a-0b0d-0df0-8526-aed25d81ed3a@amd.com> (Alejandro Lucero
-	Palau's message of "Mon, 12 Aug 2024 12:54:57 +0100")
-References: <20240729084611.502889-1-ying.huang@intel.com>
-	<20240729084611.502889-4-ying.huang@intel.com>
-	<20240804173813.00001018@Huawei.com>
-	<87v80e9p0m.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<cba1752a-0b0d-0df0-8526-aed25d81ed3a@amd.com>
-Date: Thu, 15 Aug 2024 09:10:00 +0800
-Message-ID: <87a5hek2vr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="RduMliW4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1723733901;
+	bh=yzHbpOIW6NkHcW18s93aDeUltQuaFPLn1cSSYIxW6rg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To;
+	b=RduMliW45n3coSQN3Mkmvby/u5QCAH3NwcTeKLNjaPTCFyQhfWDUT+phVLyY2ddU8
+	 DYA4k01S/m0aK5LRyhEHeR++SZHicIwSNH4/2Nig3NSdNHnWBOdu1WH1DawejyPjQP
+	 ytGlga9IpF2oRvOeMs5tNFTw5r/WFXBbKDnM23LjIBGA3zk+8diIiL5DxT87V7nuw5
+	 kJugHKagI2R4vBQzcyJv0AGwS5pDBSJOqa7mco2mypHTrQYOZDdhmNwI3gmYHqZRkG
+	 Qxo2p9+uJ3baR4qZ/3OGyTQdcTnmXsF6XUrVv+1KmUNta69xarpEs/Mg0TIAHfPXmA
+	 zv3L/SK3wfSTw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id D22A7DC043D;
+	Thu, 15 Aug 2024 14:58:15 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v2 0/4] driver core: Prevent device_find_child() from
+ modifying caller's match data
+Date: Thu, 15 Aug 2024 22:58:01 +0800
+Message-Id: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHkXvmYC/32NQQ6CMBBFr0JmbQ1tAZGV9zCE4HQqs7DFFomG9
+ O5WDuDyveS/v0GkwBShKzYItHJk7zKoQwE4je5Ogk1mUKWqylZKgd7FZTAWhznQPAYS2lqlsan
+ PLdWQd9lbfu/Na5954rj48NkvVvmz/2qrFKUwzQmxks1NG315vhjZ4RH9A/qU0hcPrOf0tAAAA
+ A==
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, linux1394-devel@lists.sourceforge.net, 
+ netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Proofpoint-ORIG-GUID: B4N9KxfVpvfIqZEcsYxqOgw_K_ymbEWZ
+X-Proofpoint-GUID: B4N9KxfVpvfIqZEcsYxqOgw_K_ymbEWZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-15_07,2024-08-15_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 mlxscore=0 adultscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2408150109
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Alejandro Lucero Palau <alucerop@amd.com> writes:
+This patch series is to prepare for constifying the following driver API:
 
-> On 8/6/24 06:52, Huang, Ying wrote:
->> Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
->>
->>> On Mon, 29 Jul 2024 16:46:11 +0800
->>> Huang Ying <ying.huang@intel.com> wrote:
->>>
->>>> The memory range of a type2 accelerator should be managed by the type2
->>>> accelerator specific driver instead of the common dax region drivers,
->>>> as discussed in [1].
->>>>
->>>> [1] https://lore.kernel.org/linux-cxl/66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch/
->>>>
->>>> So, in this patch, we skip dax regions creation for type2 accelerator
->>>> device memory regions.
->>>>
->>>> Based on: https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
->>>>
->>>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>>> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
->>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
->>>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
->>>> Cc: Dave Jiang <dave.jiang@intel.com>
->>>> Cc: Alison Schofield <alison.schofield@intel.com>
->>>> Cc: Vishal Verma <vishal.l.verma@intel.com>
->>>> Cc: Ira Weiny <ira.weiny@intel.com>
->>>> Cc: Alejandro Lucero <alucerop@amd.com>
->>>> ---
->>>>   drivers/cxl/core/region.c | 8 ++++++++
->>>>   1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>> index 9a483c8a32fd..b37e12bb4a35 100644
->>>> --- a/drivers/cxl/core/region.c
->>>> +++ b/drivers/cxl/core/region.c
->>>> @@ -3435,6 +3435,14 @@ static int cxl_region_probe(struct device *dev)
->>>>   					p->res->start, p->res->end, cxlr,
->>>>   					is_system_ram) > 0)
->>>>   			return 0;
->>>> +		/*
->>>> +		 * HDM-D[B] (device-memory) regions have accelerator
->>>> +		 * specific usage, skip device-dax registration.
->>>> +		 */
->>>> +		if (cxlr->type == CXL_DECODER_DEVMEM)
->>>> +			return 0;
->>> As in previous need to be careful as that may not mean it's
->>> an accelerator.
->> Yes.  We need some other way to identify type2 devices.
->
->
-> Maybe the easier option is the accel driver specifying if DAX should
-> be used.
->
-> We are adding mailbox and hdm as optional for accel/type2, with the
-> driver specifying what is supported. Another optional param could be
-> this DAX usage.
+struct device *device_find_child(struct device *dev, void *data,
+		int (*match)(struct device *dev, void *data));
+to
+struct device *device_find_child(struct device *dev, const void *data,
+		int (*match)(struct device *dev, const void *data));
 
-Another way is let accel/cxl_pci driver specify the device type (type2
-vs. type3).  cxl_pci_probe()->cxl_memdev_state_create() will set
-cxl_dev_state.type = CXL_DEVTYPE_CLASSMEM. And
-accel_X_probe()->cxl_accel_state_create() can set cxl_dev_state.type =
-CXL_DEVTYPE_DEVMEM.  This can be passed to cxl_region.  Then we can
-create cxl_dax_region for type3 devices only by default.
+How to constify the API ?
+There are total 30 usages of the API in kernel tree:
 
->
->>> However, we do need to deal with BI setup for HDM-DB type 3 devices
->>> etc and to check the HDM Decoder capability registers to make sure
->>> Supported Coherence model is appropriate. (e.g. 11 for host only or
->>> device coherency - HDM-H/HDM-DB)
->> Yes.  We need to check BI configuration too.
->>
->>>> +
->>>> +		/* HDM-H routes to device-dax */
->>>>   		return devm_cxl_add_dax_region(cxlr);
->>>>   	default:
->>>>   		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
+For 3/30 usages, the API's match function (*match)() will modify
+caller's match data @*data, and this patch series will clean up them.
 
---
-Best Regards,
-Huang, Ying
+For remaining 27/30, the other patch series will simply change its
+relevant parameter type to const void *.
+
+Why to constify the API ?
+
+(1) It normally does not make sense, also does not need to, for
+such device finding operation to modify caller's match data which
+is mainly used for comparison.
+
+(2) It will make the API's match function and match data parameter
+have the same type as all other APIs (bus|class|driver)_find_device().
+
+(3) It will give driver author hints about choice between this API and
+the following one:
+int device_for_each_child(struct device *dev, void *data,
+		int (*fn)(struct device *dev, void *data));
+ 
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v2:
+- Give up introducing the API constify_device_find_child_helper()
+- Correct commit message and inline comments
+- Implement a driver specific and equivalent one instead of device_find_child()
+- Link to v1: https://lore.kernel.org/r/20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com
+
+---
+Zijun Hu (4):
+      driver core: Make parameter check consistent for API cluster device_(for_each|find)_child()
+      cxl/region: Prevent device_find_child() from modifying caller's match data
+      firewire: core: Prevent device_find_child() from modifying caller's match data
+      net: qcom/emac: Prevent device_find_child() from modifying caller's match data
+
+ drivers/base/core.c                             |  6 ++--
+ drivers/cxl/core/region.c                       | 36 +++++++++++++++++++++++-
+ drivers/firewire/core-device.c                  | 37 +++++++++++++++++++++++--
+ drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 36 ++++++++++++++++++++++--
+ 4 files changed, 107 insertions(+), 8 deletions(-)
+---
+base-commit: bfa54a793ba77ef696755b66f3ac4ed00c7d1248
+change-id: 20240811-const_dfc_prepare-3ff23c6598e5
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
