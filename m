@@ -1,184 +1,155 @@
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DBA63C
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 00:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901EAA35;
+	Thu, 15 Aug 2024 01:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723683293; cv=none; b=roimw2byofHwkx2Y2YKyiDUeANC2bHm7zv3Rt1Iv/9zhR7MIHuHO8sd/8bHTUg3v/SB5q7SiKTeig3h3O06yF9oRDIWq9QIJFGyllAEf7/ORC5eB+Po97cVXJEJY44Sk8kGrccYfMdP2Hj2OXMHdROOfUJ+tieKqAENBHM4PJ/o=
+	t=1723684418; cv=none; b=O6fckBZskVYczZYqd1jH5gHbU2NC+R2/b9UvlikQfShyB1koVPeZ+bIDDm75SkZ8G9Hfq68/JtzIUKQibcHQWxdrtlC0Uzf58CQaSiHc2C6Sz00gNvYD8mkK0ENHfigLlqVWCoeQZM7dp4mQ+qtvzhCoYs03s3RehWngLTTxV1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723683293; c=relaxed/simple;
-	bh=HK2js8v7tUp1sOLeRRN1AQqbdnzR4T3wa4h0GQ/IhCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ldn5DetJBx8bZEz6b1CSbrxakAYbAEPhBCvI9EtLJ8FbDbnRHWK5lypjdum6W6nQbEGv5KrE/trfGPwW6DH2xCPSK65fwHASHbPDiRlGWzYPG+mJliwQ3gtbeGQvuZPmdU4ROXJ4jjyyErYdFLtGFP9VNd+omt/9WfnwaypDZ10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Rq8q+LoR; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1723684418; c=relaxed/simple;
+	bh=rTawv10ThaNtV9PGUAG/yHY9BSoQJmH+hsFuxUoVYsk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kGIbHoRQFZLBVRFVa6TxOhamep2962JgyLFIo8WLUYizypRPztEns02TMKUScepwcBlX1Qvnjy2gNN92qftFwCHKHKj/twkxtdHX3fI++70u2KhTVPwx/7TyJuROnzugfsuyprvfldA62eVpTPTvWmjiRBhhy1T/39iq6IcjlAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dy58k/dT; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Rq8q+LoR"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1723683290; x=1755219290;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HK2js8v7tUp1sOLeRRN1AQqbdnzR4T3wa4h0GQ/IhCI=;
-  b=Rq8q+LoR9YUo8/h1bHuoh1EpNA/kmzSJYnUpJxMjQrRTk27kPXE/Dj0L
-   lIGp4bXq4fWCCIZft/PlQMIiBasfZ/UEpM9sSHi6/mQ99ovKGApPznUOE
-   lwK3R/q0LwLKY548kSo76yhSYvces+7zSF3bCC1S7x2nGFM+le7CbwLcl
-   WejJdsCXRzgnSSXG+7t5d/uz81GGZkv6brkFt+HomMhK9pEoixw70x7e2
-   2iVme4uQ0PPIH1hCmAUi2/dyx9PrMfv+uFXodbDIWRu/o/CJuCQ6SygRn
-   I9nV996ICKnc9q9bqcRf3gXXL4LZRtgrMbtehqiaeoYdUQXjJGHRa9bRl
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dy58k/dT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723684417; x=1755220417;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=rTawv10ThaNtV9PGUAG/yHY9BSoQJmH+hsFuxUoVYsk=;
+  b=dy58k/dTP5Fluj2XdezW1ABr7eBeuRZP5hpgQUaJADobNkN1JztwD37g
+   aax8vgJMtbJ2u/ZbQ9YYeAMKUSf+9vXez116mtTgDv6yg9FI1UdlYBTcz
+   dDEoBJcFZ9JwkjsK/VjngiZLcM02jcED/bicYkTb6RiMr5ld0i15VlWK4
+   L7ZW027I/9ewFFrGJqMJyyxE2GOaUFOOzTrNFIl9el/PYq0bOIVld64ol
+   HX9abTiHejTUfjYL+A0E7IrQ4dMrfJEvjvrVdd5t/gTrej+j0zIhHFa77
+   r3pvIsfOOeCp3lHwnTiI87I3y2/JkHgCpPVWDl4OZizhcA8zPtq/+rQP+
    Q==;
-X-CSE-ConnectionGUID: K9OzUVGBTDKwNkZ1XVouMg==
-X-CSE-MsgGUID: b9ErJwVvTr+5LE+WOq8bbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="158930160"
-X-IronPort-AV: E=Sophos;i="6.10,147,1719846000"; 
-   d="scan'208";a="158930160"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 09:53:38 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6FCE3CA1E3
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:36 +0900 (JST)
-Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id B57B6D73CB
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:35 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 7DE81200536D;
-	Thu, 15 Aug 2024 09:53:35 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: y-goto@fujitsu.com,
-	mj@ucw.cz,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v16 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device link status
-Date: Thu, 15 Aug 2024 09:55:11 +0900
-Message-ID: <20240815005510.220835-4-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240815005510.220835-1-kobayashi.da-06@fujitsu.com>
-References: <20240815005510.220835-1-kobayashi.da-06@fujitsu.com>
+X-CSE-ConnectionGUID: igI532nJQd6aPjMMOO+ipg==
+X-CSE-MsgGUID: xw9T8romQ42oDrmL8ihIBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="22081867"
+X-IronPort-AV: E=Sophos;i="6.10,147,1719903600"; 
+   d="scan'208";a="22081867"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 18:13:36 -0700
+X-CSE-ConnectionGUID: 7cj9iZDNRNCs/LMRWoqzfQ==
+X-CSE-MsgGUID: AXp1KBdFSNqAaW4w8o1gHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,147,1719903600"; 
+   d="scan'208";a="59208141"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 18:13:33 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,  Dan Williams
+ <dan.j.williams@intel.com>,  Dave Jiang <dave.jiang@intel.com>,
+  <linux-cxl@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  Davidlohr
+ Bueso <dave@stgolabs.net>,  "Alison Schofield"
+ <alison.schofield@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
+  Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 3/3] cxl: Avoid to create dax regions for type2
+ accelerators
+In-Reply-To: <cba1752a-0b0d-0df0-8526-aed25d81ed3a@amd.com> (Alejandro Lucero
+	Palau's message of "Mon, 12 Aug 2024 12:54:57 +0100")
+References: <20240729084611.502889-1-ying.huang@intel.com>
+	<20240729084611.502889-4-ying.huang@intel.com>
+	<20240804173813.00001018@Huawei.com>
+	<87v80e9p0m.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<cba1752a-0b0d-0df0-8526-aed25d81ed3a@amd.com>
+Date: Thu, 15 Aug 2024 09:10:00 +0800
+Message-ID: <87a5hek2vr.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain; charset=ascii
 
-Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+Alejandro Lucero Palau <alucerop@amd.com> writes:
 
-In CXL1.1, the link status of the device is included in the RCRB mapped to
-the memory mapped register area. Critically, that arrangement makes the
-link status and control registers invisible to existing PCI user tooling.
+> On 8/6/24 06:52, Huang, Ying wrote:
+>> Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+>>
+>>> On Mon, 29 Jul 2024 16:46:11 +0800
+>>> Huang Ying <ying.huang@intel.com> wrote:
+>>>
+>>>> The memory range of a type2 accelerator should be managed by the type2
+>>>> accelerator specific driver instead of the common dax region drivers,
+>>>> as discussed in [1].
+>>>>
+>>>> [1] https://lore.kernel.org/linux-cxl/66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch/
+>>>>
+>>>> So, in this patch, we skip dax regions creation for type2 accelerator
+>>>> device memory regions.
+>>>>
+>>>> Based on: https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
+>>>>
+>>>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>>>> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>>>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>>>> Cc: Dave Jiang <dave.jiang@intel.com>
+>>>> Cc: Alison Schofield <alison.schofield@intel.com>
+>>>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>>> Cc: Alejandro Lucero <alucerop@amd.com>
+>>>> ---
+>>>>   drivers/cxl/core/region.c | 8 ++++++++
+>>>>   1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>>> index 9a483c8a32fd..b37e12bb4a35 100644
+>>>> --- a/drivers/cxl/core/region.c
+>>>> +++ b/drivers/cxl/core/region.c
+>>>> @@ -3435,6 +3435,14 @@ static int cxl_region_probe(struct device *dev)
+>>>>   					p->res->start, p->res->end, cxlr,
+>>>>   					is_system_ram) > 0)
+>>>>   			return 0;
+>>>> +		/*
+>>>> +		 * HDM-D[B] (device-memory) regions have accelerator
+>>>> +		 * specific usage, skip device-dax registration.
+>>>> +		 */
+>>>> +		if (cxlr->type == CXL_DECODER_DEVMEM)
+>>>> +			return 0;
+>>> As in previous need to be careful as that may not mean it's
+>>> an accelerator.
+>> Yes.  We need some other way to identify type2 devices.
+>
+>
+> Maybe the easier option is the accel driver specifying if DAX should
+> be used.
+>
+> We are adding mailbox and hdm as optional for accel/type2, with the
+> driver specifying what is supported. Another optional param could be
+> this DAX usage.
 
-Export those registers via sysfs with the expectation that PCI user
-tooling will alternatively look for these sysfs files when attempting to
-access to these CXL 1.1 endpoints registers.
+Another way is let accel/cxl_pci driver specify the device type (type2
+vs. type3).  cxl_pci_probe()->cxl_memdev_state_create() will set
+cxl_dev_state.type = CXL_DEVTYPE_CLASSMEM. And
+accel_X_probe()->cxl_accel_state_create() can set cxl_dev_state.type =
+CXL_DEVTYPE_DEVMEM.  This can be passed to cxl_region.  Then we can
+create cxl_dax_region for type3 devices only by default.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/pci.c | 78 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+>
+>>> However, we do need to deal with BI setup for HDM-DB type 3 devices
+>>> etc and to check the HDM Decoder capability registers to make sure
+>>> Supported Coherence model is appropriate. (e.g. 11 for host only or
+>>> device coherency - HDM-H/HDM-DB)
+>> Yes.  We need to check BI configuration too.
+>>
+>>>> +
+>>>> +		/* HDM-H routes to device-dax */
+>>>>   		return devm_cxl_add_dax_region(cxlr);
+>>>>   	default:
+>>>>   		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 4eaf64d92541..4e51b6a0a97b 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -792,6 +792,83 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	return 0;
- }
- 
-+static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size_t width)
-+{
-+	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *root_dev;
-+	struct cxl_dport *dport;
-+	struct cxl_port *root __free(put_cxl_root) =
-+		cxl_mem_find_port(cxlmd, &dport);
-+
-+	if (!root)
-+		return -ENXIO;
-+
-+	root_dev = root->uport_dev;
-+	if (!root_dev)
-+		return -ENXIO;
-+
-+	guard(device)(root_dev);
-+	if (!root_dev->driver)
-+		return -ENXIO;
-+
-+	switch (width) {
-+	case 2:
-+		return sysfs_emit(buf, "%#x\n",
-+				  readw(dport->regs.rcd_pcie_cap + offset));
-+	case 4:
-+		return sysfs_emit(buf, "%#x\n",
-+				  readl(dport->regs.rcd_pcie_cap + offset));
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static ssize_t rcd_link_cap_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCAP, buf, sizeof(u32));
-+}
-+static DEVICE_ATTR_RO(rcd_link_cap);
-+
-+static ssize_t rcd_link_ctrl_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCTL, buf, sizeof(u16));
-+}
-+static DEVICE_ATTR_RO(rcd_link_ctrl);
-+
-+static ssize_t rcd_link_status_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKSTA, buf, sizeof(u16));
-+}
-+static DEVICE_ATTR_RO(rcd_link_status);
-+
-+static struct attribute *cxl_rcd_attrs[] = {
-+	&dev_attr_rcd_link_cap.attr,
-+	&dev_attr_rcd_link_ctrl.attr,
-+	&dev_attr_rcd_link_status.attr,
-+	NULL
-+};
-+
-+static umode_t cxl_rcd_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (is_cxl_restricted(pdev))
-+		return a->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group cxl_rcd_group = {
-+	.attrs = cxl_rcd_attrs,
-+	.is_visible = cxl_rcd_visible,
-+};
-+__ATTRIBUTE_GROUPS(cxl_rcd);
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -975,6 +1052,7 @@ static struct pci_driver cxl_pci_driver = {
- 	.id_table		= cxl_mem_pci_tbl,
- 	.probe			= cxl_pci_probe,
- 	.err_handler		= &cxl_error_handlers,
-+	.dev_groups		= cxl_rcd_groups,
- 	.driver	= {
- 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 	},
--- 
-2.45.0
-
+--
+Best Regards,
+Huang, Ying
