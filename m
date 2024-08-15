@@ -1,116 +1,155 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8131AC8AE
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 17:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16F221105
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 17:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723741450; cv=none; b=F9C89X0YwH2W3czwFQE9QipucoJGWlXEjig6i4jWeZ/QT6OFxYpn6K0luYkoYtOMCweoowyUePaoPV5hO3ysosb8JLDqaNeUejRDIWsfL3P3Hl5j3a50lnWrKyjYJCY8yT/MLYbLLTS+T/FISZPQjpgoqWPXt9QeqCPK9nMVyfw=
+	t=1723741828; cv=none; b=uTI0bhrpDPLzxF+VG88/JyVkfgla1ixXwoAShUeMdFoFwH4Lql6YSWd1pAGrvuIzC3fUK8QD+BcRDPFj+NeIJ8l8OOmVwCUpdMcrmnej9TDH3jwpRgTRqvwQMK3p3rFwfMgSafujXcrpXW8Uq4uvBvHtMl8sbwPxozg+knu7014=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723741450; c=relaxed/simple;
-	bh=5CkYZP7ZHCw0faRhRY0TvmwbZjgEv8bTuQHNY0p3rlM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hl/OeJMZdP7ib1iNGxerIiJ4aw3ctae0APioMHDFqgN6CYcDe1A3eLEM0/Gelt8XLFKIuG7Q4ZIC2EHp0ao7S0tcJCM5Cv5z2H1JZgMV5hWz4hDxuZW9poYMtEw3OGIgS19LkiBHWC/MufdCq79sfLcRl2FrA92fzxkhmzm7M5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WlBGW67R2z6K92L;
-	Fri, 16 Aug 2024 01:01:07 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id AA477140A1B;
-	Fri, 16 Aug 2024 01:04:04 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 15 Aug
- 2024 18:04:04 +0100
-Date: Thu, 15 Aug 2024 18:04:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: ajay.opensrc <ajay.opensrc@micron.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "john@jagalactic.com" <john@jagalactic.com>,
-	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, Ravis OpenSrc
-	<Ravis.OpenSrc@micron.com>, Aravind Ramesh <arramesh@micron.com>, "Tushar M
- Mulgund ." <tmmulgund@micron.com>
-Subject: Re: [EXT] Re: [PATCH] hw/cxl: Add support for abort of background
- operation
-Message-ID: <20240815180403.000025f0@Huawei.com>
-In-Reply-To: <6erdnad5ql6xtzpwc6ay4mibud44u56kzd7r6nk5labxsmkkbi@e7lw2v7bffue>
-References: <20240729102010.20996-1-ajay.opensrc@micron.com>
-	<jvbuxqaqjclc5cy5veltygpo4dg3naej456gvphndpdc3ttyoa@p64fmecqr67r>
-	<027f6872f7ae42c4ba97ed1209e50253@micron.com>
-	<20240804171638.0000291c@Huawei.com>
-	<739db69829ed4afead329649fda1d47b@micron.com>
-	<6erdnad5ql6xtzpwc6ay4mibud44u56kzd7r6nk5labxsmkkbi@e7lw2v7bffue>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1723741828; c=relaxed/simple;
+	bh=DM1Ad+3/XOzbM8DUWuV0+UyVRehYzVSt9wNZEFw74Ao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n9dib/JCYsSqrFCxLWSAHxZTsN42iDG24f2XGw0bUSjh96Xs/ZygY/Ff1cGIvc98NeRMe6Wg+WjsdudJiweBi2dhC3VBh5Bs/+Kbop9WX6j3YIAlG6ImWSzs70z4ASTZETlGnJcZjRTGuIh4+8mFRgiKVXM6Lwz1GIdNimgozCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTYno7Pi; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTYno7Pi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723741825; x=1755277825;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DM1Ad+3/XOzbM8DUWuV0+UyVRehYzVSt9wNZEFw74Ao=;
+  b=WTYno7PizdDGxLLc+SjmbTI9oaiPI5pOVrOpoBx2IgAUTEW/g5hyiNBD
+   4B85+vmYSumnAryX9wqwoapA0uUZBgMTDyajX2W5C7WDJpqbtHApXZSze
+   gpul0c+pn1eDbZBE7l3Qyga+od+VAvm+47UY7oTD3XDFlayjOFQcBYsb3
+   n3N8hU2iDZ9Vn5Wv8gvy2AhIoJTRF16i3LEp1dwF8qLEk+/bCVxmCvh3l
+   IxGFEzYBj58AqfpvrJqz0rdSiBQJjl7pdeqjdnZHGVHwpKZGt51BULK0p
+   ocPulVH/MvhUzXCo3SzgzVH4pXaCvDssijTIO+ZjpQd4m7TFgOdFzMJyr
+   w==;
+X-CSE-ConnectionGUID: fXdPm1caRPOX6CVdhk2r1A==
+X-CSE-MsgGUID: /u7r3fGDSuOeXIjyooZZkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11165"; a="22172879"
+X-IronPort-AV: E=Sophos;i="6.10,149,1719903600"; 
+   d="scan'208";a="22172879"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 10:10:25 -0700
+X-CSE-ConnectionGUID: oDp4VeDCSm2R1h4SRFMVdg==
+X-CSE-MsgGUID: QoIdco4PTdWQmcNUh/bcjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,149,1719903600"; 
+   d="scan'208";a="59088936"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.215]) ([10.125.110.215])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 10:10:24 -0700
+Message-ID: <01c6f57b-a969-444f-b409-e46e68d4850f@intel.com>
+Date: Thu, 15 Aug 2024 10:10:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] cxl: Move mailbox related bits to the same context
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, alejandro.lucero-palau@amd.com,
+ dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, dave@stgolabs.net
+References: <20240724185649.2574627-1-dave.jiang@intel.com>
+ <20240724185649.2574627-2-dave.jiang@intel.com>
+ <20240815175745.000041cc@Huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240815175745.000041cc@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 12 Aug 2024 13:04:36 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> On Wed, 07 Aug 2024, ajay.opensrc wrote:\n
-> >>From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> >>So to my reading if you elect not to stop because it's very
-> >>nearly done, or indeed it raced and the command is done,
-> >>the specification doesn't tell us what to return.
-> >>That operation supports abort, we just didn't.
-> >>
-> >>What do you think should happen here?  
-> 
-> I had interpreted this case to return success for the req abort
-> command, but the caller had to check the Mailbox Status register
-> to see if result had actually canceled the on going bg op.
-> And I don't think there's a race between checking the status
-> register and the on-going bg command completing. Aborting
-> means percentage complete < 100 && bg field cleared.
-I'm fine with it returning success, but I'm didn't read the spec
-as actually saying it would. Maybe I missed something as these
-cases where a call is a noop are classic corner cases where it
-might return
-a) you are crazy, why did you call that?
-b) sure I'll do nothing.
 
+On 8/15/24 9:57 AM, Jonathan Cameron wrote:
+> On Wed, 24 Jul 2024 11:55:16 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Jonathan, would you want the patch to have an arbitrary "don't
-> abort the bg op over 85% done"? I see this useful as it allows
-> the cancel a bit more versatility, albeit potentially getting
-> in the way of testing. What do you think?
-I'd not bother - I think we will cancel very rarely in reality.
-This is mostly a route around possible really long delays, not
-a tool for normal operation.
+>> Create a new 'struct cxl_mailbox' and move all mailbox related bits to
+>> it. This allows isolation of all CXL mailbox data in order to export
+>> some of the calls to external callers and avoid exporting of CXL driver
+>> specific bits such has device states. The allocation of
+>> 'struct cxl_mailbox' is also split out with cxl_mailbox_create() so the
+>> mailbox can be created independently.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Hi Dave,
 > 
-> >
-> >IMHO, device should ignore the abort command and
-> >most likely return "Unsupported" code (since, the spec is not
-> >clear on what should be the return code in case the command
-> >is ignored). Does it make sense?  
+> Mostly good, but cxl_mailbox_create() needs another look.
+> Feels like a bit of cut and paste gone too far ;)
 > 
-> I don't think so. This is not an error imo. This case is about
-> supporting the request abort command, but the actual command
-> not actually triggering the desired cancel.
-> 
-> >
-> >Agree that it's a spec hole and may need to be clarified.  
-> 
-> Yes, it would be nice to have this case be explicitly stated.
-> And it is not even a corner case, the way the spec describes
-> it, this case can perfectly happen.
-Absolutely. I'll poke the relevant person.,
+> I'm not entirely convinced it shouldn't just remain embedded in
+> the parent structure with create replace with just an init()
+> function.  I don't mind that much though.
 
-Jonathan
+I made it a pointer to deal with something like a type2 device without mailbox at all. So I feel like it needs to stand on its own.... but are you saying we should just keep it as an embedded struct in the device context whether a mailbox exists or not?
+
+Also, probably need to start thinking about this. Once PCIe MMIO mailbox shows up, we will want to move the register pointer into the mailbox as well to make it independent and having a shared struct between CXL and PCIe. It'll probably end up looking like:
+
+struct cxl_mailbox {
+	struct mmio_mailbox mbox;
+}; 
 
 > 
-> Thanks,
-> Davidlohr
-
+> Jonathan
+> 
+> 
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index 2626f3fff201..9501d2576ccd 100644
+> 
+> 
+>> @@ -1408,6 +1454,34 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
+>>  
+>> +static void free_cxl_mailbox(void *cxl_mbox)
+>> +{
+>> +	kfree(cxl_mbox);
+>> +}
+>> +
+>> +struct cxl_mailbox *cxl_mailbox_create(struct device *dev)
+>> +{
+>> +	struct cxl_mailbox *cxl_mbox __free(kfree) =
+>> +		kzalloc(sizeof(*cxl_mbox), GFP_KERNEL);
+> This is not somewhere I'd use the __free magic, because
+> failure to create a mailbox is very likely fatal and doing
+> so requires the dance with devm_add_action_or_reset() to
+> just free a structure.
+> 
+> So I'd just use devm_kzalloc()
+> and rely on caller to fail probe() or if not to do manual
+> cleanup of the structure.
+> 
+> There aren't any failure paths currently where the auto cleanup
+> gets used anyway other than the devm_add_action_or_reset()
+> which is not using auto cleanup anyway.
+> 
+>> +	int rc;
+>> +
+>> +	if (!cxl_mbox)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	cxl_mbox->host = dev;
+>> +	mutex_init(&cxl_mbox->mbox_mutex);
+>> +	rcuwait_init(&cxl_mbox->mbox_wait);
+>> +
+>> +	rc = devm_add_action_or_reset(dev, free_cxl_mailbox, cxl_mbox);
+>> +	if (rc) {
+>> +		cxl_mbox = NULL;
+> Non obvious as that's a suppression of what would otherwise
+> be a double free.  Having to do this rather defeats the point
+> of the simplification __free normally brings.
+> 
+>> +		return ERR_PTR(rc);
+>> +	}
+>> +
+>> +	return no_free_ptr(cxl_mbox);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_mailbox_create, CXL);
