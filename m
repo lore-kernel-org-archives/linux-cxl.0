@@ -1,50 +1,50 @@
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
+Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D028E63C
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 00:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DBA63C
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 00:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723683278; cv=none; b=hwNV32CljgfYG827nbk4+Sw2YRtnWuhlqpey3081aFGIhLI1CqG5pgKVBHq+mPQxAanwa0DRzTIJ65mFQQdbaPRhw1MXx9TQLBKcO8/bb+uhCZBRsCWgKhLLK5FN75hj291a3tLcc+wK+Z86qxZBVtnsTTp4imFvTJwyp++6upg=
+	t=1723683293; cv=none; b=roimw2byofHwkx2Y2YKyiDUeANC2bHm7zv3Rt1Iv/9zhR7MIHuHO8sd/8bHTUg3v/SB5q7SiKTeig3h3O06yF9oRDIWq9QIJFGyllAEf7/ORC5eB+Po97cVXJEJY44Sk8kGrccYfMdP2Hj2OXMHdROOfUJ+tieKqAENBHM4PJ/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723683278; c=relaxed/simple;
-	bh=RxVUsgxTV6jJBYKdCtQvh+H5CGU49Mlq5mrNO9TdFUA=;
+	s=arc-20240116; t=1723683293; c=relaxed/simple;
+	bh=HK2js8v7tUp1sOLeRRN1AQqbdnzR4T3wa4h0GQ/IhCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u88YeBYe7JPVCLCND2kNXaJY9ZczayJIhOuIAmdZCN77qyr678bzgynEKf9t6IdS334ls9UzhDa8M112c/iRoHtOlRN54uEQzu2s8o6vJAkEBWOlKYlq4PpdgEIIgHJso4HZn8Wfo72m6aJGlQBY8++OXMs+uO+b8P+0T5ps19Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=RyzHV5vr; arc=none smtp.client-ip=207.54.90.47
+	 MIME-Version; b=ldn5DetJBx8bZEz6b1CSbrxakAYbAEPhBCvI9EtLJ8FbDbnRHWK5lypjdum6W6nQbEGv5KrE/trfGPwW6DH2xCPSK65fwHASHbPDiRlGWzYPG+mJliwQ3gtbeGQvuZPmdU4ROXJ4jjyyErYdFLtGFP9VNd+omt/9WfnwaypDZ10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Rq8q+LoR; arc=none smtp.client-ip=139.138.36.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="RyzHV5vr"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Rq8q+LoR"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1723683275; x=1755219275;
+  t=1723683290; x=1755219290;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RxVUsgxTV6jJBYKdCtQvh+H5CGU49Mlq5mrNO9TdFUA=;
-  b=RyzHV5vrmQy0+B6UhoW2uFVbeLsPoOp6M2UkS9tBPgJ5cxPmMs32DOLG
-   XLKi5vUmwijlHi4niUUoJnhRVSz9UoUH+v9tDllx43JTHxulWLSFHGWNw
-   mqPlhz+lE2hu+KsxDDiqvkqv+K/GnoTP9C8h8rEPJg31dtiq3RPSl572+
-   vhtsfS9DcOqb3XzEKxVGMEYB/wyBBZy1QqwClZlN7OttHsmFJPz5SzBzn
-   PmEs4kE/GLTx1DM7XlqPhBIQWoqFGuGpX7VFL678Botj7YXwwXS4moLc5
-   zUWo8FzyYAkH3adafnMNMDpP9GHrWmJ7NDJzIDFLEIJL/WDhuPfadMjGr
-   g==;
-X-CSE-ConnectionGUID: CipBqc4KRzm6mBce8WdqJw==
-X-CSE-MsgGUID: o7dgfxCWQ5if+oTtFt2JRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="170594866"
+  bh=HK2js8v7tUp1sOLeRRN1AQqbdnzR4T3wa4h0GQ/IhCI=;
+  b=Rq8q+LoR9YUo8/h1bHuoh1EpNA/kmzSJYnUpJxMjQrRTk27kPXE/Dj0L
+   lIGp4bXq4fWCCIZft/PlQMIiBasfZ/UEpM9sSHi6/mQ99ovKGApPznUOE
+   lwK3R/q0LwLKY548kSo76yhSYvces+7zSF3bCC1S7x2nGFM+le7CbwLcl
+   WejJdsCXRzgnSSXG+7t5d/uz81GGZkv6brkFt+HomMhK9pEoixw70x7e2
+   2iVme4uQ0PPIH1hCmAUi2/dyx9PrMfv+uFXodbDIWRu/o/CJuCQ6SygRn
+   I9nV996ICKnc9q9bqcRf3gXXL4LZRtgrMbtehqiaeoYdUQXjJGHRa9bRl
+   Q==;
+X-CSE-ConnectionGUID: K9OzUVGBTDKwNkZ1XVouMg==
+X-CSE-MsgGUID: b9ErJwVvTr+5LE+WOq8bbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="158930160"
 X-IronPort-AV: E=Sophos;i="6.10,147,1719846000"; 
-   d="scan'208";a="170594866"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 09:53:23 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id EB15BCD6E3
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:20 +0900 (JST)
+   d="scan'208";a="158930160"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 09:53:38 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6FCE3CA1E3
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:36 +0900 (JST)
 Received: from m3003.s.css.fujitsu.com (sqmail-3003.b.css.fujitsu.com [10.128.233.114])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 43988D5608
-	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:20 +0900 (JST)
+	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id B57B6D73CB
+	for <linux-cxl@vger.kernel.org>; Thu, 15 Aug 2024 09:53:35 +0900 (JST)
 Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 1BCA02005370;
-	Thu, 15 Aug 2024 09:53:20 +0900 (JST)
+	by m3003.s.css.fujitsu.com (Postfix) with ESMTP id 7DE81200536D;
+	Thu, 15 Aug 2024 09:53:35 +0900 (JST)
 From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 To: linux-cxl@vger.kernel.org,
 	dan.j.williams@intel.com
@@ -52,9 +52,9 @@ Cc: y-goto@fujitsu.com,
 	mj@ucw.cz,
 	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v16 1/2] cxl/core/regs: Add rcd_pcie_cap initialization
-Date: Thu, 15 Aug 2024 09:55:10 +0900
-Message-ID: <20240815005510.220835-3-kobayashi.da-06@fujitsu.com>
+Subject: [PATCH v16 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device link status
+Date: Thu, 15 Aug 2024 09:55:11 +0900
+Message-ID: <20240815005510.220835-4-kobayashi.da-06@fujitsu.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240815005510.220835-1-kobayashi.da-06@fujitsu.com>
 References: <20240815005510.220835-1-kobayashi.da-06@fujitsu.com>
@@ -67,200 +67,118 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 
-Add rcd_pcie_cap and its initialization to cache the offset of cxl1.1 
-device link status information. By caching it, avoid the walking 
-memory map area to find the offset when output the register value.
+Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
 
-Given that this solution involves port lookups via cxl_pci_find_port()
-and multiple exit paths where that reference needs to be dropped,
-introduce a new put_cxl_root() scope-based-free handler.
+In CXL1.1, the link status of the device is included in the RCRB mapped to
+the memory mapped register area. Critically, that arrangement makes the
+link status and control registers invisible to existing PCI user tooling.
+
+Export those registers via sysfs with the expectation that PCI user
+tooling will alternatively look for these sysfs files when attempting to
+access to these CXL 1.1 endpoints registers.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 ---
- drivers/cxl/core/core.h |  5 ++++
- drivers/cxl/core/regs.c | 56 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |  9 +++++++
- drivers/cxl/pci.c       | 30 +++++++++++++---------
- 4 files changed, 88 insertions(+), 12 deletions(-)
+ drivers/cxl/pci.c | 78 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..95d94ec14eb6 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -75,6 +75,11 @@ resource_size_t __rcrb_to_component(struct device *dev,
- 				    enum cxl_rcrb which);
- u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
- 
-+#define PCI_RCRB_CAP_LIST_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_ID_MASK	GENMASK(7, 0)
-+#define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8)
-+#define PCI_CAP_EXP_SIZEOF		0x3c
-+
- extern struct rw_semaphore cxl_dpa_rwsem;
- extern struct rw_semaphore cxl_region_rwsem;
- 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 372786f80955..b1ab0d9bcbcb 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -505,6 +505,62 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
- 	return offset;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4eaf64d92541..4e51b6a0a97b 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -792,6 +792,83 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 	return 0;
  }
  
-+static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
++static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size_t width)
 +{
-+	resource_size_t rcrb = dport->rcrb.base;
-+	void __iomem *addr;
-+	u32 cap_hdr;
-+	u16 offset;
++	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *root_dev;
++	struct cxl_dport *dport;
++	struct cxl_port *root __free(put_cxl_root) =
++		cxl_mem_find_port(cxlmd, &dport);
 +
-+	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-+		return CXL_RESOURCE_NONE;
-+
-+	addr = ioremap(rcrb, SZ_4K);
-+	if (!addr) {
-+		dev_err(dev, "Failed to map region %pr\n", addr);
-+		release_mem_region(rcrb, SZ_4K);
-+		return CXL_RESOURCE_NONE;
-+	}
-+
-+	offset = FIELD_GET(PCI_RCRB_CAP_LIST_ID_MASK, readw(addr + PCI_CAPABILITY_LIST));
-+	cap_hdr = readl(addr + offset);
-+	while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr)) != PCI_CAP_ID_EXP) {
-+		offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-+		if (offset == 0 || offset > SZ_4K) {
-+			offset = 0;
-+			break;
-+		}
-+		cap_hdr = readl(addr + offset);
-+	}
-+
-+	iounmap(addr);
-+	release_mem_region(rcrb, SZ_4K);
-+	if (!offset)
-+		return CXL_RESOURCE_NONE;
-+
-+	return offset;
-+}
-+
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport)
-+{
-+	void __iomem *dport_pcie_cap = NULL;
-+	resource_size_t pos;
-+	struct cxl_rcrb_info *ri;
-+
-+	ri = &dport->rcrb;
-+	pos = cxl_rcrb_to_linkcap(&pdev->dev, dport);
-+	if (pos == CXL_RESOURCE_NONE)
++	if (!root)
 +		return -ENXIO;
 +
-+	dport_pcie_cap = devm_cxl_iomap_block(&pdev->dev,
-+					      ri->base + pos,
-+					      PCI_CAP_EXP_SIZEOF);
-+	dport->regs.rcd_pcie_cap = dport_pcie_cap;
++	root_dev = root->uport_dev;
++	if (!root_dev)
++		return -ENXIO;
++
++	guard(device)(root_dev);
++	if (!root_dev->driver)
++		return -ENXIO;
++
++	switch (width) {
++	case 2:
++		return sysfs_emit(buf, "%#x\n",
++				  readw(dport->regs.rcd_pcie_cap + offset));
++	case 4:
++		return sysfs_emit(buf, "%#x\n",
++				  readl(dport->regs.rcd_pcie_cap + offset));
++	default:
++		return -EINVAL;
++	}
++}
++
++static ssize_t rcd_link_cap_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCAP, buf, sizeof(u32));
++}
++static DEVICE_ATTR_RO(rcd_link_cap);
++
++static ssize_t rcd_link_ctrl_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCTL, buf, sizeof(u16));
++}
++static DEVICE_ATTR_RO(rcd_link_ctrl);
++
++static ssize_t rcd_link_status_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKSTA, buf, sizeof(u16));
++}
++static DEVICE_ATTR_RO(rcd_link_status);
++
++static struct attribute *cxl_rcd_attrs[] = {
++	&dev_attr_rcd_link_cap.attr,
++	&dev_attr_rcd_link_ctrl.attr,
++	&dev_attr_rcd_link_status.attr,
++	NULL
++};
++
++static umode_t cxl_rcd_visible(struct kobject *kobj, struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (is_cxl_restricted(pdev))
++		return a->mode;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_dport_map_rcd_linkcap, CXL);
 +
- resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri,
- 				    enum cxl_rcrb which)
++static struct attribute_group cxl_rcd_group = {
++	.attrs = cxl_rcd_attrs,
++	.is_visible = cxl_rcd_visible,
++};
++__ATTRIBUTE_GROUPS(cxl_rcd);
++
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 003feebab79b..839c5a20cc33 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -230,6 +230,14 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_rch_regs, rch_regs,
- 		void __iomem *dport_aer;
- 	);
-+
-+	/*
-+	 * RCD upstream port specific PCIe cap register
-+	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
-+	 */
-+	struct_group_tagged(cxl_rcd_regs, rcd_regs,
-+		void __iomem *rcd_pcie_cap;
-+	);
- };
- 
- struct cxl_reg_map {
-@@ -299,6 +307,7 @@ int cxl_setup_regs(struct cxl_register_map *map);
- struct cxl_dport;
- resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
- 					   struct cxl_dport *dport);
-+int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
- 
- #define CXL_RESOURCE_NONE ((resource_size_t) -1)
- #define CXL_TARGET_STRLEN 20
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..4eaf64d92541 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -471,10 +471,9 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
- }
- 
- static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
--				  struct cxl_register_map *map)
-+				  struct cxl_register_map *map,
-+				  struct cxl_dport *dport)
- {
--	struct cxl_port *port;
--	struct cxl_dport *dport;
- 	resource_size_t component_reg_phys;
- 
- 	*map = (struct cxl_register_map) {
-@@ -482,14 +481,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
- 		.resource = CXL_RESOURCE_NONE,
- 	};
- 
--	port = cxl_pci_find_port(pdev, &dport);
--	if (!port)
--		return -EPROBE_DEFER;
--
- 	component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
- 
--	put_device(&port->dev);
--
- 	if (component_reg_phys == CXL_RESOURCE_NONE)
- 		return -ENXIO;
- 
-@@ -503,6 +496,7 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
- static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 			      struct cxl_register_map *map)
- {
-+	struct cxl_dport *dport;
- 	int rc;
- 
- 	rc = cxl_find_regblock(pdev, type, map);
-@@ -512,11 +506,23 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	 * is an RCH and try to extract the Component Registers from
- 	 * an RCRB.
- 	 */
--	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
--		rc = cxl_rcrb_get_comp_regs(pdev, map);
-+	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev)) {
-+		struct cxl_port *port __free(put_cxl_root) =
-+			cxl_pci_find_port(pdev, &dport);
-+		if (!port)
-+			return -EPROBE_DEFER;
- 
--	if (rc)
-+		rc = cxl_rcrb_get_comp_regs(pdev, map, dport);
-+		if (rc)
-+			return rc;
-+
-+		rc = cxl_dport_map_rcd_linkcap(pdev, dport);
-+		if (rc)
-+			return rc;
-+
-+	} else if (rc) {
- 		return rc;
-+	}
- 
- 	return cxl_setup_regs(map);
- }
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+@@ -975,6 +1052,7 @@ static struct pci_driver cxl_pci_driver = {
+ 	.id_table		= cxl_mem_pci_tbl,
+ 	.probe			= cxl_pci_probe,
+ 	.err_handler		= &cxl_error_handlers,
++	.dev_groups		= cxl_rcd_groups,
+ 	.driver	= {
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+ 	},
 -- 
 2.45.0
 
