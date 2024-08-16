@@ -1,51 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6E71BC09F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7CC1BC9EB;
 	Fri, 16 Aug 2024 14:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723817300; cv=none; b=ELFWPNROre3EFusLsLsVGyou/k84e4eUh8HHSMnZav2nlggbZIJBI286TOPWPqp8L2BEwYy/Xmz/W8H4OL3Aa7t82b0kYecPN9CT/M+JpE2PPBOMJZ3YfMew1+TIzWPcIO5uRx9dYo00Aa7Eg0EQa10Nj9lqiKISa4y9W4mDH7M=
+	t=1723817301; cv=none; b=bs37pMr937VBrSX4t3hxWLHeOXqWNgz0owgBW+5YAQe4EcCcqHwPgyHg26dWaPd3M8gNLnT/T6oygptFQh2ylpCDHZPJLFvjuILNx18xjJFARtMv12RY0G3M+dEfipuSxRIc98N2eJ1+sPN5ki7d/3OQEf2p3Zw9XQAs3w1/x90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723817300; c=relaxed/simple;
-	bh=RjlLUaj7o1Ekf7+NkDPCFuIDq4h3i49rOee7IMQvwS4=;
+	s=arc-20240116; t=1723817301; c=relaxed/simple;
+	bh=ER61a1N0JVP79hKUHmI91kDMkAKxu8opPjqQ1EyBvjY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HcN7hTrAUjMrM+AQ8eu5wuWjRo8q56c/Mbw+FSFwYwS+EdZVGMtNVZi/dgcRmOOxGz36KkzxAk6r0PtLharGW5KBLTP2CzcP95tUOuCMMsrfn/gV5AbHSpQ16wZvhsDef8FhrDTBzkeGzTy+hL7W1iAArcUa4egWizxMiJqhru0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XL3lh2aF; arc=none smtp.client-ip=198.175.65.18
+	 In-Reply-To:To:Cc; b=iu/cGcaEm359nXBEYuficIekH6pBNnOl/GuMZirVFkXj7ydQAhMfL/I5B6qOmFRhHrFhpJcG0QyFiDQH13Rh7j6aokLnDcCExXMf0IXbJsQr7n8bI+f39wBVRbABjZPANjbnnnEmJawdqVB6CExYykkDBLW0pu766HXyXM2pm8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nKb8lb16; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XL3lh2aF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nKb8lb16"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1723817300; x=1755353300;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=RjlLUaj7o1Ekf7+NkDPCFuIDq4h3i49rOee7IMQvwS4=;
-  b=XL3lh2aFz5cJP22FgStlvcotguShfjVC31JxQMrUPbEO4Bh/Owqhk9J8
-   mkios40tpjnyx4V52E7r1vG9Ew8qlrQzLz3A78iQ8S3IccD1z2QigL/tq
-   z+/OzYNeahuyzBpuEIhJefXWaZLWJhb5tF7Ex3KexD+KSv6o8EkXuA1cC
-   G8KPnDFfs5VfFZcrkSPppE49ofK2Ms6GtWRnWFF5zAF1od1T0CHwxsWhW
-   D9x6dDrI32Nfc7q+6WoB6gEsBdsDVexiuTLbjZofgPNTx2+BoOZRwjjl+
-   7Ibamdc0Iwx+TyHAZq+eDhAEWkqHCl66HaQviyaWFn6jJniSEKy/CqKVj
-   g==;
-X-CSE-ConnectionGUID: b2N+KiTdRxC4K/okFRBviQ==
-X-CSE-MsgGUID: j+6pHEDFSRqKxewPDThGQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22260877"
+  bh=ER61a1N0JVP79hKUHmI91kDMkAKxu8opPjqQ1EyBvjY=;
+  b=nKb8lb16vBvvZ7HMBsjEGDFyHIfeey5ZDYl/38dS8vMNP4bHcHX+IEN7
+   IGcjrIoUJiJB2bv3/mtsmmtX98nl6G+IvAveV8vIR7K+tWBRVNVkUu9m+
+   qDPjp0Q38rod8uSHggwsHrGuhWXsJeK/8S9DQII8FuY2jEfCrAPrQ+S1k
+   mZhiMr0dmTcyVfMxD73xCrur+/tiwHEX18QphjUXYpVSZ/YS3JOM6ES9x
+   z3oM4aTkRf/yf/yZ0pCt/3dW0K7oNvAP3nE5hPZNzGqJvFW0MKbr/ajEb
+   pEMeP7ibRFeG217gIcu6U5d5uO0FQndoj6OiMRHvbjE+srYNj9u3q94zL
+   Q==;
+X-CSE-ConnectionGUID: 5Xc71UkMR0yuithxw/2W4w==
+X-CSE-MsgGUID: 4PstT6VSTkeAuMTM2imnig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22260884"
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="22260877"
+   d="scan'208";a="22260884"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:14 -0700
-X-CSE-ConnectionGUID: 9mQLGiCBQWuZHgjuotTugQ==
-X-CSE-MsgGUID: GQ1Rc6l7SXuBLYYVNI1Plw==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:16 -0700
+X-CSE-ConnectionGUID: hMhDEQpmRU+aXNk6rrIqGg==
+X-CSE-MsgGUID: dlg93kTUTCqPU3gmBDKg6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="59847763"
+   d="scan'208";a="59847777"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.125.111.52])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:13 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:15 -0700
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 16 Aug 2024 09:08:06 -0500
-Subject: [PATCH RESEND v2 01/18] cxl/hdm: Debug, use decoder name function
+Date: Fri, 16 Aug 2024 09:08:07 -0500
+Subject: [PATCH RESEND v2 02/18] cxl/mbox: Flag support for Dynamic
+ Capacity Devices (DCD)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,7 +55,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240816-dcd-type2-upstream-v2-1-b4044aadf2bd@intel.com>
+Message-Id: <20240816-dcd-type2-upstream-v2-2-b4044aadf2bd@intel.com>
 References: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 In-Reply-To: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
@@ -65,42 +66,143 @@ Cc: Navneet Singh <navneet.singh@intel.com>, Fan Ni <fan.ni@samsung.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
  linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.15-dev-37811
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=875;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=4400;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=RjlLUaj7o1Ekf7+NkDPCFuIDq4h3i49rOee7IMQvwS4=;
- b=li2Ej/7R8NQoJSN9yvuCULPks0LlOkKOQpVFmfrqSfQRGWM9lkN9pYoLik/0f2oC0gOQsf5hV
- N15OklMeak+C8RzIa+bLzn6B4pa43i8B0dMkADdEEPO8JNCrt30afSB
+ bh=ER61a1N0JVP79hKUHmI91kDMkAKxu8opPjqQ1EyBvjY=;
+ b=q1WQqgbWEWf2ihXKsodQiNiQ0C6zpL/0Gofq+U12XeK3dmBSJuGcyzAdBR2pP9AVgxn2vXHbZ
+ tk6NxzqkMRdAoukeOisY9sTP/AAee6jyF/Bvcv7ymEaNTRFTSroYhdq
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-The decoder enum has a name conversion function defined now.
+Per the CXL 3.0 specification software must check the Command Effects
+Log (CEL) to know if a device supports DC.  If the device does support
+DC the specifics of the DC Regions (0-7) are read through the mailbox.
 
-Use that instead of open coding.
+Flag DC Device (DCD) commands in a device if they are supported.
+Subsequent patches will key off these bits to configure a DCD.
 
-Suggested-by: Navneet Singh <navneet.singh@intel.com>
+Co-developed-by: Navneet Singh <navneet.singh@intel.com>
+Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes for v2:
-[iweiny: new patch, split out]
+Changes for v2
+[iweiny: new patch]
 ---
- drivers/cxl/core/hdm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/cxl/core/mbox.c | 38 +++++++++++++++++++++++++++++++++++---
+ drivers/cxl/cxlmem.h    | 15 +++++++++++++++
+ 2 files changed, 50 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index b01a77b67511..a254f79dd4e8 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -550,8 +550,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f052d5f174ee..554ec97a7c39 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -111,6 +111,34 @@ static u8 security_command_sets[] = {
+ 	0x46, /* Security Passthrough */
+ };
  
- 	if (size > avail) {
- 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
--			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
--			&avail);
-+			cxl_decoder_mode_name(cxled->mode), &avail);
- 		rc = -ENOSPC;
- 		goto out;
++static bool cxl_is_dcd_command(u16 opcode)
++{
++#define CXL_MBOX_OP_DCD_CMDS 0x48
++
++	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
++}
++
++static void cxl_set_dcd_cmd_enabled(struct cxl_memdev_state *mds,
++					u16 opcode)
++{
++	switch (opcode) {
++	case CXL_MBOX_OP_GET_DC_CONFIG:
++		set_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
++		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_ADD_DC_RESPONSE:
++		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_RELEASE_DC:
++		set_bit(CXL_DCD_ENABLED_RELEASE, mds->dcd_cmds);
++		break;
++	default:
++		break;
++	}
++}
++
+ static bool cxl_is_security_command(u16 opcode)
+ {
+ 	int i;
+@@ -677,9 +705,10 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+ 		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+ 
+-		if (!cmd && !cxl_is_poison_command(opcode)) {
+-			dev_dbg(dev,
+-				"Opcode 0x%04x unsupported by driver\n", opcode);
++		if (!cmd && !cxl_is_poison_command(opcode) &&
++		    !cxl_is_dcd_command(opcode)) {
++			dev_dbg(dev, "Opcode 0x%04x unsupported by driver\n",
++				opcode);
+ 			continue;
+ 		}
+ 
+@@ -689,6 +718,9 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 		if (cxl_is_poison_command(opcode))
+ 			cxl_set_poison_cmd_enabled(&mds->poison, opcode);
+ 
++		if (cxl_is_dcd_command(opcode))
++			cxl_set_dcd_cmd_enabled(mds, opcode);
++
+ 		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
  	}
+ }
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index adfba72445fc..5f2e65204bf9 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -247,6 +247,15 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
+ };
+ 
++/* Device enabled DCD commands */
++enum dcd_cmd_enabled_bits {
++	CXL_DCD_ENABLED_GET_CONFIG,
++	CXL_DCD_ENABLED_GET_EXTENT_LIST,
++	CXL_DCD_ENABLED_ADD_RESPONSE,
++	CXL_DCD_ENABLED_RELEASE,
++	CXL_DCD_ENABLED_MAX
++};
++
+ /* Device enabled poison commands */
+ enum poison_cmd_enabled_bits {
+ 	CXL_POISON_ENABLED_LIST,
+@@ -436,6 +445,7 @@ struct cxl_dev_state {
+  *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
++ * @dcd_cmds: List of DCD commands implemented by memory device
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+  * @exclusive_cmds: Commands that are kernel-internal only
+  * @total_bytes: sum of all possible capacities
+@@ -460,6 +470,7 @@ struct cxl_memdev_state {
+ 	size_t lsa_size;
+ 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+ 	char firmware_version[0x10];
++	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX);
+ 	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	u64 total_bytes;
+@@ -525,6 +536,10 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+ 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
++	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
++	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
++	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
++	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+ 
 
 -- 
 2.45.2
