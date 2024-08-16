@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16411C3F06;
-	Fri, 16 Aug 2024 14:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7281C3F29;
+	Fri, 16 Aug 2024 14:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723817314; cv=none; b=e4S7nT6MY+PcRQy5Ci8FZaZeRhrotLF4itcT4pwLbOScmaGFdqeuG1QXu8pPzJAuaZ/sr5pM0pP8IK5NEiPKotVIE4wb/tUSlBY7o4EfRhJVc3nUyN2845FljW+MzoGHUPk0mZ50HBHTe/8g+wzq47dYVItmdAI8yDJ2E/104cM=
+	t=1723817317; cv=none; b=L4zJG0iJgCLWE3SypZ6JayxaafJflhz+gbDh0XNTpNJs9f6199Ac6aPaxwl3IRMYG3cqtr7VWtzlLXI4AwvmmpOvTbtNtVqfGF0j37NJN9baRtXCgwXXkfUZLwhO0QYuCHe0PpQ36rlOef/xvDqUCuMMo5PNsRnSUvd8fwY8Cic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723817314; c=relaxed/simple;
-	bh=EfWnf4VLfLpcCyt5zGNOVtk9o39fBwT3S9jyfxRNATo=;
+	s=arc-20240116; t=1723817317; c=relaxed/simple;
+	bh=ghQ1VU1ZTyfQXo8JE4reXm9H0bQYFDJVMZYP3XZMgAQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=akHi/kQib62jLEPsl31yLrwiq9lNBTe10YkrGV/MyxBgR2fErgRp2nB2a53GKMil941rA3BBZ57yXXPLr2vB2MiNHf4Lf/pb9aPngwX8euBfqDvIbVfWvzi0gTQT5J2R3e/dGp71xqOfiw/WwQfgYIBYga3WDxMXrHBm4pVgyTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kQLZYLrd; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:To:Cc; b=S4p62tsxhLZPokqmX6SJjor7LPT+i6gbz4qwSz6jR4RvSDRF7VwBaZtPtfMEWZvH6PNDquAY38jlkbkVNztdnxiIpzWnG56mvUrG7o9lMKqCIgXJW5V3uzEWh7sx61cl+1RaB2DBJOHUIqw0EdZ0hAk68ZICHj9+yWdJDgkBjKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b8QwQq63; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQLZYLrd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b8QwQq63"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723817313; x=1755353313;
+  t=1723817315; x=1755353315;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=EfWnf4VLfLpcCyt5zGNOVtk9o39fBwT3S9jyfxRNATo=;
-  b=kQLZYLrdS82WQt/+6ONe2OhRRpMiZ6zojg5k3EOJcPTQkdD14t+7IX3j
-   OnqBCVySSo1+r84Y0WPwzRO5AY714pvTT8CQKeipUSwBDj4fYsaK/pbb2
-   Sj28A1P9hK2eG/2MyC43Cz7lsNR7fxptcW+r7exss/6QnRhFjkXF2ir/Y
-   3VgSvmnPaNMdtUFWRxc0927spPIYwKcr3KOYIwoTKZCTzvI/K3YnlyXZo
-   9Uhzm6bVHRNManCgPABlcDjyPadz7CkRoTM6o9pR7C+cG0Na+pkFDJ3xD
-   Ii16yhNt4f+u4FtdTp26ECT/IckpFT7OjHNDyVSqPZKP1UvJ4c6ZeabqJ
-   A==;
-X-CSE-ConnectionGUID: QBeISbWjSHyfAOqE6rY4LQ==
-X-CSE-MsgGUID: sTepQg2NT/ufOioOFy221A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22085262"
+  bh=ghQ1VU1ZTyfQXo8JE4reXm9H0bQYFDJVMZYP3XZMgAQ=;
+  b=b8QwQq63Ua59aENVcNKzHP9cm/zaEZjzhiN9uroL05IrpYVEutOpQ0s6
+   Qw+tDbCu01LZAwvpRl2PVQicOcsUs7yyrpahq2ApCbKxqWEtv38bJTfzI
+   zoUWDFtKIIU9kWVRROKNt1YPW5vhS1NaiDp1P4FN9A7Sesagw8WBR6422
+   x/Hcs67Tdyw7fHYqTXHH3h7wl07QL3JZ0tsG7QPe6FJEd+PQkKy4ymtML
+   zxKRck8Y6J6+TokzYV+n74b9RQ1n1U5pmNDjcPVsgtWYo3nz3s4TI8pAo
+   y5vZ1qtbHyJ9w1BGgHFrZMvUGJtxlcBg6HyuQcRC49UTl7weKqt1mUgCx
+   w==;
+X-CSE-ConnectionGUID: eR8NqgXtRXKNETqB9LSJJQ==
+X-CSE-MsgGUID: REfAFtQ+SEK+Q0vcNQqJpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22085271"
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="22085262"
+   d="scan'208";a="22085271"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:33 -0700
-X-CSE-ConnectionGUID: bi/Ds5o1TBitEG4sWah7mQ==
-X-CSE-MsgGUID: 3u3eohbYTXm5xb38PMWjww==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:35 -0700
+X-CSE-ConnectionGUID: xX5DzcevQpuEFzffqUigVg==
+X-CSE-MsgGUID: y5mTI14DSjCHAjJ3gOgj5A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="64571575"
+   d="scan'208";a="64571593"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.125.111.52])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:31 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:33 -0700
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 16 Aug 2024 09:08:15 -0500
-Subject: [PATCH RESEND v2 10/18] cxl/mem: Handle DCD add and release
- capacity events.
+Date: Fri, 16 Aug 2024 09:08:16 -0500
+Subject: [PATCH RESEND v2 11/18] cxl/region: Expose DC extents on region
+ driver load
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240816-dcd-type2-upstream-v2-10-b4044aadf2bd@intel.com>
+Message-Id: <20240816-dcd-type2-upstream-v2-11-b4044aadf2bd@intel.com>
 References: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 In-Reply-To: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
@@ -66,394 +66,725 @@ Cc: Navneet Singh <navneet.singh@intel.com>, Fan Ni <fan.ni@samsung.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
  linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.15-dev-37811
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=12104;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=22228;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=EfWnf4VLfLpcCyt5zGNOVtk9o39fBwT3S9jyfxRNATo=;
- b=vIagVjom/LbhOEzAwgFIJZ1RTIhbqeSqx+PqHO5/XK2N9k4xuRTVWSOI7C2QdEfW2kak1H1Cl
- PSdWgZU+Z9qDpRqSPItZteVwSwfzXQCzy4vk4FuvM1cH31jWuSND+s6
+ bh=ghQ1VU1ZTyfQXo8JE4reXm9H0bQYFDJVMZYP3XZMgAQ=;
+ b=aAW643SCSEs4I2x/wDIuP4Eayzm/Tud8ILFX9dBJVnW1gaqoVUPl/z7cY5JcSOqvqfBvk9Nlu
+ Uq0kk9cmcdmC1a8UFSgQEpDlEbnjk1wNMfMsUDqcygG3oMmJ226ksZf
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-A Dynamic Capacity Device (DCD) utilizes events to signal the host about
-the changes to the allocation of Dynamic Capacity (DC) extents. The
-device communicates the state of DC extents through an extent list that
-describes the starting DPA, length, and meta data of the blocks the host
-can access.
+Ultimately user space must associate Dynamic Capacity (DC) extents with
+DAX devices.  Remember also that DCD extents may have been accepted
+previous to regions being created and must have references held until
+all higher level regions and DAX devices are done with the memory.
 
-Process the dynamic capacity add and release events.  The addition or
-removal of extents can occur at any time.  Adding asynchronous memory is
-straight forward.  Also remember the host is under no obligation to
-respond to a release event until it is done with the memory.  Introduce
-extent kref's to handle the delay of extent release.
+On CXL region driver load scan existing device extents and create CXL
+DAX region extents as needed.
 
-In the case of a force removal, access to the memory will fail and may
-cause a crash.  However, the extent tracking object is preserved for the
-region to safely tear down as long as the memory is not accessed.
+Create abstractions for the extents to be used in DAX region.  This
+includes a generic interface to take proper references on the lower
+level CXL region extents.
+
+Also maintain separate objects for the DAX region extent device vs the
+DAX region extent.  The DAX region extent device has a shorter life span
+which corresponds to the removal of an extent while a DAX device is
+still using it.  In this case an extent continues to exist whilst the
+ability to create new DAX devices on that extent is prevented.
+
+NOTE: Without interleaving; the device, CXL region, and DAX region
+extents have a 1:1:1 relationship.  Future support for interleaving will
+maintain a 1:N relationship between CXL region extents and the hardware
+extents.
+
+While the ability to create DAX devices on an extent exists; expose the
+necessary details of DAX region extents by creating a device with the
+following sysfs entries.
+
+/sys/bus/cxl/devices/dax_regionX/extentY
+/sys/bus/cxl/devices/dax_regionX/extentY/length
+/sys/bus/cxl/devices/dax_regionX/extentY/label
+
+Label is a rough analogy to the DC extent tag.  As such the DC extent
+tag is used to initially populate the label.  However, the label is made
+writeable so that it can be adjusted in the future when forming a DAX
+device.
 
 Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Co-developed-by: Navneet Singh <navneet.singh@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-changes for v2:
-[iweiny: Totally new version of the patch]
-[iweiny: use kref to track when to release an extent]
-[iweiny: rebased to latest master/type2 work]
-[iweiny: use a kref to track if extents are being referenced]
-[alison: align commit message paragraphs]
-[alison: remove unnecessary return]
-[iweiny: Adjust for the new __devm_cxl_add_dax_region()]
-[navneet: Fix debug prints in adding/releasing extent]
-[alison: deal with odd if/else logic]
-[alison: reverse x-tree]
-[alison: reverse x-tree]
-[alison: s/total_extent_cnt/count/]
-[alison: make handle event reverse x-tree]
-[alison: cleanup/shorten/remove handle event comment]
-[iweiny/Alison: refactor cxl_handle_dcd_event_records function]
-[iweiny: keep cxl_dc_extent_data local to mbox.c]
-[jonathan: eliminate 'rc']
-[iweiny: use proper type for mailbox size]
-[jonathan: put dc_extents on the stack]
-[jonathan: use direct returns instead of goto]
-[iweiny: Clean up comment]
-[Jonathan: define CXL_DC_EXTENT_TAG_LEN]
-[Jonathan: remove extraneous changes]
-[Jonathan: fix blank line issues]
+Changes from v1
+[iweiny: move dax_region_extents to dax layer]
+[iweiny: adjust for kreference of extents]
+[iweiny: adjust naming to cxl_dr_extent]
+[iweiny: Remove region_extent xarray; use child devices instead]
+[iweiny: ensure dax region devices are destroyed on region destruction]
+[iweiny: use xa_insert]
+[iweiny: hpa_offset is a dr_extent parameter not an extent parameter]
+[iweiny: Add dc_region_extents when the region driver is loaded]
 ---
- drivers/cxl/core/mbox.c | 186 +++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h       |   9 +++
- drivers/cxl/cxlmem.h    |  30 ++++++++
- 3 files changed, 224 insertions(+), 1 deletion(-)
+ drivers/cxl/core/mbox.c   |  12 ++++
+ drivers/cxl/core/region.c | 179 ++++++++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/cxl.h         |  16 +++++
+ drivers/cxl/cxlmem.h      |   2 +
+ drivers/dax/Makefile      |   1 +
+ drivers/dax/cxl.c         | 101 ++++++++++++++++++++++++--
+ drivers/dax/dax-private.h |  53 ++++++++++++++
+ drivers/dax/extent.c      | 119 ++++++++++++++++++++++++++++++
+ 8 files changed, 473 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 9b08c40ef484..8474a28b16ca 100644
+index 8474a28b16ca..5472ab1d0370 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -839,6 +839,8 @@ static int cxl_store_dc_extent(struct cxl_memdev_state *mds,
- 	extent->length = le64_to_cpu(dc_extent->length);
- 	memcpy(extent->tag, dc_extent->tag, sizeof(extent->tag));
- 	extent->shared_extent_seq = le16_to_cpu(dc_extent->shared_extn_seq);
-+	kref_init(&extent->region_ref);
-+	extent->mds = mds;
- 
- 	dev_dbg(dev, "dynamic capacity extent DPA:0x%llx LEN:%llx\n",
- 		extent->dpa_start, extent->length);
-@@ -879,6 +881,14 @@ static const uuid_t mem_mod_event_uuid =
- 	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
- 		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
- 
-+/* 
-+ * Dynamic Capacity Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
-+ */
-+static const uuid_t dc_event_uuid =
-+	UUID_INIT(0xca95afa7, 0xf183, 0x4018, 0x8c,
-+		  0x2f, 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a);
-+
- static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 				   enum cxl_event_log_type type,
- 				   struct cxl_event_record_raw *record)
-@@ -973,6 +983,171 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 	return rc;
+@@ -1055,6 +1055,18 @@ static void dc_extent_release(struct kref *kref)
+ 	kfree(extent);
  }
  
-+static int cxl_send_dc_cap_response(struct cxl_memdev_state *mds,
-+				struct cxl_mbox_dc_response *res,
-+				int extent_cnt, int opcode)
++int __must_check cxl_dc_extent_get_not_zero(struct cxl_dc_extent_data *extent)
 +{
-+	struct cxl_mbox_cmd mbox_cmd;
-+	size_t size;
-+
-+	size = struct_size(res, extent_list, extent_cnt);
-+	res->extent_list_size = cpu_to_le32(extent_cnt);
-+
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = opcode,
-+		.size_in = size,
-+		.payload_in = res,
-+	};
-+
-+	return cxl_internal_send_cmd(mds, &mbox_cmd);
++	return kref_get_unless_zero(&extent->region_ref);
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_dc_extent_get_not_zero, CXL);
 +
-+static int cxl_prepare_ext_list(struct cxl_mbox_dc_response **res,
-+				int *n, struct range *extent)
++void cxl_dc_extent_get(struct cxl_dc_extent_data *extent)
 +{
-+	struct cxl_mbox_dc_response *dc_res;
-+	unsigned int size;
-+
-+	if (!extent)
-+		size = struct_size(dc_res, extent_list, 0);
-+	else
-+		size = struct_size(dc_res, extent_list, *n + 1);
-+
-+	dc_res = krealloc(*res, size, GFP_KERNEL);
-+	if (!dc_res)
-+		return -ENOMEM;
-+
-+	if (extent) {
-+		dc_res->extent_list[*n].dpa_start = cpu_to_le64(extent->start);
-+		memset(dc_res->extent_list[*n].reserved, 0, 8);
-+		dc_res->extent_list[*n].length = cpu_to_le64(range_len(extent));
-+		(*n)++;
-+	}
-+
-+	*res = dc_res;
-+	return 0;
++	kref_get(&extent->region_ref);
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_dc_extent_get, CXL);
 +
-+static void dc_extent_release(struct kref *kref)
+ void cxl_dc_extent_put(struct cxl_dc_extent_data *extent)
+ {
+ 	kref_put(&extent->region_ref, dc_extent_release);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index fc8dee469244..0aeea50550f6 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1547,6 +1547,122 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
+ 	return 0;
+ }
+ 
++static bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
++				struct cxl_dc_extent_data *extent)
 +{
-+	struct cxl_dc_extent_data *extent = container_of(kref,
-+						struct cxl_dc_extent_data,
-+						region_ref);
-+	struct cxl_memdev_state *mds = extent->mds;
-+	struct cxl_mbox_dc_response *dc_res = NULL;
-+	struct range rel_range = (struct range) {
++	struct range dpa_range = (struct range){
 +		.start = extent->dpa_start,
 +		.end = extent->dpa_start + extent->length - 1,
 +	};
-+	struct device *dev = mds->cxlds.dev;
-+	int extent_cnt = 0, rc;
++	struct device *dev = &cxled->cxld.dev;
 +
-+	rc = cxl_prepare_ext_list(&dc_res, &extent_cnt, &rel_range);
-+	if (rc < 0) {
-+		dev_err(dev, "Failed to create release response %d\n", rc);
-+		goto free_extent;
-+	}
-+	rc = cxl_send_dc_cap_response(mds, dc_res, extent_cnt,
-+				      CXL_MBOX_OP_RELEASE_DC);
-+	kfree(dc_res);
++	dev_dbg(dev, "Checking extent DPA:%llx LEN:%llx\n",
++		extent->dpa_start, extent->length);
 +
-+free_extent:
-+	kfree(extent);
++	if (!cxled->cxld.region || !cxled->dpa_res)
++		return false;
++
++	dev_dbg(dev, "Cxled start:%llx end:%llx\n",
++		cxled->dpa_res->start, cxled->dpa_res->end);
++	return (cxled->dpa_res->start <= dpa_range.start &&
++		dpa_range.end <= cxled->dpa_res->end);
 +}
 +
-+void cxl_dc_extent_put(struct cxl_dc_extent_data *extent)
++static int cxl_ed_add_one_extent(struct cxl_endpoint_decoder *cxled,
++				 struct cxl_dc_extent_data *extent)
 +{
-+	kref_put(&extent->region_ref, dc_extent_release);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dc_extent_put, CXL);
++	struct cxl_dr_extent *cxl_dr_ext;
++	struct cxl_dax_region *cxlr_dax;
++	resource_size_t dpa_offset, hpa;
++	struct range *ed_hpa_range;
++	struct device *dev;
++	int rc;
 +
-+static int cxl_handle_dcd_release_event(struct cxl_memdev_state *mds,
-+					struct cxl_dc_extent *rel_extent)
-+{
-+	struct device *dev = mds->cxlds.dev;
-+	struct cxl_dc_extent_data *extent;
-+	resource_size_t dpa, size;
++	cxlr_dax = cxled->cxld.region->cxlr_dax;
++	dev = &cxlr_dax->dev;
++	dev_dbg(dev, "Adding DC extent DPA:%llx LEN:%llx\n",
++		extent->dpa_start, extent->length);
 +
-+	dpa = le64_to_cpu(rel_extent->start_dpa);
-+	size = le64_to_cpu(rel_extent->length);
-+	dev_dbg(dev, "Release DC extent DPA:0x%llx LEN:%llx\n",
-+		dpa, size);
-+
-+	extent = xa_erase(&mds->dc_extent_list, dpa);
-+	if (!extent) {
-+		dev_err(dev, "No extent found with DPA:0x%llx\n", dpa);
++	/*
++	 * Interleave ways == 1 means this coresponds to a 1:1 mapping between
++	 * device extents and DAX region extents.  Future implementations
++	 * should hold DC region extents here until the full dax region extent
++	 * can be realized.
++	 */
++	if (cxlr_dax->cxlr->params.interleave_ways != 1) {
++		dev_err(dev, "Interleaving DC not supported\n");
 +		return -EINVAL;
 +	}
-+	cxl_dc_extent_put(extent);
++
++	cxl_dr_ext = kzalloc(sizeof(*cxl_dr_ext), GFP_KERNEL);
++	if (!cxl_dr_ext)
++		return -ENOMEM;
++
++	cxl_dr_ext->extent = extent;
++	kref_init(&cxl_dr_ext->region_ref);
++
++	/*
++	 * Without interleave...
++	 * HPA offset == DPA offset
++	 * ... but do the math anyway
++	 */
++	dpa_offset = extent->dpa_start - cxled->dpa_res->start;
++	ed_hpa_range = &cxled->cxld.hpa_range;
++	hpa = ed_hpa_range->start + dpa_offset;
++	cxl_dr_ext->hpa_offset = hpa - cxlr_dax->hpa_range.start;
++
++	/* Without interleave carry length and label through */
++	cxl_dr_ext->hpa_length = extent->length;
++	snprintf(cxl_dr_ext->label, CXL_EXTENT_LABEL_LEN, "%s",
++		 extent->tag);
++
++	dev_dbg(dev, "Inserting at HPA:%llx\n", cxl_dr_ext->hpa_offset);
++	rc = xa_insert(&cxlr_dax->extents, cxl_dr_ext->hpa_offset, cxl_dr_ext,
++		       GFP_KERNEL);
++	if (rc) {
++		dev_err(dev, "Failed to insert extent %d\n", rc);
++		kfree(cxl_dr_ext);
++		return rc;
++	}
++	/* Put in cxl_dr_release() */
++	cxl_dc_extent_get(cxl_dr_ext->extent);
 +	return 0;
 +}
 +
-+static int cxl_handle_dcd_add_event(struct cxl_memdev_state *mds,
-+				    struct cxl_dc_extent *add_extent)
++static int cxl_ed_add_extents(struct cxl_endpoint_decoder *cxled)
 +{
-+	struct cxl_mbox_dc_response *dc_res = NULL;
-+	struct range alloc_range, *resp_range;
-+	struct device *dev = mds->cxlds.dev;
-+	int extent_cnt = 0;
-+	int rc;
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_state *mds = container_of(cxlds,
++						    struct cxl_memdev_state,
++						    cxlds);
++	struct device *dev = &cxled->cxld.dev;
++	struct cxl_dc_extent_data *extent;
++	unsigned long index;
 +
-+	dev_dbg(dev, "Add DC extent DPA:0x%llx LEN:%llx\n",
-+		le64_to_cpu(add_extent->start_dpa),
-+		le64_to_cpu(add_extent->length));
++	dev_dbg(dev, "Searching for DC extents\n");
++	xa_for_each(&mds->dc_extent_list, index, extent) {
++		/*
++		 * get not zero is important because this is racing with the
++		 * memory device which could be removing the extent at the same
++		 * time.
++		 */
++		if (cxl_dc_extent_get_not_zero(extent)) {
++			int rc = 0;
 +
-+	alloc_range = (struct range){
-+		.start = le64_to_cpu(add_extent->start_dpa),
-+		.end = le64_to_cpu(add_extent->start_dpa) +
-+			le64_to_cpu(add_extent->length) - 1,
-+	};
-+	resp_range = &alloc_range;
-+
-+	rc = cxl_store_dc_extent(mds, add_extent);
-+	if (rc) {
-+		dev_dbg(dev, "unconsumed DC extent DPA:0x%llx LEN:%llx\n",
-+			le64_to_cpu(add_extent->start_dpa),
-+			le64_to_cpu(add_extent->length));
-+		resp_range = NULL;
-+	}
-+
-+	rc = cxl_prepare_ext_list(&dc_res, &extent_cnt, resp_range);
-+	if (rc < 0) {
-+		dev_err(dev, "Couldn't create extent list %d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = cxl_send_dc_cap_response(mds, dc_res, extent_cnt,
-+				      CXL_MBOX_OP_ADD_DC_RESPONSE);
-+	kfree(dc_res);
-+	return rc;
-+}
-+
-+/* Returns 0 if the event was handled successfully. */
-+static int cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
-+					struct cxl_event_record_raw *rec)
-+{
-+	struct dcd_event_dyn_cap *record = (struct dcd_event_dyn_cap *)rec;
-+	uuid_t *id = &rec->hdr.id;
-+	int rc;
-+
-+	if (!uuid_equal(id, &dc_event_uuid))
-+		return -EINVAL;
-+
-+	switch (record->data.event_type) {
-+	case DCD_ADD_CAPACITY:
-+		rc = cxl_handle_dcd_add_event(mds, &record->data.extent);
-+		break;
-+	case DCD_RELEASE_CAPACITY:
-+        case DCD_FORCED_CAPACITY_RELEASE:
-+		rc = cxl_handle_dcd_release_event(mds, &record->data.extent);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return rc;
-+}
-+
- static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 				    enum cxl_event_log_type type)
- {
-@@ -1016,6 +1191,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 				le16_to_cpu(payload->records[i].hdr.handle));
- 			cxl_event_trace_record(cxlmd, type,
- 					       &payload->records[i]);
-+			if (type == CXL_EVENT_TYPE_DCD) {
-+				rc = cxl_handle_dcd_event_records(mds,
-+								  &payload->records[i]);
-+				if (rc) 
-+					dev_err_ratelimited(dev, "dcd event failed: %d\n",
-+							    rc);
++			if (cxl_dc_extent_in_ed(cxled, extent)) {
++				dev_dbg(dev, "Found extent DPA:%llx LEN:%llx\n",
++					extent->dpa_start, extent->length);
++				rc = cxl_ed_add_one_extent(cxled, extent);
 +			}
- 		}
- 
- 		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
-@@ -1056,6 +1238,8 @@ void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
- 		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
- 	if (status & CXLDEV_EVENT_STATUS_INFO)
- 		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
-+	if (status & CXLDEV_EVENT_STATUS_DCD)
-+		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_DCD);
++			cxl_dc_extent_put(extent);
++			if (rc)
++				return rc;
++		}
++	}
++	return 0;
++}
++
+ static int cxl_region_attach_position(struct cxl_region *cxlr,
+ 				      struct cxl_root_decoder *cxlrd,
+ 				      struct cxl_endpoint_decoder *cxled,
+@@ -2702,10 +2818,44 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+ 	return cxlr_pmem;
  }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
  
-@@ -1712,7 +1896,7 @@ static void cxl_destroy_mds(void *_mds)
++int __must_check cxl_dr_extent_get_not_zero(struct cxl_dr_extent *cxl_dr_ext)
++{
++	return kref_get_unless_zero(&cxl_dr_ext->region_ref);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_dr_extent_get_not_zero, CXL);
++
++void cxl_dr_extent_get(struct cxl_dr_extent *cxl_dr_ext)
++{
++	return kref_get(&cxl_dr_ext->region_ref);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_dr_extent_get, CXL);
++
++static void cxl_dr_release(struct kref *kref)
++{
++	struct cxl_dr_extent *cxl_dr_ext = container_of(kref,
++						struct cxl_dr_extent,
++						region_ref);
++
++	cxl_dc_extent_put(cxl_dr_ext->extent);
++	kfree(cxl_dr_ext);
++}
++
++void cxl_dr_extent_put(struct cxl_dr_extent *cxl_dr_ext)
++{
++	kref_put(&cxl_dr_ext->region_ref, cxl_dr_release);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_dr_extent_put, CXL);
++
+ static void cxl_dax_region_release(struct device *dev)
+ {
+ 	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
++	struct cxl_dr_extent *cxl_dr_ext;
++	unsigned long index;
  
- 	xa_for_each(&mds->dc_extent_list, index, extent) {
- 		xa_erase(&mds->dc_extent_list, index);
--		kfree(extent);
-+		cxl_dc_extent_put(extent);
++	xa_for_each(&cxlr_dax->extents, index, cxl_dr_ext) {
++		xa_erase(&cxlr_dax->extents, index);
++		cxl_dr_extent_put(cxl_dr_ext);
++	}
+ 	kfree(cxlr_dax);
+ }
+ 
+@@ -2756,6 +2906,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+ 
+ 	cxlr_dax->hpa_range.start = p->res->start;
+ 	cxlr_dax->hpa_range.end = p->res->end;
++	xa_init(&cxlr_dax->extents);
+ 
+ 	dev = &cxlr_dax->dev;
+ 	cxlr_dax->cxlr = cxlr;
+@@ -2862,7 +3013,17 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
+ 	device_unregister(&cxlr_dax->dev);
+ }
+ 
+-static int __devm_cxl_add_dax_region(struct cxl_region *cxlr)
++static int cxl_region_add_dc_extents(struct cxl_region *cxlr)
++{
++	for (int i = 0; i < cxlr->params.nr_targets; i++) {
++		int rc = cxl_ed_add_extents(cxlr->params.targets[i]);
++		if (rc)
++			return rc;
++	}
++	return 0;
++}
++
++static int __devm_cxl_add_dax_region(struct cxl_region *cxlr, bool is_dc)
+ {
+ 	struct cxl_dax_region *cxlr_dax;
+ 	struct device *dev;
+@@ -2877,6 +3038,17 @@ static int __devm_cxl_add_dax_region(struct cxl_region *cxlr)
+ 	if (rc)
+ 		goto err;
+ 
++	cxlr->cxlr_dax = cxlr_dax;
++	if (is_dc) {
++		/*
++		 * Process device extents prior to surfacing the device to
++		 * ensure the cxl_dax_region driver has access to prior extents
++		 */
++		rc = cxl_region_add_dc_extents(cxlr);
++		if (rc)
++			goto err;
++	}
++
+ 	rc = device_add(dev);
+ 	if (rc)
+ 		goto err;
+@@ -2893,7 +3065,7 @@ static int __devm_cxl_add_dax_region(struct cxl_region *cxlr)
+ 
+ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+ {
+-	return __devm_cxl_add_dax_region(cxlr);
++	return __devm_cxl_add_dax_region(cxlr, false);
+ }
+ 
+ static int devm_cxl_add_dc_dax_region(struct cxl_region *cxlr)
+@@ -2902,8 +3074,7 @@ static int devm_cxl_add_dc_dax_region(struct cxl_region *cxlr)
+ 		dev_err(&cxlr->dev, "Interleaving DC not supported\n");
+ 		return -EINVAL;
  	}
- 	xa_destroy(&mds->dc_extent_list);
+-
+-	return __devm_cxl_add_dax_region(cxlr);
++	return __devm_cxl_add_dax_region(cxlr, true);
  }
+ 
+ static int match_decoder_by_range(struct device *dev, void *data)
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 0a225b0c20bf..81ca76ae1d02 100644
+index 81ca76ae1d02..177b892ac53f 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -163,6 +163,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
- #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
- #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
-+#define CXLDEV_EVENT_STATUS_DCD                 BIT(4)
- 
- #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
- 				 CXLDEV_EVENT_STATUS_WARN |	\
-@@ -601,6 +602,14 @@ struct cxl_pmem_region {
- 	struct cxl_pmem_region_mapping mapping[];
+@@ -555,6 +555,7 @@ struct cxl_region_params {
+  * @type: Endpoint decoder target type
+  * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
+  * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
++ * @cxlr_dax: (for DC regions) cached copy of CXL DAX bridge
+  * @flags: Region state flags
+  * @params: active + config params for the region
+  */
+@@ -565,6 +566,7 @@ struct cxl_region {
+ 	enum cxl_decoder_type type;
+ 	struct cxl_nvdimm_bridge *cxl_nvb;
+ 	struct cxl_pmem_region *cxlr_pmem;
++	struct cxl_dax_region *cxlr_dax;
+ 	unsigned long flags;
+ 	struct cxl_region_params params;
  };
- 
-+/* See CXL 3.0 8.2.9.2.1.5 */
-+enum dc_event {
-+        DCD_ADD_CAPACITY,
-+        DCD_RELEASE_CAPACITY,
-+        DCD_FORCED_CAPACITY_RELEASE,
-+        DCD_REGION_CONFIGURATION_UPDATED,
-+};
-+
- struct cxl_dax_region {
+@@ -614,8 +616,22 @@ struct cxl_dax_region {
  	struct device dev;
  	struct cxl_region *cxlr;
+ 	struct range hpa_range;
++	struct xarray extents;
+ };
+ 
++/* Interleave will manage multiple cxl_dc_extent_data objects */
++#define CXL_EXTENT_LABEL_LEN 64
++struct cxl_dr_extent {
++	struct kref region_ref;
++	u64 hpa_offset;
++	u64 hpa_length;
++	char label[CXL_EXTENT_LABEL_LEN];
++	struct cxl_dc_extent_data *extent;
++};
++int cxl_dr_extent_get_not_zero(struct cxl_dr_extent *cxl_dr_ext);
++void cxl_dr_extent_get(struct cxl_dr_extent *cxl_dr_ext);
++void cxl_dr_extent_put(struct cxl_dr_extent *cxl_dr_ext);
++
+ /**
+  * struct cxl_port - logical collection of upstream port devices and
+  *		     downstream port devices to construct a CXL memory
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index ad690600c1b9..118392229174 100644
+index 118392229174..8ca81fd067c2 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -582,6 +582,16 @@ enum cxl_opcode {
- 	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
- 		  0x40, 0x3d, 0x86)
- 
-+struct cxl_mbox_dc_response {
-+	__le32 extent_list_size;
-+	u8 reserved[4];
-+	struct updated_extent_list {
-+		__le64 dpa_start;
-+		__le64 length;
-+		u8 reserved[8];
-+	} __packed extent_list[];
-+} __packed;
-+
- struct cxl_mbox_get_supported_logs {
- 	__le16 entries;
- 	u8 rsvd[6];
-@@ -667,6 +677,7 @@ enum cxl_event_log_type {
- 	CXL_EVENT_TYPE_WARN,
- 	CXL_EVENT_TYPE_FAIL,
- 	CXL_EVENT_TYPE_FATAL,
-+	CXL_EVENT_TYPE_DCD,
- 	CXL_EVENT_TYPE_MAX
- };
- 
-@@ -757,6 +768,8 @@ struct cxl_dc_extent_data {
- 	u64 length;
- 	u8 tag[CXL_DC_EXTENT_TAG_LEN];
- 	u16 shared_extent_seq;
-+	struct cxl_memdev_state *mds;
-+	struct kref region_ref;
- };
- 
- /*
-@@ -771,6 +784,21 @@ struct cxl_dc_extent {
- 	u8 reserved[6];
- } __packed;
- 
-+struct dcd_record_data {
-+	u8 event_type;
-+	u8 reserved;
-+	__le16 host_id;
-+	u8 region_index;
-+	u8 reserved1[3];
-+	struct cxl_dc_extent extent;
-+	u8 reserved2[32];
-+} __packed;
-+
-+struct dcd_event_dyn_cap {
-+	struct cxl_event_record_hdr hdr; 
-+	struct dcd_record_data data;
-+} __packed;
-+
- struct cxl_mbox_get_partition_info {
- 	__le64 active_volatile_cap;
- 	__le64 active_persistent_cap;
-@@ -974,6 +1002,8 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
+@@ -1002,6 +1002,8 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
  int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
  int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
  
-+void cxl_dc_extent_put(struct cxl_dc_extent_data *extent);
-+
++int cxl_dc_extent_get_not_zero(struct cxl_dc_extent_data *extent);
++void cxl_dc_extent_get(struct cxl_dc_extent_data *extent);
+ void cxl_dc_extent_put(struct cxl_dc_extent_data *extent);
+ 
  #ifdef CONFIG_CXL_SUSPEND
- void cxl_mem_active_inc(void);
- void cxl_mem_active_dec(void);
+diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
+index 5ed5c39857c8..38cd3c4c0898 100644
+--- a/drivers/dax/Makefile
++++ b/drivers/dax/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_DEV_DAX_CXL) += dax_cxl.o
+ 
+ dax-y := super.o
+ dax-y += bus.o
++dax-y += extent.o
+ device_dax-y := device.o
+ dax_pmem-y := pmem.o
+ dax_cxl-y := cxl.o
+diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+index 147c8c69782b..057b00b1d914 100644
+--- a/drivers/dax/cxl.c
++++ b/drivers/dax/cxl.c
+@@ -5,6 +5,87 @@
+ 
+ #include "../cxl/cxl.h"
+ #include "bus.h"
++#include "dax-private.h"
++
++static void dax_reg_ext_get(struct dax_region_extent *dr_extent)
++{
++	kref_get(&dr_extent->ref);
++}
++
++static void dr_release(struct kref *kref)
++{
++	struct dax_region_extent *dr_extent;
++	struct cxl_dr_extent *cxl_dr_ext;
++
++	dr_extent = container_of(kref, struct dax_region_extent, ref);
++	cxl_dr_ext = dr_extent->private_data;
++	cxl_dr_extent_put(cxl_dr_ext);
++	kfree(dr_extent);
++}
++
++static void dax_reg_ext_put(struct dax_region_extent *dr_extent)
++{
++	kref_put(&dr_extent->ref, dr_release);
++}
++
++static int cxl_dax_region_create_extent(struct dax_region *dax_region,
++					struct cxl_dr_extent *cxl_dr_ext)
++{
++	struct dax_region_extent *dr_extent;
++	int rc;
++
++	dr_extent = kzalloc(sizeof(*dr_extent), GFP_KERNEL);
++	if (!dr_extent)
++		return -ENOMEM;
++
++	dr_extent->private_data = cxl_dr_ext;
++	dr_extent->get = dax_reg_ext_get;
++	dr_extent->put = dax_reg_ext_put;
++
++	/* device manages the dr_extent on success */
++	kref_init(&dr_extent->ref);
++
++	rc = dax_region_ext_create_dev(dax_region, dr_extent,
++				       cxl_dr_ext->hpa_offset,
++				       cxl_dr_ext->hpa_length,
++				       cxl_dr_ext->label);
++	if (rc) {
++		kfree(dr_extent);
++		return rc;
++	}
++
++	/* extent accepted */
++	cxl_dr_extent_get(cxl_dr_ext);
++	return 0;
++}
++
++static int cxl_dax_region_create_extents(struct cxl_dax_region *cxlr_dax)
++{
++	struct cxl_dr_extent *cxl_dr_ext;
++	unsigned long index;
++
++	dev_dbg(&cxlr_dax->dev, "Adding extents\n");
++	xa_for_each(&cxlr_dax->extents, index, cxl_dr_ext) {
++		/*
++		 * get not zero is important because this is racing with the
++		 * region driver which is racing with the memory device which
++		 * could be removing the extent at the same time.
++		 */
++		if (cxl_dr_extent_get_not_zero(cxl_dr_ext)) {
++			struct dax_region *dax_region;
++			int rc;
++
++			dax_region = dev_get_drvdata(&cxlr_dax->dev);
++			dev_dbg(&cxlr_dax->dev, "Found OFF:%llx LEN:%llx\n",
++				cxl_dr_ext->hpa_offset, cxl_dr_ext->hpa_length);
++			rc = cxl_dax_region_create_extent(dax_region, cxl_dr_ext);
++			cxl_dr_extent_put(cxl_dr_ext);
++			if (rc)
++				return rc;
++		}
++	}
++	return 0;
++}
+ 
+ static int cxl_dax_region_probe(struct device *dev)
+ {
+@@ -19,20 +100,28 @@ static int cxl_dax_region_probe(struct device *dev)
+ 	if (nid == NUMA_NO_NODE)
+ 		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
+ 
+-	dev_size = range_len(&cxlr_dax->hpa_range);
+-
+ 	flags = IORESOURCE_DAX_KMEM;
+-	if (cxlr->mode == CXL_REGION_DC) {
+-		/* Add empty seed dax device */
+-		dev_size = 0;
++	if (cxlr->mode == CXL_REGION_DC)
+ 		flags |= IORESOURCE_DAX_DYNAMIC_CAP;
+-	}
+ 
+ 	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
+ 				      PMD_SIZE, flags);
+ 	if (!dax_region)
+ 		return -ENOMEM;
+ 
++	dev_size = range_len(&cxlr_dax->hpa_range);
++	if (cxlr->mode == CXL_REGION_DC) {
++		int rc;
++
++		/* NOTE: Depends on dax_region being set in driver data */
++		rc = cxl_dax_region_create_extents(cxlr_dax);
++		if (rc)
++			return rc;
++
++		/* Add empty seed dax device */
++		dev_size = 0;
++	}
++
+ 	data = (struct dev_dax_data) {
+ 		.dax_region = dax_region,
+ 		.id = -1,
+diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+index 27cf2daaaa79..4dab52496c3f 100644
+--- a/drivers/dax/dax-private.h
++++ b/drivers/dax/dax-private.h
+@@ -5,6 +5,7 @@
+ #ifndef __DAX_PRIVATE_H__
+ #define __DAX_PRIVATE_H__
+ 
++#include <linux/pgtable.h>
+ #include <linux/device.h>
+ #include <linux/cdev.h>
+ #include <linux/idr.h>
+@@ -40,6 +41,58 @@ struct dax_region {
+ 	struct device *youngest;
+ };
+ 
++/*
++ * struct dax_region_extent - extent data defined by the low level region
++ * driver.
++ * @private_data: lower level region driver data
++ * @ref: track number of dax devices which are using this extent
++ * @get: get reference to low level data
++ * @put: put reference to low level data
++ */
++struct dax_region_extent {
++	void *private_data;
++	struct kref ref;
++	void (*get)(struct dax_region_extent *dr_extent);
++	void (*put)(struct dax_region_extent *dr_extent);
++};
++
++static inline void dr_extent_get(struct dax_region_extent *dr_extent)
++{
++	if (dr_extent->get)
++		dr_extent->get(dr_extent);
++}
++
++static inline void dr_extent_put(struct dax_region_extent *dr_extent)
++{
++	if (dr_extent->put)
++		dr_extent->put(dr_extent);
++}
++
++#define DAX_EXTENT_LABEL_LEN 64
++/**
++ * struct dax_reg_ext_dev - Device object to expose extent information
++ * @dev: device representing this extent
++ * @dr_extent: reference back to private extent data
++ * @offset: offset of this extent
++ * @length: size of this extent
++ * @label: identifier to group extents
++ */
++struct dax_reg_ext_dev {
++	struct device dev;
++	struct dax_region_extent *dr_extent;
++	resource_size_t offset;
++	resource_size_t length;
++	char label[DAX_EXTENT_LABEL_LEN];
++};
++
++int dax_region_ext_create_dev(struct dax_region *dax_region,
++			      struct dax_region_extent *dr_extent,
++			      resource_size_t offset,
++			      resource_size_t length,
++			      const char *label);
++#define to_dr_ext_dev(dev)	\
++	container_of(dev, struct dax_reg_ext_dev, dev)
++
+ struct dax_mapping {
+ 	struct device dev;
+ 	int range_id;
+diff --git a/drivers/dax/extent.c b/drivers/dax/extent.c
+new file mode 100644
+index 000000000000..2075ccfb21cb
+--- /dev/null
++++ b/drivers/dax/extent.c
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
++
++#include <linux/device.h>
++#include <linux/slab.h>
++#include "dax-private.h"
++
++static ssize_t length_show(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev = to_dr_ext_dev(dev);
++
++	return sysfs_emit(buf, "%#llx\n", dr_reg_ext_dev->length);
++}
++static DEVICE_ATTR_RO(length);
++
++static ssize_t label_show(struct device *dev, struct device_attribute *attr,
++			  char *buf)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev = to_dr_ext_dev(dev);
++
++	return sysfs_emit(buf, "%s\n", dr_reg_ext_dev->label);
++}
++
++static ssize_t label_store(struct device *dev, struct device_attribute *attr,
++			   const char *buf, size_t len)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev = to_dr_ext_dev(dev);
++
++	snprintf(dr_reg_ext_dev->label, DAX_EXTENT_LABEL_LEN, "%s", buf);
++	return len;
++}
++static DEVICE_ATTR_RW(label);
++
++static struct attribute *dr_extent_attrs[] = {
++	&dev_attr_length.attr,
++	&dev_attr_label.attr,
++	NULL,
++};
++
++static const struct attribute_group dr_extent_attribute_group = {
++	.attrs = dr_extent_attrs,
++};
++
++static void dr_extent_release(struct device *dev)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev = to_dr_ext_dev(dev);
++
++	kfree(dr_reg_ext_dev);
++}
++
++static const struct attribute_group *dr_extent_attribute_groups[] = {
++	&dr_extent_attribute_group,
++	NULL,
++};
++
++const struct device_type dr_extent_type = {
++	.name = "extent",
++	.release = dr_extent_release,
++	.groups = dr_extent_attribute_groups,
++};
++
++static void unregister_dr_extent(void *ext)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev = ext;
++	struct dax_region_extent *dr_extent;
++
++	dr_extent = dr_reg_ext_dev->dr_extent;
++	dev_dbg(&dr_reg_ext_dev->dev, "Unregister DAX region ext OFF:%llx L:%s\n",
++		dr_reg_ext_dev->offset, dr_reg_ext_dev->label);
++	dr_extent_put(dr_extent);
++	device_unregister(&dr_reg_ext_dev->dev);
++}
++
++int dax_region_ext_create_dev(struct dax_region *dax_region,
++			      struct dax_region_extent *dr_extent,
++			      resource_size_t offset,
++			      resource_size_t length,
++			      const char *label)
++{
++	struct dax_reg_ext_dev *dr_reg_ext_dev;
++	struct device *dev;
++	int rc;
++
++	dr_reg_ext_dev = kzalloc(sizeof(*dr_reg_ext_dev), GFP_KERNEL);
++	if (!dr_reg_ext_dev)
++		return -ENOMEM;
++
++	dr_reg_ext_dev->dr_extent = dr_extent;
++	dr_reg_ext_dev->offset = offset;
++	dr_reg_ext_dev->length = length;
++	snprintf(dr_reg_ext_dev->label, DAX_EXTENT_LABEL_LEN, "%s", label);
++
++	dev = &dr_reg_ext_dev->dev;
++	device_initialize(dev);
++	dev->id = offset / PMD_SIZE ;
++	device_set_pm_not_required(dev);
++	dev->parent = dax_region->dev;
++	dev->type = &dr_extent_type;
++	rc = dev_set_name(dev, "extent%d", dev->id);
++	if (rc)
++		goto err;
++
++	rc = device_add(dev);
++	if (rc)
++		goto err;
++
++	dev_dbg(dev, "DAX region extent OFF:%llx LEN:%llx\n",
++		dr_reg_ext_dev->offset, dr_reg_ext_dev->length);
++	return devm_add_action_or_reset(dax_region->dev, unregister_dr_extent,
++					dr_reg_ext_dev);
++
++err:
++	dev_err(dev, "Failed to initialize DAX extent dev OFF:%llx LEN:%llx\n",
++		dr_reg_ext_dev->offset, dr_reg_ext_dev->length);
++	put_device(dev);
++	return rc;
++}
++EXPORT_SYMBOL_GPL(dax_region_ext_create_dev);
 
 -- 
 2.45.2
