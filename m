@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595781C0DD7;
-	Fri, 16 Aug 2024 14:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE43A1C0DD9;
+	Fri, 16 Aug 2024 14:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723817322; cv=none; b=sEz1TuNiGiX0Sq3c8VxbaFA9LCyiaDmG7fdEdqCXQXSgE3b/kTeS8pFzW13lGklcf0pBpPCTfVEDmeC+PZyZVUEAcr7ZenVr2niSWpNDNFF5VyXZSZ3KOZy4lnacWWUsoNfggJBwaS78DTf4z4jwtyH3CbrpxbtSHFhPW75+5J8=
+	t=1723817325; cv=none; b=eNWDxaOpsdHEqpoKfJEKZsGvE4cyatPRSamt0MZVP/tBKEhoXVJH01gDUx8rrXT/1QFvxL/hI3+0zAgEUO4SbWyslioUyaLnX98IXJ90wXHYY8A1dN1GmBmDlfy2LwAxRhaZd3I74YWPIakaVBYJs04JzdYkr7ml/xS8B5qkXKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723817322; c=relaxed/simple;
-	bh=41imGvmAZOujDaS9hVfhyiJJp8/wSTZRA+xyf8QypMc=;
+	s=arc-20240116; t=1723817325; c=relaxed/simple;
+	bh=iqYi9qGKpsi4OQyYti2iKVMKe9GZTq7Nj4Xoy5LIsbs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q06fpOtO9xPsCN28ZVLSMjsla4UfvZS1eMlZiXQ6qDwnQlH/qVKfe+HJVZqXzhjS4tKus8Dvrhl8BaepL/vlID7/zKI68lCSucRjWP340xp2Ef1C1a8Zsw7BKMuo9PA66W6tKUQR7pE5/+DbBC9lh3/N0E8PCFhqoB/tiwWKsh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e2sv46VH; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:To:Cc; b=P0uZ6WBpea1848ry3w4kHouPxSxxVUkkiM4JneuqrHiX2Qi/26jozk8jmvsgH0zIqp8OHLpF+Xvo93w5O+oeKRC75jsrfPUzv4u4e5/Iq6Z8yhbrRRvMCTu5mSkmK6G8Vad2L9sTez4sbcvWscJFM8pJG0DYsRrbc9NHuiVS2XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TBPFJbbQ; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e2sv46VH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TBPFJbbQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723817321; x=1755353321;
+  t=1723817324; x=1755353324;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=41imGvmAZOujDaS9hVfhyiJJp8/wSTZRA+xyf8QypMc=;
-  b=e2sv46VH6z1czMJxfSP5zRZZui9x/RU2MZhxiqPs1JokhuVXQOAfVCT5
-   PDOQLWYhwoYaWbR4Pp8+UtuXUtoF1yTq5/CJgxmqYW6FqdivX3Qy5vQJ4
-   l+X2oejzIbqTzinqGUUUV5v25dRfLFBDNy7j1/J0rX5PVmZ+Nk8q5dCdu
-   bS9rXu67EGr4grsVDYOb9G3bVer2TeoMv1O8pH+1IiURua3b6N4MdQ9ch
-   lECH8y49f+4KA03gKZChY02hZh9eQpnklYh0IY0VKOp9MoFB4KihYSJpZ
-   nrX9qkTtgbGrCjfR/udoh40/1J97gqbL64d8x9ufSbIdMbcVtGX+nhpy7
-   A==;
-X-CSE-ConnectionGUID: KgDxFsH+SbOs26dl39Dlag==
-X-CSE-MsgGUID: okaRAv61Tz+s2cM3URzXBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22085299"
+  bh=iqYi9qGKpsi4OQyYti2iKVMKe9GZTq7Nj4Xoy5LIsbs=;
+  b=TBPFJbbQEXPMiE00LhZZ1t7/3wKVLdQd3yUwJpYzBf69zn1GSdsbcnoB
+   FVVE8FcP/GBCf+RSEARvEL2yLArDCipDYwbimT72L9fngl6uEU2S8aNVH
+   QAzAIB9bEfGbKzeNySAJ4h+EDAg4Lo1rriQMB1Vs3zrKSHdWRGuZHv+d0
+   HsZxRgwZ7bvDgc19hEMR/wW0Zz0b6QTD7+V7n8I27sf7TP0jUUyTlDV/1
+   gFh3uHIVUc6z9oGscxiE/S6BqrtUYKx8paVLE7XamhcTNsbfw5t8wEYoP
+   kMHKvuz1fB0V6/rIWOregcglwSx7k5LCsgtmbanT6TP9qDx9AlVUgjRBx
+   w==;
+X-CSE-ConnectionGUID: gy/+ewHtTmaWy4poI81AVg==
+X-CSE-MsgGUID: u4YN8rCYRVyFCNudJJfhag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22085305"
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="22085299"
+   d="scan'208";a="22085305"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:41 -0700
-X-CSE-ConnectionGUID: zDTf7pQ9SDKWojg18cTnDA==
-X-CSE-MsgGUID: EKw6f6WsSx+6prKhErdlvg==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:44 -0700
+X-CSE-ConnectionGUID: ed7KPw+SS8+JW2zSKxbX9Q==
+X-CSE-MsgGUID: IX6xieblTj+10ZR+3nE3IA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="64571637"
+   d="scan'208";a="64571661"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.125.111.52])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:39 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 16 Aug 2024 09:08:19 -0500
-Subject: [PATCH RESEND v2 14/18] dax/region: Support DAX device creation on
- dynamic DAX regions
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:08:42 -0700
+From: ira.weiny@intel.com
+Date: Fri, 16 Aug 2024 09:08:20 -0500
+Subject: [PATCH RESEND v2 15/18] cxl/mem: Trace Dynamic capacity Event
+ Record
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240816-dcd-type2-upstream-v2-14-b4044aadf2bd@intel.com>
+Message-Id: <20240816-dcd-type2-upstream-v2-15-b4044aadf2bd@intel.com>
 References: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 In-Reply-To: <20240816-dcd-type2-upstream-v2-0-b4044aadf2bd@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>
@@ -66,458 +66,124 @@ Cc: Navneet Singh <navneet.singh@intel.com>, Fan Ni <fan.ni@samsung.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
  linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.15-dev-37811
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=15280;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723817288; l=3471;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=41imGvmAZOujDaS9hVfhyiJJp8/wSTZRA+xyf8QypMc=;
- b=Fh0c4QJuhVOkwVgb304ml8kkU5gEaIPQabm6vk7dRlwJcHQbzcmhxtagso1Q9zLubYwkMHf3v
- oN3ZLFXGQD4C0qGfYpAucTEGBS5T4sHspPBG85IQ1RIFWzhO/ZuimQ8
+ bh=btVbiwQ2WtrSPeA40kJolneVn+Xb13ZFysp+2MD41iM=;
+ b=+Yzp3uQiwuAJVqveRVoNIKrZ6Ayuc3xYtCV4149AsyAopQ+vhzA3kdtAjfmBoLT6zwa1+F3co
+ nvAzYCCpJu4D6/ID4I1CDYCR2ID+aYRHMO1wVzsd6gblkw4C5aC3X7M
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-Dynamic Capacity (DC) DAX regions have a list of extents which define
-the memory of the region which is available.
+From: Navneet Singh <navneet.singh@intel.com>
 
-Now that DAX region extents are fully realized support DAX device
-creation on dynamic regions by adjusting the allocation algorithms
-to account for the extents.  Remember also references must be held on
-the extents until the DAX devices are done with the memory.
+CXL rev 3.0 section 8.2.9.2.1.5 defines the Dynamic Capacity Event Record
+Determine if the event read is a Dynamic capacity event record and
+if so trace the record for the debug purpose.
 
-Redefine the region available size to include only extent space.  Reuse
-the size allocation algorithm by defining sub-resources for each extent
-and limiting range allocation to those extents which have space.  Do not
-support direct mapping of DAX devices on dynamic devices.
+Add DC trace points to the trace log.
 
-Enhance DAX device range objects to hold references on the extents until
-the DAX device is destroyed.
-
-NOTE: At this time all extents within a region are created equally.
-However, labels are associated with extents which can be used with
-future DAX device labels to group which extents are used.
-
+Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/dax/bus.c         | 157 +++++++++++++++++++++++++++++++++++++++-------
- drivers/dax/cxl.c         |  44 +++++++++++++
- drivers/dax/dax-private.h |   5 ++
- 3 files changed, 182 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index ea7ae82b4687..a9ea6a706702 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -280,6 +280,36 @@ static ssize_t region_align_show(struct device *dev,
- static struct device_attribute dev_attr_region_align =
- 		__ATTR(align, 0400, region_align_show, NULL);
+---
+[iweiny: fixups]
+---
+ drivers/cxl/core/mbox.c  |  5 ++++
+ drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 9d9c13e13ecf..9462c34aa1dc 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -939,6 +939,11 @@ static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 				(struct cxl_event_mem_module *)record;
  
-+#define for_each_extent_resource(extent, res) \
-+	for (res = (extent)->child; res; res = res->sibling)
+ 		trace_cxl_memory_module(cxlmd, type, rec);
++	} else if (uuid_equal(id, &dc_event_uuid)) {
++		struct dcd_event_dyn_cap *rec =
++				(struct dcd_event_dyn_cap *)record;
 +
-+static unsigned long long
-+dr_extent_avail_size(struct dax_region_extent *dr_extent)
-+{
-+	unsigned long long rc;
-+	struct resource *res;
++		trace_cxl_dynamic_capacity(cxlmd, type, rec);
+ 	} else {
+ 		/* For unknown record types print just the header */
+ 		trace_cxl_generic_event(cxlmd, type, record);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index a0b5819bc70b..1899c5cc96b9 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -703,6 +703,71 @@ TRACE_EVENT(cxl_poison,
+ 	)
+ );
+ 
++/*
++ * DYNAMIC CAPACITY Event Record - DER
++ *
++ * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
++ */
 +
-+	rc = resource_size(dr_extent->res);
-+	for_each_extent_resource(dr_extent->res, res)
-+		rc -= resource_size(res);
-+	return rc;
-+}
++#define CXL_DC_ADD_CAPACITY			0x00
++#define CXL_DC_REL_CAPACITY			0x01
++#define CXL_DC_FORCED_REL_CAPACITY		0x02
++#define CXL_DC_REG_CONF_UPDATED			0x03
++#define show_dc_evt_type(type)	__print_symbolic(type,		\
++	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
++	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
++	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
++	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
++)
 +
-+static int dax_region_add_dynamic_size(struct device *dev, void *data)
-+{
-+	unsigned long long *size = data, ext_size;
-+	struct dax_reg_ext_dev *dr_reg_ext_dev;
++TRACE_EVENT(cxl_dynamic_capacity,
 +
-+	if (!is_dr_ext_dev(dev))
-+		return 0;
++	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
++		 struct dcd_event_dyn_cap  *rec),
 +
-+	dr_reg_ext_dev = to_dr_ext_dev(dev);
-+	ext_size = dr_extent_avail_size(dr_reg_ext_dev->dr_extent);
-+	dev_dbg(dev, "size %llx\n", ext_size);
-+	*size += ext_size;
-+	return 0;
-+}
++	TP_ARGS(cxlmd, log, rec),
 +
- #define for_each_dax_region_resource(dax_region, res) \
- 	for (res = (dax_region)->res.child; res; res = res->sibling)
- 
-@@ -290,8 +320,12 @@ static unsigned long long dax_region_avail_size(struct dax_region *dax_region)
- 
- 	device_lock_assert(dax_region->dev);
- 
--	if (is_dynamic(dax_region))
--		return 0;
-+	if (is_dynamic(dax_region)) {
-+		size = 0;
-+		device_for_each_child(dax_region->dev, &size,
-+				      dax_region_add_dynamic_size);
-+		return size;
-+	}
- 
- 	for_each_dax_region_resource(dax_region, res)
- 		size -= resource_size(res);
-@@ -421,15 +455,24 @@ EXPORT_SYMBOL_GPL(kill_dev_dax);
- static void trim_dev_dax_range(struct dev_dax *dev_dax)
- {
- 	int i = dev_dax->nr_range - 1;
--	struct range *range = &dev_dax->ranges[i].range;
-+	struct dev_dax_range *dev_range = &dev_dax->ranges[i];
-+	struct range *range = &dev_range->range;
- 	struct dax_region *dax_region = dev_dax->region;
-+	struct resource *res = &dax_region->res;
- 
- 	device_lock_assert(dax_region->dev);
- 	dev_dbg(&dev_dax->dev, "delete range[%d]: %#llx:%#llx\n", i,
- 		(unsigned long long)range->start,
- 		(unsigned long long)range->end);
- 
--	__release_region(&dax_region->res, range->start, range_len(range));
-+	if (dev_range->dr_extent)
-+		res = dev_range->dr_extent->res;
++	TP_STRUCT__entry(
++		CXL_EVT_TP_entry
 +
-+	__release_region(res, range->start, range_len(range));
++		/* Dynamic capacity Event */
++		__field(u8, event_type)
++		__field(u16, hostid)
++		__field(u8, region_id)
++		__field(u64, dpa_start)
++		__field(u64, length)
++		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
++		__field(u16, sh_extent_seq)
++	),
 +
-+	if (dev_range->dr_extent)
-+		dr_extent_put(dev_range->dr_extent);
++	TP_fast_assign(
++		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
 +
- 	if (--dev_dax->nr_range == 0) {
- 		kfree(dev_dax->ranges);
- 		dev_dax->ranges = NULL;
-@@ -818,7 +861,8 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
- }
- 
- static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
--			       u64 start, resource_size_t size)
-+			       u64 start, resource_size_t size,
-+			       struct dax_region_extent *dr_extent)
- {
- 	struct dax_region *dax_region = dev_dax->region;
- 	struct device *dev = &dev_dax->dev;
-@@ -852,12 +896,15 @@ static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
- 	for (i = 0; i < dev_dax->nr_range; i++)
- 		pgoff += PHYS_PFN(range_len(&ranges[i].range));
- 	dev_dax->ranges = ranges;
-+	if (dr_extent)
-+		dr_extent_get(dr_extent);
- 	ranges[dev_dax->nr_range++] = (struct dev_dax_range) {
- 		.pgoff = pgoff,
- 		.range = {
- 			.start = alloc->start,
- 			.end = alloc->end,
- 		},
-+		.dr_extent = dr_extent,
- 	};
- 
- 	dev_dbg(dev, "alloc range[%d]: %pa:%pa\n", dev_dax->nr_range - 1,
-@@ -938,7 +985,8 @@ static int dev_dax_shrink(struct dev_dax *dev_dax, resource_size_t size)
- 	int i;
- 
- 	for (i = dev_dax->nr_range - 1; i >= 0; i--) {
--		struct range *range = &dev_dax->ranges[i].range;
-+		struct dev_dax_range *dev_range = &dev_dax->ranges[i];
-+		struct range *range = &dev_range->range;
- 		struct dax_mapping *mapping = dev_dax->ranges[i].mapping;
- 		struct resource *adjust = NULL, *res;
- 		resource_size_t shrink;
-@@ -954,12 +1002,16 @@ static int dev_dax_shrink(struct dev_dax *dev_dax, resource_size_t size)
- 			continue;
- 		}
- 
--		for_each_dax_region_resource(dax_region, res)
--			if (strcmp(res->name, dev_name(dev)) == 0
--					&& res->start == range->start) {
--				adjust = res;
--				break;
--			}
-+		if (dev_range->dr_extent) {
-+			adjust = dev_range->dr_extent->res;
-+		} else {
-+			for_each_dax_region_resource(dax_region, res)
-+				if (strcmp(res->name, dev_name(dev)) == 0
-+						&& res->start == range->start) {
-+					adjust = res;
-+					break;
-+				}
-+		}
- 
- 		if (dev_WARN_ONCE(dev, !adjust || i != dev_dax->nr_range - 1,
- 					"failed to find matching resource\n"))
-@@ -973,12 +1025,15 @@ static int dev_dax_shrink(struct dev_dax *dev_dax, resource_size_t size)
- /*
-  * Only allow adjustments that preserve the relative pgoff of existing
-  * allocations. I.e. the dev_dax->ranges array is ordered by increasing pgoff.
-+ * Dissallow adjustments on dynamic regions as they can come from all over.
-  */
- static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
- {
- 	struct dev_dax_range *last;
- 	int i;
- 
-+	if (is_dynamic(dev_dax->region))
-+		return false;
- 	if (dev_dax->nr_range == 0)
- 		return false;
- 	if (strcmp(res->name, dev_name(&dev_dax->dev)) != 0)
-@@ -997,19 +1052,21 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
- }
- 
- /*
-- * dev_dax_resize_static - Expand the device into the unused portion of the
-- * region. This may involve adjusting the end of an existing resource, or
-- * allocating a new resource.
-+ * __dev_dax_resize - Expand the device into the unused portion of the region.
-+ * This may involve adjusting the end of an existing resource, or allocating a
-+ * new resource.
-  *
-  * @parent: parent resource to allocate this range in.
-  * @dev_dax: DAX device we are creating this range for
-  * @to_alloc: amount of space to alloc; must be <= space available in @parent
-+ * @dr_extent: if dynamic; the extent containing parent
-  *
-  * Return the amount of space allocated or -ERRNO on failure
-  */
--static ssize_t dev_dax_resize_static(struct resource *parent,
--				     struct dev_dax *dev_dax,
--				     resource_size_t to_alloc)
-+static ssize_t __dev_dax_resize(struct resource *parent,
-+				struct dev_dax *dev_dax,
-+				resource_size_t to_alloc,
-+				struct dax_region_extent *dr_extent)
- {
- 	struct resource *res, *first;
- 	int rc;
-@@ -1017,7 +1074,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
- 	first = parent->child;
- 	if (!first) {
- 		rc = alloc_dev_dax_range(parent, dev_dax,
--					   parent->start, to_alloc);
-+					   parent->start, to_alloc,
-+					   dr_extent);
- 		if (rc)
- 			return rc;
- 		return to_alloc;
-@@ -1031,7 +1089,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
- 		if (res == first && res->start > parent->start) {
- 			alloc = min(res->start - parent->start, to_alloc);
- 			rc = alloc_dev_dax_range(parent, dev_dax,
--						 parent->start, alloc);
-+						 parent->start, alloc,
-+						 dr_extent);
- 			if (rc)
- 				return rc;
- 			return alloc;
-@@ -1055,7 +1114,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
- 				return rc;
- 			return alloc;
- 		}
--		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc);
-+		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc,
-+					 dr_extent);
- 		if (rc)
- 			return rc;
- 		return alloc;
-@@ -1066,6 +1126,47 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
- 	return 0;
- }
- 
-+static ssize_t dev_dax_resize_static(struct dax_region *dax_region,
-+				     struct dev_dax *dev_dax,
-+				     resource_size_t to_alloc)
-+{
-+	return __dev_dax_resize(&dax_region->res, dev_dax, to_alloc, NULL);
-+}
++		/* Dynamic_capacity Event */
++		__entry->event_type = rec->data.event_type;
 +
-+static int dax_region_find_space(struct device *dev, void *data)
-+{
-+	struct dax_reg_ext_dev *dr_reg_ext_dev;
++		/* DCD event record data */
++		__entry->hostid = le16_to_cpu(rec->data.host_id);
++		__entry->region_id = rec->data.region_index;
++		__entry->dpa_start = le64_to_cpu(rec->data.extent.start_dpa);
++		__entry->length = le64_to_cpu(rec->data.extent.length);
++		memcpy(__entry->tag, &rec->data.extent.tag, CXL_DC_EXTENT_TAG_LEN);
++		__entry->sh_extent_seq = le16_to_cpu(rec->data.extent.shared_extn_seq);
++	),
 +
-+	if (!is_dr_ext_dev(dev))
-+		return 0;
++	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
++		"starting_dpa=%llx length=%llx tag=%s " \
++		"shared_extent_sequence=%d",
++		show_dc_evt_type(__entry->event_type),
++		__entry->hostid,
++		__entry->region_id,
++		__entry->dpa_start,
++		__entry->length,
++		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
++		__entry->sh_extent_seq
++	)
++);
 +
-+	dr_reg_ext_dev = to_dr_ext_dev(dev);
-+	return dr_extent_avail_size(dr_reg_ext_dev->dr_extent);
-+}
-+
-+static ssize_t dev_dax_resize_dynamic(struct dax_region *dax_region,
-+				      struct dev_dax *dev_dax,
-+				      resource_size_t to_alloc)
-+{
-+	struct dax_reg_ext_dev *dr_reg_ext_dev;
-+	struct dax_region_extent *dr_extent;
-+	resource_size_t alloc;
-+	resource_size_t extent_max;
-+	struct device *dev;
-+
-+	dev = device_find_child(dax_region->dev, NULL, dax_region_find_space);
-+	if (dev_WARN_ONCE(dax_region->dev, !dev, "Space should be available!"))
-+		return -ENOSPC;
-+	dr_reg_ext_dev = to_dr_ext_dev(dev);
-+	dr_extent = dr_reg_ext_dev->dr_extent;
-+	extent_max = dr_extent_avail_size(dr_extent);
-+	to_alloc = min(extent_max, to_alloc);
-+	alloc = __dev_dax_resize(dr_extent->res, dev_dax, to_alloc, dr_extent);
-+	put_device(dev);
-+
-+	return alloc;
-+}
-+
- static ssize_t dev_dax_resize(struct dax_region *dax_region,
- 		struct dev_dax *dev_dax, resource_size_t size)
- {
-@@ -1089,7 +1190,10 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
- 		return -ENXIO;
+ #endif /* _CXL_EVENTS_H */
  
- retry:
--	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
-+	if (is_dynamic(dax_region))
-+		alloc = dev_dax_resize_dynamic(dax_region, dev_dax, to_alloc);
-+	else
-+		alloc = dev_dax_resize_static(dax_region, dev_dax, to_alloc);
- 	if (alloc <= 0)
- 		return alloc;
- 	to_alloc -= alloc;
-@@ -1168,6 +1272,9 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
- 	struct range r;
- 	ssize_t rc;
- 
-+	if (is_dynamic(dax_region))
-+		return -EINVAL;
-+
- 	rc = range_parse(buf, len, &r);
- 	if (rc)
- 		return rc;
-@@ -1183,7 +1290,7 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
- 	to_alloc = range_len(&r);
- 	if (alloc_is_aligned(dev_dax, to_alloc))
- 		rc = alloc_dev_dax_range(&dax_region->res, dev_dax, r.start,
--					 to_alloc);
-+					 to_alloc, NULL);
- 	device_unlock(dev);
- 	device_unlock(dax_region->dev);
- 
-@@ -1400,8 +1507,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
- 	device_initialize(dev);
- 	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
- 
-+	dev_WARN_ONCE(parent, is_dynamic(dax_region) && data->size,
-+		      "Dynamic DAX devices are created initially with 0 size");
- 	rc = alloc_dev_dax_range(&dax_region->res, dev_dax, dax_region->res.start,
--				 data->size);
-+				 data->size, NULL);
- 	if (rc)
- 		goto err_range;
- 
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index 44cbd28668f1..6394a3531e25 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -12,6 +12,17 @@ static void dax_reg_ext_get(struct dax_region_extent *dr_extent)
- 	kref_get(&dr_extent->ref);
- }
- 
-+
-+static void dax_region_rm_resource(struct dax_region_extent *dr_extent)
-+{
-+	struct dax_region *dax_region = dr_extent->region;
-+	struct resource *res = dr_extent->res;
-+	
-+	dev_dbg(dax_region->dev, "Extent release resource %pR\n",
-+		dr_extent->res);
-+	__release_region(&dax_region->res, res->start, resource_size(res));
-+}
-+
- static void dr_release(struct kref *kref)
- {
- 	struct dax_region_extent *dr_extent;
-@@ -19,6 +30,7 @@ static void dr_release(struct kref *kref)
- 
- 	dr_extent = container_of(kref, struct dax_region_extent, ref);
- 	cxl_dr_ext = dr_extent->private_data;
-+	dax_region_rm_resource(dr_extent);
- 	cxl_dr_extent_put(cxl_dr_ext);
- 	kfree(dr_extent);
- }
-@@ -28,6 +40,29 @@ static void dax_reg_ext_put(struct dax_region_extent *dr_extent)
- 	kref_put(&dr_extent->ref, dr_release);
- }
- 
-+static int dax_region_add_resource(struct dax_region *dax_region,
-+				   struct dax_region_extent *dr_extent,
-+				   resource_size_t offset,
-+				   resource_size_t length)
-+{
-+	resource_size_t start = dax_region->res.start + offset;
-+	struct resource *ext_res;
-+
-+	dev_dbg(dax_region->dev, "DAX region resource %pR\n", &dax_region->res);
-+	ext_res = __request_region(&dax_region->res, start, length, "extent", 0);
-+	if (!ext_res) {
-+		dev_err(dax_region->dev, "Failed to add extent s:%llx l:%llx\n",
-+			start, length);
-+		return -ENOSPC;
-+	}
-+
-+	dr_extent->region = dax_region;
-+	dr_extent->res = ext_res;
-+	dev_dbg(dax_region->dev, "Extent add resource %pR\n", ext_res);
-+
-+	return 0;
-+}
-+
- static int cxl_dax_region_create_extent(struct dax_region *dax_region,
- 					struct cxl_dr_extent *cxl_dr_ext)
- {
-@@ -45,11 +80,20 @@ static int cxl_dax_region_create_extent(struct dax_region *dax_region,
- 	/* device manages the dr_extent on success */
- 	kref_init(&dr_extent->ref);
- 
-+	rc = dax_region_add_resource(dax_region, dr_extent,
-+				     cxl_dr_ext->hpa_offset,
-+				     cxl_dr_ext->hpa_length);
-+	if (rc) {
-+		kfree(dr_extent);
-+		return rc;
-+	}
-+
- 	rc = dax_region_ext_create_dev(dax_region, dr_extent,
- 				       cxl_dr_ext->hpa_offset,
- 				       cxl_dr_ext->hpa_length,
- 				       cxl_dr_ext->label);
- 	if (rc) {
-+		dax_region_rm_resource(dr_extent);
- 		kfree(dr_extent);
- 		return rc;
- 	}
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index 250babd6e470..ad73b53aa802 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -44,12 +44,16 @@ struct dax_region {
- /*
-  * struct dax_region_extent - extent data defined by the low level region
-  * driver.
-+ * @region: cache of dax_region
-+ * @res: cache of resource tree for this extent
-  * @private_data: lower level region driver data
-  * @ref: track number of dax devices which are using this extent
-  * @get: get reference to low level data
-  * @put: put reference to low level data
-  */
- struct dax_region_extent {
-+	struct dax_region *region;
-+	struct resource *res;
- 	void *private_data;
- 	struct kref ref;
- 	void (*get)(struct dax_region_extent *dr_extent);
-@@ -131,6 +135,7 @@ struct dev_dax {
- 		unsigned long pgoff;
- 		struct range range;
- 		struct dax_mapping *mapping;
-+		struct dax_region_extent *dr_extent;
- 	} *ranges;
- };
- 
+ #define TRACE_INCLUDE_FILE trace
 
 -- 
 2.45.2
