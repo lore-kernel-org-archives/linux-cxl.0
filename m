@@ -1,107 +1,146 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0418D20E3
-	for <linux-cxl@vger.kernel.org>; Fri, 16 Aug 2024 09:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D185196D80
+	for <linux-cxl@vger.kernel.org>; Fri, 16 Aug 2024 11:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723801277; cv=none; b=lT/+GytYQ1+fZmYT7OqSWglNtggqsVQ5JKOi23d1ZH5apvnW2+Gw8tFnvo5yW6iRW42c9SByGI46OghmV63N+aXpbAY1Fq5JKvGZ8Oi0AXJDUXxaKoWe4DXLMAbpOPKIXOrVudJAdYMZ2MWaYAm4lY3l1Xrml0grx0acX2T4T4w=
+	t=1723806749; cv=none; b=u68Smv2GC3JBJUn+TerXu2m9pNofxloeecIexaj7f/DcJHfiquSGQJRzp337B64ZZb1NnoEWkuaoATgv+netpH5rmg5DGkZGmTuFlh/5TbhOoH3qQ6cXF5t5So6oSbnoJJxn9YXV032C+tnTvH8hRlvDQDeN5ltXvlnUdligBdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723801277; c=relaxed/simple;
-	bh=B8Du7785RKz8I5dtK6eIhQ7HYxTvjJ0RgFG8YUsyucI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ueN6CgM+f/XcjM2ob/IEpcKermms3f6ydLN/TjhdAgrBobKkjfxpIcokQhtr4e24p/5XKr9t2xV1jVzXugXSvYYNDfOk3pjyYnd+4WOG7gBEYoF1dTdkXrCNJDS+Z5NpZ/tSE/6tShmpAMDLhMZ3iK3ZNqUc7JLxMkWAt8pQYlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WlcPJ4psFz6K5l3;
-	Fri, 16 Aug 2024 17:38:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2AACD1400DB;
-	Fri, 16 Aug 2024 17:41:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 16 Aug
- 2024 10:41:11 +0100
-Date: Fri, 16 Aug 2024 10:41:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Hannes Reinecke <hare@suse.de>
-CC: David Hildenbrand <david@redhat.com>, <linux-mm@kvack.org>,
-	<linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny
-	<ira.weiny@intel.com>, John Groves <John@Groves.net>,
-	<virtualization@lists.linux.dev>, Oscar Salvador <osalvador@suse.de>,
-	<qemu-devel@nongnu.org>, Dave Jiang <dave.jiang@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linuxarm@huawei.com>,
-	<wangkefeng.wang@huawei.com>, John Groves <jgroves@micron.com>, Fan Ni
-	<fan.ni@samsung.com>, Navneet Singh <navneet.singh@intel.com>, "
- =?UTF-8?Q?=E2=80=9CMichael?= S. =?UTF-8?Q?Tsirkin=E2=80=9D?="
-	<mst@redhat.com>, Igor Mammedov <imammedo@redhat.com>, Philippe
- =?UTF-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [RFC] Virtualizing tagged disaggregated memory capacity (app
- specific, multi host shared)
-Message-ID: <20240816104110.000012e6@Huawei.com>
-In-Reply-To: <904a433c-0471-4f11-a34b-cef8adf1663c@suse.de>
-References: <20240815172223.00001ca7@Huawei.com>
-	<904a433c-0471-4f11-a34b-cef8adf1663c@suse.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1723806749; c=relaxed/simple;
+	bh=ev8gItlxT8GfFSSM6MbqNb6Y6y6p896g9CJuhyNyxNM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kY+X5wRTWnAMWj+b34bQHRSaCqcACTqPoWWQ2RmBGXoNnJbRJ8sEQDLk94EVbIJy1Ix+C2IDVdK2QHrGteAIF3S7rB/hqv2+he3ob9zHlPJOpKh6MAv3rQNalEJw8LNNx9esYvCyDApzoHB/yGFupexiWvZOVnXwLmtDV0e7moA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bzSJIscm; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bzSJIscm"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5b9d48d1456so3082383a12.1
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Aug 2024 04:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1723806746; x=1724411546; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vu6p4NVjd5a5X5kDuNbFrcpGswZu1Bkp/8WsnSo57I8=;
+        b=bzSJIscmpaP6twqCKbKIVaLhtDGmWGORz1qMPcmN5aTxNMK/+WnyN0H8KT4FHNl39w
+         Djfj+iuDFg8stp10RdVW7yBVPOTfPH8ul+oC2Z14M9dIGCLZ2goGN8eg7FrWWHRmlSl9
+         JgsThPqSDnUm0xVo/MHBW32m50ae1Lktx5EeY2Rxsgdb4scdB70lBoIbSZCk7Gzim69J
+         nROz4+QTXGmMUYwUK4a/bfslCg54gY5+1ozPZcKI5PIF6hyI9DRKFhjXE36Y0y7aOMof
+         WoJi+NHX4gK03893leh6Y7uGgvJdRQaW22C3ERC8N9t8iOCz70I/uFVIEZidcKjapzRk
+         e/vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723806746; x=1724411546;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vu6p4NVjd5a5X5kDuNbFrcpGswZu1Bkp/8WsnSo57I8=;
+        b=NzP7g97mD0v600QsmbvJ0dIW0Ldj4mO4BdhcTNN0uf+DSppzxLAQJOM9HgrH633mhf
+         L+KW73X5Qn2roK/pftN00CAfzViTEW1i4Bor8Dne0MO5le/i5xoyz2usabMAIzquQdk9
+         axy2/nAoGMPJ7WcrC+9PG6Rk+EEX3on65j4BgxZppeNY8w9EF1drWhFsXoZCxaS6QqXQ
+         3IFx4U3USnIuPQNBQyDYcK43Q2V0jPeWJC/akQAMAHqPwX/i6b0dwcFSg8uu0ihIroEf
+         DlIAKF1q7mK/uQq5ZT32owAjX3lZnkda8Aumu2iwm1Hu+xIIZxUFFPFZpJyf73Uhl3mH
+         jdOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIS1xZ7ci75w6+XrfSoSGMfvX2qkKUh50Zw9tGYts1i0l6LLt7EkB9iifsQmaqSCKkAXQ0GLYByr53i9in62ATe/qj6H5Fzqoj
+X-Gm-Message-State: AOJu0YyeBbQybw4r6pJT67vlHS6cdfG209MqlSTJmZ1+om4cP/XbuCQ2
+	rA4NWLclV5YHZEy2h1WQFHqlraxfGvhiOEhWAnpgefS5k+pIxTIEYToNQtTK0vg=
+X-Google-Smtp-Source: AGHT+IHrZPj0GDl8aLs3V6+bDceZfINTrVKI0dshA6qcSm27LFmTvVpr+cYRN/sN4aTRDpPHirLLag==
+X-Received: by 2002:a05:6402:520d:b0:57d:455:d395 with SMTP id 4fb4d7f45d1cf-5beb3a84f4cmr5719044a12.7.1723806745762;
+        Fri, 16 Aug 2024 04:12:25 -0700 (PDT)
+Received: from ?IPV6:2a07:de40:a101:3:ce70:3e6f:3b9c:9125? (megane.afterburst.com. [2a01:4a0:11::2])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebbde7cd4sm2111869a12.39.2024.08.16.04.12.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2024 04:12:25 -0700 (PDT)
+Message-ID: <2fd48f87-2521-4c34-8589-dbb7e91bb1c8@suse.com>
+Date: Fri, 16 Aug 2024 13:12:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [MAINTAINERS SUMMIT] Device Passthrough Considered Harmful?
+To: Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe
+ <jgg@nvidia.com>, James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ ksummit@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+References: <668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240726142731.GG28621@pendragon.ideasonboard.com>
+ <66a43c48cb6cc_200582942d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240728111826.GA30973@pendragon.ideasonboard.com>
+ <2024072802-amendable-unwatched-e656@gregkh>
+ <2b4f6ef3fc8e9babf3398ed4a301c2e4964b9e4a.camel@HansenPartnership.com>
+ <2024072909-stopwatch-quartet-b65c@gregkh>
+ <206bf94bb2eb7ca701ffff0d9d45e27a8b8caed3.camel@HansenPartnership.com>
+ <20240801144149.GO3371438@nvidia.com>
+ <66b2ba7150128_c1448294fe@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.com>
+In-Reply-To: <66b2ba7150128_c1448294fe@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 16 Aug 2024 09:05:46 +0200
-Hannes Reinecke <hare@suse.de> wrote:
-
-> On 8/15/24 18:22, Jonathan Cameron wrote:
-> > Introduction
-> > ============
-> > 
-> > If we think application specific memory (including inter-host shared memory) is
-> > a thing, it will also be a thing people want to use with virtual machines,
-> > potentially nested. So how do we present it at the Host to VM boundary?
-> > 
-> > This RFC is perhaps premature given we haven't yet merged upstream support for
-> > the bare metal case. However I'd like to get the discussion going given we've
-> > touched briefly on this in a number of CXL sync calls and it is clear no one is
-> > entirely sure what direction make sense.  We may briefly touch on this in the
-> > LPC CXL uconf, but time will be very limited.
-> >   
-> Thanks for the detailed write-up.
+On 8/7/24 02:06, Dan Williams wrote:
+> Jason Gunthorpe wrote:
+>> On Wed, Jul 31, 2024 at 08:33:36AM -0400, James Bottomley wrote:
+>>
+>>> For the specific issue of discussing fwctl, the Plumbers session would
+>>> be better because it can likely gather all interested parties.
+>>
+>> Keep in mind fwctl is already at the end of a long journey of
+>> conference discussions and talks spanning 3 years back now. It now
+>> represents the generalized consensus between multiple driver
+>> maintainers for at least one side of the debate.
+>>
+>> There was also a fwctl presentation at netdev conf a few weeks ago.
+>>
+>> In as far as the cross-subsystem NAK, I don't expect more discussion
+>> to result in any change to people's opinions. RDMA side will continue
+>> to want access to the shared device FW, and netdev side will continue
+>> to want to deny access to the shared device FW.
 > 
-> Can't we have an ad-hoc meeting at OSS/LPC to gather interested/relevant 
-> people to explore ideas around this?
-
-Absolutely.  If people want to email me directly (or mention in the thread)
-I'll gather up a list of people to try and find a suitable time / place
-(and then post that here).
-
-
+> As I mentioned before, this is what I hoped to mediate. The on-list
+> discussion has seem to hit a deficit of trust roadblock, not a deficit
+> of technical merit.
 > 
-> In particular I'd be interested on how to _get_ the application specific 
-> memory to the application in question. It's easy if you have your own 
-> application and design it to work on DAX devices. Obviously this 
-> approach won't work for unmodified applications; however, they really
-> might want to use this, too.
+> All I can say is the discussion is worth a try. With respect to a
+> precedent for a stalemate moving forward, I point to the MGLRU example.
+> That proposal had all of the technical merit on the list, but was not
+> making any clear progress to being merged. It was interesting to watch
+> that all thaw in real time at LSF/MM (2022) where in person
+> collaboration yielded strategy concessions, and mutual understanding
+> that email was never going to produce.
+> 
+Well, my experience does not _quite_ match this, but I fully support
+the attempt to resolve it.
 
-That's a good parallel question (as not virtualization specific).
-I'd be tempted to enable this path first for aware applications, but longer
-term the ability to use this via common allocator libraries (LD_PRELOAD etc)
-might make sense (or some other path?) 
+FWIW, we (ie 'me' with my SUSE distro hat on) are facing similar issues;
+every now and again vendors come along asking us to take this very 
+important out-of-tree module to allow them to configure their device.
+The SCSI stack is _littered_ with vendor-specific commands allowing them 
+to reprogram their devices (had a fun experiment once reflashing a 
+megaraid HBA to suddenly show up as mpt2sas ... try to code that in 
+command effects ...)
 
-> 
-> And, of course, the other mentioned problems are worth discussing, and I 
-> do agree that the uconf will probably not providing sufficient time for 
-> this.
-> 
-> Cheers,
-> 
-> Hannes
+So yes, I'd be in favour having an interface for this kind of stuff.
+Less sure if there is a generic interface to be found; what we should
+try to avoid is having an too generic one (aka: send command with this 
+payload, get this result, and heaven knows what it did to the device).
+That would surely be useful, but security and operational aspects of
+that are a nightmare.
+
+I'd be happy to participate on the discussion at LPC if and when it happens.
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.com                               +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
