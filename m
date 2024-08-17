@@ -1,347 +1,333 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2080.outbound.protection.outlook.com [40.107.236.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416512AF17;
-	Sat, 17 Aug 2024 09:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723888643; cv=none; b=rXq4KAVn4+YA9P86Yde6yVpo1S3S7Rsk1j4+jlhZudxBBQVrye4MvWx4wdo/zhvRrdFnNFAaOrmFWpot1yKTGwy6Wq0HRJwPoQnTUMPIL5ki2O0lza220ur/4LtXka8LtVlKRMK5kvKNp6o5dFqOCHsBNncINorai3fGIVlVkFo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723888643; c=relaxed/simple;
-	bh=Gq5IKdEPeh2TkTrhizWAKJgB3fUPwD2pK/WZv+zSG2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3H9x+UoWFq71BLdhChcxYz52R5dvUdRg377mfFtdwRAXoOQezA3qNbdnOguZfaom5SV7PGSfKhcL+TrPLx+E8icnA9WIhDGZYKHg0SftPlN91X2XQ79sbbrnR1+zqEPiH5x4i0wHdSL6m/T25UrSLArs5pUb0Cu4jQ4uGy/EVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=bZFfWWfD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Imv3ZnYa; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93718824AF;
+	Sat, 17 Aug 2024 20:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723926784; cv=fail; b=gxafnbPL1ymIjmEZnM2WAweJMyrS+30dhebaFfa1Av3D2R57GqHS95LBRNQjauumD+kKB+L+mYfnO/ZukBty2xXd28jGc0wvwbO9HjJCEgRVWXHRimOrxsu5McCV1U+eZz2ZB9/TsQjBs+YFRze/am0pUFxT7JJ7krCPlaUBMIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723926784; c=relaxed/simple;
+	bh=rKNlgkhB65A4i/m5FmQnDU87kGKjyxVsMXciYcPtCRA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RgSNfsfGMI7a3m1ndH+r5ksfF96jalPyW62ZmBdE33EOOs+mUfuroy6cUF7lQstvLybJ0GdW9esl55J/Aq56VlNZKoNmwVY5tKv8m5ze28gHEf13w77mEYZh6wwswRENwf0D1JaDPGPFjCkhjEs5zQbfzerp93rPiP7f2ef/9lE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fM7nDrTy; arc=fail smtp.client-ip=40.107.236.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="bZFfWWfD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Imv3ZnYa"
-Received: from phl-compute-02.internal (phl-compute-02.nyi.internal [10.202.2.42])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 3C39C1151C0F;
-	Sat, 17 Aug 2024 05:57:20 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Sat, 17 Aug 2024 05:57:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1723888640; x=
-	1723975040; bh=OKF032Y5YaEJsYf98SzFHHnezNjRg1rIhihP93Nchj8=; b=b
-	ZFfWWfDcBnv5lombjA1IJl0GfO4aEGdh62AvRsPn+F5NhzB4SV/DwAevomPXhK3m
-	wMpA7Ki3Rhrj3eHZ9e7DSz8HnyyYz72MocfNHY53RcElAyhZ720nhE9g94COi7sm
-	JXVWxjpC9Db62bpLvsmU1b5j/UHMg0X5j/pR3Xz+hvcdHPhnX4eK4IYSWI3MWc2D
-	LTj0t3F1rxMjXAmJNS5y6A+MZxeluYHtfG+SilC7tPI/9HIldaw1gKmpmymPE42Q
-	8ucr+cOdGECZ4wQqyeU3HorPmwJ7IqKQhQ8GlyF7j1GPxDKeXl2oFsAqw6rvrw/B
-	fsAYt2dQl+g3eEQVBE7Pg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1723888640; x=1723975040; bh=OKF032Y5YaEJsYf98SzFHHnezNjR
-	g1rIhihP93Nchj8=; b=Imv3ZnYaDANISjgAya4YvgZuWKfUAe8QJaDXtI+i7+ZR
-	9Ppha54V1JuAj0NsALq4HzQDDMixpECNZou7toTx/13imzTCBZt+mMt0khkmPjyP
-	zLBDmU8vJJiXSuBetGmlssats7CjY/qiGkTK4Z6ght3qzacDgs9VFPlHS1hKvnpM
-	yfeCjRPqT3dsJYsLbSokcfLhayzxNMtpYaaE47o4DTvaHyLOzNeDHYhLRTks6uhX
-	HdM8lSsA4tLSO6jzj8hIj6WHPyLn4NTFA8Z7xz1J/I9mvjBLa6JGLNhdX6D7bh2v
-	FZELGc8UJiy8VAvxZ6tjZbPNQuPd4p36yphhU6pdXQ==
-X-ME-Sender: <xms:_3PAZiQGiNzsBM-RkpaP63lz4084ytyOcE-u_NPdV4mRdsAAjw-LZg>
-    <xme:_3PAZnwRlUS990lxBydQsWK0IqIf-cVeok88fSmsICdxC27jpLLJX1Iii_PkOD3IO
-    BrF5QTZianhuL5-Ra4>
-X-ME-Received: <xmr:_3PAZv0x3r5FCBjkPrS9HRevmwZ4DsPX-KdGT-HTdwaltXPLBQYo97XZbvzWFU-gGL18BkOvmm55bLbwQNRzTcnILaF8qa-_d0s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddutddgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihessh
-    grkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhephefhhfettefgkedvieeu
-    ffevveeufedtlefhjeeiieetvdelfedtgfefuedukeeunecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhho
-    tggthhhirdhjphdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopeiiihhjuhhnpghhuhesihgtlhhouhgurdgtohhmpdhrtghpthhtohepghhr
-    vghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfh
-    grvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvgesshhtghholhgrsghs
-    rdhnvghtpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvih
-    drtghomhdprhgtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomhdprhgt
-    phhtthhopegrlhhishhonhdrshgthhhofhhivghlugesihhnthgvlhdrtghomhdprhgtph
-    htthhopehvihhshhgrlhdrlhdrvhgvrhhmrgesihhnthgvlhdrtghomhdprhgtphhtthho
-    pehirhgrrdifvghinhihsehinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:_3PAZuACpKWfoPblqQ01MJwp1wo3RAjdkFtoQhwuozkDny11StiGAw>
-    <xmx:_3PAZrg9LgTGT-P_8toKbxgS4Gxes-orU44HjnGanrDnqXIicqHrkQ>
-    <xmx:_3PAZqozqkkjP3kNoKc5NbNV819yG-3WpolZQHS1Pysxv5kW1msxpA>
-    <xmx:_3PAZuhMOMeMZAodihfKvYg-LBLoKJ8cKzklDa5KAQwA6JdF6oirYA>
-    <xmx:AHTAZuhMZ1CbAhPLeNvxNJ295fso3-68ZRztUQXgPS1VIkxzq3rNbGAz>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 17 Aug 2024 05:57:15 -0400 (EDT)
-Date: Sat, 17 Aug 2024 18:57:13 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Timur Tabi <timur@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v2 3/4] firewire: core: Prevent device_find_child() from
- modifying caller's match data
-Message-ID: <20240817095713.GA182612@workstation.local>
-Mail-Followup-To: Zijun Hu <zijun_hu@icloud.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Timur Tabi <timur@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
- <20240815-const_dfc_prepare-v2-3-8316b87b8ff9@quicinc.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fM7nDrTy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JDOV1eD2p40WCVxUXIcBIMOTnD5QGJusWh4SPOuOKTiscbLyZtKq/lLpRbkz1etyJW44/yS9rU8AmAn14bVWtAdzj9TRcRb1RkWgt8uMjgyRwCLgasZC5Myix33+Eh6tCF23BzauY9iJvC2vSpHhC6IRZ2nyNKbNSXe+QBnKU0+GLpULDomQLG+kXoTNwi3dhZRexoBNz7YxMQuGGJmuJYpvMQyIh33faKcj5RVs0oc5lYU7KerUNt8M+ui0zzsKUDMCBYJ4nNgoh5Wf7ESmA14Aa9EddA6X4TzYnqmplEaWEs+ScACCJbKmQa8aNT+L+8yPD7vfltgIdRTLvgQeyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4wtw9uEzAQDQiye/h/kkN4VX/wpwtlJA9/FQkl9sA6o=;
+ b=mH/cW4vFiSSniAZnWj3cACwE9IDpvxuh6dV8ZPya6Kx+UJuCMEBXlE2R0GZMIG4b8Kt7xppgLKoBJteezznYxA/oHixfesz1WyXZNn8XDphEFt65Cf+8HN8e6IEzwXVHlRtwM3v+65flU/cKZBDaZ0ONMC3G95pjIEEDfN2wLinqUzIHt4vDqNX/Rjnlo71DDgRwYTGQQ1j/XQDNBa+EN8vg4NtTWeBeDhh2ttjyN8GekFFfe+okmTq+scBTYgAgECKCh4rQzJAjCzQyVezKk9FpXtHACh7mUE4FWft/D4QY7NbcEjTwIj9qtYSwekWAdIbdu3EAWx1dP7wEKXuxUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4wtw9uEzAQDQiye/h/kkN4VX/wpwtlJA9/FQkl9sA6o=;
+ b=fM7nDrTyTTTsyxKA6pPMHkrusY/74WoaWxOJwqI7fATj2ZBOK+qu2kXT6u5+57DDtgiewlPro7YVCuhskvl0EACzv2NBwpJql/xreNB3ueGG6VCxaYH5PpGjovFNCvV1tEfjDeUfm/Hfm8AKZ3PqFQG66gWZRVH4f8mvrVleIQgubdkAHbRrzgSTcrSBsB0bDc5xPoz6pdvBe1weuuCtiU/hF7jMYIA2yrfHai0Ysjt+AOtawMtHIHC2TJtU/wvXK1l76KLRg06/+urSRqcaTwIXgtmxBFMnmHvND09LpPPm6EHDF5HQubnmnZkTvwl4tstjZoOgB4MFbkDymQEwag==
+Received: from BYAPR08CA0002.namprd08.prod.outlook.com (2603:10b6:a03:100::15)
+ by DM6PR12MB4433.namprd12.prod.outlook.com (2603:10b6:5:2a1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21; Sat, 17 Aug
+ 2024 20:32:57 +0000
+Received: from MWH0EPF000A6731.namprd04.prod.outlook.com
+ (2603:10b6:a03:100:cafe::8d) by BYAPR08CA0002.outlook.office365.com
+ (2603:10b6:a03:100::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.19 via Frontend
+ Transport; Sat, 17 Aug 2024 20:32:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ MWH0EPF000A6731.mail.protection.outlook.com (10.167.249.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7897.11 via Frontend Transport; Sat, 17 Aug 2024 20:32:57 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sat, 17 Aug
+ 2024 13:32:57 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sat, 17 Aug 2024 13:32:56 -0700
+Received: from localhost (10.127.8.11) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Sat, 17 Aug
+ 2024 13:32:53 -0700
+Date: Sat, 17 Aug 2024 23:32:52 +0300
+From: Zhi Wang <zhiw@nvidia.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<richard.hughes@amd.com>, <targupta@nvidia.com>, <zhiwang@kernel.org>
+Subject: Re: [PATCH v2 01/15] cxl: add type2 device basic support
+Message-ID: <20240817232657.00005266.zhiw@nvidia.com>
+In-Reply-To: <8498f6bd-7ad0-5f24-826c-50956f4d9769@amd.com>
+References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
+	<20240715172835.24757-2-alejandro.lucero-palau@amd.com>
+	<20240809113428.00003f58.zhiw@nvidia.com>
+	<8498f6bd-7ad0-5f24-826c-50956f4d9769@amd.com>
+Organization: NVIDIA
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240815-const_dfc_prepare-v2-3-8316b87b8ff9@quicinc.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A6731:EE_|DM6PR12MB4433:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4697354-d160-4e8b-3b6d-08dcbefbc79a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CqRgHpWBvlzlBLuWcGZ6RBuQa+261YMMYkP91Afx6yen+jZmJF9yfEvJN2sX?=
+ =?us-ascii?Q?ZUfJA9xplZ7FqDZls3lseM6ZGFBNnvnnqT9CIFqqJwEGOz8fDeTcnC0atQbf?=
+ =?us-ascii?Q?eq/MulKYipO+Erwp+lK8xQ1+egQbH1sS83HyijM8NGNS+KLOmj2ERTdlvqjo?=
+ =?us-ascii?Q?sVcg0dA2RB3timZ8S3pUSScS18b1ZLBxQERx1tIyEEa8T6dwjGzp5/WbyPYC?=
+ =?us-ascii?Q?yzbw5XCHcPzVuikmOQ3wSOetuleO/KWY8ph9nXWlbLCoesrYVvltOrMLyWbk?=
+ =?us-ascii?Q?MNmgcwmVNuG9Iq9VfiIdN/qiKtOHggw84jNAWf96PQ4LmzFmwQtNvGAhNlGk?=
+ =?us-ascii?Q?F5UZUQm1fFNQImZWfz9+jG/zvVJG/O4BBM2TUJn1CbndR5IFCIO8DRYU/hvH?=
+ =?us-ascii?Q?oP6c8VCePwDs/A77HiCl9STBEfLDq2RIQAePXUiJN9KIMEgGMyTrECgabcG+?=
+ =?us-ascii?Q?e9b0dKEeEm7y1uvXUvslgfC2M7G2BocjBbEm7DYIycTzuqY1I01fyTaYgHLW?=
+ =?us-ascii?Q?9aZmDi13lGw1yKO3bB+NiPy3GJKUOhl9Bn6oVqzA4wosPwoNBn60GDYieRyA?=
+ =?us-ascii?Q?GEzG+8fRknhue7vz6yW0gzqiHALIHldnr+ApfsHShIggvcAMwDjpiV/Hmujp?=
+ =?us-ascii?Q?7iL7FoBejlPMTgwO9zbOuENjDOdtHg+W7q6TJ78y2laUkw+8kZA+cxd/mceF?=
+ =?us-ascii?Q?EHUocU/1bxCWYKupUdTFscbJMplJTz+0BeRalPd+CKn79JxGGhO/nXH/RN69?=
+ =?us-ascii?Q?ooyv205kgCvf14fLI6MbF4Fgq3VA/bCVzbLdxaCfqhwqpu5SqQVIV7gv1nfK?=
+ =?us-ascii?Q?BWYwDO51qctugjfmTEA3RBOt2NwoWBXthQk9NcQx81ClyyW9UmhkRA0dN1q/?=
+ =?us-ascii?Q?jXRrocXA3ALpUYPVD8jQXNP7jvRg5JLi2w3on5sa9Udkt9YzzznKECB7rqaM?=
+ =?us-ascii?Q?4MjH32De1lAQSUxhc7M7PcUIR+vf56TponlpWROOLoMcz1B3N19jxpgNmNBp?=
+ =?us-ascii?Q?Ud0yjDmPXu/fiYA+ahTUuCG+KaiPFxCm+FKzy7o9drUcHcfOUlKNl5T9aT0P?=
+ =?us-ascii?Q?5DHvzwu7u0JOwPUDPhQLUPDS5uHfMauoe01ihuXqxPm9Y2Rn/h5D/wra1sSc?=
+ =?us-ascii?Q?9CG1wwT58iUIxIykuYNGriDBaSaRBIKvlTOGOe5k/7+ut2xl/22BEDlc3JPv?=
+ =?us-ascii?Q?9+H9DL5nvNfMkYToXSRwxCWKTF4s276LDWMQpOoV5NOjlqCvrUfX/IjB3ARD?=
+ =?us-ascii?Q?E7zgUL2mRzBGPL37edWb7IKe6GNzj6/ZHNvsw9EwQs9VODFWuQGyL0g3Oohe?=
+ =?us-ascii?Q?x974VH4VYZydHfTH7Q4+2hW2vXZD1DZYR9uOTbFuDciIX6OjWVabyrqcwRWw?=
+ =?us-ascii?Q?yStaCo9d/jrUsITKYT/4YvT0H2cae3u2ty5M5C4lGOOnduOQMQxXoiVhNlmf?=
+ =?us-ascii?Q?UU7DLF9/w/ru/uy8NYMz8Pcm8fKBLjcx?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2024 20:32:57.3672
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4697354-d160-4e8b-3b6d-08dcbefbc79a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A6731.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4433
 
-Hi,
+On Mon, 12 Aug 2024 12:34:55 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-On Thu, Aug 15, 2024 at 10:58:04PM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
-> To prepare for constifying the following old driver core API:
+> On 8/9/24 09:34, Zhi Wang wrote:
+> > On Mon, 15 Jul 2024 18:28:21 +0100
+> > <alejandro.lucero-palau@amd.com> wrote:
+> >
+> >> From: Alejandro Lucero <alucerop@amd.com>
+> >>
+> >> Differientiate Type3, aka memory expanders, from Type2, aka device
+> >> accelerators, with a new function for initializing cxl_dev_state.
+> >>
+> >> Create opaque struct to be used by accelerators relying on new
+> >> access functions in following patches.
+> >>
+> >> Add SFC ethernet network driver as the client.
+> >>
+> >> Based on
+> >> https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m52543f85d0e41ff7b3063fdb9caa7e845b446d0e
+> >>
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> >> ---
+> >>   drivers/cxl/core/memdev.c             | 52
+> >> ++++++++++++++++++++++++++ drivers/net/ethernet/sfc/Makefile     |
+> >>  2 +- drivers/net/ethernet/sfc/efx.c        |  4 ++
+> >>   drivers/net/ethernet/sfc/efx_cxl.c    | 53
+> >> +++++++++++++++++++++++++++ drivers/net/ethernet/sfc/efx_cxl.h    |
+> >> 29 +++++++++++++++ drivers/net/ethernet/sfc/net_driver.h |  4 ++
+> >>   include/linux/cxl_accel_mem.h         | 22 +++++++++++
+> >>   include/linux/cxl_accel_pci.h         | 23 ++++++++++++
+> >>   8 files changed, 188 insertions(+), 1 deletion(-)
+> >>   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+> >>   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+> >>   create mode 100644 include/linux/cxl_accel_mem.h
+> >>   create mode 100644 include/linux/cxl_accel_pci.h
+> >>
+> >> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> >> index 0277726afd04..61b5d35b49e7 100644
+> >> --- a/drivers/cxl/core/memdev.c
+> >> +++ b/drivers/cxl/core/memdev.c
+> >> @@ -8,6 +8,7 @@
+> >>   #include <linux/idr.h>
+> >>   #include <linux/pci.h>
+> >>   #include <cxlmem.h>
+> >> +#include <linux/cxl_accel_mem.h>
+> > Let's keep the header inclusion in an alphabetical order. The same
+> > in efx_cxl.c
 > 
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> to new:
-> struct device *device_find_child(struct device *dev, const void *data,
-> 		int (*match)(struct device *dev, const void *data));
 > 
-> The new API does not allow its match function (*match)() to modify
-> caller's match data @*data, but lookup_existing_device() as the old
-> API's match function indeed modifies relevant match data, so it is not
-> suitable for the new API any more, fixed by implementing a equivalent
-> fw_device_find_child() instead of the old API usage.
+> The headers seem to follow a reverse Christmas tree order here rather 
+> than an alphabetical one.
 > 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  drivers/firewire/core-device.c | 37 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 35 insertions(+), 2 deletions(-)
-
-Thanks for the patch.
-
-> Why to constify the API ?
+> Should I rearrange them all?
 > 
-> (1) It normally does not make sense, also does not need to, for
-> such device finding operation to modify caller's match data which
-> is mainly used for comparison.
+
+Let's fix them.
+
 > 
-> (2) It will make the API's match function and match data parameter
-> have the same type as all other APIs (bus|class|driver)_find_device().
+> >>   #include "trace.h"
+> >>   #include "core.h"
+> >>   
+> >> @@ -615,6 +616,25 @@ static void detach_memdev(struct work_struct
+> >> *work)
+> >>   static struct lock_class_key cxl_memdev_key;
+> >>   
+> >> +struct cxl_dev_state *cxl_accel_state_create(struct device *dev)
+> >> +{
+> >> +	struct cxl_dev_state *cxlds;
+> >> +
+> >> +	cxlds = devm_kzalloc(dev, sizeof(*cxlds), GFP_KERNEL);
+> >> +	if (!cxlds)
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +
+> >> +	cxlds->dev = dev;
+> >> +	cxlds->type = CXL_DEVTYPE_DEVMEM;
+> >> +
+> >> +	cxlds->dpa_res = DEFINE_RES_MEM_NAMED(0, 0, "dpa");
+> >> +	cxlds->ram_res = DEFINE_RES_MEM_NAMED(0, 0, "ram");
+> >> +	cxlds->pmem_res = DEFINE_RES_MEM_NAMED(0, 0, "pmem");
+> >> +
+> >> +	return cxlds;
+> >> +}
+> >> +EXPORT_SYMBOL_NS_GPL(cxl_accel_state_create, CXL);
+> >> +
+> >>   static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state
+> >> *cxlds, const struct file_operations *fops)
+> >>   {
+> >> @@ -692,6 +712,38 @@ static int cxl_memdev_open(struct inode
+> >> *inode, struct file *file) return 0;
+> >>   }
+> >>
+> >> +
+> >> +void cxl_accel_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec)
+> >> +{
+> >> +	cxlds->cxl_dvsec = dvsec;
+> >> +}
+> >> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_dvsec, CXL);
+> >> +
+> >> +void cxl_accel_set_serial(struct cxl_dev_state *cxlds, u64 serial)
+> >> +{
+> >> +	cxlds->serial= serial;
+> >> +}
+> >> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_serial, CXL);
+> >> +
+> > It would be nice to explain about how the cxl core is using these in
+> > the patch comments, as we just saw the stuff got promoted into the
+> > core.
 > 
-> (3) It will give driver author hints about choice between this API and
-> the following one:
-> int device_for_each_child(struct device *dev, void *data,
->                 int (*fn)(struct device *dev, void *data));
+> 
+> As far as I can see, it is for info/debugging purposes. I will add
+> such explanation in next version.
+> 
+> 
+> >
+> >> +void cxl_accel_set_resource(struct cxl_dev_state *cxlds, struct
+> >> resource res,
+> >> +			    enum accel_resource type)
+> >> +{
+> >> +	switch (type) {
+> >> +	case CXL_ACCEL_RES_DPA:
+> >> +		cxlds->dpa_res = res;
+> >> +		return;
+> >> +	case CXL_ACCEL_RES_RAM:
+> >> +		cxlds->ram_res = res;
+> >> +		return;
+> >> +	case CXL_ACCEL_RES_PMEM:
+> >> +		cxlds->pmem_res = res;
+> >> +		return;
+> >> +	default:
+> >> +		dev_err(cxlds->dev, "unkown resource type (%u)\n",
+> >> type);
+> >> +	}
+> >> +}
+> >> +EXPORT_SYMBOL_NS_GPL(cxl_accel_set_resource, CXL);
+> >> +
+> > I wonder in which situation this error can be triggered.
+> > One can be a newer out-of-tree type-2 driver tries to work on an
+> > older kernel. Other situations should be the coding problem of an
+> > in-tree driver.
+> 
+> 
+> I guess that would point to an extension not updating this function.
+> 
+> 
+> > I prefer to WARN_ONCE() here.
+> 
+> 
+> I agree after your previous concern.
+> 
+> 
+> >
+> >>   
+> >> diff --git a/include/linux/cxl_accel_mem.h
+> >> b/include/linux/cxl_accel_mem.h new file mode 100644
+> >> index 000000000000..daf46d41f59c
+> >> --- /dev/null
+> >> +++ b/include/linux/cxl_accel_mem.h
+> >> @@ -0,0 +1,22 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/* Copyright(c) 2024 Advanced Micro Devices, Inc. */
+> >> +
+> >> +#include <linux/cdev.h>
+> >> +
+> >> +#ifndef __CXL_ACCEL_MEM_H
+> >> +#define __CXL_ACCEL_MEM_H
+> >> +
+> >> +enum accel_resource{
+> >> +	CXL_ACCEL_RES_DPA,
+> >> +	CXL_ACCEL_RES_RAM,
+> >> +	CXL_ACCEL_RES_PMEM,
+> >> +};
+> >> +
+> >> +typedef struct cxl_dev_state cxl_accel_state;
+> > The case of using typedef in kernel coding is very rare (quite many
+> > of them are still there due to history reason, you can also spot
+> > that there is only one typedef in driver/cxl). Be sure to double
+> > check the coding style bible [1] when deciding to use one. :)
+> >
+> > [1] https://www.kernel.org/doc/html/v4.14/process/coding-style.html
+> 
+> 
+> Right.
+> 
+> I think there is an agreement now in not using typedef but struct 
+> cxl_dev_state so problem solved.
+> 
+> 
+> Thanks!
+> 
+> 
+> 
 
-I have found another issue in respect to this subsystem.
-
-The whole procedure in 'lookup_existing_device()' in the call of
-'device_find_child()' is a bit superfluous, since it includes not only
-finding but also updating. The helper function passed to
-'device_find_child()' should do quick finding only.
-
-I think we can change the relevant codes like the following patch. It
-would solve your concern, too. If you prefer the change, I'm going to
-evaluate it.
-
-======== 8< --------
-
-From ceaa8a986ae07865eb3fec810de330e96b6d56e2 Mon Sep 17 00:00:00 2001
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Date: Sat, 17 Aug 2024 17:52:53 +0900
-Subject: [PATCH] firewire: core: update fw_device outside of
- device_find_child()
-
-When detecting updates of bus topology, the data of fw_device is newly
-allocated and caches the content of configuration ROM from the
-corresponding node. Then, the tree of device is sought to find the
-previous data of fw_device corresponding to the node, since in IEEE 1394
-specification numeric node identifier could be changed dynamically every
-generation of bus topology. If it is found, the previous data is updated
-and reused, then the newly allocated data is going to be released.
-
-The above procedure is done in the call of device_find_child(), however it
-is a bit abusing against the intention of the helper function, since the
-call would not only find but also update.
-
-This commit splits the update outside of the call.
----
- drivers/firewire/core-device.c | 109 ++++++++++++++++-----------------
- 1 file changed, 54 insertions(+), 55 deletions(-)
-
-diff --git a/drivers/firewire/core-device.c b/drivers/firewire/core-device.c
-index bc4c9e5a..62e8d839 100644
---- a/drivers/firewire/core-device.c
-+++ b/drivers/firewire/core-device.c
-@@ -928,56 +928,6 @@ static void fw_device_update(struct work_struct *work)
- 	device_for_each_child(&device->device, NULL, update_unit);
- }
- 
--/*
-- * If a device was pending for deletion because its node went away but its
-- * bus info block and root directory header matches that of a newly discovered
-- * device, revive the existing fw_device.
-- * The newly allocated fw_device becomes obsolete instead.
-- */
--static int lookup_existing_device(struct device *dev, void *data)
--{
--	struct fw_device *old = fw_device(dev);
--	struct fw_device *new = data;
--	struct fw_card *card = new->card;
--	int match = 0;
--
--	if (!is_fw_device(dev))
--		return 0;
--
--	guard(rwsem_read)(&fw_device_rwsem); // serialize config_rom access
--	guard(spinlock_irq)(&card->lock); // serialize node access
--
--	if (memcmp(old->config_rom, new->config_rom, 6 * 4) == 0 &&
--	    atomic_cmpxchg(&old->state,
--			   FW_DEVICE_GONE,
--			   FW_DEVICE_RUNNING) == FW_DEVICE_GONE) {
--		struct fw_node *current_node = new->node;
--		struct fw_node *obsolete_node = old->node;
--
--		new->node = obsolete_node;
--		new->node->data = new;
--		old->node = current_node;
--		old->node->data = old;
--
--		old->max_speed = new->max_speed;
--		old->node_id = current_node->node_id;
--		smp_wmb();  /* update node_id before generation */
--		old->generation = card->generation;
--		old->config_rom_retries = 0;
--		fw_notice(card, "rediscovered device %s\n", dev_name(dev));
--
--		old->workfn = fw_device_update;
--		fw_schedule_device_work(old, 0);
--
--		if (current_node == card->root_node)
--			fw_schedule_bm_work(card, 0);
--
--		match = 1;
--	}
--
--	return match;
--}
--
- enum { BC_UNKNOWN = 0, BC_UNIMPLEMENTED, BC_IMPLEMENTED, };
- 
- static void set_broadcast_channel(struct fw_device *device, int generation)
-@@ -1038,6 +988,17 @@ int fw_device_set_broadcast_channel(struct device *dev, void *gen)
- 	return 0;
- }
- 
-+static int compare_configuration_rom(struct device *dev, void *data)
-+{
-+	const struct fw_device *old = fw_device(dev);
-+	const u32 *config_rom = data;
-+
-+	if (!is_fw_device(dev))
-+		return 0;
-+
-+	return !!memcmp(old->config_rom, config_rom, 6 * 4);
-+}
-+
- static void fw_device_init(struct work_struct *work)
- {
- 	struct fw_device *device =
-@@ -1071,13 +1032,51 @@ static void fw_device_init(struct work_struct *work)
- 		return;
- 	}
- 
--	revived_dev = device_find_child(card->device,
--					device, lookup_existing_device);
-+	// If a device was pending for deletion because its node went away but its bus info block
-+	// and root directory header matches that of a newly discovered device, revive the
-+	// existing fw_device. The newly allocated fw_device becomes obsolete instead.
-+	//
-+	// serialize config_rom access.
-+	scoped_guard(rwsem_read, &fw_device_rwsem) {
-+		// TODO: The cast to 'void *' could be removed if Zijun Hu's work goes well.
-+		revived_dev = device_find_child(card->device, (void *)device->config_rom,
-+						compare_configuration_rom);
-+	}
- 	if (revived_dev) {
--		put_device(revived_dev);
--		fw_device_release(&device->device);
-+		struct fw_device *found = fw_device(revived_dev);
- 
--		return;
-+		// serialize node access
-+		guard(spinlock_irq)(&card->lock);
-+
-+		if (atomic_cmpxchg(&found->state,
-+				   FW_DEVICE_GONE,
-+				   FW_DEVICE_RUNNING) == FW_DEVICE_GONE) {
-+			struct fw_node *current_node = device->node;
-+			struct fw_node *obsolete_node = found->node;
-+
-+			device->node = obsolete_node;
-+			device->node->data = device;
-+			found->node = current_node;
-+			found->node->data = found;
-+
-+			found->max_speed = device->max_speed;
-+			found->node_id = current_node->node_id;
-+			smp_wmb();  /* update node_id before generation */
-+			found->generation = card->generation;
-+			found->config_rom_retries = 0;
-+			fw_notice(card, "rediscovered device %s\n", dev_name(revived_dev));
-+
-+			found->workfn = fw_device_update;
-+			fw_schedule_device_work(found, 0);
-+
-+			if (current_node == card->root_node)
-+				fw_schedule_bm_work(card, 0);
-+
-+			put_device(revived_dev);
-+			fw_device_release(&device->device);
-+
-+			return;
-+		}
- 	}
- 
- 	device_initialize(&device->device);
--- 
-2.43.0
-
-
-
-Regards
-
-Takashi Sakamoto
