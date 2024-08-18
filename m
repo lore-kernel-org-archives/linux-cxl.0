@@ -1,309 +1,155 @@
-Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A1380054
-	for <linux-cxl@vger.kernel.org>; Sun, 18 Aug 2024 14:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234EC8FF;
+	Sun, 18 Aug 2024 19:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723991083; cv=none; b=hmmszP54Q5GGeRx9zafPPszFj1yFIM0nNrIxAf6IakJXWFhDr0s4VA0PfPHPMrXDnvAydj7E7cZlBFbdpc02vUXeoZLYVpUi/54cCZ356aH7pwIJnGbcrCHyYzoofhIOsURULLbrX2IFAoovNF1Nxs3VksVDRtxw4oUHXa/dOU0=
+	t=1724009066; cv=none; b=DHe2MuXgBjdI4Fy58gCAmIrElO5TgD2nIhkrYGH7dD+j6xgPOcql/4LuPCvYiV/1uD09wLchH/J7nPj7GdHxDG0OOPUo1XbEN3QVQytozO3oas59GngS1uphUX6+EJOFj+Hxa5DrzBCueJnO6O5gKwJarGiBnNb2ywUY2D33BVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723991083; c=relaxed/simple;
-	bh=z+tfOpQbN5fJ3NhByqRml2Dj0aHW5tbD/YrQgELNBLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BUmurlm6r4LUdhpFoBB1CcTE1Z6AK/Vj2eI2OwGrXWrhkHjHjD1FtjHN4qhSlURO3FOQICkPEmv6IqUqnfmqls5d35Lcn2QOz0ck2QRGFw3x2C4LWqPu7Sl6dRi8gE2KarQYF54BhOZUB1WU80LZTeWYhMTRKwpQwwoIFldLnn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ST2oh08o; arc=none smtp.client-ip=17.58.6.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1724009066; c=relaxed/simple;
+	bh=uDIlPlP6pOZko2F3eOUc/KS8ctBQF6b3E/mzu/L+Jfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lwaf+mM0G/lB0Q1xFln9fNNBexIBRe7x95ZmvOGjq8P8c+cs9PixLMxC9GtTu7hIEsXoOGTWDoPyRC3sXV37N8ha575CvKx/x0Q4bWjXVZbBDD+GTOhC18tvaf/zDgZRQy1IiqYQPmHxllZkOOSB3RMCOxZ+9Xr82kER1rVmLB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZDiQ2Rj; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ST2oh08o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1723991081;
-	bh=dVKb0+xiVWMJj1VKLV7FqP+s7uyL5WIaFvx+KYYzJUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=ST2oh08ofn4CjXGcQ5aTFulOYQERimyUK7LuXS8wbtT8HBsOpVuzGCvxBEqd+Qnj+
-	 /ZV/1oHnVpAhndhvqx36190mrlnw+duOiW5jKqRBY07hjvFapQ5Z27Govj1Ze1djUw
-	 C7rBZgGTryGVHvF6x6XyXupdOurN+2fpds/UfqCbiWAx2iFLv07oU3e4tvH0FTCTFD
-	 VCDWQmZv8pw5EHqGBiBFEckp2QyEYF7zjhcOybn6mKSDdDeRaB2Ux2DJyK4madj0q/
-	 izLYivmlCSCbFFLgrdt7K3CSt87fKtIKMCC/QDYuxdX+fUc8okHyqI68lmLVJi5gsP
-	 6TBiFuVvo4xkQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id A51D78E0437;
-	Sun, 18 Aug 2024 14:24:34 +0000 (UTC)
-Message-ID: <11efcbb2-f69a-49b4-a593-34fce42d49ea@icloud.com>
-Date: Sun, 18 Aug 2024 22:24:30 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZDiQ2Rj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724009064; x=1755545064;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uDIlPlP6pOZko2F3eOUc/KS8ctBQF6b3E/mzu/L+Jfs=;
+  b=GZDiQ2RjTaAKpSRyoXi0lJkE2joUqfkR0k8q2/WLMHLW+tPPAitUWcmG
+   DzVhFc9Nk+V8g9fJyEnNAzkhYUKdIyRWP0Gvpgx4Ds4EzIh7aqdkV1FKE
+   sq0BoHJUQq5slGD1kxbyBB40GJTHX+RKfNUOLpuLgUdrRI4dfIxTZhJTY
+   oW+8yF82ogMtaUy0lCGIxPBF3NuaCNQLPV0w/utcHc7Gs6VP2T/xDJGNa
+   GaOVjHjRPZM/HgQxq/q9wn6qw81Kdpjsbk+Qo0BKEpBgdhzHNp1id5mYM
+   wiVES2c5cv6mwB+Or0O1v1dGpylDfLk921juLLq4Er2s1WDqDLZ2mL72+
+   A==;
+X-CSE-ConnectionGUID: 9NOQGG/bRkia3a9Nfq/Deg==
+X-CSE-MsgGUID: ah2jg7aJSm+sZ0iXhg7tTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11168"; a="33393262"
+X-IronPort-AV: E=Sophos;i="6.10,157,1719903600"; 
+   d="scan'208";a="33393262"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2024 12:24:24 -0700
+X-CSE-ConnectionGUID: 0mSq64FMRWi+hrc1jcc9yg==
+X-CSE-MsgGUID: VmyUEt/ATrSZkRad8kq8xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,157,1719903600"; 
+   d="scan'208";a="64561022"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 18 Aug 2024 12:24:17 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sflVf-0008QE-0A;
+	Sun, 18 Aug 2024 19:24:15 +0000
+Date: Mon, 19 Aug 2024 03:23:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, bp@alien8.de, tony.luck@intel.com,
+	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+	dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
+	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
+	somasundaram.a@hpe.com, erdemaktas@google.com
+Subject: Re: [PATCH v11 04/14] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox
+ command
+Message-ID: <202408190510.dFXq1LrX-lkp@intel.com>
+References: <20240816164238.1902-5-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] firewire: core: Prevent device_find_child() from
- modifying caller's match data
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
- <20240815-const_dfc_prepare-v2-3-8316b87b8ff9@quicinc.com>
- <20240817095713.GA182612@workstation.local>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20240817095713.GA182612@workstation.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: BHc0WGEMQ2Lt9gpcmxuvj_aj9GbKxoD7
-X-Proofpoint-ORIG-GUID: BHc0WGEMQ2Lt9gpcmxuvj_aj9GbKxoD7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-18_14,2024-08-16_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408180105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240816164238.1902-5-shiju.jose@huawei.com>
 
-On 2024/8/17 17:57, Takashi Sakamoto wrote:
-> Hi,
-> 
-> On Thu, Aug 15, 2024 at 10:58:04PM +0800, Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> To prepare for constifying the following old driver core API:
->>
->> struct device *device_find_child(struct device *dev, void *data,
->> 		int (*match)(struct device *dev, void *data));
->> to new:
->> struct device *device_find_child(struct device *dev, const void *data,
->> 		int (*match)(struct device *dev, const void *data));
->>
->> The new API does not allow its match function (*match)() to modify
->> caller's match data @*data, but lookup_existing_device() as the old
->> API's match function indeed modifies relevant match data, so it is not
->> suitable for the new API any more, fixed by implementing a equivalent
->> fw_device_find_child() instead of the old API usage.
->>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
->>  drivers/firewire/core-device.c | 37 +++++++++++++++++++++++++++++++++++--
->>  1 file changed, 35 insertions(+), 2 deletions(-)
-> 
-> Thanks for the patch.
-> 
->> Why to constify the API ?
->>
->> (1) It normally does not make sense, also does not need to, for
->> such device finding operation to modify caller's match data which
->> is mainly used for comparison.
->>
->> (2) It will make the API's match function and match data parameter
->> have the same type as all other APIs (bus|class|driver)_find_device().
->>
->> (3) It will give driver author hints about choice between this API and
->> the following one:
->> int device_for_each_child(struct device *dev, void *data,
->>                 int (*fn)(struct device *dev, void *data));
-> 
-> I have found another issue in respect to this subsystem.
-> 
-> The whole procedure in 'lookup_existing_device()' in the call of
-> 'device_find_child()' is a bit superfluous, since it includes not only
-> finding but also updating. The helper function passed to
-> 'device_find_child()' should do quick finding only.
-> 
-> I think we can change the relevant codes like the following patch. It
-> would solve your concern, too. If you prefer the change, I'm going to
-> evaluate it.
-> 
+Hi,
 
-thanks for your reply.
-of course, i prefer your change.
+kernel test robot noticed the following build warnings:
 
-> ======== 8< --------
-> 
-> From ceaa8a986ae07865eb3fec810de330e96b6d56e2 Mon Sep 17 00:00:00 2001
-> From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> Date: Sat, 17 Aug 2024 17:52:53 +0900
-> Subject: [PATCH] firewire: core: update fw_device outside of
->  device_find_child()
-> 
-> When detecting updates of bus topology, the data of fw_device is newly
-> allocated and caches the content of configuration ROM from the
-> corresponding node. Then, the tree of device is sought to find the
-> previous data of fw_device corresponding to the node, since in IEEE 1394
-> specification numeric node identifier could be changed dynamically every
-> generation of bus topology. If it is found, the previous data is updated
-> and reused, then the newly allocated data is going to be released.
-> 
-> The above procedure is done in the call of device_find_child(), however it
-> is a bit abusing against the intention of the helper function, since the
-> call would not only find but also update.
-> 
-> This commit splits the update outside of the call.
-> ---
->  drivers/firewire/core-device.c | 109 ++++++++++++++++-----------------
->  1 file changed, 54 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/firewire/core-device.c b/drivers/firewire/core-device.c
-> index bc4c9e5a..62e8d839 100644
-> --- a/drivers/firewire/core-device.c
-> +++ b/drivers/firewire/core-device.c
-> @@ -928,56 +928,6 @@ static void fw_device_update(struct work_struct *work)
->  	device_for_each_child(&device->device, NULL, update_unit);
->  }
->  
-> -/*
-> - * If a device was pending for deletion because its node went away but its
-> - * bus info block and root directory header matches that of a newly discovered
-> - * device, revive the existing fw_device.
-> - * The newly allocated fw_device becomes obsolete instead.
-> - */
-> -static int lookup_existing_device(struct device *dev, void *data)
-> -{
-> -	struct fw_device *old = fw_device(dev);
-> -	struct fw_device *new = data;
-> -	struct fw_card *card = new->card;
-> -	int match = 0;
-> -
-> -	if (!is_fw_device(dev))
-> -		return 0;
-> -
-> -	guard(rwsem_read)(&fw_device_rwsem); // serialize config_rom access
-> -	guard(spinlock_irq)(&card->lock); // serialize node access
-> -
-> -	if (memcmp(old->config_rom, new->config_rom, 6 * 4) == 0 &&
-> -	    atomic_cmpxchg(&old->state,
-> -			   FW_DEVICE_GONE,
-> -			   FW_DEVICE_RUNNING) == FW_DEVICE_GONE) {
-> -		struct fw_node *current_node = new->node;
-> -		struct fw_node *obsolete_node = old->node;
-> -
-> -		new->node = obsolete_node;
-> -		new->node->data = new;
-> -		old->node = current_node;
-> -		old->node->data = old;
-> -
-> -		old->max_speed = new->max_speed;
-> -		old->node_id = current_node->node_id;
-> -		smp_wmb();  /* update node_id before generation */
-> -		old->generation = card->generation;
-> -		old->config_rom_retries = 0;
-> -		fw_notice(card, "rediscovered device %s\n", dev_name(dev));
-> -
-> -		old->workfn = fw_device_update;
-> -		fw_schedule_device_work(old, 0);
-> -
-> -		if (current_node == card->root_node)
-> -			fw_schedule_bm_work(card, 0);
-> -
-> -		match = 1;
-> -	}
-> -
-> -	return match;
-> -}
-> -
->  enum { BC_UNKNOWN = 0, BC_UNIMPLEMENTED, BC_IMPLEMENTED, };
->  
->  static void set_broadcast_channel(struct fw_device *device, int generation)
-> @@ -1038,6 +988,17 @@ int fw_device_set_broadcast_channel(struct device *dev, void *gen)
->  	return 0;
->  }
->  
-> +static int compare_configuration_rom(struct device *dev, void *data)
-> +{
-> +	const struct fw_device *old = fw_device(dev);
-> +	const u32 *config_rom = data;
-> +
-> +	if (!is_fw_device(dev))
-> +		return 0;
-> +
-> +	return !!memcmp(old->config_rom, config_rom, 6 * 4);
+[auto build test WARNING on ras/edac-for-next]
+[also build test WARNING on rafael-pm/linux-next rafael-pm/bleeding-edge cxl/next linus/master v6.11-rc3 next-20240816]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-!memcmp(old->config_rom, config_rom, 6 * 4) ?
+url:    https://github.com/intel-lab-lkp/linux/commits/shiju-jose-huawei-com/EDAC-Add-support-for-EDAC-device-feature-s-control/20240817-004442
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+patch link:    https://lore.kernel.org/r/20240816164238.1902-5-shiju.jose%40huawei.com
+patch subject: [PATCH v11 04/14] cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
+config: alpha-randconfig-r131-20240818 (https://download.01.org/0day-ci/archive/20240819/202408190510.dFXq1LrX-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20240819/202408190510.dFXq1LrX-lkp@intel.com/reproduce)
 
-is this extra condition old->state == FW_DEVICE_GONE required ?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408190510.dFXq1LrX-lkp@intel.com/
 
-namely, is it okay for  below return ?
-return  !memcmp(old->config_rom, config_rom, 6 * 4) && old->state ==
-FW_DEVICE_GONE
+sparse warnings: (new ones prefixed by >>)
+>> drivers/cxl/core/mbox.c:1377:26: sparse: sparse: incorrect type in assignment (different base types) @@     expected int nentries @@     got restricted __le16 [usertype] nr_entries @@
+   drivers/cxl/core/mbox.c:1377:26: sparse:     expected int nentries
+   drivers/cxl/core/mbox.c:1377:26: sparse:     got restricted __le16 [usertype] nr_entries
 
-> +}
-> +
->  static void fw_device_init(struct work_struct *work)
->  {
->  	struct fw_device *device =
-> @@ -1071,13 +1032,51 @@ static void fw_device_init(struct work_struct *work)
->  		return;
->  	}
->  
-> -	revived_dev = device_find_child(card->device,
-> -					device, lookup_existing_device);
-> +	// If a device was pending for deletion because its node went away but its bus info block
-> +	// and root directory header matches that of a newly discovered device, revive the
-> +	// existing fw_device. The newly allocated fw_device becomes obsolete instead.
-> +	//
-> +	// serialize config_rom access.
-> +	scoped_guard(rwsem_read, &fw_device_rwsem) {
-> +		// TODO: The cast to 'void *' could be removed if Zijun Hu's work goes well.
+vim +1377 drivers/cxl/core/mbox.c
 
-may remove this TODO line since i will simply remove the cast with the
-other patch series as shown below:
-https://lore.kernel.org/all/20240811-const_dfc_done-v1-0-9d85e3f943cb@quicinc.com/
+  1353	
+  1354	int cxl_get_supported_feature_entry(struct cxl_memdev_state *mds, const uuid_t *feat_uuid,
+  1355					    struct cxl_mbox_supp_feat_entry *feat_entry_out)
+  1356	{
+  1357		struct cxl_mbox_supp_feat_entry *feat_entry;
+  1358		int feat_index, feats_out_size;
+  1359		int nentries, count;
+  1360		int ret;
+  1361	
+  1362		feat_index = 0;
+  1363		feats_out_size = sizeof(struct cxl_mbox_get_supp_feats_out) +
+  1364					sizeof(struct cxl_mbox_supp_feat_entry);
+  1365		struct cxl_mbox_get_supp_feats_out *feats_out __free(kfree) =
+  1366						kmalloc(feats_out_size, GFP_KERNEL);
+  1367		if (!feats_out)
+  1368			return -ENOMEM;
+  1369	
+  1370		while (true) {
+  1371			memset(feats_out, 0, feats_out_size);
+  1372			ret = cxl_get_supported_features(mds, feats_out_size,
+  1373							 feat_index, feats_out);
+  1374			if (ret)
+  1375				return ret;
+  1376	
+> 1377			nentries = feats_out->nr_entries;
+  1378			if (!nentries)
+  1379				return -EOPNOTSUPP;
+  1380	
+  1381			/* Check CXL memdev supports the feature */
+  1382			feat_entry = feats_out->feat_entries;
+  1383			for (count = 0; count < nentries; count++, feat_entry++) {
+  1384				if (uuid_equal(&feat_entry->uuid, feat_uuid)) {
+  1385					memcpy(feat_entry_out, feat_entry,
+  1386					       sizeof(*feat_entry_out));
+  1387					return 0;
+  1388				}
+  1389			}
+  1390			feat_index += nentries;
+  1391		}
+  1392	}
+  1393	EXPORT_SYMBOL_NS_GPL(cxl_get_supported_feature_entry, CXL);
+  1394	
 
-
-> +		revived_dev = device_find_child(card->device, (void *)device->config_rom,
-> +						compare_configuration_rom);
-> +	}
->  	if (revived_dev) {
-> -		put_device(revived_dev);
-> -		fw_device_release(&device->device);
-> +		struct fw_device *found = fw_device(revived_dev);
->  
-> -		return;
-> +		// serialize node access
-> +		guard(spinlock_irq)(&card->lock);
-> +
-> +		if (atomic_cmpxchg(&found->state,
-> +				   FW_DEVICE_GONE,
-> +				   FW_DEVICE_RUNNING) == FW_DEVICE_GONE) {
-> +			struct fw_node *current_node = device->node;
-> +			struct fw_node *obsolete_node = found->node;
-> +
-> +			device->node = obsolete_node;
-> +			device->node->data = device;
-> +			found->node = current_node;
-> +			found->node->data = found;
-> +
-> +			found->max_speed = device->max_speed;
-> +			found->node_id = current_node->node_id;
-> +			smp_wmb();  /* update node_id before generation */
-> +			found->generation = card->generation;
-> +			found->config_rom_retries = 0;
-> +			fw_notice(card, "rediscovered device %s\n", dev_name(revived_dev));
-> +
-> +			found->workfn = fw_device_update;
-> +			fw_schedule_device_work(found, 0);
-> +
-> +			if (current_node == card->root_node)
-> +				fw_schedule_bm_work(card, 0);
-> +
-> +			put_device(revived_dev);
-> +			fw_device_release(&device->device);
-> +
-> +			return;
-> +		}
-
-is it okay to put_device() here as well ?
-put_device(revived_dev);
-
->  	}
->  
->  	device_initialize(&device->device);
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
