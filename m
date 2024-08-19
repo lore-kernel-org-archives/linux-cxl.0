@@ -1,75 +1,76 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A3B18A934;
-	Mon, 19 Aug 2024 18:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A993188CD9;
+	Mon, 19 Aug 2024 18:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724091496; cv=none; b=PQ8anTaulJk9kmBlcsrLJQZZlG9ItXE5GsoEnpuRix8ZmJZ2mWRbdrpANiwL9EBmwue4sPJc1wVCjTsFAC/Sl9NF3j+h9GKJ8p832su7RYTEI9TSAU3RAgTYt3YCmUySFCD/Qv2kz4JIs81sh9Hf5csfWGCyF62tc3q7tbCQpxs=
+	t=1724092522; cv=none; b=iQwFTTXHBNXNfEgj3Y3ATqo+TGSuhJVTYBMIOqevpf/msSxbfEqJ+uJPnvxt1iZlvlQ1fxhEt4RC4iap7Qnsf0cyoOjl/VG5pzn1UXHB8XhldBDLl3ASN3CHU0SGCgwdZ7dusbmP1SipuVBT/TyrWodOoCUh0X/waw7sa2b+sko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724091496; c=relaxed/simple;
-	bh=EWOZyibOW+wIExVAMS5SDctag1MIP4HuSTQODw8wl2I=;
+	s=arc-20240116; t=1724092522; c=relaxed/simple;
+	bh=qN25ESiBluW/Wgf7nnUMEGNcqsWMOVJegLeAlewK/VM=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bCeIX45Tw1n+7qlWHK5rPMYZ0dveWBvz5HnRSB1ulNQyHr03GtiiBB3dPwggEVnFZZLSXrHW6ndQm247tDDlCQGolVQnClLbkW3tWGcx4CznZqVML0/D143B6lA8nD6Wx6hLi1jNmrrNUQkMpzv/PxpIblJ30kq6HemaeZImw9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gY2OFHCa; arc=none smtp.client-ip=209.85.219.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=gK9iiaHok2TTMlHplEKwXyMd+DOs1n6STI7etfZP+Buay2IlTHCo4Yd94UdWauPp53CR4CY3sNISyvqvtoV/Ut6KrRLkn3Yz/t6okpIgUeTFOuDKe+4CFFCbVnHF4OVWdnCLmSPs13+07Zo0vhGEscKWm7Dc6IGQRzBEze6Qqgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZT5metu4; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gY2OFHCa"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e116ec43a4aso4905302276.0;
-        Mon, 19 Aug 2024 11:18:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZT5metu4"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e03caab48a2so3392735276.1;
+        Mon, 19 Aug 2024 11:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724091494; x=1724696294; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724092519; x=1724697319; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGaYa1Q8KPOcvDV/p8Nmwra1mvJ7inGUNSlMYUWHzO0=;
-        b=gY2OFHCa98zEQCazwHoe3bldrsLC1RByHg6wTPJ9ENQlBa/635Ah7SJ17Ga/neeE1M
-         VH3SeaFJXRst8KxrTDwsG6lTdDyF2hf6iHsS6xAt3ukMITtovBRAfxF2JJ6FJ4s0BLiP
-         bvY6OWWbWN0rUofN5YxQa7VB0jVARRrjEnYeWhtSZEiPCfS5DcMau/QDVe0xq4fVuRtl
-         oB4uvBjtNqILo/9Ib3xSw3VKds7GMBU6Zg2dj8bepmujkGrCKurAHcRbB68RMFQBboAX
-         hj+gYAV5yMhEYBXBKTN+iTIg4Sa12xrLKPGMA+WZ+kihE/BFSBOtiDWkpvrXLZRckqnk
-         MlZQ==
+        bh=SYH3TQeVTTY68Kyifj6Lhi9y33FdIk3s3eh/aNh8/P8=;
+        b=ZT5metu4fisNshzO8bdO9LG40gGB0MlLmfAbKmpmCTiFQzOrQ6WzeOD56wb0yAMlMx
+         GVr2mVigApqvyTFxlX4E/5wUgxzleCqUC02J9YultePE2HNwXXjP1uW4bpOOe4/3xE0N
+         6UhlxCWPTWMMDKacPEJvBvEMMu9NAcEs242VWqHOSq5qoM9TxTGqlJzO8UVkOIrd2+IQ
+         pp/qRbvKIyQIpz2Ebu/yrgwdLg1Klok2Am2fkBD96Fd8tYFe5D7Ake8w2nuBM1uReNC2
+         HWU01Vi6BGmUmi6Z62ugV0JLyXT5jz6C48ak7YlK5fR1TjtQABTBRv2addL+8s/oBlk2
+         B9UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724091494; x=1724696294;
+        d=1e100.net; s=20230601; t=1724092519; x=1724697319;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AGaYa1Q8KPOcvDV/p8Nmwra1mvJ7inGUNSlMYUWHzO0=;
-        b=JAhmpHHN6RnYYQQn2p05on/5xfKAfx3kUD2KiYvp67nyBUKU++mZ2UnatJKAQ6NE4s
-         ZrJSyXKIIT6unBSQq2BMFPCau1KSmH3ouM6VNk3PfD8apCAgwdShWltx5UoaGXPTtvgb
-         O9Mff8CIPIj+k3R9zwpX9jvn+JvWYJlazJNADZGcRqWKtwePZv8DAg2Oc5TCyNo6gvju
-         /Rp685/8xq5Unwz+reV9d8Rs6UlJ4FYufsCnFjCpZzKDiz913tDCbdjWj3gS5uN0Rj9B
-         EpVTdGlDX3KerdkBhgCFMyk0uOs41JvoWMosdrlAwafIDmfRSdm1Adif8618t4a5w+Bw
-         VVLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoa/6BAEXDqjYvLSeKSPET1PQOmZAnjZK1f4yHOjPoFGBHZd9GzoJWNxpkuA++ZS1aHI40HbM4XiHs/w6z55px8UtMxw/zTT5gUS6P54wlKJLt9Y0ibTp1UcGThcO52yH93nkkUiKe
-X-Gm-Message-State: AOJu0YzA0+mhPw3EZLbTxlo10grNTiRPFz2CJLnIdl7lJBzrJnhShHtp
-	QNAM2c+f35JTrBfyBg0EYVdLPumLnQ+PWmcsodCQ/npOjaPlbhhr
-X-Google-Smtp-Source: AGHT+IFTQcrX/ZqxE31X+8Bo8Q8GGk4HsqH57l96fLkavexRAW5f2wDZWpd956d6VC05s+DphvKhMw==
-X-Received: by 2002:a05:690c:17:b0:698:bde0:a2dd with SMTP id 00721157ae682-6b1b70c4806mr148329977b3.7.1724091493684;
-        Mon, 19 Aug 2024 11:18:13 -0700 (PDT)
+        bh=SYH3TQeVTTY68Kyifj6Lhi9y33FdIk3s3eh/aNh8/P8=;
+        b=CrnUZm+XgxPBkaBbFi1rZqp9wBHX2siawTsIkGWbO5tewF/78up1lgdhVj4kjJPsXL
+         njx7+lAgXTYHTPUCBLAbIGXZ9KiKdsom216iU0Ha/lA3z4sUG7uz//sDLBxnpJFBDtsc
+         5hDRJbjEV8I1wch28oChMmahD8zKArYxiWwVbPng9wzl9bFYWLWaIeWgmUQPFxfECk6U
+         ikrWi1H34Bt5DMJM3FctXKvwyu59icOlCqwUqcVDouZMaMhfLDy7wkl2rofiPpdJnQJC
+         sdwniSqh74yGF6JWJ5y3eacsbJR46rCNL5dHSYkl+02n1LBmSVklCgkPiivyprmxwoYQ
+         U39A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeeqKjCnqkCrQlrqshh6zgOEiCNA+cyz6EOCZTQYu+QrpUVwaozoGVenaRBRFGvZK29iiEDdH7u/8=@vger.kernel.org, AJvYcCWNAVIlAriw1JeqD6ttReCsrdeymMcF7CFjNNR6YzF9N4L6O5Oz3UdvSi7pJ8NWnU75oaIR4+tsr2KB@vger.kernel.org, AJvYcCWiPf+rgorjgVVoRRyC+jHhwLXnh7Q9BjZRD6sYc1XLCPVbXTJ8AZsTiqnN2Z1FCzQVsAyHvp0W/h3ZHONH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+7nM0kYb8fk25NyFuGSyFFzhZfXuzIyrl/z7niwO4FjB8D5Px
+	3TnTHlbuYAfLNtpB8P1PUlb3dRZ2AYTBOO74eFb3nk4PC7FCLs1p
+X-Google-Smtp-Source: AGHT+IHJ4yX6twOUj+yvQhYg9lvd7DEHA7ViXOMbSjRZ2dxNnD3umeQUVsbdUZjFH0URzjCEzKV38Q==
+X-Received: by 2002:a5b:74b:0:b0:e11:44b9:6bc5 with SMTP id 3f1490d57ef6-e164a9a7865mr460329276.22.1724092519398;
+        Mon, 19 Aug 2024 11:35:19 -0700 (PDT)
 Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6af9cd7a548sm16670207b3.87.2024.08.19.11.18.11
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e1172008bdfsm2167805276.51.2024.08.19.11.35.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 11:18:13 -0700 (PDT)
+        Mon, 19 Aug 2024 11:35:18 -0700 (PDT)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 19 Aug 2024 11:17:54 -0700
+Date: Mon, 19 Aug 2024 11:35:15 -0700
 To: Terry Bowman <Terry.Bowman@amd.com>
-Cc: fan <nifan.cxl@gmail.com>, dan.j.williams@intel.com,
-	ira.weiny@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, ming4.li@intel.com,
-	vishal.l.verma@intel.com, jim.harris@samsung.com,
-	ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
+Cc: Dan Williams <dan.j.williams@intel.com>, ira.weiny@intel.com,
+	dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+	ming4.li@intel.com, vishal.l.verma@intel.com,
+	jim.harris@samsung.com, ilpo.jarvinen@linux.intel.com,
+	ardb@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
 	a.manzanares@samsung.com
-Subject: Re: [RFC PATCH 0/9] Add RAS support for CXL root ports, CXL
- downstream switch ports, and CXL upstream switch ports
-Message-ID: <ZsOMUi_dMhakCkit@fan>
+Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
+ downstream port UCE handlers
+Message-ID: <ZsOQYyh-_t3QRSTW@fan>
 References: <20240617200411.1426554-1-terry.bowman@amd.com>
- <ZqKeHWsZtDb1RKfh@debian>
- <6db43744-1d92-482a-852f-8d43efa55b74@amd.com>
+ <20240617200411.1426554-2-terry.bowman@amd.com>
+ <6675d1cc5d08_57ac294d5@dwillia2-xfh.jf.intel.com.notmuch>
+ <ecc5fbd0-52e1-443f-8e5a-2546328319b2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,176 +79,123 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6db43744-1d92-482a-852f-8d43efa55b74@amd.com>
+In-Reply-To: <ecc5fbd0-52e1-443f-8e5a-2546328319b2@amd.com>
 
-On Mon, Aug 19, 2024 at 11:21:01AM -0500, Terry Bowman wrote:
-> Hi Fan
+On Mon, Jun 24, 2024 at 12:56:29PM -0500, Terry Bowman wrote:
+> Hi Dan,
 > 
-> On 7/25/24 13:49, fan wrote:
-> > On Mon, Jun 17, 2024 at 03:04:02PM -0500, Terry Bowman wrote:
-> >> This patchset provides RAS logging for CXL root ports, CXL downstream
-> >> switch ports, and CXL upstream switch ports. This includes changes to
-> >> use a portdrv notifier chain to communicate CXL AER/RAS errors to a
-> >> cxl_pci callback.
+> I added a response below.
+> 
+> On 6/21/24 14:17, Dan Williams wrote:
+> > Terry Bowman wrote:
+> >> The AER service driver does not currently call a handler for AER
+> >> uncorrectable errors (UCE) detected in root ports or downstream
+> >> ports. This is not needed in most cases because common PCIe port
+> >> functionality is handled by portdrv service drivers.
 > >>
-> >> The first 3 patches prepare for and add an atomic notifier chain to the
-> >> portdrv driver. The portdrv's notifier chain reports the port device's
-> >> AER internal errors to the registered callback(s). The preparation changes
-> >> include a portdrv update to call the uncorrectable handler for PCIe root
-> >> ports and PCIe downstream switch ports. Also, the AER correctable error
-> >> (CE) status is made available to the AER CE handler.
+> >> CXL root ports include CXL specific RAS registers that need logging
+> >> before starting do_recovery() in the UCE case.
 > >>
-> >> The next 4 patches are in preparation for adding an atomic notification
-> >> callback in the cxl_pci driver. This is for receiving AER internal error
-> >> events from the portdrv notifier chain. Preparation includes adding RAS
-> >> register block mapping, adding trace functions for logging, and
-> >> refactoring cxl_pci RAS functions for reuse.
+> >> Update the AER service driver to call the UCE handler for root ports
+> >> and downstream ports. These PCIe port devices are bound to the portdrv
+> >> driver that includes a CE and UCE handler to be called.
 > >>
-> >> The final 2 patches enable the AER internal error interrupts.
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >> Cc: linux-pci@vger.kernel.org
+> >> ---
+> >>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
+> >>  1 file changed, 20 insertions(+)
 > >>
-> >> Testing RAS CE/UCE:
-> >>   QEMU was used for testing CXL root port, CXL downstream switch port, and
-> >>   CXL upstream switch port. The aer-inject tool was used to inject AER and
-> >>   a test patch was used to set the AER CIE/UIE and RAS CE/UCE status during
-> >>   testing. Testing passed with no issues.
+> >> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> >> index 705893b5f7b0..a4db474b2be5 100644
+> >> --- a/drivers/pci/pcie/err.c
+> >> +++ b/drivers/pci/pcie/err.c
+> >> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> >>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> >>  
+> >> +	/*
+> >> +	 * PCIe ports may include functionality beyond the standard
+> >> +	 * extended port capabilities. This may present a need to log and
+> >> +	 * handle errors not addressed in this driver. Examples are CXL
+> >> +	 * root ports and CXL downstream switch ports using AER UIE to
+> >> +	 * indicate CXL UCE RAS protocol errors.
+> >> +	 */
+> >> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> >> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> >> +		struct pci_driver *pdrv = dev->driver;
+> >> +
+> >> +		if (pdrv && pdrv->err_handler &&
+> >> +		    pdrv->err_handler->error_detected) {
+> >> +			const struct pci_error_handlers *err_handler;
+> >> +
+> >> +			err_handler = pdrv->err_handler;
+> >> +			status = err_handler->error_detected(dev, state);
+> >> +		}
+> >> +	}
+> >> +
 > > 
-> > Hi Terry,
-> > 
-> > Could you share a little more about the qemu test setup?
-> > From what I see, it seems currently qemu can only inject error to
-> > type3 devices, is that true? Or how to do that for port devices?
-> > Do we need a hack there?
-> > 
-> > Also, is the aer-inject tool you mentioned the one currently in the kernel
-> > or something else?
-> > https://elixir.bootlin.com/linux/v6.10-rc6/source/drivers/pci/pcie/aer_inject.c
-> > 
-> > Thanks,
-> > Fan
-> > 
-> Sorry for the late response.
+> > Would not a more appropriate place for this be pci_walk_bridge() where
+> > the ->subordinate == NULL and these type-check cases are unified?
 > 
-> I used AMD RAS injection for testing HW root ports.
-> 
-> I used QEMU and the legacy aer-inject userspace tool to test switch ports (USP/DSP).[1] 
-> I added a couple test patches to set the AER UIE/CIE because the tool doesn't support 
-> injecting UIE or CIE bits. I used a test patch for assigning the RAS status as well.
-> 
-> Regards,
-> Terry
-> 
-> [1] - https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/about/
+> It does. I can take a look at moving that.
 > 
 
-Hi Terry,
-Thanks for the reply. I was able to do aer error inject through the aer
-inject kernel module and the user space tool. 
-Trying to exercise the code in this patchset.
+Based on current code logic, the code added here will be executed as
+long as the type matches (downstream port or root port), and I also
+noticed the case ->subordinate == NULL never gets touched when I try to
+inject an error through the aer_inject module and the user space tool. 
+If my way to do error injection is right, it means the behaviour will
+get changed after the code move.
+
+Here is some of my experimental setup:
+
+QEMU +  cxl topology (one type3 memdev directly attached to a HB with a
+single root port).
+
+1. Load the cxl related drivers before error injection
+
+2. Do aer inject with aer_inject inside the QEMU VM
+
+# aer_inject ~/nonfatal
+
+aer inject input file looks like below
+-----------------------------------------------------
+fan:~/cxl/linux-fixes$ cat ~/nonfatal 
+# Inject an uncorrectable/non-fatal training error into the device
+# with header log words 0 1 2 3.
+#
+# Either specify the PCI id on the command-line option or uncomment and edit
+# the PCI_ID line below using the correct PCI ID.
+#
+# Note that system firmware/BIOS may mask certain errors, change their severity
+# and/or not report header log words.
+#
+AER
+PCI_ID 0000:0c:00.0
+UNCOR_STATUS COMP_ABORT
+HEADER_LOG 0 1 2 3
+-----------------------------------------------------
+
+The "lspci" output on the VM looks like below
+----------------------------------------------------
+Qemu: execute "lspci" on VM
+00:00.0 Host bridge: Intel Corporation 82G33/G31/P35/P31 Express DRAM Controller
+00:01.0 VGA compatible controller: Device 1234:1111 (rev 02)
+00:02.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
+00:03.0 Unclassified device [0002]: Red Hat, Inc. Virtio filesystem
+00:04.0 Unclassified device [0002]: Red Hat, Inc. Virtio filesystem
+00:05.0 Host bridge: Red Hat, Inc. QEMU PCIe Expander bridge
+00:1f.0 ISA bridge: Intel Corporation 82801IB (ICH9) LPC Interface Controller (rev 02)
+00:1f.2 SATA controller: Intel Corporation 82801IR/IO/IH (ICH9R/DO/DH) 6 port SATA Controller [AHCI mode] (rev 02)
+00:1f.3 SMBus: Intel Corporation 82801I (ICH9 Family) SMBus Controller (rev 02)
+0c:00.0 PCI bridge: Intel Corporation Device 7075
+0d:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+--------------------------------------------------
 
 Fan
 
-> > 
-> >>  
-> >>   An AMD platform with the AMD RAS error injection tool was used for
-> >>   testing CXL root port injection. Testing passed with no issues.
-> >>
-> >>   TODO - regression test CXL1.1 RCH handling.
-> >>
-> >> Solutions Considered (1-4):
-> >>   Below are solutions that were considered. Solution #4 is
-> >>   implemented in this patchset. 
-> >>
-> >>   1.) Reassigning portdrv error handler for CXL port devices
-> >>   
-> >>   This solution was based on reassigning the portdrv's CE/UCE err_handler
-> >>   to be CXL cxl_pci driver functions.
-> >>   
-> >>   I started with this solution and once the flow was working I realized
-> >>   the endpoint removal would have to be addressed as well. While this
-> >>   could be resolved it does highlight the odd coupling and dependency
-> >>   between the CXL port devices error handling with cxl_pci endpoint's
-> >>   handlers. Also, the err_handler re-assignment at runtime required
-> >>   ignoring the 'const' definition. I don't believe this should be
-> >>   considered as a possible solution.
-> >>   
-> >>   2.) Update the AER driver to call cxl_pci driver's error handler before
-> >>   calling pci_aer_handle_error()
-> >>
-> >>   This is similar to the existing RCH port error approach in aer.c.
-> >>   In this solution the AER driver searches for a downstream CXL endpoint
-> >>   to 'handle' detected CXL port protocol errors.
-> >>
-> >>   This is a good solution to consider if the one presented in this patchset
-> >>   is not acceptable. I was initially reluctant to this approach because it
-> >>   adds more CXL coupling to the AER driver. But, I think this solution
-> >>   would technically work. I believe Ming was working towards this
-> >>   solution.
-> >>
-> >>   3.) Refactor portdrv
-> >>   The portdrv refactoring solution is to change the portdrv service drivers
-> >>   into PCIe auxiliary drivers. With this change the facility drivers can be
-> >>   associated with a PCIe driver instead fixed bound to the portdrv driver.
-> >>
-> >>   In this case the CXL port functionality would be added either as a CXL
-> >>   auxiliary driver or as a CXL specific port driver
-> >>   (PCI_CLASS_BRIDGE_PCI_NORMAL).
-> >>
-> >>   This solution has challenges in the interrupt allocation by separate
-> >>   auxiliary drivers and in binding of a specific driver. Binding is
-> >>   currently based on PCIe class and would require extending the binding
-> >>   logic to support multiple drivers for the same class.
-> >>
-> >>   Jonathan Cameron is working towards this solution by initially solving
-> >>   for the PMU service driver.[1] It is using the auxiliary bus to associate
-> >>   what were service drivers with the portdrv driver. Using a CXL auxiliary
-> >>   for handling CXL port RAS errors would result in RAS logic called from
-> >>   the cxl_pci and CXL auxiliary drivers. This may need a library driver.
-> >>
-> >>   4.) Using a portdrv notifier chain/callback for CIE/UIE
-> >>   (Implemented in this patchset)
-> >>
-> >>   This solution uses a portdrv atomic chain notifier and a cxl_pci
-> >>   callback to handle and log CXL port RAS errors.
-> >>   
-> >>   I chose this after trying solution#1 above. I see a couple advantages to
-> >>   this solution are:
-> >>   - Is general port implementation for CIE/UIE specific handling mentioned
-> >>   in the PCIe spec.[2]
-> >>   - Notifier is used in RAS MCE driver as an existing example.
-> >>   - Does not introduce further CXL dependencies into the AER driver.
-> >>   - The notifier chain provides registration/unregistration and
-> >>   synchronization.
-> >>
-> >>   A disadvantage of this approach is coupling still exists between the CXL
-> >>   port's driver (portdrv) and the cxl_pci driver. The CXL port device's RAS
-> >>   is handled by a notifier callback in the cxl_pci endpoint driver.
-> >>
-> >>   Most of the patches in this patchset could be reused to work with
-> >>   solution#3 or solution#2. The atomic notifier could be dropped and
-> >>   instead use an auxiliary device or AER driver awareness. The other
-> >>   changes in this patchset could possibly be reused.
-> >>
-> >>   [1] Kernel.org -
-> >>   https://lore.kernel.org/all/f4b23710-059a-51b7-9d27-b62e8b358b54@linux.intel.com
-> >>   [2] PCI6.0 - 6.2.10 Internal errors
-> >>
-> >>  drivers/cxl/core/core.h    |   4 +
-> >>  drivers/cxl/core/pci.c     | 153 ++++++++++++++++++++++++++++++++-----
-> >>  drivers/cxl/core/port.c    |   6 +-
-> >>  drivers/cxl/core/trace.h   |  34 +++++++++
-> >>  drivers/cxl/cxl.h          |  10 +++
-> >>  drivers/cxl/cxlpci.h       |   2 +
-> >>  drivers/cxl/mem.c          |  32 +++++++-
-> >>  drivers/cxl/pci.c          |  19 ++++-
-> >>  drivers/pci/pcie/aer.c     |  10 ++-
-> >>  drivers/pci/pcie/err.c     |  20 +++++
-> >>  drivers/pci/pcie/portdrv.c |  32 ++++++++
-> >>  drivers/pci/pcie/portdrv.h |   2 +
-> >>  include/linux/aer.h        |   6 ++
-> >>  13 files changed, 303 insertions(+), 27 deletions(-)
-> >>
-> >>
-> >> base-commit: ca3d4767c8054447ac2a58356080e299a59e05b8
-> >> -- 
-> >> 2.34.1
-> >>
+
+> Regards,
+> Terry
