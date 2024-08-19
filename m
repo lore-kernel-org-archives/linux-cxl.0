@@ -1,292 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from esa11.fujitsucc.c3s2.iphmx.com (esa11.fujitsucc.c3s2.iphmx.com [216.71.156.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632A52C18C;
-	Mon, 19 Aug 2024 02:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724034871; cv=none; b=CUVUYxSfS9TtxvKIZZ8GT/TWnDPET2t/O3ZC1tenD2wuKT+MrBAkqkt0/N7mdJgAbHW7g0jMxvO0hATW+GMt1TUmd6Bu1RjeE1OR8JHmAIAvXhnBKXd0YK1ZvZ/rIR3j6bVpqxN5aHgPxvFoZxkTBKt3d7e631j7xbm9szpCOXQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724034871; c=relaxed/simple;
-	bh=5Z0nzJhKJas79o+LDX/DR11sJ2PP9VPjJkbhB84Rx6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YZ3YhYAuJyOm8MQMlseJFfAb+bbrkFUWcsZAz7kzUeN/SBPSogShG709JizKN30B2HxU9oD660h7K4noWH8pllb6LsscSuO+FiF8s7env/x5KBCq29UfI14AUNG1IQTjcgf/Jvv2538qE2HY3c9xN2qNq6nYqy9hNtHY/iC5sUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GMVKet15; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EDB322A
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Aug 2024 05:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.156.121
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724046767; cv=fail; b=TVA89OI0hy4slsXaEIVssDkjVYFNVTGRS+PFO7AjzTuefw9Nt5Ygsfp5CwPPRMN7qfTNjz7U4lv471k60D1Ogw4dcFXfeKOXjuRbMKpt+VYjbGi/W3UrxTOy4kXeZe1yCZfS+eaHgrb3qHNZ+vkG6Wy30VT+AyMjNQFFKikD5qo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724046767; c=relaxed/simple;
+	bh=cZ9HPqvGn7YpNDyS4BYQ1TTD/MKKf8WIGQMsU5D/JaE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RsUEYJsZAzI1aXD5ooLIv0bvZ4o6f499iNLz2AGw6XcvPdlmtGl1kZaMSWNwmCqY2r/bmWukhzrTPOzEqCXLSf2Pz3ZnS2JF1Qp6/M7uG4Y8MPl1kicUnA42GfrYOkQz8Q5IQxKwotmvxhkwWRN92AUTR0J5cgWecR5u+6uWZxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=E5aWt+4d; arc=fail smtp.client-ip=216.71.156.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GMVKet15"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724034869; x=1755570869;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5Z0nzJhKJas79o+LDX/DR11sJ2PP9VPjJkbhB84Rx6w=;
-  b=GMVKet156fyHiIIHOVwRNZlh+SNoGMemuoHiaZNY+wqYdjt+qTdjFdwI
-   dkzL0ECMUBfpuilbB8VOqOe8h/iPGAtjRlVs0Zw/WBxiG1Dl2NTj8ee5Z
-   Ca40KltqboT0xXroNB0dPRMvSkVH3KN394qGZC3W8m+6hgYrWe8DlhpNd
-   WOGx7rJtvcLQ2MncM9xTx9sKQh3tcuF5o0rMhNHeTjCFjCt9VYcLPsL9x
-   zdQedKa8keQWH0yfagDpYVCngJpzgzVYZROpyDGEnjHpgMhBTimu4HcvL
-   vz88+daCI+n52o5bPUdAELdOFKYQjm28mIyXlRd7PMr2ES7/n4pRRAAs/
-   w==;
-X-CSE-ConnectionGUID: 9w8KR1IiS7ah5psFJuPJgQ==
-X-CSE-MsgGUID: VkFBphwCS2u6yysKS4wR7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11168"; a="33639877"
-X-IronPort-AV: E=Sophos;i="6.10,158,1719903600"; 
-   d="scan'208";a="33639877"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2024 19:34:28 -0700
-X-CSE-ConnectionGUID: p7Xuo10/ShSKYQijg3o5Xw==
-X-CSE-MsgGUID: icVulG52TRaCzAo1ZTDDIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,158,1719903600"; 
-   d="scan'208";a="60225690"
-Received: from unknown (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.245.243.221])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2024 19:34:23 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Huang Ying <ying.huang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH -v2] Resource: fix region_intersects() for CXL memory
-Date: Mon, 19 Aug 2024 10:34:13 +0800
-Message-Id: <20240819023413.1109779-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="E5aWt+4d"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1724046763; x=1755582763;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=cZ9HPqvGn7YpNDyS4BYQ1TTD/MKKf8WIGQMsU5D/JaE=;
+  b=E5aWt+4dK9hngkYYP802y1QcD75DF/fjFLd+oVX5lt4ROHjKAHMNqYbE
+   HAeS7WtpXWYFtbbWmWNkim13nc5PxClPIzXDT7VC8nbXI5AOt+/NJ3E7M
+   gHyFB1CqhB+zxaceE4qSvHq+BvU45FOyEGD4XNe7EsjLKBNfzwXL9QDHg
+   bmqBrn4FCEs5NiTlM81rejyZRjrNiWxKR5oZZ7dzV/VLc3dt7h3DHXWOd
+   FPAr83P9dGUp6zz3Ov8ekhWwI8dZWcvrd8oKOpRxSHaovHSug2l8vnlgj
+   WhINh27GaqF+prq8Mr3hq1M1n/JTzRy5WUU7FBNf0sdvY6nkMoSysgyco
+   Q==;
+X-CSE-ConnectionGUID: 2bHEP9q6SFKoOgbsyhkT/g==
+X-CSE-MsgGUID: m0BmRrThRz6s7XT4SkbfSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11168"; a="129116066"
+X-IronPort-AV: E=Sophos;i="6.10,158,1719846000"; 
+   d="scan'208";a="129116066"
+Received: from mail-japaneastazlp17011030.outbound.protection.outlook.com (HELO TYVP286CU001.outbound.protection.outlook.com) ([40.93.73.30])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 14:52:34 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LbrVTlJ3jGLqWt7J6u+vPKqnvymLbjGJMzyUUCl0t54/MwvLtc6lzSMjXqH/kvsLC66DCjIGh6FpPeYKqNlM5CSt8KYNSS+mm85Xb4p0FZcPblun64wjE1noibAaA7A9f2DQilxDWKSsuyJJzhky8kcvb7whwuMuLWn0fZL6qPmgKMG0+4liHXKwRU8dFUsvszJ2AQso7otq14Pkw6iJlud9EyGTjDSjqcOYzhkHsPuXahftHh1sbeC5ASFfJ7gnOzFzG50t8RMZhviddF46PptQ9lFktdlGpNYvWPiOKWEeZuFlxAMOij+RQc4sya9TLGvSUVGsGh0yr0jNepUaxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5N8/ANzV75Esp4VF41ukLX3RYo6CS7Y2jDH+6cwHQRI=;
+ b=BsMRhHC7k/RJAp1qZXInp28WxmWK2zrT5d6uitMNdRYYNDQnulhafZ0IlSE+nVMMrORoDEk7i1xZ100we2Zukz2DEcQv9sVg09A10aSXmn0/TsvcP6/cGw/uvzaL7Yf3itNxrkyaue1yIaC0TDxsd98qgSCs6AN/HPfvLoMf4sKOKG4HCGIQhCEMGw/vTzftcvQp/z8d1qsw/5q2FP1Vpe/TYNDHJaEbO5Va78bhq7SRiuId+yVQiOCEDN2pCKV1VuaH7Ub/Yyc8V7AVj/3LxMoIlVNIPvm6hrDUqhYrdsKvMO5VVaP2WBHdJlUDS5j4YWSB75CNnQnW1c/U7AURhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
+ by OSCPR01MB12912.jpnprd01.prod.outlook.com (2603:1096:604:33c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21; Mon, 19 Aug
+ 2024 05:52:31 +0000
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::357a:7bf5:8d95:3cba%5]) with mapi id 15.20.7875.019; Mon, 19 Aug 2024
+ 05:52:31 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: "Li, Ming4" <ming4.li@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>
+CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, "mj@ucw.cz" <mj@ucw.cz>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: RE: [PATCH v16 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
+ link status
+Thread-Topic: [PATCH v16 2/2] cxl/pci: Add sysfs attribute for CXL 1.1 device
+ link status
+Thread-Index: AQHa7q2RB61N3A+NEE+x4Nhuszovo7IpdYCAgAROg8A=
+Date: Mon, 19 Aug 2024 05:52:31 +0000
+Message-ID:
+ <OSAPR01MB7182BB9F62ED6ADD9BFB0C68BA8C2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240815005510.220835-1-kobayashi.da-06@fujitsu.com>
+ <20240815005510.220835-4-kobayashi.da-06@fujitsu.com>
+ <5181e123-44ef-43d8-926a-3a11cfec6842@intel.com>
+In-Reply-To: <5181e123-44ef-43d8-926a-3a11cfec6842@intel.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=True;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-08-19T05:52:30.154Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Standard;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|OSCPR01MB12912:EE_
+x-ms-office365-filtering-correlation-id: a2990b58-c053-481b-9d8f-08dcc0131d90
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|366016|38070700018|1580799027;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?ZjNQSUsreWk2Mmt0MmVqWXZIWkFodDAxYjlxL2NKbDJBS2xRSFU0OEU4?=
+ =?iso-2022-jp?B?ZEhpNkx6T1VNSGc5c0ZsOXEzU09zcklEdVA5NHdVbm1sZzc2d01TQ25U?=
+ =?iso-2022-jp?B?NmN1K0RlR1NNUnlyMk4vZXExRWRZZGpISVplNEVYWTFmQzh0cVhwUXg4?=
+ =?iso-2022-jp?B?TkcwcGljdHpFWUdGdEhYaW9PVWEwaU5QQUM4Yk9RRFpuVHV2bS9JWGRC?=
+ =?iso-2022-jp?B?dXVoSTFZV0lqVjkzUEt4RFBwUmJyd2c3ampORjRlZllQRE1PMTMvbmlZ?=
+ =?iso-2022-jp?B?aTM5MnZ0clQySU5ZcjRrSjJyUm5IUGs0eUtnNnFtSC84cGVOUk5xbXc3?=
+ =?iso-2022-jp?B?aDkyRkgxN2JaNC9NL1pwcjdlMFdYZEJGaGVSZTdDZ3YyVUdicTloMEx5?=
+ =?iso-2022-jp?B?aFB3azlvT1hZRWZYekJWRkhJYTE3TmJXbmVhWkJ5WHVLUjFBU0grNUdB?=
+ =?iso-2022-jp?B?RGdnNDd3dVFmNHVnMHhwQmswNUhreFovc2FRNGNubnlvdE1XS1A4b0FV?=
+ =?iso-2022-jp?B?a2twYTN6VU96OUxkSVloL1RCYllKOUVSTHo3TXFSaks0Z0dkQUoyUWNx?=
+ =?iso-2022-jp?B?eWlSeW1QRzZHM3RKelloYjhZQ3RzQU1WZDZma21EUmJLMEFlaUxKbW83?=
+ =?iso-2022-jp?B?bEhDd2VHKzdQRUhlOEZFTUNBVnJ1MU5zMEI1bmUvT1NZbERkQ0ZwTDZB?=
+ =?iso-2022-jp?B?cE5EZE5jV1I0UXc5N2NnZ1luUmF5Qk9tKzFYQ1BLUnVIK3dSdWxrL2du?=
+ =?iso-2022-jp?B?bFB4SFFJOEdvaU45b2pRZmlkSm82U1JBN1JpYmM3V1MxRk9MSkltVFZH?=
+ =?iso-2022-jp?B?bnZoakptMWVtdG9pcmhua0ZROHhyZXpsY3NFT3ZRbjE1UzZOdEV0dCtn?=
+ =?iso-2022-jp?B?NTlYUTA1S3hmemdZaUZjYnI2Wkc4TWFaRGcrZ1dTbW53ODJoVzNLSmpt?=
+ =?iso-2022-jp?B?YnY4cGU3MmRBV0d0aWVBRU1vZzNueStyMnR6aGU4d0xYU2hRdmdIU1lj?=
+ =?iso-2022-jp?B?cm1NTTZmbk1JeDBrNlAvWTB6N1Y0Ukx1SjFVYlI3SmVlTTRlYXpTN0Z4?=
+ =?iso-2022-jp?B?V3dvTTBiVzJBbjEyMlA5elNKUTlzaUhpcWY3ckEzbzdHbCt3QzBzcjBR?=
+ =?iso-2022-jp?B?emI3aWJaK1hZR2ZMRytWTndKWTQrKy9SdTRnOENGWktPWitBYkpkYnVY?=
+ =?iso-2022-jp?B?d01LQmdKQktQKytOK1pROUlDMng4Q3liWUNZQlZhZ1pjcS8xWExpN284?=
+ =?iso-2022-jp?B?M1B1Y09Fek1pQjhRMDZvNWZFaGNBK1cxaHhVN1BiRDBadVVMWkdXaFQ5?=
+ =?iso-2022-jp?B?U09iV2F1NFJLcUJRQllDTlhaYUJ1YWVpS1YzK2ZxMEhUZGJEbVNvcEh0?=
+ =?iso-2022-jp?B?SXFVeTViVW9uUEFoSHpTSVVsVmlJeHpDVFppUW9JRThXZ3gveDhLUnZw?=
+ =?iso-2022-jp?B?cUowMDlWSG1GTGdZUWhvZmwwbGZiTXY3L3draWJIRm9HV2VvR1hvd2dX?=
+ =?iso-2022-jp?B?enRsNjY4OVVPNnA1YzlxRDYvYmhZd1IwNnhjSngzYXljT2YzNTBQUlU2?=
+ =?iso-2022-jp?B?aEJuZmk4UFlEeGpxMXhCdER0Qk9vS01jTldYN2RXcHVvVFlweGw1RFBF?=
+ =?iso-2022-jp?B?NkVpakdnQkdFUVNZT3F1SElqd2s1dml2NlMvcVNXcUlOOWlXT1EyUTNa?=
+ =?iso-2022-jp?B?TTB3Y0xORlNucm52ZGpzQnpWODlKUUNXaGdCNkZzRjZodEJqdHpYcGFy?=
+ =?iso-2022-jp?B?MzZ1WHhCM3hYenFNRnRocVNoNmJnci9BWjhaRnhtTDk2ZDJXeUttODNK?=
+ =?iso-2022-jp?B?b2pUME9JUVpKNVcxTkRvMzVURkJPZnZ2Kzc4bzd3QUtCRWR1TjlOOU9a?=
+ =?iso-2022-jp?B?T28zZFdkOTA0aXRaWW4wVHg3REJQZ0tSb1hNYXU0cnBxUkNuSDZhTGFS?=
+ =?iso-2022-jp?B?ejFlQlRYYy8vclVEdXJKbW1jNVptWEtWZ1pPSVNSWllCL0toODhhOEMr?=
+ =?iso-2022-jp?B?NENJMU5Bbm1EaXpZTzBEakQ4eThlRw==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?RkozaXhzNUxwcHdvOGN2bmZaaUNhUDRxc3pscXB3M2hrSERzOVNCTGJq?=
+ =?iso-2022-jp?B?SWdScUIwVCsxY2FTeHhsMHVNUjIydGd3SVE4b1FlZXY2Vkw2N1pZQktp?=
+ =?iso-2022-jp?B?L3c2bk8xclVqbVJ5SnRRMXFvRUN3elR4YW5MSXhWRU9SWmZ1OHAwUE1Z?=
+ =?iso-2022-jp?B?V0pVbmlBdjIxV1hZRW5OanRWVUFucUVMajZRcmJTV2pOMXJHTHhVYlpB?=
+ =?iso-2022-jp?B?OUVjNW1GbUdJZHo5SUx4dTZjNUVsYkJNOHA4ZFVhTXdSaE9idGlXVmo0?=
+ =?iso-2022-jp?B?NVVLekdLNk1UbEdlZ1lSelp2aWxTdjRkeGM1bnY3OHVIVEIyM3FEWEM0?=
+ =?iso-2022-jp?B?cjJsSEN2eTBibW92dDBwTi9USm9TWVNCbnlUWE1HYkt0QTIxSTd3Y2VH?=
+ =?iso-2022-jp?B?RWVDZEtOSzlOdmcwUjFhenhFZWZmb3FWczkxK1RqR09Ia1huaDdQa0tv?=
+ =?iso-2022-jp?B?ZE43QnozQUVoV3RUUC84Y3ViY3lONjJ5ZWhaVTNVQklHajlBSVdHcU4w?=
+ =?iso-2022-jp?B?UDNhcmw0RUhSblRvS2FrR0huSU11QnhTaVdVNmljeFVlc0p4cjIxaU1o?=
+ =?iso-2022-jp?B?Q1h1U0NOYzZDSmxLTUFlOXJTbVg4WkRBQlY5TE5uc1lDcUhVN2dVd1hM?=
+ =?iso-2022-jp?B?cllkcVpTUjlkcEJ2S1FsRXNjamhXMmt2ZEZUV3VSYmZsNUh2UVBQOFhC?=
+ =?iso-2022-jp?B?UGNHdVM3d3BucEpReW5YcXI5eU1QazhNbWRtY0hFRU14UGpIWG0rT0Jo?=
+ =?iso-2022-jp?B?NHM3MHMvdTVpYnJsTUhUakxwSm95djh3SWNsaUVaTFBDdVg5MVU3ZVV1?=
+ =?iso-2022-jp?B?bzRvMEdrejRQbzlGOXo5Z2R4QkNiMW5PdkxVd3VEWHZPNHdRVWdleGFa?=
+ =?iso-2022-jp?B?Uk5kYk91WDY5WlpJYkhsMUtHc2krRVZKRUozQXA2SkUvZ3pLRzVSRFV1?=
+ =?iso-2022-jp?B?Yi83dUNqN1I3Mks1QzEzdWlsQ2RVOGUyQ2xORnFHVmZ5RXljRi9lUVE4?=
+ =?iso-2022-jp?B?bXd6MlFUOG9uZWQ2MDNUWCtzcS9wRTlncVhQTmRYLzN4TzE2TzJVUWhN?=
+ =?iso-2022-jp?B?TGVKL1pRTEJ6bm9OeWRJVnVmTHR5TzI1WC94RkNvVmNsU2JuSG9iKytF?=
+ =?iso-2022-jp?B?QklVQXQ5anhFdjV6Q2ZDOUJuZVNML2Y2clNxY0RCeHZuY0EwZXhGdjQ5?=
+ =?iso-2022-jp?B?c2szWm5uKzRNNkIydGlUclpIWkNwNnpVTkxMOGlrRzhydS80MGppRHhH?=
+ =?iso-2022-jp?B?LytpMzBOcEZ3OGJRbW5vN2FyYjVwWUdiMlllYWw4UXRBbGZna0NzeFdl?=
+ =?iso-2022-jp?B?WnhmTGQ1L1hta25aN1QvNng2T2IxSjZEK1ZQK25SRERPc3ZtZnlCcTBO?=
+ =?iso-2022-jp?B?b1JSUU1rWTlOb1UrRVF1Z2dRODUzSStMT3hvbzk1cWZGZVNiYTBNRUNC?=
+ =?iso-2022-jp?B?NFNtdkx3dlBCK1N1bWlJUUNCNTlPYTRBVGFSSHRXQmNjc2xqQml6L3Bk?=
+ =?iso-2022-jp?B?T2htMDdqOEZXODQ4dmFkSlpiZ3pHbzVsbzB5b1hPL2R5alBaclFKdll6?=
+ =?iso-2022-jp?B?QWR2RitPRmYxdXVqMnNUWkJFakR3WlhUa1lHT0s4S1hrRzhRSUlZYVNW?=
+ =?iso-2022-jp?B?eTJFVmE5SitPaFlxbDlKcmJTYlo2R1VUQlRuMHZYOEIwV0trdVR5SDZX?=
+ =?iso-2022-jp?B?RlhZMFdIUERvdkF5QkdqUDNPRWtWdHVnNlBNY3hQL3E0RXozZ0s1UFYy?=
+ =?iso-2022-jp?B?dXlQeEdESnV1MGRzMWF0aTdWYkw1THNnSTU0TVdKVHFQRjRUdmdmRzM1?=
+ =?iso-2022-jp?B?QnRWdGtheVlnbUVoRUZRZWdINjdlaXVRbE5YZ0JGaUt5ZnJQOEhYSmN4?=
+ =?iso-2022-jp?B?TjdENXZMbDNXOWFhemNZem42cVN6aVVYanZqUTNzai8yTVd1RjdEYkE4?=
+ =?iso-2022-jp?B?RXZ0RGJwQm15TndGMmd5ZU9QWjNDS1hhUDhOS3pOSkdiK2toaWZkOVhB?=
+ =?iso-2022-jp?B?WC9xb1hFa1VJM0hTTWxYcjBPU0Fydi9JTzdhMm1oQjV5TVBIMno1TjV3?=
+ =?iso-2022-jp?B?MzNzbStrRm1yMmpkRElXb2d0RmIvQ21HYnJLYjdHbnBBTHRKbHRHR3Ir?=
+ =?iso-2022-jp?B?OHZFWXBicTRuWExGbEdYYXMzK3l5TThFZzBVZCtaNjlEdUFncE9IMDJH?=
+ =?iso-2022-jp?B?WEZQSUw4ekVmMjhnTWlxTGgzYjBUb0xnWThUZDMyZE9TZTF4TkVadHlB?=
+ =?iso-2022-jp?B?QzNnUzd1cklwM3o2eDNFMkI2YUE1MUlDWWxISnRLSHVhd1VXc0pSK2xo?=
+ =?iso-2022-jp?B?a2k1K051bFdRSGM2aThtNXZPYXhHS3VaMUE9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	R9NKj1Qcz5IfnHIqRTZ3EUNyTjtrsLGp86atlux9Xx1a8WO+cHtObFcubJ6z1WszVJLtrbwdTKY2jDSMuOoboqMRY77p/iJy6FFE3vZRqL9FHLZTU4+WYCLyWRVl0Jzs1mAk76YsewlpT2KHAhv/OFcfrB32z0pmdUQlJEHvavENim8XFXJVllZ8fr6jsvsAsIYswPdJOuI8QyxZkx567S1/s01XjmoHA1fy7/bo4JotmQYTbcVENaCDUZ5491nKZGhziZMLLEzl6R5ft4Svr2AqDggUN2We6xPk4kEqGPsw6Pkoh1lleBrRKh+7oR+b87U1EOcxBZzduZOIXVcUvsWVzgDBAOXdoY7/8/s/AegLa+8yD0Jh7gveTJ5N2AHKV/7YepueAYxF5R2wH4MHp0zGBeNOAdYTf+a3DfU4U1qK7WNrSZofLBKdGTcReykaKVZCZegIlgMEnRJIM9UyAvuERsAJb58gynv80+ko/yVuIMLoHVOWMOH63peVTjNvcGbXkdZWA9u9z2Gjj4k6JoW/lmOBs1K56No9RX/GOVsieNhm7x22WesRRgdVi85TmlmaFOLHOt/h35GiTxm6pZZOSWTO0ioAkY6QlS0i4QKR8+219Qmg7KniRrZTn/AO
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2990b58-c053-481b-9d8f-08dcc0131d90
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2024 05:52:31.2347
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: votfSlMK42ZGNB8wlDqGDw86cCpzCJlEIqVymLBtJCI/npTXOzn4WFGYIFxNoeMNZ6Bkh1GO4OAiYvL3LMXstcHLgIUCL/4fZsXPKBSC2ls=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB12912
 
-On a system with CXL memory installed, the resource tree (/proc/iomem)
-related to CXL memory looks like something as follows.
-
-490000000-50fffffff : CXL Window 0
-  490000000-50fffffff : region0
-    490000000-50fffffff : dax0.0
-      490000000-50fffffff : System RAM (kmem)
-
-When the following command line is run to try writing some memory in
-CXL memory range,
-
- $ dd if=data of=/dev/mem bs=1k seek=19136512 count=1
- dd: error writing '/dev/mem': Bad address
- 1+0 records in
- 0+0 records out
- 0 bytes copied, 0.0283507 s, 0.0 kB/s
-
-the command fails as expected.  However, the error code is wrong.  It
-should be "Operation not permitted" instead of "Bad address".  And,
-the following warning is reported in kernel log.
-
- ioremap on RAM at 0x0000000490000000 - 0x0000000490000fff
- WARNING: CPU: 2 PID: 416 at arch/x86/mm/ioremap.c:216 __ioremap_caller.constprop.0+0x131/0x35d
- Modules linked in: cxl_pmem libnvdimm cbc encrypted_keys cxl_pmu
- CPU: 2 UID: 0 PID: 416 Comm: dd Not tainted 6.11.0-rc3-kvm #40
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
- RIP: 0010:__ioremap_caller.constprop.0+0x131/0x35d
- Code: 2d 80 3d 24 6a a1 02 00 75 c1 48 8d 54 24 70 48 8d b4 24 90 00 00 00 48 c7 c7 40 3a 05 8a c6 05 07 6a a1 02 01 e8 a3 a0 01 00 <0f> 0b eb 9d 48 8b 84 24 90 00 00 00 48 8d 4c 24 60 89 ea 48 bf 00
- RSP: 0018:ffff888105387bf0 EFLAGS: 00010282
- RAX: 0000000000000000 RBX: 0000000490000fff RCX: 0000000000000000
- RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffffed1020a70f73
- RBP: 0000000000000000 R08: ffffed100d9fce92 R09: 0000000000000001
- R10: ffffffff892348e7 R11: ffffed100d9fce91 R12: 0000000490000000
- R13: 0000000000000001 R14: 0000000000000001 R15: ffff888105387ca0
- FS:  00007f86c438c740(0000) GS:ffff88806ce00000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 000055ba75b1b818 CR3: 0000000005231000 CR4: 0000000000350eb0
- Call Trace:
-  <TASK>
-  ? __warn+0xd7/0x1b8
-  ? __ioremap_caller.constprop.0+0x131/0x35d
-  ? report_bug+0x136/0x19e
-  ? __ioremap_caller.constprop.0+0x131/0x35d
-  ? handle_bug+0x3c/0x64
-  ? exc_invalid_op+0x13/0x38
-  ? asm_exc_invalid_op+0x16/0x20
-  ? irq_work_claim+0x16/0x38
-  ? __ioremap_caller.constprop.0+0x131/0x35d
-  ? tracer_hardirqs_off+0x18/0x16d
-  ? kmem_cache_debug_flags+0x16/0x23
-  ? memremap+0xcb/0x184
-  ? iounmap+0xfe/0xfe
-  ? lock_sync+0xc7/0xc7
-  ? lock_sync+0xc7/0xc7
-  ? rcu_is_watching+0x1c/0x38
-  ? do_raw_read_unlock+0x37/0x42
-  ? _raw_read_unlock+0x1f/0x2f
-  memremap+0xcb/0x184
-  ? pfn_valid+0x159/0x159
-  ? resource_is_exclusive+0xba/0xc5
-  xlate_dev_mem_ptr+0x25/0x2f
-  write_mem+0x94/0xfb
-  vfs_write+0x128/0x26d
-  ? kernel_write+0x89/0x89
-  ? rcu_is_watching+0x1c/0x38
-  ? __might_fault+0x72/0xba
-  ? __might_fault+0x72/0xba
-  ? rcu_is_watching+0x1c/0x38
-  ? lock_release+0xba/0x13e
-  ? files_lookup_fd_raw+0x40/0x4b
-  ? __fget_light+0x64/0x89
-  ksys_write+0xac/0xfe
-  ? __ia32_sys_read+0x40/0x40
-  ? tracer_hardirqs_off+0x18/0x16d
-  ? tracer_hardirqs_on+0x11/0x146
-  do_syscall_64+0x9a/0xfd
-  entry_SYSCALL_64_after_hwframe+0x4b/0x53
- RIP: 0033:0x7f86c4487140
- Code: 40 00 48 8b 15 c1 9c 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d a1 24 0e 00 00 74 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
- RSP: 002b:00007ffca9f62af8 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
- RAX: ffffffffffffffda RBX: 0000000000000400 RCX: 00007f86c4487140
- RDX: 0000000000000400 RSI: 000055ba75b1a000 RDI: 0000000000000001
- RBP: 000055ba75b1a000 R08: 0000000000000000 R09: 00007f86c457c080
- R10: 00007f86c43a84d0 R11: 0000000000000202 R12: 0000000000000000
- R13: 0000000000000000 R14: 000055ba75b1a000 R15: 0000000000000400
-  </TASK>
- irq event stamp: 0
- hardirqs last  enabled at (0): [<0000000000000000>] 0x0
- hardirqs last disabled at (0): [<ffffffff89091e85>] copy_process+0xb60/0x255f
- softirqs last  enabled at (0): [<ffffffff89091e85>] copy_process+0xb60/0x255f
- softirqs last disabled at (0): [<0000000000000000>] 0x0
-
-After investigation, we found the following bug.
-
-In the above resource tree, "System RAM" is a descendant of "CXL
-Window 0" instead of a top level resource.  So, region_intersects()
-will report no System RAM resources in the CXL memory region
-incorrectly, because it only checks the top level resources.
-Consequently, devmem_is_allowed() will return 1 (allow access via
-/dev/mem) for CXL memory region incorrectly.  Fortunately, ioremap()
-doesn't allow to map System RAM and reject the access.
-
-However, region_intersects() needs to be fixed to work correctly with
-the resources tree with CXL Window as above.  To fix it, if we found a
-unmatched resource in the top level, we will continue to search
-matched resources in its descendant resources.  So, we will not miss
-any matched resources in resource tree anymore.  In the new
-implementation,
-
-|------------- "CXL Window 0" ------------|
-|-- "System RAM" --|
-
-will look as if
-
-|-- "System RAM" --||-- "CXL Window 0a" --|
-
-in effect.
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Baoquan He <bhe@redhat.com>
----
-Changelogs:
-
-v2:
-
-- Fix a bug which occurs when descendant of a matched resource matches.
-
-- Revise the patch description and comments to make the algorithm clearer.
-  Thanks Dan and David's comments!
-
-- Link to v1: https://lore.kernel.org/linux-mm/20240816020723.771196-1-ying.huang@intel.com/
-
- kernel/resource.c | 53 ++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 14777afb0a99..60492f143275 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -542,18 +542,57 @@ static int __region_intersects(struct resource *parent, resource_size_t start,
- {
- 	struct resource res;
- 	int type = 0; int other = 0;
--	struct resource *p;
-+	struct resource *p, *dp;
-+	resource_size_t ostart, oend;
-+	bool is_type, covered;
- 
- 	res.start = start;
- 	res.end = start + size - 1;
- 
- 	for (p = parent->child; p ; p = p->sibling) {
--		bool is_type = (((p->flags & flags) == flags) &&
--				((desc == IORES_DESC_NONE) ||
--				 (desc == p->desc)));
--
--		if (resource_overlaps(p, &res))
--			is_type ? type++ : other++;
-+		if (!resource_overlaps(p, &res))
-+			continue;
-+		is_type = (((p->flags & flags) == flags) &&
-+			   ((desc == IORES_DESC_NONE) || (desc == p->desc)));
-+		if (is_type) {
-+			type++;
-+			continue;
-+		}
-+		/*
-+		 * Continue to search in descendant resources as if the
-+		 * matched descendant resources cover some ranges of 'p'.
-+		 *
-+		 * |------------- "CXL Window 0" ------------|
-+		 * |-- "System RAM" --|
-+		 *
-+		 * looks as if
-+		 *
-+		 * |-- "System RAM" --||-- "CXL Window 0a" --|
-+		 *
-+		 * in effect.
-+		 */
-+		covered = false;
-+		ostart = max(res.start, p->start);
-+		oend = min(res.end, p->end);
-+		for_each_resource(p, dp, false) {
-+			if (!resource_overlaps(dp, &res))
-+				continue;
-+			is_type = (((dp->flags & flags) == flags) &&
-+				   ((desc == IORES_DESC_NONE) ||
-+				    (desc == dp->desc)));
-+			if (is_type) {
-+				type++;
-+				if (dp->start > ostart)
-+					break;
-+				if (dp->end >= oend) {
-+					covered = true;
-+					break;
-+				}
-+				ostart = max(ostart, dp->end + 1);
-+			}
-+		}
-+		if (!covered)
-+			other++;
- 	}
- 
- 	if (type == 0)
--- 
-2.39.2
-
+Li,Ming wrote:=0A=
+> On 8/15/2024 8:55 AM, Kobayashi,Daisuke wrote:=0A=
+> > Add sysfs attribute for CXL 1.1 device link status to the cxl pci devic=
+e.=0A=
+> >=0A=
+> > In CXL1.1, the link status of the device is included in the RCRB mapped=
+ to=0A=
+> > the memory mapped register area. Critically, that arrangement makes the=
+=0A=
+> > link status and control registers invisible to existing PCI user toolin=
+g.=0A=
+> >=0A=
+> > Export those registers via sysfs with the expectation that PCI user=0A=
+> > tooling will alternatively look for these sysfs files when attempting t=
+o=0A=
+> > access to these CXL 1.1 endpoints registers.=0A=
+> >=0A=
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>=0A=
+> > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>=0A=
+> > ---=0A=
+> >  drivers/cxl/pci.c | 78=0A=
+> +++++++++++++++++++++++++++++++++++++++++++++++=0A=
+> >  1 file changed, 78 insertions(+)=0A=
+> >=0A=
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c=0A=
+> > index 4eaf64d92541..4e51b6a0a97b 100644=0A=
+> > --- a/drivers/cxl/pci.c=0A=
+> > +++ b/drivers/cxl/pci.c=0A=
+> > @@ -792,6 +792,83 @@ static int cxl_event_config(struct pci_host_bridge=
+=0A=
+> *host_bridge,=0A=
+> >  	return 0;=0A=
+> >  }=0A=
+> >=0A=
+> > +static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char =
+*buf,=0A=
+> size_t width)=0A=
+> > +{=0A=
+> > +	struct cxl_dev_state *cxlds =3D dev_get_drvdata(dev);=0A=
+> > +	struct cxl_memdev *cxlmd =3D cxlds->cxlmd;=0A=
+> > +	struct device *root_dev;=0A=
+> > +	struct cxl_dport *dport;=0A=
+> > +	struct cxl_port *root __free(put_cxl_root) =3D=0A=
+> > +		cxl_mem_find_port(cxlmd, &dport);=0A=
+> =0A=
+> It is not right to use put_cxl_root() to dereference a cxl_port->dev here=
+.=0A=
+> put_cxl_root() is used for a struct cxl_root rather than a struct cxl_por=
+t. I=0A=
+> implemented a put_cxl_port() in the below patch which is under review.=0A=
+> =0A=
+> https://lore.kernel.org/linux-cxl/20240813070552.3353530-1-ming4.li@intel=
+.c=0A=
+> om/T/#m07695675435bf702311dfc40f64289b9623afa16=0A=
+> =0A=
+> =0A=
+Thank you for your comment.=0A=
+It seems I misunderstood Dan's review comment. It appears that using the fu=
+nction is the correct approach.=0A=
+=0A=
+Dan, could you please confirm that your review comment is suggesting the us=
+e of this function which is under review?=0A=
+=0A=
+=0A=
+> > +=0A=
+> > +	if (!root)=0A=
+> > +		return -ENXIO;=0A=
+> > +=0A=
+> > +	root_dev =3D root->uport_dev;=0A=
+> > +	if (!root_dev)=0A=
+> > +		return -ENXIO;=0A=
+> > +=0A=
+> > +	guard(device)(root_dev);=0A=
+> > +	if (!root_dev->driver)=0A=
+> > +		return -ENXIO;=0A=
+> > +=0A=
+> > +	switch (width) {=0A=
+> > +	case 2:=0A=
+> > +		return sysfs_emit(buf, "%#x\n",=0A=
+> > +				  readw(dport->regs.rcd_pcie_cap +=0A=
+> offset));=0A=
+> > +	case 4:=0A=
+> > +		return sysfs_emit(buf, "%#x\n",=0A=
+> > +				  readl(dport->regs.rcd_pcie_cap + offset));=0A=
+> > +	default:=0A=
+> > +		return -EINVAL;=0A=
+> > +	}=0A=
+> > +}=0A=
+> > +=0A=
+> > +static ssize_t rcd_link_cap_show(struct device *dev,=0A=
+> > +				 struct device_attribute *attr, char *buf)=0A=
+> > +{=0A=
+> > +	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCAP, buf, sizeof(u32));=0A=
+> > +}=0A=
+> > +static DEVICE_ATTR_RO(rcd_link_cap);=0A=
+> > +=0A=
+> > +static ssize_t rcd_link_ctrl_show(struct device *dev,=0A=
+> > +				  struct device_attribute *attr, char *buf)=0A=
+> > +{=0A=
+> > +	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKCTL, buf, sizeof(u16));=0A=
+> > +}=0A=
+> > +static DEVICE_ATTR_RO(rcd_link_ctrl);=0A=
+> > +=0A=
+> > +static ssize_t rcd_link_status_show(struct device *dev,=0A=
+> > +				    struct device_attribute *attr, char *buf)=0A=
+> > +{=0A=
+> > +	return rcd_pcie_cap_emit(dev, PCI_EXP_LNKSTA, buf, sizeof(u16));=0A=
+> > +}=0A=
+> > +static DEVICE_ATTR_RO(rcd_link_status);=0A=
+> > +=0A=
+> > +static struct attribute *cxl_rcd_attrs[] =3D {=0A=
+> > +	&dev_attr_rcd_link_cap.attr,=0A=
+> > +	&dev_attr_rcd_link_ctrl.attr,=0A=
+> > +	&dev_attr_rcd_link_status.attr,=0A=
+> > +	NULL=0A=
+> > +};=0A=
+> > +=0A=
+> > +static umode_t cxl_rcd_visible(struct kobject *kobj, struct attribute =
+*a, int=0A=
+> n)=0A=
+> > +{=0A=
+> > +	struct device *dev =3D kobj_to_dev(kobj);=0A=
+> > +	struct pci_dev *pdev =3D to_pci_dev(dev);=0A=
+> > +=0A=
+> > +	if (is_cxl_restricted(pdev))=0A=
+> > +		return a->mode;=0A=
+> > +=0A=
+> > +	return 0;=0A=
+> > +}=0A=
+> > +=0A=
+> > +static struct attribute_group cxl_rcd_group =3D {=0A=
+> > +	.attrs =3D cxl_rcd_attrs,=0A=
+> > +	.is_visible =3D cxl_rcd_visible,=0A=
+> > +};=0A=
+> > +__ATTRIBUTE_GROUPS(cxl_rcd);=0A=
+> > +=0A=
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device=
+_id=0A=
+> *id)=0A=
+> >  {=0A=
+> >  	struct pci_host_bridge *host_bridge =3D=0A=
+> pci_find_host_bridge(pdev->bus);=0A=
+> > @@ -975,6 +1052,7 @@ static struct pci_driver cxl_pci_driver =3D {=0A=
+> >  	.id_table		=3D cxl_mem_pci_tbl,=0A=
+> >  	.probe			=3D cxl_pci_probe,=0A=
+> >  	.err_handler		=3D &cxl_error_handlers,=0A=
+> > +	.dev_groups		=3D cxl_rcd_groups,=0A=
+> >  	.driver	=3D {=0A=
+> >  		.probe_type	=3D PROBE_PREFER_ASYNCHRONOUS,=0A=
+> >  	},=0A=
+> =0A=
+=0A=
