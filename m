@@ -1,319 +1,225 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
+Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83182142900;
-	Mon, 19 Aug 2024 11:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724066940; cv=fail; b=YsECgHzPe7VjJsBJXdhtZhCoqcY+zMMU86ZwZUdA2GPWjqmTvFfX8A5o2wMueXzN/QqVLg6mip11JYXSn9V4ko1kFEe7WXvpwu7Hj3sj4pnlz3+LxznhvfLB/M1itgz3xY/4nnARoHLKKAUGrRLZGfvyrH+4DkxahlcIYAKeJB0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724066940; c=relaxed/simple;
-	bh=eJRvKhC5qSzhrTs3Jmjr00IhBq9VudKtI/fdHTEy3Yw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iY73gft65FXFxMxUQ61FdOIbn+2f1CKw79HshTu9Ggx8VhdeRJ7+XhKaq5V29BmrCtsO2rI8nM+kUXsvy8/6EiaTf7p3o7NCzU6Ceu9wXuZfPErO29RX0mh0Rrp2WrtVXXq7g3GDPP+z1s0kk8bH1JWOqHa+BOVHHP9qEIQveyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=onG9EXBE; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498D4142900
+	for <linux-cxl@vger.kernel.org>; Mon, 19 Aug 2024 11:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724067688; cv=none; b=EIbrj5qenVp6BRSth80SOvRN8NI1OucGRggu3Cq6oNJWzzZc3Dd6lKZeVdKJGitglsZn0rU42bW79rA84NbTUw954COa8GPtRBZnVTzs/xnzlt4yQUGwkeXs3O8cjCH453gXUYrtFD4/5AsoF5DzkBZiXYhnGXBQCL7bSVapWgk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724067688; c=relaxed/simple;
+	bh=StiwBl7gcsKPM4QUqdzPmLaOQDatwYYOr4RXGOWzdJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=j1j4XCSwOq9kFaYrP7RNf9LG3c6SvRu5jfCW0vT385zFprbnuRYZlS5FHCXh6IgwLx8XxkUtk3FYDGzhk4SZ935lVix7Mz2YxZxEAsz0gV3uSWF1Tzie63aSoa7XIQW1APTrOE+7mm266scLMs9tAti3/ysZdb6JBUgD0+atE/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=kvpFPjnz; arc=none smtp.client-ip=17.58.6.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="onG9EXBE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KiBF8g3yGfJkGbev+rWI9HDPLDmM+VUGVIZ935wnQUz93q71X9FEgPfvg7YvAW8fiVEUnwRU4VXSB7f6Md0WmK1nU7CUn8FHSwN8w5LJ8qvofmNkBNJwEK9wPkNMnPUbUslTknvd8Q9Jxj8MgNlIsmAxh8QiOTMTAIZ2ffYsXqWIw1McV9CvS11PtScUu1BXm8RVXf05XxH2okIfq6NXFtKZrBR5MvI4OrWYftdqV9vJMVVIrjrxEigvh6U62hDBotLp6O2ZeLs6M2weE3EgfrSSqIjx23eieApRJgZ9PihYixDncztS4aqd+uBxshbpX0DXiDyZNWSIOjrWGNZvow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XI+wivW1YLw6RBWEp3vriP5eFuxx+/AIk/W7yXMSFPs=;
- b=i7CvpGuYXtClRgbKMF7mgFJt6gwob3bGnlCZdj5e4aauuiN2bhVIOOaAOgYJ74i5RPswqK4JwUxZT8TrrINWk/MVLg1y50ZFcc2Tbt+YFeQm/SErJNXh8q7RRUyQVFmEg5gsbOeZM1llZBMKgSTYEikCRXRcuX8eOfdqWegqvscGG7+M3Zvi+oSPgfebQGwbWGV5jtNR1ujjtxuxYmg0dPfsRZ0iK8cf8KjfJlQotvDxPVX+z26l8rcrXHUnGP0L0tDsfnl5k4sI6sHoZUm7Tt7ymuS5wrvkVZPG8yoHHtczfl0csutq12qiaPP/+yJ13S6YMJvlJp/Vvv7QPOiOBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XI+wivW1YLw6RBWEp3vriP5eFuxx+/AIk/W7yXMSFPs=;
- b=onG9EXBEbjcrkvyF4BtCBj82DEvrIYp/hhU9dZbJB33JiwSAu/X+fLDbphvxV80gGn3O9+/9cQyNyq2CbbpP7vB1FVyt3mVREIbiBdwMnsR4rfU5nsf+4czUCdReP1D4faSrW0YY22e/0E+0UfzcJRVKBI2yZC+hwu3AsF4kOeA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by DS0PR12MB7970.namprd12.prod.outlook.com (2603:10b6:8:149::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21; Mon, 19 Aug
- 2024 11:28:56 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.7875.019; Mon, 19 Aug 2024
- 11:28:55 +0000
-Message-ID: <24600a48-a173-7a32-445f-83337b035285@amd.com>
-Date: Mon, 19 Aug 2024 12:28:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 02/15] cxl: add function for type2 cxl regs setup
-Content-Language: en-US
-To: Zhi Wang <zhiw@nvidia.com>, Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, richard.hughes@amd.com,
- targupta@nvidia.com, vsethi@nvidia.com, zhiwang@kernel.org
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-3-alejandro.lucero-palau@amd.com>
- <20240804181529.00004aa9@Huawei.com>
- <5d8f8771-8e43-6559-c510-0b8b26171c05@amd.com>
- <20240815174035.00005bb0@Huawei.com>
- <20240818110720.00004e16.zhiw@nvidia.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20240818110720.00004e16.zhiw@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO6P123CA0008.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:338::16) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="kvpFPjnz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1724067686;
+	bh=M3gESBvhy0PNBB/+wlGjnZP9di3TeOOVucipNeSD7H0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=kvpFPjnzBoAxLz8VSNgZ8WtfdAMsgcSvB0r6OYe49PS9D60oLV4fzsQXyz1gQDxHC
+	 zIikMIP1OzDNKQ11XoYMtszN0mKKYZYvdCKUtSXXfNEXGweQvgHGXIEpYdHUfcP1kW
+	 9HXcVSeN4AqQZTFg7LKN6YOxojU68qfwbYOpHNbJ0sben1gjHEajIuOR5SkL12xarW
+	 3NMp9OZ2fT2SiMMYgxO42t+PITCWrSBU2WYwm3f03iDtecwT8dlEdAHDhfyi+d2TOx
+	 yHlm1ohFRofzGG+bVuO9Nwdx0fPc0GCroVh6g5sZlIe9np/9MwmYpYeeTNoBtO9jjp
+	 n2h5OE4ZYDcyA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id 6F2BD20103D2;
+	Mon, 19 Aug 2024 11:41:19 +0000 (UTC)
+Message-ID: <25131af2-17f2-4e3d-a11f-247cb1c4fff4@icloud.com>
+Date: Mon, 19 Aug 2024 19:41:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DS0PR12MB7970:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5f99a45-f46f-444f-efb7-08dcc0421c5e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXVmcW5SdzQzYktmMUVIQkFpcXdTMjdld2tHTjRuMm9GSDhSZHQyUE9RdFAw?=
- =?utf-8?B?MHpJZzhpNkdaUW5WMnNrcW1McmZTVERDWXM1Lzl4OXI4K09tVFBKK0tlNXRR?=
- =?utf-8?B?U2J2MGh5SjlrRzVJTzFNZFZuUlMzaCsrQzhQMUZGOEhYeERzUEY5N2theDVP?=
- =?utf-8?B?RDhYbVV3OGprR2dGUXR3UFQvS0FJZlVqMW1ZSlYvL0lQUnpjckVwMjN6WXdq?=
- =?utf-8?B?Z0ZLZHlkOXVUMldNNGdaS3NwdDloWDZEQmFyS2c0WkZ5T2xsVXRJeUdOWUtU?=
- =?utf-8?B?a1ZEL25paXBvTzEvcXpiZUtvNFlxV0s2aVNNdXNtY2Q5U2ViQUx3S3pLOE1j?=
- =?utf-8?B?b3o4SjdsUkRhalNHMkM0YWJOWm1yOVZVa3JYVUJ4Q3RxYTNiMmNGNXRXREpp?=
- =?utf-8?B?ak9TQ05oK1RaUkhSYnNORHQyZldtTVBERU1NRVNrSjgxMGVsSFlzdFp2S0tM?=
- =?utf-8?B?djR6UVcrQlRvODkzMkJpTUNteEJKR2Zkb051QnF2VEpWTkpnZWgzc2pGMGxY?=
- =?utf-8?B?UEdBMmdKa1l6MEJXT1FGN29uUHRGblZybG5aVWxzQWdybUlXa0R4WExiS1RJ?=
- =?utf-8?B?Z1k0S1U5YytYcGlMcWhweU0xTWx1OVBVeituWUZBOWl6bHYxb1VuT3ZvWVJx?=
- =?utf-8?B?RlBpa05ZNVFQbXhRNEF5ZWx4R2p6c0dqVGhWMm1nYm9oTkRNSkxaS2lZUk5r?=
- =?utf-8?B?SGo2QjFFVkUxNEpnWGRKT2tPaVllKzllZHhkcjNWQXNPYlhJN0hmQ1JpZnBW?=
- =?utf-8?B?TVVXMU5aZHdVK2FVZWdxeURBQ0dwWjBCMjA5bWF2Ly83Sko5Mmx6S25pdTVj?=
- =?utf-8?B?NmxoVG5mR2tIY2QxcGpoN3p0cWZrY3BPMFVuUllFZ1ZiTzF4blcxczl0bkE5?=
- =?utf-8?B?RGZjZndqbEVNaUp4ZndOMHNCRGFlcHQzSjU1MjR6RzdVcE1jRmhqQUlxM0to?=
- =?utf-8?B?dHhXbkZ1a29ITUkrb2FPdlJHNTRacjJjejJTc3k2K0FDWEc2L3haRURzV0x3?=
- =?utf-8?B?WDRuVmpId24rYWtaZ0xiNkJXb2xXaS9Rd2NSNktmenhMc1JIUUpMSGVyakpC?=
- =?utf-8?B?eXdaV1lldWl0ZEhTOGxOa1drT3lveGkzWlV4NEoyVFY5cjNsOWF1bS9WNXRk?=
- =?utf-8?B?cEc5dUFEeTNDcmlsVWZvQThaWU8xUVBMZ2E2TmhDeDJlck1RZDBEZHFkZmlO?=
- =?utf-8?B?a3c3eE0wV1E1cnRNK2xQWkQzakZ3M2NDZE8rMloxdDhvY1JhUnlFQURFY0xW?=
- =?utf-8?B?UnVFL2NQL1BuWVlpUU5zOVZaT0NBV2FoWExhbklEWm13MTFVV1F5Sk5NeUxN?=
- =?utf-8?B?NlFvU2pEM2Q1dHRSVnhmK3VTZldJczJuZU0zWmhLbVBDa2xpR1VCUlpUL3Rr?=
- =?utf-8?B?Z0QxNEZiSkFoN0E4ZmRvb2FuQUtKWHYvQkJlWGlQSkdidFN4YU1vSExJVHpt?=
- =?utf-8?B?QytvRE1LSHV3SndxeXhSOXBYaWszNERjd3ZDVDVuRkhUVXZiTUt5Z29RbjJ0?=
- =?utf-8?B?T3pENU5Gb3ZDMlV5dnFGY2VDQWpVS2hSOW1IdHpjS21FZVVKUnZIU0oySlNp?=
- =?utf-8?B?Y0R4VW1DeUdIRTBhR0RMZU1MM1dVaUFDRmxUbkh5VmhxU2w3cWpabjREWlFF?=
- =?utf-8?B?cDdIVGUySklVNmMvSGt0SjcxMHhSY01mWWRlSi9qeFNFMzluUjVvc090K0Ja?=
- =?utf-8?B?WkYvZGJ5OGx5dURZbWdib1dvWGU4T2hLZ29QSEFDNS9seXNpUUFXeWM1QXBs?=
- =?utf-8?B?UWVtZHRpV2VUWVp2TE4wMjcvZXZYd3YzQk82YmFKd0JCRlNBcmNXMW9ybEND?=
- =?utf-8?B?S1ZmeUc5STRkcU1LU3RUQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b1h1U2w2VmVYc21kYkxmLzNtRkpaM1puVFB4NXFtZEVHNFVpcUY4OXZzSEN1?=
- =?utf-8?B?RTQxOXZNK3Rrc0RRajd0ZTg2dlpTN2pBQ3BnM1FiTk9TaFNuSkNWakFlR2F6?=
- =?utf-8?B?TU5wcEJQaEhmV1lyNzZLMEtqeGI0SlJsc3JwSGlmQnNETDdaVXVWdnczQ2l3?=
- =?utf-8?B?K2V3WnpzNEtHQjU0YWJITFFhcWRZZkg1VVI5T1RzSnJhbFVZL3RwK0pqam5u?=
- =?utf-8?B?VlR0RW5oc2dHTWxGTUNGNmhTNFB1em5qVWdVVW1NQndpK29raEg4LzZZUVg5?=
- =?utf-8?B?bHd1UmRQdHJOcE0xSDlic28yQ1JVUmk2YnprZUU4UHJYekRzdTFZTWptOFcr?=
- =?utf-8?B?dHF5ekdlanEzNVROR3gvWHduU3dJaVNybElPcXVTelJLRzlXRGVpRUlkNlZG?=
- =?utf-8?B?MS9TMWNpcG1VaEk2bFlYZDMxMWphc0s4cW81MVNWNUsvbUptbVErNk1UaGNo?=
- =?utf-8?B?ZXYzVWVkQ2lVcU95aHBIK0FoSlJUSGN2Z0JDSzFUTnlQL3YxZVN1RW5iemZX?=
- =?utf-8?B?S281VkhjK0V0em5DUHdXeVZwbGpjNHZ0RzhmSVI0a3dkRzZQc1R4U2U5cFlT?=
- =?utf-8?B?M1Z1NlhUeUJTVmZSWi9wQzhDOFVIU0NGQlR6MGdOZzFlSSt4SlBORGZrTDB3?=
- =?utf-8?B?NlNmUzNaN3JuUlpLdWhzYlpqejBycGVRR20yVURTTjczOGlDQjNtK2JPNkE5?=
- =?utf-8?B?bVpEQWtRZnBsZ2dLT3ZLU2tSVW53U1FBUkJRM1NnbXF1TFhwZWRJZEV4OHp2?=
- =?utf-8?B?US9Db3lRa01FeDlWQmZaejlob2dyZmprOEsrL2JsZzdzSTU4NTZMQVRORTJW?=
- =?utf-8?B?UGt4ZmQ4Nk1wb3JOLzdOOFMwQkhvYTVocEY3R1ZyNlpoKy9KMC9vNHVRbzhQ?=
- =?utf-8?B?NG8rb1VQZlRWUENraEhMRWNLZjByNUs0cUJJdllRL1Fiem9zZGtKRUtIeEJI?=
- =?utf-8?B?ZktXTUV6V2JTRkRUS0YxelFNdXBoZ1ZuNDB6YWpUUkRYNGZxTXZHYytpbDhv?=
- =?utf-8?B?dHAvc2gxMWZBZVVKSUNWdjlyT1BKQmU2TDFhVDJvM01Wc08zME5jZ3ZQUHpC?=
- =?utf-8?B?aGZzZnhTSW1GN3llTys0a2dNbGRhTHhFYkhqSnZlWUFlb1dScEFZcFFhVHQw?=
- =?utf-8?B?ZFZvSUZQeWVLU29qdWJmNk9qSFRvUk9OeWtNeXp6V1duV2REdUVrOUlNaWRS?=
- =?utf-8?B?WlkxSHhxcWhwNzhrMFZROUxKVHU4dkZ1Y2RtL1U3YmR1RkFBdUEzdnV2K205?=
- =?utf-8?B?K0Y3b2JxdW1uQWJvUjh2aGtLdlZEQkt1TFNtb3M3cExURlBrM3FETkh5cGdI?=
- =?utf-8?B?eVc3OXRrSjdTbThsT3J1T1pFcWcvOTVQYzdJSGtnbi84ZDdpU3dobEVMbDI2?=
- =?utf-8?B?ZEFSVU1jY2lvSkp4aHROWVI1ZlNKdUdQS3ovN0I2RUFTRHlrUmtqYUo5ZGlj?=
- =?utf-8?B?dVJQb2NZVy9XTm1CYVFUUGRkYVdmSVpNamFkV3NScHAvQWo0dFh3aFg4YVpm?=
- =?utf-8?B?UEFVQVlCcHlHNFlIdCsvd2x1MndaRzBSRFJjbWRXQ1gxeHc3Tm5WOGc0VERB?=
- =?utf-8?B?cUlERTZ5TDh2TTc2Y2c0S3BOVzQ1SzJ5UkVjMlBFY1lBbWV1Mzlsb2NJVjVU?=
- =?utf-8?B?U2RBT3pnbU15TWtmdW0zWGdKUVlFTnpLRmh3eVpCME9ObGNadnZBS1g5SGZp?=
- =?utf-8?B?NWk4ckZIczliUkhsTDR4d2pCa01hdFJ1SU5ZREszQXpqR2NBQzVWVFhoQmI4?=
- =?utf-8?B?cVcyYkkzQUZUZUQ2aVJIV1YwKzVCajNyZTlNVWxyaGRBbkFLeDhMZWVGakQr?=
- =?utf-8?B?UitIVEZzbWNTM3JBdElmMU5wY2I5eDdTSUhjZ1RDYTBEYXc4OUJPNHllUHRa?=
- =?utf-8?B?OUJKNzBTNVV4WmgwRWgyR1hmeDltQTd5QUFLMllaM0FiOXJSMENyQTVPVkJU?=
- =?utf-8?B?bUVvMGYxQUpNbVhuUjVEK0ErdmVwWG5tTnc4VXFYeUtvRU1zUGFoTXhZa0xI?=
- =?utf-8?B?QVRmelpnMEwvK3hjZHZZcVphNi9Bc0tQVkRmVW1Zc3k3L05SUnJBcWxkbThm?=
- =?utf-8?B?ZENkOTRqM3ZYcFh4N1M4VkNjWXBTSGlYeC9JcUlqcEdMek95VDN3U2o2WTFq?=
- =?utf-8?Q?lhbn+Pb8bDUjZFN0A+3EU/CWd?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5f99a45-f46f-444f-efb7-08dcc0421c5e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2024 11:28:55.8982
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 35FLw9WQOWiq0teQTrr6JTnKO1c4KsVrIAyLWVsyl/EXGu5YvdGujfCZbWikY7FlA5HtxMyvVlx7tUkLgK4+NA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7970
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] firewire: core: Prevent device_find_child() from
+ modifying caller's match data
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Timur Tabi <timur@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20240819085847.GA252819@workstation.local>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20240819085847.GA252819@workstation.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: PKojMI1yXK7Etn5C1lLExPn4o5PTW2nf
+X-Proofpoint-ORIG-GUID: PKojMI1yXK7Etn5C1lLExPn4o5PTW2nf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-19_10,2024-08-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2408190078
 
-
-On 8/18/24 09:07, Zhi Wang wrote:
-> On Thu, 15 Aug 2024 17:40:35 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
->
->> On Wed, 14 Aug 2024 08:56:35 +0100
->> Alejandro Lucero Palau <alucerop@amd.com> wrote:
->>
->>> On 8/4/24 18:15, Jonathan Cameron wrote:
->>>> On Mon, 15 Jul 2024 18:28:22 +0100
->>>> alejandro.lucero-palau@amd.com wrote:
->>>>   
->>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>
->>>>> Create a new function for a type2 device initialising the opaque
->>>>> cxl_dev_state struct regarding cxl regs setup and mapping.
->>>>>
->>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>>>> ---
->>>>>    drivers/cxl/pci.c                  | 28
->>>>> ++++++++++++++++++++++++++++ drivers/net/ethernet/sfc/efx_cxl.c
->>>>> |  3 +++ include/linux/cxl_accel_mem.h      |  1 +
->>>>>    3 files changed, 32 insertions(+)
->>>>>
->>>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->>>>> index e53646e9f2fb..b34d6259faf4 100644
->>>>> --- a/drivers/cxl/pci.c
->>>>> +++ b/drivers/cxl/pci.c
->>>>> @@ -11,6 +11,7 @@
->>>>>    #include <linux/pci.h>
->>>>>    #include <linux/aer.h>
->>>>>    #include <linux/io.h>
->>>>> +#include <linux/cxl_accel_mem.h>
->>>>>    #include "cxlmem.h"
->>>>>    #include "cxlpci.h"
->>>>>    #include "cxl.h"
->>>>> @@ -521,6 +522,33 @@ static int cxl_pci_setup_regs(struct
->>>>> pci_dev *pdev, enum cxl_regloc_type type, return
->>>>> cxl_setup_regs(map); }
->>>>>    
->>>>> +int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct
->>>>> cxl_dev_state *cxlds) +{
->>>>> +	struct cxl_register_map map;
->>>>> +	int rc;
->>>>> +
->>>>> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV,
->>>>> &map);
->>>>> +	if (rc)
->>>>> +		return rc;
->>>>> +
->>>>> +	rc = cxl_map_device_regs(&map,
->>>>> &cxlds->regs.device_regs);
->>>>> +	if (rc)
->>>>> +		return rc;
->>>>> +
->>>>> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
->>>>> +				&cxlds->reg_map);
->>>>> +	if (rc)
->>>>> +		dev_warn(&pdev->dev, "No component registers
->>>>> (%d)\n", rc);
->>>> Not fatal?  If we think it will happen on real devices, then
->>>> dev_warn is too strong.
+On 2024/8/19 16:58, Takashi Sakamoto wrote:
+> 
+> Hi,
+> 
+> On 2024/8/18 22:34, Zijun Hu wrote:
+>> On 2024/8/17 17:57, Takashi Sakamoto wrote:
+>>> ======== 8< --------
 >>>
->>> This is more complex than what it seems, and it is not properly
->>> handled with the current code.
+>>> From ceaa8a986ae07865eb3fec810de330e96b6d56e2 Mon Sep 17 00:00:00 2001
+>>> From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+>>> Date: Sat, 17 Aug 2024 17:52:53 +0900
+>>> Subject: [PATCH] firewire: core: update fw_device outside of
+>>>  device_find_child()
 >>>
->>> I will cover it in another patch in more detail, but the fact is
->>> those calls to cxl_pci_setup_regs need to be handled better,
->>> because Type2 has some of these registers as optional.
->> I'd argue you don't have to support all type 2 devices with your
->> first code.  Things like optionality of registers can come in when
->> a device shows up where they aren't present.
+>>> When detecting updates of bus topology, the data of fw_device is newly
+>>> allocated and caches the content of configuration ROM from the
+>>> corresponding node. Then, the tree of device is sought to find the
+>>> previous data of fw_device corresponding to the node, since in IEEE 1394
+>>> specification numeric node identifier could be changed dynamically every
+>>> generation of bus topology. If it is found, the previous data is updated
+>>> and reused, then the newly allocated data is going to be released.
+>>>
+>>> The above procedure is done in the call of device_find_child(), however it
+>>> is a bit abusing against the intention of the helper function, since the
+>>> call would not only find but also update.
+>>>
+>>> This commit splits the update outside of the call.
+>>> ---
+>>>  drivers/firewire/core-device.c | 109 ++++++++++++++++-----------------
+>>>  1 file changed, 54 insertions(+), 55 deletions(-)
+>>>
+>>> diff --git a/drivers/firewire/core-device.c b/drivers/firewire/core-device.c
+>>> index bc4c9e5a..62e8d839 100644
+>>> --- a/drivers/firewire/core-device.c
+>>> +++ b/drivers/firewire/core-device.c
+>>> ...
+>>> @@ -1038,6 +988,17 @@ int fw_device_set_broadcast_channel(struct device *dev, void *gen)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int compare_configuration_rom(struct device *dev, void *data)
+>>> +{
+>>> +	const struct fw_device *old = fw_device(dev);
+>>> +	const u32 *config_rom = data;
+>>> +
+>>> +	if (!is_fw_device(dev))
+>>> +		return 0;
+>>> +
+>>> +	return !!memcmp(old->config_rom, config_rom, 6 * 4);
 >>
->> Jonathan
+>> !memcmp(old->config_rom, config_rom, 6 * 4) ?
+> 
+> Indeed.
+> 
+>> is this extra condition old->state == FW_DEVICE_GONE required ?
 >>
-> I think it is more like we need to change those register
-> probe routines to probe and return the result, but not decide
-> if the result is fatal or not. Let the caller decide it. E.g. type-3
-> assumes some registers group must be present, then the caller of type-3
-> can throw a fatal. While, type-2 just need to remember if the register
-> group is present or not. A register group is missing might not be fatal
-> to a type-2.
+>> namely, is it okay for  below return ?
+>> return  !memcmp(old->config_rom, config_rom, 6 * 4) && old->state ==
+>> FW_DEVICE_GONE
+> 
+> If so, atomic_read() should be used, however I avoid it since the access
+> to state member happens twice in in the path to reuse the instance.
+> 
 
+it sounds good to not append the extra condition.
 
-I agree.
+>>> +}
+>>> +
+>>>  static void fw_device_init(struct work_struct *work)
+>>>  {
+>>>  	struct fw_device *device =
+>>> @@ -1071,13 +1032,51 @@ static void fw_device_init(struct work_struct *work)
+>>>  		return;
+>>>  	}
+>>>  
+>>> -	revived_dev = device_find_child(card->device,
+>>> -					device, lookup_existing_device);
+>>> +	// If a device was pending for deletion because its node went away but its bus info block
+>>> +	// and root directory header matches that of a newly discovered device, revive the
+>>> +	// existing fw_device. The newly allocated fw_device becomes obsolete instead.
+>>> +	//
+>>> +	// serialize config_rom access.
+>>> +	scoped_guard(rwsem_read, &fw_device_rwsem) {
+>>> +		// TODO: The cast to 'void *' could be removed if Zijun Hu's work goes well.
+>>
+>> may remove this TODO line since i will simply remove the cast with the
+>> other patch series as shown below:
+>> https://lore.kernel.org/all/20240811-const_dfc_done-v1-0-9d85e3f943cb@quicinc.com/
+> 
+> Of course, I won't apply this patch as is. It is just a mark to hold
+> your attention.
+> 
+>>> +		revived_dev = device_find_child(card->device, (void *)device->config_rom,
+>>> +						compare_configuration_rom);
+>>> +	}
+>>>  	if (revived_dev) {
+>>> -		put_device(revived_dev);
+>>> -		fw_device_release(&device->device);
+>>> +		struct fw_device *found = fw_device(revived_dev);
+>>>  
+>>> -		return;
+>>> +		// serialize node access
+>>> +		guard(spinlock_irq)(&card->lock);
+>>> +
+>>> +		if (atomic_cmpxchg(&found->state,
+>>> +				   FW_DEVICE_GONE,
+>>> +				   FW_DEVICE_RUNNING) == FW_DEVICE_GONE) {
+>>> +			struct fw_node *current_node = device->node;
+>>> +			struct fw_node *obsolete_node = found->node;
+>>> +
+>>> +			device->node = obsolete_node;
+>>> +			device->node->data = device;
+>>> +			found->node = current_node;
+>>> +			found->node->data = found;
+>>> +
+>>> +			found->max_speed = device->max_speed;
+>>> +			found->node_id = current_node->node_id;
+>>> +			smp_wmb();  /* update node_id before generation */
+>>> +			found->generation = card->generation;
+>>> +			found->config_rom_retries = 0;
+>>> +			fw_notice(card, "rediscovered device %s\n", dev_name(revived_dev));
+>>> +
+>>> +			found->workfn = fw_device_update;
+>>> +			fw_schedule_device_work(found, 0);
+>>> +
+>>> +			if (current_node == card->root_node)
+>>> +				fw_schedule_bm_work(card, 0);
+>>> +
+>>> +			put_device(revived_dev);
+>>> +			fw_device_release(&device->device);
+>>> +
+>>> +			return;
+>>> +		}
+>>
+>> is it okay to put_device() here as well ?
+>> put_device(revived_dev);
+> 
+> Exactly. The call of put_device() should be done when the call of
+> device_find_child() returns non-NULL value.
+> 
+> Additionally, I realize that the call of fw_device_release() under
+> acquiring card->lock causes dead lock.
+> 
+>>>  	}
+>>>  
+>>>  	device_initialize(&device->device);
+> 
+> Anyway, I'll post take 2 and work for its evaluation.
+> 
+great
+> 
+> Thanks
+> 
+> Takashi Sakamoto
 
-
-> E.g.
->
-> 1) moving the judges out of cxl_probe_regs() and wrap them into a
-> function. e.g. cxl_check_check_device_regs():
->          case CXL_REGLOC_RBI_MEMDEV:
->                  dev_map = &map->device_map;
->                  cxl_probe_device_regs(host, base, dev_map);
->
-> 		/* Moving the judeges out of here. */
->                  if (!dev_map->status.valid ||
->                      ((caps & CXL_DRIVER_CAP_MBOX) &&
->                  !dev_map->mbox.valid) || !dev_map->memdev.valid) {
->                          dev_err(host, "registers not found: %s%s%s\n",
->                                  !dev_map->status.valid ? "status " : "",
->                                  ((caps & CXL_DRIVER_CAP_MBOX) &&
->                  !dev_map->mbox.valid) ? "mbox " : "",
->                  !dev_map->memdev.valid ? "memdev " : ""); return -ENXIO;
->                  }
->
-> 2) At the top caller for type-3 cxl_pci_probe():
->
->          rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
->                                  cxlds->capabilities);
->          if (rc)
->                  return rc;
->
-> 	/* call cxl_check_device_regs() here, if fail, throw fatal! */
->
-> 3) At the top caller for type-2 cxl_pci_accel_setup_regs():
->
-> 	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
->                                  cxlds->capabilities);
->          if (rc)
->                  return rc;
->
-> /* call cxl_check_device_regs() here,
->   * if succeed, map the registers
->   * if fail, move on, no need to throw fatal.
->   */
-> 	rc = cxl_map_device_regs(&map, &cxlds->regs.device_regs);
->          if (rc)
->                  return rc;
->
-> With the changes, we can let the CXL core detects what the registers the
-> device has, maybe the driver even doesn't need to tell the CXL core,
-> what caps the driver/device has, then we don't need to introduce the
-> cxlds->capabilities? the CXL core just go to check if a register group's
-> vaddr mapping is present, then it knows if the device has a
-> register group or not, after the cxl_pci_accel_setup_regs().
-
-
-I thought about building up the device capabilities based on what the 
-registers show instead of explicitly stated by the driver, what I think 
-it is your point, but I think we need those capabilities in one way or 
-another, not just for pure information purposes but also for finding out 
-if other initialization should fail or not, what was the original goal 
-behind this patch. The driver could also define those capabilities to 
-expect and check out after identified by the registers initialization if 
-they match.
-
-
-So yes, I think it could go this way, but I would prefer to do such a 
-refactoring after this initial type2 support.
-
-
-> Thanks,
-> Zhi.
->
