@@ -1,72 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E3717D354;
-	Wed, 21 Aug 2024 23:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369051422A8;
+	Wed, 21 Aug 2024 23:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724283323; cv=none; b=f/2Zwm+iiWmDenljWbomDiIkK4FES2IKWD69CyjWZir4srXOsjLr6JEszUxxHFdpk6hNuIH87F91gNGX8ONOELAdYGWCzPNEE1N7CVdl18eaCAJu0Bep5AdVTDNsaO8WRRB6D/henFNIm0im8MeSEM0FFGEzCeFSql2VDMBGum0=
+	t=1724284192; cv=none; b=awwyX5yQIPif9LiWdHqg6bjxeJDrTD3BdO59IwOi//3XgZfcxYFMtti+RitzQ/vkpT2L1YEjO+8QKztW0a9acWlhinLyyVoDbcQGHy7tVASMIlBIFUoNVD1tYe3fXlEepOnMwJnXOQj47c26OIPJV6jUXw19r05sSN/2uuOqdWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724283323; c=relaxed/simple;
-	bh=3xWr65f/8UFK4AztTZVns9baOkOUll4BHku8VlE4qSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FeQutswhUL0pkUCl63lBNZquQEjOmWqeaNHZ+Fp/6A9f1mK4Yv+IdhypS1nz1kpP1Col+FFUl2MQstf+S9zqCfuGBlTYgEO1MUJ4uF4JP7BdO+b9diDkWelRzNEtPidjmUxw25KGFZkMuxvZaRG67FvtoRkyOzXoahMSAB4EjNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ELN4COzv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724284192; c=relaxed/simple;
+	bh=/bY3cMBIpekL92+/aW9JC2UUFiFB5ABm3j76VZe483g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OG8zgg/Wu8bRUWSLeCHmYmq2HyIrasuOuByRwxePQfi18GOWMGeVifLCrbATDKnFRXz88hEkSw3WL8ln8JUeU6HHcoR6cUxRUueFtVW7BC6CnsQoP6rzAkP9bcaGHM0R3S2yXKjyfkLmd52uEnpxR+JopXCPfm65eb7IHHnERJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCnjlK3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ELN4COzv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5818C32781;
-	Wed, 21 Aug 2024 23:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1724283323;
-	bh=3xWr65f/8UFK4AztTZVns9baOkOUll4BHku8VlE4qSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ELN4COzvQx0wZlikCG0QUDKvBebwEA5SHeYMd6HXEbf4d6QoJMLx03QR8oIaMR1+p
-	 o7yVCPI08r9yqdHjvK7pkBLRPD36sgJr68Vf+4dQIevSbI5ipTuuCik0lJU4htPL66
-	 YgAWiQT8hus03sdYgrQC+jZWFSYPUHHESt22hfK0=
-Date: Thu, 22 Aug 2024 07:35:20 +0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCnjlK3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4205FC32781;
+	Wed, 21 Aug 2024 23:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724284191;
+	bh=/bY3cMBIpekL92+/aW9JC2UUFiFB5ABm3j76VZe483g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NCnjlK3XUeQm4EBZ32TMjl/0sTxMr4gdaNRbyRMd7N4Z8spIJ8+kZvccLMqrIpwCH
+	 i3O1dpuoleH/+xvATCXDJMtEEzeKBYGPYMuRyGH/qNTKDNuQ78Et2Pm6Kr/mxoTrbE
+	 4WP9g4ST8PQPtr4SRwy3aaqd9PrF54swhliXnlSCa3/Y5DmepW0emyAwXO2wD2l4K5
+	 llsxsRCu0OAWwW9z/zYjFo+S6MnKTVX2gpI77ersQw1mR2PgUciLf1i3ct6A9bvCek
+	 FMxMwQroZ3uqXnmbFTd0XcyCuLab1MOH2Vt89btStrbJwutpsE8h1k+PX0UnUqTNBn
+	 KFkgPg6+YOOSg==
+Date: Wed, 21 Aug 2024 16:49:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
 To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>
-Subject: Re: [PATCH v3 04/10] taint: Add TAINT_FWCTL
-Message-ID: <2024082226-unbent-clarify-564c@gregkh>
+Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
+ <aron.silverton@oracle.com>, Dan Williams <dan.j.williams@intel.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>,
+ David Ahern <dsahern@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Itay
+ Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
+ <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org, Saeed Mahameed
+ <saeedm@nvidia.com>
+Subject: Re: [PATCH v3 05/10] fwctl: FWCTL_RPC to execute a Remote Procedure
+ Call to device firmware
+Message-ID: <20240821164950.486849ca@kernel.org>
+In-Reply-To: <5-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
 References: <0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
- <4-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
+	<5-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 21, 2024 at 03:10:56PM -0300, Jason Gunthorpe wrote:
-> Requesting a fwctl scope of access that includes mutating device debug
-> data will cause the kernel to be tainted. Changing the device operation
-> through things in the debug scope may cause the device to malfunction in
-> undefined ways. This should be reflected in the TAINT flags to help any
-> debuggers understand that something has been done.
+On Wed, 21 Aug 2024 15:10:57 -0300 Jason Gunthorpe wrote:
+> +	case FWCTL_RPC_DEBUG_WRITE_FULL:
+> +		if (!capable(CAP_SYS_RAWIO))
+> +			return -EPERM;
+> +		fallthrough;
+> +	case FWCTL_RPC_DEBUG_WRITE:
 
-I know naming is hard, but the word "fwctl" is rough, don't you think?
-It's become much more than just a random driver in the kernel tree, it's
-now a taint flag and is exposed to userspace.  So I think you need to
-rename it to something that is at least pronouncable when talking about
-it (i.e. something with vowels...)
+Nacked-by: Jakub Kicinski <kuba@kernel.org> # RFC 3514
 
-There's no need to keep it in 8 or less characters, this isn't the
-1970's anymore, we have enough room for everyone to spell things out
-now. :)
-
-thanks,
-
-greg k-h
+How many times do I have to ask you to keep my tags, and to CC netdev?
