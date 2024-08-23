@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DFC18453C;
-	Fri, 23 Aug 2024 14:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B921DA5E;
+	Fri, 23 Aug 2024 14:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724423723; cv=none; b=g0tzIhtcs57bPojtoTbDNQR2gx/e6dQdZXTw3+IoS3kMZwFECoAUoC8Tana4/Wj3CNz8DxVH8QC6ihjPQ9t81yw7tc1vHC273+h6ywA/hg1REJvP2106fYVLQ0ApZGElJpIameqSFJ0B09frtvWZXlHBABeVsvWl7OWHXyvD1tU=
+	t=1724424519; cv=none; b=cfmLLCnYI9x8aOKZSmF4VSpaRv1vdBIgEvZl7/6FFLfbG6bJ6DYCYo+aSpHMSlPIS8349uEijsx0NDErFT940qpNd1SZVmEUbW7rGrLRkLo/w720uSnjXtr77SO/FzHogAVokQwELS9VXa0t/vdIynn6FicdRJjPQquoO2zjh44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724423723; c=relaxed/simple;
-	bh=pBL3ap7bMgMjYKLDZVHWrfgYzXV6+h/J6k6ee6lAWx4=;
+	s=arc-20240116; t=1724424519; c=relaxed/simple;
+	bh=RVXPaYO3UXSo7pTFeTWVlCKiEP1KLsVMQyXyA0iVN/o=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nFDW+3KQ8FuzdgryyNnJyR4dxLsJmJ/KXqNZcc2ezW7ZImt+o75LnUXuRbi6Ms7dUTu2tmSGOR0nrEJ90yQjAQRlBKAtPp4kx0MASxFrV0pmsQ2phe4DaDcQDyYUh2Ex25ws2KFPbZioIiw0h3sWFOE8dHOUqcX95/kIktJta+g=
+	 MIME-Version:Content-Type; b=oPRBouoK+BxcpuoIAfR/U8RIBRWGk9BP5cnjiNRVroPifKCTuD5oFJx8O3QeMtq4E7iT+1N0lbTCPu2qKbQkYyhJPcro7rBT4hUIQ0JGHqkuBR0fmpIfHluo+6BtKyIA3aSpv6PvXin1gylBlfaqqOBNLxIZswyXcb+TK1IBaX4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wr2Zy3Bxdz6K93W;
-	Fri, 23 Aug 2024 22:32:10 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wr2sW1STZz6GBpb;
+	Fri, 23 Aug 2024 22:44:47 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 32127140447;
-	Fri, 23 Aug 2024 22:35:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8AC1D140B2A;
+	Fri, 23 Aug 2024 22:48:32 +0800 (CST)
 Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 23 Aug
- 2024 15:35:14 +0100
-Date: Fri, 23 Aug 2024 15:35:13 +0100
+ 2024 15:48:32 +0100
+Date: Fri, 23 Aug 2024 15:48:30 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
 CC: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
@@ -36,11 +36,12 @@ CC: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
 	<kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky
 	<leonro@nvidia.com>, <linux-cxl@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>
-Subject: Re: [PATCH v3 06/10] fwctl: Add documentation
-Message-ID: <20240823153513.00000499@Huawei.com>
-In-Reply-To: <6-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
+Subject: Re: [PATCH v3 07/10] fwctl/mlx5: Support for communicating with
+ mlx5 fw
+Message-ID: <20240823154830.00007d8c@Huawei.com>
+In-Reply-To: <7-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
 References: <0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
-	<6-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
+	<7-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,61 +52,128 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 21 Aug 2024 15:10:58 -0300
+On Wed, 21 Aug 2024 15:10:59 -0300
 Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> Document the purpose and rules for the fwctl subsystem.
+> From: Saeed Mahameed <saeedm@nvidia.com>
 > 
-> Link in kdocs to the doc tree.
+> mlx5's fw has long provided a User Context concept. This has a long
+> history in RDMA as part of the devx extended verbs programming
+> interface. A User Context is a security envelope that contains objects and
+> controls access. It contains the Protection Domain object from the
+> InfiniBand Architecture and both togther provide the OS with the necessary
+> tools to bind a security context like a process to the device.
 > 
-> Nacked-by: Jakub Kicinski <kuba@kernel.org>
-> Link: https://lore.kernel.org/r/20240603114250.5325279c@kernel.org
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
+> The security context is restricted to not be able to touch the kernel or
+> other processes. In the RDMA verbs case it is also restricted to not touch
+> global device resources.
+> 
+> The fwctl_mlx5 takes this approach and builds a User Context per fwctl
+> file descriptor and uses a FW security capability on the User Context to
+> enable access to global device resources. This makes the context useful
+> for provisioning and debugging the global device state.
+> 
+> mlx5 already has a robust infrastructure for delivering RPC messages to
+> fw. Trivially connect fwctl's RPC mechanism to mlx5_cmd_do(). Enforce the
+> User Context ID in every RPC header so the FW knows the security context
+> of the issuing ID.
+> 
+> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
 > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Just one trivial plural / singular comment.
+
+Trivial stuff only. Feel free to ignore if you really like the code
+the way it is.  I don't know the MLX5 parts, but based on just what
+is visible here and in this series.
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
->  Documentation/userspace-api/fwctl.rst | 285 ++++++++++++++++++++++++++
->  Documentation/userspace-api/index.rst |   1 +
->  2 files changed, 286 insertions(+)
->  create mode 100644 Documentation/userspace-api/fwctl.rst
-> 
-> diff --git a/Documentation/userspace-api/fwctl.rst b/Documentation/userspace-api/fwctl.rst
+> diff --git a/drivers/fwctl/mlx5/main.c b/drivers/fwctl/mlx5/main.c
 > new file mode 100644
-> index 00000000000000..8f3da30ee7c91b
+> index 00000000000000..8839770fbe7ba5
 > --- /dev/null
-> +++ b/Documentation/userspace-api/fwctl.rst
-> @@ -0,0 +1,285 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/fwctl/mlx5/main.c
+
+
 > +
-> +===============
-> +fwctl subsystem
-> +===============
+> +static void *mlx5ctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
+> +			    void *rpc_in, size_t in_len, size_t *out_len)
+> +{
+> +	struct mlx5ctl_dev *mcdev =
+> +		container_of(uctx->fwctl, struct mlx5ctl_dev, fwctl);
+> +	struct mlx5ctl_uctx *mfd =
+> +		container_of(uctx, struct mlx5ctl_uctx, uctx);
+> +	void *rpc_alloc __free(kvfree) = NULL;
+
+Whilst you can't completely pair this with destructor, I'd still
+move this as locally as possible.
+
+> +	void *rpc_out;
+> +	int ret;
 > +
-> +:Author: Jason Gunthorpe
+> +	if (in_len < MLX5_ST_SZ_BYTES(mbox_in_hdr) ||
+> +	    *out_len < MLX5_ST_SZ_BYTES(mbox_out_hdr))
+> +		return ERR_PTR(-EMSGSIZE);
 > +
-> +Overview
-> +========
+> +	/* FIXME: Requires device support for more scopes */
+> +	if (scope != FWCTL_RPC_CONFIGURATION &&
+> +	    scope != FWCTL_RPC_DEBUG_READ_ONLY)
+> +		return ERR_PTR(-EOPNOTSUPP);
 > +
-> +Modern devices contain extensive amounts of FW, and in many cases, are largely
-> +software-defined pieces of hardware. The evolution of this approach is largely a
-> +reaction to Moore's Law where a chip tape out is now highly expensive, and the
-> +chip design is extremely large. Replacing fixed HW logic with a flexible and
-> +tightly coupled FW/HW combination is an effective risk mitigation against chip
-> +respin. Problems in the HW design can be counteracted in device FW. This is
-> +especially true for devices which present a stable and backwards compatible
-> +interface to the operating system driver (such as NVMe).
+> +	mlx5ctl_dbg(mcdev, "[UID %d] cmdif: opcode 0x%x inlen %zu outlen %zu\n",
+> +		    mfd->uctx_uid, MLX5_GET(mbox_in_hdr, rpc_in, opcode),
+> +		    in_len, *out_len);
 > +
-> +The FW layer in devices has grown to incredible sizes and devices frequently
-incredible size
-(tricky to get the plurals right in this sentence, but currently its a mixture)
-> +integrate clusters of fast processors to run it. For example, mlx5 devices have
-> +over 30MB of FW code, and big configurations operate with over 1GB of FW managed
-> +runtime state.
-...
+> +	if (!mlx5ctl_validate_rpc(rpc_in, scope))
+> +		return ERR_PTR(-EBADMSG);
+> +
+> +	/*
+> +	 * mlx5_cmd_do() copies the input message to its own buffer before
+> +	 * executing it, so we can reuse the allocation for the output.
+> +	 */
+> +	if (*out_len <= in_len) {
+> +		rpc_out = rpc_in;
+> +	} else {
+> +		rpc_out = rpc_alloc = kvzalloc(*out_len, GFP_KERNEL);
+> +		if (!rpc_alloc)
+> +			return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	/* Enforce the user context for the command */
+> +	MLX5_SET(mbox_in_hdr, rpc_in, uid, mfd->uctx_uid);
+> +	ret = mlx5_cmd_do(mcdev->mdev, rpc_in, in_len, rpc_out, *out_len);
+> +
+> +	mlx5ctl_dbg(mcdev,
+> +		    "[UID %d] cmdif: opcode 0x%x status 0x%x retval %pe\n",
+> +		    mfd->uctx_uid, MLX5_GET(mbox_in_hdr, rpc_in, opcode),
+> +		    MLX5_GET(mbox_out_hdr, rpc_out, status), ERR_PTR(ret));
+> +
+> +	/*
+> +	 * -EREMOTEIO means execution succeeded and the out is valid,
+> +	 * but an error code was returned inside out. Everything else
+> +	 * means the RPC did not make it to the device.
+> +	 */
+> +	if (ret && ret != -EREMOTEIO)
+> +		return ERR_PTR(ret);
+> +	if (rpc_out == rpc_in)
+> +		return rpc_in;
+> +	return_ptr(rpc_alloc);
+> +}
+> +
+
+> +static void mlx5ctl_remove(struct auxiliary_device *adev)
+> +{
+> +	struct mlx5ctl_dev *mcdev __free(mlx5ctl) = auxiliary_get_drvdata(adev);
+
+I'm not keen on the non constructor being paired with destructor
+but it's your code so you get keep the confusion if you really
+like it.
+
+I'd just have an explicit put.
+
+> +
+> +	fwctl_unregister(&mcdev->fwctl);
+> +}
 
