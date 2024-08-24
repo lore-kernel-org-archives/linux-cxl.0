@@ -1,292 +1,185 @@
-Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AFD1C8245
-	for <linux-cxl@vger.kernel.org>; Fri, 23 Aug 2024 22:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881FC156993;
+	Sat, 24 Aug 2024 05:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724451554; cv=none; b=d5cL86d6uayIlKm9IS1A1eph1yJxakLaKHZp8SZdCGI0RiPXDitFjC5zhZgDofm+fRqdjRlUPzOX7uWRZIwKjQiMjQTsHgRs0BlQ5Z3snXZfrx/MBQXzKVVJ5F4ZYpGTH5KJh0phgN8oI2M+LHVqEi9KuvSOMRDCWqzppwqerCg=
+	t=1724476712; cv=none; b=XiOYJH9P9Wlu+CyVUVHxskqY0FJQPCrL6jFklU3o3oDNIbY2HUu/8WmDh+LbzyK5pu72SCxXmC2XjuRRC9SXBFu4eZLjITJNKLx+Ix6/oifTNUBTuYyKADv+1+/8Jo+7PM3CXPn2nNz64foKMlJ71dJgAKWbdGkK5hDUBpJj9Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724451554; c=relaxed/simple;
-	bh=wE5MeZ/TfiicdYafgD6Teglz+CEKSXVRhEU2cDL5wL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IGyBwfrCvhd+bjbaW+bRaQaNLyE8UrLpjc+OOgegjgAsuAh5G7GoPemzFT1kaziU/PY4Cm3wTQd6djtc0RUIlYdn3lJUzp+8GQyZvVEDvIuRMMG0DxIeJZiIMvI/UvEI78wWeGE9Ui0EhxTPGP1klW/NTa+aPu7XrIsqHZm9EbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=mUN+84QF; arc=none smtp.client-ip=17.58.6.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1724476712; c=relaxed/simple;
+	bh=vaVUY3x1E+AltHmP85LtP0QxxKM//TMlRo0EhRETOTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6g23gj7nv8w9lTkioVXkmC3gK/LMo8+zyg8B8ksx9ykqYGhNx/7rMbg6kdFn3wjubk3Fn6SMCDG/egi4VtmZVGQv3tIkD3B0Thjtukl7ON2Z6sbOvrhu6MvMSXa5JSG4SHojNx0Evv0qjrJYjcOHxbl7GDBpORuMgZknXjlbIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FmnOhMzs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="mUN+84QF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1724451552;
-	bh=hK2bUFwzHVU9grr2BqVFrLx3aTZWAKPQfP4qaJ8H2Fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=mUN+84QFaZuSrBcDE9KTp4A3/ubk9jWcEov5iVmtmM6h6xBwf15zvolDvSXWWLtrQ
-	 86vqzxGJBjJw5uh5FD1QaLq7tSgHIot/gj/g1gw4r0w9OTHDHjvsN5l8zCG+ZptDla
-	 sqVSCNZ6AAsBFy7e+qsxnYI4QWtra5UUK53dKpKOIb4in98eSAzWfSCuMyhWJ+O12i
-	 N2ky9emoOvUF9PnJG/PK6FWe9KSxfQts+Tm+bqrOFuZREKUSE4kOw1hS17SH595Bqw
-	 /KuoC9kaJYtAnQc5nZtgFeerd64r96WvjibGPj99vGbm0YSBRZ4ALz2BDHyiseci2a
-	 VQO8sYNphLOHw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id E7E2BDC024C;
-	Fri, 23 Aug 2024 22:19:01 +0000 (UTC)
-Message-ID: <9030e7e9-7255-497e-be4c-5bba3a373a54@icloud.com>
-Date: Sat, 24 Aug 2024 06:18:56 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FmnOhMzs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB78C32781;
+	Sat, 24 Aug 2024 05:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1724476712;
+	bh=vaVUY3x1E+AltHmP85LtP0QxxKM//TMlRo0EhRETOTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FmnOhMzsIWi5qna6yeiwCxebFimDjitRfM8CBuwHM7gb0mWRGGHEfDISFTDDTScsG
+	 0SqwyRgdBUC+C37zUAxwGakUPIR0xccyhLQBbaXaAMynDUabnToBTx6JeIsZyA7bbG
+	 g+hRXmpP+D3OkewCfhYvDFAtNv7egCPPChRPzea0=
+Date: Sat, 24 Aug 2024 11:21:03 +0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Timur Tabi <timur@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH v2 1/4] driver core: Make parameter check consistent for
+ API cluster device_(for_each|find)_child()
+Message-ID: <2024082435-finite-handrail-a4bb@gregkh>
+References: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
+ <20240815-const_dfc_prepare-v2-1-8316b87b8ff9@quicinc.com>
+ <66c491c32091d_2ddc24294e8@iweiny-mobl.notmuch>
+ <2b9fc661-e061-4699-861b-39af8bf84359@icloud.com>
+ <66c4a4e15302b_2f02452943@iweiny-mobl.notmuch>
+ <e30eac3b-4244-460d-ab0b-baaa659999fe@icloud.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] cxl/region: Prevent device_find_child() from
- modifying caller's match data
-To: Ira Weiny <ira.weiny@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
- <20240815-const_dfc_prepare-v2-2-8316b87b8ff9@quicinc.com>
- <66c4a136d9764_2ddc2429435@iweiny-mobl.notmuch>
- <dec374a6-073d-4b7f-9e83-adcfcf672852@icloud.com>
- <66c8d0a7eddc5_a87cd294e1@iweiny-mobl.notmuch>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <66c8d0a7eddc5_a87cd294e1@iweiny-mobl.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: OEcYKCeKl2lrSiKKOvGo38JYgj9Rul2W
-X-Proofpoint-GUID: OEcYKCeKl2lrSiKKOvGo38JYgj9Rul2W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-23_16,2024-08-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1015 spamscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408230165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e30eac3b-4244-460d-ab0b-baaa659999fe@icloud.com>
 
-On 2024/8/24 02:10, Ira Weiny wrote:
-> Zijun Hu wrote:
->> On 2024/8/20 21:59, Ira Weiny wrote:
->>> Zijun Hu wrote:
->>>> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>>>
->>>> To prepare for constifying the following old driver core API:
->>>>
->>>> struct device *device_find_child(struct device *dev, void *data,
->>>> 		int (*match)(struct device *dev, void *data));
->>>> to new:
->>>> struct device *device_find_child(struct device *dev, const void *data,
->>>> 		int (*match)(struct device *dev, const void *data));
->>>>
->>>> The new API does not allow its match function (*match)() to modify
->>>> caller's match data @*data, but match_free_decoder() as the old API's
->>>> match function indeed modifies relevant match data, so it is not
->>>> suitable for the new API any more, fixed by implementing a equivalent
->>>> cxl_device_find_child() instead of the old API usage.
->>>
->>> Generally it seems ok but I think some name changes will make this more
->>> clear.  See below.
->>>
->>
->> okay.
->>
->>> Also for those working on CXL I'm questioning the use of ID here and the
->>> dependence on the id's being added to the parent in order.  Is that a
->>> guarantee?
->>>
->>>>
->>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>>> ---
->>>>  drivers/cxl/core/region.c | 36 +++++++++++++++++++++++++++++++++++-
->>>>  1 file changed, 35 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>> index 21ad5f242875..8d8f0637f7ac 100644
->>>> --- a/drivers/cxl/core/region.c
->>>> +++ b/drivers/cxl/core/region.c
->>>> @@ -134,6 +134,39 @@ static const struct attribute_group *get_cxl_region_access1_group(void)
->>>>  	return &cxl_region_access1_coordinate_group;
->>>>  }
->>>>  
->>>> +struct cxl_dfc_data {
->>>
->>> struct cxld_match_data
->>>
->>> 'cxld' == cxl decoder in our world.
->>>
->>
->> make sense.
->>
->>>> +	int (*match)(struct device *dev, void *data);
->>>> +	void *data;
->>>> +	struct device *target_device;
->>>> +};
->>>> +
->>>> +static int cxl_dfc_match_modify(struct device *dev, void *data)
->>>
->>> Why not just put this logic into match_free_decoder?
->>>
->>
->> Actually, i ever considered solution B as you suggested in the end.
->>
->> For this change, namely, solution A:
->> 1) this change is clearer and easier to understand.
->> 2) this change does not touch any existing cxld logic
->>
->> For solution B:
->> it is more reasonable
->>
->> i finally select A since it can express my concern and relevant solution
->> clearly.
+On Wed, Aug 21, 2024 at 10:44:27PM +0800, Zijun Hu wrote:
+> On 2024/8/20 22:14, Ira Weiny wrote:
+> > Zijun Hu wrote:
+> >> On 2024/8/20 20:53, Ira Weiny wrote:
+> >>> Zijun Hu wrote:
+> >>>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> >>>>
+> >>>> The following API cluster takes the same type parameter list, but do not
+> >>>> have consistent parameter check as shown below.
+> >>>>
+> >>>> device_for_each_child(struct device *parent, ...)  // check (!parent->p)
+> >>>> device_for_each_child_reverse(struct device *parent, ...) // same as above
+> >>>> device_find_child(struct device *parent, ...)      // check (!parent)
+> >>>>
+> >>>
+> >>> Seems reasonable.
+> >>>
+> >>> What about device_find_child_by_name()?
+> >>>
+> >>
+> >> Plan to simplify this API implementation by * atomic * API
+> >> device_find_child() as following:
+> >>
+> >> https://lore.kernel.org/all/20240811-simply_api_dfcbn-v2-1-d0398acdc366@quicinc.com
+> >> struct device *device_find_child_by_name(struct device *parent,
+> >>  					 const char *name)
+> >> {
+> >> 	return device_find_child(parent, name, device_match_name);
+> >> }
+> > 
+> > Ok.  Thanks.
+> > 
+> >>
+> >>>> Fixed by using consistent check (!parent || !parent->p) for the cluster.
+> >>>>
+> >>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> >>>> ---
+> >>>>  drivers/base/core.c | 6 +++---
+> >>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> >>>> index 1688e76cb64b..b1dd8c5590dc 100644
+> >>>> --- a/drivers/base/core.c
+> >>>> +++ b/drivers/base/core.c
+> >>>> @@ -4004,7 +4004,7 @@ int device_for_each_child(struct device *parent, void *data,
+> >>>>  	struct device *child;
+> >>>>  	int error = 0;
+> >>>>  
+> >>>> -	if (!parent->p)
+> >>>> +	if (!parent || !parent->p)
+> >>>>  		return 0;
+> >>>>  
+> >>>>  	klist_iter_init(&parent->p->klist_children, &i);
+> >>>> @@ -4034,7 +4034,7 @@ int device_for_each_child_reverse(struct device *parent, void *data,
+> >>>>  	struct device *child;
+> >>>>  	int error = 0;
+> >>>>  
+> >>>> -	if (!parent->p)
+> >>>> +	if (!parent || !parent->p)
+> >>>>  		return 0;
+> >>>>  
+> >>>>  	klist_iter_init(&parent->p->klist_children, &i);
+> >>>> @@ -4068,7 +4068,7 @@ struct device *device_find_child(struct device *parent, void *data,
+> >>>>  	struct klist_iter i;
+> >>>>  	struct device *child;
+> >>>>  
+> >>>> -	if (!parent)
+> >>>> +	if (!parent || !parent->p)
+> >>>
+> >>> Perhaps this was just a typo which should have been.
+> >>>
+> >>> 	if (!parent->p)
+> >>> ?
+> >>>
+> >> maybe, but the following device_find_child_by_name() also use (!parent).
+> >>
+> >>> I think there is an expectation that none of these are called with a NULL
+> >>> parent.
+> >>>
+> >>
+> >> this patch aim is to make these atomic APIs have consistent checks as
+> >> far as possible, that will make other patches within this series more
+> >> acceptable.
+> >>
+> >> i combine two checks to (!parent || !parent->p) since i did not know
+> >> which is better.
+> > 
+> > I'm not entirely clear either.  But checking the member p makes more sense
+> > to me than the parent parameter.  I would expect that iterating the
+> > children of a device must be done only when the parent device is not NULL.
+> > 
+> > parent->p is more subtle.  I'm unclear why the API would need to allow
+> > that to run without error.
+> > 
+> i prefer (!parent || !parent->p) with below reasons:
 > 
-> Understood.
-> 
->>
->>>> +{
->>>> +	struct cxl_dfc_data *dfc_data = data;
->>>> +	int res;
->>>> +
->>>> +	res = dfc_data->match(dev, dfc_data->data);
->>>> +	if (res && get_device(dev)) {
->>>> +		dfc_data->target_device = dev;
->>>> +		return res;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +/*
->>>> + * I have the same function as device_find_child() but allow to modify
->>>> + * caller's match data @*data.
->>>> + */
->>>
->>> No need for this comment after the new API is established.
->>>
->>
->> i have given up the idea within v1 to introduce a new API which *should
->> ONLY* be used by this patch series, so it is not worthy of a new API
->> even if it can bring convenient for this patch series.
-> 
-> I'm not clear on this.  Are you still proposing to change the parameter to
-> const?
-> 
-yes.
->>
->>>> +static struct device *cxl_device_find_child(struct device *parent, void *data,
->>>> +					    int (*match)(struct device *dev, void *data))
->>>> +{
->>>> +	struct cxl_dfc_data dfc_data = {match, data, NULL};
->>>> +
->>>> +	device_for_each_child(parent, &dfc_data, cxl_dfc_match_modify);
->>>> +	return dfc_data.target_device;
->>>> +}
->>>> +
->>>>  static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
->>>>  			 char *buf)
->>>>  {
->>>> @@ -849,7 +882,8 @@ cxl_region_find_decoder(struct cxl_port *port,
->>>>  		dev = device_find_child(&port->dev, &cxlr->params,
->>>>  					match_auto_decoder);
->>>>  	else
->>>> -		dev = device_find_child(&port->dev, &id, match_free_decoder);
->>>> +		dev = cxl_device_find_child(&port->dev, &id,
->>>> +					    match_free_decoder);
->>>
->>> This is too literal.  How about the following (passes basic cxl-tests).
->>>
->>
->> it is reasonable.
->>
->> do you need me to submit that you suggest in the end and add you as
->> co-developer ?
-> 
-> You can submit it with Suggested-by:
-> 
-okay.
->>
->> OR
->>
->> you submit it by yourself ?
->>
->> either is okay for me.
->>
->>> Ira
->>>
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c              
->>> index 21ad5f242875..c1e46254efb8 100644                                         
->>> --- a/drivers/cxl/core/region.c                                                 
->>> +++ b/drivers/cxl/core/region.c                                                 
->>> @@ -794,10 +794,15 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->>>         return rc;                                                              
->>>  }                                                                              
->>>                                                                                 
->>> +struct cxld_match_data {                                                       
->>> +       int id;                                                                 
->>> +       struct device *target_device;                                           
->>> +};                                                                             
->>> +                                                                               
->>>  static int match_free_decoder(struct device *dev, void *data)                  
->>>  {                                                                              
->>> +       struct cxld_match_data *match_data = data;                              
->>>         struct cxl_decoder *cxld;                                               
->>> -       int *id = data;                                                         
->>>                                                                                 
->>>         if (!is_switch_decoder(dev))                                            
->>>                 return 0;                                                       
->>> @@ -805,17 +810,30 @@ static int match_free_decoder(struct device *dev, void *data)
->>>         cxld = to_cxl_decoder(dev);                                             
->>>                                                                                 
->>>         /* enforce ordered allocation */                                        
->>> -       if (cxld->id != *id)                                                    
->>> +       if (cxld->id != match_data->id)                                         
->>>                 return 0;                                                       
->>>                                                                                 
->>> -       if (!cxld->region)                                                      
->>> +       if (!cxld->region && get_device(dev)) {                                 
->>
->> get_device(dev) failure may cause different logic against existing
->> but i think it should be impossible to happen normally.
-> 
-> Indeed this is slightly different.  :-/
-> 
-> Move the get_device() to find_free_decoder()?
-> 
-i think we can keep your change. so ignore this slight difference.
-i also notice that you have done some verification for this change.
-> Ira
-> 
->>
->>> +               match_data->target_device = dev;                                
->>>                 return 1;                                                       
->>> +       }                                                                       
->>>                                                                                 
->>> -       (*id)++;                                                                
->>> +       match_data->id++;                                                       
->>>                                                                                 
->>>         return 0;                                                               
->>>  }                                                                              
->>>                                                                                 
->>> +static struct device *find_free_decoder(struct device *parent)                 
->>> +{                                                                              
->>> +       struct cxld_match_data match_data = {                                   
->>> +               .id = 0,                                                        
->>> +               .target_device = NULL,                                          
->>> +       };                                                                      
->>> +                                                                               
->>> +       device_for_each_child(parent, &match_data, match_free_decoder);         
->>> +       return match_data.target_device;                                        
->>> +}                                                                              
->>> +                                                                               
-> 
-> [snip]
+> 1)
+> original API authors have such concern that either (!parent) or
+> (!parent->p) maybe happen since they are checked, all their concerns
+> can be covered by (!parent || !parent->p).
 
+Wait, a device's parent can NOT be NULL except for some special cases
+when it is being created.
+
+And the ->p check is for internal stuff, meaning it has been initialized
+and registered properly, again, these functions should never be called
+for a device that this has not happened on.  So if they are, crashing is
+fine as this should never have gotten through a development cycle.
+
+The ->p checks were added way after the initial driver core was created,
+as evolution of moving things out of struct device to prevent drivers
+from touching those fields.  They were added add-hoc where needed and
+probably not everywhere as you are finding out.
+
+By adding these "robust" checks, we are making it harder for new code to
+be written at the expense of doing checks that we "know" are never
+going to happen in normal operation.  It's a trade off.  Only add them
+when you KNOW they will be needed please.
+
+thanks,
+
+greg k-h
