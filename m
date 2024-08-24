@@ -1,106 +1,140 @@
-Received: from ms11p00im-hyfv17281201.me.com (ms11p00im-hyfv17281201.me.com [17.58.38.39])
+Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC910153824
-	for <linux-cxl@vger.kernel.org>; Sat, 24 Aug 2024 07:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.38.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A101547C5
+	for <linux-cxl@vger.kernel.org>; Sat, 24 Aug 2024 09:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724483478; cv=none; b=WetPb4UgF6X7WuExzO3XQkHq2G7FjG0T8hZDE8xHeoCA9zyrt0kycW9kt821jtd4UUmmcgGz81XTsdvbeAGnYF9oEFyrCUxEInnGrnJ5s/1Cx7+P9/e/N4CjFmVI+BD83A1SBhUMLcHrW+eLcXByk5j99PY9595FeBeQrImlBrk=
+	t=1724490496; cv=none; b=CIu+bKVLx6Ki2Udvyyc0ni584B1HivrZtTGy8Bkp13gQS6LM97f+mfLSzAygcGjnWqjK+CZjubmECNvCTJpCyP0GDBCMPpXVoxxLMafc+mpiYz+g8Xz4rZQUDZ3OegR0YmaRw8mjjOW+qfzSTLgRa6v5ZQxMcvF4Vg3pdbe+mBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724483478; c=relaxed/simple;
-	bh=omL5xzG1t9UscQnTMq0/kHaQpxK6+Rzluf2x8wEqXXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LnzBdcuzE15dvvvyxbK/2wSseVZOkTTnSAr+cQeGzL/UILOX9dLnlitZGJJe8Kh5PP9lsTxLxUapkyfh+u3usTdi1bNtBw6ng4ABlZrgq0GMOGXxJjdKVIbHafj8fCKa6KGR7a083Lo/zi4j2jteXIP8zCBDII0eCAoAfMcNLG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=QAsAvBK0; arc=none smtp.client-ip=17.58.38.39
+	s=arc-20240116; t=1724490496; c=relaxed/simple;
+	bh=iDueYySTOYDf76dyKY+O2COXWFiJlDQMv8fu9IizmiA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y9mSioeyat+O4yb5o2yneTt+CI/13qAAS4Q47JdeVcE8ctJk2FNuwS5doDg9KYPceZambgz4NmsBsrRnHwcoaHHLV8kYR+AGyrAV8EYKPuKFOeUQPCoKmnoiVs6VpwNQvWYs8i0YxEdviJAS0YdC2SBkXOO2njPWh3q9s3Mmh9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=vBvAfaAI; arc=none smtp.client-ip=17.58.6.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="QAsAvBK0"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="vBvAfaAI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1724483476;
-	bh=lYAJZu7nJ9OlFCL+XhSBSj8o0ojB6jJJSzfvDpVjQhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=QAsAvBK0+9dvp/4zOOWPEBzkxa/TqvSKfFPu9fIWmy5U2xSmsGBV8gb8MQydQ7XPY
-	 /SPUslApuZoFOOrOnAEj+O4Ky0pC+u59rt/LbZOt4BE4CTF8ngKY6Ek5zu5jgm2mDc
-	 6sFad0qFHVKSetmiFoGauVGC/zOgEIiQKP56xvXAci0aciXPjaM5hRW6Vu/fkNRJ3J
-	 i0SkvqntLZhUDtYbj6ayl9U1UcjuN6ToQMMxhv/HU84czz2Xaia1QDorSNIxuuvF0S
-	 mFH64bNUvvf7nwhAt0A2NKOw2A3ZtVxw4jbQiEN9lQyB9WdtVk1Vc5/XV6ejzO2reB
-	 013iIz/0EYlYg==
-Received: from [192.168.1.26] (ms11p00im-dlb-asmtpmailmevip.me.com [17.57.154.19])
-	by ms11p00im-hyfv17281201.me.com (Postfix) with ESMTPSA id 56C6CC8042F;
-	Sat, 24 Aug 2024 07:11:10 +0000 (UTC)
-Message-ID: <6691f94a-030a-4c76-8a1b-602620102a01@icloud.com>
-Date: Sat, 24 Aug 2024 15:11:05 +0800
+	s=1a1hai; t=1724490494;
+	bh=TzP6fFPiDxclLlxPva2OtcKn8MvNbhGsPMaB51w3/kI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To;
+	b=vBvAfaAIxGN1pnq2mQUXe0qKdUAMkx8vitOmUqcntV6DVfCcAOcHMAUUz9aOkdee5
+	 fd9dNPRUOObQGLfTBG10GXeMGM68e1krza+hcWstHfvzFrmxgcuQGp4Cy/hBuCJVkS
+	 eO+WSmaxJnA7oClqX+XPf0YYT9vr0OObqisDBSkmn9P+I6Zkr0ditji9OxhZphuLdp
+	 BaoLq8Q+u5iwX11fdQVCvMX1KtNVmhvFyGbpFto/yL8tzvzDV3fVNKQMMlruLeMSiw
+	 XBqoA8VKztglPeuGFPywOQOm1bxwOarGfZ/uPM6YOs7dM7jUB+rR2gHPv0nLtIc00c
+	 IVe8Z1vMwYrMw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id B17D92010334;
+	Sat, 24 Aug 2024 09:08:07 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v3 0/3] driver core: Prevent device_find_child() from
+ modifying caller's match data
+Date: Sat, 24 Aug 2024 17:07:42 +0800
+Message-Id: <20240824-const_dfc_prepare-v3-0-32127ea32bba@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] net: qcom/emac: Prevent device_find_child() from
- modifying caller's match data
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com>
- <20240815-const_dfc_prepare-v2-4-8316b87b8ff9@quicinc.com>
- <2024082415-platform-shriek-2810@gregkh>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <2024082415-platform-shriek-2810@gregkh>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: nk62xV0h0PiFA08hn8OVndpPemz9k8ZH
-X-Proofpoint-GUID: nk62xV0h0PiFA08hn8OVndpPemz9k8ZH
+X-B4-Tracking: v=1; b=H4sIAN6iyWYC/33NTQ6CMBQE4KuQrq2hLT+FlfcwhsBrK29hiy02G
+ sLdLaw0MS5nkvlmIUF71IG02UK8jhjQ2RTEISMw9vaqKaqUCc95kUvGKDgb5k4Z6Cavp95rKoz
+ hAqqykbokaZd6g8/dPF9SHjHMzr/2i8i29p8WGc2pqmqAglWDUOJ0fyCghSO4G9m8yD+N8pfBk
+ yFF2st6kMY038a6rm+3ZjIw+AAAAA==
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Proofpoint-GUID: X7M2T8oCoMcwW3v59-FhLlvTphq15KTt
+X-Proofpoint-ORIG-GUID: X7M2T8oCoMcwW3v59-FhLlvTphq15KTt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-24_06,2024-08-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408240040
+ definitions=2024-08-24_08,2024-08-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2408240053
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-On 2024/8/24 11:29, Greg Kroah-Hartman wrote:
-> On Thu, Aug 15, 2024 at 10:58:05PM +0800, Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> To prepare for constifying the following old driver core API:
->>
->> struct device *device_find_child(struct device *dev, void *data,
->> 		int (*match)(struct device *dev, void *data));
->> to new:
->> struct device *device_find_child(struct device *dev, const void *data,
->> 		int (*match)(struct device *dev, const void *data));
->>
->> The new API does not allow its match function (*match)() to modify
->> caller's match data @*data, but emac_sgmii_acpi_match() as the old
->> API's match function indeed modifies relevant match data, so it is not
->> suitable for the new API any more, fixed by implementing a equivalent
->> emac_device_find_child() instead of the old API usage.
->>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
->>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 36 +++++++++++++++++++++++--
->>  1 file changed, 34 insertions(+), 2 deletions(-)
-> 
-> Can you rewrite this based on the cxl change to make it a bit more less
-> of a "wrap the logic in yet another layer" type of change like this one
-> is?
-> 
-sure. will do it today.
-> thanks,
-> 
-> greg k-h
+This patch series is to prepare for constifying the following driver API:
+
+struct device *device_find_child(struct device *dev, void *data,
+		int (*match)(struct device *dev, void *data));
+to
+struct device *device_find_child(struct device *dev, const void *data,
+		int (*match)(struct device *dev, const void *data));
+
+How to constify the API ?
+There are total 30 usages of the API in kernel tree:
+
+For 2/30 usages, the API's match function (*match)() will modify
+caller's match data @*data, and this patch series will clean up them.
+
+For remaining 28/30, the following patch series will simply change its
+relevant parameter type to const void *.
+https://lore.kernel.org/all/20240811-const_dfc_done-v1-1-9d85e3f943cb@quicinc.com/
+
+Why to constify the API ?
+
+(1) It normally does not make sense, also does not need to, for
+such device finding operation to modify caller's match data which
+is mainly used for comparison.
+
+(2) It will make the API's match function and match data parameter
+have the same type as all other APIs (bus|class|driver)_find_device().
+
+(3) It will give driver author hints about choice between this API and
+the following one:
+int device_for_each_child(struct device *dev, void *data,
+		int (*fn)(struct device *dev, void *data));
+ 
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v3:
+- Git rebase
+- Correct commit message for the driver core patch
+- Use changes suggested by Ira Weiny cxl/region
+- Drop firewire core patch
+- Make qcom/emac follow cxl/region solution suggested by Greg
+- Link to v2: https://lore.kernel.org/r/20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com
+
+Changes in v2:
+- Give up introducing the API constify_device_find_child_helper()
+- Correct commit message and inline comments
+- Implement a driver specific and equivalent one instead of device_find_child()
+- Link to v1: https://lore.kernel.org/r/20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com
+
+---
+Zijun Hu (3):
+      driver core: Make parameter check consistent for API cluster device_(for_each|find)_child()
+      cxl/region: Find free cxl decoder by device_for_each_child()
+      net: qcom/emac: Prevent device_find_child() from modifying caller's match data
+
+ drivers/base/core.c                             |  6 ++---
+ drivers/cxl/core/region.c                       | 30 ++++++++++++++++++++-----
+ drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 22 +++++++++++++-----
+ 3 files changed, 44 insertions(+), 14 deletions(-)
+---
+base-commit: 888f67e621dda5c2804a696524e28d0ca4cf0a80
+change-id: 20240811-const_dfc_prepare-3ff23c6598e5
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
 
