@@ -1,155 +1,102 @@
-Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C6E155A34
-	for <linux-cxl@vger.kernel.org>; Sat, 24 Aug 2024 09:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C0AF13A89A
+	for <linux-cxl@vger.kernel.org>; Sun, 25 Aug 2024 10:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724490517; cv=none; b=cOV5smTlVIUwF1Ea20v4k85Ui9LdZt9XpHsWjsxyQw8FghI1ME74wEkY8rpsKNBGuleuPha4BL7gZnG0w0u+QH4SsHFWZSMgikBfDz0cc18yrJXMoAi0gkuIi1e07dcKvM8IgYSBFDjjyTBR7upF7QfOKfxXv4Z0N33Isz6YPd8=
+	t=1724581365; cv=none; b=uu/5rYWk/G4aepBvR/waQvjPVU+zxGn8tcOTuIEu6MGmtY8gYXWEXLa8EBdGYA13Q8DRdDC/oK1sarDFKJfkJsEnzjRf9XlYyXMrtlnDXvbYqxDUErVW3fm9zXf+jyQ1Jp7n4HO0c4sxuwL9KUGhXwB0KtJu4SHC/2burSy0/hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724490517; c=relaxed/simple;
-	bh=6N7PqK9xBFI6iYPFqZ/0q8L0Dbt2mFTNu//UuPHTsR0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HEskrUlhEHSXVoT5c+8LiVtkJlRTMM5OI0CPUz3ofA602OuJ4OkyZkwaQGVzs/chLk5dnsn5dSmXLWuW6mZXzPuSgAVufPWEQ2LKTU8v5pFu+wJ4IaLB2iI8se7ABXX7pIWjjxg8BAmkBU5JqBSZLZspxWHNnwvUken9z76lyZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=AUaQ7HoJ; arc=none smtp.client-ip=17.58.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1724581365; c=relaxed/simple;
+	bh=2DQG51DiteoO0MVKpITEv1Y2FLKIJnTiOcxL9qybrm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ieKUs18Oe2LDyeO0vgf/37+CnFyyQ9Zt8xxxDSEMR4+aqcsfPrt/kIuE6qzqIA5O1lxyqyf9zhefiJXOGM/MMHYCLNA6ikLQJy9O7RKdRWZFZcCFLU8zO+U3VdLn8LDOaGFt/4HJBEftpcjhIJ0S7GFFZJtRf1VgUjW6h9mvfuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=GDWBQRny; arc=none smtp.client-ip=207.46.229.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="AUaQ7HoJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1724490515;
-	bh=3ltOxJ7yzq2fygEXUJTTlGgiDR87fnykZ2qH+ljFSB8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
-	b=AUaQ7HoJzdlsPS2x/9JZmg7KYdTDwfM2gYrICytEtesPk6ykj6HCgUsTFitc4mPhV
-	 fCajqTSLbR/yUnbW7mwFm8sdS1UiI40v/PT1Qh13dtHdA+NZf/VBxUjmvfXWZN31YT
-	 tQ42o5a6HZmUEr0GqBbAyKZO4cN3HHNk2dVw4yUef9zRxNHlPaWtSEAAUoK6i9ptx4
-	 8yiGJr4jLvPZaDCZUIPO9oh0dh6zmTaopIVWFmU0OgC+2GmncpLluEfry/zvEBscVF
-	 2giCaXz5mPQQxOrOOpGU9H9erIc512+OEsPVJ0Zevu5L4HSX+aCJf71Gayvc167SxB
-	 JhmsjyqKJxJww==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id A7D1720102FF;
-	Sat, 24 Aug 2024 09:08:28 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sat, 24 Aug 2024 17:07:45 +0800
-Subject: [PATCH v3 3/3] net: qcom/emac: Prevent device_find_child() from
- modifying caller's match data
+	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="GDWBQRny"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
+	Message-ID:MIME-Version:Content-Transfer-Encoding; bh=Ughe4HkEcC
+	tqRyRZ7fpO9i+fyOFkw7Jk4xY6EMQZZdo=; b=GDWBQRny6pY+74Kl6wNQvDoVN9
+	vniPzxtXWAWNEcPn9irm0Griswry4jq3uSVCtv2E9wtwizyi11M73t/2HMQtGFOk
+	9fgw/QxhWsxoA/pFFBK3j8TjZ+HQFVZj5HwBZDCZLqp+SrwbuE+pW56CUv/uG0BM
+	GRBcYb9OT4d7hDZd8=
+Received: from gp-VMware-Virtual-Platform.localdomain (unknown [139.227.253.185])
+	by coremail-app2 (Coremail) with SMTP id Nyz+CgCnmibVBctmh4yDAQ--.6641S2;
+	Sun, 25 Aug 2024 18:22:15 +0800 (CST)
+From: peng guo <engguopeng@buaa.edu.cn>
+To: jonathan.cameron@huawei.com,
+	fan.ni@samsung.com
+Cc: mst@redhat.com,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org,
+	peng guo <engguopeng@buaa.edu.cn>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3] hw/cxl: fix physical address field in get scan media results output
+Date: Sun, 25 Aug 2024 18:22:12 +0800
+Message-ID: <20240825102212.3871-1-engguopeng@buaa.edu.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240824-const_dfc_prepare-v3-3-32127ea32bba@quicinc.com>
-References: <20240824-const_dfc_prepare-v3-0-32127ea32bba@quicinc.com>
-In-Reply-To: <20240824-const_dfc_prepare-v3-0-32127ea32bba@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Proofpoint-GUID: V18wEW-gUmWrD26jVLEKnIiwehUGNeQt
-X-Proofpoint-ORIG-GUID: V18wEW-gUmWrD26jVLEKnIiwehUGNeQt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-24_08,2024-08-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408240053
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Nyz+CgCnmibVBctmh4yDAQ--.6641S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF48AFWDCw48WFW5WrW7Jwb_yoW8XrWDpr
+	4DKrnIvayrA347XrsrXa40ga4UWrZxWry3u39xu34jvr97ZFWUXFy5Ka1F9r45X3s5tay8
+	ArnY9ryUKan8Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkY1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv
+	6cx26F1DJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+When using the mailbox command get scan media results, the scan media 
+restart physical address field in the ouput palyload is not 64-byte 
+aligned.
 
-To prepare for constifying the following old driver core API:
+This patch removed the error source of the restart physical address. 
 
-struct device *device_find_child(struct device *dev, void *data,
-		int (*match)(struct device *dev, void *data));
-to new:
-struct device *device_find_child(struct device *dev, const void *data,
-		int (*match)(struct device *dev, const void *data));
+The Scan Media Restart Physical Address is the location from which the 
+host should restart the Scan Media operation. [5:0] bits are reserved.
+Refer to CXL spec r3.1 Table 8-146
 
-The new API does not allow its match function (*match)() to modify
-caller's match data @*data, but emac_sgmii_acpi_match() as the old
-API's match function indeed modifies relevant match data, so it is not
-suitable for the new API any more, solved by using device_for_each_child()
-to implement relevant functions.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Fixes: 89b5cfcc31e6 ("hw/cxl: Add get scan media results cmd support")
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/linux-cxl/20240819154206.16456-1-engguopeng@buaa.edu.cn/
+Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
 ---
- drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+v2 -> v3: 
+-- Resend +CC qemu-devel list and Michael Tsirkin.
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-index e4bc18009d08..29392c63d115 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-@@ -293,6 +293,11 @@ static struct sgmii_ops qdf2400_ops = {
- };
- #endif
- 
-+struct emac_match_data {
-+	struct sgmii_ops **sgmii_ops;
-+	struct device *target_device;
-+};
-+
- static int emac_sgmii_acpi_match(struct device *dev, void *data)
- {
- #ifdef CONFIG_ACPI
-@@ -303,7 +308,7 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
- 		{}
- 	};
- 	const struct acpi_device_id *id = acpi_match_device(match_table, dev);
--	struct sgmii_ops **ops = data;
-+	struct emac_match_data *match_data = data;
- 
- 	if (id) {
- 		acpi_handle handle = ACPI_HANDLE(dev);
-@@ -324,10 +329,12 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
- 
- 		switch (hrv) {
- 		case 1:
--			*ops = &qdf2432_ops;
-+			*match_data->sgmii_ops = &qdf2432_ops;
-+			match_data->target_device = get_device(dev);
- 			return 1;
- 		case 2:
--			*ops = &qdf2400_ops;
-+			*match_data->sgmii_ops = &qdf2400_ops;
-+			match_data->target_device = get_device(dev);
- 			return 1;
- 		}
- 	}
-@@ -356,10 +363,15 @@ int emac_sgmii_config(struct platform_device *pdev, struct emac_adapter *adpt)
- 	int ret;
- 
- 	if (has_acpi_companion(&pdev->dev)) {
-+		struct emac_match_data match_data = {
-+			.sgmii_ops = &phy->sgmii_ops,
-+			.target_device = NULL,
-+		};
- 		struct device *dev;
- 
--		dev = device_find_child(&pdev->dev, &phy->sgmii_ops,
--					emac_sgmii_acpi_match);
-+		device_for_each_child(&pdev->dev, &match_data, emac_sgmii_acpi_match);
-+		/* Need to put_device(@dev) after use */
-+		dev = match_data.target_device;
- 
- 		if (!dev) {
- 			dev_warn(&pdev->dev, "cannot find internal phy node\n");
+v1 -> v2: 
+-- Add module name to title.
+---
+ hw/cxl/cxl-mailbox-utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 3ebbd32e1028..9258e48f95ee 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -2076,7 +2076,7 @@ static CXLRetCode cmd_media_get_scan_media_results(const struct cxl_cmd *cmd,
+ 
+         start = ROUND_DOWN(ent->start, 64ull);
+         stop = ROUND_DOWN(ent->start, 64ull) + ent->length;
+-        stq_le_p(&out->records[i].addr, start | (ent->type & 0x7));
++        stq_le_p(&out->records[i].addr, start);
+         stl_le_p(&out->records[i].length, (stop - start) / CXL_CACHE_LINE_SIZE);
+         i++;
+ 
 -- 
-2.34.1
+2.43.0
 
