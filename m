@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15B71C6894;
-	Tue, 27 Aug 2024 15:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC761CDA04;
+	Tue, 27 Aug 2024 15:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724771582; cv=none; b=oslc8vHfHlckW4kt84DnSNFYJSFzC5t62sXMphV6529MrMd2FOc8P73avCwTMaHu17WS2XBZQRjgTEVi7d+hfpUewTFOe3m0FdxjchrMn+xx4HDVaFmlWpSJTFdJRwwAJl47oGfFALLXetRxQI1DA3ratCnS9wQVpP4WTa737QA=
+	t=1724771911; cv=none; b=p5wwfXDZMIhn7iIXHFTxX7GPkcWHv1vMGcWInRrPB1GasuxUfmjJxGAPcOdh5R7t9O91EyvpPKntDkkrVJSaTzvUdq9jqNPJN7ikljtT1+FUGO+cIPxdFgVkSQ0rOajAE5D09uE+kMMo/OZMRVZCsRIjTkUw/uK2nImIGfPz7IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724771582; c=relaxed/simple;
-	bh=U6ZXTvMC7qfXZv/4gvYoEX0upKnN/rHEnjpxOPk+BBE=;
+	s=arc-20240116; t=1724771911; c=relaxed/simple;
+	bh=nNRIz068p/qgB1Y61AXhoZ04ufnISP5a48d3JNGk+ak=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GnzcHLQp4ApbY2Rh4fHH28vSEPtafu8S6vmkCoq9iMesUMV8DlAKvDnog3DeikxJ8lslZuZqIzQY+10HV3N9dvKCFB8rHCrVjEEhgIOz5QIhzoaKyzGCOxyT841EjKDyDsd0nNZP91jIhDB75s6DKVGq6bpPkKdFR1XM6qzrKqg=
+	 MIME-Version:Content-Type; b=bDHe8cy/Dq/pjNvStO2lsCwOgITonfSNjPO+4sKPL/g3AzoIeNGAybFnHs889aDAheFg/+Zdl2mqCYtAtFcgbDmuNlRgFcY3IOochz733TLm693+U/tPIGF1PP+Fxr3btXkEfsEXSg21OpCZKeHdwt227Gx/zHVyLHCnxjIbpjk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WtWCY33nlz6J73k;
-	Tue, 27 Aug 2024 23:08:57 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WtWLl05Yjz6K5VM;
+	Tue, 27 Aug 2024 23:15:11 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52C6F140B33;
-	Tue, 27 Aug 2024 23:12:56 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BD348140C9C;
+	Tue, 27 Aug 2024 23:18:26 +0800 (CST)
 Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 27 Aug
- 2024 16:12:55 +0100
-Date: Tue, 27 Aug 2024 16:12:54 +0100
+ 2024 16:18:26 +0100
+Date: Tue, 27 Aug 2024 16:18:25 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Alejandro Lucero Palau <alucerop@amd.com>
 CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
@@ -32,13 +32,14 @@ CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
 	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
 	<richard.hughes@amd.com>
-Subject: Re: [PATCH v2 05/15] cxl: fix use of resource_contains
-Message-ID: <20240827161254.00002dbe@Huawei.com>
-In-Reply-To: <32f38caf-8cc3-2e4c-668f-f36552b7cffe@amd.com>
+Subject: Re: [PATCH v2 09/15] cxl: define a driver interface for HPA free
+ space enumaration
+Message-ID: <20240827161825.0000146b@Huawei.com>
+In-Reply-To: <adcc692e-8819-3741-31d3-d1202cc1b619@amd.com>
 References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
-	<20240715172835.24757-6-alejandro.lucero-palau@amd.com>
-	<20240804182519.00006ea8@Huawei.com>
-	<32f38caf-8cc3-2e4c-668f-f36552b7cffe@amd.com>
+	<20240715172835.24757-10-alejandro.lucero-palau@amd.com>
+	<20240804185756.000046c5@Huawei.com>
+	<adcc692e-8819-3741-31d3-d1202cc1b619@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,111 +50,76 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 16 Aug 2024 15:37:14 +0100
+On Mon, 19 Aug 2024 15:47:48 +0100
 Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-> On 8/4/24 18:25, Jonathan Cameron wrote:
-> > On Mon, 15 Jul 2024 18:28:25 +0100
-> > <alejandro.lucero-palau@amd.com> wrote:
+> On 8/4/24 18:57, Jonathan Cameron wrote:
+> > On Mon, 15 Jul 2024 18:28:29 +0100
+> > alejandro.lucero-palau@amd.com wrote:
 > >  
 > >> From: Alejandro Lucero <alucerop@amd.com>
 > >>
-> >> For a resource defined with size zero, resource contains will also
-> >> return true.
+> >> CXL region creation involves allocating capacity from device DPA
+> >> (device-physical-address space) and assigning it to decode a given HPA
+> >> (host-physical-address space). Before determining how much DPA to
+> >> allocate the amount of available HPA must be determined. Also, not all
+> >> HPA is create equal, some specifically targets RAM, some target PMEM,
+> >> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
+> >> is host-only (HDM-H).
 > >>
-> >> Add resource size check before using it.
+> >> Wrap all of those concerns into an API that retrieves a root decoder
+> >> (platform CXL window) that fits the specified constraints and the
+> >> capacity available for a new region.
 > >>
-> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>  
-> > If this can happen in existing type 3 case the fixes tag
-> > and send it separately from this series.  
+> >> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m6fbe775541da3cd477d65fa95c8acdc347345b4f
+> >>
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >> Co-developed-by: Dan Williams <dan.j.williams@intel.com>  
+> > Hi.
+> >
+> > This seems a lot more complex than an accelerator would need.
+> > If plan is to use this in the type3 driver as well, I'd like to
+> > see that done as a precursor to the main series.
+> > If it only matters to accelerator drivers (as in type 3 I think
+> > we make this a userspace problem), then limit the code to handle
+> > interleave ways == 1 only.  Maybe we will care about higher interleave
+> > in the long run, but do you have a multihead accelerator today?  
 > 
 > 
-> I have been looking at this possibility and although not with 100% 
-> certainty, I would say it is not for Type3.
+> I would say this is needed for Type3 as well but current support relies 
+> on user space requests. I think Type3 support uses the legacy 
+> implementation for memory devices where initially the requirements are 
+> quite similar, but I think where CXL is going requires less manual 
+> intervention or more automatic assisted manual intervention. I'll wait 
+> until Dan can comment on this one for sending it as a precursor or as 
+> part of the type2 support.
 > 
-> "Type3 regions" are (usually) created from user space, and:
 > 
-> 1) if it is RAM, dax code is invoked for creating the region
-> 
-> 2) if it is pmem, pmem region creation code is invoked.
-> 
-> None of these possibilities use the affected code in this patch.
-> 
-> There exist two options where that code could be used by Type3, which 
-> are confusing:
-> 
-> 1) regions created during device initialization, but for that the 
-> decoder needs to be committed and it is not expected for Type3 without 
-> user space intervention.
+> Regarding the interleave, I know you are joking ... but who knows what 
+> the future will bring. O maybe I'm misunderstanding your comment, 
+> because in my view multi-head device and interleave are not directly 
+> related. Are they? I think you can have a single head and support 
+> interleaving, with multi-head implying different hosts and therefore 
+> different HPAs.
 
-More than possible a bios already set them up.
+Nothing says they heads are connected to different hosts.
 
-> 
-> 2) when emulating an hdm decoder, what I think it is not possible for 
-> Type3 since it is mandatory.
+For type 3 version the reason you'd do this is to spread load across
+multiple root ports.  So it's just a bandwidth play and as far
+as the host is concerned they might as well be separate devices.
 
-HDM Decoders are not mandatory for older devices and not mandatory for
-bios to have used them.  Papering over that gap is what the emulation code
-is there for.
+For accelerators in theory you can do stuff like that but it gets
+fiddly fast and in theory you might care that they are the same
+device for reasons beyond RAS etc and might interleave access to
+device memory across the two heads.
 
-> 
-> 
-> Finally we have code when sysfs dpa_size file is written, which I'm not 
-> familiar with.
-
-That's an early part of the userspace bringing up the memory if it
-wasn't set up by bios or from pmem lsa data.
-
-Not sure any that helps though ;)
+Don't think we care today though, so for now I'd just reject any
+interleaving.
 
 Jonathan
 
-> 
-> 
-> 
-> > If there is no path due to some external code, then
-> > drop the word fix from the title and call it
-> >
-> > cxl: harden resource_contains checks to handle zero size resources  
-> 
-> 
-> After the explanation above, I will do as you say.
-> 
-> Thanks!
-> 
-> 
-> > Avoids it getting backported into stable / distros picking it
-> > up if there isn't a real issue before this series.
-> >
-> > Thanks,
-> >
-> > Jonathan
-> >  
-> >> ---
-> >>   drivers/cxl/core/hdm.c | 7 +++++--
-> >>   1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> >> index 3df10517a327..4af9225d4b59 100644
-> >> --- a/drivers/cxl/core/hdm.c
-> >> +++ b/drivers/cxl/core/hdm.c
-> >> @@ -327,10 +327,13 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
-> >>   	cxled->dpa_res = res;
-> >>   	cxled->skip = skipped;
-> >>   
-> >> -	if (resource_contains(&cxlds->pmem_res, res))
-> >> +	if ((resource_size(&cxlds->pmem_res)) && (resource_contains(&cxlds->pmem_res, res))) {
-> >> +		printk("%s: resource_contains CXL_DECODER_PMEM\n", __func__);
-> >>   		cxled->mode = CXL_DECODER_PMEM;
-> >> -	else if (resource_contains(&cxlds->ram_res, res))
-> >> +	} else if ((resource_size(&cxlds->ram_res)) && (resource_contains(&cxlds->ram_res, res))) {
-> >> +		printk("%s: resource_contains CXL_DECODER_RAM\n", __func__);
-> >>   		cxled->mode = CXL_DECODER_RAM;
-> >> +	}
-> >>   	else {
-> >>   		dev_warn(dev, "decoder%d.%d: %pr mixed mode not supported\n",
-> >>   			 port->id, cxled->cxld.id, cxled->dpa_res);  
+ 
 
