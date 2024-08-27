@@ -1,75 +1,59 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF98618D65C
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Aug 2024 09:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EBE18C345;
+	Tue, 27 Aug 2024 11:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724752317; cv=none; b=g2r1eM6YqxeXMRO/3SuL+E9OLYgNaJRF4CSdFg5KniT5OYmvbiCZMtgM/MWl9yggGJWmI3ea7Hryg0/N+cTDW16Lf6d22VeEcMEKdddZ7Ptpe/H3xfC4/DjxoyZ7XQAZrCtcJ24fKOkMYCqQFgL6UqkleNC1uNhjs6TEAxRoedU=
+	t=1724757355; cv=none; b=paEAJqyJ0qVQkICISA0CJLahFFIhb/X8oNCbB/uotSMMAUJjx0lSzfsIRn3XDuxDLJMg4AksbIdbbmALbHacoCN6y/pAQzVj/qMubmZNObhQTd0Cf8yfPzKPvt9utgW3RE+h7OZD9N+RCpPb09bLc6NHN3SE0VWainIrl3JsYac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724752317; c=relaxed/simple;
-	bh=1p6pmnqI7EqVba9pVVN8kdlQYzKrOCXpB5NqkCr/MMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l2V+nX9iskT8G6Fddaqdrrp7EkTr9eAJOJNCq08nPUp158bw7KOiU7ZlHB6zfsr/Tozok8O96/bEaEX0EOvGAAwIJ2TLbZB0ENdZSkwNMOSNABDS2HndQk2eOP6VujVg8eFmAv1cltjCe5suiihecw/LeMsw+G4QrNu2gFB+ZUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wi8Pv6Ke; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wi8Pv6Ke"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1724752312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vwiC4I+wNAddjc4LjGQaDlHdkw/jV1rVA+GTUj5UF/c=;
-	b=Wi8Pv6Ke2VGeL6TmDsMPzkzXQZAZ/EOXh8aPujr3uQ6ZpQEZS3t6uD8pI1jDgf47t2p+eA
-	ThlhIF9DPKDMj/N2hjs1UK5/R5Bcn/v83rlVZEFDDKX9HOtYfVjUubXajrUiDf0SdckS4R
-	uJSTyn6eevP6rCXNiWArJO15bzrkSzk=
-From: Kunwu Chan <kunwu.chan@linux.dev>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] tools/testing/cxl: Use dev_is_platform()
-Date: Tue, 27 Aug 2024 17:51:23 +0800
-Message-ID: <20240827095123.168696-1-kunwu.chan@linux.dev>
+	s=arc-20240116; t=1724757355; c=relaxed/simple;
+	bh=O3RMyC7YePNQp0PJtDMyCVnAcgZuOihs3XoD4kqeGII=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h5xfmVIZgcuk5iCIfQ+JrNado7zjJrMin2LY2h+C/RE0+QRf4Tz5vv9iR4sDseD5+GZjsRlCMBms+NusdcKnEk2y70aZs24zzq1EuBs5gEl35FKxy30xYq7nQgZbD9Mb8rfP8Ac92QdDFb0Hw/ePS1t8CaXbtXdFPKNY/dIuG64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WtPy04xgtz6J6wF;
+	Tue, 27 Aug 2024 19:11:52 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A67FA140CB9;
+	Tue, 27 Aug 2024 19:15:50 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 27 Aug
+ 2024 12:15:50 +0100
+Date: Tue, 27 Aug 2024 12:15:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Kunwu Chan <kunwu.chan@linux.dev>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] tools/testing/cxl: Use dev_is_platform()
+Message-ID: <20240827121549.00003e17@Huawei.com>
+In-Reply-To: <20240827095123.168696-1-kunwu.chan@linux.dev>
+References: <20240827095123.168696-1-kunwu.chan@linux.dev>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Kunwu Chan <chentao@kylinos.cn>
+On Tue, 27 Aug 2024 17:51:23 +0800
+Kunwu Chan <kunwu.chan@linux.dev> wrote:
 
-Use dev_is_platform() instead of checking bus type directly.
-
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- tools/testing/cxl/mock_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/cxl/mock_acpi.c b/tools/testing/cxl/mock_acpi.c
-index 55813de26d46..8da94378ccec 100644
---- a/tools/testing/cxl/mock_acpi.c
-+++ b/tools/testing/cxl/mock_acpi.c
-@@ -18,7 +18,7 @@ struct acpi_device *to_cxl_host_bridge(struct device *host, struct device *dev)
- 		goto out;
- 	}
- 
--	if (dev->bus == &platform_bus_type)
-+	if (dev_is_platform(dev))
- 		goto out;
- 
- 	adev = to_acpi_device(dev);
--- 
-2.41.0
-
+> From: Kunwu Chan <chentao@kylinos.cn>
+> 
+> Use dev_is_platform() instead of checking bus type directly.
+> 
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
