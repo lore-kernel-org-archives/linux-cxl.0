@@ -1,86 +1,80 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6E15687D
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Aug 2024 07:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58188158DD0;
+	Tue, 27 Aug 2024 08:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724744618; cv=none; b=KoWqxWT1fQqrHVDw5XkxGAKY9fC3TtnOWm2rm9AEY5m0TnCaqeZsjr1bLoqN3e58jKclAuEY9ZUTk7ZqUvt6TZSwLNNUqwoocd0Qd79sVmzRAcZ5cvibRAL7SAKtFisVXkWXNNLnJ/PRjPL0GY52MTr+90ZG3PjlOrDelgDnBLg=
+	t=1724748945; cv=none; b=bLyEsNYT8WeLcukQ5W+0k58/kim9tIPhGIssieGFgBjDgndmcdCVx+ZBvjqA2+dosRdy8ryr1CoFfr3Qb3xKHtab7WuLBYb5dgto36HhoxjfgYTAhFkXjcRKuLGnU3wrLcS1RzSy1RVxoKfUC0LtlEak2epeUdHnzCC3T84a5oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724744618; c=relaxed/simple;
-	bh=9O+wV+FDw4hvHkak6u5i2N5UmUmRnNZjiSFhsZp5OhQ=;
+	s=arc-20240116; t=1724748945; c=relaxed/simple;
+	bh=WLyDwKrTLwxUKO9wLuHMkEx2eqbtMQG2RDk7GrJYDXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HtnC4017NH3xVkY5fZEBngrgrckh5XPs6RlyHeLTDSef1owggQESR80SrSm8yoVyi745D/6wBsgE/OhM6+rKklSkjU0YeK8nCqZHEK6ECqUqWwuP0DnTJq45JYBaC9MfZgmrXC+369vqrWDa2pp6KQrE6393QObOaPcjbVQHH9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QoNHKv6w; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oW+yXMNYQLA8jsdJv8q+4imlY13EYHDB43Pi/YHEqiPG0tfwost9HmHi9gToLX3rOliQ49yvvdc1sLeVJnek25rOgrvDA3/hH5iYjH1dJ+jRDb4w9I2hLG/S6S47Z+71FPe/IJmHo0mt47b7lYNGEiVVzOXnRRgo84P4UjHV6aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DusVZnZ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QoNHKv6w"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c0a9ae3665so2204538a12.0
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Aug 2024 00:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724744614; x=1725349414; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oTDyalBaKZ6GvpyVhJbU4E6wPQv70hj8wtzNRSfGJVc=;
-        b=QoNHKv6wv/hNdvM7XuZqWKLnqJLSx6KDuESNSsGi04gndV4QLFHlZuWwJRCuHfsX5c
-         doluuN5HInRoH8PSpRAK9UKlEeYmz77T/E5uDimp9VUZh46QsSmY0t+Fyo4nZz7G1j1P
-         UmbT6iIrwkTkNnHe/L0NRLB5kfbVrOIt9gf61PNo0mTR2c4qQgqFSkt1rIQRSrLVzX7A
-         4cDfmQK62xtOL0wR58KG5OmHoTVB1jmHyGMJUedNp1SVo/wPqyTXBiA6PogCw/2oXJiw
-         geyhVTSFkp+a4QZIvwcaUWz/VEyT7L7AJt9pXH3qZJGDDrIB7fNBvYmmYgGOqh0nxBTw
-         IzXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724744614; x=1725349414;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oTDyalBaKZ6GvpyVhJbU4E6wPQv70hj8wtzNRSfGJVc=;
-        b=UmvXSOX8itb8G278DseUDD/LLIURmbHL6bWHqPjBwH8d5eFxpAXsVhuVaNMWiogXvk
-         oz/BnePJsE7KRU9Gl+yzuPcH3l85W+z/GzKEfz6w8sIaFZsZnUu1TclFzSkho0zz4KMf
-         7Z6eMMZgjOMG+j6FWR30EnoW+KMvVrbS2qQIYnUDJbiXSEtC8ZxXctiVf7LdAZHg4HI3
-         NzkXFyCG/8r82a1jmpSwaA5NBUhsNXI+cp2Gi8fERxgUrsjWAKsUT3Rw2DroVU1+fmUI
-         u3AfW237LjzGpmFKGxRyydMkRbycf2ZlBAL8b2j0F7NIuV5m+pBALpdkX9+xhr6pq63u
-         YK2w==
-X-Forwarded-Encrypted: i=1; AJvYcCW5CafKXDO3gyBlYX1qLic+w5Lqdvq8pPe9d7quNmjJOYntyELTglW3En5bFhm6Nl3oxIwh6HnqvpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0pmZerngOFMIenotP0ty1nSBBgopp1fzLeApLJhMML+bQnn1d
-	BncMAhDfxG2EaghtBjy+bWjoPlUUPj53lPLTh7KPYn11EBgW7hFuqAj2hFpiGA0=
-X-Google-Smtp-Source: AGHT+IH7Fgf/EB0JBJKuUh2fTIXnJD3jA6O0dLLhMvQDq4Jq6cjKeLWS5uYP/wIJcEcCmyeKJ1TGAA==
-X-Received: by 2002:a05:6402:5203:b0:5be:d63a:4608 with SMTP id 4fb4d7f45d1cf-5c0ba299682mr1136660a12.3.1724744614148;
-        Tue, 27 Aug 2024 00:43:34 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb209c2csm687412a12.41.2024.08.27.00.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2024 00:43:33 -0700 (PDT)
-Date: Tue, 27 Aug 2024 09:43:32 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DusVZnZ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E362BC8B7A5;
+	Tue, 27 Aug 2024 08:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724748944;
+	bh=WLyDwKrTLwxUKO9wLuHMkEx2eqbtMQG2RDk7GrJYDXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DusVZnZ7wV2iULh/1avLL75JPrhMhQlBqoECiJtic0bUtwgwuIxQeD5hzgO3OPkyS
+	 dpl+eK1bBgzJJ35WOwwwbfdgq1YQrY2eHAEWUAKnv8OixY+PRJYPtQH9Uh4KDOOHgD
+	 2/VI5iJPwBhdC5LsFDFX73FW+2wIcx/umVi6Bv43EvELDrk40xPn4mIuDGkezsnKRA
+	 xbs+ZNNQqQDTYUIePAvIqd1K0l/VrmBAarQw0NUQwiKK+jAlMR+ifUUyK+I6EB0ATl
+	 0IqZzSdRMeIajz+pVDlkeyPLq3GoGX7ttE4pCEa3ZuqwGkXktl0F6ooJc0ev3A8Yxa
+	 2+SfAAZCXhU+Q==
+Date: Tue, 27 Aug 2024 11:52:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Bruno Faccini <bfaccini@nvidia.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 02/25] printk: Add print format (%par) for struct range
-Message-ID: <Zs2DhzbLK_LU6B0a@pathway.suse.cz>
-References: <20240816-dcd-type2-upstream-v3-0-7c9b96cba6d7@intel.com>
- <20240816-dcd-type2-upstream-v3-2-7c9b96cba6d7@intel.com>
- <ZsSjdjzRSG87alk5@pathway.suse.cz>
- <66c77b1c5c65c_1719d2940@iweiny-mobl.notmuch>
- <Zsd_EctNZ80fuKMu@smile.fi.intel.com>
- <ZsyB5rqhaZ-oRwny@pathway.suse.cz>
- <Zsy6BbJiYqiXORGu@smile.fi.intel.com>
- <66ccf10089b0_e0732294ef@iweiny-mobl.notmuch>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v4 24/26] arch_numa: switch over to numa_memblks
+Message-ID: <Zs2T5wkSYO9MGcab@kernel.org>
+References: <MW4PR12MB72616723E1A090E315681FF6A38B2@MW4PR12MB7261.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,127 +83,90 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <66ccf10089b0_e0732294ef@iweiny-mobl.notmuch>
+In-Reply-To: <MW4PR12MB72616723E1A090E315681FF6A38B2@MW4PR12MB7261.namprd12.prod.outlook.com>
 
-On Mon 2024-08-26 16:17:52, Ira Weiny wrote:
-> Andy Shevchenko wrote:
-> > On Mon, Aug 26, 2024 at 03:23:50PM +0200, Petr Mladek wrote:
-> > > On Thu 2024-08-22 21:10:25, Andy Shevchenko wrote:
-> > > > On Thu, Aug 22, 2024 at 12:53:32PM -0500, Ira Weiny wrote:
-> > > > > Petr Mladek wrote:
-> > > > > > On Fri 2024-08-16 09:44:10, Ira Weiny wrote:
+Hi,
+
+On Mon, Aug 26, 2024 at 06:17:22PM +0000, Bruno Faccini wrote:
+> > On 7 Aug 2024, at 2:41, Mike Rapoport wrote:
 > > 
-> > ...
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > > 
-> > > > > > > +	%par	[range 0x60000000-0x6fffffff] or
-> > > > > > 
-> > > > > > It seems that it is always 64-bit. It prints:
-> > > > > > 
-> > > > > > struct range {
-> > > > > > 	u64   start;
-> > > > > > 	u64   end;
-> > > > > > };
-> > > > > 
-> > > > > Indeed.  Thanks I should not have just copied/pasted.
-> > > > 
-> > > > With that said, I'm not sure the %pa is a good placeholder for this ('a' stands
-> > > > to "address" AFAIU). Perhaps this should go somewhere under %pr/%pR?
+> > Until now arch_numa was directly translating firmware NUMA information
+> > to memblock.
+> > 
+> > Using numa_memblks as an intermediate step has a few advantages:
+> > * alignment with more battle tested x86 implementation
+> > * availability of NUMA emulation
+> > * maintaining node information for not yet populated memory
+> > 
+> > Adjust a few places in numa_memblks to compile with 32-bit phys_addr_t
+> > and replace current functionality related to numa_add_memblk() and
+> > __node_distance() in arch_numa with the implementation based on
+> > numa_memblks and add functions required by numa_emulation.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> [arm64 + CXL via
+> > QEMU]
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >   drivers/base/Kconfig       |   1 +
+> >   drivers/base/arch_numa.c   | 201 +++++++++++--------------------------
+> >   include/asm-generic/numa.h |   6 +-
+> >   mm/numa_memblks.c          |  17 ++--
+> >   4 files changed, 75 insertions(+), 150 deletions(-)
+> >  
+> > <snip>
+> > 
+> > +
+> > +u64 __init numa_emu_dma_end(void)
+> > +{
+> > +             return PFN_PHYS(memblock_start_of_DRAM() + SZ_4G);
+> > +}
+> > +
 > 
-> I'm speaking a bit for Dan here but also the logical way I thought of
-> things.
+> PFN_PHYS() translation is unnecessary here, as
+> memblock_start_of_DRAM() + SZ_4G is already a
+> memory size.
 > 
-> 1) %p does not dictate anything about the format of the data.  Rather
->    indicates that what is passed is a pointer.  Because we are passing a
->    pointer to a range struct %pXX makes sense.
-> 2) %pa indicates what follows is 'address'.  This was a bit of creative
->    license because, as I said in the commit message most of the time
->    struct range contains an address range.  So for this narrow use case it
->    also makes sense.
-> 3) %par r for range.
-
-Yes. I got it.
-
-Well, is struct range really used for addresses? It rather looks like
-a range of any 64-bit values.
-
-> %p[rR] is taken.  %pra confuses things IMO.
-
-Another variants might be %pr64 or %prange.
-
-IMHO, there is no good solution. We are trying to find the least
-bad one. The meaning should be as obvious and as least confusing
-as possible.
-
-Honestly, I do not have a strong opinion. I kind of like %prange ;-)
-But I could live with all other variants, except for %pn mentioned below.
-
-> > > The r/R in %pr/%pR actually stands for "resource".
-> > > 
-> > > But "%ra" really looks like a better choice than "%par". Both
-> > > "resource"  and "range" starts with 'r'. Also the struct resource
-> > > is printed as a range of values.
+> This should fix it:
+>  
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 8d49893c0e94..e18701676426 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -346,7 +346,7 @@ void __init numa_emu_update_cpu_to_node(int
+> *emu_nid_to_phys,
 > 
-> %r could be used I think.  But this breaks with the convention of passing a
-> pointer and how to interpret it.
-
-How exactly does it break the convention, please?
-
-Do you passing a pointer to struct range instead of a pointer to
-struct resource?
-
-It should not be a big problem as long as the vsprintf() code is
-able to guess the right pointer type from the %pXX modifier.
-
-> The other idea I had, mentioned in the commit
-> message was %pn.  Meaning passed by pointer 'raNge'.
-
-This looks like the worst variant to me.
-
-> > Fine with me as long as it:
-> > 1) doesn't collide with %pa namespace
-> > 2) tries to deduplicate existing code as much as possible.
+> u64 __init numa_emu_dma_end(void)
+> {
+> -              return PFN_PHYS(memblock_start_of_DRAM() + SZ_4G);
+> +             return memblock_start_of_DRAM() + SZ_4G;
+> }
 > 
-> Andy, I'm not quite following how you expect to share the code between
-> resource_string() and range_string()?
-> 
-> There is very little duplicated code.  In fact with Petr's suggestions and some
-> more work range_string() is quite simple:
->
-> +static noinline_for_stack
-> +char *range_string(char *buf, char *end, const struct range *range,
-> +                     struct printf_spec spec, const char *fmt)
-> +{
-> +#define RANGE_DECODED_BUF_SIZE         ((2 * sizeof(struct range)) + 4)
-> +#define RANGE_PRINT_BUF_SIZE           sizeof("[range -]")
-> +       char sym[RANGE_DECODED_BUF_SIZE + RANGE_PRINT_BUF_SIZE];
-> +       char *p = sym, *pend = sym + sizeof(sym);
-> +
-> +       *p++ = '[';
-> +       p = string_nocheck(p, pend, "range ", default_str_spec);
-> +       p = special_hex_number(p, pend, range->start, sizeof(range->start));
-> +       *p++ = '-';
-> +       p = special_hex_number(p, pend, range->end, sizeof(range->end));
-> +       *p++ = ']';
-> +       *p = '\0';
-> +
-> +       return string_nocheck(buf, end, sym, spec);
-> +}
+> void debug_cpumask_set_cpu(unsigned int cpu, int node, bool enable)
 
-I agree that there is not much duplicated code in the end.
+Right, I've missed that. Thanks for the fix!
 
-> Also this is the bulk of the patch except for documentation and the new
-> testing code.  [new patch below]
-> 
-> Am I missing your point somehow?  I considered cramming a struct range into a
-> struct resource to let resource_string() process the data.  But that would
-> involve creating a new IORESOURCE_* flag (not ideal) and also does not allow
-> for the larger u64 data in struct range should this be a 32 bit physical
-> address config.
+Andrew, can you please apply this (with fixed formatting)
 
-This would be nasty. I believe that this is not what Andy meant.
+diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+index 8d49893c0e94..e18701676426 100644
+--- a/drivers/base/arch_numa.c
++++ b/drivers/base/arch_numa.c
+@@ -346,7 +346,7 @@ void __init numa_emu_update_cpu_to_node(int *emu_nid_to_phys,
+ 
+ u64 __init numa_emu_dma_end(void)
+ {
+-	return PFN_PHYS(memblock_start_of_DRAM() + SZ_4G);
++	return memblock_start_of_DRAM() + SZ_4G;
+ }
+ 
+ void debug_cpumask_set_cpu(unsigned int cpu, int node, bool enable)
 
-Best Regards,
-Petr
-
-PS: I have vacation until the end of the week, so my next eventual
-    reaction would be delayed.
+-- 
+Sincerely yours,
+Mike.
