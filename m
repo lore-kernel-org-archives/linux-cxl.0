@@ -1,548 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DD31D365A
-	for <linux-cxl@vger.kernel.org>; Tue, 27 Aug 2024 21:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC28158218
+	for <linux-cxl@vger.kernel.org>; Tue, 27 Aug 2024 22:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724795482; cv=none; b=KnOxlORxaBIZzdvjIZ4+LlMmJgLTVuER46DbULYGJ2jpf+a+bYQanu5NA/eMSR6bykhwSNcCQeHKfEsigBHMrKeCXTYI+wrCeA9pOKfetJDYRkKGPh/FKbM6XOch1kOQ8p1NIIVc15OBv2Bf/QWrTjmVN/Zpif+wVmRzWLAn1Ys=
+	t=1724798311; cv=none; b=fJSEGtO1iAqSE44aMYj3PRXp/s9cgChQuc3pX1X5R18XtvdQOYrgpY+qufrc2VeMKhMig6zin3OaXjgMCtd1MuUokcf+MWkCpN+xz1QS+0wVgW0n59BkwfY5fPlyXsPXOQPXuJ4D5mKwQs48J01GAX7Ua9AquJ0SG4aD6ErCy5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724795482; c=relaxed/simple;
-	bh=OkLvGtGDj9byYva+8kmm9NiHIlOLf6vkdb5goBvEdek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N3mSXcZFThsq2gcGPu2ubaty2wDDbOuKJS3c0V4dAXKdNh2aiAgto9vilDEeazZtK1Ykmv8Rux7WXq1ls8QDq3eZPi7HbrrWb5/PzKIYruYpcj3hSJSk5iFhJ/1i0lkVDtlF7bh1kNSelPaVabUafrqw/mUfLFSM9lU0oL6wxcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 415FDC4AF10;
-	Tue, 27 Aug 2024 21:51:22 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: alejandro.lucero-palau@amd.com,
-	dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	fan.ni@samsung.com
-Subject: [PATCH v2 2/2] cxl: Convert cxl_internal_send_cmd() to use 'struct cxl_mailbox' as input
-Date: Tue, 27 Aug 2024 14:49:50 -0700
-Message-ID: <20240827215116.536126-3-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240827215116.536126-1-dave.jiang@intel.com>
-References: <20240827215116.536126-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1724798311; c=relaxed/simple;
+	bh=zQ+eYLyxr0GWVHaXmf/PIJWuXecHg8EbR9oiH3kHGy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CpsPeIl0OAabzwu0ci9EwNJGtRRex2aqm1OsNpGGmrdIh66gXNWyGUF+t0kPjzEQO3w9CNx3uZdYU38Bs99dQs6fPGO5i5WB3jrd3hcHWtAl3RXTJkEZCGUXxJ0vpMQLJSQmBBAXCsj2hbelTutDnj+Ppc32zAP87AoslO8rnYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXPO9ZT8; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXPO9ZT8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724798309; x=1756334309;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zQ+eYLyxr0GWVHaXmf/PIJWuXecHg8EbR9oiH3kHGy4=;
+  b=mXPO9ZT8OCwwO36NHaaPOH/99jvkhmcNbv/Ach9hVuC90FRenwDwR0Il
+   K2a6dk+0/4jx27tPl0sqSq4Mj3xsi+gt+RRQjfM5SQFQdXM+PuTu4bvFN
+   Jrdy6dUs/fqw2jYD2WYzfMQ9/jl36zXftdx0sF1JDij3P8JThuyzNndLN
+   2/S2anIMfCTOjvJfLh3PxovfYRRxBFPqzuZ4NMnRLV+tn8uVIzyyEAKm9
+   5Dzgr2XnD7YRRf9bJ+ZgNxCjp4jc0Fh9rnZiTYK6GdAIptOabqxQGGjV9
+   cfX7u5xuRG1h+HCJDLUnuU/BdvjnDSuXd8/GJxNTuaSIq0zfB/eY+VtBc
+   Q==;
+X-CSE-ConnectionGUID: ZSq0lvHKQpyOqlWEYYMcLQ==
+X-CSE-MsgGUID: 7ekxANHdTjq51qZs53JViQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="26204970"
+X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
+   d="scan'208";a="26204970"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 15:38:29 -0700
+X-CSE-ConnectionGUID: kPwKSAy9SE21BB9AW23r/w==
+X-CSE-MsgGUID: 6Bgn2GiyQkaLrGLwEy20Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
+   d="scan'208";a="62743882"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.233]) ([10.125.110.233])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 15:38:28 -0700
+Message-ID: <3c325ad2-e483-417a-a952-1357df3382c4@intel.com>
+Date: Tue, 27 Aug 2024 15:38:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/3] cxl: Add documentation to explain the shared link
+ bandwidth calculation
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net
+References: <20240710222716.797267-1-dave.jiang@intel.com>
+ <20240710222716.797267-4-dave.jiang@intel.com>
+ <20240827170640.000007ab@Huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240827170640.000007ab@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-With the CXL mailbox context split out, cxl_internal_send_cmd() can take
-'struct cxl_mailbox' as an input parameter rather than
-'struct memdev_dev_state'. Change input parameter for
-cxl_internal_send_cmd() and fixup all impacted call sites.
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://patch.msgid.link/20240724185649.2574627-3-dave.jiang@intel.com
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/mbox.c   | 38 ++++++++++++++++++++------------------
- drivers/cxl/core/memdev.c | 23 +++++++++++++----------
- drivers/cxl/cxlmem.h      |  2 +-
- drivers/cxl/pci.c         |  6 ++++--
- drivers/cxl/pmem.c        |  6 ++++--
- drivers/cxl/security.c    | 23 ++++++++++++-----------
- 6 files changed, 54 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index eb9ab32b675c..7f8570ef8ee1 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -225,7 +225,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
- 
- /**
-  * cxl_internal_send_cmd() - Kernel internal interface to send a mailbox command
-- * @mds: The driver data for the operation
-+ * @cxl_mbox: CXL mailbox context
-  * @mbox_cmd: initialized command to execute
-  *
-  * Context: Any context.
-@@ -241,10 +241,9 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
-  * error. While this distinction can be useful for commands from userspace, the
-  * kernel will only be able to use results when both are successful.
-  */
--int cxl_internal_send_cmd(struct cxl_memdev_state *mds,
-+int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 			  struct cxl_mbox_cmd *mbox_cmd)
- {
--	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	size_t out_size, min_out;
- 	int rc;
- 
-@@ -689,7 +688,7 @@ static int cxl_xfer_log(struct cxl_memdev_state *mds, uuid_t *uuid,
- 			.payload_out = out,
- 		};
- 
--		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 
- 		/*
- 		 * The output payload length that indicates the number
-@@ -775,7 +774,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *
- 		/* At least the record number field must be valid */
- 		.min_out = 2,
- 	};
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
- 		kvfree(ret);
- 		return ERR_PTR(rc);
-@@ -964,7 +963,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 
- 		if (i == max_handles) {
- 			payload->nr_recs = i;
--			rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+			rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 			if (rc)
- 				goto free_pl;
- 			i = 0;
-@@ -975,7 +974,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 	if (i) {
- 		payload->nr_recs = i;
- 		mbox_cmd.size_in = struct_size(payload, handles, i);
--		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 		if (rc)
- 			goto free_pl;
- 	}
-@@ -1009,7 +1008,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 			.min_out = struct_size(payload, records, 0),
- 		};
- 
--		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 		if (rc) {
- 			dev_err_ratelimited(dev,
- 				"Event log '%d': Failed to query event records : %d",
-@@ -1080,6 +1079,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
-  */
- static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_partition_info pi;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -1089,7 +1089,7 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
- 		.size_out = sizeof(pi),
- 		.payload_out = &pi,
- 	};
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
- 		return rc;
- 
-@@ -1116,6 +1116,7 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
-  */
- int cxl_dev_state_identify(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
- 	struct cxl_mbox_identify id;
- 	struct cxl_mbox_cmd mbox_cmd;
-@@ -1130,7 +1131,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds)
- 		.size_out = sizeof(id),
- 		.payload_out = &id,
- 	};
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -1158,6 +1159,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
- 
- static int __cxl_mem_sanitize(struct cxl_memdev_state *mds, u16 cmd)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	int rc;
- 	u32 sec_out = 0;
- 	struct cxl_get_security_output {
-@@ -1169,14 +1171,13 @@ static int __cxl_mem_sanitize(struct cxl_memdev_state *mds, u16 cmd)
- 		.size_out = sizeof(out),
- 	};
- 	struct cxl_mbox_cmd mbox_cmd = { .opcode = cmd };
--	struct cxl_dev_state *cxlds = &mds->cxlds;
- 
- 	if (cmd != CXL_MBOX_OP_SANITIZE && cmd != CXL_MBOX_OP_SECURE_ERASE)
- 		return -EINVAL;
- 
--	rc = cxl_internal_send_cmd(mds, &sec_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &sec_cmd);
- 	if (rc < 0) {
--		dev_err(cxlds->dev, "Failed to get security state : %d", rc);
-+		dev_err(cxl_mbox->host, "Failed to get security state : %d", rc);
- 		return rc;
- 	}
- 
-@@ -1193,9 +1194,9 @@ static int __cxl_mem_sanitize(struct cxl_memdev_state *mds, u16 cmd)
- 	    sec_out & CXL_PMEM_SEC_STATE_LOCKED)
- 		return -EINVAL;
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
--		dev_err(cxlds->dev, "Failed to sanitize device : %d", rc);
-+		dev_err(cxl_mbox->host, "Failed to sanitize device : %d", rc);
- 		return rc;
- 	}
- 
-@@ -1310,6 +1311,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
- 
- int cxl_set_timestamp(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	struct cxl_mbox_set_timestamp_in pi;
- 	int rc;
-@@ -1321,7 +1323,7 @@ int cxl_set_timestamp(struct cxl_memdev_state *mds)
- 		.payload_in = &pi,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	/*
- 	 * Command is optional. Devices may have another way of providing
- 	 * a timestamp, or may return all 0s in timestamp fields.
-@@ -1338,7 +1340,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 		       struct cxl_region *cxlr)
- {
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
--	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_poison_out *po;
- 	struct cxl_mbox_poison_in pi;
- 	int nr_records = 0;
-@@ -1362,7 +1364,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 			.min_out = struct_size(po, record, 0),
- 		};
- 
--		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 		if (rc)
- 			break;
- 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 05bb84cb1274..84fefb76dafa 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -278,7 +278,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 
- int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- {
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_inject_poison inject;
- 	struct cxl_poison_record record;
- 	struct cxl_mbox_cmd mbox_cmd;
-@@ -308,13 +308,13 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.size_in = sizeof(inject),
- 		.payload_in = &inject,
- 	};
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
- 		goto out;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
--		dev_warn_once(mds->cxlds.dev,
-+		dev_warn_once(cxl_mbox->host,
- 			      "poison inject dpa:%#llx region: %s\n", dpa,
- 			      dev_name(&cxlr->dev));
- 
-@@ -333,7 +333,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
- 
- int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- {
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_clear_poison clear;
- 	struct cxl_poison_record record;
- 	struct cxl_mbox_cmd mbox_cmd;
-@@ -372,13 +372,13 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.payload_in = &clear,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
- 		goto out;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
--		dev_warn_once(mds->cxlds.dev,
-+		dev_warn_once(cxl_mbox->host,
- 			      "poison clear dpa:%#llx region: %s\n", dpa,
- 			      dev_name(&cxlr->dev));
- 
-@@ -715,6 +715,7 @@ static int cxl_memdev_release_file(struct inode *inode, struct file *file)
-  */
- static int cxl_mem_get_fw_info(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_fw_info info;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -725,7 +726,7 @@ static int cxl_mem_get_fw_info(struct cxl_memdev_state *mds)
- 		.payload_out = &info,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -749,6 +750,7 @@ static int cxl_mem_get_fw_info(struct cxl_memdev_state *mds)
-  */
- static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_activate_fw activate;
- 	struct cxl_mbox_cmd mbox_cmd;
- 
-@@ -765,7 +767,7 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
- 	activate.action = CXL_FW_ACTIVATE_OFFLINE;
- 	activate.slot = slot;
- 
--	return cxl_internal_send_cmd(mds, &mbox_cmd);
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- /**
-@@ -780,6 +782,7 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
-  */
- static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_transfer_fw *transfer;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -799,7 +802,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- 
- 	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	kfree(transfer);
- 	return rc;
- }
-@@ -924,7 +927,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 		.poll_count = 30,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
- 		rc = FW_UPLOAD_ERR_RW_ERROR;
- 		goto out_free;
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a2548cd9e99..1325943eeb22 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -812,7 +812,7 @@ enum {
- 	CXL_PMEM_SEC_PASS_USER,
- };
- 
--int cxl_internal_send_cmd(struct cxl_memdev_state *mds,
-+int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 			  struct cxl_mbox_cmd *cmd);
- int cxl_dev_state_identify(struct cxl_memdev_state *mds);
- int cxl_await_media_ready(struct cxl_dev_state *cxlds);
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 356172154351..3db3ef43a336 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -658,6 +658,7 @@ static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
- static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
- 				    struct cxl_event_interrupt_policy *policy)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd = {
- 		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
- 		.payload_out = policy,
-@@ -665,7 +666,7 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
- 	};
- 	int rc;
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		dev_err(mds->cxlds.dev,
- 			"Failed to get event interrupt policy : %d", rc);
-@@ -676,6 +677,7 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
- static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
- 				    struct cxl_event_interrupt_policy *policy)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
- 
-@@ -692,7 +694,7 @@ static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
- 		.size_in = sizeof(*policy),
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
- 		dev_err(mds->cxlds.dev, "Failed to set event interrupt policy : %d",
- 			rc);
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 3985ff9ce70e..5453c0faa295 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -120,6 +120,7 @@ static int cxl_pmem_get_config_data(struct cxl_memdev_state *mds,
- 				    struct nd_cmd_get_config_data_hdr *cmd,
- 				    unsigned int buf_len)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_lsa get_lsa;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -141,7 +142,7 @@ static int cxl_pmem_get_config_data(struct cxl_memdev_state *mds,
- 		.payload_out = cmd->out_buf,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	cmd->status = 0;
- 
- 	return rc;
-@@ -151,6 +152,7 @@ static int cxl_pmem_set_config_data(struct cxl_memdev_state *mds,
- 				    struct nd_cmd_set_config_hdr *cmd,
- 				    unsigned int buf_len)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_set_lsa *set_lsa;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -177,7 +179,7 @@ static int cxl_pmem_set_config_data(struct cxl_memdev_state *mds,
- 		.size_in = struct_size(set_lsa, data, cmd->in_length),
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 
- 	/*
- 	 * Set "firmware" status (4-packed bytes at the end of the input
-diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-index 21856a3f408e..452d1a9b9148 100644
---- a/drivers/cxl/security.c
-+++ b/drivers/cxl/security.c
-@@ -14,6 +14,7 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
- 	unsigned long security_flags = 0;
- 	struct cxl_get_security_output {
-@@ -29,7 +30,7 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
- 		.payload_out = &out,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		return 0;
- 
-@@ -70,7 +71,7 @@ static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	struct cxl_set_pass set_pass;
- 
-@@ -87,7 +88,7 @@ static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
- 		.payload_in = &set_pass,
- 	};
- 
--	return cxl_internal_send_cmd(mds, &mbox_cmd);
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
-@@ -96,7 +97,7 @@ static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_disable_pass dis_pass;
- 	struct cxl_mbox_cmd mbox_cmd;
- 
-@@ -112,7 +113,7 @@ static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
- 		.payload_in = &dis_pass,
- 	};
- 
--	return cxl_internal_send_cmd(mds, &mbox_cmd);
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
-@@ -131,12 +132,12 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd = {
- 		.opcode = CXL_MBOX_OP_FREEZE_SECURITY,
- 	};
- 
--	return cxl_internal_send_cmd(mds, &mbox_cmd);
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
-@@ -144,7 +145,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	u8 pass[NVDIMM_PASSPHRASE_LEN];
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
-@@ -156,7 +157,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
- 		.payload_in = pass,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -169,7 +170,7 @@ static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	struct cxl_pass_erase erase;
- 	int rc;
-@@ -185,7 +186,7 @@ static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
- 		.payload_in = &erase,
- 	};
- 
--	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0)
- 		return rc;
- 
--- 
-2.46.0
+On 8/27/24 9:06 AM, Jonathan Cameron wrote:
+> On Wed, 10 Jul 2024 15:24:02 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Create a kernel documentation to describe how the CXL shared upstream
+>> link bandwidth is calculated.
+>>
+>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Oops. Missed this previously.  A few minor things inline.
+> 
+> J
+>> ---
+>>  .../driver-api/cxl/access-coordinates.rst     | 90 +++++++++++++++++++
+>>  Documentation/driver-api/cxl/index.rst        |  1 +
+>>  MAINTAINERS                                   |  1 +
+>>  3 files changed, 92 insertions(+)
+>>  create mode 100644 Documentation/driver-api/cxl/access-coordinates.rst
+>>
+>> diff --git a/Documentation/driver-api/cxl/access-coordinates.rst b/Documentation/driver-api/cxl/access-coordinates.rst
+>> new file mode 100644
+>> index 000000000000..973e63872f06
+>> --- /dev/null
+>> +++ b/Documentation/driver-api/cxl/access-coordinates.rst
+>> @@ -0,0 +1,90 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +.. include:: <isonum.txt>
+>> +
+>> +==================================
+>> +CXL Access Coordinates Computation
+>> +==================================
+>> +
+>> +Shared Upstream Link Calculation
+>> +================================
+>> +For certain CXL region construction with endpoints behind CXL switches (SW) or
+>> +Root Ports (RP), there is the possibility of the total bandwdith for all
+> spell check. bandwidth
+>> +the endpoints behind a switch being more than the switch upstream link.
+> 
+> Could also be the Generic Port bit of the topology. Mind you I'm still failing
+> to come up with text for the qemu GP Documentation that the reviewers can follow
+> so maybe that's just too hard to describe here.  Could use weasel words.
+> 
+> "A similar situation can occur within the host, upstream of the root ports."
+> 
+> 
+>> +The CXL driver performs an additional pass after all the targets have
+>> +arrived for a region in order to recalculate the bandwidths with possible
+>> +upstream link being a limiting factor in mind.
+>> +
+>> +The algorithm assumes the configuration is a symmetric topology as that
+>> +maximizes performance. When asymmetric topology is detected, the calculation
+>> +is aborted when such topology is detected. An asymmetric topology is detected
+> 
+> is detected is duplicated.
 
+I don't follow here.
+
+> 
+>> +during topology walk where the number of RPs detected as a grandparent is not
+>> +equal to the number of devices iterated in the same iteration loop.
+> 
+> Maybe make the point that asymmetric in terms of only properties of devices
+> is not detected. It just uses the first one I think?
+
+I also don't follow here.
+
+I also wonder if I should use "unbalanced" topology rather than "unsymmetric"?
+
+DJ
+
+>> +
+>> +There can be multiple switches under a RP. There can be multiple RPs under
+>> +a CXL Host Bridge (HB). There can be multiple HBs under a CXL Fixed Memory
+>> +Window Structure (CFMWS).
+>> +
+>> +An example hierarchy:
+>> +
+>> +                CFMWS 0
+>> +                  |
+>> +         _________|_________
+>> +        |                   |
+>> +    ACPI0017-0          ACPI0017-1
+>> + GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
+>> +    |          |        |           |
+>> +   RP0        RP1      RP2         RP3
+>> +    |          |        |           |
+>> +  SW 0       SW 1     SW 2        SW 3
+>> +  |   |      |   |    |   |       |   |
+>> + EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
+>> +
+>> +Computation for the example hierarchy:
+>> +
+>> +Min (GP0 to CPU BW,
+>> +     Min(SW 0 Upstream Link to RP0 BW,
+>> +         Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Link) +
+>> +         Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream link)) +
+>> +     Min(SW 1 Upstream Link to RP1 BW,
+>> +         Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Link) +
+>> +         Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream link))) +
+>> +Min (GP1 to CPU BW,
+>> +     Min(SW 2 Upstream Link to RP2 BW,
+>> +         Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Link) +
+>> +         Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream link)) +
+>> +     Min(SW 3 Upstream Link to RP3 BW,
+>> +         Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Link) +
+>> +         Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream link))))
+>> +
+>> +
+>> +The calculation starts at cxl_region_shared_upstream_perf_update(). A xarray
+>> +is created to collect all the endpoint bandwidths via the
+>> +cxl_endpoint_gather_bandwidth() function. The min() of bandwidth from the
+>> +endpoint CDAT and the upstream link bandwidth is calculated. If the endpoint
+>> +has a CXL switch as a parent, then min() of calculated bandwidth and the
+>> +bandwidth from the SSLBIS for the switch downstream port that is associated
+>> +with the endpoint is calculated. The final bandwidth is stored in a
+>> +'struct cxl_perf_ctx' in the xarray indexed by a device pointer. If the
+>> +endpoint is direct attached to a root port (RP), the device pointer would be a
+>> +RP device. If the endpoint is behind a switch, the device pointer would be the
+> an RP 
+>> +upstream device of the parent switch.
+>> +
+>> +At the next stage, the code attempts to walk through one or more switches if
+> the code walks through
+> (I doubt it ever fails and if it does that's detail you don't need here)
+>> +they exist in the topology. For endpoints directly attached to RPs, this
+>> +step is skipped. If there is another switch upstream, the code takes the min()
+>> +of the current gathered bandwidth and the upstream link bandwidth. If there's
+>> +a switch upstream, then the SSLBIS of the upstream switch.
+>> +
+>> +Once the topology walk reaches the RP, whether it's direct attached endpoints
+>> +or walking through the switch(es), cxl_rp_gather_bandwidth() is called. At
+>> +this point all the bandwidths are aggregated per each host bridge, which is
+>> +also the index for the resulting xarray.
+>> +
+>> +The next step is to take the min() of the per host bridge bandwidth and the
+>> +bandwidth from the Generic Port (GP). The bandwidths for the GP is retrieved
+>> +via ACPI tables SRAT/HMAT. The min bandwidth are aggregated under the same
+>> +ACPI0017 device to form a new xarray.
+>> +
+>> +Finally, the cxl_region_update_bandwidth() is called and the aggregated
+>> +bandwidth from all the members of the last xarray is updated for the
+>> +access coordinates residing in the cxl region (cxlr) context.
+> 
