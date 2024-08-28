@@ -1,286 +1,193 @@
-Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB71716C68D
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 10:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF7B16BE1D;
+	Wed, 28 Aug 2024 11:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724842146; cv=none; b=RD/Fw6NtcrFDAx3ysDy0k0jn5cw42M6CvuvggMuV7LpmqrR85pdd0OLKH5eBl1YoFwNiv8JqytUdCA/ufgu82OOn54ZFfGx3jUHht9EZwJqbMs99s3Pj12fXMiBNLjVeZiCAq4y7V9GRW/j8MRN9pJ5bGoZPLYvoFOKFzsCEZQo=
+	t=1724844002; cv=none; b=Y52FAGfBxHDUSgZrTY6tau584jF6nroIMhd1gsr6ZnTJOBHxbA1f+8QKZMI+e5indeu4758j+aDyMlXZJVI/CGUYf+A6jwQqsEGAEd3d/WnqEPJc6ChX+Ad6FbiHwNiFLH4dsH2PCoAu/EtSwj2V2CO6AMQ6pmyMyAAOn1EJq8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724842146; c=relaxed/simple;
-	bh=mvIj7j1Gi5H+RISXOAHqN+8KX54lI5r2QeLk9sPA5kU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uOGfJ/Hc/pd8/Sw67BKx+YnKenF2EbUoaeifg01u65aubIRPfSxcnYUdVOWAH4PBWB6PLM4L9rtNRgoD+/2vq6qwdyB0yyBHxCseyepa5jmLi1adrsDB/XFhUI9ArDsi1fTA1GBzfeiKlhCLpE8DLYSOpcqG+LfNuWWNfrn2qfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=oRf35QXl; arc=none smtp.client-ip=17.58.6.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="oRf35QXl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1724842144;
-	bh=wahpuMvFPO+NbQtmXheKTK2Adr9fvj/gLQT3gVp6Jfo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	b=oRf35QXlR8SF+LXsjxDpJmxAhorRHdG0mG+0Y3M9DaZzsg0j4H7MyzZ0V2RF31nCm
-	 i7OmoDxjfcp7nKiIWYZnlvprn9J5HLbdmbd5OTi1KYzNHHOuqjSPoT8IQbS8ezTxus
-	 LlZWA/djb916kStb/Am/hnswG3o9r4qfssRtWk/riEm8yUzOxaF4mM4WolIC3Y9iOl
-	 oy3yGdET0LrdyZs4y2Eh8XJZPEstXpjpwpIWKkr7cZpbU3PasctVZctBr98XibnNRy
-	 YXojWVdVHbpZxhGIkhmsf10CR2qe0rmiq1kq/W93C86XR4lDlXYWkkBfeSraaTS2ME
-	 j0FzolEwiaQzg==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id E8F694A04AA;
-	Wed, 28 Aug 2024 10:48:34 +0000 (UTC)
-Message-ID: <30fd2355-0db0-4d9c-bcfe-88b06b8aaeae@icloud.com>
-Date: Wed, 28 Aug 2024 18:48:28 +0800
+	s=arc-20240116; t=1724844002; c=relaxed/simple;
+	bh=Yn1bCe0Ywc5LYHwIAuylM9sxlTZCQHCCKjEHNXtUZP8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AlE9rcbYJuvTfi/d15tGAEFfsEllYvOvm2jlhtxypQ3HTSwPS90MrauCig/pYtuNPWo22fkYB4xENvJuwUWb0Cc9YbJPYSmoaAXuxfWm44vHrYzVwJ7BAGkQHNwz5j8l/e8YCGZXK6Es6Q7V7vIyt4FuvIM0NJFeW03lQJwhh0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv20y1b5mz6J7Ln;
+	Wed, 28 Aug 2024 19:16:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C05B14038F;
+	Wed, 28 Aug 2024 19:19:50 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
+ 2024 12:19:49 +0100
+Date: Wed, 28 Aug 2024 12:19:48 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<richard.hughes@amd.com>
+Subject: Re: [PATCH v2 09/15] cxl: define a driver interface for HPA free
+ space enumaration
+Message-ID: <20240828121948.00001105@Huawei.com>
+In-Reply-To: <a6751e81-7a14-a8c9-b6b6-038e50b1b588@amd.com>
+References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
+	<20240715172835.24757-10-alejandro.lucero-palau@amd.com>
+	<20240804185756.000046c5@Huawei.com>
+	<a6751e81-7a14-a8c9-b6b6-038e50b1b588@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] cxl/region: Find free cxl decoder by
- device_for_each_child()
-From: Zijun Hu <zijun_hu@icloud.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240824-const_dfc_prepare-v3-0-32127ea32bba@quicinc.com>
- <20240824-const_dfc_prepare-v3-2-32127ea32bba@quicinc.com>
- <20240827123006.00004527@Huawei.com>
- <cdfc6f98-1aa0-4cb5-bd7d-93256552c39b@icloud.com>
-Content-Language: en-US
-In-Reply-To: <cdfc6f98-1aa0-4cb5-bd7d-93256552c39b@icloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: tb6HQHC4dIaI-_RmN3abHdv4p45pBAam
-X-Proofpoint-ORIG-GUID: tb6HQHC4dIaI-_RmN3abHdv4p45pBAam
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-28_03,2024-08-27_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 suspectscore=0 clxscore=1015 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2408280078
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 2024/8/27 19:53, Zijun Hu wrote:
-> On 2024/8/27 19:30, Jonathan Cameron wrote:
->> On Sat, 24 Aug 2024 17:07:44 +0800
->> Zijun Hu <zijun_hu@icloud.com> wrote:
->>
->>> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>>
->>> To prepare for constifying the following old driver core API:
->>>
->>> struct device *device_find_child(struct device *dev, void *data,
->>> 		int (*match)(struct device *dev, void *data));
->>> to new:
->>> struct device *device_find_child(struct device *dev, const void *data,
->>> 		int (*match)(struct device *dev, const void *data));
->>>
->>> The new API does not allow its match function (*match)() to modify
->>> caller's match data @*data, but match_free_decoder() as the old API's
->>> match function indeed modifies relevant match data, so it is not suitable
->>> for the new API any more, solved by using device_for_each_child() to
->>> implement relevant finding free cxl decoder function.
->>>
->>> Suggested-by: Ira Weiny <ira.weiny@intel.com>
->>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> This seems to functionally do the same as before.
->>
-> 
-> yes, this change have the same logic as previous existing logic.
-> 
->> I'm not sure I like the original code though so a comment inline.
->>
->>> ---
->>>  drivers/cxl/core/region.c | 30 ++++++++++++++++++++++++------
->>>  1 file changed, 24 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 21ad5f242875..c2068e90bf2f 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -794,10 +794,15 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->>>  	return rc;
->>>  }
->>>  
->>> +struct cxld_match_data {
->>> +	int id;
->>> +	struct device *target_device;
->>> +};
->>> +
->>>  static int match_free_decoder(struct device *dev, void *data)
->>>  {
->>> +	struct cxld_match_data *match_data = data;
->>>  	struct cxl_decoder *cxld;
->>> -	int *id = data;
->>>  
->>>  	if (!is_switch_decoder(dev))
->>>  		return 0;
->>> @@ -805,17 +810,31 @@ static int match_free_decoder(struct device *dev, void *data)
->>>  	cxld = to_cxl_decoder(dev);
->>>  
->>>  	/* enforce ordered allocation */
->>> -	if (cxld->id != *id)
->>> +	if (cxld->id != match_data->id)
->>
->> Why do we carry on in this case?
->> Conditions are:
->> 1. Start match_data->id == 0
->> 2. First pass cxld->id == 0 (all good) or
->>    cxld->id == 1 say (and we skip until we match
->>    on cxld->id == 0 (perhaps on the second child if they are
->>    ordered (1, 0, 2) etc. 
->>
->> If we skipped and then matched on second child but it was
->> already in use (so region set), we will increment match_data->id to 1
->> but never find that as it was the one we skipped.
->>
->> So this can only work if the children are ordered.
->> So if that's the case and the line above is just a sanity check
->> on that, it should be noisier (so an error print) and might
->> as well fail as if it doesn't match all bets are off.
->>
-> 
-> it seems Ira Weiny also has some concerns related to previous existing
-> logic as following:
-> 
-> https://lore.kernel.org/all/66c4a136d9764_2ddc2429435@iweiny-mobl.notmuch/
-> "Also for those working on CXL I'm questioning the use of ID here and
-> the dependence on the id's being added to the parent in order.  Is that
-> a guarantee?"
-> 
-Hi Jonathan, ira
+On Wed, 28 Aug 2024 11:18:12 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-i don't know CXL decoder at all. For your concerns about original logic:
+> On 8/4/24 18:57, Jonathan Cameron wrote:
+> > On Mon, 15 Jul 2024 18:28:29 +0100
+> > alejandro.lucero-palau@amd.com wrote:
+> > =20
+> >> From: Alejandro Lucero <alucerop@amd.com>
+> >>
+> >> CXL region creation involves allocating capacity from device DPA
+> >> (device-physical-address space) and assigning it to decode a given HPA
+> >> (host-physical-address space). Before determining how much DPA to
+> >> allocate the amount of available HPA must be determined. Also, not all
+> >> HPA is create equal, some specifically targets RAM, some target PMEM,
+> >> some is prepared for device-memory flows like HDM-D and HDM-DB, and so=
+me
+> >> is host-only (HDM-H).
+> >>
+> >> Wrap all of those concerns into an API that retrieves a root decoder
+> >> (platform CXL window) that fits the specified constraints and the
+> >> capacity available for a new region.
+> >>
+> >> Based on https://lore.kernel.org/linux-cxl/168592149709.1948938.866342=
+5987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m6fbe775541da3cd477d65fa95=
+c8acdc347345b4f
+> >>
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >> Co-developed-by: Dan Williams <dan.j.williams@intel.com> =20
+> > Hi.
+> >
+> > This seems a lot more complex than an accelerator would need.
+> > If plan is to use this in the type3 driver as well, I'd like to
+> > see that done as a precursor to the main series.
+> > If it only matters to accelerator drivers (as in type 3 I think
+> > we make this a userspace problem), then limit the code to handle
+> > interleave ways =3D=3D 1 only.  Maybe we will care about higher interle=
+ave
+> > in the long run, but do you have a multihead accelerator today?
+> >
+> > Jonathan
+> > =20
+> >> ---
+> >>   drivers/cxl/core/region.c          | 161 +++++++++++++++++++++++++++=
+++
+> >>   drivers/cxl/cxl.h                  |   3 +
+> >>   drivers/cxl/cxlmem.h               |   5 +
+> >>   drivers/net/ethernet/sfc/efx_cxl.c |  14 +++
+> >>   include/linux/cxl_accel_mem.h      |   9 ++
+> >>   5 files changed, 192 insertions(+)
+> >>
+> >> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> >> index 538ebd5a64fd..ca464bfef77b 100644
+> >> --- a/drivers/cxl/core/region.c
+> >> +++ b/drivers/cxl/core/region.c
+> >> @@ -702,6 +702,167 @@ static int free_hpa(struct cxl_region *cxlr)
+> >>   	return 0;
+> >>   }
+> >>  =20
+> >> +
+> >> +struct cxlrd_max_context {
+> >> +	struct device * const *host_bridges;
+> >> +	int interleave_ways;
+> >> +	unsigned long flags;
+> >> +	resource_size_t max_hpa;
+> >> +	struct cxl_root_decoder *cxlrd;
+> >> +};
+> >> +
+> >> +static int find_max_hpa(struct device *dev, void *data)
+> >> +{
+> >> +	struct cxlrd_max_context *ctx =3D data;
+> >> +	struct cxl_switch_decoder *cxlsd;
+> >> +	struct cxl_root_decoder *cxlrd;
+> >> +	struct resource *res, *prev;
+> >> +	struct cxl_decoder *cxld;
+> >> +	resource_size_t max;
+> >> +	int found;
+> >> +
+> >> +	if (!is_root_decoder(dev))
+> >> +		return 0;
+> >> +
+> >> +	cxlrd =3D to_cxl_root_decoder(dev);
+> >> +	cxld =3D &cxlrd->cxlsd.cxld;
+> >> +	if ((cxld->flags & ctx->flags) !=3D ctx->flags) {
+> >> +		dev_dbg(dev, "find_max_hpa, flags not matching: %08lx vs %08lx\n",
+> >> +			      cxld->flags, ctx->flags);
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	/* A Host bridge could have more interleave ways than an
+> >> +	 * endpoint, couldn=B4t it? =20
+> > EP interleave ways is about working out how the full HPA address (it's
+> > all sent over the wire) is modified to get to the DPA.  So it needs
+> > to know what the overall interleave is.  Host bridge can't interleave
+> > and then have the EP not know about it.  If there are switch HDM decode=
+rs
+> > in the path, the host bridge interleave may be less than that the EP ne=
+eds
+> > to deal with.
+> >
+> > Does an accelerator actually cope with interleave? Is aim here to ensure
+> > that IW is never anything other than 1?  Or is this meant to have
+> > more general use? I guess it is meant to. In which case, I'd like to
+> > see this used in the type3 driver as well. =20
+>=20
+>=20
+> I guess an accelerator could cope with interleave ways > 1, but not ours.
+>=20
+> And it does not make sense to me an accelerator being an EP for an=20
+> interleaved HPA because the memory does not make sense out of the=20
+> accelerator.
+>=20
+> So if the CFMW and the Host Bridge have an interleave way of 2, implying=
+=20
+> accesses to the HPA through different wires, I assume an accelerator=20
+> should not be allowed.
+That's certainly fine for now. 'maybe' something will come along that can
+make use of interleaving (I'm thinking of Processing near memory type setup
+where it's offloading minor stuff more local to the memory but is basically
+type 3 memory)
+>=20
+>=20
+> >> +	 *
+> >> +	 * What does interleave ways mean here in terms of the requestor?
+> >> +	 * Why the FFMWS has 0 interleave ways but root port has 1? =20
+> > FFMWS? =20
+>=20
+>=20
+> I meant CFMW, and I think this comment is because I found out the CFMW=20
+> is parsed with interleave ways =3D 0 then the root port having 1, what is=
+=20
+> confusing.
+>=20
+I'm a bit lost.  Maybe this is just encoded and 'real' values?
+1 way interleave is just not interleaving.
 
-is it okay to find a child with the minimal index as shown below ?
+Jonathan
 
-i would like to submit it as a separate patch if you like it.
-
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 21ad5f242875..d10cca02eba8 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -797,21 +797,27 @@ static size_t show_targetN(struct cxl_region
-*cxlr, char *buf, int pos)
- static int match_free_decoder(struct device *dev, void *data)
- {
-        struct cxl_decoder *cxld;
--       int *id = data;
-+       struct cxl_decoder *target_cxld;
-+       struct device **target_device = data;
-
-        if (!is_switch_decoder(dev))
-                return 0;
-
-        cxld = to_cxl_decoder(dev);
-
--       /* enforce ordered allocation */
--       if (cxld->id != *id)
-+       if (cxld->region)
-                return 0;
-
--       if (!cxld->region)
--               return 1;
-+       if (!*target_device) {
-+               *target_device = get_device(dev);
-+               return 0;
-+       }
-
--       (*id)++;
-+       target_cxld = to_cxl_decoder(*target_device);
-+       if (cxld->id < target_cxld->id) {
-+               put_device(*target_device);
-+               *target_device = get_device(dev);
-+       }
-
-        return 0;
- }
-@@ -839,8 +845,7 @@ cxl_region_find_decoder(struct cxl_port *port,
-                        struct cxl_endpoint_decoder *cxled,
-                        struct cxl_region *cxlr)
- {
--       struct device *dev;
--       int id = 0;
-+       struct device *dev = NULL;
-
-        if (port == cxled_to_port(cxled))
-                return &cxled->cxld;
-@@ -849,7 +854,7 @@ cxl_region_find_decoder(struct cxl_port *port,
-                dev = device_find_child(&port->dev, &cxlr->params,
-                                        match_auto_decoder);
-        else
--               dev = device_find_child(&port->dev, &id,
-match_free_decoder);
-+               device_for_each_child(&port->dev, &dev, match_free_decoder);
-        if (!dev)
-                return NULL;
-        /*
-
-
-> perhaps, create a new dedicated thread to discuss original design.
-> 
->> Jonathan
->>  
->>>  		return 0;
->>>  
->>> -	if (!cxld->region)
->>> +	if (!cxld->region) {
->>> +		match_data->target_device = get_device(dev);
->>>  		return 1;
->>> +	}
->>>  
->>> -	(*id)++;
->>> +	match_data->id++;
->>>  
->>>  	return 0;
->>>  }
->>>  
->>> +/* NOTE: need to drop the reference with put_device() after use. */
->>> +static struct device *find_free_decoder(struct device *parent)
->>> +{
->>> +	struct cxld_match_data match_data = {
->>> +		.id = 0,
->>> +		.target_device = NULL,
->>> +	};
->>> +
->>> +	device_for_each_child(parent, &match_data, match_free_decoder);
->>> +	return match_data.target_device;
->>> +}
->>> +
->>>  static int match_auto_decoder(struct device *dev, void *data)
->>>  {
->>>  	struct cxl_region_params *p = data;
->>> @@ -840,7 +859,6 @@ cxl_region_find_decoder(struct cxl_port *port,
->>>  			struct cxl_region *cxlr)
->>>  {
->>>  	struct device *dev;
->>> -	int id = 0;
->>>  
->>>  	if (port == cxled_to_port(cxled))
->>>  		return &cxled->cxld;
->>> @@ -849,7 +867,7 @@ cxl_region_find_decoder(struct cxl_port *port,
->>>  		dev = device_find_child(&port->dev, &cxlr->params,
->>>  					match_auto_decoder);
->>>  	else
->>> -		dev = device_find_child(&port->dev, &id, match_free_decoder);
->>> +		dev = find_free_decoder(&port->dev);
->>>  	if (!dev)
->>>  		return NULL;
->>>  	/*
->>>
->>
-> 
 
