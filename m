@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2DB15ECDF
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 08:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F60615AD9C
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 08:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724835019; cv=none; b=LQXO9rZ4RSyQK5YBV3yJEvvlemZ1zjxla0RtNUatP1QRtaKYSzq3ZXA03l2iry/+0BTS4wnqH39L1ocTPzVx/eYYOHGVJePJusoa/fdBGYMjVb1hahKZxLytUM8hNe2dhET0ceGIuh/2kColiLwC1JJtvG+Q0xF9N28OwtECo3U=
+	t=1724835027; cv=none; b=Sh/nN4/k6omXBFmved/HxQIRWOEREaBhk25l1aNr3Z1bxY0K5jLso/W1mYyYGihtxtAJ3kJaZGS5985cg1rCkLK8bdeQHD2Kc77QQIdUUGzvJDJ/HKSsp4tGOndBUobc0HS9jeiT+C3Eiw2WIs++V4Rc9jSiCoUQYbjsmj7/OVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724835019; c=relaxed/simple;
-	bh=PvEWhAEI/tCdHo06VsYqKztrs2pLHWpr3bJc4P6bHBQ=;
+	s=arc-20240116; t=1724835027; c=relaxed/simple;
+	bh=KK5Gj3jhOLfFJrDZozwHot44Z64Z9TXr0NckbSv0uDM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lCqaQVMDAh3mrn4B+znE0QdVJI9EL6LdZiFlBjVB2Ox0Zov9/CLg0WUsU660++8jQi4NPAZXEzfuo6+Lgp7H67LrCKgtzPatJh8ufXvJtN/Mo11HV0hHVdwi6gG8GzekviFsBNQjbkmwsLPK4VudV+bWRATeilhqoe9tJWAFpw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQrbWULq; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=G7lnhRbVCUldLKI1JhGHiStKfHqy3FwLWLfxnEiqSVT3xA1IibPqwOH5yaI1SKIqfJ/l5MwJiDktutlH/n2UoP6l+GRa1DWxDz6QGtvpkgQApHLcdznhr7glcSwK0y1gFEEEtgJLmaReFWyEMj/kx2bQlu77imdOEovD4xALxbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TwucQj++; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQrbWULq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TwucQj++"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724835018; x=1756371018;
+  t=1724835026; x=1756371026;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=PvEWhAEI/tCdHo06VsYqKztrs2pLHWpr3bJc4P6bHBQ=;
-  b=DQrbWULq/pfu/SDh6qfNgkEdIu5vTVvtIMf/x26LlQf2LXf0Ad9f6TW/
-   b2lf4pl0kOJ+2ObF853386HYV+mE/FTlAq5ug1VDonYxaT6LjC9glQwEC
-   2sgBh5Ad6RkNY7kWBSL8JEPMABWpduMifRmZ/lGFKU6KHseopU9FFqjpS
-   c4+/gt6bfCcA0/BiXA7XsA6vlsvyJVSLgeFb27+oyOrdY9zyUkj2zeQPe
-   F5rsJ6AstTrqgV57sMHBxbuDf29xVrmbDm9D2qdKMNzKXrPaZXMy8t1Yx
-   QTXMQwW64q6KwruZLTFxIWBPpBTYhg3CI3PBmyHUyYPJhcX06k/Gn23r8
-   w==;
-X-CSE-ConnectionGUID: Pyu7oofyTgKksdE8f/tdKg==
-X-CSE-MsgGUID: TAMvk1nDTyyiLltTOxh0cQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="22874632"
+  bh=KK5Gj3jhOLfFJrDZozwHot44Z64Z9TXr0NckbSv0uDM=;
+  b=TwucQj++Wv9ZCKRWnN9XPHTitwTRITNptZFsq5Ht0OOdZAuO6QFDXHns
+   qreOJA4d3B8k/e6vEgFfUAfV87oUAiIA/Pc9Xn4+OWG38Ot6NKjSah6oM
+   tVp3gibe72VKSeZrZ720NvnKn48hFi2jWzSynpLRBDw9HKDG76RYEgQEk
+   23YSPDROYwUn6ZIJWkF8mAkgiLmaXFRTq8OX0YWQZbuKYm+/2ldeGW7V6
+   vcGRQVRfkk7FTNHLiyvh6NZAu2wDTNrAQNHk4ZfkiMCMbYKN9oBjeeaAe
+   p6YqhzWjfluS4z85uS7fCCniJrEuLJJqFMGbNoxfN+67m3hxjdzKAMddu
+   g==;
+X-CSE-ConnectionGUID: GCHkl5pMRae1taQhOdFXOQ==
+X-CSE-MsgGUID: FhdBga9fRPepjiutSk4iKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="22874638"
 X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="22874632"
+   d="scan'208";a="22874638"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:18 -0700
-X-CSE-ConnectionGUID: 4s4WUgIxSESiSXbP6Z1ZIA==
-X-CSE-MsgGUID: fQKVm0bNQdu2YnfgN4GehA==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:25 -0700
+X-CSE-ConnectionGUID: xZXJ1FP4QuGGbobyLFFUUw==
+X-CSE-MsgGUID: D8sGPEsISEO0KKB45167eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="62999078"
+   d="scan'208";a="62999089"
 Received: from tower.bj.intel.com ([10.238.157.70])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:14 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:18 -0700
 From: Yanfei Xu <yanfei.xu@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -54,9 +54,9 @@ Cc: dave@stgolabs.net,
 	dan.j.williams@intel.com,
 	ming4.li@intel.com,
 	yanfei.xu@intel.com
-Subject: [v4 3/4] cxl/pci: Check Mem_info_valid bit for each applicable DVSEC
-Date: Wed, 28 Aug 2024 16:42:30 +0800
-Message-Id: <20240828084231.1378789-4-yanfei.xu@intel.com>
+Subject: [v4 4/4] cxl/pci: simplify the check of mem_enabled in cxl_hdm_decode_init()
+Date: Wed, 28 Aug 2024 16:42:31 +0800
+Message-Id: <20240828084231.1378789-5-yanfei.xu@intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240828084231.1378789-1-yanfei.xu@intel.com>
 References: <20240828084231.1378789-1-yanfei.xu@intel.com>
@@ -68,45 +68,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In theory a device might set the mem_info_valid bit for a first range
-after it is ready but before as second range has reached that state.
-Therefore, the correct approach is to check the Mem_info_valid bit for
-each applicable DVSEC range against HDM_COUNT, rather than only for the
-DVSEC range 1. Consequently, let's move the check into the "for loop"
-that handles each DVSEC range.
+Cases can be divided into two categories which are DVSEC range enabled and
+not enabled when HDM decoders exist but is not enabled. To avoid checking
+info->mem_enabled, which indicates the enablement of DVSEC range, every
+time, we can check !info->mem_enabled once in advance. This simplification
+can make the code clearer.
+
+No functional change intended.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Yanfei Xu <yanfei.xu@intel.com>
 ---
- drivers/cxl/core/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/cxl/core/pci.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index f29af0b788d9..cda22feadbd3 100644
+index cda22feadbd3..a3f0e907d08c 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -324,10 +324,6 @@ int cxl_dvsec_rr_decode(struct device *dev, struct cxl_port *port,
- 	if (!hdm_count || hdm_count > 2)
- 		return -EINVAL;
+@@ -426,7 +426,15 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 		return -ENODEV;
+ 	}
  
--	rc = cxl_dvsec_mem_range_valid(cxlds, 0);
--	if (rc)
--		return rc;
--
- 	/*
- 	 * The current DVSEC values are moot if the memory capability is
- 	 * disabled, and they will remain moot after the HDM Decoder
-@@ -345,6 +341,10 @@ int cxl_dvsec_rr_decode(struct device *dev, struct cxl_port *port,
- 		u64 base, size;
- 		u32 temp;
- 
-+		rc = cxl_dvsec_mem_range_valid(cxlds, i);
+-	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
++	if (!info->mem_enabled) {
++		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
 +		if (rc)
 +			return rc;
 +
- 		rc = pci_read_config_dword(
- 			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
- 		if (rc)
++		return devm_cxl_enable_mem(&port->dev, cxlds);
++	}
++
++	for (i = 0, allowed = 0; i < info->ranges; i++) {
+ 		struct device *cxld_dev;
+ 
+ 		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
+@@ -440,7 +448,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 		allowed++;
+ 	}
+ 
+-	if (!allowed && info->mem_enabled) {
++	if (!allowed) {
+ 		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
+ 		return -ENXIO;
+ 	}
+@@ -454,14 +462,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
+ 	 * Decoder Capability Enable.
+ 	 */
+-	if (info->mem_enabled)
+-		return 0;
+-
+-	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+-	if (rc)
+-		return rc;
+-
+-	return devm_cxl_enable_mem(&port->dev, cxlds);
++	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
+ 
 -- 
 2.39.2
 
