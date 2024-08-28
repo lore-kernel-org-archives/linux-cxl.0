@@ -1,45 +1,46 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0C41A2C38
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 16:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7DC1A38CD
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 16:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724861552; cv=none; b=L0bHrW6lCYvfkUvCf4yUaGqE77W5bf5aPXSfAWw3ifCh5qCD0juINahIPcK/K7q9u+ooO2bVQfiOjBykZnzLuSgH/hUXjFNW/x6Heql+NE30FhABcPm4nm+ARHjp33pK3UlCKRooJoOjqn2FiPOMURvCKUkL1nU/8RT7Zc4caoo=
+	t=1724864053; cv=none; b=LOEHX7b7jH3IK3d5jH4vdIUnMc5exJeiw1VfN/e4TFfNYDim1e5kO92iz0rvA64D2XfRpN0o8sHqapVifbQv/hByVAOIky4Y+jfAPd1rXp6AmfiAi7NiLfCHUvB2ma6ahH4hnAfoMONGMx9kT7LcpllIS6Z6SLWLUinz5qMqgF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724861552; c=relaxed/simple;
-	bh=WYcOlXs012QIe7o3a6sazyR5sUQghQgcJXffYNUszFA=;
+	s=arc-20240116; t=1724864053; c=relaxed/simple;
+	bh=Z1TyjheiKGAQDEGbzg4FLl0GHIasqFhBabAG5E+1QMM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T1yMSQfCwPEHFQNdbUnT7WdpUinjImjvtusmiPiNNaIFYlJzGpjEDG2xOzeEMXvf6MisLcPIGXEkcGOSgO31MKYMvdF2h1crhPfjJkZDCIobVC/i7vKLry6aP+zGfQyJl+t86QLzptdl1Oj63uw7jndLBBSBtKVp9ctyGMITFXg=
+	 MIME-Version:Content-Type; b=tjCaAKOe9lrOLkEKVgKclZv9fttDSww+JdTMjwbG7ZppCWxXOZaZjoDBtz/g3UQF3qmGmROdq6AXo/a7Bj+EGGfo/NQiM1DwQLeX80cSRuHMK1nkWnzbd6/a9BwgxPihz8et6GESrvO27IXkPpGB4dW0NFB1zQBxs/wd0tsE0N0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv8VT3DNXz6K9Bs;
-	Thu, 29 Aug 2024 00:09:05 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv9Pn1xZhz6K6Q2;
+	Thu, 29 Aug 2024 00:50:05 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 27FDB1400CA;
-	Thu, 29 Aug 2024 00:12:24 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2E4791400D4;
+	Thu, 29 Aug 2024 00:54:07 +0800 (CST)
 Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
- 2024 17:12:23 +0100
-Date: Wed, 28 Aug 2024 17:12:22 +0100
+ 2024 17:54:06 +0100
+Date: Wed, 28 Aug 2024 17:54:05 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v7 3/3] cxl: Add documentation to explain the shared
- link bandwidth calculation
-Message-ID: <20240828171222.000034f2@Huawei.com>
-In-Reply-To: <426842e1-ac1b-4741-8774-0d40dfbd8a33@intel.com>
-References: <20240710222716.797267-1-dave.jiang@intel.com>
-	<20240710222716.797267-4-dave.jiang@intel.com>
-	<20240827170640.000007ab@Huawei.com>
-	<3c325ad2-e483-417a-a952-1357df3382c4@intel.com>
-	<20240828100015.000010a0@Huawei.com>
-	<426842e1-ac1b-4741-8774-0d40dfbd8a33@intel.com>
+To: Igor Mammedov <imammedo@redhat.com>
+CC: Markus Armbruster <armbru@redhat.com>, <mst@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <linuxarm@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <marcel.apfelbaum@gmail.com>,
+	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>, Dave
+ Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, <eduardo@habkost.net>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v5 10/13] hw/acpi: Generic Port Affinity Structure
+ support
+Message-ID: <20240828175405.00004b4b@Huawei.com>
+In-Reply-To: <20240715164841.1979fdea@imammedo.users.ipa.redhat.com>
+References: <20240712110837.1439736-1-Jonathan.Cameron@huawei.com>
+	<20240712110837.1439736-11-Jonathan.Cameron@huawei.com>
+	<20240715164841.1979fdea@imammedo.users.ipa.redhat.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,111 +51,164 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 28 Aug 2024 08:35:07 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Mon, 15 Jul 2024 16:48:41 +0200
+Igor Mammedov <imammedo@redhat.com> wrote:
 
-> On 8/28/24 2:00 AM, Jonathan Cameron wrote:
-> > On Tue, 27 Aug 2024 15:38:27 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> On 8/27/24 9:06 AM, Jonathan Cameron wrote:  
-> >>> On Wed, 10 Jul 2024 15:24:02 -0700
-> >>> Dave Jiang <dave.jiang@intel.com> wrote:
-> >>>     
-> >>>> Create a kernel documentation to describe how the CXL shared upstream
-> >>>> link bandwidth is calculated.
-> >>>>
-> >>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> >>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>    
-> >>> Oops. Missed this previously.  A few minor things inline.
-> >>>
-> >>> J    
-> >>>> ---
-> >>>>  .../driver-api/cxl/access-coordinates.rst     | 90 +++++++++++++++++++
-> >>>>  Documentation/driver-api/cxl/index.rst        |  1 +
-> >>>>  MAINTAINERS                                   |  1 +
-> >>>>  3 files changed, 92 insertions(+)
-> >>>>  create mode 100644 Documentation/driver-api/cxl/access-coordinates.rst
-> >>>>
-> >>>> diff --git a/Documentation/driver-api/cxl/access-coordinates.rst b/Documentation/driver-api/cxl/access-coordinates.rst
-> >>>> new file mode 100644
-> >>>> index 000000000000..973e63872f06
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/driver-api/cxl/access-coordinates.rst
-> >>>> @@ -0,0 +1,90 @@
-> >>>> +.. SPDX-License-Identifier: GPL-2.0
-> >>>> +.. include:: <isonum.txt>
-> >>>> +
-> >>>> +==================================
-> >>>> +CXL Access Coordinates Computation
-> >>>> +==================================
-> >>>> +
-> >>>> +Shared Upstream Link Calculation
-> >>>> +================================
-> >>>> +For certain CXL region construction with endpoints behind CXL switches (SW) or
-> >>>> +Root Ports (RP), there is the possibility of the total bandwdith for all    
-> >>> spell check. bandwidth    
-> >>>> +the endpoints behind a switch being more than the switch upstream link.    
-> >>>
-> >>> Could also be the Generic Port bit of the topology. Mind you I'm still failing
-> >>> to come up with text for the qemu GP Documentation that the reviewers can follow
-> >>> so maybe that's just too hard to describe here.  Could use weasel words.
-> >>>
-> >>> "A similar situation can occur within the host, upstream of the root ports."
-> >>>
-> >>>     
-> >>>> +The CXL driver performs an additional pass after all the targets have
-> >>>> +arrived for a region in order to recalculate the bandwidths with possible
-> >>>> +upstream link being a limiting factor in mind.
-> >>>> +
-> >>>> +The algorithm assumes the configuration is a symmetric topology as that
-> >>>> +maximizes performance. When asymmetric topology is detected, the calculation
-> >>>> +is aborted when such topology is detected. An asymmetric topology is detected    
-> >>>
-> >>> is detected is duplicated.    
-> >>
-> >> I don't follow here.
-> >>
-> >> + When asymmetric topology is detected, the calculation  
-> >                              ^^^^^^^^^^^  
-> >> +is aborted when such topology is detected.  
-> >                                 ^^^^^^^^^^^^
-> > Delete the second one.  
+> On Fri, 12 Jul 2024 12:08:14 +0100
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> Thanks. The brain does funny tricks sometimes when reading the stuff you write yourself. 
-> 
-> >   
-> >>>     
-> >>>> +during topology walk where the number of RPs detected as a grandparent is not
-> >>>> +equal to the number of devices iterated in the same iteration loop.    
-> >>>
-> >>> Maybe make the point that asymmetric in terms of only properties of devices
-> >>> is not detected. It just uses the first one I think?    
-> >>
-> >> I also don't follow here.
-> >>
-> >> I also wonder if I should use "unbalanced" topology rather than "unsymmetric"?  
+> > These are very similar to the recently added Generic Initiators
+> > but instead of representing an initiator of memory traffic they
+> > represent an edge point beyond which may lie either targets or
+> > initiators.  Here we add these ports such that they may
+> > be targets of hmat_lb records to describe the latency and
+> > bandwidth from host side initiators to the port.  A discoverable
+> > mechanism such as UEFI CDAT read from CXL devices and switches
+> > is used to discover the remainder of the path, and the OS can build
+> > up full latency and bandwidth numbers as need for work and data
+> > placement decisions.
 > > 
-> > Difference between detecting a topology with different number of links and one
-> > where say one type 3 device in an interleave set has lower bandwidth in it's CDAT.
+> > Acked-by: Markus Armbruster <armbru@redhat.com>
+> > Tested-by: "Huang, Ying" <ying.huang@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> 
+> ACPI tables generation LGTM
+> As for the rest my review is perfunctory mostly.
+Hi Igor,
+
+Given I guess we will soon be in the 9.2 cycle, revisiting this
+to prepare a v6.
+
+Added missing parameter descriptions for properties in here
+and an additional patch for the ones missing for
+generic initiators.  Another patch fixes the uint32_t fragilty
+you pointed out for generic initiators (fixed here as well)
+
+2 things remain, the docs and the question you are asked Markus.
+
+See inline.
+
+> 
+> > ---
+> > v5: Push the definition of TYPE_ACPI_GENERIC_PORT down into the
+> >     c file (similar to TYPE_ACPI_GENERIC_INITIATOR in earlier patch)
+> > ---
+> >  qapi/qom.json                       |  34 +++++++++
+> >  include/hw/acpi/aml-build.h         |   4 +
+> >  include/hw/acpi/pci.h               |   2 +-
+> >  include/hw/pci/pci_bridge.h         |   1 +
+> >  hw/acpi/aml-build.c                 |  40 ++++++++++
+> >  hw/acpi/pci.c                       | 112 +++++++++++++++++++++++++++-
+> >  hw/arm/virt-acpi-build.c            |   2 +-
+> >  hw/i386/acpi-build.c                |   2 +-
+> >  hw/pci-bridge/pci_expander_bridge.c |   1 -
+> >  9 files changed, 193 insertions(+), 5 deletions(-)
 > > 
-> > IIRC this does the first, but not the second.  
+> > diff --git a/qapi/qom.json b/qapi/qom.json
+> > index 8e75a419c3..b97c031b73 100644
+> > --- a/qapi/qom.json
+> > +++ b/qapi/qom.json
+> > @@ -838,6 +838,38 @@
+> >    'data': { 'pci-dev': 'str',
+> >              'node': 'uint32' } }
+> >  
+> > +##
+> > +# @AcpiGenericPortProperties:
+> > +#
+> > +# Properties for acpi-generic-port objects.
+> > +#
+> > +# @pci-bus: QOM path of the PCI bus of the hostbridge associated with
+> > +#     this SRAT Generic Port Affinity Structure.  This is the same as
+> > +#     the bus parameter for the root ports attached to this host
+> > +#     bridge.  The resulting SRAT Generic Port Affinity Structure will
+> > +#     refer to the ACPI object in DSDT that represents the host bridge
+> > +#     (e.g.  ACPI0016 for CXL host bridges).  See ACPI 6.5 Section
+> > +#     5.2.16.7 for more information.
+> > +#  
 > 
-> I think here we attempt to detect whether one root port has different level of switch(s) vs another. For example a topology configuration like RP0 is direct attached and RP1 has a switch underneath. 
+> > +# @node: Similar to a NUMA node ID, but instead of providing a
+> > +#     reference point used for defining NUMA distances and access
+> > +#     characteristics to memory or from an initiator (e.g. CPU), this
+> > +#     node defines the boundary point between non-discoverable system
+> > +#     buses which must be described by firmware, and a discoverable
+> > +#     bus.  NUMA distances and access characteristics are defined to
+> > +#     and from that point.  For system software to establish full
+> > +#     initiator to target characteristics this information must be
+> > +#     combined with information retrieved from the discoverable part
+> > +#     of the path.  An example would use CDAT (see UEFI.org)
+> > +#     information read from devices and switches in conjunction with
+> > +#     link characteristics read from PCIe Configuration space.  
+> 
+> you lost me here (even reading this several time doesn't help).
+> Perhaps I lack specific domain knowledge, but is there a way to make it
+> more comprehensible for layman?
 
-I'd just add a line to say that we assume that
-subtle asymmetry in properties doesn't happen, so compute
-bandwidth on assumption all paths to EPs are equivalent.
+I've had a few passes and clearly still failing :(
 
-Jonathan
+Maybe an example is the way to go?  Does the following help?
+(replacing the 'An example sentence' above).
+
+#       For example, a CXL Memory device M is directly
+#       plugged into a CXL root port P which is part of a
+#       CXL root bridge B. To calculate latency from a CPU in
+#       the host to the memory on M, the latency from that CPU
+#       to the bridge B (and hence port P)* must be added
+#       to the latency due to the CXL Link between P and M
+#       (calculated from link status registers) and that from
+#       the CXL port on device M to the actual memory (read from
+#       CDAT via a mailbox on the device).
+#       The CPU to root bridge latency (*) is provided by ACPI HMAT.
+#       HMAT latency data is indexed with the combination of the
+#       proximity domain for the CPU and that for the root bridge.
+#       This node value is the root bridge part of that index pair.     	
+
+
+
+...
+
+
+> > +static int build_acpi_generic_port(Object *obj, void *opaque)
+> > +{
+> > +    MachineState *ms = MACHINE(qdev_get_machine());
+> > +    const char *hid = "ACPI0016";
+> > +    GArray *table_data = opaque;
+> > +    AcpiGenericPort *gp;
+> > +    uint32_t uid;
+> > +    Object *o;
+> > +
+> > +    if (!object_dynamic_cast(obj, TYPE_ACPI_GENERIC_PORT)) {
+> > +        return 0;
+> > +    }
+> > +
+> > +    gp = ACPI_GENERIC_PORT(obj);
+> > +
+> > +    if (gp->node >= ms->numa_state->num_nodes) {  
+> 
+> > +        error_printf("%s: node %d is invalid.\n",
+> > +                     TYPE_ACPI_GENERIC_PORT, gp->node);
+> > +        exit(1);  
+> 
+> not sure, 
+> maybe use error_fatal instead of using exit(1)?
+> 
+> CCing Markus to check if it's ok.
+
+Markus?
 
 > 
-> >   
-> >>
-> >> DJ  
-> >   
 > 
+> > +    }
+> > +
+> > +    o = object_resolve_path_type(gp->pci_bus, TYPE_PXB_CXL_BUS, NULL);
+> > +    if (!o) {
+> > +        error_printf("%s: device must be a CXL host bridge.\n",
+> > +                     TYPE_ACPI_GENERIC_PORT);
+> > +       exit(1);
+> > +    }  
+> ditto
+> 
+
 
