@@ -1,133 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F60615AD9C
-	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 08:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90D61459FD
+	for <linux-cxl@vger.kernel.org>; Wed, 28 Aug 2024 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724835027; cv=none; b=Sh/nN4/k6omXBFmved/HxQIRWOEREaBhk25l1aNr3Z1bxY0K5jLso/W1mYyYGihtxtAJ3kJaZGS5985cg1rCkLK8bdeQHD2Kc77QQIdUUGzvJDJ/HKSsp4tGOndBUobc0HS9jeiT+C3Eiw2WIs++V4Rc9jSiCoUQYbjsmj7/OVM=
+	t=1724835624; cv=none; b=F35Mq5IjGzfeLb1zPCX/mAC9DRW9vb/oXa2M0Cl7edptssXBaF4BZLICEZNlWXnddnWba9+I7fLDCSLPSsSf8lLyaU7U4jd4U9dvWvrcDzbbk2634Crro2T8Wtk7GJymJ/IIDmzwtZhCfnQQ9Jc0/Y6CpJDmU7oCdci1cI5Nh6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724835027; c=relaxed/simple;
-	bh=KK5Gj3jhOLfFJrDZozwHot44Z64Z9TXr0NckbSv0uDM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G7lnhRbVCUldLKI1JhGHiStKfHqy3FwLWLfxnEiqSVT3xA1IibPqwOH5yaI1SKIqfJ/l5MwJiDktutlH/n2UoP6l+GRa1DWxDz6QGtvpkgQApHLcdznhr7glcSwK0y1gFEEEtgJLmaReFWyEMj/kx2bQlu77imdOEovD4xALxbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TwucQj++; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TwucQj++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724835026; x=1756371026;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KK5Gj3jhOLfFJrDZozwHot44Z64Z9TXr0NckbSv0uDM=;
-  b=TwucQj++Wv9ZCKRWnN9XPHTitwTRITNptZFsq5Ht0OOdZAuO6QFDXHns
-   qreOJA4d3B8k/e6vEgFfUAfV87oUAiIA/Pc9Xn4+OWG38Ot6NKjSah6oM
-   tVp3gibe72VKSeZrZ720NvnKn48hFi2jWzSynpLRBDw9HKDG76RYEgQEk
-   23YSPDROYwUn6ZIJWkF8mAkgiLmaXFRTq8OX0YWQZbuKYm+/2ldeGW7V6
-   vcGRQVRfkk7FTNHLiyvh6NZAu2wDTNrAQNHk4ZfkiMCMbYKN9oBjeeaAe
-   p6YqhzWjfluS4z85uS7fCCniJrEuLJJqFMGbNoxfN+67m3hxjdzKAMddu
-   g==;
-X-CSE-ConnectionGUID: GCHkl5pMRae1taQhOdFXOQ==
-X-CSE-MsgGUID: FhdBga9fRPepjiutSk4iKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="22874638"
-X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="22874638"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:25 -0700
-X-CSE-ConnectionGUID: xZXJ1FP4QuGGbobyLFFUUw==
-X-CSE-MsgGUID: D8sGPEsISEO0KKB45167eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="62999089"
-Received: from tower.bj.intel.com ([10.238.157.70])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 01:50:18 -0700
-From: Yanfei Xu <yanfei.xu@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	ming4.li@intel.com,
-	yanfei.xu@intel.com
-Subject: [v4 4/4] cxl/pci: simplify the check of mem_enabled in cxl_hdm_decode_init()
-Date: Wed, 28 Aug 2024 16:42:31 +0800
-Message-Id: <20240828084231.1378789-5-yanfei.xu@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240828084231.1378789-1-yanfei.xu@intel.com>
-References: <20240828084231.1378789-1-yanfei.xu@intel.com>
+	s=arc-20240116; t=1724835624; c=relaxed/simple;
+	bh=SI3EKb/+2YCz9qQMJz1xHELer7He0gVsQNCnEVhOnDk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g6CUzWW81zY2knA1puRhpHepMW49laz6iw6rhyEf/zLo7jF9Tv9ttU1gyNKj4YLNGIfzhcESlGd+tVA9ocPYlx0JjeRhU61whh4J7tos1uzMmBhODMcpWM2oBYhvphiS08Cny+wPWRDn35PMOl4+bvvi+6rdSqCOrj/RYEpquyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wtyvw3YN2z6D9j0;
+	Wed, 28 Aug 2024 16:57:00 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id DE8A1140447;
+	Wed, 28 Aug 2024 17:00:16 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
+ 2024 10:00:16 +0100
+Date: Wed, 28 Aug 2024 10:00:15 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v7 3/3] cxl: Add documentation to explain the shared
+ link bandwidth calculation
+Message-ID: <20240828100015.000010a0@Huawei.com>
+In-Reply-To: <3c325ad2-e483-417a-a952-1357df3382c4@intel.com>
+References: <20240710222716.797267-1-dave.jiang@intel.com>
+	<20240710222716.797267-4-dave.jiang@intel.com>
+	<20240827170640.000007ab@Huawei.com>
+	<3c325ad2-e483-417a-a952-1357df3382c4@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Cases can be divided into two categories which are DVSEC range enabled and
-not enabled when HDM decoders exist but is not enabled. To avoid checking
-info->mem_enabled, which indicates the enablement of DVSEC range, every
-time, we can check !info->mem_enabled once in advance. This simplification
-can make the code clearer.
+On Tue, 27 Aug 2024 15:38:27 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-No functional change intended.
+> On 8/27/24 9:06 AM, Jonathan Cameron wrote:
+> > On Wed, 10 Jul 2024 15:24:02 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> Create a kernel documentation to describe how the CXL shared upstream
+> >> link bandwidth is calculated.
+> >>
+> >> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
+> > Oops. Missed this previously.  A few minor things inline.
+> > 
+> > J  
+> >> ---
+> >>  .../driver-api/cxl/access-coordinates.rst     | 90 +++++++++++++++++++
+> >>  Documentation/driver-api/cxl/index.rst        |  1 +
+> >>  MAINTAINERS                                   |  1 +
+> >>  3 files changed, 92 insertions(+)
+> >>  create mode 100644 Documentation/driver-api/cxl/access-coordinates.rst
+> >>
+> >> diff --git a/Documentation/driver-api/cxl/access-coordinates.rst b/Documentation/driver-api/cxl/access-coordinates.rst
+> >> new file mode 100644
+> >> index 000000000000..973e63872f06
+> >> --- /dev/null
+> >> +++ b/Documentation/driver-api/cxl/access-coordinates.rst
+> >> @@ -0,0 +1,90 @@
+> >> +.. SPDX-License-Identifier: GPL-2.0
+> >> +.. include:: <isonum.txt>
+> >> +
+> >> +==================================
+> >> +CXL Access Coordinates Computation
+> >> +==================================
+> >> +
+> >> +Shared Upstream Link Calculation
+> >> +================================
+> >> +For certain CXL region construction with endpoints behind CXL switches (SW) or
+> >> +Root Ports (RP), there is the possibility of the total bandwdith for all  
+> > spell check. bandwidth  
+> >> +the endpoints behind a switch being more than the switch upstream link.  
+> > 
+> > Could also be the Generic Port bit of the topology. Mind you I'm still failing
+> > to come up with text for the qemu GP Documentation that the reviewers can follow
+> > so maybe that's just too hard to describe here.  Could use weasel words.
+> > 
+> > "A similar situation can occur within the host, upstream of the root ports."
+> > 
+> >   
+> >> +The CXL driver performs an additional pass after all the targets have
+> >> +arrived for a region in order to recalculate the bandwidths with possible
+> >> +upstream link being a limiting factor in mind.
+> >> +
+> >> +The algorithm assumes the configuration is a symmetric topology as that
+> >> +maximizes performance. When asymmetric topology is detected, the calculation
+> >> +is aborted when such topology is detected. An asymmetric topology is detected  
+> > 
+> > is detected is duplicated.  
+> 
+> I don't follow here.
+> 
+>+ When asymmetric topology is detected, the calculation
+                             ^^^^^^^^^^^
+>+is aborted when such topology is detected.
+                                ^^^^^^^^^^^^
+Delete the second one.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Yanfei Xu <yanfei.xu@intel.com>
----
- drivers/cxl/core/pci.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+> >   
+> >> +during topology walk where the number of RPs detected as a grandparent is not
+> >> +equal to the number of devices iterated in the same iteration loop.  
+> > 
+> > Maybe make the point that asymmetric in terms of only properties of devices
+> > is not detected. It just uses the first one I think?  
+> 
+> I also don't follow here.
+> 
+> I also wonder if I should use "unbalanced" topology rather than "unsymmetric"?
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index cda22feadbd3..a3f0e907d08c 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -426,7 +426,15 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 		return -ENODEV;
- 	}
- 
--	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
-+	if (!info->mem_enabled) {
-+		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
-+		if (rc)
-+			return rc;
-+
-+		return devm_cxl_enable_mem(&port->dev, cxlds);
-+	}
-+
-+	for (i = 0, allowed = 0; i < info->ranges; i++) {
- 		struct device *cxld_dev;
- 
- 		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
-@@ -440,7 +448,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 		allowed++;
- 	}
- 
--	if (!allowed && info->mem_enabled) {
-+	if (!allowed) {
- 		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
- 		return -ENXIO;
- 	}
-@@ -454,14 +462,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
- 	 * Decoder Capability Enable.
- 	 */
--	if (info->mem_enabled)
--		return 0;
--
--	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
--	if (rc)
--		return rc;
--
--	return devm_cxl_enable_mem(&port->dev, cxlds);
-+	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
- 
--- 
-2.39.2
+Difference between detecting a topology with different number of links and one
+where say one type 3 device in an interleave set has lower bandwidth in it's CDAT.
 
+IIRC this does the first, but not the second.
+
+> 
+> DJ
