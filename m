@@ -1,339 +1,332 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2183178CEC;
-	Wed, 28 Aug 2024 13:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724852640; cv=fail; b=IQKvlv3oFSqNDQtFEZjcHAZ9WBiUtLE2dpbeVB3ghZHDWzJsb0SQkxx84s3bIkLOp+/egjaQCeSVish4YeJbR1qezFZJQRTyjq6Ivb83rsO5Viti5ZNtrOce+J4ZB+E6yqdNg1inIjUbrLOCkdoebh3rIXqiWfdKEUK3Zenlb84=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724852640; c=relaxed/simple;
-	bh=c8dgK+nZoKpIAC0NhSAvccguDZTq/71jva4eH8i3p9k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sV3Lmc7rJ8H27IBGquAcPq8bu586UsNJ3cmbL5JSMp0tRTXrI1t49Fq0IfqqhZe//oktSS2QeSQnzON4VLuNinrsavCzX3qMVlnQ4BSUgx7LHmrS2OINqRto6mkfj3ygJsgyLZRWE2eOF4+fGu7862D59KIRy5hfH0HcGFgAqqQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TPpBNrq3; arc=fail smtp.client-ip=40.107.237.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB26F241E7;
+	Wed, 28 Aug 2024 13:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724853036; cv=none; b=cbwZ/tq3YruktocR6MOt3GuThvTWKjadFJao81fUk2y8/L8IttpFWud1vSIBop9b1ogNXmcL9xKH2uCYB/LX86C8E1Ny9sdp3VqDrI7vg8F/iUL7EyPLdcizgGMmBfSPdEExxFdsFIXUN/obq/j40kGFocat/boCPbbcwnpt8+A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724853036; c=relaxed/simple;
+	bh=T1rGWrRBFWAIrukoKtCDRzTZ0Z/EyiwmKHPNYsl0+N8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I371xligg9612MyNhQnceUP1B3r/32m4xVIGHHZsdi7xS8djJUY85AJRONPhjeUuxtYCvXpt0aoBt0q0Bp4ficfS0xeJ24DdDqgYSvZuokW5R+8jxWljQScaLn/gZd0UTRLbeOxpaDXrEPwYobd1ZLP75T47YSHa7+ObUxj/pcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nEn+qXGe; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TPpBNrq3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yKCpYPqwDLNJfCZwyKcUF3bIuJPYr6eZF9aLBLYMa2u+4jo/Obdf4lWDkIlpFg7ZbOKnaoxZ+kVZSMGoJAyTWIdZi6s0l9GMUl82x6MFnKFfrNQhF1Yqysdtk23p7tbrSss4tXaC5wDPcfa74p5R1krTEswMUSMIKAeP+hwfo0fj0JpeW9+sJpws8NzU7MpWW/bdCsGdKgrMIX7CjKEZ1G43obSh/Ij4HOFbfQRoaeKE5txGCwBdyMDH39ttHyXYu9tFeBSiVhpBLWUP4CpWvriYMCV2w3vMzQolCpvExjynX/79XRMUeF9fLigBe1LKDg2iZFltNxTjacil7ZDhhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kVP1tywk1E2yvsQmIjPby+1OuSlR4RtkDNjNg4/vXTc=;
- b=OO/ZhN13EVKlgcymLLhdAY2Qc86219vzzweiFFHR8vrTvYThEYzUcXrcHAef8OLlk9qnTFkVkLmtKUwp46Hgte7c9RyWwXsuVgBj6rRfP9kkZ1RRj0PaReMStapoH+3fkiM9fMaPNvF4phvEXOdtt58mWRNVgwz5FruuuoGgBlqU+VgtIeOk2alppLnQSApbB08QOexoBaqkNa78MM6CHBGOK/mXvLR6yihWrd0T7pGG+zJTwlkjFTT0fO34vXqNXyzlukk5i+MTepGvd71Wp3FG/cX7f9CTspg1CnSBtP0xP20y5ibKhaQBEc9/oPIpHHuv0fzHQHgzMy1SmdIdtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kVP1tywk1E2yvsQmIjPby+1OuSlR4RtkDNjNg4/vXTc=;
- b=TPpBNrq33nZD2w6VH6KdW1t5xl2b3XOS88g2QrbkIjafnzRii9roIh0V6okNVhYMmayKs32GVE7TELF9DsHOpiYa2HS8Ab4tXKSkwHrsKd2kTy1JsYcqGEWbsalJHhAZ+Wddep2X0uajCWh6MI8OhshhHPmzGH2ohKl7Jk5IFbo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by BL3PR12MB6594.namprd12.prod.outlook.com (2603:10b6:208:38d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Wed, 28 Aug
- 2024 13:43:53 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.7897.027; Wed, 28 Aug 2024
- 13:43:52 +0000
-Message-ID: <301642a1-ae97-7140-3b52-da0e6e69e7c7@amd.com>
-Date: Wed, 28 Aug 2024 14:43:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 08/15] cxl: indicate probe deferral
-Content-Language: en-US
-To: Zhi Wang <zhiw@nvidia.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, richard.hughes@amd.com, targupta@nvidia.com,
- vsethi@nvidia.com
-References: <20240715172835.24757-1-alejandro.lucero-palau@amd.com>
- <20240715172835.24757-9-alejandro.lucero-palau@amd.com>
- <20240826204232.000009ce.zhiw@nvidia.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20240826204232.000009ce.zhiw@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0344.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::20) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nEn+qXGe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724853035; x=1756389035;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T1rGWrRBFWAIrukoKtCDRzTZ0Z/EyiwmKHPNYsl0+N8=;
+  b=nEn+qXGeX+c/YbYdkEB0YjAhPRHz/tWITi+nBs2SuSN58ggBrZ9qc6BR
+   +wmRupLcLeOubiRv0zX8QsqMn6nySS1F/RvBBAatB1vM3kE+tH953U0nU
+   Y5p3cSx0W1GfmqNPe9ZfGNm9OPfWkfGXoRJ63jGqE6jQwJMKJLHo/7q09
+   x2vWXfp7Sp8QbGZCjDCOSatsZzmeF2erh414uXiN3yQ1/Hu58vw4BVIt7
+   3hJhwWLIaMnlkA39jAgwStS7y4H5pWUw1ynM33Zy50HJa+BCocS0GruQz
+   ceXRifWPBZDxM641oUjiry6uuoDjSApvWafqxAinFJfd7FSXR0MQ/1Ket
+   g==;
+X-CSE-ConnectionGUID: Tfqj3+NtTfSp8QX5akIYNw==
+X-CSE-MsgGUID: gxM16SfbQZaqoYmSDA3rPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="26280565"
+X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
+   d="scan'208";a="26280565"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 06:50:34 -0700
+X-CSE-ConnectionGUID: 35NnCYRhR7WyfmuC21zOEA==
+X-CSE-MsgGUID: Gbv0dmn8SoKC/WXnq4ZaCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
+   d="scan'208";a="63560144"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 06:50:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sjJ45-00000002f8e-1KT8;
+	Wed, 28 Aug 2024 16:50:25 +0300
+Date: Wed, 28 Aug 2024 16:50:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, Dave Jiang <dave.jiang@intel.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [PATCH v3 02/25] printk: Add print format (%par) for struct range
+Message-ID: <Zs8rIIKAsaMrVsCk@smile.fi.intel.com>
+References: <20240816-dcd-type2-upstream-v3-0-7c9b96cba6d7@intel.com>
+ <20240816-dcd-type2-upstream-v3-2-7c9b96cba6d7@intel.com>
+ <ZsSjdjzRSG87alk5@pathway.suse.cz>
+ <66c77b1c5c65c_1719d2940@iweiny-mobl.notmuch>
+ <Zsd_EctNZ80fuKMu@smile.fi.intel.com>
+ <ZsyB5rqhaZ-oRwny@pathway.suse.cz>
+ <Zsy6BbJiYqiXORGu@smile.fi.intel.com>
+ <66ccf10089b0_e0732294ef@iweiny-mobl.notmuch>
+ <Zs3SB48QdLmUEdzw@smile.fi.intel.com>
+ <66cea3bf3332f_f937b29424@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|BL3PR12MB6594:EE_
-X-MS-Office365-Filtering-Correlation-Id: edd8e6d3-7240-4e5a-791a-08dcc767744d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TEtteE9OT1hsQlUzUEZYeHNRb2VwdWhFZWtLaFZFMXJQWGpIQ0ZJSzloeTJ2?=
- =?utf-8?B?U1R1aFdyTzRBWURpZ2lXWHl2NGVpM0pLU29RRElaZFhMY1ZKY2c3RkdMYmsy?=
- =?utf-8?B?eEc4QmxSVDh3QWQzZkRiRm1pSTRpOGZzTTcrdDAyQ0RpTUJlSUVOTWU1OFJ0?=
- =?utf-8?B?NFZJaFNIUEg1VnN3WkVCMlE0MVgyd1R1YVJ1enZNZnJGZFJVSytQRDhuOXVO?=
- =?utf-8?B?bXpzZ2YzTkFtVE1GSzJkTWVuSlFMU2RnNmx1R01hMXVvbkZYdmNSaWxPdkcz?=
- =?utf-8?B?VHJrTEhFVVNIU0grWFZNQy9JSTFsVkoyc1FjSUJHbGQ1R215Zi95ZXR5NjlX?=
- =?utf-8?B?RWFhMDZML1ozdjhtOHR3YkZVQUN1akpqV3pDVHNhU3lEUDhjYWdBYjZJWXNn?=
- =?utf-8?B?dmRqQmlkME5ZK05zcDFJUlI3b0xnemg0eUt5UUdJTy9jQ1l3Wnp0OUtwdkpE?=
- =?utf-8?B?eUlQbU0razNxbjRlaFpwOFRZLzhhT1B2cW12UzhFdGlxUE5aazh0SHE3SFR2?=
- =?utf-8?B?a2JhdDZlWjg3WVk0anVEVWUrQUZRSWk5eEpCMzlXVndIS1JjSnhadFN2dDR5?=
- =?utf-8?B?ZTROanBvOW80bHVDZEdFaDdEbnJjSHFtMzlOYUdqQStnQUhwK1YrNHZWVFdY?=
- =?utf-8?B?L210V3lZa3VtdkRvSytBSWdGMTNJOE1VQW45ZCtQbnNMZVBYRjdVU1JWMGk5?=
- =?utf-8?B?cFFhL0g2Zko5QzNYRzhVRjYyYnRwWjJnUXhRSkZwOHVWdDdWTmtNWmFRSlJn?=
- =?utf-8?B?QitNdTJCaTNYcTN3NkZ6MWI2UTdXVGxFdThjdGxxRTVFdk81dlArbkxXYzNk?=
- =?utf-8?B?aTl5NXh1UURXSW1MdmZQbFVhNDFUTFA4WitaRkllTVZhOUwvTkMrSHNKeTU5?=
- =?utf-8?B?L0FVMzhIVk5Ia29pSVdMaXNkMVBkNURSTEtuN01XLzBDZGozQWxqdGIvTFND?=
- =?utf-8?B?S2ZOcWtRcExDa1J6UW1mQk9tblZWNnFLdm9xTVJjOFFMR0owMVBnMDBvMk1k?=
- =?utf-8?B?Q0VsQnkrMU1ablNxd3Ixc3E4ZGdqRVk2Um4zek50Z2tLaHRpdU8ycHNBUXBW?=
- =?utf-8?B?eHFOekZrVHB2V3VJZWNGSFc0Y0ptbitNU1lyMHpZSWtrZGtVZi9pWGxuSDQ2?=
- =?utf-8?B?Rk4vdGJTYk0xQ3hMS2FDVlMva1BoMXFOR1FpMnQ1VlZhWGppdzdTbUIrMHA4?=
- =?utf-8?B?RE1veWo1dXlTY2J3ZWVLSjBEbldsTUZsNCtQOVdjakpVeTVOZWJSUTlHbTly?=
- =?utf-8?B?UWxYNWJudVFTdUZ1SENjRzZIRXNaZThIdG8wZ3J6RWErWU11RFNKa2dYQ3ZO?=
- =?utf-8?B?S04wcG8rUk9yd0VHM0dMckh1VStESjgwWm9mNFFxeDF0b1k4TDl5S1Y3bEtS?=
- =?utf-8?B?MVA0UStTS01udkt0dHdpZ3ZtWDJGbEVKMGxDcjllMmRvVVZpZDlVOWZSM2wy?=
- =?utf-8?B?VlVwdFdLTzBENjlUT2o1NWtna0EyYjhsWTlCRUlTbTRGTFgzQkNreTF0U1ZX?=
- =?utf-8?B?ZEpnMWt4WTRubi8zV0x4a21uWmpGV1BxV3BmcnJFcXVNd3hRNm5aSTF1YmtC?=
- =?utf-8?B?UW03OVQ1N3QwcFZlZm80a3FiZUtKcXUzODJlWlkremFZL0s1QnVscjZCeWlH?=
- =?utf-8?B?WlNzcXBNRlRCOVp5cDZzUkszSHEyNXpxZGxEcXlHUmpvT05WOGNZTDR0REpt?=
- =?utf-8?B?UUlIRjA1bE11MldzMFdVQnMrUkxSZmR2WW0zeWtTclV0SzBtcGMrdnFxci9Q?=
- =?utf-8?Q?EHxkBqRnGJRIc/4cqw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eDhMV2RLclpBWmhhZkd6cFpZajFHdXNTMjBJNmlKaG9YWGdJUW1idnVGeS90?=
- =?utf-8?B?UEcyUHZVY29iWG8veVlPMEtla0FmNjlTVjZMTDNwT2ttcjFNcFVHYmg2TUky?=
- =?utf-8?B?UXBUSnF5a2JFdWFsN2Yvb1JpLzFYODQ5clI4M2EzQm9DVFhZcThvbE5IVHZ5?=
- =?utf-8?B?SW9kalllVk10SEdxYUxPOVBGVlcwdWlQQjgxU1BIWGk4c3NUVjA4SEs5c1pQ?=
- =?utf-8?B?OGNyTlE1RzRpbnFlTEsyMDBYUmVKdVBldXpJUUlHTnFQMXkxbXp4WkdQc2pY?=
- =?utf-8?B?R1F6QjhTWWZyUFBwbGdYU2lacEJNVHBGTVRhSlMxcWMzVVBCNDVEellzczhP?=
- =?utf-8?B?NTh2T0VXUUxOSGtzaVVhNTZsVTQ1dmdSWWxwejk5NlRYWDVxRHk4S25pSzlu?=
- =?utf-8?B?ZVBoMjZuZi9QNGJKRno3TERTdDladmVlQ2ViUXhjdk5yY085ZlhSVk1valJi?=
- =?utf-8?B?Ung2Sm1XODFVVndacnBXNEdpMy9ua3d4WkxpaFJmMVhEc2lFYTZCekJ0RVE3?=
- =?utf-8?B?dllXY0t0MHZnRVlXZmdBbWJuYTdReUYwRHhBME5iK2pFcmRWdEErdys2THZp?=
- =?utf-8?B?ZDY5K1NTQmc5dEV4dWxzQ0RqYUUxMzZ2Zm5XVHk2QXJyTDUrTFNxUWFscUxL?=
- =?utf-8?B?TkFmWWVhbWk4b0JINXdNQU5UMkJyeHlDd3daNGtDQkprc0FNQ25SYUMxVmU1?=
- =?utf-8?B?UlNRMEg3dFNxOXlZdlg1MzhrRVlKWVNUd3hsRDFrN24yUVNKN0JMU0ZJNldS?=
- =?utf-8?B?bVBzSHROcS9ZWU9tNGJMK3BrTGFKVlJVVzNhRnNWL2I2WUE5M09aRXNMTlBP?=
- =?utf-8?B?OW4yRnl3ZGllL2kzaDFmaklZb2g0NnozWlF2VlhSNlU2NVowSHorMjJ0SnpY?=
- =?utf-8?B?alRGVldNa0s2K0Z3Q3FIb2QwTHRkclNLcmJnSGwzWlIvQW1wYzVKY3FFZTRN?=
- =?utf-8?B?Y01ZTm1QWTMxZTlkMDF5M2VYRHNQSFFqcnF5bS9nOHV6YlVETDFQUEdvV2Fk?=
- =?utf-8?B?L3pKdVdpd0ZEQ2dnV3FpSjRFN3hXUXEzSGhJemMyeTVNNnhvcFdrc0xFRjVO?=
- =?utf-8?B?bUJLelorcXQxRjRDOURHQ3pVMS8wK210VjhKS2VaSXNGRWxpK2I1MndRMTJa?=
- =?utf-8?B?VVUreVRpZktydndubWthWHBHM1lNZ3FiQzNxOTR2YnVqRFRvQzduM0hISkJ5?=
- =?utf-8?B?QVR1RlNsM0hYaWRJa0VHNlNUd1lxc0IwcnYzcXJjazZoMnFYaC9kNmZXMjBE?=
- =?utf-8?B?Q2VWOTU4QlZ0QmhBelgrQ0NRbkFmbXZkcG5CWGsrVTNZL1FsTTg2cmNodWZB?=
- =?utf-8?B?NUpLUUJiNGRVUlYzMmpNTTR0TUEvdGRjcHN1UVBmTHlBakdpZkxJNWVPakhy?=
- =?utf-8?B?UkM0N0ppMGRCYk1SNi8vdXAyZFRCOFJjaTQyblprUUVPVGFxVjc3dHFKN1JS?=
- =?utf-8?B?cHhkbkxIdVNXWWYzWUhvZklEdzUrTWxwdklYTTJ1OFZYTnRaV2VNdDhkVk5L?=
- =?utf-8?B?L2U0M01HYUNXYmtZT3JjcS8vNnFEcU5rVzhHa0dIM293SStpQlNyQ1NSSFNS?=
- =?utf-8?B?bzNKNDVHOWdzeWNyRkF0YWtmclgvOTNoYUFPZVNGR2I0NlMxK3JiYUw5ckZN?=
- =?utf-8?B?SUNKZnFjTUNVbWZoSG8yTllmZzJFYTUyTVhBZDFiVktFUlF3VEdlbXM3ZGli?=
- =?utf-8?B?TGgzdFlFcFhCM2duSDQrQlhPaHU4RldlU1FiTmhFTkQxQy9rVWtveVVNQ3lQ?=
- =?utf-8?B?MEo4NHUvaVFDQWRndkt6OGE1NWF3a3AyaEJyS3prM1NobXBZUHpSZHRwTFRq?=
- =?utf-8?B?TVcyUFkrNEJrRithWEhuUFJXK3FBd3pyVXQ1U25hQjRTU21PdzE4enlhUjJR?=
- =?utf-8?B?eTZhYUUvcWxtSDB3a3JydXZaYy9OZWtkNlViMVlKTmNQcWdFUmtVb1UwNFdN?=
- =?utf-8?B?MjdJK2dzUzhNcXgxdTZ6cnBTWDRyNFFpUTBsU3I4TDV1Rk1EdHkyTm80NW1X?=
- =?utf-8?B?a0duYmFzenp4elZqK0hsRW9abWNYSGMzTStISjk4NUkrZDRVQlJsdzR3NTZi?=
- =?utf-8?B?VkNoQis3aloxRENNMFpQMU43QkRGUEUyYmVhR0F5YkZDRS95QVVNbVd5Slg1?=
- =?utf-8?Q?vMI/D3ARv9vLj9kasLaFw4brK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edd8e6d3-7240-4e5a-791a-08dcc767744d
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2024 13:43:52.8777
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4jYNej+Sr2DaaAUh91ErxFBN4e+nSccNGwx74ezfTXRkCGFq5rQg/TAqz+tmJimwr/AsJpX7z9UHYAct8/L5bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6594
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66cea3bf3332f_f937b29424@iweiny-mobl.notmuch>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Aug 27, 2024 at 11:12:47PM -0500, Ira Weiny wrote:
+> Andy Shevchenko wrote:
+> > On Mon, Aug 26, 2024 at 04:17:52PM -0500, Ira Weiny wrote:
+> > > Andy Shevchenko wrote:
+> > > > On Mon, Aug 26, 2024 at 03:23:50PM +0200, Petr Mladek wrote:
+> > > > > On Thu 2024-08-22 21:10:25, Andy Shevchenko wrote:
+> > > > > > On Thu, Aug 22, 2024 at 12:53:32PM -0500, Ira Weiny wrote:
+> > > > > > > Petr Mladek wrote:
+> > > > > > > > On Fri 2024-08-16 09:44:10, Ira Weiny wrote:
+
+[snip]
+
+> > > +char *range_string(char *buf, char *end, const struct range *range,
+> > > +                     struct printf_spec spec, const char *fmt)
+> > > +{
+> > > +#define RANGE_DECODED_BUF_SIZE         ((2 * sizeof(struct range)) + 4)
+> > > +#define RANGE_PRINT_BUF_SIZE           sizeof("[range -]")
+> > > +       char sym[RANGE_DECODED_BUF_SIZE + RANGE_PRINT_BUF_SIZE];
+> > > +       char *p = sym, *pend = sym + sizeof(sym);
+> > 
+> > Missing check for pointer, but it's not that I wanted to tell.
+> 
+> No it was not missing.  It was checked in address_val() already.  However, with
+> %pra I'll have to add it in.
+
+Ah, I haven't noticed the address_val() implementation details, thanks for
+elaborating!
+
+> > > +       *p++ = '[';
+> > > +       p = string_nocheck(p, pend, "range ", default_str_spec);
+> > 
+> > Hmm... %pr uses str_spec, what the difference can be here?
+> 
+> str_spec is designed for variable length strings which are used based on the
+> struct resource flags.  Struct range does not vary so default_str_spec works.
+
+Okay, makes sense.
+
+> > > +       p = special_hex_number(p, pend, range->start, sizeof(range->start));
+> > > +       *p++ = '-';
+> > > +       p = special_hex_number(p, pend, range->end, sizeof(range->end));
+> > 
+> > This is basically the copy of %pr implementation.
+> 
+> Only at a very basic level.  struct resource has a variable spec while struct
+> range does not.  This causes complexity to make the code the same.
+
+Fair enough, that's why I said "as much as possible to deduplicate". If you
+think this is not worth it, let's do without an additional complications then.
+
+> > 	p = number(p, pend, res->start, *specp);
+> > 	if (res->start != res->end) {
+> > 		*p++ = '-';
+> > 		p = number(p, pend, res->end, *specp);
+> > 	}
+> > 
+> > Would it be possible to unify? I think so, but it requires a bit of thinking.
+> 
+> Not much thinking.  But the issue is that they are not close enough to justify
+> the extra complexity IMHO.
+
+Okay!
+
+> Making the outputs match with a common function takes 13 lines of code[1]
+> including the declaration of a print specification which, as this thread
+> already showed, is non-trivial to understand.
+
+> __Also__ this is currently crashing on me and I can't figure out why.
+> 
+> $ git diff --stat
+>  lib/vsprintf.c | 32 ++++++++++++++++++++++++--------
+>  1 file changed, 24 insertions(+), 8 deletions(-)
+> 
+> OTOH to force a unified output, only takes 2 lines of duplicated code.[2]  This
+> is a very minor expense of duplicate code which is much easier to follow.
+> 
+> $ git diff --stat
+>  lib/vsprintf.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+
+Yep, got it.
+
+> > That's why testing is very important in this kind of generic code.
+> 
+> Yep.  But the struct resource test was stubbed out.  I've added some basic
+> ones.  But there are many more variations of struct resource prints.  I'm not
+> sure I've not broken them.
+
+Yeah, so make it then separated branches for %pr and %pra. You will take the
+correct argument type in each of them. There are existing examples there.
+
+Probably an initial 'r'/'R' parsing should be moved to pointer().
+
+> > > +       *p++ = ']';
+> > > +       *p = '\0';
+> > > +
+> > > +       return string_nocheck(buf, end, sym, spec);
+> > > +}
+
+...
+
+> > > +       struct range test_range = {
+> > > +               .start = 0xc0ffee00ba5eba11,
+> > > +               .end = 0xc0ffee00ba5eba11,
+> > > +       };
+> > > +
+> > > +       test("[range 0xc0ffee00ba5eba11-0xc0ffee00ba5eba11]",
+> > > +            "%par", &test_range);
+> > > +
+> > > +       test_range = (struct range) {
+> > > +               .start = 0xc0ffee,
+> > > +               .end = 0xba5eba11,
+> > > +       };
+> > > +       test("[range 0x0000000000c0ffee-0x00000000ba5eba11]",
+> > > +            "%par", &test_range);
+> > 
+> > Case when start == end?
+> 
+> Yes, that is the 1st case.
+
+Thumb up!
+
+> > Case when end < start?
+> 
+> I had no intention of having the output dictated by the values.
+> 
+> 	test("[range 0x0000000000c0ffee-0x0000000000c0ffee]",
+> and
+> 	test("[range 0x00000000ba5eba11-0x0000000000c0ffee]",
+> 
+> ... are acceptable to me.
+
+But it seems the %pr in the first case doesn't do range, just a single value,
+which makes sense to me (and this thread proved it) to avoid needless pedantic
+checking of each value. It means that at a glance you may tell start == end.
+Not sure about end < start case, but the point is just let's make it mimicing
+%pr behaviour.
+
+...
+
+> +static noinline_for_stack
+> +char *hex_range(char *buf, char *end, u64 start_val, u64 end_val,
+> +               struct printf_spec spec)
+> +{
+> +       buf = number(buf, end, start_val, spec);
+> +       if (start_val != end_val) {
+> +               *buf++ = '-';
+> +               buf = number(buf, end, end_val, spec);
+> +       }
+> +       return buf;
+> +}
+> +
+>  static noinline_for_stack
+>  char *resource_string(char *buf, char *end, struct resource *res,
+>                       struct printf_spec spec, const char *fmt)
+> @@ -1115,11 +1127,7 @@ char *resource_string(char *buf, char *end, struct resource *res,
+>                 p = string_nocheck(p, pend, "size ", str_spec);
+>                 p = number(p, pend, resource_size(res), *specp);
+>         } else {
+> -               p = number(p, pend, res->start, *specp);
+> -               if (res->start != res->end) {
+> -                       *p++ = '-';
+> -                       p = number(p, pend, res->end, *specp);
+> -               }
+> +               p = hex_range(p, pend, res->start, res->end, *specp);
+>         }
+>         if (decode) {
+>                 if (res->flags & IORESOURCE_MEM_64)
+> @@ -1149,11 +1157,19 @@ char *range_string(char *buf, char *end, const struct range *range,
+>         char sym[RANGE_DECODED_BUF_SIZE + RANGE_PRINT_BUF_SIZE];
+>         char *p = sym, *pend = sym + sizeof(sym);
+>  
+> +       struct printf_spec range_spec = {
+> +               spec.field_width = 2 + 2 * sizeof(range->start), /* 0x + 2 * u64 */
+> +               spec.flags = SPECIAL | SMALL | ZEROPAD,
+> +               spec.base = 16,
+> +               spec.precision = -1,
+> +       };
+
+But this can be deduplicated from special_hex_number(), no?
+Something like
+
+fill_special_hex_number_spec()
+{
+}
+
+special_hex_number()
+{
+	fill_special_hex_number_spec();
+}
+
+special_hex_range()
+{
+	fill_special_hex_number_spec();
+}
+
+Would it be better?
+
+> +       if (check_pointer(&buf, end, range, spec))
+> +               return buf;
+> +
+>         *p++ = '[';
+>         p = string_nocheck(p, pend, "range ", default_str_spec);
+> -       p = special_hex_number(p, pend, range->start, sizeof(range->start));
+> -       *p++ = '-';
+> -       p = special_hex_number(p, pend, range->end, sizeof(range->end));
+> +       p = hex_range(p, pend, range->start, range->end, range_spec);
+>         *p++ = ']';
+>         *p = '\0';
+
+so, can you check if with the above implemented we can actually enforce unified
+format for %pr and %pra?
+
+...
+
+> [2] sample diff
+
+>         p = special_hex_number(p, pend, range->start, sizeof(range->start));
+> -       *p++ = '-';
+> -       p = special_hex_number(p, pend, range->end, sizeof(range->end));
+> +       if (range->start != range->end) {
+> +               *p++ = '-';
+> +               p = special_hex_number(p, pend, range->end, sizeof(range->end));
+> +       }
+
+There is a possibility to supply a callback, but it seems to me much
+overcomplicated approach.
+
+...
+
+If we go the second way (the latter one here) can you add a comment in both
+%pr/%pra code excerpts to point to each other that the format is unified
+between them? It might help in the future to optimise the code if needed at
+all.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 8/26/24 18:42, Zhi Wang wrote:
-> On Mon, 15 Jul 2024 18:28:28 +0100
-> <alejandro.lucero-palau@amd.com> wrote:
->
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> The first stop for a CXL accelerator driver that wants to establish
->> new CXL.mem regions is to register a 'struct cxl_memdev. That kicks
->> off cxl_mem_probe() to enumerate all 'struct cxl_port' instances in
->> the topology up to the root.
->>
->> If the root driver has not attached yet the expectation is that the
->> driver waits until that link is established. The common cxl_pci_driver
->> has reason to keep the 'struct cxl_memdev' device attached to the bus
->> until the root driver attaches. An accelerator may want to instead
->> defer probing until CXL resources can be acquired.
->>
->> Use the @endpoint attribute of a 'struct cxl_memdev' to convey when
->> accelerator driver probing should be defferred vs failed. Provide that
->> indication via a new cxl_acquire_endpoint() API that can retrieve the
->> probe status of the memdev.
->>
->> The first consumer of this API is a test driver that excercises the
->> CXL Type-2 flow.
->>
-> Out of curiosity, when and where do we probe CXL_DVSEC_CACHE_CAPABLE and
-> enable the CXL_DVSEC_CACHE_ENABLE bit for a type-2 device?
->
-> Thanks,
-> Zhi.
-
-
-As It is mentioned in the cover letter, this is a Type2 device but not 
-working on CXL.cache yet.
-
-I hope we can discuss how to deal with CXL.cache in the LPC next month. 
-I'll be talking about it and current state of this patchset.
-
-Thank you
-
-
->> Based on
->> https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/T/#m18497367d2ae38f88e94c06369eaa83fa23e92b2
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
->> ---
->>   drivers/cxl/core/memdev.c          | 41
->> ++++++++++++++++++++++++++++++ drivers/cxl/core/port.c            |
->> 2 +- drivers/cxl/mem.c                  |  7 +++--
->>   drivers/net/ethernet/sfc/efx_cxl.c | 10 +++++++-
->>   include/linux/cxl_accel_mem.h      |  3 +++
->>   5 files changed, 59 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->> index b902948b121f..d51c8bfb32e3 100644
->> --- a/drivers/cxl/core/memdev.c
->> +++ b/drivers/cxl/core/memdev.c
->> @@ -1137,6 +1137,47 @@ struct cxl_memdev *devm_cxl_add_memdev(struct
->> device *host, }
->>   EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, CXL);
->>   
->> +/*
->> + * Try to get a locked reference on a memdev's CXL port topology
->> + * connection. Be careful to observe when cxl_mem_probe() has
->> deposited
->> + * a probe deferral awaiting the arrival of the CXL root driver
->> +*/
->> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd)
->> +{
->> +	struct cxl_port *endpoint;
->> +	int rc = -ENXIO;
->> +
->> +	device_lock(&cxlmd->dev);
->> +	endpoint = cxlmd->endpoint;
->> +	if (!endpoint)
->> +		goto err;
->> +
->> +	if (IS_ERR(endpoint)) {
->> +		rc = PTR_ERR(endpoint);
->> +		goto err;
->> +	}
->> +
->> +	device_lock(&endpoint->dev);
->> +	if (!endpoint->dev.driver)
->> +		goto err_endpoint;
->> +
->> +	return endpoint;
->> +
->> +err_endpoint:
->> +	device_unlock(&endpoint->dev);
->> +err:
->> +	device_unlock(&cxlmd->dev);
->> +	return ERR_PTR(rc);
->> +}
->> +EXPORT_SYMBOL_NS(cxl_acquire_endpoint, CXL);
->> +
->> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port
->> *endpoint) +{
->> +	device_unlock(&endpoint->dev);
->> +	device_unlock(&cxlmd->dev);
->> +}
->> +EXPORT_SYMBOL_NS(cxl_release_endpoint, CXL);
->> +
->>   static void sanitize_teardown_notifier(void *data)
->>   {
->>   	struct cxl_memdev_state *mds = data;
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index d66c6349ed2d..3c6b896c5f65 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -1553,7 +1553,7 @@ static int add_port_attach_ep(struct cxl_memdev
->> *cxlmd, */
->>   		dev_dbg(&cxlmd->dev, "%s is a root dport\n",
->>   			dev_name(dport_dev));
->> -		return -ENXIO;
->> +		return -EPROBE_DEFER;
->>   	}
->>   
->>   	parent_port = find_cxl_port(dparent, &parent_dport);
->> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
->> index f76af75a87b7..383a6f4829d3 100644
->> --- a/drivers/cxl/mem.c
->> +++ b/drivers/cxl/mem.c
->> @@ -145,13 +145,16 @@ static int cxl_mem_probe(struct device *dev)
->>   		return rc;
->>   
->>   	rc = devm_cxl_enumerate_ports(cxlmd);
->> -	if (rc)
->> +	if (rc) {
->> +		cxlmd->endpoint = ERR_PTR(rc);
->>   		return rc;
->> +	}
->>   
->>   	parent_port = cxl_mem_find_port(cxlmd, &dport);
->>   	if (!parent_port) {
->>   		dev_err(dev, "CXL port topology not found\n");
->> -		return -ENXIO;
->> +		cxlmd->endpoint = ERR_PTR(-EPROBE_DEFER);
->> +		return -EPROBE_DEFER;
->>   	}
->>   
->>   	if (resource_size(&cxlds->pmem_res) &&
->> IS_ENABLED(CONFIG_CXL_PMEM)) { diff --git
->> a/drivers/net/ethernet/sfc/efx_cxl.c
->> b/drivers/net/ethernet/sfc/efx_cxl.c index 0abe66490ef5..2cf4837ddfc1
->> 100644 --- a/drivers/net/ethernet/sfc/efx_cxl.c +++
->> b/drivers/net/ethernet/sfc/efx_cxl.c @@ -65,8 +65,16 @@ void
->> efx_cxl_init(struct efx_nic *efx) }
->>   
->>   	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, cxl->cxlds);
->> -	if (IS_ERR(cxl->cxlmd))
->> +	if (IS_ERR(cxl->cxlmd)) {
->>   		pci_info(pci_dev, "CXL accel memdev creation
->> failed");
->> +		return;
->> +	}
->> +
->> +	cxl->endpoint = cxl_acquire_endpoint(cxl->cxlmd);
->> +	if (IS_ERR(cxl->endpoint))
->> +		pci_info(pci_dev, "CXL accel acquire endpoint
->> failed"); +
->> +	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
->>   }
->>   
->>   
->> diff --git a/include/linux/cxl_accel_mem.h
->> b/include/linux/cxl_accel_mem.h index 442ed9862292..701910021df8
->> 100644 --- a/include/linux/cxl_accel_mem.h
->> +++ b/include/linux/cxl_accel_mem.h
->> @@ -29,4 +29,7 @@ int cxl_await_media_ready(struct cxl_dev_state
->> *cxlds);
->>   struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
->>   				       struct cxl_dev_state *cxlds);
->> +
->> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd);
->> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port
->> *endpoint); #endif
