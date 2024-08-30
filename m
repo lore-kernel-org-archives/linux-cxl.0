@@ -1,38 +1,61 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6EA13D60E
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 04:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9E31D131D
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 06:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724991401; cv=none; b=bfdi6OZz66zENL33V9q3vLd1AAAkVNySbSv20+XB5yVhM4z/sitSqLBhaBq02QeVeu9Ziv4HSwMBXsOmi9OtoeR63BwYQSQTLybQCdsfYzNovO4Bw9AK+72iGzGS3sOf4S1pHn+/5vGwn57H+a87210AK/f8dyxB74Kx9gPArwo=
+	t=1725000197; cv=none; b=arXjJg6GqdLfmVZK6S/Y50v/RmXMZgh/jiwjM+0iOSCzuVRbi/VlRFwIvvtjFBNCwpVWKZ1A4pVdGM2Fvd5cg7nguQ/6V1yw8tyl1fCtwpTRHJ/VmoNY3nX/dIQnWlyuOhtTuZSevgoX6K4U09rZQLLfSuyw0e7XCqIGEzvWPX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724991401; c=relaxed/simple;
-	bh=1FyDwZsi9sVVYlGCW0Yb+6wuLnGyBUarh5xDu2tPbb4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d4M8L9EFX1//S+HJe4U3QlYxfrezS7TpXPDEsOlNjt8LqO8VQIK+pmYosLSIG64t/eV7aL3BPvqfUGyJU2gW7/UBkLg+Ev2RN341Qv4zeWtkLcvzcF7PORJ7DvKc7nAJReAjQXov4pz9MGZIDREoCUlok8AiFJ8h/kVqCu1wk6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwD3LTaWR9FmeL+CAg--.18279S2;
-	Fri, 30 Aug 2024 12:16:22 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwC34bGOR9FmmakpAA--.16568S3;
-	Fri, 30 Aug 2024 12:16:15 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@Huawei.com,
-	quic_llindhol@quicinc.com,
-	peter.maydell@linaro.org,
-	marcin.juszkiewicz@linaro.org
-Cc: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org,
-	qemu-arm@nongnu.org,
-	chenbaozi@phytium.com.cn,
-	wangyinfeng@phytium.com.cn,
-	shuyiqi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [RFC PATCH 0/2] Sbsa-ref CXL Enablement
-Date: Fri, 30 Aug 2024 12:15:55 +0800
-Message-Id: <20240830041557.600607-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725000197; c=relaxed/simple;
+	bh=qVXbmzaqyqoeex3xIhRoHSGFDyy0uvJQXmRAomvZr/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OfJY65cAzgcEtdmgmlP4dzXdSp34QhdT6MGpPvtGNHJK9Lasb3BUCWtTEa3Vhx+8TbxfsIKEokrZvJJE6wXg+9blvVvWYfmYgNrJe5KkPSxH80qVcem70HOPfXJwlOAThPlkXDpiSC1gSuZZQBWJcCXuqzvxP/OLDqa0f4nrtrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gl1/iZkv; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gl1/iZkv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725000196; x=1756536196;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qVXbmzaqyqoeex3xIhRoHSGFDyy0uvJQXmRAomvZr/g=;
+  b=Gl1/iZkvxJVh/NIKI9JES9k1wXhqiko66KiqB5MXlw12S30hF4Ri/rap
+   Dj8vZDWRdJYUBEHMGDMqu/vLmjwupttWcpAxc52ZPmJ4KG+/pdcMgoraF
+   EMAusWI6yyZVYMf/fwe+G+TRwJ+xCATDhUAugbyZ/LEL33suQ1ut78tRs
+   B3qh+6krPaiQ+xWs+QM1y7crnv9OrRpHuHn40R3dpPJauCGVCiDiXmiZL
+   FicBjCGo7Mb/wCyCQzneauJs5tSsVJY9s4kLlFcSA72hEEcao1fy/BzfO
+   KUPjspQFpOW00fnj7Xy3IFk1uw4RVZbg550aKnDkGqw9K8IGfvYZ33N3M
+   g==;
+X-CSE-ConnectionGUID: 2L/KNLBpQcWxcKAbLx+prw==
+X-CSE-MsgGUID: jlrpV5WMSjiOMHxEXmMilA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="27424896"
+X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
+   d="scan'208";a="27424896"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 23:43:15 -0700
+X-CSE-ConnectionGUID: EXCiWiDhQyW61SSVvsAGNg==
+X-CSE-MsgGUID: 9J4ZNI7cRBy6lvXMqYABiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
+   d="scan'208";a="94631074"
+Received: from s2600wttr.bj.intel.com ([10.240.192.138])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 23:43:12 -0700
+From: Li Ming <ming4.li@intel.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	Li Ming <ming4.li@intel.com>
+Subject: [PATCH v2 1/3] cxl/pci: Rename cxl_setup_parent_dport() and cxl_dport_map_regs()
+Date: Fri, 30 Aug 2024 06:13:06 +0000
+Message-Id: <20240830061308.2327065-1-ming4.li@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -40,100 +63,144 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwC34bGOR9FmmakpAA--.16568S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQANAWbQ2MkCEgADs5
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxurWrXF15JFWrKw4xZryfCrg_yoWrJr4fpa
-	yYgr13Kr48Gw1aya93X34kXr15ur1kuFWUZr97ur97Cws0grn7ZrZ7ta1Yya4UXryrKry7
-	CF1qqw1F9a4UZ3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
 
-RFC because
-- Many contents are ported from Jonathan' patch on qemu virt design
+The name of cxl_setup_parent_dport() function is not clear, the function
+is used to initialize AER and RAS capabilities on a dport, therefore,
+rename the function to cxl_dport_init_ras_reporting(), it is easier for
+user to understand what the function does. Besides, adjust the order of
+the function parameters, the subject of cxl_dport_init_ras_reporting()
+is a cxl dport, so a struct cxl_dport as the first parameter of the
+function should be better.
 
-- Bring plenty of PCDs values and modifying the original PCIE values
+cxl_dport_map_regs() is used to map CXL RAS capability on a cxl dport,
+using cxl_dport_map_ras() as the function name.
 
-- Less experience and not particularly confident in ACPI area so this might be
-  stupidly broken in a way I've not considered.
+Signed-off-by: Li Ming <ming4.li@intel.com>
+---
+v2:
+- Jonathan: cxl_setup_parent_dport() renamed to
+cxl_dport_init_ras_reporting().
+- Jonathan: Adjust patch 3's title
+Link to v1: https://lore.kernel.org/linux-cxl/69ec6922-08da-4ebb-a45f-24111f0ee2f2@intel.com/T/#ma73e64c1373de3b21f0152ff04f8093244b8d3d1
+---
+ drivers/cxl/core/pci.c        | 13 +++++++++----
+ drivers/cxl/cxl.h             |  6 +++---
+ drivers/cxl/mem.c             |  2 +-
+ tools/testing/cxl/Kbuild      |  2 +-
+ tools/testing/cxl/test/mock.c |  6 +++---
+ 5 files changed, 17 insertions(+), 12 deletions(-)
 
-Currently the base CXL support for arm platforms is only on Jonathan's patches[1] which
-have not yet merged into upstream. SBSA-REF can be more like a real machine, thus the
-support of cxl could be meaningful.
-
-Regard to the burden of edk2 firmware, I try to build a static CEDT table and add acpi0016,
-acpi0017 objects on DSDT at the initial development phase[2][3]. Hence it doesn't need to
-communicate cxl contents via DT to edk2. 
-
-This series leverages Jonathan's patches[1] to design [SBSA_CXL_HOST] and [SBSA_CXL_FIXED_WINDOW]
-spaces for sbsa-ref layout. 
-
-For [SBSA_CXL_HOST], new memory layout places 1M space for 16 host bridge register regions
-in the sbsa-ref memmap. In addition, this only creates a default pxb-cxl (bus_nr=0xfe) bridge 
-with one cxl-rp on sbsa-ref, so only one cxl device could be added by user on this cxl Bus.
-With the 'create_pxb_cxl', users don't need to input '-device pxb-cxl' and '-device cxl-rp'
-parameters.
-
-For [SBSA_CXL_FIXED_WINDOW], this extends 1TB space from the hole above RAM Memory [SBSA_MEM]
-for CXL Fixed Memory Window. 0xA0000000000 is chosen as the base address of this space because
-of 3 reasons:
-
-1) It is more suitable to choose a static address instead of that
-implementation in virt, since a dynamic address space layout of
-sbsa-ref is not appropriate for its original purpose as a reference
-platform.
-
-2) The Hotplug Memory address range should in the range of maximum
-addressable range of sbsa-ref platform(0x10000000000-0x80ffffffffff).
-It is satisfied the requirements of memory hotplug in linux kernel.
-
-3) The start pfn of CFMW should exceed the reserved_pfn_range for
-onlined numa node.
-
-Based on 'cxl_fmws_link_targets', this adds a new function
-'sbsa_cxl_fmws_link_targets' for binding cfmws.target with the default
-pxb-cxl-bus on sbsa-ref.
-
-In addition, this also adds 'create_cxl_fixed_window_region' which
-based on 'machine_set_cfmw' to support creating a static cfmw region on
-sbsa-ref, so users don't need to input '-M cxl-fmw' parameter.
-
-Thus, to run sbsa-ref with a cxl device could use:
-qemu-system-aarch64 \
--machine sbsa-ref \
--cpu cortex-a57 \
--smp 4 \
--m 4G \
--object memory-backend-ram,size=2G,id=mem0 \
--numa node,nodeid=0,cpus=0-1,memdev=mem0 \
--object memory-backend-ram,size=2G,id=mem1 \
--numa node,nodeid=1,cpus=2-3,memdev=mem1 \
--object memory-backend-file,id=mem2,mem-path=/tmp/mem2,size=256M,share=true \
--device cxl-type3,bus=cxl.0,volatile-memdev=mem2,id=cxl-mem1 \
--hda ubuntu.ext4 \
--pflash SBSA_FLASH0.fd \
--pflash SBSA_FLASH1.fd \
-
-This series patches are here to hopefully some comments to guide me!
-
-Link:
-[1]: https://lore.kernel.org/linux-cxl/20220616141950.23374-1-Jonathan.Cameron@huawei.com/
-[2]: https://edk2.groups.io/g/devel/topic/rfc_patch_0_1/108173029
-[3]: https://edk2.groups.io/g/devel/topic/rfc_patch_edk2_platforms/108173682
-
-Yuquan Wang (2):
-  hw/arm/sbsa-ref: Enable CXL Host Bridge by pxb-cxl
-  hw/arm/sbsa-ref: Support CXL Fixed Memory Window
-
- hw/arm/sbsa-ref.c                   | 127 +++++++++++++++++++++++++++-
- hw/cxl/cxl-host-stubs.c             |   1 +
- hw/cxl/cxl-host.c                   |   2 +-
- hw/pci-bridge/pci_expander_bridge.c |   1 -
- include/hw/cxl/cxl_host.h           |   1 +
- include/hw/pci/pci_bridge.h         |   1 +
- 6 files changed, 128 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 51132a575b27..87f992a7f14a 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -787,7 +787,7 @@ static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+ 	dport->regs.dport_aer = dport_aer;
+ }
+ 
+-static void cxl_dport_map_regs(struct cxl_dport *dport)
++static void cxl_dport_map_ras(struct cxl_dport *dport)
+ {
+ 	struct cxl_register_map *map = &dport->reg_map;
+ 	struct device *dev = dport->dport_dev;
+@@ -831,7 +831,12 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+ 	}
+ }
+ 
+-void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
++/**
++ * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
++ * @dport: the cxl_dport that needs to be initialized
++ * @host: host device for devm operations
++ */
++void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+ {
+ 	struct device *dport_dev = dport->dport_dev;
+ 
+@@ -843,12 +848,12 @@ void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+ 	}
+ 
+ 	dport->reg_map.host = host;
+-	cxl_dport_map_regs(dport);
++	cxl_dport_map_ras(dport);
+ 
+ 	if (dport->rch)
+ 		cxl_disable_rch_root_ints(dport);
+ }
+-EXPORT_SYMBOL_NS_GPL(cxl_setup_parent_dport, CXL);
++EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
+ 
+ static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+ 					  struct cxl_dport *dport)
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 9afb407d438f..3327ebad3b81 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -761,10 +761,10 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+ 					 resource_size_t rcrb);
+ 
+ #ifdef CONFIG_PCIEAER_CXL
+-void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
++void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
+ #else
+-static inline void cxl_setup_parent_dport(struct device *host,
+-					  struct cxl_dport *dport) { }
++static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
++						struct device *host) { }
+ #endif
+ 
+ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 7de232eaeb17..f7a69f79a164 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -166,7 +166,7 @@ static int cxl_mem_probe(struct device *dev)
+ 	else
+ 		endpoint_parent = &parent_port->dev;
+ 
+-	cxl_setup_parent_dport(dev, dport);
++	cxl_dport_init_ras_reporting(dport, dev);
+ 
+ 	device_lock(endpoint_parent);
+ 	if (!endpoint_parent->driver) {
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 3d1ca9e38b1f..b1256fee3567 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -14,7 +14,7 @@ ldflags-y += --wrap=cxl_dvsec_rr_decode
+ ldflags-y += --wrap=devm_cxl_add_rch_dport
+ ldflags-y += --wrap=cxl_rcd_component_reg_phys
+ ldflags-y += --wrap=cxl_endpoint_parse_cdat
+-ldflags-y += --wrap=cxl_setup_parent_dport
++ldflags-y += --wrap=cxl_dport_init_ras_reporting
+ 
+ DRIVERS := ../../../drivers
+ CXL_SRC := $(DRIVERS)/cxl
+diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+index d619672faa49..bbd7d938156d 100644
+--- a/tools/testing/cxl/test/mock.c
++++ b/tools/testing/cxl/test/mock.c
+@@ -299,17 +299,17 @@ void __wrap_cxl_endpoint_parse_cdat(struct cxl_port *port)
+ }
+ EXPORT_SYMBOL_NS_GPL(__wrap_cxl_endpoint_parse_cdat, CXL);
+ 
+-void __wrap_cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
++void __wrap_cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+ {
+ 	int index;
+ 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+ 
+ 	if (!ops || !ops->is_mock_port(dport->dport_dev))
+-		cxl_setup_parent_dport(host, dport);
++		cxl_dport_init_ras_reporting(dport, host);
+ 
+ 	put_cxl_mock_ops(index);
+ }
+-EXPORT_SYMBOL_NS_GPL(__wrap_cxl_setup_parent_dport, CXL);
++EXPORT_SYMBOL_NS_GPL(__wrap_cxl_dport_init_ras_reporting, CXL);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_IMPORT_NS(ACPI);
 -- 
-2.34.1
+2.40.1
 
