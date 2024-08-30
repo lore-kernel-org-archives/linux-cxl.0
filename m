@@ -1,65 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE7112B71
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 02:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F3E4C7E
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 03:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724983313; cv=none; b=Yh+KvcE1FcH89W1zwdvv/I7Eqmdb/p4ogQRKQVmNDIuXt6WbIWoW0zRjeDmw7lZzc3TtwEzBjOLQ9B4Q3YVgnmNbOTU3RG/09pynlsI8r8/K6DhkVtN/wW/SmHFJwvC8M1+3e4JMhevoZGTDsCPpjtD2ieu0FazcvVR3CVyk3As=
+	t=1724987790; cv=none; b=XlS8CnWcWFpwMrA75tu7LsX4MZG/MX6PeWkNCLpl1rff2Z/AWDxyTZS5Z9wfNkCWCdGvBqkykpDlzZzbTqCHF3rK9g5xoyzJLZQB405lcIV7TqTQWE7TFWdkJpVA0DoNYcmjFGCJZQ+OfTFHNyt2ai9frKDVX2MmlEm2vmOATe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724983313; c=relaxed/simple;
-	bh=AZp8Y4svlxRlLRPVUdTF0INTgw8JVNVFIBL8zCgukek=;
+	s=arc-20240116; t=1724987790; c=relaxed/simple;
+	bh=0QWnkl1io9aaEahkCbNn6F9h1e4CRz7E5uAQ232pRn4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pg/9r1Qwsrqyl+JpRsvddU+LwAiph48C11YgfWzC/1kGc7u2IXah7xy6tB8rZ9IFondeo88x/gv9mcYsvE6tuid8ekCmcjGTz4L1B5okIuP5//VTIqmRaDNjHLUBBNED76Cqptq/kox0NUou95GdwpODxx/By7zsZjiYuFeT50U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y0q4s4ir; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y0q4s4ir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724983311; x=1756519311;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AZp8Y4svlxRlLRPVUdTF0INTgw8JVNVFIBL8zCgukek=;
-  b=Y0q4s4irkQa9cFi1R6ooxR9fBp0ycF9TH8BRu3h2XYiuUkGSKEKyDKOI
-   6PLuR+3vNMCFgD3ZEFYtg469LzpU9On5/vEe6uRbUQaxpIkjfLN+U5VF5
-   Mucimt1egveEZ9TAyAYnZcDolczLPpgOFTemKNKYn+OM625mhYV/2syti
-   gdhPqyZvET/hLmkSY5P9hg0gJaSNtaVGis1NfnnyxxZ9mSOKt5wUydtg9
-   ERjOy0PWukwUpxFSwlWoFkUhlAJTK9oEeVYcP4mlhp7AwW1Zg34YFXXNz
-   xEeJWRjRqA7/hvvPqwsfbNZthYg/UJzI2jZDrVkvwmVZtB/r4W72wkvZi
-   w==;
-X-CSE-ConnectionGUID: n1dEtIg6QYC3BiApJgqPXQ==
-X-CSE-MsgGUID: GCAL/i6FQxS636sc+v8i3g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="46122230"
-X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
-   d="scan'208";a="46122230"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:51 -0700
-X-CSE-ConnectionGUID: tLqm4VSJSv6+T3k7KcKs8A==
-X-CSE-MsgGUID: liFkZm23Sx6f8iZaOm+zpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
-   d="scan'208";a="101267118"
-Received: from s2600wttr.bj.intel.com ([10.240.192.138])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:49 -0700
-From: Li Ming <ming4.li@intel.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	Li Ming <ming4.li@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwaei.com>
-Subject: [PATCH v3 3/3] cxl/port: Refactor __devm_cxl_add_port() to drop goto pattern
-Date: Fri, 30 Aug 2024 01:31:38 +0000
-Message-Id: <20240830013138.2256244-3-ming4.li@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240830013138.2256244-1-ming4.li@intel.com>
-References: <20240830013138.2256244-1-ming4.li@intel.com>
+	 MIME-Version; b=QORgWh9q4GpRDoF/gf2asM8OFEsRsU5eWstaouosLJOmDQN9S3jVqjwdK3U7Gp0vz9FZ4cOA8+YDlhsgHrcI6N01lQvldAToJw3881ZsPzZ/KymAlwbiU4ZH8PQYgBqvYWxHaj+1cDLJabFGURRCL+inu2oXbtctWR5nGNOhXSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3vCSDOdFm4J6AAg--.18330S2;
+	Fri, 30 Aug 2024 11:16:19 +0800 (CST)
+Received: from phytium.com.cn (unknown [218.76.62.144])
+	by mail (Coremail) with SMTP id AQAAfwAnVLRyOdFmhaMpAA--.16473S5;
+	Fri, 30 Aug 2024 11:16:15 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan.Cameron@Huawei.com,
+	ardb+tianocore@kernel.org,
+	quic_llindhol@quicinc.com,
+	peter.maydell@linaro.org
+Cc: devel@edk2.groups.io,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org,
+	chenbaozi@phytium.com.cn,
+	wangyinfeng@phytium.com.cn,
+	shuyiqi@phytium.com.cn,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [RFC PATCH edk2-platforms 2/2] SbsaQemu: AcpiTables: Add CEDT Table
+Date: Fri, 30 Aug 2024 11:15:45 +0800
+Message-Id: <20240830031545.548789-3-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240830031545.548789-1-wangyuquan1236@phytium.com.cn>
+References: <20240830031545.548789-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,123 +43,149 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwAnVLRyOdFmhaMpAA--.16473S5
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQANAWbQ2MkCEAAAs4
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWF4kWr47CFWktw1kXF17GFg_yoWrKry3pF
+	1IvFZYkr4kA343tr4xGanYvF4YkFya9F4DCa9xXr1UCrsxJF1UXa15Ka4IvFy7J3Z3Zw4D
+	GF4Iv34jvr4fu3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-In __devm_cxl_add_port(), there is a 'goto' to call put_device() for the
-error cases between device_initialize() and device_add() to dereference
-the 'struct device' of a new cxl_port. The 'goto' pattern in the case
-can be removed by refactoring. Introducing a new function called
-cxl_port_add() which is used to add the 'struct device' of a new
-cxl_port to device hierarchy, moving the functions needing the help of
-the 'goto' into cxl_port_add(), and using a scoped-based resource
-management __free() to drop the open coded put_device() and the 'goto'
-for the error cases.
+Provide CXL Early Discovery Table that describes the static CXL
+Platform Components of sbsa-ref.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Li Ming <ming4.li@intel.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwaei.com>
+This adds a static CXL Host Bridge structure and a CXL Fixed Memory
+Window structure which are implemented as two independent space on
+sbsa-ref: [SBSA_CXL_HOST] & [SBSA_CXL_FIXED_WINDOW].
+
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 ---
- drivers/cxl/core/port.c | 59 ++++++++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
+ .../Qemu/SbsaQemu/AcpiTables/AcpiTables.inf   |  6 +-
+ Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc    | 70 +++++++++++++++++++
+ Silicon/Qemu/SbsaQemu/SbsaQemu.dec            |  7 ++
+ 3 files changed, 82 insertions(+), 1 deletion(-)
+ create mode 100644 Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index d02fb85e8c8d..611da602bf8f 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -828,27 +828,20 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- 			    &cxl_einj_inject_fops);
- }
- 
--static struct cxl_port *__devm_cxl_add_port(struct device *host,
--					    struct device *uport_dev,
--					    resource_size_t component_reg_phys,
--					    struct cxl_dport *parent_dport)
-+static int cxl_port_add(struct cxl_port *port,
-+			resource_size_t component_reg_phys,
-+			struct cxl_dport *parent_dport)
- {
--	struct cxl_port *port;
--	struct device *dev;
-+	struct device *dev __free(put_device) = &port->dev;
- 	int rc;
- 
--	port = cxl_port_alloc(uport_dev, parent_dport);
--	if (IS_ERR(port))
--		return port;
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf b/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
+index b4d5aa807bd9..f39b06d708d5 100644
+--- a/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
+@@ -21,7 +21,7 @@
+   Fadt.aslc
+   Mcfg.aslc
+   Spcr.aslc
 -
--	dev = &port->dev;
--	if (is_cxl_memdev(uport_dev)) {
--		struct cxl_memdev *cxlmd = to_cxl_memdev(uport_dev);
-+	if (is_cxl_memdev(port->uport_dev)) {
-+		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
- 		struct cxl_dev_state *cxlds = cxlmd->cxlds;
++  Cedt.aslc
+ [Packages]
+   ArmPlatformPkg/ArmPlatformPkg.dec
+   ArmPkg/ArmPkg.dec
+@@ -78,6 +78,10 @@
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarSize
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarLimit
  
- 		rc = dev_set_name(dev, "endpoint%d", port->id);
- 		if (rc)
--			goto err;
-+			return rc;
- 
- 		/*
- 		 * The endpoint driver already enumerated the component and RAS
-@@ -861,19 +854,41 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
- 	} else if (parent_dport) {
- 		rc = dev_set_name(dev, "port%d", port->id);
- 		if (rc)
--			goto err;
-+			return rc;
- 
- 		rc = cxl_port_setup_regs(port, component_reg_phys);
- 		if (rc)
--			goto err;
--	} else
-+			return rc;
-+	} else {
- 		rc = dev_set_name(dev, "root%d", port->id);
--	if (rc)
--		goto err;
-+		if (rc)
-+			return rc;
-+	}
- 
- 	rc = device_add(dev);
- 	if (rc)
--		goto err;
-+		return rc;
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdChbcrBase
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmwsBase
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmwsSize
 +
-+	/* Inhibit the cleanup function invoked */
-+	dev = NULL;
-+	return 0;
-+}
+   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase
+ 
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPlatformAhciBase
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc b/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
+new file mode 100644
+index 000000000000..66c9dc8858bc
+--- /dev/null
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
+@@ -0,0 +1,70 @@
++/** @file
++*  CXL Early Discovery Table (CEDT)
++*
++*  Copyright (c) 2024, Phytium Technology Co Ltd. All rights reserved.
++*
++**/
 +
-+static struct cxl_port *__devm_cxl_add_port(struct device *host,
-+					    struct device *uport_dev,
-+					    resource_size_t component_reg_phys,
-+					    struct cxl_dport *parent_dport)
++#include <IndustryStandard/CXLEarlyDiscoveryTable.h>
++#include <IndustryStandard/Acpi64.h>
++#include <IndustryStandard/SbsaQemuAcpi.h>
++
++#pragma pack(1)
++
++typedef struct
 +{
-+	struct cxl_port *port;
-+	int rc;
++  EFI_ACPI_6_4_CXL_Early_Discovery_TABLE           Header;
++  EFI_ACPI_6_4_CXL_Host_Bridge_Structure           Chbs;
++  EFI_ACPI_6_4_CXL_Fixed_Memory_Window_Structure   Cfmws;
++} SBSA_REF_CEDT;
 +
-+	port = cxl_port_alloc(uport_dev, parent_dport);
-+	if (IS_ERR(port))
-+		return port;
 +
-+	rc = cxl_port_add(port, component_reg_phys, parent_dport);
-+	if (rc)
-+		return ERR_PTR(rc);
++SBSA_REF_CEDT Cedt =
++{
++  // EFI_ACPI_6_4_CXL_Early_Discovery_TABLE(Header)
++  {
++     SBSAQEMU_ACPI_HEADER  // EFI_ACPI_DESCRIPTION_HEADER
++     (
++       EFI_ACPI_6_4_CXL_EARLY_DISCOVERY_TABLE_SIGNATURE,
++       SBSA_REF_CEDT,
++       EFI_ACPI_CXL_Early_Discovery_TABLE_REVISION_01
++     ),
++  },
++  // EFI_ACPI_6_4_CXL_Host_Bridge_Structure
++  {
++    // EFI_ACPI_6_4_CEDT_Structure
++    {
++        EFI_ACPI_CEDT_TYPE_CHBS,                                 // Type
++        0,                                                       // Reserved
++        sizeof (EFI_ACPI_6_4_CXL_Host_Bridge_Structure),         // Length
++    },
++    FixedPcdGet32 (PcdCxlBusMin),          // UID
++    0x1,                                   // CXLVersion
++    0,                                     // Reserved
++    FixedPcdGet32 (PcdChbcrBase),          // CHBCR Base
++    0X10000,                               // Length
++  },
++  // EFI_ACPI_6_4_CXL_Fixed_Memory_Window_Structure
++  {
++    // EFI_ACPI_6_4_CEDT_Structure
++    {
++        EFI_ACPI_CEDT_TYPE_CFMWS,                                // Type
++        0,                                                       // Reserved
++        sizeof (EFI_ACPI_6_4_CXL_Fixed_Memory_Window_Structure), // Length
++    },
++    0,                                     // Reserved
++    FixedPcdGet32 (PcdCfmwsBase),          // BaseHPA
++    FixedPcdGet32 (PcdCfmwsSize),          // WindowSize
++    0,                                     // InterleaveMembers
++    0,                                     // InterleaveArithmetic
++    0,                                     // Reserved1
++    0,                                     // Granularity
++    0xF,                                   // Restrictions
++    0,                                     // QtgId
++    FixedPcdGet32 (PcdCxlBusMin),          // FirstTarget
++  }
++};
++
++#pragma pack ()
++
++VOID* CONST ReferenceAcpiTable = &Cedt;
+diff --git a/Silicon/Qemu/SbsaQemu/SbsaQemu.dec b/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
+index 7d8c7997160b..dff838315d06 100644
+--- a/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
++++ b/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
+@@ -65,6 +65,13 @@ HardwareInfoLib|Include/Library/HardwareInfoLib.h
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMin|254|UINT32|0x00000019
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMax|255|UINT32|0x00000020
  
- 	rc = devm_add_action_or_reset(host, unregister_port, port);
- 	if (rc)
-@@ -891,10 +906,6 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
- 		port->pci_latency = cxl_pci_get_latency(to_pci_dev(uport_dev));
- 
- 	return port;
--
--err:
--	put_device(dev);
--	return ERR_PTR(rc);
- }
- 
- /**
++  # PCDs complementing base address for CXL CHBCR (CXL Host Bridge Component Registers)
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdChbcrBase|0x60120000|UINT64|0x00000021
++
++  # CXL Fixed Memory Window
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmwsBase|0xA0000000000|UINT64|0x00000022
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmwsSize|0x10000000000|UINT64|0x00000023
++
+ [PcdsDynamic.common]
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdSystemManufacturer|L""|VOID*|0x00000110
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdSystemSerialNumber|L""|VOID*|0x00000111
 -- 
-2.40.1
+2.34.1
 
