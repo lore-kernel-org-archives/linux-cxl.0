@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BD212B71
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 02:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE7112B71
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 02:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724983310; cv=none; b=IzJQ4kOqIkLNr/07DTfgQJTQy5jpc7e70GMnow82yelypLqo5dEd1eLz5Rs79TCkCy6TYoryOy8lPpqOM8Nm/oTuzqhK/TpN/wyRUxc3HfaP8ytU8q/bUVGl51aPGWSGAdGCR/iYp8z2MhBSq4Nss8iIVS/k81dI+PtxrlVy4Q8=
+	t=1724983313; cv=none; b=Yh+KvcE1FcH89W1zwdvv/I7Eqmdb/p4ogQRKQVmNDIuXt6WbIWoW0zRjeDmw7lZzc3TtwEzBjOLQ9B4Q3YVgnmNbOTU3RG/09pynlsI8r8/K6DhkVtN/wW/SmHFJwvC8M1+3e4JMhevoZGTDsCPpjtD2ieu0FazcvVR3CVyk3As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724983310; c=relaxed/simple;
-	bh=fwilON6PW2qxiM48LCAuF2ZCedsqiAso2p6jGbhN2Tg=;
+	s=arc-20240116; t=1724983313; c=relaxed/simple;
+	bh=AZp8Y4svlxRlLRPVUdTF0INTgw8JVNVFIBL8zCgukek=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mUpTa/VtiKDHgcn/0cqPhO9EC53Ld6MAexes2joKKeNNaYq6RIzPSVD+Ng14EYZC1/NQGrtYEGwKe+6/qhG4QxAMPD9N8niiAOUUwGTAovqPiIPtz3ryl4uo+NuKACZxlro5Sk0coT17yXlIRUBvKecx5lnWSlzwuu7PSFRRmwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mRTvdh8a; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=pg/9r1Qwsrqyl+JpRsvddU+LwAiph48C11YgfWzC/1kGc7u2IXah7xy6tB8rZ9IFondeo88x/gv9mcYsvE6tuid8ekCmcjGTz4L1B5okIuP5//VTIqmRaDNjHLUBBNED76Cqptq/kox0NUou95GdwpODxx/By7zsZjiYuFeT50U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y0q4s4ir; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mRTvdh8a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y0q4s4ir"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724983308; x=1756519308;
+  t=1724983311; x=1756519311;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fwilON6PW2qxiM48LCAuF2ZCedsqiAso2p6jGbhN2Tg=;
-  b=mRTvdh8a4qmGRj6N67yedtVE+6WDx81gf0lPiQUayGZr60975x7yeypA
-   bOjJWNLy7nz4kOTowiHwU60bq3svgX8GS/ux3XosSZt3zSObQh+i3aBAe
-   xAjYko6pGDBrR0f7wmsH9AnhRdCq4onSvKlv/0eZqt3WlFsr78P8Yc20v
-   8966bDlALcIM31EJwqSmVtRP+gyGhax0BYXJsoC3FQuaB34Btwd10qp3U
-   eD32AyvYaTiwzU2tS1QT3bk+ruzfYb9xZy8Ukl/1isDH7KdJY7oKbNiU+
-   rvqbngLY0MqZ0gyDYDoQ9Lp7Quf9vcNkmHLjz18+UaPbd9aJW7w6Uyfyp
+  bh=AZp8Y4svlxRlLRPVUdTF0INTgw8JVNVFIBL8zCgukek=;
+  b=Y0q4s4irkQa9cFi1R6ooxR9fBp0ycF9TH8BRu3h2XYiuUkGSKEKyDKOI
+   6PLuR+3vNMCFgD3ZEFYtg469LzpU9On5/vEe6uRbUQaxpIkjfLN+U5VF5
+   Mucimt1egveEZ9TAyAYnZcDolczLPpgOFTemKNKYn+OM625mhYV/2syti
+   gdhPqyZvET/hLmkSY5P9hg0gJaSNtaVGis1NfnnyxxZ9mSOKt5wUydtg9
+   ERjOy0PWukwUpxFSwlWoFkUhlAJTK9oEeVYcP4mlhp7AwW1Zg34YFXXNz
+   xEeJWRjRqA7/hvvPqwsfbNZthYg/UJzI2jZDrVkvwmVZtB/r4W72wkvZi
    w==;
-X-CSE-ConnectionGUID: lnKFL44mRkinrRG0wYc+LQ==
-X-CSE-MsgGUID: z3cIpG4jR9uM3GN5WbYOtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="46122218"
+X-CSE-ConnectionGUID: n1dEtIg6QYC3BiApJgqPXQ==
+X-CSE-MsgGUID: GCAL/i6FQxS636sc+v8i3g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="46122230"
 X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
-   d="scan'208";a="46122218"
+   d="scan'208";a="46122230"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:48 -0700
-X-CSE-ConnectionGUID: iJ+2Ob7QQg+zuz5tRg8oTQ==
-X-CSE-MsgGUID: fwE+c1e9RCShhoZ4kv5ibQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:51 -0700
+X-CSE-ConnectionGUID: tLqm4VSJSv6+T3k7KcKs8A==
+X-CSE-MsgGUID: liFkZm23Sx6f8iZaOm+zpg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
-   d="scan'208";a="101267097"
+   d="scan'208";a="101267118"
 Received: from s2600wttr.bj.intel.com ([10.240.192.138])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:46 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 19:01:49 -0700
 From: Li Ming <ming4.li@intel.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -53,10 +53,10 @@ To: dave@stgolabs.net,
 	dan.j.williams@intel.com
 Cc: linux-cxl@vger.kernel.org,
 	Li Ming <ming4.li@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 2/3] cxl/port: Use scoped_guard()/guard() to drop device_lock() for cxl_port
-Date: Fri, 30 Aug 2024 01:31:37 +0000
-Message-Id: <20240830013138.2256244-2-ming4.li@intel.com>
+	Jonathan Cameron <Jonathan.Cameron@huwaei.com>
+Subject: [PATCH v3 3/3] cxl/port: Refactor __devm_cxl_add_port() to drop goto pattern
+Date: Fri, 30 Aug 2024 01:31:38 +0000
+Message-Id: <20240830013138.2256244-3-ming4.li@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240830013138.2256244-1-ming4.li@intel.com>
 References: <20240830013138.2256244-1-ming4.li@intel.com>
@@ -68,288 +68,122 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A device_lock() and device_unlock() pair can be replaced by a cleanup
-helper scoped_guard() or guard(), that can enhance code readability. In
-CXL subsystem, still use device_lock() and device_unlock() pairs for cxl
-port resource protection, most of them can be replaced by a
-scoped_guard() or a guard() simply.
+In __devm_cxl_add_port(), there is a 'goto' to call put_device() for the
+error cases between device_initialize() and device_add() to dereference
+the 'struct device' of a new cxl_port. The 'goto' pattern in the case
+can be removed by refactoring. Introducing a new function called
+cxl_port_add() which is used to add the 'struct device' of a new
+cxl_port to device hierarchy, moving the functions needing the help of
+the 'goto' into cxl_port_add(), and using a scoped-based resource
+management __free() to drop the open coded put_device() and the 'goto'
+for the error cases.
 
 Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Li Ming <ming4.li@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwaei.com>
 ---
- drivers/cxl/core/mbox.c   |  3 +-
- drivers/cxl/core/port.c   | 93 +++++++++++++++++----------------------
- drivers/cxl/core/region.c | 25 ++++++-----
- drivers/cxl/mem.c         | 22 +++++----
- drivers/cxl/pmem.c        | 16 +++----
- 5 files changed, 72 insertions(+), 87 deletions(-)
+ drivers/cxl/core/port.c | 59 ++++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index e5cdeafdf76e..0a913b30c7fc 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1214,7 +1214,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	int rc;
- 
- 	/* synchronize with cxl_mem_probe() and decoder write operations */
--	device_lock(&cxlmd->dev);
-+	guard(device)(&cxlmd->dev);
- 	endpoint = cxlmd->endpoint;
- 	down_read(&cxl_region_rwsem);
- 	/*
-@@ -1226,7 +1226,6 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	else
- 		rc = -EBUSY;
- 	up_read(&cxl_region_rwsem);
--	device_unlock(&cxlmd->dev);
- 
- 	return rc;
- }
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index ffd322aaed42..d02fb85e8c8d 100644
+index d02fb85e8c8d..611da602bf8f 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1258,18 +1258,13 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_rch_dport, CXL);
- static int add_ep(struct cxl_ep *new)
+@@ -828,27 +828,20 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 			    &cxl_einj_inject_fops);
+ }
+ 
+-static struct cxl_port *__devm_cxl_add_port(struct device *host,
+-					    struct device *uport_dev,
+-					    resource_size_t component_reg_phys,
+-					    struct cxl_dport *parent_dport)
++static int cxl_port_add(struct cxl_port *port,
++			resource_size_t component_reg_phys,
++			struct cxl_dport *parent_dport)
  {
- 	struct cxl_port *port = new->dport->port;
--	int rc;
+-	struct cxl_port *port;
+-	struct device *dev;
++	struct device *dev __free(put_device) = &port->dev;
+ 	int rc;
  
--	device_lock(&port->dev);
--	if (port->dead) {
--		device_unlock(&port->dev);
-+	guard(device)(&port->dev);
-+	if (port->dead)
- 		return -ENXIO;
--	}
--	rc = xa_insert(&port->endpoints, (unsigned long)new->ep, new,
--		       GFP_KERNEL);
--	device_unlock(&port->dev);
- 
--	return rc;
-+	return xa_insert(&port->endpoints, (unsigned long)new->ep,
-+			 new, GFP_KERNEL);
- }
- 
- /**
-@@ -1393,14 +1388,14 @@ static void delete_endpoint(void *data)
- 	struct cxl_port *endpoint = cxlmd->endpoint;
- 	struct device *host = endpoint_host(endpoint);
- 
--	device_lock(host);
--	if (host->driver && !endpoint->dead) {
--		devm_release_action(host, cxl_unlink_parent_dport, endpoint);
--		devm_release_action(host, cxl_unlink_uport, endpoint);
--		devm_release_action(host, unregister_port, endpoint);
-+	scoped_guard(device, host) {
-+		if (host->driver && !endpoint->dead) {
-+			devm_release_action(host, cxl_unlink_parent_dport, endpoint);
-+			devm_release_action(host, cxl_unlink_uport, endpoint);
-+			devm_release_action(host, unregister_port, endpoint);
-+		}
-+		cxlmd->endpoint = NULL;
- 	}
--	cxlmd->endpoint = NULL;
--	device_unlock(host);
- 	put_device(&endpoint->dev);
- 	put_device(host);
- }
-@@ -1565,40 +1560,38 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 	 * dereferencing the device of the port before the parent_port releasing.
- 	 */
- 	struct cxl_port *port __free(put_cxl_port) = NULL;
--	device_lock(&parent_port->dev);
--	if (!parent_port->dev.driver) {
--		dev_warn(&cxlmd->dev,
--			 "port %s:%s disabled, failed to enumerate CXL.mem\n",
--			 dev_name(&parent_port->dev), dev_name(uport_dev));
--		port = ERR_PTR(-ENXIO);
--		goto out;
--	}
-+	scoped_guard(device, &parent_port->dev) {
-+		if (!parent_port->dev.driver) {
-+			dev_warn(&cxlmd->dev,
-+				 "port %s:%s disabled, failed to enumerate CXL.mem\n",
-+				 dev_name(&parent_port->dev), dev_name(uport_dev));
-+			return -ENXIO;
-+		}
-+
-+		port = find_cxl_port_at(parent_port, dport_dev, &dport);
-+		if (!port) {
-+			component_reg_phys = find_component_registers(uport_dev);
-+			port = devm_cxl_add_port(&parent_port->dev, uport_dev,
-+						 component_reg_phys, parent_dport);
-+			if (IS_ERR(port))
-+				return PTR_ERR(port);
- 
--	port = find_cxl_port_at(parent_port, dport_dev, &dport);
--	if (!port) {
--		component_reg_phys = find_component_registers(uport_dev);
--		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
--					 component_reg_phys, parent_dport);
--		/* retry find to pick up the new dport information */
--		if (!IS_ERR(port))
-+			/* retry find to pick up the new dport information */
- 			port = find_cxl_port_at(parent_port, dport_dev, &dport);
-+			if (!port)
-+				return -ENXIO;
-+		}
- 	}
--out:
--	device_unlock(&parent_port->dev);
- 
+-	port = cxl_port_alloc(uport_dev, parent_dport);
 -	if (IS_ERR(port))
--		rc = PTR_ERR(port);
--	else {
--		dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
--			dev_name(&port->dev), dev_name(port->uport_dev));
--		rc = cxl_add_ep(dport, &cxlmd->dev);
--		if (rc == -EBUSY) {
--			/*
--			 * "can't" happen, but this error code means
--			 * something to the caller, so translate it.
--			 */
--			rc = -ENXIO;
--		}
-+	dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
-+		dev_name(&port->dev), dev_name(port->uport_dev));
-+	rc = cxl_add_ep(dport, &cxlmd->dev);
-+	if (rc == -EBUSY) {
-+		/*
-+		 * "can't" happen, but this error code means
-+		 * something to the caller, so translate it.
-+		 */
-+		rc = -ENXIO;
- 	}
- 
- 	return rc;
-@@ -1979,7 +1972,6 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- {
- 	struct cxl_port *port;
--	int rc;
- 
- 	if (WARN_ON_ONCE(!cxld))
- 		return -EINVAL;
-@@ -1989,11 +1981,8 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- 
- 	port = to_cxl_port(cxld->dev.parent);
- 
--	device_lock(&port->dev);
--	rc = cxl_decoder_add_locked(cxld, target_map);
--	device_unlock(&port->dev);
+-		return port;
 -
--	return rc;
-+	guard(device)(&port->dev);
-+	return cxl_decoder_add_locked(cxld, target_map);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+-	dev = &port->dev;
+-	if (is_cxl_memdev(uport_dev)) {
+-		struct cxl_memdev *cxlmd = to_cxl_memdev(uport_dev);
++	if (is_cxl_memdev(port->uport_dev)) {
++		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
+ 		struct cxl_dev_state *cxlds = cxlmd->cxlds;
  
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 21ad5f242875..9a7c001eff1e 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3094,11 +3094,11 @@ static void cxlr_release_nvdimm(void *_cxlr)
- 	struct cxl_region *cxlr = _cxlr;
- 	struct cxl_nvdimm_bridge *cxl_nvb = cxlr->cxl_nvb;
+ 		rc = dev_set_name(dev, "endpoint%d", port->id);
+ 		if (rc)
+-			goto err;
++			return rc;
  
--	device_lock(&cxl_nvb->dev);
--	if (cxlr->cxlr_pmem)
--		devm_release_action(&cxl_nvb->dev, cxlr_pmem_unregister,
--				    cxlr->cxlr_pmem);
--	device_unlock(&cxl_nvb->dev);
-+	scoped_guard(device, &cxl_nvb->dev) {
-+		if (cxlr->cxlr_pmem)
-+			devm_release_action(&cxl_nvb->dev, cxlr_pmem_unregister,
-+					    cxlr->cxlr_pmem);
-+	}
- 	cxlr->cxl_nvb = NULL;
- 	put_device(&cxl_nvb->dev);
- }
-@@ -3134,13 +3134,14 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
- 	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
- 		dev_name(dev));
+ 		/*
+ 		 * The endpoint driver already enumerated the component and RAS
+@@ -861,19 +854,41 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
+ 	} else if (parent_dport) {
+ 		rc = dev_set_name(dev, "port%d", port->id);
+ 		if (rc)
+-			goto err;
++			return rc;
  
--	device_lock(&cxl_nvb->dev);
--	if (cxl_nvb->dev.driver)
--		rc = devm_add_action_or_reset(&cxl_nvb->dev,
--					      cxlr_pmem_unregister, cxlr_pmem);
--	else
--		rc = -ENXIO;
--	device_unlock(&cxl_nvb->dev);
-+	scoped_guard(device, &cxl_nvb->dev) {
-+		if (cxl_nvb->dev.driver)
-+			rc = devm_add_action_or_reset(&cxl_nvb->dev,
-+						      cxlr_pmem_unregister,
-+						      cxlr_pmem);
-+		else
-+			rc = -ENXIO;
-+	}
- 
- 	if (rc)
- 		goto err_bridge;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index ab9b8ab8df44..ae94018a01bd 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -168,19 +168,17 @@ static int cxl_mem_probe(struct device *dev)
- 
- 	cxl_setup_parent_dport(dev, dport);
- 
--	device_lock(endpoint_parent);
--	if (!endpoint_parent->driver) {
--		dev_err(dev, "CXL port topology %s not enabled\n",
--			dev_name(endpoint_parent));
--		rc = -ENXIO;
--		goto unlock;
--	}
-+	scoped_guard(device, endpoint_parent) {
-+		if (!endpoint_parent->driver) {
-+			dev_err(dev, "CXL port topology %s not enabled\n",
-+				dev_name(endpoint_parent));
-+			return -ENXIO;
-+		}
- 
--	rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
--unlock:
--	device_unlock(endpoint_parent);
+ 		rc = cxl_port_setup_regs(port, component_reg_phys);
+ 		if (rc)
+-			goto err;
+-	} else
++			return rc;
++	} else {
+ 		rc = dev_set_name(dev, "root%d", port->id);
 -	if (rc)
--		return rc;
-+		rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
+-		goto err;
 +		if (rc)
 +			return rc;
 +	}
  
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 4ef93da22335..647c7e25ef3a 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -233,15 +233,13 @@ static int detach_nvdimm(struct device *dev, void *data)
- 	if (!is_cxl_nvdimm(dev))
- 		return 0;
+ 	rc = device_add(dev);
+ 	if (rc)
+-		goto err;
++		return rc;
++
++	/* Inhibit the cleanup function invoked */
++	dev = NULL;
++	return 0;
++}
++
++static struct cxl_port *__devm_cxl_add_port(struct device *host,
++					    struct device *uport_dev,
++					    resource_size_t component_reg_phys,
++					    struct cxl_dport *parent_dport)
++{
++	struct cxl_port *port;
++	int rc;
++
++	port = cxl_port_alloc(uport_dev, parent_dport);
++	if (IS_ERR(port))
++		return port;
++
++	rc = cxl_port_add(port, component_reg_phys, parent_dport);
++	if (rc)
++		return ERR_PTR(rc);
  
--	device_lock(dev);
--	if (!dev->driver)
--		goto out;
+ 	rc = devm_add_action_or_reset(host, unregister_port, port);
+ 	if (rc)
+@@ -891,10 +906,6 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
+ 		port->pci_latency = cxl_pci_get_latency(to_pci_dev(uport_dev));
+ 
+ 	return port;
 -
--	cxl_nvd = to_cxl_nvdimm(dev);
--	if (cxl_nvd->cxlmd && cxl_nvd->cxlmd->cxl_nvb == data)
--		release = true;
--out:
--	device_unlock(dev);
-+	scoped_guard(device, dev) {
-+		if (dev->driver) {
-+			cxl_nvd = to_cxl_nvdimm(dev);
-+			if (cxl_nvd->cxlmd && cxl_nvd->cxlmd->cxl_nvb == data)
-+				release = true;
-+		}
-+	}
- 	if (release)
- 		device_release_driver(dev);
- 	return 0;
+-err:
+-	put_device(dev);
+-	return ERR_PTR(rc);
+ }
+ 
+ /**
 -- 
 2.40.1
 
