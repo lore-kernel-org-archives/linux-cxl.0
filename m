@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED07D13A261
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 09:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614D718A927
+	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 10:23:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725011560; cv=none; b=hv/wZucHDAR9UtT0zTN1HAxkRfv6KT65EgjcbegkH8gqxeTvVplijxD75XCFR82cGPVSQH+vMNZ7lOjWIJifogKpEGt7t1Hf+i+384/JX0E04FsfSEJtdTxDAe3adXVnHO8NRBCANBEvGxQbpjojurpJA9317OR/aqbmIk4fEcQ=
+	t=1725013433; cv=none; b=JyGmqu096W5c9VWK5o9dA9SU1cWM0nvMQCYl729bsxkh1BzFLRhYq0SPoR6IVg7RmkAomdf5R/NTTWyNcyKmo9rae9ZhyQjvCe0YitQxu6Fe2ghDmec/3aB+V3UonCep/0wcfl9M3NIc9kopWnLSyMVydNEl4pEfUdss8qfRHa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725011560; c=relaxed/simple;
-	bh=hb0tC0Ww7jrSnLg2gSXlzDHBZT80zHACjxIlq955pHI=;
+	s=arc-20240116; t=1725013433; c=relaxed/simple;
+	bh=K8vxo+/gNgQFT3DLamRz5iBR3W1egWsjEccWaK0rYwg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JlBH6KkjTQKmDTdaye/dB9C9fvbeOLFZ6oMUJ/jazqSGu/1nnwSj9gH1/EuOLTp2ypMp4cjeAx302uCuDaH+yv/Hg31SlOJf+nV/w9SigWCcR9ueKuURqY9cgFTi7B5TogCylB7oWIycT2dGscthJ9NSan5+xkPTy/VJS/B58kI=
+	 MIME-Version:Content-Type; b=lTCjwDmAkJtAjaYVJAJdKZ0PejlhflA78FZChOSPBZ1p/lqX8IGFv0/tYf52M6g8tsY5qLBSklfboe6hRoBxTBYCFP/6IqGpxxPcuxKUJiJ1XIOd6zsJiPfx9PP0+8eT1z11hytRdzuvWhNPJRo1OV+DcI4wGzC/+mPqXlvr46Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WwCz8038Hz6K5q9;
-	Fri, 30 Aug 2024 17:49:08 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WwDgC6SZBz6K9F1;
+	Fri, 30 Aug 2024 18:20:23 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A1083140736;
-	Fri, 30 Aug 2024 17:52:31 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 979E514073F;
+	Fri, 30 Aug 2024 18:23:47 +0800 (CST)
 Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 Aug
- 2024 10:52:31 +0100
-Date: Fri, 30 Aug 2024 10:52:30 +0100
+ 2024 11:23:47 +0100
+Date: Fri, 30 Aug 2024 11:23:46 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 CC: <quic_llindhol@quicinc.com>, <peter.maydell@linaro.org>,
@@ -32,12 +32,12 @@ CC: <quic_llindhol@quicinc.com>, <peter.maydell@linaro.org>,
 	<linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>,
 	<chenbaozi@phytium.com.cn>, <wangyinfeng@phytium.com.cn>,
 	<shuyiqi@phytium.com.cn>
-Subject: Re: [RFC PATCH 1/2] hw/arm/sbsa-ref: Enable CXL Host Bridge by
- pxb-cxl
-Message-ID: <20240830105230.00002043@Huawei.com>
-In-Reply-To: <20240830041557.600607-2-wangyuquan1236@phytium.com.cn>
+Subject: Re: [RFC PATCH 2/2] hw/arm/sbsa-ref: Support CXL Fixed Memory
+ Window
+Message-ID: <20240830112346.0000667c@Huawei.com>
+In-Reply-To: <20240830041557.600607-3-wangyuquan1236@phytium.com.cn>
 References: <20240830041557.600607-1-wangyuquan1236@phytium.com.cn>
-	<20240830041557.600607-2-wangyuquan1236@phytium.com.cn>
+	<20240830041557.600607-3-wangyuquan1236@phytium.com.cn>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -47,202 +47,314 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 30 Aug 2024 12:15:56 +0800
+On Fri, 30 Aug 2024 12:15:57 +0800
 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-> The memory layout places 1M space for 16 host bridge register regions
-> in the sbsa-ref memmap. In addition, this creates a default pxb-cxl
-> (bus_nr=3D0xfe) bridge with one cxl-rp on sbsa-ref.
+> In order to provide CFMWs on sbsa-ref, this extends 1TB space
+> from the hole above RAM Memory [SBSA_MEM] for CXL Fixed Memory
+> Window. 0xA0000000000 is chosen as the base address of this
+> space because of 3 reasons:
+> 
+> 1) It is more suitable to choose a static address instead of that
+> implementation in virt, since a dynamic address space layout of
+> sbsa-ref is not appropriate for its original purpose as a reference
+> platform.
+> 
+> 2) The Hotplug Memory address range should in the range of maximum
+> addressable range of sbsa-ref platform(0x10000000000-0x80ffffffffff).
+> It is satisfied the requirements of memory hotplug in linux kernel.
+> 
+> 3) The start pfn of CFMW should exceed the reserved_pfn_range for
+> onlined numa node.
+> 
+> Based on 'cxl_fmws_link_targets', this adds a new function
+> 'sbsa_cxl_fmws_link_targets' for binding cfmws.target with the default
+> pxb-cxl-bus on sbsa-ref.
+> 
+> In addition, this also adds 'create_cxl_fixed_window_region' which
+> based on 'machine_set_cfmw' to support creating a static cfmw region on
+> sbsa-ref.
+> 
+> Thus, to run sbsa-ref with a cxl device could use:
+> qemu-system-aarch64 \
+> -machine sbsa-ref \
+> -cpu cortex-a57 \
+> -smp 4 \
+> -m 4G \
+> -object memory-backend-ram,size=2G,id=mem0 \
+> -numa node,nodeid=0,cpus=0-1,memdev=mem0 \
+> -object memory-backend-ram,size=2G,id=mem1 \
+> -numa node,nodeid=1,cpus=2-3,memdev=mem1 \
+> -object memory-backend-file,id=mem2,mem-path=/tmp/mem2,size=256M,share=true \
+> -device cxl-type3,bus=cxl.0,volatile-memdev=mem2,id=cxl-mem1 \
+> -hda ubuntu.ext4 \
+> -pflash SBSA_FLASH0.fd \
+> -pflash SBSA_FLASH1.fd \
+> 
+> I'm not sure if the new space layout would bring a series of bad
+> influence, this patch is here to hopefully some comments to guide me!
 
-If you are only supporting 1 host bridge you could reduce the space to just
-fit that?
+I've no idea on memory layout for sbsaref so will leave those
+more knowledgeable to comment on that.
 
-=46rom the command line example and code here it seems the pxb instances are =
-hard
-coded so you don't need to support the flexibility I needed for virt.
+I'm not sure why you can't use the generic code to set up the 
+target linkage.  That 'should' work, but you will need the options
+to be a match for the naming of the pxb bus.
 
-Otherwise, just superficial code comments inline.
-Fixed setups are definitely easier to support :)
+Given you know how many fixed windows there are etc, you can
+also simplify various code paths.  See inline.
+
+Overall though this looks right to me. Again things are much simpler
+if you have everything hard coded but not so useful to me as my
+interest is poking the kernel stack and that needs a broad range
+of flexibility I can't do in SBSA ref for all the reasons you've
+hardcoded things.
 
 Jonathan
 
 
->=20
+> 
 > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 > ---
->  hw/arm/sbsa-ref.c | 54 ++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
->=20
+>  hw/arm/sbsa-ref.c                   | 73 +++++++++++++++++++++++++++++
+>  hw/cxl/cxl-host-stubs.c             |  1 +
+>  hw/cxl/cxl-host.c                   |  2 +-
+>  hw/pci-bridge/pci_expander_bridge.c |  1 -
+>  include/hw/cxl/cxl_host.h           |  1 +
+>  include/hw/pci/pci_bridge.h         |  1 +
+>  6 files changed, 77 insertions(+), 2 deletions(-)
+> 
 > diff --git a/hw/arm/sbsa-ref.c b/hw/arm/sbsa-ref.c
-> index ae37a92301..dc924d181e 100644
+> index dc924d181e..b10865920e 100644
 > --- a/hw/arm/sbsa-ref.c
 > +++ b/hw/arm/sbsa-ref.c
-> @@ -41,7 +41,10 @@
->  #include "hw/intc/arm_gicv3_common.h"
->  #include "hw/intc/arm_gicv3_its_common.h"
->  #include "hw/loader.h"
-> +#include "hw/pci/pci_bridge.h"
-> +#include "hw/pci/pci_bus.h"
->  #include "hw/pci-host/gpex.h"
-> +#include "hw/pci-bridge/pci_expander_bridge.h"
->  #include "hw/qdev-properties.h"
->  #include "hw/usb.h"
->  #include "hw/usb/xhci.h"
-> @@ -52,6 +55,8 @@
->  #include "qom/object.h"
->  #include "target/arm/cpu-qom.h"
->  #include "target/arm/gtimer.h"
-> +#include "hw/cxl/cxl.h"
-> +#include "hw/cxl/cxl_host.h"
-
-Headers look to be alphabetical order.
-
-> =20
->  #define RAMLIMIT_GB 8192
->  #define RAMLIMIT_BYTES (RAMLIMIT_GB * GiB)
-> @@ -94,6 +99,7 @@ enum {
->      SBSA_SECURE_MEM,
+> @@ -100,6 +100,7 @@ enum {
 >      SBSA_AHCI,
 >      SBSA_XHCI,
-> +    SBSA_CXL_HOST,
+>      SBSA_CXL_HOST,
+> +    SBSA_CXL_FIXED_WINDOW,
 >  };
-> =20
+>  
 >  struct SBSAMachineState {
-> @@ -105,6 +111,9 @@ struct SBSAMachineState {
->      int psci_conduit;
->      DeviceState *gic;
->      PFlashCFI01 *flash[2];
-> +    CXLState cxl_devices_state;
-> +    PCIBus *bus;
-
-Lot of buses in a system, I'd call the pcibus
-or similar. However, see below - I don't think
-it is necessary.
-
-
-> +    PCIBus *cxlbus;
+> @@ -152,6 +153,8 @@ static const MemMapEntry sbsa_ref_memmap[] = {
+>      /* ~1TB PCIE MMIO space (4GB to 1024GB boundary) */
+>      [SBSA_PCIE_MMIO_HIGH] =     { 0x100000000ULL, 0xFF00000000ULL },
+>      [SBSA_MEM] =                { 0x10000000000ULL, RAMLIMIT_BYTES },
+> +    /* 1TB CXL FIXED WINDOW space */
+> +    [SBSA_CXL_FIXED_WINDOW] =   { 0xA0000000000ULL, 0x10000000000ULL },
 >  };
-> =20
->  #define TYPE_SBSA_MACHINE   MACHINE_TYPE_NAME("sbsa-ref")
-> @@ -132,6 +141,8 @@ static const MemMapEntry sbsa_ref_memmap[] =3D {
->      /* Space here reserved for more SMMUs */
->      [SBSA_AHCI] =3D               { 0x60100000, 0x00010000 },
->      [SBSA_XHCI] =3D               { 0x60110000, 0x00010000 },
-> +    /* 1M CXL Host Bridge Registers space (64KiB * 16) */
-> +    [SBSA_CXL_HOST] =3D           { 0x60120000, 0x00100000 },
-
-As below, can just leave space for however many you are creating.
-
->      /* Space here reserved for other devices */
->      [SBSA_PCIE_PIO] =3D           { 0x7fff0000, 0x00010000 },
->      /* 32-bit address PCIE MMIO space */
-> @@ -631,6 +642,26 @@ static void create_smmu(const SBSAMachineState *sms,=
- PCIBus *bus)
->      }
+>  
+>  static const int sbsa_ref_irqmap[] = {
+> @@ -734,6 +737,72 @@ static void create_cxl_host_reg_region(SBSAMachineState *sms)
+>      memory_region_add_subregion(sysmem, sbsa_ref_memmap[SBSA_CXL_HOST].base, mr);
 >  }
-> =20
-> +static void create_pxb_cxl(SBSAMachineState *sms)
+>  
+> +static void create_cxl_fixed_window_region(SBSAMachineState *sms, MemoryRegion *mem)
 > +{
-> +    CXLHost *host;
-> +    PCIHostState *cxl;
+> +    char cxl_host[] = "pxb-cxl-bus.0";
+
+Better to retrieve this from the object rather than hard coding.
+	object_get_canonical_path(sms->cxlbus); I think?
+
+> +    CXLFixedMemoryWindowOptionsList *list;
+> +    hwaddr base, end;
+> +    GList *it;
+> +    strList host_target = { NULL, cxl_host };
+> +    CXLFixedMemoryWindowOptions sbsa_ref_cfmwoptions = {
+> +        .size = 1 * TiB,
+> +        .has_interleave_granularity = false,
+> +        .targets = &host_target,
+> +    };
+> +    CXLFixedMemoryWindowOptionsList sbsa_ref_cfmwlist = { NULL, &sbsa_ref_cfmwoptions };
+
+Wrap all these long lines to 80 chars unless it significantly hurts readability.
+
 > +
-> +    sms->cxl_devices_state.is_enabled =3D true;
+> +    for (list = &sbsa_ref_cfmwlist; list; list = list->next) {
+
+It's a list of 1, so no point in parsing it like this.  Just use the values
+directly for now. If you add more windows, great but that probably only makes
+sense if you either:
+1) Want windows that have different properties (pmem vs volatile etc)
+   Maybe windows that don't support HDM-DB once that is supported in general.
+2) You have more than one root bridge and want to do interleave.
+
+I'd quite like to see 2 enabled as that stresses a lot more of the kernel code
+that won't be touched here.  However probably that's a job for the future.
+For now, just call this as
+
+	cxl_fixed_memory_window_config(&sms->cxl_devices_state,
+				       &sbsa_ref_cfmwoptions, &error_fatal);
+and have drop the loop.
+
+
+> +        cxl_fixed_memory_window_config(&sms->cxl_devices_state, list->value, &error_fatal);
+> +    }
 > +
-> +    DeviceState *qdev;
-
-I think qemu still sticks mostly to declarations at the top
-of functions. So move this up.
-
-> +    qdev =3D qdev_new(TYPE_PXB_CXL_DEV);
-> +    qdev_prop_set_uint32(qdev, "bus_nr", 0xfe);
-
-Ouch. That's not a lot of space in bus numbers.
-Move it down a bit so there is room for switches etc
-and not just a single root port.
-Up to SBSA ref maintainers, but I'd use 0xc0 or something
-like that.
-
+> +    base = sbsa_ref_memmap[SBSA_CXL_FIXED_WINDOW].base;
+> +    end = base + sbsa_ref_memmap[SBSA_CXL_FIXED_WINDOW].size;
 > +
-> +    PCIDevice *dev =3D PCI_DEVICE(qdev);
+> +    for (it = sms->cxl_devices_state.fixed_windows; it; it = it->next) {
 
-Declarations at the top I think.
+As above.  Don't code for multiple windows if you only support one.
+For now code it for one and if you later follow up with multiple
+then that series has a precursor refactoring the code to handle a list.
 
-> +    pci_realize_and_unref(dev, sms->bus, &error_fatal);
+So just get the first element and work on that to give simpler code
+for review today.
+
+
+> +        CXLFixedWindow *fw = it->data;
+> +        if (base + fw->size > end) {
+> +            error_report("CFMWS does not fit under PA limit");
+> +            exit(EXIT_FAILURE);
+> +        }
 > +
-> +    host =3D PXB_CXL_DEV(dev)->cxl_host_bridge;
-> +    cxl =3D PCI_HOST_BRIDGE(host);
-> +    sms->cxlbus =3D cxl->bus;
-> +    pci_create_simple(sms->cxlbus, -1, "cxl-rp");
-
-You want to enable at least some interleaving the HB so I'd
-add at least 2 root ports.
-
+> +        fw->base = base;
+> +        memory_region_init_io(&fw->mr, OBJECT(sms), &cfmws_ops, fw,
+> +                                "cxl-fixed-memory-region", fw->size);
+> +
+> +        memory_region_add_subregion(mem, fw->base, &fw->mr);
+> +        base += fw->size;
+> +    }
 > +}
 > +
->  static void create_pcie(SBSAMachineState *sms)
+> +static void sbsa_cxl_fmws_link_targets(SBSAMachineState *sms,
+> +                                CXLState *cxl_state, Error **errp)
+> +{
+> +    PXBCXLDev *pxb =  PXB_CXL_DEV(pci_bridge_get_device(sms->cxlbus));
+> +    if (cxl_state && cxl_state->fixed_windows) {
+> +        GList *it;
+> +
+> +        for (it = cxl_state->fixed_windows; it; it = it->next) {
+> +            CXLFixedWindow *fw = it->data;
+> +            int i;
+> +
+> +            for (i = 0; i < fw->num_targets; i++) {
+> +                Object *o;
+> +                bool ambig;
+> +
+> +                o = object_resolve_path_type(fw->targets[i],
+> +                                             TYPE_PXB_CXL_BUS,
+> +                                             &ambig);
+> +                if (!o) {
+> +                    error_setg(errp, "Could not resolve CXLFM target %s",
+> +                               fw->targets[i]);
+> +                    return;
+> +                }
+> +                fw->target_hbs[i] = pxb;
+This has me confused.  The loop is looking for wrong things and then
+you are setting the single target to pxb (Which is correct).
+
+So this whole function could be written
+
+	GList *it = glist_first(cxl_state->fixed_windows);
+	CXLFixedWindow *fw = it->data;
+
+	fw->target_hbs[0] = PXB_CXL_DEV(pci_bridge_get_device(sms->cxlbus));
+
+Which doesn't need TYPE_PXB_CXL_BUS etc so you can drop the
+moving of that to a header.
+
+I wonder if we can just make this use the normal code however.
+You've already set up targets above so why doesn't calling
+cxl_fmws_link_targets() not find it?
+
+Of is that magic string above wrong?
+
+> +            
+> +        }
+> +    }
+> +}
+> +
+>  static void *sbsa_ref_dtb(const struct arm_boot_info *binfo, int *fdt_size)
 >  {
->      hwaddr base_ecam =3D sbsa_ref_memmap[SBSA_PCIE_ECAM].base;
-> @@ -682,12 +713,25 @@ static void create_pcie(SBSAMachineState *sms)
->      }
-> =20
->      pci =3D PCI_HOST_BRIDGE(dev);
-> +    sms->bus =3D pci->bus;
-
-I'd carry on using pci->bus for this code to minimize changes
-needed and set sms->bus at the end of the function, not the
-start (see below - you can get rid of need to store pci->bus
-I think).
-
+>      const SBSAMachineState *board = container_of(binfo, SBSAMachineState,
+> @@ -869,8 +938,12 @@ static void sbsa_ref_init(MachineState *machine)
+>  
+>      create_cxl_host_reg_region(sms);
+>  
+> +    create_cxl_fixed_window_region(sms, sysmem);
 > +
-> +    pci_init_nic_devices(sms->bus, mc->default_nic);
-> =20
-> -    pci_init_nic_devices(pci->bus, mc->default_nic);
-> +    pci_create_simple(sms->bus, -1, "bochs-display");
-> =20
-> -    pci_create_simple(pci->bus, -1, "bochs-display");
-> +    create_smmu(sms, sms->bus);
-> =20
-> -    create_smmu(sms, pci->bus);
-> +    create_pxb_cxl(sms);
+I'd be tempted to not have blank space between the various cxl setup steps
+as they are all related, however up to sbsa maintainers.
 
-Keep this similar to the others and pass in pci->bus even
-though you are going to stash pci->bus
-
-> +}
-
-
-> =20
->  static void *sbsa_ref_dtb(const struct arm_boot_info *binfo, int *fdt_si=
-ze)
-> @@ -823,6 +867,10 @@ static void sbsa_ref_init(MachineState *machine)
-> =20
->      create_pcie(sms);
-> =20
-> +    create_cxl_host_reg_region(sms);
+>      cxl_hook_up_pxb_registers(sms->bus, &sms->cxl_devices_state, &error_fatal);
+>  
+> +    sbsa_cxl_fmws_link_targets(sms, &sms->cxl_devices_state, &error_fatal);
 > +
-> +    cxl_hook_up_pxb_registers(sms->bus, &sms->cxl_devices_state, &error_=
-fatal);
-> +
-
-Fixed pxb instances certainly make this less of a dance than we need for pc=
- / virt
-as the creation order is constrained in a way it isn't for those generic ma=
-chines.
-
-Given you know you only have one PXB-cxl and have it in sms->cxlbus
-you could just call
-pxb_cxl_hook_up_registers(&sms->cxl_devices_state, pci->cxlbus, &error_fata=
-l)
-I think and get same result without needed to add sms->bus to get hold of t=
-he
-pci bus.
-
-
 >      create_secure_ec(secure_sysmem);
-> =20
->      sms->bootinfo.ram_size =3D machine->ram_size;
+>  
+>      sms->bootinfo.ram_size = machine->ram_size;
+> diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
+> index cae4afcdde..d523be24a2 100644
+> --- a/hw/cxl/cxl-host-stubs.c
+> +++ b/hw/cxl/cxl-host-stubs.c
+> @@ -11,5 +11,6 @@
+>  void cxl_fmws_link_targets(CXLState *stat, Error **errp) {};
+>  void cxl_machine_init(Object *obj, CXLState *state) {};
+>  void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp) {};
+> +void cxl_fixed_memory_window_config(CXLState *cxl_state, CXLFixedMemoryWindowOptions *object, Error **errp) {};
+Wrap that line to 80 chars.
+
+>  
+>  const MemoryRegionOps cfmws_ops;
+> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+> index e9f2543c43..d408c7db15 100644
+> --- a/hw/cxl/cxl-host.c
+> +++ b/hw/cxl/cxl-host.c
+> @@ -22,7 +22,7 @@
+>  #include "hw/pci/pcie_port.h"
+>  #include "hw/pci-bridge/pci_expander_bridge.h"
+>  
+> -static void cxl_fixed_memory_window_config(CXLState *cxl_state,
+> +void cxl_fixed_memory_window_config(CXLState *cxl_state,
+>                                             CXLFixedMemoryWindowOptions *object,
+>                                             Error **errp)
+>  {
+> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+> index 0411ad31ea..f5431443b9 100644
+> --- a/hw/pci-bridge/pci_expander_bridge.c
+> +++ b/hw/pci-bridge/pci_expander_bridge.c
+> @@ -38,7 +38,6 @@ DECLARE_INSTANCE_CHECKER(PXBBus, PXB_BUS,
+>  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_PCIE_BUS,
+>                           TYPE_PXB_PCIE_BUS)
+>  
+> -#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
+>  DECLARE_INSTANCE_CHECKER(PXBBus, PXB_CXL_BUS,
+>                           TYPE_PXB_CXL_BUS)
+>  
+> diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
+> index c9bc9c7c50..5fbf5a9347 100644
+> --- a/include/hw/cxl/cxl_host.h
+> +++ b/include/hw/cxl/cxl_host.h
+> @@ -16,6 +16,7 @@
+>  void cxl_machine_init(Object *obj, CXLState *state);
+>  void cxl_fmws_link_targets(CXLState *stat, Error **errp);
+>  void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
+> +void cxl_fixed_memory_window_config(CXLState *cxl_state, CXLFixedMemoryWindowOptions *object, Error **errp);
+
+Very long online. Wrap at 80 chars.
+Otherwise I'm fine with exposing this.
+
+
+>  
+>  extern const MemoryRegionOps cfmws_ops;
+>  
+> diff --git a/include/hw/pci/pci_bridge.h b/include/hw/pci/pci_bridge.h
+> index 5cd452115a..5456e24883 100644
+> --- a/include/hw/pci/pci_bridge.h
+> +++ b/include/hw/pci/pci_bridge.h
+> @@ -102,6 +102,7 @@ typedef struct PXBPCIEDev {
+>      PXBDev parent_obj;
+>  } PXBPCIEDev;
+>  
+> +#define TYPE_PXB_CXL_BUS "pxb-cxl-bus"
+>  #define TYPE_PXB_DEV "pxb"
+>  OBJECT_DECLARE_SIMPLE_TYPE(PXBDev, PXB_DEV)
+>  
 
