@@ -1,81 +1,174 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84196171650
-	for <linux-cxl@vger.kernel.org>; Fri, 30 Aug 2024 11:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF13A8F6C;
+	Mon,  2 Sep 2024 02:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725016715; cv=none; b=u5JqdZpSKQ5KpFpLfwNJ+uWx2hQeU1ctGsx/bnqD5lEH5rKl/h1TspQe2VW8jrTY5SgGoaPElpqg2s0ajN5VXRim3URZKfAjwszEl0b4yZUskWl/MECEokd2R2gJuObsH80w9cB22UcKa40d6aA7Guct52yWZFzfz6qjE/APV34=
+	t=1725243092; cv=none; b=u34thxfcI1iRawMexZrAsUECa75jLT2trwCHKM/3L467cqkXAJi1GNLl/+KqEJm8JZ4U4CF8XSaHI2xAwHRzkZjdoYM62AbnN0Aux+3OEq56LuJE+/B3Jtr0gqtDpFiMUqaY8DsHs4n5E2/6UdQk/4+WDk59wjxB/l/bk/Z7QW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725016715; c=relaxed/simple;
-	bh=ULOZtCSxWo9KMqvVb7I8RYVZeN9EgrEXVhdI5ZJQzN8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hLtUGkbR6nvoD+q7AsAp7gqY0LZSACIifYRKUypcZQ+54iTj8f+hruj5AlP1YZr7rUmvgL1F6+Wk0TvDutOmVH5RgtJ6adZtXohC61GrUPopywKDgsJ+zUKlKi1OtSWzkb9gZPb34yMoPM4dWDtzAGarn9kTHorHjfkKA0SGSAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WwFtR5t4sz6J7v8;
-	Fri, 30 Aug 2024 19:15:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E469A140736;
-	Fri, 30 Aug 2024 19:18:30 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 Aug
- 2024 12:18:30 +0100
-Date: Fri, 30 Aug 2024 12:18:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: <quic_llindhol@quicinc.com>, <peter.maydell@linaro.org>,
-	<marcin.juszkiewicz@linaro.org>, <qemu-devel@nongnu.org>,
-	<linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>,
-	<chenbaozi@phytium.com.cn>, <wangyinfeng@phytium.com.cn>,
-	<shuyiqi@phytium.com.cn>
-Subject: Re: [RFC PATCH 0/2] Sbsa-ref CXL Enablement
-Message-ID: <20240830121829.00005d79@Huawei.com>
-In-Reply-To: <20240830041557.600607-1-wangyuquan1236@phytium.com.cn>
-References: <20240830041557.600607-1-wangyuquan1236@phytium.com.cn>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1725243092; c=relaxed/simple;
+	bh=lIa1/ves7CFhzV4mIUGD2uJCIk7VgGhY+d4DZ+ukbCE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CKn7h3KAga6jHka7+PywiCNe1cHyl0XHz+WuIgzzLCc7VQ55SEZLS/6e0mSN2Ivjz5y8jGpJrxQgyXRrFNOkzytAoq+R0Cm2dTNHwW/MC9vxpkcs/gYl5kukUN8w6nq5QWOh0Pfe0VA5d5gqFgDhuCRepf6nZylT052GfdhBE3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrhwMf1/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrhwMf1/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725243090; x=1756779090;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=lIa1/ves7CFhzV4mIUGD2uJCIk7VgGhY+d4DZ+ukbCE=;
+  b=XrhwMf1/VYlsfI+un+WhtG4VBI6NJbrDLT52woE7iP6KRvVz+LLS3eKp
+   9TKrlPTZ0ivOph8zFDNQl1anMxcN5N25S2CH9XiW0RYcqmYF05UNp2GHe
+   Gd7YMw6Zg3lnQbWL9w88vyZoxxvmIHv457TRBgF0h4C8Fyf5w5UaeppSe
+   9Dzlzw5jmJ7wig3iYk5Ipieb/vytbT8Q2wBHtvMArUp3AJKOeN6RxYEee
+   FldymXALOIjBpkJFa2hQ9RU6HzWyhXzcV/vOZ4376G8EatHOsSC6ydXi1
+   xEYhCkv0SJdmdxgJyi14zHqC8WHtvA74d5LV0wFSgANokVlBvhouwpBIb
+   Q==;
+X-CSE-ConnectionGUID: 6XVf55LHTWGxegAXiNJynw==
+X-CSE-MsgGUID: H0BSmI/OSLCBSiBxJ7uBYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11182"; a="49206481"
+X-IronPort-AV: E=Sophos;i="6.10,194,1719903600"; 
+   d="scan'208";a="49206481"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2024 19:11:29 -0700
+X-CSE-ConnectionGUID: u3HEMCwyQbWZqI0ZiAcqLw==
+X-CSE-MsgGUID: 8aJnlJ+tSlSFM3Y1Mybzlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,194,1719903600"; 
+   d="scan'208";a="101931078"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2024 19:11:26 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,  Davidlohr
+ Bueso <dave@stgolabs.net>,  Jonathan Cameron
+ <jonathan.cameron@huawei.com>,  Dave Jiang <dave.jiang@intel.com>,  Alison
+ Schofield <alison.schofield@intel.com>,  Vishal Verma
+ <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Alistair
+ Popple <apopple@nvidia.com>,  Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
+  Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] Resource: fix region_intersects() for CXL memory
+In-Reply-To: <66c69470ae357_7605294ab@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	(Dan Williams's message of "Wed, 21 Aug 2024 18:29:20 -0700")
+References: <20240816020723.771196-1-ying.huang@intel.com>
+	<66bedd0f746ab_1c18294b5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<87y14wj4ju.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<66c69470ae357_7605294ab@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Date: Mon, 02 Sep 2024 10:07:52 +0800
+Message-ID: <87r0a2g64n.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=ascii
 
-On Fri, 30 Aug 2024 12:15:55 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+Dan Williams <dan.j.williams@intel.com> writes:
 
-> RFC because
-> - Many contents are ported from Jonathan' patch on qemu virt design
-> 
-> - Bring plenty of PCDs values and modifying the original PCIE values
-> 
-> - Less experience and not particularly confident in ACPI area so this might be
->   stupidly broken in a way I've not considered.
+> Huang, Ying wrote:
+>> Dan Williams <dan.j.williams@intel.com> writes:
+>> > Huang Ying wrote:
+> [..]
+>> >>  kernel/resource.c | 44 +++++++++++++++++++++++++++++++++++++-------
+>> >>  1 file changed, 37 insertions(+), 7 deletions(-)
+>> >> 
+>> >> diff --git a/kernel/resource.c b/kernel/resource.c
+>> >> index 14777afb0a99..c97a5add9394 100644
+>> >> --- a/kernel/resource.c
+>> >> +++ b/kernel/resource.c
+> [..]
 
-Hi Yuquan,
+[snip]
 
-So an opening question for you.  What do you want to use this for?
-If the aim is to do full software stack verification, I'd be tempted to
-make a slightly more complex setup from the start and have at least
-2 CXL host bridges so that you can enable interleaving + probably 2 or
-3 CFMWS so that you can test that interleaving.
-Even then it won't meet my requirements which is to stress the software
-stack but then that's not the aim of sbsa ref so fair enough.
+>
+>> However, I admit that the original code is hard to be understood,
+>> whether is something like below better?
+>
+> I like that this proposal defers incrementing @other rather than
+> decrement after the fact.
+>
+>> 
+>> 	for (p = parent->child; p ; p = p->sibling) {
+>> 		if (!resource_overlaps(p, &res))
+>> 			continue;
+>> 		is_type = (((p->flags & flags) == flags) &&
+>> 			   ((desc == IORES_DESC_NONE) || (desc == p->desc)));
+>> 		if (is_type) {
+>> 			type++;
+>> 			continue;
+>> 		}
+>> 		/*
+>> 		 * Continue to search in descendant resources.  Unless
+>> 		 * the matched descendant resources cover the whole
+>> 		 * overlapped range, increase 'other', because it
+>> 		 * overlaps with 'p' at least.
+>> 		 */
+>> 		covered = false;
+>
+> I would call @covered, @single_descendant. Since @covered is ambiguous.
 
-What you have here looks good to me in general, just superficial
-suggestions in the various patches.
+Sorry, I don't understand why this is called @single_descendant.  It's
+possible that the checked region is overlapped with 2 descendants, and
+the result is REGION_INTERSECTS.  For example,
 
-Thanks,
+490000000-52fffffff : CXL Window 0
+  490000000-50fffffff : region0
+    490000000-50fffffff : dax0.0
+      490000000-50fffffff : System RAM (kmem)
+  510000000-52fffffff : region1
+    510000000-52fffffff : dax0.1
+      510000000-52fffffff : System RAM (kmem)
 
-Jonathan
+region_intersects(, 0x50ffff000, 2 * PAGE_SIZE, IORESOURCE_SYSTEM_RAM,
+IORES_DESC_NONE) => REGION_INTERSECTS
 
+>> 		ostart = max(res.start, p->start);
+>> 		oend = min(res.end, p->end);
+>> 		for_each_resource(p, dp, false) {
+>> 			if (!resource_overlaps(dp, &res))
+>> 				continue;
+>> 			is_type = (((dp->flags & flags) == flags) &&
+>> 				   ((desc == IORES_DESC_NONE) ||
+>> 				    (desc == dp->desc)));
+>> 			if (is_type) {
+>> 				type++;
+>> 				if (dp->start > ostart)
+>
+> ...this should have a comment:
+>
+> /* partial descendant overlap indicates overlap with a descendant hole */
 
+Yes.  Some comments should help.
 
+>> 					break;
+>> 				if (dp->end >= oend) {
+>> 					covered = true;
+>> 					break;
+>
+> ...then per above this because easier to read as:
+>
+> 	single_descendant = true;
+>
+>> 				}
+>> 				ostart = dp->end + 1;
+>> 			}
+>> 		}
+>> 		if (!covered)
+>> 			other++;
+>> 	}
+>> 
+
+[snip]
+
+--
+Best Regards,
+Huang, Ying
