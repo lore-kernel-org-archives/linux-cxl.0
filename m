@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE1F173
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Sep 2024 00:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F201623
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Sep 2024 00:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725408800; cv=none; b=k0B561PUaf76tVGfryGCJM1eSmEmlxHPygamApp0DbLmNyeOnI/kM8lWTnmeQhovTOJJbGs+W4MRJ2rX45InWDMPDmjcprxvXgd9VT8hAL07WZKHkcBLAjG2FM9XgrlyTqwZUlSn8im6vU/glaOa4/7JkdNlvyQr27qsSX8OXd4=
+	t=1725408802; cv=none; b=qpo59KHHlUTHTlVZEKjU7ndO7p09N9s8evro5Vq0nCLPMM+z/AyMAWftK5eolaRy0/iXsRp1ZQj3g8OsXSO8g3tqWScxVbr3BKnhif85Vh3fDFAlUtkdh63eau1HBjdGd/f7RlqdiLUaHf/3gYuOo4U0OSS9f3Fs99Qi0TDolDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725408800; c=relaxed/simple;
-	bh=sonsEKU6qa0Qf43Kit9xxSz4ba5CMrT6GShp+p0QvLk=;
+	s=arc-20240116; t=1725408802; c=relaxed/simple;
+	bh=Se+1UaA85aE6ckUPJ5sm5pf/K05a46wf28Vv1Tn2J6o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QbWOXyh4buhIf1WcpBYaxMJs52xuKdoOIFXasHPTdXJArr1hvGRda7iYlN+SxqatpZX/IfewMy63kqUYuHvf8Gw9pfY7UoMhPeC0NfSkHoU8QbrhQn3T7NV1ab+P5zjrTw03zW80JeUuF/ZJxjcTi6n+wPgfKt7Tfjli9TWOjA4=
+	 MIME-Version; b=MTVbEsVQxdYW8ZroXuNrb3q7cF26CINJtZ5RnVRkruOOH2/WME9LNXVtfzpytKCqDNtXN8o6uf0Dbl4hzZk++6aSqhXWTyBjgb+7Q1s13k2qqpbrNIpWqa6Rl68M77L9ziHk7iCGWF08Qrel604q/d+uCcMioAyoG2lWVA3zj1I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 454D6C4CEC4;
-	Wed,  4 Sep 2024 00:13:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4EFC4CEC4;
+	Wed,  4 Sep 2024 00:13:21 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -21,10 +21,11 @@ Cc: dan.j.williams@intel.com,
 	vishal.l.verma@intel.com,
 	alison.schofield@intel.com,
 	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net
-Subject: [PATCH v8 1/3] cxl: Preserve the CDAT access_coordinate for an endpoint
-Date: Tue,  3 Sep 2024 17:11:50 -0700
-Message-ID: <20240904001316.1688225-2-dave.jiang@intel.com>
+	dave@stgolabs.net,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: [PATCH v8 2/3] cxl: Calculate region bandwidth of targets with shared upstream link
+Date: Tue,  3 Sep 2024 17:11:51 -0700
+Message-ID: <20240904001316.1688225-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240904001316.1688225-1-dave.jiang@intel.com>
 References: <20240904001316.1688225-1-dave.jiang@intel.com>
@@ -36,82 +37,695 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Keep the access_coordinate from the CDAT tables for region perf
-calculations. The region perf calculation requires all participating
-endpoints to have arrived in order to determine if there are limitations
-of bandwidth data due to shared uplink.
+The current bandwidth calculation aggregates all the targets. This simple
+method does not take into account where multiple targets sharing under
+a switch or a root port where the aggregated bandwidth can be greater than
+the upstream link of the switch.
 
+To accurately account for the shared upstream uplink cases, a new update
+function is introduced by walking from the leaves to the root of the
+hierarchy and clamp the bandwidth in the process as needed. This process
+is done when all the targets for a region are present but before the
+final values are send to the HMAT handling code cached access_coordinate
+targets.
+
+The original perf calculation path was kept to calculate the latency
+performance data that does not require the shared link consideration.
+The shared upstream link calculation is done as a second pass when all
+the endpoints have arrived.
+
+Testing is done via qemu with CXL hierachy. run_qemu[1] is modified to
+support several CXL hierachy layouts. The following layouts are tested:
+
+HB: Host Bridge
+RP: Root Port
+SW: Switch
+EP: End Point
+
+2 HB 2 RP 2 EP: resulting bandwidth: 624
+1 HB 2 RP 2 EP: resulting bandwidth: 624
+2 HB 2 RP 2 SW 4 EP: resulting bandwidth: 624
+
+Current testing, perf number from SRAT/HMAT is hacked into the kernel
+code. However with new QEMU support of Generic Target Port that's
+incoming, the perf data injection is no longer needed.
+
+[1]: https://github.com/pmem/run_qemu
+
+Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
 ---
-v8
-- Rebase adjustment against v6.11-rc5
+v8:
+- Fix uninitialized is_root (kbot)
+- Fix checking incorrect return value. (Alison)
+- Remove goto from cxl_region_shared_upstrea_bandwidth_update(). (Alison)
+- Add ** for kdoc. (Alison)
 ---
- drivers/cxl/core/cdat.c | 10 ++++++----
- drivers/cxl/cxlmem.h    |  2 ++
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/cxl/core/cdat.c   | 496 +++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/core.h   |   4 +-
+ drivers/cxl/core/pci.c    |  23 ++
+ drivers/cxl/core/port.c   |  20 ++
+ drivers/cxl/core/region.c |   2 +
+ drivers/cxl/cxl.h         |   1 +
+ 6 files changed, 536 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index bb83867d9fec..fea214340d4b 100644
+index fea214340d4b..3db75bf1764e 100644
 --- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -15,7 +15,7 @@ struct dsmas_entry {
- 	struct range dpa_range;
- 	u8 handle;
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
--
-+	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
- 	int entries;
- 	int qos_class;
- };
-@@ -163,7 +163,7 @@ static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
- 	val = cdat_normalize(le16_to_cpu(le_val), le64_to_cpu(le_base),
- 			     dslbis->data_type);
+@@ -548,19 +548,37 @@ void cxl_coordinates_combine(struct access_coordinate *out,
  
--	cxl_access_coordinate_set(dent->coord, dslbis->data_type, val);
-+	cxl_access_coordinate_set(dent->cdat_coord, dslbis->data_type, val);
+ MODULE_IMPORT_NS(CXL);
  
- 	return 0;
- }
-@@ -220,7 +220,7 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
- 	xa_for_each(dsmas_xa, index, dent) {
- 		int qos_class;
- 
--		cxl_coordinates_combine(dent->coord, dent->coord, ep_c);
-+		cxl_coordinates_combine(dent->coord, dent->cdat_coord, ep_c);
- 		dent->entries = 1;
- 		rc = cxl_root->ops->qos_class(cxl_root,
- 					      &dent->coord[ACCESS_COORDINATE_CPU],
-@@ -241,8 +241,10 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
- static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
- 			      struct cxl_dpa_perf *dpa_perf)
- {
--	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++)
+-void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+-				    struct cxl_endpoint_decoder *cxled)
++static void cxl_bandwidth_add(struct access_coordinate *coord,
++			      struct access_coordinate *c1,
++			      struct access_coordinate *c2)
++{
 +	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
- 		dpa_perf->coord[i] = dent->coord[i];
-+		dpa_perf->cdat_coord[i] = dent->cdat_coord[i];
++		coord[i].read_bandwidth = c1[i].read_bandwidth +
++					  c2[i].read_bandwidth;
++		coord[i].write_bandwidth = c1[i].write_bandwidth +
++					   c2[i].write_bandwidth;
 +	}
- 	dpa_perf->dpa_range = dent->dpa_range;
- 	dpa_perf->qos_class = dent->qos_class;
- 	dev_dbg(dev,
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index afb53d058d62..2d9208aabdf8 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -397,11 +397,13 @@ enum cxl_devtype {
-  * struct cxl_dpa_perf - DPA performance property entry
-  * @dpa_range: range for DPA address
-  * @coord: QoS performance data (i.e. latency, bandwidth)
-+ * @cdat_coord - raw QoS performance data from CDAT
-  * @qos_class: QoS Class cookies
-  */
- struct cxl_dpa_perf {
- 	struct range dpa_range;
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-+	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
- 	int qos_class;
++}
++
++static bool dpa_perf_contains(struct cxl_dpa_perf *perf,
++			      struct resource *dpa_res)
+ {
+-	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+ 	struct range dpa = {
+-			.start = cxled->dpa_res->start,
+-			.end = cxled->dpa_res->end,
++		.start = dpa_res->start,
++		.end = dpa_res->end,
+ 	};
++
++	return range_contains(&perf->dpa_range, &dpa);
++}
++
++static struct cxl_dpa_perf *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxled,
++					       enum cxl_decoder_mode mode)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+ 	struct cxl_dpa_perf *perf;
+ 
+-	switch (cxlr->mode) {
++	switch (mode) {
+ 	case CXL_DECODER_RAM:
+ 		perf = &mds->ram_perf;
+ 		break;
+@@ -568,12 +586,472 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 		perf = &mds->pmem_perf;
+ 		break;
+ 	default:
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!dpa_perf_contains(perf, cxled->dpa_res))
++		return ERR_PTR(-EINVAL);
++
++	return perf;
++}
++
++/*
++ * Transient context for containing the current calculation of bandwidth when
++ * doing walking the port hierachy to deal with shared upstream link.
++ */
++struct cxl_perf_ctx {
++	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
++	struct cxl_port *port;
++};
++
++/**
++ * cxl_endpoint_gather_bandwidth - collect all the endpoint bandwidth in an xarray
++ * @cxlr: CXL region for the bandwidth calculation
++ * @cxled: endpoint decoder to start on
++ * @usp_xa: (output) the xarray that collects all the bandwidth coordinates
++ *          indexed by the upstream device with data of 'struct cxl_perf_ctx'.
++ * @gp_is_root: (output) bool of whether the grandparent is cxl root.
++ *
++ * Return: 0 for success or -errno
++ *
++ * Collects aggregated endpoint bandwidth and store the bandwidth in
++ * an xarray indexed by the upstream device of the switch or the RP
++ * device. Each endpoint consists the minimum of the bandwidth from DSLBIS
++ * from the endpoint CDAT, the endpoint upstream link bandwidth, and the
++ * bandwidth from the SSLBIS of the switch CDAT for the switch upstream port to
++ * the downstream port that's associated with the endpoint. If the
++ * device is directly connected to a RP, then no SSLBIS is involved.
++ */
++static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
++					 struct cxl_endpoint_decoder *cxled,
++					 struct xarray *usp_xa,
++					 bool *gp_is_root)
++{
++	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
++	struct cxl_port *parent_port = to_cxl_port(endpoint->dev.parent);
++	struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
++	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
++	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
++	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++	struct cxl_perf_ctx *perf_ctx;
++	struct cxl_dpa_perf *perf;
++	unsigned long index;
++	void *ptr;
++	int rc;
++
++	if (cxlds->rcd)
++		return -ENODEV;
++
++	perf = cxled_get_dpa_perf(cxled, cxlr->mode);
++	if (IS_ERR(perf))
++		return PTR_ERR(perf);
++
++	gp_port = to_cxl_port(parent_port->dev.parent);
++	*gp_is_root = is_cxl_root(gp_port);
++
++	/*
++	 * If the grandparent is cxl root, then index is the root port,
++	 * otherwise it's the parent switch upstream device.
++	 */
++	if (*gp_is_root)
++		index = (unsigned long)endpoint->parent_dport->dport_dev;
++	else
++		index = (unsigned long)parent_port->uport_dev;
++
++	perf_ctx = xa_load(usp_xa, index);
++	if (!perf_ctx) {
++		struct cxl_perf_ctx *c __free(kfree) =
++			kzalloc(sizeof(*perf_ctx), GFP_KERNEL);
++
++		if (!c)
++			return -ENOMEM;
++		ptr = xa_store(usp_xa, index, c, GFP_KERNEL);
++		if (xa_is_err(ptr))
++			return xa_err(ptr);
++		perf_ctx = no_free_ptr(c);
++		perf_ctx->port = parent_port;
++	}
++
++	/* Direct upstream link from EP bandwidth */
++	rc = cxl_pci_get_bandwidth(pdev, pci_coord);
++	if (rc < 0)
++		return rc;
++
++	/*
++	 * Min of upstream link bandwidth and Endpoint CDAT bandwidth from
++	 * DSLBIS.
++	 */
++	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
++
++	/*
++	 * If grandparent port is root, then there's no switch involved and
++	 * the endpoint is connected to a root port.
++	 */
++	if (!*gp_is_root) {
++		/*
++		 * Retrieve the switch SSLBIS for switch downstream port
++		 * associated with the endpoint bandwidth.
++		 */
++		rc = cxl_port_get_switch_dport_bandwidth(endpoint, sw_coord);
++		if (rc)
++			return rc;
++
++		/*
++		 * Min of the earlier coordinates with the switch SSLBIS
++		 * bandwidth
++		 */
++		cxl_coordinates_combine(ep_coord, ep_coord, sw_coord);
++	}
++
++	/*
++	 * Aggregate the computed bandwidth with the current aggregated bandwidth
++	 * of the endpoints with the same switch upstream device or RP.
++	 */
++	cxl_bandwidth_add(perf_ctx->coord, perf_ctx->coord, ep_coord);
++
++	return 0;
++}
++
++static void free_perf_xa(struct xarray *xa)
++{
++	struct cxl_perf_ctx *ctx;
++	unsigned long index;
++
++	if (!xa)
++		return;
++
++	xa_for_each(xa, index, ctx)
++		kfree(ctx);
++	xa_destroy(xa);
++	kfree(xa);
++}
++DEFINE_FREE(free_perf_xa, struct xarray *, if (_T) free_perf_xa(_T))
++
++/**
++ * cxl_switch_gather_bandwidth - collect all the bandwidth at switch level in an xarray
++ * @cxlr: The region being operated on
++ * @input_xa: xarray indexed by upstream device of a switch with data of 'struct
++ *	      cxl_perf_ctx'
++ * @gp_is_root: (output) bool of whether the grandparent is cxl root.
++ *
++ * Return: a xarray of resulting cxl_perf_ctx per parent switch or root port
++ *         or ERR_PTR(-errno)
++ *
++ * Iterate through the xarray. Take the minimum of the downstream calculated
++ * bandwidth, the upstream link bandwidth, and the SSLBIS of the upstream
++ * switch if exists. Sum the resulting bandwidth under the switch upstream
++ * device or a RP device. The function can be iterated over multiple switches
++ * if the switches are present.
++ */
++static struct xarray *cxl_switch_gather_bandwidth(struct cxl_region *cxlr,
++						  struct xarray *input_xa,
++						  bool *gp_is_root)
++{
++	struct xarray *res_xa __free(free_perf_xa) =
++		kzalloc(sizeof(*res_xa), GFP_KERNEL);
++	struct access_coordinate coords[ACCESS_COORDINATE_MAX];
++	struct cxl_perf_ctx *ctx, *us_ctx;
++	unsigned long index, us_index;
++	int dev_count = 0;
++	int gp_count = 0;
++	void *ptr;
++	int rc;
++
++	if (!res_xa)
++		return ERR_PTR(-ENOMEM);
++	xa_init(res_xa);
++
++	xa_for_each(input_xa, index, ctx) {
++		struct device *dev = (struct device *)index;
++		struct cxl_port *port = ctx->port;
++		struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
++		struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
++		struct cxl_dport *dport = port->parent_dport;
++		bool is_root = false;
++
++		dev_count++;
++		if (is_cxl_root(gp_port)) {
++			is_root = true;
++			gp_count++;
++		}
++
++		/*
++		 * If the grandparent is cxl root, then index is the root port,
++		 * otherwise it's the parent switch upstream device.
++		 */
++		if (is_root)
++			us_index = (unsigned long)port->parent_dport->dport_dev;
++		else
++			us_index = (unsigned long)parent_port->uport_dev;
++
++		us_ctx = xa_load(res_xa, us_index);
++		if (!us_ctx) {
++			struct cxl_perf_ctx *n __free(kfree) =
++				kzalloc(sizeof(*n), GFP_KERNEL);
++
++			if (!n)
++				return ERR_PTR(-ENOMEM);
++
++			ptr = xa_store(res_xa, us_index, n, GFP_KERNEL);
++			if (xa_is_err(ptr))
++				return ERR_PTR(xa_err(ptr));
++			us_ctx = no_free_ptr(n);
++			us_ctx->port = parent_port;
++		}
++
++		/*
++		 * If the device isn't an upstream PCIe port, there's something
++		 * wrong with the topology.
++		 */
++		if (!dev_is_pci(dev))
++			return ERR_PTR(-EINVAL);
++
++		/* Retrieve the upstream link bandwidth */
++		rc = cxl_pci_get_bandwidth(to_pci_dev(dev), coords);
++		if (rc)
++			return ERR_PTR(-ENXIO);
++
++		/*
++		 * Take the min of downstream bandwidth and the upstream link
++		 * bandwidth.
++		 */
++		cxl_coordinates_combine(coords, coords, ctx->coord);
++
++		/*
++		 * Take the min of the calculated bandwdith and the upstream
++		 * switch SSLBIS bandwidth if there's a parent switch
++		 */
++		if (!is_root)
++			cxl_coordinates_combine(coords, coords, dport->coord);
++
++		/*
++		 * Aggregate the calculated bandwidth common to an upstream
++		 * switch.
++		 */
++		cxl_bandwidth_add(us_ctx->coord, us_ctx->coord, coords);
++	}
++
++	/* Asymmetric topology detected. */
++	if (gp_count) {
++		if (gp_count != dev_count) {
++			dev_dbg(&cxlr->dev,
++				"Asymmetric hierachy detected, bandwidth not updated\n");
++			return ERR_PTR(-EOPNOTSUPP);
++		}
++		*gp_is_root = true;
++	}
++
++	return no_free_ptr(res_xa);
++}
++
++/**
++ * cxl_rp_gather_bandwidth - handle the root port level bandwidth collection
++ * @xa: the xarray that holds the cxl_perf_ctx that has the bandwidth calculated
++ *      below each root port device.
++ *
++ * Return: xarray that holds cxl_perf_ctx per host bridge or ERR_PTR(-errno)
++ */
++static struct xarray *cxl_rp_gather_bandwidth(struct xarray *xa)
++{
++	struct xarray *hb_xa __free(free_perf_xa) =
++		kzalloc(sizeof(*hb_xa), GFP_KERNEL);
++	struct cxl_perf_ctx *ctx;
++	unsigned long index;
++
++	if (!hb_xa)
++		return ERR_PTR(-ENOMEM);
++	xa_init(hb_xa);
++
++	xa_for_each(xa, index, ctx) {
++		struct cxl_port *port = ctx->port;
++		unsigned long hb_index = (unsigned long)port->uport_dev;
++		struct cxl_perf_ctx *hb_ctx;
++		void *ptr;
++
++		hb_ctx = xa_load(hb_xa, hb_index);
++		if (!hb_ctx) {
++			struct cxl_perf_ctx *n __free(kfree) =
++				kzalloc(sizeof(*n), GFP_KERNEL);
++
++			if (!n)
++				return ERR_PTR(-ENOMEM);
++			ptr = xa_store(hb_xa, hb_index, n, GFP_KERNEL);
++			if (xa_is_err(ptr))
++				return ERR_PTR(xa_err(ptr));
++			hb_ctx = no_free_ptr(n);
++			hb_ctx->port = port;
++		}
++
++		cxl_bandwidth_add(hb_ctx->coord, hb_ctx->coord, ctx->coord);
++	}
++
++	return no_free_ptr(hb_xa);
++}
++
++/**
++ * cxl_hb_gather_bandwidth - handle the host bridge level bandwidth collection
++ * @xa: the xarray that holds the cxl_perf_ctx that has the bandwidth calculated
++ *      below each host bridge.
++ *
++ * Return: xarray that holds cxl_perf_ctx per ACPI0017 device or ERR_PTR(-errno)
++ */
++static struct xarray *cxl_hb_gather_bandwidth(struct xarray *xa)
++{
++	struct xarray *mw_xa __free(free_perf_xa) =
++		kzalloc(sizeof(*mw_xa), GFP_KERNEL);
++	struct cxl_perf_ctx *ctx;
++	unsigned long index;
++
++	if (!mw_xa)
++		return ERR_PTR(-ENOMEM);
++	xa_init(mw_xa);
++
++	xa_for_each(xa, index, ctx) {
++		struct cxl_port *port = ctx->port;
++		struct cxl_port *parent_port;
++		struct cxl_perf_ctx *mw_ctx;
++		struct cxl_dport *dport;
++		unsigned long mw_index;
++		void *ptr;
++
++		parent_port = to_cxl_port(port->dev.parent);
++		mw_index = (unsigned long)parent_port->uport_dev;
++
++		mw_ctx = xa_load(mw_xa, mw_index);
++		if (!mw_ctx) {
++			struct cxl_perf_ctx *n __free(kfree) =
++				kzalloc(sizeof(*n), GFP_KERNEL);
++
++			if (!n)
++				return ERR_PTR(-ENOMEM);
++			ptr = xa_store(mw_xa, mw_index, n, GFP_KERNEL);
++			if (xa_is_err(ptr))
++				return ERR_PTR(xa_err(ptr));
++			mw_ctx = no_free_ptr(n);
++		}
++
++		dport = port->parent_dport;
++		cxl_coordinates_combine(ctx->coord, ctx->coord, dport->coord);
++		cxl_bandwidth_add(mw_ctx->coord, mw_ctx->coord, ctx->coord);
++	}
++
++	return no_free_ptr(mw_xa);
++}
++
++/**
++ * cxl_region_update_bandwidth - Update the bandwidth access coordinates of a region
++ * @cxlr: The region being operated on
++ * @input_xa: xarray holds cxl_perf_ctx wht calculated bandwidth per ACPI0017 instance
++ */
++static void cxl_region_update_bandwidth(struct cxl_region *cxlr,
++					struct xarray *input_xa)
++{
++	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
++	struct cxl_perf_ctx *ctx;
++	unsigned long index;
++
++	memset(coord, 0, sizeof(coord));
++	xa_for_each(input_xa, index, ctx)
++		cxl_bandwidth_add(coord, coord, ctx->coord);
++
++	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
++		cxlr->coord[i].read_bandwidth = coord[i].read_bandwidth;
++		cxlr->coord[i].write_bandwidth = coord[i].write_bandwidth;
++	}
++}
++
++/**
++ * cxl_region_shared_upstream_perf_update - Recalculate the bandwidth for the region
++ * @cxl_region: the cxl region to recalculate
++ *
++ * The function walks the topology from bottom up and calculates the bandwidth. It
++ * starts at the endpoints, processes at the switches if any, processes at the rootport
++ * level, at the host bridge level, and finally aggregates at the region.
++ */
++void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr)
++{
++	struct xarray *working_xa;
++	int root_count = 0;
++	bool is_root;
++	int rc;
++
++	lockdep_assert_held(&cxl_dpa_rwsem);
++
++	struct xarray *usp_xa __free(free_perf_xa) =
++		kzalloc(sizeof(*usp_xa), GFP_KERNEL);
++
++	if (!usp_xa)
++		return;
++
++	xa_init(usp_xa);
++
++	/* Collect bandwidth data from all the endpoints. */
++	for (int i = 0; i < cxlr->params.nr_targets; i++) {
++		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
++
++		is_root = false;
++		rc = cxl_endpoint_gather_bandwidth(cxlr, cxled, usp_xa, &is_root);
++		if (rc)
++			return;
++		root_count += is_root;
++	}
++
++	/* Detect asymmetric hierachy with some direct attached endpoints. */
++	if (root_count && root_count != cxlr->params.nr_targets) {
++		dev_dbg(&cxlr->dev,
++			"Asymmetric hierachy detected, bandwidth not updated\n");
+ 		return;
+ 	}
+ 
++	/*
++	 * Walk up one or more switches to deal with the bandwidth of the
++	 * switches if they exist. Endpoints directly attached to RPs skip
++	 * over this part.
++	 */
++	if (!root_count) {
++		do {
++			working_xa = cxl_switch_gather_bandwidth(cxlr, usp_xa,
++								 &is_root);
++			if (IS_ERR(working_xa))
++				return;
++			free_perf_xa(usp_xa);
++			usp_xa = working_xa;
++		} while (!is_root);
++	}
++
++	/* Handle the bandwidth at the root port of the hierachy */
++	working_xa = cxl_rp_gather_bandwidth(usp_xa);
++	if (IS_ERR(working_xa))
++		return;
++	free_perf_xa(usp_xa);
++	usp_xa = working_xa;
++
++	/* Handle the bandwidth at the host bridge of the hierachy */
++	working_xa = cxl_hb_gather_bandwidth(usp_xa);
++	if (IS_ERR(working_xa))
++		return;
++	free_perf_xa(usp_xa);
++	usp_xa = working_xa;
++
++	/*
++	 * Aggregate all the bandwidth collected per CFMWS (ACPI0017) and
++	 * update the region bandwidth with the final calculated values.
++	 */
++	cxl_region_update_bandwidth(cxlr, usp_xa);
++}
++
++void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
++				    struct cxl_endpoint_decoder *cxled)
++{
++	struct cxl_dpa_perf *perf;
++
+ 	lockdep_assert_held(&cxl_dpa_rwsem);
+ 
+-	if (!range_contains(&perf->dpa_range, &dpa))
++	perf = cxled_get_dpa_perf(cxled, cxlr->mode);
++	if (IS_ERR(perf))
+ 		return;
+ 
+ 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 72a506c9dbd0..0c62b4069ba0 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -103,9 +103,11 @@ enum cxl_poison_trace_type {
  };
+ 
+ long cxl_pci_get_latency(struct pci_dev *pdev);
+-
++int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
+ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
+ 				       enum access_coordinate_class access);
+ bool cxl_need_node_perf_attrs_update(int nid);
++int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
++					struct access_coordinate *c);
+ 
+ #endif /* __CXL_CORE_H__ */
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 51132a575b27..41fa7161c2c8 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1076,3 +1076,26 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
+ 				     __cxl_endpoint_decoder_reset_detected);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
++
++int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
++{
++	int speed, bw;
++	u16 lnksta;
++	u32 width;
++
++	speed = pcie_link_speed_mbps(pdev);
++	if (speed < 0)
++		return speed;
++	speed /= BITS_PER_BYTE;
++
++	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
++	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
++	bw = speed * width;
++
++	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
++		c[i].read_bandwidth = bw;
++		c[i].write_bandwidth = bw;
++	}
++
++	return 0;
++}
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 1d5007e3795a..37e8a8cba414 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -2241,6 +2241,26 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
+ 
++int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
++					struct access_coordinate *c)
++{
++	struct cxl_dport *dport = port->parent_dport;
++
++	/* Check this port is connected to a switch DSP and not an RP */
++	if (parent_port_is_cxl_root(to_cxl_port(port->dev.parent)))
++		return -ENODEV;
++
++	if (!coordinates_valid(dport->coord))
++		return -EINVAL;
++
++	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
++		c[i].read_bandwidth = dport->coord[i].read_bandwidth;
++		c[i].write_bandwidth = dport->coord[i].write_bandwidth;
++	}
++
++	return 0;
++}
++
+ /* for user tooling to ensure port disable work has completed */
+ static ssize_t flush_store(const struct bus_type *bus, const char *buf, size_t count)
+ {
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 21ad5f242875..3adde3b48064 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1983,6 +1983,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		 * then the region is already committed.
+ 		 */
+ 		p->state = CXL_CONFIG_COMMIT;
++		cxl_region_shared_upstream_bandwidth_update(cxlr);
+ 
+ 		return 0;
+ 	}
+@@ -2004,6 +2005,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		if (rc)
+ 			return rc;
+ 		p->state = CXL_CONFIG_ACTIVE;
++		cxl_region_shared_upstream_bandwidth_update(cxlr);
+ 	}
+ 
+ 	cxled->cxld.interleave_ways = p->interleave_ways;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 9afb407d438f..3ca05eddf850 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -889,6 +889,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
+ 				      struct access_coordinate *coord);
+ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+ 				    struct cxl_endpoint_decoder *cxled);
++void cxl_region_shared_upstream_bandwidth_update(struct cxl_region *cxlr);
+ 
+ void cxl_memdev_update_perf(struct cxl_memdev *cxlmd);
  
 -- 
 2.46.0
