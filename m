@@ -1,119 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E154E1DCB26
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Sep 2024 16:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD291DCB26
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Sep 2024 16:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725468571; cv=none; b=uFhvrYaZ6Nbbxt7xJsE/JrymrdkMAPRRS0TwS1CFevROxAIWI7PPqGvG+44nGP+WqhVyVUjQ19zUp6H/GEggo/VblW/jMNkqfjpbghNF6SYA5eY+6dTROIcLo4FPoaJEK/YiiN6UTg6Yj9q7h7AI4didBVzNzUToKaId3EWnjTI=
+	t=1725468643; cv=none; b=AKGpBUyits3axpWZx3U0Xf1tky8QC9jk/bU9cF1ai/J5niN1RBtGW3yP1Hxr0+pqdQ8qjYzlBSg9tbJFnWq7YgV/FbB1GoeN/Z4pG5NnqSIIiEN7QDIitz6vmkr4jPLthT7KrE6mK/053zFW+oi5obrs3CJW2JM+AeSGN9Se4Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725468571; c=relaxed/simple;
-	bh=rRMvonLgztdJQQQYsRebtlmixJhsUVoM9bd0HmKcwCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FI6ae0TsUvXTxtQPwmboBndTJxEoi+78IxZ7275rL+md0+tOEee0XX9fhsAoM8AfBh3wfmOTdav2S0Tvfaow6n/ybEgfnavyTzm/Aowm8O/i5S+vfJjD+SnwpMMJY6lHclVqYaMLNI4YEAuQHbfkRolRlyiDmXUIAAefm8gFvmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8cK2fsn; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725468643; c=relaxed/simple;
+	bh=FOcg7xMxnAIFCv17uHXmaVa2pqL9tYIIyqUMroFAEBc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3UGGSOZRf8i4hxqMqyMMRztFYpsfpE6Y5nT5xokqset1mJzUf7p5qjtE++7DuPw2gJFdcv3WCEWO9zwLSK87i60caUf8tQd2y3ZAGwIeEekz78wyi1ZYT6B+X7VOKA3tbtUMhwyN3TQ693+kE7z5xOwcpQf4njsvWKJXIlbQh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBHAhBhO; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8cK2fsn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725468570; x=1757004570;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rRMvonLgztdJQQQYsRebtlmixJhsUVoM9bd0HmKcwCM=;
-  b=e8cK2fsnidKUhdQO2Qcuau0zZrEXEGoagrVUQbnpokco66e0s/S6zAUm
-   Sg0Q7E6WAAgND/e7+4JsO3xTjSoJKhJI+sbH1225zaPlcxmCsH941c0yj
-   hl4Go/HUb6WHmUZSo2A0Zs7qjnAEzfhUze470zL9x7z0xaE7+PHW1K5Y/
-   ulywk4os7QBt7kDZXPHZ4no5ik56MKGiG0H+v4B3AVsTJIlVD5/R8cOro
-   iuQExWlWVD3QRoZG3BOTuC8wk9eN+mFq5j4HSFnhTEv8BTYgK9aXkzF/K
-   DA+TPaOVDUPI6OtCEXElr0PVvYitUUhPHhTo1heifB1F5Jg3mlJVDHgw6
-   A==;
-X-CSE-ConnectionGUID: 8OVjJTdJSlmFY/9mbFIDlw==
-X-CSE-MsgGUID: zMzXMqJFQBWOtwQ9R87vVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="27901881"
-X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
-   d="scan'208";a="27901881"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 09:49:30 -0700
-X-CSE-ConnectionGUID: 5sbK5BitTK6Hc6dY/q/YnA==
-X-CSE-MsgGUID: VrfrtQeeT9KmaGAJQaC9+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
-   d="scan'208";a="66056604"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.157]) ([10.125.109.157])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 09:49:29 -0700
-Message-ID: <b7d13c8d-dc80-4a1c-baac-d27db35c8a16@intel.com>
-Date: Wed, 4 Sep 2024 09:49:28 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBHAhBhO"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6d5a4615a56so10025667b3.0
+        for <linux-cxl@vger.kernel.org>; Wed, 04 Sep 2024 09:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725468641; x=1726073441; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HU7OztcxC4dGOh1jD0or8NoLTJ47z4j1W9gRHRA+RV4=;
+        b=BBHAhBhObAAzKhTxNTDP5vU7mbe9unQzmpJUYBCusqT9LhlX1tWT9NUt7Bj6hvgV7u
+         44dAjCwK62vdEPLu7ayDukzc8wx1QnTpCftwP7pxPBLQJfkO4B+SLMqO06ZS1cR2AbNn
+         DbvH0VgQOO8R3HfbpO1h9lz7HtKwLxidN5SnpnySm7MbBMkDztCb40MuFr+iWSK+9/Hk
+         HpfPGwrrgpqOZtdW98n1iNpP5VdHgg406i0nKUgEqA/VfpqVHEMl+pNcaNVoGE4ysjD3
+         8TZurpB4yJ+MRrXpPY82P7Rb4S1hZIHlyE0gChEV0iZyIC4P7FpUkHHUyvQurtuM57qb
+         gArA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725468641; x=1726073441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HU7OztcxC4dGOh1jD0or8NoLTJ47z4j1W9gRHRA+RV4=;
+        b=B0d1Zyj7mN230cTERA1CZf0ej1MhKB0R/bcoTDIhZTte7GldGfUewqdlf5oMK4Ac4s
+         7AdjMUAgtaqjPpZBQeKOz3Yk4/G8SHCQNOgYm7VDun1stYXYI4FCpJuh+ym6KGpCIUTp
+         w82OA7Gr4BNU9Qav1L4i8lwEN9d/Y0SpUg0yGj0YB0PjRk5gEzF5cs8JXKmNnOio7dag
+         gzB7OWOJwjHBcDBrgIGI0QB4Ws4QXdDWMCB+qcgxKBf1R/KEw5F4N3flfO76gRreI4LL
+         yP/TuzRl7riC54u0ileD7Tlf4REEeXLdkT48A6JKjAs+S45MMtOD6YRB9jwoz9l35gHd
+         qsDg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9blgOJ/9eV3Svdy0FcZ03V/JEcMgKt3a2a7v0WDkc6aur+HI2Y+NGacFRgfflPqqMCwoPj6eegYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNIgn8ego3GkrYM1IR2/GQqCsiRZofpxJrZ5bFaKHPRhk0kNYv
+	mGeHxL/WmchTji2jxqqk3r5SVtbxJPCTf9RedggzD4MJzbqqk1cp
+X-Google-Smtp-Source: AGHT+IHuJimfGTXEpdqlFDSiMK+DYE/CcnQ1wPzFxlkDDkQ6qmhmI6vJl7XI3nPcT888+1D4k/M/7A==
+X-Received: by 2002:a05:690c:82:b0:6b0:3303:803b with SMTP id 00721157ae682-6db236c88f4mr41479387b3.23.1725468641082;
+        Wed, 04 Sep 2024 09:50:41 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d5a267d5basm16086937b3.15.2024.09.04.09.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 09:50:40 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 4 Sep 2024 09:50:15 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, nifan.cxl@gmail.com,
+	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, a.manzanares@samsung.com,
+	dave@stgolabs.net, nmtadam.samsung@gmail.com
+Subject: Re: [PATCH 2/2] hw/cxl/cxl_event: Fix interrupt triggering for
+ dynamic capacity events grouped via More flag
+Message-ID: <ZtiPxyDYatbP8p98@fan>
+References: <20240827164304.88876-1-nifan.cxl@gmail.com>
+ <20240827164304.88876-3-nifan.cxl@gmail.com>
+ <20240828123919.00005b5f@Huawei.com>
+ <66d88ccd15efb_1e915829439@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] cxl: Move mailbox related bits to the same context
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, alejandro.lucero-palau@amd.com,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- Jonathan.Cameron@huawei.com, dave@stgolabs.net, fan.ni@samsung.com,
- Alejandro Lucero <alucerop@amd.com>
-References: <20240904000020.1686611-1-dave.jiang@intel.com>
- <20240904000020.1686611-2-dave.jiang@intel.com>
- <ZtiLQblMnSAoHfu3@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ZtiLQblMnSAoHfu3@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66d88ccd15efb_1e915829439@iweiny-mobl.notmuch>
 
+On Wed, Sep 04, 2024 at 11:37:33AM -0500, Ira Weiny wrote:
+> Jonathan Cameron wrote:
+> > On Tue, 27 Aug 2024 09:40:05 -0700
+> > nifan.cxl@gmail.com wrote:
+> > 
+> > > From: Fan Ni <fan.ni@samsung.com>
+> > > 
+> > > When inserting multiple dynamic capacity event records grouped via More flag,
+> > > we should only trigger interrupt after the last record is inserted into the
+> > > event log. Achieving the goal by letting cxl_event_insert return true only
+> > > for the insertion of the last dynamic capacity event record in the sequence.
+> > 
+> > I'm not sure this one is accurate.  We might well have a slow
+> > system provisioning capacity one extent at time (and interrupting).
+> > 
+> > The event buffer might also not be large enough to hold all records so
+> > the device might 'wait' before figuring out the next extent for there
+> > to be somewhere to put the record.
+> > 
+> > Overall I think we can interrupt on each one and it should 'work'
+> > as should interrupt only once there are lots of them or
+> > every (n).
+> 
+> Indeed I think it should work.  But you won't see any extents as they will
+> be pending in the memdev.
+> 
+> Did this fail in some way?  I'm sorry I did not try and use qemu to test
+> the more bit.  Rather I used cxl_test for that.
+> 
+> Ira
 
+It works with or without this fix in my test. Until the last extent is
+notified to the OS, the extents will be pending as you mentioned. 
 
-On 9/4/24 9:30 AM, Alison Schofield wrote:
-> On Tue, Sep 03, 2024 at 04:59:08PM -0700, Dave Jiang wrote:
->> Create a new 'struct cxl_mailbox' and move all mailbox related bits to
->> it. This allows isolation of all CXL mailbox data in order to export
->> some of the calls to external kernel callers and avoid exporting of CXL
->> driver specific bits such has device states. The allocation of
->> 'struct cxl_mailbox' is also split out with cxl_mailbox_create() so the
->> mailbox can be created independently.
->>
->> Reviewed-by: Fan Ni <fan.ni@samsung.com>
->> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->> Link: https://patch.msgid.link/20240724185649.2574627-2-dave.jiang@intel.com
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
-> 
-> snip
-> 
-> 
->> @@ -1408,6 +1421,19 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
->>  
->> +int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
->> +{
->> +	if (!cxl_mbox && !host)
+Fan
 
-Oh yeah this needs to be || for it to make sense
+> 
+> > 
+> > Interrupt only fires on a 0 to >= 1 transition anyway, not
+> > on repeats after that unless the log has been cleared.
+> > It's up to OS to keep clearing records until it at least
+> > momentarily hits 0 if it wants to get any more interrupts.
+> > 
+> > Jonathan
+> > 
+> > 
+> > > 
+> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > > ---
+> > >  hw/cxl/cxl-events.c         | 8 ++++++++
+> > >  include/hw/cxl/cxl_events.h | 1 +
+> > >  2 files changed, 9 insertions(+)
+> > > 
+> > > diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> > > index 12dee2e467..90536c0e68 100644
+> > > --- a/hw/cxl/cxl-events.c
+> > > +++ b/hw/cxl/cxl-events.c
+> > > @@ -135,6 +135,14 @@ bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
+> > >      QSIMPLEQ_INSERT_TAIL(&log->events, entry, node);
+> > >      cxl_event_set_status(cxlds, log_type, true);
+> > >  
+> > > +    /*
+> > > +     * For dynamic capacity event records grouped via More flag,
+> > > +     * Only raise interrupt after inserting the last record in the log.
+> > > +     */
+> > > +    if (log_type == CXL_EVENT_TYPE_DYNAMIC_CAP) {
+> > > +        CXLEventDynamicCapacity *dCap = (CXLEventDynamicCapacity *)event;
+> > > +        return (dCap->flags & MORE_FLAG) ? false : true;
+> > > +    }
+> > >      /* Count went from 0 to 1 */
+> > >      return cxl_event_count(log) == 1;
+> > 
+> > If there are multiple this will fail I think as cxl_event_count(log) will go from 0
+> > to X not 1.
+> > 
+> > >  }
+> > > diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> > > index 38cadaa0f3..b0e5cc89c0 100644
+> > > --- a/include/hw/cxl/cxl_events.h
+> > > +++ b/include/hw/cxl/cxl_events.h
+> > > @@ -170,6 +170,7 @@ typedef struct CXLEventMemoryModule {
+> > >   * CXL r3.1 section Table 8-50: Dynamic Capacity Event Record
+> > >   * All fields little endian.
+> > >   */
+> > > +#define MORE_FLAG BIT_MASK(0)
+> > >  typedef struct CXLEventDynamicCapacity {
+> > >      CXLEventRecordHdr hdr;
+> > >      uint8_t type;
+> > 
+> 
+> 
 
->> +		return -EINVAL;
->> +
->> +	cxl_mbox->host = host;
-> 
-> drivers/cxl/core/mbox.c:1431 cxl_mailbox_init() error: we previously assumed 'cxl_mbox' could be null (see line 1428)
-> 
-> caught by smatch_scripts/kchecker
-> 
-> 
-> 
->> +	mutex_init(&cxl_mbox->mbox_mutex);
->> +	rcuwait_init(&cxl_mbox->mbox_wait);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, CXL);
->> +
->>
->>
+-- 
+Fan Ni
