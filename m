@@ -1,133 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADDF1E519;
-	Wed,  4 Sep 2024 12:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0789126AED;
+	Wed,  4 Sep 2024 14:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725453844; cv=none; b=KKlB5FEESZYdf4UjNUsNbDUAusCGMxzUQhZiHBy8esStrmjamPVWBb/j5UUM48KEzfXV1k8eoPPfPtz08Q2fAqMfrG9xHAC2I5yX1WFURr3JTOh9VnDyJqz7aLdmmLIHCcufWb4VeHz3jClm1ORcxEqgoW2L7awPg1QEzwIxx9k=
+	t=1725461279; cv=none; b=dpLynui114KttrBU642aVf0W6FEMwqA35DQDNvh6xZebj16kyGkh7hzEi2pgcwe8o9U03vGRzYGEcsv1Csyq+zARuI8FP1oIV4t2PM+YQbz5XY8HA2ZiOYvVafQxdAl46Gr0X2bErtLTdXQ7P2sGTDk2WMeMup10n3oDLFzsQyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725453844; c=relaxed/simple;
-	bh=tJGTLcktLd7tavZHRdOlm61GQ0ma4cOPb2sKQtEiXps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMQKlXPv9Q0lfxKuqJaIzgaNZu+nF4IJMtdT7VfT7yFMIMgMr98mOK+Y2pwpUX6xe9tNaUsdyyvuFqiR4AsszNeWsFB0DiSmtpt2h+0ROSinvODHyxHM0Dn+/TBPIao4kRonoxkDWK1CEfjAHA0oukWrnma4p6r3e46rK+A+rTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSILlcXN; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725461279; c=relaxed/simple;
+	bh=mU0KzA224qXoCbPfGh2pyAoZukwp+fmwa8j8BL/k5BY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RpTthKTdAyNp7CzJ6cH7AhEggexkiSzMP/5sd08os2VqT6d/yOvjCmwRrf4eVFp2x1Ez6mTxqXruKuxFogA+XzoOm0tjxtjLvXNL9iFB7aRq/t6X9Bt6oxGYvS+DyJnVjjHp0S/9wpOVMI9cJvpmXzWNJhpsGh2fmmyB74lu2qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AohnrcaA; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSILlcXN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AohnrcaA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725453842; x=1756989842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tJGTLcktLd7tavZHRdOlm61GQ0ma4cOPb2sKQtEiXps=;
-  b=PSILlcXN1cu27WrHCmUB7LJnVhh20tGqLYCCueD4W7ybvkMlxF5J8wYZ
-   nPdFzXFHQ+EU2z1/ljh6REGrCi2ehSEHLPkvRK3XKAzFMLeT5ESFmUbNN
-   9mlrrZ0iAihUjhBmWKfFgbmAdJZz0h2nxRNH6NUSPeKNJiMTmhV2R+vDH
-   e4zcewlbeIV+Myr4NNZDxZPpjSX8YSClkelss1PofGFQTeovQc9V5aCvE
-   ADUZYACpueOYmcQUy+T5R9/kAtl/Feukm6aEiJLuVoFvM5UTqMFLmvsdr
-   2y8RfBoF2cOd7P+Hr2tm++9ibr0z10TZl6WV/d5BXDBH7tdsb9LvPo9qp
-   g==;
-X-CSE-ConnectionGUID: SbgpTQAFR4GSuuP3JBmtSA==
-X-CSE-MsgGUID: enrxvbL1RTa9wnGs5U9MUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="13368171"
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="13368171"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 05:44:02 -0700
-X-CSE-ConnectionGUID: mBEWJLO1SHa3KbIefr81zQ==
-X-CSE-MsgGUID: vnGnocvRStC/I5gMTVre5Q==
+  t=1725461277; x=1756997277;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=mU0KzA224qXoCbPfGh2pyAoZukwp+fmwa8j8BL/k5BY=;
+  b=AohnrcaAcUMJFmPuq5HfZSLN5maa3VFhF56fRt+o3XZH9Z0LJqzqBPAd
+   IIiELCSYVBqzc4zzMI4BW3j5RpP3dhvrdAykOHzsevImbKA58aFoEEbvx
+   joXsz3hrbkqD6bjEm3NZVyujxNnxg1W7b/cahq20tRYwXSUCTnre1Gryh
+   114uLvmAb2uMNzi9/xtCg8v2Uu2f8jcHB9gPAJ1Mf1bSe3O7ZD8cysNzx
+   RjRQX0AQH2Iqv0Rm0sRXAhBPXOnXvRpzB7DLd8SWRws4F3OjgF/i64pO1
+   /e4fFXM7NRTLj/hhVihxLiXuuUMg8iyjHEpEH0S3BAqfQS+w9b40vEqk9
+   A==;
+X-CSE-ConnectionGUID: UTzq1il/RuqnoV/xOxQIQg==
+X-CSE-MsgGUID: VMUervLYTEqszeHATX28/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="24318084"
+X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
+   d="scan'208";a="24318084"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 07:47:56 -0700
+X-CSE-ConnectionGUID: VIJxpYjoQHarQZouFm6ZTw==
+X-CSE-MsgGUID: 7NU172oHQNihxkUVylelKA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="70069854"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 05:43:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1slpMY-000000053xj-3rwX;
-	Wed, 04 Sep 2024 15:43:54 +0300
-Date: Wed, 4 Sep 2024 15:43:54 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
-Message-ID: <ZthWCrUR4VmroXZv@smile.fi.intel.com>
-References: <20240819023413.1109779-1-ying.huang@intel.com>
- <ZsL-wfDYsUmWKBep@smile.fi.intel.com>
- <874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
+   d="scan'208";a="65334086"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.125.109.134])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 07:47:55 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Wed, 04 Sep 2024 09:47:54 -0500
+Subject: [PATCH v3] cxl/region: Remove lock from memory notifier callback
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240904-fix-notifiers-v3-1-576b4e950266@intel.com>
+X-B4-Tracking: v=1; b=H4sIABlz2GYC/3WMwQ7CIBAFf6XhLAYWrNST/2E8ULq1myg00BBN0
+ 3+X9tSYeJyXNzOzhJEwsUs1s4iZEgVfQB0q5gbrH8ipK8xAgBZGKt7Tm/swUU8YE28ap06iFVp
+ bYMUZI5bD1rvdCw+UphA/Wz7Ldf1XypJLjn0HykpTG9NdyU/4PLrwYmspw97WvzYUu25tq4xsw
+ J3d3l6W5QuMEBw66AAAAA==
+To: Ying Huang <ying.huang@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.15-dev-37811
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1725461274; l=5311;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=mU0KzA224qXoCbPfGh2pyAoZukwp+fmwa8j8BL/k5BY=;
+ b=K7kpeyOuwtMsbzKbGbF2O/q3beeeM/CtRgdcnvJs50iCfrB48sDrhoaVGKYY0l8x8MSWqEiKe
+ vxGoccys1ZwCXIBG+yZx1rIwa7ljYqloUTCdHc/HjWVazyDdWExB8h2
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-On Wed, Sep 04, 2024 at 03:48:44PM +0800, Huang, Ying wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> > On Mon, Aug 19, 2024 at 10:34:13AM +0800, Huang Ying wrote:
+In testing Dynamic Capacity Device (DCD) support, a lockdep splat
+revealed an ABBA issue between the memory notifiers and the DCD extent
+processing code.[0]  Changing the lock ordering within DCD proved
+difficult because regions must be stable while searching for the proper
+region and then the device lock must be held to properly notify the DAX
+region driver of memory changes.
 
-...
+Dan points out in the thread that notifiers should be able to trust that
+it is safe to access static data.  Region data is static once the device
+is realized and until it's destruction.  Thus it is better to manage the
+notifiers within the region driver.
 
-> >> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> >> Cc: Dan Williams <dan.j.williams@intel.com>
-> >> Cc: David Hildenbrand <david@redhat.com>
-> >> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> >> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> >> Cc: Dave Jiang <dave.jiang@intel.com>
-> >> Cc: Alison Schofield <alison.schofield@intel.com>
-> >> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> >> Cc: Ira Weiny <ira.weiny@intel.com>
-> >> Cc: Alistair Popple <apopple@nvidia.com>
-> >> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >> Cc: Baoquan He <bhe@redhat.com>
-> >
-> > You may move Cc list after '---', so it won't unnecessarily pollute the commit
-> > message.
-> 
-> Emm... It appears that it's a common practice to include "Cc" in the
-> commit log.
+Remove the need for a lock by ensuring the notifiers are active only
+during the region's lifetime.
 
-For what benefit? (Note, nowadays we have lore.kernel.org which is under
-the control of Linux kernel project)
+Furthermore, remove cxl_region_nid() because resource can't be NULL
+while the region is stable.
 
-Personally I see only downsides of these being inside the commit message.
+Link: https://lore.kernel.org/all/66b4cf539a79b_a36e829416@iweiny-mobl.notmuch/ [0]
+Cc: Ying Huang <ying.huang@intel.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ying Huang <ying.huang@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+Changes in v3:
+- [Ying: Add comment regarding cxl_region_rwsem]
+- [iweiny: pickup tags]
+- Link to v2: https://patch.msgid.link/20240814-fix-notifiers-v2-1-6bab38192c7c@intel.com
 
-Here is a discussion about this
-https://lore.kernel.org/linux-doc/20240423132024.2368662-1-andriy.shevchenko@linux.intel.com/
+Changes in v2:
+- [djbw: remove cxl_region_nid()]
+- Link to v1: https://patch.msgid.link/20240813-fix-notifiers-v1-1-efd23a18688d@intel.com
+---
+ drivers/cxl/core/region.c | 54 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-...
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 21ad5f242875..dbc9f8a4f603 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2313,8 +2313,6 @@ static void unregister_region(void *_cxlr)
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	int i;
+ 
+-	unregister_memory_notifier(&cxlr->memory_notifier);
+-	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
+ 	device_del(&cxlr->dev);
+ 
+ 	/*
+@@ -2391,18 +2389,6 @@ static bool cxl_region_update_coordinates(struct cxl_region *cxlr, int nid)
+ 	return true;
+ }
+ 
+-static int cxl_region_nid(struct cxl_region *cxlr)
+-{
+-	struct cxl_region_params *p = &cxlr->params;
+-	struct resource *res;
+-
+-	guard(rwsem_read)(&cxl_region_rwsem);
+-	res = p->res;
+-	if (!res)
+-		return NUMA_NO_NODE;
+-	return phys_to_target_node(res->start);
+-}
+-
+ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
+ 					  unsigned long action, void *arg)
+ {
+@@ -2415,7 +2401,11 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
+ 	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
+ 		return NOTIFY_DONE;
+ 
+-	region_nid = cxl_region_nid(cxlr);
++	/*
++	 * No need to hold cxl_region_rwsem; region parameters are stable
++	 * within the cxl_region driver.
++	 */
++	region_nid = phys_to_target_node(cxlr->params.res->start);
+ 	if (nid != region_nid)
+ 		return NOTIFY_DONE;
+ 
+@@ -2434,7 +2424,11 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
+ 	int *adist = data;
+ 	int region_nid;
+ 
+-	region_nid = cxl_region_nid(cxlr);
++	/*
++	 * No need to hold cxl_region_rwsem; region parameters are stable
++	 * within the cxl_region driver.
++	 */
++	region_nid = phys_to_target_node(cxlr->params.res->start);
+ 	if (nid != region_nid)
+ 		return NOTIFY_OK;
+ 
+@@ -2484,14 +2478,6 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+ 	if (rc)
+ 		goto err;
+ 
+-	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
+-	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
+-	register_memory_notifier(&cxlr->memory_notifier);
+-
+-	cxlr->adist_notifier.notifier_call = cxl_region_calculate_adistance;
+-	cxlr->adist_notifier.priority = 100;
+-	register_mt_adistance_algorithm(&cxlr->adist_notifier);
+-
+ 	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
+ 	if (rc)
+ 		return ERR_PTR(rc);
+@@ -3386,6 +3372,14 @@ static int is_system_ram(struct resource *res, void *arg)
+ 	return 1;
+ }
+ 
++static void shutdown_notifiers(void *_cxlr)
++{
++	struct cxl_region *cxlr = _cxlr;
++
++	unregister_memory_notifier(&cxlr->memory_notifier);
++	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
++}
++
+ static int cxl_region_probe(struct device *dev)
+ {
+ 	struct cxl_region *cxlr = to_cxl_region(dev);
+@@ -3418,6 +3412,18 @@ static int cxl_region_probe(struct device *dev)
+ out:
+ 	up_read(&cxl_region_rwsem);
+ 
++	if (rc)
++		return rc;
++
++	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
++	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
++	register_memory_notifier(&cxlr->memory_notifier);
++
++	cxlr->adist_notifier.notifier_call = cxl_region_calculate_adistance;
++	cxlr->adist_notifier.priority = 100;
++	register_mt_adistance_algorithm(&cxlr->adist_notifier);
++
++	rc = devm_add_action_or_reset(&cxlr->dev, shutdown_notifiers, cxlr);
+ 	if (rc)
+ 		return rc;
+ 
 
-> >> +		ostart = max(res.start, p->start);
-> >> +		oend = min(res.end, p->end);
-> >
-> > Isn't a reinvention of resource_intersection()? With that in place you may also
-> > drop the above resource_overlaps().
-> 
-> sizeof(struct resource) == 8 * sizeof(unsigned long)
-> 
-> Just want to avoid to define another struct resource on stack.
+---
+base-commit: 67784a74e258a467225f0e68335df77acd67b7ab
+change-id: 20240813-fix-notifiers-99c350b044a2
 
-Is it a problem?
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Ira Weiny <ira.weiny@intel.com>
 
