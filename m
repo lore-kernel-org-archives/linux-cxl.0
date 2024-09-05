@@ -1,155 +1,111 @@
-Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+Received: from pv50p00im-hyfv10011601.me.com (pv50p00im-hyfv10011601.me.com [17.58.6.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEF179CC
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Sep 2024 00:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AA9748D
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Sep 2024 01:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725496630; cv=none; b=lLeYEKV4R2lU5USyFyY9hygLDK3BOMqgOhcDByVKlpduqbigWCvgMQ3lz9No2AQOQxgDHCf8kAlyAdgc6BZkx3oC5kRaebX/sSMfNLpJ9ehNDTV/kOz5w6BhLx54HewFQwB5qfnetl+isPbKPMOkxkLMM1MGbFykviWhG6ejCyM=
+	t=1725498181; cv=none; b=mFQdvSbdjqT83C9Xf9gX09F2rfdf0vWAgpWMf2dd+pnoEyld/R7Xwedy1yqIdew79S+r9knj2CfXr+F90K2fuPlqWyB0PEU6ksM00fMliqrXEhq4a5+GOqeSC4DUot42Md13C7ACVAd8uCLqe4mMIG1AHLHIUHqDqcIFfyvN7NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725496630; c=relaxed/simple;
-	bh=drjG4ZOWXJdI+ivlJh21hmoDtwnILe4lYsXLEA47HkY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PjS225u01Sy29gq5t0i7lS3MeqJwxAELmwAA2eQJGgeBws3wHTaG3Q6JYy/ADvnv8m5GpeIz6ZREvklzsnLpKPVOBN16J3QAlhYIadtKSrOA54j+ngw52+DetrC84NS7wVufdYM7tMkYg586+yALssqWmEAtN1VGkDvQPOapFJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Ubtsjbr5; arc=none smtp.client-ip=17.58.6.42
+	s=arc-20240116; t=1725498181; c=relaxed/simple;
+	bh=GykyIwLq1BnUDdl5erj5qQJG0n/oyjRymF+evXtV7oI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g75CqRO3uJVJlBcYVInma+i/x/1I4PSpOYKfYvPbQtHYradTWPv8niMDS8hPBjD0+cPie08K8SkafaXtrIAxQ9tKN3xhBW+fV3ekIOupedLHhinQVxEBd4NDgsZARJvcs1aU6Ls2Cv8GjmJFocmj7vmFggjdqg2/VvWjzgYNfps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=FKFy/o14; arc=none smtp.client-ip=17.58.6.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Ubtsjbr5"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="FKFy/o14"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1725496628;
-	bh=USB2vfc0jyMwYalYSpIdv6871aXzY1LF0xxOVZ5PeKw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
-	b=Ubtsjbr5bH+GbqvBLG23EcbIvl1jCr2cZEEd7blJwLnsbgoFwtPgq+vW2xWYqvrfb
-	 R+MQ4vl+J7Vz8EI0KoMukz1o+YewelzjUu4yzB4IciPB3YlBAobSeOIi1TT6bKeScJ
-	 NE/AIRnUpsejCHmkm6ievvmIowKVs+tThmRTWtSwnFOZVY0EQ6d4u2ND5LFQLo5N1d
-	 wQVrkG3M818mvseClX9VrZRnFhxbw9X3G+tK5kd4xeW88xlWqCNs5nmOdej6QY2Qq5
-	 uqCDrNJ7Go1mNNhkVkHwdrJVN42kjCkmmxeqVXFITAXNTyWwbPxAiazZwogVwvAgS2
-	 0bhmF8hMmkLSw==
+	s=1a1hai; t=1725498180;
+	bh=6Hmte6RnfrOEToAS1kUk3LKPZ+n947JNju3lGec5oho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=FKFy/o14jYYGLMVx0PnK+yfGg62i3AEV4ZeN5WdNc8sWQ6rDfobm6Qrv2wCwD8uYI
+	 Q81qVTarBT2msuVAJGQqI67vJv72jwNnGdj8snLO4LuJdQxAOuDxtUNP4uAozN8RjZ
+	 TdLh9QRaIUyLNc+ScugLRz+uP2b9xE8O4CVhUWgaZhiEU2DYCk4BZ23bU63EWeVy9g
+	 m68raLb96raoC5J7r5cmCmJGazO1IWb7HG7YDEyMDMiUG1Ruy7X1D5C6v6wrUuym3G
+	 sWdaSMnUBBFcvq5JIjkz4TWJI4lJKz4XbCxdVLlpP/JjRzCOY2bFv8H1AyKQ8z9Fxv
+	 Jpvk+WJ9N69Nw==
 Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 8CB104A017B;
-	Thu,  5 Sep 2024 00:36:59 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Thu, 05 Sep 2024 08:36:10 +0800
-Subject: [PATCH v4 2/2] net: qcom/emac: Find sgmii_ops by
- device_for_each_child()
+	by pv50p00im-hyfv10011601.me.com (Postfix) with ESMTPSA id 13315C8009E;
+	Thu,  5 Sep 2024 01:02:54 +0000 (UTC)
+Message-ID: <af326d48-e41e-4e4f-8555-5bf62dd6e552@icloud.com>
+Date: Thu, 5 Sep 2024 09:02:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/region: Fix logic for finding a free cxl decoder
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Ben Widawsky <bwidawsk@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>,
+ stable@vger.kernel.org
+References: <20240903-fix_cxld-v1-1-61acba7198ae@quicinc.com>
+ <ZtduQeu2NNyVWTk7@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <ZtduQeu2NNyVWTk7@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240905-const_dfc_prepare-v4-2-4180e1d5a244@quicinc.com>
-References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
-In-Reply-To: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>, Timur Tabi <timur@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Proofpoint-ORIG-GUID: LdsecNXrHLlaiqKWlirkO2_BwraVm0vJ
-X-Proofpoint-GUID: LdsecNXrHLlaiqKWlirkO2_BwraVm0vJ
+X-Proofpoint-ORIG-GUID: lYNaOzvWn1x7jVXL8M2WOO0oJq-sykJ4
+X-Proofpoint-GUID: lYNaOzvWn1x7jVXL8M2WOO0oJq-sykJ4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-04_22,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- spamscore=0 phishscore=0 suspectscore=0 malwarescore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2409050002
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2409050006
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On 2024/9/4 04:14, Alison Schofield wrote:
+> On Tue, Sep 03, 2024 at 08:41:44PM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> match_free_decoder()'s logic for finding a free cxl decoder depends on
+>> a prerequisite that all child decoders are sorted by ID in ascending order
+>> but the prerequisite may not be guaranteed, fix by finding a free cxl
+>> decoder with minimal ID.
+> 
+> After reading the 'Closes' tag below I have a better understanding of
+> why you may be doing this, but I don't want to have to jump to that
+> Link. Can you describe here examples of when the ordered allocation
+> may not be guaranteed, and the impact when that happens.
+> 
 
-To prepare for constifying the following old driver core API:
+thank you for code review.
+let me try to do it.
 
-struct device *device_find_child(struct device *dev, void *data,
-		int (*match)(struct device *dev, void *data));
-to new:
-struct device *device_find_child(struct device *dev, const void *data,
-		int (*match)(struct device *dev, const void *data));
+> This includes a change to device_for_each_child() which I see mentioned
+> in the Closes tag discussion too. Is that required for this fix?
+>
 
-The new API does not allow its match function (*match)() to modify
-caller's match data @*data, but emac_sgmii_acpi_match() as the old
-API's match function indeed modifies relevant match data, so it is not
-suitable for the new API any more, solved by using device_for_each_child()
-to implement relevant finding sgmii_ops function.
+yes, device_for_each_child() is better than device_find_child() to
+correct logic for finding a free cxl decoder.
+> It's feeling like the fix and api update are comingled. Please clarify.
+> 
 
-By the way, this commit does not change any existing logic.
+actually, there are two concerns as shown below:
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+concern A: device_find_child() modifies caller's match data.
+concern B: weird logic for finding a free cxl decoder
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-index e4bc18009d08..29392c63d115 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
-@@ -293,6 +293,11 @@ static struct sgmii_ops qdf2400_ops = {
- };
- #endif
- 
-+struct emac_match_data {
-+	struct sgmii_ops **sgmii_ops;
-+	struct device *target_device;
-+};
-+
- static int emac_sgmii_acpi_match(struct device *dev, void *data)
- {
- #ifdef CONFIG_ACPI
-@@ -303,7 +308,7 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
- 		{}
- 	};
- 	const struct acpi_device_id *id = acpi_match_device(match_table, dev);
--	struct sgmii_ops **ops = data;
-+	struct emac_match_data *match_data = data;
- 
- 	if (id) {
- 		acpi_handle handle = ACPI_HANDLE(dev);
-@@ -324,10 +329,12 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
- 
- 		switch (hrv) {
- 		case 1:
--			*ops = &qdf2432_ops;
-+			*match_data->sgmii_ops = &qdf2432_ops;
-+			match_data->target_device = get_device(dev);
- 			return 1;
- 		case 2:
--			*ops = &qdf2400_ops;
-+			*match_data->sgmii_ops = &qdf2400_ops;
-+			match_data->target_device = get_device(dev);
- 			return 1;
- 		}
- 	}
-@@ -356,10 +363,15 @@ int emac_sgmii_config(struct platform_device *pdev, struct emac_adapter *adpt)
- 	int ret;
- 
- 	if (has_acpi_companion(&pdev->dev)) {
-+		struct emac_match_data match_data = {
-+			.sgmii_ops = &phy->sgmii_ops,
-+			.target_device = NULL,
-+		};
- 		struct device *dev;
- 
--		dev = device_find_child(&pdev->dev, &phy->sgmii_ops,
--					emac_sgmii_acpi_match);
-+		device_for_each_child(&pdev->dev, &match_data, emac_sgmii_acpi_match);
-+		/* Need to put_device(@dev) after use */
-+		dev = match_data.target_device;
- 
- 		if (!dev) {
- 			dev_warn(&pdev->dev, "cannot find internal phy node\n");
+this patch focuses on concern B, and it also solve concern A in passing.
 
--- 
-2.34.1
+the following exclusive patch only solves concern A.
+https://lore.kernel.org/all/20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com/
+
+either will solve concern A i care about.
+
+> Thanks,
+> Alison
+> 
+>>
 
