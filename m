@@ -1,191 +1,203 @@
-Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322D61991AC
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Sep 2024 11:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0319884A;
+	Thu,  5 Sep 2024 11:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725535143; cv=none; b=hEEGfS/1pXKos+1Si67Iv6yYPmBYHdEYPo2l8gYNNgO9Ygfi8xUFi/fCJHFCiwRAEkLmMphrh8sB6FSyDea6vNFovKfcQinqJFyZ+avUnofzYVcp/klZItIfQgZKG8ZHTt6lU0ilKvxSvI4d9YathGuBCb7mfaqfktGkBWWDDK0=
+	t=1725535434; cv=none; b=StTmPU95X/JHpSWQ7yImuqlPhKCrHxjnnZdCm9kw8coBVyehZigDqSyB2/8XVD0c2VBdpDbWAbTR9kxsgwPw4BI2ixoNWFrHhbYrS5ot7fTn5kSdhC7nFdW1srhXuH0MjXo8NNrV3GbusFiZFy3oJ+9cEP84VGYpCCO7Bb14ewI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725535143; c=relaxed/simple;
-	bh=lMp1ke43TA48pLwZz2aBhY6oDUH1zsX1teUgRgCDxF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q/ittarsIW3jfLtE5acDw3AaDhREsyaKhO9w+ey8e3h/orZdMFU7ZwgkxoMNup4JZfZzmgDPhibwiFau0OrrCn2Pz61SqdQBwM9gIegalf7cAa30hteBQmYVHmPgZNvS69gHcMchv+nETPd/j3Kh6D/ICAszjYdVu0bVnkJuLl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=zd3n2A6h; arc=none smtp.client-ip=17.58.6.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="zd3n2A6h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1725535141;
-	bh=DefRs6VFP4+6dHR//STGdVMunQuKjjIDMnCyAZvxDuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=zd3n2A6hYtpgHxT1rRV+1tzdqQBmWZ599/qp4fT9DMjFW7yBxa1OUG9oxRWT6SjV2
-	 pBmGwS5VJCY9pMKC3IW5sxE4MyL9OJ0SJDkzerWjxsMpJzMfx/RTainIDwd6mjUoN/
-	 UKBdb8olaSPoeFvJsNBF95OZZLNOza3M9giChaYUXFHlFWVqt293DaQT/h+gu03jjv
-	 b5JIGF+HMQ4maAjK4F2DOGzolA8hLfDJQBiz+uAgTjeVDGIPQCxdPrrJg39DyLMwSQ
-	 /D/qwpZMxtQDZMegfwer9g3ihxvG6TFr7pSnB/FPHalW1tiQBtAcLXm9BprHOyg8za
-	 otlb9tIZIoGeA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id 4F06A3A103A;
-	Thu,  5 Sep 2024 11:18:52 +0000 (UTC)
-Message-ID: <c1e70de3-5c08-4213-a15d-fe565d8a533a@icloud.com>
-Date: Thu, 5 Sep 2024 19:18:47 +0800
+	s=arc-20240116; t=1725535434; c=relaxed/simple;
+	bh=8kCS0pJXM3ezR5roVWNJdy8wnu81VgMsOVNuKqbx5vc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GipyKvd26hP1X8/6GYP9Z6M3ciLdtL4LekMHY/gkxS9UwF5xHCKwzgV6AzNXUkX+QduzcfxiOZfcmWSh9iB3JszfXRxPN9//wyD7L/zpLf1MurUerWbxzSZMHNRbZAbujneekFqTC9lEBpSeDLF4/y5ILL4tNA68tjejA3uZAng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WzxjG2btbz6K8yp;
+	Thu,  5 Sep 2024 19:20:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3108C1400DC;
+	Thu,  5 Sep 2024 19:23:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 5 Sep
+ 2024 12:23:43 +0100
+Date: Thu, 5 Sep 2024 12:23:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+	<linuxarm@huawei.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvi?=
+ =?ISO-8859-1?Q?nen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
+ CXL PMUs (and aer)
+Message-ID: <20240905122342.000001be@Huawei.com>
+In-Reply-To: <87plpsbbe5.ffs@tglx>
+References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
+	<20240605180409.GA520888@bhelgaas>
+	<20240605204428.00001cb2@Huawei.com>
+	<20240605213910.00003034@huawei.com>
+	<ZmG3vjD2sbCOPrM0@wunner.de>
+	<20240823120501.00004151@Huawei.com>
+	<87plpsbbe5.ffs@tglx>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
- device_for_each_child()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
- <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
- <2024090531-mustang-scheming-3066@gregkh>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <2024090531-mustang-scheming-3066@gregkh>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: V_PDx_zY9TCLD3jByaAHCB0SsebnLhlI
-X-Proofpoint-ORIG-GUID: V_PDx_zY9TCLD3jByaAHCB0SsebnLhlI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-05_06,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 bulkscore=0
- mlxscore=0 phishscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2409050083
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 2024/9/5 13:32, Greg Kroah-Hartman wrote:
-> On Thu, Sep 05, 2024 at 08:36:09AM +0800, Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> To prepare for constifying the following old driver core API:
->>
->> struct device *device_find_child(struct device *dev, void *data,
->> 		int (*match)(struct device *dev, void *data));
->> to new:
->> struct device *device_find_child(struct device *dev, const void *data,
->> 		int (*match)(struct device *dev, const void *data));
->>
->> The new API does not allow its match function (*match)() to modify
->> caller's match data @*data, but match_free_decoder() as the old API's
->> match function indeed modifies relevant match data, so it is not suitable
->> for the new API any more, solved by using device_for_each_child() to
->> implement relevant finding free cxl decoder function.
->>
->> By the way, this commit does not change any existing logic.
->>
->> Suggested-by: Ira Weiny <ira.weiny@intel.com>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
->>  drivers/cxl/core/region.c | 30 ++++++++++++++++++++++++------
->>  1 file changed, 24 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 21ad5f242875..c2068e90bf2f 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -794,10 +794,15 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->>  	return rc;
->>  }
->>  
->> +struct cxld_match_data {
->> +	int id;
->> +	struct device *target_device;
->> +};
->> +
->>  static int match_free_decoder(struct device *dev, void *data)
->>  {
->> +	struct cxld_match_data *match_data = data;
->>  	struct cxl_decoder *cxld;
->> -	int *id = data;
->>  
->>  	if (!is_switch_decoder(dev))
->>  		return 0;
->> @@ -805,17 +810,31 @@ static int match_free_decoder(struct device *dev, void *data)
->>  	cxld = to_cxl_decoder(dev);
->>  
->>  	/* enforce ordered allocation */
->> -	if (cxld->id != *id)
->> +	if (cxld->id != match_data->id)
->>  		return 0;
->>  
->> -	if (!cxld->region)
->> +	if (!cxld->region) {
->> +		match_data->target_device = get_device(dev);
-> 
-> Where is put_device() called?
-> 
-> Ah, it's on the drop later on after find_free_decoder(), right?
-> 
->>  		return 1;
->> +	}
->>  
->> -	(*id)++;
->> +	match_data->id++;
->>  
->>  	return 0;
->>  }
->>  
->> +/* NOTE: need to drop the reference with put_device() after use. */
->> +static struct device *find_free_decoder(struct device *parent)
->> +{
->> +	struct cxld_match_data match_data = {
->> +		.id = 0,
->> +		.target_device = NULL,
->> +	};
->> +
->> +	device_for_each_child(parent, &match_data, match_free_decoder);
->> +	return match_data.target_device;
->> +}
->> +
->>  static int match_auto_decoder(struct device *dev, void *data)
->>  {
->>  	struct cxl_region_params *p = data;
->> @@ -840,7 +859,6 @@ cxl_region_find_decoder(struct cxl_port *port,
->>  			struct cxl_region *cxlr)
->>  {
->>  	struct device *dev;
->> -	int id = 0;
->>  
->>  	if (port == cxled_to_port(cxled))
->>  		return &cxled->cxld;
->> @@ -849,7 +867,7 @@ cxl_region_find_decoder(struct cxl_port *port,
->>  		dev = device_find_child(&port->dev, &cxlr->params,
->>  					match_auto_decoder);
->>  	else
->> -		dev = device_find_child(&port->dev, &id, match_free_decoder);
->> +		dev = find_free_decoder(&port->dev);
-> 
-> This still feels more complex that I think it should be.  Why not just
-> modify the needed device information after the device is found?  What
-> exactly is being changed in the match_free_decoder that needs to keep
-> "state"?  This feels odd.
-> 
+Hi Thomas,
 
-i noticed that state of below exclusive fix have changed to "Handled
-Elsewhere", that fix can solve our concern as well, let us wait for 2-3
-days to see if there are some progress.
+One quick follow up question below.
 
-https://patchwork.kernel.org/project/cxl/patch/20240903-fix_cxld-v1-1-61acba7198ae@quicinc.com/
-
-thanks
-
-> thanks,
 > 
-> greg k-h
+> So looking at the ASCII art of the cover letter:
+> 
+>  _____________ __            ________ __________
+> |  Port       |  | creates  |        |          |
+> |  PCI Dev    |  |--------->| CPMU A |          |
+> |_____________|  |          |________|          |
+> |portdrv binds   |          | perf/cxlpmu binds |
+> |________________|          |___________________|
+>                  \         
+>                   \
+>                    \         ________ __________
+>                     \       |        |          |
+>                      ------>| CPMU B |          |      
+>                             |________|          |
+>                             | perf/cxlpmu binds |
+>                             |___________________|
+> 
+> AND
+> 
+>  _____________ __ 
+> |  Type 3     |  | creates                                 ________ _________
+> |  PCI Dev    |  |--------------------------------------->|        |         |
+> |_____________|  |                                        | CPMU C |         |
+> | cxl_pci binds  |                                        |________|         |
+> |________________|                                        | perf/cxpmu binds |
+>                                                           |__________________|
+> 
+> If I understand it correctly then both the portdrv and the cxl_pci
+> drivers create a "bus". The CPMU devices are attached to these buses.
+> 
+> So we are talking about distinctly different devices with the twist that
+> these devices somehow need to utilize the MSI/X (forget MSI) facility of
+> the device which creates the bus.
+> 
+> From the devres perspective we look at separate devices and that's what
+> the interrupt code expects too. This reminds me of the lengthy
+> discussion we had about IMS a couple of years ago.
+> 
+>   https://lore.kernel.org/all/87bljg7u4f.fsf@nanos.tec.linutronix.de/
+> 
+> My view on that issue was wrong because the Intel people described the
+> problem wrong. But the above pretty much begs for a proper separation
+> and hierarchical design because you provide an actual bus and distinct
+> devices. Reusing the ASCII art from that old thread for the second case,
+> but it's probably the same for the first one:
+> 
+>            ]-------------------------------------------|
+>            | PCI device                                |
+>            ]-------------------|                       |
+>            | Physical function |                       |
+>            ]-------------------|                       |
+>            ]-------------------|----------|            |
+>            | Control block for subdevices |            |
+>            ]------------------------------|            |
+>            |            | <- "Subdevice BUS"           |
+>            |            |                              |
+>            |            |-- Subddevice 0               | 
+>            |            |-- Subddevice 1               | 
+>            |            |-- ...                        | 
+>            |            |-- Subddevice N               | 
+>            ]-------------------------------------------|
+> 
+> 1) cxl_pci driver binds to the PCI device.
+> 
+> 2) cxl_pci driver creates AUXbus
+> 
+> 3) Bus enumerates devices on AUXbus
+> 
+> 4) Drivers bind to the AUXbus devices
+> 
+> So you have a clear provider consumer relationship. Whether the
+> subdevice utilizes resources of the PCI device or not is a hardware
+> implementation detail.
+> 
+> The important aspect is that you want to associate the subdevice
+> resources to the subdevice instances and not to the PCI device which
+> provides them.
+> 
+> Let me focus on interrupts, but it's probably the same for everything
+> else which is shared.
+> 
+> Look at how the PCI device manages interrupts with the per device MSI
+> mechanism. Forget doing this with either one of the legacy mechanisms.
+> 
+>   1) It creates a hierarchical interrupt domain and gets the required
+>      resources from the provided parent domain. The PCI side does not
+>      care whether this is x86 or arm64 and it neither cares whether the
+>      parent domain does remapping or not. The only way it cares is about
+>      the features supported by the different parent domains (think
+>      multi-MSI).
+>      
+>   2) Driver side allocations go through the per device domain
+> 
+> That AUXbus is not any different. When the CPMU driver binds it wants to
+> allocate interrupts. So instead of having a convoluted construct
+> reaching into the parent PCI device, you simply can do:
+> 
+>   1) Let the cxl_pci driver create a MSI parent domain and set that in
+>      the subdevice::msi::irqdomain pointer.
+> 
+>   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
+>      driver to create a per device interrupt domain.
+> 
+>   3) Let the CPMU driver create its per device interrupt domain with
+>      the provided parent domain
+> 
+>   4) Let the CPMU driver allocate its MSI-X interrupts through the per
+>      device domain
+> 
+> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
+> function does:
+> 
+>     if (!pci_msix_enabled(pdev))
+>     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
+>     else
+>         return pci_msix_alloc_irq_at(pdev, ....);
+
+Hi Thomas,
+
+I'm struggling to follow this suggestion
+Would you expect the cxl_pci MSI parent domain to set it's parent as
+msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
+					 IRQ_DOMAIN_FLAG_MSI_PARENT,
+					 ...
+which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
+or create a separate domain structure and provide callbacks that reach into
+the parent domain as necessary?
+
+Or do I have this entirely wrong? I'm struggling to relate what existing
+code like PCI does to what I need to do here.
+
+Jonathan
+
 
