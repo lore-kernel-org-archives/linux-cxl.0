@@ -1,102 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0395476B;
-	Thu,  5 Sep 2024 03:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A214879F5;
+	Thu,  5 Sep 2024 05:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725505455; cv=none; b=AzZ0oSkRT7Y+mmOuMpWZ84CVqguwTAk4LOnNUQ+mF21/reR0HupZpgQ5eSsk1yOzf+lE7VU67faCwooUwmI5BhMYkwRWUMxbygG4Bj7nUZTfyCuhGRZCSkYO4qjPg/vWxTAWDdb3D4EkCzZEueagAAwrJ/19eB3aOnuiHghwnbk=
+	t=1725514153; cv=none; b=Wtubksavi0xkz+v0l1V1rJNMz4vk/6PLgTPRl0Xnob7qQnIvZp9fajEr/l6yc+p1vvcY/ZSoam8AkYzq7Dd2t+IbCKbbjVEUPxB3k8Jt+MNMjajckete0fih6KustSr8Hd34KZCjABzhfml7i5VnPO1lyCX0bU32EX3+XdTKOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725505455; c=relaxed/simple;
-	bh=0JSnG5HRLCKfbdDlK8qTrHejGQWFOx7ylq1ibs1Fn1c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=r59GN05fTkIobycZMVwTXTL6K3v7ohDxRaUjzjKQZgILLsb1PQJ8FmF/h0OWQJ1M9K5Cavdp2plaKDKkvcMYMfUP/EjGRb96twjEtIyIEPkeEQgvt46HfvlSGOdEQN3cZwO3dzzJJVtC3tPzawaK68xd5mmvEFZuuozW4wYvHKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFPrCVH+; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725514153; c=relaxed/simple;
+	bh=t4IL1zURGkLHSSkfDGduy22l1pZL0eKjhf0pnmeRqKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p71/Tg6Mko3+DQdwHxDZd3Z6snlyxaGlFMi5oDyAm/mwAeEykA/IrnoG9ApGKwXFAaGufggCDF2hoON9+4Hy6dpfYdc6tnepk8MvkbBVwMwRy+Pye9zweY6KV3AdNWSzmD70v2LlnpQSZIhum1NMdPLJxA898NjDTalNItEXKGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NS8SsDSX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFPrCVH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725505453; x=1757041453;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=0JSnG5HRLCKfbdDlK8qTrHejGQWFOx7ylq1ibs1Fn1c=;
-  b=gFPrCVH+JhhACsM9TazArPpdfXT4JDAssY5il2gi3Z/tWBnVF44nS6o6
-   LabevFCSXro0DMoekhUv4hRt2evjoFroTm6l+lgODvnNmvcl+oIwToT+t
-   mqWulYXr32SNwY/BQW5PbJwNvnsLxnxofWGYvEJz8pNq4w2K9epoz1n4C
-   dTMhXn7kIDt6/ApvjWPUqwozFjREQPyaXKtzXLz5gOweT7nb8ULQQlkQ3
-   6/dpN7dmBkCbffCioDvKd3I/6KiaHEMk+whK8dH+RamkImn8sg5FggkTL
-   wq9RCHgFWfk5OZSDFRGsX0NerMRVxdLnElzQhrgdjFyLYUhGvZz9ii807
-   Q==;
-X-CSE-ConnectionGUID: 0jVHs0/kTVC9bNo1qFx6rA==
-X-CSE-MsgGUID: 5D+z8H40Qam5BI6qZ+qIvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="35357204"
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="35357204"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 20:03:50 -0700
-X-CSE-ConnectionGUID: Z8iGrkMfSI2AHVkBUG0Zeg==
-X-CSE-MsgGUID: ucmmtiruRcCC+/WXqLY2Sw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="65516118"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 20:03:47 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,  Dan
- Williams <dan.j.williams@intel.com>,  David Hildenbrand
- <david@redhat.com>,  "Davidlohr Bueso" <dave@stgolabs.net>,  Jonathan
- Cameron <jonathan.cameron@huawei.com>,  Dave Jiang <dave.jiang@intel.com>,
-  Alison Schofield <alison.schofield@intel.com>,  Vishal Verma
- <vishal.l.verma@intel.com>,  "Ira Weiny" <ira.weiny@intel.com>,  Alistair
- Popple <apopple@nvidia.com>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
-In-Reply-To: <ZthWCrUR4VmroXZv@smile.fi.intel.com> (Andy Shevchenko's message
-	of "Wed, 4 Sep 2024 15:43:54 +0300")
-References: <20240819023413.1109779-1-ying.huang@intel.com>
-	<ZsL-wfDYsUmWKBep@smile.fi.intel.com>
-	<874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZthWCrUR4VmroXZv@smile.fi.intel.com>
-Date: Thu, 05 Sep 2024 11:00:14 +0800
-Message-ID: <87tteu6c01.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NS8SsDSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FDD9C4CEC4;
+	Thu,  5 Sep 2024 05:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1725514153;
+	bh=t4IL1zURGkLHSSkfDGduy22l1pZL0eKjhf0pnmeRqKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NS8SsDSX3TjlfFfgoDpJZnpcGYvFLdOe4npmlaRUKGVunoFYbMJPT3aKi9OsbI7Yd
+	 BtwwOT9OQcUpHSq85rqzq2LOYWhe1eqCnFSqKde2TXNKCkcamt6cvnI0q5S6DrOMMu
+	 LykCO+LVBrMMfgvgd/uSlpNDHQC6QVW5qAGxe/XQ=
+Date: Thu, 5 Sep 2024 07:29:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Timur Tabi <timur@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH v4 2/2] net: qcom/emac: Find sgmii_ops by
+ device_for_each_child()
+Message-ID: <2024090521-finch-skinny-69bc@gregkh>
+References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
+ <20240905-const_dfc_prepare-v4-2-4180e1d5a244@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240905-const_dfc_prepare-v4-2-4180e1d5a244@quicinc.com>
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+On Thu, Sep 05, 2024 at 08:36:10AM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> To prepare for constifying the following old driver core API:
+> 
+> struct device *device_find_child(struct device *dev, void *data,
+> 		int (*match)(struct device *dev, void *data));
+> to new:
+> struct device *device_find_child(struct device *dev, const void *data,
+> 		int (*match)(struct device *dev, const void *data));
+> 
+> The new API does not allow its match function (*match)() to modify
+> caller's match data @*data, but emac_sgmii_acpi_match() as the old
+> API's match function indeed modifies relevant match data, so it is not
+> suitable for the new API any more, solved by using device_for_each_child()
+> to implement relevant finding sgmii_ops function.
+> 
+> By the way, this commit does not change any existing logic.
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
+> index e4bc18009d08..29392c63d115 100644
+> --- a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
+> +++ b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
+> @@ -293,6 +293,11 @@ static struct sgmii_ops qdf2400_ops = {
+>  };
+>  #endif
+>  
+> +struct emac_match_data {
+> +	struct sgmii_ops **sgmii_ops;
+> +	struct device *target_device;
+> +};
+> +
+>  static int emac_sgmii_acpi_match(struct device *dev, void *data)
+>  {
+>  #ifdef CONFIG_ACPI
+> @@ -303,7 +308,7 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
+>  		{}
+>  	};
+>  	const struct acpi_device_id *id = acpi_match_device(match_table, dev);
+> -	struct sgmii_ops **ops = data;
+> +	struct emac_match_data *match_data = data;
+>  
+>  	if (id) {
+>  		acpi_handle handle = ACPI_HANDLE(dev);
+> @@ -324,10 +329,12 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
+>  
+>  		switch (hrv) {
+>  		case 1:
+> -			*ops = &qdf2432_ops;
+> +			*match_data->sgmii_ops = &qdf2432_ops;
+> +			match_data->target_device = get_device(dev);
+>  			return 1;
+>  		case 2:
+> -			*ops = &qdf2400_ops;
+> +			*match_data->sgmii_ops = &qdf2400_ops;
+> +			match_data->target_device = get_device(dev);
 
-> On Wed, Sep 04, 2024 at 03:48:44PM +0800, Huang, Ying wrote:
->> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
->> > On Mon, Aug 19, 2024 at 10:34:13AM +0800, Huang Ying wrote:
->
+Where is put_device() now called?
 
-[snip]
+>  			return 1;
+>  		}
+>  	}
+> @@ -356,10 +363,15 @@ int emac_sgmii_config(struct platform_device *pdev, struct emac_adapter *adpt)
+>  	int ret;
+>  
+>  	if (has_acpi_companion(&pdev->dev)) {
+> +		struct emac_match_data match_data = {
+> +			.sgmii_ops = &phy->sgmii_ops,
+> +			.target_device = NULL,
+> +		};
+>  		struct device *dev;
+>  
+> -		dev = device_find_child(&pdev->dev, &phy->sgmii_ops,
+> -					emac_sgmii_acpi_match);
+> +		device_for_each_child(&pdev->dev, &match_data, emac_sgmii_acpi_match);
+> +		/* Need to put_device(@dev) after use */
+> +		dev = match_data.target_device;
 
->
->> >> +		ostart = max(res.start, p->start);
->> >> +		oend = min(res.end, p->end);
->> >
->> > Isn't a reinvention of resource_intersection()? With that in place you may also
->> > drop the above resource_overlaps().
->> 
->> sizeof(struct resource) == 8 * sizeof(unsigned long)
->> 
->> Just want to avoid to define another struct resource on stack.
->
-> Is it a problem?
 
-Not a serious problem.  Just prefer to avoid too much stack usage.
-IMHO, the benefit isn't large too.
+Why this new comment?  That's always required and happens down below in
+the function, right?  Otherwise, what changed?
 
---
-Best Regards,
-Huang, Ying
+thanks,
+
+greg k-h
