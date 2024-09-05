@@ -1,203 +1,126 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0319884A;
-	Thu,  5 Sep 2024 11:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F58199FA7;
+	Thu,  5 Sep 2024 12:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725535434; cv=none; b=StTmPU95X/JHpSWQ7yImuqlPhKCrHxjnnZdCm9kw8coBVyehZigDqSyB2/8XVD0c2VBdpDbWAbTR9kxsgwPw4BI2ixoNWFrHhbYrS5ot7fTn5kSdhC7nFdW1srhXuH0MjXo8NNrV3GbusFiZFy3oJ+9cEP84VGYpCCO7Bb14ewI=
+	t=1725539791; cv=none; b=dMMje34JGdX5zjWPEG+AthWajgpz2ElHcvTbd+a7DfCm2Ma+U4tns5CRbCwgSGd87oE518MSCvQAK99//DSKiGlAgZLocz3e8PTNUzybuiv1nXw8ZWYCFlz7Ieno8HJRzr4oWEDEd1Tq911X06wL1fAv3iwiaRB1GLfbBaELesg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725535434; c=relaxed/simple;
-	bh=8kCS0pJXM3ezR5roVWNJdy8wnu81VgMsOVNuKqbx5vc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GipyKvd26hP1X8/6GYP9Z6M3ciLdtL4LekMHY/gkxS9UwF5xHCKwzgV6AzNXUkX+QduzcfxiOZfcmWSh9iB3JszfXRxPN9//wyD7L/zpLf1MurUerWbxzSZMHNRbZAbujneekFqTC9lEBpSeDLF4/y5ILL4tNA68tjejA3uZAng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WzxjG2btbz6K8yp;
-	Thu,  5 Sep 2024 19:20:02 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3108C1400DC;
-	Thu,  5 Sep 2024 19:23:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 5 Sep
- 2024 12:23:43 +0100
-Date: Thu, 5 Sep 2024 12:23:42 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-	<linuxarm@huawei.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvi?=
- =?ISO-8859-1?Q?nen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-Message-ID: <20240905122342.000001be@Huawei.com>
-In-Reply-To: <87plpsbbe5.ffs@tglx>
-References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
-	<20240605180409.GA520888@bhelgaas>
-	<20240605204428.00001cb2@Huawei.com>
-	<20240605213910.00003034@huawei.com>
-	<ZmG3vjD2sbCOPrM0@wunner.de>
-	<20240823120501.00004151@Huawei.com>
-	<87plpsbbe5.ffs@tglx>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1725539791; c=relaxed/simple;
+	bh=tUOAOd8CYkdJjqbj7ss21WuFdmdRdcvBFxMicTiHizk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iu0MvWmulKGVXnHSOxlNAqK9q6R9VUmuKIfbQp3UMtbALNOy6Mqto9iw2pVW396QsgPNvI9OvV1bKgeuMqA0hTSIzgViTZ2Ok51H0OH9ycFjsn2KIo46og7NzqBt0PC15cYjYOwtP2AcLFCYWkcPosroUIB339cqPBG2aEA6Xzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MlCvcIV0; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MlCvcIV0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725539790; x=1757075790;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tUOAOd8CYkdJjqbj7ss21WuFdmdRdcvBFxMicTiHizk=;
+  b=MlCvcIV0Tjl+njME49M0Qc9bYqMo0Gq7Zope5T5gHeUpWmm5esUVxRjp
+   oCiIirIh4hfZFrv1EDyqMDcAaOhb0NxiDpjG9oYMk6uYZVJrHIZtCzir6
+   siXITdVpTax286aSqm5BrYfKrqDy4TQ8Yo+t9d3HG4feb8exRvdC/TYi4
+   DSfh/hWC+LiQ6o/VfL1+uANI8+51GPbznWWgjC9gRm2Gnes5JY9UW4EZv
+   ijmKJgA1GgyK3MaNoO9WY9UP9hDfTBTPgdTepj/rXsPW2YZCSELLsY/uF
+   VRY6sl0wgBk32aZWznHgWoMxLXmIxs92I7AR5Z/np1E6w/rbHy6r8xZvJ
+   A==;
+X-CSE-ConnectionGUID: 3gA+D5oiTVi+Zu0h4kba/w==
+X-CSE-MsgGUID: aaQVbrtaR0mbfhAO6sA9hg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="27173405"
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="27173405"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 05:36:29 -0700
+X-CSE-ConnectionGUID: Exg24nuaSxatVWhPMsTnaQ==
+X-CSE-MsgGUID: 6GCVJ3eWRzqlJgZaX2z7Hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="70408882"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 05:36:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1smBim-00000005OTQ-0x57;
+	Thu, 05 Sep 2024 15:36:20 +0300
+Date: Thu, 5 Sep 2024 15:36:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
+Message-ID: <Ztmlw1q3Djn94MRQ@smile.fi.intel.com>
+References: <20240819023413.1109779-1-ying.huang@intel.com>
+ <ZsL-wfDYsUmWKBep@smile.fi.intel.com>
+ <874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <66d8f41cb3e6_3975294f9@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZtmOTYF9EWPeLg5u@smile.fi.intel.com>
+ <65838cc0-9a20-4994-a0ef-9cd50bb00951@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65838cc0-9a20-4994-a0ef-9cd50bb00951@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Thomas,
+On Thu, Sep 05, 2024 at 01:08:35PM +0200, David Hildenbrand wrote:
+> On 05.09.24 12:56, Andy Shevchenko wrote:
+> > On Wed, Sep 04, 2024 at 04:58:20PM -0700, Dan Williams wrote:
+> > > Huang, Ying wrote:
+> > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-One quick follow up question below.
+[..]
 
+> > > > > You may move Cc list after '---', so it won't unnecessarily pollute the commit
+> > > > > message.
+> > > > 
+> > > > Emm... It appears that it's a common practice to include "Cc" in the
+> > > > commit log.
+> > > 
+> > > Yes, just ignore this feedback, it goes against common practice. Cc list
+> > > as is looks sane to me.
+> > 
+> > It seems nobody can give technical arguments why it's better than just keeping
+> > them outside of the commit message. Mantra "common practice" nowadays is
+> > questionable.
 > 
-> So looking at the ASCII art of the cover letter:
-> 
->  _____________ __            ________ __________
-> |  Port       |  | creates  |        |          |
-> |  PCI Dev    |  |--------->| CPMU A |          |
-> |_____________|  |          |________|          |
-> |portdrv binds   |          | perf/cxlpmu binds |
-> |________________|          |___________________|
->                  \         
->                   \
->                    \         ________ __________
->                     \       |        |          |
->                      ------>| CPMU B |          |      
->                             |________|          |
->                             | perf/cxlpmu binds |
->                             |___________________|
-> 
-> AND
-> 
->  _____________ __ 
-> |  Type 3     |  | creates                                 ________ _________
-> |  PCI Dev    |  |--------------------------------------->|        |         |
-> |_____________|  |                                        | CPMU C |         |
-> | cxl_pci binds  |                                        |________|         |
-> |________________|                                        | perf/cxpmu binds |
->                                                           |__________________|
-> 
-> If I understand it correctly then both the portdrv and the cxl_pci
-> drivers create a "bus". The CPMU devices are attached to these buses.
-> 
-> So we are talking about distinctly different devices with the twist that
-> these devices somehow need to utilize the MSI/X (forget MSI) facility of
-> the device which creates the bus.
-> 
-> From the devres perspective we look at separate devices and that's what
-> the interrupt code expects too. This reminds me of the lengthy
-> discussion we had about IMS a couple of years ago.
-> 
->   https://lore.kernel.org/all/87bljg7u4f.fsf@nanos.tec.linutronix.de/
-> 
-> My view on that issue was wrong because the Intel people described the
-> problem wrong. But the above pretty much begs for a proper separation
-> and hierarchical design because you provide an actual bus and distinct
-> devices. Reusing the ASCII art from that old thread for the second case,
-> but it's probably the same for the first one:
-> 
->            ]-------------------------------------------|
->            | PCI device                                |
->            ]-------------------|                       |
->            | Physical function |                       |
->            ]-------------------|                       |
->            ]-------------------|----------|            |
->            | Control block for subdevices |            |
->            ]------------------------------|            |
->            |            | <- "Subdevice BUS"           |
->            |            |                              |
->            |            |-- Subddevice 0               | 
->            |            |-- Subddevice 1               | 
->            |            |-- ...                        | 
->            |            |-- Subddevice N               | 
->            ]-------------------------------------------|
-> 
-> 1) cxl_pci driver binds to the PCI device.
-> 
-> 2) cxl_pci driver creates AUXbus
-> 
-> 3) Bus enumerates devices on AUXbus
-> 
-> 4) Drivers bind to the AUXbus devices
-> 
-> So you have a clear provider consumer relationship. Whether the
-> subdevice utilizes resources of the PCI device or not is a hardware
-> implementation detail.
-> 
-> The important aspect is that you want to associate the subdevice
-> resources to the subdevice instances and not to the PCI device which
-> provides them.
-> 
-> Let me focus on interrupts, but it's probably the same for everything
-> else which is shared.
-> 
-> Look at how the PCI device manages interrupts with the per device MSI
-> mechanism. Forget doing this with either one of the legacy mechanisms.
-> 
->   1) It creates a hierarchical interrupt domain and gets the required
->      resources from the provided parent domain. The PCI side does not
->      care whether this is x86 or arm64 and it neither cares whether the
->      parent domain does remapping or not. The only way it cares is about
->      the features supported by the different parent domains (think
->      multi-MSI).
->      
->   2) Driver side allocations go through the per device domain
-> 
-> That AUXbus is not any different. When the CPMU driver binds it wants to
-> allocate interrupts. So instead of having a convoluted construct
-> reaching into the parent PCI device, you simply can do:
-> 
->   1) Let the cxl_pci driver create a MSI parent domain and set that in
->      the subdevice::msi::irqdomain pointer.
-> 
->   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
->      driver to create a per device interrupt domain.
-> 
->   3) Let the CPMU driver create its per device interrupt domain with
->      the provided parent domain
-> 
->   4) Let the CPMU driver allocate its MSI-X interrupts through the per
->      device domain
-> 
-> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
-> function does:
-> 
->     if (!pci_msix_enabled(pdev))
->     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
->     else
->         return pci_msix_alloc_irq_at(pdev, ....);
+> Just look at how patches look like in the git tree that Andrew picks up.
+> (IIRC, he adds a bunch of CCs himself that are not even part of the original
+> patch).
 
-Hi Thomas,
+I know that and it's historical, he has a lot of the scripts that work and when
+he moved to the Git it was another long story. Now you even can see how he uses
+Git in his quilt approach. So, it's an exceptional and not usual workflow, hence
+bad example. Try again :-)
 
-I'm struggling to follow this suggestion
-Would you expect the cxl_pci MSI parent domain to set it's parent as
-msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
-					 IRQ_DOMAIN_FLAG_MSI_PARENT,
-					 ...
-which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
-or create a separate domain structure and provide callbacks that reach into
-the parent domain as necessary?
+> Having in the git tree who was actually involved/CCed can be quite valuable.
+> More helpful than get_maintainers.pl sometimes.
 
-Or do I have this entirely wrong? I'm struggling to relate what existing
-code like PCI does to what I need to do here.
+First of all, there is no guarantee they _were_ involved. From this perspective
+having Link: tag instead has much more value and supports my side of arguments.
 
-Jonathan
+Anything else?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
