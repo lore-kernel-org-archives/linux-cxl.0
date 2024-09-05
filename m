@@ -1,143 +1,124 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874E4188017;
-	Thu,  5 Sep 2024 19:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C7818A6B0
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Sep 2024 20:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725565486; cv=none; b=Qf9luHs4IEE/TN0h/4cmKjdSN2Erx3sojrZp2oLzdlb+1WmSYaMc2VMP/DPp7DVhYnmYp8Ihkpg8pWej8M+x/agDnd40v8jm80x6IaP4rJurM3NeJjImwz6h6J9WDSkVtQveiDCMJFXiK4EmAUHL/UQGkAlNvAmOKkAhGmM2nQg=
+	t=1725567677; cv=none; b=JLG778GUzR1C0+cWyLt468qVvUs7KY25VRIpJ61sF74eAQYphyjsSkLR7QRdJYm6aRV1hdn3r8UNYh42DzEJmaxD1SEYc1w6yhqN2e4WXRuU2fG6O24O5qHvk+L/4IACAMArO5G2AKinWcBDFRFS3PVlNjpUl1Zuott647PTxV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725565486; c=relaxed/simple;
-	bh=fue0HDW/3+IS1tus8cXU1jw98GqL1Ym+HsM/Iofut+Q=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzPj44pxwdrt2Fs0QN1/zXKV/CYokSkqfxjxs2V7Oq/hybjHtrw087wKxpFAKV7zZeV+dfUft9u8JpAGXDoRDcmTduq5seOzs549RB0KRCEImwQTMlzUsCL4BVN97FI5oZIrEN/wcOhe2cd2SCLoWd46VQUu1/ZlnfTT+2qBb54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZLrYLIk; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725567677; c=relaxed/simple;
+	bh=EIRtWb2tUKGRiQU3P8soLfWgJnlmbRQ8pcuZLSZIMR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gEEL9pe5rYcrtQWBK3vfIg3UDtw/KzSSCtrLVSkoK2fblZuQKoQGZbXzd7SU9mFFgZG9VKwblDSGrdD5HAnDK9onZL13ZmJkSvK7MblrZp9zPQfFsByUUD2GLlmXzc4GyPBt+e/gDRcR+zv02+OMGJYsHAILsNO8u6kzq/hIghQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EmzqvZ4y; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZLrYLIk"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-715abede256so1016517b3a.3;
-        Thu, 05 Sep 2024 12:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725565485; x=1726170285; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8blKARCK9hIi8qeqcpQY8FMcJR6skaNK4+MKzRO1q9A=;
-        b=kZLrYLIkKkmzr/7siKqbfXf3gjohD1PsZ121BTwVhtQegYgmQ1rVY7t3r6F83xmHsD
-         tf88rQWzgni/Z6cuEgx9PMSbwY0UOhndaOo5En0lW64OD7vnN+3xiNmf8V58TFFxpcdf
-         hbEiQbN1WBoNx1UTcnw8pUtY0rcFBwEOkQeEFeZKMbrfXHG24YWwDWbSIe8Nt2ja9iWC
-         zstKL8WJ19lSESDemqzZ7WMTNgZCnKolsqRyBH29SJG9HY2blX6YSBJ8hVY9BgLOARn5
-         dOOGJfXpIu9gzzCsPHL0P1vmpeYMBX+2Jd0oHgNFcrKZxndKiYcits+OO+tRSmDmLI1L
-         z7Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725565485; x=1726170285;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8blKARCK9hIi8qeqcpQY8FMcJR6skaNK4+MKzRO1q9A=;
-        b=Hl16CtTXI0MnADQGJ+k2x+31xgSEtogkBpwSysNqCA7ykqHUkWLHGnnf+4EigMAm4t
-         T6ZwQMx6cYX+hHqvLNkoTvfaf/930l1AWkgoY2wmnw7mmu6/ATWdfT+7z+fb4P/AMaCc
-         aB4+3g9ohG9IOiKflbAit31n2PWIRp5379AmM+tCQzHhx9tApK5oyIxVzMiibswdp+8V
-         hHq0SPrvdhmDcxleB0BhulE2fcmObCPOpE/PSFxbtsgcGVBU24qZ/rtW3ziMsQ0/t1QJ
-         Rrwy33VtO1n5OFXVZOeALqF0yI04F2h7VnM2LORtFfBLgbXYuPOh2UJtPqbbta+cxix4
-         t69Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU2lasIu6KmawZ6qDSrD7JKtxtmuWfKmrYTX8CvNe1Wq+O/SdO5l5R+NtrLQI/P5EVd0ulilDhy9ujAC5Bw@vger.kernel.org, AJvYcCUTOoWXZ/DcoeLZLINop19eunSZL/n2TgzCOAI7xgK2BXzbN5plgdmIIDbMKibWcsiHAnxSbZ5/WSi/@vger.kernel.org, AJvYcCV/jQRR9tt0n/+COjQW4JDEKEefO6DtyU54DINl4xFQXcPNpH8fPqgSB7f2kUUNS5ebJvvTB+RHv2VA@vger.kernel.org, AJvYcCV9x6ndcRcBOiOexqycY/164CmCeBBqBmPP/ws4YJfCCvqJzxEa+i0ibPPhKazeqWRjSQHb9j6YOwDEBQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE8aGscXD9uYSQxlaB444qqVlP51jHfcayl/ZpZgNksdP1CEvq
-	MRn9CwakN3Ky75P0tf6B6xo+lo4unV4nSg/xCkZv/peLVu3+hybw
-X-Google-Smtp-Source: AGHT+IH4+fX/yHmOeAuqwoSbrIHi2omPpjNgufLcJxCjb0muDVPuPNm2103Rdbup4SGV09v81le2FA==
-X-Received: by 2002:a05:6300:44:b0:1ce:ebb7:dcb8 with SMTP id adf61e73a8af0-1cf1d05864amr60468637.3.1725565484771;
-        Thu, 05 Sep 2024 12:44:44 -0700 (PDT)
-Received: from leg ([2601:646:8f03:9fee:1d73:7db5:2b4a:dfdd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7178e39a188sm1473548b3a.219.2024.09.05.12.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 12:44:44 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 5 Sep 2024 12:44:24 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 04/25] cxl/pci: Delay event buffer allocation
-Message-ID: <ZtoKGEEhNHByhXyw@leg>
-References: <20240816-dcd-type2-upstream-v3-0-7c9b96cba6d7@intel.com>
- <20240816-dcd-type2-upstream-v3-4-7c9b96cba6d7@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EmzqvZ4y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725567675; x=1757103675;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EIRtWb2tUKGRiQU3P8soLfWgJnlmbRQ8pcuZLSZIMR4=;
+  b=EmzqvZ4yBjBtmvJhOL37pSgVMOMzOzmokxoAnDmcCDF24MVei6SUtUPO
+   h6a8AIvweAMSxa+NmNvVa7PBMceqKIUpcwG6GNxQ1il4JpyK7Y+bi5sD9
+   9+gL6vwrTAADnKD4FrZ6uFdlrG9AK/uhU0O8RCiiPgih4z/QvQBZScBs8
+   BbiprkMQ1b3wdrc8dTjWJu3mMmQqQI4wPd2/New8Tk3OjTDLe5wrLxPyU
+   kTxl8cW6Hmm4e7/lrsHBFiosUJd0sEM+SBebwEG3OozK6Ur7nQlk51coc
+   IDD4dr646N1ni8xjdVxbuZyhqwXn/7kwY5w62fAB4Bz25prfu3EVr169J
+   w==;
+X-CSE-ConnectionGUID: SycTmo0MSQ+1N0onGy2FaQ==
+X-CSE-MsgGUID: yhDamyRsScaWPZeouoBbcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="27234249"
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="27234249"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 13:21:15 -0700
+X-CSE-ConnectionGUID: xgP2XYzSSLyfLrKYQF1nBw==
+X-CSE-MsgGUID: JuuACiVtQyePJcHywd/rdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="70546340"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO [10.125.110.30]) ([10.125.110.30])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 13:21:14 -0700
+Message-ID: <779b7a90-92fb-44f3-9fd9-39009dcd6709@intel.com>
+Date: Thu, 5 Sep 2024 13:21:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240816-dcd-type2-upstream-v3-4-7c9b96cba6d7@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] cxl: move cxl headers to new linux/cxl/ directory
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: alejandro.lucero-palau@amd.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, fan.ni@samsung.com
+References: <20240904000020.1686611-1-dave.jiang@intel.com>
+ <20240904000020.1686611-4-dave.jiang@intel.com>
+ <e6cdb731-c2f1-5791-79ff-ff5835009475@amd.com>
+ <66d91d844003d_286b294cf@dwillia2-xfh.jf.intel.com.notmuch>
+ <d86d41ca-923d-0c90-1480-8f48efac07e4@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <d86d41ca-923d-0c90-1480-8f48efac07e4@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 16, 2024 at 09:44:12AM -0500, Ira Weiny wrote:
-> The event buffer does not need to be allocated if something has failed in
-> setting up event irq's.
-> 
-> In prep for adjusting event configuration for DCD events move the buffer
-> allocation to the end of the event configuration.
-> 
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> Changes:
-> [iweiny: keep tags for early simple patch]
-> [Davidlohr, Jonathan, djiang: move to beginning of series]
-> 	[Dave feel free to pick this up if you like]
-> ---
->  drivers/cxl/pci.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+On 9/4/24 11:51 PM, Alejandro Lucero Palau wrote:
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 4be35dc22202..3a60cd66263e 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -760,10 +760,6 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  		return 0;
->  	}
->  
-> -	rc = cxl_mem_alloc_event_buf(mds);
-> -	if (rc)
-> -		return rc;
-> -
->  	rc = cxl_event_get_int_policy(mds, &policy);
->  	if (rc)
->  		return rc;
-> @@ -777,6 +773,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  		return -EBUSY;
->  	}
->  
-> +	rc = cxl_mem_alloc_event_buf(mds);
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = cxl_event_irqsetup(mds);
->  	if (rc)
->  		return rc;
+> On 9/5/24 03:55, Dan Williams wrote:
+>> Alejandro Lucero Palau wrote:
+>>> On 9/4/24 00:59, Dave Jiang wrote:
+>>>> Group all cxl related kernel headers into include/linux/cxl directory.
+>>>
+>>> I tried to do this in the RFC for Type2 support.
+>>>
+>>> I was told to just move the required bits for accel drivers able to do
+>>> CXL initialization,
+>>>
+>>> What has changed since then?
+>> I saw this subject line fly by and had the same thought, but now that I
+>> come to read it there is a significant difference.
+>>
+>> This is not "move cxl headers to new linux/cxl/ directory" this is
+>> "rename existing cxl headers in include/linux/ to include/linux/cxl/".
+>>
+>> Compare that to the proposal to move all drivers/cxl/*.h headers to
+>> include/linux/.
 > 
-> -- 
-> 2.45.2
 > 
+> Right. My bad. I did just pay attention to the commit message.
+> 
+> 
+>>
+>> Now, I do not think it makes sense to place these cross-driver cxl headers under
+>> include/linux/cxl/, just place them under include/cxl/.
+> 
+> 
+> Not sure you are telling this to me or to Dave.
+
+I think he's telling me. I chatted with Dan offline. I'm going to send v4 and move stuff to include/cxl/. Sorry about the churn.
+
+> 
+> FWIW:
+> 
+> I have almost ready v3 and I'm adding headers to include/linux/cxl after this directory was created after v2.
+> 
+> As I understand it, include/linux implies headers to be used by kernel code, with headers to just include those to be used by user space.
+> 
+> The headers added in v3 are for accel drivers so it makes sense to me to be include/linux/cxl.
+> 
+> 
+>> However, I do not understand the motivation. It's not like a new header
+>> is being added and that is the final straw that merits moving the
+>> existing headers. Most include/$subsys/ directories have more than 2
+>> header files.
+>>
+>> So what is the pain motivating this move?
