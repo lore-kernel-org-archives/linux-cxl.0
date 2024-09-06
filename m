@@ -1,331 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2D14AEF2;
-	Fri,  6 Sep 2024 03:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725592172; cv=none; b=DX5slylc62vNLNmnGRCti0Or0IkOSEs5Kg8ah0FLt/II5DRu6XufTb/TaeQxohog9nhh0m/YLZA/6soiW1S2ZGIvG4WUa60cPcesWOpl6cNNBdXYAo5+szetfTtkumCTscU9EB+qgxuACY34woTY7jRt1Q7eR+Fu4TwXkhQ9/N8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725592172; c=relaxed/simple;
-	bh=PSFihkZgLasjDkyToU3y/y2OCLAaD/A4Hx/YphgS1CM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LAmd65w1nKqSAKXTVCuK9FOLO9cfP14ICozVaEVncU1QUyU+fZPDf6mZCtnmEU/lXL3aVdF1D42lbpF1m0/Pi4/HTi6QH+OejKoQC+/hBxb629JhPCUh82n80xHyXW0bKnyUJ/WWFEhZm5eMr9a/LDAW0b2ra1IjXDh4JJOupUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AEEnVWIM; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948A13B1A2;
+	Fri,  6 Sep 2024 06:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725602932; cv=fail; b=GEoFd+bDs7M9jPyG300gRwCZBBslbxDo6JZ8udj3X7tbaAAv5UmN0xZaYykpREtes9aQEGuk08SFh/lt2A+lRC/X8r1w4nFi94TJWVGgAaGdtl5z6xBVg84ZOFVmeFpHCgACzgerG0H9tyw5GyVqDBzAPxJ3tlEbvxkkUof1Ye4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725602932; c=relaxed/simple;
+	bh=EE5gyL6n2EA1Rls5D/wwEvbVdbWsm3vZSHcjoPfSoJI=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=c2bbka+ESs0+iRFGh7OXBlqgssSaYIQk15CsW20qY5H01M6QlqoaSQJpL2rQL73ZoDGfzvqzl95wXJxj8BvReEE4TBQzQQtZyAqLxyXoQ6FYgg3/mBArzf4zSRPQQxhM0yIaFboetZrsbUcQLvA8cIE9Uxx+uQ4uqIXMiz10m0M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=n1nW40tT; arc=fail smtp.client-ip=40.107.243.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AEEnVWIM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725592170; x=1757128170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PSFihkZgLasjDkyToU3y/y2OCLAaD/A4Hx/YphgS1CM=;
-  b=AEEnVWIMPpnKFei5Scmnq1d3zHfG3iUZ2AMO92t0DOy5CDhZtLspIJ4S
-   XOPF3y3yRzK67PvEaMRm3vyhsK3wCXDG9zXJKcYR7Um/JF6uZduK8F/MD
-   4/gz/JQZzk9/9KBFd2hT7oohUlG/yezRTfxTp3udBlfAOevsLV6a9tJv5
-   3jwu+Qf4+Ym3HHgMX4zmlsvoKkQ6tKSP2cX3T0D0viEP01kx1rXEPqCES
-   gLVW/iuan3S4cEceZqMiyV3we39eGD1TpSuuqm1AGWbsAjw23KiOZw3e7
-   9dLdubMmhzxJZTGMPUk+D5UaxGNBHGxt2IDLf0OsANrz6Se/MfdBd8Lkm
-   g==;
-X-CSE-ConnectionGUID: 22hlmmOcQ0S216mX6K0/Tw==
-X-CSE-MsgGUID: anYqW03fRPyanAXJZiIrtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="28089487"
-X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
-   d="scan'208";a="28089487"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 20:09:30 -0700
-X-CSE-ConnectionGUID: x+ooRBcEQECl/064bwq7yg==
-X-CSE-MsgGUID: 64nkZDu+REefnITy+IXeiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
-   d="scan'208";a="66364412"
-Received: from unknown (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.245.242.189])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 20:09:26 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Huang Ying <ying.huang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH -v3 3/3] resource, kunit: Add test case for region_intersects()
-Date: Fri,  6 Sep 2024 11:07:13 +0800
-Message-Id: <20240906030713.204292-4-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240906030713.204292-1-ying.huang@intel.com>
-References: <20240906030713.204292-1-ying.huang@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="n1nW40tT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LCrR6VhnMnsg1v2Rbtl51RhnerGQJZRpyySPERektbkoaCDCeThbkFo65cRrieXJHyBDS84vS+yChuAGl2/FNHcyAAWmfsn1sHn+7O8oqFOKZxKeGqa+w8ZXB4xogOmWTNbJM7WZVre3XgN48/swD+XFUcZUJL97v9ik7tqVZl1WY5gzVyjUWjTxdaff7auucIxcJRVkLsiNbTdQQ7x7GW/8qXStR8QqqoDKJcnfe+SoiEV3dQBUo76VjFSu5LUHv9rkXnBV408yEfKaLPr8qtDiBhDHXnGFfCpv6+3wPAlimN2ccdcebH4R6yZjavXhghHneT4dbjrd0Z0qBiHR1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UbsRXH9JJIBnRvfSPNoa0YV7m2c595aea1nDAMY00oI=;
+ b=bRXnbi6fG0MqNV0Hp/SCLmUNdJZhvvZ+ZzB6oVFWaFRxAnZ5Rr7JwodkoPR1MDJHnLt2NbCdbbZCBeQ9iVVpT9aLAzyofBJ7tbEzkXUdgob174v828SHmJNQPw32PgK4IMSPoKO2sd+6u1d2IS8+zxOOUKhI4M5zxaMzm5S7LMcHAe/+jB+pjndA1qLZvIHk/LuWuoyx3APrulCW7cMIM7Eg64TU1dg8AYGvmmf4E3onvrvPNs9c+0O3qNexoGHqNRA6SbQJqjDQiUCYcBIkU1eGPpYc8G/ILCkDT+ji8t6Cff3s52McGgIzy+2868pDR/Y0zDI5B3mG+b2kYAjV4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UbsRXH9JJIBnRvfSPNoa0YV7m2c595aea1nDAMY00oI=;
+ b=n1nW40tTYajkvZIah/cOB3kuMPNPkzynMSnvc0Rx1aQwK7PnFIMaPVV7RFtNnfbGAaaEn7rlu9IH2lgVuRx5bbcAIQAKHHlc8YvnNoFozYOmT0Dz0sQ9DYImFiiEbtBOSFeH+0O0kLLOEmsNeQfbG7Lo9vblrzP78s+Hz4zTvKP4pkydF+HZF3/YVkotEPM7AjMkLUR89IksW8HMZXB2+Hw49nrWafcYL4Xfycz/BLYbO/OvR/Pt5fQFGuZTwup8BqXLbugBYmx3NIBKPESOPuoA9Z1QKolxjahVEF5EX/zPkDSn/J1yoo86nuTkUfwoFgPXJWjCvf15ClX+T52Viw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ SA0PR12MB4495.namprd12.prod.outlook.com (2603:10b6:806:70::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7918.28; Fri, 6 Sep 2024 06:08:47 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%3]) with mapi id 15.20.7918.024; Fri, 6 Sep 2024
+ 06:08:47 +0000
+References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
+ <afcfa4f164e5642c4f629c75acf794838c2ac9aa.1719386613.git-series.apopple@nvidia.com>
+ <20240627054455.GF14837@lst.de>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Alistair Popple <apopple@nvidia.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+ jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
+ mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
+ tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+ jhubbard@nvidia.com, david@fromorbit.com
+Subject: Re: [PATCH 10/13] fs/dax: Properly refcount fs dax pages
+Date: Fri, 06 Sep 2024 16:00:38 +1000
+In-reply-to: <20240627054455.GF14837@lst.de>
+Message-ID: <87wmjpb9g6.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY5PR01CA0085.ausprd01.prod.outlook.com
+ (2603:10c6:10:1f5::12) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SA0PR12MB4495:EE_
+X-MS-Office365-Filtering-Correlation-Id: d081438c-657d-4fc3-63dd-08dcce3a5e92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Qkn2Zz9/4qH7iAaVFFLM7o2NoD5/A0WNiRaXj72XV5wtoX+z6oAy7fR3BN6f?=
+ =?us-ascii?Q?VvqdYpdiBD90SOMrOSFt+j73r7FsvQItHV9GMySaaJ0Pq9NPAE7BDQ3FG2W8?=
+ =?us-ascii?Q?q0Dr1+kO1PaY7rieB+0SgNMB3OHb1ucb8kDYGsb6dVWBBwbN4U1p1/+sR7k7?=
+ =?us-ascii?Q?FrZ6hadUvmLRY8Ow+NmbcWaQ2IQ7flRG+/bn6F7FPfx8yCwCtI9ROS8ebaLz?=
+ =?us-ascii?Q?CWKc0r4ZjBGGGRu/PiNi5z+1cdXu7xlqUU38J3XytJoEGZOdGxDQVDFMlT4Q?=
+ =?us-ascii?Q?yWyoJEorzVCRSVuphmT3t4o/AkRmTJPTuC+VRHNmezh73KoiBdLDouf/3Q9n?=
+ =?us-ascii?Q?x4IAlea0Ck+EMimkStn10h38OefCvf06PRMMXstWTBnshhOm8jl6GDaXhgpp?=
+ =?us-ascii?Q?1a0ODHht6/TXTurPmZROe/LqLuElcjuOc76lKBoPtZN84hUjYhRWWkeFxeYN?=
+ =?us-ascii?Q?GdO/J3G9wHPgpELNtpwD2cKUm9zywigH9KIx9ykwuGvAijRF91ZGzILh0p8k?=
+ =?us-ascii?Q?O1ihH4CgFvkGvCJNvxQaxPCjEsWAvGIh5JYHY7OhvlxmOMzOZFK9wiSUfIDx?=
+ =?us-ascii?Q?rTBQtBLLact7WcoileoSOKBk1+UA070w9uZ0/Wcj+w3CLUNOniS8Qn94ceuv?=
+ =?us-ascii?Q?GDumQSEXjfl44Bbrt3eYbbpxNLmelpJu/Y3C73YU0vqZwzLzeU5tyWzwDAEx?=
+ =?us-ascii?Q?CYuayZxQuQwE/0V30xS0FRzj1cQ9ibVFuhenJbLQnKDu+DSFrRFnetc+Tmbg?=
+ =?us-ascii?Q?4/Pr9zj87kKIcpmWH+IniHi8TdeYhoUCkwvql0YG1age+zd/VmNSRsBtugXr?=
+ =?us-ascii?Q?pClbmGNub2BCOIxQDiumHPAGhtZmrSNuSBvKFZf/1rsWy31TgHSEz8afzwn4?=
+ =?us-ascii?Q?BcU8U3Kl0Chv0c8gsOp2iWdr2SA4tRDybjHUAcGonSBcCJL0JBBIBKpwLuLR?=
+ =?us-ascii?Q?YuR31LxeSMcLpZWculnzC97b/HoVm2D/ArDYOLO3J+yQa1Q7Zd4qEXDBJFeE?=
+ =?us-ascii?Q?6E1kMjk7iX153CsWfYekq2C5/AewKBksItEl0vGTe6YKWjl5awwx9wl+BYMX?=
+ =?us-ascii?Q?OwZNmqivzNOJpNAzRM22Xa5jKMiZwh1FWpr7keeq0oaMOry2HmL/XVMufu4j?=
+ =?us-ascii?Q?n6azWgkd3TMziOHgPfzzwZH00mLBWlRA+9Y4+sRodcuglLY3o7Exjj1N75Pr?=
+ =?us-ascii?Q?35ogvnd1vP8pt6jGHKPhj/B/hvH8ysrE+cg3N1SEjuCpfRflnf0253rEXM8V?=
+ =?us-ascii?Q?SQTPAZlCA5QgnrW39XI+hg6XjA75DBKVheU0a8mJw/rNE+RwSud2dA0svylk?=
+ =?us-ascii?Q?sfIXOR8rNPJ4NkC7Q1Ov88+CtMqEEOZkliAqUv2UwZGdsw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YLsEU0S8sWvuBBHQ1rIXmX8xljB5qdnPq48s4HILSUaki49MCk3UlmVOkpgI?=
+ =?us-ascii?Q?p7zzGU8VdL79gR/gBeILlWMZncGwAoGhBBXJzeLtjS4SMOuR3yU4fQqE8ik4?=
+ =?us-ascii?Q?0uR7cOAQg3wVDqpCLY9y1J/ftpvr6o3OO9lwKtK+nR/KMMMlcGvoeYCJdI5M?=
+ =?us-ascii?Q?LMRz5/gLkFjw8Kqb2Et57VjRXqc++0qBq44rB0ihhTc9OEgAuM3+YD1pFTiL?=
+ =?us-ascii?Q?2hDG8M/d3bjc9rVnCGKr7FzNMJfUeD7Sy/HHKpbsmEzbmYuxNo4STzvnKp3i?=
+ =?us-ascii?Q?ZdgXgAZy1eopAeJ/44LqZcN8sGlCQLbOXZOHcCtU1LO4chZilqa0aGINBfsV?=
+ =?us-ascii?Q?Xx8AmQCX+/6vYOIW53Co7GlgGEzp3LR3awCvHS+KY+eX7aXybojY6KU3HZv1?=
+ =?us-ascii?Q?NYfG8+zyxbiNq15LnKtrj3hHoKN2OQDtfxqeEwU0a2CKSl9mgZKqQmyf4r/P?=
+ =?us-ascii?Q?s5CHV69ojOsmIP63/pmQb20WvRXf/L2k1DNgvLBZLpMFi1Vu0WuGxcqAHodA?=
+ =?us-ascii?Q?5Zm/TEwzjCY+ofqbkk0pfmUT7WE9o4WPOKZjKrenKZM3QcOltzVrNNZKT15e?=
+ =?us-ascii?Q?uerCl7+5pz+P6m7zaDQOcyqk2M2I0WavHjkr35YTf5M/S0mKvZx3Ti/0O1L7?=
+ =?us-ascii?Q?19htGNqivcYb1TZBjb7q1c0WZcIzZznMAJOeQrmNC+CezW5sU/lt/dp7n7Ht?=
+ =?us-ascii?Q?hNBCVk08sJGlNOssgSrKJqAazDAXk1SYzBRXgMKnnP4ZLwb+/ER+8Q8oXfGM?=
+ =?us-ascii?Q?9LJDHhAzbT6Ealod1RSoSyVrP0dDGyrRJsgl3NWA/Qj8AAKGHZub2XlgoyxO?=
+ =?us-ascii?Q?hZN3jtpYh2dPPraTVS9tTJ985/wM9ZL377YTXr83ze1y/ZtTR/g4jihLyvFR?=
+ =?us-ascii?Q?1lfIac5WLm4P2eCtXE7LBZzRaZRGYDEukXLtMtoUGE39qDfnuAnzYBVj2iNI?=
+ =?us-ascii?Q?B2tJNuE0A8r450hYGvwYfhIXxYqvUFzGn5freb5sFcpxEkrV5F099s361Jls?=
+ =?us-ascii?Q?LQlzIT3a8yB0rq0imsKazLZ0b5T+PvKUNoIsii3I7hQkc9/Hwl1YyZ/0i3m6?=
+ =?us-ascii?Q?voNseznKbRgjSiDMZ0fvRZBGyhcr/p3hr47xplidVRLBp12pmKKmq54Jifnw?=
+ =?us-ascii?Q?OqfE6Ly4cH8K5go7bAVVtJNbXUy+I+MjUpiEvDJoxG8wPkG1K5XIKH1VTCQq?=
+ =?us-ascii?Q?Y/0AbHrTsT1fVxMpiWZepxkpaUSG+scdZzCj5EMW8LESThVwZBZ7GXhTbln7?=
+ =?us-ascii?Q?sBsZV8ljyVNhp+cfD0G5wQ9wBNsSnxtmDtIJwvrbCG6/IJemztNHH/Eyka3D?=
+ =?us-ascii?Q?AyqlrMwV5GKp6pfcSx1G+a0uk23d5Uwb05oGj43QbrbTy3UKXkJHFH38+a/Z?=
+ =?us-ascii?Q?P6axFRrluydkBdymQJuUxw45Vh5ruu4ViNMhBdXmYWiUNznIKR1csq70SLoR?=
+ =?us-ascii?Q?eFc78r98oAUKOZ/nzXIWdC6a5aZN92eREaC13S08EmZHItbtV3+RT3zPo4xO?=
+ =?us-ascii?Q?4oF3FS44PzTaYYIFOGl/KoTNfbzyCJEGzyA3GuXKitI/xFulWUz9CGOAFlLF?=
+ =?us-ascii?Q?2JsXpH4xze5zJ2jX+0RhsglWmBb+7Y88tDlr/81o?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d081438c-657d-4fc3-63dd-08dcce3a5e92
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 06:08:47.3083
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gbK2MoRguK+zVxCQMw/hnsNuQuoEZO8vjpOaoX14PgMEC75rqG8HQpHJ5+z51xWMmF5EkR/vBNjnBKkiJVkBKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4495
 
-region_intersects() is important because it's used for /dev/mem
-permission checking.  To avoid possible bug of region_intersects() in
-the future, a kunit test case for region_intersects() is added.
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Baoquan He <bhe@redhat.com>
----
- kernel/resource.c       |  20 ++++--
- kernel/resource_kunit.c | 143 ++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig.debug       |   1 +
- 3 files changed, 158 insertions(+), 6 deletions(-)
+Christoph Hellwig <hch@lst.de> writes:
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 035ef16c1a66..e6d222fb0f84 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1860,7 +1860,17 @@ EXPORT_SYMBOL(resource_list_free);
- #ifdef CONFIG_GET_FREE_REGION
- #define GFR_DESCENDING		(1UL << 0)
- #define GFR_REQUEST_REGION	(1UL << 1)
--#define GFR_DEFAULT_ALIGN (1UL << PA_SECTION_SHIFT)
-+#ifdef PA_SECTION_SHIFT
-+#define GFR_DEFAULT_ALIGN	(1UL << PA_SECTION_SHIFT)
-+#else
-+#define GFR_DEFAULT_ALIGN	PAGE_SIZE
-+#endif
-+
-+#ifdef MAX_PHYSMEM_BITS
-+#define MAX_PHYS_ADDR		((1ULL << MAX_PHYSMEM_BITS) - 1)
-+#else
-+#define MAX_PHYS_ADDR		(-1ULL)
-+#endif
- 
- static resource_size_t gfr_start(struct resource *base, resource_size_t size,
- 				 resource_size_t align, unsigned long flags)
-@@ -1868,8 +1878,7 @@ static resource_size_t gfr_start(struct resource *base, resource_size_t size,
- 	if (flags & GFR_DESCENDING) {
- 		resource_size_t end;
- 
--		end = min_t(resource_size_t, base->end,
--			    (1ULL << MAX_PHYSMEM_BITS) - 1);
-+		end = min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
- 		return end - size + 1;
- 	}
- 
-@@ -1886,8 +1895,7 @@ static bool gfr_continue(struct resource *base, resource_size_t addr,
- 	 * @size did not wrap 0.
- 	 */
- 	return addr > addr - size &&
--	       addr <= min_t(resource_size_t, base->end,
--			     (1ULL << MAX_PHYSMEM_BITS) - 1);
-+		addr <= min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
- }
- 
- static resource_size_t gfr_next(resource_size_t addr, resource_size_t size,
-@@ -2048,7 +2056,7 @@ struct resource *alloc_free_mem_region(struct resource *base,
- 	return get_free_mem_region(NULL, base, size, align, name,
- 				   IORES_DESC_NONE, flags);
- }
--EXPORT_SYMBOL_NS_GPL(alloc_free_mem_region, CXL);
-+EXPORT_SYMBOL_GPL(alloc_free_mem_region);
- #endif /* CONFIG_GET_FREE_REGION */
- 
- static int __init strict_iomem(char *str)
-diff --git a/kernel/resource_kunit.c b/kernel/resource_kunit.c
-index 0e509985a44a..42d2d8d20f5d 100644
---- a/kernel/resource_kunit.c
-+++ b/kernel/resource_kunit.c
-@@ -7,6 +7,8 @@
- #include <linux/ioport.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/sizes.h>
-+#include <linux/mm.h>
- 
- #define R0_START	0x0000
- #define R0_END		0xffff
-@@ -137,9 +139,150 @@ static void resource_test_intersection(struct kunit *test)
- 	} while (++i < ARRAY_SIZE(results_for_intersection));
- }
- 
-+/*
-+ * The test resource tree for region_intersects() test:
-+ *
-+ * BASE-BASE+1M-1 : Test System RAM 0
-+ *		  # hole 0 (BASE+1M-BASE+2M)
-+ * BASE+2M-BASE+3M-1 : Test CXL Window 0
-+ * BASE+3M-BASE+4M-1 : Test System RAM 1
-+ * BASE+4M-BASE+7M-1 : Test CXL Window 1
-+ *   BASE+4M-BASE+5M-1 : Test System RAM 2
-+ *     BASE+4M+128K-BASE+4M+256K-1: Test Code
-+ *   BASE+5M-BASE+6M-1 : Test System RAM 3
-+ */
-+#define RES_TEST_RAM0_OFFSET	0
-+#define RES_TEST_RAM0_SIZE	SZ_1M
-+#define RES_TEST_HOLE0_OFFSET	(RES_TEST_RAM0_OFFSET + RES_TEST_RAM0_SIZE)
-+#define RES_TEST_HOLE0_SIZE	SZ_1M
-+#define RES_TEST_WIN0_OFFSET	(RES_TEST_HOLE0_OFFSET + RES_TEST_HOLE0_SIZE)
-+#define RES_TEST_WIN0_SIZE	SZ_1M
-+#define RES_TEST_RAM1_OFFSET	(RES_TEST_WIN0_OFFSET + RES_TEST_WIN0_SIZE)
-+#define RES_TEST_RAM1_SIZE	SZ_1M
-+#define RES_TEST_WIN1_OFFSET	(RES_TEST_RAM1_OFFSET + RES_TEST_RAM1_SIZE)
-+#define RES_TEST_WIN1_SIZE	(SZ_1M * 3)
-+#define RES_TEST_RAM2_OFFSET	RES_TEST_WIN1_OFFSET
-+#define RES_TEST_RAM2_SIZE	SZ_1M
-+#define RES_TEST_CODE_OFFSET	(RES_TEST_RAM2_OFFSET + SZ_128K)
-+#define RES_TEST_CODE_SIZE	SZ_128K
-+#define RES_TEST_RAM3_OFFSET	(RES_TEST_RAM2_OFFSET + RES_TEST_RAM2_SIZE)
-+#define RES_TEST_RAM3_SIZE	SZ_1M
-+#define RES_TEST_TOTAL_SIZE	((RES_TEST_WIN1_OFFSET + RES_TEST_WIN1_SIZE))
-+
-+static void remove_free_resource(void *ctx)
-+{
-+	struct resource *res = (struct resource *)ctx;
-+
-+	remove_resource(res);
-+	kfree(res);
-+}
-+
-+static void resource_test_request_region(struct kunit *test, struct resource *parent,
-+					 resource_size_t start, resource_size_t size,
-+					 const char *name, unsigned long flags)
-+{
-+	struct resource *res;
-+
-+	res = __request_region(parent, start, size, name, flags);
-+	KUNIT_ASSERT_NOT_NULL(test, res);
-+	kunit_add_action_or_reset(test, remove_free_resource, res);
-+}
-+
-+static void resource_test_insert_resource(struct kunit *test, struct resource *parent,
-+					  resource_size_t start, resource_size_t size,
-+					  const char *name, unsigned long flags)
-+{
-+	struct resource *res;
-+
-+	res = kzalloc(sizeof(*res), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, res);
-+
-+	res->name = name;
-+	res->start = start;
-+	res->end = start + size - 1;
-+	res->flags = flags;
-+	if (insert_resource(parent, res)) {
-+		kfree(res);
-+		KUNIT_FAIL_AND_ABORT(test, "Fail to insert resource %pR\n", res);
-+	}
-+
-+	kunit_add_action_or_reset(test, remove_free_resource, res);
-+}
-+
-+static void resource_test_region_intersects(struct kunit *test)
-+{
-+	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	struct resource *parent;
-+	resource_size_t start;
-+
-+	/* Find an iomem_resource hole to hold test resources */
-+	parent = alloc_free_mem_region(&iomem_resource, RES_TEST_TOTAL_SIZE, SZ_1M,
-+				       "test resources");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, parent);
-+	start = parent->start;
-+	kunit_add_action_or_reset(test, remove_free_resource, parent);
-+
-+	resource_test_request_region(test, parent, start + RES_TEST_RAM0_OFFSET,
-+				     RES_TEST_RAM0_SIZE, "Test System RAM 0", flags);
-+	resource_test_insert_resource(test, parent, start + RES_TEST_WIN0_OFFSET,
-+				      RES_TEST_WIN0_SIZE, "Test CXL Window 0",
-+				      IORESOURCE_MEM);
-+	resource_test_request_region(test, parent, start + RES_TEST_RAM1_OFFSET,
-+				     RES_TEST_RAM1_SIZE, "Test System RAM 1", flags);
-+	resource_test_insert_resource(test, parent, start + RES_TEST_WIN1_OFFSET,
-+				      RES_TEST_WIN1_SIZE, "Test CXL Window 1",
-+				      IORESOURCE_MEM);
-+	resource_test_request_region(test, parent, start + RES_TEST_RAM2_OFFSET,
-+				     RES_TEST_RAM2_SIZE, "Test System RAM 2", flags);
-+	resource_test_insert_resource(test, parent, start + RES_TEST_CODE_OFFSET,
-+				      RES_TEST_CODE_SIZE, "Test Code", flags);
-+	resource_test_request_region(test, parent, start + RES_TEST_RAM3_OFFSET,
-+				     RES_TEST_RAM3_SIZE, "Test System RAM 3", flags);
-+	kunit_release_action(test, remove_free_resource, parent);
-+
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_RAM0_OFFSET, PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_RAM0_OFFSET +
-+					  RES_TEST_RAM0_SIZE - PAGE_SIZE, 2 * PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_DISJOINT,
-+			region_intersects(start + RES_TEST_HOLE0_OFFSET, PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_DISJOINT,
-+			region_intersects(start + RES_TEST_HOLE0_OFFSET +
-+					  RES_TEST_HOLE0_SIZE - PAGE_SIZE, 2 * PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_MIXED,
-+			region_intersects(start + RES_TEST_WIN0_OFFSET +
-+					  RES_TEST_WIN0_SIZE - PAGE_SIZE, 2 * PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_RAM1_OFFSET +
-+					  RES_TEST_RAM1_SIZE - PAGE_SIZE, 2 * PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_RAM2_OFFSET +
-+					  RES_TEST_RAM2_SIZE - PAGE_SIZE, 2 * PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_CODE_OFFSET, PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_INTERSECTS,
-+			region_intersects(start + RES_TEST_RAM2_OFFSET,
-+					  RES_TEST_RAM2_SIZE + PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+	KUNIT_EXPECT_EQ(test, REGION_MIXED,
-+			region_intersects(start + RES_TEST_RAM3_OFFSET,
-+					  RES_TEST_RAM3_SIZE + PAGE_SIZE,
-+					  IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE));
-+}
-+
- static struct kunit_case resource_test_cases[] = {
- 	KUNIT_CASE(resource_test_union),
- 	KUNIT_CASE(resource_test_intersection),
-+	KUNIT_CASE(resource_test_region_intersects),
- 	{}
- };
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index a30c03a66172..383453cbf4af 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2616,6 +2616,7 @@ config RESOURCE_KUNIT_TEST
- 	tristate "KUnit test for resource API" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
- 	default KUNIT_ALL_TESTS
-+	select GET_FREE_REGION
- 	help
- 	  This builds the resource API unit test.
- 	  Tests the logic of API provided by resource.c and ioport.h.
--- 
-2.39.2
+>> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+>> index eb61598..b7a31ae 100644
+>> --- a/drivers/dax/device.c
+>> +++ b/drivers/dax/device.c
+>> @@ -126,11 +126,11 @@ static vm_fault_t __dev_dax_pte_fault(struct dev_dax *dev_dax,
+>>  		return VM_FAULT_SIGBUS;
+>>  	}
+>>  
+>> -	pfn = phys_to_pfn_t(phys, PFN_DEV|PFN_MAP);
+>> +	pfn = phys_to_pfn_t(phys, 0);
+>>  
+>>  	dax_set_mapping(vmf, pfn, fault_size);
+>>  
+>> -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
+>> +	return dax_insert_pfn(vmf->vma, vmf->address, pfn, vmf->flags & FAULT_FLAG_WRITE);
+>
+> Plenty overly long lines here and later.
+>
+> Q: hould dax_insert_pfn take a vm_fault structure instead of the vma?
+> Or are the potential use cases that aren't from the fault path?
 
+Nope, good idea. I will update it to take a vm_fault struct for the next
+version.
+
+> similar instead of the bool write passing the fault flags might actually
+> make things more readable than the bool.
+>
+> Also at least currently it seems like there are no modular users despite
+> the export, or am I missing something?
+
+It gets used in drivers/dax/device.c which I think is built into
+device_dax.ko:
+
+obj-$(CONFIG_DEV_DAX) += device_dax.o
+
+...
+
+device_dax-y := device.o
+
+>>  {
+>> +	/*
+>> +	 * Make sure we flush any cached data to the page now that it's free.
+>> +	 */
+>> +	if (PageDirty(page))
+>> +		dax_flush(NULL, page_address(page), page_size(page));
+>> +
+>
+> Adding the magic dax_dev == NULL case to dax_flush and going through it
+> vs just calling arch_wb_cache_pmem directly here seems odd.
+>
+> But I also don't quite understand how it is related to the rest
+> of the patch anyway.
+
+Yeah, that should be unnecessary as it gets called elsewhere as needed
+so will remove it.
+
+>>  		if (!pmd_present(*pmd))
+>>  			goto out;
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index b7e1599..f11ee0d 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -1016,7 +1016,8 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+>>  	 */
+>>  	if (pgmap->type == MEMORY_DEVICE_PRIVATE ||
+>>  	    pgmap->type == MEMORY_DEVICE_COHERENT ||
+>> -	    pgmap->type == MEMORY_DEVICE_PCI_P2PDMA)
+>> +	    pgmap->type == MEMORY_DEVICE_PCI_P2PDMA ||
+>> +	    pgmap->type == MEMORY_DEVICE_FS_DAX)
+>>  		set_page_count(page, 0);
+>>  }
+>
+> So we'll skip this for MEMORY_DEVICE_GENERIC only.  Does anyone remember
+> if that's actively harmful or just not needed?  If the latter it might
+> be simpler to just set the page count unconditionally here.
+
+Yeah I'm not sure but the switch statement you suggested at least makes
+this much clearer. Once I get this series finished I can chase down the
+MEMORY_DEVICE_GENERIC differences. I suspect we can just do it
+unconditionally.
