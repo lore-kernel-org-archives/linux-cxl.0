@@ -1,154 +1,104 @@
-Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8924C171AA
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Sep 2024 00:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C6B17991;
+	Fri,  6 Sep 2024 01:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725582591; cv=none; b=lQqwsEPlM7uhd6GqXp1geNnxsqN+mAs6/tZ3KonNhX49I2H7QD13YgD9QSRNyXa/Nd7UxXXHiMbMJe0M1JD6gIgHWw+jyYJpjcCoJVQM1ZrpTFY5ZTOzlSPRe5sfturj8FnIgppztxCUsCe8+VvZTA7VAJ5RmUKPnesS99YnqOI=
+	t=1725585081; cv=none; b=EIF4zgjALU34owKw4NjlpHTwM20JKbDKZyMWWV/uR6yXBa+UGfYzHycdw9G/gnbY6OquMemgCSo7EsKQN4Be+VDfYCFEU3lxS7Bs4KhW8rsNkR/Cv3atIQPmzE32MJ4bgNnwQOrEt5IwV58Mce2Vip7YB4+G549LbUjUjaE1yqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725582591; c=relaxed/simple;
-	bh=4ZK6Y0L46E329ybdQpbO/TKmYYczvuudgiPndMr7/s0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TpvofXZxHJ6Y2cZFdMvEQAq2Dt07Y+INvOzSUFJYdVtrVgrWMrfS48svNJgIjFNZS6IZzLLT7+DJg+LrHFDjvA/Q7HQaJDfUUsIojot3Rsobs40Sqy/s9EgAc7ywN+FihdVanez4NSN9vqjdH4GTS0HqC1mWlOheBvK8f6Mzq6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Kw0GmmK3; arc=none smtp.client-ip=17.58.6.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1725585081; c=relaxed/simple;
+	bh=8S+jXpwt85dGZWnEqivLD598BH0yX52AmDkn7Gkw3Is=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=q4GFsP9s5vkhrKNw8ybFs+tkHJcdYOtbZ4z7xtxYsnqI3FeJaKJ+/rkAF7P1coadXyvZSGI2OEdZg8Fo1DXKGijaUFw6enwvhdKmdfEcLVf6ge6raBLMvZZL1cbqTAYWrAqUav8RjH1OOAZG07JGXvcOurklAaiuMAIs78f60fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DKI1cBhJ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Kw0GmmK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1725582588;
-	bh=MphT4C4bHD4orjy7XPvNclhjC+CK7I5wacnhSReDOEc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=Kw0GmmK3JaHFycnIl1Kqtg08ES8hPeL8iahsjttDhhwPBdrG2tReJ+c9EoCa1W+MM
-	 ROdg4HlC6W1aS7r03Bri76IJHSyHubOrPT+wg8t6mzBJSMHZSdPPprpDknrTdVxPB4
-	 KowSiQfBogCu0Yos67zblEsI/T331LiGl6XO7wLEpD8remN6ivR8kDpfjzxOxyhoil
-	 foMu54aMy4XOS9lrnATN+qdWTe5zuWRStSMXSEtKFTUBJMUbNnXotM9ohVto3ui6OW
-	 SOyMjw5nCIIwer8RfsavGShihkZP+q+hjZLtiBeAb4DsIOVCFkjET4fys/JeBLQN1O
-	 J2iful8XWPjmQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id 407603A0315;
-	Fri,  6 Sep 2024 00:29:40 +0000 (UTC)
-Message-ID: <2d989071-18ba-40dd-835d-06689e2cd13a@icloud.com>
-Date: Fri, 6 Sep 2024 08:29:37 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DKI1cBhJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725585080; x=1757121080;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=8S+jXpwt85dGZWnEqivLD598BH0yX52AmDkn7Gkw3Is=;
+  b=DKI1cBhJJsSDJUi7ZTBV/HcaGHShLyl4Xvll8VtwDetUKr35vKWFjIko
+   3cqVfoqj+wkbWBNoOcCdUyUPOZOwXA0KKMvaydXQbsKAMRPcYHB/37EFB
+   RNs50aTHiq+tcjwGirOwSmjfmKf1DlUnOuTjyZr5l3/hFgNr3UJnVoLEU
+   pPVORo26LjxHvUA5WK9CyOPVFjoPglmzW14900KJKb53tLKDHSHg33K2D
+   jWbNzaXp8oN8kEclwO+g/5AoLieVL/6HFqR2fG94FpNkcfMQQKK0hErNi
+   a18b6hWmyk158ur724w1/ueeE0GEonyVeGOcoWwt8v7XxJO8VKE5yXO9/
+   Q==;
+X-CSE-ConnectionGUID: LDZJzpqYTOmLUH6ed9mN1Q==
+X-CSE-MsgGUID: yZThUJrSRUyjJy30g+avJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="23891490"
+X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
+   d="scan'208";a="23891490"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 18:11:19 -0700
+X-CSE-ConnectionGUID: zPIbzNPWSweJ6Zcr2THlJA==
+X-CSE-MsgGUID: 0g+abiOrSLeuAFE4eFRXCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,206,1719903600"; 
+   d="scan'208";a="96523282"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 18:11:15 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  <linux-mm@kvack.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,  "David
+ Hildenbrand" <david@redhat.com>,  Davidlohr Bueso <dave@stgolabs.net>,
+  "Jonathan Cameron" <jonathan.cameron@huawei.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  Alison Schofield <alison.schofield@intel.com>,
+  Vishal Verma <vishal.l.verma@intel.com>,  Ira Weiny
+ <ira.weiny@intel.com>,  Alistair Popple <apopple@nvidia.com>,  Bjorn
+ Helgaas <bhelgaas@google.com>,  Baoquan He <bhe@redhat.com>, Philip Li
+ <philip.li@intel.com>
+Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
+In-Reply-To: <ZtmOTYF9EWPeLg5u@smile.fi.intel.com> (Andy Shevchenko's message
+	of "Thu, 5 Sep 2024 13:56:13 +0300")
+References: <20240819023413.1109779-1-ying.huang@intel.com>
+	<ZsL-wfDYsUmWKBep@smile.fi.intel.com>
+	<874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<66d8f41cb3e6_3975294f9@dwillia2-xfh.jf.intel.com.notmuch>
+	<ZtmOTYF9EWPeLg5u@smile.fi.intel.com>
+Date: Fri, 06 Sep 2024 09:07:41 +0800
+Message-ID: <87v7z91teq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] net: qcom/emac: Find sgmii_ops by
- device_for_each_child()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
- <20240905-const_dfc_prepare-v4-2-4180e1d5a244@quicinc.com>
- <2024090521-finch-skinny-69bc@gregkh>
- <2024090548-riverbank-resemble-6590@gregkh>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <2024090548-riverbank-resemble-6590@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: U8RtFDwOMQI9JHogTBsBVbwW6bBNBQhw
-X-Proofpoint-ORIG-GUID: U8RtFDwOMQI9JHogTBsBVbwW6bBNBQhw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-05_17,2024-09-05_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- suspectscore=0 phishscore=0 clxscore=1015 spamscore=0 mlxscore=0
- bulkscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2409060002
+Content-Type: text/plain; charset=ascii
 
-On 2024/9/5 13:33, Greg Kroah-Hartman wrote:
-> On Thu, Sep 05, 2024 at 07:29:10AM +0200, Greg Kroah-Hartman wrote:
->> On Thu, Sep 05, 2024 at 08:36:10AM +0800, Zijun Hu wrote:
->>> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>>
->>> To prepare for constifying the following old driver core API:
->>>
->>> struct device *device_find_child(struct device *dev, void *data,
->>> 		int (*match)(struct device *dev, void *data));
->>> to new:
->>> struct device *device_find_child(struct device *dev, const void *data,
->>> 		int (*match)(struct device *dev, const void *data));
->>>
->>> The new API does not allow its match function (*match)() to modify
->>> caller's match data @*data, but emac_sgmii_acpi_match() as the old
->>> API's match function indeed modifies relevant match data, so it is not
->>> suitable for the new API any more, solved by using device_for_each_child()
->>> to implement relevant finding sgmii_ops function.
->>>
->>> By the way, this commit does not change any existing logic.
->>>
->>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>> ---
->>>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.c | 22 +++++++++++++++++-----
->>>  1 file changed, 17 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
->>> index e4bc18009d08..29392c63d115 100644
->>> --- a/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
->>> +++ b/drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
->>> @@ -293,6 +293,11 @@ static struct sgmii_ops qdf2400_ops = {
->>>  };
->>>  #endif
->>>  
->>> +struct emac_match_data {
->>> +	struct sgmii_ops **sgmii_ops;
->>> +	struct device *target_device;
->>> +};
->>> +
->>>  static int emac_sgmii_acpi_match(struct device *dev, void *data)
->>>  {
->>>  #ifdef CONFIG_ACPI
->>> @@ -303,7 +308,7 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
->>>  		{}
->>>  	};
->>>  	const struct acpi_device_id *id = acpi_match_device(match_table, dev);
->>> -	struct sgmii_ops **ops = data;
->>> +	struct emac_match_data *match_data = data;
->>>  
->>>  	if (id) {
->>>  		acpi_handle handle = ACPI_HANDLE(dev);
->>> @@ -324,10 +329,12 @@ static int emac_sgmii_acpi_match(struct device *dev, void *data)
->>>  
->>>  		switch (hrv) {
->>>  		case 1:
->>> -			*ops = &qdf2432_ops;
->>> +			*match_data->sgmii_ops = &qdf2432_ops;
->>> +			match_data->target_device = get_device(dev);
->>>  			return 1;
->>>  		case 2:
->>> -			*ops = &qdf2400_ops;
->>> +			*match_data->sgmii_ops = &qdf2400_ops;
->>> +			match_data->target_device = get_device(dev);
->>
->> Where is put_device() now called?
-> 
-> Nevermind, I see it now.
-> 
-> That being said, this feels wrong still, why not just do this "set up
-> the ops" logic _after_ you find the device and not here in the match
-> function?
-> 
-sorry, let me complement a little reply to last one.
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-This change will use emac_sgmii_acpi_match() as device_for_each_child()
-function parameter, so may not regard emac_sgmii_acpi_match() as
-match() function anymore.
+> On Wed, Sep 04, 2024 at 04:58:20PM -0700, Dan Williams wrote:
+>> Huang, Ying wrote:
+>> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+>
+> [..]
+>
+>> > > You may move Cc list after '---', so it won't unnecessarily pollute the commit
+>> > > message.
+>> > 
+>> > Emm... It appears that it's a common practice to include "Cc" in the
+>> > commit log.
+>> 
+>> Yes, just ignore this feedback, it goes against common practice. Cc list
+>> as is looks sane to me.
+>
+> It seems nobody can give technical arguments why it's better than just keeping
+> them outside of the commit message. Mantra "common practice" nowadays is
+> questionable.
 
-> thanks,
-> 
-> greg k-h
+Cc list is used by 0day test robot to notify relevant developers and
+maintainers in addition to the author when reporting regressions.  That
+is helpful information.
 
+--
+Best Regards,
+Huang, Ying
