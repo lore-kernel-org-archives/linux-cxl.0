@@ -1,211 +1,207 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8239B3B1A2
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Sep 2024 07:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725607442; cv=fail; b=PUNQ0GZeVK4qcNcElhu7i8AAYzI/tE4HbkBPK1BoUOocWnDBmSTCdWZBbjVk0UjJ4XeLAFeXPrVIsH7t0xQTegIpmwHdVVXACweI9Edsh6WpULv0gAJBHqYo3gp8GpyxkATvCstfY9YqAjRbNyK4RAL1DGaxOS0SoD0AYJ1v8+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725607442; c=relaxed/simple;
-	bh=ehlzSz43KHH3Ndj/UnWdKVsw/u/BqkpTih60qVcjpbA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lzFcbGf/OhF30y77mfrzw4b80Tu0iZy7tQFUws8JDjFjEPEY55Xvyvj1S3WLFbeCOz29gJ6AyVba3qliitPwjydFXtUbQbUppVjwEDEljROJpVSROllIn1+MxRgzZGiPHVigfF82Kn4gKQLhfGhpc1KYlc0cFBnvVeHUjJq0BAE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kUeN0op6; arc=fail smtp.client-ip=40.107.220.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA851C9DCB;
+	Fri,  6 Sep 2024 10:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725617501; cv=none; b=uBLyqB5a7FctlcNOajqqNKOGbFhcyK48ygxUkTD6SPeOYL5pZmBF2sQdglO7U2xRThMi09zBuYE0HzpJ5pX7jQPN9/1fUmehcBcp2NYmyiIvvGIFPlA2sDAqKX1E5yuDpHV7j3R/JDUU/VJL/9V2DQVcYh5klF8d9up7PvpgUeo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725617501; c=relaxed/simple;
+	bh=5iCS/jcm24otnfJfKau14m/kEAeAp4bMMO4+mkaNDTI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=Ju0bjU9P3P0fOno6n84gowmKuLD8XOOqTRgUzUYNJgcdg69iFGt4pOcoB0N2vK0MvlDynMhH30ym8eaGKTk5pgUROA4Yp6OZOo7QvKEedLGn/ux2Ud5gVj9MZAMJSX0TjYiYGLcVNvekjsVJkmD/C1+93T7O2remWVs6q6LRaKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bcbn+IeD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x8uxBtc6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kUeN0op6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X6b91jQOPM1KRjcNE5WRjZbYQEwJ7Y597liUTACNEIj7IXAUrHe68b7fxQVrwSDGkvzRJod125kMiP1XKMGDIMlpeL+2d2tTbueBDSzGmiV8f5psMB17fThAFcWy7mznr5Nivkr6xWPK6BU4FlJpOOu5cNtjL4hkAETFVvgPpKK9XxncDnqGpzqwBWZsbKe4rGqtFRBAKqr2KMI+xGNCC+1gCFR8Zons/8tZDmEr2Qv5cfjc13ZWzpOajapdy3CHSNDZW2CzRzhZtyDdrAatefhBV1GgEADX1NEhtCSXrhcgDPv+LgvZU9N6uDzK1UBkHafK4PJCap4YcSljyXaN5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sqILWHNWimDbelPRLXr5JBm1tIlZbuQ4uizK+YduLMw=;
- b=KyrAfIPianyuWFgfQOJ0j3LvXGU+EP6l7qBAgiUno311kSDMeMdKX+u7vhr5jWj1RkvmHL3niKXRKbOyOIY1ZFk0NaW6tNR59qmG5REkYd2nHg/stFj0tAhRTf7HbrkqiKuAz2gKmAXjhauCHajLSa3SsDNoMgsSs6qvl0vxe1MCCce7d6X6AF0s3EI0oj9XZQC4FtH006L+RlAsKZXy/ZFc1j9Fc+OmVN/iQ0PjSU9TAxt2BIp427ng9LlcO3LfHsaDuzVTfuEgkIofT/a5OHOXMlJ5vJd9z7o5/mFXR1XRnUliRMXKBQ2KUR2oS3yl0gZziABathCiHLKrP4g7rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sqILWHNWimDbelPRLXr5JBm1tIlZbuQ4uizK+YduLMw=;
- b=kUeN0op6ihKzkzTUpNHbEps5j/DwUr5LqDWtWt1FB5ShiwFnUkjYG0yMQO5jOEnx5utYXxdU/8SE0RP1jQQmf7ugjpkxpHsrT+8rDIHLiuiFmOFeZNI13VwI+t4w67dvRLqMgR9W3jfrntOUdIlPSK0GDoI/HCu+cOsRqltz2xA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4205.namprd12.prod.outlook.com (2603:10b6:208:198::10)
- by IA0PR12MB7698.namprd12.prod.outlook.com (2603:10b6:208:432::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Fri, 6 Sep
- 2024 07:23:58 +0000
-Received: from MN2PR12MB4205.namprd12.prod.outlook.com
- ([fe80::cdcb:a990:3743:e0bf]) by MN2PR12MB4205.namprd12.prod.outlook.com
- ([fe80::cdcb:a990:3743:e0bf%2]) with mapi id 15.20.7918.019; Fri, 6 Sep 2024
- 07:23:58 +0000
-Message-ID: <59918a1c-5ebd-4255-ec5a-4d7a08b8cda2@amd.com>
-Date: Fri, 6 Sep 2024 08:23:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v4 0/3] cxl: Pull out mailbox bits to be independent of
- cxl_dev_state
-Content-Language: en-US
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: alejandro.lucero-palau@amd.com, dan.j.williams@intel.com,
- ira.weiny@intel.com, vishal.l.verma@intel.com, alison.schofield@intel.com,
- Jonathan.Cameron@huawei.com, dave@stgolabs.net, fan.ni@samsung.com
-References: <20240905223711.1990186-1-dave.jiang@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20240905223711.1990186-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0035.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ae::11) To MN2PR12MB4205.namprd12.prod.outlook.com
- (2603:10b6:208:198::10)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bcbn+IeD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x8uxBtc6"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1725617497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=d+Aq0SZRqn2r2G97sRUrqL/DG9W0etbkppVpcUP28Og=;
+	b=bcbn+IeD5E6EOybaXGhNp7piBWTuMZPQk4hoxmPuCShAMVXBSHJ38wh6Lm6/e1L5pTjMv+
+	vKyHzFLc1P1aLUe8ExaKuvIJLnWxyE/Zx9AbJkLPXHEkA0EP6pumS12uE9GyjGdBseCOVB
+	r+Jd/kOiFzXRFgp+t/ofeTTERj/EcIslzzY2uy2gQtkE6ihqkqZ3uemCUIfSoSlNqQ89xo
+	xPMjYEdUP7W+U6QLcjE6mBOIhaimF9EbLiBZMDUDhhM6Wp6+GeCUzpUVoqprTiDdLD6UBg
+	xIpfcz6cZatRHdF3MUG5EN6zaXKxDixhHPNA5/W4Ofxlx55aSSktcLARz3U45g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1725617497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=d+Aq0SZRqn2r2G97sRUrqL/DG9W0etbkppVpcUP28Og=;
+	b=x8uxBtc6kem2lYHgpu+tTF429Ixb7CriMd0DJZAbVNBpo05+JrKMQrBdZuLgZuFdV+LZx6
+	jGlGvlVY+RX6uLBg==
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+ linuxarm@huawei.com, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ terry.bowman@amd.com, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo =?utf-8?Q?J=C3=A4rvine?=
+ =?utf-8?Q?n?=
+ <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
+ CXL PMUs (and aer)
+In-Reply-To: <20240905122342.000001be@Huawei.com>
+Date: Fri, 06 Sep 2024 12:11:36 +0200
+Message-ID: <87jzfpdrc7.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4205:EE_|IA0PR12MB7698:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1df664fb-1fcd-4f92-e213-08dcce44df25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2hJZXdJcWlpaWYxTmlEOE1vSld4NmNvUHM4cG05SWlvYTNySUJGN3phYW90?=
- =?utf-8?B?bklGVld3ZWozR3VDY3BzZDBUY1dxa1ptQ291b3dxS3RESFBPVXloVmt4MGd5?=
- =?utf-8?B?V2kxdVRGOWpFck1hVWFwTUNZMUJ6dnFHMlRwbjkyOWhIOWcvalRGcElIS1gv?=
- =?utf-8?B?b1VZOTY0UmtOOUhqditDRU91dm9NZWdyRmpoWXB1dkd5aXIxdnd5dmpPNHJO?=
- =?utf-8?B?OWV3V04rdFU3QVhpVDEvK1ZGdUYvT1NoK3UybXp4Z3FybUQxTUlNWThiUkht?=
- =?utf-8?B?Mk1qamNhM2I3WGVpd0dDY2U0QnlTYkdrY29PWjExZEZkNGI3NGRSSHU2Q3VB?=
- =?utf-8?B?NGtGMFlXS0dBUW03RmpVd2IyQVNBY0FFR0xodW1YcUp0amlxTWFiUlNLMHV5?=
- =?utf-8?B?TXhjb1RqMVB1OEUra1U5elJFUVRMVmUyYU1aNEU1Z1BZUExEVnNWc0RONUFi?=
- =?utf-8?B?NERHU2pQZ2Vvd05hY0tvYkFmWHk0M1RyUlZIWkhPaWN1VnpUaUZjSVJoemZm?=
- =?utf-8?B?WmlmZXNjMkJVbEZhWFBUeFZwb3VTSUZBY0JBTXNHMk5SaTJPOTRhLzI0bFVo?=
- =?utf-8?B?VDBJempBUWNqUnR6c3U2VVlXZ0t5RDhoakVpR1FteTU5WlJscUI4TmpJdlpH?=
- =?utf-8?B?bDdHUEszNEFwdzZvRVdiLzhMU3JjTWRrMk5nNmtDZmNhSTd0cHF3WFAzWGIy?=
- =?utf-8?B?TGNxU1RGdWV1UFFVQVcrbzlSVDNhZEFPOEJGak1BOXhIUytQaTh4Unl1SnNB?=
- =?utf-8?B?L1g2dUF3VXdpTXE3aWhWcmdrUmJ2aFJHelJ4WGh5QW0xTUVqZkZ0VXlmcUxw?=
- =?utf-8?B?SDdaVnhTZDdtVDVwYSs3cVdkT09FdWVzSE03dkEwTTQ3OUZ6NlN0MFRINXRt?=
- =?utf-8?B?d0QrM0UwbzFPNnBLcGVjb0JSb001Q1ZJSjVNOHFjdVdCMXVQYVp3bGZsdzB2?=
- =?utf-8?B?alA1d01ZS3RPdmc4UFUyWnNETHVKQzRaaGRZUjdqQkQvRm9kRGxSODR3MGhG?=
- =?utf-8?B?Y2hqcU9ITEdZdCt2amJrNUhyeldyNHpMaUJSNytkR3ZPVVRVdkd1QWd3TEd6?=
- =?utf-8?B?VEp3Si94NGF1eW9Qd1ZXVlNOeWgwYU85QU1YWk1hRG5MOEZuU0FMUHdUSzdX?=
- =?utf-8?B?TFVmRWFld0NPRndEcnBtWU1sVUlrMVNIcEtVRzNhNDgrOFFGc3JwVTBEaG00?=
- =?utf-8?B?bmsvUGQ0ektYaWRDcTAzSVlDUEkxTmswZkQrUStVTitBYWhvR1pLWUpVSy82?=
- =?utf-8?B?RCt4dk0yVHhQSVFUU0VoNys2TTZMZWJVdE1uMGMyOWEvbnVYcUFPeEVXL2JD?=
- =?utf-8?B?ZzFDRjNXeEc2VEw1b3RVdGRnQ1JGNVQyOGlPTWpGY1Q0cFJCVGhZMExOZUZu?=
- =?utf-8?B?eFN2M1JkRWFlUlBXYnNjeDNuUFVxMy9FdmRWbFB4eS9kSThIUXlnMnpBZnh3?=
- =?utf-8?B?OVJEVzA2N1pFTVN2dXhQamNiajB4NGhya2NHQU1sOEdBbUpqWktDeklDSnlN?=
- =?utf-8?B?aU9nT2p2Nk5Zb3BOcktBYUNlVnJRN0ZFMmRpRFd1U1BEUkJKMU5jdVdvUEsr?=
- =?utf-8?B?Z2o0ZnJ4UTRUWlBkOEVXSzhxcjV2VjZ4c3U4WlRCMk45QXR3dmQyUVIvOS9H?=
- =?utf-8?B?UmFtUVo1ZkhNU0d2UjhyMWt6TlNtV2J4Ty9LMkthUjRSOHVHY1g2Y3FUY2xD?=
- =?utf-8?B?NXFEQWN6TDNZMG9wYTBJajY4bisvMkE1ZTVmelVwQUNvWFdBR3BCOS9KN1VW?=
- =?utf-8?B?Ny9tU2hEOXhVNmptMzFSNEFxTGp3bFI0aE5naWtHNEk4SndpbjdTNUp6TnlN?=
- =?utf-8?B?L05mcDU3Q3JVd3UzQnluQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4205.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NHlweFM5RWl5Njk1QXJUYmE1bFQxV3FRRFRDTjhwbCt2aHFxY0xVTC9zN1BX?=
- =?utf-8?B?VW5mRzNBcmg1YjhReUJzNXVqSjAxMlM2YUVsSnh6enY3aC82dUxyK2MrQkcy?=
- =?utf-8?B?aTRpSTd5MDZjTWNZVm9CaGFNMDBuMXhUU0hQL0NHMjdWMjBxSlZpVG1za0tu?=
- =?utf-8?B?cy9WVnR2bHB1eEdFa0RHVk0zRjI4SXpqRGVUb0QyTFRRQ20vOVVWN3JqY01i?=
- =?utf-8?B?NDNnbFBsYkxpNnNpK3hCMDkvenM1WHRKQVhNRFNpS0RLMDhoNXYzeEF2cFNK?=
- =?utf-8?B?OXlwNFExOEpxclhEbFJUQzMyTm0ydmRNYkluL2JKN05GOXljZFFyWm5PYk1v?=
- =?utf-8?B?S3BRdkdGM3BZMmt3K1k3NHRUUkRZUVdhVlVLZEdpUFZDZzZwa3hteWx6TU1k?=
- =?utf-8?B?UjJOeUNTd2NFbXhtM04wYlRIYTR2UXZtMHBrQWlaUjh4THNyRS9wbmJpOTFt?=
- =?utf-8?B?QnovKzljSGNTbHZZd3VlWk5FMkwwN282VzFjM2hiQ0tNQW5PVURETEVoaVlO?=
- =?utf-8?B?WWJKNmNsbWEyUlh3TWN1eHFTdlZYUGhiRWZ3cjVUdjk2bWFMb3RQRkZ3dlk0?=
- =?utf-8?B?bU9xbzlMUlgwTVo1ejRpUWVlV3V0SmhYM0JzZVFCOEcwdysrR0dsWGFBcE5s?=
- =?utf-8?B?RE1CcVRwZ0laYmJBQm9wWkEwSy91REVGZVZJNlpheHZVZ3F0NFoxSVpKbkRp?=
- =?utf-8?B?TXBkSmJ4ck1wcXZqNWFHencvTTAzc3RVYmpLaW1RQlVlUnhvaTI2eDNTbmNt?=
- =?utf-8?B?bVF0MEtJbUQ2T01NUmVjeXlFdXE4VmxvYUppWFVnSXhBNEhLTS9IeWQzaU1a?=
- =?utf-8?B?ZVA3WFpzYXV5ZWd3YStsc3h1R3hOY290bUVEaWEyMTNmai80cDNYZ1ZJdUMx?=
- =?utf-8?B?a1lrT1I1eDc1aGgrQWNmdVJjTms2V0tnd0JKS3J4RHBkcnBkYjhESldrSVJF?=
- =?utf-8?B?MzVKaEhuLzBsa050WDNKb2tJY0Y0ck5tbWdJdis1MVFlenpWWU5WUnExMFRp?=
- =?utf-8?B?bnQ0ZEUyRExZclJzbTJ1Vk84d05hY1E4RTgweU80NTlnR0NsUXM5WFk3eHNm?=
- =?utf-8?B?VVY4bGpvSWdnR3ZtT1JDQ0tjb0JSRzFER3M0cXRRQmF4aDVnOUhObnhJWGVP?=
- =?utf-8?B?QlRReWFkdkhOMjZwb1pzOGcxWVdmcnBHN3o3cDJXS1p6b3c1ZFNpQXA3bEdt?=
- =?utf-8?B?d01PUFNCZ3kzeFdBbjIzNG5xWVdtcGZpSmliSUcxMW5iS01lSWFpNFlEQnAx?=
- =?utf-8?B?QVR5L05PMUp0c2hySGdCRnIrd0dVMm9DNU1XTFhqRU9HcU9nTy92Uyt3TkQ0?=
- =?utf-8?B?VXlmMUlEaW91bGovbCtCNFVSYnBNNGtrNXhqQ3hpb3czbEIvVDdvVXMxdFdw?=
- =?utf-8?B?ZW4xK1JOVEw0c1d4WFhBRG55ai8vUU1xOXFOZmRKL0pSR0txMHUvYXJ4Wllq?=
- =?utf-8?B?SzBzREt1TFF1VmE0RUFKaTZXRGxtb2x3RGxsV3Z4eGxLMUlQME53VVM3OHI3?=
- =?utf-8?B?aXBscmRYeC9EeWpVRU5ndmpocysya1kza3VDOCsxbjQ3ZCtucEczTXZpT2VK?=
- =?utf-8?B?WWtNOTVzVmdDZ0c3TlFmNy9xeVgvSFIrM1loZnlzRnhlUDBDQVhtVnhsRUtV?=
- =?utf-8?B?NUZSazlFMVNpOTFxZ2owanlFM2oxTGkxTkhScTM3TTh0bjJXQWlNWDd4K1Az?=
- =?utf-8?B?cHcxUWRqQ0RYZVBhd3I5bFJsSWZxUk9HbHVOaFBURXdYbWh2Tkthc0RERml5?=
- =?utf-8?B?a2pxVEVMa1lGOHJyOGVXZDdXNXF6clhpK3RjUUFXeXh1czF0V2U5V2I1R1R1?=
- =?utf-8?B?N1o5VXArWEJZcnA0U2VQR0p4RWFvbTBxZFNoN0xnL0VOZ2EzcFlyU2R2cmhl?=
- =?utf-8?B?aGxacjhRczNIM1J1N2RxK0FIK1lsWEVBRW1CQlNoMkxOUll2d0ttUk14dGx5?=
- =?utf-8?B?b2NvcFFWZkgwZytxakdrbGU1WlFuTjlkNGxHMnFTZ3kyK3RRRzFGVS9vb1BU?=
- =?utf-8?B?KzR5K2ZITjllM0Noay9NU1FtL2hVRDQzQ2pCVkxzMVYxbEVyY1hZWG1MekRi?=
- =?utf-8?B?czJqOUd6NW0yRW5SdDJmaXZHQjNkb21TWnIzZTBEMW9jT3p1RGZVQjZBMWxQ?=
- =?utf-8?Q?YuT5qrY/EUiS/L7mqeQ4sP2nJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1df664fb-1fcd-4f92-e213-08dcce44df25
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4205.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 07:23:57.9583
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J4NsaNPWauev6G4LcYMiz1T+qJesBo+EFof3mnhaGbMLDbc22nMLMrqB0ZU8oVq4RW5h1mvo/fhq2xLmDiOrnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7698
+Content-Type: text/plain
+
+On Thu, Sep 05 2024 at 12:23, Jonathan Cameron wrote:
+>> Look at how the PCI device manages interrupts with the per device MSI
+>> mechanism. Forget doing this with either one of the legacy mechanisms.
+>> 
+>>   1) It creates a hierarchical interrupt domain and gets the required
+>>      resources from the provided parent domain. The PCI side does not
+>>      care whether this is x86 or arm64 and it neither cares whether the
+>>      parent domain does remapping or not. The only way it cares is about
+>>      the features supported by the different parent domains (think
+>>      multi-MSI).
+>>      
+>>   2) Driver side allocations go through the per device domain
+>> 
+>> That AUXbus is not any different. When the CPMU driver binds it wants to
+>> allocate interrupts. So instead of having a convoluted construct
+>> reaching into the parent PCI device, you simply can do:
+>> 
+>>   1) Let the cxl_pci driver create a MSI parent domain and set that in
+>>      the subdevice::msi::irqdomain pointer.
+>> 
+>>   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
+>>      driver to create a per device interrupt domain.
+>> 
+>>   3) Let the CPMU driver create its per device interrupt domain with
+>>      the provided parent domain
+>> 
+>>   4) Let the CPMU driver allocate its MSI-X interrupts through the per
+>>      device domain
+>> 
+>> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
+>> function does:
+>> 
+>>     if (!pci_msix_enabled(pdev))
+>>     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
+>>     else
+>>         return pci_msix_alloc_irq_at(pdev, ....);
+
+Ignore the above. Brainfart.
+
+> I'm struggling to follow this suggestion
+> Would you expect the cxl_pci MSI parent domain to set it's parent as
+> msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
+> 					 IRQ_DOMAIN_FLAG_MSI_PARENT,
+> 					 ...
+> which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
+> or create a separate domain structure and provide callbacks that reach into
+> the parent domain as necessary?
+>
+> Or do I have this entirely wrong? I'm struggling to relate what existing
+> code like PCI does to what I need to do here.
+
+dev_get_msi_domain(&pdev->dev) is a nightmare due to the 4 different
+models we have:
+
+   - Legacy has no domain
+
+   - Non-hierarchical domain
+
+   - Hierarchical domain v1
+
+         That's the global PCI/MSI domain
+
+   - Hierarchical domain v2
+
+      That's the underlying MSI_PARENT domain, which is on x86
+      either the interrupt remap unit or the vector domain. On arm64
+      it's the ITS domain.
+
+See e.g. pci_msi_domain_supports() which handles the mess.
+
+Now this proposal will only work on hierarchical domain v2 because that
+can do the post enable allocations on MSI-X. Let's put a potential
+solution for MSI aside for now to avoid complexity explosion.
+
+So there are two ways to solve this:
+
+  1) Implement the CXL MSI parent domain as disjunct domain
+
+  2) Teach the V2 per device MSI-X domain to be a parent domain
+
+#1 Looks pretty straight forward, but does not seemlessly fit the
+   hierarchical domain model and creates horrible indirections.
+
+#2 Is the proper abstraction, but requires to teach the MSI core code
+   about stacked MSI parent domains, which should not be horribly hard
+   or maybe just works out of the box.
+
+The PCI device driver invokes the not yet existing function
+pci_enable_msi_parent_domain(pci_dev). This function does:
+
+  A) validate that this PCI device has a V2 parent domain
+
+  B) validate that the device has enabled MSI-X
+
+  C) validate that the PCI/MSI-X domain supports dynamic MSI-X
+     allocation
+
+  D) if #A to #C are true, it enables the PCI device parent domain
+
+I made #B a prerequisite for now, as that's an orthogonal problem, which
+does not need to be solved upfront. Maybe it does not need to be solved
+at all because the underlying PCI driver always allocates a management
+interrupt before dealing with the underlying "bus", which is IMHO a
+reasonable expectation. At least it's a reasonable restriction for
+getting started.
+
+That function does:
+
+     msix_dom = pci_msi_get_msix_domain(pdev);
+     msix_dom->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
+     msix_dom->msi_parent_ops = &pci_msix_parent_ops;
+
+When creating the CXL devices the CXL code invokes
+pci_msi_init_subdevice(pdev, &cxldev->device), which just does:
+
+  dev_set_msi_domain(dev, pci_msi_get_msix_subdevice_parent(pdev));
+
+That allows the CXL devices to create their own per device MSI
+domain via a new function pci_msi_create_subdevice_irq_domain().
+
+That function can just use a variant of pci_create_device_domain() with
+a different domain template and a different irqchip, where the irqchip
+just redirects to the underlying parent domain chip, aka PCI-MSI-X.
+
+I don't think the CXL device will require a special chip as all they
+should need to know is the linux interrupt number. If there are special
+requirements then we can bring the IMS code back or do something similar
+to the platform MSI code. 
+
+Then you need pci_subdev_msix_alloc_at() and pci_subdev_msix_free()
+which are the only two functions which the CXL (or similar) need.
+
+The existing pci_msi*() API function might need a safety check so they
+can't be abused by subdevices, but that's a problem for a final
+solution.
+
+That's pretty much all what it takes. Hope that helps.
+
+Thanks,
+
+        tglx
 
 
-On 9/5/24 23:35, Dave Jiang wrote:
-> Hi Alejandro,
-> Please feel free to pull in the patches in this series into your type2 series.
-> Although I may just pull these into the 6.12 merge window to make things easier
-> for you.
->
-> The patches pulls out the related mailbox bits and form a 'struct cxl_mailbox'. In
-> v2 Jonathan suggested that we keep cxl_mbox embedded. So I moved it back to be
-> embedded. For the type2 devices that does not use mailbox, it can just not have
-> the mailbox struct at all.
-
-
-I've been using your v2 for my v3, so I'll adjust it to this v4. 
-However, I do not think it has an impact on my work since the Type2 
-support I'm adding is for our accel case which has not mailbox and 
-therefore no accessor for initialising a mailbox from an accel driver is 
-added. I guess that will need to wait until another accel driver 
-requires it.
-
-
-> v3
-> - moved the other cxl headers into the linux/cxl directory.
-> - Moved rcuwait.h header into mailbox.h (Alison)
->
-> v4
-> - Move headers to include/cxl (Dan)
-> - Move header moving patch to 1/3 (Dan)
-> - Fix cxl_mailbox_init input param check. (Alison)
->
-> ---
->
-> Dave Jiang (3):
->        cxl: move cxl headers to new linux/cxl/ directory
->        cxl: Move mailbox related bits to the same context
->        cxl: Convert cxl_internal_send_cmd() to use 'struct cxl_mailbox' as input
->
->   MAINTAINERS                                |  3 +-
->   drivers/acpi/apei/einj-cxl.c               |  2 +-
->   drivers/acpi/apei/ghes.c                   |  2 +-
->   drivers/cxl/core/mbox.c                    | 91 ++++++++++++++++++++++++++++++++------------------
->   drivers/cxl/core/memdev.c                  | 41 +++++++++++++----------
->   drivers/cxl/core/port.c                    |  2 +-
->   drivers/cxl/cxlmem.h                       | 25 ++++++--------
->   drivers/cxl/pci.c                          | 82 ++++++++++++++++++++++++++++++---------------
->   drivers/cxl/pmem.c                         | 10 ++++--
->   drivers/cxl/security.c                     | 23 +++++++------
->   include/{linux/einj-cxl.h => cxl/einj.h}   |  0
->   include/{linux/cxl-event.h => cxl/event.h} |  0
->   include/cxl/mailbox.h                      | 28 ++++++++++++++++
->   tools/testing/cxl/test/mem.c               | 44 ++++++++++++++++++------
->   14 files changed, 233 insertions(+), 120 deletions(-)
->
