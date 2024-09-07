@@ -1,355 +1,278 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2043.outbound.protection.outlook.com [40.107.102.43])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D17015B561;
-	Sat,  7 Sep 2024 08:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725697204; cv=fail; b=KBTMvpWJ0g+TAdw1MrJ+E+oeD4ylAfBsuzfVniroUvbEwTDpB2PfGXnjlE1uayQ+n+dYZxyDL+Zv4WXQrWGKbdW8BLMGsjjhkcFnxv+jk1rkfnFv4ioSRcXwnrRdpWf9OTPzGuarwT+fdTd7z8M6ANKJ3cLhB7+yL1H1/9XPc20=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725697204; c=relaxed/simple;
-	bh=7GX6wIfJL5Gi/Ty6yGhWnBvgjsMoJjS9XScxPCDZD48=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IJsouTZvW425AWRGKS9YLTM1reNCfiqsvj+F2OWFEUs1wKMMXHV7BhE669WT4O3tgxsvJWI0TLexdjj0D8ri5Pal3JxP8WeJXm4PKzRS+Vlv/joKvxkqted3ji7dBZgB2grf1cP0X1ZDyqFPpLbPw0DoTS2PIUMv7v5s8ADqzHY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Yo4mYet; arc=fail smtp.client-ip=40.107.102.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E566F149C4F;
+	Sat,  7 Sep 2024 18:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725732558; cv=none; b=AHH2dCe+OvirooOLOv4WYaCTX3fNU3ZwkZwtmcfT8ePMfTpD34VT//2BELm6XDgpC3kBsA86icjGJ4hNEiMW+brwM1HbR3ALWBmJylYHvI0gaYQSuktoiLmrZtMU/eyMjIDizS22PVmbk5Fupj8Dz79ZS4aC1tl4rI5YGyqSuKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725732558; c=relaxed/simple;
+	bh=03RZKeDjnVqe0G7FXwwDaNspHTqiVI51ZvrGTvgSqLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qg/dEZQtu46duI6kpm4oZ8ko8BPd/Vbx+KH6dSld/BTg0ma7w5RMabhMI8/rv+9yPwxIpguzidU32UDi2Hh+LmqeX4qkVds3Jb3tygrFMlLrK3rvKxMOiMqSRzrT9ZoXoOMpS7Z6H+7U+IZ7GsLVGKSwflrvlKwkmAlxo492bPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EOOxnc8Y; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Yo4mYet"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oHBxj6KW+R1U6SiEhL4Z7iKOtGZjEonRbCt5MAMHXU8h8eZw5gXzZUq9B3uMmwkO2PaK0DXinsb7H3mA1DXqDsY/BqeeOGQuyKSrJD7YSnr8OjMEDG9pURIo7d2delZRq17RBIz76Sr2vN2gd3CcjUa3LfsWGpBuuJAS5W0zsVmrOobIuCXUh8A92VeHrjbCaBOs1PP8Df99jPJxUmHGGeua4eXH3stZKzO2WEe7c4XkannwN3let7uf67LWT4Y1N/K2CWTuJ+fYqOcGe8i4FE9NShgk7qryiY4Hu6pExEroNsWF76zzCk4xwVW9fm2NVZ0uUxkiJRWpm1857C7U2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nombQutZ7tb66ymj7wDLaJLA0to7Z0ZjG6RUub4ZZJo=;
- b=Y/zIJk7Pk99Yva11B+QEjPFAok/VXnvRLnkZ6u5eanhLkZNjMvFnoswtBwH6QiABKyjVt6u1Ibwu5YclQveqSS2Zx5PyLw5ZSMEUP9nip0HP2HGCN6GC09dCvQy4RCKh8J2TGjaX88wUeCUArzFsd4IGAFN0CdpeqEZ1hgaJp6IP5DnAY+aRBX7/1yjuSTm3h1r0oAGfuc1NH90Qc15SEvjE2A48jENoXmYvk67RRrZOdEVCdvNf2AOJD2J5mrBH9An0WC+odVcaA7G0fcVeQBHIesED3GzuhrAIvfKCA5yOWBej/0pnRfoaREvN203ofD1K++KXXT/xE2ZdHn13uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nombQutZ7tb66ymj7wDLaJLA0to7Z0ZjG6RUub4ZZJo=;
- b=1Yo4mYetX7oUNB3CmHrXhKqODY+g3ogiZqSUEsBqeHUWTV8xJEiLwOTs4Myeouv9Q2MKCTYxfhqSNj165XvLji4BVzTFqat2Ny16CboK4vhpr5t99ZO/WvtIZR7rnd7/HEfZYvo+v9OQdlJh39bczMXYWpmol7sikc6I0lFprKs=
-Received: from DM6PR02CA0135.namprd02.prod.outlook.com (2603:10b6:5:1b4::37)
- by DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.27; Sat, 7 Sep
- 2024 08:19:58 +0000
-Received: from DS1PEPF0001709A.namprd05.prod.outlook.com
- (2603:10b6:5:1b4:cafe::1d) by DM6PR02CA0135.outlook.office365.com
- (2603:10b6:5:1b4::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.14 via Frontend
- Transport; Sat, 7 Sep 2024 08:19:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DS1PEPF0001709A.mail.protection.outlook.com (10.167.18.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7918.13 via Frontend Transport; Sat, 7 Sep 2024 08:19:58 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 7 Sep
- 2024 03:19:57 -0500
-Received: from xcbalucerop41x.xilinx.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Sat, 7 Sep 2024 03:19:56 -0500
-From: <alejandro.lucero-palau@amd.com>
-To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
-	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <edumazet@google.com>
-CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH v3 20/20] efx: support pio mapping based on cxl
-Date: Sat, 7 Sep 2024 09:18:36 +0100
-Message-ID: <20240907081836.5801-21-alejandro.lucero-palau@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
-References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EOOxnc8Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725732557; x=1757268557;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=03RZKeDjnVqe0G7FXwwDaNspHTqiVI51ZvrGTvgSqLw=;
+  b=EOOxnc8Yoqc58ruM79De6njoaFa02sDLlTJmmijmGUTq/jATDSCVGP7l
+   CUGy+VNfFUC3uBNUenBdRgTWEuP9oZBshFTm3nrfegP1jEo613lF2SxSI
+   oOFyZWn0RtXPgsG2Pdc1PXNUMMPTcNcqTaCcu0+39FJ5b7Rhx3wzeNVGE
+   NzgqV1cpcg2+ihs6GUGOmX4R6CQDYELiwvdvD8dpUNAfRuxC5i+eWYswD
+   fUX+XmEer41r7P0zh67qoNsewyiXmkY680pN/Gl/Sy2ZAWo+kCfTg6SWo
+   2dZVO+2ojYXSr2qo/vYAnU7e5eYJdAAOXUVg9PWVyMbFGK2B7vBuwZzwm
+   w==;
+X-CSE-ConnectionGUID: bgBGza9dTfOdfZgxGtKp2A==
+X-CSE-MsgGUID: cHOKEWgOSN+R6fYV9jw88Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11188"; a="24664690"
+X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
+   d="scan'208";a="24664690"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2024 11:09:16 -0700
+X-CSE-ConnectionGUID: SLjUjvqNRHSEzeDyMXpsFQ==
+X-CSE-MsgGUID: b8jsPESTTNK1LaOafwcWog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
+   d="scan'208";a="66234384"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 07 Sep 2024 11:09:13 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1smzry-000CpP-1j;
+	Sat, 07 Sep 2024 18:09:10 +0000
+Date: Sun, 8 Sep 2024 02:08:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dan.j.williams@intel.com,
+	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+Cc: oe-kbuild-all@lists.linux.dev, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v3 02/20] cxl: add capabilities field to cxl_dev_state
+ and cxl_port
+Message-ID: <202409080140.BHrsmdob-lkp@intel.com>
+References: <20240907081836.5801-3-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: alejandro.lucero-palau@amd.com does
- not designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001709A:EE_|DS7PR12MB5744:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95e2437b-487c-4fb5-1185-08dccf15dcf4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xxQM1YNunuoAqxiGOZYYlq39XU+/GHPr/j/vqktd0U0qVJPwIGk52AZolu4O?=
- =?us-ascii?Q?QGjK7vIjR8E3nuCTm7KD4AOpwioCSHm2hXXOq9R0CYlEOx50gToc7ChNNBLg?=
- =?us-ascii?Q?VvU64opQOkJjIZgfwsVeYbwiAhh/V0utUmUhddcj5c4T+2Vq/P1vSJsu8W6N?=
- =?us-ascii?Q?YCkt7sJYC0472jOiZltgyEFH5tAt7GeDhp1Ahlkl37T4YSW1tF3mSsgjDPEb?=
- =?us-ascii?Q?Op+DFaRj1M0yVCafHHggVwjBQMn+4uMHPhpDCvnWjs/OvTYcf6JW1cHXFTux?=
- =?us-ascii?Q?XS0iCpacTBi0PNY0X43zCufCOfgYwNSx9xx6eZk+eziR1PQwUkpGQ6A4Ecbz?=
- =?us-ascii?Q?HFGsVb0ffkv7ZerTR2cF2+tW0RTcZXQH6cAhFINufhou1DJq7BJOEuurWoHZ?=
- =?us-ascii?Q?/BpLlvoznt0zp8Io82TWgm+mbPO2uUBUDng7G4HpqO8tMKLSIe/CQEoTzOLZ?=
- =?us-ascii?Q?GI9l0o7tH3ZpJBvWxTaoGPw88huuKPRHOkNtALrsQLVeJCwzPjJ1lrg3vS67?=
- =?us-ascii?Q?LuspKo5wj2g1Yo7fNgDgGSjqmLp6T+ukM5VabGN3ZvRU6Su84TMvFtXgVjBC?=
- =?us-ascii?Q?xSqO1Sa+KRzvKhyQ7jHiqpuH6/qbwZNxOdmXiQywy4Jrw/qHN7tWGWxcPZcb?=
- =?us-ascii?Q?w6jvagDuJ6kYnax4iGWXw/BunBfHmyoaP/BWpPamgiZymZJJofkNESyTmle1?=
- =?us-ascii?Q?ZZcUVykfZup8b0w610lL3N45z881+qhsCu+wPvGZz3Ex+IHr6eso/6YzYw9a?=
- =?us-ascii?Q?JgLJA5OGKHjjM1ePQ1Lqp3cZbNOb0hFRkMFmpHJeZ2XzjlB+35FiMdtszKi1?=
- =?us-ascii?Q?FVwkqTbi9ktmvMMVmhuwioL5lXMDu+GVvBxKklw3rCygaVod5MP1MNlmUjjJ?=
- =?us-ascii?Q?hlydo+x6mDmPl0CS21BukWqn2kqtxssTMTtKVMGMf7pJ7y6RYT4GI8FEEszR?=
- =?us-ascii?Q?VzBLxcbrRadczZEcQ/KtHFRyttIQ9pjlwkm40D3FxYdBFvN4CMT+Z/FZeNQH?=
- =?us-ascii?Q?Usqs5JZoFfqIXDHC6bxK9y7NGMR1D+n+LmV6U9UU3o+aLew3ZRoYnGcVMWc3?=
- =?us-ascii?Q?Ueku1W7p6iJK6qOFuNQPe0TDInbmrabAzXTaaxofzLf1umDV9wVdN/bfZQEs?=
- =?us-ascii?Q?I+4nC3eepZqTlN6dMEfxs97tI/0RfdD7t1Gt9V3r9wZEFSM2yYlGc0LIbG+5?=
- =?us-ascii?Q?9BZ/KxMemJXoQR5F7lVVa947eVNQD3/MmWUYuC7tFtIDALLZ7u+8o/taXRAc?=
- =?us-ascii?Q?WTjHVwKZkrH5tuj9c1nBms6aq0r+5iU0EConSjke2bZaWqdVthQRiaeFgZaE?=
- =?us-ascii?Q?pVb6ojnn1HcD8TzKz7tQKNQp5lp/WWG7v1Q9tnRcKx4MsnGdx8G/yN2lYN5Q?=
- =?us-ascii?Q?UAm30ehcPtVD245l614G6dyHTam6ppLwWb8exxke+fxYuU77h5JvowkyKZ4W?=
- =?us-ascii?Q?7fCLSQu+5YhCbFeo7Um9UNZlVQbNOiOW?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2024 08:19:58.6919
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95e2437b-487c-4fb5-1185-08dccf15dcf4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001709A.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5744
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240907081836.5801-3-alejandro.lucero-palau@amd.com>
 
-From: Alejandro Lucero <alucerop@amd.com>
+Hi,
 
-With a device supporting CXL and successfully initialised, use the cxl
-region to map the memory range and use this mapping for PIO buffers.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Alejandro Lucero <alucerop@amd.com>
----
- drivers/net/ethernet/sfc/ef10.c       | 32 +++++++++++++++++++++------
- drivers/net/ethernet/sfc/efx_cxl.c    | 20 ++++++++++++++++-
- drivers/net/ethernet/sfc/mcdi_pcol.h  | 12 ++++++++++
- drivers/net/ethernet/sfc/net_driver.h |  2 ++
- drivers/net/ethernet/sfc/nic.h        |  2 ++
- 5 files changed, 60 insertions(+), 8 deletions(-)
+[auto build test WARNING on cxl/next]
+[also build test WARNING on linus/master v6.11-rc6 next-20240906]
+[cannot apply to cxl/pending horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 7d69302ffa0a..d4e64cd0f7a4 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -24,6 +24,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <net/udp_tunnel.h>
-+#include "efx_cxl.h"
- 
- /* Hardware control for EF10 architecture including 'Huntington'. */
- 
-@@ -177,6 +178,12 @@ static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
- 			  efx->num_mac_stats);
- 	}
- 
-+	if (outlen < MC_CMD_GET_CAPABILITIES_V7_OUT_LEN)
-+		nic_data->datapath_caps3 = 0;
-+	else
-+		nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-+						      GET_CAPABILITIES_V7_OUT_FLAGS3);
-+
- 	return 0;
- }
- 
-@@ -949,7 +956,7 @@ static void efx_ef10_remove(struct efx_nic *efx)
- 
- 	efx_mcdi_rx_free_indir_table(efx);
- 
--	if (nic_data->wc_membase)
-+	if (nic_data->wc_membase && !efx->efx_cxl_pio_in_use)
- 		iounmap(nic_data->wc_membase);
- 
- 	rc = efx_mcdi_free_vis(efx);
-@@ -1263,8 +1270,19 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
- 	iounmap(efx->membase);
- 	efx->membase = membase;
- 
--	/* Set up the WC mapping if needed */
--	if (wc_mem_map_size) {
-+	if (!wc_mem_map_size)
-+		return 0;
-+
-+	/* Using PIO through CXL mapping? */
-+	if ((nic_data->datapath_caps3 &
-+	    (1 << MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN)) &&
-+	    efx->efx_cxl_pio_initialised) {
-+		nic_data->pio_write_base = efx->cxl->ctpio_cxl +
-+					   (pio_write_vi_base * efx->vi_stride +
-+					    ER_DZ_TX_PIOBUF - uc_mem_map_size);
-+		efx->efx_cxl_pio_in_use = true;
-+	} else {
-+		/* Using legacy PIO BAR mapping */
- 		nic_data->wc_membase = ioremap_wc(efx->membase_phys +
- 						  uc_mem_map_size,
- 						  wc_mem_map_size);
-@@ -1279,12 +1297,12 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
- 			nic_data->wc_membase +
- 			(pio_write_vi_base * efx->vi_stride + ER_DZ_TX_PIOBUF -
- 			 uc_mem_map_size);
--
--		rc = efx_ef10_link_piobufs(efx);
--		if (rc)
--			efx_ef10_free_piobufs(efx);
- 	}
- 
-+	rc = efx_ef10_link_piobufs(efx);
-+	if (rc)
-+		efx_ef10_free_piobufs(efx);
-+
- 	netif_dbg(efx, probe, efx->net_dev,
- 		  "memory BAR at %pa (virtual %p+%x UC, %p+%x WC)\n",
- 		  &efx->membase_phys, efx->membase, uc_mem_map_size,
-diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-index dd2dbfb8ba15..ef57f833b8a7 100644
---- a/drivers/net/ethernet/sfc/efx_cxl.c
-+++ b/drivers/net/ethernet/sfc/efx_cxl.c
-@@ -21,9 +21,9 @@
- int efx_cxl_init(struct efx_nic *efx)
- {
- 	struct pci_dev *pci_dev = efx->pci_dev;
-+	resource_size_t start, end, max = 0;
- 	struct efx_cxl *cxl;
- 	struct resource res;
--	resource_size_t max;
- 	u16 dvsec;
- 	int rc;
- 
-@@ -132,10 +132,27 @@ int efx_cxl_init(struct efx_nic *efx)
- 		goto err_region;
- 	}
- 
-+	rc = cxl_get_region_params(cxl->efx_region, &start, &end);
-+	if (rc) {
-+		pci_err(pci_dev, "CXL getting regions params failed");
-+		goto err_map;
-+	}
-+
-+	cxl->ctpio_cxl = ioremap(start, end - start);
-+	if (!cxl->ctpio_cxl) {
-+		pci_err(pci_dev, "CXL ioremap region failed");
-+		rc = -EIO;
-+		goto err_map;
-+	}
-+
-+	efx->efx_cxl_pio_initialised = true;
-+
- 	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
- 
- 	return 0;
- 
-+err_map:
-+		cxl_region_detach(cxl->cxled);
- err_region:
- 	cxl_dpa_free(efx->cxl->cxled);
- err_release:
-@@ -151,6 +168,7 @@ int efx_cxl_init(struct efx_nic *efx)
- void efx_cxl_exit(struct efx_nic *efx)
- {
- 	if (efx->cxl) {
-+		iounmap(efx->cxl->ctpio_cxl);
- 		cxl_region_detach(efx->cxl->cxled);
- 		cxl_dpa_free(efx->cxl->cxled);
- 		cxl_release_resource(efx->cxl->cxlds, CXL_ACCEL_RES_RAM);
-diff --git a/drivers/net/ethernet/sfc/mcdi_pcol.h b/drivers/net/ethernet/sfc/mcdi_pcol.h
-index cd297e19cddc..c158a1e8d01b 100644
---- a/drivers/net/ethernet/sfc/mcdi_pcol.h
-+++ b/drivers/net/ethernet/sfc/mcdi_pcol.h
-@@ -16799,6 +16799,9 @@
- #define        MC_CMD_GET_CAPABILITIES_V7_OUT_DYNAMIC_MPORT_JOURNAL_OFST 148
- #define        MC_CMD_GET_CAPABILITIES_V7_OUT_DYNAMIC_MPORT_JOURNAL_LBN 14
- #define        MC_CMD_GET_CAPABILITIES_V7_OUT_DYNAMIC_MPORT_JOURNAL_WIDTH 1
-+#define        MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_OFST 148
-+#define        MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN 17
-+#define        MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_WIDTH 1
- 
- /* MC_CMD_GET_CAPABILITIES_V8_OUT msgresponse */
- #define    MC_CMD_GET_CAPABILITIES_V8_OUT_LEN 160
-@@ -17303,6 +17306,9 @@
- #define        MC_CMD_GET_CAPABILITIES_V8_OUT_DYNAMIC_MPORT_JOURNAL_OFST 148
- #define        MC_CMD_GET_CAPABILITIES_V8_OUT_DYNAMIC_MPORT_JOURNAL_LBN 14
- #define        MC_CMD_GET_CAPABILITIES_V8_OUT_DYNAMIC_MPORT_JOURNAL_WIDTH 1
-+#define        MC_CMD_GET_CAPABILITIES_V8_OUT_CXL_CONFIG_ENABLE_OFST 148
-+#define        MC_CMD_GET_CAPABILITIES_V8_OUT_CXL_CONFIG_ENABLE_LBN 17
-+#define        MC_CMD_GET_CAPABILITIES_V8_OUT_CXL_CONFIG_ENABLE_WIDTH 1
- /* These bits are reserved for communicating test-specific capabilities to
-  * host-side test software. All production drivers should treat this field as
-  * opaque.
-@@ -17821,6 +17827,9 @@
- #define        MC_CMD_GET_CAPABILITIES_V9_OUT_DYNAMIC_MPORT_JOURNAL_OFST 148
- #define        MC_CMD_GET_CAPABILITIES_V9_OUT_DYNAMIC_MPORT_JOURNAL_LBN 14
- #define        MC_CMD_GET_CAPABILITIES_V9_OUT_DYNAMIC_MPORT_JOURNAL_WIDTH 1
-+#define        MC_CMD_GET_CAPABILITIES_V9_OUT_CXL_CONFIG_ENABLE_OFST 148
-+#define        MC_CMD_GET_CAPABILITIES_V9_OUT_CXL_CONFIG_ENABLE_LBN 17
-+#define        MC_CMD_GET_CAPABILITIES_V9_OUT_CXL_CONFIG_ENABLE_WIDTH 1
- /* These bits are reserved for communicating test-specific capabilities to
-  * host-side test software. All production drivers should treat this field as
-  * opaque.
-@@ -18374,6 +18383,9 @@
- #define        MC_CMD_GET_CAPABILITIES_V10_OUT_DYNAMIC_MPORT_JOURNAL_OFST 148
- #define        MC_CMD_GET_CAPABILITIES_V10_OUT_DYNAMIC_MPORT_JOURNAL_LBN 14
- #define        MC_CMD_GET_CAPABILITIES_V10_OUT_DYNAMIC_MPORT_JOURNAL_WIDTH 1
-+#define        MC_CMD_GET_CAPABILITIES_V10_OUT_CXL_CONFIG_ENABLE_OFST 148
-+#define        MC_CMD_GET_CAPABILITIES_V10_OUT_CXL_CONFIG_ENABLE_LBN 17
-+#define        MC_CMD_GET_CAPABILITIES_V10_OUT_CXL_CONFIG_ENABLE_WIDTH 1
- /* These bits are reserved for communicating test-specific capabilities to
-  * host-side test software. All production drivers should treat this field as
-  * opaque.
-diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-index 77261de65e63..893e7841ffb4 100644
---- a/drivers/net/ethernet/sfc/net_driver.h
-+++ b/drivers/net/ethernet/sfc/net_driver.h
-@@ -967,6 +967,7 @@ struct efx_cxl;
-  * @dl_port: devlink port associated with the PF
-  * @cxl: details of related cxl objects
-  * @efx_cxl_pio_initialised: clx initialization outcome.
-+ * @efx_cxl_pio_in_use: PIO using CXL mapping
-  * @mem_bar: The BAR that is mapped into membase.
-  * @reg_base: Offset from the start of the bar to the function control window.
-  * @monitor_work: Hardware monitor workitem
-@@ -1154,6 +1155,7 @@ struct efx_nic {
- 	struct devlink_port *dl_port;
- 	struct efx_cxl *cxl;
- 	bool efx_cxl_pio_initialised;
-+	bool efx_cxl_pio_in_use;
- 	unsigned int mem_bar;
- 	u32 reg_base;
- 
-diff --git a/drivers/net/ethernet/sfc/nic.h b/drivers/net/ethernet/sfc/nic.h
-index 1db64fc6e909..b7148810acdb 100644
---- a/drivers/net/ethernet/sfc/nic.h
-+++ b/drivers/net/ethernet/sfc/nic.h
-@@ -151,6 +151,7 @@ enum {
-  * @datapath_caps: Capabilities of datapath firmware (FLAGS1 field of
-  *	%MC_CMD_GET_CAPABILITIES response)
-  * @datapath_caps2: Further Capabilities of datapath firmware (FLAGS2 field of
-+ * @datapath_caps3: Further Capabilities of datapath firmware (FLAGS3 field of
-  * %MC_CMD_GET_CAPABILITIES response)
-  * @rx_dpcpu_fw_id: Firmware ID of the RxDPCPU
-  * @tx_dpcpu_fw_id: Firmware ID of the TxDPCPU
-@@ -186,6 +187,7 @@ struct efx_ef10_nic_data {
- 	bool must_check_datapath_caps;
- 	u32 datapath_caps;
- 	u32 datapath_caps2;
-+	u32 datapath_caps3;
- 	unsigned int rx_dpcpu_fw_id;
- 	unsigned int tx_dpcpu_fw_id;
- 	bool must_probe_vswitching;
+url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20240907-162231
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20240907081836.5801-3-alejandro.lucero-palau%40amd.com
+patch subject: [PATCH v3 02/20] cxl: add capabilities field to cxl_dev_state and cxl_port
+config: xtensa-randconfig-r073-20240908 (https://download.01.org/0day-ci/archive/20240908/202409080140.BHrsmdob-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240908/202409080140.BHrsmdob-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409080140.BHrsmdob-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/cxl/core/regs.c:41: warning: Function parameter or struct member 'caps' not described in 'cxl_probe_component_regs'
+>> drivers/cxl/core/regs.c:124: warning: Function parameter or struct member 'caps' not described in 'cxl_probe_device_regs'
+
+
+vim +41 drivers/cxl/core/regs.c
+
+fa89248e669d58 Robert Richter   2022-10-18   13  
+2b922a9d064f8e Dan Williams     2021-09-03   14  /**
+2b922a9d064f8e Dan Williams     2021-09-03   15   * DOC: cxl registers
+2b922a9d064f8e Dan Williams     2021-09-03   16   *
+2b922a9d064f8e Dan Williams     2021-09-03   17   * CXL device capabilities are enumerated by PCI DVSEC (Designated
+2b922a9d064f8e Dan Williams     2021-09-03   18   * Vendor-specific) and / or descriptors provided by platform firmware.
+2b922a9d064f8e Dan Williams     2021-09-03   19   * They can be defined as a set like the device and component registers
+2b922a9d064f8e Dan Williams     2021-09-03   20   * mandated by CXL Section 8.1.12.2 Memory Device PCIe Capabilities and
+2b922a9d064f8e Dan Williams     2021-09-03   21   * Extended Capabilities, or they can be individual capabilities
+2b922a9d064f8e Dan Williams     2021-09-03   22   * appended to bridged and endpoint devices.
+2b922a9d064f8e Dan Williams     2021-09-03   23   *
+2b922a9d064f8e Dan Williams     2021-09-03   24   * Provide common infrastructure for enumerating and mapping these
+2b922a9d064f8e Dan Williams     2021-09-03   25   * discrete capabilities.
+2b922a9d064f8e Dan Williams     2021-09-03   26   */
+2b922a9d064f8e Dan Williams     2021-09-03   27  
+0f06157e0135f5 Dan Williams     2021-08-03   28  /**
+0f06157e0135f5 Dan Williams     2021-08-03   29   * cxl_probe_component_regs() - Detect CXL Component register blocks
+0f06157e0135f5 Dan Williams     2021-08-03   30   * @dev: Host device of the @base mapping
+0f06157e0135f5 Dan Williams     2021-08-03   31   * @base: Mapping containing the HDM Decoder Capability Header
+0f06157e0135f5 Dan Williams     2021-08-03   32   * @map: Map object describing the register block information found
+0f06157e0135f5 Dan Williams     2021-08-03   33   *
+0f06157e0135f5 Dan Williams     2021-08-03   34   * See CXL 2.0 8.2.4 Component Register Layout and Definition
+0f06157e0135f5 Dan Williams     2021-08-03   35   * See CXL 2.0 8.2.5.5 CXL Device Register Interface
+0f06157e0135f5 Dan Williams     2021-08-03   36   *
+0f06157e0135f5 Dan Williams     2021-08-03   37   * Probe for component register information and return it in map object.
+0f06157e0135f5 Dan Williams     2021-08-03   38   */
+0f06157e0135f5 Dan Williams     2021-08-03   39  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+98279f48d53f4f Alejandro Lucero 2024-09-07   40  			      struct cxl_component_reg_map *map, u32 *caps)
+0f06157e0135f5 Dan Williams     2021-08-03  @41  {
+0f06157e0135f5 Dan Williams     2021-08-03   42  	int cap, cap_count;
+74b0fe80409733 Jonathan Cameron 2022-02-01   43  	u32 cap_array;
+0f06157e0135f5 Dan Williams     2021-08-03   44  
+0f06157e0135f5 Dan Williams     2021-08-03   45  	*map = (struct cxl_component_reg_map) { 0 };
+0f06157e0135f5 Dan Williams     2021-08-03   46  
+0f06157e0135f5 Dan Williams     2021-08-03   47  	/*
+0f06157e0135f5 Dan Williams     2021-08-03   48  	 * CXL.cache and CXL.mem registers are at offset 0x1000 as defined in
+0f06157e0135f5 Dan Williams     2021-08-03   49  	 * CXL 2.0 8.2.4 Table 141.
+0f06157e0135f5 Dan Williams     2021-08-03   50  	 */
+0f06157e0135f5 Dan Williams     2021-08-03   51  	base += CXL_CM_OFFSET;
+0f06157e0135f5 Dan Williams     2021-08-03   52  
+74b0fe80409733 Jonathan Cameron 2022-02-01   53  	cap_array = readl(base + CXL_CM_CAP_HDR_OFFSET);
+0f06157e0135f5 Dan Williams     2021-08-03   54  
+0f06157e0135f5 Dan Williams     2021-08-03   55  	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, cap_array) != CM_CAP_HDR_CAP_ID) {
+0f06157e0135f5 Dan Williams     2021-08-03   56  		dev_err(dev,
+d621bc2e7282f9 Dan Williams     2022-01-23   57  			"Couldn't locate the CXL.cache and CXL.mem capability array header.\n");
+0f06157e0135f5 Dan Williams     2021-08-03   58  		return;
+0f06157e0135f5 Dan Williams     2021-08-03   59  	}
+0f06157e0135f5 Dan Williams     2021-08-03   60  
+0f06157e0135f5 Dan Williams     2021-08-03   61  	/* It's assumed that future versions will be backward compatible */
+0f06157e0135f5 Dan Williams     2021-08-03   62  	cap_count = FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_array);
+0f06157e0135f5 Dan Williams     2021-08-03   63  
+0f06157e0135f5 Dan Williams     2021-08-03   64  	for (cap = 1; cap <= cap_count; cap++) {
+0f06157e0135f5 Dan Williams     2021-08-03   65  		void __iomem *register_block;
+af2dfef854aa6a Dan Williams     2022-11-29   66  		struct cxl_reg_map *rmap;
+0f06157e0135f5 Dan Williams     2021-08-03   67  		u16 cap_id, offset;
+af2dfef854aa6a Dan Williams     2022-11-29   68  		u32 length, hdr;
+0f06157e0135f5 Dan Williams     2021-08-03   69  
+0f06157e0135f5 Dan Williams     2021-08-03   70  		hdr = readl(base + cap * 0x4);
+0f06157e0135f5 Dan Williams     2021-08-03   71  
+0f06157e0135f5 Dan Williams     2021-08-03   72  		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
+0f06157e0135f5 Dan Williams     2021-08-03   73  		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
+0f06157e0135f5 Dan Williams     2021-08-03   74  		register_block = base + offset;
+af2dfef854aa6a Dan Williams     2022-11-29   75  		hdr = readl(register_block);
+0f06157e0135f5 Dan Williams     2021-08-03   76  
+af2dfef854aa6a Dan Williams     2022-11-29   77  		rmap = NULL;
+0f06157e0135f5 Dan Williams     2021-08-03   78  		switch (cap_id) {
+af2dfef854aa6a Dan Williams     2022-11-29   79  		case CXL_CM_CAP_CAP_ID_HDM: {
+af2dfef854aa6a Dan Williams     2022-11-29   80  			int decoder_cnt;
+af2dfef854aa6a Dan Williams     2022-11-29   81  
+0f06157e0135f5 Dan Williams     2021-08-03   82  			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
+0f06157e0135f5 Dan Williams     2021-08-03   83  				offset);
+0f06157e0135f5 Dan Williams     2021-08-03   84  
+0f06157e0135f5 Dan Williams     2021-08-03   85  			decoder_cnt = cxl_hdm_decoder_count(hdr);
+0f06157e0135f5 Dan Williams     2021-08-03   86  			length = 0x20 * decoder_cnt + 0x10;
+af2dfef854aa6a Dan Williams     2022-11-29   87  			rmap = &map->hdm_decoder;
+98279f48d53f4f Alejandro Lucero 2024-09-07   88  			*caps |= BIT(CXL_DEV_CAP_HDM);
+0f06157e0135f5 Dan Williams     2021-08-03   89  			break;
+af2dfef854aa6a Dan Williams     2022-11-29   90  		}
+bd09626b39dff9 Dan Williams     2022-11-29   91  		case CXL_CM_CAP_CAP_ID_RAS:
+bd09626b39dff9 Dan Williams     2022-11-29   92  			dev_dbg(dev, "found RAS capability (0x%x)\n",
+bd09626b39dff9 Dan Williams     2022-11-29   93  				offset);
+bd09626b39dff9 Dan Williams     2022-11-29   94  			length = CXL_RAS_CAPABILITY_LENGTH;
+bd09626b39dff9 Dan Williams     2022-11-29   95  			rmap = &map->ras;
+98279f48d53f4f Alejandro Lucero 2024-09-07   96  			*caps |= BIT(CXL_DEV_CAP_RAS);
+0f06157e0135f5 Dan Williams     2021-08-03   97  			break;
+0f06157e0135f5 Dan Williams     2021-08-03   98  		default:
+0f06157e0135f5 Dan Williams     2021-08-03   99  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+0f06157e0135f5 Dan Williams     2021-08-03  100  				offset);
+0f06157e0135f5 Dan Williams     2021-08-03  101  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  102  		}
+af2dfef854aa6a Dan Williams     2022-11-29  103  
+af2dfef854aa6a Dan Williams     2022-11-29  104  		if (!rmap)
+af2dfef854aa6a Dan Williams     2022-11-29  105  			continue;
+af2dfef854aa6a Dan Williams     2022-11-29  106  		rmap->valid = true;
+a1554e9cac5ea0 Dan Williams     2022-11-29  107  		rmap->id = cap_id;
+af2dfef854aa6a Dan Williams     2022-11-29  108  		rmap->offset = CXL_CM_OFFSET + offset;
+af2dfef854aa6a Dan Williams     2022-11-29  109  		rmap->size = length;
+0f06157e0135f5 Dan Williams     2021-08-03  110  	}
+0f06157e0135f5 Dan Williams     2021-08-03  111  }
+affec782742e08 Dan Williams     2021-11-12  112  EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
+0f06157e0135f5 Dan Williams     2021-08-03  113  
+0f06157e0135f5 Dan Williams     2021-08-03  114  /**
+0f06157e0135f5 Dan Williams     2021-08-03  115   * cxl_probe_device_regs() - Detect CXL Device register blocks
+0f06157e0135f5 Dan Williams     2021-08-03  116   * @dev: Host device of the @base mapping
+0f06157e0135f5 Dan Williams     2021-08-03  117   * @base: Mapping of CXL 2.0 8.2.8 CXL Device Register Interface
+0f06157e0135f5 Dan Williams     2021-08-03  118   * @map: Map object describing the register block information found
+0f06157e0135f5 Dan Williams     2021-08-03  119   *
+0f06157e0135f5 Dan Williams     2021-08-03  120   * Probe for device register information and return it in map object.
+0f06157e0135f5 Dan Williams     2021-08-03  121   */
+0f06157e0135f5 Dan Williams     2021-08-03  122  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+98279f48d53f4f Alejandro Lucero 2024-09-07  123  			   struct cxl_device_reg_map *map, u32 *caps)
+0f06157e0135f5 Dan Williams     2021-08-03 @124  {
+0f06157e0135f5 Dan Williams     2021-08-03  125  	int cap, cap_count;
+0f06157e0135f5 Dan Williams     2021-08-03  126  	u64 cap_array;
+0f06157e0135f5 Dan Williams     2021-08-03  127  
+0f06157e0135f5 Dan Williams     2021-08-03  128  	*map = (struct cxl_device_reg_map){ 0 };
+0f06157e0135f5 Dan Williams     2021-08-03  129  
+0f06157e0135f5 Dan Williams     2021-08-03  130  	cap_array = readq(base + CXLDEV_CAP_ARRAY_OFFSET);
+0f06157e0135f5 Dan Williams     2021-08-03  131  	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
+0f06157e0135f5 Dan Williams     2021-08-03  132  	    CXLDEV_CAP_ARRAY_CAP_ID)
+0f06157e0135f5 Dan Williams     2021-08-03  133  		return;
+0f06157e0135f5 Dan Williams     2021-08-03  134  
+0f06157e0135f5 Dan Williams     2021-08-03  135  	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
+0f06157e0135f5 Dan Williams     2021-08-03  136  
+0f06157e0135f5 Dan Williams     2021-08-03  137  	for (cap = 1; cap <= cap_count; cap++) {
+af2dfef854aa6a Dan Williams     2022-11-29  138  		struct cxl_reg_map *rmap;
+0f06157e0135f5 Dan Williams     2021-08-03  139  		u32 offset, length;
+0f06157e0135f5 Dan Williams     2021-08-03  140  		u16 cap_id;
+0f06157e0135f5 Dan Williams     2021-08-03  141  
+0f06157e0135f5 Dan Williams     2021-08-03  142  		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
+0f06157e0135f5 Dan Williams     2021-08-03  143  				   readl(base + cap * 0x10));
+0f06157e0135f5 Dan Williams     2021-08-03  144  		offset = readl(base + cap * 0x10 + 0x4);
+0f06157e0135f5 Dan Williams     2021-08-03  145  		length = readl(base + cap * 0x10 + 0x8);
+0f06157e0135f5 Dan Williams     2021-08-03  146  
+af2dfef854aa6a Dan Williams     2022-11-29  147  		rmap = NULL;
+0f06157e0135f5 Dan Williams     2021-08-03  148  		switch (cap_id) {
+0f06157e0135f5 Dan Williams     2021-08-03  149  		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
+0f06157e0135f5 Dan Williams     2021-08-03  150  			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
+af2dfef854aa6a Dan Williams     2022-11-29  151  			rmap = &map->status;
+98279f48d53f4f Alejandro Lucero 2024-09-07  152  			*caps |= BIT(CXL_DEV_CAP_DEV_STATUS);
+0f06157e0135f5 Dan Williams     2021-08-03  153  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  154  		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
+0f06157e0135f5 Dan Williams     2021-08-03  155  			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+af2dfef854aa6a Dan Williams     2022-11-29  156  			rmap = &map->mbox;
+98279f48d53f4f Alejandro Lucero 2024-09-07  157  			*caps |= BIT(CXL_DEV_CAP_MAILBOX_PRIMARY);
+0f06157e0135f5 Dan Williams     2021-08-03  158  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  159  		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
+0f06157e0135f5 Dan Williams     2021-08-03  160  			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
+0f06157e0135f5 Dan Williams     2021-08-03  161  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  162  		case CXLDEV_CAP_CAP_ID_MEMDEV:
+0f06157e0135f5 Dan Williams     2021-08-03  163  			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
+af2dfef854aa6a Dan Williams     2022-11-29  164  			rmap = &map->memdev;
+98279f48d53f4f Alejandro Lucero 2024-09-07  165  			*caps |= BIT(CXL_DEV_CAP_MEMDEV);
+0f06157e0135f5 Dan Williams     2021-08-03  166  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  167  		default:
+0f06157e0135f5 Dan Williams     2021-08-03  168  			if (cap_id >= 0x8000)
+0f06157e0135f5 Dan Williams     2021-08-03  169  				dev_dbg(dev, "Vendor cap ID: %#x offset: %#x\n", cap_id, offset);
+0f06157e0135f5 Dan Williams     2021-08-03  170  			else
+0f06157e0135f5 Dan Williams     2021-08-03  171  				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
+0f06157e0135f5 Dan Williams     2021-08-03  172  			break;
+0f06157e0135f5 Dan Williams     2021-08-03  173  		}
+af2dfef854aa6a Dan Williams     2022-11-29  174  
+af2dfef854aa6a Dan Williams     2022-11-29  175  		if (!rmap)
+af2dfef854aa6a Dan Williams     2022-11-29  176  			continue;
+af2dfef854aa6a Dan Williams     2022-11-29  177  		rmap->valid = true;
+a1554e9cac5ea0 Dan Williams     2022-11-29  178  		rmap->id = cap_id;
+af2dfef854aa6a Dan Williams     2022-11-29  179  		rmap->offset = offset;
+af2dfef854aa6a Dan Williams     2022-11-29  180  		rmap->size = length;
+0f06157e0135f5 Dan Williams     2021-08-03  181  	}
+0f06157e0135f5 Dan Williams     2021-08-03  182  }
+affec782742e08 Dan Williams     2021-11-12  183  EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
+0f06157e0135f5 Dan Williams     2021-08-03  184  
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
