@@ -1,218 +1,275 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2043.outbound.protection.outlook.com [40.107.236.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F370C1C8FB6;
-	Fri,  6 Sep 2024 17:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725643125; cv=none; b=tjtlp/am+slhDOJz3pRg0G4og7ASm8g3nO3jBeVVVXiaAvPK/OCo26hlbRIDpOEFQmcL1DaHJ0H3vkdaxIDnE6AdmJRtJgSOfPIeyipubuffvXjyvin5tSYQDiwtkTLSdDLZA78CphsVYJl+Uykg2CF+zwWK17hgsnmXp3Mg/nY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725643125; c=relaxed/simple;
-	bh=ZTzBUKAGroNLqJ1odxdsYO7FH4rWOAcZlLGP2FUJcnE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gs598dOE8xg0MXVqOtC9czYPp/9ywpdxHPH1+IoSizwBMkOFki0In3iG1FACl2DrLKHrTwtuPUNRaIWJmF2RxmklJD6NL6bo42WnotB6vCK4iOBYAqi+lQtb2Heb+GF4+rmiTiZfq95O/irSb+9qu49QbSIBYG4gylBoBnloYNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X0jXS1X6Sz6L77B;
-	Sat,  7 Sep 2024 01:15:04 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 00AF81400CA;
-	Sat,  7 Sep 2024 01:18:34 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 6 Sep
- 2024 18:18:33 +0100
-Date: Fri, 6 Sep 2024 18:18:32 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-	<linuxarm@huawei.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvi?=
- =?ISO-8859-1?Q?nen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-Message-ID: <20240906181832.00007dc7@Huawei.com>
-In-Reply-To: <87jzfpdrc7.ffs@tglx>
-References: <20240905122342.000001be@Huawei.com>
-	<87jzfpdrc7.ffs@tglx>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4261212E5B;
+	Sat,  7 Sep 2024 08:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725697164; cv=fail; b=YQ95/P9CwHO4EX+kl1Tsj9gWqTlhBYaWOCB0B2TqZ92/pCgO9dibAvTOx1rwGtB8r9Ut4eCuJokrgGO9MaNvljBRUpWdLzlOMZnAGz6kD6lwjyu/crN+mBjB6MUC80ySeRgXtryoalk2TYbrWRub44O86jRzhexKSc9PLJHP5zc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725697164; c=relaxed/simple;
+	bh=2iziT9OFvKai3jXO0V1nyBX03c6ny9BN5Gj53IWLsIg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Em7phcgmG++a/ARtciyN22o95TQ/VdYttWw5Vm4d0UMOV8EP2Q2hIte160Iq1aOPtSiVjoL8pug9ks8BBlEbjpoUXiYrf/gy0tHEY2dcOTSR63YRw/iYPZ864nUjvTbmICc4RLw//BMMZW6i3aeriWPsnyGsByOn6COVaZlOOMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eGw9Xyuq; arc=fail smtp.client-ip=40.107.236.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eGw9Xyuq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l0c+h8KNlL2qPj7cwOcOQfxJO/OgR4BOaZGkJaSPtXAA3BCDMUuYW/PVZ/MP/ZhLz0yepvOrwTxXV8/ZSv4Lwh/m2uE4rERMPIDYPAQ5U/LqilH+Y63BWfzSPHx/frA7AWC5+pSpvo7XQzTc1kwG4OwtE7MgS8QH5bMKzogv484rJFe+bBEaYqgyj9TAvlB+yKD8VLKuA8vRW2+/ySAbqFRspU0xkw2ie/7bCdnOAt3zxuHLP2XdOWVwCDCuwb7QhBWOQ1IukEC+s4UU+5aAMnS2ReJ5ydJhEPyCNSpfGplGuOj8TonEFNmCIthXAeywMWLPvdzK63vU1PZM/BH2jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yZnSAEkI3XpU3wGFgMeVisfAP3Ctv3N0UuIt/mcOYZI=;
+ b=Jcas0TogV+0wkFnQk1MO/19tr9GLTneGQBeSD6P+fCYuraMHf7aDVxIy1JRkHlpFqK9M8X3KlRHU7pzUOrMUlevX2x+ftgY+jlW9JBb0TNbbDElzf6jxYba6WPxgD6vSFWhc6Ol9VPFrs6wRPfUxpqcXxZTdJdAoCe/QRBUutk9lfrOKVpXiPrAm1gbXqsTSmvFHtjVio3Wb2mf2vDoHpZ0TY9iyajDkIXi01OzCZTZrmhErJcNwOtO9towTcipCTo1/1IvUbd1GLLyxzG7ZXhpqOXVW1JhD/PdDS56Y0i1TIcZZaBXfCDYI5zzyHv0PIr2mEZdCM3QRB+2wYLDcGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yZnSAEkI3XpU3wGFgMeVisfAP3Ctv3N0UuIt/mcOYZI=;
+ b=eGw9XyuqDU9kZfaGRw5lOitluEymQttr+QUS8iBJfyCn185ULaOuQPyPGNkLSbEw+RCVogKuWIVt3DrWV7jktPzhvIxSmUug8Co84RCZyy5/DoagFjunFco5FKhtENYRh++p7yH3zLEqLdq/ZHcPwK7vPKKcEI0k9h98L+Uw7hw=
+Received: from DM6PR02CA0097.namprd02.prod.outlook.com (2603:10b6:5:1f4::38)
+ by IA1PR12MB6529.namprd12.prod.outlook.com (2603:10b6:208:3a6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.31; Sat, 7 Sep
+ 2024 08:19:17 +0000
+Received: from DS1PEPF0001709D.namprd05.prod.outlook.com
+ (2603:10b6:5:1f4:cafe::53) by DM6PR02CA0097.outlook.office365.com
+ (2603:10b6:5:1f4::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.16 via Frontend
+ Transport; Sat, 7 Sep 2024 08:19:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DS1PEPF0001709D.mail.protection.outlook.com (10.167.18.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7918.13 via Frontend Transport; Sat, 7 Sep 2024 08:19:17 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 7 Sep
+ 2024 03:19:16 -0500
+Received: from xcbalucerop41x.xilinx.com (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Sat, 7 Sep 2024 03:19:15 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
+	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <edumazet@google.com>
+CC: Alejandro Lucero <alejandro.lucero-palau@amd.com>
+Subject: [PATCH v3 00/20] cxl: add Type2 device support
+Date: Sat, 7 Sep 2024 09:18:16 +0100
+Message-ID: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: alejandro.lucero-palau@amd.com does
+ not designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709D:EE_|IA1PR12MB6529:EE_
+X-MS-Office365-Filtering-Correlation-Id: fefd8069-7806-44a0-d931-08dccf15c44b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ckdqYWtKY1JuTm9CTzhIcFc5QzJEb1lHTXdVbVQwa3psbEtZTDdMM1lOTjZy?=
+ =?utf-8?B?OU9MYVg4dWNJbGJUYWU4YW5DWXloa3FjdVpjcElJczRhZ2gwWjV1YmU3YTRQ?=
+ =?utf-8?B?UUNmZEY5RmNBUWJqd29jaTRneVRFMGt4ZnF3YkhXUURJVmMyM2RmMFYwOTBu?=
+ =?utf-8?B?b0hlM21TT2RSSm0yZkp0aUhTNUNFUFlLMXVrcDNCYnFwVFdoZE1oNXFuN0FN?=
+ =?utf-8?B?Lzg2QkFadytvL3hjVUE0YWJqSCtMdkk3ZXV1MWtHVytvUzcvQXlnQnl5eE5j?=
+ =?utf-8?B?SktTUHZmd1RqbXRNSWs3RVY3MUdORUdQK0RadFFiRlJmYVZNaWlzZ3BoZU5p?=
+ =?utf-8?B?U2ovNGM4MHJaakJZejZsRkkrRS80UnQ2RUx1ZU9IRFN2RnJEUEFmeGdReTFw?=
+ =?utf-8?B?cWQxTFRQWnpYaGZudzd1WWdDdGdEN1lKcWZKZ2txTmcrYTlvMVVHdzdUNWpv?=
+ =?utf-8?B?eExIZDdpQ2hrT3B0c25MUjRiKzZrSW52Zy9tUU1kOVFySHAzbnVnY3c0aGo5?=
+ =?utf-8?B?M1pwVnJ4dVNGZkMrd2p4SzJmellrdS9UKzQxV3JBRmxyNURpZFJMdUExT2JQ?=
+ =?utf-8?B?VmZUcStwVGM4TERmSksyWFRzWVZGT0pINncybWJVT29ZQkY1U2VlcnhvVENO?=
+ =?utf-8?B?TUNEL2tYMjJXNGVRekFKOU1KQWNtTkhxTDZCNWM5akdrZ0xHTmRjWC9qZ3Zt?=
+ =?utf-8?B?YmJsQWxSZW94dlpIVkNJMDU3Wlh1RjZVWlUvRDd0M2lKbmY5Nm9YWG9kTnFv?=
+ =?utf-8?B?SkovRDc1a0UwNllFdGhpRnJNNHBDNFMvRzBsY21DakNRT1h5M3dVdldocGNr?=
+ =?utf-8?B?QkxOWTZLUWw5Mlc4dElwWmp2MHdEVWRzT0ZkMFBMK0lEbklSN2ZCQm9BUWpV?=
+ =?utf-8?B?Sk9QcmR1V0Q3ZmtNQnhpU1BSNkVFTkF1YkppNmZoUzhsUUY4NHgxM0xNVks2?=
+ =?utf-8?B?MXRsVzRPNVRlM1lCcXhTMEtVVTZOVCtBbEg4dTVkcXB3bUFyMjdtMDd1WmdM?=
+ =?utf-8?B?ZXIvaktKNzhJZmU2UEdkQmpOcEdlMC9GaFZBTzZ6WEVUZTJ5ejBaZUxxL3p6?=
+ =?utf-8?B?OFUxRGdlaHZSUnJvYk12UURHb2pCa2xOTUFaWk5ldDQxd200NnRQREYvUXd2?=
+ =?utf-8?B?dE42cVRJcWJPQVpLZStCY25NZlRaMldVdTlqcVM1ZGNkb0ZoTWlWRXZKK1pG?=
+ =?utf-8?B?VFAyRHNIVURWSU5YNW1OeElHc0M3S3Ayc1NMMjZDT21WZk52dEpPRThUVmlE?=
+ =?utf-8?B?ZElTM1dTQmVSVUpKeitQQmsxQTFwRHRKVGdGZFl0aFpJRkVmdnN4ZEhzeWNJ?=
+ =?utf-8?B?T0V0OCtISXI0azczRllXZmM4TXNZaWFyTE9CUU12RzFlTGFsaXhKd0JmWUhw?=
+ =?utf-8?B?RzdTY2VhMDJGSEJsc2lWSnBBbUVNbUVsL2JLM2pzRWF4dnBxQXRPd1ZBMjNJ?=
+ =?utf-8?B?SE81bUZHUU9BOHA2dU5WTVZUMTJVTEFORTNEL2F4OGdLSjdKNkJTSlVMVksz?=
+ =?utf-8?B?bzBYaEpIWGtkVncxcWxkckxmUk5TSmFscmd6STB4czFSMWQ1V0xha0U4Qy8y?=
+ =?utf-8?B?Y0tVME1SWFdpbm9NemtKNjcxUThVS3Y0OXZkRDdnb1JFLzNvL2t6MEFZMGx6?=
+ =?utf-8?B?RXpXQ2tOLzl5TitIZWxHY24zbHljd2lyMng1bzVPZE5tOVM3aHlWa2RwTW1S?=
+ =?utf-8?B?VktPbzJvcWlpNzdBdTNpeFFOQnFzdUYxNW05Z0NiczJ0RlRERHZ0bHFFR2Vl?=
+ =?utf-8?B?UmVEaVdNVk9EQWIvK0p1VnhaZnl6bEVqcTh4MDJ4YmhoU0xpZGhoQkhhY0hq?=
+ =?utf-8?B?QmJGVFh4S2FwdFRKejROSFQxYlY3Qk5XRjF5cm91UFAwQ3hzdE54MExJNUt1?=
+ =?utf-8?B?T3RkNDZEOXFXVUQ1ZE5LMWIzZHJkenlPTkt5N1pIWkhhczZiMC9HWnZhUmcv?=
+ =?utf-8?Q?JW8rYCOLbfP37Sn3p7HJVAB+PGY6LqMQ?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2024 08:19:17.3242
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fefd8069-7806-44a0-d931-08dccf15c44b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6529
 
-On Fri, 06 Sep 2024 12:11:36 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+From: Alejandro Lucero <alejandro.lucero-palau@amd.com>
 
-> On Thu, Sep 05 2024 at 12:23, Jonathan Cameron wrote:
-> >> Look at how the PCI device manages interrupts with the per device MSI
-> >> mechanism. Forget doing this with either one of the legacy mechanisms.
-> >> 
-> >>   1) It creates a hierarchical interrupt domain and gets the required
-> >>      resources from the provided parent domain. The PCI side does not
-> >>      care whether this is x86 or arm64 and it neither cares whether the
-> >>      parent domain does remapping or not. The only way it cares is about
-> >>      the features supported by the different parent domains (think
-> >>      multi-MSI).
-> >>      
-> >>   2) Driver side allocations go through the per device domain
-> >> 
-> >> That AUXbus is not any different. When the CPMU driver binds it wants to
-> >> allocate interrupts. So instead of having a convoluted construct
-> >> reaching into the parent PCI device, you simply can do:
-> >> 
-> >>   1) Let the cxl_pci driver create a MSI parent domain and set that in
-> >>      the subdevice::msi::irqdomain pointer.
-> >> 
-> >>   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
-> >>      driver to create a per device interrupt domain.
-> >> 
-> >>   3) Let the CPMU driver create its per device interrupt domain with
-> >>      the provided parent domain
-> >> 
-> >>   4) Let the CPMU driver allocate its MSI-X interrupts through the per
-> >>      device domain
-> >> 
-> >> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
-> >> function does:
-> >> 
-> >>     if (!pci_msix_enabled(pdev))
-> >>     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
-> >>     else
-> >>         return pci_msix_alloc_irq_at(pdev, ....);  
-> 
-> Ignore the above. Brainfart.
-> 
-> > I'm struggling to follow this suggestion
-> > Would you expect the cxl_pci MSI parent domain to set it's parent as
-> > msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
-> > 					 IRQ_DOMAIN_FLAG_MSI_PARENT,
-> > 					 ...
-> > which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
-> > or create a separate domain structure and provide callbacks that reach into
-> > the parent domain as necessary?
-> >
-> > Or do I have this entirely wrong? I'm struggling to relate what existing
-> > code like PCI does to what I need to do here.  
-> 
-> dev_get_msi_domain(&pdev->dev) is a nightmare due to the 4 different
-> models we have:
-> 
->    - Legacy has no domain
-> 
->    - Non-hierarchical domain
-> 
->    - Hierarchical domain v1
-> 
->          That's the global PCI/MSI domain
-> 
->    - Hierarchical domain v2
-> 
->       That's the underlying MSI_PARENT domain, which is on x86
->       either the interrupt remap unit or the vector domain. On arm64
->       it's the ITS domain.
-> 
-> See e.g. pci_msi_domain_supports() which handles the mess.
-> 
-> Now this proposal will only work on hierarchical domain v2 because that
-> can do the post enable allocations on MSI-X. Let's put a potential
-> solution for MSI aside for now to avoid complexity explosion.
-> 
-> So there are two ways to solve this:
-> 
->   1) Implement the CXL MSI parent domain as disjunct domain
-> 
->   2) Teach the V2 per device MSI-X domain to be a parent domain
-> 
-> #1 Looks pretty straight forward, but does not seemlessly fit the
->    hierarchical domain model and creates horrible indirections.
-> 
-> #2 Is the proper abstraction, but requires to teach the MSI core code
->    about stacked MSI parent domains, which should not be horribly hard
->    or maybe just works out of the box.
-> 
-> The PCI device driver invokes the not yet existing function
-> pci_enable_msi_parent_domain(pci_dev). This function does:
-> 
->   A) validate that this PCI device has a V2 parent domain
-> 
->   B) validate that the device has enabled MSI-X
-> 
->   C) validate that the PCI/MSI-X domain supports dynamic MSI-X
->      allocation
-> 
->   D) if #A to #C are true, it enables the PCI device parent domain
-> 
-> I made #B a prerequisite for now, as that's an orthogonal problem, which
-> does not need to be solved upfront. Maybe it does not need to be solved
-> at all because the underlying PCI driver always allocates a management
-> interrupt before dealing with the underlying "bus", which is IMHO a
-> reasonable expectation. At least it's a reasonable restriction for
-> getting started.
-> 
-> That function does:
-> 
->      msix_dom = pci_msi_get_msix_domain(pdev);
->      msix_dom->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
->      msix_dom->msi_parent_ops = &pci_msix_parent_ops;
-> 
-> When creating the CXL devices the CXL code invokes
-> pci_msi_init_subdevice(pdev, &cxldev->device), which just does:
-> 
->   dev_set_msi_domain(dev, pci_msi_get_msix_subdevice_parent(pdev));
-> 
-> That allows the CXL devices to create their own per device MSI
-> domain via a new function pci_msi_create_subdevice_irq_domain().
-> 
-> That function can just use a variant of pci_create_device_domain() with
-> a different domain template and a different irqchip, where the irqchip
-> just redirects to the underlying parent domain chip, aka PCI-MSI-X.
-> 
-> I don't think the CXL device will require a special chip as all they
-> should need to know is the linux interrupt number. If there are special
-> requirements then we can bring the IMS code back or do something similar
-> to the platform MSI code. 
-> 
-> Then you need pci_subdev_msix_alloc_at() and pci_subdev_msix_free()
-> which are the only two functions which the CXL (or similar) need.
-> 
-> The existing pci_msi*() API function might need a safety check so they
-> can't be abused by subdevices, but that's a problem for a final
-> solution.
-> 
-> That's pretty much all what it takes. Hope that helps.
+v3 changes:
 
-Absolutely!  Thanks for providing the detailed suggestion
-this definitely smells a lot less nasty than previous approach.
+ - cxl_dev_state not defined as opaque but only manipulated by accel drivers
+   through accessors.
 
-I have things sort of working now but it's ugly code with a few
-cross layer hacks that need tidying up (around programming the
-msi registers from wrong 'device'), so may be a little
-while before I get it in a state to post.
+ - accessors names not identified as only for accel drivers.
 
-Jonathan
+ - move pci code from pci driver (drivers/cxl/pci.c) to generic pci code
+   (drivers/cxl/core/pci.c).
 
-> 
-> Thanks,
-> 
->         tglx
-> 
-> 
-> 
+ - capabilities field from u8 to u32 and initialised by CXL regs discovering
+   code.
+
+ - add capabilities check and removing current check by CXL regs discovering
+   code.
+
+ - Not fail if CXL Device Registers not found. Not mandatory for Type2.
+
+ - add timeout in acquire_endpoint for solving a race with the endpoint port
+   creation.
+
+ - handle EPROBE_DEFER by sfc driver.
+
+ - Limiting interleave ways to 1 for accel driver HPA/DPA requests.
+
+ - factoring out interleave ways and granularity helpers from type2 region
+   creation patch.
+
+ - restricting region_creation for type2 to one endpoint decoder.
+
+ - add accessor for release_resource.
+
+ - handle errors and errors messages properly.
+
+
+v2 changes:
+
+I have removed the introduction about the concerns with BIOS/UEFI after the
+discussion leading to confirm the need of the functionality implemented, at
+least is some scenarios.
+
+There are two main changes from the RFC:
+
+1) Following concerns about drivers using CXL core without restrictions, the CXL
+struct to work with is opaque to those drivers, therefore functions are
+implemented for modifying or reading those structs indirectly.
+
+2) The driver for using the added functionality is not a test driver but a real
+one: the SFC ethernet network driver. It uses the CXL region mapped for PIO
+buffers instead of regions inside PCIe BARs.
+
+
+
+RFC:
+
+Current CXL kernel code is focused on supporting Type3 CXL devices, aka memory
+expanders. Type2 CXL devices, aka device accelerators, share some functionalities
+but require some special handling.
+
+First of all, Type2 are by definition specific to drivers doing something and not just
+a memory expander, so it is expected to work with the CXL specifics. This implies the CXL
+setup needs to be done by such a driver instead of by a generic CXL PCI driver
+as for memory expanders. Most of such setup needs to use current CXL core code
+and therefore needs to be accessible to those vendor drivers. This is accomplished
+exporting opaque CXL structs and adding and exporting functions for working with
+those structs indirectly.
+
+Some of the patches are based on a patchset sent by Dan Williams [1] which was just
+partially integrated, most related to making things ready for Type2 but none
+related to specific Type2 support. Those patches based on Dan´s work have Dan´s
+signing as co-developer, and a link to the original patch.
+
+A final note about CXL.cache is needed. This patchset does not cover it at all,
+although the emulated Type2 device advertises it. From the kernel point of view
+supporting CXL.cache will imply to be sure the CXL path supports what the Type2
+device needs. A device accelerator will likely be connected to a Root Switch,
+but other configurations can not be discarded. Therefore the kernel will need to
+check not just HPA, DPA, interleave and granularity, but also the available
+CXL.cache support and resources in each switch in the CXL path to the Type2
+device. I expect to contribute to this support in the following months, and
+it would be good to discuss about it when possible.
+
+[1] https://lore.kernel.org/linux-cxl/98b1f61a-e6c2-71d4-c368-50d958501b0c@intel.com/T/
+
+Alejandro Lucero (20):
+  cxl: add type2 device basic support
+  cxl: add capabilities field to cxl_dev_state and cxl_port
+  cxl/pci: add check for validating capabilities
+  cxl: move pci generic code
+  cxl: add function for type2 cxl regs setup
+  cxl: add functions for resource request/release by a driver
+  cxl: harden resource_contains checks to handle zero size resources
+  cxl: add function for setting media ready by a driver
+  cxl: support type2 memdev creation
+  cxl: indicate probe deferral
+  cxl: define a driver interface for HPA free space enumaration
+  efx: use acquire_endpoint when looking for free HPA
+  cxl: define a driver interface for DPA allocation
+  cxl: make region type based on endpoint type
+  cxl/region: factor out interleave ways setup
+  cxl/region: factor out interleave granularity setup
+  cxl: allow region creation by type2 drivers
+  cxl: preclude device memory to be used for dax
+  cxl: add function for obtaining params from a region
+  efx: support pio mapping based on cxl
+
+ drivers/cxl/core/cdat.c               |   3 +
+ drivers/cxl/core/hdm.c                | 158 ++++++++--
+ drivers/cxl/core/memdev.c             | 174 +++++++++++
+ drivers/cxl/core/pci.c                | 111 +++++++
+ drivers/cxl/core/port.c               |  11 +-
+ drivers/cxl/core/region.c             | 417 ++++++++++++++++++++++----
+ drivers/cxl/core/regs.c               |  29 +-
+ drivers/cxl/cxl.h                     |  14 +-
+ drivers/cxl/cxlmem.h                  |   7 +
+ drivers/cxl/cxlpci.h                  |  19 +-
+ drivers/cxl/mem.c                     |  21 +-
+ drivers/cxl/pci.c                     |  90 ++----
+ drivers/net/ethernet/sfc/Makefile     |   2 +-
+ drivers/net/ethernet/sfc/ef10.c       |  32 +-
+ drivers/net/ethernet/sfc/efx.c        |  19 ++
+ drivers/net/ethernet/sfc/efx_cxl.c    | 180 +++++++++++
+ drivers/net/ethernet/sfc/efx_cxl.h    |  29 ++
+ drivers/net/ethernet/sfc/mcdi_pcol.h  |  12 +
+ drivers/net/ethernet/sfc/net_driver.h |   8 +
+ drivers/net/ethernet/sfc/nic.h        |   2 +
+ include/linux/cxl/cxl.h               |  81 +++++
+ include/linux/cxl/pci.h               |  23 ++
+ 22 files changed, 1237 insertions(+), 205 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/linux/cxl/cxl.h
+ create mode 100644 include/linux/cxl/pci.h
+
+-- 
+2.17.1
 
