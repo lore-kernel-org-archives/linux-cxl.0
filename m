@@ -1,114 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2509A166317;
-	Sat,  7 Sep 2024 20:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3402B2DA;
+	Sun,  8 Sep 2024 03:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725740800; cv=none; b=R4za7xATeCS+TahsuMKuXCQoxR3653TzV4L+97knvzw2nlEOkPUUWtxxC3JTX7Umi25gejNBuz6N2AiN40Q4cbK2zSHConw02SV5c3MHtxAUUX5IDA9BawqxqwHxpxpkZEanrHhsE5o/BLqyfTwH8JjW0dnRG/e35gDbB/3Lle4=
+	t=1725765900; cv=none; b=ENNiEdk4GrIogjc0Xa3r2p4Gk2LBeU4fDBGUoryA6RDrhU2DYJCUV30C9mf1iaPHhFgmrNxBWV7qdiUg6vXENRPIWpOwDDRAODrWn5BOQ7d6PBlb+3PwkmIt0pRUBBJQHLiKnmzp5IPephYXedfoNZYzoPLlR69dkvhAaxveO34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725740800; c=relaxed/simple;
-	bh=fMa7zk8F941GU/2okPN/spWK9VAcgdf8B/UpfGouItk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejFqNw0oX/IXyg3dCKw3uhJnqECv5ZGUv5LBhMY3a2y9y8kxa45F1OmPJmfuIpITT3EBIPTSxyVswrqnAI5FWRSj0KaUeSheRPosP0097I+ZAq7YzIwmvW7PN0TWiNWdr01Se5l2/djTgj4osCBRmwBJX1eQebuQJ0fCJR2IDVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Roh6+gcA; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725765900; c=relaxed/simple;
+	bh=Pyp7dRfMcSf5MD+6qBE70iGPu2i/5ZdA4dgou2lJL98=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OPBA/pSCEl/uFvoeU27gA5t3AMu4YJiAos2lJ1xvae3Sao0cJoHAqlJwNsyw0oZrmDw7UKt3S6xtOH7yG2HaSfD5nx9KLK4kH4nvBJ0EGX5kMm0y9kEHFI4x/ZxMhX8dDusuURA+giRvPSz9djS/oskiB+18o4KB+BJa3BbI07Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RJpiXoFq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Roh6+gcA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725740798; x=1757276798;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fMa7zk8F941GU/2okPN/spWK9VAcgdf8B/UpfGouItk=;
-  b=Roh6+gcAn+cttmAmtFWt14htw4me8UNGXsJTfR2waIGCEhJcu0rxYHKL
-   ol9Pb25xsYRQZN8hkHlkfsZkG1gqlWZAI/bSEmhWZDE3Ed+AsXD/6O/d+
-   X+9A/twjUHEzR7A1RoHezDejB/P1C71OLT208FMhGNYIGfAxLLrul5ow9
-   IQ3dWk6oUqPSGqF959Mc4+2J47TESMGSdf36R3aC02IRvS8EZ5hbGHNho
-   30uzwfcVfZlomSEWEZMvR1vLQlRgt6mkVQoVrXQwlydULOR86RqritqDv
-   h0ASj4vh0HK6D21eH98m0L9dkN7yDOR7kOkHeol8isVxBXhL8SuDP6w1T
-   A==;
-X-CSE-ConnectionGUID: aF0fpPoSTPSAWN/SGvAEPQ==
-X-CSE-MsgGUID: To1cfAG5T5G2KHVsE/jjEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11188"; a="24668280"
-X-IronPort-AV: E=Sophos;i="6.10,211,1719903600"; 
-   d="scan'208";a="24668280"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2024 13:26:37 -0700
-X-CSE-ConnectionGUID: u/Fz9l78RMS/Sjhs9hFhKw==
-X-CSE-MsgGUID: ShqGrfHxRx6e2fErV5C5Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,211,1719903600"; 
-   d="scan'208";a="70677102"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 07 Sep 2024 13:26:35 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sn20u-000Cyl-1E;
-	Sat, 07 Sep 2024 20:26:32 +0000
-Date: Sun, 8 Sep 2024 04:26:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: oe-kbuild-all@lists.linux.dev, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v3 01/20] cxl: add type2 device basic support
-Message-ID: <202409080455.S5Uvi35I-lkp@intel.com>
-References: <20240907081836.5801-2-alejandro.lucero-palau@amd.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RJpiXoFq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47301C4CEC4;
+	Sun,  8 Sep 2024 03:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1725765899;
+	bh=Pyp7dRfMcSf5MD+6qBE70iGPu2i/5ZdA4dgou2lJL98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RJpiXoFqyWKXsiRSbKurj/snbkWegxcRcdb5ipXFzmA+U2SVo7fEschQfzxsFsF5C
+	 GMawSuO/7erkzr53L8e4p5jTyXVqxw+Re+zRAxuqTn1yM3BH4ybYr9jbQIHMriq4ku
+	 4p5HhU/JdZhsi6vBVG69PzBRl4njn7vGqaPEfRxg=
+Date: Sat, 7 Sep 2024 20:24:58 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Huang Ying <ying.huang@intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, David
+ Hildenbrand <david@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Alistair Popple <apopple@nvidia.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH -v3 1/3] resource: Fix region_intersects() vs
+ add_memory_driver_managed()
+Message-Id: <20240907202458.dfe90bfee071021706af91eb@linux-foundation.org>
+In-Reply-To: <20240906030713.204292-2-ying.huang@intel.com>
+References: <20240906030713.204292-1-ying.huang@intel.com>
+	<20240906030713.204292-2-ying.huang@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240907081836.5801-2-alejandro.lucero-palau@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri,  6 Sep 2024 11:07:11 +0800 Huang Ying <ying.huang@intel.com> wrote:
 
-kernel test robot noticed the following build errors:
+> On a system with CXL memory, the resource tree (/proc/iomem) related
+> to CXL memory may look like something as follows.
+> 
+> 490000000-50fffffff : CXL Window 0
+>   490000000-50fffffff : region0
+>     490000000-50fffffff : dax0.0
+>       490000000-50fffffff : System RAM (kmem)
+> 
+> Because drivers/dax/kmem.c calls add_memory_driver_managed() during
+> onlining CXL memory, which makes "System RAM (kmem)" a descendant of
+> "CXL Window X".  This confuses region_intersects(), which expects all
+> "System RAM" resources to be at the top level of iomem_resource.  This
+> can lead to bugs.
+> 
+> ...
+> 
+> Fixes: c221c0b0308f ("device-dax: "Hotplug" persistent memory for use like normal RAM")
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on linus/master v6.11-rc6 next-20240906]
-[cannot apply to cxl/pending horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20240907-162231
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20240907081836.5801-2-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v3 01/20] cxl: add type2 device basic support
-config: mips-ip27_defconfig (https://download.01.org/0day-ci/archive/20240908/202409080455.S5Uvi35I-lkp@intel.com/config)
-compiler: mips64-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240908/202409080455.S5Uvi35I-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409080455.S5Uvi35I-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/btrfs/btrfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/cast_common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/crypto/libarc4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/zlib_inflate/zlib_inflate.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/zlib_deflate/zlib_deflate.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/mfd-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_aec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cdrom/cdrom.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
->> ERROR: modpost: "cxl_accel_state_create" [drivers/net/ethernet/sfc/sfc.ko] undefined!
->> ERROR: modpost: "cxl_set_serial" [drivers/net/ethernet/sfc/sfc.ko] undefined!
-ERROR: modpost: "cxl_set_resource" [drivers/net/ethernet/sfc/sfc.ko] undefined!
-ERROR: modpost: "cxl_set_dvsec" [drivers/net/ethernet/sfc/sfc.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Do you believe this should be fixed in earlier (-stable) kernels?
