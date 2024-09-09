@@ -1,273 +1,511 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28C21B5832;
-	Mon,  9 Sep 2024 11:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725880680; cv=none; b=N9XARQ4JMgdXYVs/EM1EjkJeUYmlazxzVY6aCjuTtZ6GC6dKDmlH81mlOKz42B5PkBIBPjLNOPYq0uhceH4zdyE4tJEjoW/b/c8Dm1MqoDpp8+3hfkrzDqZmyN9Do4elT4c0wNFreQh5a97AnCwZdHgwrTEM2RMwP9iAbzdIpm4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725880680; c=relaxed/simple;
-	bh=fi6HpSk5L2N5f9mEV/ZlqlRAPeaAyXhEDSK9MLqROzU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q2dGRGjQtpw0kPlviJxcYtW45oJDycsKWoqPc7s2VTa2chBNVgqtVIGK0D2iH5B9ANj6wZroVt0yZJqVJQDsFn6ff4Rs380NAWGM7cU2noGVYdMBez4A8QAO0hsiuJzkoqGv198DAvrKJm0QZVtK7PQ3OayWH/NjZjMXbWITi2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X2PMR2Hqmz6K6S0;
-	Mon,  9 Sep 2024 19:13:07 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1F0D714A14D;
-	Mon,  9 Sep 2024 19:17:48 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FB91BA890;
+	Mon,  9 Sep 2024 13:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725890278; cv=fail; b=TgBTeZ8ZX3SvYpJ39dGE9aFDJ79Le6QY4rLs04KY07zecaSgufXBKc59i0dKpviGhrx1uYSh1aVFL+1zxeNaJgGSgmivzHsMCNCFKhUV72Qg+bzcxTUXLAB2R3lY30ExA4Y2hQ+S4lZ3S9MDIE7ExZ/laNaax9PThn471FkLJlE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725890278; c=relaxed/simple;
+	bh=RCTTar3aSAjajpcBLywr3PI2OIqPlmw7KMDYlUI8oHY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oRRp0LoLbX8n7gWg/GQFiDZSEDjPEmiJrljg1b2wuBdLrdkoHluD46xIcsnx5EwxVFGU9OxFrqLK4X5AqYDAxKcrHvUUe2we9uYhn8fOZ5naZflaMGZSWOC+bQQOSece973vSI6Lmgrhad+XnjbDbJ3COFIsJ8abZaQkoCzy8YA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QRnb0Vje; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QRnb0Vje"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725890277; x=1757426277;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=RCTTar3aSAjajpcBLywr3PI2OIqPlmw7KMDYlUI8oHY=;
+  b=QRnb0VjesSK/dHoZLFjnf3DwLX28FNvm8H8sVQSekmKvGuCk8bOqgcjg
+   zp2/Xa0irqk3qvAkG3Q7DI+oT3PsrX/eu6vQEUuhBIRFjfXJmkGudCFzN
+   fjwihxDsMAtwdTCslfCFXdiTihP64WQjNZ0pcQnqSZB4MKMxvhBKEYAHY
+   wv2/Z/k1hLIVD8nFhfw1st2xTbjmiDJmfuY0VJwLxojpCzzgumZpRz9dG
+   4zise6sTG3QorzD8SFGBVwrTc3v1xCRdaqJ4RHfZX5ShkZeqeRd+nYiRT
+   qQxtRBxstCOXB8PGJ3prN6BqxC1r7BfEnjPUbHXGHLcDI5jfOUKdSbi+c
+   Q==;
+X-CSE-ConnectionGUID: ga37d5HiQB6XkSa+4i9iuA==
+X-CSE-MsgGUID: HXXz0im9SzyIYp1ovQ2TOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24462759"
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="24462759"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 06:57:56 -0700
+X-CSE-ConnectionGUID: EHwlwArsSLW5lt8KXVemcA==
+X-CSE-MsgGUID: D+440NSHS3GeFzvA1uwC5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="66652938"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Sep 2024 06:57:56 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Sep 2024 06:57:55 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Sep 2024 06:57:54 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 9 Sep 2024 06:57:54 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 9 Sep 2024 13:17:47 +0200
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
- Mon, 9 Sep 2024 12:17:47 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "jgroves@micron.com"
-	<jgroves@micron.com>, "vsalve@micron.com" <vsalve@micron.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v11 01/14] EDAC: Add support for EDAC device feature's
- control
-Thread-Topic: [PATCH v11 01/14] EDAC: Add support for EDAC device feature's
- control
-Thread-Index: AQHa7/tqm9XJar2NaUuYivGEV4aaM7JGTcyAgAkOiXA=
-Date: Mon, 9 Sep 2024 11:17:47 +0000
-Message-ID: <dc4cc7313d444035a90e1d4e0c37f858@huawei.com>
-References: <20240816164238.1902-1-shiju.jose@huawei.com>
- <20240816164238.1902-2-shiju.jose@huawei.com>
- <20240903163519.GAZtc6x7o9Cy1MQAsb@fat_crate.local>
-In-Reply-To: <20240903163519.GAZtc6x7o9Cy1MQAsb@fat_crate.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.1.2507.39; Mon, 9 Sep 2024 06:57:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VC3ySgNMCiD8wLKgFvYSuTfO2EAxN6LZfghSdyEEjZijomHclxSbeVfp557+zLp2POscb36GYL+DyHYdjSdoiU9vLZXM0oH1j1G0aF6V2ZKW82C+V1SIcpjI12dcQaPICww6UzEl6DB1xDN59nWlWia4GoNzh/eA2KTpSpfL2L2E1zv44VVuqKFTybYOolv17Lbr7HfcdCRYR5IgCsCVGChe2KF+vRq6V2qTd7+AUP3R6bC0UDNYgksaO83N0dmgXVgGHCR5rs0pIsvK8p256qKMmcMwQVnauDfYxlvjKGfDockpOnPNYt3D5gh5XBiqAWkY/AsWnndeHqPhHF8w4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dveML4ViEM/Zfv7SXV/GT2+Em8xwREmpd7Ne0XoKpeo=;
+ b=pMnaV46lKO+vvH/bik3FQ5GDNIDsClJ2CXGga2NWnVEn8U9XkPkMhrocz15UmygOsulD7CsdUvV+VzHX4qsyo5CA22J4040tI00ibv4+jorUKnbScjPR5wktv/XahVmOj0uuBNO3SGibOk2MJHUjhivGU0E0QNLjnTJ/NPqoNacb4DWCHokWr5iAgdBzsVI1mU0oprhXr02U/T2t74Tn7aMs6MXJmyxBhnVRpIhJPTvkyO5CC5iDgI5uFGxURhb3ROw2FhyoINkPAN4WkEVWJClV2TnHhnTFKe0nYr0UY1om2suZhS1ZGJ7DRACmVfiyO/6vfgeFOT9vWGRxTP99dQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by MW3PR11MB4587.namprd11.prod.outlook.com (2603:10b6:303:58::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.28; Mon, 9 Sep
+ 2024 13:57:51 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%6]) with mapi id 15.20.7939.017; Mon, 9 Sep 2024
+ 13:57:51 +0000
+Date: Mon, 9 Sep 2024 08:57:42 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Ira Weiny
+	<ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Chris Mason <clm@fb.com>, Josef Bacik
+	<josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Petr Mladek
+	<pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-btrfs@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v3 24/25] tools/testing/cxl: Make event logs dynamic
+Message-ID: <66defed6b37c2_f937b29469@iweiny-mobl.notmuch>
+References: <20240816-dcd-type2-upstream-v3-0-7c9b96cba6d7@intel.com>
+ <20240816-dcd-type2-upstream-v3-24-7c9b96cba6d7@intel.com>
+ <20240827153204.00002bff@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240827153204.00002bff@Huawei.com>
+X-ClientProxiedBy: MW4PR04CA0285.namprd04.prod.outlook.com
+ (2603:10b6:303:89::20) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW3PR11MB4587:EE_
+X-MS-Office365-Filtering-Correlation-Id: a2bbc3ce-56d7-4c6e-909c-08dcd0d764af
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?K9YVyBgcuQMMh2InX3r4t6I32K39dH2P0WFblJEfGOuSyhdkfwQ3PVmz8XhY?=
+ =?us-ascii?Q?OJAhY9NT+PRBumhqAYzpN9tXuHmLINEDsNbRpLyDNuDeKkrVvr2Rj4PUi7ky?=
+ =?us-ascii?Q?ak4TLSuhYlyZGq/LkpuPs6eklxlc3K/mXmVV+dJloD7foMMIx+Bw2YrIJzVN?=
+ =?us-ascii?Q?qdVoEpl/vCBGxrgN3FbFA2hEOBV22T0gWvcf1Ky1rncpjJiKnsEYdlu5mWbN?=
+ =?us-ascii?Q?RtANN5KJu09xzhnZnmG+ZqVHRumf97AOg6gyCID77bcCXjANi9JcLlf4NKZp?=
+ =?us-ascii?Q?PASyJMUDDibOzU2Fqe4+KBi8aIY6V9n4zLITfGnY+wsSDwcD9dH72VR4YTAz?=
+ =?us-ascii?Q?w1EIDvdHnEos9DBQ2LnUfI/iOHD6tC9xsS0agMbG57IBiFme7wfr6sbXVlpG?=
+ =?us-ascii?Q?++TYa/M+1Jz7CLymO3KR3bTYJZ3GabsFQ/NGxC2XPbFY00IjjcKAqS7qbZHb?=
+ =?us-ascii?Q?hXb2OsEybljrbfHQFCFUX0Nbw1n/zPV4VumQn3DkrxQosfX8L45Q5o4Yz+f0?=
+ =?us-ascii?Q?E9BCNd0gW1OPH3rX11WAOAc8DZBUYwSlsz40anX+GyoZXrC7Wg9U+BiVxKG2?=
+ =?us-ascii?Q?fgG305FlwWjed+kJoj1K9jbbbD1X/IjYBPKxeXW9i9uRosRxhAl7P4C7g5Tu?=
+ =?us-ascii?Q?qxVR834Fs5K+fR4XBkgUpDX5bZqRNEPDReZOdkDKeh5Db9E32+5CGZAK8bni?=
+ =?us-ascii?Q?pXtbAyoN5FJDkv5rbcI38fDGWvOclU/totBIFdK4QIX5iY8uDtsktBe+bRXn?=
+ =?us-ascii?Q?4vqoMLj7jc8mr3AlUj1KG10FVcwoRY3X4SBfodV7/vbPpZKwtZOp6c3SM4Va?=
+ =?us-ascii?Q?jRwBel118fIj5dO1y6E2ftQt8EbSP9JcMU5L7n0shnAMv1EnpKPTxgy/q1cH?=
+ =?us-ascii?Q?tRgGaq5OwDzg78OnUnxVGv8ehnzyyydxPY6BH13jR7Bda3gTFlqNhDEOX2Kf?=
+ =?us-ascii?Q?mWzqzTulT/z1oSODl7n2AEykpLqPzKkLu4TzueMMrHJSCMT80KLkOIRQK6OS?=
+ =?us-ascii?Q?Im6hC3uDEceq8Y3rNKyhj3Rouyo+WvJqBfMbFP7GJNEbzOXhsGv0PCROYQFy?=
+ =?us-ascii?Q?hxfi7v2sdJ7Q1h0LY8DmVBFiQxH2nkNHjEZleXTZCGpk4rrG3PZBfhYOQy1E?=
+ =?us-ascii?Q?51BwPkq56sKZ49WRo4XccQc0+MB8vFrMw+YLTZyWL4pMfFhX6VTB35rIMuvt?=
+ =?us-ascii?Q?Ed1WPE9UXL3d2q8SuGHKUSqiSkvONGuFQhVenQ92HHmO/Q738OseS2b1eNhL?=
+ =?us-ascii?Q?rFqQWe8H6dkmAhoXZ/mcwc3r7dYx+ysZ29hRNjDX5zswVk3+kFJT83qs3nvX?=
+ =?us-ascii?Q?5sjbt6H4UrNs7/MqXyWCbD4dtIvWRQpuY1QGIQGz66NDUw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GG4lYsUqU+gAt9pjSsTcAmgt85w0LRNYzghoIZXw7S6kV/NT14duhOTDC/NW?=
+ =?us-ascii?Q?hoC+K0tAOT5RNrfH+Du/QlQ5LarHGWC4FoL6vD+FhOOvUeRCRpCoEBiHYx02?=
+ =?us-ascii?Q?rE1jjH5ng9L5DGLMr6zKrM6++HCEVIspD4cvHIbggrDeRXiZ1H+xQqiWApEn?=
+ =?us-ascii?Q?hSZYd7bhIWhk/50PULMNrQONjRVfy8aBUb4ZyqP/5cMWxxvlkzrR1tKuJexm?=
+ =?us-ascii?Q?CG2n0gqmUyxduuyxwQNSJS+8ewpMd1RB+m9ZgeMU3kxqdCh3/h/g+1GYXp/w?=
+ =?us-ascii?Q?XtmJyvKPHcs7Bk5IdxrkL/sb4p7zoOc97teY9FSHgGGkP0i2VYUeCyKRG+fT?=
+ =?us-ascii?Q?K5avsPP8f/NltRDHijh1j/sxYEGH/UF1+19j2dBIK6kq3UaoYoSDomQo8Xl2?=
+ =?us-ascii?Q?xlmOBb+XprntHTcE7QiB480DE7Ydo3vyhvjbiiZsHv2UnQTDU1rbO0zRv3en?=
+ =?us-ascii?Q?ICGJ4FSYxT6kADEVvXgp+XNKRcpwDmZDkRWk4U4uUOaX5dKZ5E9TQI5p9RMw?=
+ =?us-ascii?Q?ST19aTNrYhly9JJLtX7LcMKIPFDBr7dh710gfJ/3Lw0wdLoo2nCwHrov6r/k?=
+ =?us-ascii?Q?4CIN2NDaz+6OjdcdFcz1JdTNxDF9fYDZGukamh64UgbHRCWYuk2x+KWqrH3O?=
+ =?us-ascii?Q?NCJeR/yjR6nQywrNgkSwBQeyhfmKni+j2CR7UVoJdA+I7mjVfmMbY+iTQp4z?=
+ =?us-ascii?Q?0S7HDPk14vwIyLcm0kp82/hWI1QiNb2hu1gqyQSeRLlsEAm4WdFexKu9zCsM?=
+ =?us-ascii?Q?Co/hCbLEb9rSIfuqdLVx6RwgyKIEx67fVCXxNPZskrJqiAw75Evh3jDizPMI?=
+ =?us-ascii?Q?qxIfHkvZRqucPFp5fSvk52lss3daUkw7dpkSlkNCbS/IMtqzwizT/O2EIWRC?=
+ =?us-ascii?Q?gkN1yiAc6ixksy3R9hbikA/qzcIZ80UG8Mq/rz3jKC/asNpk+snKsdPtoxEC?=
+ =?us-ascii?Q?d/jg1h5+FK+b7cBse5WDGcPIKxCgCga7VphpTIMvVzxfUV6HmHy/W+8HhckX?=
+ =?us-ascii?Q?KsPf7yka6ZJ3DeyOJHMkZqStb/uJiBHtvM2ZQEXfggkxY+uZj9Z7tWEjx5jp?=
+ =?us-ascii?Q?SWHpzFQscKg5uHV+XeGkSP0dQrdCnOkeyOrLOnZ8uWoOVVnyC3dcCgV2YCUO?=
+ =?us-ascii?Q?1Ze8lF7rbc9sjPWk/WXLL7p/LOGQOSb//Ftr3hpNCBsqyV6KKsJvawZSWsdJ?=
+ =?us-ascii?Q?6eC87pwdAMhDf7If/hyGiXtqdCyoA2UB3DMWmCY0FJ0Qfq/kgg34vG/+kawA?=
+ =?us-ascii?Q?FX3/HtrtGaYX90JoleeODKzJ4iWn8o4fEhDIdOm+J+yiV3oPBryRJGeZpDWD?=
+ =?us-ascii?Q?raFczH8RxogUHSeCh1gBVP5wYwFx3t+vrVFTC+FDJlwbw6Ym5ENxtkOlUlOd?=
+ =?us-ascii?Q?6FvRWx0JT+S8wReX9QYoPhxOroZ8stz0bZxntNz6oUx5dr8Ii8n28x35qOFW?=
+ =?us-ascii?Q?yGneklNx3PBnvhX9r+JBcdFRi8cJHygIYUcAuQwKvolbJSuRhO9pzrimNirJ?=
+ =?us-ascii?Q?hqa06nHjh3wg7PRnh68Ob9vFmBkIkqVZ+e/8JksVZ1d3qBVWDttfOlfMGNB3?=
+ =?us-ascii?Q?rvsXW1+qYP+43CMUelmhj4I/Cz0Tkm+V4d4BVTVh?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2bbc3ce-56d7-4c6e-909c-08dcd0d764af
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 13:57:50.9455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ap8t+KHDTTR1XCKC1P7cD/D0MG5E7gFXDx7hs7z32oNY3QF99o9zeUGDmigmeGefIVjujTdICWGeMgEFptwdGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4587
+X-OriginatorOrg: intel.com
 
-VGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2tzLg0KQXBvbG9naWVzIGZvciB0aGUgZGVsYXkgaW4g
-cmVwbHlpbmcuDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
-IFBldGtvdiA8YnBAYWxpZW44LmRlPg0KPlNlbnQ6IDAzIFNlcHRlbWJlciAyMDI0IDE3OjM1DQo+
-VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtZWRhY0B2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmFjcGlA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1tbUBrdmFjay5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+dG9ueS5sdWNrQGludGVsLmNvbTsgcmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJA
-a2VybmVsLm9yZzsNCj5tY2hlaGFiQGtlcm5lbC5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNv
-bTsgZGF2ZUBzdGdvbGFicy5uZXQ7IEpvbmF0aGFuDQo+Q2FtZXJvbiA8am9uYXRoYW4uY2FtZXJv
-bkBodWF3ZWkuY29tPjsgZGF2ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBp
-bnRlbC5jb207IHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsN
-Cj5kYXZpZEByZWRoYXQuY29tOyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGVvLmR1cmFuQGFt
-ZC5jb207DQo+WWF6ZW4uR2hhbm5hbUBhbWQuY29tOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFx
-aXlhbkBnb29nbGUuY29tOw0KPkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5p
-bnRlbC5jb207DQo+bmFveWEuaG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207
-IGp0aG91Z2h0b25AZ29vZ2xlLmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFr
-dGFzQGdvb2dsZS5jb207IHBnb25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsg
-bWlrZS5tYWx2ZXN0dXRvQGludGVsLmNvbTsgZ3RoZWxlbkBnb29nbGUuY29tOw0KPndzY2h3YXJ0
-ekBhbXBlcmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25AYW1wZXJlY29tcHV0aW5nLmNvbTsNCj53
-YnNAb3MuYW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4uY3hsQGdtYWlsLmNvbTsgamdyb3Zlc0Bt
-aWNyb24uY29tOw0KPnZzYWx2ZUBtaWNyb24uY29tOyB0YW54aWFvZmVpIDx0YW54aWFvZmVpQGh1
-YXdlaS5jb20+OyBaZW5ndGFvIChCKQ0KPjxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+OyBSb2Jl
-cnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+Ow0KPmthbmdrYW5nLnNoZW5AZnV0
-dXJld2VpLmNvbTsgd2FuZ2h1aXFpYW5nIDx3YW5naHVpcWlhbmdAaHVhd2VpLmNvbT47DQo+TGlu
-dXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMDEv
-MTRdIEVEQUM6IEFkZCBzdXBwb3J0IGZvciBFREFDIGRldmljZSBmZWF0dXJlJ3MNCj5jb250cm9s
-DQo+DQo+T24gRnJpLCBBdWcgMTYsIDIwMjQgYXQgMDU6NDI6MjRQTSArMDEwMCwgc2hpanUuam9z
-ZUBodWF3ZWkuY29tIHdyb3RlOg0KPj4gRnJvbTogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3
-ZWkuY29tPg0KPj4NCj4+IEFkZCBnZW5lcmljIEVEQUMgZGV2aWNlIGZlYXR1cmUncyBjb250cm9s
-IHN1cHBvcnRzIHJlZ2lzdGVyaW5nDQo+DQo+ImZlYXR1cmVzIg0KPg0KPkNoZWNrIHlvdXIgd2hv
-bGUgc2V0Lg0KU3VyZS4gTW9kaWZpZWQuDQo+DQo+PiBSQVMgZmVhdHVyZXMgc3VwcG9ydGVkIGlu
-IHRoZSBzeXN0ZW0uIERyaXZlciBleHBvc2VzIGZlYXR1cmUncyBjb250cm9sDQo+PiBhdHRyaWJ1
-dGVzIHRvIHRoZSB1c2Vyc3BhY2UgaW4NCj4NCj5zL3RoZSAvLw0KQ2hhbmdlZC4NCj4NCj4+IC9z
-eXMvYnVzL2VkYWMvZGV2aWNlcy88ZGV2LW5hbWU+LzxyYXMtZmVhdHVyZT4vDQo+Pg0KPj4gQ28t
-ZGV2ZWxvcGVkLWJ5OiBKb25hdGhhbiBDYW1lcm9uIDxKb25hdGhhbi5DYW1lcm9uQGh1YXdlaS5j
-b20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBKb25hdGhhbiBDYW1lcm9uIDxKb25hdGhhbi5DYW1lcm9u
-QGh1YXdlaS5jb20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1
-YXdlaS5jb20+DQo+PiAtLS0NCj4+ICBkcml2ZXJzL2VkYWMvZWRhY19kZXZpY2UuYyB8IDE3OA0K
-PisrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4+ICBpbmNsdWRlL2xpbnV4
-L2VkYWMuaCAgICAgICB8ICA2MCArKysrKysrKysrKysrDQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAy
-MzggaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2VkYWMvZWRhY19k
-ZXZpY2UuYyBiL2RyaXZlcnMvZWRhYy9lZGFjX2RldmljZS5jDQo+PiBpbmRleCA2MjFkYzJhNWQw
-MzQuLjYzNWE0MWRiOGI1YSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvZWRhYy9lZGFjX2Rldmlj
-ZS5jDQo+PiArKysgYi9kcml2ZXJzL2VkYWMvZWRhY19kZXZpY2UuYw0KPj4gQEAgLTU3MCwzICs1
-NzAsMTgxIEBAIHZvaWQgZWRhY19kZXZpY2VfaGFuZGxlX3VlX2NvdW50KHN0cnVjdA0KPmVkYWNf
-ZGV2aWNlX2N0bF9pbmZvICplZGFjX2RldiwNCj4+ICAJCSAgICAgIGJsb2NrID8gYmxvY2stPm5h
-bWUgOiAiTi9BIiwgY291bnQsIG1zZyk7ICB9DQo+PiBFWFBPUlRfU1lNQk9MX0dQTChlZGFjX2Rl
-dmljZV9oYW5kbGVfdWVfY291bnQpOw0KPj4gKw0KPj4gKy8qIEVEQUMgZGV2aWNlIGZlYXR1cmUg
-Ki8NCj4+ICtzdGF0aWMgdm9pZCBlZGFjX2Rldl9yZWxlYXNlKHN0cnVjdCBkZXZpY2UgKmRldikg
-ew0KPj4gKwlzdHJ1Y3QgZWRhY19kZXZfZmVhdF9jdHggKmN0eCA9DQo+PiArCQljb250YWluZXJf
-b2YoZGV2LCBzdHJ1Y3QgZWRhY19kZXZfZmVhdF9jdHgsIGRldik7DQo+DQo+RXcsIG5vLCBkb24n
-dCBkbyBzdWNoIHNpbGx5IGxpbmVicmVha3MgcGxzLg0KQ2hhbmdlZC4NCj4NCj4+ICsJa2ZyZWUo
-Y3R4LT5kZXYuZ3JvdXBzKTsNCj4+ICsJa2ZyZWUoY3R4KTsNCj4+ICt9DQo+PiArDQo+PiArY29u
-c3Qgc3RydWN0IGRldmljZV90eXBlIGVkYWNfZGV2X3R5cGUgPSB7DQo+PiArCS5uYW1lID0gImVk
-YWNfZGV2IiwNCj4+ICsJLnJlbGVhc2UgPSBlZGFjX2Rldl9yZWxlYXNlLA0KPj4gK307DQo+PiAr
-DQo+PiArc3RhdGljIHZvaWQgZWRhY19kZXZfdW5yZWcodm9pZCAqZGF0YSkgew0KPj4gKwlkZXZp
-Y2VfdW5yZWdpc3RlcihkYXRhKTsNCj4+ICt9DQo+PiArDQo+PiArLyoqDQo+PiArICogZWRhY19k
-ZXZfZmVhdHVyZV9pbml0IC0gSW5pdCBhIHJhcyBmZWF0dXJlDQo+DQo+cy9yYXMvUkFTL2cNCj4N
-Cj5DaGVjayB5b3VyIHdob2xlIHNldC4NClN1cmUuIE1vZGlmaWVkLg0KPg0KPj4gKyAqIEBwYXJl
-bnQ6IGNsaWVudCBkZXZpY2UuDQo+PiArICogQGRldl9kYXRhOiBwb2ludGVyIHRvIHN0cnVjdCBl
-ZGFjX2Rldl9kYXRhLg0KPg0KPkkgY2FuIHNlZSBpdCBpcyBhIHBvaW50ZXIuIFdoYXQgaXQgaXMg
-dXNlZCBmb3I/DQpVcGRhdGVkLg0KPg0KPj4gKyAqIEBmZWF0OiBwb2ludGVyIHRvIHN0cnVjdCBl
-ZGFjX2Rldl9mZWF0dXJlLg0KPj4gKyAqIEBhdHRyX2dyb3VwczogcG9pbnRlciB0byBhdHRyaWJ1
-dGUgZ3JvdXAncyBjb250YWluZXIuDQo+PiArICoNCj4+ICsgKiBSZXR1cm5zIG51bWJlciBvZiBz
-Y3J1YiBmZWF0dXJlJ3MgYXR0cmlidXRlIGdyb3VwcyBvbiBzdWNjZXNzLA0KPj4gKyAqIGVycm9y
-IG90aGVyd2lzZS4NCj4+ICsgKi8NCj4+ICtzdGF0aWMgaW50IGVkYWNfZGV2X2ZlYXRfaW5pdChz
-dHJ1Y3QgZGV2aWNlICpwYXJlbnQsDQo+PiArCQkJICAgICAgc3RydWN0IGVkYWNfZGV2X2RhdGEg
-KmRldl9kYXRhLA0KPj4gKwkJCSAgICAgIGNvbnN0IHN0cnVjdCBlZGFjX2Rldl9mZWF0dXJlICpy
-YXNfZmVhdCwNCj4+ICsJCQkgICAgICBjb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwICoqYXR0
-cl9ncm91cHMpIHsNCj4+ICsJaW50IG51bTsNCj4+ICsNCj4+ICsJc3dpdGNoIChyYXNfZmVhdC0+
-ZmVhdCkgew0KPj4gKwljYXNlIFJBU19GRUFUX1NDUlVCOg0KPj4gKwkJZGV2X2RhdGEtPnNjcnVi
-X29wcyA9IHJhc19mZWF0LT5zY3J1Yl9vcHM7DQo+PiArCQlkZXZfZGF0YS0+cHJpdmF0ZSA9IHJh
-c19mZWF0LT5zY3J1Yl9jdHg7DQo+PiArCQlyZXR1cm4gMTsNCj4+ICsJY2FzZSBSQVNfRkVBVF9F
-Q1M6DQo+PiArCQludW0gPSByYXNfZmVhdC0+ZWNzX2luZm8ubnVtX21lZGlhX2ZydXM7DQo+PiAr
-CQlkZXZfZGF0YS0+ZWNzX29wcyA9IHJhc19mZWF0LT5lY3Nfb3BzOw0KPj4gKwkJZGV2X2RhdGEt
-PnByaXZhdGUgPSByYXNfZmVhdC0+ZWNzX2N0eDsNCj4+ICsJCXJldHVybiBudW07DQo+PiArCWNh
-c2UgUkFTX0ZFQVRfUFBSOg0KPj4gKwkJZGV2X2RhdGEtPnBwcl9vcHMgPSByYXNfZmVhdC0+cHBy
-X29wczsNCj4+ICsJCWRldl9kYXRhLT5wcml2YXRlID0gcmFzX2ZlYXQtPnBwcl9jdHg7DQo+PiAr
-CQlyZXR1cm4gMTsNCj4+ICsJZGVmYXVsdDoNCj4+ICsJCXJldHVybiAtRUlOVkFMOw0KPj4gKwl9
-DQo+PiArfQ0KPj4gKw0KPj4gKy8qKg0KPj4gKyAqIGVkYWNfZGV2X3JlZ2lzdGVyIC0gcmVnaXN0
-ZXIgZGV2aWNlIGZvciByYXMgZmVhdHVyZXMgd2l0aCBlZGFjDQo+DQo+cy9lZGFjL0VEQUMvZw0K
-Pg0KPkNoZWNrIHlvdXIgd2hvbGUgc2V0Lg0KTW9kaWZpZWQuDQo+DQo+PiArICogQHBhcmVudDog
-Y2xpZW50IGRldmljZS4NCj4+ICsgKiBAbmFtZTogY2xpZW50IGRldmljZSdzIG5hbWUuDQo+PiAr
-ICogQHByaXZhdGU6IHBhcmVudCBkcml2ZXIncyBkYXRhIHRvIHN0b3JlIGluIHRoZSBjb250ZXh0
-IGlmIGFueS4NCj4+ICsgKiBAbnVtX2ZlYXR1cmVzOiBudW1iZXIgb2YgcmFzIGZlYXR1cmVzIHRv
-IHJlZ2lzdGVyLg0KPj4gKyAqIEByYXNfZmVhdHVyZXM6IGxpc3Qgb2YgcmFzIGZlYXR1cmVzIHRv
-IHJlZ2lzdGVyLg0KPj4gKyAqDQo+PiArICogUmV0dXJucyAwIG9uIHN1Y2Nlc3MsIGVycm9yIG90
-aGVyd2lzZS4NCj4+ICsgKiBUaGUgbmV3IGVkYWNfZGV2X2ZlYXRfY3R4IHdvdWxkIGJlIGZyZWVk
-IGF1dG9tYXRpY2FsbHkuDQo+PiArICovDQo+PiAraW50IGVkYWNfZGV2X3JlZ2lzdGVyKHN0cnVj
-dCBkZXZpY2UgKnBhcmVudCwgY2hhciAqbmFtZSwNCj4+ICsJCSAgICAgIHZvaWQgKnByaXZhdGUs
-IGludCBudW1fZmVhdHVyZXMsDQo+PiArCQkgICAgICBjb25zdCBzdHJ1Y3QgZWRhY19kZXZfZmVh
-dHVyZSAqcmFzX2ZlYXR1cmVzKSB7DQo+PiArCWNvbnN0IHN0cnVjdCBhdHRyaWJ1dGVfZ3JvdXAg
-KipyYXNfYXR0cl9ncm91cHM7DQo+PiArCXN0cnVjdCBlZGFjX2Rldl9kYXRhICpkZXZfZGF0YTsN
-Cj4+ICsJc3RydWN0IGVkYWNfZGV2X2ZlYXRfY3R4ICpjdHg7DQo+PiArCWludCBwcHJfY250ID0g
-MCwgcHByX2luc3QgPSAwOw0KPj4gKwlpbnQgYXR0cl9nY250ID0gMDsNCj4+ICsJaW50IHJldCwg
-ZmVhdDsNCj4+ICsNCj4+ICsJaWYgKCFwYXJlbnQgfHwgIW5hbWUgfHwgIW51bV9mZWF0dXJlcyB8
-fCAhcmFzX2ZlYXR1cmVzKQ0KPj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+PiArDQo+PiArCS8qIERv
-dWJsZSBwYXJzZSBzbyB3ZSBjYW4gbWFrZSBzcGFjZSBmb3IgYXR0cmlidXRlcyAqLw0KPg0KPldo
-bydzICJ3ZSI/DQo+DQo+UGxlYXNlIHVzZSBwYXNzaXZlIHZvaWNlIGluIHlvdXIgY29tbWVudHM6
-IG5vICJ3ZSIgb3IgIkkiLCBldGMuDQpGaXhlZC4NCj4NCj5QZXJzb25hbCBwcm9ub3VucyBhcmUg
-YW1iaWd1b3VzIGluIHRleHQsIGVzcGVjaWFsbHkgd2l0aCBzbyBtYW55DQo+cGFydGllcy9jb21w
-YW5pZXMvZXRjIGRldmVsb3BpbmcgdGhlIGtlcm5lbCBzbyBsZXQncyBhdm9pZCB0aGVtIHBsZWFz
-ZS4NCj4NCj4+ICsJZm9yIChmZWF0ID0gMDsgZmVhdCA8IG51bV9mZWF0dXJlczsgZmVhdCsrKSB7
-DQo+PiArCQlzd2l0Y2ggKHJhc19mZWF0dXJlc1tmZWF0XS5mZWF0KSB7DQo+PiArCQljYXNlIFJB
-U19GRUFUX1NDUlVCOg0KPg0KPkRvZXMgdGhpcyBuZWVkICJmYWxsdGhyb3VnaDsiIG9yIHNvbWVz
-dWNoPw0KSXQgaXMgYSBidWcsIGZpeGVkLiANCj4NCj4+ICsJCWNhc2UgUkFTX0ZFQVRfUFBSOg0K
-Pj4gKwkJCWF0dHJfZ2NudCsrOw0KPj4gKwkJCXBwcl9jbnQrKzsNCj4+ICsJCQlicmVhazsNCj4+
-ICsJCWNhc2UgUkFTX0ZFQVRfRUNTOg0KPj4gKwkJCWF0dHJfZ2NudCArPQ0KPnJhc19mZWF0dXJl
-c1tmZWF0XS5lY3NfaW5mby5udW1fbWVkaWFfZnJ1czsNCj4+ICsJCQlicmVhazsNCj4+ICsJCWRl
-ZmF1bHQ6DQo+PiArCQkJcmV0dXJuIC1FSU5WQUw7DQo+PiArCQl9DQo+PiArCX0NCj4+ICsNCj4+
-ICsJY3R4ID0ga3phbGxvYyhzaXplb2YoKmN0eCksIEdGUF9LRVJORUwpOw0KPj4gKwlpZiAoIWN0
-eCkNCj4+ICsJCXJldHVybiAtRU5PTUVNOw0KPj4gKw0KPj4gKwljdHgtPmRldi5wYXJlbnQgPSBw
-YXJlbnQ7DQo+PiArCWN0eC0+cHJpdmF0ZSA9IHByaXZhdGU7DQo+PiArDQo+PiArCXJhc19hdHRy
-X2dyb3VwcyA9IGtjYWxsb2MoYXR0cl9nY250ICsgMSwgc2l6ZW9mKCpyYXNfYXR0cl9ncm91cHMp
-LA0KPkdGUF9LRVJORUwpOw0KPj4gKwlpZiAoIXJhc19hdHRyX2dyb3Vwcykgew0KPj4gKwkJcmV0
-ID0gLUVOT01FTTsNCj4+ICsJCWdvdG8gY3R4X2ZyZWU7DQo+PiArCX0NCj4+ICsNCj4+ICsJaWYg
-KHBwcl9jbnQpIHsNCj4+ICsJCWN0eC0+cHByID0ga2NhbGxvYyhwcHJfY250LCBzaXplb2YoKihj
-dHgtPnBwcikpLCBHRlBfS0VSTkVMKTsNCj4+ICsJCWlmICghY3R4LT5wcHIpIHsNCj4+ICsJCQly
-ZXQgPSAtRU5PTUVNOw0KPj4gKwkJCWdvdG8gZ3JvdXBzX2ZyZWU7DQo+PiArCQl9DQo+PiArCX0N
-Cj4+ICsNCj4+ICsJYXR0cl9nY250ID0gMDsNCj4+ICsJZm9yIChmZWF0ID0gMDsgZmVhdCA8IG51
-bV9mZWF0dXJlczsgZmVhdCsrLCByYXNfZmVhdHVyZXMrKykgew0KPj4gKwkJc3dpdGNoIChyYXNf
-ZmVhdHVyZXMtPmZlYXQpIHsNCj4+ICsJCWNhc2UgUkFTX0ZFQVRfU0NSVUI6DQo+PiArCQkJaWYg
-KCFyYXNfZmVhdHVyZXMtPnNjcnViX29wcykNCj4+ICsJCQkJY29udGludWU7DQo+PiArCQkJZGV2
-X2RhdGEgPSAmY3R4LT5zY3J1YjsNCj4+ICsJCQlicmVhazsNCj4+ICsJCWNhc2UgUkFTX0ZFQVRf
-RUNTOg0KPj4gKwkJCWlmICghcmFzX2ZlYXR1cmVzLT5lY3Nfb3BzKQ0KPj4gKwkJCQljb250aW51
-ZTsNCj4+ICsJCQlkZXZfZGF0YSA9ICZjdHgtPmVjczsNCj4+ICsJCQlicmVhazsNCj4+ICsJCWNh
-c2UgUkFTX0ZFQVRfUFBSOg0KPj4gKwkJCWlmICghcmFzX2ZlYXR1cmVzLT5wcHJfb3BzKQ0KPj4g
-KwkJCQljb250aW51ZTsNCj4+ICsJCQlkZXZfZGF0YSA9ICZjdHgtPnBwcltwcHJfaW5zdF07DQo+
-PiArCQkJZGV2X2RhdGEtPmluc3RhbmNlID0gcHByX2luc3Q7DQo+PiArCQkJcHByX2luc3QrKzsN
-Cj4+ICsJCQlicmVhazsNCj4+ICsJCWRlZmF1bHQ6DQo+PiArCQkJcmV0ID0gLUVJTlZBTDsNCj4+
-ICsJCQlnb3RvIGRhdGFfbWVtX2ZyZWU7DQo+PiArCQl9DQo+PiArCQlyZXQgPSBlZGFjX2Rldl9m
-ZWF0X2luaXQocGFyZW50LCBkZXZfZGF0YSwgcmFzX2ZlYXR1cmVzLA0KPj4gKwkJCQkJICZyYXNf
-YXR0cl9ncm91cHNbYXR0cl9nY250XSk7DQo+PiArCQlpZiAocmV0IDwgMCkNCj4+ICsJCQlnb3Rv
-IGRhdGFfbWVtX2ZyZWU7DQo+PiArDQo+PiArCQlhdHRyX2djbnQgKz0gcmV0Ow0KPj4gKwl9DQo+
-DQo+TmV3bGluZS4NCkFkZGVkIG5ld2xpbmUuDQo+DQo+PiArCXJhc19hdHRyX2dyb3Vwc1thdHRy
-X2djbnRdID0gTlVMTDsNCj4+ICsJY3R4LT5kZXYuYnVzID0gZWRhY19nZXRfc3lzZnNfc3Vic3lz
-KCk7DQo+PiArCWN0eC0+ZGV2LnR5cGUgPSAmZWRhY19kZXZfdHlwZTsNCj4+ICsJY3R4LT5kZXYu
-Z3JvdXBzID0gcmFzX2F0dHJfZ3JvdXBzOw0KPj4gKwlkZXZfc2V0X2RydmRhdGEoJmN0eC0+ZGV2
-LCBjdHgpOw0KPg0KPkRpdHRvLg0KQWRkZWQgbmV3bGluZS4NCj4NCj4+ICsJcmV0ID0gZGV2X3Nl
-dF9uYW1lKCZjdHgtPmRldiwgbmFtZSk7DQo+PiArCWlmIChyZXQpDQo+PiArCQlnb3RvIGRhdGFf
-bWVtX2ZyZWU7DQo+PiArDQo+PiArCXJldCA9IGRldmljZV9yZWdpc3RlcigmY3R4LT5kZXYpOw0K
-Pj4gKwlpZiAocmV0KSB7DQo+PiArCQlwdXRfZGV2aWNlKCZjdHgtPmRldik7DQo+PiArCQlnb3Rv
-IGRhdGFfbWVtX2ZyZWU7DQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKwl9DQo+PiArDQo+PiArCXJl
-dHVybiBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQocGFyZW50LCBlZGFjX2Rldl91bnJlZywgJmN0
-eC0+ZGV2KTsNCj4+ICsNCj4+ICtkYXRhX21lbV9mcmVlOg0KPj4gKwlpZiAocHByX2NudCkNCj4+
-ICsJCWtmcmVlKGN0eC0+cHByKTsNCj4+ICtncm91cHNfZnJlZToNCj4+ICsJa2ZyZWUocmFzX2F0
-dHJfZ3JvdXBzKTsNCj4+ICtjdHhfZnJlZToNCj4+ICsJa2ZyZWUoY3R4KTsNCj4+ICsJcmV0dXJu
-IHJldDsNCj4+ICt9DQo+PiArRVhQT1JUX1NZTUJPTF9HUEwoZWRhY19kZXZfcmVnaXN0ZXIpOw0K
-Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZWRhYy5oIGIvaW5jbHVkZS9saW51eC9lZGFj
-LmggaW5kZXgNCj4+IGI0ZWU4OTYxZTYyMy4uY2M5NmY1NWFjNzE0IDEwMDY0NA0KPj4gLS0tIGEv
-aW5jbHVkZS9saW51eC9lZGFjLmgNCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvZWRhYy5oDQo+PiBA
-QCAtNjYxLDQgKzY2MSw2NCBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBkaW1tX2luZm8NCj4+ICpl
-ZGFjX2dldF9kaW1tKHN0cnVjdCBtZW1fY3RsX2luZm8gKm1jaSwNCj4+DQo+PiAgCXJldHVybiBt
-Y2ktPmRpbW1zW2luZGV4XTsNCj4+ICB9DQo+PiArDQo+PiArLyogRURBQyBkZXZpY2UgZmVhdHVy
-ZXMgKi8NCj4+ICsNCj4+ICsjZGVmaW5lIEVEQUNfRkVBVF9OQU1FX0xFTgkxMjgNCj4+ICsNCj4+
-ICtlbnVtIGVkYWNfZGV2X2ZlYXQgew0KPj4gKwlSQVNfRkVBVF9TQ1JVQiwNCj4+ICsJUkFTX0ZF
-QVRfRUNTLA0KPj4gKwlSQVNfRkVBVF9QUFIsDQo+DQo+V2hhdCBhcmUgdGhvc2U/IENvbW1lbnRz
-IG9udG9wIGV4cGxhaW5pbmcgcGxzLg0KQWRkZWQgY29tbWVudHMuDQo+DQo+PiArCVJBU19GRUFU
-X01BWA0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IGVkYWNfZWNzX2V4X2luZm8gew0KPj4gKwl1
-MTYgbnVtX21lZGlhX2ZydXM7DQo+PiArfTsNCj4+ICsNCj4+ICsvKg0KPj4gKyAqIEVEQUMgZGV2
-aWNlIGZlYXR1cmUgaW5mb3JtYXRpb24gc3RydWN0dXJlICAqLyBzdHJ1Y3QgZWRhY19kZXZfZGF0
-YQ0KPj4gK3sNCj4+ICsJdW5pb24gew0KPj4gKwkJY29uc3Qgc3RydWN0IGVkYWNfc2NydWJfb3Bz
-ICpzY3J1Yl9vcHM7DQo+PiArCQljb25zdCBzdHJ1Y3QgZWRhY19lY3Nfb3BzICplY3Nfb3BzOw0K
-Pj4gKwkJY29uc3Qgc3RydWN0IGVkYWNfcHByX29wcyAqcHByX29wczsNCj4+ICsJfTsNCj4+ICsJ
-dTggaW5zdGFuY2U7DQo+PiArCXZvaWQgKnByaXZhdGU7DQo+PiArfTsNCj4+ICsNCj4+ICtzdHJ1
-Y3QgZGV2aWNlOw0KPj4gKw0KPj4gK3N0cnVjdCBlZGFjX2Rldl9mZWF0X2N0eCB7DQo+PiArCXN0
-cnVjdCBkZXZpY2UgZGV2Ow0KPj4gKwl2b2lkICpwcml2YXRlOw0KPj4gKwlzdHJ1Y3QgZWRhY19k
-ZXZfZGF0YSBzY3J1YjsNCj4+ICsJc3RydWN0IGVkYWNfZGV2X2RhdGEgZWNzOw0KPj4gKwlzdHJ1
-Y3QgZWRhY19kZXZfZGF0YSAqcHByOw0KPj4gK307DQo+PiArDQo+PiArc3RydWN0IGVkYWNfZGV2
-X2ZlYXR1cmUgew0KPj4gKwllbnVtIGVkYWNfZGV2X2ZlYXQgZmVhdDsNCj4NCj4JCQlmdF90eXBl
-Ow0KU3VyZS4gQ2hhbmdlZC4NCj4NCj4+ICsJdTggaW5zdGFuY2U7DQo+PiArCXVuaW9uIHsNCj4+
-ICsJCWNvbnN0IHN0cnVjdCBlZGFjX3NjcnViX29wcyAqc2NydWJfb3BzOw0KPj4gKwkJY29uc3Qg
-c3RydWN0IGVkYWNfZWNzX29wcyAqZWNzX29wczsNCj4+ICsJCWNvbnN0IHN0cnVjdCBlZGFjX3Bw
-cl9vcHMgKnBwcl9vcHM7DQo+PiArCX07DQo+PiArCXVuaW9uIHsNCj4+ICsJCXZvaWQgKnNjcnVi
-X2N0eDsNCj4+ICsJCXZvaWQgKmVjc19jdHg7DQo+PiArCQl2b2lkICpwcHJfY3R4Ow0KPj4gKwl9
-Ow0KPg0KPk9yIGRyb3AgdGhlIHNpbGx5IHVuaW9uIGFuZCBzaW1wbHkgZG8NCj4NCj4Jdm9pZCAq
-Y3R4Ow0KTW9kaWZpZWQuDQo+DQo+PiArCXVuaW9uIHsNCj4+ICsJCXN0cnVjdCBlZGFjX2Vjc19l
-eF9pbmZvIGVjc19pbmZvOw0KPj4gKwl9Ow0KPg0KPlVuaW9uIHdpdGggYSBzaW5nbGUgbWVtYmVy
-PyENClJlbW92ZWQgVW5pb24uDQo+DQo+PiArfTsNCj4+ICsNCj4+ICtpbnQgZWRhY19kZXZfcmVn
-aXN0ZXIoc3RydWN0IGRldmljZSAqcGFyZW50LCBjaGFyICpkZXZfbmFtZSwNCj4+ICsJCSAgICAg
-IHZvaWQgKnBhcmVudF9wdnRfZGF0YSwgaW50IG51bV9mZWF0dXJlcywNCj4+ICsJCSAgICAgIGNv
-bnN0IHN0cnVjdCBlZGFjX2Rldl9mZWF0dXJlICpyYXNfZmVhdHVyZXMpOw0KPj4gICNlbmRpZiAv
-KiBfTElOVVhfRURBQ19IXyAqLw0KPj4gLS0NCj4+IDIuMzQuMQ0KPj4NCj4NCj4tLQ0KPlJlZ2Fy
-ZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0KPmh0dHBzOi8vcGVvcGxlLmtlcm5lbC5vcmcvdGds
-eC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQoNClRoYW5rcywNClNoaWp1DQoNCg==
+Jonathan Cameron wrote:
+> On Fri, 16 Aug 2024 09:44:32 -0500
+> Ira Weiny <ira.weiny@intel.com> wrote:
+> 
+> > The test event logs were created as static arrays as an easy way to mock
+> > events.  Dynamic Capacity Device (DCD) test support requires events be
+> > generated dynamically when extents are created or destroyed.
+> > 
+> > Modify the event log storage to be dynamically allocated.  Reuse the
+> > static event data to create the dynamic events in the new logs without
+> > inventing complex event injection for the previous tests.  Simplify the
+> > processing of the logs by using the event log array index as the handle.
+> > Add a lock to manage concurrency required when user space is allowed to
+> > control DCD extents
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Probably make sense to spinkle some guard() magic in here
+> to avoid all the places where you goto end of function to release the lock
+
+Yes.  Sorry this patch did not get as much self-review as it should have.
+
+> > 
+> > ---
+> > Changes:
+> > [iweiny: rebase]
+> > ---
+> >  tools/testing/cxl/test/mem.c | 278 ++++++++++++++++++++++++++-----------------
+> >  1 file changed, 171 insertions(+), 107 deletions(-)
+> > 
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index 129f179b0ac5..674fc7f086cd 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -125,18 +125,27 @@ static struct {
+> >  
+> >  #define PASS_TRY_LIMIT 3
+> >  
+> > -#define CXL_TEST_EVENT_CNT_MAX 15
+> > +#define CXL_TEST_EVENT_CNT_MAX 17
+> 
+> Seems you added a couple more. Don't do that in a patch
+> just changing allocation approach.
+> 
+> I could find 1 but not sure where other one came from!
+
+I wasn't sure either.  see below...
+
+
+[snip]
+
+> > @@ -233,8 +254,8 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  {
+> >  	struct cxl_get_event_payload *pl;
+> >  	struct mock_event_log *log;
+> > -	u16 nr_overflow;
+> >  	u8 log_type;
+> > +	u16 handle;
+> >  	int i;
+> >  
+> >  	if (cmd->size_in != sizeof(log_type))
+> > @@ -254,29 +275,39 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  	memset(cmd->payload_out, 0, struct_size(pl, records, 0));
+> >  
+> >  	log = event_find_log(dev, log_type);
+> > -	if (!log || event_log_empty(log))
+> > +	if (!log)
+> >  		return 0;
+> >  
+> >  	pl = cmd->payload_out;
+> >  
+> > -	for (i = 0; i < ret_limit && !event_log_empty(log); i++) {
+> > -		memcpy(&pl->records[i], event_get_current(log),
+> > -		       sizeof(pl->records[i]));
+> > -		pl->records[i].event.generic.hdr.handle =
+> > -				event_get_cur_event_handle(log);
+> > -		log->cur_idx++;
+> > +	read_lock(&log->lock);
+> > +
+> > +	handle = log->cur_handle;
+> > +	dev_dbg(dev, "Get log %d handle %u next %u\n",
+> > +		log_type, handle, log->next_handle);
+> > +	for (i = 0;
+> > +	     i < ret_limit && handle != log->next_handle;
+> As below, maybe combine 2 lines above into 1.
+
+Ok. done.
+
+> 
+> 
+> > +	     i++, event_inc_handle(&handle)) {
+> > +		struct cxl_event_record_raw *cur;
+> > +
+> > +		cur = log->events[handle];
+> > +		dev_dbg(dev, "Sending event log %d handle %d idx %u\n",
+> > +			log_type, le16_to_cpu(cur->event.generic.hdr.handle),
+> > +			handle);
+> > +		memcpy(&pl->records[i], cur, sizeof(pl->records[i]));
+> > +		pl->records[i].event.generic.hdr.handle = cpu_to_le16(handle);
+> >  	}
+> >  
+> >  	cmd->size_out = struct_size(pl, records, i);
+> >  	pl->record_count = cpu_to_le16(i);
+> > -	if (!event_log_empty(log))
+> > +	if (log->nr_events > i)
+> >  		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
+> >  
+> >  	if (log->nr_overflow) {
+> >  		u64 ns;
+> >  
+> >  		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
+> > -		pl->overflow_err_count = cpu_to_le16(nr_overflow);
+> > +		pl->overflow_err_count = cpu_to_le16(log->nr_overflow);
+> >  		ns = ktime_get_real_ns();
+> >  		ns -= 5000000000; /* 5s ago */
+> >  		pl->first_overflow_timestamp = cpu_to_le64(ns);
+> > @@ -285,16 +316,17 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  		pl->last_overflow_timestamp = cpu_to_le64(ns);
+> >  	}
+> >  
+> > +	read_unlock(&log->lock);
+> Another one maybe for guard()
+
+done.
+
+> 
+> >  	return 0;
+> >  }
+> >  
+> >  static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  {
+> >  	struct cxl_mbox_clear_event_payload *pl = cmd->payload_in;
+> > -	struct mock_event_log *log;
+> >  	u8 log_type = pl->event_log;
+> > +	struct mock_event_log *log;
+> > +	int nr, rc = 0;
+> >  	u16 handle;
+> > -	int nr;
+> >  
+> >  	if (log_type >= CXL_EVENT_TYPE_MAX)
+> >  		return -EINVAL;
+> > @@ -303,24 +335,23 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  	if (!log)
+> >  		return 0; /* No mock data in this log */
+> >  
+> > -	/*
+> > -	 * This check is technically not invalid per the specification AFAICS.
+> > -	 * (The host could 'guess' handles and clear them in order).
+> > -	 * However, this is not good behavior for the host so test it.
+> > -	 */
+> > -	if (log->clear_idx + pl->nr_recs > log->cur_idx) {
+> > -		dev_err(dev,
+> > -			"Attempting to clear more events than returned!\n");
+> > -		return -EINVAL;
+> > -	}
+> > +	write_lock(&log->lock);
+> Use a guard()?
+
+done.
+
+> >  
+> >  	/* Check handle order prior to clearing events */
+> > -	for (nr = 0, handle = event_get_clear_handle(log);
+> > -	     nr < pl->nr_recs;
+> > -	     nr++, handle++) {
+> > +	handle = log->cur_handle;
+> > +	for (nr = 0;
+> > +	     nr < pl->nr_recs && handle != log->next_handle;
+> 
+> I'd combine the two lines above.
+
+Ok. done.
+
+> 
+> > +	     nr++, event_inc_handle(&handle)) {
+> > +
+> > +		dev_dbg(dev, "Checking clear of %d handle %u plhandle %u\n",
+> > +			log_type, handle,
+> > +			le16_to_cpu(pl->handles[nr]));
+> > +
+> >  		if (handle != le16_to_cpu(pl->handles[nr])) {
+> > -			dev_err(dev, "Clearing events out of order\n");
+> > -			return -EINVAL;
+> > +			dev_err(dev, "Clearing events out of order %u %u\n",
+> > +				handle, le16_to_cpu(pl->handles[nr]));
+> > +			rc = -EINVAL;
+> > +			goto unlock;
+> >  		}
+> >  	}
+> >  
+> > @@ -328,25 +359,12 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+> >  		log->nr_overflow = 0;
+> >  
+> >  	/* Clear events */
+> > -	log->clear_idx += pl->nr_recs;
+> > -	return 0;
+> > -}
+> 
+> >  
+> >  struct cxl_event_record_raw maint_needed = {
+> > @@ -475,8 +493,27 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
+> >  	return 0;
+> >  }
+> >  
+> 
+> > +static void cxl_mock_add_event_logs(struct cxl_mockmem_data *mdata)
+> >  {
+> > +	struct mock_event_store *mes = &mdata->mes;
+> > +	struct device *dev = mdata->mds->cxlds.dev;
+> > +
+> >  	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
+> >  			   &gen_media.rec.media_hdr.validity_flags);
+> >  
+> > @@ -484,43 +521,60 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+> >  			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
+> >  			   &dram.rec.media_hdr.validity_flags);
+> >  
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+> > +	dev_dbg(dev, "Generating fake event logs %d\n",
+> > +		CXL_EVENT_TYPE_INFO);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO, &maint_needed);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO,
+> >  		      (struct cxl_event_record_raw *)&gen_media);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_INFO,
+> >  		      (struct cxl_event_record_raw *)&mem_module);
+> >  	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
+> >  
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> > +	dev_dbg(dev, "Generating fake event logs %d\n",
+> > +		CXL_EVENT_TYPE_FAIL);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &maint_needed);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
+> > +		      (struct cxl_event_record_raw *)&mem_module);
+> 
+> So this one is new?  I can't spot the other one...
+
+Its coming back to me now.  The cxl-events.sh test relied on an expected number
+of each type of event (Including an overflow count) which were completely
+fabricated previous to this patch.
+
+	num_overflow_expected=1
+	num_fatal_expected=2
+	num_failure_expected=16
+	num_info_expected=3
+
+To maintain backwards compatibility this new code needed to preserve those
+counts.  The buffers and number of entries were adjusted to make the output
+match.  However now the logs need to actually over flow to create the overflow
+error.  Furthermore, the handles are the array entries.  cxl-events.sh passes
+before and after this patch.
+
+That said, my math was wrong.  A max of 16 with 16+ entries added to the
+failure log should result in the counts above.  I added a couple extra to the
+overflow though.
+
+Good catch on this.  I basically hacked it to match and moved on.  I've cleaned
+it up for the next version.
+
+> 
+> 
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
+> >  		      (struct cxl_event_record_raw *)&dram);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
+> >  		      (struct cxl_event_record_raw *)&gen_media);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
+> >  		      (struct cxl_event_record_raw *)&mem_module);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL,
+> >  		      (struct cxl_event_record_raw *)&dram);
+> >  	/* Overflow this log */
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> >  	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
+> >  
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> > -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
+> > +	dev_dbg(dev, "Generating fake event logs %d\n",
+> > +		CXL_EVENT_TYPE_FATAL);
+> The dev_dbg() fine but not really part of making it dynamic, so adds
+> a bit of noise. Maybe not worth splitting out though.
+
+It's just debugging that we are indeed adding these to the now dynamic list.  I
+added a print for each type.  I've added even more debugging with the clean up.
+
+I'm going to leave it in for now because it is part of ensuring the dynamic
+events work.
+
+Thanks,
+Ira
+
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> > +	add_event_from_static(mdata, CXL_EVENT_TYPE_FATAL,
+> >  		      (struct cxl_event_record_raw *)&dram);
+> >  	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
+> >  }
+> 
+> 
+
+
