@@ -1,241 +1,473 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA4D1A071E;
-	Tue, 10 Sep 2024 16:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725984114; cv=fail; b=o4mQZOsBUAdYL2E1yc3bW64+mvtnyjK15BFE85ER48b0DWPGjOqXEwn/bkipC5npJkxUIz1i8MPYs6ISjS9gSUG13HRUJE6O/MQF3XAzR1BSOU//DdL4jmBYVhJbu9oWhzYNAqJ6Rd5yl139UnL6gR10eM+8qML6uH7E93TOxRc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725984114; c=relaxed/simple;
-	bh=bB9/ODhQLC1M5LISYHa2iSR6jjfSa3whk/F9EOALFvQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K9LnOscclGLBDS2h6KQ4qHY5wYSeKD/XJlhJMJZnLdbA2Od5laPTtlIk88klTBH7sx06hHl3E3cAQMwp8m21rBEFhL7mOYXvIGpHgs07MnaeBl/oxJpz16YYrr+pka/LepY2VqKdrX/UTb3/ctm43B5ZyGUI68IeDshH3p1vorY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uy5u4+Oo; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uy5u4+Oo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725984113; x=1757520113;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=bB9/ODhQLC1M5LISYHa2iSR6jjfSa3whk/F9EOALFvQ=;
-  b=Uy5u4+OoVUmMNRuOWgaC3DkwhfNJ2IgOk7wH4uRLR4O9BW3dcapn+gZT
-   zjj8roqSCdn40v/qwWO0GlT+D6NKQhPbZmDuN6gXWNTia89q3Vfeboyg0
-   DhNf0FCpEfgvA6UBbeacu6epYDfWdkX7liRppBQBFp+8WZtUEJEvJckjM
-   1lEwp3Ei5OgAK4DIZrxbrqiPWt7rhv6lBWW5m+CSCsV2iF7fA5nrvkiOV
-   tXQmRwQgtIHN9eQeZXzyTRcjtzRkU32PKU16uMPUZvIZa2wqi8vuYRg6R
-   wBSaD74M204dEdy7gqHko/aALiNM/7qDgumRkaW/XLQocY67AlmJrq1L4
-   w==;
-X-CSE-ConnectionGUID: vsNYez2cSoGCeW3c5TJhnA==
-X-CSE-MsgGUID: FogHbacqTIKMrymZBQkSDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="24884776"
-X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
-   d="scan'208";a="24884776"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 09:01:52 -0700
-X-CSE-ConnectionGUID: hOGvTdz+RYeVzVePp9ctpQ==
-X-CSE-MsgGUID: IuFcrTlnRjmJ9obESwtyvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
-   d="scan'208";a="71837561"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Sep 2024 09:01:52 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 10 Sep 2024 09:01:51 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 10 Sep 2024 09:01:51 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 10 Sep 2024 09:01:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EQ2UBZ5E/QV3U5Ipz6moklQVMO0fvDhnFNrhfS8qFPJiK+7SKXhb8gmMMPJ+0VEwR2DPPRFqSc4UzH/ahCx+6wzEyBQLYoqZiRV7suhZVKfROP2vx+A4HwwG32PUI8Y2pvVkUeNpAPZmnwef9FaHEZsiesLNsMdjeDRIJryVxnMYVr+xCbOKiPAbyoe5xtHQbqrT2FgKZJSCdnlg3AOsZ4ng96pYHfWED9sWfUdM8QN9CtD+qACzS8p+o1JQkdfPKaBBsWJat1X6y28Tfrj5zgJbPYivYkvwlI3HDRtDQg2tVoxaKh63MrFr/TON30ztoyrnFtui6QiKHcEegR36HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sm8n5fy7+7x3NlKRr6fHZvWFmYpYVTvnswZK0/aHtlY=;
- b=K24JjAH6qTV5JBbQofbmv3DXNwwuINMsWM3tHzJyOGaRjst45bzlNtmZqgHSSNkwaVm6M+18LoQ3McE6t9zWoatGs/cs0pnKKqLi4AiaQTdw3Z9e7Q7MloQXpWKZxRx0MopUVJTVpb6vYsKHz/d21tWwW4W9BjwlcASUlW+YXO/QzJWNod9UHyvIR16WpWm+Jmr0MYuqab6XBbnb//3XcNnhnRhfWOIS48oghLEO2is8u1TbTDEZTD9wp1VdycgUjq4K8pzLBDt0olXR+DTjObwN9lDNGoHUvYBgXjmodOe7Seow3kvizirCJpsfoyT5kcBV5QuRaVT2/ViSa9ETxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by CYXPR11MB8663.namprd11.prod.outlook.com (2603:10b6:930:da::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Tue, 10 Sep
- 2024 16:01:47 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec%5]) with mapi id 15.20.7939.022; Tue, 10 Sep 2024
- 16:01:46 +0000
-Date: Tue, 10 Sep 2024 09:01:42 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Zijun Hu <zijun_hu@icloud.com>, Dan Williams <dan.j.williams@intel.com>,
-	quic_zijuhu <quic_zijuhu@quicinc.com>, Ira Weiny <ira.weiny@intel.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Timur Tabi <timur@kernel.org>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
- device_for_each_child()
-Message-ID: <66e06d66ca21b_3264629448@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
- <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
- <2024090531-mustang-scheming-3066@gregkh>
- <66df52d15129a_2cba232943d@iweiny-mobl.notmuch>
- <66df9692e324d_ae21294ad@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
- <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
- <e7e6ea66-bcfe-4af4-9f82-ae39fef1a976@icloud.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <e7e6ea66-bcfe-4af4-9f82-ae39fef1a976@icloud.com>
-X-ClientProxiedBy: MW4PR04CA0123.namprd04.prod.outlook.com
- (2603:10b6:303:84::8) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FF21755C;
+	Tue, 10 Sep 2024 16:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725986877; cv=none; b=XaDXp5kWw9W+IGwZgGiw+YkpV7WiGR0YWlmRVRDv2m1TUurVKueGtPaVZ3ce+NlUh9Pwm6HBy7j0XNip8pQ6/+HaSWr1BoNdwRxB3rROrdhBOa+CizkpAxQci/9ePyC5UkupGwBD311Y5w2eUTZJCjlaXll/rv8nWcJsbj5SxwY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725986877; c=relaxed/simple;
+	bh=tyHBoaMhxKYDhKrrXyJTZ6YTlcpNHsZBqJsYr/vSixI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f/x6qYeEmfztdVJLfwtoO9c+BTbNlC1YnzAMeSzwkpgHOyE4A/Ech5yr5cf3nJFlcQ9iaHJWAk2h84SEg0E5utL7Uh66mLq75jupDuNAJBoiCpZIb/zg5SjXGU9Y3TS/heE5UZBpSFOztrbQG+RKiXaGeZzEGlMWN2khsNBFBxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X38fy2Q0zz6J6kK;
+	Wed, 11 Sep 2024 00:44:10 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 33BFC1400CA;
+	Wed, 11 Sep 2024 00:47:46 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 10 Sep
+ 2024 18:47:45 +0200
+Date: Tue, 10 Sep 2024 17:47:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, Mahesh
+ J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, "Dave Jiang" <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Will
+ Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, <terry.bowman@amd.com>, Kuppuswamy
+ Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
+ CXL PMUs (and aer)
+Message-ID: <20240910174743.000037c7@huawei.com>
+In-Reply-To: <20240906181832.00007dc7@Huawei.com>
+References: <20240905122342.000001be@Huawei.com>
+ <87jzfpdrc7.ffs@tglx>
+ <20240906181832.00007dc7@Huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|CYXPR11MB8663:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bc889da-f358-4c37-8da3-08dcd1b1df11
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?E34uN70f6v3OyhmNoLLwTY6bsWd1jZi9pwwWpoLiz2zLzWdPZ1JOeylrXCWN?=
- =?us-ascii?Q?HwEJyOw27BzHhuk9cd/bHz8WXNr0H5hABQqghpWX3yu6/VeqYDLFtqt6P9bU?=
- =?us-ascii?Q?7Szi/3Qq2BJs0ho9ITN4bIwvlISYLde09S8PR6QkTtrcZcfItjRg4NHh5kkS?=
- =?us-ascii?Q?v2qa8imOdO1LQOTwD0QCnyZsCorcF7duSZS6Mk7xbVtdOeJIIH3EfNZBx+G5?=
- =?us-ascii?Q?ltYQFnA87hBGcr/Rf5DPB5DLGTYbPFJcXLyiqbr3G1O1CQc/LpGyGs1aBcNo?=
- =?us-ascii?Q?MKxvTIfPq4JW/3bi8vr+Vq1cfnl+HT/KNcgE0sAgj8OsFpPM1MO5ZgSkdPLw?=
- =?us-ascii?Q?F87DdKVwRYMBA+Ij4Cly5ZjpbjBMKmeLXjcbFJIFd0tNyfh4MHgcoVm6htRi?=
- =?us-ascii?Q?vMKEGqap873z4sxpfaZhzrX1/Le3ejGvelircCjfa8H82a8821bqwn8Sc8Sc?=
- =?us-ascii?Q?9pFuIjJXd/XW2z+FUBtvZpizXHWSGB/OQC1g4ZRtTqDbkao3qp5sQ50Tafsc?=
- =?us-ascii?Q?POh4ovrLxY7poQ5o9Uw4SKliUiFDWNrOapxTxENc5dY069GH/z4zFYPCl+dv?=
- =?us-ascii?Q?1k7s7HL/lJTaznRG1CGsx1iK5M13CqvJ9oLxj0SWcnn4MgR12CV/INf5gFxS?=
- =?us-ascii?Q?AwNxZb5ujpNcO4qqqnKo0H2mzI0mGxbWyGnczKsjNnO3T8rE0fuKzMYwiNVL?=
- =?us-ascii?Q?4/C7NPDK3ju5EBObqaVKzfN2pLQZQrpGCRYzwQnU5wKQj1n7fUUEqA1xa5m6?=
- =?us-ascii?Q?AQJ9orJOwt876k6ia1+TzU2XB9jtUIWrPmBmsTD0KGeV0kiPqAquvRr6Yb6s?=
- =?us-ascii?Q?u2OGEHzhT2wq0THNz/Bu+6/rAgI6Q/wDp3R3uQaOYUbYltZ4mg8z/iuCyqVx?=
- =?us-ascii?Q?xJjstHV1nnocn9U7EHncr9FuHLW+7MFImbWM7/5ljy2kB+RPt92R0iGAa8eV?=
- =?us-ascii?Q?znc4FerN6pQWSiXhjgPxpJhKC23G3VcF3i9fs0UeHD4Oqfch4x8EgJSIy2Cy?=
- =?us-ascii?Q?tn+xE0XeeMkkhjL+JkYsCR1uj21FNX38fUNmfYmFDWFH2smk9aHzZLpUPN8Y?=
- =?us-ascii?Q?RnUsRhnLK1MfN9r3I4p+bMJpvcKZO7CE+wy3j42AUqgR+jKfroXR06ckQHC1?=
- =?us-ascii?Q?2ALwHYe3PUUyGTA2pVR4Hw02wJuijcZ7gkUrF4FjVOZxlyp2sR1Ojq9k0nNF?=
- =?us-ascii?Q?Srv+VBlLum3xdZhi915hAocd245ilVOEhGCRXYfeSR1dIF4+UEmNkd1NeCPQ?=
- =?us-ascii?Q?XNmFcUaG4QuaYzaegMkpZtZ394c8Ahb+8Ntu/AyR4xwHO5mJxCa8Ogb5dsgF?=
- =?us-ascii?Q?VSg1T0jrUAVz7CSoIhIo8odAa4jmU8XKstG9QOBvJhH7DwY9nIJbLhT7ZJka?=
- =?us-ascii?Q?oYytT+0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZsQPj55b87E27MKp0b54ViDw/NZ5NJAZ0XXodO+ID56Ize4auaDZUs71sGmW?=
- =?us-ascii?Q?6fKuYA6KXO7AmlAhahj4+FlZ0rl2QQQAtt1B6/MkKSilvwV7126pcplvDBf5?=
- =?us-ascii?Q?KUEuEj+aPjtcHUSvlwGz+6H0MdAa7CZREIF+rvZ7xPpYhmS3Fcjhsbt0DV0X?=
- =?us-ascii?Q?kjo3I+pRj+Gx74EHnRMbhh1BI4b/2thaH7brA7KZihVRfQmb3pPCdoMcBvJo?=
- =?us-ascii?Q?H4QBGNupgN1vwcx3XlSROjm8iR89AI5fV7h2ASXhSEmZN3Zw05T0i7CHCYsD?=
- =?us-ascii?Q?hrZrry8OOejR5AyBBfgP2bSciRlAUiAHRtLXSsirow5F+HsZ8j5lTHipq9u1?=
- =?us-ascii?Q?ItIfLCcGYrgfGjzL8cUehiwgb1mESBhxAcVEQU+qXxJsXD+UlD1rULs640Gx?=
- =?us-ascii?Q?Acx0WyK8KM2DTWZUJlokUlv5LMNTEqAvF/yb1AZsBrXP43yjYFS9Bic9X679?=
- =?us-ascii?Q?JJYT42huN1DzIGN5EdH6+Vf0xmHo64fZz+SOuw4KWmksWf4tOm0xoLPCtWRT?=
- =?us-ascii?Q?e8/iKgi6Cbn//+ztQhaWtJsUSj+L1ml5CRATUrt/Daoitu1mm3WocqeoKrfX?=
- =?us-ascii?Q?YOvcQwOoE7l7Z2E8+Frwmx8M8yy3kpi0cPezc3y7sLV8I6UlzG34Polw1a3y?=
- =?us-ascii?Q?OM+ROSK3AayU0w3+FeixSNdCLemqgVJfM+qlKPLvGnpTM+8xcrT5Y2kHPQK4?=
- =?us-ascii?Q?N/nK4+u25BvGcjVMuTBn2THv019BL5GemGrx+Sgt/33mPlcpL+X2SedfWmHG?=
- =?us-ascii?Q?eflnPF3QHrQ3uX226rEuCqDrc6cg6f3c6GNg0RxNNpB5SGaiAr4ir6J/3SzU?=
- =?us-ascii?Q?DUqU+PvxW4SBdt67RNXJ2o/ubiNuX+YDjBiPfTKZ+65aQ1gEROYw6k99aEQg?=
- =?us-ascii?Q?kjNZPT0zcm1AUivoNtpLpMntpFiVEi8baxu+9Tfw7ywEFbLymBt6ParnD1MN?=
- =?us-ascii?Q?XjY5FkJyq2w/HQlw6zqPfMO+LXE/fGEY0FFLXwLN6hlATFh1rMSfcktPS2gc?=
- =?us-ascii?Q?O9Y192zD5S8VIkyCAxmw4SIno+F39RO6eeecb3SZdZxfbwCzsC7ce7Mc+0En?=
- =?us-ascii?Q?goIt1RoPVlyL19O47CpO1tqcdlYzBnXzP+OPzwx4nrBFV6W2bmLGRSsB1i4i?=
- =?us-ascii?Q?VY9TmF6Bj+v2vV19OBvrO8f04UuuSbQs7Wrh2wtBsIBy0CzAp6BZio901ung?=
- =?us-ascii?Q?RAJfDmP9bu2ckvmQco0vsH3/jmTTMoLIXCld4VoJk9fhu3fbI4ik/3Q9mDhf?=
- =?us-ascii?Q?cpebPZKYVc4axQ6pxUv4mdQDnZc2GQ4V706/IB09orgFO3GawkPgvN1RGibu?=
- =?us-ascii?Q?28FEpn2Cwu/Ivyno4O7XBgrRWS6L4OdKDZ11lDJHCxlCeL/RZwSyuDN/dL6s?=
- =?us-ascii?Q?juVqmRS5wBJ+jXo5zMH5IA3rA7TATZ0YN9XEpLN1X/gIF+A8jJHwAiqf0wnh?=
- =?us-ascii?Q?vF/P2T44YlxXkQhQCMjaS+NGBaSAJ4jbFgzQnA46VNi6+p8FI+uaka+mthAf?=
- =?us-ascii?Q?C1pHrHby1lSQMTzwf3tY+2RZ00jDgjhxkA+puxw143VsS8MCDvocSo2A+C8K?=
- =?us-ascii?Q?iZYsEoa3Yg6P1O/Ej8PcXEsV/CZrkkvJywF14iJi+z9uLSvGV4ObjfxLr3Vr?=
- =?us-ascii?Q?kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bc889da-f358-4c37-8da3-08dcd1b1df11
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 16:01:46.3299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +xZX/h7QWfv0msjE67/qkNaQtUW9b9txQpvMfwJs1FtYYtT2iiCNSgni8nCINWlxYwkEVaL59Q7y43b8Dh0Y00v8SODczidVrvQPO+ZtfUA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8663
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Zijun Hu wrote:
-[..]
-> > So I wanted to write a comment here to stop the next person from
-> > tripping over this dependency on decoder 'add' order, but there is a
-> > problem. For this simple version to work it needs 3 things:
-> > 
-> > 1/ decoders are added in hardware id order: done,
-> > devm_cxl_enumerate_decoders() handles that
-> > 
-> 
-> do not known how you achieve it, perhaps, it is not simpler than
-> my below solution:
-> 
-> finding a free switch cxl decoder with minimal ID
-> https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
-> 
-> which has simple logic and also does not have any limitation related
-> to add/allocate/de-allocate a decoder.
-> 
-> i am curious why not to consider this solution ?
+On Fri, 6 Sep 2024 18:18:32 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-Because it leaves region shutdown ordering bug in place.
+> On Fri, 06 Sep 2024 12:11:36 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+> > On Thu, Sep 05 2024 at 12:23, Jonathan Cameron wrote: =20
+> > >> Look at how the PCI device manages interrupts with the per device MSI
+> > >> mechanism. Forget doing this with either one of the legacy mechanism=
+s.
+> > >>=20
+> > >>   1) It creates a hierarchical interrupt domain and gets the required
+> > >>      resources from the provided parent domain. The PCI side does not
+> > >>      care whether this is x86 or arm64 and it neither cares whether =
+the
+> > >>      parent domain does remapping or not. The only way it cares is a=
+bout
+> > >>      the features supported by the different parent domains (think
+> > >>      multi-MSI).
+> > >>     =20
+> > >>   2) Driver side allocations go through the per device domain
+> > >>=20
+> > >> That AUXbus is not any different. When the CPMU driver binds it want=
+s to
+> > >> allocate interrupts. So instead of having a convoluted construct
+> > >> reaching into the parent PCI device, you simply can do:
+> > >>=20
+> > >>   1) Let the cxl_pci driver create a MSI parent domain and set that =
+in
+> > >>      the subdevice::msi::irqdomain pointer.
+> > >>=20
+> > >>   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU de=
+vice
+> > >>      driver to create a per device interrupt domain.
+> > >>=20
+> > >>   3) Let the CPMU driver create its per device interrupt domain with
+> > >>      the provided parent domain
+> > >>=20
+> > >>   4) Let the CPMU driver allocate its MSI-X interrupts through the p=
+er
+> > >>      device domain
+> > >>=20
+> > >> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
+> > >> function does:
+> > >>=20
+> > >>     if (!pci_msix_enabled(pdev))
+> > >>     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
+> > >>     else
+> > >>         return pci_msix_alloc_irq_at(pdev, ....);   =20
+> >=20
+> > Ignore the above. Brainfart.
+> >  =20
+> > > I'm struggling to follow this suggestion
+> > > Would you expect the cxl_pci MSI parent domain to set it's parent as
+> > > msi_domain =3D irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->=
+dev),
+> > > 					 IRQ_DOMAIN_FLAG_MSI_PARENT,
+> > > 					 ...
+> > > which seems to cause a problem with deadlocks in __irq_domain_alloc_i=
+rqs()
+> > > or create a separate domain structure and provide callbacks that reac=
+h into
+> > > the parent domain as necessary?
+> > >
+> > > Or do I have this entirely wrong? I'm struggling to relate what exist=
+ing
+> > > code like PCI does to what I need to do here.   =20
+> >=20
+> > dev_get_msi_domain(&pdev->dev) is a nightmare due to the 4 different
+> > models we have:
+> >=20
+> >    - Legacy has no domain
+> >=20
+> >    - Non-hierarchical domain
+> >=20
+> >    - Hierarchical domain v1
+> >=20
+> >          That's the global PCI/MSI domain
+> >=20
+> >    - Hierarchical domain v2
+> >=20
+> >       That's the underlying MSI_PARENT domain, which is on x86
+> >       either the interrupt remap unit or the vector domain. On arm64
+> >       it's the ITS domain.
+> >=20
+> > See e.g. pci_msi_domain_supports() which handles the mess.
+> >=20
+> > Now this proposal will only work on hierarchical domain v2 because that
+> > can do the post enable allocations on MSI-X. Let's put a potential
+> > solution for MSI aside for now to avoid complexity explosion.
+> >=20
+> > So there are two ways to solve this:
+> >=20
+> >   1) Implement the CXL MSI parent domain as disjunct domain
+> >=20
+> >   2) Teach the V2 per device MSI-X domain to be a parent domain
+> >=20
+> > #1 Looks pretty straight forward, but does not seemlessly fit the
+> >    hierarchical domain model and creates horrible indirections.
+> >=20
+> > #2 Is the proper abstraction, but requires to teach the MSI core code
+> >    about stacked MSI parent domains, which should not be horribly hard
+> >    or maybe just works out of the box.
+> >=20
+> > The PCI device driver invokes the not yet existing function
+> > pci_enable_msi_parent_domain(pci_dev). This function does:
+> >=20
+> >   A) validate that this PCI device has a V2 parent domain
+> >=20
+> >   B) validate that the device has enabled MSI-X
+> >=20
+> >   C) validate that the PCI/MSI-X domain supports dynamic MSI-X
+> >      allocation
+> >=20
+> >   D) if #A to #C are true, it enables the PCI device parent domain
+> >=20
+> > I made #B a prerequisite for now, as that's an orthogonal problem, which
+> > does not need to be solved upfront. Maybe it does not need to be solved
+> > at all because the underlying PCI driver always allocates a management
+> > interrupt before dealing with the underlying "bus", which is IMHO a
+> > reasonable expectation. At least it's a reasonable restriction for
+> > getting started.
+> >=20
+> > That function does:
+> >=20
+> >      msix_dom =3D pci_msi_get_msix_domain(pdev);
+> >      msix_dom->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
+> >      msix_dom->msi_parent_ops =3D &pci_msix_parent_ops;
+> >=20
+> > When creating the CXL devices the CXL code invokes
+> > pci_msi_init_subdevice(pdev, &cxldev->device), which just does:
+> >=20
+> >   dev_set_msi_domain(dev, pci_msi_get_msix_subdevice_parent(pdev));
+> >=20
+> > That allows the CXL devices to create their own per device MSI
+> > domain via a new function pci_msi_create_subdevice_irq_domain().
+> >=20
+> > That function can just use a variant of pci_create_device_domain() with
+> > a different domain template and a different irqchip, where the irqchip
+> > just redirects to the underlying parent domain chip, aka PCI-MSI-X.
+> >=20
+> > I don't think the CXL device will require a special chip as all they
+> > should need to know is the linux interrupt number. If there are special
+> > requirements then we can bring the IMS code back or do something similar
+> > to the platform MSI code.=20
+> >=20
+> > Then you need pci_subdev_msix_alloc_at() and pci_subdev_msix_free()
+> > which are the only two functions which the CXL (or similar) need.
+> >=20
+> > The existing pci_msi*() API function might need a safety check so they
+> > can't be abused by subdevices, but that's a problem for a final
+> > solution.
+> >=20
+> > That's pretty much all what it takes. Hope that helps. =20
+>=20
+> Absolutely!  Thanks for providing the detailed suggestion
+> this definitely smells a lot less nasty than previous approach.
+>=20
+> I have things sort of working now but it's ugly code with a few
+> cross layer hacks that need tidying up (around programming the
+> msi registers from wrong 'device'), so may be a little
+> while before I get it in a state to post.
 
-> > 2/ search for decoders in their added order: done, device_find_child()
-> > guarantees this, although it is not obvious without reading the internals
-> > of device_add().
-> > 
-> > 3/ regions are de-allocated from decoders in reverse decoder id order.
-> > This is not enforced, in fact it is impossible to enforce. Consider that
-> > any memory device can be removed at any time and may not be removed in
-> > the order in which the device allocated switch decoders in the topology.
-> >
-> 
-> sorry, don't understand, could you take a example ?
-> 
-> IMO, the simple change in question will always get a free decoder with
-> the minimal ID once 1/ is ensured regardless of de-allocation approach.
+Hi Thomas,
 
-No, you are missing the fact that CXL hardware requires that decoders
-cannot be sparsely allocated. They must be allocated consecutively and
-in increasing address order.
+My first solution had some callbacks where we created a local
+descriptor so that I could swap in the pci_dev->dev and
+just use the various standard pci/msi/irqdomain.c functions.
 
-Imagine a scenario with a switch port with three decoders,
-decoder{A,B,C} allocated to 3 respective regions region{A,B,C}.
+The 'minimal' solution seems to be a bit ugly.
+`
+There are quite a few places that make the assumption that the
+preirq_data->parent->chip is the right chip to for example call
+irq_set_affinity on.
 
-If regionB is destroyed due to device removal that does not make
-decoderB free to be reallocated in hardware. The destruction of regionB
-requires regionC to be torn down first. As it stands the driver does not
-force regionC to shutdown and it falsely clears @decoderB->region making
-it appear free prematurely.
+So the simple way to make it all work is to just have
+a msi_domain_template->msi_domain_ops->prepare_desc
+that sets the desc->dev =3D to the parent device (here the
+pci_dev->dev)
 
-So, while regionB would be the next decoder to allocate after regionC is
-torn down, it is not a free decoder while decoderC and regionC have not been
-reclaimed.
+At that point everything more or less just works and all the
+rest of the callbacks can use generic forms.
+
+Alternative might be to make calls like the one in
+arch/x86/kernel/apic/msi.c msi_set_affinity search
+for the first ancestor device that has an irq_set_affinity().
+That unfortunately may affect quite a few places.
+
+Anyhow, I'll probably send out the prepare_desc hack set with
+driver usage etc after I've written up a proper description of problems enc=
+ountered
+etc so you can see what it all looks like and will be more palatable in
+general but in the  meantime this is the guts of it of the variant where the
+subdev related desc has the dev set to the parent device.
+
+Note for the avoidance of doubt, I don't much like this
+solution but maybe it will grow on me ;)
+
+Jonathan
+
+
+
+=46rom eb5761b1cb7b6278c86c836ae552982621c3504e Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Tue, 10 Sep 2024 17:10:09 +0100
+Subject: [PATCH 1/1] pci: msi: Add subdevice irq domains for dynamic MSI-X
+
+PoC code only. All sorts of missing checks etc.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ arch/x86/kernel/apic/msi.c  |  3 ++
+ drivers/pci/msi/api.c       | 14 ++++++
+ drivers/pci/msi/irqdomain.c | 87 +++++++++++++++++++++++++++++++++++++
+ include/linux/msi.h         |  5 +++
+ include/linux/pci.h         |  3 ++
+ kernel/irq/msi.c            |  5 +++
+ 6 files changed, 117 insertions(+)
+
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 340769242dea..8ab4391d4559 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -218,6 +218,9 @@ static bool x86_init_dev_msi_info(struct device *dev, s=
+truct irq_domain *domain,
+ 	case DOMAIN_BUS_DMAR:
+ 	case DOMAIN_BUS_AMDVI:
+ 		break;
++	case DOMAIN_BUS_PCI_DEVICE_MSIX:
++		/* Currently needed just for the PCI MSI-X subdevice handling */
++		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return false;
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index b956ce591f96..2b4c15102671 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -179,6 +179,20 @@ void pci_msix_free_irq(struct pci_dev *dev, struct msi=
+_map map)
+ }
+ EXPORT_SYMBOL_GPL(pci_msix_free_irq);
+=20
++struct msi_map pci_subdev_msix_alloc_irq_at(struct device *dev, unsigned i=
+nt index,
++					const struct irq_affinity_desc *affdesc)
++{
++	//missing sanity checks
++	return msi_domain_alloc_irq_at(dev, MSI_DEFAULT_DOMAIN, index, affdesc, N=
+ULL);
++}
++EXPORT_SYMBOL_GPL(pci_subdev_msix_alloc_irq_at);
++
++void pci_subdev_msix_free_irq(struct device *dev, struct msi_map map)
++{
++	msi_domain_free_irqs_range(dev, MSI_DEFAULT_DOMAIN, map.index, map.index);
++}
++EXPORT_SYMBOL_GPL(pci_subdev_msix_free_irq);
++
+ /**
+  * pci_disable_msix() - Disable MSI-X interrupt mode on device
+  * @dev: the PCI device to operate on
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index 569125726b3e..48357a8054ff 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -444,3 +444,90 @@ struct irq_domain *pci_msi_get_device_domain(struct pc=
+i_dev *pdev)
+ 					     DOMAIN_BUS_PCI_MSI);
+ 	return dom;
+ }
++
++static const struct msi_parent_ops pci_msix_parent_ops =3D {
++	.supported_flags =3D MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN,
++	.prefix =3D "PCI-MSIX-PROXY-",
++	.init_dev_msi_info =3D msi_parent_init_dev_msi_info,
++};
++
++int pci_msi_enable_parent_domain(struct pci_dev *pdev)
++{
++	struct irq_domain *msix_dom;
++	/* TGLX: Validate has v2 parent domain */
++	/* TGLX: validate msix enabled */
++	/* TGLX: Validate msix domain supports dynamics msi-x */
++
++	/* Enable PCI device parent domain */
++	msix_dom =3D dev_msi_get_msix_device_domain(&pdev->dev);
++	msix_dom->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
++	msix_dom->msi_parent_ops =3D &pci_msix_parent_ops;
++	return 0;
++}
++
++void pci_msi_init_subdevice(struct pci_dev *pdev, struct device *dev)
++{
++	dev_set_msi_domain(dev, dev_msi_get_msix_device_domain(&pdev->dev));
++}
++
++static bool pci_subdev_create_device_domain(struct device *dev, const stru=
+ct msi_domain_template *tmpl,
++				     unsigned int hwsize)
++{
++	struct irq_domain *domain =3D dev_get_msi_domain(dev);
++
++	if (!domain || !irq_domain_is_msi_parent(domain))
++		return true;
++
++	return msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN, tmpl,
++					    hwsize, NULL, NULL);
++}
++
++static void pci_subdev_msix_prepare_desc(struct irq_domain *domain, msi_al=
+loc_info_t *arg,
++					struct msi_desc *desc)
++{
++	struct device *parent =3D desc->dev->parent;
++
++	if (!desc->pci.mask_base) {
++		/* Not elegant - but needed for irq affinity to work? */
++		desc->dev =3D parent;
++		msix_prepare_msi_desc(to_pci_dev(parent), desc);
++	}
++}
++
++static const struct msi_domain_template subdev_template =3D {
++	.chip =3D {
++		.name =3D "SUBDEV",
++		.irq_mask =3D irq_chip_unmask_parent,
++		.irq_unmask =3D irq_chip_unmask_parent,
++		.irq_write_msi_msg =3D pci_msi_domain_write_msg,
++		.irq_set_affinity =3D irq_chip_set_affinity_parent,
++		.flags =3D IRQCHIP_ONESHOT_SAFE,
++	},
++	.ops =3D {
++		/*
++		 * RFC: Sets the desc->dev to the parent PCI device
++		 *       Needed for
++		 *       irq_setup_affinity() ->
++		 *          msi_set_affinity() ->
++		 *             parent =3D irq_d->parent_data;
++		 *             parent->chip->irq_set_affinity() to work.
++		 *      That could be made more flexible perhaps as
++		 *      currently it makes assumption that parent of
++		 *      the MSI device is the one to set the affinity on.
++		 */
++		.prepare_desc =3D pci_subdev_msix_prepare_desc,
++		/* Works because the desc->dev is the parent PCI device */
++		.set_desc =3D pci_msi_domain_set_desc,
++	},
++	.info =3D {
++		.flags =3D MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN |
++		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_USE_DEF_DOM_OPS,
++		.bus_token =3D DOMAIN_BUS_PCI_DEVICE_MSIX,
++	},
++};
++
++bool pci_subdev_setup_device_domain(struct device *dev, unsigned int hwsiz=
+e)
++{
++	return pci_subdev_create_device_domain(dev, &subdev_template, hwsize);
++}
++EXPORT_SYMBOL_GPL(pci_subdev_setup_device_domain);
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 944979763825..ff81b4dcc1d9 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -656,8 +656,13 @@ void pci_msi_unmask_irq(struct irq_data *data);
+ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 					     struct msi_domain_info *info,
+ 					     struct irq_domain *parent);
++int pci_msi_enable_parent_domain(struct pci_dev *pdev);
++struct irq_domain *pci_msi_get_msix_device_domain(struct device *dev);
+ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *=
+pdev);
+ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
++struct irq_domain *dev_msi_get_msix_device_domain(struct device *dev);
++void pci_msi_init_subdevice(struct pci_dev *pdev, struct device *dev);
++bool pci_subdev_setup_device_domain(struct device *dev, unsigned int hwsiz=
+e);
+ #else /* CONFIG_PCI_MSI */
+ static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev =
+*pdev)
+ {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 225de9be3006..460551f1bd6e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1679,6 +1679,9 @@ struct msi_map pci_msix_alloc_irq_at(struct pci_dev *=
+dev, unsigned int index,
+ 				     const struct irq_affinity_desc *affdesc);
+ void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map);
+=20
++struct msi_map pci_subdev_msix_alloc_irq_at(struct device *dev, unsigned i=
+nt index,
++					const struct irq_affinity_desc *affdesc);
++void pci_subdev_msix_free_irq(struct device *dev, struct msi_map map);
+ void pci_free_irq_vectors(struct pci_dev *dev);
+ int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
+ const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 5fa0547ece0c..d55a91c7a496 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -1720,3 +1720,8 @@ bool msi_device_has_isolated_msi(struct device *dev)
+ 	return arch_is_isolated_msi();
+ }
+ EXPORT_SYMBOL_GPL(msi_device_has_isolated_msi);
++struct irq_domain *dev_msi_get_msix_device_domain(struct device *dev)
++{
++	return dev->msi.data->__domains[0].domain;
++}
++
+--=20
+2.43.0
+
+
