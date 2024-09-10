@@ -1,91 +1,110 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE90B193067;
-	Tue, 10 Sep 2024 04:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB9D1448E2;
+	Tue, 10 Sep 2024 04:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725941765; cv=fail; b=G5ZvNHduxEcdc0jla5+KxtFpIy14q+oo2CQ7wQijJqymZHnMmGD1/7gwjGUGVYiMQkAbprz23PCExkExaYn4RJRuLuCLVcDyr+pI1ByJ4wWX8TptNceqYXKhjzGZUB/dHUvEa3SoyYHJlTOzKQGheHzCyIzwlr4/y+xOBz9lVyA=
+	t=1725942017; cv=fail; b=g++XWGuNC/8fe576Y6Mev/j/Cety9BmEQ+rI/hcb1IiN261Rexx2ycV3K/lFSfVInnsJnPQ6AJtCzVgZaIUUzGWmQVJHB4ZVjA+9vEQOe+x1/6hcr+tzzpr3Dmr9coD9xzO/nTQOxT+DPf3rVEXLxpmZ7yR+mzzB/JzNQXXoinM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725941765; c=relaxed/simple;
-	bh=ZDDnLD68UvQOGvV/UwP8zyczYFoRYm0bptMwhNPWKUE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oDihmNNhG0smhISfZRR0mb31PqQS9B2bH0Sgpi0XMZCnw1HOHsF8tu5MFF0f3rBu1OfRt0YurZ1xmhWSQhBU8KF4NQfcbq83HpRMI6Yunrp9gRNmSEOdtJX+qXBHqH13Ho2ijol3WtF4V7yX0qEE+UQpIvxQTf0tjFJwlIjFwJ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DA1HHclP; arc=fail smtp.client-ip=40.107.220.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1725942017; c=relaxed/simple;
+	bh=XZAldZhgx3uFqWoLUfHTouUjLCWGraoX5kWiN/zQbXM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nN2xGRxzNFne/nfM0l5qQ+XGyFFvAQYFThXVfUdOnhjhuPAxnFBRPYQexyM3lzmiVpdBjOM0mNun0KeMT0zVZK1zs8YwOI2wGP8clDcuj2yWBgZVaw0tN9Ve/DjUAIJkKNO5H1PEQ+Uu7RYorXVRlxUKR+92A8ysPny3kom11xE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RT0nMBP7; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DA1HHclP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RT0nMBP7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725942015; x=1757478015;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=XZAldZhgx3uFqWoLUfHTouUjLCWGraoX5kWiN/zQbXM=;
+  b=RT0nMBP7OlwVjYjqxmAVsAFLFZ//cnPbYnkfAdF/hZG3WfxDK4GoFVeB
+   AI1g6egod6XaKHqVmr32XgwNP7y/Wz6n03wq1Ftut/8OYiWW0GWNA1UlC
+   I6j/NQBWeaeh27Lz+PCfIAyUGuwxMOrEvYjfkz0YlbjkN9OT5bw8/MoVU
+   0OtQ9sGuLFfv4eE7H1dC9a/4VpQ4dxxn7u1VpEqsrG2oBf6VFi0eGSxrR
+   +ZdV6WLD+H+dJbAarCWEYl2hg2QnoIW08Y84evCm9lG15IZ9lSFrhSTcZ
+   grEzXoNpU3njOR/Zm2BKQ8r3mYtMkPk/Fn6tge3/QEMYwIdsY8VtQwb/Z
+   w==;
+X-CSE-ConnectionGUID: ggnGjgYPTDKqYzbU7MCkMA==
+X-CSE-MsgGUID: hOlo0eilRdGRupJqnopiJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24213383"
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="24213383"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 21:20:14 -0700
+X-CSE-ConnectionGUID: LdisceHKSIeRYkYoi8rQRg==
+X-CSE-MsgGUID: pFtY01JZTZal8jWLLzCcAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="71856941"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Sep 2024 21:20:15 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Sep 2024 21:20:14 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 9 Sep 2024 21:20:14 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 9 Sep 2024 21:20:13 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DVPlP/smIwUuv9UXKLFPUb0G3UF6TAIy72mf53Rop3f0LbG42Tw9nkrnuJreP0NinQeFes95+CFkfZG8q0H0A8T6ZOXOUEakbCyf+8XjfMY01khN9FD4UQBm9943WRfqPWpWNOu1bBO7xXH1ZjTXMn0BuO5ZrRGgFAxf5F5jzMlmR9ej1ApGdGrdiLsk4sxodKbOq36sMW+Mj7r61fpm0VegIsskanDBKzEGI1t9+GwYcBQajQ2ZPh0WnSIUXwgJZg+crpupnNXsMitAQF+TYQi/IXwoXbfARMO1sHI7A/e+OdZQomdchgaRXClszmFEHz8L+JdvcVkIoI9mMLmTDQ==
+ b=QxUQ+lPOZa4GR/zdP+mzf58BrE9ciShL4OeBuxBhZG+wiu3ecaMJkzF8g0WqOaxYhyPrvmKosGeJBLgUMaVirbbXk+WyCrtPytZPwZrTVnD4xyO85ioXYSEW9OgdxchvkzSeRTcvFSD4amM1KY1l9ATTUMJ0bYlAxy0el1SHtCmemGDzYIeFji55Csd+UW7vfEefl75sR5ThtuJWHm5Xj7jj+uM/X2vuAwut2Vdg3y7Yfaf1rWs/DY29XiUk0/Jqqmh8pax9Z4mg7kcvxcpn72a04mKx2qgNRM2Fe94T24w3tF5tBmFttYFonpEMtVHaJ2xwME5A2logCq6cIprKYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7SMUkeTzWk6c4iE6rjNyhyHm9o2LzNrSa+O2Uo2gc7Q=;
- b=B8K2Z95oCsh20vq0vGXSxBGGVo0YKcVfRJZVM2jVBq+MG/ScJdJlCGgHhgP/PeOCfJ/mbUBSrFouftvwbg+BRsNuVezpPr50XD+2YMpvzxlFLMrfg1lw2hQOcr9gePPrGb+O6Y0po+954t9H5jSG0kZck2vKDQgomYNpzqsUCxvMr/mrXxBoDGK59hW4mJbOq7WSYaI4FLJQ/pFPWOZ3JNgxherrPf5tl5shFyWk8EK0LJ+gc5tZJUlgiZJDSxODUOVGyPdw2LLRjZmAUef6pfGYoA8y/wK2kK9z2e51MLPqFbHe9biTk9flqzt9iJIH+2pRYiSk49pj8sjOL103EQ==
+ bh=J3Yw5Pyn83Q7E1tLQYMmWvLhHpXKO7dpd1+YVwwKl4A=;
+ b=sY8A511u3P/utnOea+bqrhKRdmr/Q6KsR6qpsgSOR6MeoVjuXvtlBnTYipEPqnoJmcoS0+o2pxsKuoCX2khN6e7g/vrHkgXCNxT15SeXFPerO2YvuXvO0o25ehBVqn12rhLmTjWiBpIgINyYjkOBsOwjM8CA6EanGvh3I7ULgFWM0p6oIiVnubLLSYUWesev/1pos7+Gr68c/O1E03AyCGMJBDiKm96LP9Zn7TRUl3z15PdDPC3kFFe36G1M2KfmAP9tyZ+uDzhSe7oujdokEcM0aswCL2x1QcYnFfVSUTnmFA05Cav0srNBB2C9CoMwjr8eFEdasuqq9O1Ru7JjDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7SMUkeTzWk6c4iE6rjNyhyHm9o2LzNrSa+O2Uo2gc7Q=;
- b=DA1HHclPwFsrSPUFMtTjTkwPwvv9CRuB121jfKFCgFRUt4wVIN0kMwWdBg7lJdyknF9NOiGJ7S8dNjUQvhExdvud7yv6EompwbcX7PlBlo04aTbEoY5/5stgMIbGFTvzVA/oMqx1w5mHNXoANX9NKfROQ3FMnu82kbyeT7aPE+72IvxmJ+72iZv1gcPnS5mde4nhz+qcrNrApDIoB0fWqSTIILtZo4dyrWKicZKuhq5MQVcBq9HQ+eKIO4dXoLq+M2bkT7bsCHTs7WoeHfKKrktZ7XBYfyoqXY0iuuVTWkvOD6X5+kWYsF3nGhFXBWgtx9JiEJyOcHODFZFkVxIiUA==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- IA0PR12MB8088.namprd12.prod.outlook.com (2603:10b6:208:409::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7918.27; Tue, 10 Sep 2024 04:15:59 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%3]) with mapi id 15.20.7918.024; Tue, 10 Sep 2024
- 04:15:59 +0000
-From: Alistair Popple <apopple@nvidia.com>
-To: dan.j.williams@intel.com,
-	linux-mm@kvack.org
-Cc: Alistair Popple <apopple@nvidia.com>,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	logang@deltatee.com,
-	bhelgaas@google.com,
-	jack@suse.cz,
-	jgg@ziepe.ca,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	dave.hansen@linux.intel.com,
-	ira.weiny@intel.com,
-	willy@infradead.org,
-	djwong@kernel.org,
-	tytso@mit.edu,
-	linmiaohe@huawei.com,
-	david@redhat.com,
-	peterx@redhat.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com,
-	hch@lst.de,
-	david@fromorbit.com
-Subject: [PATCH 12/12] mm: Remove devmap related functions and page table bits
-Date: Tue, 10 Sep 2024 14:14:37 +1000
-Message-ID: <39b1a78aa16ebe5db1c4b723e44fbdd217d302ac.1725941415.git-series.apopple@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
-References: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SYCPR01CA0034.ausprd01.prod.outlook.com
- (2603:10c6:10:e::22) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB6428.namprd11.prod.outlook.com (2603:10b6:510:1f4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.17; Tue, 10 Sep
+ 2024 04:20:11 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7918.024; Tue, 10 Sep 2024
+ 04:20:11 +0000
+Date: Mon, 9 Sep 2024 21:20:08 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, quic_zijuhu
+	<quic_zijuhu@quicinc.com>, Ira Weiny <ira.weiny@intel.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Zijun Hu <zijun_hu@icloud.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Timur Tabi <timur@kernel.org>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
+ device_for_each_child()
+Message-ID: <66dfc8f83414d_3264629429@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
+ <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
+ <2024090531-mustang-scheming-3066@gregkh>
+ <66df52d15129a_2cba232943d@iweiny-mobl.notmuch>
+ <66df9692e324d_ae21294ad@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
+ <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: MW4PR03CA0351.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -93,768 +112,124 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|IA0PR12MB8088:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c6ad695-bef9-41df-3a9a-08dcd14f45fb
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6428:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1660e58-43d5-4845-30f2-08dcd14fdc94
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZqPB41i3tzHAG1VS1zvrugREewOLjXViHvSBJKybH87fMG0KwqMdPNdjOpB8?=
- =?us-ascii?Q?in/Vgl/9ImRr601MH+nGEnKL0a9XP+I/Dyq9Pp/cN2xhGuNFSp4cjHsVfYCv?=
- =?us-ascii?Q?cJ4tLGmoyiq1/Biy64byebisD04x5AFd0gQn+CgKglbObcAjmWYlYYjuY6Og?=
- =?us-ascii?Q?QI+WrcUbJIML0H+p0h6TvEgZOLs37JME0e1MnGeKvtuGWTiX5Mn16nJMoYQC?=
- =?us-ascii?Q?S7Thj1CGgJcm6CMFQUNkcQxYnfl9V7CjXo32pnNv8jTHMK9YZ77heIfLbB6f?=
- =?us-ascii?Q?oa1V2rXcnclq5YMTd5UANTmP+RVEJQ90y9UFc0r5ZKAIA0tuikbaRwN7dxPU?=
- =?us-ascii?Q?05BD2mAZoUXtyGXAO3s4dQk2CJbW1anjP686T1R3AWDPUZKwYHowAOJz3ILB?=
- =?us-ascii?Q?l2qDP1VouWEGV9GKW18FQajlCLn5kWQ64OHEd+mgGWwlnpLi3grqIjRznc3B?=
- =?us-ascii?Q?bG0zEPvQUn6wb5UaK6VF8vdaJ5kQRSMEd2rj2ZRgisri81cIBhuSmynxzd3E?=
- =?us-ascii?Q?2Nknl0gwKZF0LrI6LqeaeWdYYOpV7K2lYKqjH2b/UNdnLRCly2wQ4I6BX2Mo?=
- =?us-ascii?Q?mkQWRI3/MUFTy60Ih2UhTFz2SyfVf7V+uFTi3V1y8NkASlM1AjavZEiWOdpM?=
- =?us-ascii?Q?j7emK1RVIh67WQ8wz6Otni1eS1jYC5To2fpxd0kKGDAtLm0eUFgWKVFEetsf?=
- =?us-ascii?Q?b0N6ZGhoQSSqDzQK7BmxXx2GJ0QnxcWssen/xWtzyWe7XGVaM+0OoJLLJdms?=
- =?us-ascii?Q?RUsAJwXTiAqCy7FcS6LNKq4RvggqDhCML2ES78wIX1GIEWMtjnxbKhXNuHoi?=
- =?us-ascii?Q?oeCUvX7EFpLRmQJ9awLMQyrvyt78QrfEd4Ho46fCtt0KTOjEE/qZl19yiZwC?=
- =?us-ascii?Q?qkFKAmUgeGJsetafmR6Uf/Z5kSjAeiB7iuDGkCyz+cjoNUWwYXLms4LRUTnJ?=
- =?us-ascii?Q?V81rqLOidp/vjRG9elFL8PGF/0QhabXrkgisWr3lZfSNWuZg3f6roLPFMfPS?=
- =?us-ascii?Q?SQNtOh3tA/BEGQhQ6rufJ22m36ikM3tVblGLnSlvDmuXJDNSR6Gi1qIGsCxV?=
- =?us-ascii?Q?4c2BGW1svlvpUBbHTsR4YdbWRvtUqCRz/SRZYDOJMdQZSdLDFznNeFZd+ZQ1?=
- =?us-ascii?Q?eRhmpTY8w//ImiN1JaVewwG7pMZP0Q75IsrqyRtWWhfJedhJkQXZ9mv+Dxl5?=
- =?us-ascii?Q?xiPunDOCqvKIn9D0YKMEiaS3h6muDrV4vwu/p2P1Pj2VJbt38ZQxSqwe74eT?=
- =?us-ascii?Q?weP5eGISHN2m324MVnSdN7bFByMutJ8NP5xnaxYbgopdOx/uhlD8RJoSiQty?=
- =?us-ascii?Q?YYXM1yNhgiDl8OaG5sThJLWUXw7DhFMUQIbK69TXPzd+1w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?+ehX1XTAv7ab1xXq8lpuaugyEZlduB1pMr42MTp0+OJkQ39GJBzLlgPAqJ+b?=
+ =?us-ascii?Q?zHegj7ln0Xi37evXQ7vrLFujKCLJ39cOYKj4z8CtkobbwP/JjbyGUMhwSl+6?=
+ =?us-ascii?Q?r1wHmgbD51AEtCxzxY652jwFzVms+9VIkoCJ9y30few9MC5H5ib4fpjuGPo6?=
+ =?us-ascii?Q?zlADJdhqj/lsg3g6tU3tCZ9jQYdCSW+5NbZymaplFWYBXgDF9bw/Jz61gJij?=
+ =?us-ascii?Q?pCfltuT53jlO3mKtzH9MSYNcUQr38HJfs60Qf89Bojasz1LLscR5OUqSmTnW?=
+ =?us-ascii?Q?PPx/AJhTYIlMja9BwssRsZd01DmHHB4nfU/wmVilwDKU2KiLXZ4zNLHe/LPg?=
+ =?us-ascii?Q?QKL5GKn9Y7+2SPz4k6Q0aqRtHcr7n4mOY+kcdwiMjDyO9xcNjfSrCpf63954?=
+ =?us-ascii?Q?I8CKe+uFy/B+lD8+SOW8uuOGZ4EPWEcUT5V+7L7/oeq/4CrwhN32Zv4UbhKB?=
+ =?us-ascii?Q?MLT+waeerQwGo9hRhQc28HrHnLYv51JpEVzfJwDo1YOK5Cz15hVETiVwc9QC?=
+ =?us-ascii?Q?0pT27TXllgS1D6mY2QKFo/+TVvlmrSUwmsN/GivGTnAggbnDpBm+OWK3oiTD?=
+ =?us-ascii?Q?vm5Qr100IxFG5V7HkcAm/3vRuycwhu4iIhjKYKqu3RZoYaf0PTRx7Un4u+3W?=
+ =?us-ascii?Q?V5oDR6AqAYEogyQCdCPvj6bUt0c4TmUaZbH9TojpAeo3ka4g8E6EG5ApeITc?=
+ =?us-ascii?Q?8r86lTkMcGKZzFEXjhw63e5dC9FCGspzc1Tzs3e521EXMhjzaFkcEFCvDvud?=
+ =?us-ascii?Q?lnSiYqtFANtRW654rylGJHtJ1ze6ypccqNJbjGsCyd5psnk9HsJRapf6pSdk?=
+ =?us-ascii?Q?lk3EATHYGq0biHJIUjBiaDPK8J0cNzBhbcP/j0M1Xl3yXuftPhMVtrDDdDMF?=
+ =?us-ascii?Q?8fKdyvJxZ0DhMf7TIoMfdjgJp6OdZVSY/KY+1cGYZkcnJktEQdQxh3XwTspF?=
+ =?us-ascii?Q?7rJ4MKUdCjUhXMvZqVEhK3k6ZkhSt2uKYZx/4xTMJgi7vrSPj4adOZu26QEe?=
+ =?us-ascii?Q?Z28DC6auSEtL0x087KHpI/tgtOEXQxS5wwEHUuD768xw3w+10lGAexK5i+cw?=
+ =?us-ascii?Q?Qb0r9EqCV40PFVV2ae1u3CIC1f94lgbUn7Kd7XhwlvVi4Zz616oFO5kDOYxM?=
+ =?us-ascii?Q?XJicC6FSJ3xB22kS1c8MDCe9ynMn4SVudg8DVe4lYSejEwHA8nS2QRnQcPdb?=
+ =?us-ascii?Q?4JCTCSZLwQ6bFB5EUG61ZMUAMzg4ES//HFxh6+UcRI7zK8PRX865nd8ONXTY?=
+ =?us-ascii?Q?ISyDabhw8+/25Iukbyph3Uy44Sm2qSooHdJr8Kyeyv0f8MnAn/hyRuzG258Z?=
+ =?us-ascii?Q?zBGwmi84w9/SKfP9BhP5HJ55BKuOS8OsrQJ3lnQEdZk+9w=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lreiPlExgUqJova0xZzIYi/s1jgXyKsl70n1XU74JC2x1zwA4XVK2PLZofnV?=
- =?us-ascii?Q?b87EWpZebQb+9sBitZvKhAbt6ACE6iX77X2NQ8phjCe4R55+RaECVNrQiDSD?=
- =?us-ascii?Q?DeWNjLRrMavDnR6I77RoFB8vmmK4WEg17QYiFgrSFjC54AbIceoOLCnB23PR?=
- =?us-ascii?Q?jYkMQyYciZKz/fHkvyGcvZfKiFei77UoxRduKFFJ00TdFJh3W2266qFwLWni?=
- =?us-ascii?Q?c4/icHo0kkxSiDntIPE35NoL7ZGHHXDG0hf/fGH6Q2TnDMIW1sLMQtoFF0qL?=
- =?us-ascii?Q?rozhwuI+bLnn7cnjdiBeaHjSWA5Ly2U3E7qnnZZ9nygr9HGZzU2gKSlNBPJq?=
- =?us-ascii?Q?7HEUdfEYvKFpDlr3Gu2d0Fpxf54UtUc8ZrLmDvPIXv8Vsla6Eha79lwtK/7n?=
- =?us-ascii?Q?L4F3EDTIS4J+syvPXjA5kAL9zCI4Gv7Oc0srKnStKt70Zbm5ZCg2rwJ/dGML?=
- =?us-ascii?Q?xGO2YIqYEMafP65ueG62rz46f5ScsDJynrv1KEG1teDPaNkbso+/VdMIF6Z2?=
- =?us-ascii?Q?O5XU25OxWD4FejcSP0ZtUFolJtvRYNp9WGZkHTYSzAy3877W7xbR6FOSE6OV?=
- =?us-ascii?Q?DGXarlITXksWkG3nmTptZmqsWkJZ9vHSMCNmOtWFaCdFMYjz2CAWQe+8yHuj?=
- =?us-ascii?Q?ybb3uWWTZVXekNhUBhe8zQ7bbOL/3ZKjlYn8e3s7y374GZX5Zah1QhimA7tq?=
- =?us-ascii?Q?PcQh064n2DU/CzwCJFiCqnoo7fXE29srKxWj6XbztMeCPaR6EiMchPiXivf6?=
- =?us-ascii?Q?ewAIX8emsVC4q8W2drGibMg61Z+hMfYuvrv3B9DIUVr03DT6X5BqZwmexd18?=
- =?us-ascii?Q?yty8gzcrF3YBwQavzpnHq1t2pu0Sk+VSg7UJqp6i3qwx10xA6GnYz/JKk1rn?=
- =?us-ascii?Q?K+mOqx9/OerqrGf/oz2g39SdjpzKxWlkTHvgaTsS49avEaF12ODT/JwOO2lH?=
- =?us-ascii?Q?iptLX/qSZuSca6UKABWMkrmxLYKMD2t9iv6uzPjyAqqAIgNDV0gsbOCc92ne?=
- =?us-ascii?Q?1EWxu559fFxqbewmdTnnhBgDRymM16fkisPEpFg7xsokgCwh56SW/pCRx7Tr?=
- =?us-ascii?Q?25W0+QmScD4fyEnv9c4CmsyMwfMM1DanbNWmxamDlN3dhG48zWzww0WqVhWl?=
- =?us-ascii?Q?a+UlGanFqvhoFooqj+OwxggmQhXubZdXhCXKHkNp4D7Hn++gEbIP5t17jdbF?=
- =?us-ascii?Q?v1FNh/ZmGw99t6v1lYxtsPgIEIjMvKPh3IlWpzuu4ajH8E9RMPRVtHbEMj5x?=
- =?us-ascii?Q?i61sdz1OuHBNt7d9sBaJMmtRI82XMuezaTDHx5uL1Cr08ULg4XvljM+QmHbf?=
- =?us-ascii?Q?+0qT1TCZUWVJPF099W4rhLr9f5IQgwNkbWqTolFSA1flXpTkDpuVGfdjSZfd?=
- =?us-ascii?Q?fefyC66qv3/xUvWF2m4KXW5ZCmINSvwEdOOqQ6yS6HqiajZyv1v79kN3wsF0?=
- =?us-ascii?Q?pNUOpfuS2qqnUP7+pVlXKAYUUfKdZcH+NQB/KNYbswimaK0gQwUjbNMGhnLU?=
- =?us-ascii?Q?LLvOkBdLzlZyHlrcnqIa8OTVfI1W3e0mNiQdHYrtzddKXayi38k7Jz0gEde/?=
- =?us-ascii?Q?zsAO9wCXqs0Nxd3X4gUvg6ZRJFnWzYpvBSRWkIgS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c6ad695-bef9-41df-3a9a-08dcd14f45fb
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?o2YCAdGizNF+rWUn1I/ZMd3liZidZQVWoXuQEfifyaGDAds1m/vmRdo6KPz8?=
+ =?us-ascii?Q?rjMNfOkw4O7SgvSbpWUuRI/kgAe8RJXg+JVqdlMlM/OtSy4I8KrFWXl8tJWX?=
+ =?us-ascii?Q?zDI56tGIFjgOrjeEhyQjKzlJM4qgDeb+OTzPIPHACBwpXwQmX+7aHUupGyB8?=
+ =?us-ascii?Q?UbOHjevL7INiMZPn76x7C4kon7hbF0DbcIxAaKCIrT0TYafw/q2Eat91Vq+G?=
+ =?us-ascii?Q?YKNpzj+95bSFvIG0SPcN+xziFDbQxvgfHvQWAhxJbIzqyU9qgAIYQitxW1di?=
+ =?us-ascii?Q?yGcacEXK/JFS+s+UthLW0Wd0G+XCGJL3lJgrgai6u3FSjATujQboIWNxuZ6q?=
+ =?us-ascii?Q?7SeapLxHNc+qQUSRbvKNtBpCgGvHnknI1/NUKiXM/8Z996Ygz1QM9nAMJBm7?=
+ =?us-ascii?Q?iPAmQS5vj7jGHR7Mt8dAfI2mWvP5IDHWxHcLWqSlkK9ze6nmVYnnRhFXxOHB?=
+ =?us-ascii?Q?FlOiOb70UcStNpdBV85+0N4xiZjfYZ44wggMmSRz5AEwlb/VV3qB8mqBMR7c?=
+ =?us-ascii?Q?YDUaZzP0LMKo76wKs2v7LgdQ5ic4Zl03qSANu2EWnMrBl2Ns9nTxJ+xmYro/?=
+ =?us-ascii?Q?87uZ4mkoz/g+QLIaFvq2KqOs/dx5/0PEiHrI/dzmii3zwkzH6WcJSQ/Mr1CB?=
+ =?us-ascii?Q?9XN9/quZ9MAEndLr5bSSxfA0VQaXbGwEHXZG6qcghDTPAg50M2sZkr6OjzxF?=
+ =?us-ascii?Q?oZi3XIkejwGzUYXzFOF0PcLCRmpzyaltdRyE0xmIT20nm5eby/6EWGrNBF8A?=
+ =?us-ascii?Q?QYWmfZ6UCsW77KgDx2Hj9Vl3FG85yJRy/lUoW4ZvI9MGw7TvYL+/0dCaxm6I?=
+ =?us-ascii?Q?WG5jutbK3nqlVEbJrE3hzg1A8BvgPbXDgSRnB3dYOCTkk+yObjfcXl66AYFl?=
+ =?us-ascii?Q?RJcsUXV6/5X88MBNfh9WWwgyp6C5IJD1+0kfUJGZhDrYdP8lmHHRXcOZamf3?=
+ =?us-ascii?Q?ViJdZ1ryQuloctvUm3dW21cP4D6zX+yvtF+GSlgR2oSf9TOqhQxM9R1s9qtH?=
+ =?us-ascii?Q?L3YZZpATEHzWykJUTjuT5MeQBlKiTlUAvlE17V4iHg+GLYC3ID1YB1GIABVx?=
+ =?us-ascii?Q?LJ5/pBIr05PfqmBKRF8HNMnxRJshQ14eDOXhLO/BgsJqH1mzqlXbBuMpcVCk?=
+ =?us-ascii?Q?6DPpRv2TcrhfNWUYemIlx9tPsygL1u5a8PRiBsgYtTXpekU74V7GYqk2bpOh?=
+ =?us-ascii?Q?E5zvN7RuRmf2YHUuY7zGAfWQCUZr609GjKXC+qxM2HvBukX7cRNWJmo209Zf?=
+ =?us-ascii?Q?HJ9pjvij7D0EA1jWgEbbktb/gjFvRqIAcpKIZ2+DJHRcONxZGvWGmLBP9Y4o?=
+ =?us-ascii?Q?Xu3xYMyk4+LO42JB2S9jtlwbcTG2qp6IpxmupkVHRw/JFw6aAy7/i5RB4lof?=
+ =?us-ascii?Q?cRhCTMO3fhVbKEOXsWWYWDZhFuKoDdgpY1dgzmjgY9y+CFmtrF0OSQUfAnjv?=
+ =?us-ascii?Q?ecX3Tl1HOL+3qy1rRtZQkVwHl39qS8lXK9uh9JlaD1CVS3C5LezcRLYXQnpC?=
+ =?us-ascii?Q?gFRFnngk0FjVQNpi1qblFOIvVkjoeoloK4UDLoB/9XnG9Z9TNMsdw2sicxzG?=
+ =?us-ascii?Q?UcEN49TfAgHZVP8JtNGmp+clBLpNKXhKvPL76p2+73uUNrZFati8wA0mrUba?=
+ =?us-ascii?Q?3Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1660e58-43d5-4845-30f2-08dcd14fdc94
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 04:15:58.9614
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 04:20:11.4349
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ws2Z61tZ3nhpzS8/N3UNVdkSF8cKfUXf11B86GsH2q9YGzH48sh/uZSgBQiIPywyGeeA/UCWWnNh1XiRKd0fLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8088
+X-MS-Exchange-CrossTenant-UserPrincipalName: ybeMY8QARvCGZ98XIoFRLaunPbLTW+mT0CC4TUlsqaY4LgDMlCydkYUOaCFn/3St24DKWuxsDzaHrVsc6scHKr76VAKyqAHahlGy9CmnrH8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6428
+X-OriginatorOrg: intel.com
 
-Now that DAX and all other reference counts to ZONE_DEVICE pages are
-managed normally there is no need for the special devmap PTE/PMD/PUD
-page table bits. So drop all references to these, freeing up a
-software defined page table bit on architectures supporting it.
+Dan Williams wrote:
+[..]
+> So I wanted to write a comment here to stop the next person from
+> tripping over this dependency on decoder 'add' order, but there is a
+> problem. For this simple version to work it needs 3 things:
+> 
+> 1/ decoders are added in hardware id order: done,
+> devm_cxl_enumerate_decoders() handles that
+> 
+> 2/ search for decoders in their added order: done, device_find_child()
+> guarantees this, although it is not obvious without reading the internals
+> of device_add().
+> 
+> 3/ regions are de-allocated from decoders in reverse decoder id order.
+> This is not enforced, in fact it is impossible to enforce. Consider that
+> any memory device can be removed at any time and may not be removed in
+> the order in which the device allocated switch decoders in the topology.
+> 
+> So, that existing comment of needing to enforce ordered allocation is
+> still relevant even though the implementation fails to handle the
+> out-of-order region deallocation problem.
+> 
+> I alluded to the need for a "tear down the world" implementation back in
+> 2022 [1], but never got around to finishing that.
+> 
+> Now, the cxl_port.hdm_end attribute tracks the "last" decoder to be
+> allocated for endpoint ports. That same tracking needs to be added for
+> switch ports, then this routine could check for ordering constraints by:
+> 
+>     /* enforce hardware ordered allocation */
+>     if (!cxld->region && port->hdm_end + 1 == cxld->id)
+>         return 1;
+>     return 0;
+> 
+> As it stands now @hdm_end is never updated for switch ports.
+> 
+> [1]: 176baefb2eb5 cxl/hdm: Commit decoder state to hardware
 
-Signed-off-by: Alistair Popple <apopple@nvidia.com>
-Acked-by: Will Deacon <will@kernel.org> # arm64
----
- Documentation/mm/arch_pgtable_helpers.rst     |  6 +--
- arch/arm64/Kconfig                            |  1 +-
- arch/arm64/include/asm/pgtable-prot.h         |  1 +-
- arch/arm64/include/asm/pgtable.h              | 24 +--------
- arch/powerpc/Kconfig                          |  1 +-
- arch/powerpc/include/asm/book3s/64/hash-4k.h  |  6 +--
- arch/powerpc/include/asm/book3s/64/hash-64k.h |  7 +--
- arch/powerpc/include/asm/book3s/64/pgtable.h  | 52 +------------------
- arch/powerpc/include/asm/book3s/64/radix.h    | 14 +-----
- arch/x86/Kconfig                              |  1 +-
- arch/x86/include/asm/pgtable.h                | 50 +-----------------
- arch/x86/include/asm/pgtable_types.h          |  5 +--
- include/linux/mm.h                            |  7 +--
- include/linux/pfn_t.h                         | 20 +-------
- include/linux/pgtable.h                       | 19 +------
- mm/Kconfig                                    |  4 +-
- mm/debug_vm_pgtable.c                         | 59 +--------------------
- mm/hmm.c                                      |  3 +-
- 18 files changed, 11 insertions(+), 269 deletions(-)
+--- cut the reply here ---
 
-diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-index af24516..c88c7fa 100644
---- a/Documentation/mm/arch_pgtable_helpers.rst
-+++ b/Documentation/mm/arch_pgtable_helpers.rst
-@@ -30,8 +30,6 @@ PTE Page Table Helpers
- +---------------------------+--------------------------------------------------+
- | pte_protnone              | Tests a PROT_NONE PTE                            |
- +---------------------------+--------------------------------------------------+
--| pte_devmap                | Tests a ZONE_DEVICE mapped PTE                   |
--+---------------------------+--------------------------------------------------+
- | pte_soft_dirty            | Tests a soft dirty PTE                           |
- +---------------------------+--------------------------------------------------+
- | pte_swp_soft_dirty        | Tests a soft dirty swapped PTE                   |
-@@ -104,8 +102,6 @@ PMD Page Table Helpers
- +---------------------------+--------------------------------------------------+
- | pmd_protnone              | Tests a PROT_NONE PMD                            |
- +---------------------------+--------------------------------------------------+
--| pmd_devmap                | Tests a ZONE_DEVICE mapped PMD                   |
--+---------------------------+--------------------------------------------------+
- | pmd_soft_dirty            | Tests a soft dirty PMD                           |
- +---------------------------+--------------------------------------------------+
- | pmd_swp_soft_dirty        | Tests a soft dirty swapped PMD                   |
-@@ -177,8 +173,6 @@ PUD Page Table Helpers
- +---------------------------+--------------------------------------------------+
- | pud_write                 | Tests a writable PUD                             |
- +---------------------------+--------------------------------------------------+
--| pud_devmap                | Tests a ZONE_DEVICE mapped PUD                   |
--+---------------------------+--------------------------------------------------+
- | pud_mkyoung               | Creates a young PUD                              |
- +---------------------------+--------------------------------------------------+
- | pud_mkold                 | Creates an old PUD                               |
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6494848..b6d9c29 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -36,7 +36,6 @@ config ARM64
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
--	select ARCH_HAS_PTE_DEVMAP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_HW_PTE_YOUNG
- 	select ARCH_HAS_SETUP_DMA_OPS
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index b11cfb9..043b102 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -17,7 +17,6 @@
- #define PTE_SWP_EXCLUSIVE	(_AT(pteval_t, 1) << 2)	 /* only for swp ptes */
- #define PTE_DIRTY		(_AT(pteval_t, 1) << 55)
- #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
--#define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
- 
- /*
-  * PTE_PRESENT_INVALID=1 & PTE_VALID=0 indicates that the pte's fields should be
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 7a4f560..d21b6c9 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -107,7 +107,6 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
- #define pte_user(pte)		(!!(pte_val(pte) & PTE_USER))
- #define pte_user_exec(pte)	(!(pte_val(pte) & PTE_UXN))
- #define pte_cont(pte)		(!!(pte_val(pte) & PTE_CONT))
--#define pte_devmap(pte)		(!!(pte_val(pte) & PTE_DEVMAP))
- #define pte_tagged(pte)		((pte_val(pte) & PTE_ATTRINDX_MASK) == \
- 				 PTE_ATTRINDX(MT_NORMAL_TAGGED))
- 
-@@ -269,11 +268,6 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
- 	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
- }
- 
--static inline pte_t pte_mkdevmap(pte_t pte)
--{
--	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
--}
--
- #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
- static inline int pte_uffd_wp(pte_t pte)
- {
-@@ -569,14 +563,6 @@ static inline int pmd_trans_huge(pmd_t pmd)
- 
- #define pmd_mkhuge(pmd)		(__pmd(pmd_val(pmd) & ~PMD_TABLE_BIT))
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--#define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
--#endif
--static inline pmd_t pmd_mkdevmap(pmd_t pmd)
--{
--	return pte_pmd(set_pte_bit(pmd_pte(pmd), __pgprot(PTE_DEVMAP)));
--}
--
- #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
- #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
- #define pmd_pfn(pmd)		((__pmd_to_phys(pmd) & PMD_MASK) >> PAGE_SHIFT)
-@@ -1136,16 +1122,6 @@ static inline int pmdp_set_access_flags(struct vm_area_struct *vma,
- 	return __ptep_set_access_flags(vma, address, (pte_t *)pmdp,
- 							pmd_pte(entry), dirty);
- }
--
--static inline int pud_devmap(pud_t pud)
--{
--	return 0;
--}
--
--static inline int pgd_devmap(pgd_t pgd)
--{
--	return 0;
--}
- #endif
- 
- #ifdef CONFIG_PAGE_TABLE_CHECK
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index d7b09b0..8094e48 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -144,7 +144,6 @@ config PPC
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select ARCH_HAS_PMEM_API
--	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
- 	select ARCH_HAS_SET_MEMORY
-diff --git a/arch/powerpc/include/asm/book3s/64/hash-4k.h b/arch/powerpc/include/asm/book3s/64/hash-4k.h
-index c654c37..d23244b 100644
---- a/arch/powerpc/include/asm/book3s/64/hash-4k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-4k.h
-@@ -140,12 +140,6 @@ extern pmd_t hash__pmdp_huge_get_and_clear(struct mm_struct *mm,
- extern int hash__has_transparent_hugepage(void);
- #endif
- 
--static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
--{
--	BUG();
--	return pmd;
--}
--
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_4K_H */
-diff --git a/arch/powerpc/include/asm/book3s/64/hash-64k.h b/arch/powerpc/include/asm/book3s/64/hash-64k.h
-index 0bf6fd0..0fb5b7d 100644
---- a/arch/powerpc/include/asm/book3s/64/hash-64k.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash-64k.h
-@@ -259,7 +259,7 @@ static inline void mark_hpte_slot_valid(unsigned char *hpte_slot_array,
-  */
- static inline int hash__pmd_trans_huge(pmd_t pmd)
- {
--	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP)) ==
-+	return !!((pmd_val(pmd) & (_PAGE_PTE | H_PAGE_THP_HUGE)) ==
- 		  (_PAGE_PTE | H_PAGE_THP_HUGE));
- }
- 
-@@ -281,11 +281,6 @@ extern pmd_t hash__pmdp_huge_get_and_clear(struct mm_struct *mm,
- extern int hash__has_transparent_hugepage(void);
- #endif /*  CONFIG_TRANSPARENT_HUGEPAGE */
- 
--static inline pmd_t hash__pmd_mkdevmap(pmd_t pmd)
--{
--	return __pmd(pmd_val(pmd) | (_PAGE_PTE | H_PAGE_THP_HUGE | _PAGE_DEVMAP));
--}
--
- #endif	/* __ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_BOOK3S_64_HASH_64K_H */
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 5da92ba..9bf54b5 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -88,7 +88,6 @@
- 
- #define _PAGE_SOFT_DIRTY	_RPAGE_SW3 /* software: software dirty tracking */
- #define _PAGE_SPECIAL		_RPAGE_SW2 /* software: special page */
--#define _PAGE_DEVMAP		_RPAGE_SW1 /* software: ZONE_DEVICE page */
- 
- /*
-  * Drivers request for cache inhibited pte mapping using _PAGE_NO_CACHE
-@@ -109,7 +108,7 @@
-  */
- #define _HPAGE_CHG_MASK (PTE_RPN_MASK | _PAGE_HPTEFLAGS | _PAGE_DIRTY | \
- 			 _PAGE_ACCESSED | H_PAGE_THP_HUGE | _PAGE_PTE | \
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY)
- /*
-  * user access blocked by key
-  */
-@@ -123,7 +122,7 @@
-  */
- #define _PAGE_CHG_MASK	(PTE_RPN_MASK | _PAGE_HPTEFLAGS | _PAGE_DIRTY | \
- 			 _PAGE_ACCESSED | _PAGE_SPECIAL | _PAGE_PTE |	\
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY)
- 
- /*
-  * We define 2 sets of base prot bits, one for basic pages (ie,
-@@ -635,24 +634,6 @@ static inline pte_t pte_mkhuge(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkdevmap(pte_t pte)
--{
--	return __pte_raw(pte_raw(pte) | cpu_to_be64(_PAGE_SPECIAL | _PAGE_DEVMAP));
--}
--
--/*
-- * This is potentially called with a pmd as the argument, in which case it's not
-- * safe to check _PAGE_DEVMAP unless we also confirm that _PAGE_PTE is set.
-- * That's because the bit we use for _PAGE_DEVMAP is not reserved for software
-- * use in page directory entries (ie. non-ptes).
-- */
--static inline int pte_devmap(pte_t pte)
--{
--	__be64 mask = cpu_to_be64(_PAGE_DEVMAP | _PAGE_PTE);
--
--	return (pte_raw(pte) & mask) == mask;
--}
--
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
- 	/* FIXME!! check whether this need to be a conditional */
-@@ -1406,35 +1387,6 @@ static inline bool arch_needs_pgtable_deposit(void)
- }
- extern void serialize_against_pte_lookup(struct mm_struct *mm);
- 
--
--static inline pmd_t pmd_mkdevmap(pmd_t pmd)
--{
--	if (radix_enabled())
--		return radix__pmd_mkdevmap(pmd);
--	return hash__pmd_mkdevmap(pmd);
--}
--
--static inline pud_t pud_mkdevmap(pud_t pud)
--{
--	if (radix_enabled())
--		return radix__pud_mkdevmap(pud);
--	BUG();
--	return pud;
--}
--
--static inline int pmd_devmap(pmd_t pmd)
--{
--	return pte_devmap(pmd_pte(pmd));
--}
--
--static inline int pud_devmap(pud_t pud)
--{
--	return pte_devmap(pud_pte(pud));
--}
--
--static inline int pgd_devmap(pgd_t pgd)
--{
--	return 0;
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
-diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
-index 8f55ff7..df23a82 100644
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -264,7 +264,7 @@ static inline int radix__p4d_bad(p4d_t p4d)
- 
- static inline int radix__pmd_trans_huge(pmd_t pmd)
- {
--	return (pmd_val(pmd) & (_PAGE_PTE | _PAGE_DEVMAP)) == _PAGE_PTE;
-+	return (pmd_val(pmd) & _PAGE_PTE) == _PAGE_PTE;
- }
- 
- static inline pmd_t radix__pmd_mkhuge(pmd_t pmd)
-@@ -274,7 +274,7 @@ static inline pmd_t radix__pmd_mkhuge(pmd_t pmd)
- 
- static inline int radix__pud_trans_huge(pud_t pud)
- {
--	return (pud_val(pud) & (_PAGE_PTE | _PAGE_DEVMAP)) == _PAGE_PTE;
-+	return (pud_val(pud) & _PAGE_PTE) == _PAGE_PTE;
- }
- 
- static inline pud_t radix__pud_mkhuge(pud_t pud)
-@@ -315,16 +315,6 @@ static inline int radix__has_transparent_pud_hugepage(void)
- }
- #endif
- 
--static inline pmd_t radix__pmd_mkdevmap(pmd_t pmd)
--{
--	return __pmd(pmd_val(pmd) | (_PAGE_PTE | _PAGE_DEVMAP));
--}
--
--static inline pud_t radix__pud_mkdevmap(pud_t pud)
--{
--	return __pud(pud_val(pud) | (_PAGE_PTE | _PAGE_DEVMAP));
--}
--
- struct vmem_altmap;
- struct dev_pagemap;
- extern int __meminit radix__vmemmap_create_mapping(unsigned long start,
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index b74b9ee..9177fe3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -91,7 +91,6 @@ config X86
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PMEM_API		if X86_64
--	select ARCH_HAS_PTE_DEVMAP		if X86_64
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_HW_PTE_YOUNG
- 	select ARCH_HAS_NONLEAF_PMD_YOUNG	if PGTABLE_LEVELS > 2
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 8d12bfa..b576a14 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -280,16 +280,15 @@ static inline bool pmd_leaf(pmd_t pte)
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_leaf */
- static inline int pmd_trans_huge(pmd_t pmd)
- {
--	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
-+	return (pmd_val(pmd) & _PAGE_PSE) == _PAGE_PSE;
- }
- 
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- static inline int pud_trans_huge(pud_t pud)
- {
--	return (pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
-+	return (pud_val(pud) & _PAGE_PSE) == _PAGE_PSE;
- }
- #endif
- 
-@@ -299,29 +298,6 @@ static inline int has_transparent_hugepage(void)
- 	return boot_cpu_has(X86_FEATURE_PSE);
- }
- 
--#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
--static inline int pmd_devmap(pmd_t pmd)
--{
--	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
--}
--
--#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
--static inline int pud_devmap(pud_t pud)
--{
--	return !!(pud_val(pud) & _PAGE_DEVMAP);
--}
--#else
--static inline int pud_devmap(pud_t pud)
--{
--	return 0;
--}
--#endif
--
--static inline int pgd_devmap(pgd_t pgd)
--{
--	return 0;
--}
--#endif
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
- static inline pte_t pte_set_flags(pte_t pte, pteval_t set)
-@@ -482,11 +458,6 @@ static inline pte_t pte_mkspecial(pte_t pte)
- 	return pte_set_flags(pte, _PAGE_SPECIAL);
- }
- 
--static inline pte_t pte_mkdevmap(pte_t pte)
--{
--	return pte_set_flags(pte, _PAGE_SPECIAL|_PAGE_DEVMAP);
--}
--
- static inline pmd_t pmd_set_flags(pmd_t pmd, pmdval_t set)
- {
- 	pmdval_t v = native_pmd_val(pmd);
-@@ -572,11 +543,6 @@ static inline pmd_t pmd_mkwrite_shstk(pmd_t pmd)
- 	return pmd_set_flags(pmd, _PAGE_DIRTY);
- }
- 
--static inline pmd_t pmd_mkdevmap(pmd_t pmd)
--{
--	return pmd_set_flags(pmd, _PAGE_DEVMAP);
--}
--
- static inline pmd_t pmd_mkhuge(pmd_t pmd)
- {
- 	return pmd_set_flags(pmd, _PAGE_PSE);
-@@ -656,11 +622,6 @@ static inline pud_t pud_mkdirty(pud_t pud)
- 	return pud_mksaveddirty(pud);
- }
- 
--static inline pud_t pud_mkdevmap(pud_t pud)
--{
--	return pud_set_flags(pud, _PAGE_DEVMAP);
--}
--
- static inline pud_t pud_mkhuge(pud_t pud)
- {
- 	return pud_set_flags(pud, _PAGE_PSE);
-@@ -988,13 +949,6 @@ static inline int pte_present(pte_t a)
- 	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
- }
- 
--#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
--static inline int pte_devmap(pte_t a)
--{
--	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
--}
--#endif
--
- #define pte_accessible pte_accessible
- static inline bool pte_accessible(struct mm_struct *mm, pte_t a)
- {
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 2f32113..37c250f 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -33,7 +33,6 @@
- #define _PAGE_BIT_CPA_TEST	_PAGE_BIT_SOFTW1
- #define _PAGE_BIT_UFFD_WP	_PAGE_BIT_SOFTW2 /* userfaultfd wrprotected */
- #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
--#define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
- 
- #ifdef CONFIG_X86_64
- #define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit */
-@@ -117,11 +116,9 @@
- 
- #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
- #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
--#define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
- #define _PAGE_SOFTW4	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW4)
- #else
- #define _PAGE_NX	(_AT(pteval_t, 0))
--#define _PAGE_DEVMAP	(_AT(pteval_t, 0))
- #define _PAGE_SOFTW4	(_AT(pteval_t, 0))
- #endif
- 
-@@ -148,7 +145,7 @@
- #define _COMMON_PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |	\
- 				 _PAGE_SPECIAL | _PAGE_ACCESSED |	\
- 				 _PAGE_DIRTY_BITS | _PAGE_SOFT_DIRTY |	\
--				 _PAGE_DEVMAP | _PAGE_CC | _PAGE_UFFD_WP)
-+				 _PAGE_CC | _PAGE_UFFD_WP)
- #define _PAGE_CHG_MASK	(_COMMON_PAGE_CHG_MASK | _PAGE_PAT)
- #define _HPAGE_CHG_MASK (_COMMON_PAGE_CHG_MASK | _PAGE_PSE | _PAGE_PAT_LARGE)
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 592b992..5976276 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2624,13 +2624,6 @@ static inline pte_t pte_mkspecial(pte_t pte)
- }
- #endif
- 
--#ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
--static inline int pte_devmap(pte_t pte)
--{
--	return 0;
--}
--#endif
--
- extern pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
- 			       spinlock_t **ptl);
- static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
-diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-index 2d91482..0100ad8 100644
---- a/include/linux/pfn_t.h
-+++ b/include/linux/pfn_t.h
-@@ -97,26 +97,6 @@ static inline pud_t pfn_t_pud(pfn_t pfn, pgprot_t pgprot)
- #endif
- #endif
- 
--#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
--static inline bool pfn_t_devmap(pfn_t pfn)
--{
--	const u64 flags = PFN_DEV|PFN_MAP;
--
--	return (pfn.val & flags) == flags;
--}
--#else
--static inline bool pfn_t_devmap(pfn_t pfn)
--{
--	return false;
--}
--pte_t pte_mkdevmap(pte_t pte);
--pmd_t pmd_mkdevmap(pmd_t pmd);
--#if defined(CONFIG_TRANSPARENT_HUGEPAGE) && \
--	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
--pud_t pud_mkdevmap(pud_t pud);
--#endif
--#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
--
- #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
- static inline bool pfn_t_special(pfn_t pfn)
- {
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index a68e279..f3a95e3 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1616,21 +1616,6 @@ static inline int pud_write(pud_t pud)
- }
- #endif /* pud_write */
- 
--#if !defined(CONFIG_ARCH_HAS_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
--static inline int pmd_devmap(pmd_t pmd)
--{
--	return 0;
--}
--static inline int pud_devmap(pud_t pud)
--{
--	return 0;
--}
--static inline int pgd_devmap(pgd_t pgd)
--{
--	return 0;
--}
--#endif
--
- #if !defined(CONFIG_TRANSPARENT_HUGEPAGE) || \
- 	!defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- static inline int pud_trans_huge(pud_t pud)
-@@ -1885,8 +1870,8 @@ typedef unsigned int pgtbl_mod_mask;
-  * - It should contain a huge PFN, which points to a huge page larger than
-  *   PAGE_SIZE of the platform.  The PFN format isn't important here.
-  *
-- * - It should cover all kinds of huge mappings (e.g., pXd_trans_huge(),
-- *   pXd_devmap(), or hugetlb mappings).
-+ * - It should cover all kinds of huge mappings (i.e. pXd_trans_huge()
-+ *   or hugetlb mappings).
-  */
- #ifndef pgd_leaf
- #define pgd_leaf(x)	false
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 8078a4b..58402d7 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1017,9 +1017,6 @@ config ARCH_HAS_CURRENT_STACK_POINTER
- 	  register alias named "current_stack_pointer", this config can be
- 	  selected.
- 
--config ARCH_HAS_PTE_DEVMAP
--	bool
--
- config ARCH_HAS_ZONE_DMA_SET
- 	bool
- 
-@@ -1037,7 +1034,6 @@ config ZONE_DEVICE
- 	depends on MEMORY_HOTPLUG
- 	depends on MEMORY_HOTREMOVE
- 	depends on SPARSEMEM_VMEMMAP
--	depends on ARCH_HAS_PTE_DEVMAP
- 	select XARRAY_MULTI
- 
- 	help
-diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-index e4969fb..1262148 100644
---- a/mm/debug_vm_pgtable.c
-+++ b/mm/debug_vm_pgtable.c
-@@ -348,12 +348,6 @@ static void __init pud_advanced_tests(struct pgtable_debug_args *args)
- 	vaddr &= HPAGE_PUD_MASK;
- 
- 	pud = pfn_pud(args->pud_pfn, args->page_prot);
--	/*
--	 * Some architectures have debug checks to make sure
--	 * huge pud mapping are only found with devmap entries
--	 * For now test with only devmap entries.
--	 */
--	pud = pud_mkdevmap(pud);
- 	set_pud_at(args->mm, vaddr, args->pudp, pud);
- 	flush_dcache_page(page);
- 	pudp_set_wrprotect(args->mm, vaddr, args->pudp);
-@@ -366,7 +360,6 @@ static void __init pud_advanced_tests(struct pgtable_debug_args *args)
- 	WARN_ON(!pud_none(pud));
- #endif /* __PAGETABLE_PMD_FOLDED */
- 	pud = pfn_pud(args->pud_pfn, args->page_prot);
--	pud = pud_mkdevmap(pud);
- 	pud = pud_wrprotect(pud);
- 	pud = pud_mkclean(pud);
- 	set_pud_at(args->mm, vaddr, args->pudp, pud);
-@@ -384,7 +377,6 @@ static void __init pud_advanced_tests(struct pgtable_debug_args *args)
- #endif /* __PAGETABLE_PMD_FOLDED */
- 
- 	pud = pfn_pud(args->pud_pfn, args->page_prot);
--	pud = pud_mkdevmap(pud);
- 	pud = pud_mkyoung(pud);
- 	set_pud_at(args->mm, vaddr, args->pudp, pud);
- 	flush_dcache_page(page);
-@@ -693,53 +685,6 @@ static void __init pmd_protnone_tests(struct pgtable_debug_args *args)
- static void __init pmd_protnone_tests(struct pgtable_debug_args *args) { }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
--#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
--static void __init pte_devmap_tests(struct pgtable_debug_args *args)
--{
--	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
--
--	pr_debug("Validating PTE devmap\n");
--	WARN_ON(!pte_devmap(pte_mkdevmap(pte)));
--}
--
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--static void __init pmd_devmap_tests(struct pgtable_debug_args *args)
--{
--	pmd_t pmd;
--
--	if (!has_transparent_hugepage())
--		return;
--
--	pr_debug("Validating PMD devmap\n");
--	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
--	WARN_ON(!pmd_devmap(pmd_mkdevmap(pmd)));
--}
--
--#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
--static void __init pud_devmap_tests(struct pgtable_debug_args *args)
--{
--	pud_t pud;
--
--	if (!has_transparent_pud_hugepage())
--		return;
--
--	pr_debug("Validating PUD devmap\n");
--	pud = pfn_pud(args->fixed_pud_pfn, args->page_prot);
--	WARN_ON(!pud_devmap(pud_mkdevmap(pud)));
--}
--#else  /* !CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
--static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
--#endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
--#else  /* CONFIG_TRANSPARENT_HUGEPAGE */
--static void __init pmd_devmap_tests(struct pgtable_debug_args *args) { }
--static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
--#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
--#else
--static void __init pte_devmap_tests(struct pgtable_debug_args *args) { }
--static void __init pmd_devmap_tests(struct pgtable_debug_args *args) { }
--static void __init pud_devmap_tests(struct pgtable_debug_args *args) { }
--#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
--
- static void __init pte_soft_dirty_tests(struct pgtable_debug_args *args)
- {
- 	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
-@@ -1341,10 +1286,6 @@ static int __init debug_vm_pgtable(void)
- 	pte_protnone_tests(&args);
- 	pmd_protnone_tests(&args);
- 
--	pte_devmap_tests(&args);
--	pmd_devmap_tests(&args);
--	pud_devmap_tests(&args);
--
- 	pte_soft_dirty_tests(&args);
- 	pmd_soft_dirty_tests(&args);
- 	pte_swap_soft_dirty_tests(&args);
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 1b85ed6..4fca141 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -395,8 +395,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
- 	return 0;
- }
- 
--#if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && \
--    defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
-+#if defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- static inline unsigned long pud_to_hmm_pfn_flags(struct hmm_range *range,
- 						 pud_t pud)
- {
--- 
-git-series 0.9.1
+> Yes, that looks simple enough for now, although lets not use a ternary
+> condition and lets leave a comment for the next person:
+> 
+> /* decoders are added in hardware id order
+>  * (devm_cxl_enumerate_decoders), allocated to regions in id order
+>  * (device_find_child() walks children in 'add' order)
+>  */
+
+This is garbage I forgot to delete after realizing there was missing
+logic to make this simple proposal work in practice.
