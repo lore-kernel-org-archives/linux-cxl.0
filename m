@@ -1,92 +1,113 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CDC18D649;
-	Tue, 10 Sep 2024 04:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6203818E77F;
+	Tue, 10 Sep 2024 04:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725941724; cv=fail; b=GA71KC5PVaPGDXY7jOLHc7uLcS8Ht7MM3g81r1Frpv0SHL3wOvN/YhwsPSdNi+FNJSBYpJujpL3dHhsh07scghtr2OyrRNvmwBXginrbSWY5LCyMc+JQ3DEd+2+op6NejTuRINieEQOfCgRS4G4mOZkLm9es/5frHG8B+FRuXzI=
+	t=1725941727; cv=fail; b=SaGmXGNp6wlXmqu8ci0RQHGQP8TrImV4g86DNHRaLCSNmXuyPD1euoKn14fyXiV4xb4aI0WYwHR7TRosqKNPCSZVD//Pt9SbrEF7EacbU2Q/PaK+JHDIY5SWni1A2CRoFeY82rud8jWbKECz6ApU/f+0L++sSAzJgob9GStAhbE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725941724; c=relaxed/simple;
-	bh=P8hj8duirPqMbwv4st4UqVI974aAMGWoSxucp+HHAyk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KnCOEBepaUdrZrQKnb7r5WLnd8P1TphpmTSRRRhfemNasCGbM66Dd9DjC7rscI00UGIAH13KUbm/Gv9GLPMDV8WIWusTjqpvCCTWMh4NysLFxBPci16dbr4IuzJfZ88mQvwbPMES5QRwHq8Oi8WW0xFPnC7MObQ38CtskSGiTwc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lr7jpi/6; arc=fail smtp.client-ip=40.107.220.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1725941727; c=relaxed/simple;
+	bh=igh4QlN0U8Cqu2t7gJb2xKk2cam/rX/FEF2akSlEF70=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=apR1kHN8zVv4iz9tLTwve9Cj5/3IX9U88WZRgMaG9WCxBM0rPgEaOPO+gTHtzABFLfMKfULld0ynOxyAo8bx+n+tnin+XwZ+TAMhIp39qj2zuLr5DnHjcMfBvIEzjIoaENUWQVVsw14RQKNkjUxo4e7VN1Zgi052z5s+/Kwktbc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeD8FaGG; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lr7jpi/6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeD8FaGG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725941726; x=1757477726;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=igh4QlN0U8Cqu2t7gJb2xKk2cam/rX/FEF2akSlEF70=;
+  b=QeD8FaGGegnxORkkrx9ntyDJzwG0/2MCwZWWX85vbtWucjXzaqvsMA4v
+   M9IwAsVx4MYdQYrhekjI1xpAwNG3d3dz3MpJ/sA4mD51aQCJw/vKuPoP7
+   phze5uAdb6YAsC/iBSWjDT61IInki6q5E+YZXYu31ywhXnOj/LWUgCUE7
+   1Jidk1fr+MmarY9iKQD8pcKxlkFI35DqbnlckxDAcicJJzRnTq0psKINh
+   Sa25PtB4ronoz4+hMpGURab3MPNRMNWOX79DDLYxKHHUEp1n3D/Itr1E5
+   OUswtUnO5Y8dDgUSjhMOdp2p/F1Cot4mdE8ljSSrmFklWuCeqYCWVkSxB
+   A==;
+X-CSE-ConnectionGUID: JYGHBEkERDugnfRC8mVZYw==
+X-CSE-MsgGUID: rf3tYO4LTA6PyQocRgNjDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="35239272"
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="35239272"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 21:15:25 -0700
+X-CSE-ConnectionGUID: HbGNPfg5Q5aw0iG5Nw68PA==
+X-CSE-MsgGUID: ILktLtu8TeWDdKTaLuA0HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="97700248"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Sep 2024 21:15:24 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Sep 2024 21:15:23 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Sep 2024 21:15:23 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 9 Sep 2024 21:15:23 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 9 Sep 2024 21:15:22 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tVemABZIZThPaR09NY40UZOvIqHoiesl5ZNh0FBob/FonkyBWycrHaU5ipwh2JTWluOOsHkKOHPvBuL3gjPkY7oo+y9RISSeg0LOgtpqIeLhyIB8BrOr5026xt56HUAI51vOTd1aNAgJMo7VMCTp1+w4JOO2jeEaEp7/mbxd1tPK7W2UPOCm3N3w8cYE05eC66Gh3DNAGQobxvJSVjY8HXKn1inJZrwEEb8EIKMQGKvcVLBwiufsHU2DPS841wgEqDQmto2aT4c9XGF7cNzHO3Rb2NTf5QmjC9uVd8Ugm3PVtKbohfHJnq9l9OhkyB1WGKcwGGZTeFSPi8yC3OKsvQ==
+ b=gRNvV0nCfIRKliw23RB/JurSKcshq/9RQfw7FhITq6WsYzrdKjT+8VIBNcto/5KNniZNopOsWWNavS4RV0UwK+HrHB55owfZqPK0jiHVv5zPx/nQilFcyYjJT4iGNyBtReugeYx+ATveO/rQnbYDZS2tyb5qBW0DhTGzku4AlN33p8ebwikCv/YOxPwyVAGy8QF4U/+PwTSZDmYA2U6PXqdBhA6RfsbAtcqF2xhZY+mVlZ6MhdeONUT6tVcJMeAvp662/KcRR+niSquNglP4fnO55Tw8/dLXWZYJc0gjwUoujaeOkFM0BsdUM3Irql0K0CBoQ+rr3EwtG0UNGEYNCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=44/c89HYmWXuc2I8zGYG6pChU962eRsHc5iIPIY/3LY=;
- b=c+mq6fuamCE/tHlRkMn1FouhTffZ9kNN9cQui2slEOCe+lSqSIZdYZxY2To6iTxChranpxUDvSX9J3aPmWTmw0iuSD7fqmsDxaPH3LPu0mlrc5Kf4RjrYibaahedbi3iOTBhI7ALXGwqySOJyePXaEP5ubS1DgzlFYH6sCIeLOqcTBToKwicq8p0gqw/PF4ajLhEI/r7wlFA5huYwxo6B+C2hYVyQIw4/T3rKltfQruhKfgO9FWdNl7e/YJkuhxUQQ0cWY/oEswIcW3pNN/HRnQOEejvIyXMvcjyTbBybj5XvGGduApmuEnbxZ7kWiZH69Uea9NmdIm+1xEipxKx4Q==
+ bh=/sLPjLsowBduiwzoR+TYMfaoOaCqOSQysGuf9cnYnCc=;
+ b=nuuAoXE09pFiGVCdioDo/tstOGuNKfw981BU0oytLx1BSLSIS258TaiVWiRYVkTW+CnSJ07nFBE1g3tmCAAMAhWR7i0MiWCJKxTgfR74ofpL5vvR9aAfk/NRoeWz3ZWUVjisglBUKXftjSh1LTV8MY+Ionlni9YBvzVNf0yMH/7zLT+QebX2yBuR65pij0gMTtFM+wVLn67MrCIcDmYrWqZcM/0vKcNg14DesPuKJZSHfpSdcSwmntVp/EGh2BMGBC+X/rcwZOnmZVEmSmA7zjVXV6GUJPk0LKlsezTdgMblsqnVKX8u6yrxFdc9na28qCDWTkVY9Le13+swPR3wVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=44/c89HYmWXuc2I8zGYG6pChU962eRsHc5iIPIY/3LY=;
- b=lr7jpi/6v5w1PCtw63AaJp9L3qhf1QIVAzexT9KUftGE2lWKBTtsxh2ZiraW9u76im6zz2Clr4yS5xXMfAi9CfubXbkinstM+fmOnvOIzGOYn5YaMJBuy+AulXq/qbqXT6kW5dPqlrtAXsRxPAPEFTtMc/2nqh2bhLARF01zK1rqd2o7wLF1V/yPJ6+QoG7xqL2kUx8HO6FYBA9PUnstl1QirOy207mZrNklyb0D6d2e0LZnWZIW3U2GMlXs0me0XeBOZVURMIk+WkcwnTKQZ8+88knOoeMngqF1SFjbvZe+oeSeUVEs3pd6aimLs41aAw4Ak/Edhs8V/ltifhdMkA==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- BY5PR12MB4148.namprd12.prod.outlook.com (2603:10b6:a03:208::23) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MN0PR11MB6256.namprd11.prod.outlook.com (2603:10b6:208:3c3::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.20; Tue, 10 Sep
- 2024 04:15:19 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%3]) with mapi id 15.20.7918.024; Tue, 10 Sep 2024
- 04:15:19 +0000
-From: Alistair Popple <apopple@nvidia.com>
-To: dan.j.williams@intel.com,
-	linux-mm@kvack.org
-Cc: Alistair Popple <apopple@nvidia.com>,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	logang@deltatee.com,
-	bhelgaas@google.com,
-	jack@suse.cz,
-	jgg@ziepe.ca,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	dave.hansen@linux.intel.com,
-	ira.weiny@intel.com,
-	willy@infradead.org,
-	djwong@kernel.org,
-	tytso@mit.edu,
-	linmiaohe@huawei.com,
-	david@redhat.com,
-	peterx@redhat.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com,
-	hch@lst.de,
-	david@fromorbit.com
-Subject: [PATCH 05/12] mm/memory: Add dax_insert_pfn
-Date: Tue, 10 Sep 2024 14:14:30 +1000
-Message-ID: <110d5b177d793ab17ea5d1210606cb7dd0f82493.1725941415.git-series.apopple@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
-References: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SY8P282CA0001.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:29b::35) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.20; Tue, 10 Sep
+ 2024 04:15:20 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7918.024; Tue, 10 Sep 2024
+ 04:15:20 +0000
+Date: Mon, 9 Sep 2024 21:15:17 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: quic_zijuhu <quic_zijuhu@quicinc.com>, Dan Williams
+	<dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Zijun Hu <zijun_hu@icloud.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Timur Tabi <timur@kernel.org>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
+ device_for_each_child()
+Message-ID: <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
+ <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
+ <2024090531-mustang-scheming-3066@gregkh>
+ <66df52d15129a_2cba232943d@iweiny-mobl.notmuch>
+ <66df9692e324d_ae21294ad@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
+X-ClientProxiedBy: MW4PR04CA0253.namprd04.prod.outlook.com
+ (2603:10b6:303:88::18) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -94,262 +115,207 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|BY5PR12MB4148:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a32106e-d821-48f2-d5a0-08dcd14f2e4b
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN0PR11MB6256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 897ef96c-4478-4296-ad01-08dcd14f2eda
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OYHtU7a8jLIt/MuBG+b8ChbB5Htn+KST2CrbhqYChwiM4iKd2w4r6a1cx+ZO?=
- =?us-ascii?Q?VdT4jchb8Xa06XqPhf7gdEjEFyMZRpkPARGsEE/EZ0oItIGQVhSWjGBvYpJS?=
- =?us-ascii?Q?GvLTBzcW+HMto4B8hdGo0P9gP6M+4cOxhftkRRcfxUAOUKVi2n9JEqtgMESY?=
- =?us-ascii?Q?hrkjH90eOJOxcMIV53y+MPqVddgL0EO+f7Zo/mSN/mBXHC7lxXrqSXTvkeab?=
- =?us-ascii?Q?mzNieQWoXoo5Xv1Uej7ucJaRzJMJpJvZ5EPNhDm0WhC20BZ5vQH3+Rz20hv1?=
- =?us-ascii?Q?F7GK+Q4y5ku38V5uZFNWORn8k/OP+qeP5+3rYR6HgIwdCcjM2GVwM730+wCR?=
- =?us-ascii?Q?Bh76YwbBn0JDjsLzCDxhVvUILwsafolEQPQkrpz+ZBWRVNwKtdYVth2Jp4U8?=
- =?us-ascii?Q?xJQHXwZAintWYT5w7ah8mBCiDWMtq3lnvMO86sjCzubC/fwrJQcAl/xY2O81?=
- =?us-ascii?Q?n6VrlCad3oDkzubZ5WxWC1tcIV2ehxnz691gi+dCc1lVAXZFgke91d1xSIkd?=
- =?us-ascii?Q?AeHxXI0+mx86UN9LBg+t3b6zP/FlClhSl9W/GdUay9BVjISfETsw3/nffIeF?=
- =?us-ascii?Q?wPr9sOJEWm9UC5wrq8CTxnHEEB9qAR0UxH3+Ge9EX1YT3ZrMaqUgswelEuxI?=
- =?us-ascii?Q?g9mgm3YEypX/csVUv6wUJZq51B+3ixhrrA3gvyWdY2dj5PYzqyGLJl7h1xYw?=
- =?us-ascii?Q?aXl82RWKLqCXNHL7uMWZ7XtR7EmWEnpdUroCDV4xsCYUp0meizINycAdK8st?=
- =?us-ascii?Q?r+UQl1MZ0+M7fMKKOhW46bRIpRCVWOeOOUvCvc3eMPawn6r517CqvgveszOs?=
- =?us-ascii?Q?5Ak4fq0xYoiuQcGQ7tl4CoGZknRBXAe+NvGanz6fROXRJHTETy46xvICDY4w?=
- =?us-ascii?Q?WDJNJ6g5XI2KPsB9I3AlanHYuZWtZW26VOFxPVUD71p/+8LdzXKcW+GbAbwD?=
- =?us-ascii?Q?onQrNKGkedPtDPLH9u4AED3PA5vzjDcRSZcxRlhBnl/7vcjTguwKKO7i1tum?=
- =?us-ascii?Q?4T29zmvYD2ZGPmWCn9rE9Owu/A4LYXLCgUnZO990BxQFWYcztAaRC5llLjea?=
- =?us-ascii?Q?cmbg0vKftkbA2LrMX0RgK2Nw5h6O1dWfk0cxVpxOFTlkSEtvagQ4loS+n5WJ?=
- =?us-ascii?Q?FChSEChYkGTa6ALDqNUKg1jvrtSFV6H2KXZQLY+ZdVEYNHCUsdOyGYHEFcIv?=
- =?us-ascii?Q?zSe6ddNykGPEEAFYaZ2BIyngaZLVSvG80zUHT6llwMw+cW1RjVgmrqnmRISl?=
- =?us-ascii?Q?LU3Om9VHw9qBcfKXVujQSql5BmEFfebKhjgAtNgcP3JXIYAp0CkTOq9ADoQi?=
- =?us-ascii?Q?DA2+G9O4sbNH0hUqBmPaR3dP2sMVQjiUPGikbufvXpQEzQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?NdfdmZUZqqYRjWHiol6uZzV7SKLOMSOPKuAtVv/rh/yjLY5lN/XXVblBhXBS?=
+ =?us-ascii?Q?T9KeiAF8KBgt3HKT9aj4Hng09cvRgkb8KGOXFU1SX3Za+EOek/dEMskXhdLQ?=
+ =?us-ascii?Q?h/kmjsAU1WGspwHljXik7iQcKZtfPbPttaCjMdzc4wQjEqQxMGaMe0QuCwCn?=
+ =?us-ascii?Q?Laz1vqHz2iGDbNUlcW/+3uCB2gNY/lFIgF2ED0RSzOd/2no72QJkRP/wh/1P?=
+ =?us-ascii?Q?g5IxduQld1KWtt8z0IrZNbTJvXQ/PAwayKcPuKgW5zA0OTxpdt+d3NimCUik?=
+ =?us-ascii?Q?Zj90N1tnkf/tQ+2e4NFANUyeNsP7/biWpyJ1KLXYTGC5dC+/UtbCl6cmvpRx?=
+ =?us-ascii?Q?q/NcHDzKWxo0CcwbtXnQPLtHAWoXLz4LEX0lvmZO+5aeKwl3OZY/7v0woL49?=
+ =?us-ascii?Q?8Q/ctO475AvP8TlkMIlH39qZmQQPtKf4UXCcTrLNUd0rYVIE4x83Aa5V9pUv?=
+ =?us-ascii?Q?tEhEEly2lH7r8MFDyRzGHmF8UoygN6tz9182izWfTYTFVKvdUouz1FSGRTXJ?=
+ =?us-ascii?Q?aIAxC7wq/8++YwuTMibTlyhr7hiod8bHc7VDO6uVsSYk9SHmNn4SWA8CzA7P?=
+ =?us-ascii?Q?HTvUiyew7PJRRAm57FZqdy4vV8Zpax8HrS0kJqldTOgBBpQbFG+t8FfmYY65?=
+ =?us-ascii?Q?DA+PKliNomiewg1I+ZWFAqqL+bhdHqKUJkD0y5b4dDYD9DFjY6Z59Q70u78j?=
+ =?us-ascii?Q?LjfaXWuQn2GyeubScojl4N/E0vawviKRSI/ukBrzfrP249MoZNHD8QNIoiLs?=
+ =?us-ascii?Q?yJRjy5lgg2KI+aGKqhsPJd4VIqrxSdy57bmvAx8YEQdbBHoT5nMkCPWMZenl?=
+ =?us-ascii?Q?eE2OJaM6oy7S+8cbrGYmkA44Gg3rqYqetubsEHqJyiWJKK+xn/gzBS6gljQY?=
+ =?us-ascii?Q?CaCOJC4gLC4ZuAWm77UWbjyxENYYRus04HbsLUP1b3OgAWCgUnDbX+OqpSrs?=
+ =?us-ascii?Q?lNJHV008cQdjqFqCt5XBLEItdWh2k83E0ZMWy33UGkQi2/zGqdWL8kUUFSDv?=
+ =?us-ascii?Q?tGY3bCB9++KZ8tB0l23mD8B9praFDLkZg9uSioxUXPTzwIHzMcxvPgeKRg3J?=
+ =?us-ascii?Q?rx++HjZAcQ6pLFgzK4GCMZOXIJsrWwN9R/1IXBSTnQx5uv7J/oytHhhJRbzn?=
+ =?us-ascii?Q?D9U4GwhS/QGJh8eJfgNKAKvmj4VjNKSnK9U+/mR+z1Dm5xuEiENy3AJ3onjb?=
+ =?us-ascii?Q?rCERlEtpPSE0PxMUq5VviejFLm9nbwrwpwLpJ1sb6S/9gkwM+YS09ynt3JuV?=
+ =?us-ascii?Q?kycPYGtguGM2tOjxtxwBa6SbS4LuvhIfS9dz0o4QY+WMhnukYDp5Ev8mjL/1?=
+ =?us-ascii?Q?JepFPeMiooQ9HuSXGp7+f6RZoCznhek3iCZfJ37s9gN+feMIBZ0cwiIxWMoD?=
+ =?us-ascii?Q?oflPI1Q=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4fm1AMGUfi0XUs52JZf0rz+bge8SUQRMukaoO6sIPARxe4n5otAObBKpyu3W?=
- =?us-ascii?Q?1n7WGCKXebBq4Ky8M2tw40dTrJGGqEtpOaIbdirmJh6XWMd1HxjZNeNP/8Dg?=
- =?us-ascii?Q?hHjc19eRMiKCU9ghM2snmuSkeoFDD6vXqrt7UmpYdEUD8NvYgxkHwAWoOPy5?=
- =?us-ascii?Q?t/NZpi25GcVAtimDAx5gcES0ibzRyI4dEdc7aXKGoM6WhmYQIV8NFKMxCULp?=
- =?us-ascii?Q?IBgVUiN77UfGcVSsofsPvuoxRhvlOzTUIACAfn2Gfk3W5rE1uZHB+0I2zFlG?=
- =?us-ascii?Q?A5LUsQyxYI857LjGlpNMv13fyMF6tLHN/MvcrctRbO8nsSleDu50EmopoPXb?=
- =?us-ascii?Q?AyoccCLeX5P1Ng1vyLzIws68oF9MKR5alWXi/VafbI4CqxpZufG4o9dgn5I4?=
- =?us-ascii?Q?hC8bXKo9/fOAoTFEN/l8tVUbZap0c4/obrDaEW8GhFh12LyiCVysczneHbDG?=
- =?us-ascii?Q?4dKcs/CQTQ9HC5H5oF1/OVYWcx0wiKvDibDE2BGef9h9Pzv4USGKLy63VSd2?=
- =?us-ascii?Q?bWhwx+lB3PI/kCAqxiCF03IQZY1rhyCMGLnGC2TyZkQX5oYMqKN+wG3p+kWL?=
- =?us-ascii?Q?4bWW0DhX+yEAvlBd6taXhgSgU/rnh+op55XcZ/xbqdAuyxK5fbonB7nnn2aw?=
- =?us-ascii?Q?PGBOHHZpTaKbcM9Fg93YhOZB/MW7SLNfzERbNqWW+PDvEuIqOC1oa2YCkdHw?=
- =?us-ascii?Q?u6gNSYff5yObgIKp3SMjRAt4SVtbD6RbTSAQU+xF17SBsd8nslmjjLGDexDB?=
- =?us-ascii?Q?nG75oUYNZ9BBKsDzdlZn0DuEn1g5a23v8I+Fe26RCnu6wqitw09Iq8bcKPWZ?=
- =?us-ascii?Q?Fifv3CPku+gVGmawV6n+vbQ4cZXeITRlWvPudqsjcAj5i08wrioZzCqnTB6o?=
- =?us-ascii?Q?wi1NY/mBeivSkAg6N6CtPF3lkV5oygoTJwrBt4gLnje+7XFBJ6bCuOCm865g?=
- =?us-ascii?Q?Bwq5u9Xrk1DNul0QtknjD3p8h6oGKT+HaQtnmMiosR33MbntLMOUJ4wgKF5E?=
- =?us-ascii?Q?Wfdgkrnc7uxd/ZOrRg0bRjBnmVyMLSi8oobJqadcSMVxwhHIZh5ZFEEMwA7z?=
- =?us-ascii?Q?X8fmMuyk/vs5ToqbcWA1pqITAz1xrxaudX0jgzSzr5kcBfc/eHKutpNqvFCf?=
- =?us-ascii?Q?7NY65Bd8Y3benNwUC94FZThYtjkhUVnpVLDXBVPYsAMLoGa6avYzo9teJu3G?=
- =?us-ascii?Q?BTuHTaKZB1kcv/RS8SdgUckZILeLKzsgcXl7txynyQNuUDktfX5npD/zUBeh?=
- =?us-ascii?Q?X6n6hNsW9EVAIxr1LamlEF/Q4D2W1BL+4K9yP6bFRXusno1A1zcvm2B3cUpt?=
- =?us-ascii?Q?wwsoI6lD2GBsTmq3KB6Z37cH8K/AI9uXcxRq7TazLN5s9+JS7osha67dg13C?=
- =?us-ascii?Q?OSAddanHsxMI7IfoYfYYQOuXznxposOk5mwxrJQOpDfQErf3Ll/UHkc945br?=
- =?us-ascii?Q?K33qUDs55BLoZTGvinpXPmvAnlokvgPj020XkvWLVCeSyTsDNoHuQslv1Mjv?=
- =?us-ascii?Q?EoDM2+xSiQxs9RRaJlvFa7+AcFeWFYcqOAMz42EG9VZEcjSgAgv3R7JY/Yr0?=
- =?us-ascii?Q?TBeayITiJBylzzs+msSazDtTJivcCjbucF3PsU6v?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a32106e-d821-48f2-d5a0-08dcd14f2e4b
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rtCwbvzu5uqrtbb0EXOiD/EFWJ4bp6QrVAxpY9d0PQDGcE9g2gtv2i+MOPVB?=
+ =?us-ascii?Q?OECR1SUfH2GpJ/AlFWqh6PUt4IUOqsiChyaoZu3EiRxeyzW4aXpisCVnGWRl?=
+ =?us-ascii?Q?/8TjMh5foZ1csUbsX0ipr/51K9r4R0d2fS+d5SDxRjmn6F+h6Ts+5QXy1YSE?=
+ =?us-ascii?Q?b9iSSp5UGcgSMRYOMvesbs1vQWMUHebWHLDHNeh8ty8g7nwgLKaaulW80Za+?=
+ =?us-ascii?Q?6X5L7FQSaQR+rSt9A8ykvh1TkFGMKVXEbAlhbfMWDnCEQO/g2I5Rz1GYaOvq?=
+ =?us-ascii?Q?bwiB4gjERM1rFjy/imT0aCbfWrjExQcC22+kNlniwM3nzxmQ/wOdTTshnly3?=
+ =?us-ascii?Q?X/2Znl9wQSCzgpdpa9fWepVeP8ecH0Mv5JlJZ8ZzdSEkr7Vc6uiWla5vZ1Wh?=
+ =?us-ascii?Q?hWf0/9EENBg/cg59RxVefPohPYZ07ZGCYZnkkqmliygaRR4Ev1dJ7TegwZZ1?=
+ =?us-ascii?Q?C2MGPXFFJxMe3ALcCSbvpsPh8MXt8z2/7sWb1oTDYYSi4WL3ekfwYbORcc3z?=
+ =?us-ascii?Q?IaAge2zqGNrqChhhPfA+gDgTSo0hOOwFO6CP11JyLJHBVdaAkrJHzmlV3Dgf?=
+ =?us-ascii?Q?5OGBd+kHZLfDfICrBqWrtyuBcg9jYmfWraLue+ZS3CyD4vPyIIA64a9H/cco?=
+ =?us-ascii?Q?/ANfDD2SjSPywqgONYlSeOlT4gTE4A8hQ7rmxNCa5SlY683proz4N52ydCt/?=
+ =?us-ascii?Q?jm7p5N7rRP/dp6OaLUzTnP//nm5dC3owfYIIMyLfkQ+q8S2M7NCoKBd/iE3Z?=
+ =?us-ascii?Q?PM6ic2+v1OPEP89fo0bOaWvUW1yW20syHZXc76wefJytr8HbZaIHR9yAq8Sl?=
+ =?us-ascii?Q?9frCp33oglhsw6pVqEQIAiXdcgYkAoDw2HD+iitlOTpbIE/YkRELHHiXt0HN?=
+ =?us-ascii?Q?z49m46x+V5R74IZRVD9GQVwMuHV7+STdQywn8DvxIdxZWhW9YDKD7okPGARI?=
+ =?us-ascii?Q?uMoatQZ729dvPZZtTiI38Yr1YhqWXVECUUl4coocFUANtXANRJmaYowTBh2u?=
+ =?us-ascii?Q?EKzlL6j2vTqVmYVmlKWDHwFd/wKGnaqnJbEMRZKjISOOHWu62FH6AkcL5fmL?=
+ =?us-ascii?Q?NIw2LQuo/QJ3eXEQy69+5jdaaTDhTlp/RqJwZiA11LmuV30KmahcFluLZhNI?=
+ =?us-ascii?Q?oZCNhgd/Y0Coja3O3EMuKzHf7DdK7sy/09G4+Go+ijX1cqwXETaR1YUMrFAQ?=
+ =?us-ascii?Q?ORYvUB5iKS4jYeMC11NxyA7lwnruf8EeSVrowkwG0qf73q8nOqG5LKniDk0t?=
+ =?us-ascii?Q?YRLM8EMCh7NYBg5kaktPvO8QanT20GC5PDVeHM5a6QcoeKsP/dYZu4tTlHeI?=
+ =?us-ascii?Q?An9LJ9rTAN1f8W8YMftzfnVFKt7JLYQL9+ni3UFjX/c+gkjX/lFpN0VLnf16?=
+ =?us-ascii?Q?U/2e4i9WiVfNJQSIo9tLmBek1BpBYl9IO8cd4maDttiNf3koVs8rJRtGr3Ji?=
+ =?us-ascii?Q?rxWKfewo98Tdq+my9zFicfdgTe0r247Ba+4P+Bu9JkZnbzfkkVgAwk9JvfUw?=
+ =?us-ascii?Q?p8fkzk9eWgR5wtOCSbhV51gEB2ciIt87AbQB4m30ZsTZLTqqlCWhsPrg4cAz?=
+ =?us-ascii?Q?d4pEykxITN7VeJ+VqCnkIaAXiLJLvr6rHiyR2iXB9mtcavrErMVI5qH+0l/I?=
+ =?us-ascii?Q?CA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 897ef96c-4478-4296-ad01-08dcd14f2eda
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 04:15:19.2031
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 04:15:19.9763
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vrD+oo8TgBdRf5WfNZocgy7YpSi09mpOuFvt+6m/W4jpWAksLIQ49wwxXSOW4YqO+Kh9BVzpdCHqpFjQ8xteYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4148
+X-MS-Exchange-CrossTenant-UserPrincipalName: X4Ls3k21a7U4IyPqS1ayrPwfEgs72xnm0l0wpq7GXBoMs7xIdUyy5yVjYm3XqzUhtctCZ8P6JSEXSr8nQjO9mS98ePhpoebLcqqt5w2uLWY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6256
+X-OriginatorOrg: intel.com
 
-Currently to map a DAX page the DAX driver calls vmf_insert_pfn. This
-creates a special devmap PTE entry for the pfn but does not take a
-reference on the underlying struct page for the mapping. This is
-because DAX page refcounts are treated specially, as indicated by the
-presence of a devmap entry.
+quic_zijuhu wrote:
+> On 9/10/2024 8:45 AM, Dan Williams wrote:
+> > Ira Weiny wrote:
+> > [..]
+> >>> This still feels more complex that I think it should be.  Why not just
+> >>> modify the needed device information after the device is found?  What
+> >>> exactly is being changed in the match_free_decoder that needs to keep
+> >>> "state"?  This feels odd.
+> >>
+> >> Agreed it is odd.
+> >>
+> >> How about adding?
+> > 
+> > I would prefer just dropping usage of device_find_ or device_for_each_
+> > with storing an array decoders in the port directly. The port already
+> > has arrays for dports , endpoints, and regions. Using the "device" APIs
+> > to iterate children was a bit lazy, and if the id is used as the array
+> > key then a direct lookup makes some cases simpler.
+> 
+> it seems Ira and Dan have corrected original logic to ensure
+> that all child decoders are sorted by ID in ascending order as shown
+> by below link.
+> 
+> https://lore.kernel.org/all/66df666ded3f7_3c80f229439@iweiny-mobl.notmuch/
+> 
+> based on above correction, as shown by my another exclusive fix
+> https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
+> there are a very simple change to solve the remaining original concern
+> that device_find_child() modifies caller's match data.
+> 
+> here is the simple change.
+> 
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -797,23 +797,13 @@ static size_t show_targetN(struct cxl_region
+> *cxlr, char *buf, int pos)
+>  static int match_free_decoder(struct device *dev, void *data)
+>  {
+>         struct cxl_decoder *cxld;
+> -       int *id = data;
+> 
+>         if (!is_switch_decoder(dev))
+>                 return 0;
+> 
+>         cxld = to_cxl_decoder(dev);
+> 
+> -       /* enforce ordered allocation */
+> -       if (cxld->id != *id)
+> -               return 0;
+> -
+> -       if (!cxld->region)
+> -               return 1;
+> -
+> -       (*id)++;
+> -
+> -       return 0;
+> +       return cxld->region ? 0 : 1;
 
-To allow DAX page refcounts to be managed the same as normal page
-refcounts introduce dax_insert_pfn. This will take a reference on the
-underlying page much the same as vmf_insert_page, except it also
-permits upgrading an existing mapping to be writable if
-requested/possible.
+So I wanted to write a comment here to stop the next person from
+tripping over this dependency on decoder 'add' order, but there is a
+problem. For this simple version to work it needs 3 things:
 
-Signed-off-by: Alistair Popple <apopple@nvidia.com>
+1/ decoders are added in hardware id order: done,
+devm_cxl_enumerate_decoders() handles that
 
----
+2/ search for decoders in their added order: done, device_find_child()
+guarantees this, although it is not obvious without reading the internals
+of device_add().
 
-Updates from v1:
+3/ regions are de-allocated from decoders in reverse decoder id order.
+This is not enforced, in fact it is impossible to enforce. Consider that
+any memory device can be removed at any time and may not be removed in
+the order in which the device allocated switch decoders in the topology.
 
- - Re-arrange code in insert_page_into_pte_locked() based on comments
-   from Jan Kara.
+So, that existing comment of needing to enforce ordered allocation is
+still relevant even though the implementation fails to handle the
+out-of-order region deallocation problem.
 
- - Call mkdrity/mkyoung for the mkwrite case, also suggested by Jan.
----
- include/linux/mm.h |  1 +-
- mm/memory.c        | 83 ++++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 76 insertions(+), 8 deletions(-)
+I alluded to the need for a "tear down the world" implementation back in
+2022 [1], but never got around to finishing that.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b0ff06d..ae6d713 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3463,6 +3463,7 @@ int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
- 				unsigned long num);
- int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
- 				unsigned long num);
-+vm_fault_t dax_insert_pfn(struct vm_fault *vmf, pfn_t pfn_t, bool write);
- vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 			unsigned long pfn);
- vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
-diff --git a/mm/memory.c b/mm/memory.c
-index d2785fb..368e15d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2039,19 +2039,47 @@ static int validate_page_before_insert(struct vm_area_struct *vma,
- }
- 
- static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
--			unsigned long addr, struct page *page, pgprot_t prot)
-+				unsigned long addr, struct page *page,
-+				pgprot_t prot, bool mkwrite)
- {
- 	struct folio *folio = page_folio(page);
-+	pte_t entry = ptep_get(pte);
- 	pte_t pteval;
- 
--	if (!pte_none(ptep_get(pte)))
--		return -EBUSY;
-+	if (!pte_none(entry)) {
-+		if (!mkwrite)
-+			return -EBUSY;
-+
-+		/*
-+		 * For read faults on private mappings the PFN passed in may not
-+		 * match the PFN we have mapped if the mapped PFN is a writeable
-+		 * COW page.  In the mkwrite case we are creating a writable PTE
-+		 * for a shared mapping and we expect the PFNs to match. If they
-+		 * don't match, we are likely racing with block allocation and
-+		 * mapping invalidation so just skip the update.
-+		 */
-+		if (pte_pfn(entry) != page_to_pfn(page)) {
-+			WARN_ON_ONCE(!is_zero_pfn(pte_pfn(entry)));
-+			return -EFAULT;
-+		}
-+		entry = maybe_mkwrite(entry, vma);
-+		entry = pte_mkyoung(entry);
-+		if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-+			update_mmu_cache(vma, addr, pte);
-+		return 0;
-+	}
-+
- 	/* Ok, finally just insert the thing.. */
- 	pteval = mk_pte(page, prot);
- 	if (unlikely(is_zero_folio(folio))) {
- 		pteval = pte_mkspecial(pteval);
- 	} else {
- 		folio_get(folio);
-+		entry = mk_pte(page, prot);
-+		if (mkwrite) {
-+			entry = pte_mkyoung(entry);
-+			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-+		}
- 		inc_mm_counter(vma->vm_mm, mm_counter_file(folio));
- 		folio_add_file_rmap_pte(folio, page, vma);
- 	}
-@@ -2060,7 +2088,7 @@ static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
- }
- 
- static int insert_page(struct vm_area_struct *vma, unsigned long addr,
--			struct page *page, pgprot_t prot)
-+			struct page *page, pgprot_t prot, bool mkwrite)
- {
- 	int retval;
- 	pte_t *pte;
-@@ -2073,7 +2101,8 @@ static int insert_page(struct vm_area_struct *vma, unsigned long addr,
- 	pte = get_locked_pte(vma->vm_mm, addr, &ptl);
- 	if (!pte)
- 		goto out;
--	retval = insert_page_into_pte_locked(vma, pte, addr, page, prot);
-+	retval = insert_page_into_pte_locked(vma, pte, addr, page, prot,
-+					mkwrite);
- 	pte_unmap_unlock(pte, ptl);
- out:
- 	return retval;
-@@ -2087,7 +2116,7 @@ static int insert_page_in_batch_locked(struct vm_area_struct *vma, pte_t *pte,
- 	err = validate_page_before_insert(vma, page);
- 	if (err)
- 		return err;
--	return insert_page_into_pte_locked(vma, pte, addr, page, prot);
-+	return insert_page_into_pte_locked(vma, pte, addr, page, prot, false);
- }
- 
- /* insert_pages() amortizes the cost of spinlock operations
-@@ -2223,7 +2252,7 @@ int vm_insert_page(struct vm_area_struct *vma, unsigned long addr,
- 		BUG_ON(vma->vm_flags & VM_PFNMAP);
- 		vm_flags_set(vma, VM_MIXEDMAP);
- 	}
--	return insert_page(vma, addr, page, vma->vm_page_prot);
-+	return insert_page(vma, addr, page, vma->vm_page_prot, false);
- }
- EXPORT_SYMBOL(vm_insert_page);
- 
-@@ -2503,7 +2532,7 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 		 * result in pfn_t_has_page() == false.
- 		 */
- 		page = pfn_to_page(pfn_t_to_pfn(pfn));
--		err = insert_page(vma, addr, page, pgprot);
-+		err = insert_page(vma, addr, page, pgprot, mkwrite);
- 	} else {
- 		return insert_pfn(vma, addr, pfn, pgprot, mkwrite);
- 	}
-@@ -2516,6 +2545,44 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 	return VM_FAULT_NOPAGE;
- }
- 
-+vm_fault_t dax_insert_pfn(struct vm_fault *vmf, pfn_t pfn_t, bool write)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	pgprot_t pgprot = vma->vm_page_prot;
-+	unsigned long pfn = pfn_t_to_pfn(pfn_t);
-+	struct page *page = pfn_to_page(pfn);
-+	unsigned long addr = vmf->address;
-+	int err;
-+
-+	if (addr < vma->vm_start || addr >= vma->vm_end)
-+		return VM_FAULT_SIGBUS;
-+
-+	track_pfn_insert(vma, &pgprot, pfn_t);
-+
-+	if (!pfn_modify_allowed(pfn, pgprot))
-+		return VM_FAULT_SIGBUS;
-+
-+	/*
-+	 * We refcount the page normally so make sure pfn_valid is true.
-+	 */
-+	if (!pfn_t_valid(pfn_t))
-+		return VM_FAULT_SIGBUS;
-+
-+	WARN_ON_ONCE(pfn_t_devmap(pfn_t));
-+
-+	if (WARN_ON(is_zero_pfn(pfn) && write))
-+		return VM_FAULT_SIGBUS;
-+
-+	err = insert_page(vma, addr, page, pgprot, write);
-+	if (err == -ENOMEM)
-+		return VM_FAULT_OOM;
-+	if (err < 0 && err != -EBUSY)
-+		return VM_FAULT_SIGBUS;
-+
-+	return VM_FAULT_NOPAGE;
-+}
-+EXPORT_SYMBOL_GPL(dax_insert_pfn);
-+
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
- 		pfn_t pfn)
- {
--- 
-git-series 0.9.1
+Now, the cxl_port.hdm_end attribute tracks the "last" decoder to be
+allocated for endpoint ports. That same tracking needs to be added for
+switch ports, then this routine could check for ordering constraints by:
+
+    /* enforce hardware ordered allocation */
+    if (!cxld->region && port->hdm_end + 1 == cxld->id)
+        return 1;
+    return 0;
+
+As it stands now @hdm_end is never updated for switch ports.
+
+[1]: 176baefb2eb5 cxl/hdm: Commit decoder state to hardware
+
+
+
+
+
+
+
+Yes, that looks simple enough for now, although lets not use a ternary
+condition and lets leave a comment for the next person:
+
+/* decoders are added in hardware id order
+ * (devm_cxl_enumerate_decoders), allocated to regions in id order
+ * (device_find_child() walks children in 'add' order)
+ */
+>  }
+> 
+>  static int match_auto_decoder(struct device *dev, void *data)
+> @@ -840,7 +830,6 @@ cxl_region_find_decoder(struct cxl_port *port,
+>                         struct cxl_region *cxlr)
+>  {
+>         struct device *dev;
+> -       int id = 0;
+> 
+>         if (port == cxled_to_port(cxled))
+>                 return &cxled->cxld;
+> @@ -849,7 +838,7 @@ cxl_region_find_decoder(struct cxl_port *port,
+>                 dev = device_find_child(&port->dev, &cxlr->params,
+>                                         match_auto_decoder);
+>         else
+> -               dev = device_find_child(&port->dev, &id,
+> match_free_decoder);
+> +               dev = device_find_child(&port->dev, NULL,
+> match_free_decoder);
+>         if (!dev)
+>                 return NULL;
+> 
+> 
+
+
