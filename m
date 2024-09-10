@@ -1,228 +1,193 @@
-Received: from pv50p00im-ztdg10021101.me.com (pv50p00im-ztdg10021101.me.com [17.58.6.44])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B6418F2FD
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Sep 2024 11:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725968799; cv=none; b=b8Ll0wqBLo9bK3xACpi5oDYy3vsx9gG+qUxRxSBu2c9+2OBiG0cBbbCEn/zDqCHBjaPeNkepPEc8x50ZBpftJygId2lJSSxLwCRVsG5tJiZ66f2k8ZlH0gHQsNhK6Mgqoii0qK5kx8+fiNDpjmw+peSIe4e7U3FaBQVXU6sORbo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725968799; c=relaxed/simple;
-	bh=lCuEX1B7G8V6W9Z6q+uGVeU5AA5ec3oX68AitYTYla4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dSQPEmnp7a6xniuSqXHMjSh1JayUfW+5WjscOhk9iprlIX174lPdmvZlic0oh4FQs8Lsxd6dXV2al1MiBLhPfaN1/PIJRweTIdNGPpNFGNbxElAXDPW2ZUNiTXvWUFeIBjWZbTtiUXVZgjTct9npeL1VxiQO6WLrj+MMfCB4HNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=G4BQ5oWh; arc=none smtp.client-ip=17.58.6.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A463C0C;
+	Tue, 10 Sep 2024 13:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725973220; cv=fail; b=or3+ftJfgihzRaGFRuDmWkH28s88CbBzock3WBPJCm2UX1co2vSR7kwT8LBFm/ste8h97hojzXblzx1hhoA5QTGQEAhN7b1bukmvv4ZJXdS9ArqwBxxWzdYLeh5NkJK0xeOD/TuKGxoTsOjRYKDGk1AqFvb5qJC7kQKhZJjqFUk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725973220; c=relaxed/simple;
+	bh=Km3QeX+7AT9Fiz4r69+OsBlsFqjFlRJvowZdqF7t88M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BMtTwyaP7HiRE0cYrZK5QEc42pvSsguv0/XBDPUqh55EwAi2whL3Z5FFXrh891BUmi9899lQlne94+ZqYPiEsdb1kTFpqNWjRgwBtRpwAPo3okOrmyov+chLgMDvKn2oXY7URfLDizLS1gNnFofRC5r7nFahFm7WT5HsTpB+j6U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NRH5XGIW; arc=fail smtp.client-ip=40.107.223.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="G4BQ5oWh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1725968797;
-	bh=tmrBWDvF0iFyeIEX7Tyi7+YVVfmUxWfr5OWVJk8yh0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=G4BQ5oWhVYcRKTfdXQ4pIgR2PiqxXbB9NFXGNnQhcHs5IXSC/hd4q/B4FuiU4q12p
-	 QvEYZukH3U+0sPeyayEBY/S0f/S76q+YFZTWrzABe9wqmRksIeAcaqL8L+vw7/9x4V
-	 2qOxFXixhIy4w1BtiGqVxbFKO/aEqyXA3cW5efE/ERmKoBZ9v0fPZJqHQQUhr9dRf6
-	 tBAHb5bm4DpJiACBGAp/3iswfuL7qcDMUS5RpL/a6Bvqcs/ywuGUOqd1htm37BSqKO
-	 kp0IJQSpKMNOFA9z0zVhYrpDS4tiriV6ycXk8jmRSBtAD/qEoHM+yxHl1SXn2sKo76
-	 zYlsYcUm4x9Vw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021101.me.com (Postfix) with ESMTPSA id CE6C8D000DB;
-	Tue, 10 Sep 2024 11:46:28 +0000 (UTC)
-Message-ID: <e7e6ea66-bcfe-4af4-9f82-ae39fef1a976@icloud.com>
-Date: Tue, 10 Sep 2024 19:46:14 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NRH5XGIW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EvpgCtyeZ+69j6Tn/7ULtU9kiTVuyBKrikO7NQLtTTLW++l35bCvOfLw2XZuKlTm/s/sPfS0CGcC9NFBvwuY5vlJFQ02zyOYMR8HGTCUGCiof8uWa1sL8vUgdblm8wGd1L2ReModgxm8/rOKwojuOTEcnGGvq8hUze49rRizta5J3rY9GQBR1NRiwOo3IKrWsCHs8K4TMTDFDB/pZ25g5Nsq7RiDqHQd+U8VxL5cfRin7vKpIDI/00uV3E2r2jI1MRgkhfM7GTWeCrZQsEWM52GBf4UY2xO1hxsRUoVsb+YSMx1QvOZA0g4iJmiALz5vMlTRtpz3XrpmWhcWMCCgOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wIktH0jYC2TzfuFvTN7iT6R1oTCWql/vaF+m70DwAns=;
+ b=VQTQ3yS7djqp9AemDXcmYomcY7dD0kUIDqFqVmJi6DZb75/ckY6DyxZjpueulfdBMLhQCcG7/QT9GeA4h8gE0zxTKJ+dghTZBS5Y4I7KymHKtP3f9OBI0tWBYar/2ZxcFr/bP/OSfNv60QdOvFzJV1KVJhDRqaVqSlMCa832S8HnD9bRZFvmZTK+vRja4/S4nWaETlRCdLo07wfsqIWZFeh1oCsibKK3eFO8lMk3KYJTNxBX7vAzTT+eftHJg9fMAEUtzUq+wFs7LEyzP3xldXxotiFGKWLLtasuHANTsq8pZinFyk5tPUpiwX8BzhAkXabbJ44j40TMpOkBsyVwJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wIktH0jYC2TzfuFvTN7iT6R1oTCWql/vaF+m70DwAns=;
+ b=NRH5XGIWu951x/4LeyRNSVUWC3jhb9jWYre8tYUfURn1WpKqIOWWHf/NCFjSPEnw4liCjmsy78TgHcekPv6GxC5bPq9u/XlF4QCuCJkxXWz1mCH4ZI2xHGoTQBXNmH4/DBhmvv638itTEG9q+eLnYsZipbaK+EgBdaOd3QPgvms=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
+ by SA3PR12MB8764.namprd12.prod.outlook.com (2603:10b6:806:317::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.25; Tue, 10 Sep
+ 2024 13:00:15 +0000
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48%6]) with mapi id 15.20.7939.022; Tue, 10 Sep 2024
+ 13:00:14 +0000
+Message-ID: <78cbbaca-5413-c006-6609-ee23e2c757f0@amd.com>
+Date: Tue, 10 Sep 2024 15:00:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] device-dax: map dax memory as decrypted in CoCo guests
+Content-Language: en-US
+To: Kevin Loughlin <kevinloughlin@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, changyuanl@google.com, pgonda@google.com,
+ sidtelang@google.com, tytso@mit.edu, pasha.tatashin@soleen.com,
+ thomas.lendacky@amd.com
+References: <20240814205303.2619373-1-kevinloughlin@google.com>
+ <0bae453d-b4a8-3132-9fd0-bca0eece6a74@amd.com>
+ <CAGdbjmLVFZJq7OJv2OwM3knmwfb-j8nZP7G_ownFA3kd3fYbVA@mail.gmail.com>
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <CAGdbjmLVFZJq7OJv2OwM3knmwfb-j8nZP7G_ownFA3kd3fYbVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0303.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f6::16) To IA1PR12MB8189.namprd12.prod.outlook.com
+ (2603:10b6:208:3f0::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
- device_for_each_child()
-To: Dan Williams <dan.j.williams@intel.com>,
- quic_zijuhu <quic_zijuhu@quicinc.com>, Ira Weiny <ira.weiny@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Timur Tabi <timur@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
- <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
- <2024090531-mustang-scheming-3066@gregkh>
- <66df52d15129a_2cba232943d@iweiny-mobl.notmuch>
- <66df9692e324d_ae21294ad@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
- <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: u82aMDuBd8roHSdBbqsymyDqICNgNuyL
-X-Proofpoint-ORIG-GUID: u82aMDuBd8roHSdBbqsymyDqICNgNuyL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-10_04,2024-09-09_02,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 phishscore=0 suspectscore=0 spamscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2409100087
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|SA3PR12MB8764:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34414a36-5755-4747-f650-08dcd198832e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SVpEak9xNGRXWk9hdjVBWUFRZDlmYnhycGtva05MN0VGRzMvaDVQSXdkejdM?=
+ =?utf-8?B?Z2hLa25rUUMyV3ArbEVRK25SblJ1RG5PMHB0NW54eWRrREFIaFk4MjEwY2Fp?=
+ =?utf-8?B?RUZEeERhQ0JZbUl6RUNOSTlZVmJlSjN6VG13V054d0k5bDJKdTYwZ0pCbERr?=
+ =?utf-8?B?WFFqSUJhRk1kUTZya2pXclhwSmhIR2JHMzNUWGhTeGN4a2hFZG9kcU1pbGlI?=
+ =?utf-8?B?KzdmMmtVY3duaGxWbitKVk1kSFMxVDc4eWRLN2VocDl6MVduWk1EV3llS1cz?=
+ =?utf-8?B?L3ZhblNCVTBjU0tpTEI4MHZiZkFqVEViWC9DZVdlZFpZRXFuZVZ5SHJqQXZY?=
+ =?utf-8?B?QVMrWkxkb3FWUFUrYmZSWDIrUmwxR1RMSzJ6UitjVXdNRGhVd2JUbUJYMnBo?=
+ =?utf-8?B?WDRWSndtbGpYNkR6cUlLem9ib0FPTnhZN0NuRWlkTEh6UmltQndMUVZTdnF6?=
+ =?utf-8?B?dlNhSzM5SVZFQnZEVjJ6WlNTc1BwYTE4R3BoTTEzUXVlemNSRTRwQmRRZS9L?=
+ =?utf-8?B?clBBRWVreU93RWhYemtXYUhDbVBCRWxSZVZta3JmYUs4b2FRcGlBakRNeFVC?=
+ =?utf-8?B?cE96Skw5MFRRL1hLWStPTTA5SW42N3hlbktHL2Y2anJkOG9sTkRGenpkU0k5?=
+ =?utf-8?B?T0o4RUw5Y3FUTi94cWNCMERUa1RZQlVJSXJyejQ5SG1LdE5nQnZLTm9mUUlE?=
+ =?utf-8?B?cFZjRlhVd3R0R2k3dm5hNU1FeHBydnBCNnk2ZWtRUzQ4ZW82Z3d4WmVBekZt?=
+ =?utf-8?B?ZlM4ckF5b3ZmNzZlYTlBYVAwdXRaWGg5ZzV0ZDUxZkFZcENlWEZDUC9aLzgw?=
+ =?utf-8?B?bU9GWTJLTjJVWkk1YmpzempQVFR4NVZpckQ1aDg2dDVJL2pXaVV1NkVMTDAr?=
+ =?utf-8?B?Q3haTUpEUnAwclh5R1BJNmRjNEx3YzYvUlV6R3hZUFIxNjgzc2Fna2M5YmJl?=
+ =?utf-8?B?YjhyZjhJcW4wTW9qNDdCa3lXclJvMlJCdzltRGtDRTJGK2FZa2ppRUJNdU9J?=
+ =?utf-8?B?cTYrbTRyT2tqWGUxVDJuM1pTdHZyMlBzOEs1VTlONHB6NkxWVS9kc0dGTTBS?=
+ =?utf-8?B?cjhXMkwyMjBXaGdUUTRzNk9nM0s3ZjNKSFFTdlhRQXVPMnBISjNTTGdUSUJy?=
+ =?utf-8?B?S0dOckZ4eGwyMEZpYThFUTAzNVlJVkpCeGx1Rjl2bDhaMm9OSHRONGwwVnBD?=
+ =?utf-8?B?dVl3UlJUOXgxS1JES2pkMXF6THFwblBVeDhvc1oxVEh6OEpPZ3BOQVo3aTNO?=
+ =?utf-8?B?dytac1k3MGhZUExnQ0RVWktSUkFJTmM2Um1rSVU0dDhTQVdpY3NUalpMVDk5?=
+ =?utf-8?B?ZVkwR0drL1g3ZDJxMW5xQ09obm5jY1cxemZ1MkU4K3g3R0NmbHFwMTNsZVg0?=
+ =?utf-8?B?UzNBZzZtKy9uWUZwR1c4MEJXRGtsUGxyUW1xZHVQTEdCdmUwZWREVmc0Q1pR?=
+ =?utf-8?B?dS9DUlRxRjNGelp0Y3JIdHNqSGN2K083YTRmaGhGRGo5ak9RaEFhTkJHeW5M?=
+ =?utf-8?B?ZTQrOFZsRDBJUHo1U3BYMUJ0SVp2QkUvOUJSQWZTR3RmUTVselBERHFUU3Z0?=
+ =?utf-8?B?QTR3S2hYZDJYS3ZGK0lybGdFNFF0L1lXV2ZreHBWMldVb2hmVDZ6Y1Y5NW1w?=
+ =?utf-8?B?MHdjbm1adVhHclo3YXhiUDcwN3FDa1A1VjlSQXpscWVXNEhjQk43V1M1QlA5?=
+ =?utf-8?B?RGRMdGlHNGJVLzQydng4aU4xcHpkZ3lJeGFYcThQNEtFeHM0eG5TOG10eUdN?=
+ =?utf-8?B?ajFURXhHcU1HZVIrRFU1cjBaMllxWkl3cno4Rk1uM0RBZUxDUFVEdWZDbWVq?=
+ =?utf-8?B?QTVOT2h0VHZXNzFjN3RYUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eUJGZGpJOVdjSVB2WDRVd2NBV2ExUTQ2YllINWdJQ0x1aXd3QkJSblk5aW9M?=
+ =?utf-8?B?WVlwZlZyMUNicDdnRkI0dXYyUk9ld0gvRTdsYlk4SForQXNTQ1JqR0dDaWVJ?=
+ =?utf-8?B?ZmRvRTFyemtYa1JMMmQvQ0p4OHdwU3djT2l3SXFvRDJidnJjYXJuVkVwLzB5?=
+ =?utf-8?B?UXNpYThHTEN3dXVlVk9VNkdNcW1aSTBjZUR1bXF0ZldseUdtamJ3SjJxV0lE?=
+ =?utf-8?B?UE9rVkg1aVB6bXFCNlRsay9VeVZCSVRzMG11QmtCZlArMGFPeW1ydi81OWNH?=
+ =?utf-8?B?NzFIc3pjMWczN2M0UUtnekhXbVV6ZnBjTURJdEJMYXJzVGpRRlRqRXUwMVQz?=
+ =?utf-8?B?RGNyRDE4Y3M5ZTFuVlhYNGRHOEVUdkcxdGVxTDlOVDBHd2REbGlsejl3a3ZY?=
+ =?utf-8?B?cHU0d05DZS9sQmk0UUM0bnVNeTB6RzNUc2JrbjF5elgrVVFnSWpKRURxait2?=
+ =?utf-8?B?YTF1dlZYYzQ4c2lnejlITmpVdTd2MTVscEZ0ZGgwWHBPV1Jiby9LbVk0NVBp?=
+ =?utf-8?B?RlNRbXMxWWdqRFliRzFyc3pMMERrbnFqaDgvMEV6WmVyYldGNFI1ZnhBeitt?=
+ =?utf-8?B?TGxLVWd0aG5LWXRtRjlLYjVqSHFVYmFLbGRNM2tpVGMwMmxYUkVvSG4vVkVY?=
+ =?utf-8?B?NnUrWHlnM0lpTjFKRmliU2VIb1JhWFN4OXBqTVNmakVnVVh0VCs2TVNFSWx4?=
+ =?utf-8?B?SCtpeEo2eUhveENoWEEwV09UQlJNa3IzY3VSSVBHa2tOU0doWG9IWmVsb2U2?=
+ =?utf-8?B?TWt1ZDhPRXkrT3JWVXVQM1hDREc1RHc5ZGlWYytSYTZWUytBYXgzWEc4VDg1?=
+ =?utf-8?B?UDlJRGYrWXlSWnY5eWJReVBwQWd3V3NOalJOV0VSSWNycnlTRHpEa2VnNS9Z?=
+ =?utf-8?B?V3BVeDJTUjZrL2dnbWNLNGZseU9VOEVrMlUyVWV5U0hwTWg0OG5KWkZ2OU5Q?=
+ =?utf-8?B?VW5sVHRCMWZTTTlza3JXMUp5OE54RjJTWWZEejdSZXcyWU9QaVk1OGpDd0JU?=
+ =?utf-8?B?SWhUNy9nV0dUQTl0dnMzc0haMXM3YTBKYzZBZm5SWUoyV0VmT2NVaWRiM0VO?=
+ =?utf-8?B?c1R2MjNWZ254WHVUdEo3QjJsWTRaUHl0VVZIUkMwbnJyTVk0YWlSUUx1Z0Vq?=
+ =?utf-8?B?KzE2Q1JFSnNOUDdjZWFlcC9zcDllWmRLTVVmV1NiZVdIcS9nTWZmOHRXMC9k?=
+ =?utf-8?B?eSswOHJzUnh4K0tlNmI4YTVQNFJjNEg3MmpUbm5XTkNhWkI1ZDVrY2xLYm42?=
+ =?utf-8?B?VmIyOXJUUUxTWDBwTW16OU9FZW1BVlhudDBkbUgyZUVWK3pJSFY4eTV1K2l5?=
+ =?utf-8?B?Y3VqKzN4Z3JZaE5kZkFTcDZqUWF5ZlRBTXR2M0pmMmNVNFRiU3dORkJiMU5C?=
+ =?utf-8?B?TWliNk1DSlpjOU9MYVNDWk02cnNZN0FmVGI3cDZDMzFiM1o0YlB1L016K1NZ?=
+ =?utf-8?B?Q25Qa0dqV1JyaTRaMkIrUXp6ME1STmYySGlHdTdmT2w2WEtzSzFEZ3hkbkJv?=
+ =?utf-8?B?SHFIRS9INHRIVWsyeHZ0eDNoZ0lrTFFEQjk3cEhFRk5qL09FV2JOaGNmc3VL?=
+ =?utf-8?B?UHVEZmRWR0hHMnRQMG04WC8wa0E1ajVUa3llMmNiRzlTcG10eWk0bzBzd2xC?=
+ =?utf-8?B?bU5xbERlclRSK1hSaHZ3RDRXN1FEa0RiZGIzNEhjMzNpMHlqeDRvdExQV01s?=
+ =?utf-8?B?QmxzOTJGdzZRWmllVU9nM1RzYVhtcWVsOElIZFRIMk12N09ZaVMyMFd0NXlF?=
+ =?utf-8?B?L3E3YVJwN2FOMkxUTk1wZHRBV3ZWNk1xcGgvbG0rRFJHYnhiVUo0YW9MbEJ6?=
+ =?utf-8?B?MFlzWUs3bnR0MWxUbmNsTC90aDYyRlpleDc3SWoyUm5rUms0aVpqbWFxRit2?=
+ =?utf-8?B?QjlzYkkxamhMcldyekFmQ3J1V2ovWHI0blNGdjJvN2tmdDc4LzIrVlVDZmFu?=
+ =?utf-8?B?d0ZZSDZvM0pPV3VoeXFISWdIV3FKTExKS2VFTmdMb0pXemZoenlIL1Vjb0ln?=
+ =?utf-8?B?LzN2OTZwajVudGpsUWJiREMyRG1rTnk4REtiL2hvaDBRakRJZU9sRUZKUkx6?=
+ =?utf-8?B?bEZTSlVLekIxZlYwK0s5VmhaNkdLMHM4aUJsMUVRUFRvajdQaDBMbTNFeG9G?=
+ =?utf-8?Q?NP5wCiP3yNNEwhV5/l95oVspQ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34414a36-5755-4747-f650-08dcd198832e
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 13:00:14.8003
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kyOcOIWhPENWUYOPkR9uAPAS0gp2lgh0EyuDxU61+poRzPliUJhx9wE2o1Y2e18JMJtFQHNa3rcoFVaihNfSFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8764
 
-On 2024/9/10 12:15, Dan Williams wrote:
-> quic_zijuhu wrote:
->> On 9/10/2024 8:45 AM, Dan Williams wrote:
->>> Ira Weiny wrote:
->>> [..]
->>>>> This still feels more complex that I think it should be.  Why not just
->>>>> modify the needed device information after the device is found?  What
->>>>> exactly is being changed in the match_free_decoder that needs to keep
->>>>> "state"?  This feels odd.
->>>>
->>>> Agreed it is odd.
->>>>
->>>> How about adding?
->>>
->>> I would prefer just dropping usage of device_find_ or device_for_each_
->>> with storing an array decoders in the port directly. The port already
->>> has arrays for dports , endpoints, and regions. Using the "device" APIs
->>> to iterate children was a bit lazy, and if the id is used as the array
->>> key then a direct lookup makes some cases simpler.
->>
->> it seems Ira and Dan have corrected original logic to ensure
->> that all child decoders are sorted by ID in ascending order as shown
->> by below link.
->>
->> https://lore.kernel.org/all/66df666ded3f7_3c80f229439@iweiny-mobl.notmuch/
->>
->> based on above correction, as shown by my another exclusive fix
->> https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
->> there are a very simple change to solve the remaining original concern
->> that device_find_child() modifies caller's match data.
->>
->> here is the simple change.
->>
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -797,23 +797,13 @@ static size_t show_targetN(struct cxl_region
->> *cxlr, char *buf, int pos)
->>  static int match_free_decoder(struct device *dev, void *data)
->>  {
->>         struct cxl_decoder *cxld;
->> -       int *id = data;
->>
->>         if (!is_switch_decoder(dev))
->>                 return 0;
->>
->>         cxld = to_cxl_decoder(dev);
->>
->> -       /* enforce ordered allocation */
->> -       if (cxld->id != *id)
->> -               return 0;
->> -
->> -       if (!cxld->region)
->> -               return 1;
->> -
->> -       (*id)++;
->> -
->> -       return 0;
->> +       return cxld->region ? 0 : 1;
+On 8/26/2024 11:35 PM, Kevin Loughlin wrote:
+>> How can I test this? Can I test it with virtio-pmem device?
 > 
-> So I wanted to write a comment here to stop the next person from
-> tripping over this dependency on decoder 'add' order, but there is a
-> problem. For this simple version to work it needs 3 things:
-> 
-> 1/ decoders are added in hardware id order: done,
-> devm_cxl_enumerate_decoders() handles that
-> 
+> Correct. Assuming the CoCo guest accesses some virtio-pmem device in
+> devdax mode, mmapping() this virtio-pmem device's memory region
+> results in the guest and host reading the same (plaintext) values from
+> the region.
 
-do not known how you achieve it, perhaps, it is not simpler than
-my below solution:
+I tried to test the daxdev with virtio-pmem but getting the below error 
+(just tried without this patch)
 
-finding a free switch cxl decoder with minimal ID
-https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
+root@ubuntu:/home/amd# ndctl list -N
+{
+   "dev":"namespace0.0",
+   "mode":"devdax",
+   "map":"dev",
+   "size":1054867456,
+   "uuid":"c8b15ce6-0c8f-4a1a-ada6-b19a90bdf1bb",
+   "numa_node":0
+}
 
-which has simple logic and also does not have any limitation related
-to add/allocate/de-allocate a decoder.
+root@ubuntu:cat /dev/zero | daxio --output=/dev/namespace0.0
+daxio: neither input or output is device dax
 
-i am curious why not to consider this solution ?
+Could you please share the instructions (to test with virtio-pmem or 
+Qemu). If not, still okay.
 
-> 2/ search for decoders in their added order: done, device_find_child()
-> guarantees this, although it is not obvious without reading the internals
-> of device_add().
-> 
-> 3/ regions are de-allocated from decoders in reverse decoder id order.
-> This is not enforced, in fact it is impossible to enforce. Consider that
-> any memory device can be removed at any time and may not be removed in
-> the order in which the device allocated switch decoders in the topology.
->
-
-sorry, don't understand, could you take a example ?
-
-IMO, the simple change in question will always get a free decoder with
-the minimal ID once 1/ is ensured regardless of de-allocation approach.
-
-> So, that existing comment of needing to enforce ordered allocation is
-> still relevant even though the implementation fails to handle the
-> out-of-order region deallocation problem.
-> 
-> I alluded to the need for a "tear down the world" implementation back in
-> 2022 [1], but never got around to finishing that.
-> 
-> Now, the cxl_port.hdm_end attribute tracks the "last" decoder to be
-> allocated for endpoint ports. That same tracking needs to be added for
-> switch ports, then this routine could check for ordering constraints by:
-> 
->     /* enforce hardware ordered allocation */
->     if (!cxld->region && port->hdm_end + 1 == cxld->id)
->         return 1;
->     return 0;
-> 
-> As it stands now @hdm_end is never updated for switch ports.
-> 
-> [1]: 176baefb2eb5 cxl/hdm: Commit decoder state to hardware
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> Yes, that looks simple enough for now, although lets not use a ternary
-> condition and lets leave a comment for the next person:
-> 
-> /* decoders are added in hardware id order
->  * (devm_cxl_enumerate_decoders), allocated to regions in id order
->  * (device_find_child() walks children in 'add' order)
->  */
->>  }
->>
->>  static int match_auto_decoder(struct device *dev, void *data)
->> @@ -840,7 +830,6 @@ cxl_region_find_decoder(struct cxl_port *port,
->>                         struct cxl_region *cxlr)
->>  {
->>         struct device *dev;
->> -       int id = 0;
->>
->>         if (port == cxled_to_port(cxled))
->>                 return &cxled->cxld;
->> @@ -849,7 +838,7 @@ cxl_region_find_decoder(struct cxl_port *port,
->>                 dev = device_find_child(&port->dev, &cxlr->params,
->>                                         match_auto_decoder);
->>         else
->> -               dev = device_find_child(&port->dev, &id,
->> match_free_decoder);
->> +               dev = device_find_child(&port->dev, NULL,
->> match_free_decoder);
->>         if (!dev)
->>                 return NULL;
->>
->>
-> 
-> 
-
+Thanks,
+Pankaj
+Best regards,
+Pankaj
