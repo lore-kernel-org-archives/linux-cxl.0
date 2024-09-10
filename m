@@ -1,295 +1,228 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2072.outbound.protection.outlook.com [40.107.236.72])
+Received: from pv50p00im-ztdg10021101.me.com (pv50p00im-ztdg10021101.me.com [17.58.6.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4745A17D8BF;
-	Tue, 10 Sep 2024 07:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725953539; cv=fail; b=YCKSMihlgNHoUtBx5gZmW4+mgvOHifCWdUoB3Yz6P+A3jEobxDZIzA1NIivQN4O36uVCYpgi7rGAPtmM+KAQ9yDOTGs2Vz9rsUw6Z10uYNMuI2IhaFoOfs0aw3CPdmWkrU1s4jFFE9YbmE0lzHNB3SD0cG1e9kwgSGBjIeFPsts=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725953539; c=relaxed/simple;
-	bh=al0l+wvA7oddpTy85a9D4KoW1cVrWAe07bYcUbApcTw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=epKFTK+gO4jGWFDsRRWWdAqTzyp7T/dmkG0S5cZfSWM/9Ed05yUBFcNaUw7odPpPJDiLA5CXRLuTKccnEGzVypGeiPp2iW0GlJ3ZPiW2TbHmEnw+c9d7Slou4NA5HUUfNFsLgpcVDsfWCIAzhNG/ZBRt/1PQS1p6UbsTypjxOSY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AZvIA+MG; arc=fail smtp.client-ip=40.107.236.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B6418F2FD
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Sep 2024 11:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725968799; cv=none; b=b8Ll0wqBLo9bK3xACpi5oDYy3vsx9gG+qUxRxSBu2c9+2OBiG0cBbbCEn/zDqCHBjaPeNkepPEc8x50ZBpftJygId2lJSSxLwCRVsG5tJiZ66f2k8ZlH0gHQsNhK6Mgqoii0qK5kx8+fiNDpjmw+peSIe4e7U3FaBQVXU6sORbo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725968799; c=relaxed/simple;
+	bh=lCuEX1B7G8V6W9Z6q+uGVeU5AA5ec3oX68AitYTYla4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSQPEmnp7a6xniuSqXHMjSh1JayUfW+5WjscOhk9iprlIX174lPdmvZlic0oh4FQs8Lsxd6dXV2al1MiBLhPfaN1/PIJRweTIdNGPpNFGNbxElAXDPW2ZUNiTXvWUFeIBjWZbTtiUXVZgjTct9npeL1VxiQO6WLrj+MMfCB4HNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=G4BQ5oWh; arc=none smtp.client-ip=17.58.6.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AZvIA+MG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IVK0iqLSbS2Bu1ZW7+syeu+nbm/6MXnrXthkq1vuxLFG8tNGZQMD/jGcH9SlrKlLRtjKPwSOdnCuk2+5x8w8wmhCwXDKMu7gqugYwBXoueMs5ecPgFTalVeg2F7MkpjuLf9J4zzdkYP5dgTmb7PgA/H2FeM5sY5lHAfw1vCbvG1gXpno3OrNwayZoNYONwylBS19qUy2xoD0orhcDlBjAtbTVmKsA7DnIc+pCc0GlUV0owE4Sn4y7Iazh2JN/lJHYIjSUleElVa9+3gffIAjp4N4gA79IdXXMrwJ9n/RYTUJH4geSTf+qWwxWj9uYP0uPHkYetCcm9dl4DoN2pmFNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T4v9JajwNPgrGk5t5H95Le4f9mM263ADLIkBbqk8zhw=;
- b=eLMWB0Fb0IwVVse4QjTR5QDS8SdqMm957LoTi8Gh0wuPMrC0oiYdcUTXJ/Qn4zcZ6frwA9Nf1ki2prEvg9lY6JwKSBHHF4D3RhBDJOdMlBih7dJQ40sNU0iWWOBGbBjLddu2cxJkz51Vz86GPPo1JfxLCJPtv4tW0F2eHsxBVMwNtzugDYJ7hJ1QpKKlz3yuZdWzKQReWcdeipfDkR9h8ZFoYyyhor82Cb2KZnT2Z2BQzFg6UXTkv9CEmst4CAdbnImIZ3V5ot+hZNV3FpF+tlGLYQsNGq79pL7D3G9qnBQ/Mm7DMgLYxy2pAkfuUcf64dqb800XCSwHTdnfzv+HsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T4v9JajwNPgrGk5t5H95Le4f9mM263ADLIkBbqk8zhw=;
- b=AZvIA+MGWp0LlMR5hImDa1ilZ6YlMt6R2HE4XI7LvMdScE2LP/dttHOX88KovsMR9Z7JlGEnCByI4HXmy6EmIdCInmlNi2jQVtfkhZNXrpEoDl+qYfROOpDMiHvZYIxeZw+ZER9lap0RMUioUMNVGgEwn2OQZgJtjror7PBqN3k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by CY8PR12MB8411.namprd12.prod.outlook.com (2603:10b6:930:6e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.24; Tue, 10 Sep
- 2024 07:32:11 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.7939.017; Tue, 10 Sep 2024
- 07:32:11 +0000
-Message-ID: <d47976e6-caa0-93b9-a42c-507d2f34401b@amd.com>
-Date: Tue, 10 Sep 2024 08:31:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 03/20] cxl/pci: add check for validating capabilities
-Content-Language: en-US
-To: "Li, Ming4" <ming4.li@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
- <20240907081836.5801-4-alejandro.lucero-palau@amd.com>
- <937b2409-c34c-4540-9bb8-3142d719a881@intel.com>
- <c5c67507-941f-4112-a6b5-822c126be388@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <c5c67507-941f-4112-a6b5-822c126be388@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0672.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:351::10) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="G4BQ5oWh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1725968797;
+	bh=tmrBWDvF0iFyeIEX7Tyi7+YVVfmUxWfr5OWVJk8yh0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=G4BQ5oWhVYcRKTfdXQ4pIgR2PiqxXbB9NFXGNnQhcHs5IXSC/hd4q/B4FuiU4q12p
+	 QvEYZukH3U+0sPeyayEBY/S0f/S76q+YFZTWrzABe9wqmRksIeAcaqL8L+vw7/9x4V
+	 2qOxFXixhIy4w1BtiGqVxbFKO/aEqyXA3cW5efE/ERmKoBZ9v0fPZJqHQQUhr9dRf6
+	 tBAHb5bm4DpJiACBGAp/3iswfuL7qcDMUS5RpL/a6Bvqcs/ywuGUOqd1htm37BSqKO
+	 kp0IJQSpKMNOFA9z0zVhYrpDS4tiriV6ycXk8jmRSBtAD/qEoHM+yxHl1SXn2sKo76
+	 zYlsYcUm4x9Vw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021101.me.com (Postfix) with ESMTPSA id CE6C8D000DB;
+	Tue, 10 Sep 2024 11:46:28 +0000 (UTC)
+Message-ID: <e7e6ea66-bcfe-4af4-9f82-ae39fef1a976@icloud.com>
+Date: Tue, 10 Sep 2024 19:46:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CY8PR12MB8411:EE_
-X-MS-Office365-Filtering-Correlation-Id: c092c4b6-e7e2-4eb2-932c-08dcd16aaf28
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dUI5WDdXSk1aL2Ntb2QrdDh0T1VOelp6dm50ZVhUM0JpMmdMTjVmUW8zUUoy?=
- =?utf-8?B?bERXNExFYmZNbGkxYXJCbDZ4TGw0TzdyV2hyY2RiMW03UUswSit2TTR4U0E4?=
- =?utf-8?B?MjYycjBvcERUWmlIN05PeTBtMGdzNmx1aTRTaTY1Q1ZnTWsrYUh4M0Y1ZkR4?=
- =?utf-8?B?bFBYOEVqcHFyc1VNYklZazZnd3J4RWtqVmdYVGlqbURzblVnVnE4OGMzeUxt?=
- =?utf-8?B?OGlFdzJoemFlVURHZ0RrWEQvQ0U4SDFJWm56Q3E1dUdtdjZLbHBVdWtjZjU5?=
- =?utf-8?B?bnU2RTNQSUxPSWpjdnBCVUpxUVZ3a3hDOFdka1FJRkRXYTgxakRRRDkxOFJh?=
- =?utf-8?B?WDNBTy9tV3ArWHRMK1dFWnJiRnYySDZGbkFiNC9xc0hGU3g0OHFkZlhUaytP?=
- =?utf-8?B?VDBraVpDQ1V0VllIbVR3bmpUM3hCckVrdEtRYVBES3Mya0xhQ3huK2g5cVda?=
- =?utf-8?B?eW9KeXpnQU5scGw2ckdENkZnUXZ6VGNuazllY0hFNGZhUldQOEtLOGFuMWhj?=
- =?utf-8?B?SG9vVXFwOXdBWEFPM2ZCZVNBNnVnK3pJZmlJM1Jlc2l0eUZlMS9oQmp6dE1n?=
- =?utf-8?B?K0xOdVA3VzRPOVlZd2EyOHUyOW9TdUpidzhzNkFKS3Q1d3RMRUtiZ3RXdDVz?=
- =?utf-8?B?T1c5akRkNVNLN2liV2tWTnpUVnRESURZU0M0TDAraytEMmUvSTUyYmxXcG13?=
- =?utf-8?B?ZURld0NIR3N4eU1mUzFaWkFvWTE4Z3ZyeFozOHcyakFScnhUSTk2NUhSVUtO?=
- =?utf-8?B?aDNMejczY3BiTFFNUCtDMk5GS0twbUhRbTZsa0oyK1RZZFV4elZZL3JBRTVR?=
- =?utf-8?B?S3FaMU1sUElENTRjU1lwWjZ2Y3RYSFNZZHBxZFhrVWx3anJSYjR5SWVnU2xF?=
- =?utf-8?B?czRCcDJXczZ3b2dNNDZiQ2VJWmNIcm5HNTJ3NkgyMjdrdTNTdnFXV1Y0b2NR?=
- =?utf-8?B?TWN0ekpzVVdSem04YXdkeFgvK2kwNU5USjRrYTMwaklJblgxeno4dGZ3ZElI?=
- =?utf-8?B?TUludlVBMW9xckxjcytMaWRRL0VVME5nRVhMQmdGVnpINHZ1U2MzSW9LUlZy?=
- =?utf-8?B?akxsVjVPMndaa1pFUVRpVHVsd0oyRERmdDgvVnZVd2k5WTZJVnJXd0QzWGhL?=
- =?utf-8?B?RytvMmxWOGlBRjRySVZyNVN1dms5cHlrRkRZMHltZjAwSVRKbUQrOFdKV0Ry?=
- =?utf-8?B?MEk0ckZ5a2xwbkVBWFF3ZDVndVJmQk02ejNlZnFzZDcyQlhuYnBrSERxRFp5?=
- =?utf-8?B?eWIyZitLU2JYeC9OdDVLbWpkZndhNGdVSGhiblZXNGQ2VmJqcG5CZnlJWHJM?=
- =?utf-8?B?Ym1Nb1l2MUVIRzVCSE1xQXJDSVdSaStoM1BvK0cwK3g2aFhib0h5N25yQ3B4?=
- =?utf-8?B?dllyVVRRNDRRUUw0ZmVhVmpyYkhqVGIwSXMycGlpVmp3a3phZmRPbm1aN2NP?=
- =?utf-8?B?YTFJT1JhZDdOZTFpN1FkRThSeHpTakRrUFhTV0psRGhtUTlFTWxiKzV2MXdO?=
- =?utf-8?B?QVF6WnVpOXFyd2lTSSs0MmRmQTREUVQyNk9lSitiTFU1UjZNVXlEbHNhRWhZ?=
- =?utf-8?B?MTNoTDVRa1RwWG9pUGtHdGdneGtiRXdiUXpYc09PSDNZSnZSdVVrR2dmeFBJ?=
- =?utf-8?B?bTBGNVp0ZHVEa0xvZGU3VldrNW5NYkNvZ0JER2htUDg1U2grOWdXckZUN0pi?=
- =?utf-8?B?cmJSTXJJaW1vbkJ5bEtZMWJLZ1BZQTl1OUZxOUkvQWRYdTFsVjBndGpPZkhq?=
- =?utf-8?B?bUw1KzZJWGtNaHYzaDFNOFJvMkJnM2F5cmFMRnh6V09naWJNR0hmOHNRc2Vw?=
- =?utf-8?B?UVNDNjdiNTFGZEFPK2swaXlCQ2dqZFE2RUxCV25jMWNWMzFGZnI1TjMzOXZi?=
- =?utf-8?Q?0FXEqjFcI93zS?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YklSUTR4Q3VWN2NQUTY5TGd1bmdiai96UGtaNGxhSDBMaHFUM2lwRGc1NXBl?=
- =?utf-8?B?ZXdWZzg1VTNmK0xnWlVjVE1odFd0c2s0cXRBWjlweDFEdWJIRUZ4UnRKR244?=
- =?utf-8?B?VmFUMzdhRWtCNWtaMnVNQzJVS1Y2VHVKSUFjeVNIYStaT0VaSFM0VFk0bGJP?=
- =?utf-8?B?UU95REdQaUlxU1BsbGROQnBUaUE4ZXdYS3p2a01DSENtdm1ncElhaUdsaHVT?=
- =?utf-8?B?N3FsbnF4VUxHa1U2Vk5JcEI2QzhKY0RvVk40cHh4VkNIZ3Rmc2ZzNGdaTk5Y?=
- =?utf-8?B?QWNrQ0ZWeS8veFhPM0dzV2lzZnNBbkE5RDViWjFYQmZoaGhIU1RLUktBNkN3?=
- =?utf-8?B?QlMxZ0xuRlY5eS9vWHM5WUozMDZnWnVkalRXMnQyVStEVjF0UWdsMEU0SUJ1?=
- =?utf-8?B?MUw1NGpLeklndzFoaTJFRGtqTTkxZEJ5bjhVYXhlaXZQeXAveE1sc1JaNjl4?=
- =?utf-8?B?aHJmaE14eE16T3FjajhZSzZ0YlBvQ0tuTk0xK000bm9qRk00bVN3ZzBFbDA1?=
- =?utf-8?B?ZkZpTms0V1FtZlVCVnZyRGN2U1hOYWM1cUNjQTl4cDVvOE1HUFJjT2lrZnVs?=
- =?utf-8?B?eEdBTFJFM2k4REp3L3VFTFBUcGRuZjc3NlBXdXIxK2t6czNOL3NUcENMMDUw?=
- =?utf-8?B?TGpkcDdJZUlxamZIZXFjTG04a3BxUXRVT0I2UG9YOUF5ZTk3ckExYlJNcGdt?=
- =?utf-8?B?MUxNRXJna2dvTUNIdW5hYWdCeVl2cjFYNXlCVytoZ01Jd1IrRzExUXpSbTRy?=
- =?utf-8?B?RDBpV0FGeTVNQ2JTK0NkbFh4cHI4UVZqdDFSdHdCcTcxNldQUEVQbnpCWXQ5?=
- =?utf-8?B?Q2I0bHJ2TFY5KzI2UjBSeVZwcWN2bzlVcWdmMnN0OGJXQmFlaW10QmJNQ2w5?=
- =?utf-8?B?Y2ZuV2VlSWdMWkZtcW9LUmRZMnBIS0JEeGhrTlFuOFRQOVRTRW5yZFZEbHJq?=
- =?utf-8?B?TUpqOGVGN3Y0c05ZaW1xOTNDVUs4TVlma0lSTnBoaVl0MDNQZFFocGdmZTZm?=
- =?utf-8?B?UExwMVFJbnVNUXN2VEJKRkZqcDRzMnRVVEJDTUVPYTRDN2x3elB5eTdLY3hJ?=
- =?utf-8?B?R05IejlGSDVySzNYMXp6MVNIZk85YnJaalFGK0UweWlTRlhPSXlaeGh4Nk5o?=
- =?utf-8?B?YUhXa3oyczFyMXRwYmtRa09aS00wOFVlNitJL3NvbjcvRng0UE1XY003K3A2?=
- =?utf-8?B?Y1BDaFRCL2hMaHM1WHQ1QTFXSkZvS1lqL2NnUE9LS2dNK2w3L2JHTkdrRTBW?=
- =?utf-8?B?czlhYXBTNUdndDlwUWhzVklSOHNESXdIdlY4QXI4cW1YS1lKd01ZZFNVZEI1?=
- =?utf-8?B?alRaZ0VsNWljYnBKRkVFQytmUzcxN3NmUUtBcEFHd0ZjR3lPUG5UMFRFaG1a?=
- =?utf-8?B?UHUrdkFJQWRXZGdhZ3VRZzRiQVB3Nzd0SnlqNUNscXdoenM5N0U2R2FoZG1o?=
- =?utf-8?B?L3FreXdLSHZsVml5dzdCb3JjbUNrbTlOM3h5aTQweDZ5MTdoU1plS2oybUZJ?=
- =?utf-8?B?RkxlZnNOejhOZ21zclVEU2lVN0JySExjbDRnWUNoYURiRm9XdWhmemsvMjJI?=
- =?utf-8?B?bml3d3FpZkRnUnNSanRBME1KdHcwR294SkY2ODN1WDZNYitwRUdpcmxRc2E3?=
- =?utf-8?B?VDNDM3gwZlJoZnN2Z3lIQjIzODdraDZwZkJVTDl0d3QzRCtTcldiWlZ5QnFt?=
- =?utf-8?B?US9XQTIwendnaGxqR28ySkRRaUVzN0ZjblAvbm1KV01ONjR4L3A0bGphbTY1?=
- =?utf-8?B?SzdrYTNaYVF6K2NEeVNwUC9SYlFibllqQ0d5NEtqc0phUDEzVXVFL2NaeHRp?=
- =?utf-8?B?TUNKb2JJV0I2dVpGN29sODZmV1J5bHhBUnIyM1FSd3JGTWtEd0V0NFVobUxp?=
- =?utf-8?B?L2x4eUtoUE1ZTEtqME9MTWRnblNobzF1ZU51NzljNjdkd1lJTWM0eEZmck1K?=
- =?utf-8?B?WE9YckZVWGdLL2o0UUw1bFZvZDkreitKR2I2K1hINjloTTFjTVhMMDB1L05I?=
- =?utf-8?B?NkRYV0IraVg0cHlRUC80ZWdJYVpmT0RNaWEvODl4NlZNRC90RnFId01SVHAv?=
- =?utf-8?B?K0xMOEFuTVUyeHNKMjAvbFBvSm4vRHJyOGJzL2NBZkk4bWdDV2dBeTlwMUhH?=
- =?utf-8?Q?ZqhL5Jg+UROAQfaX9pjsJf3iE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c092c4b6-e7e2-4eb2-932c-08dcd16aaf28
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 07:32:11.7268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yXndO4jtGm68inFnHc1pj/rA9iK+WSlvsru782KrsUoX47tk8E1RuWSeK/FDlfdP1IS63NYEEQ1lXa6Nx8uXCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8411
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] cxl/region: Find free cxl decoder by
+ device_for_each_child()
+To: Dan Williams <dan.j.williams@intel.com>,
+ quic_zijuhu <quic_zijuhu@quicinc.com>, Ira Weiny <ira.weiny@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Timur Tabi <timur@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com>
+ <20240905-const_dfc_prepare-v4-1-4180e1d5a244@quicinc.com>
+ <2024090531-mustang-scheming-3066@gregkh>
+ <66df52d15129a_2cba232943d@iweiny-mobl.notmuch>
+ <66df9692e324d_ae21294ad@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <a6dae308-ff34-4479-a638-8c12ff2e8d32@quicinc.com>
+ <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <66dfc7d4f11a3_32646294f7@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: u82aMDuBd8roHSdBbqsymyDqICNgNuyL
+X-Proofpoint-ORIG-GUID: u82aMDuBd8roHSdBbqsymyDqICNgNuyL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-10_04,2024-09-09_02,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 phishscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2409100087
 
-
-On 9/10/24 07:24, Li, Ming4 wrote:
-> On 9/10/2024 11:26 AM, Li, Ming4 wrote:
->> On 9/7/2024 4:18 PM, alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
+On 2024/9/10 12:15, Dan Williams wrote:
+> quic_zijuhu wrote:
+>> On 9/10/2024 8:45 AM, Dan Williams wrote:
+>>> Ira Weiny wrote:
+>>> [..]
+>>>>> This still feels more complex that I think it should be.  Why not just
+>>>>> modify the needed device information after the device is found?  What
+>>>>> exactly is being changed in the match_free_decoder that needs to keep
+>>>>> "state"?  This feels odd.
+>>>>
+>>>> Agreed it is odd.
+>>>>
+>>>> How about adding?
 >>>
->>> During CXL device initialization supported capabilities by the device
->>> are discovered. Type3 and Type2 devices have different mandatory
->>> capabilities and a Type2 expects a specific set including optional
->>> capabilities.
->>>
->>> Add a function for checking expected capabilities against those found
->>> during initialization.
->>>
->>> Rely on this function for validating capabilities instead of when CXL
->>> regs are probed.
->>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> ---
->>>   drivers/cxl/core/pci.c  | 17 +++++++++++++++++
->>>   drivers/cxl/core/regs.c |  9 ---------
->>>   drivers/cxl/pci.c       | 12 ++++++++++++
->>>   include/linux/cxl/cxl.h |  2 ++
->>>   4 files changed, 31 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->>> index 3d6564dbda57..57370d9beb32 100644
->>> --- a/drivers/cxl/core/pci.c
->>> +++ b/drivers/cxl/core/pci.c
->>> @@ -7,6 +7,7 @@
->>>   #include <linux/pci.h>
->>>   #include <linux/pci-doe.h>
->>>   #include <linux/aer.h>
->>> +#include <linux/cxl/cxl.h>
->>>   #include <linux/cxl/pci.h>
->>>   #include <cxlpci.h>
->>>   #include <cxlmem.h>
->>> @@ -1077,3 +1078,19 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
->>>   				     __cxl_endpoint_decoder_reset_detected);
->>>   }
->>>   EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
->>> +
->>> +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, u32 expected_caps,
->>> +			u32 *current_caps)
->>> +{
->>> +	if (current_caps)
->>> +		*current_caps = cxlds->capabilities;
->>> +
->>> +	dev_dbg(cxlds->dev, "Checking cxlds caps 0x%08x vs expected caps 0x%08x\n",
->>> +		cxlds->capabilities, expected_caps);
->>> +
->>> +	if ((cxlds->capabilities & expected_caps) != expected_caps)
->>> +		return false;
->>> +
->>> +	return true;
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_pci_check_caps, CXL);
->> Why has to use this 'u32 *current_caps' as a parameter? if user wants to know the capabilities of a device, they can get it from cxlds->capabilities directly.
+>>> I would prefer just dropping usage of device_find_ or device_for_each_
+>>> with storing an array decoders in the port directly. The port already
+>>> has arrays for dports , endpoints, and regions. Using the "device" APIs
+>>> to iterate children was a bit lazy, and if the id is used as the array
+>>> key then a direct lookup makes some cases simpler.
 >>
-> Sorry, I missed something implemented in PATCH #1, seems like you can not access struct cxl_dev_state from efx driver side. right?
+>> it seems Ira and Dan have corrected original logic to ensure
+>> that all child decoders are sorted by ID in ascending order as shown
+>> by below link.
+>>
+>> https://lore.kernel.org/all/66df666ded3f7_3c80f229439@iweiny-mobl.notmuch/
+>>
+>> based on above correction, as shown by my another exclusive fix
+>> https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
+>> there are a very simple change to solve the remaining original concern
+>> that device_find_child() modifies caller's match data.
+>>
+>> here is the simple change.
+>>
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -797,23 +797,13 @@ static size_t show_targetN(struct cxl_region
+>> *cxlr, char *buf, int pos)
+>>  static int match_free_decoder(struct device *dev, void *data)
+>>  {
+>>         struct cxl_decoder *cxld;
+>> -       int *id = data;
+>>
+>>         if (!is_switch_decoder(dev))
+>>                 return 0;
+>>
+>>         cxld = to_cxl_decoder(dev);
+>>
+>> -       /* enforce ordered allocation */
+>> -       if (cxld->id != *id)
+>> -               return 0;
+>> -
+>> -       if (!cxld->region)
+>> -               return 1;
+>> -
+>> -       (*id)++;
+>> -
+>> -       return 0;
+>> +       return cxld->region ? 0 : 1;
+> 
+> So I wanted to write a comment here to stop the next person from
+> tripping over this dependency on decoder 'add' order, but there is a
+> problem. For this simple version to work it needs 3 things:
+> 
+> 1/ decoders are added in hardware id order: done,
+> devm_cxl_enumerate_decoders() handles that
+> 
 
+do not known how you achieve it, perhaps, it is not simpler than
+my below solution:
 
-Yes. The idea is to avoid that for facilitating changes to those updated 
-structs. Initially, during the RFC review, it was said let's enforce 
-because accel drivers should not be trusted, but I think the main 
-concern is maintenance.
+finding a free switch cxl decoder with minimal ID
+https://lore.kernel.org/all/20240905-fix_cxld-v2-1-51a520a709e4@quicinc.com/
 
+which has simple logic and also does not have any limitation related
+to add/allocate/de-allocate a decoder.
 
+i am curious why not to consider this solution ?
+
+> 2/ search for decoders in their added order: done, device_find_child()
+> guarantees this, although it is not obvious without reading the internals
+> of device_add().
+> 
+> 3/ regions are de-allocated from decoders in reverse decoder id order.
+> This is not enforced, in fact it is impossible to enforce. Consider that
+> any memory device can be removed at any time and may not be removed in
+> the order in which the device allocated switch decoders in the topology.
 >
->>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
->>> index 8b8abcadcb93..35f6dc97be6e 100644
->>> --- a/drivers/cxl/core/regs.c
->>> +++ b/drivers/cxl/core/regs.c
->>> @@ -443,15 +443,6 @@ static int cxl_probe_regs(struct cxl_register_map *map, u32 *caps)
->>>   	case CXL_REGLOC_RBI_MEMDEV:
->>>   		dev_map = &map->device_map;
->>>   		cxl_probe_device_regs(host, base, dev_map, caps);
->>> -		if (!dev_map->status.valid || !dev_map->mbox.valid ||
->>> -		    !dev_map->memdev.valid) {
->>> -			dev_err(host, "registers not found: %s%s%s\n",
->>> -				!dev_map->status.valid ? "status " : "",
->>> -				!dev_map->mbox.valid ? "mbox " : "",
->>> -				!dev_map->memdev.valid ? "memdev " : "");
->>> -			return -ENXIO;
->>> -		}
->>> -
->>>   		dev_dbg(host, "Probing device registers...\n");
->>>   		break;
->>>   	default:
->>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->>> index 58f325019886..bec660357eec 100644
->>> --- a/drivers/cxl/pci.c
->>> +++ b/drivers/cxl/pci.c
->>> @@ -796,6 +796,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>>   	struct cxl_register_map map;
->>>   	struct cxl_memdev *cxlmd;
->>>   	int i, rc, pmu_count;
->>> +	u32 expected, found;
->>>   	bool irq_avail;
->>>   	u16 dvsec;
->>>   
->>> @@ -852,6 +853,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>>   	if (rc)
->>>   		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
->>>   
->>> +	/* These are the mandatory capabilities for a Type3 device */
->>> +	expected = BIT(CXL_DEV_CAP_HDM) | BIT(CXL_DEV_CAP_DEV_STATUS) |
->>> +		   BIT(CXL_DEV_CAP_MAILBOX_PRIMARY) | BIT(CXL_DEV_CAP_MEMDEV);
->>> +
->>> +	if (!cxl_pci_check_caps(cxlds, expected, &found)) {
->>> +		dev_err(&pdev->dev,
->>> +			"Expected capabilities not matching with found capabilities: (%08x - %08x)\n",
->>> +			expected, found);
->>> +		return -ENXIO;
->>> +	}
->>> +
->> Same as above, the capabilities already are cached in cxlds->capabilities. seems like that the 'found' can be removed and using cxlds->capabilities directly here.
+
+sorry, don't understand, could you take a example ?
+
+IMO, the simple change in question will always get a free decoder with
+the minimal ID once 1/ is ensured regardless of de-allocation approach.
+
+> So, that existing comment of needing to enforce ordered allocation is
+> still relevant even though the implementation fails to handle the
+> out-of-order region deallocation problem.
+> 
+> I alluded to the need for a "tear down the world" implementation back in
+> 2022 [1], but never got around to finishing that.
+> 
+> Now, the cxl_port.hdm_end attribute tracks the "last" decoder to be
+> allocated for endpoint ports. That same tracking needs to be added for
+> switch ports, then this routine could check for ordering constraints by:
+> 
+>     /* enforce hardware ordered allocation */
+>     if (!cxld->region && port->hdm_end + 1 == cxld->id)
+>         return 1;
+>     return 0;
+> 
+> As it stands now @hdm_end is never updated for switch ports.
+> 
+> [1]: 176baefb2eb5 cxl/hdm: Commit decoder state to hardware
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> Yes, that looks simple enough for now, although lets not use a ternary
+> condition and lets leave a comment for the next person:
+> 
+> /* decoders are added in hardware id order
+>  * (devm_cxl_enumerate_decoders), allocated to regions in id order
+>  * (device_find_child() walks children in 'add' order)
+>  */
+>>  }
+>>
+>>  static int match_auto_decoder(struct device *dev, void *data)
+>> @@ -840,7 +830,6 @@ cxl_region_find_decoder(struct cxl_port *port,
+>>                         struct cxl_region *cxlr)
+>>  {
+>>         struct device *dev;
+>> -       int id = 0;
+>>
+>>         if (port == cxled_to_port(cxled))
+>>                 return &cxled->cxld;
+>> @@ -849,7 +838,7 @@ cxl_region_find_decoder(struct cxl_port *port,
+>>                 dev = device_find_child(&port->dev, &cxlr->params,
+>>                                         match_auto_decoder);
+>>         else
+>> -               dev = device_find_child(&port->dev, &id,
+>> match_free_decoder);
+>> +               dev = device_find_child(&port->dev, NULL,
+>> match_free_decoder);
+>>         if (!dev)
+>>                 return NULL;
 >>
 >>
->>>   	rc = cxl_await_media_ready(cxlds);
->>>   	if (rc == 0)
->>>   		cxlds->media_ready = true;
->>> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
->>> index 930b1b9c1d6a..4a57bf60403d 100644
->>> --- a/include/linux/cxl/cxl.h
->>> +++ b/include/linux/cxl/cxl.h
->>> @@ -48,4 +48,6 @@ void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
->>>   void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
->>>   int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
->>>   		     enum cxl_resource);
->>> +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, u32 expected_caps,
->>> +			u32 *current_caps);
->>>   #endif
->>
+> 
+> 
+
