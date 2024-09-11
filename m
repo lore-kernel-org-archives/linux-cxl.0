@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B0917BB34;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF75719AA75;
 	Wed, 11 Sep 2024 09:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726045684; cv=none; b=GbcemEHLDSrLVFgtTrcTzw6lJ0ObYGYPWJiGqAfncyPosOPeUq6CH+elDczrBtHTgKwrZcPV68//9QFqE8pgtuLPC/wadFqoc4b//l4qKoVKW7PdhxQcFZpdODgKIEONWFSyJNM317ldEc98o9q5v4H+vHlrBFxvwKHNz8ko+fQ=
+	t=1726045684; cv=none; b=PgxobOAiTEgzEgNi0iB2V2v7B3ZAAU0UT1M6cmrmMgMG5Xp/xu6+y/ByWdmrw9gdGxP4Vp8cz7sSUhrSfdUhat0BkVR+Ys1VbyoTJ3ZJBsCgNOHZMOBkXOgJKYHDRyZQCZBGyW+BKUwZZbtD2cZTSu+uwi+xdlc9F/0hxoxyW7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1726045684; c=relaxed/simple;
-	bh=oIlgVn2yPgJBEMCAS8z9Ge6TJ3sOLrUOEaqIApebRAQ=;
+	bh=Hgnu/H6PTERArFWCUjzLLzoTFeFa32jy5z0VnGftOoc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E6I0TSL3+EKRhK1LEYcVWqLE2Sp6gsZPPstyju+9FHJte12n2l/oPMSTfpIjFmZY5noHQnRTYRAZEO9edsPwaqXEnqexzMnEr89YpDiPyMbUA2U8UhiboqEkRi7T+yQ4/A/NmalQG3tjVuF3JTR5uw78V79I+kkNc9t41fUpclQ=
+	 MIME-Version:Content-Type; b=TsTP6LpvP+ER4O3vZ4+ibu797tzJcHkbdQxxqvuLDXsCxb2Oj9xw79tlLwyOtSy798oXC1rLK7CrG53gIEtsYLkVx2nuHuNDrEdJkQOBPPlekLH4qvR0Y8B6feX4iuofp/R2ArRO/8cJbnnBlcPk/eigmZNXsFAalHxtxNNuMKI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X3ZNP4Xpfz6K6p0;
-	Wed, 11 Sep 2024 17:03:01 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X3ZNX2LWfz6K6pK;
+	Wed, 11 Sep 2024 17:03:08 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8701F140F60;
-	Wed, 11 Sep 2024 17:07:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4235E140F63;
+	Wed, 11 Sep 2024 17:07:55 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.245.151) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 11 Sep 2024 11:07:46 +0200
+ 15.1.2507.39; Wed, 11 Sep 2024 11:07:52 +0200
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -44,9 +44,9 @@ CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
 	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v12 15/17] EDAC: Add EDAC PPR control driver
-Date: Wed, 11 Sep 2024 10:04:44 +0100
-Message-ID: <20240911090447.751-16-shiju.jose@huawei.com>
+Subject: [PATCH v12 17/17] cxl/memfeature: Add CXL memory device PPR control feature
+Date: Wed, 11 Sep 2024 10:04:46 +0100
+Message-ID: <20240911090447.751-18-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20240911090447.751-1-shiju.jose@huawei.com>
 References: <20240911090447.751-1-shiju.jose@huawei.com>
@@ -63,437 +63,371 @@ X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add generic EDAC PPR(Post Package Repair) control driver supports configuring
-the memory PPR feature in the system. Supports both sPPR(soft PPR) and
-hPPR(hard PPR). The device with PPR feature, get the PPR descriptor from the
-EDAC PPR and registers with the EDAC, which adds the sysfs PPR control attributes.
-The PPR control attributes are available to userspace in
-/sys/bus/edac/devices/<dev-name>/pprX/
+Post Package Repair (PPR) maintenance operations may be supported by CXL
+devices that implement CXL.mem protocol. A PPR maintenance operation
+requests the CXL device to perform a repair operation on its media.
+For example, a CXL device with DRAM components that support PPR features
+may implement PPR Maintenance operations. DRAM components may support two
+types of PPR: Hard PPR (hPPR), for a permanent row repair, and Soft PPR
+(sPPR), for a temporary row repair. sPPR is much faster than hPPR, but the
+repair is lost with a power cycle.
 
-Generic EDAC PPR driver and the common sysfs PPR interface promotes
-unambiguous access from the userspace irrespective of the underlying memory
-devices with PPR feature supported.
+During the execution of a PPR Maintenance operation, a CXL memory device:
+- May or may not retain data
+- May or may not be able to process CXL.mem requests correctly, including
+the ones that target the DPA involved in the repair.
+These CXL Memory Device capabilities are specified by Restriction Flags
+in the sPPR Feature and hPPR Feature.
 
-The sysfs PPR attribute nodes would be present only if the client driver
-has implemented the corresponding attribute callback functions and pass in ops
-to the EDAC during registration.
+sPPR maintenance operation may be executed at runtime, if data is retained
+and CXL.mem requests are correctly processed. For CXL devices with DRAM
+components, hPPR maintenance operation may be executed only at boot because
+data would not be retained.
+When a CXL device identifies a failure on a memory component, the device
+may inform the host about the need for a PPR maintenance operation by using
+an Event Record, where the Maintenance Needed flag is set. The Event Record
+specifies the DPA that should be repaired. A CXL device may not keep track
+of the requests that have already been sent and the information on which
+DPA should be repaired may be lost upon power cycle.
+The userspace tool requests for maintenance operation if the number of
+corrected error reported on a CXL.mem media exceeds error threshold.
+
+CXL spec 3.1 section 8.2.9.7.1.2 describes the device's sPPR (soft PPR)
+maintenance operation and section 8.2.9.7.1.3 describes the device's
+hPPR (hard PPR) maintenance operation feature.
+
+CXL spec 3.1 section 8.2.9.7.2.1 describes the sPPR feature discovery and
+configuration.
+
+CXL spec 3.1 section 8.2.9.7.2.12 describes the hPPR feature discovery and
+configuration.
+
+Add support for CXL memory device PPR control.
+Register with EDAC driver, which gets the PPR attr descriptors from the
+EDAC PPR and expose sysfs PPR control attributes to the userspace.
+For example CXL PPR control for the CXL mem0 device is
+exposed in /sys/bus/edac/devices/cxl_mem0/pprX/
+
+Tested with QEMU patch for CXL PPR feature.
+https://lore.kernel.org/all/20240730045722.71482-1-dave@stgolabs.net/
 
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- Documentation/ABI/testing/sysfs-edac-ppr |  69 ++++++
- drivers/edac/Makefile                    |   2 +-
- drivers/edac/edac_device.c               |   4 +
- drivers/edac/edac_ppr.c                  | 255 +++++++++++++++++++++++
- include/linux/edac.h                     |  30 +++
- 5 files changed, 359 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-edac-ppr
- create mode 100755 drivers/edac/edac_ppr.c
+ drivers/cxl/core/memfeature.c | 277 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 276 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-edac-ppr b/Documentation/ABI/testing/sysfs-edac-ppr
-new file mode 100644
-index 000000000000..aaa645c195fc
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-edac-ppr
-@@ -0,0 +1,69 @@
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		The sysfs EDAC bus devices /<dev-name>/ppr* subdirectory
-+		belongs to the memory media PPR (Post Package Repair) control
-+		feature, where <dev-name> directory corresponds to a device
-+		registered with the EDAC PPR driver and thus registered with
-+		the generic EDAC device driver.
-+		/ppr* belongs to either sPPR (Soft PPR) or hPPR (Hard PPR)
-+		feature for the memory device.
-+		The sysfs PPR attr nodes would be only present if PPR is
-+		supported.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/persist_mode_avail
-+Date:		Oct 2024
-+KernelVersion:	6.12For e.g. HBM, DDR.
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(RO) persist PPR modes supported in the device.
-+		For e.g. Hard PPR(hPPR) for a permanent row repair,
-+		Soft PPR(sPPR) for a temporary row repair.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/persist_mode
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(RW) Current persist PPR mode.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/dpa_support
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(RO) True if supports DPA for PPR maintenance operation.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/ppr_safe_when_in_use
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(RO) True if memory media is accessible and data is retained
-+		during the PPR operation.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/repair_hpa
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(WO) Start the PPR operation for the HPA (host physical
-+		address) set. Return failure if resources are not available
-+		to perform repair.
-+
-+What:		/sys/bus/edac/devices/<dev-name>/ppr*/repair_dpa
-+Date:		Oct 2024
-+KernelVersion:	6.12
-+Contact:	linux-edac@vger.kernel.org
-+Description:
-+		(WO) Starts the PPR operation for the DPA(device physical
-+		address) set. Return failure if resources are not available
-+                to perform repair.
-+		In some states of system configuration (e.g. before address decoders
-+		have been configured), memory devices (e.g. CXL) may not have an
-+		active mapping in the main host address physical address map.
-+		As such, the memory to repair must be identified by a device
-+		specific physical addressing scheme using a DPA. The DPA to use
-+		will be presented in related error records.
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 62115eff6a9a..19ab22a210a1 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_EDAC)			:= edac_core.o
+diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
+index 5d4057fa304c..ad0b4a616d9d 100644
+--- a/drivers/cxl/core/memfeature.c
++++ b/drivers/cxl/core/memfeature.c
+@@ -18,8 +18,9 @@
+ #include <linux/limits.h>
+ #include <cxl.h>
+ #include <linux/edac.h>
++#include "core.h"
  
- edac_core-y	:= edac_mc.o edac_device.o edac_mc_sysfs.o
- edac_core-y	+= edac_module.o edac_device_sysfs.o wq.o
--edac_core-y	+= edac_scrub.o edac_ecs.o
-+edac_core-y	+= edac_scrub.o edac_ecs.o edac_ppr.o
+-#define CXL_DEV_NUM_RAS_FEATURES	2
++#define CXL_DEV_NUM_RAS_FEATURES	3
+ #define CXL_DEV_HOUR_IN_SECS	3600
  
- edac_core-$(CONFIG_EDAC_DEBUG)		+= debugfs.o
+ #define CXL_SCRUB_NAME_LEN	128
+@@ -702,6 +703,247 @@ static const struct edac_ecs_ops cxl_ecs_ops = {
+ 	.set_threshold = cxl_ecs_set_threshold,
+ };
  
-diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-index 9cac9ae75080..8a0640523342 100644
---- a/drivers/edac/edac_device.c
-+++ b/drivers/edac/edac_device.c
-@@ -630,6 +630,10 @@ static int edac_dev_feat_init(struct device *parent,
- 	case RAS_FEAT_PPR:
- 		dev_data->ppr_ops = ras_feat->ppr_ops;
- 		dev_data->private = ras_feat->ctx;
-+		ret = edac_ppr_get_desc(parent, attr_groups,
-+					ras_feat->instance);
-+		if (ret)
-+			return ret;
- 		return 1;
- 	default:
- 		return -EINVAL;
-diff --git a/drivers/edac/edac_ppr.c b/drivers/edac/edac_ppr.c
-new file mode 100755
-index 000000000000..4f97ea4deee3
---- /dev/null
-+++ b/drivers/edac/edac_ppr.c
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Generic EDAC PPR driver supports controlling the memory
-+ * device with Post Package Repair (PPR) feature in the system
-+ * and the common sysfs PPR control interface promotes unambiguous
-+ * access from the userspace.
-+ *
-+ * Copyright (c) 2024 HiSilicon Limited.
-+ */
++/* CXL memory soft PPR & hard PPR control definitions */
++static const uuid_t cxl_sppr_uuid =
++	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,     \
++		  0x75, 0x68, 0xbb);
 +
-+#define pr_fmt(fmt)     "EDAC PPR: " fmt
++static const uuid_t cxl_hppr_uuid =
++	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,     \
++		  0xfb, 0x0e, 0x24);
 +
-+#include <linux/edac.h>
-+
-+enum edac_ppr_attributes {
-+	PPR_PERSIST_MODE_AVAIL,
-+	PPR_PERSIST_MODE,
-+	PPR_DPA_SUPPORT,
-+	PPR_SAFE_IN_USE,
-+	PPR_HPA,
-+	PPR_DPA,
-+	PPR_MAX_ATTRS
-+};
-+
-+struct edac_ppr_dev_attr {
-+	struct device_attribute dev_attr;
++struct cxl_ppr_context {
++	uuid_t ppr_uuid;
 +	u8 instance;
-+};
-+
-+struct edac_ppr_context {
-+	char name[EDAC_FEAT_NAME_LEN];
-+	struct edac_ppr_dev_attr ppr_dev_attr[PPR_MAX_ATTRS];
-+	struct attribute *ppr_attrs[PPR_MAX_ATTRS + 1];
-+	struct attribute_group group;
-+};
-+
-+#define to_ppr_dev_attr(_dev_attr)      \
-+		container_of(_dev_attr, struct edac_ppr_dev_attr, dev_attr)
-+
-+static ssize_t persist_mode_avail_show(struct device *ras_feat_dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+
-+	return ops->get_persist_mode_avail(ras_feat_dev->parent,
-+					   ctx->ppr[inst].private, buf);
-+}
-+
-+static ssize_t persist_mode_show(struct device *ras_feat_dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+	u32 mode;
-+	int ret;
-+
-+	ret = ops->get_persist_mode(ras_feat_dev->parent, ctx->ppr[inst].private, &mode);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", mode);
-+}
-+
-+static ssize_t persist_mode_store(struct device *ras_feat_dev,
-+				  struct device_attribute *attr,
-+				  const char *buf,
-+				  size_t len)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+	long mode;
-+	int ret;
-+
-+	ret = kstrtol(buf, 0, &mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ops->set_persist_mode(ras_feat_dev->parent, ctx->ppr[inst].private, mode);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t dpa_support_show(struct device *ras_feat_dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+	int ret;
-+	u32 val;
-+
-+	ret = ops->get_dpa_support(ras_feat_dev->parent, ctx->ppr[inst].private, &val);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", val);
-+}
-+
-+static ssize_t ppr_safe_when_in_use_show(struct device *ras_feat_dev,
-+					 struct device_attribute *attr, char *buf)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+	int ret;
-+	u32 val;
-+
-+	ret = ops->get_ppr_safe_when_in_use(ras_feat_dev->parent,
-+					    ctx->ppr[inst].private, &val);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", val);
-+}
-+
-+static ssize_t repair_hpa_store(struct device *ras_feat_dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+	u64 hpa;
-+	int ret;
-+
-+	ret = kstrtou64(buf, 0, &hpa);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ops->do_ppr(ras_feat_dev->parent, ctx->ppr[inst].private, true, hpa);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t repair_dpa_store(struct device *ras_feat_dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
++	u16 get_feat_size;
++	u16 set_feat_size;
++	u8 get_version;
++	u8 set_version;
++	u16 set_effects;
++	struct cxl_memdev *cxlmd;
++	enum edac_ppr_type ppr_type;
 +	u64 dpa;
-+	int ret;
++	u32 nibble_mask;
++};
 +
-+	ret = kstrtou64(buf, 0, &dpa);
-+	if (ret < 0)
-+		return ret;
++/**
++ * struct cxl_memdev_ppr_params - CXL memory PPR parameter data structure.
++ * @op_class[OUT]: PPR operation class.
++ * @op_subclass[OUT]: PPR operation subclass.
++ * @dpa_support[OUT]: device physical address for PPR support.
++ * @media_accessible[OUT]: memory media is accessible or not during PPR operation.
++ * @data_retained[OUT]: data is retained or not during PPR operation.
++ * @dpa:[IN]: device physical address.
++ */
++struct cxl_memdev_ppr_params {
++	u8 op_class;
++	u8 op_subclass;
++	bool dpa_support;
++	bool media_accessible;
++	bool data_retained;
++	u64 dpa;
++};
 +
-+	ret = ops->do_ppr(ras_feat_dev->parent, ctx->ppr[inst].private, 0, dpa);
-+	if (ret)
-+		return ret;
++enum cxl_ppr_param {
++	CXL_PPR_PARAM_DO_PPR,
++};
 +
-+	return len;
-+}
++#define	CXL_MEMDEV_PPR_QUERY_RESOURCE_FLAG BIT(0)
 +
-+static umode_t ppr_attr_visible(struct kobject *kobj,
-+				struct attribute *a, int attr_id)
++#define CXL_MEMDEV_PPR_DEVICE_INITIATED_MASK BIT(0)
++#define CXL_MEMDEV_PPR_FLAG_DPA_SUPPORT_MASK BIT(0)
++#define CXL_MEMDEV_PPR_FLAG_NIBBLE_SUPPORT_MASK BIT(1)
++#define CXL_MEMDEV_PPR_FLAG_MEM_SPARING_EV_REC_SUPPORT_MASK BIT(2)
++
++#define CXL_MEMDEV_PPR_RESTRICTION_FLAG_MEDIA_ACCESSIBLE_MASK BIT(0)
++#define CXL_MEMDEV_PPR_RESTRICTION_FLAG_DATA_RETAINED_MASK BIT(2)
++
++#define CXL_MEMDEV_PPR_SPARING_EV_REC_EN_MASK BIT(0)
++
++struct cxl_memdev_ppr_rd_attrs {
++	u8 max_op_latency;
++	__le16 op_cap;
++	__le16 op_mode;
++	u8 op_class;
++	u8 op_subclass;
++	u8 rsvd[9];
++	u8 ppr_flags;
++	__le16 restriction_flags;
++	u8 ppr_op_mode;
++}  __packed;
++
++struct cxl_memdev_ppr_wr_attrs {
++	__le16 op_mode;
++	u8 ppr_op_mode;
++}  __packed;
++
++struct cxl_memdev_ppr_maintenance_attrs {
++	u8 flags;
++	__le64 dpa;
++	u8 nibble_mask[3];
++}  __packed;
++
++static int cxl_mem_ppr_get_attrs(struct device *dev, void *drv_data,
++				 struct cxl_memdev_ppr_params *params)
 +{
-+	struct device *ras_feat_dev = kobj_to_dev(kobj);
-+	struct device_attribute *dev_attr =
-+				container_of(a, struct device_attribute, attr);
-+	u8 inst = ((struct edac_ppr_dev_attr *)to_ppr_dev_attr(dev_attr))->instance;
-+	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-+	const struct edac_ppr_ops *ops = ctx->ppr[inst].ppr_ops;
-+
-+	switch (attr_id) {
-+	case PPR_PERSIST_MODE_AVAIL:
-+		return ops->get_persist_mode_avail ? a->mode : 0;
-+	case PPR_PERSIST_MODE:
-+		if (ops->get_persist_mode && ops->set_persist_mode)
-+			return a->mode;
-+		if (ops->get_persist_mode)
-+			return 0444;
-+		return 0;
-+	case PPR_DPA_SUPPORT:
-+		return ops->get_dpa_support ? a->mode : 0;
-+	case PPR_SAFE_IN_USE:
-+		return ops->get_ppr_safe_when_in_use ? a->mode : 0;
-+	case PPR_HPA:
-+	case PPR_DPA:
-+		return ops->do_ppr ? a->mode : 0;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+#define EDAC_PPR_ATTR_RO(_name, _instance)       \
-+	((struct edac_ppr_dev_attr) { .dev_attr = __ATTR_RO(_name), \
-+				     .instance = _instance })
-+
-+#define EDAC_PPR_ATTR_WO(_name, _instance)       \
-+	((struct edac_ppr_dev_attr) { .dev_attr = __ATTR_WO(_name), \
-+				     .instance = _instance })
-+
-+#define EDAC_PPR_ATTR_RW(_name, _instance)       \
-+	((struct edac_ppr_dev_attr) { .dev_attr = __ATTR_RW(_name), \
-+				     .instance = _instance })
-+
-+static int ppr_create_desc(struct device *ppr_dev,
-+			   const struct attribute_group **attr_groups,
-+			   u8 instance)
-+{
-+	struct edac_ppr_context *ppr_ctx;
-+	struct attribute_group *group;
-+	int i;
-+
-+	ppr_ctx = devm_kzalloc(ppr_dev, sizeof(*ppr_ctx), GFP_KERNEL);
-+	if (!ppr_ctx)
++	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
++	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	size_t rd_data_size = sizeof(struct cxl_memdev_ppr_rd_attrs);
++	size_t data_size;
++	struct cxl_memdev_ppr_rd_attrs *rd_attrs __free(kfree) =
++				kmalloc(rd_data_size, GFP_KERNEL);
++	if (!rd_attrs)
 +		return -ENOMEM;
 +
-+	group = &ppr_ctx->group;
-+	ppr_ctx->ppr_dev_attr[0] = EDAC_PPR_ATTR_RO(persist_mode_avail, instance);
-+	ppr_ctx->ppr_dev_attr[1] = EDAC_PPR_ATTR_RW(persist_mode, instance);
-+	ppr_ctx->ppr_dev_attr[2] = EDAC_PPR_ATTR_RO(dpa_support, instance);
-+	ppr_ctx->ppr_dev_attr[3] = EDAC_PPR_ATTR_RO(ppr_safe_when_in_use, instance);
-+	ppr_ctx->ppr_dev_attr[4] = EDAC_PPR_ATTR_WO(repair_hpa, instance);
-+	ppr_ctx->ppr_dev_attr[5] = EDAC_PPR_ATTR_WO(repair_dpa, instance);
-+	for (i = 0; i < PPR_MAX_ATTRS; i++)
-+		ppr_ctx->ppr_attrs[i] = &ppr_ctx->ppr_dev_attr[i].dev_attr.attr;
++	data_size = cxl_get_feature(cxlds, cxl_ppr_ctx->ppr_uuid,
++				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
++				    rd_attrs, rd_data_size);
++	if (!data_size)
++		return -EIO;
 +
-+	sprintf(ppr_ctx->name, "%s%d", "ppr", instance);
-+	group->name = ppr_ctx->name;
-+	group->attrs = ppr_ctx->ppr_attrs;
-+	group->is_visible  = ppr_attr_visible;
-+
-+	attr_groups[0] = group;
++	params->op_class = rd_attrs->op_class;
++	params->op_subclass = rd_attrs->op_subclass;
++	params->dpa_support = FIELD_GET(CXL_MEMDEV_PPR_FLAG_DPA_SUPPORT_MASK,
++					rd_attrs->ppr_flags);
++	params->media_accessible = FIELD_GET(CXL_MEMDEV_PPR_RESTRICTION_FLAG_MEDIA_ACCESSIBLE_MASK,
++					     rd_attrs->restriction_flags) ^ 1;
++	params->data_retained = FIELD_GET(CXL_MEMDEV_PPR_RESTRICTION_FLAG_DATA_RETAINED_MASK,
++					  rd_attrs->restriction_flags) ^ 1;
 +
 +	return 0;
 +}
 +
-+/**
-+ * edac_ppr_get_desc - get EDAC PPR descriptors
-+ * @ppr_dev: client PPR device
-+ * @attr_groups: pointer to attrribute group container
-+ * @instance: device's PPR instance number.
-+ *
-+ * Returns 0 on success, error otherwise.
-+ */
-+int edac_ppr_get_desc(struct device *ppr_dev,
-+		      const struct attribute_group **attr_groups,
-+		      u8 instance)
++static int cxl_mem_ppr_set_attrs(struct device *dev, void *drv_data,
++				 struct cxl_memdev_ppr_params *params,
++				 enum cxl_ppr_param param_type)
 +{
-+	if (!ppr_dev || !attr_groups)
++	struct cxl_memdev_ppr_maintenance_attrs maintenance_attrs;
++	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
++	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_ppr_params rd_params;
++	struct cxl_region *cxlr;
++	int ret;
++
++	ret = cxl_mem_ppr_get_attrs(dev, drv_data, &rd_params);
++	if (ret) {
++		dev_err(dev, "Get cxlmemdev PPR params failed ret=%d\n",
++			ret);
++		return ret;
++	}
++
++	switch (param_type) {
++	case CXL_PPR_PARAM_DO_PPR:
++		ret = down_read_interruptible(&cxl_region_rwsem);
++		if (ret)
++			return ret;
++		if (!rd_params.media_accessible || !rd_params.data_retained) {
++			/* Check if DPA is mapped */
++			ret = down_read_interruptible(&cxl_dpa_rwsem);
++			if (ret) {
++				up_read(&cxl_region_rwsem);
++				return ret;
++			}
++
++			cxlr = cxl_dpa_to_region(cxlmd, cxl_ppr_ctx->dpa);
++			up_read(&cxl_dpa_rwsem);
++			if (cxlr) {
++				dev_err(dev, "CXL can't do PPR as DPA is mapped\n");
++				up_read(&cxl_region_rwsem);
++				return -EBUSY;
++			}
++		}
++		maintenance_attrs.flags = CXL_MEMDEV_PPR_QUERY_RESOURCE_FLAG;
++		maintenance_attrs.dpa = params->dpa;
++		/* May need to get the nibble mask from the CXL dram error record via
++		 * trace dram event. Presently all nibble masks bits set to 1.
++		 */
++		maintenance_attrs.nibble_mask[0] = 0xFF;
++		maintenance_attrs.nibble_mask[1] = 0xFF;
++		maintenance_attrs.nibble_mask[2] = 0xFF;
++		ret = cxl_do_maintenance(cxlds, rd_params.op_class, rd_params.op_subclass,
++					 &maintenance_attrs, sizeof(maintenance_attrs));
++		if (ret) {
++			dev_err(dev, "CXL do PPR maintenance failed ret=%d\n", ret);
++			up_read(&cxl_region_rwsem);
++			return ret;
++		}
++		up_read(&cxl_region_rwsem);
++		return 0;
++	default:
 +		return -EINVAL;
-+
-+	return ppr_create_desc(ppr_dev, attr_groups, instance);
++	}
 +}
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 90cb90cf5272..bd99b7a6804d 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -741,6 +741,36 @@ struct edac_ecs_ex_info {
- int edac_ecs_get_desc(struct device *ecs_dev,
- 		      const struct attribute_group **attr_groups,
- 		      u16 num_media_frus);
 +
-+enum edac_ppr_type {
-+	EDAC_TYPE_SPPR, /* soft PPR */
-+	EDAC_TYPE_HPPR, /* hard PPR */
++static int cxl_ppr_get_persist_mode_avail(struct device *dev, void *drv_data,
++					  char *buf)
++{
++	return sysfs_emit(buf, "Soft PPR Hard PPR\n");
++}
++
++static int cxl_ppr_get_persist_mode(struct device *dev, void *drv_data,
++				    u32 *persist_mode)
++{
++	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
++
++	*persist_mode = cxl_ppr_ctx->ppr_type;
++
++	return 0;
++}
++
++static int cxl_ppr_get_dpa_support(struct device *dev, void *drv_data,
++				   u32 *dpa_support)
++{
++	struct cxl_memdev_ppr_params params;
++	int ret;
++
++	ret = cxl_mem_ppr_get_attrs(dev, drv_data, &params);
++	if (ret)
++		return ret;
++
++	*dpa_support = params.dpa_support;
++
++	return 0;
++}
++
++static int cxl_get_ppr_safe_when_in_use(struct device *dev, void *drv_data,
++					u32 *safe)
++{
++	struct cxl_memdev_ppr_params params;
++	int ret;
++
++	ret = cxl_mem_ppr_get_attrs(dev, drv_data, &params);
++	if (ret)
++		return ret;
++
++	*safe = params.media_accessible & params.data_retained;
++
++	return 0;
++}
++
++static int cxl_do_ppr(struct device *dev, void *drv_data, bool hpa, u64 pa)
++{
++	struct cxl_memdev_ppr_params params = {
++		.dpa = pa,
++	};
++
++	/* CXL mem perform PPR, need support for HPA? */
++	if (hpa)
++		return -EOPNOTSUPP;
++
++	return cxl_mem_ppr_set_attrs(dev, drv_data, &params,
++				     CXL_PPR_PARAM_DO_PPR);
++}
++
++static const struct edac_ppr_ops cxl_sppr_ops = {
++	.get_persist_mode_avail = cxl_ppr_get_persist_mode_avail,
++	.get_persist_mode = cxl_ppr_get_persist_mode,
++	.get_dpa_support = cxl_ppr_get_dpa_support,
++	.get_ppr_safe_when_in_use = cxl_get_ppr_safe_when_in_use,
++	.do_ppr = cxl_do_ppr,
 +};
 +
-+/**
-+ * struct edac_ppr_ops - PPR(Post Package Repair) device operations
-+ * (all elements optional)
-+ * @get_persist_mode_avail: get the persist modes supported in the device.
-+ * @get_persist_mode: get the persist mode of the PPR instance.
-+ * @set_persist_mode: set the persist mode for the PPR instance.
-+ * @get_dpa_support: get dpa support flag.
-+ * @get_ppr_safe_when_in_use: get whether memory media is accessible and
-+ *			       data is retained during PPR operation.
-+ * @do_ppr: start PPR operation for the HPA/DPA set.
-+ */
-+struct edac_ppr_ops {
-+	int (*get_persist_mode_avail)(struct device *dev, void *drv_data, char *buf);
-+	int (*get_persist_mode)(struct device *dev, void *drv_data, u32 *mode);
-+	int (*set_persist_mode)(struct device *dev, void *drv_data, u32 mode);
-+	int (*get_dpa_support)(struct device *dev, void *drv_data, u32 *val);
-+	int (*get_ppr_safe_when_in_use)(struct device *dev, void *drv_data, u32 *val);
-+	int (*do_ppr)(struct device *dev, void *drv_data, bool hpa, u64 pa);
-+};
+ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+ {
+ 	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
+@@ -710,8 +952,10 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+ 	struct cxl_feat_entry feat_entry;
+ 	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
+ 	struct cxl_ecs_context *cxl_ecs_ctx;
++	struct cxl_ppr_context *cxl_sppr_ctx;
+ 	int rc, i, num_ras_features = 0;
+ 	int num_media_frus;
++	u8 ppr_inst = 0;
+ 
+ 	if (cxlr) {
+ 		struct cxl_region_params *p = &cxlr->params;
+@@ -800,6 +1044,37 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+ 		ras_features[num_ras_features].ecs_info.num_media_frus =
+ 								num_media_frus;
+ 		num_ras_features++;
 +
-+int edac_ppr_get_desc(struct device *ppr_dev,
-+		      const struct attribute_group **attr_groups,
-+		      u8 instance);
++		/* CXL sPPR */
++		rc = cxl_get_supported_feature_entry(cxlds, &cxl_sppr_uuid,
++						     &feat_entry);
++		if (rc < 0)
++			goto feat_register;
 +
- /*
-  * EDAC device feature information structure
-  */
++		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
++			goto feat_register;
++
++		cxl_sppr_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_sppr_ctx),
++					    GFP_KERNEL);
++		if (!cxl_sppr_ctx)
++			goto feat_register;
++		*cxl_sppr_ctx = (struct cxl_ppr_context) {
++			.ppr_uuid = cxl_sppr_uuid,
++			.get_feat_size = feat_entry.get_feat_size,
++			.set_feat_size = feat_entry.set_feat_size,
++			.get_version = feat_entry.get_feat_ver,
++			.set_version = feat_entry.set_feat_ver,
++			.set_effects = feat_entry.set_effects,
++			.cxlmd = cxlmd,
++			.ppr_type = EDAC_TYPE_SPPR,
++			.instance = ppr_inst++,
++		};
++
++		ras_features[num_ras_features].ft_type = RAS_FEAT_PPR;
++		ras_features[num_ras_features].instance = cxl_sppr_ctx->instance;
++		ras_features[num_ras_features].ppr_ops = &cxl_sppr_ops;
++		ras_features[num_ras_features].ctx = cxl_sppr_ctx;
++		num_ras_features++;
+ 	}
+ 
+ feat_register:
 -- 
 2.34.1
 
