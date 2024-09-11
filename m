@@ -1,211 +1,404 @@
-Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF80A2EAE5
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Sep 2024 21:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726091981; cv=pass; b=o3NApq1HfTuYGeNJkqCq+R4CAu2ZByDW7Wed3pbbbvRcKxpyvWzvVhMMLu4tfuflJfhYApr+3UGr1J7c7fgrOUqhCXmpOPdz/y/kkMy4/sOSfnbuj3sPDD2KvgEdFiqWZeMWQImmRr6yIDkYMIUuagz3CkJ4zghHTp1Lx1zqX1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726091981; c=relaxed/simple;
-	bh=s/eA6v5pmr7tv5WthEy7srNqeZudfooRhzCI0eHkBqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QmAIbjcXcO449//kXIizkMBsahvwaY3vK2PviX+Rde3cnjXzdKt31CUCfbSNIKlYY0GnADfEQe60KmW3njYcepFFxZ+wtM9lXVbUVF0aRk+0kDENrhI419mp9Xozm0QBdtrPdotWtOdoniEywlAF73lKGsjk5UV2siz9elzbH34=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=k7vy5ATu; arc=pass smtp.client-ip=23.83.223.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E036178C9D;
+	Wed, 11 Sep 2024 22:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726093033; cv=none; b=IilMjb+gmDB/EGFEaM6Rw3dV7mzpubZyodcxEyCeVHfIDsivFdyl9QFM5tGEVAIs87FgqzeCnOmLrbbTg8IYDJEJp0NkNpnbVLUCt+BuvEKaBghH3HUjfR+KQYdm03V7mVGrq7fTmkcQHotXsfG9/X6aDLntOPVqMz3qp+Unb/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726093033; c=relaxed/simple;
+	bh=HAZvut5ojoivTzmWO5diUmUE4hKVVm1KC06x8zix0Do=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ItAX+twA8BZBt+t+Pg5SZ3WDZ4r0YCKt3XA/oLWpFhf2wzGwfWTAjf6lYzHHyk9GJZ5JoP6jCIrjBa5VKuMLYakhoBYsusDYnYf5WWrCSFdpSYtQqVx2sD+bp8qGedy44UgWn6CDSViQcHEPBo9PzJb/J2FEnVYWu+FjfzeYGaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ajJJCEwG; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="k7vy5ATu"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 67FBA1A3D33;
-	Wed, 11 Sep 2024 21:53:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a311.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.96.74.238])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 15BC41A3CE6;
-	Wed, 11 Sep 2024 21:53:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1726091581; a=rsa-sha256;
-	cv=none;
-	b=14JNnpVtrWzNbuRDmH4vovx+sLDRNLsk3zJ2OcZsiEyf3rhmfLVwpLx6xaHGgyOlKgLWbz
-	ASkvJmfd7gc/9vSYck+0jC1f5kNbY4sASRiS6OO/wFUF0TUTOreMm5ZRtjhoFM3BoQCvPe
-	MZvA2kgzMmVtMGqIchD2RN5vMI5u3Pmw0SfPtUpqKjw7pI8vepSEKmibqFCARoVfssRqdl
-	gOabPYinAMpPpAF+g/mUlSokRLKZFL9t3vrnNwzK26LHVr6c7kbyioJ6zNvjNl0FklfCPn
-	mcmnltljlUoj2YFhaSQgq2y8NDxTCMy0GSObiCda81op6NmK00dr15PA3YZC0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1726091581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=9Nnr6uSdQ5RrNfmJjurtblM11RMqyI1AHVlzHm5oxZM=;
-	b=LAE6ttKrS0CsR0Pg8NUKX+yhu0gZh780lvsflRj/s3q/XCuszD5RxhsovycemT34h0n5Gc
-	VGsjAAzVpJFDMt9ZC9zUeQKDJXkUWtrQADTV4mNk55G9id6Go+RAaI2DX297NYrZtSZUwE
-	cCnD900zA3IwR7zIinQ4eyGydrvRoeaYEkddtoqcEZGw7cR5Jfb5k9RIoIMl68Fh5govmx
-	SC84wIJNIzR186iYZ81FyZw+3HZlqNAvtj2ohEybdBPypQZ34Y9Ot3xBocioTvWjjg0hb/
-	55AKq4URVZ4V2e30JqYg4ATjsEwrfEtvbzCtY6Tx3Rt438laqMYc6tZKm5f2TQ==
-ARC-Authentication-Results: i=1;
-	rspamd-77766c4bb8-lhtrb;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Grain-Snatch: 7530eb252d49db3c_1726091581312_1260044576
-X-MC-Loop-Signature: 1726091581312:1279010088
-X-MC-Ingress-Time: 1726091581312
-Received: from pdx1-sub0-mail-a311.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.74.238 (trex/7.0.2);
-	Wed, 11 Sep 2024 21:53:01 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a311.dreamhost.com (Postfix) with ESMTPSA id 4X3vSr4fphzQt;
-	Wed, 11 Sep 2024 14:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1726091580;
-	bh=9Nnr6uSdQ5RrNfmJjurtblM11RMqyI1AHVlzHm5oxZM=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=k7vy5ATuDX8PdWshs1ugv7GESpPYTnwHHnKmawZVVVol3NUtUIdWcg9pSiY8EHgoU
-	 TRh52Z+prXA7Zpmi1MViUVTr7psAic6ny6t76WBcT5GX+Nl36l+ulAoLa9BBH8VIbG
-	 4CDnMjqp+eVDhsFrWizt94dB/rxU8TX61Q6jo4JYmKjIlQsrgB7rqfitV7DYK5G0LE
-	 MIvKWqq+cLHkD9i1ZIirNF3jZFRkz6UJAu/m+R6Bd6oKdKBw9hhvQBTRbmSF1UnIry
-	 p2m7yD98U1JnvoEO50Ns14RG8inolz4rDsfjxlWle5slclrXv9otKqfkOfs4cEnmTo
-	 8ye/cjEROPShg==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: fan.ni@samsung.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH] perf/cxlpmu: Support missing events in 3.1 spec
-Date: Wed, 11 Sep 2024 14:52:21 -0700
-Message-ID: <20240911215221.308483-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ajJJCEwG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726093031; x=1757629031;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HAZvut5ojoivTzmWO5diUmUE4hKVVm1KC06x8zix0Do=;
+  b=ajJJCEwGu7abt0argqg2K8+472ky9D8pbVbwGEKHyRbdhDWKxiUE0j25
+   qz9nOtk5ns1RlI49WG8Kbd0OGnJ/uJE629W8UquA7kEawwKVHGgTdkpre
+   W2pRhHvqyHKEgrBb8kx3w4jNqds9vl87aO2s+2Uum+FlgV2FQ44W/TUQL
+   JzzWS9Tir4nEtIYN742w259zk1XGf2hMlbNHqX0Av7Dj+EqvcM+xcjWUe
+   vtcugrfuvBiJt0LXRWEGh5X4XZC3wR7XLyj+GQqtI2nOkRaK0XzXP3NSE
+   hObjpfnkQGPYlu9xyPrUCMfDWM9dcwi8RovqLbqhK2EZRI7vRLwFngZXq
+   g==;
+X-CSE-ConnectionGUID: 5/HOX8olQZ65FuUPkogBsA==
+X-CSE-MsgGUID: pohDT81RSEuq0XHWysw1DQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11192"; a="35491382"
+X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
+   d="scan'208";a="35491382"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 15:17:10 -0700
+X-CSE-ConnectionGUID: GDBd7FHSQdqjpYVhOsd1nA==
+X-CSE-MsgGUID: JlzhHhs/S36BmuiLyqnSvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
+   d="scan'208";a="68286631"
+Received: from rchernet-mobl4.amr.corp.intel.com (HELO [10.125.108.13]) ([10.125.108.13])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 15:17:08 -0700
+Message-ID: <06cc4873-d841-4a41-b681-e73bd7a3d4d8@intel.com>
+Date: Wed, 11 Sep 2024 15:17:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/20] cxl: add capabilities field to cxl_dev_state and
+ cxl_port
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
+ <20240907081836.5801-3-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240907081836.5801-3-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Update the CXL PMU driver to support the new events introduced
-in the latest revision. These are:
 
-- read/write accesses with TEE constraints.
-- S2M indicating Modified state.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/perf/cxl_pmu.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+On 9/7/24 1:18 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Type2 devices have some Type3 functionalities as optional like an mbox
+> or an hdm decoder, and CXL core needs a way to know what an CXL accelerator
+> implements.
+> 
+> Add a new field for keeping device capabilities as discovered during
+> initialization.
+> 
+> Add same field to cxl_port which for an endpoint will use those
+> capabilities discovered previously, and which will be initialized when
+> calling cxl_port_setup_regs for no endpoints.
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 1f93a66eff5b..13005f410ee0 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -63,7 +63,7 @@
- 
- #define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
- 
--/* CXL rev 3.0 Table 13-5 Events under CXL Vendor ID */
-+/* CXL rev 3.1 Table 13-5 Events under CXL Vendor ID */
- #define CXL_PMU_GID_CLOCK_TICKS		0x00
- #define CXL_PMU_GID_D2H_REQ		0x0010
- #define CXL_PMU_GID_D2H_RSP		0x0011
-@@ -338,7 +338,7 @@ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
- 
- static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(clock_ticks,			CXL_PMU_GID_CLOCK_TICKS, BIT(0)),
--	/* CXL rev 3.0 Table 3-17 - Device to Host Requests */
-+	/* CXL rev 3.1 Table 3-22 - Device to Host Requests */
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_rdcurr,			CXL_PMU_GID_D2H_REQ, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_rdown,			CXL_PMU_GID_D2H_REQ, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_rdshared,		CXL_PMU_GID_D2H_REQ, BIT(3)),
-@@ -354,7 +354,7 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_wowrinvf,		CXL_PMU_GID_D2H_REQ, BIT(13)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_wrinv,			CXL_PMU_GID_D2H_REQ, BIT(14)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_req_cacheflushed,		CXL_PMU_GID_D2H_REQ, BIT(16)),
--	/* CXL rev 3.0 Table 3-20 - D2H Repsonse Encodings */
-+	/* CXL rev 3.1 Table 3-25 - D2H Response Encodings */
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspihiti,		CXL_PMU_GID_D2H_RSP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspvhitv,		CXL_PMU_GID_D2H_RSP, BIT(6)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspihitse,		CXL_PMU_GID_D2H_RSP, BIT(5)),
-@@ -362,11 +362,11 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspsfwdm,		CXL_PMU_GID_D2H_RSP, BIT(7)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspifwdm,		CXL_PMU_GID_D2H_RSP, BIT(15)),
- 	CXL_PMU_EVENT_CXL_ATTR(d2h_rsp_rspvfwdv,		CXL_PMU_GID_D2H_RSP, BIT(22)),
--	/* CXL rev 3.0 Table 3-21 - CXL.cache - Mapping of H2D Requests to D2H Responses */
-+	/* CXL rev 3.1 Table 3-26 - CXL.cache - Mapping of H2D Requests to D2H Responses */
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_req_snpdata,			CXL_PMU_GID_H2D_REQ, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_req_snpinv,			CXL_PMU_GID_H2D_REQ, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_req_snpcur,			CXL_PMU_GID_H2D_REQ, BIT(3)),
--	/* CXL rev 3.0 Table 3-22 - H2D Response Opcode Encodings */
-+	/* CXL rev 3.1 Table 3-27 - H2D Response Opcode Encodings */
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_writepull,		CXL_PMU_GID_H2D_RSP, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_go,			CXL_PMU_GID_H2D_RSP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_gowritepull,		CXL_PMU_GID_H2D_RSP, BIT(5)),
-@@ -374,45 +374,50 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_gowritepulldrop,		CXL_PMU_GID_H2D_RSP, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_fastgowritepull,		CXL_PMU_GID_H2D_RSP, BIT(13)),
- 	CXL_PMU_EVENT_CXL_ATTR(h2d_rsp_goerrwritepull,		CXL_PMU_GID_H2D_RSP, BIT(15)),
--	/* CXL rev 3.0 Table 13-5 directly lists these */
-+	/* CXL rev 3.1 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(cachedata_d2h_data,		CXL_PMU_GID_CACHE_DATA, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(cachedata_h2d_data,		CXL_PMU_GID_CACHE_DATA, BIT(1)),
--	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
-+	/* CXL rev 3.1 Table 3-35 M2S Req Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminv,			CXL_PMU_GID_M2S_REQ, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrd,			CXL_PMU_GID_M2S_REQ, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddata,		CXL_PMU_GID_M2S_REQ, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdfwd,		CXL_PMU_GID_M2S_REQ, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
--	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
-+	/* CXL rev 3.1 Table 3-41 M2S RwD Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwr,			CXL_PMU_GID_M2S_RWD, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptl,		CXL_PMU_GID_M2S_RWD, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_biconflict,		CXL_PMU_GID_M2S_RWD, BIT(4)),
--	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
-+	/* CXL rev 3.1 Table 3-45 M2S BIRsp Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_i,			CXL_PMU_GID_M2S_BIRSP, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_s,			CXL_PMU_GID_M2S_BIRSP, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_e,			CXL_PMU_GID_M2S_BIRSP, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_iblk,			CXL_PMU_GID_M2S_BIRSP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_sblk,			CXL_PMU_GID_M2S_BIRSP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_eblk,			CXL_PMU_GID_M2S_BIRSP, BIT(6)),
--	/* CXL rev 3.0 Table 3-40 S2M BISnp Opcodes */
-+	/* CXL rev 3.1 Table 3-47 S2M BISnp Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_cur,			CXL_PMU_GID_S2M_BISNP, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_data,			CXL_PMU_GID_S2M_BISNP, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_inv,			CXL_PMU_GID_S2M_BISNP, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
--	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
-+	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
--	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee,			CXL_PMU_GID_S2M_NDR, BIT(5)),
-+	/* CXL rev 3.1 Table 3-53 S2M DRS opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,		CXL_PMU_GID_S2M_DRS, BIT(1)),
--	/* CXL rev 3.0 Table 13-5 directly lists these */
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatatee,		CXL_PMU_GID_S2M_DRS, BIT(2)),
-+	/* CXL rev 3.1 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_act,				CXL_PMU_GID_DDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_pre,				CXL_PMU_GID_DDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_casrd,			CXL_PMU_GID_DDR, BIT(2)),
--- 
-2.46.0
+I don't quite understand what you are trying to say here.
 
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/port.c |  9 +++++----
+>  drivers/cxl/core/regs.c | 20 +++++++++++++-------
+>  drivers/cxl/cxl.h       |  8 +++++---
+>  drivers/cxl/cxlmem.h    |  2 ++
+>  drivers/cxl/pci.c       |  9 +++++----
+>  include/linux/cxl/cxl.h | 30 ++++++++++++++++++++++++++++++
+>  6 files changed, 60 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 1d5007e3795a..39b20ddd0296 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -749,7 +749,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+>  }
+>  
+>  static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map,
+> -			       resource_size_t component_reg_phys)
+> +			       resource_size_t component_reg_phys, u32 *caps)
+>  {
+>  	*map = (struct cxl_register_map) {
+>  		.host = host,
+> @@ -763,7 +763,7 @@ static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map
+>  	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
+>  	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+>  
+> -	return cxl_setup_regs(map);
+> +	return cxl_setup_regs(map, caps);
+>  }
+>  
+>  static int cxl_port_setup_regs(struct cxl_port *port,
+> @@ -772,7 +772,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
+>  	if (dev_is_platform(port->uport_dev))
+>  		return 0;
+>  	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
+> -				   component_reg_phys);
+> +				   component_reg_phys, &port->capabilities);
+>  }
+>  
+>  static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+> @@ -789,7 +789,7 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+>  	 * NULL.
+>  	 */
+>  	rc = cxl_setup_comp_regs(dport->dport_dev, &dport->reg_map,
+> -				 component_reg_phys);
+> +				 component_reg_phys, &dport->port->capabilities);
+>  	dport->reg_map.host = host;
+>  	return rc;
+>  }
+> @@ -858,6 +858,7 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
+>  		port->reg_map = cxlds->reg_map;
+>  		port->reg_map.host = &port->dev;
+>  		cxlmd->endpoint = port;
+> +		port->capabilities = cxlds->capabilities;
+>  	} else if (parent_dport) {
+>  		rc = dev_set_name(dev, "port%d", port->id);
+>  		if (rc)
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index e1082e749c69..8b8abcadcb93 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2020 Intel Corporation. */
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/cxl/cxl.h>
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+>  #include <linux/pci.h>
+> @@ -36,7 +37,7 @@
+>   * Probe for component register information and return it in map object.
+>   */
+>  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+> -			      struct cxl_component_reg_map *map)
+> +			      struct cxl_component_reg_map *map, u32 *caps)
+>  {
+>  	int cap, cap_count;
+>  	u32 cap_array;
+> @@ -84,6 +85,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			decoder_cnt = cxl_hdm_decoder_count(hdr);
+>  			length = 0x20 * decoder_cnt + 0x10;
+>  			rmap = &map->hdm_decoder;
+> +			*caps |= BIT(CXL_DEV_CAP_HDM);
+>  			break;
+>  		}
+>  		case CXL_CM_CAP_CAP_ID_RAS:
+> @@ -91,6 +93,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  				offset);
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+> +			*caps |= BIT(CXL_DEV_CAP_RAS);
+>  			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+> @@ -117,7 +120,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
+>   * Probe for device register information and return it in map object.
+>   */
+>  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> -			   struct cxl_device_reg_map *map)
+> +			   struct cxl_device_reg_map *map, u32 *caps)
+>  {
+>  	int cap, cap_count;
+>  	u64 cap_array;
+> @@ -146,10 +149,12 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
+>  			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
+>  			rmap = &map->status;
+> +			*caps |= BIT(CXL_DEV_CAP_DEV_STATUS);
+>  			break;
+>  		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
+>  			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
+>  			rmap = &map->mbox;
+> +			*caps |= BIT(CXL_DEV_CAP_MAILBOX_PRIMARY);
+>  			break;
+>  		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
+>  			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
+> @@ -157,6 +162,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  		case CXLDEV_CAP_CAP_ID_MEMDEV:
+>  			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
+>  			rmap = &map->memdev;
+> +			*caps |= BIT(CXL_DEV_CAP_MEMDEV);
+>  			break;
+>  		default:
+>  			if (cap_id >= 0x8000)
+> @@ -421,7 +427,7 @@ static void cxl_unmap_regblock(struct cxl_register_map *map)
+>  	map->base = NULL;
+>  }
+>  
+> -static int cxl_probe_regs(struct cxl_register_map *map)
+> +static int cxl_probe_regs(struct cxl_register_map *map, u32 *caps)
+>  {
+>  	struct cxl_component_reg_map *comp_map;
+>  	struct cxl_device_reg_map *dev_map;
+> @@ -431,12 +437,12 @@ static int cxl_probe_regs(struct cxl_register_map *map)
+>  	switch (map->reg_type) {
+>  	case CXL_REGLOC_RBI_COMPONENT:
+>  		comp_map = &map->component_map;
+> -		cxl_probe_component_regs(host, base, comp_map);
+> +		cxl_probe_component_regs(host, base, comp_map, caps);
+>  		dev_dbg(host, "Set up component registers\n");
+>  		break;
+>  	case CXL_REGLOC_RBI_MEMDEV:
+>  		dev_map = &map->device_map;
+> -		cxl_probe_device_regs(host, base, dev_map);
+> +		cxl_probe_device_regs(host, base, dev_map, caps);
+>  		if (!dev_map->status.valid || !dev_map->mbox.valid ||
+>  		    !dev_map->memdev.valid) {
+>  			dev_err(host, "registers not found: %s%s%s\n",
+> @@ -455,7 +461,7 @@ static int cxl_probe_regs(struct cxl_register_map *map)
+>  	return 0;
+>  }
+>  
+> -int cxl_setup_regs(struct cxl_register_map *map)
+> +int cxl_setup_regs(struct cxl_register_map *map, u32 *caps)
+>  {
+>  	int rc;
+>  
+> @@ -463,7 +469,7 @@ int cxl_setup_regs(struct cxl_register_map *map)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = cxl_probe_regs(map);
+> +	rc = cxl_probe_regs(map, caps);
+>  	cxl_unmap_regblock(map);
+>  
+>  	return rc;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 9afb407d438f..07c153aa3d77 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -284,9 +284,9 @@ struct cxl_register_map {
+>  };
+>  
+>  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+> -			      struct cxl_component_reg_map *map);
+> +			      struct cxl_component_reg_map *map, u32 *caps);
+>  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> -			   struct cxl_device_reg_map *map);
+> +			   struct cxl_device_reg_map *map, u32 *caps);
+>  int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			   struct cxl_component_regs *regs,
+>  			   unsigned long map_mask);
+> @@ -300,7 +300,7 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  			       struct cxl_register_map *map, int index);
+>  int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  		      struct cxl_register_map *map);
+> -int cxl_setup_regs(struct cxl_register_map *map);
+> +int cxl_setup_regs(struct cxl_register_map *map, u32 *caps);
+>  struct cxl_dport;
+>  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+>  					   struct cxl_dport *dport);
+> @@ -600,6 +600,7 @@ struct cxl_dax_region {
+>   * @cdat: Cached CDAT data
+>   * @cdat_available: Should a CDAT attribute be available in sysfs
+>   * @pci_latency: Upstream latency in picoseconds
+> + * @capabilities: those capabilities as defined in device mapped registers
+>   */
+>  struct cxl_port {
+>  	struct device dev;
+> @@ -623,6 +624,7 @@ struct cxl_port {
+>  	} cdat;
+>  	bool cdat_available;
+>  	long pci_latency;
+> +	u32 capabilities;
+>  };
+>  
+>  /**
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index afb53d058d62..37c043100300 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -424,6 +424,7 @@ struct cxl_dpa_perf {
+>   * @ram_res: Active Volatile memory capacity configuration
+>   * @serial: PCIe Device Serial Number
+>   * @type: Generic Memory Class device or Vendor Specific Memory device
+> + * @capabilities: those capabilities as defined in device mapped registers
+>   */
+>  struct cxl_dev_state {
+>  	struct device *dev;
+> @@ -438,6 +439,7 @@ struct cxl_dev_state {
+>  	struct resource ram_res;
+>  	u64 serial;
+>  	enum cxl_devtype type;
+> +	u32 capabilities;
+>  };
+>  
+>  /**
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 742a7b2a1be5..58f325019886 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -503,7 +503,7 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
+>  }
+>  
+>  static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> -			      struct cxl_register_map *map)
+> +			      struct cxl_register_map *map, u32 *caps)
+>  {
+>  	int rc;
+>  
+> @@ -520,7 +520,7 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	if (rc)
+>  		return rc;
+>  
+> -	return cxl_setup_regs(map);
+> +	return cxl_setup_regs(map, caps);
+>  }
+>  
+>  static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+> @@ -827,7 +827,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	else
+>  		cxl_set_dvsec(cxlds, dvsec);
+>  
+> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
+> +				&cxlds->capabilities);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -840,7 +841,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	 * still be useful for management functions so don't return an error.
+>  	 */
+>  	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> -				&cxlds->reg_map);
+> +				&cxlds->reg_map, &cxlds->capabilities);
+>  	if (rc)
+>  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+>  	else if (!cxlds->reg_map.component_map.ras.valid)
+> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
+> index e78eefa82123..930b1b9c1d6a 100644
+> --- a/include/linux/cxl/cxl.h
+> +++ b/include/linux/cxl/cxl.h
+> @@ -12,6 +12,36 @@ enum cxl_resource {
+>  	CXL_ACCEL_RES_PMEM,
+>  };
+>  
+> +/* Capabilities as defined for:
+> + *
+> + *	Component Registers (Table 8-22 CXL 3.0 specification)
+> + *	Device Registers (8.2.8.2.1 CXL 3.0 specification)
+
+Should just use 3.1 since that's the latest spec.
+
+> + */
+> +
+> +enum cxl_dev_cap {
+> +	/* capabilities from Component Registers */
+> +	CXL_DEV_CAP_RAS,
+> +	CXL_DEV_CAP_SEC,
+> +	CXL_DEV_CAP_LINK,
+> +	CXL_DEV_CAP_HDM,
+> +	CXL_DEV_CAP_SEC_EXT,
+> +	CXL_DEV_CAP_IDE,
+> +	CXL_DEV_CAP_SNOOP_FILTER,
+> +	CXL_DEV_CAP_TIMEOUT_AND_ISOLATION,
+> +	CXL_DEV_CAP_CACHEMEM_EXT,
+> +	CXL_DEV_CAP_BI_ROUTE_TABLE,
+> +	CXL_DEV_CAP_BI_DECODER,
+> +	CXL_DEV_CAP_CACHEID_ROUTE_TABLE,
+> +	CXL_DEV_CAP_CACHEID_DECODER,
+> +	CXL_DEV_CAP_HDM_EXT,
+> +	CXL_DEV_CAP_METADATA_EXT,
+> +	/* capabilities from Device Registers */
+> +	CXL_DEV_CAP_DEV_STATUS,
+> +	CXL_DEV_CAP_MAILBOX_PRIMARY,
+> +	CXL_DEV_CAP_MAILBOX_SECONDARY,
+
+Does the OS ever uses the SECONDARY mailbox?
+
+> +	CXL_DEV_CAP_MEMDEV,
+> +};
+> +
+>  struct cxl_dev_state *cxl_accel_state_create(struct device *dev);
+>  
+>  void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
