@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3899183CA6;
-	Wed, 11 Sep 2024 09:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45D71865F9;
+	Wed, 11 Sep 2024 09:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726045643; cv=none; b=UUYXfFGvjOzyRd6dQnvEqhZTSIsrV1c4Yqd9UvafSjd272k5ECJ6XHVsugrEgc4gQ2vGD1YuOJa/Re4PiIQyZpWS6wYxHAC0ik4WFuyfDaNDgdlB2R4o3PTe86ybzTxwEjaJ7pAeTYyY0tYzBOG3MwT3GRK1ybOiG2pzzXRV6G0=
+	t=1726045644; cv=none; b=PJylbg55ZNXOrzJkq5R6szlodi812XJ73lUmrH5sH+peCtfBDAs5lEONuuw0u/C4T5xhrQQO572LTJUSMOaAPAxHnbZgsyNWs5yE1PAn3cW6oT4bY48Ivv6HTMdUp7WQwH8e/vipTRYmkoACQWMFujV/xPwM1EFBy5dyD9gxcxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726045643; c=relaxed/simple;
-	bh=6myZm6/GR+DrEO8QIveZrmaYCfWjqHMoO6my+y0csY4=;
+	s=arc-20240116; t=1726045644; c=relaxed/simple;
+	bh=Ex9JCyo0pg2C/BXVbPGG0qvOHNx7gs7viWUR+gueWwA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SRk0gafiXy2lkTM1x7eumHwZlSPkz0CctybaWGNDnyZ0w7vfGrOMI+mYvHahnRwl9NiCAhPvKtXzMgcLVyDSXgbSei++8Qe7SGwIqn8uOBn9BnncB+KJkmqzfZuUejTXEp6zXpYyOOkF2baXESSKGiFbTfBverTpJ5vl4AmOrpI=
+	 MIME-Version:Content-Type; b=eTNuw28ATWnoTR2YK72gHYw9+fDhubmXrsdm/0E64TWCFR4kEB69rT072Geh7AC2CsPpUUKXgiRt8jHiLBJOVLc57LtJCbEf21Y3kX2enkyhYxvjaNAVfkAHbJuh2kofHSxR1krDcEsxINM7oz0OEsz4n9YvBHAyvkvyTk7nCSQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X3ZNc68mmz6K8qx;
-	Wed, 11 Sep 2024 17:03:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X3ZNp6z0xz6K5mT;
+	Wed, 11 Sep 2024 17:03:22 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id B6100140F63;
-	Wed, 11 Sep 2024 17:07:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D4693140B3C;
+	Wed, 11 Sep 2024 17:07:20 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.245.151) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 11 Sep 2024 11:07:08 +0200
+ 15.1.2507.39; Wed, 11 Sep 2024 11:07:18 +0200
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -44,9 +44,9 @@ CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
 	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v12 04/17] cxl: Move mailbox related bits to the same context
-Date: Wed, 11 Sep 2024 10:04:33 +0100
-Message-ID: <20240911090447.751-5-shiju.jose@huawei.com>
+Subject: [PATCH v12 07/17] cxl: Add Get Supported Features command for kernel usage
+Date: Wed, 11 Sep 2024 10:04:36 +0100
+Message-ID: <20240911090447.751-8-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20240911090447.751-1-shiju.jose@huawei.com>
 References: <20240911090447.751-1-shiju.jose@huawei.com>
@@ -63,810 +63,332 @@ X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
 
 From: Dave Jiang <dave.jiang@intel.com>
 
-Create a new 'struct cxl_mailbox' and move all mailbox related bits to
-it. This allows isolation of all CXL mailbox data in order to export
-some of the calls to external caller (fwctl) and avoid exporting of
-CXL driver specific bits such has device states.
+CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+The command retrieve the list of supported device-specific features
+(identified by UUID) and general information about each Feature.
+
+The driver will retrieve the feature entries in order to make checks and
+provide information for the Get Feature and Set Feature command. One of
+the main piece of information retrieved are the effects a Set Feature
+command would have for a particular feature.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- MAINTAINERS                  |  1 +
- drivers/cxl/core/mbox.c      | 48 ++++++++++++++++++---------
- drivers/cxl/core/memdev.c    | 18 +++++++----
- drivers/cxl/cxlmem.h         | 49 ++--------------------------
- drivers/cxl/pci.c            | 58 +++++++++++++++++++--------------
- drivers/cxl/pmem.c           |  4 ++-
- include/linux/cxl/mailbox.h  | 63 ++++++++++++++++++++++++++++++++++++
- tools/testing/cxl/test/mem.c | 27 ++++++++++------
- 8 files changed, 163 insertions(+), 105 deletions(-)
- create mode 100644 include/linux/cxl/mailbox.h
+ drivers/cxl/core/mbox.c      | 175 +++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h         |  51 ++++++++++
+ drivers/cxl/pci.c            |   4 +
+ include/uapi/linux/cxl_mem.h |   1 +
+ 4 files changed, 231 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 878dcd23b331..227c2b214f00 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5619,6 +5619,7 @@ F:	Documentation/driver-api/cxl
- F:	drivers/cxl/
- F:	include/linux/einj-cxl.h
- F:	include/linux/cxl-event.h
-+F:	include/linux/cxl/
- F:	include/uapi/linux/cxl_mem.h
- F:	tools/testing/cxl/
- 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index e5cdeafdf76e..216937ef9e07 100644
+index fa1ee495a4e3..fe965ec5802f 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -244,16 +244,17 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
- int cxl_internal_send_cmd(struct cxl_memdev_state *mds,
- 			  struct cxl_mbox_cmd *mbox_cmd)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	size_t out_size, min_out;
- 	int rc;
+@@ -67,6 +67,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
+ 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+ 	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
++	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+ };
  
--	if (mbox_cmd->size_in > mds->payload_size ||
--	    mbox_cmd->size_out > mds->payload_size)
-+	if (mbox_cmd->size_in > cxl_mbox->payload_size ||
-+	    mbox_cmd->size_out > cxl_mbox->payload_size)
- 		return -E2BIG;
+ /*
+@@ -790,6 +791,180 @@ static const uuid_t log_uuid[] = {
+ 	[VENDOR_DEBUG_UUID] = DEFINE_CXL_VENDOR_DEBUG_UUID,
+ };
  
- 	out_size = mbox_cmd->size_out;
- 	min_out = mbox_cmd->min_out;
--	rc = mds->mbox_send(mds, mbox_cmd);
-+	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
- 	/*
- 	 * EIO is reserved for a payload size mismatch and mbox_send()
- 	 * may not return this error.
-@@ -353,6 +354,7 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox,
- 			     struct cxl_memdev_state *mds, u16 opcode,
- 			     size_t in_size, size_t out_size, u64 in_payload)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	*mbox = (struct cxl_mbox_cmd) {
- 		.opcode = opcode,
- 		.size_in = in_size,
-@@ -374,7 +376,7 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox,
- 
- 	/* Prepare to handle a full payload for variable sized output */
- 	if (out_size == CXL_VARIABLE_PAYLOAD)
--		mbox->size_out = mds->payload_size;
-+		mbox->size_out = cxl_mbox->payload_size;
- 	else
- 		mbox->size_out = out_size;
- 
-@@ -398,6 +400,8 @@ static int cxl_to_mem_cmd_raw(struct cxl_mem_command *mem_cmd,
- 			      const struct cxl_send_command *send_cmd,
- 			      struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
++static void cxl_free_features(void *features)
++{
++	kvfree(features);
++}
 +
- 	if (send_cmd->raw.rsvd)
- 		return -EINVAL;
- 
-@@ -406,7 +410,7 @@ static int cxl_to_mem_cmd_raw(struct cxl_mem_command *mem_cmd,
- 	 * gets passed along without further checking, so it must be
- 	 * validated here.
- 	 */
--	if (send_cmd->out.size > mds->payload_size)
-+	if (send_cmd->out.size > cxl_mbox->payload_size)
- 		return -EINVAL;
- 
- 	if (!cxl_mem_raw_command_allowed(send_cmd->raw.opcode))
-@@ -494,6 +498,7 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 				      struct cxl_memdev_state *mds,
- 				      const struct cxl_send_command *send_cmd)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mem_command mem_cmd;
- 	int rc;
- 
-@@ -505,7 +510,7 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 	 * supports, but output can be arbitrarily large (simply write out as
- 	 * much data as the hardware provides).
- 	 */
--	if (send_cmd->in.size > mds->payload_size)
-+	if (send_cmd->in.size > cxl_mbox->payload_size)
- 		return -EINVAL;
- 
- 	/* Sanitize and construct a cxl_mem_command */
-@@ -591,6 +596,7 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev_state *mds,
- 					u64 out_payload, s32 *size_out,
- 					u32 *retval)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct device *dev = mds->cxlds.dev;
- 	int rc;
- 
-@@ -601,7 +607,7 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev_state *mds,
- 		cxl_mem_opcode_to_name(mbox_cmd->opcode),
- 		mbox_cmd->opcode, mbox_cmd->size_in);
- 
--	rc = mds->mbox_send(mds, mbox_cmd);
-+	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
- 	if (rc)
- 		goto out;
- 
-@@ -659,11 +665,12 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
- static int cxl_xfer_log(struct cxl_memdev_state *mds, uuid_t *uuid,
- 			u32 *size, u8 *out)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	u32 remaining = *size;
- 	u32 offset = 0;
- 
- 	while (remaining) {
--		u32 xfer_size = min_t(u32, remaining, mds->payload_size);
-+		u32 xfer_size = min_t(u32, remaining, cxl_mbox->payload_size);
- 		struct cxl_mbox_cmd mbox_cmd;
- 		struct cxl_mbox_get_log log;
- 		int rc;
-@@ -752,17 +759,18 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 
- static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_supported_logs *ret;
- 	struct cxl_mbox_cmd mbox_cmd;
- 	int rc;
- 
--	ret = kvmalloc(mds->payload_size, GFP_KERNEL);
-+	ret = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
- 	if (!ret)
- 		return ERR_PTR(-ENOMEM);
- 
- 	mbox_cmd = (struct cxl_mbox_cmd) {
- 		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
--		.size_out = mds->payload_size,
-+		.size_out = cxl_mbox->payload_size,
- 		.payload_out = ret,
- 		/* At least the record number field must be valid */
- 		.min_out = 2,
-@@ -910,6 +918,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 				  enum cxl_event_log_type log,
- 				  struct cxl_get_event_payload *get_pl)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_clear_event_payload *payload;
- 	u16 total = le16_to_cpu(get_pl->record_count);
- 	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
-@@ -920,8 +929,8 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- 	int i;
- 
- 	/* Payload size may limit the max handles */
--	if (pl_size > mds->payload_size) {
--		max_handles = (mds->payload_size - sizeof(*payload)) /
-+	if (pl_size > cxl_mbox->payload_size) {
-+		max_handles = (cxl_mbox->payload_size - sizeof(*payload)) /
- 			      sizeof(__le16);
- 		pl_size = struct_size(payload, handles, max_handles);
- 	}
-@@ -979,6 +988,7 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
- static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 				    enum cxl_event_log_type type)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
- 	struct device *dev = mds->cxlds.dev;
- 	struct cxl_get_event_payload *payload;
-@@ -995,7 +1005,7 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
- 			.payload_in = &log_type,
- 			.size_in = sizeof(log_type),
- 			.payload_out = payload,
--			.size_out = mds->payload_size,
-+			.size_out = cxl_mbox->payload_size,
- 			.min_out = struct_size(payload, records, 0),
- 		};
- 
-@@ -1328,6 +1338,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 		       struct cxl_region *cxlr)
- {
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_poison_out *po;
- 	struct cxl_mbox_poison_in pi;
- 	int nr_records = 0;
-@@ -1346,7 +1357,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 			.opcode = CXL_MBOX_OP_GET_POISON,
- 			.size_in = sizeof(pi),
- 			.payload_in = &pi,
--			.size_out = mds->payload_size,
-+			.size_out = cxl_mbox->payload_size,
- 			.payload_out = po,
- 			.min_out = struct_size(po, record, 0),
- 		};
-@@ -1382,7 +1393,9 @@ static void free_poison_buf(void *buf)
- /* Get Poison List output buffer is protected by mds->poison.lock */
- static int cxl_poison_alloc_buf(struct cxl_memdev_state *mds)
- {
--	mds->poison.list_out = kvmalloc(mds->payload_size, GFP_KERNEL);
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+
-+	mds->poison.list_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
- 	if (!mds->poison.list_out)
- 		return -ENOMEM;
- 
-@@ -1411,6 +1424,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
- struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- {
- 	struct cxl_memdev_state *mds;
-+	struct cxl_mailbox *cxl_mbox;
- 
- 	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
- 	if (!mds) {
-@@ -1418,7 +1432,9 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	mutex_init(&mds->mbox_mutex);
-+	cxl_mbox = &mds->cxlds.cxl_mbox;
-+	mutex_init(&cxl_mbox->mbox_mutex);
-+
- 	mutex_init(&mds->event.log_lock);
- 	mds->cxlds.dev = dev;
- 	mds->cxlds.reg_map.host = dev;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 0277726afd04..05bb84cb1274 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -58,7 +58,7 @@ static ssize_t payload_max_show(struct device *dev,
- 
- 	if (!mds)
- 		return sysfs_emit(buf, "\n");
--	return sysfs_emit(buf, "%zu\n", mds->payload_size);
-+	return sysfs_emit(buf, "%zu\n", cxlds->cxl_mbox.payload_size);
- }
- static DEVICE_ATTR_RO(payload_max);
- 
-@@ -124,15 +124,16 @@ static ssize_t security_state_show(struct device *dev,
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++static int cxl_get_supported_features_count(struct cxl_dev_state *cxlds)
++{
 +	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 	unsigned long state = mds->security.state;
- 	int rc = 0;
++	struct cxl_mbox_get_sup_feats_out mbox_out;
++	struct cxl_mbox_get_sup_feats_in mbox_in;
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	memset(&mbox_in, 0, sizeof(mbox_in));
++	mbox_in.count = sizeof(mbox_out);
++	memset(&mbox_out, 0, sizeof(mbox_out));
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++		.size_in = sizeof(mbox_in),
++		.payload_in = &mbox_in,
++		.size_out = sizeof(mbox_out),
++		.payload_out = &mbox_out,
++		.min_out = sizeof(mbox_out),
++	};
++	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++	if (rc < 0)
++		return rc;
++
++	cxlds->num_features = le16_to_cpu(mbox_out.supported_feats);
++	if (!cxlds->num_features)
++		return -ENOENT;
++
++	return 0;
++}
++
++int cxl_get_supported_features(struct cxl_dev_state *cxlds)
++{
++	int remain_feats, max_size, max_feats, start, rc;
++	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
++	int feat_size = sizeof(struct cxl_feat_entry);
++	struct cxl_mbox_get_sup_feats_out *mbox_out;
++	struct cxl_mbox_get_sup_feats_in mbox_in;
++	int hdr_size = sizeof(*mbox_out);
++	struct cxl_mbox_cmd mbox_cmd;
++	struct cxl_mem_command *cmd;
++	void *ptr;
++
++	/* Get supported features is optional, need to check */
++	cmd = cxl_mem_find_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
++	if (!cmd)
++		return -EOPNOTSUPP;
++	if (!test_bit(cmd->info.id, cxl_mbox->enabled_cmds))
++		return -EOPNOTSUPP;
++
++	rc = cxl_get_supported_features_count(cxlds);
++	if (rc)
++		return rc;
++
++	struct cxl_feat_entry *entries __free(kvfree) =
++		kvmalloc(cxlds->num_features * feat_size, GFP_KERNEL);
++
++	if (!entries)
++		return -ENOMEM;
++
++	cxlds->entries = no_free_ptr(entries);
++	rc = devm_add_action_or_reset(cxl_mbox->host, cxl_free_features,
++				      cxlds->entries);
++	if (rc)
++		return rc;
++
++	max_size = cxl_mbox->payload_size - hdr_size;
++	/* max feat entries that can fit in mailbox max payload size */
++	max_feats = max_size / feat_size;
++	ptr = &cxlds->entries[0];
++
++	mbox_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
++	if (!mbox_out)
++		return -ENOMEM;
++
++	start = 0;
++	remain_feats = cxlds->num_features;
++	do {
++		int retrieved, alloc_size, copy_feats;
++
++		if (remain_feats > max_feats) {
++			alloc_size = sizeof(*mbox_out) + max_feats * feat_size;
++			remain_feats = remain_feats - max_feats;
++			copy_feats = max_feats;
++		} else {
++			alloc_size = sizeof(*mbox_out) + remain_feats * feat_size;
++			copy_feats = remain_feats;
++			remain_feats = 0;
++		}
++
++		memset(&mbox_in, 0, sizeof(mbox_in));
++		mbox_in.count = alloc_size;
++		mbox_in.start_idx = start;
++		memset(mbox_out, 0, alloc_size);
++		mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++			.size_in = sizeof(mbox_in),
++			.payload_in = &mbox_in,
++			.size_out = alloc_size,
++			.payload_out = mbox_out,
++			.min_out = hdr_size,
++		};
++		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++		if (rc < 0) {
++			kfree(mbox_out);
++			return rc;
++		}
++		if (mbox_cmd.size_out <= hdr_size) {
++			rc = -ENXIO;
++			goto err;
++		}
++
++		/*
++		 * Make sure retrieved out buffer is multiple of feature
++		 * entries.
++		 */
++		retrieved = mbox_cmd.size_out - hdr_size;
++		if (retrieved % feat_size) {
++			rc = -ENXIO;
++			goto err;
++		}
++
++		/*
++		 * If the reported output entries * defined entry size !=
++		 * retrieved output bytes, then the output package is incorrect.
++		 */
++		if (mbox_out->num_entries * feat_size != retrieved) {
++			rc = -ENXIO;
++			goto err;
++		}
++
++		memcpy(ptr, mbox_out->ents, retrieved);
++		ptr += retrieved;
++		/*
++		 * If the number of output entries is less than expected, add the
++		 * remaining entries to the next batch.
++		 */
++		remain_feats += copy_feats - mbox_out->num_entries;
++		start += mbox_out->num_entries;
++	} while (remain_feats);
++
++	kfree(mbox_out);
++	return 0;
++
++err:
++	kfree(mbox_out);
++	cxlds->num_features = 0;
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
++
++int cxl_get_supported_feature_entry(struct cxl_dev_state *cxlds, const uuid_t *feat_uuid,
++				    struct cxl_feat_entry *feat_entry_out)
++{
++	struct cxl_feat_entry *feat_entry;
++	int count;
++
++	/* Check CXL dev supports the feature */
++	feat_entry = &cxlds->entries[0];
++	for (count = 0; count < cxlds->num_features; count++, feat_entry++) {
++		if (uuid_equal(&feat_entry->uuid, feat_uuid)) {
++			memcpy(feat_entry_out, feat_entry, sizeof(*feat_entry_out));
++			return 0;
++		}
++	}
++
++	return -EOPNOTSUPP;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_supported_feature_entry, CXL);
++
+ /**
+  * cxl_enumerate_cmds() - Enumerate commands for a device.
+  * @mds: The driver data for the operation
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index d7c6ffe2a884..5d149e64c247 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -389,6 +389,8 @@ struct cxl_dpa_perf {
+  * @ram_res: Active Volatile memory capacity configuration
+  * @serial: PCIe Device Serial Number
+  * @type: Generic Memory Class device or Vendor Specific Memory device
++ * @features: number of supported features
++ * @entries: list of supported feature entries.
+  */
+ struct cxl_dev_state {
+ 	struct device *dev;
+@@ -404,6 +406,8 @@ struct cxl_dev_state {
+ 	u64 serial;
+ 	enum cxl_devtype type;
+ 	struct cxl_mailbox cxl_mbox;
++	int num_features;
++	struct cxl_feat_entry *entries;
+ };
  
- 	/* sync with latest submission state */
--	mutex_lock(&mds->mbox_mutex);
-+	mutex_lock(&cxl_mbox->mbox_mutex);
- 	if (mds->security.sanitize_active)
- 		rc = sysfs_emit(buf, "sanitize\n");
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
+ /**
+@@ -482,6 +486,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
+ 	CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
+ 	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
++	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+ 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+ 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+@@ -765,6 +770,48 @@ enum {
+ 	CXL_PMEM_SEC_PASS_USER,
+ };
+ 
++/* Get Supported Features (0x500h) CXL r3.1 8.2.9.6.1 */
++struct cxl_mbox_get_sup_feats_in {
++	__le32 count;
++	__le16 start_idx;
++	u8 reserved[2];
++} __packed;
++
++/* Supported Feature Entry : Payload out attribute flags */
++#define CXL_FEAT_ENTRY_FLAG_CHANGABLE	BIT(0)
++#define CXL_FEAT_ENTRY_FLAG_DEEPEST_RESET_PERSISTENCE_MASK	GENMASK(3, 1)
++#define CXL_FEAT_ENTRY_FLAG_PERSIST_ACROSS_FIRMWARE_UPDATE	BIT(4)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_DEFAULT_SELECTION	BIT(5)
++#define CXL_FEAT_ENTRY_FLAG_SUPPORT_SAVED_SELECTION	BIT(6)
++
++enum cxl_feat_attr_value_persistence {
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_NONE,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_CXL_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_HOT_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_WARM_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_COLD_RESET,
++	CXL_FEAT_ATTR_VALUE_PERSISTENCE_MAX
++};
++
++struct cxl_feat_entry {
++	uuid_t uuid;
++	__le16 id;
++	__le16 get_feat_size;
++	__le16 set_feat_size;
++	__le32 attr_flags;
++	u8 get_feat_ver;
++	u8 set_feat_ver;
++	__le16 set_effects;
++	u8 reserved[18];
++} __packed;
++
++struct cxl_mbox_get_sup_feats_out {
++	__le16 num_entries;
++	__le16 supported_feats;
++	u8 reserved[4];
++	struct cxl_feat_entry ents[] __counted_by(le32_to_cpu(supported_feats));
++} __packed;
++
+ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+ 			  struct cxl_mbox_cmd *cmd);
+ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+@@ -824,4 +871,8 @@ struct cxl_hdm {
+ struct seq_file;
+ struct dentry *cxl_debugfs_create_dir(const char *dir);
+ void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
++
++int cxl_get_supported_features(struct cxl_dev_state *cxlds);
++int cxl_get_supported_feature_entry(struct cxl_dev_state *cxlds, const uuid_t *feat_uuid,
++				    struct cxl_feat_entry *feat_entry_out);
+ #endif /* __CXL_MEM_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 3c73de475bf3..cec88e3a1754 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -872,6 +872,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  	if (rc)
  		return rc;
  
-@@ -829,12 +830,13 @@ static enum fw_upload_err cxl_fw_prepare(struct fw_upload *fwl, const u8 *data,
- {
- 	struct cxl_memdev_state *mds = fwl->dd_handle;
- 	struct cxl_mbox_transfer_fw *transfer;
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 
- 	if (!size)
- 		return FW_UPLOAD_ERR_INVALID_SIZE;
- 
- 	mds->fw.oneshot = struct_size(transfer, data, size) <
--			    mds->payload_size;
-+			    cxl_mbox->payload_size;
- 
- 	if (cxl_mem_get_fw_info(mds))
- 		return FW_UPLOAD_ERR_HW_ERROR;
-@@ -854,6 +856,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- {
- 	struct cxl_memdev_state *mds = fwl->dd_handle;
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev *cxlmd = cxlds->cxlmd;
- 	struct cxl_mbox_transfer_fw *transfer;
- 	struct cxl_mbox_cmd mbox_cmd;
-@@ -877,7 +880,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	 * sizeof(*transfer) is 128.  These constraints imply that @cur_size
- 	 * will always be 128b aligned.
- 	 */
--	cur_size = min_t(size_t, size, mds->payload_size - sizeof(*transfer));
-+	cur_size = min_t(size_t, size, cxl_mbox->payload_size - sizeof(*transfer));
- 
- 	remaining = size - cur_size;
- 	size_in = struct_size(transfer, data, cur_size);
-@@ -1059,16 +1062,17 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, CXL);
- static void sanitize_teardown_notifier(void *data)
- {
- 	struct cxl_memdev_state *mds = data;
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct kernfs_node *state;
- 
- 	/*
- 	 * Prevent new irq triggered invocations of the workqueue and
- 	 * flush inflight invocations.
- 	 */
--	mutex_lock(&mds->mbox_mutex);
-+	mutex_lock(&cxl_mbox->mbox_mutex);
- 	state = mds->security.sanitize_node;
- 	mds->security.sanitize_node = NULL;
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
- 
- 	cancel_delayed_work_sync(&mds->security.poll_dwork);
- 	sysfs_put(state);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index afb53d058d62..19609b708b09 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -8,6 +8,7 @@
- #include <linux/rcuwait.h>
- #include <linux/cxl-event.h>
- #include <linux/node.h>
-+#include <linux/cxl/mailbox.h>
- #include "cxl.h"
- 
- /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-@@ -105,42 +106,6 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
- 	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
- }
- 
--/**
-- * struct cxl_mbox_cmd - A command to be submitted to hardware.
-- * @opcode: (input) The command set and command submitted to hardware.
-- * @payload_in: (input) Pointer to the input payload.
-- * @payload_out: (output) Pointer to the output payload. Must be allocated by
-- *		 the caller.
-- * @size_in: (input) Number of bytes to load from @payload_in.
-- * @size_out: (input) Max number of bytes loaded into @payload_out.
-- *            (output) Number of bytes generated by the device. For fixed size
-- *            outputs commands this is always expected to be deterministic. For
-- *            variable sized output commands, it tells the exact number of bytes
-- *            written.
-- * @min_out: (input) internal command output payload size validation
-- * @poll_count: (input) Number of timeouts to attempt.
-- * @poll_interval_ms: (input) Time between mailbox background command polling
-- *                    interval timeouts.
-- * @return_code: (output) Error code returned from hardware.
-- *
-- * This is the primary mechanism used to send commands to the hardware.
-- * All the fields except @payload_* correspond exactly to the fields described in
-- * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
-- * @payload_out are written to, and read from the Command Payload Registers
-- * defined in CXL 2.0 8.2.8.4.8.
-- */
--struct cxl_mbox_cmd {
--	u16 opcode;
--	void *payload_in;
--	void *payload_out;
--	size_t size_in;
--	size_t size_out;
--	size_t min_out;
--	int poll_count;
--	int poll_interval_ms;
--	u16 return_code;
--};
--
- /*
-  * Per CXL 3.0 Section 8.2.8.4.5.1
-  */
-@@ -438,6 +403,7 @@ struct cxl_dev_state {
- 	struct resource ram_res;
- 	u64 serial;
- 	enum cxl_devtype type;
-+	struct cxl_mailbox cxl_mbox;
- };
- 
- /**
-@@ -448,11 +414,8 @@ struct cxl_dev_state {
-  * the functionality related to that like Identify Memory Device and Get
-  * Partition Info
-  * @cxlds: Core driver state common across Type-2 and Type-3 devices
-- * @payload_size: Size of space for payload
-- *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-  * @lsa_size: Size of Label Storage Area
-  *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
-- * @mbox_mutex: Mutex to synchronize mailbox access.
-  * @firmware_version: Firmware version for the memory device.
-  * @enabled_cmds: Hardware commands found enabled in CEL.
-  * @exclusive_cmds: Commands that are kernel-internal only
-@@ -470,17 +433,13 @@ struct cxl_dev_state {
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-- * @mbox_wait: RCU wait for mbox send completely
-- * @mbox_send: @dev specific transport for transmitting mailbox commands
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-  */
- struct cxl_memdev_state {
- 	struct cxl_dev_state cxlds;
--	size_t payload_size;
- 	size_t lsa_size;
--	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
- 	char firmware_version[0x10];
- 	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
- 	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
-@@ -500,10 +459,6 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
--
--	struct rcuwait mbox_wait;
--	int (*mbox_send)(struct cxl_memdev_state *mds,
--			 struct cxl_mbox_cmd *cmd);
- };
- 
- static inline struct cxl_memdev_state *
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 4be35dc22202..faf6f5a49368 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -124,6 +124,7 @@ static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
- 	u16 opcode;
- 	struct cxl_dev_id *dev_id = id;
- 	struct cxl_dev_state *cxlds = dev_id->cxlds;
-+	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 
- 	if (!cxl_mbox_background_complete(cxlds))
-@@ -132,13 +133,13 @@ static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
- 	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
- 	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK, reg);
- 	if (opcode == CXL_MBOX_OP_SANITIZE) {
--		mutex_lock(&mds->mbox_mutex);
-+		mutex_lock(&cxl_mbox->mbox_mutex);
- 		if (mds->security.sanitize_node)
- 			mod_delayed_work(system_wq, &mds->security.poll_dwork, 0);
--		mutex_unlock(&mds->mbox_mutex);
-+		mutex_unlock(&cxl_mbox->mbox_mutex);
- 	} else {
- 		/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
--		rcuwait_wake_up(&mds->mbox_wait);
-+		rcuwait_wake_up(&cxl_mbox->mbox_wait);
- 	}
- 
- 	return IRQ_HANDLED;
-@@ -152,8 +153,9 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
- 	struct cxl_memdev_state *mds =
- 		container_of(work, typeof(*mds), security.poll_dwork.work);
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 
--	mutex_lock(&mds->mbox_mutex);
-+	mutex_lock(&cxl_mbox->mbox_mutex);
- 	if (cxl_mbox_background_complete(cxlds)) {
- 		mds->security.poll_tmo_secs = 0;
- 		if (mds->security.sanitize_node)
-@@ -167,7 +169,7 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
- 		mds->security.poll_tmo_secs = min(15 * 60, timeout);
- 		schedule_delayed_work(&mds->security.poll_dwork, timeout * HZ);
- 	}
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
- }
- 
- /**
-@@ -192,17 +194,20 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
-  * not need to coordinate with each other. The driver only uses the primary
-  * mailbox.
-  */
--static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
-+static int __cxl_pci_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
- 				   struct cxl_mbox_cmd *mbox_cmd)
- {
--	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct cxl_dev_state *cxlds = container_of(cxl_mbox,
-+						   struct cxl_dev_state,
-+						   cxl_mbox);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 	void __iomem *payload = cxlds->regs.mbox + CXLDEV_MBOX_PAYLOAD_OFFSET;
- 	struct device *dev = cxlds->dev;
- 	u64 cmd_reg, status_reg;
- 	size_t out_len;
- 	int rc;
- 
--	lockdep_assert_held(&mds->mbox_mutex);
-+	lockdep_assert_held(&cxl_mbox->mbox_mutex);
- 
- 	/*
- 	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
-@@ -315,10 +320,10 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
- 
- 		timeout = mbox_cmd->poll_interval_ms;
- 		for (i = 0; i < mbox_cmd->poll_count; i++) {
--			if (rcuwait_wait_event_timeout(&mds->mbox_wait,
--				       cxl_mbox_background_complete(cxlds),
--				       TASK_UNINTERRUPTIBLE,
--				       msecs_to_jiffies(timeout)) > 0)
-+			if (rcuwait_wait_event_timeout(&cxl_mbox->mbox_wait,
-+						       cxl_mbox_background_complete(cxlds),
-+						       TASK_UNINTERRUPTIBLE,
-+						       msecs_to_jiffies(timeout)) > 0)
- 				break;
- 		}
- 
-@@ -360,7 +365,7 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
- 		 */
- 		size_t n;
- 
--		n = min3(mbox_cmd->size_out, mds->payload_size, out_len);
-+		n = min3(mbox_cmd->size_out, cxl_mbox->payload_size, out_len);
- 		memcpy_fromio(mbox_cmd->payload_out, payload, n);
- 		mbox_cmd->size_out = n;
- 	} else {
-@@ -370,14 +375,14 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
- 	return 0;
- }
- 
--static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
-+static int cxl_pci_mbox_send(struct cxl_mailbox *cxl_mbox,
- 			     struct cxl_mbox_cmd *cmd)
- {
- 	int rc;
- 
--	mutex_lock_io(&mds->mbox_mutex);
--	rc = __cxl_pci_mbox_send_cmd(mds, cmd);
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_lock_io(&cxl_mbox->mbox_mutex);
-+	rc = __cxl_pci_mbox_send_cmd(cxl_mbox, cmd);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
- 
- 	return rc;
- }
-@@ -385,6 +390,7 @@ static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
- static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
- {
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
- 	struct device *dev = cxlds->dev;
- 	unsigned long timeout;
-@@ -392,6 +398,7 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
- 	u64 md_status;
- 	u32 ctrl;
- 
-+	cxl_mbox->host = dev;
- 	timeout = jiffies + mbox_ready_timeout * HZ;
- 	do {
- 		md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-@@ -417,8 +424,8 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
- 		return -ETIMEDOUT;
- 	}
- 
--	mds->mbox_send = cxl_pci_mbox_send;
--	mds->payload_size =
-+	cxl_mbox->mbox_send = cxl_pci_mbox_send;
-+	cxl_mbox->payload_size =
- 		1 << FIELD_GET(CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK, cap);
- 
- 	/*
-@@ -428,16 +435,16 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
- 	 * there's no point in going forward. If the size is too large, there's
- 	 * no harm is soft limiting it.
- 	 */
--	mds->payload_size = min_t(size_t, mds->payload_size, SZ_1M);
--	if (mds->payload_size < 256) {
-+	cxl_mbox->payload_size = min_t(size_t, cxl_mbox->payload_size, SZ_1M);
-+	if (cxl_mbox->payload_size < 256) {
- 		dev_err(dev, "Mailbox is too small (%zub)",
--			mds->payload_size);
-+			cxl_mbox->payload_size);
- 		return -ENXIO;
- 	}
- 
--	dev_dbg(dev, "Mailbox payload sized %zu", mds->payload_size);
-+	dev_dbg(dev, "Mailbox payload sized %zu", cxl_mbox->payload_size);
- 
--	rcuwait_init(&mds->mbox_wait);
-+	rcuwait_init(&cxl_mbox->mbox_wait);
- 	INIT_DELAYED_WORK(&mds->security.poll_dwork, cxl_mbox_sanitize_work);
- 
- 	/* background command interrupts are optional */
-@@ -578,9 +585,10 @@ static void free_event_buf(void *buf)
-  */
- static int cxl_mem_alloc_event_buf(struct cxl_memdev_state *mds)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_get_event_payload *buf;
- 
--	buf = kvmalloc(mds->payload_size, GFP_KERNEL);
-+	buf = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 	mds->event.buf = buf;
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index 4ef93da22335..3985ff9ce70e 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -102,13 +102,15 @@ static int cxl_pmem_get_config_size(struct cxl_memdev_state *mds,
- 				    struct nd_cmd_get_config_size *cmd,
- 				    unsigned int buf_len)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
++	rc = cxl_get_supported_features(cxlds);
++	if (rc)
++		dev_dbg(&pdev->dev, "No features enumerated.\n");
 +
- 	if (sizeof(*cmd) > buf_len)
- 		return -EINVAL;
+ 	rc = cxl_set_timestamp(mds);
+ 	if (rc)
+ 		return rc;
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index c6c0fe27495d..bd2535962f70 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -50,6 +50,7 @@
+ 	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
+ 	___C(CLEAR_LOG, "Clear Log"),					  \
+ 	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
++	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
+ 	___C(MAX, "invalid / last command")
  
- 	*cmd = (struct nd_cmd_get_config_size){
- 		.config_size = mds->lsa_size,
- 		.max_xfer =
--			mds->payload_size - sizeof(struct cxl_mbox_set_lsa),
-+			cxl_mbox->payload_size - sizeof(struct cxl_mbox_set_lsa),
- 	};
- 
- 	return 0;
-diff --git a/include/linux/cxl/mailbox.h b/include/linux/cxl/mailbox.h
-new file mode 100644
-index 000000000000..654df6175828
---- /dev/null
-+++ b/include/linux/cxl/mailbox.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2024 Intel Corporation. */
-+#ifndef __CXL_MBOX_H__
-+#define __CXL_MBOX_H__
-+
-+#include <linux/auxiliary_bus.h>
-+
-+/**
-+ * struct cxl_mbox_cmd - A command to be submitted to hardware.
-+ * @opcode: (input) The command set and command submitted to hardware.
-+ * @payload_in: (input) Pointer to the input payload.
-+ * @payload_out: (output) Pointer to the output payload. Must be allocated by
-+ *		 the caller.
-+ * @size_in: (input) Number of bytes to load from @payload_in.
-+ * @size_out: (input) Max number of bytes loaded into @payload_out.
-+ *            (output) Number of bytes generated by the device. For fixed size
-+ *            outputs commands this is always expected to be deterministic. For
-+ *            variable sized output commands, it tells the exact number of bytes
-+ *            written.
-+ * @min_out: (input) internal command output payload size validation
-+ * @poll_count: (input) Number of timeouts to attempt.
-+ * @poll_interval_ms: (input) Time between mailbox background command polling
-+ *                    interval timeouts.
-+ * @return_code: (output) Error code returned from hardware.
-+ *
-+ * This is the primary mechanism used to send commands to the hardware.
-+ * All the fields except @payload_* correspond exactly to the fields described in
-+ * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
-+ * @payload_out are written to, and read from the Command Payload Registers
-+ * defined in CXL 2.0 8.2.8.4.8.
-+ */
-+struct cxl_mbox_cmd {
-+	u16 opcode;
-+	void *payload_in;
-+	void *payload_out;
-+	size_t size_in;
-+	size_t size_out;
-+	size_t min_out;
-+	int poll_count;
-+	int poll_interval_ms;
-+	u16 return_code;
-+};
-+
-+/**
-+ * struct cxl_mailbox - context for CXL mailbox operations
-+ * @host: device that hosts the mailbox
-+ * @adev: auxiliary device for fw-ctl
-+ * @payload_size: Size of space for payload
-+ *                (CXL 3.1 8.2.8.4.3 Mailbox Capabilities Register)
-+ * @mbox_mutex: mutex protects device mailbox and firmware
-+ * @mbox_wait: rcuwait for mailbox
-+ * @mbox_send: @dev specific transport for transmitting mailbox commands
-+ */
-+struct cxl_mailbox {
-+	struct device *host;
-+	struct auxiliary_device adev; /* For fw-ctl */
-+	size_t payload_size;
-+	struct mutex mbox_mutex; /* lock to protect mailbox context */
-+	struct rcuwait mbox_wait;
-+	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
-+};
-+
-+#endif
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 129f179b0ac5..1829b626bb40 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -8,6 +8,7 @@
- #include <linux/delay.h>
- #include <linux/sizes.h>
- #include <linux/bits.h>
-+#include <linux/cxl/mailbox.h>
- #include <asm/unaligned.h>
- #include <crypto/sha2.h>
- #include <cxlmem.h>
-@@ -534,6 +535,7 @@ static int mock_gsl(struct cxl_mbox_cmd *cmd)
- 
- static int mock_get_log(struct cxl_memdev_state *mds, struct cxl_mbox_cmd *cmd)
- {
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_log *gl = cmd->payload_in;
- 	u32 offset = le32_to_cpu(gl->offset);
- 	u32 length = le32_to_cpu(gl->length);
-@@ -542,7 +544,7 @@ static int mock_get_log(struct cxl_memdev_state *mds, struct cxl_mbox_cmd *cmd)
- 
- 	if (cmd->size_in < sizeof(*gl))
- 		return -EINVAL;
--	if (length > mds->payload_size)
-+	if (length > cxl_mbox->payload_size)
- 		return -EINVAL;
- 	if (offset + length > sizeof(mock_cel))
- 		return -EINVAL;
-@@ -617,12 +619,13 @@ void cxl_mockmem_sanitize_work(struct work_struct *work)
- {
- 	struct cxl_memdev_state *mds =
- 		container_of(work, typeof(*mds), security.poll_dwork.work);
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 
--	mutex_lock(&mds->mbox_mutex);
-+	mutex_lock(&cxl_mbox->mbox_mutex);
- 	if (mds->security.sanitize_node)
- 		sysfs_notify_dirent(mds->security.sanitize_node);
- 	mds->security.sanitize_active = false;
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
- 
- 	dev_dbg(mds->cxlds.dev, "sanitize complete\n");
- }
-@@ -631,6 +634,7 @@ static int mock_sanitize(struct cxl_mockmem_data *mdata,
- 			 struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_memdev_state *mds = mdata->mds;
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	int rc = 0;
- 
- 	if (cmd->size_in != 0)
-@@ -648,14 +652,14 @@ static int mock_sanitize(struct cxl_mockmem_data *mdata,
- 		return -ENXIO;
- 	}
- 
--	mutex_lock(&mds->mbox_mutex);
-+	mutex_lock(&cxl_mbox->mbox_mutex);
- 	if (schedule_delayed_work(&mds->security.poll_dwork,
- 				  msecs_to_jiffies(mdata->sanitize_timeout))) {
- 		mds->security.sanitize_active = true;
- 		dev_dbg(mds->cxlds.dev, "sanitize issued\n");
- 	} else
- 		rc = -EBUSY;
--	mutex_unlock(&mds->mbox_mutex);
-+	mutex_unlock(&cxl_mbox->mbox_mutex);
- 
- 	return rc;
- }
-@@ -1333,10 +1337,13 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
- 	return -EINVAL;
- }
- 
--static int cxl_mock_mbox_send(struct cxl_memdev_state *mds,
-+static int cxl_mock_mbox_send(struct cxl_mailbox *cxl_mbox,
- 			      struct cxl_mbox_cmd *cmd)
- {
--	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct cxl_dev_state *cxlds = container_of(cxl_mbox,
-+						   struct cxl_dev_state,
-+						   cxl_mbox);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 	struct device *dev = cxlds->dev;
- 	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
- 	int rc = -EIO;
-@@ -1460,6 +1467,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	struct cxl_memdev_state *mds;
- 	struct cxl_dev_state *cxlds;
- 	struct cxl_mockmem_data *mdata;
-+	struct cxl_mailbox *cxl_mbox;
- 	int rc;
- 
- 	mdata = devm_kzalloc(dev, sizeof(*mdata), GFP_KERNEL);
-@@ -1487,9 +1495,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (IS_ERR(mds))
- 		return PTR_ERR(mds);
- 
-+	cxl_mbox = &mds->cxlds.cxl_mbox;
- 	mdata->mds = mds;
--	mds->mbox_send = cxl_mock_mbox_send;
--	mds->payload_size = SZ_4K;
-+	cxl_mbox->mbox_send = cxl_mock_mbox_send;
-+	cxl_mbox->payload_size = SZ_4K;
- 	mds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
- 	INIT_DELAYED_WORK(&mds->security.poll_dwork, cxl_mockmem_sanitize_work);
- 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 -- 
 2.34.1
 
