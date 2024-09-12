@@ -1,256 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAAC186E53;
-	Wed, 11 Sep 2024 23:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0357A1E51D
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Sep 2024 01:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726098904; cv=none; b=OkJNoX9A6vmRHboqlGTX6K5kUHjFUtUmeT9aHld1xAcIAAvPzZAMOU6mqiyxnOCueqZE3ywzXlPV0HG9jDBcTjExR8jMts+VLDsIqEzZ3ZwXoNMDVDJYACIjmpmtvQKffKoqZQnh5Ia3eZ5R//yZGUT+6qHzYQ13BgUjkXjisWs=
+	t=1726103197; cv=none; b=pPfjBTOp+qKM3TzjEISrFmjRuXt37zLL1fXFW/LTf77bMsWfpRCCRWWxSjnRklGzrKVbaLz9Mz0sJJEF5PeXRxCADEh9o+NjTeHZohSdahHatQlK1UNHt6K7IwabFFSEbWfUtu5FNOx/wOirQtSML90MktNX/ouWg7lUe8UA8j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726098904; c=relaxed/simple;
-	bh=ek8J3fG7+LMM6WtCVa2A7+/+si/gX9ltbqxIerTlvvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YPspWQfrY0YM7tQO92jmpGQzKfxM+BBtje0ycvdOgyc2ZHXzGb43vu9bcE/OBdO894cvA/+0uQIXVrFHKPoxDgOJa2CkqmZT470KdQjGLCtBfrVZDgLA7qs+qN8cXwIJ5ytYao/tZf5owGJyomv4GVcpZm8M+t3DhODv+TTZBdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8r6VrwZ; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1726103197; c=relaxed/simple;
+	bh=kaI+p7sVIt84JE0ZIqZ3fEO5rxQnRwI22uUsIJ8kVNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0fca0tpfmFNSA9m/3xn1kKd/eCQfs3kTvp8290B79vgqxo3Ic8qlZubsv4nUTYS61eODgNjFXJK1JfiHdV98+QT9pjBBw9UVsR+ASSVpbA7lLkdi68Wlk1xljfB04qm/CkXJ1cvhi2240tRoaIrytlwAbonmEDaes4LZk+GNss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3KFAlBj; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8r6VrwZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3KFAlBj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726098903; x=1757634903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ek8J3fG7+LMM6WtCVa2A7+/+si/gX9ltbqxIerTlvvY=;
-  b=R8r6VrwZ7uYaqdyYGpN9sM3FLFOJQBan8ArWoFUIqj5f0yS4rZvmI2RG
-   euHDpnChbTlhsqCYmuAnw5BssF6nk3/bMAiEk3nvTqQadWlALx37LoBnH
-   JpQhjDG0d/FxpwqaQeBHjSmDbIcy4OuMHzRyt3yE06FH736l497YKkQid
-   lwfYBuT8fVAs6uv8r6B7vkGG3TWNOGfw+bJCagyoP+YU7YZVQJSgKhbRw
-   lVfZdwsQm0B6JFqcncvj49qmPnTpCH4smbu2gyipW2LkvuFecLnf6Dnmo
-   vC8hvw3yu339eWYT0Ch+ktzQOmf6pGiqdZtIXcKrtO2y7digLr6ivLSbI
-   g==;
-X-CSE-ConnectionGUID: tyAdBCXPSmaHooHmZZrU8Q==
-X-CSE-MsgGUID: QIVhu/OGSoSs1jbEzLPW5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11192"; a="28666239"
+  t=1726103196; x=1757639196;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kaI+p7sVIt84JE0ZIqZ3fEO5rxQnRwI22uUsIJ8kVNA=;
+  b=E3KFAlBjhofiZldE+7e6L3ZlMxejApnihQACXRY+Q45bit/ANwprmTo1
+   9Dqr3u7Ozd2wnm6eLyYA3wKR/KcUykTmKxrVzUtcI5CWzvNOXIaCHe5Iu
+   0rmyatlVDz7pQ5G4trRNnsG/HVK3yC1XFkCttSxLhVsFUChMFIRXS/w4y
+   xxeJBGabpy69kqBKazbZh54MjxpyKu+sJTGmpNV9XckPoEp909Q9zja80
+   8IQdElOxJ3RPObQwmuKgNhBrRdzbreraGC79pYi5SHyoS20XLXSoVlIrq
+   tiq0Z1oZ5WCUuuVEVcTwqJ+AItXRQwHqbrPskmUjaZBtbTh95rGIyye9/
+   Q==;
+X-CSE-ConnectionGUID: EjEtOkybS9ODki/MJjVK+A==
+X-CSE-MsgGUID: Eh1X6uYaSaWs3WMh2WyEmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11192"; a="35526792"
 X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
-   d="scan'208";a="28666239"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 16:55:02 -0700
-X-CSE-ConnectionGUID: MuWS+NwfRKerCRC7bdP+4A==
-X-CSE-MsgGUID: szW6Z3q4Tk+CB2DYSFMZwQ==
+   d="scan'208";a="35526792"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 18:06:32 -0700
+X-CSE-ConnectionGUID: ukFncjO+SCa6NnvEjBPyGA==
+X-CSE-MsgGUID: kJxqgSxUQRKmwRQA4o0O6A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
-   d="scan'208";a="98359031"
-Received: from rchernet-mobl4.amr.corp.intel.com (HELO [10.125.108.13]) ([10.125.108.13])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 16:55:01 -0700
-Message-ID: <56f1a2fb-aab1-4ecc-98b3-bdcf0f37ec3c@intel.com>
-Date: Wed, 11 Sep 2024 16:55:00 -0700
+   d="scan'208";a="72139172"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.5])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 18:06:31 -0700
+Date: Wed, 11 Sep 2024 18:06:29 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Subject: Re: [PATCH v8 2/3] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+Message-ID: <ZuI-lQssSZd8ml7K@aschofie-mobl2.lan>
+References: <20240904001316.1688225-1-dave.jiang@intel.com>
+ <20240904001316.1688225-3-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/20] cxl: move pci generic code
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
- <20240907081836.5801-5-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240907081836.5801-5-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240904001316.1688225-3-dave.jiang@intel.com>
 
-
-
-On 9/7/24 1:18 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Tue, Sep 03, 2024 at 05:11:51PM -0700, Dave Jiang wrote:
+> The current bandwidth calculation aggregates all the targets. This simple
+> method does not take into account where multiple targets sharing under
+> a switch or a root port where the aggregated bandwidth can be greater than
+> the upstream link of the switch.
 > 
-> Inside cxl/core/pci.c there are helpers for CXL PCIe initialization
-> meanwhile cxl/pci.c implements the functionality for a Type3 device
-> initialization.
+> To accurately account for the shared upstream uplink cases, a new update
+> function is introduced by walking from the leaves to the root of the
+> hierarchy and clamp the bandwidth in the process as needed. This process
+> is done when all the targets for a region are present but before the
+> final values are send to the HMAT handling code cached access_coordinate
+> targets.
 > 
-> Move those functions required also for Type2 initialization to
-> cxl/core/pci.c with a specific function using that moved code added in
-> a following patch.
-
-Please consider rephrasing as:
-
-Move helper functions from cxl/pci.c to cxl/core/pci.c in order to be
-exported and shared with CXL Type2 device initialization.
-
+> The original perf calculation path was kept to calculate the latency
+> performance data that does not require the shared link consideration.
+> The shared upstream link calculation is done as a second pass when all
+> the endpoints have arrived.
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Testing is done via qemu with CXL hierachy. run_qemu[1] is modified to
+> support several CXL hierachy layouts. The following layouts are tested:
+> 
+> HB: Host Bridge
+> RP: Root Port
+> SW: Switch
+> EP: End Point
+> 
+> 2 HB 2 RP 2 EP: resulting bandwidth: 624
+> 1 HB 2 RP 2 EP: resulting bandwidth: 624
+> 2 HB 2 RP 2 SW 4 EP: resulting bandwidth: 624
+> 
+> Current testing, perf number from SRAT/HMAT is hacked into the kernel
+> code. However with new QEMU support of Generic Target Port that's
+> incoming, the perf data injection is no longer needed.
+> 
+> [1]: https://github.com/pmem/run_qemu
+> 
+> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>
 > ---
->  drivers/cxl/core/pci.c | 63 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h   |  3 ++
->  drivers/cxl/pci.c      | 60 ----------------------------------------
->  3 files changed, 66 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 57370d9beb32..bf57f081ef8f 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1079,6 +1079,69 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
->  
-> +/*
-> + * Assume that any RCIEP that emits the CXL memory expander class code
-> + * is an RCD
-> + */
-> +bool is_cxl_restricted(struct pci_dev *pdev)
-> +{
-> +	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(is_cxl_restricted, CXL);
-> +
-> +static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
-> +				  struct cxl_register_map *map)
-> +{
-> +	struct cxl_port *port;
-> +	struct cxl_dport *dport;
-> +	resource_size_t component_reg_phys;
-> +
-> +	*map = (struct cxl_register_map) {
-> +		.host = &pdev->dev,
-> +		.resource = CXL_RESOURCE_NONE,
-> +	};
-> +
-> +	port = cxl_pci_find_port(pdev, &dport);
-> +	if (!port)
-> +		return -EPROBE_DEFER;
-> +
-> +	component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
-> +
-> +	put_device(&port->dev);
-> +
-> +	if (component_reg_phys == CXL_RESOURCE_NONE)
-> +		return -ENXIO;
-> +
-> +	map->resource = component_reg_phys;
-> +	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
-> +	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
-> +
-> +	return 0;
-> +}
-> +
-> +int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +		       struct cxl_register_map *map,
-> +		       u32 *caps)
-> +{
-> +	int rc;
-> +
-> +	rc = cxl_find_regblock(pdev, type, map);
-> +
-> +	/*
-> +	 * If the Register Locator DVSEC does not exist, check if it
-> +	 * is an RCH and try to extract the Component Registers from
-> +	 * an RCRB.
-> +	 */
-> +	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
-> +		rc = cxl_rcrb_get_comp_regs(pdev, map);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_setup_regs(map, caps);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, CXL);
-> +
->  bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, u32 expected_caps,
->  			u32 *current_caps)
->  {
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index eb59019fe5f3..786b811effba 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -113,4 +113,7 @@ void read_cdat_data(struct cxl_port *port);
->  void cxl_cor_error_detected(struct pci_dev *pdev);
->  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  				    pci_channel_state_t state);
-> +bool is_cxl_restricted(struct pci_dev *pdev);
-> +int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +		       struct cxl_register_map *map, u32 *caps);
+> v8:
+> - Fix uninitialized is_root (kbot)
+> - Fix checking incorrect return value. (Alison)
+> - Remove goto from cxl_region_shared_upstrea_bandwidth_update(). (Alison)
+> - Add ** for kdoc. (Alison)
+> ---
 
-Does this need to go to a different header like include/cxl/pci.h or something for type2 consumption?
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-DJ
 
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index bec660357eec..2b85f87549c2 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -463,66 +463,6 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
->  	return 0;
->  }
->  
-> -/*
-> - * Assume that any RCIEP that emits the CXL memory expander class code
-> - * is an RCD
-> - */
-> -static bool is_cxl_restricted(struct pci_dev *pdev)
-> -{
-> -	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
-> -}
-> -
-> -static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
-> -				  struct cxl_register_map *map)
-> -{
-> -	struct cxl_port *port;
-> -	struct cxl_dport *dport;
-> -	resource_size_t component_reg_phys;
-> -
-> -	*map = (struct cxl_register_map) {
-> -		.host = &pdev->dev,
-> -		.resource = CXL_RESOURCE_NONE,
-> -	};
-> -
-> -	port = cxl_pci_find_port(pdev, &dport);
-> -	if (!port)
-> -		return -EPROBE_DEFER;
-> -
-> -	component_reg_phys = cxl_rcd_component_reg_phys(&pdev->dev, dport);
-> -
-> -	put_device(&port->dev);
-> -
-> -	if (component_reg_phys == CXL_RESOURCE_NONE)
-> -		return -ENXIO;
-> -
-> -	map->resource = component_reg_phys;
-> -	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
-> -	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
-> -
-> -	return 0;
-> -}
-> -
-> -static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> -			      struct cxl_register_map *map, u32 *caps)
-> -{
-> -	int rc;
-> -
-> -	rc = cxl_find_regblock(pdev, type, map);
-> -
-> -	/*
-> -	 * If the Register Locator DVSEC does not exist, check if it
-> -	 * is an RCH and try to extract the Component Registers from
-> -	 * an RCRB.
-> -	 */
-> -	if (rc && type == CXL_REGLOC_RBI_COMPONENT && is_cxl_restricted(pdev))
-> -		rc = cxl_rcrb_get_comp_regs(pdev, map);
-> -
-> -	if (rc)
-> -		return rc;
-> -
-> -	return cxl_setup_regs(map, caps);
-> -}
-> -
->  static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->  {
->  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+snip
+
