@@ -1,258 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F6A2F24
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Sep 2024 04:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FB62C80
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Sep 2024 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726201838; cv=none; b=U2kwXUu9TEuGVVodCjefxziNG1nplJYFrCureWY6IGYJxEOsd4KV8aEBkgpaACyN96eBqGzf8nURXCHJqkcSyzNDWi8XCW6SXGoU1eBaIAMGwDIblcLmy7baaamarV8rc66RyJ0IYBPoWNQFExZKpQgmEhAz3wza1gBdGQE8EHA=
+	t=1726228347; cv=none; b=XRaHAhaFUDib0PLY3qoLtFx9h1zCYWyfOEN8Uy5weNv4Rpsta4RgtOzr0eQT0sIZc2T6vn2+B7USJOoCXpTnBr2+aTT2l4FibarvIpvlaqWn+RS8KtSF6CkDmVzzAIXUT/kO7tLlmjoX+ZAJxr1BQAx6f9FUd5dj/PgDgtcgS9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726201838; c=relaxed/simple;
-	bh=giwx0jNRcr7JEOqx5iYkypFTb0vedIzv1BSirXqHZLc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kjmQlqidSFbKUJoQYWijK9KyhWjiMlH1PctRfn0SMH+YuuK7cFZ7LiOKhugGETN9J729EflQANfaQTj9EO9B1NfwMF1JEUDIGVjfhJ+xf4V5gfIAnUcuS/9U8wGStakI5BMvohXw/xCm6JADBnk26rjcdccUDeFUft1KOvLe2co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTiG3274; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTiG3274"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726201837; x=1757737837;
-  h=date:from:to:cc:subject:message-id;
-  bh=giwx0jNRcr7JEOqx5iYkypFTb0vedIzv1BSirXqHZLc=;
-  b=UTiG3274bRFUOxE9ITUE+GqEGPSYBSvxT3s4zKP6ggEro/7Z/XDnz8Bp
-   Qy7qtwR+ykMe0Yy5lb7VAv4C/rEZhHZZWT8YVaPJjiGsGPObZt1/GXf4E
-   tx5gf+7Z9Cz+6665beejdzF/RnqOPEdk8UxRFW3l8ZBUnoy9oYdLM7bKY
-   TOaTSIx7kguUqAmflB4nWT1TS0mqLZg32bEWAiCXopB3erzinJfyrUGBj
-   cZS2fQJDShGmQ2JFRGmRiHA8kySkr0VWm+K1NR8KX7Ygh963sxd7j4zj8
-   jFiFX0KFxjb0Q88ZswLWk796XFkJfhzDvroMY86s6RX4hEWiqYPi4AO57
-   w==;
-X-CSE-ConnectionGUID: GrZhedjgTxSdB1MZSYi11g==
-X-CSE-MsgGUID: 39xQTniSQKCZ7tNAXeEG3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="28868709"
-X-IronPort-AV: E=Sophos;i="6.10,224,1719903600"; 
-   d="scan'208";a="28868709"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2024 21:30:36 -0700
-X-CSE-ConnectionGUID: Uv1pOte9QESrIGauAwqwIQ==
-X-CSE-MsgGUID: mQuTpA4hQ2uOelkEa3BwIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,224,1719903600"; 
-   d="scan'208";a="91189726"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 12 Sep 2024 21:30:34 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1soxx1-00060s-2Q;
-	Fri, 13 Sep 2024 04:30:31 +0000
-Date: Fri, 13 Sep 2024 12:30:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- b5209da36b19b573cf25fe7e698e3a45b0f40a75
-Message-ID: <202409131210.UJ5kCWt7-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1726228347; c=relaxed/simple;
+	bh=Sq+E1KJzHsf1IR/cyTQXi3D8vCI9zi5q6E8F/SXxl7A=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XKvJe2o3Zou3w/hfjVsQuyCLyMSokVR8+lwxWV6e/uk9FDdJWdaZ4WigGcdCiigw/0HbCbOfYgCX8A9+qSnVG/GXAav2kTIQbYftkfQtl/dYdtsQ+XUVaKghxExQC1T0X0uCHPdOs1rcN+5ANvIKZwRM4LLxNxnjnKgx88LQcxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X4sy90c4fz67pJF;
+	Fri, 13 Sep 2024 19:48:17 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 003E8140519;
+	Fri, 13 Sep 2024 19:52:21 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 13 Sep
+ 2024 13:52:19 +0200
+Date: Fri, 13 Sep 2024 12:52:18 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Shinas Rasheed <srasheed@marvell.com>
+CC: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"Ravis.OpenSrc@micron.com" <Ravis.OpenSrc@micron.com>, "ajayjoshi@micron.com"
+	<ajayjoshi@micron.com>, "emirakhur@micron.com" <emirakhur@micron.com>,
+	"john@jagalactic.com" <john@jagalactic.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"sthanneeru.opensrc@micron.com" <sthanneeru.opensrc@micron.com>,
+	"sthanneeru@micron.com" <sthanneeru@micron.com>, Haseeb Gani
+	<hgani@marvell.com>, Sathesh B Edara <sedara@marvell.com>, Srinivasa Rao
+ Jampala <sjampala@marvell.com>, Shariful Alam <sharifula@marvell.com>,
+	Vimlesh Kumar <vimleshk@marvell.com>, Dharmesh Pitroda <dpitroda@marvell.com>
+Subject: Re: [RFC PATCH] cxl/pci: Set default timeout for background
+ operations
+Message-ID: <20240913125218.00003099@Huawei.com>
+In-Reply-To: <PH0PR18MB47345DDF79DB8970D40D3BC5C7922@PH0PR18MB4734.namprd18.prod.outlook.com>
+References: <PH0PR18MB47345DDF79DB8970D40D3BC5C7922@PH0PR18MB4734.namprd18.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: b5209da36b19b573cf25fe7e698e3a45b0f40a75  cxl: Convert cxl_internal_send_cmd() to use 'struct cxl_mailbox' as input
+On Mon, 2 Sep 2024 06:42:34 +0000
+Shinas Rasheed <srasheed@marvell.com> wrote:
 
-elapsed time: 731m
+> Hi,
 
-configs tested: 178
-configs skipped: 8
+Hi Shinas,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Note this is my view. Opinions may differ!
 
-tested configs:
-alpha                             allnoconfig    gcc-13.3.0
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    gcc-13.3.0
-alpha                               defconfig    gcc-13.3.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                            hsdk_defconfig    gcc-13.2.0
-arc                   randconfig-001-20240913    gcc-13.2.0
-arc                   randconfig-002-20240913    gcc-13.2.0
-arm                              allmodconfig    gcc-14.1.0
-arm                               allnoconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    gcc-14.1.0
-arm                                 defconfig    clang-14
-arm                          ep93xx_defconfig    clang-14
-arm                      integrator_defconfig    clang-20
-arm                   randconfig-001-20240913    gcc-14.1.0
-arm                   randconfig-002-20240913    gcc-14.1.0
-arm                   randconfig-003-20240913    gcc-14.1.0
-arm                   randconfig-004-20240913    clang-20
-arm                        shmobile_defconfig    gcc-14.1.0
-arm64                            alldefconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-arm64                 randconfig-001-20240913    clang-15
-arm64                 randconfig-002-20240913    clang-20
-arm64                 randconfig-003-20240913    gcc-14.1.0
-arm64                 randconfig-004-20240913    clang-20
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-csky                  randconfig-001-20240913    gcc-14.1.0
-csky                  randconfig-002-20240913    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    clang-20
-hexagon               randconfig-001-20240913    clang-20
-hexagon               randconfig-002-20240913    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20240913    clang-18
-i386        buildonly-randconfig-002-20240913    gcc-12
-i386        buildonly-randconfig-003-20240913    gcc-12
-i386        buildonly-randconfig-004-20240913    gcc-12
-i386        buildonly-randconfig-005-20240913    clang-18
-i386        buildonly-randconfig-006-20240913    gcc-11
-i386                                defconfig    clang-18
-i386                  randconfig-001-20240913    gcc-12
-i386                  randconfig-002-20240913    gcc-12
-i386                  randconfig-003-20240913    gcc-12
-i386                  randconfig-004-20240913    clang-18
-i386                  randconfig-005-20240913    clang-18
-i386                  randconfig-006-20240913    clang-18
-i386                  randconfig-011-20240913    gcc-11
-i386                  randconfig-012-20240913    gcc-12
-i386                  randconfig-013-20240913    gcc-12
-i386                  randconfig-014-20240913    gcc-12
-i386                  randconfig-015-20240913    gcc-11
-i386                  randconfig-016-20240913    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch             randconfig-001-20240913    gcc-14.1.0
-loongarch             randconfig-002-20240913    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                       bvme6000_defconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                       m5249evb_defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                          eyeq5_defconfig    gcc-14.1.0
-mips                           ip27_defconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-nios2                 randconfig-001-20240913    gcc-14.1.0
-nios2                 randconfig-002-20240913    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                            defconfig    gcc-14.1.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc                              defconfig    gcc-14.1.0
-parisc                randconfig-001-20240913    gcc-14.1.0
-parisc                randconfig-002-20240913    gcc-14.1.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    clang-20
-powerpc               randconfig-001-20240913    clang-17
-powerpc64             randconfig-001-20240913    clang-20
-powerpc64             randconfig-002-20240913    clang-20
-powerpc64             randconfig-003-20240913    gcc-14.1.0
-riscv                            allmodconfig    clang-20
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    clang-20
-riscv                               defconfig    clang-20
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20240913    gcc-14.1.0
-riscv                 randconfig-002-20240913    gcc-14.1.0
-s390                             allmodconfig    clang-20
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    clang-20
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20240913    clang-16
-s390                  randconfig-002-20240913    clang-20
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                                  defconfig    gcc-14.1.0
-sh                    randconfig-001-20240913    gcc-14.1.0
-sh                    randconfig-002-20240913    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-sparc64                             defconfig    gcc-14.1.0
-sparc64               randconfig-001-20240913    gcc-14.1.0
-sparc64               randconfig-002-20240913    gcc-14.1.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20240913    gcc-12
-um                    randconfig-002-20240913    clang-17
-um                           x86_64_defconfig    clang-15
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64      buildonly-randconfig-001-20240913    clang-18
-x86_64      buildonly-randconfig-002-20240913    gcc-12
-x86_64      buildonly-randconfig-003-20240913    clang-18
-x86_64      buildonly-randconfig-004-20240913    clang-18
-x86_64      buildonly-randconfig-005-20240913    gcc-12
-x86_64      buildonly-randconfig-006-20240913    clang-18
-x86_64                              defconfig    gcc-11
-x86_64                randconfig-001-20240913    gcc-12
-x86_64                randconfig-002-20240913    clang-18
-x86_64                randconfig-003-20240913    gcc-12
-x86_64                randconfig-004-20240913    clang-18
-x86_64                randconfig-005-20240913    clang-18
-x86_64                randconfig-006-20240913    gcc-12
-x86_64                randconfig-011-20240913    gcc-12
-x86_64                randconfig-012-20240913    clang-18
-x86_64                randconfig-013-20240913    clang-18
-x86_64                randconfig-014-20240913    clang-18
-x86_64                randconfig-015-20240913    gcc-12
-x86_64                randconfig-016-20240913    gcc-12
-x86_64                randconfig-071-20240913    clang-18
-x86_64                randconfig-072-20240913    gcc-12
-x86_64                randconfig-073-20240913    gcc-12
-x86_64                randconfig-074-20240913    gcc-12
-x86_64                randconfig-075-20240913    clang-18
-x86_64                randconfig-076-20240913    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                randconfig-001-20240913    gcc-14.1.0
-xtensa                randconfig-002-20240913    gcc-14.1.0
+> 
+> Trying to revive this discussion about background commands. I'm sorry if more on the topic has been discussed elsewhere, 
+> but this is a patch that I could find which related to the same topic.
+> 
+> The requirement for default timeouts (or atleast a mechanism to provide timeouts to the command structure) seems to be needed
+> since the CXL spec doesn't seem to explicitly deny userspace access to background commands.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The CXL spec (quite rightly) doesn't speak at all about providing userspace or other
+access to anything. This is purely an OS implementation question so
+this is the right place to address it for Linux.
+
+It would be perfectly valid for an OS to mediate fully every command
+including all vendor defined ones. If there is a command it doesn't
+know about, default to blocking it.
+
+There is a path to enable 'some' background commands from userspace
+but only the ones that support abort.
+
+
+> This seems to constrain a lot of
+> functionality with respect to Vendor Defined commands as well, if a command needs to be implemented as background.
+
+Indeed. If someone has a vendor defined command that locks the device up for
+a long period, then the kernel may well have a quirk in future to
+block that command (if we enable vendor commands from userspace
+in general - see the fwctl discussion).  That may be a necessary precaution
+to avoid the kernel locking up for substantial periods.
+
+
+
+> 
+> >> sthanneeru.opensrc@ wrote:  
+> >> > From: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+> >> > 
+> >> > The CXL 3.0 specification outlines background operations,
+> >> > and support for handling these operations was added in following patch.
+> >> > 
+> >> > Link: https://lore.kernel.org/all/20230523170927.20685-5-dave@stgolabs.net/
+> >> > 
+> >> > Mailbox commands like ‘Log Populate’ use background operations
+> >> > to complete the execution of the command.
+> >> > This can lead to a timeout, since there is currently no option
+> >> > in the ioctl cxl_send_command structure to specify
+> >> > a timeout value. The default values being zero can lead
+> >> > to the driver reporting false negatives to the application.
+> >> > 
+> >> > This patch aims to establish default values, enabling mailbox commands
+> >> > that operate in the background to continue functioning even
+> >> > if a timeout is not set in the userspace application.    
+> >> 
+> >> The reason there are no defaults is because userspace is not allowed to
+> >> issue background commands. The CXL background command definition is
+> >> awkward in that it allows a single command to monopolize the mailbox for
+> >> an indefinite amount of time.  
+> 
+> I understand this is a design adopted by the kernel, and not actually by the CXL spec (at least I don't see it
+> specifying explicitly that background commands are not allowed in band).
+
+(I see you touch on this below)
+The background commands are 1 at a time.  Given some background commands
+are used by the kernel, the ability to run non background commands at the
+same time doesn't help us in the general case.  Hence proposal
+is to only allow userspace use of commands that may be cancelled.
+If the kernel wants to use the mailbox for a background command and
+one is already being processed by the device, the kernel can just cancel it.
+
+> 
+> >> 
+> >> Instead, the approach taken with Firmware Update and Sanitize is that a
+> >> kernel sysfs ABI mediates access to the mailbox and facilitates bounded 
+> >> timeslices between command submissions. It effectively allows the kernel
+> >> to manage fairness and more importantly preempt userspace if it needs to
+> >> issue its own commands.
+> >> 
+> >> I assume you are only seeing this lack of a default due to building with
+> >> CONFIG_CXL_MEM_RAW_COMMANDS=y? If yes, "raw" means "raw" and the kernel
+> >> is mostly taken out of the loop of saving userspace from itself.  
+> 
+> This seems to imply that no vendor defined command can be background commands. Please correct me if
+> I'm wrong, since Vendor defined commands have to be sent as raw commands, and the absence of default timeouts
+> indicate that the command will be immediately timed out.
+
+The fwctl discussion may provide a path for this, but I think
+that will still only support commands we can abort.
+
+> 
+> Also, I understand the point that background commands (since there can only be one) monopolizes the
+> mailbox, and hence cannot be exposed to userspace and as I see the background command handling goes synchronously
+> with the usual command handling in the kernel (ie; foreground command has to wait for the background command to complete or timeout)
+> but doesn't this defeat the purpose of the spec defined ability to run a foreground command while a background command is
+> underway?
+
+It is a valid optimization to run non background commands. If there
+is a clear use case then I think we'd be happy to see patches.
+As you say though, that doesn't enable userspace background comamnds
+though as some of the commands the kernel uses are background as well
+so we still need to be able to abort the ones userspace issued.
+
+> 
+> >> 
+> >> All that said, ugh, "Log Populate" has no facility to time bound the
+> >> population of the log. I do not think it is tenable for Linux to
+> >> surrender mailbox access for an indefinite uninterruptible amount of
+> >> time... unless you want to handle "Log Populate" like Sanitize where the
+> >> unbounded background operation is tolerated because the device is taken
+> >> offline?  
+> >
+> >It may be pointless to do a component state dump only on an offline device.
+> >My assumption is this one is hardware debug only.  Patches out of
+> >tree or behind a really scary sounding config variable perhaps?
+> >Other than vendor log I don't think populate log applies to the other
+> >log types yet (they don't mention it anyway!)
+> >
+> >Jonathan  
+> 
+> Am I wrong to understand that this design decision is still in the open right now?
+> 
+> Another concern was that right now, a WARN_ONCE is issued when a raw command is ensued. Maybe this belongs
+> on a different thread, but are raw commands to be depreciated (if then how can Vendor Defined commands be sent?)
+See fwctl discussion for Vendor Defined command.
+Right now Dave has focused on Get / Set feature but we'll expand to others.
+The FWCTL area in general is probably going to be discussed at the various
+conferences in Vienna next week, so for now this is a 'watch this space'.
+
+We did discuss the option of possibly supporting vendor defined commands explicitly
+if some or all of these conditions were met.
+1) There was clear documentation.
+2) Possibly a proposal for similar feature in the CXL specification or another
+   industry spec.  (to ensure we don't end supporting a never ending sequence of
+   similar vendor specific commands)
+
+In a sense (1) means they are a defacto standard so we can be sure
+of side effects etc and things like how long they take.
+
+Jonathan
+
+> 
+> 
+
