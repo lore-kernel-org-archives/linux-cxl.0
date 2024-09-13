@@ -1,100 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208A4824A1;
-	Fri, 13 Sep 2024 17:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DA11EEE4;
+	Fri, 13 Sep 2024 17:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726248395; cv=none; b=XgIDqJ2sqjlcuE2rbI1GgPjiJVdc8DekR/R7+lTrgjwuNZF83/UoZ1m974hAU/UZyAxt5XD5cKqcsYWCFz3jUIxTIF0lQ3+bGMR+KpXjXfeIxZDK09ttmMDEtvq3ZFyhwPBD/o38INN97Xb4xYis5TBsYJCM4C1P+ai0W/alD3U=
+	t=1726248515; cv=none; b=U9hw1fu2xd1FvpwjYGFbheJx9nAWraXnT21/QgQYD50CubnolwD7CTj+ck+53Rnw6BZBO6pHB8uJ/Xx0S0NcFA+SjJZmaDsjepsuywV9NxJm3vQRWvvRE8791s7FUmOi8QI4gm0H3nopoJf1tfIfxCq7TaIVPM3EWemoagWSGdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726248395; c=relaxed/simple;
-	bh=ObHm9oMxbmCJwWODc6eiOXIrFNOf7ZHrYCnahzJSUa4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IM1eU+k0xHFMt0T4o8G4HuEx93EI/wUSFr8yG37HPQdST3DQsTUcWqlDy9F8Df7gCA968wQ849vQxUxNmQHTYlWjvqSIEvh4jxY5P4jf9zDtcvLqH39wFEkUeZu6oaQDtKNpS9erK9t3zwIxebZcwIXopPrz0IBqcnw1a1w33GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbzdB1uy; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbzdB1uy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726248395; x=1757784395;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ObHm9oMxbmCJwWODc6eiOXIrFNOf7ZHrYCnahzJSUa4=;
-  b=GbzdB1uyJJOFkvCxm2v+wdqUR/D1f982cONtPJLJ4GgXIVGZayXKzL5U
-   JnasY7STzyapn8LxMP/c/AUkdMZAcv67O5Ri10Y4/m6hbFvDQbqKYLFHb
-   kN7povQEce1FZCoFHDBeJWkLI0uvL9CQa5WF+Nqy439wbE2N2yWWD8vqR
-   mZjxkDu0BSeEFcxPo4XkIc4gZ5aqlhKkoM8KUca4Z+jLsRmW+zx/U0z90
-   2L91+s9kVGnxg+Hh+hy3RRAEEast4WPvFXAfyZxdWyc4FYYyszwzJFL7B
-   XN0jo7WwdK5rgnIRAK2Wj3eYrVR7QWarcslQWrWbbQAQ7horN9kgob/q+
-   Q==;
-X-CSE-ConnectionGUID: k2BCW+4mTnS6prtcBMNWQw==
-X-CSE-MsgGUID: gxs3pk1aQyWdgFUnUq/sHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="42635315"
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="42635315"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 10:26:34 -0700
-X-CSE-ConnectionGUID: SK6hDug6RKKKjj8UKtvKRQ==
-X-CSE-MsgGUID: VzO7Zkh+S56pVvvgEFcX8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="68061739"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.177]) ([10.125.108.177])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 10:26:30 -0700
-Message-ID: <45aeb8f4-b452-4ecf-8dcc-1b0a9f89e2ae@intel.com>
-Date: Fri, 13 Sep 2024 10:26:28 -0700
+	s=arc-20240116; t=1726248515; c=relaxed/simple;
+	bh=NNwiiJSJsfFiDGLn6QJwhQlAKUnbmjGKbIJn6LVga8Y=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mtjy4hM++e0gCBUTIhHT28rsG7vKkE6GF6xAiscRv3aBT+YmotYbe9KqHiMf+nC6s0AorhhSxeftG7luvpsj4fdmtzJVYV49nO0vaJMiYJ2FrKIol/mlVK0j7jF9oLymK0UegBpg57P5fIiVhLb7A7m+tzfw6oLslH8uJ/C/WZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X51Q15FcGz6K5mD;
+	Sat, 14 Sep 2024 01:24:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4DF7D140B3C;
+	Sat, 14 Sep 2024 01:28:30 +0800 (CST)
+Received: from localhost (10.48.150.243) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 13 Sep
+ 2024 19:28:29 +0200
+Date: Fri, 13 Sep 2024 18:28:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <alejandro.lucero-palau@amd.com>, <netdev@vger.kernel.org>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>, "Alejandro
+ Lucero" <alucerop@amd.com>
+Subject: Re: [PATCH v3 03/20] cxl/pci: add check for validating capabilities
+Message-ID: <20240913182828.0000602c@Huawei.com>
+In-Reply-To: <20240907081836.5801-4-alejandro.lucero-palau@amd.com>
+References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
+	<20240907081836.5801-4-alejandro.lucero-palau@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/20] cxl: preclude device memory to be used for dax
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
- <20240907081836.5801-19-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240907081836.5801-19-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Sat, 7 Sep 2024 09:18:19 +0100
+<alejandro.lucero-palau@amd.com> wrote:
 
-
-On 9/7/24 1:18 AM, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> By definition a type2 cxl device will use the host managed memory for
-> specific functionality, therefore it should not be available to other
-> uses.
+> During CXL device initialization supported capabilities by the device
+> are discovered. Type3 and Type2 devices have different mandatory
+> capabilities and a Type2 expects a specific set including optional
+> capabilities.
+> 
+> Add a function for checking expected capabilities against those found
+> during initialization.
+> 
+> Rely on this function for validating capabilities instead of when CXL
+> regs are probed.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > ---
->  drivers/cxl/core/region.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/cxl/core/pci.c  | 17 +++++++++++++++++
+>  drivers/cxl/core/regs.c |  9 ---------
+>  drivers/cxl/pci.c       | 12 ++++++++++++
+>  include/linux/cxl/cxl.h |  2 ++
+>  4 files changed, 31 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d8c29e28e60c..45b4891035a6 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3699,6 +3699,9 @@ static int cxl_region_probe(struct device *dev)
->  	case CXL_DECODER_PMEM:
->  		return devm_cxl_add_pmem_region(cxlr);
->  	case CXL_DECODER_RAM:
-> +		if (cxlr->type != CXL_DECODER_HOSTONLYMEM)
-> +			return 0;
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 3d6564dbda57..57370d9beb32 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+>  #include <linux/aer.h>
+> +#include <linux/cxl/cxl.h>
+>  #include <linux/cxl/pci.h>
+>  #include <cxlpci.h>
+>  #include <cxlmem.h>
+> @@ -1077,3 +1078,19 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
+>  				     __cxl_endpoint_decoder_reset_detected);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
 > +
+> +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, u32 expected_caps,
+> +			u32 *current_caps)
+> +{
+> +	if (current_caps)
+> +		*current_caps = cxlds->capabilities;
 
-While it's highly unlikely that someone puts pmem on a type2 device, the spec does not forbid it. Maybe it makes sense to just return 0 above this switch block entirely and skip this code block?
+I'd split this up as setting a value in a 'check_caps' and comparisom with
+a list is odd.
+
+Also bitmaps all the way would be better.
+Given you know it fits in one unsigned long you can short cut the
+assignment of the bits though. Easy to extend that later if the bitmap
+gets bigger.
 
 
->  		/*
->  		 * The region can not be manged by CXL if any portion of
->  		 * it is already online as 'System RAM'
+> +
+> +	dev_dbg(cxlds->dev, "Checking cxlds caps 0x%08x vs expected caps 0x%08x\n",
+> +		cxlds->capabilities, expected_caps);
+> +
+> +	if ((cxlds->capabilities & expected_caps) != expected_caps)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_pci_check_caps, CXL);
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 8b8abcadcb93..35f6dc97be6e 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -443,15 +443,6 @@ static int cxl_probe_regs(struct cxl_register_map *map, u32 *caps)
+>  	case CXL_REGLOC_RBI_MEMDEV:
+>  		dev_map = &map->device_map;
+>  		cxl_probe_device_regs(host, base, dev_map, caps);
+> -		if (!dev_map->status.valid || !dev_map->mbox.valid ||
+> -		    !dev_map->memdev.valid) {
+> -			dev_err(host, "registers not found: %s%s%s\n",
+> -				!dev_map->status.valid ? "status " : "",
+> -				!dev_map->mbox.valid ? "mbox " : "",
+> -				!dev_map->memdev.valid ? "memdev " : "");
+> -			return -ENXIO;
+> -		}
+> -
+>  		dev_dbg(host, "Probing device registers...\n");
+>  		break;
+>  	default:
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 58f325019886..bec660357eec 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -796,6 +796,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct cxl_register_map map;
+>  	struct cxl_memdev *cxlmd;
+>  	int i, rc, pmu_count;
+> +	u32 expected, found;
+>  	bool irq_avail;
+>  	u16 dvsec;
+>  
+> @@ -852,6 +853,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+>  
+> +	/* These are the mandatory capabilities for a Type3 device */
+> +	expected = BIT(CXL_DEV_CAP_HDM) | BIT(CXL_DEV_CAP_DEV_STATUS) |
+> +		   BIT(CXL_DEV_CAP_MAILBOX_PRIMARY) | BIT(CXL_DEV_CAP_MEMDEV);
+> +
+> +	if (!cxl_pci_check_caps(cxlds, expected, &found)) {
+> +		dev_err(&pdev->dev,
+> +			"Expected capabilities not matching with found capabilities: (%08x - %08x)\n",
+> +			expected, found);
+> +		return -ENXIO;
+> +	}
+> +
+>  	rc = cxl_await_media_ready(cxlds);
+>  	if (rc == 0)
+>  		cxlds->media_ready = true;
+> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
+> index 930b1b9c1d6a..4a57bf60403d 100644
+> --- a/include/linux/cxl/cxl.h
+> +++ b/include/linux/cxl/cxl.h
+> @@ -48,4 +48,6 @@ void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
+>  void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
+>  int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
+>  		     enum cxl_resource);
+> +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, u32 expected_caps,
+> +			u32 *current_caps);
+>  #endif
+
