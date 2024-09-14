@@ -1,46 +1,47 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2087.outbound.protection.outlook.com [40.107.102.87])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2059.outbound.protection.outlook.com [40.107.223.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12794154BE0
-	for <linux-cxl@vger.kernel.org>; Sat, 14 Sep 2024 11:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15ACD1CF2BF
+	for <linux-cxl@vger.kernel.org>; Sat, 14 Sep 2024 11:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726312886; cv=fail; b=cZavkhFaDim/3KZSrf2nmid+8ok1a2wPCjnx6YeOO6E8rYv5yMos9HyWQs8RznUqvoqByPS1dhYMb3TxcGUSbcBztJcVpHGIEdrVDntgqV/Kff1TlSwbe/CQ7tVA9dXeA73BGHAGugInBX6nlBgVdg82ovoFLQ0DLMfXkbANmqA=
+	t=1726313401; cv=fail; b=hPiJg6T17N8wScxIemYgIrPojmMyJeNWYq01Pq32BvatyBnH0V+7H7KiJwS5yTMTatVbahbokdN5GVNL8/bEdwxUraRGnn6cItXjVNjBUSPVOhQXn80xW99x1kC54pqWjjScRkj4dwDxf8mR19jPQPT/YeGqVkP3TpDlM5VAAZk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726312886; c=relaxed/simple;
-	bh=aWXoHbgpbcDr3/Co/m2lXKJc5eUPEq2Xf49L0ugqyUs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R+6ZCxTC6o96q1X3EzlbiK/ELp3JubOWU6y8tArPZhRMiX0sUHEaUKppa5SXWV+q44cHr2QLiNVBGoAYBM2uor02COOiM77o6zdAN0oxgdbB0aZyT07aO0HIdmtfgMLqEh3pOcqbr89U25iQ8A7X8amd3Dj46ysdlw79PDEZAcM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=cPfLt7HU; arc=fail smtp.client-ip=40.107.102.87
+	s=arc-20240116; t=1726313401; c=relaxed/simple;
+	bh=1XyZElhCajkAO7Pw8xca9vhh2qbTsUWSuyjMwdTVnbE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UcFU7A8N6+BaZF4aMn+ohlWj6C51CxKzWJC4e6R6IUuk7nZfaF+80liFrWa7atuHcJkc8yZAW4BuPzTLc2j8h/ju2p4pig144Ut3qms0NX2l6PSRkt+u+sHYOzqszsO/9T8bIORlA340Wabw5ni/r+x9PkI1fFtGh/Jg9CTucpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=jS4wenEG; arc=fail smtp.client-ip=40.107.223.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="cPfLt7HU"
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="jS4wenEG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EKgOOgcwDGfA6dS/FM53sFdILat+oHE65793Uvfy55lIwB+EEIWF1kdD8XkXmd0oVNEPXkw/NuD8ABXJcQz5FRs9nY1Or1bBK05hLx9f6W+b262PGSAnuAqqRz/H8iFz/U2n+hDnyE4Fh8/ZDc0xwdfOTH0qoNP5sQNgm+EdV6J9FXnSF8dteyTQgws9aD6/mDVrzaDVLy15+Jh9WSCQAjUkUTofFkZ2rMG/l9WSme1JRGHTjFHRwPJFKf9JHPJWM1aIfThzKFYYw8nvnb3InmArzY1yG8SmXYeD+ABH0Fk2Y2xJ9P0IsF668hWUBhjqqMOzQeQe6wA1TjY0oSC0Dw==
+ b=ts3p0iLTdTYLnAHwQzhtsr5dwYiDhiseF3FTzWwRB70HSEdqvp1+SbIHuZZRQLNGY6NG4f8autIM/HObA25MAu496iZE7OIyVo6C2kqa+z1ARVgHcdTP9GCE0b4Y1sljGoTgvuKFRd5bd0aPCSy7DQlwDtKY3eTfa01jXMMUylXvmofn4DcKPJYtkKiz0Sy+k++Qj6VQA+jfFJXBIOaj2qIEF6OBKsCtKdwpkKiazj3Y/j1Nk1wz+aIiTPcATwqm7NdKyuc9ZxZNGzkuerjhry34Q52EHqrzv+O2uTcBQDVejhzhigFqsj3EX4Z/Or7s2kHXpfBij+CbWU34BVGKpw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qWurBCnkVDOKxwoN4VxNG9mRtJhZ9tkueleRIm1x0uM=;
- b=zTYNLsvsiEExHJCBx67GUfkNh1JlvKK5M5dg9iIa5FcqYPU2FQ/WfF/dPHlYEcd0XbW19b1nrg9JgfujYMN6kaaNAUrYMfl8j8Zlc0uy6PXzKmWukRe4zcRyPkAGA4qA/ZxJOMX2MS0U1O6Q6vG/kMoLfSrAmxTAYW/+cQfzAh1hA3rObMDYj7YTWOuih3/EE+xuTRn57irY3utG+WRcd442a7FQYz5+F/XLwjSlQyhqXYpbe0Szq31gn6SamHEeKW9Tfu9QqyUStRdLKVSQRB7NFyJIMH8Em5sFaZK8RSVgqKdS10oqC+zGTIwmvyJZXy+WXUJ3dbgm49S287sfvw==
+ bh=cO+gHMsnHONx1BlbvqV/mYPnO6zsq0BZbF27dyW11AI=;
+ b=W6nkvBETX3hc6GjFpSNndjyXeECulmwMK95QXBcSZ0tB5yJDQMnZnW75kSESBGV+mvGmLYok/0BT5Y8i4DacCy9IcPgwvAKrMxcPg90S2oETzisJI8BJuLPWLjxm0yl9QWUj0PVz0O49jvsSOUve+IAvC/jVA3XUQtcx+jumNQYHLXG02ffuCFuAVEH+x+Ex2DflPbfCRXpucxugE2apfFec3+XYZBRAz6RywWd4bnlW+Ty+yRiflRXRFp5qX7olzQhaRFxP3Ys5TPL33zXTLWcyh6LeDWdpqhsMLUgLE7Cod+4ihWucalx+Q5TjmrTiZOF7C/f+mqj+bdIMEcPGYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=redhat.com smtp.mailfrom=micron.com;
+ 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qWurBCnkVDOKxwoN4VxNG9mRtJhZ9tkueleRIm1x0uM=;
- b=cPfLt7HU7/TZNi9kBINhlkLXLFG0+pyii6wMBTVC20Lz2G09gFRvjVPgVNbPbluVKsKNE719xqrtnwI2pgtFbkU8opkktkR8dUN9GSo7afr/cAYGav64v90L+5z0SkuRT+Tr+fMTHMyaIR4kpOIL+9QUOiUi3/e5fU5KGNH3rq7wXNbUVP0QmiUIHIxC0dNxwFlxItAeejxqJ5d7ONbvd25rVSUVi+AchxUCZeMlJg8LsjJkNSNEsFMLq/cQ9XT9sazlchdeIY89Vlhm4S//h1nKbGaYsN/XL45kWIjEOZzXOmatT+Ng11WEqnq587XVuc77EPjljAS1xc5CikN9dQ==
-Received: from BN9PR03CA0504.namprd03.prod.outlook.com (2603:10b6:408:130::29)
- by DS1PR08MB9812.namprd08.prod.outlook.com (2603:10b6:8:206::7) with
+ bh=cO+gHMsnHONx1BlbvqV/mYPnO6zsq0BZbF27dyW11AI=;
+ b=jS4wenEGx3Zs4lrqJwJRywTm+/jyUJ85MS2cJ0dqtwXNRVywQuGvqT+/8PR6roxVCgg9WxKOQ2skvu53zRDRX5xmcGmId2HEMx0OhXZbtbzO76qAu6yjMqbbzCH0vEg7FpxJpaFWRwVFdFftWCqC5Ppep2KJkaS6lT+NvLa33HBIYvbA4OuT8g6ICvnNp+qxguutvQ5Rz5QLlm0VqhiWAdOcGgeMkKTNp4/vo28g1OX91hYAeLSMRbRc+PFIRkZiNvXeaBYiOd7mXXC0VhBX87ZBukptob6OfxpRRYh1fgwehu9Tk+rYaq49An9wDDE0aSeHjwEjx/QInbSbyXo7+A==
+Received: from BL1PR13CA0154.namprd13.prod.outlook.com (2603:10b6:208:2bd::9)
+ by MWHPR08MB10013.namprd08.prod.outlook.com (2603:10b6:303:279::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.18; Sat, 14 Sep
- 2024 11:21:19 +0000
-Received: from BN2PEPF00004FC0.namprd04.prod.outlook.com
- (2603:10b6:408:130:cafe::6b) by BN9PR03CA0504.outlook.office365.com
- (2603:10b6:408:130::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.24 via Frontend
- Transport; Sat, 14 Sep 2024 11:21:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.21; Sat, 14 Sep
+ 2024 11:29:55 +0000
+Received: from BL6PEPF0001AB72.namprd02.prod.outlook.com
+ (2603:10b6:208:2bd:cafe::5a) by BL1PR13CA0154.outlook.office365.com
+ (2603:10b6:208:2bd::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.17 via Frontend
+ Transport; Sat, 14 Sep 2024 11:29:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
  smtp.mailfrom=micron.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=micron.com;
@@ -48,120 +49,141 @@ Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
  137.201.242.130 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.201.242.130; helo=mail.micron.com; pr=C
 Received: from mail.micron.com (137.201.242.130) by
- BN2PEPF00004FC0.mail.protection.outlook.com (10.167.243.186) with Microsoft
+ BL6PEPF0001AB72.mail.protection.outlook.com (10.167.242.165) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7918.13 via Frontend Transport; Sat, 14 Sep 2024 11:21:19 +0000
-Received: from BOW36EX19B.micron.com (137.201.85.154) by BOW17EX19B.micron.com
- (137.201.21.219) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.7918.13 via Frontend Transport; Sat, 14 Sep 2024 11:29:55 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19A.micron.com
+ (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 14 Sep
- 2024 05:21:16 -0600
-Received: from EMR-025.micron.com (10.101.228.116) by
- RestrictedRelayBOW36EX19B.micron.com (137.201.85.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11 via Frontend Transport; Sat, 14 Sep 2024 05:21:15 -0600
-From: <ajay.opensrc@micron.com>
-To: <mst@redhat.com>
-CC: <Jonathan.Cameron@huawei.com>, <john@jagalactic.com>,
-	<emirakhur@micron.com>, <ajayjoshi@micron.com>, <sthanneeru@micron.com>,
-	<Ravis.OpenSrc@micron.com>, <arramesh@micron.com>, <dave@stgolabs.net>,
-	<qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, Ajay Joshi
-	<ajay.opensrc@micron.com>
-Subject: [PATCH v1] hw/cxl: Fix background completion percentage calculation
-Date: Sat, 14 Sep 2024 16:50:21 +0530
-Message-ID: <20240914112021.2730383-1-ajay.opensrc@micron.com>
-X-Mailer: git-send-email 2.34.1
+ 2024 05:29:53 -0600
+Received: from BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3]) by
+ BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3%6]) with mapi id
+ 15.02.1544.011; Sat, 14 Sep 2024 05:29:53 -0600
+From: ajay.opensrc <ajay.opensrc@micron.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+CC: "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@Huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"john@jagalactic.com" <john@jagalactic.com>, Eishan Mirakhur
+	<emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, "Srinivasulu
+ Thanneeru" <sthanneeru@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
+	Aravind Ramesh <arramesh@micron.com>
+Subject: Re: [EXT] Re: [PATCH] hw/cxl: Fix background completion percentage
+ calculation
+Thread-Topic: [EXT] Re: [PATCH] hw/cxl: Fix background completion percentage
+ calculation
+Thread-Index: AQHa4aFnXFAhiNhGOUK/S8twyYFQ27JR6UmAgAWFZN0=
+Date: Sat, 14 Sep 2024 11:29:52 +0000
+Message-ID: <edbfbc67684d4fe5979632d2c01bffaf@micron.com>
+References: <20240729102338.22337-1-ajay.opensrc@micron.com>,<20240910130723-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240910130723-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mt-whitelisted: matched
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MT-Whitelisted: matched
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC0:EE_|DS1PR08MB9812:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51af6d05-bf57-4298-8e17-08dcd4af5b21
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB72:EE_|MWHPR08MB10013:EE_
+X-MS-Office365-Filtering-Correlation-Id: b39684fa-7c2f-4050-a4fd-08dcd4b08ea5
 X-EXT-ByPass: 1
 X-MT-RULE-Whitelisted: Triggered
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6xks/WYvVZCT4Pn1nEhY7E6naINe3UDPjMA/YBtMZf7PnC/AqSoNAppSsd1p?=
- =?us-ascii?Q?Xwwacj1UoRc8tFgJ0iBMUy5NtXEL3PBsEzTD0lTkI63vdwKLaL4257eEOo1H?=
- =?us-ascii?Q?UbbeROlQk/XRKedvldrmpMk4gkoPWx8nfoE87gdjnkhG+j6MWz5eNiDVoLyH?=
- =?us-ascii?Q?kds1cNrCbCSbWGzpRN5D47IwYwjbsgDPtXZSqz40jxuxmm4QCHUghX/hLB/E?=
- =?us-ascii?Q?7zFWMBRzbgreHOpde2DnvEsoOGdJpUST1HEtnuvQ1vZhCnsi+ZgXehExTirL?=
- =?us-ascii?Q?Ij5fMY2XMoXPt1Au+SZ2ueFq4UPg9WlSxdVfPw4Ap8TsVUwuSn+pWRrQKCwT?=
- =?us-ascii?Q?U3hoQtwZzf/5imdvlLsy/6zy0w2IW7uAOJO3gr1l0w/tHTf2zwebJuuMMzQP?=
- =?us-ascii?Q?HTH6ruEPfW2yvg51q16FaGT5C2KaJ5oaA/75dlLv5Y4GbUYhjAs3nLHdgGty?=
- =?us-ascii?Q?advRPT1naNM8+h1wVSEUi7NSZj2Y2Fe//dlf2R8zQcnMktTeoWfN8oW7wj9X?=
- =?us-ascii?Q?r3PMSLwufT9A9bUvFUK3uVW9mirxrQTFa/mbEIGVXXRLysypNHgxZyYKazih?=
- =?us-ascii?Q?vFqERa21SWNCIFd7Oe7uFHJ72ZuBajKYcetyzzkBAihZQlExS181LI3zspIm?=
- =?us-ascii?Q?Sycq7ZVFWPV84nE5cv654x2gFIwn5SECLK8JB28QfccTdhnqQiHyKuYY8lr2?=
- =?us-ascii?Q?c+IUXjQ+OThvBqkbzyb+WSHOtJbRHbb/Utc4RjQUZeF6We8IX+i2Z23mGZNU?=
- =?us-ascii?Q?d7W3H0rjjhBY3aa775ySMOTTqDaaRB2jgstF5QMdXUlmC6BevAaJzrp6gbl0?=
- =?us-ascii?Q?vvww1hWTaEmU8c7Q1xbbPc+2Tbd6WtiDCl9el57Y2rv60CzDlD5Srvq37QH9?=
- =?us-ascii?Q?0md3YSMhYl0iA8lvlRJ6rZbUXTgS84PGWM8Fe9EiZWTk4R5mDpXudgbd5pKj?=
- =?us-ascii?Q?O1DX1UXaKcPr9tYQkQI+zV2WGkzfGZPmo8raxBn1dUn2e/Fr5hqBaWLyfrzq?=
- =?us-ascii?Q?C64OPP/NLAMKfoaD4y1We+b/ax/Yuq7HcK/6bNdvBZ6en7Gu5Ze9C6PpFM48?=
- =?us-ascii?Q?Vz1rXBpJWZyLkaBnTP4d0WnUx9EJD2iFDD9a73rEC/I/mO7eXaX50AJG1/cl?=
- =?us-ascii?Q?p8qs/0clj8BvGK3NL1CPXKY33Cxb30it1brOauwBNFlGuYRT4Pk2hU1sjOF1?=
- =?us-ascii?Q?tkzMQrjtkZOkjdgSoaq3Bsxi2Vp1xS5ZFiWPD5TDPURcSI4wdRjFBvw3j12v?=
- =?us-ascii?Q?fO1ea329bu2JG/955M6OWtI65cF6czDEqYby6pXARqsNzWnoJIM16Ix9R+3c?=
- =?us-ascii?Q?A9m/EwWzHTYDBtApTkv1gXjAXjYJLwQbRZ3SihdTqNf5a/ObtfHj6oGMWUKv?=
- =?us-ascii?Q?kNKJ1kA6kSoXw9DhVqG0VYBhR2kem3C0MSc9ga9m4dB2/TMI0gyJzpvvIyOw?=
- =?us-ascii?Q?v3whbAULzmT7z0nbVBs+8hF5bwe0s8gY?=
+	=?iso-8859-1?Q?MfO55stOirKXZQOLudAJBj1P+7kCWhpL4EmWb0Gp9S8Q6EUZ24Dqg9Ii6c?=
+ =?iso-8859-1?Q?2BAXtb/TUfDFWqgLw24EBwE72CWIPF24CO3fRxyYTi8u/tnsxMVKCQfRT1?=
+ =?iso-8859-1?Q?qU+fqy3O+/7QagRHXXGOUkWLBGeVlLarKUkP/9esID7QMo4JrqbeI3NvO/?=
+ =?iso-8859-1?Q?0ZC0zB2PCOy8WyNq9Y0oXkVv+PNXctORzElxiYxMkLSPzDZ1bXycIpEZeq?=
+ =?iso-8859-1?Q?7BMvZ7uLgkfLhK7V6biFl3O44qs+S9nVMlDz4VTI0mFvFFARMGjCAUJJRJ?=
+ =?iso-8859-1?Q?ISR0d/Z5ojauo2hnXGyWA4JEXG9LQwUF6/u9+nGov71liZBklRxMhBD2Ta?=
+ =?iso-8859-1?Q?FgKThje5xq8JQ7MPwtcLnj8hujzFagl3zFg8HNXkltmwFhKrAyS29gUGg1?=
+ =?iso-8859-1?Q?lb7pp5Xup1bTvX6+o9gzTbPummBKPSu9LBUy8aBguYyJkq1bn64znP7Y65?=
+ =?iso-8859-1?Q?TDmWY2LDBlQYEuh3veK3q7Q7shu6rHGeAd+6mk0lLpfu5uHA5UfMMN+vpl?=
+ =?iso-8859-1?Q?ovGTAk3yl/1X01PxcQxmloaMaXCVRmQAn0YAPybASN3FSW1dqgy7OATuPb?=
+ =?iso-8859-1?Q?HCoX76Qb6xYSSUDd59xvw/1hQW4TqkhgpvcakvkPqoK21L5O6aNqdfhMRL?=
+ =?iso-8859-1?Q?8NoOmRHZ4gAswMkzvszQq44h1jO6n71PR0Ot9GHIhu/U5uA2DPomHMKP9U?=
+ =?iso-8859-1?Q?I1A3cmMppmngKU76ClYp1CaIGsQmtRk9dvEWBgJP0XTy9b1OLslBhwr1eS?=
+ =?iso-8859-1?Q?lkLsV1Ufe03rsD/D9bdtKQdfeV802OKZAG2CrVijfsPr4vzj2/yFVbfK5u?=
+ =?iso-8859-1?Q?fio6tWJctsbPtIhKTixa3+eRzM5/luqgLrWABTwaHFEo+VXwAPxrTKuSxG?=
+ =?iso-8859-1?Q?hPJHCnhVrBWuZCTDbXaEtVTJpYQSji+9r4TmjuN446NjaFq8U42ASjEwG1?=
+ =?iso-8859-1?Q?4Q49H6Pso4QkPmdlX0ftf2p+eAg6lCunfz5cg+MPOlvkly7zpylXzG379j?=
+ =?iso-8859-1?Q?h5VvCQ6oM2aersoTooIdj1n1L/IZ5nmgyuRFkqbZmQjGzEnrN2bsVwyk3h?=
+ =?iso-8859-1?Q?rwr+KmRdRm5GFG3zJe7/r36ggLvh+I0MrQpyx/Lh6clmDuLi0SheZgGxIl?=
+ =?iso-8859-1?Q?MxwxP4BRf1GqbaakUvqC8kQKdkj7M2xG0OF/4bdgSPc4ot7CI/SxlLQdZU?=
+ =?iso-8859-1?Q?ls89uAGCL6ZwEGB8bgENiXtuO53bLoDXM9k+kQMbDR43tEUKrRRq7sHYS5?=
+ =?iso-8859-1?Q?/LcmL/NODjV30IMfwAnqPUnECAyWDOviMvpjQY1/zYudebHGm5gudniOpF?=
+ =?iso-8859-1?Q?e+B0gpk0uuSY63Q0kFfrq5KWaEk7ghrHRmmyRPqKC066hOvWnhshkXTqOZ?=
+ =?iso-8859-1?Q?fXDioSWDEBSqVZumReqcKJ4G4X1CtUNbrmYHduVcqSeb61fV0EeV/3gmIM?=
+ =?iso-8859-1?Q?RbouBMQswTd5/jPCTsPM0Tk7eZryUWe6mLHGIg=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2024 11:21:19.1496
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2024 11:29:55.0758
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51af6d05-bf57-4298-8e17-08dcd4af5b21
+X-MS-Exchange-CrossTenant-Network-Message-Id: b39684fa-7c2f-4050-a4fd-08dcd4b08ea5
 X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN2PEPF00004FC0.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB72.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR08MB9812
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR08MB10013
 
-From: Ajay Joshi <ajayjoshi@micron.com>
 
-The current completion percentage calculation
-does not account for the relative time since
-the start of the background activity, this leads
-to showing incorrect start percentage vs what has
-actually been completed.
 
-This patch calculates the percentage based on the actual
-elapsed time since the start of the operation.
+>From: Michael S. Tsirkin <mst@redhat.com>
+>On Mon, Jul 29, 2024 at 03:53:38PM +0530, ajay.opensrc@micron.com wrote:
+>> From: Ajay Joshi <ajayjoshi@micron.com>
+>>
+>> The current completion percentage calculation
+>> does not account for the relative time since
+>> the start of the background activity, this leads
+>> to showing incorrect start percentage vs what has
+>> actually been completed.
+>>
+>> This patch calculates the percentage based on the actual
+>> elapsed time since the start of the operation.
+>>
+>> Fixes: 221d2cfbdb ("hw/cxl/mbox: Add support for background operations")
+>>
+>> Signed-off-by: Ajay Joshi <ajay.opensrc@micron.com>
+>
+>Keep all tags together with no empty lines pls.
 
-Fixes: 221d2cfbdb ("hw/cxl/mbox: Add support for background operations")
+I have resent the patch with the all the tags Michael.
+https://lore.kernel.org/linux-cxl/20240914112021.2730383-1-ajay.opensrc@mic=
+ron.com/T/#u
 
-Signed-off-by: Ajay Joshi <ajay.opensrc@micron.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/cxl/cxl-mailbox-utils.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>> ---
+>>  hw/cxl/cxl-mailbox-utils.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index c2ed251bb3..873d60c069 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -2708,7 +2708,8 @@ static void bg_timercb(void *opaque)
+>>          }
+>>      } else {
+>>          /* estimate only */
+>> -        cci->bg.complete_pct =3D 100 * now / total_time;
+>> +        cci->bg.complete_pct =3D
+>> +            100 * (now - cci->bg.starttime) / cci->bg.runtime;
+>>          timer_mod(cci->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
+>>      }
+>>
+>> --
+>> 2.34.1
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index c2ed251bb3..873d60c069 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -2708,7 +2708,8 @@ static void bg_timercb(void *opaque)
-         }
-     } else {
-         /* estimate only */
--        cci->bg.complete_pct = 100 * now / total_time;
-+        cci->bg.complete_pct =
-+            100 * (now - cci->bg.starttime) / cci->bg.runtime;
-         timer_mod(cci->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
-     }
- 
--- 
-2.34.1
 
+    =
