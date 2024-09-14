@@ -1,246 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1CFD502;
-	Fri, 13 Sep 2024 22:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726267202; cv=none; b=r/OAq9tIUsajohUshTpUH0jSc6DtK1crqEiN3pmCj8UEi2jA73D6HbP1gIOe06sZ67PKVDOwscYcdoMuHqfDTANw5SIV5wbQmjHrSVzEteMeGbBxviTrc9gLGBJpjBOVqcRo7zVHNE/zKVmJpeKF20FI1XHS0nXF7wwexB3PKzM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726267202; c=relaxed/simple;
-	bh=JVylM2s0zxtVpYDuu0OuZUQXmSd6j/OJ4jwfmBC//i4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=huJ+H2a60eKAZOzT++cwHDp4n1QKwVojXH86h/iiiXx/6ED1LXN5C5PdR10zHifRHb/RCwEv8b6G4TtOUuLTNEHDVzo4WZUw8JP0x3//P9VfjrMP67JWR74gVTZentLD5R6HR2q90IDKeFrZBA+kizwBypMS+l44upMEaTlqTiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imdnZiVR; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5242107;
+	Sat, 14 Sep 2024 04:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726288409; cv=fail; b=B4yR2yMPx+JacAH+z0MGwYe5a0Le4Mo2ehg5HM4Xf0v+cWNT0Q51CqO2qBv62q3Eft8jayL3lWusu1LqVcLMCLWXWDhIy/GoqeI4mhpgWx/AizHSNzvm07x12+W0dJhw/VOxb3IzODornAq73XMPxnFVpUTip6Z0vD+nxkpD+ZM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726288409; c=relaxed/simple;
+	bh=dfIvhLw3W0aTvl39coCC2vVmi3s73ZrpwMvXa47NpTc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SGWXTaQySAO/UZNxpMwHrZ5YDcVy992CY9dZW9MCAopX1SMVoVKrY7QQBGi6+o4qqh+oNubLhZiMSh9snb6PexK6RYvbkIE/pgTQVm5XvqDJsFo2ip3fJz379zATxMrcv3nI7wqlaMXq5NCYictB5wu0Q1FkJU38Z8se1S2CAmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jfZCtp7B; arc=fail smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imdnZiVR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jfZCtp7B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726267200; x=1757803200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JVylM2s0zxtVpYDuu0OuZUQXmSd6j/OJ4jwfmBC//i4=;
-  b=imdnZiVRYTg1QUIcvv/z53gHHOZhGq5B4LoGjEI7gWrfn7k+JgXdNR0C
-   VdzcI0JE/+vytPhSa3oGuWRcRTPxQfNwPW6uST2dVPL5RPx26dhzN/2i1
-   LiOYvMTuEHRSwe+rWA3lyT9JYUxfs8QCyIM8xG7z6LGbk0hPJLaxHEGwe
-   hgnbh2muNFzbHybE6BDO7wqpNuKM+hmS4YMb26vqi9VWoO1ZEdtPyI5aw
-   /cQ7KIoaVj9h+4xPyuF+cfxTm2MdBqMtnoC2JB/C8OB7OKU3dyYCXk2Gd
-   BTxucR5nNZ3THsvwMPHn8fjxFh7uJRrmQrdjzLrlS7tJ/9iWxeXZRFO8N
-   Q==;
-X-CSE-ConnectionGUID: s88W8ryKT+ucqSV51onIPw==
-X-CSE-MsgGUID: zRbzFHeCR0ikFrYx9fEORw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="28095966"
-X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
-   d="scan'208";a="28095966"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 15:40:00 -0700
-X-CSE-ConnectionGUID: X3e292kgTOirRQEJSxxNtg==
-X-CSE-MsgGUID: kWazInGYQYGQMDRwbAxZvQ==
+  t=1726288408; x=1757824408;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=dfIvhLw3W0aTvl39coCC2vVmi3s73ZrpwMvXa47NpTc=;
+  b=jfZCtp7BNjFAt3VbQKeU8mYphbVZu23GtZt7CbvvnTu1U6rSDqWauohj
+   oVaSzhj/3b3t8Cb0UNibX1D7ZIx3CnYrzfSzjc5uufNAm1cXrTU+LGVTD
+   oHHwv84WWRLt0AVfCiuxCSf5LsrFzNbvvnpxlYASfESKIwhMaR+6Vp54w
+   yRo9wH9rMougUCzXYAKx/ocGvVPB+1DruFD3BfmlYT30FAxcsaKJaLxkX
+   GddiVdIQHWN5dABBGsIQ400D77HZJMau7wUQj0gwjVc//lsRm7zh6tSKT
+   w7mwGlMIrdG3uVtK1V+4H10fKbzfv3jzB+QcSAYBfL+yN562oa3Hm/LY7
+   A==;
+X-CSE-ConnectionGUID: gi5HhZNyQny8r2vSGdckag==
+X-CSE-MsgGUID: bXLEG43IQM6b64Nx5iPpLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="25025055"
+X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
+   d="scan'208";a="25025055"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 21:33:27 -0700
+X-CSE-ConnectionGUID: XQcF/eLhRwKOPDQ1ScnwsA==
+X-CSE-MsgGUID: mPtiDFR6REWkcjDNm2g+bQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
-   d="scan'208";a="91487691"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.177]) ([10.125.108.177])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 15:39:58 -0700
-Message-ID: <8029e786-d693-4002-9dba-b45f9bb4acb1@intel.com>
-Date: Fri, 13 Sep 2024 15:39:57 -0700
+X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
+   d="scan'208";a="73057715"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Sep 2024 21:33:28 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 13 Sep 2024 21:33:26 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 13 Sep 2024 21:33:26 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 13 Sep 2024 21:33:26 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.170)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 13 Sep 2024 21:33:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gvIm4OaqMHckmHHvXi7ZchHHk/0dbBka45I4lrQcnzPCRTNEcBVI71NOe3lt5fYVWB208bOXnP0RnkKWpYqsOA4O0r5/SUqnuTxxI7FToqMyQ07uSx2m3Ffpx7MaSPey2k2CVgunM7tTMZryHunjyVvaI9Tz4tPWyCg4qs/qei+FnttR0Nro3XdVzEWWhYSuhiHdcsWO0cjZR9DR2fbAphGpi9w+7ddX79oPnPumap6OvDijN3t0LluR6tJhCGS9sASzM2NUXtLBpnq6oW2S/aNbnt1UD5RxeHRHxHkpVLm/yATI3izLQ/RLz4MeoQUwgHBIo+3gXzVhWiylokRVcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dbx27TqfxHQWG4RH88QKUakeqqGMeSOjgEaCEAq1hw8=;
+ b=E8ZlpLAmwOfjOfvDc3JgCosul+nPM6kiTtOjck2JVkESIYWApLnv56gfsubfzFvUKmLSDXKyJ/5gY58f1WhcirLSVdUZkIvXePWZwYSPGReCglIJpauTT9dX+RIugw6USn4OBiWqEi5ScIp+cqqxQ7+R8op0SEkm4qz6iHfoTePmQ/rKY4xgZJ5TffpnDcLZBiN6O9sGUWcgL+Pn0xl2DhXMVbQt5DPrZeBRLU/7lBvEofQV6rTVAc8cVV/2VF5o18PlPv9wiPlnyrj0YY+DSLbt0iEgY+aIoVXAcLd7PYxL4AANzBfYDxuBaQQtK5mvkoFDNLIB+3/7Ej01m1j2AA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
+ by SJ2PR11MB8451.namprd11.prod.outlook.com (2603:10b6:a03:56e::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.17; Sat, 14 Sep
+ 2024 04:33:19 +0000
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec%5]) with mapi id 15.20.7939.022; Sat, 14 Sep 2024
+ 04:33:18 +0000
+Date: Fri, 13 Sep 2024 21:32:48 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Gregory Price <gourry@gourry.net>, <linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <rrichter@amd.com>,
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH] cxl/core/port: defer probe when memdev fails to find
+ correct port
+Message-ID: <66e511eff0c0d_ae212945a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240913183234.17302-1-gourry@gourry.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240913183234.17302-1-gourry@gourry.net>
+X-ClientProxiedBy: MW4PR03CA0336.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::11) To SA3PR11MB8118.namprd11.prod.outlook.com
+ (2603:10b6:806:2f1::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/10] Introduce fwctl subystem
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Daniel Vetter <daniel.vetter@ffwll.ch>, David Ahern <dsahern@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christoph Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>,
- Jiri Pirko <jiri@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
- Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
- Saeed Mahameed <saeedm@nvidia.com>
-References: <0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|SJ2PR11MB8451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72a97fcd-c9f7-4336-25d6-08dcd4765aff
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?WvKg0NykKDLw2VVB6JurN5al2ZhJMH6eHyJZc2vF05xF4VC8rZLnqzcnLX6I?=
+ =?us-ascii?Q?jRiVMml9K3XyrYcCt+wGgeYz/J2WNyrDwiBAcDtrffDSX0+9cIaC80l9yYxS?=
+ =?us-ascii?Q?h+KsvyLyPargNztskSnR7aWXrV/ejorI55E+Q4JM/60q3P49G7TN7XRbxaQy?=
+ =?us-ascii?Q?AIHbgBkJebfMQ3ovfYmR4gXmr4nkWdPl9Rp2WEmh3Xff7HULzuNh6LtZInVU?=
+ =?us-ascii?Q?1R6YlSVT/5/dIzHeeO4WPAKgpDVZmWNqJ8k+oLEYdri+EL96BqcRe79OtbRj?=
+ =?us-ascii?Q?kVT6nAzi7EmVvYxOXPJ2+mKC4AhNLbXsxJIhUboKyGzTxHL0PY47hWrmGtX9?=
+ =?us-ascii?Q?KtVZFg4PBKvqKTYb/uODraj0dEUbIDS2j1BPeLaFXumu3w4KDLcJ6qp4nkum?=
+ =?us-ascii?Q?jTKKjfYChXZ9nH226+dDzxYpHD8pBa3NtMzmvCogQyDizhVARioPhFyB1LOW?=
+ =?us-ascii?Q?XhB47V/jaYnThFdj9r71Jn7yfELxJJn81I0ROSO0kSS3k1woc+gr+Gl2DyFl?=
+ =?us-ascii?Q?02Q0Dgb66hjB02szvou72t9fNC5kupe1l3qa4mtOyZikmV31vZN6JEB3T3NV?=
+ =?us-ascii?Q?7DU0jhU39hH9wYt91VXbHvsEfec0Rf9oASNAO4Nrlf/uR5KG3Wjmf7nnPVLf?=
+ =?us-ascii?Q?V9JJGpqwWfN7Y8u/t/Grp8w+YDrxDRP0Z3FEdAKsJPAZVCLp8Qy1405m3eSV?=
+ =?us-ascii?Q?F3/zRWZE/y1zxlmJYQ0LYCBAbVBbhRl1I2OBcqzHJLEZxEO1lXCrHY0gvC5Y?=
+ =?us-ascii?Q?ZjHubsF2ae+ZOXzIoYISFkBO0nad4E85945BAATU62N/goUulfTf/taEf/7x?=
+ =?us-ascii?Q?xU0RIvJoYVu78m0BJn3Of8aVzpxZXd+Vgc6PrfoXGZ8pi4FuI7F7AMUoSc5N?=
+ =?us-ascii?Q?gBtK86J9pPG9kwmbyahS7Sp0dUrPl7ipbkO7KOShxX55vo3bhJVuN/f3Q2Dn?=
+ =?us-ascii?Q?+Ri2mMde7fehHXO/RACXAtzYOTdIGoGUU1V2PqXy9AhuM/41VqxHJXfqS2Wm?=
+ =?us-ascii?Q?GAUiKFsX+NSA3gzOM6G/pFLTvbPBBOtsH2isLZxtkoOPyyuzUr7zaWPI9Yw9?=
+ =?us-ascii?Q?yI2/gc/GoUkFL6YzLw2ESDESFDx7vMf4QCKdoqNAnXsuqLa1J0PYTNEX0V5a?=
+ =?us-ascii?Q?WcjjZZf5rMmrxDjAXRgI3CWCPDk9Uoph3eyvU5leyK9ba/VI1oBvUt2+D5j8?=
+ =?us-ascii?Q?3P06qko+E4Gsu7uBRRMh6ArzgA2jDCoWxCpLOhA3uA0v47k8hMJpmBQBkKuZ?=
+ =?us-ascii?Q?t6P3mo8HXcGBn2HZPXYBAOtMbWfQb/P6RLrQuA3mwFe7dPO5yWB1PcYo8XcG?=
+ =?us-ascii?Q?jgqksDOwf8jNUcaSzywFxnqYEY7hWpWdZ92pMSjBsEHLdw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+ymOoddkFhDGvY2ubg2xKYqD6YFbNEReorjWI+1iKGBEDdRMpasY20NkP86w?=
+ =?us-ascii?Q?ZltbyCx8a2ojByNDHcyQuNlsWhmYgkilVXrCKPnebJWwk5mNXc9k5dGmvONL?=
+ =?us-ascii?Q?HTAYxbHDkirNFiSb6aZcbMp2dR1zyzYS13WH2iJWb3EdVgDOhdg11AalnswK?=
+ =?us-ascii?Q?r/qsDHkd5iderhfusv3Km64+vXCRbh8ZmgPSXMEOTzm4DOsEmUmJ0PyKGMIy?=
+ =?us-ascii?Q?/6tJ4+XswFNplZgEFmZOuG3oDPrNNWnCDTFG17syS5A5MAFb7TV5LllMEMOj?=
+ =?us-ascii?Q?sHeFHc4T/xMpWbbZzdr0/oorigHTgUhsyqWW66OWF5JS+PAOnh3ygs02gPZF?=
+ =?us-ascii?Q?7RT9pxX5WRaGCpD/roFgqWN2y4gnQyhO+WgfTlduGELGOm1r26KzbpD3AALh?=
+ =?us-ascii?Q?HspGTp6cGBGUM9v84x4uBCP3FC8FbBZcjaG7JzpgXwwiMVwtMKa1YAssYnux?=
+ =?us-ascii?Q?iu4/dtPOzjPyx/OJoo364umQ8Ktrifx/Kc6xYngpB0CDQe3yZnrZyA9H4qdL?=
+ =?us-ascii?Q?X9LiGjKm7XJnIyseK5wLIU/o1SbR3bIqNZnAdeLnZ5NQ7oIeR6qc5iwFMPLT?=
+ =?us-ascii?Q?zCC+ro4uvoOxqfy9JRLvuGl7SAtxNfhF1QUlHPWgOknBImxh8vaQGC7BorDT?=
+ =?us-ascii?Q?Yug/ogzgwc1/A8tRyLiK57ApC2NsU462/O3/U8Lh3crKcq6V/S6Ntgcyxzqf?=
+ =?us-ascii?Q?JEaVhfjLLBveZLOhysyfFL0MKkNcVN1MhfFE/RkSKdIHvOx0Ksqiy+qiaSQY?=
+ =?us-ascii?Q?amK4Bdhh8iZvHQ3ThCQAd3LmBEZsxViFNZe44TEcxsHfrp5veFqtN4EW+8KC?=
+ =?us-ascii?Q?3aBUUwNdnZ129jIaItlv4drpPOGF+5VlUfulTNiIwldlLdkxBy9VxuUb6uKD?=
+ =?us-ascii?Q?CUDCgn/XgaqKbmORQLLYklG4XLV6IlIgmFFbTINDTI6gCY3sM9z1TkJwxmqK?=
+ =?us-ascii?Q?hHiwkQ90QElcdz3R4M4rLW3s7QEHLtQ7y3DywW6BqpJXIcDhS3R8chpiCAvE?=
+ =?us-ascii?Q?AlDbgOzrV8wTaAmujFxpTaXX1TK9nXdRxv+GK2NjkAhSZcamYI/pf0S9QYLF?=
+ =?us-ascii?Q?tgHjGUtQkJIrMoe7NhK/JequsGPRCOfO1UKDpsQoEx+zcaxwVh8kJtBX15QG?=
+ =?us-ascii?Q?Y4SD/yDodltmiTNInv/aOeyssMoGWKw/mgeh3TFyz/UQOfmwU0Zf7nCB7tNS?=
+ =?us-ascii?Q?hrMd/kCo35LVPhE4A16TtHv5/UJHtfUmEvH1zT5MlI9NnwHM1pmCL30fsJMe?=
+ =?us-ascii?Q?7xf5Qp+tLt0Z6GF39ArN7jNTHey/VrCgMEMrox9BRIsoJfigAO5AGXLTz9uh?=
+ =?us-ascii?Q?QsoqdohRCQ4qXbHsd+js9zWkzNxa+MjyLU3EibPRLWe5q/MAhk5wqOOuMb/y?=
+ =?us-ascii?Q?mh3FeszFTdjdW0kVKU2hM2BiPJa4ot3LuweJ1JlLvXBDPZpEoU7uZTCD54Gs?=
+ =?us-ascii?Q?Uk6zV7yjUqMspEIHiw5kF9sLT2akOWTGu5x03NCJSAnKSscxU5n89aTs5/ic?=
+ =?us-ascii?Q?pejeuc3TCLs6dyX4Mn7qJg0zpp483KrWFFOGnt0a4e+hN9h99Uc7xFO+PaWx?=
+ =?us-ascii?Q?GmqVEe0FwuRjYC6kOGI5h6+FLI5PGQPUQ6fCH8evMjalwKzZ7YEB7Gva70XV?=
+ =?us-ascii?Q?ow=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72a97fcd-c9f7-4336-25d6-08dcd4765aff
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2024 04:33:18.5513
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uBmWAaEpt2Sac3YmxmetZFLHInlVB/VqSUOZ3Lmvky9GL3oqv3zbv92jmwik7w45/ncsV6ZCpFhJlbnJeiBSOcncrkPEL/gTFOeEMRPas4c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8451
+X-OriginatorOrg: intel.com
 
+Gregory Price wrote:
+> Depending on device/hierarchy readiness, it can be possible for the
+> async probe process to attempt to register an endpoint before the
+> entire port hierarchy is ready.  This currently fails with -ENXIO.
+> 
+> Return -EPROBE_DEFER to try again later automatically (which is
+> what the local comments already say we should do anyway).
 
+I want to make sure this is not papering over some other issue. Can you
+post the final topology when this works (cxl list -BPET)? My working
+theory is that you have 2 devices that share an intermediate port.
+Otherwise, I am having a hard time understanding why the
+cxl_bus_rescan() in cxl_acpi_probe() does not obviate the explicit
+EPROBE_DEFER.
 
-On 8/21/24 11:10 AM, Jason Gunthorpe wrote:
-> fwctl is a new subsystem intended to bring some common rules and order to
-> the growing pattern of exposing a secure FW interface directly to
-> userspace. Unlike existing places like RDMA/DRM/VFIO/uacce that are
-> exposing a device for datapath operations fwctl is focused on debugging,
-> configuration and provisioning of the device. It will not have the
-> necessary features like interrupt delivery to support a datapath.
-> 
-> This concept is similar to the long standing practice in the "HW" RAID
-> space of having a device specific misc device to manager the RAID
-> controller FW. fwctl generalizes this notion of a companion debug and
-> management interface that goes along with a dataplane implemented in an
-> appropriate subsystem.
-> 
-> The need for this has reached a critical point as many users are moving to
-> run lockdown enabled kernels. Several existing devices have had long
-> standing tooling for management that relied on /sys/../resource0 or PCI
-> config space access which is not permitted in lockdown. A major point of
-> fwctl is to define and document the rules that a device must follow to
-> expose a lockdown compatible RPC.
-> 
-> Based on some discussion fwctl splits the RPCs into four categories
-> 
-> 	FWCTL_RPC_CONFIGURATION
-> 	FWCTL_RPC_DEBUG_READ_ONLY
-> 	FWCTL_RPC_DEBUG_WRITE
-> 	FWCTL_RPC_DEBUG_WRITE_FULL
-> 
-> Where the latter two trigger a new TAINT_FWCTL, and the final one requires
-> CAP_SYS_RAWIO - excluding it from lockdown. The device driver and its FW
-> would be responsible to restrict RPCs to the requested security scope,
-> while the core code handles the tainting and CAP checks.
-> 
-> For details see the final patch which introduces the documentation.
-> 
-> This series incorporates a version of the mlx5ctl interface previously
-> proposed:
->   https://lore.kernel.org/r/20240207072435.14182-1-saeed@kernel.org/
-> 
-> For this series the memory registration mechanism was removed, but I
-> expect it will come back.
-> 
-> It also includes the FWCL driver series from David:
->   https://lore.kernel.org/all/20240718213446.1750135-1-dave.jiang@intel.com/
-> 
-> 
-> This is still waiting a 3rd fwctl driver and the CXL side to finish some
-> of its development. The github has the necessary CXL precursor patches.
-> 
-> There have been two LWN articles written discussing various aspects of
-> this proposal:
-> 
->  https://lwn.net/Articles/955001/
->  https://lwn.net/Articles/969383/
-> 
-> And a really giant ksummit thread:
-> 
->  https://lore.kernel.org/ksummit/668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch/
-> 
-> Several have expressed general support for this concept:
-> 
->  Broadcom Networking - https://lore.kernel.org/r/Zf2n02q0GevGdS-Z@C02YVCJELVCG
->  Christoph Hellwig - https://lore.kernel.org/r/Zcx53N8lQjkpEu94@infradead.org/
->  Daniel Vetter - https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
->  Enfabrica - https://lore.kernel.org/r/9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org/
->  NVIDIA Networking
->  Oded Gabbay/Habana - https://lore.kernel.org/r/ZrMl1bkPP-3G9B4N@T14sgabbay.
->  Oracle Linux - https://lore.kernel.org/r/6lakj6lxlxhdgrewodvj3xh6sxn3d36t5dab6najzyti2navx3@wrge7cyfk6nq
->  SuSE/Hannes - https://lore.kernel.org/r/2fd48f87-2521-4c34-8589-dbb7e91bb1c8@suse.com
-> 
-> Work is ongoing for a robust multi-device open source userspace, currently
-> the mlx5ctl_user that was posted by Saeed has been updated to use fwctl.
-> 
->   https://github.com/saeedtx/mlx5ctl.git
->   https://github.com/jgunthorpe/mlx5ctl.git
-> 
-> This is on github: https://github.com/jgunthorpe/linux/commits/fwctl
-> 
-> v3:
->  - Rebase to v6.11-rc4
->  - Add a squashed version of David's CXL series as the 2nd driver
->  - Add missing includes
->  - Improve comments based on feedback
->  - Use the kdoc format that puts the member docs inside the struct
->  - Rewrite fwctl_alloc_device() to be clearer
->  - Incorporate all remarks for the documentation
-> v2: https://lore.kernel.org/r/0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com
->  - Rebase to v6.10-rc5
->  - Minor style changes
->  - Follow the style consensus for the guard stuff
->  - Documentation grammer/spelling
->  - Add missed length output for mlx5 get_info
->  - Add two more missed MLX5 CMD's
->  - Collect tags
-> v1: https://lore.kernel.org/r/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
-> 
-> Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-> Cc: Aron Silverton <aron.silverton@oracle.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: David Ahern <dsahern@kernel.org>
-> Cc: Itay Avraham <itayavr@nvidia.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Jiri Pirko <jiri@nvidia.com>
-> Cc: Leon Romanovsky <leonro@nvidia.com>
-> Cc: Leonid Bloch <lbloch@nvidia.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> Dave Jiang (1):
->   fwctl/cxl: Add driver for CXL mailbox for handling CXL features
->     commands (RFC)
-> 
-> Jason Gunthorpe (7):
->   fwctl: Add basic structure for a class subsystem with a cdev
->   fwctl: Basic ioctl dispatch for the character device
->   fwctl: FWCTL_INFO to return basic information about the device
->   taint: Add TAINT_FWCTL
->   fwctl: FWCTL_RPC to execute a Remote Procedure Call to device firmware
->   fwctl: Add documentation
->   cxl: Create an auxiliary device for fwctl_cxl
-> 
-> Saeed Mahameed (2):
->   fwctl/mlx5: Support for communicating with mlx5 fw
->   mlx5: Create an auxiliary device for fwctl_mlx5
-> 
->  Documentation/admin-guide/tainted-kernels.rst |   5 +
->  Documentation/userspace-api/fwctl.rst         | 285 ++++++++++++
->  Documentation/userspace-api/index.rst         |   1 +
->  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
->  MAINTAINERS                                   |  23 +
->  drivers/Kconfig                               |   2 +
->  drivers/Makefile                              |   1 +
->  drivers/cxl/core/memdev.c                     |  19 +
->  drivers/fwctl/Kconfig                         |  32 ++
->  drivers/fwctl/Makefile                        |   6 +
->  drivers/fwctl/cxl/Makefile                    |   4 +
->  drivers/fwctl/cxl/cxl.c                       | 274 ++++++++++++
->  drivers/fwctl/main.c                          | 414 ++++++++++++++++++
->  drivers/fwctl/mlx5/Makefile                   |   4 +
->  drivers/fwctl/mlx5/main.c                     | 337 ++++++++++++++
->  drivers/net/ethernet/mellanox/mlx5/core/dev.c |   8 +
->  include/linux/cxl/mailbox.h                   | 104 +++++
->  include/linux/fwctl.h                         | 135 ++++++
->  include/linux/panic.h                         |   3 +-
->  include/uapi/fwctl/cxl.h                      |  94 ++++
->  include/uapi/fwctl/fwctl.h                    | 140 ++++++
->  include/uapi/fwctl/mlx5.h                     |  36 ++
->  kernel/panic.c                                |   1 +
->  tools/debugging/kernel-chktaint               |   8 +
->  24 files changed, 1936 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/userspace-api/fwctl.rst
->  create mode 100644 drivers/fwctl/Kconfig
->  create mode 100644 drivers/fwctl/Makefile
->  create mode 100644 drivers/fwctl/cxl/Makefile
->  create mode 100644 drivers/fwctl/cxl/cxl.c
->  create mode 100644 drivers/fwctl/main.c
->  create mode 100644 drivers/fwctl/mlx5/Makefile
->  create mode 100644 drivers/fwctl/mlx5/main.c
->  create mode 100644 include/linux/fwctl.h
->  create mode 100644 include/uapi/fwctl/cxl.h
->  create mode 100644 include/uapi/fwctl/fwctl.h
->  create mode 100644 include/uapi/fwctl/mlx5.h
-> 
-> 
-> base-commit: cd0c76bee95e9c2092418523599439d2c8dbff7e
-
-Hi Jason,
-Which base-commit is this? I'm not finding the hash in the upstream tree. I'm having trouble applying the series against 6.10 or 6.11-rc7 via b4. 
+So, devA is dependendent on devB to create a common port, but devA loses
+that race after cxl_bus_rescan() has already run. Then EBPROBE_DEFER is
+the right answer to trigger devA to try again.
