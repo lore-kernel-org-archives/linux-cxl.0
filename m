@@ -1,248 +1,250 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2047.outbound.protection.outlook.com [40.107.223.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C398B154C14;
-	Mon, 16 Sep 2024 16:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726503394; cv=none; b=Dw9iWX6mSF1PhnTGokZ/ASu2aSFcLu02AB8Il2AcruHKFqoEJ8JDVGa9O4SVDcP7j7nkhsy2uxDJDADtlCfpY2Wn5ojD7YiUkjYEs6x/TG4cIYXHOyKVrVQCYN+j/IVNI/1h3r+QbTdTS0HKi9t1duDMSYo6CTAjafR+aOp1Q6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726503394; c=relaxed/simple;
-	bh=vqzYyA10Ra+Ue2aMyu+n6htlVt6+PdHenejO+zV5cVE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rDbG8tQgukTmR0n3VaQZvlMCEHkZx7SlIUJ5hn1b5g3Lb+2BXxQXYczTsFDVbDajW+Wh30xpiwmwAt0orwgSQSBZNwi9e9uEwvyrI0x94OQeqRg1emfEzsddvHjq/nknxjrwAEiddMIg/8N1eXLTAljdkwfRWEunh5hYksX1190=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X6qgM6yfmz6K9Cj;
-	Tue, 17 Sep 2024 00:12:15 +0800 (CST)
-Received: from frapeml100005.china.huawei.com (unknown [7.182.85.132])
-	by mail.maildlp.com (Postfix) with ESMTPS id F271E140C98;
-	Tue, 17 Sep 2024 00:16:27 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 16 Sep 2024 18:16:27 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 16 Sep 2024 18:16:27 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: Borislav Petkov <bp@alien8.de>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "jgroves@micron.com"
-	<jgroves@micron.com>, "vsalve@micron.com" <vsalve@micron.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v12 01/17] EDAC: Add support for EDAC device features
- control
-Thread-Topic: [PATCH v12 01/17] EDAC: Add support for EDAC device features
- control
-Thread-Index: AQHbBCn2X0FlmKPPaUWpEENlHZJn/rJVzXyAgARPCJCAAAYMAIAAfGFw
-Date: Mon, 16 Sep 2024 16:16:27 +0000
-Message-ID: <518da468c15047c0b78781784688f4f5@huawei.com>
-References: <20240911090447.751-1-shiju.jose@huawei.com>
-	<20240911090447.751-2-shiju.jose@huawei.com>
-	<20240913164041.GKZuRrCeoFZBapVYaU@fat_crate.local>
-	<c31c733bb6e742f580721ec9d0e2f3b2@huawei.com>
- <20240916115014.000064bf@Huawei.com>
-In-Reply-To: <20240916115014.000064bf@Huawei.com>
-Accept-Language: en-GB, en-US
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7805D25632;
+	Mon, 16 Sep 2024 16:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726503809; cv=fail; b=gQrU5GmXeG9fabOcGi/9AmyJj3QTTpSMcb4gf3Olu/xsqNJuAgAPGhaSCuV8mwYp1c7fXKzIRcAO80uRvNav/BGRHDU9037nQlEs1cB4jWQ+dVyC6BpxYkKq2p44CrR4rvZnKHamtqkAQ4q4nEIgtOS00HUGlkzFc3p4tZ0OFA4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726503809; c=relaxed/simple;
+	bh=KAkJemPeEcLytj6C/bVpqtJvkBCe1UtgrKtH5rTtAdU=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Yq3U/jEHk0ZGCro3QjsLLP/n1fTu59PQARAEEwheKpOkmUBPEAzj5ov6emNr5pwVZZftkiguIoOZHQtAGjj0t+xmMJZ0BUFDwjS+GJmyY5jrRhpLG2tLlPvsKsj1yhxKJjKdI7sDndsylYi6VfsaPawVxp6QE+6se3GuNg2n7hM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PolT/ca8; arc=fail smtp.client-ip=40.107.223.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PolT/ca8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FwQGnNHcWwgrzunAN/Xqn68RrnQYXYG9xNHuUQjMnCxPh4qBh5LCQXvzZxsCcuZRlbXMCyGmVQezeVUzDLTbEtKeZPS10THhgRDSCGbV6laRTDQJx2MCNxgQrf4KwWYdp1pATUPj/Iz4G1AxgiQxojY6eWYHJ4PZYCluPywdGRMSLlKdfIck9pEsjJJpEPdTzmGsI6XSkM6mGQMLNwg+jH0DFaGtNrpJXayg8V87QJhFDgqsydaJyIamMa92CF5I4fTD1QNugW5gFkeWL6ZSjwYmUwMA8EXKz2yIsz0dgg6CVNnU1DoW28rKLEek2AjjRgXYjB3A7OwC3XRbozxHUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Tv6G+fl3Xv/Hd/8oZXWvaGtiI+AEtuVH1MMZ98NkwoQ=;
+ b=nxaQsrDN6CDJz2uJ2z0cL9/A04OOtUkrcMPEMweRJLQVXCd5xrn/csJZAmAXS2pVi1dOhZ+yme2J13nap/RiSkVukaTQ8rvedmxhAwteHUPIh2Mg3m4lQMAm8DIVkso5uRXZAWXRk6fB2SuDNHOhWXrBkKDt/c7PenGs2SsgqU85OesjfZccngzqOxJN8Drkt83d6MSY3clmV0WfA8SgVcgk24SkNXWW++qgAch8fmG/cuUBFUW3KjcuTu+mYj31r/sf2E2xMtmJojeaTZzf05sOnQUzkkSwtQ9ELk5E9fGn+ct+95iHgaKqEjUTL8u/c2B/WgP4ruiFbBsLnV1yQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tv6G+fl3Xv/Hd/8oZXWvaGtiI+AEtuVH1MMZ98NkwoQ=;
+ b=PolT/ca8yTFgywEqVMFvwzHWNn2NJ7pxatpWrt5bkPDeNLJmNmobC72+JwRBQWDRKFJIL+WiNtFROOfRa6OHg3QUFqIojYa7cnpcN35UyaKYWfG9fOcprpHmjAcgRbwupmrl1LH3H8QdoqeWjg71fDJAdiOUJq8kLgCZAOwKqyQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB4205.namprd12.prod.outlook.com (2603:10b6:208:198::10)
+ by CY8PR12MB7610.namprd12.prod.outlook.com (2603:10b6:930:9a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.24; Mon, 16 Sep
+ 2024 16:23:24 +0000
+Received: from MN2PR12MB4205.namprd12.prod.outlook.com
+ ([fe80::cdcb:a990:3743:e0bf]) by MN2PR12MB4205.namprd12.prod.outlook.com
+ ([fe80::cdcb:a990:3743:e0bf%2]) with mapi id 15.20.7962.022; Mon, 16 Sep 2024
+ 16:23:24 +0000
+Message-ID: <7ec2eb7a-62fa-f340-1ee1-2c9fec7df75f@amd.com>
+Date: Mon, 16 Sep 2024 17:22:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3 19/20] cxl: add function for obtaining params from a
+ region
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To: Dave Jiang <dave.jiang@intel.com>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
+ martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+References: <20240907081836.5801-1-alejandro.lucero-palau@amd.com>
+ <20240907081836.5801-20-alejandro.lucero-palau@amd.com>
+ <8afb39a9-c04f-4e61-af75-e7f6adcee36f@intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <8afb39a9-c04f-4e61-af75-e7f6adcee36f@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0613.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:314::19) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4205:EE_|CY8PR12MB7610:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4dc8fb84-bee6-482d-98aa-08dcd66bdc1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cHJpNzg4eUg1aUxKbUd5WXY3WjBoem9MdXdkOWh2M0x1dzdVUzY0bUtEamFn?=
+ =?utf-8?B?VzlMbUxMTlMxUU1KUFNSeWRwdlFjREc0bWpsQU5JeGxPM1dxVHZuQWJySjFU?=
+ =?utf-8?B?bng1cHJkQ00yVnU1ZGVLK0w0d1RSSmJ6NHhRVHBZSmw3RFdyWTROcGlRWjdT?=
+ =?utf-8?B?ZktCWlZPZ01LQkhhdU4yTjZURVE4Y1ZPQk1COXNQK2hBdlgzZDhnd3pUSW5J?=
+ =?utf-8?B?OXJCRzEvemozMGNjR3M5cTd4dXZkVjZGN0NUK0IycW01MUwvWnc1K1F0bENB?=
+ =?utf-8?B?N0NGOXowMEI5RzVMbjZUSTAvM2szVmVDSjZoTTdCZHduTTAwSHZvWjNpd2Zu?=
+ =?utf-8?B?d1N3akFLTXltTUc4aDNraEtMTTUwSEdwV3pzTnJ3QnB3UWdYVXdkR0UvTXhX?=
+ =?utf-8?B?dWlncm4xSGhYZ3h2eXg5bUtmMWlPY1NrcGZZSVJuaVVWemFpQzdtU0IxUjJn?=
+ =?utf-8?B?T2JtWE82YjVnem05aW9nb21XelpOS1VMeHRDdEFQcHVDMlJMUnF0QXJ3Q1lM?=
+ =?utf-8?B?MkR1UTZXRXF1eGorSFJEMWRES0hvQzFSMk14elhhYjY3bk05RzdYVmd5Q29V?=
+ =?utf-8?B?VTVFdTh6SGEwQUJMeEZHWlBENHc4MmhsQ29VbUt3eERCT0MxcWpIY1hxa3Zr?=
+ =?utf-8?B?ZGE3THBIS01rY1hSbjJYMjRlMkJmN3Y1MkM3UXJCL0hRcklWUEQxNTJOckRo?=
+ =?utf-8?B?US9tUlMrZXovOXlvdytEWlpOY0RITkRBWkpqdVN4YWk3dmNvcFdlb2dCdDF4?=
+ =?utf-8?B?TS9sSXR1UXIreGN3YUdLb1pQclhKNVYxeTJpVU5iWXo5cXpEU1krZWRCSUk3?=
+ =?utf-8?B?TzMyVmpPdmpYclBGUFU3Zi9OTkRSSk9xSU5vYkhIMWdJL0ZtZnRjUXdIOHNT?=
+ =?utf-8?B?cWtFbjZVLzlQWUF4bnFxRk01c1dFT0Yxc2k0Q1o1RlI5ZXNJclVwWmtZT24z?=
+ =?utf-8?B?enBXbS9Kb0tOY2ZCb0hLMGdmZ0pCVG1FZnVpeU5FK1BUL1JuNCtqY3pRWUg0?=
+ =?utf-8?B?dE5pTGhHTi8wOE5GZFI2eGJJYytpNlNZSVgvamlBNytvdDJjNjd4NzRqQ0s0?=
+ =?utf-8?B?UW0vYjlpTUZ3Z3RQbnZRa1BOck9YNWllSUkxcmw3R1RpNGJzTGVvYlF3VEhR?=
+ =?utf-8?B?ekRYLzl2MWltQms3RDVNNWpBVWxWanhjTnk0WnZyQTBIS01UeHFJY0VTR2dZ?=
+ =?utf-8?B?YXJ1MDNkSlVQcGJmNkltSng5elpRYjV1Q0FadUdLdVE5TzNRcHpCTUgzUEgx?=
+ =?utf-8?B?dVRZUlBOSmRVU0FoVVJDaTZ2eU5ZbDY1a1kzOFFRenJVcytSbzhSN3FKS2d5?=
+ =?utf-8?B?QTNNK0theGpUUXdEdDVFQ21YS3RCRGJOYlZiRVZub1pWMGJPaTRVMElvM0RB?=
+ =?utf-8?B?M1Bmayt3dm13Y1FNcUpWTzhtK0Z0UjhUbWgyQzVsSnU0R2RnN3B6aWR2d3hM?=
+ =?utf-8?B?WWpZVkpFY3RtR3ovZXNtTzZpbitqVEdtVkVTeDZXaHFSK25ObE9NWDI0Z0l1?=
+ =?utf-8?B?OHdKVERMN0FIVXZDZUZHTzl0NkJtdnUyVkJFLytsL1VIWmQrcGdOZzdLbFpM?=
+ =?utf-8?B?aXV3ZGFJam1BZkJLR2dEdW1PV0ZrUlc3bnBERXVXaHk0dVFHamNmWFc2Z1oy?=
+ =?utf-8?B?WldsaDBBTGJLeDhDV2N4SXp6cEROZFczaStFM2pzWFQzMHhtZk01bDQrRnBj?=
+ =?utf-8?B?STV0Zy9vSmsxQUE2NGhDSEtnUS8xQlIvWXl3VEZoY09mWWNJSnBod3FtTmFM?=
+ =?utf-8?B?QWZvQ2UvYTl1S3BwWlJoVlkwWDRlZUduZHhVS1dJRXRYWUNtWmQzbTFZdE1j?=
+ =?utf-8?B?d25EYXlJbjM4UDNXYXZTR2lhbVRXMWlsZEYzZ0ZBbW9Uam81Z0t4bERac00y?=
+ =?utf-8?Q?divCOxdvmoWMP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4205.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Um0zRDE3VmFPYSt2WHZNYzlCSDFVby96YlloV1hNRkZwRGp3a3BQWkYwN3ly?=
+ =?utf-8?B?QWJYZ3pGcFBBWHp2MVYrSUxrQ25obFNENUFtdmd1VjRVc3pzWVVKaXUxMTZz?=
+ =?utf-8?B?ZWVUN3VIZndzb1lOWXpTbUNZd2tad0p5TUhaQ05KMmlPRGpCZVRXSmxReHY2?=
+ =?utf-8?B?K1lnWkd0R2lQWWI1N0w1bVRqODhUTTdzblk0N3h0Nlp4M3pHeWJ3MzVLRWxI?=
+ =?utf-8?B?TkRMOWR0T0FCSTV6bGhESkNpazN2MVNrSWxrL3B0anFvQnpBNlZFUlFWVisw?=
+ =?utf-8?B?S0JKZDhraC9SWmdjMzRNWlBnVDdPOVBtOURHNFZ0YXhrWE5WNW41U2dOa2tJ?=
+ =?utf-8?B?ZUovRUViUXZUTk5ObzJ3T0JGMjZWL1NkRW9IMG10WCtOQlpwYmwyZDg3clJK?=
+ =?utf-8?B?TnlRM0pRcy94YWJ2SkFqTmg5MHlpNmtkLy9pbjNjLzdqSnQwc2R4QmxiTEJl?=
+ =?utf-8?B?ZU04aGI3b1I4cVBGZElaL2QwNXVRUmhtYjdzN3VYMVZvWjJmcmxUYzUzNjVr?=
+ =?utf-8?B?VC9mMjFyUGxBbkNuQXo1aTN5SDNqYnFrTVpOS3gwNU9wR0pxS1Z1NTVDbzN0?=
+ =?utf-8?B?YmZIWEVod1d6NGJpdTU2Y29VTWptdnV3VmRxMHJLc2ltcSs0VVdycVVxa0Fy?=
+ =?utf-8?B?bGR1TG1IdU9LaGpaTUlUZmdyMGJFMk9DOFhZbFRaeG9BVVhtR0l5M1FNVFlO?=
+ =?utf-8?B?eXpPcE5tT0M3QTlMdFdjV3I4RHNYYmtSR09ZZW1WUkdkaGI3aFhGZEp3b2JK?=
+ =?utf-8?B?ZkUvYlltQ1duWVBlTVAyTlpvd3ZzbE5yUjNCckhhNTYwOTVxbHM5Q0tHbGQz?=
+ =?utf-8?B?VnZ4QlUvZzh6OERLTW00MldFdWFNRE5idGtBYmJhaW9MR3ZLSHlaWHB6aHYx?=
+ =?utf-8?B?ZkdMd1RQNUxhOXBmR1hsTlA5OU52TTJ2TDNTOE9mejhDT0NrcWk4bm96L0Ur?=
+ =?utf-8?B?T0pzL0FzYkQzekpmNk1SSTU3Zi9rNlVPR0VHT3B1Y3BTMG9RTkdPNFE2blh3?=
+ =?utf-8?B?eFpldHl3S1Q3VVFveEpJY1pOdTE4UjF0TlQxalAxQTJYK1djcEJ1Q2x6cFpG?=
+ =?utf-8?B?Y0g1eWdhVG83NEU4UnBLTXB6cWp4SkE1d3BHV2RBTlJjd1J0R1hiWFVjNTl6?=
+ =?utf-8?B?SXlTcE9md1l4cWwzZlc2aUpYQUQ0dWhkVkVtK0xSeDY0dll0c3hhVDBPMU1K?=
+ =?utf-8?B?VnROV1Y5MUdNbE9ZZjRCOTFUMGVKOTUvYjBwS1lHRTlTVVpnS2JqYmYybVZa?=
+ =?utf-8?B?TG52ditqVVdyUm9ZM0NsVm5MTXhkVWpyZmFnRnhaRUUyV3BJYnNlUzR5QmlL?=
+ =?utf-8?B?QVNTNStGdi83ODRKT0NJMHRPbSt4cVRibHUvL0g1ZEdXbEhqSkJxT2M5MkNm?=
+ =?utf-8?B?eER6cjdOblpnK00wcUwxam5jMjJKRlZLT3hRYnZOOHdzWEtKNGFSSmwyc29l?=
+ =?utf-8?B?S2FoaWduUk41OGFXSDBIbDF1LzAyc0VsVjBMeWNuMUJkR3pIdHI2SU40cTVw?=
+ =?utf-8?B?a0p0SjB4SDR5QmR2eGRFd2UxK2FsTTlKZWZjY2RLUGVrR001WjJhMzRjMDIv?=
+ =?utf-8?B?YlhXRlY5cWczNDZvM2IyQmxmcmxRSlkrUldTSnFYQzdaNm9HYTFmSWp1MS80?=
+ =?utf-8?B?TEp0T2loV1JXeTNHRnFFYzZKUnNidDN2NW9wam5hb3AzK3E2cTU2bkJrYkNm?=
+ =?utf-8?B?bEN6RzNZUUJjbkNna3dPOHVMamI5R3FaTCtjQ3daN2hXaFd3TWp5dkxaNVhT?=
+ =?utf-8?B?OTltVkxjWUlpY0lpUjdycXhrUElIeTlBbUtIbDh2dzI4Z0F3ZEc5dngxbmtt?=
+ =?utf-8?B?SUU0L0JRUjNoZHJhUGJ3L1hyeUJuNTdreFRKQkYyckJCdnp2emVPNDJObFJO?=
+ =?utf-8?B?SElGTENlQmhkQUwwU1c3VllMU0JvYjgrRzdSdTJqbDBXZkZMQVJyRWxOYXo5?=
+ =?utf-8?B?TG1IWFAzUUMrRkdMVnlHMjNkM3VlMjVTRzlLR1RvZHQ2Q0JEamwydHgzeFpM?=
+ =?utf-8?B?bTltWUxCOHl2K2UxdzM4cEFGa05RcGV5ZlV1aU9mV2VSMGR6dXBtUHo5U1Av?=
+ =?utf-8?B?YnJqaThXOENDSll1Nm1YUVJsUEljWlUwK01FZ1lBSFdpNXZnTVlVYTlWT0JR?=
+ =?utf-8?Q?6NQU9T+2qdX/Fr1UYhHDgnHJ5?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc8fb84-bee6-482d-98aa-08dcd66bdc1f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2024 16:23:24.5498
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kNNwTKhuOfP8kMiAgTjUryzEJes51+f0AZYDvaEm5s+L3GJkOTqE+zVAj+IXMpkVmmF3wsV8Ae0Neqm7wS7ALw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7610
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 16 September 2024 11:50
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: Borislav Petkov <bp@alien8.de>; linux-edac@vger.kernel.org; linux-
->cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org; linux=
--
->kernel@vger.kernel.org; tony.luck@intel.com; rafael@kernel.org;
->lenb@kernel.org; mchehab@kernel.org; dan.j.williams@intel.com;
->dave@stgolabs.net; dave.jiang@intel.com; alison.schofield@intel.com;
->vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
->Vilas.Sridharan@amd.com; leo.duran@amd.com; Yazen.Ghannam@amd.com;
->rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
->erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->mike.malvestuto@intel.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; jgroves@micron.com;
->vsalve@micron.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
-><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [PATCH v12 01/17] EDAC: Add support for EDAC device features
->control
+
+On 9/13/24 18:48, Dave Jiang wrote:
 >
->On Mon, 16 Sep 2024 10:21:58 +0100
->Shiju Jose <shiju.jose@huawei.com> wrote:
->
->> Thanks for reviewing.
+> On 9/7/24 1:18 AM, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> >-----Original Message-----
->> >From: Borislav Petkov <bp@alien8.de>
->> >Sent: 13 September 2024 17:41
->> >To: Shiju Jose <shiju.jose@huawei.com>
->> >Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
->> >acpi@vger.kernel.org; linux-mm@kvack.org;
->> >linux-kernel@vger.kernel.org; tony.luck@intel.com; rafael@kernel.org;
->> >lenb@kernel.org; mchehab@kernel.org; dan.j.williams@intel.com;
->> >dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->> >dave.jiang@intel.com; alison.schofield@intel.com;
->> >vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
->> >Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com;
->> >rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->> >dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->> >james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com;
->> >erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->> >mike.malvestuto@intel.com; gthelen@google.com;
->> >wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->> >wbs@os.amperecomputing.com; nifan.cxl@gmail.com; jgroves@micron.com;
->> >vsalve@micron.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
->> ><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->> >kangkang.shen@futurewei.com; wanghuiqiang
-><wanghuiqiang@huawei.com>;
->> >Linuxarm <linuxarm@huawei.com>
->> >Subject: Re: [PATCH v12 01/17] EDAC: Add support for EDAC device
->> >features control
->> >
->> >On Wed, Sep 11, 2024 at 10:04:30AM +0100, shiju.jose@huawei.com wrote:
->> >> +/**
->> >> + * edac_dev_feature_init - Init a RAS feature
->> >> + * @parent: client device.
->> >> + * @dev_data: pointer to the edac_dev_data structure, which
->> >> +contains
->> >> + * client device specific info.
->> >> + * @feat: pointer to struct edac_dev_feature.
->> >> + * @attr_groups: pointer to attribute group's container.
->> >> + *
->> >> + * Returns number of scrub features attribute groups on success,
->> >
->> >Not "scrub" - this is an interface initializing a generic feature.
->> Will correct.
->> >
->> >> + * error otherwise.
->> >> + */
->> >> +static int edac_dev_feat_init(struct device *parent,
->> >> +			      struct edac_dev_data *dev_data,
->> >> +			      const struct edac_dev_feature *ras_feat,
->> >> +			      const struct attribute_group **attr_groups) {
->> >> +	int num;
->> >> +
->> >> +	switch (ras_feat->ft_type) {
->> >> +	case RAS_FEAT_SCRUB:
->> >> +		dev_data->scrub_ops =3D ras_feat->scrub_ops;
->> >> +		dev_data->private =3D ras_feat->ctx;
->> >> +		return 1;
->> >> +	case RAS_FEAT_ECS:
->> >> +		num =3D ras_feat->ecs_info.num_media_frus;
->> >> +		dev_data->ecs_ops =3D ras_feat->ecs_ops;
->> >> +		dev_data->private =3D ras_feat->ctx;
->> >> +		return num;
->> >> +	case RAS_FEAT_PPR:
->> >> +		dev_data->ppr_ops =3D ras_feat->ppr_ops;
->> >> +		dev_data->private =3D ras_feat->ctx;
->> >> +		return 1;
->> >> +	default:
->> >> +		return -EINVAL;
->> >> +	}
->> >> +}
->> >
->> >And why does this function even exist and has kernel-doc comments
->> >when all it does is assign a couple of values? And it gets called exact=
-ly once?
->> >
->> >Just merge its body into the call site. There you can reuse the
->> >switch-case there too. No need for too much noodling around.
->> edac_dev_feat_init () function is updated with feature specific function=
- call()
->etc in subsequent
->> EDAC feature specific patches. Thus added a separate function.
->> >
->> >> diff --git a/include/linux/edac.h b/include/linux/edac.h index
->> >> b4ee8961e623..b337254cf5b8 100644
->> >> --- a/include/linux/edac.h
->> >> +++ b/include/linux/edac.h
->> >> @@ -661,4 +661,59 @@ static inline struct dimm_info
->> >> *edac_get_dimm(struct mem_ctl_info *mci,
->> >>
->> >>  	return mci->dimms[index];
->> >>  }
->> >> +
->> >> +/* EDAC device features */
->> >> +
->> >> +#define EDAC_FEAT_NAME_LEN	128
->> >> +
->> >> +/* RAS feature type */
->> >> +enum edac_dev_feat {
->> >> +	RAS_FEAT_SCRUB,
->> >> +	RAS_FEAT_ECS,
->> >> +	RAS_FEAT_PPR,
->> >> +	RAS_FEAT_MAX
->> >
->> >I still don't know what ECS or PPR is.
->> I will add comment/documentation here with a short explanation of
->> features if that make sense?
->> Each feature is described in the subsequent EDAC feature specific patche=
-s.
->Can you bring the enum entries in with those patches?
->That way there is no reference to them before we have the information on w=
-hat
->they are.
-Will do.
->
->J
->> >
->> >--
->> >Regards/Gruss,
->> >    Boris.
->> >
->> >https://people.kernel.org/tglx/notes-about-netiquette
+>> A CXL region struct contains the physical address to work with.
 >>
-Thanks,
-Shiju
+>> Add a function for given a opaque cxl region struct returns the params
+>> to be used for mapping such memory range.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>   drivers/cxl/core/region.c | 16 ++++++++++++++++
+>>   drivers/cxl/cxl.h         |  2 ++
+>>   include/linux/cxl/cxl.h   |  2 ++
+>>   3 files changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 45b4891035a6..e0e2342bb1ed 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2662,6 +2662,22 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+>>   	return ERR_PTR(rc);
+>>   }
+>>   
+>> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
+>> +			  resource_size_t *end)
+> Maybe just pass in a 'struct range' to be filled out instead of start/end?
+>
+
+It makes sense.
+
+I'll do it.
 
 
+>> +{
+>> +	if (!region)
+>> +		return -ENODEV;
+>> +
+>> +	if (!region->params.res)
+>> +		return -ENOSPC;
+>> +
+>> +	*start = region->params.res->start;
+>> +	*end = region->params.res->end;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_get_region_params, CXL);
+> I think at least for me, it's better to have the introduction of helper functions to be with the code where it gets called to provide the full picture and thus make a better review. Especially if the function is fairly small. So maybe squash this patch and the next one. There may be a few other situations like this in this series worth the same consideration.
+>    
 
+
+The next patch is not too big either, but I wanted to make things easier 
+in that one.
+
+Anyway, I'll do so.
+
+Thanks
+
+
+>> +
+>>   static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
+>>   {
+>>   	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 120e961f2e31..b26833ff52c0 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -904,6 +904,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+>>   bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+>>   
+>>   int cxl_region_detach(struct cxl_endpoint_decoder *cxled);
+>> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
+>> +			  resource_size_t *end);
+>>   /*
+>>    * Unit test builds overrides this to __weak, find the 'strong' version
+>>    * of these symbols in tools/testing/cxl/.
+>> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
+>> index 169683d75030..ef3bd8329bd8 100644
+>> --- a/include/linux/cxl/cxl.h
+>> +++ b/include/linux/cxl/cxl.h
+>> @@ -76,4 +76,6 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+>>   				     struct cxl_endpoint_decoder *cxled);
+>>   
+>>   int cxl_region_detach(struct cxl_endpoint_decoder *cxled);
+>> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
+>> +			  resource_size_t *end);
+>>   #endif
