@@ -1,189 +1,238 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2059.outbound.protection.outlook.com [40.107.223.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15ACD1CF2BF
-	for <linux-cxl@vger.kernel.org>; Sat, 14 Sep 2024 11:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726313401; cv=fail; b=hPiJg6T17N8wScxIemYgIrPojmMyJeNWYq01Pq32BvatyBnH0V+7H7KiJwS5yTMTatVbahbokdN5GVNL8/bEdwxUraRGnn6cItXjVNjBUSPVOhQXn80xW99x1kC54pqWjjScRkj4dwDxf8mR19jPQPT/YeGqVkP3TpDlM5VAAZk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726313401; c=relaxed/simple;
-	bh=1XyZElhCajkAO7Pw8xca9vhh2qbTsUWSuyjMwdTVnbE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UcFU7A8N6+BaZF4aMn+ohlWj6C51CxKzWJC4e6R6IUuk7nZfaF+80liFrWa7atuHcJkc8yZAW4BuPzTLc2j8h/ju2p4pig144Ut3qms0NX2l6PSRkt+u+sHYOzqszsO/9T8bIORlA340Wabw5ni/r+x9PkI1fFtGh/Jg9CTucpE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=jS4wenEG; arc=fail smtp.client-ip=40.107.223.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F623FE4A;
+	Mon, 16 Sep 2024 07:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726473290; cv=none; b=jbdzMZbelLz0GbmZVoCJjagddgA1Ew+w9a+vUD3YMgAiPZVoq+bjERD8WCArGN/DtY9Z2y8EWd37bSO8xOTVEkXS7LgnKe70Z492HQxIz5u0iTbvju/3Du4S19mff6RUKHMqfkdiVuiQOYRSNYy7ZTaORFNP6+GtIeCqcfqjmzw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726473290; c=relaxed/simple;
+	bh=9Uxllx3nCNE5VF0LffW4t0C3QwPY8+2DJST5wYb8ssQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpRYmoZbgUcj0LQn19fgqcilueEsA3S57BPPiAET2GcDq3D2gi3RIJH03ROC59uAlJhyEm3jVmtNr/X+RiIvudJVkgTudYW0KxyR0Zj0kn01crKrdRy76ImDPmcRqlHCeYzrqdK733NkCZ+9vEinqwft9u+LFPzKsiClFdpMo58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRMpgO8r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="jS4wenEG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ts3p0iLTdTYLnAHwQzhtsr5dwYiDhiseF3FTzWwRB70HSEdqvp1+SbIHuZZRQLNGY6NG4f8autIM/HObA25MAu496iZE7OIyVo6C2kqa+z1ARVgHcdTP9GCE0b4Y1sljGoTgvuKFRd5bd0aPCSy7DQlwDtKY3eTfa01jXMMUylXvmofn4DcKPJYtkKiz0Sy+k++Qj6VQA+jfFJXBIOaj2qIEF6OBKsCtKdwpkKiazj3Y/j1Nk1wz+aIiTPcATwqm7NdKyuc9ZxZNGzkuerjhry34Q52EHqrzv+O2uTcBQDVejhzhigFqsj3EX4Z/Or7s2kHXpfBij+CbWU34BVGKpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cO+gHMsnHONx1BlbvqV/mYPnO6zsq0BZbF27dyW11AI=;
- b=W6nkvBETX3hc6GjFpSNndjyXeECulmwMK95QXBcSZ0tB5yJDQMnZnW75kSESBGV+mvGmLYok/0BT5Y8i4DacCy9IcPgwvAKrMxcPg90S2oETzisJI8BJuLPWLjxm0yl9QWUj0PVz0O49jvsSOUve+IAvC/jVA3XUQtcx+jumNQYHLXG02ffuCFuAVEH+x+Ex2DflPbfCRXpucxugE2apfFec3+XYZBRAz6RywWd4bnlW+Ty+yRiflRXRFp5qX7olzQhaRFxP3Ys5TPL33zXTLWcyh6LeDWdpqhsMLUgLE7Cod+4ihWucalx+Q5TjmrTiZOF7C/f+mqj+bdIMEcPGYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.201.242.130) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=micron.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cO+gHMsnHONx1BlbvqV/mYPnO6zsq0BZbF27dyW11AI=;
- b=jS4wenEGx3Zs4lrqJwJRywTm+/jyUJ85MS2cJ0dqtwXNRVywQuGvqT+/8PR6roxVCgg9WxKOQ2skvu53zRDRX5xmcGmId2HEMx0OhXZbtbzO76qAu6yjMqbbzCH0vEg7FpxJpaFWRwVFdFftWCqC5Ppep2KJkaS6lT+NvLa33HBIYvbA4OuT8g6ICvnNp+qxguutvQ5Rz5QLlm0VqhiWAdOcGgeMkKTNp4/vo28g1OX91hYAeLSMRbRc+PFIRkZiNvXeaBYiOd7mXXC0VhBX87ZBukptob6OfxpRRYh1fgwehu9Tk+rYaq49An9wDDE0aSeHjwEjx/QInbSbyXo7+A==
-Received: from BL1PR13CA0154.namprd13.prod.outlook.com (2603:10b6:208:2bd::9)
- by MWHPR08MB10013.namprd08.prod.outlook.com (2603:10b6:303:279::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.21; Sat, 14 Sep
- 2024 11:29:55 +0000
-Received: from BL6PEPF0001AB72.namprd02.prod.outlook.com
- (2603:10b6:208:2bd:cafe::5a) by BL1PR13CA0154.outlook.office365.com
- (2603:10b6:208:2bd::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.17 via Frontend
- Transport; Sat, 14 Sep 2024 11:29:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
- smtp.mailfrom=micron.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=micron.com;
-Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
- 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.201.242.130; helo=mail.micron.com; pr=C
-Received: from mail.micron.com (137.201.242.130) by
- BL6PEPF0001AB72.mail.protection.outlook.com (10.167.242.165) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7918.13 via Frontend Transport; Sat, 14 Sep 2024 11:29:55 +0000
-Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19A.micron.com
- (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 14 Sep
- 2024 05:29:53 -0600
-Received: from BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3]) by
- BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3%6]) with mapi id
- 15.02.1544.011; Sat, 14 Sep 2024 05:29:53 -0600
-From: ajay.opensrc <ajay.opensrc@micron.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@Huawei.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"john@jagalactic.com" <john@jagalactic.com>, Eishan Mirakhur
-	<emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, "Srinivasulu
- Thanneeru" <sthanneeru@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-	Aravind Ramesh <arramesh@micron.com>
-Subject: Re: [EXT] Re: [PATCH] hw/cxl: Fix background completion percentage
- calculation
-Thread-Topic: [EXT] Re: [PATCH] hw/cxl: Fix background completion percentage
- calculation
-Thread-Index: AQHa4aFnXFAhiNhGOUK/S8twyYFQ27JR6UmAgAWFZN0=
-Date: Sat, 14 Sep 2024 11:29:52 +0000
-Message-ID: <edbfbc67684d4fe5979632d2c01bffaf@micron.com>
-References: <20240729102338.22337-1-ajay.opensrc@micron.com>,<20240910130723-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240910130723-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mt-whitelisted: matched
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRMpgO8r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CA17C4CEC4;
+	Mon, 16 Sep 2024 07:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726473289;
+	bh=9Uxllx3nCNE5VF0LffW4t0C3QwPY8+2DJST5wYb8ssQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tRMpgO8rO6nC/yGTsOuq0gh66lk0uIeRAn619x/Ee9ln6d6Mkr9A8MhTxliwZy5fe
+	 pOIsDY/hFfxWjHauDNpS7obzIovcrmLT4OO5r8AGvA3CVd+0//c6LMCrFKlEByW8SW
+	 A71Q98REui3J3koXBvxMarOgjy3nkt0Oi2qVIT9nHTLEYwVL2McR+jQExf4rlUN7+J
+	 rRWuUsNecvzrmSrX4GK01v4wub/NPvHt00RllC6CWdcszSy8F31+zoxklGfuVYyodz
+	 CXquPi6Vwjjbqxcrqv8GufBJfwwx3jsoQjbNDl3s+o84X9wlTpyGUGBQ/iovuwHNIg
+	 P+wBZ1lP8vY/g==
+Date: Mon, 16 Sep 2024 10:54:44 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	David Ahern <dsahern@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>,
+	linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>
+Subject: Re: [PATCH v3 00/10] Introduce fwctl subystem
+Message-ID: <20240916075444.GJ4026@unreal>
+References: <0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com>
+ <8029e786-d693-4002-9dba-b45f9bb4acb1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB72:EE_|MWHPR08MB10013:EE_
-X-MS-Office365-Filtering-Correlation-Id: b39684fa-7c2f-4050-a4fd-08dcd4b08ea5
-X-EXT-ByPass: 1
-X-MT-RULE-Whitelisted: Triggered
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?MfO55stOirKXZQOLudAJBj1P+7kCWhpL4EmWb0Gp9S8Q6EUZ24Dqg9Ii6c?=
- =?iso-8859-1?Q?2BAXtb/TUfDFWqgLw24EBwE72CWIPF24CO3fRxyYTi8u/tnsxMVKCQfRT1?=
- =?iso-8859-1?Q?qU+fqy3O+/7QagRHXXGOUkWLBGeVlLarKUkP/9esID7QMo4JrqbeI3NvO/?=
- =?iso-8859-1?Q?0ZC0zB2PCOy8WyNq9Y0oXkVv+PNXctORzElxiYxMkLSPzDZ1bXycIpEZeq?=
- =?iso-8859-1?Q?7BMvZ7uLgkfLhK7V6biFl3O44qs+S9nVMlDz4VTI0mFvFFARMGjCAUJJRJ?=
- =?iso-8859-1?Q?ISR0d/Z5ojauo2hnXGyWA4JEXG9LQwUF6/u9+nGov71liZBklRxMhBD2Ta?=
- =?iso-8859-1?Q?FgKThje5xq8JQ7MPwtcLnj8hujzFagl3zFg8HNXkltmwFhKrAyS29gUGg1?=
- =?iso-8859-1?Q?lb7pp5Xup1bTvX6+o9gzTbPummBKPSu9LBUy8aBguYyJkq1bn64znP7Y65?=
- =?iso-8859-1?Q?TDmWY2LDBlQYEuh3veK3q7Q7shu6rHGeAd+6mk0lLpfu5uHA5UfMMN+vpl?=
- =?iso-8859-1?Q?ovGTAk3yl/1X01PxcQxmloaMaXCVRmQAn0YAPybASN3FSW1dqgy7OATuPb?=
- =?iso-8859-1?Q?HCoX76Qb6xYSSUDd59xvw/1hQW4TqkhgpvcakvkPqoK21L5O6aNqdfhMRL?=
- =?iso-8859-1?Q?8NoOmRHZ4gAswMkzvszQq44h1jO6n71PR0Ot9GHIhu/U5uA2DPomHMKP9U?=
- =?iso-8859-1?Q?I1A3cmMppmngKU76ClYp1CaIGsQmtRk9dvEWBgJP0XTy9b1OLslBhwr1eS?=
- =?iso-8859-1?Q?lkLsV1Ufe03rsD/D9bdtKQdfeV802OKZAG2CrVijfsPr4vzj2/yFVbfK5u?=
- =?iso-8859-1?Q?fio6tWJctsbPtIhKTixa3+eRzM5/luqgLrWABTwaHFEo+VXwAPxrTKuSxG?=
- =?iso-8859-1?Q?hPJHCnhVrBWuZCTDbXaEtVTJpYQSji+9r4TmjuN446NjaFq8U42ASjEwG1?=
- =?iso-8859-1?Q?4Q49H6Pso4QkPmdlX0ftf2p+eAg6lCunfz5cg+MPOlvkly7zpylXzG379j?=
- =?iso-8859-1?Q?h5VvCQ6oM2aersoTooIdj1n1L/IZ5nmgyuRFkqbZmQjGzEnrN2bsVwyk3h?=
- =?iso-8859-1?Q?rwr+KmRdRm5GFG3zJe7/r36ggLvh+I0MrQpyx/Lh6clmDuLi0SheZgGxIl?=
- =?iso-8859-1?Q?MxwxP4BRf1GqbaakUvqC8kQKdkj7M2xG0OF/4bdgSPc4ot7CI/SxlLQdZU?=
- =?iso-8859-1?Q?ls89uAGCL6ZwEGB8bgENiXtuO53bLoDXM9k+kQMbDR43tEUKrRRq7sHYS5?=
- =?iso-8859-1?Q?/LcmL/NODjV30IMfwAnqPUnECAyWDOviMvpjQY1/zYudebHGm5gudniOpF?=
- =?iso-8859-1?Q?e+B0gpk0uuSY63Q0kFfrq5KWaEk7ghrHRmmyRPqKC066hOvWnhshkXTqOZ?=
- =?iso-8859-1?Q?fXDioSWDEBSqVZumReqcKJ4G4X1CtUNbrmYHduVcqSeb61fV0EeV/3gmIM?=
- =?iso-8859-1?Q?RbouBMQswTd5/jPCTsPM0Tk7eZryUWe6mLHGIg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2024 11:29:55.0758
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b39684fa-7c2f-4050-a4fd-08dcd4b08ea5
-X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB72.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR08MB10013
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8029e786-d693-4002-9dba-b45f9bb4acb1@intel.com>
 
+On Fri, Sep 13, 2024 at 03:39:57PM -0700, Dave Jiang wrote:
+> 
+> 
+> On 8/21/24 11:10 AM, Jason Gunthorpe wrote:
+> > fwctl is a new subsystem intended to bring some common rules and order to
+> > the growing pattern of exposing a secure FW interface directly to
+> > userspace. Unlike existing places like RDMA/DRM/VFIO/uacce that are
+> > exposing a device for datapath operations fwctl is focused on debugging,
+> > configuration and provisioning of the device. It will not have the
+> > necessary features like interrupt delivery to support a datapath.
+> > 
+> > This concept is similar to the long standing practice in the "HW" RAID
+> > space of having a device specific misc device to manager the RAID
+> > controller FW. fwctl generalizes this notion of a companion debug and
+> > management interface that goes along with a dataplane implemented in an
+> > appropriate subsystem.
+> > 
+> > The need for this has reached a critical point as many users are moving to
+> > run lockdown enabled kernels. Several existing devices have had long
+> > standing tooling for management that relied on /sys/../resource0 or PCI
+> > config space access which is not permitted in lockdown. A major point of
+> > fwctl is to define and document the rules that a device must follow to
+> > expose a lockdown compatible RPC.
+> > 
+> > Based on some discussion fwctl splits the RPCs into four categories
+> > 
+> > 	FWCTL_RPC_CONFIGURATION
+> > 	FWCTL_RPC_DEBUG_READ_ONLY
+> > 	FWCTL_RPC_DEBUG_WRITE
+> > 	FWCTL_RPC_DEBUG_WRITE_FULL
+> > 
+> > Where the latter two trigger a new TAINT_FWCTL, and the final one requires
+> > CAP_SYS_RAWIO - excluding it from lockdown. The device driver and its FW
+> > would be responsible to restrict RPCs to the requested security scope,
+> > while the core code handles the tainting and CAP checks.
+> > 
+> > For details see the final patch which introduces the documentation.
+> > 
+> > This series incorporates a version of the mlx5ctl interface previously
+> > proposed:
+> >   https://lore.kernel.org/r/20240207072435.14182-1-saeed@kernel.org/
+> > 
+> > For this series the memory registration mechanism was removed, but I
+> > expect it will come back.
+> > 
+> > It also includes the FWCL driver series from David:
+> >   https://lore.kernel.org/all/20240718213446.1750135-1-dave.jiang@intel.com/
+> > 
+> > 
+> > This is still waiting a 3rd fwctl driver and the CXL side to finish some
+> > of its development. The github has the necessary CXL precursor patches.
+> > 
+> > There have been two LWN articles written discussing various aspects of
+> > this proposal:
+> > 
+> >  https://lwn.net/Articles/955001/
+> >  https://lwn.net/Articles/969383/
+> > 
+> > And a really giant ksummit thread:
+> > 
+> >  https://lore.kernel.org/ksummit/668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch/
+> > 
+> > Several have expressed general support for this concept:
+> > 
+> >  Broadcom Networking - https://lore.kernel.org/r/Zf2n02q0GevGdS-Z@C02YVCJELVCG
+> >  Christoph Hellwig - https://lore.kernel.org/r/Zcx53N8lQjkpEu94@infradead.org/
+> >  Daniel Vetter - https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
+> >  Enfabrica - https://lore.kernel.org/r/9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org/
+> >  NVIDIA Networking
+> >  Oded Gabbay/Habana - https://lore.kernel.org/r/ZrMl1bkPP-3G9B4N@T14sgabbay.
+> >  Oracle Linux - https://lore.kernel.org/r/6lakj6lxlxhdgrewodvj3xh6sxn3d36t5dab6najzyti2navx3@wrge7cyfk6nq
+> >  SuSE/Hannes - https://lore.kernel.org/r/2fd48f87-2521-4c34-8589-dbb7e91bb1c8@suse.com
+> > 
+> > Work is ongoing for a robust multi-device open source userspace, currently
+> > the mlx5ctl_user that was posted by Saeed has been updated to use fwctl.
+> > 
+> >   https://github.com/saeedtx/mlx5ctl.git
+> >   https://github.com/jgunthorpe/mlx5ctl.git
+> > 
+> > This is on github: https://github.com/jgunthorpe/linux/commits/fwctl
+> > 
+> > v3:
+> >  - Rebase to v6.11-rc4
+> >  - Add a squashed version of David's CXL series as the 2nd driver
+> >  - Add missing includes
+> >  - Improve comments based on feedback
+> >  - Use the kdoc format that puts the member docs inside the struct
+> >  - Rewrite fwctl_alloc_device() to be clearer
+> >  - Incorporate all remarks for the documentation
+> > v2: https://lore.kernel.org/r/0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com
+> >  - Rebase to v6.10-rc5
+> >  - Minor style changes
+> >  - Follow the style consensus for the guard stuff
+> >  - Documentation grammer/spelling
+> >  - Add missed length output for mlx5 get_info
+> >  - Add two more missed MLX5 CMD's
+> >  - Collect tags
+> > v1: https://lore.kernel.org/r/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
+> > 
+> > Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>
+> > Cc: Aron Silverton <aron.silverton@oracle.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: David Ahern <dsahern@kernel.org>
+> > Cc: Itay Avraham <itayavr@nvidia.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Jiri Pirko <jiri@nvidia.com>
+> > Cc: Leon Romanovsky <leonro@nvidia.com>
+> > Cc: Leonid Bloch <lbloch@nvidia.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: linux-cxl@vger.kernel.org
+> > Cc: linux-rdma@vger.kernel.org
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > 
+> > Dave Jiang (1):
+> >   fwctl/cxl: Add driver for CXL mailbox for handling CXL features
+> >     commands (RFC)
+> > 
+> > Jason Gunthorpe (7):
+> >   fwctl: Add basic structure for a class subsystem with a cdev
+> >   fwctl: Basic ioctl dispatch for the character device
+> >   fwctl: FWCTL_INFO to return basic information about the device
+> >   taint: Add TAINT_FWCTL
+> >   fwctl: FWCTL_RPC to execute a Remote Procedure Call to device firmware
+> >   fwctl: Add documentation
+> >   cxl: Create an auxiliary device for fwctl_cxl
+> > 
+> > Saeed Mahameed (2):
+> >   fwctl/mlx5: Support for communicating with mlx5 fw
+> >   mlx5: Create an auxiliary device for fwctl_mlx5
+> > 
+> >  Documentation/admin-guide/tainted-kernels.rst |   5 +
+> >  Documentation/userspace-api/fwctl.rst         | 285 ++++++++++++
+> >  Documentation/userspace-api/index.rst         |   1 +
+> >  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+> >  MAINTAINERS                                   |  23 +
+> >  drivers/Kconfig                               |   2 +
+> >  drivers/Makefile                              |   1 +
+> >  drivers/cxl/core/memdev.c                     |  19 +
+> >  drivers/fwctl/Kconfig                         |  32 ++
+> >  drivers/fwctl/Makefile                        |   6 +
+> >  drivers/fwctl/cxl/Makefile                    |   4 +
+> >  drivers/fwctl/cxl/cxl.c                       | 274 ++++++++++++
+> >  drivers/fwctl/main.c                          | 414 ++++++++++++++++++
+> >  drivers/fwctl/mlx5/Makefile                   |   4 +
+> >  drivers/fwctl/mlx5/main.c                     | 337 ++++++++++++++
+> >  drivers/net/ethernet/mellanox/mlx5/core/dev.c |   8 +
+> >  include/linux/cxl/mailbox.h                   | 104 +++++
+> >  include/linux/fwctl.h                         | 135 ++++++
+> >  include/linux/panic.h                         |   3 +-
+> >  include/uapi/fwctl/cxl.h                      |  94 ++++
+> >  include/uapi/fwctl/fwctl.h                    | 140 ++++++
+> >  include/uapi/fwctl/mlx5.h                     |  36 ++
+> >  kernel/panic.c                                |   1 +
+> >  tools/debugging/kernel-chktaint               |   8 +
+> >  24 files changed, 1936 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/userspace-api/fwctl.rst
+> >  create mode 100644 drivers/fwctl/Kconfig
+> >  create mode 100644 drivers/fwctl/Makefile
+> >  create mode 100644 drivers/fwctl/cxl/Makefile
+> >  create mode 100644 drivers/fwctl/cxl/cxl.c
+> >  create mode 100644 drivers/fwctl/main.c
+> >  create mode 100644 drivers/fwctl/mlx5/Makefile
+> >  create mode 100644 drivers/fwctl/mlx5/main.c
+> >  create mode 100644 include/linux/fwctl.h
+> >  create mode 100644 include/uapi/fwctl/cxl.h
+> >  create mode 100644 include/uapi/fwctl/fwctl.h
+> >  create mode 100644 include/uapi/fwctl/mlx5.h
+> > 
+> > 
+> > base-commit: cd0c76bee95e9c2092418523599439d2c8dbff7e
+> 
+> Hi Jason,
+> Which base-commit is this? I'm not finding the hash in the upstream tree. I'm having trouble applying the series against 6.10 or 6.11-rc7 via b4. 
 
+This base-commit very depends on there cover letter was generated and
+stored while creating the series. In this specific case, Jason put cover
+letter to be the last commit in the series, so the base-commit points to
+the last patch cd0c76bee95e ("cxl: Infrastructure for fwctl").
 
->From: Michael S. Tsirkin <mst@redhat.com>
->On Mon, Jul 29, 2024 at 03:53:38PM +0530, ajay.opensrc@micron.com wrote:
->> From: Ajay Joshi <ajayjoshi@micron.com>
->>
->> The current completion percentage calculation
->> does not account for the relative time since
->> the start of the background activity, this leads
->> to showing incorrect start percentage vs what has
->> actually been completed.
->>
->> This patch calculates the percentage based on the actual
->> elapsed time since the start of the operation.
->>
->> Fixes: 221d2cfbdb ("hw/cxl/mbox: Add support for background operations")
->>
->> Signed-off-by: Ajay Joshi <ajay.opensrc@micron.com>
->
->Keep all tags together with no empty lines pls.
-
-I have resent the patch with the all the tags Michael.
-https://lore.kernel.org/linux-cxl/20240914112021.2730383-1-ajay.opensrc@mic=
-ron.com/T/#u
-
->
->> ---
->>  hw/cxl/cxl-mailbox-utils.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index c2ed251bb3..873d60c069 100644
->> --- a/hw/cxl/cxl-mailbox-utils.c
->> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -2708,7 +2708,8 @@ static void bg_timercb(void *opaque)
->>          }
->>      } else {
->>          /* estimate only */
->> -        cci->bg.complete_pct =3D 100 * now / total_time;
->> +        cci->bg.complete_pct =3D
->> +            100 * (now - cci->bg.starttime) / cci->bg.runtime;
->>          timer_mod(cci->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
->>      }
->>
->> --
->> 2.34.1
-
-
-    =
+Thanks
