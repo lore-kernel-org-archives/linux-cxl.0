@@ -1,426 +1,286 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137CC189F2F
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Sep 2024 10:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F493C3C;
+	Wed, 18 Sep 2024 12:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726654765; cv=none; b=ME1M9Le23VmfHYuy0wBWt/uvlsqr/4hDC4y2jqk+GfkndzgGRaJIyCseQIIng7NJqoSO8hNT2fuTskoL2ZDlN+Sm9he3C08FIsUyLDE4C2r4CJcCYf6iesFo5TwFSn7JOklKzwvWIQI0vxQdOY/TnTYYTG/jgLtyEGjt5JVPjCA=
+	t=1726661561; cv=none; b=YpTM3ZwBfDBS0p6jCJVh9QaeibYZDdPifa+S1RJRS/e54k7mBnONoA6xQ6K2ChRC+Y+hM2QDqtrwM876aSj2beWDhsXk526hk6M2wv0T+d3RKocAQfgwzJupbHIwB0dCAxUsvkykA3Z1Tnmct8ypLDVCHqqFYOEQLoWfm+hs9D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726654765; c=relaxed/simple;
-	bh=VLXexvB5xOFks2PgsfgM+N0lQgH8W4ID6OXaYy2fUrI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fg2mLpBvs0O/19ORCFh+8W3SENJYHpQfRgK+a4y8DurP+A07ns3Zr/qx741NUfbmOI2EavfFoblvvZcwefbnxO0hiMLog7n/rWAyCWkDybPF8VU8cfxTO+7J+2J7t/PSSqLw5nSbQ7U38CpMd1QkLekDOY8/aHwN0njxvu8EOs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CeDgi91S; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1726661561; c=relaxed/simple;
+	bh=JhhkhILXtZKx/eR4sDSXtFMm6W/kF+QdN4He/iQd1f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q7e6iz57lnZ3jXenYLfV622Ev7Bgmf5WyZmxv8qAIQTXsCk1LwX2NGikweAmfruPAAJ4E/q45BvAaIl21VN2d2BXI046klNFYULYsP74dWX/UMl2pAmlFm2pqo5tK8MfkzPr25RX/TY5FufH/rYI4TDwukmsfNAaUIz5kGWp54k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGhzJulw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CeDgi91S"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1726654760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbUtm5WprPjz08SnW/Ys9oOg4o7q9TuKMEC1OuMigdk=;
-	b=CeDgi91SrzcSP22d5q5fM6DkAwgWSE9IivmIKe2TK/e0ksM9JFecn1U8JxIPBNBNqBzu92
-	5vjOAWKyGK4ZPLZRhwcf3UytLdQGtnQV5nR/UanP2KvrKATqjDIsAxRVKz16oN/h+vH2z8
-	ucqWxoxI3RgOMSnV3u0xdorsUDxu+L0=
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: axboe@kernel.dk,
-	dan.j.williams@intel.com,
-	gregory.price@memverge.com,
-	John@groves.net,
-	Jonathan.Cameron@Huawei.com,
-	bbhushan2@marvell.com,
-	chaitanyak@nvidia.com,
-	rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-bcache@vger.kernel.org,
-	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [PATCH v2 8/8] block: Init for CBD(CXL Block Device) module
-Date: Wed, 18 Sep 2024 10:18:21 +0000
-Message-Id: <20240918101821.681118-9-dongsheng.yang@linux.dev>
-In-Reply-To: <20240918101821.681118-1-dongsheng.yang@linux.dev>
-References: <20240918101821.681118-1-dongsheng.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGhzJulw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC95C4CEC3;
+	Wed, 18 Sep 2024 12:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726661560;
+	bh=JhhkhILXtZKx/eR4sDSXtFMm6W/kF+QdN4He/iQd1f0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dGhzJulw1a5X0/TNcFR50ne2LNTyx8BnT6b88El3p8QD8p48GikDrlMGb95vAjId3
+	 ra/kKmI2c1OxrghmVkXO7sHwF0gqf3rWkKwVVh9eDz+EtitSak9gTziJbOU2TIXjEx
+	 1l6UKSCN+sjOMOBD4+43wKfDVSebFR3GoEAk1vY2/YJ9du6Say2GnkhTuOz+rYal9m
+	 Kg1TI/suMIsAiWPe6dRCuZV5hT2mQLDF7dKzOFAW1ZPMef89kM/pOTSw9AEGymtLP/
+	 0dJ+cawez/ehQHOyPjTTKgrvpvOCSyHcbYXSMMJC5BqEswFcdrGmeC1iDMcNdmOoZQ
+	 jHrKKpe/bC7bA==
+Date: Wed, 18 Sep 2024 13:12:32 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: John Groves <John@groves.net>, <linuxarm@huawei.com>, David Hildenbrand
+ <david@redhat.com>, linux-mm <linux-mm@kvack.org>, linux-cxl
+ <linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny
+ <ira.weiny@intel.com>, virtualization <virtualization@lists.linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, qemu-devel <qemu-devel@nongnu.org>,
+ Dave Jiang <dave.jiang@intel.com>, "Dan Williams"
+ <dan.j.williams@intel.com>, "Wangkefeng (OS Kernel Lab)"
+ <wangkefeng.wang@huawei.com>, John Groves <jgroves@micron.com>, Fan Ni
+ <fan.ni@samsung.com>, Navneet Singh <navneet.singh@intel.com>, "
+ =?UTF-8?B?4oCcTWljaGFlbA==?= S. =?UTF-8?B?VHNpcmtpbuKAnQ==?="
+ <mst@redhat.com>, Igor Mammedov <imammedo@redhat.com>, Philippe
+ =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?= <philmd@linaro.org>
+Subject: Re: [RFC] Virtualizing tagged disaggregated memory capacity (app
+ specific, multi host shared)
+Message-ID: <20240918131232.6fa02096@jic23-huawei>
+In-Reply-To: <20240917205048.00001e34@huawei.com>
+References: <20240815172223.00001ca7@Huawei.com>
+	<sjz2xzwkgkq6bun5lssqbsimbggczarotpjdhcsq3itoq5h7jc@x5ormqciwofo>
+	<20240819164024.00005a0a@Huawei.com>
+	<20240917205048.00001e34@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-CBD (CXL Block Device) provides two usage scenarios: single-host and
-multi-hosts.
+On Tue, 17 Sep 2024 20:56:53 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-(1) Single-host scenario, CBD can use a pmem device as a cache for block
-devices, providing a caching mechanism specifically designed for
-persistent memory.
+> On Tue, 17 Sep 2024 19:37:21 +0000
+> Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> 
+> > Plan is currently to meet at lpc registration desk 2pm tomorrow Wednesday and we will find a room.
+> >  
+> 
+> And now the internet maybe knows my phone number (serves me right for using
+> my company mobile app that auto added a signature)
+> I might have been lucky and it didn't hit the archives because
+> the formatting was too broken..
+> 
+> Anyhow, see some of you tomorrow.  I didn't manage to borrow a jabra mic
+> so remote will be tricky but feel free to reach out and we might be
+> able to sort something.
+> 
+> Intent is this will be in informal BoF so we'll figure out the scope
+> at the start of the meeting.
+> 
+> Sorry for the noise!
 
-+-----------------------------------------------------------------+
-|                         single-host                             |
-+-----------------------------------------------------------------+
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                                                                 |
-|                        +-----------+     +------------+         |
-|                        | /dev/cbd0 |     | /dev/cbd1  |         |
-|                        |           |     |            |         |
-|  +---------------------|-----------|-----|------------|-------+ |
-|  |                     |           |     |            |       | |
-|  |      /dev/pmem0     | cbd0 cache|     | cbd1 cache |       | |
-|  |                     |           |     |            |       | |
-|  +---------------------|-----------|-----|------------|-------+ |
-|                        |+---------+|     |+----------+|         |
-|                        ||/dev/sda ||     || /dev/sdb ||         |
-|                        |+---------+|     |+----------+|         |
-|                        +-----------+     +------------+         |
-+-----------------------------------------------------------------+
+Hack room 1.14 now if anyone is looking for us.
 
-(2) Multi-hosts scenario, CBD also provides a cache while taking
-advantage of shared memory features, allowing users to access block
-devices on other nodes across different hosts.
 
-As shared memory is supported in CXL3.0 spec, we can transfer data via
-CXL shared memory. CBD use CXL shared memory to transfer data between
-node-1 and node-2.
-
-This scenario require your shared memory device support Hardware-consistency
-as CXL 3.0 described, and CONFIG_CBD_MULTIHOST to be enabled.
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
----
- drivers/block/Kconfig        |   2 +
- drivers/block/Makefile       |   2 +
- drivers/block/cbd/Kconfig    |  45 +++++++
- drivers/block/cbd/Makefile   |   3 +
- drivers/block/cbd/cbd_main.c | 224 +++++++++++++++++++++++++++++++++++
- 5 files changed, 276 insertions(+)
- create mode 100644 drivers/block/cbd/Kconfig
- create mode 100644 drivers/block/cbd/Makefile
- create mode 100644 drivers/block/cbd/cbd_main.c
-
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 5b9d4aaebb81..1f6376828af9 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -219,6 +219,8 @@ config BLK_DEV_NBD
- 
- 	  If unsure, say N.
- 
-+source "drivers/block/cbd/Kconfig"
-+
- config BLK_DEV_RAM
- 	tristate "RAM block device support"
- 	help
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 101612cba303..8be2a39f5a7c 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -39,4 +39,6 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- 
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
-+obj-$(CONFIG_BLK_DEV_CBD)	+= cbd/
-+
- swim_mod-y	:= swim.o swim_asm.o
-diff --git a/drivers/block/cbd/Kconfig b/drivers/block/cbd/Kconfig
-new file mode 100644
-index 000000000000..16ffcca058c5
---- /dev/null
-+++ b/drivers/block/cbd/Kconfig
-@@ -0,0 +1,45 @@
-+config BLK_DEV_CBD
-+	tristate "CXL Block Device (Experimental)"
-+	depends on DEV_DAX && FS_DAX
-+	help
-+	  CBD allows you to register a persistent memory device as a CBD transport.
-+	  You can use this persistent memory as a data cache to improve your block
-+	  device performance. Additionally, if you enable CBD_MULTIHOST, cbd allows
-+	  you to access block devices on a remote host as if they were local disks.
-+
-+	  Select 'y' to build this module directly into the kernel.
-+	  Select 'm' to build this module as a loadable kernel module.
-+
-+	  If unsure say 'N'.
-+
-+config CBD_CRC
-+	bool "Enable CBD checksum"
-+	default N
-+	depends on BLK_DEV_CBD
-+	help
-+	  When CBD_CRC is enabled, all data sent by CBD will include
-+	  a checksum. This includes a data checksum, a submit entry checksum,
-+	  and a completion entry checksum. This ensures the integrity of the
-+	  data transmitted through the CXL memory device.
-+
-+config CBD_DEBUG
-+	bool "Enable CBD debug"
-+	default N
-+	depends on BLK_DEV_CBD
-+	help
-+	  When CBD_DEBUG is enabled, cbd module will print more messages
-+	  for debugging. But that will affact performance, so do not use it
-+	  in production case.
-+
-+config CBD_MULTIHOST
-+	bool "multi-hosts CXL Dlock Device"
-+	default N
-+	depends on BLK_DEV_CBD
-+	help
-+	  When CBD_MULTIHOST is enabled, cbd allows the use of a shared memory device
-+	  as a cbd transport. In this mode, the blkdev and backends on different
-+	  hosts can be connected through the shared memory device, enabling cross-node
-+	  disk access.
-+
-+	  IMPORTANT: This Require your shared memory device support Hardware-consistency
-+	  as CXL 3.0 described.
-diff --git a/drivers/block/cbd/Makefile b/drivers/block/cbd/Makefile
-new file mode 100644
-index 000000000000..ee61f7e2b978
---- /dev/null
-+++ b/drivers/block/cbd/Makefile
-@@ -0,0 +1,3 @@
-+cbd-y := cbd_main.o cbd_transport.o cbd_channel.o cbd_host.o cbd_backend.o cbd_handler.o cbd_blkdev.o cbd_queue.o cbd_segment.o cbd_cache.o
-+
-+obj-$(CONFIG_BLK_DEV_CBD) += cbd.o
-diff --git a/drivers/block/cbd/cbd_main.c b/drivers/block/cbd/cbd_main.c
-new file mode 100644
-index 000000000000..066596ca9b82
---- /dev/null
-+++ b/drivers/block/cbd/cbd_main.c
-@@ -0,0 +1,224 @@
-+/*
-+ * Copyright(C) 2024, Dongsheng Yang <dongsheng.yang@linux.dev>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/blk-mq.h>
-+#include <linux/blkdev.h>
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/bio.h>
-+#include <linux/module.h>
-+#include <linux/blk-mq.h>
-+#include <linux/fs.h>
-+#include <linux/blkdev.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <linux/workqueue.h>
-+#include <linux/delay.h>
-+#include <net/genetlink.h>
-+
-+#include <linux/types.h>
-+
-+#include "cbd_internal.h"
-+
-+struct workqueue_struct	*cbd_wq;
-+
-+enum {
-+	CBDT_REG_OPT_ERR		= 0,
-+	CBDT_REG_OPT_FORCE,
-+	CBDT_REG_OPT_FORMAT,
-+	CBDT_REG_OPT_PATH,
-+	CBDT_REG_OPT_HOSTNAME,
-+};
-+
-+static const match_table_t register_opt_tokens = {
-+	{ CBDT_REG_OPT_FORCE,		"force=%u" },
-+	{ CBDT_REG_OPT_FORMAT,		"format=%u" },
-+	{ CBDT_REG_OPT_PATH,		"path=%s" },
-+	{ CBDT_REG_OPT_HOSTNAME,	"hostname=%s" },
-+	{ CBDT_REG_OPT_ERR,		NULL	}
-+};
-+
-+static int parse_register_options(
-+		char *buf,
-+		struct cbdt_register_options *opts)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *o, *p;
-+	int token, ret = 0;
-+
-+	o = buf;
-+
-+	while ((p = strsep(&o, ",\n")) != NULL) {
-+		if (!*p)
-+			continue;
-+
-+		token = match_token(p, register_opt_tokens, args);
-+		switch (token) {
-+		case CBDT_REG_OPT_PATH:
-+			if (match_strlcpy(opts->path, &args[0],
-+				CBD_PATH_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		case CBDT_REG_OPT_FORCE:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->force = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_FORMAT:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->format = (token != 0);
-+			break;
-+		case CBDT_REG_OPT_HOSTNAME:
-+			if (match_strlcpy(opts->hostname, &args[0],
-+				CBD_NAME_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		default:
-+			pr_err("unknown parameter or missing value '%s'\n", p);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+static ssize_t transport_unregister_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	u32 transport_id;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (sscanf(ubuf, "transport_id=%u", &transport_id) != 1)
-+		return -EINVAL;
-+
-+	ret = cbdt_unregister(transport_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static ssize_t transport_register_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	struct cbdt_register_options opts = { 0 };
-+	char *buf;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
-+	if (IS_ERR(buf)) {
-+		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
-+		return PTR_ERR(buf);
-+	}
-+	buf[size] = '\0';
-+
-+	ret = parse_register_options(buf, &opts);
-+	if (ret < 0) {
-+		kfree(buf);
-+		return ret;
-+	}
-+	kfree(buf);
-+
-+	ret = cbdt_register(&opts);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static BUS_ATTR_WO(transport_unregister);
-+static BUS_ATTR_WO(transport_register);
-+
-+static struct attribute *cbd_bus_attrs[] = {
-+	&bus_attr_transport_unregister.attr,
-+	&bus_attr_transport_register.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cbd_bus_group = {
-+	.attrs = cbd_bus_attrs,
-+};
-+__ATTRIBUTE_GROUPS(cbd_bus);
-+
-+const struct bus_type cbd_bus_type = {
-+	.name		= "cbd",
-+	.bus_groups	= cbd_bus_groups,
-+};
-+
-+static void cbd_root_dev_release(struct device *dev)
-+{
-+}
-+
-+struct device cbd_root_dev = {
-+	.init_name =    "cbd",
-+	.release =      cbd_root_dev_release,
-+};
-+
-+static int __init cbd_init(void)
-+{
-+	int ret;
-+
-+	cbd_wq = alloc_workqueue(CBD_DRV_NAME, WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
-+	if (!cbd_wq)
-+		return -ENOMEM;
-+
-+	ret = device_register(&cbd_root_dev);
-+	if (ret < 0) {
-+		put_device(&cbd_root_dev);
-+		goto destroy_wq;
-+	}
-+
-+	ret = bus_register(&cbd_bus_type);
-+	if (ret < 0)
-+		goto device_unregister;
-+
-+	ret = cbd_blkdev_init();
-+	if (ret < 0)
-+		goto bus_unregister;
-+
-+	return 0;
-+
-+bus_unregister:
-+	bus_unregister(&cbd_bus_type);
-+device_unregister:
-+	device_unregister(&cbd_root_dev);
-+destroy_wq:
-+	destroy_workqueue(cbd_wq);
-+
-+	return ret;
-+}
-+
-+static void cbd_exit(void)
-+{
-+	cbd_blkdev_exit();
-+	bus_unregister(&cbd_bus_type);
-+	device_unregister(&cbd_root_dev);
-+
-+	destroy_workqueue(cbd_wq);
-+}
-+
-+MODULE_AUTHOR("Dongsheng Yang <dongsheng.yang@linux.dev>");
-+MODULE_DESCRIPTION("CXL(Compute Express Link) Block Device");
-+MODULE_LICENSE("GPL v2");
-+module_init(cbd_init);
-+module_exit(cbd_exit);
--- 
-2.34.1
+> 
+> Jonathan
+>  
+> > J
+> > On Sun, 18 Aug 2024 21:12:34 -0500
+> > John Groves <John@groves.net> wrote:
+> >   
+> > > On 24/08/15 05:22PM, Jonathan Cameron wrote:    
+> > > > Introduction
+> > > > ============
+> > > >
+> > > > If we think application specific memory (including inter-host shared memory) is
+> > > > a thing, it will also be a thing people want to use with virtual machines,
+> > > > potentially nested. So how do we present it at the Host to VM boundary?
+> > > >
+> > > > This RFC is perhaps premature given we haven't yet merged upstream support for
+> > > > the bare metal case. However I'd like to get the discussion going given we've
+> > > > touched briefly on this in a number of CXL sync calls and it is clear no one is    
+> > >
+> > > Excellent write-up, thanks Jonathan.
+> > >
+> > > Hannes' idea of an in-person discussion at LPC is a great idea - count me in.    
+> > 
+> > Had a feeling you might say that ;)
+> >   
+> > >
+> > > As the proprietor of famfs [1] I have many thoughts.
+> > >
+> > > First, I like the concept of application-specific memory (ASM), but I wonder
+> > > if there might be a better term for it. ASM suggests that there is one
+> > > application, but I'd suggest that a more concise statement of the concept
+> > > is that the Linux kernel never accesses or mutates the memory - even though
+> > > multiple apps might share it (e.g. via famfs). It's a subtle point, but
+> > > an important one for RAS etc. ASM might better be called non-kernel-managed
+> > > memory - though that name does not have as good a ring to it. Will mull this
+> > > over further...    
+> > 
+> > Naming is always the hard bit :)  I agree that one doesn't work for
+> > shared capacity. You can tell I didn't start there :)
+> >   
+> > >
+> > > Now a few level-setting comments on CXL and Dynamic Capacity Devices (DCDs),
+> > > some of which will be obvious to many of you:
+> > >
+> > > * A DCD is just a memory device with an allocator and host-level
+> > >   access-control built in.
+> > > * Usable memory from a DCD is not available until the fabric manger (likely
+> > >   on behalf of an orchestrator) performs an Initiate Dynamic Capacity Add
+> > >   command to the DCD.
+> > > * A DCD allocation has a tag (uuid) which is the invariant way of identifying
+> > >   the memory from that allocation.
+> > > * The tag becomes known to the host from the DCD extents provided via
+> > >   a CXL event following succesful allocation.
+> > > * The memory associated with a tagged allocation will surface as a dax device
+> > >   on each host that has access to it. But of course dax device naming &
+> > >   numbering won't be consistent across separate hosts - so we need to use
+> > >   the uuid's to find specific memory.
+> > >
+> > > A few less foundational observations:
+> > >
+> > > * It does not make sense to "online" shared or sharable memory as system-ram,
+> > >   because system-ram gets zeroed, which blows up use cases for sharable memory.
+> > >   So the default for sharable memory must be devdax mode.    
+> > (CXL specific diversion)
+> > 
+> > Absolutely agree this this. There is a 'corner' that irritates me in the spec though
+> > which is that there is no distinction between shareable and shared capacity.
+> > If we are in a constrained setup with limited HPA or DPA space, we may not want
+> > to have separate DCD regions for these.  Thus it is plausible that an orchestrator
+> > might tell a memory appliance to present memory for general use and yet it
+> > surfaces as shareable.  So there may need to be an opt in path at least for
+> > going ahead and using this memory as normal RAM.
+> >   
+> > > * Tags are mandatory for sharable allocations, and allowed but optional for
+> > >   non-sharable allocations. The implication is that non-sharable allocations
+> > >   may get onlined automatically as system-ram, so we don't need a namespace
+> > >   for those. (I argued for mandatory tags on all allocations - hey you don't
+> > >   have to use them - but encountered objections and dropped it.)
+> > > * CXL access control only goes to host root ports; CXL has no concept of
+> > >   giving access to a VM. So some component on a host (perhaps logically
+> > >   an orchestrator component) needs to plumb memory to VMs as appropriate.    
+> > 
+> > Yes.  It's some mashup of an orchestrator and VMM / libvirt, local library
+> > of your choice. We can just group into into the ill defined concept of
+> > a distributed orchestrator.
+> >   
+> > >
+> > > So tags are a namespace to find specific memory "allocations" (which in the
+> > > CXL consortium, we usually refer to as "tagged capacity").
+> > >
+> > > In an orchestrated environment, the orchestrator would allocate resources
+> > > (including tagged memory capacity), make that capacity visible on the right
+> > > host(s), and then provide the tag when starting the app if needed.
+> > >
+> > > if (e.g.) the memory cotains a famfs file system, famfs needs the uuid of the
+> > > root memory allocation to find the right memory device. Once mounted, it's a
+> > > file sytem so apps can be directed to the mount path. Apps that consume the
+> > > dax devices directly also need the uuid because /dev/dax0.0 is not invariant
+> > > across a cluster...
+> > >
+> > > I have been assuming that when the CXL stack discovers a new DCD allocation,
+> > > it will configure the devdax device and provide some way to find it by tag.
+> > > /sys/cxl/<tag>/dev or whatever. That works as far as it goes, but I'm coming
+> > > around to thinking that the uuid-to-dax map should not be overtly CXL-specific.    
+> > 
+> > Agreed. Whether that's a nice kernel side thing, or a utility pulling data
+> > from various kernel subsystem interfaces doesn't really matter. I'd prefer
+> > the kernel presents this but maybe that won't work for some reason.
+> >   
+> > >
+> > > General thoughts regarding VMs and qemu
+> > >
+> > > Physical connections to CXL memory are handled by physical servers. I don't
+> > > think there is a scenario in which a VM should interact directly with the
+> > > pcie function(s) of CXL devices. They will be configured as dax devices
+> > > (findable by their tags!) by the host OS, and should be provided to VMs
+> > > (when appropriate) as DAX devices. And software in a VM needs to be able to
+> > > find the right DAX device the same way it would running on bare metal - by
+> > > the tag.    
+> > 
+> > Limiting to typical type 3 memory pool devices. Agreed. The other CXL device
+> > types are a can or worms for another day.
+> >   
+> > >
+> > > Qemu can already get memory from files (-object memory-backend-file,...), and
+> > > I believe this works whether it's an actual file or a devdax device. So far,
+> > > so good.
+> > >
+> > > Qemu can back a virtual pmem device by one of these, but currently (AFAIK)
+> > > not a virtual devdax device. I think virtual devdax is needed as a first-class
+> > > abstraction. If we can add the tag as a property of the memory-backend-file,
+> > > we're almost there - we just need away to lookup a daxdev by tag.    
+> > 
+> > I'm not sure that is simple. We'd need to define a new interface capable of:
+> > 1) Hotplug - potentially of many separate regions (think nested VMs).
+> >    That more or less rules out using separate devices on a discoverable hotpluggable
+> >    bus. We'd run out of bus numbers too quickly if putting them on PCI.
+> >    ACPI style hotplug is worse because we have to provision slots at the outset.
+> > 2) Runtime provision of metadata - performance data very least (bandwidth /
+> >    latency etc). In theory could wire up ACPI _HMA but no one has ever bothered.
+> > 3) Probably do want async error signaling.  We 'could' do that with
+> >    FW first error injection - I'm not sure it's a good idea but it's definitely
+> >    an option.
+> > 
+> > A locked down CXL device is a bit more than that, but not very much more.
+> > It's easy to fake registers for things that are always in one state so
+> > that the software stack is happy.
+> > 
+> > virtio-mem has some of the parts and could perhaps be augmented
+> > to support this use case with the advantage of no implicit tie to CXL.
+> > 
+> >   
+> > >
+> > > Summary thoughts:
+> > >
+> > > * A mechanism for resolving tags to "tagged capacity" devdax devices is
+> > >   essential (and I don't think there are specific proposals about this
+> > >   mechanism so far).    
+> > 
+> > Agreed.
+> >   
+> > > * Said mechanism should not be explicitly CXL-specific.    
+> > 
+> > Somewhat agreed, but I don't want to invent a new spec just to avoid explicit
+> > ties to CXL. I'm not against using CXL to present HBM / ACPI Specific Purpose
+> > memory for example to a VM. It will trivially work if that is what a user
+> > wants to do and also illustrates that this stuff doesn't necessarily just
+> > apply to capacity on a memory pool - it might just be 'weird' memory on the host.
+> >   
+> > > * Finding a tagged capacity devdax device in a VM should work the same as it
+> > >   does running on bare metal.    
+> > 
+> > Absolutely - that's a requirement.
+> >   
+> > > * The file-backed (and devdax-backed) devdax abstraction is needed in qemu.    
+> > 
+> > Maybe. I'm not convinced the abstraction is needed at that particular level.
+> >   
+> > > * Beyond that, I'm not yet sure what the lookup mechanism should be. Extra
+> > >   points for being easy to implement in both physical and virtual systems.    
+> > 
+> > For physical systems we aren't going to get agreement :(  For the systems
+> > I have visibility of there will be some diversity in hardware, but the
+> > presentation to userspace and up consistency should be doable.
+> > 
+> > Jonathan
+> >   
+> > >
+> > > Thanks for teeing this up!
+> > > John
+> > >
+> > >
+> > > [1] https://github.com/cxl-micron-reskit/famfs/blob/master/README.md
+> > >    
+> > 
+> > 
+> >   
+> 
 
