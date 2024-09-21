@@ -1,83 +1,81 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2074.outbound.protection.outlook.com [40.107.236.74])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2048.outbound.protection.outlook.com [40.107.243.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A1C18E347;
-	Fri, 20 Sep 2024 22:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B851238F9C;
+	Sat, 21 Sep 2024 07:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726871732; cv=fail; b=YRTpHC8fEsFwC90UeGLtizOUBbVF5I27AjhgMtn4QnOcIDImCwj4Z7SWLjZyITWC4FLJAlMfFb/DyPoPrpSps1+fCChOlciC78klnzz1JRe29QuSU8LYANdwQLho898USeSMoDowJbMVAsU4PjlcHGFmPD0C8rDI0DGK9M4heu8=
+	t=1726902893; cv=fail; b=mzCCkY3rtvljtWJoFHsiIKtbrWLS8LHw7znkAxM5+VlYhMLkbxwAawWdR45LbELqmZCdwSKAIpTcvLbIQhLi6Z+i5tu4vLZ33DEQ0JK+UHkzP26IG86Kw/dFKxcVdfUPOBMSziQeM9oPtgi4anfr1IYv3QRmsqVJgot5WOVM5wE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726871732; c=relaxed/simple;
-	bh=KSVOTVWhQ7FOBawrx6yHcRPfDw6BIR/lcjz14rPP/d0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O1Pm22VTlmF0bao/jHFNtcOC40ZgY0E2nEISc55HMgGNiagupljdFo/J87qPvSTKrZi37W76qkGa9OcLhY1L7gBwCbfTvrn5EjWUoMcw6OGjoOgYBSLu9EYugJVmrhfRGjwj54FXbw/jTpgqGqyFeMhB8gJv2njr9vWiDxeJhB4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aJfKteDs; arc=fail smtp.client-ip=40.107.236.74
+	s=arc-20240116; t=1726902893; c=relaxed/simple;
+	bh=4RbXD9hHsRcsFVEikqardya2+gAqsY+kKbi2KJjYJyY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AEJ6zkrAYyzmrgS7aZ1zuADz1mCu3zHokUz0BsP/51k+hg0cuwcZIvgb50MExdXgZebXto0yqxGIpQ6iCh86MM6EqQr8t3gXIPK8p+1mS28G7ORyPePAwdeeqCSeM+x+Xgg+I3et7Syf4kwl4POVmdpGeRZMLGDy948eQlEMh3Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Fy4onrKX; arc=fail smtp.client-ip=40.107.243.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aJfKteDs"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Fy4onrKX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZvPoCa0OPf9iRiP+eTpqvQuulL62+vPROeVxBB80jnqcFHYgLQDhYI39SXWL0TJBK6SexuFIxfeIT7rqk9iFEV3kjSTXUdooMhcScW6YXvOeaG59QghcPnXp4aQXqVZyoJ0Eq6drZG2v7DDKWwPeAaAKdHYPmNxZk1/BKzchOdoHRnetU2LG8peg3yu5lc1Flit+2GUO7WrpiTS5K3NdZ5pJyWY6gA60Jrn/F+JYqC7eW+/0obViMurrleyo0jSVZJv/Tktq/vfF611Ee9roDAaRwC8oleBIn4UsQT29iyI+fGtP2D35SDFJt71Q1mdBD/S0vVgn84uX6R9VsmzYEg==
+ b=tMPhbPoWZpyr0wrDIGtwI9EzrVrrPTuSlU8qp/W1B/gQfdbkpflUF+TwlrtjudfJmFLh1rlmP2xt6FltncnSenqoS3M+nhYfD/fN5kqfO53+Pe0DgZfFhgMsBzerPw5w6KG6MOAcDW4VFgDhFgyvqHDg1GDFAIU7fuqNyj7fNdRSYfkWj8vkQQRTE5GgW+EPGJgxu4u3lR/x4D+C/42n6y2oWs9KWjETzAFdBfiYOIJVq6tq3Zq3Fe7ZbLBRpFUwJozrAfZNYCLb4gqNfrp0NLJHjHpOm5vPEY9HWzOobL/ff3KRP6ZQ4rbXYafRIwdTeEda+N0fEozlNUiQWSr8MA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jj6vIJHUIuEGQEoT6g/SGfa4v6kHpkW+QLMs33NhB6w=;
- b=bxhqgAU2f+b9gOd2JzP5Fc/2tR3LO8XX0pRVPDpxATzLv4+3tafhuaUoYIBP4xPkmoQMJF+BT1nc70izUYfEF/yGkq21iiXmCBI2ITaFOYuo38ZcoVHfRmr9lEkP5ClT/nKS4nyPenxjrzP3+WLsAxFGhBGUacUSDPrbMFAPijd24yfIs4MJi+NxcNGvd4LljXiw57A9gyQiojGeJCYmc8izxuR3ZxmyY8UPRLLDx1feHHhdJs0BzeO4jpFFsCr2LzjrRDAS47MzURZezKOiQ3NGY87VQ+xc2Zfwp7EzNy6G/BwuYE4HhU9fm/2amrPoufGFZMclGdHwZyE9xBJpNg==
+ bh=XBDwVbLm6vfmJFsa/Q0ax92YXqeWMa5oxkcvuAdppBs=;
+ b=gQcIpXWKGy8Pj/0O2ET1EuiAOFtlW5GfhjZsXDKzH7j9VyjE6q8MbLBefxRNvTr8aCVf79yFcjh5nkqOTmJ79UCezASRZOnV+9dimlDNVQ+mnzwV/zUlMuXsGe9iL9bjBaY9bj5GcuzIJen3HYKGZFALC0ucRrgKrnY4j1QBeJabTxGPDIsNH2Xk43nrQwej9ddGhVJ1iu7erV2xof2FBVnxmyBus/2SzBMp5zluuFtUrWSc4M78TwtgZYuazJVMBjEDCZIuPk1kZR2oUEl64ijSRL0OsQinXrFDZJQCjf4eDdB5VFX197pEInsZvXVtzl51mb0lCvZzAayn9mdXig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jj6vIJHUIuEGQEoT6g/SGfa4v6kHpkW+QLMs33NhB6w=;
- b=aJfKteDsN9bS2lXhLEdkjndT0NLl/yhtjtjp+yNXWTjBUmELWLpTX/V5L6NqVxF86AZjnLqJvhmzeniGBH7Ulhc6i2BJ1tWNdXR+l9ZzG56QxI1DFZsInr5om8LLOlqIWSA03KwQyUxHpbSyQnS7AwCZk5IqdlvV4JZ2yGScBxi3+sCbErzgHhL3HgTgVF9fvn7G/QbsZ1GwmhUBA2riDF7ve6C8E+tPdL7qlfOhoRM527dJTUe9QTzbFEvYNTyxyfuskztN6jRh6B1oAtvVFrMxGWIlgNFRJxoGVkKAR3dgppo73LMXnLcKTo5PfEJdKUIuHbC/2ZBpo47AHblbyQ==
-Received: from CY5PR19CA0119.namprd19.prod.outlook.com (2603:10b6:930:64::13)
- by MN0PR12MB5788.namprd12.prod.outlook.com (2603:10b6:208:377::5) with
+ bh=XBDwVbLm6vfmJFsa/Q0ax92YXqeWMa5oxkcvuAdppBs=;
+ b=Fy4onrKX83K3EpxpMaONYgu9K4QfB+BP2D3UHwvHsCC99OFrVKL2uKPBI1hwYgNBS05kygdosi5EB7mL2HRpBuWFy6y97KKo+WQuts+jjVycWPcHiWr4apWBPIPKbC0+Katb7uxkXgjIC3jFFUBZPccIhJBoJmqycSG5BeVwNCwco+vr7NMPANK7b2zeB9mqNIB6nGQtXHLR7A2pSE3/Knp2F7SZ09INy0dnRIrlLIBrvq+LkIqYIuKcGz9x5QJ9sVzo2ki+WBYUrQh8+YFcxUSv1zbGng/hi8LQPKwlKG5YVz9LlAJwTVMiDLClERBTJCF7VVpbMilReGGBDiBV1w==
+Received: from CH0PR03CA0362.namprd03.prod.outlook.com (2603:10b6:610:119::9)
+ by CY8PR12MB7099.namprd12.prod.outlook.com (2603:10b6:930:61::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.22; Fri, 20 Sep
- 2024 22:35:23 +0000
-Received: from CY4PEPF0000E9D3.namprd03.prod.outlook.com
- (2603:10b6:930:64:cafe::6c) by CY5PR19CA0119.outlook.office365.com
- (2603:10b6:930:64::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.30 via Frontend
- Transport; Fri, 20 Sep 2024 22:35:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.17; Sat, 21 Sep
+ 2024 07:14:48 +0000
+Received: from CH2PEPF0000013E.namprd02.prod.outlook.com
+ (2603:10b6:610:119:cafe::3c) by CH0PR03CA0362.outlook.office365.com
+ (2603:10b6:610:119::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.29 via Frontend
+ Transport; Sat, 21 Sep 2024 07:14:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CY4PEPF0000E9D3.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH2PEPF0000013E.mail.protection.outlook.com (10.167.244.70) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7918.13 via Frontend Transport; Fri, 20 Sep 2024 22:35:23 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 20 Sep
- 2024 15:35:06 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 20 Sep
- 2024 15:35:06 -0700
+ 15.20.7918.13 via Frontend Transport; Sat, 21 Sep 2024 07:14:47 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sat, 21 Sep
+ 2024 00:14:44 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sat, 21 Sep
+ 2024 00:14:43 -0700
 Received: from inno-linux.nvidia.com (10.127.8.13) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 20 Sep 2024 15:35:05 -0700
+ (10.129.68.7) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sat, 21 Sep 2024 00:14:42 -0700
 From: Zhi Wang <zhiw@nvidia.com>
 To: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>
 CC: <alex.williamson@redhat.com>, <kevin.tian@intel.com>, <jgg@nvidia.com>,
 	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
 	<dave.jiang@intel.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
 	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<acurrid@nvidia.com>, <cjia@nvidia.com>, <smitra@nvidia.com>,
-	<ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
-	<targupta@nvidia.com>, <zhiw@nvidia.com>, <zhiwang@kernel.org>
-Subject: [RFC 12/13] vfio/cxl: VFIO variant driver for QEMU CXL accel device
-Date: Fri, 20 Sep 2024 15:34:45 -0700
-Message-ID: <20240920223446.1908673-13-zhiw@nvidia.com>
+	<clg@redhat.com>, <qemu-devel@nongnu.org>, <acurrid@nvidia.com>,
+	<cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
+	<aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
+	<zhiw@nvidia.com>, <zhiwang@kernel.org>
+Subject: [RFC 0/1] Introduce vfio-cxl to support CXL type-2 device passthrough
+Date: Sat, 21 Sep 2024 00:14:39 -0700
+Message-ID: <20240921071440.1915876-1-zhiw@nvidia.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240920223446.1908673-1-zhiw@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,233 +87,79 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D3:EE_|MN0PR12MB5788:EE_
-X-MS-Office365-Filtering-Correlation-Id: b602c0b5-eaa5-4c8f-3421-08dcd9c48464
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013E:EE_|CY8PR12MB7099:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57cae869-804a-4a0b-c45a-08dcda0d13c8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|376014|1800799024|36860700013;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UnuJ4auzK0KCUzTxLahkH4nblPEkaAQwevxzn3jJ6pKocSeCicS/KQqVqlHN?=
- =?us-ascii?Q?u7NxX+L+eFM5mhesUqGl7sk19clkOSspDB6dWd1JesWZ2Au6PjicKIgAwiPy?=
- =?us-ascii?Q?cPMzjLLDnLMf3mtPnZyXOsPnamvki+JFKyEVduqVsWehmo9NcLKzTVpUJqYh?=
- =?us-ascii?Q?nXRTtZcY0ITaeFK6MrJCa0b50Lp+q/lyz0j3louNaRoWPPs/F2NEwlDH9/kA?=
- =?us-ascii?Q?VcaN6FcX64EQfqh5vp+FDlZFIzoEFmx9AJ81BRWLhqN2yzJFF3O9Sj7L6WfU?=
- =?us-ascii?Q?FkFB0D6r3S5SLmZOjsfNd3cCXiEdYIFeYzdQ1ygPXnfPdZvuqBwVze8aV5ja?=
- =?us-ascii?Q?MFmp4UrIWxFM4Enxzcgl5/v6XLome63Oj49chVMfJK7azSlGhBMbLAzhtXTi?=
- =?us-ascii?Q?yytacJuK5rHmXSd0FbRv+Z+CswYqaSOE9Ih00ujt8vHE6/ygJeKq9folAfRa?=
- =?us-ascii?Q?i3ok99Q6ipx9Eyoz1miVLEpZCy8sXGVlhXe1Guug+cK1CH4vxvMz2KvlGa2j?=
- =?us-ascii?Q?DtPNTHj2oYIlhSUA+C3L0JKXwcvm3d7owHKoMgZkWcCGEhlpadSKrW+kouIF?=
- =?us-ascii?Q?77RIoxeieTZ4BRuOnNX+NxO2M0KhsHFgxz2BOX114mTjFAV/LhYFkjh07mqS?=
- =?us-ascii?Q?qfUZn7YcMvwrKDlxlZDb/5JJ06iO35mSYIfmqWehlYE4o3PGsUx/jpMhjBWU?=
- =?us-ascii?Q?TjwKYvGu3Rzsrm4vf48xSOIEs74XBmDj4fc/MsQufhO0rg/5VemNMOSgEatj?=
- =?us-ascii?Q?DlYW0rWxR/T0KbMW+qMOe4GFZN0P9e/BgPzgl2C+Y0/JJvMqnnXZJG/3mQjO?=
- =?us-ascii?Q?oshlU8kBeISu7IGG5x9KbbPYW4x+Y6DMcvKxu1STp06v/bblnJ6nYU6tJK54?=
- =?us-ascii?Q?cfpjm1bcmAMDZUExifv0srGtkSUuQilIeZ1GN6q/RS5oADTgpyDnK9rvjZhG?=
- =?us-ascii?Q?o9jEJHHIHjMsstr5nIl4pyvUSpUA9badviyoVS1QtjOw26AXgFR0YT6gd+ZM?=
- =?us-ascii?Q?HWwCWXSPCFjXJkqKMsevRiSCMEvtPQsg9vss/pDkZoQo53B02ainTn+Ku4k4?=
- =?us-ascii?Q?htmNOY33uWVpaMVT/H4pwyIQtt2tHdeBk/J2cpvb3kRp4WcL8VGXENprCYiv?=
- =?us-ascii?Q?iPL94OcBGJaBsvcJsexvG/+QKNqCPJVsbjoi2BnqWY5rm4KHtoIO5CqWB+pg?=
- =?us-ascii?Q?wxKRp4KB+4eoBh1mqXjpV/L05Xz+ckqf3S+nlqmrlNxTFHZESy9hAm+qHDxi?=
- =?us-ascii?Q?gd1Yfax5kdBiqiOUDKuSSSK27/T2XkVLDykJv3C/HI19TmA1KJYQsuHTuPWz?=
- =?us-ascii?Q?aKU+6jxdn2wcp4Ou1Yr/OpR+SxZ6o4ZCOs31jb6//v50DbN6wwX4u+x7zgs5?=
- =?us-ascii?Q?hYDrgw+vCXxWv1S7lQEjo3fFm8SD+JOwdh8kNvMefWan2dpVFQfd6IuQH3AG?=
- =?us-ascii?Q?XPgDUIAbzSpr29abhtgk2x+y9Z627RqN?=
+	=?us-ascii?Q?2m2zj3KceAhytFwKNfodHFQ1sffwZ9NEYW6d8zVZfny28b4xUv/Mvl91HnhT?=
+ =?us-ascii?Q?wNXDv+CgTIQfRhNFAmaOlXlCH/s72aDjUr51Fv6N56AIa2TdyNeD+L5QmtAg?=
+ =?us-ascii?Q?WBU+si2c703+z/wHwZr56eoAd3dGZ6dNFZ/modIinaE8XUAXngCSXfm56GlG?=
+ =?us-ascii?Q?MD5ylivNpRWL9I49yMevi3nO6L1mrPo1SgC1+iCWaIpK4eXPn1Y0x2IJ4qlQ?=
+ =?us-ascii?Q?uTDp/C/CWGNTQZmvGyhLpz8yIjc8N7DhJbPdF3uKzwyatgtioVHjA1mhE/fz?=
+ =?us-ascii?Q?Y/SNjDydrDaUntJHhsYlBBDY1HPtLFi8oFMYamOw1YY9bTGPXRh3ES0owDoP?=
+ =?us-ascii?Q?2Nsvlc9SNa79YjHypfCQ8wtJZaNqO0pRwjTNwrh2kYzztSj/+kTetnNcgcvP?=
+ =?us-ascii?Q?NEuxy/jDgHxEry0Yznggv+LT+dDV6KZ/sbfxRtoz2z2MSQxSK4zElbcYscZw?=
+ =?us-ascii?Q?hYvVIJrl8sc9I5PyXuZT7ubSomnvKIXkENMs7/1vc1v0qIzPHNFcVZOYGYWe?=
+ =?us-ascii?Q?xhBF0HHrLkEaGy7kshJe1CDvfBD1IKihCYwltzjBdAlVJW/5vWaHAmI+cYze?=
+ =?us-ascii?Q?ikGIzv/TNMuNW9o8k5DPGRVkPsSgMjzBjIAUTkBh9YQTSJZjph2Dcx1ZD+2N?=
+ =?us-ascii?Q?GOMQ0h4zP5OOeamPdORl1r2VQjSchyTjiCyccz++CqDZF4IW+tE/w3o4dNOY?=
+ =?us-ascii?Q?X5Gd+SYl8a6oA6BKSP3KdggOp1Y4p+CwFVs23NToCpTOZRjfkUMPwLTPFzFw?=
+ =?us-ascii?Q?dA24um8LRP61+VoZozD5yBVOhDSdpVKqS5boLuR22lNdLCHt8c4sHrhwbrCK?=
+ =?us-ascii?Q?RWiifbm15XYCH3V8b5OHr9MCPhqiG4IYcYizTG8cfbJ9GaddnnH7YmWBYPU+?=
+ =?us-ascii?Q?K9YwOQVSunfakLvCu2KjD3V3dEq4KP/PaD94WF0GRG36//USppEwFIgYyH3l?=
+ =?us-ascii?Q?vp1DvUNwqeRf1xYIjT8reKclZJihFASVeFnDSO3DQYL/w7ggdZyw7s8bOky4?=
+ =?us-ascii?Q?nEWfpidP5pU+0f3ecQKHOZ4hbAaTgqhD276NartHIu36aLvjEs1FyusQg3Ne?=
+ =?us-ascii?Q?VpjxM3lcFJFFuZFzXM3ILez7V2lxxfNV8eLg4SfD9tOH5xE2mF6JvsvL2/Ib?=
+ =?us-ascii?Q?dfzyPLFlLMA8JI8wDJ4IgNrEL+8ZpPSrC5pxu9ZmItAQbSGBPKVIUPC5PJIu?=
+ =?us-ascii?Q?059AzwAAVlmpvBY1kUrVamuLO4E4H0AnbSUejz+olwo85LjzdjkyWzIxx8EC?=
+ =?us-ascii?Q?I4MOnVWUeCAqsEYyk0Bz+Q62tDVlhopg6gPnmrvbS+CnSnVG2ujimztc9KA5?=
+ =?us-ascii?Q?K0mwvLFGxuOAQ8t6/r1JQbHdAxwx5KGjvrID23Aga92sIZKhgb7ZIZQL1mvh?=
+ =?us-ascii?Q?fVTD81ujERap+WHbR8rJ9XWoVj2Q?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2024 22:35:23.6338
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2024 07:14:47.9559
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b602c0b5-eaa5-4c8f-3421-08dcd9c48464
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57cae869-804a-4a0b-c45a-08dcda0d13c8
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D3.namprd03.prod.outlook.com
+	CH2PEPF0000013E.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5788
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7099
 
-To demostrate the VFIO CXL core, a VFIO variant driver for QEMU CXL
-accel device is introduced, so that people to test can try the patches.
+Compute Express Link (CXL) is an open standard interconnect built upon
+industrial PCI layers to enhance the performance and efficiency of data
+centers by enabling high-speed, low-latency communication between CPUs
+and various types of devices such as accelerators, memory.
 
-This patch is not meant to be merged.
+Although CXL is built upon the PCI layers, passing a CXL type-2 device can
+be different than PCI devices according to CXL specification. Thus,
+addtional changes on are required.
 
-Signed-off-by: Zhi Wang <zhiw@nvidia.com>
----
- drivers/vfio/pci/Kconfig            |   2 +
- drivers/vfio/pci/Makefile           |   2 +
- drivers/vfio/pci/cxl-accel/Kconfig  |   6 ++
- drivers/vfio/pci/cxl-accel/Makefile |   3 +
- drivers/vfio/pci/cxl-accel/main.c   | 116 ++++++++++++++++++++++++++++
- 5 files changed, 129 insertions(+)
- create mode 100644 drivers/vfio/pci/cxl-accel/Kconfig
- create mode 100644 drivers/vfio/pci/cxl-accel/Makefile
- create mode 100644 drivers/vfio/pci/cxl-accel/main.c
+vfio-cxl is introduced to support the CXL type-2 device passthrough.
+This is the QEMU VFIOStub draft changes to support it.
 
-diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-index 2196e79b132b..9eebce09ffa2 100644
---- a/drivers/vfio/pci/Kconfig
-+++ b/drivers/vfio/pci/Kconfig
-@@ -75,4 +75,6 @@ source "drivers/vfio/pci/nvgrace-gpu/Kconfig"
- 
- source "drivers/vfio/pci/qat/Kconfig"
- 
-+source "drivers/vfio/pci/cxl-accel/Kconfig"
-+
- endmenu
-diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-index b51221b94b0b..03293b52c5e3 100644
---- a/drivers/vfio/pci/Makefile
-+++ b/drivers/vfio/pci/Makefile
-@@ -22,3 +22,5 @@ obj-$(CONFIG_VIRTIO_VFIO_PCI) += virtio/
- obj-$(CONFIG_NVGRACE_GPU_VFIO_PCI) += nvgrace-gpu/
- 
- obj-$(CONFIG_QAT_VFIO_PCI) += qat/
-+
-+obj-$(CONFIG_CXL_ACCEL_VFIO_PCI) += cxl-accel/
-diff --git a/drivers/vfio/pci/cxl-accel/Kconfig b/drivers/vfio/pci/cxl-accel/Kconfig
-new file mode 100644
-index 000000000000..c3c9d7ec7fa4
---- /dev/null
-+++ b/drivers/vfio/pci/cxl-accel/Kconfig
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config CXL_ACCEL_VFIO_PCI
-+	tristate "VFIO support for the QEMU CXL accel device"
-+	select VFIO_CXL_CORE
-+	help
-+	  If you don't know what to do here, say N.
-diff --git a/drivers/vfio/pci/cxl-accel/Makefile b/drivers/vfio/pci/cxl-accel/Makefile
-new file mode 100644
-index 000000000000..20f190482cc9
---- /dev/null
-+++ b/drivers/vfio/pci/cxl-accel/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_CXL_ACCEL_VFIO_PCI) += cxl-accel-vfio-pci.o
-+cxl-accel-vfio-pci-y := main.o
-diff --git a/drivers/vfio/pci/cxl-accel/main.c b/drivers/vfio/pci/cxl-accel/main.c
-new file mode 100644
-index 000000000000..1672fb9d9232
---- /dev/null
-+++ b/drivers/vfio/pci/cxl-accel/main.c
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
-+ */
-+
-+#include <linux/sizes.h>
-+#include <linux/vfio_pci_core.h>
-+
-+struct cxl_device {
-+	struct vfio_pci_core_device core_device;
-+};
-+
-+static int cxl_open_device(struct vfio_device *vdev)
-+{
-+	struct vfio_pci_core_device *core_dev =
-+		container_of(vdev, struct vfio_pci_core_device, vdev);
-+	struct resource res;
-+	int ret;
-+
-+	/* Provide the device infomation to the kernel CXL core.*/
-+	/* Device DPA */
-+	res = DEFINE_RES_MEM(0, SZ_256M);
-+	vfio_cxl_core_set_resource(core_dev, res, CXL_ACCEL_RES_DPA);
-+
-+	/* Device RAM */
-+	res = DEFINE_RES_MEM_NAMED(0, SZ_256M, "ram");
-+	vfio_cxl_core_set_resource(core_dev, res, CXL_ACCEL_RES_RAM);
-+
-+	/* The expected size of the CXL region to be created */
-+	vfio_cxl_core_set_region_size(core_dev, SZ_256M);
-+	vfio_cxl_core_set_driver_hdm_cap(core_dev);
-+
-+	/* Initailize the CXL device and enable the vfio-pci-core */
-+	ret = vfio_cxl_core_enable(core_dev);
-+	if (ret)
-+		return ret;
-+
-+	vfio_cxl_core_finish_enable(core_dev);
-+
-+	return 0;
-+}
-+
-+static const struct vfio_device_ops cxl_core_ops = {
-+	.name		= "cxl-vfio-pci",
-+	.init		= vfio_pci_core_init_dev,
-+	.release	= vfio_pci_core_release_dev,
-+	.open_device	= cxl_open_device,
-+	.close_device	= vfio_cxl_core_close_device,
-+	.ioctl		= vfio_pci_core_ioctl,
-+	.device_feature	= vfio_pci_core_ioctl_feature,
-+	.read		= vfio_cxl_core_read,
-+	.write		= vfio_cxl_core_write,
-+	.mmap		= vfio_pci_core_mmap,
-+	.request	= vfio_pci_core_request,
-+	.match		= vfio_pci_core_match,
-+	.bind_iommufd	= vfio_iommufd_physical_bind,
-+	.unbind_iommufd	= vfio_iommufd_physical_unbind,
-+	.attach_ioas	= vfio_iommufd_physical_attach_ioas,
-+	.detach_ioas	= vfio_iommufd_physical_detach_ioas,
-+};
-+
-+static int cxl_probe(struct pci_dev *pdev,
-+			     const struct pci_device_id *id)
-+{
-+	const struct vfio_device_ops *ops = &cxl_core_ops;
-+	struct cxl_device *cxl_device;
-+	int ret;
-+
-+	cxl_device = vfio_alloc_device(cxl_device, core_device.vdev,
-+				       &pdev->dev, ops);
-+	if (IS_ERR(cxl_device))
-+		return PTR_ERR(cxl_device);
-+
-+	dev_set_drvdata(&pdev->dev, &cxl_device->core_device);
-+
-+	ret = vfio_pci_core_register_device(&cxl_device->core_device);
-+	if (ret)
-+		goto out_put_vdev;
-+
-+	return ret;
-+
-+out_put_vdev:
-+	vfio_put_device(&cxl_device->core_device.vdev);
-+	return ret;
-+}
-+
-+static void cxl_remove(struct pci_dev *pdev)
-+{
-+	struct vfio_pci_core_device *core_device = dev_get_drvdata(&pdev->dev);
-+
-+	vfio_pci_core_unregister_device(core_device);
-+	vfio_put_device(&core_device->vdev);
-+}
-+
-+static const struct pci_device_id cxl_vfio_pci_table[] = {
-+	{ PCI_DRIVER_OVERRIDE_DEVICE_VFIO(PCI_VENDOR_ID_INTEL, 0xd94) },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(pci, cxl_vfio_pci_table);
-+
-+static struct pci_driver cxl_vfio_pci_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = cxl_vfio_pci_table,
-+	.probe = cxl_probe,
-+	.remove = cxl_remove,
-+	.err_handler = &vfio_pci_core_err_handlers,
-+	.driver_managed_dma = true,
-+};
-+
-+module_pci_driver(cxl_vfio_pci_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Zhi Wang <zhiw@nvidia.com>");
-+MODULE_DESCRIPTION("VFIO variant driver for QEMU CXL accel device");
-+MODULE_IMPORT_NS(CXL);
+More details (patches, repos, kernel config) all what you need to test
+and hack around, plus a demo video shows the kernel/QEMU command line
+can be found at:
+https://lore.kernel.org/kvm/20240920223446.1908673-7-zhiw@nvidia.com/T/
+
+Zhi Wang (1):
+  vfio: support CXL device in VFIO stub
+
+ hw/vfio/common.c              |   3 +
+ hw/vfio/pci.c                 | 134 ++++++++++++++++++++++++++++++++++
+ hw/vfio/pci.h                 |  10 +++
+ include/hw/pci/pci.h          |   2 +
+ include/hw/vfio/vfio-common.h |   1 +
+ linux-headers/linux/vfio.h    |  14 ++++
+ 6 files changed, 164 insertions(+)
+
 -- 
 2.34.1
 
