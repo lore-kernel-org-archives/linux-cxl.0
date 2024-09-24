@@ -1,37 +1,50 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F711A4F22;
-	Tue, 24 Sep 2024 16:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF80146D78
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Sep 2024 23:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727195738; cv=none; b=HknWXG4eDwe1vs2arivJMImLOmCuYYDeowqhI/R0P/zHCfMqgiVRo111cooYKGKLmjVOovxj/1bInHFjUQjqjK2R13KF5pA34gyB9uJEaG32A31QG6KKJX/eBZv+cSi1dXp8naWov5rTeAT9HOoaxxwXBfMQTra79B596hKsYR4=
+	t=1727221268; cv=none; b=peRzgukxYb6zsKV0NBhuSB/80IaqVe/wzSrhuCf2WU5wiQD20h81FcUkXE4C9fKlVyTvXisVR5svGpES1+SapbNeQfXKvt3DVmW1afkXiNwmwx+aZbIIUvJmG7/+jhTnWx/Ahhw3FNW3FL6+lbqTrf5es4PD5T7SS+sHZkRJhgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727195738; c=relaxed/simple;
-	bh=Lqr9ttKdTWKFzSzmRe08yrAUPtUn/VpHz6sP7K7/I7g=;
+	s=arc-20240116; t=1727221268; c=relaxed/simple;
+	bh=nsQDOpT++VquSK9yCSTqo6ydwK3PWSL0lSscIkhbtB4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZF2wwPdNyjqccWMDbZQJ7feghKU/JZQE8K3hdrRXxuktb/NIpc4Wci9P2KazCDp0W8yLRs8DPjjS9E6Fkqda67wmtncHhCCMpZXhFkLttc92FCdy7MaeAZwWpZWw/yOhK+l9QcmjniQs67CW8FXvJXGX3qX69Ux4NVqbp3tiBfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zj88v0t1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=YXlMrC9GQEhl3vEECso4X8uW1pU+cryMT1ST9NCnJ5LLv2ekdGDraaY0jstrZCDDxkIptbk1AXxJKfCbQS+TgoHhbo5kmCxnukJip3ahd9fxR5+EiGgvEFlynRQLw+O/CHAgZ3BLXFt0zfRAend7wgGzIyJ9dycp5bhv1oi+Vwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZdeeFMqi; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zj88v0t1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Wh1jAzeffZYy009nI33+/VcSQcTAyr6o4mJKc/jsMzk=; b=Zj88v0t1MY08AC1fTc/e1M+d67
-	0X+U4pGIrLH13AWv4CZQ39nUVuYW2aHHa+eIIePpw1hOmKPxjq6S68fzMe1HgZa1Un3GOjXALczmh
-	nz8KrbXP0IwG0LwcPjLCnVO628IgSgIIJ6DUbdPS/13i7cS+sUv/aXHEPVeZjtSLgjEWBXPKbb1Zo
-	N/8UlA1tme5VRGmt5FZ+DCRmOOuRhLzy/doIAqh848NvNjm/Y0zHJDl15W2LpPAL/wDrJJ2MJkKKR
-	tM5tFNfHqwPoa+NLI8JrAOfBlr5Dr1DiGmINErkgWPaM8freDCpJSI36yGk0oueuRX5U7zjE7NfzX
-	q0RS5uNw==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1st8VW-00000001reU-3Eva;
-	Tue, 24 Sep 2024 16:35:23 +0000
-Message-ID: <27bf8cff-83b6-4a41-923a-7713a847f979@infradead.org>
-Date: Tue, 24 Sep 2024 09:35:18 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZdeeFMqi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727221267; x=1758757267;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nsQDOpT++VquSK9yCSTqo6ydwK3PWSL0lSscIkhbtB4=;
+  b=ZdeeFMqixIgXY6Gwou7GLKT6i95oyMaqXmeJiCAJAc8BWEbx65TAI7Qb
+   raOfLtlFRu400WMncauB7uldIF3pgcOCN8P9OFQ8t3frYnbeLBgH6ImEk
+   eJ2Nakn6pvdBmZUGvjrexc+SM8hGX70h4fz5+oXWMi9QMDFGv8jafnV5A
+   is6dVG49beI3V4eGBlBKhwJmqBYKSqj3dJJS7it6lNRRuYnTCBzCl4OwX
+   4q+tlKdiZn+AxmzQuH8JZ6jbIMYrJ7bb2OHchTiCCSCN1vzix5CZSiZas
+   ne3DWA3KVqN8xAr+K5nOp1W55RV/kXNpjk+ITDHYHDsi9w1ZL3NPFgpF/
+   w==;
+X-CSE-ConnectionGUID: mzFO5amgQFqv/eouSYFBpQ==
+X-CSE-MsgGUID: 9ewGuOKoSpGxqdJGcjE3Zw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11205"; a="37621657"
+X-IronPort-AV: E=Sophos;i="6.10,256,1719903600"; 
+   d="scan'208";a="37621657"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 16:41:07 -0700
+X-CSE-ConnectionGUID: xL3rLDdEQN+l5gLYFwEFtA==
+X-CSE-MsgGUID: ld43r86ETOqaOr5ajaOPPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,256,1719903600"; 
+   d="scan'208";a="71682916"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.11]) ([10.125.111.11])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 16:41:06 -0700
+Message-ID: <c21783e8-3ab6-4aee-9532-206fcffec5d9@intel.com>
+Date: Tue, 24 Sep 2024 16:41:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,104 +52,51 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] block: Init for CBD(CXL Block Device) module
-To: Dongsheng Yang <dongsheng.yang@linux.dev>, axboe@kernel.dk,
- dan.j.williams@intel.com, gregory.price@memverge.com, John@groves.net,
- Jonathan.Cameron@Huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org
-References: <20240918101821.681118-1-dongsheng.yang@linux.dev>
- <20240918101821.681118-9-dongsheng.yang@linux.dev>
+Subject: Re: [RFC PATCH 02/13] cxl: Fix comment regarding cxl_query_cmd()
+ return data
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240718213446.1750135-3-dave.jiang@intel.com>
+ <20240726182926.000050b7@Huawei.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240918101821.681118-9-dongsheng.yang@linux.dev>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240726182926.000050b7@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi.
 
-On 9/18/24 3:18 AM, Dongsheng Yang wrote:
-> diff --git a/drivers/block/cbd/Kconfig b/drivers/block/cbd/Kconfig
-> new file mode 100644
-> index 000000000000..16ffcca058c5
-> --- /dev/null
-> +++ b/drivers/block/cbd/Kconfig
-> @@ -0,0 +1,45 @@
-> +config BLK_DEV_CBD
-> +	tristate "CXL Block Device (Experimental)"
-> +	depends on DEV_DAX && FS_DAX
-> +	help
-> +	  CBD allows you to register a persistent memory device as a CBD transport.
-> +	  You can use this persistent memory as a data cache to improve your block
-> +	  device performance. Additionally, if you enable CBD_MULTIHOST, cbd allows
 
-s/cbd/CBD/ for consistency. Or does 'cbd' here explicitly refer to the loadable module
-name?
+On 7/26/24 10:29 AM, Jonathan Cameron wrote:
+> On Thu, 18 Jul 2024 14:32:20 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> The code indicates that the min of n_commands and total commands
+>> is returned. The comment incorrectly says it's the max(). Correct
+>> comment to min().
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Send this one separately.
 
-> +	  you to access block devices on a remote host as if they were local disks.
-> +
-> +	  Select 'y' to build this module directly into the kernel.
-> +	  Select 'm' to build this module as a loadable kernel module.
-  +	  The module will be called cbd.
+Yup. This one is now queued for 6.12.
 
-> +
-> +	  If unsure say 'N'.
-> +
-> +config CBD_CRC
-> +	bool "Enable CBD checksum"
-> +	default N
-
-We usually omit 'default N' since that is the default default.
-
-> +	depends on BLK_DEV_CBD
-> +	help
-> +	  When CBD_CRC is enabled, all data sent by CBD will include
-> +	  a checksum. This includes a data checksum, a submit entry checksum,
-> +	  and a completion entry checksum. This ensures the integrity of the
-> +	  data transmitted through the CXL memory device.
-> +
-> +config CBD_DEBUG
-> +	bool "Enable CBD debug"
-> +	default N
-
-Ditto.
-
-> +	depends on BLK_DEV_CBD
-> +	help
-> +	  When CBD_DEBUG is enabled, cbd module will print more messages
-> +	  for debugging. But that will affact performance, so do not use it
-
-	                               affect
-
-> +	  in production case.
-> +
-> +config CBD_MULTIHOST
-> +	bool "multi-hosts CXL Dlock Device"
-
-	                      Block
-
-> +	default N
-
-drop default line.
-
-> +	depends on BLK_DEV_CBD
-> +	help
-> +	  When CBD_MULTIHOST is enabled, cbd allows the use of a shared memory device
-
-cbd or CBD?
-
-> +	  as a cbd transport. In this mode, the blkdev and backends on different
-
-ditto.
-
-> +	  hosts can be connected through the shared memory device, enabling cross-node
-> +	  disk access.
-> +
-> +	  IMPORTANT: This Require your shared memory device support Hardware-consistency
-
-	                  requires                          supports
-
-> +	  as CXL 3.0 described.
-
-	  as described in CXL 3.0.
+>> ---
+>>  drivers/cxl/core/mbox.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index 783cb5ed823f..433819ac36b7 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -547,7 +547,7 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
+>>  		return put_user(ARRAY_SIZE(cxl_mem_commands), &q->n_commands);
+>>  
+>>  	/*
+>> -	 * otherwise, return max(n_commands, total commands) cxl_command_info
+>> +	 * otherwise, return min(n_commands, total commands) cxl_command_info
+>>  	 * structures.
+>>  	 */
+>>  	cxl_for_each_cmd(cmd) {
 
