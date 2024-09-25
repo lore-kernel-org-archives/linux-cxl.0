@@ -1,160 +1,95 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0841A704B;
-	Wed, 25 Sep 2024 13:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580791D5ACD
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Sep 2024 15:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727269528; cv=none; b=tr4k8oF5wHa5KT7ufIjckftXaGFrDmHAvKJe4fBB4zMyeXwwlLotPuR49Lsp93a1QDvfl1C2+oOBqaSs1H7OrfRCKAJej5Cp3yRHoIFjPwrnJUqAgaYy6HusnWZY1J4hUk1bjT7ij1XyyfraNwmBIYw8FzQrncqwabN7oLF0A1M=
+	t=1727279638; cv=none; b=uhEchsLehOEt7izsBPExJ6PVbtXFLMJOr9ZQJnrk8/oTnrx8ZBykFxrHAXP+9Kzaq2tWpZoIrrwhcNopfEjvIOrAt1mBZmZaYTFYmV+Qdvl1z/nPVLlJB7pbDiypBRS5GJf1Y6Wj7bsCs1pB56bc4P1R3P4uKmDTilGa2Txooe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727269528; c=relaxed/simple;
-	bh=Z8A+F6g+ckcqDRO/xPuowSQmdScdm2BzOdA9oeqi8hI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W5zPbAfZP5AOd1A12r7TsUit1+GOqejWWY7S1rJcWgxlXTvmLT3zZxMdZJ3/uQ/adxF/yNLldB5dw6C32T3yOwqub6/7ZKS7DUR2eK1CY57SoRA8Kfk606qffTC1wNEiA+5KA12nQ9KpwgZl/DIYZpmMjelnTlSa2wCnbOlT51g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XDH0862gfz6K9B2;
-	Wed, 25 Sep 2024 21:00:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D06A9140F63;
-	Wed, 25 Sep 2024 21:05:17 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Sep
- 2024 15:05:16 +0200
-Date: Wed, 25 Sep 2024 14:05:15 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Zhi Wang <zhiw@nvidia.com>
-CC: "Tian, Kevin" <kevin.tian@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>, "Schofield,
- Alison" <alison.schofield@intel.com>, "Williams, Dan J"
-	<dan.j.williams@intel.com>, "Jiang, Dave" <dave.jiang@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "Weiny, Ira" <ira.weiny@intel.com>,
-	"Verma, Vishal L" <vishal.l.verma@intel.com>, "alucerop@amd.com"
-	<alucerop@amd.com>, Andy Currid <ACurrid@nvidia.com>, Neo Jia
-	<cjia@nvidia.com>, Surath Mitra <smitra@nvidia.com>, "Ankit Agrawal"
-	<ankita@nvidia.com>, Aniket Agashe <aniketa@nvidia.com>, "Kirti Wankhede"
-	<kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	"zhiwang@kernel.org" <zhiwang@kernel.org>
-Subject: Re: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
- accelerator passthrough
-Message-ID: <20240925140515.000077f5@Huawei.com>
-In-Reply-To: <75c0c6f1-07e4-43c1-819c-2182bdd0b47c@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<BN9PR11MB5276B821A9732BF0A9EC67988C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
-	<75c0c6f1-07e4-43c1-819c-2182bdd0b47c@nvidia.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1727279638; c=relaxed/simple;
+	bh=xbNzagmFfT/JWgGozQxA+RR3EfRBzCUORkag6vx6YXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RaZM3rperOxFmmHsr93aBVCPStEvIos1mzGnsnUcHupVszqJnWlNkVfw8VnrwjvkDMnKfii50I/b/c91BZQroDbkS2hUkrbCJ3dGUF/FH0OrLGJI8JI4jP430GPxrHKf7DWLi+mLqRZ3VEDvl/kEJqlLovCYCAvYPUrleJ9Wr5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hzwvSNNw; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hzwvSNNw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727279637; x=1758815637;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xbNzagmFfT/JWgGozQxA+RR3EfRBzCUORkag6vx6YXo=;
+  b=hzwvSNNwUPiJCr1wtL6SjMCsk9zytMtZFXj1oa3Kyw4SJ/DCVClV246t
+   7PhA+9AtbY8QGBtxsHOy0mcVkjKEsy5yPwr0Kuk4ZX5v2P6zkNlBggz6G
+   HkyIUdOG3VjbOHbcnTkwGqFOI3s7lX6aLiZ0tiAhN0m1vOvvZKQYW/1KG
+   fB7UlSbU98xVl+kIALe6YTn54wybjJkXHUrWv9oFfXr1VjByxLHAxq2Dx
+   6EVxTfK5UCv5xOFRdOWW4++YPeaiT7MOmfMU2NzVINWBI9yQbXgcH1v4U
+   a8RolwT+YPoA+4lKf7mG0AhAulKQzNywCyPqd3PgX+gmqoX6K+duqgID9
+   A==;
+X-CSE-ConnectionGUID: qmDTLXJZQCeoCmUFFPKgAg==
+X-CSE-MsgGUID: WBSoQxavR+6p9ijP64ez7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26210221"
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="26210221"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 08:53:56 -0700
+X-CSE-ConnectionGUID: 4eYblus8SI2Kh9M0cV8b8Q==
+X-CSE-MsgGUID: l47KLLK+QpivSuhEKWWfYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="71967598"
+Received: from cmdeoliv-mobl.amr.corp.intel.com (HELO [10.125.111.90]) ([10.125.111.90])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 08:53:55 -0700
+Message-ID: <a77d3247-8ef9-40dc-9bf3-69ab44aa27d8@intel.com>
+Date: Wed, 25 Sep 2024 08:53:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: How to start sanitize?
+To: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+References: <TYRPR01MB12335599B869ED3E7716A758790692@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <TYRPR01MB12335599B869ED3E7716A758790692@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 24 Sep 2024 08:30:17 +0000
-Zhi Wang <zhiw@nvidia.com> wrote:
 
-> On 23/09/2024 11.00, Tian, Kevin wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> >   
-> >> From: Zhi Wang <zhiw@nvidia.com>
-> >> Sent: Saturday, September 21, 2024 6:35 AM
-> >>  
-> > [...]  
-> >> - Create a CXL region and map it to the VM. A mapping between HPA and DPA
-> >> (Device PA) needs to be created to access the device memory directly. HDM
-> >> decoders in the CXL topology need to be configured level by level to
-> >> manage the mapping. After the region is created, it needs to be mapped to
-> >> GPA in the virtual HDM decoders configured by the VM.  
-> > 
-> > Any time when a new address space is introduced it's worthy of more
-> > context to help people who have no CXL background better understand
-> > the mechanism and think any potential hole.
-> > 
-> > At a glance looks we are talking about a mapping tier:
-> > 
-> >    GPA->HPA->DPA
-> > 
-> > The location/size of HPA/DPA for a cxl region are decided and mapped
-> > at @open_device and the HPA range is mapped to GPA at @mmap.
-> > 
-> > In addition the guest also manages a virtual HDM decoder:
-> > 
-> >    GPA->vDPA
-> > 
-> > Ideally the vDPA range selected by guest is a subset of the physical
-> > cxl region so based on offset and vHDM the VMM may figure out
-> > which offset in the cxl region to be mmaped for the corresponding
-> > GPA (which in the end maps to the desired DPA).
-> > 
-> > Is this understanding correct?
-> >   
+
+On 9/25/24 3:41 AM, Yasunori Gotou (Fujitsu) wrote:
+> Hello,
 > 
-> Yes. Many thanks to summarize this. It is a design decision from a 
-> discussion in the CXL discord channel.
+> I have a question about sanitize feature for cxl memory.
 > 
-> > btw is one cxl device only allowed to create one region? If multiple
-> > regions are possible how will they be exposed to the guest?
-> >  
-> 
-> It is not an (shouldn't be) enforced requirement from the VFIO cxl core. 
-> It is really requirement-driven. I am expecting what kind of use cases 
-> in reality that needs multiple CXL regions in the host and then passing 
-> multiple regions to the guest.
+> How to start the sanitize feature for a cxl memory device?
+> Is it just writing "1" to /sys/bus/cxl/devices/memX/security/sanitize ?
 
-Mix of back invalidate and non back invalidate supporting device memory
-maybe?  A bounce region for p2p traffic would the obvious reason to do
-this without paying the cost of large snoop filters. If anyone puts PMEM
-on the device, then maybe mix of that at volatile. In theory you might
-do separate regions for QoS reasons but seems unlikely to me...
-
-Anyhow not an immediately problem as I don't know of any
-BI capable hosts yet and doubt anyone (other than Dan) cares about PMEM :)
+Technically yes. I'm surprised that there wasn't the accompanied cxl CLI enabling for it. 
 
 
 > 
-> Presumably, the host creates one large CXL region that covers the entire 
-> DPA, while QEMU can virtually partition it into different regions and 
-> map them to different virtual CXL region if QEMU presents multiple HDM 
-> decoders to the guest.
-
-I'm not sure why it would do that. Can't think why you'd break up
-a host region - maybe I'm missing something.
-
-...
-
-> >> In the L2 guest, a dummy CXL device driver is provided to attach to the
-> >> virtual pass-thru device.
-> >>
-> >> The dummy CXL type-2 device driver can successfully be loaded with the
-> >> kernel cxl core type2 support, create CXL region by requesting the CXL
-> >> core to allocate HPA and DPA and configure the HDM decoders.  
-> > 
-> > It'd be good to see a real cxl device working to add confidence on
-> > the core design.  
+> I found cxl command has "cxl wait-sanitize" feature, but it seems to just wait the completion of sanitize,
+> and not to start it. In my understanding, there is no feature to start sanitize in cxl command.
 > 
-> To leverage the opportunity of F2F discussion in LPC, I proposed this 
-> patchset to start the discussion and meanwhile offered an environment 
-> for people to try and hack around. Also patches is good base for 
-> discussion. We see what we will get. :)
-> 
-> There are devices already there and on-going. AMD's SFC (patches are 
-> under review) and I think they are going to be the first variant driver 
-> that use the core. NVIDIA's device is also coming and NVIDIA's variant 
-> driver is going upstream for sure. Plus this emulated device, I assume 
-> we will have three in-tree variant drivers talks to the CXL core.
-Nice.
+> Are there any plan to make "cxl start-sanitize" command?
+
++Davidlohr
+
+Davidlohr,
+Do you have cxl cli enabling bits for cxl sanitize when you added the kernel enabling a while back?
+
 > 
 > Thanks,
-> Zhi.
+> 
+> 
 
