@@ -1,158 +1,103 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3B61482FE
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Sep 2024 01:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF59F647;
+	Wed, 25 Sep 2024 02:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727228941; cv=none; b=AaoEaC1T99OfWS1Dp0Vx2GkFEHzp5Bb8+fLWYLfje7HJA1uqTwJN3QUJyxB6BBAHQksvBltnGTnxFWmyELoGdnptyXzjHLpnDnj+lu76cqzignVEcYiONChMT4l4uUpKhhecAW4F61vAkmAU5hMBSHY+ryOn0qNEm2INRrBUqA8=
+	t=1727232431; cv=none; b=Npg2f5wKOm25AiTGO0ii8FNLV7zgD8myHz2b2cFbNi2xf4M5AJ1GXgTyYWXiFSb1MC6M9y9OB5neFxv/a+FvhzXFBZXNXuIZdfjDYVgpDXFOrbJRqe1dCskhjwCxVkR2rWS0xh2Y1r1EbfQCOiPcypc4kxhLItJoET41xd5YDd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727228941; c=relaxed/simple;
-	bh=g3Up5ycJcBXiri8FE+jRpYgWBq7NRqptB30sSCdkX0E=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rSAynGSqCERH2DQDD3w2SeBHWIt9VRXPhuktRHI6Din48xKfXvfRvxr8qDTi6EhwvctXsy1x4Tlo7HSN9g6+2Ms1GJW7NR330/DeFSBd4STSvtbqX/7jKzDu5W8oOYTwk7KgYRrS07Nyxy33xh1TTEFTwDZroH4xPX7wqhjLFHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vy/YLieu; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1727232431; c=relaxed/simple;
+	bh=oaQE6hd7RvtSy106D6ugYqDvaO565pG0/zqJCR9JgxU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hRhLWa491LqSvwOYSRlqAzr9trWC3zHqff+xrlwnWtHt1+drXXa5By6QHtHaIQJD6YC2B3o6W2tIioppKmYsZQRlVYxXuqptdX0m5+GH7ehjQ3JHsaRq0VrVshFoUKLEP0EMu4+Qc50d3oCaWceZcgArxrH+h2YBX2cHsU6FWfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKVcmwBI; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vy/YLieu"
-Subject: Re: [PATCH v2 8/8] block: Init for CBD(CXL Block Device) module
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1727228937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R9a1mjfhW8sOmneVxsGeTyR7GmOE/nZ4p8AXfssa9uk=;
-	b=Vy/YLieu6gh5aOX72A74Pk3t4c4bhJmwEWsFPmat6BuU729HhBsAsOC1N+HgHj+Ng5YBEB
-	dd342ermEnCZTaS0Ylgukj21IwpejePVqd4Bzer7l6pcAvh+3A+4mrpEzYb/SwdmCL5rK8
-	QtESlk4hsMZFZpE34jA27wYliDqO49Q=
-To: Randy Dunlap <rdunlap@infradead.org>, axboe@kernel.dk,
- dan.j.williams@intel.com, gregory.price@memverge.com, John@groves.net,
- Jonathan.Cameron@Huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org
-References: <20240918101821.681118-1-dongsheng.yang@linux.dev>
- <20240918101821.681118-9-dongsheng.yang@linux.dev>
- <27bf8cff-83b6-4a41-923a-7713a847f979@infradead.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-Message-ID: <c8a09654-f27e-766a-58f2-d36dffe34322@linux.dev>
-Date: Wed, 25 Sep 2024 09:48:30 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKVcmwBI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727232429; x=1758768429;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oaQE6hd7RvtSy106D6ugYqDvaO565pG0/zqJCR9JgxU=;
+  b=mKVcmwBIMGDj2g0plex7crP/sVjcmtDi8IWk1jGHiWpwhuvEXv+zzZmP
+   JwxwpuPLRKswly9hYFfoqlFkd6YbVwpH4LSz6YbdwJJsidWRQqthxRF9X
+   qrFcohw80kbbvJGBwMhzKlwSmZU3WLedV1BK0v3MKLwgiNXXnHKzrp2sZ
+   1zdOCZyIKyldUMxWjRQr/MSjUTdJ1CE+lGYBnZ9yrlV+R5e8dDuL75egC
+   ygt6Z4l88YI0qYSi8ynl43346kUzRkw3ZU8waM4C5KTUu4a6NlaHEtCUa
+   MGkxh+pQ8LPJZWw2ytB63hPNC6JtewK8weeDbHIjoCM77xM2AMiBOHYQf
+   A==;
+X-CSE-ConnectionGUID: TcS122HXTtmpllEJ2hwEGA==
+X-CSE-MsgGUID: ieAUvdNnSkKHC4U4IYDYpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11205"; a="26132016"
+X-IronPort-AV: E=Sophos;i="6.10,256,1719903600"; 
+   d="scan'208";a="26132016"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 19:47:09 -0700
+X-CSE-ConnectionGUID: WMimAwU5TRu3ZuQesnKPsg==
+X-CSE-MsgGUID: /b13eS66TwiNOCQ35LVgbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,256,1719903600"; 
+   d="scan'208";a="102388960"
+Received: from yhuang6-mobl2.sh.intel.com ([10.238.3.32])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 19:47:06 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: [RFC 0/5] cxl: Preparation of type2 accelerators support
+Date: Wed, 25 Sep 2024 10:46:42 +0800
+Message-Id: <20240925024647.46735-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <27bf8cff-83b6-4a41-923a-7713a847f979@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Hi Randy,
+There have been 2 series to add type 2 accelerators support in [1] and [2].
 
-在 2024/9/25 星期三 上午 12:35, Randy Dunlap 写道:
-> Hi.
-> 
-> On 9/18/24 3:18 AM, Dongsheng Yang wrote:
->> diff --git a/drivers/block/cbd/Kconfig b/drivers/block/cbd/Kconfig
->> new file mode 100644
->> index 000000000000..16ffcca058c5
->> --- /dev/null
->> +++ b/drivers/block/cbd/Kconfig
->> @@ -0,0 +1,45 @@
->> +config BLK_DEV_CBD
->> +	tristate "CXL Block Device (Experimental)"
->> +	depends on DEV_DAX && FS_DAX
->> +	help
->> +	  CBD allows you to register a persistent memory device as a CBD transport.
->> +	  You can use this persistent memory as a data cache to improve your block
->> +	  device performance. Additionally, if you enable CBD_MULTIHOST, cbd allows
-> 
-> s/cbd/CBD/ for consistency. Or does 'cbd' here explicitly refer to the loadable module
-> name?
+[1] https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
+[2] https://lore.kernel.org/linux-cxl/20240516081202.27023-1-alucerop@amd.com/
 
-I will use uppercase "CBD" in the next version for consistency.
-> 
->> +	  you to access block devices on a remote host as if they were local disks.
->> +
->> +	  Select 'y' to build this module directly into the kernel.
->> +	  Select 'm' to build this module as a loadable kernel module.
->    +	  The module will be called cbd.
-> 
->> +
->> +	  If unsure say 'N'.
->> +
->> +config CBD_CRC
->> +	bool "Enable CBD checksum"
->> +	default N
-> 
-> We usually omit 'default N' since that is the default default.
+Both provide relative complete support, but both are long too.  To
+make it easier to review, some preparation of type2 accelerators
+support is implemented in this series.  More complete support can be
+implemented based on it.
 
-I explicitly added "default" here to make it clearer. In fact, I did a 
-search:
+This series has been tested with cxl_test via mocking a type2
+accelerator as in [1] above.  Because more type2 accelerators support
+than that provided by this series is needed to simulate the device,
+the cxl_test patch isn't included in the series.
 
-find . -name 'Kconfig' -exec grep 'default n' {} + | wc -l
+Huang Ying (5):
+  cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
+  cxl: Rename CXL_DECODER_HOSTONLYMEM/DEVMEM
+  cxl: Separate coherence from target type
+  cxl: Set type of region to that of the first endpoint
+  cxl: Avoid to create dax regions for type2 accelerators
 
-There are over 400+ of "default n" in the Kconfig files. （I will use 
-'default n' in next version）
-> 
->> +	depends on BLK_DEV_CBD
->> +	help
->> +	  When CBD_CRC is enabled, all data sent by CBD will include
->> +	  a checksum. This includes a data checksum, a submit entry checksum,
->> +	  and a completion entry checksum. This ensures the integrity of the
->> +	  data transmitted through the CXL memory device.
->> +
->> +config CBD_DEBUG
->> +	bool "Enable CBD debug"
->> +	default N
-> 
-> Ditto.
-> 
->> +	depends on BLK_DEV_CBD
->> +	help
->> +	  When CBD_DEBUG is enabled, cbd module will print more messages
->> +	  for debugging. But that will affact performance, so do not use it
-> 
-> 	                               affect
-> 
->> +	  in production case.
->> +
->> +config CBD_MULTIHOST
->> +	bool "multi-hosts CXL Dlock Device"
-> 
-> 	                      Block
-> 
->> +	default N
-> 
-> drop default line.
-> 
->> +	depends on BLK_DEV_CBD
->> +	help
->> +	  When CBD_MULTIHOST is enabled, cbd allows the use of a shared memory device
-> 
-> cbd or CBD?
-> 
->> +	  as a cbd transport. In this mode, the blkdev and backends on different
-> 
-> ditto.
-> 
->> +	  hosts can be connected through the shared memory device, enabling cross-node
->> +	  disk access.
->> +
->> +	  IMPORTANT: This Require your shared memory device support Hardware-consistency
-> 
-> 	                  requires                          supports
-> 
->> +	  as CXL 3.0 described.
-> 
-> 	  as described in CXL 3.0.
+ drivers/cxl/acpi.c           |  9 +++---
+ drivers/cxl/core/hdm.c       | 38 +++++++++++++----------
+ drivers/cxl/core/mbox.c      |  1 +
+ drivers/cxl/core/port.c      | 17 ++++++-----
+ drivers/cxl/core/region.c    | 58 ++++++++++++++++++++++++++++++------
+ drivers/cxl/cxl.h            | 28 +++++++++++------
+ drivers/cxl/cxlmem.h         | 11 +++++++
+ include/acpi/actbl1.h        | 10 +++----
+ tools/testing/cxl/test/cxl.c | 24 +++++++--------
+ 9 files changed, 133 insertions(+), 63 deletions(-)
 
-agreed.
-
-Thank you for your review.
-
-Dongsheng
-> 
+Best Regards,
+Huang, Ying
