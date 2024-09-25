@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580791D5ACD
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Sep 2024 15:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52273D55D
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Sep 2024 16:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727279638; cv=none; b=uhEchsLehOEt7izsBPExJ6PVbtXFLMJOr9ZQJnrk8/oTnrx8ZBykFxrHAXP+9Kzaq2tWpZoIrrwhcNopfEjvIOrAt1mBZmZaYTFYmV+Qdvl1z/nPVLlJB7pbDiypBRS5GJf1Y6Wj7bsCs1pB56bc4P1R3P4uKmDTilGa2Txooe4=
+	t=1727280132; cv=none; b=WyqLmvc/1qe3ViUo0aWsbRCw8NUsbuY3FJj6qs5q1h6GxsITfLi6xY8RmujD3XyO+zmSnM1ttdK0MYftTIxn6epg9ISHW+1KBH0DGwAazmO2krBeKb6Wd2Od4QU3XM9UlFIqHQm3TFVkfSLtmNvOOkCLUs9V+1VTwhXglB4AW30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727279638; c=relaxed/simple;
-	bh=xbNzagmFfT/JWgGozQxA+RR3EfRBzCUORkag6vx6YXo=;
+	s=arc-20240116; t=1727280132; c=relaxed/simple;
+	bh=WpGA+oI2y3NSaawSW67MpkLJHnVDb2/n4MjXek2hl1Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RaZM3rperOxFmmHsr93aBVCPStEvIos1mzGnsnUcHupVszqJnWlNkVfw8VnrwjvkDMnKfii50I/b/c91BZQroDbkS2hUkrbCJ3dGUF/FH0OrLGJI8JI4jP430GPxrHKf7DWLi+mLqRZ3VEDvl/kEJqlLovCYCAvYPUrleJ9Wr5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hzwvSNNw; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=VXuBc2kARqOM1xKq71HJTvXYls8naetKhoJ9WVb6c4YxsszH59v7/+8wa2B7p3QBvhfEqOH+bpf6Xvgs5fTlYvW3lSvCfzHxBAl/1NK00WluSx99YgzNcQZeQiviAPNQp1WO1hL48P4rCVTqOnWVwWRUG7idj2vsRy4tw0eNXL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0jVYmAs; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hzwvSNNw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0jVYmAs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727279637; x=1758815637;
+  t=1727280131; x=1758816131;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=xbNzagmFfT/JWgGozQxA+RR3EfRBzCUORkag6vx6YXo=;
-  b=hzwvSNNwUPiJCr1wtL6SjMCsk9zytMtZFXj1oa3Kyw4SJ/DCVClV246t
-   7PhA+9AtbY8QGBtxsHOy0mcVkjKEsy5yPwr0Kuk4ZX5v2P6zkNlBggz6G
-   HkyIUdOG3VjbOHbcnTkwGqFOI3s7lX6aLiZ0tiAhN0m1vOvvZKQYW/1KG
-   fB7UlSbU98xVl+kIALe6YTn54wybjJkXHUrWv9oFfXr1VjByxLHAxq2Dx
-   6EVxTfK5UCv5xOFRdOWW4++YPeaiT7MOmfMU2NzVINWBI9yQbXgcH1v4U
-   a8RolwT+YPoA+4lKf7mG0AhAulKQzNywCyPqd3PgX+gmqoX6K+duqgID9
-   A==;
-X-CSE-ConnectionGUID: qmDTLXJZQCeoCmUFFPKgAg==
-X-CSE-MsgGUID: WBSoQxavR+6p9ijP64ez7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26210221"
+  bh=WpGA+oI2y3NSaawSW67MpkLJHnVDb2/n4MjXek2hl1Q=;
+  b=K0jVYmAsIuMKhW4w5lBlwOnCuNibw3GSbArEC4GxTY4PgNiphMcEDQRo
+   POi50VvMv8NO2reY/7K8mn89uV4fyHWVIsdrk25aNeG/iKDSBHEzJ1ZO3
+   xvc5lQTYHqQB4iQxZN/eKC+vLtBxTFciC903959zjOZWIw9jHMPPuKk5r
+   l04g5y+MVwNsvrSV8Y4RPqOJ1HO2ep8vaDMrfZ0z/RyWO8DAtiSIBmBra
+   nWQSBDqbd9w5M2snHUcvLCDzUMo8h2V3gE7cQLhpIxftQOBOS6bxDwIRE
+   Q2IuQ4sg6TV3bogrrwJx968t36HNIfKnmgik9itcvlgM6EvS38DUkKuNs
+   Q==;
+X-CSE-ConnectionGUID: U2ithjM/QNSa0LLnWxjzmA==
+X-CSE-MsgGUID: aWv2VQACS22L+UFdlT835w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="25849758"
 X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
-   d="scan'208";a="26210221"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 08:53:56 -0700
-X-CSE-ConnectionGUID: 4eYblus8SI2Kh9M0cV8b8Q==
-X-CSE-MsgGUID: l47KLLK+QpivSuhEKWWfYA==
+   d="scan'208";a="25849758"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 09:02:07 -0700
+X-CSE-ConnectionGUID: lo0bpNtNQeqUyJWHxa5e1g==
+X-CSE-MsgGUID: Y0DDN5PjQOewkSpWqrWREA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
-   d="scan'208";a="71967598"
+   d="scan'208";a="76332216"
 Received: from cmdeoliv-mobl.amr.corp.intel.com (HELO [10.125.111.90]) ([10.125.111.90])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 08:53:55 -0700
-Message-ID: <a77d3247-8ef9-40dc-9bf3-69ab44aa27d8@intel.com>
-Date: Wed, 25 Sep 2024 08:53:54 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 09:02:06 -0700
+Message-ID: <08321511-e070-44a3-ae67-3e8992a42a8e@intel.com>
+Date: Wed, 25 Sep 2024 09:02:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,44 +52,230 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: How to start sanitize?
-To: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+Subject: Re: [PATCH v17 0/2] Export cxl1.1 device link status register value
+ to pci device sysfs.
+To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
  "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-References: <TYRPR01MB12335599B869ED3E7716A758790692@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+ "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>
+Cc: "mj@ucw.cz" <mj@ucw.cz>
+References: <20240903025915.270521-1-kobayashi.da-06@fujitsu.com>
+ <OSAPR01MB71827E711822FF4DD30C8A58BA682@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+ <e4b76403-2e1e-4c5b-ae02-e09d97384c0a@intel.com>
+ <OSAPR01MB71829C78947C2FC023CD0DDABA692@OSAPR01MB7182.jpnprd01.prod.outlook.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <TYRPR01MB12335599B869ED3E7716A758790692@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB71829C78947C2FC023CD0DDABA692@OSAPR01MB7182.jpnprd01.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/25/24 3:41 AM, Yasunori Gotou (Fujitsu) wrote:
-> Hello,
+On 9/24/24 5:20 PM, Daisuke Kobayashi (Fujitsu) wrote:
+> Dave Jiang wrote:
+>> On 9/24/24 12:36 AM, Daisuke Kobayashi (Fujitsu) wrote:
+>>> Hi, Dan. Could you please review this patch?
+>>> I think I've fixed the issues you mentioned.
+>>
+>> Hi Daisuke,
+>> In the mean time can you please respin and fix these two kbot issues?
+>> https://lore.kernel.org/linux-cxl/202409040011.kaajNuCb-lkp@intel.com/
+>> https://lore.kernel.org/linux-cxl/202409040010.afyGcWUe-lkp@intel.com/
+>>
+>>>
+>>> Thank you.
+>>>
+> Thank you for your comment.
 > 
-> I have a question about sanitize feature for cxl memory.
+> This patch was using a function that hasn't been merged yet, as per Dan's instructions. 
+> It seems that the patch containing that function has now been merged into the cxl-next branch.
+> https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=next&id=dd2617ebd2a69c012001a29274557199409eff39
 > 
-> How to start the sanitize feature for a cxl memory device?
-> Is it just writing "1" to /sys/bus/cxl/devices/memX/security/sanitize ?
-
-Technically yes. I'm surprised that there wasn't the accompanied cxl CLI enabling for it. 
-
-
+> I apologize for the lack of explanation and any confusion this may have caused.
 > 
-> I found cxl command has "cxl wait-sanitize" feature, but it seems to just wait the completion of sanitize,
-> and not to start it. In my understanding, there is no feature to start sanitize in cxl command.
-> 
-> Are there any plan to make "cxl start-sanitize" command?
+> While the situation may be different from when kbot reported the error, 
+> could you please advise what modifications are needed here?
 
-+Davidlohr
-
-Davidlohr,
-Do you have cxl cli enabling bits for cxl sanitize when you added the kernel enabling a while back?
+The series has missed the 6.12 merge window unfortunately. My suggestion is to post v18 rebased against 6.12-rc1 (given that the patch you need should be upstream by then) and the kbot issues hopefully should clear up. Hopefully Dan will get a chance to review the changes in the next cycle and let's get this into the 6.13 merge window.
 
 > 
-> Thanks,
-> 
+>>> Kobayashi Daisuke wrote:
+>>>> Subject: [PATCH v17 0/2] Export cxl1.1 device link status register
+>>>> value to pci device sysfs.
+>>>>
+>>>> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+>>>> the link status can be output in the same way as traditional PCIe.
+>>>> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+>>>> different method to obtain the link status from traditional PCIe.
+>>>> This is because the link status of the CXL1.1 device is not mapped in
+>>>> the configuration space (as per cxl3.0 specification 8.1).
+>>>> Instead, the configuration space containing the link status is mapped
+>>>> to the memory mapped register region (as per cxl3.0 specification 8.2, Table
+>> 8-18).
+>>>> Therefore, the current lspci has a problem where it does not display
+>>>> the link status of the CXL1.1 device.
+>>>> Solve these issues with sysfs attributes to export the status
+>>>> registers hidden in the RCRB.
+>>>>
+>>>> The procedure is as follows:
+>>>> First, obtain the RCRB address within the cxl driver, then access the
+>>>> configuration space. Next, output the link status information from
+>>>> the configuration space to sysfs. Ultimately, the expectation is that
+>>>> this sysfs file will be consumed by PCI user tools to utilize link status
+>> information.
+>>>>
+>>>> This patch series relies on the functions defined in the following patches.
+>>>> https://lore.kernel.org/linux-cxl/20240830013138.2256244-1-ming4.li@i
+>>>> ntel.c
+>>>> om/
+>>>>
+>>>> Changes
+>>>> v1[1] -> v2:
+>>>> - Modified to perform rcrb access within the CXL driver.
+>>>> - Added new attributes to the sysfs of the PCI device.
+>>>> - Output the link status information to the sysfs of the PCI device.
+>>>> - Retrieve information from sysfs as the source when displaying
+>>>> information in lspci.
+>>>>
+>>>> v2[2] -> v3:
+>>>> - Fix unnecessary initialization and wrong types (Bjohn).
+>>>> - Create a helper function for getting a PCIe capability offset (Bjohn).
+>>>> - Move platform-specific implementation to the lib directory in
+>>>> pciutils (Martin).
+>>>>
+>>>> v3[3] -> v4:
+>>>> - RCRB register values are read once and cached.
+>>>> - Added a new attribute to the sysfs of the PCI device.
+>>>> - Separate lspci implementation from this patch.
+>>>>
+>>>> v4[4] -> v5:
+>>>> - Use macros for bitwise operations
+>>>> - Fix RCRB access to use cxl_memdev
+>>>>
+>>>> v5[5] -> v6:
+>>>> - Add and use masks for RCRB register values
+>>>>
+>>>> v6[6] -> v7:
+>>>> - Fix comments on white space inline
+>>>>
+>>>> v7[7] -> v8:
+>>>> - Change the cache value to offset
+>>>> - Access memory map area in rcd_*_show() functions
+>>>>
+>>>> v8[8] -> v9:
+>>>> - Map the pcie cap in for all the time the driver is bound to the device.
+>>>> - Add mapping the pcie cap in cxl_rcd_component_reg_phys().
+>>>>
+>>>> v9[9] -> v10:
+>>>> - Change a utility function for getting PCIe capability.
+>>>> - Fix tab alignment issue, error handling, and apply suggestions from
+>> Jonathan.
+>>>>
+>>>> v10[10] -> v11:
+>>>> - Add functions to have one function do only one thing.
+>>>> - Add a size parameter to utility function arguments and consolidated
+>>>> them into one.
+>>>>
+>>>> v11[11] -> v12:
+>>>> - Fix the error handling in cxl_pci_setup_regs().
+>>>> - Fix and clean up some details.
+>>>>
+>>>> v12[12] -> v13:
+>>>> - Fix and clean up some details.
+>>>>
+>>>> v13[13] -> v14:
+>>>> - Fix and clean up some details.
+>>>>
+>>>> v14[14] -> v15:
+>>>> - Change dport lookup to be done only once.
+>>>> - Fix the visibility of cxl_rcrb_to_linkcap().
+>>>>
+>>>> v15[15] -> v16:
+>>>> - Fix the port leak bug by introduce a new scope-based-free handler
+>>>> - Improve the variable names.
+>>>>
+>>>> v16[16] -> v17:
+>>>> - Change used function for making struct cxl_port *port
+>>>>
+>>>> [1]
+>>>> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.d
+>>>> a-06
+>>>> @fujitsu.com/
+>>>> [2]
+>>>> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [3]
+>>>> https://lore.kernel.org/linux-cxl/20240312080559.14904-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [4]
+>>>> https://lore.kernel.org/linux-cxl/20240409073528.13214-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [5]
+>>>> https://lore.kernel.org/linux-cxl/20240412070715.16160-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [6]
+>>>> https://lore.kernel.org/linux-cxl/20240424050102.26788-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [7]
+>>>> https://lore.kernel.org/linux-cxl/20240510073710.98953-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [8]
+>>>> https://lore.kernel.org/linux-cxl/20240606074814.5633-1-kobayashi.da-
+>>>> 06@f
+>>>> ujitsu.com/
+>>>> [9]
+>>>> https://lore.kernel.org/linux-cxl/20240610082222.22772-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [10]
+>>>> https://lore.kernel.org/linux-cxl/20240611055254.61203-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [11]
+>>>> https://lore.kernel.org/linux-cxl/20240612075940.92500-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [12]
+>>>> https://lore.kernel.org/linux-cxl/20240614045611.58658-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [13]
+>>>> https://lore.kernel.org/linux-cxl/20240617043702.62028-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [14]
+>>>> https://lore.kernel.org/linux-cxl/20240618042941.96893-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [15]
+>>>> https://lore.kernel.org/linux-cxl/20240716042540.89639-1-kobayashi.da
+>>>> -06@
+>>>> fujitsu.com/
+>>>> [16]
+>>>> https://lore.kernel.org/linux-cxl/20240815005510.220835-1-kobayashi.d
+>>>> a-06
+>>>> @fujitsu.com/
+>>>>
+>>>> Kobayashi,Daisuke (2):
+>>>>   cxl/core/regs: Add rcd_pcie_cap initialization
+>>>>   cxl/pci: Add sysfs attribute for CXL 1.1 device link status
+>>>>
+>>>>  drivers/cxl/core/core.h |   5 ++
+>>>>  drivers/cxl/core/regs.c |  56 ++++++++++++++++++++
+>>>>  drivers/cxl/cxl.h       |   9 ++++
+>>>>  drivers/cxl/pci.c       | 110
+>>>> +++++++++++++++++++++++++++++++++++-----
+>>>>  4 files changed, 167 insertions(+), 13 deletions(-)
+>>>>
+>>>> --
+>>>> 2.45.0
+>>>
+>>>
 > 
 
