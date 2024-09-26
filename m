@@ -1,184 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A799814884F
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Sep 2024 16:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727369576; cv=none; b=gGYScWE6hEAlIaC6x6tULJY1zykx9mHQsuyKt84cds3Dj4RcjoTTwK5+a3xnqR/lxEzkgEGUAkrudEBacLIjfP8XN1QQWL7aHd6JOFNKxVMddr3MoPzeVHSCD3h//P7y2f4Ar5286rs7V7KKROB7iQu31WTHI3Z9fXGFyFFvvX0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727369576; c=relaxed/simple;
-	bh=J1OH4P2HGJb32Si+0OTL/MFTqDk02Yeh0y6VNt4C7to=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ir+4/DfOhmNw/qf6barKnXQf0dQd5HG19nz8M9yiMdSTphB4AN66J0RIu7x+qSeGQNVWgTFt6kFHyq8e5/e5g9TM72FB9m/ugNxW6yLD4y31U5Aaf1x3+44oRdehni10SLsScxRa+/Xyns3h/RYtROuy6Q+9uS8R6+GLiSa9Ll4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AOdRbXhQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C961D15DBA3
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Sep 2024 17:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727372250; cv=fail; b=tEiib7lZBnZ/kgaBpn47M3/XdecG+EHVO0Sw9FqcCW9sQztIlCTlFjE5IbdjWNXtaxYK8vwuDQME1lFh8liTs5u339PbRSFB251itEDXi/6reERZ8yucmKs3g+PabITVQGFTgvxcOo4ttCy1NGINks4pzX9znkTmgKfmA0XiMIo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727372250; c=relaxed/simple;
+	bh=wnOxVJs74M215rdIrberOpSsGAe0ux4t949VGLBqzos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CauEgaoPgs+/KXP/2g3PGnXEsxyQYMw5gUsni4t29NwJzGxaLjYlYhaENAAm0fwYnjiICYF76FJSuR2w2Jt5kmb7DpYN1VdCj/SsiljBGcRWQvI75y0GWDZ13RVxFgHbG+eEKX1kIrVEQPEjEFxDtCwL0vC5T1dg3Zwvr5vAZ3I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rBFxlOdc; arc=fail smtp.client-ip=40.107.220.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOdRbXhQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727369573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zj9vLyVeTUrkXFtErPVwTTDYQdcUkLzh1lKD/qYC/0s=;
-	b=AOdRbXhQVx45k80zWPRPfhWMvvfZdljeRG0xCbSwHALxB1rjLIykVdhgLS/hbDaJj03aO3
-	L6YB2EBRR7cLCpfi5OTYR9x44ySjVrWVaLhhYlXde6ChaXuh56FqAZQDHiGvf5K5GhNKKF
-	6eJdcM7s6K6dMe7tR8iLfpg2yZEV+wk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-145-TFksZ74_OCOtFQta_7KcbQ-1; Thu, 26 Sep 2024 12:52:52 -0400
-X-MC-Unique: TFksZ74_OCOtFQta_7KcbQ-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7acb118ba04so245809285a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Sep 2024 09:52:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727369572; x=1727974372;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zj9vLyVeTUrkXFtErPVwTTDYQdcUkLzh1lKD/qYC/0s=;
-        b=b1eqITA2MksDN6OkpjFUGiC9O6OMqL1hqCRWSpgUUgoghskEvkIdtU2Cajn3bYIsrK
-         OE3dilRN6K+Ar4J2GwtT3y3gpz2uVBAL5wgGvUAb7HyIKE4fzIQRJ4OkjaTB7n111+Hj
-         kcpkJDOVrhq+hlJhdYbW38dv6cBihj/Xuzp+YUGlo3iYhw2oL/54J2LurkYeOfefpQ6p
-         cDW/Pj86MGbK0HFhNTr2ADHnLMSkeioRaxGRZJeIhU2taq3KGGgNUDg+aTe/4Ls13RY5
-         sxFWRZzD/gvXYbKLZq08QIqjUsyboXepAKUr5lZhfj6E/Wa71ONqSUmyS1Ry+fARDSZF
-         fSWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0EHai6Mq6b2ta262PmgWVKvOCFqxnOaPmWAyhTouzIjRZ11BHuH1AiwQle0pAjsZZ6t5Fya0IihU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYzyVEbibhSCoBjysDdwPWz4G1/RTDWDbPpV8Y3s2S3BK0btYg
-	Oc3G6WIqjXX7IfQ0D4XM35ksnJ1k3Lir/m6WqG6GhBkmU7uj4PEZ5fWpmaJFcGsjF/GNOJ1Cxuc
-	c4XAe+VsWOWopp6rMN/TwiEyw6FOFshmWV1p4UfPQFpmYqFqjtEwvTFeMfg==
-X-Received: by 2002:a05:620a:4305:b0:7ab:3511:4eda with SMTP id af79cd13be357-7ae37859606mr28691885a.34.1727369572043;
-        Thu, 26 Sep 2024 09:52:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEc18+Y15wl3KbfQPxhfJugWm0iv4GLJ2pqlzsLF1lv3cavBK20N0dqbclFhcsiP8FYcVCfA==
-X-Received: by 2002:a05:620a:4305:b0:7ab:3511:4eda with SMTP id af79cd13be357-7ae37859606mr28688285a.34.1727369571647;
-        Thu, 26 Sep 2024 09:52:51 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:280:24f0:576b:abc6:6396:ed4a? ([2a01:e0a:280:24f0:576b:abc6:6396:ed4a])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae3782c5f1sm6537285a.74.2024.09.26.09.52.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2024 09:52:51 -0700 (PDT)
-Message-ID: <104676c7-9732-4972-b00e-8f65ce9eb259@redhat.com>
-Date: Thu, 26 Sep 2024 18:52:47 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rBFxlOdc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a+KPAr6YaXBk0//o0zfwshBkJQDMN+H7a02slEMYEmJYRZN5eQcdIOIKDOjZxs7AocLN6htQy3ucSsDRLZXYK+UMzE43Zb4i2VSZIztnroDx/uzmxP6VN5G+L8DZEalJK21RgVSd7wuxtbix/zhuYR+yegd4I6HMiqO1clN29442OrvopfSbQO6zt7aRmF26QcOtUMCcpc/g1KewzIdbQW2/NleopjCHVf21Z9KeYMJlzRRd5AYyAlgNGsXL3zPzQO1N69ivUZWvzG24uZFYef7HbLypXsPRuavN6OOikA+P/PIeFD4Wp3yFCx5LPgZPR5bduVbLhhFBxEnMGSYyIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lXrc4lBxbUcwH+ToylxVbDA/ZepqJVKHDNVqnldYRVs=;
+ b=WwQMbAoAXVgZ8Cu69g+hsO9nR1/CJagd6wD0evL+FuzJ8Bd+pU6rpJDl+5DlR1s/iSU9sjYNIQW6QDuziZF0tonB3lJfUvt7czV8liXj306R4AsLVpkYyVgaqDKx+wvfaV4iHzynUnKvq28zlOI5u5a9B0+XJbliuHa4IxMaw+Avmn+dPvqG3VxoXPgjyhXP3vhDzu/WmgQ4abU3E5GNVNmCKepXMP7ZuD8osQ5vU8gLLl53FSGTJbC0Y4Rdhvz8ediRhFrZQHak+cZxiEZ04jXavyoUg/lCnC7JtKr64uhqib3q/ktK3eQrCjgOwPh1dowycccmPAwIrc7gEC6FYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lXrc4lBxbUcwH+ToylxVbDA/ZepqJVKHDNVqnldYRVs=;
+ b=rBFxlOdcTHCeBXhrwFsE3g59kjpZDBf0cXhbx9nd5cOw65Xv3cOAFPj+oSm9+NHfyq2FTdiBlXKcMmCwQJR1IAUReqA9VD388eauXlPjzV27x1BnDLnoYGE1ENLym7cuIR4c5zwxJAACGN2gN01QcFO5L5s0plqmiLn8yEHtuJtAOMobe9l/YUmxhdhq9uA/llpzvzwo35tE1Gakw/BA8uIATb0uW4ZTbaVnhilJvOcyCqnrqL+9Cnp7oCmeVAett9K4trUg/YLcuZTN8BBx+DYTGyWDIheynBEjUF21vbUXZ4Icc8w9yfPczQOITEtfLdkjs30qzo2JkZ4zrXre7w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DS0PR12MB8442.namprd12.prod.outlook.com (2603:10b6:8:125::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.26; Thu, 26 Sep
+ 2024 17:37:19 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.7982.022; Thu, 26 Sep 2024
+ 17:37:19 +0000
+Date: Thu, 26 Sep 2024 14:37:18 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, dave@stgolabs.net,
+	shiju.jose@huawei.com
+Subject: Re: [RFC PATCH 08/13] fwctl/cxl: Add driver for CXL mailbox for
+ handling CXL features commands
+Message-ID: <20240926173718.GD9417@nvidia.com>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240718213446.1750135-9-dave.jiang@intel.com>
+ <20240726190257.00003a60@Huawei.com>
+ <f57c9889-450f-40de-a3be-55c1fa5d7eaa@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f57c9889-450f-40de-a3be-55c1fa5d7eaa@intel.com>
+X-ClientProxiedBy: MN2PR19CA0027.namprd19.prod.outlook.com
+ (2603:10b6:208:178::40) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/1] Introduce vfio-cxl to support CXL type-2 device
- passthrough
-To: Zhi Wang <zhiw@nvidia.com>, kvm@vger.kernel.org, linux-cxl@vger.kernel.org
-Cc: alex.williamson@redhat.com, kevin.tian@intel.com, jgg@nvidia.com,
- alison.schofield@intel.com, dan.j.williams@intel.com, dave.jiang@intel.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alucerop@amd.com, qemu-devel@nongnu.org,
- acurrid@nvidia.com, cjia@nvidia.com, smitra@nvidia.com, ankita@nvidia.com,
- aniketa@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com,
- zhiwang@kernel.org
-References: <20240921071440.1915876-1-zhiw@nvidia.com>
-From: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>
-Autocrypt: addr=clg@redhat.com; keydata=
- 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
- uVKe8BVz4atMOoktmt0GWTOC8P4=
-In-Reply-To: <20240921071440.1915876-1-zhiw@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, fr
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB8442:EE_
+X-MS-Office365-Filtering-Correlation-Id: bfc4dce8-9af8-4a2c-06b9-08dcde51df0c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?eyaO0VqaYq7L/mSdB7MqIwzSPBEi700Ym8ODNSwQqLy3kYF+9mUwl2FiY7Ii?=
+ =?us-ascii?Q?cd+IdnVavMc+bP0mp+4C8i9gdfxTF8lMPlPtKhInH8ZrYkss7kdJ18tWhUL0?=
+ =?us-ascii?Q?+O50FrdgZoXSq1Y9+f2P2KoPXG8ZhVStS7gt/4FsTyOvcC7fPqiCcGvKW2pd?=
+ =?us-ascii?Q?YI3jgC2pbvChAP9bfBa8XZI46rQK66nlDxSVCUD0gcj14oMqnPScVnKRYowg?=
+ =?us-ascii?Q?xj+OduepEn7QWIXcx7UTxJsBSNt4cbzFp8eu95es7wG7XO2sLpgrVAbEkL6V?=
+ =?us-ascii?Q?Uhk9ERYCSO2T/uhb+vkujjJWyRmF7VCcsm4pm7mSWwsAJ2UGD9pTKMoIWURU?=
+ =?us-ascii?Q?ro7PRRErEVpbEQ0N590RmZdRqokhkekJqBtBIloZ6ctueSUDWNsRmLh/fSuf?=
+ =?us-ascii?Q?aO3CEtDGptBub63iXLL/RCmSKCYfJex+j2DNmp9rzJxAzzd4KcPDpk57PspX?=
+ =?us-ascii?Q?iip7Cqz0VJBprA4ujdhtftmjjfy3gzlHihewwMlLj7hk7rjMsbcbMMULAono?=
+ =?us-ascii?Q?wWnmQqUoKpD4t1GZ2k0qpPdxwYWNF1V0Jx1KCB2Zluy+DkN+0/+Hkr7m6J4y?=
+ =?us-ascii?Q?AiypMbruz5RmnMLKkF7WnAg+SI7V9reBFhtTtPlRf3t6fVNOiW7aKnKPCWCe?=
+ =?us-ascii?Q?Uisx3/OC3molNkiDvtrks+wlpg1kp4bIcWRBVMBGmgb9NogPwwizUBB3BQRT?=
+ =?us-ascii?Q?x1dtyWNZ3Wpx3tZx3fJZGpud3mZTe6wc1F3VcmyAjcrYztRcw6vppQlvIAMb?=
+ =?us-ascii?Q?p7wei8P2M3T/FzkIIsK2jFmau9qojsLi5B6m7I49wP1w/di0EbS4zP8AcqZJ?=
+ =?us-ascii?Q?uhaAJDwNLQ15Nd41V5x7CmHH2zEId4c+N8iz4bnL7CGqmi9ajWQQmhW0j3Y2?=
+ =?us-ascii?Q?V5CwSR4qIoI15vgpXmQXMh5LAecIk+AB7X5uqDsBpLJRb5KgS2Oc4DKR1Ws9?=
+ =?us-ascii?Q?1cknDgYsyPTjQUaVuc/SeoyRNjk6ltrONVPPX8RhpbVxA5IsJaMVxtr7bqnl?=
+ =?us-ascii?Q?vRQangk2HWNVN/Aw6e1bFjX48aOHDt81QadnI3seJfw6xEzBMs6XX8GNt0GP?=
+ =?us-ascii?Q?lP6JToIjw7dOE6wEHrzIYpccmPIi/+eQW7zY/sITrM4pXF8f2t88X97ZU8FV?=
+ =?us-ascii?Q?TBrefoTsoMjwZapfRCE8GA7yuR3G1kuPLnwaZL/J0muOVqN4c5i1lc5KRTUQ?=
+ =?us-ascii?Q?0/5W9oWsnwL0Tq+SNNAm3T+fppV17pImoIYiWXq2zPUagRx+gaXVN1Y5sIDt?=
+ =?us-ascii?Q?6jaG/coEf7dLx2Y43KEzgn5PySGJNJzTV0SnlNMfU79N985Vgba4Dc0Q1zfn?=
+ =?us-ascii?Q?DbmfqRbY+RULZj+rMp6yLSLIaIgHt/IinVMRnWZHjH2fig=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4JXiD2sDZfMWLeCxZPUE2ob7HPfyfMhRWRDLbtnV1e+6CD0LZzpOwd7VR3CX?=
+ =?us-ascii?Q?Hxo2zgo5XAsoTeLKcdYyqRTK2vX7Civ/1/Rm9/p5MGRE0VIn54ZLv6XFPdUy?=
+ =?us-ascii?Q?N8lHND8mYJvXZotgZHwxARovpDaXLmSxXNoAq7CX0vHXhfQKofwuN/twa2Zr?=
+ =?us-ascii?Q?OmCUJYm3n6oORauRmp1M3HxW8UvAfuDtp0tTKULMz7Piwykn+S/sYKNR5WJ4?=
+ =?us-ascii?Q?9SZQ249bBPGRxf/zb6Vt///xWx2jewT+0+a6fm2c4w34hOwOG5grIASV6i1f?=
+ =?us-ascii?Q?9gWvk2FLMF3//wctOOzst/D8tcsrZjYDfCOzBuSRCm/7kDHRLZIglFJ5THjQ?=
+ =?us-ascii?Q?soxXNOZZLe/NAhTMVoHG/smFX0Jqq+zWwFiKE0Lfk0DOEYRN985nnWvnowCt?=
+ =?us-ascii?Q?BUHG7shoy1FdFXH+osLbd/OIpN+iQwS5WkaKQd+l9r2yoVV3Bn4TNXOlY+SF?=
+ =?us-ascii?Q?O8GfWIgUEmTGE6QyyrWCrvSZ9/AMR6qyfzp0PIehhpGDYIfm1B+NPH61g5K2?=
+ =?us-ascii?Q?e+A6w8qdqMFoOJkqpEWNktMK9K6Jo+SPY37N1T/PCa3v2UM1jxxwtqVAGyIE?=
+ =?us-ascii?Q?nob63Bb9tDn8PRkKnMs9zlu762Hddnql8MvmM/gX8HgoDWDp8uvjf2lvJ122?=
+ =?us-ascii?Q?oQLuyELYymhvQe8UEvZ44Sf3Les8EsMyP8SZAzO+p+U06++BnXkLThXFBg3Y?=
+ =?us-ascii?Q?HdouAEVsAXK92yeLXYFWMN3tfuTrHOQLZX/M4bjSRoE9dC8G4wMe2Gdy2FwJ?=
+ =?us-ascii?Q?MWTiZxT4IK5fxBw2fYoPvCrrqPAFUKgGdqC0B7iaLDD0UMPfL+rnNpEuXmzL?=
+ =?us-ascii?Q?dh4ND/erjONxg7v2kn9aeMgHz+Fo2jnudE9R4iQ2QJqkTkubqEQdGZdWGjfz?=
+ =?us-ascii?Q?9sFe9Xfbz7cRiHNyPHte76GkWrkFy1YOfOrTIHc+oFsBT13f5ivI6UX7CRGJ?=
+ =?us-ascii?Q?dz1uuREWpJmRrQwgRQ4auKb8YWGSPLEZddOJ3IvvvHqZ6PaoVgEXhu/TixPq?=
+ =?us-ascii?Q?WybtXyTLTHwn3EIc3rZMQEcRZU3eYv4EJ6gcp+hmm13d9arJ8eoXb1Tk5iWF?=
+ =?us-ascii?Q?9VZDEXoqfkdjkX0PLBdE2RD3x/zqxjYMlBO+PwND3+dnBlRrNPL+2K7VAl0W?=
+ =?us-ascii?Q?SmfrTeQEPrbg61bnso9bMkba18nt6j4iTAL18P/0jhQf6Wwqu5EZzgnF6IQ3?=
+ =?us-ascii?Q?ZSCkP1NeAkOtW7Uu/AS0f85mmuteG1+dDNckbmD1xmFlXbjSjUgLDhqG/OUl?=
+ =?us-ascii?Q?cusqVIxeMoI7lY9t2gb27jT4ydczmdL1T+OJHjqrq+HbQP6T3jX5kJ/zuD1R?=
+ =?us-ascii?Q?mjRiy73IsICxZ5qkMu+i+czqbC9v49Jv9WN5j9lArgzi5PrE/p4y6BzB6EV+?=
+ =?us-ascii?Q?gkzUdKd2spJ/pwut48Uvb29YW4EblnrmrqnJhcrtS/EsC9sMnrC7WdUry6sy?=
+ =?us-ascii?Q?zl3PIjQ+rwTg+G1SpGEDnyLFSgr9o6eIOpSnRFYlhVrNswxLH0LeFZ0PXVCM?=
+ =?us-ascii?Q?j+7Ct82pzLl+HXJNPoN3dQ4yNq1CosMdx3Ab6fcCWQXTrYNE+QATyvWuR2Nx?=
+ =?us-ascii?Q?y6VMqAPRPdWFdsgzZj8=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfc4dce8-9af8-4a2c-06b9-08dcde51df0c
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2024 17:37:19.7086
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vWwFKDgRoKwTKuvLQxo0SU1Uq0gx9bQXc7jGDxSUP9n8OUzs9h/BpRaLEiNWyZQ2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8442
 
-Hello Zhi,
+On Tue, Sep 24, 2024 at 04:44:19PM -0700, Dave Jiang wrote:
 
-On 9/21/24 09:14, Zhi Wang wrote:
-> Compute Express Link (CXL) is an open standard interconnect built upon
-> industrial PCI layers to enhance the performance and efficiency of data
-> centers by enabling high-speed, low-latency communication between CPUs
-> and various types of devices such as accelerators, memory.
-> 
-> Although CXL is built upon the PCI layers, passing a CXL type-2 device can
-> be different than PCI devices according to CXL specification. Thus,
-> addtional changes on are required.
-> 
-> vfio-cxl is introduced to support the CXL type-2 device passthrough.
-> This is the QEMU VFIOStub draft changes to support it.
-> 
-> More details (patches, repos, kernel config) all what you need to test
-> and hack around, plus a demo video shows the kernel/QEMU command line
-> can be found at:
-> https://lore.kernel.org/kvm/20240920223446.1908673-7-zhiw@nvidia.com/T/
+> >> @@ -1030,6 +1032,7 @@ static const struct file_operations cxl_memdev_fops = {
+> >>  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+> >>  				       struct cxl_dev_state *cxlds)
+> >>  {
+> >> +	struct auxiliary_device *adev;
+> > 
+> > Why an auxdev? It can be any convienient dev to which a driver
+> > will bind. Why not spin one on the CXL bus for this purpose?
 
+IMHO bus members should adhere to some kinds of rules about the bus
+itself. Devices should have the same set of paramters/etc. I don't
+know what cxl_bus is, but I'd be surprised that something with that
+name has SW only entities on it as devices??
 
-I have started looking at the software stack and the QEMU trees
-are quite old. Could you please rebase the branches on the latest ?
+aux bus was specifically for SW only entities that are just for
+linking software components.
 
-Also, I think having a single branch per project would be easier.
-
-For linux :
-   [v2] cxl: add Type2 device support
-   [RFC] vfio: introduce vfio-cxl to support CXL type-2
-   [RFC] samples: introduce QEMU CXL accel driver
-
-Same for QEMU.
-
-Thanks,
-
-C.
-
-
-
-> 
-> Zhi Wang (1):
->    vfio: support CXL device in VFIO stub
-> 
->   hw/vfio/common.c              |   3 +
->   hw/vfio/pci.c                 | 134 ++++++++++++++++++++++++++++++++++
->   hw/vfio/pci.h                 |  10 +++
->   include/hw/pci/pci.h          |   2 +
->   include/hw/vfio/vfio-common.h |   1 +
->   linux-headers/linux/vfio.h    |  14 ++++
->   6 files changed, 164 insertions(+)
-> 
-
+Jason
