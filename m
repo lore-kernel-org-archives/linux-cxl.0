@@ -1,123 +1,198 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F3918BC1D;
-	Fri, 27 Sep 2024 12:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CE41C6A5
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Sep 2024 14:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727440228; cv=none; b=XVPug9M6MPzWVPiUlOCznRqengRME4Ica52MvwoN/7Hd3c2TmwCbo6iqdZf2g3aOmuLaWRkmyo2A02v0aSTjtWY5IC+N6XbMKSLjE9sFCXwYmHl+uuEQD1xUL0OO8etj/o+rVJHUwTI8tpGxDKu0Nl6MFnfjmGHVhL25qVRk8w4=
+	t=1727445789; cv=none; b=hJeMX0D/FD1kjkMCVx8hFuJNjv1V/Jdxc9E9iD2zFJFqK61luA/VJ0tc8c6TW1BMAn8BXBssKc8d5UG47YhjbtifdaMpFV3NPOz3R4RmhZuw7MFT02eBatgGPJdGHM+2llpKz4w2AAmlb0ImSbg/uyKQgUYkZ6MDfnzJ7DubDv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727440228; c=relaxed/simple;
-	bh=a3h2hbkd2SAJD+szjSc9cqtg5L0XsCkXzbVeCe0Gqd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0Kt62lz6DzUXBe4if/ORe/PQ5j1hzqLNjIlZOcSv53xAfcCzlu+VeMvpR3Qp6IJzxyioER8oGtn3xR68fip2Df8S36N6a6kI5rgqsu9sHUWEMMJtsVLxkJZFsjyVe8Ezbs0IRBAX621mHNTZ4xwVsOMdx/Ya/KuOqeK1Yr/gbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sGYFe9qA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1727445789; c=relaxed/simple;
+	bh=aa7fptxLg5hhuLC9545GybWqmtEy7NltjQ+ZlEE88BY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=szOPCXuWH0TbR2uZGiC337V/HyTmLLTWYq3V0OhdLAvpRBSy17Tu3ifeMKgl2m7dWDz2/ka04Bbrw+0ZWD6STa5/8G9mThi/RE3xB6iWoFoPmjFXtZWzubHSDt7mLdelTCkSl+3gdNRo3QQ1+OoEk+Z1EDrfTqMy29IyMs0CPx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KY+ifbO1; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sGYFe9qA"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48R26XTD005581;
-	Fri, 27 Sep 2024 12:29:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=X3KPffXxGN0FIhLP5f2K/FrqF2R
-	GS6QdxDbR1ndTZX0=; b=sGYFe9qAb/CiVmT4JsSABkFSS1iewD180v/BmBSG1tx
-	aSMKrjKxF+MOqGzv+5hc9KigJpdY2e3K6eIumU1MNSsK3qB/HOnHeajJNqxzg/a5
-	MdnYFUPK5gKSRKskepU17H87XqAn+5YL0VPxKQU7A2/8wQTfMPFqEh9fu4+HSGgg
-	lSASwpn9GFduHZfSXDk5jxHMZTUVh0yFNcPcLflHvzF3qTGM2L/WTtKDL9z6BSWE
-	74VHjrADXjwIlBVQKNHGGRvOjcUWwj8MvY+3OE/BCW7a12s8ToSgpHIcGqPctGiw
-	kMyoDCNnxrSVlcxM+SqQMS8KkROb7e8ZQs1dJKXEh5Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41wkmnjgx6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 12:29:35 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48RCTYnK016144;
-	Fri, 27 Sep 2024 12:29:35 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41wkmnjgx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 12:29:34 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48RA8lXn008722;
-	Fri, 27 Sep 2024 12:29:33 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41t8v1mxbj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 12:29:33 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48RCTV7v15270396
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Sep 2024 12:29:31 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3FFF520043;
-	Fri, 27 Sep 2024 12:29:31 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5867C20040;
-	Fri, 27 Sep 2024 12:29:29 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.79.55])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 27 Sep 2024 12:29:29 +0000 (GMT)
-Date: Fri, 27 Sep 2024 14:29:27 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, linux-mm@kvack.org, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
-        jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
-        mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
-        ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
-        tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com,
-        peterx@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
-Subject: Re: [PATCH 11/12] mm: Remove pXX_devmap callers
-Message-ID: <ZvalJ9O/SV9Riiws@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
- <4511465a4f8429f45e2ac70d2e65dc5e1df1eb47.1725941415.git-series.apopple@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KY+ifbO1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727445787; x=1758981787;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   content-transfer-encoding;
+  bh=aa7fptxLg5hhuLC9545GybWqmtEy7NltjQ+ZlEE88BY=;
+  b=KY+ifbO1CJnI/DtE/SWXbuv2xtBoLC8U0pUufbnCiBKao10uPf1fASC0
+   8zLAXYF8tIwP60FZA04gnR1Hb/w3/p9GCIFINqiS5L0B1lJGxRsMLGeMY
+   Pd9gNLET0O7J+a/mhXI0AXTp2Ter7aJdiC9OZMex0buyInQsQZ6m69HVw
+   5JEIgfbkRFplVYjKr54qI2u7iOV8hEZHIQaELSxn8iLw788nYwmDAe1/A
+   9VTwPEzF02E/doRg9fW6BvA1qqQoW8g9yALJpfLcjj1jThCMHuk10MGMV
+   ZrE8qYLWlB8uf/g5FmP6lU0/RZvGLgk95H3Z2EAgHhqoFYEs+zwo5IfGu
+   g==;
+X-CSE-ConnectionGUID: rKTYcPecSgmFT5e8FWME8Q==
+X-CSE-MsgGUID: Tlsj6PNsSoaSBk1jiqXklg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11207"; a="37171354"
+X-IronPort-AV: E=Sophos;i="6.11,158,1725346800"; 
+   d="scan'208";a="37171354"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 07:02:58 -0700
+X-CSE-ConnectionGUID: A1xn9U98Tiu7TNPmdkdCaw==
+X-CSE-MsgGUID: R4N0vw43ScWTLLQa3cmtyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,158,1725346800"; 
+   d="scan'208";a="72847885"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.33]) ([10.125.108.33])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 07:02:58 -0700
+Message-ID: <9c4d4de9-5c24-4644-ba41-875bf19da10b@intel.com>
+Date: Fri, 27 Sep 2024 07:02:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4511465a4f8429f45e2ac70d2e65dc5e1df1eb47.1725941415.git-series.apopple@nvidia.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oFQh9Q3qdgOsP-PvuakR2OvYRSStdcRF
-X-Proofpoint-ORIG-GUID: 9y1XQY94BFekLXDgIVhFUpi4XYvsL7VN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-27_06,2024-09-27_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=771
- priorityscore=1501 suspectscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409270086
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) for 6.12
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 10, 2024 at 02:14:36PM +1000, Alistair Popple wrote:
+Hi Linus, please pull from:
 
-Hi Alistair,
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git cxl-for-6.12
 
-> diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-> index 5a4a753..4537a29 100644
-> --- a/arch/powerpc/mm/book3s64/pgtable.c
-> +++ b/arch/powerpc/mm/book3s64/pgtable.c
-> @@ -193,7 +192,7 @@ pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
->  	pmd_t pmd;
->  	VM_BUG_ON(addr & ~HPAGE_PMD_MASK);
->  	VM_BUG_ON((pmd_present(*pmdp) && !pmd_trans_huge(*pmdp) &&
-> -		   !pmd_devmap(*pmdp)) || !pmd_present(*pmdp));
-> +		   || !pmd_present(*pmdp));
+...to receive updates for CXL subsystem.
 
-That looks broken.
+Changes contain a patch series to address HDM decoder initialization from DVSEC
+ranges, a patch series that refactors the code related to cxl mailboxes to be
+independent of the memory devices, a patch series that adds support for shared
+upstream link access_coordinate calculation, as well as a change to remove
+locking from memory notifier callback. In addition, a number of misc cleanups
+and refactoring of the code are also included.
 
->  	pmd = pmdp_huge_get_and_clear(vma->vm_mm, addr, pmdp);
->  	/*
->  	 * if it not a fullmm flush, then we can possibly end up converting
+These have all appeared in -next for a few days with no reported issues.
 
-Thanks!
+---
+
+The following changes since commit 431c1646e1f86b949fa3685efc50b660a364c2b6:
+
+  Linux 6.11-rc6 (2024-09-01 19:46:02 +1200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git cxl-for-6.12
+
+for you to fetch changes up to 2c70677dabb5e326467160e28915b804b925b53b:
+
+  cxl: Add documentation to explain the shared link bandwidth calculation (2024-09-22 21:29:08 -0700)
+
+----------------------------------------------------------------
+cxl changes for v6.12
+
+Misc cleanups:
+- Convert devm_cxl_add_root() to return using ERR_CAST().
+- cxl_test use dev_is_platform() instead of open coding.
+- Remove duplicate include of header core.h in core/cdat.c.
+- use scoped resource management to drop put_device() for cxl_port
+- Use scoped_guard to drop device_lock() for cxl_port
+- Refactor __devm_cxl_add_port() to drop gotos
+- Rename cxl_setup_parent_dport to cxl_dport_init_aer and cxl_dport_map_regs()
+  to cxl_dport_map_ras().
+- Refactor cxl_dport_init_aer() to be more concise.
+- Remove duplicate host_bridge->native_aer checking in cxl_dport_init_ras_reporting().
+- Fix comment for cxl_query_cmd()
+
+Series to address HDM decoder initialization from DVSEC ranges:
+- Only register non-zero DVSEC ranges.
+- Remove duplicate implementation of waiting for memory_info_valid.
+- Simplify the checking of mem_enabled in  cxl_hdm_decode_init().
+
+Remove locking from memory notifier callback
+
+Series that refactors the code related to cxl mailboxes to be independent of the memory devices
+- Move cxl headers in include/linux/ to include/cxl.
+- Move all mailbox related data to 'struct cxl_mailbox'.
+- Refactor mailbox APIs with 'struct cxl_mailbox' as input instead of memory device state.
+
+Series that adds support for shared upstream link access_coordinate calculation for
+configurations that have multiple targets under a switch or a root port where the
+aggregated bandwidth can be greater than the upstream link of the switch/RP upstream
+link.
+- Preserve the CDAT access_coordinate from an endpoint
+- Add the support for shared upstream link access_coordinate calculation
+- Add documentation to explain how the calculations are done.
+
+----------------------------------------------------------------
+Dave Jiang (7):
+      cxl: move cxl headers to new include/cxl/ directory
+      cxl: Move mailbox related bits to the same context
+      cxl: Convert cxl_internal_send_cmd() to use 'struct cxl_mailbox' as input
+      cxl: Fix comment regarding cxl_query_cmd() return data
+      cxl: Preserve the CDAT access_coordinate for an endpoint
+      cxl: Calculate region bandwidth of targets with shared upstream link
+      cxl: Add documentation to explain the shared link bandwidth calculation
+
+Hongbo Li (1):
+      cxl: Remove duplicate included header file core.h
+
+Ira Weiny (1):
+      cxl/region: Remove lock from memory notifier callback
+
+Kunwu Chan (1):
+      tools/testing/cxl: Use dev_is_platform()
+
+Li Ming (6):
+      cxl/port: Use __free() to drop put_device() for cxl_port
+      cxl/port: Use scoped_guard()/guard() to drop device_lock() for cxl_port
+      cxl/port: Refactor __devm_cxl_add_port() to drop goto pattern
+      cxl/pci: Rename cxl_setup_parent_dport() and cxl_dport_map_regs()
+      cxl/pci: cxl_dport_map_rch_aer() cleanup
+      cxl/pci: Remove duplicate host_bridge->native_aer checking
+
+Yanfei Xu (4):
+      cxl/pci: Fix to record only non-zero ranges
+      cxl/pci: Remove duplicated implementation of waiting for memory_info_valid
+      cxl/pci: Check Mem_info_valid bit for each applicable DVSEC
+      cxl/pci: simplify the check of mem_enabled in cxl_hdm_decode_init()
+
+Yuesong Li (1):
+      cxl/port: Convert to use ERR_CAST()
+
+ .../driver-api/cxl/access-coordinates.rst          |  91 ++++
+ Documentation/driver-api/cxl/index.rst             |   1 +
+ MAINTAINERS                                        |   3 +-
+ drivers/acpi/apei/einj-cxl.c                       |   2 +-
+ drivers/acpi/apei/ghes.c                           |   2 +-
+ drivers/cxl/core/cdat.c                            | 508 ++++++++++++++++++++-
+ drivers/cxl/core/core.h                            |   4 +-
+ drivers/cxl/core/mbox.c                            |  96 ++--
+ drivers/cxl/core/memdev.c                          |  41 +-
+ drivers/cxl/core/pci.c                             | 168 +++----
+ drivers/cxl/core/port.c                            | 208 +++++----
+ drivers/cxl/core/region.c                          |  81 ++--
+ drivers/cxl/cxl.h                                  |   9 +-
+ drivers/cxl/cxlmem.h                               |  27 +-
+ drivers/cxl/mem.c                                  |  29 +-
+ drivers/cxl/pci.c                                  |  91 ++--
+ drivers/cxl/pmem.c                                 |  26 +-
+ drivers/cxl/port.c                                 |   2 +-
+ drivers/cxl/security.c                             |  23 +-
+ include/{linux/einj-cxl.h => cxl/einj.h}           |   0
+ include/{linux/cxl-event.h => cxl/event.h}         |   0
+ include/cxl/mailbox.h                              |  28 ++
+ tools/testing/cxl/Kbuild                           |   2 +-
+ tools/testing/cxl/mock_acpi.c                      |   2 +-
+ tools/testing/cxl/test/mem.c                       |  44 +-
+ tools/testing/cxl/test/mock.c                      |  10 +-
+ 26 files changed, 1092 insertions(+), 406 deletions(-)
+ create mode 100644 Documentation/driver-api/cxl/access-coordinates.rst
+ rename include/{linux/einj-cxl.h => cxl/einj.h} (100%)
+ rename include/{linux/cxl-event.h => cxl/event.h} (100%)
+ create mode 100644 include/cxl/mailbox.h
