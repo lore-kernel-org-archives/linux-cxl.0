@@ -1,249 +1,307 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F78E13635C;
-	Fri, 27 Sep 2024 14:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCB513A276
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Sep 2024 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727446895; cv=none; b=TOVV/yk0bFeDsgFRn49SXPbgp+PRSsZZB1Bfe2xP1GGK9DazqL9ylVcyIN+B5j8skxcgczvH+n2iDRVAl+YhFXWU4h/t/29svRKVp03Xm4accDFs1Z7rDPMOynQZVxn+SX3OxXRvuNqcojkDjiLeTJzl+DJOpMLOotrLgj5eDw4=
+	t=1727454125; cv=none; b=ouhc+uMXHUEVFxRn7c02EuXV0N8A95VHwPadq3u4QCODGIt2PUivdBTp4HjlG94x9kyiNaT3o/HmOVPJ2z5UxRpHTQBVWWoU2+Mq0EqML3VYj+dHloO1XAoksrBX7csetLCFbWF6cPzwk3YXdLH7uarX9u69KLWIAmz9xva1gZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727446895; c=relaxed/simple;
-	bh=Tj7g9Qz2+m9XOubxNkSKkbchbcNiJ9Ze8iorf5CIJ1k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rPC0M/TwX27hIoEwOkPQB67dQYAqm+8zHzTHCpJ6hCsFv3C8W7adh+OrZ4NHrTm+2zWJ+VJ23nScmizAD8oovvCAiWeicCt/Xc3/oggJ+FZtRiuWXVldXsRpz0qROSCCiEcX4+WSUV8GjRrPu8AsPrWVEq1CiQNgGe9t/8j7za4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6682C4CEC4;
-	Fri, 27 Sep 2024 14:21:33 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	tony.luck@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com
-Subject: [RFC PATCH 6/6] cxl: Add mce notifier to emit aliased address for extended linear cache
-Date: Fri, 27 Sep 2024 07:16:58 -0700
-Message-ID: <20240927142108.1156362-7-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20240927142108.1156362-1-dave.jiang@intel.com>
-References: <20240927142108.1156362-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1727454125; c=relaxed/simple;
+	bh=klF2iZfwh2+nG8JAds+S3q18HVww0Ub6KWdU/8VM6w0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NcTjr9QrhQG7feG5SPa/cER5oiQEKeWR5EwPqyJdS2XvLuVwgxfrOm8mGWvshYVSE17B6eL36TswvubcXWWF1zNTDnpEqPj7oKMrY1vsQ5TRF13B+MCfQESRdB7rHqVy2vnQ/o/NYhyZH/bLlAawtnGQBtw+Mk/N7augb+Hps6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JX3p4i1s; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JX3p4i1s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727454123; x=1758990123;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=klF2iZfwh2+nG8JAds+S3q18HVww0Ub6KWdU/8VM6w0=;
+  b=JX3p4i1sYhco3+P9CCiwravnH1HvXeUgLaMfDcI4xTS0UJbDnsAt9CtB
+   9iGN/U0cYp1tpPkzQra/Kfj/NKLqUMBpOwZ4wtbDi4OH62hLptghwcq7J
+   xIfzyicLtrpqYDmGlJO/iYX4r0hKGQZbpmE3AZe9SnkSRhwVaPw2Z4Dli
+   nd5PdoWK3nXXi8+tNjpoDvF9MVDT95UMxrBZnvurqZq9/bzaNwB+wrmdH
+   R178pu9GcWb1nH8IikSRfO0Rf4QnDPy27uoNidrvWEwviz0Vzh1X3mdKN
+   3DdEOpr9ZlyjGtyC9CQzQBEKkI3UcvVy7iAy49dQzUku5YqHbBVy6OwpI
+   w==;
+X-CSE-ConnectionGUID: +Ud5eEBgR8upc8fVq5mRYw==
+X-CSE-MsgGUID: 599XLECdQZ6qi/UUrB9VFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11208"; a="26736726"
+X-IronPort-AV: E=Sophos;i="6.11,159,1725346800"; 
+   d="scan'208";a="26736726"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 09:22:03 -0700
+X-CSE-ConnectionGUID: KN2oHQOdQsabTFxJ4Dr7kg==
+X-CSE-MsgGUID: opp3o+TKQRqGSEgf0nrr1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,159,1725346800"; 
+   d="scan'208";a="110069516"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.33]) ([10.125.108.33])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 09:22:02 -0700
+Message-ID: <806fbf8c-c3c3-41ed-b4b7-cb0a74d408df@intel.com>
+Date: Fri, 27 Sep 2024 09:22:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 04/13] cxl: Add Get Supported Features command for
+ kernel usage
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240718213446.1750135-5-dave.jiang@intel.com>
+ <20240726185010.0000295c@Huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240726185010.0000295c@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Below is a setup with extended linear cache configuration with an example
-layout of of memory region shown below presented as a single memory region
-consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-The kernel sees a region of total 256G of system memory.
 
-              128G DRAM                          128G CXL memory
-|-----------------------------------|-------------------------------------|
 
-Data resides in either DRAM or far memory (FM) with no replication. Hot data
-is swapped into DRAM by the hardware behind the scenes. When error is detected
-in one location, it is possible that error also resides in the aliased
-location. Therefore when a memory location that is flagged by MCE is part of
-the special region, the aliased memory location needs to be offlined as well.
+On 7/26/24 10:50 AM, Jonathan Cameron wrote:
+> On Thu, 18 Jul 2024 14:32:22 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+>> The command retrieve the list of supported device-specific features
+>> (identified by UUID) and general information about each Feature.
+>>
+>> The driver will retrieve the feature entries in order to make checks and
+>> provide information for the Get Feature and Set Feature command. One of
+>> the main piece of information retrieved are the effects a Set Feature
+>> command would have for a particular feature.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> Already a fairly well reviewed implementation of this in 
+> 
+> https://lore.kernel.org/linux-cxl/20240726160556.2079-5-shiju.jose@huawei.com/
+> 
+> Though it wasn't focused on providing userspace access to it and doesn't handle
+> large feature lists which would be eventually needed.
+> 
+> I'd have preferred to see review on that rather than another version
+> of the same functionality.
+> 
+> Note the QEMU testing used for that set will be useable here too
+> and is now upstream.
+> 
+> A few comments inline.
+> 
+> Jonathan
+> 
+> 
+>> +int cxl_get_supported_features(struct cxl_mailbox *cxl_mbox)
+>> +{
+>> +	int remain_feats, max_size, max_feats, start, rc;
+>> +	int feat_size = sizeof(struct cxl_feat_entry);
+>> +	struct cxl_mbox_get_sup_feats_out *mbox_out;
+>> +	struct cxl_mbox_get_sup_feats_in mbox_in;
+>> +	int hdr_size = sizeof(*mbox_out);
+>> +	struct cxl_mbox_cmd mbox_cmd;
+>> +	struct cxl_mem_command *cmd;
+>> +	void *ptr;
+>> +
+>> +	/* Get supported features is optional, need to check */
+>> +	cmd = cxl_mem_find_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
+>> +	if (!cmd)
+>> +		return -EOPNOTSUPP;
+>> +	if (!test_bit(cmd->info.id, cxl_mbox->enabled_cmds))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	rc = cxl_get_supported_features_count(cxl_mbox);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	struct cxl_feat_entry *entries __free(kvfree) =
+>> +		kvmalloc(cxl_mbox->num_features * feat_size, GFP_KERNEL);
+>> +
+>> +	if (!entries)
+>> +		return -ENOMEM;
+>> +
+>> +	cxl_mbox->entries = no_free_ptr(entries);
+> 
+> Hmm. Not srue I'd bother with __free(kvfree) for one line that doesn't
+> do the free.
+> 
+>> +	rc = devm_add_action_or_reset(cxl_mbox->host, cxl_free_features,
+>> +				      cxl_mbox->entries);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	max_size = cxl_mbox->payload_size - hdr_size;
+>> +	/* max feat entries that can fit in mailbox max payload size */
+>> +	max_feats = max_size / feat_size;
+>> +	ptr = &cxl_mbox->entries[0];
+>> +
+>> +	mbox_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+> Freed?
+> 
+>> +	if (!mbox_out)
+>> +		return -ENOMEM;
+>> +
+>> +	start = 0;
+>> +	remain_feats = cxl_mbox->num_features;
+>> +	do {
+>> +		int retrieved, alloc_size, copy_feats;
+>> +
+>> +		if (remain_feats > max_feats) {
+>> +			alloc_size = sizeof(*mbox_out) + max_feats * feat_size;
+>> +			remain_feats = remain_feats - max_feats;
+>> +			copy_feats = max_feats;
+>> +		} else {
+>> +			alloc_size = sizeof(*mbox_out) + remain_feats * feat_size;
+>> +			copy_feats = remain_feats;
+>> +			remain_feats = 0;
+>> +		}
+>> +
+>> +		memset(&mbox_in, 0, sizeof(mbox_in));
+>> +		mbox_in.count = alloc_size;
+>> +		mbox_in.start_idx = start;
+>> +		memset(mbox_out, 0, alloc_size);
+>> +		mbox_cmd = (struct cxl_mbox_cmd) {
+>> +			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
+>> +			.size_in = sizeof(mbox_in),
+>> +			.payload_in = &mbox_in,
+>> +			.size_out = alloc_size,
+>> +			.payload_out = mbox_out,
+>> +			.min_out = hdr_size,
+>> +		};
+>> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+>> +		if (rc < 0)
+>> +			return rc;
+>> +
+>> +		if (mbox_cmd.size_out <= hdr_size) {
+>> +			rc = -ENXIO;
+>> +			goto err;
+>> +		}
+>> +
+>> +		/*
+>> +		 * Make sure retrieved out buffer is multiple of feature
+>> +		 * entries.
+>> +		 */
+>> +		retrieved = mbox_cmd.size_out - hdr_size;
+>> +		if (retrieved % sizeof(struct cxl_feat_entry)) {
+>> +			rc = -ENXIO;
+>> +			goto err;
+>> +		}
+>> +
+>> +		/*
+>> +		 * If the reported output entries * defined entry size !=
+>> +		 * retrieved output bytes, then the output package is incorrect.
+>> +		 */
+>> +		if (mbox_out->num_entries * feat_size != retrieved) {
+>> +			rc = -ENXIO;
+>> +			goto err;
+>> +		}
+>> +
+>> +		memcpy(ptr, mbox_out->ents, retrieved);
+>> +		ptr += retrieved;
+>> +		/*
+>> +		 * If the number of output entries is less than expected, add the
+>> +		 * remaining entries to the next batch.
+>> +		 */
+>> +		remain_feats += copy_feats - mbox_out->num_entries;
+>> +		start += mbox_out->num_entries;
+>> +	} while (remain_feats);
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	cxl_mbox->num_features = 0;
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
+>> +
+>>  /**
+>>   * cxl_enumerate_cmds() - Enumerate commands for a device.
+>>   * @mds: The driver data for the operation
+>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>> index efdf833f2c51..4d3690aa2f3b 100644
+>> --- a/drivers/cxl/cxlmem.h
+>> +++ b/drivers/cxl/cxlmem.h
+> 
+>> +struct cxl_mbox_get_sup_feats_out {
+>> +	__le16 num_entries;
+>> +	__le16 supported_feats;
+>> +	__le32 reserved;
+>> +	struct cxl_feat_entry ents[] __counted_by(le32_to_cpu(supported_feats));
+> 
+> I didn't know __counted_by worked with function calls. Interesting.
 
-Add an mce notify callback to identify if the MCE address location is part of
-an extended linear cache region and handle accordingly.
+Actually I need to use __counted_by_le() instead as someone pointed out via kbot reporting.
 
-Added symbol export to set_mce_nospec() in x86 code in order to call
-set_mce_nospec() from the CXL MCE notify callback.
+DJ
 
-Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- arch/x86/include/asm/mce.h   |  1 +
- arch/x86/mm/pat/set_memory.c |  1 +
- drivers/cxl/core/mbox.c      | 45 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/region.c    | 25 ++++++++++++++++++++
- drivers/cxl/cxl.h            |  6 +++++
- drivers/cxl/cxlmem.h         |  2 ++
- 6 files changed, 80 insertions(+)
-
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 3ad29b128943..5da45e870858 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -182,6 +182,7 @@ enum mce_notifier_prios {
- 	MCE_PRIO_NFIT,
- 	MCE_PRIO_EXTLOG,
- 	MCE_PRIO_UC,
-+	MCE_PRIO_CXL,
- 	MCE_PRIO_EARLY,
- 	MCE_PRIO_CEC,
- 	MCE_PRIO_HIGHEST = MCE_PRIO_CEC
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 44f7b2ea6a07..1f85c29e118e 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2083,6 +2083,7 @@ int set_mce_nospec(unsigned long pfn)
- 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(set_mce_nospec);
- 
- /* Restore full speculative operation to the pfn. */
- int clear_mce_nospec(unsigned long pfn)
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index ac170fd85a1a..4488f30abc64 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -4,6 +4,9 @@
- #include <linux/debugfs.h>
- #include <linux/ktime.h>
- #include <linux/mutex.h>
-+#include <linux/notifier.h>
-+#include <linux/set_memory.h>
-+#include <asm/mce.h>
- #include <asm/unaligned.h>
- #include <cxlpci.h>
- #include <cxlmem.h>
-@@ -1444,6 +1447,44 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
- 
-+static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
-+			  void *data)
-+{
-+	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
-+						    mce_notifier);
-+	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct mce *mce = (struct mce *)data;
-+	u64 spa, spa_alias;
-+	unsigned long pfn;
-+
-+	if (!mce || !mce_usable_address(mce))
-+		return NOTIFY_DONE;
-+
-+	spa = mce->addr & MCI_ADDR_PHYSADDR;
-+
-+	pfn = spa >> PAGE_SHIFT;
-+	if (!pfn_valid(pfn))
-+		return NOTIFY_DONE;
-+
-+	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
-+	if (!spa_alias)
-+		return NOTIFY_DONE;
-+
-+	pfn = spa_alias >> PAGE_SHIFT;
-+
-+	/*
-+	 * Take down the aliased memory page. The original memory page flagged
-+	 * by the MCE will be taken cared of by the standard MCE handler.
-+	 */
-+	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address: %#llx\n",
-+		  spa_alias);
-+	if (!memory_failure(pfn, 0))
-+		set_mce_nospec(pfn);
-+
-+	return NOTIFY_OK;
-+}
-+
- struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- {
- 	struct cxl_memdev_state *mds;
-@@ -1463,6 +1504,10 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 
-+	mds->mce_notifier.notifier_call = cxl_handle_mce;
-+	mds->mce_notifier.priority = MCE_PRIO_CXL;
-+	mce_register_decode_chain(&mds->mce_notifier);
-+
- 	return mds;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, CXL);
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index c19bbbf8079d..a60af9763a95 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3420,6 +3420,31 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, CXL);
- 
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
-+{
-+	struct cxl_region_ref *iter;
-+	unsigned long index;
-+
-+	guard(rwsem_write)(&cxl_region_rwsem);
-+
-+	xa_for_each(&endpoint->regions, index, iter) {
-+		struct cxl_region_params *p = &iter->region->params;
-+
-+		if (p->res->start <= spa && spa <= p->res->end) {
-+			if (!p->cache_size)
-+				return 0;
-+
-+			if (spa > p->res->start + p->cache_size)
-+				return spa - p->cache_size;
-+
-+			return spa + p->cache_size;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, CXL);
-+
- static int is_system_ram(struct resource *res, void *arg)
- {
- 	struct cxl_region *cxlr = arg;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d8d715090779..8516f6da620c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -864,6 +864,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
- int cxl_add_to_region(struct cxl_port *root,
- 		      struct cxl_endpoint_decoder *cxled);
- struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
- {
-@@ -882,6 +883,11 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- {
- 	return NULL;
- }
-+static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
-+					       u64 spa)
-+{
-+	return 0;
-+}
- #endif
- 
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index afb53d058d62..46515d2a49cb 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -470,6 +470,7 @@ struct cxl_dev_state {
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-+ * @mce_notifier: MCE notifier
-  * @mbox_wait: RCU wait for mbox send completely
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-  *
-@@ -500,6 +501,7 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
-+	struct notifier_block mce_notifier;
- 
- 	struct rcuwait mbox_wait;
- 	int (*mbox_send)(struct cxl_memdev_state *mds,
--- 
-2.46.1
+> 
+>> +} __packed;
+>> +
+> 
+>>  #endif /* __CXL_MEM_H__ */
+>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>> index 7e26da706921..6a00238446f9 100644
+>> --- a/drivers/cxl/pci.c
+>> +++ b/drivers/cxl/pci.c
+>> @@ -872,6 +872,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>  	if (rc)
+>>  		return rc;
+>>  
+>> +	rc = cxl_get_supported_features(&cxlds->cxl_mbox);
+> 
+> I would separate no features from an error in trying to enumerate them.
+> 
+>> +	if (rc)
+>> +		dev_dbg(&pdev->dev, "No features enumerated.\n");
+>> +
+>>  	rc = cxl_set_timestamp(mds);
+>>  	if (rc)
+>>  		return rc;
+>> diff --git a/include/linux/cxl/mailbox.h b/include/linux/cxl/mailbox.h
+>> index 2380b22d7a12..570864239b8f 100644
+>> --- a/include/linux/cxl/mailbox.h
+>> +++ b/include/linux/cxl/mailbox.h
+>> @@ -53,6 +53,7 @@ struct cxl_mbox_cmd {
+>>   * @mbox_mutex: mutex protects device mailbox and firmware
+>>   * @mbox_wait: rcuwait for mailbox
+>>   * @mbox_send: @dev specific transport for transmitting mailbox commands
+>> + * @features: number of supported features
+> 
+> missing docs for entries.
+> 
+>>   */
+>>  struct cxl_mailbox {
+>>  	struct device *host;
+>> @@ -63,6 +64,8 @@ struct cxl_mailbox {
+>>  	struct mutex mbox_mutex; /* lock to protect mailbox context */
+>>  	struct rcuwait mbox_wait;
+>>  	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
+>> +	int num_features;
+>> +	struct cxl_feat_entry *entries;
+>>  };
+>>  
+>>  #endif
+>> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+>> index c6c0fe27495d..bd2535962f70 100644
+>> --- a/include/uapi/linux/cxl_mem.h
+>> +++ b/include/uapi/linux/cxl_mem.h
+>> @@ -50,6 +50,7 @@
+>>  	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
+>>  	___C(CLEAR_LOG, "Clear Log"),					  \
+>>  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
+>> +	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
+>>  	___C(MAX, "invalid / last command")
+>>  
+>>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> 
 
