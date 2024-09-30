@@ -1,445 +1,157 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flamingo.ash.relay.mailchannels.net (flamingo.ash.relay.mailchannels.net [23.83.222.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BB8192D7F;
-	Mon, 30 Sep 2024 18:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727719964; cv=none; b=OuPorLspczNiVxTTCGRHTdYT2kswIllKBJqEVptSdLE96C1fLybp7SgRoX182DWNHN+4fskYdiT9Qz9dkgeRN92xvBVcsKBGwDiQZ4ecg6FdblepGsQdULjYXKO7zYVWdkUvKlAFcVIDeMJZdniUiCZ4c4sy7mIeqI1yKjwyV/Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727719964; c=relaxed/simple;
-	bh=20EVv87MX0+qJDTkTgZb1BgQLdiuABaXeh4YFLWCDVQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gc7jHE3/hBc85Jiv62d6VcMqQriYKewm1BFaJ5SXeA1pVo9XDqkAXZI0RvjBHJmB3ippD366sPCQpAukz3Vi0oy/yDUfR7YTMf7lXpThUAEMdY+rLuHI4eZYPtLG+dsnYH99f9yvqui9jmzPzKMG7uBr5AJFL8UZne3kxI3eDUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4TAmgkw; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3F0198E84
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Sep 2024 19:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727725132; cv=pass; b=nxcP0bbQPyboTIqaZD6MNZaGZQ4JDrtDJlHzHHtGSKNSGUilxbx2YVM92Yybtdf/ko922N1KFPonFcz8sc/51hNItXMquxGScAph1tpB8SV1W2HnqMvWaIfOqGSQoaGJFiRHM0id4nI+c/fzBN6uDYjY4CIXyO09bi1aZkmZv7Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727725132; c=relaxed/simple;
+	bh=drvfoqRwLTPzEhF/GU5GtuJlQm1UODZr1pFD/5K1JrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxlq9Ac7d8ersxNFi5oX0gnxzlTwhqxAN7uR6ys92ubOhGwGQ9IDbqArqr4274TtucaWsLqNFsUPyR6N4A5c/g38zmUdw0xzH+rm6r7v4XCP9HlkP+njr2m0AZY+vk15bdCDNkWjTJ1Yzt+VoObv/61yFbVvBRlOaLc1A48eO/I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Ka4ws+iS; arc=pass smtp.client-ip=23.83.222.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4TAmgkw"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6dde476d3dfso37450767b3.3;
-        Mon, 30 Sep 2024 11:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727719962; x=1728324762; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yOQRubuT/DdhrnZg0J46Z8IjsbDjiXizvk3mSMiIiPk=;
-        b=B4TAmgkwdsMlqdv4nKrML+oQbNBySNvhrBGfn1HnvqWjnifoEKPpQEOwnUdITL/2v4
-         jxlbCdJ6C5XSG0wZwdwnf+akj2LM/x9crnc7Q8pBSU0gQ4RvZpUYJms6Zq8EDW77+pAz
-         MmpIbrWzT21TbOaGGmGvccLjiEN+HinlitHHv+Sfawf1CTKXNtpDSa2MO2iTghycJXz0
-         YOLhTT3AeTzDNrNx6Vvi+IGk64obwO0RgR8XTpBCs2+tcwa4h2PywaEhZCEMjknRtLy5
-         8QAKG4Pg42cTJV3ofHLYJtnELfUfAq5nTtGpav+QfiNgX+er1xc4wbFjsBWoo7L5lHEm
-         qwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727719962; x=1728324762;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yOQRubuT/DdhrnZg0J46Z8IjsbDjiXizvk3mSMiIiPk=;
-        b=pcGBPDV+BmMD/bqeNs1vVMY0Wdjq/skP9ftuDlsiVwsWtriuAYQpGyYlR+73uKA5Em
-         GqpOheyjInnoX3cNuVZiZSL3x13nCJSXeGZ8CQ0f8wWS1iNxJmKs8AqOSA5rzfd/wKil
-         Exyx9acXV8IQOUPYqS+kDiZ2jXafb4Ye2wmMfWgsvFcY3FI/tBwigNjT2oODm3jLEl8D
-         +q1R+Uckk/qdhVpR13r/3VyoMTFWwVmQo7bka7RovEyQMnwbbqdjhygFeShD7ewg/Dua
-         jbemUTZaz3MDDSlD+RD4GYLRN3/exk7A31LHw/ocl7/1KoMb+SOc1GekFRbg6ulq3JHf
-         7LPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDknyh8JrJUHs1VcmMtKwJLbR5Luni6nCsHQdOLyDE/C72UCbUBP7oyQ2hzymCBEu39ithP1Mw485T@vger.kernel.org, AJvYcCVvPrFl4D4PvNEk0Iozr81Fi6LHba8Q7G9p6Q8xuFawfr8SPgZ4clvVZ7HGRQcUdrRwzCvQWJb3mYnI@vger.kernel.org, AJvYcCW5lst0Lpf5Qz3QUxGX+z+gX5+fT7p8NzKitoG1+z2ReAQ8YeYzpQa2XNhJRE3P7UFf0E1zKjvPLGR7buKh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHKi6X+K+Gv19r3rVvCtenHPYlMULhUm9fwZ549IyysG/ZXrSg
-	LHbX3N0bRUxrv5REqaLCFK/jduz2pogYtj4/xYHDrLexJeNld6vS
-X-Google-Smtp-Source: AGHT+IFGDtb1okPx8ASJ/FqC3q3kJ3m8KDX+uOf7nXaeJotGB3ywKi4Rawv85c/1vPtm8bldSFByTQ==
-X-Received: by 2002:a05:690c:389:b0:6e2:71b:150 with SMTP id 00721157ae682-6e2475d07c4mr79893047b3.29.1727719961869;
-        Mon, 30 Sep 2024 11:12:41 -0700 (PDT)
-Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e24536999esm15107697b3.95.2024.09.30.11.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 11:12:41 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 30 Sep 2024 11:12:36 -0700
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com, jgroves@micron.com,
-	vsalve@micron.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH v12 11/17] cxl/memfeature: Add CXL memory device ECS
- control feature
-Message-ID: <ZvrqFHQ8TPv_c3vC@fan>
-References: <20240911090447.751-1-shiju.jose@huawei.com>
- <20240911090447.751-12-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Ka4ws+iS"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 755E95C626B;
+	Mon, 30 Sep 2024 19:31:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1128A5C6634;
+	Mon, 30 Sep 2024 19:31:03 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727724663; a=rsa-sha256;
+	cv=none;
+	b=Ey+7Dmd50zH8+noevr5o877sRUjywh3eDgJ0x+tqIWAzzGKoj9902R1siYjDo5xBJvnnvo
+	OAbTbRNo2wTWEC+W5xuqmz6R9tBAgNhYfDZh8Qs0ofzRabMfczPNNI27eZ6lMIrg0AlrK6
+	TaDOttwbDN2oglQGxz1tmC68a3gSyuWfMo3lPATZdoGXZb+MsmFwWT+2N6XD1e01/kIL7A
+	sFr0KygRoystzJDzWjwD6l991FESBdDach0Ht7UuXK99KTWF/lcnCAeaIqHsQft95Yx6wq
+	ox6vfA5RpWOTfLTDpjk78ntjaqos2Kp5DQjFAtXjMOHnErUhUnR5HP9eNq+SnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1727724663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=aRWDBQPsV6KbvpbJ88AAbGqasNK6ffj6dOPqME6msik=;
+	b=DVkuASwblSHzC8Wb3d89NoPn12vfNMLDFliGevfXLWR6VFoDfKCOYWHqVuYDfNeeGgEEYG
+	5oQoD+eDB2VU+d2pme4hbgX4SgSD0KcRsbLxh6viHli6dtmTrlJtMrDonEYn1naeR3jRRq
+	BBD3W9wcOj1/K/tUcrhicrjwF53N42AxfvStzUc8U+19yxayWXxJ7WfLZjr58peSR1e8dv
+	lrNp9Hq0+JLO/Qt9PL9iRfJElnK6Azp12kkerQkx/k5Ri4HaKtDWOaDrWKEhSbaGLgLgCn
+	k20JWKpcOhrUwE/C6IJpA1u0WSyJ67IDZgRLzHxef1J5kRRGEFr6qIKvNWfb7A==
+ARC-Authentication-Results: i=1;
+	rspamd-5b468d8b77-4ctkl;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Drop-Thoughtful: 1a96d8b7640a480b_1727724663307_2316578376
+X-MC-Loop-Signature: 1727724663307:2520058090
+X-MC-Ingress-Time: 1727724663307
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.114.165.125 (trex/7.0.2);
+	Mon, 30 Sep 2024 19:31:03 +0000
+Received: from offworld (unknown [104.36.31.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4XHWQG2jfszKk;
+	Mon, 30 Sep 2024 12:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1727724662;
+	bh=aRWDBQPsV6KbvpbJ88AAbGqasNK6ffj6dOPqME6msik=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Ka4ws+iS4gXGBIQ9t8Sa9VaX9Pz5vmqpgsB2Lx2FgIP1Ymh+TtIVlOwjbTh4mORRA
+	 twM2du+w5aJFbPeUGSo0wYNCEzAMGlJkRg87QW3aYF1d4bHTQKX5si3FQWiLKForAH
+	 mg1+Qg57D56o6z8ov3+TLsIhTYo12dHt3eei4FPtUtCSCCsCw6fwDE8zMdfQ7vg3aj
+	 HdiymQD+u+jC1dxOTQFBmRnC+CMiMqq9MWq1hu04cGIa3J29hzdk0McEqqkCe6/omK
+	 km7OU4rJhofkSV4U2Q0GBaGLck/PZPjKevMAa9EHoWSqu5+J/jDMxbgmWY5SJkA1tY
+	 qJtAzQKu0lkaA==
+Date: Mon, 30 Sep 2024 12:29:35 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: vishal.l.verma@intel.com, y-goto@fujitsu.com, dave.jiang@intel.com, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH -ndctl] cxl/memdev: Introduce sanitize-memdev
+ functionality
+Message-ID: <f6ybfabcft5wcpx2wuoxf3qgwset3h4nhngn5c4jk6ssudl5gj@o2ssocnihy6t>
+References: <20240928211643.140264-1-dave@stgolabs.net>
+ <ZvrhusA7So_u51W_@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20240911090447.751-12-shiju.jose@huawei.com>
+In-Reply-To: <ZvrhusA7So_u51W_@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20240425
 
-On Wed, Sep 11, 2024 at 10:04:40AM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 ECS (Error Check
-> Scrub) control feature.
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts.
-> 
-> The ECS control allows the requester to change the log entry type, the ECS
-> threshold count provided that the request is within the definition
-> specified in DDR5 mode registers, change mode between codeword mode and
-> row count mode, and reset the ECS counter.
-> 
-> Register with EDAC RAS control feature driver, which gets the ECS attr
-> descriptors from the EDAC ECS and expose sysfs ECS control attributes
-> to the userspace.
-> For example ECS control for the memory media FRU 0 in CXL mem0 device is
-> in /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/core/memfeature.c | 439 +++++++++++++++++++++++++++++++++-
->  1 file changed, 438 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
-> index 90c68d20b02b..5d4057fa304c 100644
-> --- a/drivers/cxl/core/memfeature.c
-> +++ b/drivers/cxl/core/memfeature.c
-> @@ -19,7 +19,7 @@
->  #include <cxl.h>
->  #include <linux/edac.h>
->  
-> -#define CXL_DEV_NUM_RAS_FEATURES	1
-> +#define CXL_DEV_NUM_RAS_FEATURES	2
->  #define CXL_DEV_HOUR_IN_SECS	3600
->  
->  #define CXL_SCRUB_NAME_LEN	128
-> @@ -303,6 +303,405 @@ static const struct edac_scrub_ops cxl_ps_scrub_ops = {
->  	.cycle_duration_write = cxl_patrol_scrub_write_scrub_cycle,
->  };
->  
-...
-> +	case CXL_ECS_PARAM_THRESHOLD:
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_THRESHOLD_COUNT_MASK;
-> +		switch (params->threshold) {
-> +		case 256:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +								  ECS_THRESHOLD_256);
-> +			break;
-> +		case 1024:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +								  ECS_THRESHOLD_1024);
-> +			break;
-> +		case 4096:
-> +			wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_THRESHOLD_COUNT_MASK,
-> +								  ECS_THRESHOLD_4096);
-> +			break;
-> +		default:
-> +			dev_err(dev,
-> +				"Invalid CXL ECS scrub threshold count(%d) to set\n",
-> +				params->threshold);
-> +			dev_err(dev,
-> +				"Supported scrub threshold count: 256,1024,4096\n");
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case CXL_ECS_PARAM_MODE:
-> +		if (params->mode != ECS_MODE_COUNTS_ROWS &&
-> +		    params->mode != ECS_MODE_COUNTS_CODEWORDS) {
-> +			dev_err(dev,
-> +				"Invalid CXL ECS scrub mode(%d) to set\n",
-> +				params->mode);
-> +			dev_err(dev,
-> +				"Mode 0: ECS counts rows with errors"
-> +				" 1: ECS counts codewords with errors\n");
-The messaging here can be improved. When printed out in dmesg, it looks
-like
+Hi Alison,
 
-root@localhost:~# echo 2 > /sys/bus/edac/devices/cxl_mem0/ecs_fru0/mode
-----
-[ 6099.073006] cxl_mem mem0: Invalid CXL ECS scrub mode(2) to set
-[ 6099.074407] cxl_mem mem0: Mode 0: ECS counts rows with errors 1: ECS counts codewords with errors
-----
-Maybe use similar message format as threshold above, like
-+			dev_err(dev,
-+				"Supported ECS mode: 0: ECS counts rows with errors; 1: ECS counts codewords with errors\n");
+On Mon, 30 Sep 2024, Alison Schofield wrote:\n
+>+ nvdimm@lists.linux.dev
+>
+>On Sat, Sep 28, 2024 at 02:16:42PM -0700, Davidlohr Bueso wrote:
+>> Add a new cxl_memdev_sanitize() to libcxl to support triggering memory
+>> device sanitation, in either Sanitize and/or Secure Erase, per the
+>> CXL 3.0 spec.
+>>
+>> This is analogous to 'ndctl sanitize-dimm'.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>
+>Hi David,
+>
+>I'm wrangling patches for ndctl now and need your help with this one.
 
-Fan
-> +			return -EINVAL;
-> +		}
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_MODE_MASK;
-> +		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_MODE_MASK,
-> +							  params->mode);
-> +		break;
-> +	case CXL_ECS_PARAM_RESET_COUNTER:
-> +		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_RESET_COUNTER_MASK;
-> +		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK,
-> +							  params->reset_counter);
-> +		break;
-> +	default:
-> +		dev_err(dev, "Invalid CXL ECS parameter to set\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = cxl_set_feature(cxlds, cxl_ecs_uuid, cxl_ecs_ctx->set_version,
-> +			      wr_attrs, wr_data_size,
-> +			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET);
-> +	if (ret) {
-> +		dev_err(dev, "CXL ECS set feature failed ret=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type(struct device *dev, void *drv_data,
-> +				      int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.log_entry_type;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_log_entry_type(struct device *dev, void *drv_data,
-> +				      int fru_id, u32 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.log_entry_type = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id,
-> +				     &params, CXL_ECS_PARAM_LOG_ENTRY_TYPE);
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type_per_dram(struct device *dev, void *drv_data,
-> +					       int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_DRAM)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_log_entry_type_per_memory_media(struct device *dev,
-> +						       void *drv_data,
-> +						       int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_mode(struct device *dev, void *drv_data,
-> +			    int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_mode(struct device *dev, void *drv_data,
-> +			    int fru_id, u32 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.mode = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id,
-> +				     &params, CXL_ECS_PARAM_MODE);
-> +}
-> +
-> +static int cxl_ecs_get_mode_counts_rows(struct device *dev, void *drv_data,
-> +					int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.mode == ECS_MODE_COUNTS_ROWS)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_get_mode_counts_codewords(struct device *dev, void *drv_data,
-> +					     int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (params.mode == ECS_MODE_COUNTS_CODEWORDS)
-> +		*val = 1;
-> +	else
-> +		*val = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_reset(struct device *dev, void *drv_data, int fru_id, u32 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.reset_counter = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id,
-> +				     &params, CXL_ECS_PARAM_RESET_COUNTER);
-> +}
-> +
-> +static int cxl_ecs_get_threshold(struct device *dev, void *drv_data,
-> +				 int fru_id, u32 *val)
-> +{
-> +	struct cxl_ecs_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val = params.threshold;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ecs_set_threshold(struct device *dev, void *drv_data,
-> +				 int fru_id, u32 val)
-> +{
-> +	struct cxl_ecs_params params = {
-> +		.threshold = val,
-> +	};
-> +
-> +	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id,
-> +				     &params, CXL_ECS_PARAM_THRESHOLD);
-> +}
-> +
-> +static const struct edac_ecs_ops cxl_ecs_ops = {
-> +	.get_log_entry_type = cxl_ecs_get_log_entry_type,
-> +	.set_log_entry_type = cxl_ecs_set_log_entry_type,
-> +	.get_log_entry_type_per_dram = cxl_ecs_get_log_entry_type_per_dram,
-> +	.get_log_entry_type_per_memory_media =
-> +				cxl_ecs_get_log_entry_type_per_memory_media,
-> +	.get_mode = cxl_ecs_get_mode,
-> +	.set_mode = cxl_ecs_set_mode,
-> +	.get_mode_counts_codewords = cxl_ecs_get_mode_counts_codewords,
-> +	.get_mode_counts_rows = cxl_ecs_get_mode_counts_rows,
-> +	.reset = cxl_ecs_reset,
-> +	.get_threshold = cxl_ecs_get_threshold,
-> +	.set_threshold = cxl_ecs_set_threshold,
-> +};
-> +
->  int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  {
->  	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
-> @@ -310,7 +709,9 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  	struct cxl_patrol_scrub_context *cxl_ps_ctx;
->  	struct cxl_feat_entry feat_entry;
->  	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
-> +	struct cxl_ecs_context *cxl_ecs_ctx;
->  	int rc, i, num_ras_features = 0;
-> +	int num_media_frus;
->  
->  	if (cxlr) {
->  		struct cxl_region_params *p = &cxlr->params;
-> @@ -366,6 +767,42 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  	ras_features[num_ras_features].ctx = cxl_ps_ctx;
->  	num_ras_features++;
->  
-> +	if (!cxlr) {
-> +		rc = cxl_get_supported_feature_entry(cxlds, &cxl_ecs_uuid,
-> +						     &feat_entry);
-> +		if (rc < 0)
-> +			goto feat_register;
-> +
-> +		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
-> +			goto feat_register;
-> +		num_media_frus = feat_entry.get_feat_size /
-> +					sizeof(struct cxl_ecs_rd_attrs);
-> +		if (!num_media_frus)
-> +			goto feat_register;
-> +
-> +		cxl_ecs_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx),
-> +					   GFP_KERNEL);
-> +		if (!cxl_ecs_ctx)
-> +			goto feat_register;
-> +		*cxl_ecs_ctx = (struct cxl_ecs_context) {
-> +			.get_feat_size = feat_entry.get_feat_size,
-> +			.set_feat_size = feat_entry.set_feat_size,
-> +			.get_version = feat_entry.get_feat_ver,
-> +			.set_version = feat_entry.set_feat_ver,
-> +			.set_effects = feat_entry.set_effects,
-> +			.num_media_frus = num_media_frus,
-> +			.cxlmd = cxlmd,
-> +		};
-> +
-> +		ras_features[num_ras_features].ft_type = RAS_FEAT_ECS;
-> +		ras_features[num_ras_features].ecs_ops = &cxl_ecs_ops;
-> +		ras_features[num_ras_features].ctx = cxl_ecs_ctx;
-> +		ras_features[num_ras_features].ecs_info.num_media_frus =
-> +								num_media_frus;
-> +		num_ras_features++;
-> +	}
-> +
-> +feat_register:
->  	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->  				 num_ras_features, ras_features);
->  }
-> -- 
-> 2.34.1
-> 
+Ah I missed that, sorry I didn't Cc you.
 
--- 
-Fan Ni
+>
+>Looking at the lore history, you posted a patchset for wait-sanitize &
+>sanitize-memdev in Apr'03.[1] and update with rev2.[2] Later in Oct'23
+>Dan posted a patchset with wait-sanitize and a unit test that was merged
+>in ndctl v80.[3,4]  A quick look at the code tells me Dan did not just
+>grab your implementation. It differs.
+
+While the implementations of wait-sanitize are slightly different between
+what I posted and Dan's patches, it is not fundamentally very different
+(poll on the file).
+
+>
+>Can you confirm that the two features as a set are what you want today?
+
+I can.
+
+>Are the last comments from Vishal and I addressed? [2]
+
+So I had made sure to address the libcxl.sym comments but just noticed
+that the -s option wanted to be removed as it will the the default. So
+only have the -e option for secure erase alternative (and not allow for
+both to be specified at the same time).
+
+      cxl sanitize-memdev -e mem0 <-- secure erase
+      cxl sanitize-memdev mem0 <-- sanitize
+
+>Can the existing unit test be expanded with a sanitize-memdev test case?
+
+Good point. Yeah we could trivially replace those
+
+      echo 1 > /sys/bus/cxl/devices/${inactive}/security/sanitize && err $LINENO
+
+with
+
+      "$CXL" sanitize-memdev $inactive || err $LINENO
+
+
+Thanks,
+Davidlohr
