@@ -1,148 +1,121 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557091A0729;
-	Tue,  1 Oct 2024 10:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C361BFE02
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Oct 2024 13:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727779461; cv=none; b=HQ6t3UPdGAvtO6KZq8JNYUZjH18qt2Ql93Kn6aHP5RSDs/JlSZoNgPdwqnQpC+mjwtHbW7+p49NwLqv+5+ivjDuPpajS6FF9rf1OW7jMildSZrCTg2FxxtMqdcXKGydM3EKv950cPcvlcGBQAbfvYXeqHu9k28BMojCfGgmBskI=
+	t=1727790243; cv=none; b=Sjh1WgbqomTGY7DcHEXsaK3UnKDJ3wwBfdX1IgskTGgxSnrIFzemzezxa+YJZD0jTxZhe41fg5Rxj0Fu7gUx8rLHtlQ3knDowJ+REfhqfB/fmaAI0Cdx7Tl/Lcq5nyun3CaGllitvPEalXkIJ8jFhdzH+/38++cQnOD8EALZH7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727779461; c=relaxed/simple;
-	bh=R4W9StWya2ct3GHl8Bmf6USziiauPBQvJXVwXG/ZQr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SXvcRhPrajleP3SgNv3aERraFeaAYvr64mCZ65YP51HIR0ETcq7nAQEneUcQCSx7oZ2Tvo34rjicFjbPm5CeXyugVJl8W/9eyTW3vSvHmAQxNCRSheamXmBEUAdStVrTRRUEsj5HLIF7kfu53voF/OCdFXOEg7c59scNSuBTxmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pBxk9Pfm; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1727790243; c=relaxed/simple;
+	bh=xGx6noygeMgO8AaQLqGM7+q8fh5vc5kUtmlJwZCD2eo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZxnyMJi/hYprFK0XgzpwY4FJoih+l0GWNUubPi+R9Ov+niRHe3AtvQDVzWL3SYJcQnDMtbB1L68mER722AaTjECRz1SP1z58VIk5lSjHgAtl2felTAe/CfNjToWPa+w2W78o1mUmYqKGBiw0B2A4fratKY3E8p15tsCAcV7f0Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=I4E2get9; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pBxk9Pfm"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4918rlWA024393;
-	Tue, 1 Oct 2024 10:43:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	EbBiI8fSH5VnllJ71ly5Ye4ZTPDlUiVslkZDSkOv6TM=; b=pBxk9Pfm6EsDfF8Q
-	iqUeM1FnmtgX53pJ0O39C77AAcD1MIdHs8EzC5/ri4wCzexHaBfbeu3XYa1MNuhr
-	eJrsmHuxPqK6cm0vGct98JM4U0+BUpFDBIcM75UI2ScI5N02e5xkS/ZCRMd7H282
-	0Azl1ZgHYpCgJ3MZcAcj0rOj98AnwTvyYi5mze3SorxyYhOkaYp2FtXLOXNJcI52
-	vEg06YOiEqDQ16vL/o7a57SNphNSGtYUIFyzUt0oHvIjsnMTnIidLPO3Lj1/hyEz
-	LsPSeSPcRqZNO/wijZXbh9gF2+zp3bNZDbNFs7t3r9v9lstbldRgfcOJYDlRXbAa
-	2FQ1xA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420ckngyg5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 10:43:19 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 491Adrbv020483;
-	Tue, 1 Oct 2024 10:43:18 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420ckngyfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 10:43:18 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 491AViee002356;
-	Tue, 1 Oct 2024 10:43:17 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41xxu13f3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Oct 2024 10:43:17 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 491AhD4A18284834
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Oct 2024 10:43:13 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B84420049;
-	Tue,  1 Oct 2024 10:43:13 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8521C20040;
-	Tue,  1 Oct 2024 10:43:11 +0000 (GMT)
-Received: from thinkpad-T15 (unknown [9.171.59.94])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Tue,  1 Oct 2024 10:43:11 +0000 (GMT)
-Date: Tue, 1 Oct 2024 12:43:09 +0200
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Popple <apopple@nvidia.com>, <linux-mm@kvack.org>,
-        <vishal.l.verma@intel.com>, <dave.jiang@intel.com>,
-        <logang@deltatee.com>, <bhelgaas@google.com>, <jack@suse.cz>,
-        <jgg@ziepe.ca>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-        <dave.hansen@linux.intel.com>, <ira.weiny@intel.com>,
-        <willy@infradead.org>, <djwong@kernel.org>, <tytso@mit.edu>,
-        <linmiaohe@huawei.com>, <david@redhat.com>, <peterx@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <nvdimm@lists.linux.dev>,
-        <linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <jhubbard@nvidia.com>, <hch@lst.de>, <david@fromorbit.com>,
-        <hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-        <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-        <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH 05/12] mm/memory: Add dax_insert_pfn
-Message-ID: <20241001124309.782004b8@thinkpad-T15>
-In-Reply-To: <66ef75e59c7ea_109b5294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <cover.9f0e45d52f5cff58807831b6b867084d0b14b61c.1725941415.git-series.apopple@nvidia.com>
-	<110d5b177d793ab17ea5d1210606cb7dd0f82493.1725941415.git-series.apopple@nvidia.com>
-	<66ef75e59c7ea_109b5294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mLp8W3ZTWJaathMCFPKloMnlrxlln_bF
-X-Proofpoint-ORIG-GUID: 5FfpjjtfUKsGqxfrBWkGoY0YounV3Quc
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="I4E2get9"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7a99e4417c3so471453985a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Oct 2024 06:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1727790240; x=1728395040; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JYTJ0CUqrH1SHJfivVlEjJG53DkWzerfR4yWluFNYZE=;
+        b=I4E2get90BZHel+50j7iOBLPgnrEt9wwdFzOeHPAtlCjZJuZJQqOvcOpdYwIPRXfh4
+         wnzZmyzy550VYrVv71I/V1OKm26KFIdZAcIibNJY/zf357OHPTLa9LGd1joN+bHYxwT4
+         wxCqfD/8pI4oeJU4tnSJ2IT3UcanVMArfHOLCzXo8E22K5/GjMWu230n8OT7Umr17V+S
+         ZS+PQqD5aoJ5Umx51BIqzS/5pbEsfrNebNqXHgsfm8p1iwQGmFevzyE1oVjP6kcAMLuB
+         vNebyOM2X4vQp97N4CHd9uv4AoQc82XxZ27nMFr00sCcpDU/Hf7QFLIpbX7mbsn0ZcFL
+         Hwbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727790240; x=1728395040;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JYTJ0CUqrH1SHJfivVlEjJG53DkWzerfR4yWluFNYZE=;
+        b=MLaWQst5vlXVUlpe+vcLuDYQBjzUvSRtRn5ek0cjd6h+kNdiaIvks30r/oO5rXPAls
+         7xo7fit1SQ5fDJ0HDUf5aLkf4/blWBSP6L+ToAHgsr55XSBs40LFg55aRJMhn4OcPr7b
+         wrNfb7yOxjBo/PN77TvdZztV/XFLr6p9MdxMzi6hxu6dVtiWuH/xDW+/dPrWkkrCRtaN
+         fpRtTMuiF2UX/YZvo8GjBbWH1erC3JA2rY1SmtizeBVk3r0FCOCLAJqiKTgEkgQEYr+P
+         q+W1HBf0/5K9yBHQ8qUetei7jDvB6yHF2b5SSlPJTHtcNQ0Ht3nOubGYukb39PHj8F5L
+         ODGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXH3v4SY07vrn14UEpvbJ8DWhVbLZu165F72JF13cb9278K2XZm3nVcvhPZYyode7iBYNsWsGXj14A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCKjDk8xv9wxb/GD+sMgHNNJQQwjpAi/h13yBkHNG+akevP5e4
+	F6h+gwgL9OQPsh/xMD9ru2WQKJ+XOTPyai0lsbfPpajVoyTLGlwlj1520dANWVY=
+X-Google-Smtp-Source: AGHT+IF5VUNcvnmPtnD8VPaddLA8g45OQ216uprpipGG1nA4txFOuXegaZTFCcl2msleBSBHLXCt6Q==
+X-Received: by 2002:a05:6214:5342:b0:6cb:3340:ac36 with SMTP id 6a1803df08f44-6cb3b65feacmr169019196d6.52.1727790239921;
+        Tue, 01 Oct 2024 06:43:59 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cb3b6800a9sm49778366d6.116.2024.10.01.06.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 06:43:59 -0700 (PDT)
+Date: Tue, 1 Oct 2024 09:43:30 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [RFC 1/5] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
+Message-ID: <Zvv8gtAy4hel9yY3@PC2K9PVX.TheFacebook.com>
+References: <20240925024647.46735-1-ying.huang@intel.com>
+ <20240925024647.46735-2-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-01_07,2024-09-30_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=928
- mlxscore=0 priorityscore=1501 clxscore=1011 spamscore=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2410010066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240925024647.46735-2-ying.huang@intel.com>
 
-On Sun, 22 Sep 2024 03:41:57 +0200
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, Sep 25, 2024 at 10:46:43AM +0800, Huang Ying wrote:
+> According to the description of the "Window Restrictions" field of
+> "CFMWS Structure" in the CXL spec v3.1 section 9.18.1.3: CXL Fixed
+> Memory Window Structure (CFMWS), the bit 0 of "Window Restrictions" is
+> formerly known as "CXL Type 2 Memory" and renamed to "Device
+> Coherent", while the bit 1 is formerly known as "CXL Type 3 Memory"
+> and renamed to "Host-only Coherent".  Because type 3 memory can only
+> be host-only coherent before, while it can be host-only coherent or
+> device coherent with "Back-Invalidate" now.
+> 
+> To avoid confusing about type 3 memory and host-only coherent in Linux
+> kernel, we rename corresponding bit definition from
+> ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3 to
+> ACPI_CEDT_CFMWS_RESTRICT_DEVCOH/HOSTONLYCOH.  This makes the kernel
+> code consistent with the spec too.
+> 
+> Also rename the corresponding cxl_decoder flags
+> CXL_DECODER_F_TYPE2/TYPE3 to CXL_DECODER_F_DEVCOH/HOSTONLYCOH.
+> 
+> No functionality change is expected, because we just rename the flags
+> constant definition.
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/acpi.c           |  8 ++++----
+>  drivers/cxl/core/port.c      |  8 ++++----
+>  drivers/cxl/cxl.h            | 14 +++++++-------
+>  include/acpi/actbl1.h        | 10 +++++-----
+>  tools/testing/cxl/test/cxl.c | 18 +++++++++---------
+>  5 files changed, 29 insertions(+), 29 deletions(-)
+> 
 
-> [ add s390 folks to comment on CONFIG_FS_DAX_LIMITED ]
-
-[...]
-
-> > @@ -2516,6 +2545,44 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
-> >  	return VM_FAULT_NOPAGE;
-> >  }
-> >  
-> > +vm_fault_t dax_insert_pfn(struct vm_fault *vmf, pfn_t pfn_t, bool write)
-> > +{
-> > +	struct vm_area_struct *vma = vmf->vma;
-> > +	pgprot_t pgprot = vma->vm_page_prot;
-> > +	unsigned long pfn = pfn_t_to_pfn(pfn_t);
-> > +	struct page *page = pfn_to_page(pfn);  
-> 
-> The problem here is that we stubbornly have __dcssblk_direct_access() to
-> worry about. That is the only dax driver that does not return
-> pfn_valid() pfns.
-> 
-> In fact, it looks like __dcssblk_direct_access() is the only thing
-> standing in the way of the removal of pfn_t.
-> 
-> It turns out it has been 3 years since the last time the question of
-> bringing s390 fully into the ZONE_DEVICE regime was raised:
-> 
-> https://lore.kernel.org/all/20210820210318.187742e8@thinkpad/
-> 
-> Given that this series removes PTE_DEVMAP which was a stumbling block,
-> would it be feasible to remove CONFIG_FS_DAX_LIMITED for a few kernel
-> cycles until someone from the s390 side can circle back to add full
-> ZONE_DEVICE support?
-
-Yes, see also my reply to your "dcssblk: Mark DAX broken" patch.
-Thanks Alistair for your effort, making ZONE_DEVICE usable w/o extra
-PTE bit!
+Reviewed-by: Gregory Price <gourry@gourry.net>
