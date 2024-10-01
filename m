@@ -1,69 +1,42 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54C51C3F0C
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Oct 2024 15:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4C91C9EC9;
+	Tue,  1 Oct 2024 15:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727796043; cv=none; b=lMJhgw9vX51nY7oopdUqSZ5j65xEFo/r751+ulBoo6P8ta2HyIfBjzLTuwKhKBp14sk7jQOPFsLXvcRvhRDsD4Pxvm/36IgIfBitSuoqHdK4fgwGvOEiHtefPGnsv31OAAkvkNFen0B3N/75mIqRma5OMxZhw4cVurYwgQ0RhBU=
+	t=1727797629; cv=none; b=Q2WDwXuJ/qqYN7Y41IKz1+Zqw/+fYfyEWgG2l3+lEPMU6Gg2Aof43Tvobyk0BCavd/FLUJUEsG1aQIqPd9inQWIEDnLxhJ1aXrpfCjDBM6FBETjWWqRWkt9dtbtc2oKow/CIs4NSCr5iRnsErRaex88ibq1/PUcj9BgJjGSuNmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727796043; c=relaxed/simple;
-	bh=ZU+Z/WlZcaTh47xXgjL+D5zyETNn+avD/Kj0arLV7NM=;
+	s=arc-20240116; t=1727797629; c=relaxed/simple;
+	bh=LbnThuOkvJQLggX5f8+TIkhPw2EtISnLC74p+3MWKLE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfZ4QDVwkO1vTJGCARLKhMae1gxEVDUtnNHgdW43RAsbDMooblEhQBv/XbfG0dtZ2FnUXdsCDFLsFGlFXiN6ajjGlon8gMXPB8ZydVlYsG1Sw4uLP80waA3zwCRTOf2yddGsmMgmT9FZoi3/A/LdVp4qfZVX7Vi/mhHRpGFYtb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=j1xXWvFH; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="j1xXWvFH"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6c548eb3354so46305206d6.2
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Oct 2024 08:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1727796041; x=1728400841; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=os7ciG24pZLduUL01Uf3DEB98OBQt4RnR5S6qFgUTGk=;
-        b=j1xXWvFHdB9HepYC6ePIdZAd2TU2cL1uUGr2LjU3Jc/qZa3GIjsN5vjiHdCiwQax5G
-         XzbB07Yc44ubAAIaMtiVQamly1rhZUAinjnqj1/mWKjDwdvhJsdEaSFKquZlZ4s4J5kn
-         HTp7CddHuzFILkiWQDcPBKysfoKJv5zXg+VBrcOwwvgHNM+N2tTANtrntG3ESKRD48ZG
-         azx/V+sDIOSLa5jYcqaoQJge3B2qEUIYhsy3//dGzDI4jQL5op8cuiQHX5uQmiBfqWI5
-         C1yIgYOuxPpmt+bIl0EknVXKdHrOqP8Sb6SxZ/BDRWLQ4qc7gJXzODtCFBZnKzgL0zfa
-         Xi+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727796041; x=1728400841;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=os7ciG24pZLduUL01Uf3DEB98OBQt4RnR5S6qFgUTGk=;
-        b=gWUaIcagXPtuJKISjYt+h803oTcBKuX5O2U8qaHThRUjdYAGq8t8H7V/kfsZEb2rAC
-         WH8JqceiQe/I6Eaqc6YQgdWDV0VDTsLZfPYXchIKFKRgu1GyrIZM8YDMOEFxok3hiFNb
-         wMAle2pBL/hUq0payKB1M3OIDwaoihDPaoz6bGc2Amf51awnznpHe4niI55L5Fr4v+3B
-         oxvjYZcdsOO5G9HlKhC4pDWt7Vo7B8z6RBW6banejxdfhjMRs7KG0a+n8MhLjmA6Zf/u
-         uftq1UaHpZbXyUZF+q70AWx9VRFpNHV1j4TbRko9pbzPv6o3lkwan2wuRlF869G92Zm2
-         rg3g==
-X-Gm-Message-State: AOJu0YzPCM3wDmfKdVQWLuB6eggo70klGBGFtuD0UapAiEUUD88Es4ui
-	7mkhNoTErfUMM3RJ1qKWy4Zu2K17y5QwTAETf2+PAVm3k8bIm0EuZcbuQ6uM6VE=
-X-Google-Smtp-Source: AGHT+IEfkdwBIWEZzpIx/ashe6rDUHbFbG5kJrCq2hePig1GgZbqm2JF4/GnUYx4iA8UiMuXCbaUtQ==
-X-Received: by 2002:a05:6214:3207:b0:6c5:7446:4fdf with SMTP id 6a1803df08f44-6cb3b5e283dmr258721556d6.24.1727796040646;
-        Tue, 01 Oct 2024 08:20:40 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cb3b66b5a8sm50944436d6.79.2024.10.01.08.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 08:20:39 -0700 (PDT)
-Date: Tue, 1 Oct 2024 11:20:11 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, rrichter@amd.com,
-	terry.bowman@amd.com
-Subject: Re: [PATCH] cxl/core/port: defer probe when memdev fails to find
- correct port
-Message-ID: <ZvwTKxTc9yDypmkG@PC2K9PVX.TheFacebook.com>
-References: <20240913183234.17302-1-gourry@gourry.net>
- <66e511eff0c0d_ae212945a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ZurAiwt7t2WWVrJM@PC2K9PVX.TheFacebook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9xOHcs41tJDUW/AaW2zlS1SwUg3rSi+LLocVIeAfyjRncv4safUqCykM6aHMYEY7QMN9y7lfnq+ORbhUbmDAPheqxZDqJg293HDTcm/eWpmerIKGoEjCHiJXXC4+3jkU0uM2sqSI4uPQ/n8msk1WwAe8S6I3VejBu1ufRIPgQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 597B7100DA1D3;
+	Tue,  1 Oct 2024 17:47:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 19317268E72; Tue,  1 Oct 2024 17:47:03 +0200 (CEST)
+Date: Tue, 1 Oct 2024 17:47:03 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Gregory Price <gourry@gourry.net>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, dave@stgolabs.net, dave.jiang@intel.com,
+	vishal.l.verma@intel.com
+Subject: Re: [PATCH] pci/doe: add a 1 second retry window to pci_doe
+Message-ID: <ZvwZd5CCV2PdqSLF@wunner.de>
+References: <20240913183241.17320-1-gourry@gourry.net>
+ <66e51febbab99_ae212949d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240916101557.00007b3a@Huawei.com>
+ <ZvwRjbRIrkCSjwQI@PC2K9PVX.TheFacebook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -72,99 +45,58 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZurAiwt7t2WWVrJM@PC2K9PVX.TheFacebook.com>
+In-Reply-To: <ZvwRjbRIrkCSjwQI@PC2K9PVX.TheFacebook.com>
 
-On Wed, Sep 18, 2024 at 01:59:07PM +0200, Gregory Price wrote:
-> On Fri, Sep 13, 2024 at 09:32:48PM -0700, Dan Williams wrote:
-> > Gregory Price wrote:
-> > > Depending on device/hierarchy readiness, it can be possible for the
-> > > async probe process to attempt to register an endpoint before the
-> > > entire port hierarchy is ready.  This currently fails with -ENXIO.
-> > > 
-> > > Return -EPROBE_DEFER to try again later automatically (which is
-> > > what the local comments already say we should do anyway).
-> > 
-> > I want to make sure this is not papering over some other issue. Can you
-> > post the final topology when this works (cxl list -BPET)? My working
-> > theory is that you have 2 devices that share an intermediate port.
-> > Otherwise, I am having a hard time understanding why the
-> > cxl_bus_rescan() in cxl_acpi_probe() does not obviate the explicit
-> > EPROBE_DEFER.
-> >
+On Tue, Oct 01, 2024 at 11:13:17AM -0400, Gregory Price wrote:
+> > > Gregory Price wrote:
+> > > > Depending on the device, sometimes firmware clears the busy flag
+> > > > later than expected.  This can cause the device to appear busy when
+> > > > calling multiple commands in quick sucession. Add a 1 second retry
+> > > > window to all doe commands that end with -EBUSY.  
+> 
+> Just following up here, it sounds like everyone is unsure of this change.
+> 
+> I can confirm that this handles the CDAT retry issue I am seeing, and that
+> the BUSY bit is set upon entry into the initial call. Only 1 or 2 retries
+> are attempted before it is cleared and returns successfully.
+> 
+> I'd explored putting the retry logic in the CDAT code that calls into here,
+> but that just seemed wrong.  Is there a suggestion or a nak here?
+> 
+> Trying to find a path forward.
 
-just reporting back with a fully functional layout - they do not appear to
-share an intermediate port, unless you consider the root a shared port.
+The PCIe Base Spec doesn't prescribe a maximum timeout for the
+DOE BUSY bit to clear.  Thus it seems fine to me in principle
+to add a (or raise the) timeout if it turns out to be necessary
+for real-life hardware.
 
-I see your concern about this papering over another issue, but it's not
-clear what to look for or how to look for it at this point.
+That said, the proposed patch has room for improvement:
 
-For what it's worth - another group observed the same issue with different
-hardware and produced the same patch.
+* The patch seems to wait for DOE BUSY bit to clear *after*
+  completion.  That's odd.  The kernel waits for DOE Busy bit
+  to clear *before* sending a new request, in pci_doe_send_req().
+  My expectation would have been that you'd add a loop there which
+  polls for DOE Busy bit to clear before sending a request.
 
-    "ports:root0":[
-      {
-        "port":"port1",
-        "host":"pci0000:e0",
-        "depth":1,
-        "decoders_committed":1,
-        "nr_dports":4,
-        "dports":[
-          {
-            "dport":"0000:e0:07.2",
-            "alias":"device:16",
-            "id":114
-          },
-          {
-            "dport":"0000:e0:01.1",
-            "alias":"device:02",
-            "id":0
-          },
-          {
-            "dport":"0000:e0:01.3",
-            "alias":"device:05",
-            "id":2
-          },
-          {
-            "dport":"0000:e0:07.1",
-            "alias":"device:0d",
-            "id":113
-          }
-        ],
-        "endpoints:port1":[
-          {
-            "endpoint":"endpoint5",
-            "host":"mem0",
-            "parent_dport":"0000:e0:01.1",
-            "depth":2,
-            "decoders_committed":1
-          }
-        ]
-      },
-      {
-        "port":"port3",
-        "host":"pci0000:c0",
-        "depth":1,
-        "decoders_committed":2,
-        "nr_dports":1,
-        "dports":[
-          {
-            "dport":"0000:c0:01.1",
-            "alias":"device:c3",
-            "id":0
-          }
-        ],
-        "endpoints:port3":[
-          {
-            "endpoint":"endpoint6",
-            "host":"mem1",
-            "parent_dport":"0000:c0:01.1",
-            "depth":2,
-            "decoders_committed":2
-          }
-        ]
-      },
-    ]
+  It seems that polling is the only option as no interrupt is
+  raised on DOE Busy bit clear, per PCIe r6.2 sec 6.30.3.
+  (Please add this bit of information to the commit message.)
 
-> > So, devA is dependendent on devB to create a common port, but devA loses
-> > that race after cxl_bus_rescan() has already run. Then EBPROBE_DEFER is
-> > the right answer to trigger devA to try again.
+* The commit message should clearly specify the device(s)
+  affected by the issue (Vendor and Device ID plus name).
+  Comments such as "Depending on the device, sometimes ..."
+  are a little too vague.
+
+* The "1 or 2 retries" bit of information you're mentioning
+  above should likewise be in the commit message.
+
+* Please use "PCI/DOE:" as subject prefix to match previous
+  commits which touched drivers/pci/doe.c.
+
+* Please adhere to spec language, e.g. use "DOE Busy bit"
+  instead of "busy bit" so it's unambiguous for readers
+  what you're referring to.
+
+Thanks,
+
+Lukas
