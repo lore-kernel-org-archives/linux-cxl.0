@@ -1,620 +1,414 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF61C6F7A;
-	Tue,  1 Oct 2024 15:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727797641; cv=none; b=hkhaXUTRgiYLg667w7nVPSIeCoSDg0ZFDS88qQEMiSaJu5k9F59dfMPHLCp5oz3NBia60BMsR6PyY/Cd+Mi6gcFAYuzHpmdhkKL4sstGkfdL/d9RtNjmWRBrmkfJccsInEQJ8t2ugW5tDraxKeXANm2hkokkWMewCWoPYpx5bdQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727797641; c=relaxed/simple;
-	bh=SwO6KmyZAd7l6q7eq2eNZxvBtdqEdmbcGKbipOWE/IE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1/UeSdbP0sfgI/mQJSu8a34Y2heEvIoRHm9maBH7fqtjwYJNoFgJYn+bP4pcRtGdc8FTtX7dugVVK6/9t2dHpgB1IQvyuQ1Dxznk+ydHhEe5oVHQGUYen9FjIKI8lT8yQVOdORlQq9BeXluwGhvHzli+tTkbIuLgD8NqzW4imE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=al7GL5Sd; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335C31CB336;
+	Tue,  1 Oct 2024 15:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727797650; cv=fail; b=pO/hAoi70czgSS3ieN6vE1eIyGpPJsoD+0s8YnKZuckUzDLOcPWRkXyd+ocp5wTmEI++nfTKqL450qx4ju9aR/nTZj+PYF9YlwkVfTWao6QQMKy58dR2bUiruNBYOrCKnUVrqIoq4pCXLsNgYNc2B5THQpFs0xqBhHbZUenNjGA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727797650; c=relaxed/simple;
+	bh=HRKMFjkKIakCJTAvAe7OeAC5BPGE5N659YUBkBCLuV4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RDAx60dDwWwVzkfM0joG6ImrpMM65Gb6c7PghVvjClqX1Du5KDlkuuNRRCOx+21vz4wWAn43xwpS0HYDmU8EZ3gZwt1J9AITFIMix8jhfizHBYSC2udxBR2AANtfL732g3wPMmSllPWAjLNbcaUHIplOIsk1lXisAo2VENNGymA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g+a414/Q; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="al7GL5Sd"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20b7eb9e81eso26597015ad.2;
-        Tue, 01 Oct 2024 08:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727797638; x=1728402438; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdCLMn5ZpQ+7rFvDfl2k8rSsKmnsDj7+j9oBZJ1kwpA=;
-        b=al7GL5Sdx3f5KzyjAeO5PYV4grpSjulWAtksd3Ous+HB6Jlr4IVmHJgOBkeMPGACAI
-         Z7t8dD1VJvUPvUqx/DCJI5BugSgi7nxCb2HnKNOitWEJY8HiWLM4q4aX+xw3uKPrOtSQ
-         /BZ5D2Yt2i39lWBtLdCpdt+MvwYahvINq7mAXHiX2eGjdlqEKKtmYLVLqpdtwJFE+R9j
-         7nxkV/vgW5BiJuYkf5Mq3pQQjN+/y2t0wjovvQPrAeF25gsdreISY0tiwg45mZL/jUpX
-         Lk1GPcEX7lj321Aj6NXgQ/AsJSfZw4HRJWqbvPRNFmEkslXiL2u8O6VaHziUErXWUqHX
-         Icjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727797638; x=1728402438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YdCLMn5ZpQ+7rFvDfl2k8rSsKmnsDj7+j9oBZJ1kwpA=;
-        b=S4grdLf53kQ7vqw/PCT3kPl9DUA5dlO/VWtKXoGfFcpfNT/lik8QtlTAXzBl0P3WNo
-         Ao/a98iupZhOWxGYwrRaLBE8D+5DEve5ELhdZOkT3tyoROsKhJxyyjVTv2OH/sfGcuvS
-         aT93BfI44yYUxtY/vnCSITbPp2+Wr1+2rxSSOAjIcZKsOE471ODT7x/m8Q/npRxwgO7F
-         pQLCuIcbsOQ/20Ah3nTtLJWauGvRVnz1qQ2MHWCS3MC/zmWKgSkyNu/ly0E11fYZ/GNF
-         DFGRDl1mbNLo4KPGF2M4cN9ykaV/kTXbEzNq2/4ftGCnvJUkw/K8QiXQhOoJ0Maa72ku
-         zvtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoZkGXw6ChlX5kIta6yPMen06SRPwOjbP4zAgnyZsvJYjAoU1bzNM+M8RPJEGHmkbsw5TQ39vP44h@vger.kernel.org, AJvYcCVNUHyzG5IsOsdJHOR+ThSVI6riYYbO07Ou/v48IMFRnzo9gYJJLwrQNJnXqfsQmrHA4dcdjNl2QYE4@vger.kernel.org, AJvYcCXcT46ahW2+jwTyiKmlvLGq2wTblvjn3VtHCKimsTV1uDpryIhL3BBPqcg9imNfYM6Y39z4XuOkbcFwlhOR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX/CCWj4RRGEaxw357tt1EPYAl+aqXlRUW4Oee1Eumy2djtVE7
-	rJlCqwnXZF/Nd8NaW8n6fTAhpz1RvggBEvWJMJCNNnXSi0PWwL31
-X-Google-Smtp-Source: AGHT+IEMbtm052TafSeVHJR05rc0f2Z5POx5ZKXoEIgIOO5suOxCV5fraMKul8fONcGiPBM+C8SmjA==
-X-Received: by 2002:a17:902:fb8e:b0:20b:b479:94ca with SMTP id d9443c01a7336-20bc59f080emr1053455ad.23.1727797638346;
-        Tue, 01 Oct 2024 08:47:18 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:7dd:d82b:9686:b02a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37da22basm71127265ad.100.2024.10.01.08.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 08:47:17 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 1 Oct 2024 08:47:07 -0700
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, mike.malvestuto@intel.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com, jgroves@micron.com,
-	vsalve@micron.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH v12 13/17] ACPI:RAS2: Add ACPI RAS2 driver
-Message-ID: <ZvwZe2qa_OrjboIU@fan>
-References: <20240911090447.751-1-shiju.jose@huawei.com>
- <20240911090447.751-14-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g+a414/Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727797648; x=1759333648;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=HRKMFjkKIakCJTAvAe7OeAC5BPGE5N659YUBkBCLuV4=;
+  b=g+a414/QJLGfqcXwI8H5bF4KIIgmQdl01mvRg/Tk+Gt/y2/g5eFQfse4
+   tmGj/dJHpQhz4/DcruJwraewo/T8fa4HXSHJh2o2nGBRPuEYOskSB4eJ6
+   R3fHwUHai4M6OKXDlK+E0n1grfZzX1nsgmFiw7+L5lQ8mPOu6IQ/Yd5LH
+   SXdG50ifco/XlhN6hWlQX6oDnq0jBNIEg4ykFFN3pamIOkYhswPTUDTzV
+   PiapxwuTgF8MDuwmJxifjJnAV7BZ1Tndn2xVFkQJjdql1qQTQIKst5MgQ
+   IaViQXpw51clh7osmriMqJwDbREVZ5uyVLlItu7gKYMosvN7i0+iP6brV
+   w==;
+X-CSE-ConnectionGUID: 4nO4AspKSyGV/GA034e0dQ==
+X-CSE-MsgGUID: ZH0B8CAaTa6dVmygWYeQyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="27115631"
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="27115631"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 08:47:27 -0700
+X-CSE-ConnectionGUID: V7pXjOGnQ1yvk80QVUpMPw==
+X-CSE-MsgGUID: xjeMtICfQOSCaNwASKiYIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="74027529"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Oct 2024 08:47:27 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 1 Oct 2024 08:47:26 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 1 Oct 2024 08:47:26 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 1 Oct 2024 08:47:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ML72ZNR7/JyaVVpO/dt1yUMuA4aDPyqvekVAsQgcGbWNSDNPWH/LGNc5B1a1D8g9Q2n4qkx0MJGAwTxjBPRR6XQOLhKPBHsdLNo2WAJXrqabhJ4R9xy55BH3OPyKYZjEFdxQ/v3UkQEZFObfeQgXXFPN+O4y1QIO/ryvxqk79Xvvqg4M/5xgQGMiDht5SyIKvvHVWKb2npB9l3QX35wma6In6ayXD2LKX9zuoIbdXgfr+xDudaUqM6xXM+I8zYL0YHcg6iAEw1Gn38gR5bH9G5xxg+B8riuqpRDhl15oV3tyJII/wwrj1uf+LWzOBbMeenByhkRpEHvQRGnKHJI35w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YRvF2SMNFhF6CKwdMZr2nN8A1fVZJuvKtRMiohcY5Ys=;
+ b=rRAeG/vKEc9lO6TVIM2uPz/rprqrkKBa+GFhfhbLFsnzLeSH2R+stPs2j0gM436eoM4J4rOwHaMuQZCqPW2nt3KrNzZevJWoQuMKDpFc8UPHgUvOGn79racfBks7GdX9d5vpessE0mAcjbAMDhwNCh1KJmcCfevVSkJaEw4bonSTUYRT/uL3QO/5gf2m7iNlAWn1Ke8u7DfE26SSiueajyNX/2v+loovOwZluaI4JBBBsdXth9y1IuC3fOFeLpgtZzDf8wwakk47fYB/f22cI0HrnvdduS1Y2lrISujKfe73YwC1cgX21++w90Kg0UfOHhUvPOHajjFYkbfzCDHyAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ2PR11MB7456.namprd11.prod.outlook.com (2603:10b6:a03:4cd::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.26; Tue, 1 Oct
+ 2024 15:47:16 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8005.024; Tue, 1 Oct 2024
+ 15:47:16 +0000
+Date: Tue, 1 Oct 2024 10:47:10 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 3/4] acpi/ghes, efi/cper: Recognize and process CXL
+ Protocol Errors.
+Message-ID: <66fc197e1993a_b5d942942d@iweiny-mobl.notmuch>
+References: <20241001005234.61409-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20241001005234.61409-4-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20241001005234.61409-4-Smita.KoralahalliChannabasappa@amd.com>
+X-ClientProxiedBy: MW4PR04CA0156.namprd04.prod.outlook.com
+ (2603:10b6:303:85::11) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240911090447.751-14-shiju.jose@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ2PR11MB7456:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11c14736-486e-48df-a169-08dce23052fa
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?3Id/RnSg+eLIasrXge7hOhTNLcFRSgUpQkooXCLGAocTeVZOnuFTXD3SEEQ+?=
+ =?us-ascii?Q?KzR7wfE9UQx2czJsDmY/Nh3CrktovcqoZGsiN6UurP2jb6wqBayZQ3OVoMXp?=
+ =?us-ascii?Q?F4HxvGUQsuLBWhDE9wjbF0bNFszPADIJisubv7eeMpafXJ+SK+UmOTLKV40f?=
+ =?us-ascii?Q?m1vVMJwELb20Fpj1Kpaf2srB9pkRuh6tx9h5eet3NGcemwWeavOeEv7fPHJ5?=
+ =?us-ascii?Q?dBt/ULZS1usazqm5E5E2cbIrrk/HVCyMRtrgb0n1Y3TemtMUZBKf3VdkNE5o?=
+ =?us-ascii?Q?M4jsTtsukUXXTz8TQC7xuRrnEi7oK1/xgbxx7k1oOFEB84CKoHCLO0DsLrEL?=
+ =?us-ascii?Q?geQqWgPogE/ko/DXrqcqU2CGU7mGDsexq3NZSWLeKtha7yfJVWu4qaWKMw3F?=
+ =?us-ascii?Q?uvloAut/4Il1iHTWmtEn7lHGVesGRAT81ZLsJYW+YUT0dYKZ6r7rV7XPXXQA?=
+ =?us-ascii?Q?0AsvV9vD61PbxcweD/MoVJt2yaHZvUz/O+2Wlr0GjyCZ3RPP5Eq1iHiEM5lQ?=
+ =?us-ascii?Q?F8/TzzBG6xmYIzJjBEXQbDpgRP5R4Dz/mEITuLWhxWi2bb3NgcM4KH63HDmf?=
+ =?us-ascii?Q?t9XkCaCjH069SoyoGRJorhSDEoNJA+e3X9UqViuzrfkqvtaFhXXjyPI00gqb?=
+ =?us-ascii?Q?IzcBXgcmeQdVBIxIy3MMIfraIaq+vpo9oHMzZKOBCcWP4bw3iCZ+8c3m0Pwt?=
+ =?us-ascii?Q?CxpxHK5BkfTRTPU1dTMsGj/bwepwv4HEAgQAKths8cXiaQD8z4KGpD83s0W/?=
+ =?us-ascii?Q?x2rxv0zHokgQKMKXqaCSRKq0SL59ZBJTsT45uj+WSuVc8NWVNRyoOejDmtoI?=
+ =?us-ascii?Q?5AibIYoQjPLsJ2i6zp8738+x2/Gr8qXOj8m8OUWkFkqYWwiHcWK8zQ5fetO8?=
+ =?us-ascii?Q?3/75X1+sUt9hl/shdfONK1G2jibRcyYe/AsMEy00/kSxP8jBUmEfR1QdVIdl?=
+ =?us-ascii?Q?6VSyR5PRPcOvhlBxCBaI/wImOkXaQliBcJopTnpmNJGDLF+hvZrqwkK4Cs3o?=
+ =?us-ascii?Q?L4oeGMPOhGQitKbJGGJHY3FkmI7jKKyGFss9yK7766xK6ekpT/d7eMiiBi+k?=
+ =?us-ascii?Q?VHUpDKlCi2ZVaxXcgWaJAJ33Sc3s9LPBcOqFssAOggpxvnbZTkP8K+EjOjSR?=
+ =?us-ascii?Q?T75FPya/6ohiav0C/DJYko1U6ntzHP3vDGZL3IPFbj23HAs0hevpra5mWyBh?=
+ =?us-ascii?Q?ZqhWgaO9hDMNmTzRZ3kH4RObFQeG3r4EhGbdMYMelRZCkzbRAh3isOKXTdtr?=
+ =?us-ascii?Q?hLEbA+XJBjt7BMOtCmFbePSKer70xp7Tno3zrnUzaQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ArfMjRmsU3jGSeg5UmEY07tOFHmdcO2DtjuthuMCRdIQDMNsM5+OPIBpHB4S?=
+ =?us-ascii?Q?PS4xusPbyOA8oh4GRcMB5AmKt2HHrAPM0fX0Wfh3H45MY0O+D+1B06OjONqL?=
+ =?us-ascii?Q?N4eydoJdLwMPc1QULWQmPIwHXlhpvnr3xEDZY9vrVjMMbWoOfnoBgkNj1W9G?=
+ =?us-ascii?Q?K6rJ0ZXQWB7wmAtYcuQSZjHkO40EGck7pyGdS+0HCLd03VWE9fhaPDij69M0?=
+ =?us-ascii?Q?v9HCuoSlIvQwCWLmF51V4j9ivZ/+4Z4faN80/1sDL4zoIW8e41OLaPdAY6I9?=
+ =?us-ascii?Q?rOfT8SJba/ILzjspXy/P6iWYB9N4Mjcim05+hMKZHLvJj5rn2BKdN6fvnIKW?=
+ =?us-ascii?Q?N1JGSbkhwIui9VapKLGPPceyghcoFd+IIWnePAIKmU1u79D1fZ9qC5A1Qn3t?=
+ =?us-ascii?Q?aYOJMc7LcLmY4f++3m5TgeOHSgjPmJIGocO/lAG+MwlwUZhAvycoDi+g7ZGh?=
+ =?us-ascii?Q?XFa1VFl7aYLtcn5CnSwbC5Dc3iemQigPWImeNSRemWnH/MaqO4yTA+czyio9?=
+ =?us-ascii?Q?hSSa74NhNvJzSxNHsMB9TSSPO5+/CvG11XDIwBElYizJ3SJMIzOspTFqLUOs?=
+ =?us-ascii?Q?PXr+cqGqiaxjyUWmzMKBpbkQwKndVXvIT47wtQsxYzlKLdJYBOCHO+LUDFBH?=
+ =?us-ascii?Q?N0tDJdqPGqX4qWAKKP3VUgSIbRx2LMVo6ULc/pwpmK5DIGqrALXu7RzlhJFU?=
+ =?us-ascii?Q?NJX5EURyiy2CSJqoKAYWL5NqVKD9L4bX+hI+tvYsSqBZ9deJXRZUQleCF6JU?=
+ =?us-ascii?Q?rOvQqhTyR72LGTuOprf+cq82cuD1XRnwGHf2S59VwB8wWz+/624ftNkQEs3J?=
+ =?us-ascii?Q?gcKnxcPxhdPpUmwKikys1k2iV2B9pA0AYvW0Uw3CS5EoC0lBONHYCYWYG0Mx?=
+ =?us-ascii?Q?oTCCt8R6VOa8McYgytEkB4O/JJGRY8sGVjuni4d7TYbXqtgCw/H7erDwBDFX?=
+ =?us-ascii?Q?wjv6fU8nXvDmi7OsOd7JkNQ67pWwpVoUav6rxsoqsjd2U0vQqNU9fQKzPkQI?=
+ =?us-ascii?Q?0h80wyWK7Txv9YqB/15Oco7qFRS3R7KIAuLYMYeaLMe8iIQD1kHgKndxaw+r?=
+ =?us-ascii?Q?JznlxPouapA4pioA8gHccAmSeAqZBvdxRM2Dh5pFfNkVoZcqcSkfeecPuhoV?=
+ =?us-ascii?Q?t4NuWjZe1HnKJFaZfzhdkOX87JrWNxMuWEkAQCfX9ldKkSW9ZXncfY3acBC1?=
+ =?us-ascii?Q?xaQP1rrd6wHvsrYyN1/wTc432iCzWlYeIFpNCqWOkBDppimZQ6GksD/T2FY/?=
+ =?us-ascii?Q?+f0qsyvqoHG6xpdTpQ3RieS9Xx1s4C/rM64Tfq63L3wTRTsfHCSWhSx/rrtG?=
+ =?us-ascii?Q?HMIg2J9/VccHa5aAlQwmM33YE87H17Sm3TXdohKZ68b7Hx20iSGfnpmIm1y6?=
+ =?us-ascii?Q?PkKX8sFpZYq03EV8D6EnLXMBRjv2yVfWmeszFgEhbobuwqKvpYxoHHVQB0Ti?=
+ =?us-ascii?Q?Ez5u/BQUQQ4loA+9DfeGtgJvlw8BykGwIO4J+jc25omUVfZhcrM83EnU5Vxg?=
+ =?us-ascii?Q?Xj7rdvauUdOEj7WYx4N8Mumoq9uxzFXZ5snQkFisUO8L+G6XDTClUgxc5JJs?=
+ =?us-ascii?Q?MdrZeNN6izy1+Y7O8YV7GCwuwG+n7CjrW0zqSDt4?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11c14736-486e-48df-a169-08dce23052fa
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 15:47:16.0358
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CLn6UUpM5MUr3lv0pHHhQLa1aEN/zQDoFPJ9qSrvcPut/etL8Z9jy0cX6qlVL76Ti5M3Gw7KiAXHVEPp1SGZRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7456
+X-OriginatorOrg: intel.com
 
-On Wed, Sep 11, 2024 at 10:04:42AM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+Smita Koralahalli wrote:
+> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
 > 
-> Add support for ACPI RAS2 feature table (RAS2) defined in the
-> ACPI 6.5 Specification, section 5.2.21.
-> Driver contains RAS2 Init, which extracts the RAS2 table and driver
-> adds platform device for each memory features which binds to the
-s/features/feature/
-
-Fan
-> RAS2 memory driver.
+> Add GHES support to detect CXL CPER Protocol Error Record and Cache Error
+> Severity, Device ID, Device Serial number and CXL RAS capability struct in
+> struct cxl_cper_prot_err. Include this struct as a member of struct
+> cxl_cper_work_data.
 > 
-> Driver uses PCC mailbox to communicate with the ACPI HW and the
-> driver adds OSPM interfaces to send RAS2 commands.
-> 
-> Co-developed-by: A Somasundaram <somasundaram.a@hpe.com>
-> Signed-off-by: A Somasundaram <somasundaram.a@hpe.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 > ---
->  drivers/acpi/Kconfig     |  10 +
->  drivers/acpi/Makefile    |   1 +
->  drivers/acpi/ras2.c      | 391 +++++++++++++++++++++++++++++++++++++++
->  include/acpi/ras2_acpi.h |  60 ++++++
->  4 files changed, 462 insertions(+)
->  create mode 100755 drivers/acpi/ras2.c
->  create mode 100644 include/acpi/ras2_acpi.h
+> v2:
+> 	Defined array of structures for Device ID and Serial number
+> 	comparison.
+> 	p_err -> rec/p_rec.
+> ---
+>  drivers/acpi/apei/ghes.c        |  10 +++
+>  drivers/firmware/efi/cper_cxl.c | 115 ++++++++++++++++++++++++++++++++
+>  include/cxl/event.h             |  26 ++++++++
+>  3 files changed, 151 insertions(+)
 > 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index e3a7c2aedd5f..482080f1f0c5 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -284,6 +284,16 @@ config ACPI_CPPC_LIB
->  	  If your platform does not support CPPC in firmware,
->  	  leave this option disabled.
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index ada93cfde9ba..9dcf0f78458f 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -717,6 +717,14 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  	schedule_work(cxl_cper_work);
+>  }
 >  
-> +config ACPI_RAS2
-> +	bool "ACPI RAS2 driver"
-> +	select MAILBOX
-> +	select PCC
-> +	help
-> +	  The driver adds support for ACPI RAS2 feature table(extracts RAS2
-> +	  table from OS system table) and OSPM interfaces to send RAS2
-> +	  commands via PCC mailbox subspace. Driver adds platform device for
-> +	  the RAS2 memory features which binds to the RAS2 memory driver.
-> +
->  config ACPI_PROCESSOR
->  	tristate "Processor"
->  	depends on X86 || ARM64 || LOONGARCH || RISCV
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index 61ca4afe83dc..84e2a2519bae 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -100,6 +100,7 @@ obj-$(CONFIG_ACPI_EC_DEBUGFS)	+= ec_sys.o
->  obj-$(CONFIG_ACPI_BGRT)		+= bgrt.o
->  obj-$(CONFIG_ACPI_CPPC_LIB)	+= cppc_acpi.o
->  obj-$(CONFIG_ACPI_SPCR_TABLE)	+= spcr.o
-> +obj-$(CONFIG_ACPI_RAS2)		+= ras2.o
->  obj-$(CONFIG_ACPI_DEBUGGER_USER) += acpi_dbg.o
->  obj-$(CONFIG_ACPI_PPTT) 	+= pptt.o
->  obj-$(CONFIG_ACPI_PFRUT)	+= pfr_update.o pfr_telemetry.o
-> diff --git a/drivers/acpi/ras2.c b/drivers/acpi/ras2.c
-> new file mode 100755
-> index 000000000000..5daf1510d19e
-> --- /dev/null
-> +++ b/drivers/acpi/ras2.c
-> @@ -0,0 +1,391 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Implementation of ACPI RAS2 driver.
-> + *
-> + * Copyright (c) 2024 HiSilicon Limited.
-> + *
-> + * Support for RAS2 - ACPI 6.5 Specification, section 5.2.21
-> + *
-> + * Driver contains ACPI RAS2 init, which extracts the ACPI RAS2 table and
-> + * get the PCC channel subspace for communicating with the ACPI compliant
-> + * HW platform which supports ACPI RAS2. Driver adds platform devices
-> + * for each RAS2 memory feature which binds to the memory ACPI RAS2 driver.
-> + */
-> +
-> +#define pr_fmt(fmt)    "ACPI RAS2: " fmt
-> +
-> +#include <linux/delay.h>
-> +#include <linux/export.h>
-> +#include <linux/ktime.h>
-> +#include <linux/platform_device.h>
-> +#include <acpi/pcc.h>
-> +#include <acpi/ras2_acpi.h>
-> +
-> +/*
-> + * Arbitrary Retries for PCC commands because the
-> + * remote processor could be much slower to reply.
-> + */
-> +#define RAS2_NUM_RETRIES 600
-> +
-> +#define RAS2_FEATURE_TYPE_MEMORY        0x00
-> +
-> +/* global variables for the RAS2 PCC subspaces */
-> +static DEFINE_MUTEX(ras2_pcc_subspace_lock);
-> +static LIST_HEAD(ras2_pcc_subspaces);
-> +
-> +static int ras2_report_cap_error(u32 cap_status)
+> +static void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
 > +{
-> +	switch (cap_status) {
-> +	case ACPI_RAS2_NOT_VALID:
-> +	case ACPI_RAS2_NOT_SUPPORTED:
-> +		return -EPERM;
-> +	case ACPI_RAS2_BUSY:
-> +		return -EBUSY;
-> +	case ACPI_RAS2_FAILED:
-> +	case ACPI_RAS2_ABORTED:
-> +	case ACPI_RAS2_INVALID_DATA:
-> +		return -EINVAL;
-> +	default: /* 0 or other, Success */
-> +		return 0;
-> +	}
-> +}
+> +	struct cxl_cper_work_data wd;
 > +
-> +static int ras2_check_pcc_chan(struct ras2_pcc_subspace *pcc_subspace)
-> +{
-> +	struct acpi_ras2_shared_memory __iomem *generic_comm_base = pcc_subspace->pcc_comm_addr;
-> +	ktime_t next_deadline = ktime_add(ktime_get(), pcc_subspace->deadline);
-> +	u32 cap_status;
-> +	u16 status;
-> +	u32 ret;
-> +
-> +	while (!ktime_after(ktime_get(), next_deadline)) {
-> +		/*
-> +		 * As per ACPI spec, the PCC space will be initialized by
-> +		 * platform and should have set the command completion bit when
-> +		 * PCC can be used by OSPM
-> +		 */
-> +		status = readw_relaxed(&generic_comm_base->status);
-> +		if (status & RAS2_PCC_CMD_ERROR) {
-> +			cap_status = readw_relaxed(&generic_comm_base->set_capabilities_status);
-> +			ret = ras2_report_cap_error(cap_status);
-> +
-> +			status &= ~RAS2_PCC_CMD_ERROR;
-> +			writew_relaxed(status, &generic_comm_base->status);
-> +			return ret;
-> +		}
-> +		if (status & RAS2_PCC_CMD_COMPLETE)
-> +			return 0;
-> +		/*
-> +		 * Reducing the bus traffic in case this loop takes longer than
-> +		 * a few retries.
-> +		 */
-> +		msleep(10);
-> +	}
-> +
-> +	return -EIO;
-> +}
-> +
-> +/**
-> + * ras2_send_pcc_cmd() - Send RAS2 command via PCC channel
-> + * @ras2_ctx:	pointer to the RAS2 context structure
-> + * @cmd:	command to send
-> + *
-> + * Returns: 0 on success, an error otherwise
-> + */
-> +int ras2_send_pcc_cmd(struct ras2_scrub_ctx *ras2_ctx, u16 cmd)
-> +{
-> +	struct ras2_pcc_subspace *pcc_subspace = ras2_ctx->pcc_subspace;
-> +	struct acpi_ras2_shared_memory *generic_comm_base = pcc_subspace->pcc_comm_addr;
-> +	static ktime_t last_cmd_cmpl_time, last_mpar_reset;
-> +	struct mbox_chan *pcc_channel;
-> +	unsigned int time_delta;
-> +	static int mpar_count;
-> +	int ret;
-> +
-> +	guard(mutex)(&ras2_pcc_subspace_lock);
-> +	ret = ras2_check_pcc_chan(pcc_subspace);
-> +	if (ret < 0)
-> +		return ret;
-> +	pcc_channel = pcc_subspace->pcc_chan->mchan;
-> +
-> +	/*
-> +	 * Handle the Minimum Request Turnaround Time(MRTT)
-> +	 * "The minimum amount of time that OSPM must wait after the completion
-> +	 * of a command before issuing the next command, in microseconds"
-> +	 */
-> +	if (pcc_subspace->pcc_mrtt) {
-> +		time_delta = ktime_us_delta(ktime_get(), last_cmd_cmpl_time);
-> +		if (pcc_subspace->pcc_mrtt > time_delta)
-> +			udelay(pcc_subspace->pcc_mrtt - time_delta);
-> +	}
-> +
-> +	/*
-> +	 * Handle the non-zero Maximum Periodic Access Rate(MPAR)
-> +	 * "The maximum number of periodic requests that the subspace channel can
-> +	 * support, reported in commands per minute. 0 indicates no limitation."
-> +	 *
-> +	 * This parameter should be ideally zero or large enough so that it can
-> +	 * handle maximum number of requests that all the cores in the system can
-> +	 * collectively generate. If it is not, we will follow the spec and just
-> +	 * not send the request to the platform after hitting the MPAR limit in
-> +	 * any 60s window
-> +	 */
-> +	if (pcc_subspace->pcc_mpar) {
-> +		if (mpar_count == 0) {
-> +			time_delta = ktime_ms_delta(ktime_get(), last_mpar_reset);
-> +			if (time_delta < 60 * MSEC_PER_SEC) {
-> +				dev_dbg(ras2_ctx->dev,
-> +					"PCC cmd not sent due to MPAR limit");
-> +				return -EIO;
-> +			}
-> +			last_mpar_reset = ktime_get();
-> +			mpar_count = pcc_subspace->pcc_mpar;
-> +		}
-> +		mpar_count--;
-> +	}
-> +
-> +	/* Write to the shared comm region. */
-> +	writew_relaxed(cmd, &generic_comm_base->command);
-> +
-> +	/* Flip CMD COMPLETE bit */
-> +	writew_relaxed(0, &generic_comm_base->status);
-> +
-> +	/* Ring doorbell */
-> +	ret = mbox_send_message(pcc_channel, &cmd);
-> +	if (ret < 0) {
-> +		dev_err(ras2_ctx->dev,
-> +			"Err sending PCC mbox message. cmd:%d, ret:%d\n",
-> +			cmd, ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * If Minimum Request Turnaround Time is non-zero, we need
-> +	 * to record the completion time of both READ and WRITE
-> +	 * command for proper handling of MRTT, so we need to check
-> +	 * for pcc_mrtt in addition to CMD_READ
-> +	 */
-> +	if (cmd == RAS2_PCC_CMD_EXEC || pcc_subspace->pcc_mrtt) {
-> +		ret = ras2_check_pcc_chan(pcc_subspace);
-> +		if (pcc_subspace->pcc_mrtt)
-> +			last_cmd_cmpl_time = ktime_get();
-> +	}
-> +
-> +	if (pcc_channel->mbox->txdone_irq)
-> +		mbox_chan_txdone(pcc_channel, ret);
-> +	else
-> +		mbox_client_txdone(pcc_channel, ret);
-> +
-> +	return ret >= 0 ? 0 : ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ras2_send_pcc_cmd);
-> +
-> +static int ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
-> +				     int pcc_subspace_id)
-> +{
-> +	struct acpi_pcct_hw_reduced *ras2_ss;
-> +	struct mbox_client *ras2_mbox_cl;
-> +	struct pcc_mbox_chan *pcc_chan;
-> +	struct ras2_pcc_subspace *pcc_subspace;
-> +
-> +	if (pcc_subspace_id < 0)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ras2_pcc_subspace_lock);
-> +	list_for_each_entry(pcc_subspace, &ras2_pcc_subspaces, elem) {
-> +		if (pcc_subspace->pcc_subspace_id == pcc_subspace_id) {
-> +			ras2_ctx->pcc_subspace = pcc_subspace;
-> +			pcc_subspace->ref_count++;
-> +			mutex_unlock(&ras2_pcc_subspace_lock);
-> +			return 0;
-> +		}
-> +	}
-> +	mutex_unlock(&ras2_pcc_subspace_lock);
-> +
-> +	pcc_subspace = kcalloc(1, sizeof(*pcc_subspace), GFP_KERNEL);
-> +	if (!pcc_subspace)
-> +		return -ENOMEM;
-> +	pcc_subspace->pcc_subspace_id = pcc_subspace_id;
-> +	ras2_mbox_cl = &pcc_subspace->mbox_client;
-> +	ras2_mbox_cl->dev = dev;
-> +	ras2_mbox_cl->knows_txdone = true;
-> +
-> +	pcc_chan = pcc_mbox_request_channel(ras2_mbox_cl, pcc_subspace_id);
-> +	if (IS_ERR(pcc_chan)) {
-> +		kfree(pcc_subspace);
-> +		return PTR_ERR(pcc_chan);
-> +	}
-> +	pcc_subspace->pcc_chan = pcc_chan;
-> +	ras2_ss = pcc_chan->mchan->con_priv;
-> +	pcc_subspace->comm_base_addr = ras2_ss->base_address;
-> +
-> +	/*
-> +	 * ras2_ss->latency is just a Nominal value. In reality
-> +	 * the remote processor could be much slower to reply.
-> +	 * So add an arbitrary amount of wait on top of Nominal.
-> +	 */
-> +	pcc_subspace->deadline = ns_to_ktime(RAS2_NUM_RETRIES * ras2_ss->latency *
-> +					     NSEC_PER_USEC);
-> +	pcc_subspace->pcc_mrtt = ras2_ss->min_turnaround_time;
-> +	pcc_subspace->pcc_mpar = ras2_ss->max_access_rate;
-> +	pcc_subspace->pcc_comm_addr = acpi_os_ioremap(pcc_subspace->comm_base_addr,
-> +						      ras2_ss->length);
-> +	/* Set flag so that we dont come here for each CPU. */
-> +	pcc_subspace->pcc_channel_acquired = true;
-> +
-> +	mutex_lock(&ras2_pcc_subspace_lock);
-> +	list_add(&pcc_subspace->elem, &ras2_pcc_subspaces);
-> +	pcc_subspace->ref_count++;
-> +	mutex_unlock(&ras2_pcc_subspace_lock);
-> +	ras2_ctx->pcc_subspace = pcc_subspace;
-> +
-> +	return 0;
-> +}
-> +
-> +static void ras2_unregister_pcc_channel(void *ctx)
-> +{
-> +	struct ras2_scrub_ctx *ras2_ctx = ctx;
-> +	struct ras2_pcc_subspace *pcc_subspace = ras2_ctx->pcc_subspace;
-> +
-> +	if (!pcc_subspace  || !pcc_subspace->pcc_chan)
+> +	if (cxl_cper_handle_prot_err_info(gdata, &wd.p_rec))
 > +		return;
+> +}
+
+This is a bit odd.  One could call cxl_cper_handle_prot_err_info()
+directly from ghes_do_proc() in this patch.  Then add
+cxl_cper_handle_prot_err() in patch 4/4 but either way is fine with me.
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
 > +
-> +	guard(mutex)(&ras2_pcc_subspace_lock);
-> +	if (pcc_subspace->ref_count > 0)
-> +		pcc_subspace->ref_count--;
-> +	if (!pcc_subspace->ref_count) {
-> +		list_del(&pcc_subspace->elem);
-> +		pcc_mbox_free_channel(pcc_subspace->pcc_chan);
-> +		kfree(pcc_subspace);
+>  int cxl_cper_register_work(struct work_struct *work)
+>  {
+>  	if (cxl_cper_work)
+> @@ -791,6 +799,8 @@ static bool ghes_do_proc(struct ghes *ghes,
+>  			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+>  
+>  			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> +			cxl_cper_handle_prot_err(gdata);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+> index 4fd8d783993e..08da7764c066 100644
+> --- a/drivers/firmware/efi/cper_cxl.c
+> +++ b/drivers/firmware/efi/cper_cxl.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/cper.h>
+> +#include <acpi/ghes.h>
+>  #include "cper_cxl.h"
+>  
+>  #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
+> @@ -44,6 +45,66 @@ enum {
+>  	USP,	/* CXL Upstream Switch Port */
+>  };
+>  
+> +struct agent_info {
+> +	const char *string;
+> +	bool req_sn;
+> +	bool req_sbdf;
+> +};
+> +
+> +static const struct agent_info agent_info[] = {
+> +	[RCD] = {
+> +		.string = "Restricted CXL Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[RCH_DP] = {
+> +		.string = "Restricted CXL Host Downstream Port",
+> +		.req_sbdf = false,
+> +		.req_sn = false,
+> +	},
+> +	[DEVICE] = {
+> +		.string = "CXL Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[LD] = {
+> +		.string = "CXL Logical Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[FMLD] = {
+> +		.string = "CXL Fabric Manager managed Logical Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[RP] = {
+> +		.string = "CXL Root Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +	[DSP] = {
+> +		.string = "CXL Downstream Switch Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +	[USP] = {
+> +		.string = "CXL Upstream Switch Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +};
+> +
+> +static enum cxl_aer_err_type cper_severity_cxl_aer(int cper_severity)
+> +{
+> +	switch (cper_severity) {
+> +	case CPER_SEV_RECOVERABLE:
+> +	case CPER_SEV_FATAL:
+> +		return CXL_AER_UNCORRECTABLE;
+> +	default:
+> +		return CXL_AER_CORRECTABLE;
 > +	}
 > +}
 > +
-> +/**
-> + * devm_ras2_register_pcc_channel() - Register RAS2 PCC channel
-> + * @dev:		pointer to the RAS2 device
-> + * @ras2_ctx:		pointer to the RAS2 context structure
-> + * @pcc_subspace_id:	identifier of the RAS2 PCC channel.
-> + *
-> + * Returns: 0 on success, an error otherwise
-> + */
-> +int devm_ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
-> +				   int pcc_subspace_id)
+>  void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
+>  {
+>  	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
+> @@ -176,3 +237,57 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
+>  			       sizeof(cxl_ras->header_log), 0);
+>  	}
+>  }
+> +
+> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+> +				  struct cxl_cper_prot_err *rec)
 > +{
-> +	int ret;
+> +	struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+> +	u8 *dvsec_start, *cap_start;
 > +
-> +	ret = ras2_register_pcc_channel(dev, ras2_ctx, pcc_subspace_id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, ras2_unregister_pcc_channel, ras2_ctx);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_ras2_register_pcc_channel, ACPI_RAS2);
-> +
-> +static struct platform_device *ras2_add_platform_device(char *name, int channel)
-> +{
-> +	int ret;
-> +	struct platform_device *pdev __free(platform_device_put) =
-> +		platform_device_alloc(name, PLATFORM_DEVID_AUTO);
-> +	if (!pdev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = platform_device_add_data(pdev, &channel, sizeof(channel));
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	ret = platform_device_add(pdev);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return_ptr(pdev);
-> +}
-> +
-> +static int __init ras2_acpi_init(void)
-> +{
-> +	struct acpi_table_header *pAcpiTable = NULL;
-> +	struct acpi_ras2_pcc_desc *pcc_desc_list;
-> +	struct acpi_table_ras2 *pRas2Table;
-> +	struct platform_device *pdev;
-> +	int pcc_subspace_id;
-> +	acpi_size ras2_size;
-> +	acpi_status status;
-> +	u8 count = 0, i;
-> +	int ret;
-> +
-> +	status = acpi_get_table("RAS2", 0, &pAcpiTable);
-> +	if (ACPI_FAILURE(status) || !pAcpiTable) {
-> +		pr_err("ACPI RAS2 driver failed to initialize, get table failed\n");
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID)) {
+> +		pr_err(FW_WARN "No Device ID\n");
 > +		return -EINVAL;
 > +	}
 > +
-> +	ras2_size = pAcpiTable->length;
-> +	if (ras2_size < sizeof(struct acpi_table_ras2)) {
-> +		pr_err("ACPI RAS2 table present but broken (too short #1)\n");
-> +		ret = -EINVAL;
-> +		goto free_ras2_table;
+> +	/*
+> +	 * The device ID or agent address is required for CXL RCD, CXL
+> +	 * SLD, CXL LD, CXL Fabric Manager Managed LD, CXL Root Port,
+> +	 * CXL Downstream Switch Port and CXL Upstream Switch Port.
+> +	 */
+> +	if (!(agent_info[prot_err->agent_type].req_sbdf)) {
+> +		pr_err(FW_WARN "Invalid agent type\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	pRas2Table = (struct acpi_table_ras2 *)pAcpiTable;
-> +	if (pRas2Table->num_pcc_descs <= 0) {
-> +		pr_err("ACPI RAS2 table does not contain PCC descriptors\n");
-> +		ret = -EINVAL;
-> +		goto free_ras2_table;
+> +	rec->segment = prot_err->agent_addr.segment;
+> +	rec->bus = prot_err->agent_addr.bus;
+> +	rec->device = prot_err->agent_addr.device;
+> +	rec->function = prot_err->agent_addr.function;
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> +		pr_err(FW_WARN "Invalid Protocol Error log\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	struct platform_device **pdev_list __free(kfree) =
-> +			kcalloc(pRas2Table->num_pcc_descs, sizeof(*pdev_list),
-> +				GFP_KERNEL);
-> +	if (!pdev_list) {
-> +		ret = -ENOMEM;
-> +		goto free_ras2_table;
-> +	}
+> +	dvsec_start = (u8 *)(prot_err + 1);
+> +	cap_start = dvsec_start + prot_err->dvsec_len;
+> +	rec->cxl_ras = *(struct cxl_ras_capability_regs *)cap_start;
 > +
-> +	pcc_desc_list = (struct acpi_ras2_pcc_desc *)(pRas2Table + 1);
-> +	/* Double scan for the case of only one actual controller */
-> +	pcc_subspace_id = -1;
-> +	count = 0;
-> +	for (i = 0; i < pRas2Table->num_pcc_descs; i++, pcc_desc_list++) {
-> +		if (pcc_desc_list->feature_type != RAS2_FEATURE_TYPE_MEMORY)
-> +			continue;
-> +		if (pcc_subspace_id == -1) {
-> +			pcc_subspace_id = pcc_desc_list->channel_id;
-> +			count++;
-> +		}
-> +		if (pcc_desc_list->channel_id != pcc_subspace_id)
-> +			count++;
-> +	}
-> +	if (count == 1) {
-> +		pdev = ras2_add_platform_device("acpi_ras2", pcc_subspace_id);
-> +		if (!pdev) {
-> +			ret = -ENODEV;
-> +			goto free_ras2_pdev;
-> +		}
-> +		pdev_list[0] = pdev;
-> +		return 0;
-> +	}
+> +	/*
+> +	 * Set device serial number unconditionally.
+> +	 *
+> +	 * Print a warning message if it is not valid. The device serial
+> +	 * number is required for CXL RCD, CXL SLD, CXL LD and CXL Fabric
+> +	 * Manager Managed LD.
+> +	 */
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
+> +	    !(agent_info[prot_err->agent_type].req_sn))
+> +		pr_warn(FW_WARN "No Device Serial number\n");
 > +
-> +	count = 0;
-> +	for (i = 0; i < pRas2Table->num_pcc_descs; i++, pcc_desc_list++) {
-> +		if (pcc_desc_list->feature_type != RAS2_FEATURE_TYPE_MEMORY)
-> +			continue;
-> +		pcc_subspace_id = pcc_desc_list->channel_id;
-> +		/* Add the platform device and bind ACPI RAS2 memory driver */
-> +		pdev = ras2_add_platform_device("acpi_ras2", pcc_subspace_id);
-> +		if (!pdev)
-> +			goto free_ras2_pdev;
-> +		pdev_list[count++] = pdev;
-> +	}
+> +	rec->lower_dw = prot_err->dev_serial_num.lower_dw;
+> +	rec->upper_dw = prot_err->dev_serial_num.upper_dw;
 > +
-> +	acpi_put_table(pAcpiTable);
+> +	rec->severity = cper_severity_cxl_aer(gdata->error_severity);
+> +
 > +	return 0;
-> +
-> +free_ras2_pdev:
-> +	for (i = count; i >= 0; i++)
-> +		platform_device_put(pdev_list[i]);
-> +
-> +free_ras2_table:
-> +	acpi_put_table(pAcpiTable);
-> +
-> +	return ret;
 > +}
-> +late_initcall(ras2_acpi_init)
-> diff --git a/include/acpi/ras2_acpi.h b/include/acpi/ras2_acpi.h
-> new file mode 100644
-> index 000000000000..edfca253d88a
-> --- /dev/null
-> +++ b/include/acpi/ras2_acpi.h
-> @@ -0,0 +1,60 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * RAS2 ACPI driver header file
-> + *
-> + * (C) Copyright 2014, 2015 Hewlett-Packard Enterprises
-> + *
-> + * Copyright (c) 2024 HiSilicon Limited
-> + */
-> +
-> +#ifndef _RAS2_ACPI_H
-> +#define _RAS2_ACPI_H
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +
-> +#define RAS2_PCC_CMD_COMPLETE	BIT(0)
-> +#define RAS2_PCC_CMD_ERROR	BIT(2)
-> +
-> +/* RAS2 specific PCC commands */
-> +#define RAS2_PCC_CMD_EXEC 0x01
-> +
-> +struct device;
-> +
-> +/* Data structures for PCC communication and RAS2 table */
-> +struct pcc_mbox_chan;
-> +
-> +struct ras2_pcc_subspace {
-> +	int pcc_subspace_id;
-> +	struct mbox_client mbox_client;
-> +	struct pcc_mbox_chan *pcc_chan;
-> +	struct acpi_ras2_shared_memory __iomem *pcc_comm_addr;
-> +	u64 comm_base_addr;
-> +	bool pcc_channel_acquired;
-> +	ktime_t deadline;
-> +	unsigned int pcc_mpar;
-> +	unsigned int pcc_mrtt;
-> +	struct list_head elem;
-> +	u16 ref_count;
+> diff --git a/include/cxl/event.h b/include/cxl/event.h
+> index 57b4630568f6..5b316150556a 100644
+> --- a/include/cxl/event.h
+> +++ b/include/cxl/event.h
+> @@ -158,11 +158,37 @@ struct cxl_ras_capability_regs {
+>  	u32 header_log[16];
+>  };
+>  
+> +enum cxl_aer_err_type {
+> +	CXL_AER_UNCORRECTABLE,
+> +	CXL_AER_CORRECTABLE,
 > +};
 > +
-> +struct ras2_scrub_ctx {
-> +	struct device *dev;
-> +	struct ras2_pcc_subspace *pcc_subspace;
-> +	int id;
-> +	u8 instance;
-> +	struct device *scrub_dev;
-> +	bool bg;
-> +	u64 base, size;
-> +	u8 scrub_cycle_hrs, min_scrub_cycle, max_scrub_cycle;
-> +	/* Lock to provide mutually exclusive access to PCC channel */
-> +	struct mutex lock;
+> +struct cxl_cper_prot_err {
+> +	struct cxl_ras_capability_regs cxl_ras;
+> +
+> +	/* Device ID */
+> +	u8 function;
+> +	u8 device;
+> +	u8 bus;
+> +	u16 segment;
+> +
+> +	/* Device Serial Number */
+> +	u32 lower_dw;
+> +	u32 upper_dw;
+> +
+> +	int severity;
 > +};
 > +
-> +int ras2_send_pcc_cmd(struct ras2_scrub_ctx *ras2_ctx, u16 cmd);
-> +int devm_ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
-> +				   int pcc_subspace_id);
+>  struct cxl_cper_work_data {
+>  	enum cxl_event_type event_type;
+>  	struct cxl_cper_event_rec rec;
+> +	struct cxl_cper_prot_err p_rec;
+>  };
+>  
+> +struct acpi_hest_generic_data;
+> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+> +				  struct cxl_cper_prot_err *rec);
 > +
-> +#endif /* _RAS2_ACPI_H */
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  int cxl_cper_register_work(struct work_struct *work);
+>  int cxl_cper_unregister_work(struct work_struct *work);
 > -- 
-> 2.34.1
+> 2.17.1
 > 
 
--- 
-Fan Ni
+
