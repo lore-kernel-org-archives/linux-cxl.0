@@ -1,71 +1,74 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4A21CC146
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Oct 2024 16:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E8A1CB312;
+	Tue,  1 Oct 2024 17:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727798716; cv=none; b=e0xt6Io+aUHdb5UiO4XYTEJLy/ROhATOeNLYQxXpyAT++nBCrcyXyTWV16qkdYJ61WInYkQFSqhb1UK43j2J1OrodWfnOIDneGUMA5wCcPCFwHaH4crkrlIjhDpvO/NK0tiXM08waW8N8iBIsxau28VClpD2v6eEBVCc9Yw5avw=
+	t=1727804509; cv=none; b=cnfO/tNfuBShLgNIgM8BCstTAK/geqtwbIvVAHEch1C30YCSp3dmXF6peHUphWt/6HDRkBh0nmwIcswEnI3efDyo1p6lM7TJVgDAKlhc/sP+96b3bPJgEzcw0n6dr3ThlfGsq3meNdx74o4bQvziMQHtZS2saZ3vqauVn6P/sJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727798716; c=relaxed/simple;
-	bh=C57aOV7WqzX66B1kVXAbDB2SXf2Y+tKtl/uQWnjaZuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7bnJCIynbHvt57pko9lIDgktsPiFzepu0pFxqrrv16nYzJyTjpUe5dh1ejWnvZqzskpJFFtebVYwdRpJN7/bhSXzhumBfzLu0cSVAVPDwMtzgrb67Y9dv+sbX7pO0cEjmcWYqAKlhqxcuE6/v++rJxTHN6pIsna7an5bUWUcwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=nfQ1lo0/; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1727804509; c=relaxed/simple;
+	bh=LOC0bFakV8X8LMSei2yZtBKCG9MitAs/kdj4g3baMsY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0HAcC6021D8qo6BGo2PUou5BMVtrQO1KVmwDalugMfWzN8Si+/CKWUIm7gxjkz5Hpg8cIjBZqQCOgPP22jLZqTpZTqfyeOhessBBhqrgKcT2W7PnbLq3ek+T7hUMFPH3PFLS3Txm0z0k7lc24CZWrsJep8i3wenSvLrGgJHL9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeRbtqoY; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="nfQ1lo0/"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7a9ae0e116cso570496385a.1
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Oct 2024 09:05:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeRbtqoY"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e0894f1b14so4374953a91.1;
+        Tue, 01 Oct 2024 10:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1727798713; x=1728403513; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1727804507; x=1728409307; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wqbFlSrs+wzzaAJa1pk9Jm3ecEhBzsBWk37uMTmAYtM=;
-        b=nfQ1lo0/ruHHA46X3xf1ytyIaHIXyuALRm+iVA/kc3Zypue8POnj4IlF4OaPzsFL8A
-         ODa97+a4er+pf/INvAQdZWLwGXKuwOZw77WkLl5LrUPvDYLPtJz1JqUSdyVY2tcxgRSD
-         fOOiLDp80n+7/U42T/zJbNcxdGkkXBzk2Yj1rbA5B18KgZSrI3fFV22KhO0CcarsDRQI
-         B323p6bIZrZH8VS0MkXA1x/+M0cczKl2WdSACv+wCAnvaSGmf200AoE8NMjZFLeVDZhZ
-         O619VfJCnTnaPcpHAHvSucDCL0f5BEauuT/26D6YHkurMfs+/vGCsbPyEAPu0FpRUlCc
-         WuBA==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1l+2UE4lLIqZawFA+83hjv4rfdjxJdPZSh1jfmLlOxo=;
+        b=UeRbtqoYSij86qekgdACJU4Iw2a8zGc/8PGD1Nn5JZ5xrD6OR7tVPBv/cryFLQ3OIQ
+         +unrjvSqfOIFPm0vd5WI6NOTxY0jw7DyG83cfJD1eDbv4QDeYPyrSy5bV+C3SF9//suD
+         X0HIX3UFxYy7/ws7k2XV35O5CJn8SP6H4Cn6FDk5SimmZNZNV1wne7poHRTPrXIEhC4/
+         K9eGR45+UP1S0nETqGcgH5OcipCwwVeekbYpBr2ANONG9N0YazMBQdlT52yJi43I0V4h
+         HX09/0hshdEbEChAP2LhCBZEYY86P6ixByWrSsQWj/Wgyj8ifysA8LXojtGhV3pEBoy6
+         ojuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727798713; x=1728403513;
+        d=1e100.net; s=20230601; t=1727804507; x=1728409307;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wqbFlSrs+wzzaAJa1pk9Jm3ecEhBzsBWk37uMTmAYtM=;
-        b=Q8M9k+aEWesw/WxLVgtnHQITsvBxDF1Zpy8cAh8+pdIIJMDxLHj0PugmcxdgN+CgOo
-         iqzsITX6AoXYGeKHwbLL1XDol3whfkNDz4RrRVEpVymYl02HaLme/DvxBFZiSTV0ZT46
-         BJG7XlRgw5amcpPqviPD2bTrItU+jp/nBz8nKt7r2U7UOp4agLjwctgbWVSP4ekrancq
-         9NST0XUjOfEdAtXRnLsZNHmO1Kyw3HEGQEwFtcCKuUkghH99+L3/Sg1sDTotVehcQ9A3
-         /D8SSkbzQRThGyp7lt79NIpXY/cotSqp4/FF8Ji9SCqr/liC/oOD/7EEElL11Bg0jgO1
-         /PLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/hbukHVPs1QVJfCPuDuBt3SsEZmO2fijPuiAjx/lZxDlgPzY7XitTZN6nOnSlr69g9IXkHUO9XGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi5Ku/oIYozLEq2EbaX4Hk8VTgL/TMxdHrt9rG//7jOZU3yTHO
-	PtBdfUJnYruuA+7Zx9sc7ok2SpO5GlZmWAxj2S6AJxHG51Dho+maJudhilOJgsQ=
-X-Google-Smtp-Source: AGHT+IGvHKnNKLHBVUMCFw3MdQ+JfCrHKwohCgRxUwgHH8k6a6X/J7lGp9KRTdH3ZOdKWQEw36fpEA==
-X-Received: by 2002:a05:620a:2992:b0:7ac:e15c:9d01 with SMTP id af79cd13be357-7ae62732e43mr21762785a.43.1727798712929;
-        Tue, 01 Oct 2024 09:05:12 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae377f0ea7sm520807185a.61.2024.10.01.09.05.12
+        bh=1l+2UE4lLIqZawFA+83hjv4rfdjxJdPZSh1jfmLlOxo=;
+        b=AkIqRccxkBd2IhvF4J7h9354jxWXTo2TVbGT/NuZxHC59aDMW34nfUrZfSfGXTeLeP
+         acc+QPBXmJ++/8V74tWctm4rBYu6M1zrwZdXf06f0QZX5rmB8XFO1O4ObFklxWqdhjiD
+         5SaSvuQl8G9N+wDkAI2iPDmG5QZnxJJJgkMRopQD88H0omr3OqExzV5FCCDp1p+LaGuK
+         E+XabaiTgduRGX83T9UfRy8Zo3nDQppmrCJjVGZ8ZChm34Sc3UYYbrQBsNr3CO60PcN5
+         Rwwq5yFB8Hs686NM9/fhRpL9etZRkzCQ5DZ+S4FmDm/I68aZ5upvDCOmrRBz46hhxSol
+         iNKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKZGwkqdooXylr93EJV9coT25sjop4Gg6+kxCcrJsByjN6iSUq00LPCChDIunPe+n++V8tyyQ6CG0=@vger.kernel.org, AJvYcCV+6QXOiwakkfcJLYRgc9UsJCldnLM8PP93PEynCeY1meJ0Y5NFiJf8own1+FUCf7m7IGk4rT37m9u/XoGW@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx3Gj4v3EloTmQVxLhcAbVSVMSBluMsWj8qzcioNio5zc+pqVp
+	+1km0335p5DPMDxYCDy02BnT9bDaevK2uPJoOK0JFlngJfKfT3Bq
+X-Google-Smtp-Source: AGHT+IGOkQ9PzM4pulpEZePjxRxN82y8aoFWPRcbE1/tcaVtRNuCyOUYItKeWCosIlBw0FfypZBj6Q==
+X-Received: by 2002:a17:90b:4a92:b0:2d3:cf20:80bd with SMTP id 98e67ed59e1d1-2e1846bea1bmr568466a91.17.1727804506671;
+        Tue, 01 Oct 2024 10:41:46 -0700 (PDT)
+Received: from fan ([2601:646:8f03:9fee:7dd:d82b:9686:b02a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e0b6c7729fsm10611216a91.22.2024.10.01.10.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 09:05:12 -0700 (PDT)
-Date: Tue, 1 Oct 2024 12:04:43 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, dave@stgolabs.net, dave.jiang@intel.com,
-	vishal.l.verma@intel.com
-Subject: Re: [PATCH] pci/doe: add a 1 second retry window to pci_doe
-Message-ID: <Zvwdmy43AUELFzV4@PC2K9PVX.TheFacebook.com>
-References: <20240913183241.17320-1-gourry@gourry.net>
- <66e51febbab99_ae212949d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240916101557.00007b3a@Huawei.com>
- <ZvwRjbRIrkCSjwQI@PC2K9PVX.TheFacebook.com>
- <ZvwZd5CCV2PdqSLF@wunner.de>
+        Tue, 01 Oct 2024 10:41:46 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 1 Oct 2024 10:41:30 -0700
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Bowman Terry <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 3/4] acpi/ghes, efi/cper: Recognize and process CXL
+ Protocol Errors.
+Message-ID: <Zvw0SnS40Rf_jWbB@fan>
+References: <20241001005234.61409-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20241001005234.61409-4-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,62 +77,242 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvwZd5CCV2PdqSLF@wunner.de>
+In-Reply-To: <20241001005234.61409-4-Smita.KoralahalliChannabasappa@amd.com>
 
-On Tue, Oct 01, 2024 at 05:47:03PM +0200, Lukas Wunner wrote:
-> On Tue, Oct 01, 2024 at 11:13:17AM -0400, Gregory Price wrote:
-> > > > Gregory Price wrote:
-> > > > > Depending on the device, sometimes firmware clears the busy flag
-> > > > > later than expected.  This can cause the device to appear busy when
-> > > > > calling multiple commands in quick sucession. Add a 1 second retry
-> > > > > window to all doe commands that end with -EBUSY.  
-> > 
-> > Just following up here, it sounds like everyone is unsure of this change.
-> > 
-> > I can confirm that this handles the CDAT retry issue I am seeing, and that
-> > the BUSY bit is set upon entry into the initial call. Only 1 or 2 retries
-> > are attempted before it is cleared and returns successfully.
-> > 
-> > I'd explored putting the retry logic in the CDAT code that calls into here,
-> > but that just seemed wrong.  Is there a suggestion or a nak here?
-> > 
-> > Trying to find a path forward.
+On Tue, Oct 01, 2024 at 12:52:33AM +0000, Smita Koralahalli wrote:
+> UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
 > 
-> The PCIe Base Spec doesn't prescribe a maximum timeout for the
-> DOE BUSY bit to clear.  Thus it seems fine to me in principle
-> to add a (or raise the) timeout if it turns out to be necessary
-> for real-life hardware.
+> Add GHES support to detect CXL CPER Protocol Error Record and Cache Error
+> Severity, Device ID, Device Serial number and CXL RAS capability struct in
+> struct cxl_cper_prot_err. Include this struct as a member of struct
+> cxl_cper_work_data.
 > 
-> That said, the proposed patch has room for improvement:
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> ---
+> v2:
+> 	Defined array of structures for Device ID and Serial number
+> 	comparison.
+> 	p_err -> rec/p_rec.
+> ---
+>  drivers/acpi/apei/ghes.c        |  10 +++
+>  drivers/firmware/efi/cper_cxl.c | 115 ++++++++++++++++++++++++++++++++
+>  include/cxl/event.h             |  26 ++++++++
+>  3 files changed, 151 insertions(+)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index ada93cfde9ba..9dcf0f78458f 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -717,6 +717,14 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  	schedule_work(cxl_cper_work);
+>  }
+>  
+> +static void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
+> +{
+> +	struct cxl_cper_work_data wd;
+> +
+> +	if (cxl_cper_handle_prot_err_info(gdata, &wd.p_rec))
+> +		return;
+> +}
 
-Will address and resubmit, thanks!
+Why we need a if here? It seems the function will return anyway.
 
+Fan
+> +
+>  int cxl_cper_register_work(struct work_struct *work)
+>  {
+>  	if (cxl_cper_work)
+> @@ -791,6 +799,8 @@ static bool ghes_do_proc(struct ghes *ghes,
+>  			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
+>  
+>  			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> +			cxl_cper_handle_prot_err(gdata);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+> index 4fd8d783993e..08da7764c066 100644
+> --- a/drivers/firmware/efi/cper_cxl.c
+> +++ b/drivers/firmware/efi/cper_cxl.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/cper.h>
+> +#include <acpi/ghes.h>
+>  #include "cper_cxl.h"
+>  
+>  #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
+> @@ -44,6 +45,66 @@ enum {
+>  	USP,	/* CXL Upstream Switch Port */
+>  };
+>  
+> +struct agent_info {
+> +	const char *string;
+> +	bool req_sn;
+> +	bool req_sbdf;
+> +};
+> +
+> +static const struct agent_info agent_info[] = {
+> +	[RCD] = {
+> +		.string = "Restricted CXL Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[RCH_DP] = {
+> +		.string = "Restricted CXL Host Downstream Port",
+> +		.req_sbdf = false,
+> +		.req_sn = false,
+> +	},
+> +	[DEVICE] = {
+> +		.string = "CXL Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[LD] = {
+> +		.string = "CXL Logical Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[FMLD] = {
+> +		.string = "CXL Fabric Manager managed Logical Device",
+> +		.req_sbdf = true,
+> +		.req_sn = true,
+> +	},
+> +	[RP] = {
+> +		.string = "CXL Root Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +	[DSP] = {
+> +		.string = "CXL Downstream Switch Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +	[USP] = {
+> +		.string = "CXL Upstream Switch Port",
+> +		.req_sbdf = true,
+> +		.req_sn = false,
+> +	},
+> +};
+> +
+> +static enum cxl_aer_err_type cper_severity_cxl_aer(int cper_severity)
+> +{
+> +	switch (cper_severity) {
+> +	case CPER_SEV_RECOVERABLE:
+> +	case CPER_SEV_FATAL:
+> +		return CXL_AER_UNCORRECTABLE;
+> +	default:
+> +		return CXL_AER_CORRECTABLE;
+> +	}
+> +}
+> +
+>  void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
+>  {
+>  	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
+> @@ -176,3 +237,57 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
+>  			       sizeof(cxl_ras->header_log), 0);
+>  	}
+>  }
+> +
+> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+> +				  struct cxl_cper_prot_err *rec)
+> +{
+> +	struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+> +	u8 *dvsec_start, *cap_start;
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID)) {
+> +		pr_err(FW_WARN "No Device ID\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * The device ID or agent address is required for CXL RCD, CXL
+> +	 * SLD, CXL LD, CXL Fabric Manager Managed LD, CXL Root Port,
+> +	 * CXL Downstream Switch Port and CXL Upstream Switch Port.
+> +	 */
+> +	if (!(agent_info[prot_err->agent_type].req_sbdf)) {
+> +		pr_err(FW_WARN "Invalid agent type\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	rec->segment = prot_err->agent_addr.segment;
+> +	rec->bus = prot_err->agent_addr.bus;
+> +	rec->device = prot_err->agent_addr.device;
+> +	rec->function = prot_err->agent_addr.function;
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> +		pr_err(FW_WARN "Invalid Protocol Error log\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dvsec_start = (u8 *)(prot_err + 1);
+> +	cap_start = dvsec_start + prot_err->dvsec_len;
+> +	rec->cxl_ras = *(struct cxl_ras_capability_regs *)cap_start;
+> +
+> +	/*
+> +	 * Set device serial number unconditionally.
+> +	 *
+> +	 * Print a warning message if it is not valid. The device serial
+> +	 * number is required for CXL RCD, CXL SLD, CXL LD and CXL Fabric
+> +	 * Manager Managed LD.
+> +	 */
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
+> +	    !(agent_info[prot_err->agent_type].req_sn))
+> +		pr_warn(FW_WARN "No Device Serial number\n");
+> +
+> +	rec->lower_dw = prot_err->dev_serial_num.lower_dw;
+> +	rec->upper_dw = prot_err->dev_serial_num.upper_dw;
+> +
+> +	rec->severity = cper_severity_cxl_aer(gdata->error_severity);
+> +
+> +	return 0;
+> +}
+> diff --git a/include/cxl/event.h b/include/cxl/event.h
+> index 57b4630568f6..5b316150556a 100644
+> --- a/include/cxl/event.h
+> +++ b/include/cxl/event.h
+> @@ -158,11 +158,37 @@ struct cxl_ras_capability_regs {
+>  	u32 header_log[16];
+>  };
+>  
+> +enum cxl_aer_err_type {
+> +	CXL_AER_UNCORRECTABLE,
+> +	CXL_AER_CORRECTABLE,
+> +};
+> +
+> +struct cxl_cper_prot_err {
+> +	struct cxl_ras_capability_regs cxl_ras;
+> +
+> +	/* Device ID */
+> +	u8 function;
+> +	u8 device;
+> +	u8 bus;
+> +	u16 segment;
+> +
+> +	/* Device Serial Number */
+> +	u32 lower_dw;
+> +	u32 upper_dw;
+> +
+> +	int severity;
+> +};
+> +
+>  struct cxl_cper_work_data {
+>  	enum cxl_event_type event_type;
+>  	struct cxl_cper_event_rec rec;
+> +	struct cxl_cper_prot_err p_rec;
+>  };
+>  
+> +struct acpi_hest_generic_data;
+> +int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
+> +				  struct cxl_cper_prot_err *rec);
+> +
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  int cxl_cper_register_work(struct work_struct *work);
+>  int cxl_cper_unregister_work(struct work_struct *work);
+> -- 
+> 2.17.1
 > 
-> * The patch seems to wait for DOE BUSY bit to clear *after*
->   completion.  That's odd.  The kernel waits for DOE Busy bit
->   to clear *before* sending a new request, in pci_doe_send_req().
->   My expectation would have been that you'd add a loop there which
->   polls for DOE Busy bit to clear before sending a request.
-> 
->   It seems that polling is the only option as no interrupt is
->   raised on DOE Busy bit clear, per PCIe r6.2 sec 6.30.3.
->   (Please add this bit of information to the commit message.)
-> 
-> * The commit message should clearly specify the device(s)
->   affected by the issue (Vendor and Device ID plus name).
->   Comments such as "Depending on the device, sometimes ..."
->   are a little too vague.
-> 
-> * The "1 or 2 retries" bit of information you're mentioning
->   above should likewise be in the commit message.
-> 
-> * Please use "PCI/DOE:" as subject prefix to match previous
->   commits which touched drivers/pci/doe.c.
-> 
-> * Please adhere to spec language, e.g. use "DOE Busy bit"
->   instead of "busy bit" so it's unambiguous for readers
->   what you're referring to.
-> 
-> Thanks,
-> 
-> Lukas
+
+-- 
+Fan Ni
