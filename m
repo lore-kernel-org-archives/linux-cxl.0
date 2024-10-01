@@ -1,91 +1,95 @@
-Received: from buffalo.birch.relay.mailchannels.net (buffalo.birch.relay.mailchannels.net [23.83.209.24])
+Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F81329AF
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Oct 2024 01:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.209.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A494AEE9;
+	Tue,  1 Oct 2024 02:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727745025; cv=fail; b=gS56aFa5w1dRc/7GxCKm8bFR/tMD9OLL6CxxcEdyBV7xgHQLSbXBeaDbXNVAqEYKGc8BaubxKXKjZlBT++V6w1sCHXhgjGOYMm4E1SRbJzJciU9YoeJknYFZrOFIuyoPvs1y9M3AMT81soydf8mOzGLlAY0uSlNk+IQTehaTUUk=
+	t=1727750911; cv=pass; b=kAFVZ/C16BpvGgJpYwt3MYPYBRbBlgKclxVAdy2taOVns6fGJMOzxsIaOJxuJQxyIrtA9bbstpVJdRZKpCNOPqm9CjjNPdo7Fb8qp0igwzxfJCOU+3r0oaENYSvtH159EkPiV7orfnN2w7y9I1b78+ETFvznxE0faBj5KJSs200=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727745025; c=relaxed/simple;
-	bh=KGQa5lwA0CQtpO3ICzPVu3rf6sS/+2ak6kzxmj4+Z7Y=;
+	s=arc-20240116; t=1727750911; c=relaxed/simple;
+	bh=pXnC0I5nFoihOuSkOJv2WVy9n/hXu5luM0AO1mqv84c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pf+CmEe8wcExBprTWoQmoA/qdo79pAWXN0t141ROc7RwAO9RA9O1WuLbcznu7OUPXkr/qIpTVaoYfM6UxhCOxS9diugDtGEsTAz6AXV/mPHV5zSFgcDQoIPdzmiy8Av/YXR6sClr11udbxlqQhyXRkIBCKATSu0ZGPXetT0SQ/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=AXP9ciQm; arc=fail smtp.client-ip=23.83.209.24
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ou1Joo6P4+uO4y78JnP5QD3ujXXc04XPFFoT3IPOo2iyMAN/3YKfs5LKY71gGFpbCD2Vej0Nab8BRXDWX+wzfZCWr+uIrZvQ4d0m0ODWF+hJvJZsNBBXKOs+FrEfByw7EK4jtJLrtAFVf+lY2/oJDJL8GnLq31/g3q7jSZEZcWM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Xqhaygni; arc=pass smtp.client-ip=23.83.223.167
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="AXP9ciQm"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Xqhaygni"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9DE3D163FD9;
-	Mon, 30 Sep 2024 21:41:01 +0000 (UTC)
-Received: from pdx1-sub0-mail-a244.dreamhost.com (100-99-145-32.trex-nlb.outbound.svc.cluster.local [100.99.145.32])
+	by relay.mailchannels.net (Postfix) with ESMTP id A114A82FE0;
+	Tue,  1 Oct 2024 02:48:22 +0000 (UTC)
+Received: from pdx1-sub0-mail-a311.dreamhost.com (100-96-87-216.trex-nlb.outbound.svc.cluster.local [100.96.87.216])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 36B221640C0;
-	Mon, 30 Sep 2024 21:41:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727732461; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id 32C7D82E00;
+	Tue,  1 Oct 2024 02:48:22 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727750902; a=rsa-sha256;
 	cv=none;
-	b=bBGaeKzoz+76+3M42BDwGGaxwdm92yOnu8h1sSyaldwXstSGEtvNrDtBj6LrXnC4I4qReY
-	ZdFe5XEy46uiO7BYs+hea7zfXlsn4Fbx5LGByt3YtURDwkPmBRXcraSLS+5fG2IwQ2lRdG
-	2S1wUwCQC2NrBdjNRNayAJxQ8XPg5bYWVm7BZ2JvcdzJEpeEY52/Tc+UZSdWKVWZM+M2I9
-	qbcHvEeuV6a527R9G78SRUPE2ZVjPMNHPpVLdM6ABHx+8eN6FrRH2c2TOHzM43nDo26lCk
-	Rs7pIQRJtI/2ERce+6TW8RrmVx0Ah3xfXaAr3KDac/66NUgmLlpTnXamUiZ31Q==
+	b=0kaveM/E9E+kS2N7Lv3Ssnodr7fPPX7kSP7efKRRwrvTf1ZX08rq47WY5JbZGyJHneqOaH
+	i82pzDpv1wjBL3w/wKYh2In2gJwG8Qr73iGGKNdIBsjbT9zvl2LlcnMZYbNxVzY5TM/Y01
+	VlCHW2oHDx2aLNxBaNh8qfI/WrAoFUsolIVv7nFbi0HzUDKqHvafFIN8AVEz054xFvSStU
+	DbcfRPhTsqI01BPNw6MXqwjO6v1qkDzwkeH7H36FEaYf71z4BRX7cJCrlScQ9tZf/IkaAi
+	OKI6xLk8gktWOgbxC05siexfYT5oLhzryCjRfHa1Tlz1Qh6M3vZ5bolJkdggOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1727732461;
+	s=arc-2022; t=1727750902;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=lIdkrqI+cq4xAtYGgNrIChsgwaZla+y553BzB6wMkVM=;
-	b=Sj9RptH9POwyd6VqZECa5+I/FHcSCM/f+Kd/cPHEFDPJSbTuwCpJgTLtlTdv935WRweMnT
-	S3Yu/dzVLqOxjbqSFX8I55F+fFdWE5hDe2hm2mcskQ905hgVk1RVnGyusTuXVZE8jEELSS
-	jPkgdc99BbSw4+Gb7l++euDpzfB3v/7Pl6zTn5RSXOMu9y4wTb+Ex8xjCcuHdpIPDJw+C7
-	LE6eQfCEPwsh37LIis5yRQFLS1z8ol5jV5WyCjlIRGErSwgoEAQrEKzwcbiQ2cPOfB8cFw
-	xcgqRd1N//D07rvdqfP+ul4jDnkqjOzCH0ZYcSTXyKRuyJ60bPkwrJ4wSRF8iA==
+	bh=+OzDF51qHcsxAKYk7mQb7m9zf6kbvxorNI13kUbqlHs=;
+	b=fwtilx9McqGMFXtVHIYx9+nbcR6plCdZffcE7neO/9CVf8GnL8bTcDA08CSiqCGf4/wQyZ
+	D/mkqSPXkOPpO9FN29IRLu2IZf2UPTVcxQCwQpX2IJp3Gl42k3UV00o2rSiHrZhzOEd+s6
+	zVyf64Cf7TOhKa7GJPobD7sFYliVHS+Jw/JS+8dJkvXNg6aLsrMEpWTjvLlD2Fp7XVHfdn
+	iSIVPBTMlMGLLUKm8/6Pgnpk8Mitr6ohvedRb7FJIGi5pEfXRHyJw4oaoqZp7421ybHCeN
+	2e42EvQyBzgs1v0NJxNr3fZDhefBvNWXiPPDU/+X0AOuRUFZ87lCrIRiSqhYdw==
 ARC-Authentication-Results: i=1;
-	rspamd-657f47799c-zn9dx;
+	rspamd-9d66c6866-z8h92;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Zesty-Cooing: 7f33fdac763de419_1727732461461_1316246610
-X-MC-Loop-Signature: 1727732461461:167932956
-X-MC-Ingress-Time: 1727732461460
-Received: from pdx1-sub0-mail-a244.dreamhost.com (pop.dreamhost.com
+X-Trouble-Lyrical: 77a35d3a52075bfd_1727750902479_2277151766
+X-MC-Loop-Signature: 1727750902479:1982707863
+X-MC-Ingress-Time: 1727750902479
+Received: from pdx1-sub0-mail-a311.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.145.32 (trex/7.0.2);
-	Mon, 30 Sep 2024 21:41:01 +0000
-Received: from offworld (unknown [104.36.31.106])
+	by 100.96.87.216 (trex/7.0.2);
+	Tue, 01 Oct 2024 02:48:22 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a244.dreamhost.com (Postfix) with ESMTPSA id 4XHZJD3B3lz5Z;
-	Mon, 30 Sep 2024 14:41:00 -0700 (PDT)
+	by pdx1-sub0-mail-a311.dreamhost.com (Postfix) with ESMTPSA id 4XHj6s2ZGjzGP;
+	Mon, 30 Sep 2024 19:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1727732461;
-	bh=UNJQohW8Zsni2T4+DfIQDy74rbrJsCFmu6epjouBvf4=;
+	s=dreamhost; t=1727750902;
+	bh=+OzDF51qHcsxAKYk7mQb7m9zf6kbvxorNI13kUbqlHs=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=AXP9ciQm5e5NVzOgO6pth+7WwL7y7BQTfZOyg2qIr1Kb5X2UmXObx9aD2Ms0VAhvV
-	 1nwp9Vd1iwHygUMAxCzwXWibVFE4W1Y36mShgMpAUBbSk0Mfig8cG9qTqHNDEjLOWk
-	 0jzPUbYbrMm7hrvOG9nLTZKgHzXnpqKvg+4eajAg8YtU71/+x/G3cOO2ynPONsCcYQ
-	 MJQjoxtKg/euvPnYA428Ahff6Zret7l7jNbFMMzOJBtaoskIFKv7yIe8sPaa4JNOpM
-	 ObddNgkRCryhGFwtx7kAa5D8fNU2tHL3vcmhfm/gzyB9pIn2SFddvOOxYMz9Psz0pK
-	 22kThuS6RnKtw==
-Date: Mon, 30 Sep 2024 14:39:33 -0700
+	b=Xqhaygnivi7U0M/nFzgy2h26I7egcM1+IuPxD+GwAUo8LXlKprlmg2cXYEZ3bvUPx
+	 0dmjl4/Vn7z/m+z1RpLUcq6QyqGzGLvM0vQxyF94btlF/VJ3r2QYD6AeY1vfSe2VoU
+	 4u/vgjsASdXpok78JXjHkmEdzUbjO5+Q6Av5vuYZ9KS/4wqvxmyOaDwLYUVHbQ95ft
+	 QfXeG9StELaQM/4gdGIUHoqHv67pauckBvUl+o6xoxWxuNlDdn81rPuuSjlB+MrfU7
+	 zTzE4i9xNeeHntFnoq7grznfU/zlLjWUYsCcjD8b1nbFA2rwYRORdRl1ZxEaTi5VMy
+	 txthvqKn8JSwg==
+Date: Mon, 30 Sep 2024 19:48:18 -0700
 From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: vishal.l.verma@intel.com, y-goto@fujitsu.com, dave.jiang@intel.com, 
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH -ndctl] cxl/memdev: Introduce sanitize-memdev
- functionality
-Message-ID: <ngnoxz6w6q3y6korof6mepzvw2jyx4trlii7zon5jcoafobbfp@4z5ld55qgvqy>
-References: <20240928211643.140264-1-dave@stgolabs.net>
- <ZvrhusA7So_u51W_@aschofie-mobl2.lan>
- <f6ybfabcft5wcpx2wuoxf3qgwset3h4nhngn5c4jk6ssudl5gj@o2ssocnihy6t>
+To: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [RFC 1/5] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
+Message-ID: <20241001024818.lvby5jab645nhnsc@offworld>
+References: <20240925024647.46735-1-ying.huang@intel.com>
+ <20240925024647.46735-2-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -94,25 +98,41 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <f6ybfabcft5wcpx2wuoxf3qgwset3h4nhngn5c4jk6ssudl5gj@o2ssocnihy6t>
-User-Agent: NeoMutt/20240425
+In-Reply-To: <20240925024647.46735-2-ying.huang@intel.com>
+User-Agent: NeoMutt/20220429
 
-On Mon, 30 Sep 2024, Davidlohr Bueso wrote:\n
+On Wed, 25 Sep 2024, Huang Ying wrote:
 
->     cxl sanitize-memdev -e mem0 <-- secure erase
->     cxl sanitize-memdev mem0 <-- sanitize
+>According to the description of the "Window Restrictions" field of
+>"CFMWS Structure" in the CXL spec v3.1 section 9.18.1.3: CXL Fixed
+>Memory Window Structure (CFMWS), the bit 0 of "Window Restrictions" is
+>formerly known as "CXL Type 2 Memory" and renamed to "Device
+>Coherent", while the bit 1 is formerly known as "CXL Type 3 Memory"
+>and renamed to "Host-only Coherent".  Because type 3 memory can only
+>be host-only coherent before, while it can be host-only coherent or
+>device coherent with "Back-Invalidate" now.
+>
+>To avoid confusing about type 3 memory and host-only coherent in Linux
+>kernel, we rename corresponding bit definition from
+>ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3 to
+>ACPI_CEDT_CFMWS_RESTRICT_DEVCOH/HOSTONLYCOH.  This makes the kernel
+>code consistent with the spec too.
+>
+>Also rename the corresponding cxl_decoder flags
+>CXL_DECODER_F_TYPE2/TYPE3 to CXL_DECODER_F_DEVCOH/HOSTONLYCOH.
+>
+>No functionality change is expected, because we just rename the flags
+>constant definition.
+>
+>Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Cc: Davidlohr Bueso <dave@stgolabs.net>
+>Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Cc: Dave Jiang <dave.jiang@intel.com>
+>Cc: Alison Schofield <alison.schofield@intel.com>
+>Cc: Vishal Verma <vishal.l.verma@intel.com>
+>Cc: Ira Weiny <ira.weiny@intel.com>
+>Cc: Alejandro Lucero <alucerop@amd.com>
 
-Not related to this patch (I will post v2), but just for future reference, and
-perhaps someone has thoughts. Whenever the kernel supports Media Operation
-(4402h in 3.1), I see this utility expanding to something like:
-
-       cxl sanitize-memdev --zero A1-A2 [B1-B2 C1-C2] <-- zero-out ranges
-       cxl sanitize-memdev --zero mem0 <-- internally use all the mem0 range
-       cxl sanitize-memdev A1-A2 [B1-B2 C1-C2] <-- sanitize ranges
-       cxl sanitize-memdev -e A1-A2 [B1-B2 C1-C2] <-- error
-
-... and perhaps the kernel would need a security/zero as well as a
-security/{sanitize_range,zero_range} set of files.
-
-Of course the underlying memdev for the specified ranges would still need to be
-offline entirely, just as is now.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
