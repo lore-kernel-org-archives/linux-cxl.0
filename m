@@ -1,148 +1,229 @@
-Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09467174EF0
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Sep 2024 20:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F2A28F1;
+	Tue,  1 Oct 2024 00:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727729649; cv=pass; b=SdPrYly+ZNxxdjRi3G/m4RL6owTK7MGWuuM/5e1283ghab98ArQRepWoVEOgKlwWRrscq2vitfrD0oQ3cQ8jEkofzgsSqn/FfFlvGpj2x3cUF4EPoXt6weDJO6qsKe6CFvZQELA2sdRDAMcRf+1rvt3pl1tF7GGA0XaycC6Zwno=
+	t=1727744009; cv=fail; b=GqSOI59EmbRBbrYS5tAZLQKOM3n3qrLx7wEwmkF0QLTACxIMh3HK1y8bUHPA6pcSpwGr4GEmstQEunm8Wg+d3vxd4FCaTBmJyZXKmdSDJ+UUhRAZHeqBc4BZpbroO4ETCV87lrq6pUy8b7qf5upkQ7Cw8Tj9r7KFikWmRsGjkMk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727729649; c=relaxed/simple;
-	bh=UNIKu8VUsz1Qa70A/lpfbAYdeD5H5MpRjUiSpzt0v1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SlrF7GuhJGwfJ3fl47BmhVtwm3GS3iPGhUOuDoFF79VFQtxsAeEEotCqXAY4K6nFEcimzs4MzY05ddBxRizMXfXCybW7TSVfiG7Kh8fyH5mXHRfNbIwrnbC/G3U3x1RzWshHxP/vk+oDLffIEyRdPycOrCzAzGqiyrZW7mzwp5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=hS1zHIBT; arc=pass smtp.client-ip=23.83.223.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1727744009; c=relaxed/simple;
+	bh=2OhSsZBzzsiupPXE6VJ1eh+gvywccEgT9UN8RH0csJU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OTSYpvlOLQXswAz+c54LQ1G4I+YiioPzlRhnfIQEAMzT9WgXeOedE5Swi3pFkdfNxQQFKjKAOj6AFPJap1IfNJGYpZLImMY26U53uVHZykKBT2ocgydNktJlZWRd0zhDhwXLUCp0SfPFlnoSbd4IWKJmDrAfMb9JJS3y1rL63sg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E22s3KcL; arc=fail smtp.client-ip=40.107.93.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="hS1zHIBT"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 2D5887806F4;
-	Mon, 30 Sep 2024 20:36:13 +0000 (UTC)
-Received: from pdx1-sub0-mail-a281.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.96.87.181])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id B0BC6785A54;
-	Mon, 30 Sep 2024 20:36:12 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727728572; a=rsa-sha256;
-	cv=none;
-	b=1GoFodHqocmylypAPQCzTsBEsztF2l2iZa/Jxo7UCSOfH4slqfzkxSMh5pwhgxc8ywqef4
-	wYqedwh4YWNv+mRB+tTXd9X4kKdwVAWpY5cVa8CDctV8WR8dKdCW1eF7zcIjk0S4Xrip+A
-	jSelsAVq2dhtyGN3hgOOmvzdh+nhfgTjGMuAeiZMuhP2Slgkf+elxGGw5cbOgfsD+5ohRn
-	SPYMz8vKpTpEgHuvOxK/7Qf9GIAAqQYS8CEvinX4LsKdsVUQo/LqVzcYsE1lov3RbuMMRV
-	NMGvO4RquiQCA8yCsjI64A9kDVisZ7Yl1GqusH8FdXQYqE1xLop978vXWKpo+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1727728572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=9IGUX+FzzK9phvyuovMHlzaIGYgc851fORp5ivSfdlU=;
-	b=AUy2X1wnweyVPFjZlFd2jtsKMqZX27/dFXE8GzLWCZu++Mk7cnRDla3h9LeoIt/cKDF6/5
-	anE+2GzCwhUQJZ+9F5P/ZpDjcSgTgwzWLBnx04FsFFj7VOU1z/8vW7tTZ4LiB7PNFt4omb
-	LvWI4+KlfhaG6yvBg6Lvy4blHPMLext9SPjBJlkALD+DawJkil/nU8GrPbgEZ44Sr5L2ce
-	A4NPRH7hthuAYvs89eh/B/w8w4MtT5gC1kkQPVfAT/n5G8w1PQsnVrfCw4A2VQrBYk6D5W
-	J2gvfcMoKmKztNwdme7dlz1Ece62zx4oep4+z0xA7Rz2i2OOtMjkoBWkDGiohg==
-ARC-Authentication-Results: i=1;
-	rspamd-9d66c6866-9gmrn;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Vacuous-Scare: 1311b6706f629492_1727728572973_1618280945
-X-MC-Loop-Signature: 1727728572973:459566395
-X-MC-Ingress-Time: 1727728572972
-Received: from pdx1-sub0-mail-a281.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.87.181 (trex/7.0.2);
-	Mon, 30 Sep 2024 20:36:12 +0000
-Received: from localhost.localdomain (unknown [104.36.31.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4XHXsS0Wp7zRX;
-	Mon, 30 Sep 2024 13:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1727728572;
-	bh=9IGUX+FzzK9phvyuovMHlzaIGYgc851fORp5ivSfdlU=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=hS1zHIBTjLu+48gIoqBOGt/9FZM4FrQL8SrjsBniqEuodTriq3ZpniAi4xF/4cuzy
-	 +MmXRNp+/6N0Cm8RI5jiYKA1N2nLz+PZlpCVIJw45AUPq10+WDeGZz6WECi/eLa5d7
-	 PnGW+LfwBgyl70OhCKKTFL/uAgE8RKIoU+v95ZeyFeEPnmAeT+TPYLAtpi4PyJwSby
-	 /RIfVtkmdgoe6ce8/QcM/WM4iuSNzLAPoVa3BFd42z2eeb4uv4hfzjPITZqXMutQCn
-	 pxWNsgatm8FTzl2y4uoV5D652Kp7glnWDtg/LAznmu3+e4CCt2bJD3dn1zZmMnAK/V
-	 eiNvJ3T/63XZQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	fan.ni@samsung.com,
-	linux-cxl@vger.kernel.org,
-	dave@stgolabs.net
-Subject: [PATCH v2] perf/cxlpmu: Support missing events in 3.1 spec
-Date: Mon, 30 Sep 2024 13:34:45 -0700
-Message-ID: <20240930203445.149954-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.46.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E22s3KcL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mwgOE7E4MoF9stksEvkUg/Oca85jvsZK2YaOPSq8KgRBqGbSt2z8F/WsShlK8M/Qjrduc+7nYhVtSCufZGBtQvp1N8UecP0TKSWe7LdSqXfo1bSomJyOkaXjdySuBGuebUU2VOeCuaQTPPgRYuOz0bJcYzpof9+QIwbMzbSAJ51EMXFPDdVKLa+HjZJ/yrhzdObZkRTc0wx2Vi8OXhXbGmgWtYl8/jKunASOKNI8wDYDSNz4njk4kPgWOI4mhTLXOaKOJNbicYO3niKZ/jM4oEOT9bjY5LjYxGopdJCopM0OtoCXxcSzEemT4EuuIDjtw3emz4qLUH57tb96iQisCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nkEQBCSC3uuZvmSouHQt1STZB2viZ5THm+5/pL89Kns=;
+ b=O6TGnXEf/iBYVlzl3o16oXdUWwDiXtukQ8wlJQ44l5CzUv96wBLB3A6+PLyEthfAjoYJ6SevnRpKvLO5u6sKJ/NVrUznxjLCiDVEOHZ3Z4bBogIh96Nir0ZTFxYMEZnpbm5gQbRyxziR8zloI17IEmjDEU9+3LFJjB2XaO5W4BoPKF5YkeU4PI8n/+ua+op1Wat3mXCQPo8dXFpJAmElvjSyTWLS2FkggeCERhHsv0ylDvBrIkf/12wBnf1Prkd61Ax2YLVttOGqgNUQoTGnvQZKWDKgdswsGkgpcTjQ+SWpX2a1ANLVrUM9i0fWjJl/dF58ffhA/s0N3f3OzAxq2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nkEQBCSC3uuZvmSouHQt1STZB2viZ5THm+5/pL89Kns=;
+ b=E22s3KcLH2Y1qSx5FEvG0sQaK0GGfZghV8KAOTx4joY2FhjkbvNGyTBCPkyXCs0P2SlkorllvExk67R+ez/k2PZ4g37Z/8T4UqpF/QwbemmUHZeRw1UEyw8Ct1wGHsegDfDIP+RXxT8m5/tkbz0rdVsQHlIona7VJn7nulYpZbY=
+Received: from BYAPR11CA0052.namprd11.prod.outlook.com (2603:10b6:a03:80::29)
+ by SJ1PR12MB6172.namprd12.prod.outlook.com (2603:10b6:a03:459::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.24; Tue, 1 Oct
+ 2024 00:53:24 +0000
+Received: from SJ5PEPF000001F3.namprd05.prod.outlook.com
+ (2603:10b6:a03:80:cafe::ef) by BYAPR11CA0052.outlook.office365.com
+ (2603:10b6:a03:80::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.27 via Frontend
+ Transport; Tue, 1 Oct 2024 00:53:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001F3.mail.protection.outlook.com (10.167.242.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8026.11 via Frontend Transport; Tue, 1 Oct 2024 00:53:23 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Sep
+ 2024 19:53:05 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+Subject: [PATCH v2 1/4] efi/cper, cxl: Make definitions and structures global
+Date: Tue, 1 Oct 2024 00:52:31 +0000
+Message-ID: <20241001005234.61409-2-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20241001005234.61409-1-Smita.KoralahalliChannabasappa@amd.com>
+References: <20241001005234.61409-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F3:EE_|SJ1PR12MB6172:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0cd7445-2970-4754-b11a-08dce1b373f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gsgqoeillXsSpxoBlu0fwmZYN3CAL4W5k/WZ09aeZeXjTp2hLTeuTzXp43E9?=
+ =?us-ascii?Q?y53XxNi9GKYnGpYbuT7yRPUJmQcVcpYIUnBrkaVu/HYPsz4k98q8YNFFu6w+?=
+ =?us-ascii?Q?TJ2CDtymDad/20WaxQdNe85fy2vQUEbQReVUM/dZTV141/inZzTOwm71CCfR?=
+ =?us-ascii?Q?7MoY6r6BdRP2eEl9qPiqJityJajzFl+3lEcQIVPCLGcVIafwYOj0Vq+cDcL6?=
+ =?us-ascii?Q?PRnHyOav0yFrzYgFJUcz+ADPYxZ1ljPw1NDFLsVM5RagpKAYBk3E3SAhEhaC?=
+ =?us-ascii?Q?AJO2qgHrl0ButUgRtOWzi7xb2AmcX++mHRX2Qs59avjhhNDLrIRWel+4nLYa?=
+ =?us-ascii?Q?L2rqLHM+3fUtzv9DEkeeCa6SFqQxrGK8yKtfW7a9Bm3yfBlcvL21kVhu2UbM?=
+ =?us-ascii?Q?UfigNbKo+JVIyMS6Vp8ITQSbyDm7Sm8FD90lxep5LwcKUIO5ez73HvdbZQdy?=
+ =?us-ascii?Q?CSTe0tQL/irQg6vVPP2j96FlT4KGhpoufgQSXmFmrqYfmU/huvXYV2zfx0Gh?=
+ =?us-ascii?Q?r2Cfc6VHGv2lM0DxjNH9NMi5Pw9ARmRqeomWccB9frKsfygFv8DnFtO1baMB?=
+ =?us-ascii?Q?rM+lSFs5VV4q5dCCwfbDzLfHqHUsXq3ZgXeFylstj/nXuDONI7a5K84gVmor?=
+ =?us-ascii?Q?MFIR5ezl5LdeNDP9QZBAEj6HfZvNTWVozauepg6nXAMv1gQEwSVcCVWA59Y0?=
+ =?us-ascii?Q?5R5ZFayx1hPO+FqdTtXTx8lWPKSDih0y+WWBez4yZvUQfVDl/fpGy/twVsrF?=
+ =?us-ascii?Q?wYtl82VmvxM/AAlymajCc+/DO/mICVYYiWTl3ym8spkLyVVOA2ZDs0IqY4Pi?=
+ =?us-ascii?Q?avL0GfAqB7+9kRNt96heh9n71RePTWX8UHksiuf8UvQeAgzet7HcUtqiKUZ3?=
+ =?us-ascii?Q?15CbOgoXC0T2z79lRI3DDz8xaYrSfARGgxXkwsqzM1O+FGp1mxfIjkUqo9Zy?=
+ =?us-ascii?Q?aQqT/xbZKG8utS6+gKzXpNdWQhTLrc/VYW0DKXJweK2P89ZkZbMxDnRWaBeq?=
+ =?us-ascii?Q?hUbnzegHlFjgyLZ7YDWBBoILi2qHeGf4ResK4Y//YQ7qfGH0lO9e7X6D3REu?=
+ =?us-ascii?Q?y7c0yGPYxZOjJdz7+XlS5T/vEcs63GxMZGm8mSqE8ns5FNKZn80YnzRLmBxz?=
+ =?us-ascii?Q?pKzUKVEpShKGY21cyD3+qQlM8uRp6l//qyDswhTGDXhvgLivl5osV9Atrbv3?=
+ =?us-ascii?Q?ChzwMsFDAC7nM1OQbGww9C1nKewNv/AeKVxgPQBb44/yNkBLObNfHsPx7j3e?=
+ =?us-ascii?Q?M72KLQ2Z+JJIOEtQqsNJm8FmcMXrPGj9pis/O5ovChPI5DcocfId1PLox9Gs?=
+ =?us-ascii?Q?SM4tD61bLISOYO+sfPkKWp7BG81Bl5JxPw9cpeL3icR77qCMiMfxwu+0R5JL?=
+ =?us-ascii?Q?sAGrPTbFzyasNhOUDajshN3WwM/2?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 00:53:23.9435
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0cd7445-2970-4754-b11a-08dce1b373f8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F3.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6172
 
-Update the CXL PMU driver to support the new events introduced
-in the latest revision. These are:
+In preparation to add tracepoint support, move protocol error UUID
+definition to a common location and make CXL RAS capability struct
+global for use across different modules.
 
-- read/write accesses with TEE constraints.
-- S2M indicating Modified state.
-
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
+v2:
+	No functional change. CXL RAS Capability struct is now in
+	include/cxl/event.h instead of include/linux/cxl-event.h
+---
+ drivers/firmware/efi/cper_cxl.c | 11 -----------
+ drivers/firmware/efi/cper_cxl.h |  7 ++-----
+ include/cxl/event.h             | 11 +++++++++++
+ include/linux/cper.h            |  4 ++++
+ 4 files changed, 17 insertions(+), 16 deletions(-)
 
-Changes from v1:
- - only update spec references of groups that are affected (Alison, Dave).
-
- drivers/perf/cxl_pmu.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 43d68b69e630..644caf039718 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -377,12 +377,14 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	/* CXL rev 3.0 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(cachedata_d2h_data,		CXL_PMU_GID_CACHE_DATA, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(cachedata_h2d_data,		CXL_PMU_GID_CACHE_DATA, BIT(1)),
--	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
-+	/* CXL rev 3.1 Table 3-35 M2S Req Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminv,			CXL_PMU_GID_M2S_REQ, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrd,			CXL_PMU_GID_M2S_REQ, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddata,		CXL_PMU_GID_M2S_REQ, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdfwd,		CXL_PMU_GID_M2S_REQ, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
-@@ -404,10 +406,11 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
--	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
-+	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
- 	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
+diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+index a55771b99a97..4fd8d783993e 100644
+--- a/drivers/firmware/efi/cper_cxl.c
++++ b/drivers/firmware/efi/cper_cxl.c
+@@ -18,17 +18,6 @@
+ #define PROT_ERR_VALID_DVSEC			BIT_ULL(5)
+ #define PROT_ERR_VALID_ERROR_LOG		BIT_ULL(6)
+ 
+-/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
+-struct cxl_ras_capability_regs {
+-	u32 uncor_status;
+-	u32 uncor_mask;
+-	u32 uncor_severity;
+-	u32 cor_status;
+-	u32 cor_mask;
+-	u32 cap_control;
+-	u32 header_log[16];
+-};
+-
+ static const char * const prot_err_agent_type_strs[] = {
+ 	"Restricted CXL Device",
+ 	"Restricted CXL Host Downstream Port",
+diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
+index 86bfcf7909ec..0d248ad888a1 100644
+--- a/drivers/firmware/efi/cper_cxl.h
++++ b/drivers/firmware/efi/cper_cxl.h
+@@ -7,14 +7,11 @@
+  * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+  */
+ 
++#include <cxl/event.h>
++
+ #ifndef LINUX_CPER_CXL_H
+ #define LINUX_CPER_CXL_H
+ 
+-/* CXL Protocol Error Section */
+-#define CPER_SEC_CXL_PROT_ERR						\
+-	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
+-		  0x4B, 0x77, 0x10, 0x48)
+-
+ #pragma pack(1)
+ 
+ /* Compute Express Link Protocol Error Section, UEFI v2.10 sec N.2.13 */
+diff --git a/include/cxl/event.h b/include/cxl/event.h
+index 0bea1afbd747..57b4630568f6 100644
+--- a/include/cxl/event.h
++++ b/include/cxl/event.h
+@@ -147,6 +147,17 @@ struct cxl_cper_event_rec {
+ 	union cxl_event event;
+ } __packed;
+ 
++/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
++struct cxl_ras_capability_regs {
++	u32 uncor_status;
++	u32 uncor_mask;
++	u32 uncor_severity;
++	u32 cor_status;
++	u32 cor_mask;
++	u32 cap_control;
++	u32 header_log[16];
++};
++
+ struct cxl_cper_work_data {
+ 	enum cxl_event_type event_type;
+ 	struct cxl_cper_event_rec rec;
+diff --git a/include/linux/cper.h b/include/linux/cper.h
+index 265b0f8fc0b3..5c6d4d5b9975 100644
+--- a/include/linux/cper.h
++++ b/include/linux/cper.h
+@@ -89,6 +89,10 @@ enum {
+ #define CPER_NOTIFY_DMAR						\
+ 	GUID_INIT(0x667DD791, 0xC6B3, 0x4c27, 0x8A, 0x6B, 0x0F, 0x8E,	\
+ 		  0x72, 0x2D, 0xEB, 0x41)
++/* CXL Protocol Error Section */
++#define CPER_SEC_CXL_PROT_ERR						\
++	GUID_INIT(0x80B9EFB4, 0x52B5, 0x4DE3, 0xA7, 0x77, 0x68, 0x78,	\
++		  0x4B, 0x77, 0x10, 0x48)
+ 
+ /* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
+ /*
 -- 
-2.46.1
+2.17.1
 
