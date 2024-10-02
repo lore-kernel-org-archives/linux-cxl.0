@@ -1,141 +1,132 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1471CEE94
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Oct 2024 22:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2501F1FA4;
+	Wed,  2 Oct 2024 00:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727821855; cv=none; b=XFfhTwOSaDYPlTbGwGDTSRsE8OcqCstMOibXzZdSWJS84yA+L8ea77eCZG3TqdfRLa+BSYDIguoDDRRf9wcVGcA0oRcCzbbuBFdA0NyTRAE3/53jZukJRncnNEG3VBth5CwdbQcun+2P8sbIEZMWBuc/YDPdczCdG+1SI80hK9Y=
+	t=1727829867; cv=none; b=ula+G7d9Hy0/rKFxvF77GkbLZxwKU8FvStEenemwnTFIPM/cwpX5Us4iAxPjuR3GEWFOChTbICJroLo9A0Yfyi6Xcov/1w1YmZLqoRSGVCSuHrA1xXSgNhAzIKtRw9PcG77LFfzsq91ffM/LYOGemJU8MWfuGwpPdEaI2xXySfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727821855; c=relaxed/simple;
-	bh=V9Njp+Hss1MP7IhsB17a7/LmI6/c4TSAPkMBpdvoTI8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O/CcP9ToL892nv/vKfox+zHxi7RBYBzCKhDQmE2OWK+vgbE8xIYgb91kOo9ioNspH3SoQTNH+o03XjqOgKFPHoI04xaIseXe6yAk6jcJhEtn43zF+pc0wWjeHT7bC1jmeutJ9Pvn+EYE6wxJj6QuTEEqafuAKwsGkLDbgbMQpGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PTaISppF; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1727829867; c=relaxed/simple;
+	bh=Cpd2/fCJWhNJswd/Wu9NmTkpsUbepUaKwCDHjrcSnlc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SskwAUKw++9GaaNjUl2mtK3nDX+6BEgogrSFVfLkOG8vffavvVF6rtYb5KnGoS2F+6Rjuc8j4HnuQPMs15OBuiwb22txB7RM07WGebajuKxzlQ8WHZ16tIMRDXnGOhZ/W13dNRzbTghZ0Q9fU25dTj0JIvwwwuKWzRea3MprQxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mtSbrQsP; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PTaISppF"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3e04801bb65so3367939b6e.0
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Oct 2024 15:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727821853; x=1728426653; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A9Sl44lq8X2WGm+oVf4+6IoQK0XVriOutR+vfMIV4VA=;
-        b=PTaISppFa54EdVufO4rTjF1hU+hLTnfaBDct/jgGkOGPZRE60gyg9sn3vs6mDxFiup
-         TuL8SJcZ4y72K0ubQfWqNSOct1/iBB9nM5mgiddpVNRZFJANsxDdEqUtyfF05Wvmz6iZ
-         4mi3gXxki0o2k7f3CIhqb21MY7O9EGB+9Uw/C3+9Gnzx7Tfq46G9/8QHezW561B566Nq
-         mvpWWUilg2r1hlDdKwNuQg8bDtjf++w11ZwNpeOLu44cwUPmPJn08/uU/ZIh6M0yh9sK
-         +NSX8Zh2EK3G7vN6Rtdmu0aWDj9zapKa9G1YvqMBn31oyRKJdcPKcqqPxcJDXeOs65Ki
-         gPYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727821853; x=1728426653;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A9Sl44lq8X2WGm+oVf4+6IoQK0XVriOutR+vfMIV4VA=;
-        b=Sw0F+pSDQ0yUnwiK0Npzry0VWpbnqYaxTnw8q3TZfR8uYfX32uYAMlK8bEDUtrp+SD
-         XJgmF2BxLffZBGdJaOOskGZji/V49PYvP5q2AjoJnsMRCImkipXb/GjP5aj5gQONVyJa
-         d8Bi29QxoimKuBHyVFjSKeXsnM69Dk4ICraJfb6bvCPozHIDKfVL5vqaWcH6i0es3WeQ
-         4QEi/se39CL7APk+ijEIalPPecrhktsYF+yZaA67tc7Tz7h1rSZ4W4dsg7TmSj9QZrD4
-         L0RTR9dWvMXbxFd3oBOncdinuLOtXoOY2IYOsRZ5KOt7e9X+MU4Ri21k3LWOVn4RBDcP
-         iHDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/6tWLfqK/nTI9JkaL+gUN1suCi5Cs1rnXth6trhHoh/h9f8qSXCmawdzmyMAwbNCQr7XZAoKFKGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3HuCz6897kQbtrYvwzHRg4081ERsorlOCpnjfacfmoSjoY1QM
-	RAxOCCpb0OSmE0CgM2+hNL6UiIWz54EpxzyQpJn5TKcGO7fO69ts7zl/by/L6/M=
-X-Google-Smtp-Source: AGHT+IEN2pfHky00i0eXvdOYYGLR6DqqFZpSA+Qwe2ckMPGBiP2uT0h9yCZCjMfnku65naZhHJqcAw==
-X-Received: by 2002:a05:6808:3a15:b0:3e2:7b57:9930 with SMTP id 5614622812f47-3e3b41631b4mr1047352b6e.36.1727821853123;
-        Tue, 01 Oct 2024 15:30:53 -0700 (PDT)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5e770eaa056sm3002097eaf.31.2024.10.01.15.30.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 15:30:51 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 01 Oct 2024 17:30:20 -0500
-Subject: [PATCH 3/3] cxl/region: Use cond_guard() in show_targetN()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mtSbrQsP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727829867; x=1759365867;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Cpd2/fCJWhNJswd/Wu9NmTkpsUbepUaKwCDHjrcSnlc=;
+  b=mtSbrQsPLBg2pYcXay/CtJlFCw23kvcX5Xnp31OFeTxV0RLqzXwXZT3R
+   XfvR50QVT+G2oUqLpbBZ5WL4Zr4LBqHITFdKCdYAThT/Rk2f1Z/dWvTo/
+   Utc0M+vws3qq7PfzMmoxc6a6X4ItU6hMTRC589Km+xdGCFEdpzaZkRHps
+   E+4hHPb+HpgwbrAZeSN2p2ItlGQhDFRHK0+0YlFgR+Utt3HyYdm/0FPbk
+   g7iicN/JLijfHDu/nxwNoFLQZune3ouwnK/4iMBnEhz4eEfWv1tx3uL6t
+   +5Qtlkdup4MGz32V0rJdq2J/3d5jMptpXOF0dSXGNoqf0o8Dgjlx6xDts
+   g==;
+X-CSE-ConnectionGUID: oI+Ox0odQu+4y0dQzWarPA==
+X-CSE-MsgGUID: rNazjVtlTj2RO/9ufptTOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="38373889"
+X-IronPort-AV: E=Sophos;i="6.11,170,1725346800"; 
+   d="scan'208";a="38373889"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 17:44:26 -0700
+X-CSE-ConnectionGUID: wjnn1cIXQ++8IdFRc4ufnQ==
+X-CSE-MsgGUID: gfTfrprlR9mY0+ekT+PP1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,170,1725346800"; 
+   d="scan'208";a="74277090"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 17:44:22 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  linux-cxl@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  Davidlohr Bueso <dave@stgolabs.net>,
+  Alison Schofield <alison.schofield@intel.com>,  Vishal Verma
+ <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Alejandro
+ Lucero <alucerop@amd.com>
+Subject: Re: [RFC 4/5] cxl: Set type of region to that of the first endpoint
+In-Reply-To: <Zvv_oov557lzvYUM@PC2K9PVX.TheFacebook.com> (Gregory Price's
+	message of "Tue, 1 Oct 2024 09:56:50 -0400")
+References: <20240925024647.46735-1-ying.huang@intel.com>
+	<20240925024647.46735-5-ying.huang@intel.com>
+	<Zvv_oov557lzvYUM@PC2K9PVX.TheFacebook.com>
+Date: Wed, 02 Oct 2024 08:40:49 +0800
+Message-ID: <87ttdvnxpq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241001-cleanup-if_not_cond_guard-v1-3-7753810b0f7a@baylibre.com>
-References: <20241001-cleanup-if_not_cond_guard-v1-0-7753810b0f7a@baylibre.com>
-In-Reply-To: <20241001-cleanup-if_not_cond_guard-v1-0-7753810b0f7a@baylibre.com>
-To: Peter Zijlstra <peterz@infradead.org>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Linus Torvalds <torvalds@linux-foundation.org>, 
- Jonathan Cameron <jic23@kernel.org>
-Cc: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
- "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.1
+Content-Type: text/plain; charset=ascii
 
-Use if_not_cond_guard() to avoid goto and rc variable in the
-show_targetN() function.
+Gregory Price <gourry@gourry.net> writes:
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Co-developed-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/cxl/core/region.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+> On Wed, Sep 25, 2024 at 10:46:46AM +0800, Huang Ying wrote:
+>> The type of region is hard-coded as type 3 expander now, because this
+>> is the only supported device type.  As a preparation to support type 2
+>> accelerators, we set the type of region to that of the first endpoint.
+>> Then, we will check whether the type of region is same as the type of
+>> other endpoints of the region.  Because what we really need is to make
+>> sure the type of all endpoints of a region is same.
+>> 
+>> The target type of endpoint devices comes from expander/accelerator
+>> device drivers via struct cxl_dev_state.
+>> 
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Cc: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>  drivers/cxl/acpi.c        |  1 -
+>>  drivers/cxl/core/hdm.c    | 28 +++++++++++++---------------
+>>  drivers/cxl/core/port.c   |  2 ++
+>>  drivers/cxl/core/region.c | 13 +++++++------
+>>  drivers/cxl/cxl.h         |  1 +
+>>  5 files changed, 23 insertions(+), 22 deletions(-)
+>> 
+>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e701e4b04032..e7c0221edeae 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-+#include <linux/cleanup.h>
- #include <linux/memregion.h>
- #include <linux/genalloc.h>
- #include <linux/device.h>
-@@ -770,28 +771,21 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_endpoint_decoder *cxled;
--	int rc;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	if_not_cond_guard(rwsem_read_intr, &cxl_region_rwsem)
-+		return -EINTR;
- 
- 	if (pos >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
- 			p->interleave_ways);
--		rc = -ENXIO;
--		goto out;
-+		return -ENXIO;
- 	}
- 
- 	cxled = p->targets[pos];
- 	if (!cxled)
--		rc = sysfs_emit(buf, "\n");
--	else
--		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
--out:
--	up_read(&cxl_region_rwsem);
-+		return sysfs_emit(buf, "\n");
- 
--	return rc;
-+	return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
- }
- 
- static int match_free_decoder(struct device *dev, void *data)
+Thanks!
 
--- 
-2.43.0
+>>  static ssize_t create_pmem_region_store(struct device *dev,
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 99398c868d82..2a2d2c483654 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -324,6 +324,7 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+>>  #define CXL_DECODER_F_MASK        GENMASK(5, 0)
+>>  
+>>  enum cxl_decoder_type {
+>> +	CXL_DECODER_INVALID,
+>
+> nit - should this be an explicit value?
 
+Sure.  Will fix this in the future version!
+
+>>  	CXL_DECODER_ACCEL = 2,
+>>  	CXL_DECODER_EXPANDER = 3,
+>>  };
+>> -- 
+>> 2.39.2
+>> 
+
+--
+Best Regards,
+Huang, Ying
