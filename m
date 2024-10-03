@@ -1,59 +1,62 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC2915E5D3
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Oct 2024 14:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727965217; cv=none; b=LTnyDVKQy/CbjFzJLCrb+UuJ5oYyz3xMt5M+zgJP+0ImuUUAhPxJgEiRGkp9mnm1IzV/dNfsDqP5y5KNFIsAA8tcA5SNC+GTjQsCvcjBHgcpEt1dbsyrqz4uzkXG3l9TnKCNduov/kFrLYG/CIWGNyFHhku/5E2tWGw1Js9MX4k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727965217; c=relaxed/simple;
-	bh=MTBMAJpXm1pHcmzbDM+XtEXr3jCyoJ1nEuQscnYO1H8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IB5WaN8n7XWfXK/iyGM72OHnL35IQY6SbN2q8t+bctqMtVGDRmGd+vP9fj2AB06DDZut5EoyuhdQaDXcvAqOZr+HOaezI3D/hHg0eNtHeHII741IGAUnQv5n09Ru6ocmS4/4peiECcazmi/xCwOG7SIsD1WzEtLfZFoMq7sna14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=156L6qv4; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1483619E973;
+	Thu,  3 Oct 2024 14:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727965703; cv=fail; b=k0zR+hDjQurH3UOObiQNCXX2+dLLim1J7ypN5jiWAgoFVMAMIZZCdC230X4T69MU4eJihTfoEYHpc/UV+0Ta/FD2zgSzSeAZ6Wp2Tq3icY/gfRWvbwq9piSwsymCv2yFtEAQBFdaz/uWPDtlTAHQApKRgA0EtLoEwpj3IzFDwGc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727965703; c=relaxed/simple;
+	bh=nlZpId1EWjsM0XsXIGjt8fBlFzpJnGx9e+h2+vRdHek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gJNNgqRYGIP8q+aMgu8kvwlYUVGgbsdQ8/AJmpv+pOwTCrvYL8C5HOiZ73lru3Yc5a0LAnGz83NrVSDJ2DE7rJMHhrfar05K4IuYspKyYBNGBshjkBMvpDfTrNZ/AJssUxtms81donjK6HqELfmwu+iSHzffuIL1IXtsDKK2dUY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g57nOkTN; arc=fail smtp.client-ip=40.107.94.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="156L6qv4"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-713892fed01so457804a34.2
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Oct 2024 07:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727965213; x=1728570013; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W0xXnRccwICf3nQQCN6F6qfdjv2N+ArvTxSpI1D+3TY=;
-        b=156L6qv4P4lP2eLtL5C9cfGDjXqLU64DgzWpTh9BZb7xEeKUd4XxQEkeFDXFXCrd+s
-         ajUkATVmwgKK+B4Nk2v9/y7n1dXGtAQENvtsYaz1BhgTTLsZ3S70xgQ0MuTlx2PgPZu5
-         OUZdkPp6reOU2ctv+hJS/IPeAn3jN2OpJkLBwgRn4bIY8KUvVdhy/Cs3z1L4vM9pu339
-         6vsYKeaoSEx+YRZ+HLhUvH2ja3zyuoyI/MKsAQZPZI7rEtGhe5eTPOVmbKu9QxMop0o9
-         NvsqRb08BUfOut3dNbshXrYj29k5rnRd/JGxWTCyON6niCthIxOzPKXjRuXtA0sj9js1
-         t5pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727965213; x=1728570013;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0xXnRccwICf3nQQCN6F6qfdjv2N+ArvTxSpI1D+3TY=;
-        b=Vic+2IZR/qE5jbb9CIza65ttJMvcuX51NT8TOfxGFygyxw69deDz9EP6mrP+ovy0Bx
-         W3MHkYrHbbf9CIJj0NDPHeUtZw6+m3QU+wH2xxxh8h6sQD6x+msgvZSgNpEqgbljzioB
-         t5Aw8K2JDpmSMSP4/RocyrHevClFNcIhfERyRXgwukX6DOqceRYx96+G6BAO9hkwRDgj
-         sCez+mcFJa7Fwhvk8vStLDiEVLqeFp1hVHZ+bjkGjkvh+QkTLSHgOHpoypEs7OEpWadG
-         y/vWTEtibGhomhaXq9twOLrdTNHrJgxwAdz65kk6Nw++EcwHXKQFjQPxvFYbikN4RsGF
-         VnGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGor35Nc20SNcmveLAXBu9RwG79kq5BZa0yAClP1vK0o6hjI6+YJcxZNjpp1fWeavnsm7XfvgI3QI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlHniPgXYdai5fYh3l27yhFbTAjB3PQpCJyEz09p2sytMdPy3/
-	4/8mCzI9nxDTF6G8A+Qb8gYBG1pvhvuqJOzaDkPYE2q+vhazu4msJAEt4Bd74ps=
-X-Google-Smtp-Source: AGHT+IEWwNUWz4nQ2IndJUC/CzrU5KetlvJmNaXTu3CLm7H2k6yOjFPj8tQXSEF6utrDP8q+MGltcQ==
-X-Received: by 2002:a05:6830:438b:b0:713:76ea:6be9 with SMTP id 46e09a7af769-7153cd796b0mr6532950a34.11.1727965213475;
-        Thu, 03 Oct 2024 07:20:13 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71547f893a9sm337467a34.77.2024.10.03.07.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2024 07:20:11 -0700 (PDT)
-Message-ID: <193a517c-dd4e-4ed1-ba4e-a0aa6028beec@baylibre.com>
-Date: Thu, 3 Oct 2024 09:20:09 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g57nOkTN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yGq1VQmFIrtq2Lek1Kb/5Hxsgr76/CF3Qf2F5Rji8iJZYCfpvvL6brYtZXCMMj3h9zNMI3iRqrejJzyZ+lr1sg2ZK5SyZhXipEtS3bKZAb0d10MIMjrjAN3CifYVEnZsWTTfMX7zMJK2qCDxpL7WM7qCyNTpDp6FPeOLPKyOy8QXJ3VlKaXLcAl5ClDdPYtL7G6DBeMMRhI6F3cYYi7xhEosq75DOYTHnbKx8tQbuHLZaLB/yFQOggRQzXlLso5DpCwU0+O2hkTWYzoZJgCH2ctw2xEWcMcrlCLsaPzUg6/8Xu3ebnI36SQc0bDy295m4D9XBWBTroB2RtOAuyuIPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fFkRZrtfCBZQsVHZaQ561m5PXvIo5auSi1R12ILwlvg=;
+ b=JoQaG72Ou7887xhQTKwzDInAPQhkCsnjurI/QcUWBD4rZd4YpTdUZB9z5qSU7olNQdIoXViVuuITihI/T6s/s4tYZd7GhVvcWQJvTY+1lZ1XyWUqYhBM08HF7Wedk8hjgixmwC46yRzqCblIsv328ayS14bksfrXdgvYlaSQPzbCftt1qTP2ciBk56zHEiLgBQLX5NIs8+IuxmQlKdSzvDt3g/t+K3ycFLbeT/n/8o62pTIAsMu6nW6Mz2TriE2HXk4YyHrcScrU0qYr5r7H7zvyXYwTH82LDm53uOml59NUHp6dEtJF6fkw1CqhA0g3VSeviUgZUlkjNLIBcnQCGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fFkRZrtfCBZQsVHZaQ561m5PXvIo5auSi1R12ILwlvg=;
+ b=g57nOkTNyXk3NDdCMc+Nor92NoaPGRZKiGqYL6DcniS1lIrw4RTs1ytMVyue8yuppn4Gx5r1NACmtkVUKi6I1hFpjUvAFNS7WPTkOHySzTqlDBd7oVKhjBevvkPhT4f4rIJSjthQyDf1aha/2MowwvF1/F3/JvesrdrB5d93RqU=
+Received: from SJ0PR03CA0207.namprd03.prod.outlook.com (2603:10b6:a03:2ef::32)
+ by DS0PR12MB7584.namprd12.prod.outlook.com (2603:10b6:8:13b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Thu, 3 Oct
+ 2024 14:28:17 +0000
+Received: from MWH0EPF000989EB.namprd02.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::c1) by SJ0PR03CA0207.outlook.office365.com
+ (2603:10b6:a03:2ef::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.18 via Frontend
+ Transport; Thu, 3 Oct 2024 14:28:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989EB.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8026.11 via Frontend Transport; Thu, 3 Oct 2024 14:28:16 +0000
+Received: from [10.254.109.133] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Oct
+ 2024 09:28:11 -0500
+Message-ID: <9d6fc7c9-e94e-48e2-8c41-b6bbf5e1e3cd@amd.com>
+Date: Thu, 3 Oct 2024 09:28:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -61,281 +64,120 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] iio: adc: ad7380: use if_not_cond_guard for claim
- direct
-To: kernel test robot <lkp@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jonathan Cameron <jic23@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Michael Hennerich <michael.hennerich@analog.com>,
- linux-iio@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20241001-cleanup-if_not_cond_guard-v1-2-7753810b0f7a@baylibre.com>
- <202410031253.vjAMDYuX-lkp@intel.com>
+Reply-To: <benjamin.cheatham@amd.com>
+Subject: Re: [RFC 4/5] cxl: Set type of region to that of the first endpoint
+To: "Huang, Ying" <ying.huang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Alejandro Lucero
+	<alucerop@amd.com>, Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>
+References: <20240925024647.46735-1-ying.huang@intel.com>
+ <20240925024647.46735-5-ying.huang@intel.com>
+ <85a73846-4d8d-4f28-b748-24904b749bca@amd.com>
+ <87a5fmng5z.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <202410031253.vjAMDYuX-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Ben Cheatham <benjamin.cheatham@amd.com>
+In-Reply-To: <87a5fmng5z.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989EB:EE_|DS0PR12MB7584:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3112c78b-9c88-41cc-d286-08dce3b79eed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OVZQeG1pVlNadUkvMFJYVkp0NUpnYUpBS0NRSmkyWE5rVG5DbFJIeGFOYUVR?=
+ =?utf-8?B?Vkp3cytOMkNtb3F3Tlg2K3c1ZjA0bDdBNUNzTXJjVGVyMzEzSmIxUVFxOWNi?=
+ =?utf-8?B?S0tmVHNYdlBESDlkV3ErblhpcWV3T0xCTG80SmZ5MC80eWdzSFgvaEJQb1pK?=
+ =?utf-8?B?OERzN2o4K1NPcHVpRXd0QUJXaHROeTdoSzJHKzFBMjdIM0toNWFOTmtMd0dP?=
+ =?utf-8?B?c1g3L0psWTJ3eVhOVTk2eEN6REdMWGd2MTZ3bjlzU3pxeWRjdmwzdjFiVFBh?=
+ =?utf-8?B?bU5TZmlWN0VSei9NdXl6S1RlMUlFVHU3WlR6bVVkbHFnUnpCdTZzNVR1c1JD?=
+ =?utf-8?B?NFRPMHplMitRTWNFM3RUWDhQYTA4YW0yTGZJVC9mWkxVY0hMYUVmbkNoTzVF?=
+ =?utf-8?B?SGVPV0pnRmNUeXIrRlVYTElNenAvU1dicDFPYVJkMjlPOGV0WDZQYlBSK21h?=
+ =?utf-8?B?ZWczT2NCUDk5WEZqYzlSUXpHWmhKTGt3YWs3U1MvQ0Qrb3JqclNCL2dLUGYy?=
+ =?utf-8?B?VTU3bDFjaC9KODluc1c1NkU4bG5nd3p6SmlyUEdJTDhtVC9GeFJuT2FVZXpV?=
+ =?utf-8?B?Q1RITGJpVS9lbTZuUU80ZGlkTUdNb0xTdUJReGNBQmVReFU4WGFPeU5iV1ZV?=
+ =?utf-8?B?QVVCSmg5K3l3b3FYQ1d3eGlrdzFCaE9VVzc2Z3ZDUjV2bmM0eW5sLytFSDZv?=
+ =?utf-8?B?cTBOYmlCZ1VoRDVON3dzVW5aMWlMWWs0YkpvaVVHS2ZhdWZKN0E1WU0vNVcx?=
+ =?utf-8?B?c2s0anZ6KzBRVnpHR1YrYVJpbVV4MEU3cjUvQ3NFR2RMZGZZbC80SzVNTzN5?=
+ =?utf-8?B?UTNydDZZNjYrbDhhbkZJT2hmdTBSUlpXTWxqNHNBR3R3VnRVT1FjTkkzdzVt?=
+ =?utf-8?B?RTV4TEpLTGt4MmZrZUYySS8rNnlobEg4UE1HZUpmVXVqRkYxVWttbVdlMk9M?=
+ =?utf-8?B?eGNDanh6QnhLb2I1UXlGc2s5N0V0d3ZmS1NYdGRiNWFiM0pzemhRZFduaGdG?=
+ =?utf-8?B?bTF1VlUwcndQbUoyeUVCR2ZYSkhBc0IzbUdtd29UVjlWak9weVkyejcxdXYr?=
+ =?utf-8?B?ZE9NS1RUa3pvU0hIZWtyNDYzb0pWRWVYREZtUHY5YytWMms5WllQV2hsbWNY?=
+ =?utf-8?B?UDdnWWpiZGsvVStKYlhWK3djaUsySUE2NWlldUpFdWhmSWp4dE1zVVluaU54?=
+ =?utf-8?B?VVNqaEwwbDhFNndzVFlRN2hNeEpBdHh2MWhaM3d3NGJmMkx0VlBDVjRuM214?=
+ =?utf-8?B?a2taOVNlUVNjS3ljalpUTkJhWmY2dk0yOXVWV1ZrTDQzTkpidS9LOUdsZnBz?=
+ =?utf-8?B?RUwwZExzMzNHV1FMelhzdmpBbmMzRFlYbTdxd1FnTjdBcnUxM01GYjUxRGFo?=
+ =?utf-8?B?YUdrcVY0RURqWUNBZ3JiTzhuQzV4NkM2cVJ2QTQ2d2dxWEJqZlhzOExCdFEw?=
+ =?utf-8?B?ZUxUaVV3dStmT1NkWllRNjBtZytKMU5iWHdOOVRNbzNzYnVnbFN6REthUm41?=
+ =?utf-8?B?ZU9WUlRlVWdGSy9xcUNDN2tyRTVVYXVUYWRKaE9hTDdEL3RvWDFsVzBBOHFB?=
+ =?utf-8?B?OGRiaU9PYjd6aVgrWHpFeDR2SUhiVEQ1NXg3UTJNNmZaNGJKNFc0NzUySno4?=
+ =?utf-8?B?dEUvNmd0d0REdnZhRWRlRGdzM1FDbnZhbWsvME02QU8wOUNtWGNOVGtFN1Q0?=
+ =?utf-8?B?MzdUeEs4WlRkVlp1Y000K3lEYzNpL2syTWhyMkpVajA3M3dWRWdqWnlCRDU2?=
+ =?utf-8?B?RUFLclF4aWtBTzZzUmp6b2pPbkcwNzVOUFhmbWVqeGxkSWF5YmhtaDJaZUpU?=
+ =?utf-8?Q?QAb0JZa0+M1wHaxDAVPseFJgdG07tx2K1KF48=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2024 14:28:16.2799
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3112c78b-9c88-41cc-d286-08dce3b79eed
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989EB.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7584
 
-On 10/3/24 12:35 AM, kernel test robot wrote:
-> Hi David,
+On 10/2/24 8:12 PM, Huang, Ying wrote:
+> Hi, Ben,
 > 
-> kernel test robot noticed the following build errors:
+> Ben Cheatham <benjamin.cheatham@amd.com> writes:
 > 
-> [auto build test ERROR on 431c39f6d3edbab14f48dbf37a58ccdc0ac3be1e]
+>> On 9/24/24 9:46 PM, Huang Ying wrote:
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/cleanup-add-conditional-guard-helper/20241002-063209
-> base:   431c39f6d3edbab14f48dbf37a58ccdc0ac3be1e
-> patch link:    https://lore.kernel.org/r/20241001-cleanup-if_not_cond_guard-v1-2-7753810b0f7a%40baylibre.com
-> patch subject: [PATCH 2/3] iio: adc: ad7380: use if_not_cond_guard for claim direct
-> config: arm64-randconfig-001-20241003 (https://download.01.org/0day-ci/archive/20241003/202410031253.vjAMDYuX-lkp@intel.com/config)
-> compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241003/202410031253.vjAMDYuX-lkp@intel.com/reproduce)
+> [snip]
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202410031253.vjAMDYuX-lkp@intel.com/
+>>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>>> index 2dee78e9b90c..5633b7316cb3 100644
+>>> --- a/drivers/cxl/core/port.c
+>>> +++ b/drivers/cxl/core/port.c
+>>> @@ -139,6 +139,8 @@ static ssize_t target_type_show(struct device *dev,
+>>>  		return sysfs_emit(buf, "accelerator\n");
+>>>  	case CXL_DECODER_EXPANDER:
+>>>  		return sysfs_emit(buf, "expander\n");
+>>> +	default:
+>>> +		break;
+>>
+>> You can drop this imo. It doesn't change anything functionally considering
+>> the break is immediately followed by a return.
 > 
-> All errors (new ones prefixed by >>):
+> Sorry, I cannot do that.  Otherwise, there will be build error.
 > 
->>> drivers/iio/adc/ad7380.c:823:3: error: expected expression
->      823 |                 if_not_cond_guard(iio_claim_direct_try, indio_dev)
->          |                 ^
->    include/linux/cleanup.h:316:2: note: expanded from macro 'if_not_cond_guard'
->      316 |         __if_not_cond_guard(_name, __UNIQUE_ID(guard), args)
->          |         ^
->    include/linux/cleanup.h:312:2: note: expanded from macro '__if_not_cond_guard'
->      312 |         CLASS(_name, _id)(args);                        \
->          |         ^
->    include/linux/cleanup.h:258:2: note: expanded from macro 'CLASS'
->      258 |         class_##_name##_t var __cleanup(class_##_name##_destructor) =   \
->          |         ^
->    <scratch space>:81:1: note: expanded from here
->       81 | class_iio_claim_direct_try_t
->          | ^
->    drivers/iio/adc/ad7380.c:823:3: error: use of undeclared identifier '__UNIQUE_ID_guard799'
->    include/linux/cleanup.h:316:29: note: expanded from macro 'if_not_cond_guard'
->      316 |         __if_not_cond_guard(_name, __UNIQUE_ID(guard), args)
->          |                                    ^
->    include/linux/compiler.h:189:29: note: expanded from macro '__UNIQUE_ID'
->      189 | #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
->          |                             ^
->    include/linux/compiler_types.h:84:22: note: expanded from macro '__PASTE'
->       84 | #define __PASTE(a,b) ___PASTE(a,b)
->          |                      ^
->    include/linux/compiler_types.h:83:23: note: expanded from macro '___PASTE'
->       83 | #define ___PASTE(a,b) a##b
->          |                       ^
->    <scratch space>:79:1: note: expanded from here
->       79 | __UNIQUE_ID_guard799
->          | ^
->>> drivers/iio/adc/ad7380.c:935:2: error: cannot jump from switch statement to this case label
->      935 |         default:
->          |         ^
->    drivers/iio/adc/ad7380.c:911:3: note: jump bypasses initialization of variable with __attribute__((cleanup))
->      911 |                 if_not_cond_guard(iio_claim_direct_try, indio_dev)
->          |                 ^
->    include/linux/cleanup.h:316:29: note: expanded from macro 'if_not_cond_guard'
->      316 |         __if_not_cond_guard(_name, __UNIQUE_ID(guard), args)
->          |                                    ^
->    include/linux/compiler.h:189:29: note: expanded from macro '__UNIQUE_ID'
->      189 | #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
->          |                             ^
->    include/linux/compiler_types.h:84:22: note: expanded from macro '__PASTE'
->       84 | #define __PASTE(a,b) ___PASTE(a,b)
->          |                      ^
->    include/linux/compiler_types.h:83:23: note: expanded from macro '___PASTE'
->       83 | #define ___PASTE(a,b) a##b
->          |                       ^
->    <scratch space>:90:1: note: expanded from here
->       90 | __UNIQUE_ID_guard800
->          | ^
->    3 errors generated.
-> 
-> Kconfig warnings: (for reference only)
->    WARNING: unmet direct dependencies detected for MODVERSIONS
->    Depends on [n]: MODULES [=y] && !COMPILE_TEST [=y]
->    Selected by [y]:
->    - RANDSTRUCT_FULL [=y] && (CC_HAS_RANDSTRUCT [=y] || GCC_PLUGINS [=n]) && MODULES [=y]
-> 
-> 
-> vim +823 drivers/iio/adc/ad7380.c
-> 
->    808	
->    809	static int ad7380_read_raw(struct iio_dev *indio_dev,
->    810				   struct iio_chan_spec const *chan,
->    811				   int *val, int *val2, long info)
->    812	{
->    813		struct ad7380_state *st = iio_priv(indio_dev);
->    814		const struct iio_scan_type *scan_type;
->    815	
->    816		scan_type = iio_get_current_scan_type(indio_dev, chan);
->    817	
->    818		if (IS_ERR(scan_type))
->    819			return PTR_ERR(scan_type);
->    820	
->    821		switch (info) {
->    822		case IIO_CHAN_INFO_RAW:
->  > 823			if_not_cond_guard(iio_claim_direct_try, indio_dev)
->    824				return -EBUSY;
->    825	
->    826			return ad7380_read_direct(st, chan->scan_index, scan_type, val);
->    827		case IIO_CHAN_INFO_SCALE:
->    828			/*
->    829			 * According to the datasheet, the LSB size is:
->    830			 *    * (2 × VREF) / 2^N, for differential chips
->    831			 *    * VREF / 2^N, for pseudo-differential chips
->    832			 * where N is the ADC resolution (i.e realbits)
->    833			 */
->    834			*val = st->vref_mv;
->    835			*val2 = scan_type->realbits - chan->differential;
->    836	
->    837			return IIO_VAL_FRACTIONAL_LOG2;
->    838		case IIO_CHAN_INFO_OFFSET:
->    839			/*
->    840			 * According to IIO ABI, offset is applied before scale,
->    841			 * so offset is: vcm_mv / scale
->    842			 */
->    843			*val = st->vcm_mv[chan->channel] * (1 << scan_type->realbits)
->    844				/ st->vref_mv;
->    845	
->    846			return IIO_VAL_INT;
->    847		case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->    848			*val = st->oversampling_ratio;
->    849	
->    850			return IIO_VAL_INT;
->    851		default:
->    852			return -EINVAL;
->    853		}
->    854	}
->    855	
->    856	static int ad7380_read_avail(struct iio_dev *indio_dev,
->    857				     struct iio_chan_spec const *chan,
->    858				     const int **vals, int *type, int *length,
->    859				     long mask)
->    860	{
->    861		switch (mask) {
->    862		case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->    863			*vals = ad7380_oversampling_ratios;
->    864			*length = ARRAY_SIZE(ad7380_oversampling_ratios);
->    865			*type = IIO_VAL_INT;
->    866	
->    867			return IIO_AVAIL_LIST;
->    868		default:
->    869			return -EINVAL;
->    870		}
->    871	}
->    872	
->    873	/**
->    874	 * ad7380_osr_to_regval - convert ratio to OSR register value
->    875	 * @ratio: ratio to check
->    876	 *
->    877	 * Check if ratio is present in the list of available ratios and return the
->    878	 * corresponding value that needs to be written to the register to select that
->    879	 * ratio.
->    880	 *
->    881	 * Returns: register value (0 to 7) or -EINVAL if there is not an exact match
->    882	 */
->    883	static int ad7380_osr_to_regval(int ratio)
->    884	{
->    885		int i;
->    886	
->    887		for (i = 0; i < ARRAY_SIZE(ad7380_oversampling_ratios); i++) {
->    888			if (ratio == ad7380_oversampling_ratios[i])
->    889				return i;
->    890		}
->    891	
->    892		return -EINVAL;
->    893	}
->    894	
->    895	static int ad7380_write_raw(struct iio_dev *indio_dev,
->    896				    struct iio_chan_spec const *chan, int val,
->    897				    int val2, long mask)
->    898	{
->    899		struct ad7380_state *st = iio_priv(indio_dev);
->    900		int ret, osr, boost;
->    901	
->    902		switch (mask) {
->    903		case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->    904			osr = ad7380_osr_to_regval(val);
->    905			if (osr < 0)
->    906				return osr;
->    907	
->    908			/* always enable resolution boost when oversampling is enabled */
->    909			boost = osr > 0 ? 1 : 0;
->    910	
->    911			if_not_cond_guard(iio_claim_direct_try, indio_dev)
->    912				return -EBUSY;
->    913	
->    914			ret = regmap_update_bits(st->regmap,
->    915						 AD7380_REG_ADDR_CONFIG1,
->    916						 AD7380_CONFIG1_OSR | AD7380_CONFIG1_RES,
->    917						 FIELD_PREP(AD7380_CONFIG1_OSR, osr) |
->    918						 FIELD_PREP(AD7380_CONFIG1_RES, boost));
->    919	
->    920			if (ret)
->    921				return ret;
->    922	
->    923			st->oversampling_ratio = val;
->    924			st->resolution_boost_enabled = boost;
->    925	
->    926			/*
->    927			 * Perform a soft reset. This will flush the oversampling block
->    928			 * and FIFO but will maintain the content of the configurable
->    929			 * registers.
->    930			 */
->    931			return regmap_update_bits(st->regmap, AD7380_REG_ADDR_CONFIG2,
->    932						  AD7380_CONFIG2_RESET,
->    933						  FIELD_PREP(AD7380_CONFIG2_RESET,
->    934							     AD7380_CONFIG2_RESET_SOFT));
->  > 935		default:
->    936			return -EINVAL;
->    937		}
->    938	}
->    939	
-> 
+I thought that might be the case, but figured I'd suggest it anyway. Oh well!
 
-This warning and the "warning: label followed by a declaration
-is a C23 extension" from the other bot message are both fixed
-with the following modification:
+Thanks,
+Ben
 
-
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index 19a942035e93..34adc5aeb6f3 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -819,11 +819,12 @@ static int ad7380_read_raw(struct iio_dev *indio_dev,
- 		return PTR_ERR(scan_type);
- 
- 	switch (info) {
--	case IIO_CHAN_INFO_RAW:
-+	case IIO_CHAN_INFO_RAW: {
- 		if_not_cond_guard(iio_claim_direct_try, indio_dev)
- 			return -EBUSY;
- 
- 		return ad7380_read_direct(st, chan->scan_index, scan_type, val);
-+	}
- 	case IIO_CHAN_INFO_SCALE:
- 		/*
- 		 * According to the datasheet, the LSB size is:
-@@ -900,7 +901,7 @@ static int ad7380_write_raw(struct iio_dev *indio_dev,
- 	int ret, osr, boost;
- 
- 	switch (mask) {
--	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO: {
- 		osr = ad7380_osr_to_regval(val);
- 		if (osr < 0)
- 			return osr;
-@@ -932,6 +933,7 @@ static int ad7380_write_raw(struct iio_dev *indio_dev,
- 					  AD7380_CONFIG2_RESET,
- 					  FIELD_PREP(AD7380_CONFIG2_RESET,
- 						     AD7380_CONFIG2_RESET_SOFT));
-+	}
- 	default:
- 		return -EINVAL;
- 	}
+>> Thanks,
+>> Ben
+>>
+>>>  	}
+>>>  	return -ENXIO;
+>>>  }
+> 
+> [snip]
+> 
+> --
+> Best Regards,
+> Huang, Ying
 
