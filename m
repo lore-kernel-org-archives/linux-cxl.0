@@ -1,45 +1,54 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9738613D503;
-	Fri,  4 Oct 2024 11:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE0428E8;
+	Fri,  4 Oct 2024 11:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728041531; cv=none; b=VhJhLLysiwCWg9jTZi799M6f/OGBroeHfxO5JYSW8Mjup1klFhRdIcU8gz+/QPc7RGwRZKjczo0JyEImMzj0d5OHjSjqaTDI6N2A8a27NvSqLnMl0rSSPewdyUiu6qXk0aY+ao4qmeu4NynKf1SPFYbo3c16cepe3jwT1BhxzZk=
+	t=1728042022; cv=none; b=D6xIOA4fy/2EBN8b40/96uTXg4iYomOzRZcSbGWAgvNoS3NrQfQyyNNkuc/TkONk/dPp6Y6THrPtkympCyqXTy1A3LV54POSpabznaOen19iuQYitOc0C6Yt0GE+D7j66xG6WggwlojOZmip/C61TiK57FWairh+oXOtBPqkPvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728041531; c=relaxed/simple;
-	bh=yZJUr5y0cFjRAooP/YZ0lox9GjmGrEgMTe2qMk8Si8E=;
+	s=arc-20240116; t=1728042022; c=relaxed/simple;
+	bh=zj/v/YSZm7JOt2SMXu1c+xcBVS6L9M+HRftbnsyzSPQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b804lXHl1nGZQIskE0PynH2hJWSbKTlmOycQt68m1PLnpgzboSIh0auCd/GOXP3VF8lEnAoS1zZXwUpSdc5599jsOdtiH3aUnvkRPIB0Nq4+U0o2CTqKN31Fpvx4NCNQtpGgDnqld5rVMKAjE4QkTzJyI2o23XjHU0ngk7e4Iqk=
+	 MIME-Version:Content-Type; b=oo01DR/hvg0zw7XZED3B5PBYINkEyHglDyqB1/JqpCXUJPgQmUOrQR4zJYLmSfKjj0LgdM5onT1O3Wyx02bI5PywZUOfxWRWNF4EFF3jHe22ER3lNdqSA8hznt6O58FSYxFCHasLOAqZS5a+miEkCwfODFnq48qgupuSegSJygI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XKmVy3Kfnz6LCql;
-	Fri,  4 Oct 2024 19:27:54 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XKmhM2X03z6L774;
+	Fri,  4 Oct 2024 19:36:03 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3EC721402C6;
-	Fri,  4 Oct 2024 19:32:06 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 26059140B63;
+	Fri,  4 Oct 2024 19:40:15 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Oct
- 2024 13:32:05 +0200
-Date: Fri, 4 Oct 2024 12:32:03 +0100
+ 2024 13:40:14 +0200
+Date: Fri, 4 Oct 2024 12:40:13 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Gregory Price <gourry@gourry.net>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bhelgaas@google.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<vishal.l.verma@intel.com>
-Subject: Re: [PATCH] pci/doe: add a 1 second retry window to pci_doe
-Message-ID: <20241004123203.00007456@Huawei.com>
-In-Reply-To: <ZvwZd5CCV2PdqSLF@wunner.de>
-References: <20240913183241.17320-1-gourry@gourry.net>
-	<66e51febbab99_ae212949d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<20240916101557.00007b3a@Huawei.com>
-	<ZvwRjbRIrkCSjwQI@PC2K9PVX.TheFacebook.com>
-	<ZvwZd5CCV2PdqSLF@wunner.de>
+To: Zhi Wang <zhiw@nvidia.com>
+CC: "Tian, Kevin" <kevin.tian@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>, "Schofield,
+ Alison" <alison.schofield@intel.com>, "Williams, Dan J"
+	<dan.j.williams@intel.com>, "Jiang, Dave" <dave.jiang@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "Weiny, Ira" <ira.weiny@intel.com>,
+	"Verma, Vishal L" <vishal.l.verma@intel.com>, "alucerop@amd.com"
+	<alucerop@amd.com>, Andy Currid <ACurrid@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, Surath Mitra <smitra@nvidia.com>, Ankit Agrawal
+	<ankita@nvidia.com>, Aniket Agashe <aniketa@nvidia.com>, Kirti Wankhede
+	<kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	"zhiwang@kernel.org" <zhiwang@kernel.org>
+Subject: Re: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
+ accelerator passthrough
+Message-ID: <20241004124013.00004bca@Huawei.com>
+In-Reply-To: <5ad34682-5fa9-44ee-b36b-b17317256187@nvidia.com>
+References: <20240920223446.1908673-1-zhiw@nvidia.com>
+	<BN9PR11MB5276B821A9732BF0A9EC67988C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
+	<75c0c6f1-07e4-43c1-819c-2182bdd0b47c@nvidia.com>
+	<20240925140515.000077f5@Huawei.com>
+	<5ad34682-5fa9-44ee-b36b-b17317256187@nvidia.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -53,75 +62,35 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 1 Oct 2024 17:47:03 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
 
-> On Tue, Oct 01, 2024 at 11:13:17AM -0400, Gregory Price wrote:
-> > > > Gregory Price wrote:  
-> > > > > Depending on the device, sometimes firmware clears the busy flag
-> > > > > later than expected.  This can cause the device to appear busy when
-> > > > > calling multiple commands in quick sucession. Add a 1 second retry
-> > > > > window to all doe commands that end with -EBUSY.    
+> >   
+> >>
+> >> Presumably, the host creates one large CXL region that covers the entire
+> >> DPA, while QEMU can virtually partition it into different regions and
+> >> map them to different virtual CXL region if QEMU presents multiple HDM
+> >> decoders to the guest.  
 > > 
-> > Just following up here, it sounds like everyone is unsure of this change.
-> > 
-> > I can confirm that this handles the CDAT retry issue I am seeing, and that
-> > the BUSY bit is set upon entry into the initial call. Only 1 or 2 retries
-> > are attempted before it is cleared and returns successfully.
-> > 
-> > I'd explored putting the retry logic in the CDAT code that calls into here,
-> > but that just seemed wrong.  Is there a suggestion or a nak here?
-> > 
-> > Trying to find a path forward.  
+> > I'm not sure why it would do that. Can't think why you'd break up
+> > a host region - maybe I'm missing something.
+> >   
 > 
-> The PCIe Base Spec doesn't prescribe a maximum timeout for the
-> DOE BUSY bit to clear.  Thus it seems fine to me in principle
-> to add a (or raise the) timeout if it turns out to be necessary
-> for real-life hardware.
-> 
-> That said, the proposed patch has room for improvement:
-> 
-> * The patch seems to wait for DOE BUSY bit to clear *after*
->   completion.  That's odd.  The kernel waits for DOE Busy bit
->   to clear *before* sending a new request, in pci_doe_send_req().
->   My expectation would have been that you'd add a loop there which
->   polls for DOE Busy bit to clear before sending a request.
-> 
->   It seems that polling is the only option as no interrupt is
->   raised on DOE Busy bit clear, per PCIe r6.2 sec 6.30.3.
->   (Please add this bit of information to the commit message.)
+> It is mostly concerning about a device can have multiple HDM decoders. 
+> In the current design, a large physical CXL (pCXL) region with the whole 
+> DPA will be passed to the userspace. Thinking that the guest will see 
+> the virtual multiple HDM decoders, which usually SW is asking for, the 
+> guest SW might create multiple virtual CXL regions. In that case QEMU 
+> needs to map them into different regions of the pCXL region.
 
-This changed at some point.  In PCI 6.0 the clearing
-of this bit is explicitly called out in DOE interrupt status
-as a reason to trigger the interrupt. By 6.1 that's gone.
-This was a problem for the original implementation as we had
-to assume that we'd get random spurious interrupts because
-of that delight.
+Don't let the guest see multiple HDM decoders?
 
-Anyhow, hopefully doesn't matter to us here as you are correct
-that we have to poll for it.
+There is no obvious reason why it would want them other than type
+differences.
 
-Mind you we still have to allow for spurious garbage interrupts
-and eat them silently. :(
+Why is it useful for a type 2 device to be setup for multiple CXL regions?
+It shouldn't be a performance thing. Might be convenient for management
+I guess, but the driver can layer it's own allocator etc on top of a single
+region so I'm not sure I see a reason to do this...
 
-> 
-> * The commit message should clearly specify the device(s)
->   affected by the issue (Vendor and Device ID plus name).
->   Comments such as "Depending on the device, sometimes ..."
->   are a little too vague.
-> 
-> * The "1 or 2 retries" bit of information you're mentioning
->   above should likewise be in the commit message.
-> 
-> * Please use "PCI/DOE:" as subject prefix to match previous
->   commits which touched drivers/pci/doe.c.
-> 
-> * Please adhere to spec language, e.g. use "DOE Busy bit"
->   instead of "busy bit" so it's unambiguous for readers
->   what you're referring to.
-> 
-> Thanks,
-> 
-> Lukas
-> 
+Jonathan
+
 
