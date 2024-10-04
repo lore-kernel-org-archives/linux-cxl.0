@@ -1,143 +1,121 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C53B1C8786
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Oct 2024 16:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2281E3795
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Oct 2024 16:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728059315; cv=none; b=i9yMtG/gUZp4STboI7RT26Xtjyz/MX60REbzAU8ZGiv88VnXakqNfp8qaPBf36+wFUFaVySvhP2XhWsNzUeCk1yodEumjTtR6849KaVy/cDIXVNT6xiVkljUBzBzW7DZk59OrTxZSm9Q8MY/QE2cYNO0bzGPe9dHq6IOMVRuwBo=
+	t=1728060227; cv=none; b=Ls8m2nTNkzE1DGcnxKxQykryT4bhw/KlSU8yuQeEYdaKUMtyq3HktGhXLePniHg493/+ieYS6bk5FpjMRKpYSBlvWdkZGAGTHiv6V1Jy0F4jQVbUcaTmw2B/B+u0CO+XYPDKzayt8ccX05ouBKXfdcuxcu6TA+YEKndumHb3eE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728059315; c=relaxed/simple;
-	bh=l7+/OOnbPo59NRdHU4hf39heIHqnVwgUybEyl/BT7zY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nkp5PTSNe1XwPtb9lPyhgrBmtIphMWRqUEYpzoaTHgY7zLvgFD0Y1DbmEraVd+coA8R/F+w5pzKEyKssCGLkPpdfI1qt8H43d86bO82/gNYzRD1Y4nsmw5uPt/yFLmp+WmD2h2QyA2rg2ANYBFWuRRi/U28LviR0+Tae3Zj4ZuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=N5MAvhXP; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1728060227; c=relaxed/simple;
+	bh=caWUEqBo9JBzKr5pYbO48z5AX97RvRUEdO9pFaTQp2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htHBWkzYjgMUJxnC1X7pOU9Cj63kpl36MPxnACuJQwXbKwI12SIzKl+hAG8vcbFM1UfGXdVvKcS9gUGyhF2n1rY6O0U2EBPVg9jGPVXZWlJRfjgao+WvRzn1MjgYlTeoZxDmOJcDo/sKVQ+9pTfu82FE+GcO776u7FABzXGSYtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFqkjsD8; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="N5MAvhXP"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6cb97afcec9so11479936d6.2
-        for <linux-cxl@vger.kernel.org>; Fri, 04 Oct 2024 09:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728059312; x=1728664112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9cpx8Hyi6dy6qO2dUhiRIRpdrteVAK0AMuAZrMnAe0=;
-        b=N5MAvhXPocpXL+3MRnLl6U8seb48TXhzIBXVAGF6Z5WylKzfg0PGkMinuwXG8cdnS/
-         raQH7qudNAX3v1B/9Qy3c5Hzk1i75y3HHgpVLDnNWTzg9pKA9hI91i9zbS8fkvBRzbhL
-         yDmknpHxL8IoHp+fne7pCvc5KTG7wzoc234m6tS2ePyNmurrsfezA97BnnePodjMbDWY
-         FXAPzWSJx+qYyc2kLa/btg7cqB4xWXJuLy6/a2AXezMquOZah862dfX8qAHQ8YRHztEU
-         MHoIpaiotQi/NjTH3AnQxWKN+5riQplWeni+ontCtxV05YncNV4ObPO8IopM6J3olyTJ
-         I2eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728059312; x=1728664112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g9cpx8Hyi6dy6qO2dUhiRIRpdrteVAK0AMuAZrMnAe0=;
-        b=jgvihtOGadNNLJ7cWuniY8vXzwyOBtcGwCQEn5FvmPomUnycN1ws4fu2uOCAaDsYa/
-         mm3wzNJlNWCvAen1d5WhOlfKVteyUKev+f7NpXusQxcPQYcALZPFcQekvARsC3CENHOy
-         N9P8bYQaGvB5c7rrhEOLwRtKtpfxc5nj6u+ekVWyHyIlFWHLP9cTguUbygg2g8XNbxaD
-         KlWjWAUo2Mcf4Gyl8IO3XNHiRyxoGs1behqBK3Qs44UHCIN73oOX1dIwMxJgt+wKGwZi
-         +lTFkl4u/0g+JytS9VJsgVtS7IDLoRdAG9aRAKd818IWTaVjXqbyd4XM0nlYvRmS8sDC
-         r6Ag==
-X-Gm-Message-State: AOJu0Yzn1FaCYwrWKOLceQ1VSPXikhNgTm6CpT0vf5KHye9dRgEFafSY
-	LkVWAtK2aeNNz8xF3Ly/wfFwasE19Y+Uhkxk7LfH/I+lBs5icbbbgOXXt5ds4LYWtQnEGS9mxOn
-	Y
-X-Google-Smtp-Source: AGHT+IHCGTgu+cqiGiiZGFp3IkE06rob+xgV+iZNNZ8TyR776du/mFsmvAe7H6wEvrhSrVYdAin9FQ==
-X-Received: by 2002:a05:6214:5504:b0:6cb:4a84:e02a with SMTP id 6a1803df08f44-6cb9a32d338mr50523826d6.16.1728059312390;
-        Fri, 04 Oct 2024 09:28:32 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cba4751920sm573476d6.98.2024.10.04.09.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 09:28:31 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-pci@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	dan.j.williams@intel.com,
-	bhelgaas@google.com,
-	dave@stgolabs.net,
-	dave.jiang@intel.com,
-	vishal.l.verma@intel.com,
-	Jonathan.Cameron@Huawei.com
-Subject: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in pci_doe_send_req
-Date: Fri,  4 Oct 2024 12:28:28 -0400
-Message-ID: <20241004162828.314-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFqkjsD8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728060225; x=1759596225;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=caWUEqBo9JBzKr5pYbO48z5AX97RvRUEdO9pFaTQp2A=;
+  b=MFqkjsD8ma+o0R0XEg4sMww5Kak/GFJhNtl6tkR8vjljfPgwc9Zn8B3V
+   bj+xxkJZHa5/n3iDsRZejU8tbyzFktyjl28W08IpP39NbjZAKC7l2f/4A
+   7mHCJR7N3DbJTKykr9NMOHDanudgpVTkmTYxLbBVivzLhfBFqWwa13zmK
+   Ym26LaJHAd3H3i/22NGw6ZzSNKyWEuej22NRnp+2ODOY870/SzutLabrd
+   mWVeDBQaC19yRzHLxFUwJEESVKrCWsHB9DepTAQ5bZI32vfs56yHlB778
+   TM3qdrY4qQGdPrQl5GeOgqgylEdb1iEYezpAADqM4Lv+LMrEltFStt/dg
+   A==;
+X-CSE-ConnectionGUID: RslXPTDjTEGinRdclVH36Q==
+X-CSE-MsgGUID: ZFY1pd+ZR1adUzJvJ1NGpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="49819574"
+X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
+   d="scan'208";a="49819574"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 09:43:44 -0700
+X-CSE-ConnectionGUID: 2VDto1VuR9CEQpmZjbXNAQ==
+X-CSE-MsgGUID: 8CmPP9bVTLSLS36Z2gLxCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
+   d="scan'208";a="98081677"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.218])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 09:43:43 -0700
+Date: Fri, 4 Oct 2024 09:43:40 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	dan.j.williams@intel.com, ira.weiny@intel.com, fan.ni@samsung.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] perf/cxlpmu: Support missing events in 3.1 spec
+Message-ID: <ZwAbPFS7XqxCrI7U@aschofie-mobl2.lan>
+References: <20240930203445.149954-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240930203445.149954-1-dave@stgolabs.net>
 
-During initial device probe, the PCI DOE busy bit for some CXL
-devices may be left set for a longer period than expected by the
-current driver logic. Despite local comments stating DOE Busy is
-unlikely to be detected, it appears commonly specifically during
-boot when CXL devices are being probed.
+On Mon, Sep 30, 2024 at 01:34:45PM -0700, Davidlohr Bueso wrote:
+> Update the CXL PMU driver to support the new events introduced
+> in the latest revision. These are:
+> 
+> - read/write accesses with TEE constraints.
+> - S2M indicating Modified state.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+> 
+> Changes from v1:
+>  - only update spec references of groups that are affected (Alison, Dave).
+> 
 
-This was observed on a single socket AMD platform with 2 CXL memory
-expanders attached to the single socket. It was not the case that
-concurrent accesses were being made, as validated by monitoring
-mailbox commands on the device side.
+Typo in a comment s/Opcopdes/Opcodes may be fixed-up upon applying.
 
-This behavior has been observed with multiple CXL memory expanders
-from different vendors - so it appears unrelated to the model.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-In all observed tests, only a small period of the retry window is
-actually used - typically only a handful of loop iterations.
-
-Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-interval (1 second), resolves this issues cleanly.
-
-Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
-raise an interrupt, so polling is the best option in this scenario.
-
-Subsqeuent code in doe_statemachine_work and abort paths also wait
-for up to 1 PCI DOE timeout interval, so this order of (potential)
-additional delay is presumed acceptable.
-
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/pci/doe.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 652d63df9d22..27ba5d281384 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
- 	size_t length, remainder;
- 	u32 val;
- 	int i;
-+	unsigned long timeout_jiffies;
- 
- 	/*
- 	 * Check the DOE busy bit is not set. If it is set, this could indicate
- 	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
- 	 * it is expected that firmware and OS will negotiate access rights via
- 	 * an, as yet to be defined, method.
-+	 *
-+	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
-+	 * finish. Otherwise, simply error out as unable to field the request.
-+	 *
-+	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
-+	 * bit is cleared, so polling here is our best option for the moment.
- 	 */
--	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-+	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
-+	do {
-+		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-+	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
-+		 !time_after(jiffies, timeout_jiffies));
-+
- 	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
- 		return -EBUSY;
- 
--- 
-2.43.0
-
+>  drivers/perf/cxl_pmu.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 43d68b69e630..644caf039718 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -377,12 +377,14 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+>  	/* CXL rev 3.0 Table 13-5 directly lists these */
+>  	CXL_PMU_EVENT_CXL_ATTR(cachedata_d2h_data,		CXL_PMU_GID_CACHE_DATA, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(cachedata_h2d_data,		CXL_PMU_GID_CACHE_DATA, BIT(1)),
+> -	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
+> +	/* CXL rev 3.1 Table 3-35 M2S Req Memory Opcodes */
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminv,			CXL_PMU_GID_M2S_REQ, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrd,			CXL_PMU_GID_M2S_REQ, BIT(1)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddata,		CXL_PMU_GID_M2S_REQ, BIT(2)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdfwd,		CXL_PMU_GID_M2S_REQ, BIT(3)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
+> +	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
+> +	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
+> @@ -404,10 +406,11 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
+> -	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
+> +	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
+> +	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
+>  	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
+> -- 
+> 2.46.1
+> 
