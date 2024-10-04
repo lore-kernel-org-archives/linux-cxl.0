@@ -1,54 +1,39 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE0428E8;
-	Fri,  4 Oct 2024 11:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFC157484
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Oct 2024 11:44:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728042022; cv=none; b=D6xIOA4fy/2EBN8b40/96uTXg4iYomOzRZcSbGWAgvNoS3NrQfQyyNNkuc/TkONk/dPp6Y6THrPtkympCyqXTy1A3LV54POSpabznaOen19iuQYitOc0C6Yt0GE+D7j66xG6WggwlojOZmip/C61TiK57FWairh+oXOtBPqkPvI=
+	t=1728042279; cv=none; b=LQFDF/FM/4P3Tw+LdC0TRhI6jNVHjsWQit6t8GMQAmnx2g4jWIlgyTFxxspQy9H06CYBV2mglv2LDsFt+I6sTsPa79iOKIgUDEW8VLccznR+p0e1zBA/uG43GCW/IeGA0B8jUChtZgQlMYBynJMmjvfJ+4L/z0icU7gjpm5QZN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728042022; c=relaxed/simple;
-	bh=zj/v/YSZm7JOt2SMXu1c+xcBVS6L9M+HRftbnsyzSPQ=;
+	s=arc-20240116; t=1728042279; c=relaxed/simple;
+	bh=/lkWcFb8UntGN5MxzW4ovwKVc4iGeawqy07mrl63yac=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oo01DR/hvg0zw7XZED3B5PBYINkEyHglDyqB1/JqpCXUJPgQmUOrQR4zJYLmSfKjj0LgdM5onT1O3Wyx02bI5PywZUOfxWRWNF4EFF3jHe22ER3lNdqSA8hznt6O58FSYxFCHasLOAqZS5a+miEkCwfODFnq48qgupuSegSJygI=
+	 MIME-Version:Content-Type; b=UlGK/NhvGOgLbfQ1XQLvmCOpT1X2yuuret6xQU+r51t/OVw/qBpx08K1Nc4ktD40PCQd6Pf18z7E8DMMj4XDerHq+idBp3C8VkF6goebbAHQp1h6IFB6GtP48voUnV5DjaPfHogAJCF1BSorjk5caTmlhGn86t1uB6p5lwOnm94=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XKmhM2X03z6L774;
-	Fri,  4 Oct 2024 19:36:03 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XKmt6730Yz6HJJD;
+	Fri,  4 Oct 2024 19:44:30 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 26059140B63;
-	Fri,  4 Oct 2024 19:40:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 53F2A1400CA;
+	Fri,  4 Oct 2024 19:44:34 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Oct
- 2024 13:40:14 +0200
-Date: Fri, 4 Oct 2024 12:40:13 +0100
+ 2024 13:44:33 +0200
+Date: Fri, 4 Oct 2024 12:44:32 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Zhi Wang <zhiw@nvidia.com>
-CC: "Tian, Kevin" <kevin.tian@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>, "Schofield,
- Alison" <alison.schofield@intel.com>, "Williams, Dan J"
-	<dan.j.williams@intel.com>, "Jiang, Dave" <dave.jiang@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "Weiny, Ira" <ira.weiny@intel.com>,
-	"Verma, Vishal L" <vishal.l.verma@intel.com>, "alucerop@amd.com"
-	<alucerop@amd.com>, Andy Currid <ACurrid@nvidia.com>, Neo Jia
-	<cjia@nvidia.com>, Surath Mitra <smitra@nvidia.com>, Ankit Agrawal
-	<ankita@nvidia.com>, Aniket Agashe <aniketa@nvidia.com>, Kirti Wankhede
-	<kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	"zhiwang@kernel.org" <zhiwang@kernel.org>
-Subject: Re: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
- accelerator passthrough
-Message-ID: <20241004124013.00004bca@Huawei.com>
-In-Reply-To: <5ad34682-5fa9-44ee-b36b-b17317256187@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<BN9PR11MB5276B821A9732BF0A9EC67988C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
-	<75c0c6f1-07e4-43c1-819c-2182bdd0b47c@nvidia.com>
-	<20240925140515.000077f5@Huawei.com>
-	<5ad34682-5fa9-44ee-b36b-b17317256187@nvidia.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>, <fan.ni@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2] perf/cxlpmu: Support missing events in 3.1 spec
+Message-ID: <20241004124432.00005b67@Huawei.com>
+In-Reply-To: <20240930203445.149954-1-dave@stgolabs.net>
+References: <20240930203445.149954-1-dave@stgolabs.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -62,35 +47,62 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
+On Mon, 30 Sep 2024 13:34:45 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> >   
-> >>
-> >> Presumably, the host creates one large CXL region that covers the entire
-> >> DPA, while QEMU can virtually partition it into different regions and
-> >> map them to different virtual CXL region if QEMU presents multiple HDM
-> >> decoders to the guest.  
-> > 
-> > I'm not sure why it would do that. Can't think why you'd break up
-> > a host region - maybe I'm missing something.
-> >   
+> Update the CXL PMU driver to support the new events introduced
+> in the latest revision. These are:
 > 
-> It is mostly concerning about a device can have multiple HDM decoders. 
-> In the current design, a large physical CXL (pCXL) region with the whole 
-> DPA will be passed to the userspace. Thinking that the guest will see 
-> the virtual multiple HDM decoders, which usually SW is asking for, the 
-> guest SW might create multiple virtual CXL regions. In that case QEMU 
-> needs to map them into different regions of the pCXL region.
+> - read/write accesses with TEE constraints.
+> - S2M indicating Modified state.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Don't let the guest see multiple HDM decoders?
-
-There is no obvious reason why it would want them other than type
-differences.
-
-Why is it useful for a type 2 device to be setup for multiple CXL regions?
-It shouldn't be a performance thing. Might be convenient for management
-I guess, but the driver can layer it's own allocator etc on top of a single
-region so I'm not sure I see a reason to do this...
+Driver is in perf though so you need to +CC perf maintainers as
+they will probably pick this up directly.
 
 Jonathan
 
+> ---
+> 
+> Changes from v1:
+>  - only update spec references of groups that are affected (Alison, Dave).
+> 
+>  drivers/perf/cxl_pmu.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 43d68b69e630..644caf039718 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -377,12 +377,14 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+>  	/* CXL rev 3.0 Table 13-5 directly lists these */
+>  	CXL_PMU_EVENT_CXL_ATTR(cachedata_d2h_data,		CXL_PMU_GID_CACHE_DATA, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(cachedata_h2d_data,		CXL_PMU_GID_CACHE_DATA, BIT(1)),
+> -	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
+> +	/* CXL rev 3.1 Table 3-35 M2S Req Memory Opcodes */
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminv,			CXL_PMU_GID_M2S_REQ, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrd,			CXL_PMU_GID_M2S_REQ, BIT(1)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddata,		CXL_PMU_GID_M2S_REQ, BIT(2)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdfwd,		CXL_PMU_GID_M2S_REQ, BIT(3)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
+> +	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
+> +	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
+>  	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
+> @@ -404,10 +406,11 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
+> -	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
+> +	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
+> +	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
+>  	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
 
