@@ -1,200 +1,381 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B251D54DC;
-	Mon,  7 Oct 2024 14:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E2A18BC3B;
+	Mon,  7 Oct 2024 23:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728311090; cv=none; b=snn+6hdXNfKVHdrIpRykBLl/BFfD4l72IYcjByjjHeouN0vKv1/zlQsdSfIV84xf/ehMenNJhYRzal5nNH4d9k4wohdLOHwqhWtdrGelJdazvJVfbP98jzO7SlPcC6VpmSYvt/q4D5A4iAl9V/8XvYDiAxppdhUfgDdmtvXnDJg=
+	t=1728342975; cv=none; b=SpdnTGCuWeDvLkekJ/oZl/N7cJ82HceFFNkgthRZ62zFgCYyam2jw1DrvmtwmbMvHBgpzVJqXMct72yze4RT/3HAwyrbCBEcSTILBZO41PXaFC+ySt5U/F8R3QhXB612ozW6OBNQ9EQgUe0iZFT9Bo+Ljd4wPJYAZ4fmoDQm0g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728311090; c=relaxed/simple;
-	bh=xtD5r6R1+iAiOT5E2n5P7WbselsT4vAju7aEoR9WU7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2jYnBbBZIOvVoetxN9RBjS8PJynscFOhYtIgmNjgaVTi/iCgxt39guTC3dEKZ22FOJBkGjAmni4tjX8FAqXGSqKaQic5puinfypcVv63fPAYzaTgukcEwvb4G3Zgg9XJRYeSkTfXGxAO+qmgVYKeeAyetHt+ubSxX7sECUdrFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3As6tQ6; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1728342975; c=relaxed/simple;
+	bh=OXoiarDQ/wZQh9c1DY7NZJoQbq5qxwtTSLb2/K7p9vg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MKuCZRAIRYVUzrOriui5Yn/hQgzWQlxjkB2BzA/77X6KuR7uZ6w/mXI7tzVUAlRx+970q2eWQznyL9v7cmlz1FRp7COf/fZP/GvdxFaM2LZ5dzEzsKAP4YmpFUfAt6YhVnSVRYOC3EGnCXEXufB8wUzo/n9FLnHK085uYVR91HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=egLonC1B; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3As6tQ6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="egLonC1B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728311089; x=1759847089;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xtD5r6R1+iAiOT5E2n5P7WbselsT4vAju7aEoR9WU7k=;
-  b=i3As6tQ68sepqwtt+1vnF5rp+rKpQwhXsmhEfNiBX5oHPJPt4Nkpe5L8
-   DFJoWbbjcpG/k310lpxQuwkiyqzUKdqXgY12Yjx5D5F+xX+LwSthYz6AL
-   2LwnQV3t+TLhyF7VeRqN83jQGmVvpPfJ3DRIf0Id19hMA2qj3u8NoD03q
-   5100qFwDTyYVlE+XPbY6Yes+Hl4ag6qFv/tH+vHwBYCF5Wb2+MolHiyRb
-   lr4yDkviu8rEtdwd2r55ylhZdmDXYHzUjOAJM+RonHu4bYROhH+IsrZzH
-   AFOXSoZCPsz2YThAnkTAxjg0wkD8DQJSteVlZVlbdsFKBO9d9vYdbrx3x
-   w==;
-X-CSE-ConnectionGUID: a+GtRHKtT2SPaVPK8Qr+Tw==
-X-CSE-MsgGUID: OLW3yXJ4RV6MDufSlFTOiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11218"; a="38066724"
-X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
-   d="scan'208";a="38066724"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 07:24:48 -0700
-X-CSE-ConnectionGUID: GY0tNvgjRFGpfhvvU6AzHA==
-X-CSE-MsgGUID: B/OfJPxKRyKdLRPqMuh9HQ==
+  t=1728342974; x=1759878974;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=OXoiarDQ/wZQh9c1DY7NZJoQbq5qxwtTSLb2/K7p9vg=;
+  b=egLonC1Bs+JvqcxuYLqm21Ud3/NjVvKM7/cXIWYxo+ouLdlQREaIckKr
+   PPB7C2uCbvi+WolL6F56LbvHsUpqGkLhn1O39Bt2EG0FPvwdHbVyfzlci
+   UNnI4kizaQxdYGHNb65dTFBuwuzojMOXQgkzWEQlQ4AefLkR4wkx7nczf
+   bfnjAQvnO1LU0b6fW+voX1MlunPSWIYEtaHrz/K+bBl8WPMYOUp6sEXMv
+   YeTDqcfKC2OJd2dyHMpMJ1LOywI6TPb34gRd8c8zLvu/5bQ5QSv4J2jnw
+   0fTbuGEZX0K+YUUjUEG5X7CKVkNkcN14lQPkgJGbqkj5bbh26RfsBn5gZ
+   g==;
+X-CSE-ConnectionGUID: AbkELgYJR/OJDQ7HQQM0xA==
+X-CSE-MsgGUID: qj9FEI4gS6We1hZ0fNS6wA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11218"; a="38078847"
+X-IronPort-AV: E=Sophos;i="6.11,185,1725346800"; 
+   d="scan'208";a="38078847"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 16:16:13 -0700
+X-CSE-ConnectionGUID: DhcaiU2SQNmdkSKk+kbcIA==
+X-CSE-MsgGUID: fRR9hNG+Spysj393Wiwd6Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
-   d="scan'208";a="106244537"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 07:24:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sxofB-00000000F60-2JO7;
-	Mon, 07 Oct 2024 17:24:41 +0300
-Date: Mon, 7 Oct 2024 17:24:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
-Message-ID: <ZwPvKST69TdcaVO8@smile.fi.intel.com>
-References: <20240819023413.1109779-1-ying.huang@intel.com>
- <ZsL-wfDYsUmWKBep@smile.fi.intel.com>
- <874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <66d8f41cb3e6_3975294f9@dwillia2-xfh.jf.intel.com.notmuch>
- <ZtmOTYF9EWPeLg5u@smile.fi.intel.com>
- <65838cc0-9a20-4994-a0ef-9cd50bb00951@redhat.com>
- <Ztmlw1q3Djn94MRQ@smile.fi.intel.com>
- <09d44b21-9739-417b-a76c-5383fcbde96b@redhat.com>
- <Ztmo_EITDSRewSka@smile.fi.intel.com>
- <922e97d9-e16a-4bb8-90b0-4bb3347174e8@redhat.com>
+X-IronPort-AV: E=Sophos;i="6.11,185,1725346800"; 
+   d="scan'208";a="75634535"
+Received: from ldmartin-desk2.corp.intel.com (HELO localhost) ([10.125.110.112])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 16:16:09 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v4 00/28] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Date: Mon, 07 Oct 2024 18:16:06 -0500
+Message-Id: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <922e97d9-e16a-4bb8-90b0-4bb3347174e8@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALZrBGcC/4WPy07EMAxFf2WUNUGOkzqUFf+BWOTh0kjQVkmpG
+ I367ySVkAbEY3ktn3PtiyicExdxf7qIzFsqaZ5qMDcnEUY3PbNMsWaBgBoIjIwhyvW8MMq3pay
+ Z3auEEFU3ECoaoqigd4Wlz24KY0O/breFJfOQ3o/Wx6eax1TWOZ+PIzbVpn/2bUqCtMqTNso77
+ sxDmlZ+uQ3zYa+oAY2/o956gEioCbsrtF2y4f/tWBWDNRCMZdsr+q7QnwoDd4p+VOj2QOh9T8E
+ 7ivZase/7B4Sy1BeWAQAA
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ linux-doc@vger.kernel.org, nvdimm@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>, 
+ "Li, Ming" <ming4.li@intel.com>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
+ Robert Moore <robert.moore@intel.com>, 
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+ Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+ acpica-devel@lists.linux.dev
+X-Mailer: b4 0.15-dev-37811
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728342968; l=13078;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=OXoiarDQ/wZQh9c1DY7NZJoQbq5qxwtTSLb2/K7p9vg=;
+ b=OIXwVAQ+2g0diR/ATNYjlq1WJGSxMRZ4G7mzX7Es2yd5P/qZ5jlB/Nh7jJ1Yyk4AYAEasFAI2
+ lmZZSVSM9eUBGM1Dw3sq9s50w4BviJbVXmp+O/lTe9BeLe/rK0SzMnH
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-On Thu, Sep 05, 2024 at 02:57:34PM +0200, David Hildenbrand wrote:
-> On 05.09.24 14:50, Andy Shevchenko wrote:
-> > On Thu, Sep 05, 2024 at 02:42:05PM +0200, David Hildenbrand wrote:
-> > > On 05.09.24 14:36, Andy Shevchenko wrote:
-> > > > On Thu, Sep 05, 2024 at 01:08:35PM +0200, David Hildenbrand wrote:
-> > > > > On 05.09.24 12:56, Andy Shevchenko wrote:
-> > > > > > On Wed, Sep 04, 2024 at 04:58:20PM -0700, Dan Williams wrote:
-> > > > > > > Huang, Ying wrote:
-> > > > > > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+A git tree of this series can be found here:
 
-[..]
+	https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-10-04
 
-> > > > > > > > > You may move Cc list after '---', so it won't unnecessarily pollute the commit
-> > > > > > > > > message.
-> > > > > > > > 
-> > > > > > > > Emm... It appears that it's a common practice to include "Cc" in the
-> > > > > > > > commit log.
-> > > > > > > 
-> > > > > > > Yes, just ignore this feedback, it goes against common practice. Cc list
-> > > > > > > as is looks sane to me.
-> > > > > > 
-> > > > > > It seems nobody can give technical arguments why it's better than just keeping
-> > > > > > them outside of the commit message. Mantra "common practice" nowadays is
-> > > > > > questionable.
-> > > > > 
-> > > > > Just look at how patches look like in the git tree that Andrew picks up.
-> > > > > (IIRC, he adds a bunch of CCs himself that are not even part of the original
-> > > > > patch).
-> > > > 
-> > > > I know that and it's historical, he has a lot of the scripts that work and when
-> > > > he moved to the Git it was another long story. Now you even can see how he uses
-> > > > Git in his quilt approach. So, it's an exceptional and not usual workflow, hence
-> > > > bad example. Try again :-)
-> > > 
-> > > Point is, it doesn't matter what we do in this patch here if Andrew will
-> > > unify it at all.
-> > 
-> > Point is, that this is exceptional. And better to teach people based on better
-> > practices, no?
-> 
-> "Better" in your opinion.
+Series info
+===========
 
-> I don't care
+This series has 5 parts:
 
-Exactly, that's what I pointed out as well to the previous reply to Dan:
-it's matter of our care about number of things.
+Patch 1-3: Add %pra printk format for struct range
+Patch 4: Add core range_overlaps() function
+Patch 5-6: CXL clean up/prelim patches
+Patch 7-26: Core DCD support
+Patch 27-28: cxl_test support
 
-> about a couple of Cc lines in a git
-> commit. They've been useful for me, apparently not for you.
+Background
+==========
 
-I hardly can imagine how _nowadays_ this may be still useful in this form.
-What I admit is the lore archive and Link tag is really useful. Much more
-than bare Cc list.
+A Dynamic Capacity Device (DCD) (CXL 3.1 sec 9.13.3) is a CXL memory
+device that allows memory capacity within a region to change
+dynamically without the need for resetting the device, reconfiguring
+HDM decoders, or reconfiguring software DAX regions.
 
-> If you succeed in convincing Andrew to change it, then Andrew can fixup his
-> scripts to remove all of these from the patches he sends out.
+One of the biggest use cases for Dynamic Capacity is to allow hosts to
+share memory dynamically within a data center without increasing the
+per-host attached memory.
 
-Maybe at some point in time. As you know he is the most conservative maintainer
-(from tooling or workflow perspective), so it might take time, but I'm going to
-do my best to convince people to look at this problem from different angles.
+The general flow for the addition or removal of memory is to have an
+orchestrator coordinate the use of the memory.  Generally there are 5
+actors in such a system, the Orchestrator, Fabric Manager, the Logical
+device, the Host Kernel, and a Host User.
 
-> > > > > Having in the git tree who was actually involved/CCed can be quite valuable.
-> > > > > More helpful than get_maintainers.pl sometimes.
-> > > > 
-> > > > First of all, there is no guarantee they _were_ involved. From this perspective
-> > > > having Link: tag instead has much more value and supports my side of arguments.
-> > > 
-> > > Link is certainly preferable. Usually when I fix a commit, I make sure to CC
-> > > the people that are listed for the patch, because it at least should have
-> > > ended up in their mailbox.
-> > > 
-> > > Often, it also helped to see if a buggy commit was at least CCed to the
-> > > right persons without digging through mailing list archives.
-> > 
-> > How is it better than having it in lore.kernel.org in archives where you even
-> > see who _actually_ participated in discussion, if any?
-> 
-> You might have to dig through multiple code revisions to find that out.
+Typical work flows are shown below.
 
-The Link tag will refer to the one that has been applied. It keeps not less
-information as bare Cc list, but on top one may:
+Orchestrator      FM         Device       Host Kernel    Host User
 
-1) either put a few Link tags with versioning;
-2) or refer to the previous version of the patches in the respective cover
-letter.
+    |             |           |            |              |
+    |-------------- Create region ----------------------->|
+    |             |           |            |              |
+    |             |           |            |<-- Create ---|
+    |             |           |            |    Region    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create --->|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |             |           |            |              |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |-- Remove -->|- Release->|- Release ->|              |   |
+    |  Capacity   |  Extent   |   Extent   |              |   |
+    |             |           |            |              |   |
+    |             |           |     (Release Ignored)     |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |             |- Release->|- Release ->|              |
+    |             |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Destroy ---|
+    |             |           |            |   Region     |
+    |             |           |            |              |
 
-> Again, I used this in the past quite successfully.
-> 
-> > Again, Cc neither in the Git commit, nor in the email guarantees the people
-> > were involved. Having Cc in the commit just a big noise that pollutes it.
-> > Especially I do not understand at all Cc: mailing-list@bla.bla.bla cases.
-> > They are not people, they have a lot of archives besides lore.kernel.org,
-> > only waste of resources in all means of that. I tried to summarize that in
-> > the submitted patches to the documentation, that I referred earlier in this
-> > thread to.
-> 
-> I, for my part, never add "Cc:" to patches or cover letters that refer to
-> mailing lists. I add these manually to my git-send-email "--cc" list. I
-> though Andrews script also fix that up, but I might be wrong.
+Implementation
+==============
 
-I see some people / scripts? still put mailing lists to the Cc list which
-comes as part of the commit messages. This is most odd part to me why.
+The series still requires the creation of regions and DAX devices to be
+closely synchronized with the Orchestrator and Fabric Manager.  The host
+kernel will reject extents if a region is not yet created.  It also
+ignores extent release if memory is in use (DAX device created).  These
+synchronizations are not anticipated to be an issue with real
+applications.
 
-> Anyhow, this is a discussion to be had with Andrew, not with me, so feel
-> free to engage with Andrew to change is scripts to throw away all CC.
+In order to allow for capacity to be added and removed a new concept of
+a sparse DAX region is introduced.  A sparse DAX region may have 0 or
+more bytes of available space.  The total space depends on the number
+and size of the extents which have been added.
 
-I will try, definitely.
+Initially it is anticipated that users of the memory will carefully
+coordinate the surfacing of additional capacity with the creation of DAX
+devices which use that capacity.  Therefore, the allocation of the
+memory to DAX devices does not allow for specific associations between
+DAX device and extent.  This keeps allocations very similar to existing
+DAX region behavior.
 
+To keep the DAX memory allocation aligned with the existing DAX devices
+which do not have tags extents are not allowed to have tags.  Future
+support for tags is planned.
+
+Great care was taken to keep the extent tracking simple.  Some xarray's
+needed to be added but extra software objects were kept to a minimum.
+
+Region extents continue to be tracked as sub-devices of the DAX region.
+This ensures that region destruction cleans up all extent allocations
+properly.
+
+Some review tags were kept if a patch did not change.
+
+The major functionality of this series includes:
+
+- Getting the dynamic capacity (DC) configuration information from cxl
+  devices
+
+- Configuring the DC partitions reported by hardware
+
+- Enhancing the CXL and DAX regions for dynamic capacity support
+	a. Maintain a logical separation between hardware extents and
+	   software managed region extents.  This provides an
+	   abstraction between the layers and should allow for
+	   interleaving in the future
+
+- Get hardware extent lists for endpoint decoders upon
+  region creation.
+
+- Adjust extent/region memory available on the following events.
+        a. Add capacity Events
+	b. Release capacity events
+
+- Host response for add capacity
+	a. do not accept the extent if:
+		If the region does not exist
+		or an error occurs realizing the extent
+	b. If the region does exist
+		realize a DAX region extent with 1:1 mapping (no
+		interleave yet)
+	c. Support the event more bit by processing a list of extents
+	   marked with the more bit together before setting up a
+	   response.
+
+- Host response for remove capacity
+	a. If no DAX device references the extent; release the extent
+	b. If a reference does exist, ignore the request.
+	   (Require FM to issue release again.)
+
+- Modify DAX device creation/resize to account for extents within a
+  sparse DAX region
+
+- Trace Dynamic Capacity events for debugging
+
+- Add cxl-test infrastructure to allow for faster unit testing
+  (See new ndctl branch for cxl-dcd.sh test[1])
+
+- Only support 0 value extent tags
+
+Fan Ni's upstream of Qemu DCD was used for testing.
+
+Remaining work:
+
+	1) Allow mapping to specific extents (perhaps based on
+	   label/tag)
+	   1a) devise region size reporting based on tags
+	2) Interleave support
+
+Possible additional work depending on requirements:
+
+	1) Accept a new extent which extends (but overlaps) an existing
+	   extent(s)
+	2) Release extents when DAX devices are released if a release
+	   was previously seen from the device
+	3) Rework DAX device interfaces, memfd has been explored a bit
+
+[1] https://github.com/weiny2/ndctl/tree/dcd-region2-2024-10-01
+
+---
+Major changes in v4:
+- iweiny: rebase to 6.12-rc
+- iweiny: Add qos data to regions
+- Jonathan: Fix up shared region detection
+- Jonathan/jgroves/djbw/iweiny: Ignore 0 value tags
+- iweiny: Change DCD partition sysfs entries to allow for qos class and
+  additional parameters per partition
+- Petr/Andy: s/%par/%pra/
+- Andy: Share logic between printing struct resource and struct range
+- Link to v3: https://patch.msgid.link/20240816-dcd-type2-upstream-v3-0-7c9b96cba6d7@intel.com
+
+---
+Ira Weiny (14):
+      test printk: Add very basic struct resource tests
+      printk: Add print format (%pra) for struct range
+      cxl/cdat: Use %pra for dpa range outputs
+      range: Add range_overlaps()
+      dax: Document dax dev range tuple
+      cxl/pci: Delay event buffer allocation
+      cxl/cdat: Gather DSMAS data for DCD regions
+      cxl/region: Refactor common create region code
+      cxl/events: Split event msgnum configuration from irq setup
+      cxl/pci: Factor out interrupt policy check
+      cxl/core: Return endpoint decoder information from region search
+      dax/bus: Factor out dev dax resize logic
+      tools/testing/cxl: Make event logs dynamic
+      tools/testing/cxl: Add DC Regions to mock mem data
+
+Navneet Singh (14):
+      cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+      cxl/mem: Read dynamic capacity configuration from the device
+      cxl/core: Separate region mode from decoder mode
+      cxl/region: Add dynamic capacity decoder and region modes
+      cxl/hdm: Add dynamic capacity size support to endpoint decoders
+      cxl/mem: Expose DCD partition capabilities in sysfs
+      cxl/port: Add endpoint decoder DC mode support to sysfs
+      cxl/region: Add sparse DAX region support
+      cxl/mem: Configure dynamic capacity interrupts
+      cxl/extent: Process DCD events and realize region extents
+      cxl/region/extent: Expose region extent information in sysfs
+      dax/region: Create resources on sparse DAX regions
+      cxl/region: Read existing extents on region creation
+      cxl/mem: Trace Dynamic capacity Event Record
+
+ Documentation/ABI/testing/sysfs-bus-cxl   | 120 +++-
+ Documentation/core-api/printk-formats.rst |  13 +
+ drivers/cxl/core/Makefile                 |   2 +-
+ drivers/cxl/core/cdat.c                   |  52 +-
+ drivers/cxl/core/core.h                   |  33 +-
+ drivers/cxl/core/extent.c                 | 486 +++++++++++++++
+ drivers/cxl/core/hdm.c                    | 213 ++++++-
+ drivers/cxl/core/mbox.c                   | 605 ++++++++++++++++++-
+ drivers/cxl/core/memdev.c                 | 130 +++-
+ drivers/cxl/core/port.c                   |  13 +-
+ drivers/cxl/core/region.c                 | 170 ++++--
+ drivers/cxl/core/trace.h                  |  65 ++
+ drivers/cxl/cxl.h                         | 122 +++-
+ drivers/cxl/cxlmem.h                      | 131 +++-
+ drivers/cxl/pci.c                         | 123 +++-
+ drivers/dax/bus.c                         | 352 +++++++++--
+ drivers/dax/bus.h                         |   4 +-
+ drivers/dax/cxl.c                         |  72 ++-
+ drivers/dax/dax-private.h                 |  47 +-
+ drivers/dax/hmem/hmem.c                   |   2 +-
+ drivers/dax/pmem.c                        |   2 +-
+ fs/btrfs/ordered-data.c                   |  10 +-
+ include/acpi/actbl1.h                     |   2 +
+ include/cxl/event.h                       |  32 +
+ include/linux/range.h                     |   7 +
+ lib/test_printf.c                         |  70 +++
+ lib/vsprintf.c                            |  55 +-
+ tools/testing/cxl/Kbuild                  |   3 +-
+ tools/testing/cxl/test/mem.c              | 960 ++++++++++++++++++++++++++----
+ 29 files changed, 3576 insertions(+), 320 deletions(-)
+---
+base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Ira Weiny <ira.weiny@intel.com>
 
