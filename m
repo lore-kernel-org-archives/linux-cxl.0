@@ -1,78 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAF213541B;
-	Tue,  8 Oct 2024 19:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157252139B6
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Oct 2024 19:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728415105; cv=none; b=LMfyVeA1UuK3c0tsRqxKaGPj+OB9KJdmzpdXrH3cLp734XDSQriqz3sJePVKXxEP7YKxeWUjYO2RILVNppFPyO/PMtxKJe29huOax1ZworcEZfcZF6PL67NbR03hlI/B2ZegsLT1v+2gYjuXUigUfrs8uvHJtq804MbHVE+ATRY=
+	t=1728416724; cv=none; b=aacOx3Gves6SD9xVpHP3jb6FOzcQ+Nt3l0p7kzy+07hid5Th6PYUVAmSd1GPQRTXmYCM9rh/YQgNWkUq+gMoFAqIywB+qba9Gkpnsh4m2gqOOPFwdylD1M0kPFHEfWj972CcqztPtOh05nfUAgJfnOcTEg46vuGXiql1MX+gns4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728415105; c=relaxed/simple;
-	bh=uFg0S2Rr8P1/EgjOYhVKli1cEC4yWKwNsV71L1XmBLo=;
+	s=arc-20240116; t=1728416724; c=relaxed/simple;
+	bh=ASdWfVJPzlxahRt/zRGst+ZQIgxfx9y3/wjpoGFPtyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AaFAatrlztjtfSdUSV7Wimr1rh9iF7oP6yvxlPKxadDgVM368r3TUNrhWPgxGkbBi+4x6Yf0qkg38txb38SgnaXDEFFpWGVLGAlRsl8IB30AwfVppv3qomjLT+IH5NTyiDIyoJRF1uBmaNyMyZy4Jv1PlieAe8JVa7rrz3A9CXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O2onej86; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DufTuuaVinvlFdWUm2KechUaDrHb0wk89hnUTNGvOYTMij+S/IwjXDYa6dCeX3eoHA7stXZpoRyAdV8znADPe1fsM5X/JjTrR2hh6A4lcYwCtZXYZE3Le5R0ZcwV6XJlnY4OiNpi+/eNiAgX8ys57Mhc4i6XZMH6NSEP8tcXcGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tKWegZ3X; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O2onej86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728415105; x=1759951105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uFg0S2Rr8P1/EgjOYhVKli1cEC4yWKwNsV71L1XmBLo=;
-  b=O2onej86+PDW7zn3tPSzF3WwRWm9VGuYeYgOZkGVnDZTZN8J3j9vXoli
-   285BjQcqVUy4knpdG5YH1EzKJa7EWypIHbJCfXDkQAlYpCy/k7SbxtB3V
-   odE3Dkoc8PePZsWC8X1mB53mU2r5DzHKmhRXZLifZlXWiRKR4QZsgquXz
-   x4dM7NH+UqbJrhkIJkOtuC5qDaEsQ3Rtzpy1csGy7k+VYc5Oz00ry4BBv
-   tZRTvenYyI82tHk7e0IwX+aB1RWMHc75xCLHzgHRgOsQDnu3lMiCQgIes
-   tvn832EiVphfGeQ+Fs/sTM5Qbxmdhii0yvUFJXNdg6t6aOpzai/E0HHkm
-   g==;
-X-CSE-ConnectionGUID: UHWIvBLoSm6VPUdJOrGZcQ==
-X-CSE-MsgGUID: XkZ7s2W4Sw+E1yZVm9uNKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="45118030"
-X-IronPort-AV: E=Sophos;i="6.11,187,1725346800"; 
-   d="scan'208";a="45118030"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 12:18:24 -0700
-X-CSE-ConnectionGUID: yscp/KodTgWankHwH43E2w==
-X-CSE-MsgGUID: eH8ygnYYSV677NcO4QOnSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,187,1725346800"; 
-   d="scan'208";a="80742690"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 08 Oct 2024 12:18:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 906BE26B; Tue, 08 Oct 2024 22:18:18 +0300 (EEST)
-Date: Tue, 8 Oct 2024 22:18:18 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>,
-	Philip Li <philip.li@intel.com>
-Subject: Re: [PATCH -v2] Resource: fix region_intersects() for CXL memory
-Message-ID: <ZwWFeo1zV4JGpTLw@black.fi.intel.com>
-References: <20240819023413.1109779-1-ying.huang@intel.com>
- <ZsL-wfDYsUmWKBep@smile.fi.intel.com>
- <874j6vc10j.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <66d8f41cb3e6_3975294f9@dwillia2-xfh.jf.intel.com.notmuch>
- <ZtmOTYF9EWPeLg5u@smile.fi.intel.com>
- <87v7z91teq.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZwPsYqkLF0eWUb9e@smile.fi.intel.com>
- <871q0rnw6n.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZwVlZROV84DDMCnc@black.fi.intel.com>
- <670581c5e7e_174cb329467@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tKWegZ3X"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7a9ab721058so14891485a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Oct 2024 12:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1728416722; x=1729021522; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyOFo3K+fAZ65UEhLUHR8F6Og9mXsgjDoyxIBEdD5YY=;
+        b=tKWegZ3XdENW6VtKxQUIdyNpGj22XPGIhYVMlr/i8bpB+zjWQAxkfm+VwdXLyUkzpV
+         SHOxKzPC43Vo08dfjJeSVwv/1HhjND+GbrLBsQr3mi9AWbi7hxAEBaEM5+aw9Lxb8hY4
+         LrypzevC+sqHFxCzQPAM5vvBgwPsD6++LQgnEsOlBD9yuw/8nAAtjKR7uEFWT+vWlzfB
+         VKvdyZ4am8h3Z8keofW7Rt4XWH5wFL4yoCOT06roKQktGQcBUBRJ9Kc8pJEQcy8v59Ej
+         amIQ6Qmy2k/Mgl85qTnVatMgv6WgbHkIaawyYMEoM2t+ww0kLPld8pb9VryZaslYslBi
+         KPQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728416722; x=1729021522;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyOFo3K+fAZ65UEhLUHR8F6Og9mXsgjDoyxIBEdD5YY=;
+        b=s8KAMjvLp9zXNRMWoFMIqggSoEAUpmblR9mDml7FJElUpNRat+U6ZRN5ZyGiSF2NYJ
+         2pvHEKyqklWGdmsU3yA9JxYcprfA4aW5ULqRo9JCVUMnCFShyBkuIg2z7o8zZaIvFiqQ
+         qYf2lSmQZJ9/hbfP5s/xU1QeNJPjBwVncXyNKzqH3BJza9+K/yaWgV6deg/0c6PL+vKT
+         dfMBE9yW0S9DzypHfJNS5Bc9to7TcgT0p9YyBmFF44uTDCAp0vDsO18qCvCX8Yk60djO
+         mntLwNHJzF1vevHEoVGNIka3h0sNpWkQM56NazZtjZUzX/UuBRZoqij9HmbI1sagtAO6
+         acSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOhTao8egWPlWHm5q+mq6M24MVFowmQ0E83Id2TEE1LtVINBPguJp/fStqHnOcw6WBNazwVBY28uQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgR833/WKpLX9OZW5lHdn5UE109NEDeC2ZJeB0ZJ1qSxVZ8pAx
+	H6tP/Pl/kdz7XnCFIBvwXOgc8Zj0MnTIXScR5DIshbaxQeSWvIW4pgRp12SEvok=
+X-Google-Smtp-Source: AGHT+IH6XWnL5kwtHfTkxIDRb5j2x0rPOC89uj1NPmyIh5ioBCIwJgkV9Nl3E7AGtUXJH2g6+ElCWA==
+X-Received: by 2002:a05:620a:2415:b0:7a9:9f44:3f8 with SMTP id af79cd13be357-7affaf938demr42461885a.5.1728416721987;
+        Tue, 08 Oct 2024 12:45:21 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7afcea7f657sm41246785a.0.2024.10.08.12.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 12:45:21 -0700 (PDT)
+Date: Tue, 8 Oct 2024 15:45:12 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-cxl@vger.kernel.org,
+	x86@kernel.org, linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
+	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, osalvador@suse.de,
+	gregkh@linuxfoundation.org, rafael@kernel.org,
+	akpm@linux-foundation.org, dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
+	rrichter@amd.com, terry.bowman@amd.com, lenb@kernel.org,
+	dave.jiang@intel.com
+Subject: Re: [PATCH 1/3] memory: extern memory_block_size_bytes and
+ set_memory_block_size_order
+Message-ID: <ZwWLyOkQ8kfAoZjg@PC2K9PVX.TheFacebook.com>
+References: <20241008044355.4325-1-gourry@gourry.net>
+ <20241008044355.4325-2-gourry@gourry.net>
+ <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
+ <ZwVG8Z3GRYLoL_Jk@PC2K9PVX.TheFacebook.com>
+ <d3203f2c-eff6-4e84-80cd-3c6f58dab292@redhat.com>
+ <ZwVOE6JRS8Fd9_a8@PC2K9PVX.TheFacebook.com>
+ <670582254a5db_2e172294fe@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,31 +82,64 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <670581c5e7e_174cb329467@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <670582254a5db_2e172294fe@iweiny-mobl.notmuch>
 
-On Tue, Oct 08, 2024 at 12:02:29PM -0700, Dan Williams wrote:
-> Andy Shevchenko wrote:
-> [..]
-> > We have all tags and MAINTAINERS database. How do you know if those who
-> > are in the Cc list are really interested in receiving this? What make me
-> > sure is to have Author of the culprit commit, relevant mailing list and
-> > maintainers, also reviewers and testers, if any. All this information is
-> > available without Cc list. But if you *really* want it, you should
-> > follow the Link tag (for the new commits, for the past ~2+ years) and
-> > harvest it there. And actually I use that Link to reply to the thread
-> > directly. So, again, the Cc list in the commit message is a historical
-> > burden that consumes a lot of time and energy and should be gone in the
-> > future.
+On Tue, Oct 08, 2024 at 02:04:05PM -0500, Ira Weiny wrote:
+> Gregory Price wrote:
+> > On Tue, Oct 08, 2024 at 05:02:33PM +0200, David Hildenbrand wrote:
+> > > On 08.10.24 16:51, Gregory Price wrote:
+> > > > > > +int __weak set_memory_block_size_order(unsigned int order)
+> > > > > > +{
+> > > > > > +	return -ENODEV;
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL_GPL(set_memory_block_size_order);
+> > > > > 
+> > > > > I can understand what you are trying to achieve, but letting arbitrary
+> > > > > modules mess with this sounds like a bad idea.
+> > > > > 
+> > > > 
+> > > > I suppose the alternative is trying to scan the CEDT from inside each
+> > > > machine, rather than the ACPI driver?  Seems less maintainable.
+> > > > 
+> > > > I don't entirely disagree with your comment.  I hummed and hawwed over
+> > > > externing this - hence the warning in the x86 machine.
+> > > > 
+> > > > Open to better answers.
+> > > 
+> > > Maybe an interface to add more restrictions on the maximum size might be
+> > > better (instead of setting the size/order, you would impose another upper
+> > > limit).
+> > 
+> > That is effectively what set_memory_block_size_order is, though.  Once
+> > blocks are exposed to the allocators, its no longer safe to change the
+> > size (in part because it was built assuming it wouldn't change, but I
+> > imagine there are other dragons waiting in the shadows to bite me).
 > 
-> Andy, this debate is consuming more time and energy than any amount of
-> trimming Cc: lines from commits could save.
+> Yea I think this is along the idea I had.  But much clearer.
+> 
+> Ira
+> 
 
-Okay, okay, I'm giving up...
-...with a thought that this planet is doomed.
+Dan seems to think I can just extern without EXPORT, so let me see if I can
+get that working first.  Then I'll see if I can add a lock bit.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'll see if i can make an arch_advise call that does away with some of the
+ifdef spaghetti.
 
-
+> > 
+> > So this would basically amount to a lock-bit being set in the architecture,
+> > beyond which block size can no longer be changed and a big ol' splat
+> > can be generated that says "NO TOUCH".
+> > 
+> > > Just imagine having various users of such an interface ..
+> > 
+> > I don't wanna D:
+> > 
+> > > 
+> > > -- 
+> > > Cheers,
+> > > 
+> > > David / dhildenb
+> > > 
+> 
+> 
