@@ -1,72 +1,73 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBE61DFD8B
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Oct 2024 14:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72E61DE4CB
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Oct 2024 14:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728398960; cv=none; b=mN0pooJapiiASzVTRp+qfaSpQn2/mKwmV1i7cyLSn48nasf9KzaCenNRO1M9vaVF75SII5mqfynTUNrdGZuL5wTM/aUTYXFLxJ+5OiP6aWYlYV/dboOHMcrqYZPEPDWV5W4cPbhS5sYcf2K/E/4lILOC4ZCZX1NK4zMOO2KNRSA=
+	t=1728399102; cv=none; b=tgxbpSjfHWUi1YlGL6u5P9F51bkH14Up952uVtwn2/n2deabk6urpjTZN0N0AFHf/6l51VVJfcjxGCpQRj1iJUY5dlKSmxP9NIJAkQ2ol9DLBoY3c+sGf/Bhp9Y9hv/cEJDI5u6pdg5mPTbfIRUirBud94ojlms4lI+wTeInDi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728398960; c=relaxed/simple;
-	bh=qfU8C3TAPpSJwHJTPIgiDIgrnm35EvTKgGk+6mYnWkg=;
+	s=arc-20240116; t=1728399102; c=relaxed/simple;
+	bh=FdX000BfNXmYUb4opHXMevAqiMWP56/tqAYYlyDF/SM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CDEBCiRZda+qS7/f6SO769f9R5ITG9JU0cjieplujHFlbumztcmNGEo+aV0WEsArkqtgx6sNmo1Dd43q0sf3t0VLz+kcNuJkw27Sy8sB73BQLkeH7XUVuz6vO4HHKzRZuZMMTprBevNAqonr9LLGzGFLF3sfs+v3KRROBOgcwMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZGBtJDa7; arc=none smtp.client-ip=209.85.222.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=D3zh750ImMQJPCUKKM3l+5fbAqtJnT91uNewm+xDKSUp2ISx9aOSXlq4YbYN21bYk03QnUrDyPChDsPVeqlvOe0faZN/NOdda7WWBRHFi6i76qGaK0Lm87K+CRIVy/meJCxg8NCibuZ1dXSNaWsJHSY4vaOJjfoLgijfvQ4djjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MhgcSAsu; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZGBtJDa7"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7ae3fcec5feso599255885a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 08 Oct 2024 07:49:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MhgcSAsu"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7ae3fcec5feso599428785a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 08 Oct 2024 07:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728398957; x=1729003757; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1728399099; x=1729003899; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sJFDONM1BJH1/Fon/2cRmbbze18YgFQzcNOLNf5fQ30=;
-        b=ZGBtJDa7FrRzccHTFFXNE4CH3iBtybCrBuglxHATE/ALaQQlUwyI90MikkDZLON4Zx
-         7a9FfKKAjAlvKlOgtNsPcwwt6ZjgfDqGPterJa41mlMXtBdlIGGRd+6IdvT68CHA7rHD
-         5p1XuBqUwE6FXTmMGkFtcQgbjN4O7Cv4AIfttJGI9DLKjYRfKWdvJ06CedCF+3a7XTog
-         Az2y494vinaWXCAeueFSQeAzIhcyjPObCuXc5u4320WFZ7cFtbmTc64HPFYIVRxI89t1
-         1HzmbQi9CqI08DzFFmQkqMGLBDC5QfOZ09sJ7h20KD0NzL7LbVpe96iFXemBFldrqjkM
-         72cA==
+        bh=o+8u49KVyhPOrweO2lc6eBFQS+Hc6vnffHct6u8Jv+w=;
+        b=MhgcSAsuU+jCrZX0l4hWSH5pUs0TMn9rZR9g9vqnKmTJlaAUqcXirI1m91ppzNRdB2
+         yBW0ompQ8CCS2isafEyPBA68NaRTDth/Iuv2ZSxib0nglHmssItSMkO2WkgY/3OLGrGO
+         ToaWBIPzhzTbIlfJDtUdbqUwsxwnQRDnrlK2ZvKRygTzG+gUq2b9Ex84naglBcpfUoUj
+         wKvsgMH9YkY3vCqAeLusFZAh+22QaaBhPw2shOjIhNEYp1uyE6S7uxvAdo12eyF7wU+i
+         IMOZpfkMfT4yA830bdiXc1fw5iuXocEb7hT32rTjkJxJvQRilU7FhSao9UNXq3wB8NgH
+         E7Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728398957; x=1729003757;
+        d=1e100.net; s=20230601; t=1728399099; x=1729003899;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sJFDONM1BJH1/Fon/2cRmbbze18YgFQzcNOLNf5fQ30=;
-        b=EXjyJF9MCQDhXgSnlQ/wE3g/DrGQHzLuAcChNMDp5nNXsizsHJSsU/a0uHuWo8aK9j
-         h0yld4VRYTuhzgsygQDk+aKwt3w5rlPXwi9w3XWql+1mRt2IqIBOv/30yqi4Utf6WrU+
-         yhR/du6jXGEm8t5NGVl7X68sIcOH33e399a+FQSCsTAZ8NNnzqc9rIc+neKQzHbGJZw6
-         L1B8pHUJxTWlMJbK4gZF2WpGH4WydQaGOuQQloUiD+NiueqZZ1KDVNMA3lCb4WI2dbvy
-         W6/yoP3pIc/TclCl1yksWmxpkzfozaKJjuLps3koMWKlDUFEkTf7pqtPrOsvpDxV5Lfm
-         io4g==
-X-Gm-Message-State: AOJu0Yxrpe/6/kfUf70CS5wtUz5HE5+v3zaWwlhqgNVpl32MYudX9Ws/
-	Abm+VmOgcONup4fCuSBxgrtub44XiBWnfdMoYF0FIpGDkc/xXDrYg7Q3zpFqBuM=
-X-Google-Smtp-Source: AGHT+IG6OVFWCoKZv69Wir07hN1vPWvg1lLXioIZ8R9wjd/d9XMMbY+LszjT31b7d2ZMcixN54E+Nw==
-X-Received: by 2002:a05:620a:1a96:b0:7a9:c0f3:3b71 with SMTP id af79cd13be357-7ae6f43756fmr2795433385a.19.1728398957353;
-        Tue, 08 Oct 2024 07:49:17 -0700 (PDT)
+        bh=o+8u49KVyhPOrweO2lc6eBFQS+Hc6vnffHct6u8Jv+w=;
+        b=OABaaMBCT0+gQwm1pb+sWwZhj7/8P9JvZkd6dn4JrKblzNDrXxr4taEoWk0OCkC25h
+         uOCPQMqKfOjG3YlGC5czYSw1tmeOaKYz2OgMeaJe5G+gguyzbRy1F4QE83Ql1YhrwtQr
+         0U8V6vnI32r1HVBRA01aHnoqP8MQNdF6Sek5q40vOQP5Rbdyh49oBHUBVlwqoZbpS48h
+         N9eFwfyls2t8fg+Vh1gCXRJBBrc4pZEiLN8zPJrN+wK1VWTaqyHYb72s+XbywaISj88Z
+         mzm8qJGDiodDNRTGc0I4YYz7bIuH0WAC/6MSYrCm1r/15LBK8+CmpkNfOXIbsrC6r+mX
+         JL7g==
+X-Gm-Message-State: AOJu0Yy0cTGTlbuVktK1LkxFPvGdp4Y713unS8QA93Bn7Lci/TZEpyYv
+	W7PSp0QFOJiU+yXxuZWWMHtxx56DNeUYjfWA1p67DH46LHgjHHeWqUm4w9fKJao=
+X-Google-Smtp-Source: AGHT+IFq4ejAZimMFPt1747gCyE+Qz23dQBrY1mL0z6fT+fBj1wX7llJiqwXX1zCd9TNFYGsXrL5tg==
+X-Received: by 2002:a05:620a:29c4:b0:7ac:e30e:f6f with SMTP id af79cd13be357-7ae6f48699fmr2414673785a.43.1728399098773;
+        Tue, 08 Oct 2024 07:51:38 -0700 (PDT)
 Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae7562ca6esm355821885a.52.2024.10.08.07.49.16
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae75635ca8sm360029085a.60.2024.10.08.07.51.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 07:49:16 -0700 (PDT)
-Date: Tue, 8 Oct 2024 10:49:07 -0400
+        Tue, 08 Oct 2024 07:51:38 -0700 (PDT)
+Date: Tue, 8 Oct 2024 10:51:29 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <ira.weiny@intel.com>
+To: David Hildenbrand <david@redhat.com>
 Cc: linux-cxl@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
 	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
 	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
 	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	david@redhat.com, osalvador@suse.de, gregkh@linuxfoundation.org,
-	rafael@kernel.org, akpm@linux-foundation.org,
-	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-	alison.schofield@intel.com, rrichter@amd.com, terry.bowman@amd.com,
-	lenb@kernel.org, dave.jiang@intel.com
-Subject: Re: [PATCH 0/3] memory,acpi: resize memory blocks based on CFMW
- alignment
-Message-ID: <ZwVGY1WzwEakdcCJ@PC2K9PVX.TheFacebook.com>
+	osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
+	akpm@linux-foundation.org, dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
+	rrichter@amd.com, terry.bowman@amd.com, lenb@kernel.org,
+	dave.jiang@intel.com, ira.weiny@intel.com
+Subject: Re: [PATCH 1/3] memory: extern memory_block_size_bytes and
+ set_memory_block_size_order
+Message-ID: <ZwVG8Z3GRYLoL_Jk@PC2K9PVX.TheFacebook.com>
 References: <20241008044355.4325-1-gourry@gourry.net>
- <670543eae94d9_125a7294bd@iweiny-mobl.notmuch>
+ <20241008044355.4325-2-gourry@gourry.net>
+ <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,120 +76,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <670543eae94d9_125a7294bd@iweiny-mobl.notmuch>
+In-Reply-To: <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
 
-On Tue, Oct 08, 2024 at 09:38:35AM -0500, Ira Weiny wrote:
-> Gregory Price wrote:
-> > When physical address capacity is not aligned to the size of a memory
-> > block managed size, the misaligned portion is not mapped - creating
-> > an effective loss of capacity.
+On Tue, Oct 08, 2024 at 04:03:37PM +0200, David Hildenbrand wrote:
+> On 08.10.24 06:43, Gregory Price wrote:
+> > On CXL systems, block alignment may be as small as 256MB, which may
+> > require a resize of the block size during initialization.  This is done
+> > in the ACPI driver, so the resize function need to be made available.
 > > 
-> > This appears to be a calculated decision based on the fact that most
-> > regions would generally be aligned, and the loss of capacity would be
-> > relatively limited. With CXL devices, this is no longer the case.
+> > Presently, only x86 provides the functionality to resize memory
+> > block sizes.  Wire up a weak stub for set_memory_block_size_order,
+> > similar to memory_block_size_bytes, that simply returns -ENODEV.
 > > 
-> > CXL exposes its memory for management through the ACPI CEDT (CXL Early
-> > Detection Table) in a field called the CXL Fixed Memory Window.  Per
-> > the CXL specification, this memory must be aligned to at least 256MB.
+> > Since set_memory_block_size_order is now extern, we also need to
+> > drop the __init macro.
 > > 
-> > On X86, memory block capacity increases based on the overall capacity
-> > of the machine - eventually reaching a maximum of 2GB per memory block.
-> > When a CFMW aligns on 256MB, this causes a loss of at least 2GB of
-> > capacity, and in some cases more.
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > ---
+> >   arch/x86/mm/init_64.c  | 2 +-
+> >   drivers/base/memory.c  | 6 ++++++
+> >   include/linux/memory.h | 4 ++--
+> >   3 files changed, 9 insertions(+), 3 deletions(-)
 > > 
-> > It is also possible for multiple CFMW to be exposed for a single device.
-> > This can happen if a reserved region intersects with the target memory
-> > location of the memory device. This happens on AMD x86 platforms. 
+> > diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> > index ff253648706f..6086f99449fa 100644
+> > --- a/arch/x86/mm/init_64.c
+> > +++ b/arch/x86/mm/init_64.c
+> > @@ -1424,7 +1424,7 @@ void mark_rodata_ro(void)
+> >   /* Adjustable memory block size */
+> >   static unsigned long set_memory_block_size;
+> > -int __init set_memory_block_size_order(unsigned int order)
+> > +int set_memory_block_size_order(unsigned int order)
+> >   {
+> >   	unsigned long size = 1UL << order;
+> > diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> > index 67858eeb92ed..f9045642f69e 100644
+> > --- a/drivers/base/memory.c
+> > +++ b/drivers/base/memory.c
+> > @@ -110,6 +110,12 @@ static void memory_block_release(struct device *dev)
+> >   	kfree(mem);
+> >   }
+> > +int __weak set_memory_block_size_order(unsigned int order)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +EXPORT_SYMBOL_GPL(set_memory_block_size_order);
 > 
-> I'm not clear why you mention reserved regions here.  IIUC CFMW's can
-> overlap to describe different attributes which may be utilized based on
-> the devices which are mapped within them.  For this reason, all CFMW's
-> must be scanned to find the lowest common denominator even if the HPA
-> range has already been evaluated.
+> I can understand what you are trying to achieve, but letting arbitrary
+> modules mess with this sounds like a bad idea.
 > 
-> Is that what you are trying to say?
->
 
-On AMD systems, depending on the capacity, it is possible for a single
-memory expander to be represented by multiple CFMW.
+I suppose the alternative is trying to scan the CEDT from inside each
+machine, rather than the ACPI driver?  Seems less maintainable.
 
-an example: There are two memory expanders w/ 256GB total capacity
+I don't entirely disagree with your comment.  I hummed and hawwed over
+externing this - hence the warning in the x86 machine.
 
-[    0.000000] BIOS-e820: [mem 0x000000c050000000-0x000000fcffffffff] soft reserved
-[    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000010000000000-0x000001034fffffff] soft reserved
+Open to better answers.
 
-[0A4h 0164   1]                Subtable Type : 01 [CXL Fixed Memory Window Structure]
-[0A5h 0165   1]                     Reserved : 00
-[0A6h 0166   2]                       Length : 0028
-[0A8h 0168   4]                     Reserved : 00000000
-[0ACh 0172   8]          Window base address : 000000C050000000
-[0B4h 0180   8]                  Window size : 0000002000000000
-[0BCh 0188   1]     Interleave Members (2^n) : 00
-[0BDh 0189   1]        Interleave Arithmetic : 00
-[0BEh 0190   2]                     Reserved : 0000
-[0C0h 0192   4]                  Granularity : 00000000
-[0C4h 0196   2]                 Restrictions : 0006
-[0C6h 0198   2]                        QtgId : 0001
-[0C8h 0200   4]                 First Target : 00000007
-
-[0CCh 0204   1]                Subtable Type : 01 [CXL Fixed Memory Window Structure]
-[0CDh 0205   1]                     Reserved : 00
-[0CEh 0206   2]                       Length : 0028
-[0D0h 0208   4]                     Reserved : 00000000
-[0D4h 0212   8]          Window base address : 000000E050000000
-[0DCh 0220   8]                  Window size : 0000001CB0000000
-[0E4h 0228   1]     Interleave Members (2^n) : 00
-[0E5h 0229   1]        Interleave Arithmetic : 00
-[0E6h 0230   2]                     Reserved : 0000
-[0E8h 0232   4]                  Granularity : 00000000
-[0ECh 0236   2]                 Restrictions : 0006
-[0EEh 0238   2]                        QtgId : 0002
-[0F0h 0240   4]                 First Target : 00000006
-
-[0F4h 0244   1]                Subtable Type : 01 [CXL Fixed Memory Window Structure]
-[0F5h 0245   1]                     Reserved : 00
-[0F6h 0246   2]                       Length : 0028
-[0F8h 0248   4]                     Reserved : 00000000
-[0FCh 0252   8]          Window base address : 0000010000000000
-[104h 0260   8]                  Window size : 0000000350000000
-[10Ch 0268   1]     Interleave Members (2^n) : 00
-[10Dh 0269   1]        Interleave Arithmetic : 00
-[10Eh 0270   2]                     Reserved : 0000
-[110h 0272   4]                  Granularity : 00000000
-[114h 0276   2]                 Restrictions : 0006
-[116h 0278   2]                        QtgId : 0003
-[118h 0280   4]                 First Target : 00000006
-
-Note that there are two soft reserved regions, but 3 CFMWS.  This is
-because the first device is contained entirely within the first region,
-and the second device is split across the first and the second.
-
-The reserved space at the top of the 1TB memory region is reserved by
-the system for something else - similar I imagine to the PCI hole at the
-top of 4GB.
-
-The e820 entries are not aligned to 2GB - so you will lose capacity
-right off the bat. Then on top of this, when you go to map the windows,
-you're met with more bases and lengths not aligned to 2GB which results
-in even futher loss of usable capacity.
-
-> > 
-> > This patch set detects the alignments of all CFMW in the ACPI CEDT,
-> > and changes the memory block size downward to meet the largest common
-> > denomenator of the supported memory regions.
-> > 
-> > To do this, we needed 3 changes:
-> >     1) extern memory block management functions for the acpi driver
-> >     2) modify x86 to update its cached block size value
-> >     3) add code in acpi/numa/srat.c to do the alignment check
-> > 
-> > Presently this only affects x86, since this is the only architecture
-> > that implements set_memory_block_size_order.
-> > 
-> > Presently this appears to only affect x86, and we only mitigated there
-> > since it is the only arch to implement set_memory_block_size_order.
+> -- 
+> Cheers,
 > 
-> NIT : duplicate statement
+> David / dhildenb
 > 
-> Ira
