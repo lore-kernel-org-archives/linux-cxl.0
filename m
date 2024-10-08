@@ -1,75 +1,98 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41AD1E00B9
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Oct 2024 15:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08E41E0E09;
+	Tue,  8 Oct 2024 16:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728400928; cv=none; b=eduxO/6OopZuxUBnPO34NmkW4m2oD7rykoPQHHorMKKEn67k9pHvI0sdhmaAUMbZz/bgmpU1KSy3mpYzXDc970q1eA32/bKjJywum87JSgGpR+W4o69BuqbmRMHLRqap1Tnnr94tTTLs2CMj+xioOB0qO0Iz1x3X4bMDD1/Zmes=
+	t=1728403841; cv=none; b=CNQmR4ruL5fKiy1UBTuUf06nQ6zgLPrEscOXJlOSgxtPISMr6SWfuCnC+A5aaMSG/YjZMYH3GlbXTkAdwSp8U+9IFcqanYmFxNRi4kHW4B+9n9hRdun2+Z9Xg09/fsV+iXrphFcmJY2UvnhtTI2XgtpiKWtLXTI49hhGvJdRYBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728400928; c=relaxed/simple;
-	bh=3hNLYOGxFEk/QG9fzsv0VGS8Q4v9VUxQyk8dxvdDmAU=;
+	s=arc-20240116; t=1728403841; c=relaxed/simple;
+	bh=gctuw2elVipMW4NLdMwRY4b4B2lcHzupRXgkVDRPJwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VuDpbMmjX8/fsTwG1Bgl3nr1r9EbwEo6kcEBkwS8ZXqxKWuUqqcsy8ICwM/8Xps/LzK7nnXBwEjigZNJHEqmcBLoHEaxpqQKHeYaWApOypZJWwjnlOTLguDUTU4Di0XG+/uhIa/rT6Cx9JGIX6MAc4FyEp/K/iuktoyErbRNN0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZtI11w+j; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjQ381Icuth01syWexUQYAkqZZK3LWrSA5HPUpiQhlF4f8K38MK23mMRK5DSfTpU85jMzwrO8cXq05+POEFYZDpWm8AT06J+kf0YEgE+ScwX3S17/2A/dLVAXkoLOp+iPcSDZAyHNka63fZjdwKUpwMSNRSOicGhLohAOQHZjs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+X2TMDJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yJ4bs5dI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+X2TMDJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yJ4bs5dI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZtI11w+j"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7a99fd5beb6so556049085a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 08 Oct 2024 08:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728400926; x=1729005726; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZ67u8RxgzRAwx2Ool9AQUwW74l6Qtl1I/8HA1yVK7o=;
-        b=ZtI11w+jtp1wDLPTjJriENfyaUN27ukJSDZhn15aAnQRJx/DBCvy/KPwEeie3UiXdV
-         wPphXu0ZVmC2AGClKeFDgb0RPNtlFloUN+LhSVwM72Jgr87IyXFG4QobA3qqD16pTwyF
-         baVW1m/sZffmaLNEIKIJDXdaDFsDObIouFDmYz/04Z/JRmPKHj7Xe3Gt+AyKZdUf+vSV
-         7O++oZciC3rCCR3Wgjkxza8/pB62u5gB0iGg9AuB1YoY/cLCkgoBM70rZf+Rk4prJCgA
-         pPnC+7BJNt3WE7RV03SNgESnOB+UbEJ+vfdM7KpRdTzZUOtUhiIRFLEeXYhzFOxABHyM
-         gxHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728400926; x=1729005726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XZ67u8RxgzRAwx2Ool9AQUwW74l6Qtl1I/8HA1yVK7o=;
-        b=nA6UuQ62mkBg0OjUP49SIVn1p1G9Uz/icfjC4v6tXSDpsXQ9WgzEyqCzdKdv1AnBRP
-         Vh8JNcU3tmhs8hTXQuPWgypseDcLzHNCmlQLNPRbrMv2/xv6j6UL63ibhERnU4Q1bUWH
-         fcOE0YHeuY50KqIz0Gn6eVouC3WtB2ZIEMDpJSt6DCPPfdaOnnSfvXmXS/5sFTjQ/6jh
-         iQ1ejF0ckyBhIYkaS6A6/KLKb/OfkVt9UOOCqmVQn4kfYLZDc5MbuA9YrtnortwE00GN
-         BQxG0AvFxMVvmQK3e7aDIwikXPcx4QOmvun7dSd6ad3IDFEr81hdA1ZpGzsNMBkZp2Mo
-         DLzA==
-X-Gm-Message-State: AOJu0YwTniYiG+H7yAA2iF87xBzIIAQpOCMxQuQ+A6Xvosx+sqwrusKr
-	SHfkC1E/n6/n2Lp1tAXytbahcoNpV1qUUEoTCrqj2f3NAne8Kt335mtDKPp+HJg=
-X-Google-Smtp-Source: AGHT+IGMO0Tvvi9+VmcOsgILzXspWMlWZQ5WxVaJLr0S8i8w6Q2UsaoDkhwE/bfLc/fA5kw9BP3AeA==
-X-Received: by 2002:a05:620a:1791:b0:7a9:95f6:e372 with SMTP id af79cd13be357-7afcf03a0e9mr69595385a.2.1728400925668;
-        Tue, 08 Oct 2024 08:22:05 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae7562caf3sm361427285a.36.2024.10.08.08.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 08:22:05 -0700 (PDT)
-Date: Tue, 8 Oct 2024 11:21:55 -0400
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-cxl@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
-	akpm@linux-foundation.org, dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
-	rrichter@amd.com, terry.bowman@amd.com, lenb@kernel.org,
-	dave.jiang@intel.com, ira.weiny@intel.com
-Subject: Re: [PATCH 1/3] memory: extern memory_block_size_bytes and
- set_memory_block_size_order
-Message-ID: <ZwVOE6JRS8Fd9_a8@PC2K9PVX.TheFacebook.com>
-References: <20241008044355.4325-1-gourry@gourry.net>
- <20241008044355.4325-2-gourry@gourry.net>
- <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
- <ZwVG8Z3GRYLoL_Jk@PC2K9PVX.TheFacebook.com>
- <d3203f2c-eff6-4e84-80cd-3c6f58dab292@redhat.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+X2TMDJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yJ4bs5dI";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+X2TMDJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yJ4bs5dI"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DF2291FB64;
+	Tue,  8 Oct 2024 16:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728403837;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNr0uQOXBSHoSllotYSzKawgJJkcCx9f7HtFzhtE5PE=;
+	b=0+X2TMDJz0L4ZF+3dLYsK8Bw2Cx9t5eCpdmeNSV5mDOcanZw2U+HP475/d4QpmHRwtW0j2
+	B+xA1GG27WQhcC1Yh+6KXGmykvvjhRbGdgxVWw6jtMFh9aj/q8kDk7fY02Nl6lACpomE/4
+	aALUlbv4spxajR7fJv4rxtFOPe2BiVs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728403837;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNr0uQOXBSHoSllotYSzKawgJJkcCx9f7HtFzhtE5PE=;
+	b=yJ4bs5dIlDh0Kx92XjV5ODzXW92Ebd8QThgXuoOvDL2cN15CfX8iUKJACbwUV3JRI4T3cV
+	XrFTCyAIQYoTIAAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728403837;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNr0uQOXBSHoSllotYSzKawgJJkcCx9f7HtFzhtE5PE=;
+	b=0+X2TMDJz0L4ZF+3dLYsK8Bw2Cx9t5eCpdmeNSV5mDOcanZw2U+HP475/d4QpmHRwtW0j2
+	B+xA1GG27WQhcC1Yh+6KXGmykvvjhRbGdgxVWw6jtMFh9aj/q8kDk7fY02Nl6lACpomE/4
+	aALUlbv4spxajR7fJv4rxtFOPe2BiVs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728403837;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNr0uQOXBSHoSllotYSzKawgJJkcCx9f7HtFzhtE5PE=;
+	b=yJ4bs5dIlDh0Kx92XjV5ODzXW92Ebd8QThgXuoOvDL2cN15CfX8iUKJACbwUV3JRI4T3cV
+	XrFTCyAIQYoTIAAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B539A1340C;
+	Tue,  8 Oct 2024 16:10:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id M48ILH1ZBWf2QgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 08 Oct 2024 16:10:37 +0000
+Date: Tue, 8 Oct 2024 18:10:32 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: Re: [PATCH v4 04/28] range: Add range_overlaps()
+Message-ID: <20241008161032.GB1609@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-4-c261ee6eeded@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,48 +101,42 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3203f2c-eff6-4e84-80cd-3c6f58dab292@redhat.com>
+In-Reply-To: <20241007-dcd-type2-upstream-v4-4-c261ee6eeded@intel.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Oct 08, 2024 at 05:02:33PM +0200, David Hildenbrand wrote:
-> On 08.10.24 16:51, Gregory Price wrote:
-> > > > +int __weak set_memory_block_size_order(unsigned int order)
-> > > > +{
-> > > > +	return -ENODEV;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(set_memory_block_size_order);
-> > > 
-> > > I can understand what you are trying to achieve, but letting arbitrary
-> > > modules mess with this sounds like a bad idea.
-> > > 
-> > 
-> > I suppose the alternative is trying to scan the CEDT from inside each
-> > machine, rather than the ACPI driver?  Seems less maintainable.
-> > 
-> > I don't entirely disagree with your comment.  I hummed and hawwed over
-> > externing this - hence the warning in the x86 machine.
-> > 
-> > Open to better answers.
-> 
-> Maybe an interface to add more restrictions on the maximum size might be
-> better (instead of setting the size/order, you would impose another upper
-> limit).
+On Mon, Oct 07, 2024 at 06:16:10PM -0500, Ira Weiny wrote:
+> --- a/include/linux/range.h
+> +++ b/include/linux/range.h
+> +/* True if any part of r1 overlaps r2 */
+> +static inline bool range_overlaps(struct range *r1, struct range *r2)
 
-That is effectively what set_memory_block_size_order is, though.  Once
-blocks are exposed to the allocators, its no longer safe to change the
-size (in part because it was built assuming it wouldn't change, but I
-imagine there are other dragons waiting in the shadows to bite me).
+I've noticed only now, you can constify the arguments, but this applise
+to other range_* functions so that can be done later in one go.
 
-So this would basically amount to a lock-bit being set in the architecture,
-beyond which block size can no longer be changed and a big ol' splat
-can be generated that says "NO TOUCH".
-
-> Just imagine having various users of such an interface ..
-
-I don't wanna D:
-
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+> +{
+> +	return r1->start <= r2->end && r1->end >= r2->start;
+> +}
