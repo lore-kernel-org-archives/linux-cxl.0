@@ -1,55 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3CD1D07A3;
-	Wed,  9 Oct 2024 16:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BB514A611;
+	Wed,  9 Oct 2024 17:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728489892; cv=none; b=crseXkJfqflkBqwZfiyT78U7lEeR1jInwaHxgGB6n/0PZMayNhBxvsBkJEvLCaNi/40ebjVZcSZII+v+7WOBfr34HedK5Kp4X5O0aqXw+RAZQ62970pq73ebJkux+xvMTBncV/H0T2ltc/0shgKlm5deJ4Z/HMeMoHl2VZ5LuUk=
+	t=1728493822; cv=none; b=gEVau1y9ORiljUkC1DoZaW5fmMs7S5MbXPoQYwTWLAjp36RWzMqCfXe6sUpjwBhv2rmTM7So6j+9fvi8VehK1KnYRm2umNATubdzI54sBMrKha8fALLJymb+mudMsI8prMWJHtXicg7xc3RfyyTIKBRoxQvKtVe86n0u4YIQJ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728489892; c=relaxed/simple;
-	bh=S7VOLr15MA5IYpxNnw6xgbwUOkXwGf/+Y/OeUbY9oZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ISKSZqQ8b4cSoAazUo5ksswysYHY3EpPD1CSQPPNw7UkM/qB/R0RHsJ0OFOnx5ZjCSHVXHNLwuXliyYf3M7acLXoju5HhAh7Jqm2ASxVCeR+Crwzw1SvMwMK0CMTBcSJKcXuhmB0WctUgV2XFWKoIwwt0VcQebjG7c3ZaUdV+4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mMqRLFBH; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728493822; c=relaxed/simple;
+	bh=ji/gakLu/qIT18qKQ000acOtbeI7Zd5eSJ/x/GSUR+U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gsi30tLJ7tlYCis/PFySXKaFiotNBYwKe4utb8YYPtBUTNHaL7JEmKQR0ucqMw3AkCzEzlvft6uRlxYG2w7ozWrB1IyB3Zd3r1/TAivxjLdv8KJoMxODI7XyZuZI8r7bpYtrAteF6SUPSwjfLdp1jIpJG01aBPmQ3zR/7Eo87ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mLfaMd0h; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mMqRLFBH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728489891; x=1760025891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S7VOLr15MA5IYpxNnw6xgbwUOkXwGf/+Y/OeUbY9oZk=;
-  b=mMqRLFBHn6HXxrsLLJp7yCpLQri273Wd9PIqBqFouek5KW9lJnGqIU8z
-   ilv54wxa3U21A14s97BuQNN8bmyYUpcV2m8UxjnkBJFecoNx+WCLubozF
-   JMAMnYOUXbbNwY55FqXpHEmnfpY7jLidc+hKhpsKlh70qQGnl3ziBPgmN
-   AtWh6UgHbYEMaGmzs0kTVI8mDlTdPntDAnhwVAFdceZgbzgahSUZEvqJj
-   R6xYOpYfeVf1tN9YMYCVew+d4l1nbVRHHpLL0HtYGdIvCsKicd3ZUIddC
-   IBxp07OQUQVIwPLN/p9w3j5lTHW1/AkIfj2fNjpMm11hXKqF9LJooVROU
-   g==;
-X-CSE-ConnectionGUID: MFREpKG5Tfu6oO68frH4vg==
-X-CSE-MsgGUID: Azlxt9QbTq+hp6EzsimnqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="39163345"
-X-IronPort-AV: E=Sophos;i="6.11,190,1725346800"; 
-   d="scan'208";a="39163345"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 09:04:50 -0700
-X-CSE-ConnectionGUID: sdQLp+9IQuq57QIp38SDtA==
-X-CSE-MsgGUID: N99/WQr4SpWFntETzZXecw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,190,1725346800"; 
-   d="scan'208";a="80805323"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 09 Oct 2024 09:04:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0BDAB50F; Wed, 09 Oct 2024 19:04:43 +0300 (EEST)
-Date: Wed, 9 Oct 2024 19:04:43 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Sterba <dsterba@suse.cz>
-Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	Fan Ni <fan.ni@samsung.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLfaMd0h"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e0875f1e9edso5783108276.1;
+        Wed, 09 Oct 2024 10:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728493819; x=1729098619; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Chk44cch0ltIQeofSD5CiqT4vY5iO0SSNHIRHVLIjtY=;
+        b=mLfaMd0hG3R3vhSB6pTMtWZ6XeKphKalAMq4K+uHdc8B2fBt2tqjh5QILz9k3wqrWd
+         1bhTwZ2Ufxmaavuyh6dPZwXA9Ohf/ODVerz7ippB6anY37LsZHUhREsq96vWdD2SQN+U
+         2E1QowxkB8zhtCv6UDFP0qj3g6RaPmm8xxhJtEVn9lJdZZ7E24zoFkugB4OA8gZBkAz2
+         z8k1ri6dQz8vy7nbS9KgjFIuLVend3i7tdU1wFU3hVMJZBkT8p+VXA/Nz0b/Wsm97+EO
+         FRDTMe8s6RKsT5AjTURRMlF/GF8KYkPj70mT9eV1rZzeGhEZDQofrb2MbQ2VYa2Imi6r
+         vCJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728493819; x=1729098619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Chk44cch0ltIQeofSD5CiqT4vY5iO0SSNHIRHVLIjtY=;
+        b=v16owEesMfiTHnTDpzuggyRgd8+5lZD3xDRKPW+CMCVSaSQCb4wJiBwuep3YxauR8I
+         Aquw7JUL/Hnfjn/YogWmkLQrtRmb0yjyA+8wMR7S+Ogn8WVDLSWvnqiqs+HcAMruKzUf
+         t1EqtNKG713ZyXdaEBwaa/E+q4V/CwYgnDaoF/O7JvTjOFE/W2OFDXEKJOIjotdiJeeZ
+         0VKS+QG7UPyazNSm5m4e63IJVjgui0PV9iW3s1K+QU80ia+4eVX4HwvI163BzS/npdjq
+         AJ0oWXB3ySQl/sYcuhQpmfd2y8QT70C9m2Zm5f68smwZtv1/lkjB5NQb7rCnVKvyW1MQ
+         5gtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNdrX+lWORyPT4XbuDoavndh1Tgdn/IcX/0v0zlkDUoHNgG/kqe85FXt3QdKmWxuVp9/4tpWzM+QTZ@vger.kernel.org, AJvYcCUpE1RdgjdAiL56IxiGKom9m87sS5r0cozFiBnAbJ3qy/2Ez9Bh0EhucVO01fMMKItTuoGr719NKT0S@vger.kernel.org, AJvYcCVzBq2KPwXk9nmXrqHnhamZB1+gDVmX1R3sVWleMeuDl4n/Xq6iIpqcUaxxBk8v0PKujdMHhW4ACQnRZQ==@vger.kernel.org, AJvYcCVzO7c+SlpwWubV31w6PG5+ZefypCNscmpKE7HmP95E9gv/KgyaCkSLF9QMD2kAUAb0euLx6Juca0jllRGh@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwjYMdtBooP3nfdk74osaZv8Fzu31K5JfL+KEeWNPXiQV4qZoT
+	T4dp4qtQNFbR32n8vw9h5kfiMuYq9EdhFkN2ArwT+qV4ra/RxXBp
+X-Google-Smtp-Source: AGHT+IE3r5HC98b7ltN7b94kiIbfr65zeIie3Egdm+UMr/y40gIfmJ3yDynf8CUNg4QQRZxCtnDuuw==
+X-Received: by 2002:a25:fc12:0:b0:e28:fee0:e971 with SMTP id 3f1490d57ef6-e28fee0eae8mr2393108276.22.1728493818638;
+        Wed, 09 Oct 2024 10:10:18 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e28a5dbd3a7sm1828233276.63.2024.10.09.10.10.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2024 10:10:18 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 9 Oct 2024 10:09:41 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Navneet Singh <navneet.singh@intel.com>,
 	Jonathan Corbet <corbet@lwn.net>,
@@ -60,16 +66,16 @@ Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
 	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH v4 04/28] range: Add range_overlaps()
-Message-ID: <Zwapm97gV0y7Up9H@black.fi.intel.com>
+	linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v4 01/28] test printk: Add very basic struct resource
+ tests
+Message-ID: <Zwa41SFUfDH0LCPJ@fan>
 References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-4-c261ee6eeded@intel.com>
- <20241008161032.GB1609@twin.jikos.cz>
- <ZwaW9gXuh_JzqRfh@black.fi.intel.com>
- <20241009153641.GK1609@suse.cz>
+ <20241007-dcd-type2-upstream-v4-1-c261ee6eeded@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,53 +84,91 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241009153641.GK1609@suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20241007-dcd-type2-upstream-v4-1-c261ee6eeded@intel.com>
 
-On Wed, Oct 09, 2024 at 05:36:42PM +0200, David Sterba wrote:
-> On Wed, Oct 09, 2024 at 05:45:10PM +0300, Andy Shevchenko wrote:
-> > On Tue, Oct 08, 2024 at 06:10:32PM +0200, David Sterba wrote:
-> > > On Mon, Oct 07, 2024 at 06:16:10PM -0500, Ira Weiny wrote:
-
-...
-
-> > > > +static inline bool range_overlaps(struct range *r1, struct range *r2)
-> > > 
-> > > I've noticed only now, you can constify the arguments, but this applise
-> > > to other range_* functions so that can be done later in one go.
-> > 
-> > Frankly you may add the same to each new API being added to the file and
-> > the "one go" will never happen.
+On Mon, Oct 07, 2024 at 06:16:07PM -0500, Ira Weiny wrote:
+> The printk tests for struct resource were stubbed out.  struct range
+> printing will leverage the struct resource implementation.
 > 
-> Yeah, but it's a minor issue for a 28 patchset, I don't know if there
-> are some other major things still to do so that a v5 is expected.
-
-At least seems printf() changes have to be amended, so I think v5 is
-warranted anyway.
-
-> If anybody is interested, reviewing APIs and interfaces with focus on
-> some data structure and const is relatively easy, compile test is
-> typically enough.
-
-Except the cases where a const pointer has to be passed thru non-const
-(or integer) field in a data structure. Tons of the existing examples is
-ID tables that wanted to have kernel_ulong_t instead of const void * in
-driver data field.
-
-> The hard part is to find the missing ones. There's no
-> compiler aid thad I'd know of (-Wsuggest-attribute=const is not for
-> parameters), so it's been reading a file top-down for me.
-
-Yeah...
-
-> > So, I support your first part with
-> > constifying, but I think it would be rather done now to start that "one
-> > go" to happen.
+> To prevent regression add some basic sanity tests for struct resource.
 > 
-> Agreed, one patch on top is probably the least intrusive way.
+> To: Petr Mladek <pmladek@suse.com>
+> To: Steven Rostedt <rostedt@goodmis.org>
+> To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> To: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Tested-by: Fan Ni <fan.ni@samsung.com>
+
+> 
+> ---
+> [lkp: ensure phys_addr_t is within limits for all arch's]
+> ---
+>  lib/test_printf.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 8448b6d02bd9..5afdf5efc627 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> @@ -386,6 +386,50 @@ kernel_ptr(void)
+>  static void __init
+>  struct_resource(void)
+>  {
+> +	struct resource test_resource = {
+> +		.start = 0xc0ffee00,
+> +		.end = 0xc0ffee00,
+> +		.flags = IORESOURCE_MEM,
+> +	};
+> +
+> +	test("[mem 0xc0ffee00 flags 0x200]",
+> +	     "%pr", &test_resource);
+> +
+> +	test_resource = (struct resource) {
+> +		.start = 0xc0ffee,
+> +		.end = 0xba5eba11,
+> +		.flags = IORESOURCE_MEM,
+> +	};
+> +	test("[mem 0x00c0ffee-0xba5eba11 flags 0x200]",
+> +	     "%pr", &test_resource);
+> +
+> +	test_resource = (struct resource) {
+> +		.start = 0xba5eba11,
+> +		.end = 0xc0ffee,
+> +		.flags = IORESOURCE_MEM,
+> +	};
+> +	test("[mem 0xba5eba11-0x00c0ffee flags 0x200]",
+> +	     "%pr", &test_resource);
+> +
+> +	test_resource = (struct resource) {
+> +		.start = 0xba5eba11,
+> +		.end = 0xba5eca11,
+> +		.flags = IORESOURCE_MEM,
+> +	};
+> +
+> +	test("[mem 0xba5eba11-0xba5eca11 flags 0x200]",
+> +	     "%pr", &test_resource);
+> +
+> +	test_resource = (struct resource) {
+> +		.start = 0xba11,
+> +		.end = 0xca10,
+> +		.flags = IORESOURCE_IO |
+> +			 IORESOURCE_DISABLED |
+> +			 IORESOURCE_UNSET,
+> +	};
+> +
+> +	test("[io  size 0x1000 disabled]",
+> +	     "%pR", &test_resource);
+>  }
+>  
+>  static void __init
+> 
+> -- 
+> 2.46.0
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Fan Ni
