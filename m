@@ -1,82 +1,164 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3BA7DA62;
-	Thu, 10 Oct 2024 16:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032DF1CEAA2;
+	Thu, 10 Oct 2024 16:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728577412; cv=none; b=IYFG47sk6eiQ/nzWH7wLnoiasD4+kFSLHOOJLAmaYSbgJH+A1x6ZyCmL8a+ag6rQCMlxMVpq+827Fp73H2qrjffPV+T27OVAPhQIaqETrePsAgpY5HUPlqka37inzjIJgG3dqEyhpBQtdUOGE7EkzMaQWppyNkYG2jLJbZ/TxEM=
+	t=1728577648; cv=none; b=CwacxO3uwn9wIoa3Riua6wbZqebZIzOv6MFxNfdg/uJhHcpPRkGFQLs7sYzpsMShr1Pcz490rpMKkeDR9/3Pz23pJQ7nFmtKWH5uHsQWtI6qrBLGuhVHLQ/kql0Xv1N5ewwA5vkvhLwXN6sNGicfRBrr8a4KCVZ6l3ACGPDLZjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728577412; c=relaxed/simple;
-	bh=r5RQUSqIRifgak7HHNmWG3aZxu+/9+hiSZdy3uPwCVs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XbP4pPw8S0KJ4QJBijnO5dBQIduKveKBupZasjC01QRiDbNtF4bLqCW8MsXM8++TbO2ibXmgPKxSw8GoPNUNiDHy3lEZ8Go1HO+ZZjUEGPMZ1UFTcj7jeXVmpg7/OmoYPJXWbavWExPubMU+2bT1/NXicxE8TFrvmCV7JygCAYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XPZlf44Lsz67MRx;
-	Fri, 11 Oct 2024 00:22:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB1B01400CB;
-	Fri, 11 Oct 2024 00:23:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 10 Oct
- 2024 18:23:27 +0200
-Date: Thu, 10 Oct 2024 17:23:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Gregory Price <gourry@gourry.net>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>
-Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
- pci_doe_send_req
-Message-ID: <20241010172326.00004d1a@Huawei.com>
-In-Reply-To: <ZweukOWeqFy8vd4W@wunner.de>
-References: <20241004162828.314-1-gourry@gourry.net>
-	<ZweukOWeqFy8vd4W@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1728577648; c=relaxed/simple;
+	bh=EezNVeA2uyxOZbiJHcAoytd4T0u9uCuZE27/ZijVLTA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J0/hhLaqj7VrLGKdB8TQeK1mGK6E/e8AzUmg0XE35UTDueItbHNBd0RB2bKoLXJVrjJ/EKB6vr32VBoDW8IHe3MJ6kdcOmrmLpAKL46U8fuOHOARhbX2LZ7UNSmIKdLTlNiPM9nKOhotXpeBksRrZpgBgfhUANpm+vq2+crt/ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDuJwCz3; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDuJwCz3"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71de9e1f431so918664b3a.3;
+        Thu, 10 Oct 2024 09:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728577645; x=1729182445; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fSLzl5yBihgiBmsYyY0ZLdSXzjCf12rYeXArERj6rDI=;
+        b=lDuJwCz3N6IUynHgFPSSnuFU/R2IcSe4xFZaBIzyW5IZXF4sw8SCxsZAhwF89BPHf6
+         XlL/tMGqiKnXboWlgWI3asRJeWWOnqW8t/fFhd/MX/Q7FgisVA1TPEKtvIsolTptH1V7
+         gwLT/eTKjFEPvQlW/vSi2q76GD4b8ecnL+wViouknZJZGbGbI59dMdjTTbKKffTwENJt
+         FyJzDH87vfq1Qe0sY6nY9MtU2NSbcn1EV5/VqnRRyoIprO9UbU6/ioQC3KfdZpBXytsa
+         y5TXYbHjPUzerJRaVDT8eUlNtdUSZcE4SnUzudFsrwoPu3rvVDayNXx0u7ENFKHr33IF
+         /bWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728577645; x=1729182445;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fSLzl5yBihgiBmsYyY0ZLdSXzjCf12rYeXArERj6rDI=;
+        b=ufUvFa0EEBMwELJGIWt0ASrioRlrZQx8YKmGS67HC34/Z/7XxCkRv+NdxGoeAf7z1Q
+         dIxwWGbIOCtcMpajFyTOvaIod+0OSeXSVem5hUYSPHn5WeDm6WOLBIKSMqy7JO2E/Y3J
+         peIpIrUTZfzEcbKZaAGIr5Ea8kicL5VrtwNRibaXAEFHL0oxDmx9OA6xtFWS07i6YZMY
+         uFqMIyHDgMi0szdqUWKLQ72zjZRY3Hleq/WlUHF7U864+SCkLXF6HWshA6DaCNHLLAY2
+         QbD21ojiEsL6k566RNU7i7+1RII6CenJQl1zwhQi0q5b1YVIia+pSY2ltbuI5JMfdtHO
+         I/qA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4RnKIhRCM+Gy3l074rlOuPHzxEG9lajwqOFXxb2D+H4CnmxXRFVo0fTEXGBZbtDIjgdHTeqW04T8f@vger.kernel.org, AJvYcCW6Y6qCjiYL0hWYjxS+BVBUwReBl/zhMoeuz8Iu7RQjCeSuwKECJbKe7VRxxqOIkkyU9aZbE2elxcxiymNc@vger.kernel.org, AJvYcCWCPlE1XUuw6tJ2Y+Ur2hOWkYixJJJhSnNDkRi40XFkGg8v1/K+8c+4/+urXVMoMqKyQX6nUQrblPip@vger.kernel.org, AJvYcCX90iDcWlU5no+31lc8o+Tl+mim5ojdMXz4dvPPXrrNKbAmgb5alZGYaFUQhJvTtvzJdDCaq09AtFJTHQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGn4vJZAXMBNnz7ybzekv+duil3/fgK+Mn1gSUOBAw6hjmuND9
+	9Lv+7uJPdJAXuPTVaYOIVwccpC55N+AYrck3L9EwOfk5u5N0mn6JSI2y0w==
+X-Google-Smtp-Source: AGHT+IGIsf4f/iQQgXnwF0falPkwr2nFCnUFSLBEZqjJbFXQB+jGFOTfXuGfIuYojsJ2HGj2GIYvYg==
+X-Received: by 2002:a05:6a00:2e9e:b0:71e:2d2:1de4 with SMTP id d2e1a72fcca58-71e1db6485emr10418466b3a.3.1728577645027;
+        Thu, 10 Oct 2024 09:27:25 -0700 (PDT)
+Received: from fan ([2601:646:8f03:9fee:c165:c800:4280:d79b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2aaba3a7sm1200121b3a.169.2024.10.10.09.27.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 09:27:24 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 10 Oct 2024 09:27:03 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 15/28] cxl/region: Refactor common create region code
+Message-ID: <ZwgAV81DSbpW7Ezd@fan>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-15-c261ee6eeded@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241007-dcd-type2-upstream-v4-15-c261ee6eeded@intel.com>
 
-On Thu, 10 Oct 2024 12:38:08 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+On Mon, Oct 07, 2024 at 06:16:21PM -0500, Ira Weiny wrote:
+> create_pmem_region_store() and create_ram_region_store() are identical
+> with the exception of the region mode.  With the addition of DC region
+> mode this would end up being 3 copies of the same code.
+> 
+> Refactor create_pmem_region_store() and create_ram_region_store() to use
+> a single common function to be used in subsequent DC code.
+> 
+> Suggested-by: Fan Ni <fan.ni@samsung.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
 
-> On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
-> > Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-> > interval (1 second), resolves this issues cleanly.  
-> 
-> Nit: s/issues/issue/
-> 
-> > Subsqeuent code in doe_statemachine_work and abort paths also wait  
-> 
-> Nit: s/Subsqeuent/Subsequent/
-> 
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
-> > @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
-> >  	size_t length, remainder;
-> >  	u32 val;
-> >  	int i;
-> > +	unsigned long timeout_jiffies;  
-> 
-> Nit: Reverse Christmas tree.
-> 
-> With that addressed,
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> 
-Looks good to me with Lukas' nits tidied up.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
+>  drivers/cxl/core/region.c | 28 +++++++++++-----------------
+>  1 file changed, 11 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index ab00203f285a..2ca6148d108c 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2552,9 +2552,8 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+>  	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_HOSTONLYMEM);
+>  }
+>  
+> -static ssize_t create_pmem_region_store(struct device *dev,
+> -					struct device_attribute *attr,
+> -					const char *buf, size_t len)
+> +static ssize_t create_region_store(struct device *dev, const char *buf,
+> +				   size_t len, enum cxl_region_mode mode)
+>  {
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+>  	struct cxl_region *cxlr;
+> @@ -2564,31 +2563,26 @@ static ssize_t create_pmem_region_store(struct device *dev,
+>  	if (rc != 1)
+>  		return -EINVAL;
+>  
+> -	cxlr = __create_region(cxlrd, CXL_REGION_PMEM, id);
+> +	cxlr = __create_region(cxlrd, mode, id);
+>  	if (IS_ERR(cxlr))
+>  		return PTR_ERR(cxlr);
+>  
+>  	return len;
+>  }
+> +
+> +static ssize_t create_pmem_region_store(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf, size_t len)
+> +{
+> +	return create_region_store(dev, buf, len, CXL_REGION_PMEM);
+> +}
+>  DEVICE_ATTR_RW(create_pmem_region);
+>  
+>  static ssize_t create_ram_region_store(struct device *dev,
+>  				       struct device_attribute *attr,
+>  				       const char *buf, size_t len)
+>  {
+> -	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+> -	struct cxl_region *cxlr;
+> -	int rc, id;
+> -
+> -	rc = sscanf(buf, "region%d\n", &id);
+> -	if (rc != 1)
+> -		return -EINVAL;
+> -
+> -	cxlr = __create_region(cxlrd, CXL_REGION_RAM, id);
+> -	if (IS_ERR(cxlr))
+> -		return PTR_ERR(cxlr);
+> -
+> -	return len;
+> +	return create_region_store(dev, buf, len, CXL_REGION_RAM);
+>  }
+>  DEVICE_ATTR_RW(create_ram_region);
+>  
+> 
+> -- 
+> 2.46.0
+> 
 
+-- 
+Fan Ni
