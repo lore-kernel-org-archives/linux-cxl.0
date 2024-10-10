@@ -1,88 +1,42 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7CC1D041A;
-	Thu, 10 Oct 2024 20:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6573719A2A3;
+	Thu, 10 Oct 2024 22:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728592739; cv=none; b=ENQy7sk493RewpcMyq+Rt0sPrJXUkDIWNwBJ+DyVk9FDyyAl+WCfD0JzUrPXzubVrdqbFEneTmrNjYnKefbtKJqXw94GVpSKePpPdYuov/L6NifzUHT30i6YDkLJRS+SEHPqKcYFA7qfXQ/dTKPLVUA08XQ8g/TV74ecYFSIRHk=
+	t=1728598592; cv=none; b=HdOGsLMgD1/iR+bWJZxHqumrd1o9Z3TrUr5aZVoWQ/r32oegNgZIkHvFFnkOoICIFMgGn29eMr7BeaLfqgMK7bEerjPOFYjStt7wmnrRiPjsLFsjLJYSFi0Bba7/nShircNGaMRPD7nTNb+Qqw4rViD0XnrAkePy2lsGupDaEiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728592739; c=relaxed/simple;
-	bh=tAzSba8fi0vSD9nfCa0OsDhhkMUxr+cxCTAKKbZbKAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3LISwWuA5bAyFduFYt+bvt1wOU5+bErziTtvcM/NJknQBClVeckKNdxkBR53vDoXOVa1VRewVjzqD6/yDlqL7Qnor4h/xcoVOGzrNrXWgC+yIuy3Bvbw51IVtsMluunmDO6/P5vlNjGnBDbnDlvKaokCUdZDeDSRENRIRjfNuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b/UnzDlh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lqxbGS6T; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b/UnzDlh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lqxbGS6T; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1728598592; c=relaxed/simple;
+	bh=/fSUe/XuT4djq6U2zM2gzmBo0xFuuCYD1/zFnLdp/QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YRshi/AN7o4onSPp5SG7VJ4iEEuGVFIToean06fX97KAFtJskKfiix9Qfu38U5I/CdRtSPQuEtJGRDZTKpYCv7eCyUsFuDd3x0HXlXi9YrYPfCz5tJtjfnM2D/+gbAASKUm4xWpF/3cLlCW38xWB3Ivorl/5pUw/qMCQrKvBAdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOjDNuJb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b/UnzDlh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lqxbGS6T";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b/UnzDlh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lqxbGS6T"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ACFB521A90;
-	Thu, 10 Oct 2024 20:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1728592734;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQ6HQ25L3Z5f5L0A1ffhLg/EnLPyof/1Rm2rAB6KxaA=;
-	b=b/UnzDlhqh3WSFCPYWPJH5Oog6B/yTI3hunC97q2E05N7JWeukDOZjCZIHILDIDCMtGDOd
-	F4HVQtP7i0MQGD1KTQhK76e4xgQUFb10PCtrBk95oRz4PAPuyKEbLgBWFqs9orZFjmiN3+
-	vc9Yoats6htjaESCdzl7y35qKCpqG7g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1728592734;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQ6HQ25L3Z5f5L0A1ffhLg/EnLPyof/1Rm2rAB6KxaA=;
-	b=lqxbGS6TwHLVcnPweL/Q3mi1UTyQbUyPDxqcKeukBOGj+yMhMVirDt+WXiETmmg2O6l7df
-	nyjfOr5UrKVZikBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="b/UnzDlh";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=lqxbGS6T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1728592734;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQ6HQ25L3Z5f5L0A1ffhLg/EnLPyof/1Rm2rAB6KxaA=;
-	b=b/UnzDlhqh3WSFCPYWPJH5Oog6B/yTI3hunC97q2E05N7JWeukDOZjCZIHILDIDCMtGDOd
-	F4HVQtP7i0MQGD1KTQhK76e4xgQUFb10PCtrBk95oRz4PAPuyKEbLgBWFqs9orZFjmiN3+
-	vc9Yoats6htjaESCdzl7y35qKCpqG7g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1728592734;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQ6HQ25L3Z5f5L0A1ffhLg/EnLPyof/1Rm2rAB6KxaA=;
-	b=lqxbGS6TwHLVcnPweL/Q3mi1UTyQbUyPDxqcKeukBOGj+yMhMVirDt+WXiETmmg2O6l7df
-	nyjfOr5UrKVZikBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 89DE01370C;
-	Thu, 10 Oct 2024 20:38:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PqAZIV47CGefVQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 10 Oct 2024 20:38:54 +0000
-Date: Thu, 10 Oct 2024 22:38:52 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	David Sterba <dsterba@suse.cz>
-Subject: Re: [PATCH] kernel/range: Const-ify range_contains parameters
-Message-ID: <20241010203852.GU1609@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20241010-const-range-v1-1-afb6e4bfd8ce@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOjDNuJb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5136C4CEC5;
+	Thu, 10 Oct 2024 22:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728598591;
+	bh=/fSUe/XuT4djq6U2zM2gzmBo0xFuuCYD1/zFnLdp/QU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZOjDNuJbForY00J9ZrwYA99p1VYOnT3JUgWwXgRVQ+fBnZSIImFd/K5x70FlGYEes
+	 wxEgP7tEOGaV6XBtHdmT9Wmr+22/QRGErM6dJHTul27R+qBAZdP0FuJh3u+6JUtF9V
+	 DH5nuDkADPqJIhdVztudOAEOJnYXxfQojAf4LS0/T/nBYEY4pnWfKesRyHZWlTofXM
+	 hLHC+etVaffbIFf1e5ig9awUHBcozyvz0Qunn+jvE/JHfmAzUOrHbHa80HDzwrryAy
+	 rPaHfkMotx9Shw+x8Fdj8iOoWejgiINbyZt1xoL64kOllpaxC8LahQftjfSmT/Nw3c
+	 wCPSNp9T/68mQ==
+Date: Thu, 10 Oct 2024 17:16:28 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	dan.j.williams@intel.com, bhelgaas@google.com, dave@stgolabs.net,
+	dave.jiang@intel.com, vishal.l.verma@intel.com,
+	Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
+ pci_doe_send_req
+Message-ID: <20241010221628.GA580128@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -91,50 +45,81 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241010-const-range-v1-1-afb6e4bfd8ce@intel.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: ACFB521A90
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:replyto,suse.cz:dkim,suse.cz:email];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+In-Reply-To: <20241004162828.314-1-gourry@gourry.net>
 
-On Thu, Oct 10, 2024 at 10:24:42AM -0500, Ira Weiny wrote:
-> range_contains() does not modify the range values.  David suggested it
-> is safer to keep those parameters as const.[1]
+On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
+> During initial device probe, the PCI DOE busy bit for some CXL
+> devices may be left set for a longer period than expected by the
+> current driver logic. Despite local comments stating DOE Busy is
+> unlikely to be detected, it appears commonly specifically during
+> boot when CXL devices are being probed.
 > 
-> Make range parameters const
+> This was observed on a single socket AMD platform with 2 CXL memory
+> expanders attached to the single socket. It was not the case that
+> concurrent accesses were being made, as validated by monitoring
+> mailbox commands on the device side.
 > 
-> Link: https://lore.kernel.org/all/20241008161032.GB1609@twin.jikos.cz/ [1]
-> Suggested-by: David Sterba <dsterba@suse.cz>
+> This behavior has been observed with multiple CXL memory expanders
+> from different vendors - so it appears unrelated to the model.
+> 
+> In all observed tests, only a small period of the retry window is
+> actually used - typically only a handful of loop iterations.
+> 
+> Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
+> interval (1 second), resolves this issues cleanly.
+> 
+> Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
+> raise an interrupt, so polling is the best option in this scenario.
+> 
+> Subsqeuent code in doe_statemachine_work and abort paths also wait
+> for up to 1 PCI DOE timeout interval, so this order of (potential)
+> additional delay is presumed acceptable.
 
-You can drop the above line.
+I provisionally applied this to pci/doe for v6.13 with Lukas and
+Jonathan's reviewed-by.  
 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Can we include a sample of any dmesg logging or other errors users
+would see because of this problem?  I'll update the commit log with
+any of this information to help users connect an issue with this fix.
 
-Reviewed-by: David Sterba <dsterba@suse.com>
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  drivers/pci/doe.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 652d63df9d22..27ba5d281384 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  	size_t length, remainder;
+>  	u32 val;
+>  	int i;
+> +	unsigned long timeout_jiffies;
+>  
+>  	/*
+>  	 * Check the DOE busy bit is not set. If it is set, this could indicate
+>  	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+>  	 * it is expected that firmware and OS will negotiate access rights via
+>  	 * an, as yet to be defined, method.
+> +	 *
+> +	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
+> +	 * finish. Otherwise, simply error out as unable to field the request.
+> +	 *
+> +	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
+> +	 * bit is cleared, so polling here is our best option for the moment.
+>  	 */
+> -	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
+> +	do {
+> +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
+> +		 !time_after(jiffies, timeout_jiffies));
+> +
+>  	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+>  		return -EBUSY;
+>  
+> -- 
+> 2.43.0
+> 
