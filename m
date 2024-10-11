@@ -1,112 +1,142 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D1C209662
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 12:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E6A2185B1;
+	Fri, 11 Oct 2024 13:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728649705; cv=none; b=NezO5R+8G2E1GL93LdoKxzO2puk1oFRCpE42czISvTIJ22CgXCXTOSKw1i2NWnMtCwIbhXEFPUSdhZ998ahVWmZKXaDrbhtCSm+//uifL4L5Q2RFbxY8lMalsQhIFyyjnDvNxTMBfP6NAa9fCMm9HTkQArMcaETlIyfe54lEfXk=
+	t=1728653088; cv=none; b=dBKas9y6g38BRbf2Rqp3/jqeuJjp4qzWuzSbrPy6Q7GZbyAta3LOBRy62rGBOC13sSg8e/1D4T6gPnDl4GRtza1YQuZKvtQxgLlcOpslXPubJKG4FQHWg4bzlIl5L7aPvH8SENKhT+o5BJC+FOCAOb/T7TzUmvzW+HIGOs5LWaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728649705; c=relaxed/simple;
-	bh=ntcgeCURA5ce587yUAKQgoA0Tmx5Ok1EsT51gRWdt8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hQuE0d0izzHrEKZ1E0X4tS+lokaLfrqciRRh8ms89Nn8Zi8foaInWsjtS10PVvqIAxnyAQQCgEC+71EDzGSxjzQxXoRf0VP2mjrJWUyxWwMyIpFg87PvWAFIOPwC80P2KMkXERAddRx2QOulJPcwNJdgKocy5B0Yf0CUzQC1aoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bYDx25VQ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1728653088; c=relaxed/simple;
+	bh=iIufuyOteBXsvMYuxWsNVz1UkSne8TnyU6hpEqh44yI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tX2oUa0++kCMLTSLL0bPs15tM8++++AgLkXsxsNzQgxdVjmOU/XQeTWBm4oj0QIF+TpJBseBOZqnUoOQ7yCeWXBOHTgGACewNTaZZSVR98PC+q3pZ7UNir2d0CknLfVNUOiEktSZ+QmFqi9p+DfJw1fElCN8untHUf1CdYAYIyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YBFvuGBC; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bYDx25VQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=7houdCIGUhdA1x+Uffay+F+PIOQHP2RpFB4vPwsx33s=;
-	b=bYDx25VQRsmUYz2YQIph2yK7YcisnGKVmGzWbLWLt5Gw4FINweTPvU/1URrpIM
-	phmOsNzOmavPA5LMkzQyfy8txWrtvrt92MoMaYmxONvvHhEAYq1UHlqzpgYaMtEO
-	OpQYbsVTLaOsWFToPU/sIT5n4QMMtTbzGFMBNBmrpJV4U=
-Received: from [192.168.1.26] (unknown [183.195.0.32])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDX_3LHGQln1W_ZAQ--.48413S2;
-	Fri, 11 Oct 2024 20:27:53 +0800 (CST)
-Message-ID: <e5da0fb3-f7d4-4513-a0ca-cc0099864eef@163.com>
-Date: Fri, 11 Oct 2024 20:27:51 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YBFvuGBC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728653086; x=1760189086;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=iIufuyOteBXsvMYuxWsNVz1UkSne8TnyU6hpEqh44yI=;
+  b=YBFvuGBCB1zmX1UEEcMwEsnMSOqqV28qPzwYCMAyb0Nv6q25FU/ObfD8
+   N4SvU7NR0x3vVkyFwUtIi6NpPeZn3l/CDuA83KFISYvQU4bMIboTOepjK
+   NpNxly+G9ufPc9X9vkMjApweBzqOBto3xaDj0yROKeN0wW5f/hEmefZpE
+   0j//lUZOuD1KmtE0Ygb/ocJ3XnYh3a9+wVrVOFO2gnYlBED/wPnlRNgbi
+   5tgLtiiBfIge/bEAngvRL7oXeovftal9hg/C4W6kizDiN/MR6ABb/XqEN
+   68N6XZxQN1TJmPHjHZDRuFiT8/ISSc0SOcJ6f70/UkYsysCv8FLJjQYhn
+   Q==;
+X-CSE-ConnectionGUID: UU6h8R+/Qk6y4UtnNiKrvA==
+X-CSE-MsgGUID: /9AnyVUgT+iCCaZN+AXCPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="27523126"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="27523126"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:24:43 -0700
+X-CSE-ConnectionGUID: 9HFN1MVJREGnXwoFJGKiNg==
+X-CSE-MsgGUID: lLrqMJBrQo+K8cdGK7CVbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="107640626"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:24:38 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,  Dan Williams
+ <dan.j.williams@intel.com>,  Davidlohr Bueso <dave@stgolabs.net>,
+  Jonathan Cameron <jonathan.cameron@huawei.com>,  Alistair Popple
+ <apopple@nvidia.com>,  Bjorn Helgaas <bhelgaas@google.com>,  Baoquan He
+ <bhe@redhat.com>,  Dave Jiang <dave.jiang@intel.com>,  Alison Schofield
+ <alison.schofield@intel.com>
+Subject: Re: [RFC] resource: Avoid unnecessary resource tree walking in
+ __region_intersects()
+In-Reply-To: <12c0a19e-784d-4ac0-8d3c-d5242bcd3723@redhat.com> (David
+	Hildenbrand's message of "Fri, 11 Oct 2024 13:30:15 +0200")
+References: <20241010065558.1347018-1-ying.huang@intel.com>
+	<d129bbe4-8ae8-4915-bd9c-b38b684e8103@redhat.com>
+	<87set3a1nm.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZwkCt_ip5VOGWp4u@smile.fi.intel.com>
+	<b8262026-533b-497b-9713-fa3e32f76d9f@redhat.com>
+	<ZwkI62qBAbc02O8C@smile.fi.intel.com>
+	<ZwkJyMaBnN84Kbg7@smile.fi.intel.com>
+	<12c0a19e-784d-4ac0-8d3c-d5242bcd3723@redhat.com>
+Date: Fri, 11 Oct 2024 21:21:05 +0800
+Message-ID: <87msja93ni.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] cxl/port: Fix cxl_bus_rescan() vs
- bus_rescan_devices()
-To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
- ira.weiny@intel.com
-Cc: vishal.l.verma@intel.com, alison.schofield@intel.com,
- linux-cxl@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
- <172862484920.2150669.7306809902566347902.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From: Lk Sii <lk_sii@163.com>
-In-Reply-To: <172862484920.2150669.7306809902566347902.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDX_3LHGQln1W_ZAQ--.48413S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7urWkKrW7GryDJry5Gr1rJFb_yoW8tr4xpF
-	s5WFWakrW8WryI9ws3Z3yvyFZ8Ww4vy345Wr1xWwn09FnrCw17XFyrK345u34F9rWvka4S
-	yr9Fqr1rCa18ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRLNV9UUUUU=
-X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiXx11NWcJCfnMAgAAsS
+Content-Type: text/plain; charset=ascii
 
-On 2024/10/11 13:34, Dan Williams wrote:
-> It turns out since its original introduction, pre-2.6.12,
-> bus_rescan_devices() has skipped devices that might be in the process of
-> attaching or detaching from their driver. For CXL this behavior is
-> unwanted and expects that cxl_bus_rescan() is a probe barrier.
-> 
+David Hildenbrand <david@redhat.com> writes:
 
-is it relevant with bus_rescan_devices()'s bugs fixed by below link
-https://lore.kernel.org/all/20240913-bus_match_unlikely-v2-2-5c0c3bfda2f6@quicinc.com/
+> On 11.10.24 13:19, Andy Shevchenko wrote:
+>> On Fri, Oct 11, 2024 at 02:15:55PM +0300, Andy Shevchenko wrote:
+>>> On Fri, Oct 11, 2024 at 12:51:09PM +0200, David Hildenbrand wrote:
+>>>> On 11.10.24 12:49, Andy Shevchenko wrote:
+>>>>> On Fri, Oct 11, 2024 at 09:06:37AM +0800, Huang, Ying wrote:
+>>>>>> David Hildenbrand <david@redhat.com> writes:
+>>>>>>> On 10.10.24 08:55, Huang Ying wrote:
+>> ...
+>> 
+>>>>>>> 	for ((_p) = (_root)->child; (_p); (_p) = next_resource_XXX(_root, _p))
+>>>>>>
+>>>>>> Yes.  This can improve code readability.
+>>>>>>
+>>>>>> A possible issue is that "_root" will be evaluated twice in above macro
+>>>>>> definition.  IMO, this should be avoided.
+>>>>>
+>>>>> Ideally, yes. But how many for_each type of macros you see that really try hard
+>>>>> to achieve that? I believe we shouldn't worry right now about this and rely on
+>>>>> the fact that root is the given variable. Or do you have an example of what you
+>>>>> suggested in the other reply, i.e. where it's an evaluation of the heavy call?
+>>>>>
+>>>>>> Do you have some idea about
+>>>>>> how to do that?  Something like below?
+>>>>>>
+>>>>>> #define for_each_resource_XXX(_root, _p)                                \
+>>>>>> 	for (typeof(_root) __root = (_root), __p = (_p) = (__root)->child; \
+>>>>>> 	     __p && (_p); (_p) = next_resource_XXX(__root, _p))
+>>>>>
+>>>>> This is a bit ugly :-( I would avoid ugliness as long as we have no problem to
+>>>>> solve (see above).
+>>>>
+>>>> Fully agreed, I didn't quite understand the concern about "evaluation" at
+>>>> first.
+>>>
+>>> It's a basic concept for macros and a good mine field even for the simple
+>>> cases.
+>>>
+>>>> If it's just reading a variable twice, it doesn't matter at all right
+>>>> now.
+>>>
+>>> The problem (even if it's a variable) is that the content of variable can be
+>>> changed when run in non-atomic context, i.e. two evaluations will give two
+>>> different results. Most "simple" for_each macros leave this exercise to the
+>>> caller. That's what I also suggest for now.
+>> For any context as Ying provided an example with calls, they have to
+>> be
+>> idempotent, or you definitely get two different pointers for these, which is
+>> bigger issue that what I described above.
+>
+> Ah, now I understood what Ying meant: if the root pointer is modified
+> within the loop body we'd be in trouble.
 
-which also checks dev->driver within device_lock()'s protection.
+Given we cannot provide a good macro implementation to traverse only the
+descendant tree of _root, I suggest to just keep current
+for_each_resource() implementation.  There is only one user of the
+proposed new macro to traverse the descendant tree.  So, I suggest to
+open coded the for loop instead.  More comments can be added to make it
+clear.
 
-> That behavior is simple enough to achieve with bus_for_each_dev() paired
-> with call to device_attach(), and it is unclear why bus_rescan_devices()
-> took the positition of lockless consumption of dev->driver which is
-> racy.
-> 
-> The "Fixes:" but no "Cc: stable" on this patch reflects that the issue
-> is merely by inspection since the bug that triggered the discovery of
-> this potential problem [1] is fixed by other means.  However, a stable
-> backport should do no harm.
-> 
-> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
-> Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/port.c |   13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index e666ec6a9085..b7828b6c7826 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -2084,11 +2084,18 @@ static void cxl_bus_remove(struct device *dev)
->  
->  static struct workqueue_struct *cxl_bus_wq;
->  
-> -static void cxl_bus_rescan_queue(struct work_struct *w)
-> +static int attach_device(struct device *dev, void *data)
->  {
-> -	int rc = bus_rescan_devices(&cxl_bus_type);
-> +	int rc = device_attach(dev);
-> +
-> +	dev_vdbg(dev, "rescan: %s\n", rc ? "attach" : "detached");
->  
-> -	pr_debug("CXL bus rescan result: %d\n", rc);
-> +	return 0;
-> +}
-> +
-> +static void cxl_bus_rescan_queue(struct work_struct *w)
-> +{
-> +	bus_for_each_dev(&cxl_bus_type, NULL, NULL, attach_device);
->  }
->  
->  void cxl_bus_rescan(void)
-> 
-> 
-
+--
+Best Regards,
+Huang, Ying
