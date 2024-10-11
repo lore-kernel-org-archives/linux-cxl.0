@@ -1,64 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6728F5B
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 21:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC8819AD97
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 21:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728680554; cv=none; b=kDUNXd6pQhBCq6O0zUqK1CZR8RTZcnKntJvg5NDre/YXNc/ugRT6uqhu4iTwdCB79OGv+aBPFHPVgjvFVITiKNCyIBzhKT8Bl7uEsTRdlpwSJJq/QWtnCZWlB/lmWkJ9TBXEjGKFVMo98ohuN0JVQFWoKQKjjLE9DcxV8qSDTjA=
+	t=1728681260; cv=none; b=KtzRHe3y8+KdI0f2HkRD5nWjRlPhSyD+K65K9RJUXwoqejyHdy2YAIrPUbjmq7RPYOpnizMeRg/C//srxnsViL4wDsABo8stLDOLgPy0O3syVjExK8b8Wm0KPc8YLtXCK/D81KzAVT6lR9qECphrkr6cKoMmAid3I6yRi/phq5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728680554; c=relaxed/simple;
-	bh=t7v9LrnikA0b/tdjpm95QIPigc7c4Z7Gm+7ryEqj1gE=;
+	s=arc-20240116; t=1728681260; c=relaxed/simple;
+	bh=ExMoUpCDJ/R6BehmPeDOlR4R77PKPTu6pDUU6pP5rKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a08d74tLfRqYnDxuGw/OM28TqZkmYTZtiX7XLaJojT1LNqdBn0iwDPPI4qil9IUrR2PUk5Ls6cofPTNo2dtUSGn8ybPPGIs1tnAjrBOa3b7tOhyctrrOqEw3Zui6LWye1V1UZ75xUz98WM9oKBsKvbpZCOv8ETRagSZ0rLZeDfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jkh6D/Um; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=tIxLNycR1uxuJ/93p5LKFUlXsr8wDcI40Ke20vyIAqofgsKOFA//PPPZ/qlmpko9a0vhqYP5eC6H54SARb7E9NGUofXEleihaPcnyU1piIWs70Rem3L4K9CiFHbGx/boxUMnClE8L/vLZ1EDsWDlLfFLxknZfIxwrcEKNKNhgF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IpL5Ypov; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jkh6D/Um"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IpL5Ypov"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728680551;
+	s=mimecast20190719; t=1728681256;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M4ZF/lqPBd0UGdsnnza01sUUQe28zx1+oJm7x5DzidA=;
-	b=Jkh6D/UmteYdnL3mUDeoULQraI2OMzzqdltGqsnroBLb2juSY/JMAQcstMl7ql7qZ2vq13
-	hIjh+WyfARtRF9odnxjNDUFcMkPNN22wISxhJhGXjL0qtsVNT7qIlehO2DZ0VRgZbQ46HC
-	N56/gf+r7GsJULHyg8lcz1DHbcBjedY=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=QMUBbZRfSoQvEodUgNa2TXbxyHgaQJ7LEL/v8sBXYi4=;
+	b=IpL5YpovtaBUoTJ+o0XFeGsOMOFE/4lQfESZ4jQtjMKp4see1GARVrNjoZzB14Xl29FADx
+	MZj1rnSNiwsJpZc81V7ZMi6S4WUnYVBCDrPQMZXffLTGNR5cISqLJ6ql2XVGzKnQl+EnvY
+	5Ja2gWM6u4buDz23BIEqN+h4v7ADm9I=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-UmZrid74PfCH2TYKZ-J3UQ-1; Fri, 11 Oct 2024 17:02:30 -0400
-X-MC-Unique: UmZrid74PfCH2TYKZ-J3UQ-1
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-83539231e19so34872639f.0
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 14:02:30 -0700 (PDT)
+ us-mta-547-GLx2DxCsPhaiwPho0X9h3g-1; Fri, 11 Oct 2024 17:14:15 -0400
+X-MC-Unique: GLx2DxCsPhaiwPho0X9h3g-1
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3e3e6a4e309so208159b6e.0
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 14:14:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728680550; x=1729285350;
+        d=1e100.net; s=20230601; t=1728681254; x=1729286054;
         h=content-transfer-encoding:mime-version:organization:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M4ZF/lqPBd0UGdsnnza01sUUQe28zx1+oJm7x5DzidA=;
-        b=EIUBxScYFCSWT7G8pgBp274YZ8cDHgWfDgDpvqc7oiyuPUOdvVEwt0vn5sgLhvA+XQ
-         x2Vkkb8RNQKgaoK0TP+f2GOUjRU1TsLA17DuHS8gugYAAeUMjESRQ1CLtcmDIvMYv/7U
-         7+hsypfqZBb5jd2EM+/eTV/F0ncsHmFc1skHVbclj3JN+2UiQF1yFc/T4+RR3CSn7jAf
-         URvVrJZjiZ/VpKHYQdJtLaA/DKniShLL9iUD5w1W0EUo4d0/2x6lLXJKfIkht2rk3Bln
-         fcOY56o9auCbZ8DmSeBuPGTgskA/JbVenk1by7F/X/jXDkR2fOK+6SrpPwp3+xtm+D0j
-         Wi+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzqV6xQ8DYRAKvO76QjkZLkOsSv9PnoaHrGKn40jzz8hP0y5pDt+mXuQ+31QfxzY1DZ4BgXTWcSh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN3toPHB8cJuHdotQ44YPVgehHGbsVIV0QHIVJldktjP/JHONF
-	V6c8lgcitUGhi4sGWBTc2Dx6nW+IGZd0GKYhkybU9jMYHSDlJ2tbgF9aYOX5/56qTwOr7NdHSB7
-	TYb8o9XAZxwaQwRmq9eM0Lo7I3Gx7dG0S3ODjCCGA/95QnpoXCJZ1JZZjKQ==
-X-Received: by 2002:a05:6602:3284:b0:834:f667:217a with SMTP id ca18e2360f4ac-8379202f708mr89166639f.1.1728680550021;
-        Fri, 11 Oct 2024 14:02:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFqD2f+aFQtnYWBNo5lj3VmQuysrsCAI+ZXqdxvd+ha7KP/RQaF5OE/2Ag0jxh8N+y1wX+hmg==
-X-Received: by 2002:a05:6602:3284:b0:834:f667:217a with SMTP id ca18e2360f4ac-8379202f708mr89165039f.1.1728680549687;
-        Fri, 11 Oct 2024 14:02:29 -0700 (PDT)
+        bh=QMUBbZRfSoQvEodUgNa2TXbxyHgaQJ7LEL/v8sBXYi4=;
+        b=X3SNzT+QkYyX66hYZ9C8waGJBhaNp5FMCw74lqZ99w9s2esLwRvP6nQSEl/YRbdzU3
+         YOTzj5IHltdVlaG0rdcMzTHt033hQMd/QqgP4ck1lg/l5JNXebgzRIs8qLKU277Qzh8I
+         gpBFPsk4pP344R1/o4CikfqGEMzX+1A6BLhZEUNRUraGrilOnvNw7Uu0+3bH+TG+TDio
+         WQeGhokk/zbhRW1jiElV1ixyhX1QrWAm6ZYt+vMDoI1He9pF4wKrodCwF3h20OxfB9FY
+         YNvJgQdqCAOhnb5XHuFZAAuNFuBDdKfT/kWrtc83OOIrY7tNPNAUYthW0DKe6tTHwUJ+
+         NPvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0DH20KPTARD5ek3cYiM1XzsGpnoOPFQVtPpqSfzsQ86GP1FaAqA3EhAlt8irhKP0s0/PCQzEDXYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmsni/xO6lO4kpuBybsSoJlBZ0XlNBJoI6nTVqq9J11Tu1syDh
+	P09NgXqA26E9OvD9K1i99HCiEIdclHEmg/QDFrMRXNSC5FI1V4ZzH4l4MebopxWDmK9D7jlNMXZ
+	OWPQZIxFUILOEFgbrHFoM22Y8IG4kp9TVxWwmP4ilaVBPQHEtF2GG7m6dMQ==
+X-Received: by 2002:a05:6808:2223:b0:3e0:38ab:718e with SMTP id 5614622812f47-3e5c9131c45mr920641b6e.10.1728681254515;
+        Fri, 11 Oct 2024 14:14:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExBvBAUNHD/iMT7K/PYik7aFQyB3k755ifaewktdrtEizCuwl6K0a6zwI2kI4XKE/nPufnIg==
+X-Received: by 2002:a05:6808:2223:b0:3e0:38ab:718e with SMTP id 5614622812f47-3e5c9131c45mr920634b6e.10.1728681254206;
+        Fri, 11 Oct 2024 14:14:14 -0700 (PDT)
 Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbad9b15absm792043173.34.2024.10.11.14.02.28
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e50a29d05csm809691b6e.6.2024.10.11.14.14.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 14:02:29 -0700 (PDT)
-Date: Fri, 11 Oct 2024 15:02:27 -0600
+        Fri, 11 Oct 2024 14:14:13 -0700 (PDT)
+Date: Fri, 11 Oct 2024 15:14:10 -0600
 From: Alex Williamson <alex.williamson@redhat.com>
 To: Zhi Wang <zhiw@nvidia.com>
 Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
@@ -69,12 +69,11 @@ Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
  <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
  <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
  <zhiwang@kernel.org>
-Subject: Re: [RFC 10/13] vfio/pci: emulate CXL DVSEC registers in the
- configuration space
-Message-ID: <20241011150227.1b41a479.alex.williamson@redhat.com>
-In-Reply-To: <20240920223446.1908673-11-zhiw@nvidia.com>
+Subject: Re: [RFC 11/13] vfio/cxl: introduce VFIO CXL device cap
+Message-ID: <20241011151410.04ac0bc9.alex.williamson@redhat.com>
+In-Reply-To: <20240920223446.1908673-12-zhiw@nvidia.com>
 References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<20240920223446.1908673-11-zhiw@nvidia.com>
+	<20240920223446.1908673-12-zhiw@nvidia.com>
 Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -87,53 +86,140 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Sep 2024 15:34:43 -0700
+On Fri, 20 Sep 2024 15:34:44 -0700
 Zhi Wang <zhiw@nvidia.com> wrote:
 
-> A CXL device has many DVSEC registers in the configuration space for
-> device control and enumeration. E.g. enable CXL.mem/CXL.cahce.
+> The userspace needs CXL device information, e.g. HDM decoder registers
+> offset to know when the VM updates the HDM decoder and re-build the
+> mapping between GPA in the virtual HDM decoder base registers and the
+> HPA of the CXL region created by the vfio-cxl-core when initialize the
+> CXL device.
 > 
-> However, the kernel CXL core owns those registers to control the device.
-> Thus, the VM is forbidden to touch the physical device control registers.
+> To acheive this, a new VFIO CXL device cap is required to convey those
+> information to the usersapce.
 > 
-> Read/write the CXL DVSEC from/to the virt configuration space.
+> Introduce a new VFIO CXL device cap to expose necessary information to
+> the userspace. Initialize the cap with the information filled when the
+> CXL device is being initialized. vfio-pci-core fills the CXL cap into
+> the caps returned to userapce when CXL is enabled.
 > 
 > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 > ---
->  drivers/vfio/pci/vfio_pci_config.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/vfio/pci/vfio_cxl_core.c | 15 +++++++++++++++
+>  drivers/vfio/pci/vfio_pci_core.c | 19 ++++++++++++++++++-
+>  include/linux/vfio_pci_core.h    |  1 +
+>  include/uapi/linux/vfio.h        | 10 ++++++++++
+>  4 files changed, 44 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index 98f3ac2d305c..af8c0997c796 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -1902,6 +1902,15 @@ static ssize_t vfio_config_do_rw(struct vfio_pci_core_device *vdev, char __user
+> diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
+> index d8b51f8792a2..cebc444b54b7 100644
+> --- a/drivers/vfio/pci/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/vfio_cxl_core.c
+> @@ -367,6 +367,19 @@ static int setup_virt_comp_regs(struct vfio_pci_core_device *core_dev)
+>  	return 0;
+>  }
 >  
->  			perm = &ecap_perms[cap_id];
->  			cap_start = vfio_find_cap_start(vdev, *ppos);
+> +static void init_vfio_cxl_cap(struct vfio_pci_core_device *core_dev)
+> +{
+> +	struct vfio_cxl *cxl = &core_dev->cxl;
 > +
-> +			if (cap_id == PCI_EXT_CAP_ID_DVSEC) {
-> +				u32 dword;
-
-This should be an __le32 and we should use an le32_to_cpu before
-comparison to PCI_VENDOR_ID_CXL.
-
+> +	cxl->cap.header.id = VFIO_DEVICE_INFO_CAP_CXL;
+> +	cxl->cap.header.version = 1;
+> +	cxl->cap.hdm_count = cxl->hdm_count;
+> +	cxl->cap.hdm_reg_offset = cxl->hdm_reg_offset;
+> +	cxl->cap.hdm_reg_size = cxl->hdm_reg_size;
+> +	cxl->cap.hdm_reg_bar_index = cxl->comp_reg_bar;
+> +	cxl->cap.dpa_size = cxl->dpa_size;
+> +}
 > +
-> +				memcpy(&dword, vdev->vconfig + cap_start + PCI_DVSEC_HEADER1, 4);
+>  int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
+>  {
+>  	struct vfio_cxl *cxl = &core_dev->cxl;
+> @@ -401,6 +414,8 @@ int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
+>  	if (ret)
+>  		goto err_enable_cxl_device;
+>  
+> +	init_vfio_cxl_cap(core_dev);
 > +
-> +				if (PCI_DVSEC_HEADER1_VID(dword) == PCI_VENDOR_ID_CXL)
-> +					perm = &virt_perms;
+>  	flags = VFIO_REGION_INFO_FLAG_READ |
+>  		VFIO_REGION_INFO_FLAG_WRITE |
+>  		VFIO_REGION_INFO_FLAG_MMAP;
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index e0f23b538858..47e65e28a42b 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -963,6 +963,15 @@ static int vfio_pci_info_atomic_cap(struct vfio_pci_core_device *vdev,
+>  	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
+>  }
+>  
+> +static int vfio_pci_info_cxl_cap(struct vfio_pci_core_device *vdev,
+> +				 struct vfio_info_cap *caps)
+> +{
+> +	struct vfio_cxl *cxl = &vdev->cxl;
+> +
+> +	return vfio_info_add_capability(caps, &cxl->cap.header,
+> +					sizeof(cxl->cap));
+> +}
+> +
+>  static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
+>  				   struct vfio_device_info __user *arg)
+>  {
+> @@ -984,9 +993,17 @@ static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
+>  	if (vdev->reset_works)
+>  		info.flags |= VFIO_DEVICE_FLAGS_RESET;
+>  
+> -	if (vdev->has_cxl)
+> +	if (vdev->has_cxl) {
+>  		info.flags |= VFIO_DEVICE_FLAGS_CXL;
+>  
+> +		ret = vfio_pci_info_cxl_cap(vdev, &caps);
+> +		if (ret) {
+> +			pci_warn(vdev->pdev,
+> +				 "Failed to setup CXL capabilities\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	info.num_regions = VFIO_PCI_NUM_REGIONS + vdev->num_regions;
+>  	info.num_irqs = VFIO_PCI_NUM_IRQS;
+>  
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index e5646aad3eb3..d79f7a91d977 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -80,6 +80,7 @@ struct vfio_cxl {
+>  	struct resource ram_res;
+>  
+>  	struct vfio_cxl_region region;
+> +	struct vfio_device_info_cap_cxl cap;
 
-We're making an assumption here that all CXL defined DVSEC capabilities
-will have the same behavior.  Also, should we bother to expose an
-emulated, dummy capability, or should we expect the VMM to handle
-emulating it?  Doesn't the virt_perms allow the entire capability,
-including headers to be writable?  Thanks,
+We should create this dynamically on request, the device info ioctl is
+not a fast path.  Thanks,
 
 Alex
 
-> +			}
->  		} else {
->  			WARN_ON(cap_id > PCI_CAP_ID_MAX);
+>  };
 >  
+>  struct vfio_pci_core_device {
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 0895183feaac..9a5972961280 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -257,6 +257,16 @@ struct vfio_device_info_cap_pci_atomic_comp {
+>  	__u32 reserved;
+>  };
+>  
+> +#define VFIO_DEVICE_INFO_CAP_CXL		6
+> +struct vfio_device_info_cap_cxl {
+> +	struct vfio_info_cap_header header;
+> +	__u8 hdm_count;
+> +	__u8 hdm_reg_bar_index;
+> +	__u64 hdm_reg_size;
+> +	__u64 hdm_reg_offset;
+> +	__u64 dpa_size;
+> +};
+> +
+>  /**
+>   * VFIO_DEVICE_GET_REGION_INFO - _IOWR(VFIO_TYPE, VFIO_BASE + 8,
+>   *				       struct vfio_region_info)
 
