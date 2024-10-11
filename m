@@ -1,141 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F78B4C7D;
-	Fri, 11 Oct 2024 01:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2F51E8834;
+	Fri, 11 Oct 2024 02:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728609016; cv=none; b=dl3gcfW1cLjSZkY5LIYKNW11MiPTyWzhavxKX1WaWpJuN2OFSmcorzoRCwBEa+zf0JJCEk0+uOlz2c9L7b5HbWmBPC3aankSMjuka43eOXDtpAJNe4VovOUYRMWn8vN5yW5pnEsdHv3+PqQCZH2Dd929DAZ9XpmIagXZWxB6X/s=
+	t=1728612561; cv=none; b=UnXF+U9ANqZN4lANGIGby8Z+V+Ht6BJ22HvfeqJgc5I1r3I7f6YlLP2/BHJXKYOr768rfCpi70tiYUd4YDuRta2kagBSa7NtfAvVqvMgqtG8hxBqCmq8gSspNCStpWdtHr/3iHw2yUXdtSFTmTQstyKCiQXTlo+kp/ras7w7tQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728609016; c=relaxed/simple;
-	bh=CxcNe39wol/3RMMdthb7jSSJhVKt++1yY7sFwySt0Ug=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qH3CvKfZcsjaAn2CxtKuEgGrwDzbY8WDFEJ0ZXrrzLMyFahLEiHTVjoihs3V/fy9JvF6W8fXvd0tx73zAY2VL4vOuLLOiLG56yE7xTUYLotokHWF6MElxf5F2WwqVYVe9kAOrO85pHvwul0MZwQqBkOGaLuHzo+5enr9UXa5Qg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GYtbvKND; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1728612561; c=relaxed/simple;
+	bh=aI+kVo3JrrNJ7YGaRvYFfYl3G/dHWG/G4ayXbq9TxyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqOsac9DA5KDjqKUq0VYiNVHyVvkqn4lcTjUBFxfb8r0rfSiSd6j5o4LqOTdCWm8AqtYOFwpPx6QRUI1Qd8dRSPjXuATejOZm2DQ2ROaPvDN2UIKrYUvy66/L73l8acSyvMbYVo5lXtvxHQqx/XH6hir9zf1ldEFuMDtycP7ffc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ti/J1EnJ; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GYtbvKND"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728609015; x=1760145015;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=CxcNe39wol/3RMMdthb7jSSJhVKt++1yY7sFwySt0Ug=;
-  b=GYtbvKNDO1MVSnybToA8ELBB0/eSb6lMziauiwIY94Au1cOxow/ocbT9
-   m/OagYXQzpquj/woIJtAvSfFsfaHr5suDlhW1VuFQA5lVn8pcHdO7s0h1
-   Jbk1aeWY9P7YlomapZ12tNVldMeEujNriEvVOuJUaS1X71S6XOGiB2DRY
-   jn+a6ROpE0hekVRzNM3I+/QjpaG4Bw2tiFRdQTVhmEZznqL+PzfQs87uU
-   /FYftKCkSOsjN+OHN7L83l/vRqRKxg5/vHwzV3TTjNj7Kdm5KOXSwbeW/
-   5768xNZZyZejwNKPvCinXQL/uHsdwI/XRSHD6P6svQr+L4WdEAMtKasl7
-   A==;
-X-CSE-ConnectionGUID: ubpQHaTfTkK0v5r9BN/Y5Q==
-X-CSE-MsgGUID: r16xOe25S1CbinNtVm0r5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="30869209"
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="30869209"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 18:10:14 -0700
-X-CSE-ConnectionGUID: cLQw4wNyTAeywHSh/b7aKQ==
-X-CSE-MsgGUID: FkIIDcY1SSeg17kKRAtytA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="107629082"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 18:10:11 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  linux-cxl@vger.kernel.org,  Dan Williams
- <dan.j.williams@intel.com>,  Davidlohr Bueso <dave@stgolabs.net>,
-  Jonathan Cameron <jonathan.cameron@huawei.com>,  Alistair Popple
- <apopple@nvidia.com>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  Baoquan He <bhe@redhat.com>,  Dave Jiang <dave.jiang@intel.com>,  Alison
- Schofield <alison.schofield@intel.com>
-Subject: Re: [RFC] resource: Avoid unnecessary resource tree walking in
- __region_intersects()
-In-Reply-To: <d129bbe4-8ae8-4915-bd9c-b38b684e8103@redhat.com> (David
-	Hildenbrand's message of "Thu, 10 Oct 2024 14:54:33 +0200")
-References: <20241010065558.1347018-1-ying.huang@intel.com>
-	<d129bbe4-8ae8-4915-bd9c-b38b684e8103@redhat.com>
-Date: Fri, 11 Oct 2024 09:06:37 +0800
-Message-ID: <87set3a1nm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ti/J1EnJ"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2dc61bc41so841549a91.1;
+        Thu, 10 Oct 2024 19:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728612560; x=1729217360; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HjWeD9HT47zkfpKbRTMi6no6+ST4z9rpRHbcw/ft7DA=;
+        b=Ti/J1EnJFmmN3EUfT4PdVSULJVCHRUqG2nqNKFPDB9VVX3BJWeTaSk5fIUURqI+WnE
+         oRZVPIiMFoOyNfvk6rIuQBGEyAhDb2O8dzQDZH1k+M8SwSJnfu37gid2kIQl1DbJh+5P
+         roqj/hNrWBZv+3NraYSMvnX3USsPrUBvVIdDlw0XH/LaL44ZAX+gdOvx2AbTWqOrv6LV
+         6lgk54Mpw+iR4bcmTeXmJKuj6ocMu+3iWX2qt7yqiKk+slAfzcWSxPX42oExxrHhZqmo
+         ikII3Haz6HRUhMLCKLAjnVAVefFuoDgl5vi3LAHfs4lRhJ2SGdSfULGf2d4VX4BbEqzd
+         9BHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728612560; x=1729217360;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HjWeD9HT47zkfpKbRTMi6no6+ST4z9rpRHbcw/ft7DA=;
+        b=pEJ/Aj6gb0aXQCEBFn2x+njlYHqWbwNH4aIyRvm4uCgVa466hxNtMn8EQIyhynhRhR
+         q9+FGjLnbzsjE4fcP1ugRcSY96xv/klkzyNwgQXzmKLU5q4/JiRMI4EPu89M/s6I8gP9
+         7pWnWSChQjtk9wFAmR53bmR6Br6Ocr1UVarCTOfbfpRrKnsVGTxz3Csp5E3mA7goETlZ
+         FqBYAAKzRx0F9PR8PUl2cPI7tLpECdyqVyWawpsiOSZF+d4X+otLUW6Hn/GKp65Gc7EB
+         Sl6j/u9S7pJg944NQTFPzzb1pcV9tKaSijK2ZUWxEs+NeA7etnkx9ULg6dB4YJ1A4T9f
+         I4NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUL5r9kIaWQ50QizSDYsVlx77vqcFL0ZZPRqvC5vDXPEC+f8ETwT28NiflZ+ShRrsCW052YCKS1v0yY1jk1@vger.kernel.org, AJvYcCV2TUSzil7V+hrizbukKFbfKBi7fSBNgTKv7JqCz/IBrDn5LHxCLFKl9sQqtLZtkcc94Ky/De9ItEjphQ==@vger.kernel.org, AJvYcCW5rfafEYP0EKZJjWGPjTmIlhJygp6bsDXAgHhTjOUH4DeSAKNybwWrGp8+H4/oaE25PdpR/eqwnyEj@vger.kernel.org, AJvYcCWHpXdM0t+4BGGUqiRPdoJHNqw6Ztq/YoMAe3PDo1wQkk4A9D8+XASlxat1uY9vpTKb+luHUYpcu6Lm@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA7DZARP9TIz1/+LObdDFQ8xeOZLTwueUPRl21jqRZu8+QRv7L
+	fhvdfSy/bqHcw8eIhS8qsYw416LCgfuEzqheEz09a/PAGlcgwslr
+X-Google-Smtp-Source: AGHT+IGmMxiC+DaNWneEaWUXbx942+3srxh6SQiQYR1Tc2s2HP0uHw5IXb6QSGrhhTUBncneke8Rzw==
+X-Received: by 2002:a17:90a:db15:b0:2e2:ba35:3574 with SMTP id 98e67ed59e1d1-2e2f0a7afecmr1668241a91.11.1728612559763;
+        Thu, 10 Oct 2024 19:09:19 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2d5df1ed0sm2122410a91.19.2024.10.10.19.09.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 19:09:19 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 3BB5C4374224; Fri, 11 Oct 2024 09:09:16 +0700 (WIB)
+Date: Fri, 11 Oct 2024 09:09:15 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v4 02/28] printk: Add print format (%pra) for struct range
+Message-ID: <ZwiIy-pIo_BPLtua@archie.me>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-2-c261ee6eeded@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KmiAZmKUS8OFkhKJ"
+Content-Disposition: inline
+In-Reply-To: <20241007-dcd-type2-upstream-v4-2-c261ee6eeded@intel.com>
 
-David Hildenbrand <david@redhat.com> writes:
 
-> On 10.10.24 08:55, Huang Ying wrote:
->> Currently, if __region_intersects() finds any overlapped but unmatched
->> resource, it walks the descendant resource tree to check for
->> overlapped and matched descendant resources.  This is achieved using
->> for_each_resource(), which iterates not only the descent tree, but
->> also subsequent sibling trees in certain scenarios.  While this
->> doesn't introduce bugs, it makes code hard to be understood and
->> potentially inefficient.
->> So, the patch renames next_resource() to __next_resource() and
->> modified it to return NULL after traversing all descent resources.
->> Test shows that this avoids unnecessary resource tree walking in
->> __region_intersects().
->> It appears even better to revise for_each_resource() to traverse the
->> descendant resource tree of "_root" only.  But that will cause "_root"
->> to be evaluated twice, which I don't find a good way to eliminate.
->
-> I'm not sure I'm enjoying below code, it makes it harder for me to
-> understand what's happening.
->
-> I'm also not 100% sure why "p" becomes "root" and "dp" becomes "p" when
-> calling the function :) Likely this works as intended, but it's confusing
-> (IOW, bad naming, especially for dp).
->
->
-> I think you should just leave next_resource() alone and rather add
-> a new function that doesn't conditionally consume NULL pointers
-> (and also no skip_children because you're passing false either way).
->
-> static struct resource *next_resource_XXX(struct resource *root,
-> 		struct resource *p)
-> {
-> 	while (!p->sibling && p->parent) {
-> 		p = p->parent;
-> 		if (p == root)
-> 			return NULL;
-> 	}
-> 	return p->sibling;
-> }
->
-> Maybe even better, add a new for_each_resource() macro that expresses the intended semantics.
->
-> #define for_each_resource_XXX(_root, _p) \
-> 	for ((_p) = (_root)->child; (_p); (_p) = next_resource_XXX(_root, _p))
+--KmiAZmKUS8OFkhKJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes.  This can improve code readability.
+On Mon, Oct 07, 2024 at 06:16:08PM -0500, Ira Weiny wrote:
+> +Struct Range
+> +------------
+> +
+> +::
+> +
+> +	%pra    [range 0x0000000060000000-0x000000006fffffff]
+> +	%pra    [range 0x0000000060000000]
+> +
+> +For printing struct range.  struct range holds an arbitrary range of u64
+> +values.  If start is equal to end only 1 value is printed.
 
-A possible issue is that "_root" will be evaluated twice in above macro
-definition.  IMO, this should be avoided.  Do you have some idea about
-how to do that?  Something like below?
+Do you mean printing only start value in start=3Dequal case?
 
-#define for_each_resource_XXX(_root, _p)                                \
-	for (typeof(_root) __root = (_root), __p = (_p) = (__root)->child; \
-	     __p && (_p); (_p) = next_resource_XXX(__root, _p))
+Confused...
 
-> XXX TBD
->
-> Or do you think this should not only be "improved" for the __region_intersects() use case
-> but for all for_each_resource() users? I cannot tell easily.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-I prefer to make for_each_resource() to traverse only descendant
-resource tree of "_root".  This helps code reusing and make the
-interface easier to be understood.  The difficulty lies in twice
-evaluation as above.
+--KmiAZmKUS8OFkhKJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Best Regards,
-Huang, Ying
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZwiIxwAKCRD2uYlJVVFO
+oxaVAP9PfgNhSqeNCS9x8Z3GR7wEInL1UyyJGOr6Rl+q58Kj0wEAl3ide8qht2EY
+rGtPL8e03mtewkj3HecVC3pCWmSy/gc=
+=a0GV
+-----END PGP SIGNATURE-----
+
+--KmiAZmKUS8OFkhKJ--
