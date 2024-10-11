@@ -1,299 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764171D131E
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 20:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728679050; cv=none; b=dZGrtSXq3x0OiWMr1ZcABPY0FjBbQEaLsCDeUrUMPYU1pCFOZlNE6Vt8mfUZxLMKsHafMD7Tt5821K/xBx3ss4rA6rIUMNJklo0D41qMp1Gu4ME7su7Iwsl3VITL8lIzSa5Xvu9R394RPDMCnG8opxdEwSpRhAJZfjaJKbayF80=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728679050; c=relaxed/simple;
-	bh=ok3Uhus4o1fHHNgAgze2m5cCgEgSOBzJ+bu2Lk58iQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PFQcyViQjwepYxQZxmgHlBoeRtb3s1RBcwnvPUC4mR3BZAU3UHd0DN9K5LewlQoswGSl+7SMmZfxrIoAvqOoCNrZYj4VVD6ClaeN8fIb/hB7GZNM3To39CNuLyFXfwVEVOcvIS0G0SWlIjOL30ghgMZ/qXKmBNlUO1oIB5d9eqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZFXKynBC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1FB19B3CB;
+	Fri, 11 Oct 2024 20:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728679106; cv=fail; b=BVjNLOIQYwimCPY1uHWHaDL88C/BW0CMk+7rlB5hYp+Mhr2vKyOY4ZFfZCaijGIiMVvn6Pq0/ES3/adaT6dXGvCT0S17fM8c4Tl+OIuqWtJqU7Io7hCMYIwJpNOPhpzL48uiq1OdijWINMm9FIyV9pfQW3aO3kMCRV7qTlrpoJg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728679106; c=relaxed/simple;
+	bh=TN06abKnyHnPe8ujbPS7t+Vypi97uRydXUevwEruehs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EL7ITspzyo8obo6jmkUTCtLpqMz6MUrbMJQPsKFHKyAg7Awcg1C2sBcP8SMcY1lmP9jUW5xGE2kK+gPFdD/CV3vntzBDy42D8ttsMumGetFOf8EdzRE//mtl4b/iRW+UayMkmOtMyUxbMghol2NDhX1oP/kjMANiVU79DKBbcTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VgEFy2gk; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFXKynBC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728679047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=83b1hPyOJcDieDQ667domh+NlBgqeUhWWW1JcLYMgsI=;
-	b=ZFXKynBCGjELkFlojI0va/xqiNUMTuj77qDZQ3CzXtgkOqhf95cWty6XzqeIlTPlPaDm8B
-	2vmRIYwzcF2KqOy6eZi38GuyTjHgRViJGNDhvTkhaIueXlNvufuJ15U4qC3v8s1yUYaUTZ
-	9A+xwsloxOROiv2JbPNdS+wSM32nh8s=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-85-VZQSrohuNIab9DnCdEvdDg-1; Fri, 11 Oct 2024 16:37:24 -0400
-X-MC-Unique: VZQSrohuNIab9DnCdEvdDg-1
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-834add432f3so34591339f.2
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 13:37:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728679043; x=1729283843;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=83b1hPyOJcDieDQ667domh+NlBgqeUhWWW1JcLYMgsI=;
-        b=hp/lKr5s90rzjdDDTy6rLdGy8R8+lVhbRGmWFmm/gk8PvHWEWYNxMKrHa1AeHqqcln
-         dPrZFFZavfsqVRHkWGGQR/ZQm5Lz6zkatwEtomOstAsUN5c1WLyiuVKC9yfIy5KLzzKK
-         T4zyOTQzKlyQ7N042Ii1IdVKXmVtm+iV355kqSAmOqI6DC8XFYWRRx+ecwjrgCWcpnVy
-         XUCFTKNJuvFU5C/+ueI+HFdvFbBKskaZSNTgf7ToDqvmJULYW94cdk91wcpabmbAXg0w
-         QUmM/n55X/gmYFbB/aTJGeKEaHuQ4yQSY2a/XclHGqa6QCDBYSxeL0U/x8ovUOd6ewlK
-         i26g==
-X-Forwarded-Encrypted: i=1; AJvYcCUne0c5kHrZ8znrQC4JEdKMKehNkKwGDvdKP8WIqu1YqObllhr2yVoq+7ivsrjvCb2NduAglX0VnC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNIZz1DwtRBMBFYmMuYgnkd6yvTr62V1MwQIP958nppeJWuVRA
-	3ZnIFD/MecEVTFlvQFeCM9c/9dQvihyG0gEqooi/8q0vDj3/QlE5r2uNxmhzLi5Jf6/s2ZaEx8c
-	LqftB2Zrn8guQhSPjroWf4Q+WGgmK8orubm2dFjgMjhAvLCyp5HaiBzYEzg==
-X-Received: by 2002:a5e:8e4d:0:b0:82a:a4f0:c95d with SMTP id ca18e2360f4ac-83794b58cf0mr91138339f.4.1728679043366;
-        Fri, 11 Oct 2024 13:37:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGGzr9L4tEu39Z7uqjYgxawSTwRkH6yKP4IuMAlzewyi0uMldGhyZLXRBPlAt1XieJJwhU9vw==
-X-Received: by 2002:a5e:8e4d:0:b0:82a:a4f0:c95d with SMTP id ca18e2360f4ac-83794b58cf0mr91136739f.4.1728679042876;
-        Fri, 11 Oct 2024 13:37:22 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbadaa9f67sm780452173.153.2024.10.11.13.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 13:37:22 -0700 (PDT)
-Date: Fri, 11 Oct 2024 14:37:19 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
- <kevin.tian@intel.com>, <jgg@nvidia.com>, <alison.schofield@intel.com>,
- <dan.j.williams@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
- <jonathan.cameron@huawei.com>, <ira.weiny@intel.com>,
- <vishal.l.verma@intel.com>, <alucerop@amd.com>, <acurrid@nvidia.com>,
- <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
- <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
- <zhiwang@kernel.org>
-Subject: Re: [RFC 09/13] vfio/pci: introduce CXL device awareness
-Message-ID: <20241011143719.2c6e0458.alex.williamson@redhat.com>
-In-Reply-To: <20240920223446.1908673-10-zhiw@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<20240920223446.1908673-10-zhiw@nvidia.com>
-Organization: Red Hat
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VgEFy2gk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728679105; x=1760215105;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=TN06abKnyHnPe8ujbPS7t+Vypi97uRydXUevwEruehs=;
+  b=VgEFy2gkGkQU259VLMZ/UdgCpSPLXLk6hv7OrAxD7Fvf+Gk288BmML9/
+   +hoVGTCyIG3LEnAQtFonB4nWtI4KEOYwncaDCnmqV2VcuW1foes7oAi++
+   YLqwqsL0tV2mndig2x12P8CupDTF3+LBiMJnaVkzYJN+Z3yHwkfsEvxyW
+   e/iOyh7Odtuu/qLJZ9mT132cxmg+g5Hgj9HylZBlVrCZ/YmQjgMC2xGCW
+   kudUYc7oKQG5JQqDysBs1aByPORjEHHTNLKz4Qi9nt/PS5ukEIzoYWeWy
+   QMvx+8cW+9chNZ6NoRrXTYhgVgnI61mGLgmC1Y0JobJN7XlNYK00TNo0x
+   w==;
+X-CSE-ConnectionGUID: 9kGpW//mRWG/YbzotM5kXg==
+X-CSE-MsgGUID: 7fwjcYm+Sy+KrdiLeJ1TBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39463739"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="39463739"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 13:38:24 -0700
+X-CSE-ConnectionGUID: wEPQbErySMWiQvO4ub+kew==
+X-CSE-MsgGUID: qRKNiSmcSwWU4rPvf8xe+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="81014707"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Oct 2024 13:38:24 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 11 Oct 2024 13:38:23 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 11 Oct 2024 13:38:23 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 11 Oct 2024 13:38:23 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fjQYsi6P4JqiuGAcGF9fG8smaleeNcEMAxXINYAudrA0/Q/SMWgBJw58K2FlnI8aQoOwiCZuWBKY5ZCSKrto/G4J7M+rc7LydmAhEISnl/Coese7BkzF/7WiQKGGsSSuebaRpPrSSFbZZSLB33onjiYKH2rO736SSxp4v++9LV0hkb4FEUkGxh9U+t4gwgKjn6ffv4eoTkdd+Wruk+WIHPAERFCw8CTzXuRquhuQ/xhM92335b9C9EI6hWHSgB5h+Py49nr4JGHkW8wHqctjhtk1h/FszjNupJdhyeeSGi1OnUD/tUwozidu3F3lEtrylLMhfI0SVhS6F+9CCDhXcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7noy4HOjjPxndstDBlybTQwEwCu4S+2zewtIIOvG+z0=;
+ b=gQe8PxC8zWEixkLiz4EjEuSG3pwXpn47dcsESY94bMT1QnmlqptGo8XDdjSNXgo7nJONkY9F/lRHTpAnCASigjsNJbvvSTSvKgEswB8RuVi84Jkgfh0c93g1K4IVDtqJyBI+lASadMhyokfHgCkRolycOvtHrdX8xDVXv50P9MFXekAPY3Qg64+UqNSPxLn5hVUyNL+rCP2qlJlvDUTr8ZYkcIKvQ4/RUzcBfQ9frf8xbRA0Q6mLFYbbXVtkPOrAGaf4blRTmBlhbSPU2cQSR1uxkX6iWFtpT/GSuzW1UfhD0MsUgmCjzmMENJXgImfwSUxlDABfK2uraAOOPXoFsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CH0PR11MB8190.namprd11.prod.outlook.com (2603:10b6:610:188::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Fri, 11 Oct
+ 2024 20:38:18 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8048.018; Fri, 11 Oct 2024
+ 20:38:18 +0000
+Date: Fri, 11 Oct 2024 15:38:12 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Navneet Singh
+	<navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
+	<akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown
+	<lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
+	<acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v4 12/28] cxl/cdat: Gather DSMAS data for DCD regions
+Message-ID: <67098cb436d87_a55db294f8@iweiny-mobl.notmuch>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-12-c261ee6eeded@intel.com>
+ <CAJZ5v0iFco4htzfW1sYYKKh67oe4GsnUBOPRiunHQ1n2FHa3hA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iFco4htzfW1sYYKKh67oe4GsnUBOPRiunHQ1n2FHa3hA@mail.gmail.com>
+X-ClientProxiedBy: MW4PR04CA0188.namprd04.prod.outlook.com
+ (2603:10b6:303:86::13) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH0PR11MB8190:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29ab2738-a44d-448c-6514-08dcea34a339
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WEQ2Y2FvRzA2NkRzd0RicGRSWGk3dVYyTFNWM2lJbU1yREtkVVBQLzArNXZi?=
+ =?utf-8?B?RERWRmh3bDRNa1hGdGphNzk0djNNRlRnUStvRGU4ZHRzQjh4bTdPMllZOGlk?=
+ =?utf-8?B?WWs0MjRLenJ4cCttcUpTTDZ5T2pDekQ2emd5VkhlaCtSMTFZNWdqaFhTVlFa?=
+ =?utf-8?B?Z3IrVG5TdStYTjR5aVN5djRoaVpEV0d0S1daazZHNHVyNEU3R2diWTBxWEdG?=
+ =?utf-8?B?NDhTL09EOEEzNTI5R0U1VDhFTkdXQ1NiZEFWUnl5cVhxcVBFM2diTzQ2bTNq?=
+ =?utf-8?B?QnJBd3VKaUdjTEs1enI5VVkwN2VvUzI4alhkeSsxVk1mbTM0Vk9kbmx3WkVT?=
+ =?utf-8?B?ZDNyYXNqL3FrOTd6K3d2ODg4OVBTMkNUZGNNR3FobWU4K3lEaGdRMDNucGxq?=
+ =?utf-8?B?NDM3MEhqdk5HbmZLVEZtQ1A3aXNVakhhVjNIeit0UXJmKzZBZ3FUWkc2NUFp?=
+ =?utf-8?B?SytLUlZrdXZNN1Y4eXhCK0l5QnhjcGdsZmRjckVVanU4clZoTm9UbVBYdjNT?=
+ =?utf-8?B?RzRHZVZRS0dRR3lpNm1FN3hQZUd4N0traUhNUHU2NHRkMWRyUXlFdm5DMTUv?=
+ =?utf-8?B?bVhpN0dzNnJtckdxcDhIU3NjSVRjbHd0U0ZEblJMeDNBRmFxVTg1N1BmQzVC?=
+ =?utf-8?B?aldkb2o2VjdNYk5wOUVDbGFld2Frd3hReTB1emIvL01TSTZyNE01ZDYxK2px?=
+ =?utf-8?B?aWh2TGp5QmV3WnhqRnE4NkwwWTBGNWNoMFZBWTRkYkgrZ2V0dHkvbXdLQ2E1?=
+ =?utf-8?B?MUF2cklHQTZvbm5ob25GV0tFczRFWWNjMGJ3VUVrMFpBblYzWC9memkwQzhK?=
+ =?utf-8?B?a2xPN05rRUl3MENzUGhYZ2ErWkFQMmE2YmJtUEswRHp2eUNpcHVhYzR6N2hs?=
+ =?utf-8?B?SEpmWmJUKzZZMGZpakxXK0lnZ1FlbW5leG5HUGV6REhOUW1Xc2tXNHl1eGJz?=
+ =?utf-8?B?RXpyS3dQcDRYSkd2T3p5WkFRNHVibHZaYzBiQ09tREtBeWJMRXRUUXFGcFBI?=
+ =?utf-8?B?bnRmNlZvaERGNU1hLzFiQUZvTkhkbGwrTEJoWWpWdm43bFZ5bHhLbTJHdmNx?=
+ =?utf-8?B?Zzk4cldLcmQwQzd2VkoxWjZjTjRSVFRwNWk2MDM3YXpCVHBCZHNPMFJDQ1RO?=
+ =?utf-8?B?OU9PZkpCdkl2YjUwM3FldEF5N1hCWnJNR0JrOUNtTU9YRWgyQlV2N0lkUm9B?=
+ =?utf-8?B?MlF2b1ZCVDd1MFQrSVJUeXd3ZTJ5S01sdG1XUXl3NUpWcGsxR2lwZExOakxr?=
+ =?utf-8?B?aDArK04zK0RSTGdaNWJiTys4NW9Dbzc3VTBWaUEvK21jd2VKTnpHVTJiMVRZ?=
+ =?utf-8?B?YllOaHJrTGxyTEYyd1creEdiRHArYTBnYUlXRVhMVklmSmx0K0pjUTVJcmZJ?=
+ =?utf-8?B?VllEaDdLQm9mb0Jxc21TL3hSU3QySHlVWU9sU293UkdoSGxWUWFVL2tZQUp0?=
+ =?utf-8?B?dXAvcWhid1dHVkR0ckVNNjV4VDQ4MERJbDVtNjBvSCtjcEdxdDZWK08xa2p2?=
+ =?utf-8?B?Vlp2alJZamtYcERZdFJUdXVNZEhwNDVaVWhZTllHeEx6L3ljRUZxSUxmUCtr?=
+ =?utf-8?B?OHdRNDU0YkRtN1NtMXhyU0FJQWs1NG9LZTlvTjVJbWhOWXRBSm45REY0bE5z?=
+ =?utf-8?B?NjVXUCtZZzBxcnlSYk5RWll6WGNLazl2OWNoK29weVNKaDhJUG5iS1c0eHRs?=
+ =?utf-8?B?OHowQnZVQ2dqSXB0cjFKdElGd3dWSmlDY1lJNzBlajlha2czeE1kOEhRPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VjI1anRuTVN0dGlkVmM3S2xYQ2N2ZEhpVGxqUnlwL1RKQW9KaE51akJFaFp0?=
+ =?utf-8?B?NXR5N3hyUUVZU2ZNeGFWR0cwOVJpTC9UcFgydllZS05MMU1qbHlpeUVzM1Nh?=
+ =?utf-8?B?N2pzY2VvdGk1ZnNmVDJzWlRwZnBMb09qOW9SOHM1clRhVzRGYkNUaGRsTHFh?=
+ =?utf-8?B?MHNOUlJYdlRVSGNrc0pzTS83SzhkTDF6aHFSTmc3OGNvQ2Q2dDMzd01SS0Uw?=
+ =?utf-8?B?ay9rRlFsL0NJemtEanRSN29yT0lWVzdzdjNjSjF2TVE0emttUFQ2aEYxMnQ4?=
+ =?utf-8?B?bGFkNGpTVytqQVBLY2hYWkQwbWExUVcrZVhlOHN3T09aOFEzeXRxdHhkd01m?=
+ =?utf-8?B?NVNad091RG9ic2tqMUtUNStobThxTjJhQ2dVMmlZanl4VERFM3k4YUJUOXJJ?=
+ =?utf-8?B?dVRMWnVDL2F2QmUvVVZlbjNtaWdNUzV5WGtkM1BycjZwZmpwcWZMZ05vNE5W?=
+ =?utf-8?B?Y3hGR2x4c2tYOElIay9kL3pYZllYRm02VEM2V0lKd1kyRVNIb2ltYS9sNGNa?=
+ =?utf-8?B?eEVjbzV5azZYSEZLMUVKdlFsTHZDWDY4enRhanFPZTU2b2w0enVJKzNPSXIx?=
+ =?utf-8?B?SXZESkxFMGcwV0dkSTQ0Z2VYcFhNOVlvQjlyYVRSZjU0d0dqMjBOQk1FQVAv?=
+ =?utf-8?B?N0lVTks2UjQ1SnM3ZDlvRk9rcDZNbVdMcnJXQXpyREdmcHRxSStuV2Rka3Bo?=
+ =?utf-8?B?UE9acmM0ZEFMdDA2OXYvdWFtUVZIZmFaS0crYTdYa1J1UFI0US9rQ041MUxp?=
+ =?utf-8?B?cU05dndaa2N1UXJweXNNaXBFUjlCRk9YdWdrelVtVzhTUHdTYmJYemV2TlNl?=
+ =?utf-8?B?UkdFeXJUdUdGUUV4U1VVamltbE1MNXZUTGlhTjB6SkljWE40Q0xjNFlhdERt?=
+ =?utf-8?B?L0o3R2tRMERkR1E2MW5SVUJBakc4ZWpUUkgzOEMzN3VxdG1BWWZqdXQyZUJ6?=
+ =?utf-8?B?eHZTZzhIUnJxR0k1eE8xS2dJZkNGZ1h0SFExa25nWjZ6RDI0eko0MjExOXBD?=
+ =?utf-8?B?OEZIKzB1dDF5VXZRWDc2VVN6Vk5SZzZrdnRrZDRVK3lUcXpLSkFGcjA1NHZ0?=
+ =?utf-8?B?YUZwcFQxdTQ0ZkV5Q2gyRXIybEJyaUxvY3ZZRklvdkloOFB2emRzSktpQUlZ?=
+ =?utf-8?B?b1RjbFZHTGlEZXJwMFpldHpJNUZUdHcrWUVNWnl6NkdpakVLb3B4VnNEOXEv?=
+ =?utf-8?B?THlDUlJVUWZPNGs4SjA2bG9rNENyMnF1MHRlYzNEaUVidnpIRWFJWlV2TS9R?=
+ =?utf-8?B?eEk1azd2UmluTFdWSHZOR05VdWIxM3VzVlZRRlRjWnJnSmVpVlZrVGdtU1gx?=
+ =?utf-8?B?RDFySkxyMDh6OVlmTDh0cXV2SktIK3JjZW5kVTg0VnQ4RjYwYkZWQTdmb2Vk?=
+ =?utf-8?B?TVJtcml1cktWNm94OUU3WVhnNUx2WWlVQ1RsWGJza1VFaTdaei9tcGhPZGZ3?=
+ =?utf-8?B?bUZVRFZWNlA2TU9uaHJDRXhMM3JKeXVEUmJld1hXa01VUzdvTTdNSTI1UFh6?=
+ =?utf-8?B?MWRTSXl2RThjalpCZDFESWwwTkp0RU1BL3VSbml0SXE3Y1NVRjE3dWNaVGk1?=
+ =?utf-8?B?Tk5Uc2lZdThRMHJTS1FjN3ZOYURoK0F3cy9Reis4RWJXNnBWWlhlOFJwbUJ5?=
+ =?utf-8?B?dlBLT2ZNU3ZqdEdNQ1oxMUlKTG1DQUU5a0daZkRMRFlLSUFmc1RxNlNPT0VV?=
+ =?utf-8?B?U0FSV3BTTUIwRHVSZEt1RzQ1Yk9ZY2s3MjhkRkx6REI3TXgzcHlVVkFidmxu?=
+ =?utf-8?B?RzJHc21DRFdublJacE9UNmorUzF1VEo1ZnNKbDlaTFVWNkZ2ZjVOMzhycTZI?=
+ =?utf-8?B?cEpSdVlJVjRmQkxCM0V3eDkwZU9FdEE5TXdXN0Zsa3YwVk0wdU1tMFY1Ujdw?=
+ =?utf-8?B?TGZwRmZSSjlubVNnUExFT2lNOWxjR1V4bmxSbTRnK1RUNURTYXFZT2dueDg5?=
+ =?utf-8?B?bGp3NngxTEo4VkErSjNEUTc3TFZyZ3VNM2xJc3o0dlhoYnkwa29STVV3azRr?=
+ =?utf-8?B?aDlCQ0w1K3BUajZhVkpVcTNZK242bXVSeU40OXVaTDBZWW9TUWl6U3NKY0NS?=
+ =?utf-8?B?OHh5RU9hbm9yeVpGVkZGVzJRUTYvd2FFaXE2Q3hVQ3RUVHBkaHBmL2ZMcDJV?=
+ =?utf-8?Q?wacg5Hz52S76P9oJfQkoS9DQA?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29ab2738-a44d-448c-6514-08dcea34a339
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 20:38:18.2647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hJRFrua5VQAcgaDgqeh+O7CQBlG+u5KapVxvs6i4aX0N45WX1bqTEpe8huSLqUGqpDdbY9AL5W8wwwGE/mOxtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8190
+X-OriginatorOrg: intel.com
 
-On Fri, 20 Sep 2024 15:34:42 -0700
-Zhi Wang <zhiw@nvidia.com> wrote:
+Rafael J. Wysocki wrote:
+> On Tue, Oct 8, 2024 at 1:17 AM Ira Weiny <ira.weiny@intel.com> wrote:
+> >
 
-> CXL device programming interfaces are built upon PCI interfaces. Thus
-> the vfio-pci-core can be leveraged to handle a CXL device.
+[snip]
+
+> > diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+> > index 199afc2cd122..387fc821703a 100644
+> > --- a/include/acpi/actbl1.h
+> > +++ b/include/acpi/actbl1.h
+> > @@ -403,6 +403,8 @@ struct acpi_cdat_dsmas {
+> >  /* Flags for subtable above */
+> >
+> >  #define ACPI_CDAT_DSMAS_NON_VOLATILE        (1 << 2)
+> > +#define ACPI_CDAT_DSMAS_SHAREABLE           (1 << 3)
+> > +#define ACPI_CDAT_DSMAS_READ_ONLY           (1 << 6)
+> >
+> >  /* Subtable 1: Device scoped Latency and Bandwidth Information Structure (DSLBIS) */
+> >
 > 
-> However, CXL device also has difference with PCI devicce:
-> 
-> - No INTX support, only MSI/MSIX is supported.
-> - Resest is one via CXL reset. FLR only resets CXL.io.
-> 
-> Introduce the CXL device awareness to the vfio-pci-core. Expose a new
-> VFIO device flags to the userspace to identify the VFIO device is a CXL
-> device. Disable INTX support in the vfio-pci-core. Disable FLR reset for
-> the CXL device as the kernel CXL core hasn't support CXL reset yet.
-> Disable mmap support on the CXL MMIO BAR in vfio-pci-core.
+> Is there an upstream ACPICA commit for this?
 
-Why are we disabling mmap on the entire BAR when we have sparse mmap
-support to handle disabling mmap only on a portion of the BAR, which
-seems to be the case needed here.  Am I mistaken?
- 
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_cxl_core.c |  8 ++++++
->  drivers/vfio/pci/vfio_pci_core.c | 42 +++++++++++++++++++++-----------
->  include/linux/vfio_pci_core.h    |  2 ++
->  include/uapi/linux/vfio.h        |  1 +
->  4 files changed, 39 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
-> index bbb968cb1b70..d8b51f8792a2 100644
-> --- a/drivers/vfio/pci/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/vfio_cxl_core.c
-> @@ -391,6 +391,8 @@ int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
->  	if (ret)
->  		return ret;
->  
-> +	vfio_pci_core_enable_cxl(core_dev);
-> +
->  	ret = vfio_pci_core_enable(core_dev);
->  	if (ret)
->  		goto err_pci_core_enable;
-> @@ -618,6 +620,12 @@ ssize_t vfio_cxl_core_write(struct vfio_device *core_vdev, const char __user *bu
->  }
->  EXPORT_SYMBOL_GPL(vfio_cxl_core_write);
->  
-> +void vfio_pci_core_enable_cxl(struct vfio_pci_core_device *core_dev)
-> +{
-> +	core_dev->has_cxl = true;
-> +}
-> +EXPORT_SYMBOL(vfio_pci_core_enable_cxl);
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR(DRIVER_AUTHOR);
->  MODULE_DESCRIPTION(DRIVER_DESC);
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 9373942f1acb..e0f23b538858 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -126,6 +126,9 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
->  		if (!(res->flags & IORESOURCE_MEM))
->  			goto no_mmap;
->  
-> +		if (vdev->has_cxl && bar == vdev->cxl.comp_reg_bar)
-> +			goto no_mmap;
-> +
->  		/*
->  		 * The PCI core shouldn't set up a resource with a
->  		 * type but zero size. But there may be bugs that
-> @@ -487,10 +490,15 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  	if (ret)
->  		goto out_power;
->  
-> -	/* If reset fails because of the device lock, fail this path entirely */
-> -	ret = pci_try_reset_function(pdev);
-> -	if (ret == -EAGAIN)
-> -		goto out_disable_device;
-> +	if (!vdev->has_cxl) {
-> +		/* If reset fails because of the device lock, fail this path entirely */
-> +		ret = pci_try_reset_function(pdev);
-> +		if (ret == -EAGAIN)
-> +			goto out_disable_device;
-> +	} else {
-> +		/* CXL Reset is missing in CXL core. FLR only resets CXL.io path. */
-> +		ret = -ENODEV;
-> +	}
+There is a PR for it now.
 
-Seems like this should perhaps be a prerequisite to exposing the device
-to userspace, otherwise how is the state sanitized between uses?
+	https://github.com/acpica/acpica/pull/976
 
->  
->  	vdev->reset_works = !ret;
->  	pci_save_state(pdev);
-> @@ -498,14 +506,17 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  	if (!vdev->pci_saved_state)
->  		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
->  
-> -	if (likely(!nointxmask)) {
-> -		if (vfio_pci_nointx(pdev)) {
-> -			pci_info(pdev, "Masking broken INTx support\n");
-> -			vdev->nointx = true;
-> -			pci_intx(pdev, 0);
-> -		} else
-> -			vdev->pci_2_3 = pci_intx_mask_supported(pdev);
-> -	}
-> +	if (!vdev->has_cxl) {
-> +		if (likely(!nointxmask)) {
-> +			if (vfio_pci_nointx(pdev)) {
-> +				pci_info(pdev, "Masking broken INTx support\n");
-> +				vdev->nointx = true;
-> +				pci_intx(pdev, 0);
-> +			} else
-> +				vdev->pci_2_3 = pci_intx_mask_supported(pdev);
-> +		}
-> +	} else
-> +		vdev->nointx = true; /* CXL device doesn't have INTX. */
->  
+Do I need to reference that in this patch?  Or wait for it to be merged
+and drop this hunk?
 
-Why do we need to do anything here?  nointx is for exposing a device
-with INTx support as if it does not have INTx support.  If a CXL device
-simply does not support INTx, like SR-IOV VFs, this is not necessary,
-the interrupt pin register should be zero.  Is that not the case on a
-CXL device?
-
->  	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
->  	if (vdev->pci_2_3 && (cmd & PCI_COMMAND_INTX_DISABLE)) {
-> @@ -541,7 +552,6 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  	if (!vfio_vga_disabled() && vfio_pci_is_vga(pdev))
->  		vdev->has_vga = true;
->  
-> -
-
-Gratuitous whitespace change.
-
->  	return 0;
->  
->  out_free_zdev:
-> @@ -657,7 +667,8 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
->  	 * Disable INTx and MSI, presumably to avoid spurious interrupts
->  	 * during reset.  Stolen from pci_reset_function()
->  	 */
-> -	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-> +	if (!vdev->nointx)
-> +		pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-
-No, this is not what nointx is for.  Regardless it should be a no-op on
-a device that doesn't support INTx.
-
->  
->  	/*
->  	 * Try to get the locks ourselves to prevent a deadlock. The
-> @@ -973,6 +984,9 @@ static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
->  	if (vdev->reset_works)
->  		info.flags |= VFIO_DEVICE_FLAGS_RESET;
->  
-> +	if (vdev->has_cxl)
-> +		info.flags |= VFIO_DEVICE_FLAGS_CXL;
-> +
-
-So the proposal is that a vfio-cxl device will expose *both* PCI and
-CXL device compatibility flags?  That means existing userspace
-expecting only a PCI device will try to make use of this.  Shouldn't
-the device be bound to vfio-pci rather than a vfio-cxl driver for that,
-if it's even valid?
-
->  	info.num_regions = VFIO_PCI_NUM_REGIONS + vdev->num_regions;
->  	info.num_irqs = VFIO_PCI_NUM_IRQS;
->  
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index 9d295ca9382a..e5646aad3eb3 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -113,6 +113,7 @@ struct vfio_pci_core_device {
->  	bool			needs_pm_restore:1;
->  	bool			pm_intx_masked:1;
->  	bool			pm_runtime_engaged:1;
-> +	bool			has_cxl:1;
-
-I wonder if has_cxl is based on has_vga, I would have expected is_cxl.
-A PCI device that supports VGA is a much more discrete add-on, versus
-my limited understanding of CXL is that it is a CXL device where PCI is
-mostly just the configuration and enumeration interface, ie. CXL.io.
-
->  	struct pci_saved_state	*pci_saved_state;
->  	struct pci_saved_state	*pm_save;
->  	int			ioeventfds_nr;
-> @@ -208,5 +209,6 @@ ssize_t vfio_cxl_core_read(struct vfio_device *core_vdev, char __user *buf,
->  			   size_t count, loff_t *ppos);
->  ssize_t vfio_cxl_core_write(struct vfio_device *core_vdev, const char __user *buf,
->  			    size_t count, loff_t *ppos);
-> +void vfio_pci_core_enable_cxl(struct vfio_pci_core_device *core_dev);
->  
->  #endif /* VFIO_PCI_CORE_H */
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 71f766c29060..0895183feaac 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -214,6 +214,7 @@ struct vfio_device_info {
->  #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
->  #define VFIO_DEVICE_FLAGS_CAPS	(1 << 7)	/* Info supports caps */
->  #define VFIO_DEVICE_FLAGS_CDX	(1 << 8)	/* vfio-cdx device */
-> +#define VFIO_DEVICE_FLAGS_CXL	(1 << 9)	/* Device supports CXL support */
-
-Comment wording.  Thanks,
-
-Alex
-
->  	__u32	num_regions;	/* Max region index + 1 */
->  	__u32	num_irqs;	/* Max IRQ index + 1 */
->  	__u32   cap_offset;	/* Offset within info struct of first cap */
-
+Ira
