@@ -1,79 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC8819AD97
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 21:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80591194A67
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 21:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728681260; cv=none; b=KtzRHe3y8+KdI0f2HkRD5nWjRlPhSyD+K65K9RJUXwoqejyHdy2YAIrPUbjmq7RPYOpnizMeRg/C//srxnsViL4wDsABo8stLDOLgPy0O3syVjExK8b8Wm0KPc8YLtXCK/D81KzAVT6lR9qECphrkr6cKoMmAid3I6yRi/phq5g=
+	t=1728683262; cv=none; b=XQ27L1JWFZizJ5jpKynHGX94DFcBRY3ZFRsgIiohv0rDxFejNNdmno/zioEZbZUWDjgXAJecz7h34lwU5qMzAsN0Tc/lVNLE8NQP5mW1AJczhWUiZT8cYb+8tCTXrjYTPhDqh/L/9aiscB3qDsTwX2HUs1uUVjRBTn4NjRWooMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728681260; c=relaxed/simple;
-	bh=ExMoUpCDJ/R6BehmPeDOlR4R77PKPTu6pDUU6pP5rKs=;
+	s=arc-20240116; t=1728683262; c=relaxed/simple;
+	bh=ix4thBlpRIL6pfM9YON38TDCTRXcpVvSIDwZJJiPPXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tIxLNycR1uxuJ/93p5LKFUlXsr8wDcI40Ke20vyIAqofgsKOFA//PPPZ/qlmpko9a0vhqYP5eC6H54SARb7E9NGUofXEleihaPcnyU1piIWs70Rem3L4K9CiFHbGx/boxUMnClE8L/vLZ1EDsWDlLfFLxknZfIxwrcEKNKNhgF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IpL5Ypov; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=lRBxHjkUGzz//SWYSeAUFlzTh5eBesbXG0RiKE1Mlel8TA5/897KfsgXbCs6zgeBs30LnySTarUaWI7pkUjhC6udGHEgwbTgaNPMihPiR0nN0teTnjgf2B7xaOmEXYos37gajcVxd/ZeOZQuu+slTXSdhzo/FFsvxwaxAN+JZVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L7iaSghv; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IpL5Ypov"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L7iaSghv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728681256;
+	s=mimecast20190719; t=1728683259;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QMUBbZRfSoQvEodUgNa2TXbxyHgaQJ7LEL/v8sBXYi4=;
-	b=IpL5YpovtaBUoTJ+o0XFeGsOMOFE/4lQfESZ4jQtjMKp4see1GARVrNjoZzB14Xl29FADx
-	MZj1rnSNiwsJpZc81V7ZMi6S4WUnYVBCDrPQMZXffLTGNR5cISqLJ6ql2XVGzKnQl+EnvY
-	5Ja2gWM6u4buDz23BIEqN+h4v7ADm9I=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=353w8Ns/H+ncPZlQRfFNeLbshCnD91tEa17jCVYDyBM=;
+	b=L7iaSghvMS77FYQp454q8OIvXaQIpzEGbY6A4YlMlzCoIJHP2AkQqLOiOBKFO2VjuCuphL
+	ElABGewV8UVsXerUBKYz+1D9V75asSi8AQT8ITbngn8pr15IHG9bbbZrg6HHfn4+SWMEuz
+	h+lwksb6ZFpG2JpWAqZMPKnrZbA4r94=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-GLx2DxCsPhaiwPho0X9h3g-1; Fri, 11 Oct 2024 17:14:15 -0400
-X-MC-Unique: GLx2DxCsPhaiwPho0X9h3g-1
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3e3e6a4e309so208159b6e.0
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 14:14:15 -0700 (PDT)
+ us-mta-668-Cf_QHZpYNuOlbHyTRdxi9Q-1; Fri, 11 Oct 2024 17:47:38 -0400
+X-MC-Unique: Cf_QHZpYNuOlbHyTRdxi9Q-1
+Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-5eb231d0fd3so52125eaf.0
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 14:47:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728681254; x=1729286054;
+        d=1e100.net; s=20230601; t=1728683257; x=1729288057;
         h=content-transfer-encoding:mime-version:organization:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QMUBbZRfSoQvEodUgNa2TXbxyHgaQJ7LEL/v8sBXYi4=;
-        b=X3SNzT+QkYyX66hYZ9C8waGJBhaNp5FMCw74lqZ99w9s2esLwRvP6nQSEl/YRbdzU3
-         YOTzj5IHltdVlaG0rdcMzTHt033hQMd/QqgP4ck1lg/l5JNXebgzRIs8qLKU277Qzh8I
-         gpBFPsk4pP344R1/o4CikfqGEMzX+1A6BLhZEUNRUraGrilOnvNw7Uu0+3bH+TG+TDio
-         WQeGhokk/zbhRW1jiElV1ixyhX1QrWAm6ZYt+vMDoI1He9pF4wKrodCwF3h20OxfB9FY
-         YNvJgQdqCAOhnb5XHuFZAAuNFuBDdKfT/kWrtc83OOIrY7tNPNAUYthW0DKe6tTHwUJ+
-         NPvg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0DH20KPTARD5ek3cYiM1XzsGpnoOPFQVtPpqSfzsQ86GP1FaAqA3EhAlt8irhKP0s0/PCQzEDXYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmsni/xO6lO4kpuBybsSoJlBZ0XlNBJoI6nTVqq9J11Tu1syDh
-	P09NgXqA26E9OvD9K1i99HCiEIdclHEmg/QDFrMRXNSC5FI1V4ZzH4l4MebopxWDmK9D7jlNMXZ
-	OWPQZIxFUILOEFgbrHFoM22Y8IG4kp9TVxWwmP4ilaVBPQHEtF2GG7m6dMQ==
-X-Received: by 2002:a05:6808:2223:b0:3e0:38ab:718e with SMTP id 5614622812f47-3e5c9131c45mr920641b6e.10.1728681254515;
-        Fri, 11 Oct 2024 14:14:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExBvBAUNHD/iMT7K/PYik7aFQyB3k755ifaewktdrtEizCuwl6K0a6zwI2kI4XKE/nPufnIg==
-X-Received: by 2002:a05:6808:2223:b0:3e0:38ab:718e with SMTP id 5614622812f47-3e5c9131c45mr920634b6e.10.1728681254206;
-        Fri, 11 Oct 2024 14:14:14 -0700 (PDT)
+        bh=353w8Ns/H+ncPZlQRfFNeLbshCnD91tEa17jCVYDyBM=;
+        b=ZF7Mkreg02DBpixKFJhJ8LPFQeuAeP9nVn9yrKqW3rs29vtP9Oz11Ek5TjczLL+pIQ
+         tdwMGbTPPK732bIGzKm6phLPMN9LdCCOMTsXl1dC9lokyDBR84HTh3feXUOhO6K2/dmX
+         4IefIiMFcJAT63Rz0BY/YmNnpC8janQEgrmYR2v+V1eDOVe6sEzfGMcfEZNWugyxbukB
+         LxJa818qRfBexXL8DLzBY/m/13wWA5DGRKcM823QUD/Jn+ByZPt7meTqVhkX5eGxbR7Z
+         TXLfJ+zj7ocax3X/gQ1mj5aIuz6N5uFrhU4WoOBB4k3lhY+Kr6826MHGy9njWZLV9ln6
+         glSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDNj5/gcmP5j44hZZBBq8mye1E7n+WrTNBtcrBhy/KBZHIn6JA9kEZcHc2JjTjTRCzspRhWghlLFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK1MhmtbghxzEa0U+fX4mELwAkF65qrgsplD2T2yZt9iEAy+Io
+	S32SyXHs9U7QMUvomYMliT83Ig+JBxa7mxfSHmLUldrbal1cIGgjKZzp5RKxcdCMKRwwMFR+uO0
+	c9HgIouenARAYf63Mtvhryjow+fmlxO2MeM0feogYGUXKAsFELOb0rL+6Zw==
+X-Received: by 2002:a05:6808:7085:b0:3e0:5141:66b2 with SMTP id 5614622812f47-3e5c90b9b3dmr728414b6e.2.1728683257477;
+        Fri, 11 Oct 2024 14:47:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFeZXcoyNz7p0zGGSdSLQO0BSkMoItypf+gpZHE+e0EioaeD9lbG7PoDGJ+thpbOP3mngmcWA==
+X-Received: by 2002:a05:6808:7085:b0:3e0:5141:66b2 with SMTP id 5614622812f47-3e5c90b9b3dmr728406b6e.2.1728683257004;
+        Fri, 11 Oct 2024 14:47:37 -0700 (PDT)
 Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e50a29d05csm809691b6e.6.2024.10.11.14.14.12
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e50a2b7f8dsm812829b6e.17.2024.10.11.14.47.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 14:14:13 -0700 (PDT)
-Date: Fri, 11 Oct 2024 15:14:10 -0600
+        Fri, 11 Oct 2024 14:47:36 -0700 (PDT)
+Date: Fri, 11 Oct 2024 15:47:34 -0600
 From: Alex Williamson <alex.williamson@redhat.com>
 To: Zhi Wang <zhiw@nvidia.com>
 Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
  <kevin.tian@intel.com>, <jgg@nvidia.com>, <alison.schofield@intel.com>,
  <dan.j.williams@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
  <jonathan.cameron@huawei.com>, <ira.weiny@intel.com>,
- <vishal.l.verma@intel.com>, <alucerop@amd.com>, <acurrid@nvidia.com>,
- <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
- <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
- <zhiwang@kernel.org>
-Subject: Re: [RFC 11/13] vfio/cxl: introduce VFIO CXL device cap
-Message-ID: <20241011151410.04ac0bc9.alex.williamson@redhat.com>
-In-Reply-To: <20240920223446.1908673-12-zhiw@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<20240920223446.1908673-12-zhiw@nvidia.com>
+ <vishal.l.verma@intel.com>, <alucerop@amd.com>, <clg@redhat.com>,
+ <qemu-devel@nongnu.org>, <acurrid@nvidia.com>, <cjia@nvidia.com>,
+ <smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
+ <kwankhede@nvidia.com>, <targupta@nvidia.com>, <zhiwang@kernel.org>
+Subject: Re: [RFC 1/1] vfio: support CXL device in VFIO stub
+Message-ID: <20241011154734.2d466fba.alex.williamson@redhat.com>
+In-Reply-To: <20240921071440.1915876-2-zhiw@nvidia.com>
+References: <20240921071440.1915876-1-zhiw@nvidia.com>
+	<20240921071440.1915876-2-zhiw@nvidia.com>
 Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -86,140 +86,310 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Sep 2024 15:34:44 -0700
+On Sat, 21 Sep 2024 00:14:40 -0700
 Zhi Wang <zhiw@nvidia.com> wrote:
 
-> The userspace needs CXL device information, e.g. HDM decoder registers
-> offset to know when the VM updates the HDM decoder and re-build the
-> mapping between GPA in the virtual HDM decoder base registers and the
-> HPA of the CXL region created by the vfio-cxl-core when initialize the
-> CXL device.
+> To support CXL device passthrough, vfio-cxl-core is introduced. This
+> is the QEMU part.
 > 
-> To acheive this, a new VFIO CXL device cap is required to convey those
-> information to the usersapce.
-> 
-> Introduce a new VFIO CXL device cap to expose necessary information to
-> the userspace. Initialize the cap with the information filled when the
-> CXL device is being initialized. vfio-pci-core fills the CXL cap into
-> the caps returned to userapce when CXL is enabled.
-> 
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_cxl_core.c | 15 +++++++++++++++
->  drivers/vfio/pci/vfio_pci_core.c | 19 ++++++++++++++++++-
->  include/linux/vfio_pci_core.h    |  1 +
->  include/uapi/linux/vfio.h        | 10 ++++++++++
->  4 files changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
-> index d8b51f8792a2..cebc444b54b7 100644
-> --- a/drivers/vfio/pci/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/vfio_cxl_core.c
-> @@ -367,6 +367,19 @@ static int setup_virt_comp_regs(struct vfio_pci_core_device *core_dev)
->  	return 0;
->  }
->  
-> +static void init_vfio_cxl_cap(struct vfio_pci_core_device *core_dev)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +
-> +	cxl->cap.header.id = VFIO_DEVICE_INFO_CAP_CXL;
-> +	cxl->cap.header.version = 1;
-> +	cxl->cap.hdm_count = cxl->hdm_count;
-> +	cxl->cap.hdm_reg_offset = cxl->hdm_reg_offset;
-> +	cxl->cap.hdm_reg_size = cxl->hdm_reg_size;
-> +	cxl->cap.hdm_reg_bar_index = cxl->comp_reg_bar;
-> +	cxl->cap.dpa_size = cxl->dpa_size;
-> +}
-> +
->  int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
->  {
->  	struct vfio_cxl *cxl = &core_dev->cxl;
-> @@ -401,6 +414,8 @@ int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
->  	if (ret)
->  		goto err_enable_cxl_device;
->  
-> +	init_vfio_cxl_cap(core_dev);
-> +
->  	flags = VFIO_REGION_INFO_FLAG_READ |
->  		VFIO_REGION_INFO_FLAG_WRITE |
->  		VFIO_REGION_INFO_FLAG_MMAP;
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index e0f23b538858..47e65e28a42b 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -963,6 +963,15 @@ static int vfio_pci_info_atomic_cap(struct vfio_pci_core_device *vdev,
->  	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
->  }
->  
-> +static int vfio_pci_info_cxl_cap(struct vfio_pci_core_device *vdev,
-> +				 struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_cxl *cxl = &vdev->cxl;
-> +
-> +	return vfio_info_add_capability(caps, &cxl->cap.header,
-> +					sizeof(cxl->cap));
-> +}
-> +
->  static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
->  				   struct vfio_device_info __user *arg)
->  {
-> @@ -984,9 +993,17 @@ static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
->  	if (vdev->reset_works)
->  		info.flags |= VFIO_DEVICE_FLAGS_RESET;
->  
-> -	if (vdev->has_cxl)
-> +	if (vdev->has_cxl) {
->  		info.flags |= VFIO_DEVICE_FLAGS_CXL;
->  
-> +		ret = vfio_pci_info_cxl_cap(vdev, &caps);
-> +		if (ret) {
-> +			pci_warn(vdev->pdev,
-> +				 "Failed to setup CXL capabilities\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	info.num_regions = VFIO_PCI_NUM_REGIONS + vdev->num_regions;
->  	info.num_irqs = VFIO_PCI_NUM_IRQS;
->  
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index e5646aad3eb3..d79f7a91d977 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -80,6 +80,7 @@ struct vfio_cxl {
->  	struct resource ram_res;
->  
->  	struct vfio_cxl_region region;
-> +	struct vfio_device_info_cap_cxl cap;
+> Get the CXL caps from the vfio-cxl-core. Trap and emulate the HDM
+> decoder registers. Map the HDM decdoers when the guest commits a HDM
+> decoder.
 
-We should create this dynamically on request, the device info ioctl is
-not a fast path.  Thanks,
+It seems like this could all essentially be handled as a quirk, setting
+things up based on the CXL flag or CXL device info capability, and the
+update could be done in the quirk write handler rather than a new
+change notifier callback.  Thanks,
 
 Alex
 
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> ---
+>  hw/vfio/common.c              |   3 +
+>  hw/vfio/pci.c                 | 134 ++++++++++++++++++++++++++++++++++
+>  hw/vfio/pci.h                 |  10 +++
+>  include/hw/pci/pci.h          |   2 +
+>  include/hw/vfio/vfio-common.h |   1 +
+>  linux-headers/linux/vfio.h    |  14 ++++
+>  6 files changed, 164 insertions(+)
+> 
+> diff --git a/hw/vfio/common.c b/hw/vfio/common.c
+> index 9aac21abb7..6dea606f62 100644
+> --- a/hw/vfio/common.c
+> +++ b/hw/vfio/common.c
+> @@ -237,6 +237,9 @@ void vfio_region_write(void *opaque, hwaddr addr,
+>          break;
+>      }
+>  
+> +    if (region->notify_change)
+> +        region->notify_change(opaque, addr, data, size);
+> +
+>      if (pwrite(vbasedev->fd, &buf, size, region->fd_offset + addr) != size) {
+>          error_report("%s(%s:region%d+0x%"HWADDR_PRIx", 0x%"PRIx64
+>                       ",%d) failed: %m",
+> diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
+> index a205c6b113..431a588252 100644
+> --- a/hw/vfio/pci.c
+> +++ b/hw/vfio/pci.c
+> @@ -23,6 +23,7 @@
+>  #include <sys/ioctl.h>
+>  
+>  #include "hw/hw.h"
+> +#include "hw/cxl/cxl_component.h"
+>  #include "hw/pci/msi.h"
+>  #include "hw/pci/msix.h"
+>  #include "hw/pci/pci_bridge.h"
+> @@ -2743,6 +2744,72 @@ int vfio_populate_vga(VFIOPCIDevice *vdev, Error **errp)
+>      return 0;
+>  }
+>  
+> +static bool read_region(VFIORegion *region, uint32_t *val, uint64_t offset)
+> +{
+> +    VFIODevice *vbasedev = region->vbasedev;
+> +
+> +    if (pread(vbasedev->fd, val, 4, region->fd_offset + offset) != 4) {
+> +        error_report("%s(%s, 0x%lx, 0x%x, 0x%x) failed: %m",
+> +                     __func__,vbasedev->name, offset, *val, 4);
+> +        return false;
+> +    }
+> +    return true;
+> +}
+> +
+> +static void vfio_cxl_hdm_regs_changed(void *opaque, hwaddr addr,
+> +                                      uint64_t data, unsigned size)
+> +{
+> +    VFIORegion *region = opaque;
+> +    VFIODevice *vbasedev = region->vbasedev;
+> +    VFIOPCIDevice *vdev = container_of(vbasedev, VFIOPCIDevice, vbasedev);
+> +    VFIOCXL *cxl = &vdev->cxl;
+> +    MemoryRegion *address_space_mem = pci_get_bus(&vdev->pdev)->address_space_mem;
+> +    uint64_t offset, reg_offset, index;
+> +    uint32_t cur_val, write_val;
+> +
+> +    if (size != 4 || (addr & 0x3))
+> +        error_report("hdm_regs_changed: unsupported size or unaligned addr!\n");
+> +
+> +    offset = addr - cxl->hdm_regs_offset;
+> +    index = (offset - 0x10) / 0x20;
+> +    reg_offset = offset - 0x20 * index;
+> +
+> +    if (reg_offset != 0x20)
+> +        return;
+> +
+> +#define READ_REGION(val, offset) do { \
+> +    if (!read_region(region, val, offset)) \
+> +        return; \
+> +    } while(0)
+> +
+> +    write_val = (uint32_t)data;
+> +    READ_REGION(&cur_val, cxl->hdm_regs_offset + 0x20 * index + reg_offset);
+> +
+> +    if (!(cur_val & (1 << 10)) && (write_val & (1 << 9))) {
+> +        memory_region_transaction_begin();
+> +        memory_region_del_subregion(address_space_mem, cxl->region.mem);
+> +        memory_region_transaction_commit();
+> +    } else if (cur_val & (1 << 10) && !(write_val & (1 << 9))) {
+> +        /* commit -> not commit */
+> +        uint32_t base_hi, base_lo;
+> +        uint64_t base;
+> +
+> +        /* locked */
+> +        if (cur_val & (1 << 8))
+> +            return;
+> +
+> +        READ_REGION(&base_lo, cxl->hdm_regs_offset +  0x20 * index + 0x10);
+> +        READ_REGION(&base_hi, cxl->hdm_regs_offset +  0x20 * index + 0x14);
+> +
+> +        base = ((uint64_t)base_hi << 32) | (uint64_t)(base_lo >> 28);
+> +
+> +        memory_region_transaction_begin();
+> +        memory_region_add_subregion_overlap(address_space_mem,
+> +                                            base, cxl->region.mem, 0);
+> +        memory_region_transaction_commit();
+> +    }
+> +}
+> +
+>  static void vfio_populate_device(VFIOPCIDevice *vdev, Error **errp)
+>  {
+>      VFIODevice *vbasedev = &vdev->vbasedev;
+> @@ -2780,6 +2847,11 @@ static void vfio_populate_device(VFIOPCIDevice *vdev, Error **errp)
+>          }
+>  
+>          QLIST_INIT(&vdev->bars[i].quirks);
+> +
+> +        if (vbasedev->flags & VFIO_DEVICE_FLAGS_CXL &&
+> +            i == vdev->cxl.hdm_regs_bar_index) {
+> +            vdev->bars[i].region.notify_change = vfio_cxl_hdm_regs_changed;
+> +        }
+>      }
+>  
+>      ret = vfio_get_region_info(vbasedev,
+> @@ -2974,6 +3046,62 @@ static void vfio_unregister_req_notifier(VFIOPCIDevice *vdev)
+>      vdev->req_enabled = false;
+>  }
+>  
+> +static int vfio_cxl_setup(VFIOPCIDevice *vdev)
+> +{
+> +    VFIODevice *vbasedev = &vdev->vbasedev;
+> +    struct VFIOCXL *cxl = &vdev->cxl;
+> +    struct vfio_device_info_cap_cxl *cap;
+> +    g_autofree struct vfio_device_info *info = NULL;
+> +    struct vfio_info_cap_header *hdr;
+> +    struct vfio_region_info *region_info;
+> +    int ret;
+> +
+> +    if (!(vbasedev->flags & VFIO_DEVICE_FLAGS_CXL))
+> +        return 0;
+> +
+> +    info = vfio_get_device_info(vbasedev->fd);
+> +    if (!info) {
+> +        return -ENODEV;
+> +    }
+> +
+> +    hdr = vfio_get_device_info_cap(info, VFIO_DEVICE_INFO_CAP_CXL);
+> +    if (!hdr) {
+> +        return -ENODEV;
+> +    }
+> +
+> +    cap = (void *)hdr;
+> +
+> +    cxl->hdm_count = cap->hdm_count;
+> +    cxl->hdm_regs_bar_index = cap->hdm_regs_bar_index;
+> +    cxl->hdm_regs_size = cap->hdm_regs_size;
+> +    cxl->hdm_regs_offset = cap->hdm_regs_offset;
+> +    cxl->dpa_size = cap->dpa_size;
+> +
+> +    ret = vfio_get_dev_region_info(vbasedev,
+> +            VFIO_REGION_TYPE_PCI_VENDOR_TYPE | PCI_VENDOR_ID_CXL,
+> +            VFIO_REGION_SUBTYPE_CXL, &region_info);
+> +    if (ret) {
+> +        error_report("does not support requested CXL feature");
+> +        return ret;
+> +    }
+> +
+> +    ret = vfio_region_setup(OBJECT(vdev), vbasedev, &cxl->region,
+> +            region_info->index, "cxl region");
+> +    if (ret) {
+> +        error_report("fail to setup CXL region");
+> +        return ret;
+> +    }
+> +
+> +    g_free(region_info);
+> +
+> +    if (vfio_region_mmap(&cxl->region)) {
+> +        error_report("Failed to mmap %s cxl region",
+> +                     vdev->vbasedev.name);
+> +        return -EFAULT;
+> +    }
+> +    return 0;
+> +}
+> +
+>  static void vfio_realize(PCIDevice *pdev, Error **errp)
+>  {
+>      VFIOPCIDevice *vdev = VFIO_PCI(pdev);
+> @@ -3083,6 +3211,12 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
+>          goto error;
+>      }
+>  
+> +    ret = vfio_cxl_setup(vdev);
+> +    if (ret) {
+> +        vfio_put_group(group);
+> +        goto error;
+> +    }
+> +
+>      vfio_populate_device(vdev, &err);
+>      if (err) {
+>          error_propagate(errp, err);
+> diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
+> index a2771b9ff3..6c5f5c1ea5 100644
+> --- a/hw/vfio/pci.h
+> +++ b/hw/vfio/pci.h
+> @@ -118,6 +118,15 @@ typedef struct VFIOMSIXInfo {
+>  #define TYPE_VFIO_PCI "vfio-pci"
+>  OBJECT_DECLARE_SIMPLE_TYPE(VFIOPCIDevice, VFIO_PCI)
+>  
+> +typedef struct VFIOCXL {
+> +    uint8_t hdm_count;
+> +    uint8_t hdm_regs_bar_index;
+> +    uint64_t hdm_regs_size;
+> +    uint64_t hdm_regs_offset;
+> +    uint64_t dpa_size;
+> +    VFIORegion region;
+> +} VFIOCXL;
+> +
+>  struct VFIOPCIDevice {
+>      PCIDevice pdev;
+>      VFIODevice vbasedev;
+> @@ -177,6 +186,7 @@ struct VFIOPCIDevice {
+>      bool clear_parent_atomics_on_exit;
+>      VFIODisplay *dpy;
+>      Notifier irqchip_change_notifier;
+> +    VFIOCXL cxl;
 >  };
 >  
->  struct vfio_pci_core_device {
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 0895183feaac..9a5972961280 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -257,6 +257,16 @@ struct vfio_device_info_cap_pci_atomic_comp {
+>  /* Use uin32_t for vendor & device so PCI_ANY_ID expands and cannot match hw */
+> diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
+> index b70a0b95ff..fbf5786d00 100644
+> --- a/include/hw/pci/pci.h
+> +++ b/include/hw/pci/pci.h
+> @@ -117,6 +117,8 @@ extern bool pci_available;
+>  #define PCI_DEVICE_ID_REDHAT_UFS         0x0013
+>  #define PCI_DEVICE_ID_REDHAT_QXL         0x0100
+>  
+> +#define PCI_VENDOR_ID_CXL                0x1e98
+> +
+>  #define FMT_PCIBUS                      PRIx64
+>  
+>  typedef uint64_t pcibus_t;
+> diff --git a/include/hw/vfio/vfio-common.h b/include/hw/vfio/vfio-common.h
+> index da43d27352..1c998c3ed6 100644
+> --- a/include/hw/vfio/vfio-common.h
+> +++ b/include/hw/vfio/vfio-common.h
+> @@ -56,6 +56,7 @@ typedef struct VFIORegion {
+>      uint32_t nr_mmaps;
+>      VFIOMmap *mmaps;
+>      uint8_t nr; /* cache the region number for debug */
+> +    void (*notify_change)(void *, hwaddr, uint64_t, unsigned);
+>  } VFIORegion;
+>  
+>  typedef struct VFIOMigration {
+> diff --git a/linux-headers/linux/vfio.h b/linux-headers/linux/vfio.h
+> index 16db89071e..22fb50ed34 100644
+> --- a/linux-headers/linux/vfio.h
+> +++ b/linux-headers/linux/vfio.h
+> @@ -214,6 +214,7 @@ struct vfio_device_info {
+>  #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
+>  #define VFIO_DEVICE_FLAGS_CAPS	(1 << 7)	/* Info supports caps */
+>  #define VFIO_DEVICE_FLAGS_CDX	(1 << 8)	/* vfio-cdx device */
+> +#define VFIO_DEVICE_FLAGS_CXL	(1 << 9)	/* vfio-cdx device */
+>  	__u32	num_regions;	/* Max region index + 1 */
+>  	__u32	num_irqs;	/* Max IRQ index + 1 */
+>  	__u32   cap_offset;	/* Offset within info struct of first cap */
+> @@ -255,6 +256,16 @@ struct vfio_device_info_cap_pci_atomic_comp {
 >  	__u32 reserved;
 >  };
 >  
-> +#define VFIO_DEVICE_INFO_CAP_CXL		6
+> +#define VFIO_DEVICE_INFO_CAP_CXL               6
 > +struct vfio_device_info_cap_cxl {
 > +	struct vfio_info_cap_header header;
 > +	__u8 hdm_count;
-> +	__u8 hdm_reg_bar_index;
-> +	__u64 hdm_reg_size;
-> +	__u64 hdm_reg_offset;
+> +	__u8 hdm_regs_bar_index;
+> +	__u64 hdm_regs_size;
+> +	__u64 hdm_regs_offset;
 > +	__u64 dpa_size;
 > +};
 > +
 >  /**
 >   * VFIO_DEVICE_GET_REGION_INFO - _IOWR(VFIO_TYPE, VFIO_BASE + 8,
 >   *				       struct vfio_region_info)
+> @@ -371,6 +382,9 @@ struct vfio_region_info_cap_type {
+>  /* sub-types for VFIO_REGION_TYPE_GFX */
+>  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+>  
+> +/* sub-types for VFIO CXL region */
+> +#define VFIO_REGION_SUBTYPE_CXL                 (1)
+> +
+>  /**
+>   * struct vfio_region_gfx_edid - EDID region layout.
+>   *
 
