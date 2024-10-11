@@ -1,395 +1,301 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80591194A67
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 21:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AE21E2016
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 23:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728683262; cv=none; b=XQ27L1JWFZizJ5jpKynHGX94DFcBRY3ZFRsgIiohv0rDxFejNNdmno/zioEZbZUWDjgXAJecz7h34lwU5qMzAsN0Tc/lVNLE8NQP5mW1AJczhWUiZT8cYb+8tCTXrjYTPhDqh/L/9aiscB3qDsTwX2HUs1uUVjRBTn4NjRWooMc=
+	t=1728690025; cv=none; b=OFJuyVXniYvZzFWCbPL7r3UkB+/h9eTcXIlK66xuQPd4QeVDLD+qKGiDB6L9EIKpBNai/cWDsiEdYsDncJDhTXT/Agp51GPMCt7OPMO6nYcE+OnYjp6soBaJSqcqQyq4Q99Q6aZJA3GvX0TR4jFYAfhRfAXmwOgvUyYdnWrOxG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728683262; c=relaxed/simple;
-	bh=ix4thBlpRIL6pfM9YON38TDCTRXcpVvSIDwZJJiPPXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lRBxHjkUGzz//SWYSeAUFlzTh5eBesbXG0RiKE1Mlel8TA5/897KfsgXbCs6zgeBs30LnySTarUaWI7pkUjhC6udGHEgwbTgaNPMihPiR0nN0teTnjgf2B7xaOmEXYos37gajcVxd/ZeOZQuu+slTXSdhzo/FFsvxwaxAN+JZVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L7iaSghv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728690025; c=relaxed/simple;
+	bh=hzmriMm1SlBGJ794Cddrkfm/jHhZdGdWaKuc0Hj0ZFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=atKCrvAnrsUbh5EhEjwKAgdjLbUkpDQ2dN6QspjsAo2RZlVneAoCs2l6IICcdPs+iT7dfBWUvrdtBjIoFkCvPpb519Z1Uhxz3KPw5b56mcik38NTxeNYhXd2mbOdnRko2zaxYwZ3yQQpv4+h3LzqrZkBUa3GDQkQFNkKVqgoiug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gznUbumH; arc=none smtp.client-ip=17.58.6.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L7iaSghv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728683259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=353w8Ns/H+ncPZlQRfFNeLbshCnD91tEa17jCVYDyBM=;
-	b=L7iaSghvMS77FYQp454q8OIvXaQIpzEGbY6A4YlMlzCoIJHP2AkQqLOiOBKFO2VjuCuphL
-	ElABGewV8UVsXerUBKYz+1D9V75asSi8AQT8ITbngn8pr15IHG9bbbZrg6HHfn4+SWMEuz
-	h+lwksb6ZFpG2JpWAqZMPKnrZbA4r94=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-Cf_QHZpYNuOlbHyTRdxi9Q-1; Fri, 11 Oct 2024 17:47:38 -0400
-X-MC-Unique: Cf_QHZpYNuOlbHyTRdxi9Q-1
-Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-5eb231d0fd3so52125eaf.0
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 14:47:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728683257; x=1729288057;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=353w8Ns/H+ncPZlQRfFNeLbshCnD91tEa17jCVYDyBM=;
-        b=ZF7Mkreg02DBpixKFJhJ8LPFQeuAeP9nVn9yrKqW3rs29vtP9Oz11Ek5TjczLL+pIQ
-         tdwMGbTPPK732bIGzKm6phLPMN9LdCCOMTsXl1dC9lokyDBR84HTh3feXUOhO6K2/dmX
-         4IefIiMFcJAT63Rz0BY/YmNnpC8janQEgrmYR2v+V1eDOVe6sEzfGMcfEZNWugyxbukB
-         LxJa818qRfBexXL8DLzBY/m/13wWA5DGRKcM823QUD/Jn+ByZPt7meTqVhkX5eGxbR7Z
-         TXLfJ+zj7ocax3X/gQ1mj5aIuz6N5uFrhU4WoOBB4k3lhY+Kr6826MHGy9njWZLV9ln6
-         glSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDNj5/gcmP5j44hZZBBq8mye1E7n+WrTNBtcrBhy/KBZHIn6JA9kEZcHc2JjTjTRCzspRhWghlLFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK1MhmtbghxzEa0U+fX4mELwAkF65qrgsplD2T2yZt9iEAy+Io
-	S32SyXHs9U7QMUvomYMliT83Ig+JBxa7mxfSHmLUldrbal1cIGgjKZzp5RKxcdCMKRwwMFR+uO0
-	c9HgIouenARAYf63Mtvhryjow+fmlxO2MeM0feogYGUXKAsFELOb0rL+6Zw==
-X-Received: by 2002:a05:6808:7085:b0:3e0:5141:66b2 with SMTP id 5614622812f47-3e5c90b9b3dmr728414b6e.2.1728683257477;
-        Fri, 11 Oct 2024 14:47:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFeZXcoyNz7p0zGGSdSLQO0BSkMoItypf+gpZHE+e0EioaeD9lbG7PoDGJ+thpbOP3mngmcWA==
-X-Received: by 2002:a05:6808:7085:b0:3e0:5141:66b2 with SMTP id 5614622812f47-3e5c90b9b3dmr728406b6e.2.1728683257004;
-        Fri, 11 Oct 2024 14:47:37 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e50a2b7f8dsm812829b6e.17.2024.10.11.14.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 14:47:36 -0700 (PDT)
-Date: Fri, 11 Oct 2024 15:47:34 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
- <kevin.tian@intel.com>, <jgg@nvidia.com>, <alison.schofield@intel.com>,
- <dan.j.williams@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
- <jonathan.cameron@huawei.com>, <ira.weiny@intel.com>,
- <vishal.l.verma@intel.com>, <alucerop@amd.com>, <clg@redhat.com>,
- <qemu-devel@nongnu.org>, <acurrid@nvidia.com>, <cjia@nvidia.com>,
- <smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
- <kwankhede@nvidia.com>, <targupta@nvidia.com>, <zhiwang@kernel.org>
-Subject: Re: [RFC 1/1] vfio: support CXL device in VFIO stub
-Message-ID: <20241011154734.2d466fba.alex.williamson@redhat.com>
-In-Reply-To: <20240921071440.1915876-2-zhiw@nvidia.com>
-References: <20240921071440.1915876-1-zhiw@nvidia.com>
-	<20240921071440.1915876-2-zhiw@nvidia.com>
-Organization: Red Hat
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gznUbumH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1728690023;
+	bh=rC/dMbnugMRawoRxS2uRVhimv+ms1/XM7Yr5Pb3hCoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=gznUbumHUDA1uaHgKsfzgAnxv+kG5j6ikHE//fBa9stmsXh41VWRVv2Dpic4ieQfV
+	 iWh78db4bpMCJ01AOjsV/8pZvrCwrX6RP4X44Qecnat3PIqVb6sotaU3ODqFNhVogs
+	 BZh6Xrtmv6yAwYsA+7e5wXAXlsqzYzsAePtxt1d8Z8sce8rWYq/mqUyTou0LfQ9Kzi
+	 FF4HJ/tcmnjKLQxewzTzULyK62OOzebnxb1vUWQ71WaDpdwdjMEjPePQnNWDkY4Qjw
+	 yrnrfsLugPdXbSK94SL6V51NHoPdDwm7e4PidbpYLDgN6oMJiVSq9bQWi4LVrPnIqY
+	 Vpt7iO8q7xUZA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id B5D903A02D6;
+	Fri, 11 Oct 2024 23:40:17 +0000 (UTC)
+Message-ID: <060193f9-5de1-422b-abfb-6328a1c7b806@icloud.com>
+Date: Sat, 12 Oct 2024 07:40:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] cxl/port: Fix use-after-free, permit out-of-order
+ decoder shutdown
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+ ira.weiny@intel.com
+Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>, vishal.l.verma@intel.com,
+ linux-cxl@vger.kernel.org
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+ <172862486548.2150669.3548553804904171839.stgit@dwillia2-xfh.jf.intel.com>
+ <a7b8a007-907a-4fda-9a35-68faed109ed3@icloud.com>
+ <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: SdAq2sLRtK5itv8SkkUuMB5ydBc9zxot
+X-Proofpoint-GUID: SdAq2sLRtK5itv8SkkUuMB5ydBc9zxot
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-11_21,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 phishscore=0 spamscore=0
+ adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2410110164
 
-On Sat, 21 Sep 2024 00:14:40 -0700
-Zhi Wang <zhiw@nvidia.com> wrote:
-
-> To support CXL device passthrough, vfio-cxl-core is introduced. This
-> is the QEMU part.
+On 2024/10/12 01:46, Dan Williams wrote:
+> Zijun Hu wrote:
+>> On 2024/10/11 13:34, Dan Williams wrote:
+>>> In support of investigating an initialization failure report [1],
+>>> cxl_test was updated to register mock memory-devices after the mock
+>>> root-port/bus device had been registered. That led to cxl_test crashing
+>>> with a use-after-free bug with the following signature:
+>>>
+>>>     cxl_port_attach_region: cxl region3: cxl_host_bridge.0:port3 decoder3.0 add: mem0:decoder7.0 @ 0 next: cxl_switch_uport.0 nr_eps: 1 nr_targets: 1
+>>>     cxl_port_attach_region: cxl region3: cxl_host_bridge.0:port3 decoder3.0 add: mem4:decoder14.0 @ 1 next: cxl_switch_uport.0 nr_eps: 2 nr_targets: 1
+>>>     cxl_port_setup_targets: cxl region3: cxl_switch_uport.0:port6 target[0] = cxl_switch_dport.0 for mem0:decoder7.0 @ 0
+>>> 1)  cxl_port_setup_targets: cxl region3: cxl_switch_uport.0:port6 target[1] = cxl_switch_dport.4 for mem4:decoder14.0 @ 1
+>>>     [..]
+>>>     cxld_unregister: cxl decoder14.0:
+>>>     cxl_region_decode_reset: cxl_region region3:
+>>>     mock_decoder_reset: cxl_port port3: decoder3.0 reset
+>>> 2)  mock_decoder_reset: cxl_port port3: decoder3.0: out of order reset, expected decoder3.1
+>>>     cxl_endpoint_decoder_release: cxl decoder14.0:
+>>>     [..]
+>>>     cxld_unregister: cxl decoder7.0:
+>>> 3)  cxl_region_decode_reset: cxl_region region3:
+>>>     Oops: general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6bc3: 0000 [#1] PREEMPT SMP PTI
+>>>     [..]
+>>>     RIP: 0010:to_cxl_port+0x8/0x60 [cxl_core]
+>>>     [..]
+>>>     Call Trace:
+>>>      <TASK>
+>>>      cxl_region_decode_reset+0x69/0x190 [cxl_core]
+>>>      cxl_region_detach+0xe8/0x210 [cxl_core]
+>>>      cxl_decoder_kill_region+0x27/0x40 [cxl_core]
+>>>      cxld_unregister+0x5d/0x60 [cxl_core]
+>>>
+>>> At 1) a region has been established with 2 endpoint decoders (7.0 and
+>>> 14.0). Those endpoints share a common switch-decoder in the topology
+>>> (3.0). At teardown, 2), decoder14.0 is the first to be removed and hits
+>>> the "out of order reset case" in the switch decoder. The effect though
+>>> is that region3 cleanup is aborted leaving it in-tact and
+>>> referencing decoder14.0. At 3) the second attempt to teardown region3
+>>> trips over the stale decoder14.0 object which has long since been
+>>> deleted.
+>>>
+>>> The fix here is to recognize that the CXL specification places no
+>>> mandate on in-order shutdown of switch-decoders, the driver enforces
+>>> in-order allocation, and hardware enforces in-order commit. So, rather
+>>> than fail and leave objects dangling, always remove them.
+>>>
+>>> In support of making cxl_region_decode_reset() always succeed,
+>>> cxl_region_invalidate_memregion() failures are turned into warnings.
+>>> Crashing the kernel is ok there since system integrity is at risk if
+>>> caches cannot be managed around physical address mutation events like
+>>> CXL region destruction.
+>>>
+>>> A new device_for_each_child_reverse_from() is added to cleanup
+>>> port->commit_end after all dependent decoders have been disabled. In
+>>> other words if decoders are allocated 0->1->2 and disabled 1->2->0 then
+>>> port->commit_end only decrements from 2 after 2 has been disabled, and
+>>> it decrements all the way to zero since 1 was disabled previously.
+>>>
+>>> Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
+>>> Cc: <stable@vger.kernel.org>
+>>> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
+>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>>> Cc: Dave Jiang <dave.jiang@intel.com>
+>>> Cc: Alison Schofield <alison.schofield@intel.com>
+>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>> Cc: Zijun Hu <zijun_hu@icloud.com>
+>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>>> ---
+>>>  drivers/base/core.c          |   35 +++++++++++++++++++++++++++++
+>>>  drivers/cxl/core/hdm.c       |   50 +++++++++++++++++++++++++++++++++++-------
+>>>  drivers/cxl/core/region.c    |   48 +++++++++++-----------------------------
+>>>  drivers/cxl/cxl.h            |    3 ++-
+>>>  include/linux/device.h       |    3 +++
+>>>  tools/testing/cxl/test/cxl.c |   14 ++++--------
+>>>  6 files changed, 100 insertions(+), 53 deletions(-)
+>>>
+>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>> index a4c853411a6b..e42f1ad73078 100644
+>>> --- a/drivers/base/core.c
+>>> +++ b/drivers/base/core.c
+>>> @@ -4037,6 +4037,41 @@ int device_for_each_child_reverse(struct device *parent, void *data,
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(device_for_each_child_reverse);
+>>>  
+>>> +/**
+>>> + * device_for_each_child_reverse_from - device child iterator in reversed order.
+>>> + * @parent: parent struct device.
+>>> + * @from: optional starting point in child list
+>>> + * @fn: function to be called for each device.
+>>> + * @data: data for the callback.
+>>> + *
+>>> + * Iterate over @parent's child devices, starting at @from, and call @fn
+>>> + * for each, passing it @data. This helper is identical to
+>>> + * device_for_each_child_reverse() when @from is NULL.
+>>> + *
+>>> + * @fn is checked each iteration. If it returns anything other than 0,
+>>> + * iteration stop and that value is returned to the caller of
+>>> + * device_for_each_child_reverse_from();
+>>> + */
+>>> +int device_for_each_child_reverse_from(struct device *parent,
+>>> +				       struct device *from, const void *data,
+>>> +				       int (*fn)(struct device *, const void *))
+>>> +{
+>>> +	struct klist_iter i;
+>>> +	struct device *child;
+>>> +	int error = 0;
+>>> +
+>>> +	if (!parent->p)
+>>> +		return 0;
+>>> +
+>>> +	klist_iter_init_node(&parent->p->klist_children, &i,
+>>> +			     (from ? &from->p->knode_parent : NULL));
+>>> +	while ((child = prev_device(&i)) && !error)
+>>> +		error = fn(child, data);
+>>> +	klist_iter_exit(&i);
+>>> +	return error;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(device_for_each_child_reverse_from);
+>>> +
+>>
+>> it does NOT deserve, also does NOT need to introduce a new core driver
+>> API device_for_each_child_reverse_from(). existing
+>> device_for_each_child_reverse() can do what the _from() wants to do.
+>>
+>> we can use similar approach as below link shown:
+>> https://lore.kernel.org/all/20240815-const_dfc_prepare-v2-2-8316b87b8ff9@quicinc.com/
 > 
-> Get the CXL caps from the vfio-cxl-core. Trap and emulate the HDM
-> decoder registers. Map the HDM decdoers when the guest commits a HDM
-> decoder.
-
-It seems like this could all essentially be handled as a quirk, setting
-things up based on the CXL flag or CXL device info capability, and the
-update could be done in the quirk write handler rather than a new
-change notifier callback.  Thanks,
-
-Alex
-
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> ---
->  hw/vfio/common.c              |   3 +
->  hw/vfio/pci.c                 | 134 ++++++++++++++++++++++++++++++++++
->  hw/vfio/pci.h                 |  10 +++
->  include/hw/pci/pci.h          |   2 +
->  include/hw/vfio/vfio-common.h |   1 +
->  linux-headers/linux/vfio.h    |  14 ++++
->  6 files changed, 164 insertions(+)
+> No, just have a simple starting point parameter. I understand that more
+> logic can be placed around device_for_each_child_reverse() to achieve
+> the same effect, but the core helpers should be removing logic from
+> consumers, not forcing them to add more.
 > 
-> diff --git a/hw/vfio/common.c b/hw/vfio/common.c
-> index 9aac21abb7..6dea606f62 100644
-> --- a/hw/vfio/common.c
-> +++ b/hw/vfio/common.c
-> @@ -237,6 +237,9 @@ void vfio_region_write(void *opaque, hwaddr addr,
->          break;
->      }
->  
-> +    if (region->notify_change)
-> +        region->notify_change(opaque, addr, data, size);
-> +
->      if (pwrite(vbasedev->fd, &buf, size, region->fd_offset + addr) != size) {
->          error_report("%s(%s:region%d+0x%"HWADDR_PRIx", 0x%"PRIx64
->                       ",%d) failed: %m",
-> diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
-> index a205c6b113..431a588252 100644
-> --- a/hw/vfio/pci.c
-> +++ b/hw/vfio/pci.c
-> @@ -23,6 +23,7 @@
->  #include <sys/ioctl.h>
->  
->  #include "hw/hw.h"
-> +#include "hw/cxl/cxl_component.h"
->  #include "hw/pci/msi.h"
->  #include "hw/pci/msix.h"
->  #include "hw/pci/pci_bridge.h"
-> @@ -2743,6 +2744,72 @@ int vfio_populate_vga(VFIOPCIDevice *vdev, Error **errp)
->      return 0;
+> If bloat is a concern, then after your const cleanups go through
+> device_for_each_child_reverse() can be rewritten in terms of
+> device_for_each_child_reverse_from() as (untested):
+> 
+
+bloat is one aspect, the other aspect is that there are redundant
+between both driver core APIs, namely, there are a question:
+
+why to still need device_for_each_child_reverse() if it is same as
+_from(..., NULL, ...) ?
+
+So i suggest use existing API now.
+if there are more users who have such starting point requirement, then
+add the parameter into device_for_each_child_reverse() which is
+consistent with other existing *_for_each_*() core APIs such as
+(class|driver|bus)_for_each_device() and bus_for_each_drv(), that may
+need much efforts.
+
+
+could you please contains your proposal "fixing this allocation
+order validation" of below link into this patch series with below
+reason? and Cc me (^^)
+
+https://lore.kernel.org/all/670835f5a2887_964f229474@dwillia2-xfh.jf.intel.com.notmuch/
+
+A)
+  the proposal depends on this patch series.
+B)
+  one of the issues the proposal fix is match_free_decoder()  error
+logic which is also relevant issues this patch series fix, the proposal
+also can fix the other device_find_child()'s match() issue i care about.
+
+C)
+ Actually, it is a bit difficult for me to understand the proposal since
+ i don't have any basic knowledge about CXL. (^^)
+
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index e42f1ad73078..2571c910da46 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -4007,36 +4007,6 @@ int device_for_each_child(struct device *parent, void *data,
 >  }
+>  EXPORT_SYMBOL_GPL(device_for_each_child);
 >  
-> +static bool read_region(VFIORegion *region, uint32_t *val, uint64_t offset)
-> +{
-> +    VFIODevice *vbasedev = region->vbasedev;
-> +
-> +    if (pread(vbasedev->fd, val, 4, region->fd_offset + offset) != 4) {
-> +        error_report("%s(%s, 0x%lx, 0x%x, 0x%x) failed: %m",
-> +                     __func__,vbasedev->name, offset, *val, 4);
-> +        return false;
-> +    }
-> +    return true;
-> +}
-> +
-> +static void vfio_cxl_hdm_regs_changed(void *opaque, hwaddr addr,
-> +                                      uint64_t data, unsigned size)
-> +{
-> +    VFIORegion *region = opaque;
-> +    VFIODevice *vbasedev = region->vbasedev;
-> +    VFIOPCIDevice *vdev = container_of(vbasedev, VFIOPCIDevice, vbasedev);
-> +    VFIOCXL *cxl = &vdev->cxl;
-> +    MemoryRegion *address_space_mem = pci_get_bus(&vdev->pdev)->address_space_mem;
-> +    uint64_t offset, reg_offset, index;
-> +    uint32_t cur_val, write_val;
-> +
-> +    if (size != 4 || (addr & 0x3))
-> +        error_report("hdm_regs_changed: unsupported size or unaligned addr!\n");
-> +
-> +    offset = addr - cxl->hdm_regs_offset;
-> +    index = (offset - 0x10) / 0x20;
-> +    reg_offset = offset - 0x20 * index;
-> +
-> +    if (reg_offset != 0x20)
-> +        return;
-> +
-> +#define READ_REGION(val, offset) do { \
-> +    if (!read_region(region, val, offset)) \
-> +        return; \
-> +    } while(0)
-> +
-> +    write_val = (uint32_t)data;
-> +    READ_REGION(&cur_val, cxl->hdm_regs_offset + 0x20 * index + reg_offset);
-> +
-> +    if (!(cur_val & (1 << 10)) && (write_val & (1 << 9))) {
-> +        memory_region_transaction_begin();
-> +        memory_region_del_subregion(address_space_mem, cxl->region.mem);
-> +        memory_region_transaction_commit();
-> +    } else if (cur_val & (1 << 10) && !(write_val & (1 << 9))) {
-> +        /* commit -> not commit */
-> +        uint32_t base_hi, base_lo;
-> +        uint64_t base;
-> +
-> +        /* locked */
-> +        if (cur_val & (1 << 8))
-> +            return;
-> +
-> +        READ_REGION(&base_lo, cxl->hdm_regs_offset +  0x20 * index + 0x10);
-> +        READ_REGION(&base_hi, cxl->hdm_regs_offset +  0x20 * index + 0x14);
-> +
-> +        base = ((uint64_t)base_hi << 32) | (uint64_t)(base_lo >> 28);
-> +
-> +        memory_region_transaction_begin();
-> +        memory_region_add_subregion_overlap(address_space_mem,
-> +                                            base, cxl->region.mem, 0);
-> +        memory_region_transaction_commit();
-> +    }
-> +}
-> +
->  static void vfio_populate_device(VFIOPCIDevice *vdev, Error **errp)
->  {
->      VFIODevice *vbasedev = &vdev->vbasedev;
-> @@ -2780,6 +2847,11 @@ static void vfio_populate_device(VFIOPCIDevice *vdev, Error **errp)
->          }
->  
->          QLIST_INIT(&vdev->bars[i].quirks);
-> +
-> +        if (vbasedev->flags & VFIO_DEVICE_FLAGS_CXL &&
-> +            i == vdev->cxl.hdm_regs_bar_index) {
-> +            vdev->bars[i].region.notify_change = vfio_cxl_hdm_regs_changed;
-> +        }
->      }
->  
->      ret = vfio_get_region_info(vbasedev,
-> @@ -2974,6 +3046,62 @@ static void vfio_unregister_req_notifier(VFIOPCIDevice *vdev)
->      vdev->req_enabled = false;
->  }
->  
-> +static int vfio_cxl_setup(VFIOPCIDevice *vdev)
-> +{
-> +    VFIODevice *vbasedev = &vdev->vbasedev;
-> +    struct VFIOCXL *cxl = &vdev->cxl;
-> +    struct vfio_device_info_cap_cxl *cap;
-> +    g_autofree struct vfio_device_info *info = NULL;
-> +    struct vfio_info_cap_header *hdr;
-> +    struct vfio_region_info *region_info;
-> +    int ret;
-> +
-> +    if (!(vbasedev->flags & VFIO_DEVICE_FLAGS_CXL))
-> +        return 0;
-> +
-> +    info = vfio_get_device_info(vbasedev->fd);
-> +    if (!info) {
-> +        return -ENODEV;
-> +    }
-> +
-> +    hdr = vfio_get_device_info_cap(info, VFIO_DEVICE_INFO_CAP_CXL);
-> +    if (!hdr) {
-> +        return -ENODEV;
-> +    }
-> +
-> +    cap = (void *)hdr;
-> +
-> +    cxl->hdm_count = cap->hdm_count;
-> +    cxl->hdm_regs_bar_index = cap->hdm_regs_bar_index;
-> +    cxl->hdm_regs_size = cap->hdm_regs_size;
-> +    cxl->hdm_regs_offset = cap->hdm_regs_offset;
-> +    cxl->dpa_size = cap->dpa_size;
-> +
-> +    ret = vfio_get_dev_region_info(vbasedev,
-> +            VFIO_REGION_TYPE_PCI_VENDOR_TYPE | PCI_VENDOR_ID_CXL,
-> +            VFIO_REGION_SUBTYPE_CXL, &region_info);
-> +    if (ret) {
-> +        error_report("does not support requested CXL feature");
-> +        return ret;
-> +    }
-> +
-> +    ret = vfio_region_setup(OBJECT(vdev), vbasedev, &cxl->region,
-> +            region_info->index, "cxl region");
-> +    if (ret) {
-> +        error_report("fail to setup CXL region");
-> +        return ret;
-> +    }
-> +
-> +    g_free(region_info);
-> +
-> +    if (vfio_region_mmap(&cxl->region)) {
-> +        error_report("Failed to mmap %s cxl region",
-> +                     vdev->vbasedev.name);
-> +        return -EFAULT;
-> +    }
-> +    return 0;
-> +}
-> +
->  static void vfio_realize(PCIDevice *pdev, Error **errp)
->  {
->      VFIOPCIDevice *vdev = VFIO_PCI(pdev);
-> @@ -3083,6 +3211,12 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
->          goto error;
->      }
->  
-> +    ret = vfio_cxl_setup(vdev);
-> +    if (ret) {
-> +        vfio_put_group(group);
-> +        goto error;
-> +    }
-> +
->      vfio_populate_device(vdev, &err);
->      if (err) {
->          error_propagate(errp, err);
-> diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
-> index a2771b9ff3..6c5f5c1ea5 100644
-> --- a/hw/vfio/pci.h
-> +++ b/hw/vfio/pci.h
-> @@ -118,6 +118,15 @@ typedef struct VFIOMSIXInfo {
->  #define TYPE_VFIO_PCI "vfio-pci"
->  OBJECT_DECLARE_SIMPLE_TYPE(VFIOPCIDevice, VFIO_PCI)
->  
-> +typedef struct VFIOCXL {
-> +    uint8_t hdm_count;
-> +    uint8_t hdm_regs_bar_index;
-> +    uint64_t hdm_regs_size;
-> +    uint64_t hdm_regs_offset;
-> +    uint64_t dpa_size;
-> +    VFIORegion region;
-> +} VFIOCXL;
-> +
->  struct VFIOPCIDevice {
->      PCIDevice pdev;
->      VFIODevice vbasedev;
-> @@ -177,6 +186,7 @@ struct VFIOPCIDevice {
->      bool clear_parent_atomics_on_exit;
->      VFIODisplay *dpy;
->      Notifier irqchip_change_notifier;
-> +    VFIOCXL cxl;
->  };
->  
->  /* Use uin32_t for vendor & device so PCI_ANY_ID expands and cannot match hw */
-> diff --git a/include/hw/pci/pci.h b/include/hw/pci/pci.h
-> index b70a0b95ff..fbf5786d00 100644
-> --- a/include/hw/pci/pci.h
-> +++ b/include/hw/pci/pci.h
-> @@ -117,6 +117,8 @@ extern bool pci_available;
->  #define PCI_DEVICE_ID_REDHAT_UFS         0x0013
->  #define PCI_DEVICE_ID_REDHAT_QXL         0x0100
->  
-> +#define PCI_VENDOR_ID_CXL                0x1e98
-> +
->  #define FMT_PCIBUS                      PRIx64
->  
->  typedef uint64_t pcibus_t;
-> diff --git a/include/hw/vfio/vfio-common.h b/include/hw/vfio/vfio-common.h
-> index da43d27352..1c998c3ed6 100644
-> --- a/include/hw/vfio/vfio-common.h
-> +++ b/include/hw/vfio/vfio-common.h
-> @@ -56,6 +56,7 @@ typedef struct VFIORegion {
->      uint32_t nr_mmaps;
->      VFIOMmap *mmaps;
->      uint8_t nr; /* cache the region number for debug */
-> +    void (*notify_change)(void *, hwaddr, uint64_t, unsigned);
->  } VFIORegion;
->  
->  typedef struct VFIOMigration {
-> diff --git a/linux-headers/linux/vfio.h b/linux-headers/linux/vfio.h
-> index 16db89071e..22fb50ed34 100644
-> --- a/linux-headers/linux/vfio.h
-> +++ b/linux-headers/linux/vfio.h
-> @@ -214,6 +214,7 @@ struct vfio_device_info {
->  #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
->  #define VFIO_DEVICE_FLAGS_CAPS	(1 << 7)	/* Info supports caps */
->  #define VFIO_DEVICE_FLAGS_CDX	(1 << 8)	/* vfio-cdx device */
-> +#define VFIO_DEVICE_FLAGS_CXL	(1 << 9)	/* vfio-cdx device */
->  	__u32	num_regions;	/* Max region index + 1 */
->  	__u32	num_irqs;	/* Max IRQ index + 1 */
->  	__u32   cap_offset;	/* Offset within info struct of first cap */
-> @@ -255,6 +256,16 @@ struct vfio_device_info_cap_pci_atomic_comp {
->  	__u32 reserved;
->  };
->  
-> +#define VFIO_DEVICE_INFO_CAP_CXL               6
-> +struct vfio_device_info_cap_cxl {
-> +	struct vfio_info_cap_header header;
-> +	__u8 hdm_count;
-> +	__u8 hdm_regs_bar_index;
-> +	__u64 hdm_regs_size;
-> +	__u64 hdm_regs_offset;
-> +	__u64 dpa_size;
-> +};
-> +
+> -/**
+> - * device_for_each_child_reverse - device child iterator in reversed order.
+> - * @parent: parent struct device.
+> - * @fn: function to be called for each device.
+> - * @data: data for the callback.
+> - *
+> - * Iterate over @parent's child devices, and call @fn for each,
+> - * passing it @data.
+> - *
+> - * We check the return of @fn each time. If it returns anything
+> - * other than 0, we break out and return that value.
+> - */
+> -int device_for_each_child_reverse(struct device *parent, void *data,
+> -				  int (*fn)(struct device *dev, void *data))
+> -{
+> -	struct klist_iter i;
+> -	struct device *child;
+> -	int error = 0;
+> -
+> -	if (!parent || !parent->p)
+> -		return 0;
+> -
+> -	klist_iter_init(&parent->p->klist_children, &i);
+> -	while ((child = prev_device(&i)) && !error)
+> -		error = fn(child, data);
+> -	klist_iter_exit(&i);
+> -	return error;
+> -}
+> -EXPORT_SYMBOL_GPL(device_for_each_child_reverse);
+> -
 >  /**
->   * VFIO_DEVICE_GET_REGION_INFO - _IOWR(VFIO_TYPE, VFIO_BASE + 8,
->   *				       struct vfio_region_info)
-> @@ -371,6 +382,9 @@ struct vfio_region_info_cap_type {
->  /* sub-types for VFIO_REGION_TYPE_GFX */
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+>   * device_for_each_child_reverse_from - device child iterator in reversed order.
+>   * @parent: parent struct device.
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 667cb6db9019..96a2c072bf5b 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -1076,11 +1076,14 @@ DEFINE_FREE(device_del, struct device *, if (_T) device_del(_T))
 >  
-> +/* sub-types for VFIO CXL region */
-> +#define VFIO_REGION_SUBTYPE_CXL                 (1)
-> +
->  /**
->   * struct vfio_region_gfx_edid - EDID region layout.
->   *
+>  int device_for_each_child(struct device *dev, void *data,
+>  			  int (*fn)(struct device *dev, void *data));
+> -int device_for_each_child_reverse(struct device *dev, void *data,
+> -				  int (*fn)(struct device *dev, void *data));
+>  int device_for_each_child_reverse_from(struct device *parent,
+>  				       struct device *from, const void *data,
+>  				       int (*fn)(struct device *, const void *));
+> +static inline int device_for_each_child_reverse(struct device *dev, const void *data,
+> +						int (*fn)(struct device *, const void *))
+> +{
+> +	return device_for_each_child_reverse_from(dev, NULL, data, fn);
+> +}
+>  struct device *device_find_child(struct device *dev, void *data,
+>  				 int (*match)(struct device *dev, void *data));
+>  struct device *device_find_child_by_name(struct device *parent,
 
