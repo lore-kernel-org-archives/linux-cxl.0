@@ -1,129 +1,115 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FA41F8F16;
-	Fri, 11 Oct 2024 02:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2818E17BA9;
+	Fri, 11 Oct 2024 02:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728612932; cv=none; b=QCmLZmgzA3IXeb40vufKCZAy0olw4WCIHQRwf23pRRxuAe50PKSVmspi+iezlNmYjSccFGiBrtDbkomDwbbEkiSaVKLlsz46ufIt9sFWtQxHKYbvN/Jzsmndf++XBTsYEmFyFYumMlFAeo1bC+Ug+nAKTQWw7TR2x79yDAwFUxU=
+	t=1728614674; cv=none; b=G36GiHt+ffnWcXX1wZvkSravtTTUfN4BBIrY1eAnhuhgHWBFkOXEU/l5HBZcnpMa9SGDRFMU6aJ7PX+4Ao6/KxOaHZKYUvAvqyyeKeSOu90ptyCTbGX43tqbbT8h9UpopA5U4QFaqR3bvup0aKJGIhYwH4482C65CrzArJF92Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728612932; c=relaxed/simple;
-	bh=gKiPKrKK60BJmsa5junoqJcObDYTvmnASwTlUEIPmT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4gBlF8S0yp7Mv51+3XzwFjwg/2BBvVqh/1am+0CfAzk8qmx3Gln+nOry8BbmpGhdAjFmZHDsTRtc22LGBWq0RJ2aegWRjdbr6TfCrTqvBEiDZNxZ5U2DjQtCTCwQ3/qqpy45PaxxniKS3Riku7UCnDu0W0+lmUa0KM4xgE9teI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBzk3v/B; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728614674; c=relaxed/simple;
+	bh=ep5nUHCPM48um+Xp4OcKgtzbYd6FuZYwpN1qzFCD6EE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rgoudRRSYy2Y360taChPALJ3e2X96y6XxH2parn+YZJfx7yMBtENpgJfIy/TERXgMSFJqS0/u5qzS1B76+5FMNdEPqQb5liPSBjgTAEaB+0v6USWHGjo9OIBdSi+0gBG04oKhs2EQeZlZZ9kGOQM0ZYpXDWc9K1sUgXeBv/OsLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHrq4Wxf; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBzk3v/B"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20b7259be6fso16491805ad.0;
-        Thu, 10 Oct 2024 19:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728612930; x=1729217730; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G70sgRbW5zVDibTqLQGClZ8RjbVJyvgKa5ojU/Ri918=;
-        b=OBzk3v/B9RuhNBUTEH7jFTurJY2cDiar41HEcLcU6PWRoA8jUIjrX2jVz0v27AELY3
-         zxzFeD+hT73MwnVmsnlivRf/zcl5ApJi/cKi6VIKoA/9vefM53mPj4KbmoWf/4GQPe1i
-         /8QieYDAoK5fpmdMFeI78T6uAdv9lWfB3mbf6k3Q+zXWUW1Zuzd58/f4V5EHrlsOkoAE
-         iLJF16twSPddzdYdur6kHPJnjvKpIe4ZQx54QfkkTP2ptbjEY/LKcrXJEiJ5RbTmAlig
-         cLmgrDw3NyhCMHqv5VS83ycUPqAJc+MQMLVqLsoxov9G4ywlaIamJVoPMNNmFF4r/rCV
-         cs2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728612930; x=1729217730;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G70sgRbW5zVDibTqLQGClZ8RjbVJyvgKa5ojU/Ri918=;
-        b=Z98+kWOdAr1MpG92kr20QJUELAjW+GM68FGunGx0KGGl+CasJs8jDT8iX6XO47Fxzo
-         dbM40f+XbqJu/VhhIwxXXs7hCjLuHZBcnwLP23YAVhnSghBgJb4guF875N7Gp87CrOxG
-         /ahr7a1j00eGfIMsGlYA9Gx3Up3T16vB0bgzCGqlyKKt5ZjWYwXUlS1Io1xNqMkKQhWf
-         BBqr8flwRxsSJ/rg0KQGhQeAgLDoFNdx8FLVThgkAcw3SwstVSFWWSc3vby7l2O7BAYF
-         1rQxSJIxgvxyAK+ca3WTOXoU9I+BRdVeG3FYEHx9Vh4BdJTVLGNLp9GSnyTL8vYhggaw
-         /KkA==
-X-Forwarded-Encrypted: i=1; AJvYcCU96iDsmObkdWUCJEpVN63Wg+KX729Iesvofp3Gk/Oub6H9/ezmS5NSSSlcttOH9guL2aSCOKxyNWLZoX6n@vger.kernel.org, AJvYcCVBuPoWchl2i78Xc0degEp7dh0Ox2EZiAqabZtzQxih9nwjCePhQBMUucKBfhUt4WURVjM2HzC7abPA/g==@vger.kernel.org, AJvYcCW2C7U9Jel80OkzvDSQpVbqKMCtHy3CVQU8SRE8hwqwccDFPgp/OdpXyKiMSIMm2kS8Rp9m6YRGS9TP@vger.kernel.org, AJvYcCXLM+P0cD9EpXVoJWyh02ro3b+3pL3XhLsI7WPsQ13DwBkiH+htrHd2oJLts/d51+ClvB1qTw1WWvWs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsDgac/jlxVMyyC4rFXTeNDdFMTAMUxDEOZJ/ZM2MG2uCYP4Y7
-	tgUAkACCV9jrLj2lvRU5FRJEUtve+EodoWd1DL5Q1dX6Qou8nat+
-X-Google-Smtp-Source: AGHT+IE+MmEO12vUoLLKgbmMkNfIYHaPi9xzVe//y2m2AiK1pGN+UkN2eoeP1RMMb86Uy/RRTG6kzw==
-X-Received: by 2002:a17:902:f789:b0:20c:9821:69a9 with SMTP id d9443c01a7336-20ca169e77dmr10577485ad.37.1728612929724;
-        Thu, 10 Oct 2024 19:15:29 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c350ee8sm15532475ad.295.2024.10.10.19.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 19:15:29 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 99E6E4374224; Fri, 11 Oct 2024 09:15:23 +0700 (WIB)
-Date: Fri, 11 Oct 2024 09:15:23 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: ira.weiny@intel.com, Dave Jiang <dave.jiang@intel.com>,
-	Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 13/28] cxl/mem: Expose DCD partition capabilities in
- sysfs
-Message-ID: <ZwiKOyvXFXfAiOOU@archie.me>
-References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-13-c261ee6eeded@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHrq4Wxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728614673; x=1760150673;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ep5nUHCPM48um+Xp4OcKgtzbYd6FuZYwpN1qzFCD6EE=;
+  b=GHrq4WxfaT99UMUmMt8ssqrrC+PSV716b4SOhW9j8NdRiaPWC33SDEgi
+   TYroE/2mccIXZ8cM6jmyN5G5x5YqnudjD1dryvPHOHjyN2zxxuD7lWsXt
+   oDAUxFEPBVpzPEqfc7FuMkuZPgsREcCQKvXuHN7nwKQQOJJWxZfsUhPe2
+   PerBExVJ4HfE9lDTVtygfOnIGTiUXRQjgxIxuFZpjVIQkgL1lcsiaFine
+   uExeR/YgFss5ffgSQOQswA8ROwDwDU3ZFhTYJGJblbl+VlZrv4CHIRjSE
+   GqZjfpAZcYrSZ2iOnpcmJZJPFiKIeFOtKusdsyMfxd54Br4ceqfZSOrfT
+   A==;
+X-CSE-ConnectionGUID: cIN83G/aQ8qxb9SVuosOtA==
+X-CSE-MsgGUID: 3Evdmy1gR1u6GrLvkNuUUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="28096191"
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="28096191"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 19:44:33 -0700
+X-CSE-ConnectionGUID: XqJDrOIyTpW/J299GCTnMA==
+X-CSE-MsgGUID: O31aAfRnSia93r0tHtnHXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="76426930"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 19:44:30 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
+ <dave.jiang@intel.com>,  linux-cxl@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  Davidlohr Bueso <dave@stgolabs.net>,
+  Alison Schofield <alison.schofield@intel.com>,  Vishal Verma
+ <vishal.l.verma@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Alejandro
+ Lucero <alucerop@amd.com>
+Subject: Re: [RFC 3/5] cxl: Separate coherence from target type
+In-Reply-To: <87plojnxog.fsf@yhuang6-desk2.ccr.corp.intel.com> (Ying Huang's
+	message of "Wed, 02 Oct 2024 08:41:35 +0800")
+References: <20240925024647.46735-1-ying.huang@intel.com>
+	<20240925024647.46735-4-ying.huang@intel.com>
+	<Zvv-xTGGTZee_fr8@PC2K9PVX.TheFacebook.com>
+	<87plojnxog.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Date: Fri, 11 Oct 2024 10:40:57 +0800
+Message-ID: <87iktz9xae.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oaAeGPAZ1RHcucEh"
-Content-Disposition: inline
-In-Reply-To: <20241007-dcd-type2-upstream-v4-13-c261ee6eeded@intel.com>
+Content-Type: text/plain; charset=ascii
 
+"Huang, Ying" <ying.huang@intel.com> writes:
 
---oaAeGPAZ1RHcucEh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Gregory Price <gourry@gourry.net> writes:
+>
+>> On Wed, Sep 25, 2024 at 10:46:45AM +0800, Huang Ying wrote:
 
-On Mon, Oct 07, 2024 at 06:16:19PM -0500, ira.weiny@intel.com wrote:
-> +What:		/sys/bus/cxl/devices/memX/dcY/qos_class
-> +Date:		December, 2024
-> +KernelVersion:	v6.13
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Dynamic Capacity (DC) region information.  Devices only
-> +		export dcY if DCD partition Y is supported.  For CXL host
-> +		platforms that support "QoS Telemmetry" this attribute conveys
-> +		a comma delimited list of platform specific cookies that
-> +		identifies a QoS performance class for the persistent partition
-> +		of the CXL mem device. These class-ids can be compared against
-> +		a similar "qos_class" published for a root decoder. While it is
-> +		not required that the endpoints map their local memory-class to
-> +		a matching platform class, mismatches are not recommended and
-> +		there are platform specific performance related side-effects
-"... mismatches are not recommended as there are ..."
-> +		that may result. First class-id is displayed.
-> =20
+[snip]
 
-Thanks.
+>
+>>> @@ -1925,6 +1933,29 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>>>  		return -ENXIO;
+>>>  	}
+>>>  
+>>> +	/* Set the coherence of region to that of the first endpoint */
+>>> +	if (cxlr->coherence == CXL_DECODER_INVALIDCOH) {
+>>> +		unsigned long flags = cxlrd->cxlsd.cxld.flags;
+>>> +		enum cxl_decoder_coherence coherence = cxled->cxld.coherence;
+>>> +
+>>> +		cxlr->coherence = coherence;
+>>> +		if ((coherence == CXL_DECODER_HOSTONLYCOH &&
+>>> +		     !(flags & CXL_DECODER_F_HOSTONLYCOH)) ||
+>>> +		    (coherence == CXL_DECODER_DEVCOH &&
+>>> +		     !(flags & CXL_DECODER_F_DEVCOH))) {
+>>
+>> silly nit but my gut tells me we can make this less ugly.
+>> Not a blocker though.
+>
+> Yes.  This looks urgly.  Will think about how to improve it.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Reviewed the code again.  However, I don't have any idea to improve
+this.  Do you have some suggestion?
 
---oaAeGPAZ1RHcucEh
-Content-Type: application/pgp-signature; name="signature.asc"
+>>> +			dev_dbg(&cxlr->dev,
+>>> +"%s:%s endpoint coherence: %d isn't supported by root decoder: %#lx\n",
+>>> +				dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+>>> +				coherence, flags);
+>>> +			return -ENXIO;
+>>> +		}
+>
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZwiKOwAKCRD2uYlJVVFO
-o8NIAQCZrs5IPtJRWJ3wy4dqN3eWUxQgLyspoOpH7V3EXTsEbwEAuEOVomNyr5Hp
-JxCkGB4XGrygV0ZUzfdlEEXL1qkYYgo=
-=v9WZ
------END PGP SIGNATURE-----
-
---oaAeGPAZ1RHcucEh--
+--
+Best Regards,
+Huang, Ying
