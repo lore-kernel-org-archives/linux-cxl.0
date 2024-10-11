@@ -1,163 +1,194 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCF12194AC
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 13:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728655171; cv=none; b=aUkxXo4i7X4EysUaQbHYg4IpoqsXItn3beQyPBO20Ub+pXg9Pvl6licKjKMPrc044yJKX1hxUpYmD88HNcXXD864RrmDlY0ELR9GfQglGTXcVAGILgKk8T5RqiWSBH6QMeoTNbTd4rTufJ+WTZ9il2IKtRUpNoPXviDEM6FY6lc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728655171; c=relaxed/simple;
-	bh=oa0wWEHk2DCgqrnI5NOLBJVu4UIRkhWHOM9j5gizBjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNLXiz4OrGYr7FZUGfDNvBbLZ0LqbK8z24hS6dKqQZXVOf5vG9iLD9nuCTXSz8M+ykwBi8kxpCStDvkOngg8tF5Wy1odv6Hi1p+QudwS/YfeyoeKWcatQLRNEYWDfg+IzFy0ZdCIbQsxFcnS4YY8fXgvYggRO9ku5/lcgskKT5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OoP9AM4D; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A35219CB0;
+	Fri, 11 Oct 2024 14:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728656973; cv=fail; b=QfvEGHew9XTPfc7tbnCLX+EpdYIv7TXhFdg7y3QpmUQhbIBbtY9NAikOLh5If8b98GSgY/+AD7lroi6g2NpI3yz5mQiIh58ehTh2ozW/qrOzqqE5oCcqJS+W/8gpGmYLv+raAOQA7e6UKTgO3VcaGLXL4KGJorQe4sRIhpn4npM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728656973; c=relaxed/simple;
+	bh=7xthBl2WXmMq/FPFOMv0L1Cq/yt6j8xPmg5RtVlBS3g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VWjFWv/Dvzqzb8a2Wqvs7xVleU1GMIjb0Zbwgma+R1fXZEjOc0a11025urqpLnPsFpdbue3Ov5ntCqGclv+ULpfelrRbVh5QY7kmFhH/bPflP0PhadVUAm1HRJ5gXuMUjXllEOrwlUR3SEOUpnnsf1seNa7HM0PrFISxkZF0hyo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UYpZh3U/; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OoP9AM4D"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b11a28242eso58268585a.3
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 06:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728655167; x=1729259967; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
-        b=OoP9AM4DUSycm1wuyGbr1ndEJyrJAetSznP1hRPbvKwk10LNRp6k7p31nFwujsoilA
-         JUfIWaeP2lzyEsWLSsFVLGnnOS+M/zqsNDSv9akYYbFFBjsOgLEQiRTS0ta2IpJn238I
-         9aJQAd0Oj5PJlopdRZySkZftqsA5oNHnBlBJxhUOMb3lp2+cm+LLUoBnnwqoEZPjmtrZ
-         oIQYJsJlIp0QlbVvwnE8rsNJa+VSa7zbB4adS7Z7fJTkiTmPO1hW2TMvw7SN7LOZWLtx
-         9FmJheXWnBZtm+j7FUkdBB22MReLysCzwEZBjRkpRNfzd+12q6KlHhmdshDc5w1HariA
-         hpag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728655167; x=1729259967;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
-        b=cNq5tyPoHuhYWwbrDIEpvOV++49Do1cWCmYw1xrUjpMuLqA96wJAaca2gmYsYqqWYO
-         hLIofR2d9rdAPx6Srxftsck07bKhU+G3iLSKCcX5IT38n1j4pknSyLEkYdVCaffOdmLn
-         9sqBU+QgRSZhElYcbjpN+3EA95cccaulijT8+s1Q4rD1Ejg5jLvDq9A0jhnMqgC05r+5
-         AHddAXiWhpVyWVomKcqVQR9gQY1kaqSeo8C5ilsILasqYq/Ioc6UdnbAXMFdZoeIYYgP
-         sycO55+Arqffx1/WTvyZme6/oqy0pCC0bT4SzTlqEhM2c+KgwrB44DGY5c8EzEd/V816
-         cRZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdSoLnH3k/V+6DSAFhtjixWvQ1G+Ma1MCbykYUnTd+4xx4R6rwMEykbd+isG8fX3oNTlvQCHgxcPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw160vPmTj9/BUVqnJqFZTo0LiZgCVed+1a+o44M191Vb8FkJtz
-	7KAEJfMVsHXvS3OIkn1ejHJy1/qrOlphiRklQw41tbKT8ObU4lwPhKlZkiDV44M=
-X-Google-Smtp-Source: AGHT+IHcByFF6yQ/bPeQbJ3nqEcB1yr2kvWliV8YMpQdFKT5Ch9+kA9/fIFQYrGYJJKQ8+n1Sx+XxA==
-X-Received: by 2002:a05:6214:5c03:b0:6cb:e770:f505 with SMTP id 6a1803df08f44-6cbf012bc58mr29670396d6.50.1728655167499;
-        Fri, 11 Oct 2024 06:59:27 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe85a5d6asm15892246d6.5.2024.10.11.06.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 06:59:26 -0700 (PDT)
-Date: Fri, 11 Oct 2024 09:59:12 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lukas@wunner.de,
-	dan.j.williams@intel.com, bhelgaas@google.com, dave@stgolabs.net,
-	dave.jiang@intel.com, vishal.l.verma@intel.com,
-	Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
- pci_doe_send_req
-Message-ID: <ZwkvMIqC2DjLZJrg@PC2K9PVX.TheFacebook.com>
-References: <20241004162828.314-1-gourry@gourry.net>
- <20241010221628.GA580128@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UYpZh3U/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728656971; x=1760192971;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=7xthBl2WXmMq/FPFOMv0L1Cq/yt6j8xPmg5RtVlBS3g=;
+  b=UYpZh3U/dL8WGYt1vCHFkh1WHl0QCu734udt7rWq7aWv3mn1LqgaKAeJ
+   Dk7WGfOVaka5od7SA7+xRpc5tYoVI90c0lKH/AgSDqkiHASFYOtFJYyX2
+   VWUZxHruZuLW/tp4J8h96uvcNOGldqDvF4o0mm6h2Yz3nfruRxFtq7gYs
+   tNmUn/KiKVEJriQEwJx274+tnyeDUMt2QcyO1wApKQYBN2UDyRCkooBIw
+   Qqy175m1hVZj9SWd8wGysfOhNPfOgIOuE6BSQ9yuqpVhi2joGanNbN9R0
+   zOTNRDs8nNJmuZNHhvnrofXRqaiH4qk1SaHUsA+2HK2Sdj/HWBtsGoC3Y
+   A==;
+X-CSE-ConnectionGUID: huc5IXDRQT2tC9sj/vKhsQ==
+X-CSE-MsgGUID: enWEpvpST52ClocabX6XAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="15680517"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="15680517"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 07:29:30 -0700
+X-CSE-ConnectionGUID: vhROcjlTSZSuzEI7RakEWg==
+X-CSE-MsgGUID: 9PQbGxLRSi6O4hfQKYSfTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="81712205"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Oct 2024 07:29:30 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 11 Oct 2024 07:29:29 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 11 Oct 2024 07:29:29 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.172)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 11 Oct 2024 07:29:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sry3V2eYtbXR6q2+WjqVU/cQbIgnpAdsYjPAS1Sd14gbBAxFMM2ltEW0u+MbsCXoIOPr/j1a0GeLCvfF/EOxO4HbOMHCM9dOmfWzJ8IIOWdpSQ5qmhaocaCNcBplkoi4UBF6brQ6s5Q+YjG1j6qanundKLiOVUBggSMl/DQdLPwxLcRqVUii3mbbBzralIrahZFOoGTErSSWEZ7Ue9yueOAHPjLU+aJaq0YK38zyE+I3CLY6xXjshuV4tjDFZQEG5Tpd/3fCrqGNWFo0Q7aat35RkQHviC+2CsdUt47Mt+PtzUD2q9u14VcRf/vnVT4t4LbUH8h/ZVNnQ2Hfc4E9RQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mf4LEq6n2e34j2oruLbYRS3s+DGs6tu2kzEsMKcN7dw=;
+ b=PxvlRr6j5CMe0IC7Tz9AgViGXvhKOnF4T6RCkrZmzdVfK+FNw25Vw1cf6UHU9hsXjOtLP40H5t6JXGxtIdLJ5m/fR9dKYU4wo1Q+lG+UNGzE5hz/5OSQBLwSfVDz3fNNrNzExhXHhNxZhqHLCYM+o6rD1NnDBvOmvgzyT052USpU1l/I0ZOTWLHOVizKzh0qaHFUS96AP2feCqMtHPER2PQvIa9E2dlxtRLlBBVVQYa/SorbrLGtG89HkytOpwC9Z74hpW3d5U2g3RTmcuuYI5cUmGj4KyoEsz/u5eJ6mLo4frSo4DRXB4FjaUKpb1kHhQCEObmWh/rt1LKrDAPzjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by IA0PR11MB7744.namprd11.prod.outlook.com (2603:10b6:208:409::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.20; Fri, 11 Oct
+ 2024 14:29:26 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8048.018; Fri, 11 Oct 2024
+ 14:29:26 +0000
+Date: Fri, 11 Oct 2024 09:29:21 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: David Sterba <dsterba@suse.cz>, Ira Weiny <ira.weiny@intel.com>
+CC: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, Josef Bacik
+	<josef@toxicpanda.com>, <linux-btrfs@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, David Sterba
+	<dsterba@suse.cz>
+Subject: Re: [PATCH] kernel/range: Const-ify range_contains parameters
+Message-ID: <67093641c8654_9533f29461@iweiny-mobl.notmuch>
+References: <20241010-const-range-v1-1-afb6e4bfd8ce@intel.com>
+ <20241010203852.GU1609@twin.jikos.cz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20241010203852.GU1609@twin.jikos.cz>
+X-ClientProxiedBy: MW3PR05CA0022.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::27) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010221628.GA580128@bhelgaas>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA0PR11MB7744:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b84f249-f04a-4b26-8438-08dcea011bca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?j27x1PAS5a9D09Jt6bU0+gsQJeUAUaPG/XeTRg7mQN+GzBBkz1WZfssv0L/x?=
+ =?us-ascii?Q?Gxu19DQS3TUe3hcd1qSCcI9ezUbJ3NKvayM9x1XBkj0Yb1tFOv2bbV9T4fHu?=
+ =?us-ascii?Q?bzTpNDCbTa+8J1md++F4CDtY4TUchOzH+vRLBShaITwIdR/Th8XFu1TTN902?=
+ =?us-ascii?Q?SnhgL+C8blP36MCPFahO6jvM/pOCLL3WNCJwCRLAcgP3q6RMwlRMT5kcaN+r?=
+ =?us-ascii?Q?UX2njHvUhDF3m67pi9fR5Ogj8k/ceUO6zEOiVk0LCN7LfEAWyl77OzxsUAbf?=
+ =?us-ascii?Q?xGQLJXaJlWerWQst2J/peKQERjIy+sVsKvR+WU7DQj77hzcv2EXyTHbADzdg?=
+ =?us-ascii?Q?9BKu6E+sHO2LhdbFtMEA7JoynechFjNZ1mBdnLbRL7tTmJwdi65DUn1d8kKc?=
+ =?us-ascii?Q?Im66nfqoh2VAU3n6xH5N8rWlvAlqe4HVPYlYn4soBes9VOYOaaietKjUFcdW?=
+ =?us-ascii?Q?/UKI4pFSgpu9uKZ5FNxsJ/A/AwyggnaE+uKy/dXCKsgaKYG2w1+0ehD81qGt?=
+ =?us-ascii?Q?I5cB9WEEwlsGNerE00/ccN1+X4PPF3bLxUbD4gF1JjGasyXtjTmzLn+cGuKF?=
+ =?us-ascii?Q?MDtVnG1l0IrgHg2qG6Edyf+GvyL1dmAjyLDra/1RiyrS33OeEaPc0qWU6yFV?=
+ =?us-ascii?Q?nBKRw38Y9OQ5fRV88E1gL8LvrUMMqm59HG3sTwA5IxFLoSvRivQ2rQlgvdFc?=
+ =?us-ascii?Q?s29PEBjfKYZ1oNgeYidFmkibPkSO631gUm51SQXOWvAz3AObWr1Sj7zlXPfV?=
+ =?us-ascii?Q?qeJjBQrhFPBBiz6Ex2VtNzTfpbnMSArx/NVQv9UFwQaMeKW55R8xwj2pe2Uy?=
+ =?us-ascii?Q?u1vPjaJ+WGKrMChi/Jaj70Cbz82XARKS2xARBopy9eHgbRQTq0yx13SUAfP1?=
+ =?us-ascii?Q?STr/yRWRj1b/ZGuK42eMKX/OpPyTSyLlO9XA67MXgg71vLI8VIZOZSM55qa8?=
+ =?us-ascii?Q?uzZG70HDjQTZHZOoiLs+nlJA/Dj0hhr1hkDP8Kb6XlmVOn+xb0PbQdsCQ3XY?=
+ =?us-ascii?Q?ncDrB4JsTtY2OVGZZrQ9kWZpLZv3IUDbCrBeM/k1ZUJS2fYfe3dAY7w7VTW1?=
+ =?us-ascii?Q?YbRFnhGIVT/xIsHSOoZTIGNRkw8Jhf571OKPdCYSyhubUyf4hZzJO/XkkGpi?=
+ =?us-ascii?Q?MfphH+J+kYI+EuICe1/QLH2+fhBVRPvV7EfjnHpiUBnSlJX/NMdeKhIaD7/d?=
+ =?us-ascii?Q?TldUpCLFjLp76bFXqq7+MyisyxwYcJ8xq4qRtayNhvUGhNO8y2lRviMGRkav?=
+ =?us-ascii?Q?hSooV4RFUroCGq15Sj2X25Evf1kdxV7sllynaw5JxQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KGWIauRXcCfOx3Ziwyon7k1Tjb8yxLjQxy/lWJusLLIfOd98BvfqrxUH/IEG?=
+ =?us-ascii?Q?MmJxjx2XzWJEZ/QtD5VigUeUYAX4+k0pvCNiHoA8iUUAg6p6G5H9Wxmym9CP?=
+ =?us-ascii?Q?fXwSor+p33PtMdZDj9jKdPujBsgLe7RF+QwHaqRV4aRq7q1nUqm2j5g16stP?=
+ =?us-ascii?Q?flcDhHYAStxrdQTTyNY2a307tWuC2ONwbeh2rJlwDeSwoWXd5uBuKIXn0WGN?=
+ =?us-ascii?Q?7LldlSpFRAni3M4f7wVF9c8M5Cfgaws/S7q6eHSyTVR4o0qYSKaBTd0N+NwD?=
+ =?us-ascii?Q?piQbk43K1CJCjCAxEGoh0DkkW0QG89YNtXggeNTViUaHpJq9Ng+Olf2fcN9O?=
+ =?us-ascii?Q?/aSm3kqVeAsWbpJ7Z7/226laKMKpYk4AUTqXwm2E//Pr33zVn7kMOenRSxf6?=
+ =?us-ascii?Q?aO6/8+vpYNgRG8HBpM+kziDgfcPd1IS/PjFJfzBuHewREWxXeUvsncBsmh/N?=
+ =?us-ascii?Q?QsjmtUFuTScOdW5DLMxlTRZZdtu6Iuk+a4BYcd8TXm6e2VA8dc9Eu8+JurvI?=
+ =?us-ascii?Q?fBKzS4KkUpa3KNC9bJOBgCE7BR5d1aR97dUj72NmoLECaiO0AKvfeTOTQa6c?=
+ =?us-ascii?Q?flpS5gWb3ULaJlUmnFaCCjt5u8CupWlViyDpa0wW7fvKkvr/w0tKzglf9SVp?=
+ =?us-ascii?Q?sN5SguifAJfsDbKjYDDnB+EQ90CnS2eiHU4rIU40IPcrceqE68WXUTTYBHQI?=
+ =?us-ascii?Q?MkOaJBuJ1RHTd+qBa0ciLcEvOXu63kXGb+1KWWujMdBS9OI0bbCFWwX5zd1K?=
+ =?us-ascii?Q?/NvqdZicDvPxXSBqu2fVhaDHJuoZajt7XaHeBeQc+CZOuOY1VaOh9dZqULHR?=
+ =?us-ascii?Q?FN9HJsHs+wg6bhChq/MX1jHxg/EeJZPB2serZYTDGYT/047NCsCBQHOmfYir?=
+ =?us-ascii?Q?zzijcdCizUBvf9Uvq5tzwROAYfiVsgDvkB938udRI5FCcgvwQ/mzRhGa2eUu?=
+ =?us-ascii?Q?92TOIrKzEj/6DTVe2TS9ytueSooVoCe5if4OU6A1zonqDNYtdX+krANx8goT?=
+ =?us-ascii?Q?BFiCNFcg0nan5P133GWao17bL8LsDLHTz6Ohg+0Cxj/CWXVUWxA23szGU16Q?=
+ =?us-ascii?Q?fmtyCiKS7weU/En5WvcwPP64lwN0uT4J/bNA/kYd5VuoeIfLxlOCa+7Hokg4?=
+ =?us-ascii?Q?BPcQHq6w4yBms/iDnc0vgg4RvTCeraEz7U0wWLtvvqg6m6spqWZR7MOiYJwP?=
+ =?us-ascii?Q?m79D6Ss23TfCzN7BEHrL2G1OPpF8t7xTDPGMh28cInAkqQEh++spmh3scJCQ?=
+ =?us-ascii?Q?jzE30w7YCJt6xbDpQst7abTWXvHOgISZbtyBbRkAYKQ1/i9aIo7VadqoLCQm?=
+ =?us-ascii?Q?rw6ZkmeZybBL9+6KEJ1hrNiQK40WAo/LehNZIyS6BQn1byKbAkH+KSSagjHZ?=
+ =?us-ascii?Q?Dq0n5VKRKHLo3EfNFBtaS9zxt9ocTbWWs2E1Ra8Cq4x8yHm67Uf92a/X6Hs6?=
+ =?us-ascii?Q?ZN+rPDdy5tYWXZbsEWAO4r33ZjpQHnbw0BJWjG4Qe12fvQbEL3LIWQkLLZer?=
+ =?us-ascii?Q?fBoogknCIXIXU8JB0SI0Q9x5Oc0mCU2mfmpSa3LmZvk/7RiDqzouDQ9f4Kzl?=
+ =?us-ascii?Q?XOkbgEJNq26p+o73A5n264PHCuXXWjyadH08ek/L?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b84f249-f04a-4b26-8438-08dcea011bca
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 14:29:26.3473
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ag++Bn8YTo/SEJBUKgo2/HGJHatshLpNMkwZyLiwYghPKRUUIwrkFv+0Zv49xqIWghiIkYIuvXvO0kRBAivJ0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7744
+X-OriginatorOrg: intel.com
 
-On Thu, Oct 10, 2024 at 05:16:28PM -0500, Bjorn Helgaas wrote:
-> On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
-> > During initial device probe, the PCI DOE busy bit for some CXL
-> > devices may be left set for a longer period than expected by the
-> > current driver logic. Despite local comments stating DOE Busy is
-> > unlikely to be detected, it appears commonly specifically during
-> > boot when CXL devices are being probed.
+David Sterba wrote:
+> On Thu, Oct 10, 2024 at 10:24:42AM -0500, Ira Weiny wrote:
+> > range_contains() does not modify the range values.  David suggested it
+> > is safer to keep those parameters as const.[1]
 > > 
-> > This was observed on a single socket AMD platform with 2 CXL memory
-> > expanders attached to the single socket. It was not the case that
-> > concurrent accesses were being made, as validated by monitoring
-> > mailbox commands on the device side.
+> > Make range parameters const
 > > 
-> > This behavior has been observed with multiple CXL memory expanders
-> > from different vendors - so it appears unrelated to the model.
-> > 
-> > In all observed tests, only a small period of the retry window is
-> > actually used - typically only a handful of loop iterations.
-> > 
-> > Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-> > interval (1 second), resolves this issues cleanly.
-> > 
-> > Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
-> > raise an interrupt, so polling is the best option in this scenario.
-> > 
-> > Subsqeuent code in doe_statemachine_work and abort paths also wait
-> > for up to 1 PCI DOE timeout interval, so this order of (potential)
-> > additional delay is presumed acceptable.
+> > Link: https://lore.kernel.org/all/20241008161032.GB1609@twin.jikos.cz/ [1]
+> > Suggested-by: David Sterba <dsterba@suse.cz>
 > 
-> I provisionally applied this to pci/doe for v6.13 with Lukas and
-> Jonathan's reviewed-by.  
+> You can drop the above line.
+
+Done.
+
+
 > 
-> Can we include a sample of any dmesg logging or other errors users
-> would see because of this problem?  I'll update the commit log with
-> any of this information to help users connect an issue with this fix.
->
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> Reviewed-by: David Sterba <dsterba@suse.com>
 
-The only indication in dmesg you will see is a line like
+Queued in the cxl-next tree.
 
-[   24.542625] endpoint6: DOE failed -EBUSY
-
-produced by cxl_cdat_get_length or cxl_cdat_read_table
-
-
-Do you want an updated patch with the nits fixed?
- 
-> > Suggested-by: Lukas Wunner <lukas@wunner.de>
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  drivers/pci/doe.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > index 652d63df9d22..27ba5d281384 100644
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
-> > @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
-> >  	size_t length, remainder;
-> >  	u32 val;
-> >  	int i;
-> > +	unsigned long timeout_jiffies;
-> >  
-> >  	/*
-> >  	 * Check the DOE busy bit is not set. If it is set, this could indicate
-> >  	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
-> >  	 * it is expected that firmware and OS will negotiate access rights via
-> >  	 * an, as yet to be defined, method.
-> > +	 *
-> > +	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
-> > +	 * finish. Otherwise, simply error out as unable to field the request.
-> > +	 *
-> > +	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
-> > +	 * bit is cleared, so polling here is our best option for the moment.
-> >  	 */
-> > -	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
-> > +	do {
-> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
-> > +		 !time_after(jiffies, timeout_jiffies));
-> > +
-> >  	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> >  		return -EBUSY;
-> >  
-> > -- 
-> > 2.43.0
-> > 
+Thanks!
+Ira
