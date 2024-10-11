@@ -1,64 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AADC8BE5
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 18:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E605E19F49F
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 19:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728671640; cv=none; b=psJ3k3PK/Cq199KyTjwMxhu8voocUVLHtt7k8hdE+Yav3zMj0aamemlOnfejZtLiUD7Pa+WXp/bOGmQ9DwXM4UqxD69yOTr6eUP2ALFIZEQIoIQwfijsccp4Fb73+yY2RNP+xJVun0S3DhotqNP1lddRjbNFm5bnYVy9/lrFdwk=
+	t=1728673929; cv=none; b=ku0ZDjBy/hKyUGEikCzHVCvb5FhVqgbH8dKO2c0pdgJRAkFw7p+D7cTmP8FmJ0WcfXgBaLN9miydrOBFnJs/SDQaaiAZ0VSjJKyZutizb9jPU2aJxGIjUQnsr0F/HfRCnCoglkLq/WTd69xH82z+UAU8miRU8s7ixFizoHGwSj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728671640; c=relaxed/simple;
-	bh=3/GHCGogAuhYSv//x85j/Z6b9fGW4Nuf2Rs+fdP7h/c=;
+	s=arc-20240116; t=1728673929; c=relaxed/simple;
+	bh=RLCaiqYXdv9vLhUkI8qL2ZtBmD/O9wx9un22TR7hyu4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a4a3Zus40IsbKGQx7BdNU7fqeADxMTBXH3UbQnAU5p+Vzer+qM1rJq2FarDrgtS7y3C8ZKNAWoUsZPrxEyXSvpcCUJiQOHLbcugtqlJ71uQGYOuaXJHtMAVr7fimL5qn3f3yoTyKR4RfXaUZDa69dp7PRejXPCGzqBj3pHEOXRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iPk5XT7T; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=gAIqhlqshlIys18uQ8xSWK6gDOKETaTAscx7SMIsyv+xUO8X8f/D4fRwytYDxkyzbkPhBm0wmpQxgvwUZbPHz2ObFJO5dyLmYxpUhZHrl1gLAyxESh/r46AM1kAIzbo33GVAM220auxLN0SPZ5TSENI3+hh+0NmRXtwBdR5n5QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X41N04Ba; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPk5XT7T"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X41N04Ba"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728671637;
+	s=mimecast20190719; t=1728673926;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VWEsJtQknKO+f6wwawdGRc5BYz0aknSe6+kTVKNHDEQ=;
-	b=iPk5XT7TtQ4KoZ+8GZVLo+RohG9DsGNaSn6+WTT8tIMy/BrXvQokWaB9W1PknPG52gkdqD
-	WNQ0wBFeb6749FiWO/MREyYgWHn0+CAnNNu1J3AxsicKEVB8r71wl3MjyA6KajPEgTPbDV
-	n6dnPT5sIJjlqtUyLo7OhkD9gM+Gu/0=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=I+OX/8G3uytsdFoagf55NZyH1hjkUK5j7MSdcF6rs2U=;
+	b=X41N04BaLKVQrvAYeswfytEKYoqSc7X48X4SQk7AEGPphWFG3Wdd5peAwFhdSdMxjDNzlE
+	NmwbCJM/xK5xlkydgjd2TDjvE7uBcV0va0/MtOfCnXowhq+LVr3n0hGSoptHoxwKnKrDTX
+	eBD+bEfm8ZTN44Y5qq5uAJ/ZMGzqYkY=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193--IKEKGzfO1GNayVA0xuMTA-1; Fri, 11 Oct 2024 14:33:56 -0400
-X-MC-Unique: -IKEKGzfO1GNayVA0xuMTA-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-83549342337so34895139f.3
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 11:33:56 -0700 (PDT)
+ us-mta-269-B-tNKa8lMkGUwXEerbrcag-1; Fri, 11 Oct 2024 15:12:05 -0400
+X-MC-Unique: B-tNKa8lMkGUwXEerbrcag-1
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8353bd6481fso32911839f.1
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 12:12:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728671636; x=1729276436;
+        d=1e100.net; s=20230601; t=1728673925; x=1729278725;
         h=content-transfer-encoding:mime-version:organization:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VWEsJtQknKO+f6wwawdGRc5BYz0aknSe6+kTVKNHDEQ=;
-        b=s8jpOb6sDdWmAgQUGxlnCDx3rRCP/h8bryz3jbZn4twAjzkP0WmLHGsYUNB+/cZp0w
-         0vAQYzHYwUzramnVF/nsgP7FwOrGXUZOestpa/O16kwdZ1CrIGdWhj9zMl122G4Esn4F
-         oBwuoIp+XsrCCF8WRTbI7ODIcv2n8CTReoAGOgs9PsB1pKHLEFEnm7T3xwUXp2514j8w
-         WjwOTEk2CFAOCFCjPsDaGVsm3ZTxM/0H+oE9FuLOFmf9ZRZIkj1NDf9GPUoCi7jamyD/
-         CpkTMO5WHWSt/14b9+5pZhsBF9LGzMcPJ7NmTGuNO2lPvNTDIg3SABGAPh6GMfvmd8Vd
-         yu3A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5zbgGJCSEHA12Hisx+wv1ofMt7C00f5v7F3JD0v/TjszilDho1HPVrk0LgBQBHFofRjrh/vvk6ro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ0Qp5J93ZOyT+D8sekDxDYvEngW9P+Xv5tY3kz9/IH2Ui7MJb
-	BsnB8/OjfJDrBf3XB0ZHKDIATgt/UJeRrMJmbAUD8c/+SoL1ROLyNvezcfYHIdmczpmQTPPUtkA
-	LilYFgt4aBf2XkrxfgPjjhG/mB2EHnoEAUzwA2HVRqwyxp85encXiUJTOfg==
-X-Received: by 2002:a5e:df09:0:b0:82c:edde:1284 with SMTP id ca18e2360f4ac-8378f459394mr85038939f.0.1728671635651;
-        Fri, 11 Oct 2024 11:33:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEd6OXg+HD0QliOBqjfCfwDOnHpiNIAAOMAgvMMk32OIcgd0iGT0f7gaPJGraeLqmTu/XYybQ==
-X-Received: by 2002:a5e:df09:0:b0:82c:edde:1284 with SMTP id ca18e2360f4ac-8378f459394mr85037139f.0.1728671635073;
-        Fri, 11 Oct 2024 11:33:55 -0700 (PDT)
+        bh=I+OX/8G3uytsdFoagf55NZyH1hjkUK5j7MSdcF6rs2U=;
+        b=N3vDPgIiO9KnlzkLTa6NjYLlV530fnZnojCid22bujsIUW2xbZN0nhZDn/ZEHkXlsw
+         ysho+dAPRlpe0ikSgIvQnT26x9XFboA3QRRNwnHdqIPa6+M3J5avHvjGYFYVST4ChLTx
+         HNvlG2jvOqDS5iVDp6gOJ5noVFFIi3s8QAh5PutRBENa8acr1GyKzInW0HvPbjkyQz1e
+         Hj7Ka/QmszrbygyY5gOF8t4DISTym984nX+H+rWzIbn3ILIqN6B6W9aPVLw/hqDlGGLm
+         OKW9eKRV4B5BWpbPwCjWjYutcjOjy7EwmWE7uULsF1Va0rbZjU805p6n3BD/u5VL3HmJ
+         Rong==
+X-Forwarded-Encrypted: i=1; AJvYcCWDSCjXzAAhs8QJ8NyY7k8gvqosadAm3fAUHFGcoYgYBn2x2wBZ7oVEZWVRKEmBX2R7ADj76bA5zOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQhkhcb+xkQAeQj1WRYDrf/ZxwR8cgRPVdpmJH0DMXV2GzrAlE
+	DLnxakNK4pJQaaNcgjrcSuT9qhySKB7AW5q/AFfPpK5c1/z5wlurqtMyx0Qv1msZxxx/x2XyGio
+	jYUbbUX8azzbSww3x044P9CEUNorw2U7ZqF5buoKNBW/WASg48+T/BqPHDA==
+X-Received: by 2002:a05:6602:3284:b0:834:f667:217a with SMTP id ca18e2360f4ac-8379202f708mr83316139f.1.1728673924938;
+        Fri, 11 Oct 2024 12:12:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMOjScxGW8WUwWIPwVN81fKV5ZAd5dudRciOYQaALugF8psCxv5LI7Tr8m8yh9l7uUa+kYEw==
+X-Received: by 2002:a05:6602:3284:b0:834:f667:217a with SMTP id ca18e2360f4ac-8379202f708mr83314139f.1.1728673924485;
+        Fri, 11 Oct 2024 12:12:04 -0700 (PDT)
 Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbada84a35sm749888173.117.2024.10.11.11.33.53
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8354b8df7d1sm83056939f.2.2024.10.11.12.12.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 11:33:54 -0700 (PDT)
-Date: Fri, 11 Oct 2024 12:33:51 -0600
+        Fri, 11 Oct 2024 12:12:03 -0700 (PDT)
+Date: Fri, 11 Oct 2024 13:12:02 -0600
 From: Alex Williamson <alex.williamson@redhat.com>
 To: Zhi Wang <zhiw@nvidia.com>
 Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
@@ -69,11 +69,12 @@ Cc: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
  <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
  <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
  <zhiwang@kernel.org>
-Subject: Re: [RFC 04/13] vfio: introduce vfio-cxl core preludes
-Message-ID: <20241011123351.27474f2b.alex.williamson@redhat.com>
-In-Reply-To: <20240920223446.1908673-5-zhiw@nvidia.com>
+Subject: Re: [RFC 05/13] vfio/cxl: expose CXL region to the usersapce via a
+ new VFIO device region
+Message-ID: <20241011131202.1b6edc8d.alex.williamson@redhat.com>
+In-Reply-To: <20240920223446.1908673-6-zhiw@nvidia.com>
 References: <20240920223446.1908673-1-zhiw@nvidia.com>
-	<20240920223446.1908673-5-zhiw@nvidia.com>
+	<20240920223446.1908673-6-zhiw@nvidia.com>
 Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -86,467 +87,269 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Sep 2024 15:34:37 -0700
+On Fri, 20 Sep 2024 15:34:38 -0700
 Zhi Wang <zhiw@nvidia.com> wrote:
 
-> In VFIO, common functions that used by VFIO variant drivers are managed
-> in a set of "core" functions. E.g. the vfio-pci-core provides the common
-> functions used by VFIO variant drviers to support PCI device
-> passhthrough.
+> To directly access the device memory, a CXL region is required. Creating
+> a CXL region requires to configure HDM decoders on the path to map the
+> access of HPA level by level and evetually hit the DPA in the CXL
+> topology.
 > 
-> Although the CXL type-2 device has a PCI-compatible interface for device
-> configuration and programming, they still needs special handlings when
-> initialize the device:
+> For the usersapce, e.g. QEMU, to access the CXL region, the region is
+> required to be exposed via VFIO interfaces.
 > 
-> - Probing the CXL DVSECs in the configuration.
-> - Probing the CXL register groups implemented by the device.
-> - Configuring the CXL device state required by the kernel CXL core.
-> - Create the CXL region.
-> - Special handlings of the CXL MMIO BAR.
-> 
-> Introduce vfio-cxl core predules to hold all the common functions used
-
-s/predules/preludes/
-
-> by VFIO variant drivers to support CXL device passthrough.
+> Introduce a new VFIO device region and region ops to expose the created
+> CXL region when initailize the device in the vfio-cxl-core. Introduce a
+> new sub region type for the userspace to identify a CXL region.
 > 
 > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 > ---
->  drivers/vfio/pci/Kconfig         |   4 +
->  drivers/vfio/pci/Makefile        |   3 +
->  drivers/vfio/pci/vfio_cxl_core.c | 264 +++++++++++++++++++++++++++++++
->  include/linux/vfio_pci_core.h    |  37 +++++
->  4 files changed, 308 insertions(+)
->  create mode 100644 drivers/vfio/pci/vfio_cxl_core.c
+>  drivers/vfio/pci/vfio_cxl_core.c   | 140 ++++++++++++++++++++++++++++-
+>  drivers/vfio/pci/vfio_pci_config.c |   1 +
+>  include/linux/vfio_pci_core.h      |   1 +
+>  include/uapi/linux/vfio.h          |   3 +
+>  4 files changed, 144 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index bf50ffa10bde..2196e79b132b 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -7,6 +7,10 @@ config VFIO_PCI_CORE
->  	select VFIO_VIRQFD
->  	select IRQ_BYPASS_MANAGER
->  
-> +config VFIO_CXL_CORE
-> +	tristate
-> +	select VFIO_PCI_CORE
-
-I don't see anything in this series that depends on CXL Kconfigs, so it
-seems this will break in randconfig when the resulting vfio-cxl variant
-driver is enabled without core CXL support.
-
-> +
->  config VFIO_PCI_MMAP
->  	def_bool y if !S390
->  	depends on VFIO_PCI_CORE
-> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-> index cf00c0a7e55c..b51221b94b0b 100644
-> --- a/drivers/vfio/pci/Makefile
-> +++ b/drivers/vfio/pci/Makefile
-> @@ -8,6 +8,9 @@ vfio-pci-y := vfio_pci.o
->  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
->  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
->  
-> +vfio-cxl-core-y := vfio_cxl_core.o
-> +obj-$(CONFIG_VFIO_CXL_CORE) += vfio-cxl-core.o
-> +
->  obj-$(CONFIG_MLX5_VFIO_PCI)           += mlx5/
->  
->  obj-$(CONFIG_HISI_ACC_VFIO_PCI) += hisilicon/
 > diff --git a/drivers/vfio/pci/vfio_cxl_core.c b/drivers/vfio/pci/vfio_cxl_core.c
-> new file mode 100644
-> index 000000000000..6a7859333f67
-> --- /dev/null
+> index 6a7859333f67..ffc15fd94b22 100644
+> --- a/drivers/vfio/pci/vfio_cxl_core.c
 > +++ b/drivers/vfio/pci/vfio_cxl_core.c
-> @@ -0,0 +1,264 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/device.h>
-> +#include <linux/eventfd.h>
-> +#include <linux/file.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iommu.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/notifier.h>
-> +#include <linux/pci.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "vfio_pci_priv.h"
-> +
-> +#define DRIVER_AUTHOR "Zhi Wang <zhiw@nvidia.com>"
-> +#define DRIVER_DESC "core driver for VFIO based CXL devices"
-> +
-> +static int get_hpa_and_request_dpa(struct vfio_pci_core_device *core_dev)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +	struct pci_dev *pdev = core_dev->pdev;
-> +	u64 max;
-> +
-> +	cxl->cxlrd = cxl_get_hpa_freespace(cxl->endpoint, 1,
-> +					   CXL_DECODER_F_RAM |
-> +					   CXL_DECODER_F_TYPE2,
-> +					   &max);
+> @@ -102,6 +102,13 @@ static int create_cxl_region(struct vfio_pci_core_device *core_dev)
+>  	cxl_accel_get_region_params(cxl->region.region, &start, &end);
+>  
+>  	cxl->region.addr = start;
+> +	cxl->region.vaddr = ioremap(start, end - start);
+> +	if (!cxl->region.addr) {
 
-I don't see that this adhere to the comment in cxl_get_hpa_freespace()
-that the caller needs to deal with the elevated ref count on the root
-decoder.  There's no put_device() call in either the error path or
-disable path.
+This is testing addr, not the newly added vaddr.
 
-Also, maybe this is inherent in the cxl code, but cxl->cxlrd seems
-redundant to me, couldn't we refer to this as cxl->root_decoder? (or
-some variant more descriptive than "rd")
-
-Is this exclusively a type2 extension or how do you envision type1/3
-devices with vfio?
-
-> +	if (IS_ERR(cxl->cxlrd)) {
-> +		pci_err(pdev, "Fail to get HPA space.\n");
-> +		return PTR_ERR(cxl->cxlrd);
-> +	}
-> +
-> +	if (max < cxl->region.size) {
-> +		pci_err(pdev, "No enough free HPA space %llu < %llu\n",
-> +			max, cxl->region.size);
-> +		return -ENOSPC;
-> +	}
-> +
-> +	cxl->cxled = cxl_request_dpa(cxl->endpoint, true, cxl->region.size,
-> +				     cxl->region.size);
-
-cxl->endpoint_decoder? cxl->endp_dec?
-
-> +	if (IS_ERR(cxl->cxled)) {
-> +		pci_err(pdev, "Fail to request DPA\n");
-> +		return PTR_ERR(cxl->cxled);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int create_cxl_region(struct vfio_pci_core_device *core_dev)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +	struct pci_dev *pdev = core_dev->pdev;
-> +	resource_size_t start, end;
-> +	int ret;
-> +
-> +	ret = cxl_accel_request_resource(cxl->cxlds, true);
-> +	if (ret) {
-> +		pci_err(pdev, "Fail to request CXL resource\n");
-> +		return ret;
-> +	}
-
-Where is the corresponding release_resource()?
-
-> +
-> +	if (!cxl_await_media_ready(cxl->cxlds)) {
-> +		cxl_accel_set_media_ready(cxl->cxlds);
-> +	} else {
-> +		pci_err(pdev, "CXL media is not active\n");
-> +		return ret;
-> +	}
-
-We're not capturing the media ready error for this return.  I think
-Jason would typically suggest a success oriented flow as:
-
-	ret = cxl_await_media_ready(cxl->cxlds)
-	if (ret) {
-		pci_err(...);
-		return ret;
-	}
-	cxl_accel_set_media_ready(cxl->cxlds);
-
-> +
-> +	cxl->cxlmd = devm_cxl_add_memdev(&pdev->dev, cxl->cxlds);
-> +	if (IS_ERR(cxl->cxlmd)) {
-> +		pci_err(pdev, "Fail to create CXL memdev\n");
-> +		return PTR_ERR(cxl->cxlmd);
-> +	}
-> +
-> +	cxl->endpoint = cxl_acquire_endpoint(cxl->cxlmd);
-> +	if (IS_ERR(cxl->endpoint)) {
-> +		pci_err(pdev, "Fail to acquire CXL endpoint\n");
-> +		return PTR_ERR(cxl->endpoint);
-> +	}
-> +
-> +	ret = get_hpa_and_request_dpa(core_dev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	cxl->region.region = cxl_create_region(cxl->cxlrd, &cxl->cxled, 1);
-> +	if (IS_ERR(cxl->region.region)) {
-> +		ret = PTR_ERR(cxl->region.region);
-> +		pci_err(pdev, "Fail to create CXL region\n");
+> +		pci_err(pdev, "Fail to map CXL region\n");
+> +		cxl_region_detach(cxl->cxled);
 > +		cxl_dpa_free(cxl->cxled);
 > +		goto out;
 > +	}
+>  out:
+>  	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
+>  	return ret;
+> @@ -152,17 +159,135 @@ static void disable_cxl(struct vfio_pci_core_device *core_dev)
+>  {
+>  	struct vfio_cxl *cxl = &core_dev->cxl;
+>  
+> -	if (cxl->region.region)
+> +	if (cxl->region.region) {
+> +		iounmap(cxl->region.vaddr);
+>  		cxl_region_detach(cxl->cxled);
+> +	}
+>  
+>  	if (cxl->cxled)
+>  		cxl_dpa_free(cxl->cxled);
+>  }
+>  
+> +static unsigned long vma_to_pfn(struct vm_area_struct *vma)
+> +{
+> +	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+> +	struct vfio_cxl *cxl = &vdev->cxl;
+> +	u64 pgoff;
 > +
-> +	cxl_accel_get_region_params(cxl->region.region, &start, &end);
+> +	pgoff = vma->vm_pgoff &
+> +		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
 > +
-> +	cxl->region.addr = start;
-> +out:
-> +	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
+> +	return (cxl->region.addr >> PAGE_SHIFT) + pgoff;
+> +}
+> +
+> +static vm_fault_t vfio_cxl_mmap_fault(struct vm_fault *vmf)
+> +{
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+> +	unsigned long pfn, pgoff = vmf->pgoff - vma->vm_pgoff;
+> +	unsigned long addr = vma->vm_start;
+> +	vm_fault_t ret = VM_FAULT_SIGBUS;
+> +
+> +	pfn = vma_to_pfn(vma);
+> +
+> +	down_read(&vdev->memory_lock);
+> +
+> +	if (vdev->pm_runtime_engaged || !__vfio_pci_memory_enabled(vdev))
+> +		goto out_unlock;
+> +
+> +	ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
+> +	if (ret & VM_FAULT_ERROR)
+> +		goto out_unlock;
+> +
+> +	for (; addr < vma->vm_end; addr += PAGE_SIZE, pfn++) {
+> +		if (addr == vmf->address)
+> +			continue;
+> +
+> +		if (vmf_insert_pfn(vma, addr, pfn) & VM_FAULT_ERROR)
+> +			break;
+> +	}
+> +
+> +out_unlock:
+> +	up_read(&vdev->memory_lock);
+> +
 > +	return ret;
 > +}
-> +
-> +/* Standard CXL-type 2 driver initialization sequence */
-> +static int enable_cxl(struct vfio_pci_core_device *core_dev, u16 dvsec)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +	struct pci_dev *pdev = core_dev->pdev;
-> +	u32 count;
-> +	u64 offset, size;
-> +	int ret;
-> +
-> +	cxl->cxlds = cxl_accel_state_create(&pdev->dev, cxl->caps);
-> +	if (IS_ERR(cxl->cxlds))
-> +		return PTR_ERR(cxl->cxlds);
-> +
-> +	cxl_accel_set_dvsec(cxl->cxlds, dvsec);
-> +	cxl_accel_set_serial(cxl->cxlds, pdev->dev.id);
 
-Doesn't seem to meet the description were cxl_device_state.serial is
-described as the PCIe device serial number, not a struct device
-instance number.
+This is identical to vfio_pci_mmap_fault(), we should figure out how to
+reuse it rather than duplicate it.
 
 > +
-> +	cxl_accel_set_resource(cxl->cxlds, cxl->dpa_res, CXL_ACCEL_RES_DPA);
-> +	cxl_accel_set_resource(cxl->cxlds, cxl->ram_res, CXL_ACCEL_RES_RAM);
+> +static const struct vm_operations_struct vfio_cxl_mmap_ops = {
+> +	.fault = vfio_cxl_mmap_fault,
+> +};
+
+This should make use of the huge_fault support similar to what we added
+in vfio-pci too, right?
+
 > +
-> +	ret = cxl_pci_accel_setup_regs(pdev, cxl->cxlds);
-> +	if (ret) {
-> +		pci_err(pdev, "Fail to setup CXL accel regs\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = cxl_get_hdm_info(cxl->cxlds, &count, &offset, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!count || !size) {
-> +		pci_err(pdev, "Fail to find CXL HDM reg offset\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	cxl->hdm_count = count;
-> +	cxl->hdm_reg_offset = offset;
-> +	cxl->hdm_reg_size = size;
-> +
-> +	return create_cxl_region(core_dev);
-> +}
-> +
-> +static void disable_cxl(struct vfio_pci_core_device *core_dev)
+> +static int vfio_cxl_region_mmap(struct vfio_pci_core_device *core_dev,
+> +				struct vfio_pci_region *region,
+> +				struct vm_area_struct *vma)
 > +{
 > +	struct vfio_cxl *cxl = &core_dev->cxl;
+> +	u64 phys_len, req_len, pgoff, req_start;
 > +
-> +	if (cxl->region.region)
-> +		cxl_region_detach(cxl->cxled);
-> +
-> +	if (cxl->cxled)
-> +		cxl_dpa_free(cxl->cxled);
-> +}
-> +
-> +int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +	struct pci_dev *pdev = core_dev->pdev;
-> +	u16 dvsec;
-> +	int ret;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_PCIE_DEVICE);
-> +	if (!dvsec)
-> +		return -ENODEV;
-> +
-> +	if (!cxl->region.size)
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_MMAP))
 > +		return -EINVAL;
 > +
-> +	ret = vfio_pci_core_enable(core_dev);
-> +	if (ret)
-> +		return ret;
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ) &&
+> +	    (vma->vm_flags & VM_READ))
+> +		return -EPERM;
 > +
-> +	ret = enable_cxl(core_dev, dvsec);
-> +	if (ret)
-> +		goto err_enable_cxl_device;
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE) &&
+> +	    (vma->vm_flags & VM_WRITE))
+> +		return -EPERM;
+> +
+> +	phys_len = cxl->region.size;
+> +	req_len = vma->vm_end - vma->vm_start;
+> +	pgoff = vma->vm_pgoff &
+> +		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
+> +	req_start = pgoff << PAGE_SHIFT;
+> +
+> +	if (req_start + req_len > phys_len)
+> +		return -EINVAL;
+> +
+> +	vma->vm_private_data = core_dev;
+> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+
+I thought a large part of CXL was that the memory is coherent, maybe I
+don't understand what we're providing access to here.
+
+> +	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+> +
+> +	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
+> +			VM_DONTEXPAND | VM_DONTDUMP);
+> +	vma->vm_ops = &vfio_cxl_mmap_ops;
 > +
 > +	return 0;
-> +
-> +err_enable_cxl_device:
-> +	vfio_pci_core_disable(core_dev);
-> +	return ret;
 > +}
-> +EXPORT_SYMBOL(vfio_cxl_core_enable);
-
-These should all be _GPL symbols by default, right?
-
 > +
-> +void vfio_cxl_core_finish_enable(struct vfio_pci_core_device *core_dev)
+> +static ssize_t vfio_cxl_region_rw(struct vfio_pci_core_device *core_dev,
+> +				  char __user *buf, size_t count, loff_t *ppos,
+> +				  bool iswrite)
 > +{
-> +	vfio_pci_core_finish_enable(core_dev);
+> +	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
+> +	struct vfio_cxl_region *cxl_region = core_dev->region[i].data;
+> +	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
+> +
+> +	if (!count)
+> +		return 0;
+> +
+> +	return vfio_pci_core_do_io_rw(core_dev, false,
+> +				      cxl_region->vaddr,
+> +				      (char __user *)buf, pos, count,
+> +				      0, 0, iswrite);
 > +}
-> +EXPORT_SYMBOL(vfio_cxl_core_finish_enable);
 > +
-> +void vfio_cxl_core_close_device(struct vfio_device *vdev)
+> +static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
+> +				    struct vfio_pci_region *region)
 > +{
-> +	struct vfio_pci_core_device *core_dev =
-> +		container_of(vdev, struct vfio_pci_core_device, vdev);
+> +}
 > +
+> +static const struct vfio_pci_regops vfio_cxl_regops = {
+> +	.rw		= vfio_cxl_region_rw,
+> +	.mmap		= vfio_cxl_region_mmap,
+> +	.release	= vfio_cxl_region_release,
+> +};
+> +
+>  int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
+>  {
+>  	struct vfio_cxl *cxl = &core_dev->cxl;
+>  	struct pci_dev *pdev = core_dev->pdev;
+> +	u32 flags;
+>  	u16 dvsec;
+>  	int ret;
+>  
+> @@ -182,8 +307,21 @@ int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev)
+>  	if (ret)
+>  		goto err_enable_cxl_device;
+>  
+> +	flags = VFIO_REGION_INFO_FLAG_READ |
+> +		VFIO_REGION_INFO_FLAG_WRITE |
+> +		VFIO_REGION_INFO_FLAG_MMAP;
+> +
+> +	ret = vfio_pci_core_register_dev_region(core_dev,
+> +		PCI_VENDOR_ID_CXL | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
+> +		VFIO_REGION_SUBTYPE_CXL, &vfio_cxl_regops,
+> +		cxl->region.size, flags, &cxl->region);
+> +	if (ret)
+> +		goto err_register_cxl_region;
+> +
+>  	return 0;
+>  
+> +err_register_cxl_region:
 > +	disable_cxl(core_dev);
-> +	vfio_pci_core_close_device(vdev);
-> +}
-> +EXPORT_SYMBOL(vfio_cxl_core_close_device);
-> +
-> +/*
-> + * Configure the resource required by the kernel CXL core:
-> + * device DPA and device RAM size
-> + */
-> +void vfio_cxl_core_set_resource(struct vfio_pci_core_device *core_dev,
-> +				struct resource res,
-> +				enum accel_resource type)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +
-> +	switch (type) {
-> +	case CXL_ACCEL_RES_DPA:
-> +		cxl->dpa_size = res.end - res.start + 1;
-> +		cxl->dpa_res = res;
-> +		break;
-> +
-> +	case CXL_ACCEL_RES_RAM:
-> +		cxl->ram_res = res;
-> +		break;
-> +
-> +	default:
-> +		WARN(1, "invalid resource type: %d\n", type);
-> +		break;
-> +	}
-> +}
-> +EXPORT_SYMBOL(vfio_cxl_core_set_resource);
+>  err_enable_cxl_device:
+>  	vfio_pci_core_disable(core_dev);
+>  	return ret;
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index 97422aafaa7b..98f3ac2d305c 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -412,6 +412,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_core_device *vdev)
+>  	return pdev->current_state < PCI_D3hot &&
+>  	       (pdev->no_command_memory || (cmd & PCI_COMMAND_MEMORY));
+>  }
+> +EXPORT_SYMBOL(__vfio_pci_memory_enabled);
 
-It's not obvious to me why we want to multiplex these through one
-function rather than have separate functions to set the dpa and ram.
-The usage in patch 12/ doesn't really dictate a multiplexed function.
+_GPL
 
-> +
-> +/* Configure the expected CXL region size to be created */
-> +void vfio_cxl_core_set_region_size(struct vfio_pci_core_device *core_dev,
-> +				   u64 size)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +
-> +	if (WARN_ON(size > cxl->dpa_size))
-> +		return;
-> +
-> +	if (WARN_ON(cxl->region.region))
-> +		return;
-> +
-> +	cxl->region.size = size;
-> +}
-> +EXPORT_SYMBOL(vfio_cxl_core_set_region_size);
-> +
-> +/* Configure the driver cap required by the kernel CXL core */
-> +void vfio_cxl_core_set_driver_hdm_cap(struct vfio_pci_core_device *core_dev)
-> +{
-> +	struct vfio_cxl *cxl = &core_dev->cxl;
-> +
-> +	cxl->caps |= CXL_ACCEL_DRIVER_CAP_HDM;
-> +}
-> +EXPORT_SYMBOL(vfio_cxl_core_set_driver_hdm_cap);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR(DRIVER_AUTHOR);
-> +MODULE_DESCRIPTION(DRIVER_DESC);
-> +MODULE_IMPORT_NS(CXL);
+There should also be a lockdep assert added if this is exported.  With
+that it could also drop the underscore prefix.
+
+>  
+>  /*
+>   * Restore the *real* BARs after we detect a FLR or backdoor reset.
 > diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index fbb472dd99b3..7762d4a3e825 100644
+> index 7762d4a3e825..6523d9d1bffe 100644
 > --- a/include/linux/vfio_pci_core.h
 > +++ b/include/linux/vfio_pci_core.h
-> @@ -15,6 +15,8 @@
->  #include <linux/types.h>
->  #include <linux/uuid.h>
->  #include <linux/notifier.h>
-> +#include <linux/cxl_accel_mem.h>
-> +#include <linux/cxl_accel_pci.h>
->  
->  #ifndef VFIO_PCI_CORE_H
->  #define VFIO_PCI_CORE_H
-> @@ -49,6 +51,31 @@ struct vfio_pci_region {
->  	u32				flags;
+> @@ -54,6 +54,7 @@ struct vfio_pci_region {
+>  struct vfio_cxl_region {
+>  	u64 size;
+>  	u64 addr;
+> +	void *vaddr;
+>  	struct cxl_region *region;
 >  };
 >  
-> +struct vfio_cxl_region {
-> +	u64 size;
-> +	u64 addr;
-> +	struct cxl_region *region;
-> +};
-> +
-> +struct vfio_cxl {
-> +	u8 caps;
-> +	u64 dpa_size;
-> +
-> +	u32 hdm_count;
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 2b68e6cdf190..71f766c29060 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -372,6 +372,9 @@ struct vfio_region_info_cap_type {
+>  /* sub-types for VFIO_REGION_TYPE_GFX */
+>  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+>  
+> +/* sub-types for VFIO CXL region */
+> +#define VFIO_REGION_SUBTYPE_CXL                 (1)
 
-Poor packing, caps and hdm_count should at least be adjacent to leave
-only a single 24-bit gap.
+This is a PCI vendor sub-type with vendor ID 0x1e98.  The comment
+should reflect that.  Thanks,
 
-> +	u64 hdm_reg_offset;
-> +	u64 hdm_reg_size;
-> +
-> +	struct cxl_dev_state *cxlds;
-> +	struct cxl_memdev *cxlmd;
-> +	struct cxl_root_decoder *cxlrd;
-> +	struct cxl_port *endpoint;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct resource dpa_res;
-> +	struct resource ram_res;
-> +
-> +	struct vfio_cxl_region region;
-> +};
-> +
->  struct vfio_pci_core_device {
->  	struct vfio_device	vdev;
->  	struct pci_dev		*pdev;
-> @@ -94,6 +121,7 @@ struct vfio_pci_core_device {
->  	struct vfio_pci_core_device	*sriov_pf_core_dev;
->  	struct notifier_block	nb;
->  	struct rw_semaphore	memory_lock;
-> +	struct vfio_cxl		cxl;
-
-I'd prefer we not embed a structure here that's unused for 100% of
-current use cases.  Why can't we have:
-
-struct vfio_cxl_core_device {
-	struct vfio_pci_core_device	pci_core;
-	struct vfio_cxl			clx;
-};
-
-Thanks,
 Alex
 
->  };
->  
->  /* Will be exported for vfio pci drivers usage */
-> @@ -159,4 +187,13 @@ VFIO_IOREAD_DECLARATION(32)
->  VFIO_IOREAD_DECLARATION(64)
->  #endif
->  
-> +int vfio_cxl_core_enable(struct vfio_pci_core_device *core_dev);
-> +void vfio_cxl_core_finish_enable(struct vfio_pci_core_device *core_dev);
-> +void vfio_cxl_core_close_device(struct vfio_device *vdev);
-> +void vfio_cxl_core_set_resource(struct vfio_pci_core_device *core_dev,
-> +				struct resource res,
-> +				enum accel_resource type);
-> +void vfio_cxl_core_set_region_size(struct vfio_pci_core_device *core_dev,
-> +				   u64 size);
-> +void vfio_cxl_core_set_driver_hdm_cap(struct vfio_pci_core_device *core_dev);
->  #endif /* VFIO_PCI_CORE_H */
+> +
+>  /**
+>   * struct vfio_region_gfx_edid - EDID region layout.
+>   *
 
