@@ -1,301 +1,233 @@
-Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AE21E2016
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Oct 2024 23:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728690025; cv=none; b=OFJuyVXniYvZzFWCbPL7r3UkB+/h9eTcXIlK66xuQPd4QeVDLD+qKGiDB6L9EIKpBNai/cWDsiEdYsDncJDhTXT/Agp51GPMCt7OPMO6nYcE+OnYjp6soBaJSqcqQyq4Q99Q6aZJA3GvX0TR4jFYAfhRfAXmwOgvUyYdnWrOxG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728690025; c=relaxed/simple;
-	bh=hzmriMm1SlBGJ794Cddrkfm/jHhZdGdWaKuc0Hj0ZFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atKCrvAnrsUbh5EhEjwKAgdjLbUkpDQ2dN6QspjsAo2RZlVneAoCs2l6IICcdPs+iT7dfBWUvrdtBjIoFkCvPpb519Z1Uhxz3KPw5b56mcik38NTxeNYhXd2mbOdnRko2zaxYwZ3yQQpv4+h3LzqrZkBUa3GDQkQFNkKVqgoiug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gznUbumH; arc=none smtp.client-ip=17.58.6.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B27C4C83;
+	Sat, 12 Oct 2024 06:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728714681; cv=fail; b=En+BZcntkJgXQbK5aKacWdRAuY2BhyDPyI382z6YGBRrMNvMC+x62ACLs74dSwk6c3VVxBR76GdCh0HGmwONdxaBJZugaBN+r+Qb3rrFiTphNGXaag0dU//1Hi8Dj5C9hY2aEQF7xcOSXFiiEAQ/GIp3azTYzE2GS/BW54MNhYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728714681; c=relaxed/simple;
+	bh=TV35u2qpug2Tybx7aC6pgt8rTu0flvEgH4qHcAhQZdo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=McI7Df5znO6JTqGb/IK/WEi34IawYMz4bym/VH+C3v3JGOBoLErqD0o7r1Q505rM0lDdVKYxdhAoXmfm89xdaxJKw3Rzm7PBLig7EtWmdgakqygXsyjiCpjmeTsZfx0U2ZVM+ilbJUDGxQNVINTEjMvLI2ynjVaJcsM4bOsSk38=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k1q4caMr; arc=fail smtp.client-ip=40.107.220.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gznUbumH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1728690023;
-	bh=rC/dMbnugMRawoRxS2uRVhimv+ms1/XM7Yr5Pb3hCoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=gznUbumHUDA1uaHgKsfzgAnxv+kG5j6ikHE//fBa9stmsXh41VWRVv2Dpic4ieQfV
-	 iWh78db4bpMCJ01AOjsV/8pZvrCwrX6RP4X44Qecnat3PIqVb6sotaU3ODqFNhVogs
-	 BZh6Xrtmv6yAwYsA+7e5wXAXlsqzYzsAePtxt1d8Z8sce8rWYq/mqUyTou0LfQ9Kzi
-	 FF4HJ/tcmnjKLQxewzTzULyK62OOzebnxb1vUWQ71WaDpdwdjMEjPePQnNWDkY4Qjw
-	 yrnrfsLugPdXbSK94SL6V51NHoPdDwm7e4PidbpYLDgN6oMJiVSq9bQWi4LVrPnIqY
-	 Vpt7iO8q7xUZA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id B5D903A02D6;
-	Fri, 11 Oct 2024 23:40:17 +0000 (UTC)
-Message-ID: <060193f9-5de1-422b-abfb-6328a1c7b806@icloud.com>
-Date: Sat, 12 Oct 2024 07:40:13 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k1q4caMr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RfmfPMTBHHjiMiUwT0zToNfHSuZBAJTxoGoTIZBzrnfJlGNF8PH+Qn6U64R8zPf9IkSlj3lOqtkHCjaRDMYnqXuHx8J2k3UGbMMiq7ngC7Ypw4KSsu/XVBeoMM9CLnartSgPl9Y8dQXqyz77J+PkEtQHHrKcQWw2gqlrdnH61MrUGdV3yZlz2cfejZFNxuXH4XT/hH9ED0KH5A3jD9VHoFYphWZaBuzMpsbUGjFCd6AAtxGzuNPHmvplOH8doufC6hn1fn2X/4PchTNrMFpXhAQ3tPTO8Xbjt9uO3vAGuAWJQuvj6olpFHjWTwOTE9W3QiwASoLT0ndIpTu75u8o7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=haDkHbOgvtPbsN5Gd+EsElqaJ20zM4LSNBAGswl2Nl4=;
+ b=x0c+GkZhK/iIuU/BrOG82b3PYYGRN9/t+v1KgeoBM3/9VhEcrQn1Sb27oHyv0iMWZbpUY95/UNm4/O977GdxcWUfAO9LQ8LdUstQTEsPVcixDMz43xeMhuQIkMUVVF7fYGPhFeIJbs44V8Ox7zmxZ7go6vQcKAR/GNsmP74/nF/ib5VWc551Qw7tpOl4MxpC+EYe+hwx/wY/sKjsqyvidkQ2v92V6XAUCxoFRhjKt5/mfR0Ci/5IUQZLvkx94AzIiFvyihaoCVG/aV1UeL2sLNMK2OfIM4RgYGsjcH+uRD5n/oQO9Bgkb44UhntXDlhZQt+CtdFKIuYtpc7YLPGRhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=haDkHbOgvtPbsN5Gd+EsElqaJ20zM4LSNBAGswl2Nl4=;
+ b=k1q4caMraOWrpCmJdl5AZMf8Fd9jiWVi1PNcp74Mx4hvJdhJBAEzeSKv3N3h95V8AixVs+cK2YoOALS8DTUEUF198kwnUVt68pqYaiprkbcMJJ9V11cOQQ8tvoB2XHiRLBVoX9lflqaeWo1FwOBDT42n8arn4jcaj0d5lXBzPUA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by IA0PR12MB8646.namprd12.prod.outlook.com (2603:10b6:208:489::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.21; Sat, 12 Oct
+ 2024 06:31:16 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8048.017; Sat, 12 Oct 2024
+ 06:31:16 +0000
+Message-ID: <a5a310fe-2451-b053-4a0f-53e496adb9be@amd.com>
+Date: Sat, 12 Oct 2024 07:30:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 0/5] cxl: Initialization and shutdown fixes
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+ ira.weiny@intel.com
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, stable@vger.kernel.org,
+ Zijun Hu <zijun_hu@icloud.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Gregory Price <gourry@gourry.net>, Vishal Verma <vishal.l.verma@intel.com>,
+ linux-cxl@vger.kernel.org
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+ <7eb2912e-3359-8a22-2db9-4bfa803eccbe@amd.com>
+ <6709627eba220_964f229495@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <6709627eba220_964f229495@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0092.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bb::27) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] cxl/port: Fix use-after-free, permit out-of-order
- decoder shutdown
-To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
- ira.weiny@intel.com
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>, vishal.l.verma@intel.com,
- linux-cxl@vger.kernel.org
-References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
- <172862486548.2150669.3548553804904171839.stgit@dwillia2-xfh.jf.intel.com>
- <a7b8a007-907a-4fda-9a35-68faed109ed3@icloud.com>
- <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: SdAq2sLRtK5itv8SkkUuMB5ydBc9zxot
-X-Proofpoint-GUID: SdAq2sLRtK5itv8SkkUuMB5ydBc9zxot
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-11_21,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 phishscore=0 spamscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2410110164
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA0PR12MB8646:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a062dd3-d642-4e31-c9cc-08dcea87799b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NkNkdVR0Z2w1elZkTHVySDJjRUI2SWZrclJSQ2J2aExGNGhYenVrdlBlRGhQ?=
+ =?utf-8?B?NGtmMUI5V1B4bFhEanArTTJyTmk1RXJWY2NyYWszMHQ4dmdzN0Y0bzZIOCtD?=
+ =?utf-8?B?aTVIaEk1QVhGL2wxYjk2QlZEWURxb2VBcUtoc1JheFVoMFRvL0F4cTJqUFk5?=
+ =?utf-8?B?Q0ZHWUZJVHdnbmNyY1NEOUlrOC91cVVYUGk2K1ZqOXNMZ2llWGIzUXpNdmxs?=
+ =?utf-8?B?aS8ydTE5cGdkV0FmeWR3alBYR01EbUU0clNoWGtVdGFIUmFwZFNNdXNwT2dr?=
+ =?utf-8?B?K0Z5MXlxSWlWVkNoR3VWQ0ZTYU1QWURNckUwTWp4TUVCMmJScnVyODB5ZnR1?=
+ =?utf-8?B?bitianV5OXE0R0RqY1JybHNKYmkrTXRIZXYvSEFMTXpOK1g0aHpmbm9mVy9D?=
+ =?utf-8?B?QS92L2RuS2V1Yk5ZQjlOelhjcWIvSHNaVU55Z1hsSlc3Ti91QWIxVmJTNHJ1?=
+ =?utf-8?B?THM3YjJic3crWXpLbjg1bUdIQmtZNTdEbmtzcGQ1cldHQzJMSnVvdEpDRjk3?=
+ =?utf-8?B?WUVXejVyKzFxeGtvYndaVUpqOHZGb2wzL0t0YXROV2FVQzZYZEtUTjRxZnRG?=
+ =?utf-8?B?UDM3RVppQ3NCaUxqWXU5NmYxN2U1RTVXbXdkcm1SazRZbm1Dd0M0ai9LZUVN?=
+ =?utf-8?B?VXlIQU5oV0V2eG93QmdxVlNjNGpPNUJyeGlnOXhzbFJPbTZZd1ExcWRRbXBO?=
+ =?utf-8?B?a3FxZkNLMm5mSWZTTCtJU3ZjM3lrOUpDWGRTQ0o0cG5naHVWcHRUdTRFU282?=
+ =?utf-8?B?N2xpdkloVmk4d2FBeTAyeU1JT2xPeHhvVVFicDhBVlpVUzhLekpkeGhueTdM?=
+ =?utf-8?B?cGxTMTMvMkFjUGpUQ1I0WXd0ZWdXMnBTQjhTK01DMlUvTEJnOXRiRlBqdE9i?=
+ =?utf-8?B?YUpLRE9NejE0dzQ4VzYvMC85cW12TGpzVDNodFBZWExBWVZvVDExQVQ0d2VM?=
+ =?utf-8?B?cjFGVE0xNzBwYlZXUXFvampIUUNmMjFDUmUyMkdGRk45c2h1RFBvSWRJczFQ?=
+ =?utf-8?B?UVFQcDFDZCt6a0d1NklVYzI5aFhVUVplRTlPMXY5cmYyeWdRRDhZWWpRTlVB?=
+ =?utf-8?B?aGlLeEVUQ3VwZ3R4d1BWT2M5M3JpaW1jUHZFMi82cUdMZ1crWkxuWjA2bTZV?=
+ =?utf-8?B?NS8rdTBMZ1IwSlVjMEVDdHYvU3BvYmxESFNCZDdpT3I4K25hWUZ6TWs1SUxz?=
+ =?utf-8?B?b285ZHMvSXM1VlB3a1orQ1dtNEZOMnkrZ3ZyMTd3SFJoVW45dXpPd3dLU0Nl?=
+ =?utf-8?B?VFh2WFg4ZDFmc3IzK1hOMmZWczJ2a25iUDM2bytzc2JlZ1pPNEdEWjBEWHY2?=
+ =?utf-8?B?MUMxUWR2MEJmY2J3ZUd3aTFycmZsNFhtNFVNZ3lTTE5nR2RoQkJHLzlRQUdC?=
+ =?utf-8?B?S1c5bTVaeVJQekRoU1dMYlF0VGU5NlVUaUMrN0VaK296bXNnSlM0NVJnZjNY?=
+ =?utf-8?B?WituRUpKNWlURUQ1ZjZxYWJMMkRScEdxcVJNUzVYTHhKWWhXS3p5VXpXd3J1?=
+ =?utf-8?B?dXBTMm51VE5WZmxqRjZIR2xYbU9FVHFDT3Mxb2FNK1RZQyt0MkdyT1dWMm92?=
+ =?utf-8?B?Zk0yN0t3c21hbWhNUmp4U1lIUnE0NkU3Mm5TajNtU2pNMzdEOHlyVVlnYldD?=
+ =?utf-8?B?clNabmJVRWVCN3hmVTV1dWtVUThHUjNSTnlkQ3pjZytBbnZEcFArcytTeHRU?=
+ =?utf-8?B?WHZ5bnlTa3ZsMkp2bnFUWGN1VVRJN2xiTElCaGJtR0U3cXI1VzNzWWdCMlZm?=
+ =?utf-8?Q?NTxL7neM7cpYICKJ68=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZDNkVjVuOUdkSFN5dytBSmdobGRtdi9lZmdrMUtzOUR3RWtza2xKRDlTZzht?=
+ =?utf-8?B?aDNvdmxQOVNpN0xVRldtb1RpL2F0MDhudGF6dUtUWGk3MlhybkZlQXpUa1Bh?=
+ =?utf-8?B?MmcwRHNTZ0JIMjNQTTgzbkJMcnU0Wlh5VjRwS0ZuUjZBYmNMR2o2L1M2QXV6?=
+ =?utf-8?B?bEtlb1AvMkdMaGVUckFlSTJZcnNCLzJMcU9aMHNERjlHdWRMMzZRaVVlYVJK?=
+ =?utf-8?B?citvejNLb2ZpdXVSTHpzYyt6cXovZ25HbFJ2Zk96bjNoSjhUbFRsZkJ5YUxS?=
+ =?utf-8?B?a1NVcXBjTEQyd1JDR1ZxR3pReEE3ZkdYcDVydGRFK3doa0FIZzRSWHNuVVdx?=
+ =?utf-8?B?Zkg0amNUUkNWcUZlMGVvSmppenptQWZHaWNIZUJmUjhWd21QZCtDaE5uVWJi?=
+ =?utf-8?B?aGxLVlRHRWNKUC9nY1UyOU5STHYwdkxnNlVDNEFCcFBVUWE2bUY3aU8wbjZo?=
+ =?utf-8?B?S2tLZENwSFduZ2tmUmk1UDBpZnFWalkyNzkzVVoyRkMrTWZ3TGVmME9JSEtG?=
+ =?utf-8?B?TFUyNlh5ODRHbjVqbzRVdHhlaDZQQ1ZlaWtReUVqKzBxV3lUWFBSaGpHZ2V2?=
+ =?utf-8?B?ditCNFMvQjc2Ulp0aGNnNGlUSko1bGxBWkVFZWNFOUlKZDFaVE9MWlpNdCtm?=
+ =?utf-8?B?ajVqekpkVER3a1VRY3NpUzhEMUVQVWRoUTB2NHRJS0VqTExUSStCSTVLbjJH?=
+ =?utf-8?B?K1phMzdmRzRnZDJYcDFpYS9xakY4WVppRERwU2lsYndDQUtXNGQwOEROUmdN?=
+ =?utf-8?B?dUlnbFFVMklNb2poRmxDTDdLTDJmd1VBNHFjd0RNanNweDE1V3JFeW95SUhG?=
+ =?utf-8?B?NU1TQURmUG1yaGpUWUp6Vy94cnUwZGE3SEFuNVZYNVRNcTFxZGR0TnRTNG9H?=
+ =?utf-8?B?eDYyaDg5Q29paEJNdjk2QnZhT0FRUWFnTFpOYk5FV01nYU1xU0ZmVlFOSUda?=
+ =?utf-8?B?Y1ZZckM4bFpxbjNTd05yODhYOHdaaU43ZVBOdmRrY1pmRUhFQkxUL0hCTDdM?=
+ =?utf-8?B?NmpzSi9hVVphWkowN0JxRkJQdjU2NG1ZQ1kxU3VocW9sczJVVDZhVnE4WkFy?=
+ =?utf-8?B?U1czUUJielRIeS96akJqR2ludGhCcVUzUXgwZHVkN2RwakNHdFFkN1gwWXlt?=
+ =?utf-8?B?NDExWUJjYzBtYjk5UnR5cDJrZW4vMTdoajJzOGhDTnRjZVRUd214d1NVVFJo?=
+ =?utf-8?B?cTNUaUJESXovRVExQnppNExIOFYya3cxSjJGbVh4eEU4NlIzOFQxRHZhb2wx?=
+ =?utf-8?B?YWZ2a3hBSCtvakd4VEtodHhMdW85eWJ0d09qMzBWdk1ZelJ3ZGtrYUwyQ3h3?=
+ =?utf-8?B?OGRoa0MyMWJzR1RaVUZTdXpWMStaVVlRN2U2VmtySDVnalBFamFqOE1EOWEw?=
+ =?utf-8?B?d1R6cUVTeFpKckRTOWhab1hrV1RscnUwNkE1K3NRU0gxL0EwTnpuK3FyV1Ji?=
+ =?utf-8?B?d0IwcGU1TTBmTDRxWjI0amFqOVJqMlFiaEpPeDRSaWl6WEc2YWlPMFlkSzFH?=
+ =?utf-8?B?Mmx4NHV5S08wd0NWL242UG05djN3MlAyMlNMcm5JbVpLN3NRaFJhREVvcTFm?=
+ =?utf-8?B?VG05R1p3d2d5QktNSW43UFdCZXhkWWVGWitoV1JXVDluN0drdnVnb3oweWJH?=
+ =?utf-8?B?RFMwN1ZwN3UzSndsTXNHZktSeGlKcXdTZk95bzVTRWZLR0hVdjNTVnh6WDBP?=
+ =?utf-8?B?a2p3b1FFWHc2NVhibTdVMzVqRXJjb1BDLzBVZ0NWaTlFcHU1T1VJNkM1TTZn?=
+ =?utf-8?B?b3hJb0t3TktNUVpyd1N5eFBTTTFUWjVNMVlDTjRvcEJ1SnJiK0ZtNWduU2xL?=
+ =?utf-8?B?TlV5NnFOWm01em9UWVZaY1lLcWpocmd0UnhjUWhZMHRGVDRQaWc5TVpUand2?=
+ =?utf-8?B?ajVGK0tHSnhwUUVRTHJrU1lzMmlsYncvYUkrQ3pJc2I4MVpHamp2dlMzQ0Yr?=
+ =?utf-8?B?UW80cmNRQ2tOMk1GNnFZMlNyNFN0UndIK3VWWk43d2xoYTVidnovUzZ3UG1D?=
+ =?utf-8?B?UFRRZm1RM2I3MXZ6U3Mza05VOS96QjAxeE0yQzJTRWk4ZW8zTjJaQWt5dHJp?=
+ =?utf-8?B?MGV3RmFaNEVlZEJpajJtLzJmMWYrcjhDSjBOOUtGZU9raVdkS014WE9ERnJV?=
+ =?utf-8?Q?sHwaYdQzPhkUjI/9z1b8gzZV1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a062dd3-d642-4e31-c9cc-08dcea87799b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2024 06:31:16.5220
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eZRnnueVEWqEnUajOPsqYU4yeaKVL+LxRAqAgAkrF1BTCpbBw5y3fbtLxlKopCDx1CbWtBY60M5TemXBkkIh/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8646
 
-On 2024/10/12 01:46, Dan Williams wrote:
-> Zijun Hu wrote:
->> On 2024/10/11 13:34, Dan Williams wrote:
->>> In support of investigating an initialization failure report [1],
->>> cxl_test was updated to register mock memory-devices after the mock
->>> root-port/bus device had been registered. That led to cxl_test crashing
->>> with a use-after-free bug with the following signature:
->>>
->>>     cxl_port_attach_region: cxl region3: cxl_host_bridge.0:port3 decoder3.0 add: mem0:decoder7.0 @ 0 next: cxl_switch_uport.0 nr_eps: 1 nr_targets: 1
->>>     cxl_port_attach_region: cxl region3: cxl_host_bridge.0:port3 decoder3.0 add: mem4:decoder14.0 @ 1 next: cxl_switch_uport.0 nr_eps: 2 nr_targets: 1
->>>     cxl_port_setup_targets: cxl region3: cxl_switch_uport.0:port6 target[0] = cxl_switch_dport.0 for mem0:decoder7.0 @ 0
->>> 1)  cxl_port_setup_targets: cxl region3: cxl_switch_uport.0:port6 target[1] = cxl_switch_dport.4 for mem4:decoder14.0 @ 1
->>>     [..]
->>>     cxld_unregister: cxl decoder14.0:
->>>     cxl_region_decode_reset: cxl_region region3:
->>>     mock_decoder_reset: cxl_port port3: decoder3.0 reset
->>> 2)  mock_decoder_reset: cxl_port port3: decoder3.0: out of order reset, expected decoder3.1
->>>     cxl_endpoint_decoder_release: cxl decoder14.0:
->>>     [..]
->>>     cxld_unregister: cxl decoder7.0:
->>> 3)  cxl_region_decode_reset: cxl_region region3:
->>>     Oops: general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6bc3: 0000 [#1] PREEMPT SMP PTI
->>>     [..]
->>>     RIP: 0010:to_cxl_port+0x8/0x60 [cxl_core]
->>>     [..]
->>>     Call Trace:
->>>      <TASK>
->>>      cxl_region_decode_reset+0x69/0x190 [cxl_core]
->>>      cxl_region_detach+0xe8/0x210 [cxl_core]
->>>      cxl_decoder_kill_region+0x27/0x40 [cxl_core]
->>>      cxld_unregister+0x5d/0x60 [cxl_core]
->>>
->>> At 1) a region has been established with 2 endpoint decoders (7.0 and
->>> 14.0). Those endpoints share a common switch-decoder in the topology
->>> (3.0). At teardown, 2), decoder14.0 is the first to be removed and hits
->>> the "out of order reset case" in the switch decoder. The effect though
->>> is that region3 cleanup is aborted leaving it in-tact and
->>> referencing decoder14.0. At 3) the second attempt to teardown region3
->>> trips over the stale decoder14.0 object which has long since been
->>> deleted.
->>>
->>> The fix here is to recognize that the CXL specification places no
->>> mandate on in-order shutdown of switch-decoders, the driver enforces
->>> in-order allocation, and hardware enforces in-order commit. So, rather
->>> than fail and leave objects dangling, always remove them.
->>>
->>> In support of making cxl_region_decode_reset() always succeed,
->>> cxl_region_invalidate_memregion() failures are turned into warnings.
->>> Crashing the kernel is ok there since system integrity is at risk if
->>> caches cannot be managed around physical address mutation events like
->>> CXL region destruction.
->>>
->>> A new device_for_each_child_reverse_from() is added to cleanup
->>> port->commit_end after all dependent decoders have been disabled. In
->>> other words if decoders are allocated 0->1->2 and disabled 1->2->0 then
->>> port->commit_end only decrements from 2 after 2 has been disabled, and
->>> it decrements all the way to zero since 1 was disabled previously.
->>>
->>> Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
->>> Cc: <stable@vger.kernel.org>
->>> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Cc: Davidlohr Bueso <dave@stgolabs.net>
->>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
->>> Cc: Dave Jiang <dave.jiang@intel.com>
->>> Cc: Alison Schofield <alison.schofield@intel.com>
->>> Cc: Ira Weiny <ira.weiny@intel.com>
->>> Cc: Zijun Hu <zijun_hu@icloud.com>
->>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->>> ---
->>>  drivers/base/core.c          |   35 +++++++++++++++++++++++++++++
->>>  drivers/cxl/core/hdm.c       |   50 +++++++++++++++++++++++++++++++++++-------
->>>  drivers/cxl/core/region.c    |   48 +++++++++++-----------------------------
->>>  drivers/cxl/cxl.h            |    3 ++-
->>>  include/linux/device.h       |    3 +++
->>>  tools/testing/cxl/test/cxl.c |   14 ++++--------
->>>  6 files changed, 100 insertions(+), 53 deletions(-)
->>>
->>> diff --git a/drivers/base/core.c b/drivers/base/core.c
->>> index a4c853411a6b..e42f1ad73078 100644
->>> --- a/drivers/base/core.c
->>> +++ b/drivers/base/core.c
->>> @@ -4037,6 +4037,41 @@ int device_for_each_child_reverse(struct device *parent, void *data,
->>>  }
->>>  EXPORT_SYMBOL_GPL(device_for_each_child_reverse);
->>>  
->>> +/**
->>> + * device_for_each_child_reverse_from - device child iterator in reversed order.
->>> + * @parent: parent struct device.
->>> + * @from: optional starting point in child list
->>> + * @fn: function to be called for each device.
->>> + * @data: data for the callback.
->>> + *
->>> + * Iterate over @parent's child devices, starting at @from, and call @fn
->>> + * for each, passing it @data. This helper is identical to
->>> + * device_for_each_child_reverse() when @from is NULL.
->>> + *
->>> + * @fn is checked each iteration. If it returns anything other than 0,
->>> + * iteration stop and that value is returned to the caller of
->>> + * device_for_each_child_reverse_from();
->>> + */
->>> +int device_for_each_child_reverse_from(struct device *parent,
->>> +				       struct device *from, const void *data,
->>> +				       int (*fn)(struct device *, const void *))
->>> +{
->>> +	struct klist_iter i;
->>> +	struct device *child;
->>> +	int error = 0;
->>> +
->>> +	if (!parent->p)
->>> +		return 0;
->>> +
->>> +	klist_iter_init_node(&parent->p->klist_children, &i,
->>> +			     (from ? &from->p->knode_parent : NULL));
->>> +	while ((child = prev_device(&i)) && !error)
->>> +		error = fn(child, data);
->>> +	klist_iter_exit(&i);
->>> +	return error;
->>> +}
->>> +EXPORT_SYMBOL_GPL(device_for_each_child_reverse_from);
->>> +
+
+On 10/11/24 18:38, Dan Williams wrote:
+> Alejandro Lucero Palau wrote:
+>> Hi Dan,
 >>
->> it does NOT deserve, also does NOT need to introduce a new core driver
->> API device_for_each_child_reverse_from(). existing
->> device_for_each_child_reverse() can do what the _from() wants to do.
 >>
->> we can use similar approach as below link shown:
->> https://lore.kernel.org/all/20240815-const_dfc_prepare-v2-2-8316b87b8ff9@quicinc.com/
-> 
-> No, just have a simple starting point parameter. I understand that more
-> logic can be placed around device_for_each_child_reverse() to achieve
-> the same effect, but the core helpers should be removing logic from
-> consumers, not forcing them to add more.
-> 
-> If bloat is a concern, then after your const cleanups go through
-> device_for_each_child_reverse() can be rewritten in terms of
-> device_for_each_child_reverse_from() as (untested):
-> 
-
-bloat is one aspect, the other aspect is that there are redundant
-between both driver core APIs, namely, there are a question:
-
-why to still need device_for_each_child_reverse() if it is same as
-_from(..., NULL, ...) ?
-
-So i suggest use existing API now.
-if there are more users who have such starting point requirement, then
-add the parameter into device_for_each_child_reverse() which is
-consistent with other existing *_for_each_*() core APIs such as
-(class|driver|bus)_for_each_device() and bus_for_each_drv(), that may
-need much efforts.
+>> I think this is the same issue one of the patches in type2 support tries
+>> to deal with:
+>>
+>>
+>> https://lore.kernel.org/linux-cxl/20240907081836.5801-1-alejandro.lucero-palau@amd.com/T/#m9357a559c1a3cc7869ecce44a1801d51518d106e
+>>
+>>
+>> If this fixes that situation, I guess I can drop that one from v4 which
+>> is ready to be sent.
+>>
+>>
+>> The other problem I try to fix in that patch, the endpoint not being
+>> there when that code tries to use it, it is likely not needed either,
+>> although I have a trivial fix for it now instead of that ugly loop with
+>> delays. The solution is to add PROBE_FORCE_SYNCHRONOUS as probe_type for
+>> the cxl_mem_driver which implies the device_add will only return when
+>> the device is really created. Maybe that is worth it for other potential
+>> situations suffering the delayed creation.
+> I am skeptical that PROBE_FORCE_SYNCRONOUS is a fix for any
+> device-readiness bug. Some other assumption is violated if that is
+> required.
 
 
-could you please contains your proposal "fixing this allocation
-order validation" of below link into this patch series with below
-reason? and Cc me (^^)
+But that problem is not about device readiness but just how the device 
+model works. In this case the memdev creation is adding devices, no real 
+ones but those abstractions we use from the device model, and that 
+device creation is done asynchronously. When the code creating the 
+memdev, a Type2 driver in my case, is going to work with such a device 
+abstraction just after the memdev creation, it is not there yet. It is 
+true that clx_mem_probe will interact with the real device, but the fact 
+is such a function is not invoked by the device model synchronously, so 
+the code using such a device abstraction needs to wait until it is 
+there. With this flag the waiting is implicit to device creation. 
+Without that flag other "nasty dancing" with delays and checks needs to 
+be done as the code in v3 did.
 
-https://lore.kernel.org/all/670835f5a2887_964f229474@dwillia2-xfh.jf.intel.com.notmuch/
 
-A)
-  the proposal depends on this patch series.
-B)
-  one of the issues the proposal fix is match_free_decoder()  error
-logic which is also relevant issues this patch series fix, the proposal
-also can fix the other device_find_child()'s match() issue i care about.
+> For the type-2 case I did have an EPROBE_DEFER in my initial RFC on the
+> assumption that an accelerator driver might want to wait until CXL is
+> initialized before the base accelerator proceeds. However, if
+> accelerator drivers behave the same as the cxl_pci driver and are ok
+> with asynchronus arrival of CXL functionality then no deferral is
+> needed.
 
-C)
- Actually, it is a bit difficult for me to understand the proposal since
- i don't have any basic knowledge about CXL. (^^)
 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index e42f1ad73078..2571c910da46 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -4007,36 +4007,6 @@ int device_for_each_child(struct device *parent, void *data,
->  }
->  EXPORT_SYMBOL_GPL(device_for_each_child);
->  
-> -/**
-> - * device_for_each_child_reverse - device child iterator in reversed order.
-> - * @parent: parent struct device.
-> - * @fn: function to be called for each device.
-> - * @data: data for the callback.
-> - *
-> - * Iterate over @parent's child devices, and call @fn for each,
-> - * passing it @data.
-> - *
-> - * We check the return of @fn each time. If it returns anything
-> - * other than 0, we break out and return that value.
-> - */
-> -int device_for_each_child_reverse(struct device *parent, void *data,
-> -				  int (*fn)(struct device *dev, void *data))
-> -{
-> -	struct klist_iter i;
-> -	struct device *child;
-> -	int error = 0;
-> -
-> -	if (!parent || !parent->p)
-> -		return 0;
-> -
-> -	klist_iter_init(&parent->p->klist_children, &i);
-> -	while ((child = prev_device(&i)) && !error)
-> -		error = fn(child, data);
-> -	klist_iter_exit(&i);
-> -	return error;
-> -}
-> -EXPORT_SYMBOL_GPL(device_for_each_child_reverse);
-> -
->  /**
->   * device_for_each_child_reverse_from - device child iterator in reversed order.
->   * @parent: parent struct device.
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 667cb6db9019..96a2c072bf5b 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1076,11 +1076,14 @@ DEFINE_FREE(device_del, struct device *, if (_T) device_del(_T))
->  
->  int device_for_each_child(struct device *dev, void *data,
->  			  int (*fn)(struct device *dev, void *data));
-> -int device_for_each_child_reverse(struct device *dev, void *data,
-> -				  int (*fn)(struct device *dev, void *data));
->  int device_for_each_child_reverse_from(struct device *parent,
->  				       struct device *from, const void *data,
->  				       int (*fn)(struct device *, const void *));
-> +static inline int device_for_each_child_reverse(struct device *dev, const void *data,
-> +						int (*fn)(struct device *, const void *))
-> +{
-> +	return device_for_each_child_reverse_from(dev, NULL, data, fn);
-> +}
->  struct device *device_find_child(struct device *dev, void *data,
->  				 int (*match)(struct device *dev, void *data));
->  struct device *device_find_child_by_name(struct device *parent,
+I think deferring the accel driver makes sense. In the sfc driver case, 
+it could work without CXL and then change to use it once the CXL kernel 
+support is fully initialised, but I guess other accel drivers will rely 
+on CXL with no other option, and even with the sfc driver, supporting 
+such a change will make the code far more complex.
+
+>
+> Otherwise, the only motivation for synchronous probing I can think of
+> would be to have more predictable naming of kernel objects. So yes, I
+> would be curious to understand what scenarios probe deferral is still
+> needed.
+
+
+OK. I will keep that patch with the last change in the v4. Let's discuss 
+this further with that patch as a reference.
+
+
+Thanks.
 
