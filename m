@@ -1,173 +1,321 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB77A1CACE8
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 15:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EC11D0490;
+	Mon, 14 Oct 2024 15:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728919008; cv=none; b=CffcXvtQO3ahUsocrH2Jct5IYFf+tWwvimE8/l1HzHN6DXAxQmTYYwgmkuRL14rm/z/eQuTR2MPOlzaiWnoAA1606UXoaVKcx+dkN3XG+k/Sn0A7eP/TIepazxz+57meR8zlhuEH+gKOndT+VZ3o3RYdmtsAbtL1uqaZWlms3pk=
+	t=1728919748; cv=none; b=EfWM/OTl4Yu4pHfwTYMcevkJ1kqy+VxIlOki2vX0UNoPkKscWXMqaI/wwDc5wRopK5URaDzbl1Cg63/TT7LFXvQnLK1fimK0/9AsZXLpA4B3RZKjvonTUOj9S/qXG8uSE8VN1gcNS/bD92VcUwh4mxkszxk29sdJ+Ae/MiEpse8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728919008; c=relaxed/simple;
-	bh=nQxtEVbr7kGLi1E5jS0D4st03+SyxP7dTbTt8mqmMko=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RWYbOj4/x/g2WMMNiTaj183fVD2T+Lby+3WxRb9gV+rd+lumPCMYGVJP3MGkTMPu2napIbWiV0C2gQoJKLN7T7Bw9HHsp23o2RuflDXMznZjDfOr+3PeE4tYOYV3jnqtEQpOssGB3D0LzPicvu2TpVa+EIkBksVe0A5UbPquQTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1728919748; c=relaxed/simple;
+	bh=UGy2SwRvnSWU52bBfkJxu3GqglzWihxSmimXlWUaqnY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oAeCiTQ2PtvYbyZeMnNHiqhrp/u23xP5OEdV2MQHyx9dDbhAMQHFuUo3QbKfnPsZmNGGHS9KU1zVLyE24TIV0wEQKZdSK3W1Qdi0JBx4cDC5SYz4ozz0j15JGG4coZazEqOvjH19JfYr1FtBIqo8JY7djw6n5LSD7ZSlnyfSih4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS14X4Kqvz6GByn;
-	Mon, 14 Oct 2024 23:15:08 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6BC9A1400CA;
-	Mon, 14 Oct 2024 23:16:43 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 14 Oct 2024 17:16:43 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 14 Oct 2024 17:16:43 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC: Linuxarm <linuxarm@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: RE: [PATCH 1/1] cxl/events: Fix Trace DRAM Event Record
-Thread-Topic: [PATCH 1/1] cxl/events: Fix Trace DRAM Event Record
-Thread-Index: AQHbHkWZEnbgbq/HpUGDXi3ssQ4G17KGMtYAgAAkioA=
-Date: Mon, 14 Oct 2024 15:16:43 +0000
-Message-ID: <05305df495904b9f99fcb52f67a66762@huawei.com>
-References: <20241014143003.1170-1-shiju.jose@huawei.com>
- <670d2fc83b507_1357e2294c1@iweiny-mobl.notmuch>
-In-Reply-To: <670d2fc83b507_1357e2294c1@iweiny-mobl.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS1Lh1Zr4z6G9YN;
+	Mon, 14 Oct 2024 23:27:24 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1145A140A77;
+	Mon, 14 Oct 2024 23:28:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
+ 2024 17:28:57 +0200
+Date: Mon, 14 Oct 2024 16:28:56 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <shiju.jose@huawei.com>
+CC: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v13 10/18] cxl/memfeature: Add CXL memory device patrol
+ scrub control feature
+Message-ID: <20241014162856.00007752@Huawei.com>
+In-Reply-To: <20241009124120.1124-11-shiju.jose@huawei.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+	<20241009124120.1124-11-shiju.jose@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
->-----Original Message-----
->From: Ira Weiny <ira.weiny@intel.com>
->Sent: 14 October 2024 15:51
->To: Shiju Jose <shiju.jose@huawei.com>; dave.jiang@intel.com;
->dan.j.williams@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
->vishal.l.verma@intel.com; ira.weiny@intel.com; dave@stgolabs.net; linux-
->cxl@vger.kernel.org
->Cc: Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>; Shiju Jose <shiju.jose@huawei.com>
->Subject: Re: [PATCH 1/1] cxl/events: Fix Trace DRAM Event Record
+On Wed, 9 Oct 2024 13:41:11 +0100
+<shiju.jose@huawei.com> wrote:
+
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
+> feature. The device patrol scrub proactively locates and makes corrections
+> to errors in regular cycle.
+> 
+> Allow specifying the number of hours within which the patrol scrub must be
+> completed, subject to minimum and maximum limits reported by the device.
+> Also allow disabling scrub allowing trade-off error rates against
+> performance.
+> 
+> Add support for CXL memory device based patrol scrub control.
+> Register with EDAC device driver , which gets the scrub attr descriptors
+> from EDAC scrub and exposes sysfs scrub control attributes to the
+> userspace. For example CXL device based scrub control for the CXL mem0
+> device is exposed in /sys/bus/edac/devices/cxl_mem0/scrubX/
+> 
+> Also add support for region based CXL memory patrol scrub control.
+> CXL memory region may be interleaved across one or more CXL memory devices.
+> For example region based scrub control for CXL region1 is exposed in
+> /sys/bus/edac/devices/cxl_region1/scrubX/
+> 
+> Open Questions:
+> Q1: CXL 3.1 spec defined patrol scrub control feature at CXL memory devices
+> with supporting set scrub cycle and enable/disable scrub. but not based on
+> HPA range. Thus presently scrub control for a region is implemented based
+> on all associated CXL memory devices.
+
+That is exactly what I'd expect.
+
+> What is the exact use case for the CXL region based scrub control?
+> How the HPA range, which Dan asked for region based scrubbing is used?
+> Does spec change is required for patrol scrub control feature with support
+> for setting the HPA range?
+
+Can't discuss future spec here :(  + we should support current specification
+even if it is changing (can't say if it is!)
+
+This came up at LPC briefly. The HPA range is only useful as a userspace
+short cut to find the right control.  So not necessary initially for
+the reason you state - we can't control it.
+
+Whilst we may scrub by region, it's just a way to control scrubbing of
+a set of interleaved devices.  So what you have here is fine as it
+stands.
+
+> 
+> Q2: Both CXL device based and CXL region based scrub control would be
+> enabled at the same time in a system?
+
+Typically no, but we should make the interface do something consistent.
+
+1) Go with highest scrub frequency requested via either path.
+2) Go with latest scrub frequency to be requested.
+
+Given it is a corner case I don't think we care which.
+
+The device based scrub is appropriate for 'pre use' scrub control
+to find out if we have dodgy hardware.
+Region scrub is the logical thing to do once it is in use. In some
+cases the region will include the whole of all devices in an interleave
+set.
+
+So I don't see either of these questions as a blocker on current
+implementation.
+
+> 
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+A few trivial things inline.
+
+> ---
+>  Documentation/edac/edac-scrub.rst |  74 ++++++
+>  drivers/cxl/Kconfig               |  18 ++
+>  drivers/cxl/core/Makefile         |   1 +
+>  drivers/cxl/core/memfeature.c     | 383 ++++++++++++++++++++++++++++++
+>  drivers/cxl/core/region.c         |   6 +
+>  drivers/cxl/cxlmem.h              |   7 +
+>  drivers/cxl/mem.c                 |   4 +
+>  7 files changed, 493 insertions(+)
+>  create mode 100644 Documentation/edac/edac-scrub.rst
+>  create mode 100644 drivers/cxl/core/memfeature.c
+> 
+> diff --git a/Documentation/edac/edac-scrub.rst b/Documentation/edac/edac-scrub.rst
+> new file mode 100644
+> index 000000000000..243035957e99
+> --- /dev/null
+> +++ b/Documentation/edac/edac-scrub.rst
+> @@ -0,0 +1,74 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===================
+> +EDAC Scrub control
+> +===================
+> +
+> +Copyright (c) 2024 HiSilicon Limited.
+> +
+> +:Author:   Shiju Jose <shiju.jose@huawei.com>
+> +:License:  The GNU Free Documentation License, Version 1.2
+> +          (dual licensed under the GPL v2)
+> +:Original Reviewers:
+> +
+> +- Written for: 6.12
+
+Update to 6.13
+
+> +- Updated for:
+
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 99b5c25be079..b717a152d2a5 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -145,4 +145,22 @@ config CXL_REGION_INVALIDATION_TEST
+>  	  If unsure, or if this kernel is meant for production environments,
+>  	  say N.
+>  
+> +config CXL_RAS_FEAT
+> +	tristate "CXL: Memory RAS features"
+> +	depends on CXL_PCI
+> +	depends on CXL_MEM
+> +	depends on EDAC
+> +	help
+> +	  The CXL memory RAS feature control is optional allows host to control
+> +	  the RAS features configurations of CXL Type 3 devices.
+> +
+> +	  Registers with the EDAC device subsystem to expose control attributes
+> +	  of CXL memory device's RAS features to the user.
+> +	  Provides interface functions to support configuring the CXL memory
+> +	  device's RAS features.
+> +
+> +	  Say 'y/n' to enable/disable CXL.mem device'ss RAS features control.
+
+'s or s' but not 'ss
+(singular or plural forms)
+
+> +	  See section 8.2.9.9.11 of CXL 3.1 specification for the detailed
+> +	  information of CXL memory device features.
+> +
+>  endif
+
+> diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
+> new file mode 100644
+> index 000000000000..84d6e887a4fa
+> --- /dev/null
+> +++ b/drivers/cxl/core/memfeature.c
+> @@ -0,0 +1,383 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * CXL memory RAS feature driver.
+> + *
+> + * Copyright (c) 2024 HiSilicon Limited.
+> + *
+> + *  - Supports functions to configure RAS features of the
+> + *    CXL memory devices.
+> + *  - Registers with the EDAC device subsystem driver to expose
+> + *    the features sysfs attributes to the user for configuring
+> + *    CXL memory RAS feature.
+> + */
+> +
+> +#define pr_fmt(fmt)	"CXL MEM FEAT: " fmt
+> +
+> +#include <cxlmem.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/limits.h>
+> +#include <cxl.h>
+
+Reorder includes to put the cxl ones at the end and others
+in alphabetical order.
+
+> +#include <linux/edac.h>
 >
->shiju.jose@ wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> CXL spec rev 3.0 section 8.2.9.2.1.2 defines the DRAM Event Record.
->>
->> Fix decode memory event type field of DRAM Event Record.
->> For e.g. if value is 0x1 it will be reported as an Invalid Address
->> (General Media Event Record - Memory Event Type) instead of Scrub
->> Media ECC Error (DRAM Event Record - Memory Event Type) and so on.
->>
->> Fixes: 2d6c1e6d60ba ("cxl/mem: Trace DRAM Event Record")
->
->I assume this is causing issues with user space?
-This change directly affects kernel logging for memory event type in DRAM  =
-event record only.
-However similar fix is needed in rasdaemon too because I referred the kerne=
-l code for the
-CXL event logging part in the user space.
->
->If so I will add...
->
->Cc: <stable@vger.kernel.org> # 6.3.x
->
->... and queue this up in cxl-fixes.
->
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->> Updates for event records in CXL spec r3.1 will follow shortly.
->>
->>  drivers/cxl/core/trace.h | 17 ++++++++++++++---
->>  1 file changed, 14 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h index
->> 9167cfba7f59..cdffebcf20a4 100644
->> --- a/drivers/cxl/core/trace.h
->> +++ b/drivers/cxl/core/trace.h
->> @@ -279,7 +279,7 @@ TRACE_EVENT(cxl_generic_event,
->>  #define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
->>  #define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
->>  #define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
->> -#define show_mem_event_type(type)	__print_symbolic(type,
->	\
->> +#define show_gmer_mem_event_type(type)	__print_symbolic(type,
->		\
->>  	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },
->		\
->>  	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid
->Address" },	\
->>  	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path
->Error" }	\
->> @@ -373,7 +373,7 @@ TRACE_EVENT(cxl_general_media,
->>  		"hpa=3D%llx region=3D%s region_uuid=3D%pUb",
->>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->>  		show_event_desc_flags(__entry->descriptor),
->> -		show_mem_event_type(__entry->type),
->> +		show_gmer_mem_event_type(__entry->type),
->>  		show_trans_type(__entry->transaction_type),
->>  		__entry->channel, __entry->rank, __entry->device,
->>  		__print_hex(__entry->comp_id,
->CXL_EVENT_GEN_MED_COMP_ID_SIZE), @@
->> -391,6 +391,17 @@ TRACE_EVENT(cxl_general_media,
->>   * DRAM Event Record defines many fields the same as the General Media
->Event
->>   * Record.  Reuse those definitions as appropriate.
->>   */
->> +#define CXL_DER_MEM_EVT_TYPE_ECC_ERROR			0x00
->> +#define CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x01
->> +#define CXL_DER_MEM_EVT_TYPE_INV_ADDR			0x02
->> +#define CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x03
->> +#define show_dram_mem_event_type(type)  __print_symbolic(type,
->			\
->> +	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },
->			\
->> +	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub
->Media ECC Error" },	\
->> +	{ CXL_DER_MEM_EVT_TYPE_INV_ADDR,		"Invalid
->Address" },		\
->> +	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data
->Path Error" }		\
->> +)
->> +
->>  #define CXL_DER_VALID_CHANNEL				BIT(0)
->>  #define CXL_DER_VALID_RANK				BIT(1)
->>  #define CXL_DER_VALID_NIBBLE				BIT(2)
->> @@ -477,7 +488,7 @@ TRACE_EVENT(cxl_dram,
->>  		"hpa=3D%llx region=3D%s region_uuid=3D%pUb",
->>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->>  		show_event_desc_flags(__entry->descriptor),
->> -		show_mem_event_type(__entry->type),
->> +		show_dram_mem_event_type(__entry->type),
->>  		show_trans_type(__entry->transaction_type),
->>  		__entry->channel, __entry->rank, __entry->nibble_mask,
->>  		__entry->bank_group, __entry->bank,
->> --
->> 2.34.1
->>
->
->
-Thanks,
-Shiju
+> +static int cxl_ps_get_attrs(struct device *dev, void *drv_data,
+> +			    struct cxl_memdev_ps_params *params)
+> +{
+> +	struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
+> +	struct cxl_memdev *cxlmd;
+> +	struct cxl_dev_state *cxlds;
+> +	struct cxl_memdev_state *mds;
+> +	u16 min_scrub_cycle = 0;
+> +	int i, ret;
+> +
+> +	if (cxl_ps_ctx->cxlr) {
+> +		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
+> +		struct cxl_region_params *p = &cxlr->params;
+> +
+> +		for (i = p->interleave_ways - 1; i >= 0; i--) {
+> +			struct cxl_endpoint_decoder *cxled = p->targets[i];
+> +
+> +			cxlmd = cxled_to_memdev(cxled);
+> +			cxlds = cxlmd->cxlds;
+> +			mds = to_cxl_memdev_state(cxlds);
+> +			ret = cxl_mem_ps_get_attrs(mds, params);
+> +			if (ret)
+> +				return ret;
+> +
+> +			if (params->min_scrub_cycle_hrs > min_scrub_cycle)
+> +				min_scrub_cycle = params->min_scrub_cycle_hrs;
+> +		}
+> +		params->min_scrub_cycle_hrs = min_scrub_cycle;
+> +		return 0;
+> +	}
+> +	cxlmd = cxl_ps_ctx->cxlmd;
+> +	cxlds = cxlmd->cxlds;
+> +	mds = to_cxl_memdev_state(cxlds);
+> +
+See below - this is the similar example I refer to.
+
+> +	return cxl_mem_ps_get_attrs(mds, params);
+> +}
+
+> +
+> +static int cxl_ps_set_attrs(struct device *dev, void *drv_data,
+> +			    struct cxl_memdev_ps_params *params,
+> +			    enum cxl_scrub_param param_type)
+> +{
+> +	struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
+> +	struct cxl_memdev *cxlmd;
+> +	struct cxl_dev_state *cxlds;
+> +	struct cxl_memdev_state *mds;
+> +	int ret, i;
+> +
+> +	if (cxl_ps_ctx->cxlr) {
+> +		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
+> +		struct cxl_region_params *p = &cxlr->params;
+> +
+> +		for (i = p->interleave_ways - 1; i >= 0; i--) {
+> +			struct cxl_endpoint_decoder *cxled = p->targets[i];
+> +
+> +			cxlmd = cxled_to_memdev(cxled);
+> +			cxlds = cxlmd->cxlds;
+> +			mds = to_cxl_memdev_state(cxlds);
+> +			ret = cxl_mem_ps_set_attrs(dev, drv_data, mds,
+> +						   params, param_type);
+> +			if (ret)
+> +				return ret;
+> +		}
+
+Maybe return here?
+
+> +	} else {
+> +		cxlmd = cxl_ps_ctx->cxlmd;
+> +		cxlds = cxlmd->cxlds;
+> +		mds = to_cxl_memdev_state(cxlds);
+> +
+> +		return cxl_mem_ps_set_attrs(dev, drv_data, mds, params, param_type);
+
+Then indent of this hunk can drop. Similar to the case above.
+
+> +	}
+> +
+> +	return 0;
+> +}
+
