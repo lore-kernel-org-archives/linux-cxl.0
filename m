@@ -1,339 +1,462 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8121AAE02;
-	Mon, 14 Oct 2024 16:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800851AB6DC;
+	Mon, 14 Oct 2024 17:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728924982; cv=none; b=PNq9ozPbexBajMHI9JrvCwhaEP3cuohHe2nDiYqQHx92dUAHOAjuk/qu7wFbifB0V6e38S9vaezfXUD8MVPcLZlb1u54Gujaj9dypkjaBc3kNQkT5SrQO3czAZii/8dKsNljTXAbStcdRSTVRZUyDyZmyP2NRCLWjaw3HqE4GBo=
+	t=1728925236; cv=none; b=FkAArZ0j1j3+ylrC5QBN4Y5rhT89FYxbyBh4EO13Wc/rf5/nDq05eFzvrWzw1/0Viisd4x4OMAp7yNw0E9YxggTfDyOxD3S4rXZOp7YO4Drlj4Olj/w6Q/uZD0SJ4rT68W0V6NBVIbxi4ypPg8/2Qq32IazirbXl0gY3XeiRHek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728924982; c=relaxed/simple;
-	bh=nD3fGeBFvL+EJJPI5lGj7pAV+MixQ67qEsOh2VTNyKI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OqpvuuyyqfMvZPrk7N8th9KgypIA0zgyfhXruziqwfLkZMt0cbzjvrN2H1CxfRtwwJ01hK4CAwGohezqk/esjDdSOtVGo72q2CdUESNwAXh2SHTgNe36mGaz7HxXXeZEZFGcl3K9GEqyja/umF7VUIrdzerF1gyaSSXEgjrNoWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LsK9CZfN; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsK9CZfN"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e2908e8d45eso3755540276.2;
-        Mon, 14 Oct 2024 09:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728924978; x=1729529778; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddsXQQbU8MvXf6QmdcSJ6JsFBx6hSo9OkjFj+kLPcxo=;
-        b=LsK9CZfNKN+OpKgMlq3J0/GMqZ+ANb0uXR2AfAABO6vgom9kFGs7s2B3bOaTV60M//
-         UkYdEVul9mySSJOeJlY38YPaYCYF9wXFk6a5D9uYqBW63w+jS8zPio0MlmmJPNi71blr
-         /43WHQeyhHwIxz7czcasjZJKdrPdKxW2s7Xz5Auwn16mRrzrY2i2533d4WpUgZGBBvi7
-         WocwG7MFC31RILfsaS06SkLAfmM8orhFBDPVKFVqJbgFvIHEmDnRt0LNGboGqRpTsIWu
-         G0NhhafqGbw5cICgHPXzkqNp/SIPRPmvLfPefNL6SqP3aGvbRnX6sCy81eufgmh6olqh
-         Vw0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728924978; x=1729529778;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ddsXQQbU8MvXf6QmdcSJ6JsFBx6hSo9OkjFj+kLPcxo=;
-        b=tbtyoqFOVWT5g+9O47Z1I+MKRjr+crvKF63ZP9RPKcTKqZ79H46KgfLagxbliLLreL
-         0EsfO96mSWLVKbqt7okUjCp4FAx+itowl0BIstc9SyEQjl5bjxSbzVSvzOgG2MTocy0K
-         c3n1TTRskKEDOxOqxIAQTceXBkf0+onoBUanFYnWAS+VjUrN4vmLyRs1g7njgeK8nGtU
-         VS+GMHe7okr05CES7e3u0K5US86LrL6r7u0RW349PqFcGk8QBhpnAhg5lJY04cWu5ckf
-         NPFA3cd0l2aOdPtxnnqlOccg5/WIcJZadQNkgLTNcOMZMG7SnHycKEEqrGNFVaSMK7nF
-         U95g==
-X-Forwarded-Encrypted: i=1; AJvYcCUoAdGkrzPnfNtGWZQQRHKD8k/zGcyvf2Wu+nLY2sMD30khkfsRAUqWX9CXVn3CrKd6K5c3tCkvDvar@vger.kernel.org, AJvYcCWx6Z21uUDulIfGtDkL9Y99+ZI1FjzSrSNN3z/re4utcMWb57KklycsskoTYageGh3IfDJHDMCzn39tMw==@vger.kernel.org, AJvYcCX+kSuPPNDRmbjTRDwVp8WGHLp69bns9KrsSKcOOb5XP6An/93KWRYqLg3YWx1MaDK0X80fvGUvYtshvHEI@vger.kernel.org, AJvYcCXoBAq0BrAo8Z6G3WoJ5KxBZ9v+YRE3McB1dNEtfB337rsPVNtu/oQ7N6BhiQVx2QP4FRrF/dQesTzf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrRvLchYUMuPW816U9jKuQfXAaCPYdvHMuYifT1OTF9FhxpCoG
-	ZL2zN5qYQmffVmjROCz/Kbrvp2aBPJeHfa7+d907WOzAHB/bfxeE
-X-Google-Smtp-Source: AGHT+IGRxIooMyF8x4PKhiot8G3u2vhGn1BfEG0sXBKicJWPXR5jgNPa1nRNB1dgAoe7W2WUWzlBuw==
-X-Received: by 2002:a05:690c:2843:b0:6dd:b920:6e61 with SMTP id 00721157ae682-6e347c840a2mr71270877b3.40.1728924978243;
-        Mon, 14 Oct 2024 09:56:18 -0700 (PDT)
-Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e332b611acsm15759257b3.24.2024.10.14.09.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 09:56:18 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 14 Oct 2024 09:56:15 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 23/28] dax/bus: Factor out dev dax resize logic
-Message-ID: <Zw1NL3_otWVTUF4c@fan>
-References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-23-c261ee6eeded@intel.com>
+	s=arc-20240116; t=1728925236; c=relaxed/simple;
+	bh=VP0g8shd0BXsf7rD5u6CIZRbX5Ew+8vAMWJRLG6RIjI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SMgndSoWSPJocJPFhCB/WOO5RoHw7MtoJDf3kiEo64Kdv25ocWWejaCGErDdknMce/FsNPcTdOa3Jl92hXTb5L1DEJFedI7BEJ+8hQlTK+cUU+bE5FnJErKCn8LL8zE8unagGMnUubKLluG/pNbh7J1Mh/wO8hI4wwqxg974QzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS3Jz2ddYz6LCdw;
+	Tue, 15 Oct 2024 00:56:03 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B7E13140D26;
+	Tue, 15 Oct 2024 01:00:30 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
+ 2024 19:00:29 +0200
+Date: Mon, 14 Oct 2024 18:00:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: <shiju.jose@huawei.com>
+CC: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v13 18/18] cxl/memfeature: Add CXL memory device memory
+ sparing control feature
+Message-ID: <20241014180027.00001d1e@Huawei.com>
+In-Reply-To: <20241009124120.1124-19-shiju.jose@huawei.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+	<20241009124120.1124-19-shiju.jose@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241007-dcd-type2-upstream-v4-23-c261ee6eeded@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Oct 07, 2024 at 06:16:29PM -0500, Ira Weiny wrote:
-> Dynamic Capacity regions must limit dev dax resources to those areas
-> which have extents backing real memory.  Such DAX regions are dubbed
-> 'sparse' regions.  In order to manage where memory is available four
-> alternatives were considered:
-> 
-> 1) Create a single region resource child on region creation which
->    reserves the entire region.  Then as extents are added punch holes in
->    this reservation.  This requires new resource manipulation to punch
->    the holes and still requires an additional iteration over the extent
->    areas which may already have existing dev dax resources used.
-> 
-> 2) Maintain an ordered xarray of extents which can be queried while
->    processing the resize logic.  The issue is that existing region->res
->    children may artificially limit the allocation size sent to
->    alloc_dev_dax_range().  IE the resource children can't be directly
->    used in the resize logic to find where space in the region is.  This
->    also poses a problem of managing the available size in 2 places.
-> 
-> 3) Maintain a separate resource tree with extents.  This option is the
->    same as 2) but with the different data structure.  Most ideally there
->    should be a unified representation of the resource tree not two places
->    to look for space.
-> 
-> 4) Create region resource children for each extent.  Manage the dax dev
->    resize logic in the same way as before but use a region child
->    (extent) resource as the parents to find space within each extent.
-> 
-> Option 4 can leverage the existing resize algorithm to find space within
-> the extents.  It manages the available space in a singular resource tree
-> which is less complicated for finding space.
-> 
-> In preparation for this change, factor out the dev_dax_resize logic.
-> For static regions use dax_region->res as the parent to find space for
-> the dax ranges.  Future patches will use the same algorithm with
-> individual extent resources as the parent.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Wed, 9 Oct 2024 13:41:19 +0100
+<shiju.jose@huawei.com> wrote:
 
-LGTM based on the code logic, but not familiar with dax resource management.
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Memory sparing is defined as a repair function that replaces a portion of
+> memory with a portion of functional memory at that same DPA. The subclasses
+> for this operation vary in terms of the scope of the sparing being
+> performed. The cacheline sparing subclass refers to a sparing action that
+> can replace a full cacheline. Row sparing is provided as an alternative to
+> PPR sparing functions and its scope is that of a single DDR row. Bank
+> sparing allows an entire bank to be replaced. Rank sparing is defined as
+> an operation in which an entire DDR rank is replaced.
+> 
+> Memory sparing maintenance operations may be supported by CXL devices
+> that implement CXL.mem protocol. A sparing maintenance operation requests
+> the CXL device to perform a repair operation on its media.
+> For example, a CXL device with DRAM components that support memory sparing
+> features may implement sparing maintenance operations.
+> 
+> The host may issue a query command by setting query resources flag in the
+> input payload (CXL spec 3.1 Table 8-105) to determine availability of
+> sparing resources for a given address. In response to a query request,
+> the device shall report the resource availability by producing the memory
+> sparing event record (CXL spec 3.1 Table 8-48) in which the Channel, Rank,
+> Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields are a copy
+> of the values specified in the request.
+> 
+> During the execution of a sparing maintenance operation, a CXL memory
+> device:
+> - May or may not retain data
+> - May or may not be able to process CXL.mem requests correctly.
+> These CXL memory device capabilities are specified by restriction flags
+> in the memory sparing feature readable attributes.
+> 
+> When a CXL device identifies a failure on a memory component, the device
+> may inform the host about the need for a memory sparing maintenance
+> operation by using an Event Record, where the maintenance needed flag may
+> set. The event record specifies some of the DPA, Channel, Rank, Nibble
+> Mask, Bank Group, Bank, Row, Column, Sub-Channel fields that should be
+> repaired. The userspace tool requests for maintenance operation if the
+> number of corrected error reported on a CXL.mem media exceeds error
+> threshold.
+> 
+> CXL spec 3.1 section 8.2.9.7.1.4 describes the device's memory sparing
+> maintenance operation feature.
+Push these references into the code as well as comments.
+> 
+> CXL spec 3.1 section 8.2.9.7.2.3 describes the memory sparing feature
+> discovery and configuration.
+> 
+> Add support for controlling CXL memory device memory sparing feature.
+> Register with EDAC driver, which gets the memory repair attr descriptors
+> from the EDAC memory repair driver and exposes sysfs repair control
+> attributes for memory sparing to the userspace. For example CXL memory
+> sparing control for the CXL mem0 device is exposed in
+> /sys/bus/edac/devices/cxl_mem0/mem_repairX/
+> 
+> Use case
+> ========
+> 1. CXL device identifies a failure in a memory component, report to
+>    userspace in a CXL generic/DRAM trace event.
+> 2. Rasdaemon process the trace event and issue query request in sysfs to
+> check resources available for memory sparing if either of the following
+> conditions met.
+>  - number of corrected error reported on a CXL.mem media exceeds error
+> threshold
+>  - maintenance needed flag set in the event record.
+> 3. CXL device shall report the resource availability by producing the
+> memory sparing event record in which the channel, rank, nibble mask, bank
+> Group, bank, row, column, sub-channel fields are a copy of the values
+> specified in the request. The query resource command shall return error
+> (invalid input) if the controller does not support reporting resource is
+> available.
+> 4. Rasdaemon process the memory sparing trace event and issue repair
+> request for memory sparing.
+> 
+> Kernel CXL driver shall report memory sparing event record to the userspace
+> with the resource availability in order rasdaemon to process the event
+> record and issue a repair request in sysfs for the memory sparing operation
+> in the CXL device.
+> 
+> Tested for memory sparing control feature with
+>    "hw/cxl: Add memory sparing control feature"
+>    Repository: "https://gitlab.com/shiju.jose/qemu.git"
+>    Branch: cxl-ras-features-2024-10-02
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-Fan
+Main thing in here is we need some references to the spec.
+Some of the details are not that easy to find.
+Otherwise some suggested refactors around the locking.
+
+Thanks,
+
+Jonathan
 
 > ---
-> Changes:
-> [Jonathan: Fix handling of alloc]
-> ---
->  drivers/dax/bus.c | 129 +++++++++++++++++++++++++++++++++---------------------
->  1 file changed, 79 insertions(+), 50 deletions(-)
+>  drivers/cxl/core/memfeature.c | 503 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 499 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index d8cb5195a227..f0e3f8c787df 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -844,11 +844,9 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
->  	return 0;
->  }
->  
-> -static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
-> -		resource_size_t size)
-> +static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
-> +			       u64 start, resource_size_t size)
->  {
-> -	struct dax_region *dax_region = dev_dax->region;
-> -	struct resource *res = &dax_region->res;
->  	struct device *dev = &dev_dax->dev;
->  	struct dev_dax_range *ranges;
->  	unsigned long pgoff = 0;
-> @@ -866,14 +864,14 @@ static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
->  		return 0;
->  	}
->  
-> -	alloc = __request_region(res, start, size, dev_name(dev), 0);
-> +	alloc = __request_region(parent, start, size, dev_name(dev), 0);
->  	if (!alloc)
->  		return -ENOMEM;
->  
->  	ranges = krealloc(dev_dax->ranges, sizeof(*ranges)
->  			* (dev_dax->nr_range + 1), GFP_KERNEL);
->  	if (!ranges) {
-> -		__release_region(res, alloc->start, resource_size(alloc));
-> +		__release_region(parent, alloc->start, resource_size(alloc));
->  		return -ENOMEM;
->  	}
->  
-> @@ -1026,50 +1024,45 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
->  	return true;
->  }
->  
-> -static ssize_t dev_dax_resize(struct dax_region *dax_region,
-> -		struct dev_dax *dev_dax, resource_size_t size)
-> +/**
-> + * dev_dax_resize_static - Expand the device into the unused portion of the
-> + * region. This may involve adjusting the end of an existing resource, or
-> + * allocating a new resource.
-> + *
-> + * @parent: parent resource to allocate this range in
-> + * @dev_dax: DAX device to be expanded
-> + * @to_alloc: amount of space to alloc; must be <= space available in @parent
-> + *
-> + * Return the amount of space allocated or -ERRNO on failure
-> + */
-> +static ssize_t dev_dax_resize_static(struct resource *parent,
-> +				     struct dev_dax *dev_dax,
-> +				     resource_size_t to_alloc)
->  {
-> -	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
-> -	resource_size_t dev_size = dev_dax_size(dev_dax);
-> -	struct resource *region_res = &dax_region->res;
-> -	struct device *dev = &dev_dax->dev;
->  	struct resource *res, *first;
-> -	resource_size_t alloc = 0;
->  	int rc;
->  
-> -	if (dev->driver)
-> -		return -EBUSY;
-> -	if (size == dev_size)
-> -		return 0;
-> -	if (size > dev_size && size - dev_size > avail)
-> -		return -ENOSPC;
-> -	if (size < dev_size)
-> -		return dev_dax_shrink(dev_dax, size);
-> -
-> -	to_alloc = size - dev_size;
-> -	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
-> -			"resize of %pa misaligned\n", &to_alloc))
-> -		return -ENXIO;
-> -
-> -	/*
-> -	 * Expand the device into the unused portion of the region. This
-> -	 * may involve adjusting the end of an existing resource, or
-> -	 * allocating a new resource.
-> -	 */
-> -retry:
-> -	first = region_res->child;
-> -	if (!first)
-> -		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc);
-> +	first = parent->child;
-> +	if (!first) {
-> +		rc = alloc_dev_dax_range(parent, dev_dax,
-> +					   parent->start, to_alloc);
-> +		if (rc)
-> +			return rc;
-> +		return to_alloc;
-> +	}
->  
-> -	rc = -ENOSPC;
->  	for (res = first; res; res = res->sibling) {
->  		struct resource *next = res->sibling;
-> +		resource_size_t alloc;
->  
->  		/* space at the beginning of the region */
-> -		if (res == first && res->start > dax_region->res.start) {
-> -			alloc = min(res->start - dax_region->res.start, to_alloc);
-> -			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc);
-> -			break;
-> +		if (res == first && res->start > parent->start) {
-> +			alloc = min(res->start - parent->start, to_alloc);
-> +			rc = alloc_dev_dax_range(parent, dev_dax,
-> +						 parent->start, alloc);
-> +			if (rc)
-> +				return rc;
-> +			return alloc;
->  		}
->  
->  		alloc = 0;
-> @@ -1078,21 +1071,55 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
->  			alloc = min(next->start - (res->end + 1), to_alloc);
->  
->  		/* space at the end of the region */
-> -		if (!alloc && !next && res->end < region_res->end)
-> -			alloc = min(region_res->end - res->end, to_alloc);
-> +		if (!alloc && !next && res->end < parent->end)
-> +			alloc = min(parent->end - res->end, to_alloc);
->  
->  		if (!alloc)
->  			continue;
->  
->  		if (adjust_ok(dev_dax, res)) {
->  			rc = adjust_dev_dax_range(dev_dax, res, resource_size(res) + alloc);
-> -			break;
-> +			if (rc)
-> +				return rc;
-> +			return alloc;
->  		}
-> -		rc = alloc_dev_dax_range(dev_dax, res->end + 1, alloc);
-> -		break;
-> +		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc);
-> +		if (rc)
-> +			return rc;
-> +		return alloc;
->  	}
-> -	if (rc)
-> -		return rc;
+> diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
+> index a0c9a6bd73c0..ecebdf0176ed 100644
+> --- a/drivers/cxl/core/memfeature.c
+> +++ b/drivers/cxl/core/memfeature.c
+
+> +struct cxl_memdev_sparing_rd_attrs {
+> +	u8 max_op_latency;
+> +	__le16 op_cap;
+> +	__le16 op_mode;
+> +	u8 op_class;
+> +	u8 op_subclass;
+> +	u8 rsvd[10];
+
+If you do the separate common maint header as suggested
+in review of previous patch then there is
+still one byte of extra rsvd to have here.
+Got to love a trailing structure that starts with a reserved
+byte...
+
+> +	__le16 restriction_flags;
+> +}  __packed;
 > +
-> +	/* available was already calculated and should never be an issue */
-> +	dev_WARN_ONCE(&dev_dax->dev, 1, "space not found?");
-> +	return 0;
+> +struct cxl_memdev_sparing_wr_attrs {
+> +	__le16 op_mode;
+> +}  __packed;
+> +
+> +struct cxl_memdev_sparing_maintenance_attrs {
+
+This is called the memory sparing input payload in the spec.
+Maybe name it closer to that?  + a reference. Took some finding!
+
+> +	u8 flags;
+> +	u8 channel;
+> +	u8 rank;
+> +	u8 nibble_mask[3];
+> +	u8 bank_group;
+> +	u8 bank;
+> +	u8 row[3];
+> +	u16 column;
+> +	u8 sub_channel;
+> +}  __packed;
+
+> +static int cxl_mem_sparing_set_attrs(struct device *dev, void *drv_data,
+> +				     enum cxl_mem_sparing_param_type param_type)
+> +{
+> +	struct cxl_memdev_sparing_maintenance_attrs maintenance_attrs;
+> +	struct cxl_mem_sparing_context *cxl_sparing_ctx = drv_data;
+> +	struct cxl_memdev *cxlmd = cxl_sparing_ctx->cxlmd;
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+> +	struct cxl_memdev_sparing_params rd_params;
+> +	struct cxl_region *cxlr;
+> +	int ret;
+> +
+> +	ret = cxl_mem_sparing_get_attrs(dev, drv_data, &rd_params);
+> +	if (ret) {
+> +		dev_err(dev, "Get cxlmemdev sparing params failed ret=%d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	switch (param_type) {
+> +	case CXL_MEM_SPARING_PARAM_DO_QUERY:
+> +	case CXL_MEM_SPARING_PARAM_DO_REPAIR:
+> +		ret = down_read_interruptible(&cxl_region_rwsem);
+I think this should be refactored to take this semaphore
+then call another function.
+
+		ret = down_read_interruptible(&cxl_region_rwsem);
+		if (ret)
+			return ret;
+		ret = do_sparing_op();
+		up_read(&cxl_region_rwsem);
+		if (ret)
+			return ret;
+
+
+The reason being it is far too easy to miss a path.
+Maybe we will get a nicer conditional guard shortly but we shouldn't
+wait for that.
+
+> +		if (ret)
+> +			return ret;
+> +		if (!rd_params.cap_safe_when_in_use && cxl_sparing_ctx->dpa) {
+> +			/* Check if DPA is mapped */
+> +			ret = down_read_interruptible(&cxl_dpa_rwsem);
+> +			if (ret) {
+> +				up_read(&cxl_region_rwsem);
+> +				return ret;
+> +			}
+> +
+> +			cxlr = cxl_dpa_to_region(cxlmd, cxl_sparing_ctx->dpa);
+> +			up_read(&cxl_dpa_rwsem);
+
+Feels like maybe a cxl_dpa_to_region_locked() is useful?  Perhaps a job for
+another day though.
+
+> +			if (cxlr) {
+> +				dev_err(dev, "CXL can't do PPR as DPA is mapped\n");
+> +				up_read(&cxl_region_rwsem);
+> +				return -EBUSY;
+> +			}
+> +		}
+> +
+> +		memset(&maintenance_attrs, 0, sizeof(maintenance_attrs));
+> +		if (param_type == CXL_MEM_SPARING_PARAM_DO_QUERY) {
+> +			maintenance_attrs.flags = CXL_MEMDEV_SPARING_QUERY_RESOURCE_FLAG;
+> +		} else {
+> +			maintenance_attrs.flags =
+> +				FIELD_PREP(CXL_MEMDEV_SPARING_QUERY_RESOURCE_FLAG, 0);
+> +			/* Do need set hard sparing, sub-channel & nb mask flags for query? */
+> +			if (cxl_sparing_ctx->persist_mode == EDAC_MEM_REPAIR_HARD)
+> +				maintenance_attrs.flags |=
+> +					FIELD_PREP(CXL_MEMDEV_SET_HARD_SPARING_FLAG, 1);
+> +			if (cxl_sparing_ctx->sub_channel)
+> +				maintenance_attrs.flags |=
+> +					FIELD_PREP(CXL_MEMDEV_SPARING_SUB_CHANNEL_VALID_FLAG, 1);
+> +			if (cxl_sparing_ctx->nibble_mask)
+> +				maintenance_attrs.flags |=
+> +					FIELD_PREP(CXL_MEMDEV_SPARING_NIB_MASK_VALID_FLAG, 1);
+> +		}
+> +		/* Common atts for all memory sparing types */
+> +		maintenance_attrs.channel = cxl_sparing_ctx->channel;
+> +		maintenance_attrs.rank = cxl_sparing_ctx->rank;
+> +		*((u32 *)&maintenance_attrs.nibble_mask[0]) = cxl_sparing_ctx->nibble_mask;
+> +
+> +		if (cxl_sparing_ctx->repair_type == EDAC_TYPE_CACHELINE_MEM_SPARING ||
+> +		    cxl_sparing_ctx->repair_type == EDAC_TYPE_ROW_MEM_SPARING ||
+> +		    cxl_sparing_ctx->repair_type == EDAC_TYPE_BANK_MEM_SPARING) {
+> +			maintenance_attrs.bank_group = cxl_sparing_ctx->bank_group;
+> +			maintenance_attrs.bank = cxl_sparing_ctx->bank;
+> +		}
+> +		if (cxl_sparing_ctx->repair_type == EDAC_TYPE_CACHELINE_MEM_SPARING ||
+> +		    cxl_sparing_ctx->repair_type == EDAC_TYPE_ROW_MEM_SPARING)
+> +			*((u32 *)&maintenance_attrs.row[0]) = cxl_sparing_ctx->row;
+> +		if (cxl_sparing_ctx->repair_type == EDAC_TYPE_CACHELINE_MEM_SPARING) {
+> +			maintenance_attrs.column = cxl_sparing_ctx->column;
+> +			maintenance_attrs.sub_channel = cxl_sparing_ctx->sub_channel;
+> +		}
+> +
+> +		ret = cxl_do_maintenance(mds, rd_params.op_class, rd_params.op_subclass,
+> +					 &maintenance_attrs, sizeof(maintenance_attrs));
+> +		if (ret) {
+> +			dev_err(dev, "CXL do mem sparing maintenance failed ret=%d\n", ret);
+> +			up_read(&cxl_region_rwsem);
+> +			return ret;
+> +		}
+> +		up_read(&cxl_region_rwsem);
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+> +
+> +static int cxl_mem_sparing_get_persist_mode_avail(struct device *dev, void *drv_data,
+> +						  char *buf)
+> +{
+> +	return sysfs_emit(buf, "%u\n", EDAC_MEM_REPAIR_SOFT);
+As before, if only supporting soft (which is fine for now) then
+make it clear in the patch description.
+
 > +}
 > +
-> +static ssize_t dev_dax_resize(struct dax_region *dax_region,
-> +		struct dev_dax *dev_dax, resource_size_t size)
+> +static int cxl_mem_sparing_get_persist_mode(struct device *dev, void *drv_data,
+> +					    u32 *persist_mode)
 > +{
-> +	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
-> +	resource_size_t dev_size = dev_dax_size(dev_dax);
-> +	struct device *dev = &dev_dax->dev;
-> +	resource_size_t alloc;
+> +	struct cxl_mem_sparing_context *ctx = drv_data;
 > +
-> +	if (dev->driver)
-> +		return -EBUSY;
-> +	if (size == dev_size)
-> +		return 0;
-> +	if (size > dev_size && size - dev_size > avail)
-> +		return -ENOSPC;
-> +	if (size < dev_size)
-> +		return dev_dax_shrink(dev_dax, size);
+> +	*persist_mode = ctx->persist_mode;
 > +
-> +	to_alloc = size - dev_size;
-> +	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
-> +			"resize of %pa misaligned\n", &to_alloc))
-> +		return -ENXIO;
-> +
-> +retry:
-> +	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
-> +	if (alloc <= 0)
-> +		return alloc;
->  	to_alloc -= alloc;
->  	if (to_alloc)
->  		goto retry;
-> @@ -1198,7 +1225,8 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
->  
->  	to_alloc = range_len(&r);
->  	if (alloc_is_aligned(dev_dax, to_alloc))
-> -		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-> +		rc = alloc_dev_dax_range(&dax_region->res, dev_dax, r.start,
-> +					 to_alloc);
->  	up_write(&dax_dev_rwsem);
->  	up_write(&dax_region_rwsem);
->  
-> @@ -1466,7 +1494,8 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
->  	device_initialize(dev);
->  	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
->  
-> -	rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, data->size);
-> +	rc = alloc_dev_dax_range(&dax_region->res, dev_dax, dax_region->res.start,
-> +				 data->size);
->  	if (rc)
->  		goto err_range;
->  
-> 
-> -- 
-> 2.46.0
-> 
+> +	return 0;
+> +}
 
--- 
-Fan Ni
+> +
+> +#define RANK_OPS \
+> +	.get_repair_type = cxl_mem_sparing_get_repair_type, \
+> +	.get_persist_mode_avail = cxl_mem_sparing_get_persist_mode_avail, \
+> +	.get_persist_mode = cxl_mem_sparing_get_persist_mode, \
+> +	.set_persist_mode = cxl_mem_sparing_set_persist_mode, \
+> +	.get_repair_safe_when_in_use = cxl_get_mem_sparing_safe_when_in_use, \
+> +	.get_dpa_support = cxl_get_sparing_dpa_support, \
+> +	.set_dpa = cxl_set_mem_sparing_dpa, \
+> +	.set_nibble_mask = cxl_set_mem_sparing_nibble_mask, \
+> +	.set_rank = cxl_set_mem_sparing_rank, \
+> +	.set_channel = cxl_set_mem_sparing_channel, \
+> +	.do_query = cxl_do_query_mem_sparing, \
+> +	.do_repair = cxl_do_mem_sparing
+> +
+> +#define BANK_OPS \
+> +	RANK_OPS, \
+> +	.set_bank_group = cxl_set_mem_sparing_bank_group, \
+> +	.set_bank = cxl_set_mem_sparing_bank
+> +
+> +#define ROW_OPS \
+> +	BANK_OPS, \
+> +	.set_row = cxl_set_mem_sparing_row
+> +
+> +#define CACHELINE_OPS \
+> +	ROW_OPS, \
+> +	.set_column = cxl_set_mem_sparing_column, \
+> +	.set_sub_channel = cxl_set_mem_sparing_sub_channel
+> +
+> +static const struct edac_mem_repair_ops cxl_rank_sparing_ops = {
+> +	RANK_OPS
+> +};
+> +
+> +static const struct edac_mem_repair_ops cxl_bank_sparing_ops = {
+> +	BANK_OPS
+> +};
+> +
+> +static const struct edac_mem_repair_ops cxl_row_sparing_ops = {
+> +	ROW_OPS
+> +};
+> +
+> +static const struct edac_mem_repair_ops cxl_cacheline_sparing_ops = {
+> +	CACHELINE_OPS
+I'd add trailing commas.  Whilst we don't expect to add stuff after
+these we 'might'.
+> +};
+> +
+> +struct cxl_mem_sparing_desc {
+> +	const uuid_t repair_uuid;
+> +	enum edac_mem_repair_type repair_type;
+> +	enum edac_mem_repair_persist_mode persist_mode;
+> +	enum cxl_mem_sparing_granularity granularity;
+> +	const struct edac_mem_repair_ops *repair_ops;
+> +};
+> +
+> +static struct cxl_mem_sparing_desc mem_sparing_desc[] = {
+const?
+
+> +	{
+> +		.repair_uuid = CXL_CACHELINE_SPARING_UUID,
+> +		.repair_type = EDAC_TYPE_CACHELINE_MEM_SPARING,
+> +		.persist_mode = EDAC_MEM_REPAIR_SOFT,
+> +		.granularity = CXL_MEM_SPARING_CACHELINE,
+> +		.repair_ops = &cxl_cacheline_sparing_ops,
+> +	},
+> +	{
+> +		.repair_uuid = CXL_ROW_SPARING_UUID,
+> +		.repair_type = EDAC_TYPE_ROW_MEM_SPARING,
+> +		.persist_mode = EDAC_MEM_REPAIR_SOFT,
+> +		.granularity = CXL_MEM_SPARING_ROW,
+> +		.repair_ops = &cxl_row_sparing_ops,
+> +	},
+> +	{
+> +		.repair_uuid = CXL_BANK_SPARING_UUID,
+> +		.repair_type = EDAC_TYPE_BANK_MEM_SPARING,
+> +		.persist_mode = EDAC_MEM_REPAIR_SOFT,
+> +		.granularity = CXL_MEM_SPARING_BANK,
+> +		.repair_ops = &cxl_bank_sparing_ops,
+> +	},
+> +	{
+> +		.repair_uuid = CXL_RANK_SPARING_UUID,
+> +		.repair_type = EDAC_TYPE_RANK_MEM_SPARING,
+> +		.persist_mode = EDAC_MEM_REPAIR_SOFT,
+> +		.granularity = CXL_MEM_SPARING_RANK,
+> +		.repair_ops = &cxl_rank_sparing_ops,
+> +	},
+> +};
+> +
+>  int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+>  {
+>  	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
+> @@ -1022,6 +1479,7 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+>  	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
+>  	struct cxl_ecs_context *cxl_ecs_ctx;
+>  	struct cxl_ppr_context *cxl_sppr_ctx;
+> +	struct cxl_mem_sparing_context *cxl_sparing_ctx;
+>  	int rc, i, num_ras_features = 0;
+>  	int num_media_frus;
+>  	u8 scrub_inst = 0, repair_inst = 0;
+> @@ -1125,15 +1583,15 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
+>  		rc = cxl_get_supported_feature_entry(mds, &cxl_sppr_uuid,
+>  						     &feat_entry);
+>  		if (rc < 0)
+> -			goto feat_register;
+> +			goto feat_mem_sparing;
+>  
+>  		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
+> -			goto feat_register;
+> +			goto feat_mem_sparing;
+Trivial but maybe change labels to 
+feat_sppr_done: 
+etc so that you can provide them only when adding the new features
+rather than always having to update when next feature is added.
+Will reduce patch set a little is size which is nice and I think
+will be no less clear.
+
+>  
+>  		cxl_sppr_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_sppr_ctx),
+>  					    GFP_KERNEL);
+>  		if (!cxl_sppr_ctx)
+> -			goto feat_register;
+> +			goto feat_mem_sparing;
+
