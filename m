@@ -1,41 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93D0158DD1
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 11:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BC919F42F;
+	Mon, 14 Oct 2024 11:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728905011; cv=none; b=ahFYbGrJijOI5beMcD9djD4DSH19r8BHCdpPl4DLgukHFtXdxkFegECC1T7B1mBLCv6vhWPzXnwgxY6HaWs20/t/jf9xwwg2F01R5IaxOj1EeMpM32aGkwdoeYYqGbZm00jZhltT2XK12EMnhP8RrR5XRVsWXXn73EzcgZ2cYtU=
+	t=1728905618; cv=none; b=IBXnABXEZrrjFVwzju2Wq/ZITFpOzJDgaKHF0MeTocUUcVoqcNpms1niPqPHGfb6MZj3PdScCcWXI2yxwMshsmBfNB2uWKXLgs+Mqzn7+zIqNBHRHQHHIZ96Y4qBA9hQ4oF4GRMgfM9eWzIVNSCIF3LW66Mh0er3HRDttwt+dgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728905011; c=relaxed/simple;
-	bh=WqDfjrYr/VQg1euTarR01UNsLa+AuDmGejNPZjuysFE=;
+	s=arc-20240116; t=1728905618; c=relaxed/simple;
+	bh=7Yl/4VbTnnC4Gh9bjyUQwT0KZLPhHoojN635dgyGWl0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WJTPo40EvrdIGqtTNng9rrgU8t9UUMzkaSijFZ7hPW2LCyQG6XnjKMvYYAKYkQcMmQga/B2m5XXNd5LwOS+XmZLQeOnbYPvAn0Bnvz8jg7DmBhx7c6Ux92WP91bhgwGjH4rL18bWkyGOr5n4e6ufxxN8MaFt4lZhZsIvabT0S/s=
+	 MIME-Version:Content-Type; b=r4tw/HJebzfVmfFslocQCChb2l9Nx52MFrOHyc0FRqBRLoiQNk+yq4flZZBCMoKTSytC0RvLtcUfhIQGENJAMocCDu4Xc3yjjAuf2HHeY/J63ZKL+7ZAPyzzJkyammvXS/+Hqn82IWNaTSWRB6nmjuDMvWM+Iy33Xf+zHfD7FNk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRvwY1842z6J9hQ;
-	Mon, 14 Oct 2024 19:22:53 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRw3j3dj5z6LDMX;
+	Mon, 14 Oct 2024 19:29:05 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A4CF3140C98;
-	Mon, 14 Oct 2024 19:23:24 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B0A7140C72;
+	Mon, 14 Oct 2024 19:33:31 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 13:23:24 +0200
-Date: Mon, 14 Oct 2024 12:23:22 +0100
+ 2024 13:33:31 +0200
+Date: Mon, 14 Oct 2024 12:33:29 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <nifan.cxl@gmail.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [QEMU RFC] hw/mem/cxl_type3: add guard to avoid event log
- overflow during a DC extent add/release request
-Message-ID: <20241014122322.00001ad4@Huawei.com>
-In-Reply-To: <20241011202929.11611-2-nifan.cxl@gmail.com>
-References: <20241011202929.11611-2-nifan.cxl@gmail.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <dave.jiang@intel.com>, <ira.weiny@intel.com>, Gregory Price
+	<gourry@gourry.net>, <stable@vger.kernel.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/5] cxl/port: Fix CXL port initialization order when
+ the subsystem is built-in
+Message-ID: <20241014123329.00000045@Huawei.com>
+In-Reply-To: <172862484072.2150669.9910214123827630595.stgit@dwillia2-xfh.jf.intel.com>
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+	<172862484072.2150669.9910214123827630595.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,101 +50,91 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 11 Oct 2024 13:24:50 -0700
-nifan.cxl@gmail.com wrote:
+On Thu, 10 Oct 2024 22:34:02 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> From: Fan Ni <fan.ni@samsung.com>
+> When the CXL subsystem is built-in the module init order is determined
+> by Makefile order. That order violates expectations. The expectation is
+> that cxl_acpi and cxl_mem can race to attach and that if cxl_acpi wins
+> the race cxl_mem will find the enabled CXL root ports it needs and if
+> cxl_acpi loses the race it will retrigger cxl_mem to attach via
+> cxl_bus_rescan(). That only works if cxl_acpi can assume ports are
+> enabled immediately upone cxl_acpi_probe() return. That in turn can only
+
+upon
+
+> happen in the CONFIG_CXL_ACPI=y case if the cxl_port object appears
+> before the cxl_acpi object in the Makefile.
 > 
-> One DC extent add/release request can take multiple DC extents.
-> For each extent in the request, one DC event record will be generated and
-> isnerted into the event log. All the event records for the request will be
-> grouped with the More flag (see CXL spec r3.1, Table 8-168 and 8-170).
-> If an overflow happens during the process, the yet-to-insert records will
-> get lost, leaving the device in a situation where it notifies the host
-> only part of the extents involved, and the host never surfacing the
-> extents received and waiting for the remaining extents.
-
-Interesting corner.  For other 'events' an overflow is natural because
-they can be out of the control of the device. This artificial limit
-was to trigger the overflow handling in those cases. For this one I'd expect
-the device to push back on the fabric management commands, or handle the
-event log filling so overflow doesn't happen.
-
+> Fix up the order to prevent initialization failures, and make sure that
+> cxl_port is built-in if cxl_acpi is also built-in.
 > 
-> Add a check in qmp_cxl_process_dynamic_capacity_prescriptive and ensure
-> the event log does not overflow during the process.
-> 
-> Currently we check the number of extents involved with the event
-> overflow threshold, do we need to tight the check and compare with
-> the remaining spot available in the event log?
+> As for what contributed to this not being found earlier, the CXL
+> regression environment, cxl_test, builds all CXL functionality as a
+> module to allow to symbol mocking and other dynamic reload tests.  As a
+> result there is no regression coverage for the built-in case.
 
-Yes. I think we need to prevent other outstanding events causing us trouble.
-
-Is it useful to support the case where we have more than one
-group of extents outstanding?  If not we could simply fail the add whenever
-that happens.  Maybe that is a reasonable stop gap until we have a reason
-to care about that case. We probably care when we have FM-API hooked up
-to this and want to test more advanced fabric management stuff, or poke
-a corner of the kernel code perhaps?
-
-I guess from a 'would it be right if a device did this' the answer may be
-yes, but that doesn't mean Linux is going to support such a device
-(at least not until we know they really exist).  Ira, what do you think
-about this corner case?  Maybe detect and scream if we aren't already?
-
-Jonathan
+My testing is all modular too :( 
 
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> Reported-by: Gregory Price <gourry@gourry.net>
+> Closes: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net
+> Tested-by: Gregory Price <gourry@gourry.net>
+> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+> Cc: <stable@vger.kernel.org>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  hw/cxl/cxl-events.c         | 2 --
->  hw/mem/cxl_type3.c          | 7 +++++++
->  include/hw/cxl/cxl_events.h | 3 +++
->  3 files changed, 10 insertions(+), 2 deletions(-)
+>  drivers/cxl/Kconfig  |    1 +
+>  drivers/cxl/Makefile |   12 ++++++------
+>  2 files changed, 7 insertions(+), 6 deletions(-)
 > 
-> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
-> index 12dee2e467..05d8aae627 100644
-> --- a/hw/cxl/cxl-events.c
-> +++ b/hw/cxl/cxl-events.c
-> @@ -16,8 +16,6 @@
->  #include "hw/cxl/cxl.h"
->  #include "hw/cxl/cxl_events.h"
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 29c192f20082..876469e23f7a 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -60,6 +60,7 @@ config CXL_ACPI
+>  	default CXL_BUS
+>  	select ACPI_TABLE_LIB
+>  	select ACPI_HMAT
+> +	select CXL_PORT
+>  	help
+>  	  Enable support for host managed device memory (HDM) resources
+>  	  published by a platform's ACPI CXL memory layout description.  See
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index db321f48ba52..374829359275 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,13 +1,13 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-y += core/
+> -obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+> -obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+> +obj-$(CONFIG_CXL_PORT) += cxl_port.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+
+Needs some comments on the ordering being required.
+Otherwise some future 'cleanup' will reorder them again.
+However relying on build order is nasty.
+
+> +obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+> -obj-$(CONFIG_CXL_PORT) += cxl_port.o
+> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o
 >  
-> -/* Artificial limit on the number of events a log can hold */
-> -#define CXL_TEST_EVENT_OVERFLOW 8
->  
->  static void reset_overflow(CXLEventLog *log)
->  {
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 3d7289fa84..32668df365 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -2015,6 +2015,13 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
->          num_extents++;
->      }
->  
-> +    if (num_extents > CXL_TEST_EVENT_OVERFLOW) {
-> +        error_setg(errp,
-> +                   "at most %d extents allowed in one add/release request",
-> +                   CXL_TEST_EVENT_OVERFLOW);
-> +       return;
-> +    }
-> +
->      /* Create extent list for event being passed to host */
->      i = 0;
->      list = records;
-> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-> index 38cadaa0f3..2a6b57e3e6 100644
-> --- a/include/hw/cxl/cxl_events.h
-> +++ b/include/hw/cxl/cxl_events.h
-> @@ -12,6 +12,9 @@
->  
->  #include "qemu/uuid.h"
->  
-> +/* Artificial limit on the number of events a log can hold */
-> +#define CXL_TEST_EVENT_OVERFLOW 8
-> +
->  /*
->   * CXL r3.1 section 8.2.9.2.2: Get Event Records (Opcode 0100h); Table 8-52
->   *
+> -cxl_mem-y := mem.o
+> -cxl_pci-y := pci.o
+> +cxl_port-y := port.o
+>  cxl_acpi-y := acpi.o
+> +cxl_pci-y := pci.o
+>  cxl_pmem-y := pmem.o security.o
+> -cxl_port-y := port.o
+> +cxl_mem-y := mem.o
+> 
+> 
 
