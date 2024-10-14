@@ -1,50 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504D51547E4
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 09:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3955158DD8
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 10:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728898628; cv=none; b=Ixf5kHzTQvJXdQocxj6VFLyrXuPKNXGhJESaM8KUHeSz0pju9coFe/rzx793ErfD08Gyq3Qi1hoXZ3jgmaS85j7zCMBA5QKqIiDVXoceEyLSYshtBphO4CbCuTb4L5D2RW7RNePsxeSlPvfEuV8mbsKsKkQOYOH1EAuToKZKDBw=
+	t=1728900560; cv=none; b=mnB2Lh0bPv6pvLebkjzxcH1D/W91MIEKyxaFJs6gz0kp5CRR+fOaV3+QJ0MT+5CxfnLc4vhv9as/HYQsXmUIlixhFh1gIHjLiKf4Dai5lu9SylL6I8dzJSUBhWbeA/Q3butuF6+pmw0DZSJ5W0kvd2dM+H9V/MaUYoGgLYEM0K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728898628; c=relaxed/simple;
-	bh=18DrhyBfMqfPb6eOhsDAx4CpJ/4lAUU20aV9s1YL09E=;
+	s=arc-20240116; t=1728900560; c=relaxed/simple;
+	bh=2T4wfo9rBv/C3xTflOql+JHSU9Z3TiehvW/BJVoYVGU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WQQVhv81t603N59rKJ6f0EZUi3cuuU9unTq13sQBnQlCS/E4HCphuNOHQbKhrANoL5F2FHo45enjq1BTcHoorBfcgp6DpPJCvEk/Qh5EYAKag0YZ3hh+N+Gn0MCb6Otw9xrUO6fHKvi95gE+MgoIfD+Bws7qsll0Iy0LLhN0CBk=
+	 MIME-Version:Content-Type; b=uUr7jEFUGwl1yo/LdsKjxKHNUztiKafxtk976fJETZnR8K5L2piNKoRVz969/NsO8lWz9JxcK5T4Nw17MG9gR64I+w+OIWXFemXEpWkuehWc/EqwgMSg6tKeC7kI5zQDShDWFKRVnOgO2JM0E1oPbqCjzEiPRyziByTtUhKBoho=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRsT9408gz67RYs;
-	Mon, 14 Oct 2024 17:32:29 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRtGy6mF2z6K5nY;
+	Mon, 14 Oct 2024 18:08:42 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7F1B71400D9;
-	Mon, 14 Oct 2024 17:36:56 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5EDA11401F4;
+	Mon, 14 Oct 2024 18:09:14 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 11:36:55 +0200
-Date: Mon, 14 Oct 2024 10:36:53 +0100
+ 2024 12:09:13 +0200
+Date: Mon, 14 Oct 2024 11:09:12 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Corey Minyard <minyard@acm.org>, Andrew Jeffery
-	<andrew@codeconstruct.com.au>, Matt Johnston <matt@codeconstruct.com.au>
-CC: Klaus Jensen <its@irrelevant.dk>, Corey Minyard <cminyard@mvista.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Peter Maydell
-	<peter.maydell@linaro.org>, Jason Wang <jasowang@redhat.com>, Keith Busch
-	<kbusch@kernel.org>, Lior Weintraub <liorw@pliops.com>, Jeremy Kerr
-	<jk@codeconstruct.com.au>, Peter Delevoryas <peter@pjd.dev>,
-	<qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>, <qemu-block@nongnu.org>,
-	"Klaus Jensen" <k.jensen@samsung.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	<linux-cxl@vger.kernel.org>, Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH v6 0/3] hw/{i2c,nvme}: mctp endpoint, nvme management
- interface model
-Message-ID: <20241014103653.00002c83@Huawei.com>
-In-Reply-To: <ZQsDcmkZYCk0eVhA@mail.minyard.net>
-References: <20230914-nmi-i2c-v6-0-11bbb4f74d18@samsung.com>
-	<20230920124803.00005ae9@Huawei.com>
-	<ZQrrgxHrfzmGyhZU@mail.minyard.net>
-	<ZQr0LXsSRXGqJ4EL@cormorant.local>
-	<ZQsDcmkZYCk0eVhA@mail.minyard.net>
+To: <shiju.jose@huawei.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<fan.ni@samsung.com>, <linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<tanxiaofei@huawei.com>
+Subject: Re: [PATCH 1/1] hw/cxl/cxl-mailbox-utils: Fix for device DDR5 ECS
+ control feature tables
+Message-ID: <20241014110912.000014ed@Huawei.com>
+In-Reply-To: <20240927091743.965-1-shiju.jose@huawei.com>
+References: <20240927091743.965-1-shiju.jose@huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -55,117 +45,196 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 20 Sep 2023 09:36:34 -0500
-Corey Minyard <minyard@acm.org> wrote:
+On Fri, 27 Sep 2024 10:17:43 +0100
+<shiju.jose@huawei.com> wrote:
 
-> On Wed, Sep 20, 2023 at 06:31:25AM -0700, Klaus Jensen wrote:
-> > On Sep 20 07:54, Corey Minyard wrote:  
-> > > On Wed, Sep 20, 2023 at 12:48:03PM +0100, Jonathan Cameron via wrote:  
-> > > > On Thu, 14 Sep 2023 11:53:40 +0200
-> > > > Klaus Jensen <its@irrelevant.dk> wrote:
-> > > >   
-> > > > > This adds a generic MCTP endpoint model that other devices may derive
-> > > > > from.
-> > > > > 
-> > > > > Also included is a very basic implementation of an NVMe-MI device,
-> > > > > supporting only a small subset of the required commands.
-> > > > > 
-> > > > > Since this all relies on i2c target mode, this can currently only be
-> > > > > used with an SoC that includes the Aspeed I2C controller.
-> > > > > 
-> > > > > The easiest way to get up and running with this, is to grab my buildroot
-> > > > > overlay[1] (aspeed_ast2600evb_nmi_defconfig). It includes modified a
-> > > > > modified dts as well as a couple of required packages.
-> > > > > 
-> > > > > QEMU can then be launched along these lines:
-> > > > > 
-> > > > >   qemu-system-arm \
-> > > > >     -nographic \
-> > > > >     -M ast2600-evb \
-> > > > >     -kernel output/images/zImage \
-> > > > >     -initrd output/images/rootfs.cpio \
-> > > > >     -dtb output/images/aspeed-ast2600-evb-nmi.dtb \
-> > > > >     -nic user,hostfwd=tcp::2222-:22 \
-> > > > >     -device nmi-i2c,address=0x3a \
-> > > > >     -serial mon:stdio
-> > > > > 
-> > > > > From within the booted system,
-> > > > > 
-> > > > >   mctp addr add 8 dev mctpi2c15
-> > > > >   mctp link set mctpi2c15 up
-> > > > >   mctp route add 9 via mctpi2c15
-> > > > >   mctp neigh add 9 dev mctpi2c15 lladdr 0x3a
-> > > > >   mi-mctp 1 9 info
-> > > > > 
-> > > > > Comments are very welcome!
-> > > > > 
-> > > > >   [1]: https://github.com/birkelund/hwtests/tree/main/br2-external
-> > > > > 
-> > > > > Signed-off-by: Klaus Jensen <k.jensen@samsung.com>  
-> > > > 
-> > > > Hi Klaus,
-> > > > 
-> > > > Silly question, but who is likely to pick this up? + likely to be soon?
-> > > > 
-> > > > I'm going to post the CXL stuff that makes use of the core support shortly
-> > > > and whilst I can point at this patch set on list, I'd keen to see it upstream
-> > > > to reduce the dependencies (it's got 2 sets ahead of it of CXL stuff
-> > > > anyway but that will all hopefully go through Michael Tsirkin's tree
-> > > > for PCI stuff in one go).  
-> > > 
-> > > I can pick it up, but he can just request a merge, too.
-> > > 
-> > > I did have a question I asked earlier about tests.  It would be unusual
-> > > at this point to add something like this without having some tests,
-> > > especially injecting invalid data.
-> > >   
-> > 
-> > Hi all,
-> > 
-> > Sorry for the late reply. I'm currently at SDC, but I will write up some
-> > tests when I get back to in the office on Monday.
-> > 
-> > Corey, what kinds of tests would be best here? Avocado "acceptance"
-> > tests or would you like to see something lower level?  
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> My main concern is testing what happens when bad data gets injected, to
-> avoid people coming up with clever names for exploits in qemu.  It's not
-> so much for this code, it's for the changes that comes in the future.
+> CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check Scrub (ECS)
+> control feature.
 > 
-> And, of course, normal functional tests to make sure it works.  What a
-> friend of mine calls "dead chicken" tests.  You wave a dead chicken at
-> it, and if the chicken is still dead everything is ok :).
+> ECS log capabilities field in following ECS tables, which is common for all
+> memory media FRUs in a CXL device.
 > 
-> I'm fine with either type of tests, but I'm not sure you can do this
-> with avocado.  It's probably about the same amount of work either path
-> you choose.
+> Fix struct CXLMemECSReadAttrs and struct CXLMemECSWriteAttrs to make
+> log entry type field common.
 > 
-> -corey
+> Fixes:2d41ce38fb9a (hw/cxl/cxl-mailbox-utils: Add device DDR5 ECS control feature)
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Hi Shiju
 
-Hi Klaus, All,
+Sorry for taking so long to get to this! 
 
-I was looking at what dependencies I'm carrying on my CXL tree and this
-series is one of the bigger bits :(
+Anyhow, one trivial comment inline that I'll fix up.
+I'm preparing a fixes series today so will include this patch in that.
 
-Any plans to take it forwards?
-I have some other stuff to solve to have a fully upstream QEMU
-solution for the CXL fm-api over mctp (direct from host anyway), but
-if this is blocked indefinitely tackling how to get a controller onto
-a typical server system isn't going to be productive :(
-
-As Davidlohr called out at in the CXL LPC Uconf [1] this is really handy
-for testing his work on libcxlmi. A number of people are looking
-at more sophisticated CXL fabric emulation and that will also need
-us to close this gap!
-
-No promises but maybe we can find someone to help with adding tests
-if that's the only remaining blocker.
-
-https://lpc.events/event/18/contributions/1876/attachments/1441/3072/lpc24-dbueso-libcxlmi.pdf [1]
+Thanks,
 
 Jonathan
 
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 27 ++++++++++-----------------
+>  hw/mem/cxl_type3.c          |  9 ++++-----
+>  include/hw/cxl/cxl_device.h | 36 ++++++++++++++++++++++--------------
+>  3 files changed, 36 insertions(+), 36 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index c2d776bc96..fa06cd7910 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -1152,10 +1152,8 @@ static CXLRetCode cmd_features_get_supported(const struct cxl_cmd *cmd,
+>                           (struct CXLSupportedFeatureEntry) {
+>                  .uuid = ecs_uuid,
+>                  .feat_index = index,
+> -                .get_feat_size = CXL_ECS_NUM_MEDIA_FRUS *
+> -                                    sizeof(CXLMemECSReadAttrs),
+> -                .set_feat_size = CXL_ECS_NUM_MEDIA_FRUS *
+> -                                    sizeof(CXLMemECSWriteAttrs),
+> +                .get_feat_size = sizeof(CXLMemECSReadAttrs),
+> +                .set_feat_size = sizeof(CXLMemECSWriteAttrs),
+>                  .attr_flags = CXL_FEAT_ENTRY_ATTR_FLAG_CHANGABLE,
+>                  .get_feat_version = CXL_ECS_GET_FEATURE_VERSION,
+>                  .set_feat_version = CXL_ECS_SET_FEATURE_VERSION,
+> @@ -1223,13 +1221,10 @@ static CXLRetCode cmd_features_get_feature(const struct cxl_cmd *cmd,
+>                 (uint8_t *)&ct3d->patrol_scrub_attrs + get_feature->offset,
+>                 bytes_to_copy);
+>      } else if (qemu_uuid_is_equal(&get_feature->uuid, &ecs_uuid)) {
+> -        if (get_feature->offset >=  CXL_ECS_NUM_MEDIA_FRUS *
+> -                                sizeof(CXLMemECSReadAttrs)) {
+> +        if (get_feature->offset >= sizeof(CXLMemECSReadAttrs)) {
+>              return CXL_MBOX_INVALID_INPUT;
+>          }
+> -        bytes_to_copy = CXL_ECS_NUM_MEDIA_FRUS *
+> -                        sizeof(CXLMemECSReadAttrs) -
+> -                            get_feature->offset;
+> +        bytes_to_copy = sizeof(CXLMemECSReadAttrs) - get_feature->offset;
+>          bytes_to_copy = MIN(bytes_to_copy, get_feature->count);
+>          memcpy(payload_out,
+>                 (uint8_t *)&ct3d->ecs_attrs + get_feature->offset,
+> @@ -1318,19 +1313,17 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+>  
+>          ecs_set_feature = (void *)payload_in;
+>          ecs_write_attrs = ecs_set_feature->feat_data;
+> -        memcpy((uint8_t *)ct3d->ecs_wr_attrs + hdr->offset,
+> +        memcpy((uint8_t *)&ct3d->ecs_wr_attrs + hdr->offset,
+>                 ecs_write_attrs,
+>                 bytes_to_copy);
+>          set_feat_info->data_size += bytes_to_copy;
+>  
+>          if (data_transfer_flag == CXL_SET_FEATURE_FLAG_FULL_DATA_TRANSFER ||
+>              data_transfer_flag ==  CXL_SET_FEATURE_FLAG_FINISH_DATA_TRANSFER) {
+> -            for (count = 0; count < CXL_ECS_NUM_MEDIA_FRUS; count++) {
+> -                ct3d->ecs_attrs[count].ecs_log_cap =
+> -                                  ct3d->ecs_wr_attrs[count].ecs_log_cap;
+> -                ct3d->ecs_attrs[count].ecs_config =
+> -                                  ct3d->ecs_wr_attrs[count].ecs_config & 0x1F;
+> -            }
+> +            ct3d->ecs_attrs.ecs_log_cap = ct3d->ecs_wr_attrs.ecs_log_cap;
+> +            for (count = 0; count < CXL_ECS_NUM_MEDIA_FRUS; count++)
+Qemu style needs the brackets even for one line cases. I'll fix up whilst applying
+Also side effect will be reducing the diff which is nice to have :)
+
+> +                ct3d->ecs_attrs.fru_attrs[count].ecs_config =
+> +                        ct3d->ecs_wr_attrs.fru_attrs[count].ecs_config & 0x1F;
+>          }
+>      } else {
+>          return CXL_MBOX_UNSUPPORTED;
+> @@ -1343,7 +1336,7 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+>          if (qemu_uuid_is_equal(&hdr->uuid, &patrol_scrub_uuid)) {
+>              memset(&ct3d->patrol_scrub_wr_attrs, 0, set_feat_info->data_size);
+>          } else if (qemu_uuid_is_equal(&hdr->uuid, &ecs_uuid)) {
+> -            memset(ct3d->ecs_wr_attrs, 0, set_feat_info->data_size);
+> +            memset(&ct3d->ecs_wr_attrs, 0, set_feat_info->data_size);
+>          }
+>          set_feat_info->data_transfer_flag = 0;
+>          set_feat_info->data_saved_across_reset = false;
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 3006ca21ad..e10de42254 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1045,16 +1045,15 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      ct3d->patrol_scrub_attrs.scrub_flags = CXL_MEMDEV_PS_ENABLE_DEFAULT;
+>  
+>      /* Set default value for DDR5 ECS read attributes */
+> +    ct3d->ecs_attrs.ecs_log_cap = CXL_ECS_LOG_ENTRY_TYPE_DEFAULT;
+>      for (count = 0; count < CXL_ECS_NUM_MEDIA_FRUS; count++) {
+> -        ct3d->ecs_attrs[count].ecs_log_cap =
+> -                            CXL_ECS_LOG_ENTRY_TYPE_DEFAULT;
+> -        ct3d->ecs_attrs[count].ecs_cap =
+> +        ct3d->ecs_attrs.fru_attrs[count].ecs_cap =
+>                              CXL_ECS_REALTIME_REPORT_CAP_DEFAULT;
+> -        ct3d->ecs_attrs[count].ecs_config =
+> +        ct3d->ecs_attrs.fru_attrs[count].ecs_config =
+>                              CXL_ECS_THRESHOLD_COUNT_DEFAULT |
+>                              (CXL_ECS_MODE_DEFAULT << 3);
+>          /* Reserved */
+> -        ct3d->ecs_attrs[count].ecs_flags = 0;
+> +        ct3d->ecs_attrs.fru_attrs[count].ecs_flags = 0;
+>      }
+>  
+>      return;
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 4b68c52cdc..076eb9814a 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -493,18 +493,6 @@ typedef struct CXLMemPatrolScrubWriteAttrs {
+>  #define CXL_MEMDEV_PS_ENABLE_DEFAULT    0
+>  
+>  /* CXL memory device DDR5 ECS control attributes */
+> -typedef struct CXLMemECSReadAttrs {
+> -        uint8_t ecs_log_cap;
+> -        uint8_t ecs_cap;
+> -        uint16_t ecs_config;
+> -        uint8_t ecs_flags;
+> -} QEMU_PACKED CXLMemECSReadAttrs;
+> -
+> -typedef struct CXLMemECSWriteAttrs {
+> -   uint8_t ecs_log_cap;
+> -    uint16_t ecs_config;
+> -} QEMU_PACKED CXLMemECSWriteAttrs;
+> -
+>  #define CXL_ECS_GET_FEATURE_VERSION    0x01
+>  #define CXL_ECS_SET_FEATURE_VERSION    0x01
+>  #define CXL_ECS_LOG_ENTRY_TYPE_DEFAULT    0x01
+> @@ -513,6 +501,26 @@ typedef struct CXLMemECSWriteAttrs {
+>  #define CXL_ECS_MODE_DEFAULT    0
+>  #define CXL_ECS_NUM_MEDIA_FRUS   3 /* Default */
+>  
+> +typedef struct CXLMemECSFRUReadAttrs {
+> +    uint8_t ecs_cap;
+> +    uint16_t ecs_config;
+> +    uint8_t ecs_flags;
+> +} QEMU_PACKED CXLMemECSFRUReadAttrs;
+> +
+> +typedef struct CXLMemECSReadAttrs {
+> +    uint8_t ecs_log_cap;
+> +    CXLMemECSFRUReadAttrs fru_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+> +} QEMU_PACKED CXLMemECSReadAttrs;
+> +
+> +typedef struct CXLMemECSFRUWriteAttrs {
+> +    uint16_t ecs_config;
+> +} QEMU_PACKED CXLMemECSFRUWriteAttrs;
+> +
+> +typedef struct CXLMemECSWriteAttrs {
+> +    uint8_t ecs_log_cap;
+> +    CXLMemECSFRUWriteAttrs fru_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+> +} QEMU_PACKED CXLMemECSWriteAttrs;
+> +
+>  #define DCD_MAX_NUM_REGION 8
+>  
+>  typedef struct CXLDCExtentRaw {
+> @@ -609,8 +617,8 @@ struct CXLType3Dev {
+>      CXLMemPatrolScrubReadAttrs patrol_scrub_attrs;
+>      CXLMemPatrolScrubWriteAttrs patrol_scrub_wr_attrs;
+>      /* ECS control attributes */
+> -    CXLMemECSReadAttrs ecs_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+> -    CXLMemECSWriteAttrs ecs_wr_attrs[CXL_ECS_NUM_MEDIA_FRUS];
+> +    CXLMemECSReadAttrs ecs_attrs;
+> +    CXLMemECSWriteAttrs ecs_wr_attrs;
+>  
+>      struct dynamic_capacity {
+>          HostMemoryBackend *host_dc;
 
