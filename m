@@ -1,40 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B7919E7F9
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 11:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93D0158DD1
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 11:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728904222; cv=none; b=e2DNXw4zw6lBRMyxVuhKRRRiZnFPPOLkrCs24YKsQhmJx4uy9em5Jr8MCKGOeTI7RKlcOwS2CEWCehzc6DUqfKefth4X119HRF9qYrWqKng9p18tt2ep66Mi9cuQcqNFgqtjuWOyOicd/90Ar5wK8dKN8LhSp0cJ3JC8bZz54zU=
+	t=1728905011; cv=none; b=ahFYbGrJijOI5beMcD9djD4DSH19r8BHCdpPl4DLgukHFtXdxkFegECC1T7B1mBLCv6vhWPzXnwgxY6HaWs20/t/jf9xwwg2F01R5IaxOj1EeMpM32aGkwdoeYYqGbZm00jZhltT2XK12EMnhP8RrR5XRVsWXXn73EzcgZ2cYtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728904222; c=relaxed/simple;
-	bh=KsI7h8yQTOclepOnbijvt7Os5Npbv1jKZbuLj54Y1rA=;
+	s=arc-20240116; t=1728905011; c=relaxed/simple;
+	bh=WqDfjrYr/VQg1euTarR01UNsLa+AuDmGejNPZjuysFE=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l0rGxnx8xfvMIBCqG9ay6yKQPraOqky5X9U4G5828SgrODvIjFoic9AkFI2nn8TSBwszcWTyrZpTto0qHeE5rFJWBjAHo+MtFn6OU/tCeOE3q2wRAuFJDYYJSk9zoFM7ZBtzuqAcAe17o7llu7MLypVVlzv2T2eMDQcQPHr2RMQ=
+	 MIME-Version:Content-Type; b=WJTPo40EvrdIGqtTNng9rrgU8t9UUMzkaSijFZ7hPW2LCyQG6XnjKMvYYAKYkQcMmQga/B2m5XXNd5LwOS+XmZLQeOnbYPvAn0Bnvz8jg7DmBhx7c6Ux92WP91bhgwGjH4rL18bWkyGOr5n4e6ufxxN8MaFt4lZhZsIvabT0S/s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRvXr3C8Mz6LCln;
-	Mon, 14 Oct 2024 19:05:48 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRvwY1842z6J9hQ;
+	Mon, 14 Oct 2024 19:22:53 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 773211401F4;
-	Mon, 14 Oct 2024 19:10:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A4CF3140C98;
+	Mon, 14 Oct 2024 19:23:24 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 13:10:15 +0200
-Date: Mon, 14 Oct 2024 12:10:13 +0100
+ 2024 13:23:24 +0200
+Date: Mon, 14 Oct 2024 12:23:22 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<qemu-devel@nongnu.org>
-Subject: Re: [PATCH -qemu] hw/cxl: Support get/set mctp response payload
- size
-Message-ID: <20241014121013.000062c3@Huawei.com>
-In-Reply-To: <Zwheg1hFMG_MYggX@fan>
-References: <20241010014157.175548-1-dave@stgolabs.net>
-	<Zwheg1hFMG_MYggX@fan>
+To: <nifan.cxl@gmail.com>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [QEMU RFC] hw/mem/cxl_type3: add guard to avoid event log
+ overflow during a DC extent add/release request
+Message-ID: <20241014122322.00001ad4@Huawei.com>
+In-Reply-To: <20241011202929.11611-2-nifan.cxl@gmail.com>
+References: <20241011202929.11611-2-nifan.cxl@gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -45,181 +46,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 10 Oct 2024 16:08:51 -0700
-Fan Ni <nifan.cxl@gmail.com> wrote:
+On Fri, 11 Oct 2024 13:24:50 -0700
+nifan.cxl@gmail.com wrote:
 
-> On Wed, Oct 09, 2024 at 06:41:57PM -0700, Davidlohr Bueso wrote:
-> > Add Get/Set Response Message Limit commands.
-> > 
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>  
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> The commit log may include the cxl spec reference. Otherwise,
+> One DC extent add/release request can take multiple DC extents.
+> For each extent in the request, one DC event record will be generated and
+> isnerted into the event log. All the event records for the request will be
+> grouped with the More flag (see CXL spec r3.1, Table 8-168 and 8-170).
+> If an overflow happens during the process, the yet-to-insert records will
+> get lost, leaving the device in a situation where it notifies the host
+> only part of the extents involved, and the host never surfacing the
+> extents received and waiting for the remaining extents.
+
+Interesting corner.  For other 'events' an overflow is natural because
+they can be out of the control of the device. This artificial limit
+was to trigger the overflow handling in those cases. For this one I'd expect
+the device to push back on the fabric management commands, or handle the
+event log filling so overflow doesn't happen.
+
 > 
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Add a check in qmp_cxl_process_dynamic_capacity_prescriptive and ensure
+> the event log does not overflow during the process.
 > 
-> 
-> > ---
-> >  hw/cxl/cxl-mailbox-utils.c | 68 ++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 65 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index c2d776bc96eb..98416af794bb 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -7,6 +7,8 @@
-> >   * COPYING file in the top-level directory.
-> >   */
-> >  
-> > +#include <math.h>
-> > +
-> >  #include "qemu/osdep.h"
-> >  #include "hw/pci/msi.h"
-> >  #include "hw/pci/msix.h"
-> > @@ -56,6 +58,8 @@ enum {
-> >      INFOSTAT    = 0x00,
-> >          #define IS_IDENTIFY   0x1
-> >          #define BACKGROUND_OPERATION_STATUS    0x2
-> > +        #define GET_RESPONSE_MSG_LIMIT   0x3
-> > +        #define SET_RESPONSE_MSG_LIMIT   0x4
-> >      EVENTS      = 0x01,
-> >          #define GET_RECORDS   0x0
-> >          #define CLEAR_RECORDS   0x1
-> > @@ -393,7 +397,7 @@ static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
-> >          uint16_t pcie_subsys_vid;
-> >          uint16_t pcie_subsys_id;
-> >          uint64_t sn;
-> > -    uint8_t max_message_size;
-> > +        uint8_t max_message_size;
-Huh.  I wonder how that misalignment got in.
+> Currently we check the number of extents involved with the event
+> overflow threshold, do we need to tight the check and compare with
+> the remaining spot available in the event log?
 
-I'll spin a separate tidy up patch to deal with that and
-include it in a trivial series I'm sending later today.
+Yes. I think we need to prevent other outstanding events causing us trouble.
 
-> >          uint8_t component_type;
-> >      } QEMU_PACKED *is_identify;
-> >      QEMU_BUILD_BUG_ON(sizeof(*is_identify) != 18);
-> > @@ -422,12 +426,58 @@ static CXLRetCode cmd_infostat_identify(const struct cxl_cmd *cmd,
-> >          is_identify->component_type = 0x3; /* Type 3 */
-> >      }
-> >  
-> > -    /* TODO: Allow this to vary across different CCIs */
-> > -    is_identify->max_message_size = 9; /* 512 bytes - MCTP_CXL_MAILBOX_BYTES */
-> > +    is_identify->max_message_size = (uint8_t)log2(cci->payload_max);
-> >      *len_out = sizeof(*is_identify);
-> >      return CXL_MBOX_SUCCESS;
-> >  }
-> >  
-> > +/* CXL r3.1 section 8.2.9.1.3: Get Response Message Limit (Opcode 0003h) */
-> > +static CXLRetCode cmd_get_response_msg_limit(const struct cxl_cmd *cmd,
-> > +                                             uint8_t *payload_in,
-> > +                                             size_t len_in,
-> > +                                             uint8_t *payload_out,
-> > +                                             size_t *len_out,
-> > +                                             CXLCCI *cci)
-> > +{
-> > +    struct {
-> > +        uint8_t rsp_limit;
-> > +    } QEMU_PACKED *get_rsp_msg_limit = (void *)payload_out;
-> > +    QEMU_BUILD_BUG_ON(sizeof(*get_rsp_msg_limit) != 1);
-> > +
-> > +    get_rsp_msg_limit->rsp_limit = (uint8_t)log2(cci->payload_max);
-> > +
-> > +    *len_out = sizeof(*get_rsp_msg_limit);
-> > +    return CXL_MBOX_SUCCESS;
-> > +}
-> > +
-> > +/* CXL r3.1 section 8.2.9.1.4: Set Response Message Limit (Opcode 0004h) */
-> > +static CXLRetCode cmd_set_response_msg_limit(const struct cxl_cmd *cmd,
-> > +                                             uint8_t *payload_in,
-> > +                                             size_t len_in,
-> > +                                             uint8_t *payload_out,
-> > +                                             size_t *len_out,
-> > +                                             CXLCCI *cci)
-> > +{
-> > +    struct {
-> > +        uint8_t rsp_limit;
-> > +    } QEMU_PACKED *in = (void *)payload_in;
-> > +    QEMU_BUILD_BUG_ON(sizeof(*in) != 1);
-> > +    struct {
-> > +        uint8_t rsp_limit;
-> > +    } QEMU_PACKED *out = (void *)payload_out;
-> > +    QEMU_BUILD_BUG_ON(sizeof(*out) != 1);
-> > +
-> > +    if (in->rsp_limit < 8 || in->rsp_limit > 10) {
+Is it useful to support the case where we have more than one
+group of extents outstanding?  If not we could simply fail the add whenever
+that happens.  Maybe that is a reasonable stop gap until we have a reason
+to care about that case. We probably care when we have FM-API hooked up
+to this and want to test more advanced fabric management stuff, or poke
+a corner of the kernel code perhaps?
 
-Good to document why these values - possibly using defines.
-I think 8 is the minimum the spec allows, but is the 10 based on
-anything specific?
-
-I'll carry this on my gitlab staging branch but want to
-tidy this up before suggesting Michael picks it up.
-
-I'll end up splitting this up a little though as only one of
-the MCTP mailboxes on that tree is not dependent on the i2c mctp
-stuff that is queued up behind Klaus' series.  So I'll drag
-the guts of this to near the top of my tree and include the extra
-commands where that i2c_mctp is added.
-
-hw/cxl/i2c_mctp_cxl: Initial device emulation
-
-I'll push a new gitlab.com/jic23/qemu tree out later today with this
-done.
-
-Thanks,
+I guess from a 'would it be right if a device did this' the answer may be
+yes, but that doesn't mean Linux is going to support such a device
+(at least not until we know they really exist).  Ira, what do you think
+about this corner case?  Maybe detect and scream if we aren't already?
 
 Jonathan
 
-> > +        return CXL_MBOX_INVALID_INPUT;
-> > +    }
-> > +
-> > +    cci->payload_max = 1 << in->rsp_limit;
-> > +    out->rsp_limit = in->rsp_limit;
-> > +
-> > +    *len_out = sizeof(*out);
-> > +    return CXL_MBOX_SUCCESS;
-> > +}
-> > +
-> >  static void cxl_set_dsp_active_bm(PCIBus *b, PCIDevice *d,
-> >                                    void *private)
-> >  {
-> > @@ -3000,6 +3050,10 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
-> >  
-> >  static const struct cxl_cmd cxl_cmd_set_t3_mctp[256][256] = {
-> >      [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
-> > +    [INFOSTAT][GET_RESPONSE_MSG_LIMIT] = { "GET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_get_response_msg_limit, 0, 0 },
-> > +    [INFOSTAT][SET_RESPONSE_MSG_LIMIT] = { "SET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_set_response_msg_limit, 1, 0 },
-> >      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
-> >      [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0,
-> >                                0 },
-> > @@ -3035,6 +3089,10 @@ void cxl_initialize_t3_ld_cci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
-> >  
-> >  static const struct cxl_cmd cxl_cmd_set_t3_fm_owned_ld_mctp[256][256] = {
-> >      [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0,  0},
-> > +    [INFOSTAT][GET_RESPONSE_MSG_LIMIT] = { "GET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_get_response_msg_limit, 0, 0 },
-> > +    [INFOSTAT][SET_RESPONSE_MSG_LIMIT] = { "SET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_set_response_msg_limit, 1, 0 },
-> >      [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported, 0,
-> >                                0 },
-> >      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-> > @@ -3055,6 +3113,10 @@ void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
-> >  
-> >  static const struct cxl_cmd cxl_cmd_set_usp_mctp[256][256] = {
-> >      [INFOSTAT][IS_IDENTIFY] = { "IDENTIFY", cmd_infostat_identify, 0, 0 },
-> > +    [INFOSTAT][GET_RESPONSE_MSG_LIMIT] = { "GET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_get_response_msg_limit, 0, 0 },
-> > +    [INFOSTAT][SET_RESPONSE_MSG_LIMIT] = { "SET_RESPONSE_MSG_LIMIT",
-> > +                                           cmd_set_response_msg_limit, 1, 0 },
-> >      [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
-> >                                0, 0 },
-> >      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-> > -- 
-> > 2.46.1
-> >   
 > 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> ---
+>  hw/cxl/cxl-events.c         | 2 --
+>  hw/mem/cxl_type3.c          | 7 +++++++
+>  include/hw/cxl/cxl_events.h | 3 +++
+>  3 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> index 12dee2e467..05d8aae627 100644
+> --- a/hw/cxl/cxl-events.c
+> +++ b/hw/cxl/cxl-events.c
+> @@ -16,8 +16,6 @@
+>  #include "hw/cxl/cxl.h"
+>  #include "hw/cxl/cxl_events.h"
+>  
+> -/* Artificial limit on the number of events a log can hold */
+> -#define CXL_TEST_EVENT_OVERFLOW 8
+>  
+>  static void reset_overflow(CXLEventLog *log)
+>  {
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 3d7289fa84..32668df365 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -2015,6 +2015,13 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+>          num_extents++;
+>      }
+>  
+> +    if (num_extents > CXL_TEST_EVENT_OVERFLOW) {
+> +        error_setg(errp,
+> +                   "at most %d extents allowed in one add/release request",
+> +                   CXL_TEST_EVENT_OVERFLOW);
+> +       return;
+> +    }
+> +
+>      /* Create extent list for event being passed to host */
+>      i = 0;
+>      list = records;
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index 38cadaa0f3..2a6b57e3e6 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -12,6 +12,9 @@
+>  
+>  #include "qemu/uuid.h"
+>  
+> +/* Artificial limit on the number of events a log can hold */
+> +#define CXL_TEST_EVENT_OVERFLOW 8
+> +
+>  /*
+>   * CXL r3.1 section 8.2.9.2.2: Get Event Records (Opcode 0100h); Table 8-52
+>   *
 
