@@ -1,140 +1,208 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BC919F42F;
-	Mon, 14 Oct 2024 11:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891D719E98B
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 11:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728905618; cv=none; b=IBXnABXEZrrjFVwzju2Wq/ZITFpOzJDgaKHF0MeTocUUcVoqcNpms1niPqPHGfb6MZj3PdScCcWXI2yxwMshsmBfNB2uWKXLgs+Mqzn7+zIqNBHRHQHHIZ96Y4qBA9hQ4oF4GRMgfM9eWzIVNSCIF3LW66Mh0er3HRDttwt+dgM=
+	t=1728906615; cv=none; b=eqLltR9d7s3Kr2zmlF6mtTsipubYRd8gkrU6RJIPhopXwPWS0fkpfMZO0AopWkiTgkSs0YdiKISxubjZ46sK8FRJbVH2GVkgnph4zDD4zHKGAYlyzZYQ8KHfm0tELObuYR9LwyLNzY34LaKx59AwcCqFFI3niTv7DRjIKUM0eUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728905618; c=relaxed/simple;
-	bh=7Yl/4VbTnnC4Gh9bjyUQwT0KZLPhHoojN635dgyGWl0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r4tw/HJebzfVmfFslocQCChb2l9Nx52MFrOHyc0FRqBRLoiQNk+yq4flZZBCMoKTSytC0RvLtcUfhIQGENJAMocCDu4Xc3yjjAuf2HHeY/J63ZKL+7ZAPyzzJkyammvXS/+Hqn82IWNaTSWRB6nmjuDMvWM+Iy33Xf+zHfD7FNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XRw3j3dj5z6LDMX;
-	Mon, 14 Oct 2024 19:29:05 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B0A7140C72;
-	Mon, 14 Oct 2024 19:33:31 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 13:33:31 +0200
-Date: Mon, 14 Oct 2024 12:33:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <dave.jiang@intel.com>, <ira.weiny@intel.com>, Gregory Price
-	<gourry@gourry.net>, <stable@vger.kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/5] cxl/port: Fix CXL port initialization order when
- the subsystem is built-in
-Message-ID: <20241014123329.00000045@Huawei.com>
-In-Reply-To: <172862484072.2150669.9910214123827630595.stgit@dwillia2-xfh.jf.intel.com>
-References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
-	<172862484072.2150669.9910214123827630595.stgit@dwillia2-xfh.jf.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1728906615; c=relaxed/simple;
+	bh=ej2oJo7FjWLjwyn8EarcLeDwAHzM0k8oP27ePKxkGF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jqOIQM33RxK86WRr1e0Gz39gAIHPaQRv2CxMF4emKF6/PzKFCsAVTlV2MDVKW3F+xY/GSXM1kbzbsOpjztS8TYJ5KKCxvTJx1WmKfs7AAo540GJilESSAv1mxsbMsqeqpa8OGacRbaVJVpl+SAeNTsPJ3apoLQFo4gjey3j7dpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UDEoSaQH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UDEoSaQH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728906612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bHKRdzrsASSDCDG09qNrYYOs1yqvFqCl/DrkRyuPvzs=;
+	b=UDEoSaQH+zbQKNrnp91VvFQG0gRIR9nCrb1D8Ww+X50nNGb4FoitqIhRu9dqdw63GyQ67b
+	JEpEFW7YNp7cNOwkPzdY+qCrqT03PKy2z9cmLQVqyIh1Gd81WfiNfLvhlSx7s2jtpcsjkL
+	Og+dRRpNByE9mO2N2mRWg1BWJyWzjwk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-500-rY4fMEM7OTOD6eeArdHbDA-1; Mon, 14 Oct 2024 07:50:09 -0400
+X-MC-Unique: rY4fMEM7OTOD6eeArdHbDA-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-37d504759d0so2208832f8f.0
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 04:50:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728906608; x=1729511408;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bHKRdzrsASSDCDG09qNrYYOs1yqvFqCl/DrkRyuPvzs=;
+        b=UG6ib5qFGvWIizeUaKhGjrr+Y3/n0jo4zlIa33IFOQpLo9q3A8AsRX+B2RIkovbKHm
+         LFvO2c9ksZbeLn6GbTfKot+7dVbQprALXtJuWWQqbN/Nf6onpXHD8blGFKE1AnvAzYB0
+         MTTa+xd5JXlH1Y7t1nqlarC/9rWK/UUGITHrx/PJ0hHp24WkH7IA2DRSGuw/CK2ZXWmU
+         fOMExyj2XUf7m3pc+w5uTIFZ45h3cEBc86yrJouqyPQcMZ8tRwo83kZ9bDVPio7LT5Bq
+         G98lg+qiSFA2gboNCsxQsAHLMyL5R4AM2RHwayfAhU0qShe2cdISjqC5s8uOEpIV2hhM
+         I7Xw==
+X-Gm-Message-State: AOJu0YxSSX0992iL0s1ow9F/OBLX0u4DMN2DFA60ag39UIUEZqIIDN+K
+	AQkMJouORQAO8SLEkpBYOfVjQjA2bQdPwjFoCYyyB0xV2e2+zemMWgOlkKLCVPk4gsHNe74K9SZ
+	cJRhF70vHLfWvcOn5fYMtNf+rIlzCxxmd6A8XJrAnCDnjSbj/u2O+z3iOlQ==
+X-Received: by 2002:a5d:540a:0:b0:37d:47e0:45fb with SMTP id ffacd0b85a97d-37d5ff86f1dmr6891401f8f.21.1728906608347;
+        Mon, 14 Oct 2024 04:50:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYAyoizc1NBJkIlcYaJ0Tc0Q7WNTy3sLLGVuc57+TUYOtZJGmKImzG++BPWmFtWkxeDYuE2w==
+X-Received: by 2002:a5d:540a:0:b0:37d:47e0:45fb with SMTP id ffacd0b85a97d-37d5ff86f1dmr6891372f8f.21.1728906607930;
+        Mon, 14 Oct 2024 04:50:07 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182ffc51sm118499215e9.15.2024.10.14.04.50.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2024 04:50:06 -0700 (PDT)
+Message-ID: <1791f0e4-1c4e-41cd-b34b-cf63dedec912@redhat.com>
+Date: Mon, 14 Oct 2024 13:50:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] acpi,srat: reduce memory block size if CFMWS has a
+ smaller alignment
+To: Dan Williams <dan.j.williams@intel.com>, Gregory Price
+ <gourry@gourry.net>, Ira Weiny <ira.weiny@intel.com>
+Cc: linux-cxl@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
+ akpm@linux-foundation.org, Jonathan.Cameron@huawei.com,
+ alison.schofield@intel.com, rrichter@amd.com, terry.bowman@amd.com,
+ lenb@kernel.org, dave.jiang@intel.com
+References: <20241008044355.4325-1-gourry@gourry.net>
+ <20241008044355.4325-4-gourry@gourry.net>
+ <6705489bdc79b_125a729415@iweiny-mobl.notmuch>
+ <ZwVNAYiyUaoc8Pax@PC2K9PVX.TheFacebook.com>
+ <670561ebe74b7_964fe29460@dwillia2-xfh.jf.intel.com.notmuch>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <670561ebe74b7_964fe29460@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 10 Oct 2024 22:34:02 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On 08.10.24 18:46, Dan Williams wrote:
+> Gregory Price wrote:
+>> On Tue, Oct 08, 2024 at 09:58:35AM -0500, Ira Weiny wrote:
+>>> Gregory Price wrote:
+>>>> The CXL Fixed Memory Window allows for memory aligned down to the
+>>>> size of 256MB.  However, by default on x86, memory blocks increase
+>>>> in size as total System RAM capacity increases. On x86, this caps
+>>>> out at 2G when 64GB of System RAM is reached.
+>>>>
+>>>> When the CFMWS regions are not aligned to memory block size, this
+>>>> results in lost capacity on either side of the alignment.
+>>>>
+>>>> Parse all CFMWS to detect the largest common denomenator among all
+>>>> regions, and reduce the block size accordingly.
+>>>>
+>>>> This can only be done when MEMORY_HOTPLUG and SPARSEMEM configs are
+>>>> enabled, but the surrounding code may not necessarily require these
+>>>> configs, so build accordingly.
+>>>>
+>>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Signed-off-by: Gregory Price <gourry@gourry.net>
+>>>> ---
+> [..]
+>>> To help address David's comment as well;
+>>>
+>>> Is there a way to scan all the alignments of the windows and pass the
+>>> desired alignment to the arch in a new call and have the arch determine if
+>>> changing the order is ok?
+>>>
+>>
+>> At least on x86, it's only OK during init, so it would probably look like
+>> setting a static bit (like the global value in x86) and just refusing to
+>> update once it is locked.
+>>
+>> I could implement that on the x86 side as an example.
+>>
+>> FWIW: this was Dan's suggestion (quoting discord, sorry Dan!)
+>> ```
+>>      I am assuming we would call it here
+>>          drivers/acpi/numa/srat.c::acpi_parse_cfmws()
+>>      which should be before page-allocator init
+>> ```
+>>
+>> It's only safe before page-allocator init (i.e. once blocks start getting
+>> populated and used), and this area occurs before that.
 
-> When the CXL subsystem is built-in the module init order is determined
-> by Makefile order. That order violates expectations. The expectation is
-> that cxl_acpi and cxl_mem can race to attach and that if cxl_acpi wins
-> the race cxl_mem will find the enabled CXL root ports it needs and if
-> cxl_acpi loses the race it will retrigger cxl_mem to attach via
-> cxl_bus_rescan(). That only works if cxl_acpi can assume ports are
-> enabled immediately upone cxl_acpi_probe() return. That in turn can only
+Sorry for the late reply. It must also be called before 
+memory_dev_init(), which happens after the buddy is up IIRC.
 
-upon
-
-> happen in the CONFIG_CXL_ACPI=y case if the cxl_port object appears
-> before the cxl_acpi object in the Makefile.
 > 
-> Fix up the order to prevent initialization failures, and make sure that
-> cxl_port is built-in if cxl_acpi is also built-in.
-> 
-> As for what contributed to this not being found earlier, the CXL
-> regression environment, cxl_test, builds all CXL functionality as a
-> module to allow to symbol mocking and other dynamic reload tests.  As a
-> result there is no regression coverage for the built-in case.
+> I will note though that drivers/acpi/numa/srat.c is always built-in, so
+> there is no need for set_memory_block_size_order() to be EXPORT_SYMBOL
+> for modules to play with, just an extern for NUMA init to access.
 
-My testing is all modular too :( 
+That's the magic piece I was missing.
 
-> 
-> Reported-by: Gregory Price <gourry@gourry.net>
-> Closes: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net
-> Tested-by: Gregory Price <gourry@gourry.net>
-> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
-> Cc: <stable@vger.kernel.org>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/Kconfig  |    1 +
->  drivers/cxl/Makefile |   12 ++++++------
->  2 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 29c192f20082..876469e23f7a 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -60,6 +60,7 @@ config CXL_ACPI
->  	default CXL_BUS
->  	select ACPI_TABLE_LIB
->  	select ACPI_HMAT
-> +	select CXL_PORT
->  	help
->  	  Enable support for host managed device memory (HDM) resources
->  	  published by a platform's ACPI CXL memory layout description.  See
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index db321f48ba52..374829359275 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,13 +1,13 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y += core/
-> -obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-> -obj-$(CONFIG_CXL_MEM) += cxl_mem.o
-> +obj-$(CONFIG_CXL_PORT) += cxl_port.o
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+Because it didn't make too much sense for me a call to this function 
+would ever makes sense after modules where loaded.
 
-Needs some comments on the ordering being required.
-Otherwise some future 'cleanup' will reorder them again.
-However relying on build order is nasty.
+This really only works that early during boot, that modules are not 
+loaded yet.
 
-> +obj-$(CONFIG_CXL_PCI) += cxl_pci.o
->  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-> -obj-$(CONFIG_CXL_PORT) += cxl_port.o
-> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  
-> -cxl_mem-y := mem.o
-> -cxl_pci-y := pci.o
-> +cxl_port-y := port.o
->  cxl_acpi-y := acpi.o
-> +cxl_pci-y := pci.o
->  cxl_pmem-y := pmem.o security.o
-> -cxl_port-y := port.o
-> +cxl_mem-y := mem.o
-> 
-> 
+So this patch here should be dropped.
+
+-- 
+Cheers,
+
+David / dhildenb
 
