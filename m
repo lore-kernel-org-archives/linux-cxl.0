@@ -1,42 +1,54 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF21AC8AE
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 14:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F37E1BDC3;
+	Mon, 14 Oct 2024 15:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728917556; cv=none; b=H8sY8NIuzw+V8j7ehavWVWm27yIZXMhBk+5osgi1cyzF2BK2arOIbxxeNPNiX6kihvqVF+ucyU5TStmIPNvEPl6chRGsAHZ2f/V1PQf7XNddbUkzN6zMu45NedZ6wPF0M7+dIAbeQySo+hTl+yEYd0kSVM/wLjOYDBv58Ox4M4c=
+	t=1728918330; cv=none; b=jA2DPyGhJVagNutnVUOpduZxbvIwf65CC+F2SniSmWumjHWhj/tUKqWQKBoHgvdg+3FITpR1Mknl1cUzsiC76jfi3fi9rzHReOz6YYFsxa/jglcRBPmLzfWqOECgfXv1CcjJMLTzrrq1nTZiNTWWIRsQABB4s8CfmEAP903ruPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728917556; c=relaxed/simple;
-	bh=WA75nAoCHRADyPsjPVGirVYEGJOKKIKcHfQBy7n0M5c=;
+	s=arc-20240116; t=1728918330; c=relaxed/simple;
+	bh=YHZMg+7IqKiBHfICbs4pNan2XPI4Cd1Z6BpmSGsUcWs=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kXQj6FfafthXdRZ/rXWTjvA5P7kZXdVKvzPfyMOyytOnmLrt5to1opAf2Nb4PFgYY3Zqc5zdgUZLOVDfTYUSAAOV1TYn1mZ0x5VQyEYO00qyrXVWuYweBoKUJF9yJkq4pxK5BGHK+DZKGLSKY7kLcRilk/8FAutTJyl8kLEb1KQ=
+	 MIME-Version:Content-Type; b=bgvdYAcxlxq9OL/wzC0G47L93G4gIhJCBBQw9EEVqZShgrmhgMGbP98WEPILQKU95JJ9qkBH+qnCKvWQKCW6cNntN/Dy/+WJ0GUWbZt3y8X7yzBjsAsZqJawLLYyYj4fpxwOfMcgxJ06TWpQbbAEiR6ihcLPyQmvAYgVbXFKKmw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS0Xf2DrPz6GBnl;
-	Mon, 14 Oct 2024 22:50:58 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS0mB6X2qz6L6XG;
+	Mon, 14 Oct 2024 23:00:58 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17615140A77;
-	Mon, 14 Oct 2024 22:52:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 323FD1400CA;
+	Mon, 14 Oct 2024 23:05:26 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 16:52:32 +0200
-Date: Mon, 14 Oct 2024 15:52:31 +0100
+ 2024 17:05:24 +0200
+Date: Mon, 14 Oct 2024 16:05:23 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <alejandro.lucero-palau@amd.com>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<dave@stgolabs.net>, <fan.ni@samsung.com>
-Subject: Re: [PATCH v4 1/3] cxl: move cxl headers to new include/cxl/
- directory
-Message-ID: <20241014155231.00003a81@Huawei.com>
-In-Reply-To: <20240905223711.1990186-2-dave.jiang@intel.com>
-References: <20240905223711.1990186-1-dave.jiang@intel.com>
-	<20240905223711.1990186-2-dave.jiang@intel.com>
+To: <shiju.jose@huawei.com>
+CC: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v13 07/18] cxl: Add Get Supported Features command for
+ kernel usage
+Message-ID: <20241014160523.00007897@Huawei.com>
+In-Reply-To: <20241009124120.1124-8-shiju.jose@huawei.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+	<20241009124120.1124-8-shiju.jose@huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -47,14 +59,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 5 Sep 2024 15:35:45 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, 9 Oct 2024 13:41:08 +0100
+<shiju.jose@huawei.com> wrote:
 
-> Group all cxl related kernel headers into include/cxl/ directory.
+> From: Dave Jiang <dave.jiang@intel.com>
+> 
+> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+> The command retrieve the list of supported device-specific features
+> (identified by UUID) and general information about each Feature.
+> 
+> The driver will retrieve the feature entries in order to make checks and
+> provide information for the Get Feature and Set Feature command. One of
+> the main piece of information retrieved are the effects a Set Feature
+> command would have for a particular feature.
 > 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+This comes from the fwctl series and that will take a while to settle
+down so we should be fine taking this directly as part of this series.
+
+
+
