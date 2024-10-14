@@ -1,70 +1,58 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF481BE854;
-	Mon, 14 Oct 2024 17:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D845A29A0;
+	Mon, 14 Oct 2024 17:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728925346; cv=none; b=bvmp4GVn/LkgccGp0P3pnuog7/yuom8H9LSlyPZg0P5b/Gtuenku2Mb0NIepV0nIu1HA5FM+h08oXnIip1C+cbsBz2LbkF4sw/bYe/bFFjpXvezVdvtm8M9Tu2TBgCV5Rht9bU0cFbOtbLV3PrRJtVaB6H3Kn255OHFiS+L48TU=
+	t=1728926222; cv=none; b=MitvxvdxKWT2schBe8Gyq04IjrBAO1uOpL20bWIpcB4gyqr7QrpImtcRT/sbmFOFUXMHOcBTrapT6g05hZiV84GV1YXTcaGdYalfIIoLFKNZ9kM4D8+QEgUkmvxfwaXFY9DDV4s4LR5lYJs1AAxvRl2biX1DzOmeWJKudC/J6Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728925346; c=relaxed/simple;
-	bh=vkupR3+rWlCaZao5/CLj0g4WFEKCHfS/VpFVvhggC54=;
+	s=arc-20240116; t=1728926222; c=relaxed/simple;
+	bh=XCeA+5nUpigSV09HFAGPYtOx2/NeR3ALQlw3vYP/wjE=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q+CGWzq5V6r7WdM5om6JbknyjIyYfvWYYlAsw0ljEl9nDLJJFTiqiaF0RAG4RxiqkqNKFWXusrmhpas2ZUk9wdQWhfDMvb+LuScBvJRZXid0l+DyEXgxI8KjhVd8oblOWPykbZhOp/s+6FON+Q7HB/BLTE+iQVT+DMPiyNTMitw=
+	 MIME-Version:Content-Type; b=Y/DHLrVU3Rb5CQFm6GUOowGKUA/yiFVKw4mMlZwjXaPoHgLjNxAD6755479acx7R6W7iN5vbiYcNRWGBAwko8RzQu6EZD8RniOKftNOXzM8zBgiSS6EYc7g/fBgUsks4mnarQerkRRRSQpyrhbOnSeWAGatvoCljGRtDO/LBzl4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS3QR2yBmz6J6qD;
-	Tue, 15 Oct 2024 01:00:47 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XS3mS5pQJz6HJpx;
+	Tue, 15 Oct 2024 01:16:24 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 734101404F5;
-	Tue, 15 Oct 2024 01:02:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 43E88140CF4;
+	Tue, 15 Oct 2024 01:16:57 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Oct
- 2024 19:02:19 +0200
-Date: Mon, 14 Oct 2024 18:02:17 +0100
+ 2024 19:16:55 +0200
+Date: Mon, 14 Oct 2024 18:16:54 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Shiju Jose <shiju.jose@huawei.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v13 15/18] EDAC: Add memory repair control feature
-Message-ID: <20241014180217.0000299a@Huawei.com>
-In-Reply-To: <162f5e44507b46029eebb007dedef0d5@huawei.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <shiju.jose@huawei.com>, <linux-edac@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
+	<tony.luck@intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<mchehab@kernel.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <david@redhat.com>,
+	<Vilas.Sridharan@amd.com>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
+	<rientjes@google.com>, <jiaqiyan@google.com>, <Jon.Grimm@amd.com>,
+	<dave.hansen@linux.intel.com>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v13 12/18] platform: Add __free() based cleanup function
+ for platform_device_put
+Message-ID: <20241014181654.00005180@Huawei.com>
+In-Reply-To: <2024101451-reword-animation-2179@gregkh>
 References: <20241009124120.1124-1-shiju.jose@huawei.com>
-	<20241009124120.1124-16-shiju.jose@huawei.com>
-	<20241014172312.00007034@Huawei.com>
-	<162f5e44507b46029eebb007dedef0d5@huawei.com>
+	<20241009124120.1124-13-shiju.jose@huawei.com>
+	<20241014164339.00003e73@Huawei.com>
+	<2024101410-turf-junior-7739@gregkh>
+	<2024101451-reword-animation-2179@gregkh>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -75,79 +63,75 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 14 Oct 2024 17:39:12 +0100
-Shiju Jose <shiju.jose@huawei.com> wrote:
+On Mon, 14 Oct 2024 18:04:37 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-> >-----Original Message-----
-> >From: Jonathan Cameron <jonathan.cameron@huawei.com>
-> >Sent: 14 October 2024 17:23
-> >To: Shiju Jose <shiju.jose@huawei.com>
-> >Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
-> >acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
-> >bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
-> >mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net;
-> >dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com;
-> >ira.weiny@intel.com; david@redhat.com; Vilas.Sridharan@amd.com;
-> >leo.duran@amd.com; Yazen.Ghannam@amd.com; rientjes@google.com;
-> >jiaqiyan@google.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
-> >naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
-> >somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
-> >duenwen@google.com; gthelen@google.com;
-> >wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
-> >wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-> ><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
-> >Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
-> >wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-> ><linuxarm@huawei.com>
-> >Subject: Re: [PATCH v13 15/18] EDAC: Add memory repair control feature
-> >
-> >On Wed, 9 Oct 2024 13:41:16 +0100
-> ><shiju.jose@huawei.com> wrote:
-> >  
-> >> From: Shiju Jose <shiju.jose@huawei.com>
-> >>
-> >> Add generic EDAC memory repair control, eg. PPR(Post Package Repair),
-> >> memory sparing etc, control driver in order to control memory repairs
-> >> in the system. Supports sPPR(soft PPR), hPPR(hard PPR), soft/hard
-> >> memory sparing, memory sparing at cacheline/row/bank/rank granularity etc.
-> >> Device with memory repair features registers with EDAC device driver,
-> >> which retrieves memory repair descriptor from EDAC memory repair
-> >> driver and exposes the sysfs repair control attributes to userspace in
-> >> /sys/bus/edac/devices/<dev-name>/mem_repairX/.
-> >>
-> >> The common memory repair control interface abstracts the control of an
-> >> arbitrary memory repair functionality to a common set of functions.
-> >> The sysfs memory repair attribute nodes would be present only if the
-> >> client driver has implemented the corresponding attribute callback
-> >> function and passed in ops to the EDAC device driver during registration.
-> >>
-> >> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>  
-> [...]
-> >  
-> >> +
-> >> +What:		/sys/bus/edac/devices/<dev-name>/mem_repairX/hpa
-> >> +Date:		Oct 2024
-> >> +KernelVersion:	6.12
-> >> +Contact:	linux-edac@vger.kernel.org
-> >> +Description:
-> >> +		(WO) Set HPA (Host Physical Address) for memory repair.  
-> >
-> >Can we not just read back what was written?  Seems like userspace might expect
-> >that?  
-> I am fine to add read back.
-> I did not add read back  for controls because there was no such requirement from the client driver and
-> also tried to reduce the number of callbacks in the initial version. 
+> On Mon, Oct 14, 2024 at 06:00:51PM +0200, Greg KH wrote:
+> > On Mon, Oct 14, 2024 at 04:43:39PM +0100, Jonathan Cameron wrote:  
+> > > On Wed, 9 Oct 2024 13:41:13 +0100
+> > > <shiju.jose@huawei.com> wrote:
+> > >   
+> > > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > 
+> > > > Add __free() based cleanup function for platform_device_put().
+> > > > 
+> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> > > > ---
+> > > >  include/linux/platform_device.h | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> > > > index d422db6eec63..606533b88f44 100644
+> > > > --- a/include/linux/platform_device.h
+> > > > +++ b/include/linux/platform_device.h
+> > > > @@ -232,6 +232,7 @@ extern int platform_device_add_data(struct platform_device *pdev,
+> > > >  extern int platform_device_add(struct platform_device *pdev);
+> > > >  extern void platform_device_del(struct platform_device *pdev);
+> > > >  extern void platform_device_put(struct platform_device *pdev);
+> > > > +DEFINE_FREE(platform_device_put, struct platform_device *, if (_T) platform_device_put(_T))
+> > > >  
+> > > >  struct platform_driver {
+> > > >  	int (*probe)(struct platform_device *);  
+> > > 
+> > > +CC Greg KH and Rafael.
+> > > 
+> > > Makes sure to include them on v14 as this needs review from a driver core point
+> > > of view I think.  
+> > 
+> > Why is this needed for a platform device?  This feels like you will have
+> > to do more work to "keep" the reference on the normal path than you to
+> > today to release the reference on the error path, right?  Have a pointer
+> > to a patch that uses this?  
+> 
+> Ah, is it this one:
+> 	https://lore.kernel.org/all/20241014164955.00003439@Huawei.com/
+> ?
+> 
+> If so, no, that's an abuse of a platform device, don't do that, make a
+> REAL device on the bus that this device lives on.  If it doesn't live on
+> a real bus, then put it on the virtual bus but do NOT abuse the platform
+> device layer for something like this.
 
-I think we can for now at least just cache in the core code.
-If we have future implementations where more validation is possible
-then we can add optional callbacks at that stage.
+Ok.  Probably virtual bus it is then.  Rafael, what do you think makes sense
+for a 'feature' that is described only by an ACPI table (here RAS2)?
+Kind of similar(ish) to say IORT.
+
+My thinking on a platform device was that this could be described
+in DSDT and would have ended up as one. No idea why it isn't.
+Maybe it predated the resource stuff that lets you use PCC channels
+from methods under devices. Anyhow, it's not something I care about
+so virtual bus is fine by me.
 
 Jonathan
 
+
 > 
-> Thanks,
-> Shiju
+> thanks,
+> 
+> greg k-h
+> 
 
