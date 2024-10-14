@@ -1,238 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB0D2914;
-	Mon, 14 Oct 2024 01:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728868591; cv=fail; b=GkMz5wOyxQe66MR5topKlqo5adZIQST5GTLBkDvlr8gy5SC/dHlGRjEP70oUukpYGMQgBe3Y3R0N+nNi0vaIb+qxz8roQFQdmDEeaZ0Jafx5+wNHBNvfCS1xU6124U4CLbbHvRLx86zpr9Umvi7msJSm1NXkcvdMgFtrd3oohok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728868591; c=relaxed/simple;
-	bh=0nBtbXZh5abV8HNsN9gQ/SNmmhZywTbc5c8bCF4CWcI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n4D102hdnfdJNEK/1eeI4Uil+QoLlSN0w4p620eu3cJc4zfUfmGK9YAsSMC9jM2a7TXMkCVtVJ0h64CP0lVM3EEDgGHAtqUb+kgNmnbXOvj1DNx7S7mD4H1sZPfDrst/ixKon5dHWJC8+FxLaFzYCMmRSzCWG6MnuSPHxxwj7us=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OLjthHRc; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B57101EE
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 01:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728869370; cv=none; b=DfisLSqvpj5bnVaYVZrBS3c6ScKjrHBwxQnpCz6zV6913VGiu3dlA9tvrIOI5+JE9U2Ya9OHcjzMINQoKCtO2Fgtd7E3H8T+lx1EijbWjIbhcoT4wHLv51XM4kZtLaJeYRbsfTJGZq1N2ZQowxUb//gfFKB9uBN/vUL0M4Cy8cQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728869370; c=relaxed/simple;
+	bh=S5HwfiMBsCuQ8Bq2X7geGaQx9JB5AGW8Yq8J7Tcpo48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RbIXEs+ft9fjAwlfPOAG3szM0f9jh+VcJFR/MEJCkU+3JbeDmFGYvY4rEzQt3QHxNhZ+wPia2V/k7zF3bWtARIu3W9b2U152fVVj3TCbvG7x37HmcwmiTpU0Cq5Q4KhBKbpOBlVMVjLJvkCIfbBZSq3G+eNGkOv30HyjJxCMUfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=EOgRh8fC; arc=none smtp.client-ip=17.58.6.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OLjthHRc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728868589; x=1760404589;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=0nBtbXZh5abV8HNsN9gQ/SNmmhZywTbc5c8bCF4CWcI=;
-  b=OLjthHRcUtA4PaXmrQj877goEkwGvogvA584dLQBiYZ45GpmNake2TM8
-   tY2BXLdHi3gg3db8BiHyISkwZdb2YQCfGCTGC5Gr6zS0M65XILwE10D7K
-   rE7xHZUUkI+aKJ/hQMR3hKfwAKISj0JAiDnF4cLH4tWMpTPM7Mro2C3Ok
-   scCBPfcs+qD2W/0otvWqZv0ehIg+QK48UH+QEcZgnbLt5JVE9tjE4naFU
-   8i8ufRvVtotxgc5YKx7mVH2P7F8iMngxMRFNdJSoWdFHup8xEI6tfxVD7
-   2IqKSf7Eo2TytK7u1Z4scDKVWRirp6kqOWQc2jRp4+v1hFUeI5p8YldD/
-   w==;
-X-CSE-ConnectionGUID: cOdeHHGvTWG0snZKMnc5ww==
-X-CSE-MsgGUID: Fh2nExAQTf2O0nlQrGpgYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11224"; a="28287652"
-X-IronPort-AV: E=Sophos;i="6.11,201,1725346800"; 
-   d="scan'208";a="28287652"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2024 18:16:29 -0700
-X-CSE-ConnectionGUID: RrBn/eUcSwePhaofJz7A+Q==
-X-CSE-MsgGUID: DwcbTA57SFCsodZy/8QUPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,201,1725346800"; 
-   d="scan'208";a="82039108"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Oct 2024 18:16:28 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 13 Oct 2024 18:16:28 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Sun, 13 Oct 2024 18:16:28 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sun, 13 Oct 2024 18:16:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qdioyhxBp/S2VyLu8R0FRJDOG8GiDQYYoTaVrZfiGY2qkKLQQTmdMg10EUuBoBbilqqNpTIItx8c4ICym59/YBw4/J91dx7UZQmsa4xQFWE7U/qxTiP2H6NGjui2OjaeHOl6RvrQo4ZnKlye6UbWbfSgBEtCAN/KtTEm6o5F16YucBRUTpmj8416OIjCH4ftib86e7TTcWuA04rPSbfaem9qxyw7G8/4Owr2oPthMW4+64V7zHhvvJ5jKyB0/igenrB/F/41HTuPULEqhGFnbPSVrTHwOM/tmwV3g/0453XidA48bR8x6HwKcZoHEWFSS0aO0JIB7QEKRMtOq9Cclw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aMogswxMyat/lwJqWsK5+Cx90CoIIFEMSHiCTKkbpkI=;
- b=GdcPiGPyqFaevmDB0A4EnTs8PHby1CPTfh00NaMTUYUbjn+qypXquXCsKgyoe7HtVgCnuDSYbgxu8ECG3kEyjgfoVrUUiAZa3X8dEBHQeYEiNiSV7+cRHt4UgnEQgWVX4aY/76dC+nF/3bLvyimT3arYFgQRuOaWZHx/FNFqIdluszspWu38gi1BHkSqaPrF0uSdzsaGeFPSWoUBIBQDpPm9F+jemd8GnjlcPcMdPO+Wc6CxGGbdmNVOYPNOJgUYluu5XsqpaF9foyz73B+xIouUmiCUAuwawndwfbjHAgdvGb1xzwn60JVnYIS2Le5zGmwxeS4gcYvO4vM+kRRIFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH0PR11MB5879.namprd11.prod.outlook.com (2603:10b6:510:142::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.25; Mon, 14 Oct
- 2024 01:16:25 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8048.020; Mon, 14 Oct 2024
- 01:16:25 +0000
-Date: Sun, 13 Oct 2024 20:16:18 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Fan Ni <nifan.cxl@gmail.com>, Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Navneet Singh <navneet.singh@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
-	Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-btrfs@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Robert Moore
-	<robert.moore@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<acpica-devel@lists.linux.dev>
-Subject: Re: [PATCH v4 12/28] cxl/cdat: Gather DSMAS data for DCD regions
-Message-ID: <670c70e2d760c_9710f2948d@iweiny-mobl.notmuch>
-References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-12-c261ee6eeded@intel.com>
- <ZwbIkQCzaOoUwWki@fan>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZwbIkQCzaOoUwWki@fan>
-X-ClientProxiedBy: MW4PR04CA0301.namprd04.prod.outlook.com
- (2603:10b6:303:82::6) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="EOgRh8fC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1728869369;
+	bh=p/0isTr9qkbLy7LpIsD3AA4pI52RUqudxo5eFWiJE0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=EOgRh8fCsfjvy4mq7ZwAhx5JS4ZqwKeIOldwcbyCw0N2OETXzQ+oC2/qF9iZXkoIs
+	 jbkkIU8eoWvLTIQKFbsUwOiEcMsFqAKoagQemacjndLRgelf+t09+PR+PePk4IMPm8
+	 15y/8GBCSJUzDaf4C/zVzqiPXtf786AUuh+BtnLy/+bVFQwNXVvAeVxfwCC5abDQPI
+	 yEXQMjeuU953WkPTSeOGyrm+6r3TCgEkJZ3LAvelda//ORm03QaLpw/yNHT0Jhy2+F
+	 0KgNqi2vU3PMXAnvRyW6Dk6Cn7QKrMY7hXv939MGXQOXz1InGbNHjjpUlFHJNLkJb6
+	 7/g5YZvoKxGcg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 73F2D8001E4;
+	Mon, 14 Oct 2024 01:29:24 +0000 (UTC)
+Message-ID: <695d1a26-255f-464b-884b-47a5b7421128@icloud.com>
+Date: Mon, 14 Oct 2024 09:29:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB5879:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9dc2a76a-8412-4d30-8ded-08dcebedd22e
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Q8KDNVL0f8lRPWXmLZdzgofIQQxJAlGc8yymAnPjnlUfhJXvf4mBOkcor4M0?=
- =?us-ascii?Q?MebUFGewkgBS/zbSmTcFFHPftUPskp+HmC5ivKHoeqhPlqq9wjFs+hkF0gK4?=
- =?us-ascii?Q?wHRSoPejXIjEThP7fmHI5BgllRITmhdDia3/6hI88cduo2Kc6TIZx3T0mRBU?=
- =?us-ascii?Q?b6lwgr2olYey7jo2F8bIyl/KHuGmsQyuTikJOmKCSO3hkCl7Cxapud7T1xCh?=
- =?us-ascii?Q?mIemKTvJgrpKmfFplBPDLGl8iyIEhWavE05LRlnm/wWjSMSNAAHpqHPiBH+C?=
- =?us-ascii?Q?c8mTojNYkMZY/ggXtNktgCkwbSgV5+le/yoiB3P29MLlsF8KJw0hBboEDHCm?=
- =?us-ascii?Q?TnIBk0VapOUonWCuMXjNZVCQOHNze9NWNGhPbd9VosJCRADUQzdabvo1vLlO?=
- =?us-ascii?Q?3fsLx27PhRRwrcOXYNIUMA6USAsyWhJzm5g2PbZxvyYe7pKiE+jWxGvNp8Td?=
- =?us-ascii?Q?5PLUB1GsVUdwz9+x8V5y6lH46S78gMU+e5vhHnnPVKq/ZADyY6QbYQkRzo2H?=
- =?us-ascii?Q?0btVsSRJB1gDxfC0/xry2sY7QzqJLzK4Utk7xH5x61+IC52rdPnSk4qqEUHm?=
- =?us-ascii?Q?C0zmJS7ndvNyH5ZTq+diL+n1xTQB5pf2lZqOoqouLd6wEWIHaDM6odsh3ITB?=
- =?us-ascii?Q?Z381R9Ywd19L503G09YPh4BfbzI3uWaw+kWiSnGls68ZOlV28VAlbTcwG2nz?=
- =?us-ascii?Q?U4dilNcQozi21FprBtDWKoQ3OWweL73vaDtQIl6QMTVu2/LN4WscEDdC80IS?=
- =?us-ascii?Q?o/T6YkMuHhSepOq5Sn6nkBbmU4PvwSP1n2nY+9/oaVPRowdKnnw7TwAOfpDQ?=
- =?us-ascii?Q?wwnSZkI4jFnUTJq1uZREa/qTN+6j5byBvez9kvqbZYlx6anpOhK9Fd+RD6S1?=
- =?us-ascii?Q?5jyRz6qAwnH6ze/aIsmegFZ4Yumn4tbV+3mkmAjdBm2qANTl3OK95C34mcXm?=
- =?us-ascii?Q?PbawoNYc7fRcskorg0Wyj6Fa+g25RiWr2lNB4KiPzCEEcbz2RCu/qUCqoah9?=
- =?us-ascii?Q?zD5xwSE72AEgh/WDnjLaDzZRxnVm9qcL+7oyick+obJsMfzwf3ksWrrQXPnn?=
- =?us-ascii?Q?ZGDHlPdsheOntHvteO5XNb6rktmNU+rKLRGMFON0DpZ7SVTYY422vlQXuH69?=
- =?us-ascii?Q?r/dE3vQxtkShdr56/U6eaok9ERoUWACbl+kFPdTmdfC9NPHw8MrTWsKjDy2r?=
- =?us-ascii?Q?zPrPN3BU1ajA7C7aPHB5mxrv1LYyFcNOsKJtcEdxqgtysg9J96sgKi583jIU?=
- =?us-ascii?Q?ie5+9PrYEnq84Mo+dW23rd6OaZUbplWPOBjjO8kqEQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5Nszo3leTxyDU1upbro+StDaXjIog1QJZKqbD4Cbgbgh8OGqCToQOT569YhR?=
- =?us-ascii?Q?QInsuj5IFanJZrM/OGCNY95db3EgHZXvQjqHldcE0y4DHR9M64lq7ubvF14+?=
- =?us-ascii?Q?TU3X0r/DjlC0SSGZZifmdCRqEDj1iy+Dm/X+luGhkL2MJ/GYAkAkaQ+ujJmH?=
- =?us-ascii?Q?MDSSHT9zusG5wUL++9L40kEEAb+xYV0JuKWfUBEUFeALlygebTb79LGPjVCt?=
- =?us-ascii?Q?4DTvQWgKsnjyDlV61UWfiXpFPF9j6qw2/RjYnqkKINRaEVIseshS4TPBRxGP?=
- =?us-ascii?Q?AmAX2D5+AzNVmMCdKyxrcSd7rygSLQUlWZ7/tLNiKO2hMCSx32MH1O1pvqpZ?=
- =?us-ascii?Q?eRzJvbS72kqUgYn+yVTmE1zJNF7lY8tiuiszOTlS96EMb0MoSAOOmUXvd+Ft?=
- =?us-ascii?Q?svO77IgaiekoPBFMzKNNdzTNcFSsAuhSYCt0WFlj68C9kVOQub93R3utV8Rk?=
- =?us-ascii?Q?ZtJA+sfbgiSgsBixce0tankCKCxm/7apu70+Y+uSk8HKrQGmn4prglpGuRoU?=
- =?us-ascii?Q?FqjcH/7fhRf6bqAVBkMDlEi75FB444/MEK+Ngc+FtJe/Xc0NZP5R5fT9U5va?=
- =?us-ascii?Q?SocU6gv6Rxtpmr2YTHuu2J5ohORa1G7GwFGfMpi2YXH7V1vPJunmW9WOkXsX?=
- =?us-ascii?Q?m5tqw9Rp9uD6kOvV3AmTpoSQo6Kdjnl8kMdGtvBLa6XgpfuKUFpZl3tqjcr0?=
- =?us-ascii?Q?NcilqmeAZOoplXULcGPCPzPG80bnf6tAlczmW+SDY4fZ6Qfy9Vv6Bpr7P0Ab?=
- =?us-ascii?Q?8ULYvmM9sL2WM5lpY56KrCDqy5My7+Cw5IzF/tcKaVfVDtEwbnrRVBNvBoHz?=
- =?us-ascii?Q?v9QJv5s/m8ZnA2dWNSRm1dbMeE4nAYPINpD7eUTmYYrUKYHGO5akRaqeEvd5?=
- =?us-ascii?Q?I+n17ynXoDPasb0DkJTrnLVfrKbbxIp6mGGqYa2F5EJuHrKJXxryA99HV7jq?=
- =?us-ascii?Q?rXdF0jWUZE/Wow0AdBfRUSI2t7qZYVlxcOIM01Cl+uyIWeN+q++NieatkL5Z?=
- =?us-ascii?Q?YsI+NUMazqL9a8SdUl8RjcCbHdrW6km2Qx5e2xjGxFFZVgJ6fKkrAAcq9Sal?=
- =?us-ascii?Q?WFpX9F0cevykzybhJ4LMLu6VeJF/fvBMvvJpmhiMnVA249rHsKcMosfeCfCE?=
- =?us-ascii?Q?s4abc6J/sJ9T/+mePhE8y+FBpHxkuozW8KEXXKdwKbgf0NherRvkKVx2wCPK?=
- =?us-ascii?Q?sUE0BkGfUdQ5h4Lucec7SYHeoM+jbT7yfzPoDbajomqV8qJoeT3ltbqdESBb?=
- =?us-ascii?Q?E6sUdRj1OUbJ/TMdfYqguJY61oiEvTPOb67Izd8P2Q1+EEI0rZcbs8TiKOzp?=
- =?us-ascii?Q?Z8k0n9BygHxW/aKMQj5+dMI142jgYknSlEsvpFLJBEKlxJcQEGglJfdvgxZA?=
- =?us-ascii?Q?Z2SXMZVax1Yjsb31b/heee5d3NokdnGGNTaC+fmRNZXR4OJWRVn8zRcp2HyG?=
- =?us-ascii?Q?wa+gB4YIZ5SStq3VPGVhuqTwS4dtnqKouHOB/lB3Aclzqg9Py73tNFBP48nU?=
- =?us-ascii?Q?I7zoztxZUIf+Tfvs+RLa+I7373JmmbW4PQekA8GwzV3Y7dCZnarG7g9UJ/nU?=
- =?us-ascii?Q?D93rF3Y+suWpKk1NrWMIQGYUulYIXOVBUKNvjjbx?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc2a76a-8412-4d30-8ded-08dcebedd22e
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 01:16:24.8338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ho9NB70U/MDoxeI8QnSmZftAlX6JEIDxq6lDBfpboL2+/wWIrtiOK5VU9H7ZDsTohBCXRKgnqjAeT8qOjnxSCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5879
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] cxl/port: Fix use-after-free, permit out-of-order
+ decoder shutdown
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+ ira.weiny@intel.com
+Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>, vishal.l.verma@intel.com,
+ linux-cxl@vger.kernel.org
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+ <172862486548.2150669.3548553804904171839.stgit@dwillia2-xfh.jf.intel.com>
+ <a7b8a007-907a-4fda-9a35-68faed109ed3@icloud.com>
+ <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
+ <060193f9-5de1-422b-abfb-6328a1c7b806@icloud.com>
+ <670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 39yAAcbnvXMxmaUbiIE4G_uzBrweEicy
+X-Proofpoint-ORIG-GUID: 39yAAcbnvXMxmaUbiIE4G_uzBrweEicy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-13_17,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2410140009
 
-Fan Ni wrote:
-> On Mon, Oct 07, 2024 at 06:16:18PM -0500, Ira Weiny wrote:
-> > Additional DCD region (partition) information is contained in the DSMAS
-> > CDAT tables, including performance, read only, and shareable attributes.
-> > 
-> > Match DCD partitions with DSMAS tables and store the meta data.
-> > 
-> > To: Robert Moore <robert.moore@intel.com>
-> > To: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > To: Len Brown <lenb@kernel.org>
-> > Cc: linux-acpi@vger.kernel.org
-> > Cc: acpica-devel@lists.linux.dev
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
+On 2024/10/13 06:16, Dan Williams wrote:
+> Zijun Hu wrote:
+> [..]
+>>>> it does NOT deserve, also does NOT need to introduce a new core driver
+>>>> API device_for_each_child_reverse_from(). existing
+>>>> device_for_each_child_reverse() can do what the _from() wants to do.
+>>>>
+>>>> we can use similar approach as below link shown:
+>>>> https://lore.kernel.org/all/20240815-const_dfc_prepare-v2-2-8316b87b8ff9@quicinc.com/
+>>>
+>>> No, just have a simple starting point parameter. I understand that more
+>>> logic can be placed around device_for_each_child_reverse() to achieve
+>>> the same effect, but the core helpers should be removing logic from
+>>> consumers, not forcing them to add more.
+>>>
+>>> If bloat is a concern, then after your const cleanups go through
+>>> device_for_each_child_reverse() can be rewritten in terms of
+>>> device_for_each_child_reverse_from() as (untested):
+>>>
+>>
+>> bloat is one aspect, the other aspect is that there are redundant
+>> between both driver core APIs, namely, there are a question:
+>>
+>> why to still need device_for_each_child_reverse() if it is same as
+>> _from(..., NULL, ...) ?
 > 
-> One minor comment inline.
+> To allow access to the new functionality without burdening existing
+> callers. With device_for_each_child_reverse() re-written to internally
+> use device_for_each_child_reverse_from() Linux gets more functionality
+> with no disruption to existing users and no bloat. This is typical API
+> evolution.
 > 
-> > ---
-> > Changes:
-> > [iweiny: new patch]
-> > [iweiny: Gather shareable/read-only flags for later use]
-> > ---
-> >  drivers/cxl/core/cdat.c | 38 ++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/mbox.c |  2 ++
-> >  drivers/cxl/cxlmem.h    |  3 +++
-> >  include/acpi/actbl1.h   |  2 ++
-> >  4 files changed, 45 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> > index bd50bb655741..9b2f717a16e5 100644
-> > --- a/drivers/cxl/core/cdat.c
-> > +++ b/drivers/cxl/core/cdat.c
-> > @@ -17,6 +17,8 @@ struct dsmas_entry {
-> >  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
-> >  	int entries;
-> >  	int qos_class;
-> > +	bool shareable;
-> > +	bool read_only;
-> >  };
-> >  
-> >  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
-> > @@ -74,6 +76,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
-> >  		return -ENOMEM;
-> >  
-> >  	dent->handle = dsmas->dsmad_handle;
-> > +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
-> > +	dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
-> >  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
-> >  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
-> >  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
-> > @@ -255,6 +259,38 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
-> >  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
-> >  }
-> >  
-> > +
-> Unwanted blank line.
+>> So i suggest use existing API now.
+> 
+> No, I am failing to understand your concern.
+> 
+>> if there are more users who have such starting point requirement, then
+>> add the parameter into device_for_each_child_reverse() which is
+>> consistent with other existing *_for_each_*() core APIs such as
+>> (class|driver|bus)_for_each_device() and bus_for_each_drv(), that may
+>> need much efforts.
+> 
+> There are ~370 existing device_for_each* callers. Let's not thrash them.
+> 
+> Introduce new superset calls with the additional parameter and then
+> rewrite the old routines to just have a simple wrapper that passes a
+> NULL @start parameter.
+> 
+> Now, if Greg has the appetite to go touch all ~370 existing callers, so
+> be it, but introducing a superset-iterator-helper and a compat-wrapper
+> for legacy is the path I would take.
+> 
 
-Fixed. Thanks.
-Ira
+current kernel tree ONLY has 15 usages of
+device_for_each_child_reverse(), i would like to
+add an extra parameter @start as existing
+(class|driver)_for_each_device() and bus_for_each_(dev|drv)() do
+if it is required.
+
+>> could you please contains your proposal "fixing this allocation
+>> order validation" of below link into this patch series with below
+>> reason? and Cc me (^^)
+>>
+>> https://lore.kernel.org/all/670835f5a2887_964f229474@dwillia2-xfh.jf.intel.com.notmuch/
+>>
+>> A)
+>>   the proposal depends on this patch series.
+>> B)
+>>   one of the issues the proposal fix is match_free_decoder()  error
+>> logic which is also relevant issues this patch series fix, the proposal
+>> also can fix the other device_find_child()'s match() issue i care about.
+>>
+>> C)
+>>  Actually, it is a bit difficult for me to understand the proposal since
+>>  i don't have any basic knowledge about CXL. (^^)
+> 
+> If I understand your question correctly you are asking how does
+> device_for_each_child_reverse_from() get used in
+> cxl_region_find_decoder() to enforce in-order allocation?
+> 
+
+yes. your recommendation may help me understand it.
+
+> The recommendation is the following:
+> 
+> -- 8< --
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3478d2058303..32cde18ff31b 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -778,26 +778,50 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+>  	return rc;
+>  }
+>  
+> +static int check_commit_order(struct device *dev, const void *data)
+> +{
+> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> +
+> +	/*
+> +	 * if port->commit_end is not the only free decoder, then out of
+> +	 * order shutdown has occurred, block further allocations until
+> +	 * that is resolved
+> +	 */
+> +	if (((cxld->flags & CXL_DECODER_F_ENABLE) == 0))
+> +		return -EBUSY;
+> +	return 0;
+> +}
+> +
+>  static int match_free_decoder(struct device *dev, void *data)
+>  {
+> +	struct cxl_port *port = to_cxl_port(dev->parent);
+>  	struct cxl_decoder *cxld;
+> -	int *id = data;
+> +	int rc;
+>  
+>  	if (!is_switch_decoder(dev))
+>  		return 0;
+>  
+>  	cxld = to_cxl_decoder(dev);
+>  
+> -	/* enforce ordered allocation */
+> -	if (cxld->id != *id)
+> +	if (cxld->id != port->commit_end + 1)
+>  		return 0;
+>  
+
+for a port, is it possible that there are multiple CXLDs with same IDs?
+
+> -	if (!cxld->region)
+> -		return 1;
+> -
+> -	(*id)++;
+> +	if (cxld->region) {
+> +		dev_dbg(dev->parent,
+> +			"next decoder to commit is already reserved\n",
+> +			dev_name(dev));
+> +		return 0;
+> +	}
+>  
+> -	return 0;
+> +	rc = device_for_each_child_reverse_from(dev->parent, dev, NULL,
+> +						check_commit_order);
+> +	if (rc) {
+> +		dev_dbg(dev->parent,
+> +			"unable to allocate %s due to out of order shutdown\n",
+> +			dev_name(dev));
+> +		return 0;
+> +	}
+> +	return 1;
+>  }
+>  
+>  static int match_auto_decoder(struct device *dev, void *data)
+> @@ -824,7 +848,6 @@ cxl_region_find_decoder(struct cxl_port *port,
+>  			struct cxl_region *cxlr)
+>  {
+>  	struct device *dev;
+> -	int id = 0;
+>  
+>  	if (port == cxled_to_port(cxled))
+>  		return &cxled->cxld;
+> @@ -833,7 +856,7 @@ cxl_region_find_decoder(struct cxl_port *port,
+>  		dev = device_find_child(&port->dev, &cxlr->params,
+>  					match_auto_decoder);
+>  	else
+> -		dev = device_find_child(&port->dev, &id, match_free_decoder);
+> +		dev = device_find_child(&port->dev, NULL, match_free_decoder);
+>  	if (!dev)
+>  		return NULL;
+>  	/*
+
