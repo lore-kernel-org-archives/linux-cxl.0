@@ -1,232 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247EC15687C;
-	Mon, 14 Oct 2024 22:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728944673; cv=fail; b=thUVp39tVgYbd8evsE3oYAUhr86SdXplEODcP0//W2R3Y8aDtHZA7KRieOFaoWmhP+hyhLUXPTPIOY1/AFPl9EdqgLkBKYW8qBH3FmXKHHmtwfXgEtpt2VKt/s0T4FkCjnfHsVT9Ftq0nv4iRgzPRV9h0IF/rg7rlG6+pvThc5Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728944673; c=relaxed/simple;
-	bh=WdI6P2ZV1U9SJijicLbMPKJ7EK/WUBMtazkIe7s9Ueg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bxd02Mc/2u7uS4jPRvgk95Q29my0genmpqUU36pIw196rxO50ry2dxpoJBUNdNDt0dECxSPwDa4WXjD0+CsoX1tiyYnchDlg5GoILiCw1GSsx7yyX73kBou8nAa8N8LA4/MusUVXRp5UynJ97vLp2NhwYLyOTmalTtlfJRuBbIw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJZpSjll; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0302BD19
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 22:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728945623; cv=none; b=O6CyKuKjWoz2wa5NgQQOz6DjvQvgs7P5JLQwCo9G+FwXYAg/+guUSvx920HnsPGQvC20IannoM0fPfGyDCdksGtgu8+/avnL6gXEHD7yDoSzHZJBDDEcMDdrXiUDEvYrKqOeghLgSUNvmLXPOKGmkHRAqWAciq051Rx/aGjuYHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728945623; c=relaxed/simple;
+	bh=eJB5nm0LGipv6GkGY/aV3TbZ2J8W3GzqGON/tG1P9rM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZXemL/k/vwWg1ZgaXShQa/Bv8kjt6Tc9rpSds3trGcuUUV5eDqmtt/fI+lM2h9rf5XzQ02r09Us/nGFstaWCu6Jn7XNA4YHOEx3hTnh5OZY0v7/faCzF3JHr8k+y5n9lelY8bxDrPqu0D8knfKJf6DI6jaH3jBvkt/Tg99S5iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sdbVnrpc; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJZpSjll"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728944672; x=1760480672;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=WdI6P2ZV1U9SJijicLbMPKJ7EK/WUBMtazkIe7s9Ueg=;
-  b=TJZpSjllfH9EfALFB2zBfLfhnHwLhTny+ZdbYf1EBvZSW4WxWJ6sN2C2
-   xxhol0OBBwMYhcnNN9wzJ9EdmXF8CapYqVeedys3sX8HubFAKt0xesSL5
-   POA+PC0zNW1sTixR+4Zva+QbucKI2YI5fvjkT2BTQDMUlaT0YlTuyGLqf
-   +dOOvTJBFh8QCOHQSIOZui0CYGZk0MeA6vsvGJpxRr9tyHmRw8gVGZcwG
-   wtRMtFHDHwoAK+8KGxJHxKhWScBoKBRBV/GGo4izz87Hb8oDik2J6UEh1
-   QBYOueT7In5ckQkg8U898Jn7NH/8FvmjLU/ptTZ+4p63tZ3PDy0lZyUuC
-   A==;
-X-CSE-ConnectionGUID: ZJeZ6WZATGeT9kSmEWzuvQ==
-X-CSE-MsgGUID: W8dqG1JGTsqJEj6lU7fBXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28402797"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28402797"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 15:24:31 -0700
-X-CSE-ConnectionGUID: DLTHg39dSTiJaIpZC0KOxw==
-X-CSE-MsgGUID: ogsh4rOORDWeFB1Bjvh/Rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
-   d="scan'208";a="77573467"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Oct 2024 15:24:32 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 14 Oct 2024 15:24:31 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 14 Oct 2024 15:24:30 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 14 Oct 2024 15:24:30 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 14 Oct 2024 15:24:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FUIJAiybBsF0b0YcQwQfAyiTdv8ZDEAQL/v+3dFdMuQqJjqGuQUfZEVB8inqUD0wvm4/okvO1KxNdjvcyTE8BXI5IHsb4x0amBkIEpthqcYuUyqSIpCg+EaFjIULy9hS48aqmIrMXg47TlfxKrmM530qeDS6iqJXIAv6XFQ8yKz/63yaUuauXOAYr7E7BpRG1RUoVf7axFxPGVpEVFhSZoCoBzVjbcFDugurQm6k9p8drUKkHK6iiPSw8F5ES0k7J0ddAbxBqeXAdL9f5aInnMXTkcg1mt9du4AK4nHpwQB0qPyWIuxRxstHBzeukOCLTLQK0IMF6I5yaEYDChAC9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cbaKhiRIfU0pNpyrbcR9cS6m7dfZqpqpWV161pTSv+g=;
- b=eeQZ3rZEWlgL9VLjWtbFj6y8nTqw70Vipr0ms3cNZ00vmQ4XTunvHGsdpVyxD7nZo6Jh19kIBlkx/OvZacKEjARMEnBxLb+Tq3DdnQ1XGHf/qtCKnzWygPTaxB5k3VsAgSowaP8tK4WmkDjeqwzmCpxWklLF8zRGtFm0JBGMPSY71mIE/dpzYKvksewasxVykEZLcOStwJxB2Mw9bFQaOOYm2grNoeG1tcOw8EqO3mx8vo89ca/OZb1m3ClBFbgYRqU0lj7YJkn64SiG0uDlvEfxI7wGGx8b+6QENdY1qDzO3CZkzXVpxYhYlp75W8BOG7uQoWyH3bK3F/c8XvZmsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by LV1PR11MB8789.namprd11.prod.outlook.com (2603:10b6:408:2b4::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26; Mon, 14 Oct
- 2024 22:24:22 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8048.020; Mon, 14 Oct 2024
- 22:24:22 +0000
-Date: Mon, 14 Oct 2024 15:24:19 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <dave.jiang@intel.com>, <ira.weiny@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, <stable@vger.kernel.org>, Zijun Hu
-	<zijun_hu@icloud.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alison Schofield <alison.schofield@intel.com>, Gregory Price
-	<gourry@gourry.net>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 0/5] cxl: Initialization and shutdown fixes
-Message-ID: <670d9a13b4869_3ee2294a4@dwillia2-xfh.jf.intel.com.notmuch>
-References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
- <7eb2912e-3359-8a22-2db9-4bfa803eccbe@amd.com>
- <6709627eba220_964f229495@dwillia2-xfh.jf.intel.com.notmuch>
- <a5a310fe-2451-b053-4a0f-53e496adb9be@amd.com>
- <670af0e72a86a_964f229465@dwillia2-xfh.jf.intel.com.notmuch>
- <0c945d60-de62-06a5-c636-1cec3b5f516c@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0c945d60-de62-06a5-c636-1cec3b5f516c@amd.com>
-X-ClientProxiedBy: MW2PR16CA0026.namprd16.prod.outlook.com (2603:10b6:907::39)
- To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sdbVnrpc"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6cbcd49b833so39845396d6.3
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 15:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1728945621; x=1729550421; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aYw/DowXMP8iT0vBm8bMBxhj8l9VIuy2ovueWWo/kGY=;
+        b=sdbVnrpc4qcOrKPNsoHaC9fqjG9Voe2SSIiI/Cr5MacX/6CVypRYnnq7dEovbpVlxQ
+         scyn/jP7ySDvyHgw1FfMaSaqeGQJgz8uRiVNsgyGnm+fXzV+8g6Qt4CLV+w5RGNkZ2CP
+         s7WoTnGNvvNO1njtc2IbRub/NFE4TiVYMqghqEJw0hrG9IqrOpt4vMrgGHD4tJj7lisc
+         +dwqXsgCV6KQgeSaW0Sd2rXgwtaGdyBaLvbhAGrfaWt18ITeXvRPHH9ulVzHJMjRSdkI
+         XQ8Ffz3qk0UQ7R28wWELQim97cIvQJKakWXCwbA7VHoo1Gl8VrUczX1P+9JDyz60MTs0
+         hLTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728945621; x=1729550421;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aYw/DowXMP8iT0vBm8bMBxhj8l9VIuy2ovueWWo/kGY=;
+        b=gED+gyRB6RBbG+fm7VXTVPXHxQc4JiJnmXqDjMJbzNbxSRo2FtVxFVr7c93BvClx+V
+         r5Xh77hjTX4BMNmQRALilGyAU1IjjBEk/IW5qLSfEQf8mfd342G/Cczki7dmjEjal/on
+         Tr8Rqlyuirl0VvAw+vjBoAD6mk08DTAV9DZdeHiy4z09MKULITqg53BetjrhqUSaUE8b
+         v5yrKFktWTqyRYUgPz+tjvjcoNve8W/wWsc8qPfMMl6NXIj0Fa6/yGloy1rdSlVVOx3P
+         IM74EDKym6n+0VqgFLUkVZqTHDEsERNUpk7THdbS4QW6BXOHZ8ICK3ek3K/+EQU02r+Y
+         AHCA==
+X-Gm-Message-State: AOJu0YwcPOuiBOvDJm/SnNc7bwZBJ9e45Yrh16HHw5Fb5uV+CZDhPcdl
+	koQoKimc7hY/Bknv32mcMjoVRgkM2fWffESVitxSWg4JU9ghknsb2a1Z5arMcNo=
+X-Google-Smtp-Source: AGHT+IEF3dKRKqarTnBYXO5TAih258zYEUVmUl9i+Hckz/OMf3T05ro3fHPweLsgT86eMNWxUx0sCQ==
+X-Received: by 2002:a05:6214:33c3:b0:6cc:1dd9:296 with SMTP id 6a1803df08f44-6cc1dd9048bmr26873916d6.0.1728945621142;
+        Mon, 14 Oct 2024 15:40:21 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cc22910ecfsm392706d6.23.2024.10.14.15.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 15:40:19 -0700 (PDT)
+Date: Mon, 14 Oct 2024 18:40:00 -0400
+From: Gregory Price <gourry@gourry.net>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-cxl@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+	osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
+	akpm@linux-foundation.org, dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
+	rrichter@amd.com, terry.bowman@amd.com, lenb@kernel.org,
+	dave.jiang@intel.com, ira.weiny@intel.com
+Subject: Re: [PATCH 1/3] memory: extern memory_block_size_bytes and
+ set_memory_block_size_order
+Message-ID: <Zw2dwG_rp7Hg-vIa@PC2K9PVX.TheFacebook.com>
+References: <20241008044355.4325-1-gourry@gourry.net>
+ <20241008044355.4325-2-gourry@gourry.net>
+ <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
+ <ZwVG8Z3GRYLoL_Jk@PC2K9PVX.TheFacebook.com>
+ <d3203f2c-eff6-4e84-80cd-3c6f58dab292@redhat.com>
+ <ZwVOE6JRS8Fd9_a8@PC2K9PVX.TheFacebook.com>
+ <2c854e5e-c200-4ed9-bf21-778779af7e5b@redhat.com>
+ <Zw0p7-7ymn-0bPiC@PC2K9PVX.TheFacebook.com>
+ <01fbdcef-b923-4bb0-80b0-f1d3e57fe515@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV1PR11MB8789:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2022fb82-176e-42e7-fc01-08dcec9ef40f
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?WVFsZvvoAiVWU853BICROGjLmKiptEPGgZCf8H8J1yumSw+X6TlXMcJOWMfc?=
- =?us-ascii?Q?r7xw4XYTqn6Apl8JIVlUtLDuBsph3eLf8XBfnHQDygYUkzF4NeTPiRIqraG2?=
- =?us-ascii?Q?4vtvlrHNamctjh2z5nmNLfIGPrlbuY7B0bGCEwWwdEbggRj7cKRVKWL7RQeC?=
- =?us-ascii?Q?de89DNePG7HLv0hE5Snvc5uPHWJLH8XT4ndMVVSFgwWGH1TDqKjJJM30iGCx?=
- =?us-ascii?Q?3ddeOApqaUG3p0XrUkWPHm+8IR9yoOUS4UmR6auUp2AjOEmkiSrVUz1W3ZQ9?=
- =?us-ascii?Q?dC4UG6EUJBrqAujgPc1wCmoGNbK1C7stUWrW3a6Bnr26OZ+wqFtNCyGv4W0y?=
- =?us-ascii?Q?7u38x+ypM8bRBbV87w2++oJRGN35ocHlPBLoV2tgekR9wORPnOJIK3RO6QI0?=
- =?us-ascii?Q?Uuj74ENogi5mcew4pvEtx6jdGqy7beHzP8Id0AP4V9z83IW7z8yTPwlQUD1R?=
- =?us-ascii?Q?3SNODA2D7km/FI3SynWm5wRjUVIjX15wAYjhDMP3meHAY2Icj4echnAyG1tm?=
- =?us-ascii?Q?2W5i4wfLnkuBTzUqOSkxpapkbn4NTz3XHMo9GMr3DnvDUP33sHnBRwTw/cPF?=
- =?us-ascii?Q?//oL4wFXnDtCMbp/JKpAxCXkwICyQaJpYCoEHrDXePaVj6ILZmZ5WQNx5I3J?=
- =?us-ascii?Q?Oc2olPqWn8mDsvxOmOpReULEg5+rvRgPp0v+PAgzLlxrjXvnwSmRiQ5VkKsm?=
- =?us-ascii?Q?1hntVrF60jifyGKCq5FCjI4JNcqUG+cdEFPDUUxVBat2XUAHyXDu0eW7EtV2?=
- =?us-ascii?Q?O9fjRDuw30SUlaNI6IJ66soo36A2M6TdhnQWBVB/ZUeNj0COsesjRX/6XjRI?=
- =?us-ascii?Q?xnAcyoaOqVhi3dPzDLkS0s+Z1cv2d11Oj9CIv16pfRS/GaoA0dstwgsR4XPM?=
- =?us-ascii?Q?SI+ThpzEaut6gMKkK3QCjjH+7qlbhfeYvFXmwCD0ZQy6v5m95JYrp/HhNeoV?=
- =?us-ascii?Q?vuWFXHXsNf5SMj7679aUDKyBANZuSoJlhTwWVF/vqIM0YiDjwJlwjh8MhUQe?=
- =?us-ascii?Q?ANc8JvDl9UUAfvMUI1oPTG0qHxmnE1GNxQUNKl4ceIVuPHXLVZNB+BGN/Wnj?=
- =?us-ascii?Q?3pQoFp7/li32Aap3zEgw1ToKlChwpTHJOw3auZTxQ6T1FzFPMpG+JhgAor7P?=
- =?us-ascii?Q?a37LMeoX95jFsB16gS9avC6I2py8qsld/dV5Dy6EQW+byLrHUC2Q4kl3oRFU?=
- =?us-ascii?Q?hCwG86o73f8IG0YSj07wW5LrVsLpU8mk3OxcSeB+0npf1xXAmewbs/noAQFv?=
- =?us-ascii?Q?VWKHbHhIrSAuGORGt+EN8WwaZlqjRjtJ5dkAxi2sNA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aKvmQpSZ99xHrPDgnCU+Dr9TW2pQ5qxNv49OvedA7YdVTJjwLEAWuVz/zPMT?=
- =?us-ascii?Q?pjdzphe68lbN2dX4jHDOk5Dy/KC6o0Dw7O9bz9Hc9Il25qUGautFA20i+aPz?=
- =?us-ascii?Q?SKM2KFGZ7xBoF44KTgpdpT0C95kwGbEpwVJaW/5CHxWY4tb73HKQvrzWGs/X?=
- =?us-ascii?Q?x6UVySVjszWXgemXHt2I6JZ4WEn0vVqNYRF9Qz5E8mRQbJzQRZaLB21fLSlm?=
- =?us-ascii?Q?R0k0Rg2wR7+urPOs5GGQi0rGLEiR3r+EL25muYR8hVUyLPAcan1dIaXOXpDG?=
- =?us-ascii?Q?WZXltPXt9MVLqIzg9VLyUEEz/bpRHni7spVQfsLKOCzyvlnPAaBxjQIyeHYC?=
- =?us-ascii?Q?E9Pu0ogS/Y52ZQGmWgEee6C4WKQDe6p0atTLEZiYXFmfniRWjdYclBNu7dz0?=
- =?us-ascii?Q?SWFLjakKh6VS1Xq9AWfz2NWJa7LGUIGU9CrNDLWOLoBBWqH6PueeDPrf9byc?=
- =?us-ascii?Q?tThm9cEiSSa8X7ijz9tNMLQQtpjxbss/AT+kEeGfmTnhZmTvs/Ooj9j7uc2e?=
- =?us-ascii?Q?Sbd+gNBJlTfPoSuNTr0R8o+0lMh89Vaz0eXJpiF3QRb5YOqoWFMRNmNp2Ggs?=
- =?us-ascii?Q?boCOlwRhjmqWISv7QXZh4NQ8m+678yZFZa8IoQy/qLmjlqxk0M5ewXaec1D+?=
- =?us-ascii?Q?2RsdYqCMeulR/GkoZqcsNiMR7ldlRHcr8z+tSc4JpQdOJgG9hUzjK0X7IkOm?=
- =?us-ascii?Q?QMQ33BpPK/OpYqvUi/6Jra5sblfRCKBJU+qkzYcTJvdaykxzip4b6+l48Smz?=
- =?us-ascii?Q?Ks/ULWEYHHDgjfU0pjWAwTvq+zYswrwoyGLYqXJ3AK733/I1uEQuIWsRtlOW?=
- =?us-ascii?Q?LTe5kUVLyuQdk+zspdmp8wNaLwOp2gAq4ABHnvj0uTS/WsAxDCE/HP7OVimI?=
- =?us-ascii?Q?tcDzcBmBBipdPI9xfssC39SqVI3JhuWEeVz1lHhSPINP59T96Xr3RvbP5slZ?=
- =?us-ascii?Q?p2Ox7DNvRZg5Ng3bdm1TqRf8OWPH2zamED8OgroDpjA9n8u/xw1FbYV94WWW?=
- =?us-ascii?Q?a3IqZxNRbb2Q1iM57pZTaijDaMgWN6L2m5r82QyB7VSOQbAM5GRh7bEQpm1f?=
- =?us-ascii?Q?wv8+HsdYOHeL3fpBpBRQt5wpw2EyEFAYPDy9fMJY72c16Chj7JJn8t0P4xjM?=
- =?us-ascii?Q?9RDu2rZl/8kgPHeTFGOxhpWbA7ZLEMEHAQAZcnYr4T9DgDRbbZiTruYjBZzf?=
- =?us-ascii?Q?vtBlgBRXyWOsVHdKbt58GKBdZ0iW1ZkvWK/E3pQrof2uQO4Bxlqnb5fuoGzg?=
- =?us-ascii?Q?K4gutjFnqbgbiDLct5o8ZnwiZ8rku1mvSIJ+LebzJapSWqiJ+LCSaF29tKrs?=
- =?us-ascii?Q?7153u8q408kkxDoIxPFXTUkZ6SyPa9phhbvbewj3R8JrPivitOdCup0UusgK?=
- =?us-ascii?Q?mHDrik54Bp3UhjrL0GHwENA2oz+kfETMIPyHGFrTESK5i3GAsoYI3M1zmVeq?=
- =?us-ascii?Q?116gNPyK5oyrsS2l5/2OZrQW5bGgtfX8VYBq8wKe2V3/tEm+/DnPVQQITEg5?=
- =?us-ascii?Q?TfM3UOidxWvwy1jCatgDxl8XXE4HsJRfy95tEu0cI/DxXvGY1gCrYGBgTgH5?=
- =?us-ascii?Q?wr3LqiS5hmsvlExNwW2aZyszp/D6bcbG+uOD0Jef9xNqq9P4P0KrKg1iu2p6?=
- =?us-ascii?Q?kA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2022fb82-176e-42e7-fc01-08dcec9ef40f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2024 22:24:22.5289
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J0kjGhX9jMkxpxybU6ArGYxBPhvMai05mhKw9rDVnBKpqlv9DipQNhLxaQbXce6htOariALqS0/d8hkk0V4JkeBTsx5qorWs7DLQcVb1a94=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV1PR11MB8789
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01fbdcef-b923-4bb0-80b0-f1d3e57fe515@redhat.com>
 
-Alejandro Lucero Palau wrote:
+On Mon, Oct 14, 2024 at 10:32:36PM +0200, David Hildenbrand wrote:
+> On 14.10.24 16:25, Gregory Price wrote:
+> > On Mon, Oct 14, 2024 at 01:54:27PM +0200, David Hildenbrand wrote:
+> > > On 08.10.24 17:21, Gregory Price wrote:
+> > > > On Tue, Oct 08, 2024 at 05:02:33PM +0200, David Hildenbrand wrote:
+> > > > > On 08.10.24 16:51, Gregory Price wrote:
+> > > > > > > > +int __weak set_memory_block_size_order(unsigned int order)
+> > > > > > > > +{
+> > > > > > > > +	return -ENODEV;
+> > > > > > > > +}
+> > > > > > > > +EXPORT_SYMBOL_GPL(set_memory_block_size_order);
+> > > > > > > 
+> > > > > > > I can understand what you are trying to achieve, but letting arbitrary
+> > > > > > > modules mess with this sounds like a bad idea.
+> > > > > > > 
+> > > > > > 
+> > > > > > I suppose the alternative is trying to scan the CEDT from inside each
+> > > > > > machine, rather than the ACPI driver?  Seems less maintainable.
+> > > > > > 
+> > > > > > I don't entirely disagree with your comment.  I hummed and hawwed over
+> > > > > > externing this - hence the warning in the x86 machine.
+> > > > > > 
+> > > > > > Open to better answers.
+> > > > > 
+> > > > > Maybe an interface to add more restrictions on the maximum size might be
+> > > > > better (instead of setting the size/order, you would impose another upper
+> > > > > limit).
+> > > > 
+> > > > That is effectively what set_memory_block_size_order is, though.  Once
+> > > > blocks are exposed to the allocators, its no longer safe to change the
+> > > > size (in part because it was built assuming it wouldn't change, but I
+> > > > imagine there are other dragons waiting in the shadows to bite me).
+> > > 
+> > > Yes, we must run very early.
+> > > 
+> > > How is this supposed to interact with code like
+> > > 
+> > > set_block_size()
+> > > 
+> > > that also calls set_memory_block_size_order() on UV systems (assuming there
+> > > will be CXL support sooner or later?)?
+> > > 
+> > > 
+> > 
+> > Tying the other email to this one - just clarifying the way forward here.
+> > 
+> > It sounds like you're saying at a minimum drop EXPORT tags to prevent
+> > modules from calling it - but it also sounds like built-ins need to be
+> > prevented from touching it as well after a certain point in early boot.
 > 
-> On 10/12/24 22:57, Dan Williams wrote:
-> > Alejandro Lucero Palau wrote:
-> > [..]
-> >>> I am skeptical that PROBE_FORCE_SYNCRONOUS is a fix for any
-> >>> device-readiness bug. Some other assumption is violated if that is
-> >>> required.
-> >>
-> >> But that problem is not about device readiness but just how the device
-> >> model works. In this case the memdev creation is adding devices, no real
-> >> ones but those abstractions we use from the device model, and that
-> >> device creation is done asynchronously.
-> > Device creation is not done asynchronously, the PCI driver is attaching
-> > asynchrounously. When the PCI driver attaches it creates memdevs and
-> > those are attached to cxl_mem synchronously.
-> >
-> >> memdev, a Type2 driver in my case, is going to work with such a device
-> >> abstraction just after the memdev creation, it is not there yet.
-> > Oh, is the concern that you always want to have the memdev attached to
-> > cxl_mem immediately after it is registered?
-> >
-> > I think that is another case where "MODULE_SOFTDEP("pre: cxl_mem")" is
-> > needed. However, to fix this situation once and for all I think I would
-> > rather just drop all this modularity and move both cxl_port and cxl_mem
-> > to be drivers internal to cxl_core.ko similar to the cxl_region driver.
+> Right, at least the EXPORT is not required.
+> 
+> > 
+> > Do you think I should go down the advise() path as suggested by Ira,
+> > just adding a arch_lock_blocksize() bit and have set_..._order check it,
+> > or should we just move towards each architecture having to go through
+> > the ACPI:CEDT itself?
+> 
+> Let's summarize what we currently have on x86 is:
+> 
+> 1) probe_memory_block_size()
+> 
+> Triggered on first memory_block_size_bytes() invocation. Makes a decision
+> based on:
+> 
+> a) Already set size using set_memory_block_size_order()
+> b) RAM size
+> c) Bare metal vs. virt (bare metal -> use max)
+> d) Virt: largest block size aligned to memory end
 > 
 > 
-> Oh, so the problem is the code is not ready because the functionality is 
-> in a module not loaded yet.
+> 2) set_memory_block_size_order()
+> 
+> Triggered by set_block_size() on UV systems.
+> 
+> 
+> I don't think set_memory_block_size_order() is the right tool to use. We
+> just want to leave that alone I think -- it's a direct translation of a
+> kernel cmdline parameter that should win.
+> 
+> You essentially want to tweak the b)->d) logic to take other alignment into
+> consideration.
+> 
+> Maybe have some simple callback mechanism probe_memory_block_size() that can
+> consult other sources for alignment requirements?
+>
 
-Right.
+Thanks for this - I'll cobble something together.
 
-> Then it makes sense that change. I'll do it if not already taken. I'll 
-> send v4 without the PROBE_FORCE_SYNCHRONOUS flag and without the 
-> previous loop with delays implemented in v3.
+Probably this ends up falling out similar to what Ira suggested. 
 
-So I think EPROBE_DEFER can stay out of the CXL core because it is up to
-the accelerator driver to decide whether CXL availability is fatal to
-init or not.
+drivers/acpi/numa/srat.c
+    acpi_numa_init():
+        order = parse_cfwm(...)
+        memblock_advise_size(order);
 
-Additionally, I am less and less convinced that Type-2 drivers should be
-forced to depend on the cxl_mem driver to attach vs just arranging for
-those Type-2 drivers to call devm_cxl_enumerate_ports() and
-devm_cxl_add_endpoint() directly. In other words I am starting to worry
-that the generic cxl_mem driver design pattern is a midlayer mistake.
+drivers/base/memory.c
+    static int memblock_size_order = 0; /* let arch choose */
 
-So, if it makes it easier for sfc, I would be open to exploring a direct
-scheme for endpoint attachment, and not requiring the generic cxl_mem
-driver as an intermediary.
+    int memblock_advise_size(order)
+        int old_order;
+        int new_order;
+        if (order <= 0)
+            return -EINVAL;
+
+        do {
+            old_order = memblock_size_order;
+            new_order = MIN(old_order, order);
+        } while (!atomic_cmpxchg(&memblock_size_order, old_order, new_order));
+
+        /* memblock_size_order is now <= order, if -1 then the probe won */
+        return new_order;
+
+    int memblock_probe_size()
+        return atomic_xchg(&memblock_size_order, -1);
+
+drivers/base/memblock.h
+    #ifdef HOTPLUG
+        export memblock_advise_size()
+        export memblock_probe_size()
+    #else
+        static memblock_advice_size() { return -ENODEV; } /* always fail */
+        static memblock_probe_size() { return 0; } /* arch chooses */
+    #endif
+
+arch/*/mm/...
+    probe_block_size():
+        memblock_probe_size();
+        /* select minimum across above suggested values */
+
+> If that's not an option, then another way to set further min-alignment
+> requirements (whereby we take MIN(old_align, new_align))?
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
