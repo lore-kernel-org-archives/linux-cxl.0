@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7E718BB8B;
-	Tue, 15 Oct 2024 06:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2017F1C7B99;
+	Tue, 15 Oct 2024 06:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728975511; cv=none; b=VtMkKpEsQLeVFDdRHD3cWmsae+JLa3Gyhhv8DYwkcr4FvCQm5ZUmI4JeQKvoLQZKp07UgD9t+APP7NBQUW+Sqc2Bo6rfB56TyW8ABYIadiBbPbuOB0y/Xv8sB4+ErE+O26TypivLtgOHhkUYfpGZsu5mH4b4fypNGtiZe1G5ScU=
+	t=1728975514; cv=none; b=HopGh/1pSHki04uY/sbl4KBLNAuEzFIMbvzME8ODJWCBlrNsPpxM/gBDvOyEeZEUK2V7MEGQVSyVbop4owGrNxGzuMsqS+r1RQIzQwnjr+NKLOMiR9PTZo1jjBg2OgajfHX6DNi6H26RNl4bq1vOq+iCHzKAiutVPuIRpYeCRnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728975511; c=relaxed/simple;
-	bh=kfEWIK4MkSwe8J7QnC0SyLg4DySWos7YcTLodpSGzF4=;
+	s=arc-20240116; t=1728975514; c=relaxed/simple;
+	bh=rdfJ2s+ybBBsiZWkLx6WCDUJESH8OwrCvCQaJyX1YaQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dRnQ5b+NrfMzwDohIFOcwJLIMcKonH8PvcpyJXU5Mx2eAw/mUbxFF5JRzgMTOjAMudQDPNw9VMXqp3TjccIB5F185pvyjdj4vbyC34xKMZi/GOUhlc1nQAAizW5qHvSMy2qn6rsiDyZAJ0kcHuoD3VgxC+iORwjveMbGZyqtUeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FSaoNfVh; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=cAyKMWMYO5TK1/9FkkxNxJLYYRPgmB5zqq50UNLEF9HuI7ywChf1b+XFCyCcSTZJyhqwlcGjD6BuPZhA4He17ga0c69l96hWoVRr1P6oH6GSbY5+PKCFCtLX9DsPY3fTgIpcaUqtA8C8bVmVFuu84HYETNimFmeXxNAy3xhLnNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bYi5aUPq; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FSaoNfVh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bYi5aUPq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728975510; x=1760511510;
+  t=1728975514; x=1760511514;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kfEWIK4MkSwe8J7QnC0SyLg4DySWos7YcTLodpSGzF4=;
-  b=FSaoNfVhzvjqUj7zL7/RUeTgUxJ7/LYtdOuVBN+d5Pen+TeFG7RKTo48
-   VylfYU2zHgW4KIjCA4XHOOWmu5VWNWpaUhWd4QOs04xIIe/k5vhBbaaBd
-   fh/t1o2bPnSED+YHHSil/17mS95OXd3HK6vO1BxwAQvauk2T70iqb2Ot/
-   H+6VtEXnyK3wZqr+dmkRqzPd4DoH2HfHKa0z27hjMbpZIzZvY1iMcxmI2
-   EO/8x78zZ7NFD5WdVtBtmN09ZGmKacAf9qPs/V1XQX6R9Adz+Lm02pUo8
-   Ifw8+vRERY5j5p+Kp35fMC08E9n9yd4ILGc9lF9EFUkhb/H3hsnAorL0x
+  bh=rdfJ2s+ybBBsiZWkLx6WCDUJESH8OwrCvCQaJyX1YaQ=;
+  b=bYi5aUPqVRP46V+ZB2r3ZoK3ZSoAh+gTaLORphU6YtGtc2EPfKrBYXZu
+   iEXFEFzOlt1VAvBYate0TOTI+N4sEldtISts8dKb3UE+RuPH+CPAJMZRu
+   EXLXtelhycCDBiQWoCQQJCWmwWGasJY0YjbKtev5gR1lTMMajk4Rv9wt/
+   +Zp0cU/RTpoZ163G/lbEMSi1nN0N6UOnYJZ7HmsucvxNJg1O37zA6a2P2
+   lfDkUo3/4jHlYlf4ZymMfsqpbxgGtGichuylTxcVbgXU5VQ8LSoKdFyIH
+   /nBMlkIrIa5eLX0JPljDj9Pce/stc0qCh7l1ag19uAGq3kpGPls32w7Wi
    Q==;
-X-CSE-ConnectionGUID: ScUbsDBRRYyapZMOGQprow==
-X-CSE-MsgGUID: WASINfLtSUmB05w42J1NPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="28447865"
+X-CSE-ConnectionGUID: UpVmXI9SR3yYLwFu3iFprA==
+X-CSE-MsgGUID: CySwF2NbS5is1dYqmyn+Lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="28447876"
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="28447865"
+   d="scan'208";a="28447876"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:30 -0700
-X-CSE-ConnectionGUID: WKEUq0feTha0qIlAlJPguA==
-X-CSE-MsgGUID: AML8i+ePQx6G445dIA2iRQ==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:33 -0700
+X-CSE-ConnectionGUID: LPAqurBaQ/yaUiD/0Ni2Iw==
+X-CSE-MsgGUID: /2ss5ox9QNSaykbqey4WHA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="81776920"
+   d="scan'208";a="81776923"
 Received: from yhuang6-mobl2.sh.intel.com ([10.238.3.32])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:26 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:30 -0700
 From: Huang Ying <ying.huang@intel.com>
 To: Dan Williams <dan.j.williams@intel.com>,
 	Dave Jiang <dave.jiang@intel.com>
@@ -57,9 +57,9 @@ Cc: linux-cxl@vger.kernel.org,
 	Ira Weiny <ira.weiny@intel.com>,
 	Alejandro Lucero <alucerop@amd.com>,
 	Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: [PATCH 4/5] cxl: Set type of region to that of the first endpoint
-Date: Tue, 15 Oct 2024 14:57:12 +0800
-Message-Id: <20241015065713.308671-5-ying.huang@intel.com>
+Subject: [PATCH 5/5] cxl: Avoid to create dax regions for type2 accelerators
+Date: Tue, 15 Oct 2024 14:57:13 +0800
+Message-Id: <20241015065713.308671-6-ying.huang@intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241015065713.308671-1-ying.huang@intel.com>
 References: <20241015065713.308671-1-ying.huang@intel.com>
@@ -71,19 +71,21 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Current kernel hard-codes the type of region to type 3 expander now,
-because this is the only supported device type.  As a preparation to
-support type 2 accelerators, the patch sets the type of region to that
-of the first endpoint.  Then, the patch checks whether the type of
-region is same as the type of other endpoints of the region.  Because
-what we really need is to make sure the type of all endpoints of a
-region is same.  And, the patch lets expander/accelerator device
-drivers specify the target type of endpoint devices via struct
-cxl_dev_state.
+The memory range of a type2 accelerator should be managed by the type2
+accelerator specific driver instead of the common dax region drivers,
+as discussed in [1].
+
+[1] https://lore.kernel.org/linux-cxl/66469ff1b8fbc_2c2629427@dwillia2-xfh.jf.intel.com.notmuch/
+
+So, the patch skips dax regions creation for type2 accelerator device
+memory regions.
+
+Based on: https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
 
 Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Gregory Price <gourry@gourry.net>
-Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
@@ -93,160 +95,28 @@ Cc: Ira Weiny <ira.weiny@intel.com>
 Cc: Alejandro Lucero <alucerop@amd.com>
 Cc: Ben Cheatham <benjamin.cheatham@amd.com>
 ---
- drivers/cxl/acpi.c        |  1 -
- drivers/cxl/core/hdm.c    | 28 +++++++++++++---------------
- drivers/cxl/core/port.c   |  2 ++
- drivers/cxl/core/region.c | 13 +++++++------
- drivers/cxl/cxl.h         |  1 +
- 5 files changed, 23 insertions(+), 22 deletions(-)
+ drivers/cxl/core/region.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 21486e471305..29c2a44b122c 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -382,7 +382,6 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 
- 	cxld = &cxlrd->cxlsd.cxld;
- 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
--	cxld->target_type = CXL_DECODER_EXPANDER;
- 	cxld->hpa_range = (struct range) {
- 		.start = cfmws->base_hpa,
- 		.end = cfmws->base_hpa + cfmws->window_size - 1,
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 478fb6691759..c9accf8be71f 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -841,18 +841,25 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		.end = base + size - 1,
- 	};
- 
-+	if (cxled) {
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+		if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
-+			cxld->target_type = CXL_DECODER_EXPANDER;
-+		else
-+			cxld->target_type = CXL_DECODER_ACCEL;
-+	}
-+
- 	/* decoders are enabled if committed */
- 	if (committed) {
- 		cxld->flags |= CXL_DECODER_F_ENABLE;
- 		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
- 			cxld->flags |= CXL_DECODER_F_LOCK;
--		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl)) {
--			cxld->target_type = CXL_DECODER_EXPANDER;
-+		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
- 			cxld->coherence = CXL_DECODER_HOSTONLYCOH;
--		} else {
--			cxld->target_type = CXL_DECODER_ACCEL;
-+		else
- 			cxld->coherence = CXL_DECODER_DEVCOH;
--		}
- 
- 		guard(rwsem_write)(&cxl_region_rwsem);
- 		if (cxld->id != cxl_num_decoders_committed(port)) {
-@@ -874,21 +881,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 			struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--			/*
--			 * Default by devtype until a device arrives that needs
--			 * more precision.
--			 */
--			if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
--				cxld->target_type = CXL_DECODER_EXPANDER;
--			else
--				cxld->target_type = CXL_DECODER_ACCEL;
- 			if (cxlds->coherence == CXL_DEVCOH_HOSTONLY)
- 				cxld->coherence = CXL_DECODER_HOSTONLYCOH;
- 			else
- 				cxld->coherence = CXL_DECODER_DEVCOH;
- 		} else {
--			/* To be overridden by region type/coherence at commit time */
--			cxld->target_type = CXL_DECODER_EXPANDER;
-+			/* To be overridden by region coherence at commit time */
- 			cxld->coherence = CXL_DECODER_HOSTONLYCOH;
- 		}
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 9ebbffcea26a..d1bc6aed6509 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -139,6 +139,8 @@ static ssize_t target_type_show(struct device *dev,
- 		return sysfs_emit(buf, "accelerator\n");
- 	case CXL_DECODER_EXPANDER:
- 		return sysfs_emit(buf, "expander\n");
-+	default:
-+		break;
- 	}
- 	return -ENXIO;
- }
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 21b877d8582f..d709738ada61 100644
+index d709738ada61..708be236c9a2 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1926,7 +1926,10 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
- 
--	if (cxled->cxld.target_type != cxlr->type) {
-+	/* Set the type of region to that of the first endpoint */
-+	if (cxlr->type == CXL_DECODER_INVALID) {
-+		cxlr->type = cxled->cxld.target_type;
-+	} else if (cxled->cxld.target_type != cxlr->type) {
- 		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
- 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
- 			cxled->cxld.target_type, cxlr->type);
-@@ -2476,7 +2479,6 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
-  * @cxlrd: root decoder
-  * @id: memregion id to create, or memregion_free() on failure
-  * @mode: mode for the endpoint decoders of this region
-- * @type: select whether this is an expander or accelerator (type-2 or type-3)
-  *
-  * This is the second step of region initialization. Regions exist within an
-  * address space which is mapped by a @cxlrd.
-@@ -2486,8 +2488,7 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
-  */
- static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 					      int id,
--					      enum cxl_decoder_mode mode,
--					      enum cxl_decoder_type type)
-+					      enum cxl_decoder_mode mode)
- {
- 	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
- 	struct cxl_region *cxlr;
-@@ -2498,7 +2499,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
- 	if (IS_ERR(cxlr))
- 		return cxlr;
- 	cxlr->mode = mode;
--	cxlr->type = type;
-+	cxlr->type = CXL_DECODER_INVALID;
- 
- 	dev = &cxlr->dev;
- 	rc = dev_set_name(dev, "region%d", id);
-@@ -2562,7 +2563,7 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- 		return ERR_PTR(-EBUSY);
- 	}
- 
--	return devm_cxl_add_region(cxlrd, id, mode, CXL_DECODER_EXPANDER);
-+	return devm_cxl_add_region(cxlrd, id, mode);
- }
- 
- static ssize_t create_pmem_region_store(struct device *dev,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1927a1849d82..f4cbe5c292ea 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -324,6 +324,7 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
- #define CXL_DECODER_F_MASK        GENMASK(5, 0)
- 
- enum cxl_decoder_type {
-+	CXL_DECODER_INVALID = 0,
- 	CXL_DECODER_ACCEL = 2,
- 	CXL_DECODER_EXPANDER = 3,
- };
+@@ -3473,6 +3473,14 @@ static int cxl_region_probe(struct device *dev)
+ 					p->res->start, p->res->end, cxlr,
+ 					is_system_ram) > 0)
+ 			return 0;
++		/*
++		 * Accelerator regions have specific usage, skip
++		 * device-dax registration.
++		 */
++		if (cxlr->type == CXL_DECODER_ACCEL)
++			return 0;
++
++		/* Expander routes to device-dax */
+ 		return devm_cxl_add_dax_region(cxlr);
+ 	default:
+ 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
 -- 
 2.39.2
 
