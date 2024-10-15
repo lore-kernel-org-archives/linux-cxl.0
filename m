@@ -1,90 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DE7174ED0
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Oct 2024 05:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08930189BA7;
+	Tue, 15 Oct 2024 06:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728968412; cv=none; b=niUbkF01xZVPWurbl2l2S3OTWHq9D53UYbwQ//zksdTzut44cETtkisxoTcrDRXJo0qAQD2b1e2PFEzF8wBOJaojK+04cei/qgGWzl1EoNQna7P0/ph0j9JoiLX7u9FZg61qIcawgWSh7pJ3sw9dcZ6anV2Vs7NgZVxdB6PIpzA=
+	t=1728975498; cv=none; b=Nkbo6t8HRLmH/PpetwsuPySknD3Cp5aIY1im6gcCrxlVt0X/Ym2aZb+QbdY8fp7Bv8qBgZcVdWZjTgE9Uo9hWRbiQlbiStgiC2BFqfLccC/ofIeSbb32EdViub1TSz2JSpjt9QT2qxZJXIY8In1eehWZ6ys60VCLfafER6XaP/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728968412; c=relaxed/simple;
-	bh=PH6DD452D0KtN7pKZIV8eGdN09BKzyO8KF+HFMg6OCg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u0wRgyhpYDerSU923w7CxltlQjnjSIMAGxMqP9QJhGS1zwW9if2mKPhCfRMwjQy5H0LmBOs/npXV7danIy5ylN2ug5/gfEw2P4RLBHSDnbWR2kkz3ORTpoiNdbIscNU8iZPq+uEN3PQwdog74egBozQaV1do733HQyxnyG8knJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QJHKp3N1; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1728975498; c=relaxed/simple;
+	bh=8lQqbWw6Enw+eklZHJGZTOhSRk4GGcFepVWdCPy9COg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sd4tA32xSqLaEtdeMLx/M2c96ilYjomE1fFVpUK2I2rFpB49SQBDEQ1xS86JUJoF2k3XIwW7M49d/xGHqZ5l+5J/T5NUE7I1gDHjElI1BDDnQYK3Fox3zMD+reNB0UOWq5//OQIBEfV6hNJ3/Emns9zgEdIWTzIVAbMLFk/MChI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBkKvWzg; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJHKp3N1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBkKvWzg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728968411; x=1760504411;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=PH6DD452D0KtN7pKZIV8eGdN09BKzyO8KF+HFMg6OCg=;
-  b=QJHKp3N1tf1EVaoJ2QfbnwxjhqCUXl55kKeobVUyowq7t0IoUA0nea8s
-   mpqcn5SvQjMYEwiDuzp2DRNUdTSobllunpjgwzIecgyR64lh4zZWDm+ru
-   wdJTl4phxSWxmVazkfWIyXAhcgQqRvV47f1YR2ucHWamgfbYWozLEfYl9
-   CqYR1Yw9CJyRogdmFcCQK3Jar3/vTqeAKLBmBk0h3Ooxn8S/xQuAcEcoG
-   VRjFJu5YfPey/dParQqIAUER+8Q7Ojkq77piAAR3r9PX2Fah8UvE08VLj
-   WuCxPyUQPbAB3TenbFYbeonku5OrBcBEG7UO8QMrlg1oClyTAYrd5oDow
-   A==;
-X-CSE-ConnectionGUID: sAZImItxRde/eogOXN8Eyg==
-X-CSE-MsgGUID: s1fGjy8FQFWFirDLiWrNuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="31217229"
+  t=1728975497; x=1760511497;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8lQqbWw6Enw+eklZHJGZTOhSRk4GGcFepVWdCPy9COg=;
+  b=UBkKvWzgZA1GKCBc/TAJayFCWa7CVjCUu14foEaR9Jh1M2LF+1xuMeOP
+   3gJpAOZvqD9FnhktFpdSyAYdB7OJJ90zJc4yW3JiNN1z3OiBeCLaMC5n/
+   8kYiorgWV6ohnYprHmfK1MuonxL8hNMqNDqfR/bLX4SgoVFXp4AiBm1aY
+   HHm+fXE4MBhYDPoC03IH2NeFUQX1sy9ahukO8B2+ZSPI+f7+vaaEzro+6
+   /RQEJXbLROFipyW4LcSygdBi15hD0meLkTswhXV2BaXGCdm1RVlwqBe8R
+   ezCnYVLuP7W889U6mb4hyXtVN9rMYUGpcceQ1KG5vFS84QoapfLMQpxm8
+   g==;
+X-CSE-ConnectionGUID: Im+4/uG1Rjm9OKnAcmJKTA==
+X-CSE-MsgGUID: qWzjr9zURMyj44SVPBrrog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="28447791"
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="31217229"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 22:00:10 -0700
-X-CSE-ConnectionGUID: dkDL3LKcTrWPST6iLEN+/w==
-X-CSE-MsgGUID: hftaNpfQQIerSy207slj6A==
+   d="scan'208";a="28447791"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:17 -0700
+X-CSE-ConnectionGUID: jVCCtqDzRNCa4x9ieWRARw==
+X-CSE-MsgGUID: k4+QcVj7RhSnzOgGlG/Thg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="78596399"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 22:00:08 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  linux-cxl@vger.kernel.org, Ira Weiny
- <ira.weiny@intel.com>
-Subject: Re: KASAN error when insmod cxl_test
-In-Reply-To: <670de32847e6d_3f1429473@dwillia2-xfh.jf.intel.com.notmuch> (Dan
-	Williams's message of "Mon, 14 Oct 2024 20:36:08 -0700")
-References: <87y12w9vp5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<670de32847e6d_3f1429473@dwillia2-xfh.jf.intel.com.notmuch>
-Date: Tue, 15 Oct 2024 12:56:35 +0800
-Message-ID: <87cyk27ym4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="81776905"
+Received: from yhuang6-mobl2.sh.intel.com ([10.238.3.32])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 23:58:13 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alejandro Lucero <alucerop@amd.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: [PATCH 0/5] cxl: Some preparation work for type2 accelerators support
+Date: Tue, 15 Oct 2024 14:57:08 +0800
+Message-Id: <20241015065713.308671-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 
-Dan Williams <dan.j.williams@intel.com> writes:
+This series implement some preparation work for the type2 accelerators
+support.
 
-> Huang, Ying wrote:
->> Hi, Dave,
->> 
->> When I tried to test v6.12-rc2 with cxl_test in qemu, the below error is
->> reported.  Revert commit a5ab0de0ebaa ("cxl: Calculate region bandwidth
->> of targets with shared upstream link") can eliminate the error.
->> 
->> Can you take a look at it?
->
-> Does the same reproduce with "modprobe cxl_test"?
+We have tested the series with cxl_test via mocking a type2
+accelerator as in [1].  Because we need more type2 accelerators
+support to simulate a type2 device, we don't include the cxl_test
+patch in the series.
 
-I used "modprobe cxl_test" to test.
+[1] https://lore.kernel.org/linux-cxl/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
 
-> I worry that direct
-> 'insmod' usage results in cases where it proceeds with the wrong
-> dependencies. I.e. I never test with insmod, only modprobe, and my
-> v6.12-rc2 testing so far has not hit this.
+Changes:
 
-One possible reason is the difference in .config.
+RFC->v1:
 
---
+- Collected Reviewed-by, Thanks Davidlohr and Gregory.
+
+- Some minor fixes, Thanks Ben and others
+
+- Thanks Jonathan to suggest to revise type2/type3 and coherence naming.
+
+- Rebased to latest upstream
+
+- Link to RFC: https://lore.kernel.org/linux-cxl/20240925024647.46735-1-ying.huang@intel.com/
+
+Huang Ying (5):
+  cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
+  cxl: Rename CXL_DECODER_HOSTONLYMEM/DEVMEM
+  cxl: Separate coherence from target type
+  cxl: Set type of region to that of the first endpoint
+  cxl: Avoid to create dax regions for type2 accelerators
+
+ drivers/cxl/acpi.c           |  9 +++---
+ drivers/cxl/core/hdm.c       | 38 +++++++++++++----------
+ drivers/cxl/core/mbox.c      |  1 +
+ drivers/cxl/core/port.c      | 17 ++++++-----
+ drivers/cxl/core/region.c    | 58 ++++++++++++++++++++++++++++++------
+ drivers/cxl/cxl.h            | 29 ++++++++++++------
+ drivers/cxl/cxlmem.h         | 12 ++++++++
+ include/acpi/actbl1.h        | 10 +++----
+ tools/testing/cxl/test/cxl.c | 24 +++++++--------
+ 9 files changed, 135 insertions(+), 63 deletions(-)
+
 Best Regards,
 Huang, Ying
