@@ -1,224 +1,246 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0302BD19
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 22:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBDB290F
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Oct 2024 00:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728945623; cv=none; b=O6CyKuKjWoz2wa5NgQQOz6DjvQvgs7P5JLQwCo9G+FwXYAg/+guUSvx920HnsPGQvC20IannoM0fPfGyDCdksGtgu8+/avnL6gXEHD7yDoSzHZJBDDEcMDdrXiUDEvYrKqOeghLgSUNvmLXPOKGmkHRAqWAciq051Rx/aGjuYHo=
+	t=1728950564; cv=none; b=VR7qP19HqJbl2BvIt0ZzeVUcPuZE5IvUTxRZ2kjO47rGxGA6zxvprRGCUU7ZYL55Qo03Bn9Ippdn5XbUohx0W3d9UxG4bSxB8DkHzp+8Wc5DaTTWv2KkNksdqXEOkcZgeNFteygMkAzCNSEQn+6ry62ZP0sMEeXXlQ/C1RTtIZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728945623; c=relaxed/simple;
-	bh=eJB5nm0LGipv6GkGY/aV3TbZ2J8W3GzqGON/tG1P9rM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XZXemL/k/vwWg1ZgaXShQa/Bv8kjt6Tc9rpSds3trGcuUUV5eDqmtt/fI+lM2h9rf5XzQ02r09Us/nGFstaWCu6Jn7XNA4YHOEx3hTnh5OZY0v7/faCzF3JHr8k+y5n9lelY8bxDrPqu0D8knfKJf6DI6jaH3jBvkt/Tg99S5iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sdbVnrpc; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1728950564; c=relaxed/simple;
+	bh=qdp1IXm7sPtQ1iXlhRGCFjNLSsWp/D6bIF43Ev+J+nA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wx9Wf/1drWZK2cJ859jBtz79VmWPR2R9aNT+qylTmIYfa6hpBW42TiLF9g90tzSrJBfqyBMA4cNJRqnBOUA2LbAlc+PHFtCkmALxyLbI2JGEtzzHZBRozz38CZHDPAfF0nlEM7dyk7WfZfz+PrfOnmnvY1Wee5qz/mR2p5Kwq9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=0Fjp2AXF; arc=none smtp.client-ip=17.58.6.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sdbVnrpc"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6cbcd49b833so39845396d6.3
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Oct 2024 15:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728945621; x=1729550421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYw/DowXMP8iT0vBm8bMBxhj8l9VIuy2ovueWWo/kGY=;
-        b=sdbVnrpc4qcOrKPNsoHaC9fqjG9Voe2SSIiI/Cr5MacX/6CVypRYnnq7dEovbpVlxQ
-         scyn/jP7ySDvyHgw1FfMaSaqeGQJgz8uRiVNsgyGnm+fXzV+8g6Qt4CLV+w5RGNkZ2CP
-         s7WoTnGNvvNO1njtc2IbRub/NFE4TiVYMqghqEJw0hrG9IqrOpt4vMrgGHD4tJj7lisc
-         +dwqXsgCV6KQgeSaW0Sd2rXgwtaGdyBaLvbhAGrfaWt18ITeXvRPHH9ulVzHJMjRSdkI
-         XQ8Ffz3qk0UQ7R28wWELQim97cIvQJKakWXCwbA7VHoo1Gl8VrUczX1P+9JDyz60MTs0
-         hLTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728945621; x=1729550421;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aYw/DowXMP8iT0vBm8bMBxhj8l9VIuy2ovueWWo/kGY=;
-        b=gED+gyRB6RBbG+fm7VXTVPXHxQc4JiJnmXqDjMJbzNbxSRo2FtVxFVr7c93BvClx+V
-         r5Xh77hjTX4BMNmQRALilGyAU1IjjBEk/IW5qLSfEQf8mfd342G/Cczki7dmjEjal/on
-         Tr8Rqlyuirl0VvAw+vjBoAD6mk08DTAV9DZdeHiy4z09MKULITqg53BetjrhqUSaUE8b
-         v5yrKFktWTqyRYUgPz+tjvjcoNve8W/wWsc8qPfMMl6NXIj0Fa6/yGloy1rdSlVVOx3P
-         IM74EDKym6n+0VqgFLUkVZqTHDEsERNUpk7THdbS4QW6BXOHZ8ICK3ek3K/+EQU02r+Y
-         AHCA==
-X-Gm-Message-State: AOJu0YwcPOuiBOvDJm/SnNc7bwZBJ9e45Yrh16HHw5Fb5uV+CZDhPcdl
-	koQoKimc7hY/Bknv32mcMjoVRgkM2fWffESVitxSWg4JU9ghknsb2a1Z5arMcNo=
-X-Google-Smtp-Source: AGHT+IEF3dKRKqarTnBYXO5TAih258zYEUVmUl9i+Hckz/OMf3T05ro3fHPweLsgT86eMNWxUx0sCQ==
-X-Received: by 2002:a05:6214:33c3:b0:6cc:1dd9:296 with SMTP id 6a1803df08f44-6cc1dd9048bmr26873916d6.0.1728945621142;
-        Mon, 14 Oct 2024 15:40:21 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cc22910ecfsm392706d6.23.2024.10.14.15.40.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 15:40:19 -0700 (PDT)
-Date: Mon, 14 Oct 2024 18:40:00 -0400
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-cxl@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
-	akpm@linux-foundation.org, dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com, alison.schofield@intel.com,
-	rrichter@amd.com, terry.bowman@amd.com, lenb@kernel.org,
-	dave.jiang@intel.com, ira.weiny@intel.com
-Subject: Re: [PATCH 1/3] memory: extern memory_block_size_bytes and
- set_memory_block_size_order
-Message-ID: <Zw2dwG_rp7Hg-vIa@PC2K9PVX.TheFacebook.com>
-References: <20241008044355.4325-1-gourry@gourry.net>
- <20241008044355.4325-2-gourry@gourry.net>
- <039e8c87-c5da-4469-b10e-e57dd5662cff@redhat.com>
- <ZwVG8Z3GRYLoL_Jk@PC2K9PVX.TheFacebook.com>
- <d3203f2c-eff6-4e84-80cd-3c6f58dab292@redhat.com>
- <ZwVOE6JRS8Fd9_a8@PC2K9PVX.TheFacebook.com>
- <2c854e5e-c200-4ed9-bf21-778779af7e5b@redhat.com>
- <Zw0p7-7ymn-0bPiC@PC2K9PVX.TheFacebook.com>
- <01fbdcef-b923-4bb0-80b0-f1d3e57fe515@redhat.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="0Fjp2AXF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1728950562;
+	bh=bc0gGgWaIEjvU+FNjrCKosVTwu3yCu4HMvtfsrQBbNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=0Fjp2AXF2+qI4DRHIQYAERNQtHpwIeeyPIHFzpiWw+gak7VZLf7IpDS0qzj/iwJTQ
+	 apfEH8/UTVufXCjbRqJtkPWzUpi/wKLA+6h3wp/sNC3JgGt8N2F6QJsvxeZnIyJzGg
+	 dxmB+JqU7K6ZzbCcStv3pteME7PVWNcqaNrrQyOL4fQaA1LNitq2JOKB2g0U99UB9m
+	 T33Dd/cUm6FBacUJc1UB1BW9nx3GZIkqj+YZFANP1jVkcu7zNy3Awcjhl/K3ysYGgR
+	 V6Y7vVNGILUYZUMq0EVaXzsr+KHHpcqJze0CF2qVPn39LwjIH5Uz1ofuy3gZTh5IL4
+	 sNXiypG8i2/cw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id 618853A029B;
+	Tue, 15 Oct 2024 00:02:34 +0000 (UTC)
+Message-ID: <4239bfd4-d5fe-4ac8-a087-9e1584765e61@icloud.com>
+Date: Tue, 15 Oct 2024 08:02:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01fbdcef-b923-4bb0-80b0-f1d3e57fe515@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] cxl/port: Fix use-after-free, permit out-of-order
+ decoder shutdown
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+ ira.weiny@intel.com
+Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>, vishal.l.verma@intel.com,
+ linux-cxl@vger.kernel.org
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+ <172862486548.2150669.3548553804904171839.stgit@dwillia2-xfh.jf.intel.com>
+ <a7b8a007-907a-4fda-9a35-68faed109ed3@icloud.com>
+ <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
+ <060193f9-5de1-422b-abfb-6328a1c7b806@icloud.com>
+ <670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch>
+ <695d1a26-255f-464b-884b-47a5b7421128@icloud.com>
+ <670d71b354c30_3ee2294c4@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <670d71b354c30_3ee2294c4@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: BcrNUSmlarhB_qc4nw-s5mPq3Jp_xtA9
+X-Proofpoint-ORIG-GUID: BcrNUSmlarhB_qc4nw-s5mPq3Jp_xtA9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-14_18,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2410140172
 
-On Mon, Oct 14, 2024 at 10:32:36PM +0200, David Hildenbrand wrote:
-> On 14.10.24 16:25, Gregory Price wrote:
-> > On Mon, Oct 14, 2024 at 01:54:27PM +0200, David Hildenbrand wrote:
-> > > On 08.10.24 17:21, Gregory Price wrote:
-> > > > On Tue, Oct 08, 2024 at 05:02:33PM +0200, David Hildenbrand wrote:
-> > > > > On 08.10.24 16:51, Gregory Price wrote:
-> > > > > > > > +int __weak set_memory_block_size_order(unsigned int order)
-> > > > > > > > +{
-> > > > > > > > +	return -ENODEV;
-> > > > > > > > +}
-> > > > > > > > +EXPORT_SYMBOL_GPL(set_memory_block_size_order);
-> > > > > > > 
-> > > > > > > I can understand what you are trying to achieve, but letting arbitrary
-> > > > > > > modules mess with this sounds like a bad idea.
-> > > > > > > 
-> > > > > > 
-> > > > > > I suppose the alternative is trying to scan the CEDT from inside each
-> > > > > > machine, rather than the ACPI driver?  Seems less maintainable.
-> > > > > > 
-> > > > > > I don't entirely disagree with your comment.  I hummed and hawwed over
-> > > > > > externing this - hence the warning in the x86 machine.
-> > > > > > 
-> > > > > > Open to better answers.
-> > > > > 
-> > > > > Maybe an interface to add more restrictions on the maximum size might be
-> > > > > better (instead of setting the size/order, you would impose another upper
-> > > > > limit).
-> > > > 
-> > > > That is effectively what set_memory_block_size_order is, though.  Once
-> > > > blocks are exposed to the allocators, its no longer safe to change the
-> > > > size (in part because it was built assuming it wouldn't change, but I
-> > > > imagine there are other dragons waiting in the shadows to bite me).
-> > > 
-> > > Yes, we must run very early.
-> > > 
-> > > How is this supposed to interact with code like
-> > > 
-> > > set_block_size()
-> > > 
-> > > that also calls set_memory_block_size_order() on UV systems (assuming there
-> > > will be CXL support sooner or later?)?
-> > > 
-> > > 
-> > 
-> > Tying the other email to this one - just clarifying the way forward here.
-> > 
-> > It sounds like you're saying at a minimum drop EXPORT tags to prevent
-> > modules from calling it - but it also sounds like built-ins need to be
-> > prevented from touching it as well after a certain point in early boot.
-> 
-> Right, at least the EXPORT is not required.
-> 
-> > 
-> > Do you think I should go down the advise() path as suggested by Ira,
-> > just adding a arch_lock_blocksize() bit and have set_..._order check it,
-> > or should we just move towards each architecture having to go through
-> > the ACPI:CEDT itself?
-> 
-> Let's summarize what we currently have on x86 is:
-> 
-> 1) probe_memory_block_size()
-> 
-> Triggered on first memory_block_size_bytes() invocation. Makes a decision
-> based on:
-> 
-> a) Already set size using set_memory_block_size_order()
-> b) RAM size
-> c) Bare metal vs. virt (bare metal -> use max)
-> d) Virt: largest block size aligned to memory end
-> 
-> 
-> 2) set_memory_block_size_order()
-> 
-> Triggered by set_block_size() on UV systems.
-> 
-> 
-> I don't think set_memory_block_size_order() is the right tool to use. We
-> just want to leave that alone I think -- it's a direct translation of a
-> kernel cmdline parameter that should win.
-> 
-> You essentially want to tweak the b)->d) logic to take other alignment into
-> consideration.
-> 
-> Maybe have some simple callback mechanism probe_memory_block_size() that can
-> consult other sources for alignment requirements?
->
+On 2024/10/15 03:32, Dan Williams wrote:
+> Zijun Hu wrote:
+>> On 2024/10/13 06:16, Dan Williams wrote:
+>>> Zijun Hu wrote:
+>>> [..]
+>>>>>> it does NOT deserve, also does NOT need to introduce a new core driver
+>>>>>> API device_for_each_child_reverse_from(). existing
+>>>>>> device_for_each_child_reverse() can do what the _from() wants to do.
+>>>>>>
 
-Thanks for this - I'll cobble something together.
+[snip]
 
-Probably this ends up falling out similar to what Ira suggested. 
-
-drivers/acpi/numa/srat.c
-    acpi_numa_init():
-        order = parse_cfwm(...)
-        memblock_advise_size(order);
-
-drivers/base/memory.c
-    static int memblock_size_order = 0; /* let arch choose */
-
-    int memblock_advise_size(order)
-        int old_order;
-        int new_order;
-        if (order <= 0)
-            return -EINVAL;
-
-        do {
-            old_order = memblock_size_order;
-            new_order = MIN(old_order, order);
-        } while (!atomic_cmpxchg(&memblock_size_order, old_order, new_order));
-
-        /* memblock_size_order is now <= order, if -1 then the probe won */
-        return new_order;
-
-    int memblock_probe_size()
-        return atomic_xchg(&memblock_size_order, -1);
-
-drivers/base/memblock.h
-    #ifdef HOTPLUG
-        export memblock_advise_size()
-        export memblock_probe_size()
-    #else
-        static memblock_advice_size() { return -ENODEV; } /* always fail */
-        static memblock_probe_size() { return 0; } /* arch chooses */
-    #endif
-
-arch/*/mm/...
-    probe_block_size():
-        memblock_probe_size();
-        /* select minimum across above suggested values */
-
-> If that's not an option, then another way to set further min-alignment
-> requirements (whereby we take MIN(old_align, new_align))?
+>>> Introduce new superset calls with the additional parameter and then
+>>> rewrite the old routines to just have a simple wrapper that passes a
+>>> NULL @start parameter.
+>>>
+>>> Now, if Greg has the appetite to go touch all ~370 existing callers, so
+>>> be it, but introducing a superset-iterator-helper and a compat-wrapper
+>>> for legacy is the path I would take.
+>>>
+>>
+>> current kernel tree ONLY has 15 usages of
+>> device_for_each_child_reverse(), i would like to
+>> add an extra parameter @start as existing
+>> (class|driver)_for_each_device() and bus_for_each_(dev|drv)() do
+>> if it is required.
 > 
-> -- 
-> Cheers,
+> A new parameter to a new wrapper symbol sounds fine to me. Otherwise,
+> please do not go thrash all the call sites to pass an unused NULL @start
+> parameter. Just accept that device_for_each_* did not follow the
+> {class,driver,bus}_for_each_* example and instead introduce a new symbol
+> to wrap the new functionality that so far only has the single CXL user.
 > 
-> David / dhildenb
+
+you maybe regard my idea as a alternative proposal if Greg dislike
+introducing a new core driver API. (^^)
+
+> [..]
+>>> If I understand your question correctly you are asking how does
+>>> device_for_each_child_reverse_from() get used in
+>>> cxl_region_find_decoder() to enforce in-order allocation?
+>>>
+>>
+>> yes. your recommendation may help me understand it.
+>>
+
+below simple solution should have same effect as your recommendation.
+also have below optimizations:
+
+1) it don't need new core API.
+2) it is more efficient since it has minimal iterating.
+
+i will submit it if you like it. (^^)
+
+index e701e4b04032..37da42329ff3 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -796,8 +796,9 @@ static size_t show_targetN(struct cxl_region *cxlr,
+char *buf, int pos)
+
+ static int match_free_decoder(struct device *dev, void *data)
+ {
++       struct cxl_port *port = to_cxl_port(dev->parent);
+        struct cxl_decoder *cxld;
+-       int *id = data;
++       struct device **target_dev = data;
+
+        if (!is_switch_decoder(dev))
+                return 0;
+@@ -805,15 +806,19 @@ static int match_free_decoder(struct device *dev,
+void *data)
+        cxld = to_cxl_decoder(dev);
+
+        /* enforce ordered allocation */
+-       if (cxld->id != *id)
+-               return 0;
+-
+-       if (!cxld->region)
+-               return 1;
+-
+-       (*id)++;
+-
+-       return 0;
++       if (cxld->id == port->commit_end + 1) {
++               if (!cxld->region) {
++                       *target_dev = dev;
++                       return 1;
++               } else {
++                       dev_dbg(dev->parent,
++                               "next decoder to commit is already
+reserved\n",
++                               dev_name(dev));
++                       return -ENODEV;
++               }
++       } else {
++               return cxld->flags & CXL_DECODER_F_ENABLE ? 0 : -EBUSY;
++       }
+ }
+
+ static int match_auto_decoder(struct device *dev, void *data)
+@@ -839,7 +844,7 @@ cxl_region_find_decoder(struct cxl_port *port,
+                        struct cxl_endpoint_decoder *cxled,
+                        struct cxl_region *cxlr)
+ {
+-       struct device *dev;
++       struct device *dev = NULL;
+        int id = 0;
+
+        if (port == cxled_to_port(cxled))
+@@ -848,8 +853,8 @@ cxl_region_find_decoder(struct cxl_port *port,
+        if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
+                dev = device_find_child(&port->dev, &cxlr->params,
+                                        match_auto_decoder);
+-       else
+-               dev = device_find_child(&port->dev, &id,
+match_free_decoder);
++       else if (device_for_each_child(&port->dev, &dev,
+match_free_decoder) > 0)
++               get_device(dev);
+        if (!dev)
+                return NULL;
+        /*
+
+
+>>> The recommendation is the following:
+>>>
+>>> -- 8< --
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index 3478d2058303..32cde18ff31b 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -778,26 +778,50 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+>>>  	return rc;
+>>>  }
+>>>  
+>>> +static int check_commit_order(struct device *dev, const void *data)
+>>> +{
+>>> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+>>> +
+>>> +	/*
+>>> +	 * if port->commit_end is not the only free decoder, then out of
+>>> +	 * order shutdown has occurred, block further allocations until
+>>> +	 * that is resolved
+>>> +	 */
+>>> +	if (((cxld->flags & CXL_DECODER_F_ENABLE) == 0))
+>>> +		return -EBUSY;
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int match_free_decoder(struct device *dev, void *data)
+>>>  {
+>>> +	struct cxl_port *port = to_cxl_port(dev->parent);
+>>>  	struct cxl_decoder *cxld;
+>>> -	int *id = data;
+>>> +	int rc;
+>>>  
+>>>  	if (!is_switch_decoder(dev))
+>>>  		return 0;
+>>>  
+>>>  	cxld = to_cxl_decoder(dev);
+>>>  
+>>> -	/* enforce ordered allocation */
+>>> -	if (cxld->id != *id)
+>>> +	if (cxld->id != port->commit_end + 1)
+>>>  		return 0;
+>>>  
+>>
+>> for a port, is it possible that there are multiple CXLDs with same IDs?
 > 
+> Not possible, that is also enforced by the driver core, all kernel
+> object names must be unique (at least if they have the same parent), and
+> the local subsystem convention is that all decoders are registered in
+> id-order.
+
