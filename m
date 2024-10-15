@@ -1,246 +1,178 @@
-Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBDB290F
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Oct 2024 00:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB26A920
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Oct 2024 00:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728950564; cv=none; b=VR7qP19HqJbl2BvIt0ZzeVUcPuZE5IvUTxRZ2kjO47rGxGA6zxvprRGCUU7ZYL55Qo03Bn9Ippdn5XbUohx0W3d9UxG4bSxB8DkHzp+8Wc5DaTTWv2KkNksdqXEOkcZgeNFteygMkAzCNSEQn+6ry62ZP0sMEeXXlQ/C1RTtIZA=
+	t=1728950809; cv=none; b=SJPK4x7E2ha8RJrYUVCJgro2Ses3fvPHl0yavg2zrSK0O4Z6yM+oWqo0vlm+Jq012NvEhEutTtCy2Tqz59uSmei6hkQqfaA2SOR6b7aYTXBZl0ohhr1E/HCXG9L/RWFXQUvHexynroT4LpL+nCE2eKm1oVHjd4VQ5zYV0UKXUIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728950564; c=relaxed/simple;
-	bh=qdp1IXm7sPtQ1iXlhRGCFjNLSsWp/D6bIF43Ev+J+nA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wx9Wf/1drWZK2cJ859jBtz79VmWPR2R9aNT+qylTmIYfa6hpBW42TiLF9g90tzSrJBfqyBMA4cNJRqnBOUA2LbAlc+PHFtCkmALxyLbI2JGEtzzHZBRozz38CZHDPAfF0nlEM7dyk7WfZfz+PrfOnmnvY1Wee5qz/mR2p5Kwq9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=0Fjp2AXF; arc=none smtp.client-ip=17.58.6.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1728950809; c=relaxed/simple;
+	bh=pPFUA4Pu5oXH6I8ccGwkiCg8aaiJuDpzY9ijNQ8ACAw=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=M5vT8J36MbMq6ZVyOt8SzW58v+t1IWMqdxTOnkqpcT1XmFggY62vgvbswXv0Pflw9CkwogKtJ1eIoZuzWnha3cJ03qvyzdsX2EqROG7gGIPepQl+8BiL660it4X0OHI6eVb4BPltarEjGKnDavmqMnRMv/OSIZOdumhubU/pJIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+IN4DRB; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="0Fjp2AXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1728950562;
-	bh=bc0gGgWaIEjvU+FNjrCKosVTwu3yCu4HMvtfsrQBbNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=0Fjp2AXF2+qI4DRHIQYAERNQtHpwIeeyPIHFzpiWw+gak7VZLf7IpDS0qzj/iwJTQ
-	 apfEH8/UTVufXCjbRqJtkPWzUpi/wKLA+6h3wp/sNC3JgGt8N2F6QJsvxeZnIyJzGg
-	 dxmB+JqU7K6ZzbCcStv3pteME7PVWNcqaNrrQyOL4fQaA1LNitq2JOKB2g0U99UB9m
-	 T33Dd/cUm6FBacUJc1UB1BW9nx3GZIkqj+YZFANP1jVkcu7zNy3Awcjhl/K3ysYGgR
-	 V6Y7vVNGILUYZUMq0EVaXzsr+KHHpcqJze0CF2qVPn39LwjIH5Uz1ofuy3gZTh5IL4
-	 sNXiypG8i2/cw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id 618853A029B;
-	Tue, 15 Oct 2024 00:02:34 +0000 (UTC)
-Message-ID: <4239bfd4-d5fe-4ac8-a087-9e1584765e61@icloud.com>
-Date: Tue, 15 Oct 2024 08:02:25 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+IN4DRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728950807; x=1760486807;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pPFUA4Pu5oXH6I8ccGwkiCg8aaiJuDpzY9ijNQ8ACAw=;
+  b=i+IN4DRB5KRAIahH2/AX6mWBsfq2aKOKa50VrIWJzHn/tBh0Ge9zBt6z
+   vYYkBo3YFWj9jaxYJ+hz3yJ+33vqyXftjkLgo1mn2Oprf7INTm2QUax0i
+   ses/VJxVamkPUjk42nnmW2q5fMF6BPy6y5fV2ZyGlJfdyGxG2O+ItgzEv
+   3r2fBGrV6vU6pQQkoUPMMKcWmkVKp0li5ru7g7z0TiLqhpXKpCxk4kART
+   oeO3xlHLVqimjYXEDXdz6Y5yn9mLODMlt0cRk+Pbt6kC+bpxqk0X3KupW
+   2laxurROngmuX0j8gItmk/H3yrTAabTqASKot/7UuhXHOWYGP3H7MXLPB
+   A==;
+X-CSE-ConnectionGUID: P1hmq7qFSBe42Ds1B0azTA==
+X-CSE-MsgGUID: 2+HZvi3hRDaXMsoNKSrNsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="32120244"
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="32120244"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 17:06:46 -0700
+X-CSE-ConnectionGUID: Dl9gtFN4SMqxGmjq7SXgXg==
+X-CSE-MsgGUID: qTIvHabAQvufc4q3ruAKjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="108465620"
+Received: from cmdeoliv-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.108.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 17:06:46 -0700
+Subject: [PATCH] cxl/port: Prevent out-of-order decoder allocation
+From: Dan Williams <dan.j.williams@intel.com>
+To: dave.jiang@intel.com, ira.weiny@intel.com
+Cc: Zijun Hu <zijun_hu@icloud.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, linux-cxl@vger.kernel.org
+Date: Mon, 14 Oct 2024 17:06:44 -0700
+Message-ID: <172895072669.39002.9296583943188706348.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] cxl/port: Fix use-after-free, permit out-of-order
- decoder shutdown
-To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
- ira.weiny@intel.com
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>, vishal.l.verma@intel.com,
- linux-cxl@vger.kernel.org
-References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
- <172862486548.2150669.3548553804904171839.stgit@dwillia2-xfh.jf.intel.com>
- <a7b8a007-907a-4fda-9a35-68faed109ed3@icloud.com>
- <6709647f66d94_964f2294ae@dwillia2-xfh.jf.intel.com.notmuch>
- <060193f9-5de1-422b-abfb-6328a1c7b806@icloud.com>
- <670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch>
- <695d1a26-255f-464b-884b-47a5b7421128@icloud.com>
- <670d71b354c30_3ee2294c4@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <670d71b354c30_3ee2294c4@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: BcrNUSmlarhB_qc4nw-s5mPq3Jp_xtA9
-X-Proofpoint-ORIG-GUID: BcrNUSmlarhB_qc4nw-s5mPq3Jp_xtA9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-14_18,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2410140172
 
-On 2024/10/15 03:32, Dan Williams wrote:
-> Zijun Hu wrote:
->> On 2024/10/13 06:16, Dan Williams wrote:
->>> Zijun Hu wrote:
->>> [..]
->>>>>> it does NOT deserve, also does NOT need to introduce a new core driver
->>>>>> API device_for_each_child_reverse_from(). existing
->>>>>> device_for_each_child_reverse() can do what the _from() wants to do.
->>>>>>
+With the recent change to allow out-of-order decoder de-commit it
+highlights a need to strengthen the in-order decoder commit guarantees.
+As it stands match_free_decoder() ensures that if 2 regions are racing
+decoder allocations the one that wins the race will get the lower id
+decoder, but that still leaves the race to *commit* the decoder.
 
-[snip]
+Rather than have this complicated case of "reserved in-order, but may
+still commit out-of-order", just arrange for the reservation order to
+match the commit-order. In other words, prevent subsequent allocations
+until the last reservation is committed.
 
->>> Introduce new superset calls with the additional parameter and then
->>> rewrite the old routines to just have a simple wrapper that passes a
->>> NULL @start parameter.
->>>
->>> Now, if Greg has the appetite to go touch all ~370 existing callers, so
->>> be it, but introducing a superset-iterator-helper and a compat-wrapper
->>> for legacy is the path I would take.
->>>
->>
->> current kernel tree ONLY has 15 usages of
->> device_for_each_child_reverse(), i would like to
->> add an extra parameter @start as existing
->> (class|driver)_for_each_device() and bus_for_each_(dev|drv)() do
->> if it is required.
-> 
-> A new parameter to a new wrapper symbol sounds fine to me. Otherwise,
-> please do not go thrash all the call sites to pass an unused NULL @start
-> parameter. Just accept that device_for_each_* did not follow the
-> {class,driver,bus}_for_each_* example and instead introduce a new symbol
-> to wrap the new functionality that so far only has the single CXL user.
-> 
+This precludes overlapping region creation events and requires the
+previous regionN to either move forward to the decoder commit stage or
+drop its reservation before regionN+1 can move forward. That is,
+provided that regionN and regionN+1 decode through the same switch port.
 
-you maybe regard my idea as a alternative proposal if Greg dislike
-introducing a new core driver API. (^^)
+As a side effect this allows match_free_decoder() to drop its dependency
+on needing write access to the device_find_child() @data parameter [1].
 
-> [..]
->>> If I understand your question correctly you are asking how does
->>> device_for_each_child_reverse_from() get used in
->>> cxl_region_find_decoder() to enforce in-order allocation?
->>>
->>
->> yes. your recommendation may help me understand it.
->>
+Reported-by: Zijun Hu <zijun_hu@icloud.com>
+Closes: http://lore.kernel.org/20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com [1]
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+This patch is incremental to "cxl: Initialization and shutdown fixes"
 
-below simple solution should have same effect as your recommendation.
-also have below optimizations:
+[2]: http://lore.kernel.org/172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com
 
-1) it don't need new core API.
-2) it is more efficient since it has minimal iterating.
+ drivers/cxl/core/region.c |   43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
-i will submit it if you like it. (^^)
-
-index e701e4b04032..37da42329ff3 100644
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3478d2058303..dff618c708dc 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -796,8 +796,9 @@ static size_t show_targetN(struct cxl_region *cxlr,
-char *buf, int pos)
-
+@@ -778,26 +778,50 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+ 	return rc;
+ }
+ 
++static int check_commit_order(struct device *dev, const void *data)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++
++	/*
++	 * if port->commit_end is not the only free decoder, then out of
++	 * order shutdown has occurred, block further allocations until
++	 * that is resolved
++	 */
++	if (((cxld->flags & CXL_DECODER_F_ENABLE) == 0))
++		return -EBUSY;
++	return 0;
++}
++
  static int match_free_decoder(struct device *dev, void *data)
  {
-+       struct cxl_port *port = to_cxl_port(dev->parent);
-        struct cxl_decoder *cxld;
--       int *id = data;
-+       struct device **target_dev = data;
-
-        if (!is_switch_decoder(dev))
-                return 0;
-@@ -805,15 +806,19 @@ static int match_free_decoder(struct device *dev,
-void *data)
-        cxld = to_cxl_decoder(dev);
-
-        /* enforce ordered allocation */
--       if (cxld->id != *id)
--               return 0;
++	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_decoder *cxld;
+-	int *id = data;
++	int rc;
+ 
+ 	if (!is_switch_decoder(dev))
+ 		return 0;
+ 
+ 	cxld = to_cxl_decoder(dev);
+ 
+-	/* enforce ordered allocation */
+-	if (cxld->id != *id)
++	if (cxld->id != port->commit_end + 1)
+ 		return 0;
+ 
+-	if (!cxld->region)
+-		return 1;
 -
--       if (!cxld->region)
--               return 1;
--
--       (*id)++;
--
--       return 0;
-+       if (cxld->id == port->commit_end + 1) {
-+               if (!cxld->region) {
-+                       *target_dev = dev;
-+                       return 1;
-+               } else {
-+                       dev_dbg(dev->parent,
-+                               "next decoder to commit is already
-reserved\n",
-+                               dev_name(dev));
-+                       return -ENODEV;
-+               }
-+       } else {
-+               return cxld->flags & CXL_DECODER_F_ENABLE ? 0 : -EBUSY;
-+       }
+-	(*id)++;
++	if (cxld->region) {
++		dev_dbg(dev->parent,
++			"next decoder to commit (%s) is already reserved (%s)\n",
++			dev_name(dev), dev_name(&cxld->region->dev));
++		return 0;
++	}
+ 
+-	return 0;
++	rc = device_for_each_child_reverse_from(dev->parent, dev, NULL,
++						check_commit_order);
++	if (rc) {
++		dev_dbg(dev->parent,
++			"unable to allocate %s due to out of order shutdown\n",
++			dev_name(dev));
++		return 0;
++	}
++	return 1;
  }
-
+ 
  static int match_auto_decoder(struct device *dev, void *data)
-@@ -839,7 +844,7 @@ cxl_region_find_decoder(struct cxl_port *port,
-                        struct cxl_endpoint_decoder *cxled,
-                        struct cxl_region *cxlr)
+@@ -824,7 +848,6 @@ cxl_region_find_decoder(struct cxl_port *port,
+ 			struct cxl_region *cxlr)
  {
--       struct device *dev;
-+       struct device *dev = NULL;
-        int id = 0;
-
-        if (port == cxled_to_port(cxled))
-@@ -848,8 +853,8 @@ cxl_region_find_decoder(struct cxl_port *port,
-        if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-                dev = device_find_child(&port->dev, &cxlr->params,
-                                        match_auto_decoder);
--       else
--               dev = device_find_child(&port->dev, &id,
-match_free_decoder);
-+       else if (device_for_each_child(&port->dev, &dev,
-match_free_decoder) > 0)
-+               get_device(dev);
-        if (!dev)
-                return NULL;
-        /*
-
-
->>> The recommendation is the following:
->>>
->>> -- 8< --
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 3478d2058303..32cde18ff31b 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -778,26 +778,50 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->>>  	return rc;
->>>  }
->>>  
->>> +static int check_commit_order(struct device *dev, const void *data)
->>> +{
->>> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
->>> +
->>> +	/*
->>> +	 * if port->commit_end is not the only free decoder, then out of
->>> +	 * order shutdown has occurred, block further allocations until
->>> +	 * that is resolved
->>> +	 */
->>> +	if (((cxld->flags & CXL_DECODER_F_ENABLE) == 0))
->>> +		return -EBUSY;
->>> +	return 0;
->>> +}
->>> +
->>>  static int match_free_decoder(struct device *dev, void *data)
->>>  {
->>> +	struct cxl_port *port = to_cxl_port(dev->parent);
->>>  	struct cxl_decoder *cxld;
->>> -	int *id = data;
->>> +	int rc;
->>>  
->>>  	if (!is_switch_decoder(dev))
->>>  		return 0;
->>>  
->>>  	cxld = to_cxl_decoder(dev);
->>>  
->>> -	/* enforce ordered allocation */
->>> -	if (cxld->id != *id)
->>> +	if (cxld->id != port->commit_end + 1)
->>>  		return 0;
->>>  
->>
->> for a port, is it possible that there are multiple CXLDs with same IDs?
-> 
-> Not possible, that is also enforced by the driver core, all kernel
-> object names must be unique (at least if they have the same parent), and
-> the local subsystem convention is that all decoders are registered in
-> id-order.
+ 	struct device *dev;
+-	int id = 0;
+ 
+ 	if (port == cxled_to_port(cxled))
+ 		return &cxled->cxld;
+@@ -833,7 +856,7 @@ cxl_region_find_decoder(struct cxl_port *port,
+ 		dev = device_find_child(&port->dev, &cxlr->params,
+ 					match_auto_decoder);
+ 	else
+-		dev = device_find_child(&port->dev, &id, match_free_decoder);
++		dev = device_find_child(&port->dev, NULL, match_free_decoder);
+ 	if (!dev)
+ 		return NULL;
+ 	/*
 
