@@ -1,87 +1,69 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D1015E5CA;
-	Wed, 16 Oct 2024 16:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F6717CA1D;
+	Wed, 16 Oct 2024 16:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729096219; cv=none; b=I5e/4cuWhndCyaGG1A9UlZNAmtabhcp7Sn2OphVP85Edm7vIykY32qbblqmkZ+qC6GQ9A8ZLW0TyaTn415+KK+F0GNHviPEgX+ehRlkuctvFbFNJIDio5yGEj0Su+bb4Ast3rKukQaaFmwLE9jKZ/TbvfNwIha/5IRNg4fwAE/0=
+	t=1729096462; cv=none; b=MjmoNrbXYk7sZlQYkmlUeBn883EcqKlqtGJ9hyyeo3ENDqETobDQoB7DYjvXiYfyxxOTYF2hF/6jcRePe9yt8XiFD7OiP0J/XX4mR83/bAbljhUdWoKvDU7gYC4VaZNwSPahvZqa7pfujP9V+Awd5S8lMJzRcQk70HT55CNK+/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729096219; c=relaxed/simple;
-	bh=ifgkVkIER1fekyXXjdFz/dVArNLvS3sJe+MD8HitC70=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t/l0Jj/JuoRu1VFO0XfNsvVp4MZS6d61RH0HYRQoMN9+tfMB+06yVrR99+HIiVjWsohjfpoqVcAY9RPT5zaLvLf+vOZU7UROBux90vDO2qcz/30ZU3FCZtIdDU7J65cwXrh6tr7nYtnGSqNHnGen9un0qMUrMQAODgmuC85UaYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1729096462; c=relaxed/simple;
+	bh=2ZEI9hUJ/eG8J9tqMxLov+QtZjHgeL2+nf2gMo2b/Ww=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pwdmiAnvMj6mTNjJMi9v1lHegI4pfeo+/J7I0EFrkSgkijIYnvctaVZFmOtEdiLBqX2cVmRh7WxWiGqFRmY/vrAFiHlnZe6J0E8vRDEkGkiuTpevanUHdugJucZHJ7UAHvV+dGEX/JYfpta01nO/jQCFzFKpWnTE8onv/XwmdQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTGcJ4qxZz6J67l;
-	Thu, 17 Oct 2024 00:28:32 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E977A140B39;
-	Thu, 17 Oct 2024 00:30:13 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
- 2024 18:30:13 +0200
-Date: Wed, 16 Oct 2024 17:30:11 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<smita.koralahallichannabasappa@amd.com>
-Subject: Re: [PATCH 06/15] cxl/aer/pci: Introduce PCI_ERS_RESULT_PANIC to
- pci_ers_result type
-Message-ID: <20241016173011.000021e4@Huawei.com>
-In-Reply-To: <20241008221657.1130181-7-terry.bowman@amd.com>
-References: <20241008221657.1130181-1-terry.bowman@amd.com>
-	<20241008221657.1130181-7-terry.bowman@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTGj12xFVz6J6bv;
+	Thu, 17 Oct 2024 00:32:37 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id AADA4140A46;
+	Thu, 17 Oct 2024 00:34:18 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.158.191) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 16 Oct 2024 18:34:17 +0200
+From: <shiju.jose@huawei.com>
+To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
+	<linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
+Subject: [RFC PATCH 0/4] Updates for CXL Event Records
+Date: Wed, 16 Oct 2024 17:33:45 +0100
+Message-ID: <20241016163349.1210-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-On Tue, 8 Oct 2024 17:16:48 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+From: Shiju Jose <shiju.jose@huawei.com>
 
-> The CXL AER service will be updated to support CXL PCIe port error
-> handling in the future. These devices will use a system panic during
-> recovery handling.
+CXL spec rev 3.1 CXL Event Records has updated w.r.t CXL spec rev 3.0.
+Add updates for the above spec changes in the CXL events records and CXL
+trace events implementation.
 
-Recovery handling by panic? :) That's an interesting form of recovery..
+Note: Please apply following fix patch first if not present.
+https://patchwork.kernel.org/project/cxl/patch/20241014143003.1170-1-shiju.jose@huawei.com/
 
-> 
-> Add PCI_ERS_RESULT_PANIC enumeration to pci_ers_result type.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  include/linux/pci.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 4cf89a4b4cbc..6f7e7371161d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -857,6 +857,9 @@ enum pci_ers_result {
->  
->  	/* No AER capabilities registered for the driver */
->  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
-> +
-> +	/* Device state requires system panic */
-> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
->  };
->  
->  /* PCI bus error event callbacks */
+Shiju Jose (4):
+  cxl/events: Updates for CXL Common Event Record Format
+  cxl/events: Updates for CXL General Media Event Record
+  cxl/events: Updates for CXL DRAM Event Record
+  cxl/events: Updates for CXL Memory Module Event Record
+
+ drivers/cxl/core/trace.h | 201 +++++++++++++++++++++++++++++++++------
+ include/cxl/event.h      |  20 +++-
+ 2 files changed, 190 insertions(+), 31 deletions(-)
+
+-- 
+2.34.1
 
