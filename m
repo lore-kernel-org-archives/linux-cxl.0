@@ -1,259 +1,144 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711B41FDF99;
-	Wed, 16 Oct 2024 16:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54A820C031;
+	Wed, 16 Oct 2024 16:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729097676; cv=none; b=uhSZ73Ia7xgrSmeu/Y50198UHWXrqghl98MEddUtf3nUK34XpBJLpuU5P4YBMrifP8uZ86yzZN3FcOxGHzQSZ0ekG0e4PjZj0s1D36Qp2M1JOAux3JWlZFvjV2O3iss1wO0GX7Q1VqEMgZXe8AcLxUQyuB3AaMsE/5mpqtZT21c=
+	t=1729097973; cv=none; b=lDtu7cG4vRrsdcYvqhlreFI5G0ob0D4cCy3rgBe9FPI86fdOtWZukAGuLj7gdU4XSNShKPtxJ+vZouRZkhgWCrbundy0sL+e0XRorgVTW7oYrC7/jrI+fKXKOtEqC4EEYZJJtXkOLGjIo/K+qhmEPW6yOgE2ioScBRrF6j3XbOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729097676; c=relaxed/simple;
-	bh=PYlv1pv0ilaHXl9zv60mR5y5zmk1H8dbAl6VIgahPj4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mFFwbHegblbdRWS9RGDFRYg/nPcSrzKVkaHi+MBXrTtXZBcGEfmgb7zbdB5Cp9gGfTkI2p57JbQI0DWv/IkXfE9HQlGLSNJxu76qdbeIHEorGXPRz23gxxaJe7o0jg3Zee2L6LVYGFhRD8PbUIfxRtxQXQ7WY5/7bVbFer4hONw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTH522zhRz6LDKl;
-	Thu, 17 Oct 2024 00:49:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A00E2140A86;
-	Thu, 17 Oct 2024 00:54:28 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
- 2024 18:54:27 +0200
-Date: Wed, 16 Oct 2024 17:54:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<smita.koralahallichannabasappa@amd.com>
-Subject: Re: [PATCH 07/15] cxl/aer/pci: Add CXL PCIe port uncorrectable
- error recovery in AER service driver
-Message-ID: <20241016175426.0000411e@Huawei.com>
-In-Reply-To: <20241008221657.1130181-8-terry.bowman@amd.com>
-References: <20241008221657.1130181-1-terry.bowman@amd.com>
-	<20241008221657.1130181-8-terry.bowman@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1729097973; c=relaxed/simple;
+	bh=WSA6cXI9paugRSBVmePqzHVAXr82KSH6RNrOaBQM73M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEvEyhV8jobc+JOX0QzNuauAzZtzuS7KwYmhVT07yDDgYmeH8Qh8LhH80677J7xAp3edEvyAYMNwdn5RFr+9uaWHXYY8siqCmu+h747B6KoEsEXifnXKrMNQdqv7lRdJepkC80WK9ZwNOlcsMcK9rjuYROo6pSE1cdI8A8Z0WZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrxJzigD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrxJzigD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332EEC4CEC5;
+	Wed, 16 Oct 2024 16:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729097973;
+	bh=WSA6cXI9paugRSBVmePqzHVAXr82KSH6RNrOaBQM73M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NrxJzigDbh/gSdc+iOlC5oMELDYBbHtNqAYPRBzoy+vyQbY2/i51f38aJ2fNQwR5c
+	 VD1PdckDwndDgVDRZuK0aTdQEZnBMKzRusul/NI+9DCHZkGgPYagx9G7ZYqZQQdFRz
+	 HRULNwqmDNyjZuscgs8xkU16p3K4gqxjwxXvWvzBjJAkldomwCJ4DCuxJu/Klht+/M
+	 kH4Rf/ifTnkNO7XtnN5He2fSGBCY+h6y4oug/PYQh/MZknJQ3+YxaZ8odjEVQu4R0G
+	 oOrLvlZkJ1G2piOWN1TQieA/CDwtXoQAGc3hJUyd1QhGx7UYZYi46RR+TJQIgcjoUR
+	 LGgfppYeG14Yw==
+Date: Wed, 16 Oct 2024 09:59:29 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, "Li, Ming" <ming4.li@intel.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v4 08/28] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <202410160958.518EB9DB6@keescook>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-8-c261ee6eeded@intel.com>
+ <20241009134936.00003e0e@Huawei.com>
+ <670c6037718f_9710f294d0@iweiny-mobl.notmuch>
+ <20241016165415.00002bad@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241016165415.00002bad@Huawei.com>
 
-On Tue, 8 Oct 2024 17:16:49 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> The current pcie_do_recovery() handles device recovery as result of
-> uncorrectable errors (UCE). But, CXL port devices require unique
-> recovery handling.
+On Wed, Oct 16, 2024 at 04:54:15PM +0100, Jonathan Cameron wrote:
+> On Sun, 13 Oct 2024 19:05:11 -0500
+> Ira Weiny <ira.weiny@intel.com> wrote:
 > 
-> Create a cxl_do_recovery() function parallel to pcie_do_recovery(). Add CXL
-> specific handling to the new recovery function.
+> > Jonathan Cameron wrote:
+> > > On Mon, 07 Oct 2024 18:16:14 -0500
+> > > ira.weiny@intel.com wrote:
+> > >   
+> > > > From: Navneet Singh <navneet.singh@intel.com>
+> > > > 
+> > > > Devices which optionally support Dynamic Capacity (DC) are configured
+> > > > via mailbox commands.  CXL 3.1 requires the host to issue the Get DC
+> > > > Configuration command in order to properly configure DCDs.  Without the
+> > > > Get DC Configuration command DCD can't be supported.
+> > > > 
+> > > > Implement the DC mailbox commands as specified in CXL 3.1 section
+> > > > 8.2.9.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> > > > information.  Disable DCD if DCD is not supported.  Leverage the Get DC
+> > > > Configuration command supported bit to indicate if DCD support.
+> > > > 
+> > > > Linux has no use for the trailing fields of the Get Dynamic Capacity
+> > > > Configuration Output Payload (Total number of supported extents, number
+> > > > of available extents, total number of supported tags, and number of
+> > > > available tags). Avoid defining those fields to use the more useful
+> > > > dynamic C array.
+> > > > 
+> > > > Cc: "Li, Ming" <ming4.li@intel.com>
+> > > > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> > > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > > 
+> > > Looks fine to me.  Trivial comment inline  
+> > 
+> > Thanks.
+> > 
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > 
+> > > 
+> > >   
+> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > > index e8907c403edb..0690b917b1e0 100644
+> > > > --- a/drivers/cxl/cxlmem.h
+> > > > +++ b/drivers/cxl/cxlmem.h  
+> > > ...
+> > >   
+> > > > +/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
+> > > > +struct cxl_mbox_get_dc_config_out {
+> > > > +	u8 avail_region_count;
+> > > > +	u8 regions_returned;
+> > > > +	u8 rsvd[6];
+> > > > +	/* See CXL 3.1 Table 8-165 */
+> > > > +	struct cxl_dc_region_config {
+> > > > +		__le64 region_base;
+> > > > +		__le64 region_decode_length;
+> > > > +		__le64 region_length;
+> > > > +		__le64 region_block_size;
+> > > > +		__le32 region_dsmad_handle;
+> > > > +		u8 flags;
+> > > > +		u8 rsvd[3];
+> > > > +	} __packed region[];  
+> > > 
+> > > Could throw in a __counted_by I think?  
+> > 
+> > I was not sure if this would work considering this is coming from the hardware.
+> > From what I have read I think it will but only because the region count can't
+> > be byte swapped.
 > 
-> The CXL port UCE recovery must invoke the AER service driver's CXL port
-> UCE callback. This is different than the standard pcie_do_recovery()
-> recovery that calls the pci_driver::err_handler UCE handler instead.
+> __counted_by_le() deals potentially larger values by just making
+> the __counted_by go away on big endian architectures.
 > 
-> Treat all CXL PCIe port UCE errors as fatal and call kernel panic to
-> "recover" the error. A panic is called instead of attempting recovery
-> to avoid potential system corruption.
 > 
-> The uncorrectable support added here will be used to complete CXL PCIe
-> port error handling in the future.
+> > 
+> > Is this something we want to do with structs coming from hardware when we can?
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> I think we still do.  Gustavo, Kees?
 
-Hi Terry,
+As long as "regions_returned" got correctly set by hardware before
+anything in the kernel touches the "region" array, it can totally be
+used by a __counted_by annotation.
 
-I'm a little bothered by the subtle difference in the bus walks
-in here vs the existing cases. If we need them, comments needed
-to explain why.
-
-If we are going to have separate handling, see if you can share
-a lot more of the code by factoring out common functions for
-the pci and cxl handling with callbacks to handle the differences.
-
-I've managed to get my head around this code a few times in the past
-(I think!) and really don't fancy having two subtle variants to
-consider next time we get a bug :( The RC_EC additions hurt my head.
-
-Jonathan
-
->  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffc..de12f2eb19ef 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -86,6 +86,63 @@ static int report_error_detected(struct pci_dev *dev,
->  	return 0;
->  }
->  
-> +static int cxl_report_error_detected(struct pci_dev *dev,
-> +				     pci_channel_state_t state,
-> +				     enum pci_ers_result *result)
-> +{
-> +	struct cxl_port_err_hndlrs *cxl_port_hndlrs;
-> +	struct pci_driver *pdrv;
-> +	pci_ers_result_t vote;
-> +
-> +	device_lock(&dev->dev);
-> +	cxl_port_hndlrs = find_cxl_port_hndlrs();
-
-Can we refactor to have a common function under this and report_error_detected()?
-
-> +	pdrv = dev->driver;
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		vote = PCI_ERS_RESULT_DISCONNECT;
-> +	} else if (!pci_dev_set_io_state(dev, state)) {
-> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
-> +			dev->error_state, state);
-> +		vote = PCI_ERS_RESULT_NONE;
-> +	} else if (!cxl_port_hndlrs || !cxl_port_hndlrs->error_detected) {
-> +		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> +			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
-> +			pci_info(dev, "can't recover (no error_detected callback)\n");
-> +		} else {
-> +			vote = PCI_ERS_RESULT_NONE;
-> +		}
-> +	} else {
-> +		vote = cxl_port_hndlrs->error_detected(dev, state);
-> +	}
-> +	pci_uevent_ers(dev, vote);
-> +	*result = merge_result(*result, vote);
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-
->  static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
->  {
->  	pm_runtime_get_sync(&pdev->dev);
-> @@ -188,6 +245,28 @@ static void pci_walk_bridge(struct pci_dev *bridge,
->  		cb(bridge, userdata);
->  }
->  
-> +/**
-> + * cxl_walk_bridge - walk bridges potentially AER affected
-> + * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
-> + * @cb:		callback to be called for each device found
-> + * @userdata:	arbitrary pointer to be passed to callback
-> + *
-> + * If the device provided is a bridge, walk the subordinate bus, including
-> + * the device itself and any bridged devices on buses under this bus.  Call
-> + * the provided callback on each device found.
-> + *
-> + * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
-> + * call the callback on the device itself.
-only call the callback on the device itself.
-
-(as you call it as stated above either way).
-
-> + */
-> +static void cxl_walk_bridge(struct pci_dev *bridge,
-> +			    int (*cb)(struct pci_dev *, void *),
-> +			    void *userdata)
-> +{
-> +	cb(bridge, userdata);
-> +	if (bridge->subordinate)
-> +		pci_walk_bus(bridge->subordinate, cb, userdata);
-The difference between this and pci_walk_bridge() is subtle and
-I'd like to avoid having both if we can.
-
-> +}
-> +
->  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_channel_state_t state,
->  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
-> @@ -276,3 +355,74 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  
->  	return status;
->  }
-> +
-> +pci_ers_result_t cxl_do_recovery(struct pci_dev *bridge,
-> +				 pci_channel_state_t state,
-> +				 pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(bridge->bus);
-> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> +	int type = pci_pcie_type(bridge);
-> +
-> +	if ((type != PCI_EXP_TYPE_ROOT_PORT) &&
-> +	    (type != PCI_EXP_TYPE_RC_EC) &&
-> +	    (type != PCI_EXP_TYPE_DOWNSTREAM) &&
-> +	    (type != PCI_EXP_TYPE_UPSTREAM)) {
-> +		pci_dbg(bridge, "Unsupported device type (%x)\n", type);
-> +		return status;
-> +	}
-> +
-
-Would similar trick to in pcie_do_recovery work here for the upstream
-and downstream ports use pci_upstream_bridge() and for the others pass the dev into
-pci_walk_bridge()?
-
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-> +
-> +	pci_dbg(bridge, "broadcast error_detected message\n");
-> +	if (state == pci_channel_io_frozen) {
-> +		cxl_walk_bridge(bridge, cxl_report_frozen_detected, &status);
-> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
-> +			pci_warn(bridge, "subordinate device reset failed\n");
-> +			goto failed;
-> +		}
-> +	} else {
-> +		cxl_walk_bridge(bridge, cxl_report_normal_detected, &status);
-> +	}
-> +
-> +	if (status == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error. Invoking panic");
-> +
-> +	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> +		status = PCI_ERS_RESULT_RECOVERED;
-> +		pci_dbg(bridge, "broadcast mmio_enabled message\n");
-> +		cxl_walk_bridge(bridge, report_mmio_enabled, &status);
-> +	}
-> +
-> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> +		status = PCI_ERS_RESULT_RECOVERED;
-> +		pci_dbg(bridge, "broadcast slot_reset message\n");
-> +		report_slot_reset(bridge, &status);
-> +		pci_walk_bridge(bridge, report_slot_reset, &status);
-> +	}
-> +
-> +	if (status != PCI_ERS_RESULT_RECOVERED)
-> +		goto failed;
-> +
-> +	pci_dbg(bridge, "broadcast resume message\n");
-> +	cxl_walk_bridge(bridge, report_resume, &status);
-> +
-> +	if (host->native_aer || pcie_ports_native) {
-> +		pcie_clear_device_status(bridge);
-> +		pci_aer_clear_nonfatal_status(bridge);
-> +	}
-> +
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
-> +	pci_info(bridge, "device recovery successful\n");
-> +	return status;
-> +
-> +failed:
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
-> +	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
-> +
-> +	pci_info(bridge, "device recovery failed\n");
-> +
-> +	return status;
-> +}
-
+-- 
+Kees Cook
