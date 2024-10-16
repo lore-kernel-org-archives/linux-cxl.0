@@ -1,51 +1,50 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095CDD520;
-	Wed, 16 Oct 2024 17:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965F14A09E;
+	Wed, 16 Oct 2024 18:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729099905; cv=fail; b=H39wz37JwUhvXMsh8YSLwGcxKX3Dxn+npaSjp6UsjS44HYIhgwvtyrhY96vrBeM8dm838aBVXRf/3AvcdUvwgq2TukROA/ojDNh/wDz8FLdzD5E++ZgWOo2lljlVwnSUw2jFBqudnxcWJOqoti6z4egBXhrPRoZMvLNGaUHyRpc=
+	t=1729102064; cv=fail; b=r7ZZZCsp4Jers39bAtwXNm6JS17nQS1Ti6myPxpK04XhSVH7kb2EYmIySGaCZy/ut/bu6rSvb79L68sqcPeZzOOrtXCGv2sqaernKY55Ne0DlZ7LSL4IEUiFC81QgXgAf2y8brjFUK03LKvTU14GWPuvIy2O8tnfECaU6+pe4Bg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729099905; c=relaxed/simple;
-	bh=fOY4HHZqK/NAIaHOy2qXTMHjV5mMsiVdn43b2Ml9RA0=;
+	s=arc-20240116; t=1729102064; c=relaxed/simple;
+	bh=Y+ZqjkgfQqFwvhaxqJNE7mTfn4uJwn6Yo1xtN/6MUcw=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gruT4sxn0Bb0xfjftXO7QC8KOdMihHlUfrZAj9gnzkuUv9tpB62+3RCzbXdbcaQzUJ/wTBGP1QGZKIZ+whf/tGWJuEkIUgAuxf3hL47/UXsmZa6ExyKNTV73TZMgJfub5KoheIhL545YBQwXljQi8adYGIea61WvH7lDgrJ+ikw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=O7E5Nlm6; arc=fail smtp.client-ip=40.107.243.60
+	 Content-Type:MIME-Version; b=nXWhUtvGfAsWb+SmdU0wzTV3hzvM73JhqNzCtubSGRlUiU0PRQ1pCzvgTmQdX0Q4RB5eXsYOefcHv7f0la0mIAKxzi7uTpQIegNhi/yphO/3OMmLab5h5RLOYRwefnNSaW6v0fGtwhQ0inO3zD7llCzI2v2eNHsvLRfqu31IFbo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qcArPhKc; arc=fail smtp.client-ip=40.107.92.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="O7E5Nlm6"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qcArPhKc"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m3KAgAxcrITZNrdJLhoJveIzVA0SdH7x2Kd+FsSjtf9wq1cLvNbkTng+7aUtU9CqtFJCgccNg6kj8jiNX5ijNRiMRQJmMeebzitW9vWRfXLEE+gTMkrr3csRhxZD3fsOO6aMbMQttMI3o8e2fsaOogaSaGL4kp3vliSA7BTp7uu2abmV1c7IaQ8iO7Cr91bZ4kr0tVeZROsi27YmBLvK1dUtEpRlkXWeNGD6ClfUj0Xlg+z38SsOOSa3Vol9/KILOK+KhQPxVUpUdBHB5owcNjlyfYkibq3pj7SCO75uI9GFYuvMPeivLmxYKobjKdHaXK9OcYiympc56Rv2zs+q2Q==
+ b=sdfGd4ZLGMiHpXso3lFvOyEJaG+lUHMvnWa96BdMeJkof0wN6ktVw6+sBx2C2Q6riy0oBCZQv3lYaVf6qqGyuV06ENMPnh/0UO4Mq2gR8NfNuuhEMBOVISLeUk6HZPOVDlx/R6BLNazn5JVbrU+W4nyTZu0EHMA0PNt0ipazdaRkGaGNTnDoRC2zlEffvxykCJ+ZgKfdwvgV6azGnopiiAbAKKwhYBYoxoPFDKy7sq1lu0FqZbFnPCWLLuCgjhfOD1z+GEOvsSPg5y8d1I3gebrh5JmpDtfbON38R2RNQ9qzpAHXViJhGC/uxdLdAk59yYFqNX2p6UgrVdYvToeCGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b+HTgjQRkfAXc9/pEARtXSZ3y3nKIInZXVvE4rxqNC0=;
- b=pfP1cIlO9TgWhIcmsxObc+a49+x3+t0O1ocDmMouslS20d2nRP41vjOXsiE5gz+LVglSgSSY8vTtawxvlDMXsE5L4rbecx3hX3Xn416xYo8c2HjhlIH2hsBYUAz6IWq8EQ2avN8tajmFJJEjAWcv/2ULfghxpZJabB00reKUcNauCfWbglb/8YtU9MTBKsft3eqsr8J8o0A2K7y9jU/UG6dvVU+Bvj7iXUIvPFfcd5EX0i4sG180muRh69l6dBe2PUFfEGHQZZaiaSCHwhKITxNChugQC2i9akZ98MGZfxTxK0B2FQ4GaFx9620PFckF8D9SvqVGh7utG1S1Pu4eFA==
+ bh=Pzbvv4FBt7e41u5jlBOSUq1jEgvV/jW/zYV/xAzS3eA=;
+ b=trnEf6Z4JwBl03C5yFI3Oi+MXGfgX6RyHbMmwMxWYmF+T8yPxIDznLOvCm8ScDXElulTAeoszozZOfvgpboToMVFOvKfMWOiowB0nYExXLDN3dfgOb5efT9V3ec+KNA6JW2u0EZrOFlC6J5k+maaU2xvU2ZmJyJelFNws6lbsXhW63XJB66tGqDS7r8QDkDWh3NO2DPLZGyz7jL2ozEfpJAtWIlBCm83lmw6Thru6SNPaZ3TJq2kKi+PZDnNC0bBMuysVf8f7g/+jSBaX8/96BF4aXNB/aJTwlKbbnPL40iCYZX1rvjqr0EX2WWJBBYwZwVmIOmRVZ05toxUxDms9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b+HTgjQRkfAXc9/pEARtXSZ3y3nKIInZXVvE4rxqNC0=;
- b=O7E5Nlm6/QHDXfK8SH0WaCEcAUt1kzT6G5zE4qfA0ouY/MAsnf3s3I4c9efBvldWl3MJQzO1P6Hbvo7CrKH94ClFlkzqmpWYo/IhgRH5jWwDKCDHPE6XUygNa51848KL42vwQPF8GJ/QK0dK4qLAraQYAOYGvwB7k6+J3jPUe/s=
+ bh=Pzbvv4FBt7e41u5jlBOSUq1jEgvV/jW/zYV/xAzS3eA=;
+ b=qcArPhKc2mwlQscpV1gcXpTSkQq4hIvGQOVICzTiI1/4gYCBWxE7L2klnjNKKszkYcRUxXvl7iduv955KNt9kE2oDRHLZ+1zHJDfQi8zh8uWL3d3FkcC8id8m2HZlCu2B+LguYR0n2YXkylLxA5W9z9ZrMswkH6T6YNZ+j3pz5I=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- PH0PR12MB7813.namprd12.prod.outlook.com (2603:10b6:510:286::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.25; Wed, 16 Oct
- 2024 17:31:37 +0000
+ DM6PR12MB4236.namprd12.prod.outlook.com (2603:10b6:5:212::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.18; Wed, 16 Oct 2024 18:07:39 +0000
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f%6]) with mapi id 15.20.8048.020; Wed, 16 Oct 2024
- 17:31:37 +0000
-Message-ID: <6555a001-4f5e-40c0-bf27-38dd7a15c3d9@amd.com>
-Date: Wed, 16 Oct 2024 12:31:35 -0500
+ 18:07:39 +0000
+Message-ID: <ac5f05ec-5017-4ac7-b238-b90585e7a5bc@amd.com>
+Date: Wed, 16 Oct 2024 13:07:37 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/15] cxl/aer/pci: Introduce PCI_ERS_RESULT_PANIC to
- pci_ers_result type
+Subject: Re: [PATCH 07/15] cxl/aer/pci: Add CXL PCIe port uncorrectable error
+ recovery in AER service driver
 Content-Language: en-US
 To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
@@ -55,14 +54,14 @@ Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
  oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
  nathan.fontenot@amd.com, smita.koralahallichannabasappa@amd.com
 References: <20241008221657.1130181-1-terry.bowman@amd.com>
- <20241008221657.1130181-7-terry.bowman@amd.com>
- <20241016173011.000021e4@Huawei.com>
+ <20241008221657.1130181-8-terry.bowman@amd.com>
+ <20241016175426.0000411e@Huawei.com>
 From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <20241016173011.000021e4@Huawei.com>
+In-Reply-To: <20241016175426.0000411e@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0117.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c5::23) To DS0PR12MB6390.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0207.namprd11.prod.outlook.com
+ (2603:10b6:806:1bc::32) To DS0PR12MB6390.namprd12.prod.outlook.com
  (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -71,134 +70,289 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|PH0PR12MB7813:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68ffdb53-1406-450e-085b-08dcee08633d
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM6PR12MB4236:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8b4c610-66bc-41fe-50e8-08dcee0d6bdd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d29zU2FlK3hyYTlXODFxS3R6SENmaWdaS0d5ejlPbFZ5NjEwaE9zYjV0Sjds?=
- =?utf-8?B?NkU4U0Y1R2VYa2FNc0JJZldzK0wzcmU5WVNCTjFDaW85bTZLNXdneHhnY2N1?=
- =?utf-8?B?KzNadHdPdVhkLzJvWXNEWm5zMCtqVENEZEc4b2FhTTU3enZWMXdRZkhkUTlr?=
- =?utf-8?B?eTBWcTZEb09HVmYxaUJzMUpNc0RWZ3hNVCt6VUNCcHBnQml5VHZVQWN1dUg1?=
- =?utf-8?B?RHlsQjV5RE00OVliR3N3SThrQ1Y1ZVk5MXNBeS9qZVVqNitNSnJzYVRPVXVB?=
- =?utf-8?B?eEZab0RVVDJTYUM5SXhOanhZNlJEQzRYUUIzTFdXbHdDdkVZekRwQUcyM0lO?=
- =?utf-8?B?UFEvczlISm9uazRlRklKN3hlWTNuQ0Q5TEliZmlxbUEzZU8zQ3ZsMXRaTWN6?=
- =?utf-8?B?SjZBYzNheWxqRDZQdnVzVHBmUlRSNjU0YVFCckRIK2wwUjZwVTlubEM0amZ2?=
- =?utf-8?B?cHRXd3d5ZUJYMm5xWTJFUjdaUHArUUtvblJOYlp2ZVQ5S05XbDFodklmWmJl?=
- =?utf-8?B?aGY2OTI4aUF0aGtHbUtCMVd5VVUzMkVrUFJEcHB0ajVmV05nQURORVoxOXZL?=
- =?utf-8?B?WWM2NnF1NHZBYmgvT3U3TXhXNEN1RUdQYjltM1Fid3hWYzNzZ2JqYnpicUZu?=
- =?utf-8?B?VFRvTnk1TzFqN2w3RjQ2VWZtWUJVMlJtNG5memk2MTdQYWxWTFRueFg3dk5U?=
- =?utf-8?B?OFFNb0dZTU93ZGNueHhsdWxiS0dCMHFOR0dBcWgvNFMyaWpXaUJ0cWIwUkNy?=
- =?utf-8?B?YmY4cGwzSkMwaU0rZDZWem9YVXdPWFFKZ0RMZGZQS1E0Wk8yaktXRDlCa0or?=
- =?utf-8?B?b3U2RDFRMWlwMVVhV2VSN2xsV291R3NxOU9HWkZ2RkdyMmNnalNkdE1jVXhT?=
- =?utf-8?B?R3ZtMzZnNkl5ZHA2TXpHSmxtRWNqZko0VXlkcWxXVXFWT3QyTG12S09mTGRC?=
- =?utf-8?B?ZVFBRHdRUjRnQzE1TlZhOFF1ODFtbmNHbUFVTVBLMkwxSElGa0I4ODhUYmxR?=
- =?utf-8?B?cGtwdGVWS0dES1lLWnMrTGdQcGVuOStjTktOVEFXSG91Q2JCQ1dCMGhYeDE3?=
- =?utf-8?B?MnpSeXYwUnRocG9wdCtzY3RYSjQ0ZzYvY0V0RkxRWFlMTktCWnpoTmRsSkxz?=
- =?utf-8?B?c0labmcvVktkazlxYjQzYlArSWhuc3hvOS9hRVZSUTBRRDhHNjYrZElYYmFp?=
- =?utf-8?B?SVYraGRyMm5ZZ3R1S1kwS0dwNG5RaEdBMVplV0owbFM5YmJERld5OWx1YzZ2?=
- =?utf-8?B?aUxCM2pyS3dhUmcvc0Z6dWFtOXlKV1pFaXlYaUlNU3dtbHQ4NE11NnN3Vk9q?=
- =?utf-8?B?UEhETzhpbVEwWE9Xc3oxY1ErSmpncm1iZzc0NFAwbVYzeU5lcDVQOC9UTTl0?=
- =?utf-8?B?SXhTVlNyb1NaYkpDUkljSDFnQitTNHg2MW9OdlpZb2FJZFkyVjR1RUdvQnQ3?=
- =?utf-8?B?ekFwaEVtZFJUZjQ2dWEybmZSdDc3SVFGbU5uOFlVMWxHNk03RGUzV002MElD?=
- =?utf-8?B?NVVFZnBWVHlhczFPMEVlbXVVYklKaHh5TnBPd2R2MldRUldWRkRLRkxnQXdh?=
- =?utf-8?B?blVReVNwaGRvcng1S3NQeFoxdVY4RXRESjIyZGhQUkVPSXJnL3R3NTNybnRB?=
- =?utf-8?B?VDFBYjlCVC9zZjU0VCtydFZUSEs2N010TjZqR29MWWdvbjl4MnBlc21xWW5S?=
- =?utf-8?B?TXNlS1A5Nm95THc2YVV2V1ZEa0l5ZDU1OU1peXVPMThzMHNDTHdjck5RPT0=?=
+	=?utf-8?B?WC9saVN4NzRrTE1GYTRRQ0pqUTl4Y0pJUlI1RFZZbEtCcU1HUkFKRGlUOWp0?=
+ =?utf-8?B?YXlWRDJtLzFWekswQWlBcDloc0poOFZMYXplS0RJUFIwQ3c2R1J2M0RpUDJ5?=
+ =?utf-8?B?Z2dSeU40akZzazJ1cGxwczhjM0RKOEtrTzdBeFg4dExtM2QzanlJOFhBOUlD?=
+ =?utf-8?B?ZElaTHYxQVFKWitnQjRhZVRkcHhuWUxQQ25IWmlUNVBnUG0xWk9VWVpheGVz?=
+ =?utf-8?B?enBqWHl2dllNbjN6aTJKV2o5MkZtaXM5SDBnNUpralIyZ2VYZ3FObE1WZ3E5?=
+ =?utf-8?B?YTUyUWcybitEbzNhVndSZWxDcU4rY3k2UFpSQ2dUNUEycUVzTWE3cDR5OS81?=
+ =?utf-8?B?aWJKT1hKeWNIVmhJdGRVTFRrN05QWWdVUEk0VFNVRUhEcTg0anFNUEkraDV6?=
+ =?utf-8?B?bDFFSDRqRWE3aHJYWEVrU21pUThwRGJwMTI5bXFpbUV3RXBwVHdLTGpscCtL?=
+ =?utf-8?B?TWRsZ3ZnclJRN3NESkMvVGlicVN6Ui9aVjFlZzErRFdUTzJFUnVKRExoMVJ1?=
+ =?utf-8?B?UC9zTDQxWGJMYlhVeWsxZ0ZLSkE4d05mWXU4ZjVEaVJ6THpCdGhFc3ZTS20x?=
+ =?utf-8?B?bG1FbmQzWVNRTjdqc0d0T3Z2dG5uYlpYcVJ6dFNZMmZ5KzNOL2V1ZGhScVBz?=
+ =?utf-8?B?aHQ1SlJlNGFVcU9zNjZrYkplNWhVaXZmdjVhV3hhT1dHcHpQNHljL2xsUUtn?=
+ =?utf-8?B?eG9ZQmpHZngxVEd5VUFwS3pWQ0xkU1RyU2tlZm1tWUtOcThnSVIvY0I5WFV2?=
+ =?utf-8?B?Zm9nbDVPa1hEb2RuTitEZVBzb1VtaFl5U05ZVUpmb3I0K2JQVVhYY3N3NUMx?=
+ =?utf-8?B?eFAvaXJzcFg4RUhIREUwK0I3eTJPb0k5M09KTDVvTUVFNWdPbng0K0h4V0RL?=
+ =?utf-8?B?ZVo0aG0xeldOMjZaUFZuMFV5N1V1aUlHMTlvYWNrWHNHdGx5djQ3V0NXUzI5?=
+ =?utf-8?B?N1FKL1lGd0ZXS1NkUFFSK2pNWkhSNlI0cjVvRUJwK2RudURlMVR3RmpuOUZa?=
+ =?utf-8?B?cFpMdXpscjFhTFlCUHdRUGp5Q21Kb1NjWUFXRDVCaHFzK0Evc0puN2IrSy85?=
+ =?utf-8?B?MkZoYjEvSTJ2NWhTZVBOKytPOHRCZENDdHQxWFUrN25iS2E4ZkxIc3FJOFc5?=
+ =?utf-8?B?VmxKc1JGVU41akYyT1VQVmd6eUNJa2RRTlRaMDQxNXFuSzdRWnk5ekhUa3Bs?=
+ =?utf-8?B?dDlUczkyeko1UnJwSjBVQjc1WXYzSlFMT09WYXljVUVGaXdUcG9BSFU5WlZK?=
+ =?utf-8?B?ZitqMlVxQjNyUHU3cUViSnFFWFJQNnNveUZ5MlUxbDh3VU4zZ01MV2xIamZm?=
+ =?utf-8?B?VWd0NXRNM25ZMjI5b0JjQ3JHQ3NXWkRFMm9Uc1NydzRSWlNVSHhoT0gxWDZw?=
+ =?utf-8?B?M2dpZlFPSG1uUUk0OUtCeEdkbHdVMWdLQUN4QjlUUVZZQ0c3L3N1MGorSFlL?=
+ =?utf-8?B?dndtRXQrQmJPbllQaTYxRUt5Qk1WZ2djV1V2OERaWHJuY1A5eGVXaE1rTGZ4?=
+ =?utf-8?B?aEVZVlQxQ0ErbXJ5WUhib2dZM3FZZ2EwNUVVNlNyVUQ4TnJ5N0FzQUZvaklI?=
+ =?utf-8?B?NVI0MjBmTkhMaXVkbVBGcnE3ZnJUTUp5Z05Ld2lqV21FNlpBbll2dnNPOXg5?=
+ =?utf-8?B?VFFoeHo1bzJNM08zSk1DOWQ0Z0ZoTVRvaC96cmxkaDhHc0xsVWIyWktIL3F3?=
+ =?utf-8?B?ZDRqVmpkT2pNblVWbHpyN096eFc4K3JPRzdrRklQYWE2VlN2d0FVTDhRPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WEZ0WDBVTG1VdmhZcEtrbWVxMzZDZStwTW5rbUprd3A1ai8yM2p4N2xtaEhz?=
- =?utf-8?B?ZXZZSEhKUTdyVVNackFxUGUvZkVIUVppek8wdmFFZkJ1YWdqdG9KVUVlTGhu?=
- =?utf-8?B?TzhvdXpYSHg3Y2NpbzZVS2lZYzd4VEpzOTRBb2dZZGFTSjJXcklnSmxUY1lW?=
- =?utf-8?B?TTVZVkFFMHI2VDJsZ1ZNTzlQZ1FtcDJGdnpUKzRHaVlkbkc3cnlkZk9yekd2?=
- =?utf-8?B?alQ2R0ZKNnBmRmk4emJTMG1Wcm9kZ05HT2k4K1VDeGVqcTVaOHdpMW9iL1cx?=
- =?utf-8?B?OVRlanpDUGdYMEpkOWdLVWRCRFlPaDk4eGhPSkxZcnlESUkwYzRxWFpiQTc5?=
- =?utf-8?B?STF2WmZkaW91T0dDajRqSkJtREtFbUdLVk83R29hckVwcTFwMWF2NlBjUVRw?=
- =?utf-8?B?SVlIVktqM3BNY2p5dk9DS0xRT2tYeEs5K3JmelNrcXowUTlpR29vSGF1MDlB?=
- =?utf-8?B?MEdVdWdTS0VrUm0rYTVzeExybUI1aGNvcGFjUHFwc0pqb3IyR0FONVFpWVVT?=
- =?utf-8?B?dWFKbDFVaFBJTnNaUGVMTzArUldDMEZ4OWJZUTN5V0xaeXc0OUVVZ0hIRkky?=
- =?utf-8?B?RU12ajZGVGtVUUQxdGxDV1dmTldPaDA1UTM2MjlMMWcycC8wdDl1TkVmZFp5?=
- =?utf-8?B?MmRzdmU1MVppd29BTWRRUzVTZ1JVNExkWUt5Nm1pR2dNTURwTmlzandjYy9Q?=
- =?utf-8?B?c3dyY3ZoVnFFeVBOWTVsTWVTbnRUTXlEWW5QM3dRbzB0TDViTnV1a0RjdjBi?=
- =?utf-8?B?OG84MjhRTHBnT3ZmemlyZFl6aTc4ZElUN29jblBsek9wT00ra0J6b3ZUTVZk?=
- =?utf-8?B?aXBRY0RGZk5FUmU2WWFMY0FjSlUvSjd3RzlTNkZZVE9rNXArTE1YcDhiZytE?=
- =?utf-8?B?UmpDRTlYck1DVURuMXdzMG9odW1nbjI4VWFYY2x1SmpUMGFzYmNlVDJGTXNp?=
- =?utf-8?B?elNoZFZ4TkpxUGN5K1VVOWVBdzJSSXJCSnpqMHF5dkJ5WEc4cWtERzA3UHAz?=
- =?utf-8?B?a1RCTVU0STVSa290eE1YNE9SVWNsSmdTN0ZrODQraWFpbk1wM1dKVm1nVE9V?=
- =?utf-8?B?a1RTNEJYcmdqNXYrTU5qWk41Q0EwVXJiZ29mcmpXcnN4eDIyWi9Fa2FRT21Q?=
- =?utf-8?B?Wm43MDl4b09QOWdFVDhXbWNRNE9uOUh4MUNreFZWVGo0bmZaaDhsbUF4cHhK?=
- =?utf-8?B?WHhMVjVuVFVLeG1FMHRGZEFNZ29IL3ZNVlBuc0dmazYzSnFoTENXemVOSTB6?=
- =?utf-8?B?SWJSdm1zNmZHSTZBbkZvNlRxRmtGNFFxUTNzTUlSRnQ3U2NqL0R0d1oyRE9v?=
- =?utf-8?B?VFhzZmVBdC80SkJuNzRtdk1QVE84My94RVl0NDhFSkVaaHVzaFl3Q3NtTmlr?=
- =?utf-8?B?VjNNUXFRL2QrTzNXK2orNXRmQ3Nkc1RuQnJxV3JvTDhoQXZ3aEpFeXRCQThO?=
- =?utf-8?B?aGVNa0s1Ui9ydnd5dkNtSWd6cktCcFc5ZVhtcS8yYzJMSVJsQlBHVUJnQWtY?=
- =?utf-8?B?WEhSREkxT2N4TXY2Y3EwRmg3VGRrMTU1UFpBUzRNOVBVTW5rczVOT0ZISTJh?=
- =?utf-8?B?NVVZV1VEcG8zL3NOODZXRFNsako0ZUFtRDZvNVJpSU5FdC9hQkRLYXZ2NXA1?=
- =?utf-8?B?d0Z2NUtUMnV5bk1scEpLQnJ2Wjc3ZHlFaTFDcmdZc3l1OS9Bd09Ed0d3SUZh?=
- =?utf-8?B?dzgwU2tWNEhPOEFGTG1JSGZwSzlJQlN0YVYzY1ViaGM1eWE4c2RPU3VBQ2Fr?=
- =?utf-8?B?MUo5MTNkWUV2Y0pLUUtqUWhNSmtLYVhsdERUSFRNTWdid3dLQUZnK0sydHpF?=
- =?utf-8?B?U0VIa0Zydys1TmhVWHhVd21FeFpreHUzU1dDZTFrSTlLS24yYXJLeEt0QzJ6?=
- =?utf-8?B?djBzQk5pcUJ5SVdoMGxzVE9zbGw1OVZuOXhEZGE4SHg4elBaZ2EvZm1KMGwr?=
- =?utf-8?B?enJ4Q2djY1RKUG9lWmJ6M29meVhCWDdxVjJxcFhORVFORksvYnBqVWIrQk1O?=
- =?utf-8?B?VzJaS3d3Mm5FdW5IeWxwZmgrNlNEd1cvOGVHbGhEb3hUenVLRHlFaFppUTBz?=
- =?utf-8?B?ZmxtbXhUcXNlNTRrNnY0NlpFZG1vYTIyTWNhemFsUi9MN3hDbGNXQytOUWhO?=
- =?utf-8?Q?mZnJbX/yMQl8TUPQNO58zH5TG?=
+	=?utf-8?B?cEVxN1NicmI3YmlrWTRjYTAxMUtDUWdkU0lVb0ltc1JzdkZMakNFTHpiSi9x?=
+ =?utf-8?B?N1BnYWFRZDJXVHM1K2I1VitncUtTSlFDdjlnUXBBdVdZTjh0cnFTOGZTNWk0?=
+ =?utf-8?B?UnFEMmZVd1lFSWg2REY4UVZXQkNEY0srdTc3bTVYaWdXMjdPT1dXbmRhc1FF?=
+ =?utf-8?B?Z3NaREo5NzBvTkl5cldmc0xaZnhHbXF1REJuZ0NISmRIaGZYd3VPMjJPdmZ6?=
+ =?utf-8?B?K0ZXbFBsZDdrbGRYd0ZtejYwNjd5bE9jeFg0aWJYdEd5a1JoemJzcDdVNytZ?=
+ =?utf-8?B?ajh6a0JCYzdCamh5SjMxYW1iQ1Z2UmtKR0Ixa0hHSUxQNUduUlpuRDg0eHp6?=
+ =?utf-8?B?NGFKSFBUc0RNQ1Z0c3AxeWpZQ09BQnBCVU45eHpEVU85WEFNMU96ekpJZmFH?=
+ =?utf-8?B?MG5FRmc1dGNTcHFrWm1BZVZZcFVvN201TUlFNnYzR3lGei9rYTRZRWpnYmU2?=
+ =?utf-8?B?cjJHNnY0c1RBZVdFeTdmUExKK3RUN1ZFR1QvZnNscE5rdGw1dHE2eVVVRGN4?=
+ =?utf-8?B?NWdocDhyTkpYTFRpRUlVSmloUzRndkM5cVpvQWRNcWNLR1RwbW9yTU1KUEVF?=
+ =?utf-8?B?cnRGNjQzQXZxRmtaVGlFcUttUmZEbGVsZGtGMmY1TDdLbUtmQzZleDYvVUtG?=
+ =?utf-8?B?Q1dCWUZEcU8wclZmajNWQ0dOSlVyZTFsMmIyamRDNnU5NVJVaFJtZXFEUCtK?=
+ =?utf-8?B?cXZZZ2F6ekFxYTRsTWVvMkU4WjhkaXdUNkZmNFNBQktuU0FZWThaYXdteTRj?=
+ =?utf-8?B?OTVrNHc4MG1LTkxhcFFRTXlDeTVqUXducXc4RXRTa09ZOVkvRnpjeURNNDcy?=
+ =?utf-8?B?TzNkYzJSQUZ0ekw4SUUxRlFPTjB2SUpqdXk3WXVWbm9yM1RsYS91U0hkeUVq?=
+ =?utf-8?B?VVIwcUZ3a1hZbUZNVlZTRHNJNVQvdU9BdWJGQ1hIL3FlV2tlbytnQlovbnVQ?=
+ =?utf-8?B?Z0NNTnRWQWFqR2xhalp2VXJ1dkVWeDFVQnNsdlNGZFpiYjhadnJ4RmhudlBq?=
+ =?utf-8?B?QlluVVlQR1piSGxPVTFrclZNcmdPRVlRTHhPMTZQNnZZcTJvdDhKVWdud0Iw?=
+ =?utf-8?B?TDBWeG52TVgrOENxNnozdEVML3d2bUpkL2d6S0xpd0hpSFNqa1dmMEtrTUpk?=
+ =?utf-8?B?c0lvQzl6dCtqN2RnK0ZYWGEyR1kxM3liQ1hlWmZFbU95VFNSR0pIbDJlc2xk?=
+ =?utf-8?B?ZkxGcW11QlR3bHpleFowSzlyaE9SUE8vMFlrczVaREFxTHRhSVZ0RnkxaXdm?=
+ =?utf-8?B?NEhJYTBXWlVwOTVIaG0yTWxPYUxmSjVrT003c0huSG85Rk1nRFpZbXFMd2lD?=
+ =?utf-8?B?bTFzRlFLNWJFUlNaV3dOalF6bEM5eFYwclFvR1JwTEllSUpxdEhxeHR5ckRr?=
+ =?utf-8?B?ckJxWCtsT1pZQklxWVRKOHQzbkJLaFNISjJsYzhQRklKeGJVTTdoS3U3MzZv?=
+ =?utf-8?B?MkR5Uk51NGhhU0ZTcDB6WGFDaFA3ZzFoSS9XTWpSYVhEY3YySkIwMWhNdDhi?=
+ =?utf-8?B?eEp4am1VdG1uTzV4NnYwOXZvMzZvRHNmWkg0ZEhwUC9DRVpmVER2V1RhNUtj?=
+ =?utf-8?B?YTB5TUIyNy9Uczhhd1FZbW5NMkZBSStaekVZRlA0UDRjMm5SNnhFdHZIOVhr?=
+ =?utf-8?B?TlZ4cDBuL3ozTnJZaVBFVXhRemN0ZUFPa29OVWV1UzQ0cEZPdFA5VkZZeDBp?=
+ =?utf-8?B?Syt5VDZILzRCQkZBOElQYzhyZWYxa3hvOXNWYnFnZFdrLzlpVkEvWVFJM2wy?=
+ =?utf-8?B?Y1pZUitXWlJYMHdIZmJOcTEvWHhBMVlCb1Z2aHU5bjlYZ0ZjOFNoekE4eWxn?=
+ =?utf-8?B?YzlmSFFUZklGTEZLSkFpU0pHV0xKT2RPT1ovc0FZdE8yVzRLU1JEcTBWTSs4?=
+ =?utf-8?B?aTB3a0tsUk1sU3VFeXM1MDg4dkNESUhTVU15NjlzWlFrR3kwKys5Y0xPN0Ev?=
+ =?utf-8?B?VTVDVGN5M3QvWGNVQStsd1hTaExNYWxId05vVzV2MEZEb0RhRi9zTUd1dTRN?=
+ =?utf-8?B?cGhHVUNMVnVMSWhQeVNLWmtMZkprV2R2U2FwdFhnZnhGWVpYUnVvbkxsTFAx?=
+ =?utf-8?B?anFyUzVCMlR6eGpFUWtxSDB1aHhqQnBDTDlHSEVHWVJjMW9SM3BENWE4dFd0?=
+ =?utf-8?Q?a/UDNLBhw17dFQ4AoU9uRld98?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68ffdb53-1406-450e-085b-08dcee08633d
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8b4c610-66bc-41fe-50e8-08dcee0d6bdd
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 17:31:37.3507
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 18:07:39.3034
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VEAtaKuLkPiMrbiCqxqMVVoud+OYfQjdOPox3qNtTVgfwJ4ArxdX4pICUPW1wMOI7K7/9Mar1ZPKxjZlFI3J+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7813
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4vgj+3HOaiGnkL7D////TASB/hrT5fn+skCJz0YJePVGZE5DqnfvCPagYauxGVjC6uid8I+uMj/UiMdgGpxdsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4236
 
+Hi Jonathan,
 
-
-On 10/16/24 11:30, Jonathan Cameron wrote:
-> On Tue, 8 Oct 2024 17:16:48 -0500
+On 10/16/24 11:54, Jonathan Cameron wrote:
+> On Tue, 8 Oct 2024 17:16:49 -0500
 > Terry Bowman <terry.bowman@amd.com> wrote:
 > 
->> The CXL AER service will be updated to support CXL PCIe port error
->> handling in the future. These devices will use a system panic during
+>> The current pcie_do_recovery() handles device recovery as result of
+>> uncorrectable errors (UCE). But, CXL port devices require unique
 >> recovery handling.
+>>
+>> Create a cxl_do_recovery() function parallel to pcie_do_recovery(). Add CXL
+>> specific handling to the new recovery function.
+>>
+>> The CXL port UCE recovery must invoke the AER service driver's CXL port
+>> UCE callback. This is different than the standard pcie_do_recovery()
+>> recovery that calls the pci_driver::err_handler UCE handler instead.
+>>
+>> Treat all CXL PCIe port UCE errors as fatal and call kernel panic to
+>> "recover" the error. A panic is called instead of attempting recovery
+>> to avoid potential system corruption.
+>>
+>> The uncorrectable support added here will be used to complete CXL PCIe
+>> port error handling in the future.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > 
-> Recovery handling by panic? :) That's an interesting form of recovery..
+> Hi Terry,
+> 
+> I'm a little bothered by the subtle difference in the bus walks
+> in here vs the existing cases. If we need them, comments needed
+> to explain why.
 > 
 
-Yes, Dan requested all UCE (fatal and non-fatal) are handled by panic in order 
-to limit the  blast radius of corruption in the  case of UCE. 
+Yes, I will add more details in the commit message about "why".
+I added explanation following your below comment.
 
-The recovery logic in cxl_do_recovery() (not using the panic) is also tested as well.
+> If we are going to have separate handling, see if you can share
+> a lot more of the code by factoring out common functions for
+> the pci and cxl handling with callbacks to handle the differences.
+> 
+
+Dan requested separate paths for the PCIe and CXL recovery. The intent,
+as I understand, is to isolate the handling of PCIe and CXL protocol 
+errors. This is to create 2 different classes of protocol errors.
+
+> I've managed to get my head around this code a few times in the past
+> (I think!) and really don't fancy having two subtle variants to
+> consider next time we get a bug :( The RC_EC additions hurt my head.
+> 
+> Jonathan
+
+Right, the UCE recovery logic is not straightforward. The code can  be 
+refactored to take advantage of reuse. I'm interested in your thoughts 
+after I have provided some responses here.
+
+> 
+>>  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 31090770fffc..de12f2eb19ef 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -86,6 +86,63 @@ static int report_error_detected(struct pci_dev *dev,
+>>  	return 0;
+>>  }
+>>  
+>> +static int cxl_report_error_detected(struct pci_dev *dev,
+>> +				     pci_channel_state_t state,
+>> +				     enum pci_ers_result *result)
+>> +{
+>> +	struct cxl_port_err_hndlrs *cxl_port_hndlrs;
+>> +	struct pci_driver *pdrv;
+>> +	pci_ers_result_t vote;
+>> +
+>> +	device_lock(&dev->dev);
+>> +	cxl_port_hndlrs = find_cxl_port_hndlrs();
+> 
+> Can we refactor to have a common function under this and report_error_detected()?
+> 
+
+Sure, this can be refactored. 
+
+The difference between cxl_report_error_detected() and report_error_detected() is the 
+handlers that are called.
+
+cxl_report_error_detected() calls the CXL driver's registered port error handler. 
+
+report_error_recovery() calls the pcie_dev::err_handlers.
+
+Let me know if I should refactor for common code here?
+
+
+>> +	pdrv = dev->driver;
+>> +	if (pci_dev_is_disconnected(dev)) {
+>> +		vote = PCI_ERS_RESULT_DISCONNECT;
+>> +	} else if (!pci_dev_set_io_state(dev, state)) {
+>> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
+>> +			dev->error_state, state);
+>> +		vote = PCI_ERS_RESULT_NONE;
+>> +	} else if (!cxl_port_hndlrs || !cxl_port_hndlrs->error_detected) {
+>> +		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+>> +			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+>> +			pci_info(dev, "can't recover (no error_detected callback)\n");
+>> +		} else {
+>> +			vote = PCI_ERS_RESULT_NONE;
+>> +		}
+>> +	} else {
+>> +		vote = cxl_port_hndlrs->error_detected(dev, state);
+>> +	}
+>> +	pci_uevent_ers(dev, vote);
+>> +	*result = merge_result(*result, vote);
+>> +	device_unlock(&dev->dev);
+>> +	return 0;
+>> +}
+> 
+>>  static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
+>>  {
+>>  	pm_runtime_get_sync(&pdev->dev);
+>> @@ -188,6 +245,28 @@ static void pci_walk_bridge(struct pci_dev *bridge,
+>>  		cb(bridge, userdata);
+>>  }
+>>  
+>> +/**
+>> + * cxl_walk_bridge - walk bridges potentially AER affected
+>> + * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
+>> + * @cb:		callback to be called for each device found
+>> + * @userdata:	arbitrary pointer to be passed to callback
+>> + *
+>> + * If the device provided is a bridge, walk the subordinate bus, including
+>> + * the device itself and any bridged devices on buses under this bus.  Call
+>> + * the provided callback on each device found.
+>> + *
+>> + * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
+>> + * call the callback on the device itself.
+> only call the callback on the device itself.
+> 
+> (as you call it as stated above either way).
+> 
+
+Thanks. I will update the function header to include "only".
+
+>> + */
+>> +static void cxl_walk_bridge(struct pci_dev *bridge,
+>> +			    int (*cb)(struct pci_dev *, void *),
+>> +			    void *userdata)
+>> +{
+>> +	cb(bridge, userdata);
+>> +	if (bridge->subordinate)
+>> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> The difference between this and pci_walk_bridge() is subtle and
+> I'd like to avoid having both if we can.
+> 
+
+The cxl_walk_bridge() was added because pci_walk_bridge() does not report
+CXL errors as needed. If the erroring device is a bridge then pci_walk_bridge() 
+does not call report_error_detected() for the root port itself. If the bridge 
+is a CXL root port then the CXL port error handler is not called. This has 2 
+problems: 1. Error logging is not provided, 2. A result vote is not provided 
+by the root port's CXL port handler.
+
+>> +}
+>> +
+>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>  		pci_channel_state_t state,
+>>  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>> @@ -276,3 +355,74 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>  
+>>  	return status;
+>>  }
+>> +
+>> +pci_ers_result_t cxl_do_recovery(struct pci_dev *bridge,
+>> +				 pci_channel_state_t state,
+>> +				 pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>> +{
+>> +	struct pci_host_bridge *host = pci_find_host_bridge(bridge->bus);
+>> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>> +	int type = pci_pcie_type(bridge);
+>> +
+>> +	if ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+>> +	    (type != PCI_EXP_TYPE_RC_EC) &&
+>> +	    (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+>> +	    (type != PCI_EXP_TYPE_UPSTREAM)) {
+>> +		pci_dbg(bridge, "Unsupported device type (%x)\n", type);
+>> +		return status;
+>> +	}
+>> +
+> 
+> Would similar trick to in pcie_do_recovery work here for the upstream
+> and downstream ports use pci_upstream_bridge() and for the others pass the dev into
+> pci_walk_bridge()?
+> 
+
+Yes, that would be a good starting point to begin reuse refactoring.
+I'm interested in getting yours and others feedback on the separation of the 
+PCI and CXL protocol errors and how much separation is or not needed.
+
 
 Regards,
 Terry
 
->>
->> Add PCI_ERS_RESULT_PANIC enumeration to pci_ers_result type.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> ---
->>  include/linux/pci.h | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 4cf89a4b4cbc..6f7e7371161d 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -857,6 +857,9 @@ enum pci_ers_result {
->>  
->>  	/* No AER capabilities registered for the driver */
->>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
->> +
->> +	/* Device state requires system panic */
->> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
->>  };
->>  
->>  /* PCI bus error event callbacks */
-> 
