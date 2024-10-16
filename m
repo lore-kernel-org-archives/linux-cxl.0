@@ -1,115 +1,175 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCED21E3C2
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 03:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729047871; cv=none; b=Uhq/gzPrVI2RbCbDm0A2fSMJu2186PyDsWoAilen1KkBUd/U7Bb7fiY2EMy1UA3hh0VVJeJrWox6/XLIxgu1wKL7dxTAoiSCjtBz1+0yogxNWSE2W7B63bP+yuEiSaWCigl83VZTS2jE4TV1DhFW3gsYtEwERWW6F9wN6XaY+0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729047871; c=relaxed/simple;
-	bh=V9XEDtH8WDYY6bGc+86z7aqIoQ03QWEFqV8kc1x/5bI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aGdRA9ClosScBYSrJpZoPnvT8V5CoxUSgU4zJe53gWjm91/eaSDSOlO/2+3kgvgLDTr+mkCrg/qcZP3tWQmYFxXXCsE0IE0y/Hkgthx+yvOaZVi9YV1Ablj9KUUHSmD8FbcUg8+xFmmCMPMTgJ15sAHwmwCuaxdMLQzyadDA5I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=JwrLc1wW; arc=none smtp.client-ip=207.54.90.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE31A4A02
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 04:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729053112; cv=fail; b=OQIf1NioCIOq48fpPaE/7Vl0hxCa1yUZtEUpRToWO/4QyKbEMQO58zH/c8VYbc/5HZUhm0L26xm7D0Elpy5/jF9KaDab1cBLcnwNvRhTOvtJ4q59BlTGPMQn6TVJeWjuzhppA9BZLOa57RROBtDfH6LuOKEFVqsmBZ6KOD+hy8g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729053112; c=relaxed/simple;
+	bh=AtJ0ZoSIHkxv7a2/D0eEdOUjNjyZfWfRq5YLlD5Wh/g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=di9p/UeJeB3uvh6PFD4aELxbVeTgbauGZoXYj01NJzvPeDOXpdKrqEvfFGGNpE4KaTo3wtxqQfezWptgl3mPdMjb/vVjV11t+y/urNOn3UBoeoNX9TLWP7HQ9pw4+jpepi3lY7FDxb73MkgSwy65R4h7RBGQlt/tGWUFAYnx5ok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=mKeQ4q6Z; arc=fail smtp.client-ip=40.107.92.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="JwrLc1wW"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1729047870; x=1760583870;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=V9XEDtH8WDYY6bGc+86z7aqIoQ03QWEFqV8kc1x/5bI=;
-  b=JwrLc1wWNDIGOVVdQOH5Krn1SCK0iujP3jGVVA3tUb3mtHQDEyANe25r
-   hj9rXFW/NxrQCQGtfvOm8YuCbkINSXmqVpDBsv/960Uhv3zgQwCYjphjy
-   wdsPvf9EYOXkTu2v6lfxyJtBIGAIjbc8N+pqXWibuvuymHi0haDMF8TWp
-   DXGLgxOCDzH2+/dnCjDstXJIM8EzD2UEgY9WNUh32CAgx4MbYrSK3Qiy4
-   zjKNu7C6jbQZoUmCMRWqp+19rmzAKjZ5k0y8YpU+pBglm6tEAdvcqVg+O
-   TaiJJWwjsEwXF70mHnBPzUJC8nIT+4/BX5HZjrHP8UvfT8nwyr6wIZciq
-   Q==;
-X-CSE-ConnectionGUID: SZHiY/gcSoqTu4DMGHRWuw==
-X-CSE-MsgGUID: k4etd6BjQB+GXlFairS4fg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="176894214"
-X-IronPort-AV: E=Sophos;i="6.11,206,1725289200"; 
-   d="scan'208";a="176894214"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 12:03:19 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 38BAED4F57
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 12:03:16 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 70211D5BA0
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 12:03:15 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id D6A2920050191
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 12:03:14 +0900 (JST)
-Received: from iaas-rdma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4A8EA1A000B;
-	Wed, 16 Oct 2024 11:03:14 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: nvdimm@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [ndctl PATCH] test/monitor.sh: Fix 2 bash syntax errors
-Date: Wed, 16 Oct 2024 11:03:58 +0800
-Message-ID: <20241016030358.983042-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="mKeQ4q6Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HX68s+PRkKB9MzIDnOkIzpnpX/jfjHCuuPtZAhHYWdMCai4RP2K+42ajz2DtZZSk5ZL+tX+KM54YwWQCamueTVskS1NnhlJ7tbX7DBpyjfJJ+PnM0hoKggUEHa2qd3NH0RQ+G+kEA5umA5Z9nkrYiX7sqQptooy+9RXOW55NotxYLn7c1JkWoWVfOAKgOdeffNKaac0czHwGld/SjKYA/F3YsJPUAJHo0mMDiHweCZoJjuX48pxhqJyy+RTzs7U3SBCW8fzPmYaOEeLVSOMIKXfo9mE19m1SwFaiBgTIWqdJM8RFEscu58WZCjKPRYcx/6GCLnxQ4N6lr61tjOc+ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d8vgbxmaOdhAloIuD8edrJk9w04s61DpRnG2w4J97w0=;
+ b=FXQ4utbBfXGHeM21xe4O+H7AQ0QS3P+3ldNZ9+qJ+v2ZMbqR49kFyzoIyFOgsaO+aOMapqQrAFXZxg+ThO+rPDsMtPFqcvQeNFbxsOcE5g15JMiNLFIpcMsKY3pCSHlK9tC68uSGo78DmyZ20iKVk1w5nktmTsuDLUg9TpzuXhydIhEVDZdQquf2glFuVjT3Not83w5UKiJV2LnVK7gIyWk0c8yfZohMaken80aF1EvGzUvh9A4bsS9agkeZ4+qs65rGCQUQlOKlYy2DgYk42ht+douf0KXb5h7+BaKkWJhaKBVXWQdaTw9jBtcAgR60gHZ//L9MgdqxB4/pQoFtiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.201.242.130) smtp.rcpttodomain=jagalactic.com smtp.mailfrom=micron.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d8vgbxmaOdhAloIuD8edrJk9w04s61DpRnG2w4J97w0=;
+ b=mKeQ4q6Z/NuNzCbhHWCAjZfECd+rQtA4cJGlFslwx2mnAeZjqOU7KUfaSCv/zILi6QeYTINdmm9dQQuAaS+qsEIaWppljQU5q6iNpILDoAV1ugXBJsuqy3qSiLB1CsUc6wvwjAvMukoBm2NteeKYHZOAyfFNeuNFYYCqiet4w0R5Ut8UtQDaJID8tWTnYH3IngJdwA1tM7w1enJU1vnpoAGEHNWSvUoNHgUG7+YkJH0R8QFig6uKFfNjH7+czETHQCoqj+0/8etXe1orNsS8S9/JNgxLvGj1RQd+LNUdh4CsQaDQfo+PV2q4L7mRNkjuYTa1HnbHz9QbcFm06ATsxQ==
+Received: from BL1PR13CA0341.namprd13.prod.outlook.com (2603:10b6:208:2c6::16)
+ by SN4PR0801MB7742.namprd08.prod.outlook.com (2603:10b6:806:201::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
+ 2024 04:31:46 +0000
+Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
+ (2603:10b6:208:2c6:cafe::78) by BL1PR13CA0341.outlook.office365.com
+ (2603:10b6:208:2c6::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18 via Frontend
+ Transport; Wed, 16 Oct 2024 04:31:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
+ smtp.mailfrom=micron.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=micron.com;
+Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
+ 137.201.242.130 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.201.242.130; helo=mail.micron.com; pr=C
+Received: from mail.micron.com (137.201.242.130) by
+ BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.17 via Frontend Transport; Wed, 16 Oct 2024 04:31:46 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19A.micron.com
+ (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 15 Oct
+ 2024 22:31:44 -0600
+Received: from BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3]) by
+ BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3%6]) with mapi id
+ 15.02.1544.011; Tue, 15 Oct 2024 22:31:44 -0600
+From: Ravis OpenSrc <Ravis.OpenSrc@micron.com>
+To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "jonathan.cameron@huawei.com"
+	<jonathan.cameron@huawei.com>
+CC: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>, "john@jagalactic.com"
+	<john@jagalactic.com>, Ajay Joshi <ajayjoshi@micron.com>
+Subject: [RFC 0/4] cxl: Support for mailbox background abort operation
+Thread-Topic: [RFC 0/4] cxl: Support for mailbox background abort operation
+Thread-Index: AQHbH0T8Mc+wQe7gQEii/lVVIsbMpLKIxSt2
+Date: Wed, 16 Oct 2024 04:31:44 +0000
+Message-ID: <c3312b1ce2374fb28a899b0bdb01c6a4@micron.com>
+References: <20241015205633.127333-1-ravis.opensrc@micron.com>
+In-Reply-To: <20241015205633.127333-1-ravis.opensrc@micron.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mt-whitelisted: matched
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28734.004
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28734.004
-X-TMASE-Result: 10--1.652000-10.000000
-X-TMASE-MatchedRID: x/N1Pl+vn8bCS1NeCvs3qIdlc1JaOB1TqMXw4YFVmwiWMZBmiy+fzzl3
-	2fTh8s1mPs0ZDS8itpdeWwXKQGp3JC7SL1WWCs3qEXjPIvKd74BMkOX0UoduuZXP+fN7LWAf/sv
-	dVly7w9nhfIRFx1/VL/vQCPiy8IEcHxPMjOKY7A+u65UDD0aDgsRB0bsfrpPIcSqbxBgG0w5ayq
-	C8OLb67mqAt5Et9doFroSY4RRy04jMEQ14+GxXQPRAIX3uQWntyeuDUOSOxiIO1pEmt7SpDq84h
-	lON7yhVCyemwOQVRipbjBuldNvkMkoq97WSHdFjfupJaud1uZCfRs6uIbkFVw==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|SN4PR0801MB7742:EE_
+X-MS-Office365-Filtering-Correlation-Id: f100b21e-39b8-4705-e769-08dced9b71a9
+X-EXT-ByPass: 1
+X-MT-RULE-Whitelisted: Triggered
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?qZtffEjAMqVH9CtYbiwnJSDjWY5Dg3x314zEVat6sgUwmk2fNChVArDPGs?=
+ =?iso-8859-1?Q?d21sqB5aqDJZLXT484r1jD9SgSlL7S2VLDdTyVh01nWqie/DHGHkzu5Fbn?=
+ =?iso-8859-1?Q?I25zWMXhcopOr3XcIkdW35BWsR1TPOt5UENtK7l9eVYdEPOtv7P4xFOAEH?=
+ =?iso-8859-1?Q?0Dc6pUUonJKVuHvRG11VLoJg/uYrLBgedowNtwlkCXClUfmjVaBCEpG+e/?=
+ =?iso-8859-1?Q?Yds1V9vL1kNuhhSOZ5hl9L+qc6oxZirlBFLyYUOxTssCUO8HXRTKsW5UZ/?=
+ =?iso-8859-1?Q?fiFSZ/vCgyu1DLpsiujU/T7oLsZqgtKWesYVwvyhpVPvuAA9nvZklWsfzw?=
+ =?iso-8859-1?Q?NxD2DrNougGrIMSejJ6D5HonkflnqnZTrHt+ybAhdK7WI37bpA174gsgi3?=
+ =?iso-8859-1?Q?2BacYZ9QYnDExn3q/ULohrSqGrOlqaaxCIZgv5Ye9PITKSF+wFaQDZ80mN?=
+ =?iso-8859-1?Q?rvUb0WS/1ul5shZp8SMszppCFGwmUQ9BUzVowmBnOVBC/CKNVTC2bTT5DN?=
+ =?iso-8859-1?Q?0uoL/+VayjGd1eF+q+rSndhjEx927vnWwejhmBd0rNI1ElGjIshYm7K7eH?=
+ =?iso-8859-1?Q?9v7utGNOCdk4trgIr6vsPUC0gbvXcZ1LyOWXf2Lnj+dDWpOT0orywyJ/hk?=
+ =?iso-8859-1?Q?HJ789ZHqgd/7OGInaiQBtcqB1Jlk5+0rLhxTY8yhDz+SISWnjV6D7izSex?=
+ =?iso-8859-1?Q?9mAJCD5Cmz+nTwn71I5Wbb2OJutjSsn/1SS+OTGw1GfwvuiUCJJ04XW7Gc?=
+ =?iso-8859-1?Q?7Qx73V6mlKa5YX4pma5EsI3RVs8g+hyeF9GGiDmydJyx+AJpawO3T+1sWj?=
+ =?iso-8859-1?Q?RSfUKyx+Zr0bhIX7ZHEBe3913iWN6dsrYjEgzTWUrSv+lpiC2jXeXSbJL9?=
+ =?iso-8859-1?Q?Rs+p52+XKCjnlKP2f/DFnI/WEQOp8ZrGt6WvdJ/SU4FSGOpL2YcW8SEON7?=
+ =?iso-8859-1?Q?jpfLdU/2TG4omhtpJMbmWL3nf1idgAAcKqkK//wtbHbDamBhYCET4XS79O?=
+ =?iso-8859-1?Q?QcGdOAcSnCeXLFpvh4WXk+W3Da4YW/H32PrTnebMHLtbiFsF6+1M9gZJf3?=
+ =?iso-8859-1?Q?swOBfg0OWjYkEh29EX0tT/lLJY6AZjjep1tGtkB62aSRbCUXB9yb7qE1AJ?=
+ =?iso-8859-1?Q?oNR3jliBPUtjKQ8KzQ+nuGW/rupbtlf7d9zcgKybMQfFkNGmcoS996mbE9?=
+ =?iso-8859-1?Q?+U3W/sGzsJF05mVas3ofjUsxcWfdc8mZ9bnw7sAWTRyWU9hHL42eLjdu/q?=
+ =?iso-8859-1?Q?UkPwd2TIbB3jxZ8P+qWozUP9C7c16Tg1GFLN0YT6PQwLGn+3PuXF40srV2?=
+ =?iso-8859-1?Q?qXPTa6OlEbGBjjERoKuhncvVZ+la3TKxiLly5RrZZRdR19oKQm498Gsf1I?=
+ =?iso-8859-1?Q?1sm6kQY6scOhZxDyPWN8VdxhEEChLtG9Frf0JYYWZNCM99o5IwJs799woC?=
+ =?iso-8859-1?Q?4qFC9661jYRtY84k?=
+X-Forefront-Antispam-Report:
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 04:31:46.0879
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f100b21e-39b8-4705-e769-08dced9b71a9
+X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB4E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0801MB7742
 
-$ grep -w line build/meson-logs/testlog.txt
-test/monitor.sh: line 99: [: too many arguments
-test/monitor.sh: line 99: [: nmem0: binary operator expected
-test/monitor.sh: line 149: 40.0: syntax error: invalid arithmetic operator (error token is ".0")
+This patchset introduces the Request Background Abort operation as outlined
+in CXL 3.1, section 8.2.9.1.5. It ensures that only background operations
+supporting request background abort are allowed. A default timeout of
+5 seconds is specified for operations where a timeout is not explicitly
+defined. If this timeout expires, a Request Abort command is issued to
+terminate the ongoing background operation.
 
-- monitor_dimms could be a string with multiple *spaces*, like: "nmem0 nmem1 nmem2"
-- inject_value is a float value, like 40.0, need to convert to integer.
+This patchset is based on suggestion from Dan Williams, as referenced here:
+https://lore.kernel.org/linux-cxl/66035c2e8ba17_770232948b@dwillia2-xfh.jf.=
+intel.com.notmuch/
 
-Some features have not been really verified due to these errors
+(1) Patch 1: Enables only those background mailbox commands
+=A0=A0=A0 that also support request abort through their CEL.
+(2) Patch 2: A default timeout of 5 secs for mailbox commands
+=A0=A0=A0 that do not have an explicitly mentioned timeout.
+(3) Patch 3: Adds support for sending an abort when a mailbox
+=A0=A0=A0 background operation times out.
+(4) Patch 4: Adds support for the Populate Log command,
+=A0=A0=A0 a background operation that can potentially support abort.
 
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- test/monitor.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Ravi Shankar (4):
+=A0 cxl: Enable mailbox ops with background only if request abort
+=A0=A0=A0 operation is supported.
+=A0 cxl: Add default timeout for bg mailbox commands
+=A0 cxl: Abort background operation in case of timeout
+=A0 cxl/mbox: Add Populate Log support
 
-diff --git a/test/monitor.sh b/test/monitor.sh
-index c5beb2c..544e57b 100755
---- a/test/monitor.sh
-+++ b/test/monitor.sh
-@@ -96,7 +96,7 @@ test_filter_region()
- 	while [ $i -lt $count ]; do
- 		monitor_region=$($NDCTL list -R -b $smart_supported_bus | jq -r .[$i].dev)
- 		monitor_dimms=$(get_monitor_dimm "-r $monitor_region")
--		[ ! -z $monitor_dimms ] && break
-+		[ ! -z "$monitor_dimms" ] && break
- 		i=$((i + 1))
- 	done
- 	start_monitor "-r $monitor_region"
-@@ -147,6 +147,7 @@ test_filter_dimmevent()
- 
- 	inject_value=$($NDCTL list -H -d $monitor_dimms | jq -r .[]."health"."temperature_threshold")
- 	inject_value=$((inject_value + 1))
-+	inject_value=${inject_value%.*}
- 	start_monitor "-d $monitor_dimms -D dimm-media-temperature"
- 	inject_smart "-m $inject_value"
- 	check_result "$monitor_dimms"
--- 
-2.44.0
+=A0drivers/cxl/core/mbox.c=A0=A0=A0=A0=A0 | 13 +++++++++++--
+=A0drivers/cxl/cxlmem.h=A0=A0=A0=A0=A0=A0=A0=A0 | 18 ++++++++++++++++++
+=A0drivers/cxl/pci.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 24 ++++++++++++++++=
+++++++++
+=A0include/uapi/linux/cxl_mem.h |=A0 1 +
+=A04 files changed, 54 insertions(+), 2 deletions(-)
 
+--=20
+2.43.0
+
+    =
