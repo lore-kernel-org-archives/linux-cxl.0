@@ -1,204 +1,135 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F5C212EF9;
-	Wed, 16 Oct 2024 16:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F6514F135
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 16:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729096470; cv=none; b=fnMpPC7RRp0GeE1ZfOtgsbfT2FDpLpwFrW7ILPHjIRCbLLdZS6e8aKBWPr54i2KZlySGUB/nwrX409oRHy2oJmmzwWVJiY2QccCjT3tq58v1khqPTdNfGhzjS8Vx5ioXVOQq2Y4A+UX6yevpJ2vi3awWuXHeeUYIYu4q/S0+Srw=
+	t=1729097118; cv=none; b=V59b3uCfnZ5WfvJoj9IGR0MTwRC192ZSUcmMa//PplhAVV9bCPh6njsisIIqBhSN4FoVCGQtg1/Wn3ai7fLtGknF5ncJm/mcSqF+/T+p7Vmsyi6nD0XUbh3x3yzTmb5aKTREW5gT6zix09S8IHphLFnB42atwv6UIdwAhcVKynk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729096470; c=relaxed/simple;
-	bh=dHzs/QnRReAbZIRMGawvbaWH1HjGnyWPITuLKP0SIVE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ino6pZkkmea4fcFokaPM60tq1/kAQqd72F/nH/tV7WV7FZh0nvLyRfjjrhj0L/XyiYZlsGHTEIyADFWs6CRn0SMSSjopeHtwVSUdsDse2my4uit/9gDs+cHLmSyC0j2JvYpIuLktYTfzZZ6ytVeB5zDagCHXu3MdK8Wk7dz5+AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTGkJ6cLYz67vyB;
-	Thu, 17 Oct 2024 00:33:44 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id A850F1400DB;
-	Thu, 17 Oct 2024 00:34:22 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.158.191) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 16 Oct 2024 18:34:21 +0200
-From: <shiju.jose@huawei.com>
-To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
-	<linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH 4/4] cxl/events: Updates for CXL Memory Module Event Record
-Date: Wed, 16 Oct 2024 17:33:49 +0100
-Message-ID: <20241016163349.1210-5-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20241016163349.1210-1-shiju.jose@huawei.com>
-References: <20241016163349.1210-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1729097118; c=relaxed/simple;
+	bh=qKjlToxfaPcholsWZHePU6dNENTJgpAjav9s8DbZ5ZI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDPY8fq5obh3kcH1UEPMjNEn0ZKvqeWZgBJwe3LXhyCnwYlrx0bCcRXzWDH5eWfg97BxAi+5LyAP52hc3OePu/lMZflY4ixvfrdCjNCPfi3mM1GrWwU+vjq5cW1YHlyxrty4wmVUUA458v+Lli9kzegrwk9N/EfwcEQuYv5I4t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=beO4pGri; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beO4pGri"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e396a69062so910147b3.0
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 09:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729097115; x=1729701915; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RABL2RF01Ga9XpkAVqzY5/IVkiUt1spFGyVkgeyO5hM=;
+        b=beO4pGria/PY2HkeTEmBzfAuqO5b/1D771t3TXU8S8+OJbw/1Cu4BULEwR/o+7zHxV
+         PhZhepBqI6wH82Bk5gPB/dL4RhSxKKc1jIGwNrK/OyxqSmtslqEkAAkWtr5pO9S+Kfyq
+         ZRk/ejHyfdnftuRLSRbZA1f6TnnN1Jzi5R7u5hRYDd4uWKvnD8Dbss7nDTQ0wCKoqY8r
+         RFZB8RGCHl/EimhzInDwmsSgrjTEcxbWEGcVXCYq1qJuXyKZ0eJD0tX8Hq3b/oF8ZwcW
+         abDMcMt0cweasqDoe/V2lBs5P92sqj/Q50ngE9Br+Ge2JH1vahmUxvIC9TKLdtLD+jWX
+         h9pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729097115; x=1729701915;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RABL2RF01Ga9XpkAVqzY5/IVkiUt1spFGyVkgeyO5hM=;
+        b=V34MPNI1g6q9B/DDkchQUaJNp7ALUtWcazflZubWaCkXKiRJ51t+Fi6ip/EH3VJa3j
+         cPMouVn2naN+BTSA/KU+ro1RVyJVtJ1cbrqLj2HYc1cNju3iLOsGp5TIGXAXBz8H8XsD
+         WcRT5+QLkBrZYYnwM/YiC0fn3ziuEL8zwnS/MN2HXvfQioQFOiMG6k2vviuCXStfXlQL
+         khaiN2B79K+QtKzYe/16ZnlTle0dnL0dMUtkS5Ed1tn/kCYFonBZ40I4dCeZ6w2CLeBI
+         n4QL5lE0e4gy3x+wIc71LiClNDp4djGgD6i3udvuM8t8dq1acXYxoDJq+UzLFDfWBXnw
+         d9/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWU5/rkngwr6hie5NKld61Uq1LcDXSZtfsgdKU4rUd7lkkOaXWKjwUaWnmrWZXwEB3MgrBG6FxrW9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze1bSW+JvltOUL1Ys26/KnbkRy247Z/K17s0UnpSWUY3V08Yoj
+	lcIm0Ff05jqyjrFnvPSKo6oYCOpvj+XI6PXnhfNJ1v/llYmKUGSw
+X-Google-Smtp-Source: AGHT+IEGjNq75Z0TNHUOEBobxg7WjOf7EkMLeAY9MH2m2qV3RqnzflX5OCh7d9mVE1/fN1rIb5esog==
+X-Received: by 2002:a05:690c:38a:b0:6e3:116c:ebf3 with SMTP id 00721157ae682-6e347c4851amr168082307b3.28.1729097115458;
+        Wed, 16 Oct 2024 09:45:15 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e3c5d25fcfsm7626937b3.120.2024.10.16.09.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 09:45:15 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 16 Oct 2024 09:45:00 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, nifan.cxl@gmail.com,
+	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org,
+	a.manzanares@samsung.com, nmtadam.samsung@gmail.com,
+	abhi.n@samsung.com, alok.rathore@samsung.com
+Subject: Re: [QEMU PATCH] cxl/cxl-mailbox-utils: Fix size check for
+ cmd_firmware_update_get_info
+Message-ID: <Zw_tjJ1E8jyu4S-f@fan>
+References: <20241008164624.78608-1-nifan.cxl@gmail.com>
+ <uuxiowlqgqs7mq2dfxixw4ryx4zfbygyaji7axfcln3nstdfed@nufwcfs2nj2a>
+ <20241016170138.000001cf@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500007.china.huawei.com (7.182.85.172)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241016170138.000001cf@Huawei.com>
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Wed, Oct 16, 2024 at 05:01:38PM +0100, Jonathan Cameron wrote:
+> On Tue, 8 Oct 2024 20:01:07 -0700
+> Davidlohr Bueso <dave@stgolabs.net> wrote:
+> 
+> > On Tue, 08 Oct 2024, nifan.cxl@gmail.com wrote:\n
+> > >From: Fan Ni <fan.ni@samsung.com>
+> > >
+> > >In the function cmd_firmware_update_get_info for handling Get FW info
+> > >command (0x0200h), the vmem, pmem and DC capacity size check were
+> > >incorrect. The size should be aligned to 256MiB, not smaller than
+> > >256MiB.  
+> > 
+> > Can get rid of a level of parenthesis (other cmds as well), otherwise:
+> > 
+> > Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> I missed this one when gathering up fixes the other day.
+> I'll queue it up now with the excess brackets dropped.
+> 
+> Jonathan
+Thanks Jonathan,
+Please also take a look the following patch, it is a fix for dcd.
 
-CXL spec 3.1 section 8.2.9.2.1.3 Table 8-47, Memory Module Event Record
-has updated with following new fields and new info for Device Event Type
-and Device Health Information fields.
-1. Validity Flags
-2. Component Identifier
-3. Device Event Sub-Type
+https://lore.kernel.org/linux-cxl/20241015190224.251293-1-nifan.cxl@gmail.com/T/#u
 
-Add updates for the above spec changes in the CXL events record and CXL
-Memory Module trace event implementations.
+Fan
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/trace.h | 48 +++++++++++++++++++++++++++++++++++-----
- include/cxl/event.h      |  5 ++++-
- 2 files changed, 46 insertions(+), 7 deletions(-)
+> 
+> > 
+> > >
+> > >Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > >---
+> > > hw/cxl/cxl-mailbox-utils.c | 6 +++---
+> > > 1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > >diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > >index 9258e48f95..c82ad50ac8 100644
+> > >--- a/hw/cxl/cxl-mailbox-utils.c
+> > >+++ b/hw/cxl/cxl-mailbox-utils.c
+> > >@@ -649,9 +649,9 @@ static CXLRetCode cmd_firmware_update_get_info(const struct cxl_cmd *cmd,
+> > >     } QEMU_PACKED *fw_info;
+> > >     QEMU_BUILD_BUG_ON(sizeof(*fw_info) != 0x50);
+> > >
+> > >-    if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
+> > >-        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER) ||
+> > >-        (ct3d->dc.total_capacity < CXL_CAPACITY_MULTIPLIER)) {
+> > >+    if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
+> > >+        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER)) ||
+> > >+        (!QEMU_IS_ALIGNED(ct3d->dc.total_capacity, CXL_CAPACITY_MULTIPLIER))) {
+> > >         return CXL_MBOX_INTERNAL_ERROR;
+> > >     }
+> > >
+> > >--
+> > >2.43.0
+> > >  
+> 
 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 20790dffa2b4..1ce43bff49c7 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -613,7 +613,7 @@ TRACE_EVENT(cxl_dram,
- /*
-  * Memory Module Event Record - MMER
-  *
-- * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
-+ * CXL res 3.1 section 8.2.9.2.1.3; Table 8-47
-  */
- #define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
- #define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
-@@ -621,27 +621,35 @@ TRACE_EVENT(cxl_dram,
- #define CXL_MMER_TEMP_CHANGE			0x03
- #define CXL_MMER_DATA_PATH_ERROR		0x04
- #define CXL_MMER_LSA_ERROR			0x05
-+#define CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR	0x06
-+#define CXL_MMER_MEMORY_MEDIA_FRU_ERROR		0x07
-+#define CXL_MMER_POWER_MANAGEMENT_FAULT		0x08
- #define show_dev_evt_type(type)	__print_symbolic(type,			   \
- 	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
- 	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
- 	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
- 	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
- 	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
--	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}  \
-+	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}, \
-+	{ CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR,	"Unrecoverable Internal Sideband Bus Error"	}, \
-+	{ CXL_MMER_MEMORY_MEDIA_FRU_ERROR,	"Memory Media FRU Error"	}, \
-+	{ CXL_MMER_POWER_MANAGEMENT_FAULT,	"Power Management Fault"	}  \
- )
- 
- /*
-  * Device Health Information - DHI
-  *
-- * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
-+ * CXL res 3.1 section 8.2.9.9.3.1; Table 8-133
-  */
- #define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
- #define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
- #define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
-+#define CXL_DHI_HS_MEM_CAPACITY_DEGRADED			BIT(3)
- #define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
- 	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"MAINTENANCE_NEEDED"	}, \
- 	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"PERFORMANCE_DEGRADED"	}, \
--	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}  \
-+	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}, \
-+	{ CXL_DHI_HS_MEM_CAPACITY_DEGRADED,	"MEM_CAPACITY_DEGRADED"	}  \
- )
- 
- #define CXL_DHI_MS_NORMAL							0x00
-@@ -695,6 +703,22 @@ TRACE_EVENT(cxl_dram,
- #define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
- #define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
- 
-+#define CXL_MMER_VALID_COMPONENT			BIT(0)
-+#define CXL_MMER_VALID_COMPONENT_ID_FORMAT		BIT(1)
-+#define show_mem_module_valid_flags(flags)	__print_flags(flags, "|",	\
-+	{ CXL_MMER_VALID_COMPONENT,	"COMPONENT"	}			\
-+)
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED			0x00
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA		0x01
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA		0x02
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU		0x03
-+#define show_dev_event_sub_type(sub_type)	__print_symbolic(sub_type,	  \
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED,		"Not Reported" }, \
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA,	"Invalid Config Data" }, \
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA,		"Unsupported Config Data" }, \
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU,	"Unsupported Memory Media FRU" } \
-+)
-+
- TRACE_EVENT(cxl_memory_module,
- 
- 	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-@@ -717,6 +741,9 @@ TRACE_EVENT(cxl_memory_module,
- 		__field(u32, cor_per_err_cnt)
- 		__field(s16, device_temp)
- 		__field(u8, add_status)
-+		__field(u16, validity_flags)
-+		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
-+		__field(u8, sub_type)
- 	),
- 
- 	TP_fast_assign(
-@@ -735,12 +762,17 @@ TRACE_EVENT(cxl_memory_module,
- 		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
- 		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
- 		__entry->add_status = rec->info.add_status;
-+		__entry->validity_flags = get_unaligned_le16(rec->validity_flags);
-+		memcpy(__entry->comp_id, &rec->component_id,
-+		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
-+		__entry->sub_type = rec->sub_type;
- 	),
- 
- 	CXL_EVT_TP_printk("event_type='%s' health_status='%s' media_status='%s' " \
- 		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
- 		"as_cor_per_err_cnt=%s life_used=%u device_temp=%d " \
--		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u",
-+		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u " \
-+		"validity_flags='%s' comp_id=%s sub_type='%s'",
- 		show_dev_evt_type(__entry->event_type),
- 		show_health_status_flags(__entry->health_status),
- 		show_media_status(__entry->media_status),
-@@ -750,7 +782,11 @@ TRACE_EVENT(cxl_memory_module,
- 		show_one_bit_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
- 		__entry->life_used, __entry->device_temp,
- 		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
--		__entry->cor_per_err_cnt
-+		__entry->cor_per_err_cnt,
-+		show_mem_module_valid_flags(__entry->validity_flags),
-+		cxl_print_component_id(__entry->validity_flags, CXL_MMER_VALID_COMPONENT,
-+				       CXL_MMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		show_dev_event_sub_type(__entry->sub_type)
- 	)
- );
- 
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 7e98492c85df..18b7f96dea77 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -102,7 +102,10 @@ struct cxl_event_mem_module {
- 	struct cxl_event_record_hdr hdr;
- 	u8 event_type;
- 	struct cxl_get_health_info info;
--	u8 reserved[0x3d];
-+	u8 validity_flags[2];
-+	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-+	u8 sub_type;
-+	u8 reserved[0x2a];
- } __packed;
- 
- union cxl_event {
 -- 
-2.34.1
-
+Fan Ni
