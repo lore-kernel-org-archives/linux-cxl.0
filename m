@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E2145008;
-	Wed, 16 Oct 2024 16:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ACC210183;
+	Wed, 16 Oct 2024 16:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729095764; cv=none; b=NbZ+o/RfzsnK2YoKaX9biAuA+KCXroz1PuxSTTl1srBf7OcxO173L4MAuRo2IijkuQYUMkBhf6zlHqNh1ec/rV+zw3tMyJz+DULhL8OpjTy5fmElz4NSJva3YUS+xtGHminsDUhxcC4b6jILe3qbmbJ7u6yBYX0zDettlS7fCUg=
+	t=1729096148; cv=none; b=fLnR6x939sBt2Bz3UpLQnHA8QY5QDuDBxHlXBwvi0h00aOpo6k1LfAjmgg1p7apcN0JqE4WJ6nTZma5n2c13CvpCxDTtyhwxYIcrx5WG+GBAhQrcB4J6/6FW4PPlBn6oDq81GH8H/wRK8YPJVzbzyMAVSuJ1eBIOv5b+1SyBpQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729095764; c=relaxed/simple;
-	bh=MvQA7IS7CGySYRfDQZKf2ZKM0e6XoSwsxyFBT+rE0GY=;
+	s=arc-20240116; t=1729096148; c=relaxed/simple;
+	bh=m03GgYfpjhsbMSm0//osAxU4REPjr4beIsD/5qr/bus=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iTBy0TApgBWr5YT5XcfAGclerQmF7yPyjiAVKheL3HtLyYksvfjIZnMFQrLAs1WSPDkznGZ/PMHv1ag4WVHwzjTbZ78FkxmUQfkhqA66gI97JaaDPqOqhCPKi6V/VJeqvM6ZNq9EF9w36PALazqdylkfzyVPswvV0V0FKO0QjYo=
+	 MIME-Version:Content-Type; b=iQOIL9L3Oij8CGxyEKri27gyvVKZ3ZGEbw31DH7ze7B+FQ2nqT7WOiLO3RrNHwXaebb8IgOB5WlSR9dpe/JWsOxgRhD4FLmND+FK+8+RfgrLIz1b4W9NdoV+Wmf/04zWBoS9447Zixh1VYSU0pPN/FjvvnJf+J7D5dXUuHW3On0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTGRX4hTvz6G9Mj;
-	Thu, 17 Oct 2024 00:20:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTGc74yg5z6JB1g;
+	Thu, 17 Oct 2024 00:28:23 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E06081400C9;
-	Thu, 17 Oct 2024 00:22:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CF221400DB;
+	Thu, 17 Oct 2024 00:29:01 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
- 2024 18:22:37 +0200
-Date: Wed, 16 Oct 2024 17:22:35 +0100
+ 2024 18:29:00 +0200
+Date: Wed, 16 Oct 2024 17:28:59 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
@@ -34,12 +34,12 @@ CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
 	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
 	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
 	<smita.koralahallichannabasappa@amd.com>
-Subject: Re: [PATCH 04/15] cxl/aer/pci: Add CXL PCIe port correctable error
- support in AER service driver
-Message-ID: <20241016172235.00001e65@Huawei.com>
-In-Reply-To: <20241008221657.1130181-5-terry.bowman@amd.com>
+Subject: Re: [PATCH 05/15] cxl/aer/pci: Update AER driver to read UCE fatal
+ status for all CXL PCIe port devices
+Message-ID: <20241016172859.00004209@Huawei.com>
+In-Reply-To: <20241008221657.1130181-6-terry.bowman@amd.com>
 References: <20241008221657.1130181-1-terry.bowman@amd.com>
-	<20241008221657.1130181-5-terry.bowman@amd.com>
+	<20241008221657.1130181-6-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,77 +50,52 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 8 Oct 2024 17:16:46 -0500
+On Tue, 8 Oct 2024 17:16:47 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The AER service driver currently does not manage CXL PCIe port
-> protocol errors reported by CXL root ports, CXL upstream switch ports,
-> and CXL downstream switch ports. Consequently, RAS protocol errors
-> from CXL PCIe port devices are not properly logged or handled.
+> The AER service driver's aer_get_device_err_info() function does not
+> read uncorrectable (UCE) fatal error status from PCIe upstream port
+> devices. As a result, fatal errors are not logged or handled as needed
+> for CXL PCIe upstream switch port devices.
+
+I wonder why not?  Is this the first ever upstream port to
+report an uncorrectable error (that didn't mean the link was
+down) or is there something more subtle going on.
+
+PCI folk, this one looks like it might cause problems to me.
+
 > 
-> These errors are reported to the OS via the root port's AER correctable
-> and uncorrectable internal error fields. While the AER driver supports
-> handling downstream port protocol errors in restricted CXL host (RCH)
-> mode also known as CXL1.1, it lacks the same functionality for CXL
-> PCIe ports operating in virtual hierarchy (VH) mode, introduced in
-> CXL2.0.
+> Update the aer_get_device_err_info() function to read the UCE fatal
+error_info()
+
+> status for all CXL PCIe port devices.
 > 
-> To address this gap, update the AER driver to handle CXL PCIe port
-> device protocol correctable errors (CE).
-> 
-> The uncorrectable error handling (UCE) will be added in a future
-> patch.
-> 
-> Make this update alongside the existing downstream port RCH error
-> handling logic, extending support to CXL PCIe ports in VH.
+> The fatal error status will be used in future patches implementing
+> CXL PCIe port error handling and logging.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Minor comments inline.
-
-J
 > ---
->  drivers/pci/pcie/aer.c | 54 +++++++++++++++++++++++++++++++++---------
->  1 file changed, 43 insertions(+), 11 deletions(-)
+>  drivers/pci/pcie/aer.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index dc8b17999001..1c996287d4ce 100644
+> index 1c996287d4ce..9b2872c8e20d 100644
 > --- a/drivers/pci/pcie/aer.c
 > +++ b/drivers/pci/pcie/aer.c
-> @@ -40,6 +40,8 @@
->  #define AER_MAX_TYPEOF_COR_ERRS		16	/* as per PCI_ERR_COR_STATUS */
->  #define AER_MAX_TYPEOF_UNCOR_ERRS	27	/* as per PCI_ERR_UNCOR_STATUS*/
+> @@ -1282,6 +1282,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>  		   type == PCI_EXP_TYPE_RC_EC ||
+>  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +		   type == PCI_EXP_TYPE_UPSTREAM ||
+>  		   info->severity == AER_NONFATAL) {
 >  
-> +#define CXL_DVSEC_PORT_EXTENSIONS	3
+>  		/* Link is still healthy for IO reads */
+So this comment makes me worried.  In general case the fatal
+error may mean we can't talk to the USP?
 
-Duplicate of definition in drivers/cxl/cxlpci.h
-
-Maybe wrap it up in an is_cxl_port() or similar? Or just 
-move that to a header both places can exercise.
+Jonathan
 
 
-> +
->  struct aer_err_source {
->  	u32 status;			/* PCI_ERR_ROOT_STATUS */
->  	u32 id;				/* PCI_ERR_ROOT_ERR_SRC */
-> @@ -941,6 +943,17 @@ static bool find_source_device(struct pci_dev *parent,
->  	return true;
->  }
->  
-> +static bool is_pcie_cxl_port(struct pci_dev *dev)
-> +{
-> +	if ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> +	    (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
-> +	    (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM))
-> +		return false;
-> +
-> +	return (!!pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
-> +					    CXL_DVSEC_PORT_EXTENSIONS));
-
-No need for the !! it will return the same without that clamping to 1/0
-because any non 0 value is true.
-
-> +}
-> +
