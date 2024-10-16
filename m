@@ -1,131 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from qs51p00im-qukt01072301.me.com (qs51p00im-qukt01072301.me.com [17.57.155.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5BF1D47AE
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 23:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA81D1747
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 23:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.155.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729121057; cv=none; b=dSvUTk6gFl7cS1xgFaA+pjFgv1EszqDf146L9gAzdDzmtFoeK2NcwMmA/WsOvcSdL5j6OhwUI0koD7y0BmXaAxIJK8Fp9sN0JBJDhtI2FOI3BzbkFyxwjJE5XcMj1fZlSvGyDehO1lHzMpOlrmnv0J0WGgip3PpvUqs8xqgchYs=
+	t=1729121749; cv=none; b=G3R1h2dDOGSKGRTJYCsDoSB12UKkxr+ZeEk6FOw/hfsUsqyNwtHstHGscbog+xWMwTjTkMtQ5SAzwWcjuFvnNeUH6iHYKxpKsOtzgEsXQXiLeZZY8QIJ45yz8itVvJ4iqZDEHGcQRDfK3rHYHaOhxIYRxMqjQKuNtP9a+IlX/Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729121057; c=relaxed/simple;
-	bh=w7jB3Bmg0IHrfZyI7lRmgUtFfpbyIYZk93HT0ALZqTE=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qgj13uDM9r94AbtAQkAxV1ksnm8/lQUbarHL0K6b4E9w1pJck5ccGfFuRutSpz8KOteUWjzyR6Vspb3D5nh+wxstu3J5m/nek03U/3jkoy03/toGqMa4dKysy5xesEGuNd4NAZSVRDYcrJ7iEpbD3UtcBlTJVoDzdtDKxjzTQYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HTrruH8M; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729121749; c=relaxed/simple;
+	bh=gdwTVAwWb9VdzRsGZopWrMq8IXjxY6qHdy0/H1n9jUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqzzkmjuGtx6tD+Sw5jbFddsLi0p61r9NVJyAeE/poDBnnBUWmPNFohd+KVpTTj1eA/it8Lnzy7hunIzM1N9jp3zlAhug39Nn0WRPspJ549WsvbRpT6MqmuUHdnE3zQ8YM87st8qrHjO2KUu1Wm5GsRs3n08fLsec36/jZficuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ES2hMIB9; arc=none smtp.client-ip=17.57.155.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HTrruH8M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729121055; x=1760657055;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=w7jB3Bmg0IHrfZyI7lRmgUtFfpbyIYZk93HT0ALZqTE=;
-  b=HTrruH8Mea1NYVMvic2a998zs6Mju8VoWvoOb93tmRizdmye4BrH9Pn7
-   XAxvH5yctiAPHkr7E3oQKB/UrZzNnGBYgQqCekL1fvrGT/0CAfWwTPRpn
-   jNgfS/+s59x0D19IvnyABI2Oq9seRL7Ufv/8K0gF0tLEugjTl7fhnYiqF
-   pg/iDwd6wxp74gzutToXd1Ub/WNhflhE9X9COsynRO/vB9VGjfVc3+22a
-   F6/sZYK3RAiWAne5WV2vyZCoN3bi8hE4qIA9mehtyp5zkipAaxQAeL0aj
-   hpblD3NkFk2+O4T8dOtytm1yO7gCTgpf3ganoBEt5ZM4ZvoipJhH2nu0c
-   Q==;
-X-CSE-ConnectionGUID: i1xfTxdWScGQrdOt74Gx0w==
-X-CSE-MsgGUID: FQPtJ0/bRMi4Y7M1yXxXog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28377986"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28377986"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 16:24:15 -0700
-X-CSE-ConnectionGUID: +tVlDz/OTMKgxHi3eVp/KQ==
-X-CSE-MsgGUID: h4sU0QfRTqCBY1qAB7dLyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
-   d="scan'208";a="78529246"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.108.250])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 16:24:15 -0700
-Subject: [PATCH 2/2] cxl/port: Revert __free() conversion of
- add_port_attach_ep()
-From: Dan Williams <dan.j.williams@intel.com>
-To: ira.weiny@intel.com, dave.jiang@intel.com
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Li Ming <ming4.li@intel.com>,
- linux-cxl@vger.kernel.org
-Date: Wed, 16 Oct 2024 16:24:13 -0700
-Message-ID: <172912105192.1414627.12908026603084784872.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <172912104335.1414627.1377616790909088415.stgit@dwillia2-xfh.jf.intel.com>
-References: <172912104335.1414627.1377616790909088415.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ES2hMIB9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1729121746;
+	bh=4O6bY24xBTUD4eTJn/i/gevB4jlr+Frj2BgzgIvn6KQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=ES2hMIB9tySlH6IMhVQCgZUVmRksEFP5mEsyf6eNA3wzVfI9tmyaTEfQef+cNxjMi
+	 Rw0VpHOiiLxr6NAIW4GL5gskIJkkDslzaXOK6v8lncCATlFyMCNavFOFjnZE/loekz
+	 5qFEEGtAEnfbExLtVVsru6RqtJTN5z6KnfAQjFxCTpfpozIDMlnrfefbH/6wE5PnT8
+	 KZ51LKH1ozLY2Iagtfehz1V8pjFM5L1ThkIZuTPuUXtDTtCQORQ/y93gYu9gfPR9yx
+	 RpHStDzfeeJMbrwCl8VWKW8mwHwVe1LNV1+sZeoXyTgBpTocJgz0X8aIBx4USZlIfP
+	 +PYVryk3c1P+A==
+Received: from [192.168.1.26] (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
+	by qs51p00im-qukt01072301.me.com (Postfix) with ESMTPSA id 03DF425401B2;
+	Wed, 16 Oct 2024 23:35:41 +0000 (UTC)
+Message-ID: <4be42749-5444-4847-9396-820667d5a9e2@icloud.com>
+Date: Thu, 17 Oct 2024 07:35:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] cxl/region: Fix wrong logic for finding a free switch
+ cxl decoder
+To: Dan Williams <dan.j.williams@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241017-const_dfc_prepare-v6-1-fc842264a1cc@quicinc.com>
+ <671045fc36835_3ee2294a5@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <671045fc36835_3ee2294a5@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: V1NzOHRLfubtklamPbYDlgBRgqGYis2j
+X-Proofpoint-ORIG-GUID: V1NzOHRLfubtklamPbYDlgBRgqGYis2j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-16_17,2024-10-16_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 spamscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2410160151
 
-Dan points out via smatch [1] that the conversion of
-add_port_attach_ep() to use cleanup helpers does not correctly handle a
-pointer reassignment case.
+On 2024/10/17 07:02, Dan Williams wrote:
+> Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Provided that all child switch cxl decoders are sorted by ID in ascending
+>> order, then it is wrong for current match_free_decoder()'s logic to find
+>> a free cxl decoder as explained below:
+>>
+>> Port
+>>  ├── cxld A        <---->  region A
+>>  ├── cxld B        // no region
+>>  ├── cxld C        <---->  region C
+>>
+>> Current logic will find cxld B as a free one, but cxld B is not true
+>> free since region C has not been torn down, so current logic is wrong.
+>>
+>> Fixed by verifying if cxl decoder with ID (@port->commit_end + 1) can
+>> be returned as finding result.
+>>
+>> Link: https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
+>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> ---
+>> This patch is incremental to below patch series with title "cxl: Initialization and shutdown fixes"
+>> http://lore.kernel.org/172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com
+>>
+>> This patch is based on Dan's recommendation shown by below link:
+>> https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
+> 
+> ...and Dan and already sent a patch he is happier with here:
+> 
+> http://lore.kernel.org/172895072669.39002.9296583943188706348.stgit@dwillia2-xfh.jf.intel.com
 
-    drivers/cxl/core/port.c:1591 add_port_attach_ep()
-    warn: re-assigning __cleanup__ ptr 'port'
+this is a optimized one based your recommendation, namely, above link.
+please don't hesitate to use it as your V2 if you like this one.
 
-In the case that @port is not found and a new @port is created the
-cleanup method changes from __free() to devm.
+you maybe also have below change when you send V2
+Reported-by: Zijun Hu <zijun_hu@icloud.com>
+to
+Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Revert the change for now as this function is not amenable to cleanup
-helpers without a wider refactoring.
+So let us close discussion for this mail thread and go to your above thread.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: http://lore.kernel.org/2a19289b-0bcf-42c4-82a9-268a922535f2@stanley.mountain [1]
-Cc: Li Ming <ming4.li@intel.com>
-Fixes: dd2617ebd2a6 ("cxl/port: Use __free() to drop put_device() for cxl_port")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/port.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 54dd2cd450ca..8e6596e147b3 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1544,6 +1544,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 			      struct device *dport_dev)
- {
- 	struct device *dparent = grandparent(dport_dev);
-+	struct cxl_port *port, *parent_port = NULL;
- 	struct cxl_dport *dport, *parent_dport;
- 	resource_size_t component_reg_phys;
- 	int rc;
-@@ -1559,18 +1560,12 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 		return -ENXIO;
- 	}
- 
--	struct cxl_port *parent_port __free(put_cxl_port) =
--		find_cxl_port(dparent, &parent_dport);
-+	parent_port = find_cxl_port(dparent, &parent_dport);
- 	if (!parent_port) {
- 		/* iterate to create this parent_port */
- 		return -EAGAIN;
- 	}
- 
--	/*
--	 * Definition with __free() here to keep the sequence of
--	 * dereferencing the device of the port before the parent_port releasing.
--	 */
--	struct cxl_port *port __free(put_cxl_port) = NULL;
- 	device_lock(&parent_port->dev);
- 	if (!parent_port->dev.driver) {
- 		dev_warn(&cxlmd->dev,
-@@ -1605,8 +1600,10 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 			 */
- 			rc = -ENXIO;
- 		}
-+		put_device(&port->dev);
- 	}
- 
-+	put_device(&parent_port->dev);
- 	return rc;
- }
- 
+
 
