@@ -1,276 +1,238 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B061C07F9;
-	Wed, 16 Oct 2024 10:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729076375; cv=none; b=fytCDZvXu6Si/UyDizwyJPfzlVLqLuqyOWCgpfzNh48adgEMFo9TbE6S1H8CHwI76plUnRLCqp3tuvsCeX3tv/ACLX9az3OkboHzKhvo6d1Ucxq4viELZ2NMAynLzLhVMUOt1BDy5KKqbhweg+obJpQFKdau4pIMqS3PY84Oae0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729076375; c=relaxed/simple;
-	bh=z6QRm0J2I++VLMK4orPSe4kHg6UZzQ44XST8c0Wy+aQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i+DNENOyolJZHdruhpD9ZEbEv0Xg0aleqTjjUTrYN5b4cOzx2ctwdWd1ghrmBXlP+w9asexMFUa1ySa3/BKLnbXoF1RNwgyhaOEkXhR4IzJH22Ksp56jTDB7lhRPaV8iPtjN2bcvGjPaGq8hgQOafoJ9E6/1+RXnRTHxsY+ZSRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FCrxX8Yo reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1437320C012;
+	Wed, 16 Oct 2024 14:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729089732; cv=fail; b=Cu3TN7qgpfr+df+JZ9UAwIzkpd5XMo73pfIOOl0ygVTbbfYze5/sPBv/orYrfvl1WwBGtpUCVyvDAMtyL5WrgLyuoRzpOCs+a9Yslgw9eyZ8T1hnN5hYUSVkP8fEBUbHOD2ZxbObECQ3x/BOwcjU1315Dib2r/bsE5Fpxh+6ztk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729089732; c=relaxed/simple;
+	bh=jpLO3GivTxwnjEOy/87Big/+fx2lC8K54I0zkT6vhps=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CDLfv4xTyYicZIzr6UhiLSlKa7ab/AHvte0H404zUeO/qCrePDaspeORHUE4dVBNCOJ5IjAQZsP4ZsJdVRER4DVymEDNA6b8zZ0e9dM/pKa3mCB0MB7FOH0WXO1L6m6gNiQ6VlKJt5YzMa+q6EsK/w8zGqL2GEiAQaOTb3JNH0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o86mQZN8; arc=fail smtp.client-ip=40.107.243.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FCrxX8Yo"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6A8AE40E0198;
-	Wed, 16 Oct 2024 10:59:27 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id H-8ABRph_QdB; Wed, 16 Oct 2024 10:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1729076361; bh=zv5a7UXvwk4zGhwGx+Twn4ugNezq5/Up+qwxz+Hta1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FCrxX8YoQ/0ZHFOf4iWtfypQOEK/v75QEQqJ4SCZSvzWZ6ndsHmWNi5BSVB3wDZsH
-	 ghUpOMJMJU0c7Lk59YRlV8HC+kKwfmzEkLDx9ShZgxBS/wSkiAkc1fo+s0dEL+qgBI
-	 Ft6c7lrtmoWtqZyksnii6gHt0u6RrGxL5NfWtyeAk7wHSSFZb1PW1WN3IA0BaYiNSW
-	 ppG7DJp6ZCsJ/SJySvir3y4W4nIQJx0+QDMC142tXw8u4WifNm/coXUNYyPWiMEtS2
-	 v6geuGqyprz5T3/yD1ymW+QS4/Us0w9DZ6507bTKISm81TyhbMbfwNG5l+sr6BD2sV
-	 lNw7XDM7eCV+Ka6zhbJmZFtty7T1DnBZQRJyaqwPP1y4CDOz/5ehRWJ8lMgqH8bGK/
-	 5CE8GXtjuoBKQNbJZ9cvpKeAmhGAQoen6Nz38IJQwg0fBjcGKonYfrXUAjPb3SlqIN
-	 sPCcYWGsvpU03dWQTW0PtcWJkez3oCQ0m5UlwrDqvhzM48ikXuUQpmlrxQwDztE5P8
-	 tfrGwtyJiAT7QUSbX0HXPJxj7hqg5WmPQ/8lvYOJKm61S2P1zmF7CPPZXzvyOO11/m
-	 GFCt+qosgfObsqGmYBn/tX69pJ5KGO+z3b42BcfTb6kgmY/M5vz5sMO6N5Ga/Pw1ZY
-	 QbIE8Eew44X1U944NxCePlIs=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D10C40E021A;
-	Wed, 16 Oct 2024 10:58:38 +0000 (UTC)
-Date: Wed, 16 Oct 2024 12:58:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH v13 01/18] EDAC: Add support for EDAC device features
- control
-Message-ID: <20241016105832.GSZw-cWDOFweQMWRgZ@fat_crate.local>
-References: <20241009124120.1124-1-shiju.jose@huawei.com>
- <20241009124120.1124-2-shiju.jose@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o86mQZN8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YYOnvCJfPSvNf73m3SVNWttaS0viR+XWqbo3gEtJKi6JnwJUcHXcSSdaasF7sPGo80EzOHx3+em1m9dJ0feyigZEAp6WfBlovFN31/Qh4hmwNUuuuboUO8uY80aE7jCntBYB5DXAaPVLOlKjQiLe6bV0ifW0zuy5flt2BO9RiRvX74lBjm3x2h3v7kkyZxWXxCe0hTqlQaCAFHwJPp8KTJm+FFYbCHMdVjXPsI47Wdieaqt3lA5/eqVD5GfmZ444Tf/tM+CBhV8Ptcxj9/PUU4zWhvpQ41ZR05DdyP/xEwZH/Jjjvj+fpO26JBGCNWNg0uzaLEb7McXDL63ViTTU+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+LQlhfjAr9JdpDNXt3FJv+jLTpaNbeM0Hct3RzZMQUo=;
+ b=WS6hPgNb0LnWVfZW1ciiZBHR8mg4NmVZHC+R8RBN6RwNYUnNgivFNcwgAgdZ1GNIP6u9joFbWI2eg9AxweXDwUC8w4ynZdyTj1uhxSFayaqfRBoAve+Ud8AqyDA5TyEsTfEAiqcSPpj45Hzo2tvUW2eXrSxydaz7Ee4hdDr8xhEoodSvDZlbCTC0gWAC2YEjmpJQCLM4njDeHsdq2sdA6RlPrbcVSHrUetCLvo1J4XHAMzzxu6ecob82LdXVIUNvOJmBg23Q+OjFjoDUZFihbarevhXXO4LnQi1ftebjAcs6HGOlECVM5Q5w6iFVV8608imqk7Un4C/kRd28XW6LvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+LQlhfjAr9JdpDNXt3FJv+jLTpaNbeM0Hct3RzZMQUo=;
+ b=o86mQZN8lTCxQw7Gk8i4rkFasLm9kolHmNnUn2giKn6DcsA3zTBepB7UiGpRWXlTGl12FHesyGamhkEqQpPLmhF/nfzI1DIUXVScQ5BLzb8G2p7yDWsxAzfR6O6oJTAIs7FbPQvPuWWSj7je2i4lj/SAmaGEXfh2aGxrVR170nY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by CY5PR12MB6275.namprd12.prod.outlook.com (2603:10b6:930:20::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
+ 2024 14:42:07 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8069.016; Wed, 16 Oct 2024
+ 14:42:07 +0000
+Message-ID: <c54bb2bd-ab12-1178-f18a-6925bf3d4f8a@amd.com>
+Date: Wed, 16 Oct 2024 15:41:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 0/5] cxl: Initialization and shutdown fixes
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+ ira.weiny@intel.com
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, stable@vger.kernel.org,
+ Zijun Hu <zijun_hu@icloud.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Gregory Price <gourry@gourry.net>, Vishal Verma <vishal.l.verma@intel.com>,
+ linux-cxl@vger.kernel.org
+References: <172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com>
+ <7eb2912e-3359-8a22-2db9-4bfa803eccbe@amd.com>
+ <6709627eba220_964f229495@dwillia2-xfh.jf.intel.com.notmuch>
+ <a5a310fe-2451-b053-4a0f-53e496adb9be@amd.com>
+ <670af0e72a86a_964f229465@dwillia2-xfh.jf.intel.com.notmuch>
+ <0c945d60-de62-06a5-c636-1cec3b5f516c@amd.com>
+ <670d9a13b4869_3ee2294a4@dwillia2-xfh.jf.intel.com.notmuch>
+ <9a1827e3-1c55-cfbb-566f-508793b47a4a@amd.com>
+ <670e9a2db6f4a_3ee229472@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <670e9a2db6f4a_3ee229472@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0515.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:272::7) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241009124120.1124-2-shiju.jose@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CY5PR12MB6275:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f888924-8ce4-4925-1e62-08dcedf0b5a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VnRROFc3cVNGeEMrUndseE1ocVVKMzhHYk44MTlVUHc0MmluT2VnQWlyQVpY?=
+ =?utf-8?B?SUNaZ1k5STNmaUNER2FHU09wWmY2Z1QrbDgxV3Ftd3FZUTBuYjFnRUx0R29V?=
+ =?utf-8?B?QTd0ZmlGN3MrVEdGVXlZU0NBcjNqQkhoUExZYXFBZm9Gd0tYNXFZVEFGbyt1?=
+ =?utf-8?B?OUFtNmxkMEtOU1FKeGozdU0vMnZPbm1qbDFoODFkVk0raFMxVEFOK0xXWWRU?=
+ =?utf-8?B?bWJodVlmMi8vOVlLaEZUQ0tZREo4c3RuRDQ5VFpBaTJlWVlmZE13TTFJN29u?=
+ =?utf-8?B?UENva1daYnY4dHh6YVJQSzZBSkJYc0VJQzJ0elZTeTRYNmtVY3ZHNWtSS1lB?=
+ =?utf-8?B?RjVRbTdzdDF1THlaVFFQaDdKckw4L0tFQVFicmVOUldxUWNhYmFVRFZGU1Ju?=
+ =?utf-8?B?KzBGMXRzZjZDZEgrUERYUStqV3kwM1ExdVhsSVVQRnNIeWM1R2U4V1VwdHBZ?=
+ =?utf-8?B?Y2Q0U3hQY3M1Rmt2S3JHQWg4RHNjTkhJVFBBTnNLMDM3dHpkV0JYV0ZYaW9V?=
+ =?utf-8?B?TDBFVEJJUnFESkRWemk5c3A3cGJHWGNqeWVnak12bFBDVmxSNkdOVUNqNXlC?=
+ =?utf-8?B?N2hUcE12WGt1T2NsNXFBcllPTmJ3c3NrMXBUU1c3cWtoWWlXa3BxVzBoKzBP?=
+ =?utf-8?B?dDR5bzE0RlBBclYrRFNBa2FIaktDalpZc2FMcE41UllVMWN6dmNMdDZVOXov?=
+ =?utf-8?B?TGRiR0IyajFEWlpJZDUySHF1L0s1aFg1SnlJaGp6V3h3TnhLT0ZVczQ1OXBV?=
+ =?utf-8?B?YmRQcTJ6cEEvaFpPclRiZWU1RnMveitnWFF6dTNLTnhZSmV2OFJRNGN1a2Q1?=
+ =?utf-8?B?V1VScExERTNQa3Q0OUlHM3ZONWQ3RlB6NmJsTm1odUxwNVA0aVJKV2s5LzNH?=
+ =?utf-8?B?QjdVWXRLOVZzZjhObnFONWo4dDNDUVQ4RVFiNGV5SmNxWHFFNkNDOVBsUjFo?=
+ =?utf-8?B?WHN3MHN5R3ZJWFkrVjZ6Yzc1NWdqaHVtSUovVzR2d1BXUUVNbDhZUzM5R3Fs?=
+ =?utf-8?B?b0JRa0dEbHppRkhqcGNHOWVJdm5iMUl2NzZGK3JYWEJMU1k5am5hRDRLRHNE?=
+ =?utf-8?B?aEZROUNpazl3bnIwcDBrWmZNd3ZEcFJROVJKTE0rVGxRYXFYNUN6NDVOZE5I?=
+ =?utf-8?B?TXQ1bm15TitKdWpFTmU1aG5uUFdtZmk2SVB2RmFNRzlCZHEwSGphWkpMSFhx?=
+ =?utf-8?B?MXdyZXRrVVdPdFRncnI5UnhMajNtR0lWZFgrRXNBd2JjeDVIL1BqMEE1MndR?=
+ =?utf-8?B?ZkhPVUZuS1FuWUZFUis3OEgvREU2dVg5UjBZd1dPUHlRTEZPVG5pSUx6bGJn?=
+ =?utf-8?B?YUlNTlRDblBlUS9OQkRLS2hXN2NpanpUNHNWT1luVGRBMHVtbTVmanVlYWVS?=
+ =?utf-8?B?Tm5NZFhvam1iZ3EzckZVejJJNElyUzNxN0hLdnFRVWJxaHJjUFlXNmRnYjlp?=
+ =?utf-8?B?a09ocllVdTVmTmJuT0E2L0hZTU1Rb3o5bWovaHdxOGVGYnBhOTJhU2VidktM?=
+ =?utf-8?B?ZFpSNzBHUnluUytMRTV4UEtFcFBab2toL0NhdnREMzMvbytnbU1VQlhnTUR6?=
+ =?utf-8?B?eTRZd0x2aklYWDJOMTNuc0h2azVhWlZmS1BlSVErS1E3bndwaGdtYjV0cmJa?=
+ =?utf-8?B?dlBFVlpxVXlmWXdiMU0yalBDZStqNVgrcm81ZjUrQ00wVi9BUDlqeENkQ2tJ?=
+ =?utf-8?B?Slk2am1nQVZMZjY4TVRsWC9wb2N2c1NGblZTeWZhL3RKUS9CVDBoL0FRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Sm5US1o2aURyQ0s3WU90M1RqUWJKZ2RnalFRR1FxclB1Ti96eDJoN1JpOVVw?=
+ =?utf-8?B?cTk5TzV3VEFNQXhHTVNrYm8zckpQZmVmMXplZDBhV3hqRHZldlRMREFwOUxM?=
+ =?utf-8?B?bDNLQkRQR2JMNjFTaS9uS2ZqNmI5Rit2YWVjTnVnc1hWZXJHMzdpRzNBVHAz?=
+ =?utf-8?B?NWZKU2REaXh0SEFrMFgzYVBuNDZJK3Y2SG1XT1lJS0dqbUppMkV0amZ1ZTQz?=
+ =?utf-8?B?d3UwazVuUTErdldCNDZZRWw5VDRoZS9nOHdBRnBiU1R5amlSNlRsWjNBQUFR?=
+ =?utf-8?B?anBQY0tZZlhjUWtibWJHa3dwcGYvQ0s3QkxsYmdxcmlMMTdiRGZoQStQN2Ir?=
+ =?utf-8?B?YjdzMytMT2g5K3h2ZlFjZnd1UXZ6NGtjazBwVGtmMHFRekY1ZDNweitsbC9O?=
+ =?utf-8?B?TzY4a09GM0FCZitKWjljeStPM0JpdWRuOVByU3UrTHNWcFovODQybGlGdDhS?=
+ =?utf-8?B?TjFJd1V3QVNrSEFoUmlIQlBEWkl1aVVIN1llbTE1U2crVnhlbEdlZCs1UFI2?=
+ =?utf-8?B?Q2M1WTdnbDI5dUJRV0NIM2RWMFg5MldnRXVpdmN6SnM2NnVLOFZua2orTDNC?=
+ =?utf-8?B?TzJrV2puZXVDMTVQSmJTYi9seTJaUWt6NXBFbDY0dzBvYXJyRU40M1lIZ3VH?=
+ =?utf-8?B?L08rS1gvalAyNVJPazVOS0hrSW1pRGtkMEVCSHJ2eHo2S0Y0ekdmVjFvb3ZH?=
+ =?utf-8?B?VW9qVGxRN1ltMXA4dGl4M1FLS0RuUFhMWXkwS0FRWFk5TzVycmE4c2hlcUNp?=
+ =?utf-8?B?bTBnSVlXVTRGbFB2dHZaQ1IrY0M0RCtmL0ZxZ2o1c1RPVXdCR3BGUjREdFNK?=
+ =?utf-8?B?TzQxTEUrdXE4WThMQVk0ZERsUnZSdFFHd3Nycm9ucHY0cTZZRzE5YlpFdHhE?=
+ =?utf-8?B?Tk5Va3BLM005K3J1NkRZVFZ3U2tVV3F4N1ZnSWRVUEdHOXIwZWFpM05Dcm5S?=
+ =?utf-8?B?VDJydllmVGl6aUQ4ZWE5RGxOSjFNYlljRnUvOWdhaU5nbHhZYXBtSW12R2s1?=
+ =?utf-8?B?MitrZEZWemN5TEFpMUtFU0RwVThmRDhtZGYvSnRlUG5FVUV5YTZacVg2RXBm?=
+ =?utf-8?B?b2V2WHgyQ3VvTlZ1OFQvTVBvcnR4cUJTUG1oalZnNElKWWVDRCtTQlJHdk13?=
+ =?utf-8?B?WGM0RGZKaUhLNUxxSGxIYjhoaGpPTXYvTGVTTlhvQmpUdzV4NXRMWWhhT2Y3?=
+ =?utf-8?B?ZVdqYW9zK0xlMWh1V0dJUUk3Q1hBN2NJNnNxUk1FRy9Hd25wcG5UemQwUFpY?=
+ =?utf-8?B?cmxUYlJXeE04TkFVZVhGZy9xU3ovRC8veXpYTnRnTUw4aFM3dHV4MjRQeThO?=
+ =?utf-8?B?a0FsUmZlSnpXMnJ2WUROdGltcTBlVDNKZ1ZQUmJTOXZ5eGZKaXprVE9McWFR?=
+ =?utf-8?B?SmlYd05qeG9WaEZkQUllLzdZUXlvekVERU5Vb0ZSZjNybHZKSVN5UkJDbGIx?=
+ =?utf-8?B?VHV0Y2pSMkFaZ3lFZFJQM1pyZFM0NlhRSlFXSXJGbHpUcE5yYTdWbmxhV0tP?=
+ =?utf-8?B?YTAwS0Fka1lVa3B6M2dGY3hZcFhRQ2NSNzB4eUdla21lb0JOUmY2NnFwZ0Y2?=
+ =?utf-8?B?bGpHeERTU0U3RVBsK1FhOEd0cG1Nb0w3RWlTdDJsQk9xS1dwNk82WU5oMndo?=
+ =?utf-8?B?OFR0WUh2a3RKcDZ2SFI4YUpGSjlpcjZkR2padXdMUDRaYXB3c0RQYTBtM0lh?=
+ =?utf-8?B?dDVkZndDQ2JtbVZ0NXIra1VuUGErOEZPb1Y4c0x3VEVLZS92c1dvRTVya2sr?=
+ =?utf-8?B?ejNOSVd0ZzMyZFd3bWVxK2l3dEQ2bjEvU1A0K0xNRWNxWGREeDI4UkorME5V?=
+ =?utf-8?B?aXh6OEVzRjRTK290TW9zWlh6d1ZsUVNZVnpsQ1ZWS2tKYm1ZNnlmelZGTDk5?=
+ =?utf-8?B?Y25XbWxudklYbC9OZjBPRFZVZ1FIcVlOTzBPVC9NU3FOa2xjNEpka0lhdThH?=
+ =?utf-8?B?Mlp1SWk2NElLcVdSQnE5U3JlUEFpcnorMGZ4dk5KWHBLSElPbENJWEhWbjVZ?=
+ =?utf-8?B?LzA2RHRJYzIrSEd0S3Z3ZWhLdCtNUHVta0NZWHZJR2R1KzdBakh0RjhWSUg3?=
+ =?utf-8?B?bUtMQTN1a3dkQ2FPR2E2V09nQTdVaVdpMUx3dEVmaHE4TkVpM09IaUJPeXRP?=
+ =?utf-8?Q?r3GIdqnQV0KvfKfAjtq9z1b2z?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f888924-8ce4-4925-1e62-08dcedf0b5a6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 14:42:07.7339
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SBIbCZu5DEE/IeXKwRBs3sxpjJdpdeXDcziyvY9qOj/iD3Yd6NKiYd1QsD12ci+TwKsH4UZ5QnI1xnFzpg+2+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6275
 
-On Wed, Oct 09, 2024 at 01:41:02PM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
->=20
-> Add generic EDAC device features control supports registering
-> RAS features supported in the system. Driver exposes features
-> control attributes to userspace in
-> /sys/bus/edac/devices/<dev-name>/<ras-feature>/
 
-Chatgpt prompt:
+On 10/15/24 17:37, Dan Williams wrote:
+> Alejandro Lucero Palau wrote:
+> [..]
+>>>> Then it makes sense that change. I'll do it if not already taken. I'll
+>>>> send v4 without the PROBE_FORCE_SYNCHRONOUS flag and without the
+>>>> previous loop with delays implemented in v3.
+>>> So I think EPROBE_DEFER can stay out of the CXL core because it is up to
+>>> the accelerator driver to decide whether CXL availability is fatal to
+>>> init or not.
+>>
+>> It needs support from the cxl core though. If the cxl root is not there
+>> yet, the driver needs to know, and that is what you did in your original
+>> patch and I'm keeping as well.
+> So there are two ways, check if a registered @memdev has
+> @memdev->dev.driver set, assuming you know that the cxl_mem driver is
+> available, or call devm_cxl_enumerate_ports() yourself and skip the
+> cxl_mem driver indirection.
+>
+> Setting @memdev->endpoint to ERR_PTR(-EPROBE_DEFER), as I originally
+> had, is an even more indirect way to convey a similar result and is
+> starting to feel a bit "mid-layer-y".
+>
 
-| Please check the grammar in this English text: "Add generic EDAC device
-| features control supports registering RAS features supported in the sys=
-tem.
-| Driver exposes features control attributes to userspace in
-| /sys/bus/edac/devices/<dev-name>/<ras-"feature>/
+I was a bit confused with this answer until I read again the patch 
+commit from your original work.
 
-Response:
 
-| Here=E2=80=99s a corrected version of the text:
-|=20
-| "Add generic EDAC device feature control support for registering RAS fe=
-atures
-| supported in the system. The driver exposes feature control attributes =
-to
-| userspace in /sys/bus/edac/devices/<dev-name>/<ras-feature>/."
-|=20
-| Changes made:
-|=20
-| * "features control" was changed to "feature control" for consistency a=
-nd
-| clarity.
-|=20
-| * "supports registering" was changed to "support for registering" to ma=
-tch the
-| structure of the sentence.
-|=20
-| * Added "The" at the beginning of the second sentence for better flow.
-|=20
-| * Corrected the syntax around the file path to ensure clarity and prope=
-r
-| * punctuation.
+The confusion came from my assumption about if the root device is not 
+there, it is due to the hardware root initialization requiring more 
+time. But I realize now you specifically said "the root driver has not 
+attached yet" what turns it into this problem of kernel modules not 
+loaded yet.
 
-Please run all your commit text through some LLM AI as they're apparently=
- good
-enough now to help me in correcting grammar.
-=20
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/edac/edac_device.c | 105 +++++++++++++++++++++++++++++++++++++
->  include/linux/edac.h       |  32 +++++++++++
->  2 files changed, 137 insertions(+)
->=20
-> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-> index 621dc2a5d034..0b8aa8150239 100644
-> --- a/drivers/edac/edac_device.c
-> +++ b/drivers/edac/edac_device.c
-> @@ -570,3 +570,108 @@ void edac_device_handle_ue_count(struct edac_devi=
-ce_ctl_info *edac_dev,
->  		      block ? block->name : "N/A", count, msg);
->  }
->  EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
-> +
-> +/* EDAC device feature */
-> +static void edac_dev_release(struct device *dev)
-> +{
-> +	struct edac_dev_feat_ctx *ctx =3D container_of(dev, struct edac_dev_f=
-eat_ctx, dev);
-> +
-> +	kfree(ctx->dev.groups);
-> +	kfree(ctx);
-> +}
-> +
-> +const struct device_type edac_dev_type =3D {
-> +	.name =3D "edac_dev",
-> +	.release =3D edac_dev_release,
-> +};
-> +
-> +static void edac_dev_unreg(void *data)
-> +{
-> +	device_unregister(data);
-> +}
-> +
-> +/**
-> + * edac_dev_register - register device for RAS features with EDAC
-> + * @parent: client device.
 
-If this is a client device, why is the variable called "parent" and not
-"client"?
+If so, I think I can solve this within the type2 driver code and 
+kconfig. Kconfig will force the driver being compiled as a module if the 
+cxl core is a module, and with MODULE_SOFTDEP("pre: cxl_core cxl_port 
+cxl_acpi cxl-mem) the type2 driver modprobe will trigger loading of 
+dependencies beforehand. This makes unnecessary EPROBE_DEFER.
 
-I.e.,
 
-	struct device *client;
+What do you think?
 
-For clarity and simplicity.
 
-Or call it "parent" because you do:
-
-	ctx->dev.parent =3D parent;
-
-and forget "client" altogether.
-
-> + * @name: client device's name.
-> + * @private: parent driver's data to store in the context if any.
-> + * @num_features: number of RAS features to register.
-> + * @ras_features: list of RAS features to register.
-> + *
-> + * Return:
-> + *  * %0       - Success.
-> + *  * %-EINVAL - Invalid parameters passed.
-> + *  * %-ENOMEM - Dynamic memory allocation failed.
-> + *
-> + * The new edac_dev_feat_ctx would be freed automatically.
-
-Why is this important to call out here?
-
-It is a common coding pattern of freeing resources in the release functio=
-n...
-
-> + */
-> +int edac_dev_register(struct device *parent, char *name,
-> +		      void *private, int num_features,
-> +		      const struct edac_dev_feature *ras_features)
-> +{
-> +	const struct attribute_group **ras_attr_groups;
-> +	struct edac_dev_feat_ctx *ctx;
-> +	int attr_gcnt =3D 0;
-> +	int ret, feat;
-> +
-> +	if (!parent || !name || !num_features || !ras_features)
-> +		return -EINVAL;
-> +
-> +	/* Double parse to make space for attributes */
-> +	for (feat =3D 0; feat < num_features; feat++) {
-> +		switch (ras_features[feat].ft_type) {
-> +		/* Add feature specific code */
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->dev.parent =3D parent;
-> +	ctx->private =3D private;
-> +
-> +	ras_attr_groups =3D kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), =
-GFP_KERNEL);
-> +	if (!ras_attr_groups) {
-> +		ret =3D -ENOMEM;
-> +		goto ctx_free;
-> +	}
-> +
-> +	attr_gcnt =3D 0;
-> +	for (feat =3D 0; feat < num_features; feat++, ras_features++) {
-> +		switch (ras_features->ft_type) {
-> +		/* Add feature specific code */
-> +		default:
-> +			ret =3D -EINVAL;
-> +			goto groups_free;
-> +		}
-> +	}
-> +
-> +	ras_attr_groups[attr_gcnt] =3D NULL;
-> +	ctx->dev.bus =3D edac_get_sysfs_subsys();
-> +	ctx->dev.type =3D &edac_dev_type;
-> +	ctx->dev.groups =3D ras_attr_groups;
-> +	dev_set_drvdata(&ctx->dev, ctx);
-> +
-> +	ret =3D dev_set_name(&ctx->dev, name);
-> +	if (ret)
-> +		goto groups_free;
-> +
-> +	ret =3D device_register(&ctx->dev);
-> +	if (ret) {
-> +		put_device(&ctx->dev);
-> +		goto groups_free;
-> +		return ret;
-		^^^^^^^^^^
-
-Come again?!
-
-There's code after a "goto"?
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>>> Additionally, I am less and less convinced that Type-2 drivers should be
+>>> forced to depend on the cxl_mem driver to attach vs just arranging for
+>>> those Type-2 drivers to call devm_cxl_enumerate_ports() and
+>>> devm_cxl_add_endpoint() directly. In other words I am starting to worry
+>>> that the generic cxl_mem driver design pattern is a midlayer mistake.
+>> You know better than me but in my view, a Type2 should follow what a
+>> Type3 does with some small changes for dealing with the differences,
+>> mainly the way it is going to be used and those optional capabilities
+>> for Type2. This makes more sense to me for Type1.
+> If an accelerator driver *wants* to depend on cxl_mem, it can, but all
+> the cxl_core functions that cxl_mem uses are also exported for
+> accelerator drivers to use directly to avoid needing to guess about when
+> / if cxl_mem is going to attach.
+>
+>>> So, if it makes it easier for sfc, I would be open to exploring a direct
+>>> scheme for endpoint attachment, and not requiring the generic cxl_mem
+>>> driver as an intermediary.
+>> V4 is ready (just having problems when testing with 6.12-rcX) so I would
+>> like to keep it and explore this once we have something working and
+>> accepted. Type2 and Type1 with CXL cache will bring new challenges and I
+>> bet we will need refactoring in the code and potentially new design for
+>> generic code (Type3 and Type2, Type2 and Type1).
+> Yeah, no need to switch horses mid-race if you already have a cxl_mem
+> dependent approach nearly ready, but a potential simplification to
+> explore going forward.
