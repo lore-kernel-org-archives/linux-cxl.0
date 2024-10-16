@@ -1,137 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6DD18C932;
-	Wed, 16 Oct 2024 06:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5411C6F55;
+	Wed, 16 Oct 2024 09:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729058792; cv=none; b=Ww5lR/hJwaHESpjOk1Px84rJIqtAzeV8BUlfdlLpNqvxjnpwtsFECJvXr3S+5tC+OCJwR7bn/wBoZa4smS8WMaKCiPom0+y2IztKtCEjy1ok4CYRGRLhZ7T/HAx1XuoRJfsJkWNhJaLBoR9BQjNXTwQaD0XadcexxSIK+oUg+nE=
+	t=1729069211; cv=none; b=X+16r0HpuTLCWETHxalGflC/+azkzNhFjSzgs09P1C97z244Sx4/Ogsq0TCfaXx8B4klweEfDmu+0W/9l/d9/Z+tfcTejUhvD1GG+Ik/+MgcaIldrlbPIDwG5FJmcuKdpG/+exHgY7CMi1D9RPRbqj9wRfmR7Yd74QL6/ajwHcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729058792; c=relaxed/simple;
-	bh=yH+onESiJsPDoF11czz2NHxvcfAqzirJr83WIvmwbM0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g38LYObbrpMhOyueJEqisq8lUg4U542WKVjSjiIcBM8ze9Ml5NgIjGcAUgAu81vEbc1EHmN+DLk7Hu+UqEO7KOdD7/h2T7nuiloBaN5ls0idjbpg0RIF20rN4K8MyUzHnsHd4JQZltL9OOpzRwKgo2ln+tDAbIsCJJgkCzVOjfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CRISqYkL; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRISqYkL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729058790; x=1760594790;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=yH+onESiJsPDoF11czz2NHxvcfAqzirJr83WIvmwbM0=;
-  b=CRISqYkL2kzXoGD2ZsByQCaDIbaPhwExU9u+tYeV9uc0gNkQTQur949v
-   Qz0mrvFIdnGD4T+DO6gLfG3GAzQ6mJV4SLnswkyBN4RU9TI+oKH4wo/5a
-   OU1lno6RCvJeEbcxKILyHhn1pRZy+FLWj7gBs/oB46oLNZ5dE2VOstgZ4
-   nZ/ryHRouxKgfsZ7fku/rVV/4fcYCSW8+DPo0gtEE/AmIfXmgh4bexm76
-   L0r0tY5f/eOAuMTHgor9K0QbZEHx921ZaLw9U1/ijC4dkySinROQgiS+I
-   kX7RbyQRE6NWI26kaaEdRNRpP9elqNDGNi814SJEd+9yAEHjOfWWz3Doe
-   A==;
-X-CSE-ConnectionGUID: wEkTIY3eRQ6PSIfAR65iRA==
-X-CSE-MsgGUID: i6bIHwTHS6SjaoybTBYorw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39609543"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="39609543"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 23:06:29 -0700
-X-CSE-ConnectionGUID: 7lfOfdlYTqWcuyB6E1V97A==
-X-CSE-MsgGUID: v6SpD88yRQKnnFAEJ+r8Fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
-   d="scan'208";a="82093840"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 23:06:27 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-cxl@vger.kernel.org,  Davidlohr Bueso <dave@stgolabs.net>,
-  Jonathan Cameron <jonathan.cameron@huawei.com>,  Dave Jiang
- <dave.jiang@intel.com>,  Alison Schofield <alison.schofield@intel.com>,
-  Vishal Verma <vishal.l.verma@intel.com>,  Ira Weiny
- <ira.weiny@intel.com>,  Dan Williams <dan.j.williams@intel.com>,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] testing/cxl: Fix abused pci_bus_read_config_word() on
- platform device
-In-Reply-To: <20241016015213.900985-1-lizhijian@fujitsu.com> (Li Zhijian's
-	message of "Wed, 16 Oct 2024 09:52:13 +0800")
-References: <20241016015213.900985-1-lizhijian@fujitsu.com>
-Date: Wed, 16 Oct 2024 14:02:53 +0800
-Message-ID: <87o73k7fg2.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1729069211; c=relaxed/simple;
+	bh=Z8vYqfcihPahyj6XkwjiIM4tnoQjxhP9bBwIwwT90C4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LGZukVFs+LKB3HCfZDlVprBHxCD5U7VThfW55f39M+uiPl8tJth4sjTjHTyLLqy4sI+o2AwwsRkEnc5F+hEPe8n6K7UzVLSis1Mj3rzK6082iyjiQxIlvdpD3LYFMqCEkOPe2APKdHO2cocbG15LG8NhygCeu4bMxm/lFWzzk4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XT4cx6f2mz67ntN;
+	Wed, 16 Oct 2024 16:58:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3079E140B67;
+	Wed, 16 Oct 2024 17:00:06 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
+ 2024 11:00:04 +0200
+Date: Wed, 16 Oct 2024 10:00:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Greg KH <gregkh@linuxfoundation.org>, <linuxarm@huawei.com>,
+	<shiju.jose@huawei.com>, <linux-edac@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
+	<tony.luck@intel.com>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Jassi Brar
+	<jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v13 12/18] platform: Add __free() based cleanup function
+ for platform_device_put
+Message-ID: <20241016100003.000072fd@Huawei.com>
+In-Reply-To: <CAJZ5v0iRzFQ4EaHKjs0oirmh1HpkONz--JKYB3oLrT84A+XXzA@mail.gmail.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+	<20241009124120.1124-13-shiju.jose@huawei.com>
+	<20241014164339.00003e73@Huawei.com>
+	<2024101410-turf-junior-7739@gregkh>
+	<2024101451-reword-animation-2179@gregkh>
+	<20241014181654.00005180@Huawei.com>
+	<CAJZ5v0j-mwZmuciSTaL8MyAp530y=n9HbQ=uVvcnvGLR1n+YuQ@mail.gmail.com>
+	<20241015101025.00005305@Huawei.com>
+	<20241015104021.00002906@huawei.com>
+	<2024101517-bubbling-deploy-1be0@gregkh>
+	<CAJZ5v0iyc5gvpXjpZdmv-vh8+haPENz+UBXVSF6UDBCRT12fMg@mail.gmail.com>
+	<20241015151947.00006a4f@Huawei.com>
+	<CAJZ5v0iRzFQ4EaHKjs0oirmh1HpkONz--JKYB3oLrT84A+XXzA@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi, Zhijian,
+On Tue, 15 Oct 2024 17:35:31 +0200
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-Li Zhijian <lizhijian@fujitsu.com> writes:
+> On Tue, Oct 15, 2024 at 4:19=E2=80=AFPM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Tue, 15 Oct 2024 15:32:28 +0200
+> > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> > =20
+> > > On Tue, Oct 15, 2024 at 12:17=E2=80=AFPM Greg KH <gregkh@linuxfoundat=
+ion.org> wrote: =20
+> > > >
+> > > > On Tue, Oct 15, 2024 at 10:40:54AM +0100, Jonathan Cameron wrote: =
+=20
+> > > > > On Tue, 15 Oct 2024 10:10:25 +0100
+> > > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > > > > =20
+> > > > > > On Mon, 14 Oct 2024 20:06:40 +0200
+> > > > > > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> > > > > > =20
+> > > > > > > On Mon, Oct 14, 2024 at 7:17=E2=80=AFPM Jonathan Cameron
+> > > > > > > <Jonathan.Cameron@huawei.com> wrote: =20
+> > > > > > > >
+> > > > > > > > On Mon, 14 Oct 2024 18:04:37 +0200
+> > > > > > > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > > > > =20
+> > > > > > > > > On Mon, Oct 14, 2024 at 06:00:51PM +0200, Greg KH wrote: =
+=20
+> > > > > > > > > > On Mon, Oct 14, 2024 at 04:43:39PM +0100, Jonathan Came=
+ron wrote: =20
+> > > > > > > > > > > On Wed, 9 Oct 2024 13:41:13 +0100
+> > > > > > > > > > > <shiju.jose@huawei.com> wrote:
+> > > > > > > > > > > =20
+> > > > > > > > > > > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > > > > > > > > >
+> > > > > > > > > > > > Add __free() based cleanup function for platform_de=
+vice_put().
+> > > > > > > > > > > >
+> > > > > > > > > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@h=
+uawei.com>
+> > > > > > > > > > > > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >  include/linux/platform_device.h | 1 +
+> > > > > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > > > > >
+> > > > > > > > > > > > diff --git a/include/linux/platform_device.h b/incl=
+ude/linux/platform_device.h
+> > > > > > > > > > > > index d422db6eec63..606533b88f44 100644
+> > > > > > > > > > > > --- a/include/linux/platform_device.h
+> > > > > > > > > > > > +++ b/include/linux/platform_device.h
+> > > > > > > > > > > > @@ -232,6 +232,7 @@ extern int platform_device_add_=
+data(struct platform_device *pdev,
+> > > > > > > > > > > >  extern int platform_device_add(struct platform_dev=
+ice *pdev);
+> > > > > > > > > > > >  extern void platform_device_del(struct platform_de=
+vice *pdev);
+> > > > > > > > > > > >  extern void platform_device_put(struct platform_de=
+vice *pdev);
+> > > > > > > > > > > > +DEFINE_FREE(platform_device_put, struct platform_d=
+evice *, if (_T) platform_device_put(_T))
+> > > > > > > > > > > >
+> > > > > > > > > > > >  struct platform_driver {
+> > > > > > > > > > > >         int (*probe)(struct platform_device *); =20
+> > > > > > > > > > >
+> > > > > > > > > > > +CC Greg KH and Rafael.
+> > > > > > > > > > >
+> > > > > > > > > > > Makes sure to include them on v14 as this needs revie=
+w from a driver core point
+> > > > > > > > > > > of view I think. =20
+> > > > > > > > > >
+> > > > > > > > > > Why is this needed for a platform device?  This feels l=
+ike you will have
+> > > > > > > > > > to do more work to "keep" the reference on the normal p=
+ath than you to
+> > > > > > > > > > today to release the reference on the error path, right=
+?  Have a pointer
+> > > > > > > > > > to a patch that uses this? =20
+> > > > > > > > >
+> > > > > > > > > Ah, is it this one:
+> > > > > > > > >       https://lore.kernel.org/all/20241014164955.00003439=
+@Huawei.com/
+> > > > > > > > > ?
+> > > > > > > > >
+> > > > > > > > > If so, no, that's an abuse of a platform device, don't do=
+ that, make a
+> > > > > > > > > REAL device on the bus that this device lives on.  If it =
+doesn't live on
+> > > > > > > > > a real bus, then put it on the virtual bus but do NOT abu=
+se the platform
+> > > > > > > > > device layer for something like this. =20
+> > > > > > > >
+> > > > > > > > Ok.  Probably virtual bus it is then.  Rafael, what do you =
+think makes sense
+> > > > > > > > for a 'feature' that is described only by an ACPI table (he=
+re RAS2)?
+> > > > > > > > Kind of similar(ish) to say IORT. =20
+> > > > > > >
+> > > > > > > Good question.
+> > > > > > >
+> > > > > > > I guess it depends on whether or not there are any registers =
+to access
+> > > > > > > or AML to interact with.  If so, I think that a platform devi=
+ce makes
+> > > > > > > sense. =20
+> > > > > >
+> > > > > > Unfortunately still a gray area I think.
+> > > > > >
+> > > > > > This does access mailbox memory addresses, but they are provided
+> > > > > > by an existing platform device, so maybe platform device for th=
+is
+> > > > > > device is still inappropriate :(
+> > > > > >
+> > > > > > What this uses is:
+> > > > > > PCC channel (mailbox in memory + doorbells, etc but that is ind=
+irectly
+> > > > > > provided as a service via reference in ACPI to the PCCT table e=
+ntry
+> > > > > > allowing this to find the mailbox device - which is a platform
+> > > > > > device drivers/mailbox/pcc.c).
+> > > > > > Because it's all spec defined content in the mailbox messages, =
+we don't
+> > > > > > have the more flexible (and newer I think) 'register' via opera=
+tion region
+> > > > > > stuff in AML.
+> > > > > >
+> > > > > > A wrinkle though.  The mailbox data is mapped into this driver =
+via
+> > > > > > an acpi_os_ioremap() call.
+> > > > > >
+> > > > > > So I'm thinking we don't have a strong reason for a platform de=
+vice
+> > > > > > other than 'similarity' to other examples.  Never the strongest=
+ reason!
+> > > > > >
+> > > > > > We'll explore alternatives and see what they end up looking lik=
+e.
+> > > > > >
+> > > > > > Jonathan
+> > > > > > =20
+> > > > >
+> > > > > Greg,
+> > > > >
+> > > > > I'm struggling a little to figure out how you envision the virtua=
+l bus
+> > > > > working here.  So before we spend too much time implementing the =
+wrong thing
+> > > > > as it feels non trivial, let me check my understanding.
+> > > > >
+> > > > > Would this mean registering a ras2 bus via subsys_virtual_registe=
+r().
+> > > > > (Similar to done for memory tiers) =20
+> > > >
+> > > > It should show up under /sys/devices/virtual/ is what I mean.
+> > > > =20
+> > > > > On that we'd then add all the devices: one per RAS2 PCC descripto=
+r (these
+> > > > > are one per independent feature). Each feature has its own mailbo=
+x sub
+> > > > > channel (via a reference to the PCC mailbox devices .
+> > > > > Typically you have one of these per feature type per numa node, b=
+ut
+> > > > > that isn't guaranteed.  That will then need wiring up with bus->p=
+robe() etc
+> > > > > so that the RAS2 edac feature drivers can find this later and bin=
+d to it to
+> > > > > register with edac etc.
+> > > > >
+> > > > > So spinning up a full new bus, to support this?  I'm not against =
+that. =20
+> > > >
+> > > > No, again, see how the stuff that shows up in /sys/devices/virtual
+> > > > works, that should be much simpler.
+> > > >
+> > > > But really, as this is a "bus", just make a new one.  I don't under=
+stand
+> > > > why ACPI isn't creating your devices for you, as this is ACPI code,
+> > > > perhaps just fix that up instead?  That would make much more sense =
+to
+> > > > me... =20
+> > >
+> > > Because it is a data-only table, not AML.
+> > >
+> > > It looks to me like this could be an auxiliary device, similar to the
+> > > Intel VSEC driver: see intel_vsec_add_aux() etc.
+> > > =20
+> >
+> > That was in the other branch of the thread abbreviated as auxbus.
+> > My concern with that approach is we have no parent device and the
+> > auxiliary bus is always described as being for sub parts of a
+> > compound device. In the intel_vsec case there is always a parent
+> > pci device or platform device.
+> >
+> > I don't think there is any functional requirement for a real parent,
+> > it just feels like abuse given the stated purpose of auxiliary bus.
+> > Greg, auxiliary bus or separate acpi_ras2 bus feel better to you?
+> >
+> > We'd need to parent it off something to avoid the check in
+> > auxiliary_device_init() + all devices should have a parent anyway. =20
+>=20
+> Wouldn't that be the platform device providing the mailbox memory
+> addresses mentioned in one of the previous messages?
 
-> The cxl_region_shared_upstream_bandwidth_update() in clx_core works on
-> PCI/PCIe CXL device only while cxl_test was implemeneted by platform
-> device.
->
-> Mock a cxl_region_shared_upstream_bandwidth_update() which does nothing
-> for cxl_core so that the cxl_test goes well.
->
-> Abuse cxl_region_shared_upstream_bandwidth_update() on platform device
-> will cause a kernel panic with calltrace:
->  platform cxl_host_bridge.3: host supports CXL (restricted)
->  Oops: general protection fault, probably for non-canonical address 0x3ef17856fcae4fbd: 0000 [#1] PREEMPT SMP PTI
->  CPU: 1 UID: 0 PID: 9167 Comm: cxl Kdump: loaded Tainted: G           OE      6.12.0-rc3-master+ #66
->  Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
->  Hardware name: LENOVO 90CXCTO1WW/, BIOS FCKT70AUS 04/23/2015
->  RIP: 0010:pci_bus_read_config_word+0x1c/0x60
->  Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 53 b8 87 00 00 00 48 83 ec 08 c7 44 24 04 00 00 00 00 f6 c2 01 75 29 <48> 8b 87 c0 00 00 00 48 89 cb 4c 8d 44 24 04 b9 02 00 00 00 48 8b
->  RSP: 0018:ffffa115034dfbb8 EFLAGS: 00010246
->  RAX: 0000000000000087 RBX: 0000000000000012 RCX: ffffa115034dfbfe
->  RDX: 0000000000000016 RSI: 000000006f4e2f4e RDI: 3ef17856fcae4efd
->  RBP: ffff8cc229121b48 R08: 0000000000000010 R09: 0000000000000000
->  R10: 0000000000000001 R11: ffff8cc225434360 R12: ffffa115034dfbfe
->  R13: 0000000000000000 R14: ffff8cc2f119a080 R15: ffffa115034dfc50
->  FS:  00007f31d93537c0(0000) GS:ffff8cc510a80000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f31d95f3370 CR3: 00000001163ea001 CR4: 00000000001726f0
->  Call Trace:
->   <TASK>
->   ? __die_body.cold+0x19/0x27
->   ? die_addr+0x38/0x60
->   ? exc_general_protection+0x1f5/0x4b0
->   ? asm_exc_general_protection+0x22/0x30
->   ? pci_bus_read_config_word+0x1c/0x60
->   pcie_capability_read_word+0x93/0xb0
->   pcie_link_speed_mbps+0x18/0x50
->   cxl_pci_get_bandwidth+0x18/0x60 [cxl_core]
->   cxl_endpoint_gather_bandwidth.constprop.0+0xf4/0x230 [cxl_core]
->   ? xas_store+0x54/0x660
->   ? preempt_count_add+0x69/0xa0
->   ? _raw_spin_lock+0x13/0x40
->   ? __kmalloc_cache_noprof+0xe7/0x270
->   cxl_region_shared_upstream_bandwidth_update+0x9c/0x790 [cxl_core]
->   cxl_region_attach+0x520/0x7e0 [cxl_core]
->   store_targetN+0xf2/0x120 [cxl_core]
->   kernfs_fop_write_iter+0x13a/0x1f0
->   vfs_write+0x23b/0x410
->   ksys_write+0x53/0xd0
->   do_syscall_64+0x62/0x180
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->
-> And Ying also reported a KASAN error with similar calltrace.
->
-> Reported-by: "Huang, Ying" <ying.huang@intel.com>
-> Closes: https://lore.kernel.org/linux-cxl/87y12w9vp5.fsf@yhuang6-desk2.ccr.corp.intel.com/
-> Fixes: a5ab0de0ebaa ("cxl: Calculate region bandwidth of targets with shared upstream link")
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+Added Sudeep and Jassi given this feels like we'd need their input
+to consider doing this.
 
-This fixes the KASAN error report in my test too.  Thanks!  Feel free to
-add
+Hmm. Probably works, though it will be a little inelegant as we'll have
+a discovery path unrelated to the mailbox provider discovery path
+that then instantiates children of the mailbox device. This is just
+one consumer of the mailbox device. It feels not too bad for this particular
+combination at all because RAS2 entries don't have any other resources
+so unlike many PCC channel users we wouldn't be introduce devices with
+wider scope than the mailbox parent device (note I think there is only
+device for all PCC in the system - each actual mailbox is a PCC subspace).
 
-Tested-by: "Huang, Ying" <ying.huang@intel.com>
+1) Mailbox path:
+	acpi_pcc_probe() in drivers/mailbox/pcc.c via postcore_init_call()
+ 	Checks there are PCC channels in PCCT ACPI table.
+	Instantiates a platform device and binds that via
+	platform_create_bundle()
+	Probes the available channels and stashes all the info
+	about them in arrays associated with that platform device.
+	Calls mbox_controller_register() which sounds like as
+	class registration but isn't. That just puts it on
+	LIST_HEAD(mbox_cons) so that it can be searched for
+	by consumers of this channel.
+2) RAS2 parsing (tweaked version of patch 13)
+	acpi_ras2_probe() currently via a late_initcall()
+	Checks for RAS2 table and for each RAS2 PCC descriptor and
+	gets a channel from the appropriate mailbox via
+	pcc_mbox_request_channel() giving us a struct pcc_mbox_chan.
+	Then we would need to get from there to the platform device
+	that represents all the mailboxes.
+	pcc_mbox->mchan->mbox_controller->dev is it I think.
+	Finally we parent our new device off that.
 
---
-Best Regards,
-Huang, Ying
+What do people think of this vs option of spinning a new bus/acpi_ras2
+and no parent relationship between a ras2 feature entry the PCC
+platform device - just a client of mailbox relationship
+(effectively what is in patch 13, but with devices on a new bus rather
+than as platform_device)
+https://lore.kernel.org/all/20241009124120.1124-14-shiju.jose@huawei.com/
+is that patch.
+
+Jonathan
+
+
+
+
+
+
