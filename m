@@ -1,249 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAC61D31A5
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 21:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729115578; cv=fail; b=kpxhPqd+ecSiECTtp673mzlvicY5pmNNxHgiJxkG3HFwSJEMMQVUAAaN5euMJQRSk8LrfN5EgzCnl/yrEKFYWKpESp2T/SBjt3Ty8XPDiYhQ2JHKWYCrxRtwbZia8Qtg5oPO625s793KQsOfr/uSPxkQ0wa0L4p3pYgrJS8oTTg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729115578; c=relaxed/simple;
-	bh=5laW5beZZlxOOOeZMdEsRZsoDof1VZUSJgRZmJp7C4c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mvWdhhGhDbuq/pcR+pgT5pfUvxlu0h9OnVDz8pab9BY3R14RVgP8H6qyib2NAacX2okjPQeqxpkA7BhpTzmoN88yA30dxSSjIbv+SVUv827r6SZl7172O9kvHzkF0R8Qwn5yJNeMuoCOLLxpK70GEKVivu2W5UacEOth1rcooyU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYPsMwKS; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDF71D270B
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 21:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729115944; cv=none; b=qQCQshpoULhoT4b33tZ6d44s09b8x9Pty2NZ8tvM5mwoxqyI7DuzlJz+tJIeDF8aCT+CpEUxNhIzC6GP2llX+CvyYYGpzt2qn38gkH+2y7LjJ6RkvkFUbqOYoxOrSHap7G7MZkz2FBzHe/dapHlvFkIQqdIUiJvoy/8kt+Cay4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729115944; c=relaxed/simple;
+	bh=VM5AoH77kamG/P8FfHaTplWWh9Ri6fOxL2aXoCutNPQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=usO73XM7tji5kTB8vwJvGRaozkbfL/WwwEF1yDiEV+3w5bnVpk0ROS8FLBTlcuTUfT9rONZyRzJW7jy1g0naxHjrD9zmG6ZYx1BNh/LFKRMMx9HPfYCIcgncU0VZAzYYOuCVhrrky5xphBbVhtgcffwjSaNJDjUcX2VsWsBN1d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=WXPgRGfA; arc=none smtp.client-ip=17.58.6.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYPsMwKS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729115576; x=1760651576;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=5laW5beZZlxOOOeZMdEsRZsoDof1VZUSJgRZmJp7C4c=;
-  b=LYPsMwKSX5i61uwp5H9Z+y27NML+lUEMUSG6K5LzFQZa2uH/vaywtyFe
-   zxqU4am4WR5ib6roqNz70dY3nCjU6ThcK6GJT+qijVM0/zexXVyCqaxaT
-   8TW7RK0Kk0F4v8AXNLB1H0m6zNRmORoiljxBbIP73dMKEpgivWYFAV0jG
-   8fHgluo3v7pDkIHMa9qibffQPdaYG4uJg9Stf3hWoAsrKQ4Lgkf98Phdl
-   eNpvhpAYEuyKKHTpSw6HTgZBRF0Ih34l3ENl0Dx4F3deYytSrgwkv6AO3
-   u7m9/0tcYASq+M9RLNMIoqjDNMybndrPkOvMI6d9rXMirfug3QAqga0td
-   g==;
-X-CSE-ConnectionGUID: OlMAUXJHSFG90Nqj0AaNPA==
-X-CSE-MsgGUID: JJfmqQfaR/mYTnrL6+EGRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="39978255"
-X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
-   d="scan'208";a="39978255"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 14:52:56 -0700
-X-CSE-ConnectionGUID: J1SFRAIqTjO3ueE+4/Yy2Q==
-X-CSE-MsgGUID: 47vfhBUvRmSl69T7EqD5Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
-   d="scan'208";a="79175225"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Oct 2024 14:52:56 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 16 Oct 2024 14:52:55 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 16 Oct 2024 14:52:55 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 16 Oct 2024 14:52:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RDErGdDuXhFsRzw29kTOXs1h/GtaWK0hEKA642evVp7EYeqjW8wmpiwfPkx6a+hVvvLay94PusnJbflIowChH/F52P/n9VYewb5q6/vzbTgKROKiyR4CZihhgFAh3p/nZtenPDiNfLDbLxtc0V6VsUFrfal3O+mYm7na0cLqNWnQUC27VhM1zS7Uqxog8foNjMCrZrA84ZA47WKyX2FjsrftBcdqGOYzo0jb3h9L4mogNJKfEA13SgKOsgmiwwiKV1FGDxINE91N0lEtysx/6OQLzdetfOD1QDHOSolQ1/pLv10QoIM9e/id4BuHoJIn4wf6z4V+40jlruyCwRV9uQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nyE0KNmmDIs0GvOoIaG+H/ccczhr26sFvuFexqIkIDU=;
- b=lTCr1s9pKajldx/jrClixcXL4gbONXEljAeNG2wAdtAx3xHM5f4IRUoRpriX1efimYMQrO7XzWjQIyWpLMm6wNcXyOmBHCmFYMrRehLDPEYWdtJhvmTXFrZV6Q9Wyy8HNqUViC+4DK6spasa8tnw7yEcKzRieGwkJLGYi/pWEVUnrKO6KMwVm++dptQeEdrhFRGikjpjoeSoDXFkdWq6qTBV3GuWOv1JhvCiif8rO/UsPTunRzXvRfN/TtZ73zSObd/tvCGICyuzjueAEB+EL/wipPtw9q1jXc9tfMY8aBox83lJbMceLbexjp915xwxQIBdXUy2ix2q8C0l12VzIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH8PR11MB8061.namprd11.prod.outlook.com (2603:10b6:510:250::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
- 2024 21:52:52 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8048.020; Wed, 16 Oct 2024
- 21:52:52 +0000
-Date: Wed, 16 Oct 2024 14:52:48 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Li Ming <ming4.li@intel.com>
-CC: <linux-cxl@vger.kernel.org>
-Subject: Re: [bug report] cxl/port: Use scoped_guard()/guard() to drop
- device_lock() for cxl_port
-Message-ID: <671035b0d98e6_3f14294c8@dwillia2-xfh.jf.intel.com.notmuch>
-References: <2a19289b-0bcf-42c4-82a9-268a922535f2@stanley.mountain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2a19289b-0bcf-42c4-82a9-268a922535f2@stanley.mountain>
-X-ClientProxiedBy: MW4PR03CA0157.namprd03.prod.outlook.com
- (2603:10b6:303:8d::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="WXPgRGfA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1729115942;
+	bh=Lm6OJ4ppqsx00EFeKk98+BP9777KWhMrNiTij1ST0DU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
+	b=WXPgRGfAGSBQ00OKL/S5QnnHalfxPHj6QKQmVCvcPeapY5Lgm1PTEoSJ18eXZWB9Y
+	 GI4ox1dbRj505boKls9Koc5HhS9U/rwJgG2DSf/IC3RRAlGGbCai/WV2ysYZOToF0D
+	 jgrKMq3twbf4+eXR9HNunIKFU1pwb4oY2u83dZ81pj6jXFMR0y7xe4mcyoo51jOFx2
+	 C1WGEkAp6jn70HYnSq96ag+Xt2QMNJsoqUCPfjkZgXQ9o5vIYS6lOeXZqkST0uYZZY
+	 feYqqkWjGhjqxHHRhOvkSxAPRrktGwofq0K0Y8vh9YNCQJZK0QU1Q8QPtqelZsR5Em
+	 OjDa0WEp8Z3qQ==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 5E01D800198;
+	Wed, 16 Oct 2024 21:58:57 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Thu, 17 Oct 2024 05:57:40 +0800
+Subject: [PATCH v6] cxl/region: Fix wrong logic for finding a free switch
+ cxl decoder
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB8061:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1413b9b-590a-4a5b-da00-08dcee2ce217
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vC5OrPd9uos1F4d+HLvzHPbq59uYd1gkhT9DnhyCPVVkmvyOHbxUar+HfqGo?=
- =?us-ascii?Q?0LigpSGhd67LzSdddYXZ3biIBLRlI11+ppxAKE92VVn8cnTpRoE73/CR39iS?=
- =?us-ascii?Q?ZXqhmEzJPmW/Jv3cTuvPa/r+w5aS8plfX4EGv3S7/s/YfmQFALTkWSaD0RNh?=
- =?us-ascii?Q?SgSYb3XRO9ybYAFDKYYQufNFc7N58/Un/XruKh533YDq/mBKwFdN/8/w2awT?=
- =?us-ascii?Q?kdteG1Hqhytoz8vABGlnjtqyUyPZGLLwqrylvodfWiNG6rbl/RhxI+skru9B?=
- =?us-ascii?Q?YsQO2IsunVnJhf7YY8KGeEL17leK9KWmUnTYZWtBLgI0xSoCZxSwXwcdoWrF?=
- =?us-ascii?Q?FKlkWtZQj1CRK9Ps/ieBDVO+4Xn5fQhYeUwuFwv29WDfIci6cOZ72zcmJWlO?=
- =?us-ascii?Q?lD/OeG8hE9alPvo9YZ+kZXImkUO+z6Hk25zBKNVflGxNOT72s3/++zoogRgN?=
- =?us-ascii?Q?e0uA7b865dFQvLpiP0jkC2zeI8QcIjnz4iin5kKfDc7gjOmHgkSH0i75RBcM?=
- =?us-ascii?Q?SUnzGLpnG414Rdvjsu8NPocmC6MRHbkU9fouMxGnW/uDVoGK+CK19PWAlMNq?=
- =?us-ascii?Q?AoD3XrsZ9PjmYek4EnHlsSsGTxcEiTDUn3YgvmSPB+1k8AF0mloRkUBgh0G5?=
- =?us-ascii?Q?IGeOpzSCa3LCo3rW6NuLBqwuRljVG6qP3r+dwblu9L7modWAeSOU8cwr8gUT?=
- =?us-ascii?Q?517ytBQV5vVW+9hEwYQJhexfYesC0NbKA+7ORgGjiufPLkRGTn6j1YKLwTCN?=
- =?us-ascii?Q?+JQqC7VesJ41jzmqM+yewGAUSJ+wgtc/++RCVT6xpklYk37I4Lyfe4G2dzBo?=
- =?us-ascii?Q?qmelCAdaDgpAz8KoOYekel+cSnozDYIBAkQ+MBUeHgWmAdvr3Gf8qeIC+dMj?=
- =?us-ascii?Q?JTFZ3vjwqE96jtmBjJVr4sITxTcJVXGtnBlWPA/E9gBF8QOzPKhOb7r26R1x?=
- =?us-ascii?Q?lxX9DfYGVp0ahjyUGND3FtXmUsKa7+aXTd4ZE2iRDw4HgU0J2TG/I8Qr9Dg0?=
- =?us-ascii?Q?POAiAX/VWm7yN+0Q86xX3qXP0Z+jK1Ozd3+wRlmX1jdIL4a7cTA1CuvaoWOU?=
- =?us-ascii?Q?38xA59C+NbwIdrmE/S5OBUkcggJrpRxj6g5WujMIuiqqP3X9QXZeL1GrWUyM?=
- =?us-ascii?Q?4+aBktViJWG6silg+bEOZuM6ED9COLQocdGz1MMRRuvMXvRWhvQJ1SREOXuy?=
- =?us-ascii?Q?tphs1niYJTGk6VIYKHvnp8FHQD+k3yHGutfUFuMq0lb57pHpKITgjP7HiefJ?=
- =?us-ascii?Q?2kveWFefnTisx93wIpiR6VD0hgIiTZinKBoQgWshIgoEsiKy1tiTyS1LzrKk?=
- =?us-ascii?Q?xkzprmqhamdkJbZj/CEvgS/6?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zzFVe7L/WN6mTN/1Q/J4mndAVp2HNMMaLnYvUu+IZUSVFf3n0PHZoLbMSFRh?=
- =?us-ascii?Q?BFhFiBdq0pembtrzJyDtgtTDoMysQmbpklTYt6zBOm6grj+cLUFIIwlCy62b?=
- =?us-ascii?Q?b1HbrsMX1fyBgOzheW4buL1NwTZnzeTdABTD7cTskmxG+WVA3SYY1EIlKiA4?=
- =?us-ascii?Q?BmXtOdjUBor+eSg6QeDC2/nQ/wGeBU2ATsLg96tnnTgi7yEuZTSx+YyGx0td?=
- =?us-ascii?Q?xAdo20XqA1vIEgNSEvgo4QZMKqGNwXfR5CCgEJ3IQd+Gtqn1hCNxKi12sTTE?=
- =?us-ascii?Q?qgFinS3T5EUGqmjKJKJzEIXM0AG2l7b2b9BEJg31jxSBW1pBh3eVRKDiyXL+?=
- =?us-ascii?Q?2X7wi12f0TWxP8WaETJGCRiuZp66OuHRaocSyHJj01CisEmvatfoeDt7IO/m?=
- =?us-ascii?Q?Z0eZapALzElCQTWnrKfoiiW5XDI28VVndUocWmmf8q7vUgPteJP6C52lgS5N?=
- =?us-ascii?Q?DDu0tPgeVcHg4q1DKl0dlX6DTvGoei3YRbmOrukG9I4ZzNXC+ACvWxnZvyXX?=
- =?us-ascii?Q?nj9z4H8UR6j06U2zCMP8v0ftVkEoqFq3l0pfg9VPMixEJof3XG9GYx2EAkP1?=
- =?us-ascii?Q?4WvarBcNdr/jVgvZSZRRZplxPQkoOMmI2q2Omka0Iqoxy/6EYwsNHzscQ3Xn?=
- =?us-ascii?Q?fNLslkG5tla1vK0UBJoCaUs60Powf79aJL/hYMdZ5PC/HqvW3mIX6tCdBL4r?=
- =?us-ascii?Q?eBym7M1ECqj+MIWQhAu8kqbH5WQTmZKV7xACNfLu+0mg7CUTCTevbWDA2YzT?=
- =?us-ascii?Q?QgMI2GplYxxW6BZh7B4+uHDheeJ+/9Zc8TaXAQAwfbCFyFe/ebZXJ7ytie1V?=
- =?us-ascii?Q?LmspxCVp2sUyQxSlVdPHDSTy04G/AFaQ7oFCnkKqZ/fTA2RpW0v43t9jT6lb?=
- =?us-ascii?Q?v00BnRrDjLQbe4i0wEmcwrPMzDoIRggIK2jLV3mVfsn0Ra7kdttZ5RTnJuUN?=
- =?us-ascii?Q?oebE+u4E/NCwOduEnKIqp5x+0KoP9f27QEcgX+RfNkRlAkJtX0o445FYRs0E?=
- =?us-ascii?Q?aM78VljpsAYgh10sSDpN0gZDAEbJtkydUocdW09MAhRweVW+1P0n6QQh4KOj?=
- =?us-ascii?Q?njjb2sqXgXkujqfr/esQ3E5MloNwKMBIlM7GqunfuiWpqCV+7YxATlHzBAUA?=
- =?us-ascii?Q?mO+54WXKV0d59lSzJ2LQ0iDxMIYlMGpslLq+UmEiHlvNkGU0XpnRDveIUJ3j?=
- =?us-ascii?Q?89iwxNQUnkCKQA4KVqsqO9wYi/uL2E51pLn2ZBMZ6Mqxr75mWlK4YxMPpVud?=
- =?us-ascii?Q?stR/kQIjFoU4uXxF9qqZ2JYr/o1O8ZDMEX02o9V9hJ6rlnSgZ/qEJmcZt2A/?=
- =?us-ascii?Q?XWcs4s0vsrRgLcdDp/p73sJnm7oXKQk3mcePBR6cH/kSfNI0f9ozklak87Qo?=
- =?us-ascii?Q?ggeLzV2zKqbt5ld5JlQUXCn+dfZOm8KquAXBG060gTg1WrMVYh0nGQyyE1ka?=
- =?us-ascii?Q?LQYmgxR+fsFeczO8Rq4sBs/4NBqn4Yl2uJCA8kUSE+F/iHlPDNU8SALXvdXE?=
- =?us-ascii?Q?0fuf2spx19guTIJmI8pjr2fNJwCNYNDKgZ506yGD+nrZeJEKRMNzZhX5V3xN?=
- =?us-ascii?Q?qHg2LMzH12DaYasmwa34uXEL68ciRhGTwN3Ytg3RQVEprhBlHUnSO7TVRXXm?=
- =?us-ascii?Q?7Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1413b9b-590a-4a5b-da00-08dcee2ce217
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 21:52:52.0267
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eb0coVGWlIBf8mMt6RcxSFYvmnw1JNdYw01VM3x2P54A1g+A4HuXK5XcNDf368pxqtXDFslMJhX4gC6U6NlVIWY+Y7xtgoHy7As+auZUN7g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8061
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20241017-const_dfc_prepare-v6-1-fc842264a1cc@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIANM2EGcC/33QwU7DMAwG4FeZciYosZMm5cR7IDSlicNyoB3Jq
+ EBT3x1vF4pacfx/yZ8tX0WjWqiJp8NVVJpLK9PIoXs4iHgK4xvJkjgLUGCU11rGaWyXY8rxeK5
+ 0DpUk5gwYO9t7soLnuM/l626+vHI+lXaZ6vd9xaxv7X/arKWSqXMxGt0NmPD547PEMsbHOL2Lm
+ zfD2rB7BrDhkee9G3zO/dbAlQFmz0A2EDQ4CgjDELaG+TV6tXuHYcNor0gnG8CYrWFXhnZ7hpX
+ 8EQKVO4dEKv41lmX5AcF4FVTEAQAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+ Zijun Hu <zijun_hu@icloud.com>, linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Proofpoint-GUID: NTtQUb32VILvAfHfVNv7Kp5Uzly96Dx_
+X-Proofpoint-ORIG-GUID: NTtQUb32VILvAfHfVNv7Kp5Uzly96Dx_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-16_17,2024-10-16_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2410160140
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Dan Carpenter wrote:
-> Hello Li Ming,
-> 
-> Commit 7f569e917b78 ("cxl/port: Use scoped_guard()/guard() to drop
-> device_lock() for cxl_port") from Aug 30, 2024 (linux-next), leads to
-> the following (unpublished) Smatch static checker warning:
-> 
-> 	drivers/cxl/core/port.c:1591 add_port_attach_ep()
-> 	warn: re-assigning __cleanup__ ptr 'port'
-> 
-> drivers/cxl/core/port.c
->     1542 static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->     1543                               struct device *uport_dev,
->     1544                               struct device *dport_dev)
->     1545 {
->     1546         struct device *dparent = grandparent(dport_dev);
->     1547         struct cxl_dport *dport, *parent_dport;
->     1548         resource_size_t component_reg_phys;
->     1549         int rc;
->     1550 
->     1551         if (!dparent) {
->     1552                 /*
->     1553                  * The iteration reached the topology root without finding the
->     1554                  * CXL-root 'cxl_port' on a previous iteration, fail for now to
->     1555                  * be re-probed after platform driver attaches.
->     1556                  */
->     1557                 dev_dbg(&cxlmd->dev, "%s is a root dport\n",
->     1558                         dev_name(dport_dev));
->     1559                 return -ENXIO;
->     1560         }
->     1561 
->     1562         struct cxl_port *parent_port __free(put_cxl_port) =
->     1563                 find_cxl_port(dparent, &parent_dport);
->     1564         if (!parent_port) {
->     1565                 /* iterate to create this parent_port */
->     1566                 return -EAGAIN;
->     1567         }
->     1568 
->     1569         /*
->     1570          * Definition with __free() here to keep the sequence of
->     1571          * dereferencing the device of the port before the parent_port releasing.
->     1572          */
->     1573         struct cxl_port *port __free(put_cxl_port) = NULL;
->                                   ^^^^^^^^^^^^^^^^^^^^^^^^
-> We free port when we exit the function, fine.
-> 
->     1574         scoped_guard(device, &parent_port->dev) {
->     1575                 if (!parent_port->dev.driver) {
->     1576                         dev_warn(&cxlmd->dev,
->     1577                                  "port %s:%s disabled, failed to enumerate CXL.mem\n",
->     1578                                  dev_name(&parent_port->dev), dev_name(uport_dev));
->     1579                         return -ENXIO;
->     1580                 }
->     1581 
->     1582                 port = find_cxl_port_at(parent_port, dport_dev, &dport);
->     1583                 if (!port) {
->     1584                         component_reg_phys = find_component_registers(uport_dev);
->     1585                         port = devm_cxl_add_port(&parent_port->dev, uport_dev,
->     1586                                                  component_reg_phys, parent_dport);
-> 
-> This port from devm_cxl_add_port() needs to be undone.
-> 
->     1587                         if (IS_ERR(port))
->     1588                                 return PTR_ERR(port);
->     1589 
->     1590                         /* retry find to pick up the new dport information */
-> --> 1591                         port = find_cxl_port_at(parent_port, dport_dev, &dport);
-> 
-> But we re-assign port here so it will only free this port and not the one from
-> devm_cxl_add_port().
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Yup. I must say I really do not like what scoped_guard() does to code
-flow. If conversion to cleanup helpers causes this much code indentation
-then the value is low, especially when it hides tricky bugs.
+Provided that all child switch cxl decoders are sorted by ID in ascending
+order, then it is wrong for current match_free_decoder()'s logic to find
+a free cxl decoder as explained below:
 
-Lets revert the scoped_guard() conversions for now.
+Port
+ ├── cxld A        <---->  region A
+ ├── cxld B        // no region
+ ├── cxld C        <---->  region C
 
-I would much prefer factoring out code sections that need a lock to
-their own helper that uses guard() rather than convert inline code to
-scoped_guard().
+Current logic will find cxld B as a free one, but cxld B is not true
+free since region C has not been torn down, so current logic is wrong.
+
+Fixed by verifying if cxl decoder with ID (@port->commit_end + 1) can
+be returned as finding result.
+
+Link: https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+This patch is incremental to below patch series with title "cxl: Initialization and shutdown fixes"
+http://lore.kernel.org/172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com
+
+This patch is based on Dan's recommendation shown by below link:
+https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
+---
+Changes in v6:
+- Use Dan's recommendation that validate clxd with ID (@port->commit_end + 1)
+- Correct commit message and update Link tag this commit derive from
+- Link to v5: https://lore.kernel.org/r/20240917-const_dfc_prepare-v5-1-0e20f673ee0c@quicinc.com
+
+Changes in v5:
+- Use changes suggested by Dan Williams for cxl/region patch
+- Correct title and commit message for cxl/region change
+- Seperate qcom/emac change for patch series
+- Link to v4: https://lore.kernel.org/r/20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com
+
+Changes in v4:
+- Drop driver core patch
+- Correct commit message for cxl/region patch
+- Correct title and commit message for qcom/emac patch
+- Link to v3: https://lore.kernel.org/r/20240824-const_dfc_prepare-v3-0-32127ea32bba@quicinc.com
+
+Changes in v3:
+- Git rebase
+- Correct commit message for the driver core patch
+- Use changes suggested by Ira Weiny cxl/region
+- Drop firewire core patch
+- Make qcom/emac follow cxl/region solution suggested by Greg
+- Link to v2: https://lore.kernel.org/r/20240815-const_dfc_prepare-v2-0-8316b87b8ff9@quicinc.com
+
+Changes in v2:
+- Give up introducing the API constify_device_find_child_helper()
+- Correct commit message and inline comments
+- Implement a driver specific and equivalent one instead of device_find_child()
+- Link to v1: https://lore.kernel.org/r/20240811-const_dfc_prepare-v1-0-d67cc416b3d3@quicinc.com
+---
+ drivers/cxl/core/region.c | 35 +++++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e701e4b04032..a7a82da39393 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -796,8 +796,9 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+ 
+ static int match_free_decoder(struct device *dev, void *data)
+ {
++	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_decoder *cxld;
+-	int *id = data;
++	struct device **target_dev = data;
+ 
+ 	if (!is_switch_decoder(dev))
+ 		return 0;
+@@ -805,15 +806,24 @@ static int match_free_decoder(struct device *dev, void *data)
+ 	cxld = to_cxl_decoder(dev);
+ 
+ 	/* enforce ordered allocation */
+-	if (cxld->id != *id)
+-		return 0;
++	if (cxld->id == port->commit_end + 1) {
++		if (!cxld->region) {
++			*target_dev = dev;
++			return 1;
++		}
+ 
+-	if (!cxld->region)
+-		return 1;
++		dev_dbg(dev->parent,
++			"%s: cxld '%s' was reserved by '%s'\n", __func__,
++			dev_name(dev), dev_name(&cxld->region->dev));
++		return -EBUSY;
++	}
+ 
+-	(*id)++;
++	if (cxld->flags & CXL_DECODER_F_ENABLE)
++		return 0;
+ 
+-	return 0;
++	dev_dbg(dev->parent, "%s: cxld '%s' was out of order shut down\n",
++		__func__, dev_name(dev));
++	return -EINVAL;
+ }
+ 
+ static int match_auto_decoder(struct device *dev, void *data)
+@@ -839,17 +849,18 @@ cxl_region_find_decoder(struct cxl_port *port,
+ 			struct cxl_endpoint_decoder *cxled,
+ 			struct cxl_region *cxlr)
+ {
+-	struct device *dev;
+-	int id = 0;
++	struct device *dev = NULL;
+ 
+ 	if (port == cxled_to_port(cxled))
+ 		return &cxled->cxld;
+ 
+-	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
++	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+ 		dev = device_find_child(&port->dev, &cxlr->params,
+ 					match_auto_decoder);
+-	else
+-		dev = device_find_child(&port->dev, &id, match_free_decoder);
++	} else {
++		device_for_each_child(&port->dev, &dev, match_free_decoder);
++		get_device(dev);
++	}
+ 	if (!dev)
+ 		return NULL;
+ 	/*
+
+---
+base-commit: 9bd133f05b1dca5ca4399a76d04d0f6f4d454e44
+change-id: 20240811-const_dfc_prepare-3ff23c6598e5
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
