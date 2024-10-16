@@ -1,28 +1,28 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2063.outbound.protection.outlook.com [40.107.95.63])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2EC18A95E
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 05:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FC818A952
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 05:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729054806; cv=fail; b=K66MK56VtI68ZEhl6ikOrmmjkkaKYV9jfUw2uJOT14YFexLGHcbtZi583GuWBkztOfgrw0wmSTFYZGIbvQ1hRqmSoXX3wvngg+PxqLUK6vsD81HnZY5GcPRKio66FcjJwqg3T+OkFB3+p2BAHL4dNExRRtq6tM5JJgBSAM7q7bY=
+	t=1729054807; cv=fail; b=H8DXMbRoSG1hwqIIS2SYe47hYkq6EbC16BsTc0DM9kDaQjIwaSgg1B9+QOP+4ocukTkNnQW9vVahRLf2GyKKlp0rMH8ohzrmIn79v+X/7dyRmVlYha67KEYO5Sat1We+kAJCdqBCeGci79UayVwehAv8cTmNw6MQjdnFQ3enOzs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729054806; c=relaxed/simple;
-	bh=YWZaz8HUJ7zNFnEPrOgcbdWU2SjlwKpb4inu5VyeJNo=;
+	s=arc-20240116; t=1729054807; c=relaxed/simple;
+	bh=fl5VuP1t8TDwTkFqLSciaGdjCxri2p6Odj6TMVBkQxs=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gl9tHk9DbvaZAlZ3enOanXYzjE4CI/y810bZKALHNzVFsogTMC2wxVAxRsXP2Wv7rguJ44UCxCB31x6h66xVJdi/cT4GzLoQwnQxMu99AplzXpzZ52kKgjSuokb3haBV4tCE6+HmyJV0BPLscWvwN6yYRJSYb9CcacWGWEiH5iA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=MhL1pxcH; arc=fail smtp.client-ip=40.107.95.63
+	 Content-Type:MIME-Version; b=jvLTi8Lopz4oHm0rzA8oNopz0nqjs7ELMY1wrRdoLg6FldZDaENNPTRllHF0I86pjOTMoDVjqwa5tLWI+KGg3l4X1scWirIi4Vm6wv/QrrgSuVHG0stVFfInn8pHuFecagnyPNqQsJaXGLbHuxigbkkFtopCgrtdtt9WXU9uk5g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com; spf=pass smtp.mailfrom=micron.com; dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b=OY8xfMHl; arc=fail smtp.client-ip=40.107.237.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=micron.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=micron.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="MhL1pxcH"
+	dkim=pass (2048-bit key) header.d=micron.com header.i=@micron.com header.b="OY8xfMHl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q2BNLy3Tys/WnV6hGSWHzcQsUqT4RsakSdiY/xqljWp1vmOIE/O5j57V6cQ+nlVaw98vP8ZyiBI2ULa5WvoEJRrzWFQpqFgMd3zxvXb62K6cCbbekFJZ+QbZ+jqH4Mq9DphGt9ruEMyAtWI9hu34ggMZkm3fWBSkCzehIuLsgHPRTp+UsiUVAirH3gy1Ss/3dBWrMla+HpJEMPLKftAzK+SIwU3unTffNpdAZ4cOCq9aJMiEs2PZHZoQO43bwXo8VqsDQZkFPaGgYAepddqb4fG0aUow9aexhY3Ii81dUVk8izBToqV8C3ZVzc7FWmM4T/zCAJppqKnczaHLAvXmQQ==
+ b=OEyPHu5opMWn7PZK192rCdoFjIDZGPRgMeUBiqNBzr4wsbSVa+rHicWxi+Sin/Ud0QNz281EVAti+XvE/bQVIQrsjBl5VBwcTPUwgTkgxYLIuvw0aHjxzX1xgsvVy3Cyqt6EneXOcc9JfFSjFaa4S+W/8vK5pvz2vw0PE6CIxRnLnWrfOAwz63vO/iMx/fbSUa6G/wNTtBHc1LhwDWmtme4GG+hQab7+KVcxzKqKu1hpeb+phV5FA0Q46WnQFoNKu2peIvZbfR42y86mwDf5cb11qMrnBk9/N5/LxncIMsfAEpHnhKaQ4evxTBSUlEpZ2rknL2rjUdiVvPSNsKhKbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GnqzN35w1JAXkYGkRioMhmLqElHTtYzdKgcq/Yeosbc=;
- b=rWnVCp1jBKtTWG84LtfiIPArWjNzt7bZVJlyvTUgEjBdnzQb+YjuSULfZA1RjsoQApU1k/8QVqZoBEzl51hQ202E1wshXpIYdzuiCmZm+UdKhogsDmflWo97J2E5+6PtkbYGvK0dJQlPCrZ7ACVMfHMGXUML0Nmu4g4EHQjEbfwnO9nhovFm+D3K4P6CRzSsIvAdVtFhnL4+C75Wl0b108QAgBwARZnN61S1ORiOIwFjQBHSpvtwFSocuADZkxgyLHXjG74Hnuncr1PfHSWdI6SFWZO55zJUBBSQDMPYNf4lYDHVQzN4P5M+Pma+J4UuAK6xNeevto+rFpOMFalsdw==
+ bh=M+tjctFtODAPpu8fwOFTKLTAdBT/wOhOnS29UylBwXw=;
+ b=Lh6BPZdnCQPi6OoewpRB1u6Zj8fW9QWSdzD6q4cK5hgNnpH2RLc9efY6CvE+YAkB4xsAuKz0fzdSQfoA5CQyNUstzT9jo7aIttD+X+d0DO7R+qZXVm+3+9v2NGV1ZDACLokxhJlM931PeFJ3RrpKyES/PPjpcHU7x5v/dp248YHoeU/xjf/IvQEgYQwhNnxI1qgSuy8+wtWqzGoGZ8BNGfx2vomDlP2x03NKzd9EZtaaERdXHfbe4HGlqOBTaiaiLbHW5fw+ptI3EhPH569i+naWCE6M4OV+KYZImWGvnWTkNdfv+NQTt41k2esYMr1edCkJkfbSJgRw31hA15eMfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.201.242.130) smtp.rcpttodomain=jagalactic.com smtp.mailfrom=micron.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=micron.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GnqzN35w1JAXkYGkRioMhmLqElHTtYzdKgcq/Yeosbc=;
- b=MhL1pxcH6MMG0cQlGWR7rJJPJazvtzTNo8msmgN/Cgkj0CiIlnBmavLeinBAprzb15BUveExzHc4pGm/Pzyk4PHEMXVsuzCFtc98Ubz+CidF6HxghQImYZoyym7QZ4kl3pQ6FERVXn3nQKSftQZSj6Tqzp0pgXd70FOdBvy/VGQUMS810dy5g2adlt6ZONcZ46ntJ2A+Dk+utb0rajJF7UV/iMHeIf8+zsCa6bwG/0TmWBJvwbMWcErXhFWelqmzLrtDrrDgNvpocrfZP27iyjsb654C782A90UU1+llxr4ovQ8+2Fxff7DAawjdPLYEY+5nBHJDVXrQaxujgY9W1A==
-Received: from CH0P223CA0012.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:116::29)
- by SN4PR0801MB7725.namprd08.prod.outlook.com (2603:10b6:806:200::12) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=M+tjctFtODAPpu8fwOFTKLTAdBT/wOhOnS29UylBwXw=;
+ b=OY8xfMHlTMuuVBQM1ssqHHHiFc4tK0X6hYcY+IbGrYN7uDdfux2Y1LE+L7S0+Mf5Rkz+xvaopyDgXWp20zHdUoshcu2vtdJJzF25xIvma5Vf3mIrr9+z2XyuSTIwIW1QyMDQp/QFeWAfujaGBSPqfRGbEHbNBHezMORrPupKopnHkavbQ3+ZHqgrsDzkpyTDDwFqWgg9Z20wGDHFRns2LD4pTC84rVM6HuYUnjh1VMxPz9gtdrssNBQqBJ9waHw//PxtFadzxu8EZ5D9Ed3inTCT4viynyf1JijHOfB+gm7ierHOch6/cJt7Os5Ol0BPNS6oHXDp5LTKTYRWsfVB+g==
+Received: from SN4PR0501CA0116.namprd05.prod.outlook.com
+ (2603:10b6:803:42::33) by CO1PR08MB7224.namprd08.prod.outlook.com
+ (2603:10b6:303:fb::18) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
- 2024 04:59:58 +0000
-Received: from CH3PEPF0000000A.namprd04.prod.outlook.com
- (2603:10b6:610:116:cafe::10) by CH0P223CA0012.outlook.office365.com
- (2603:10b6:610:116::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.27 via Frontend
- Transport; Wed, 16 Oct 2024 04:59:58 +0000
+ 2024 05:00:00 +0000
+Received: from SA2PEPF00001506.namprd04.prod.outlook.com
+ (2603:10b6:803:42:cafe::59) by SN4PR0501CA0116.outlook.office365.com
+ (2603:10b6:803:42::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.12 via Frontend
+ Transport; Wed, 16 Oct 2024 05:00:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 137.201.242.130)
  smtp.mailfrom=micron.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=micron.com;
@@ -49,16 +49,16 @@ Received-SPF: Pass (protection.outlook.com: domain of micron.com designates
  137.201.242.130 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.201.242.130; helo=mail.micron.com; pr=C
 Received: from mail.micron.com (137.201.242.130) by
- CH3PEPF0000000A.mail.protection.outlook.com (10.167.244.37) with Microsoft
+ SA2PEPF00001506.mail.protection.outlook.com (10.167.242.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8069.17 via Frontend Transport; Wed, 16 Oct 2024 04:59:58 +0000
-Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19B.micron.com
- (137.201.21.219) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8069.17 via Frontend Transport; Wed, 16 Oct 2024 04:59:59 +0000
+Received: from BOW17EX19B.micron.com (137.201.21.219) by BOW17EX19A.micron.com
+ (137.201.21.218) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 15 Oct
- 2024 22:59:56 -0600
+ 2024 22:59:58 -0600
 Received: from BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3]) by
  BOW17EX19B.micron.com ([fe80::1c0a:12aa:1e25:d8a3%6]) with mapi id
- 15.02.1544.011; Tue, 15 Oct 2024 22:59:56 -0600
+ 15.02.1544.011; Tue, 15 Oct 2024 22:59:58 -0600
 From: Ravis OpenSrc <Ravis.OpenSrc@micron.com>
 To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
 	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave.jiang@intel.com"
@@ -66,15 +66,14 @@ To: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
 	<jonathan.cameron@huawei.com>
 CC: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>, "john@jagalactic.com"
 	<john@jagalactic.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: [RFC PATCH v2 1/4] cxl: Enable mailbox ops with background only if
- request abort operation is supported.
-Thread-Topic: [RFC PATCH v2 1/4] cxl: Enable mailbox ops with background only
- if request abort operation is supported.
-Thread-Index: AQHbH4g+o4Yi/F6bYEWlyf9LmgVvoA==
-Date: Wed, 16 Oct 2024 04:59:56 +0000
-Message-ID: <6e6cc093f70442e792c05e779393442a@micron.com>
-References: <20241015205633.127333-1-ravis.opensrc@micron.com>,<20241015205633.127333-2-ravis.opensrc@micron.com>
-In-Reply-To: <20241015205633.127333-2-ravis.opensrc@micron.com>
+Subject: [RFC PATCH v2 2/4] cxl: Add default timeout for bg mailbox commands
+Thread-Topic: [RFC PATCH v2 2/4] cxl: Add default timeout for bg mailbox
+ commands
+Thread-Index: AQHbH4g/djwl0+QCQUi1njK/EXQOVA==
+Date: Wed, 16 Oct 2024 04:59:58 +0000
+Message-ID: <913b851a25344bb1832ddc902eb0aa5f@micron.com>
+References: <20241015205633.127333-1-ravis.opensrc@micron.com>,<20241015205633.127333-3-ravis.opensrc@micron.com>
+In-Reply-To: <20241015205633.127333-3-ravis.opensrc@micron.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -90,143 +89,111 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000A:EE_|SN4PR0801MB7725:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03a8f530-4ed0-49c8-61fe-08dced9f624b
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001506:EE_|CO1PR08MB7224:EE_
+X-MS-Office365-Filtering-Correlation-Id: 071b215e-6a71-4cbc-4b89-08dced9f634b
 X-EXT-ByPass: 1
 X-MT-RULE-Whitelisted: Triggered
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?/r5bfZDXcwLVwpeBCh8vjiyJbGCsY6YeMwa2SR1SMvqQFG2OGcF16W9eJ+?=
- =?iso-8859-1?Q?AMipXNwtKf7j3QBQYlJmd384Kgfh76slHlUCndXx963yJSsxnuSXviocM+?=
- =?iso-8859-1?Q?V7bQYLElhGcosS93OLyx7tF8KUcZ6MCjck/8jpF4/ZjnhVJ4mNNJ2nM9jB?=
- =?iso-8859-1?Q?DgO3KoAxfHjLdmq5Wycntz00M93FIo5spoJSZYn1G/MWRUyzUf2dN+PoxQ?=
- =?iso-8859-1?Q?Cu4l9FKWjCZuH0EIpXXBQrwc3FGZloJAWpOl8ZqnCOv9RlhYiFez3YmUHe?=
- =?iso-8859-1?Q?JJ5ifd1cvK+iZmCHgvGUIfdlmH5grK7JSNnZ4mRBp/hp6/RNL+OUZWPNyK?=
- =?iso-8859-1?Q?nPGayiLxZZR/s3QSQl9IIWPu8DI/CukghOJW/+QyYboWX0s8TeJbAd6iec?=
- =?iso-8859-1?Q?kosTH1XB9ioVUlX5gdcIow1cwfsuI9e1vGY8uT5r4ARcFyfyq5pHlqK+6U?=
- =?iso-8859-1?Q?YVnOTxsrgTF3hNBweHY5QXC+p+c7kC40hJnx51zTGRs+D7bgXhkoZDLdDk?=
- =?iso-8859-1?Q?P87PXThQgrJPqBx9FaXRtALeUOP00RjUeet3zztymp/z06jpwixiFh2od4?=
- =?iso-8859-1?Q?34EvQrxFAS/mdQWfPjAfAB7eI+lpbJ+6yacGKmkWmOeaE4Y7upbJycruR/?=
- =?iso-8859-1?Q?TjZIIMvooWHRnGsu/Q5WAjQ+PjwPIHLGx0pWgIKE92aHmQEaw6/DzUUCEe?=
- =?iso-8859-1?Q?ikbFGhl26em4nOJTCT0lWNKXRdHSQSkff7GpsknOxK5Epp7o9iMdB5VMw2?=
- =?iso-8859-1?Q?wUC+nds/RjeOq5Dq1mZpykrEWzcCOgk44jK8U5ccrWghUEibp/1Tuqa+m8?=
- =?iso-8859-1?Q?TCRS5LSwafKUjXObj0dMxu9IJz8ale2bhnmMzaJmleIOBw/a345b5/So88?=
- =?iso-8859-1?Q?yRcki/LsRnz1KBDoJsCUYEFHkLJmOVkAWWS8IpVjkYynEoKt4hkuv6bpi1?=
- =?iso-8859-1?Q?WUzGonHOJeAlPqj739u8YRs9si0a0CF1u4Sg/Mdyuc77RxcZM0njl6mUAv?=
- =?iso-8859-1?Q?UBxmiVz3e4MCCgifh0fnToXA0qDlwBQTOTyOSZpKmddUJWMjqsipxia9u3?=
- =?iso-8859-1?Q?PBwccoPSMArnaXqJ3+aa0F8IkYHlFS9YKFZtGdCgEaemvpnMk967IsZyYi?=
- =?iso-8859-1?Q?eZXwF6ixXJLMWjVtMVISPOpIw5yGHH+cnD7exLOJ286uu6TkD392fBVZ22?=
- =?iso-8859-1?Q?gHAwOIxG/SweciJKqiayACocHsJfgDzYnvp9nYhKkI0L0e72ZhEsYo1xNJ?=
- =?iso-8859-1?Q?iglxGuw0JKFuH3XKK1FIS3KdESmGsxW3Cwwll6HXwasiJVn5Y8e/I7FybN?=
- =?iso-8859-1?Q?agRN6oXGPrCm8DHtvG8IdFysDZ0of9hizyq1WAEUu99GxhRJaBLWpsBtgz?=
- =?iso-8859-1?Q?wVgR/iCK69oRQuy1iPrKy8KIhzppvjJcZ++IJXxTS/UGOssILJtgSTbJqv?=
- =?iso-8859-1?Q?gRd9ibF3qd76XjIW?=
+	=?iso-8859-1?Q?Xr9mEYqeaNeQNKwUfy/CLj7HYd9bwEG6ioiKGHMnHRmMpUXtQFgLDHKZl0?=
+ =?iso-8859-1?Q?FgzUTMIMWBgHobUU1U8NOe18tG+PgP5oiyHPikMO/Yy5eRlr8E/BjBSYI4?=
+ =?iso-8859-1?Q?UBmrwVKjSixF2lfwhULOFgYtg3ZChRNMfOiofeGipmd/hfxxl7ZxzHAYD4?=
+ =?iso-8859-1?Q?FnrHXlGERVTlGtHvzPg2UDePz9LYkrpFTfsctDjcCpgiOnVQ57li7HvoF+?=
+ =?iso-8859-1?Q?OkEudX19I3GQrorXSeIkYjaKk/jCsM9bXZqSZEyNpMHv7IOmmDgZaeOisV?=
+ =?iso-8859-1?Q?Yr17IDRinyanrV5R100pY4dtwKyT44oruwW0QCcTEC8hVy1AvW6etYfUdP?=
+ =?iso-8859-1?Q?dAHtAfHPuBBYeDBQY5QNQu08w84t+gOkWAGl3OOO2fk66kplBM/RfJZBhg?=
+ =?iso-8859-1?Q?E7u7r3XWDivwdYyNDF65afVahdQ7ooOEG+7TXeydrucyChAeOplc6rsZmW?=
+ =?iso-8859-1?Q?HQ4RhSGX1JhVv55xfcK31s4gGt5oE0NuUGAYDdUdCkIQeWTsu3zbcNHgsg?=
+ =?iso-8859-1?Q?A4PMKKUibcwV+rF9Hpx4p+oXe1IwJk+jSmoZQ4opXZ3SKc/zxgmMffRcl7?=
+ =?iso-8859-1?Q?B7Bhq63iWS2GXdZ8gTrPNXVMztQ2+a6lu/W+ie9WMnJ9cFQ3fj2le56FNo?=
+ =?iso-8859-1?Q?iman2mKVDXtNZo579u0lcF1bM7iF1DgDEjB4olwiDNywxbFaahBqku9oPn?=
+ =?iso-8859-1?Q?rYswsUSABDawID3lemvXjlDXf0Bqhm2zAEFvxXnkb4dws5DyORiAYk5Tiy?=
+ =?iso-8859-1?Q?aYcAJKmK6XbLfuIhxfFnFycLqM6VR3Szdh/FISspcu3Gpp6q4X1JForYog?=
+ =?iso-8859-1?Q?+6fJ/+vlKHN2CUqNL9tp7jLjAmb0blJsYM1ZYQ0N0OCPeW/Yn4iW68QxX5?=
+ =?iso-8859-1?Q?clGmQ/NwOP6kGeCoAkM11YvtBiyCeG/6lONH0UYduEW8lEvkQgK+3nnh+5?=
+ =?iso-8859-1?Q?hSxVcjLbgl1ZKMXTEneg80gtZ5Seyo57WYxiH+604AcZil4AmcMvN8TxkK?=
+ =?iso-8859-1?Q?lEQ75gHvjJ/tM7xBZxY6r8eKIhuNeOpAB4mO+Rgtv2FHXv6dp8EvEiWbBw?=
+ =?iso-8859-1?Q?3mXy78jG7ijhy05wJhE+C54twrLxN7QmdAgY93XVPlMlInqbgEiAM+EaWK?=
+ =?iso-8859-1?Q?yCw3FoVopJ/GkveLhqBBTG4XSbwC2W/ZFzY0VMWLsAWp4bpHswHYZvoi0g?=
+ =?iso-8859-1?Q?aG6LTJyYA3s3v7r2tksynTWJjpUVJSkZe+bblxSAOky0arVFYP56diOMWz?=
+ =?iso-8859-1?Q?8nll4nlU26XOASwCoS44qsCpwvpwKWJazp8dylUhMm4y4tfByOHr7wuO3g?=
+ =?iso-8859-1?Q?vT743Panvnj+eW3QQB3rNamzKZACOU8zKSoWEs8WDuymgjCVMyXquIRfXa?=
+ =?iso-8859-1?Q?VBlZXE0yEDyocCLiUk2JAh8BGwj34TozGJzHEyz6jxrb+OIRqmirb3/XF6?=
+ =?iso-8859-1?Q?Zd02oHMNlXTqjbe8?=
 X-Forefront-Antispam-Report:
-	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:137.201.242.130;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.micron.com;PTR:masquerade.micron.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 04:59:58.3051
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 04:59:59.9979
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03a8f530-4ed0-49c8-61fe-08dced9f624b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 071b215e-6a71-4cbc-4b89-08dced9f634b
 X-MS-Exchange-CrossTenant-Id: f38a5ecd-2813-4862-b11b-ac1d563c806f
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f38a5ecd-2813-4862-b11b-ac1d563c806f;Ip=[137.201.242.130];Helo=[mail.micron.com]
-X-MS-Exchange-CrossTenant-AuthSource: CH3PEPF0000000A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF00001506.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0801MB7725
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR08MB7224
 
-Enabling mailbox commands only if background operation and
-request abort cancellation are both supported.
+Allows 5s wait when no timeout parameter is explicitly mentioned.
 
-This check is to allow user space commands to initiate
-background commands responsibly while complying with any
-default background timeout implemented in kernel.
+It is useful for mailbox commands to be executed in background
+when initiated from userspace.
 
 Link:
-https://lore.kernel.org/linux-cxl/66035c2e8ba17_770232948b@dwillia2-xfh.jf.=
-intel.com.notmuch/
+https://lore.kernel.org/linux-mm/20240215123410.00003b8c@Huawei.com/T/
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ajay Joshi <ajay.opensrc@micron.com>
 Signed-off-by: Ravi Shankar <ravis.opensrc@micron.com>
 ---
-=A0drivers/cxl/core/mbox.c | 12 ++++++++++--
-=A0drivers/cxl/cxlmem.h=A0=A0=A0 | 16 ++++++++++++++++
-=A02 files changed, 26 insertions(+), 2 deletions(-)
+=A0drivers/cxl/pci.c | 13 +++++++++++++
+=A01 file changed, 13 insertions(+)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 5175138c4fb7..8c0144913b9e 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -733,12 +733,20 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds=
-, size_t size, u8 *cel)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 188412d45e0d..d5d6142f6aa3 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -41,6 +41,10 @@
+=A0/* CXL 2.0 - 8.2.8.4 */
+=A0#define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
 =A0
-=A0=A0=A0=A0=A0=A0=A0=A0 for (i =3D 0; i < cel_entries; i++) {
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u16 opcode =3D le16_to_cpu=
-(cel_entry[i].opcode);
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 u16 effect =3D le16_to_cpu(cel_=
-entry[i].effect);
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 struct cxl_mem_command *cm=
-d =3D cxl_mem_find_command(opcode);
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int enabled =3D 0;
-=A0
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cmd) {
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 set_bit=
-(cmd->info.id, mds->enabled_cmds);
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 enabled=
-++;
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Fo=
-r background operation commands, enable only if
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Re=
-quest abort background operation is supported.
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!(e=
-ffect & CXL_CEL_FLAG_BACKGROUND_OPERATION) ||
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 (effect & CXL_CEL_FLAG_REQ_ABORT_BACKGROUND_SUPPORTED)) {
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 set_bit(cmd->info.id, mds->enabled_cmds);
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 enabled++;
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-=A0
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (cxl_is_poison_command(=
-opcode)) {
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..d8c0894797ac 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -579,6 +579,22 @@ struct cxl_cel_entry {
-=A0=A0=A0=A0=A0=A0=A0=A0 __le16 effect;
-=A0} __packed;
-=A0
-+/*
-+ * CEL Entry Effects
-+ * CXL rev 3.1 Section 8.2.9.5.2.1; Table 8-75
-+ */
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_CFG_CHANGE_AFTER_RESET BIT(0)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_CFG_CHANGE_IMMEDIATE BIT(1)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_DATA_CHANGE_IMMEDIATE BIT(2)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_POLICY_CHANGE_IMMEDIATE BIT(3)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_LOG_CHANGE_IMMEDIATE BIT(4)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_SECURITY_CHANGE BIT(5)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_BACKGROUND_OPERATION BIT(6)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_SECONDARY_MAILBOX_SUPPORTED BIT(=
-7)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_REQ_ABORT_BACKGROUND_SUPPORTED B=
-IT(8)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_CFG_CHANGE_AFTER_CONV_RESET BIT(=
-10)
-+#define=A0=A0=A0=A0=A0=A0=A0 CXL_CEL_FLAG_CFG_CHANGE_AFTER_CXL_RESET BIT(1=
-1)
++/* Default timeout for background operations */
++#define CXL_BG_POLL_CNT=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 5
++#define CXL_BG_POLL_INTERVAL_MS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0 1000
 +
-=A0struct cxl_mbox_get_log {
-=A0=A0=A0=A0=A0=A0=A0=A0 uuid_t uuid;
-=A0=A0=A0=A0=A0=A0=A0=A0 __le32 offset;
+=A0/*
+=A0 * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
+=A0 * dictate how long to wait for the mailbox to become ready. The new
+@@ -317,6 +321,15 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_mailbox =
+*cxl_mbox,
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_dbg(dev, "Mailbox back=
+ground operation (0x%04x) started\n",
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mb=
+ox_cmd->opcode);
+=A0
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Add a default timeout of 5=
+ seconds when background operation
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * starts but no timeout is s=
+pecified.
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!mbox_cmd->poll_interval_ms=
+) {
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mbox_cm=
+d->poll_interval_ms =3D CXL_BG_POLL_INTERVAL_MS;
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mbox_cm=
+d->poll_count =3D CXL_BG_POLL_CNT;
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
++
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 timeout =3D mbox_cmd->poll=
+_interval_ms;
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 for (i =3D 0; i < mbox_cmd=
+->poll_count; i++) {
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if=
+ (rcuwait_wait_event_timeout(&cxl_mbox->mbox_wait,
 --=20
 2.43.0
 
