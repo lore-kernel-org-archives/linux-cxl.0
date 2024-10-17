@@ -1,42 +1,49 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AAE1DDC07
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Oct 2024 13:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612DD1DDA31;
+	Thu, 17 Oct 2024 13:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729170531; cv=none; b=AGs+nzOyHzHyOhF/ZDlPF10v7xPNI/83G4voOxyfiit9+ALPrHtp69JigBgJ+hhbnCfvFW6dF/JvzQxp3366QRSMslHm+Clexavfu3OPH6vlQRIff5h2PKJyuMuO9HDJp9IYPxpgjVP3kAldnK4NB9bhCpu32jtSOM3Q4GICXJY=
+	t=1729171878; cv=none; b=Q7N4MXW1R4LkIjEi1qCXm7bJfmyb29LV4IZa+4QW2LX3o8ysiOt/BbCuU4eSGt+Rmo3+dsVYAFWgMYupZ9ALU19XHSMZrkGntSzuH1RQZayd343kxtqPvcPPRiM9yKk3h5CrlpvSPt1cUhJbiaPR1JA3V1igGdXOpvTuQVokBns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729170531; c=relaxed/simple;
-	bh=Ec/cergO07Wd2PRsNvlnEq57LqoJSo+hAKsHrsTc8Ck=;
+	s=arc-20240116; t=1729171878; c=relaxed/simple;
+	bh=AA0+BSw8gb7CWEmHQjYrvI9mdR0Nlru1/nmOVynku28=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BCUDPc+igfQ34nQ1pURG/sAUzquQUjzSNjhymWHdko6DgL8b/6AX8HYSKAIdmoPX8V/oeeUbK+3lqIoTKERqCD1yNb8oAYEh4tpEbl4A85+6X3NafZHVQNbDcuLMHm5KWa1Zx3MFEjApR3FwBP7xF8wbjNew1w6kv83kAvWwDVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	 MIME-Version:Content-Type; b=N8jUOy7+SaeXiw0k14ZFKZ/51wHk+dKFlLCfPd4gvSQQxHpaQAsRPd/1jpxEuu1mSh3cc440jzZ+DX2CCT2Hj6I6dlnDd3wE5JLb3+oe/+Ey1IHx+s+fIIHi5gNVn6K+l4tnJmDZvKVQJ3pW2aZoFzhziGXAiQiKQQ9CUDFqy7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTp6X4BSXz6JBT8;
-	Thu, 17 Oct 2024 21:08:04 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTpbC4wtmz6FGr7;
+	Thu, 17 Oct 2024 21:29:27 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DBD3B140119;
-	Thu, 17 Oct 2024 21:08:44 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+	by mail.maildlp.com (Postfix) with ESMTPS id D8019140119;
+	Thu, 17 Oct 2024 21:31:11 +0800 (CST)
+Received: from localhost (10.126.174.164) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Oct
- 2024 15:08:44 +0200
-Date: Thu, 17 Oct 2024 14:08:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <nifan.cxl@gmail.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [QEMU PATCH] hw/cxl/cxl-mailbox-util: Fix output buffer index
- update when retrieving DC extents
-Message-ID: <20241017140843.00004685@huawei.com>
-In-Reply-To: <20241015190224.251293-1-nifan.cxl@gmail.com>
-References: <20241015190224.251293-1-nifan.cxl@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ 2024 15:31:10 +0200
+Date: Thu, 17 Oct 2024 14:31:08 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <Terry.Bowman@amd.com>
+CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
+	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
+	<smita.koralahallichannabasappa@amd.com>
+Subject: Re: [PATCH 06/15] cxl/aer/pci: Introduce PCI_ERS_RESULT_PANIC to
+ pci_ers_result type
+Message-ID: <20241017143108.000075ff@Huawei.com>
+In-Reply-To: <6555a001-4f5e-40c0-bf27-38dd7a15c3d9@amd.com>
+References: <20241008221657.1130181-1-terry.bowman@amd.com>
+	<20241008221657.1130181-7-terry.bowman@amd.com>
+	<20241016173011.000021e4@Huawei.com>
+	<6555a001-4f5e-40c0-bf27-38dd7a15c3d9@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,43 +52,59 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 15 Oct 2024 11:51:26 -0700
-nifan.cxl@gmail.com wrote:
+On Wed, 16 Oct 2024 12:31:35 -0500
+Terry Bowman <Terry.Bowman@amd.com> wrote:
 
-> From: Fan Ni <fan.ni@samsung.com>
+> On 10/16/24 11:30, Jonathan Cameron wrote:
+> > On Tue, 8 Oct 2024 17:16:48 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >   
+> >> The CXL AER service will be updated to support CXL PCIe port error
+> >> handling in the future. These devices will use a system panic during
+> >> recovery handling.  
+> > 
+> > Recovery handling by panic? :) That's an interesting form of recovery..
+> >   
 > 
-> In the function of retrieving DC extents (cmd_dcd_get_dyn_cap_ext_list),
-> the output buffer index was not correctly updated while iterating the
-> extent list on the device, leaving the extents returned incorrect except for
-> the first one.
-> 
-> Fixes: 1c9221f19e ("hw/mem/cxl_type3: Add DC extent list representative ...")
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-I'll queue this up alongside that other fix.
+> Yes, Dan requested all UCE (fatal and non-fatal) are handled by panic in order 
+> to limit the  blast radius of corruption in the  case of UCE. 
+That's fair enough.  Maybe it should be called attempted recovery handling ;)
 
-thanks,
+This is fine.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Jonathan
-p.s. I'm having some issues with the list servers bouncing my emails so this
-may not reach the list.
 
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index c82ad50ac8..58f8930272 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2233,6 +2233,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
->              stw_le_p(&out_rec->shared_seq, ent->shared_seq);
->  
->              record_done++;
-> +            out_rec++;
->              if (record_done == record_count) {
->                  break;
->              }
+> The recovery logic in cxl_do_recovery() (not using the panic) is also tested as well.
+> 
+> Regards,
+> Terry
+> 
+> >>
+> >> Add PCI_ERS_RESULT_PANIC enumeration to pci_ers_result type.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> ---
+> >>  include/linux/pci.h | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 4cf89a4b4cbc..6f7e7371161d 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -857,6 +857,9 @@ enum pci_ers_result {
+> >>  
+> >>  	/* No AER capabilities registered for the driver */
+> >>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> >> +
+> >> +	/* Device state requires system panic */
+> >> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+> >>  };
+> >>  
+> >>  /* PCI bus error event callbacks */  
+> >   
 
