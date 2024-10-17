@@ -1,373 +1,431 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2EC1D63C2;
-	Thu, 17 Oct 2024 21:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002901D54EF;
+	Thu, 17 Oct 2024 21:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729201213; cv=fail; b=Gdiu4e5pVHQ+iDlHNF3MWL4lvOKcLDacYc4GJpjItqOJb/+K4SckOX/3cpuXD7C+ayZLcUEZzQWDpARQ33Of09DGwmP2Y/d1FQE7DkSCZ4SL6hAxNzWMLn7/2ybWsE3ppwQmaaNd3RN4dpHM3cA6oBOAqli1HeR92Yh3RI3jOuU=
+	t=1729201742; cv=fail; b=V0dUD01o6XFZC57tTtcPalZ4i8SKb0QGZM0wX84RAvpIFR8sYx0NFKvQAsKZn1WP2HLqwlyfTOnPNbENNLz2j4QBXSkVYWQCnmjXZyRzlQa2oc+mj6yUK86e9hlR9Q8RiuRudk9In52YV35/rySFyMvl47RqH+RMiaM26JWgTaw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729201213; c=relaxed/simple;
-	bh=30BN2POOMOKr8jncE14LPvtVp6sqEeXq3wVR5j76u50=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=R1Lurxui9oFL6XijPoT1VuBmPO0zl3T76+zO1RC/dweY5lCszgW+cJf+rDIGXG14JDX2Pvqy5ES4AhcyibYrD6j0HAcQZeOaDFVLsgftkxzwAlRU8VvHoovNVEbCmoRU1b7Cwf7mSMPk3qZfCUNgmZMfm1tnp9WrJ/bC0ybNoXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E9wv+6Cl; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1729201742; c=relaxed/simple;
+	bh=Q6zyBOyHpg4tXoen9oc9a6nQ2YnSHSrTXAFa4/pQZVc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=EwNgosauHYofn8B9rWlsRaG+J344/TCeQ9EhIzWypjTnHoZjVgheZJOXthdzmQ3rVrlojlhcxYYj3/Rx897Gc+0R20rgeX9uQgdLGOAZviLFMUvKpP1hk9FM9FIoxlH4+3c6LBYFY+D/kMYsOaAjTUm/ZIXinAHP+rk3hdKuBKo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IIyFwUoa; arc=fail smtp.client-ip=40.107.93.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E9wv+6Cl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729201207; x=1760737207;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=30BN2POOMOKr8jncE14LPvtVp6sqEeXq3wVR5j76u50=;
-  b=E9wv+6ClYTO6uBhKMhF/IwX2N9wiQ0MrLXikoyBwkbLLlt8PLMvlUGVw
-   k6DWh5BbwnFNJjrnUk/5ey56WScvdPKSiG74hb5hmEdygn/EqnMi1jfJ/
-   1EMGKp574gTcdi3vcBCRrUeVwPM/O/r2qJMtNb8So4ps2t8Xf3O0TOTCP
-   tOJLFd2DCDsyA4bQHSg9DK3Ay729UNn0GB2QT8SE4SAw+ZkztQAlhdnzd
-   2jYUZPXKCzmlaaIG5JUJOYybNg6z8y9K65ohb144UqXT6C7nkSVoFv8v4
-   3Om/XWlndPyTO/vijV6Yw0L6UxCC+RoEIO4MVt6EhyanRzgziDyKmgI4Q
-   w==;
-X-CSE-ConnectionGUID: LG+Nz3pJTmSS5X08kSxXvw==
-X-CSE-MsgGUID: VNlVfo/FTOmhR3f58RPDVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11228"; a="16334301"
-X-IronPort-AV: E=Sophos;i="6.11,211,1725346800"; 
-   d="scan'208";a="16334301"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 14:40:06 -0700
-X-CSE-ConnectionGUID: ph/YMHyDRGGrhrOJwg13Aw==
-X-CSE-MsgGUID: 0I7nVq7QSq+c1b+vog/qcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,211,1725346800"; 
-   d="scan'208";a="78645675"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Oct 2024 14:40:06 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 17 Oct 2024 14:40:05 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 17 Oct 2024 14:40:05 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 17 Oct 2024 14:40:05 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IIyFwUoa"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ynvJk2K3CUYF1NX/cPaQU4mVRmkGNGv0Z2Mg2ecrI226dYh7FogM3GAgNZ41LZMueDlblVXiqaTxXOOyeSxzd4A9lAwDH1460yYtbU5y5K5B2k4Gq6YWQ3cVNOUoTK5/F7hP2xFSbO8cwSGRbYjYX2tUKXKRnm1wn+84yWcVIlHrDqoowwyEHP2C/lcdpaHytRHqrHZ5+FpAwoMSC6eMfZJVK04t9gmCTLGY4H1i/RF3m+Ve+cwukhJJLwdTJw290N0h/KVgkfKhz4pPfpUuBxKlcuf2I8PglqfM6TUOqW+8eeTZBTzt3Ux7EDSl+GE0Zjn9sUKR01CqiofFPVDUZA==
+ b=EEWLarXs5ZW/23d6cQIMJf2S8JPcWlB/SeNcF6Onjk2awwCqyidNux4HbbDjsf1GObxsxNJEhq6DaQCqlDu7D6hzW/PLj32NCZPQqUHCv1BCDusp11xWHe1Psb8PzHGR2qtQsbfjX6MKnBdMQtqkKRj8FuXmxCRPh5CU9wuuLIDzw4TTKrY1QaxLuw4NLZsydmHQeRrnKU2mWBrUiniNge2nIDoJnUPBE4KudS5rHSwO6lZoCzq/0tE7V5TgV+QfjOowTLpZl49LoIhX/5/R31QRLMx0hmYTaMUN1JaynxA6MkNt/U2SAEbMi6yflQ57gkdHl6/AQxPikY69k2JE5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xty6UORvxwXr3wqU5P3Zr0qC0ocjBaIv6yhS3Zn8AAo=;
- b=ZvVew5OZdCXIgwC0vISIcmGqP0RdmmliL7+scf4hklE3gSZwFLmo0R66ji9VO45pIDJXm/mIPjHIRWBVksANPkv+Atih9WfPRJdEiDfI/qwmfqUMbuqwvQRMxtAySfueQc6EZvGjwjeM6QcPkCsxwyB882+fiewtCtMZvoVIhdB1GIT+aR0idzeXv7CdFceLI7syZjn88aiM2XSc2mbhn0gbe/EJFRVhvVv7/GuZt4H/q4PM+ZN4hoCcFXQ/h0NzFw5CjCB3j6/bpY7tSf1WgcKvyWNf3EqBJTE5gejE+8p1x8jQU6C+vfAk3aNM3siyVaONfGYf3V2FjQ90Mo48Bw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by IA0PR11MB8335.namprd11.prod.outlook.com (2603:10b6:208:493::6) with
+ bh=PaXQUFamNTCm3mh9TmZNnyVcPFPOOJGBMH5gIZzA1sI=;
+ b=RupcQinRu0pk193AbHF68N+6txHEwEZ5ShtfFHNXucbq23zL/ujPlzrOLWjaiOQY85Cvfu9RoUSEKRjl7yJrYUAku/GfGH9aHDqlB3FRz3cZWQDqmu9jABtDuLnKwSTiwozkrMohuA4C079bhSeCM8XpdcrEa49jis4qeGt/tIr76bUMWgFzcjPrCp+J9Cn526qiesgOrOv5NkJJr91flfzRVH28lQKff0aWbG4YaMAmqxIy6JzoiIT2Hl2my18/oyb2NUNE7D3VeaR6iCEhG4yfidkOI8CknleLHUbNbfy7RubTRkw0bm4RPHcjsghlGLxKzN+FhaodSFfcTAAn8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PaXQUFamNTCm3mh9TmZNnyVcPFPOOJGBMH5gIZzA1sI=;
+ b=IIyFwUoa2jlrykdO31HS3SIRAk5xR1ziCbqqrs77ZkEFWa5jcE2zMerVm1ppfr5P+CxUhxKe+0YYkfcFfewePra9dWLAi5tqKwTL+w1d1MtLkrCW1peqieZIxnFgRpPxy1rEcrogPamaAEqqWxBRi4di5vLQI3YJtQKiya+ElN8=
+Received: from BN8PR12CA0018.namprd12.prod.outlook.com (2603:10b6:408:60::31)
+ by IA1PR12MB7637.namprd12.prod.outlook.com (2603:10b6:208:427::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.20; Thu, 17 Oct
- 2024 21:40:02 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8048.020; Thu, 17 Oct 2024
- 21:40:01 +0000
-Date: Thu, 17 Oct 2024 16:39:57 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
- Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 21/28] cxl/extent: Process DCD events and realize
- region extents
-Message-ID: <6711842d88fa_2cee2946a@iweiny-mobl.notmuch>
-References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-21-c261ee6eeded@intel.com>
- <20241010155821.00005079@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241010155821.00005079@Huawei.com>
-X-ClientProxiedBy: MW4PR04CA0248.namprd04.prod.outlook.com
- (2603:10b6:303:88::13) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17; Thu, 17 Oct
+ 2024 21:48:50 +0000
+Received: from BN2PEPF000055E0.namprd21.prod.outlook.com
+ (2603:10b6:408:60:cafe::80) by BN8PR12CA0018.outlook.office365.com
+ (2603:10b6:408:60::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.19 via Frontend
+ Transport; Thu, 17 Oct 2024 21:48:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000055E0.mail.protection.outlook.com (10.167.245.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8093.1 via Frontend Transport; Thu, 17 Oct 2024 21:48:50 +0000
+Received: from [10.254.96.79] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Oct
+ 2024 16:48:48 -0500
+Message-ID: <01ef15ab-dc8a-4796-8fc5-90c2d4107435@amd.com>
+Date: Thu, 17 Oct 2024 16:48:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v4 02/26] sfc: add cxl support using new CXL API
+Reply-To: <benjamin.cheatham@amd.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
+	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <edumazet@google.com>
+References: <20241017165225.21206-1-alejandro.lucero-palau@amd.com>
+ <20241017165225.21206-3-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+In-Reply-To: <20241017165225.21206-3-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA0PR11MB8335:EE_
-X-MS-Office365-Filtering-Correlation-Id: dcfec3f1-a7b2-4ee1-6050-08dceef4416a
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BN2PEPF000055E0:EE_|IA1PR12MB7637:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b572397-7e53-4a70-83a6-08dceef57caa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SdzLvYlA0qvTPN4GAA4oYylSNgHmNP3zTJtvIpaYlY2JqX16vVgrUywO0zUm?=
- =?us-ascii?Q?DaTfswsNsV7G1QUsIzKeVC9cmG9O9A1alKw2tueRK3sUChtUYiYgJwocMkeI?=
- =?us-ascii?Q?5d3J6ga+K7moumLiYJvtVRuTnwZAjIqi4iHPmNx5k6CBTf2Hpe1iPpH8IiGS?=
- =?us-ascii?Q?gO9n+XZ2ZIk1aGJl74VdtZXdcfy9/DSS/I8ZQ5M2Nnu+WiLfU2spn+BGgnLR?=
- =?us-ascii?Q?ZY5iwjsPo1BXyfUAUu69dUG2FGfwHBISqUXsHzaIbJLpNn6DSNh8GluYA74L?=
- =?us-ascii?Q?kAiIAXaso/Q61f6+YiZOnv82uUyfGkFYM2rO7/Vw++ZuzTcpNrAB8/7DEvI+?=
- =?us-ascii?Q?R2dARmsSZjNbplMmNqrhTWIgfFK/OS6P//yRMDHnPnAO7nkta0VctsZqXYQW?=
- =?us-ascii?Q?7cm6hd7Uv1K4FvWt1/rzFmMQu3gOlEDQhS9Brv53pjJEmcw/P2VU0WOg8M7d?=
- =?us-ascii?Q?HtF1eQ5JcCa9C1xbRrPeBWUInrC+N0thuzsGzAeox4qhPP3NDZRUPJF+C0MG?=
- =?us-ascii?Q?u0k8gIjPn3Kp4XqLSDmCREg7LAHxHjVoilA4V5om3tPEZ6bL3YhxyrOxrxI6?=
- =?us-ascii?Q?IqS84+oNips8OUtUZCk5ycfnYPs7Xbw5NDgPcBq441WgeeGS6SVOXkZtvFSm?=
- =?us-ascii?Q?UhG2A1Hy5Y8Up6ieHoY0j2x4G4IfTijYVg6kKeycUZjCaWgVwDNApHbTrd8E?=
- =?us-ascii?Q?Ffx+eRzl+xZxS4GZi+8yj22fUj+NFYsyAJpE1/iTpczaBTtvt1nLT9HyqPAE?=
- =?us-ascii?Q?guyCv3I2Litg/eV2RWOXw03W/eAiTHJNT3VyKqHcnT7jvYYLVXVx0SrRCCPh?=
- =?us-ascii?Q?NAOmgJU+2nGjGI+/pfvA0WBYjdsiU4Ul63u75T6bnzc5UkT16rdzTrlJHkZh?=
- =?us-ascii?Q?TiFXwEKr4F5fLAqaQwVt3ZHf7eBfUE9/+OvGAP/3KVYGYRnAyznjiNCaLrJG?=
- =?us-ascii?Q?WZ/fxau+qAQejVlcJ/JmiuaXQNTfJitOiY3ZmJP38j8NAGT6WEC31OATPJN2?=
- =?us-ascii?Q?3TZ/yrGZbcJL5FGTMoZciwimPX/oXtCrICNHFoZYQDz1cFRr7JFCcITLtEn4?=
- =?us-ascii?Q?YhzcSOOFbBiBUWRQ0XxY/SPJFnS4QQS9CeO8wih7/wZDZe0pOAaBivbD8nyV?=
- =?us-ascii?Q?jIqnWRnrgAFIfE/bvPLwI0z6OsplQnL4AWAw9w5ZAjQOOcuirJZNQs7ql3+Z?=
- =?us-ascii?Q?oiUj+/BP0TM/qIPhVEDxayjKwOkAlUar2rdano36mfYwopntn2N+gNG1wegg?=
- =?us-ascii?Q?IGKrZVnoDKXpY4zzUhOACR6e/nVJNkDkFcKWvwSH9o1wHgRtnYPA10a6wByf?=
- =?us-ascii?Q?iO/AYIl/Cg5QqdPRMFaQTUHk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cUKJplwFsdag4nMSQlrzWQhNAFYBP9j8dOYU+KinwLjBzB0/spNwLoVJJ/6V?=
- =?us-ascii?Q?5O8+3j1Wy8g5i/ORLok9brv9svE/VjL253ZId+qbsU0qSPeSvd+ZCfR6n3lY?=
- =?us-ascii?Q?n6IJAFUy4mqBkjYX9dD1+GywzF4+7UP+VVzAR6pWb2ArBtwI2ktpu581sk0p?=
- =?us-ascii?Q?3rjo0M9zwALBsgSOXiMdqxr9tviW2Fj6PSfLs+SPLqZw51cLBNI3zzsoDupp?=
- =?us-ascii?Q?Znn79VdDUhN+23liRlOSKxtFvKcEHQQFDZ3qWlJ3oww9WCxMk9klRaTgjh8Z?=
- =?us-ascii?Q?Op2+BpMPAH7omsC2n8vALuVcKA2fF6pu2qg0XDJKf0Di6XbpbZu8GUQfkbP1?=
- =?us-ascii?Q?ZLn2sklkw/lY8mnc838zXH014E9O5ZK6KtRbWMJOrbFWyvIgexLebBKrQLDt?=
- =?us-ascii?Q?cLDYkedRliTt7k7zVk4CqIs6NZ/GOjmdi3uTu6iFbER/maiaSTMcKE/vFI/e?=
- =?us-ascii?Q?pKQHOVESpNMlBH3ZKYaG8RYI+AvWLqc/8++aZ/gR6K8uPWU/qGc2oQLu7ttS?=
- =?us-ascii?Q?/E24kgSovRKX/a8OSmq1+hf2AKyM64pvLdWeyHzxlmyOv8gyKWeQz+785FrF?=
- =?us-ascii?Q?WZnWQaPLhhWt4847GTpJLu1QitK6hHGkjUDPGSWgAK49Ct5ycsTJtT32+jIH?=
- =?us-ascii?Q?b43UmWabDIEtike1ek9wtRt32AgaskIKHfFHRS/Nhtqp6Xr6htEO8hHapWl4?=
- =?us-ascii?Q?yo2z3sLZne45tVImukVTBDrk1DlkI7FHsC9mWLg8Hlr0ljPsEN/GeB8VvBOR?=
- =?us-ascii?Q?YPAJ7PqI+qmbZ59MDsDgctbc0NjPdBZm8gm2u0W+vWjOHqtkdN0wlOmXaT0k?=
- =?us-ascii?Q?/Ej9cAGsx6wNjendyDTsqhxH7rS9GFZww1gisO+k3054XJHLrOvDFPi6IWZY?=
- =?us-ascii?Q?aA8R0UeKYVzja/W2UxuNUMS4Ud9oivXtHnurxGFpxErIckBNxgCkrrZ6twHZ?=
- =?us-ascii?Q?OtnlkQBmvmTTiF58rrpZwkNWYJ8CsE0/mSZ0tWgkNH7VR20bsNdo9BDd2YZ4?=
- =?us-ascii?Q?w+RPpfbkXMfAW0QDjWbwABIhIoAqHxG7PnEP80awfEpY26bw0QnCHNrtmAJH?=
- =?us-ascii?Q?JbLDT3Ou7mjIH0r1xMsaHO9Zd9n5D7xNGNfWI0Fx+klJeF0WNBHbtzbO0cz4?=
- =?us-ascii?Q?1QDoV1RQMP7pXwekT1cpoUPXVNbf9kf/AcnNc1Y4iwHQuufs2ySKlpckT5TJ?=
- =?us-ascii?Q?VvHlh69Pcg+HIHfW9dJhgcQqCgWWpofIbT8qTHIXXQf0TJP4zUe6YumndQej?=
- =?us-ascii?Q?3byd+y0fe8UFzdW3Vm9LfH7vN3px/PytdmufgNYfpAiUEjDAoaieDQ3lF0hU?=
- =?us-ascii?Q?/ZGpoDgf9c7efKJusvF58+9i0ZOpH5XHjz8MPtXWavPeAgwdsAE9XQhG+RMQ?=
- =?us-ascii?Q?7M5elX7nzlWQINbvIenzIrAKNkHcNuSfBTeqpK1nTlNLyfNTNr7/jF7pHCf3?=
- =?us-ascii?Q?WSR1aD5FQidGtgk2fUf9YjetAQcXCjSMYmFKkNwhgsYYN4CBSQ7DqSoIa+9/?=
- =?us-ascii?Q?hJ15gLMxdYkXulLN29FMXBERIvKXiYDd1ix8uUi+gL8MiBQgRahSc2KDylIX?=
- =?us-ascii?Q?rDTk0kf9Y7zqH6MWB3UPi4pGHrYu7+MK3v6ty9Rx?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcfec3f1-a7b2-4ee1-6050-08dceef4416a
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2024 21:40:01.8721
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MkcySjF6SEVKeFVXa3lhcDJscmJHdzR0MFZPeEFxU1JYRHNoNzEzNWZyRWgv?=
+ =?utf-8?B?c3hOWlpva0FIODNwQWJLeHNiM3M2blV2ci81endFZ2VWSTRrUk5HQTRxbFlM?=
+ =?utf-8?B?UnU0SWxEb0VuRExkWkJGWkJxQmZzeEYxeEtIT2VyTEpKMEFzdy9aellFR1Bs?=
+ =?utf-8?B?Y1ljcGhLVUdzY3NSamFMQ2YwVmlsYmpmNUtFSUtoU2hpNWFUcERITzkyKzVk?=
+ =?utf-8?B?ekFLUzdPWTJIYWY4YUdmSFRnOXpxQnNEcStYdTZlNzQxTHUybjB6QU1Ha0p5?=
+ =?utf-8?B?MGZkSTJRTUhtVldXQkMxZUxwQnhHdkJLQzE5TmhBWUptYzVvWHNrNTJNM0c5?=
+ =?utf-8?B?TjZYMUFQanloZWVUV1JNUTN5VXFaREg1d29iT2VHWmRORWM0WVlzMnJ2am85?=
+ =?utf-8?B?eUsrN0I0N3BHZU50MVpwOHNxdHNsdG5VaXhFWU5DZ3ZoUURHR3doaVd0K3F6?=
+ =?utf-8?B?VlhVWDkzbzFZVmEyejFISWo5b3RmMWpienJENzZ4ck1NTGN2S0x2bE1Cd0Q1?=
+ =?utf-8?B?Y0tlYzgrYURqbUNLODBRSGNSSzgvajQxMXNzbHZ1QVJBNm5wTkJNWVZ1TUcy?=
+ =?utf-8?B?dWdKQ3FpdFJ0R0JjRG15Q1FyNEVWa3RoUmZSMENRWjMybDBYR2xTbnc3YzEz?=
+ =?utf-8?B?bnNabEhnbVZsQ08zbGJiU0MzS3FKR0d0ejNEdHdTUGVnN1pBZy9ndHFLRjg0?=
+ =?utf-8?B?SUlzdjFmRys4cDE4R2lLMVhBaTdzRDEwb1RSZnJjL1RJaHd4SHd5QWJrM2Yv?=
+ =?utf-8?B?dk45Q3BuVHp6MGZNNVJjemxWSmpsR3dYOFdhZWcwZzFlRkFFaDhzek9nUDBE?=
+ =?utf-8?B?QmlDQWUvTXp5czlodlU1Zk5zZ3NUYVgzdXU5MWdBNnpZaWJBZWNOYTliRkZn?=
+ =?utf-8?B?NG94Y21vYWZQcnRHUWRkVktUSmdDWDVsemhJc1dlc0JHVVVHYlZQSlovbEx4?=
+ =?utf-8?B?cFJESjRzTW5XbmVIWERHdjVRbGRUMW41UC8yN3N3N3V1bGlFbWlJWXZCYnNY?=
+ =?utf-8?B?bUVNdkxmdjBwbG9xMHBQZHF3Qkx6cTFmZ050TzlQRVF1dEZkdnl0UEl5c0RU?=
+ =?utf-8?B?cUJxVkVFU3BpTFNwcDNyWWh4dkdOMFBLSVRFS2VyTkwwZFZRMkVJdW16UGh6?=
+ =?utf-8?B?SysweWVsbGd5TEJuVlZ2aTJqY2diVm9qbzdaUzUwVmcwN0VSVVk5R0pXU0hr?=
+ =?utf-8?B?UUl5S2tMaldmTVY3VDZ6bkZ0YzZOMWFnaXluUjVPSlFtbTIrZTRZZDRMVm03?=
+ =?utf-8?B?RVFlaUgxaE5kcFlvbXc5eC9TY210MlJvZHRURnpUbEQ3SmpvTG5SYVBISHpp?=
+ =?utf-8?B?RjZiL0RqS29hNy9PYmZMYVpWb0d2WEN5OG82UGZKQndxbnNkMUJES1IxQnFy?=
+ =?utf-8?B?cTFGUThzaXc1L2ZtS2tuZkdvajVTSmFWUVZsT0Y4QVZuUlFPZWlNMEJQUVZ3?=
+ =?utf-8?B?U3k5aTJmVERFcHpaaldzV21aQ3dUOHQ3RldQcnpOSFZVYlVNL1YzT09zcjBq?=
+ =?utf-8?B?QXpqRTJxUmlsME9COVR2MjFjcVdybFNXK0E1eWY4eGtjNDlWZEorY2o5VTFG?=
+ =?utf-8?B?a2hTTVFEVnRCWHZFRHk5WXRiZS9VaGpCc21FelhmVnh2K2FiVzhnbDcvdUow?=
+ =?utf-8?B?YU9SS2pFWFBNWjFRWUhvTTZpc3ZSaVdiZ0hpNE1VU2FxdHl6RG5hUG9vdFdi?=
+ =?utf-8?B?WmoyYkpQOWs5elpaNjBOZ2hFNTVjb3A4RFVBTTEyWnQxeS9NY3JyVml2enkv?=
+ =?utf-8?B?VFNmMXdhdUt5eGw1SFo1NmtMZ2YyMVVCdkNZelpoaVZ0OXVvUG5MWW01V09F?=
+ =?utf-8?B?TGN5UnJjR2d2VTNZc01IczV5RFYzRjRvcGtmOFBmdEQxaU9oL3I0eGRTY3RF?=
+ =?utf-8?B?VDVtY3A1WndFamtpNlIwVnIxQU1ZTm1kWWMrVjdzeWcxWGc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2024 21:48:50.4934
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UElgjkNOxvI/AQ5ij0PJkVph1z9S02wjRyDLJcJAKvQ9UW9+P+GLqGHv74hsdVtGvOnZXMNGs5YSoEO8e+aSlw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8335
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b572397-7e53-4a70-83a6-08dceef57caa
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000055E0.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7637
 
-Jonathan Cameron wrote:
-> On Mon, 07 Oct 2024 18:16:27 -0500
-> ira.weiny@intel.com wrote:
+Hi Alejandro,
+
+Thanks for sending this out, comments inline (for this patch and more).
+
+On 10/17/24 11:52 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> > From: Navneet Singh <navneet.singh@intel.com>
-> > 
-> > A dynamic capacity device (DCD) sends events to signal the host for
-> > changes in the availability of Dynamic Capacity (DC) memory.  These
-> > events contain extents describing a DPA range and meta data for memory
-> > to be added or removed.  Events may be sent from the device at any time.
-> > 
-> > Three types of events can be signaled, Add, Release, and Force Release.
-> > 
-> > On add, the host may accept or reject the memory being offered.  If no
-> > region exists, or the extent is invalid, the extent should be rejected.
-> > Add extent events may be grouped by a 'more' bit which indicates those
-> > extents should be processed as a group.
-> > 
-> > On remove, the host can delay the response until the host is safely not
-> > using the memory.  If no region exists the release can be sent
-> > immediately.  The host may also release extents (or partial extents) at
-> > any time.  Thus the 'more' bit grouping of release events is of less
-> > value and can be ignored in favor of sending multiple release capacity
-> > responses for groups of release events.
+> Add CXL initialization based on new CXL API for accel drivers and make
+> it dependable on kernel CXL configuration.
 > 
-> True today - I think that would be an error for shared extents
-> though as they need to be released in one go.  We can deal with
-> that when it matters.  
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/net/ethernet/sfc/Kconfig      |  1 +
+>  drivers/net/ethernet/sfc/Makefile     |  2 +-
+>  drivers/net/ethernet/sfc/efx.c        | 16 +++++
+>  drivers/net/ethernet/sfc/efx_cxl.c    | 92 +++++++++++++++++++++++++++
+>  drivers/net/ethernet/sfc/efx_cxl.h    | 29 +++++++++
+>  drivers/net/ethernet/sfc/net_driver.h |  6 ++
+>  6 files changed, 145 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+>  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
 > 
-> 
-> Mind you patch seems to try to handle more bit anyway, so maybe just
-> remove that discussion from this description?
+> diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
+> index 3eb55dcfa8a6..b308a6f674b2 100644
+> --- a/drivers/net/ethernet/sfc/Kconfig
+> +++ b/drivers/net/ethernet/sfc/Kconfig
+> @@ -20,6 +20,7 @@ config SFC
+>  	tristate "Solarflare SFC9100/EF100-family support"
+>  	depends on PCI
+>  	depends on PTP_1588_CLOCK_OPTIONAL
+> +	depends on CXL_BUS && CXL_BUS=m && m
 
-It only handles more bit response on ADD because on RELEASE the count is always
-1.
+It seems weird to me that this would be marked as a tristate Kconfig option, but is
+required to be set to 'm'. Also, I'm assuming that SFC cards exist without CXL support,
+so this would add an unecessary dependency for those cards. So, I'm going to suggest
+using a secondary Kconfig symbol like this:
 
+config SFC_CXL
+	tristate "Colarflare SFC9100/EF100-family CXL support"
+	depends on SFC && m
+	depends on CXL_BUS=m
+	help
+	  CXL support for SFC driver...
 
-+       if (cxl_send_dc_response(mds, CXL_MBOX_OP_RELEASE_DC, &extent_list, 1)) 
-+               dev_dbg(dev, "Failed to release [range 0x%016llx-0x%016llx]\n", 
-+                       range->start, range->end);                              
+And then only compiling efx_cxl.c when that symbol is selected. This would also
+require having a stub for efx_cxl_init()/exit() in efx_cxl.h. That *should* have
+the same behavior as what you want above, but without requiring CXL to enable the
+base SFC driver. I'm no Kconfig wizard, so it would pay to double check the above,
+but I don't see a reason why something like it shouldn't be possible.
 
+>  	select MDIO
+>  	select CRC32
+>  	select NET_DEVLINK
+> diff --git a/drivers/net/ethernet/sfc/Makefile b/drivers/net/ethernet/sfc/Makefile
+> index 8f446b9bd5ee..e80c713c3b0c 100644
+> --- a/drivers/net/ethernet/sfc/Makefile
+> +++ b/drivers/net/ethernet/sfc/Makefile
+> @@ -7,7 +7,7 @@ sfc-y			+= efx.o efx_common.o efx_channels.o nic.o \
+>  			   mcdi_functions.o mcdi_filters.o mcdi_mon.o \
+>  			   ef100.o ef100_nic.o ef100_netdev.o \
+>  			   ef100_ethtool.o ef100_rx.o ef100_tx.o \
+> -			   efx_devlink.o
+> +			   efx_devlink.o efx_cxl.o
 
-For shared; a flag will need to be added to the extents and additional logic to
-group these extents for checking use etc.  
+With above suggestion this becomes:
 
-I agree, we need to handle that later on and get this basic support in.  For
-now I think my comments are correct WRT the sending of release responses.
++ sfc-$(CONFIG_SFC_CXL)		+= efx_cxl.o
 
-> > 
-> > Simplify extent tracking with the following restrictions.
-> > 
-> > 	1) Flag for removal any extent which overlaps a requested
-> > 	   release range.
-> > 	2) Refuse the offer of extents which overlap already accepted
-> > 	   memory ranges.
-> > 	3) Accept again a range which has already been accepted by the
-> > 	   host.  Eating duplicates serves three purposes.  First, this
-> > 	   simplifies the code if the device should get out of sync with
-> > 	   the host. 
-> 
-> Maybe scream about this a little.  AFAIK that happening is a device
-> bug.
+>  sfc-$(CONFIG_SFC_MTD)	+= mtd.o
+>  sfc-$(CONFIG_SFC_SRIOV)	+= sriov.o ef10_sriov.o ef100_sriov.o ef100_rep.o \
+>                             mae.o tc.o tc_bindings.o tc_counters.o \
+> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+> index 6f1a01ded7d4..cc7cdaccc5ed 100644
+> --- a/drivers/net/ethernet/sfc/efx.c
+> +++ b/drivers/net/ethernet/sfc/efx.c
+> @@ -33,6 +33,7 @@
+>  #include "selftest.h"
+>  #include "sriov.h"
+>  #include "efx_devlink.h"
+> +#include "efx_cxl.h"
+>  
+>  #include "mcdi_port_common.h"
+>  #include "mcdi_pcol.h"
+> @@ -899,6 +900,9 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+>  	efx_pci_remove_main(efx);
+>  
+>  	efx_fini_io(efx);
+> +
+> +	efx_cxl_exit(efx);
+> +
+>  	pci_dbg(efx->pci_dev, "shutdown successful\n");
+>  
+>  	efx_fini_devlink_and_unlock(efx);
+> @@ -1109,6 +1113,15 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
+>  	if (rc)
+>  		goto fail2;
+>  
+> +	/* A successful cxl initialization implies a CXL region created to be
+> +	 * used for PIO buffers. If there is no CXL support, or initialization
+> +	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
+> +	 * defined at specific PCI BAR regions will be used.
+> +	 */
+> +	rc = efx_cxl_init(efx);
+> +	if (rc)
+> +		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
+> +
+>  	rc = efx_pci_probe_post_io(efx);
+>  	if (rc) {
+>  		/* On failure, retry once immediately.
+> @@ -1380,3 +1393,6 @@ MODULE_AUTHOR("Solarflare Communications and "
+>  MODULE_DESCRIPTION("Solarflare network driver");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DEVICE_TABLE(pci, efx_pci_table);
+> +#if IS_ENABLED(CONFIG_CXL_BUS)
+> +MODULE_SOFTDEP("pre: cxl_core cxl_port cxl_acpi cxl-mem");
+> +#endif
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> new file mode 100644
+> index 000000000000..fb3eef339b34
+> --- /dev/null
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/****************************************************************************
+> + *
+> + * Driver for AMD network controllers and boards
+> + * Copyright (C) 2024, Advanced Micro Devices, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation, incorporated herein by reference.
+> + */
+> +
+> +#include <linux/cxl/cxl.h>
+> +#include <linux/cxl/pci.h>
+> +#include <linux/pci.h>
+> +
+> +#include "net_driver.h"
+> +#include "efx_cxl.h"
+> +
+> +#define EFX_CTPIO_BUFFER_SIZE	SZ_256M
+> +
+> +int efx_cxl_init(struct efx_nic *efx)
+> +{
+> +#if IS_ENABLED(CONFIG_CXL_BUS)
 
-Agreed but because of the 2nd purpose this is difficult to scream about because
-this situation can come up in normal operation.  Here is the scenario:
+With suggestion above you can drop this #if, since the file won't be
+compiled when this is false.
 
-1) Device has 2 DCD partitions active, A and B
-2) Host crashes
-3) Region X is created on A
-4) Region Y is created on B
-5) Region Y scans for extents
-6) Region X surfaces a new extent while Y is scanning
-7) Gen number changes due to new extent in X
-8) Region Y rescans for existing extents and sees duplicates.
+> +	struct pci_dev *pci_dev = efx->pci_dev;
+> +	struct efx_cxl *cxl;
+> +	struct resource res;
+> +	u16 dvsec;
+> +	int rc;
+> +
+> +	efx->efx_cxl_pio_initialised = false;
+> +
+> +	dvsec = pci_find_dvsec_capability(pci_dev, PCI_VENDOR_ID_CXL,
+> +					  CXL_DVSEC_PCIE_DEVICE);
+> +	if (!dvsec)
+> +		return 0;
+> +
+> +	pci_dbg(pci_dev, "CXL_DVSEC_PCIE_DEVICE capability found\n");
+> +
+> +	cxl = kzalloc(sizeof(*cxl), GFP_KERNEL);
+> +	if (!cxl)
+> +		return -ENOMEM;
+> +
+> +	cxl->cxlds = cxl_accel_state_create(&pci_dev->dev);
+> +	if (IS_ERR(cxl->cxlds)) {
+> +		pci_err(pci_dev, "CXL accel device state failed");
+> +		rc = -ENOMEM;
+> +		goto err1;
+> +	}
+> +
+> +	cxl_set_dvsec(cxl->cxlds, dvsec);
+> +	cxl_set_serial(cxl->cxlds, pci_dev->dev.id);
+> +
+> +	res = DEFINE_RES_MEM(0, EFX_CTPIO_BUFFER_SIZE);
+> +	if (cxl_set_resource(cxl->cxlds, res, CXL_RES_DPA)) {
+> +		pci_err(pci_dev, "cxl_set_resource DPA failed\n");
+> +		rc = -EINVAL;
+> +		goto err2;
+> +	}
+> +
+> +	res = DEFINE_RES_MEM_NAMED(0, EFX_CTPIO_BUFFER_SIZE, "ram");
+> +	if (cxl_set_resource(cxl->cxlds, res, CXL_RES_RAM)) {
+> +		pci_err(pci_dev, "cxl_set_resource RAM failed\n");
+> +		rc = -EINVAL;
+> +		goto err2;
+> +	}
+> +
+> +	efx->cxl = cxl;
+> +#endif
+> +
+> +	return 0;
+> +
+> +#if IS_ENABLED(CONFIG_CXL_BUS)
 
-These duplicates need to be ignored without signaling an error.
+Same here...
 
-> 
-> > And it should be safe to acknowledge the extent
-> > 	   again.  Second, this simplifies the code to process existing
-> > 	   extents if the extent list should change while the extent
-> > 	   list is being read.
+> +err2:
+> +	kfree(cxl->cxlds);
+> +err1:
+> +	kfree(cxl);
+> +	return rc;
+> +
+> +#endif
+> +}
+> +
+> +void efx_cxl_exit(struct efx_nic *efx)
+> +{
+> +#if IS_ENABLED(CONFIG_CXL_BUS)
 
-This is the 'normal' case.
+and here.
 
-> > Third, duplicates for a given region
-> > 	   which are seen during a race between the hardware surfacing
-> > 	   an extent and the cxl dax driver scanning for existing
-> > 	   extents will be ignored.
-> 
-> This last one is a good justification.
+> +	if (efx->cxl) {
+> +		kfree(efx->cxl->cxlds);
+> +		kfree(efx->cxl);
+> +	}
+> +#endif
+> +}
+> +
+> +MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
+> new file mode 100644
+> index 000000000000..f57fb2afd124
+> --- /dev/null
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/****************************************************************************
+> + * Driver for AMD network controllers and boards
+> + * Copyright (C) 2024, Advanced Micro Devices, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation, incorporated herein by reference.
+> + */
+> +
+> +#ifndef EFX_CXL_H
+> +#define EFX_CXL_H
+> +
+> +struct efx_nic;
+> +struct cxl_dev_state;
+> +
+> +struct efx_cxl {
+> +	struct cxl_dev_state *cxlds;
+> +	struct cxl_memdev *cxlmd;
+> +	struct cxl_root_decoder *cxlrd;
+> +	struct cxl_port *endpoint;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_region *efx_region;
+> +	void __iomem *ctpio_cxl;
+> +};
+> +
+> +int efx_cxl_init(struct efx_nic *efx);
+> +void efx_cxl_exit(struct efx_nic *efx);
 
-I think the second justification is actually better than this one.  Regardless
-this makes everything ok and should work.
+As mentioned above, you would need a #ifdef block here with stubs for when CONFIG_SFC_CXL isn't enabled.
 
-> 
-> > 
-> > 	   NOTE: Processing existing extents is done in a later patch.
-> > 
-> > Management of the region extent devices must be synchronized with
-> > potential uses of the memory within the DAX layer.  Create region extent
-> > devices as children of the cxl_dax_region device such that the DAX
-> > region driver can co-drive them and synchronize with the DAX layer.
-> > Synchronization and management is handled in a subsequent patch.
-> > 
-> > Tag support within the DAX layer is not yet supported.  To maintain
-> > compatibility legacy DAX/region processing only tags with a value of 0
-> > are allowed.  This defines existing DAX devices as having a 0 tag which
-> > makes the most logical sense as a default.
-> > 
-> > Process DCD events and create region devices.
-> > 
-> > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> A couple of minor comments from me.
+> +#endif
+> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
+> index b85c51cbe7f9..77261de65e63 100644
+> --- a/drivers/net/ethernet/sfc/net_driver.h
+> +++ b/drivers/net/ethernet/sfc/net_driver.h
+> @@ -817,6 +817,8 @@ enum efx_xdp_tx_queues_mode {
+>  
+>  struct efx_mae;
+>  
+> +struct efx_cxl;
+> +
+>  /**
+>   * struct efx_nic - an Efx NIC
+>   * @name: Device name (net device name or bus id before net device registered)
+> @@ -963,6 +965,8 @@ struct efx_mae;
+>   * @tc: state for TC offload (EF100).
+>   * @devlink: reference to devlink structure owned by this device
+>   * @dl_port: devlink port associated with the PF
+> + * @cxl: details of related cxl objects
+> + * @efx_cxl_pio_initialised: clx initialization outcome.
+>   * @mem_bar: The BAR that is mapped into membase.
+>   * @reg_base: Offset from the start of the bar to the function control window.
+>   * @monitor_work: Hardware monitor workitem
+> @@ -1148,6 +1152,8 @@ struct efx_nic {
+>  
+>  	struct devlink *devlink;
+>  	struct devlink_port *dl_port;
+> +	struct efx_cxl *cxl;
+> +	bool efx_cxl_pio_initialised;
+>  	unsigned int mem_bar;
+>  	u32 reg_base;
+>  
 
-I do appreciate the review.
-
-
-[snip]
-
-> >  
-> > +static int cxl_send_dc_response(struct cxl_memdev_state *mds, int opcode,
-> > +				struct xarray *extent_array, int cnt)
-> > +{
-> > +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> > +	struct cxl_mbox_dc_response *p;
-> > +	struct cxl_mbox_cmd mbox_cmd;
-> > +	struct cxl_extent *extent;
-> > +	unsigned long index;
-> > +	u32 pl_index;
-> > +	int rc;
-> > +
-> > +	size_t pl_size = struct_size(p, extent_list, cnt);
-> > +	u32 max_extents = cnt;
-> > +
-> > +	/* May have to use more bit on response. */
-> 
-> I thought you argued in the patch description that it didn't matter if you
-> didn't set it?
-
-Only on RELEASE responses.  ADD responses might need it depending on the
-payload size and number of extents being added.
-
-Sorry that was not clear.
-
-> 
-> > +	if (pl_size > cxl_mbox->payload_size) {
-> > +		max_extents = (cxl_mbox->payload_size - sizeof(*p)) /
-> > +			      sizeof(struct updated_extent_list);
-> > +		pl_size = struct_size(p, extent_list, max_extents);
-> > +	}
-> > +
-> > +	struct cxl_mbox_dc_response *response __free(kfree) =
-> > +						kzalloc(pl_size, GFP_KERNEL);
-> > +	if (!response)
-> > +		return -ENOMEM;
-> > +
-> > +	pl_index = 0;
-> > +	xa_for_each(extent_array, index, extent) {
-> > +
-> > +		response->extent_list[pl_index].dpa_start = extent->start_dpa;
-> > +		response->extent_list[pl_index].length = extent->length;
-> > +		pl_index++;
-> > +		response->extent_list_size = cpu_to_le32(pl_index);
-> > +
-> > +		if (pl_index == max_extents) {
-> > +			mbox_cmd = (struct cxl_mbox_cmd) {
-> > +				.opcode = opcode,
-> > +				.size_in = struct_size(response, extent_list,
-> > +						       pl_index),
-> > +				.payload_in = response,
-> > +			};
-> > +
-> > +			response->flags = 0;
-> > +			if (pl_index < cnt)
-> > +				response->flags &= CXL_DCD_EVENT_MORE;
-> Covered in other branch of thread.
-
-Yep.
-
-
-[snip]
-
-> 
-> >  
-> > +/* See CXL 3.0 8.2.9.2.1.5 */
-> 
-> Maybe update to 3.1? Otherwise patch reviewer needs to open two 
-> spec versions!  In 3.1 it is 8.2.9.2.1.6
-
-Yep missed this one.  Thanks,
-Ira
