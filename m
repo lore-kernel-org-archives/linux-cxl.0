@@ -1,115 +1,151 @@
-Received: from qs51p00im-qukt01072301.me.com (qs51p00im-qukt01072301.me.com [17.57.155.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA81D1747
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Oct 2024 23:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.155.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F838F9CF
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Oct 2024 01:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729121749; cv=none; b=G3R1h2dDOGSKGRTJYCsDoSB12UKkxr+ZeEk6FOw/hfsUsqyNwtHstHGscbog+xWMwTjTkMtQ5SAzwWcjuFvnNeUH6iHYKxpKsOtzgEsXQXiLeZZY8QIJ45yz8itVvJ4iqZDEHGcQRDfK3rHYHaOhxIYRxMqjQKuNtP9a+IlX/Yo=
+	t=1729126835; cv=none; b=SHQb5Zobxn9G7X0jxuxVOHDZ/BnQGNWvXI3SSRAlFnfs/3evP9vHbVYzLxR2BYf5qIWnMAenD9H1AQ7MEuSkiMDmn0K8hrKOOSKJdgor3LJkbTyAL9WCl4J2WBi741y4GQmsy9s6OVcSMb36hURk47Y61n/VZtvBBRZZdljbWzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729121749; c=relaxed/simple;
-	bh=gdwTVAwWb9VdzRsGZopWrMq8IXjxY6qHdy0/H1n9jUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mqzzkmjuGtx6tD+Sw5jbFddsLi0p61r9NVJyAeE/poDBnnBUWmPNFohd+KVpTTj1eA/it8Lnzy7hunIzM1N9jp3zlAhug39Nn0WRPspJ549WsvbRpT6MqmuUHdnE3zQ8YM87st8qrHjO2KUu1Wm5GsRs3n08fLsec36/jZficuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ES2hMIB9; arc=none smtp.client-ip=17.57.155.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1729126835; c=relaxed/simple;
+	bh=pN9/CQhiuUjOXBkpMoSQVxnZGa5er6XeQXf/EZkXdqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELD5fjIKGL9dnsDOmZBpTGTbKogHRIQVqXHRgNJF9Ud9gZp2p54aKkVOUQ3fkVStmwqLP4biEOA7pT5den5uewqfshfpn0G3N2czQjnc9VzclS63RALxUM7OOgZWH09+xz4tu1yD85Ar+QfK35uuRaRBXlpf5XnbBbqq7fMVmD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KgknBGsa; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ES2hMIB9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1729121746;
-	bh=4O6bY24xBTUD4eTJn/i/gevB4jlr+Frj2BgzgIvn6KQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=ES2hMIB9tySlH6IMhVQCgZUVmRksEFP5mEsyf6eNA3wzVfI9tmyaTEfQef+cNxjMi
-	 Rw0VpHOiiLxr6NAIW4GL5gskIJkkDslzaXOK6v8lncCATlFyMCNavFOFjnZE/loekz
-	 5qFEEGtAEnfbExLtVVsru6RqtJTN5z6KnfAQjFxCTpfpozIDMlnrfefbH/6wE5PnT8
-	 KZ51LKH1ozLY2Iagtfehz1V8pjFM5L1ThkIZuTPuUXtDTtCQORQ/y93gYu9gfPR9yx
-	 RpHStDzfeeJMbrwCl8VWKW8mwHwVe1LNV1+sZeoXyTgBpTocJgz0X8aIBx4USZlIfP
-	 +PYVryk3c1P+A==
-Received: from [192.168.1.26] (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
-	by qs51p00im-qukt01072301.me.com (Postfix) with ESMTPSA id 03DF425401B2;
-	Wed, 16 Oct 2024 23:35:41 +0000 (UTC)
-Message-ID: <4be42749-5444-4847-9396-820667d5a9e2@icloud.com>
-Date: Thu, 17 Oct 2024 07:35:37 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KgknBGsa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729126832; x=1760662832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pN9/CQhiuUjOXBkpMoSQVxnZGa5er6XeQXf/EZkXdqY=;
+  b=KgknBGsa/rNAmXReTvk2OQXY/YUgT7wEGKxVtJYY3cz7fpRtSCRqlR25
+   +xor76cpz4w/ZAa88mrsTLkI4Rja4uHWPXtJE5JbA189nzBSVCMoj+9Tg
+   A2dvouMaBzzlGNQU8VeK4KCiQv0Fdi1KBTgm/7Wg7vpYpBbPBFwN6BFak
+   C9gVXVymLKPSp2hlhiXJK70qB4nXp8Ud/BO20CIL8cdZGFNSvBDZiOy1l
+   W4DAwEh/uD/b5CpwPWX7YWfXS/pl6J5dPHQ7u2eUjMQoHvDmsqbXDXeb0
+   TG4DQRVIKr//lxeSZibaFv1jgV/3Wtrxu6KNjFopn8OdBTow+Cyw0eesj
+   A==;
+X-CSE-ConnectionGUID: aFxTLmnvSMm6Ye9W2TdQNQ==
+X-CSE-MsgGUID: bRnlNQoERYGm73Dpx575TA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28748272"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28748272"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 18:00:31 -0700
+X-CSE-ConnectionGUID: Xcfw7PY3RreNJWngkNWCjQ==
+X-CSE-MsgGUID: KaATVy1wRsaR105VVyxvqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
+   d="scan'208";a="78047561"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.245])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 18:00:22 -0700
+Date: Wed, 16 Oct 2024 18:00:20 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH v2] test/monitor.sh: Fix 2 bash syntax errors
+Message-ID: <ZxBhpCc-HrzbeILd@aschofie-mobl2.lan>
+References: <20241016052042.1138320-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] cxl/region: Fix wrong logic for finding a free switch
- cxl decoder
-To: Dan Williams <dan.j.williams@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20241017-const_dfc_prepare-v6-1-fc842264a1cc@quicinc.com>
- <671045fc36835_3ee2294a5@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <671045fc36835_3ee2294a5@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: V1NzOHRLfubtklamPbYDlgBRgqGYis2j
-X-Proofpoint-ORIG-GUID: V1NzOHRLfubtklamPbYDlgBRgqGYis2j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-16_17,2024-10-16_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2410160151
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241016052042.1138320-1-lizhijian@fujitsu.com>
 
-On 2024/10/17 07:02, Dan Williams wrote:
-> Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> Provided that all child switch cxl decoders are sorted by ID in ascending
->> order, then it is wrong for current match_free_decoder()'s logic to find
->> a free cxl decoder as explained below:
->>
->> Port
->>  ├── cxld A        <---->  region A
->>  ├── cxld B        // no region
->>  ├── cxld C        <---->  region C
->>
->> Current logic will find cxld B as a free one, but cxld B is not true
->> free since region C has not been torn down, so current logic is wrong.
->>
->> Fixed by verifying if cxl decoder with ID (@port->commit_end + 1) can
->> be returned as finding result.
->>
->> Link: https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
->> This patch is incremental to below patch series with title "cxl: Initialization and shutdown fixes"
->> http://lore.kernel.org/172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com
->>
->> This patch is based on Dan's recommendation shown by below link:
->> https://lore.kernel.org/all/670af54931b8_964fe29427@dwillia2-xfh.jf.intel.com.notmuch/
+On Wed, Oct 16, 2024 at 01:20:42PM +0800, Li Zhijian wrote:
+> $ grep -w line build/meson-logs/testlog.txt
+> test/monitor.sh: line 99: [: too many arguments
+> test/monitor.sh: line 99: [: nmem0: binary operator expected
+> test/monitor.sh: line 149: 40.0: syntax error: invalid arithmetic operator (error token is ".0")
 > 
-> ...and Dan and already sent a patch he is happier with here:
+> - monitor_dimms could be a string with multiple *spaces*, like: "nmem0 nmem1 nmem2"
+> - inject_value is a float value, like 40.0, which need to be converted to
+>   integer before operation: $((inject_value + 1))
 > 
-> http://lore.kernel.org/172895072669.39002.9296583943188706348.stgit@dwillia2-xfh.jf.intel.com
+> Some features have not been really verified due to these errors
+> 
 
-this is a optimized one based your recommendation, namely, above link.
-please don't hesitate to use it as your V2 if you like this one.
+Good eye finding the complaints of a passing unit test!
+I'm confused on why the trap on err spewed the line number but
+didn't fail the test. 
 
-you maybe also have below change when you send V2
-Reported-by: Zijun Hu <zijun_hu@icloud.com>
-to
-Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
+While I, maybe others chew on that, thanks for the patch and
+can you do more :)  ?
 
-So let us close discussion for this mail thread and go to your above thread.
+By quoting $monitor_dimms in the -z check ([ ! -z "$monitor_dimms" ]),
+the script breaks out of the loop correctly and monitors the first region
+that has DIMMs. I don't know if the test cared if it got the first or
+second region of nfit_test, but the syntax is definately wrong, and it's
+error prone in mulitple places in that shell script.
 
+'$ shellcheck monitor.sh' shows the instance you found:
 
+>> In monitor.sh line 99:
+>> 		[ ! -z $monitor_dimms ] && break
+>>                   ^-- SC2236: Use -n instead of ! -z.
+>>                        ^------------^ SC2086: Double quote to prevent globbing and word splitting.
+>> 
+>> Did you mean: 
+>> 		[ ! -z "$monitor_dimms" ] && break
+>> 
 
+There are a bunch more instances in need of double quotes. Can you turn
+this around as a new patch that cleans it all. Note that you might not
+be able to get rid of all shellcheck complaints in the boilerplate of
+the script, but should be able to clean up the main body of the script
+and prevent more problems like you found here.
 
+I'll suggest turning this patch into a 2 patches:
+
+1/1: test/monitor.sh address shellcheck bash syntax issues
+2/2: test/monitor.sh convert float to integer before increment
+
+For 2/2 it does stop the test prematurely. We never run the temperature
+inject test case of test_filter_dimmevent() because of the inability
+to increment the float. Please include that impact statement in the
+commit log.
+
+-- Alison
+
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+> V1:
+>  V1 has a mistake which overts to integer too late.
+>  Move the conversion forward before the operation
+> ---
+>  test/monitor.sh | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/test/monitor.sh b/test/monitor.sh
+> index c5beb2c..7809a7c 100755
+> --- a/test/monitor.sh
+> +++ b/test/monitor.sh
+> @@ -96,7 +96,7 @@ test_filter_region()
+>  	while [ $i -lt $count ]; do
+>  		monitor_region=$($NDCTL list -R -b $smart_supported_bus | jq -r .[$i].dev)
+>  		monitor_dimms=$(get_monitor_dimm "-r $monitor_region")
+> -		[ ! -z $monitor_dimms ] && break
+> +		[ ! -z "$monitor_dimms" ] && break
+>  		i=$((i + 1))
+>  	done
+>  	start_monitor "-r $monitor_region"
+> @@ -146,6 +146,7 @@ test_filter_dimmevent()
+>  	stop_monitor
+>  
+>  	inject_value=$($NDCTL list -H -d $monitor_dimms | jq -r .[]."health"."temperature_threshold")
+> +	inject_value=${inject_value%.*}
+>  	inject_value=$((inject_value + 1))
+>  	start_monitor "-d $monitor_dimms -D dimm-media-temperature"
+>  	inject_smart "-m $inject_value"
+> -- 
+> 2.44.0
+> 
+> 
