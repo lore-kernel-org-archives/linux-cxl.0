@@ -1,144 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCB21CF5E7;
-	Thu, 17 Oct 2024 07:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABA4762EB;
+	Thu, 17 Oct 2024 08:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729151504; cv=none; b=s52zbfr1K+VCmPbcPuD+MFiN/TJ+Ghr2uKAwsmqwhrAh4dHGMC1Q6rAFvTuCVx4q6ZHEHXRoebwWwyoF9NyWZafE5/vZogGlTC41i5bab7IZz4N3KcQpB81RJ3X4oTQemSVj+KsxHvRmy8X9TMlRNMKFHotjHfHdQyL9dyPZJoA=
+	t=1729154265; cv=none; b=OpPNn4dyVSVu4qstPfBkGYXaA0dD0Hx8yQTah6P51iJKlsa8D4/Uzj5Ct2tA9bZXkqc5LM8hR7wsyoDr8baDtnZC3/gOcdKPdL438q58lJyA6hLIWFNTUoS8e5KmlAMkeU8kL1naO/ACki/eW/vDqqGFM5br3DohRSPGHQ3NNHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729151504; c=relaxed/simple;
-	bh=REIKD1HxvzYNIbz9uCq0Hz8fovFtDXa2dgj1UHMlgiA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BakNu/12VR8DzTjA0s23NZFYgeS7S5XHuYAxTDGyY5UQJiqB7TWSvoXWw+/CA5Ru3i44N6YtlSsAlr/BtofyzdNH1asajkYY4GytTAR1P+xceuyIc4dKib6C9ksZIB5JrzDn6j1oaAnVaOk+kAcPokrYog+F/rX+DGmh9kSUpr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ipgqoqjj; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ipgqoqjj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729151500; x=1760687500;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=REIKD1HxvzYNIbz9uCq0Hz8fovFtDXa2dgj1UHMlgiA=;
-  b=ipgqoqjji8IkZRlxP1qM99bFBckoJJ4sBpMDYaghEwtdWG3u4/CGTprO
-   Qgldm7O7ZRnuIuhvGxnNCjO4Ns9UYGVNpa0XKVHAuBm5RtZ5RCj0avs/O
-   N00YSw7npJMfMgFD7ew67Uyfgzj+3zovrfGk9U30F3yr9hPseaU5EMlRu
-   v9zd5CdBliB+JcBAJyU/uJ8H562Bp8Pdd6QpVQUsGlZ0yJwCfAsQtuCSq
-   dMMu0T3yryCgL0n1LRrQvLc+t1wJpEfQWiOpGiIoRv4ihpuHm60YHXFcR
-   uduXKoneEiNmvCru7t66NO4QboGkeh4MzmMYY2SO+v8H64K0Hgq64pd9h
-   A==;
-X-CSE-ConnectionGUID: mvzVCO0CRyqdKC9McaosFQ==
-X-CSE-MsgGUID: 4M38skxLSzGmr3rrmjHDnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39746770"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="39746770"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 00:51:39 -0700
-X-CSE-ConnectionGUID: gQEdFuC1SRi9xZ8fxPzgeQ==
-X-CSE-MsgGUID: 8lAFyR3gRKixJAuKNvk8Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,210,1725346800"; 
-   d="scan'208";a="83247961"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 00:51:37 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,  Dave Jiang
- <dave.jiang@intel.com>,  <linux-cxl@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  Gregory Price <gourry@gourry.net>,
-  "Davidlohr Bueso" <dave@stgolabs.net>,  Jonathan Cameron
- <jonathan.cameron@huawei.com>,  Alison Schofield
- <alison.schofield@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
-  Ira Weiny <ira.weiny@intel.com>,  Ben Cheatham
- <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH 5/5] cxl: Avoid to create dax regions for type2
- accelerators
-In-Reply-To: <ea8afddb-9e97-98f6-b1ee-b5394d35e8c0@amd.com> (Alejandro Lucero
-	Palau's message of "Thu, 17 Oct 2024 08:27:01 +0100")
-References: <20241015065713.308671-1-ying.huang@intel.com>
-	<20241015065713.308671-6-ying.huang@intel.com>
-	<d5233135-9d70-9080-c7eb-0906f07e5104@amd.com>
-	<87jze76y4r.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ea8afddb-9e97-98f6-b1ee-b5394d35e8c0@amd.com>
-Date: Thu, 17 Oct 2024 15:48:04 +0800
-Message-ID: <87frov6uh7.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1729154265; c=relaxed/simple;
+	bh=WoYkazkHU6AwGRAFRR6XpGrloyKBMWmwP2W1nHF6/ss=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ni5JDQrTPBNTWb2cOZMxW7w2Rt1v/+T6TRGH6Hrazg+pzJ1SW1mQoT31OJDvc4iGZTElXlSXaEKGeO26gPQwUhLFyFTT9Amu+YYHhQVYuU82XYD/WtxaT/cKDBqJ4sCNkKgyJMrFC9tbbvsOnQ2466F58E0wH6XdJB9aR0jwiqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTh1J1KV5z6LD8T;
+	Thu, 17 Oct 2024 16:33:08 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 791C71400F4;
+	Thu, 17 Oct 2024 16:37:39 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 17 Oct 2024 10:37:39 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Thu, 17 Oct 2024 10:37:39 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v13 01/18] EDAC: Add support for EDAC device features
+ control
+Thread-Topic: [PATCH v13 01/18] EDAC: Add support for EDAC device features
+ control
+Thread-Index: AQHbGkjIT8EMR4nHhkSztyssI50yp7KGMcmAgAMn9YA=
+Date: Thu, 17 Oct 2024 08:37:38 +0000
+Message-ID: <9431b46fefec4f87bcd5e7999b97ed00@huawei.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+	<20241009124120.1124-2-shiju.jose@huawei.com>
+ <20241014151829.00000e7f@Huawei.com>
+In-Reply-To: <20241014151829.00000e7f@Huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
 
-Alejandro Lucero Palau <alucerop@amd.com> writes:
+Hi Jonathan,=20
 
-> On 10/17/24 07:29, Huang, Ying wrote:
->> Hi, Alejandro,
->>
->> Alejandro Lucero Palau <alucerop@amd.com> writes:
->>
->>> I did comment on this some time ago and I'm doing it again.
->>>
->>>
->>> This is originally part of the type2 patchset, and I'm keeping it in
->>> V4. I do not understand why you pick code changes (you explicitly said
->>> that in the first RFC) from there and use it here, and without
->>> previous discussion about this necessity in the list. I do not think
->>> this is usual, at least in other kernel subsystems I'm more familiar
->>> with, so I will raise this in today's cxl open source collaboration
->>> sync.
->> No.  I picked this change from Dan's series as follows,
->>
->> https://eclists.intel.com/sympa//arc/linux-bkc/2024-10/msg00018.html
->>
->> So, I added co-developed-by and signed-off-by of Dan.
->>
->> IIUC, your picked this change from Dan's series too?
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 14 October 2024 15:18
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+>bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
+>mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net;
+>dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
+;
+>ira.weiny@intel.com; david@redhat.com; Vilas.Sridharan@amd.com;
+>leo.duran@amd.com; Yazen.Ghannam@amd.com; rientjes@google.com;
+>jiaqiyan@google.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [PATCH v13 01/18] EDAC: Add support for EDAC device features
+>control
 >
+>On Wed, 9 Oct 2024 13:41:02 +0100
+><shiju.jose@huawei.com> wrote:
 >
-> Look, this is not going well.
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add generic EDAC device features control supports registering RAS
+>> features supported in the system. Driver exposes features control
+>> attributes to userspace in
+>> /sys/bus/edac/devices/<dev-name>/<ras-feature>/
+>>
+>> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>Hi Shiju,
 >
+>Spotted a few minor bugs in here that I'd missed in internal review :( See=
+ below.
 >
-> You specifically said in your first patchset you considered the type2
-> support patchset complete but too large or complex, so you were taking
-> parts of it as a prelude for making it easier to review/accept. Just
-> face that and not twist the argument.
+>Jonathan
 
-Although I listed your patchset in my cover letter.  All changes I
-picked was from Dan's patchset instead of yours.  And, I kept Dan's
-co-developed-by and signed-off-by.  If you will pick changes from Dan,
-please do that too.
-
-> FWIW, I'm against you doing so because:
+Thanks for reviewing.
 >
->
-> 1) You should have commented in the type2 patchset about your concern,
-> and gave advice about doing such a prelude (by me) or offer yourself
-> for doing it.
->
-> 2) Just following your approach, anyone could do the same for any
-> patchset sent to the list. This is not a good precedent.
->
-> 3) If this is going to be allowed/approved, I'm not going to be
-> comfortable within this community. If it is just me, I guess it will
-> not be a big loss.
->
->
-> None has commented yet except you and me, what I do not know if it is
-> because this is a nasty discussion they do not want to get entangle
-> with, or because they just think your approach is OK. If not further
-> comment and your patchset is accepted, nothing else will be needed to
-> say.
->
->
->> Feel free to include this change in your series.  If your patchset is
->> merged firstly, I will rebase on yours and drop this change.
+>> ---
+>>  drivers/edac/edac_device.c | 105
+>+++++++++++++++++++++++++++++++++++++
+>>  include/linux/edac.h       |  32 +++++++++++
+>>  2 files changed, 137 insertions(+)
 >>
->> [snip]
+>> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+>> index 621dc2a5d034..0b8aa8150239 100644
+>> --- a/drivers/edac/edac_device.c
+>> +++ b/drivers/edac/edac_device.c
+>
+>
+>> +
+>> +/**
+>> + * edac_dev_register - register device for RAS features with EDAC
+>> + * @parent: client device.
+>> + * @name: client device's name.
+>> + * @private: parent driver's data to store in the context if any.
+>> + * @num_features: number of RAS features to register.
+>> + * @ras_features: list of RAS features to register.
+>> + *
+>> + * Return:
+>> + *  * %0       - Success.
+>> + *  * %-EINVAL - Invalid parameters passed.
+>> + *  * %-ENOMEM - Dynamic memory allocation failed.
+>> + *
+>> + * The new edac_dev_feat_ctx would be freed automatically.
+>> + */
+>> +int edac_dev_register(struct device *parent, char *name,
+>> +		      void *private, int num_features,
+>> +		      const struct edac_dev_feature *ras_features) {
+>
+>...
+>
+>> +	ret =3D device_register(&ctx->dev);
+>> +	if (ret) {
+>> +		put_device(&ctx->dev);
+>> +		goto groups_free;
+>> +		return ret;
+>
+>Unreachable line. However, shouldn't have the goto here as put_device() sh=
+ould
+>result in the release being called in which case this is a double free. So=
+ drop the
+>goto and keep the return.
+Fixed.
+>
+>
+>> +	}
+>> +
+>> +	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
+>> +
+>> +groups_free:
+>> +	kfree(ras_attr_groups);
+>> +ctx_free:
+>> +	kfree(ctx);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(edac_dev_register);
+>> diff --git a/include/linux/edac.h b/include/linux/edac.h index
+>> b4ee8961e623..1db008a82690 100644
+>> --- a/include/linux/edac.h
+>> +++ b/include/linux/edac.h
+>> @@ -661,4 +661,36 @@ static inline struct dimm_info
+>> *edac_get_dimm(struct mem_ctl_info *mci,
+>
+>
+>> +/* EDAC device feature information structure */ struct edac_dev_data
+>> +{
+>> +	u8 instance;
+>> +	void *private;
+>> +};
+>> +
+>> +struct device;
+>
+>That forwards def doesn't work as this header needs to include enough
+>information to establish layout of struct edac_dev_feat_ctx.
+>Header already includes linux/device.h so just drop this.
+Deleted.
+>
+>
+>> +
+>> +struct edac_dev_feat_ctx {
+>> +	struct device dev;
+>> +	void *private;
+>> +};
+>> +
+>> +struct edac_dev_feature {
+>> +	enum edac_dev_feat ft_type;
+>> +	u8 instance;
+>> +	void *ctx;
+>> +};
+>> +
+>> +int edac_dev_register(struct device *parent, char *dev_name,
+>> +		      void *parent_pvt_data, int num_features,
+>> +		      const struct edac_dev_feature *ras_features);
+>>  #endif /* _LINUX_EDAC_H_ */
 
---
-Best Regards,
-Huang, Ying
+
+Thanks,
+Shiju
