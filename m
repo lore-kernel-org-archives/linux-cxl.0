@@ -1,126 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 710242010F7
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Oct 2024 10:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EB52010FB
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Oct 2024 10:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729246628; cv=none; b=CRIoz+42bmFraneExA/LnD5/jbQQH9qsMvyro4ib2e5uLNeAMFtD0c6bb8XbTXP3rsvCJ5IGtxG+MfVI33blX5azy5kniVMZ6GI7YfGM8DeNdnpjphdl0qLiB6RIniLXE5KLWHpaq2GHYVWAGaLu6jmgxLueaf9w7PJRdP9wEqA=
+	t=1729246937; cv=none; b=TNYeuRnn6KvOCoGDKGx4/Wdz9ULkeJV7Hv+XpcybdDGd4LRb7OB4AVqrTejfeHaRk3t5VJRJJ6m8RqfG4aHBkEKLoQG+XepBFGZdZSdrSOH3x0Iy+SOvetWHHrkWJ8QPTwuy5CHltLidTYRfzivEjcYUCRV+CrqAERRUgFik8+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729246628; c=relaxed/simple;
-	bh=KYPweUfsbM8NtC3lzybB2Rhd9hvukec4VKBIUGnWSCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WnL/6ZjK8lCwOrKjMGEImdxq7+sC9ekHiX4ibMtFhSFvg1h+SJyz7rMAQWyqHeOAddQzqndV3Yontok0ZA7DO9IvbmD8FgS8NOBjgYwKo3GTBZGAhvgGw3Pcc/RgFTFpjAf77fE6lD/KHcKb2DNq7TzOoxBYWhITjEtCSh5Kohw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52209FEC;
-	Fri, 18 Oct 2024 03:17:35 -0700 (PDT)
-Received: from [10.1.196.28] (eglon.cambridge.arm.com [10.1.196.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 769ED3F58B;
-	Fri, 18 Oct 2024 03:17:04 -0700 (PDT)
-Message-ID: <4e1621f7-599e-47a8-bc83-0f28f9bccd42@arm.com>
-Date: Fri, 18 Oct 2024 11:17:01 +0100
+	s=arc-20240116; t=1729246937; c=relaxed/simple;
+	bh=hA134TEANHPZgfEeupic1B+HCLw3uNQGD74SOm3zUv0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hbJ3MX5qv8lGhEita1deYUc0tdDqpzuFRPpRMw8BBiDhUWK1hqpGtYTyomjnADHmJnaLdCcfpkUX7x94rjR0XDGK/oYSdaUvWGmg45P5X4qVIhDuEAUQ9qUG6cq80WEShxe7zdDT2MN6pxj5M0fZbMwJclwNxmkarnFfDIDkn6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XVLMs4B9Zz6JBH3;
+	Fri, 18 Oct 2024 18:21:29 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3D352140556;
+	Fri, 18 Oct 2024 18:22:12 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 18 Oct
+ 2024 12:22:11 +0200
+Date: Fri, 18 Oct 2024 11:22:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: Coly Li <colyli@suse.de>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, "Bowman, Terry" <kibowman@amd.com>
+Subject: Re: Removing a misleading warning message?
+Message-ID: <20241018112210.00004179@Huawei.com>
+In-Reply-To: <ZxElg0RC_S1TY2cd@aschofie-mobl2.lan>
+References: <15237B14-B55B-4737-9A98-D76AEDB4AEAD@suse.de>
+	<ZxElg0RC_S1TY2cd@aschofie-mobl2.lan>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] cxl: Update Soft Reserved resources upon region creation
-Content-Language: en-GB
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- "Fontenot, Nathan" <nafonten@amd.com>
-Cc: Nathan Fontenot <nathan.fontenot@amd.com>, alison.schofield@intel.com,
- dan.j.williams@intel.com, linux-cxl@vger.kernel.org
-References: <20241004181754.8960-1-nathan.fontenot@amd.com>
- <20241016164324.000037b9@Huawei.com>
- <45f3d3e7-4145-4bc9-96bb-98d7c10c35e0@amd.com>
- <20241017175320.000023e5@Huawei.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <20241017175320.000023e5@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi guys,
+On Thu, 17 Oct 2024 07:56:03 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-On 17/10/2024 17:53, Jonathan Cameron wrote:
-> On Thu, 17 Oct 2024 09:49:01 -0500
-> "Fontenot, Nathan" <nafonten@amd.com> wrote:
->> On 10/16/2024 10:43 AM, Jonathan Cameron wrote:
->>> On Fri, 4 Oct 2024 13:17:54 -0500
->>> Nathan Fontenot <nathan.fontenot@amd.com> wrote:
->>>   
->>>> Update handling of SOFT RESERVE iomem resources that intersect with
->>>> CXL region resources to remove the intersections from the SOFT RESERVE
->>>> resources. The current approach of leaving the SOFT RESERVE
->>>> resource as is can cause failures during hotplug replace of CXL
->>>> devices because the resource is not available for reuse after
->>>> teardown.  
-
->>>> The approach sought is to trim out any pieces of SOFT RESERVE
->>>> resources that intersect with CXL regions. To do this, first set
->>>> aside any SOFT RESERVE resources that intersect with a CFMWS
->>>> into a separate resource tree during e820__reserve_resources_late()
->>>> that would have been otherwise added to the iomem resource tree.
->>>>
->>>> As CXL regions are created the cxl resource created for the new
->>>> region is used to trim intersections from the SOFT RESERVE
->>>> resources that were previously set aside.
->>>>
->>>> The next steps are to add any SOFT RESERVE resources remaining to the
->>>> iomem resource tree after CXL device probe completes and to notify
->>>> the dax driver so it may consume the added SOFT RESERVE resources.
->>>>
->>>> This patch includes the use of a delayed work queue to wait
->>>> for CXL device probe completion and then have a worker thread add
->>>> any remaining SOFT RESERVE resources to the iomem resource tree.
->>>>
->>>> Not in this patch is notification of the dax driver so it may consume
->>>> the SOFT RESERVE resources.
->>>>
->>>> The goal of presenting this RFC is to drive discussion of the
->>>> current approach for trimming SOFT RESERVE resources, the use of
->>>> a delayed work queue to add remaining SOFT RESERVE resources to
->>>> the iomem resource tree, and methods for notifying the dax driver
->>>> of any newly added SOFT RESERVE resources.
-
-
->>> Whilst I appreciate this is an RFC, the arch specific bleed
->>> into CXL code needs to go.  + we need some info here on whether this
->>> is an x86 specific issue.  I'm fairly sure it's not and that should
->>> be called out as future work.  
->>
->> As far as I know this is an x86 issue for handling the SOFT RESERVE
->> resources, if other arches are seeing this than we need to update the approach.
+> + linux-cxl mailing list
 > 
-> Hmm. I've not fully understood where it is tripping up in the x86 code.
-> Any EFI table using arch (arm64 etc) has soft reserved handling so
-> a bios doing CXL enumeration might have chosen to mark the CXL memory
-> with that.  
+> On Fri, Oct 11, 2024 at 05:58:52PM +0800, Coly Li wrote:
+> > Hi list,
+> > 
+> > Recently I have a report for a warning message from CXL subsystem,
+> > [ 48.142342] cxl_port port2: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.144690] cxl_port port3: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.144704] cxl_port port3: HDM decoder capability not found
+> > [ 48.144850] cxl_port port4: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.144859] cxl_port port4: HDM decoder capability not found
+> > [ 48.170374] cxl_port port6: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.172893] cxl_port port7: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.174689] cxl_port port7: HDM decoder capability not found
+> > [ 48.175091] cxl_port port8: Couldn't locate the CXL.cache and CXL.mem capability array header.
+> > [ 48.175105] cxl_port port8: HDM decoder capability not found
+> > 
+> > After checking the source code I realize this is not a real bug, just a warning message that expected device was not detected.
+
+I'd like to understand a little more about the hardware.
+Superficially this looks to be a screaming about non spec compliant (i.e. broken) ports.
+
+Are these on a switch or all root ports?  What is connected to the ports?
+
+Understanding what exactly is going on may affect how this is suppressed (which seems
+reasonable to do if this is production hardware).
+
+There have been a few mentions of 'late' register validity on specific root ports. Maybe
+that is going on here? +CC Terry.
+
+Jonathan 
+
+> > But from the above warning information itself, users/customers are worried there is something wrong (IMHO indeed not).
+> > 
+> > Is there any chance that we can improve the code logic that only printing out the warning message when it is really a problem to be noticed? 
+> > 
+> > Thanks in advance.
+> > 
+> > Coly Li   
 > 
-> The rest of us just don't bounce through the ancient history of e820,
-> 
-> It's more than possible that other architectures don't care that
-> it was previously soft reserved on hotplug paths. I'm not sure.
-> I guess I could hack a test but it will be a while...
 
-arm64 will try to block removal of memory that was described in the UEFI memory map.
-
-The reason is we can't modify the UEFI tables when they have bits we don't understand.
-(Should we preserve those bits if the memory comes back?)
-On a UEFI platform, the memory map is the only information about where memory is that we
-have, we can't fix it up with other things we know like x86 does, (or stir in another
-memory map we found near the ISA hole)
-These tables are treated as the static properties of the system that cannot be changed and
-is just handed over during kexec. (This also means we don't have to work around the
-lovecraftian matrix of bugs that could be introduced by kexecing via older kernels)
-
-To remove memory on arm64, it should have been detected via one of the hotplug mechanisms.
-
-I think this removal of early boot memory is going to be specific to x86.
-
-
-Thanks,
-
-James
