@@ -1,102 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6534D205144
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Oct 2024 19:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F8A205ADD;
+	Fri, 18 Oct 2024 20:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729280843; cv=fail; b=pBxhTcJXevto+unj0jrIs569kw3GsKsX1jMCzXNbnhYWJ1jzuEi6bAOLryc87Fgyfkdvd0Hvdw1TQzQtLnC51NMmfOhL/IBrKLA9dQA8mOz87n4GBpK8HwRVx2ElDf644tQYC+HblYXRthq5d8NUW4SnZgwAKR+bqx7TJY0yNwQ=
+	t=1729281932; cv=fail; b=uhaILBsveSUARF6DSgIBdicgdQFvLtW1HkphgsGgJ4oYJxy0qljYgonKZUkOJcMWmUMtM3BR+Jps3gvREyCvJR1bwALxkW2zLDflKrdRqaG7z1y3Ay0xkXQzkxkspuclRqRK+pOv8ZRcGWYMNVRDi1KPz0i9wgbaxvKNA5vx9zw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729280843; c=relaxed/simple;
-	bh=YAbeEiQIciEHpg3bfRTflj9CY6HAu3rJzr+ZiKvPIKc=;
+	s=arc-20240116; t=1729281932; c=relaxed/simple;
+	bh=N+T9Cnt9Y9ksE3CQnMDl8ybcEM7wWGpevaMzNh1J8ww=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=G8VMOlEKFN0gb8/YNGeJgOft4tGy/+KsQwJtSR4pLDYHlJ6TD0BTgNA0c0SPN1N5Q/CGiRqQrCCX/Ju3RnPqP3BKYJGRjiae26EEsjhF1au4yqyFcyRWG7V9iy3d86pLnM9XZu86HvPiXE71d/yOajO9LS8VyZQQzzNjsgV92uA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ky/sGwvU; arc=fail smtp.client-ip=192.198.163.13
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OVvfLvcaoV9EjyF42x9hlLkKtF0725OzzyFjCnWy9G8VLnagEpGZspUMNhplwFsvk/m2ilU9oWEtgvOEYE0X3UEQkPqC/IgLxdHz+/MdW+PdChY89ph4vyF1jucU2gQfWNa5/AwpSgi5nQkQ44uXtbwfdKXTUyWsDV3FOuhxwUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dk3F0XPu; arc=fail smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ky/sGwvU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dk3F0XPu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729280841; x=1760816841;
+  t=1729281931; x=1760817931;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=YAbeEiQIciEHpg3bfRTflj9CY6HAu3rJzr+ZiKvPIKc=;
-  b=Ky/sGwvUs688OPOsY3YmSsUTlXYeZifnDEDy+hYslsrfUeLC0Huj3Ca6
-   RcrK2L/E5rGlVRiJQVj3SpfYWglD0BshE8t70AVKOc7J11jcbpiIwdsyq
-   G9feelV4EtErl3RdFzdYZqPd9tjxvphRbh8d/G0TBE6M932dcJPSIz30m
-   zLbDgQCss7A7hdwn93OW5pQHKu37AWXj8hsX5GST5MUvipi0hmmRuqlXH
-   /yw9zn3paCCGgcm9mTjf9ySpLDykNBoed+ifIT3+CACtE7Z35G8CIwL0e
-   z8X7PdnS2lUjFoKTEbw2mEph3EHsR+kCrYbKfofbhgu2uar/3dpVJFkwh
+  bh=N+T9Cnt9Y9ksE3CQnMDl8ybcEM7wWGpevaMzNh1J8ww=;
+  b=Dk3F0XPuZtIYJ7u5BYNyg2I1NWXXKceSX7s90tSfB4D7/paRlBODCRYg
+   n7pTyX4qhjNy4smDiUOoAUlBwDnk6KEn1SotAkDem5YUK/vfyjIhjvxPS
+   EkXhlARaKEY/KiRotd/QDYhuYz6kHk2nEt/FQLT5MI9TOOkXS20M4/q8O
+   D+cRCaCZ4QPq+TCnDSyE7nH/RyvcQQaqSavFofnmTCMAChX6KYiqnA4zL
+   Ld81suUqQ+ehKimyN7CHLhTji8Q9zMuqalxizB0nLLvqsB545IO38x/0R
+   3gPVhOKt8wQcmadE42HWDUUbIhyO0U1tnOsnLB8BeiLjGljzRKbrYfpLS
    g==;
-X-CSE-ConnectionGUID: fhJzn/OSSCmCVM5LOwvfHA==
-X-CSE-MsgGUID: KsZ/C0ylQ/ag6HDEO3TTZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="31688759"
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="31688759"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 12:47:21 -0700
-X-CSE-ConnectionGUID: c50Fv2WURNWWvOMuwywgpA==
-X-CSE-MsgGUID: klob/AjSTYaWtGB6xFVLPA==
+X-CSE-ConnectionGUID: CTo0AZhlQmuUMmi/8Cd3nw==
+X-CSE-MsgGUID: aoMB8ODAQdiGUEkXyEsJcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28987995"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28987995"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 13:05:30 -0700
+X-CSE-ConnectionGUID: 3AFRx/2mSPqweCSSOkIgIQ==
+X-CSE-MsgGUID: y0Q3qcEkSFmXeJ/jO1Zdng==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="82917267"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Oct 2024 12:47:20 -0700
+   d="scan'208";a="79772576"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Oct 2024 13:05:29 -0700
 Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 18 Oct 2024 12:47:20 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ 15.1.2507.39; Fri, 18 Oct 2024 13:05:28 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
  fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 18 Oct 2024 12:47:20 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 18 Oct 2024 12:47:20 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Fri, 18 Oct 2024 13:05:28 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.48) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 18 Oct 2024 12:47:19 -0700
+ 15.1.2507.39; Fri, 18 Oct 2024 13:05:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=neFZP4c1y0NPQB6c+ey4QWDaLZUiaqaKZ+y+nxUgfonLKcvvJ/jomcALEPIqi35Fs6UQ0lssCUZH8HRbnwISUCnfHdRiS4PdMEohggqbASXr7MARe87XyZT/c5mwIMCJPxv/axNNl1+ix0RxupclrmaaAgqM4E+/Abi3c2x2yyzpXesDiO0w4MD/GWv1NoYJc8r4nNmKau2oGmpEROcuXDMzvCzjFrQ4/6F2WaldxXewv6n5oKgTwUkryEtrRrgMLYka/+G8dWoE8qQsWWXV5IpDE4kNeA05lIiy0xCgd7Qec9Cp8zXnUHRnMJV4j+4mWBsGj63cpNxerjrLpUEd0w==
+ b=DEV+7IPpTI4qoN73eRoSnmugi9H/fxNIAu8NSkKAo6vN4oDg+PJ0TgBSIO6opk7DQE/YTSWj7uSSD/3JZCZc5lFNvXAOAdyfTqNx3KhMFuL9ZJ1pmUhy1sQEIed7Xj7ZmeDMHk5q+NF6K72gq7vYidS60yMzgvemK1INSxt+6Q+olBCz/Oqg0gH8QWlGuiBSL+YO6gxuXSztRLwWt/cmcpEVOQmeobUa8/T6A4ySUjfb+JnaTpmILrwlxi5P950lrBKpdynSBvgqY2M9BeFILXNvKO3RbxZk6xMBCOtPeUc7DCEoDPhxZVUwIFWJc3RewxlYGfPKKvnhNuwhje1MFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OYidReMZqL8zTtB57HhiLucea1zdlIFx4oE86tZEXlE=;
- b=koU38Ary2XAd35Gslq7dymU7gMYWI4jqVzcxrFEElijD9Mfw4yRDbctO4ba4BdwXdg2rrH67OukXDXnnklsYzN9l4sBbxrNGToRVR1ihBE+H6BFhre0AQtV4yNprkh+I4IGx55cbd/dY/rIFZkr38GISbNNac51z+KtN5OZH2kPACfblCbkMHaDUWzW4oqFmJkoWkMIqFkx6sXcEuPtbZ7qcnEWPpHpsiXFCbzbGgRN/A/WENx8CWgpUpLOT4AdPw+yyls/NX+dnq8XqMmS4xltF8Ef7khYwyXS2QEErQF7/J1qFcY3p3kDDWyiR9rd/bkFE0k6iEV0SQAADgq2TeQ==
+ bh=58Depf5Ll0PBNnZ0gaUMvolvQ8C6oWPHq1aIBrXcIuY=;
+ b=OR3h3kOQHvOuQ7tKAA7RKPFX9vwwhJ2lyLiYvBgiGp3CCN/kNyve9xi959KSY0ug9Z25hV34lVtFCCvvv6YMc8uIfCFFZjf5qTXQwP0ORfwpX5KWz/Kzr8K8JTriW8oBxAi2EnLDaKZb3pROHvEbjogfy3BxRj8ldJFi2s7AtY3GLfrtnnpihC6ijD7F34EWD4YbjdSgVhWesLY0+8SVBOUx9kt5LOEG8Lck7/XU0llUoWrV4fEddCpMVG03OQInImPBvRxluDgh5nixkNMyb3lwqlXocsWq/18iz0u0oBoz1uMwttwH3K0vKVYcvbgVQkAu5iExGuva0OYvaqKFvg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB7200.namprd11.prod.outlook.com (2603:10b6:208:42f::11) with
+ by PH0PR11MB7165.namprd11.prod.outlook.com (2603:10b6:510:1e9::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Fri, 18 Oct
- 2024 19:47:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.23; Fri, 18 Oct
+ 2024 20:05:26 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8069.018; Fri, 18 Oct 2024
- 19:47:17 +0000
-Date: Fri, 18 Oct 2024 12:47:14 -0700
+ 20:05:25 +0000
+Date: Fri, 18 Oct 2024 13:05:22 -0700
 From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams
+To: Ira Weiny <ira.weiny@intel.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Dan Williams
 	<dan.j.williams@intel.com>
-CC: <ira.weiny@intel.com>, <dave.jiang@intel.com>, Dan Carpenter
-	<dan.carpenter@linaro.org>, Li Ming <ming4.li@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] cxl/port: Clarify add_port_attach_ep()
-Message-ID: <6712bb425d4e2_10a0329445@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <172921380683.2133624.1708770961640157143.stgit@dwillia2-xfh.jf.intel.com>
- <172921383206.2133624.16072155083340676420.stgit@dwillia2-xfh.jf.intel.com>
- <20241018120401.00006e7a@Huawei.com>
+CC: Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 2/3] printf: Add print format (%pra) for struct range
+Message-ID: <6712bf8240b8d_10a03294a6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20241018-cxl-pra-v1-0-7f49ba58208b@intel.com>
+ <20241018-cxl-pra-v1-2-7f49ba58208b@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20241018120401.00006e7a@Huawei.com>
-X-ClientProxiedBy: MW4PR04CA0081.namprd04.prod.outlook.com
- (2603:10b6:303:6b::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20241018-cxl-pra-v1-2-7f49ba58208b@intel.com>
+X-ClientProxiedBy: MW4PR04CA0058.namprd04.prod.outlook.com
+ (2603:10b6:303:6a::33) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -105,228 +107,152 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB7200:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5a0b1e6-d4f5-4f99-bbe0-08dcefadabb4
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB7165:EE_
+X-MS-Office365-Filtering-Correlation-Id: 078738db-e9d8-47ed-9e7c-08dcefb0347f
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ygwpto4Op/kLASAOp+CzEDfzFqPQPzZjsFKyGeFtZcu97EmfQNYANkAAmQdw?=
- =?us-ascii?Q?BKK8Yh+CvCdEu1juJ024Usa7iZqV/jgNNmkhVaOz0zKkQ57W0nMx9wSid7EX?=
- =?us-ascii?Q?N61tkziMV5RdCROpuk/LV0+Ufwp07lzfoSyNFk8+eanlvUPHBgyiLbHVtzBj?=
- =?us-ascii?Q?C1QZfnzqk4igRnAAR3VcxrJ6ozkGm9E4Rt42sV4EqPR7VWTVpMWn4nEd9rHE?=
- =?us-ascii?Q?wdsNd2OWqm/cpvmz0osIy4lfmC+lcSflVE+z3oVQNficZh1BPJAY63m60bbO?=
- =?us-ascii?Q?8Ln/XyYo/F78wMhV10zohjwn5fSk34RcVB91XxaZ5shdFQ2KJzUzuTXU0itk?=
- =?us-ascii?Q?Cx0ouEHAAaM9oWASGaPybZdPWj98Ia+H190fXSmn4XLLjczqjGB+pXlrBQSh?=
- =?us-ascii?Q?1/ew46pkNn0c3iAkCEuHh7T0f3QEZYHNlU7KMUNglbiTvsO1b/zdWodxZvdY?=
- =?us-ascii?Q?TVM8ufJjXC7IUwU0DtSfFp7pgzFpHVHMpst39FwkkMxuiwjrjpWRl9qKIRsT?=
- =?us-ascii?Q?KP6Mj+oSuxGHB0DA5scx6zabzNKo+iTigx3wioMUaFhP6xLXLzTr2jeFvIQW?=
- =?us-ascii?Q?D4cQIOVLJYRVEHVJ7Ksn5wssMk+kw8yftzJ9Qfyb8He2K7fk9ntAKS2hHQkW?=
- =?us-ascii?Q?o8sDx1YPwSSvXV+OCJNjAUPcYplu6/MOCbnzyArkyesKSol9ZG5jauaWZ8P1?=
- =?us-ascii?Q?JaLH9DF6J89bWgzgdD3tonk8jp/QfgtXdLfKUdyJt+wzWQxQ9q472+JDk4Af?=
- =?us-ascii?Q?gUgxnBmbF4kRnJpBK1ZOT9MafEYjj2rh53d4WqMXBge4GeSCb43YM7ESnb8o?=
- =?us-ascii?Q?q8K4cKjjApGu2SyENXzPGIHPVHHgojK+vcgLcnqhl4YpM4FxZpBWNY23zrMS?=
- =?us-ascii?Q?ve+lzmaafj3fE6dfOx2UTzYYA8ddmMVOkwOX6NhBbMxppHA1arGS7HU57ekr?=
- =?us-ascii?Q?fEzkJo+LewIRagn+TbvugHZSLYt4Z6Ui27Dtf/ZMCcLX7NjFn/AX64HkKLGe?=
- =?us-ascii?Q?CiTFe/f9LrtE1/Jj2ivA9a8W2rRvgcKCVyteydoRvSCaRPJqRGtVHdoeDV8l?=
- =?us-ascii?Q?87YC6xF3k+cYKpY1pvA+IfuajuqVKXx6z83dZeLiYgYMi9TW0dt/wByBFCDY?=
- =?us-ascii?Q?GqrdM454Bgp+oRKlyq5Kw1iVEIMzJ4grZxuyss0pUqAWwZ3u1CF9qrNBN4IP?=
- =?us-ascii?Q?iRmkgu8bOPoE0cWD/kr12LYPM2ATEE18j8clGGEHIikteUIVCPw9R5Mqh0bQ?=
- =?us-ascii?Q?CkGeVAt88ZNKKPGTA67f0zQOfFvEMi1bYIlZcVB+2YQlvmlhuHob0JCnh+VZ?=
- =?us-ascii?Q?uXWAQEFMrMNPNpCH42vDwgS9?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?DsDjj0yBiGgB2NBEWb4BLAuSnEUyWPzNHZvNStiJO0MAYwLAt5vUAXfcAiX4?=
+ =?us-ascii?Q?hl68b3bhT1qLoBLie9Rzg9s3+tpcKChV1eJYsNggVJjCyiNdUz3a7sXjuNzx?=
+ =?us-ascii?Q?bsAKGuSyFKILEScECGVcnHQbI+uBQiGnIU82lfTiLO5N+8Q5YPgPN2Egbvcn?=
+ =?us-ascii?Q?mxwIz1lL6anj6HHDeW1P/SpLr991louMujHm+5w63mGHbP7PedLklJc5J2eO?=
+ =?us-ascii?Q?COni4VfE8a6iOSmPk1N5C/o/Rdq8A1uIeqK8YpU0+GEJDGTeM4JqTKPMerD3?=
+ =?us-ascii?Q?vKYNFKRiGinc57zcqg3vHX+DJb5jbJMHhP+S8PqHdwpF4a+H2as/kXHl9aQt?=
+ =?us-ascii?Q?O1z+U0f7JR6YlcbUiEwoxqybADJDqXjfTRUHp2sXidixM7iPfv04/EteLZJW?=
+ =?us-ascii?Q?wWI4xBumxHElB2zTnWgOo54gzuX0Ip/KRtkVkHaPNZpft9tRvsHphpa5wo5z?=
+ =?us-ascii?Q?6Y/j+zSm4bFjoNwAMTUQFAwAc5/SQg9I3nRJ/HlWGTbW5CD+Q5gYt5IGqkvl?=
+ =?us-ascii?Q?DLNPJXxvYePQN9sQPWgtvnNeUuUj/a8dh4+diclccxCEzpWPukv+JbareGV3?=
+ =?us-ascii?Q?TKxrzDXrth4OdPslDyXGVpxnQD+hjSK5WYXJwMILF0e/A757+NWYAxgCMFDV?=
+ =?us-ascii?Q?pO2cR+gcaj4T2KXUE7Ao1rIG6BMcz6dpRfTpL6/XmsMgm5HVt7md5BQYw6QS?=
+ =?us-ascii?Q?qcaX4gu80D01RFXwg8oBGBVXT/dVz9Ip935FDdv9BQTvQ5sb+KeI4RFGOpOr?=
+ =?us-ascii?Q?Df3Gzg5+T5mHTt4A7YZyTyv35mo7TDLThnzLMjKoiX4UXcURmQ5qyAkpfDNZ?=
+ =?us-ascii?Q?iXUgyOBhmdyfMv5ygoz33D7ZctVzvZohYnsHmzgw2qPVn/sIrztlbDqCk1m6?=
+ =?us-ascii?Q?p9cAWx2mYk10tjr2jf9l3IJqpGvr1ltFn0njbrKuo1zHp5n3aqxVXfR3+MK1?=
+ =?us-ascii?Q?thWtLm1e06tLB2PZiigRoYebxY6Xy4+Ajx69360ph5YCUm1atcvpMrlGXkXz?=
+ =?us-ascii?Q?pdY0atjtiFwENWNPmEQvq4TtPh9w4FFd/IFL305MNE3w0OLNwQKb+8QJDsZh?=
+ =?us-ascii?Q?FUve0kDCsGDA2IUbagAppOJU6kNxt3wRsZ0KeHI11HGhgO9umBdoWmXymsFW?=
+ =?us-ascii?Q?r/U+ZkJpwoHGnu/gp8pP7FB1tn86I8GvQxdrk1yAkIGws9PkIB5GpKP/T1YY?=
+ =?us-ascii?Q?4zDyUGjY/Mq+xaMWpMMdif19+WMTwzZ+EYQMkeHqT7Qti7UF78jJzmPdikKU?=
+ =?us-ascii?Q?Dg6D3eHTUuqOxZfSqjroy0X8CvM0j65erVtwLHNHDvhiX8tMA9rCVXnTlKyb?=
+ =?us-ascii?Q?42XzzlPGHZVGjnf4iyCnpekHIos2ftlHfyaR3VQV3aFFgOBbeazeG/BscQz9?=
+ =?us-ascii?Q?bCAFLZyzDfl9ACedLUgcw/797fh9?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p5zAW1UQ3uR0WlGkGUqhdTtDWeD6jaTUC96AkQTF2a18tU/pmIdBM77jcNmZ?=
- =?us-ascii?Q?KycoFPNGSdPppk0go0zIq7RSA+68k/k4PQi20MtVsduQbIssNnfgQmVZGd8D?=
- =?us-ascii?Q?zxpuryt5KoBA9A71Q/7Dv8THNpS+9rRhRfzgzbLzTA7bDZmNsOfW0v7C1wUt?=
- =?us-ascii?Q?JpcxlpDPMQcKZKlmhQhzl3YxZM4UoDfVzsjtu9KxFk2QBXh6ex7QLZikkH99?=
- =?us-ascii?Q?4bBF8RaeiXW9QpDsupbsMTq2FKTs4uihcI67Ec5F5jENaw/exiwuRDitdAvF?=
- =?us-ascii?Q?lqfCyULiApqs4s8Y9mrkx+cr2iF9v3FdeB/KockJThJAlkCysJ1cFY9/aZhi?=
- =?us-ascii?Q?4Owle+R+50nlWSjhY7qsNeFOabjAVYSz6N0GTPMUcDii4GgyMo8xHS96qsUi?=
- =?us-ascii?Q?lwg42n9K0RqjlFGuFveaM3ntOuST0aZHMMz2r8z2TwuHRgzeAw2S+mNORUb+?=
- =?us-ascii?Q?LZfSbfcHlE0NFkzHloquz+A64KlQpAD3XiLBii+wBkxBO9g8umTw08sGqXZd?=
- =?us-ascii?Q?kpvfzPnwARpZnYrApCluZCy/AZ15zVtk2cxjmSz6NJdy8tKHWLvZV8zI5/33?=
- =?us-ascii?Q?Y1LyFG+HjM7IxN3YOvq24+/rK3YyJLBkPbTaStuHUz66yJ5Z4+qdmf7AEZq8?=
- =?us-ascii?Q?R12/5BxO1rB9aC4r22XOmCpKyL609wpC+W9o0h3JJbVSAMIZn6xk+5154BcS?=
- =?us-ascii?Q?IomEAeoTY2IRmhw5Ifjz+VyXSs+IuQZ2IWan1TAeLLD1ewk6qBKrzqbNJ+ik?=
- =?us-ascii?Q?2Suu8tYUbBw32hul/UF04oAcRUzIUiQ4sQ34zNjWmArrCT5XxdxQKIHELTjQ?=
- =?us-ascii?Q?Xll89XzbldMypa60zEHb0GLK+0RXTZVDSGMGbsQ+OYqkM/hwE1svPKCpR/9w?=
- =?us-ascii?Q?BmdynyYnGjGqOh9fpS2KQ/M7zR7wuSNaBTk/HVCVTBwUHJ4tuiHxVFNwwDVi?=
- =?us-ascii?Q?qXzFeOTKCMJBEII7MvHB+20huPeN42iwkFcumstWQWPUpF7V2M6Q24nk6RbV?=
- =?us-ascii?Q?ZbMutZp9fMO9puj8mtHv0gkyyCZV4ls2HogDfZpCF8Z+kAK3OsPEY3nVJVVD?=
- =?us-ascii?Q?Qv/hpNqhRHTacHPFYFxp3IKWzeP7rawxFs2lITiBJuChvXcSP8xVsfYvV60W?=
- =?us-ascii?Q?P30VxbNoUV2meXeRMmumxn6amjhbbn9z2xf2Todd7AkAVWjJD3vsYBoeHaI1?=
- =?us-ascii?Q?PDgwvKBb+7PLC+/PnpJkzpG+Sr7lrW7PGYEKlnKCyWZRRnStzRCIPahOh3/R?=
- =?us-ascii?Q?qU2P8US8I5BYhA7YTyNbVMYY/Ajgu48Hl+UqZjYwysVSA1XG7YxMrZnkso2Y?=
- =?us-ascii?Q?vD3sSmEI2ljFq87HyhlCjeI6nK/iMFHsoOYkBykHtxEGXgF3dzcWIleg5NMP?=
- =?us-ascii?Q?kt5OSXYf1dMPcY1BRhFXiZAmcJiGS1OEgFmu4LjNjUeN1j76ByCSp0VyKBU+?=
- =?us-ascii?Q?qQl2A4dfCgLhWfIiC8+NiEnh5NWg2OwCnmnjMWV1J7N6foGv0smuFxpeAkgc?=
- =?us-ascii?Q?aCFzZD59PosRnu3fzvPxB9qCMK407ZadZIMbg1IirWT2/6m4al1mfIWu7KlR?=
- =?us-ascii?Q?zZsIWscGoqcKF4ZYUa+vLcjgAyIz3sJQ75ZTBHoZ2nAClEzyDzj1/N1vtvvM?=
- =?us-ascii?Q?tg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5a0b1e6-d4f5-4f99-bbe0-08dcefadabb4
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LP6yx9Gkl0WNAieAcWD0rBfbY8hZzo9bFSPExeaL8CpRkBSjuwkfBGtob6eA?=
+ =?us-ascii?Q?a3xR76KXMdX6bjgOw56J63nghENAYt1NU0Ta/JEl9k2xAKZXjQshT5+hin9j?=
+ =?us-ascii?Q?ZyW7uEecYbPkWCIT6zWH1+72YQNIZH8y+peJeY7VlLaTv93wmENiNVaGLdcp?=
+ =?us-ascii?Q?vBU8LyxS+tEMHa2fYOATu6HXfW2LWrhc5CFqTe9SC6IKxf36ppt76nMOJ8yI?=
+ =?us-ascii?Q?f+wk2mznetLW0HYnSWzCuwse3nVQExWav8DLSboJrwsn1scvYnQJDDIhbUwl?=
+ =?us-ascii?Q?PKh9Xy4pP5cvl4oOH+u5jyB5uaEqLqeZ9NbmuoLxAU6npo+L0nynTU1/tvac?=
+ =?us-ascii?Q?6gF16vGFLYIL28/up4ynqDmfJ7EfnTXW8bwP8iwhLHFruYGMgOY0xxDwafu/?=
+ =?us-ascii?Q?8fdetZGo44uhf+9K6yZJPdf5ygIU6nwWHHwZeXd6L1vEs3Yls6At4xXlLpHw?=
+ =?us-ascii?Q?j8Y/9Ijdh+jva7r3k5l9+jTqVtvJGwm1vKXzr9TEiTrGCExTODQgPBU3FMER?=
+ =?us-ascii?Q?yzLuSbXtQuVu20fWvzvfWEGKbzi3t42ldNY5OKLBNme4fyw/f5VE2ptfXsiT?=
+ =?us-ascii?Q?/tgFQO4Q2fr/dJSEJZ2lRCWMfJbYfklVmaTvoO/zdoMWIS2hsz70fRqqyhcu?=
+ =?us-ascii?Q?usZIB3fXcBwnRQVSr/GPwAh/fYuKivpxYJBXZlH3JOZJp1tO530GExW/9Vnk?=
+ =?us-ascii?Q?btrh/5KivYL0ofhGIzK5K8+ZxpYG6Pf89cW7irYyRJJHa1no2KjxvTE+hV2Y?=
+ =?us-ascii?Q?9phn4rKzGiRQHMrkwh9bzQI7jZpTqW9aQidRyP3lTyVBMIv54/uHRh0l5dY9?=
+ =?us-ascii?Q?uOk9pRrv/CtlRRzHacVISjE5N0KJ7m5QoCYX4+Ca8nkCfx6ZtTEIGhLXIPVh?=
+ =?us-ascii?Q?Xg4zedxdya1BK+fowFd7cq8fSHyHvtbxvDrMmQ5TxbQVHt3xJdKurHYek1k0?=
+ =?us-ascii?Q?u2XGdrIO+ATvc00HdMAVHqNs/OUAAI2z46I3dIOAB5xg28mvIpXhFyNtMGpd?=
+ =?us-ascii?Q?9Q6avtDdS//NsL5i32JAOR/o9p46j4XaPjzrYN47VKgsvFXyG1/p4XsfzEbF?=
+ =?us-ascii?Q?HRdOPyNoJU4fEqExJYZPjYsJZsBpnu9pMjnX+d+pwh9ij3La07fn+Jw5t2re?=
+ =?us-ascii?Q?1DUPhJqie/5WFDt4OUeHBLCLEj+FK897gfyM33tFvi4/MiK6s9Efs1WbOjLB?=
+ =?us-ascii?Q?jNCdu/mrbOHfCyhc5sZICZhnjVT1ikGbqQNgGFj6EO1Ojr334A8IivQzYgg+?=
+ =?us-ascii?Q?DK5GUOA78f3WV4yFHq7PmQ0/aVDNGVU2lyMeYcBbN6XeDfWUcRrqW+BCyPli?=
+ =?us-ascii?Q?c9hwFC95VsGeK2ZWsFRk1V4sJY2FGksFZAPrjXKNdrbmiYQ5OtetWrp1SoQK?=
+ =?us-ascii?Q?dB9S6LOQWcMw8pKSDM2AUeZnjXGsYvXlvs4pFK8UvED8ZnrrIrR09IfYLuKb?=
+ =?us-ascii?Q?NKYzYXTDXyGRKHmRMXn0quYPoRMpe3UrxUsIMWKAEejJOSYD6L+j5bbDZfX5?=
+ =?us-ascii?Q?akMOfqP0P3T5qGhSoeBd46UvXe7Y6b4KWHvfTpcUg8MxUwOMVG8iRh5a/VTi?=
+ =?us-ascii?Q?2Q0kUY3b6g5zdYKnKD3Rd2DAiOlRlSxGtxe2PVf+rD+hFJDB3j36aPt6g3ei?=
+ =?us-ascii?Q?hg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 078738db-e9d8-47ed-9e7c-08dcefb0347f
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2024 19:47:17.0374
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2024 20:05:25.5342
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5IVCFhmehkHAnkOWpBN9CCWW8MwExUz0y9jlKABygzSd3nuwLdLV2rm3M7oLYW+OTX2lDIGRZ3o1VKt5PqVrleKdAPVDGWq2usgk9dJbAqo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7200
+X-MS-Exchange-CrossTenant-UserPrincipalName: fONymBTZNjW7Izxjk5D0foV2EmyQRk3kAft37EInRW0JRWnneJ04eBWJ25nZ9jE+dWD7GUAew+jScB1n46OCCslccLKqnQlWj4c15CqsRVQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7165
 X-OriginatorOrg: intel.com
 
-Jonathan Cameron wrote:
-> On Thu, 17 Oct 2024 18:10:33 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
+Ira Weiny wrote:
+> The use of struct range in the CXL subsystem is growing.  In particular,
+> the addition of Dynamic Capacity devices uses struct range in a number
+> of places which are reported in debug and error messages.
 > 
-> > The subtlety in add_port_attach_ep() is too high as even static analysis
-> > checkers had trouble following the error exit logic [1]. Jonathan points
-> > out that at a minimum the 2 acquisitions of @port should use 2 variables
-> > [2]. This patch goes a step further and refactors the code to:
-> > 
-> > - drop the redundant uport_dev argument
+> To wit requiring the printing of the start/end fields in each print
+> became cumbersome.  Dan Williams mentions in [1] that it might be time
+> to have a print specifier for struct range similar to struct resource
 > 
-> Feels like an 'and' patch.  Maybe split off this first trivial bit as
-> a separate patch. Also a move of a comment could be done as a final
-> patch to simplify the diff of the important stuff.
-
-ok.
-
-> > - move all device_lock dependent code to a new find_add_dport() helper
-> > - clarify why the @port reference needs to held
-> > - clarify that @port is not devm released on failure
-> > - create a new __free(put_cxl_dport) helper for this case of passing
-> >   around an implied @port refernce
-> > 
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Closes: http://lore.kernel.org/2a19289b-0bcf-42c4-82a9-268a922535f2@stanley.mountain [1]
-> > Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > Link: http://lore.kernel.org/20241017181244.00003e1f@Huawei.com [2]
-> > Cc: Li Ming <ming4.li@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> A couple of trivial comments inline, but definitely looks much better
-> to me after this!
+> A few alternatives were considered including '%par', '%r', and '%pn'.
+> %pra follows that struct range is similar to struct resource (%p[rR])
+> but needs to be different.  Based on discussions with Petr and Andy
+> '%pra' was chosen.[2]
 > 
-> Jonathan
+> Andy also suggested to keep the range prints similar to struct resource
+> though combined code.  Add hex_range() to handle printing for both
+> pointer types.
 > 
-> > ---
-> >  drivers/cxl/core/port.c |  112 ++++++++++++++++++++++++++++-------------------
-> >  drivers/cxl/cxl.h       |    1 
-> >  2 files changed, 68 insertions(+), 45 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index 8e6596e147b3..599b1a4caa70 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1539,14 +1539,63 @@ static resource_size_t find_component_registers(struct device *dev)
-> >  	return map.resource;
-> >  }
-> >  
-> > +/*
-> > + * Check if @parent_port has a child cxl_port that hosts @dport_dev.
-> > + * and if not create a new port attached via the @parent_dport
-> > + * downstream of @parent_port
-> > + *
-> > + * Caller is responsible for dropping the port reference after using
-> > + * @dport
-> > + */
-> > +static struct cxl_dport *find_add_dport(struct cxl_port *parent_port,
-> > +					struct device *dport_dev,
-> > +					struct cxl_dport *parent_dport)
-> > +{
-> > +	struct device *uport_dev = dport_dev->parent;
-> > +	resource_size_t component_reg_phys;
-> > +	struct cxl_dport *dport;
-> > +	struct cxl_port *port;
-> > +
-> > +	/*
-> > +	 * lock serves 2 purposes:
-> > +	 * - Resolve races to find/create a new port
-> > +	 * - Prevent found / created ports from being freed before a
-> > +	 *   reference can be taken
-> A breadcrumb on why this second one is true might be helpful
-> as no immediately obvious why holding parent would do this.
-> I'm guessing because reap_dports holds the same lock?
-
-It does, but the more straightforward answer is that it holds off all
-devres release actions. I'll update this comment to:
-
-/*
- * parent_port lock serves 2 purposes:
- * - Resolve races to find/create a new child port
- * - Hold off device_unbind_cleanup() triggering unregister_port()
- *   (via devres_release_all()) for the child port before a reference
- *   can be taken
- */
-
+> Finally introduce DEFINE_RANGE() as a parallel to DEFINE_RES_*() and use
+> it in the tests.
 > 
-> > +	 */
-> > +	guard(device)(&parent_port->dev);
-> > +	if (!parent_port->dev.driver) {
-> > +		dev_warn(&parent_port->dev,
-> > +			 "disabled, failed to enumerate CXL.mem\n");
-> > +		return ERR_PTR(-ENXIO);
-> > +	}
-> > +
-> > +	port = find_cxl_port_at(parent_port, dport_dev, &dport);
-> > +	if (port)
-> > +		return dport;
-> > +
-> > +	/*
-> > +	 * Note that this port is only unregistered when @parent_port
-> > +	 * is unbound / removed, not if this routine returns an error.
-> > +	 * It is a shared object across multiple downstream endpoints.
-> > +	 */
-> > +	component_reg_phys = find_component_registers(uport_dev);
-> > +	port = devm_cxl_add_port(&parent_port->dev, uport_dev,
-> > +				 component_reg_phys, parent_dport);
-> > +	if (IS_ERR(port))
-> > +		return ERR_CAST(port);
-> > +
-> > +	dport = cxl_find_dport_by_dev(port, dport_dev);
-> > +	if (!dport)
-> > +		return ERR_PTR(-ENXIO);
-> > +	get_device(&port->dev);
-> > +	return dport;
-> > +}
-> > +
-> >  static int add_port_attach_ep(struct cxl_memdev *cxlmd,
-> > -			      struct device *uport_dev,
-> >  			      struct device *dport_dev)
-> >  {
-> >  	struct device *dparent = grandparent(dport_dev);
-> > -	struct cxl_port *port, *parent_port = NULL;
-> > -	struct cxl_dport *dport, *parent_dport;
-> > -	resource_size_t component_reg_phys;
-> > +	struct cxl_dport *parent_dport;
-> >  	int rc;
-> >  
-> >  	if (!dparent) {
-> > @@ -1560,50 +1609,23 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
-> >  		return -ENXIO;
-> >  	}
-> >  
-> > -	parent_port = find_cxl_port(dparent, &parent_dport);
-> > -	if (!parent_port) {
-> > -		/* iterate to create this parent_port */
-> > -		return -EAGAIN;
-> > -	}
-> > +	struct cxl_port *parent_port __free(put_cxl_port) =
-> > +		find_cxl_port(dparent, &parent_dport);
-> >  
-> > -	device_lock(&parent_port->dev);
-> > -	if (!parent_port->dev.driver) {
-> > -		dev_warn(&cxlmd->dev,
-> > -			 "port %s:%s disabled, failed to enumerate CXL.mem\n",
-> > -			 dev_name(&parent_port->dev), dev_name(uport_dev));
-> > -		port = ERR_PTR(-ENXIO);
-> > -		goto out;
-> > -	}
-> > +	/* iterate to create this parent_port? */
-> > +	if (!parent_port)
-> > +		return -EAGAIN;
+> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org (open list)
+> Link: https://lore.kernel.org/all/663922b475e50_d54d72945b@dwillia2-xfh.jf.intel.com.notmuch/ [1]
+> Link: https://lore.kernel.org/all/66cea3bf3332f_f937b29424@iweiny-mobl.notmuch/ [2]
+> Suggested-by: "Dan Williams" <dan.j.williams@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Just to reduce diff and hence make this slightly simpler to review,
-> I'd leave the formatting as above.  If you care trivial follow up patch.
+> ---
+> Changes:
+> [iweiny: split from CXL patch set]
+> [Andy: Define DEFINE_RANGE()]
+> [Andy: rework hex_range() logic]
+> [Andy: Don't use fallthrough]
+> [Andy: clean up help comment]
+> [Fan: clean up printk comment]
+> [Rasmus: fix buf processing in hex_range()]
+> [Rasmus: simplify buffer sizing]
+> [Rasmus: add '[' to string]
+> [Bagas: Clarify the start == end print behavior]
+> ---
+>  Documentation/core-api/printk-formats.rst | 13 +++++++
+>  include/linux/range.h                     |  6 ++++
+>  lib/test_printf.c                         | 17 +++++++++
+>  lib/vsprintf.c                            | 57 +++++++++++++++++++++++++++----
+>  4 files changed, 87 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 14e093da3ccd..e1ebf0376154 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -231,6 +231,19 @@ width of the CPU data path.
+>  
+>  Passed by reference.
+>  
+> +Struct Range
+> +------------
+> +
+> +::
+> +
+> +	%pra    [range 0x0000000060000000-0x000000006fffffff]
+> +	%pra    [range 0x0000000060000000]
+> +
+> +For printing struct range.  struct range holds an arbitrary range of u64
+> +values.  If start is equal to end only print the start value.
 
-ok.
+I was going to say "why this special case that does not exist for the
+%pr case?", but then checked the code and found it *does* do this for %pr.
+So if you're going to document this special case for %pra might as well
+update the documentation for %pr too.
+
+Alternatively, drop the new %pra documentation for this corner case as
+accommodating the U64_MAX size range case is arguably a mistake in the
+caller.
+
+Either way, just make it consistent.
