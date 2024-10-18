@@ -1,46 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD2C13D52E
-	for <linux-cxl@vger.kernel.org>; Fri, 18 Oct 2024 16:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207EB202F8B
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Oct 2024 16:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729268063; cv=none; b=IvtYYF39995W37zid0EOWTQAAhY0ZmVYEpJByvTr+BpxeO5T9X20WwbsCqebz14vKw2OPFVknjLY70KPNQEeys/1E0BhD7HxzVOqkMsKZ67duxlZHhnV9mFQnkPvU5gcgnOxeVoM07MT5iFFyGhNxqfltxt4Fdqfp3K4c3Nnuo8=
+	t=1729268359; cv=none; b=H9d/OT2APx+ni7gp3CRnv5Rlkg/tBu1bW1h/PnujjP1tHbS7S4AYcUHpuOU/LM2XG/oDVC6gSykLHmKb/tbN126edHR216r14T4rYRWqhtdS6z7jIISClGTK4xYpukExBXv1d0oqqO9w7/67STRDjyR8bvNJgsQ+w0MbOYd05GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729268063; c=relaxed/simple;
-	bh=wKe6dIyM8lNeF/qcv9JCUjSunQMZCiaM7LxjVLXADXU=;
+	s=arc-20240116; t=1729268359; c=relaxed/simple;
+	bh=1fOxwNf8WW386qEnSzz01xRX0kOYdbjDWCgG55iPoa4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OsYs/RyzlHkxz3TthV1V707pT6txtAXoSUwl1SQrOs879jbmH/KbNjN/KPWOxWWWbG7v/sBU4zrJDica5MvA0Bl5sPisGKgjdvjOVg9zfXtJd1EuBVr4Y2mChT0q+asxhBuWl4SxSeOFOpJ6RPirpJoOLY7o2QU2mdPN2BfrBiQ=
+	 MIME-Version:Content-Type; b=NKrV1QoSczP6hFd7mIByYKh55JE80UcihfKffQh7Wp/FEJjUSZD+WV2ihVCiv7ziZE2uodSxJgl6JwG0cWqLyvs6Io88ILCq2XoWNFrbYcNrQOov7gE1xy2zDOl9MLeMjRSiXv/1BC80gZc5MBjtu/ibiM0zy/K3wvc9b1JJ9PE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XVV8t5qjyz67QNS;
-	Sat, 19 Oct 2024 00:12:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XVVHq2Cs8z67fBs;
+	Sat, 19 Oct 2024 00:18:31 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 739B81403D2;
-	Sat, 19 Oct 2024 00:14:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B4695140680;
+	Sat, 19 Oct 2024 00:19:14 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 18 Oct
- 2024 18:14:17 +0200
-Date: Fri, 18 Oct 2024 17:14:15 +0100
+ 2024 18:19:14 +0200
+Date: Fri, 18 Oct 2024 17:19:12 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ravis OpenSrc <Ravis.OpenSrc@micron.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>,
-	"john@jagalactic.com" <john@jagalactic.com>, Ajay Joshi
-	<ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH v2 3/4] cxl: Abort background operation in case of
- timeout
-Message-ID: <20241018171415.00003e47@Huawei.com>
-In-Reply-To: <1e78d777e19344699d6d991b2114a3e1@micron.com>
-References: <20241015205633.127333-1-ravis.opensrc@micron.com>
-	<20241015205633.127333-4-ravis.opensrc@micron.com>
-	<00a0aa82ae12450a8c690e11440c4101@micron.com>
-	<20241017163601.00002a1a@Huawei.com>
-	<1e78d777e19344699d6d991b2114a3e1@micron.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: Zhi Wang <zhiw@nvidia.com>, =?ISO-8859-1?Q?C=E9dric?= Le Goater
+	<clg@redhat.com>, Ira Weiny <ira.weiny@intel.com>, "qemu-devel@nongnu.org"
+	<qemu-devel@nongnu.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Alex Williamson
+	<alex.williamson@redhat.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>
+Subject: Re: [PATCH RFC 0/5] hw/cxl: Type 2 Device RFC
+Message-ID: <20241018171912.00001e44@Huawei.com>
+In-Reply-To: <29528327-90d0-5aa7-d756-0a88a396d6f6@amd.com>
+References: <20230517-rfc-type2-dev-v1-0-6eb2e470981b@intel.com>
+	<5827f6e5-6de9-4ec1-83eb-b2e552092498@redhat.com>
+	<4085e18e-65bb-4b0e-bb72-f05e69996cbc@nvidia.com>
+	<29528327-90d0-5aa7-d756-0a88a396d6f6@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -49,165 +48,174 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 18 Oct 2024 06:39:34 +0000
-Ravis OpenSrc <Ravis.OpenSrc@micron.com> wrote:
+On Fri, 18 Oct 2024 16:25:58 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-> >On Thu, 17 Oct 2024 09:06:00 +0530
-> >Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:  
-> >> 
-> >> On Wed, 16 Oct 2024 05:00:00 +0000
-> >> Ravis OpenSrc <Ravis.OpenSrc@micron.com> wrote:
-> >>   
-> >>> Adding support for aborting timed out background operations
-> >>>
-> >>> CXL r3.1 8.2.9.1.5 Request Abort Background Operation.
-> >>>
-> >>> If the status of a mailbox command is identified as timedout, an abort
-> >>> background operation request is sent to the device.
-> >>>
-> >>> Link:
-> >>>  
-> >>https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore  
-> >>> .kernel.org%2Flinux-cxl%2F66035c2e8ba17_770232948b%40dwillia2-  
-> >>xfh.jf.i  
-> >>>  
-> >>ntel.com.notmuch%2F&data=05%7C02%7Cajayjoshi%40micron.com%7C0d
-> >>d742041c  
-> >>>  
-> >>ba47ec0dbd08dceec16a02%7Cf38a5ecd28134862b11bac1d563c806f%7C0
-> >>%7C0%7C63  
-> >>>  
-> >>8647761722049771%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAw
-> >>MDAiLCJQIjoiV  
-> >>>  
-> >>2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=1vVK
-> >>PaqWSp6qT  
-> >>> FmwsYF1z%2F7%2FdfEeVFD9cA0g1VVo00c%3D&reserved=0
-> >>>
-> >>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> >>> Signed-off-by: Ajay Joshi <ajay.opensrc@micron.com>
-> >>> Signed-off-by: Ravi Shankar <ravis.opensrc@micron.com>  
-> >>  
-> >I was kind of expecting that we'd do this more on an ondemand basis.   
-> 
-> By saying on demand, do you envision a different implementation for
-> abort like a sysfs interface or module param?
-
-No. Abort by the kernel when it wants to do something rather than
-on a timeout. It might also make sense ultimately to have a userspace
-abort path (if it issued the command) but that is a different isseu.
-
-> 
-> > So if nothing is going on, the command can have ages.  
-> 
-> I did not quite get the comment about the ages.
-
-Long time.  If no one wants to access the device interfaces, we don't mind if
-the command takes much longer than 5 seconds.
-
-> 
-> >If the kernel wants to access the device and it has had a reasonable amount of
-> >time we abort.
-> >I'm not against this simpler approach though if it turns out to be good enough
-> >for likely use cases.
-> > 
-> >My worry is error paths crossing with a slow command where we want to find
-> >out what went wrong as quick as possible Is 5 seconds ok for that?  Maybe
-> > not.  
-> Do you feel we need to check for "aborted" status along with background percentage,
-> to avoid waiting for 5 seconds for cases when the command has already aborted.
-
-At the moment we don't have anything issuing the abort early than the 5 
-seconds so I'm not sure how we'd hit this.
-
-May need it in future though.
-> 
-> Would something like below make sense, if not let us know your thoughts.
-> +static bool cxl_mbox_background_aborted(struct cxl_dev_state *cxlds)
-> +{
-> +       u64 reg;
-> +       u16 ret_code;
-> +
-> +       reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-> +       ret_code = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK, reg);
-> +       if (ret_code == CXL_MBOX_CMD_RC_ABORT)
-> +               return true;
-> +
-> +       return false;
-
-	return ret_code == CXL_MBOX_CMD_RC_ABORT;
-
-> +}
-> +
->  static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
->  {
->         u64 reg;
-> @@ -316,11 +329,17 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
->                 timeout = mbox_cmd->poll_interval_ms;
->                 for (i = 0; i < mbox_cmd->poll_count; i++) {
->                         if (rcuwait_wait_event_timeout(&mds->mbox_wait,
-> -                                      cxl_mbox_background_complete(cxlds),
-> +                                      (cxl_mbox_background_complete(cxlds) |
-> +                                          cxl_mbox_background_aborted(cxlds)),
->                                        TASK_UNINTERRUPTIBLE,
->                                        msecs_to_jiffies(timeout)) > 0)
->                                 break;
->                 }
-> +               if (!cxl_mbox_background_aborted(cxlds)) {
-> +                       dev_err(dev, "aborted waiting for background (%d ms) by device\n",
-> +                               timeout * mbox_cmd->poll_count);
-> +                       return -ECANCELED;
-> +               }
-> > 
-> >Jonathan  
-> >>   
-> >>> ---
-> >>>  drivers/cxl/cxlmem.h |  1 +
-> >>>  drivers/cxl/pci.c    | 11 +++++++++++
-> >>>  2 files changed, 12 insertions(+)
-> >>>
-> >>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
-> >>> d8c0894797ac..808fb8712145 100644
-> >>> --- a/drivers/cxl/cxlmem.h
-> >>> +++ b/drivers/cxl/cxlmem.h
-> >>> @@ -516,6 +516,7 @@ to_cxl_memdev_state(struct cxl_dev_state *cxlds)
-> >>> enum cxl_opcode {
-> >>>          CXL_MBOX_OP_INVALID             = 0x0000,
-> >>>          CXL_MBOX_OP_RAW                 = CXL_MBOX_OP_INVALID,
-> >>> +       CXL_MBOX_OP_REQ_ABRT_BACKGROUND_OPERATION    = 0x0005,
-> >>>          CXL_MBOX_OP_GET_EVENT_RECORD    = 0x0100,
-> >>>          CXL_MBOX_OP_CLEAR_EVENT_RECORD  = 0x0101,
-> >>>          CXL_MBOX_OP_GET_EVT_INT_POLICY  = 0x0102, diff --git
-> >>> a/drivers/cxl/pci.c b/drivers/cxl/pci.c index
-> >>> d5d6142f6aa3..95c1f329bca2 100644
-> >>> --- a/drivers/cxl/pci.c
-> >>> +++ b/drivers/cxl/pci.c
-> >>> @@ -394,6 +394,17 @@ static int cxl_pci_mbox_send(struct cxl_mailbox
-> >>> *cxl_mbox,
-> >>>
-> >>>          mutex_lock_io(&cxl_mbox->mbox_mutex);
-> >>>          rc = __cxl_pci_mbox_send_cmd(cxl_mbox, cmd);
-> >>> +       if (rc == -ETIMEDOUT &&
-> >>> +               cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {  
+> On 10/18/24 15:49, Zhi Wang wrote:
+> > On 17/10/2024 19.57, C=E9dric Le Goater wrote: =20
+> >> External email: Use caution opening links or attachments
 > >>
-> >>align cmd just after ( - that is c is under the r of rc After fixing the tabs >ting.
-> >>  
-> >>> +               struct cxl_mbox_cmd abort_cmd = {
-> >>> +                       .opcode =  
-> >>CXL_MBOX_OP_REQ_ABRT_BACKGROUND_OPERATION  
-> >>> +               };
-> >>> +
-> >>> +               rc = __cxl_pci_mbox_send_cmd(cxl_mbox, &abort_cmd);
-> >>> +               if (!rc)
-> >>> +                       rc = -ECANCELED;
-> >>> +       }
-> >>> +
-> >>>          mutex_unlock(&cxl_mbox->mbox_mutex);
+> >>
+> >> Hello,
+> >>
+> >> On 5/18/23 04:45, Ira Weiny wrote: =20
+> >>> Type 2 devices are not yet a reality.=A0 Developing core kernel suppo=
+rt
+> >>> is difficult without some test device to model against.
 > >>>
-> >>>          return rc;  
+> >>> Define a type 2 device 'cxl-accel'.=A0 This device is derived from the
+> >>> type 3 device and retains all that functionality for now.
+> >>>
+> >>> Mock up a couple of accelerator features (Back Invalidate [BI] and
+> >>> Unordered IO [UIO]) as examples for the RFC.=A0 These have no
+> >>> functionality other than to report the features as present for softwa=
+re
+> >>> to key off of.
+> >>>
+> >>> Defining these devices in qemu can be done with the following example:
+> >>>
+> >>> ...
+> >>>  =A0=A0 -device
+> >>> cxl-accel,bus=3Dsw0p0,volatile-memdev=3Dcxl-ac-mem5,id=3Dcxl-dev5,sn=
+=3D0xCAFE0005
+> >>> ...
+> >>>
+> >>> NOTE: I'm leaving off Michael Tsirkin for now because this is really
+> >>> rough and I'm mainly sending it out because it was talked about in the
+> >>> CXL community call on 5/16.
+> >>>
+> >>> Not-Yet-Signed-off-by: Ira Weiny <ira.weiny@intel.com> =20
+> >>
+> >> A recent proposal to add support in VFIO for CXL passthrough uses
+> >> this emulated device and a sample driver for a proof of concept.
+> >> For this effort, it would be very useful to have a QEMU model for
+> >> a CXL type2 device, even partially implemented.
+> >>
+> >> I haven't found any updates of this series. What are the plans for
+> >> upstream today ?
+> >> =20
+> > I was discussing this with Ira and Jonathan in the LPC and CXL discord
+> > groups. (Irq and Jonathan, please feel free to correct me) I think we
+> > all thought that having the emulated device support in QEMU and a sample
+> > CXL type-2 driver in the upstream kernel could be valuable for
+> >
+> > 1) people who wish to contribute and propose changes, like refactor, and
+> > code tweaks related to CXL type-2 support in the kernel. They can
+> > validate their patches to check if they break something without a CXL
+> > type-2 device.
+> >
+> > 2) people who wish to contribute on solving problems of CXL type-2
+> > generic code, e.g. loading sequences of modules... They can get involved
+> > without a real HW.
+> >
+> > My gut feeling is I can start to work with folks to get it into the
+> > mainline together with the sample driver when CXL type-2 support is
+> > merged. So people can play with it. =20
+>=20
+>=20
+> I did use an emulated Type2 device for my initial development and I'm=20
+> still using it for wider testing. It is basically same than the Type3=20
+> with small changes. I think a proper solution should include command=20
+> line options for configuring the device with flexibility or maybe=20
+> referring to a file with that specific configuration. Note there exist=20
+> optional functionalities like HDM decoder, and CXL.cache will need such=20
+> a flexibility as well.
+
+In the first instance, I'd just make up a single reasonable configuration.
+Later, it may make sense to make it flexible.
+
+
+>=20
+> The RFC contains the driver for such emulated device implemented inside=20
+> the tools/testing/cxl directory, although it has changed since then, but=
+=20
+> happy to share it. It is almost equal to the code inside efx_cxl.c along=
+=20
+> with the functions/macros for defining the driver.
+>=20
+> FWIW, although I'm working on Type2 support, I really think qemu could=20
+> help for development and testing complex CXL infrastructures, more for=20
+> memory expanders aka Type3 than Type2. I know this requires a good=20
+> effort but IMO, it will pay off.
+
+I'm definitely not against adding support and Zhi's rough sketch sounds
+about right.
+
+>=20
+> > 3) people who would like to try on vfio-cxl.
+> >
+> > What would be nice to include in the patchset V1 in my mind:
+> >
+> > (Ira and Jonathan and folks please feel free to comment)
+> >
+> > Must have:
+> >    - HDM decoder support (>1 HDM decoder). (which I have done it in my
+> > tree, so the CXL core can create a CXL region)
+> >
+> > Nice to have:
+> >    - CXLType2 device system reset handler. As what mentioned in my cover
+> > letter, a system reset handler is required to reset the device state.
+> > Linux kernel CXL core assumes the HW is pre-configured by FW if it sees
+> > CXL.mem is enabled when enumerating the device. So I have to kill QEMU
+> > instead of resetting the virtual machine when debugging.
+> >
+> >    - CXLType2 device in the patch should be derived from PCIDevice
+> > (current it is derived from the CXLType3 device, which carries quite
+> > some unnecessary stuff to present to the guest)
+> >
+> >    - Refactor of the current QEMU FWMS code to deliver the guest access
+> > to the virtual memory backend to the correct emulated CXL device (which
+> > is currently hardcoded to connect to cxl-type3 device in QEMU. Without
+> > this, the access to the CXL region from the guest seems problematic but
+> > creating CXL region is still fine.)
+> >
+> > Thanks,
+> > Zhi.
+> > =20
+> >> For vfio-cxl, see :
+> >>
+> >> * [RFC] vfio: introduce vfio-cxl to support CXL type-2 accelerator
+> >> passthrough
+> >>   =A0 https://lore.kernel.org/kvm/20240920223446.1908673-1-zhiw@nvidia=
+.com
+> >> * [RFC] Introduce vfio-cxl to support CXL type-2 device passthrough
+> >>   =A0 https://lore.kernel.org/all/20240921071440.1915876-1-zhiw@nvidia=
+.com/
+> >>
+> >>
+> >> Thanks,
+> >>
+> >> C.
+> >>
+> >>
+> >> =20
+> >>> ---
+> >>> Ira Weiny (5):
+> >>>  =A0=A0=A0=A0=A0=A0 hw/cxl: Use define for build bug detection
+> >>>  =A0=A0=A0=A0=A0=A0 hw/cxl: Refactor component register initialization
+> >>>  =A0=A0=A0=A0=A0=A0 hw/cxl: Derive a CXL accelerator device from Type=
+-3
+> >>>  =A0=A0=A0=A0=A0=A0 hw/cxl/accel: Add Back-Invalidate decoder capbili=
+ty structure
+> >>>  =A0=A0=A0=A0=A0=A0 hw/cxl: Add UIO HDM decoder register fields
+> >>>
+> >>>  =A0 docs/system/devices/cxl.rst=A0=A0=A0 | 11 ++++++
+> >>>  =A0 hw/cxl/cxl-component-utils.c=A0=A0 | 80
+> >>> +++++++++++++++++++-----------------------
+> >>>  =A0 hw/mem/cxl_type3.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 39 ++++=
+++++++++++++++++
+> >>>  =A0 include/hw/cxl/cxl_component.h | 51 +++++++++++++++++++--------
+> >>>  =A0 include/hw/cxl/cxl_device.h=A0=A0=A0 | 16 +++++++++
+> >>>  =A0 include/hw/pci/pci_ids.h=A0=A0=A0=A0=A0=A0 |=A0 1 +
+> >>>  =A0 6 files changed, 141 insertions(+), 57 deletions(-)
+> >>> ---
+> >>> base-commit: 8eb2a03258313f404ca0c8609a8f9009b9b4318c
+> >>> change-id: 20230517-rfc-type2-dev-c2d661a29d96
+> >>>
+> >>> Best regards, =20
 
