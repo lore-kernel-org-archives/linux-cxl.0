@@ -1,146 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467352010E2;
-	Fri, 18 Oct 2024 11:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5268A210FB;
+	Fri, 18 Oct 2024 12:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729250111; cv=none; b=hCs6sY2dpekuRmrLyox2jbtxv7TYW76ba+j+yiTzs3rdEQ5m6D4PYqaS6N9mVbkIU9miqVZbnf16co57z9z3z9Rrn4XxHQJJo9vl8W85mdRVAWpxxt1CktfDfKvmgWWXO2jV8dxB+flnd9tNIDfDsdVbIKXc3BlCbdv/wW7dILw=
+	t=1729253392; cv=none; b=B6V6oZ1LL1Wi3e7y63BxjQ3o7h0Mxtz+ipmwAswaWkbGelcmtW1p62o4n4nf1jgYiL53e7eCUT0/a3VYq8AtSs4x27hcZ4+XLRPEpi+a7rYG+McIRXS/iq9eDGu3UA0XH1QTP7SbaoMP4kIN+CamnaPwIVXVJuIPaglae/AoH6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729250111; c=relaxed/simple;
-	bh=H9VbsKpLJ9wA5zYLB2VDqJsFVuIZuq/l/10T5Z+X44w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RJgI7RsGs3pplah16AmmRcy1rXQKq7iqiXpMsmPmWgi33X+jpD0LXGKsR3I75TBgZSNMfo2oxRy9VVVciLIaxRgiSOehpNVMmczAA782J+6N4EaDyEXp7boWq9SPDatgIt0C/mzPgx09g4ZkfyXxPSo/ZxqLhRE32DvafLY8isc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qvsi4u95; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qvsi4u95"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hxnHwneT1xAzY8649PF0fR25ciSRedSmGB++Tg52HxQ=; b=qvsi4u95S4N1NjtzPIjvcZ2+qm
-	vBW/PJSzCycTBe78fX3bVZXJHNSLFGD9n/r27ucHtsexpYmbOVgkXupC8CpAvNstEDVG4XN3XrRxa
-	yKqVGt4f1MSa5AaGqAnER4ZaGw/S+sC+Sv4wUFJDt1f8ToBX/3sW4KecfL59JI5S2v1mx9cnM3eyF
-	Tv3cjcS+FkgvCcqL3Et9VsHMp6NPOJxW3Mg9O3VvfJ9jrX2PdNnqJNSVr66qokQjbVlQz7W24bvRu
-	BH2IDoP6a6ANVG1dJVcxmVXNq/ZwgqeYa/8N0KTI5DHgHxURPrCx2QEBINLTWj3xbzJTiMfg4bDsu
-	wEHSyRXQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t1kwh-0000000D4SM-1VKa;
-	Fri, 18 Oct 2024 11:15:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9B7A33005AF; Fri, 18 Oct 2024 13:15:03 +0200 (CEST)
-Date: Fri, 18 Oct 2024 13:15:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-cxl@vger.kernel.org, przemyslaw.kitszel@intel.com
-Subject: Re: [PATCH 1/3] cleanup: add conditional guard helper
-Message-ID: <20241018111503.GC36494@noisy.programming.kicks-ass.net>
-References: <20241001-cleanup-if_not_cond_guard-v1-0-7753810b0f7a@baylibre.com>
- <20241001-cleanup-if_not_cond_guard-v1-1-7753810b0f7a@baylibre.com>
+	s=arc-20240116; t=1729253392; c=relaxed/simple;
+	bh=Z6IY0WLrQ+mbUTBQmT45upWo6R76pXinWA8IODszsrk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aKkm6+phAs7y4kVkh1quc/54oPsy04Mh1AIu0GdUh2LnTo4vvTlkGF2Esc1a/W+6+uumwEJP0tWkOdlPCvXm/MzfwUJkmG+DVHBCrQRrKPWu//kClqeiltVZrB6Z+PLg880wDS1LXoDG6rUeQYeJ4dhDQNK2F8mfxOMc6JBeb6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XVNlz0vkNz6HJjB;
+	Fri, 18 Oct 2024 20:09:03 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0D7A21400F4;
+	Fri, 18 Oct 2024 20:09:46 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 18 Oct 2024 14:09:45 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 18 Oct 2024 14:09:45 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [RFC PATCH 0/4] Updates for CXL Event Records
+Thread-Topic: [RFC PATCH 0/4] Updates for CXL Event Records
+Thread-Index: AQHbH+k/0+IXcnhOQkao9dWzrwOFcLKMOZUAgAAzP8A=
+Date: Fri, 18 Oct 2024 12:09:45 +0000
+Message-ID: <5ca992144d644d2b88feb89c8fb5eabd@huawei.com>
+References: <20241016163349.1210-1-shiju.jose@huawei.com>
+ <20241018120414.00006c61@Huawei.com>
+In-Reply-To: <20241018120414.00006c61@Huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241001-cleanup-if_not_cond_guard-v1-1-7753810b0f7a@baylibre.com>
-
-On Tue, Oct 01, 2024 at 05:30:18PM -0500, David Lechner wrote:
-> Add a new if_not_cond_guard() macro to cleanup.h for handling
-> conditional guards such as mutext_trylock().
-> 
-> This is more ergonomic than scoped_cond_guard() for most use cases.
-> Instead of hiding the error handling statement in the macro args, it
-> works like a normal if statement and allow the error path to be indented
-> while the normal code flow path is not indented. And it avoid unwanted
-> side-effect from hidden for loop in scoped_cond_guard().
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  include/linux/cleanup.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index 038b2d523bf8..682bb3fadfc9 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -273,6 +273,10 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->   *	an anonymous instance of the (guard) class, not recommended for
->   *	conditional locks.
->   *
-> + * if_not_cond_guard(name, args...) { <error handling> }:
-> + *	convenience macro for conditional guards that calls the statement that
-> + *	follows only if the lock was not acquired (typically an error return).
-> + *
->   * scoped_guard (name, args...) { }:
->   *	similar to CLASS(name, scope)(args), except the variable (with the
->   *	explicit name 'scope') is declard in a for-loop such that its scope is
-> @@ -304,6 +308,13 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->  
->  #define __guard_ptr(_name) class_##_name##_lock_ptr
->  
-> +#define __if_not_cond_guard(_name, _id, args...)	\
-> +	CLASS(_name, _id)(args);			\
-> +	if (!__guard_ptr(_name)(&_id))
-> +
-> +#define if_not_cond_guard(_name, args...) \
-> +	__if_not_cond_guard(_name, __UNIQUE_ID(guard), args)
-> +
->  #define scoped_guard(_name, args...)					\
->  	for (CLASS(_name, scope)(args),					\
->  	     *done = NULL; __guard_ptr(_name)(&scope) && !done; done = (void *)1)
 
 
-So if I stick this on top of:
 
-  https://lkml.kernel.org/r/20241011121535.28049-1-przemyslaw.kitszel@intel.com
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 18 October 2024 12:04
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: dave.jiang@intel.com; dan.j.williams@intel.com; alison.schofield@intel=
+.com;
+>vishal.l.verma@intel.com; ira.weiny@intel.com; dave@stgolabs.net; linux-
+>cxl@vger.kernel.org; linux-kernel@vger.kernel.org; Linuxarm
+><linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+><prime.zeng@hisilicon.com>
+>Subject: Re: [RFC PATCH 0/4] Updates for CXL Event Records
+>
+>On Wed, 16 Oct 2024 17:33:45 +0100
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> CXL spec rev 3.1 CXL Event Records has updated w.r.t CXL spec rev 3.0.
+>> Add updates for the above spec changes in the CXL events records and
+>> CXL trace events implementation.
+>>
+>> Note: Please apply following fix patch first if not present.
+>> https://patchwork.kernel.org/project/cxl/patch/20241014143003.1170-1-s
+>> hiju.jose@huawei.com/
+>>
+>> Shiju Jose (4):
+>>   cxl/events: Updates for CXL Common Event Record Format
+>>   cxl/events: Updates for CXL General Media Event Record
+>>   cxl/events: Updates for CXL DRAM Event Record
+>>   cxl/events: Updates for CXL Memory Module Event Record
+>>
+>>  drivers/cxl/core/trace.h | 201 +++++++++++++++++++++++++++++++++------
+>>  include/cxl/event.h      |  20 +++-
+>>  2 files changed, 190 insertions(+), 31 deletions(-)
+>>
+>
+>Hi Shiju,
+>
+>Why are these an RFC?  Seem in a good state to me and the questions I'm se=
+eing
+>are naming stuff that to me doesn't justify RFC status.
+>
+>Jonathan
 
-then I can add the below:
+Hi Jonathan,
 
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -277,6 +277,8 @@ static inline class_##_name##_t class_##
-  *	convenience macro for conditional guards that calls the statement that
-  *	follows only if the lock was not acquired (typically an error return).
-  *
-+ *	Only for conditional locks.
-+ *
-  * scoped_guard (name, args...) { }:
-  *	similar to CLASS(name, scope)(args), except the variable (with the
-  *	explicit name 'scope') is declard in a for-loop such that its scope is
-@@ -290,7 +292,6 @@ static inline class_##_name##_t class_##
-  *      acquire fails.
-  *
-  *	Only for conditional locks.
-- *
-  */
- 
- #define __DEFINE_CLASS_IS_CONDITIONAL(_name, _is_cond)	\
-@@ -342,6 +343,7 @@ _label:										\
- 		       __UNIQUE_ID(label), args)
- 
- #define __if_not_guard(_name, _id, args...)		\
-+	BUILD_BUG_ON(!__is_cond_ptr(_name));		\
- 	CLASS(_name, _id)(args);			\
- 	if (!__guard_ptr(_name)(&_id))
- 
+I add RFC since it is v1.  I will exclude RFC in v2. =20
 
-That make sense to people?
-
-I've queued these two patches:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git locking/core
-
-But lacking if_not_guard() users, the robot isn't really going to give
-me much feedback there, I suppose...
+Thanks,
+Shiju
