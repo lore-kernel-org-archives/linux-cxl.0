@@ -1,119 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741431940A2;
-	Mon, 21 Oct 2024 07:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982DA198837;
+	Mon, 21 Oct 2024 09:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729494481; cv=none; b=Sh3J5PoCRbz5UqNQ6wQ+v1q9n7Yem4JgE9zqEOvJ5o+1z7g2dN0LpAkksX0WBZYakkhxBdicNQqyMY0+cXLItNdTLr6cjkm+HfwXCicuyYQlXY/Oo2DlGz1033crIeVzQcry3DTwS5QqGCgZW9cTXjVIHIDxSOUzfem3T0HX74c=
+	t=1729503484; cv=none; b=ZgFIDGxtwW8NeRWEnfmXz3swZzjoiixPSGAVZKJv6QEAkdpyBeQW6TOmwYd9Vy5p7yD9iw0RhaV4IfIiV5E3oOgOrD+Dim+1TRdvxqpK6uFI/OeVdbVqx5Wg67cMFRPW1c0PgdmUFPyWIHXoi3RDni+9MNOnUVnzWWmmanT+h/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729494481; c=relaxed/simple;
-	bh=jgiYG0Ek2ZJK/rdl0cvnO5WUT2lSdDlxtVCEzXGPlM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTR9E5tLPUNOyYlcdg76F7JiIMtpkHyLb/TKfXjvIDOdyFmOXMo5jGsYAEm6gdwpVCLtLN2Z6/kjLQyRwA7CmH2YeCAPVJVJHk0DiRYBv+mz2pZSRJy321HQ4/qNTblUTEY0pUYYUV98go56UvOgUmSo0T0acF/JLvLNXl7ttHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zqbzj7H9; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zqbzj7H9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729494480; x=1761030480;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jgiYG0Ek2ZJK/rdl0cvnO5WUT2lSdDlxtVCEzXGPlM4=;
-  b=Zqbzj7H9jmiLeBxOO1POiwka8dTsXSkpqs3dKp8tIt6BO2uXbIiRfHY9
-   ZVQX2znsXohsULOua7yFS/TH8AsRymg4Squ4Y/rki25lKKosaPQqqcV5V
-   4Szt8fkyXC7AjQ8dsMKSLAQZ+ltTNmgZOu0ppinENVwf1Q9obaOgz7esH
-   Akxx90Y1PbW2U77oupo8VBCKa/QabzBr4FdQsg0XYVi9H2zZu6xNCluAW
-   9TMDjf7CR6TdOJe0gD1Kp9Ze1vFUUlyTetCCdbL8HAKf68xqh0AJOT0RM
-   yLtKkQlfGni/AD/+WcPQIEYcLy+wcBJX6U57kM29uwYkuP+Zwq0JvFJvr
-   g==;
-X-CSE-ConnectionGUID: QGQz3Dt1S8GZyVQUZmByZg==
-X-CSE-MsgGUID: XBBnkWyUQ4O5lC6FOH7+Yw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="28398053"
-X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="28398053"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 00:07:59 -0700
-X-CSE-ConnectionGUID: g8ZTj4VQRKGVGBiGDjDB5g==
-X-CSE-MsgGUID: S4MppS4yTayb9wJK/YalEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
-   d="scan'208";a="83433920"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 00:07:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1t2mW7-00000005P6t-2fsQ;
-	Mon, 21 Oct 2024 10:07:51 +0300
-Date: Mon, 21 Oct 2024 10:07:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1729503484; c=relaxed/simple;
+	bh=PEW3DFyuQciELtV+7Gvo/3gVm39aoucp79oCe+Jyz9Q=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FMGI1WZPZlD3uyKwy4jHwJ65J4jPq1VMRPNvZ8gyepoJm7dwyfxduPwxdTBMUSCSS8J33NG4Gnc/SZqWISpLKStPGxY65I78eRxlAULfrOYhoA1mCHBs98noIg9Pfz5QduL0ml3zjK342zF0J1Z08uwFe040S4kNBQyJ4CTpYIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XX9Cz06ftz6GBTY;
+	Mon, 21 Oct 2024 17:35:59 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 507A31409EA;
+	Mon, 21 Oct 2024 17:37:55 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 21 Oct
+ 2024 11:37:54 +0200
+Date: Mon, 21 Oct 2024 10:37:52 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Ira Weiny <ira.weiny@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/3] printf: Add print format (%pra) for struct range
-Message-ID: <ZxX9x82ME7GRnVl9@smile.fi.intel.com>
-References: <20241018-cxl-pra-v1-0-7f49ba58208b@intel.com>
- <20241018-cxl-pra-v1-2-7f49ba58208b@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 22/28] cxl/region/extent: Expose region extent
+ information in sysfs
+Message-ID: <20241021103752.00002741@Huawei.com>
+In-Reply-To: <6712a846dad09_2cee2945a@iweiny-mobl.notmuch>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+	<20241007-dcd-type2-upstream-v4-22-c261ee6eeded@intel.com>
+	<20241010160142.00005a5c@Huawei.com>
+	<6712a846dad09_2cee2945a@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241018-cxl-pra-v1-2-7f49ba58208b@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Oct 18, 2024 at 02:46:25PM -0500, Ira Weiny wrote:
-> The use of struct range in the CXL subsystem is growing.  In particular,
-> the addition of Dynamic Capacity devices uses struct range in a number
-> of places which are reported in debug and error messages.
+On Fri, 18 Oct 2024 13:26:14 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> Jonathan Cameron wrote:
+> > On Mon, 07 Oct 2024 18:16:28 -0500
+> > ira.weiny@intel.com wrote:
+> >   
+> > > From: Navneet Singh <navneet.singh@intel.com>
+> > > 
+> > > Extent information can be helpful to the user to coordinate memory usage
+> > > with the external orchestrator and FM.
+> > > 
+> > > Expose the details of region extents by creating the following
+> > > sysfs entries.
+> > > 
+> > >         /sys/bus/cxl/devices/dax_regionX/extentX.Y
+> > >         /sys/bus/cxl/devices/dax_regionX/extentX.Y/offset
+> > >         /sys/bus/cxl/devices/dax_regionX/extentX.Y/length
+> > >         /sys/bus/cxl/devices/dax_regionX/extentX.Y/tag
+> > > 
+> > > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > >   
+> > Trivial comments inline.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
 > 
-> To wit requiring the printing of the start/end fields in each print
-> became cumbersome.  Dan Williams mentions in [1] that it might be time
-> to have a print specifier for struct range similar to struct resource
+> Thanks!
 > 
-> A few alternatives were considered including '%par', '%r', and '%pn'.
-> %pra follows that struct range is similar to struct resource (%p[rR])
-> but needs to be different.  Based on discussions with Petr and Andy
-> '%pra' was chosen.[2]
+> >   
+> > > ---
+> > > Changes:
+> > > [djiang: Split sysfs docs up]
+> > > [iweiny: Adjust sysfs docs dates]
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-cxl | 32 ++++++++++++++++++
+> > >  drivers/cxl/core/extent.c               | 58 +++++++++++++++++++++++++++++++++
+> > >  2 files changed, 90 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > index b63ab622515f..64918180a3c9 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > @@ -632,3 +632,35 @@ Description:
+> > >  		See Documentation/ABI/stable/sysfs-devices-node. access0 provides
+> > >  		the number to the closest initiator and access1 provides the
+> > >  		number to the closest CPU.
+> > > +
+> > > +What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/offset
+> > > +Date:		December, 2024
+> > > +KernelVersion:	v6.13
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) [For Dynamic Capacity regions only] Users can use the
+> > > +		extent information to create DAX devices on specific extents.
+> > > +		This is done by creating and destroying DAX devices in specific
+> > > +		sequences and looking at the mappings created.   
+> > 
+> > Similar to earlier patch, maybe put this doc for the directory, then
+> > have much less duplication?
+> >   
 > 
-> Andy also suggested to keep the range prints similar to struct resource
-> though combined code.  Add hex_range() to handle printing for both
-> pointer types.
+> But none of the other directories are done this way so I'm inclined to keep it.
+
+Fair enough. Maybe a topic for a future cleanup to reduce duplication.
+
 > 
-> Finally introduce DEFINE_RANGE() as a parallel to DEFINE_RES_*() and use
-> it in the tests.
+> >   
+> > > Extent offset
+> > > +		within the region.
+> > > +
+> > > +What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/length
+> > > +Date:		December, 2024
+> > > +KernelVersion:	v6.13
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) [For Dynamic Capacity regions only] Users can use the
+> > > +		extent information to create DAX devices on specific extents.
+> > > +		This is done by creating and destroying DAX devices in specific
+> > > +		sequences and looking at the mappings created.  Extent length
+> > > +		within the region.
+> > > +
+> > > +What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/tag
+> > > +Date:		December, 2024
+> > > +KernelVersion:	v6.13
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(RO) [For Dynamic Capacity regions only] Users can use the
+> > > +		extent information to create DAX devices on specific extents.
+> > > +		This is done by creating and destroying DAX devices in specific
+> > > +		sequences and looking at the mappings created.  Extent tag.  
+> > 
+> > Maybe say we are treating it as a UUID?  
+> 
+> ok...  How about?
+> 
+> <quote>
+> ...  looking at the mappings created.  UUID extent tag.
+That's fine.
 
-...
+> </quote>
+> 
+> > > diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+> > > index 69a7614ba6a9..a1eb6e8e4f1a 100644
+> > > --- a/drivers/cxl/core/extent.c
+> > > +++ b/drivers/cxl/core/extent.c
+> > > @@ -6,6 +6,63 @@  
+> >   
+> > > +static struct attribute *region_extent_attrs[] = {
+> > > +	&dev_attr_offset.attr,
+> > > +	&dev_attr_length.attr,
+> > > +	&dev_attr_tag.attr,
+> > > +	NULL,  
+> > No need for trailing comma (one of my 'favourite' review comments :)  
+> 
+> I'm noticing...  :-D
+Maybe I'll one day add to checkpatch.  If it weren't written in perl
+I'd do it now ;)
 
->  	case 'R':
->  	case 'r':
-> -		return resource_string(buf, end, ptr, spec, fmt);
-> +		return resource_and_range(fmt, buf, end, ptr, spec);
+Jonathan
 
-Since you are going to have a new version, I think this should be _or_ instead
-of _and_.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> Ira
+> 
 
