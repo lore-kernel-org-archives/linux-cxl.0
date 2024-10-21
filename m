@@ -1,492 +1,382 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD071E3DF4;
-	Mon, 21 Oct 2024 09:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A8E1E907C;
+	Mon, 21 Oct 2024 10:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729504457; cv=fail; b=SG9s4QWzH5pT1byf/EE+8MUWuoHoFOP6Bfyge6w1I/D6KHadmM9LreVJ5iCDnyy3cMM1E9lbg7yhZ5tcuSsMp709RULmM0gDirBDjQse9XHHsV4j4O4pfcfwgVxdE94WYwULROk2nhxgIWfgBjvjeZEPo2t1WgeBA3ByBoCBnv4=
+	t=1729507749; cv=fail; b=s2pINuzy8fDJ5tmpTDiadofTPkWCosK++pyvZ4lpj4E3KTWrUOBJiBhxbkQWrBBz2nnANth0DxKRL9U4VeWDQzT2iJSIMc9MaRiTyiMHJEhqO3BBgtKsuYJSnhboY6RmLZNhZHD8ypsVnwQiOzQMnlYoMPPk6aPvT3Ed1zj7IE8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729504457; c=relaxed/simple;
-	bh=IrWZSMw4gW9Jv81CqzJRF0SHaUBSjyaGzn1AwG8nRI0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=s8sEAR0hHIsLPdQdUJwHGP1/AjM97ytZKp8IXOurFiq0xdmSbe/KS2fUBUisDXhbgkTDGo0xay+sPWkgtvPbK4M5r7cLMv7gw7ygz2FzX4ZJNBR0kG3mRD2wCQB/CHiFusCfgAwQVAFLDm7gyFl+k+Y4n0xnSClLGAXJySTytBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oFuAhglU; arc=fail smtp.client-ip=40.107.220.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1729507749; c=relaxed/simple;
+	bh=3z9O5MUVV3cKworGUjCAIyxxhQts+dg9lpCNqD+HgO8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cTeGiZyTUrxFonk2cKUZVYFJdz3u4YaEQfmZn7plX+oBJ4bJ7wrwANEZpUOFVJwKzOPzUyWRg7k6z/y81txJiLjlv+oi1aRK2++kNhfSOxIBQd4Ym+FocPNmjL2sbogeTTFghJIRiweFAajXKnjFZ5vzWnVrTr3DeCLi90yNEX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Kfzyn9H/; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oFuAhglU"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Kfzyn9H/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yx3pBk+7NnGFQ4Zb8QUAfbyk/CNfFvLGA18HqiAsFa/K4llWzKgv21dALdori6NpYHIwi0bm/F67kK38FYd2ClrXhrG5KnVg/WRfQbp2Q/K3Oa7jK7eerKebpk3nJBmr/asa3kDKMD68oain3tBYSHwEkmb1IVgpWtgsQnoufRjVOCVMbi/0VsJT14hY5D4ZK9Mvh94znJ2/2rUvrADeT7sgLGhbvMwLr3QfnV3/wdp43R1OuwPDi0f/avTi0Oe7+n8a6BijA2T9rJB2QDsi+9GFa2IqwMRzmsbG+42dQWRP8jjVWgz5jJrmHHr1/vzoNvTMvbwYJ3UhfJnyreTQnQ==
+ b=OiQfDs8CgairFgMT2sNu014ByZVRhAQTshjDGjv6RFby0Skoz3pvgjaB9+uRYCoYw79erQHO4rHGEWsy00pWwVH+koRxfuZjL21/OT5y29AwGsDsi5yktPqHJaUShtCU++OVQZZ0grzVD3K51xbUXf/xtFfHGYPMCIjTUg/JFHyybrWdbzEajlDZEMxkPE2KSLGy3r7b16O0GqPWCfEFO1YXskfBa7A+OCT/hw4eFJXKOtPyzZa7L+z7rKx9y+EStLAk4wm70zn/5mNPoQ2yAZc5kCpX6KRGxIX6C/gO2d/McY5hJUWSWk3wcf0dRr/J1kvMr6i/Tp08EiaMvkz3Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/tCHC66x3XqdomSjo2SyljtXZRI3gg/5EyNpMRwmxlc=;
- b=tx0p1hUdmSl4WJs7FoyzkgjujgSEaiXbYdRn7WkO6N1oHa+ypnrfX7G/yG3F/OaSlj5KFfpxQRw7pfUWg06lhHkqieH89XZC+NW1Yd5LYLYxc5C73F3zn7s5CB07dqGCsvu9m2DdzRy6a5Q3h+vBTUCap3qICiSOkaPICDJTaioU2BeJbxObfMKEwre86b3SvyDVlhbbsg+JOscPP/xysQkPZRN3laSHEzA52W5aj35NFrmK8F14JKJnhTSI9s7VBdzRK2RMEOmKGk+uFPLUVRoN4CyfD/afG8rlNeZIIGdmmtOQgFvXwY+9ufG5oJgd2tV0xnkSqVIckeMQowHT1g==
+ bh=3z9O5MUVV3cKworGUjCAIyxxhQts+dg9lpCNqD+HgO8=;
+ b=kkztiYYeuzhr1bHrTulq/7b06WxAcbSZdFGGfaEFp6oZlGyQ+7LyfuWuMRHg1Pb+0fZFF5mI4a28l+WekQQC7CDyCG94oNAHnbNT5RfsX+IzyJATZv01Z4uuxyGnNEuV1Rnsbmhhet3fjzFegG9OYz/x6gXIB5zAItHiqSj6jA5/b1CF+BqTrD2HyNtE5RsXGvlZU0TjI50/VfL/lhlbCYx4aztXHbMA9yiCA0HPjS+Kv8vHDjiCdesgFVT17LEDmAVW8AmM132YZ9I6xyhH1/cM6X/RmWTmmOeeK5z57dLZEsG71aIkF6hKTvzNJh2me5bC0L5M3r0oXvokJQt8Pg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/tCHC66x3XqdomSjo2SyljtXZRI3gg/5EyNpMRwmxlc=;
- b=oFuAhglUgiJM7v+LjZpARCsL9x6axvCz3LadFizbHn3arRNcj8pY8XOJgyp/tMOckJhOqW1xaEu1WZCr1lXcDEkpSZLMA9FzifKtVefJqA2hgTIQwAqmjWyy6W5YqgnVnpN99PdCEjSeAFrGmGLBGIAXJn53Sz/N3Rh2m4jg0mA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by IA1PR12MB8468.namprd12.prod.outlook.com (2603:10b6:208:445::16) with
+ bh=3z9O5MUVV3cKworGUjCAIyxxhQts+dg9lpCNqD+HgO8=;
+ b=Kfzyn9H/dX/E7ocOJILs431aAK9rVJyXSpF+nhs1M5OyAOoa6dSJzDXEp1rhy1J2dkxGBAEIV6nOFQexe3ySsvNtQktiLrTIHovXuqsy0zc8l/43SC2Izu+H0qVMDkU7IQwB9yPCo45wtjt6WbDnZVWQlPQq7KLLoWcaJ/tTsd5RPQRJeyNOJfK6C1cLVcaUZapUGZjqctQqSeEaZ30n9CHvQpFqLjaJoBy7vSnuxc4/KoryK8CU5Q57moIhps3Jyf+IWEC3ntBCSJZaptzjq/EYQm2NnprHyZIdQSD7NWmGWs1MVINf5gVzBeXo8PvLwoJkFBwiaksx8lxwd0zEew==
+Received: from SA1PR12MB6870.namprd12.prod.outlook.com (2603:10b6:806:25e::22)
+ by DS0PR12MB7971.namprd12.prod.outlook.com (2603:10b6:8:14e::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Mon, 21 Oct
- 2024 09:54:12 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8069.027; Mon, 21 Oct 2024
- 09:54:12 +0000
-Message-ID: <78c928ff-4624-ea21-1c13-58ef61737a53@amd.com>
-Date: Mon, 21 Oct 2024 10:54:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v4 22/26] cxl: allow region creation by type2 drivers
+ 2024 10:49:03 +0000
+Received: from SA1PR12MB6870.namprd12.prod.outlook.com
+ ([fe80::8e11:7d4b:f9ae:911a]) by SA1PR12MB6870.namprd12.prod.outlook.com
+ ([fe80::8e11:7d4b:f9ae:911a%4]) with mapi id 15.20.8069.027; Mon, 21 Oct 2024
+ 10:49:03 +0000
+From: Zhi Wang <zhiw@nvidia.com>
+To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>, Jason Gunthorpe
+	<jgg@nvidia.com>, "alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "alucerop@amd.com" <alucerop@amd.com>, Andy
+ Currid <ACurrid@nvidia.com>, Neo Jia <cjia@nvidia.com>, Surath Mitra
+	<smitra@nvidia.com>, Ankit Agrawal <ankita@nvidia.com>, Aniket Agashe
+	<aniketa@nvidia.com>, Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta
+ (SW-GPU)" <targupta@nvidia.com>, "zhiwang@kernel.org" <zhiwang@kernel.org>
+Subject: Re: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
+ accelerator passthrough
+Thread-Topic: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
+ accelerator passthrough
+Thread-Index: AQHbC61b9ki2ojKvx0ySv/3ut0ogdLKRNlMA
+Date: Mon, 21 Oct 2024 10:49:03 +0000
+Message-ID: <c4c660b7-3220-4cf8-9430-a3dd7e623cef@nvidia.com>
+References: <20240920223446.1908673-1-zhiw@nvidia.com>
+In-Reply-To: <20240920223446.1908673-1-zhiw@nvidia.com>
+Accept-Language: en-US
 Content-Language: en-US
-To: Ben Cheatham <benjamin.cheatham@amd.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20241017165225.21206-1-alejandro.lucero-palau@amd.com>
- <20241017165225.21206-23-alejandro.lucero-palau@amd.com>
- <4b699955-8131-48d8-a698-999d90523261@amd.com>
- <22262215-54de-1a36-056b-5854ff05ccc1@amd.com>
- <54dd9faf-0078-4f3f-b31e-a500bcff64ba@amd.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <54dd9faf-0078-4f3f-b31e-a500bcff64ba@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0082.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:190::15) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB6870:EE_|DS0PR12MB7971:EE_
+x-ms-office365-filtering-correlation-id: 66304a06-3fab-42b9-27ad-08dcf1bdfa64
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eGg4dWVtc1pYT3FVc0JHTkdQY1lsVjF1TmcrMWs0RWhuSm9XK2hTMURtT0hw?=
+ =?utf-8?B?MUROUmZyU3hQZlppOFpQUC9rSW1vRmlRbG1uRWlZWW55MU80RlZNK2UyZUlj?=
+ =?utf-8?B?YVhDc0VZUThmT3BtckNQVXZlUWtReVNCMTkyMzgrVk1DQ2RPS1FqSHZ2dVhD?=
+ =?utf-8?B?bDhxL1FFWllVNDJOVEZmUXM4NUVlYjhLdmhRZGJ4cWxiNE1NejdNWlcrUExJ?=
+ =?utf-8?B?aHNQNEErc3Z2NmRYUkdOSjB3RkZLZkhYSUxaVEZoVDhmYlBIVjZ4enJmT0dW?=
+ =?utf-8?B?dmo5L0U2a2h0cndFelB6L1NVWFRudnMweERKWnBmeitwT3JJb2kzOWRmTThF?=
+ =?utf-8?B?NU04RDRWK3VMNTJMY1dzWHJaZlpCU1VHbDJxeEQ3aStnNVQweXE0bEhMc1Vu?=
+ =?utf-8?B?TXhmVjZ5VDhVN0UvMGxjb0JBMDdaUTR3TkN5M3BSTVNFSG13eis5YmpqNERN?=
+ =?utf-8?B?cGN4UkJ4elJCVUZYUFA5MEJibC93NEFFbTB1K3FzZS9JZ0pCM1BoakN1eVJE?=
+ =?utf-8?B?RHp0eXo3d09SN2tnV2pjaFI2S1F1VURndEZHZE01WmRpTm41WnBPczV4VXNV?=
+ =?utf-8?B?MUIxMVpPcXMrVjl1RHNQdllVeWdGdDd6OTRIYVFBZlJnZXpTdEZ5M3VxR3Bh?=
+ =?utf-8?B?QU5HOUY5VXNkSW5USXdOUDBLNkpHNUJ0OGZqVTFkWDZvUWkzcExhUG4rNy8x?=
+ =?utf-8?B?Rm9zOVNIckYwZFljZThxVDd2YUtxMEhSNEh3L3d1MDVDcmR1V2wrbTlRQ1hy?=
+ =?utf-8?B?ZE5VdFpUWjVzaEJGMndIaU83L1UwZlUyYmU1ZGxCMUtHS1FmU1JqSkZ1b1BX?=
+ =?utf-8?B?TzE5UzN0WXVUZTZuYjFZV0Q1U2ZSaHRKRHFxa3EzSmh5VkpGbkwyZzVDZWpz?=
+ =?utf-8?B?U2MrZWVweUdCT3pFdTRUUS94UmQzMUt4THVSb3UrclZYVDhIRHFJVG8zVWQw?=
+ =?utf-8?B?TGZwcjZZb1U3d043TGRFTFBYV2xxcWd3N3ZIeXU1U3VIQjNtMlk0UUhFb0RS?=
+ =?utf-8?B?YkZ4bk9iK1gzbCtvVVorL2k2cjJRdEVEYmFaOUJRQmxxQjB0R3llYUVYajFG?=
+ =?utf-8?B?YzNQWnAzV2IrTWhnbmY3OWU1d1VxbkFmU0JQS3hheDBOQUxrdW1wUXc0OFpm?=
+ =?utf-8?B?b1lIdlFiWlBoZFpjV1NvZm50dllNV3hVMFp5bHJZdW1RV0FTSW0zQU5HaENx?=
+ =?utf-8?B?SWVwM2l2S3pzbm9OQlBCRFpyQTNLMFMyTHJ6SVRVQnUrQnhKdy95bVhscURT?=
+ =?utf-8?B?cXA2aFBtQjdLTzNlVGtFK3lLWm1FZ1J0SjlSd0xjZER3RDFsemJ1SFJSS0dS?=
+ =?utf-8?B?WFJ6U0ppdkpvZDVpYlduNDlFbnpXSWR6akJHU1krM1A5dmtQMFllT0tSVDds?=
+ =?utf-8?B?dUY5M3RGS2RqRTZERW8xTzV2R0pEVVN1VnFrbStnYmFJYWtZRkcvVVpaWHJn?=
+ =?utf-8?B?N1hCdmxydTRVaGJLM0pNNFJPQ1JuSW9nWms1b3pJRm1uemtSMGwvdkhGaDdM?=
+ =?utf-8?B?TDdkY2Y3dkhNNDVEQUk1Q3RyTkpobnpsUDFEOFRsOUxTVm85SWM0d2ZjVVl5?=
+ =?utf-8?B?eUJJNXFQRndjdWhqZ0d3SnRob0psQWFjSzRpaUhhMnZKa2dCS2Rod2l6U0NQ?=
+ =?utf-8?B?MFVnRTdzWjZ5NzJNUm1wNWhSdUhVU05ZQjg2My9rTkxRTEgxVVluRUlrODNz?=
+ =?utf-8?B?VFFSVysrVFdlNzNhMlk3NHhOV2dYSyt0akpwUlBRbDNNc1I3WGpzeGxvNnM4?=
+ =?utf-8?B?WE8zbTBTWHNVdGhTT1cyWG40V2dRSG0zN2FlS0RLMk56VU8yUUhiZzR2MER1?=
+ =?utf-8?B?ODJqYWx3RWg5OHdGQWlUS1pzSjhFMVpOVmtraGVUclhDOGs4VkYra0VPYWJ5?=
+ =?utf-8?Q?BRIHaC42BxmhB?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB6870.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WHdIbXd1V2k1VHAzOTQyb1VwUXBRRkVLc21XS3Z4bTNsTEdNSmdYSjFEaFNu?=
+ =?utf-8?B?eDV5bFZSeGdZclA3SnVITkgrUWMxeGthMnBBVGRrcktRR08wZ3FuWHVMVmpz?=
+ =?utf-8?B?cUp6aTlZVVphVXd3dUx4QmYxa0RmcVBEd1gyTXZQNmJJV2s5N2NRdnRFTUV5?=
+ =?utf-8?B?eGJuV1EwRTZzODRWR3VIOVdyMjkwTVJzWWRHYkNYdHVOUTNYWVR6RTlMRDlB?=
+ =?utf-8?B?NWdWeHdOZlhpTS81UTFYc0JSRUhaSFR4WkdJcmtQcnEwOElvZnhWT0Z0S1ZR?=
+ =?utf-8?B?UUkra2JGUVd3c0VZK2UxSFFValNLbVkzTkwyWlI5TUJxUEU5L0V2RHZwVnp6?=
+ =?utf-8?B?aTZoajVNTkl0bHlWM21SemFTRWRwRE0xb2VrUzdUSGl2a1BPZGtxcWs2UXB0?=
+ =?utf-8?B?SXk3RjVnSE9sM0h4QVk1VVc5LzVHT1BYaTFpUTB2SHM1TEZGZS9KUTU4MHg5?=
+ =?utf-8?B?UjJlU2tNeGRuV0h6cTFZanYxN3ZabVJHRWZlOEVzcmMwV3ljRCtOeUlOS04y?=
+ =?utf-8?B?OTNDUituSXRjS25oc3pVUDdSbDlsKzVQOWhicnp1cWVsK1FnUW5SMHRCWElw?=
+ =?utf-8?B?TDVVTVU2bkxudFJFcTUzSk0ycXIvVGd6bExVSE9Tb1oxV3pvcHlubE9NQzM0?=
+ =?utf-8?B?djFLWTAyRGM0SlI5dGFhNXRQRzhOUGRQWTQ3NnZVekYvOGE5SGlWRDRnYXUw?=
+ =?utf-8?B?anNBWE9ESnFsSFF4Z0J6c3NjYkcrU3g2bUk2ckRsUVhybXJMYjZYWnhjTDd0?=
+ =?utf-8?B?RUlSR1A1TFVySW1IRFBUS08vbnJHNmtSZjM0cm81bkRKOFh1VUNnc3gxSmdE?=
+ =?utf-8?B?SmJjS1lOOTUwc0E5SENvQWg0OVlYbzRwbExsc0RkUTJIWm94NVFjNFRFdmpG?=
+ =?utf-8?B?VFN6OGkvWTZ5TTdNVFY2eE1qQkpUaVh1TldMSkpvdlBCeXRTNDIvYXptY3NF?=
+ =?utf-8?B?ek9NeHBxb2JBSmNKbmRvNXp5WVljR1JKSWY0M3A3cWVNVkp0WFJNcDNGZTI0?=
+ =?utf-8?B?SlAyVk9UeDhZNTlqdW5SUEJRTnU0elQ5K0VvNDN5SXZSTlZhZ3RMbGZGTEww?=
+ =?utf-8?B?VTRZZDFoWjdKOXcrNXZTaWRCc1JLcm9VWXRFc0d4UFRWcnNtUWhPYlVFSmNR?=
+ =?utf-8?B?aGVabGUrVWdjbnNKdmIrUG5aQmJaamtrTHRjbjV1RnF6aVl4dHBZT1J1T201?=
+ =?utf-8?B?cXR3QmRnTUs1dHhTclc3cmUyeGFoY0VGOFRLTTZxUVlJYTVycU9CaGJFTjAw?=
+ =?utf-8?B?T1ZIbjJiZkN4YTQ3c29yVmhJSWtaTVR4a291U3h3OXRIeXdzUFNBNFFEdm5p?=
+ =?utf-8?B?UkZDdDJCcHk0YU80WXF1bkNuaHFCa0xSTWZtM2VMWGNIb1l5SFpraGE1eWtK?=
+ =?utf-8?B?TnUzZEtJeUV5aWNERXhSR1ZTOW5iVWZ5a2NFL3UwMEY5bXg2dFFpUDVZVk1i?=
+ =?utf-8?B?TjJ0TXFWdUhZTmF2TlFoRitGZHBZSTVMaVlsWUtJMGNyODJPWUlzWUdObGxk?=
+ =?utf-8?B?WmthbG9DenpXTUx6SjYzdnBxZGpEcTdwZ1E0dkFuRlJRYU93dEk1Z3BsVVlX?=
+ =?utf-8?B?czQvZDRnMEs0RG9Jc0pSako2RmpZVXA0QzZRZUhvbnZpNUlaVUlsSUpUaHdz?=
+ =?utf-8?B?eG1mWW1ibkJGM3luZzZrUXJBODlPK3JMMGZsZTZRc1paMlFKdWRqd09nekla?=
+ =?utf-8?B?QVlWaGd5a2pLUTgzcWhqT2FUMnZDaVhwWlUrOWJhbm53aURBVVJTc2dtQm1r?=
+ =?utf-8?B?MGVIN0JDOVcwSWhBa0UxSUdTUVZRUGxZYU4ybEErQUNWSVJUK0JlK3NzQ001?=
+ =?utf-8?B?YVFlaHFHRkRKcmtONVJDeFN1NEgzV1NDSVQ1RHhneW9HNlNvd2plWUdvTzda?=
+ =?utf-8?B?MnQvNEFBbjVoYXBTdDFkT2ZPNUlUUXZmRVFXbmI1aERid1dUZHdxMWtGbTFx?=
+ =?utf-8?B?UmMyWnVncHMranAxaUpTSjY4V05pOThlYmJiMWxUTlVoSGl4TEZFZE1yRSto?=
+ =?utf-8?B?QURkVnRUejMvWXBnc3B2aDFhSDVxVHJmcThyZlI4LzNQWEFWL0NBMUx0NEQ3?=
+ =?utf-8?B?VnhNNHVWZ1U3M1Vuc1dSOTM0UFEwaXZjbFE1YlpURmZCY052RGxZRVE4OEJa?=
+ =?utf-8?Q?M0XU=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <410EBBC83EB4E9488E547AA262B587E2@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB8468:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43373558-71d7-4a78-a785-08dcf1b65081
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cG1JSWN5RUxhTStzTUlLQkpuT0FSVXRud0RDUXFrdFRHWkFhSkUzc2ZKcit5?=
- =?utf-8?B?UXEwWFdFZUtxRE1iOUw4RiswZHJLQmxGU0RpUlg5Z3V5SkEzUi9nZHVYbTUz?=
- =?utf-8?B?cTY5QnQ1bDdVVlo4NHFVbGJUMEUxNG1jR2x1T3dLQkxtL3NSaXhjcm1lbHhz?=
- =?utf-8?B?TFZMV0pDNk8xdi9EQUFVRWNHUmdFclNYQnp3SGdKQ0pEcWNvWHBaNHQ3Y216?=
- =?utf-8?B?VWc0ZWxhQlY5UWVScDR4ZndRQjhnQ1hmQitPQ3ZaaWZMVFlUWWxOZCs1VUNC?=
- =?utf-8?B?Z2t5akpNcUowbkoxWEF2TWZDWmsvajBrVE9vdWF4M2NCK3JpdXdRM2psSktn?=
- =?utf-8?B?RUdUeW1IUEpUZmdpYjc5L1h0Q01OSXJQYWdZYzlBUTQxNnlwSzhXWDlyYWVL?=
- =?utf-8?B?cXRJaGpQZ1hyeDU4c2dvTGhpcm5LcTBQMWJQTSsrVDBsQTBaQURMZ0ZpVUdj?=
- =?utf-8?B?aSszS1pBc2Z5UHBxeE5ZdjVRL3RWMWpjb2RuaFFKcVhHU3hUTW9HaTQ3ZVF6?=
- =?utf-8?B?bFNwOFBmNFRnQlF0WVdJeFNLajNJdUwwNkNpakp6ZkJ3bE9aUG5zRkJ4T256?=
- =?utf-8?B?Nmk0VG1EQmxnWGorOExxQXAvTmx6UlhYUE9jbnZIakI0OFhHWTVyaGVCQjVu?=
- =?utf-8?B?bGlnVWt2bDlnejVoUXhoaE9iL1JmY1REeXZNME4zYWZJOStuTzgxSjdMWkc1?=
- =?utf-8?B?MHYyNDlHbjdaOWQwclRWQk1zUmZtWW5EOGRrSzNWeVExY095VnJWeFZyb1B4?=
- =?utf-8?B?eWN3U3RxZ2JKWXNTUVJlb1hRZHUrKzE3bktlc3Q4enZMejJBSW1ZWGhQVFJC?=
- =?utf-8?B?NEg5NU52b0JVRVhyS1hnMWpxWnVXeW5tQk1reWtnVkJKcnJsOEZOelBVbnVk?=
- =?utf-8?B?bU5OK3o1SUhIS3ZLUTY5Ujh2bUFmaDBqbGxMN2dUWWhXRHdob3ROWDg0RDQr?=
- =?utf-8?B?MFBxdTFrQ0hqVUVFNVIvS3UwOVpGL0tKd3BkTCs5enNOcldpMjRwYkRlMk5Z?=
- =?utf-8?B?WEtkRWtZdC80amFkMzFmZlRCcTgwN096bHprWk1GRnNoT2ZCUDVWMkpna21G?=
- =?utf-8?B?VkhQVnJYcEVOYURVSlJRYW5QZlVEZkdHS0NTQ09uNmRvT00zaXJxa3l0NmYr?=
- =?utf-8?B?Tm5DTm80NHN2emVnSGVBUkdtZjNHeXZKUmlNQnduWEpKWFh2bFhCQjVkbmhU?=
- =?utf-8?B?cVRVWmVNVG1xSjB0dlRpZVRxK0dCbFpxOEhhMFR0Nk1jSHhSNWtEakZURk1S?=
- =?utf-8?B?K0R2eFJubFJBUlR5SFVtNXB0aHRHZ2NqYmVlbkVxRGEzVmkzNnZUTTQ2UlZu?=
- =?utf-8?B?My9VUThqTHpDd0d2S0RhaEJHWGhhMzArN0VzaHlBVHcyaTc5YVBtZ1F3OFRh?=
- =?utf-8?B?emZBamk3L3hDZ3NuSVZrNm1zclFsSlQ3QVFFLzkyeXFDdnJ0NGhxdUtGNFhF?=
- =?utf-8?B?YW5BSWhMOEJjN1E5U01GZ2xRWFBmNnFhNG0xQ0g5RVgvQVVDN2w0UWhWd1Js?=
- =?utf-8?B?ZElaVDUwUThaMU15QVNrVDhnVU9xUXpKWlhXQ0xOS0NRZ2hweXlwWklwMlRZ?=
- =?utf-8?B?NlM1L3F1N0pCc3ZQTG5LMUtla2trZHI3bGF4UnJZM0tUY2xHUmpqTlZZRGZm?=
- =?utf-8?B?aXA4dnRTRTg4Y2dtOGQvZ2NCUURyTnA3ald0ajEzTjByZjg0RUZtaDFSUkcr?=
- =?utf-8?B?OHEvdmZDelN0dGNPTUtlamRvbVdjM3FjRC84Lzl6MU1GZWxEK0sxb3A0R0xB?=
- =?utf-8?Q?OqWmdyrMKmJn+CMZd3sYqhonNjCZjoMce3NqJXq?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFBIUHQ1S2NaOVlKYkJUY3FWbEVMckdCTTRqeUNnUEt2U2p0OUp2Z20xZHNG?=
- =?utf-8?B?T0RDd1p3Uy8rRWUzUzZWL3ExK2hNcHUxSFpseDJBWnBOQWFQU2VUSkxSTmN3?=
- =?utf-8?B?TEJuNVp1UmpRdXRsSkRmVmZIQUY0YzVmaE9IMkdZQXpLV2pZNFZOc21XOUt4?=
- =?utf-8?B?U1A1OXh2TUptZXJEUmU5N2xPS1RuNkhMSHhkWWpSSnFNWlc4eUU3Y05ib1pq?=
- =?utf-8?B?bVFxcjRoY1kwc1dnR3lTZERTd1NFTlJHbmU0TEVTcE5nTGZJaURRcEdici9s?=
- =?utf-8?B?UzNJQ0RkNC8rMGZ3ZzFZOTVldkNFaHFFTFNhY282S0JPS2hpTHQwUFhvRXhv?=
- =?utf-8?B?M1lNdUtwcFpWTnZSMUdReUdYSldCZkNUQkQwUFJ5NElOY0d3aGw3eXUwQkVM?=
- =?utf-8?B?UUVNK3NSeEovK1Y4Y1NENVg3UklUMnB1eDFwY01qaWVja3NlWmtSd1YxMis4?=
- =?utf-8?B?NERjVHlJdGt0d2FlMTdQd3ptN3dFYzdKcC93VU05VTdvWWtLcW53VUd6RUxQ?=
- =?utf-8?B?eVZhbVpzbTB0RzBtK0FxMFZHVEZNeFBsSndOdGhLK1FVZlpQOVBmYXhJbk1s?=
- =?utf-8?B?TVhWcmlDRDQrdHdrS2hib1BEWTJNV0tDblZaTDgyVU1WWkowaUE4YnpVQkQw?=
- =?utf-8?B?ZzY1Tnk5andaT1d5a0M0SmZQTkxlNUt0amJ2bW5VSEhYVnAxME1VY21VSjk0?=
- =?utf-8?B?RENrRFV0RElNWVUrS2NhSXJGdTIvWlJHS1lqRHFPMG1aakJENGZpRkYxM3Y5?=
- =?utf-8?B?eGh0eHNma2t4Q1VaMmtQa1JUTVFpWlEwbGZqckRsMHd2dFVjTHVtR3liNUM4?=
- =?utf-8?B?dlR1c2lhRzZCU0hCS2pnZ0ZwLytDUDZuZ3ZBc1RSaHFGMG54WmFSaHhCTHVx?=
- =?utf-8?B?dnpQcE1PdjhYdHhrZWRqc1N2ZVgwbjRLQ2dmdUNxY2YzSndBd0loTUl2Z25a?=
- =?utf-8?B?NWRoa1RlUTJTNUVJWHlHQ3ZIWXRuT0pPVEUzUG5sQUtlTUE1Rk1McHM4SDJo?=
- =?utf-8?B?U3dpRDd2MWYrYlEyclFMYlFYUVk2TGJ2NTVuMTBWREQxL3hkQ1VlWFFYQTdq?=
- =?utf-8?B?eDgrUitMQkJmajdIay9WRmVLRldDOGgzWnFxU3huVTNuMURsQnhvZHZCdndM?=
- =?utf-8?B?Ni9NeHZiOEd2V1RKTlQwS0JadmsrdEd0QnZmZm95NjhGOVpUMlUyRVlVZW1a?=
- =?utf-8?B?R01wYkpQOU5ZNDN0WVFJRTlZWVpiZGR1Y0IzNXhNdklQcmxCR3FzTzBVNG8z?=
- =?utf-8?B?M3Y4RXNNaFNBYzBPSTRoekJsMDB2M0FzeHJjNkFHRmZ4OFVNZVNlWUVUSXJa?=
- =?utf-8?B?M0RJNFpqTnFsVzVtSnhJRzRsWnNBdnpLT2gzeGtJWlJvL1VLL2ZBaFB5K2Fk?=
- =?utf-8?B?eExodmhsaXFld2N0R0U4WUxxekYvMGJpYjFNd3BJVHBVUHVyc1IvRno3Rjd1?=
- =?utf-8?B?QXlyMk55UmJjNGFQZnpCdld5VCtpQW1rR1RmalZlV2RNMmx3eUZXOGQ1bDN0?=
- =?utf-8?B?MzdBb2I2QTAzN2tnSFZxSUxWR3lLalhma3hkQXcvUWlBUzQrM0xtK2FYUW1B?=
- =?utf-8?B?UTNHTjRyZ0hnc01oeWNGc2ZzTFpBbXJrSXhmQjFJTWF0ZVhmSWs4dFAvRzNn?=
- =?utf-8?B?UVJ3WkI1OW5KZWhQdVQ4Nk9YNE9CVGtZUWQ5VEhLVjQ4eGVvbEpkZnVadVpQ?=
- =?utf-8?B?SGdHSkdSRUtXQzNxOEJocDhCSVNSVHdiWjhqTWJLRHladGNnUnozV3J0bnI5?=
- =?utf-8?B?ZzhGWWdLWUs1LzlNYzc5bDBkb2V6M1RzbWdOQkV3QVdRb3Bia2lzZisyekgr?=
- =?utf-8?B?WW5ERmhzanVDZ1ZjV09kN1ExSmx5cVJUcENoNHlMUGhFUVROMDVKSVZoVlA5?=
- =?utf-8?B?OG5Kc3UvY0E2N1BNTE1nNGhHcmVNZzVsUnpHR21QOWdLQ2VQL0ZkSzU2ZTNh?=
- =?utf-8?B?TE1QaW1BaWxZNjJ5STJZeW5jZ2tzc1F4RGdReHg1eFByMEw0S1hiNGwzWFd5?=
- =?utf-8?B?bnhLdTV4cXk0NnpBSnF6Y2Iya05QVENOSEk4aGIyVURiYmtzZkUzbjI2RFRQ?=
- =?utf-8?B?UW9uRTRIKzJYU2RUVjNLNGZqMFFOSU1GQ3IwQmlqRnNaREdyMVZTNW9CVHBl?=
- =?utf-8?Q?fvL/ue9Z0hri05JiIM2LW/XNO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43373558-71d7-4a78-a785-08dcf1b65081
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2024 09:54:11.9429
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB6870.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66304a06-3fab-42b9-27ad-08dcf1bdfa64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2024 10:49:03.1319
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vw8+KSj7ZWxs90jQZNleH5TjlymKKrsIHf8hGtzC+qB6F16AR1bAvxeO9DRZyrSRCgWjUYNn6Y0hznnyZ3rBDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8468
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tv4mm9H0PTFad44bFzVYVGq+YRrCgmbnzaU0YT42GnQ1a1EwnVUGsvEoDurgR0dc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7971
 
-
-On 10/18/24 17:40, Ben Cheatham wrote:
->
-> On 10/18/24 3:51 AM, Alejandro Lucero Palau wrote:
->> On 10/17/24 22:49, Ben Cheatham wrote:
->>> On 10/17/24 11:52 AM, alejandro.lucero-palau@amd.com wrote:
->>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>
->>>> Creating a CXL region requires userspace intervention through the cxl
->>>> sysfs files. Type2 support should allow accelerator drivers to create
->>>> such cxl region from kernel code.
->>>>
->>>> Adding that functionality and integrating it with current support for
->>>> memory expanders.
->>>>
->>>> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
->>>>
->>> So I ran into an issue at this point when using v3 as a base for my own testing. The problem is that
->>> you are doing manual region management while not explicitly preventing auto region discovery when
->>> devm_cxl_add_memdev() is called (patch 14/26 in this series). This caused some resource allocation
->>> conflicts which then caused both the auto region and the manual region set up to fail. To make it more
->>> concrete, here's the flow I encountered (I tried something new here, let me know if the ascii
->>> is all mangled):
->>>
->>> devm_cxl_add_memdev() is called
->>> │
->>> ├───► cxl_mem probes new memdev
->>> │     │
->>> │     ├─► cxl_mem probe adds new endpoint port
->>> │     │
->>> │     └─► cxl_mem probe finishes
->>> ├───────────────────────────────────────────────► Manual region set up starts (finding free space, etc.)
->>> ├───► cxl_port probes the new endpoint port            │
->>> │     │                                                │
->>> │     ├─► cxl_port probe sets up new endpoint          ├─► create_new_region() is called
->>> │     │                                                │
->>> │     ├─► cxl_port calls discover_region()             │
->>> │     │                                                │
->>> │     ├─► discover_region() creates new auto           ├─► create_new_region() creates
->>> │     │   discoveredregion                             │   new manual region
->>> │◄────◄────────────────────────────────────────────────┘
->>> │
->>> └─► Region creation fails due to resource contention/race (DPA resource, RAM resource, etc.)
->>>
->>> The timeline is a little off here I think, but it should be close enough to illustrate the point.
->>
->> Interesting.
->>
->>
->> I'm aware of that code path when endpoint port is probed, but it is not a problem with my testing because the decoder is not enabled at the time of discover_region.
->>
->>
->> I've tested this with two different emulated devices, one a dumb qemu type2 device with a driver doing nothing but cxl initialization, and another being our network device with CXL support and using RTL emulation, and in both cases the decoder is not enabled at that point, which makes sense since, AFAIK, it is at region creation/attachment when the decoder is committed/enabled. So my obvious question is how are you testing this functionality? It seems as if you could have been creating more than one region somehow, or maybe something I'm just missing about this.
->>
-> I think the reason you aren't seeing this is that QEMU doesn't have regions programmed by firmware. In my setup
-> the decoders are coming up pre-programmed and enabled by firmware, so it is hitting the path during endpoint probe.
-
-
-That explains it, and it also means you do not have the EFI_RESERVED 
-flag in use what we expect for our device.
-
-And I think the solution you give below should fix it. I'll add it to v5.
-
-Thanks!
-
-
-> Thanks,
-> Ben
->
->>> The easy solution here to not allow auto region discovery for CXL type 2 devices, like so:
->>>
->>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
->>> index 22a9ba89cf5a..07b991e2c05b 100644
->>> --- a/drivers/cxl/port.c
->>> +++ b/drivers/cxl/port.c
->>> @@ -34,6 +34,7 @@ static void schedule_detach(void *cxlmd)
->>>    static int discover_region(struct device *dev, void *root)
->>>    {
->>>           struct cxl_endpoint_decoder *cxled;
->>> +       struct cxl_memdev *cxlmd;
->>>           int rc;
->>>
->>>           dev_err(dev, "%s:%d: Enter\n", __func__, __LINE__);
->>> @@ -45,7 +46,9 @@ static int discover_region(struct device *dev, void *root)
->>>           if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
->>>                   return 0;
->>>
->>> -       if (cxled->state != CXL_DECODER_STATE_AUTO)
->>> +       cxlmd = cxled_to_memdev(cxled);
->>> +       if (cxled->state != CXL_DECODER_STATE_AUTO ||
->>> +           cxlmd->cxlds->type == CXL_DEVTYPE_DEVMEM)
->>>                   return 0;
->>>
->>> I think there's a better way to go about this, more to say about it in patch 24/26. I've
->>> dropped this here just in case you don't like my ideas there ;).
->>>                                                                      
->>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->>>> ---
->>>>    drivers/cxl/core/region.c | 147 ++++++++++++++++++++++++++++++++++----
->>>>    drivers/cxl/cxlmem.h      |   2 +
->>>>    include/linux/cxl/cxl.h   |   4 ++
->>>>    3 files changed, 138 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>> index d08a2a848ac9..04c270a29e96 100644
->>>> --- a/drivers/cxl/core/region.c
->>>> +++ b/drivers/cxl/core/region.c
->>>> @@ -2253,6 +2253,18 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
->>>>        return rc;
->>>>    }
->>>>    +int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled)
->>>> +{
->>>> +    int rc;
->>>> +
->>>> +    down_write(&cxl_region_rwsem);
->>>> +    cxled->mode = CXL_DECODER_DEAD;
->>>> +    rc = cxl_region_detach(cxled);
->>>> +    up_write(&cxl_region_rwsem);
->>>> +    return rc;
->>>> +}
->>>> +EXPORT_SYMBOL_NS_GPL(cxl_accel_region_detach, CXL);
->>>> +
->>>>    void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
->>>>    {
->>>>        down_write(&cxl_region_rwsem);
->>>> @@ -2781,6 +2793,14 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
->>>>        return to_cxl_region(region_dev);
->>>>    }
->>>>    +static void drop_region(struct cxl_region *cxlr)
->>>> +{
->>>> +    struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->>>> +    struct cxl_port *port = cxlrd_to_port(cxlrd);
->>>> +
->>>> +    devm_release_action(port->uport_dev, unregister_region, cxlr);
->>>> +}
->>>> +
->>>>    static ssize_t delete_region_store(struct device *dev,
->>>>                       struct device_attribute *attr,
->>>>                       const char *buf, size_t len)
->>>> @@ -3386,17 +3406,18 @@ static int match_region_by_range(struct device *dev, void *data)
->>>>        return rc;
->>>>    }
->>>>    -/* Establish an empty region covering the given HPA range */
->>>> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>> -                       struct cxl_endpoint_decoder *cxled)
->>>> +static void construct_region_end(void)
->>>> +{
->>>> +    up_write(&cxl_region_rwsem);
->>>> +}
->>>> +
->>>> +static struct cxl_region *construct_region_begin(struct cxl_root_decoder *cxlrd,
->>>> +                         struct cxl_endpoint_decoder *cxled)
->>>>    {
->>>>        struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->>>> -    struct cxl_port *port = cxlrd_to_port(cxlrd);
->>>> -    struct range *hpa = &cxled->cxld.hpa_range;
->>>>        struct cxl_region_params *p;
->>>>        struct cxl_region *cxlr;
->>>> -    struct resource *res;
->>>> -    int rc;
->>>> +    int err;
->>>>          do {
->>>>            cxlr = __create_region(cxlrd, cxled->mode,
->>>> @@ -3405,8 +3426,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>>        } while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
->>>>          if (IS_ERR(cxlr)) {
->>>> -        dev_err(cxlmd->dev.parent,
->>>> -            "%s:%s: %s failed assign region: %ld\n",
->>>> +        dev_err(cxlmd->dev.parent, "%s:%s: %s failed assign region: %ld\n",
->>>>                dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
->>>>                __func__, PTR_ERR(cxlr));
->>>>            return cxlr;
->>>> @@ -3416,13 +3436,33 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>>        p = &cxlr->params;
->>>>        if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
->>>>            dev_err(cxlmd->dev.parent,
->>>> -            "%s:%s: %s autodiscovery interrupted\n",
->>>> +            "%s:%s: %s region setup interrupted\n",
->>>>                dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
->>>>                __func__);
->>>> -        rc = -EBUSY;
->>>> -        goto err;
->>>> +        err = -EBUSY;
->>>> +        construct_region_end();
->>>> +        drop_region(cxlr);
->>>> +        return ERR_PTR(err);
->>>>        }
->>>>    +    return cxlr;
->>>> +}
->>>> +
->>>> +/* Establish an empty region covering the given HPA range */
->>>> +static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>> +                       struct cxl_endpoint_decoder *cxled)
->>>> +{
->>>> +    struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->>>> +    struct range *hpa = &cxled->cxld.hpa_range;
->>>> +    struct cxl_region_params *p;
->>>> +    struct cxl_region *cxlr;
->>>> +    struct resource *res;
->>>> +    int rc;
->>>> +
->>>> +    cxlr = construct_region_begin(cxlrd, cxled);
->>>> +    if (IS_ERR(cxlr))
->>>> +        return cxlr;
->>>> +
->>>>        set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
->>>>          res = kmalloc(sizeof(*res), GFP_KERNEL);
->>>> @@ -3445,6 +3485,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>>                 __func__, dev_name(&cxlr->dev));
->>>>        }
->>>>    +    p = &cxlr->params;
->>>>        p->res = res;
->>>>        p->interleave_ways = cxled->cxld.interleave_ways;
->>>>        p->interleave_granularity = cxled->cxld.interleave_granularity;
->>>> @@ -3462,15 +3503,91 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>>>        /* ...to match put_device() in cxl_add_to_region() */
->>>>        get_device(&cxlr->dev);
->>>>        up_write(&cxl_region_rwsem);
->>>> -
->>>> +    construct_region_end();
->>>>        return cxlr;
->>>>      err:
->>>> -    up_write(&cxl_region_rwsem);
->>>> -    devm_release_action(port->uport_dev, unregister_region, cxlr);
->>>> +    construct_region_end();
->>>> +    drop_region(cxlr);
->>>> +    return ERR_PTR(rc);
->>>> +}
->>>> +
->>>> +static struct cxl_region *
->>>> +__construct_new_region(struct cxl_root_decoder *cxlrd,
->>>> +               struct cxl_endpoint_decoder *cxled)
->>>> +{
->>>> +    struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
->>>> +    struct cxl_region_params *p;
->>>> +    struct cxl_region *cxlr;
->>>> +    int rc;
->>>> +
->>>> +    cxlr = construct_region_begin(cxlrd, cxled);
->>>> +    if (IS_ERR(cxlr))
->>>> +        return cxlr;
->>>> +
->>>> +    rc = set_interleave_ways(cxlr, 1);
->>>> +    if (rc)
->>>> +        goto err;
->>>> +
->>>> +    rc = set_interleave_granularity(cxlr, cxld->interleave_granularity);
->>>> +    if (rc)
->>>> +        goto err;
->>>> +
->>>> +    rc = alloc_hpa(cxlr, resource_size(cxled->dpa_res));
->>>> +    if (rc)
->>>> +        goto err;
->>>> +
->>>> +    down_read(&cxl_dpa_rwsem);
->>>> +    rc = cxl_region_attach(cxlr, cxled, 0);
->>>> +    up_read(&cxl_dpa_rwsem);
->>>> +
->>>> +    if (rc)
->>>> +        goto err;
->>>> +
->>>> +    rc = cxl_region_decode_commit(cxlr);
->>>> +    if (rc)
->>>> +        goto err;
->>>> +
->>>> +    p = &cxlr->params;
->>>> +    p->state = CXL_CONFIG_COMMIT;
->>>> +
->>>> +    construct_region_end();
->>>> +    return cxlr;
->>>> +err:
->>>> +    construct_region_end();
->>>> +    drop_region(cxlr);
->>>>        return ERR_PTR(rc);
->>>>    }
->>>>    +/**
->>>> + * cxl_create_region - Establish a region given an endpoint decoder
->>>> + * @cxlrd: root decoder to allocate HPA
->>>> + * @cxled: endpoint decoder with reserved DPA capacity
->>>> + *
->>>> + * Returns a fully formed region in the commit state and attached to the
->>>> + * cxl_region driver.
->>>> + */
->>>> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->>>> +                     struct cxl_endpoint_decoder *cxled)
->>>> +{
->>>> +    struct cxl_region *cxlr;
->>>> +
->>>> +    mutex_lock(&cxlrd->range_lock);
->>>> +    cxlr = __construct_new_region(cxlrd, cxled);
->>>> +    mutex_unlock(&cxlrd->range_lock);
->>>> +
->>>> +    if (IS_ERR(cxlr))
->>>> +        return cxlr;
->>>> +
->>>> +    if (device_attach(&cxlr->dev) <= 0) {
->>>> +        dev_err(&cxlr->dev, "failed to create region\n");
->>>> +        drop_region(cxlr);
->>>> +        return ERR_PTR(-ENODEV);
->>>> +    }
->>>> +    return cxlr;
->>>> +}
->>>> +EXPORT_SYMBOL_NS_GPL(cxl_create_region, CXL);
->>>> +
->>>>    int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
->>>>    {
->>>>        struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->>>> index 68d28eab3696..0f5c71909fd1 100644
->>>> --- a/drivers/cxl/cxlmem.h
->>>> +++ b/drivers/cxl/cxlmem.h
->>>> @@ -875,4 +875,6 @@ struct cxl_hdm {
->>>>    struct seq_file;
->>>>    struct dentry *cxl_debugfs_create_dir(const char *dir);
->>>>    void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
->>>> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->>>> +                     struct cxl_endpoint_decoder *cxled);
->>>>    #endif /* __CXL_MEM_H__ */
->>>> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
->>>> index 45b6badb8048..c544339c2baf 100644
->>>> --- a/include/linux/cxl/cxl.h
->>>> +++ b/include/linux/cxl/cxl.h
->>>> @@ -72,4 +72,8 @@ struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
->>>>                             resource_size_t min,
->>>>                             resource_size_t max);
->>>>    int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->>>> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->>>> +                     struct cxl_endpoint_decoder *cxled);
->>>> +
->>>> +int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled);
->>>>    #endif
+T24gMjEvMDkvMjAyNCAxLjM0LCBaaGkgV2FuZyB3cm90ZToNCg0KSGkgZm9sa3M6DQoNClRoYW5r
+cyBzbyBtdWNoIGZvciB0aGUgY29tbWVudHMgYW5kIGRpc2N1c3Npb25zIGluIHRoZSBtYWlsIGFu
+ZCANCmNvbGxhYm9yYXRpb24gbWVldGluZy4gSGVyZSBhcmUgdGhlIHVwZGF0ZSBvZiB0aGUgbWFq
+b3Igb3BlbnMgcmFpc2VkIGFuZCANCmNvbmNsdXNpb24vbmV4dCBzdGVwczoNCg0KMSkgSXQgaXMg
+bm90IG5lY2Vzc2FyeSB0byBzdXBwb3J0IHRoZSBtdWx0aXBsZSB2aXJ0dWFsIEhETSBkZWNvZGVy
+cyBmb3IgDQpDWEwgdHlwZS0yIGRldmljZS4gKEpvbmF0aGFuKQ0KDQpXYXMgYXNraW5nIFNXIGZv
+bGtzIGFyb3VuZCBhYm91dCB0aGUgcmVxdWlyZW1lbnQgb2YgbXVsdGlwbGUgSERNIA0KZGVjb2Rl
+cnMgaW4gYSBDWEwgdHlwZS0yIGRldmljZSBkcml2ZXIuIEl0IHNlZW1zIG9uZSBpcyBlbm91Z2gs
+IHdoaWNoIGlzIA0KcmVhc29uYWJsZSwgYmVjYXVzZSB0aGUgQ1hMIHJlZ2lvbiBjcmVhdGVkIGJ5
+IHRoZSB0eXBlLTIgZGV2aWNlIGRyaXZlciANCmlzIG1vc3RseSBrZXB0IGZvciBpdHMgb3duIHBy
+aXZhdGUgdXNlLg0KDQoyKSBQcmUtY3JlYXRlZCB2cyBwb3N0LWNyZWF0ZWQgQ1hMIHJlZ2lvbiBm
+b3IgdGhlIGd1ZXN0LiANCihEYW4vS2V2aW4vQWxlamFuZHJvKQ0KDQpUaGVyZSBoYXMgYmVlbiBh
+IGRpc2N1c3Npb24gYWJvdXQgd2hlbiB0byBjcmVhdGUgQ1hMIHJlZ2lvbiBmb3IgdGhlIGd1ZXN0
+Lg0KDQpPcHRpb24gYTogVGhlIHBDWEwgcmVnaW9uIGlzIHByZS1jcmVhdGVkIGJlZm9yZSBWTSBi
+b290cy4gV2hlbiBhIGd1ZXN0IA0KY3JlYXRlcyB0aGUgQ1hMIHJlZ2lvbiB2aWEgaXRzIHZpcnR1
+YWwgSERNIGRlY29kZXIsIFFFTVUgbWFwcyB0aGUgcENYTCANCnJlZ2lvbiB0byB0aGUgdmlydHVh
+bCBDWEwgcmVnaW9uIGNvbmZpZ3VyZWQgYnkgdGhlIGd1ZXN0LiBDaGFuZ2VzIGFuZCANCnJlLWNv
+bmZpZ3VyYXRpb24gb2YgdGhlIHBDWEwgcmVnaW9uIGlzIG5vdCBleHBlY3RlZC4NCg0KT3B0aW9u
+IGI6IFRoZSBwQ1hMIHJlZ2lvbiB3aWxsIGJlIChyZSljcmVhdGVkIHdoZW4gYSBndWVzdCBjcmVh
+dGVzIHRoZSANCkNYTCByZWdpb24gdmlhIGl0cyB2aXJ0dWFsIEhETSBkZWNvZGVyLiBRRU1VIHRy
+YXBzIHRoZSBIRE0gZGVjb2RlciANCmNvbW1pdHMsIHRyaWdnZXJzIHRoZSBwQ1hMIHJlZ2lvbiBj
+cmVhdGlvbiwgbWFwcyB0aGUgcENYTCB0byB0aGUgdmlydHVhbCANCkNYTCByZWdpb24uDQoNCkFs
+ZWphbmRybyAob3B0aW9uIGIpOg0KLSBXaWxsIHdyaXRlIGEgZG9jIHRvIGVsYWJvcmF0ZSB0aGUg
+cHJvYmxlbSBvZiBDWEwuY2FjaGUgYW5kIHdoeSBvcHRpb24gDQpiIHNob3VsZCBiZSBjaG9zZW4u
+DQoNCktldmluIChvcHRpb24gYik6DQotIENYTCByZWdpb24gaXMgYSBTVyBjb25jZXB0LCBpdCBz
+aG91bGQgYmUgY29udHJvbGxlZCBieSB0aGUgZ3Vlc3QgU1cuDQoNCkRhbiAob3B0aW9uIGEpOg0K
+LSBFcnJvciBoYW5kbGluZyB3aGVuIGNyZWF0aW5nIHRoZSBwQ1hMIHJlZ2lvbiBhdCBydW50aW1l
+LiBFLmcuIA0KQXZhaWxhYmxlIEhQQSBpbiB0aGUgRldNUyBpbiB0aGUgaG9zdCBpcyBydW5uaW5n
+IG91dCB3aGVuIGNyZWF0aW5nIHRoZSANCnBDWEwgcmVnaW9uDQotIENYTC5jYWNoZSBtaWdodCBu
+ZWVkIGV4dHJhIGhhbmRsaW5nIHdoaWNoIGNhbm5vdCBiZSBkb25lIGF0IHJ1bnRpbWUuIA0KKE5l
+ZWQgdG8gY2hlY2sgQWxlamFuZHJvJ3MgZG9jKQ0KDQpOZXh0IHN0ZXA6DQoNCi0gV2lsbCBjaGVj
+ayB3aXRoIEFsZWphbmRybyBhbmQgc3RhcnQgZnJvbSBoaXMgZG9jIGFib3V0IENYTC5jYWNoZSBj
+b25jZXJucy4NCg0KMykgSXMgdGhpcyBleGNsdXNpdmVseSBhIHR5cGUyIGV4dGVuc2lvbiBvciBo
+b3cgZG8geW91IGVudmlzaW9uIHR5cGUxLzMNCmRldmljZXMgd2l0aCB2ZmlvPyAoQWxleCkNCg0K
+Rm9yIHR5cGUtMyBkZXZpY2UgcGFzc3Rocm91Z2gsIGR1ZSB0byBpdHMgbmF0dXJlIG9mIG1lbW9y
+eSBleHBhbmRlciwgQ1hMIA0KZm9sa3MgaGF2ZSBkZWNpZGVkIHRvIHVzZSBlaXRoZXIgdmlydGlv
+LW1lbSBvciBhbm90aGVyIHN0dWIgZHJpdmVyIGluIA0KUUVNVSB0byBtYW5hZ2UvbWFwIHRoZSBt
+ZW1vcnkgdG8gdGhlIGd1ZXN0Lg0KDQpGb3IgdHlwZS0xIGRldmljZSwgSSBhbSBub3QgYXdhcmUg
+b2YgYW55IHR5cGUtMSBkZXZpY2UgaW4gdGhlIG1hcmtldC4gDQpEYW4gY29tbWVudGVkIGluIHRo
+ZSBDWEwgZGlzY29yZCBncm91cDoNCg0KIm15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBzb21lIG9m
+IHRoZSBDWEwgRlBHQSBraXRzIG9mZmVyIFR5cGUtMSBmbG93cywgDQpidXQgdGhvc2UgYXJlIGZv
+ciBjdXN0b20gc29sdXRpb25zIG5vdCBvcGVuLW1hcmtldC4gSSBhbSBhd2FyZSBvZiBzb21lIA0K
+cHJpdmF0ZSBkZXBsb3ltZW50cyBvZiBzdWNoIGhhcmR3YXJlLCBidXQgbm90aGluZyB3aXRoIGFu
+IHVwc3RyZWFtIGRyaXZlci4iDQoNCk15IHRha2UgaXMgdGhhdCB3ZSBkb24ndCBuZWVkIHRvIGNv
+bnNpZGVyIHN1cHBvcnQgdHlwZS0xIGRldmljZSANCnBhc3N0aHJvdWdoIHNvIGZhci4NCg0KWi4N
+Cg0KPiBIaSBmb2xrczoNCj4gDQo+IEFzIHByb21pc2VkIGluIHRoZSBMUEMsIGhlcmUgYXJlIGFs
+bCB5b3UgbmVlZCAocGF0Y2hlcywgcmVwb3MsIGd1aWRpbmcNCj4gdmlkZW8sIGtlcm5lbCBjb25m
+aWcpIHRvIGJ1aWxkIGEgZW52aXJvbm1lbnQgdG8gdGVzdCB0aGUgdmZpby1jeGwtY29yZS4NCj4g
+DQo+IFRoYW5rcyBzbyBtdWNoIGZvciB0aGUgZGlzY3Vzc2lvbnMhIEVuam95IGFuZCBzZWUgeW91
+IGluIHRoZSBuZXh0IG9uZS4NCj4gDQo+IEJhY2tncm91bmQNCj4gPT09PT09PT09PQ0KPiANCj4g
+Q29tcHV0ZSBFeHByZXNzIExpbmsgKENYTCkgaXMgYW4gb3BlbiBzdGFuZGFyZCBpbnRlcmNvbm5l
+Y3QgYnVpbHQgdXBvbg0KPiBpbmR1c3RyaWFsIFBDSSBsYXllcnMgdG8gZW5oYW5jZSB0aGUgcGVy
+Zm9ybWFuY2UgYW5kIGVmZmljaWVuY3kgb2YgZGF0YQ0KPiBjZW50ZXJzIGJ5IGVuYWJsaW5nIGhp
+Z2gtc3BlZWQsIGxvdy1sYXRlbmN5IGNvbW11bmljYXRpb24gYmV0d2VlbiBDUFVzDQo+IGFuZCB2
+YXJpb3VzIHR5cGVzIG9mIGRldmljZXMgc3VjaCBhcyBhY2NlbGVyYXRvcnMsIG1lbW9yeS4NCj4g
+DQo+IEl0IHN1cHBvcnRzIHRocmVlIGtleSBwcm90b2NvbHM6IENYTC5pbyBhcyB0aGUgY29udHJv
+bCBwcm90b2NvbCwgQ1hMLmNhY2hlDQo+IGFzIHRoZSBjYWNoZS1jb2hlcmVudCBob3N0LWRldmlj
+ZSBkYXRhIHRyYW5zZmVyIHByb3RvY29sLCBhbmQgQ1hMLm1lbSBhcw0KPiBtZW1vcnkgZXhwYW5z
+aW9uIHByb3RvY29sLiBDWEwgVHlwZSAyIGRldmljZXMgbGV2ZXJhZ2UgdGhlIHRocmVlIHByb3Rv
+Y29scw0KPiB0byBzZWFtbGVzc2x5IGludGVncmF0ZSB3aXRoIGhvc3QgQ1BVcywgcHJvdmlkaW5n
+IGEgdW5pZmllZCBhbmQgZWZmaWNpZW50DQo+IGludGVyZmFjZSBmb3IgaGlnaC1zcGVlZCBkYXRh
+IHRyYW5zZmVyIGFuZCBtZW1vcnkgc2hhcmluZy4gVGhpcyBpbnRlZ3JhdGlvbg0KPiBpcyBjcnVj
+aWFsIGZvciBoZXRlcm9nZW5lb3VzIGNvbXB1dGluZyBlbnZpcm9ubWVudHMgd2hlcmUgYWNjZWxl
+cmF0b3JzLA0KPiBzdWNoIGFzIEdQVXMsIGFuZCBvdGhlciBzcGVjaWFsaXplZCBwcm9jZXNzb3Jz
+LCBhcmUgdXNlZCB0byBoYW5kbGUNCj4gaW50ZW5zaXZlIHdvcmtsb2Fkcy4NCj4gDQo+IEdvYWwN
+Cj4gPT09PQ0KPiANCj4gQWx0aG91Z2ggQ1hMIGlzIGJ1aWx0IHVwb24gdGhlIFBDSSBsYXllcnMs
+IHBhc3NpbmcgYSBDWEwgdHlwZS0yIGRldmljZSBjYW4NCj4gYmUgZGlmZmVyZW50IHRoYW4gUENJ
+IGRldmljZXMgYWNjb3JkaW5nIHRvIENYTCBzcGVjaWZpY2F0aW9uWzFdOg0KPiANCj4gLSBDWEwg
+dHlwZS0yIGRldmljZSBpbml0aWFsaXphdGlvbi4gQ1hMIHR5cGUtMiBkZXZpY2UgcmVxdWlyZXMg
+YW4NCj4gYWRkaXRpb25hbCBpbml0aWFsaXphdGlvbiBzZXF1ZW5jZSBiZXNpZGVzIHRoZSBQQ0kg
+ZGV2aWNlIGluaXRpYWxpemF0aW9uLg0KPiBDWEwgdHlwZS0yIGRldmljZSBpbml0aWFsaXphdGlv
+biBjYW4gYmUgcHJldHR5IGNvbXBsaWNhdGVkIGR1ZSB0byBpdHMNCj4gaGllcmFyY2h5IG9mIHJl
+Z2lzdGVyIGludGVyZmFjZXMuIFRodXMsIGEgc3RhbmRhcmQgQ1hMIHR5cGUtMiBkcml2ZXINCj4g
+aW5pdGlhbGl6YXRpb24gc2VxdWVuY2UgcHJvdmlkZWQgYnkgdGhlIGtlcm5lbCBDWEwgY29yZSBp
+cyB1c2VkLg0KPiANCj4gLSBDcmVhdGUgYSBDWEwgcmVnaW9uIGFuZCBtYXAgaXQgdG8gdGhlIFZN
+LiBBIG1hcHBpbmcgYmV0d2VlbiBIUEEgYW5kIERQQQ0KPiAoRGV2aWNlIFBBKSBuZWVkcyB0byBi
+ZSBjcmVhdGVkIHRvIGFjY2VzcyB0aGUgZGV2aWNlIG1lbW9yeSBkaXJlY3RseS4gSERNDQo+IGRl
+Y29kZXJzIGluIHRoZSBDWEwgdG9wb2xvZ3kgbmVlZCB0byBiZSBjb25maWd1cmVkIGxldmVsIGJ5
+IGxldmVsIHRvDQo+IG1hbmFnZSB0aGUgbWFwcGluZy4gQWZ0ZXIgdGhlIHJlZ2lvbiBpcyBjcmVh
+dGVkLCBpdCBuZWVkcyB0byBiZSBtYXBwZWQgdG8NCj4gR1BBIGluIHRoZSB2aXJ0dWFsIEhETSBk
+ZWNvZGVycyBjb25maWd1cmVkIGJ5IHRoZSBWTS4NCj4gDQo+IC0gQ1hMIHJlc2V0LiBUaGUgQ1hM
+IGRldmljZSByZXNldCBpcyBkaWZmZXJlbnQgZnJvbSB0aGUgUENJIGRldmljZSByZXNldC4NCj4g
+QSBDWEwgcmVzZXQgc2VxdWVuY2UgaXMgaW50cm9kdWNlZCBieSB0aGUgQ1hMIHNwZWMuDQo+IA0K
+PiAtIEVtdWxhdGluZyBDWEwgRFZTRUNzLiBDWEwgc3BlYyBkZWZpbmVzIGEgc2V0IG9mIERWU0VD
+cyByZWdpc3RlcnMgaW4gdGhlDQo+IGNvbmZpZ3VyYXRpb24gZm9yIGRldmljZSBlbnVtZXJhdGlv
+biBhbmQgZGV2aWNlIGNvbnRyb2wuIChFLmcuIGlmIGEgZGV2aWNlDQo+IGlzIGNhcGFibGUgb2Yg
+Q1hMLm1lbSBDWEwuY2FjaGUsIGVuYWJsZS9kaXNhYmxlIGNhcGFiaWxpdHkpIFRoZXkgYXJlIG93
+bmVkDQo+IGJ5IHRoZSBrZXJuZWwgQ1hMIGNvcmUsIGFuZCB0aGUgVk0gY2FuIG5vdCBtb2RpZnkg
+dGhlbS4NCj4gDQo+IC0gRW11bGF0ZSBDWEwgTU1JTyByZWdpc3RlcnMuIENYTCBzcGVjIGRlZmlu
+ZXMgYSBzZXQgb2YgQ1hMIE1NSU8gcmVnaXN0ZXJzDQo+IHRoYXQgY2FuIHNpdCBpbiBhIFBDSSBC
+QVIuIFRoZSBsb2NhdGlvbiBvZiByZWdpc3RlciBncm91cHMgc2l0IGluIHRoZSBQQ0kNCj4gQkFS
+IGlzIGluZGljYXRlZCBieSB0aGUgcmVnaXN0ZXIgbG9jYXRvciBpbiB0aGUgQ1hMIERWU0VDcy4g
+VGhleSBhcmUgYWxzbw0KPiBvd25lZCBieSB0aGUga2VybmVsIENYTCBjb3JlLiBTb21lIG9mIHRo
+ZW0gbmVlZCB0byBiZSBlbXVsYXRlZC4NCj4gDQo+IERlc2lnbg0KPiA9PT09PT0NCj4gDQo+IFRv
+IGFjaGlldmUgdGhlIHB1cnBvc2UgYWJvdmUsIHRoZSB2ZmlvLWN4bC1jb3JlIGlzIGludHJvZHVj
+ZWQgdG8gaG9zdCB0aGUNCj4gY29tbW9uIHJvdXRpbmVzIHRoYXQgdmFyaWFudCBkcml2ZXIgcmVx
+dWlyZXMgZm9yIGRldmljZSBwYXNzdGhyb3VnaC4NCj4gU2ltaWxhciB3aXRoIHRoZSB2ZmlvLXBj
+aS1jb3JlLCB0aGUgdmZpby1jeGwtY29yZSBwcm92aWRlcyBjb21tb24NCj4gcm91dGluZXMgb2Yg
+dmZpb19kZXZpY2Vfb3BzIGZvciB0aGUgdmFyaWFudCBkcml2ZXIgdG8gaG9vayBhbmQgcGVyZm9y
+bSB0aGUNCj4gQ1hMIHJvdXRpbmVzIGJlaGluZCBpdC4NCj4gDQo+IEJlc2lkZXMsIHNldmVyYWwg
+ZXh0cmEgQVBJcyBhcmUgaW50cm9kdWNlZCBmb3IgdGhlIHZhcmlhbnQgZHJpdmVyIHRvDQo+IHBy
+b3ZpZGUgdGhlIG5lY2Vzc2FyeSBpbmZvcm1hdGlvbiB0aGUga2VybmVsIENYTCBjb3JlIHRvIGlu
+aXRpYWxpemUNCj4gdGhlIENYTCBkZXZpY2UuIEUuZy4sIERldmljZSBEUEEuDQo+IA0KPiBDWEwg
+aXMgYnVpbHQgdXBvbiB0aGUgUENJIGxheWVycyBidXQgd2l0aCBkaWZmZXJlbmNlcy4gVGh1cywg
+dGhlDQo+IHZmaW8tcGNpLWNvcmUgaXMgYWltZWQgdG8gYmUgcmUtdXNlZCBhcyBtdWNoIGFzIHBv
+c3NpYmxlIHdpdGggdGhlDQo+IGF3YXJlbmVzcyBvZiBvcGVyYXRpbmcgb24gYSBDWEwgZGV2aWNl
+Lg0KPiANCj4gQSBuZXcgVkZJTyBkZXZpY2UgcmVnaW9uIGlzIGludHJvZHVjZWQgdG8gZXhwb3Nl
+IHRoZSBDWEwgcmVnaW9uIHRvIHRoZQ0KPiB1c2Vyc3BhY2UuIEEgbmV3IENYTCBWRklPIGRldmlj
+ZSBjYXAgaGFzIGFsc28gYmVlbiBpbnRyb2R1Y2VkIHRvIGNvbnZleQ0KPiB0aGUgbmVjZXNzYXJ5
+IENYTCBkZXZpY2UgaW5mb3JtYXRpb24gdG8gdGhlIHVzZXJzcGFjZS4NCj4gDQo+IFBhdGNoZXMN
+Cj4gPT09PT09PQ0KPiANCj4gVGhlIHBhdGNoZXMgYXJlIGJhc2VkIG9uIHRoZSBjeGwtdHlwZTIg
+c3VwcG9ydCBSRkN2MiBwYXRjaHNldFsyXS4gV2lsbA0KPiByZWJhc2UgdGhlbSB0byBWMyBvbmNl
+IHRoZSBjeGwtdHlwZTIgc3VwcG9ydCB2MyBwYXRjaCByZXZpZXcgaXMgZG9uZS4NCj4gDQo+IFBB
+VENIIDEtMzogRXhwb3NlIHRoZSBuZWNlc3Nhcnkgcm91dGluZXMgcmVxdWlyZWQgYnkgdmZpby1j
+eGwuDQo+IA0KPiBQQVRDSCA0OiBJbnRyb2R1Y2UgdGhlIHByZWx1ZGVzIG9mIHZmaW8tY3hsLCBp
+bmNsdWRpbmcgQ1hMIGRldmljZQ0KPiBpbml0aWFsaXphdGlvbiwgQ1hMIHJlZ2lvbiBjcmVhdGlv
+bi4NCj4gDQo+IFBBVENIIDU6IEV4cG9zZSB0aGUgQ1hMIHJlZ2lvbiB0byB0aGUgdXNlcnNwYWNl
+Lg0KPiANCj4gUEFUQ0ggNi03OiBQcmVwYXJlIHRvIGVtdWxhdGUgdGhlIEhETSBkZWNvZGVyIHJl
+Z2lzdGVycy4NCj4gDQo+IFBBVENIIDg6IEVtdWxhdGUgdGhlIEhETSBkZWNvZGVyIHJlZ2lzdGVy
+cy4NCj4gDQo+IFBBVENIIDk6IFR3ZWFrIHZmaW8tY3hsIHRvIGJlIGF3YXJlIG9mIHdvcmtpbmcg
+b24gYSBDWEwgZGV2aWNlLg0KPiANCj4gUEFUQ0ggMTA6IFRlbGwgdmZpby1wY2ktY29yZSB0byBl
+bXVsYXRlIENYTCBEVlNFQ3MuDQo+IA0KPiBQQVRDSCAxMTogRXhwb3NlIHRoZSBDWEwgZGV2aWNl
+IGluZm9ybWF0aW9uIHRoYXQgdXNlcnNwYWNlIG5lZWRzLg0KPiANCj4gUEFUQ0ggMTI6IEFuIGV4
+YW1wbGUgdmFyaWFudCBkcml2ZXIgdG8gZGVtb25zdHJhdGUgdGhlIHVzYWdlIG9mDQo+IHZmaW8t
+Y3hsLWNvcmUgZnJvbSB0aGUgcGVyc3BlY3RpdmUgb2YgdGhlIFZGSU8gdmFyaWFudCBkcml2ZXIu
+DQo+IA0KPiBQQVRDSCAxMzogQSB3b3JrYXJvdW5kIG5lZWRzIHN1Z2dlc3Rpb25zLg0KPiANCj4g
+VGVzdA0KPiA9PT09DQo+IA0KPiBUbyB0ZXN0IHRoZSBwYXRjaGVzIGFuZCBoYWNrIGFyb3VuZCwg
+YSB2aXJ0dWFsIHBhc3N0aHJvdWdoIHdpdGggbmVzdGVkDQo+IHZpcnR1YWxpemF0aW9uIGFwcHJv
+YWNoIGlzIHVzZWQuDQo+IA0KPiBUaGUgaG9zdCBRRU1VIGVtdWxhdGVzIGEgQ1hMIHR5cGUtMiBh
+Y2NlbCBkZXZpY2UgYmFzZWQgb24gSXJhJ3MgcGF0Y2hlcw0KPiB3aXRoIHRoZSBjaGFuZ2VzIHRv
+IGVtdWxhdGUgSERNIGRlY29kZXJzLg0KPiANCj4gV2hpbGUgcnVubmluZyB0aGUgdmZpby1jeGwg
+aW4gdGhlIEwxIGd1ZXN0LCBhbiBleGFtcGxlIFZGSU8gdmFyaWFudA0KPiBkcml2ZXIgaXMgdXNl
+ZCB0byBhdHRhY2ggd2l0aCB0aGUgUUVNVSBDWEwgYWNjZXNzIGRldmljZS4NCj4gDQo+IFRoZSBM
+MiBndWVzdCBjYW4gYmUgYm9vdGVkIHZpYSB0aGUgUUVNVSB3aXRoIHRoZSB2ZmlvLWN4bCBzdXBw
+b3J0IGluIHRoZQ0KPiBWRklPU3R1Yi4NCj4gDQo+IEluIHRoZSBMMiBndWVzdCwgYSBkdW1teSBD
+WEwgZGV2aWNlIGRyaXZlciBpcyBwcm92aWRlZCB0byBhdHRhY2ggdG8gdGhlDQo+IHZpcnR1YWwg
+cGFzcy10aHJ1IGRldmljZS4NCj4gDQo+IFRoZSBkdW1teSBDWEwgdHlwZS0yIGRldmljZSBkcml2
+ZXIgY2FuIHN1Y2Nlc3NmdWxseSBiZSBsb2FkZWQgd2l0aCB0aGUNCj4ga2VybmVsIGN4bCBjb3Jl
+IHR5cGUyIHN1cHBvcnQsIGNyZWF0ZSBDWEwgcmVnaW9uIGJ5IHJlcXVlc3RpbmcgdGhlIENYTA0K
+PiBjb3JlIHRvIGFsbG9jYXRlIEhQQSBhbmQgRFBBIGFuZCBjb25maWd1cmUgdGhlIEhETSBkZWNv
+ZGVycy4NCj4gDQo+IFRvIG1ha2Ugc3VyZSBldmVyeW9uZSBjYW4gdGVzdCB0aGUgcGF0Y2hlcywg
+dGhlIGtlcm5lbCBjb25maWcgb2YgTDEgYW5kDQo+IEwyIGFyZSBwcm92aWRlZCBpbiB0aGUgcmVw
+b3MsIHRoZSByZXF1aXJlZCBrZXJuZWwgY29tbWFuZCBwYXJhbXMgYW5kDQo+IHFlbXUgY29tbWFu
+ZCBsaW5lIGNhbiBiZSBmb3VuZCBmcm9tIHRoZSBkZW1vc3RyYXRpb24gdmlkZW8uWzVdDQo+IA0K
+PiBSZXBvcw0KPiA9PT09PQ0KPiANCj4gUUVNVSBob3N0OiBodHRwczovL2dpdGh1Yi5jb20vemhp
+d2FuZy1udmlkaWEvcWVtdS90cmVlL3poaS92ZmlvLWN4bC1xZW11LWhvc3QNCj4gTDEgS2VybmVs
+OiBodHRwczovL2dpdGh1Yi5jb20vemhpd2FuZy1udmlkaWEvbGludXgvdHJlZS96aGkvdmZpby1j
+eGwtbDEta2VybmVsLXJmYw0KPiBMMSBRRU1VOiBodHRwczovL2dpdGh1Yi5jb20vemhpd2FuZy1u
+dmlkaWEvcWVtdS90cmVlL3poaS92ZmlvLWN4bC1xZW11LWwxLXJmYw0KPiBMMiBLZXJuZWw6IGh0
+dHBzOi8vZ2l0aHViLmNvbS96aGl3YW5nLW52aWRpYS9saW51eC90cmVlL3poaS92ZmlvLWN4bC1s
+Mg0KPiANCj4gWzFdIGh0dHBzOi8vY29tcHV0ZWV4cHJlc3NsaW5rLm9yZy9jeGwtc3BlY2lmaWNh
+dGlvbi8NCj4gWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL25ldGRldi8yMDI0MDcxNTE3Mjgz
+NS4yNDc1Ny0xLWFsZWphbmRyby5sdWNlcm8tcGFsYXVAYW1kLmNvbS9ULw0KPiBbM10gaHR0cHM6
+Ly9wYXRjaGV3Lm9yZy9RRU1VLzIwMjMwNTE3LXJmYy10eXBlMi1kZXYtdjEtMC02ZWIyZTQ3MDk4
+MWJAaW50ZWwuY29tLw0KPiBbNF0gaHR0cHM6Ly95b3V0dS5iZS96bGtfZWNYOWJ4cz9zaT1oYzhQ
+NThBZGhHWGZmM1E3DQo+IA0KPiBGZWVkYmFjayBleHBlY3RlZA0KPiA9PT09PT09PT09PT09PT09
+PQ0KPiANCj4gLSBBcmNodGllY3R1cmUgbGV2ZWwgYmV0d2VlbiB2ZmlvLXBjaS1jb3JlIGFuZCB2
+ZmlvLWN4bC1jb3JlLg0KPiAtIFZhcmlhbnQgZHJpdmVyIHJlcXVpcmVtZW50cyBmcm9tIG1vcmUg
+aGFyZHdhcmUgdmVuZG9ycy4NCj4gLSB2ZmlvLWN4bC1jb3JlIFVBQkkgdG8gUUVNVS4NCj4gDQo+
+IE1vdmluZyBmb3dhcmQNCj4gPT09PT09PT09PT09PQ0KPiANCj4gLSBSZWJhc2UgdGhlIHBhdGNo
+ZXMgb24gdG9wIG9mIEFsZWphbmRybydzIFBBVENIIHYzLg0KPiAtIEdldCBJcmEncyB0eXBlLTIg
+ZW11bGF0ZWQgZGV2aWNlIHBhdGNoIGludG8gdXBzdHJlYW0gYXMgQ1hMIGZvbGtzIGFuZCBSSA0K
+PiAgICBmb2xrcyBib3RoIGNhbWUgdG8gdGFsayBhbmQgZXhwZWN0IHRoaXMuIEkgaGFkIGEgY2hh
+dCB3aXRoIElyYSBhbmQgaGUNCj4gICAgZXhwZWN0ZWQgbWUgdG8gdGFrZSBpdCBvdmVyLiBXaWxs
+IHN0YXJ0IGEgZGlzY3Vzc2lvbiBpbiB0aGUgQ1hMIGRpc2NvcmQNCj4gICAgZ3JvdXAgZm9yIHRo
+ZSBkZXNnaW4gb2YgVjEuDQo+IC0gU3BhcnNlIG1hcCBpbiB2ZmlvLWN4bC1jb3JlLg0KPiANCj4g
+S25vd24gaXNzdWVzDQo+ID09PT09PT09PT09PQ0KPiANCj4gLSBUZWFyZG93biBwYXRoLiBNaXNz
+aW5nIHRlYXJkb3duIHBhdGhzIGhhdmUgYmVlbiBpbXBsZW1lbnRzIGluIEFsZWphbmRvcidzDQo+
+ICAgIFBBVENIIHYzLiBJdCBzaG91bGQgYmUgc29sdmVkIGFmdGVyIHRoZSByZWJhc2UuDQo+IA0K
+PiAtIFBvd2VyZG93biBMMSBndWVzdCBpbnN0ZWFkIG9mIHJlYm9vdCBpdC4gVGhlIFFFTVUgcmVz
+ZXQgaGFuZGxlciBpcyBtaXNzaW5nDQo+ICAgIGluIHRoZSBJcmEncyBwYXRjaC4gV2hlbiByZWJv
+b3RpbmcgTDEsIG1hbnkgQ1hMIHJlZ2lzdGVycyBhcmUgbm90IHJlc2V0Lg0KPiAgICBUaGlzIHdp
+bGwgYmUgYWRkcmVzc2VkIGluIHRoZSBmb3JtYWwgcmV2aWV3IG9mIGVtdWxhdGVkIENYTCB0eXBl
+LTIgZGV2aWNlDQo+ICAgIHN1cHBvcnQuDQo+IA0KPiBaaGkgV2FuZyAoMTMpOg0KPiAgICBjeGw6
+IGFsbG93IGEgdHlwZS0yIGRldmljZSBub3QgdG8gaGF2ZSBtZW1vcnkgZGV2aWNlIHJlZ2lzdGVy
+cw0KPiAgICBjeGw6IGludHJvZHVjZSBjeGxfZ2V0X2hkbV9pbmZvKCkNCj4gICAgY3hsOiBpbnRy
+b2R1Y2UgY3hsX2ZpbmRfY29tcF9yZWdsb2NrX29mZnNldCgpDQo+ICAgIHZmaW86IGludHJvZHVj
+ZSB2ZmlvLWN4bCBjb3JlIHByZWx1ZGVzDQo+ICAgIHZmaW8vY3hsOiBleHBvc2UgQ1hMIHJlZ2lv
+biB0byB0aGUgdXNlcnNhcGNlIHZpYSBhIG5ldyBWRklPIGRldmljZQ0KPiAgICAgIHJlZ2lvbg0K
+PiAgICB2ZmlvL3BjaTogZXhwb3NlIHZmaW9fcGNpX3J3KCkNCj4gICAgdmZpby9jeGw6IGludHJv
+ZHVjZSB2ZmlvX2N4bF9jb3JlX3tyZWFkLCB3cml0ZX0oKQ0KPiAgICB2ZmlvL2N4bDogZW11bGF0
+ZSBIRE0gZGVjb2RlciByZWdpc3RlcnMNCj4gICAgdmZpby9wY2k6IGludHJvZHVjZSBDWEwgZGV2
+aWNlIGF3YXJlbmVzcw0KPiAgICB2ZmlvL3BjaTogZW11bGF0ZSBDWEwgRFZTRUMgcmVnaXN0ZXJz
+IGluIHRoZSBjb25maWd1cmF0aW9uIHNwYWNlDQo+ICAgIHZmaW8vY3hsOiBpbnRyb2R1Y2UgVkZJ
+TyBDWEwgZGV2aWNlIGNhcA0KPiAgICB2ZmlvL2N4bDogVkZJTyB2YXJpYW50IGRyaXZlciBmb3Ig
+UUVNVSBDWEwgYWNjZWwgZGV2aWNlDQo+ICAgIHZmaW8vY3hsOiB3b3JrYXJvdW5kOiBkb24ndCB0
+YWtlIHJlc291cmNlIHJlZ2lvbiB3aGVuIGN4bCBpcyBlbmFibGVkLg0KPiANCj4gICBkcml2ZXJz
+L2N4bC9jb3JlL3BjaS5jICAgICAgICAgICAgICB8ICAyOCArKw0KPiAgIGRyaXZlcnMvY3hsL2Nv
+cmUvcmVncy5jICAgICAgICAgICAgIHwgIDIyICsNCj4gICBkcml2ZXJzL2N4bC9jeGwuaCAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArDQo+ICAgZHJpdmVycy9jeGwvY3hscGNpLmggICAgICAgICAg
+ICAgICAgfCAgIDMgKw0KPiAgIGRyaXZlcnMvY3hsL3BjaS5jICAgICAgICAgICAgICAgICAgIHwg
+IDE0ICstDQo+ICAgZHJpdmVycy92ZmlvL3BjaS9LY29uZmlnICAgICAgICAgICAgfCAgIDYgKw0K
+PiAgIGRyaXZlcnMvdmZpby9wY2kvTWFrZWZpbGUgICAgICAgICAgIHwgICA1ICsNCj4gICBkcml2
+ZXJzL3ZmaW8vcGNpL2N4bC1hY2NlbC9LY29uZmlnICB8ICAgNiArDQo+ICAgZHJpdmVycy92Zmlv
+L3BjaS9jeGwtYWNjZWwvTWFrZWZpbGUgfCAgIDMgKw0KPiAgIGRyaXZlcnMvdmZpby9wY2kvY3hs
+LWFjY2VsL21haW4uYyAgIHwgMTE2ICsrKysrDQo+ICAgZHJpdmVycy92ZmlvL3BjaS92ZmlvX2N4
+bF9jb3JlLmMgICAgfCA2NDcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgIGRyaXZl
+cnMvdmZpby9wY2kvdmZpb19wY2lfY29uZmlnLmMgIHwgIDEwICsNCj4gICBkcml2ZXJzL3ZmaW8v
+cGNpL3ZmaW9fcGNpX2NvcmUuYyAgICB8ICA3OSArKystDQo+ICAgZHJpdmVycy92ZmlvL3BjaS92
+ZmlvX3BjaV9yZHdyLmMgICAgfCAgIDggKy0NCj4gICBpbmNsdWRlL2xpbnV4L2N4bF9hY2NlbF9t
+ZW0uaCAgICAgICB8ICAgMyArDQo+ICAgaW5jbHVkZS9saW51eC9jeGxfYWNjZWxfcGNpLmggICAg
+ICAgfCAgIDYgKw0KPiAgIGluY2x1ZGUvbGludXgvdmZpb19wY2lfY29yZS5oICAgICAgIHwgIDUz
+ICsrKw0KPiAgIGluY2x1ZGUvdWFwaS9saW51eC92ZmlvLmggICAgICAgICAgIHwgIDE0ICsNCj4g
+ICAxOCBmaWxlcyBjaGFuZ2VkLCA5OTIgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25zKC0pDQo+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdmZpby9wY2kvY3hsLWFjY2VsL0tjb25maWcN
+Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy92ZmlvL3BjaS9jeGwtYWNjZWwvTWFrZWZp
+bGUNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy92ZmlvL3BjaS9jeGwtYWNjZWwvbWFp
+bi5jDQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdmZpby9wY2kvdmZpb19jeGxfY29y
+ZS5jDQo+IA0KDQo=
