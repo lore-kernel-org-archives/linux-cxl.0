@@ -1,42 +1,50 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1AA1B982C
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 17:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E117483;
+	Tue, 22 Oct 2024 17:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616438; cv=none; b=rQQVzzo7RtoBHOKkGdZRuKrcgWtEKa82OUWBZyvaMn98luOoZ7CXpsdnWf02TZxLDnXh5GX0ReIMam4GLkskNqKH/Xd5HanRvKh6FRXjRMdNTYW1wiCisQYxdz9T0cI2iMxqeSQC+dG4AQ7MUrKmDgTStdGmQLpEyWg7AJbb9Pk=
+	t=1729616490; cv=none; b=KBrFrlkbvYQQ1peRTDNXO3jrcijLWJEL0/8lRI+V93k0lOElJ3zONBqH5s3lPg0NhrSNTqG4qh8eZimppT//ATB8xdZTK05Aw+aXtcB4bkvSMdM4QtncKn/FNmo/nbFWQnvTuO/pkMfdW9SxthwTkJY3OJWPJ4IZ6b2PDkTll8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616438; c=relaxed/simple;
-	bh=WgwvgfW4z2k0KntFoNKN+4H2zyxbo8HhxFgxmwwtlOc=;
+	s=arc-20240116; t=1729616490; c=relaxed/simple;
+	bh=PPNSYZKPWMLanxucQDtSVxv8/bs3/sUN4XUPU8RmAq4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sU1xPEvetP0UAYwqwyOJAJSvPEGGL+X91nVp7kBHHIe1J77sT4H9lDX+SfMQRn8sB/mCwsi4eH0hvq3RUG3OmTAmN/r8aZ9x/9HhULPA97PTPEoBwM2peIjoJ43YkJnZCwhFiBYyg/0EhdtOfGAQRJHCY5i/CHDXIga+ALcmkTk=
+	 MIME-Version:Content-Type; b=iZWj7lHJs2dVZwgyfnB7WFfrl3Xl1hc0dJ9Wwp1kPjneS4J4qoqrsoRT0wJtp/wzAleRJeOE82LcbusENR1jEvJwtVMAK6Pnc+o3MXxo9B0dkrJ9HxX8CZVeyzYF6Df5+W6WAIRH+P6fjmbpDDtnIXtuXm6cMKYQ2ekAU2rdvBk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XXz082QLnz6K6tx;
-	Wed, 23 Oct 2024 00:58:32 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XXyy56sgYz6LD5g;
+	Wed, 23 Oct 2024 00:56:45 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CCF0D1404F9;
-	Wed, 23 Oct 2024 01:00:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E2DD140B55;
+	Wed, 23 Oct 2024 01:01:25 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Oct
- 2024 19:00:32 +0200
-Date: Tue, 22 Oct 2024 18:00:30 +0100
+ 2024 19:01:24 +0200
+Date: Tue, 22 Oct 2024 18:01:22 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <ajay.opensrc@micron.com>, <fan.ni@samsung.com>, <john@jagalactic.com>,
-	<emirakhur@micron.com>, <ajayjoshi@micron.com>, <sthanneeru@micron.com>,
-	<ravis.opensrc@micron.com>, <arramesh@micron.com>, <tmmulgund@micron.com>,
-	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH] hw/cxl: Support aborting background commands
-Message-ID: <20241022180030.00004f68@Huawei.com>
-In-Reply-To: <jdipjanthgt6atlksngodxjevfb5d43d5rshtxqxxwruszqa3e@vctljs77lg4e>
-References: <20240813221255.179200-1-dave@stgolabs.net>
-	<20240827163357.0000228e@Huawei.com>
-	<jdipjanthgt6atlksngodxjevfb5d43d5rshtxqxxwruszqa3e@vctljs77lg4e>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 21/28] cxl/extent: Process DCD events and realize
+ region extents
+Message-ID: <20241022180122.00006074@Huawei.com>
+In-Reply-To: <6716a165823b7_8cb1729437@iweiny-mobl.notmuch>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+	<20241007-dcd-type2-upstream-v4-21-c261ee6eeded@intel.com>
+	<20241010155821.00005079@Huawei.com>
+	<6711842d88fa_2cee2946a@iweiny-mobl.notmuch>
+	<20241018100909.00001ec2@Huawei.com>
+	<6716a165823b7_8cb1729437@iweiny-mobl.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,64 +58,65 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 21 Oct 2024 20:23:46 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Mon, 21 Oct 2024 13:45:57 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Tue, 27 Aug 2024, Jonathan Cameron wrote:\n
-> >No comments inline and LGTM. I'll queue it on my tree and push
-> >that out on gitlab sometime soonish.  
+> Jonathan Cameron wrote:
+> > On Thu, 17 Oct 2024 16:39:57 -0500
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > Jonathan Cameron wrote:  
+> > > > On Mon, 07 Oct 2024 18:16:27 -0500
+> > > > ira.weiny@intel.com wrote:
+> > > >     
 > 
-> I don't see this picked up, which is a good thing atm. While testing
-> the kernel side, I noticed the following is needed, will send a v2
-> with it folded in.
+> [snip]
+> 
+> > > > > Simplify extent tracking with the following restrictions.
+> > > > > 
+> > > > > 	1) Flag for removal any extent which overlaps a requested
+> > > > > 	   release range.
+> > > > > 	2) Refuse the offer of extents which overlap already accepted
+> > > > > 	   memory ranges.
+> > > > > 	3) Accept again a range which has already been accepted by the
+> > > > > 	   host.  Eating duplicates serves three purposes.  First, this
+> > > > > 	   simplifies the code if the device should get out of sync with
+> > > > > 	   the host.     
+> > > > 
+> > > > Maybe scream about this a little.  AFAIK that happening is a device
+> > > > bug.    
+> > > 
+> > > Agreed but because of the 2nd purpose this is difficult to scream about because
+> > > this situation can come up in normal operation.  Here is the scenario:
+> > > 
+> > > 1) Device has 2 DCD partitions active, A and B
+> > > 2) Host crashes
+> > > 3) Region X is created on A
+> > > 4) Region Y is created on B
+> > > 5) Region Y scans for extents
+> > > 6) Region X surfaces a new extent while Y is scanning
+> > > 7) Gen number changes due to new extent in X
+> > > 8) Region Y rescans for existing extents and sees duplicates.
+> > > 
+> > > These duplicates need to be ignored without signaling an error.  
+> > Hmm. If we can know that path is the trigger (should be able to
+> > as it's a scan after a gen number change), can we just muffle the
+> > screams on that path? (Halloween is close, the analogies will get
+> > ever worse :)  
+> 
+> Ok yea since this would be a device error we should do something here.  But the
+> code is going to be somewhat convoluted to print an error whenever this
+> happens.
+> 
+> What if we make this a warning and change the rescan debug message to a warning
+> as well?  This would allow enough bread crumbs to determine if a device is
+> failing without a lot of extra code to alter print messages on the fly?
 
-Currently just on my cxl-2024-10-15 branch of gitlab.com/jic23/qemu.
-I'll pick up your v2 and replace that.
+Sounds ok to me.
+
+Jonathan
+
 > 
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 1a9779ed8201..0d429b59aafc 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -94,14 +94,15 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
-> 	     cxl_dstate->mbox_reg_state64[offset / size] = bg_status_reg;
-> 	 }
-> 	 if (offset == A_CXL_DEV_MAILBOX_STS) {
-> +            int bgop;
-> 	     uint64_t status_reg = cxl_dstate->mbox_reg_state64[offset / size];
+> Ira
 > 
-> 	     qemu_mutex_lock(&cci->bg.lock);
-> -            if (cci->bg.complete_pct == 100 || cci->bg.aborted) {
-> -                status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
-> -                                        0);
-> -                cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
-> -            }
-> +            bgop = !(cci->bg.complete_pct == 100 || cci->bg.aborted);
-> +
-> +            status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
-> +                                    bgop);
-> +            cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
-> 	     qemu_mutex_unlock(&cci->bg.lock);
-> 	 }
-> 	 return cxl_dstate->mbox_reg_state64[offset / size];
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index d5b084388288..760a8571fda6 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2731,9 +2731,11 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->       [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
-> 	 cmd_firmware_update_get_info, 0, 0 },
->       [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
-> -        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
-> +        cmd_firmware_update_transfer, ~0,
-> +        CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT },
->       [FIRMWARE_UPDATE][ACTIVATE] = { "FIRMWARE_UPDATE_ACTIVATE",
-> -        cmd_firmware_update_activate, 2, CXL_MBOX_BACKGROUND_OPERATION },
-> +        cmd_firmware_update_activate, 2,
-> +        CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT },
->       [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
->       [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
-> 			  8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
-> 
-> Thanks,
-> Davidlohr
 
