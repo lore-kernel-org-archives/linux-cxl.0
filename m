@@ -1,147 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B636A770F1;
-	Tue, 22 Oct 2024 05:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EAB3D994;
+	Tue, 22 Oct 2024 05:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729573954; cv=none; b=Fe9IhpHPiAlOEMMIlTEZP1ytM/o7+KkaUfk4ESJkuv8V1Hfu5TRboC37obIz+ddAiPpJv7TLYmGYv/tK4cYRlSj1Ruuu5YeqCXWhHWkte06z0X+UtJA90k8iXUDA4s78fP0Oz1pN05oMRPzTKYmL6m9XLBVTLHqvppvNaoJA3jc=
+	t=1729575534; cv=none; b=rLgNpRBbPa6SwE44/cnP4WutpTHq0IWu8JSpEYSzYNHZhZvLWgvnEX9cEq8npDo3Hou29U/eIlVEk2KMu2rapTOqKV2jqD3eDWGQT5YIRCtzXORDxfuiggUwJboidRhryAzmc99aa/I5qm/6KxpPnR8KYa58pG4hXWnKG1C+eCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729573954; c=relaxed/simple;
-	bh=t+mw3U3Z7Lj1hw45TbzEbQjpZRx54yulUQ1brGuifa4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GR0/NxsSZZcCE/mjYYNYKiWqevRjoEBPNoSRAURzNaqOYAQx1I/J50XfYNGM73qmJd8vpMCL+CREeOuxglU894LqLiglk1vtNFsVxwxWNkKr0QR/S4muMqzOPNuC2BtB14MGUwhlCTkUa/bP1n4VZuZ0DCDTYl57D8U2ISSTggE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eypRtj/m; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1729575534; c=relaxed/simple;
+	bh=GwTFeNoIIXjKi/aSaoQJJGcSm97Xf5Ku6yRmwVLP3O4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XjEOoEGg7a74T4sBaW2zWcBd3Fn+KfXjIMDfg0PCisM2ayHZ4GsH1AuH0xuSWiCRsqUXAPJR1OHR6evsePPT4gEgafo3osaU/tidgod0OfxeA+6ND85JtQ6Vg65ESChVrkuyP2sOPeKvLgXOrOuCtMKeCOShBZts55UoQ374Txk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5oZkv8A; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eypRtj/m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5oZkv8A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729573953; x=1761109953;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=t+mw3U3Z7Lj1hw45TbzEbQjpZRx54yulUQ1brGuifa4=;
-  b=eypRtj/m73V5RyIPRIdJFKt6ujbJajKYqMUPF0mnQqsLIrnx9o/Gxx8B
-   ORs3YX1nMSSLcsNT4Zx5iFYDz06TAzZQwQVVxfrV+e6FSvQm7y/umtjVF
-   QSMT233Jt9Z5D5LiQBjfbZvYBpOYtzhOY0BVb/yj1/uVG7CPh4AdzZFmk
-   cmhXg8gAhi+rgP6X/anu85UiWYQJjaFbfy/sEPLj4mlGDsGnkJ8rNlhhF
-   OBtkZFHzb3GqSboXfVudEwG1z+mYXVcKi2XzsNxRtxWJ6gB+x+KUhOfXF
-   dU4QjDAlV7aCkyvpZEPEG9ETAqyrwRmrd1SjA4nVGFSWBffgjwD/rAFeF
-   w==;
-X-CSE-ConnectionGUID: Y0sWqWIySXam+u8ClOcTog==
-X-CSE-MsgGUID: n1oE7Wv8RLefWNePRAVA+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28964061"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28964061"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 22:12:33 -0700
-X-CSE-ConnectionGUID: IYciLYptT4WWCKT2nshsrQ==
-X-CSE-MsgGUID: xwiSQpOxQXah9pV5gB9JLw==
-X-ExtLoop1: 1
+  t=1729575533; x=1761111533;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GwTFeNoIIXjKi/aSaoQJJGcSm97Xf5Ku6yRmwVLP3O4=;
+  b=e5oZkv8Aukujk8aN2AgdYG39lyK6gEd4HN923x4zO7NGUaiWbOZskFDT
+   5IEh+I8vI4vu4UhZq6ENZ0Zp7Aqo1aqCBefPs55LEtdM/zuxsrjsJKFMJ
+   yJe2FLJnmRvDm8NgOgqyo5iczB6yaSO/gl5SIkD6YiVFOfJL5Adb/+TC1
+   9N6CHiyMhTKF10SDWgLJv9fAB8IC50Kqo+XiMvhk+fYdYx+3/uhnChpaY
+   br2syduXcF7YhUuGElcdHAp/mX2+F46WYKB4cvvqx+6ynS9lna9rB1zlt
+   VDx4UxABvKCwzE2/052yv48oQ4ZXxnWksyNwE0r1rwH0qUfQMbcX6eJ/F
+   g==;
+X-CSE-ConnectionGUID: Yy7y1z3VRQeEupmlQSThlA==
+X-CSE-MsgGUID: KiK25AZnQTyllJ2Dzto5Gw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="33015503"
 X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
-   d="scan'208";a="84816761"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 22:12:30 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-cxl@vger.kernel.org,  Davidlohr Bueso <dave@stgolabs.net>,
-  Jonathan Cameron <jonathan.cameron@huawei.com>,  Dave Jiang
- <dave.jiang@intel.com>,  Alison Schofield <alison.schofield@intel.com>,
-  Vishal Verma <vishal.l.verma@intel.com>,  Ira Weiny
- <ira.weiny@intel.com>,  Dan Williams <dan.j.williams@intel.com>,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cxl/core: Return error when
- cxl_endpoint_gather_bandwidth() handles a non-PCI device
-In-Reply-To: <20241022030054.258942-1-lizhijian@fujitsu.com> (Li Zhijian's
-	message of "Tue, 22 Oct 2024 11:00:54 +0800")
-References: <20241022030054.258942-1-lizhijian@fujitsu.com>
-Date: Tue, 22 Oct 2024 13:08:56 +0800
-Message-ID: <87a5ew67x3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="33015503"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 22:38:52 -0700
+X-CSE-ConnectionGUID: Az2Rjbx7TMykrTgOQjxVxg==
+X-CSE-MsgGUID: u7bsE4q1S5GTrbYWt4vuzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="84557733"
+Received: from yhuang6-mobl2.sh.intel.com ([10.238.3.32])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 22:38:48 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>
+Subject: [PATCH] resource: Avoid unnecessary resource tree walking in __region_intersects()
+Date: Tue, 22 Oct 2024 13:38:35 +0800
+Message-Id: <20241022053835.217703-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 
-Li Zhijian <lizhijian@fujitsu.com> writes:
+Currently, if __region_intersects() finds any overlapped but unmatched
+resource, it walks the descendant resource tree to check for
+overlapped and matched descendant resources.  This is achieved using
+for_each_resource(), which iterates not only the descendant tree, but
+also subsequent sibling trees in certain scenarios.  While this
+doesn't introduce bugs, it makes code hard to be understood and
+potentially inefficient.
 
-> The function cxl_endpoint_gather_bandwidth() invokes
-> pci_bus_read/write_XXX(), however, not all CXL devices are presently
-> implemented via PCI. It is recognized that the cxl_test has realized a CXL
-> device using a platform device.
->
-> Calling pci_bus_read/write_XXX() in cxl_test will cause kernel panic:
->  platform cxl_host_bridge.3: host supports CXL (restricted)
->  Oops: general protection fault, probably for non-canonical address 0x3ef17856fcae4fbd: 0000 [#1] PREEMPT SMP PTI
->  Call Trace:
->   <TASK>
->   ? __die_body.cold+0x19/0x27
->   ? die_addr+0x38/0x60
->   ? exc_general_protection+0x1f5/0x4b0
->   ? asm_exc_general_protection+0x22/0x30
->   ? pci_bus_read_config_word+0x1c/0x60
->   pcie_capability_read_word+0x93/0xb0
->   pcie_link_speed_mbps+0x18/0x50
->   cxl_pci_get_bandwidth+0x18/0x60 [cxl_core]
->   cxl_endpoint_gather_bandwidth.constprop.0+0xf4/0x230 [cxl_core]
->   ? xas_store+0x54/0x660
->   ? preempt_count_add+0x69/0xa0
->   ? _raw_spin_lock+0x13/0x40
->   ? __kmalloc_cache_noprof+0xe7/0x270
->   cxl_region_shared_upstream_bandwidth_update+0x9c/0x790 [cxl_core]
->   cxl_region_attach+0x520/0x7e0 [cxl_core]
->   store_targetN+0xf2/0x120 [cxl_core]
->   kernfs_fop_write_iter+0x13a/0x1f0
->   vfs_write+0x23b/0x410
->   ksys_write+0x53/0xd0
->   do_syscall_64+0x62/0x180
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->
-> And Ying also reported a KASAN error with similar calltrace.
->
-> Reported-by: "Huang, Ying" <ying.huang@intel.com>
-> Closes: http://lore.kernel.org/87y12w9vp5.fsf@yhuang6-desk2.ccr.corp.intel.com
-> Fixes: a5ab0de0ebaa ("cxl: Calculate region bandwidth of targets with shared upstream link")
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+So, the patch renames next_resource() to __next_resource(), and makes
+it possible to only traverse the subtree under the specified resource.
+Test shows that this avoids unnecessary resource tree walking in
+__region_intersects().
 
-This patch can eliminate the KASAN error when  `modprobe cxl_test`.
-Feel free to add
+For the example resource tree as follows,
 
-Tested-by: "Huang, Ying" <ying.huang@intel.com>
+  X
+  |
+  A----D----E
+  |
+  B--C
 
-in the future versions.
+if 'A' is the overlapped but unmatched resource, original kernel
+iterates 'B', 'C', 'D', 'E' when it walks the descendant tree.  While
+the patched kernel iterates only 'B', 'C'.
 
---
-Best Regards,
-Huang, Ying
+It appears even better to revise for_each_resource() to traverse the
+resource subtree under "_root" only.  But that will cause "_root" to
+be evaluated twice, which I don't find a good way to eliminate.
 
+Thanks David Hildenbrand for providing a good resource tree example.
 
-> ---
-> V3:
->   update return code to ENODEV and change logs #Dan
->
-> V2:
->   Check device type in original cxl_endpoint_gather_bandwidth() instead of mocking a new one. # Dan
->   Also noticed that the existing cxl_switch_gather_bandwidth() also have the same check.
-> ---
->  drivers/cxl/core/cdat.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index ef1621d40f05..e9cd7939c407 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -641,6 +641,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
->  	void *ptr;
->  	int rc;
->  
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return -ENODEV;
-> +
->  	if (cxlds->rcd)
->  		return -ENODEV;
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+---
+
+Changes:
+
+RFC->v1:
+
+- Revised patch description and comments, Thanks David and Andy!
+
+- Link to RFC: https://lore.kernel.org/linux-mm/20241010065558.1347018-1-ying.huang@intel.com/
+
+---
+ kernel/resource.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/resource.c b/kernel/resource.c
+index b730bd28b422..bd217d57fb09 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -50,15 +50,34 @@ EXPORT_SYMBOL(iomem_resource);
+ 
+ static DEFINE_RWLOCK(resource_lock);
+ 
+-static struct resource *next_resource(struct resource *p, bool skip_children)
++/*
++ * Return the next node of @p in pre-order tree traversal.  If
++ * @skip_children is true, skip the descendant nodes of @p in
++ * traversal.  If @p is a descendant of @subtree_root, only traverse
++ * the subtree under @subtree_root.
++ */
++static struct resource *__next_resource(struct resource *p, bool skip_children,
++					struct resource *subtree_root)
+ {
+ 	if (!skip_children && p->child)
+ 		return p->child;
+-	while (!p->sibling && p->parent)
++	while (!p->sibling && p->parent) {
+ 		p = p->parent;
++		if (p == subtree_root)
++			return NULL;
++	}
+ 	return p->sibling;
+ }
+ 
++static struct resource *next_resource(struct resource *p, bool skip_children)
++{
++	return __next_resource(p, skip_children, NULL);
++}
++
++/*
++ * Traverse the whole resource tree with @_root as root in pre-order.
++ * NOTE: @_root should be the topmost node, that is, @_root->parent == NULL.
++ */
+ #define for_each_resource(_root, _p, _skip_children) \
+ 	for ((_p) = (_root)->child; (_p); (_p) = next_resource(_p, _skip_children))
+ 
+@@ -572,7 +591,8 @@ static int __region_intersects(struct resource *parent, resource_size_t start,
+ 		covered = false;
+ 		ostart = max(res.start, p->start);
+ 		oend = min(res.end, p->end);
+-		for_each_resource(p, dp, false) {
++		/* Traverse the subtree under 'p'. */
++		for (dp = p->child; dp; dp = __next_resource(dp, false, p)) {
+ 			if (!resource_overlaps(dp, &res))
+ 				continue;
+ 			is_type = (dp->flags & flags) == flags &&
+-- 
+2.39.2
+
