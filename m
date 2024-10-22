@@ -1,226 +1,202 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F2719D07A;
-	Tue, 22 Oct 2024 10:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729594764; cv=none; b=jp1g+p3OlYvleHfI/dFBpyEAZA4mGm0Rk9Qv3znnlV4PTItrL3hF/1+1pZbDP7nlK0ynbyJpdYgpdbFtg/rW69wW3DvfV6UE7Jr+vTNNR9aQO7mUAHzw06WOKzOmkwq2p5fRPmJEb4GiMdSoJAIfDvYn/Hmlva6qTythWqXZIDc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729594764; c=relaxed/simple;
-	bh=05shdVmkAeASRYtPVIdPDD9sT2ieuP1wnyfC5JRadtc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aQYnL+ANY6FAcLiY0y12K1phzuHp7CvsEv7aJz5HA4PbhSLic2V32Bx+i7OdsPrYhz+yfI/zhOqTk3gsR2eAyfwJlHVoDaw/M77B2yoUvbFEnAO9S7J9V7RB52qIkFmmkmwv6vYdEI2vtADcT6rk0gnsCz1S5xNImJJe9ttKaVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XXpwB4ytFz6GFht;
-	Tue, 22 Oct 2024 18:54:34 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7957514039E;
-	Tue, 22 Oct 2024 18:59:13 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.246.16) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 22 Oct 2024 12:59:12 +0200
-From: <shiju.jose@huawei.com>
-To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
-	<linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 5/6] cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
-Date: Tue, 22 Oct 2024 11:58:48 +0100
-Message-ID: <20241022105849.1272-6-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20241022105849.1272-1-shiju.jose@huawei.com>
-References: <20241022105849.1272-1-shiju.jose@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A84C13B2A4;
+	Tue, 22 Oct 2024 13:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729603790; cv=fail; b=XXVKT+fuIofZO+dqjLl495djRpPTM8s7zS35QVt668JkeW/+hUxrov1M5eKWyCyeaYyBjO6DSG5GWsBa0dBAgtyJ4T1+8ce5pxnjf4eAHObJjumC8qCYysPWoulB+M/r5xH8k8IY+ajMvFTHzhqv6mbPEXm3gn2MuXdA9qgzhFo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729603790; c=relaxed/simple;
+	bh=YvrwEJ2rbSLeM5qQxcsCXlhrWARrCEv/DEsekNJkAr8=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=unlnCp5ZWGxYOkqJXGE4OeCJK5D/6Uhz3uX2snu3vh7qdn5uP0n1CfI34r0NQV8mTjJZk5ZhH5BBzs1F/65lOTbOfaj/yoUe0elD6nIuerZhFCs4kshaAZa30rNaJyrosLO61AkhMIXWKQVXHCJdz2jeDEHLIYXDAnq2KonB5/k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=urP4GamE; arc=fail smtp.client-ip=40.107.94.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="urP4GamE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ioizTDmKnkccifQc3fz/aCrQ44zw2t6pGmbUGRRGkoQ/QI7x/NPSj8/rOT+cxARbvPnr5MXyhbj+K8fUPRaptOZMiCEdfGSWu1cW3iG6mk9UqkLqdsvY5PECz2HgQVBc8SDGhDlRl23QTAzZ0C1SH5na/8jqsR1Vl3lLyWr0VU8CcV50aoeZFYdIwE15eF/c9dbmRojyaNXqZoAHUNwMKPUGIrNE52rc3kSuB6dOvyNctw5IE0USDvov0iKaVdzeg/uz/EGEbK3ME96T6hwiptbpwhK+PjkQ1hevIRBwbe0gAWLQSeneKgaawLZ3x14OPvwQ1pOfyaw3DRnxxsll3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bs0NPTuhjq+rZTVnHkahNkFStuzYPFWVR4sMrSOfVb4=;
+ b=MUEOtvA9TfvRPypJe8GBsnzKdo2mZO8ulLNTMdS5OVUwM5ONAQxBGVKuvwKyjqlwnDg2spiD77FuAd/SM0N9c8LnTsg0IwX8raZNnDLHIVzj2nCoCpmtWRvll2yoYu0O8VomnJc24H/2Nk3hyoJI9zSOr9YEdFSq9L9mxH/nOIv5Z4qgSHCRkA3kxnWAoMLoeECbCfznTH4ABv6R4D1aZ8CtMOElJ4f0u6l2Tb2Utv8TF7nJj7FcHc2DOdzXoFSxMG34sQ6+oZrH4MMtBDwvqknOHG+df/7eyDkHq8xBV55jBoQS/KdJnTn2k4zQjF6WQIMu0/MEoGGQw0jr2oB5oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bs0NPTuhjq+rZTVnHkahNkFStuzYPFWVR4sMrSOfVb4=;
+ b=urP4GamEvA3cuZCl2ut8FlY94uC+f8N3Bzc34vrkk8OizhWOIjVv+NDdrXwJTNNUJICE+Y8/u7bOAoaYKJ4xecu/32OR2WqDgVdFZgmnUr7e1rb+gGObrrSjP7AMnNryKf9FuviPlcOPcNzOoZJZDIcbH27oReU9Xz5aEkY+ga8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ MW5PR12MB5597.namprd12.prod.outlook.com (2603:10b6:303:192::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8093.16; Tue, 22 Oct 2024 13:29:45 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%6]) with mapi id 15.20.8093.014; Tue, 22 Oct 2024
+ 13:29:45 +0000
+Message-ID: <aaec3243-afb3-4021-a91a-a868595ffa69@amd.com>
+Date: Tue, 22 Oct 2024 08:29:43 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/15] Enable CXL PCIe port protocol error handling and
+ logging
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, ming4.li@intel.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+ Benjamin.Cheatham@amd.com, rrichter@amd.com, nathan.fontenot@amd.com,
+ smita.koralahallichannabasappa@amd.com
+References: <20241008221657.1130181-1-terry.bowman@amd.com>
+ <671703521fd1f_2312294e3@dwillia2-xfh.jf.intel.com.notmuch>
+From: Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <671703521fd1f_2312294e3@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR18CA0017.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::34) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500007.china.huawei.com (7.182.85.172)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MW5PR12MB5597:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1de912e1-bd64-4809-0394-08dcf29d9804
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NmtCM3VsUE9uVHNYeG9MUGh1azFSNG9YWjh6L3FSUVREc2FWN0FBbEJDWFh6?=
+ =?utf-8?B?WnU5OHlzQTVJZUI5YzlxZCt4QWxRUFJQVHNjWE5kblNhcFN5U1g4MG9IN1pQ?=
+ =?utf-8?B?aStKZEJPaitQUGtqUWRLUlRSRk82bWxxWVBlbWE0cWNMVVEvNmdaZlBCRTNH?=
+ =?utf-8?B?UkhtYUU4ME1xcmJVeWVodkk2VmErWUlFbjRxZFNLeWRPN2p1SzRGTmVLTEQy?=
+ =?utf-8?B?ZlRnNE1vaWhNUXMzdzBicnhBK2ZGS2hweWwxa3JSWGJqTTRYUmdkZ2Q5QTZh?=
+ =?utf-8?B?dGFWT1A4VEVLTmtPSi9ic3pTL1F5M2RIWWJJYnVwSmdpYjJsTi9MVjJhdnV5?=
+ =?utf-8?B?dXR1QWxwNmJhTHdVVU04dVhSWGppNmhNbW5wMkdlZEdaMURaSE9scWlNUXlB?=
+ =?utf-8?B?Nk5URldMRm95V0lGeFM2V3hxMUJldmxHT0c4OVI3WHExaThEVU5pazNHSGxh?=
+ =?utf-8?B?K1hKN3RhZVJudGpKcDI5TndYZHVHM0xVZnZxaTAzNC92YlNuSnp5am9PMGxD?=
+ =?utf-8?B?MSs3TkxQNEdLVktCQ1NQZzMxeWoyZUl2bE1vYXhQT1J3bGNaeDh2enh0azdy?=
+ =?utf-8?B?eXY4alhTaFFDSVh1YklGWjk5U3RvWnplT0F6aFN0blVtczZYeFFtbVVRc0hM?=
+ =?utf-8?B?a3MyWHE1bHhhQWw2Um05OGxlbXJuUDJONzNJVm1hRUtEUmlpMGtyekhZa2Vn?=
+ =?utf-8?B?WGpBNW1BSURQeDQxZDRpWEZLYW80WWRvcWJqTENjZEJ2bHkzWjhFOCswTHZO?=
+ =?utf-8?B?UEl0aENiTVk4c0hRc2pHVVNSb0VkMjg4cDdTZ3pKM1JUZ3VQV0RKMjVldWhK?=
+ =?utf-8?B?VkpLN1ZodFBiWi9zd2NGVUw5U1p6dGlzQTR4SWZHTFhjbWNlYTQvR3FRZ0o5?=
+ =?utf-8?B?Z3pRR2g4ekkrTUQ5SVFDKzdpZXJRZ3ltN0NBakt0NnFaeVR1cSs1ZEZYQ3Ax?=
+ =?utf-8?B?ZXVGbXZvZVluWS82UlVuMHRTOXRXai9EWkhKV04xT05SeVFkSkdCblh3cExu?=
+ =?utf-8?B?R25lOG1IdDdyazFwS2NXR2puUk5JUnNNazMyYmJOZGdneno3NFZJOWxTOWVn?=
+ =?utf-8?B?a2tLdGJyUjV4R2pqMkRtS0Rxcjl2bXdidXo1UWMxcGNGcnYvOUFHT0pmVjM2?=
+ =?utf-8?B?UmZmK0hLamhYd1ZNN3ZpN1NQQnAyTmhHUE1PWjhQaDZHWlY5RmtzUi9vSEJt?=
+ =?utf-8?B?b0tHQmNvbklkbmRjUThXZUNZbHJ3elpBS3lFajJyN1J3ODRxRzcwRmN1MkJJ?=
+ =?utf-8?B?V1FVelEwWnpPODFpOXZyaXBldlhyeVJ5YmtBRDhtVVdLQkxweHRBbGl6UlYw?=
+ =?utf-8?B?UjI2cEFVZGk2ZnZFQ0J5TEVma0RRVWVEbHpQUHBxTm9HN2J2YVNjVzFPVVZJ?=
+ =?utf-8?B?ckFOZ0o4WmMybWdtZTZJbFl3YU5iYVM0V3BJVU9kbFI1U2tsRUlkSTI5QURx?=
+ =?utf-8?B?MUIzektHODBybFJYeUZBREp2c0h3bzZNY240YVFHQmczd2FzUGpWYVhlNlh2?=
+ =?utf-8?B?dlpRZTlhQkdOL3QzMVI3ME53amRwQ05rdHo2SC9kUEloVGFUM2M4VDIvVU5K?=
+ =?utf-8?B?SlA5RmEzOHFQL0tZSVpwQ0dsRktEOUlJWG9VV1RpdzFTS2djbG4wWnladWdt?=
+ =?utf-8?B?dHVSNmRheFplT0JYdVdWWkdNWm1SbkFRNW55MTlYUXJNR092VVVrRjg1c0VZ?=
+ =?utf-8?B?enRUV24xOEltQ3ZUNWFVY0YwL0lqblV5TnJnbmhqeTZkUUJnU3dlYys3NWxT?=
+ =?utf-8?B?SXFnbDZtSG10MlpKVnM2R0RUM2hjVG9DL0d6Sy9DWndTUXVNeDFNUENBcWZB?=
+ =?utf-8?Q?aIAItwV+Z/GYLNE8LaPcvj5SqlmSDS0c6RbJU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VG9WbzYra3E0N3htV1NTRFoxN0N3WmswOUEyME9BUnRQam96a2ZrTVJMM2Zp?=
+ =?utf-8?B?VjV6Sk9zbEE2NWszUmNqVDA2LzZQMmFITjF4MGxxTElWNGNXMGJSMFh6NGRn?=
+ =?utf-8?B?b0ZrbzdTQWlLRDdwQTJNSXZjVDBYaHVzY1d1dkY3VHVxZzdrK2psNHl5d2dO?=
+ =?utf-8?B?WEkzaFhoaGlFMkU0VnlubGttRU9YNDhqTStsM2tvandncHQxNUxmRnVwZGxB?=
+ =?utf-8?B?VTJSSXJCZC8weGFiL05JbzhHU2RXNDM3VWl5T1FuZlVYdmE0ZVhyUzBzeUJl?=
+ =?utf-8?B?YnRJS1VLNWRHVzFlcFgxUVJ0ZmpOeGFqS0pKcjlpdFNuMlNsQmloNkk5OHlP?=
+ =?utf-8?B?ZHVwUkpnOWpoWHJHdVFCbnYrMlJBUUE0KzF6cVlMaUNSZmE3RmhmNjd4cU5Z?=
+ =?utf-8?B?eW1aZHZ1OEdCNC81RDdtSHpRTjdnbjF5d1pBQ0VlalhiNi84MFgwUzc3Z2xy?=
+ =?utf-8?B?RGI3UFNSSXdZUHlOME1OMzUwWjgxaEJxZ0dlbDdsRTU5TjFtZDRrK0tkWXEx?=
+ =?utf-8?B?bWoxUlRQSkZDcG8vcm5MMk1hNTY3dTByVXJhY09lWWM2TnE4Yzcwa3JvZHVi?=
+ =?utf-8?B?aTVEMmtuZ0pwQ0RUczhjYXZpR0R4SHhGS3grc0xWWGRmdWlkOXFSdUN0Qjdo?=
+ =?utf-8?B?ZlY1TUxEblpsMEJxVGZlY2xiZUQzZjBDay9VUytSbXlaOFNpY0hHZDJpNXNZ?=
+ =?utf-8?B?RUpweUVtMm5YWTQ0bnZNUmYvS0dZc1RGL0cwdS9lR0tiS2I5c0V2MVBMOTIw?=
+ =?utf-8?B?K1lxU1p2ZzcvaVdIaU1yUS9qaVVsMDdubmZoUmtObmhhMHZRb0ZEQzJiZXEv?=
+ =?utf-8?B?WDB3YWsrT2FxWWRmaHMweFgzSURwZlJ5ODh4ZTIrUlJTQkt2U0kzb2xFUVZ1?=
+ =?utf-8?B?RzRwR2QxRUo5NlB2VkV0b2FyMkYyejdBNVcrcDlIZ0t6d0V3Vk1XcFdkalVa?=
+ =?utf-8?B?QWh1bUpLU1E4ZHR2RDFoZHowTCttQy9KVDQ5a0xTcDRhUm0vM2J0dE1OWVQ5?=
+ =?utf-8?B?eUV3T2tvZWxxS3hmem00UHZrenQ2MWZQZ1ArVjBROW9qekxSaDFxeGpLZ1Rv?=
+ =?utf-8?B?YW5ZY1UzZUx1ZmVhQVh0LzhodC9TVmEvbTJUaG1zb3d2OEZENlFUREo3WWg2?=
+ =?utf-8?B?S09LdVQ1KzBqR1hDOFZWZkNhdGF5eWFnZHVmTWZ1MmQ2ekpOZmJ2MjlFcnIx?=
+ =?utf-8?B?aWNMelZqeGcwbmpIcHNRTXpaYjF2K21CcEhXb0JmTThDWE1GSS94WFhlRzBL?=
+ =?utf-8?B?UUx3aWo1eGJUcHFmaExoQ0prUjB5QXliOS9ZZVJKYytTcTZlY3JmTjhaZ0RO?=
+ =?utf-8?B?M0xoZVNkTStPQ0JPMU43RXVxNEl3eFVUTjFic1BvazFIeVU2UjRhaThuL29r?=
+ =?utf-8?B?dlJOOTdJUEluNWxNYWhLL1BKLzFoZEFNbW42SnJzaHlWNjBzTk5UUHFEN1Yv?=
+ =?utf-8?B?eGlGa1lnSFg0NVR3UnVaVFFnenZ3ODU5Ukw0QzdKTStyRUk4N2tsc3NEeS9N?=
+ =?utf-8?B?WXduYXRQMllWUVB5dThvbVNOOFhGTmUxYXhyUHlYankwaXB1Q213d2hGRjda?=
+ =?utf-8?B?ZWFiUTdwTEJ0aFN6enhFUEphditzcmxOSGNMZDBVQ0hpNmNtVjM2aldYM25B?=
+ =?utf-8?B?N0Uyc1RYTkh0bk8xcTNpNDVqQVJUMzc2Y1R4cmx4NE9HRk00UDRCSEtYYzd0?=
+ =?utf-8?B?cGd2aUo2NWlpdlYyNU8vK2RRb2diRDBmc3M2Q3prNWlDRTBUWGlsbTJCVW5w?=
+ =?utf-8?B?TTRCRmZaWi8yUGxtSXdCNjJxNTFjOTZ3TUFDOG9PUnMrVXJ6R2Mxd3VhSi9v?=
+ =?utf-8?B?d3kzZU9MZmMzYkR6V0ZnR1ExVUNlWnMybUFaRFVKem1OVThKTUVYT1BjYlJW?=
+ =?utf-8?B?OUE4SWh0V0RyN2RhU01FcUpkdjFzbVlOd2V2bWNpYzV0OXB4aS9ucC9qYWM5?=
+ =?utf-8?B?S3h1OUg2L0REMHJsZ1h5eGkrcVpxNDhBODIxaEZodGlLa3hEK1hWTEpkMlgv?=
+ =?utf-8?B?K3hIOTZReVdNRXN2MDBJZlg3aGlwU2hvZXpUOUxRWG05S215UzhzVk1VVCtF?=
+ =?utf-8?B?UTRBL2NsbzNrOTdib2cxTklQWUdwM0RPbzg3SFVteFEyTW9WdEs0RkpaN29V?=
+ =?utf-8?Q?bxbpjN2t++vkaiArX9KBy82HW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1de912e1-bd64-4809-0394-08dcf29d9804
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 13:29:45.6152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /SQxZJBXWyTjXi2t5Ix9NYveqhs3Z45htdewxbE7qFoOpwwSfAsfJ9q5vyaU2kgN6e3MF/+9U9s+UdvOhCu8dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5597
 
-From: Shiju Jose <shiju.jose@huawei.com>
+Hi Dan,
 
-CXL spec 3.1 section 8.2.9.2.1.3 Table 8-47, Memory Module Event Record
-has updated with following new fields and new info for Device Event Type
-and Device Health Information fields.
-1. Validity Flags
-2. Component Identifier
-3. Device Event Sub-Type
+On 10/21/24 20:43, Dan Williams wrote:
+> Terry Bowman wrote:
+> [..]
+>> Testing:
+>>
+>> Below are test results for this patchset. This is using Qemu with a root
+>> port (0c:00.0), upstream switch port (0d:00.0),and downstream switch port
+>> (0e:00.0).
+>>
+>> This was tested using aer-inject updated to support CE and UCE internal
+>> error injection. CXL RAS was set using a test patch (not upstreamed).
+> 
+> Thanks for these test outputs!
+> 
+>>
+>>     Root port UCE:
+>>     root@tbowman-cxl:~/aer-inject# ./root-uce-inject.sh
+>>     [   27.318920] pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0c:00.0
+>>     [   27.320164] pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0c:00.0
+>>     [   27.321518] pcieport 0000:0c:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+>>     [   27.322483] pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00400000/02000000
+>>     [   27.323243] pcieport 0000:0c:00.0:    [22] UncorrIntErr
+>>     [   27.325584] aer_event: 0000:0c:00.0 PCIe Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+> 
+> It strikes that by this point the code knows that it is a "CXL Bus"
+> error and no longer a "PCIe Bus" error. Given the divergent  responses
+> to Fatal errors based on bus I think it would help to clarify that the
+> kernel is panicking due to "CXL Bus", not "PCIe Bus" errors.
+> 
+>>     [   27.325584]
+>>     [   27.327171] cxl_port_aer_uncorrectable_error: device=0000:0c:00.0 host=pci0000:0c status: 'Memory Address Parity Error'
+> 
+> ...i.e. someone may not notice that this is "cxl" reference in the
+> backtrace.
 
-Update the Memory Module event record and Memory Module trace event for
-the above spec changes. The new fields are inserted in logical places.
+Good idea. I'll add logic to print 'CXL' bus in the case of a CXL erroring device.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/trace.h | 56 ++++++++++++++++++++++++++++++++++------
- include/cxl/event.h      |  5 +++-
- 2 files changed, 52 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index f6142c01d306..4e11819b8589 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -616,7 +616,7 @@ TRACE_EVENT(cxl_dram,
- /*
-  * Memory Module Event Record - MMER
-  *
-- * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
-+ * CXL res 3.1 section 8.2.9.2.1.3; Table 8-47
-  */
- #define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
- #define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
-@@ -624,27 +624,35 @@ TRACE_EVENT(cxl_dram,
- #define CXL_MMER_TEMP_CHANGE			0x03
- #define CXL_MMER_DATA_PATH_ERROR		0x04
- #define CXL_MMER_LSA_ERROR			0x05
-+#define CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR	0x06
-+#define CXL_MMER_MEMORY_MEDIA_FRU_ERROR		0x07
-+#define CXL_MMER_POWER_MANAGEMENT_FAULT		0x08
- #define show_dev_evt_type(type)	__print_symbolic(type,			   \
- 	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
- 	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
- 	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
- 	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
- 	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
--	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}  \
-+	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}, \
-+	{ CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR,	"Unrecoverable Internal Sideband Bus Error"	}, \
-+	{ CXL_MMER_MEMORY_MEDIA_FRU_ERROR,	"Memory Media FRU Error"	}, \
-+	{ CXL_MMER_POWER_MANAGEMENT_FAULT,	"Power Management Fault"	}  \
- )
- 
- /*
-  * Device Health Information - DHI
-  *
-- * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
-+ * CXL res 3.1 section 8.2.9.9.3.1; Table 8-133
-  */
- #define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
- #define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
- #define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
-+#define CXL_DHI_HS_MEM_CAPACITY_DEGRADED			BIT(3)
- #define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
- 	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"MAINTENANCE_NEEDED"	}, \
- 	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"PERFORMANCE_DEGRADED"	}, \
--	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}  \
-+	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}, \
-+	{ CXL_DHI_HS_MEM_CAPACITY_DEGRADED,	"MEM_CAPACITY_DEGRADED"	}  \
- )
- 
- #define CXL_DHI_MS_NORMAL							0x00
-@@ -698,6 +706,25 @@ TRACE_EVENT(cxl_dram,
- #define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
- #define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
- 
-+#define CXL_MMER_VALID_COMPONENT			BIT(0)
-+#define CXL_MMER_VALID_COMPONENT_ID_FORMAT		BIT(1)
-+#define show_mem_module_valid_flags(flags)	__print_flags(flags, "|",	\
-+	{ CXL_MMER_VALID_COMPONENT,	"COMPONENT"	}			\
-+)
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED			0x00
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA		0x01
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA		0x02
-+#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU		0x03
-+#define show_dev_event_sub_type(sub_type)	__print_symbolic(sub_type,			\
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED,		"Not Reported" },		\
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA,	"Invalid Config Data" },	\
-+	{ CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA,		"Unsupported Config Data" },	\
-+	{											\
-+		CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU,					\
-+		"Unsupported Memory Media FRU"							\
-+	}											\
-+)
-+
- TRACE_EVENT(cxl_memory_module,
- 
- 	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-@@ -710,6 +737,7 @@ TRACE_EVENT(cxl_memory_module,
- 
- 		/* Memory Module Event */
- 		__field(u8, event_type)
-+		__field(u8, event_sub_type)
- 
- 		/* Device Health Info */
- 		__field(u8, health_status)
-@@ -720,6 +748,8 @@ TRACE_EVENT(cxl_memory_module,
- 		__field(u32, cor_per_err_cnt)
- 		__field(s16, device_temp)
- 		__field(u8, add_status)
-+		__field(u16, validity_flags)
-+		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
- 	),
- 
- 	TP_fast_assign(
-@@ -728,6 +758,7 @@ TRACE_EVENT(cxl_memory_module,
- 
- 		/* Memory Module Event */
- 		__entry->event_type = rec->event_type;
-+		__entry->event_sub_type = rec->event_sub_type;
- 
- 		/* Device Health Info */
- 		__entry->health_status = rec->info.health_status;
-@@ -738,13 +769,18 @@ TRACE_EVENT(cxl_memory_module,
- 		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
- 		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
- 		__entry->add_status = rec->info.add_status;
-+		__entry->validity_flags = get_unaligned_le16(rec->validity_flags);
-+		memcpy(__entry->comp_id, &rec->component_id,
-+		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
- 	),
- 
--	CXL_EVT_TP_printk("event_type='%s' health_status='%s' media_status='%s' " \
--		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
-+	CXL_EVT_TP_printk("event_type='%s' event_sub_type='%s' health_status='%s' " \
-+		"media_status='%s' as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
- 		"as_cor_per_err_cnt=%s life_used=%u device_temp=%d " \
--		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u",
-+		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u " \
-+		"validity_flags='%s' comp_id=%s%s",
- 		show_dev_evt_type(__entry->event_type),
-+		show_dev_event_sub_type(__entry->event_sub_type),
- 		show_health_status_flags(__entry->health_status),
- 		show_media_status(__entry->media_status),
- 		show_two_bit_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
-@@ -753,7 +789,11 @@ TRACE_EVENT(cxl_memory_module,
- 		show_one_bit_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
- 		__entry->life_used, __entry->device_temp,
- 		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
--		__entry->cor_per_err_cnt
-+		__entry->cor_per_err_cnt,
-+		show_mem_module_valid_flags(__entry->validity_flags),
-+		comp_id_pldm_flags(__entry->comp_id[0]),
-+		cxl_print_component_id(__entry->validity_flags, CXL_MMER_VALID_COMPONENT,
-+				       CXL_MMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id)
- 	)
- );
- 
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 7e98492c85df..8ee93e146b5b 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -102,7 +102,10 @@ struct cxl_event_mem_module {
- 	struct cxl_event_record_hdr hdr;
- 	u8 event_type;
- 	struct cxl_get_health_info info;
--	u8 reserved[0x3d];
-+	u8 validity_flags[2];
-+	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-+	u8 event_sub_type;
-+	u8 reserved[0x2a];
- } __packed;
- 
- union cxl_event {
--- 
-2.34.1
-
+Regards,
+Terry
