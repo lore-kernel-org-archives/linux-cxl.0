@@ -1,216 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CD21B654C;
-	Tue, 22 Oct 2024 17:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616953; cv=fail; b=j62DgDZXHWoiVrtUs8o66en0PEICLt4Ykt90Er6Z0Pn53X56b3TenqF+CyweKe69fiJq3NIuw03e1LLlqOwDKxRbtuZGCqv3neD7dDFu7EZHEHuog2L1oIu2zDdyod3Gc/7RC0CLj+bPfF/QqW3yVsXbarJE3YMrmIEvLABNYXE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616953; c=relaxed/simple;
-	bh=vqKJutB7/qxkbTOvWNA1e6NYM3gYakMGTKp6jHZ/EPs=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Fg36Wjvb8BsKCzEiLZrdeZeY1C2+OugbCzulEsdZt6JQrvjLMFsdRjHMCHxxLGZernGW/uA16uO9O1VOCd+2fssuo+XgM2cH4Q9PH+lM1Mk5pEuDwnTCXFfUBKWIg/dfQVwXsETBw0gk5lhEtR3Z1GIFy95asqmtOfou+nnbafY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PlkiwAy+; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PlkiwAy+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729616952; x=1761152952;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=vqKJutB7/qxkbTOvWNA1e6NYM3gYakMGTKp6jHZ/EPs=;
-  b=PlkiwAy+6aiJUorrvdaipozLtB1b15NuNF8ZZWJPKUUULVBRBYrorn0B
-   d9cBitPVYs3rzyPoH4skCixPhMT00fuRtJtVXYUYly4JA4GBsq/eo2vOx
-   2UcplUxU+QWNKS2jz+zIjKQleRCYxuRymNuSisW/1gt0jLjmW+UCk7Brq
-   IKFCQPx7JRhdPXQdHX5Hs6NuZChlzDU7QiE8E+mwQFBkWVOVxxZlrqz5p
-   w6TO+k1L1Zp5++Le/L6uJSpUL5Am9cS/8eHM+yBxWqMIpZBOg6SkSDBaN
-   3yEKa+rUtW7KsWSDJFV9iVFlWVh3inuYK1ltKFytmV8c+xekCrjroi8ei
-   Q==;
-X-CSE-ConnectionGUID: P+HrU98BQgWsVKqWsKta6Q==
-X-CSE-MsgGUID: v/sZms+iSPOjs4Gz91srkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="16798013"
-X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
-   d="scan'208";a="16798013"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 10:09:10 -0700
-X-CSE-ConnectionGUID: NgH5Gb81S9mCuFqFtsIK2Q==
-X-CSE-MsgGUID: haivYqcySJumRS+wlBCCwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
-   d="scan'208";a="110716961"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Oct 2024 10:09:10 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 22 Oct 2024 10:09:09 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 22 Oct 2024 10:09:09 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFF11C9B7B;
+	Tue, 22 Oct 2024 18:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729620460; cv=none; b=ldzaW7zvf95tc7GaAlf33qZvfw0uvyFAxjuUqUzFBwIyjMZU14wR3vuOGrIR+uOnsS9jo6dMfxhpbJdUneft516SPZSghsNk6Q9YXI7AMA84o+9EiXk9MQg+03yRGbGDW9E4G5IJT/4TnPwFPVHKDg87lvQVa2mnyeywiV3PLe8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729620460; c=relaxed/simple;
+	bh=FQAoNqTo3L1gXzNU5EFWOaOOpkEb+ePuzkKcpnzkHPQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gjHCAXVVjbV5D1H6PW4KBu6fOHx9zzONEe/e8U2Bp2Wg072fgBL3Bh5gBkIEuUdCzBywBByFCVlDGSrAeFR543QmjGyzybOaa3ewxuh0dI8l4smFyB2CbSB/VfQXBk4YpI6vM+NaujWIDT7+35EwK7nM7byfnYvQFuljqS0igiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XY0TR2kJlz6K6lT;
+	Wed, 23 Oct 2024 02:05:31 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 07165140A9C;
+	Wed, 23 Oct 2024 02:07:32 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 22 Oct 2024 10:09:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u6w6dyXJXX7y/HqSK1VblE1s6VoEYFv3z4I1IpX9ycGSCmZKNneAXZIvTMgq+NfJDyBONSzCdAOSsMvcspd2C+MGhBHwOkHSS69gwv7+Haw9u/DVmRcu6q3BKJhVUqsJ9FvfFA8Nbdq0D9DG7eCkAR30PoyQ4LMLktjHpLNYyLs1Rdgiit8VfpkQqK2/+khUQMTnmyrrngkXNBGkabLCJ7ZbtdWxhf0cIXuIUVEMU23ZW2A5GBwPJF+fmdtsI+niBM88tmURYFPyKU7wfMD3NWj+yxlynh5QphKCwAdnopBpSKbEg+FfD/LqOrkwY/bvRLaKIi0S36G6Ef0CImij3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OTlWnNmzDOMadrcW1G/7nXtPuBmXQ4Hh79WsTBW1nyc=;
- b=eZS5Ci3Y6KwfToMhvDDdHd57N0NlpbT+bypi8QJ2Wj5OXKiBh3OXbE5nt1T1iUp+BI/L67WkPnqx5c1tKlJy/nyWhOgAkE/679UGZsAWXVYL8A5/1iFsMOQEQOw706dOG6D/rcRpln7smHYtibkPB2PUrH+ho1TPD5YunwEOJuQxtkaSPGcEt5JJ4LkpDKYyKFy66ev60E2RO9m/6UyHp6tnzY5bjawsD+Ll3oxL8kcql8SE7yw+dScYVtWXIx4c/rkGGl7GzoHDlMYmML3ZYT8Zjcas9sd6nHj5HJJQFrJSqvg0IDUKUQm9OU/eHtGiHcPy2uFko75ALApNI4ToeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB8478.namprd11.prod.outlook.com (2603:10b6:510:308::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Tue, 22 Oct
- 2024 17:09:06 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8093.014; Tue, 22 Oct 2024
- 17:09:06 +0000
-Date: Tue, 22 Oct 2024 10:09:02 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Terry Bowman <Terry.Bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <ming4.li@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<smita.koralahallichannabasappa@amd.com>
-Subject: Re: [PATCH 01/15] cxl/aer/pci: Add CXL PCIe port error handler
- callbacks in AER service driver
-Message-ID: <6717dc2ec6c90_231229487@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241008221657.1130181-1-terry.bowman@amd.com>
- <20241008221657.1130181-2-terry.bowman@amd.com>
- <671705b5bb95b_231229468@dwillia2-xfh.jf.intel.com.notmuch>
- <0cceca3d-f69e-4277-bc9f-2556fd212ebb@amd.com>
+ 15.1.2507.39; Tue, 22 Oct 2024 20:07:31 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Tue, 22 Oct 2024 20:07:31 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [PATCH v2 2/6] cxl/events: Add Component Identifier formatting
+ for CXL spec rev 3.1
+Thread-Topic: [PATCH v2 2/6] cxl/events: Add Component Identifier formatting
+ for CXL spec rev 3.1
+Thread-Index: AQHbJHFsQjangr5km064qFvNrZTcGrKS3NCAgAAs9XA=
+Date: Tue, 22 Oct 2024 18:07:31 +0000
+Message-ID: <26859655a08c4e6692abd38f2367f2b8@huawei.com>
+References: <20241022105849.1272-1-shiju.jose@huawei.com>
+	<20241022105849.1272-3-shiju.jose@huawei.com>
+ <20241022175827.000033ef@Huawei.com>
+In-Reply-To: <20241022175827.000033ef@Huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0cceca3d-f69e-4277-bc9f-2556fd212ebb@amd.com>
-X-ClientProxiedBy: MW4P221CA0024.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::29) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB8478:EE_
-X-MS-Office365-Filtering-Correlation-Id: 799f3210-2852-488c-2815-08dcf2bc3c38
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Xr0kr0ByLXz5iK353ng3yr+FkloxHVqIuNuSq49F45UzlSYxomiuQUHVrK3k?=
- =?us-ascii?Q?JO3olArd8q53zkWPKh3OqoaG4+RKrplwsFlv/YX+jscA9KtuIyR4dCWufBJ2?=
- =?us-ascii?Q?lcdhp1G7eKC8q/ezxNmBLThEBeGMK0ij3oZ3gBIJBQEuf8unM9XcQTtBcZhO?=
- =?us-ascii?Q?rSVI57Ab4cGtiPv0wqfln7lF1wS9BwEzrAXkSBKVwEaJmZMokPbYZUUmZcpI?=
- =?us-ascii?Q?QLlRHKZHe9GM5dv1zDI7W0lb7J+CrnhpXuvLsXy+J+2VNjopRtX8AAvsgxdH?=
- =?us-ascii?Q?SXlQekrLyH72JbeSBKkOGGtm9EvfTqOvu8g25KA0RHH65Gwklyb279sDBG2n?=
- =?us-ascii?Q?vor2/dO4fjXYscLpBvWAWexqIjUNoqGYYHI7PZolPWtFekTmDeK/hqVrW7fT?=
- =?us-ascii?Q?Risyt31TEDGoljIII1UDL7xDuoGpBhNNhkI0jEnASvglFk0CEcMP3Cm1rTUd?=
- =?us-ascii?Q?5WkyGj13+881CzLdpudhn470ElIkFI4zuR8jGrVapOXFnSl09udB7+TYW/YC?=
- =?us-ascii?Q?WErUsQCypQpCVr8PlKobvJ04sedsx4bz4vlXWbaLtAKMrITZJOZIC4IM18zP?=
- =?us-ascii?Q?b9cTo2TBB4gGfbDf+e3iWz/UV5OYH5ptgbPmisKk8OZ7iU+YljkXop/n7WMD?=
- =?us-ascii?Q?4UvNQ6lZFKS0q+Rx6fiqfVqbZ5GrVaDdybAapLXXWz7Lsp03jKm6mH4pY4AN?=
- =?us-ascii?Q?ufCaPPajG62qD0SSsc55e1T667W/I57QLhfrdq1Xsorow1nKunln1vMz36Xw?=
- =?us-ascii?Q?1wV/F0KwrGmKCFRqDWlwZQiJ/I82r44nPWZHOnCRlH2WLPnrXoVI+/FDk1PO?=
- =?us-ascii?Q?HYVcVct37vaPGTt7D+2mqfY3eAAGYSH0sxHk+Wx16rjbx2d4yM77MZ5b3HRY?=
- =?us-ascii?Q?WOusHViH+NB6la5ketgTIZUnnSKNZ+G64BF2/EhrJqKtLFwGbDzgRL02WOif?=
- =?us-ascii?Q?sE6Sep869h8yH8CGTHlFW8WHGbkI6+PA0d/uX2Ja5E6sQUlw0UhI4Zqm4Hjn?=
- =?us-ascii?Q?LsJIOW36PDZt3l18X5ILF1TXhonM8qLgQ1rNUYifjeG4a5Zkw7ZFGwEFJOYa?=
- =?us-ascii?Q?EYLvWovzz/K9vMRtumWPZleQuHQzFX1W/ks40PtSm1ROHCLKsO2lyeZZZzKT?=
- =?us-ascii?Q?7XaXh8sUzQID4yigiRDKk3d/BOMwyHkhgXfGEB77OPUXPB4LFPMygLOPte0r?=
- =?us-ascii?Q?howKUqe9n+kr5zFAtEw+Ja6azQkfdeX9RPSKs8Il8CHWR71dq048Js57vLPE?=
- =?us-ascii?Q?ceO1FETcfG0GZiiTR+sgEG/kRFB15LwFcdxMlmpt8gAmtacj+ApA9FlUvAwh?=
- =?us-ascii?Q?BA4WB/myD7PPAnhrNUb/TCWU/m/lVAfLIWfoi7ZBsR35bWrMWCyRVZ+ypieo?=
- =?us-ascii?Q?4NJgYQk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8P+F34NBgeBvXb4OjYGwOd0hU8cGWyAAFkxYFfz5ilB+Urih/xC3p7bRpbhR?=
- =?us-ascii?Q?Hu4MmErKx8Fl3A7o0Qr88TpIu9TaVvUvqTpAiWaKDlkOzxji54na6Zgl5mSG?=
- =?us-ascii?Q?l95om80MvVNV0fKlH8iXHRicJgBxgEFxdjWHQIGtrWQ1SZVqiXpVHSp+k/5l?=
- =?us-ascii?Q?Vg7uJoAOdnxJdq+sh+tf7GG51z5L00lhKrNg/cGyXtfy5pcAYrBijNmAS+09?=
- =?us-ascii?Q?6clEROmh7HHKY/d4rzR1Iz9+IPoV9BIUWO9J+IfJO1LEeztvA/skPjljZCH1?=
- =?us-ascii?Q?QlVsr4zV5MOJzcfdc9Up8mxQhm664WskuVH0/0aHu3PzGlAUuo21dFc3MU9p?=
- =?us-ascii?Q?+xUjDxy69mTBF5AB/e2a5bbvkHaU19Kkzf4WcWilXuCRtqxUbvPnLe/2BwqX?=
- =?us-ascii?Q?TeRXU+bVr9D09mIkYdgpKF8FkP4cC1RON5744PLpkQM1sPyzpYFQypATxKc6?=
- =?us-ascii?Q?5Ce65KPhco57II8FPm8LcYZEDm7nNdpPcesb/dvR1qScpxWBcv2hcsoIzaf4?=
- =?us-ascii?Q?Euc5ucbww+lmfzZBSuKWSlELAS54F8a2Ov2sXRVC9O9CLif9pol48TCvol3c?=
- =?us-ascii?Q?/Sv7QAGoCQponUVqg7poS2+Qh3Twbg3WymfvEfhQQx7nkkuA1/xe6W+QmyQs?=
- =?us-ascii?Q?AJOkAF2vyNLBkbAdJDhzcO6nj9G+XD9+S9Jqoj0i4oWUsyzv1ry1wtNZoGAx?=
- =?us-ascii?Q?t7cZUfmhJo9iN93zarEs3tR66CjL67MO3C12hcYFiAa8zD2V7Oe08onExDv5?=
- =?us-ascii?Q?8ivg/qSnPrpCtRfK5/vxLp2r1knU5gHgxC1CLNHsl/+ytYfD8ALjqQFxjOX4?=
- =?us-ascii?Q?jqBnhK2A1rUpQiausFxrUEiL/KajPEsTf1rfpYepc4rOQltV6JXmYnVJvG6D?=
- =?us-ascii?Q?vLDjhD0eRO7ilTeym4V9cGNpYuu6qV618BFNY+w7nuoyaG4gLiOlFQIB6AFL?=
- =?us-ascii?Q?P4K7zbSrPefw3Q4HXYapKk3a4TB4IQPzm1vOcylVIOhsFV3cycBinahOXJc7?=
- =?us-ascii?Q?o0N35u6lHnYwtRoSzP+/iEL3zkQ7Q7DyI87kGADw0DuptbNqVZNE4J8wvTHK?=
- =?us-ascii?Q?+sth4WBdRI4wKtR9+WpwADPcgXAVvmP2EwU3d4iddGRBHdRlbvFputFoiXFu?=
- =?us-ascii?Q?wSz3BMfZ3XEQhptXZ0Y+mFAAkcI2tEiLo3iE2NU2Nz+guwGh/ktKU4G1NXtB?=
- =?us-ascii?Q?GKAeJHB6vnjDuTVX+nkNJybMIcVj3Tgqn49tRS5MvMFkiMxJcX1+9aJUK6d1?=
- =?us-ascii?Q?I2A7lYLRYhbKoSGwMwyZ39Bm1E/IpvLyfDeYtU6XHWqTbBlxbYHhJ9leuJ+6?=
- =?us-ascii?Q?q0pO9OCKUdT/ZhDyLYbaXpmo/sAcLlWrnTrmm7XvA/deppQJHtK2WqrlMXt9?=
- =?us-ascii?Q?1+9xUR+AkfTQHmv+/JXv1/pCSJtqYiMtdIVCGPkO/wC7RZymVhyqL90wWg9V?=
- =?us-ascii?Q?PIld34R+46f8YYNU7KzUEZ7ddPzbMSMPBdiCMBPH1ktMNvaETEGKiDxPxGov?=
- =?us-ascii?Q?R86sZ0d4Yv5VWT1YGjq9VLF3vo+8bLmzESUff7LkpZU2qxmLPCxymPG9Oatx?=
- =?us-ascii?Q?EkRDC0Q4B0fHKAevHv8dAXelzN8FHLlAIyAequgQvCkoTECmcr1bSl1jpyjE?=
- =?us-ascii?Q?Dg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 799f3210-2852-488c-2815-08dcf2bc3c38
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 17:09:05.9788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IicArKgXzb1NsVE1A0c0j2c6Ds7hNIP922Wzup4TlHjBSGS11Oxw6PtPtocEG/X767PX9hA3cB7HwbID4V14hzGhOMJKtUsU37nvfTU4Sqg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8478
-X-OriginatorOrg: intel.com
 
-Terry Bowman wrote:
-[..]
-> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > index 6af5e0425872..42db26195bda 100644
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -793,6 +793,7 @@ static struct pci_driver pcie_portdriver = {
-> >         .shutdown       = pcie_portdrv_shutdown,
-> >  
-> >         .err_handler    = &pcie_portdrv_err_handler,
-> > +       .cxl_err_handler = &cxl_portdrv_err_handler,
-> >  
-> >         .driver_managed_dma = true,
-> 
-> Ok. I'm thinking to add a definition for 'pci_dev::cxl_err_handler' of type 
-> 'struct pci_error_handler'. 
-> 
-> 'struct pci_error_handler' contains a slot reset(), resume(), and mmio_enabled() fn 
-> pointers that are used in PCIe recovery if available. The plan is for CXL devices to
-> call panic for UCE fatal and non-fatal but it might be good to use the 
-> 'struct pci_error_handler' type in case there are needs for the other handlers in 
-> the future. It also makes the logic to access and use the error handlers common, 
-> requiring less code.
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 22 October 2024 17:58
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: dave.jiang@intel.com; dan.j.williams@intel.com; alison.schofield@intel=
+.com;
+>vishal.l.verma@intel.com; ira.weiny@intel.com; dave@stgolabs.net; linux-
+>cxl@vger.kernel.org; linux-kernel@vger.kernel.org; Linuxarm
+><linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+><prime.zeng@hisilicon.com>
+>Subject: Re: [PATCH v2 2/6] cxl/events: Add Component Identifier formattin=
+g for
+>CXL spec rev 3.1
+>
+>On Tue, 22 Oct 2024 11:58:45 +0100
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add Component Identifier formatting for CXL spec rev 3.1, Section
+>> 8.2.9.2.1, Table 8-44.
+>>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> ---
+>>  drivers/cxl/core/trace.h | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h index
+>> 7305974e2301..81908072c6f3 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -268,6 +268,26 @@ TRACE_EVENT(cxl_generic_event,
+>>  	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
+>>  )
+>>
+>> +/*
+>> + * Component ID Format
+>> + * CXL 3.1 section 8.2.9.2.1; Table 8-44  */
+>> +#define CXL_PLDM_COMPONENT_ID_ENTITY_VALID	BIT(0)
+>> +#define CXL_PLDM_COMPONENT_ID_RES_VALID		BIT(1)
+>> +
+>> +#define comp_id_pldm_flags(flags)  __print_flags(flags, " | ",
+>	\
+>> +	{ CXL_PLDM_COMPONENT_ID_ENTITY_VALID,   "PLDM_Entity_ID[5:0] "
+>},	\
+>> +	{ CXL_PLDM_COMPONENT_ID_RES_VALID,      "Resource_ID[9:6] " }
+>		\
+>> +)
+>> +
+>> +#define cxl_print_component_id(flags, valid_comp_id, valid_id_format,
+>comp_id)			\
+>> +	(flags & valid_comp_id && flags & valid_id_format) ?
+>			\
+>> +	(comp_id[0] & (CXL_PLDM_COMPONENT_ID_ENTITY_VALID |
+>CXL_PLDM_COMPONENT_ID_RES_VALID)) ?	\
+>> +	__print_hex(&comp_id[1], 10) : (comp_id[0] &
+>CXL_PLDM_COMPONENT_ID_ENTITY_VALID) ?	\
+>> +	__print_hex(&comp_id[1], 6) : (comp_id[0] &
+>CXL_PLDM_COMPONENT_ID_RES_VALID) ?		\
+>> +	__print_hex(&comp_id[7], 4) : __print_hex(comp_id,
+>CXL_EVENT_GEN_MED_COMP_ID_SIZE) :	\
+>
+>> +	__print_hex(comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
+>> +
+>Hi Shiju,
+>
+>This is hard to read and I've lost track of what the aim is.
+>Side note that it is probably good to state that in the patch description
+>+ give some examples of what this print looks like in the various cases.
+>If we are going to print the whole thing in the case where we have no vali=
+d bits
+>set in byte[1], maybe we just print the whole thing in all cases and just =
+add the
+>info on whether it is formatted and what those valid bits are in byte[1]?
+>
+>I was never keen on printing the invalid fields in the first place but thi=
+s code
+>adopted the convention of validity bits and print what is there where vali=
+d or
+>not. So maybe the things we should print are:
+>Taking GMER as an example.
 
-Can you give an example where CXL can reuse 'struct pci_error_handlers`
-infrastructure? The PCI error handlers are built around the idea that
-operations can be paused and recovered, CXL operations assume near
-constant device participation in CPU cache and memory coherency
-protocol.
+Hi Jonathan,
 
-About the only reuse I can think of is cases where a CXL error could be
-sent down the PCI error handler path, i.e. ones that would send a
-'pci_channel_io_normal' notice to ->error_detected(). Otherwise,
-pci_channel_state_t and pci_ers_result_t seem to be a poor fit for CXL
-error handling.
+>
+>Add the component id valid format to show_valid_flags() Then always print =
+the
+>flags for comp_id_pldm_flags() above whether or not they are valid. Finall=
+y print
+>the two broken out fields Enity ID and Resource ID.
+Will add component id valid format to show_valid_flags().
+>
+>Whether we also just print the raw versions is another question we need to
+>figure out - in the formatted case it is duplication, but if not it includ=
+es more
+>bytes.
+Can do.
+
+For the following component ID with PLDM entity and resource Id are valid
+0x03 0x07 0xc5 0x08 0x9a 0x1a 0x0b 0xfc 0x0d 0x0e 0x2f 0x00 0x00 0x00  0x00=
+  0x00
+
+For example GMER trace printed as,=20
+
+"comp_id=3DPLDM_Entity_ID[5:0]  | Resource_ID[9:6] 07 c5 08 9a 1a 0b fc 0d =
+0e 2f validity_flags=3D'CHANNEL|RANK|DEVICE|COMPONENT|0x10'"
+
+cxl_general_media: memdev=3Dmem0 host=3D0000:0f:00.0 serial=3D3 log=3DFatal=
+ : time=3D246865829224 uuid=3Dfbcd0a77-c260-417f-85a9-088b1621eba6 len=3D12=
+8 flags=3D'0x1' handle=3D1 related_handle=3D0 maint_op_class=3D0 maint_op_s=
+ub_class=3D0 : dpa=3D7c0 dpa_flags=3D'' descriptor=3D'UNCORRECTABLE_EVENT|T=
+HRESHOLD_EVENT|POISON_LIST_OVERFLOW' type=3D'TE State Violation' sub_type=
+=3D'Media Link Command Training Error' transaction_type=3D'0xc0' channel=3D=
+3 rank=3D33 device=3D5 comp_id=3DPLDM_Entity_ID[5:0]  | Resource_ID[9:6] 07=
+ c5 08 9a 1a 0b fc 0d 0e 2f validity_flags=3D'CHANNEL|RANK|DEVICE|COMPONENT=
+|0x10' hpa=3Dffffffffffffffff cme_threshold_ev_flags=3D'Corrected Memory Er=
+rors in Multiple Media Components|Exceeded Programmable Threshold' cme_coun=
+t=3D78 region=3D region_uuid=3D00000000-0000-0000-0000-000000000000
+
+Presently print comp_id_pldm_flags with [bitN: bitM] and then corresponding=
+ PLDM entity and/or resource ID based on the flags checking in the cxl_prin=
+t_component_id().
+=20
+Other cases,
+"comp_id=3DPLDM_Entity_ID[5:0]  07 c5 08 9a 1a 0b validity_flags=3D'CHANNEL=
+|RANK|DEVICE|COMPONENT|0x10'"=20
+"comp_id=3D Resource_ID[9:6] fc 0d 0e 2f validity_flags=3D'CHANNEL|RANK|DEV=
+ICE|COMPONENT|0x10'"
+
+If need to modify, can print as you suggested, =20
+... validity_flags, raw comp_id, comp_id_pldm_flags, Enity ID, Resource ID =
+...
+>
+>Jonathan
+>
+Thanks,
+Shiju
+
+>
+>
+>>  /*
+>>   * General Media Event Record - GMER
+>>   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+
