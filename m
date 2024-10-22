@@ -1,68 +1,100 @@
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B61426281;
-	Tue, 22 Oct 2024 03:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729566092; cv=none; b=mGIAZDLtBaFFWZdjs0p8qpZDgielbVfHFpRKMaREiJNiwisCywH0jpPZL4qZQ6UHpO0AzYsdafCHVlGjUBPaiqM+C3FOOmQXCipg9pIOdDswu+2gTYmQJlMQSSOjsw0RVHqPK42QNxnGJYq4vkhDIpIGqcyyoomNQ3JQsb+5Tdo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729566092; c=relaxed/simple;
-	bh=OqmSW+PZ75K8vygMvkaHIpjJJ9w6qrlByejanZJEk1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PFJcWvlateMKXjfhb8lrX4IU6Hin3AAYy9qLVTHMPl+c+J5CRGCJjhG78/Y60u/1Lmx2Rfq03uadDOQplGmwiyX/Ex14QdLl7MkWLWDxJ0sqR26rGtsBvxorsCaS09XwtBp+RXXXAPaSWl+o/cKSjSr4BtckXY3DPnW83Lr0MdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=aWPq+1fA; arc=none smtp.client-ip=139.138.61.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A6213B5B7;
+	Tue, 22 Oct 2024 03:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729567277; cv=pass; b=jABZ2PUbfucoAIxcP4WJopuPjokgcGICgoLpWXqlZf5IWuU3XfriHgIl6e8+Pr+zZ7LauMpvlXTmp31B16qhkSv+1jGmCOWy4LjXyKfMkiyDK85vyi5SdaUvj+s/YXZd/ebAxhisyqmPPsu5CYlDPEibx2mBG/MNXs86rlX7Wrw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729567277; c=relaxed/simple;
+	bh=ZFZfYC/XXlhzEGIBsCfpGwi2AGcTgaqrdpCXupX8wmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OP/0hIeiLN17SJoaZryBGV6ncSLxxghVhR8dg3EqzgdJv8JkIP341TRQ1iemCsvJOUi3IgPbbWUyc+8r/Uw/vQ6p8O4cZdnJoMmJxfHPYLVLAWie26Ulctsf2vf+pp/sVGbwG5ffVXApjzTvSRPrmVNUouZaoZDylAcLJmnEPJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=GB3p+UWw; arc=pass smtp.client-ip=23.83.212.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="aWPq+1fA"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1729566090; x=1761102090;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OqmSW+PZ75K8vygMvkaHIpjJJ9w6qrlByejanZJEk1c=;
-  b=aWPq+1fArsJkK4uI2eh4RaJp4lLNHUCKLoo0VLCBEDDN9o8BUR8fqywf
-   NTUULR9MG+QOpjXP5TTQyKkdARB/+X8QhglCrKxn+8VLlh8PepK7oywEA
-   1Qbm6UsfBM4TNIA5ZQ8ar4Uv8rV+ezvE0r9VwhfuA2wRg2gXN76kUNIHs
-   gK0+T7QW5BU+TgkEcQw+mIg62b2saj9V1wzrDKDA3PQNZ28ErVqo8N/aY
-   e9q67DQrrrhOGIsm1aNaAcMyUa1kZLv2rs2GSEsi9am5adq7NKJcpGp8K
-   FAyFrs3RvuttrH0Bld+atOkUiYzX2mucKs8QCiLGXaJvBX77ophhQT7At
-   g==;
-X-CSE-ConnectionGUID: 0FkQAr/KSvOEV9Mbp4tUTA==
-X-CSE-MsgGUID: 9hQ32j9mRCKtU140Dt+WOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="165493116"
-X-IronPort-AV: E=Sophos;i="6.11,222,1725289200"; 
-   d="scan'208";a="165493116"
-Received: from unknown (HELO yto-r1.gw.nic.fujitsu.com) ([218.44.52.217])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 12:00:19 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 31244DB3C1;
-	Tue, 22 Oct 2024 12:00:17 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 5D6A9D9695;
-	Tue, 22 Oct 2024 12:00:16 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id E10B4E2A14;
-	Tue, 22 Oct 2024 12:00:15 +0900 (JST)
-Received: from iaas-rdma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id E64E41A000B;
-	Tue, 22 Oct 2024 11:00:14 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	"Huang, Ying" <ying.huang@intel.com>
-Subject: [PATCH v3] cxl/core: Return error when cxl_endpoint_gather_bandwidth() handles a non-PCI device
-Date: Tue, 22 Oct 2024 11:00:54 +0800
-Message-ID: <20241022030054.258942-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="GB3p+UWw"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 6CAC02C2C6F;
+	Tue, 22 Oct 2024 03:21:14 +0000 (UTC)
+Received: from pdx1-sub0-mail-a259.dreamhost.com (100-99-188-116.trex-nlb.outbound.svc.cluster.local [100.99.188.116])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D70A52C2D4B;
+	Tue, 22 Oct 2024 03:21:13 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1729567274; a=rsa-sha256;
+	cv=none;
+	b=d3ITU+jB2QskEFg/4SaF4XSRIv7xTZgr1jbEAm1wVhdwlCcdnRHDGhfgl7+HyvKXdfolbJ
+	B0nMdbrbSsF84MaH7/IcOO+HUjsPM66nB05DfnycxNxayDDZHhOrg5Di7rgEUBlXQCd25C
+	/RBk7RF3k3CaitAKUWdKZsyqQRReRVxUek+nL4QEOa+zJjc2XNkGHaH5z3PGZ8f5HQ5buT
+	IiCkspZ8WWL9ejL7FzWjL2IbrftnM48JjkFSegdN0uHi5p7OP1fuRsFyEANq/4YlmV2fKA
+	NQXqE4qK7je+pdt2O/c/4Pg3u9zdVyW+KvfhzoWlJVbxbgD7aZqexfO0bVq3WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1729567274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=68EwBF3cXE1JHXLb2ovYMt6cAN5GFh2afO+CWcHSCgw=;
+	b=4Kd8MJKJAiVgiyypr86ZU4IUQ8H9V6MBbAQxR2eVfIJcapb8R39/khdliM1OqEU3hlLicV
+	svFma8x2A8dzvUtlJgjAhtap52IHkG6k0qEWi/BWP2sExb3aDFCM8Y/i3aWpkfEf8R2hUG
+	aV3ZDPmkTCSlI7GzEFENFTauSvAAYRXZ4+vltif9c0XCXDVhPX/EsZGBlFjbZCwXQ3VS4y
+	L0Pg9wsOvCllmLF1N8lBdBKXEjehqbD2ipM32AFPe5EPzaMDslsVJYUoeOalMgdEv0ZUy+
+	JmsG3VnApS3ZM9y5h7+Xa0n75efM/QBDj/GmmtVPg1wum62iObmgekRRMuCc/w==
+ARC-Authentication-Results: i=1;
+	rspamd-75d86777c9-mm5qb;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cure-Eyes: 295dd4665ea49200_1729567274226_2911567491
+X-MC-Loop-Signature: 1729567274226:1604051089
+X-MC-Ingress-Time: 1729567274226
+Received: from pdx1-sub0-mail-a259.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.188.116 (trex/7.0.2);
+	Tue, 22 Oct 2024 03:21:14 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a259.dreamhost.com (Postfix) with ESMTPSA id 4XXcs44nfwz9g;
+	Mon, 21 Oct 2024 20:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1729567273;
+	bh=68EwBF3cXE1JHXLb2ovYMt6cAN5GFh2afO+CWcHSCgw=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=GB3p+UWw8xVZQmbSIXTZ9wIEvkJz8sYuEIEI+iFn0VUAFMBvopm4fVAEXOVIL4Emr
+	 /wIkdESR5HF0POS3U3ib9nmGRD+m1zaRN71IlrhjKFpdW7tSdRLu6U6tlsBghmWgmV
+	 K9RbiqyMpawnw0l9ASHzhoKoH/ieofCDYJMIt3qLgUsIuYpcfPfhV4kJ9uI7dEFfh/
+	 D5yeZ8fN6ijKGtur0TRSzIXjooMIylbZupYCMyTQ9DYhXPcTnQwiUXAuIKu1Ca0J4f
+	 ZnIuRQ5raEEzoMQMfxouTTmCEsVIzLl9DOwuttsrvYHht5626ErN/pXoq/MSed6Xh5
+	 p8S9wL68m2HAg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dan.j.williams@intel.com,
+	dave.jiang@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	fan.ni@samsung.com,
+	a.manzanares@samsung.com,
+	sthanneeru.opensrc@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	Ravis.OpenSrc@micron.com,
+	sthanneeru@micron.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] cxl/mbox: support background operation abort requests
+Date: Mon, 21 Oct 2024 20:18:06 -0700
+Message-ID: <20241022031809.242591-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,84 +102,95 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28746.004
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28746.004
-X-TMASE-Result: 10--6.740200-10.000000
-X-TMASE-MatchedRID: FY3Fgmk8Tgm/CtrsiqyIUm03YawHJvPCuJpeHGRhXLF3de2OoBqgwolV
-	jyyDX0fc2O8rx6ppBPhMQ8GITGODLT6fxw7fU9CZrMZ+BqQt2Nos9yCYjUR6SwnnZ4xTn7Kc9zA
-	iLEDfYyml6OL12n7TiQOROoI9OuFONb/zAqrSaDUCOoDG5aR1MX607foZgOWyBuPIqCTBSzEfg4
-	t/uEEkXAa/vzANp5clSWpDJesgiOOk+AYa0R5ReKBw6BKdk7MxwMc7ZZ8e7/fSJfGV2JAq5BskA
-	daEfeQKegz5rXV3e7SqcFoiuu90Xy/7QU2czuUNA9lly13c/gGLGrmaMd6vRwZZ8N3RvTMxo8WM
-	kQWv6iX7ev9h4HyIA1cppCzPq+1UOwBXM346/+ydFXI3QoFqdfd7zn8KE4nff1x7MMBrYnyWfC2
-	wFjGvMbAcXQZvnx3t
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-The function cxl_endpoint_gather_bandwidth() invokes
-pci_bus_read/write_XXX(), however, not all CXL devices are presently
-implemented via PCI. It is recognized that the cxl_test has realized a CXL
-device using a platform device.
+Hello,
 
-Calling pci_bus_read/write_XXX() in cxl_test will cause kernel panic:
- platform cxl_host_bridge.3: host supports CXL (restricted)
- Oops: general protection fault, probably for non-canonical address 0x3ef17856fcae4fbd: 0000 [#1] PREEMPT SMP PTI
- Call Trace:
-  <TASK>
-  ? __die_body.cold+0x19/0x27
-  ? die_addr+0x38/0x60
-  ? exc_general_protection+0x1f5/0x4b0
-  ? asm_exc_general_protection+0x22/0x30
-  ? pci_bus_read_config_word+0x1c/0x60
-  pcie_capability_read_word+0x93/0xb0
-  pcie_link_speed_mbps+0x18/0x50
-  cxl_pci_get_bandwidth+0x18/0x60 [cxl_core]
-  cxl_endpoint_gather_bandwidth.constprop.0+0xf4/0x230 [cxl_core]
-  ? xas_store+0x54/0x660
-  ? preempt_count_add+0x69/0xa0
-  ? _raw_spin_lock+0x13/0x40
-  ? __kmalloc_cache_noprof+0xe7/0x270
-  cxl_region_shared_upstream_bandwidth_update+0x9c/0x790 [cxl_core]
-  cxl_region_attach+0x520/0x7e0 [cxl_core]
-  store_targetN+0xf2/0x120 [cxl_core]
-  kernfs_fop_write_iter+0x13a/0x1f0
-  vfs_write+0x23b/0x410
-  ksys_write+0x53/0xd0
-  do_syscall_64+0x62/0x180
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+This series implements the abortable capabilities for mailbox background
+operations, introduced in CXL 3.1.
 
-And Ying also reported a KASAN error with similar calltrace.
+Details in each patch, but patch 1 moves non-sanitize background command
+polling out of the mbox_mutex, such that patch 2 can add the machinery
+to request aborting the on going command. Patch 3 simply renames a call.
 
-Reported-by: "Huang, Ying" <ying.huang@intel.com>
-Closes: http://lore.kernel.org/87y12w9vp5.fsf@yhuang6-desk2.ccr.corp.intel.com
-Fixes: a5ab0de0ebaa ("cxl: Calculate region bandwidth of targets with shared upstream link")
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
-V3:
-  update return code to ENODEV and change logs #Dan
+While an overal policy could include command-priorities (which could
+be trivially added); the current policy is that, if there is an on going
+background operation, a new incoming bg-capable command will blindly
+request it to be cancelled, if capable.
 
-V2:
-  Check device type in original cxl_endpoint_gather_bandwidth() instead of mocking a new one. # Dan
-  Also noticed that the existing cxl_switch_gather_bandwidth() also have the same check.
----
- drivers/cxl/core/cdat.c | 3 +++
- 1 file changed, 3 insertions(+)
+Considering the interest of this for Logs[0], perhaps Micron folks could
+this? Does this work along the lines of what that discussion concluded?
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index ef1621d40f05..e9cd7939c407 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -641,6 +641,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
- 	void *ptr;
- 	int rc;
- 
-+	if (!dev_is_pci(cxlds->dev))
-+		return -ENODEV;
-+
- 	if (cxlds->rcd)
- 		return -ENODEV;
- 
--- 
-2.44.0
+Applies against Linus' latest tree.
+
+[0]: https://lore.kernel.org/all/20240313071218.729-1-sthanneeru.opensrc@micron.com/
+
+Testing:
+
+lockdep enabled kernel + the qemu counterpart patches:
+	https://lore.kernel.org/linux-cxl/20240813221255.179200-1-dave@stgolabs.net/
+
+#> echo 1 > /sys/bus/cxl/devices/mem1/security/sanitize && sleep 3 && echo 1 > /sys/bus/cxl/devices/mem1/security/sanitize
+[  185.928276] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0d:00.0: Sending command: 0x4400cxl/devices/mem1/security/sanitize
+[  185.930024] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+[  185.931608] cxl_pci:__cxl_pci_mbox_send_cmd:306: cxl_pci 0000:0d:00.0: Sanitization operation started
+[  188.936583] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0d:00.0: Sending command: 0x0005
+[  188.943956] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+[  188.951786] cxl_pci:cxl_try_to_cancel_background:376: cxl_pci 0000:0d:00.0: Sanitization operation aborted
+[  188.957762] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0d:00.0: Sending command: 0x4400
+[  188.959886] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+[  188.962325] cxl_pci:__cxl_pci_mbox_send_cmd:306: cxl_pci 0000:0d:00.0: Sanitization operation started
+[  197.034644] cxl_pci:cxl_mbox_sanitize_work:164: cxl_pci 0000:0d:00.0: Sanitization operation ended
+
+#> cxl update-firmware -F img.fw mem1 && sleep 3 && echo 1 > /sys/bus/cxl/devices/mem1/security/sanitize
+[   14.443484] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0e:00.0: Sending command: 0x0200
+[   14.445884] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0e:00.0: Doorbell wait took 0ms
+[   14.448744] cxl_core:cxl_query_cmd:539: cxl_mem mem1: Query IOCTL
+[   14.450458] cxl_core:cxl_query_cmd:539: cxl_mem mem1: Query IOCTL
+[   14.452307] cxl_core:cxl_send_cmd:644: cxl_mem mem1: Send IOCTL
+[   14.453686] cxl_core:handle_mailbox_cmd_from_user:602: cxl_pci 0000:0e:00.0: Submitting Get FW Info command for user
+[   14.453686] 	opcode: 200
+[   14.453686] 	size: 0
+[   14.460453] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0e:00.0: Sending command: 0x0201
+[   14.462313] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0e:00.0: Doorbell wait took 0ms
+[   14.464166] cxl_pci:__cxl_pci_mbox_send_cmd:310: cxl_pci 0000:0e:00.0: Mailbox background operation (0x0201) started
+[   14.466536] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0e:00.0: Sending command: 0x0200
+[   14.468380] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0e:00.0: Doorbell wait took 0ms
+{
+  "memdev":"mem1",
+  "pmem_size":"1024.00 MiB (1073.74 MB)",
+  "serial":"0",
+  "host":"0000:0e:00.0",
+  "firmware":{
+    "num_slots":2,
+    "active_slot":1,
+    "online_activate_capable":true,
+    "slot_1_version":"BWFW VERSION 0",
+    "fw_update_in_progress":true,
+    "remaining_size":"48.83 MiB (51.20 MB)"
+  }
+}
+cxl memdev: cmd_update_fw: firmware update started on 1 mem device
+[   17.484680] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0e:00.0: Sending command: 0x0005
+[   17.486993] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0e:00.0: Doorbell wait took 0ms
+[   17.489510] cxl_pci:cxl_pci_mbox_send:451: cxl_pci 0000:0e:00.0: Mailbox background operation (0x0201) aborted
+[   17.492476] cxl_pci:__cxl_pci_mbox_send_cmd:262: cxl_pci 0000:0e:00.0: Sending command: 0x4400
+[   17.494937] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0e:00.0: Doorbell wait took 0ms
+[   17.497598] cxl_pci:__cxl_pci_mbox_send_cmd:306: cxl_pci 0000:0e:00.0: Sanitization operation started
+[   25.682631] cxl_pci:cxl_mbox_sanitize_work:164: cxl_pci 0000:0e:00.0: Sanitization operation ended
+
+Thanks!
+
+Davidlohr Bueso (3):
+  cxl/pci: lockless background synchronous polling
+  cxl/mbox: support aborting the current background operation
+  cxl/pci: rename cxl_mbox_background_complete()
+
+ drivers/cxl/core/mbox.c |   1 +
+ drivers/cxl/cxlmem.h    |  14 +++
+ drivers/cxl/pci.c       | 189 ++++++++++++++++++++++++++++------------
+ include/cxl/mailbox.h   |   2 +
+ 4 files changed, 152 insertions(+), 54 deletions(-)
+
+--
+2.46.1
 
