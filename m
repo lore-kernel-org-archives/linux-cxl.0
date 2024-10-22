@@ -1,43 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E237A256D;
-	Tue, 22 Oct 2024 16:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1AA1B982C
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 17:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616316; cv=none; b=BWsgyHFiv26Pn8NaiuIsCZJ2J3zihjCo9hX4GScIL4fEIjix6SQefYOxD08vX3P0mP7HVI2OQSqn4YQVYnUfX4Jhcv1/mCQpaYcBmuSvmWk0YHgeq2qqQNDBVIMtnasQFslQsP9WPddX0VpmipzCJwjePw+tdgtJwt6kldyWeCs=
+	t=1729616438; cv=none; b=rQQVzzo7RtoBHOKkGdZRuKrcgWtEKa82OUWBZyvaMn98luOoZ7CXpsdnWf02TZxLDnXh5GX0ReIMam4GLkskNqKH/Xd5HanRvKh6FRXjRMdNTYW1wiCisQYxdz9T0cI2iMxqeSQC+dG4AQ7MUrKmDgTStdGmQLpEyWg7AJbb9Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616316; c=relaxed/simple;
-	bh=mv3DKaNIW8cfxeolYjwKDutSrgWG+3comP9lZi4DtYE=;
+	s=arc-20240116; t=1729616438; c=relaxed/simple;
+	bh=WgwvgfW4z2k0KntFoNKN+4H2zyxbo8HhxFgxmwwtlOc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BLTK4GP9JD9ilx+psBQs3hOCTMb/vD2ofVHeKdOwOXHa45xllmEl57gtKdA7TnaRnrGBRXVNEGAB2nnK0on+2FAt0rLqgPQJrRgVgl3501i3CasMy55Vj+PddUwv1pvFpJtKuzRUO4LdxdKXIY1GozTebcYl69XzwbV8Zj9f05g=
+	 MIME-Version:Content-Type; b=sU1xPEvetP0UAYwqwyOJAJSvPEGGL+X91nVp7kBHHIe1J77sT4H9lDX+SfMQRn8sB/mCwsi4eH0hvq3RUG3OmTAmN/r8aZ9x/9HhULPA97PTPEoBwM2peIjoJ43YkJnZCwhFiBYyg/0EhdtOfGAQRJHCY5i/CHDXIga+ALcmkTk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XXyz257SRz6K5x8;
-	Wed, 23 Oct 2024 00:57:34 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XXz082QLnz6K6tx;
+	Wed, 23 Oct 2024 00:58:32 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 614411404F9;
-	Wed, 23 Oct 2024 00:58:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CCF0D1404F9;
+	Wed, 23 Oct 2024 01:00:32 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Oct
- 2024 18:58:29 +0200
-Date: Tue, 22 Oct 2024 17:58:27 +0100
+ 2024 19:00:32 +0200
+Date: Tue, 22 Oct 2024 18:00:30 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH v2 2/6] cxl/events: Add Component Identifier formatting
- for CXL spec rev 3.1
-Message-ID: <20241022175827.000033ef@Huawei.com>
-In-Reply-To: <20241022105849.1272-3-shiju.jose@huawei.com>
-References: <20241022105849.1272-1-shiju.jose@huawei.com>
-	<20241022105849.1272-3-shiju.jose@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <ajay.opensrc@micron.com>, <fan.ni@samsung.com>, <john@jagalactic.com>,
+	<emirakhur@micron.com>, <ajayjoshi@micron.com>, <sthanneeru@micron.com>,
+	<ravis.opensrc@micron.com>, <arramesh@micron.com>, <tmmulgund@micron.com>,
+	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
+Subject: Re: [PATCH] hw/cxl: Support aborting background commands
+Message-ID: <20241022180030.00004f68@Huawei.com>
+In-Reply-To: <jdipjanthgt6atlksngodxjevfb5d43d5rshtxqxxwruszqa3e@vctljs77lg4e>
+References: <20240813221255.179200-1-dave@stgolabs.net>
+	<20240827163357.0000228e@Huawei.com>
+	<jdipjanthgt6atlksngodxjevfb5d43d5rshtxqxxwruszqa3e@vctljs77lg4e>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -51,77 +50,64 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 22 Oct 2024 11:58:45 +0100
-<shiju.jose@huawei.com> wrote:
+On Mon, 21 Oct 2024 20:23:46 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> From: Shiju Jose <shiju.jose@huawei.com>
+> On Tue, 27 Aug 2024, Jonathan Cameron wrote:\n
+> >No comments inline and LGTM. I'll queue it on my tree and push
+> >that out on gitlab sometime soonish.  
 > 
-> Add Component Identifier formatting for CXL spec rev 3.1, Section
-> 8.2.9.2.1, Table 8-44.
+> I don't see this picked up, which is a good thing atm. While testing
+> the kernel side, I noticed the following is needed, will send a v2
+> with it folded in.
+
+Currently just on my cxl-2024-10-15 branch of gitlab.com/jic23/qemu.
+I'll pick up your v2 and replace that.
 > 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/core/trace.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index 1a9779ed8201..0d429b59aafc 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -94,14 +94,15 @@ static uint64_t mailbox_reg_read(void *opaque, hwaddr offset, unsigned size)
+> 	     cxl_dstate->mbox_reg_state64[offset / size] = bg_status_reg;
+> 	 }
+> 	 if (offset == A_CXL_DEV_MAILBOX_STS) {
+> +            int bgop;
+> 	     uint64_t status_reg = cxl_dstate->mbox_reg_state64[offset / size];
 > 
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index 7305974e2301..81908072c6f3 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -268,6 +268,26 @@ TRACE_EVENT(cxl_generic_event,
->  	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
->  )
->  
-> +/*
-> + * Component ID Format
-> + * CXL 3.1 section 8.2.9.2.1; Table 8-44
-> + */
-> +#define CXL_PLDM_COMPONENT_ID_ENTITY_VALID	BIT(0)
-> +#define CXL_PLDM_COMPONENT_ID_RES_VALID		BIT(1)
+> 	     qemu_mutex_lock(&cci->bg.lock);
+> -            if (cci->bg.complete_pct == 100 || cci->bg.aborted) {
+> -                status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
+> -                                        0);
+> -                cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
+> -            }
+> +            bgop = !(cci->bg.complete_pct == 100 || cci->bg.aborted);
 > +
-> +#define comp_id_pldm_flags(flags)  __print_flags(flags, " | ",			\
-> +	{ CXL_PLDM_COMPONENT_ID_ENTITY_VALID,   "PLDM_Entity_ID[5:0] " },	\
-> +	{ CXL_PLDM_COMPONENT_ID_RES_VALID,      "Resource_ID[9:6] " }		\
-> +)
-> +
-> +#define cxl_print_component_id(flags, valid_comp_id, valid_id_format, comp_id)			\
-> +	(flags & valid_comp_id && flags & valid_id_format) ?					\
-> +	(comp_id[0] & (CXL_PLDM_COMPONENT_ID_ENTITY_VALID | CXL_PLDM_COMPONENT_ID_RES_VALID)) ?	\
-> +	__print_hex(&comp_id[1], 10) : (comp_id[0] & CXL_PLDM_COMPONENT_ID_ENTITY_VALID) ?	\
-> +	__print_hex(&comp_id[1], 6) : (comp_id[0] & CXL_PLDM_COMPONENT_ID_RES_VALID) ?		\
-> +	__print_hex(&comp_id[7], 4) : __print_hex(comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE) :	\
-
-> +	__print_hex(comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
-> +
-Hi Shiju,
-
-This is hard to read and I've lost track of what the aim is.
-Side note that it is probably good to state that in the patch description
-+ give some examples of what this print looks like in the various cases.
-If we are going to print the whole thing in the case where we
-have no valid bits set in byte[1], maybe we just print the whole thing
-in all cases and just add the info on whether it is formatted and what
-those valid bits are in byte[1]?
-
-I was never keen on printing the invalid fields in the first place
-but this code adopted the convention of validity bits and print what
-is there where valid or not. So maybe the things we should print are:
-Taking GMER as an example.
-
-Add the component id valid format to show_valid_flags() 
-Then always print the flags for comp_id_pldm_flags() above whether
-or not they are valid. Finally print the two broken out fields
-Enity ID and Resource ID.
-
-Whether we also just print the raw versions is another question we
-need to figure out - in the formatted case it is duplication, but
-if not it includes more bytes.
-
-Jonathan
-
-
-
->  /*
->   * General Media Event Record - GMER
->   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> +            status_reg = FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, BG_OP,
+> +                                    bgop);
+> +            cxl_dstate->mbox_reg_state64[offset / size] = status_reg;
+> 	     qemu_mutex_unlock(&cci->bg.lock);
+> 	 }
+> 	 return cxl_dstate->mbox_reg_state64[offset / size];
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index d5b084388288..760a8571fda6 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -2731,9 +2731,11 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>       [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
+> 	 cmd_firmware_update_get_info, 0, 0 },
+>       [FIRMWARE_UPDATE][TRANSFER] = { "FIRMWARE_UPDATE_TRANSFER",
+> -        cmd_firmware_update_transfer, ~0, CXL_MBOX_BACKGROUND_OPERATION },
+> +        cmd_firmware_update_transfer, ~0,
+> +        CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT },
+>       [FIRMWARE_UPDATE][ACTIVATE] = { "FIRMWARE_UPDATE_ACTIVATE",
+> -        cmd_firmware_update_activate, 2, CXL_MBOX_BACKGROUND_OPERATION },
+> +        cmd_firmware_update_activate, 2,
+> +        CXL_MBOX_BACKGROUND_OPERATION | CXL_MBOX_BACKGROUND_OPERATION_ABORT },
+>       [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+>       [TIMESTAMP][SET] = { "TIMESTAMP_SET", cmd_timestamp_set,
+> 			  8, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+> 
+> Thanks,
+> Davidlohr
 
