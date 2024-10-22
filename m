@@ -1,83 +1,78 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F9A19E96A
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 14:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991A31A08B5
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 14:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729606320; cv=none; b=ODkbtOlkzgyUvj6ie6baC9f3yyP9Uaza7O440wRkH7F7rHo385Hd/ArNK414GjL8gutOF1phKC/Vkzkffku6U3WrP5wT10/2Rl0vgTjtj1mRclZb4y6JGHlHiY1vT9UFxB16MOGSIApHnuGX9wLg+4UpJpf+Oev7Ss2CiRNKahY=
+	t=1729607049; cv=none; b=NAYM4hDrFWl0cWMC/oiGiLMvDCGe1AIwl941VNX5RJKrE0I1oOgb5sceYFzCmHFG15y4BUtv3PPpgcSg7A4o0O/b106ecp22rH4smjqrhbBKZLF8xjSzo7YdT5ToiKYswYx9zBGUX76gaDcR249hBCMozg3fnpuZfb6sNQqfN+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729606320; c=relaxed/simple;
-	bh=BFTMl93wn0yvR1WfKRCvWyDSqDubERJmJh1AZ0eZ+zg=;
+	s=arc-20240116; t=1729607049; c=relaxed/simple;
+	bh=EhL9si2Aq9wHNWf9k5afcj+BM8ybMHw5TENWRjpVaig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A32bQNjTN3B4vouHQH9RTkGnoFQM34+Cg710jdwo991a80GmyUKz7TJr9etjk0I/a+KEeSE4eDtMgaWXKYQKUTQdEkfusbiy/IpTHDSQTOHZNjOOwdgfWuLX7/89ZEBBu+SPZuKFiFGMjMpGiW7e4BSSOXzWB4rp6lyD6qQcyBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aWhp5l2A; arc=none smtp.client-ip=209.85.219.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=AH8l6Rc6wbBOhu0oUgqHyowBsykgtj4U2wXQ/Uk3+rpaU/rocz10jDu8jxL8pObD/Guhccvemnof14tnyxtt2PqWHZgFi5b4yk5FFhLzxkzjI0JowRqCW/3J/sROsHGHDyXCaCownIBX7MGquVU+RtmszbV/k+m/tKus7L44x7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qnUogee4; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aWhp5l2A"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6cb97afcec9so38149946d6.2
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 07:11:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qnUogee4"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-46094b68e30so44289641cf.0
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Oct 2024 07:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1729606317; x=1730211117; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1729607046; x=1730211846; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Qhll7IfNOfUrslv0JS+DDYY0+c54jassaWQ2ezcVZM=;
-        b=aWhp5l2ABHwKl3fpb/KlZB9XATAe1Yn3TBCtAyozFp6/H6OxOodN2Zk7QogFZbRLZ1
-         KIS7XPkeYhiXtL2bMOt/Ei5MVFn/lpJcCVQVKkey2Ze3VLVHU4vd2TxY+dl2vWdb4Rmu
-         VzARJXJSa+TTWM2ppLAdNB8wJDYUTSFbt+ht/pfOEjxRTzj+qPUXuwkcqFmx68+F2cgA
-         uvdx0r8eujWFkV8Xel/cC7rA7BxGWVDs2GuenkbfldW5h677CmIqZFoSvfSUC/mhLsHE
-         Nfh+3w/9MPjCKlo9xMlMAI7uEGit81y8kc12iK3QW48bp7DsUc11VrhgQkqzeFWV5bS1
-         9RmA==
+        bh=zSO/dlnnjdqEtRccDwku+xGxeoL8AGwZjql6S0C/leE=;
+        b=qnUogee4G67CC2EaRwxfbpJTjC/fD9PetF7uxSHIgi851rFqnRDXJWsh7jt4W9IE1a
+         sOT1JsPuqrqUCt0Xk/XduqTxGVnn1wYxBnnVeuTfz+g0Hjubh94Csmh3PH7JM+cmmFjX
+         ko0L7phY/tOpMml/J8o6tlUqr3sQM+0F5i8gF3fxkEmMfshUldee9SBGSWAQwszNboHK
+         rli9hRqNaa6yev2oD3Tz1ATJqKqFD5f/SaywE1wWrBaH7ftAJ7rJ4yOBkeCvwetTgOO3
+         eKV11ySWl8wOIAbiEMitZ4+Nr5UzH2gC2zHG714Q+Q1h7SKSnD+tZ6QQUqkeW/+6dV1V
+         eXvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729606317; x=1730211117;
+        d=1e100.net; s=20230601; t=1729607046; x=1730211846;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Qhll7IfNOfUrslv0JS+DDYY0+c54jassaWQ2ezcVZM=;
-        b=w6BiNd5EXIl+GdAiC/ERjnHKSN2Yes3OFFmEtDSdS/fIt03IbHlEMskQ4EKQkEXYy5
-         ZpwfLs0rVBo1cHT7lLONRn5G+wFg0Oj7XqmafoEhqI3pxz2dw6XaMccwe/1DZYNpdnft
-         5xUfe0sAgvBh2c6b0r03m7UmG9y7ap0JVT7IF1XCsvnx71bQJ5NqaoTKVagAJhaSXoLU
-         YBfnegT1VS9dCmqDbNMgMXIwLBWhBPybPYJAW0JPKkHBcU5D34iBD8PWVZDzY0Z+h+iz
-         74xWkaEO/UaKyhu/qw2uNpP1rEpgjM0hCev1Iui5UCht+mDUp+1eh8mFKjYzcOojVW30
-         gfTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKHICUvfKjGOn1eBx02hJ2uRPBqaqnXCNuN7SI9kCDfsHGu07AoxM5DmtBpuyRZHDrjkN8IpLCuzc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1f9ELajwN5LCqQXCX6TE1CvM5f0EEFkMKrnYWmmKZvym8H9Z6
-	dRdynfXNx/6QfLYpgdyDlMIg09i4Gho0fJ/nRW0kefnvuDpBO+fm2SW0pWsqhpQ=
-X-Google-Smtp-Source: AGHT+IHbw1D8MQDNK0PT64hixmIdaE3j5oH9Y2hxuMJ4+N0WrOEaNeUQS0eLymZXwzrOWOPN26VX2Q==
-X-Received: by 2002:a05:6214:440b:b0:6cc:2cc0:ccda with SMTP id 6a1803df08f44-6cde11459a2mr205071776d6.0.1729606317290;
-        Tue, 22 Oct 2024 07:11:57 -0700 (PDT)
+        bh=zSO/dlnnjdqEtRccDwku+xGxeoL8AGwZjql6S0C/leE=;
+        b=GG2mxIpOb6fppXeg0qT2ISbUVcbmhG15TmzZ2WZF0ZIp0Q2zgAJKysCddCUC3boR8s
+         jGFfn7emjctaovb1d/RurTwbhFaFt7Crju56ZuFkAXWYgNTYzNZk/4maVPE6wdkilTKD
+         hH0o1K+/A7YRWC3Kzlm8r6Cx0LnvOxwKOigX77Pr9C4X1SqNQzxS16DWUaj9DW8Om5/b
+         hJt7XbAoUuKcnzPjSwpSkl53qxXSwO/aZluTUWBM7aqt+b0O8CVggm2paWOTGzoY8Hwb
+         Uei/NXJRX0YUQoyOxrOLD6cKH6qnUEbCK8Wd5HHfA6l6OXEoQ1d8WpDwVA75HvTPEsZ/
+         MRBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmAdcbG4v8DtBJBMY5eFNJzhodhhLAirahoaIMCmcLumlQ3Z5Yr3R6GhhB/ACCVnbqvnnDAa3ePo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw11mah4jSnNXt/1bg5C4picgRaHl4rwJkd7UpocEMsy/96I2xs
+	ydLHyzdeCefnIvYoJVQxodSin3RAUb6FsLWrnzt7a5b4gJ8ycjHQLmyIGKhgCWQ=
+X-Google-Smtp-Source: AGHT+IF5fbaOto1AQAWktpGH/+6Tqp835/6zpFVXMyPZpiyi3+BOxKZkfPeAjgw/eug8GyrAW4p2RQ==
+X-Received: by 2002:ac8:5f07:0:b0:460:8f9a:9760 with SMTP id d75a77b69052e-460aed02689mr228595451cf.2.1729607046421;
+        Tue, 22 Oct 2024 07:24:06 -0700 (PDT)
 Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ce009e4470sm29298036d6.125.2024.10.22.07.11.56
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-460d3d70a6bsm29593711cf.63.2024.10.22.07.24.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 07:11:56 -0700 (PDT)
-Date: Tue, 22 Oct 2024 10:11:58 -0400
+        Tue, 22 Oct 2024 07:24:05 -0700 (PDT)
+Date: Tue, 22 Oct 2024 10:24:07 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: John Groves <John@groves.net>, David Hildenbrand <david@redhat.com>,
-	linux-mm <linux-mm@kvack.org>,
-	linux-cxl <linux-cxl@vger.kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Ira Weiny <ira.weiny@intel.com>,
-	virtualization <virtualization@lists.linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	qemu-devel <qemu-devel@nongnu.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Linuxarm <linuxarm@huawei.com>,
-	"Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-	John Groves <jgroves@micron.com>, Fan Ni <fan.ni@samsung.com>,
+To: David Hildenbrand <david@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Ira Weiny <ira.weiny@intel.com>, John Groves <John@groves.net>,
+	virtualization@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
+	qemu-devel@nongnu.org, Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linuxarm@huawei.com,
+	wangkefeng.wang@huawei.com, John Groves <jgroves@micron.com>,
+	Fan Ni <fan.ni@samsung.com>,
 	Navneet Singh <navneet.singh@intel.com>,
 	=?utf-8?B?4oCcTWljaGFlbCBTLiBUc2lya2lu4oCd?= <mst@redhat.com>,
 	Igor Mammedov <imammedo@redhat.com>,
 	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
 Subject: Re: [RFC] Virtualizing tagged disaggregated memory capacity (app
  specific, multi host shared)
-Message-ID: <ZxeyrvjaN3peNXhr@PC2K9PVX.TheFacebook.com>
+Message-ID: <Zxe1h8-E-OcO9cG3@PC2K9PVX.TheFacebook.com>
 References: <20240815172223.00001ca7@Huawei.com>
- <sjz2xzwkgkq6bun5lssqbsimbggczarotpjdhcsq3itoq5h7jc@x5ormqciwofo>
- <20240819164024.00005a0a@Huawei.com>
- <A4E80580-437F-46D8-A58B-D2F3851D67BD>
+ <fc05d089-ce04-42d2-a0d7-ea32fd73fe90@redhat.com>
+ <Zu07AU3aUrHBMXaw@PC2K9PVX.TheFacebook.com>
+ <1238f2a3-88a2-4996-92f2-05735801002b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -86,48 +81,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <A4E80580-437F-46D8-A58B-D2F3851D67BD>
+In-Reply-To: <1238f2a3-88a2-4996-92f2-05735801002b@redhat.com>
 
-On Tue, Sep 17, 2024 at 07:37:21PM +0000, Jonathan Cameron wrote:
-> > * Said mechanism should not be explicitly CXL-specific.
+On Tue, Oct 22, 2024 at 11:33:07AM +0200, David Hildenbrand wrote:
+> On 20.09.24 11:06, Gregory Price wrote:
 > 
-> Somewhat agreed, but I don't want to invent a new spec just to avoid explicit
-> ties to CXL. I'm not against using CXL to present HBM / ACPI Specific Purpose
-> memory for example to a VM. It will trivially work if that is what a user
-> wants to do and also illustrates that this stuff doesn't necessarily just
-> apply to capacity on a memory pool - it might just be 'weird' memory on the host.
+> > The only concern is when insufficient ZONE_NORMAL exists to support
+> > ZONE_MOVABLE capacity - but this is unlikely to be the general scenario AND
+> > can be mitigated w/ existing mechanisms.
+> 
+> It might be worthwhile looking at
+> Documentation/admin-guide/mm/memory-hotplug.rst "auto-movable" memory
+> onlining polciy. It might not fit all sue cases, though (just like
+> ZONE_MOVABLE doesn't)
 > 
 
-I suspect if you took all the DCD components of the current CXL device
-and repackaged it into a device called "DefinitelyNotACXLDCDDevice", that
-the CXL device inherited, this whole discussion goes away.
+I managed to miss auto-movable in my last pass through there. Though for
+our use-case, forcibly preventing ZONE_NORMAL for all CXL is the preferred
+option in an effort to keep as much kernel resources out of high latency
+memory.
 
-Patches welcome? :]
+So I think we're just going to end up using memhp_default_state, and that'll
+be mostly fine.
 
-> > * Finding a tagged capacity devdax device in a VM should work the same as it
-> >   does running on bare metal.
+> > 
+> > Manually onlined capacity defaults to ZONE_MOVABLE.
+> > 
+> > It would be nice to make this behavior consistent, since the general opinion
+> > appears to be that this capacity should default to ZONE_MOVABLE.
 > 
-> Absolutely - that's a requirement.
+> It's much easier to shoot yourself into the foot with ZONE_MOVABLE, that's
+> why the default can be adjusted manually using "online_movable" with e.g.,
+> memhp_default_state.
 > 
-> > * The file-backed (and devdax-backed) devdax abstraction is needed in qemu.
+> It's all a bit complicated, because there are various use cases and
+> mechanisms for memory hotplug ... IIRC RHEL defaults with its udev rules to
+> "ZONE_MOVABLE" on bare metal and "ZONE_NORMAL" in VMs. Except on s390, where
+> we default to "offline" (standby memory ....).
 > 
-> Maybe. I'm not convinced the abstraction is needed at that particular level.
+> I once worked on a systemd unit to make this configuration easier (and avoid
+> udev rules), and possibly more "automatic" depending on the detected
+> environment.
+>
+
+Appreciate the additional context, thanks!
+
+~Gregory
+ 
+> -- 
+> Cheers,
 > 
-> > * Beyond that, I'm not yet sure what the lookup mechanism should be. Extra
-> >   points for being easy to implement in both physical and virtual systems.
-> 
-> For physical systems we aren't going to get agreement :(  For the systems
-> I have visibility of there will be some diversity in hardware, but the
-> presentation to userspace and up consistency should be doable.
-> 
-> Jonathan
-> 
-> >
-> > Thanks for teeing this up!
-> > John
-> >
-> >
-> > [1] https://github.com/cxl-micron-reskit/famfs/blob/master/README.md
-> >
-> 
+> David / dhildenb
 > 
