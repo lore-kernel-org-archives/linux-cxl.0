@@ -1,181 +1,242 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5AB1A0AF0
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Oct 2024 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E7F4436E;
+	Wed, 23 Oct 2024 16:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729699224; cv=none; b=dE8OZtAZWm2v37ujJfFQsXGrMxkP0OGA1ev8JaSBvfb4hTPbf0KCE+Q/GZBdNU00kOhJteYylr4yifLqIBAd4sX84D9BoyRS1sIEqkuxSJ8XIyukG9TTxHILHEfwp/Oc29Z4Vw9Zp1b9jPJ9V24eVHOZrtZQlkkwZULA5YrVXA4=
+	t=1729699453; cv=none; b=UJq6wB6sKDgaCU32SdB8LrkqSexYCt9BoPA948xdRa7JsUNNsEcE6/RT0EzmAEA3R4osba0H+QxOtVv5G0RqJBS6/66s44IABVpfuwhxKaB96ZINX8GjvZ6w9MFj3E/Gux26koY3IIXGOXCVsgyjXBl/HIIYLWOTWCTjkCeMsVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729699224; c=relaxed/simple;
-	bh=59MwCHZI2eRr0Lgw3OtYNaA1fcBaVDiTk9prZoAzHbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9JSZJqqHCnAuGeyzTQatg8hffUtCiGSxoUiqkl8mXEtLsRYwrW24I/cupQ4evCdDRCXFO5dLMvng8TigUOJb8h8x3PEbFt3ayWCZm2ZJU0QTapMXmmYp+6YCIkQBvx0vGn71CpDInpmlpadqP5z7DPXMmjD14RYH/EWVO9/bNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=rQU+BXPG; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="rQU+BXPG"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6cbd57cc35bso8850956d6.1
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Oct 2024 09:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1729699221; x=1730304021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IZE5mo+XRZoTQy0RhARBcoff9U8u1ODouYGk8DXBUoE=;
-        b=rQU+BXPGpxgux4Y7kqU3sDOKPIsjEbUcK228X+ZUv9HbnjNqAxRWH4uR5djk23WwBR
-         4vxmb73D0KIDMejjxX3S1IsKPgJ+VvEPtE0Pq/jrvIegecLYI1vq6+IpZs48AsCOBrka
-         fGp4ftKDZj4yTP17g9LFUpe+CzRNBxgohNiPrlCdGPDDB7lxiDgHreRLYG7EAugNAQYu
-         CtsGSy3Fn5ycX6SBLdr5CCXx4Z8gezboNn8jnf8cWQm/LirdGkofe2dOWYI33txngBio
-         aP5mfF51V4dYJabbgWyJhkjvcyL98SNnFCTVgCavlRf66q61UuF8j7/i/xI7T5+We7BV
-         Atww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729699221; x=1730304021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IZE5mo+XRZoTQy0RhARBcoff9U8u1ODouYGk8DXBUoE=;
-        b=oEP41zVzNKG+46YrbXdI0Ilypsru1p8Hbewy5LIY6FxF3J9HAsMw4uC6Baf/tkb1Wo
-         G6hhxY2oU1a36F5WmQI6BG4tLplORvPZv36Nmu4JGAQhdxLJVSSBLHdRmcdShOHOhovh
-         ucaTpRDLVToW1oz7CAqDQ0/e/n9Lz1Ck7tQdUVnFCEM8ZIAFQ+hx55sEERWNSrBJ0DG9
-         0EP4JPoHDY55S+Hd+PhekXRXrMNKCaE3X0bhbh0A03Y3tSC8ImalZSVAFryCZqox2aIZ
-         c7qTcjYyHxoMSYpVmU6Ru3QYpxWutzlyWVBMYQWtdwRUWps/ChHHN4idmOFvk2auuRt2
-         OR7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXY52FEUDih3pUanuaFr2d4gGeIRzAS4AstBR0gwZAmvk+m4VWge+W9zmFObYOI8ZJ4RmYM985re6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8j2oadF+9bPNl/jP/PAYQ9OstE3Ba/YWF8zuf/Oim7HqnMPhh
-	lImfQcOUtx4i2ziuwU3GwqSOiy+rvDRXZQk8m5x2jqlF8G/0WM3YZdQG7+bv0Wk=
-X-Google-Smtp-Source: AGHT+IFT7UP/R2GwBpkcLMSMz0sbAQ2MaCxYMZIBaQrsveVtoCLfqVSspXEg8OQnAfl2i9+zyrWJ/A==
-X-Received: by 2002:a05:6214:3388:b0:6cb:cc30:1b0a with SMTP id 6a1803df08f44-6ce342f15bbmr52367256d6.14.1729699221324;
-        Wed, 23 Oct 2024 09:00:21 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ce009e32f9sm40702836d6.112.2024.10.23.09.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 09:00:20 -0700 (PDT)
-Date: Wed, 23 Oct 2024 12:00:23 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, ira.weiny@intel.com,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] cxl: Initialization and shutdown fixes
-Message-ID: <Zxkdl7H37gg5iXbO@PC2K9PVX.TheFacebook.com>
-References: <172964779333.81806.8852577918216421011.stgit@dwillia2-xfh.jf.intel.com>
- <Zxj2J6h8v788Vhxh@rric.localdomain>
+	s=arc-20240116; t=1729699453; c=relaxed/simple;
+	bh=SKGApaq94yriITPyBG16DbfILV4xOOkaPjXlZsQSm3s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QaSxtvtJQTuDoktK2OTV7KjA6QLLm5HZDwV/Y5t+sxreBtPStkKTlZtBsUZ+x7OMXZJtA8zQAtMoEtgqTu6TJXZky2eESEkRfffZDtc2dPckpbKjoBct6zbHmVFSHRYyFkgsPe9JIRBcQvR2QQqpShrisz1r1m/qjY50s4sAxkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XYYdT69sbz6K6f2;
+	Wed, 23 Oct 2024 23:59:25 +0800 (CST)
+Received: from frapeml100005.china.huawei.com (unknown [7.182.85.132])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6AA11140155;
+	Thu, 24 Oct 2024 00:04:06 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 23 Oct 2024 18:04:06 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 23 Oct 2024 18:04:06 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v13 02/18] EDAC: Add scrub control feature
+Thread-Topic: [PATCH v13 02/18] EDAC: Add scrub control feature
+Thread-Index: AQHbGkjJI3p+efd5HUu/BsGVBkbDXbKTFHUAgAF62LA=
+Date: Wed, 23 Oct 2024 16:04:05 +0000
+Message-ID: <4ee36d03a2894606a571b37f440da36f@huawei.com>
+References: <20241009124120.1124-1-shiju.jose@huawei.com>
+ <20241009124120.1124-3-shiju.jose@huawei.com>
+ <20241022190454.GIZxf3VkmLVR-JLeUc@fat_crate.local>
+In-Reply-To: <20241022190454.GIZxf3VkmLVR-JLeUc@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zxj2J6h8v788Vhxh@rric.localdomain>
 
-On Wed, Oct 23, 2024 at 03:12:07PM +0200, Robert Richter wrote:
-> On 22.10.24 18:43:15, Dan Williams wrote:
-> > Changes since v1 [1]:
-> > - Fix some misspellings missed by checkpatch in changelogs (Jonathan)
-> > - Add comments explaining the order of objects in drivers/cxl/Makefile
-> >   (Jonathan)
-> > - Rename attach_device => cxl_rescan_attach (Jonathan)
-> > - Fixup Zijun's email (Zijun)
-> > 
-> > [1]: http://lore.kernel.org/172862483180.2150669.5564474284074502692.stgit@dwillia2-xfh.jf.intel.com
-> > 
-> > ---
-> > 
-> > Original cover:
-> > 
-> > Gregory's modest proposal to fix CXL cxl_mem_probe() failures due to
-> > delayed arrival of the CXL "root" infrastructure [1] prompted questions
-> > of how the existing mechanism for retrying cxl_mem_probe() could be
-> > failing.
-> 
-> I found a similar issue with the region creation. 
-> 
-> A region is created with the first endpoint found and immediately
-> added as device which triggers cxl_region_probe(). Now, in
-> interleaving setups the region state comes into commit state only
-> after the last endpoint was probed. So the probe must be repeated
-> until all endpoints were enumerated. I ended up with this change:
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index a07b62254596..c78704e435e5 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3775,8 +3775,8 @@ static int cxl_region_probe(struct device *dev)
->  	}
->  
->  	if (p->state < CXL_CONFIG_COMMIT) {
-> -		dev_dbg(&cxlr->dev, "config state: %d\n", p->state);
-> -		rc = -ENXIO;
-> +		rc = dev_err_probe(&cxlr->dev, -EPROBE_DEFER,
-> +				"region config state: %d\n", p->state);
->  		goto out;
->  	}
-> 
-
-I have not experienced any out of order operations since applying Dan's
-v1 of this patch set, do you still see this after applying the existing
-set?
-
-Probably this is indicative of needing another SOFTDEP / ordering issue.
-
-~Gregory
-
-
-> -- 
-> 2.39.5
-> 
-> I don't see an init order issue here as the mem module is always up
-> before the regions are probed.
-> 
-> -Robert
-> 
-> > 
-> > The critical missing piece in the debug was that Gregory's setup had
-> > almost all CXL modules built-in to the kernel.
-> > 
-> > On the way to that discovery several other bugs and init-order corner
-> > cases were discovered.
-> > 
-> > The main fix is to make sure the drivers/cxl/Makefile object order
-> > supports root CXL ports being fully initialized upon cxl_acpi_probe()
-> > exit. The modular case has some similar potential holes that are fixed
-> > with MODULE_SOFTDEP() and other fix ups. Finally, an attempt to update
-> > cxl_test to reproduce the original report resulted in the discovery of a
-> > separate long standing use after free bug in cxl_region_detach().
-> > 
-> > [2]: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net
-> > 
-> > ---
-> > 
-> > Dan Williams (6):
-> >       cxl/port: Fix CXL port initialization order when the subsystem is built-in
-> >       cxl/port: Fix cxl_bus_rescan() vs bus_rescan_devices()
-> >       cxl/acpi: Ensure ports ready at cxl_acpi_probe() return
-> >       cxl/port: Fix use-after-free, permit out-of-order decoder shutdown
-> >       cxl/port: Prevent out-of-order decoder allocation
-> >       cxl/test: Improve init-order fidelity relative to real-world systems
-> > 
-> > 
-> >  drivers/base/core.c          |   35 +++++++
-> >  drivers/cxl/Kconfig          |    1 
-> >  drivers/cxl/Makefile         |   20 +++-
-> >  drivers/cxl/acpi.c           |    7 +
-> >  drivers/cxl/core/hdm.c       |   50 +++++++++--
-> >  drivers/cxl/core/port.c      |   13 ++-
-> >  drivers/cxl/core/region.c    |   91 ++++++++++---------
-> >  drivers/cxl/cxl.h            |    3 -
-> >  include/linux/device.h       |    3 +
-> >  tools/testing/cxl/test/cxl.c |  200 +++++++++++++++++++++++-------------------
-> >  tools/testing/cxl/test/mem.c |    1 
-> >  11 files changed, 269 insertions(+), 155 deletions(-)
-> > 
-> > base-commit: 8cf0b93919e13d1e8d4466eb4080a4c4d9d66d7b
+DQpUaGFua3MgZm9yIHRoZSBmZWVkYmFja3MuDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPkZyb206IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPg0KPlNlbnQ6IDIyIE9jdG9i
+ZXIgMjAyNCAyMDowNQ0KPlRvOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+
+Q2M6IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jeGxAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC0NCj5hY3BpQHZnZXIua2VybmVsLm9yZzsgbGludXgtbW1Aa3ZhY2sub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPnRvbnkubHVja0BpbnRlbC5jb207IHJhZmFlbEBr
+ZXJuZWwub3JnOyBsZW5iQGtlcm5lbC5vcmc7DQo+bWNoZWhhYkBrZXJuZWwub3JnOyBkYW4uai53
+aWxsaWFtc0BpbnRlbC5jb207IGRhdmVAc3Rnb2xhYnMubmV0OyBKb25hdGhhbg0KPkNhbWVyb24g
+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGRhdmUuamlhbmdAaW50ZWwuY29tOw0KPmFs
+aXNvbi5zY2hvZmllbGRAaW50ZWwuY29tOyB2aXNoYWwubC52ZXJtYUBpbnRlbC5jb207IGlyYS53
+ZWlueUBpbnRlbC5jb207DQo+ZGF2aWRAcmVkaGF0LmNvbTsgVmlsYXMuU3JpZGhhcmFuQGFtZC5j
+b207IGxlby5kdXJhbkBhbWQuY29tOw0KPllhemVuLkdoYW5uYW1AYW1kLmNvbTsgcmllbnRqZXNA
+Z29vZ2xlLmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsNCj5Kb24uR3JpbW1AYW1kLmNvbTsgZGF2
+ZS5oYW5zZW5AbGludXguaW50ZWwuY29tOw0KPm5hb3lhLmhvcmlndWNoaUBuZWMuY29tOyBqYW1l
+cy5tb3JzZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5jb207DQo+c29tYXN1bmRhcmFtLmFA
+aHBlLmNvbTsgZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29uZGFAZ29vZ2xlLmNvbTsNCj5kdWVu
+d2VuQGdvb2dsZS5jb207IGd0aGVsZW5AZ29vZ2xlLmNvbTsNCj53c2Nod2FydHpAYW1wZXJlY29t
+cHV0aW5nLmNvbTsgZGZlcmd1c29uQGFtcGVyZWNvbXB1dGluZy5jb207DQo+d2JzQG9zLmFtcGVy
+ZWNvbXB1dGluZy5jb207IG5pZmFuLmN4bEBnbWFpbC5jb207IHRhbnhpYW9mZWkNCj48dGFueGlh
+b2ZlaUBodWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT47
+IFJvYmVydG8NCj5TYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsga2FuZ2thbmcuc2hl
+bkBmdXR1cmV3ZWkuY29tOw0KPndhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdlaS5jb20+
+OyBMaW51eGFybQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djEzIDAyLzE4XSBFREFDOiBBZGQgc2NydWIgY29udHJvbCBmZWF0dXJlDQo+DQo+T24gV2VkLCBP
+Y3QgMDksIDIwMjQgYXQgMDE6NDE6MDNQTSArMDEwMCwgc2hpanUuam9zZUBodWF3ZWkuY29tIHdy
+b3RlOg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcvc3lzZnMtZWRh
+Yy1zY3J1Yg0KPj4gYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWVkYWMtc2NydWIN
+Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmI0ZjhmMGJi
+YTE3Yg0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGlu
+Zy9zeXNmcy1lZGFjLXNjcnViDQo+PiBAQCAtMCwwICsxLDY5IEBADQo+PiArV2hhdDoJCS9zeXMv
+YnVzL2VkYWMvZGV2aWNlcy88ZGV2LW5hbWU+L3NjcnViWA0KPj4gK0RhdGU6CQlPY3QgMjAyNA0K
+Pj4gK0tlcm5lbFZlcnNpb246CTYuMTINCj4+ICtDb250YWN0OglsaW51eC1lZGFjQHZnZXIua2Vy
+bmVsLm9yZw0KPj4gK0Rlc2NyaXB0aW9uOg0KPj4gKwkJVGhlIHN5c2ZzIEVEQUMgYnVzIGRldmlj
+ZXMgLzxkZXYtbmFtZT4vc2NydWJYIHN1YmRpcmVjdG9yeQ0KPj4gKwkJYmVsb25ncyB0byBhbiBp
+bnN0YW5jZSBvZiBtZW1vcnkgc2NydWIgY29udHJvbCBmZWF0dXJlLA0KPj4gKwkJd2hlcmUgPGRl
+di1uYW1lPiBkaXJlY3RvcnkgY29ycmVzcG9uZHMgdG8gYSBkZXZpY2UvbWVtb3J5DQo+PiArCQly
+ZWdpb24gcmVnaXN0ZXJlZCB3aXRoIHRoZSBFREFDIGRldmljZSBkcml2ZXIgZm9yIHRoZQ0KPj4g
+KwkJc2NydWIgY29udHJvbCBmZWF0dXJlLg0KPj4gKwkJVGhlIHN5c2ZzIHNjcnViIGF0dHIgbm9k
+ZXMgd291bGQgYmUgcHJlc2VudCBvbmx5IGlmIHRoZQ0KPj4gKwkJY2xpZW50IGRyaXZlciBoYXMg
+aW1wbGVtZW50ZWQgdGhlIGNvcnJlc3BvbmRpbmcgYXR0cg0KPj4gKwkJY2FsbGJhY2sgZnVuY3Rp
+b24gYW5kIHBhc3NlZCBpbiBvcHMgdG8gdGhlIEVEQUMgUkFTIGZlYXR1cmUNCj4+ICsJCWRyaXZl
+ciBkdXJpbmcgcmVnaXN0cmF0aW9uLg0KPj4gKw0KPj4gK1doYXQ6CQkvc3lzL2J1cy9lZGFjL2Rl
+dmljZXMvPGRldi0NCj5uYW1lPi9zY3J1YlgvYWRkcl9yYW5nZV9iYXNlDQo+PiArRGF0ZToJCU9j
+dCAyMDI0DQo+PiArS2VybmVsVmVyc2lvbjoJNi4xMg0KPj4gK0NvbnRhY3Q6CWxpbnV4LWVkYWNA
+dmdlci5rZXJuZWwub3JnDQo+PiArRGVzY3JpcHRpb246DQo+PiArCQkoUlcpIFRoZSBiYXNlIG9m
+IHRoZSBhZGRyZXNzIHJhbmdlIG9mIHRoZSBtZW1vcnkgcmVnaW9uDQo+PiArCQl0byBiZSBzY3J1
+YmJlZCAob24tZGVtYW5kIHNjcnViYmluZykuDQo+DQo+V2h5IGRvZXMgdGhpcyBzb3VuZCBtb3Jl
+IGNvbXBsaWNhdGVkIHRoYW4gaXQgaXM/DQo+DQo+V2h5IGlzbid0IHRoaXMgc2ltcGx5ICJhZGRy
+IiBhbmQgdGhlIG5leHQgb25lICJzaXplIj8NCj4NCj5Pbi1kZW1hbmQgc2NydWJiaW5nIHNob3Vs
+ZCBzY3J1YiBhdCBhZGRyZXNzICJhZGRyIiBhbmQgInNpemUiIGJ5dGVzLiBDYW4ndCBnZXQNCj5h
+bnkgc2ltcGxlciB0aGFuIHRoYXQuDQpTdXJlLiBXaWxsIG1vZGlmeSB0byBhZGRyIGFuZCBzaXpl
+Lg0KPg0KPj4gKw0KPj4gK1doYXQ6CQkvc3lzL2J1cy9lZGFjL2RldmljZXMvPGRldi0NCj5uYW1l
+Pi9zY3J1YlgvYWRkcl9yYW5nZV9zaXplDQo+PiArRGF0ZToJCU9jdCAyMDI0DQo+PiArS2VybmVs
+VmVyc2lvbjoJNi4xMg0KPj4gK0NvbnRhY3Q6CWxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnDQo+
+PiArRGVzY3JpcHRpb246DQo+PiArCQkoUlcpIFRoZSBzaXplIG9mIHRoZSBhZGRyZXNzIHJhbmdl
+IG9mIHRoZSBtZW1vcnkgcmVnaW9uDQo+PiArCQl0byBiZSBzY3J1YmJlZCAob24tZGVtYW5kIHNj
+cnViYmluZykuDQo+PiArDQo+PiArV2hhdDoJCS9zeXMvYnVzL2VkYWMvZGV2aWNlcy88ZGV2LQ0K
+Pm5hbWU+L3NjcnViWC9lbmFibGVfYmFja2dyb3VuZA0KPj4gK0RhdGU6CQlPY3QgMjAyNA0KPj4g
+K0tlcm5lbFZlcnNpb246CTYuMTINCj4+ICtDb250YWN0OglsaW51eC1lZGFjQHZnZXIua2VybmVs
+Lm9yZw0KPj4gK0Rlc2NyaXB0aW9uOg0KPj4gKwkJKFJXKSBTdGFydC9TdG9wIGJhY2tncm91bmQo
+cGF0cm9sKSBzY3J1YmJpbmcgaWYgc3VwcG9ydGVkLg0KPj4gKw0KPj4gK1doYXQ6CQkvc3lzL2J1
+cy9lZGFjL2RldmljZXMvPGRldi0NCj5uYW1lPi9zY3J1YlgvZW5hYmxlX29uX2RlbWFuZA0KPj4g
+K0RhdGU6CQlPY3QgMjAyNA0KPj4gK0tlcm5lbFZlcnNpb246CTYuMTINCj4+ICtDb250YWN0Ogls
+aW51eC1lZGFjQHZnZXIua2VybmVsLm9yZw0KPj4gK0Rlc2NyaXB0aW9uOg0KPj4gKwkJKFJXKSBT
+dGFydC9TdG9wIG9uLWRlbWFuZCBzY3J1YmJpbmcgdGhlIG1lbW9yeSByZWdpb24NCj4+ICsJCWlm
+IHN1cHBvcnRlZC4NCj4NCj5XaHkgZG8geW91IG5lZWQgYSBzZXBhcmF0ZSAiZW5hYmxlIiBmbGFn
+Pw0KPg0KPldoeSBjYW4ndCBpdCBiZTogIndyaXRpbmcgaW50byAiYWRkciIgc3RhcnRzIHRoZSBv
+bi1kZW1hbmQgc2NydWJiaW5nIj8NCklmICAnZW5hYmxlJyBhdHRyaWJ1dGUgaXMgcmVtb3ZlZCAs
+IHRoZW4gdGhlcmUgaXMgYW4gb3JkZXJpbmcgd2l0aCBzZXR0aW5nIGFkZHJlc3MgKyBzaXplLg0K
+QWxzbyB1c2VyIHNwYWNlIGNhbid0IGNoZWNrIHdoZXRoZXIgc2NydWJiaW5nIGlzIGVuYWJsZWQg
+b3Igbm90LiANCj4NCj4+ICsNCj4+ICtXaGF0OgkJL3N5cy9idXMvZWRhYy9kZXZpY2VzLzxkZXYt
+DQo+bmFtZT4vc2NydWJYL21pbl9jeWNsZV9kdXJhdGlvbg0KPj4gK0RhdGU6CQlPY3QgMjAyNA0K
+Pj4gK0tlcm5lbFZlcnNpb246CTYuMTINCj4+ICtDb250YWN0OglsaW51eC1lZGFjQHZnZXIua2Vy
+bmVsLm9yZw0KPj4gK0Rlc2NyaXB0aW9uOg0KPj4gKwkJKFJPKSBTdXBwb3J0ZWQgbWluaW11bSBz
+Y3J1YiBjeWNsZSBkdXJhdGlvbiBpbiBzZWNvbmRzDQo+PiArCQlieSB0aGUgbWVtb3J5IHNjcnVi
+YmVyLg0KPj4gKw0KPj4gK1doYXQ6CQkvc3lzL2J1cy9lZGFjL2RldmljZXMvPGRldi0NCj5uYW1l
+Pi9zY3J1YlgvbWF4X2N5Y2xlX2R1cmF0aW9uDQo+PiArRGF0ZToJCU9jdCAyMDI0DQo+PiArS2Vy
+bmVsVmVyc2lvbjoJNi4xMg0KPj4gK0NvbnRhY3Q6CWxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3Jn
+DQo+PiArRGVzY3JpcHRpb246DQo+PiArCQkoUk8pIFN1cHBvcnRlZCBtYXhpbXVtIHNjcnViIGN5
+Y2xlIGR1cmF0aW9uIGluIHNlY29uZHMNCj4+ICsJCWJ5IHRoZSBtZW1vcnkgc2NydWJiZXIuDQo+
+PiArDQo+PiArV2hhdDoJCS9zeXMvYnVzL2VkYWMvZGV2aWNlcy88ZGV2LQ0KPm5hbWU+L3NjcnVi
+WC9jdXJyZW50X2N5Y2xlX2R1cmF0aW9uDQo+PiArRGF0ZToJCU9jdCAyMDI0DQo+PiArS2VybmVs
+VmVyc2lvbjoJNi4xMg0KPj4gK0NvbnRhY3Q6CWxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnDQo+
+PiArRGVzY3JpcHRpb246DQo+PiArCQkoUlcpIFRoZSBjdXJyZW50IHNjcnViIGN5Y2xlIGR1cmF0
+aW9uIGluIHNlY29uZHMgYW5kIG11c3QgYmUNCj4+ICsJCXdpdGhpbiB0aGUgc3VwcG9ydGVkIHJh
+bmdlIGJ5IHRoZSBtZW1vcnkgc2NydWJiZXIuDQo+DQo+V2hhdCBhcmUgdGhvc2UgdGhyZWUgZ29v
+ZCBmb3IgYW5kIHdoeSBhcmUgdGhleSBleHBvc2VkPw0KU2NydWIgaGFzIGFuIG92ZXJoZWFkIHdo
+ZW4gcnVubmluZyBhbmQgdGhhdCBtYXkgd2FudCB0byBiZSByZWR1Y2VkIGJ5DQpqdXN0IHRha2lu
+ZyBsb25nZXIgdG8gZG8gaXQuIA0KTWluIGFuZCBtYXggc2NydWIgY3ljbGUgZHVyYXRpb24gcmV0
+dXJucyB0aGUgcmFuZ2Ugb2Ygc2NydWIgcmF0ZQ0Kc3VwcG9ydGVkIGJ5IHRoZSBkZXZpY2UuDQo+
+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL01ha2VmaWxlIGIvZHJpdmVycy9lZGFjL01h
+a2VmaWxlIGluZGV4DQo+PiA0ZWRmYjgzZmZiZWUuLmE5NmE3NGRlOGI5ZSAxMDA2NDQNCj4+IC0t
+LSBhL2RyaXZlcnMvZWRhYy9NYWtlZmlsZQ0KPj4gKysrIGIvZHJpdmVycy9lZGFjL01ha2VmaWxl
+DQo+PiBAQCAtMTAsNiArMTAsNyBAQCBvYmotJChDT05GSUdfRURBQykJCQk6PSBlZGFjX2NvcmUu
+bw0KPj4NCj4+ICBlZGFjX2NvcmUteQk6PSBlZGFjX21jLm8gZWRhY19kZXZpY2UubyBlZGFjX21j
+X3N5c2ZzLm8NCj4+ICBlZGFjX2NvcmUteQkrPSBlZGFjX21vZHVsZS5vIGVkYWNfZGV2aWNlX3N5
+c2ZzLm8gd3Eubw0KPj4gK2VkYWNfY29yZS15CSs9IHNjcnViLm8NCj4+DQo+PiAgZWRhY19jb3Jl
+LSQoQ09ORklHX0VEQUNfREVCVUcpCQkrPSBkZWJ1Z2ZzLm8NCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9lZGFjL2VkYWNfZGV2aWNlLmMgYi9kcml2ZXJzL2VkYWMvZWRhY19kZXZpY2UuYw0K
+Pj4gaW5kZXggMGI4YWE4MTUwMjM5Li4wYzlkYTU1ZDE4YmMgMTAwNjQ0DQo+PiAtLS0gYS9kcml2
+ZXJzL2VkYWMvZWRhY19kZXZpY2UuYw0KPj4gKysrIGIvZHJpdmVycy9lZGFjL2VkYWNfZGV2aWNl
+LmMNCj4+IEBAIC01NzYsNiArNTc2LDcgQEAgc3RhdGljIHZvaWQgZWRhY19kZXZfcmVsZWFzZShz
+dHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiB7DQo+PiAgCXN0cnVjdCBlZGFjX2Rldl9mZWF0X2N0eCAq
+Y3R4ID0gY29udGFpbmVyX29mKGRldiwgc3RydWN0DQo+PiBlZGFjX2Rldl9mZWF0X2N0eCwgZGV2
+KTsNCj4+DQo+PiArCWtmcmVlKGN0eC0+c2NydWIpOw0KPj4gIAlrZnJlZShjdHgtPmRldi5ncm91
+cHMpOw0KPj4gIAlrZnJlZShjdHgpOw0KPj4gIH0NCj4+IEBAIC02MTAsNyArNjExLDkgQEAgaW50
+IGVkYWNfZGV2X3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UgKnBhcmVudCwgY2hhcg0KPipuYW1lLA0K
+Pj4gIAkJICAgICAgY29uc3Qgc3RydWN0IGVkYWNfZGV2X2ZlYXR1cmUgKnJhc19mZWF0dXJlcykg
+IHsNCj4+ICAJY29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCAqKnJhc19hdHRyX2dyb3VwczsN
+Cj4+ICsJc3RydWN0IGVkYWNfZGV2X2RhdGEgKmRldl9kYXRhOw0KPj4gIAlzdHJ1Y3QgZWRhY19k
+ZXZfZmVhdF9jdHggKmN0eDsNCj4+ICsJaW50IHNjcnViX2NudCA9IDAsIHNjcnViX2luc3QgPSAw
+Ow0KPj4gIAlpbnQgYXR0cl9nY250ID0gMDsNCj4+ICAJaW50IHJldCwgZmVhdDsNCj4NCj5UaGUg
+RURBQyB0cmVlIHByZWZlcnJlZCBvcmRlcmluZyBvZiB2YXJpYWJsZSBkZWNsYXJhdGlvbnMgYXQg
+dGhlIGJlZ2lubmluZyBvZiBhDQo+ZnVuY3Rpb24gaXMgcmV2ZXJzZSBmaXIgdHJlZSBvcmRlcjo6
+DQpJIHVzZWQgdGhlIHJldmVyc2UgdHJlZSBvcmRlcmluZywgYnV0IG1pc3NlZCBoZXJlLiBJIHdp
+bGwgY29ycmVjdC4gDQo+DQo+CXN0cnVjdCBsb25nX3N0cnVjdF9uYW1lICpkZXNjcmlwdGl2ZV9u
+YW1lOw0KPgl1bnNpZ25lZCBsb25nIGZvbywgYmFyOw0KPgl1bnNpZ25lZCBpbnQgdG1wOw0KPglp
+bnQgcmV0Ow0KPg0KPlRoZSBhYm92ZSBpcyBmYXN0ZXIgdG8gcGFyc2UgdGhhbiB0aGUgcmV2ZXJz
+ZSBvcmRlcmluZzo6DQo+DQo+CWludCByZXQ7DQo+CXVuc2lnbmVkIGludCB0bXA7DQo+CXVuc2ln
+bmVkIGxvbmcgZm9vLCBiYXI7DQo+CXN0cnVjdCBsb25nX3N0cnVjdF9uYW1lICpkZXNjcmlwdGl2
+ZV9uYW1lOw0KPg0KPkFuZCBldmVuIG1vcmUgc28gdGhhbiByYW5kb20gb3JkZXJpbmc6Og0KPg0K
+Pgl1bnNpZ25lZCBsb25nIGZvbywgYmFyOw0KPglpbnQgcmV0Ow0KPglzdHJ1Y3QgbG9uZ19zdHJ1
+Y3RfbmFtZSAqZGVzY3JpcHRpdmVfbmFtZTsNCj4JdW5zaWduZWQgaW50IHRtcDsNCj4NCj4+DQo+
+PiBAQCAtNjIwLDcgKzYyMywxMCBAQCBpbnQgZWRhY19kZXZfcmVnaXN0ZXIoc3RydWN0IGRldmlj
+ZSAqcGFyZW50LCBjaGFyDQo+Km5hbWUsDQo+PiAgCS8qIERvdWJsZSBwYXJzZSB0byBtYWtlIHNw
+YWNlIGZvciBhdHRyaWJ1dGVzICovDQo+PiAgCWZvciAoZmVhdCA9IDA7IGZlYXQgPCBudW1fZmVh
+dHVyZXM7IGZlYXQrKykgew0KPj4gIAkJc3dpdGNoIChyYXNfZmVhdHVyZXNbZmVhdF0uZnRfdHlw
+ZSkgew0KPj4gLQkJLyogQWRkIGZlYXR1cmUgc3BlY2lmaWMgY29kZSAqLw0KPj4gKwkJY2FzZSBS
+QVNfRkVBVF9TQ1JVQjoNCj4+ICsJCQlhdHRyX2djbnQrKzsNCj4+ICsJCQlzY3J1Yl9jbnQrKzsN
+Cj4+ICsJCQlicmVhazsNCj4+ICAJCWRlZmF1bHQ6DQo+PiAgCQkJcmV0dXJuIC1FSU5WQUw7DQo+
+PiAgCQl9DQo+PiBAQCAtNjM5LDEzICs2NDUsMzYgQEAgaW50IGVkYWNfZGV2X3JlZ2lzdGVyKHN0
+cnVjdCBkZXZpY2UgKnBhcmVudCwgY2hhcg0KPipuYW1lLA0KPj4gIAkJZ290byBjdHhfZnJlZTsN
+Cj4+ICAJfQ0KPj4NCj4+ICsJaWYgKHNjcnViX2NudCkgew0KPj4gKwkJY3R4LT5zY3J1YiA9IGtj
+YWxsb2Moc2NydWJfY250LCBzaXplb2YoKmN0eC0+c2NydWIpLA0KPkdGUF9LRVJORUwpOw0KPj4g
+KwkJaWYgKCFjdHgtPnNjcnViKSB7DQo+PiArCQkJcmV0ID0gLUVOT01FTTsNCj4+ICsJCQlnb3Rv
+IGdyb3Vwc19mcmVlOw0KPj4gKwkJfQ0KPj4gKwl9DQo+PiArDQo+PiAgCWF0dHJfZ2NudCA9IDA7
+DQo+PiAgCWZvciAoZmVhdCA9IDA7IGZlYXQgPCBudW1fZmVhdHVyZXM7IGZlYXQrKywgcmFzX2Zl
+YXR1cmVzKyspIHsNCj4+ICAJCXN3aXRjaCAocmFzX2ZlYXR1cmVzLT5mdF90eXBlKSB7DQo+PiAt
+CQkvKiBBZGQgZmVhdHVyZSBzcGVjaWZpYyBjb2RlICovDQo+PiArCQljYXNlIFJBU19GRUFUX1ND
+UlVCOg0KPj4gKwkJCWlmICghcmFzX2ZlYXR1cmVzLT5zY3J1Yl9vcHMpDQo+PiArCQkJCWNvbnRp
+bnVlOw0KPg0KPkNvbnRpbnVlPw0KPg0KPkkgdGhpbmsgZmFpbC4gV2hhdCBpcyBhIHNjcnViIGZl
+YXR1cmUgZ29vZCBmb3IgaWYgaXQgZG9lc24ndCBoYXZlIG9wcz8NCkhlcmUgY29udGludWUgdG8g
+Y2hlY2sgYW55IG90aGVyIGZlYXR1cmUgKGZvciBlZy4gRUNTLCBtZW1vcnkgcmVwYWlyIG9yIGFu
+b3RoZXIgc2NydWIgaW5zdGFuY2UpIGxpc3RlZA0KYnkgdGhlIHBhcmVudCBkZXZpY2UgaW4gdGhl
+IHJhc19mZWF0dXJlc1tdLiAgIA0KPg0KPj4gKwkJCWlmIChzY3J1Yl9pbnN0ICE9IHJhc19mZWF0
+dXJlcy0+aW5zdGFuY2UpDQo+PiArCQkJCWdvdG8gZGF0YV9tZW1fZnJlZTsNCj4+ICsJCQlkZXZf
+ZGF0YSA9ICZjdHgtPnNjcnViW3NjcnViX2luc3RdOw0KPj4gKwkJCWRldl9kYXRhLT5pbnN0YW5j
+ZSA9IHNjcnViX2luc3Q7DQo+PiArCQkJZGV2X2RhdGEtPnNjcnViX29wcyA9IHJhc19mZWF0dXJl
+cy0+c2NydWJfb3BzOw0KPj4gKwkJCWRldl9kYXRhLT5wcml2YXRlID0gcmFzX2ZlYXR1cmVzLT5j
+dHg7DQo+PiArCQkJcmV0ID0gZWRhY19zY3J1Yl9nZXRfZGVzYyhwYXJlbnQsDQo+JnJhc19hdHRy
+X2dyb3Vwc1thdHRyX2djbnRdLA0KPj4gKwkJCQkJCSAgcmFzX2ZlYXR1cmVzLT5pbnN0YW5jZSk7
+DQo+PiArCQkJaWYgKHJldCkNCj4+ICsJCQkJZ290byBkYXRhX21lbV9mcmVlOw0KPj4gKwkJCXNj
+cnViX2luc3QrKzsNCj4+ICsJCQlhdHRyX2djbnQrKzsNCj4+ICsJCQlicmVhazsNCj4+ICAJCWRl
+ZmF1bHQ6DQo+PiAgCQkJcmV0ID0gLUVJTlZBTDsNCj4+IC0JCQlnb3RvIGdyb3Vwc19mcmVlOw0K
+Pj4gKwkJCWdvdG8gZGF0YV9tZW1fZnJlZTsNCj4+ICAJCX0NCj4+ICAJfQ0KPj4NCj4NCj4uLi4N
+Cj4NCj4tLQ0KPlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0KPmh0dHBzOi8vcGVvcGxl
+Lmtlcm5lbC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQoNClRoYW5rcywNClNoaWp1
+DQoNCg==
