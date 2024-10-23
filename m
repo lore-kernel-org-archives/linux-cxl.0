@@ -1,123 +1,126 @@
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59819AA46;
-	Wed, 23 Oct 2024 14:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.248
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729694861; cv=pass; b=XWpe9Oa2S1j2iUJnOVV2FKecJkJVBziSRm6giFOPL8vg6pug95QRj27nGW2D5bMWspXpS4YeWfB/MK57dpa54dDYLhalwzxzrZuXfO51AuMuziPh4Z8hC5MtdPI1O1KQnHlR02AQlLi5J6MTcxcgJ1XU/aIVoGpkCAcNTVLdVG8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729694861; c=relaxed/simple;
-	bh=Wq0dA0YgYkx6oieUjtNf5P+KES/bvf0EHBmJ8a3q9KE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59519136E21
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Oct 2024 15:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729699073; cv=none; b=mu2+BKCp+ye1leqMmZzUbhqRzeyCbloZg/pSm16V5d+/Bne7EZC5Hs2a4PyUq7C2MgSOU5JjLRWj+XhPqQiOmRycC6Rz8rhM5JiFUZoExGH7Jj7FBRltyJSh1ymj6j/O5U/aqC7Cbs2Y+cohJvxkRlv3eF1CFnbMsQMxmXxfxvM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729699073; c=relaxed/simple;
+	bh=/xxZs+EHskmEoopibWHF6zBSoqj6f7nqfqcBkjYLel0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iRvTagVGScL/783eXwC0Rl6E3v4NJjajxXmMiNGyqUnKrjXioALTPrFNd0ibxY+BF+kjeUyO60/2sWH9t3LLMkvBYm0e9fZEJ5ntG8RjnDx+I6wJ0sWEh3OTTpd+re6wUXHHwoFLY6sgx0FR7wjhm7GvYqfcxOX43tDRqq2Ct24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=j4p+/Eyi; arc=pass smtp.client-ip=23.83.218.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=VjfmxArLpC2FJdTTJIl7x3ZIieTU+ABfkGLeoCr4kZ9OksG6SAnR6JQ2mFo2o1F+ZdQNp9D+wQvBL/8Ak/sQQZmRQTO0G0krfHS0THuegF4+DldarYc7l2Fyx6xBXyG/qFBbbF8W/3712cRe8mr7qMubxAtGNpP6VP5rgq27IJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=rCecKGxn; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="j4p+/Eyi"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 14F01824CA2;
-	Wed, 23 Oct 2024 14:31:58 +0000 (UTC)
-Received: from pdx1-sub0-mail-a203.dreamhost.com (100-99-180-172.trex-nlb.outbound.svc.cluster.local [100.99.180.172])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 7440C823778;
-	Wed, 23 Oct 2024 14:31:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1729693917; a=rsa-sha256;
-	cv=none;
-	b=igBP2dws7Oo+iAR/mnIwjeFVi9BCqevwLWywHGzF+xd4fH+bt9l4tvw6F7Y++V8uxudTZY
-	UfAf2ExE9W40QfLdbgl4zzIGOCvTbE/mNWxnw/WpAwq8vhskq7I/rAtxOifhU0Tbv3l7DZ
-	sUnrtrug5+X2YukKtP8cfr83A4dnJiiLAyAG+eDfFlI6jBkmv0f0YR3XK1Yd7/izA1+cDt
-	ykztHXxiWH9rTzvcWT9dJvmdWVtzF1ij+Db96rU1y5dDNKcwwFRyuXmbLDIFf5mxco/Mzf
-	O5qp9oeXTUGZeJ67BD/iZ9OELqYY2jfNNjNZugcBBYxIZCztvqgJt0vplE+JeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1729693917;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=cuwb0qfrZ+dwEeP5isad8UT75Hf/mN+0+CRZKGSnS24=;
-	b=2/Y/i2roAhsQzFRKOOwzSTsguj8IyK7EUpsDiwGS1bk1C9MUwGX7dXY67OvzOv2aSwwkeR
-	U0ZEfJ8mej57wtFm23RKhTd8l4Rzfm6VrnkImNP3+RLtiIHUpmRkOSoxSky2KMsLnXxeQR
-	EIkqoHeMNb4sf5yi1+pzwhA94VuI+cJS2VHt11gPJTyu+gLp/PYrp72im5nWG3IyLhI1P/
-	24vzjyjmk9nxqghkPyRTVIstsW6AWvBao/vpB7ybAyDzw0vYplmqDyShkbCMaBUzDJ2Gyv
-	qFvKOdtyBbsyTkHxSwqCaI8wSJafOvAjlu6K9byihk6/Dcz/28SITJL92uh66Q==
-ARC-Authentication-Results: i=1;
-	rspamd-7d55d965b5-wpbvg;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Keen-Squirrel: 7debb4446993431a_1729693917865_2424783291
-X-MC-Loop-Signature: 1729693917864:4003134109
-X-MC-Ingress-Time: 1729693917864
-Received: from pdx1-sub0-mail-a203.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.180.172 (trex/7.0.2);
-	Wed, 23 Oct 2024 14:31:57 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a203.dreamhost.com (Postfix) with ESMTPSA id 4XYWhX3HzKzFr;
-	Wed, 23 Oct 2024 07:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1729693917;
-	bh=cuwb0qfrZ+dwEeP5isad8UT75Hf/mN+0+CRZKGSnS24=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=j4p+/Eyi7pp1WH0N3r5BeUOKrp/MIP7URV/b6xx0g5YK9s65jheAPyOz12ZzPIn+X
-	 Cj0PTRalDXCi7tIOpBifq4928lft9PAkJxsnr/6MXaNHmMKG8fT16FuhvNS/Mug5St
-	 luxK2Z2KzxppFAJXyQaYHxQA8b5agNfwJvkYyXXCJKBCFYLlRMeGtLTL9Wd9Cr+nxD
-	 XBsHNW2vePvV6f8P/BtruzoEHgaIaBFS5x0oCWuB3VnkdgFLNqJZOufrLpZprgFrOw
-	 29BtO9mhVZsREwmn3yPTd1dOYCu7plr6husd91bZb+Idnria6WK8Wwa78/Xl8xWI4w
-	 zCcKl+XK6k+ww==
-Date: Wed, 23 Oct 2024 07:29:10 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ravis OpenSrc <Ravis.OpenSrc@micron.com>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, 
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, 
-	"alison.schofield@intel.com" <alison.schofield@intel.com>, "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, 
-	"ira.weiny@intel.com" <ira.weiny@intel.com>, "fan.ni@samsung.com" <fan.ni@samsung.com>, 
-	"a.manzanares@samsung.com" <a.manzanares@samsung.com>, Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Srinivasulu Thanneeru <sthanneeru@micron.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] cxl/mbox: support background operation abort requests
-Message-ID: <zrmn3j2wzzlnzzwunk64xfy4jussoiek5ro73qs3yrjqflemtz@zbn53a27tt6y>
-References: <20241022031809.242591-1-dave@stgolabs.net>
- <feef15c9fcfd462e9b3cf614a1b4621c@micron.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="rCecKGxn"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5ebc03951abso1656656eaf.2
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Oct 2024 08:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1729699070; x=1730303870; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1/sooWPjU4O1hQpSOo+T+4AssgdRD517TbqfxHYaUx4=;
+        b=rCecKGxnFbyhq4Vg0als9k/NB8/wxKZKNbBTBqZpCfGFQGbrss7+gNdafJwJjCcPX2
+         FPQ2Xtz0LJReuEQxTNv0ExP6Tn/JX6trn2R5AV/eHEoEBc9lTqmVnjJ5ML0Gz3KM5u8V
+         c1wNF1zBzeRWb99ugP4VttJYZ6cKunAU+D1gqd/97UE2c0tG65INlcFK7Tk2VEPN1Dwx
+         wAiUgb9fiI6s9Wv7HTwgLZZlblCGYCHU8cg5WyDN75g8K0mMl86EkyDUUwBG8OGvA09J
+         7GkN/rzLRj1aGtfdJneBaILIT74T8x5MMS1xkfEw3/2y2mY8TzkuEvOTFY9wG261HdJa
+         SQyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729699070; x=1730303870;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1/sooWPjU4O1hQpSOo+T+4AssgdRD517TbqfxHYaUx4=;
+        b=UBtL+gfhlQFNNLmYshfShYy83uq1kTiPCWzcyUc9yguKPELcNtdBg1psIZeEjA1BeD
+         he+n2wLZAWv8ok+G05bbx8rns1/sWtOLAMXb4XMN++zLNIy42HqygWofCHLTRde0kfTr
+         vKwyl3XYKu9qSTOjm6iorF/dFmcNqYoBDeWD2Bgj+mRmsDsNYJHtDjDd9qyWozdqAgF/
+         qrA90FR1eUPANLoecd/dAsEG89fKDOUfqamsJjt2ZE7JBX6iknXzyHwL5oSayGWI5D+U
+         IwFSxBMVinIXhDJwLJXLbiSokphoZhWndZ5rp31CE0dQQ8P6d2+2L93dPUs5+zBMegyP
+         +vkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ3RYkPP9EDe8wuPQ0e969a/TNyP9zk5KwUsNUFJgAEuICOBmATUvzoHwmjIeVJHZ4khDC08XoZ/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIQYhOW9aXUjjsBrBxMh5/9V6hYK1gdsBM4wqLeRKCFE91r55h
+	7eVcSPOK5BmRxPORDTW5sB1h3hSTO6Fvo+6uFyL0pzTOWykDSyccDQM9lmVjK64=
+X-Google-Smtp-Source: AGHT+IEmpCaUP5qM3+ueLmLiPjSBwDSYIxAdTvJrWh4zFWOHOvi5mtwabYje6lSr7M8fiSV7OVh/+w==
+X-Received: by 2002:a05:6358:4883:b0:1c3:813d:47c6 with SMTP id e5c5f4694b2df-1c3d819cae8mr146485255d.19.1729699070252;
+        Wed, 23 Oct 2024 08:57:50 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b165a71754sm398425485a.107.2024.10.23.08.57.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2024 08:57:49 -0700 (PDT)
+Date: Wed, 23 Oct 2024 11:57:52 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, dave.jiang@intel.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] cxl/port: Fix cxl_bus_rescan() vs
+ bus_rescan_devices()
+Message-ID: <ZxkdAC2y8zHQGgUc@PC2K9PVX.TheFacebook.com>
+References: <172964779333.81806.8852577918216421011.stgit@dwillia2-xfh.jf.intel.com>
+ <172964781104.81806.4277549800082443769.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <feef15c9fcfd462e9b3cf614a1b4621c@micron.com>
-User-Agent: NeoMutt/20240425
+In-Reply-To: <172964781104.81806.4277549800082443769.stgit@dwillia2-xfh.jf.intel.com>
 
-On Wed, 23 Oct 2024, Ravis OpenSrc wrote:\n
->Hi Davidlohr,
->
->   We have recently submitted an RFC to implement Request Background Abort
->in case a timeout is encountered while executing a background command.
->The patch series disables those background commands which do not support abort
->based on their individual CEL properties.
->
->https://lore.kernel.org/linux-cxl/20241017163215.00000547@Huawei.com/T/#ma6710971908b85a5f8c5da2e23b8102b5a6e277c
+On Tue, Oct 22, 2024 at 06:43:32PM -0700, Dan Williams wrote:
+> It turns out since its original introduction, pre-2.6.12,
+> bus_rescan_devices() has skipped devices that might be in the process of
+> attaching or detaching from their driver. For CXL this behavior is
+> unwanted and expects that cxl_bus_rescan() is a probe barrier.
+> 
+> That behavior is simple enough to achieve with bus_for_each_dev() paired
+> with call to device_attach(), and it is unclear why bus_rescan_devices()
+> took the position of lockless consumption of dev->driver which is racy.
+> 
+> The "Fixes:" but no "Cc: stable" on this patch reflects that the issue
+> is merely by inspection since the bug that triggered the discovery of
+> this potential problem [1] is fixed by other means.  However, a stable
+> backport should do no harm.
+> 
+> Fixes: 8dd2bc0f8e02 ("cxl/mem: Add the cxl_mem driver")
+> Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-*sigh* it would have been nice to be Cc'ed.
+Tested-by: Gregory Price <gourry@gourry.net>
 
->
->This implementation is based on Dan's suggestion in a previous thread.
->https://lore.kernel.org/linux-cxl/66035c2e8ba17_770232948b@dwillia2-xfh.jf.intel.com.notmuch/
->
->We can discuss more on how we can potentially merge and arrive at a common ground.
-
-I think that my approach is way more robust then defining a timeout as in that series.
-It also aligns more with Jonathan's comments about the abort being on demand.
+> ---
+>  drivers/cxl/core/port.c |   13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index e666ec6a9085..af92c67bc954 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -2084,11 +2084,18 @@ static void cxl_bus_remove(struct device *dev)
+>  
+>  static struct workqueue_struct *cxl_bus_wq;
+>  
+> -static void cxl_bus_rescan_queue(struct work_struct *w)
+> +static int cxl_rescan_attach(struct device *dev, void *data)
+>  {
+> -	int rc = bus_rescan_devices(&cxl_bus_type);
+> +	int rc = device_attach(dev);
+> +
+> +	dev_vdbg(dev, "rescan: %s\n", rc ? "attach" : "detached");
+>  
+> -	pr_debug("CXL bus rescan result: %d\n", rc);
+> +	return 0;
+> +}
+> +
+> +static void cxl_bus_rescan_queue(struct work_struct *w)
+> +{
+> +	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_rescan_attach);
+>  }
+>  
+>  void cxl_bus_rescan(void)
+> 
