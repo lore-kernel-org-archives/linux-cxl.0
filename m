@@ -1,107 +1,81 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C34D1BDDF;
-	Wed, 23 Oct 2024 10:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894AF1AA7BA;
+	Wed, 23 Oct 2024 11:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729681085; cv=none; b=q1IQ3oBKDc9F+vBY07adPSr4GW2FiqQ8ZGwAarbYX1h8bTdfuwH/w+SwEvFw0WxwU9OXFdY15jQtf5geNse44gkvMwo/qPv8+LKeM8ZZ43Dz+BVTgre4pOb1ZgE7JahaqhSDMw09daysKP9OsdKprlSd1NdFq45c+l533Orpi8M=
+	t=1729681638; cv=none; b=j4gZGQKBX+Q8GnRp5voadAZeih0AcmNyv5mY8xHH7xH7W1LEZB8qjnPzhK5NDdzrcxchxU5Wj6wZGMAtytgzG7v2k7jf5YNTtqBOHJDG06DXB/nDJWNgStmnr5kvxWE2CiqbrOECrMhNcR/+lTQ7SoLUwA67Y50M5UgkwPnyT1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729681085; c=relaxed/simple;
-	bh=QsoXN+i8weNz43cjWTuqeOxBYCQ8z23n7z17VV98vXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tgx9I52xR6E1Fj+HEisC87V6wr24+r7+Rd2rbe/ye1IMmV8TlGJrXEB4FoUBckPCnfGLFLngXK+Yo0BFd0ZvCeVYwNOCNU5FzOOoS+hgDE82OiOeSeN0Cc4tBuI9HwKmOmGFF1TQLzSFx94i2Si13r1rxQyCp+6DeV8vcVMdThQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FMzxxAgi; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FMzxxAgi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fY2P5WH9N9bRXsoSS69lQH2QepyuWVl1r/+h4C6RTgI=; b=FMzxxAgiyJfEk70QindVAt8QPQ
-	udYm4IQVe/YMUv22jc2i9ZGpRy7XpUp4RkUujASVhHWIJRTe2Tf3TFK6kN8Pkto6CUMvCEJB4Q+7e
-	VGP39BTkTYGPR6wxrvLoqtkJteIzqyQVkwkUrF2yr8m0cV5x/QbxI590oG/p8387cay3xbA+HnFbv
-	ZJoyZLtuSuH0u8Whse0oYrQB6zQJwIeotugcFC8naIDRNaFNf8MN8JsK4oSyz5/y3r5U52hmbjS8b
-	277HKBuwjKTT5a4/TDuivnF8fYNysVBImhzt5wvv1jAKV9ZENEGUY9HKGC9vVJEiiBPKzqO6Y6xhY
-	TSUqXLeg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3Z3u-00000002nbV-064g;
-	Wed, 23 Oct 2024 10:57:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0423D30073F; Wed, 23 Oct 2024 12:57:57 +0200 (CEST)
-Date: Wed, 23 Oct 2024 12:57:57 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-cxl@vger.kernel.org, przemyslaw.kitszel@intel.com
-Subject: Re: [PATCH 1/3] cleanup: add conditional guard helper
-Message-ID: <20241023105757.GA9767@noisy.programming.kicks-ass.net>
-References: <20241001-cleanup-if_not_cond_guard-v1-0-7753810b0f7a@baylibre.com>
- <20241001-cleanup-if_not_cond_guard-v1-1-7753810b0f7a@baylibre.com>
- <20241018111503.GC36494@noisy.programming.kicks-ass.net>
- <6712b717a9610_10a0a2942e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	s=arc-20240116; t=1729681638; c=relaxed/simple;
+	bh=mi70kcDphTiQwmKh0IHHItVf19ur31jfbMVASfM3TMg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WqZYqZFuHRiGcgcjmAbf+oilx91dIvYpZk/+VZflIYORec7MFxOpMUPy8cGJKjAGi9VzAtmWwjGr47mtqe+4SB2ysg+DiEKlo2ZbE1v6sXktVH7nYa78FGOS+Qw+C9RMwKxSRfJsLH7tzs727VcsUNSTWhEZs4poSiBmzKPg4ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XYR6f5ksNz1SDFP;
+	Wed, 23 Oct 2024 19:05:46 +0800 (CST)
+Received: from kwepemd200012.china.huawei.com (unknown [7.221.188.145])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E9C518002B;
+	Wed, 23 Oct 2024 19:07:10 +0800 (CST)
+Received: from huawei.com (10.67.175.84) by kwepemd200012.china.huawei.com
+ (7.221.188.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 23 Oct
+ 2024 19:07:09 +0800
+From: Zicheng Qu <quzicheng@huawei.com>
+To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <tanghui20@huawei.com>, <zhangqiao22@huawei.com>,
+	<judy.chenhui@huawei.com>, <quzicheng@huawei.com>
+Subject: [PATCH] cxl: core-pmu: Fix the usage of uninitialized variable
+Date: Wed, 23 Oct 2024 10:56:10 +0000
+Message-ID: <20241023105610.668964-1-quzicheng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6712b717a9610_10a0a2942e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200012.china.huawei.com (7.221.188.145)
 
-On Fri, Oct 18, 2024 at 12:29:27PM -0700, Dan Williams wrote:
-> Peter Zijlstra wrote:
-> > On Tue, Oct 01, 2024 at 05:30:18PM -0500, David Lechner wrote:
-> > > Add a new if_not_cond_guard() macro to cleanup.h for handling
-> > > conditional guards such as mutext_trylock().
-> > > 
-> > > This is more ergonomic than scoped_cond_guard() for most use cases.
-> > > Instead of hiding the error handling statement in the macro args, it
-> > > works like a normal if statement and allow the error path to be indented
-> > > while the normal code flow path is not indented. And it avoid unwanted
-> > > side-effect from hidden for loop in scoped_cond_guard().
-> > > 
-> > > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > > ---
-> > >  include/linux/cleanup.h | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > > 
-> [..]
-> > I've queued these two patches:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git locking/core
-> > 
-> > But lacking if_not_guard() users, the robot isn't really going to give
-> > me much feedback there, I suppose...
-> 
-> Looks good. If that branch is rebase-able it would be nice to add some
-> credit tags to "cleanup: Add conditional guard helper":
-> 
-> Co-developed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> 
-> David and I talked about that here:
-> 
-> http://lore.kernel.org/f4cc471a-b602-48d8-8323-15efcd602814@baylibre.com
-> 
-> Also feel free to add:
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+In the devm_cxl_pmu_add() function, the variable rc might be
+uninitialized before its first use 'if (rc) goto err', leading
+to undefined behavior since its value depends on the compiler.
+Currently, the switch statement is limited to the CXL_PMU_MEMDEV type.
+If additional types are introduced, it could lead to similar concerns.
+If the type range remains unchanged, using a switch case is unnecessary.
+To enhance code extensibility and stability, it is recommended to
+address this potential aspect.
 
-I rebased because I had to magic in the v4 from Przemek, and I added the
-above tags to the if_not_guard() thing.
+Cc: stable@vger.kernel.org # v6.6+
+Fixes: 1ad3f701c399 ("cxl/pci: Find and register CXL PMU devices")
+Signed-off-by: Zicheng Qu <quzicheng@huawei.com>
+---
+ drivers/cxl/core/pmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I've also pushed out a locking/test branch that includes the iio
-conversion for the robots.
+diff --git a/drivers/cxl/core/pmu.c b/drivers/cxl/core/pmu.c
+index 5d8e06b0ba6e..2d12887c9915 100644
+--- a/drivers/cxl/core/pmu.c
++++ b/drivers/cxl/core/pmu.c
+@@ -51,6 +51,9 @@ int devm_cxl_pmu_add(struct device *parent, struct cxl_pmu_regs *regs,
+ 	case CXL_PMU_MEMDEV:
+ 		rc = dev_set_name(dev, "pmu_mem%d.%d", assoc_id, index);
+ 		break;
++	default:
++		rc = -EINVAL;
++		break;
+ 	}
+ 	if (rc)
+ 		goto err;
+-- 
+2.34.1
 
-Once I push to tip/locking/core (people will get robot mail) the commits
-should be stable and can be used in other branches if so desired.
