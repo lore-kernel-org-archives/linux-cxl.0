@@ -1,81 +1,71 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894AF1AA7BA;
-	Wed, 23 Oct 2024 11:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5770154439;
+	Wed, 23 Oct 2024 11:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729681638; cv=none; b=j4gZGQKBX+Q8GnRp5voadAZeih0AcmNyv5mY8xHH7xH7W1LEZB8qjnPzhK5NDdzrcxchxU5Wj6wZGMAtytgzG7v2k7jf5YNTtqBOHJDG06DXB/nDJWNgStmnr5kvxWE2CiqbrOECrMhNcR/+lTQ7SoLUwA67Y50M5UgkwPnyT1I=
+	t=1729682533; cv=none; b=lub6637LkqAeV+F70DqkFx2NZUFm4dYtEBixtqEq1tJOdoXtb9PG7Jg3PmvH4uod0tStaACVyrOySeBFhoWsrAJVFJXtPuE/3ueuJL+QAM+DreKsAjlGRFq90R/eLWRo+5OhdNFnXsq3SaI88YXV2KiIpKLsB6aN3iMvL+Td2dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729681638; c=relaxed/simple;
-	bh=mi70kcDphTiQwmKh0IHHItVf19ur31jfbMVASfM3TMg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WqZYqZFuHRiGcgcjmAbf+oilx91dIvYpZk/+VZflIYORec7MFxOpMUPy8cGJKjAGi9VzAtmWwjGr47mtqe+4SB2ysg+DiEKlo2ZbE1v6sXktVH7nYa78FGOS+Qw+C9RMwKxSRfJsLH7tzs727VcsUNSTWhEZs4poSiBmzKPg4ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	s=arc-20240116; t=1729682533; c=relaxed/simple;
+	bh=64C3SPxTd7AQQp65zjJ4dsy+GxKDPAo+C0dNOzIWPkw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JXPPKGm3nqxRcauuWItyrCqFnyAHmyRaC3tvE/fv4yKwN1bhn9NVimLCCOGZqGWB/dW3ZhUCOW+bwBy0Va81OSWN3k9DXI2OLNSaRUairq3Z3czacOt/wgLvOXUXyOYLLxWxKDo0aZeFeKYWJuehMZcmcJoEOGN4Jk0+/GfGPpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XYR6f5ksNz1SDFP;
-	Wed, 23 Oct 2024 19:05:46 +0800 (CST)
-Received: from kwepemd200012.china.huawei.com (unknown [7.221.188.145])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8E9C518002B;
-	Wed, 23 Oct 2024 19:07:10 +0800 (CST)
-Received: from huawei.com (10.67.175.84) by kwepemd200012.china.huawei.com
- (7.221.188.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 23 Oct
- 2024 19:07:09 +0800
-From: Zicheng Qu <quzicheng@huawei.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XYRR45Ft1z6FCrJ;
+	Wed, 23 Oct 2024 19:20:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A5D3714022E;
+	Wed, 23 Oct 2024 19:22:03 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Oct
+ 2024 13:22:02 +0200
+Date: Wed, 23 Oct 2024 12:22:01 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
 	<linux-kernel@vger.kernel.org>
-CC: <tanghui20@huawei.com>, <zhangqiao22@huawei.com>,
-	<judy.chenhui@huawei.com>, <quzicheng@huawei.com>
-Subject: [PATCH] cxl: core-pmu: Fix the usage of uninitialized variable
-Date: Wed, 23 Oct 2024 10:56:10 +0000
-Message-ID: <20241023105610.668964-1-quzicheng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v4 24/28] dax/region: Create resources on sparse DAX
+ regions
+Message-ID: <20241023122201.000005a4@Huawei.com>
+In-Reply-To: <67184f4ef593_7253d294d5@iweiny-mobl.notmuch>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+	<20241007-dcd-type2-upstream-v4-24-c261ee6eeded@intel.com>
+	<20241010162745.00007b31@Huawei.com>
+	<67184f4ef593_7253d294d5@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200012.china.huawei.com (7.221.188.145)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-In the devm_cxl_pmu_add() function, the variable rc might be
-uninitialized before its first use 'if (rc) goto err', leading
-to undefined behavior since its value depends on the compiler.
-Currently, the switch statement is limited to the CXL_PMU_MEMDEV type.
-If additional types are introduced, it could lead to similar concerns.
-If the type range remains unchanged, using a switch case is unnecessary.
-To enhance code extensibility and stability, it is recommended to
-address this potential aspect.
 
-Cc: stable@vger.kernel.org # v6.6+
-Fixes: 1ad3f701c399 ("cxl/pci: Find and register CXL PMU devices")
-Signed-off-by: Zicheng Qu <quzicheng@huawei.com>
----
- drivers/cxl/core/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+> > > +EXPORT_SYMBOL_GPL(dax_region_add_resource);  
+> > Adding quite a few exports. Is it time to namespace DAX exports?
+> > Perhaps a follow up series.  
+> 
+> Perhaps.  The calls have a dax_ prefix.  In addition, I thought use of the
+> export namespaces were out of favor?
 
-diff --git a/drivers/cxl/core/pmu.c b/drivers/cxl/core/pmu.c
-index 5d8e06b0ba6e..2d12887c9915 100644
---- a/drivers/cxl/core/pmu.c
-+++ b/drivers/cxl/core/pmu.c
-@@ -51,6 +51,9 @@ int devm_cxl_pmu_add(struct device *parent, struct cxl_pmu_regs *regs,
- 	case CXL_PMU_MEMDEV:
- 		rc = dev_set_name(dev, "pmu_mem%d.%d", assoc_id, index);
- 		break;
-+	default:
-+		rc = -EINVAL;
-+		break;
- 	}
- 	if (rc)
- 		goto err;
--- 
-2.34.1
+I guess I missed a change in the wind.
+Any references?
 
+
+Jonathan
