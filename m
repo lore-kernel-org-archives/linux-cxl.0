@@ -1,384 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from bumble.maple.relay.mailchannels.net (bumble.maple.relay.mailchannels.net [23.83.214.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D8220323
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Oct 2024 01:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729647851; cv=none; b=n4DPxTCPf/Un46TMPm+oIDB81pZQ9Yh1lc9izhIFVmSXRuuIGmVcwdh9oj9jSahSKGmtTyZ4Q0X/p1eHEGoQBERxQ0o95zRY6OLBrXF9vslFdHUBqlzgy6gQCLugGxWi1wAOjh/m46ekok5ShIWuX/9DltYi5CgS1a4O4si0sqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729647851; c=relaxed/simple;
-	bh=8+1Oxg2KD3Wc6rz5kN6jZmUPo8IGhAIV8pkcpyE4JhM=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tevb8shG468siUYekbtOWU/oMoVJ176r/SO6nuA3mQ7XI4BLT4fmNqO2XcuZCtcDluu+jI9IgGE2zEYCtbN0v0GxoTyzlouYJuCqrsnO5nzpEeV4df9JJ4TRZitlEA10uIGlaJCAUHV3IIaVontyMR3lZiv7kZEJ5uZVtaQKUIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ncbiu9w8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C576C61FD7;
+	Wed, 23 Oct 2024 02:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729650369; cv=pass; b=hR91HrpkFcPhGZRm4TdVbU77hlkyhGPW78UrEf6H8RevtQ9/s4EmJfOs90AdcAGC00G88SJ/dp7sMF4YLmL65NWn1j3oY7qfU5ezX+57qhAx/xwwCYc65wMXizHK27RG0n7ELlQwX0au/UZ0YzEzBbKitLa8Jjsovp2Rp0qCc5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729650369; c=relaxed/simple;
+	bh=6ToOAMkpV3a2sSbsQlcf8VgemwRMvk+/hdji7SN7g8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K98hx4ykb14O4k5Qe2lc3+Qp4eSh1KUCRnV6tKn0XXg1q0TPE0AQqFGxYpJErR3+3dL2VBRyPiPJ8RrBzRH46TuZFhw7UzO6qazDuKDuDytmpQuYNaNBsug4sjyZJsVQXNORBErdu/wEcJxIS8cvpnrpRTZWIYXEVp0QXjgR388=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=aPBggA18; arc=pass smtp.client-ip=23.83.214.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ncbiu9w8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729647849; x=1761183849;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8+1Oxg2KD3Wc6rz5kN6jZmUPo8IGhAIV8pkcpyE4JhM=;
-  b=ncbiu9w88SNqV6VBhGatP1BrdrcI5vIwVwEvjwSnN2pbS7Q0sbXWvNO7
-   NxhROOFvTTL3tG+LZ4q5fUfJiTHuBS6pDPEZN+It5ZFUNPsFQs0o89+fy
-   CrU9i0pGHSDZS+wLVa/Sdpb+RRfSSOeYstLcw+IIPzM2zALLmiacOVSdK
-   bCncEfIzjFYx88uFFPcDKGbok96igdAUQjLLrePZQ9cgeZjnEqWl/qTWF
-   lEv1+5ATqMK8/+Y03XTbdpVOnLh+l/aMwb4raSzdQeSt/3a3hMdOKVTso
-   JTEKJFN546VLttfUcBOxxkXYY26/N+oiWu3C1P6y4/D2ojbTuSiUOduYF
-   A==;
-X-CSE-ConnectionGUID: IA7DMlk4QLusni/iktDdNA==
-X-CSE-MsgGUID: mQLnjKeGQFaPy/VaPS8G4A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="46675968"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="46675968"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 18:44:09 -0700
-X-CSE-ConnectionGUID: AudK1LvdTQucC9r4+nZ97g==
-X-CSE-MsgGUID: KeRn4tcrTO6ckgcvoN6Zvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
-   d="scan'208";a="110844108"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.110.222])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 18:44:08 -0700
-Subject: [PATCH v2 6/6] cxl/test: Improve init-order fidelity relative to
- real-world systems
-From: Dan Williams <dan.j.williams@intel.com>
-To: ira.weiny@intel.com
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, dave.jiang@intel.com,
- linux-cxl@vger.kernel.org
-Date: Tue, 22 Oct 2024 18:44:06 -0700
-Message-ID: <172964784521.81806.15791069994065969243.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <172964779333.81806.8852577918216421011.stgit@dwillia2-xfh.jf.intel.com>
-References: <172964779333.81806.8852577918216421011.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="aPBggA18"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E07A73229C3;
+	Wed, 23 Oct 2024 02:26:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a233.dreamhost.com (100-99-0-56.trex-nlb.outbound.svc.cluster.local [100.99.0.56])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 5FF47322C6B;
+	Wed, 23 Oct 2024 02:26:05 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1729650365; a=rsa-sha256;
+	cv=none;
+	b=6vmrzw/LpjMw2XkIgS2k9HL3joZflL0t2PMb1Aj1Pv5u31O82gW91VP5EiQwzeNqwFoDtb
+	NSUXpLC5XWUwhGCNQQh0Nm/cceLEXAr3vP1UhaocDhomxsEMxCrFiJKkwH4b3K2Az0r5XL
+	aKLSf2C8Zmf8/HsHjAyL/VzJ5YqTb/27OEO7mpvXOG2PvUj22kpJyXESsmX7Qt0e6cYMuN
+	ChxVkh0BlTwfTUVcWnu36Rs7ibmv3Ov3mYQgZPrnQsrEvK4CvZeFq5V0VONM8vhPvYHk6F
+	SVOr1Dt8jkRcSc3JKnI3jnhoOOd0GzoRL8L4ym7F39p+jnXFlepA17xngdB5Hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1729650365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=6ToOAMkpV3a2sSbsQlcf8VgemwRMvk+/hdji7SN7g8g=;
+	b=CsZC3fyf5CPsgUqFRqxyP1NLHnegH5Zw5MtGvhFnpGokoQjDbyfn9IwAG6ioauRV4ZGaRq
+	x9T0r+GJgoebxETbInXpjKLhTgSb1GuEF5Wr/JzSldWjNM3Wzre7jScRWXjvfnHB7dGwnb
+	jaLuAd365iS6Nn4jhECi9d7/XHGYeG7nUIBRwcwcN6oC7KOh27AoIQme4in4MCjD/axHkI
+	5z+Om0sifvhtyAPta1w39ymkPU0ZzA3I9g/JgQ0gZnEvMa0rMU5+Kb8N7ibDWZVqQJPxEi
+	IJaBG4ZhBnIh88OK4xKKzwPRyv55XNMXF4lSMey5lZKH0l9pNJ9mw+CbgYXhEg==
+ARC-Authentication-Results: i=1;
+	rspamd-7d55d965b5-sg95h;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Lettuce-Celery: 272114fa7171783f_1729650365715_3605432993
+X-MC-Loop-Signature: 1729650365715:1328253685
+X-MC-Ingress-Time: 1729650365715
+Received: from pdx1-sub0-mail-a233.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.0.56 (trex/7.0.2);
+	Wed, 23 Oct 2024 02:26:05 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a233.dreamhost.com (Postfix) with ESMTPSA id 4XYCb040bzz2K;
+	Tue, 22 Oct 2024 19:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1729650365;
+	bh=6ToOAMkpV3a2sSbsQlcf8VgemwRMvk+/hdji7SN7g8g=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=aPBggA188uXZ37XUywmo4+3vqfdldB27twHo9svUEmIyY7hiUDBFRE56x7rvmJ7uj
+	 lplKjTxoGg2+pVrAK+4W0Eo50YoAlKwlQZ8jeJ8f1v4uOt0leXftOA13TL1LZx8Lg5
+	 hcnP9fZcTZPv+xJIvXEdr40W5rEBpFxAGx6yvS94nIPVzWIa9VLJ22QNo8uL9Dvyqs
+	 5gEKEQ1ZBwejqg36zXHhiBzo8cB0z1GAn1AtT45FDppnZOqDWYJgf3bACdaeCT03OP
+	 wUwb0jaKEUgJmDs5Fu7Gw487Jab2cBIRlj7Ca2hYmnePsNfx3BiK6mUXggB5mv8TZW
+	 HCVidg/kUeiug==
+Date: Tue, 22 Oct 2024 19:23:20 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: shiju.jose@huawei.com
+Cc: dave.jiang@intel.com, dan.j.williams@intel.com, 
+	jonathan.cameron@huawei.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxarm@huawei.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com
+Subject: Re: [PATCH v2 3/6] cxl/events: Update General Media Event Record to
+ CXL spec rev 3.1
+Message-ID: <i6snhmjw4njgl7mebvqk3zxwisdcwyxi54xxzqs36jdju23o36@elxtlbrjypbh>
+References: <20241022105849.1272-1-shiju.jose@huawei.com>
+ <20241022105849.1272-4-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20241022105849.1272-4-shiju.jose@huawei.com>
+User-Agent: NeoMutt/20240425
 
-The investigation of an initialization failure [1] highlighted that
-cxl_test does not reflect the init-order of real world systems. The
-expected order is root/bus first then async probing of the memory
-devices.
+On Tue, 22 Oct 2024, shiju.jose@huawei.com wrote:\n
+>From: Shiju Jose <shiju.jose@huawei.com>
+>
+>CXL spec rev 3.1 section 8.2.9.2.1.1 Table 8-45, General Media Event
+>Record has updated with following new fields and new types for Memory
+>Event Type and Transaction Type fields.
+>1. Advanced Programmable Corrected Memory Error Threshold Event Flags
+>2. Corrected Memory Error Count at Event
+>3. Memory Event Sub-Type
+>
+>The format of component identifier has changed (CXL spec 3.1 section
+>8.2.9.2.1 Table 8-44).
+>
+>Update the general media event record and general media trace event for
+>the above spec changes. The new fields are inserted in logical places.
 
-Fix up cxl_test to reflect that order. While it did not reproduce the
-initial bug report (since that is dependent on built-in vs modular
-builds), it did reveal a separate latent bug in the subsystem's decoder
-shutdown flow. Fix for that sent separately.
-
-Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- tools/testing/cxl/test/cxl.c |  186 +++++++++++++++++++++++-------------------
- tools/testing/cxl/test/mem.c |    1 
- 2 files changed, 104 insertions(+), 83 deletions(-)
-
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index c5bbd89b3192..050725afa45d 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1058,7 +1058,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
- #define SZ_64G (SZ_32G * 2)
- #endif
- 
--static __init int cxl_rch_init(void)
-+static __init int cxl_rch_topo_init(void)
- {
- 	int rc, i;
- 
-@@ -1086,30 +1086,8 @@ static __init int cxl_rch_init(void)
- 			goto err_bridge;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++) {
--		int idx = NR_MEM_MULTI + NR_MEM_SINGLE + i;
--		struct platform_device *rch = cxl_rch[i];
--		struct platform_device *pdev;
--
--		pdev = platform_device_alloc("cxl_rcd", idx);
--		if (!pdev)
--			goto err_mem;
--		pdev->dev.parent = &rch->dev;
--		set_dev_node(&pdev->dev, i % 2);
--
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
--			goto err_mem;
--		}
--		cxl_rcd[i] = pdev;
--	}
--
- 	return 0;
- 
--err_mem:
--	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_rcd[i]);
- err_bridge:
- 	for (i = ARRAY_SIZE(cxl_rch) - 1; i >= 0; i--) {
- 		struct platform_device *pdev = cxl_rch[i];
-@@ -1123,12 +1101,10 @@ static __init int cxl_rch_init(void)
- 	return rc;
- }
- 
--static void cxl_rch_exit(void)
-+static void cxl_rch_topo_exit(void)
- {
- 	int i;
- 
--	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_rcd[i]);
- 	for (i = ARRAY_SIZE(cxl_rch) - 1; i >= 0; i--) {
- 		struct platform_device *pdev = cxl_rch[i];
- 
-@@ -1139,7 +1115,7 @@ static void cxl_rch_exit(void)
- 	}
- }
- 
--static __init int cxl_single_init(void)
-+static __init int cxl_single_topo_init(void)
- {
- 	int i, rc;
- 
-@@ -1224,29 +1200,8 @@ static __init int cxl_single_init(void)
- 		cxl_swd_single[i] = pdev;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++) {
--		struct platform_device *dport = cxl_swd_single[i];
--		struct platform_device *pdev;
--
--		pdev = platform_device_alloc("cxl_mem", NR_MEM_MULTI + i);
--		if (!pdev)
--			goto err_mem;
--		pdev->dev.parent = &dport->dev;
--		set_dev_node(&pdev->dev, i % 2);
--
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
--			goto err_mem;
--		}
--		cxl_mem_single[i] = pdev;
--	}
--
- 	return 0;
- 
--err_mem:
--	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem_single[i]);
- err_dport:
- 	for (i = ARRAY_SIZE(cxl_swd_single) - 1; i >= 0; i--)
- 		platform_device_unregister(cxl_swd_single[i]);
-@@ -1269,12 +1224,10 @@ static __init int cxl_single_init(void)
- 	return rc;
- }
- 
--static void cxl_single_exit(void)
-+static void cxl_single_topo_exit(void)
- {
- 	int i;
- 
--	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem_single[i]);
- 	for (i = ARRAY_SIZE(cxl_swd_single) - 1; i >= 0; i--)
- 		platform_device_unregister(cxl_swd_single[i]);
- 	for (i = ARRAY_SIZE(cxl_swu_single) - 1; i >= 0; i--)
-@@ -1291,6 +1244,91 @@ static void cxl_single_exit(void)
- 	}
- }
- 
-+static void cxl_mem_exit(void)
-+{
-+	int i;
-+
-+	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_rcd[i]);
-+	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_mem_single[i]);
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_mem[i]);
-+}
-+
-+static int cxl_mem_init(void)
-+{
-+	int i, rc;
-+
-+	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
-+		struct platform_device *dport = cxl_switch_dport[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_mem", i);
-+		if (!pdev)
-+			goto err_mem;
-+		pdev->dev.parent = &dport->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_mem;
-+		}
-+		cxl_mem[i] = pdev;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++) {
-+		struct platform_device *dport = cxl_swd_single[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_mem", NR_MEM_MULTI + i);
-+		if (!pdev)
-+			goto err_single;
-+		pdev->dev.parent = &dport->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_single;
-+		}
-+		cxl_mem_single[i] = pdev;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++) {
-+		int idx = NR_MEM_MULTI + NR_MEM_SINGLE + i;
-+		struct platform_device *rch = cxl_rch[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_rcd", idx);
-+		if (!pdev)
-+			goto err_rcd;
-+		pdev->dev.parent = &rch->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_rcd;
-+		}
-+		cxl_rcd[i] = pdev;
-+	}
-+
-+	return 0;
-+
-+err_rcd:
-+	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_rcd[i]);
-+err_single:
-+	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_mem_single[i]);
-+err_mem:
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_mem[i]);
-+	return rc;
-+}
-+
- static __init int cxl_test_init(void)
- {
- 	int rc, i;
-@@ -1403,29 +1441,11 @@ static __init int cxl_test_init(void)
- 		cxl_switch_dport[i] = pdev;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
--		struct platform_device *dport = cxl_switch_dport[i];
--		struct platform_device *pdev;
--
--		pdev = platform_device_alloc("cxl_mem", i);
--		if (!pdev)
--			goto err_mem;
--		pdev->dev.parent = &dport->dev;
--		set_dev_node(&pdev->dev, i % 2);
--
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
--			goto err_mem;
--		}
--		cxl_mem[i] = pdev;
--	}
--
--	rc = cxl_single_init();
-+	rc = cxl_single_topo_init();
- 	if (rc)
--		goto err_mem;
-+		goto err_dport;
- 
--	rc = cxl_rch_init();
-+	rc = cxl_rch_topo_init();
- 	if (rc)
- 		goto err_single;
- 
-@@ -1438,19 +1458,20 @@ static __init int cxl_test_init(void)
- 
- 	rc = platform_device_add(cxl_acpi);
- 	if (rc)
--		goto err_add;
-+		goto err_root;
-+
-+	rc = cxl_mem_init();
-+	if (rc)
-+		goto err_root;
- 
- 	return 0;
- 
--err_add:
-+err_root:
- 	platform_device_put(cxl_acpi);
- err_rch:
--	cxl_rch_exit();
-+	cxl_rch_topo_exit();
- err_single:
--	cxl_single_exit();
--err_mem:
--	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem[i]);
-+	cxl_single_topo_exit();
- err_dport:
- 	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
- 		platform_device_unregister(cxl_switch_dport[i]);
-@@ -1482,11 +1503,10 @@ static __exit void cxl_test_exit(void)
- {
- 	int i;
- 
-+	cxl_mem_exit();
- 	platform_device_unregister(cxl_acpi);
--	cxl_rch_exit();
--	cxl_single_exit();
--	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem[i]);
-+	cxl_rch_topo_exit();
-+	cxl_single_topo_exit();
- 	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
- 		platform_device_unregister(cxl_switch_dport[i]);
- 	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index ad5c4c18c5c6..71916e0e1546 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1673,6 +1673,7 @@ static struct platform_driver cxl_mock_mem_driver = {
- 		.name = KBUILD_MODNAME,
- 		.dev_groups = cxl_mock_mem_groups,
- 		.groups = cxl_mock_mem_core_groups,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
- 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
