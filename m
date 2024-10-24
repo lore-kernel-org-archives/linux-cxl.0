@@ -1,81 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17761D5147
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Oct 2024 12:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DFB1CACE9;
+	Thu, 24 Oct 2024 12:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729772736; cv=none; b=AeeQjDrvVp/jB/vJmeuO1N7b4btQ/h0qiZthLoXVb4VcNqNWxKGJUAtzhq/trkAsL+8N4NAZQm3aLCf6e98uqYWHS6eCeyFCdjO6qI13afBA7W0FsWCVXiaY96C77133oGDjLwbQXBHyCgyUrRkdPx64z2c6sa+A0IiKEd0cQFU=
+	t=1729773259; cv=none; b=rZlZeu4mAS7DUBs/BAjp+iR1oiahaPVmRSW9qQekh/pk6M/TGYEMjQMakq+WHLvksw2HHAUKbFAH5hD5WKkh5uduQWlulL2dFPXtlK8gtA0LPQq6DXmr1fqi52ZJTvnDE7T8eKW2Endl5VKSCW+gZmGOUKFpMm1xPj3COZxG2+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729772736; c=relaxed/simple;
-	bh=DWXGV4gKNnefe7Z37+0J9UM+EPFPvAVYED14D8cKqUw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VxH5PdsjNvfLspA6YfM/FKyHCSn2EGj6NawDldAeaE/G2P2AQFUXtGmL3TddoN8I921lzuqKrlLOPAjIEet+txQW64b0Xx/j9Xg8I/TZwWps6gdxNzQvUCDRyXzMhGtYU4Ma1oz80hko/guyn1QNODW2IH6/05OW0LttKCPdSmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrWAytgE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729773259; c=relaxed/simple;
+	bh=CmAdV9afLS0JTDf0VeXFhYzLWX7ZMh8xBb4mg2UTXtU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UseypYka+GnBghteiEnSJKMUbJ1si7SDYCFzrflg7OhNdfrHT5qJI+gtPescXfhZL1H7/1mWARI/21Zw7jClDWx89wpKrCkj6j5w5640tvCiyeWsX8N9H5GJ4UMzGUXEXylRY3L/BGN5tTSuaVVjUuzAVWhby4PZGpNaS298rTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDiyjbF3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrWAytgE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D4DC4CEC7;
-	Thu, 24 Oct 2024 12:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729772735;
-	bh=DWXGV4gKNnefe7Z37+0J9UM+EPFPvAVYED14D8cKqUw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OrWAytgEI7HJjWnnYxWwrt3m4TrVNMkNxyGUX4BIGTWZw8r5TI5CiN2r2HM0CKSJy
-	 a7mgEDhfVqo5FJHOybCtIaQ9Hvv2gUQIIkMpF6P6yFxO8vQsiUHga6rL7qLjoQkD1L
-	 PkIEAvcXixFyys6lhS33GVgbZwO6JvaVBncavPZYFXrA5tTgVDZRHyCSWVgTLRfKVY
-	 4DRo/Jm+l6biB7b/nW347vQC+PsEfIygYIXrysPLK5+BOvfpn00axr1+R+zRqygnD6
-	 5Yv9tfdPpHLpxGybOz8u9yk5gQHXoJnBQ0zvMIcyVSEMa6ssO0tFTYkeyxfWKvizlh
-	 cXOAScRrFWcuQ==
-From: Will Deacon <will@kernel.org>
-To: jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	Davidlohr Bueso <dave@stgolabs.net>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	fan.ni@samsung.com,
-	a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3] perf/cxlpmu: Support missing events in 3.1 spec
-Date: Thu, 24 Oct 2024 13:25:27 +0100
-Message-Id: <172976975631.3760779.1396610844480750567.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20241010025208.180458-1-dave@stgolabs.net>
-References: <20241010025208.180458-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDiyjbF3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729773257; x=1761309257;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=CmAdV9afLS0JTDf0VeXFhYzLWX7ZMh8xBb4mg2UTXtU=;
+  b=cDiyjbF3FdRgo+08z/Lz0zwclNV1Ojk/RGFoMkeGoDMbbUmiPWLOtZXf
+   +w6JgwwL1INFFON3iyg/WCpgsSJr7wTI79QwGCRsocga0s7Xrqu0lAEeC
+   U9CxCeN+F/iTflSyztUJLDmZYLBgFk5YOhtwFk1wpF5VWN9rIHM8i0tM4
+   VUcqoWWnhjqriBbfWFjZ9018137kSUkYYSHChHkYU+lDTVle3sjeLzTw6
+   91+jOaMN/CZcjWclek4rmyC7zZ+ufw83rsxD3rtc1bR4uBijYUT6ocDMB
+   6EPUoXgCTkueq6/lsT5fAk+mEurLXgcRhrovQ9Q1PbrBjyWIJIl/rEpBl
+   w==;
+X-CSE-ConnectionGUID: HaxTR9wGTsOpUI0yQAmo7A==
+X-CSE-MsgGUID: DMvN2uXJTMG2UnQedMT2dA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="29619406"
+X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
+   d="scan'208";a="29619406"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 05:34:16 -0700
+X-CSE-ConnectionGUID: dCkiNN/zRvihLsXoCaBq7Q==
+X-CSE-MsgGUID: FCI6bu98S2uJetZqSIW1oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
+   d="scan'208";a="81395591"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 05:34:13 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,  David Hildenbrand
+ <david@redhat.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-cxl@vger.kernel.org>,  Davidlohr Bueso <dave@stgolabs.net>,
+  "Jonathan Cameron" <jonathan.cameron@huawei.com>,  Alistair Popple
+ <apopple@nvidia.com>,  Bjorn Helgaas <bhelgaas@google.com>,  Baoquan He
+ <bhe@redhat.com>,  Dave Jiang <dave.jiang@intel.com>,  Alison Schofield
+ <alison.schofield@intel.com>
+Subject: Re: [RFC] resource: Avoid unnecessary resource tree walking in
+ __region_intersects()
+In-Reply-To: <ZxnvyIme98Q8ey1c@smile.fi.intel.com> (Andy Shevchenko's message
+	of "Thu, 24 Oct 2024 09:57:12 +0300")
+References: <20241010065558.1347018-1-ying.huang@intel.com>
+	<d129bbe4-8ae8-4915-bd9c-b38b684e8103@redhat.com>
+	<87set3a1nm.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZwkCt_ip5VOGWp4u@smile.fi.intel.com>
+	<671965a8b37a2_1bbc629489@dwillia2-xfh.jf.intel.com.notmuch>
+	<ZxnvyIme98Q8ey1c@smile.fi.intel.com>
+Date: Thu, 24 Oct 2024 20:30:39 +0800
+Message-ID: <87wmhx3cpc.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-On Wed, 09 Oct 2024 19:52:08 -0700, Davidlohr Bueso wrote:
-> Update the CXL PMU driver to support the new events introduced
-> in the latest revision. These are:
-> 
-> - read/write accesses with TEE constraints.
-> - S2M indicating Modified state.
-> 
-> 
-> [...]
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-Applied to will (for-next/perf), thanks!
+> On Wed, Oct 23, 2024 at 02:07:52PM -0700, Dan Williams wrote:
+>> Andy Shevchenko wrote:
+>> > On Fri, Oct 11, 2024 at 09:06:37AM +0800, Huang, Ying wrote:
+>> > > David Hildenbrand <david@redhat.com> writes:
+>> > > > On 10.10.24 08:55, Huang Ying wrote:
+>
+> ...
+>
+>> > > > 	for ((_p) = (_root)->child; (_p); (_p) = next_resource_XXX(_root, _p))
+>> > > 
+>> > > Yes.  This can improve code readability.
+>> > > 
+>> > > A possible issue is that "_root" will be evaluated twice in above macro
+>> > > definition.  IMO, this should be avoided.
+>> > 
+>> > Ideally, yes. But how many for_each type of macros you see that really try hard
+>> > to achieve that? I believe we shouldn't worry right now about this and rely on
+>> > the fact that root is the given variable. Or do you have an example of what you
+>> > suggested in the other reply, i.e. where it's an evaluation of the heavy call?
+>> > 
+>> > > Do you have some idea about
+>> > > how to do that?  Something like below?
+>> > > 
+>> > > #define for_each_resource_XXX(_root, _p)                                \
+>> > > 	for (typeof(_root) __root = (_root), __p = (_p) = (__root)->child; \
+>> > > 	     __p && (_p); (_p) = next_resource_XXX(__root, _p))
+>> > 
+>> > This is a bit ugly :-( I would avoid ugliness as long as we have no problem to
+>> > solve (see above).
+>> 
+>> Using a local defined variable to avoid double evaluation is standard
+>> practice. I do not understand "avoid ugliness as long as we have no problem to
+>> solve", the problem to solve will be if someone accidentally does
+>> something like "for_each_resource_descendant(root++, res)". *That* will
+>> be a problem when someone finally realizes that the macro is hiding a
+>> double evaluation.
+>
+> Can you explain, why do we need __p and how can we get rid of that?
+> I understand the part of the local variable for root.
 
-[1/1] perf/cxlpmu: Support missing events in 3.1 spec
-      https://git.kernel.org/will/c/48545b3eff6b
+If don't use '__p', the macro becomes
 
-Cheers,
--- 
-Will
+#define for_each_resource_XXX(_root, _p)                                \
+	for (typeof(_root) __root = (_root), (_p) = (__root)->child; \
+	     (_p); (_p) = next_resource_XXX(__root, _p))
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Where, '_p' must be a variable name, and it will be a new variable
+inside for loop and mask the variable with same name outside of macro.
+IIUC, this breaks the macro convention in kernel and has subtle variable
+masking semantics.
+
+>> So no, this proposal is not "ugly", it is a best practice. See the
+>> definition of min_not_zero() for example.
+>
+> I know that there are a lot of macros that look uglier that this one.
+
+--
+Best Regards,
+Huang, Ying
