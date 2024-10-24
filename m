@@ -1,42 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64501C9B87
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Oct 2024 12:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C851D0F46
+	for <linux-cxl@vger.kernel.org>; Thu, 24 Oct 2024 12:17:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729771870; cv=none; b=Qga/FfEXxj9p6d942XqRD8oGAPpCY5DcIlVw0rY188sBmvifxHBJEq7BE3D3waPSsuvAxq2T7vPrBxlKgwh5LamHrWN5frg1UVChrnaqLd/HIlMP5TD3/hnpO7cdxl3Y6I2IEZq+9RM7DFLgFaOU4TPFRhAqMhi7rQ66txnoip4=
+	t=1729772248; cv=none; b=Icx8C5Vnk5U2r3RhtI/vqbYTsAitIfcQDtTQ085RoOai5o41Hn95VD85N8p3fMYp9zxyVifsNSyopzGeh5b6WjklZnQIQePd8pzGBjkkz5Jgodl3jf036QDE3Y46r/v0x6sHr7l4VLQ3hKzve3f+b1RXQFiGwYK99nhXoSu4q8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729771870; c=relaxed/simple;
-	bh=N3lXyqhlpJ2pa0yxM6HCT/736VvT/5nO4mP3zIYnNto=;
+	s=arc-20240116; t=1729772248; c=relaxed/simple;
+	bh=2ewBk6AVxD5lOMitZANuYEonOE+decybHOYrhA2+Pdg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QY7Phk0nqJ/bC5rz5c8SHH0AmaD0QB6xrIn9ebptzwV6+wDxsd1kLkJ2ad3W5tH+0ScWgV3fGU0kz/RPkp3R+Y5dILNHoSdh3lUcJKy7/FX3+LmyaFnMFduPIXgMVfNuIF5SIp61U1BuwhNiStSRjK/oeM/U7JeF46/dlwORdDs=
+	 MIME-Version:Content-Type; b=dqSUh93tRQyfXD8QHA+2u07YfiMwkWNw3pGPVJRcoi1CZZejzLtN0CObW925ypQp3evJ1po8lES4QrEIzi6jj3PODAGZfZeeso5Jqj8TM3uUcWL5DKADi+HDAbkeuP9uQxpqawAVeoBV/d4fL8mebOADbZSnATXGvN3Ks/7jH14=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZ4VF1gJTz6K9JX;
-	Thu, 24 Oct 2024 20:09:57 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZ4df3VNJz6K9FJ;
+	Thu, 24 Oct 2024 20:16:22 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0567F140B39;
-	Thu, 24 Oct 2024 20:10:58 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 46F6A140B2F;
+	Thu, 24 Oct 2024 20:17:23 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 24 Oct
- 2024 14:10:57 +0200
-Date: Thu, 24 Oct 2024 13:10:55 +0100
+ 2024 14:17:22 +0200
+Date: Thu, 24 Oct 2024 13:17:21 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
-CC: <ira.weiny@intel.com>, Zijun Hu <quic_zijuhu@quicinc.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Vishal Verma <vishal.l.verma@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, <dave.jiang@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] cxl/port: Prevent out-of-order decoder
- allocation
-Message-ID: <20241024131055.00000f84@Huawei.com>
-In-Reply-To: <172964783668.81806.14962699553881333486.stgit@dwillia2-xfh.jf.intel.com>
+CC: <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] cxl/test: Improve init-order fidelity relative
+ to real-world systems
+Message-ID: <20241024131721.00000a58@Huawei.com>
+In-Reply-To: <172964784521.81806.15791069994065969243.stgit@dwillia2-xfh.jf.intel.com>
 References: <172964779333.81806.8852577918216421011.stgit@dwillia2-xfh.jf.intel.com>
-	<172964783668.81806.14962699553881333486.stgit@dwillia2-xfh.jf.intel.com>
+	<172964784521.81806.15791069994065969243.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,34 +49,27 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 22 Oct 2024 18:43:57 -0700
+On Tue, 22 Oct 2024 18:44:06 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> With the recent change to allow out-of-order decoder de-commit it
-> highlights a need to strengthen the in-order decoder commit guarantees.
-> As it stands match_free_decoder() ensures that if 2 regions are racing
-> decoder allocations the one that wins the race will get the lower id
-> decoder, but that still leaves the race to *commit* the decoder.
+> The investigation of an initialization failure [1] highlighted that
+> cxl_test does not reflect the init-order of real world systems. The
+> expected order is root/bus first then async probing of the memory
+> devices.
 > 
-> Rather than have this complicated case of "reserved in-order, but may
-> still commit out-of-order", just arrange for the reservation order to
-> match the commit-order. In other words, prevent subsequent allocations
-> until the last reservation is committed.
+> Fix up cxl_test to reflect that order. While it did not reproduce the
+> initial bug report (since that is dependent on built-in vs modular
+> builds), it did reveal a separate latent bug in the subsystem's decoder
+> shutdown flow. Fix for that sent separately.
 > 
-> This precludes overlapping region creation events and requires the
-> previous regionN to either move forward to the decoder commit stage or
-> drop its reservation before regionN+1 can move forward. That is,
-> provided that regionN and regionN+1 decode through the same switch port.
-> 
-> As a side effect this allows match_free_decoder() to drop its dependency
-> on needing write access to the device_find_child() @data parameter [1].
-> 
-> Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> Closes: http://lore.kernel.org/20240905-const_dfc_prepare-v4-0-4180e1d5a244@quicinc.com
+> Link: http://lore.kernel.org/20241004212504.1246-1-gourry@gourry.net [1]
 > Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
 > Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-LGTM
+I'm never particularly confident reviewing cxl_test but this looks fine to
+me.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
