@@ -1,232 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3612C9A;
-	Thu, 24 Oct 2024 01:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729735154; cv=fail; b=aCWzfqb48lFpwSFotfTl45S8EIB49CxZJ6bmptqxozki/GsUYISuMpCEC//LAkZNeiUe6aSkY3MW5jztDLRbb4rXuZ0i0mmGTqkTBb9jkYEPKDfiO8l/z4TOYyZz/z3XQubeA6z3A180E5UP1pP2fj+gl+73I/iHGUiS4CfqMC8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729735154; c=relaxed/simple;
-	bh=kWVdrYjo8vTSYe25KcErkwYjyqfddKmxbBU10BFiod8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Wefo96GlZkZS269UItq9UvqWUAVXoAfABV2fJKKwRfAy2nlqrx2pkwF9mkdWqM6FeSBUC97JiZZIa/Hw73wbp9As1P39oXcUL7DTBoKhqZBYPbZNbffJbG3wg6NnppessyRXwdIT5ECiYCa1OGkIKFxyDVvCHm3EjFgdHnFkiIk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dA8oPHND; arc=fail smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40221EEA6;
+	Thu, 24 Oct 2024 02:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729736079; cv=none; b=qd294s3yCu0n2+HuTg/MxuW+noSlCPUEgOcIGoL0FYwmg1ZXEvvWim/ldG+MJW68bEG7wg3reHgvPx2QS4+X6UIquKohJHcqnRrgfQBlOboLiszOGvCCOOMa1383EU7N4J7OUKL6dsbrrVQVai3kBIGjDQudMbAdcOQ6LD0vii4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729736079; c=relaxed/simple;
+	bh=h1p/WI60gYppi0F2wi3wHK02AFQzr0j8HYPh4zbp6pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwOIrAw2uV/pCM/G7GrBuwMjrBDQpFRcuKT8LNYMjMkLYZsBhRRYcsHWn9UbYZPeTh0t/q4ZM4W1O7fN1Sa1YTS/bmXQw8Tk0adHCwzgQHBoIqg0d8xBSagDiHXxknllBMpUCpVvm47AFBG7AmFgXWP3W4yPw5mj+WWIZNUwH7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DduEMkc8; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dA8oPHND"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DduEMkc8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729735150; x=1761271150;
+  t=1729736076; x=1761272076;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=kWVdrYjo8vTSYe25KcErkwYjyqfddKmxbBU10BFiod8=;
-  b=dA8oPHNDF5GxGxrueqi/IISISddnhSCu+ROXxasFpVmPVh41RvO6pSs5
-   O62uP2nDu0fidz19uoogmOarlla6rDXblcAW8pFS/saVPVs0T1W9J85DL
-   YzAjccAU8ljXGAis37ceoDbRO9utNerx8WDrO7CfkbslbueesnREPDsNn
-   cdI7yL720cnWnbExdbAj6BtpCpJPmIQezMEHMwK3/VTHOhljbRuiMN/7I
-   oQCTh/6/fMeSHXGqeRhbXwDg6yIgoHpKMoezCRcs6GXCxyFQlWE0DU9LH
-   LcloPw7gWcCcIVODCba0MaFMj75wOaA3v6ua6w7PQCjcFInQNa7/i9TSg
+   mime-version:in-reply-to;
+  bh=h1p/WI60gYppi0F2wi3wHK02AFQzr0j8HYPh4zbp6pw=;
+  b=DduEMkc8eFhbIWFWFkGOUb1IYQIw1uVTYXUKT41DL81mxyS6PxELpIm3
+   7EDPsfE9YIMZexEAsGjtaNtNB55qVJ2sh4jG7q/Pu/OlYY/4CoouRNP8+
+   97lLNwRUPh8OEgCzsk5zZC1O8eGh9x2DEzPd1QfXEcE4rGAk0vLXNYivX
+   XvjkeDA6Ko03PrfHJDmPAHPsm4xkkjey3KIAnqc4520ig4PFMbjAn7oop
+   rlfLj6CMhpmVbeo03VXJDyCP7fMYhS/ZsLkcWaYARiZqx8i2ExA/jLdvj
+   uP9tB+61+KslEQ7BUpRQtx2MnT6nZrwIdCpwWWhLNjoCBdjciozoJ/TPp
    Q==;
-X-CSE-ConnectionGUID: KVgtiM/WTm6BHoCqj72+ow==
-X-CSE-MsgGUID: AKTLJPrNQhyILQCTE4gndw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="40742037"
-X-IronPort-AV: E=Sophos;i="6.11,227,1725346800"; 
-   d="scan'208";a="40742037"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 18:59:10 -0700
-X-CSE-ConnectionGUID: BmiLDwb8SyC00tMHYmgV3Q==
-X-CSE-MsgGUID: vwtPpaeUTLaR1AZTFkPHxQ==
+X-CSE-ConnectionGUID: +7+7PG/tSh2YjmshzVQG3A==
+X-CSE-MsgGUID: m/ZLbLeMTFGFfeAOb962Cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="33039234"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="33039234"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 19:14:35 -0700
+X-CSE-ConnectionGUID: OYsoGVvpSmm4J/dKmoi73w==
+X-CSE-MsgGUID: 4SQozAooSfOb95Ff6ZfpAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,227,1725346800"; 
-   d="scan'208";a="111251643"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Oct 2024 18:59:09 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 23 Oct 2024 18:59:09 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 23 Oct 2024 18:59:09 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 23 Oct 2024 18:59:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d3jZbfjgEwVNZT1+fYWKowcnryHJ/wVsCAZMK0TFWzDoXY/VMgOvKuhM/ou0S4VkSE4FD2iDOVbjeuNjrmnA8Ysbit6dbrdW8zbrNZ5so5ezPYsUySRKz1THMBmet5z9ZWReB5ZYyl48/AqfFbVw4kIGgWA7NRlcsJttxj7Dfj26Uld9q9JZ6JC9WvMrebLiSAb8CeNB73lkZVhXQOb/vfH/acmbcQlgJLcBuL8RBBruiIe7mxwLqZfPEXpl2+t0qioHojRBqwv6yZLTMcBdiE5djQRqkQS5g2BwbjFEj7dxT90jtkH4fJo3c1wf4EBOPCfZtdnIhbBjDBem9yd7kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/lixa9vgPIf5JiMAEc4gPo3LhXYwumjpSUUz+7R2XRo=;
- b=N1h3p7jBY68zthvXuo/L2fXTgWx+Zfag5Svsp08N8+vj6qE341BCate45B1moPKsy5LGIKDNOCigJFEQU+K2rqJSUOOHt8Cjgak22E2F7Q3BgGOLOKcZe+j79id4ItQi03JZedonrT7lqdjgJQ1wNs+63woXfYKcj77HmeFUrG3GeS84zCkGQ/icZUzQJmShmvf+nVd1NuEOiFeebWejOcZqSpRout2YNf7pH5D5hjX9M+OzYlYbDqYNJCzOMbOXbBoEukc0tJ5qKXWQlRfCx3JfS+1Xk4WriRflyx67ahodxAJrYSA+2mQcNmZiOutT3im0DoBcdVtQPOCBK+Cnrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH7PR11MB5959.namprd11.prod.outlook.com (2603:10b6:510:1e2::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Thu, 24 Oct
- 2024 01:59:06 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8069.027; Thu, 24 Oct 2024
- 01:59:06 +0000
-Date: Wed, 23 Oct 2024 20:59:02 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Ira Weiny
-	<ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
- Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 27/28] tools/testing/cxl: Make event logs dynamic
-Message-ID: <6719a9e5f2a29_da1f9294c4@iweiny-mobl.notmuch>
-References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
- <20241007-dcd-type2-upstream-v4-27-c261ee6eeded@intel.com>
- <20241010164920.000017d8@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241010164920.000017d8@Huawei.com>
-X-ClientProxiedBy: MW4PR03CA0305.namprd03.prod.outlook.com
- (2603:10b6:303:dd::10) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+   d="scan'208";a="81277341"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.250])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 19:14:35 -0700
+Date: Wed, 23 Oct 2024 19:14:32 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 3/3] cxl/cdat: Use %pra for dpa range outputs
+Message-ID: <ZxmtiOlYNklu4sKr@aschofie-mobl2.lan>
+References: <20241018-cxl-pra-v1-0-7f49ba58208b@intel.com>
+ <20241018-cxl-pra-v1-3-7f49ba58208b@intel.com>
+ <ZxcCnbV8fsSbTeGf@aschofie-mobl2.lan>
+ <67193e446b625_d944929428@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB5959:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7407dde-4a05-401e-460a-08dcf3cf7164
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?cZ7vzaXUAoRwVsiWCP0cvGhQzVUUJ9Pk+mMTB/XSYdALfIHzqfxBNi67qEB6?=
- =?us-ascii?Q?VZIjYlhEVlkZxhqfefQWfKcHBD4Cqo4JV6sEmOGsahTs9BBcCEIF2JCwMy2E?=
- =?us-ascii?Q?ap25a+MBZL3FiE+6IlYv79D6NN4ZXMXdJVFknDx6NpxG9i6BGOaNdU+MXg57?=
- =?us-ascii?Q?bv4LuHybFaWCEZO0y+4EhrOy6MkQefUjyRP82xiVcz0qZNie0ZlQ+BvWlfV/?=
- =?us-ascii?Q?AB4UcwtiWt3Jh+oA/SfbiBPfaCtLBCsO/KNVcB2wtIDelPnRcFJO942exjix?=
- =?us-ascii?Q?qM4jCxk0hoULWC3zrtJSUBH5qmCALun+a4LPlEbncvVqYF69MQ0JT/sioRul?=
- =?us-ascii?Q?iZy/PGcJzpJw8f6Dzi8MjEhzHa4x0gToNv9xvU1yM2rF0PhIl/wzzRw2ph9e?=
- =?us-ascii?Q?tl/h7TYHr/mm9Pg5r1Jsm5N/QCelV2sYT6zvUHVLRFErUD3oEN8anbdqrN6L?=
- =?us-ascii?Q?39TV991yXGRz4htXZBckUdEUpG7Sq9QsZH34vMxBemcoSioPxNh4WK2EJosr?=
- =?us-ascii?Q?9oNRT4KXWHajGuBWr9sWdfJQO4xGgRAneclDLcnpw7UrRtY5kgNun+R9YJ5f?=
- =?us-ascii?Q?TmY99daW4cuxGmNNXpHLwMJZqES9scbfmDO4ChwHeXXwwjkbbymeQm5S8mRr?=
- =?us-ascii?Q?Hr2+3tlR5RDbyVt5rut46KepUQD3h4faVqfQ9NrUsxc9S2szfHBuioFAXZ6M?=
- =?us-ascii?Q?Z3Bx7DWdoiGOBT6tWLeIItJb+sBh/qpMT31DhqheBq2l0oGeAwU4YX1yqgY0?=
- =?us-ascii?Q?Ofn9OiyvFgkR7BRrEy+sMba8edI8iv5XXBEOXDMFnf/YeOuzVxvQsR8C/h7X?=
- =?us-ascii?Q?pSGtAD8KiUpSmGbC2AiD7SK9Rl0m2XZmFj4hYI9dorXJoSOJ1qZbTVxS4Swr?=
- =?us-ascii?Q?CHUgrQuGXqGw4+MpJYhe/xWChiGWe1ZKBF9IR+A9scODQm/qQUDihDLL+BMR?=
- =?us-ascii?Q?QtaPfYL9/WldLTw4iy7Wo0onJHR5ROSy+l+rujHSZV1C7/KJC1YLJhK0HbJh?=
- =?us-ascii?Q?OUGYQJRu4qVMaxKBNM3zoC+qCJPZjf5NU6gUFESOqh557kRz7lNrtVmhJZY9?=
- =?us-ascii?Q?NxfySSjRh4CfQKpGa22AZfMv9dho+Hq35N64cl0jwNMEuvO3+rPu0ag/qBDi?=
- =?us-ascii?Q?OCB4PpVgqqdJ+gKvgSs97GljLUIAymzi1XyBVnFPnzY9G0xQJUfKRtTEH9xm?=
- =?us-ascii?Q?7tJQfiud37Jq+KQPB/ty7EGi6v9E2GQh9RWznIpA5AKVOXCyBhZa1Na1haHs?=
- =?us-ascii?Q?VCDF2hASnh8ZX/Z+CRf552ZJPU68k1xgwEP9/p4QnRztU/8XR1PQ/edFKfCC?=
- =?us-ascii?Q?5sjNmktZccWIV0kyhq3Xf64Y?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?82Kj4++X5lPbHnjMKpQH5MzqmpZLRv3dmxifp0k6QKQ8T1wyjI0q/fgovNCT?=
- =?us-ascii?Q?sIwzEqDguxBwWOrtwBx5HGFdHkX6ro3dGH2SZ4cHWmIoSgBNnYvUz8gvPF5o?=
- =?us-ascii?Q?hjxy6eAhvlBuxnhmIr67Q6q17+E0Eqst24U1XLEvxl9r6Nkc2utl2/rT9aVt?=
- =?us-ascii?Q?QsSS++CfGk6gcMnudbBP71+mDXNeMRuGhTrTXWFRa13dWQoqS6Gvmwo33Cp+?=
- =?us-ascii?Q?sP3jxY4v1/o618fh8cl/BItMNCynYD4Ykou+cwKLdt5pPbxhnKH6l/k/eTm8?=
- =?us-ascii?Q?nKeH+G9UmF6C0dEiaq590Y1m142wp/GQwENNBVUd9ionZtvsKeWakBRxjl05?=
- =?us-ascii?Q?LO7MbAfYwd87U9hIdJNfsve0p6ZFLXEIYdwmk1gponMj9Pd7fMNVV6jzkN7I?=
- =?us-ascii?Q?Hss2O3leow4Uuc2dCW0JQ878HyvwAxeEIs1vvMOoLHdBTDKPT+nS7JdS6Av2?=
- =?us-ascii?Q?3rFoVRWQwRp195lYkyurQYOqVSwLAK5IcxHbb8wbcTgwemUN/dtDa4Rrcr5F?=
- =?us-ascii?Q?Grc6mIdXiSvfor7jbjAJZ6Ojg8buCl31y4QmG28W8Tx+3YJrfsXAikMIrhBo?=
- =?us-ascii?Q?l60sFTdVcfitfeLMtG09PqlnwblUx4TFWXFqAYPMEKsJ0Q8f0MStkN7pCrg5?=
- =?us-ascii?Q?0aaJNa2G0axI4r4y0LDCFNdRsqyqvChkwmt25BegNKadcazoEKBv04NycwKC?=
- =?us-ascii?Q?/MFnw5Ge/l1RYKUw1e7yE4k8+9n5Q8SsgvA33X5w4ZoQ4RedAmG95+fYDV5D?=
- =?us-ascii?Q?Mrz58GcCdV687OLFNnrRf2RSr0oMFHkRu/zWMxgF9a/PcrsegxmFz8vJjVMy?=
- =?us-ascii?Q?voDKlxfYUKQlE1tcpsxh+llYfEAbBF9fWBgSv82sr+f5/gYlpXd+9JuIpBkD?=
- =?us-ascii?Q?/mDlIk9nMe+bIvhymlON71V3fKH/zuO7AE8ThNaxXZ4hychNbC84CkAzx8gf?=
- =?us-ascii?Q?34EG9owAZ6nKGvmY5dt981AkRgiAdSr7TBMNe8PoQEUblNfz4aoiBmcSaGbD?=
- =?us-ascii?Q?jJ53cP9vVydGzcNtwNwbb6CJBenGAvZnu/Z9xBLZCRKSKY7Ckffy88DQuiJV?=
- =?us-ascii?Q?iRIxpw7FYhKS4tquNFmtELphOtFFNZt2dO7sVqNhw5ap7HnxDp8H3kvRDe8A?=
- =?us-ascii?Q?QEajveLNAuR6jodpoZXBVY6pLl+RKtibXhIdgx8s/Q4GThH95GO5RUgiNpXX?=
- =?us-ascii?Q?I/YTNWh4Rsl41wy0FNRPicUmvfdPnN7XgtMsmoGfLOPDGJ2zRQizcrERBMYG?=
- =?us-ascii?Q?Po4kBoFpsiSzCTbWUjEbgYTb2Uqytb1rP5VuOWbW6A5Ntqvbz/wtQ2qNeS1y?=
- =?us-ascii?Q?N23vjZt86VHz2t770VcE4AhIIuQMUCZF6geAHQS7QOoD3uzPGDxJtTheg+If?=
- =?us-ascii?Q?818xJeJrnAUnQaEemb0ozwo4Y7pMxW4CZylKc6E+/cx0KHPO2hYYPK9sr1hE?=
- =?us-ascii?Q?FZhH0ericLP87PGXyJOKQqsyR6f7r7hagbpTtyHJdTxNJBKq7w+KcJQrxInv?=
- =?us-ascii?Q?RjFZCqq9aigOlo6VPA7OWiyJbqWRuL9v1ndjmXuBAL7sWm7bKsFRVEJIenTa?=
- =?us-ascii?Q?1pWUu24WbmUMy9mFt0cNGee8+7XHcIOyl8XbICZ+?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7407dde-4a05-401e-460a-08dcf3cf7164
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2024 01:59:06.7774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HYmvtPfQ3PIOIxBrfQbh1ljmTnq9LdSNXcoF8acR2jDHJ0TAP4fYuvKhzXCCWAsP8zyDxeZC5hyXlWM4SL4ROQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5959
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67193e446b625_d944929428@iweiny-mobl.notmuch>
 
-Jonathan Cameron wrote:
-> On Mon, 07 Oct 2024 18:16:33 -0500
-> Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-
-[snip]
-
+On Wed, Oct 23, 2024 at 01:19:48PM -0500, Ira Weiny wrote:
+> Alison Schofield wrote:
+> > On Fri, Oct 18, 2024 at 02:46:26PM -0500, Ira Weiny wrote:
+> > > Now that there is a printf specifier for struct range use it to enhance
+> > > the debug output of CDAT data.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > ---
+> > >  drivers/cxl/core/cdat.c | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> > > index ef1621d40f05..438869df241a 100644
+> > > --- a/drivers/cxl/core/cdat.c
+> > > +++ b/drivers/cxl/core/cdat.c
+> > > @@ -247,8 +247,8 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+> > >  	dpa_perf->dpa_range = dent->dpa_range;
+> > >  	dpa_perf->qos_class = dent->qos_class;
+> > >  	dev_dbg(dev,
+> > > -		"DSMAS: dpa: %#llx qos: %d read_bw: %d write_bw %d read_lat: %d write_lat: %d\n",
+> > > -		dent->dpa_range.start, dpa_perf->qos_class,
+> > > +		"DSMAS: dpa: %pra qos: %d read_bw: %d write_bw %d read_lat: %d write_lat: %d\n",
+> > > +		&dent->dpa_range, dpa_perf->qos_class,
+> > >  		dent->coord[ACCESS_COORDINATE_CPU].read_bandwidth,
+> > >  		dent->coord[ACCESS_COORDINATE_CPU].write_bandwidth,
+> > >  		dent->coord[ACCESS_COORDINATE_CPU].read_latency,
+> > > @@ -279,8 +279,8 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+> > >  			 range_contains(&pmem_range, &dent->dpa_range))
+> > >  			update_perf_entry(dev, dent, &mds->pmem_perf);
+> > >  		else
+> > > -			dev_dbg(dev, "no partition for dsmas dpa: %#llx\n",
+> > > -				dent->dpa_range.start);
+> > > +			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
+> > > +				&dent->dpa_range);
+> > >  	}
+> > >  }
 > > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Might be worth breaking up into refactor (the static cases) and
-> then new stuff.
-
-I had it split but the rework became difficult.  And this is test code so
-I merged it.  I'd rather keep it as is.
-
+> > This is a bit different than what I expected to find as the initial use case
+> > because it wasn't printing a range.
 > 
-> Otherwise one trivial comment inline.
+> The reason this was chosen was I was adding to this code and found the
+> range to be advantageous while doing so.  But the patch was stand alone
+> in the original DCD series so could be included here.
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks.
-
+> > With this change we go from printing only
+> > the .start to printing the range.
+> 
+> Yes that is why I mentioned that %pra is used ...  "to enhance
+> the debug output of CDAT data."
+> 
+> >
+> > Seems the wording of the dev_ message could
+> > change too since 'dpa' has been replaced with a 'dpa range'.
+> 
+> Could be but it made sense to me to read:
+> 
+> "... dpa [range 0x...-0x...]"
+> 
+> Because %pra adds 'range'.
 > 
 > > 
-> > ---
-> > Changes:
-> > [iweiny: rebase to 6.12]
-> > ---
-> >  tools/testing/cxl/test/mem.c | 268 ++++++++++++++++++++++++++-----------------
-> >  1 file changed, 162 insertions(+), 106 deletions(-)
+> > There are a few places that print the range now and can be cleaned up w this
+> > specifier. Those are the real 'uglies' like this:
+> 
+> True this is ugly and I would like to clean this up.  But the cdat code
+> was being modified and lead me to this particular call site.  But it was
+> also stand alone enough to be used here.
+> 
 > > 
-> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > index ccdd6a504222..5e453aa2819b 100644
-> > --- a/tools/testing/cxl/test/mem.c
-> > +++ b/tools/testing/cxl/test/mem.c
-> > @@ -126,18 +126,26 @@ static struct {
-> 
-> >  /* Handle can never be 0 use 1 based indexing for handle */
-> > -static u16 event_get_clear_handle(struct mock_event_log *log)
-> > +static u16 event_inc_handle(u16 handle)
-> >  {
-> > -	return log->clear_idx + 1;
-> > +	handle = (handle + 1) % CXL_TEST_EVENT_ARRAY_SIZE;
-> > +	if (!handle)
-> > +		handle = handle + 1;
-> 
-> That's a little confusing for me
-> 
-> 	if (handle == 0)
-> 		handle = 1;
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 223c273c0cd1..85a121b7b2b5 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -941,8 +941,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+> >                 return rc;
+> >         }
+> > 
+> > -       dev_dbg(&port->dev, "decoder%d.%d: range: %#llx-%#llx iw: %d ig: %d\n",
+> > -               port->id, cxld->id, cxld->hpa_range.start, cxld->hpa_range.end,
+> > +       dev_dbg(&port->dev, "decoder%d.%d: range: %pra iw: %d ig: %d\n",
+> > +               port->id, cxld->id, &cxld->hpa_range,
+> >                 cxld->interleave_ways, cxld->interleave_granularity);
+> > 
+> > 
+> > I guess you could (ducks) pick them all up here, or we can leave it
+> > for a future cleanup, or we can just say no cleanups and we'll use
+> > %pra going forward only.
+>  
+> I would say we get the specifier in then look at any clean up which works
+> for us going forward.  Like in this case where I was editing the code
+> anyway.
 
-Done.
+Thanks for the info. LGTM!
 
-Ira
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+> 
+> Ira
