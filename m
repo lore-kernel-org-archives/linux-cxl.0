@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243A02064E3;
-	Fri, 25 Oct 2024 12:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543E82064E7;
+	Fri, 25 Oct 2024 12:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729860578; cv=none; b=R86kWm1RkKXEr+BnLmOiK/1/WKgUehtX2I31ol6vPMSG/s/tYU3OnAIDZ7wx6deekFov6ocsCGTtyz32v7TY/nz3JMqSNgy20hm3XxC3wuj6kmbA9TIsAUmbPQ5louAayPvbJd8BzLMOXUxIGuk8W1jMkvz5ggL/I18vV/5w4qc=
+	t=1729860664; cv=none; b=cHOQO1LPXco7lZLfFHO47KaNvz3yY1smA7xdF5xy2V1pl7PBHxBQ76BLO+cqxgIwErco0c0tJmfgJevryvspHb6UcCaM4P62bQyOVr1LcGmpCYUNcpzXOXg9z/GI198xZ0uaVF+fS9RH0+RoijW8OwQCm+0pNQQHYtA3+qy84tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729860578; c=relaxed/simple;
-	bh=4fUJF73a5oXUqA7Zgwy5HERtObrrQMaFZqOBiL3DjrY=;
+	s=arc-20240116; t=1729860664; c=relaxed/simple;
+	bh=Y1RZb6KqG1rw1MxCJ5TI3i661l03bGfsXHyk9cHPn5s=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IzDcWdeS2pBZ94OOdQIcccue85/JaBlFhm7yHtovn09KuHIP/1K2JK6jj4lH7zWQc6p6S5Dc9/81cQCgEYrHG8c6605Vn3ci2Z2FOSdswPMtifibaXBDrhwq1tN6xrmSIpWuZd/LqE5OcBPv2t9RPh9cpcbhyF8hxb79RUWt3yc=
+	 MIME-Version:Content-Type; b=uVe98GOmyDAfKDTraViRlsanxZefUddh+6tmA3ASNZI2tUkfjlkdBKghvqzj9R0P3NBJI5/JrLSUAnb1O/y0rsF5FpBka9jpL02RikC5mUALYwGfi8VWahO2WYLL93gKvervqga8lA8VqW9YemHOQvUD2oF8E/EUb78X6H7yRos=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZjCs3LCJz6LD0c;
-	Fri, 25 Oct 2024 20:44:41 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZjJc5vhhz6K6PJ;
+	Fri, 25 Oct 2024 20:48:48 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C09A31408F9;
-	Fri, 25 Oct 2024 20:49:24 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 574CB1408F9;
+	Fri, 25 Oct 2024 20:50:58 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 25 Oct
- 2024 14:49:24 +0200
-Date: Fri, 25 Oct 2024 13:49:22 +0100
+ 2024 14:50:57 +0200
+Date: Fri, 25 Oct 2024 13:50:56 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: <shiju.jose@huawei.com>
 CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
@@ -32,12 +32,12 @@ CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<ira.weiny@intel.com>, <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH v3 2/6] cxl/events: Add Component Identifier formatting
- for CXL spec rev 3.1
-Message-ID: <20241025134922.0000145f@Huawei.com>
-In-Reply-To: <20241025114555.1363-3-shiju.jose@huawei.com>
+Subject: Re: [PATCH v3 6/6] cxl/test: Update test code for event records to
+ CXL spec rev 3.1
+Message-ID: <20241025135056.00003932@Huawei.com>
+In-Reply-To: <20241025114555.1363-7-shiju.jose@huawei.com>
 References: <20241025114555.1363-1-shiju.jose@huawei.com>
-	<20241025114555.1363-3-shiju.jose@huawei.com>
+	<20241025114555.1363-7-shiju.jose@huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -48,74 +48,91 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 25 Oct 2024 12:45:51 +0100
+On Fri, 25 Oct 2024 12:45:55 +0100
 <shiju.jose@huawei.com> wrote:
 
 > From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> Add Component Identifier formatting for CXL spec rev 3.1, Section
-> 8.2.9.2.1, Table 8-44.
-> 
-> Examples for Component Identifier format in trace log,
-> 
-> validity_flags='CHANNEL|RANK|DEVICE|COMPONENT|COMPONENT PLDM FORMAT' \
-> comp_id=03 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
-> comp_id_pldm_valid_flags='PLDM Entity ID | Resource ID' \
-> pldm_entity_id=74 c5 08 9a 1a 0b pldm_resource_id=fc d2 7e 2f \
-> 
-> validity_flags='COMPONENT|COMPONENT PLDM FORMAT' \
-> comp_id=02 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
-> comp_id_pldm_valid_flags='Resource ID' \
-> pldm_entity_id=0x00 pldm_resource_id=fc d2 7e 2f
-> 
-> If the validity flags for component ID/component ID format or PLDM ID or
-> resource ID are not set, then pldm_entity_id=0x00 or pldm_resource_id=0x00
-> would be printed.
+> Update test code for General Media, DRAM, Memory Module Event
+> Records to CXL spec rev 3.1.
 > 
 > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Given I can't find any more information in the PLDM specs on how
-these might be formatted, this looks like the best we can do.
-
+I ran the test and it looked sensible.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+Side note, cxl_test fails on ARM due to attempting to hotplug
+memory outside of the PA range the system supports.  Problem
+for another day when I'll either fix it post a proper bug report.
+
+Jonathan
 
 > ---
->  drivers/cxl/core/trace.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  tools/testing/cxl/test/mem.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index 7305974e2301..b508873ce426 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -268,6 +268,28 @@ TRACE_EVENT(cxl_generic_event,
->  	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
->  )
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index ad5c4c18c5c6..614783eb3f84 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -401,6 +401,10 @@ struct cxl_test_gen_media gen_media = {
+>  			.channel = 1,
+>  			.rank = 30,
+>  		},
+> +		.component_id = { 0x3, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
+> +		.cme_threshold_ev_flags = 3,
+> +		.cme_count = { 33, 0, 0 },
+> +		.sub_type = 0x2,
+>  	},
+>  };
 >  
-> +/*
-> + * Component ID Format
-> + * CXL 3.1 section 8.2.9.2.1; Table 8-44
-> + */
-> +#define CXL_PLDM_COMPONENT_ID_ENTITY_VALID	BIT(0)
-> +#define CXL_PLDM_COMPONENT_ID_RES_VALID		BIT(1)
+> @@ -429,6 +433,11 @@ struct cxl_test_dram dram = {
+>  		.bank_group = 5,
+>  		.bank = 2,
+>  		.column = {0xDE, 0xAD},
+> +		.component_id = { 0x1, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
+> +		.sub_channel = 8,
+> +		.cme_threshold_ev_flags = 2,
+> +		.cvme_count = { 14, 0, 0 },
+> +		.sub_type = 0x5,
+>  	},
+>  };
+>  
+> @@ -456,7 +465,10 @@ struct cxl_test_mem_module mem_module = {
+>  			.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
+>  			.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+>  			.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+> -		}
+> +		},
+> +		/* .validity_flags = <set below> */
+> +		.component_id = { 0x2, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
+> +		.event_sub_type = 0x3,
+>  	},
+>  };
+>  
+> @@ -478,13 +490,18 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
+>  
+>  static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+>  {
+> -	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
+> +	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK |
+> +			   CXL_GMER_VALID_COMPONENT | CXL_GMER_VALID_COMPONENT_ID_FORMAT,
+>  			   &gen_media.rec.media_hdr.validity_flags);
+>  
+>  	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
+> -			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
+> +			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN | CXL_DER_VALID_SUB_CHANNEL |
+> +			   CXL_DER_VALID_COMPONENT | CXL_DER_VALID_COMPONENT_ID_FORMAT,
+>  			   &dram.rec.media_hdr.validity_flags);
+>  
+> +	put_unaligned_le16(CXL_MMER_VALID_COMPONENT | CXL_MMER_VALID_COMPONENT_ID_FORMAT,
+> +			   &mem_module.rec.validity_flags);
 > +
-> +#define show_comp_id_pldm_flags(flags)  __print_flags(flags, " | ",	\
-> +	{ CXL_PLDM_COMPONENT_ID_ENTITY_VALID,   "PLDM Entity ID" },	\
-> +	{ CXL_PLDM_COMPONENT_ID_RES_VALID,      "Resource ID" }		\
-> +)
-> +
-> +#define show_pldm_entity_id(flags, valid_comp_id, valid_id_format, comp_id)	\
-> +	(flags & valid_comp_id && flags & valid_id_format) ?			\
-> +	(comp_id[0] & CXL_PLDM_COMPONENT_ID_ENTITY_VALID) ?			\
-> +	__print_hex(&comp_id[1], 6) : "0x00" : "0x00"
-> +
-> +#define show_pldm_resource_id(flags, valid_comp_id, valid_id_format, comp_id)	\
-> +	(flags & valid_comp_id && flags & valid_id_format) ?			\
-> +	(comp_id[0] & CXL_PLDM_COMPONENT_ID_RES_VALID) ?			\
-> +	__print_hex(&comp_id[7], 4) : "0x00" : "0x00"
-> +
->  /*
->   * General Media Event Record - GMER
->   * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+>  	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+>  	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+>  		      (struct cxl_event_record_raw *)&gen_media);
 
