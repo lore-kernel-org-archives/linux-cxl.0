@@ -1,123 +1,149 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904A4203711;
-	Fri, 25 Oct 2024 11:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD751F7549;
+	Fri, 25 Oct 2024 12:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729856797; cv=none; b=j39RPrRWnPlqtFrBi0sVZdsBdP+bGFK9EFi8idIGkC2JgvsYEA3TPc33w2HqQ6JEuqfSnuG7nHpFwoNMQLR8BM9lrDpjWkbRvXcLBhTjI184unBSuZChb2wWX7rYbZqJQucvdydJfdY3L1q53Bp4Np2pQ4tp4A35fsmiTQ+MObI=
+	t=1729860177; cv=none; b=NcnbGqZHxoYeYyWpqzRcbmr+eJGBTkoPBrKNzcyC88ifFv+9GyiCn/pdQIxyNj0lJYY3dw1gOYexTjQiozlMIQAm8EeKrdLiYeWkKOKHSp5zyKNhlpKJFuIac0+Hxhv68YsAboC4DAn+WOgA5A3ifYe78ersiSrQ3lrNkHKw3s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729856797; c=relaxed/simple;
-	bh=TSouM1x7gbg33/7qEMsPSpsERrPjiHUSRhCU6hzQW7w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PbVNGGVIEG06nxl7mDpL5IyoQ/D3YZGM40itFHebfATak9xvb1zv1MXFLnc8VSdH+tZDHwVURkTk2SeGkzrxuuTHMUvJmNrict32KwbIKIpcIMywCtplV8CspR5DnAea+06T/E9Lb8K8/j2MciEVHz1p6AiKeoF8yKdIt2RNhLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZgqK0xPvz6LD3q;
-	Fri, 25 Oct 2024 19:41:49 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5FC75140452;
-	Fri, 25 Oct 2024 19:46:32 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.151.104) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 25 Oct 2024 13:46:31 +0200
-From: <shiju.jose@huawei.com>
-To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
-	<linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v3 6/6] cxl/test: Update test code for event records to CXL spec rev 3.1
-Date: Fri, 25 Oct 2024 12:45:55 +0100
-Message-ID: <20241025114555.1363-7-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20241025114555.1363-1-shiju.jose@huawei.com>
-References: <20241025114555.1363-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1729860177; c=relaxed/simple;
+	bh=+tqTq/G1/ysY58iREiKY56dAmZ2o9or0upQiNmVDoqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGCx7KzUqdaNAciqTJ6tx+rTTBTPIhysAlmsnVwnQn/98JU0H4d3wnv88xjoRFXmdLvzQJ2eNJo5ktb3oaMdPyOgxyRDMKUQn97KXARw9rkiHQ6s/i1mj075aLZ8P/smUmeO1mL2f3tTI1P2pmFfK1Jz09iishyUILW+xEXlgWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kE0o9vTC; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kE0o9vTC"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20cbca51687so17408545ad.1;
+        Fri, 25 Oct 2024 05:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729860175; x=1730464975; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PXTiO9n5CgwqjEtYBHWc1ytJOpeHUyS3SdTPf/Kt7Nc=;
+        b=kE0o9vTCTGAb0wRlyORF0jgmkrbJkmoWtriIDBEdSdlzzLtJCeXdH4sdbX7RcPKOSU
+         YrJb6OUo5BdJXjnLycPOqBeI7M8iJHjvN77hn02q+T12vULa2Ign9aqY3uEDd+jpHShw
+         squDagl9hoVDnzL5dg5QnK/4aBpH+z0uCh+vefQscDkc9VBMeQGBy/RXG20iL31ugeu9
+         B8dsHyS78Y4WJW9AMVfqvJ81k5hmrCZcVKqiTDm3M+IpwCylci5Q7AN6t88esD7Z6flL
+         cx7qDYwiY3oRUk9mbiliQqp07cTAD6rIYLt+tPlRgYxq0JdQJlGDfxR+FbNTdmzMGdHL
+         bJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729860175; x=1730464975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PXTiO9n5CgwqjEtYBHWc1ytJOpeHUyS3SdTPf/Kt7Nc=;
+        b=qikLw9Uc0QYVAmtb51bO9d/+buOxFDPTcme2KCkliax7i0OVzgvRL3nu6Hq2dPuf3E
+         /rh/64jt3ruJh+Xl3Jp4soNEOHJ992V1Wd9fejhAEEaQ3jDzDHLHK95b0bsunzCS4dzH
+         ABAmfKxIV09C6J9mv7+h3hQ0SYjcOonSCxJmUKqPGrerzyJonm3dWClFlTfxLjSsl1zL
+         eBthn7imxmel+i4v3idjSvrABe9uIEJG8gMH2dl9O54+tFBA61Nc9fCP49pgRWZBCSG2
+         CWRCoDLuvKJ3+b2CIGEvq93TpDZAQXOCaA41I8iFdR8ARjeGn+Ld4bGU0s+8ysM49EFu
+         Z2Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVinuQ8mLB5EuszjSIwLD9eRImTGxX5JwtembggMpN4SURa06qlsLdyM5f2zBGmCyTIq6Em6uxW48Ni@vger.kernel.org, AJvYcCVrMJh5A278Watq1fv+yX3laGtESHZfEJBeQ4cv5Ibeb038jkUhc0dQOTlDj0Y+7aQr0tCbj0VUVsu3mg==@vger.kernel.org, AJvYcCVrlWaIuGvSB0HCsGPSoSMBPGI7HZV/vXEgeTHv4C+Zt2/rDDX7OZHWOP0FpP52tX/aDqtB9P/XxCcg@vger.kernel.org, AJvYcCWQ1pKQ11OfbQt5M1nqY1D13wC4f6LICeb9inHuCxYsU7d3xW38Y0WMhXsiWX/7SjbYZJpWpZZg6vDm7oK3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPlHrfMw/CFaJ62HUQzzSWzPawVm/pNS/5vY9wDbbcHRijfnJZ
+	DFsG6W1jJ/K2LU00hmgq+SwBLExT8MGq9bSH5wpvpzHhoM06/rl4
+X-Google-Smtp-Source: AGHT+IFugZWGDU61tJUvNQ7vNEQVOF43NuD6yJ1b66g5NnSDW8T63LnxQXz5w07qCPMB6kK0Aauktg==
+X-Received: by 2002:a17:902:f54c:b0:20c:8dff:b4ed with SMTP id d9443c01a7336-20fa9e09978mr128430245ad.16.1729860174882;
+        Fri, 25 Oct 2024 05:42:54 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc044f00sm8753685ad.260.2024.10.25.05.42.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 05:42:53 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B1BDB442B53F; Fri, 25 Oct 2024 19:42:51 +0700 (WIB)
+Date: Fri, 25 Oct 2024 19:42:51 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v4 02/28] printk: Add print format (%pra) for struct range
+Message-ID: <ZxuSS2L6RsaQ4bFJ@archie.me>
+References: <20241007-dcd-type2-upstream-v4-0-c261ee6eeded@intel.com>
+ <20241007-dcd-type2-upstream-v4-2-c261ee6eeded@intel.com>
+ <ZwiIy-pIo_BPLtua@archie.me>
+ <67117a4de6083_37703294fb@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500007.china.huawei.com (7.182.85.172)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9Cc/Ioko7b9fu/7q"
+Content-Disposition: inline
+In-Reply-To: <67117a4de6083_37703294fb@iweiny-mobl.notmuch>
 
-From: Shiju Jose <shiju.jose@huawei.com>
 
-Update test code for General Media, DRAM, Memory Module Event
-Records to CXL spec rev 3.1.
+--9Cc/Ioko7b9fu/7q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- tools/testing/cxl/test/mem.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+On Thu, Oct 17, 2024 at 03:57:50PM -0500, Ira Weiny wrote:
+> Bagas Sanjaya wrote:
+> > On Mon, Oct 07, 2024 at 06:16:08PM -0500, Ira Weiny wrote:
+> > > +Struct Range
+> > > +------------
+> > > +
+> > > +::
+> > > +
+> > > +	%pra    [range 0x0000000060000000-0x000000006fffffff]
+> > > +	%pra    [range 0x0000000060000000]
+> > > +
+> > > +For printing struct range.  struct range holds an arbitrary range of=
+ u64
+> > > +values.  If start is equal to end only 1 value is printed.
+> >=20
+> > Do you mean printing only start value in start=3Dequal case?
+>=20
+> Yes I'll change the verbiage.
+>=20
+> Ira
+>=20
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/co=
+re-api/printk-formats.rst
+> index 03b102fc60bb..e1ebf0376154 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -240,7 +240,7 @@ Struct Range
+>         %pra    [range 0x0000000060000000]
+>=20
+>  For printing struct range.  struct range holds an arbitrary range of u64
+> -values.  If start is equal to end only 1 value is printed.
+> +values.  If start is equal to end only print the start value.
+>=20
+>  Passed by reference.
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index ad5c4c18c5c6..614783eb3f84 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -401,6 +401,10 @@ struct cxl_test_gen_media gen_media = {
- 			.channel = 1,
- 			.rank = 30,
- 		},
-+		.component_id = { 0x3, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.cme_threshold_ev_flags = 3,
-+		.cme_count = { 33, 0, 0 },
-+		.sub_type = 0x2,
- 	},
- };
- 
-@@ -429,6 +433,11 @@ struct cxl_test_dram dram = {
- 		.bank_group = 5,
- 		.bank = 2,
- 		.column = {0xDE, 0xAD},
-+		.component_id = { 0x1, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.sub_channel = 8,
-+		.cme_threshold_ev_flags = 2,
-+		.cvme_count = { 14, 0, 0 },
-+		.sub_type = 0x5,
- 	},
- };
- 
-@@ -456,7 +465,10 @@ struct cxl_test_mem_module mem_module = {
- 			.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
- 			.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
- 			.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
--		}
-+		},
-+		/* .validity_flags = <set below> */
-+		.component_id = { 0x2, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.event_sub_type = 0x3,
- 	},
- };
- 
-@@ -478,13 +490,18 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
- 
- static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- {
--	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
-+	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK |
-+			   CXL_GMER_VALID_COMPONENT | CXL_GMER_VALID_COMPONENT_ID_FORMAT,
- 			   &gen_media.rec.media_hdr.validity_flags);
- 
- 	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
--			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
-+			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN | CXL_DER_VALID_SUB_CHANNEL |
-+			   CXL_DER_VALID_COMPONENT | CXL_DER_VALID_COMPONENT_ID_FORMAT,
- 			   &dram.rec.media_hdr.validity_flags);
- 
-+	put_unaligned_le16(CXL_MMER_VALID_COMPONENT | CXL_MMER_VALID_COMPONENT_ID_FORMAT,
-+			   &mem_module.rec.validity_flags);
-+
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
- 		      (struct cxl_event_record_raw *)&gen_media);
--- 
-2.34.1
+That's nice, thanks!
 
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--9Cc/Ioko7b9fu/7q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZxuSRQAKCRD2uYlJVVFO
+o5iXAP9xrOjWpF4wyXjCWIt8cPZkXj4PRmYPrb4rdo1tJKdsaQD/YSgjVnNC9gAL
+Uwspgtau9BhYzixhiBXjAblLFPAHiQ8=
+=+JhN
+-----END PGP SIGNATURE-----
+
+--9Cc/Ioko7b9fu/7q--
