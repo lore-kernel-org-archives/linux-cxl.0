@@ -1,193 +1,216 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477117083A;
-	Fri, 25 Oct 2024 14:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729865784; cv=none; b=EPz64j0MtyTqfT2CN939t9DYmBasqpFRy0Vf0l2+5V2+/RK9KYOHnvcF88HFu2wmBMUAkY+RZ+uJ00iZ+Q06FuYAUEvmbNguQn0doUMd2IhyzIrPKO3v/MrfKgVK363Xelx/RtZyvxcsObjFGkP3IOK2OaZDFw/RsA2hPY32p4c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729865784; c=relaxed/simple;
-	bh=dk6wxg1P1FKqTk7RM53nnZfR1nK55spF2u1jxwN6tcM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCTj+0zKobrQc4BcTcRdXdjhM6YeFiI31UCAH5EZWcXVWwO0TInLMJbaadY0+nJ1+164i5X1OjTxqhk01cp6sD15lSxT+whEwwrZt3JBJADH41VIjgqTH07z7+oZEKkLhDsvsKJjn6/QuWiZDXzBlPpciAQCkvsjoRF9m6rWFUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XZlC41qPFz6K6fQ;
-	Fri, 25 Oct 2024 22:14:08 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE3A7140390;
-	Fri, 25 Oct 2024 22:16:17 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 25 Oct
- 2024 16:16:17 +0200
-Date: Fri, 25 Oct 2024 15:16:15 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>
-Subject: Re: [PATCH v4 04/26] cxl/pci: add check for validating capabilities
-Message-ID: <20241025151615.00000868@Huawei.com>
-In-Reply-To: <9dba2210-5488-25d8-c065-f6a2c4fa2d82@amd.com>
-References: <20241017165225.21206-1-alejandro.lucero-palau@amd.com>
-	<20241017165225.21206-5-alejandro.lucero-palau@amd.com>
-	<9dba2210-5488-25d8-c065-f6a2c4fa2d82@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC3721A4AC;
+	Fri, 25 Oct 2024 15:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729869274; cv=fail; b=ID/6DPtH5OAKBEzq5QaxQF00XTvZV/hlSYITbjcwKVf2nJCFcaz1o4ZLTjELd5qYryg9RsHXmFrz5qCJerSJzkLBnvz9Mv9R3w4hFppl4yg681XcIo0UwgMXf4orEH4G4JxLDfPI9vOi8PhvQWr9DMKr7jGkI05r8UMvj/PKATc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729869274; c=relaxed/simple;
+	bh=lmsOTlBNkkbvaIodOBo+/oM0y4fE4X5E+kJVleVvsxQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=b8e1qwb7CVnTNtDVmc6mDmqkv3cuNl37roHgRzMzhyRHUinzPDeLzmemdNZgPvgBXS5QPERBlca+f5MEHkpy4rOUQKRlasYBWGZKnxBWreLJ/6T6+KfcnUYpKCH+3iXhsWAtaRfL46cfvJQf+3DtoJCQzAqPN4hJNyJi+FYVteQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HqnLE5ts; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HqnLE5ts"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729869273; x=1761405273;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=lmsOTlBNkkbvaIodOBo+/oM0y4fE4X5E+kJVleVvsxQ=;
+  b=HqnLE5tsYkt7B5ceCbHzeBUi1wTglSctbU2SUks6Y/+YxwBut7jyRAiH
+   BZMUeOLgtKGs0jc6VjhwGp59equTJIKRvcGFEiRmnRlfv+iYREC1TIIO5
+   vmW695sIrpd1KTPXTDi4Js5Mkz6ND/LaF4a5iDbZAQ/DMHbqAqsmMg6Ft
+   l6wR+YyoBLekIw05liup4g3PcIcPNLdRtmdAHz9Eq8s7Lg+F/B5Bvqe4x
+   35M3bPZWnNAcKWjMF4PJ14WWs8dO9snHGH7vvGCkXzoimBd736ErMqQNS
+   h/+YRRN/OwRN0TamTc+WS3ZhwnLegZgAHq5TqroqffXc02wIf7B8ptXH6
+   g==;
+X-CSE-ConnectionGUID: Y5dSWBsyRQGdKoqUBFvYTA==
+X-CSE-MsgGUID: +FInClbyQ26qwurN/vCegA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="29659317"
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="29659317"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 08:14:32 -0700
+X-CSE-ConnectionGUID: YL+MCiRxSeWZOkLGKq96YQ==
+X-CSE-MsgGUID: O1GCSY/DQ6CWZlZSxWI4vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="104241845"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Oct 2024 08:14:31 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 25 Oct 2024 08:14:31 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 25 Oct 2024 08:14:31 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 25 Oct 2024 08:14:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mdEDwvItA2O4g0btcx8It07eY963v/B6t9o+SfK5QEPainaQsQSBFFitx0sr9KAUG4WbCCGkbBr+zqS2DlhgSOzDYlVoIe71lMH1VvPFVfXRIL1zPyAGF34jKLtRwasQQxLV43h0FCu5po5Fh1q5kFvLfrEV+8bUdyu/yqSiX7rAPjIoWmjrZpyicLyMLpwc4zBsE/8e5Rx2PK5npfVi9GsOWFANTeJXW4WRnjtJ2AG2GpJHUEbgpa1ZhnekExcz2Kz6phqmLRsaZ+ErRUMQsY/lLTJaeiqaNhSitMvh8TmTCCpasrzH8d4mg5oqYxiOjxeRib8WFDTNSedE7h9vgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OZ4veQmQu37vRf45nONERBFuuMX+sfvnXkzWlxtVKhY=;
+ b=vWgvY5wiV97r1hUdWzL2g3NY5AIcewUeNw3cEjsqCEet7EQAJ9I/1AIm8mcwE0GNuYBlLs8F+Ouj/sZthKit38IqrMZxshDDn7L+JEmFG9LXoQEZqGMHB80DrEWHbQWNtdbkpH0Y2IFf7SaGqtA+bnczS86V3/Xxtep42Sp/gkWZauij+VbNCxzf7aUs0MeI9O5xOho6hOVBt8483tU7tm0sR93vhrXTsfU6/1dyyktlVpl2eUgrvZVJh/QYu/GFuZExoMfB1wYgYXkOBcyuJ3k3G1q97K7kxM5lFDgLkH/JCJsIwDyf3p4pdf3EgJMdDuTIXfpn9aobXVeXTMSo+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA0PR11MB4526.namprd11.prod.outlook.com (2603:10b6:806:96::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21; Fri, 25 Oct
+ 2024 15:14:28 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8093.018; Fri, 25 Oct 2024
+ 15:14:28 +0000
+Date: Fri, 25 Oct 2024 08:14:25 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand
+	<david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Jonathan
+ Cameron" <jonathan.cameron@huawei.com>, Alistair Popple <apopple@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>
+Subject: Re: [RFC] resource: Avoid unnecessary resource tree walking in
+ __region_intersects()
+Message-ID: <671bb5d165_10e592941e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20241010065558.1347018-1-ying.huang@intel.com>
+ <d129bbe4-8ae8-4915-bd9c-b38b684e8103@redhat.com>
+ <87set3a1nm.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZwkCt_ip5VOGWp4u@smile.fi.intel.com>
+ <671965a8b37a2_1bbc629489@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZxnvyIme98Q8ey1c@smile.fi.intel.com>
+ <87wmhx3cpc.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZxpFQBRqWMDjhtSY@smile.fi.intel.com>
+ <671ac2d2b7bea_10e59294f2@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZxubhuEwL5GrhBdu@smile.fi.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZxubhuEwL5GrhBdu@smile.fi.intel.com>
+X-ClientProxiedBy: MW4PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::30) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA0PR11MB4526:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4fa529ec-f30d-48d0-5fa1-08dcf507b805
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xpDkTr+ObOE2F1dFAl08GJPsXopXSaz0HWTQdokKIc4X+UnRNHg89ARqGVOg?=
+ =?us-ascii?Q?Q9UagEmMi5Gi0zfqBuu+w1SEc5jkquaiQl5YrACpzc9UpPQBIdb0JhDS1tqo?=
+ =?us-ascii?Q?evCSPzNyoR6ite41wOJsLws4B5hdZMi2LkZRNDoUFq4zxi75onJJkA3Iepr0?=
+ =?us-ascii?Q?pumWajRmOXF/4V4rH7EMRUbYhU7LuPFtAyij3kfG/h8pCh1yc+7oUG2ccO1i?=
+ =?us-ascii?Q?+XUIEhjmr/hxKCMD9QEfEOWlx6p/QVu1DmLpyHxMWvzDWGze1feNK41MTXao?=
+ =?us-ascii?Q?x5PvNYUs/9PTZlH5GEj9Dz8DgAmQa0tE/S4JkkvDFJ2zZqSFTBZ3ETN8SoZx?=
+ =?us-ascii?Q?DSV9qpbXUz3o06BgkHwMrRnsyc3Gaw2XcOCeN7m/EePGmIQPA5T30rIMbADO?=
+ =?us-ascii?Q?+xlTzRj2wNH9CSvXM0pG1MqpBjJUJJkW0cUlGshVvvKNXr62GGaE07nS4H21?=
+ =?us-ascii?Q?bv74SThM6SlQkNLAdTEHtcu8TJsRFkNGIFhDwMskmCGayxeKEu68UNC2e841?=
+ =?us-ascii?Q?d8IDBROVCZYDy8MlDR+meQddF4aBCVqu5KwwLahlGiTTk/wRMK56ArP4UVFv?=
+ =?us-ascii?Q?z3jiYFuX6kLsYqg7Ua/5HBe81i0yiQXU+eGUJUGxqyJbzevYYwQZybImhnB5?=
+ =?us-ascii?Q?RobeEIgZ6GFWSideHqyRdhckW2XowJH5CR4PLJA99P0Ty0fPlm04/7/gLlVA?=
+ =?us-ascii?Q?8645ZpyUAp/BpdauGJR77gwaNKBcVdfzqHOYVF+/k2CYg/XaRfoV83NAoKgW?=
+ =?us-ascii?Q?l94s/ewqK+L/uuAdLz7wriJJTyl+NSNxl4VFyRquK6Q7T5z4cuB6n78DZ/PZ?=
+ =?us-ascii?Q?ZZNlcBkxT1ERCGhQAQ+KYKVoVZIQF2TvJ7Tq9i9HvLwbTxmc1Lw4XCgoXxoP?=
+ =?us-ascii?Q?431Yh1pFIntq8SZE/mgb3NsV2yQU8HrllF/o56plt6RTbIkBLdbaV87D+5IP?=
+ =?us-ascii?Q?2Uc7EwSWbMIEJvve1BlPGh96DKvEcmb0NLMxEjmNlVQ5gO0H811se1fjktRm?=
+ =?us-ascii?Q?Yu4SkW8NnQnXkwZzyYjBQDWW+Ks3qRR6g6BPgHW0lu/UPN9gUISHIbRK0UjT?=
+ =?us-ascii?Q?Rf4oAHOtDB2qOfXRDmfMtCUq6RjSCfM/eZ3hUA/a6fEXm5FSMvU2GfTTZi39?=
+ =?us-ascii?Q?p/zpLihT9QvpNRpNBantvdsonUsSCbACcW2XDjrC/o9Tx/9l7u9yDsXLAkRl?=
+ =?us-ascii?Q?4RbDPe1tWRCco1m9ZQXW1PknQ9pz24sPqEIL35UN3SAkeyEjeGEEeL+wisYj?=
+ =?us-ascii?Q?8kZC3ISPp6pMvZEiE/opoHhgTPt5em741eJ5wfVxEJW1/xGqP/hP8g/cTIX5?=
+ =?us-ascii?Q?R2oMRBiAOsB2A/1X1H11NWmP?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nGBUkoyMdTFaX03HFcdS2k5kcanzAGnopkMKXYbl4xlGMNHATEicraAF5G71?=
+ =?us-ascii?Q?znJWyK5REU5uBLveQwGIw8Z0HLEuc4IRrXUsQo1ItIWI+E44ejJBTHbIiCbJ?=
+ =?us-ascii?Q?YkPQ42019CafuYAXzQWnXx75hFhZEVda2iy6yHTXiKE07wpacAXBJf+oHEF0?=
+ =?us-ascii?Q?MuoOjTjPCiUE/aZ7ZE+MEsh+iIYN90d2XodhOODI9bV3FKOhRjWPtwzbf8Zv?=
+ =?us-ascii?Q?IdD1JvO55Sgn9TT65bK6vF8L4y/wfszI54++/PlyJCz0FBMxJTLizqEXMfBy?=
+ =?us-ascii?Q?5ig4QjlQqZDTygqeBeHu+oc4OLMbUDsK4ERwLomSKoYvYB9azpo/qgHLyruZ?=
+ =?us-ascii?Q?BbvEGv2iMf/G/HNM+pA6kunKlfn402+vAyPVhEtbRVN2W1y/lX/CPlI/g92y?=
+ =?us-ascii?Q?j9wBGFn+2GwTwZJdm9a/oe/lv+MdmKSV3ewGe54/OIIWK4T5VmQRPjiBEwGj?=
+ =?us-ascii?Q?/8SqFH1imHgjXH/IA6hkWvzAWBzRBcDsOIL5Gup73Yf5EIeEYpd1C5v1e4yd?=
+ =?us-ascii?Q?qIijDeRm2Mj1uRUR3gJbjV71FSuXHXtraXqKMEKctK5jjW7bTsBPeIYEfrTt?=
+ =?us-ascii?Q?3N85NvQc94THwT0lTU6T8q3xHgN07oCIO/2JhFxRDjCGl3QE25cPlA1niP2s?=
+ =?us-ascii?Q?HglRrrmYS4C15FcG4FlRlpWNgy5nDDsvuVqFQ2QGKNpbBu+aLFW2CoiiLNUP?=
+ =?us-ascii?Q?OYUw4Nw3iIT8qFhuwSEbS41oHWRN2xGZ1c3rL7XrznyOrJbENy1C4OYcDeLa?=
+ =?us-ascii?Q?s9a3YKoiy52ZUBxbJh2zPqkrZKZM26OCetkRT0OScAQ38NIumkDSulcms1wv?=
+ =?us-ascii?Q?2Wg99CW5GQX9BoHK3INW/3BUjCPmZ5DoUMRxMoUWHUpCNYAR8u5tvk+/58s1?=
+ =?us-ascii?Q?B+uw3lx4c7kHOyxGg7ASG1CjhvKTCNAVLGE7ezOoeBgS0vN+khGROV7S0ceR?=
+ =?us-ascii?Q?2ZP16vjiuzMB+1xgwzSoqYPAx2aNsRpLQhBq35EwNos9iGUDIh2NL1ZwZw27?=
+ =?us-ascii?Q?TsQ4+2hwYIydc96vBaPJVIo8eOkLYI8ZkyprCWNMJqOLthqCgsTgozvzXzSd?=
+ =?us-ascii?Q?ep+cU/7f4RzHQPQVIbr6xRBOBoKpeIewZR5p7Syv076EZvc8THQLH7WjqobE?=
+ =?us-ascii?Q?QSorifQW1zpSeUGTKAbirS1lto9EnRwunzRXAZ5jWOOoLjNpQgEgnRb2iLRA?=
+ =?us-ascii?Q?9MrHvzt/wTjvwrjfi8NgKppNbYROvgCqcnQvrxCHZe0Kmvd5hh4BwO7B5MBp?=
+ =?us-ascii?Q?AVvSNEZ4MAQuQq7FIdud6CZ3SDRj8Ike9GRQJagW0uTBlf2unA+ohETb2aSG?=
+ =?us-ascii?Q?Feu+sD8NxZoBZGfbLOL6Wj2W7xqaENR9otJZwll8BG8zaUYwnd9Kd67I9k9L?=
+ =?us-ascii?Q?veOwkxzXbKXSkjEp4P5Sxdfb1REX+SkDv8CF6WGCm+af3UGuDYm1qaM1xDOD?=
+ =?us-ascii?Q?lDH86wEz48ZYt049ZzCqZxW2NKLeRPbgO6MAUFPyWDeyVRJ6PNepnp6oeQpw?=
+ =?us-ascii?Q?jmEEhzSz+SrntsUn7z2MWN6m/zc70c3f9f6h1dQmS4DvLMOPrq+i98NzGzu+?=
+ =?us-ascii?Q?yqUtLyAOb3ttJZ18vLhw6lsOBguxK8hn9DWFI4WOFSKqwuvPjGagBQDeZ+G1?=
+ =?us-ascii?Q?qw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fa529ec-f30d-48d0-5fa1-08dcf507b805
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 15:14:28.2604
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zakw20X3VwbicLZ5nUnmY9Hby+rJolPNGAMRjQ78gK+eQv8uYuA1ARuUJXAWxmtxalHOSK4dNbtN07J5Ta8G7CA1ZKlbs+aDkUYWIBpGk50=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4526
+X-OriginatorOrg: intel.com
 
-On Fri, 25 Oct 2024 11:16:55 +0100
-Alejandro Lucero Palau <alucerop@amd.com> wrote:
+Andy Shevchenko wrote:
+[..]
+> > > but if you want to stick with your variant some improvements can be done:
+> > > 
+> > > #define for_each_resource_XXX(_root, _p)				\
+> > > 	for (typeof(_root) __root = (_root), __p = _p = __root->child;	\
+> > > 	     __p && _p; _p = next_resource_XXX(__root, _p))
+> > > 
+> > > 
+> > > 1) no need to have local variable in parentheses;
+> > > 2) no need to have iterator in parentheses, otherwise it would be crazy code
+> > > that has put something really wrong there and still expect the thing to work.
+> > 
+> > Why not:
+> > 
+> > #define for_each_resource_XXX(_root, _p)				\
+> > 	for (typeof(_root) __root = (_root), __p = _p = __root->child;	\
+> > 	     _p; _p = next_resource_XXX(__root, _p))
+> > 
+> > The __p is only to allow for _p to be initialized in the first statement
+> > without causing a new "_p" shadow to be declared.
+> 
+> If people think this would be better than the existing patterns, okay. fine.
 
-> On 10/17/24 17:52, alejandro.lucero-palau@amd.com wrote:
-> > From: Alejandro Lucero <alucerop@amd.com>
-> >
-> > During CXL device initialization supported capabilities by the device
-> > are discovered. Type3 and Type2 devices have different mandatory
-> > capabilities and a Type2 expects a specific set including optional
-> > capabilities.
-> >
-> > Add a function for checking expected capabilities against those found
-> > during initialization.
-> >
-> > Rely on this function for validating capabilities instead of when CXL
-> > regs are probed.
-> >
-> > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> > ---
-> >   drivers/cxl/core/pci.c  | 14 ++++++++++++++
-> >   drivers/cxl/core/regs.c |  9 ---------
-> >   drivers/cxl/pci.c       | 17 +++++++++++++++++
-> >   include/linux/cxl/cxl.h |  3 +++
-> >   4 files changed, 34 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index 3d6564dbda57..fa2a5e216dc3 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -8,6 +8,7 @@
-> >   #include <linux/pci-doe.h>
-> >   #include <linux/aer.h>
-> >   #include <linux/cxl/pci.h>
-> > +#include <linux/cxl/cxl.h>
-> >   #include <cxlpci.h>
-> >   #include <cxlmem.h>
-> >   #include <cxl.h>
-> > @@ -1077,3 +1078,16 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
-> >   				     __cxl_endpoint_decoder_reset_detected);
-> >   }
-> >   EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-> > +
-> > +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds, unsigned long *expected_caps,
-> > +			unsigned long *current_caps)
-> > +{
-> > +	if (current_caps)
-> > +		bitmap_copy(current_caps, cxlds->capabilities, CXL_MAX_CAPS);
-> > +
-> > +	dev_dbg(cxlds->dev, "Checking cxlds caps 0x%08lx vs expected caps 0x%08lx\n",
-> > +		*cxlds->capabilities, *expected_caps);
-> > +
-> > +	return bitmap_equal(cxlds->capabilities, expected_caps, CXL_MAX_CAPS);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_pci_check_caps, CXL);
-> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> > index 9d63a2adfd42..6fbc5c57149e 100644
-> > --- a/drivers/cxl/core/regs.c
-> > +++ b/drivers/cxl/core/regs.c
-> > @@ -444,15 +444,6 @@ static int cxl_probe_regs(struct cxl_register_map *map, unsigned long *caps)
-> >   	case CXL_REGLOC_RBI_MEMDEV:
-> >   		dev_map = &map->device_map;
-> >   		cxl_probe_device_regs(host, base, dev_map, caps);
-> > -		if (!dev_map->status.valid || !dev_map->mbox.valid ||
-> > -		    !dev_map->memdev.valid) {
-> > -			dev_err(host, "registers not found: %s%s%s\n",
-> > -				!dev_map->status.valid ? "status " : "",
-> > -				!dev_map->mbox.valid ? "mbox " : "",
-> > -				!dev_map->memdev.valid ? "memdev " : "");
-> > -			return -ENXIO;
-> > -		}
-> > -
-> >   		dev_dbg(host, "Probing device registers...\n");
-> >   		break;
-> >   	default:
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 6cd7ab117f80..89c8ac1a61fd 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -792,6 +792,8 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >   {
-> >   	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> > +	DECLARE_BITMAP(expected, CXL_MAX_CAPS);
-> > +	DECLARE_BITMAP(found, CXL_MAX_CAPS);
-> >   	struct cxl_memdev_state *mds;
-> >   	struct cxl_dev_state *cxlds;
-> >   	struct cxl_register_map map;
-> > @@ -853,6 +855,21 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >   	if (rc)
-> >   		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
-> >   
-> > +	bitmap_clear(expected, 0, BITS_PER_TYPE(unsigned long));
-> > +
-> > +	/* These are the mandatory capabilities for a Type3 device */
-> > +	bitmap_set(expected, CXL_DEV_CAP_HDM, 1);
-> > +	bitmap_set(expected, CXL_DEV_CAP_DEV_STATUS, 1);
-> > +	bitmap_set(expected, CXL_DEV_CAP_MAILBOX_PRIMARY, 1);
-> > +	bitmap_set(expected, CXL_DEV_CAP_DEV_STATUS, 1);
-> > +
-> > +	if (!cxl_pci_check_caps(cxlds, expected, found)) {
-> > +		dev_err(&pdev->dev,
-> > +			"Expected capabilities not matching with found capabilities: (%08lx - %08lx)\n",
-> > +			*expected, *found);
-> > +		return -ENXIO;
-> > +	}
-> > +  
-> 
-> 
-> This is wrong since a Type3 could have more caps than the mandatory 
-> ones. I will change the check for at least the mandatory ones being 
-> there, and do not fail if they are.
-> 
-> I guess a dev_dbg showing always the found versus the expected ones 
-> would not harm, so adding that as well in v5.
+I think this case is different than the existing patterns in that the
+iterator variable needs to be initiatlized from a declared variable, and
+as Ying said, my proposal is busted.
 
-I'd also make it clear that we only check for caps that are actually
-used by Linux drivers. I don't fancy having to fix emulation up to support
-something random that no software cares about.  Will get there
-eventually but it's not a priority.
-
-Jonathan
-
-> 
-> 
-> >   	rc = cxl_await_media_ready(cxlds);
-> >   	if (rc == 0)
-> >   		cxlds->media_ready = true;
-> > diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
-> > index 4a4f75a86018..78653fa4daa0 100644
-> > --- a/include/linux/cxl/cxl.h
-> > +++ b/include/linux/cxl/cxl.h
-> > @@ -49,4 +49,7 @@ void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
-> >   void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
-> >   int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
-> >   		     enum cxl_resource);
-> > +bool cxl_pci_check_caps(struct cxl_dev_state *cxlds,
-> > +			unsigned long *expected_caps,
-> > +			unsigned long *current_caps);
-> >   #endif  
-> 
-
+To your point though, lets add a comment on why this macro is a bit
+different to avoid people like me making bad cleanup suggestions.
