@@ -1,253 +1,211 @@
-Received: from esa13.fujitsucc.c3s2.iphmx.com (esa13.fujitsucc.c3s2.iphmx.com [68.232.156.96])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95E0217F37
-	for <linux-cxl@vger.kernel.org>; Sat, 26 Oct 2024 01:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AA38BEE
+	for <linux-cxl@vger.kernel.org>; Sat, 26 Oct 2024 02:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729905011; cv=fail; b=dQaR9CHjsQjRhWYLIfBjA+XWavK+Y3rKVKcm0/vzjFG2B603YVXtHZ4/NBB+SOtA5MK+e6GHk9EsMbh0FvtkvrUqAmhUb0XR4SVRC7BL+B6cdYqLKadC4CmqX6jire827qNSyQxq6fXp+wlZSltYtJQiH7SuNC/n3M72kMiqHyY=
+	t=1729911316; cv=fail; b=KPqOsZPykbZvRYKnFKrmm20rWEQBkXCGNF7cFBWnzIcHIuWSnkAOjP9aPSnu6N6EV25mm+SePQsWTGkeLu0PYQ/vz9J8FQFvw+IrFZ8ZoFZflnK5GeDc5cAyB5DjbpqWfFz+l5sh9ylBIFHGoibzxVcGH3tmzEWkWw9afIE8INs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729905011; c=relaxed/simple;
-	bh=6tWK0AoLg0P5Ahx9DaBErBroWeKHy+D6XFrxXPUSE0w=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=e0tLeBDDM3ZpqwW3fXTiaV7U33TAHG2/He/jdGAsh/4DVmVXPuPpxz3GSd6IbGihtwa12jCj6PfaIOAWI2GNg+JyFwvcGkbuhR7vJ13e91uKdMuzBIjK+9bV/Nr24FZxyITsowWGxz3H55YlVVuyq4KebYMxQ5952BTgxeTxsls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=BaKRkXbk; arc=fail smtp.client-ip=68.232.156.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1729911316; c=relaxed/simple;
+	bh=opk32jT9+TzY2nkArv7MyX3Wnz3ZNN1YecORJf52YYs=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gAP+vp2ALjmEnneQoAcVkgePfg+znHAzB4CasPyt5ISxx6GY+/9ZKDh1u5I8bWU5jMhUHQYBOmtj7tSqMDfCPyHZq5t4aY1A1x3DAzvM70NuanP7BMie1hDiq1qrrZaWSKsK271uC2C6iY6aDMntjvnHO2NLLN8xgFqTLaqCA2w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cs49xEZl; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="BaKRkXbk"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1729905008; x=1761441008;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=6tWK0AoLg0P5Ahx9DaBErBroWeKHy+D6XFrxXPUSE0w=;
-  b=BaKRkXbkqMez5vOCrJ7M1+HTw2soHH8+1rxmoV2JzTHMkqr6Kppp7UX5
-   yA+QzkixyH7D7NW3hgPXYK4rXh15CuPVwTLrq7sWqcvb7UucsoySXrI9b
-   DdkzZHkCGgsswX0GhhH5soCT9Vjdu2PXRn5AjLYME8btg7QCoYrMg1M0H
-   rgKX++0JBJpDkN9qwySPEKf8RShep5EP8r15CGb7gf3JHYsmFkShYcKjj
-   wlVR+YYwTq9eJz67P8CeVDDDFDFyURLmff/VO3pVI22j6mZ0MHEE2gB7L
-   lMflqykXES6YOFiIX9BACiBiCmyv4HVSDPB2/0J6ocxPoc5qKrYzpxXAq
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cs49xEZl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729911314; x=1761447314;
+  h=date:from:to:subject:message-id:references:in-reply-to:
+   mime-version;
+  bh=opk32jT9+TzY2nkArv7MyX3Wnz3ZNN1YecORJf52YYs=;
+  b=cs49xEZlMLeKMSIPg+7+b7CG22l4f5jFUzhRvkFpOwEeiyol/OkSyEjS
+   cJTUTuApqjf+LH3cWwgy1VWeN1iyGgqVuhMSaIDs0JB0PuoNQ9+2yUcnT
+   QV/iy8B22uQZtW8xEOPmAGJfpNulfTcMq48JZTfL5nceQgsiMfMdWN6Qn
+   y++3gf2OtnZsrTkiZTf8KZMrhmtryXht5XLMgMmZ5Tak26u8PebDvlMtA
+   ueRY6FFGv4VDteqcMMSIE0ZFEZKi9LAVvzgySNRTdhm0TeqtxqVVreuQY
+   H+0HIA428WskEn+2iKujX7nxHfp6DfgD/BOErh9D1wprViKEAVRle4IhS
    g==;
-X-CSE-ConnectionGUID: W+dpS2e2T9i1HZjaC31p6A==
-X-CSE-MsgGUID: WuD1UUE8RKaPQlLQeiXPHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="134419212"
-X-IronPort-AV: E=Sophos;i="6.11,233,1725289200"; 
-   d="scan'208";a="134419212"
-Received: from mail-japanwestazlp17011026.outbound.protection.outlook.com (HELO OS0P286CU010.outbound.protection.outlook.com) ([40.93.130.26])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2024 10:09:58 +0900
+X-CSE-ConnectionGUID: shX9KUr1TQCvxCrtq2VC4A==
+X-CSE-MsgGUID: CnsY/yqQRbW3zZtgjrPp8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="55002463"
+X-IronPort-AV: E=Sophos;i="6.11,233,1725346800"; 
+   d="scan'208";a="55002463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 19:55:14 -0700
+X-CSE-ConnectionGUID: JlN2lB9MSIOmZT5ZJjaNiQ==
+X-CSE-MsgGUID: rr2Fwcg2TvK8OF53s5D+uA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,233,1725346800"; 
+   d="scan'208";a="81239026"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Oct 2024 19:55:14 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 25 Oct 2024 19:55:13 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 25 Oct 2024 19:55:13 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.48) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 25 Oct 2024 19:55:12 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ivYNCs8Gdw7lqOBN5wi2+SVcKjklG3BBrlqwXVehEkQV2jy/n3HTBY64F5pGgdJ8SMzy1lxa+3Vk+/MW5+Tux1oVuYr8s9XDnIGW4SKC5nOWG+dMw1iI7W/h27C657YBamF0UVQvbKaf952TgzK2xNxjXpIQV7dYiLGOf6lLkuSbxn2IV1xtUYRK4ghdxAUY6BQy+i/Ufb7x51MTELdZSKujOGq4rGh/o+UyRaZY6DSs1jR3F0/t+zpK4eFI/YatTzKTAdYD36p2b2xWlDMKoAX3vLCcji/XMAttrW20nBNy67M3sHxhrh/AvbJ1pRfdtW18gt0V4j28Md/KjBrOVw==
+ b=XHZxt3Qy0JgKyhmcn/s/xX7CRd1mm8VbxF644PqUqJHK0FB/QLxLM6oNWtgDx4QJNE/wJt4KMHb5kbg/6NW5wD7org937jxFekP+oSDwKOV8uXRAWq9yZgBoPqsjHvNBW5elXb0WJs5kHfQYvl67MoMnQLGORhkqvdGftuTbHgcbjwMjYxMoiec0cRf6sdZ4Pc3HCrH4Wo3AGtYn2VnLkmlHKN7a5rr36NH4uSeCUIQOOQamxMRAZRV02N+a/S8r/b3SC1Y3cWOXA886eJBBRw9xCUS6ER0Dmxbb76W+uXCYGMPoTz74/G7dPvRcHY+1/2PMMLyKKJ3sxzA4+tHEgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pA9/0ulC11mhjKW9LnYHbIUUfQc4QyMPF9D6/KgbodE=;
- b=Lc1IYdWLTuxl8IyYsYNa/ikM3SHpzKhQwT3zkY0CXBA6SG0KpT9WxSaRYExPANkWviINL9UPjB+aJVWN4OmYI2JHcf0r7vdoTrf3Q5fnUJYQzPU5IU+MB0FJaQHO1YD+YRfTnCn6xGVSXR6z/fvM0HK5VM0AWkJoFJsLZMuLLEzc4xzbTtD1TzlBNnB6HeiUmAKgGYfJJE+MJf7Z7QOEWkR6ABiWSZvCNVLqH+acEjL6qvNlAIMOgrWg8Kh5Q9VA+H2ceoXrr3Lq/NQ5b5kDTWr0VHX62NMRyX+BzQEMJ3Ufr8KiQR6eKhPWt2wD4THoHL+8AH8o0Uo5jRtwhksW5Q==
+ bh=2augCXD9awVt9sKfaO+2acGip0mXuo3KyzpakLJsPg4=;
+ b=IB1Qk/s6SAFqddJqb6ESLOs97LcxtFvdsEvqBKHOQnW4fmhaDiTPl/GwGjtY4eVZJOgi4Uj1PuAE4yETPMieuVM13vg6UNPW7PZJOVZL8GKEKtE797dT55GQROMAmfGIeaGjJFtLccDtgRXY9EaxLYokd7OWFJN7RGs5qsfLtOjd2iwJZ4bXqM1deDtvDavupQw0G4MvzEyoe57hg0U5Z26e0kff7yqSsY9pFErEYXr978miWRA82RqqpI/K2S/0DxKCseZ0HUviLazkKFIQOHLsBpcaOxqbmjF/Vp7ULP48eLU9ZUaEan8pVsb4QTUiNH2c/U55nmF4EBqVMnI0Uw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from TYRPR01MB12335.jpnprd01.prod.outlook.com
- (2603:1096:405:105::12) by OS3PR01MB9498.jpnprd01.prod.outlook.com
- (2603:1096:604:1c9::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.17; Sat, 26 Oct
- 2024 01:09:55 +0000
-Received: from TYRPR01MB12335.jpnprd01.prod.outlook.com
- ([fe80::18b4:fae4:bd97:f2b7]) by TYRPR01MB12335.jpnprd01.prod.outlook.com
- ([fe80::18b4:fae4:bd97:f2b7%3]) with mapi id 15.20.8093.021; Sat, 26 Oct 2024
- 01:09:55 +0000
-From: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-To: 'Dan Williams' <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB6772.namprd11.prod.outlook.com (2603:10b6:510:1b6::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.20; Sat, 26 Oct
+ 2024 02:55:10 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8093.018; Sat, 26 Oct 2024
+ 02:55:10 +0000
+Date: Fri, 25 Oct 2024 19:55:08 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, 'Dan Williams'
+	<dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
 	<linux-cxl@vger.kernel.org>
 Subject: RE: Why does cxl zero-label command fail on my QEMU CXL environment?
-Thread-Topic: Why does cxl zero-label command fail on my QEMU CXL environment?
-Thread-Index: Adsjc7cNDaeOWzIhTh2tIzh5mef73ADswXqAAAZNTrA=
-Date: Sat, 26 Oct 2024 01:09:54 +0000
-Message-ID:
- <TYRPR01MB12335AAF060E579DB251E4D6B90482@TYRPR01MB12335.jpnprd01.prod.outlook.com>
-References:
- <TYRPR01MB123355935A2E90A320934E3ED90432@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+Message-ID: <671c5a0c9bf80_4bc22945a@dwillia2-xfh.jf.intel.com.notmuch>
+References: <TYRPR01MB123355935A2E90A320934E3ED90432@TYRPR01MB12335.jpnprd01.prod.outlook.com>
  <671c10af9a6f2_10e5929496@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <671c10af9a6f2_10e5929496@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=85b32242-5ff9-4ad7-94c2-88631cc510b1;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2024-10-26T00:42:33Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-x-shieldmailcheckerpolicyversion: FJ-ISEC-20181130-VDI-enc
-x-shieldmailcheckermailid: d47fb71e5c1a44d0a099c21d9311b521
-x-securitypolicycheck: OK by SHieldMailChecker v2.6.2
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYRPR01MB12335:EE_|OS3PR01MB9498:EE_
-x-ms-office365-filtering-correlation-id: 37d3cc37-0fb7-42e9-c9b7-08dcf55ae67c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|1580799027|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?SFlNTEhpVWZVQkJDekhTdEhHbXNQWGowdENHTExTS01PWDRDVVliU1oy?=
- =?iso-2022-jp?B?RjM0bXBCS2FsdENxSis1ODBQVjdFUmZVUjdsUDg5YytUbFc2Z1E4RG1E?=
- =?iso-2022-jp?B?eTlWQ01wQXhPaXpYYjE1RVdvQ1VRT0MvK1F6ZkVGSHBCbDk3WEw3amZC?=
- =?iso-2022-jp?B?c25qUXptTDNjVDFkSkhYNXhpUmZOSTdMdGU1U0lVMHc1TVZwV1YzN2R5?=
- =?iso-2022-jp?B?YjlxeCt6WVZqQkVldkIyT2xPLzdRbUI4emxtM3FHQnZmRDBFRkt5SUgr?=
- =?iso-2022-jp?B?TlBKVnF1SmpRZkJxTFgxZWcyNFNYazNtN3o2Z01JVDNMM3U3bmRWcU9T?=
- =?iso-2022-jp?B?Y0dwRWdSWUNTdGMvd1NJS3VuVUlBTGRvcVpVRVNwclJqS1NqQ01PVGZw?=
- =?iso-2022-jp?B?dVlLTCtMVlRBa3lhQTQwZFBqMHdqSUxaRFRPWlpSNC9TQmVtcVVXSWRS?=
- =?iso-2022-jp?B?QWdiT3Y0Zis0T0pmRzVveThsV2pUeHQ5WGVYQ0dWenFybERDTkppUk1m?=
- =?iso-2022-jp?B?dHZkbUFwNDVHd1VqT05takJ1dWtKWkZpVzdMbkVjVWtPaFA5ZDVmQVk3?=
- =?iso-2022-jp?B?UStIbThVYUxMZHRlOWF6KzkvV0pHaE9HeGRQM01zTlk2clplNkFlVFov?=
- =?iso-2022-jp?B?NnNBUXNMUGpBV1hvWGRzeWxYZHgwSysra1RWZUZqQ0ljZHJrZWhXQlk4?=
- =?iso-2022-jp?B?WHUyVmhyRVp4Y1pUNTI3MUhYb3pWTU96cXhLeUpHa3VKZC9KNFpNZnVE?=
- =?iso-2022-jp?B?Y0lpbjVpZXJYczA4d0w3Z3JraG1OMWl4YzNKeTJVclpJWGRRcld3NmpK?=
- =?iso-2022-jp?B?Umd1REJRRGFrRmd3aGljVjRwY2F3R0RBQWs3VXBrUHhhYlNFQWdNZm5N?=
- =?iso-2022-jp?B?UlZoZ29iU3dkdUdmVHhFdnU0ek5oR0VkTEFYdGFNVzZSMEE1d3M3b1l6?=
- =?iso-2022-jp?B?NXZmZHA1L3Z3dzJGc0t3R0lzSitJSUROSnc3d1hnbW5xeGhnTnVpbXRG?=
- =?iso-2022-jp?B?TCtiTjFHL0Q3VFUxTnFtTlh3anRBdVdqakZMZHJ6MkVNblhRL3dLaWlY?=
- =?iso-2022-jp?B?dko1NlZJbVAxMzFaN1FmeFNMbit4U3huckxlN3pFc0hKVzhNT0czVDBO?=
- =?iso-2022-jp?B?bGZRSWZDeVFnSXRWc1VkVkR3ZjBTVmEwV2pZWDltL1NwZjd6d2NBNUhz?=
- =?iso-2022-jp?B?NkZpQ0ZvZzZrNHF3bTNESzJCWkdtSHIyUHBCTUxtenpkZnFZczZNbHhp?=
- =?iso-2022-jp?B?N2VUT2Rsc2VVZFJRL2Flb0tjbUIxYlRLU0ZydElwKzdJMTNnWjE1TlJY?=
- =?iso-2022-jp?B?RlhBaCtlb3RYbldBVkxkYy9CekJudktGNXcrbURlTHNFNVY3aUovSHVp?=
- =?iso-2022-jp?B?Y05WamZhanAydW0vL3RlNG1vUCtRZnhLcDA2VXN2d3ljNkZ2QW9BSnl3?=
- =?iso-2022-jp?B?M0pRWmJzTFliUmFpUTlmeFg0dWJoRUVyWGRGc1BTUGJJcnB6NWxqRXN2?=
- =?iso-2022-jp?B?MzJUd3VJZWVQR2dzTjlrT3dLWVk2UTNKNTZZcFU4VXdOWGJocG9XMEo0?=
- =?iso-2022-jp?B?M0tOc3E0K1BwWlFFbUhnYkw2bWM0YU5iNzRXYWYxY1p0NkF6ZWg4dzZD?=
- =?iso-2022-jp?B?Q1ZFam1xbW4wNHNnU0VBMGpCYWdyMHNjSXFxd1B1cUcwM2JZMERIdW5i?=
- =?iso-2022-jp?B?SmRSbW1aaVVVODZMb1E3bmtvaXhUdWtML2RxK0Nyd3lOdW1PM1cvaEw1?=
- =?iso-2022-jp?B?TzRzMXRldGdqSkx5L0xNRVBzMXlsZHc0N0RLK04ybEU1MTV5V00vb2ZG?=
- =?iso-2022-jp?B?YmRhVlI4ZXNJMDNOU1UrOEs0cGplcmN6YjhKeTN3TmFUbHlFenZjYzF4?=
- =?iso-2022-jp?B?OTFBYVVzNTVLaFgyRmh6NTlPTURjaXZFQmxuWE9VTXRQNlRKV2o4aVo0?=
- =?iso-2022-jp?B?NHhZbnVVQkd3MW80NUM2U2lKNkRGOXJIYVJ3dEJ2TlcrTXNwNXEycDVl?=
- =?iso-2022-jp?B?SC9vMWxaZytPam9uYlhkL1R4RWkybHRuVGNZQ3lZY2Uwank1cDA3dEs4?=
- =?iso-2022-jp?B?NEE9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYRPR01MB12335.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(1580799027)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?c2hFY0x0UUkyVlhEeWtiR0pwNWhkQloyMHZOcXprb1NJMlYwYm1ZV25O?=
- =?iso-2022-jp?B?RDN3UnRHVCtwY2xQU2J4cEpWSHp6RW8vRU1yaEwxTEl2U25VdGpONWFu?=
- =?iso-2022-jp?B?ZWoyZzJYWlZCYXRwNlFPQjJKTHRrVk1rcE8wRTJjdmFMK25NMFlUMTZz?=
- =?iso-2022-jp?B?bnVpbHNWT2pLeHhMSkxEWS9iVElQM1pSWGEvRTVWNERmZ2x3dHQyem1T?=
- =?iso-2022-jp?B?K1NibDgwL2VhUkZSdk1qenZmTVNUSjlSRzJYMmZWVWVMWFBVcXpmSk1U?=
- =?iso-2022-jp?B?SzRySjhkc2F2aGlJdjV1TlhreXRyam1HWjV5NFJ0MmhCbWFaMjZQSldV?=
- =?iso-2022-jp?B?ckV6MTFEOWRzWVR4ZldoM2NBNWRERDBjcUp2bzVJZ01YaEczNENPWld1?=
- =?iso-2022-jp?B?L2lOekxCVDB2TnZHVSszcXRwbXNSRnlnb0ZGWlh2NTh4a1dvQlkxSTdO?=
- =?iso-2022-jp?B?ZHlzNE1veDhyS2ltMGFSemxCaCtUVUVmc3V5ZEdneVc5Rnh4ZlpmRjlq?=
- =?iso-2022-jp?B?a3JFYkNxbEExdTVZN3hQVTE0UXVPWEVoOTFjalhmMVZqdnlIVlE4RkQy?=
- =?iso-2022-jp?B?THlaVEJRYmNvem1QT3Q0L21qSDV0d3RYdDg2TkRpZVUvYlVrOWZ6MHhj?=
- =?iso-2022-jp?B?aUZkQVZGMXJWK3RrbnlQWkVuM3BYTDJxQzZSVmxXbG42STcyS0d0dlRH?=
- =?iso-2022-jp?B?cnpMK3NoSVNnQnNteFJxVS9jWmJPMjZpWUo2ZG84UEo5djZ4bW4rbFRN?=
- =?iso-2022-jp?B?U3RsbGRoaTNpQVN3SCtxMlc2bFI1dXR0UVdtcWNPMmM3eEJtVTRxMktU?=
- =?iso-2022-jp?B?d1Q3SHFZenVxN2VWczVzU3VJanZmQ2FpZERlM3RQRWVEazU0UDl1eExD?=
- =?iso-2022-jp?B?ejN4bFk3dkZRL1Q5VWxuUWF4SmViNXorSVZBTlZGSzBjM3NFbUVQNGcy?=
- =?iso-2022-jp?B?NnRibkZscnJKYUt1a3NoSHlSTDA5QjdIRkNkUlM3eG1IcEt2ZGRxUVJK?=
- =?iso-2022-jp?B?TTZuSVNPVDhjanlLM3BoSFFCUnlQMU9rZmdmd25Qc2g5V0JLbXUrUklG?=
- =?iso-2022-jp?B?KzA3MldzTDBYMDMyaE5uTGovMTRsenh0U0puNWU4Zm50Mk9PYUJ3MnZS?=
- =?iso-2022-jp?B?TUVhdjNKbkFZd0djZVJMUEUxUnczWmpReHhXSmxHUzNhVHJvSi9QZmt3?=
- =?iso-2022-jp?B?enc1cTNSWnpFYnZVdE9HREs0SlNZUEJ5dUowdTY4c09ZZ0xOdFZCODU1?=
- =?iso-2022-jp?B?UVR3azhnYUJVN1YrQmlFZmNlZlIzc2tmcnIwTjhxd2ZOU3VPZHhlNGw2?=
- =?iso-2022-jp?B?NzN0cDZVMGxWS2RvUDNDSGd4RXZLR0wwbVMyMkpJSHpFTVRnWTNVTnJw?=
- =?iso-2022-jp?B?MDNhU1llUWFWYlBFcjJvb1BTeWgzWnNMT3MvY05rYW1SaXJmOTBzZ2hR?=
- =?iso-2022-jp?B?dlhIamxmVkhJTmt4UENrZTlVWWZZQTExVmF1Y2N3bXlvRmVLSnJTUStu?=
- =?iso-2022-jp?B?V3hLQmxsTmVxaWVSOWRnN2l5OFIxZ285d0U0SHNvMXJMSS94VTZLVkZt?=
- =?iso-2022-jp?B?dVNpQ1ZxTjRXdThIVTEwSjlXSkFxNkxKemdPckM1Z0lybkdZaWdNY01t?=
- =?iso-2022-jp?B?a3V2R2dPMEVCc2Jac3FwdzZKMUwxWk1iQTVETjF4d3VWSlkzY1k0ZEVv?=
- =?iso-2022-jp?B?YmgycVc4VnpvSnA2M2VUV3QrenZWRUk1aWpqQ1YwMWVYWjJKakRlRUtM?=
- =?iso-2022-jp?B?TVN0VzFUQzFTNVp0ZENVR2pmK2xpOWUwcnY1WEkxVUk3eUhWZVJJNmJm?=
- =?iso-2022-jp?B?R1Jka0tGdDRodVNlN296VXNCUlkvQTZadmxlak9mNE9JTFhWNEFGVUN4?=
- =?iso-2022-jp?B?cVFMWURBZGZ0WTVpcjFPVU51WHlld3RJVVJXSjlpK2VrY21jZWtsRGJ4?=
- =?iso-2022-jp?B?MTZTalBqSko2WjlYc1dFcTZyVzcwTXBUNVYrbjY5NmRMSVpwUmpST3d5?=
- =?iso-2022-jp?B?NWRYNzQxaXdZTUQra0FZRTA0VElQRndZakNZWnFyOUcyK3dDN29Dei9U?=
- =?iso-2022-jp?B?bWhFRnRvQnc5My9YK3NNMkd0TnJ6SnJWSVBsK0lhRnYyb1BseDN5UUxB?=
- =?iso-2022-jp?B?ejUvNHdObks2TWhQUkpNMVNmUFR2VkI2Q0dPWisxN3F3ZTNhVzlCUDVx?=
- =?iso-2022-jp?B?VExSekRuV3Avd2JoSE9lZ05pRW8rdHR5MGplWGszdlFOcGJQSWM0b0c2?=
- =?iso-2022-jp?B?QWduWlg4cVNCT2hVQ3greVFQWlUzZmhVVGUydXJudGd3aVZ1Rk5BY3BU?=
- =?iso-2022-jp?B?U3VTLw==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ <TYRPR01MB12335AAF060E579DB251E4D6B90482@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <TYRPR01MB12335AAF060E579DB251E4D6B90482@TYRPR01MB12335.jpnprd01.prod.outlook.com>
+X-ClientProxiedBy: MW4P223CA0009.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::14) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	D69ILwrZTDDg3ljJpzI1njj6E64psjfmtgZqqWFpHhVnuNGzs4/f+Cf/Bgi8sCRHy8dvXXn2rHRRiSDoB6GXl28UhMB8VxhPGyvLfqKwrHIzDbLqu4Z0e+jBICHrdZSQnIsR+3RkvTCD0Pbq+DXzy5YhwDjI0qEXoDSSJJzVEKYwxDhKdzK3/Mi7SXrCVBKGNB9CrSCkOhhLgu5RYeBIuu1tged+NfM1reF8t329Oy0xbYMHcQRINoTcPitl1vtXcXqtrnhgmYB0ac8xmRe72TG2QyjlnmHNmedEaCBiu7emdnIk2fCadFY2Z42ohxOnelI0rqz4LuTXZh0IObNwFfIa3IE53FoVRSqZq9e6sp2YCDiXLgE5r+6YNONJSFCSyvReJ8gogdj4b+JLcTiECUNhVaMXRwDnR+Xg2tHO5HmZUfzqfxrYM4AXy4TSlCyc//9fZ46mLDqB54O6qKnbJOye+KV+IyulYj6JpC713YbE75UYL6r3OvgslfUMnXPTPHy+F6wUoznKgivv6noV+UHm7dclaT104DAdMFts+j6aNMnIy4H6gmj+xed6NPfvmAJWGN0YtlzM0052PLUVJu6niRLFrnaSfuhkcUG1XfOChhqmoqekF6Jesn/8Kk+o
-X-OriginatorOrg: fujitsu.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6772:EE_
+X-MS-Office365-Filtering-Correlation-Id: f05d82c5-c9a6-4c61-f641-08dcf5699b2f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?LKbPiiV4V3osjb7eH8bTSf98gddXm+CRSKWxTUUyDi+QXMcLYwPpxkl+80vG?=
+ =?us-ascii?Q?hceReW/ap2kS7w0MAqWatq8ojK78nrcwRlfR83niwGFyO3mkxnWchAVPXx58?=
+ =?us-ascii?Q?L1yZwz/i5OCglJEA/MGpEjosvYEmAHV3d54RMmXuJTzRRwQaZ1KDrx1Wt91H?=
+ =?us-ascii?Q?xc4DivF5y7HP1peWBEQxmlRoRF4UvnW0+Zfw5MSVT2YVKurvzDyGRwM3VUMd?=
+ =?us-ascii?Q?TZzqGtxVnwNgEFsF7WoAz0+onYV9e+/rP3xqsuR8g74Q7WhwtOWo3rXhvbwI?=
+ =?us-ascii?Q?/4CmYPyThNDoIAn3VUXDiPmNld5Etf+1dHvl1AGC6xvL91wbLO68ZYnFth0E?=
+ =?us-ascii?Q?T5WePhi9hKvGcaJRcX9mnVdrVVYHddcekyyTBfP1YptI8bzn+IJEK/wE/9kx?=
+ =?us-ascii?Q?2SHVnAwNohLlUG+V8crjb0vm39IGOJvsAa/s6oVZqeaElkrZs+EhC3ecRXM1?=
+ =?us-ascii?Q?RYymKn+mPp8TGLDR+0o6R+P1/n7G+mEZ0N37UfnlkQWuKag2OfAQHJFxEDzn?=
+ =?us-ascii?Q?2WBQA4A6GgDhhedokeDS0Fkent8wClchR5+FOYN3H+uS61MuGMkJgZCMzmPU?=
+ =?us-ascii?Q?t2Bky+bAdFmCugLfwheDQqaFWo7nRPTmQXQYaS+C8RUnMGUXOxxgheTzbBOl?=
+ =?us-ascii?Q?i6+esTxqV4K853TRhPm02MGsOO8tyGgLy+DVTrFdpfRyTfZ6Kwi3cFWQSn3m?=
+ =?us-ascii?Q?AhBJKuMu6EciH8AVGEDxlQ3DKyR70jkufwB4xxVvGbzYtwcg2uCKgKaWOPmT?=
+ =?us-ascii?Q?l8YsMJ7ox+Yxl9u2HBePyVAJIVISiHkGVV3ATLFMpBdhR5S3NRvzBOKPfbGS?=
+ =?us-ascii?Q?AghdB6RtxAMa1XU52YqPYBYhNnpNofMcLiWKWuTsy5zKhvpGRtTRGeqm/Q9f?=
+ =?us-ascii?Q?5VOuJtCkCWYAgr+l2FgzAvVlSU1Eio6UPzWPNXMQq6PcdIVlMmwnoplyYuSi?=
+ =?us-ascii?Q?aOpGfHBcrNctUggCBniEd04+mwV5YmLeWpqsKF4+EXGnGX+G7KAak17rxM/8?=
+ =?us-ascii?Q?4hZ7LQ7PqXBTeJPSmcMmnuiVQrbXDMRgtuziSWrzmKPjz1PSyNlveI8JvSS/?=
+ =?us-ascii?Q?BQQbhdPh+vdhw8iIabSNNEpEQNZInORRgyyRDyMMj70xcE61hvovSSizY9VN?=
+ =?us-ascii?Q?8kVq1yTQ2XG/2guxViPfWeT7Slpn3AKa0emMSg5ersPp4JM6k2pyUyJmq61O?=
+ =?us-ascii?Q?X1B0iwSZlkD/2FJUeEl1YO03HuSYAgs2khIwha1T0LnwVOHa7Dud/YFynr9P?=
+ =?us-ascii?Q?fxsmv21JGeSQHtGvGvFH?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cjHZlM3MJdiVoiAfaJFHlX5MaKhloW661CJyS8QFrITlD/tr1jB5/zj8Fhj5?=
+ =?us-ascii?Q?KRgHCI8Tw34e3/WW1RYFpl1zMi6+o+1p0RqT8geNLyAaS6TNZGsYnNpU03uX?=
+ =?us-ascii?Q?FyJdDIBs/uvIrk0oHDYLuZShxxrGBV7GPOTUj7qFJD6L0yB5DeV17wa5XUtv?=
+ =?us-ascii?Q?jm19UpnMetnfOUHsQPepjYMOz8V1g/93xUlpUrSBjXMt5DO8YCxzCEjnXqGY?=
+ =?us-ascii?Q?iAxyMj9aSNC9CXrZXsxKwJy5dWOJtLSzLEZNZ48mNPR2/WyOy5sNCV/n47TU?=
+ =?us-ascii?Q?bG5Zbu73F+LWE8nVZEl+vhVIWwdbVNe6WDyzhPoFPyg6fruu9iG1y5+LSme3?=
+ =?us-ascii?Q?fjRsarDIG4q5fcL/c69R+Q9+jCLFxPWIyFN63qi7DxaoIjMBY7FkjA9ODn6f?=
+ =?us-ascii?Q?R+9ds/m3G3bsJRMRP85aNAjlQC0K/XBlTfQRpeIW997TfY+qGGA2otuTyq3E?=
+ =?us-ascii?Q?K9TU63vqUWjO1XGfG2+rRkcgg5kzNgNMcoSNAWObceofkk2znc2OV5fAl9YQ?=
+ =?us-ascii?Q?SU70uZmwpmis8+U4jG2Bvr5ij/Q1F7G2t1azxeAJlKJCa9o0WJ5IGoHvYkkI?=
+ =?us-ascii?Q?179z7wla61n2u5e3cOsqnQnYtWGQtk9BnIL1FYsoz3M/cqBpy5D3q4kv/xLq?=
+ =?us-ascii?Q?p7wThwGoQXl4QPsydlc8jgSj/QDBYOz24RmcEeZ+wRxMQAuvJMXkHweKGJdi?=
+ =?us-ascii?Q?bjHx8cudVQ9U5HzCMiYLAMx/Oy1GkZQgYbCI2jNk50av04JolPq5VDKeMMs5?=
+ =?us-ascii?Q?11x/wh8z3mOPFaCL+IqhFJkZA6BMczv9VS1qEJGE6T3hZI+JxmMFOknb3MWG?=
+ =?us-ascii?Q?Hg+9oLrMz0XhzjVP9ouQd6/dmK77ElIzczoP5RFcBmIY8HrId6hq0hcC3wMB?=
+ =?us-ascii?Q?E3Ys32PKER6DpuXgtV2dIhKJGyE3PILynUmqDccigBNwbFN1C0XK5XHTOW1p?=
+ =?us-ascii?Q?gRlSo9mRmR1iS2C7Yk5Dy99z3W7gR59SoByhlqekNDkpYLFp0Y0GHnqjxZsN?=
+ =?us-ascii?Q?BejfzD6/XLxE2iEuSPhemPYFtSvZSaKy2NzDiJ6JaW9yUgBnNJEhm5PGs4wI?=
+ =?us-ascii?Q?chxO4JIOorCagXZQm4aGsG4/PQ2knM+U9iew22CfwHGHFzPpfzftD9uRaI3r?=
+ =?us-ascii?Q?QRn0XiZGKoWtgAO/EIF2dFh5XDx7KFRWs5GKumgULHfe/lyddAshdmow4ek4?=
+ =?us-ascii?Q?lHeLqMsXtw4HU4GKStoThCXbt3O/8YamO5ToBiC1ok35aGfEnzLtK2wcEa9e?=
+ =?us-ascii?Q?MFgV/kapn3n/SBVvOVJyTBgeUN6Aee7T+XSuOJq2u/of5rQwBRmYoQxbdRjm?=
+ =?us-ascii?Q?tO7azcR/ii/6wUOk1ynnYY3oah8w/RcRKFImyUFyuT1dvqWi7qzdySNIk9y8?=
+ =?us-ascii?Q?vo103bqhRkCdsnWAQyhShzX8pWw7tSRqyKx8HF+1Y9PNZB5eCeCHnwhZSURX?=
+ =?us-ascii?Q?rP+4KiXW002vxEUU5/F27zJvlariZjK1VTJyRpK6UMoP6lrLnFQNqEqzvBv0?=
+ =?us-ascii?Q?Ku1F6YD909UO9T4MuhKT8pDT2IKb8PcuuyTV1kwJNpG13wjJDmsCcgRAAaHQ?=
+ =?us-ascii?Q?bIBf+aNgRtqxNcjIpkuW+k2ARvKSQk1vy8y4Pve1lHsdiVGEqQfj5HjgntYn?=
+ =?us-ascii?Q?5A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f05d82c5-c9a6-4c61-f641-08dcf5699b2f
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYRPR01MB12335.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37d3cc37-0fb7-42e9-c9b7-08dcf55ae67c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2024 01:09:54.2100
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2024 02:55:10.4999
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bAZZ3qm+G4pY0wqTm/4yxsUKCxalo650x0+qtT1WjNKRxfKrhEv0RdZZn7cdSg5e6jFmXH469gg1ToyNm8drWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB9498
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZS9xnfCLMSKgbEginwNKhdl2CcF+cBM4wPG8PYpRj4UaJ2atIcZbydyI7RULc5bUkBwN/mSWAW8HSHZAbpkxmPdvFRmKa9dDvLWpAO2yYmA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6772
+X-OriginatorOrg: intel.com
 
-> Yasunori Gotou (Fujitsu) wrote:
-> > Hello,
-> >
-> > I'm trying to execute the cxl zero-labels command for a CXL persistent
-> > memory on my QEMU CXL emulation environment, but it fails with the
-> following error.
-> > ----
-> > # cxl zero-labels mem0
-> > cxl memdev: action_zero: mem0: has active nvdimm bridge, abort label
-> > write cxl memdev: cmd_zero_labels: zeroed 0 mem
-> > ----
-> >
-> > In constrast, ndctl zero-labels seems to work correctly.
-> >
-> > ----
-> > # ndctl zero-labels nmem0
-> > zeroed 1 nmem
-> > ----
-> >
-> > Can anyone identify the problem?
->=20
-> This is "by design". Once the memdev has been registered with the NVDIMM
-> subsystem then the expectation is that label space belongs to the NVDIMM
-> side where it can be coordinated with namespace management. The ability t=
-o
-> write labels from the CXL side is mostly a debug facility, not a provisio=
-ning flow.
+Yasunori Gotou (Fujitsu) wrote:
+> > Yasunori Gotou (Fujitsu) wrote:
+> > > Hello,
+> > >
+> > > I'm trying to execute the cxl zero-labels command for a CXL persistent
+> > > memory on my QEMU CXL emulation environment, but it fails with the
+> > following error.
+> > > ----
+> > > # cxl zero-labels mem0
+> > > cxl memdev: action_zero: mem0: has active nvdimm bridge, abort label
+> > > write cxl memdev: cmd_zero_labels: zeroed 0 mem
+> > > ----
+> > >
+> > > In constrast, ndctl zero-labels seems to work correctly.
+> > >
+> > > ----
+> > > # ndctl zero-labels nmem0
+> > > zeroed 1 nmem
+> > > ----
+> > >
+> > > Can anyone identify the problem?
+> > 
+> > This is "by design". Once the memdev has been registered with the NVDIMM
+> > subsystem then the expectation is that label space belongs to the NVDIMM
+> > side where it can be coordinated with namespace management. The ability to
+> > write labels from the CXL side is mostly a debug facility, not a provisioning flow.
+> 
+> Okay, I understand.
+> However, I suppose it might be confusing for beginners.
+> It would be nice to have a document, like a beginner's guide, that explains which
+> command to use in each situation.
 
-Okay, I understand.
-However, I suppose it might be confusing for beginners.
-It would be nice to have a document, like a beginner's guide, that explains=
- which
-command to use in each situation.
+I agree, just the small matter of finding someone to write that guide.
 
+In the PMEM days Steve wrote a book about using PMEM [1], and I found he
+is also producing similar content for CXL [2]. Not sure if this specific
+command submission detail is covered, but his name came to mind when you
+mentioned user guide documentation.
 
->=20
-> This is also enforced by the cxl_pmem driver where it disables direct
-> submission of CXL commands to write the label area since the NVDIMM
-> subsystem is in control:
->=20
-> cxl_pmem_init():
->         set_bit(CXL_MEM_COMMAND_ID_SET_SHUTDOWN_STATE,
-> exclusive_cmds);
->         set_bit(CXL_MEM_COMMAND_ID_SET_LSA, exclusive_cmds);
->=20
-> cxl_nvdimm_probe():
->=20
->         set_exclusive_cxl_commands(mds, exclusive_cmds);
-> 	...
->         set_bit(NDD_LABELING, &flags);
->         set_bit(NDD_REGISTER_SYNC, &flags);
->         set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
->         set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
->         set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
->         nvdimm =3D __nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd,
->                                  cxl_dimm_attribute_groups, flags,
->                                  cmd_mask, 0, NULL, cxl_nvd->dev_id,
->                                  cxl_security_ops, NULL);
-
-Anyway, thank you for your answer.
-----
-Yasunori Goto
-
+[1]: https://stevescargall.com/books/programming-persistent-memory/
+[2]: https://stevescargall.com/categories/cxl/
