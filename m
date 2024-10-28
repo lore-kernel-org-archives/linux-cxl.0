@@ -1,275 +1,409 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3C21917F6;
-	Mon, 28 Oct 2024 09:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730108245; cv=fail; b=QSoR8HtC4vkOd0wB3zScbCT5O+vOB6dpO9OEGHbiO0fYFlyCdBKTpnwywfmt2bdgEahPpDRXLT/tPWfgPW5xRBIki20RA7SxiTaii0JvFe5lxFyje/iU4W9Ug2CB+8AnfOe6kZLDSpro9/hvLDRcUwTozrRmmhqXsgNC4crXzGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730108245; c=relaxed/simple;
-	bh=x7uh+wOhDXQatSyylDEw/aE/7l0bcQYn83P38Vkcl+4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZUztYbjBGD9s2iKwT+pU6PrmEXS7P7yvMcfLrqgeJl9xyzmwY5R280eIQ68Vi2+Q57pONb6tquJqgIU+K2Hc9U8lMXRB68/tludIH/qgcu13KiOmL5EiQcPWUB/fHdEa5mQSS+Uk5Pqn+CQICCJddHO2Cu64DLiQ0bhyruc1xsU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ksq1Igut; arc=fail smtp.client-ip=40.107.244.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17F61DE2B0;
+	Mon, 28 Oct 2024 11:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730114260; cv=none; b=CG3lAZDKUKh5w9dsKRZDqQttVZ49DJQd4bCVI1locKMxIiApmReVqsCeX9doS73y/2LymkBUkcnHnBsUBceoga32EJoSemLBihez15whaDzKlykzOER47Q8Ab4a9I9Ij6QUWESkv39eek6K9JrYUbSjNxXRNSYYhNuLDcu2uyAQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730114260; c=relaxed/simple;
+	bh=nI0ZCe9B8XTcVwbcRJwTIt3xdf75VCwrbvkULJxMMy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGlz1TOAaclPqUvVpydguOySdHGpLLcc1tCqSuPH7sKQvqpkZSuJPjnfbfbCIQRHUiSGw/8e49pRw9gAazLQtp5yvCY95b6Mhidv5oU1ecMEYGE5d19vv9W0zEcdHtYkHoHOnuIIJw7bCAVxGacIO6BnYbeyDuX6irMdKKFBcgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CK3gJwuD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ksq1Igut"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ki7v+DnmpznS9mMUY+JHbsRHzt+pZjSZctg39P6RXNunmr9w9dT9KGnhKZ5OCH4I2D0cgzb2cEZcIMawp5ilMp2dOBdZFJOVuyj3SM3l+9dh/ChP5jVubZCSbxk4K5ftwZc24vSetljlmUX3YIBEgm+F4aFskPzXxGtjkjWCZ0imCfIMc6FbjcGCeYxKZA4tDMpdbfcKqJM3fbOVGnY/dIMeFFc0YZMlfkRA7PKnhG7pRIpNtYhq3jjObvusTxCDA+FY5ZJnGtRh3pOQKbV5qObN7FHPt2usIejUnOGOp4UZrj/Kc7tpaUbQSj49nrvisKJ+06gl4HjoK5+wEEyVtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kdambczof7xvkIkaOJR77RTmvSAbpgZmXQuW36iFhSU=;
- b=xFoitvCYiQOKASwxUFlgRI48F0ueauEE+iLOjgKndl8ympiRKskfqcDEZeo+r2fXw72o0pSe3cKhHrt4t1DXb0c8FJqwaACYw94wsAlPB1nUHgtyBGSNnoLDKueD6oeVr4eWMSLRkZcW9stUIz+Ujh3q6TFK+EinI/ewQzgWlOhAqMNwfMOxOTxc7XZwLHmHn8BZGZnZJ7Sa5TcLr5g3zPbTODadxKs0XzmcO0JIyfBX92CjcZRDeGtRXEVkA7fJOesKPDsAS3lU+Y7y/MLST09fKMRUA9xwh5wXIs7hFAni0E2B/zg1ayWK4aCO5/kjLP0M4sLZLhE6OJX+l4sfPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kdambczof7xvkIkaOJR77RTmvSAbpgZmXQuW36iFhSU=;
- b=ksq1Igut/o81JlS6rXu24zRD5pzFm/ew+eXsk09hzRcPre3yC+yBOPyUF2EVTjM8mgDWgyQwHKbTA/jD2K7SY2dlN6l+bfPatEgNIgKnd2FOyu8gEqEt5U4az3IhBaPg8rK/4yAyBDsn1TnmHl76a9llrZhnv/ycdNlWv/Ig1zA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by PH7PR12MB6787.namprd12.prod.outlook.com (2603:10b6:510:1ad::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Mon, 28 Oct
- 2024 09:37:18 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8093.024; Mon, 28 Oct 2024
- 09:37:18 +0000
-Message-ID: <7deb17e2-4257-1ddf-2279-32bf4f086f67@amd.com>
-Date: Mon, 28 Oct 2024 09:37:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v4 01/26] cxl: add type2 device basic support
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20241017165225.21206-1-alejandro.lucero-palau@amd.com>
- <20241017165225.21206-2-alejandro.lucero-palau@amd.com>
- <20241025145012.00002d64@Huawei.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20241025145012.00002d64@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0267.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:37c::7) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CK3gJwuD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A16B940E0198;
+	Mon, 28 Oct 2024 11:17:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YWBf7PxV-zBo; Mon, 28 Oct 2024 11:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1730114249; bh=aQXjtMdPxcXQFLTjo1thwq4DHI1V42PctDkGBJnF/+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CK3gJwuDuQBnlCE3o4SDY3/5iCsHbLCzO+vHjzamHleWqt+WYcO69bJsAASLHJC2q
+	 ti8RqEMlzOcv7Ux5ntYx8kAML4pLXzsvb1YxnYJuPspbRxqXKEl1mTguckHzn3Sl+G
+	 AUHvfxed+jn0CulXbHZq8twP4W+uDZ5sleZ5pW0W1X7mnBjwyRtIIukyWwhovog2yS
+	 CSNAQldYCihVxHRyGcn2WyWSLfnZEUdry5qSIp4KwlU141nOaW1S1/5p2g5/rYpXuf
+	 GyS6fOrlsWBGJAtd2wyQaVU4d+ZpRSZhlR3VpvXPRYkDHtPqaSbydAaHh5lwxHgBXu
+	 r9Xaf8d4tUDu7AyY54XoyTP/42bt7WCv1lgLY2pRdnCW2LNHfJeCVVMbeuqDOH3Nil
+	 vwgVyFBnSnB30uEfmEnTPEfCKjeM5p1Hc25hHnxPxf3MumAXCK2HYpvFiT/dtI3CGf
+	 Ij8WVjFgHfEicgmitayL1N2E4FueQgJWMU6bAq6j2QKwK8oSI4kpYM1c655qNxMpgS
+	 M8MTk1nUUCYSigSBEV2G629H1aOll/cax7kFcWBvmw0wY6R+cdqyB5/RvI3OjlTFjF
+	 uxPYhCQUrHlx2jzyO49OBSQGkvavl+8FNIhfdobnAPlb8WaRUPASwogUjvYM84LJf1
+	 TbrkOTRm3H3ec7oEOYG7tTfw=
+Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26F0C40E01A5;
+	Mon, 28 Oct 2024 11:16:43 +0000 (UTC)
+Date: Mon, 28 Oct 2024 12:16:37 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com,
+	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+	dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, gregkh@linuxfoundation.org,
+	sudeep.holla@arm.com, jassisinghbrar@gmail.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
+	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v14 03/14] EDAC: Add ECS control feature
+Message-ID: <20241028111637.GSZx9yleFPOjTklIVr@fat_crate.local>
+References: <20241025171356.1377-1-shiju.jose@huawei.com>
+ <20241025171356.1377-4-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH7PR12MB6787:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88ef1638-1a22-4c9a-b283-08dcf7341d5b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ckdUaGlJbWNrdWh1K3RSWldlY1JlWklPdTJIOGZmall1a0ExVWRMUFFDS3Zk?=
- =?utf-8?B?QVFKblJnNU8yRFBnL244QUJxMzJCYjRyT2VzdERSTjBhaklrdWxEcEZ4andG?=
- =?utf-8?B?UWdhSmZCL25kcnREOWQxZVg3aWpoQm5BM1Z6SFlLWXpIcjBSODY3Q3BWcWxF?=
- =?utf-8?B?bm8vV25GV1ZMNWNWQXdMWnJ5MThORmNMQ0dHa01HYUoyVVZlZ3dwT3lOb2wx?=
- =?utf-8?B?dGM3dzdrN3V5WWJQVFZGcFVwOVFjUmJIVTlkeGlzcW5CZVBEcVFVVDJZRTJw?=
- =?utf-8?B?MkRSQldQSDE0RWFXTDBiQlRjZXgrcUhrVVN2emM5UGJDeFBlaVIzUFFwRTI1?=
- =?utf-8?B?M1IxSnlQQWdMSGxLMytmMXRzM2xkditkd3Q5Tlh3YklJRTREd1JXZTM3eThF?=
- =?utf-8?B?ZU9FQlRFMytRN0VCc2tmbzRiU2RMZDQ1b0licS9hOFBGN04xcVAwWlovcXE1?=
- =?utf-8?B?TWJZWFFKMldOejgzc2h4QVVsanJucTRyeVlzOFNSWHBwa0RrWDVPSG8rNHpo?=
- =?utf-8?B?eGRWdm9TVjMzWThWZ3ZIWDJIQVVSQjZHYnZVWnc4ZEFrK1BNemtsTCtDYWdX?=
- =?utf-8?B?cjJwS0EyZDRPT3RPb3dBMjJ2K2tUUTNid2llUTNkaWxxekhOTlRQdmc3aW5o?=
- =?utf-8?B?RVYvd2dYRWhCRGtqaGFDaXRrOHVqUW5zMkhOemJtQXo2TUJ5SGliQ3RLK2F0?=
- =?utf-8?B?VWU1aGNQbGdYeWZ0VE1sZUJrdmZqR3MzOCtHT1NHT3M2d28xVytsMGNEc292?=
- =?utf-8?B?QjdDQkVZUys1MUFab05kakRLMjU4OVJRdXRLd1c0ZDJucnJ4b2dWaERlTXNq?=
- =?utf-8?B?dlRtRCtsWlBrdU4rUmNNZGR6RUVERENPaXQ5ejhOaU5JVlp6aWU5c283akJr?=
- =?utf-8?B?ZkZ5dWk5Lzdmem0yYU9saVovblM1Rll6UExHVHdyZEJJem9YdHI3N3NrbVFn?=
- =?utf-8?B?aGdEZXp2T0dkYkt5R3hjZDArRHNaVkdXYVlGVGRreWJSdWlUUGJjcWNSZ05W?=
- =?utf-8?B?OEV4Qmp6b0M2QktZTU1wb2E5dkFUS3Q0Z2hGOTVOUXp0ZTdpNlJuVTA2L1Zk?=
- =?utf-8?B?VTZOL25WaFBrZ2xwTFRrc2hENUVXZnkzVTM5ajlUbktzY2J4WER3aVg1bDhC?=
- =?utf-8?B?d2tlTC9qQWZ1U2Npa1FaYVhBTTNCOW53VFMvY3FUcUdFNUd6WWpZb3R4VVVP?=
- =?utf-8?B?NnA0UDlnSVBKWDJtdVNqNitFMmUwWCtXOVB6cG5iSVFGQjFRcEwzZm5iVDU4?=
- =?utf-8?B?RVBHRXc0NUFpRkZXdVRuR1VyZkg1alEwWDJVK1JvdDFRalAzaGNkRTRyRi9k?=
- =?utf-8?B?dWRCTXpPNkIyNXdPb3RZQ3l2a0lNcGxHeUZoNzdSQ0dYdmNxQlo4emNBaWpM?=
- =?utf-8?B?M2Yya3ZsYUVkS1VNakZwbkZtQmtiM3hmTERseHNsT1NrdTgrTE9PWFdQSWpR?=
- =?utf-8?B?bHR2WkZrY3ZUVTVTcDVaTFczdEJZOElOaDE3UmRNc0NoWkNwa0Y5UnNXZGhS?=
- =?utf-8?B?Wm1jZ2pyK0FuMnhaTE1ycXEwVncyRGI1SVZvK0d0VTFKSlNqSklrZDR3dFN0?=
- =?utf-8?B?ajJ5Z3hBRFRHWmU2WW5VZ0t6bEJxdndoTGF4SW5xMmVtNGZlSHNyaTdIVkM3?=
- =?utf-8?B?bjVhYjlKYzdUYWFSczdJUUNIa3hlV3RxdTB2OXVXaW80TVZCRm5mTGFVMUR0?=
- =?utf-8?B?djNkUlBVeUhNaG1iSkN1US9QcDJxY25RazdsQ09hVk5xbCtGdUhjcW5DVnVQ?=
- =?utf-8?Q?Gkg7yAt0trOuowN17S/3KmLAm87F5Nw15YqSyHd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QkZBMWljN00vSW1meEsyaVZOVTkyaWhPNE5qVVRNZDV0T3dyelpvb01UTXFp?=
- =?utf-8?B?RUNnc3pMRVlrTldHbmo5Zko2RHZ3N3FPNENZUmo4Sm1vUG9CYVI3MkY3NldH?=
- =?utf-8?B?S1RPSzJOTG9iV2U0RklvaVdVQnJxN0VvQXVIUW9ORFBGSHJmd2VRNlp4RENO?=
- =?utf-8?B?M3AvVW5hWE5ZOFJGU0lDcUZJQmp2bDFXbUpsUlJBZXZUckRoeERtVThFRi82?=
- =?utf-8?B?UjBUUldXYno4dE5NdTdDZEluZzUwY3FRczBVbUY5enM4Nkk5V1ZJOXZ0bXJF?=
- =?utf-8?B?VW13dzM3VmphR0tITXU0ajRUTjlra25Sa2NKRGtkMWhENHFDb0NtSWhoaHBv?=
- =?utf-8?B?bTZTeC9qcTdkcXJ3NHVJUWZSRFBRRlNrUWVxRUhnWGxvYkFGdVJ3UituTlUv?=
- =?utf-8?B?eHNlUDZRbHcyVFN5WHZHMExCUnhzanA2ck90bmVRVWk5MlB2allsVHVsZ3VH?=
- =?utf-8?B?NlRyTUFuREtqeURWY29iZVBLeitWQXJCWHRvU0lvRjMwdUVMcktFaUc5dGdJ?=
- =?utf-8?B?bnpSVElWNUxUN0xaT1FJNEhwVnVCakt5TkRqbXg3R1d3NGp4VEVhcUh0WXFt?=
- =?utf-8?B?NkNLamJSN0tnYS9Scm15SWFKRVhUL3dGVHNZNXdGVThFa3lYTVhvN0VyeEt5?=
- =?utf-8?B?aE9mdWd5NjJrL3A0VTNqYXJ3MExzSGMweU9KNklzOTZuSWVMSnZyN1o3STcr?=
- =?utf-8?B?QitpRnZySlpZWXZCTm1ublN5VWJnalovM2xGcEovVnBiSmM4Lzhxd3M5UWZq?=
- =?utf-8?B?WVpNM3AwQ0ZXT2FVcXdHT3RSanhGUU9iVXdzMjN3U29TUDZVOTJxR3R1YXln?=
- =?utf-8?B?Zk5vU2cycGNMakxkb0h1bDlmVktENElRWk5iTmxpK3N1ejZZZ3BlczNjbzls?=
- =?utf-8?B?YUNNQlpRSzdEZHl2Y2NVWm93SW94amMyUHNwY21hcTR5bUhOSkxCdXZpaG9Y?=
- =?utf-8?B?RFppblVwSnNtRXFPNlAvdkZWTTJxcnpwNHM1VjMxMHc3cmtJaWVDZTFSaytw?=
- =?utf-8?B?T29zcnZldXlMajZkc3J2N21Qbm0xWkoxV2lFS1ZLS1pnTnFlcTU3dEwvWmFv?=
- =?utf-8?B?bVV0eVBFWEJtYXNIbmxlbi9Qam9SbWpiUVhsN3hMbDJWMW83dTZtL2U0MVFX?=
- =?utf-8?B?ZEc1YWxWc0VDS0UyeDlRcy9CMHhxaGZ6TmhhTWhWdUhLSTUxRmhxMW5ZWGZq?=
- =?utf-8?B?R2NUUXB0WGdsS09DbEYzM3RJeVo3d3dxZXE2KzhMNW5mS1lIZ0JhU1JTMVdp?=
- =?utf-8?B?cUhvTkgvTVdYU3RMMEZYbzFDcmVMZlorSm9aWXdweFN3aU9OV0NSUWsvd05D?=
- =?utf-8?B?dGJxY2RPa1FPWTVzcVkwR25TZHE5eWY1Z3JhV3cxcnJ4NEw4QTZDWkp6Njk3?=
- =?utf-8?B?dUloVzgvT1Z4Qk5KeHljMEx5QVl5SnJRVmV1bW1oVmkyM3Z5VWRnMFhXNWRL?=
- =?utf-8?B?QjJ5dTRFT1BUTjVsRmNuVktTRnFmeXNGaWxBYWg1RndrT2ZFUmR4NFBuKzlq?=
- =?utf-8?B?NDVkN21vdldIUG1ZUlIvRlptQ3ZGQUxqejNUeElkVGt0Q2c2WWhsYnFuVERz?=
- =?utf-8?B?dGtZZVVsMUN1ZWNSR0huaDN0R1NxQ3VCMm96OTJnYTVXQVM1OTdUemFoZTkv?=
- =?utf-8?B?TnFpYVVlOGlrbFB2ZWhYR0dzWEFXTTlQYkN6bzdqV3pacXFXSnNRcVN2Q2dC?=
- =?utf-8?B?RHVTWlRlY0RsNXVHVmtuMWY4NDFTbXhaeGRHbk5KWDBtSHpGQnJUdkZ1M2lX?=
- =?utf-8?B?U0NVNHN2bkg2b0szNmFKeXVjNGJkbGYwdm00My85M2ZlR3NUY05RQmtORDJN?=
- =?utf-8?B?NWNtQ3U4Ly90VDRoamI0UVgyZXFLZmp1enRyc2ZObzR3ajVyMndMM3g0d0hN?=
- =?utf-8?B?ZVFrS09sZzFIRFYwejdPRXE5bkYzZHZrZHp5c2o1dnlTeFJYbk1ldUFlT2xi?=
- =?utf-8?B?Q0VOMEhYd2llV3o3QlBwVVlPcktRSTF6REdoRkR0V2Z1VUl1bC9rL0FDRnBo?=
- =?utf-8?B?YnQyRTEzdmhMMk9EeENzcGNCMkxCOUhhMDdaMmxERjhEWDBnbXVTN2Q5QTdG?=
- =?utf-8?B?dmRvWXN5QmxMb0loNU11N2F4T1MySkl4RXBraGVhcXZZbENnS0xsNklRZ1ht?=
- =?utf-8?Q?9Yb+2pmrUnG7WOcojkQaD2lSj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88ef1638-1a22-4c9a-b283-08dcf7341d5b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 09:37:18.5279
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3GlnKfUhUQinbt7tYtWV48hSBGe9rBfV0sL8+sDSXfqMXTiImApbVXjgDMjqW921G7BrbRUYaNMhXOaxvoVf+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6787
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241025171356.1377-4-shiju.jose@huawei.com>
+
+On Fri, Oct 25, 2024 at 06:13:44PM +0100, shiju.jose@huawei.com wrote:
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/log_entry_type
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RW) The log entry type of how the DDR5 ECS log is reported.
+> +		00b - per DRAM.
+> +		01b - per memory media FRU.
+
+If the conversion function here is kstrtoul(), why are those values not "0"
+and "1" but in binary format?
+
+> +
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/log_entry_type_per_dram
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RO) True if current log entry type is per DRAM.
+> +
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/log_entry_type_per_memory_media
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RO) True if current log entry type is per memory media FRU.
+
+What's the point of those two if log_entry_type already gives you the same
+info?
+
+And the filename length is a bit too much...
+
+> +
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/mode
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RW) The mode of how the DDR5 ECS counts the errors.
+> +		0 - ECS counts rows with errors.
+> +		1 - ECS counts codewords with errors.
+
+Now we have "0" and "1"s. Oh well.
+
+What are "rows", what are "codewords"? Explain them here pls for the user.
+
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/mode_counts_rows
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RO) True if current mode is ECS counts rows with errors.
+> +
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/mode_counts_codewords
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RO) True if current mode is ECS counts codewords with errors.
+
+Same question as above - redundant files.
+
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/reset
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(WO) ECS reset ECC counter.
+> +		1 - reset ECC counter to the default value.
+
+1 or any value?
+
+Looks like any to me...
+
+You should restrict it to "1" in case you want to extend this interface with
+"2" in the future, for example, doing something a bit different.
+
+> +
+> +What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/threshold
+> +Date:		Jan 2025
+> +KernelVersion:	6.13
+> +Contact:	linux-edac@vger.kernel.org
+> +Description:
+> +		(RW) ECS threshold count per gigabits of memory cells.
+
+That definitely needs more explanation.
+
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 188501e676c7..b24c2c112d9c 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -10,7 +10,7 @@ obj-$(CONFIG_EDAC)			:= edac_core.o
+>  
+>  edac_core-y	:= edac_mc.o edac_device.o edac_mc_sysfs.o
+>  edac_core-y	+= edac_module.o edac_device_sysfs.o wq.o
+> -edac_core-y	+= scrub.o
+> +edac_core-y	+= scrub.o ecs.o
+>  
+>  edac_core-$(CONFIG_EDAC_DEBUG)		+= debugfs.o
+>  
+> diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+> new file mode 100755
+> index 000000000000..a2b64d7bf6b6
+> --- /dev/null
+> +++ b/drivers/edac/ecs.c
+> @@ -0,0 +1,240 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Generic ECS driver in order to support control the on die
+> + * error check scrub (e.g. DDR5 ECS).
+
+This sentence needs grammar check.
+
+> The common sysfs ECS
+> + * interface abstracts the control of an arbitrary ECS
+> + * functionality to a common set of functions.
+> + *
+> + * Copyright (c) 2024 HiSilicon Limited.
+> + */
+> +
+
+#undef pr_fmt
+
+> +#define pr_fmt(fmt)     "EDAC ECS: " fmt
+
+Grep the tree for examples how to do that properly.
+
+Also, this pr_fmt looks unused.
+
+> +static umode_t ecs_attr_visible(struct kobject *kobj, struct attribute *a, int attr_id)
+> +{
+> +	struct device *ras_feat_dev = kobj_to_dev(kobj);
+> +	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
+> +	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;
+> +
+> +	switch (attr_id) {
+> +	case ECS_LOG_ENTRY_TYPE:
+> +		if (ops->get_log_entry_type)  {
+> +			if (ops->set_log_entry_type)
+> +				return a->mode;
+> +			else
+> +				return 0444;
+
+What is the goal for the access mode of all those sysfs entries? I sure hope
+it is going to be root-only no-matter what. I don't want normal users to cause
+scrub activity. Please make sure your whole set does that.
+
+> +		}
+> +		break;
+> +	case ECS_LOG_ENTRY_TYPE_PER_DRAM:
+> +		if (ops->get_log_entry_type_per_dram)
+> +			return a->mode;
+> +		break;
+> +	case ECS_LOG_ENTRY_TYPE_PER_MEMORY_MEDIA:
+> +		if (ops->get_log_entry_type_per_memory_media)
+> +			return a->mode;
+> +		break;
+> +	case ECS_MODE:
+> +		if (ops->get_mode) {
+> +			if (ops->set_mode)
+> +				return a->mode;
+> +			else
+> +				return 0444;
+> +		}
+> +		break;
+> +	case ECS_MODE_COUNTS_ROWS:
+> +		if (ops->get_mode_counts_rows)
+> +			return a->mode;
+> +		break;
+> +	case ECS_MODE_COUNTS_CODEWORDS:
+> +		if (ops->get_mode_counts_codewords)
+> +			return a->mode;
+> +		break;
+> +	case ECS_RESET:
+> +		if (ops->reset)
+> +			return a->mode;
+> +		break;
+> +	case ECS_THRESHOLD:
+> +		if (ops->get_threshold) {
+> +			if (ops->set_threshold)
+> +				return a->mode;
+> +			else
+> +				return 0444;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#define EDAC_ECS_ATTR_RO(_name, _fru_id)       \
+> +	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RO(_name), \
+> +				     .fru_id = _fru_id })
+> +
+> +#define EDAC_ECS_ATTR_WO(_name, _fru_id)       \
+> +	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_WO(_name), \
+> +				     .fru_id = _fru_id })
+> +
+> +#define EDAC_ECS_ATTR_RW(_name, _fru_id)       \
+> +	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RW(_name), \
+> +				     .fru_id = _fru_id })
+> +
+> +static int ecs_create_desc(struct device *ecs_dev,
+> +			   const struct attribute_group **attr_groups, u16 num_media_frus)
+> +{
+> +	struct edac_ecs_context *ecs_ctx;
+> +	u32 fru;
+> +
+> +	ecs_ctx = devm_kzalloc(ecs_dev, sizeof(*ecs_ctx), GFP_KERNEL);
+> +	if (!ecs_ctx)
+> +		return -ENOMEM;
+> +
+> +	ecs_ctx->num_media_frus = num_media_frus;
+> +	ecs_ctx->fru_ctxs = devm_kcalloc(ecs_dev, num_media_frus,
+> +					 sizeof(*ecs_ctx->fru_ctxs),
+> +					 GFP_KERNEL);
+> +	if (!ecs_ctx->fru_ctxs)
+> +		return -ENOMEM;
+> +
+> +	for (fru = 0; fru < num_media_frus; fru++) {
+> +		struct edac_ecs_fru_context *fru_ctx = &ecs_ctx->fru_ctxs[fru];
+> +		struct attribute_group *group = &fru_ctx->group;
+> +		int i;
+> +
+> +		fru_ctx->ecs_dev_attr[ECS_LOG_ENTRY_TYPE] = EDAC_ECS_ATTR_RW(log_entry_type, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_LOG_ENTRY_TYPE_PER_DRAM] =
+> +					EDAC_ECS_ATTR_RO(log_entry_type_per_dram, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_LOG_ENTRY_TYPE_PER_MEMORY_MEDIA] =
+> +					EDAC_ECS_ATTR_RO(log_entry_type_per_memory_media, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_MODE] = EDAC_ECS_ATTR_RW(mode, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_MODE_COUNTS_ROWS] =
+> +					EDAC_ECS_ATTR_RO(mode_counts_rows, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_MODE_COUNTS_CODEWORDS] =
+> +					EDAC_ECS_ATTR_RO(mode_counts_codewords, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_RESET] = EDAC_ECS_ATTR_WO(reset, fru);
+> +		fru_ctx->ecs_dev_attr[ECS_THRESHOLD] = EDAC_ECS_ATTR_RW(threshold, fru);
+
+Clearly too long variable and define names. Shorten pls.
+
+Also, a new line here:
+
+<---
 
 
-On 10/25/24 14:50, Jonathan Cameron wrote:
-> On Thu, 17 Oct 2024 17:52:00 +0100
-> <alejandro.lucero-palau@amd.com> wrote:
->
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Differentiate Type3, aka memory expanders, from Type2, aka device
->> accelerators, with a new function for initializing cxl_dev_state.
->>
->> Create accessors to cxl_dev_state to be used by accel drivers.
->>
->> Based on previous work by Dan Williams [1]
->>
->> Link: [1] https://lore.kernel.org/linux-cxl/168592160379.1948938.12863272903570476312.stgit@dwillia2-xfh.jf.intel.com/
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Hi Alejandro,
->
-> A couple of trivial comments inline on things that that would be good to tidy up.
->
->> ---
->>   drivers/cxl/core/memdev.c | 52 +++++++++++++++++++++++++++++++++++++++
->>   drivers/cxl/core/pci.c    |  1 +
->>   drivers/cxl/cxlpci.h      | 16 ------------
->>   drivers/cxl/pci.c         | 13 +++++++---
->>   include/linux/cxl/cxl.h   | 21 ++++++++++++++++
->>   include/linux/cxl/pci.h   | 23 +++++++++++++++++
->>   6 files changed, 106 insertions(+), 20 deletions(-)
->>   create mode 100644 include/linux/cxl/cxl.h
->>   create mode 100644 include/linux/cxl/pci.h
->>
->> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->> index 0277726afd04..94b8a7b53c92 100644
->> --- a/drivers/cxl/core/memdev.c
->> +++ b/drivers/cxl/core/memdev.c
->> +int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
->> +		     enum cxl_resource type)
->> +{
->> +	switch (type) {
->> +	case CXL_RES_DPA:
->> +		cxlds->dpa_res = res;
->> +		return 0;
->> +	case CXL_RES_RAM:
->> +		cxlds->ram_res = res;
->> +		return 0;
->> +	case CXL_RES_PMEM:
->> +		cxlds->pmem_res = res;
->> +		return 0;
->> +	}
->> +
->> +	dev_err(cxlds->dev, "unknown resource type (%u)\n", type);
-> Given it's an enum and only enum values are ever passed to it, we should never
-> get here as they are all handled above.
->
-> So maybe drop?  Then if an another type is added we will get a build
-> warning.
+> +		for (i = 0; i < ECS_MAX_ATTRS; i++)
+> +			fru_ctx->ecs_attrs[i] = &fru_ctx->ecs_dev_attr[i].dev_attr.attr;
+> +
+> +		sprintf(fru_ctx->name, "%s%d", EDAC_ECS_FRU_NAME, fru);
+> +		group->name = fru_ctx->name;
+> +		group->attrs = fru_ctx->ecs_attrs;
+> +		group->is_visible  = ecs_attr_visible;
+> +
+> +		attr_groups[fru] = group;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * edac_ecs_get_desc - get EDAC ECS descriptors
+> + * @ecs_dev: client device, supports ECS feature
+> + * @attr_groups: pointer to attribute group container
+> + * @num_media_frus: number of media FRUs in the device
+> + *
+> + * Return:
+> + *  * %0	- Success.
+> + *  * %-EINVAL	- Invalid parameters passed.
+> + *  * %-ENOMEM	- Dynamic memory allocation failed.
+> + */
+> +int edac_ecs_get_desc(struct device *ecs_dev,
+> +		      const struct attribute_group **attr_groups, u16 num_media_frus)
+> +{
+> +	if (!ecs_dev || !attr_groups || !num_media_frus)
+> +		return -EINVAL;
+> +
+> +	return ecs_create_desc(ecs_dev, attr_groups, num_media_frus);
+> +}
+> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+> index 91552271b34a..5fc3ec7f25eb 100644
+> --- a/drivers/edac/edac_device.c
+> +++ b/drivers/edac/edac_device.c
+> @@ -626,6 +626,9 @@ int edac_dev_register(struct device *parent, char *name,
+>  			attr_gcnt++;
+>  			scrub_cnt++;
+>  			break;
+> +		case RAS_FEAT_ECS:
+> +			attr_gcnt += ras_features[feat].ecs_info.num_media_frus;
+> +			break;
+>  		default:
+>  			return -EINVAL;
+>  		}
+> @@ -667,6 +670,18 @@ int edac_dev_register(struct device *parent, char *name,
+>  			scrub_inst++;
+>  			attr_gcnt++;
+>  			break;
+> +		case RAS_FEAT_ECS:
+> +			if (!ras_features->ecs_ops)
+> +				goto data_mem_free;
 
+<---- newline here.
 
-OK. I'll do that.
+> +			dev_data = &ctx->ecs;
+> +			dev_data->ecs_ops = ras_features->ecs_ops;
+> +			dev_data->private = ras_features->ctx;
+> +			ret = edac_ecs_get_desc(parent, &ras_attr_groups[attr_gcnt],
+> +						ras_features->ecs_info.num_media_frus);
+> +			if (ret)
+> +				goto data_mem_free;
 
+Ditto.
 
->> +	return -EINVAL;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_set_resource, CXL);
->> +
->>   static int cxl_memdev_release_file(struct inode *inode, struct file *file)
->>   {
->>   	struct cxl_memdev *cxlmd =
->> diff --git a/include/linux/cxl/cxl.h b/include/linux/cxl/cxl.h
->> new file mode 100644
->> index 000000000000..c06ca750168f
->> --- /dev/null
->> +++ b/include/linux/cxl/cxl.h
->> @@ -0,0 +1,21 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/* Copyright(c) 2024 Advanced Micro Devices, Inc. */
->> +
->> +#ifndef __CXL_H
->> +#define __CXL_H
->> +
->> +#include <linux/device.h>
-> I'd avoid this if possible and use a forwards definition for
-> struct device;
-> Also needed for
-> struct cxl_dev_state;
-> And an include needed for linux/ioport.h for the struct
-> resource.
+> +			attr_gcnt += ras_features->ecs_info.num_media_frus;
+> +			break;
+>  		default:
+>  			ret = -EINVAL;
+>  			goto data_mem_free;
 
+-- 
+Regards/Gruss,
+    Boris.
 
-Right. And I'm adding another include later on in this patchset that 
-makes this one unnecessary.
-
-I guess the problematic thing is to refer to that core device header 
-directly which makes things suspicious.
-
-I'll change it.
-
-Thanks!
-
-
->
->> +
->> +enum cxl_resource {
->> +	CXL_RES_DPA,
->> +	CXL_RES_RAM,
->> +	CXL_RES_PMEM,
->> +};
->> +
->> +struct cxl_dev_state *cxl_accel_state_create(struct device *dev);
->> +
->> +void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
->> +void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
->> +int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
->> +		     enum cxl_resource);
->> +#endif
+https://people.kernel.org/tglx/notes-about-netiquette
