@@ -1,244 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896D4802;
-	Tue, 29 Oct 2024 15:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B349198E6E
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Oct 2024 16:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730217075; cv=none; b=fbBfpt+SL9KB/3wpksYWYB2lAjUzTEhB8Ho93pLxoswx38rb9iP73W/4zvxchixWDS0S+6y0icRU7XiaXFc+NA1omqfAFrYmJVwhpg3vJNAELjnGJdW9VEBdqgLiXnpvPQU5SI/hvKHTyb004a0pFXo57c7USlzlZVWSq7//6J4=
+	t=1730219211; cv=none; b=GPiWRVYO+SHbCaKYLZK5tI7IdLeonfYWTUqh6ABbHepke/hMMgVG1LPjR3Db1srgBwT11EZxDYqQvIu7SwgJJrTKXUYHWyMaYK1lTwMJGZl2macrw5FIbgOKNMakjnK9KjmpjnEfBh1xPZVzSaY9C3yL0A309FCwKdsCVoRbmBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730217075; c=relaxed/simple;
-	bh=f4jBgYZUSlfCMfcNx8h+IWGcspxRNAhi0goxFixH12A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BTkYhDtiSXMtJFv8As0spNJCbZ/GwZOc0JFVP7kohAbQpg8Yz5xvT1vU8eFpJIUEAHC6LYdZsZmE1SRnYqiZR+XCcSESGfzzCdzLivpQaOL0ZEKeChqQMJpeIenp5SrlEzLGToP2LqnOSVpM6/wAWcJT12PB87hgbEpF58z8IUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMkjx5Ew; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730219211; c=relaxed/simple;
+	bh=2xnS5Y63VxToTjo460ljCGQ/0jO9jScJ+HudtmhL6b4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qmn2JI/K/bqDZQ0Q2o4OpnFmfvG1jApv23KxUuDMFsvEhH/KiAH7nexGlZ53aLWOWZB4hz87NqZpla7gGDhHZgdcBTeEspG6zaeTBoWl5qiWZ2uq9omQE24WLnFSu+Lc8X4wPrwT/aJGsms2/pCF8yufV93ZhdUGqNIeWs6IdGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dBmDwh4B; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMkjx5Ew"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730217074; x=1761753074;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=f4jBgYZUSlfCMfcNx8h+IWGcspxRNAhi0goxFixH12A=;
-  b=AMkjx5EwZx5Fpcf8HHP9/G8JzjEssRQ+KNhLD+b/mgRGiorekKaNTWc7
-   pCuA2yRaZzMvaKGnlDeG0u0X6YLBu4/pGTRY2dJfo2UCp5+migrFwbicd
-   Q5EaXmh0lzZaUqQcVav3ha/j4V9K/h4RqrjzjSJZwkmw7fdecCfrrL0hl
-   Dc6UOOvSNqCwMHOLc4YAbPNDOlPbCQ7IkoGiqEvGYTLJHgIu7FN5Rb3oJ
-   VOiRMjfDb47HYLRUDdMDWjUIR6doDnWKdONbnPCvV0RrpQekn2/nSVXqK
-   +xnmD1O4LE7bPmlZkngcdaQcul0ysjBgOj7mUc6xuiTyf5oo9sovW6iKc
-   w==;
-X-CSE-ConnectionGUID: 3yH8xzAnRiOupfd8zbZ6jg==
-X-CSE-MsgGUID: OwhPSZJhSAiOSG0LlL2uzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11240"; a="30076192"
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="30076192"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:51:12 -0700
-X-CSE-ConnectionGUID: JcMIYN3xQ6ag+n1CrRZq5A==
-X-CSE-MsgGUID: TzldkHpsTc60iL7s/0Xj0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="86563041"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.108.71]) ([10.125.108.71])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 08:51:09 -0700
-Message-ID: <1bb31599-b103-45d2-b553-5facdb111941@intel.com>
-Date: Tue, 29 Oct 2024 08:51:08 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBmDwh4B"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6e3a97a6010so64059017b3.1
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Oct 2024 09:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730219208; x=1730824008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hNz7zvIV8dkYQqm5r25/46W/cbbWVnUCIgSSCm4lcoc=;
+        b=dBmDwh4B6f9+TVZQ4jLu2x3oerlL0nSCx0hSS6lDuSCT1ne4hj01Cs6fad0R6UPqrH
+         0RqhqBRD2uZTtj+4AOizZxP2I9qOSZJ9F/6K30OjMSFaNZOjq90zPQGDuZsauGH6CKqk
+         n5kos00g0FpbieenoF50dlxZXXaYOwhDPvum63KXJ1AsVh5yggSIg5eKAcFRxB9AU9Br
+         NUHIDssJa385QefphuKOsko/o5qpeT2dw+KdYmrSyfG1PDTluXrU+Lzbg8hrCtjfpoK2
+         Dd2xVWH6gnktxN6XRAa6zXQVI94ASPHTNLf1XxDdk2/E4n6+V1JOKP8VgZWNzzIu6YUp
+         eyVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730219208; x=1730824008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hNz7zvIV8dkYQqm5r25/46W/cbbWVnUCIgSSCm4lcoc=;
+        b=MSk2N7WRJd1vzrU5nW47OSGV8j2hOrVEGgg299gcN8ijp9OjUpJ6Ffb9cQ5j6OjLVk
+         uZeBM0+Dk5jMvSiOvurpe9sCm03T7CqNJRtAEL9QLqQ4VwEGkf1wWWs6jsumWhvG0rhU
+         RPRQHzax/RFPCsCNRx3tvGfCLe9qUkK3swVPLXy96RPdTNUDLDJzDBCdZXUDWuVS0Kmn
+         fufYccnDJ/Q4qOkKB9qCnk2vF0O8Usiv8aP95bDGzreMZVUf+NsO+elVGwNd0YnDK6Xb
+         s+xgB3Z7Nwl2c8kR9WahP70OpaUEb6DsUuKqskMyLLlS1hofEnLad4RZDjwFAgnveRgg
+         CPHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXO3fbpEOrzczvrPA/5wHFQNekYkzDz6Cw2hV9+vC9LJ+rGgwH1enBImQDiGCZwWdu9+E2284+9UWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4UDey1r0B1Q/s7lTxT/vOeM3qfhpKWaD1QJQSSrzfre9SrymA
+	zwQE1Tn/jJo1ZHoy16LS/vHIkEmAdBg73gWixN9MJIjmVcMF8VkP
+X-Google-Smtp-Source: AGHT+IEx5cx+H/vRnj3+XiSrvVcTyv5l1RSnPWY4t3VZwdC+aoAcizhYS0/Ff5Hx1OnoFRckiGxU1Q==
+X-Received: by 2002:a05:690c:9c0f:b0:6de:a3:a7ca with SMTP id 00721157ae682-6e9d8acb4a9mr154068787b3.32.1730219208085;
+        Tue, 29 Oct 2024 09:26:48 -0700 (PDT)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e9c6bdd42esm20204777b3.47.2024.10.29.09.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2024 09:26:47 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 29 Oct 2024 09:26:41 -0700
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: mst@redhat.com, Markus Armbruster <armbru@redhat.com>,
+	qemu-devel@nongnu.org, linuxarm@huawei.com,
+	linux-cxl@vger.kernel.org, marcel.apfelbaum@gmail.com,
+	Dave Jiang <dave.jiang@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH 1/6] hw/pci-bridge/cxl_root_port: Provide x-speed and
+ x-width properties.
+Message-ID: <ZyEMwUnnufY0bbvU@fan>
+References: <20240916173518.1843023-1-Jonathan.Cameron@huawei.com>
+ <20240916173518.1843023-2-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 06/14] cxl/mbox: Add SET_FEATURE mailbox command
-To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
- mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, gregkh@linuxfoundation.org,
- sudeep.holla@arm.com, jassisinghbrar@gmail.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
- Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
- rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
- dave.hansen@linux.intel.com, naoya.horiguchi@nec.com, james.morse@arm.com,
- jthoughton@google.com, somasundaram.a@hpe.com, erdemaktas@google.com,
- pgonda@google.com, duenwen@google.com, gthelen@google.com,
- wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
- wbs@os.amperecomputing.com, nifan.cxl@gmail.com, tanxiaofei@huawei.com,
- prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
- kangkang.shen@futurewei.com, wanghuiqiang@huawei.com, linuxarm@huawei.com
-References: <20241025171356.1377-1-shiju.jose@huawei.com>
- <20241025171356.1377-7-shiju.jose@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241025171356.1377-7-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240916173518.1843023-2-Jonathan.Cameron@huawei.com>
 
-
-
-On 10/25/24 10:13 AM, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Mon, Sep 16, 2024 at 06:35:13PM +0100, Jonathan Cameron wrote:
+> Approach copied from gen_pcie_root_port.c
+> Previously the link defaulted to a maximum of 2.5GT/s and 1x.  Enable setting
+> it's maximum values.  The actual value after 'training' will depend on the
+> downstream device configuration.
 > 
-> Add support for SET_FEATURE mailbox command.
-> 
-> CXL spec 3.1 section 8.2.9.6 describes optional device specific features.
-> CXL devices support features with changeable attributes.
-> The settings of a feature can be optionally modified using Set Feature
-> command.
-> CXL spec 3.1 section 8.2.9.6.3 describes Set Feature command.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  drivers/cxl/core/mbox.c | 73 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    | 34 +++++++++++++++++++
->  2 files changed, 107 insertions(+)
+>  hw/pci-bridge/cxl_root_port.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 3cd4bce2872d..4b9e62de164b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1011,6 +1011,79 @@ size_t cxl_get_feature(struct cxl_memdev_state *mds, const uuid_t feat_uuid,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_get_feature, CXL);
->  
-> +/*
-> + * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
-> + * available in the mailbox for storing the actual feature data so that
-> + * the feature data transfer would work as expected.
-> + */
-> +#define FEAT_DATA_MIN_PAYLOAD_SIZE 10
-> +int cxl_set_feature(struct cxl_memdev_state *mds,
-> +		    const uuid_t feat_uuid, u8 feat_version,
-> +		    void *feat_data, size_t feat_data_size,
-> +		    u8 feat_flag)
-> +{
-> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> +	struct cxl_memdev_set_feat_pi {
-> +		struct cxl_mbox_set_feat_hdr hdr;
-> +		u8 feat_data[];
-> +	}  __packed;
-> +	size_t data_in_size, data_sent_size = 0;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t hdr_size;
-> +	int rc = 0;
-> +
-> +	struct cxl_memdev_set_feat_pi *pi __free(kfree) =
-> +					kmalloc(cxl_mbox->payload_size, GFP_KERNEL);
-> +	pi->hdr.uuid = feat_uuid;
-> +	pi->hdr.version = feat_version;
-> +	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
-> +	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
-> +	hdr_size = sizeof(pi->hdr);
-> +	/*
-> +	 * Check minimum mbox payload size is available for
-> +	 * the feature data transfer.
-> +	 */
-> +	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
-> +		return -ENOMEM;
-> +
-> +	if ((hdr_size + feat_data_size) <= cxl_mbox->payload_size) {
-> +		pi->hdr.flags = cpu_to_le32(feat_flag |
-> +				       CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
-> +		data_in_size = feat_data_size;
-> +	} else {
-> +		pi->hdr.flags = cpu_to_le32(feat_flag |
-> +				       CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
-> +		data_in_size = cxl_mbox->payload_size - hdr_size;
-> +	}
-> +
-> +	do {
-> +		pi->hdr.offset = cpu_to_le16(data_sent_size);
-> +		memcpy(pi->feat_data, feat_data + data_sent_size, data_in_size);
-> +		mbox_cmd = (struct cxl_mbox_cmd) {
-> +			.opcode = CXL_MBOX_OP_SET_FEATURE,
-> +			.size_in = hdr_size + data_in_size,
-> +			.payload_in = pi,
-> +		};
-> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> +		if (rc < 0)
-> +			return rc;
-> +
-> +		data_sent_size += data_in_size;
-> +		if (data_sent_size >= feat_data_size)
-> +			return 0;
-> +
-> +		if ((feat_data_size - data_sent_size) <= (cxl_mbox->payload_size - hdr_size)) {
-> +			data_in_size = feat_data_size - data_sent_size;
-> +			pi->hdr.flags = cpu_to_le32(feat_flag |
-> +					       CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
-> +		} else {
-> +			pi->hdr.flags = cpu_to_le32(feat_flag |
-> +					       CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
-> +		}
-> +	} while (true);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_feature, CXL);
-> +
->  /**
->   * cxl_enumerate_cmds() - Enumerate commands for a device.
->   * @mds: The driver data for the operation
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 0c152719669a..fb356be8b426 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -532,6 +532,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
->  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
->  	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
-> +	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
->  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
->  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
->  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-> @@ -879,6 +880,35 @@ struct cxl_mbox_get_feat_in {
->  	u8 selection;
->  }  __packed;
->  
-> +/*
-> + * Set Feature CXL 3.1 Spec 8.2.9.6.3
-> + */
-> +
-> +/*
-> + * Set Feature input payload
-> + * CXL rev 3.1 section 8.2.9.6.3 Table 8-101
-> + */
-> +/* Set Feature : Payload in flags */
-> +#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
-> +enum cxl_set_feat_flag_data_transfer {
-> +	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
-> +	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
-> +};
-> +
-> +#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
-> +
-> +struct cxl_mbox_set_feat_hdr {
-> +	uuid_t uuid;
-> +	__le32 flags;
-> +	__le16 offset;
-> +	u8 version;
-> +	u8 rsvd[9];
-> +}  __packed;
-> +
->  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->  			  struct cxl_mbox_cmd *cmd);
->  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> @@ -945,4 +975,8 @@ int cxl_get_supported_feature_entry(struct cxl_memdev_state *mds, const uuid_t *
->  size_t cxl_get_feature(struct cxl_memdev_state *mds, const uuid_t feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size);
-> +int cxl_set_feature(struct cxl_memdev_state *mds,
-> +		    const uuid_t feat_uuid, u8 feat_version,
-> +		    void *feat_data, size_t feat_data_size,
-> +		    u8 feat_flag);
->  #endif /* __CXL_MEM_H__ */
+> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+> index 2dd10239bd..5e2156d7ba 100644
+> --- a/hw/pci-bridge/cxl_root_port.c
+> +++ b/hw/pci-bridge/cxl_root_port.c
+> @@ -24,6 +24,7 @@
+>  #include "hw/pci/pcie_port.h"
+>  #include "hw/pci/msi.h"
+>  #include "hw/qdev-properties.h"
+> +#include "hw/qdev-properties-system.h"
+>  #include "hw/sysbus.h"
+>  #include "qapi/error.h"
+>  #include "hw/cxl/cxl.h"
+> @@ -206,6 +207,10 @@ static Property gen_rp_props[] = {
+>                       -1),
+>      DEFINE_PROP_SIZE("pref64-reserve", CXLRootPort, res_reserve.mem_pref_64,
+>                       -1),
+> +    DEFINE_PROP_PCIE_LINK_SPEED("x-speed", PCIESlot,
+> +                                speed, PCIE_LINK_SPEED_64),
+> +    DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
+> +                                width, PCIE_LINK_WIDTH_32),
+>      DEFINE_PROP_END_OF_LIST()
+>  };
+LGTM.
 
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+Fan
+>  
+> -- 
+> 2.43.0
+> 
+
+-- 
+Fan Ni
