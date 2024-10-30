@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF511CF7BB
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 21:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3C11D1E7C
+	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 21:55:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730325309; cv=none; b=HzJEyWWiNA6bOjdiv2M28gBv47x3rfXcPjfeCRhTlsP/rHrxPt4beG1x4naeMcl2A+brGuD2saMcLTxYaH73V+2Cd19CY2AJZQSqiq3S1bcnEPNb1ZbRh+PDbyhTfuFEIAOZyc57EYuJZqN8qaqwnMOfxLCxKVwfrm7Q0Qzspxs=
+	t=1730325311; cv=none; b=CuQ0NrITvQ4ZB6V3GvmDqIaL7RVEvDIznplyDZzgoKRHW/3FiVyuL8qTCoak3wBt/PI5YfUF0zKFZRsyUud+kd0NQVL8R2HqgeX1ljc+lc/h1N8JlaH/8dYobb0wMM53ONFmWKjja2lu2RhsCcWU7WJaACpbTBP15kZ/l6vrTQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730325309; c=relaxed/simple;
-	bh=bnA5MH3Ut/o2XkdYerkFVpg3U06Fxf8NVmDS1qWQDyU=;
+	s=arc-20240116; t=1730325311; c=relaxed/simple;
+	bh=ie1bgarTdW2m0OhCx2ixlHunBdnNwnRrR7sxjGL0b9I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eyuE7y9Fa5ocoMHoFXvbJAHisnTRNKjzzKTwDSJl25QLo8b8uZ6oS0lMD3oj814yruJKvtoMl07E7/Bt3wk+x5jBpN3l82U1K3u4uIvBDMcSzwf5Nl5YsQ378ve1P68zIq+4ibRqOm2s2nYvN4UjoKsjsWsuQxBG2oC4gzdGhgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQJfZvCT; arc=none smtp.client-ip=192.198.163.11
+	 In-Reply-To:To:Cc; b=Jteg7F4l6K685DiW7Nhi89FGi/aYM0mY342oDTtTV0awAkkFJsMYGH76XY5I/oAlGw8VGKXrvtQ6bOCe6I3Clgg0BsFko5e5R1F6Z9R/0w71y2Ig1wLeQS58rzfTTtadQ3etze82e0q/XHLYE1TVMsALhKTlp2F/v7SYN6p/IKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K+hnXUc2; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQJfZvCT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+hnXUc2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730325308; x=1761861308;
+  t=1730325309; x=1761861309;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=bnA5MH3Ut/o2XkdYerkFVpg3U06Fxf8NVmDS1qWQDyU=;
-  b=mQJfZvCTsCMii/vpZgh9iLCFQ/dxQCIoba8Yij+LTmCXJFlfFx7DWP0L
-   koNDPWpf4akDQPOL4v6VM1yezsFDQOMt9Gec44UtnNSaoKfdD+8Iyb7lm
-   cz51tfXkRDQl66xkZF1WwWw69teHGKM6TeAcJ/Z1QDnFFescpJSfeeu+G
-   fEdGgiK7mMsHQ9uT7CjT0C2Mj80TEcr/I5EizOWLBpDE1HR4aowH3EWwJ
-   6M9BZtsjtKFQYE0pMC98aRCAC38hmhIAULjTontyTqEXmo0R9aSj7zETe
-   +kmt5z6alrAoOAgT6IdUtR7I1AU0qaHtVKPq6mOTEpTixRzKVkW168vsQ
-   g==;
-X-CSE-ConnectionGUID: /ZdVItkUTEiREBBJOxumgA==
-X-CSE-MsgGUID: tIQKYQw3RTuadshAHclpZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="40620515"
+  bh=ie1bgarTdW2m0OhCx2ixlHunBdnNwnRrR7sxjGL0b9I=;
+  b=K+hnXUc2AGbw9V0DmN9921+wauDwMacEgqcGBYbMMYfLycK0hXQDWN5c
+   ZHRfTuNCIXEWOjTpy0R493+XubD0txtnI/MtBrtvxGvXkkZ6MSUFqC8uZ
+   GfhSIZujluWlLhpcAKs/KSpTpomxk4pDRfZh9OxMH1eBT4rahy5CrVykx
+   VZcRpTn6d15LFHFZddLGANwAmmmiyZHKO2yShN5tr7GF7SBZ/XOzLzCAn
+   3QtAwoJhGaNj8jlH2avXZRdWkYA0YPLGyF9I2n0sFBlkZ2ZDEqSCpRcc6
+   riesP2A0xG2m7W3VDoKC4YsHasNlRPVThwAwo1xPj0oiEdFWyHcMp7s+P
+   Q==;
+X-CSE-ConnectionGUID: vhgyrdl6S3iX7Oj92cllSQ==
+X-CSE-MsgGUID: 9wPvM8blT6WItDAPzenKyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="40620520"
 X-IronPort-AV: E=Sophos;i="6.11,246,1725346800"; 
-   d="scan'208";a="40620515"
+   d="scan'208";a="40620520"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 14:55:07 -0700
-X-CSE-ConnectionGUID: HtVLIGyhTBOeFp4sGGTRyQ==
-X-CSE-MsgGUID: anaIG9rLS/yLhYlVpvRwUA==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 14:55:09 -0700
+X-CSE-ConnectionGUID: 6Te4gJDZRQeFrDkxPoWf6Q==
+X-CSE-MsgGUID: SmOYxaVWTxG9n6q6h0tzcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,246,1725346800"; 
-   d="scan'208";a="119899958"
+   d="scan'208";a="119899962"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO localhost) ([10.125.108.161])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 14:55:06 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 14:55:08 -0700
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Wed, 30 Oct 2024 16:54:44 -0500
-Subject: [ndctl PATCH 1/6] ndctl/cxl-events: Don't fail test until event
- counts are reported
+Date: Wed, 30 Oct 2024 16:54:45 -0500
+Subject: [ndctl PATCH 2/6] ndctl/cxl/region: Report max size for region
+ creation
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241030-dcd-region2-v1-1-04600ba2b48e@intel.com>
+Message-Id: <20241030-dcd-region2-v1-2-04600ba2b48e@intel.com>
 References: <20241030-dcd-region2-v1-0-04600ba2b48e@intel.com>
 In-Reply-To: <20241030-dcd-region2-v1-0-04600ba2b48e@intel.com>
 To: Alison Schofield <alison.schofield@intel.com>
@@ -66,45 +66,40 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>,
  linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
  Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.15-dev-2a633
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730325302; l=1446;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730325302; l=969;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=bnA5MH3Ut/o2XkdYerkFVpg3U06Fxf8NVmDS1qWQDyU=;
- b=2LHLcye7C1q/k2ff3Tle0TanynHZFAlrIrZb1/odOlKFg9NhciiCGZwU3KfuxfpD1n7zCEAt3
- HfeF81rrCzfCuMYo971bKWs0+tSsYBFlETLEUwEFcGyHdtLRKFFzVnZ
+ bh=ie1bgarTdW2m0OhCx2ixlHunBdnNwnRrR7sxjGL0b9I=;
+ b=SEow2WPOpIniAZ5Mgcv0yx6x5d70R6gsolbiHhmajL24qlEROwAP/dc+2s5PitJ/Hi1lVUA22
+ e7/1/06C+OxCjoNAPY10VgoONwbnCaAm5OPZO1C24FGaz5JWuDyCSR8
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-In testing DCD event modifications a failed cxl-event test lacked
-details on the event counts.  This was because the greps were failing
-the test rather than the check against the counts.
+When creating a region if the size exceeds the max an error is printed.
+However, the max available space is not reported which makes it harder
+to determine what is wrong.
 
-Suppress the grep failure and rely on event count checks for pass/fail
-of the test.
+Add the max size available to the output error.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- test/cxl-events.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ cxl/region.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/test/cxl-events.sh b/test/cxl-events.sh
-index ff4f3fdff1d8f6fd80f093126a27bf14b52d167f..c216d6aa9148c938a649cb22656127b3df440039 100644
---- a/test/cxl-events.sh
-+++ b/test/cxl-events.sh
-@@ -71,10 +71,10 @@ echo 0 > /sys/kernel/tracing/tracing_on
- echo "TEST: Events seen"
- trace_out=$(cat /sys/kernel/tracing/trace)
+diff --git a/cxl/region.c b/cxl/region.c
+index 96aa5931d2281c7577679b7f6165218964fa0425..207cf2d003148992255c715f286bc0f38de2ca84 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -677,8 +677,8 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+ 	}
+ 	if (!default_size && size > max_extent) {
+ 		log_err(&rl,
+-			"%s: region size %#lx exceeds max available space\n",
+-			cxl_decoder_get_devname(p->root_decoder), size);
++			"%s: region size %#lx exceeds max available space (%#lx)\n",
++			cxl_decoder_get_devname(p->root_decoder), size, max_extent);
+ 		return -ENOSPC;
+ 	}
  
--num_overflow=$(grep -c "cxl_overflow" <<< "${trace_out}")
--num_fatal=$(grep -c "log=Fatal" <<< "${trace_out}")
--num_failure=$(grep -c "log=Failure" <<< "${trace_out}")
--num_info=$(grep -c "log=Informational" <<< "${trace_out}")
-+num_overflow=$(grep -c "cxl_overflow" <<< "${trace_out}" || true)
-+num_fatal=$(grep -c "log=Fatal" <<< "${trace_out}" || true)
-+num_failure=$(grep -c "log=Failure" <<< "${trace_out}" || true)
-+num_info=$(grep -c "log=Informational" <<< "${trace_out}" || true)
- echo "     LOG     (Expected) : (Found)"
- echo "     overflow      ($num_overflow_expected) : $num_overflow"
- echo "     Fatal         ($num_fatal_expected) : $num_fatal"
 
 -- 
 2.47.0
