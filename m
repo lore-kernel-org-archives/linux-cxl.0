@@ -1,65 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBAF1E47B0
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 10:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4682194151;
+	Wed, 30 Oct 2024 10:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730284815; cv=none; b=CAcTT7q1dHuPaZXHO7guB3dTtVNE7yBX1AduCKP69V8p3D+pfozXXR/bFaFF7fbAGdaNeLosVZsK0ojip9lK651P4Oyg2qbF+gTV928mwERwqX66TQ953uFeMYl7pueztH4jkWDZ1G0KuFbJoZu6Cz2b36OcVD5f7S71tqoWVsY=
+	t=1730285515; cv=none; b=fk6SChCQZTAzNjjZ7GEoOLAO9f69B13GImYoNqTYVkYFM5rbavQVXzKrSZPhQVRJuuWx6tW9at5LLKjZOsi/gk+jD2ZNFzNgU74WkV491HQADLS/X+5OUAMnQVKreAdnHXxhV8Q5Wn1xr/SdZCIdMzhihFk3GDk3QEGklPGm8io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730284815; c=relaxed/simple;
-	bh=MUptrIFZ5MmerslHECojm4cPD/lX7r1eKpNrQ0rEWbE=;
+	s=arc-20240116; t=1730285515; c=relaxed/simple;
+	bh=ySMIDfL39z7RfhOBw+kZQlr5Jw+TjEfT4XWUlkrQitY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Po6lDGlL0EONpSXYW/j/lGyFurgkxPKyJg4Q1y2qsAyF0i7P60YOZ14mRvX9+I7rPBh5y+tMOoE7ZHfSgTW9hXo2oA79/x8Xb9/csPdFlGLaj33annSirUCqVyRoXn9xwU+NQolELFOBKjHmUtJYP2dgP7BRzGSnoEA1VVYOfIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dAdBnCVV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Sy59/lWYMlqiIJAb+7ikijSVG47nMZ5m3FEi7GFPk84IUWC9Bqy6jGKneIrhJ4Xr26hyYRVSAMwVJoIgRvcbF3inECPAyFMZXxG9k1UOdTerIiqw4zoqmuQNdD5jqOJAzGXk1q7ND8sZIgXUpsU/dnhne/X8THDCbVpE0H7K58o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=kHaPlzfU; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAdBnCVV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730284812;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mLeQeKxO4bKCx0zllR0uO5tRuOw0Dm45NAsZWOAqEzw=;
-	b=dAdBnCVVJR0cGbrXuTWYB2H3nLGob02/EhIDpZJ6QNafQX9RM9pCuoLnxzLBvVSHzOOwz4
-	AuD2F2PUZ9xJxBixawxWd/JeM0C74Zt8+/cUXQ78YAe8/IZ4zu8OUPIkHxLopYK0FE95Rn
-	KwTY71j8NrOaounDfSFzLJUjVEtPK7o=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-215-UMKq86ASO3OqGdi-eTArYg-1; Wed, 30 Oct 2024 06:40:11 -0400
-X-MC-Unique: UMKq86ASO3OqGdi-eTArYg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4314c6ca114so46755165e9.1
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 03:40:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730284810; x=1730889610;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mLeQeKxO4bKCx0zllR0uO5tRuOw0Dm45NAsZWOAqEzw=;
-        b=BRTlbzK4uI0UGRK0icOVkQddX2/ebage3m1IQtT/e0W2pIQaRiIinAkDVESfgNJRtq
-         je40Y6sp9/xVGThcdJdeiphdR/h0pJUVpMe28qxHp08YApq/9xLWkIov1o5Y1jiSniTa
-         rxb2ADD8CaQgRKNcrMbNVoFaQPXXB0B5FcgCZEL7XQT+7Ek8nvwdzTKzcvVMMHD3609V
-         IvGGRBGk8+9CBvJ0ie6L28SWQKS2vzqw1pPeG4nm8Olgwk8EPsOUtL7WZ+2f49HbCThW
-         bxpd0ZksKoZfUSCjBneRfL2pWcjdtvUSID6v6Z/KV2mNgJFyG9hqw8yAbqjTBRxTy+rB
-         QJaw==
-X-Gm-Message-State: AOJu0YyUZNzPJBLNrYz+9/zXDeHh03+ACjUu7lIjijH0WPtQPexYtF76
-	ALExzV+cb5v2gB6tO6zQLZrUqrxUzlTVuqJM3e9m8KSx1B7pH7o/JZRvfyvzzJKa8A+0gpFT+H9
-	ZbPbFQk4gTLHgpImfPpxeP1j2FqqLVa781jDxt0iymslkuFDu6obKQCCP4g==
-X-Received: by 2002:a05:600c:3515:b0:430:5887:c238 with SMTP id 5b1f17b1804b1-4319aca3fe5mr112681485e9.11.1730284810311;
-        Wed, 30 Oct 2024 03:40:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGiEZzVF2gCazHGJtH0vEuDXfbOgnEmBrD4+SFTyK948KaP3norxDlCMnAsp660DUkE7QtV8A==
-X-Received: by 2002:a05:600c:3515:b0:430:5887:c238 with SMTP id 5b1f17b1804b1-4319aca3fe5mr112681295e9.11.1730284809957;
-        Wed, 30 Oct 2024 03:40:09 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c733:7c00:d067:e327:4f99:7546? (p200300cbc7337c00d067e3274f997546.dip0.t-ipconnect.de. [2003:cb:c733:7c00:d067:e327:4f99:7546])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b70c44sm14957838f8f.80.2024.10.30.03.40.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2024 03:40:09 -0700 (PDT)
-Message-ID: <c47337ea-f20e-44eb-95e8-c29b2db849a7@redhat.com>
-Date: Wed, 30 Oct 2024 11:40:08 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="kHaPlzfU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730285482; x=1730890282; i=metux@gmx.de;
+	bh=B6qn/U2iq1HtEQufXVVEjYdqzFLF7N8KdBVfPWVpjf8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=kHaPlzfUDjvsc9qW1hC4CiOvQa9AlPWikWh7OEVPiyzAeJNLVvisr4vGZ2JgQfux
+	 nlUyZX/0LEFLQ6+Pjx7gNi646eQB0mq6Qi26XJZQrtoW0m1kdEONUnvMtdfO36bMa
+	 DEseyRpL7uaSBLh2WU03bJpJPDh9mWDZOJIGhZEYbUg8UizEhlTtA7yCyJ7E/T+n6
+	 7CS7eLOpu+pGvkJrkbsecUVgyRWcf+YhfCgg3FOXSR1P9+JlTrukUa6cJgOWqNPJN
+	 ErzXLy8WHSwFUCZLddIhxG/l0moGS8a3xDNmTNv4767asHXBTRMVyIkukGHaPdjY2
+	 fBNeThK0EAuJZH6TZw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.178] ([95.114.207.188]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDQeK-1sxsYJ0YuE-00E80s; Wed, 30
+ Oct 2024 11:51:22 +0100
+Message-ID: <18854680-4ab7-4453-85ff-78351d4d4ec9@gmx.de>
+Date: Wed, 30 Oct 2024 11:51:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,126 +43,61 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] acpi,srat: give memory block size advice based on
- CFMWS alignment
-To: Gregory Price <gourry@gourry.net>, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
- dan.j.williams@intel.com, rrichter@amd.com, Terry.Bowman@amd.com,
- dave.jiang@intel.com, ira.weiny@intel.com, alison.schofield@intel.com,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- rafael@kernel.org, lenb@kernel.org, osalvador@suse.de,
- gregkh@linuxfoundation.org, akpm@linux-foundation.org, rppt@kernel.org
-References: <20241029202041.25334-1-gourry@gourry.net>
- <20241029202041.25334-4-gourry@gourry.net>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20241029202041.25334-4-gourry@gourry.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Subject: Re: [PATCH v2 0/4] printf: Add struct range print specifier
+To: Ira Weiny <ira.weiny@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+References: <20241025-cxl-pra-v2-0-123a825daba2@intel.com>
+Content-Language: tl
+From: metux <metux@gmx.de>
+In-Reply-To: <20241025-cxl-pra-v2-0-123a825daba2@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:VALWkIbQgdz4Kre0TowjBzMwKze9v87s58H0hbTgNaM6JrIrfLm
+ D13G9Qn3oGlW2ADV7Pwuj4LV+lKoNx4nT4zncXWQAK8X/fEqIfsJeoaGLijxzef1cMYvNH2
+ COVZ1534REOWwcb/dsFZx+Ac4X5eKo2klYmIS/wjSYNZs+oDPmcljXo5PQtFUVXI9X/24+x
+ rnCH5Iea4nlxKkK4Mfi4A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:o59CQicXyQ4=;fj2WhHkOLSc3PEObbIs6JyeLJEb
+ 2Ze5nC0/14dsmrww1kL8PbPLfsfT7bldeiTXYsDUewH3MyaqOzUMDDAjFMBIbqAa18h/0aeVu
+ to1QEOKjNEZjWbwGhUWb2K2f4lcIhiIO3SzaO0Ac0mwWKF2yZkaxcgkLU7Cr2vKIVCszVp5E+
+ I3wfDxQg2HBc+8NzBiNYFAm8B9CHQ+nKSy0cTZlpYzm8NIajNAFkYzI598fbdy0Zv4R3+szFX
+ co7k6l7JSrj2KtZVYwoE782OvjML/unRJzeKqK4sjiyq2sEVyAbSEJRZttHYsyoy0STDRGPwE
+ tpTgqVbIZkZBwguQjKko3wlQSiFze9laddg3EAsr0QFdMNTD5WQs5Q9mZT86oHewokpf9NLd2
+ RDaJsNv0Tc++fydH4I5pHZiDFaOmuOaU06+asdGtQtUS2RHxT/p4f4+08l5Vi/eWpwySOgoo6
+ lglZ4HrIG4C0lF9yWeNgHavP9fw2quXV0JnnmU7d/19yXVpfk/jiGO2i0wB6OPmyqLz/e7MJL
+ IZKJjXqf5H/jqKBleNRnkbn5n1mCpiAOOdtPmkKbsaPL16b2jz1ONdIYx4mfCAcORydF6f7KN
+ 1KCVsrmPeqi0fuhFC2ftHCxPqU1c1nzqcQsqISLClMQIctVeLg4LBJNsE89AroQ/kAHKv9Za6
+ xcRT4A4qrkrFqmzayjCtbVv55UeubrgW8YpknAhs6cVOLLtvKHzP0dnBCnlWzPZOJGvw6qAwi
+ Qar6nitWlLupXRYI76KYGWr1sb/C878oFk+JlFy5LsIn94lhArA7Ll2tMSr3it3ospHTO4kaB
+ /wOnZtyMvS7JFf4StbEVIG5LNYKppCeJfVrkSWHJiXFlA=
 
-On 29.10.24 21:20, Gregory Price wrote:
-> Capacity is stranded when CFMWS regions are not aligned to block size.
-> On x86, block size increases with capacity (2G blocks @ 64G capacity).
-> 
-> Use CFMWS base/size to report memory block size alignment advice.
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   drivers/acpi/numa/srat.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 44f91f2c6c5d..a24aff38c465 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -14,6 +14,7 @@
->   #include <linux/errno.h>
->   #include <linux/acpi.h>
->   #include <linux/memblock.h>
-> +#include <linux/memory.h>
->   #include <linux/numa.h>
->   #include <linux/nodemask.h>
->   #include <linux/topology.h>
-> @@ -338,12 +339,26 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->   {
->   	struct acpi_cedt_cfmws *cfmws;
->   	int *fake_pxm = arg;
-> -	u64 start, end;
-> +	u64 start, end, align, size;
->   	int node;
->   
->   	cfmws = (struct acpi_cedt_cfmws *)header;
->   	start = cfmws->base_hpa;
-> -	end = cfmws->base_hpa + cfmws->window_size;
-> +	size = cfmws->window_size;
-> +	end = cfmws->base_hpa + size;
-> +
-> +	/* Align memblock size to CFMW regions if possible */
-> +	for (align = SZ_64T; align >= SZ_256M; align >>= 1) {
-> +		if (IS_ALIGNED(start, align) && IS_ALIGNED(size, align))
-> +			break;
-> +	}
+On 26.10.24 02:46, Ira Weiny wrote:
+> Support for the Compute Express Link (CXL) Dynamic Capacity Devices
+> (DCD) have grown a number of uses to print struct range.[1]  Support for
+> a printf specifier '%pra' was being worked within a large series and has
+> garnered a number of comments and discussion.
 
-Are there maybe some nice tricks bi-tricks to avoid the loop and these 
-hardcoded limits? :)
+This is just printing out hex dump of a memory range, correct ?
 
-align = 1UL << __ffs(start | end));
+What I'm looking for quite some time is a sane way for dumping structs
+in a human readable form (field: value pairs, using their actual types
+eg. int vs string, ...).
 
-Assuming "unsigned long" is sufficient in this code (64bit) and "start | 
-end" will never be 0.
+Any idea to do that in a generic way ?
+(potentially using debug info ?)
 
--- 
-Cheers,
 
-David / dhildenb
-
+--mtx
