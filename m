@@ -1,191 +1,146 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2082.outbound.protection.outlook.com [40.107.244.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE4421314A;
-	Wed, 30 Oct 2024 15:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730301356; cv=fail; b=LNCcldaFVMs2GhChm3EL4Yno/nGPbPUFcJ7dpoqPzFJUsRpzsxr1Z01uhQbmzQrcZzS2kgahXsZ0mE2UXTjN+0EmAtvyT0AAGqBlrXBK4L1b8NNQsPLrfAV1f4gppPAqbGaOdHEU8lr9YzOycML3X2FqPnIzH06IvTn6E6G2+rY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730301356; c=relaxed/simple;
-	bh=P+WIbD8zBxhWSUWgt4yFRFebNQnsjRRd+36IeDXVrl0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YI6BYIGJJy1KWdLmBNIOdheVcA0MpsoLsrOflP0GjksGiibAgaKaEbb/SmoOJNpUyk9HP46kMgls2ihxAx8SqADJKe3Ak/+OllxTxvmbMjzPt6FJyLeJxflOCNZKMD39JBpoPwaybG5zQBReHGnGJui1YhqApTXsWrySf+zWKJs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GWyyl2Dh; arc=fail smtp.client-ip=40.107.244.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE462215014
+	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 15:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730301913; cv=none; b=niBpx1gZ1EM6e0HfNIHy+QbaOJ9Df9PC3/Ydh+fkc/C/713mbzwfGHZAqcK7SJmYIXlFghW1rExYXnoyYtYOBobtT44Ju8o2cy+6jsZmhpwQUDnDwAP3+Y8Z1wh2BX/WnIcn+iHMe57e/skhIJPl1W23NzK9kTuC60g4Nck9tr8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730301913; c=relaxed/simple;
+	bh=NEIgB2tFlQkG+JrX4hQVS8M95TFQSsPnWmdZLvR/njQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C1/LThIvqMdM6Rxki676TFY+VjiJt7eCUpLiaFEfymUd+RluOkajZ/LSVmpI//odMILj+0jjDoPsPE3O44scnV7QO3qROM5tVIJeVb/wteXfu0yciPua20BNJs4llQ+6Z6svc1PZcPRA6aO6qRT8uJnMjptCxNAxrd5L4aZiy0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AhIA4s8M; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GWyyl2Dh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jIbbiNxwKUjkbqJOes1LYuxStpb/Shx2Af6jtJu0Yo1zXC/UH0cL5hvou2/ZILRo7yCJ3LJyWPNKl0++UYA0EUh7npLB5iHY1e1XlZ2Ja4nRjFkKrl49ADzG31K9IJJvzspguxj+6q+3VEZsoWPVj5BXmS3y0P1BagnkNMWJ7mu6kZu4SI2Tf5oP2qNqtB6E9+yRSkuXgafCYfPeQ/rkB/ua+LyEYqHtZ7m2o3A8MrKOVWoYXb+fyablUzkhC84NblD8o63DOJ+FilZqDf6bLRnhDqLPRPZmN2cRx4sYSjvKkul0C7nJGeZOG3qNukAHwc8rFC4ENl5qSoOaSB1vmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P+WIbD8zBxhWSUWgt4yFRFebNQnsjRRd+36IeDXVrl0=;
- b=Z6va6JH0fAB/3JC/HO0HTD/OJ7yoWs1D3DgCNIv7m9CGRsSwrG+HbZrb9yfvVAEVKaLyT6aGa3tP4yxftCfDV9LyXhC3bg682jsVG4LS9BiWfLyYskfH1h3UKBcYoSOnShwdoqDt2GbkMBlaNdBjkHg2gWU0pCHu++YI7RPI+j5mtssI6LjAeWpyAGCPlfehuZs4trIkzpGq6pKBwUZaqfgvoHsHqHBXZVCE74ISfWRC9JKoO7SYB4/t7hHPQCngaprodcMfFmyTkxCmWnXdBE338NMhhOvm4/VsqLAli2t3Q6CcCX/YVC2aoCAD+Ngj/Aea+gafXkFb2n0Vy1Bz4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P+WIbD8zBxhWSUWgt4yFRFebNQnsjRRd+36IeDXVrl0=;
- b=GWyyl2DhV5AldwOd2HUdOGA+t3WySjspAVn6zm6UIaUvh4MzIhck/o1oZbA7ZqsVOOVHam6/hCAoW0rBrVE29lwV0tlsqcCloHShQrQX6qzQcAwAx8HLOWTpV5AUXws1JY1qcg4fXxOtBt5205gK7eLsGQ1RRlCkOM+rjSJjuYk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- IA1PR12MB8538.namprd12.prod.outlook.com (2603:10b6:208:455::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.18; Wed, 30 Oct
- 2024 15:15:51 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8114.015; Wed, 30 Oct 2024
- 15:15:51 +0000
-Message-ID: <c415e871-4c12-4974-a818-97287d3d8188@amd.com>
-Date: Wed, 30 Oct 2024 10:15:49 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/14] PCI/AER: Introduce 'struct cxl_err_handlers' and
- add to 'struct pci_driver'
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com
-References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-2-terry.bowman@amd.com>
- <20241030151407.0000227c@Huawei.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20241030151407.0000227c@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0067.namprd13.prod.outlook.com
- (2603:10b6:806:23::12) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AhIA4s8M"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4609967ab7eso46994521cf.3
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 08:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1730301910; x=1730906710; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YLqxwpXuJNQygjoc5/hn+2+ADZpj/AHIhIEEnWpyXU=;
+        b=AhIA4s8MqbgWg+ZbRSzG+38DHbbAMKeSwtiPDf925OIgvJqOrGMQneQQtiY9POPQJF
+         SwZ6ffTIme+H0/mzempof9BRw2AtR1yxNemfrprls9Wtcd+K4qnXqeliX+jEbpgc+WBU
+         ILNstDkhBvL7gFhILPVzv7FngIcSZb5vPk0+VDATMM+yLIOFcGDmn1toMdf08YSd9m4H
+         /s8uFfTH2fliMYZE4SDFkcagM0RousZX7LeQUHPck5SGfIFa6gkjfyMF6rBR5WxvNEAl
+         QbD+tDKUWsNjyXkupOaP5XIOJPHV4dJnBQEYCcDXVzfOt5lr9wcvU90PdKd0Mry79P7r
+         veXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730301910; x=1730906710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YLqxwpXuJNQygjoc5/hn+2+ADZpj/AHIhIEEnWpyXU=;
+        b=o1+9UKOIiwVMKT7HVO8WQhFx9JD5DgU4yR0w5E/ASTL5+mzuw8M4o6KlvBl74rB2TH
+         aa8/BN3u3LTa0LVzgCQHnRkMObPIECpc8XyAEc26MVAAFMOy+bd9c7tIzEVqiNBDyMpR
+         /ruwUoXPv6qTURMR5nWHyfw7/3omiIJ2XgCzHGAzKgtP6nIfCuiRbYLvWNlFpqqrmOIS
+         YXmYySVQconH1+LBqQk/jqh8naKy+FhIRMrpnMQh3qEqdgE77E7F0/3KLVN7efbusyLD
+         3+MSx7axFgi5uTqwH5vMGFiLeKYI0PIV4yedUH3xkhD3xJpA5d32T+RsEYbbaHmnJFTV
+         EhMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz4aTleQxf5hJ1kpprfTooWObtumhk0DPIpdHsn/8XDAzmbDh4S3XzcTHIjnPIiaoSbA59FyP4kyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0VT1Y7p6gfOmEfL/4XNK+OPLNdYnc83V7c3ZVlTUbQZF/2Vdq
+	oXbdfqkXy2AN38NjHa5/erXzcGWeEyBoUlvB3DAW/s4wEsLqMjoSzcoVgiBpGlw=
+X-Google-Smtp-Source: AGHT+IFdUZSjkUbpmwREg45uzgHne+Gkj526u++YBcKniEz4ijMYyFG+sSVSPyJ6DJno6yiyLbeAAg==
+X-Received: by 2002:a05:622a:34a:b0:461:e77:d6be with SMTP id d75a77b69052e-4613bff1f08mr234444901cf.20.1730301908427;
+        Wed, 30 Oct 2024 08:25:08 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46132297c39sm55537921cf.50.2024.10.30.08.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2024 08:25:08 -0700 (PDT)
+Date: Wed, 30 Oct 2024 11:25:13 -0400
+From: Gregory Price <gourry@gourry.net>
+To: David Hildenbrand <david@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com, rrichter@amd.com, Terry.Bowman@amd.com,
+	dave.jiang@intel.com, ira.weiny@intel.com,
+	alison.schofield@intel.com, dave.hansen@linux.intel.com,
+	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rafael@kernel.org,
+	lenb@kernel.org, osalvador@suse.de, gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org, rppt@kernel.org
+Subject: Re: [PATCH v4 3/3] acpi,srat: give memory block size advice based on
+ CFMWS alignment
+Message-ID: <ZyJP2c-wHADaE8ox@PC2K9PVX.TheFacebook.com>
+References: <20241029202041.25334-1-gourry@gourry.net>
+ <20241029202041.25334-4-gourry@gourry.net>
+ <c47337ea-f20e-44eb-95e8-c29b2db849a7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|IA1PR12MB8538:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e3393f1-3e47-459d-2a0f-08dcf8f5bdd5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T2sraGhzbytWQm0xUXMxLzRpYkdKZGtiNTFhMmRkV2Y3Ymk0YVJIM0FMUmVS?=
- =?utf-8?B?cTJPWGdmWFpZQ0RSeGJZWmVzN0F1Smtlbm1BZkxRMDBHRkJITFc4Vi9EbnM0?=
- =?utf-8?B?VHFCSFhSbkppaGpMNzB1YUt0VnZmR2NEOHMxODRUQ3J0VEMwS3Q3VGVFMVFQ?=
- =?utf-8?B?Rk5POGYvTXlYMlpieHU1U3JodzZtUXUvSGRPR0ZYUXFBaHNTWi91dGVEc1RJ?=
- =?utf-8?B?VlBBcXF4Ny9WekVkbHo3dWxXdktjTnAxY2trblJmQmVuWHNYbGhkMExtWkJI?=
- =?utf-8?B?OERmUUtERWE2MTIzb0lnVDJHS0V0dWsxZDNhTjZ4Vm5DT0xXdFlacFRsY1kr?=
- =?utf-8?B?MzBpZkpiZnlGbk81bnlhQXBlMGNpUW9jeDF5aHBSU1ludWVCQzFXTTZQZXVX?=
- =?utf-8?B?a3RoV3NDVTRIcHlSR2ZqenZScEh2RnJLV0hSbWQweW9XcXhHeTZnYkdtZGFQ?=
- =?utf-8?B?WVgxVjdkUm9oSnRqcnlETCtFclNmc1o3b0QxaEgvdC9nL2g0Y1RGM3JHMllH?=
- =?utf-8?B?RFFoMDk2dXcyQXpSUnppcnVlOUNmSWZGVUc0cGx6TzlEOHBYdXhnZkxkTURU?=
- =?utf-8?B?MXR0STJTeUl1V2lDUi80TEYrUmxSL3luV0xoTUttSzhlV1dJT1pQZGpZMGo5?=
- =?utf-8?B?b1J0SWxqWjlpK3daYXV6MzV1RVVLYkVzVEhNdEN5Z0ZQYVRHb2hzT0w3SHgv?=
- =?utf-8?B?L1BxRlZmNkdQL1M0R01qMnl2aXJLNkhpREgxOFZ3NUUxQWxGV05KbUJ1V2lr?=
- =?utf-8?B?YmkzWG1vdzVBOVF5TFphVUtoMkhiTHJFS3Z4WGEwdFV6eEE4ZWJUSDR3SVYw?=
- =?utf-8?B?cm9qNnE2MUNTMG5sZzIwUEEydGVrQnFvbGR5d0tCeE9yeVRlNlpTSmV2K3V3?=
- =?utf-8?B?aFFlRWpiYTl2dVRQZEpLdDdVeE92UHNlcmN6eExwTCtFQUZOU0FQNUwxcXRr?=
- =?utf-8?B?QUhxdGpoZlpTdEU2RDFER1FNZG5qRCtzeFBlVTVSUFRmbC9FUGFIM2cvWERi?=
- =?utf-8?B?b1YxNG5GRVFkSjlCKzl1V1pJdDdlcUVPZDRjN1lROHNMa3JDL1h5VFdaUGx1?=
- =?utf-8?B?SDVWWFZaZlVFL2V1ZjgxMm0wMHVIZEJDSmdWbU91cWQyOEpzZEhrb3AzODRP?=
- =?utf-8?B?TDk1eUhDd0Q2NWNDZHZnUEI2YlNqT1V4QlYrYnRkM3JFSTR1YTgvVnVQcSt5?=
- =?utf-8?B?b3ZYMlk0Q2xHVXYzQWNuc1ByRTVodWpuR2FPd2c2V3p4b1E5M1JjRXFBNDJO?=
- =?utf-8?B?SnhwYytnQW0xdTh1eVdmNXV5c2JSbXI5b0FML2RmMk50MEEwZDVxZ1loNkxZ?=
- =?utf-8?B?cTdIOG1KVXg0TEtGamNwNDlTVDdZV2tCYW9yaTY4RHM1UVl0UE9tWWJUWTFw?=
- =?utf-8?B?VnNJVmIvYXdWMkhuVTduZzEzOStsZnhXYjZnajZxdEdzZGRrd0RKcUF2a1g5?=
- =?utf-8?B?bzM1dW41TzZnMit2NFIrdG1Jc0g0aC9nZzJZbGRTcWlDbnAvdXIrZ2kvQVpR?=
- =?utf-8?B?Mms1b0RkV2V4MVZBUkhmOFRCTDBxcUdhWjJCUVFqSm1xVzgrcmQ2SDdaZWNv?=
- =?utf-8?B?UUtRWXJEamk3NkFaSkhBMmZRWTExN2FMODlOaFRick1uL3lIRWtDNWFzYlVT?=
- =?utf-8?B?NUZnc05xTnEzUlcrWHczblRHVDU3cnRLZ0g2TGVxdjNPNmN6dHR3ZEUvT0tC?=
- =?utf-8?B?azZXL2liV3Q0SnFJUEV5YWFvSy92M0N0WjhVVUZxU3REZDJhQ2c0eW1Da09r?=
- =?utf-8?Q?hOcZOUPhy04cHBkeug=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OFdXV1JUbXdRWUdoaGRsZ2t3aTF6a1JXTFlJR25aWEdQS1VsQUJlTjcwemVj?=
- =?utf-8?B?VTNCYjVJZGZVeXdFbEpRbndTeHlKSzg2Zk1RMFQvMkVraUNCSlFYMllIMTJE?=
- =?utf-8?B?MVo2VEhscFg3dHJWeGM4MWJDUFM2ait0Nms3MHoza2I0Zjd0YmJIRWhuMHB5?=
- =?utf-8?B?QnB6SHJudklheGtlZkplN2xraGpGU0JpTzN5c24zRzJidm9OSHBvY2ZlWC9J?=
- =?utf-8?B?ak5wdURYNUJSY1ZHVFBZSXpIampUTHVncUNPbkozUmZra3hFWVlSUlU3YlNl?=
- =?utf-8?B?NEcwVGRwWTlPY1RtOTdLRExmVE5ZQ2xGZXpnMzB0azcxM3ZmenlEV0ZsWndM?=
- =?utf-8?B?bzI0M0lUUFJ0cU1rUjhpa1gzV1FMa1dZNGVVZGQxN1huZU1pK081aUIxUlow?=
- =?utf-8?B?T2VnL09pUGdiZFBwZUJHOWFIYldnOFhNbFJKMTJIMnV0c3NGdnRnVjg0dXo4?=
- =?utf-8?B?M3VNaDVuUktyYTVQa0hRazBJY2tuLy9oRHVHVEVqcUg4eThnaExqcDRWN0FT?=
- =?utf-8?B?UFFKVVB1K0VaVEpabWpFd2dCTTRaQzZ1T3oydzFiN0pSL2ZGdWR4ZXIxRXBu?=
- =?utf-8?B?SmFUNHliSUd2WUJST25jRXE4cGxSb2U5bks0Q2ZqVVFsSENIeWZWU3dIblMw?=
- =?utf-8?B?UXgzYWZxKzJsRG1rcUxLWG4wWHBReFBwanNrY1doSHBNZVlpaU9TbjhGMHd4?=
- =?utf-8?B?Y3NVQ2wrRVpRVENJaUdJMU0zTmM1cytNbFNTZUV6c2lwa09QQng5TGh6SVg3?=
- =?utf-8?B?NTNyNzgxOG1kYXN2dGEybjhuYmJaZXVIN3hxNkk4VStVVExaSjlNNS9ud0V2?=
- =?utf-8?B?blpuZ1dIdEZLZTRFYjlqVUxWbXF3S0ViTXcwQlVHWXRaZGtWdUxTbnB5YVdU?=
- =?utf-8?B?Mjh3Qmt4T2MybGEwMGZDL3NKSTFVUFVFSkFiUjFxK3hmUFV5cWxzWm1aMEhC?=
- =?utf-8?B?VkM3ZHVrR1R6eldLZmVOMS92ZkRBRXhCakpORHBOWFo2MU5XcFgzZXVSMjNZ?=
- =?utf-8?B?OEpjSUx3bGFvbVNyS2hOc2sxdWtNTFc0NjJvRGJWTjFwUFZuditWSEM4K1Bz?=
- =?utf-8?B?S0MrUjVzM1RJKzQ2UmNML3Z2RG5wTTZRUDkvVkV6K1Z4dHQyZDJvbjQxVkhJ?=
- =?utf-8?B?YVpPSlpJWGR5QStuMWZ4VEoybkZLcnlDN3Ryck43eHN4SHVzR2xVaWZwMkNU?=
- =?utf-8?B?eDcvcDd6U2Yvd083UEtTRzdHdnFPU3FrUFZEYTFiWGRBbHQrS3Y1bGlUY0g0?=
- =?utf-8?B?NG9aN0Z0ZC9mMlZtbWJlTzVjV1F6NlhrajVRRnlPYU9IUjdzb1B0dnFsS1N1?=
- =?utf-8?B?Q1Rya1hZUTlXaTBXblIvSjNRS2R5Sk01RWJSMVA2RzBzbzVmQm1PNk93QXhu?=
- =?utf-8?B?Q015Nmp5MVFNTGVwemVSZ2E4M0JBRHc2ZmZCSUcrbHZnbmc2OWJaTnIwQWZS?=
- =?utf-8?B?dkNWL1NBRUhuMHIvREQrdVFuejZTTjU2ajArZk96dk1Xb3RXL0RzZTJ4Rzlz?=
- =?utf-8?B?QnR3SlV5ZXVwZi9CaGcreHEvRENmWEx3dEZTL0M1TWMra2hBTENWUUlaNjQv?=
- =?utf-8?B?ay92c2tuOU84cWdRRHQvTzM3Y2cralgxWXgrUW84WmFLM3F1VytjTEg3V2h4?=
- =?utf-8?B?S0FaWHBwQmNZc2Y5WExiMEVOVmFNdDY4YU5mOUtLcS9yN0JMMHUwQ0ZZT0Vx?=
- =?utf-8?B?SUFGNC9yc09NNUd5aEs1TG41aEFqejFXZ0lyMHp5cjF2N2JiTFhTMElxb2lw?=
- =?utf-8?B?VHJVK2I1dk5NWVhERWdlYmExWG02QmlWU1hzOUM3alVQY0pqOXJHMEo0Mm0y?=
- =?utf-8?B?QlRHNEx4Skg5ZVRjQ1AyeXphbkRKanZrRGc3OERFZks5Ky9PRTl2UTZYN3E5?=
- =?utf-8?B?UUx5MU81dm5hV2oydDhidXlVdVBxMDQ2a3l3U0ZkQUlQR2tWRFlWZ2l6MzlE?=
- =?utf-8?B?S2hEZzVEdjJLTTRDYXhoZXRYWlVJRVBlYU1SaFJxSWlteGFuMXh4TzRSeGtO?=
- =?utf-8?B?RHBaWlBCZ2JRblBqK2kxZmZ2eHg2OFYvMzBuYzk0bThrMXlEUmNHYzBKTGs0?=
- =?utf-8?B?RUVGb3IyOWdKVCsrUjNLMnBhbXAxZHN5akt0TXBqTTNvQVAvT25NWkZvU3lo?=
- =?utf-8?Q?jNVE90ltQd8U+HNGsfG7O2tFK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3393f1-3e47-459d-2a0f-08dcf8f5bdd5
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 15:15:51.7294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wacl3CQiKHnFny3zNmLNli8+KAXOJQVq2ulbiG4Z/C0jsfNoSncynlWVREQFfcAnG4EHpwM5GMQ7lO3dk95/NQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8538
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c47337ea-f20e-44eb-95e8-c29b2db849a7@redhat.com>
 
-Hi Jonathan,
-
-Thank you for reviewing.
-
-Regards,
-Terry
-
-On 10/30/2024 10:14 AM, Jonathan Cameron wrote:
-> On Fri, 25 Oct 2024 16:02:52 -0500
-> Terry Bowman <terry.bowman@amd.com> wrote:
+On Wed, Oct 30, 2024 at 11:40:08AM +0100, David Hildenbrand wrote:
+> On 29.10.24 21:20, Gregory Price wrote:
+> > Capacity is stranded when CFMWS regions are not aligned to block size.
+> > On x86, block size increases with capacity (2G blocks @ 64G capacity).
+> > 
+> > Use CFMWS base/size to report memory block size alignment advice.
+> > 
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > ---
+> >   drivers/acpi/numa/srat.c | 19 +++++++++++++++++--
+> >   1 file changed, 17 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > index 44f91f2c6c5d..a24aff38c465 100644
+> > --- a/drivers/acpi/numa/srat.c
+> > +++ b/drivers/acpi/numa/srat.c
+> > @@ -14,6 +14,7 @@
+> >   #include <linux/errno.h>
+> >   #include <linux/acpi.h>
+> >   #include <linux/memblock.h>
+> > +#include <linux/memory.h>
+> >   #include <linux/numa.h>
+> >   #include <linux/nodemask.h>
+> >   #include <linux/topology.h>
+> > @@ -338,12 +339,26 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> >   {
+> >   	struct acpi_cedt_cfmws *cfmws;
+> >   	int *fake_pxm = arg;
+> > -	u64 start, end;
+> > +	u64 start, end, align, size;
+> >   	int node;
+> >   	cfmws = (struct acpi_cedt_cfmws *)header;
+> >   	start = cfmws->base_hpa;
+> > -	end = cfmws->base_hpa + cfmws->window_size;
+> > +	size = cfmws->window_size;
+> > +	end = cfmws->base_hpa + size;
+> > +
+> > +	/* Align memblock size to CFMW regions if possible */
+> > +	for (align = SZ_64T; align >= SZ_256M; align >>= 1) {
+> > +		if (IS_ALIGNED(start, align) && IS_ALIGNED(size, align))
+> > +			break;
+> > +	}
+> 
+> Are there maybe some nice tricks bi-tricks to avoid the loop and these
+> hardcoded limits? :)
+> 
+> align = 1UL << __ffs(start | end));
+> 
+> Assuming "unsigned long" is sufficient in this code (64bit) and "start |
+> end" will never be 0.
 >
->> CXL.io provides PCIe like protocol error implementation, but CXL.io and
->> PCIe have different handling requirements.
->>
->> The PCIe AER service driver may attempt recovering PCIe devices with
->> uncorrectable errors while recovery is not used for CXL.io. Recovery is not
->> used in the CXL.io recovery because of the potential for corruption on
->> what can be system memory.
->>
->> Create pci_driver::cxl_err_handlers similar to pci_driver::error_handler.
->> Create handlers for correctable and uncorrectable CXL.io error
->> handling.
->>
->> The CXL error handlers will be used in future patches adding CXL PCIe
->> port protocol error handling.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+This will work, if start | end is < 256MB, the ACPI table is invalid by
+definition since either the block itself is <256MB or the size is 0 (which
+is nonsense).  So yeah i can simplify here. 
+
+Ack. will push v5 once i get KLP to clear another warning.
+ 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
