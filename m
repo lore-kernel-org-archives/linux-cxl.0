@@ -1,471 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204D079D2;
-	Wed, 30 Oct 2024 11:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51DA4D8A7;
+	Wed, 30 Oct 2024 12:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730289381; cv=none; b=DpVlIrlDSsLeJDbsEflgrfREY/OCOfhzjrdGjZ1OQu47On6u9KuoyeUnri3gKZhoxgS2SjT3WrC/00kNPWxKYOWklhuVm1Jfi5WdbrCMCKO2y2tf4LHXpydX9lAR9PDMdY8Lj2uFfEymQN1xFJjxvH1H/HmfGGo9FqDnruPrpls=
+	t=1730292767; cv=none; b=Y3JV3jAPWtCR8ugTt7w9m627t+6PLnEAI+43oIB4KcXEOzZYpneMBHuZfKNiGOMUyJKj8b9yiyNAJ6CTYgEDHNKTIWBbHB9hb2tTbj66DSPPkTWk82nJoLi8LxqCcW8NG3bz+fYUzmeyDoBrf8CVsUgvIYmhGz2G78srvMtrvF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730289381; c=relaxed/simple;
-	bh=5z9/T3UXEW6lG4xakIGGEzGXoMGGoluht/KIMPSiWbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WFQ3cXmVRAWwxwrQQHnHlz+fwDfNV5TyFl2LfluYZmxuQ0m1TkeEKD87/igbreoQj00fWD57xoQa7UfQiptGMcmuUdMNkyTpM3kcvE9s6mH/XyK/BiTlCK+uf1qdAS1VSeLjYyW9o8EYnipfQAq92MTEukkbfjQ+gmfsXcsc3Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60DE0C4CEE3;
-	Wed, 30 Oct 2024 11:56:15 +0000 (UTC)
-Date: Wed, 30 Oct 2024 13:56:11 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: <kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Cc: <alex.williamson@redhat.com>, <kevin.tian@intel.com>, <jgg@nvidia.com>,
- <alison.schofield@intel.com>, <dan.j.williams@intel.com>,
- <dave.jiang@intel.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
- <ira.weiny@intel.com>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
- <acurrid@nvidia.com>, <cjia@nvidia.com>, <smitra@nvidia.com>,
- <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
- <targupta@nvidia.com>, <zhiwang@kernel.org>
-Subject: Re: [RFC 00/13] vfio: introduce vfio-cxl to support CXL type-2
- accelerator passthrough
-Message-ID: <20241030135611.0000031f.zhiw@nvidia.com>
-In-Reply-To: <20240920223446.1908673-1-zhiw@nvidia.com>
-References: <20240920223446.1908673-1-zhiw@nvidia.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
+	s=arc-20240116; t=1730292767; c=relaxed/simple;
+	bh=6FmvHYArbP9A5eMkduasERmZjhT6W53BfofWfnRc/y8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NOAQDTQASnYMmEUnWpzmJMmn212gNR00Q7FT9F0B0CIk7IoTm9HcoNN/4gx8il/szkcXsdzY3HrqD0bBU0yQh//SkHLeBAas9ICC9gBiwQo1Tx7EsfeP7h7XtJ3j9KTQMj9V/aQtTKLEedXUDaEtIfIyvsiVM4zWjHaU33o9IAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xdn604437z6K6YJ;
+	Wed, 30 Oct 2024 20:50:16 +0800 (CST)
+Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id 969AB140429;
+	Wed, 30 Oct 2024 20:52:41 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 30 Oct 2024 13:52:41 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 30 Oct 2024 13:52:41 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "jassisinghbrar@gmail.com"
+	<jassisinghbrar@gmail.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"Roberto Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v14 07/14] cxl/memfeature: Add CXL memory device patrol
+ scrub control feature
+Thread-Topic: [PATCH v14 07/14] cxl/memfeature: Add CXL memory device patrol
+ scrub control feature
+Thread-Index: AQHbJwFiEsGT6VLXSEWw7XeCpRer7rKeH9CAgAEnCgA=
+Date: Wed, 30 Oct 2024 12:52:41 +0000
+Message-ID: <35c697489f2b486482ddc42d435861e4@huawei.com>
+References: <20241025171356.1377-1-shiju.jose@huawei.com>
+ <20241025171356.1377-8-shiju.jose@huawei.com>
+ <20241029201527.GTZyFCX_foMR_GouGN@fat_crate.local>
+In-Reply-To: <20241029201527.GTZyFCX_foMR_GouGN@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Sep 2024 15:34:33 -0700
-Zhi Wang <zhiw@nvidia.com> wrote:
-
-Hi folks:
-
-As what Kevin and Alex pointed out that we need to discuss about the
-virtualization polices for the registers that need to be handled by the
-vfio-cxl core, here are my summary about the virtualization polices for
-configuration space registers.
-
-For CXL MMIO registers, I am leaning towards vfio-cxl core respecting
-the BAR Virtualization ACL Register Block (8.2.6 BAR Virtualization ACL
-Register Block), which shows the register ranges can be safely
-passed to the guest. For registers are not in the Virtualization ACL
-Register Block, or a device doesn't present a BAR Virtualization ACL
-Register Block, we leave the handling the to the variant driver.
-Besides, 
-
-Feel free to comment.
-
-Z.
-
-----
-
-8.1 Configuration Space Registers
-=================================
-
-8.1.3 PCIE DVSEC for CXL Devices
-==================================
-
-- DVS Header 1 (0x4)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-- DVS Header 2 (0x8)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-- DVSEC CXL Capability (0xa)
-
-Overide values from HW:
-
-Bit [5:4] RO - HDM_Count:
-Support only one HDM decoder
-
-Bit [12] RO - TSP Capable:
-Not supported in v1
-
-Other bits are RO, emulated, and inital values are from the HW.
-
-- DVSEC CXL Control (0xc)
-
-Bit [0] RWL - Cache_Enable:
-Emulated as RO if CONFIG_LOCK bit is set, otherwise RW.
-
-Bit [1] RO - IO_Enable:
-Emulated as RO.
-
-Bit [12:2] RWL:
-Emulated as RO when CONFIG_LOCK bit is set, otherwise RW.
-
-Bit [13] Rsvd:
-Emualted as RO
-
-Bit [14] RWL:
-Emulated as RO when CONFIG_LOCK bit is set, otherwise RW.
-
-Bit [15] Rsvd:
-Emulated as RO.
-
-- DVSEC CXL Status (0xe)
-
-Bit [14] RW1CS - Viral_Status:
-Emulate write one clear bit.
-
-Other bits are Rsvd and emulated as RO, inital values are from the HW.
-
-- DVSEC CXL Control 2 (0x10)
-
-Bit [0] RW - Disable caching:
-Disable the caching on HW when VM writes bit 1.
-
-Bit [1] RW - Initiate Cache Write Back and Invalidation:
-Trigger the cache writeback and invalidation via Linux CXL core, update
-cache invalid bit in DVSEC CXL Status 2.
-
-Bit [2] RW - Initiate CXL Reset:
-Trigger the CXL reset via Linux CXL core, update the CXL reset complete
-, CXL reset error in DVSEC CXL Status 2.
-
-Bit [3] RW - CXL Reset Mem Clr Enable:
-As a param when trigger the CXL reset via Linux CXL core.
-
-Bit [4] Desired Volatile HDM State after Hot Reset - RWS/RO
-Write the bit on the HW or via Linux CXL core.
-
-Bit [5] Modified Completion Eanble - RW/RO
-Write the bit on the HW or via Linux CXL core.
-
-Other bits are Rsvd, emulated as RO and inital values are from the HW.
-
-- DVSEC CXL Status 2 (0x12)
-Bit [0] RO - Cache Invalid:
-Updated when emulating DVSEC CXL Control 2.
-
-Bit [1] RO - CXL Reset Complete:
-Updated when emulating DVSEC CXL Control 2.
-
-Bit [1] RO - CXL Reset Error:
-Updated when emulating DVSEC CXL Control 2.
-
-Bit [3] RW1CS/RsvdZ - Volatile HDM Preservation Error:
-Read the bit from the HW.
-
-Bit [14:4] Rsvd:
-Emulated as RO and inital values are from the HW.
-
-Bit [15] RO - Power Management Intalization Complete:
-Read the bit from the HW.
-
-DVSEC CXL Capability2 (0x16)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVSEC CXL Range 1 Size High (0x18)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVSEC CXL Range 1 Size Low (0x1c)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVSEC CXL Range 1 Base High (0x20)
-Emulated as RW
-
-DVSEC CXL Range 1 Base Low (0x24)
-Emulated as RW
-
-DVSEC CXL Range 2 Size High (0x28)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVSEC CXL Range 2 Size Low (0x2c)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVSEC CXL Range 2 Base High (0x30)
-Emulated as RW
-
-DVSEC CXL Range 2 Base Low (0x34)
-Emulated as RW
-
-DVSEC CXL Capability 3 (0x38)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-8.1.4 Non-CXL Function Map DVSEC
-================================
-Not supported
-
-8.1.5 CXL Extensions DVSEC for Ports
-====================================
-For root port/switches, no need to support in type-2 device passthorugh
-
-8.1.6 GPF DVSEC for CXL Port
-============================
-For root port/switches, no need to support in type-2 device passthorugh
-
-8.1.7 GPF DVSEC for CXL Device
-==============================
-
-DVS Header 1 (0x4)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVS Header 2 (0x8)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-GPF Phase 2 Duration (0xa)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-GPF Phase 2 Power (0xc)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-8.1.8 PCIE DVSEC for Flex Bus Port
-==================================
-For root port/switches, no need to support in type-2 device passthorugh
-
-8.1.9 Register Locator DVSEC
-============================
-
-DVS Header 1 (0x4)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-DVS Header 2 (0x8)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-Register Block 1-3 (Varies)
-All bits are RO, emulated as RO and initial values are from the HW.
-
-8.1.10 MLD DVSEC
-================
-Not supported. Mostly this is for type-3 device.
-
-8.1.11 Table Access DOE
-Coupled with QEMU DOE emulation
-
-8.1.12 Memory Device Configuration Space Layout
-Not supported. Mostly this is for type-3 device.
-
-8.1.13 Switch Mailbox CCI Configuration Space Layout
-Not supported. This is for switches.
-
-
-> Hi folks:
-> 
-> As promised in the LPC, here are all you need (patches, repos, guiding
-> video, kernel config) to build a environment to test the
-> vfio-cxl-core.
-> 
-> Thanks so much for the discussions! Enjoy and see you in the next one.
-> 
-> Background
-> ==========
-> 
-> Compute Express Link (CXL) is an open standard interconnect built upon
-> industrial PCI layers to enhance the performance and efficiency of
-> data centers by enabling high-speed, low-latency communication
-> between CPUs and various types of devices such as accelerators,
-> memory.
-> 
-> It supports three key protocols: CXL.io as the control protocol,
-> CXL.cache as the cache-coherent host-device data transfer protocol,
-> and CXL.mem as memory expansion protocol. CXL Type 2 devices leverage
-> the three protocols to seamlessly integrate with host CPUs, providing
-> a unified and efficient interface for high-speed data transfer and
-> memory sharing. This integration is crucial for heterogeneous
-> computing environments where accelerators, such as GPUs, and other
-> specialized processors, are used to handle intensive workloads.
-> 
-> Goal
-> ====
-> 
-> Although CXL is built upon the PCI layers, passing a CXL type-2
-> device can be different than PCI devices according to CXL
-> specification[1]:
-> 
-> - CXL type-2 device initialization. CXL type-2 device requires an
-> additional initialization sequence besides the PCI device
-> initialization. CXL type-2 device initialization can be pretty
-> complicated due to its hierarchy of register interfaces. Thus, a
-> standard CXL type-2 driver initialization sequence provided by the
-> kernel CXL core is used.
-> 
-> - Create a CXL region and map it to the VM. A mapping between HPA and
-> DPA (Device PA) needs to be created to access the device memory
-> directly. HDM decoders in the CXL topology need to be configured
-> level by level to manage the mapping. After the region is created, it
-> needs to be mapped to GPA in the virtual HDM decoders configured by
-> the VM.
-> 
-> - CXL reset. The CXL device reset is different from the PCI device
-> reset. A CXL reset sequence is introduced by the CXL spec.
-> 
-> - Emulating CXL DVSECs. CXL spec defines a set of DVSECs registers in
-> the configuration for device enumeration and device control. (E.g. if
-> a device is capable of CXL.mem CXL.cache, enable/disable capability)
-> They are owned by the kernel CXL core, and the VM can not modify them.
-> 
-> - Emulate CXL MMIO registers. CXL spec defines a set of CXL MMIO
-> registers that can sit in a PCI BAR. The location of register groups
-> sit in the PCI BAR is indicated by the register locator in the CXL
-> DVSECs. They are also owned by the kernel CXL core. Some of them need
-> to be emulated.
-> 
-> Design
-> ======
-> 
-> To achieve the purpose above, the vfio-cxl-core is introduced to host
-> the common routines that variant driver requires for device
-> passthrough. Similar with the vfio-pci-core, the vfio-cxl-core
-> provides common routines of vfio_device_ops for the variant driver to
-> hook and perform the CXL routines behind it.
-> 
-> Besides, several extra APIs are introduced for the variant driver to
-> provide the necessary information the kernel CXL core to initialize
-> the CXL device. E.g., Device DPA.
-> 
-> CXL is built upon the PCI layers but with differences. Thus, the
-> vfio-pci-core is aimed to be re-used as much as possible with the
-> awareness of operating on a CXL device.
-> 
-> A new VFIO device region is introduced to expose the CXL region to the
-> userspace. A new CXL VFIO device cap has also been introduced to
-> convey the necessary CXL device information to the userspace.
-> 
-> Patches
-> =======
-> 
-> The patches are based on the cxl-type2 support RFCv2 patchset[2]. Will
-> rebase them to V3 once the cxl-type2 support v3 patch review is done.
-> 
-> PATCH 1-3: Expose the necessary routines required by vfio-cxl.
-> 
-> PATCH 4: Introduce the preludes of vfio-cxl, including CXL device
-> initialization, CXL region creation.
-> 
-> PATCH 5: Expose the CXL region to the userspace.
-> 
-> PATCH 6-7: Prepare to emulate the HDM decoder registers.
-> 
-> PATCH 8: Emulate the HDM decoder registers.
-> 
-> PATCH 9: Tweak vfio-cxl to be aware of working on a CXL device.
-> 
-> PATCH 10: Tell vfio-pci-core to emulate CXL DVSECs.
-> 
-> PATCH 11: Expose the CXL device information that userspace needs.
-> 
-> PATCH 12: An example variant driver to demonstrate the usage of
-> vfio-cxl-core from the perspective of the VFIO variant driver.
-> 
-> PATCH 13: A workaround needs suggestions.
-> 
-> Test
-> ====
-> 
-> To test the patches and hack around, a virtual passthrough with nested
-> virtualization approach is used.
-> 
-> The host QEMU emulates a CXL type-2 accel device based on Ira's
-> patches with the changes to emulate HDM decoders.
-> 
-> While running the vfio-cxl in the L1 guest, an example VFIO variant
-> driver is used to attach with the QEMU CXL access device.
-> 
-> The L2 guest can be booted via the QEMU with the vfio-cxl support in
-> the VFIOStub.
-> 
-> In the L2 guest, a dummy CXL device driver is provided to attach to
-> the virtual pass-thru device.
-> 
-> The dummy CXL type-2 device driver can successfully be loaded with the
-> kernel cxl core type2 support, create CXL region by requesting the CXL
-> core to allocate HPA and DPA and configure the HDM decoders.
-> 
-> To make sure everyone can test the patches, the kernel config of L1
-> and L2 are provided in the repos, the required kernel command params
-> and qemu command line can be found from the demostration video.[5]
-> 
-> Repos
-> =====
-> 
-> QEMU host:
-> https://github.com/zhiwang-nvidia/qemu/tree/zhi/vfio-cxl-qemu-host L1
-> Kernel:
-> https://github.com/zhiwang-nvidia/linux/tree/zhi/vfio-cxl-l1-kernel-rfc
-> L1 QEMU:
-> https://github.com/zhiwang-nvidia/qemu/tree/zhi/vfio-cxl-qemu-l1-rfc
-> L2 Kernel:
-> https://github.com/zhiwang-nvidia/linux/tree/zhi/vfio-cxl-l2
-> 
-> [1] https://computeexpresslink.org/cxl-specification/
-> [2]
-> https://lore.kernel.org/netdev/20240715172835.24757-1-alejandro.lucero-palau@amd.com/T/
-> [3]
-> https://patchew.org/QEMU/20230517-rfc-type2-dev-v1-0-6eb2e470981b@intel.com/
-> [4] https://youtu.be/zlk_ecX9bxs?si=hc8P58AdhGXff3Q7
-> 
-> Feedback expected
-> =================
-> 
-> - Archtiecture level between vfio-pci-core and vfio-cxl-core.
-> - Variant driver requirements from more hardware vendors.
-> - vfio-cxl-core UABI to QEMU.
-> 
-> Moving foward
-> =============
-> 
-> - Rebase the patches on top of Alejandro's PATCH v3.
-> - Get Ira's type-2 emulated device patch into upstream as CXL folks
-> and RH folks both came to talk and expect this. I had a chat with Ira
-> and he expected me to take it over. Will start a discussion in the
-> CXL discord group for the desgin of V1.
-> - Sparse map in vfio-cxl-core.
-> 
-> Known issues
-> ============
-> 
-> - Teardown path. Missing teardown paths have been implements in
-> Alejandor's PATCH v3. It should be solved after the rebase.
-> 
-> - Powerdown L1 guest instead of reboot it. The QEMU reset handler is
-> missing in the Ira's patch. When rebooting L1, many CXL registers are
-> not reset. This will be addressed in the formal review of emulated
-> CXL type-2 device support.
-> 
-> Zhi Wang (13):
->   cxl: allow a type-2 device not to have memory device registers
->   cxl: introduce cxl_get_hdm_info()
->   cxl: introduce cxl_find_comp_reglock_offset()
->   vfio: introduce vfio-cxl core preludes
->   vfio/cxl: expose CXL region to the usersapce via a new VFIO device
->     region
->   vfio/pci: expose vfio_pci_rw()
->   vfio/cxl: introduce vfio_cxl_core_{read, write}()
->   vfio/cxl: emulate HDM decoder registers
->   vfio/pci: introduce CXL device awareness
->   vfio/pci: emulate CXL DVSEC registers in the configuration space
->   vfio/cxl: introduce VFIO CXL device cap
->   vfio/cxl: VFIO variant driver for QEMU CXL accel device
->   vfio/cxl: workaround: don't take resource region when cxl is
-> enabled.
-> 
->  drivers/cxl/core/pci.c              |  28 ++
->  drivers/cxl/core/regs.c             |  22 +
->  drivers/cxl/cxl.h                   |   1 +
->  drivers/cxl/cxlpci.h                |   3 +
->  drivers/cxl/pci.c                   |  14 +-
->  drivers/vfio/pci/Kconfig            |   6 +
->  drivers/vfio/pci/Makefile           |   5 +
->  drivers/vfio/pci/cxl-accel/Kconfig  |   6 +
->  drivers/vfio/pci/cxl-accel/Makefile |   3 +
->  drivers/vfio/pci/cxl-accel/main.c   | 116 +++++
->  drivers/vfio/pci/vfio_cxl_core.c    | 647
-> ++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_config.c  |
-> 10 + drivers/vfio/pci/vfio_pci_core.c    |  79 +++-
->  drivers/vfio/pci/vfio_pci_rdwr.c    |   8 +-
->  include/linux/cxl_accel_mem.h       |   3 +
->  include/linux/cxl_accel_pci.h       |   6 +
->  include/linux/vfio_pci_core.h       |  53 +++
->  include/uapi/linux/vfio.h           |  14 +
->  18 files changed, 992 insertions(+), 32 deletions(-)
->  create mode 100644 drivers/vfio/pci/cxl-accel/Kconfig
->  create mode 100644 drivers/vfio/pci/cxl-accel/Makefile
->  create mode 100644 drivers/vfio/pci/cxl-accel/main.c
->  create mode 100644 drivers/vfio/pci/vfio_cxl_core.c
-> 
-
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2IFBldGtvdiA8
+YnBAYWxpZW44LmRlPg0KPlNlbnQ6IDI5IE9jdG9iZXIgMjAyNCAyMDoxNQ0KPlRvOiBTaGlqdSBK
+b3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1jeGxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5hY3BpQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtbW1Aa3ZhY2sub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
+PnRvbnkubHVja0BpbnRlbC5jb207IHJhZmFlbEBrZXJuZWwub3JnOyBsZW5iQGtlcm5lbC5vcmc7
+DQo+bWNoZWhhYkBrZXJuZWwub3JnOyBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IGRhdmVAc3Rn
+b2xhYnMubmV0OyBKb25hdGhhbg0KPkNhbWVyb24gPGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNv
+bT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPnN1ZGVlcC5ob2xsYUBhcm0uY29tOyBq
+YXNzaXNpbmdoYnJhckBnbWFpbC5jb207IGRhdmUuamlhbmdAaW50ZWwuY29tOw0KPmFsaXNvbi5z
+Y2hvZmllbGRAaW50ZWwuY29tOyB2aXNoYWwubC52ZXJtYUBpbnRlbC5jb207IGlyYS53ZWlueUBp
+bnRlbC5jb207DQo+ZGF2aWRAcmVkaGF0LmNvbTsgVmlsYXMuU3JpZGhhcmFuQGFtZC5jb207IGxl
+by5kdXJhbkBhbWQuY29tOw0KPllhemVuLkdoYW5uYW1AYW1kLmNvbTsgcmllbnRqZXNAZ29vZ2xl
+LmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsNCj5Kb24uR3JpbW1AYW1kLmNvbTsgZGF2ZS5oYW5z
+ZW5AbGludXguaW50ZWwuY29tOw0KPm5hb3lhLmhvcmlndWNoaUBuZWMuY29tOyBqYW1lcy5tb3Jz
+ZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5jb207DQo+c29tYXN1bmRhcmFtLmFAaHBlLmNv
+bTsgZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29uZGFAZ29vZ2xlLmNvbTsNCj5kdWVud2VuQGdv
+b2dsZS5jb207IGd0aGVsZW5AZ29vZ2xlLmNvbTsNCj53c2Nod2FydHpAYW1wZXJlY29tcHV0aW5n
+LmNvbTsgZGZlcmd1c29uQGFtcGVyZWNvbXB1dGluZy5jb207DQo+d2JzQG9zLmFtcGVyZWNvbXB1
+dGluZy5jb207IG5pZmFuLmN4bEBnbWFpbC5jb207IHRhbnhpYW9mZWkNCj48dGFueGlhb2ZlaUBo
+dWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT47IFJvYmVy
+dG8NCj5TYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsga2FuZ2thbmcuc2hlbkBmdXR1
+cmV3ZWkuY29tOw0KPndhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdlaS5jb20+OyBMaW51
+eGFybQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjE0IDA3
+LzE0XSBjeGwvbWVtZmVhdHVyZTogQWRkIENYTCBtZW1vcnkgZGV2aWNlIHBhdHJvbA0KPnNjcnVi
+IGNvbnRyb2wgZmVhdHVyZQ0KPg0KPk9uIEZyaSwgT2N0IDI1LCAyMDI0IGF0IDA2OjEzOjQ4UE0g
+KzAxMDAsIHNoaWp1Lmpvc2VAaHVhd2VpLmNvbSB3cm90ZToNCj4+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2VkYWMvZWRhYy1zY3J1Yi5yc3QNCj4+IGIvRG9jdW1lbnRhdGlvbi9lZGFjL2Vk
+YWMtc2NydWIucnN0DQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAw
+MDAwLi40YWFkNDk3NGIyMDgNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZWRhYy9lZGFjLXNjcnViLnJzdA0KPj4gQEAgLTAsMCArMSw3NCBAQA0KPj4gKy4uIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+PiArDQpbLi4uXQ0KPj4gKzENCj4+ICtyb290
+QGxvY2FsaG9zdDp+IyBlY2hvIDAgPg0KPj4gKy9zeXMvYnVzL2VkYWMvZGV2aWNlcy9jeGxfcmVn
+aW9uMC9zY3J1YjAvZW5hYmxlX2JhY2tncm91bmQNCj4+ICtyb290QGxvY2FsaG9zdDp+IyBjYXQN
+Cj4+ICsvc3lzL2J1cy9lZGFjL2RldmljZXMvY3hsX3JlZ2lvbjAvc2NydWIwL2VuYWJsZV9iYWNr
+Z3JvdW5kDQo+PiArMA0KPg0KPlRoaXMgZmlsZSdzIGFkZGl0aW9uIGJlbG9uZ3MgdG8gc29tZSBF
+REFDIHBhdGNoIGluIHRoZSBzZXJpZXMsIG5vdCBoZXJlLg0KSSB3aWxsIGRvLg0KPg0KPkl0IGNv
+dWxkIGJlIGEgc2VwYXJhdGUsIGxhc3QgcGF0Y2ggaW4gdGhlIHNlcmllcyB0b28sIG9uY2UgZXZl
+cnl0aGluZyBpcyBzZXR0bGVkLg0KPg0KPlRoeC4NCj4NCj4tLQ0KPlJlZ2FyZHMvR3J1c3MsDQo+
+ICAgIEJvcmlzLg0KDQpUaGFua3MsDQpTaGlqdQ0K
