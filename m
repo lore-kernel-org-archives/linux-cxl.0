@@ -1,204 +1,299 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24A9199EB0;
-	Wed, 30 Oct 2024 18:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730313162; cv=none; b=u+RcS3d0BvauESYme9RkjKHQbZSf00EbBjXrVQXvi7Vi/nL7kN7gigprvgp7c3xl5LCveVra0D8UGW453e1XY+rALBpIPd4fejb1L2OVF7g9R4QuQ5u7ybVTIASvE8/1NixLcHT4NtZ6zQ1NTDW5EByHf0JP+f6xZdEknNpqYkA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730313162; c=relaxed/simple;
-	bh=uKySPkrqXDPgs4yTMKdKB4kcwXEilJC0jwyaMkNRQAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YWC3Em00iMQXJ7XJoZ1JOvtW9QR56CI5M+yIYm3XKHYMX3gNtb/aQ8uZWbepj//b9HnnT9EFvaa981PXNd0ronQHpz8HiJLgOUgnuav8U5aPNVWtP9a37xyoVnyqz/W9E6yNTyMudSONse2pJM8MHn4PEdujjmcDy+Kt/iz7h9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X9Ca4nDo; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0F219CA8;
+	Wed, 30 Oct 2024 21:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730323861; cv=fail; b=O9aKShoxSMA0LLtF5/f/+JJKTZCeB+VuiedrvoWSh2Gi+pyjofGNxr0mh7uULziHraxOUMOSrbfUI1bNC6I/EJ+cz7BsNurOHET9P23jXKCzSKkgjYqoZy4wq5JBMxRsUcx886/BjlUcITQlCWNRLKZxP9H58+k64H2Psgd00Go=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730323861; c=relaxed/simple;
+	bh=YwjwGURVaYC2NtWPudhe0HlK/UE8tyoomslccByC+Xw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FpImNDhOfiZ0dO/L1GLEv8PKETe9lfZA/zf6AlNAdkvnj3D9dDzyTZar/OYxocJQcMRM24Hgl7rDaUqgamXiCjkqGOS/U8zvGZPsgdlDKpRZgei8BomXrLCYXZ1S0Xz5JET3jfbnTZxXCIyQD59RU+OOJf4jVtsilU13P63neII=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ROU1knbs; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X9Ca4nDo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730313159; x=1761849159;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uKySPkrqXDPgs4yTMKdKB4kcwXEilJC0jwyaMkNRQAU=;
-  b=X9Ca4nDorTllTaqjPwiqhs4WgK7+AJFmxvhDYovEPmJKbE0uFTXTqleM
-   Y5GDSd1aEes0QLCEjKhbvQFhi+zwJLlmWNUAi1Txaxvpl7nwCVmBoaZMC
-   4oJuerRRwJri8Z7pDuo/Sl95Lm9KTebyxDQXV0RTCGjWlJNdOEdDYpm/L
-   2jpG8Ol2XVh6nAlf96cK7W4/u1OVtxl8oB6b1949XVsopZ5xqv1lHOLSL
-   smeq1PGQX/EsItI2HDbKqWcr4sjyrDTpiPV9rIfLYTn1ZtGkow8Zs90nZ
-   JJZI9q50/tOhH8wtt2rMbjjMOjnNn3MjCoI5tVcEfsmzD2vnoiI2Se/FQ
-   A==;
-X-CSE-ConnectionGUID: P65+cg4bSMKhZIhjgoriYQ==
-X-CSE-MsgGUID: keazMJcQSFSUBeqhz7N3dA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="33961092"
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="33961092"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 11:32:38 -0700
-X-CSE-ConnectionGUID: uudTCmFsSOyE84T1m6xWag==
-X-CSE-MsgGUID: t/KE/7CBSrqMJdAtcmEXnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,245,1725346800"; 
-   d="scan'208";a="82711049"
-Received: from nnlnb-sb-019.ccr.corp.intel.com (HELO [10.125.108.160]) ([10.125.108.160])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 11:32:37 -0700
-Message-ID: <64b7b0f9-d9e1-4458-8149-9ccbf78e1c27@intel.com>
-Date: Wed, 30 Oct 2024 11:32:35 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ROU1knbs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YzeoVP/7YG76ntKVuqwQamKZowZh+ShLqEgeHQVwUBefQ87NX/943C+hx1UIizFd7579Qim2nDzmmrarNWU07+aTA8s8T/dFWcyGslalqjEAS0/QLiKGpHlqXmm5iPT5BWT5VVtFCnUn8d2qtVJfy7nakvxRxG0kfjT440n6+W7yviRC5J6PYFJNzYRwQXmVADFa8BwgUXo5eI9uuI0fyiVfQJS/fb82yvsYc1tvhSLjcFN9eVcz9IwGxn803fv4ztuf7qk5AFBVLaTSXLXnarlMgFqjCEhDKVKozDkFAJ6yCJIrqWb0jleHJeXGzFhRZP+vuwQQDrPGyguyJcSIAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VL4DPQGAOi61Kwhr8VVpUOJE6hK9LF+Gp+LRHby1160=;
+ b=a3LLqHObeanybs7DXJS4w5VKfQZhc0CqFyQWcR7ZhLt3d5JoIqmhyYwQTMlLXm1oohtcsZN9Yuiu7c9cw4C6hz/39yubJPIlEZeSqiePRopwAjh3ntcV/NI3s8QlXwhLJPu/vxecB/T9755SsML+LGdQmIE5TtRMBw8wHgI3w9YMain3dpUPblB2r9LLhd6AJ7EU6f3Mj71h5xFW2AFvVoZizQ404gZbeh0vqUwhVc6qrEl8cD97LmmS0qr88kte6Ibw/jzIFKJ9+1ScsxS+uNLuG0/Wt2w2andYpQis1qosMOfEsqhLm9CF1jixZAYqe65tSXcxCACiHXFlMAXUiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VL4DPQGAOi61Kwhr8VVpUOJE6hK9LF+Gp+LRHby1160=;
+ b=ROU1knbs8bo8KRCdEF/8f1NBDXQz1j7ItUflihqjPwflre9jcr4qqKXBNHu61cSHDZMRPR7fVj/2dT4DqQUfx3dGY43lvXSt3aui0umVa7yfzXLyY0jIQ4Eyq739iUybkAV7HZOaD4HvgfHEgOVDLCAa7ui8YUPD/W2z6ILbtgM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SJ2PR12MB7989.namprd12.prod.outlook.com (2603:10b6:a03:4c3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.27; Wed, 30 Oct
+ 2024 21:30:56 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8114.015; Wed, 30 Oct 2024
+ 21:30:56 +0000
+Message-ID: <eee81573-6c87-4f20-afec-37f114fa7759@amd.com>
+Date: Wed, 30 Oct 2024 16:30:53 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/14] cxl/pci: Add trace logging for CXL PCIe port RAS
+ errors
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, shiju.jose@huawei.com,
+ M.Chehab@huawei.com
+References: <20241025210305.27499-1-terry.bowman@amd.com>
+ <20241025210305.27499-14-terry.bowman@amd.com>
+ <20241030160726.0000533e@Huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20241030160726.0000533e@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P220CA0016.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::21) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 12/27] cxl/cdat: Gather DSMAS data for DCD regions
-To: Ira Weiny <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Navneet Singh <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
- <20241029-dcd-type2-upstream-v5-12-8739cb67c374@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241029-dcd-type2-upstream-v5-12-8739cb67c374@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ2PR12MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: 640034cd-16ad-4c90-ea10-08dcf92a236c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NkJsazNWcklpV042VFBhczBYd1UwNmYrSDFPeklIVjJMazJ6TTdoVlhxbFZU?=
+ =?utf-8?B?NVhFOVNVM0dXMndWVXh6QmZIYlZLK0JoVHQ2MGhxcFBLWUl0YUZnaEdlQzYr?=
+ =?utf-8?B?eXJRUkExVDlrQWx6M1BTRHQyaUNTMU1oOHR1UmdqS0lCdmxHWmtVSzFGMjdL?=
+ =?utf-8?B?eGVmUk85cHcwV09NNmx5ZkUxUG9sMG52a2pEdzhuaVB6MGhrRkh5OTQrMWM5?=
+ =?utf-8?B?eVJHTnNvbDE3bllYVTVyMFFqdk1vWmZ5UVlOeFRDU040OU5BVm5nUC91R3Jt?=
+ =?utf-8?B?cGNESktMK3F3alMxSjJvZkJYYWFPODZ5cHhSc2lBS3ZBQTZodEVON0Y2dUxY?=
+ =?utf-8?B?OEFPeDlodFhFd0pCVkMyY2xpRDk0SlVPdjduRWtVQUs3L1ViQTJzQ0JkQzhB?=
+ =?utf-8?B?MkJZRWxNRkU2dHBqS3RxdnZmNXZseW1QaWFGQnhVMTd2MVNOaUFWUnZZOGNn?=
+ =?utf-8?B?Sk9qQXZheTNHNlVXYlVIOEM5V0NObGszTjFadTgwOFVVZ25GMWpSZi9mcEVP?=
+ =?utf-8?B?NnVmdlRYV3FFaXVPS3RzeG9YOFFjRWtlUXpEUWx4K3pwWGdZeVB2cXNwTndM?=
+ =?utf-8?B?ZEs1TGF1V2piTXd4U1FmTVk3NWVSMmVjaFNUOExhNldNNGhWdEpPN3lSeDZ6?=
+ =?utf-8?B?SHdDWlQrTzNKWUIrdmU3RjZuSVhFRmptV2p0MitONmM1SjFVWVUwQ1dncmZQ?=
+ =?utf-8?B?VnBLQnZEdHc2a3NUYm1KNTdZaVdJTHdsOE9oaVRhQmRITnl4Qksxdm55OFVS?=
+ =?utf-8?B?RnhiWG43a25nUlBFRi9hUGE2WkFoY1JnWGdrM0dkak1BN0ZJZHhvMUt0Mk9v?=
+ =?utf-8?B?Z3NwY2gvZXRBRXgwdjRGcURYcmJ2M0owUE1Zd3o0eHlaL21Wa0I5NjRITjg3?=
+ =?utf-8?B?TTc4OGlkRUZCS2FQQ1gzMncvU2xYRnZ2b0kxY00ybEJucFlnNWVJcWJTZXA4?=
+ =?utf-8?B?RXNzVzFZSFprSThKTmFUeWNzcDNrSXZZK1dacE1tamZRKzlHNWVuUHR1QU5D?=
+ =?utf-8?B?OXd5UGpvY2Z3YTNqak9DczJyeVpST0cxYmZ6emp3VldCZUFBNUJuYjliOVZO?=
+ =?utf-8?B?ZUpSNmIvTzBtNU9qVlhFVUZaaW5adUVEdkduaEk0eG5iM1FPdFpCWXZyTUF6?=
+ =?utf-8?B?TW5zN1U1TW1wNjE2RElINlpSeHF2RDhEVDZOeDNUZUJEWFozOFBZaXh6MFdY?=
+ =?utf-8?B?NHpsV3ZkV0pJSjk2b2t1ZUJMMkJoVUtwZWhsKy9MckRVS1BWaUV6SmxtZjY3?=
+ =?utf-8?B?S29WZzNidXJmaTNrdGtuUVlMWDV6ZSs1MzA4L3NoUmV1MkJoaC9laHg2VVE0?=
+ =?utf-8?B?dHRNeERiRGh0OGdqSURzald5dnJkWnZ3TVpNV0lSU0lxSVVyc3BLMmg0clJn?=
+ =?utf-8?B?bXhvSmlhZUdwd3lPRUQwMFl5Q0pHdXBsNmVsUmFLM1ZlUHp6dENOaVlTL3Zl?=
+ =?utf-8?B?OUV5NFFlR21TV0lFVzhFbWNIdWkzNEdkUHh0a205dDZETGwzVDJBQ1R6dVJJ?=
+ =?utf-8?B?a2c1YVVmWHdUMjlTOEhSUjFPYWU3amtORlI0N0w2aGZibXBQNUIxVExNREdD?=
+ =?utf-8?B?L0ZIZmhhK0xPSjUwamFGMmtjOTNmbVRzejJNbU9pOW91cmh0TUhqQm92UFlP?=
+ =?utf-8?B?VUsvdW16aU4yRjRCQjdHYUFvWkIrdGNaR2NJZEExUSs1WDJudVUyalUva2w0?=
+ =?utf-8?B?VEdJSDZRb3Z3VDN0QmJUMEduUGQzSUpsc0c0Z1ZLVGNaeVU4dExWcVhKZFUz?=
+ =?utf-8?Q?wYLNp2aARdJXs489Q4PaaI3apnOSqj3HDfNzWOE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QUJnN3RoYW1pd1lsd2ZHRmhzZVI4bjNuNDNzNzBzUk56TElibCswc2dwMWdm?=
+ =?utf-8?B?czMrV0o0M05YeDZ3MUtSNGRZRS9VQkNvc2Y1M1RjWGRxcWs3U3pXM0VRbFNw?=
+ =?utf-8?B?dTU1N3FqWWFhSkhMRXNLTWx3U2Nlb0JBcDVUVHdOZVplSURzSTljQTRoclB4?=
+ =?utf-8?B?MEFxRDJoODdPTUFVOFYwSUdHQUYrM1FzVWJlVmluL0FQb3g2eVdOS1F4cldw?=
+ =?utf-8?B?c0RBcFJIY3BWTjV3STc2Z1dBaVFFOGFGVDM1ZDREL0p3V1krOFAzcUx3Wnkz?=
+ =?utf-8?B?UW1Rb2FFTjZEUXc2b3lFQTVaS0RHeHFIaEFHK1pRVnEwTzJ2Q2IzY2pGS2N3?=
+ =?utf-8?B?ZFJhQjliWXFSK01obGF3VFBxaE1BcWlxMHZhcTJmbUhSWTFtb3lDWTE3S0do?=
+ =?utf-8?B?WXdCWjcwcDV0M2o5VkRTQTlTK2FVSUFkOWFZRlhnL0FvU0ZOZy9UZWhYOXZH?=
+ =?utf-8?B?SW1zU2p4TWhkamtBWWd5Vk56ZlNxTWljMC8yMVVmSWdaUmY5d0YrbmRzNEQ2?=
+ =?utf-8?B?YWU4dVRmYXRncXVKMzVUMmJGTnkzUGJ4cjR0VVFKNDFQMXp2Nmx3cnp0dHZK?=
+ =?utf-8?B?dXkzWVpPOU1XM3lIOHYzUnBYUUVrMVdOSGtaT3FBNEVtaWhodzQ3aXkxSGVi?=
+ =?utf-8?B?SGFHTU1FMFJEaktzaWJJbnJEK1REbHk1eDNDLzNGVGdBb0ZVQWk5akgveVRH?=
+ =?utf-8?B?OUIxR1M3WnZZZk8zb1BhRWl3RXV4Zm9wRG1iWnFDV3RaUG1pMU9wQkNlNHA4?=
+ =?utf-8?B?Y2szcmIyRUM3VnhSWXVSb3pTcGFzTktrYm44K29nNjY1RDJCYkJDOTlaUzl2?=
+ =?utf-8?B?a2g3NXFWMThMTEp3VmFIWEluK2w1WWV5endaa2tMaXp1MnRtNGdjTE5XVVRK?=
+ =?utf-8?B?eDBIMjVUTFJ0ZFNBcmg1UDRiOW9NZm9pN0VtN0ROaW5iWVQyTHR5aEhjOGx1?=
+ =?utf-8?B?TTNFUlRqN29TN0JHdkVqRGxjTUhzZkU1aTFlNkxvdTlCeXJHajBZbjZ6ejN3?=
+ =?utf-8?B?WnV4djZiTFd5Q3BaUUVYOXhkLzB0Sy83VlRKZWVmVnFqdU1OUmVrUW9pMm15?=
+ =?utf-8?B?THRJS3lTS3EyRmlvMitvM3ZhdWJ2NFVobytaTUpwSUVQVUE1Wi95TUZjMTdI?=
+ =?utf-8?B?ZzdmSXIzYkdGOGYyejdmMk5NN0NlUXVpeTBZQUxaQllnUmN6TFN1UmdvWHpG?=
+ =?utf-8?B?MmZxTllkMEFuaXlram9Ga3dpdVRKV1hNTHVMWm84ajlhUHBZbm5KSXJVeSs1?=
+ =?utf-8?B?WFJRMkFvT3BqcGpLdllic0VMWmx2RVJqVDd6VE5lQmM1SXl3TUlRS1NGYTl4?=
+ =?utf-8?B?clJUMGRJbFpnemtzNWh3VmZlU0l4MnZ5VVo5Y3VRUFhPalpVeS81TmFpa1NC?=
+ =?utf-8?B?TjdsSWNyN050cjYvWVI3UGpXQmN3MW15eCsrTGQ3eWI1aDJQWGxONFJJY0li?=
+ =?utf-8?B?aXJqVG9yQjNYZEFIbXdSd3pjTnZHNlpyRE5OdkR3c0NKSWpJd1lQVVZuS1ZI?=
+ =?utf-8?B?aDVOajRvc1dtKzVCQkVaeDkzbWQ0NkhvSWZYMVRmWXZmeW5mWEdTaStEbjJl?=
+ =?utf-8?B?amhRMnc4ZHdRQ0hBZ0w1TmNwazBnSnRYYTRUMmd3MUl6RkhLRWw5VUw3eWpt?=
+ =?utf-8?B?SUVTUlIwSHFhaHFuUHJobHVpNmVETVdYVVFnT2hVdnpwU1JyT2N3MTBPT2hu?=
+ =?utf-8?B?bFFuNkVBdUhveDNucmtHWm16YzI2VXhYS2ZaR3lwMUNzajZSdTlXSTJtTzg5?=
+ =?utf-8?B?U3djbWtDQktzL1MvdDlCWE5KTVlOMUhQOVpBS25kcDhzVXZUR0Jkc1hPWVFl?=
+ =?utf-8?B?Ukt4VjhWL1ZvblRCdWxSOHorc0pxNUlxb1ZYTm9rQ0RRR29CTllSTGZvMjdP?=
+ =?utf-8?B?VkYzNDIrbEV1Qk5JWmEwakFzK0ZmRW41L3BDWUE5b0w1N3crQXV4cHlrUlhS?=
+ =?utf-8?B?ZnhxYjBLZGxGT1hoRXc2QmFyd3U3Tnl0T2RQTnNiVGxVWWJRRVJNWnVVMUlE?=
+ =?utf-8?B?S3A3cG40cFVUV2pZMmlWN2FMMG1JQXhYRnM2L1F3bndMWXJjNi84SnhCdHVW?=
+ =?utf-8?B?cmhFSkNnY3hUZ2FuZGVWMGM2OE1BMEFhK3ZHaWIxMU1zN1k5RUxpNVNudjdn?=
+ =?utf-8?Q?wxjrJFmkMCEsiuPwWVT915x4C?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 640034cd-16ad-4c90-ea10-08dcf92a236c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2024 21:30:55.9613
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IpsQzqqVbZ4XDVhvgl1IkFwup2EW1urFlb8uLXhmjxHUSA1g91CtEC9p1MXXxOtRImdxQAXCtJSlIag4J/jEtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7989
 
+Hi Jonathan,
 
+On 10/30/2024 11:07 AM, Jonathan Cameron wrote:
+> On Fri, 25 Oct 2024 16:03:04 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+>
+>> The CXL drivers use kernel trace functions for logging endpoint and
+>> RCH downstream port RAS errors. Similar functionality is
+>> required for CXL root ports, CXL downstream switch ports, and CXL
+>> upstream switch ports.
+>>
+>> Introduce trace logging functions for both RAS correctable and
+>> uncorrectable errors specific to CXL PCIe ports. Additionally, update
+>> the PCIe port error handlers to invoke these new trace functions.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> +CC Mauro and Shiju to give the tracepoint a sanity check and for
+> awareness that we have something new to feed rasdaemon :)
+>
+> Jonathan
+>
+>> ---
+>>  drivers/cxl/core/pci.c   | 16 ++++++++++----
+>>  drivers/cxl/core/trace.h | 47 ++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 59 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index adb184d346ae..eeb4a64ba5b5 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -661,10 +661,14 @@ static void __cxl_handle_cor_ras(struct device *dev,
+>>  
+>>  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>>  	status = readl(addr);
+>> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+>> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
+>> +		return;
+>> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>> +
+>> +	if (is_cxl_memdev(dev))
+>>  		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
+>> -	}
+>> +	else if (dev_is_pci(dev))
+> How would you get here otherwise? Is it useful to know it is a pci device
+> here?
+This dev_is_pci() check is not necessary and can be removed.
 
-On 10/29/24 1:34 PM, Ira Weiny wrote:
-> Additional DCD region (partition) information is contained in the DSMAS
-> CDAT tables, including performance, read only, and shareable attributes.
-> 
-> Match DCD partitions with DSMAS tables and store the meta data.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> Changes:
-> [Fan: remove unwanted blank line]
-> [Rafael: Split out acpi change]
-> [iweiny: remove %pra use]
-> [Jonathan: s/cdat/CDAT/]
-> ---
->  drivers/cxl/core/cdat.c | 39 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mbox.c |  2 ++
->  drivers/cxl/cxlmem.h    |  3 +++
->  3 files changed, 44 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index b5d30c5bf1e20725d13b4397a7ba90662bcd8766..7cd7734a3b0f0b742ee6e63973d12fb3e83ac332 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -17,6 +17,8 @@ struct dsmas_entry {
->  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
->  	int entries;
->  	int qos_class;
-> +	bool shareable;
-> +	bool read_only;
->  };
->  
->  static u32 cdat_normalize(u16 entry, u64 base, u8 type)
-> @@ -74,6 +76,8 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
->  		return -ENOMEM;
->  
->  	dent->handle = dsmas->dsmad_handle;
-> +	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
-> +	dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
->  	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
->  	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
->  			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
-> @@ -255,6 +259,39 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
->  		dent->coord[ACCESS_COORDINATE_CPU].write_latency);
->  }
->  
-> +static void update_dcd_perf(struct cxl_dev_state *cxlds,
-> +			    struct dsmas_entry *dent)
-> +{
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct device *dev = cxlds->dev;
-> +
-> +	for (int i = 0; i < mds->nr_dc_region; i++) {
-> +		/* CXL defines a u32 handle while CDAT defines u8, ignore upper bits */
-> +		u8 dc_handle = mds->dc_region[i].dsmad_handle & 0xff;
-> +
-> +		if (resource_size(&cxlds->dc_res[i])) {
-> +			struct range dc_range = {
-> +				.start = cxlds->dc_res[i].start,
-> +				.end = cxlds->dc_res[i].end,
-> +			};
-> +
-> +			if (range_contains(&dent->dpa_range, &dc_range)) {
-> +				if (dent->handle != dc_handle)
-> +					dev_warn(dev, "DC Region/DSMAS mis-matched handle/range; region [range 0x%016llx-0x%016llx] (%u); dsmas [range 0x%016llx-0x%016llx] (%u)\n"
-> +						      "   setting DC region attributes regardless\n",
-> +						dent->dpa_range.start, dent->dpa_range.end,
-> +						dent->handle,
-> +						dc_range.start, dc_range.end,
-> +						dc_handle);
-> +
-> +				mds->dc_region[i].shareable = dent->shareable;
-> +				mds->dc_region[i].read_only = dent->read_only;
-> +				update_perf_entry(dev, dent, &mds->dc_perf[i]);
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
->  				     struct xarray *dsmas_xa)
->  {
-> @@ -278,6 +315,8 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
->  		else if (resource_size(&cxlds->pmem_res) &&
->  			 range_contains(&pmem_range, &dent->dpa_range))
->  			update_perf_entry(dev, dent, &mds->pmem_perf);
-> +		else if (cxl_dcd_supported(mds))
-> +			update_dcd_perf(cxlds, dent);
->  		else
->  			dev_dbg(dev, "no partition for dsmas dpa: %#llx\n",
->  				dent->dpa_range.start);
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 2c9a9af3dde3a294cde628880066b514b870029f..a4b5cb61b4e6f9b17e3e3e0cce356b0ac9f960d0 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1649,6 +1649,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
->  	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
->  	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
->  	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
-> +	for (int i = 0; i < CXL_MAX_DC_REGION; i++)
-> +		mds->dc_perf[i].qos_class = CXL_QOS_CLASS_INVALID;
->  
->  	return mds;
->  }
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 2fb93269ab4359dd12dfb912ded30654e2340be0..204f7bd9197bd1a02de44ef56a345811d2107ab4 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -466,6 +466,8 @@ struct cxl_dc_region_info {
->  	u64 blk_size;
->  	u32 dsmad_handle;
->  	u8 flags;
-> +	bool shareable;
-> +	bool read_only;
->  	u8 name[CXL_DC_REGION_STRLEN];
->  };
->  
-> @@ -533,6 +535,7 @@ struct cxl_memdev_state {
->  
->  	u8 nr_dc_region;
->  	struct cxl_dc_region_info dc_region[CXL_MAX_DC_REGION];
-> +	struct cxl_dpa_perf dc_perf[CXL_MAX_DC_REGION];
->  
->  	struct cxl_event_state event;
->  	struct cxl_poison_state poison;
-> 
+>> +		trace_cxl_port_aer_correctable_error(dev, status);
+>>  }
+>>  
+>>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+>> @@ -720,7 +724,11 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>>  	}
+>>  
+>>  	header_log_copy(ras_base, hl);
+>> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+>> +	if (is_cxl_memdev(dev))
+>> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+>> +	else if (dev_is_pci(dev))
+> as above.
+Got it and thank you.
+>> +		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
+>> +
+>>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>>  
+>>  	return true;
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+>> index 8672b42ee4d1..1c4368a7b50b 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -48,6 +48,34 @@
+>>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+>>  )
+>>  
+>> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+>> +	TP_ARGS(dev, status, fe, hl),
+>> +	TP_STRUCT__entry(
+>> +		__string(devname, dev_name(dev))
+>> +		__string(host, dev_name(dev->parent))
+>> +		__field(u32, status)
+>> +		__field(u32, first_error)
+>> +		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+>> +	),
+>> +	TP_fast_assign(
+>> +		__assign_str(devname);
+>> +		__assign_str(host);
+>> +		__entry->status = status;
+>> +		__entry->first_error = fe;
+>> +		/*
+>> +		 * Embed the 512B headerlog data for user app retrieval and
+>> +		 * parsing, but no need to print this in the trace buffer.
+> I'm not sure any printing as such goes on in the trace buffer. It is from
+> the data in the trace buffer I think.
+Right, the comment indicates it is not printed but included here because the buffer can be accessed by applications. Regards, Terry
+>> +		 */
+>> +		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+>> +	),
+>> +	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+>> +		  __get_str(devname), __get_str(host),
+>> +		  show_uc_errs(__entry->status),
+>> +		  show_uc_errs(__entry->first_error)
+>> +	)
+>> +);
+>> +
+>>  TRACE_EVENT(cxl_aer_uncorrectable_error,
+>>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
+>>  	TP_ARGS(cxlmd, status, fe, hl),
+>> @@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+>>  )
+>>  
+>> +TRACE_EVENT(cxl_port_aer_correctable_error,
+>> +	TP_PROTO(struct device *dev, u32 status),
+>> +	TP_ARGS(dev, status),
+>> +	TP_STRUCT__entry(
+>> +		__string(devname, dev_name(dev))
+>> +		__string(host, dev_name(dev->parent))
+>> +		__field(u32, status)
+>> +	),
+>> +	TP_fast_assign(
+>> +		__assign_str(devname);
+>> +		__assign_str(host);
+>> +		__entry->status = status;
+>> +	),
+>> +	TP_printk("device=%s host=%s status='%s'",
+>> +		  __get_str(devname), __get_str(host),
+>> +		  show_ce_errs(__entry->status)
+>> +	)
+>> +);
+>> +
+>>  TRACE_EVENT(cxl_aer_correctable_error,
+>>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+>>  	TP_ARGS(cxlmd, status),
 
