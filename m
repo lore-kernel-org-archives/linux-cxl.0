@@ -1,144 +1,157 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2BE1F473B
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 15:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E44A1FCF40;
+	Wed, 30 Oct 2024 15:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730300494; cv=none; b=fp50Fg5p65s1rIaiI6rHG0foNqzOUGgybz2SZzMPE1Bxf9mgCN6QFmooNmESGHk3wVq236f8rdQLKh4tnZmo2q+7503Od/Dt+vOik6sbcfjP9Twb3p3ThcxvOoSUkUTPDYRwwNBbuE6NEqc9m0zy+ra+x1T7zBK5o3jutlnUiV4=
+	t=1730301196; cv=none; b=XiHtlHZ98mgFH26KJ6SolEP55OBHixP9lTdlhDTwjlbpxYsc9SQyFjCol1M4GxTKPkTApNReTDmQsJLFWc3jjeueX+GKgINr6OtMse84w04woa72IBiHiZohHUvg5oJ4wFgkjYtWO+lel0fuFDDudO9IZhH1yzPf6/zpiP3cSjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730300494; c=relaxed/simple;
-	bh=FL8y5vH2DP6OO+W2bGbV05vpOD/N9aEaxA/0pmFdX6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J4PoO4Lqwo0fz396qgMqXZf2cBrKKBYtV2BxXQjf4f9nC3OkdK2j3xF8eGcJPq57sQ8cbp43M3ejsPvTs2GWNT7LC5c6JWn422GtYrphPPG4guWzQ+5gtwK3W+jAEms+vUakHmRo8jk9gy+0YI/M7fYab6jy8V6w3++FTEGhOpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DYEUmdjF; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DYEUmdjF"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6cbd005d0f9so40827976d6.3
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 08:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1730300492; x=1730905292; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Q8Onf+m3kOOMRY7hbWMtGK0sJkECClNbY5UDCI4RFs=;
-        b=DYEUmdjFGdHgGK+dT9jD0zmz6subT09g6tL6rJhMKfF8dqY2awwrdV8R8S2rk6uZgA
-         vBP8DnXGob/dsbV8kRhSA8mBwkshJTMpk1wp2nZkDTS83ADsTR67Ihq4AWcPygx14/Kp
-         Cf22nv2pZBx+5OvVsUOEg4mMWMzmaMA0wqnVLHWJ6fxpGKczSSsY28721hreIn2NsgsB
-         vP1mxnvCMF58N7hP/NgsuZxEws2qmynqwhJmnDvouVcJhNmO4LVFoUw6g+lWvkVXIr/f
-         lKCW9pCjtzK1swnQ3N7HQYqQLqI8roVWKeCGycXnYPDfEFpP0tFF2oAy4xS4Ck9aPjii
-         TNxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730300492; x=1730905292;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Q8Onf+m3kOOMRY7hbWMtGK0sJkECClNbY5UDCI4RFs=;
-        b=ONwRePpFCeLNpLgFw/CrftTvo/luqkOfG0L26HTNzVzfYHWNjGOv11OjQV1kj/rEPZ
-         UHhrj40w9RVb1Z+M5KGPkRuTNmO8Pj1P7VXse0piLiWDL93wKI8diqCSE/JmzqLeN6nt
-         2jY4zZBoLmMx1kVu0WU81g1vp/FkS6Htbf11Fj/VqoAw4BdmyCO4rgRChft922S8/Xyw
-         HOXd3hhTtdhg5ighgrOb7imKwS/aDy0wgzUPZROuQk/Vd8aUhZ2HmK0a6kQlWcjD2UMf
-         HAKnF8ObqD6puTjutlQBq7Gn5nBMnkSuhRPEMs/jn2n+a4oEQS+KeaN1qu1tBHUeMjHp
-         iGnA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2iiuNg/1qoBVF1e8b76F/p92P9YBkNmr86GrGphbhMKfERCu/LE1ZCiyreJvtASyz9K4k5qSDBXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzibe3DFUgUY/X5I84hbanxdvZzYHy9H96ykWgcpZLe7GklKutx
-	ci1ux78IhKeIEjZhDKz9gV4jJkOiBe6DQKSYyFv6WEBpSc7w27au9WOVJUgL8JI=
-X-Google-Smtp-Source: AGHT+IHhuKpLShK8fctWjn/NG1FZnDN5PDqypx/YhKTIWg3COMyVpTWAl/pGdOiRoamvWFhjIhqKWQ==
-X-Received: by 2002:a05:6214:398c:b0:6ce:1011:60c1 with SMTP id 6a1803df08f44-6d185849638mr176475236d6.35.1730300491405;
-        Wed, 30 Oct 2024 08:01:31 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d1798a8455sm52968066d6.32.2024.10.30.08.01.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 08:01:31 -0700 (PDT)
-Date: Wed, 30 Oct 2024 11:01:36 -0400
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com, rrichter@amd.com, Terry.Bowman@amd.com,
-	dave.jiang@intel.com, ira.weiny@intel.com,
-	alison.schofield@intel.com, dave.hansen@linux.intel.com,
-	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rafael@kernel.org,
-	lenb@kernel.org, osalvador@suse.de, gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org, rppt@kernel.org
-Subject: Re: [PATCH v4 3/3] acpi,srat: give memory block size advice based on
- CFMWS alignment
-Message-ID: <ZyJKUAcn8iLoV7PI@PC2K9PVX.TheFacebook.com>
-References: <20241029202041.25334-1-gourry@gourry.net>
- <20241029202041.25334-4-gourry@gourry.net>
- <c47337ea-f20e-44eb-95e8-c29b2db849a7@redhat.com>
+	s=arc-20240116; t=1730301196; c=relaxed/simple;
+	bh=eGP89k2OWd5d7Pxbyxcn/I7TL7S78zbAyyD/JGiIBFg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t2Mska9PEI/A6NN+ATN1nvjrYBS7bbE61SA0iaLnR6WRmbf74Q5o9+066P6kxCidSuEK5i61z6QoMdz5MuEFLRT1+Hc1SjCkyHACBkhfMgBaRp+M06GzpK/CWjpmM6Ax2gsOmdhr5ZxYSN+zndL11LTkB8rhd8InSP7PSVnE7SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XdrFN1Z65z6HJgC;
+	Wed, 30 Oct 2024 23:11:52 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D84F140158;
+	Wed, 30 Oct 2024 23:13:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Oct
+ 2024 16:13:09 +0100
+Date: Wed, 30 Oct 2024 15:13:08 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 05/14] PCI/AER: Add CXL PCIe port correctable error
+ support in AER service driver
+Message-ID: <20241030151308.000005d5@Huawei.com>
+In-Reply-To: <20241025210305.27499-6-terry.bowman@amd.com>
+References: <20241025210305.27499-1-terry.bowman@amd.com>
+	<20241025210305.27499-6-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c47337ea-f20e-44eb-95e8-c29b2db849a7@redhat.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Oct 30, 2024 at 11:40:08AM +0100, David Hildenbrand wrote:
-> On 29.10.24 21:20, Gregory Price wrote:
-> > Capacity is stranded when CFMWS regions are not aligned to block size.
-> > On x86, block size increases with capacity (2G blocks @ 64G capacity).
-> > 
-> > Use CFMWS base/size to report memory block size alignment advice.
-> > 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >   drivers/acpi/numa/srat.c | 19 +++++++++++++++++--
-> >   1 file changed, 17 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> > index 44f91f2c6c5d..a24aff38c465 100644
-> > --- a/drivers/acpi/numa/srat.c
-> > +++ b/drivers/acpi/numa/srat.c
-> > @@ -14,6 +14,7 @@
-> >   #include <linux/errno.h>
-> >   #include <linux/acpi.h>
-> >   #include <linux/memblock.h>
-> > +#include <linux/memory.h>
-> >   #include <linux/numa.h>
-> >   #include <linux/nodemask.h>
-> >   #include <linux/topology.h>
-> > @@ -338,12 +339,26 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
-> >   {
-> >   	struct acpi_cedt_cfmws *cfmws;
-> >   	int *fake_pxm = arg;
-> > -	u64 start, end;
-> > +	u64 start, end, align, size;
-> >   	int node;
-> >   	cfmws = (struct acpi_cedt_cfmws *)header;
-> >   	start = cfmws->base_hpa;
-> > -	end = cfmws->base_hpa + cfmws->window_size;
-> > +	size = cfmws->window_size;
-> > +	end = cfmws->base_hpa + size;
-> > +
-> > +	/* Align memblock size to CFMW regions if possible */
-> > +	for (align = SZ_64T; align >= SZ_256M; align >>= 1) {
-> > +		if (IS_ALIGNED(start, align) && IS_ALIGNED(size, align))
-> > +			break;
-> > +	}
-> 
-> Are there maybe some nice tricks bi-tricks to avoid the loop and these
-> hardcoded limits? :)
-> 
-> align = 1UL << __ffs(start | end));
-> 
-> Assuming "unsigned long" is sufficient in this code (64bit) and "start |
-> end" will never be 0.
->
+On Fri, 25 Oct 2024 16:02:56 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-I don't think 0 itself is necessarily invalid, but it would be strange.
+> The AER service driver doesn't currently handle CXL protocol errors
+> reported by CXL root ports, CXL upstream switch ports, and CXL downstream
+> switch ports. Consequently, RAS protocol errors from CXL PCIe port devices
+> are not properly logged or handled.
+> 
+> These errors are reported to the OS via the root port's AER correctable
+> and uncorrectable internal error fields. While the AER driver supports
+> handling downstream port protocol errors in restricted CXL host (RCH) mode
+> also known as CXL1.1, it lacks the same functionality for CXL PCIe ports
+> operating in virtual hierarchy (VH) mode.
+> 
+> To address this gap, update the AER driver to handle CXL PCIe port device
+> protocol correctable errors (CE).
+> 
+> Make this update alongside the existing downstream port RCH error handling
+> logic, extending support to CXL PCIe ports in VH mode.
+> 
+> is_internal_error() is currently limited by CONFIG_PCIEAER_CXL kernel
+> config. Update is_internal_error()'s function declaration such that it is
+> always available regardless if CONFIG_PCIEAER_CXL kernel config is enabled
+> or disabled.
+> 
+> The uncorrectable error (UCE) handling will be added in a future patch.
+> 
+> [1] CXL 3.1 Spec, 12.2.2 CXL Root Ports, Downstream Switch Ports, and
+> Upstream Switch Ports
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+This is a fiddly patch to read, but that's at least partly diff going crazy
+in a few places.
 
-I can look a bit.
- 
-> -- 
-> Cheers,
+Anyhow, I think it is fine but I would call out that this changes
+things so that the PCI error handlers are no longer called for CXL ports
+if it's an internal error.
+
+With a sentence on that:
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+I'm not 100% convinced the path of separate handlers is the way to go
+but we can always change things again if that doesn't work out.
+
+Jonathan
+
+> ---
+>  drivers/pci/pcie/aer.c | 59 ++++++++++++++++++++++++++++--------------
+>  1 file changed, 39 insertions(+), 20 deletions(-)
 > 
-> David / dhildenb
-> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 53e9a11f6c0f..1d3e5b929661 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -941,8 +941,15 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
+>  }
+>  
+> -#ifdef CONFIG_PCIEAER_CXL
+> +static bool is_internal_error(struct aer_err_info *info)
+> +{
+> +	if (info->severity == AER_CORRECTABLE)
+> +		return info->status & PCI_ERR_COR_INTERNAL;
+>  
+> +	return info->status & PCI_ERR_UNC_INTN;
+> +}
+> +
+> +#ifdef CONFIG_PCIEAER_CXL
+
+Diff was having fun.  Maybe put a blank line here? I think that's
+what has tripped it up.
+
+>  /**
+>   * pci_aer_unmask_internal_errors - unmask internal errors
+>   * @dev: pointer to the pcie_dev data structure
+> @@ -994,14 +1001,6 @@ static bool cxl_error_is_native(struct pci_dev *dev)
+>  	return (pcie_ports_native || host->native_aer);
+>  }
+
+> -
+
+>  /**
+> @@ -1115,8 +1131,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	cxl_handle_error(dev, info);
+> -	pci_aer_handle_error(dev, info);
+> +	if (is_internal_error(info) && handles_cxl_errors(dev))
+> +		cxl_handle_error(dev, info);
+> +	else
+> +		pci_aer_handle_error(dev, info);
+Whilst not calling this for the CXL cases probably makes sense and
+given new code needs to be the case to avoid a double clear I think,
+I would call that change out more explicitly in the patch description.
+> +
+
+>  	pci_dev_put(dev);
+>  }
+>  
+
