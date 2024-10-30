@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0A1E284E
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 10:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2401E1C2B
+	for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 10:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730283944; cv=none; b=Sisb+6hhi5d64DxSF/JgTVOC10I7EgAV1N0prL/rISivYmyotKV6Zy+S/ZQi2ESC1xnylf/+UYOWcJJ9+qxVjE9NRWM7YDzcTBFb2cWjWV/J+btbqU2o2c1RXIqMugNIBzkoDVC5d90/Tp9F7ZRIqzqL52E1pnBb1wV4asziGzY=
+	t=1730284020; cv=none; b=F6gZCfUjyDq/FIFW0V97qyq2RNdghLPwXhPLJkhxT0BgnySe7SfYRbjcD04Mei/3OY71Rm4XnxccgMb2Q0nno8Ca98HXfHa/C1jHX/dWMWU9kcKQQm2E2CPDIbCDsdy4YUsyOOtEWWn5Op5IAlw4+QuAhFgdbNrQLglqn0JLusA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730283944; c=relaxed/simple;
-	bh=zmCLICy9LTiNLkwLvnW4mzn0GQwpDoaxhlof1YVkf3w=;
+	s=arc-20240116; t=1730284020; c=relaxed/simple;
+	bh=enkQ8wGw2YmUqnOlwAoHiWN/YGXdL6fsjKLid6ZtMzA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CP5MkNO1WEGikgQGYAxVSRLtrOGDo5EIkIGBVg6Rt1icvhmt2bXyZVxDMjy173MWNgCeRXRqE14S5BsaDqy6JELeDw6aLeCcikMA922E4bH6uN8w/D1IQrzBkl08EoLoPUp6GV7sMR7eR7mPSeUOj9auJKAfK6Q3aSTYOwbPe3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SAu5PrRh; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=kHHareMa+ujb877jsvIr/Padmre5GY49quD9u0DIKR/gv91xV/BeFlbXLO2bXdnbXXr5kXEWzUPNUVcvjbY2MvoixXV/A6GF22LTMUH/xxHjOH14RSQlwXR7gDsl8dLof7r4xmRWH38EYcehBM6wg/pFdBY1PaKxuigONaevwYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MciYac+2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SAu5PrRh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MciYac+2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730283939;
+	s=mimecast20190719; t=1730284017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xKLA0oWLDgkF5rCii7yrEur7jFosX6RQn0CfkZ28I4E=;
-	b=SAu5PrRhO/FKIId4CmYsxzdZKQ6JHxxVBxU/e2Y+H2rgjRGJFIIX0sp+UImrjD9UCgb3e9
-	OMku9E2lPouif6wv2jeJABCSYSGSyzRzrS+0OfBxJQNwiAxEGcCuRA+elRg6iceFxwqVRA
-	rbkgoMl2khDkdPhh4b2pWHfFH4mUzQ4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UAn5PtOTVly2a1DSq3FAj2+pYreXlzFZTwZTDVZFw+Y=;
+	b=MciYac+28K/jL3Wgw0hlyvdXn0QjRmhCWwOX7eauZVaQWXZvIVdRgmi5Eu5gV03P2GJqCB
+	NkUbh5a/1+zVJzi7F0o7t4ZvzBqjrgUzkbudV/iBLvnqztKJSqWNx5+GDiz8zb6aIsv9+C
+	ezpwx5of3S+CP4DcWMWzHYW5gk0QaaI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-288-30DoO8hbPKi6faWl2_xjoQ-1; Wed, 30 Oct 2024 06:25:38 -0400
-X-MC-Unique: 30DoO8hbPKi6faWl2_xjoQ-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-37d533a484aso396008f8f.0
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 03:25:38 -0700 (PDT)
+ us-mta-178-BympDIq2PzSvVG-f9lKH4g-1; Wed, 30 Oct 2024 06:26:55 -0400
+X-MC-Unique: BympDIq2PzSvVG-f9lKH4g-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37d52ca258eso3464337f8f.3
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Oct 2024 03:26:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730283937; x=1730888737;
+        d=1e100.net; s=20230601; t=1730284014; x=1730888814;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=xKLA0oWLDgkF5rCii7yrEur7jFosX6RQn0CfkZ28I4E=;
-        b=qtFrDckV0/r+NzNlyMFu6kGjbnkLPvtf6bpuOsmhIyspTay+7f60CfcPFeQZiGmeF2
-         GFAZM/8eko6Z3IiPaZPtMBco9JRZFaTiQPgBIm68bK6Xie2t+21b6JnnPXgYM2HbmJLB
-         rKfQRML7iOvpmtdESsnTqJF6kWiIRqCYt316I2/1b7qsrAyy7hw/Fm7CmP48P8k/bgt8
-         A7wb6HPVzUQKr5M+xFKWtoxPbZBq5AZ/CGSyFJ8XLCzUSBZwDdeqAXOjlumEoM1SEX6s
-         AIT3nscZPQfg0s+0eyhR1Dd+P1NJjhqDXo0Ym4VSJR8y9lMA7suvVcrmYI5Ity/9BXSc
-         nuHw==
-X-Gm-Message-State: AOJu0Yxef3PP31HJb5B0aUFH3vfTbhcGxFyDpOULsVh8ehxNHGlW97Vc
-	ShXKBKWOQTpW5Pp2NbMDvY1jYreyPHxr6xDbM4OijiEuFqyXyA4p6GTnYL1e6WSk7Dxmoh268Vw
-	WiH7WA7Wsmqu3o/Kq/J4cd4ncXXnEFJeObVngFevzuevQoImrxEWIdOTi+02sp8OKYg==
-X-Received: by 2002:a05:6000:cca:b0:367:8e57:8 with SMTP id ffacd0b85a97d-381b97a85b5mr1420479f8f.19.1730283937361;
-        Wed, 30 Oct 2024 03:25:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE97Pf9dhOPLjCXei3bbCF4D3qdGOOrwidgytfYoVyQ27lzp16/fse+MiEKENg5AXoEOEOrgw==
-X-Received: by 2002:a05:6000:cca:b0:367:8e57:8 with SMTP id ffacd0b85a97d-381b97a85b5mr1420436f8f.19.1730283936919;
-        Wed, 30 Oct 2024 03:25:36 -0700 (PDT)
+        bh=UAn5PtOTVly2a1DSq3FAj2+pYreXlzFZTwZTDVZFw+Y=;
+        b=r0tKCsngYIbSRAxRu4dL9gsmHlPsmCng83agZ18LMz2KTmn/LZ/zLsBwIi93GsQhRF
+         9Ne3UjmXuv2FRTO43Qfz6NN+/BQooy3QYfGNLdlsC+GuNWU3YsHOLcVFIFYtSh+oJaCa
+         V+Ye12c78aMF8zBMLDccfVT+p2cXWg0vI6dXryBUtrQBg3EIryxFLd+NXe6pZCaSBgcY
+         0GdbIIPrH4WpDiJAJ1ywd8P/8Qz0KCHRxHRHzlRMxpR1MKBcGCrNYgby7knye/WjEX5E
+         eXE10PUeuBDvY8ki7If9l+oj0TC526YfrgealRAqhKdu7yL3mZFzan+pt1mqTtRFMl3l
+         R02w==
+X-Gm-Message-State: AOJu0YzsXEBNLyG0wgbZdxL9tF114qau4xlYGypt/GqEuttt6FopM/qE
+	XWkzSkyJasYWRVRMeVLijzr6hiwdh9mRXjjwhnu+K9XZ9fRiQm2QyXxQlRf3np3UxMF09HLWZ2b
+	Cgn5yQengos5cEp8ImapP0YzTaHOsG2f7i4Ja5DO3oqVMJODWFS3bGSxLSQ==
+X-Received: by 2002:a5d:48c4:0:b0:374:b71f:72c9 with SMTP id ffacd0b85a97d-381b70762e8mr2234168f8f.16.1730284014544;
+        Wed, 30 Oct 2024 03:26:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhT/7VLXcmPTmel+O5szvYG/3aiGbWANU4AxCfbzCuMCvUvYX6/ZhW7mmaRxnmxOVhlaDgLQ==
+X-Received: by 2002:a5d:48c4:0:b0:374:b71f:72c9 with SMTP id ffacd0b85a97d-381b70762e8mr2234137f8f.16.1730284014109;
+        Wed, 30 Oct 2024 03:26:54 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c733:7c00:d067:e327:4f99:7546? (p200300cbc7337c00d067e3274f997546.dip0.t-ipconnect.de. [2003:cb:c733:7c00:d067:e327:4f99:7546])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd9aa83asm16969125e9.31.2024.10.30.03.25.34
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b92f11sm14925113f8f.101.2024.10.30.03.26.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2024 03:25:36 -0700 (PDT)
-Message-ID: <55df76a9-afa3-4dc0-a7f9-ff9b6f139448@redhat.com>
-Date: Wed, 30 Oct 2024 11:25:33 +0100
+        Wed, 30 Oct 2024 03:26:53 -0700 (PDT)
+Message-ID: <4fae9fa2-dc43-4a1a-af18-ec1c9c82fbf7@redhat.com>
+Date: Wed, 30 Oct 2024 11:26:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] memory: implement
- memory_block_advise/probe_max_size
+Subject: Re: [PATCH v4 2/3] x86: probe memory block size advisement value
+ during mm init
 To: Gregory Price <gourry@gourry.net>, x86@kernel.org,
  linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org
 Cc: linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
@@ -79,7 +79,7 @@ Cc: linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
  rafael@kernel.org, lenb@kernel.org, osalvador@suse.de,
  gregkh@linuxfoundation.org, akpm@linux-foundation.org, rppt@kernel.org
 References: <20241029202041.25334-1-gourry@gourry.net>
- <20241029202041.25334-2-gourry@gourry.net>
+ <20241029202041.25334-3-gourry@gourry.net>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -126,7 +126,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20241029202041.25334-2-gourry@gourry.net>
+In-Reply-To: <20241029202041.25334-3-gourry@gourry.net>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -134,97 +134,58 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 29.10.24 21:20, Gregory Price wrote:
-> Hotplug memory sources may have opinions on what the memblock size
-> should be - usually for alignment purposes.  For example, CXL memory
-> extents can be 256MB with a matching alignment. If this size/alignment
-> is smaller than the block size, it can result in stranded capacity.
+> Systems with hotplug may provide an advisement value on what the
+> memblock size should be.  Probe this value when the rest of the
+> configuration values are considered.
 > 
-> Implement memory_block_advise_max_size for use prior to allocator init,
-> for software to advise the system on the max block size.
+> The new heuristic is as follows
 > 
-> Implement memory_block_probe_max_size for use by arch init code to
-> calculate the best block size. Use of advice is architecture defined.
+> 1) set_memory_block_size_order value if already set (cmdline param)
+> 2) minimum block size if memory is less than large block limit
+> 3) if no hotplug advice: Max block size if system is bare-metal,
+>     otherwise use end of memory alignment.
+> 4) if hotplug advice: lesser of advice and end of memory alignment.
 > 
-> The probe value can never change after first probe. Calls to advise
-> after probe will return -EBUSY to aid debugging.
-> 
-> On systems without hotplug, always return -ENODEV and 0 respectively.
-> 
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
 > Signed-off-by: Gregory Price <gourry@gourry.net>
+> Acked-by: David Hildenbrand <david@redhat.com>
 > ---
->   drivers/base/memory.c  | 48 ++++++++++++++++++++++++++++++++++++++++++
->   include/linux/memory.h | 10 +++++++++
->   2 files changed, 58 insertions(+)
+>   arch/x86/mm/init_64.c | 16 ++++++++++------
+>   1 file changed, 10 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 67858eeb92ed..099a972c52dc 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -110,6 +110,54 @@ static void memory_block_release(struct device *dev)
->   	kfree(mem);
->   }
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index ff253648706f..01876629f21f 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -1452,16 +1452,20 @@ static unsigned long probe_memory_block_size(void)
+>   	}
 >   
-> +/**
-> + * memory_block_advise_max_size() - advise memory hotplug on the max suggested
-> + *				    block size, usually for alignment.
-> + * @size: suggestion for maximum block size. must be aligned on power of 2.
-> + *
-> + * Early boot software (pre-allocator init) may advise archs on the max block
-> + * size. This value can only decrease after initialization, as the intent is
-> + * to identify the largest supported alignment for all sources.
-> + *
-> + * Use of this value is arch-defined, as is min/max block size.
-> + *
-> + * Return: 0 on success
-> + *	   -EINVAL if size is 0 or not pow2 aligned
-> + *	   -EBUSY if value has already been probed
-> + */
-> +static size_t memory_block_advised_sz;
+>   	/*
+> -	 * Use max block size to minimize overhead on bare metal, where
+> -	 * alignment for memory hotplug isn't a concern.
+> +	 * When hotplug alignment is not a concern, maximize blocksize
+> +	 * to minimize overhead. Otherwise, align to the lesser of advice
+> +	 * alignment and end of memory alignment.
+>   	 */
+> -	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> +	bz = memory_block_advised_max_size();
+> +	if (!bz) {
+>   		bz = MAX_BLOCK_SIZE;
+> -		goto done;
+> -	}
+> +		if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> +			goto done;
+> +	} else
+> +		bz = max(min(bz, MAX_BLOCK_SIZE), MIN_MEMORY_BLOCK_SIZE);
 
-Nit: if everything is called "size", call this "size" as well.
+Nit: coding style want you to use
 
-> +static bool memory_block_advised_size_queried;
-> +int memory_block_advise_max_size(size_t size)
+if () {
 
-Not that memory_block_size_bytes() uses "unsigned long". I don't think 
-it matters here. Or could it on 32bit? (I assume that code will not 
-really matter on 32bit)
+} else {
 
-> +{
-> +	if (!size || !is_power_of_2(size))
-> +		return -EINVAL;
-> +
-> +	if (memory_block_advised_size_queried)
-> +		return -EBUSY;
-> +
-> +	if (memory_block_advised_sz)
-> +		memory_block_advised_sz = min(size, memory_block_advised_sz);
-> +	else
-> +		memory_block_advised_sz = size;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * memory_block_advised_max_size() - query advised max hotplug block size.
-> + *
-> + * After the first call, the value can never change. Callers looking for the
-> + * actual block size should use memory_block_size_bytes. This interface is
-> + * intended for use by arch-init when initializing the hotplug block size.
-> + *
-> + * Return: advised size in bytes, or 0 if never set.
-> + */
-> +size_t memory_block_advised_max_size(void)
-> +{
-> +	memory_block_advised_size_queried = true;
- > +	return memory_block_advised_sz;> +}
-> +
+}
 
-I wonder if both should.could be "__init" ? So they could only be called 
-from __init ... which sounds like the tight thing to do?
-
-Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
