@@ -1,170 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCCD1BBBD6;
-	Thu, 31 Oct 2024 16:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7374199FAF
+	for <linux-cxl@vger.kernel.org>; Thu, 31 Oct 2024 16:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730391679; cv=none; b=houYJ9LE/tRg5+ZVhON9OOsHg5Neb/sVreL56YWyuXTsF8gKfWk5dRAaNAAK2AzDT0HlabpQgWC/M4NUNOsEdhTbv3FIiw8E+9Vc7p++XIZu4lzHe5EZCM8Bwtfsw1SI2x0PHzjreiO1ccUGDr7Q/7SQUHW8RUjyBuOvXA+z22s=
+	t=1730391800; cv=none; b=EzYdZQXHcg8cvhmnSsV+UO9W90HRp/kCdO/KkIq6FBKblAVLWrzCZeUeN4iMEXJZhxTQ5vzn7YGR3XiS9jAera+JFgH+gyDhwYWy6SVC8860FrsIiJqsqP0Cip7xEH1bv/EP7b438ZBZEHIkgl6KjZ8gAn9FYKLk6A3nlUhsOuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730391679; c=relaxed/simple;
-	bh=CdXx1JIY5Fppr8hDxAedta9mTqEBilxS5Z9Y6Eqje2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aQlQesRXV+b9RqAXNLmS0cSjT7jK7iY4IiRIJH4aTbzvzfKnJwHZIPNbS9l0oJEif2Im0Pznl/oKb6uqfuU0d6Kqrsdg2Kbk04emmdDYEY5zaKwM9BdMi3DNXVAERl7anL9KwqPAsnDnqf71tzemO98PZcG7tgrGtKqvVuQAmV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Epjb2Ij5; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730391800; c=relaxed/simple;
+	bh=pHyLyRq9icEl7h1hajof/4uWohbq3D4kb9tZ1Q3TxCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nVq5/dmih9LIEPNIoG590N1TpoahZkhpeLPI0e4Du2piHIkGaN/hI6YhDfybFJLNcA4aV8xqHG04xXOJ7XhB66YAK9q3OnyLg/sYWxBITFVHBTlFtr10Ca9aygrEAd0tZdiQkhMRHZj+bbZS5i/ujs9ewvUV5WtK03qJczNbqQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=A4qPUJdB; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Epjb2Ij5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730391677; x=1761927677;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=CdXx1JIY5Fppr8hDxAedta9mTqEBilxS5Z9Y6Eqje2w=;
-  b=Epjb2Ij538rvP53P6InM6BW64Ec4BObvV+5BIqvhZytp+RxBdzuamu7U
-   muiJYKrBtx9rteHlM/2LDWd1ej9hYQK8gWS7J6hC7f7oN9i53hLpYQTMy
-   Q+qmfYn/OBF0Ke5s5fnsLlCw+rFgAWXYYA+XDPA511oo37n2773Bz/6zc
-   ya41sdDARq2m7niUfKkuuINrF5p3GfjoUPW3d9V1ElBPLBT2X6N3WGgMN
-   qzSM9xGiYJ/hZqQ7LPGUxKS7rXhd7Mp0u76OndGmQ+LIRp0M++cEZ/Air
-   k6QBAKnpGfWG043H9y0zVlUHFfO+x8Jpr5aBoFhAJi1nEhcMN2fCjDLKx
-   g==;
-X-CSE-ConnectionGUID: FlUuuLjmTnegOI12apSvbA==
-X-CSE-MsgGUID: bpSexOP4RC+bxAGOIFkqbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30032105"
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="30032105"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 09:21:15 -0700
-X-CSE-ConnectionGUID: M4UqB8K+S0Gk5DO42/vtnw==
-X-CSE-MsgGUID: HMUn+UNyQRiKaB5oNU9rOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="113458555"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.232]) ([10.125.108.232])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 09:21:13 -0700
-Message-ID: <32ee3523-9234-4e51-9199-5cbbabb5a0ed@intel.com>
-Date: Thu, 31 Oct 2024 09:21:12 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="A4qPUJdB"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b155da5b0cso79699285a.2
+        for <linux-cxl@vger.kernel.org>; Thu, 31 Oct 2024 09:23:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1730391797; x=1730996597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WrPPGPtF1r4JJPagnUAwxTz8GU4YzNxLE+E5DMVXteY=;
+        b=A4qPUJdBc0zjzPz59IM7rTHfXyvkBIURVIMdaOLECvzsczBDu9kG7T4zUuKhn4Oa1j
+         59SqusMgAemTsGgSuAjquTbuOCdOMz+N1ebOiZMAXUxCV5BAlikhw/FQgBmdJKSNc8Mk
+         /btFMqhC2rI8z5M/gWqfczSjg/aC9pNnfz/D0MpFQ0IX7r9Givev7q2sETHKXKI9ek0G
+         nGWY/OXevb+VnSE+r542TUqy2vwnJOcbTty9uTdWumpaBP4zoYBcY8i6bFjYA8gKCcwK
+         ffBlWEs6WeAM0Vcwwo4XmwRbSNaCDc/RQplQ5v0fY2E+TO+8yR/EdETbZviBJYg+004d
+         yZaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730391798; x=1730996598;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WrPPGPtF1r4JJPagnUAwxTz8GU4YzNxLE+E5DMVXteY=;
+        b=T700YuoO9AlznZEpLxyFbxRGZr8LDD0wDygcf/HBXkSiJY8nyzA/Gr6c6IlQnJEcI7
+         HK9iTO63TpxdKbzVkbaBYqhqtoJkNp2zXojH51b1vuLqE4/J22fCNYa0ZzIczG9mvBv8
+         5IcIfVsxVqmDhDMRRVe+qHwSWVdXwqVQb81eikdwKO3G2iKMQflSwn6LoAr7f8yei4gw
+         qETwiNyk0UXidyRW5lsoknOvbdRI1GIm+Gl01uUuB0n9L0KDReapM2L4QcKs3oDQmr+W
+         ewQ8xUeAldGjry2nA5KFciEiTom1Pm1JUCOVHF4Po+EST+K+c+I90RKetURNwMG8FA7+
+         dVMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWA6ydt04zhSrOVdjjK9v+qUcya9s7XDb2xzZQGtKHbBm/uZKNzX6JNXd5Kpvc1dabrGBUmQT2bW0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBU9KHHA0EJG3z53anc0JJLr6AGnE84q4IQH+ZAliCNqI83gpC
+	/e3pvHP7lEX3amWSUphZmgW6xWrTjyF2QOpoevMTp9AnZKFwM548Me8n9d+nK+s+vg2XyOcSY7Z
+	o
+X-Google-Smtp-Source: AGHT+IG0mJPHTCww3DZQuqv9nxseKwFokKX1MWnv7+XcE4NElcJk7zAVUMyfqkFKAZ8kX5Mw9dP5qg==
+X-Received: by 2002:a05:620a:318b:b0:7a4:d685:caa9 with SMTP id af79cd13be357-7b1aee2c038mr1047669385a.48.1730391797615;
+        Thu, 31 Oct 2024 09:23:17 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f39ebab8sm83428485a.8.2024.10.31.09.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2024 09:23:17 -0700 (PDT)
+Date: Thu, 31 Oct 2024 12:23:23 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com, rrichter@amd.com, Terry.Bowman@amd.com,
+	dave.jiang@intel.com, ira.weiny@intel.com,
+	alison.schofield@intel.com, dave.hansen@linux.intel.com,
+	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rafael@kernel.org,
+	lenb@kernel.org, david@redhat.com, osalvador@suse.de,
+	gregkh@linuxfoundation.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v4 1/3] memory: implement
+ memory_block_advise/probe_max_size
+Message-ID: <ZyOu-7MeTYGa7tf9@PC2K9PVX.TheFacebook.com>
+References: <20241029202041.25334-1-gourry@gourry.net>
+ <20241029202041.25334-2-gourry@gourry.net>
+ <ZyOUp5Juz5x3Ivrn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/14] PCI/AER: Rename AER driver's interfaces to also
- indicate CXL PCIe port support
-To: Terry Bowman <terry.bowman@amd.com>, ming4.li@intel.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com
-References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-3-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241025210305.27499-3-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZyOUp5Juz5x3Ivrn@kernel.org>
 
+On Thu, Oct 31, 2024 at 04:31:03PM +0200, Mike Rapoport wrote:
+> On Tue, Oct 29, 2024 at 04:20:39PM -0400, Gregory Price wrote:
+> > + * Return: 0 on success
+> > + *	   -EINVAL if size is 0 or not pow2 aligned
+> > + *	   -EBUSY if value has already been probed
+> > + */
+> > +static size_t memory_block_advised_sz;
+> > +static bool memory_block_advised_size_queried;
+> 
+> kernel-doc will be unhappy about variable declarations between the doc
+> block and the function it describes
+> 
 
+Yup, that was the warning I was waiting to clear KLP.
 
-On 10/25/24 2:02 PM, Terry Bowman wrote:
-> The AER service driver already includes support for CXL restricted host
-> (RCH) downstream port error handling. The current implementation is based
-> on CXL1.1 using a root complex event collector.
-> 
-> Rename function interfaces and parameters where necessary to include
-> virtual hierarchy (VH) mode CXL PCIe port error handling alongside the RCH
-> handling.[1] The CXL PCIe port error handling will be added in a future
-> patch.
-> 
-> Limit changes to renaming variable and function names. No functional
-> changes are added.
-> 
-> [1] CXL 3.1 Spec, 9.12.2 CXL Virtual Hierarchy
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Learning new things n.n;; - new version shortly
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/pci/pcie/aer.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 13b8586924ea..fe6edf26279e 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1029,7 +1029,7 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  	return 0;
->  }
->  
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  	/*
->  	 * Internal errors of an RCEC indicate an AER error in an
-> @@ -1052,30 +1052,30 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
->  	return *handles_cxl;
->  }
->  
-> -static bool handles_cxl_errors(struct pci_dev *rcec)
-> +static bool handles_cxl_errors(struct pci_dev *dev)
->  {
->  	bool handles_cxl = false;
->  
-> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> -	    pcie_aer_is_native(rcec))
-> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(dev))
-> +		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
->  
->  	return handles_cxl;
->  }
->  
-> -static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> +static void cxl_enable_internal_errors(struct pci_dev *dev)
->  {
-> -	if (!handles_cxl_errors(rcec))
-> +	if (!handles_cxl_errors(dev))
->  		return;
->  
-> -	pci_aer_unmask_internal_errors(rcec);
-> -	pci_info(rcec, "CXL: Internal errors unmasked");
-> +	pci_aer_unmask_internal_errors(dev);
-> +	pci_info(dev, "CXL: Internal errors unmasked");
->  }
->  
->  #else
-> -static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
-> -static inline void cxl_rch_handle_error(struct pci_dev *dev,
-> -					struct aer_err_info *info) { }
-> +static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
-> +static inline void cxl_handle_error(struct pci_dev *dev,
-> +				    struct aer_err_info *info) { }
->  #endif
->  
->  /**
-> @@ -1113,7 +1113,7 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> -	cxl_rch_handle_error(dev, info);
-> +	cxl_handle_error(dev, info);
->  	pci_aer_handle_error(dev, info);
->  	pci_dev_put(dev);
->  }
-> @@ -1491,7 +1491,7 @@ static int aer_probe(struct pcie_device *dev)
->  		return status;
->  	}
->  
-> -	cxl_rch_enable_rcec(port);
-> +	cxl_enable_internal_errors(port);
->  	aer_enable_rootport(rpc);
->  	pci_info(port, "enabled with IRQ %d\n", dev->irq);
->  	return 0;
-
+~Gregory
