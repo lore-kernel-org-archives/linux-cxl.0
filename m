@@ -1,201 +1,211 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F7016DEBD;
-	Thu, 31 Oct 2024 21:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730410063; cv=none; b=F1QzcxK+TtkQ3KM536BPqHnNsPVoPg00Dw7HUZwRDNUrPaHmI5AUdTHIl+UpcGpUrfXIMdeP8tiNL5RJWEgIvRpiRXwQqGNDBHt5kmhbu0j06CsD6oLi4M/MO2Pl4K4DocVk/B8McgIsNiCjdgYRDzPCpayBlj0C8tO8Q8z2vLU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730410063; c=relaxed/simple;
-	bh=bl44WVmaUULL8B5ir/xE2s0B1QEu/rRZUJxn5ctU5rM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZhhKcZhupTq2rgooBe2kWhTCibM7a7VF0VwLuUlPB2bbHFEDL9qZIPWX/BvuFofuoFqnEVDnZlMd5xmFfg98OuevdrzmZrKvmYeLtd36s3GwHp4YC+p3RuFgeLX8POMEoDFCyW5QOwa1yds0d+pt/Ss+b7dFdjs5Cd2LErHaW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qtc8XRko; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B781BD9C0;
+	Thu, 31 Oct 2024 21:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730410497; cv=fail; b=spXvpfgIPfAhmkb8qrn0J3g5RDcHCzdB3Gm3haUjBLN195BGoIoUFN67cAIQXWYtxiiVxS+s1RRThw86bdzuem9iQlpFzlU5sdx9c++ni/QKd0/WWVkyZSBy6OYqbCa4WhkOoz+KsaJJrPclL1OGeyt3OlD+lmPFkvq32QThfdo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730410497; c=relaxed/simple;
+	bh=LAIUbJP6n18k+2vaI7aFLfNKBQ/jfNnH0c79lijvh44=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ft1bfXlwP08XIzAJEirvvdLhirlpmGyOjenpq5ftwsktjLeJJoP+n1Gxi3SUJo0wqH7qJ33IASoRjbkQFksKHIB/K3a5dwOLcZCjT1czlsAplwF4cyQHZnGz+q9elVCVFny19CgaA4G8+tac0ISanb8/LjyguCn+nGkZmoRelqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CTsVPf9P; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qtc8XRko"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-718e9c8bd83so1925666b3a.1;
-        Thu, 31 Oct 2024 14:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730410057; x=1731014857; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gP3+/PsY3A1zi3YMA5waIl6JNl6hCrFJv9jzWk+G+kE=;
-        b=Qtc8XRkox/SbRUs6q0IckEQD/Ggfy6CF+I1jmOAoO5x2HytyWHI/jGtCcOaf2OS8IX
-         2VAurQVUFunrTch48mGaDghF1kFfA/ZrcN391iC1/mBGAqwo2czu1XRlIWxHWyR9grRJ
-         eKvtx4qk2MYgywUvzf7dvz/Kbx6ZVljZebCGg3lM7Ob2eqzaGzvr4zQCeWNvyMRh5eBJ
-         /G/6hLOxxK/jBw3zC2MuLQR+3O3EqEu6KWWRq6OZuIrU51BHV2NvpXWEBcGt0h+yYlJv
-         eMO3l0QRszBLMPFbbxLG+bZrRZFyhrHaKkUCwZhNs8tBQV5FRmbJgB7kqACvy1QwFU8P
-         3pDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730410057; x=1731014857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gP3+/PsY3A1zi3YMA5waIl6JNl6hCrFJv9jzWk+G+kE=;
-        b=T3C4XfLrOSd94L9bDiJjvN0zY3sgKs5xHRcoOCC9oX3Q+ZKKT71aGaAMH4Bocygj2E
-         TE/yZ97zjsZMtmM/OWj8Gu/fqK5a4UwGmvhSqL5GXMqsetPsvt+Ysdew8Gx/GOYYl7wm
-         0pLXnyYStVZ47MMrGiUXjCcK/jaJIPl6sGh+2IRl0HHHkyUfDChD+TUy8YaKYI9WBQm1
-         MYYAE+1pXMSDUZtgYL0wicU8Nq50ZWScUzNV9q6lCSNZ8sYODkPRH2nW0Q0lMa/xY0Hy
-         EqP5i9Rb4Z4Pr1nlVUEDT3+AlyfnJQL9NDkBcFtYQMZOcao8zJpMTpzofb6Ha/zgRIBv
-         MS+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUYQN2cRQHls1xnFLdmMPQVu+NtFwN4ERpgiBmZ9o9QKVnWc6ux3xZXPpcoDNcpc3Qs3oDVMs1igm13E6P2@vger.kernel.org, AJvYcCUcVBjjaQAKdf8sFPlc9LOLWweebPiotX3nVOz8YKe+AvBFifsb63b+Wu9ayUl/3zaWJgeD8l824BN1@vger.kernel.org, AJvYcCX4ClVjZO75No2KLusv7hdUWKqbmS/EOhsQ3dPiSegBaXmbuyrhjE3apeGzmw/9yhErwLw/UzFOm3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8Q5nYBeIe6J0Ue8xvvByWnipGwkU9kmPxkFUy8dcHib/4l6c0
-	lXCWHYVi+PSuPbNYr4zvRgOLPHD/dpnjp1jNc0nYmgg6Bry5/5I0kV3LGISs
-X-Google-Smtp-Source: AGHT+IEtn2vH5K/i/Z0Zxb70H9baohg/vqBNTSMXA6kbOU6qTZSpjUSinMN8Yx3+Pjj4JKspzImLUg==
-X-Received: by 2002:a05:6a20:a8a0:b0:1d9:167a:7890 with SMTP id adf61e73a8af0-1db94fbf902mr5710768637.11.1730410056810;
-        Thu, 31 Oct 2024 14:27:36 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:1a14:7759:606e:c90])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1e572dsm1577741b3a.66.2024.10.31.14.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 14:27:36 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 31 Oct 2024 14:27:33 -0700
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 04/14] PCI/AER: Modify AER driver logging to report
- CXL or PCIe bus error type
-Message-ID: <ZyP2Rda-92qdfi-N@fan>
-References: <20241025210305.27499-1-terry.bowman@amd.com>
- <20241025210305.27499-5-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CTsVPf9P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730410491; x=1761946491;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=LAIUbJP6n18k+2vaI7aFLfNKBQ/jfNnH0c79lijvh44=;
+  b=CTsVPf9Pu1kX0EiX6va9oiQ6tJoI9obDL1wmn1YJtiaS0FUtkK0N1VOe
+   ACfgLgkVG3kqBC551b6T2bvzWv8cm0Q7KTG1Q2wPMWFIPJWUwn7cnUDM9
+   S+pH7uWnV+ZkO63/kW/1lMe1Hsmfn0So5XF1bD6FzQ/C29vyEbJRxH98X
+   RUs6E9GvyXw44GfUG3dxaAAfPHvDTZr8zEHTTSU+ccMs7eo/IaNUb0Cjm
+   noRJfc5hAdLmqfcacdSC+GVyw27bCViEmh1l/6ceCRIk7MNMjonQLLGi6
+   4U1Pmfq6SS6x+yzXMf+PksZvqjL0Ei9l6cK7vhp16/BOXqUoboF/uTAiM
+   A==;
+X-CSE-ConnectionGUID: hS2qDMeZQp+EDF6rHSjriA==
+X-CSE-MsgGUID: ZLTZrciFR1O9yW0n0xvQbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="41541944"
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="41541944"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 14:34:50 -0700
+X-CSE-ConnectionGUID: sHy8ijzGSuaMkFYltNDULA==
+X-CSE-MsgGUID: XfsIyOG/SOiNvvhXHdImYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="82440277"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Oct 2024 14:34:46 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 31 Oct 2024 14:34:41 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 31 Oct 2024 14:34:41 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.171)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 31 Oct 2024 14:34:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uX0REdmoC4/mQfiTRSj+nfo36X+lcF9wPItqw9TsiDHaqozMxl1XCciWDQW45m1LDezQuUEKlINl9z7IX0suGXFZcSlnSzcvhsav7AWl0feiKydX4uo2l+fQQb184BhiMP/uWm1sDn5j2Az3DBpR7vSQA/EQkucyJq8i9YOVvp3DzlbgWtOyQbL5nGIJ3gn6LA36nuziX4boWhXmQAIOYEfyTn8fq/vqP+mzjAX23coqG7Sj8GDbvs6N0/FxZbOOc576nq3j3pyN7lvBqujlshX7DviK8KhXByl9kNNsrEhLCWl032vVfa+rBnEUuq2L/R6vl1G3asgE0KW0LbB8mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vuHmcGzlMUJxsIn7+EhS/amxKbN2tXsDvsgdo4qQihs=;
+ b=UGPtIdeVKy0Ms8N5sKZVVAzTc3LDmNsJlzv7CTwCreqvf5M+vJbkQ+tVvjeA3hUgjUhXmbh77NOfqrCbK8qn2LNWA+iOBloWI4CBYJ94G+XcZ5Y0rQeFVTmu1FEH7E+d3Bg8il6X2FMg1x+/PFF2bEn1GkyUinafT7VswV/22nmcoNXdf7QEBR4FpKEQLUuz4Ktr6zuH4v1aAn7MqWOZ9rg/mw8WDkuB3DbNPxq1C+sbDk5rD+al0oi3cZxJF3XmqT+osxScOoWJNxm8OWsY8XAmf/Qiz5EsnHxzCqzcg6a2kwESELUsVBKjowe+xNxZHVHR4mQzFt1hZAvhtNuSkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SA1PR11MB8796.namprd11.prod.outlook.com (2603:10b6:806:467::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Thu, 31 Oct
+ 2024 21:34:38 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8093.027; Thu, 31 Oct 2024
+ 21:34:37 +0000
+Date: Thu, 31 Oct 2024 16:34:30 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: metux <metux@gmx.de>, Ira Weiny <ira.weiny@intel.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] printf: Add struct range print specifier
+Message-ID: <6723f7e664470_7b1f129430@iweiny-mobl.notmuch>
+References: <20241025-cxl-pra-v2-0-123a825daba2@intel.com>
+ <18854680-4ab7-4453-85ff-78351d4d4ec9@gmx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <18854680-4ab7-4453-85ff-78351d4d4ec9@gmx.de>
+X-ClientProxiedBy: MW4PR03CA0224.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::19) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241025210305.27499-5-terry.bowman@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA1PR11MB8796:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67e6b5eb-ded5-4d80-0cfd-08dcf9f3d1e7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?fZxxCVa+BeHv2wRq3UrZfmUdAxxNIxru4lhTpdHfyxxLyiIvoAO+M7SpaSTt?=
+ =?us-ascii?Q?5BRls27NwSOnXd3/Ab7mcM4Rrc/OQRclDQylk66r5Rx4TAqpiTaCOhCGyTmJ?=
+ =?us-ascii?Q?Gto7xXs1DW3RY+EgSJBUDWeJvi1XqyaD8sl9oaOePnlg8b4q6NhEtOoT/ji0?=
+ =?us-ascii?Q?glqLFJKiysFki1D3o0Hro600Eo2c7/QSSpDyID0tHNZ/x+60CNmoRtKvscpo?=
+ =?us-ascii?Q?WAkU5aoLVh9fiT0evm6slLxuiETm5G2hYcg+MIFajBUqv8GgJJem/ydQPKqM?=
+ =?us-ascii?Q?aAN/25QGBIDrpXRSeQ5uSV8s1pTwRF7D4sw3soMG2X4xJGDG+/gD6ixyHga+?=
+ =?us-ascii?Q?RTy3cuiOKE0onynxZkCtj/ygooT7cfrlkeXK0Kr0LgvovsARRhGNaGpzi7er?=
+ =?us-ascii?Q?bFti6i4MJxHkLr5Q5enPg2ObQCshFuLBH2pbuJX7XjSMDJ/cDzw4obaRceux?=
+ =?us-ascii?Q?5++T9qjHkKXCWLnlHAPYpa5duO1N3HxEEzUJHJur7DiOsDj0+gDOfpI+Oebw?=
+ =?us-ascii?Q?oDBhVFu81keh6XnBHWaMH6eVTsrcK7UgUBhjBAGMD1P2wYaYwZ45OQKudQDT?=
+ =?us-ascii?Q?+o5vEk+jQVcvCdGpSsywWByMorihrIG7AOBYfvvDb5tsjcp7jfhmWUYwJPmf?=
+ =?us-ascii?Q?Ti615aPAjyunhdZuazfAR5t6zg40GqwyaNHKDyTI4xfCI3puWiN7B41mF6JG?=
+ =?us-ascii?Q?rg19tO4TtYfWVCom4Q/BR4IDCaM5+deoJzAXOz9niH6C+oak/gPTB+jbohlo?=
+ =?us-ascii?Q?ZbnsYCKerugsulUm5YUEOXAsdn04WsrWokbtdc5KDBYHt2GumYIjQ2pjHKYe?=
+ =?us-ascii?Q?dz1ZaLqF0iWHHHK3f7ujg3IuS5XjeNfRkYNb+itc/6RAVGxuklQYFIag8eX+?=
+ =?us-ascii?Q?MytpPwjBVaczNixl0HIkrG8NBTc2YhXEWu7LdFH5XShXk5C7lL1lx4zacvoQ?=
+ =?us-ascii?Q?ATn5ddllf3ek3JvqVtRu9LkN0u2x247ddFZN/G4bbqifYtNJ9dzLV2itfM57?=
+ =?us-ascii?Q?9EnP1nAOv0Bia6HJ/VXt3ujBc6Iz4Nz7WtNorjUC3O1ap2Pe/3quXssT+LD7?=
+ =?us-ascii?Q?y8/wb+r/NcuAWkR9PEfqE6yqZzA99YKA1TBRZp1NprAEi4Dy1p380M+jVSjH?=
+ =?us-ascii?Q?+Gnb+IGjde0QO1WqI+nyjvnBtMRdiGw7IEyqcD0dgtfB7Uts5xc1CdlNwPNc?=
+ =?us-ascii?Q?7GXbvKalorAz6uGX0tbRz2g2CW/UTDtwgMx5uAMJ/V1gugQFweIrJss/cefK?=
+ =?us-ascii?Q?9PFAgnd/5CASN/5Qov73KErrBNTbzcnl9ewaITVHjYsjVHDyZW4RQByv8MYu?=
+ =?us-ascii?Q?WldxlxblMYh6rtweXuT/3o/GQcdVVGmCS6LLv3H5+7uMwyPTnJyNg7j/+3vt?=
+ =?us-ascii?Q?Gbr+yM8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KrapXK2hz1qw2zqwvkaGifmaVflDhDI1sjYl07DfElssdNaf46NoA7+amn3W?=
+ =?us-ascii?Q?luDoQF4W5XgZpZ/nUeRPjr72voc+buKTk3YR4haTUvT9HbT3JTlSUkIp8ukB?=
+ =?us-ascii?Q?Gcf6UER1XKsXWUbSu31i4YM8Cw11plkca0Ug0XLWUKqzRiTWZKt8EL/RBk5U?=
+ =?us-ascii?Q?IVvHTDDCGbs54hxC3W8jjrUhcDDPDO4ZfKDJVXY/YdDob62cuOkBsfSA4lHt?=
+ =?us-ascii?Q?7T/g+4W9NHqcYxIBNtu5FLyMs7zP0KmRYrmrPqSyFmX9bq8GSQR5MXpdk6hj?=
+ =?us-ascii?Q?j0MUiJEaOopE8b3fBAQp4d5mE/onpWGnS47tWtWJxJcIPQE5ESEtn4QYEErt?=
+ =?us-ascii?Q?FqJQEWu3dGx83irCJcegEBPQA1Ut5lkJb0GrXG9tJhlBAwyQTmMIrmJ5YFPl?=
+ =?us-ascii?Q?GPNsct0ryBCXEYtqVVzN2r5N77mrbh6FnJcjDMjpWbgXHvjpK56IIrv3O40l?=
+ =?us-ascii?Q?W58cIGumbjSkFh9eF4QdD4/WLZfB9CrLAOtMKRMKeKgfeH/tUCrLSbJQrsu6?=
+ =?us-ascii?Q?rfYO+IhoYUiTrkYtlYy4FsM1i8JUmtHU28Gp7jBZv+5KomN4lQliDaUzZDt0?=
+ =?us-ascii?Q?zhBwR1ECXqDpcp79xcdSE8Keq0v5cjGx7CuPBgChzYDbH0HpRyIO60eOqK4Y?=
+ =?us-ascii?Q?A/bsnLG8afm//KW91HqQrhqbDeZedzsgulIrRe7pBC+LEEW0q5BjsZh1gGLy?=
+ =?us-ascii?Q?o+gSUPfeZVRD7Kh5kFDrDhZzJH/4tAo2g5r/E0cZyNGOL5MuzJhozYZe88sJ?=
+ =?us-ascii?Q?jJZE9VIZRyiDbj9A1VL6jvuDvRnP60iWT8XdTD/cxoEXHOzNx8+FaJLrXSpZ?=
+ =?us-ascii?Q?sUkptdNBIX2Yh3CzcypzzKNnb1E+TLW+ebq1bic4agFrgXlKqUvoguvsoE4Z?=
+ =?us-ascii?Q?Lifbh5K2y07bowu3y7W6UvJY4kmAYPw//ysBG2DQlBiLbiPsyNa8XB+/6l5A?=
+ =?us-ascii?Q?9dNyMe208wW1BbG/0FycE0DQUXkBMQ/0lESxrbG/nmENmREkgPG7ka0PQAbZ?=
+ =?us-ascii?Q?urIlEO23JmA4XcNTVZA4oWjtGaO+rVFz8NzBPaBQJrpWAUF3Jb51zrh19zCB?=
+ =?us-ascii?Q?OypMkZzFqPJmG+uQ6SPsjUB2jAfj685Rcp27YlyFYuXP6FihgCMmZC4hmULn?=
+ =?us-ascii?Q?YXcJn1R7TvUPYvpZfWW12lgrsKdXlGwFYIo9j/oOiK1SdexZK+Lg/PhbjMb8?=
+ =?us-ascii?Q?7otZzbDu+rUO2w/i31zSgbZ/22yRmwvJvz1qmfZXusmkbdYDUsl4flyirTyg?=
+ =?us-ascii?Q?Mk8jEkp4hZ0wKDb3XHyvzuTkbd6RksgPt9NLEZ6mzCUqs+wdGJbjEQejJjze?=
+ =?us-ascii?Q?+QBNomMH/1hEUKTmd54/4kOgylWcckKtX1MUIQUST1krWoc6TQKAFs/Wr+vx?=
+ =?us-ascii?Q?PxzJf7LnzVW8HI3YTP6qIXf9ibJ8mzc1K0DokBR3qhUwUmlpT6PX00lzXVzy?=
+ =?us-ascii?Q?5ZzjfMme1GF0166Un3Yfmx9Ccb1vkxC0N+gStWKRwWiNK986HzRUhleplNcD?=
+ =?us-ascii?Q?tOIuxQWttC6S1sc2EZLtd9nB6X1vG9cyRhvprH4Gm6Qr2d1/qNfUwvRcaULQ?=
+ =?us-ascii?Q?aWm3KQTUUfV61LkKXfw1n0vI9X/nzgxOLAjIg7Rw?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67e6b5eb-ded5-4d80-0cfd-08dcf9f3d1e7
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2024 21:34:37.5143
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AAOugliBMd35x0Qr/M1dSDyCQqq8oih3Qqq11nyQnSxwMnPdJ5xVuF77z9gDIliWktf3PRykDhIw3m+ZV2Ozcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8796
+X-OriginatorOrg: intel.com
 
-On Fri, Oct 25, 2024 at 04:02:55PM -0500, Terry Bowman wrote:
-> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors.
+metux wrote:
+> On 26.10.24 02:46, Ira Weiny wrote:
+> > Support for the Compute Express Link (CXL) Dynamic Capacity Devices
+> > (DCD) have grown a number of uses to print struct range.[1]  Support for
+> > a printf specifier '%pra' was being worked within a large series and has
+> > garnered a number of comments and discussion.
 > 
-> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL devices.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
+> This is just printing out hex dump of a memory range, correct ?
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+No.  This prints the struct range values not the data.
 
->  drivers/pci/pcie/aer.c  | 14 ++++++++------
->  include/ras/ras_event.h |  9 ++++++---
->  2 files changed, 14 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index fe6edf26279e..53e9a11f6c0f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -699,13 +699,14 @@ static void __aer_print_error(struct pci_dev *dev,
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  	const char *level;
->  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +			bus_type, aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
-> @@ -714,8 +715,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->  
-> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   bus_type, aer_error_severity_string[info->severity],
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> @@ -730,7 +731,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
-> @@ -764,6 +765,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		   struct aer_capability_regs *aer)
->  {
-> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
->  	struct aer_err_info info;
-> @@ -798,7 +800,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	if (tlp_header_valid)
->  		__print_tlp_header(dev, &aer->header_log);
->  
-> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
->  			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index e5f7ee0864e7..1bf8e7050ba8 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->  
->  TRACE_EVENT(aer_event,
->  	TP_PROTO(const char *dev_name,
-> +		 const char *bus_type,
->  		 const u32 status,
->  		 const u8 severity,
->  		 const u8 tlp_header_valid,
->  		 struct pcie_tlp_log *tlp),
->  
-> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->  
->  	TP_STRUCT__entry(
->  		__string(	dev_name,	dev_name	)
-> +		__string(	bus_type,	bus_type	)
->  		__field(	u32,		status		)
->  		__field(	u8,		severity	)
->  		__field(	u8, 		tlp_header_valid)
-> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->  
->  	TP_fast_assign(
->  		__assign_str(dev_name);
-> +		__assign_str(bus_type);
->  		__entry->status		= status;
->  		__entry->severity	= severity;
->  		__entry->tlp_header_valid = tlp_header_valid;
-> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->  		}
->  	),
->  
-> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-> -		__get_str(dev_name),
-> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-> +		__get_str(dev_name), __get_str(bus_type),
->  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->  			__entry->severity == AER_FATAL ?
->  			"Fatal" : "Uncorrected, non-fatal",
-> -- 
-> 2.34.1
+> What I'm looking for quite some time is a sane way for dumping structs
+> in a human readable form (field: value pairs, using their actual types
+> eg. int vs string, ...).
+>
+> Any idea to do that in a generic way ?
+> (potentially using debug info ?)
 > 
 
--- 
-Fan Ni
+For printing buffers less than 64 bytes look at:[1]
+
+ %*ph
+
+or bigger buffers
+
+print_hex_dump()
+
+Ira
+
+[1] https://www.kernel.org/doc/html/latest/core-api/printk-formats.html
