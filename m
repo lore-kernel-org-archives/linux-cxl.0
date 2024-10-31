@@ -1,105 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061381CCB53;
-	Wed, 30 Oct 2024 23:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730331467; cv=none; b=b/Oax8balQ/xFivj/17+c2t9AYL/6mjLJCn6GYmkV2oyMKLPZleUbVtrogCIq+j7KoElFSvezXaMk+syn58zk47HYSV854DGUjeJysyUYcDHxHtw7NNMgHGiyayK1WLF534tHa9sUoboouchwrnxIXGufg1eJ0boJrSV+TCCfJ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730331467; c=relaxed/simple;
-	bh=G+pZ6voKXH7QPeAHSjwMmvLGMhzg97TUc5ZCYTm6kxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epRApgu7qqy4gCR3LmzccpfBjlCbSb7y5sufUrk/uC3GKW8GS2V57R6RZP6TONrzNhdtMfNV+vryyEoZJyUDBGsnUhTfScnm5RJRAlYGfFqRezwmOdfrTa9EYKA8Qd9MaLcyKBiPMsiY1SrrQfsUglQRHQRqMoED6ObWvamq2hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X2jWMTGw; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C297FA23;
+	Thu, 31 Oct 2024 00:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730333782; cv=pass; b=ryCXZFDB9wE4fOTkjq0tMtU/9Cic+cWHsXKkeX0JlLjVlkYMD9Nr/utqRar8XAOIa5KvF9Kum64qwYUyKSLJaDxdbUA4rm6xSaDu/iBom6qD1ssB9ABYWmO0rpfN5qRwF+JAjV+JjM85VLqSra8uXOJY0S2p6ODHTpE2SkLgxO8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730333782; c=relaxed/simple;
+	bh=S93jTs0T/Pz6vwp0A5bpRuNy7QZZyewYmfCPIEckU5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cP3cTeyWDl8ETG3VGSd0vs0TRgqP1LnAZv4RZNpis6ess3Xg+dfGHrOstlHVb63M344GLrNwYY30rYLCwakFtw8vL66iE97pJAaZxkTErM6s3qrK/uW1Rir+bMD+1aTeEpSVtDhrCChUPS8gL0pKU10Y3Tm/q1XHkjpztg/crjM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=alroabwX; arc=pass smtp.client-ip=23.83.218.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X2jWMTGw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730331465; x=1761867465;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G+pZ6voKXH7QPeAHSjwMmvLGMhzg97TUc5ZCYTm6kxY=;
-  b=X2jWMTGwPz+dShr+GyW6NJiDTsBLsQnMT1qBnd3eGJ9jmzeysECQL2NE
-   iEKJMzHLL5/iufu/LLYqi4zxzz+x7D5DyE11069mIAiaabmmDpW4u1jqi
-   XYYfZpq7UNgNlzvIQjbiCpwq9VlYM56ZhzRzw8uPLrNhbVewIIrmNDX1C
-   RXUmFQo+9GFtnFlWXGXGAUhVcKm9STCGMpXr/E5uy8Qw66nHWdVnpYWtM
-   y+MstAugyd6nc3bvcGFr521FEldpye1WpNYPJiXYNlfx4bxxy/7w3cRfX
-   1BHDEIllkNbvsoUQ3JsexFB0keh8gmYrWsykDdm2IdW4/39+/E+RO/edA
-   w==;
-X-CSE-ConnectionGUID: p2azaL6PSWKY8Tr2WAKNgA==
-X-CSE-MsgGUID: HwFeXcZXSpSbLpLu69XL7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41156037"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="41156037"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 16:37:44 -0700
-X-CSE-ConnectionGUID: Ih9T5HSxQDO4FNXGTwvKQQ==
-X-CSE-MsgGUID: De535YE6SKum6/2zJftpUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,246,1725346800"; 
-   d="scan'208";a="82114624"
-Received: from nnlnb-sb-019.ccr.corp.intel.com (HELO [10.125.108.160]) ([10.125.108.160])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2024 16:37:42 -0700
-Message-ID: <3f0b1003-751d-4890-a045-854586eeda22@intel.com>
-Date: Wed, 30 Oct 2024 16:37:41 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="alroabwX"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7F41A8444A8;
+	Thu, 31 Oct 2024 00:16:11 +0000 (UTC)
+Received: from pdx1-sub0-mail-a201.dreamhost.com (trex-10.trex.outbound.svc.cluster.local [100.103.28.225])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E2ACE844796;
+	Thu, 31 Oct 2024 00:16:10 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1730333771; a=rsa-sha256;
+	cv=none;
+	b=jSyUmiGmwl5BVFmugR62fdfwTfnLTdNnYLV58x8SktxY8JyX4Qh73kSkVTCGRbRE8nKEHC
+	OtjDoKMJcUqx/3O6PMjpYEHgkKVuPBd3+BskJnwHu3lz1ZbIwQyTH4+kNWPup7/suIECz9
+	27Iv2ZSrLKN1m7c/dj3jaG2XFUVQJabLHlpHJ9IQjGedQCOHCzzfygS8cFFNn9NjsDySLT
+	+r1wsYhXcGdqIdnsK8TVMvXkEjvrXwbyrMfJnmg77FeaGY/DPlvxWFzh+Ke3duQivxccUj
+	r6hJBktnzelCBMiOzZNCr6soUiAV/lMDpO4mjIV/M3amYabStXDUw+Zabga2fA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1730333771;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=S93jTs0T/Pz6vwp0A5bpRuNy7QZZyewYmfCPIEckU5A=;
+	b=NiBqEyBlq0zc6EHHdIGI6O0bOBAGkWy5SuXnY8qVcN39LuFniQGq7BIvK8Coy0+mHdrVd6
+	2xHLb6xD2jw4XA0Xt6jXS/RFdpHIA8EAiOsDBUiwUly7Ggic5BREUWRJDLEP1reKpYXydC
+	wsSCphQraZXk0qKWV0aYKVn1f3qtH5wkqiqR/2I8dbmdDKsJseGCiX9EuZIYVyAe5Cs0lM
+	h9ydKT0d8eh/3+L2YlNVb6Myq78oWN9g7WYl+Ht97iBqkC5Yv1PMgI8Zqt31eYI+aKzocF
+	BO9k/pxMsgMsrBEnk3eM28rUl9NrOvkFD2UOmig6vqY2KfHkaLm/EcrbvyTtIQ==
+ARC-Authentication-Results: i=1;
+	rspamd-65cf4487d9-9nv87;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cold-Print: 7f661b066fcffcc3_1730333771339_2064918239
+X-MC-Loop-Signature: 1730333771339:793382286
+X-MC-Ingress-Time: 1730333771339
+Received: from pdx1-sub0-mail-a201.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.28.225 (trex/7.0.2);
+	Thu, 31 Oct 2024 00:16:11 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a201.dreamhost.com (Postfix) with ESMTPSA id 4Xf4KP58K1z76;
+	Wed, 30 Oct 2024 17:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1730333770;
+	bh=S93jTs0T/Pz6vwp0A5bpRuNy7QZZyewYmfCPIEckU5A=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=alroabwX7ltwrthsa2X/P4eC6LcOuDEvjDugX/zmyx5hSmk/KYeANKElaBrQ62zDF
+	 ZBc9y7rhbY0GUWOmUWQbscp6noUBFGemoRKEqNpfuL4jRu0mq59d2s2ST0qRQ1JOzv
+	 7cXfeDr6UIl4SnUHhVVz0FavqyudJ8rRunExEEZITT1x+rT4DuhaUWOGCeHGfx9ULu
+	 NXUBgpzCywq1NXcE/dtS9OpWw1zvCw604ZhpvDEltvYsyptZJClK7IER08r73Mj0oc
+	 OigvZEq1z5XWO9RjXDaAy5EHFnkdLA6lR6JOHMIUAfD/IA2qCJ+YVr6XtpJ5ZB8uy/
+	 otw0TlbEGpeBg==
+Date: Wed, 30 Oct 2024 17:16:06 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 05/27] cxl/hdm: Use guard() in cxl_dpa_set_mode()
+Message-ID: <20241031001606.6notvdsajoebalhd@offworld>
+References: <20241029-dcd-type2-upstream-v5-0-8739cb67c374@intel.com>
+ <20241029-dcd-type2-upstream-v5-5-8739cb67c374@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 6/6] cxl: Add mce notifier to emit aliased address for
- extended linear cache
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
- dave@stgolabs.net, alison.schofield@intel.com, ira.weiny@intel.com
-References: <20240927142108.1156362-1-dave.jiang@intel.com>
- <20240927142108.1156362-7-dave.jiang@intel.com>
- <20241017174058.000078bc@Huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241017174058.000078bc@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20241029-dcd-type2-upstream-v5-5-8739cb67c374@intel.com>
+User-Agent: NeoMutt/20220429
 
+On Tue, 29 Oct 2024, Ira Weiny wrote:
 
+>Additional DCD functionality is being added to this call which will be
+>simplified by the use of guard() with the cxl_dpa_rwsem.
+>
+>Convert the function to use guard() prior to adding DCD functionality.
+>
+>Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-On 10/17/24 9:40 AM, Jonathan Cameron wrote:
-> On Fri, 27 Sep 2024 07:16:58 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Below is a setup with extended linear cache configuration with an example
->> layout of of memory region shown below presented as a single memory region
->> consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
->> The kernel sees a region of total 256G of system memory.
->>
->>               128G DRAM                          128G CXL memory
->> |-----------------------------------|-------------------------------------|
->>
->> Data resides in either DRAM or far memory (FM) with no replication. Hot data
->> is swapped into DRAM by the hardware behind the scenes. When error is detected
->> in one location, it is possible that error also resides in the aliased
->> location. Therefore when a memory location that is flagged by MCE is part of
->> the special region, the aliased memory location needs to be offlined as well.
->>
->> Add an mce notify callback to identify if the MCE address location is part of
->> an extended linear cache region and handle accordingly.
->>
->> Added symbol export to set_mce_nospec() in x86 code in order to call
->> set_mce_nospec() from the CXL MCE notify callback.
-> 
-> Whilst not commenting on whether any other implementation might exist,
-> this code should be written to be arch independent at some level.
-
-I did get a 0-day report on this with mce bits. But with asm/mce.h included, it seems to make other archs happy as well AFAICT.
-> 
->>
->> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
