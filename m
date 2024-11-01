@@ -1,59 +1,59 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967691714B9;
-	Fri,  1 Nov 2024 19:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A76140E34;
+	Fri,  1 Nov 2024 22:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730488297; cv=none; b=QrL/ji0Q9+w8I0h1w5x1NnJME5AcHiIuYozDlKZOtXmg9OFdoG04/QfivFf+fqbjMvnGWSkRYqgohpRbhYEwWzBMRXjN8Ahlp1psl4TUSyxq3pkN9EdquwyKzhDkPwNBOSoFTYBu61srAzo/D97nIvurKSUGlA2SQfz1RfspI8c=
+	t=1730499094; cv=none; b=GKt5lNPGH73fdmO4aDZErQi5Af/8bBs9k+2Q1do6jo6taK7WQgmT4k3+/CTUYwbev6L/O6bgzyvh0IsTT9KQpC3qPCQj2nNuHyhTpV/fTNWcDTqONS05cOFQkARGDxUrrrNI2i3lwFHVZtW/IoTWnrBvC3EZdIOI5LS8SJ6fb9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730488297; c=relaxed/simple;
-	bh=TWZJyK0Ek2KvWFRrKuJFykXEux8Sb3PqWidP0jJDkpk=;
+	s=arc-20240116; t=1730499094; c=relaxed/simple;
+	bh=NVgd0qeM5eJhA+iymIHzjTwRMkqaJc8fzn5B62mDq1o=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clww4RkvL6X9Nk0AKllbMeVH6U2hULTm7iAful2Je7ycpztjhXqZ3ev6dklxgVteSXiySucuLytMksfxO/jCU/aVW993Y7PkawpD/TO+n2klG9GnDZoLSVHKzba7bgpx8yofib4GNYvnNQolDEcfPDM259e9KorC7kHBYh8fnmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TU8hfjwF; arc=none smtp.client-ip=209.85.210.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/vPH39x/VpdIVqs+v/7oYjVFElF0IA7g5bVuZBDCasA8nOyCB/WwIoqQ4Jv3IIBuso6bTrdaFgJj7mj7tE6Y3beuSGsLrFlk8iN7dKFm7lPnxqPP4apd4dydE26fx5g3cbvB8szvOpohDM/grKVQAD0VvQWxaj7LCJHUFhHQfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m/n423b4; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU8hfjwF"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7203c431f93so2016589b3a.1;
-        Fri, 01 Nov 2024 12:11:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/n423b4"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7206304f93aso2286249b3a.0;
+        Fri, 01 Nov 2024 15:11:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730488294; x=1731093094; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730499091; x=1731103891; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tyksEX9VffcEy3DQu/M2+BkUSCcB/8+fwI1TdK4zwzc=;
-        b=TU8hfjwFrnIG1PpeX4iEm6SmHfnAhgvy8/etxFCow59X35MSX0nPjn5kOE0XK6FltY
-         QGWreSJhX7skJ5zpVhlKbwg72CeLTf31fieiUU4hUvJJHV9V9Tq5hOZI6LwjBi6HvmWn
-         v9NZJ2K9ZJdffi1oM9cj1XXeLtK2ricGDn8lB1WZgFNvNQLIG53oCB/C2INudvVue+p7
-         ZNwP7DJYzWrC+Yo2zmQj2G59ey5rNS/A8O4a+Tdfa+9fsAC6rNPMxVSCjg17v/1lhKrW
-         +9jUzls3Eb0iiQ9U1Qsu6TCey+OyUMZgmO4pvstEzmVXEGjPFu5cLh/Xcz89BQbleokl
-         ln1g==
+        bh=X21LhufANyPN/Tj7n8TfP1pRe/ZRiL+OkK+pbxybc9s=;
+        b=m/n423b4DITs57e23W6npNQRjdxrQG09AL2gWGRsAUoWjPbxYdCTcobNWaGo2DA4wh
+         2m9V2vwh4H8gyDJ/3mRusa8CVeoO2ctYg3uId41hCQzyuaOD85n9oVBEJ5Zfb4QGPnYK
+         jZRFyM7/amZQ6LacN/gWnD+dsqeigTCYeNI6QOzxTA6Wbeoyv6teV1MQ6Myrr8cmXc9L
+         rvc3a61MQg7BKuRRuaC631t31Z5IsvcD1gruqn6hL+IPAQcBjFh3aRLKaFBum6ZAzZVd
+         Ic+R1+/ZjIoL9Y/REi2iVsYYxtu0rY0GwjJDgdxcISrV/Zoh+PFMC5JI+WuX0heaDAM7
+         +qUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730488294; x=1731093094;
+        d=1e100.net; s=20230601; t=1730499091; x=1731103891;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tyksEX9VffcEy3DQu/M2+BkUSCcB/8+fwI1TdK4zwzc=;
-        b=GBtf+Fh7lWHveq3Vay7KJEKV2zPcpsTp/tB6/W3C2uHbdjZwATBhX7R05PUlbUlm9H
-         cYWdNW25ENQAnUAAZaneM2gNnF7PmqcZ4XiMhFvaJvqz8SJTmmQzwjwwKw79uc52ZClA
-         +0colwvLYGJMKYOQZLXiojhNry+0BZhfDDVCbi35+pP7ITgn7CXUHkn+lBU+44PJWx9X
-         QjEpAwc62aAtRYFP70+3EXxek/EyuItte+rEopoxt1wIujHN87K5/xwlR2+BwbWkGmVu
-         ayLQgUzcLndIfjrlwe1H586gbWFg/c7tBDriZbGhnTXHGrM8av2sYr9J8ZLpOIbXABs0
-         Iqtw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3Sv6l5rlox6+9zxwvenz1FgGAbuFI6GxxB+pwcOksxEcLTdstez2U0ULXI9qzyIjpQTdC2n6N0zzS@vger.kernel.org, AJvYcCVVlx3fSSAKh43F5m9asGj/PMJeBsa1tT2x9gYgAtGADbM99HbZivrsvqX6/6ag1x4wF5ZvBOj1qh/sS6Ch@vger.kernel.org, AJvYcCVi97odjA4g//7YT39nbBtXQNBK8/B797eKjusrvPvDmsIQcoW43wyXnOdM2VEjHZDOzB1ezgziP5U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFcRZaOnnG/ZYlZm0D2iCIzEe3NBA1EhdKeuM/psGrVe8fkajj
-	j3MW0ZoUM9+sp+TBr1xqJz2NVCm/X9IvLVRx55bO+SUlILQbAj0DkXFuWTYl
-X-Google-Smtp-Source: AGHT+IF2Jw8OxZ2zGOUwuHFV+DLMSyz9lFbOaUyC9chy21VF6WLQmVeue9ye39DlMb0K73a5C3cohA==
-X-Received: by 2002:a05:6a21:478a:b0:1d9:792d:eda9 with SMTP id adf61e73a8af0-1db91e68229mr9682566637.37.1730488293671;
-        Fri, 01 Nov 2024 12:11:33 -0700 (PDT)
+        bh=X21LhufANyPN/Tj7n8TfP1pRe/ZRiL+OkK+pbxybc9s=;
+        b=xP2pwC9A9jxwtshofpAqkyaW6dW6dBU16mQJPoY0Mm4NyzuXATHVMsRIsnRQbiRTOm
+         idZpoX4yxw2ynwZPysC6XxH4ODdJ9O8QAzGT1KwusmfC0ezZ2rvJ68Uo65/Zsk4LYdbO
+         weKQcMCODQuc8fv7BMkVUHoZmzcSwJseyt/52rmX5+GIb8OWs0Ns6wBzbEsH6SIfTswM
+         xXrGj0x/YBiK/30BjCq1LtCvxqUZeZDp3Y3NLklGxApxloOSO8DMqQ4c9RumKwpmflus
+         5KtDqLDcsyEerRBwY7G1ofI10yc6R1DiKDGv/m1El9WGyKoTEEKDwq7r1e/UXLD738uD
+         gUFA==
+X-Forwarded-Encrypted: i=1; AJvYcCV36o1Xc+BqsRwCE6qlp6t6GZUMwIe5DxOEsnfUzwrihAEAZM9ub6LxE4zklTNs51mRw2xkCs2v/1ddirUZ@vger.kernel.org, AJvYcCV82YKuHc+bjyisqGu/pU0o6fAjMPSCH9ffSZaC2+Mi2TBDLbP26zJ8RDtFhXv9PHKSDLYQrl4ymqkR@vger.kernel.org, AJvYcCWc24CST/ozeDXEYfbsgGwIOCN2RXFLr/FIAjHIV3oaiSsCX/pfHjuq27SPB27W6+rfSWZZgyrz18k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUnfDwtSVbinvA1ED1MuAziIAh0aPXcyj9seRJQ6opFQR6mLMq
+	PzSxYWSyTTnCjS2qquqKoObYh5PUQINCJrVhqC+NLGu7aM+4E8Kh
+X-Google-Smtp-Source: AGHT+IGbbxtFiPyMCfArRKwSbL6RjlrOdwiBEOvXkXzELLDx/f9OZhDO9vxDcZ1fySMliPur/PtlOg==
+X-Received: by 2002:a05:6a21:9d83:b0:1d9:1377:c1a3 with SMTP id adf61e73a8af0-1dba54df54fmr6048677637.40.1730499091282;
+        Fri, 01 Nov 2024 15:11:31 -0700 (PDT)
 Received: from fan ([2601:646:8f03:9fee:eba7:38e1:4f3b:331c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee452a809fsm2775124a12.26.2024.11.01.12.11.31
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ee455a510fsm2912182a12.49.2024.11.01.15.11.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2024 12:11:33 -0700 (PDT)
+        Fri, 01 Nov 2024 15:11:30 -0700 (PDT)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Fri, 1 Nov 2024 12:11:19 -0700
+Date: Fri, 1 Nov 2024 15:11:15 -0700
 To: "Bowman, Terry" <terry.bowman@amd.com>
 Cc: Fan Ni <nifan.cxl@gmail.com>, ming4.li@intel.com,
 	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,7 +66,7 @@ Cc: Fan Ni <nifan.cxl@gmail.com>, ming4.li@intel.com,
 	Smita.KoralahalliChannabasappa@amd.com
 Subject: Re: [PATCH v2 0/14] Enable CXL PCIe port protocol error handling and
  logging
-Message-ID: <ZyUn18bgi-QL0aCi@fan>
+Message-ID: <ZyVSAzSW1HEd2_Mp@fan>
 References: <20241025210305.27499-1-terry.bowman@amd.com>
  <ZyUXLpQBBgTl733z@fan>
  <8a73bfa1-b916-4f0a-92be-0cb677e1e334@amd.com>
@@ -182,16 +182,17 @@ On Fri, Nov 01, 2024 at 01:28:12PM -0500, Bowman, Terry wrote:
 > 
 > Regards,
 > Terry
+> 
+Hi Terry, 
 
-Hi Terry,
+I checked the two patches you attached, do we really need the first
+patch to umask internal error? I see it is already unmasked in
+aer_enable_internal_errors() which is called in aer_probe().
+I tried to only apply the other patch and test again, it seems the test
+output is the same as applying two patches. The system panics as well.
 
-Thanks for the quick reply. With the two patches applied, the system
-panic as expected. 
-
-Thanks,
 Fan
 
-> 
 > >
 > > The problem seems to be related to the cxl_error_handler not been assigned for
 > > cxlmem device. 
