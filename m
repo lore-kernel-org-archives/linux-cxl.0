@@ -1,255 +1,230 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD7A1991AB
-	for <linux-cxl@vger.kernel.org>; Thu, 31 Oct 2024 22:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25253154C17;
+	Fri,  1 Nov 2024 09:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730414963; cv=none; b=NrlIbVU1n8fczAqfaBBeKZBlFLug2Ld+XzA7gxMjW+Owtjrmrbw4xcEJ6oYrrSB69JCXjtgEJyr9Ez59VudO+gz38YrLhACezL7+JNJEejYvSsTgEuBWIcYrmmNhFTGGA/7gIQfXZnPsV/3DyHT7TNo2vbZ28WriUamCIGFetk8=
+	t=1730452677; cv=none; b=rtLUnNtQw0Q6KaSGXbv6A8t7W+ho2/S/9cLPWhoIlo1My5ckAyJ7aedcJb5CHUGA4vzLbLc/HiVYL8i8NUzv2KFMXkGsaKgMiUoh86XfWgZUe5CQa98j0MNA/sf1gpoyKo4j+Woddr/LqCl6sSnVtJieE2Oj76VxTR3jEEBxgco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730414963; c=relaxed/simple;
-	bh=ZUWUbVd6vlMjhWzeaLEbi5tYuDL0DufaZoWUS1ZvNR0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOJFha0izOBMb0zmPyAfg+1GVPPUoovcLTFr4U2DJMsupnXM3gbH3JYY5sucvPV+xazHCAsnOhvu0ErmL0OKQzkQ5wjM1vQ2fyjJGGvoqTEaI/7KTZLeF9gdxT4GDJC8MS7x8bxVAmCnpapEz5kQlFH87hJtzFKn2ZGdmRbAN8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICAjHqiE; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICAjHqiE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c803787abso11458135ad.0
-        for <linux-cxl@vger.kernel.org>; Thu, 31 Oct 2024 15:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730414955; x=1731019755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b1qqiuqn4sWIJMyrU31AqAANpEwVjAPAmZe9LE6azyk=;
-        b=ICAjHqiE1L4cLjJPcTFGnWqIzU44j1UV/oSw/nAnYDaxjVG6dZktuXIRqzMTPDqNDG
-         K+xy0iVnjlALsoqyyWu70S/hsbyqZQ9NN1I7CkFR8VsHLeAohBDdXuEYhsjCSiwkYQF+
-         pRBZgRmwbVXayl/+50MCYHrQfAPHZw0gejxBcigC6EaX3qa44zsClXr0qM7WEq+nq0R7
-         EbfeLnb0Jx6ob3GJa/Ov9c7P+uL8irkPln0yqO2lMZyqoNUqL6F64M8qixt8HPGf4Cyb
-         AouJ8o9PnsZlMVY3UeAs0nb0O7h4O/9oK/cPfzfQIdPmbKHXvkOfCGvPhz/dDhC5ta0p
-         ym9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730414955; x=1731019755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b1qqiuqn4sWIJMyrU31AqAANpEwVjAPAmZe9LE6azyk=;
-        b=ROcB8bOLuIKYKGRkbEofAmG+aCNIDb5sQrYlDIzOtmJqeS1aMhT7lOoCL86FLOGKqf
-         EgBM47Az0Gwn4B/pvwMXAM/yGJSlRqWvPHbhJ1g6Aw3w5n5KR1eXelQpDI1RhMk+W7Xv
-         D/nvhJ7ApSMySAqo1ig6f/dzEW4XC4D1E3D38i9BkoOPiwjS9UlgwoRWB6CY8QN1aEoU
-         PF6W/FtEvmOcmZYiQ1p4Xr78SImXZZz4mCIG15V+5x46lPhwDaDo6dM/qAk4RvHSzEMt
-         2cQR0BA8RxFcCRVt9lfeDzzmdQxBQxzZib+fzDfy8hHpNCZDJsfdaTiG0holkTsAshUr
-         0gnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwWCzZfqHjRkPuwgtBgTa+3sbbratCedXdXOS8AxJA665L/TkPp8JCu3Al8wj/0xw0yyY6GZmN3Ak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuR9Tg19gOpuLD3G9bmfhp/0b1IccIZCtsF0sDEQj+Djp7+Lzs
-	44imfZOkfeLsvKQ4JqeJ+tYklsB8EuUaEv/wmkWbGfe1Wp4ufzoU
-X-Google-Smtp-Source: AGHT+IHKgqMa5mer2tolVlSeJmdHhm33dAbayczaLFP558NHquPOEyrIUMSHyZlpb5e+FWBzKsEFgQ==
-X-Received: by 2002:a17:902:e84a:b0:20c:da7c:6e8c with SMTP id d9443c01a7336-21119390d4bmr26487925ad.3.1730414955309;
-        Thu, 31 Oct 2024 15:49:15 -0700 (PDT)
-Received: from fan ([2601:646:8f03:9fee:1a14:7759:606e:c90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057c1615sm13246825ad.185.2024.10.31.15.49.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 15:49:14 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 31 Oct 2024 15:48:58 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Fan Ni <nifan.cxl@gmail.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, Sushant1 Kumar <sushant1.kumar@intel.com>
-Subject: Re: [ndctl PATCH 4/6] cxl/region: Add creation of Dynamic capacity
- regions
-Message-ID: <ZyQJWoPqJRTM2iF1@fan>
-References: <20241030-dcd-region2-v1-0-04600ba2b48e@intel.com>
- <20241030-dcd-region2-v1-4-04600ba2b48e@intel.com>
- <ZyPPPycLXADj2Lvb@fan>
- <6724007843a17_8a67029496@iweiny-mobl.notmuch>
+	s=arc-20240116; t=1730452677; c=relaxed/simple;
+	bh=hrpJyw9+3n15pBc1Ept7Dz8NqBT1q0ckDGJO4LtdMRs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TDFxENOzeoT48BtMDJHSrIPU2s6zZPCh5WyCps2H0fhGzykc5NiU84wxG9yvqBQYZHo9ctRQn15b9eMBRth83WPHQfplOO8gzZbBhEX2JgVbXcTgN6w7K0ytB9j0mF6mADWfYm11G1TkSgZP2JkmGIdeXfjp8OuT5f9s/h4nsT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XfwF441ynz6K6Kb;
+	Fri,  1 Nov 2024 17:15:20 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 80B1C1404FC;
+	Fri,  1 Nov 2024 17:17:51 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.171.129) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 1 Nov 2024 10:17:49 +0100
+From: <shiju.jose@huawei.com>
+To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <mchehab@kernel.org>, <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<gregkh@linuxfoundation.org>, <sudeep.holla@arm.com>,
+	<jassisinghbrar@gmail.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v15 01/15] EDAC: Add support for EDAC device features control
+Date: Fri, 1 Nov 2024 09:17:19 +0000
+Message-ID: <20241101091735.1465-2-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20241101091735.1465-1-shiju.jose@huawei.com>
+References: <20241101091735.1465-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6724007843a17_8a67029496@iweiny-mobl.notmuch>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-On Thu, Oct 31, 2024 at 05:11:04PM -0500, Ira Weiny wrote:
-> Fan Ni wrote:
-> > On Wed, Oct 30, 2024 at 04:54:47PM -0500, ira.weiny@intel.com wrote:
-> > > From: Navneet Singh <navneet.singh@intel.com>
-> > > 
-> > > CXL Dynamic Capacity Devices (DCDs) optionally support dynamic capacity
-> > > with up to eight partitions (Regions) (dc0-dc7).  CXL regions can now be
-> > > spare and defined as dynamic capacity (dc).
-> > > 
-> > > Add support for DCD devices.  Query for DCD capabilities.  Add the
-> > > ability to add DC partitions to a CXL DC region.
-> > > 
-> > > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> > > Co-authored-by: Sushant1 Kumar <sushant1.kumar@intel.com>
-> > > Signed-off-by: Sushant1 Kumar <sushant1.kumar@intel.com>
-> > > Co-authored-by: Ira Weiny <ira.weiny@intel.com>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > ---
-> > > Changes:
-> > > [iweiny: adjust to new sysfs interface.]
-> > > [iweiny: Rebase to latest pending]
-> > > [iweiny: Adjust DCD region code to new upstream sysfs entries]
-> > > [iweiny: Ensure backwards compatibility for non-DC kernels]
-> > > [iweiny: fixup help message to show DC type]
-> > > [iweiny: don't double declare decoder mode is dc]
-> > > [iweiny: simplify __reserve_dpa() with decoder mode to index]
-> > > [iweiny: Adjust to the new region mode]
-> > > ---
-> > >  cxl/json.c         | 26 +++++++++++++++
-> > >  cxl/lib/libcxl.c   | 95 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> > >  cxl/lib/libcxl.sym |  3 ++
-> > >  cxl/lib/private.h  |  6 +++-
-> > >  cxl/libcxl.h       | 55 +++++++++++++++++++++++++++++--
-> > >  cxl/memdev.c       |  7 +++-
-> > >  cxl/region.c       | 49 ++++++++++++++++++++++++++--
-> > >  7 files changed, 234 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/cxl/json.c b/cxl/json.c
-> > > index dcd3cc28393faf7e8adf299a857531ecdeaac50a..4276b9678d7e03eaf2aec581a08450f2a0b857f2 100644
-> > > --- a/cxl/json.c
-> > > +++ b/cxl/json.c
-> > > @@ -754,10 +754,12 @@ err_free:
-> > >  	return jpoison;
-> > >  }
-> > >  
-> > > +#define DC_SIZE_NAME_LEN 64
-> > >  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
-> > >  		unsigned long flags)
-> > >  {
-> > >  	const char *devname = cxl_memdev_get_devname(memdev);
-> > > +	char size_name[DC_SIZE_NAME_LEN];
-> > >  	struct json_object *jdev, *jobj;
-> > >  	unsigned long long serial, size;
-> > >  	const char *fw_version;
-> > > @@ -800,6 +802,17 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
-> > >  		}
-> > >  	}
-> > >  
-> > > +	for (int index; index < MAX_NUM_DC_REGIONS; index++) {
-> > 
-> > index is not initialized.
-> > Should be index = 0;
-> 
-> Thanks for the review!
-> 
-> Good catch.  I'll fix up.
-> 
-> > 
-> > Also, the "cxl list" looks like below, the size of each DC region is
-> > attached to each DCD device, that seems not quite aligned with what
-> > "_size" means for pmem/ram. Should we have a separate option for "cxl
-> > list" to show DC region info??
-> 
-> I'm not sure I follow.  The pmem/ram sizes show the size of the partitions on
-> the memdev.  This is the same for each DC partition.
-> 
-> Are you looking for the available size after some extents are available?
-> 
-> In that case I think you are looking for the dax information details which
-> comes after creating a region and using the -X option.
-> 
-> 17:02:42 > ./build/cxl/cxl list -r 8 -X
-> [
->   {
->     "region":"region8",
->     "resource":1031597457408,
->     "size":536870912,
->     "type":"dc",
->     "interleave_ways":1,
->     "interleave_granularity":256,
->     "decode_state":"commit",
->     "daxregion":{
->       "id":8,
->       "size":536870912,
->       "available_size":134217728,
->       "align":2097152
->     }
->   }
-> ]
-> 
-> 
-> This shows an available size which can further be dissected with the new
-> --extents (-N) option added in patch 5/6.
-> 
-> 17:04:32 > ./build/cxl/cxl list -r 8 -X -N
-> [
->   {
->     "region":"region8",
->     "resource":1031597457408,
->     "size":536870912,
->     "type":"dc",
->     "interleave_ways":1,
->     "interleave_granularity":256,
->     "decode_state":"commit",
->     "daxregion":{
->       "id":8,
->       "size":536870912,
->       "available_size":134217728,
->       "align":2097152
->     },
->     "extents":[
->       {
->         "offset":268435456,
->         "length":67108864,
->         "tag":"00000000-0000-0000-0000-000000000000"
->       },
->       {
->         "offset":134217728,
->         "length":67108864,
->         "tag":"00000000-0000-0000-0000-000000000000"
->       }
->     ]
->   }
-> ]
-> 
-> 
-> Does this give you the information you are looking for?  Or am I missing
-> something in your question?
-> 
-> Ira
-I was looking for something like the "-N" option provides, so I think we
-are good.
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Fan
-> 
-> > 
-> > Fan
-> > 
-> > ----------
-> >   {
-> >         "memdev":"mem1",
-> >         "dc0_size":"2.00 GiB (2.15 GB)",
-> >         "dc1_size":"2.00 GiB (2.15 GB)",
-> >         "serial":"0xf02",
-> >         "host":"0000:11:00.0",
-> >         "firmware_version":"BWFW VERSION 00"
-> >       },
-> >       {
-> >         "memdev":"mem3",
-> >         "dc0_size":"2.00 GiB (2.15 GB)",
-> >         "dc1_size":"2.00 GiB (2.15 GB)",
-> >         "serial":"0xf03",
-> >         "host":"0000:12:00.0",
-> >         "firmware_version":"BWFW VERSION 00"
-> >       },
-> > ----------
-> > 
-> 
-> [snip]
+Add generic EDAC device feature controls supporting the registration
+of RAS features available in the system. The driver exposes control
+attributes for these features to userspace in
+/sys/bus/edac/devices/<dev-name>/<ras-feature>/
 
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/edac/edac_device.c | 101 +++++++++++++++++++++++++++++++++++++
+ include/linux/edac.h       |  30 +++++++++++
+ 2 files changed, 131 insertions(+)
+
+diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+index 621dc2a5d034..e9229b5f8afe 100644
+--- a/drivers/edac/edac_device.c
++++ b/drivers/edac/edac_device.c
+@@ -570,3 +570,104 @@ void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
+ 		      block ? block->name : "N/A", count, msg);
+ }
+ EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
++
++/* EDAC device feature */
++static void edac_dev_release(struct device *dev)
++{
++	struct edac_dev_feat_ctx *ctx = container_of(dev, struct edac_dev_feat_ctx, dev);
++
++	kfree(ctx->dev.groups);
++	kfree(ctx);
++}
++
++const struct device_type edac_dev_type = {
++	.name = "edac_dev",
++	.release = edac_dev_release,
++};
++
++static void edac_dev_unreg(void *data)
++{
++	device_unregister(data);
++}
++
++/**
++ * edac_dev_register - register device for RAS features with EDAC
++ * @parent: parent device.
++ * @name: parent device's name.
++ * @private: parent driver's data to store in the context if any.
++ * @num_features: number of RAS features to register.
++ * @ras_features: list of RAS features to register.
++ *
++ * Return:
++ *  * %0       - Success.
++ *  * %-EINVAL - Invalid parameters passed.
++ *  * %-ENOMEM - Dynamic memory allocation failed.
++ *
++ */
++int edac_dev_register(struct device *parent, char *name,
++		      void *private, int num_features,
++		      const struct edac_dev_feature *ras_features)
++{
++	const struct attribute_group **ras_attr_groups;
++	struct edac_dev_feat_ctx *ctx;
++	int attr_gcnt = 0;
++	int ret, feat;
++
++	if (!parent || !name || !num_features || !ras_features)
++		return -EINVAL;
++
++	/* Double parse to make space for attributes */
++	for (feat = 0; feat < num_features; feat++) {
++		switch (ras_features[feat].ft_type) {
++		/* Add feature specific code */
++		default:
++			return -EINVAL;
++		}
++	}
++
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ras_attr_groups = kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), GFP_KERNEL);
++	if (!ras_attr_groups) {
++		ret = -ENOMEM;
++		goto ctx_free;
++	}
++
++	attr_gcnt = 0;
++	for (feat = 0; feat < num_features; feat++, ras_features++) {
++		switch (ras_features->ft_type) {
++		/* Add feature specific code */
++		default:
++			ret = -EINVAL;
++			goto groups_free;
++		}
++	}
++
++	ctx->dev.parent = parent;
++	ctx->dev.bus = edac_get_sysfs_subsys();
++	ctx->dev.type = &edac_dev_type;
++	ctx->dev.groups = ras_attr_groups;
++	ctx->private = private;
++	dev_set_drvdata(&ctx->dev, ctx);
++
++	ret = dev_set_name(&ctx->dev, name);
++	if (ret)
++		goto groups_free;
++
++	ret = device_register(&ctx->dev);
++	if (ret) {
++		put_device(&ctx->dev);
++		return ret;
++	}
++
++	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
++
++groups_free:
++	kfree(ras_attr_groups);
++ctx_free:
++	kfree(ctx);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(edac_dev_register);
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index b4ee8961e623..e19706311ec0 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -661,4 +661,34 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+ 
+ 	return mci->dimms[index];
+ }
++
++/* EDAC device features */
++
++#define EDAC_FEAT_NAME_LEN	128
++
++/* RAS feature type */
++enum edac_dev_feat {
++	RAS_FEAT_MAX
++};
++
++/* EDAC device feature information structure */
++struct edac_dev_data {
++	u8 instance;
++	void *private;
++};
++
++struct edac_dev_feat_ctx {
++	struct device dev;
++	void *private;
++};
++
++struct edac_dev_feature {
++	enum edac_dev_feat ft_type;
++	u8 instance;
++	void *ctx;
++};
++
++int edac_dev_register(struct device *parent, char *dev_name,
++		      void *parent_pvt_data, int num_features,
++		      const struct edac_dev_feature *ras_features);
+ #endif /* _LINUX_EDAC_H_ */
 -- 
-Fan Ni
+2.34.1
+
