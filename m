@@ -1,102 +1,155 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C23919BBC
-	for <linux-cxl@vger.kernel.org>; Fri,  1 Nov 2024 13:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209AC19CC2D
+	for <linux-cxl@vger.kernel.org>; Fri,  1 Nov 2024 13:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730468736; cv=none; b=QhsGx0YzpbnXJnjJBHr2NMvXjcGHXRpI9qiRRVLTkD+jFKfDUX5ZfN6IkRM7OS+ns/XpCfcQBVteHAhjHbP4tmZGIDLGDdmXmf+t7kjEe8QVALRrdAYxoYMbbsx1HMKMADCrF4OmevIQ9FPHj6ZzX9hwtC2Rh158SrLKatSz+kM=
+	t=1730468834; cv=none; b=bZ7dJTGRNxFNl2NF23zuejDfhGT7uwF9yMJeotMlNMZj1lhFRsd+S+djwXWa8dkKJuQQwRO352wwM4oRNN65FYwTsCZTqIEVou///VbEzSahSMCoL1EjFeyE4K1nY0xJjlPjgdmH1v7awqwPupwV2MlL12BZKvD1gp4WIMB3qkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730468736; c=relaxed/simple;
-	bh=ULt2LLAzl8m0+d6X2vQvVwGoC1seT5JR5YrnmO7mW14=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=djkQmNVjrEB6e6vfRofIoSMmilkrGljK6UENvlS7Nj/T8wqa8O/JtvzUo/HdKyCDpEQRvRVjpTKPhyvzkWJzEVO1DMVaRyVmm6kISX5i6tfKUlL7X20iNcY4+qvrDpuk9raFWmBdtoD2opVTasxiZoEYIBD+9p0tbrqeS8vc8jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xg29w6wGVz6K6jf;
-	Fri,  1 Nov 2024 21:43:00 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 855151400D3;
-	Fri,  1 Nov 2024 21:45:32 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 1 Nov
- 2024 14:45:32 +0100
-Date: Fri, 1 Nov 2024 13:45:30 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <mst@redhat.com>, <qemu-devel@nongnu.org>,
-	Esifiel <esifiel@gmail.com>
-CC: Fan Ni <fan.ni@samsung.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH qemu 00/10] hw/cxl: Mailbox input parser hardening
- against invalid input.
-Message-ID: <20241101134530.00003470@huawei.com>
-In-Reply-To: <20241101133917.27634-1-Jonathan.Cameron@huawei.com>
-References: <20241101133917.27634-1-Jonathan.Cameron@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1730468834; c=relaxed/simple;
+	bh=DORnpLlSSPTvlRU0Z176w+GuOM3Fh07/etpOUsmN1co=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lo5Xyfj9aGBrPz58mBtrsLMpJnPbNaABeMczYD9ORS71iKxae1XUQw0XVzU48nBPtdJL6XMAKwqC4dTkPlehpVZ6yeWYFWQiG7AnBCQR6NymswDGp0VsXkgkWUimWlExyysPIfAO8C49Hc5Pgja/EBaU8FEkxeNgK7csB+SEwno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EINromA1; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EINromA1"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4609d75e2f8so26422091cf.1
+        for <linux-cxl@vger.kernel.org>; Fri, 01 Nov 2024 06:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1730468831; x=1731073631; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pgZpdUoTAWBGW8HPZFX/sXBtOGTucTxkHn+L83ATAH8=;
+        b=EINromA1glYoEM83OqIk1FqMVBGC44SFElJ2giR/k4eQfq5Yyn07uLQ8mtVm30mAjC
+         Q86IkC+eh+ZwZvT/Tz1UcALFxpcl5P6O2t1fx/iEMSbLqGOFCecTS62s/JqlygQW/KHw
+         Qt3SOjxUCOKZSGctqnJqY8wgRKn5hBmgrE49WKc+0BjWiREbhtRvuOPu21a7xA7oMDin
+         1LI1YPyjifkUNTLkJYQUm8lGfL8r90v5gaIA/FaZGTatYPf3s15vd4KtjIrHIhUlnQZx
+         QclWnEUo6csvwgK42HSqlkVWM/f1jCxXLtcfLbJzl15LJm2dH9n3qVaaXAyZHcRdENHY
+         bRDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730468831; x=1731073631;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pgZpdUoTAWBGW8HPZFX/sXBtOGTucTxkHn+L83ATAH8=;
+        b=q6YjnMxpzRGSJIgFJy/g4mr6xwcimd7MIJdsvLIjicensXg5cXuVh7bAcFpmLLayoS
+         yFq5bP9UhCPzW4u2+wY2uvW7Z98U+vjF83JS/E/wjPt/hoEykqr/5tFnLAI2AsLLjhfT
+         XF+2Jsp41uy2Uivfs51Sz7hW/scPvq+lK1u+y02RqXYjRMNrEB7tTNvxU3Q+45wXhQ2O
+         xElzynPTxFNtGNp7csWNk4+sKDxzaafXmrBhfxTeWpCbSG5xK4eZGLdSvFuQZMRWric3
+         5x9+Z3BrjOe0iOCU0f+Wi7lj5+A1IiqXL5cP7Vma2vQzLrBGgvhem4MKdM6COMeOnaBn
+         WfHQ==
+X-Gm-Message-State: AOJu0YzEReZwv+rNbYASp91cpnYef4EIokxbMwTs70IKO5HED8QWahkx
+	7c+TUzlCnJ2rhVcaq8vXKeJ5CcvnYV7QuvSqP2Hy6wiK+9dq2oAULeAV1YjG4bU=
+X-Google-Smtp-Source: AGHT+IFO7TPVt3YP/4LUm5QV2ItbjgKfbOmnapBUP+AyArR90OJPmLDKIteJ7SrM/lUFaW2ItVhwSQ==
+X-Received: by 2002:a05:622a:1a97:b0:45d:ace1:a44a with SMTP id d75a77b69052e-462b6ebae38mr51618591cf.30.1730468831023;
+        Fri, 01 Nov 2024 06:47:11 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com ([50.193.156.113])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-462ad0cac07sm18840631cf.48.2024.11.01.06.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2024 06:47:10 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org,
+	Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	rrichter@amd.com,
+	Terry.Bowman@amd.com,
+	dave.jiang@intel.com,
+	ira.weiny@intel.com,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	david@redhat.com,
+	osalvador@suse.de,
+	gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org,
+	rppt@kernel.org
+Subject: [PATCH v5 0/3] memory,x86,acpi: hotplug memory alignment advisement
+Date: Fri,  1 Nov 2024 09:47:02 -0400
+Message-ID: <20241101134706.1185-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Fri, 1 Nov 2024 13:39:07 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+When physical address regions are not aligned to memory block size,
+the misaligned portion is lost (stranded capacity).
 
-> The CXL device mailbox has some variable sized input commands. The payload
-> length for each must be established using command especific structures.
-> 
-> If user space is either buggy or malicious, it may use size fields to
-> indicate fields beyond the end of the payload sent.  Some checks on this
-> were missing and Esifiel picked up on this.  I've tagged all these fixes
-> with Esifiel's Reported-by as either they were in the report or are similar
-> issues in other commands.
-> 
-> These can mostly be easily tested by using the raw mailbox commands option
-> in Linux and injecting broken commands from user space.
-> 
-> A typical command needs to first check that there is enough data to get to
-> the command specific sizing fields, then check the reported size is less
-> than or equal to the available payload.
-> 
-> Note that I think it very unlikely anyone is currently using CXL emulation
-> with a VM that they do not trust, but that may happen in future so good to
-> fix these paths now.
+Block size (min/max/selected) is architecture defined. Most architectures
+tend to use the minimum block size or some simplistic heurist. On x86,
+memory block size increases up to 2GB, and is otherwise fitted to the
+alignment of non-hotplug (i.e. not special purpose memory).
 
-Sorry, forgot to list dependencies.
+CXL exposes its memory for management through the ACPI CEDT (CXL Early
+Detection Table) in a field called the CXL Fixed Memory Window.  Per
+the CXL specification, this memory must be aligned to at least 256MB.
 
-Based-on: [PATCH 0/7] hw/cxl: Round up of fixes.
-Based-on: [PATCH qemu 0/2] hw/cxl: Misc fixes
+When a CFMW aligns on a size less than the block size, this causes a
+loss of up to 2GB per CFMW on x86.  It is not uncommon for CFMW to be
+allocated per-device - though this behavior is BIOS defined.
 
-Based-on: Message-id: 20241014121902.2146424-1-Jonathan.Cameron@huawei.com
-Based-on; message-id: 20241101132005.26633-1-Jonathan.Cameron@huawei.com
+This patch set provides 3 things:
+ 1) implement advise/query functions in driverse/base/memory.c to
+    report/query architecture agnostic hotplug block alignment advice.
+ 2) update x86 memblock size logic to consider the hotplug advice
+ 3) add code in acpi/numa/srat.c to report CFMW alignment advice
 
+The advisement interfaces are design to be called during arch_init
+code prior to allocator and smp_init.  start_kernel will call these
+through setup_arch() (via acpi and mm/init_64.c on x86), which occurs
+prior to mm_core_init and smp_init - so no need for atomics.
 
-> 
-> Jonathan Cameron (10):
->   hw/cxl: Check size of input data to dynamic capacity mailbox commands
->   hw/cxl: Check input includes at least the header in
->     cmd_features_set_feature()
->   hw/cxl: Check input length is large enough in
->     cmd_events_clear_records()
->   hw/cxl: Check enough data in cmd_firmware_update_transfer()
->   hw/cxl: Check the length of data requested fits in get_log()
->   hw/cxl: Avoid accesses beyond the end of cel_log.
->   hw/cxl: Ensuring enough data to read parameters in
->     cmd_tunnel_management_cmd()
->   hw/cxl: Check that writes do not go beyond end of target attributes
->   hw/cxl: Ensure there is enough data for the header in
->     cmd_ccls_set_lsa()
->   hw/cxl: Ensure there is enough data to read the input header in
->     cmd_get_physical_port_state()
-> 
->  hw/cxl/cxl-mailbox-utils.c | 73 ++++++++++++++++++++++++++++++++------
->  1 file changed, 62 insertions(+), 11 deletions(-)
-> 
+There's an attempt to signal callers to advise() that query has already
+occurred, but this is predicated on the notion that query actually
+occurs (which presently only happens on the x86 arch). This is to
+assist debugging future users.  Otherwise, the advise() call has
+been marked __init to help static discovery of bad call times.
+
+Once query is called the first time, it will always return the same value.
+
+Interfaces return -EBUSY and 0 respectively on systems without hotplug.
+
+v5:
+- nits and renames
+- kdoc warning
+- change to everything `unsigned long` instead of size_t
+- memory_block_advise_max_size marked __init
+  - both cannot be __init because the query is called from non-init
+- simplified alignment code in cfmws iterator
+
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
+
+Gregory Price (3):
+  memory: implement memory_block_advise/probe_max_size
+  x86: probe memory block size advisement value during mm init
+  acpi,srat: give memory block size advice based on CFMWS alignment
+
+ arch/x86/mm/init_64.c    | 15 ++++++++----
+ drivers/acpi/numa/srat.c | 12 ++++++++-
+ drivers/base/memory.c    | 53 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/memory.h   | 10 ++++++++
+ 4 files changed, 84 insertions(+), 6 deletions(-)
+
+-- 
+2.43.0
 
