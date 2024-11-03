@@ -1,64 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1C53D76;
-	Sat,  2 Nov 2024 01:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7108BC2FB;
+	Sun,  3 Nov 2024 17:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730512039; cv=none; b=jrNhJPvtk359JnKXXMbomhgUnQqLvUut8bnVkTDAh1gTtPWT2Pw5BX8Wi22xojs2Qbka52ntu+8BuN0vxF+pRf18JuQ4R2dfzeOlTAMfVgYADBQvHt388aisht9T1Ic3uumFJbCheaFvxdXypgrkMmOycW8NY2SMZ92z+197FgQ=
+	t=1730653481; cv=none; b=SmfR9lYaYlKhp9TH7iJdCKbOEgOvtTxXyV5n+WFldfuikLKf8m1aFwvgtVo5SBXx3UIKxnh2AHzE22JsmoFkowss7Bcq/FfFBGCnLWFAtC7Nr9i3Y3nUcWmeao/do+tNnE/nIy0rZP6aRUhQczHmveShHMvnmk3ibAhUtxy8rEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730512039; c=relaxed/simple;
-	bh=lJ1cwki+rcDEV8P2Hr4+pMHouOgKq2J2k9v/HCUJ1pA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=i5jR5RHRYDOjaSXzHcKTiVViM7oeFSON+9NeoAMd5Od4S+fUOCPnuM+JoUPRVVViI54W75QBF4qtlOl0QMtM4tCcJcNzu25v/HeD0SuPoDWMM55QzTUVVmaXx1ksWi/1Pja+ci1OAcban1peP2iM3h+1AvCLNZkjLYAkT38dJ70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0+ackE8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730653481; c=relaxed/simple;
+	bh=iCkq/n0ScNs19XGEBHP6SQ4H+TMRU4fkw8iLrhzrW/Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Qz9lGqGJlnNuF2oNMjuSZR1sGyJAbFyr4+nLIjUIGnTrr6f9Cib+TONxdz5nLvpgzOpSE/9s7w2AWqJHmB7WSTTQWaqlQ0HVSIW1byYh7D1M4jt5m2gDbcpaMiOd9qqJc8jawDiLL8PK+XSXewDQQbimiBASopSn/fFM0Dgi5wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=jCGf7P5s; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0+ackE8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17739C4CECD;
-	Sat,  2 Nov 2024 01:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730512039;
-	bh=lJ1cwki+rcDEV8P2Hr4+pMHouOgKq2J2k9v/HCUJ1pA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=L0+ackE8s9txXGvK4uEOIvacm470+p/qiAIpgCN/7qIZmBRlE2RHeuw1w6wDe22XB
-	 ufrCsfYqMqs1mb8Uk8fNSbd6oXPEPjckMZf7QSVueWjKtuzFIWj1eTyz9ArPMAsOJG
-	 gGP3J0T/oxWZT45ZZyNTR7vPid6UP+aiOCHyHBnrSDA8w4EmsRaaOBypPsyt4lYcxP
-	 ttB7M8s3Z0iQoGuqFCmXEchvNIdLWOXUprYmfErROuUyXWo7+GXFS1y0MTHca7wuJz
-	 +houzGTjyYMWa6Nd17awyfU4R7wDA20kortVy5dfFvat9HzfqYwDM/AkWspi7cvEJq
-	 xavvtEHrEb7Ug==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F2E3AB8A90;
-	Sat,  2 Nov 2024 01:47:28 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 6.12-rc6
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <672522d276c1f_9d3632949b@iweiny-mobl.notmuch>
-References: <672522d276c1f_9d3632949b@iweiny-mobl.notmuch>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <672522d276c1f_9d3632949b@iweiny-mobl.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.12-rc6
-X-PR-Tracked-Commit-Id: 3a2b97b3210bd5758f66fad04c5171f85a016a04
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b1966a1fd218e1f5d5376bf352f9a4c26aba50b5
-Message-Id: <173051204708.2889628.7065776642935085214.pr-tracker-bot@kernel.org>
-Date: Sat, 02 Nov 2024 01:47:27 +0000
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>, Li Zhijian <lizhijian@fujitsu.com>, Dan Williams <dan.j.williams@intel.com>, Shiju Jose <shiju.jose@huawei.com>, Gregory Price <gourry@gourry.net>, Zijun Hu <quic_zijuhu@quicinc.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave
- Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="jCGf7P5s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1730653474;
+	bh=iCkq/n0ScNs19XGEBHP6SQ4H+TMRU4fkw8iLrhzrW/Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=jCGf7P5s53Ta360TJbHbjEX0UBWW3nHAglDu578tyRJB0eZgE5NN8zYQ0kFtr1Svt
+	 pCp484/NqdkNGcCiZ9riHzuo/LXlzlPqaqdK9SPb5smzV52zn2yNPWdP3DIa10iyOa
+	 KeTiE8N08tCGK9uD6gJjB4S2MSPfd5jAPy1fJsj8=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sun, 03 Nov 2024 17:03:30 +0000
+Subject: [PATCH v2 01/10] sysfs: explicitly pass size to
+ sysfs_add_bin_file_mode_ns()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20241103-sysfs-const-bin_attr-v2-1-71110628844c@weissschuh.net>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Carlos Bilbao <carlos.bilbao.osdev@gmail.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ "David E. Box" <david.e.box@linux.intel.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Matt Turner <mattst88@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>, 
+ Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Logan Gunthorpe <logang@deltatee.com>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-alpha@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730653468; l=3118;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=iCkq/n0ScNs19XGEBHP6SQ4H+TMRU4fkw8iLrhzrW/Q=;
+ b=sZzl6wOvr0Sxq3DUY1GJqR+qhFx4JBDN7tgJGJz8989wTSFCjglU0coA3+lhHK8A4oBqQa8cP
+ HbptlDNYnPABVHa2o+5ifoWR29tK6teGa/60gJsy0hPwKXqLXrvxd4C
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The pull request you sent on Fri, 1 Nov 2024 13:49:54 -0500:
+Upcoming changes to the sysfs core require the size of the created file
+to be overridable by the caller.
+Add a parameter to enable this.
+For now keep using attr->size in all cases.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.12-rc6
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ fs/sysfs/file.c  | 8 ++++----
+ fs/sysfs/group.c | 3 ++-
+ fs/sysfs/sysfs.h | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b1966a1fd218e1f5d5376bf352f9a4c26aba50b5
-
-Thank you!
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index d1995e2d6c943a644ff9f34cf2488864d57daf81..6d39696b43069010b0ad0bdaadcf9002cb70c92c 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -315,7 +315,7 @@ int sysfs_add_file_mode_ns(struct kernfs_node *parent,
+ }
+ 
+ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
+-		const struct bin_attribute *battr, umode_t mode,
++		const struct bin_attribute *battr, umode_t mode, size_t size,
+ 		kuid_t uid, kgid_t gid, const void *ns)
+ {
+ 	const struct attribute *attr = &battr->attr;
+@@ -340,7 +340,7 @@ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
+ #endif
+ 
+ 	kn = __kernfs_create_file(parent, attr->name, mode & 0777, uid, gid,
+-				  battr->size, ops, (void *)attr, ns, key);
++				  size, ops, (void *)attr, ns, key);
+ 	if (IS_ERR(kn)) {
+ 		if (PTR_ERR(kn) == -EEXIST)
+ 			sysfs_warn_dup(parent, attr->name);
+@@ -580,8 +580,8 @@ int sysfs_create_bin_file(struct kobject *kobj,
+ 		return -EINVAL;
+ 
+ 	kobject_get_ownership(kobj, &uid, &gid);
+-	return sysfs_add_bin_file_mode_ns(kobj->sd, attr, attr->attr.mode, uid,
+-					   gid, NULL);
++	return sysfs_add_bin_file_mode_ns(kobj->sd, attr, attr->attr.mode,
++					  attr->size, uid, gid, NULL);
+ }
+ EXPORT_SYMBOL_GPL(sysfs_create_bin_file);
+ 
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index d22ad67a0f3291f4702f494939528d5d13c31fae..45b2e92941da1f49dcc71af3781317c61480c956 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -87,6 +87,7 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 	if (grp->bin_attrs) {
+ 		for (i = 0, bin_attr = grp->bin_attrs; *bin_attr; i++, bin_attr++) {
+ 			umode_t mode = (*bin_attr)->attr.mode;
++			size_t size = (*bin_attr)->size;
+ 
+ 			if (update)
+ 				kernfs_remove_by_name(parent,
+@@ -104,7 +105,7 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 
+ 			mode &= SYSFS_PREALLOC | 0664;
+ 			error = sysfs_add_bin_file_mode_ns(parent, *bin_attr,
+-							   mode, uid, gid,
++							   mode, size, uid, gid,
+ 							   NULL);
+ 			if (error)
+ 				break;
+diff --git a/fs/sysfs/sysfs.h b/fs/sysfs/sysfs.h
+index 3f28c9af57562f61a00a47935579f0939cbfd4dc..8e012f25e1c06e802c3138cc2715b46c1f67fa48 100644
+--- a/fs/sysfs/sysfs.h
++++ b/fs/sysfs/sysfs.h
+@@ -31,7 +31,7 @@ int sysfs_add_file_mode_ns(struct kernfs_node *parent,
+ 		const struct attribute *attr, umode_t amode, kuid_t uid,
+ 		kgid_t gid, const void *ns);
+ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
+-		const struct bin_attribute *battr, umode_t mode,
++		const struct bin_attribute *battr, umode_t mode, size_t size,
+ 		kuid_t uid, kgid_t gid, const void *ns);
+ 
+ /*
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.47.0
+
