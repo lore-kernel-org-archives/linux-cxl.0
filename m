@@ -1,66 +1,66 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563151D9A48
-	for <linux-cxl@vger.kernel.org>; Tue,  5 Nov 2024 21:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E3E1D9A48
+	for <linux-cxl@vger.kernel.org>; Tue,  5 Nov 2024 21:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730840494; cv=none; b=kdwlICjZDREQ5Mgod3ZtZcxFkPLN38VQZ4yATgZe8eRmmXtZ4kEzXLq03pZYivcMXbq2mjosQkwWe/sQ6vsTBzSkKH0xdpl5kv5Zb1IT5HCGa6FJJd1M1YiIffB36zCAnFS1D0MNaZRKvvuCm4mWu9INJDwAuECsknEDssDX0lM=
+	t=1730840670; cv=none; b=lpDrX6ERui6CF67yCu8k3KK3j8cKJn18dVKgkm4TZK16+6A5nv1DIdfde1PGbgzystvCLyb1zZIN5675hTKPC1FUNL/LJst5w3xCi7JZEv3HhyUOQOWkcisffUorzxcITkbE6oHYheuJrDWr8mgQ8zRI8jgEZXjN2tDptaBvmWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730840494; c=relaxed/simple;
-	bh=mrJzt8kZ9d/WkvrY9dYNAZMbtTkqdrnzqD0Sz7VWnlk=;
+	s=arc-20240116; t=1730840670; c=relaxed/simple;
+	bh=yin+6jSAIZSsBrDemjUmVt97T1rnRLctx1cPZqapCQI=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kC+pQCsag8nJObYgG9B7C+jrqon0D1hFsGPcREEhHHRoN0p1c07oY1kxR/z8aCe5CkjimN91BEVPTa6nY1NgQQGiqRwUkp5OSmiOgIBKo7wQhTcsvfjGuQiJAe5h/9CoHv0uT3D1+ZOwZI0IqvWhY1Ug8Z+TgFcbMF8JPDr/2v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbJiTGoT; arc=none smtp.client-ip=209.85.219.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=WYQp1sbwvNN4yGDRRlh926Cq+maTdVyBNM73gCZmpKAhnI/qoMxbdFXxL42KzxMgJTZyg7WIi7MuTFBkhU7FDLT+kn2xyRWbOC01mWQZu78k5ww61akH/y/OisRe+c7yhImuIr/lS0K1x8S3UuzizyroOkJSyEMkcUJM46enHdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dph5NDeJ; arc=none smtp.client-ip=209.85.219.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbJiTGoT"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e2bd7d8aaf8so5328177276.3
-        for <linux-cxl@vger.kernel.org>; Tue, 05 Nov 2024 13:01:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dph5NDeJ"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e29218d34f8so185295276.1
+        for <linux-cxl@vger.kernel.org>; Tue, 05 Nov 2024 13:04:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730840492; x=1731445292; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730840667; x=1731445467; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0V3nCXvKfMGVThLxqeeI6xHXpbgfrthGNbpv5LxWmok=;
-        b=fbJiTGoT4ADx+PltpYgzbTvLSFHSw6FnXENcdcyGwdipHy1yH9xdKoe5JHbdJzBGw+
-         O4rmuVUxTFDtbd75QBf/8qCwvlaObvKpz3MQFZ9PPzwyFcoRJGXgOIqP3LcFMoNDhVny
-         wuG9trzkdmNxtn6iA3tSaBEKRDlmNl8SlSVsq4hmc+5RQhMvmLuYzD0/RHxo0rs2d2gX
-         4vJTXoKWRvdUxx59H72E4pXkyMrUu8MrCu+LPDz8lJ7lnJK7m9LenaqZeZ6SEgV/b4wg
-         lunnmQ6n69ekqkFxu9FX0eEgR2ks/t/s1HiocigLDkUIvHuQdFVWwvwKqS/wobrQ+UVK
-         d1Lw==
+        bh=noY2bbayWon0kk66SxDlIazndIr82AwdxwcFGXTlqdc=;
+        b=dph5NDeJDzC6dt/6aBd3ZwKXsyDPFJNku0twG5gmhPdkFkb8z/fWS0ZrPOTfBap8v0
+         mqW2bBSqVcxnuYcS6DtCUqgQ6gFs9BJoLyOYr6C4uis1ZZAvtoR+iPPTRoU1wmBoGMme
+         3LI+1xeGeZm14VteVrBRpVuD3pEIG3UKIc1b5Wyz8kI5X8lwSYc0kj7B8x8NKe+R3+IE
+         yGbk9gehaiSho389lCB/cJgIgsUfb2+bEX9VKpx/oanPg+tYK+LOXIpc2DBFbwjnS+8W
+         2qUOmD9pe1OiuQvxQ68QbYPxizWGrrn+wjCt7MCqs0uv6La71WX/+lN4xdUlD47LQPEq
+         6qqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730840492; x=1731445292;
+        d=1e100.net; s=20230601; t=1730840667; x=1731445467;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0V3nCXvKfMGVThLxqeeI6xHXpbgfrthGNbpv5LxWmok=;
-        b=iVodFpEEp/f7q2YHZtIkfyvVC0/O6WMj+z74O0DfMajNXm9zQurovrNrGmF5du1u/K
-         dcoNZMHsirqfFLzEu0D0h1vHzTW45gi0OQd4/JxZ3jL25/m17ycf7Gd1lSnDhNj+I1q/
-         Xz0mREOFwWt/aqbhCfnvetg57H8Ge84GPoAWQEY8OtqhdWfXYUkO7aaGiXuzfuOkOSMX
-         sBlA7xMj8o+B+sFlQ+Z5M6EXMPD4fyhA7l9c6wUbv75ETAI/TQYKg9Wu+SumOhE6MvFD
-         PY6yv2lLyVlKDgTa0ASvB3/7VYmLi1k+p6S0W3L0NRLuvaS1Id4Xe7TfryuYUHUWAFZ4
-         RH0A==
-X-Gm-Message-State: AOJu0YyP0pYxZI2EWe3nuoWNug4FEqxJ3BN5NwTSwRb9Wol3ilsC+D4e
-	i932nyvTvmCpUFUIQsvg8DU5dcRCoyTpbF5+8ojP3x0t5TdGhQy+xOHG/w==
-X-Google-Smtp-Source: AGHT+IFbzPKzfW1H+8vc8LwCUl2CWaB9C2O5YZzw1zu3k06C1fw++IPRi5u9ZYNFust3TOiScEaGJA==
-X-Received: by 2002:a0d:c603:0:b0:6ea:7950:e75 with SMTP id 00721157ae682-6ea79500fbamr106050917b3.24.1730840492129;
-        Tue, 05 Nov 2024 13:01:32 -0800 (PST)
+        bh=noY2bbayWon0kk66SxDlIazndIr82AwdxwcFGXTlqdc=;
+        b=TECZ0jAkyW/GgInS2y2A2FSuAP71ci06k1DxcsMwnpRvHOSiDb6cOyLXfNd3yK3Upu
+         TFpgMb+oKP2KE56CK+wwVM2uLChlAw/f06V9dQGjusZAK3D65KyzUQl9VgW3gfBwM2/e
+         OfV3llsdM1mQ/024CMgtX1obf0CvvXQ9RjPFhhf+G5sqXR4Eexg+UWK6VauZy0msC/Ss
+         m6C8sUsz+2y6ITO6ahwIJ5vVmfTWB38qklvlFlRaOCRTv4kYWFy9bIV37sIpSfbRP0dX
+         MRgxiPktB43nmaWdzdJtOmJrhTKwiM4Asr/k5m03XHK5/GbnRRa1ggj9SSJakzA5hi07
+         4gHQ==
+X-Gm-Message-State: AOJu0Yxr9tSW7e4y+sFJbLNayPFBEWCIV0OYbnTBKPxzQc/Vh/HZO4/y
+	J+fWgmt2LyEjw3uHTwRqbZW4pHYnnkGeGiTVhQz8eczcNma+M3Ge
+X-Google-Smtp-Source: AGHT+IFbm8n9GmKArvIQ1qteK4fLi0OpvBJrYmhg6D1YhI9wwIBUjaMq6jBRxc4GkqiirzMt5RBKIA==
+X-Received: by 2002:a25:5f11:0:b0:e29:7e27:dad5 with SMTP id 3f1490d57ef6-e335ad7175dmr44845276.23.1730840667499;
+        Tue, 05 Nov 2024 13:04:27 -0800 (PST)
 Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ea94102de3sm12090487b3.52.2024.11.05.13.01.31
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e30e8adffd8sm2601283276.60.2024.11.05.13.04.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 13:01:31 -0800 (PST)
+        Tue, 05 Nov 2024 13:04:27 -0800 (PST)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 5 Nov 2024 13:01:30 -0800
+Date: Tue, 5 Nov 2024 13:04:25 -0800
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org,
 	Esifiel <esifiel@gmail.com>, linuxarm@huawei.com
-Subject: Re: [PATCH qemu 03/10] hw/cxl: Check input length is large enough in
- cmd_events_clear_records()
-Message-ID: <ZyqHqsFQzjDaEP8w@fan>
+Subject: Re: [PATCH qemu 04/10] hw/cxl: Check enough data in
+ cmd_firmware_update_transfer()
+Message-ID: <ZyqIWRP_ynMsb34n@fan>
 References: <20241101133917.27634-1-Jonathan.Cameron@huawei.com>
- <20241101133917.27634-4-Jonathan.Cameron@huawei.com>
+ <20241101133917.27634-5-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,13 +69,13 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241101133917.27634-4-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20241101133917.27634-5-Jonathan.Cameron@huawei.com>
 
-On Fri, Nov 01, 2024 at 01:39:10PM +0000, Jonathan Cameron wrote:
-> Buggy software might write a message that is too short for
-> either the header, or the header + the event data that is specified
-> in the header.  This may result in accesses beyond the range of the
-> message allocated as a duplicate of the incoming message buffer.
+On Fri, Nov 01, 2024 at 01:39:11PM +0000, Jonathan Cameron wrote:
+> Buggy guest can write a message that advertises more data that
+> is provided. As QEMU internally duplicates the reported message
+> size, this may result in an out of bounds access.
+> Add sanity checks on the size to avoid this.
 > 
 > Reported-by: Esifiel <esifiel@gmail.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -83,26 +83,24 @@ On Fri, Nov 01, 2024 at 01:39:10PM +0000, Jonathan Cameron wrote:
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
->  hw/cxl/cxl-mailbox-utils.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  hw/cxl/cxl-mailbox-utils.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index e63140aefe..3cb499a24f 100644
+> index 3cb499a24f..27fadc4fa8 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -266,6 +266,12 @@ static CXLRetCode cmd_events_clear_records(const struct cxl_cmd *cmd,
->      CXLClearEventPayload *pl;
+> @@ -705,6 +705,10 @@ static CXLRetCode cmd_firmware_update_transfer(const struct cxl_cmd *cmd,
+>      } QEMU_PACKED *fw_transfer = (void *)payload_in;
+>      size_t offset, length;
 >  
->      pl = (CXLClearEventPayload *)payload_in;
-> +
-> +    if (len_in < sizeof(*pl) ||
-> +        len_in < sizeof(*pl) + sizeof(*pl->handle) * pl->nr_recs) {
+> +    if (len < sizeof(*fw_transfer)) {
 > +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
 > +    }
 > +
->      *len_out = 0;
->      return cxl_event_clear_records(cxlds, pl);
->  }
+>      if (fw_transfer->action == CXL_FW_XFER_ACTION_ABORT) {
+>          /*
+>           * At this point there aren't any on-going transfers
 > -- 
 > 2.43.0
 > 
