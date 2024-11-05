@@ -1,338 +1,206 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDF8A1D2B03
-	for <linux-cxl@vger.kernel.org>; Tue,  5 Nov 2024 10:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730803462; cv=none; b=I8o30IoVNea2qNeAxryO/0XNzd/emW/mkxHRUU0UdMhWa6EmewAfZoDkaMcmUSkBGaSHwYo3tHPJVZWDopg31dwqQqQJKHjIpXrXGsOw+9r2a4vTlIjb5qKfiuLOQjOtMdG/DJQDH+FQW5KK15LDYxw5PjLv0k6gPZIgl2LK7ys=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730803462; c=relaxed/simple;
-	bh=WjeSw9ilmY+RRz88JWjP2dFaYS5Tz+KW4vzvpI3bWe4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VlgukJMVB7HwVQT9QVsXd7ZbWswmeGINJ7xKVbL00rD/6gUZozoXCFGzHfO7qJGMp0OwUdzJ6offrZoBvR6C6W0/hNZpdfvGy3VZ3LqypHI2JbOWyELHt2dz3y9NCF7BOhPzVJxLbZwlH7EDKJGPdil5X2NMS2Xy1Erf34pcHjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAX9nr59ilnYfQ3AA--.5578S2;
-	Tue, 05 Nov 2024 18:44:09 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwD3SXb09ilnmo9HAA--.23086S4;
-	Tue, 05 Nov 2024 18:44:08 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@Huawei.com,
-	marcin.juszkiewicz@linaro.org,
-	ardb+tianocore@kernel.org,
-	quic_llindhol@quicinc.com,
-	peter.maydell@linaro.org
-Cc: chenbaozi@phytium.com.cn,
-	devel@edk2.groups.io,
-	linux-cxl@vger.kernel.org,
-	asa-dev@op-lists.linaro.org,
-	qemu-devel@nongnu.org,
-	qemu-arm@nongnu.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [RFC PATCH v2 1/1] hw/arm/sbsa-ref: Support CXL Host Bridge & CFMW
-Date: Tue,  5 Nov 2024 18:43:46 +0800
-Message-Id: <20241105104346.417102-2-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241105104346.417102-1-wangyuquan1236@phytium.com.cn>
-References: <20241105104346.417102-1-wangyuquan1236@phytium.com.cn>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162D245027;
+	Tue,  5 Nov 2024 15:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730819852; cv=fail; b=k9UBZgvIUnZ0xEVFpzUqVb+xeI01bOHA76uqGAyp1XC5mHhwRTUrA+hY2nGSjiSt5c21aKfcCGW7K34ekPK1vNTqBrLdUFsB5rrV3s1NwOBFvtiUYAdG/AdnHEbXjM7cletYUjcmLLiMO90DPBXno31WqUARVzR3AnaAYdsv9Bo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730819852; c=relaxed/simple;
+	bh=qP6PEBfADSVWxJG4IIIa4fFsN7t6d25F6ysRBeLxWXw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Tmr+0rNv4twpoBAr5EVyBHMQYSOZ4XfixMAtrvEO1pQGfZwqGlAGK1jHge7nSO8R3xDnuqSjAMM1PYPx/Tczp7sGKW3ktQyzt8t9syNXLYnKVcLsNi8WBIboLN4KMGrjIsor5mgcha4+nTzLnUBTVBmQ2xXVMl8xr9oC92l+bmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt5rw2YT; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt5rw2YT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730819849; x=1762355849;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=qP6PEBfADSVWxJG4IIIa4fFsN7t6d25F6ysRBeLxWXw=;
+  b=Pt5rw2YTb4I7F6Wc1N5AfZ8qxi/j1nc9WNS19U+W9AbhBMmEBIuZcHve
+   cjCvPHz+N4lyyI5OV4GS7BZACZcismxdwRscrRq6p8s+1eUgKeWXb8nJj
+   JhDGbky7X5gTTxmmSvpdt1IHCsFXxmAefrAOMReTnyB9RBQWaYCAWbgLU
+   PvjZF+ro4WjY8t5OQhJCbjW9NNnAf4/5fN3nggeqqMAA/1vB0sz7Mc0ua
+   n8q1aIbbe2neg6jF1ijZsJcdFYosfC+3nimnwqRKdC4auI9ZsvhJtEHeZ
+   u+B5aJPYamTDPuRw9B+J6MfNOWazJWBni5QX1Bk61TGzfYqaClST6aLfR
+   A==;
+X-CSE-ConnectionGUID: JtiS3UbQQreNN0L6hpYvPw==
+X-CSE-MsgGUID: NH9sQ5MMQMyAhWJF88fcmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30735489"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="30735489"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:17:28 -0800
+X-CSE-ConnectionGUID: q5zpUIHNQ1uIppJFfmU35g==
+X-CSE-MsgGUID: 8wsAGz7gQFu9ILeGr/Pv/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="88841092"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Nov 2024 07:17:30 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 5 Nov 2024 07:17:28 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 5 Nov 2024 07:17:28 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.48) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 5 Nov 2024 07:17:28 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qrVlITW1ZJYrmQrtTiJB+JXeBWGBkrero2BswXZ4LQ9AVwBhkgkTs5m3+WVmEs6UrEvkLPmHIAW9OGyf9HDajJGd06MZ9rCJ8O3O9v/nLRwSKgqFmo/8KmOWI0XdGJbsf8g7xFEOJ0PClDORui5zFx70ubUiTX3MnruPLbk3+ZpDbYi+IkfDuZMVDu1gNHERw2LYSldxJqkvz5n/y0jxeOOvd+qi0EfLklpoyusP+lC4mi9w1wqXJrv9otJxqlQ7bGOxPJRsrPykmsvwP/EP88zIE55qzDKAStbmlDwiWYa2bOwjtUq0eSq0VhcSjdM1bXAQRsNU8swWbXwRiIzwxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lzebFdRejtFMOtsVENKCOlaBvpZ1V8THLFivAoN548Q=;
+ b=FAfP4DNRVfKjWMXG6r5/QmVJSHpVog69iRybElKyBpOBezaXLqMp0bnpdqcmCa+IuuZjHpDReYys1WIpV1np8Cn1cHX93W5Re2+cTTW+ns2Il5juIKD32MDG0ctP7lte2ZElUx28WNHF6d3mSO3cM49V0alebdtdtkDKzGKfJsRpekvrOIpG0oRO6sH0U4VTj4LGm8Kn5rzrs3xeDaU5fpmjaPtVbkvu4QxRvj73mh+qytvsfHuuufCw2+V6KDm4WN8qf77HC4NjPG2BVnpDpLjSFfT5VPqV9skqDJ77krkuwPjRAYmKLqeG/9NnbXiCw9uU3yNCgNDL30vw1W1e6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by MN0PR11MB6183.namprd11.prod.outlook.com (2603:10b6:208:3c5::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Tue, 5 Nov
+ 2024 15:17:25 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
+ 15:17:25 +0000
+Date: Tue, 5 Nov 2024 09:17:20 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Huang Ying <ying.huang@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Huang Ying
+	<ying.huang@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Gregory Price <gourry@gourry.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Alejandro Lucero
+	<alucerop@amd.com>, Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
+Message-ID: <672a37005ec2a_14ccd729427@iweiny-mobl.notmuch>
+References: <20241104084110.583710-1-ying.huang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20241104084110.583710-1-ying.huang@intel.com>
+X-ClientProxiedBy: MW4PR04CA0284.namprd04.prod.outlook.com
+ (2603:10b6:303:89::19) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwD3SXb09ilnmo9HAA--.23086S4
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWcpJZAFmgAAsk
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3CFWDWryUGF4kJF48AFW8WFg_yoWDWF48pF
-	45uws7Wr48GF4DZrs29a4DGF15Gw4vka4jkr9rCrZ7uF17K3WjqrWDKayjkFyUJrWqy345
-	u3W7WrnYvw1UZw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MN0PR11MB6183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 895ed979-3bd1-4d2c-b7ec-08dcfdacf459
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SnbUNVfaO8gNwjQdMYfLHTq8U122qeGQ+xUgrJwJrMP5enqNK1eVWNYhw5WK?=
+ =?us-ascii?Q?xVXtRe8fHMnWr+4VF9X8cmlcPb5a32xcnR+Hvo9PfSlsQNzlsK7UseciRUxc?=
+ =?us-ascii?Q?bKC2Rzxox37V9qdA1WmueZy7YAUYkddwmDswuarZUbQcLA0Qu6K4oISURClC?=
+ =?us-ascii?Q?LTtq1K/SaTS3uj4bV2l3sEhVFPrusdN95SsWq5wRCqJp58lUeNfMQOaQh6+3?=
+ =?us-ascii?Q?EsdpBaYdH6Q7r3K/LbJY8oTc1cZ9EyDgRyegZ0NFuuOqvcVKRce6LaSD2Wd2?=
+ =?us-ascii?Q?h3cudZ2MuK/TQsv0WbaLP1YKnXrtXhpyZn9c53MBXMI7LhN5uPJ/V3Yg4l4X?=
+ =?us-ascii?Q?YCVgGozAXO4In5eeUBJlHQ0m8KtNmEYaTeWcIgS4sgWynlko6DAmkP8/BSs/?=
+ =?us-ascii?Q?YTDATzFFjy9S8EFXT0SLZkh4ulIWKA/sINEGUD02q3VAU1OUlFK+9ClZAn2q?=
+ =?us-ascii?Q?bRrs1as8QJ1glOf1P2nqT7aFS0KpdWwf2JXkVVyozyCvx/USP822cs6tBgoN?=
+ =?us-ascii?Q?Vo+l/PDL7ZJ08zYzfhVWTyNHkKdm2NvfFyxWe9ZcfLtNAmHpVfDQsDddDwsq?=
+ =?us-ascii?Q?06X0DK2Wsp1BZo0oDrTTbNyudTe7BznyWqcFGF5Enor0vI2937Nh/vqHlI1C?=
+ =?us-ascii?Q?b1bsvNZutApeOwoM42BuybowUmNY/UYYZqQSe3Jcrstw02nQZVu66CG1DSg2?=
+ =?us-ascii?Q?0rjre4ri63+9+m9S/Y9Pze8b0cK1fEIIvBFJ1NMVv+sq17HpztqtxSHi0z6d?=
+ =?us-ascii?Q?wwSL1Prj53Zt/Rrf6cqnHtnYTfPYfwXBtF1gbbmrSHcxAiRPGSf6NgdkJU7b?=
+ =?us-ascii?Q?mrqtDfYuX/JXKo1YKYIqRBNmBtgqiilywMYOpZBrZP2J52S10tP9mGFEVMaR?=
+ =?us-ascii?Q?EYBDS+OR8b2arcAHpEwsNMCTA03lbqWgmtv3t7059JRUF0QSMP8WySdGMzIl?=
+ =?us-ascii?Q?XxBTTIEkpTuZSUQd4xlBoBLM4WZCwRbrUXtDs7+01sPKoBX8RAwXqJPx6OG9?=
+ =?us-ascii?Q?Zw1QZgCOwR08yojUj2Zlz+k5CHcA3plq3Sa/2KZpJ/lYuztoXwyxpy9KRYXh?=
+ =?us-ascii?Q?RrDPYXht+55utMN+2lBEcm7geGO9GX/aog9Ks3NoV9+wCnDI3VQvMPuY9KmH?=
+ =?us-ascii?Q?rvKJse8eqBJ0T72XwRHj31zz2+GxkolI3jPnInsp8XMHQ4QNKHYpurc2sdzI?=
+ =?us-ascii?Q?lnG0Bjj4Y5zbnXP0edHV/+RFa19Wv3qkJQ1LaPSRxsapX0wfnob20Ga9rDbt?=
+ =?us-ascii?Q?p15MkRUCN/CIOOfNFaxPE1taWl7Mp6Lc4ovd0HxbCKgeMe5lT6mvs3qcGOnp?=
+ =?us-ascii?Q?TSr+6UyAE8VlqOr4n5d2oQdb?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?huuQ6SdUsAqxGZ/tLhcYGCr1UiqVfufrE6nSwFH2zljamonAWCqoVDYjMhd4?=
+ =?us-ascii?Q?Ss37U9OLKQ54qwKmJf1NuSOzA1PeWjiSj4Ew0KS/mM/8LIX+wkzgEsNAOJW3?=
+ =?us-ascii?Q?5eoNpD5+QqotpQB0de3Mdp6RE4XZOy3QFD+sUrrvxOWMCLtMGdnfi0k/GHdW?=
+ =?us-ascii?Q?c5kTWBkiixdtsn2wyy7lpSOoponm+N0UKRHwLTBwQ87SbV9BXXtYU7nF0R77?=
+ =?us-ascii?Q?Pp/5yl/T78wdYWC2WzMAs798R6HtSJcQWdvbbGhQl3VYm0slL7myL6ZR5WYy?=
+ =?us-ascii?Q?WoFyGMRJV2zZ37TUIhtEXlJSOCrJGQ3KqrRN3tdOoJPLfG4rADH8Vj6HHqmP?=
+ =?us-ascii?Q?GOe/Mfxfxf+4DHEk2YNJKJuhR1Mfq3/Umh3RLj815WnY2H7m01sop7FpZJbG?=
+ =?us-ascii?Q?oBF0X6clXCdFBozQ+Dtpus0XcnrKr3up1yUX7BOn8HwV5SAhbpFSxUtaBnEf?=
+ =?us-ascii?Q?CRUsmiJJifVDtFfXSpa/ZMUumgjyi0aYCQ0kmC9wvK/14t1mpGuE+TbX8LSF?=
+ =?us-ascii?Q?nqQlqJy79TjtbJonGGs8VvHUHEAJvK4AO7MRXn9vw/HfILo3xLz9x7S0DUIJ?=
+ =?us-ascii?Q?Pb9bDT0Hdlt9W4I1DaPzsDPw1gsK8Q6Csd7i/Juq3qR0vzCCWYSpqCou2OMl?=
+ =?us-ascii?Q?Hb/3nkAovL1hZgzsqc9VgK4vfYBB33wNSVV8VXn2YPbmE7IJzMfr9P+nfwkN?=
+ =?us-ascii?Q?wA1Z5A8OPaEgQb/Fg2bTw2lE0/boDb8rmayQUBAKaRPL8ZLLLGc4U8lNfq6v?=
+ =?us-ascii?Q?OrdtGHI78CM03vNDeUcCi9Y0fEjJQsN6BUxWqE5nk8/z4CXlBJi6aMopurzB?=
+ =?us-ascii?Q?w5LuoRPdZX7Crxb91+0Gpw/iByd0vfBZecBsbhJvgjL/IXJsq7BzoNzQOvqq?=
+ =?us-ascii?Q?AOfNkYETWx9BgFbK9SoCoM3aRv2tL7Tsx3AhYiGonJ4VgM70Wr0UVDebUPYq?=
+ =?us-ascii?Q?yg+W2j3lS91fkKtXTjrWATJMQ6Hzx2Z8jHWf0NgfKOdNi5gcu8Vc3Erps4NX?=
+ =?us-ascii?Q?gI+PVqPUYwiEPqcZ5lDYmwZcHGeGDApiDVFWzsBpMwxTgXmwX0DWEJ5/Ja8i?=
+ =?us-ascii?Q?2U7c31iPbc0KwTHSUPHsFInxR+ci2XmmBkoS85/5qHwfxNtcj9qsO+7sxtCw?=
+ =?us-ascii?Q?z3eyOe16nkoa7En1hEl6bZVegoE6oTrdAufteTqkdTET2n/NJWMA9i41W4k4?=
+ =?us-ascii?Q?X5wxOOY36yVsDq379I6Ba9gX/6qrsBQ51C12Au/vEICVUU27tCwlB03pmCNJ?=
+ =?us-ascii?Q?0sTYAQ0apencpsHhbQ1FQs+7EWKYGnK3mTcdCfyvdGZJaWbl1+CZYnpKRWQ5?=
+ =?us-ascii?Q?KrUCOHDBWpNOklC12lIn/NblM+cU6XC9BV5x7LGzAyU/aznFZFWuSYOlLctB?=
+ =?us-ascii?Q?/6vlyRqHzJ97ew6lypRbbGjKrP4m1aEP0Ac5LI9sVbKqm37hMDQbNqSVaBvR?=
+ =?us-ascii?Q?TDNBHKiy0SgTBug18oLsppwoVgFQBmQnPfbFsM8wNzflOPpIuXI7fmlXjE7b?=
+ =?us-ascii?Q?pWiY74pCq4HxES/U+ML0g2F8sFSw64VebPWCRufz3EwMMc2k3/PbBOrFU0TD?=
+ =?us-ascii?Q?W0DJOGDXlK3yLbFkk5FKAWaHuj6OYZT/YWvjjhEz?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 895ed979-3bd1-4d2c-b7ec-08dcfdacf459
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 15:17:25.7021
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QiwZ60qun9lV8HEwA6A0fyKc5ebDKqVzdDVlq3jbSJNnuYZsO7KT95xRHKuY8vff5vQmWzOIVSa+K5mdwGVbqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6183
+X-OriginatorOrg: intel.com
 
-This creates a default pxb-cxl (bus_nr=0xc0) bridge with two
-cxl root ports on sbsa-ref. And the memory layout places 64K
-space for the cxl host bridge register regions(CHBCR) in the
-sbsa-ref memmap.
+Huang Ying wrote:
+> According to the description of the "Window Restrictions" field of
+> "CFMWS Structure" in the CXL spec v3.1 section 9.18.1.3: CXL Fixed
+> Memory Window Structure (CFMWS), the bit 0 of "Window Restrictions" is
+> formerly known as "CXL Type 2 Memory" and renamed to "Device
+> Coherent", while the bit 1 is formerly known as "CXL Type 3 Memory"
+> and renamed to "Host-only Coherent".  Because type 3 memory can only
+> be host-only coherent before, while it can be host-only coherent or
+> device coherent with "Back-Invalidate" now.
+> 
+> To avoid confusion about type 2/3 memory and device/host-only coherent
+> in Linux kernel, the patch renames corresponding bit definition from
+> ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3 to
+> ACPI_CEDT_CFMWS_RESTRICT_DEVMEM/HOSTONLYMEM.  This makes the kernel
+> code consistent with the spec too.
+> 
+> The patch also renames the corresponding cxl_decoder flags
+> CXL_DECODER_F_TYPE2/TYPE3 to CXL_DECODER_F_DEVMEM/HOSTONLYMEM.
+> 
+> No functionality change is expected.
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 
-In addition, this support indepentent mmio32(32M) & mmio64(1M)
-space for cxl components.
-
-To provide CFMWs on sbsa-ref, this extends 1TB space from the
-hole above RAM Memory [SBSA_MEM] for CXL Fixed Memory Window.
-
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
- docs/system/arm/sbsa.rst  |   4 ++
- hw/arm/sbsa-ref.c         | 122 +++++++++++++++++++++++++++++++++++++-
- hw/cxl/cxl-host-stubs.c   |   2 +
- hw/cxl/cxl-host.c         |   2 +-
- include/hw/cxl/cxl_host.h |   2 +
- 5 files changed, 130 insertions(+), 2 deletions(-)
-
-diff --git a/docs/system/arm/sbsa.rst b/docs/system/arm/sbsa.rst
-index 2bf3fc8d59..21b88e88e7 100644
---- a/docs/system/arm/sbsa.rst
-+++ b/docs/system/arm/sbsa.rst
-@@ -28,6 +28,7 @@ The ``sbsa-ref`` board supports:
-   - E1000E ethernet card on PCIe bus
-   - Bochs display adapter on PCIe bus
-   - A generic SBSA watchdog device
-+  - CXL host bridge and CXL fixed memory window
- 
- 
- Board to firmware interface
-@@ -92,3 +93,6 @@ Platform version changes:
- 
- 0.4
-   CPU topology information is present in devicetree.
-+
-+0.5
-+  CXL host bridge and CXL fixed memory window are supported.
-diff --git a/hw/arm/sbsa-ref.c b/hw/arm/sbsa-ref.c
-index e3195d5449..655dc82863 100644
---- a/hw/arm/sbsa-ref.c
-+++ b/hw/arm/sbsa-ref.c
-@@ -36,12 +36,18 @@
- #include "hw/arm/smmuv3.h"
- #include "hw/block/flash.h"
- #include "hw/boards.h"
-+#include "hw/cxl/cxl.h"
-+#include "hw/cxl/cxl_host.h"
- #include "hw/ide/ide-bus.h"
- #include "hw/ide/ahci-sysbus.h"
- #include "hw/intc/arm_gicv3_common.h"
- #include "hw/intc/arm_gicv3_its_common.h"
- #include "hw/loader.h"
-+#include "hw/pci/pci_bridge.h"
-+#include "hw/pci/pci_bus.h"
-+#include "hw/pci/pcie_port.h"
- #include "hw/pci-host/gpex.h"
-+#include "hw/pci-bridge/pci_expander_bridge.h"
- #include "hw/qdev-properties.h"
- #include "hw/usb.h"
- #include "hw/usb/xhci.h"
-@@ -94,6 +100,10 @@ enum {
-     SBSA_SECURE_MEM,
-     SBSA_AHCI,
-     SBSA_XHCI,
-+    SBSA_CXL_HOST,
-+    SBSA_CXL_MMIO,
-+    SBSA_CXL_MMIO_HIGH,
-+    SBSA_CXL_FIXED_WINDOW,
- };
- 
- struct SBSAMachineState {
-@@ -105,6 +115,8 @@ struct SBSAMachineState {
-     int psci_conduit;
-     DeviceState *gic;
-     PFlashCFI01 *flash[2];
-+    CXLState cxl_devices_state;
-+    PCIBus *cxlbus;
- };
- 
- #define TYPE_SBSA_MACHINE   MACHINE_TYPE_NAME("sbsa-ref")
-@@ -132,6 +144,10 @@ static const MemMapEntry sbsa_ref_memmap[] = {
-     /* Space here reserved for more SMMUs */
-     [SBSA_AHCI] =               { 0x60100000, 0x00010000 },
-     [SBSA_XHCI] =               { 0x60110000, 0x00010000 },
-+    /* 64KiB CXL Host Bridge Registers space */
-+    [SBSA_CXL_HOST] =           { 0x60120000, 0x00010000 },
-+    /* 32M CXL 32-bit MMIO space */
-+    [SBSA_CXL_MMIO] =           { 0x60130000, 0x02000000 },
-     /* Space here reserved for other devices */
-     [SBSA_PCIE_PIO] =           { 0x7fff0000, 0x00010000 },
-     /* 32-bit address PCIE MMIO space */
-@@ -141,6 +157,10 @@ static const MemMapEntry sbsa_ref_memmap[] = {
-     /* ~1TB PCIE MMIO space (4GB to 1024GB boundary) */
-     [SBSA_PCIE_MMIO_HIGH] =     { 0x100000000ULL, 0xFF00000000ULL },
-     [SBSA_MEM] =                { 0x10000000000ULL, RAMLIMIT_BYTES },
-+    /* 1M CXL 64-bit MMIO space */
-+    [SBSA_CXL_MMIO_HIGH] =           { 0x90000000000ULL, 0x00100000 },
-+    /* 1TB CXL FIXED WINDOW space */
-+    [SBSA_CXL_FIXED_WINDOW] =   { 0xA0000000000ULL, 0x10000000000ULL },
- };
- 
- static const int sbsa_ref_irqmap[] = {
-@@ -216,7 +236,7 @@ static void create_fdt(SBSAMachineState *sms)
-      *                        fw compatibility.
-      */
-     qemu_fdt_setprop_cell(fdt, "/", "machine-version-major", 0);
--    qemu_fdt_setprop_cell(fdt, "/", "machine-version-minor", 4);
-+    qemu_fdt_setprop_cell(fdt, "/", "machine-version-minor", 5);
- 
-     if (ms->numa_state->have_numa_distance) {
-         int size = nb_numa_nodes * nb_numa_nodes * 3 * sizeof(uint32_t);
-@@ -629,6 +649,35 @@ static void create_smmu(const SBSAMachineState *sms, PCIBus *bus)
-     }
- }
- 
-+static void create_pxb_cxl(SBSAMachineState *sms, PCIBus *bus)
-+{
-+    DeviceState *qdev = qdev_new(TYPE_PXB_CXL_DEV);
-+    PCIDevice *dev = PCI_DEVICE(qdev);
-+    CXLHost *host;
-+    PCIHostState *cxl;
-+    PCIDevice *cxlrp;
-+    PCIEPort *p;
-+    PCIESlot *s;
-+    int i;
-+
-+    sms->cxl_devices_state.is_enabled = true;
-+    qdev_prop_set_uint32(qdev, "bus_nr", 0xc0);
-+    pci_realize_and_unref(dev, bus, &error_fatal);
-+
-+    host = PXB_CXL_DEV(dev)->cxl_host_bridge;
-+    cxl = PCI_HOST_BRIDGE(host);
-+    sms->cxlbus = cxl->bus;
-+
-+    for (i = 0; i < 2; i++) {
-+        cxlrp = pci_new(-1, "cxl-rp");
-+        p = PCIE_PORT(cxlrp);
-+        s = PCIE_SLOT(cxlrp);
-+        p->port = i;
-+        s->slot = i;
-+        pci_realize_and_unref(cxlrp, sms->cxlbus, &error_fatal);
-+    }
-+}
-+
- static void create_pcie(SBSAMachineState *sms)
- {
-     hwaddr base_ecam = sbsa_ref_memmap[SBSA_PCIE_ECAM].base;
-@@ -638,6 +687,10 @@ static void create_pcie(SBSAMachineState *sms)
-     hwaddr base_mmio_high = sbsa_ref_memmap[SBSA_PCIE_MMIO_HIGH].base;
-     hwaddr size_mmio_high = sbsa_ref_memmap[SBSA_PCIE_MMIO_HIGH].size;
-     hwaddr base_pio = sbsa_ref_memmap[SBSA_PCIE_PIO].base;
-+    hwaddr cxl_base_mmio = sbsa_ref_memmap[SBSA_CXL_MMIO].base;
-+    hwaddr cxl_size_mmio = sbsa_ref_memmap[SBSA_CXL_MMIO].size;
-+    hwaddr cxl_base_mmio_high = sbsa_ref_memmap[SBSA_CXL_MMIO_HIGH].base;
-+    hwaddr cxl_size_mmio_high = sbsa_ref_memmap[SBSA_CXL_MMIO_HIGH].size;
-     int irq = sbsa_ref_irqmap[SBSA_PCIE];
-     MachineClass *mc = MACHINE_GET_CLASS(sms);
-     MemoryRegion *mmio_alias, *mmio_alias_high, *mmio_reg;
-@@ -686,6 +739,67 @@ static void create_pcie(SBSAMachineState *sms)
-     pci_create_simple(pci->bus, -1, "bochs-display");
- 
-     create_smmu(sms, pci->bus);
-+
-+    /* Map CXL MMIO space */
-+    mmio_alias = g_new0(MemoryRegion, 1);
-+    mmio_reg = sysbus_mmio_get_region(SYS_BUS_DEVICE(dev), 1);
-+    memory_region_init_alias(mmio_alias, OBJECT(dev), "cxl-mmio",
-+                             mmio_reg, cxl_base_mmio, cxl_size_mmio);
-+    memory_region_add_subregion(get_system_memory(), cxl_base_mmio, mmio_alias);
-+
-+    /* Map CXL MMIO_HIGH space */
-+    mmio_alias_high = g_new0(MemoryRegion, 1);
-+    memory_region_init_alias(mmio_alias_high, OBJECT(dev), "cxl-mmio-high",
-+                             mmio_reg, cxl_base_mmio_high, cxl_size_mmio_high);
-+    memory_region_add_subregion(get_system_memory(), cxl_base_mmio_high,
-+                                mmio_alias_high);
-+
-+    create_pxb_cxl(sms, pci->bus);
-+}
-+
-+static void create_cxl_host_reg_region(SBSAMachineState *sms)
-+{
-+    MemoryRegion *sysmem = get_system_memory();
-+    MemoryRegion *mr = &sms->cxl_devices_state.host_mr;
-+
-+    memory_region_init(mr, OBJECT(sms), "cxl_host_reg",
-+                       sbsa_ref_memmap[SBSA_CXL_HOST].size);
-+    memory_region_add_subregion(sysmem, sbsa_ref_memmap[SBSA_CXL_HOST].base, mr);
-+}
-+
-+static void create_cxl_fixed_window_region(SBSAMachineState *sms,
-+                                           MemoryRegion *mem)
-+{
-+    char *cxl_host = object_get_canonical_path(OBJECT(sms->cxlbus));
-+    hwaddr base = sbsa_ref_memmap[SBSA_CXL_FIXED_WINDOW].base;
-+    GList *it;
-+    strList host_target = { NULL, cxl_host };
-+    CXLFixedMemoryWindowOptions sbsa_ref_cfmwoptions = {
-+        .size = 1 * TiB,
-+        .has_interleave_granularity = false,
-+        .targets = &host_target,
-+    };
-+    CXLFixedWindow *fw;
-+
-+    cxl_fixed_memory_window_config(&sms->cxl_devices_state,
-+                                       &sbsa_ref_cfmwoptions, &error_fatal);
-+
-+    it = sms->cxl_devices_state.fixed_windows;
-+    fw = it->data;
-+    fw->base = base;
-+    memory_region_init_io(&fw->mr, OBJECT(sms), &cfmws_ops, fw,
-+                            "cxl-fixed-memory-region", fw->size);
-+
-+    memory_region_add_subregion(mem, fw->base, &fw->mr);
-+}
-+
-+static void sbsa_cxl_fmws_link_targets(SBSAMachineState *sms,
-+                                Error **errp)
-+{
-+    GList *it = sms->cxl_devices_state.fixed_windows;
-+    CXLFixedWindow *fw = it->data;
-+
-+    fw->target_hbs[0] = PXB_CXL_DEV(pci_bridge_get_device(sms->cxlbus));
- }
- 
- static void *sbsa_ref_dtb(const struct arm_boot_info *binfo, int *fdt_size)
-@@ -821,6 +935,12 @@ static void sbsa_ref_init(MachineState *machine)
- 
-     create_pcie(sms);
- 
-+    create_cxl_host_reg_region(sms);
-+    create_cxl_fixed_window_region(sms, sysmem);
-+    pxb_cxl_hook_up_registers(&sms->cxl_devices_state, sms->cxlbus,
-+                              &error_fatal);
-+    sbsa_cxl_fmws_link_targets(sms, &error_fatal);
-+
-     create_secure_ec(secure_sysmem);
- 
-     sms->bootinfo.ram_size = machine->ram_size;
-diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
-index cae4afcdde..aea94933ba 100644
---- a/hw/cxl/cxl-host-stubs.c
-+++ b/hw/cxl/cxl-host-stubs.c
-@@ -11,5 +11,7 @@
- void cxl_fmws_link_targets(CXLState *stat, Error **errp) {};
- void cxl_machine_init(Object *obj, CXLState *state) {};
- void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp) {};
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+                        CXLFixedMemoryWindowOptions *object, Error **errp) {};
- 
- const MemoryRegionOps cfmws_ops;
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index e9f2543c43..d408c7db15 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -22,7 +22,7 @@
- #include "hw/pci/pcie_port.h"
- #include "hw/pci-bridge/pci_expander_bridge.h"
- 
--static void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-                                            CXLFixedMemoryWindowOptions *object,
-                                            Error **errp)
- {
-diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
-index c9bc9c7c50..f3184733aa 100644
---- a/include/hw/cxl/cxl_host.h
-+++ b/include/hw/cxl/cxl_host.h
-@@ -16,6 +16,8 @@
- void cxl_machine_init(Object *obj, CXLState *state);
- void cxl_fmws_link_targets(CXLState *stat, Error **errp);
- void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+                        CXLFixedMemoryWindowOptions *object, Error **errp);
- 
- extern const MemoryRegionOps cfmws_ops;
- 
--- 
-2.34.1
-
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
