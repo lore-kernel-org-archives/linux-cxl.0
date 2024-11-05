@@ -1,556 +1,356 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D19529CE8;
-	Tue,  5 Nov 2024 20:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730838753; cv=none; b=FGCKWQqnhTpyt1WYfeELTne3Mihb9MzFC0zhjP14+2SWxPONwjemcsFFCWVCviz91fB1zqhMaAryBNFsYB0yr40y1UjHcQQeNBEFHtfGLd5x7Ex+CoShn1HA8HkIrGyHqUeDXDLiMZhewepegdKiZ2NiWX9UaYJCob2ix2fgwMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730838753; c=relaxed/simple;
-	bh=aUx+Up3qHsKlqZJcLk2SSDFVWkiR6YD1PM1TNhpPKQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BlxDQD38NnNURXlaHKgWJtu131pKbT2coSDS9YXRDftVR76mDaI4nKsw1c1siF+x/bsBDYrKrFpWN+yL3Mpw+3OyO4Q5fQnTNmDuIINjISPKV3oF8kmV8epWbS1qoVvZlh0RUxmMLiQbPtHrYNGvCH6n6rzM0XOw5avlI5QDB3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GY7FAQ7s; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39751CB9E6
+	for <linux-cxl@vger.kernel.org>; Tue,  5 Nov 2024 20:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730839106; cv=fail; b=dM9UDei1qM6dNas9nWkRWZbqFnb26ntPMiyJomRsgP2yNTHffCzkoMlujv5cT3KE3I1SG0eLplappU4QREW42G/bUHO2VjZYfFAgP4Ya5MIc28nXX21LBPOo7jWeg1rfR7P0dJeIS0uedahwN3kOvyUzO873ZV56eRgD18LwHNE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730839106; c=relaxed/simple;
+	bh=7Vc/CTSgiKj0QTmg83Rx5TiAcmGIkutSxem3ZCPxDdY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=c7rUnzT8atKUu4wXWcjb0rOQQYtaDU4pA59ETx2Jx76lUOb55IavkZQFClhTuaVHli8r6QlFeRBzKufpcLmLMrlEQzyuWQQUqApJ3GiUMy9pZxypeeLunmhATWsoas/PtgZkKONjOcOFXFgB/vI9Xnj+qJpk8mAXlu4Ahtwx4y0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VS5TEgW7; arc=fail smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GY7FAQ7s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VS5TEgW7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730838752; x=1762374752;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aUx+Up3qHsKlqZJcLk2SSDFVWkiR6YD1PM1TNhpPKQ4=;
-  b=GY7FAQ7sW9ZO4ysUMr7ehz9CPTsuVTG8NE8SIpwlBY3IulrPIj72HH6A
-   EwoOGoSFN8ZoCx3D36JeUXUZ9Ia0JT7sXtLseZC5wGCEHdftvL0EHiW/w
-   6RnMJBiuZ3NbhXOLXVmfLOblnnN5lRsRP3alhCokrQIWlY3lnNsDCOpFe
-   WeowkKLlEbAxI3zgucOdKqkfREK4YRLYQ2VDJGPcN8Kl1sjQ1NRBidC7j
-   uMOYHV1V4WvfELHTVA7s8+b6+5b68gbnup0OPRJcgVQBkBrwIzOBsWjSB
-   kQHgEmDNeT4c4rtOXnbcQj2KDIhsRP6TeJy/1ZJFzmpCVKm28eCEAA89P
+  t=1730839104; x=1762375104;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=7Vc/CTSgiKj0QTmg83Rx5TiAcmGIkutSxem3ZCPxDdY=;
+  b=VS5TEgW78snmHy8tVmsI/YQ2YR3y8dbuHuZYrPeGe/iAN2xE4B4i4fuR
+   SmbfRDfSBkR71S8z+i63N0uxPHAUcs7dCG93l+rA/asJYUvT2NkBUwpcK
+   X+NsWqpnXMqAbEF7pSRqUogKxYkNxHd0/le3p2dxHGVKC3os2y/Aj12eI
+   zgA1RKkdws3dongDr/tAmfpCB0PFLVY1oWqTwwU6u+oIC3HIJeRz4PacQ
+   HROOpeszvglDAx46oDgtuq6Mxd3mp1JFNaSX0KtD5kql0nIl5uNspxmVV
+   AF4Ahxwj04pccR4CZcbJf9wcL8ogkHS+SlImSbf6vJ2f+geekfkZDP0Kr
    A==;
-X-CSE-ConnectionGUID: R93RqilQSxOO5Ti+2auCqA==
-X-CSE-MsgGUID: H+AkKKp7SJKLOBw0r5/sEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30462528"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30462528"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 12:32:31 -0800
-X-CSE-ConnectionGUID: B6eZZQL3SxSocpMeVNlwag==
-X-CSE-MsgGUID: n9FSNWWVThmMAMSf7Ule/A==
+X-CSE-ConnectionGUID: uWD0dCtWQOCXfBAcGn2CAA==
+X-CSE-MsgGUID: U51K69viSFm7kEAfQMmhHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11247"; a="30037872"
+X-IronPort-AV: E=Sophos;i="6.11,261,1725346800"; 
+   d="scan'208";a="30037872"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 12:38:22 -0800
+X-CSE-ConnectionGUID: 7jjHxvf4QNqlpXps+Cm7aQ==
+X-CSE-MsgGUID: DWy4Tv9oQEWfaB8y123dWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,261,1725346800"; 
-   d="scan'208";a="83696517"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.109.253]) ([10.125.109.253])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 12:32:28 -0800
-Message-ID: <827fe047-a456-48b4-9db1-d28c184b9cb3@intel.com>
-Date: Tue, 5 Nov 2024 13:32:26 -0700
+   d="scan'208";a="84110279"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Nov 2024 12:38:22 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 5 Nov 2024 12:38:21 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 5 Nov 2024 12:38:21 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 5 Nov 2024 12:38:21 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pfTyxF9+W/laAepF/diHRHWA5ziWZpBgGIgr2uVS90VdISkdrIRpGzQ2EJKDFXigcOJ/Do1gt/03vjo4PxkVg6SUgUxNima5MEsj67k1LISQ8KVx/0MAZ+TNgu7SpMTrezHD+qgU18Gb7tuZGzr2ERSABx24LqRc5AiHx49sBdoSExzKgzx4wZbfMmbFBYiQ5ip5gCzzBdnN0IBMcan9yaLi8o+8o/YSLJCz0/UjIq9hAllamuraIJcmKDxPdtBwsQNCim96oF/FSRG8cYT52OQ5cRC4jf5Npg0PsyJHUfEPxv2AfbtJGtw5KFpb2VPFEOYcKUT9pkq9Ll4RowE8yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QFh6ma9cjyNUsIMgNVx6EgChX8tQc3TOpBbj7opa9hk=;
+ b=diymCbq7wus9C+d5Znp8YVxNJ8kqnN75rQ4nkgUOdqtjL0lXDlFiigFh2jfjSHjNPDHT9Yqy6rkWKv5hLZE2505yFpeKDlcBFWzj1xNPZSDwckJs7169/lf+LlPceYiuazERA/NnveN12xpPlvfqodoSHN1IFI99a1HMXUqwLm6DXiibNI5bP2pyBtKLoEql7pnY/zG3PJEMT2vM+PaBGo7kQNiA6kCAprk8bPE07rIjtyDZx4dDLzCeo0f3tJd5vqQMz2MnpoLvDcsIj0ByfQ4huaNyA9ygxKpm+huvuK8KpFkWs7I5QXG8PMC7v46G975DneBKbbPB8U7vG2Wr5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by MW4PR11MB5910.namprd11.prod.outlook.com (2603:10b6:303:189::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18; Tue, 5 Nov
+ 2024 20:38:16 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
+ 20:38:11 +0000
+Date: Tue, 5 Nov 2024 14:38:06 -0600
+From: Ira Weiny <ira.weiny@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, <ira.weiny@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>
+CC: Vishal Verma <vishal.l.verma@intel.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>, Navneet Singh
+	<navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>, Sushant1 Kumar
+	<sushant1.kumar@intel.com>
+Subject: Re: [ndctl PATCH v2 4/6] cxl/region: Add creation of Dynamic
+ capacity regions
+Message-ID: <672a822e2f2ca_166959294dc@iweiny-mobl.notmuch>
+References: <20241104-dcd-region2-v2-0-be057b479eeb@intel.com>
+ <20241104-dcd-region2-v2-4-be057b479eeb@intel.com>
+ <632e3bcd-b949-46d0-b524-d6f055f931b6@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <632e3bcd-b949-46d0-b524-d6f055f931b6@intel.com>
+X-ClientProxiedBy: MW4PR03CA0225.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::20) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 13/15] cxl/memfeature: Add CXL memory device sPPR
- control feature
-To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
- mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, gregkh@linuxfoundation.org,
- sudeep.holla@arm.com, jassisinghbrar@gmail.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
- Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
- rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
- dave.hansen@linux.intel.com, naoya.horiguchi@nec.com, james.morse@arm.com,
- jthoughton@google.com, somasundaram.a@hpe.com, erdemaktas@google.com,
- pgonda@google.com, duenwen@google.com, gthelen@google.com,
- wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
- wbs@os.amperecomputing.com, nifan.cxl@gmail.com, tanxiaofei@huawei.com,
- prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
- kangkang.shen@futurewei.com, wanghuiqiang@huawei.com, linuxarm@huawei.com
-References: <20241101091735.1465-1-shiju.jose@huawei.com>
- <20241101091735.1465-14-shiju.jose@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241101091735.1465-14-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW4PR11MB5910:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d158289-2f5c-4b2a-b61b-08dcfdd9c397
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?PeVDmL0fxwkLXpI381a1Rf0zr13bQlfyqsFCYSFDlgSyEhy7oMYu3RsVblM8?=
+ =?us-ascii?Q?KDXDhyfKe25SAzWSk6rq0btJb2e6pp0pAZpHA6hIC/RMTFwC5/eG3a7WGyXy?=
+ =?us-ascii?Q?gjOD2DbUDxOegLM6a8QQpsP2Qt2iLJ5x4jg5W6m+oQPP56j4lPtzwwk9vsi5?=
+ =?us-ascii?Q?KGPk1/n1s/wALo+SrSrJaem9bzmOrPQz9gYTT4VOEdCTNurVEVqIFdVO4iq6?=
+ =?us-ascii?Q?JSYqKY1Wm6/QtlRxxD7P+LIA0widxohAi1S+KSgYLyHIrzeF7bZpKOi5WkQ4?=
+ =?us-ascii?Q?MfazO1Fi6qEfC8j0y45i8D5jdPovIC0P8gWHeYTksgqCytf578bn1c5hpn4g?=
+ =?us-ascii?Q?+wPjoK8bU/xKmMbQn7miupl5NsEQZNMUUWhcVYUvA0dmAvoww4Xji6f1D4Xi?=
+ =?us-ascii?Q?znmkbwyJ+3xYTy/P5uIGjQY3i1Oo+bsEvkaZ9W/kPhwm5FvaTy2WZbXfxvwA?=
+ =?us-ascii?Q?1a52uTKtJAYfoDWNGUNOTR8VEPLWJ4cv1y0iLyUHEMDJ0/TfuQQbwNxwPt/f?=
+ =?us-ascii?Q?OoUFqOKGzAyn+b66at0db799zjaJA+7+pkuoX0LI5aoE9hHzpSXxbTpJWN/9?=
+ =?us-ascii?Q?93AEhyIPO1/LiEn64U9U1bEB/3kI7T3JbG8naNdUuWzPyV6U3+OD6Bu9ybYm?=
+ =?us-ascii?Q?pSuArl6M8JrKQbA9prJKALJGgs0kR2i5R8pRgqGfnnNMKqtNVwfBEEMr1IRF?=
+ =?us-ascii?Q?O1pLLP0bwlEqrNafuBqOoPtNXOFr9pGu/aU8LQRCfnGiAZ8qeRNZTVw33gB9?=
+ =?us-ascii?Q?pwLgJxqU5A++7tFe2LPYHr5IRvlHHMQwJeL0KkV2abWEqikzJyjHMZna211x?=
+ =?us-ascii?Q?NwMTLxNbZa1bXO7BXUxinhuDXRkEq3z97l042TrWzjdZeGYO9TrtDXX9W70c?=
+ =?us-ascii?Q?xDCcbFy+XlnzypF3ZhwlY0z7FYxMwMYYRkxbkN/ROjO1FqSlhd6ndiku6EjZ?=
+ =?us-ascii?Q?T6mlYRwzmZnUQza6FtfbXgo5WY9cBq8IksAdVO0u//jtu5KOybzCGnA/b71f?=
+ =?us-ascii?Q?srHKGDBPyjH921NKfyFyJXRH5xpSL004udlRFYinG8kPSWzsxgRc10qsAuTi?=
+ =?us-ascii?Q?mfrwwoWnSeB4kG2IfPkGyCr++rmhivcdH52cDBT+V58XSxlQypsYl/c5U1+f?=
+ =?us-ascii?Q?Bu9DBq7fdO5qBv5i8flarV/AGJFJ/XR5pslsSqAJnWDE6E6QGHmwcCeEPXCg?=
+ =?us-ascii?Q?bYAULqNmQBo8yjGzqF9z7uOaZEXkXCqdGeHzW116/XizMuHw3C/eXsETE73S?=
+ =?us-ascii?Q?Qq2Il9RdszRmjQ06T4J3kdZj2IfWZUUE9fgfsxoyso1wu43IKfGlPbnTUytd?=
+ =?us-ascii?Q?FIfsuX+V9ARXgrR9SpHlAypk?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aLMli7V8+f1HWcOrXkSpqGuDhScjGbS3zUwiKmIL7/QE29jvbSUyZbnGSY0e?=
+ =?us-ascii?Q?gSBWgZjnJ6hQFZywAsdU2ldKM2ePEkpFDYg60SdVoJNs4PGvco3Qyg4Zd15A?=
+ =?us-ascii?Q?ATv/saVxVpReRnPjcVpgoAeWNxNXPVn1vBTbK8c0/yh8uIljpZqszuTy/LMQ?=
+ =?us-ascii?Q?uU7hdFR06yzjf9/gyhJDrdGiCZKDC0yWYOqynV53eU83WzDUYtSvUI8hfKBr?=
+ =?us-ascii?Q?SzFqnih5BrH+fdUOWye15xyoDtbkqr/oNSRFx9htWxRubKTSAdwV1xSUL5nC?=
+ =?us-ascii?Q?zVatD06zuiQTfAFS009oD+OYlIO45RArfRau1GMyUjdvhyijT2VLraD7lBkT?=
+ =?us-ascii?Q?1jjSxdoRNNDve84vQ9khtO0vDOwJpE47VmKz1dqYlrkUx/g0AzHZmjb6mucE?=
+ =?us-ascii?Q?pQblr3sGie+yXqLPGmfabxwI3B/lbkPVzpAVdyaUi30knUENDXljr2Ai4gmA?=
+ =?us-ascii?Q?3dZnBSs8Dqpjq6fIZIKwxEphzA76OBZk0Z5MYmaaw8JD51n+Clk0b0m1cs6o?=
+ =?us-ascii?Q?JYwnk9VQdzsLCoLRTI4TFRVQ37BUOpbHXDpX2IQyKHHaQubkgdZLrl7Nzyz1?=
+ =?us-ascii?Q?v/a/Dh72BOimkSm3jzaLau9dj046nJod4FIVREg98nvodd8ROuDmuZseXfBu?=
+ =?us-ascii?Q?kSPtF9c++XCSBMljRZqvhBDn3+6aXI1GooWWEZQFNoS3vPZBB+xBnuXe+F+6?=
+ =?us-ascii?Q?1juWFRhj8NUEUa3PIT8GE04pbazVTziAM15340dH2dCxonruVo576lblkOPA?=
+ =?us-ascii?Q?RmjIcmMlZAJ6J38rEhxqpscH3J8+qiJHmjq2bfu4Qa0rdW1MnLkBgRzBcvyg?=
+ =?us-ascii?Q?ysbgraKHvVWiWwkE23qdtDwOoNwI9D0yHz7llMx0YurAxljoh5JzfF/q8e0i?=
+ =?us-ascii?Q?Q4LsQttwzxeRZxexsxDIsIotRmX222pMc8Bawko5Sqz0edrJkEHM9/STxzpH?=
+ =?us-ascii?Q?lCp/fLfyjfhVA+nCYeag6FuYI1PLLJjuVshNkbizUG2Nw8Gv5KwVeCZX0+0f?=
+ =?us-ascii?Q?RMluE2lXjptZJqpo44x9g88X+WJ+MRLAm1fwNw3V0Dpb/GJdGUSch8DTk/r0?=
+ =?us-ascii?Q?OUBm9e3EzIeIj9Y96ssy61p7CkDcpi7cOoCEwCbSGrh/YfNkDhK11AgNGDvU?=
+ =?us-ascii?Q?+ec1D6GJ+hd+Uz6Nt0tgtWMlR1XTM4U/MTbRer9flpqa+SaEkt3wyqebpfmZ?=
+ =?us-ascii?Q?r0WCcvnUsAzWfnJzDvvmO59JwzEWncv6vGjSK43QrFGMhDNLNDThOIJZIWhT?=
+ =?us-ascii?Q?Y5osGxqyTfPEY3VPcujcLmpqjEoqCjDNVIJda2IMvhWlRThb1avbLjMawv9U?=
+ =?us-ascii?Q?sTo/FroU4bypkh5SasfY+mD4KVlCpOGM/D/SbG9cgHwE2oJt5zNWAeT6BWGQ?=
+ =?us-ascii?Q?VaGp7T7sbfZk9DooSqGT3+5T+dqejcPJp3b+hMmpq193NExJ1WPgQxGJcox1?=
+ =?us-ascii?Q?fBrEyIptflT2xW1/BMlfGcFxJen7zMHuqC3babZ5tvqBKQLtsJrVS7wwgrCO?=
+ =?us-ascii?Q?1NmKr5xI9PrKPrVgwrtXsHOvtfNWXkqg/0EXHZz8zBxmneR42apUIizXuT4S?=
+ =?us-ascii?Q?HDnBDzidlYk8QrIY+tq5lUSing62AvhPXADIYbey?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d158289-2f5c-4b2a-b61b-08dcfdd9c397
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 20:38:11.3778
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RVoX1Jzq7HjLuICh8QrU0IvQwn+iK9+O2NGsn3HcNjzZFaOBD/eUIZUBEu3O9cJNgxeSVh0NgYoWNkApXggWKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5910
+X-OriginatorOrg: intel.com
+
+Dave Jiang wrote:
+> 
+> 
+> On 11/4/24 7:10 PM, ira.weiny@intel.com wrote:
+> > From: Navneet Singh <navneet.singh@intel.com>
+> > 
+> > CXL Dynamic Capacity Devices (DCDs) optionally support dynamic capacity
+> > with up to eight partitions (Regions) (dc0-dc7).  CXL regions can now be
+> > spare and defined as dynamic capacity (dc).
+> > 
+> > Add support for DCD devices.  Query for DCD capabilities.  Add the
+> > ability to add DC partitions to a CXL DC region.
+> > 
+> > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> > Co-authored-by: Sushant1 Kumar <sushant1.kumar@intel.com>
+> > Signed-off-by: Sushant1 Kumar <sushant1.kumar@intel.com>
+> > Co-authored-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> A few small things below.
+
+[snip]
+
+> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> > index 5cbfb3e7d466b491ef87ea285f7e50d3bac230db..4caa2d02313bf71960971c4eaa67fa42cea08d55 100644
+> > --- a/cxl/lib/libcxl.c
+> > +++ b/cxl/lib/libcxl.c
+> > @@ -1267,7 +1267,6 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+> >  	char buf[SYSFS_ATTR_SIZE];
+> >  	struct stat st;
+> >  	char *host;
+> > -
+> 
+> Stray line delete
+
+Oh...  I thought that was adding a space here when I reviewed the diff.
+Yes fixed.
+
+> >  	if (!path)
+> >  		return NULL;
+> >  	dbg(ctx, "%s: base: \'%s\'\n", devname, cxlmem_base);
+> > @@ -1304,6 +1303,19 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+
+[snip]
+
+> > @@ -1540,6 +1552,14 @@ CXL_EXPORT int cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev)
+> >  	return memdev->ram_qos_class;
+> >  }
+> >  
+> > +CXL_EXPORT unsigned long long cxl_memdev_get_dc_size(struct cxl_memdev *memdev, int index)
+> 
+> If you make index 'unsigned int', you can skip the index >= 0 check below right?
+
+True.  To be safe the following needs to be done then.
+
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 17ed682548b9..e0584cd658ec 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -263,8 +263,10 @@ static inline bool cxl_decoder_mode_is_dc(enum cxl_decoder_mode mode)
+        return (mode >= CXL_DECODER_MODE_DC0 && mode <= CXL_DECODER_MODE_DC7);
+ }
+ 
+-static inline int cxl_decoder_dc_mode_to_index(enum cxl_decoder_mode mode)
++static inline unsigned cxl_decoder_dc_mode_to_index(enum cxl_decoder_mode mode)
+ {
++       if (mode < CXL_DECODER_MODE_DC0)
++               return 0;
+        return mode - CXL_DECODER_MODE_DC0;
+ }
+ 
+I'm not sure which is best.  Right now cxl_decoder_dc_mode_to_index() is only
+called if the mode has been checked to be DC.  So the above check is a noop.
+But in general returning an errno would be better for
+cxl_decoder_dc_mode_to_index() is in error.
+
+I'll clean this up to match what is in dc_mode_to_region_index().  See below.
+
+[snip]
+
+> > @@ -2318,6 +2354,14 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+> >  	case CXL_PORT_SWITCH:
+> >  		decoder->pmem_capable = true;
+> >  		decoder->volatile_capable = true;
+> > +		decoder->dc_capable[0] = true;
+> > +		decoder->dc_capable[1] = true;
+> > +		decoder->dc_capable[2] = true;
+> > +		decoder->dc_capable[3] = true;
+> > +		decoder->dc_capable[4] = true;
+> > +		decoder->dc_capable[5] = true;
+> > +		decoder->dc_capable[6] = true;
+> > +		decoder->dc_capable[7] = true;
+> 
+> for loop?
+
+Sure.  Changed.
+
+> 
+> >  		decoder->mem_capable = true;
+> >  		decoder->accelmem_capable = true;
+> >  		sprintf(path, "%s/locked", cxldecoder_base);
+
+[snip]
+
+> > @@ -2648,6 +2724,14 @@ CXL_EXPORT bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder)
+> >  	return decoder->mem_capable;
+> >  }
+> >  
+> > +CXL_EXPORT bool cxl_decoder_is_dc_capable(struct cxl_decoder *decoder, int index)
+> 
+> Same comment as above WRT index.
+
+This forces changes outside of cxl_decoder_is_dc_capable().  Specifically with
+dc_mode_to_region_index().  But I actually like checking for the error from
+dc_mode_to_region_index() outside of cxl_decoder_is_dc_capable().
+
+I've made the change.
 
 
+[snip]
 
-On 11/1/24 2:17 AM, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+> > diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+> > index 0f45be89b6a00477d13fb6d7f1906213a3073c48..10abfa63dfc759b1589f9f039da1b920f8eb605e 100644
+> > --- a/cxl/lib/private.h
+> > +++ b/cxl/lib/private.h
+> > @@ -12,7 +12,6 @@
+> >  #include <util/bitmap.h>
+> >  
+> >  #define CXL_EXPORT __attribute__ ((visibility("default")))
+> > -
 > 
-> Post Package Repair (PPR) maintenance operations may be supported by CXL
-> devices that implement CXL.mem protocol. A PPR maintenance operation
-> requests the CXL device to perform a repair operation on its media.
-> For example, a CXL device with DRAM components that support PPR features
-> may implement PPR Maintenance operations. DRAM components may support two
-> types of PPR: Hard PPR (hPPR), for a permanent row repair, and Soft PPR
-> (sPPR), for a temporary row repair. sPPR is much faster than hPPR, but the
-> repair is lost with a power cycle.
-> 
-> During the execution of a PPR Maintenance operation, a CXL memory device:
-> - May or may not retain data
-> - May or may not be able to process CXL.mem requests correctly, including
-> the ones that target the DPA involved in the repair.
-> These CXL Memory Device capabilities are specified by Restriction Flags
-> in the sPPR Feature and hPPR Feature.
-> 
-> sPPR maintenance operation may be executed at runtime, if data is retained
-> and CXL.mem requests are correctly processed. For CXL devices with DRAM
-> components, hPPR maintenance operation may be executed only at boot because
-> data would not be retained.
-> When a CXL device identifies a failure on a memory component, the device
-> may inform the host about the need for a PPR maintenance operation by using
-> an Event Record, where the Maintenance Needed flag is set. The Event Record
-> specifies the DPA that should be repaired. A CXL device may not keep track
-> of the requests that have already been sent and the information on which
-> DPA should be repaired may be lost upon power cycle.
-> The userspace tool requests for maintenance operation if the number of
-> corrected error reported on a CXL.mem media exceeds error threshold.
-> 
-> CXL spec 3.1 section 8.2.9.7.1.2 describes the device's sPPR (soft PPR)
-> maintenance operation and section 8.2.9.7.1.3 describes the device's
-> hPPR (hard PPR) maintenance operation feature.
-> 
-> CXL spec 3.1 section 8.2.9.7.2.1 describes the sPPR feature discovery and
-> configuration.
-> 
-> CXL spec 3.1 section 8.2.9.7.2.2 describes the hPPR feature discovery and
-> configuration.
-> 
-> Add support for controlling CXL memory device sPPR feature.
-> Register with EDAC driver, which gets the memory repair attr descriptors
-> from the EDAC memory repair driver and exposes sysfs repair control
-> attributes for PRR to the userspace. For example CXL PPR control for the
-> CXL mem0 device is exposed in /sys/bus/edac/devices/cxl_mem0/mem_repairX/
-> 
-> Tested with QEMU patch for CXL PPR feature.
-> https://lore.kernel.org/all/20240730045722.71482-1-dave@stgolabs.net/
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Errant line deletion
 
-Just a nit below.
+Fixed.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/cxl/core/memfeature.c | 369 +++++++++++++++++++++++++++++++++-
->  1 file changed, 368 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
-> index e641396a32f5..9238ad10766e 100644
-> --- a/drivers/cxl/core/memfeature.c
-> +++ b/drivers/cxl/core/memfeature.c
-> @@ -16,8 +16,9 @@
->  #include <linux/limits.h>
->  #include <cxl.h>
->  #include <cxlmem.h>
-> +#include "core.h"
->  
-> -#define CXL_DEV_NUM_RAS_FEATURES	2
-> +#define CXL_DEV_NUM_RAS_FEATURES	3
->  #define CXL_DEV_HOUR_IN_SECS	3600
->  
->  #define CXL_SCRUB_NAME_LEN	128
-> @@ -606,17 +607,350 @@ static const struct edac_ecs_ops cxl_ecs_ops = {
->  	.set_threshold = cxl_ecs_set_threshold,
->  };
->  
-> +/* CXL memory soft PPR & hard PPR control definitions */
-> +/* See CXL rev 3.1 @8.2.9.7.2 Table 8-110 Maintenance Operation */
-> +static const uuid_t cxl_sppr_uuid =
-> +	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91, 0x75, 0x68, 0xbb);
-> +
-> +static const uuid_t cxl_hppr_uuid =
-> +	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59, 0xfb, 0x0e, 0x24);
-> +
-> +struct cxl_ppr_context {
-> +	uuid_t repair_uuid;
-> +	u8 instance;
-> +	u16 get_feat_size;
-> +	u16 set_feat_size;
-> +	u8 get_version;
-> +	u8 set_version;
-> +	u16 set_effects;
-> +	struct cxl_memdev *cxlmd;
-> +	enum edac_mem_repair_type repair_type;
-> +	enum edac_mem_repair_persist_mode persist_mode;
-> +	u64 dpa;
-> +	u32 nibble_mask;
-> +};
-> +
-> +/**
-> + * struct cxl_memdev_ppr_params - CXL memory PPR parameter data structure.
-> + * @op_class: PPR operation class.
-> + * @op_subclass: PPR operation subclass.
-> + * @dpa_support: device physical address for PPR support.
-> + * @media_accessible: memory media is accessible or not during PPR operation.
-> + * @data_retained: data is retained or not during PPR operation.
-> + * @dpa: device physical address.
-> + */
-> +struct cxl_memdev_ppr_params {
-> +	u8 op_class;
-> +	u8 op_subclass;
-> +	bool dpa_support;
-> +	bool media_accessible;
-> +	bool data_retained;
-> +	u64 dpa;
-> +};
-> +
-> +enum cxl_ppr_param {
-> +	CXL_PPR_PARAM_DO_QUERY,
-> +	CXL_PPR_PARAM_DO_PPR,
-> +};
-> +
-> +/* See CXL rev 3.1 @8.2.9.7.2.1 Table 8-113 sPPR Feature Readable Attributes */
-> +/* See CXL rev 3.1 @8.2.9.7.2.2 Table 8-116 hPPR Feature Readable Attributes */
-> +#define	CXL_MEMDEV_PPR_QUERY_RESOURCE_FLAG BIT(0)
+> >  struct cxl_pmem {
+> >  	int id;
+> >  	void *dev_buf;
+> > @@ -47,6 +46,9 @@ struct cxl_memdev {
+> >  	struct list_node list;
+> >  	unsigned long long pmem_size;
+> >  	unsigned long long ram_size;
+> > +	unsigned long long dc_size[MAX_NUM_DC_REGIONS];
+> > +	unsigned long long dc_qos_class[MAX_NUM_DC_REGIONS];
+> > +	int dc_partition_count;
+> >  	int ram_qos_class;
+> >  	int pmem_qos_class;
+> >  	int payload_max;
+> > @@ -111,6 +113,7 @@ struct cxl_endpoint {
+> >  	struct cxl_memdev *memdev;
+> >  };
+> >  
+> > +
+> 
+> Errant line addition
 
-Are all the extra spaces after #define intended?
+Fixed.
 
-DJ
 
-> +
-> +#define CXL_MEMDEV_PPR_DEVICE_INITIATED_MASK BIT(0)
-> +#define CXL_MEMDEV_PPR_FLAG_DPA_SUPPORT_MASK BIT(0)
-> +#define CXL_MEMDEV_PPR_FLAG_NIBBLE_SUPPORT_MASK BIT(1)
-> +#define CXL_MEMDEV_PPR_FLAG_MEM_SPARING_EV_REC_SUPPORT_MASK BIT(2)
-> +
-> +#define CXL_MEMDEV_PPR_RESTRICTION_FLAG_MEDIA_ACCESSIBLE_MASK BIT(0)
-> +#define CXL_MEMDEV_PPR_RESTRICTION_FLAG_DATA_RETAINED_MASK BIT(2)
-> +
-> +#define CXL_MEMDEV_PPR_SPARING_EV_REC_EN_MASK BIT(0)
-> +
-> +struct cxl_memdev_repair_rd_attrs_hdr {
-> +	u8 max_op_latency;
-> +	__le16 op_cap;
-> +	__le16 op_mode;
-> +	u8 op_class;
-> +	u8 op_subclass;
-> +	u8 rsvd[9];
-> +}  __packed;
-> +
-> +struct cxl_memdev_ppr_rd_attrs {
-> +	struct cxl_memdev_repair_rd_attrs_hdr hdr;
-> +	u8 ppr_flags;
-> +	__le16 restriction_flags;
-> +	u8 ppr_op_mode;
-> +}  __packed;
-> +
-> +/* See CXL rev 3.1 @8.2.9.7.2.1 Table 8-114 sPPR Feature Writable Attributes */
-> +/* See CXL rev 3.1 @8.2.9.7.2.2 Table 8-117 hPPR Feature Writable Attributes */
-> +struct cxl_memdev_ppr_wr_attrs {
-> +	__le16 op_mode;
-> +	u8 ppr_op_mode;
-> +}  __packed;
-> +
-> +/* See CXL rev 3.1 @8.2.9.7.1.2 Table 8-103 sPPR Maintenance Input Payload */
-> +/* See CXL rev 3.1 @8.2.9.7.1.3 Table 8-104 hPPR Maintenance Input Payload */
-> +struct cxl_memdev_ppr_maintenance_attrs {
-> +	u8 flags;
-> +	__le64 dpa;
-> +	u8 nibble_mask[3];
-> +}  __packed;
-> +
-> +static int cxl_mem_ppr_get_attrs(struct device *dev,
-> +				 struct cxl_ppr_context *cxl_ppr_ctx,
-> +				 struct cxl_memdev_ppr_params *params)
-> +{
-> +	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	size_t rd_data_size = sizeof(struct cxl_memdev_ppr_rd_attrs);
-> +	size_t data_size;
-> +	struct cxl_memdev_ppr_rd_attrs *rd_attrs __free(kfree) =
-> +				kmalloc(rd_data_size, GFP_KERNEL);
-> +	if (!rd_attrs)
-> +		return -ENOMEM;
-> +
-> +	data_size = cxl_get_feature(mds, cxl_ppr_ctx->repair_uuid,
-> +				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
-> +				    rd_attrs, rd_data_size);
-> +	if (!data_size)
-> +		return -EIO;
-> +
-> +	params->op_class = rd_attrs->hdr.op_class;
-> +	params->op_subclass = rd_attrs->hdr.op_subclass;
-> +	params->dpa_support = FIELD_GET(CXL_MEMDEV_PPR_FLAG_DPA_SUPPORT_MASK,
-> +					rd_attrs->ppr_flags);
-> +	params->media_accessible = FIELD_GET(CXL_MEMDEV_PPR_RESTRICTION_FLAG_MEDIA_ACCESSIBLE_MASK,
-> +					     rd_attrs->restriction_flags) ^ 1;
-> +	params->data_retained = FIELD_GET(CXL_MEMDEV_PPR_RESTRICTION_FLAG_DATA_RETAINED_MASK,
-> +					  rd_attrs->restriction_flags) ^ 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_do_ppr_op(struct device *dev,
-> +			     struct cxl_ppr_context *cxl_ppr_ctx,
-> +			     struct cxl_memdev_ppr_params *rd_params,
-> +			     enum cxl_ppr_param param_type)
-> +{
-> +	struct cxl_memdev_ppr_maintenance_attrs maintenance_attrs;
-> +	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	int ret;
-> +
-> +	if (!rd_params->media_accessible || !rd_params->data_retained) {
-> +		/* Check if DPA is mapped */
-> +		if (cxl_dpa_to_region(cxlmd, cxl_ppr_ctx->dpa)) {
-> +			dev_err(dev, "CXL can't do PPR as DPA is mapped\n");
-> +			return -EBUSY;
-> +		}
-> +	}
-> +	memset(&maintenance_attrs, 0, sizeof(maintenance_attrs));
-> +	if (param_type == CXL_PPR_PARAM_DO_QUERY)
-> +		maintenance_attrs.flags = CXL_MEMDEV_PPR_QUERY_RESOURCE_FLAG;
-> +	else
-> +		maintenance_attrs.flags = 0;
-> +	maintenance_attrs.dpa = cxl_ppr_ctx->dpa;
-> +	*((u32 *)&maintenance_attrs.nibble_mask[0]) = cxl_ppr_ctx->nibble_mask;
-> +	ret = cxl_do_maintenance(mds, rd_params->op_class, rd_params->op_subclass,
-> +				 &maintenance_attrs, sizeof(maintenance_attrs));
-> +	if (ret) {
-> +		dev_err(dev, "CXL do PPR failed ret=%d\n", ret);
-> +		up_read(&cxl_region_rwsem);
-> +		cxl_ppr_ctx->nibble_mask = 0;
-> +		cxl_ppr_ctx->dpa = 0;
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_ppr_set_attrs(struct device *dev,
-> +				 struct cxl_ppr_context *cxl_ppr_ctx,
-> +				 enum cxl_ppr_param param_type)
-> +{
-> +	struct cxl_memdev_ppr_params rd_params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ppr_get_attrs(dev, cxl_ppr_ctx, &rd_params);
-> +	if (ret) {
-> +		dev_err(dev, "Get cxlmemdev PPR params failed ret=%d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	switch (param_type) {
-> +	case CXL_PPR_PARAM_DO_QUERY:
-> +	case CXL_PPR_PARAM_DO_PPR:
-> +		ret = down_read_interruptible(&cxl_region_rwsem);
-> +		if (ret)
-> +			return ret;
-> +		ret = down_read_interruptible(&cxl_dpa_rwsem);
-> +		if (ret) {
-> +			up_read(&cxl_region_rwsem);
-> +			return ret;
-> +		}
-> +		ret = cxl_mem_do_ppr_op(dev, cxl_ppr_ctx, &rd_params, param_type);
-> +		up_read(&cxl_dpa_rwsem);
-> +		up_read(&cxl_region_rwsem);
-> +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int cxl_ppr_get_repair_type(struct device *dev, void *drv_data,
-> +				   u32 *repair_type)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	*repair_type = cxl_ppr_ctx->repair_type;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ppr_get_persist_mode_avail(struct device *dev, void *drv_data,
-> +					  char *buf)
-> +{
-> +	return sysfs_emit(buf, "%u\n", EDAC_MEM_REPAIR_SOFT);
-> +}
-> +
-> +static int cxl_ppr_get_persist_mode(struct device *dev, void *drv_data,
-> +				    u32 *persist_mode)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	*persist_mode = cxl_ppr_ctx->persist_mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_ppr_get_dpa_support(struct device *dev, void *drv_data,
-> +				   u32 *dpa_support)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +	struct cxl_memdev_ppr_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ppr_get_attrs(dev, cxl_ppr_ctx, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*dpa_support = params.dpa_support;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_get_ppr_safe_when_in_use(struct device *dev, void *drv_data,
-> +					u32 *safe)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +	struct cxl_memdev_ppr_params params;
-> +	int ret;
-> +
-> +	ret = cxl_mem_ppr_get_attrs(dev, cxl_ppr_ctx, &params);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*safe = params.media_accessible & params.data_retained;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_get_ppr_dpa(struct device *dev, void *drv_data,
-> +			   u64 *dpa)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	*dpa = cxl_ppr_ctx->dpa;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_set_ppr_dpa(struct device *dev, void *drv_data, u64 dpa)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	if (!dpa)
-> +		return -EINVAL;
-> +
-> +	cxl_ppr_ctx->dpa = dpa;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_get_ppr_nibble_mask(struct device *dev, void *drv_data,
-> +				   u64 *nibble_mask)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	*nibble_mask = cxl_ppr_ctx->nibble_mask;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_set_ppr_nibble_mask(struct device *dev, void *drv_data, u64 nibble_mask)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	cxl_ppr_ctx->nibble_mask = nibble_mask;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_do_query_ppr(struct device *dev, void *drv_data)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +
-> +	if (!cxl_ppr_ctx->dpa)
-> +		return -EINVAL;
-> +
-> +	return cxl_mem_ppr_set_attrs(dev, cxl_ppr_ctx, CXL_PPR_PARAM_DO_QUERY);
-> +}
-> +
-> +static int cxl_do_ppr(struct device *dev, void *drv_data)
-> +{
-> +	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-> +	int ret;
-> +
-> +	if (!cxl_ppr_ctx->dpa)
-> +		return -EINVAL;
-> +
-> +	ret = cxl_mem_ppr_set_attrs(dev, cxl_ppr_ctx, CXL_PPR_PARAM_DO_PPR);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct edac_mem_repair_ops cxl_sppr_ops = {
-> +	.get_repair_type = cxl_ppr_get_repair_type,
-> +	.get_persist_mode_avail = cxl_ppr_get_persist_mode_avail,
-> +	.get_persist_mode = cxl_ppr_get_persist_mode,
-> +	.get_dpa_support = cxl_ppr_get_dpa_support,
-> +	.get_repair_safe_when_in_use = cxl_get_ppr_safe_when_in_use,
-> +	.get_dpa = cxl_get_ppr_dpa,
-> +	.set_dpa = cxl_set_ppr_dpa,
-> +	.get_nibble_mask = cxl_get_ppr_nibble_mask,
-> +	.set_nibble_mask = cxl_set_ppr_nibble_mask,
-> +	.do_query = cxl_do_query_ppr,
-> +	.do_repair = cxl_do_ppr,
-> +};
-> +
->  int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  {
->  	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
->  	struct cxl_patrol_scrub_context *cxl_ps_ctx;
->  	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
-> +	struct cxl_ppr_context *cxl_sppr_ctx;
->  	struct cxl_ecs_context *cxl_ecs_ctx;
->  	struct cxl_feat_entry feat_entry;
->  	struct cxl_memdev_state *mds;
->  	struct cxl_dev_state *cxlds;
->  	int num_ras_features = 0;
->  	int num_media_frus;
-> +	u8 repair_inst = 0;
->  	u8 scrub_inst = 0;
->  	int rc, i;
->  
-> @@ -714,6 +1048,39 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
->  	}
->  
->  feat_ecs_done:
-> +	/* CXL sPPR */
-> +	rc = cxl_get_supported_feature_entry(mds, &cxl_sppr_uuid,
-> +					     &feat_entry);
-> +	if (rc < 0)
-> +		goto feat_sppr_done;
-> +
-> +	if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
-> +		goto feat_sppr_done;
-> +
-> +	cxl_sppr_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_sppr_ctx),
-> +				    GFP_KERNEL);
-> +	if (!cxl_sppr_ctx)
-> +		goto feat_sppr_done;
-> +	*cxl_sppr_ctx = (struct cxl_ppr_context) {
-> +		.repair_uuid = cxl_sppr_uuid,
-> +		.get_feat_size = feat_entry.get_feat_size,
-> +		.set_feat_size = feat_entry.set_feat_size,
-> +		.get_version = feat_entry.get_feat_ver,
-> +		.set_version = feat_entry.set_feat_ver,
-> +		.set_effects = feat_entry.set_effects,
-> +		.cxlmd = cxlmd,
-> +		.repair_type = EDAC_TYPE_SPPR,
-> +		.persist_mode = EDAC_MEM_REPAIR_SOFT,
-> +		.instance = repair_inst++,
-> +	};
-> +
-> +	ras_features[num_ras_features].ft_type = RAS_FEAT_MEM_REPAIR;
-> +	ras_features[num_ras_features].instance = cxl_sppr_ctx->instance;
-> +	ras_features[num_ras_features].mem_repair_ops = &cxl_sppr_ops;
-> +	ras_features[num_ras_features].ctx = cxl_sppr_ctx;
-> +	num_ras_features++;
-> +
-> +feat_sppr_done:
->  	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->  				 num_ras_features, ras_features);
->  }
+[snip]
 
+> > @@ -488,6 +506,13 @@ static int validate_decoder(struct cxl_decoder *decoder,
+> >  			return -EINVAL;
+> >  		}
+> >  		break;
+> > +	case CXL_DECODER_MODE_DC0 ... CXL_DECODER_MODE_DC7:
+> > +		index =  dc_mode_to_region_index(p->mode);
+> 
+> Extra space after =
+
+Fixed.
+
+Thanks for the review!
+
+Ira
+> 
+> DJ
+
+[snip]
