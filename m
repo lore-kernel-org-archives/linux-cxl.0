@@ -1,206 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162D245027;
-	Tue,  5 Nov 2024 15:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730819852; cv=fail; b=k9UBZgvIUnZ0xEVFpzUqVb+xeI01bOHA76uqGAyp1XC5mHhwRTUrA+hY2nGSjiSt5c21aKfcCGW7K34ekPK1vNTqBrLdUFsB5rrV3s1NwOBFvtiUYAdG/AdnHEbXjM7cletYUjcmLLiMO90DPBXno31WqUARVzR3AnaAYdsv9Bo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730819852; c=relaxed/simple;
-	bh=qP6PEBfADSVWxJG4IIIa4fFsN7t6d25F6ysRBeLxWXw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Tmr+0rNv4twpoBAr5EVyBHMQYSOZ4XfixMAtrvEO1pQGfZwqGlAGK1jHge7nSO8R3xDnuqSjAMM1PYPx/Tczp7sGKW3ktQyzt8t9syNXLYnKVcLsNi8WBIboLN4KMGrjIsor5mgcha4+nTzLnUBTVBmQ2xXVMl8xr9oC92l+bmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt5rw2YT; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF60C1D90B4;
+	Tue,  5 Nov 2024 15:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730820412; cv=none; b=qyj1t80dOmVeFMxN8Jx8HePNO6FdLUUet4rC6QqUDKLu2f9/2PLZX0XEoFKu7Pm7Iggl068WxQnrCNvquaG3aeYK5ZXj/DGUNCykZyzASTgfY1r0u8B6mlxdmx50Etmhp1FpG7K9BhtJp8lk8533SHkRnAeXIy7h47AbyYIvgYU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730820412; c=relaxed/simple;
+	bh=OyFK8z5qd2PX1b2mFjzhp33XMWRNRnaVbtklFXmouuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=blpYLj1d0isR+/P3b/MGLtTvLzmJvlnsW5w0OgZw4ydvca4mfRiI2epHTIWok48n/O7qH2aSdiwig3GFvJ661p3MissXHOL9pgSkICygtdWDRqTjyaS7HGXZk6NuYnzyjyyU1msHsDrQDws2H3W7megnXKNhNn3s2+sjuEp08Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9Iq4Wg+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt5rw2YT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730819849; x=1762355849;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=qP6PEBfADSVWxJG4IIIa4fFsN7t6d25F6ysRBeLxWXw=;
-  b=Pt5rw2YTb4I7F6Wc1N5AfZ8qxi/j1nc9WNS19U+W9AbhBMmEBIuZcHve
-   cjCvPHz+N4lyyI5OV4GS7BZACZcismxdwRscrRq6p8s+1eUgKeWXb8nJj
-   JhDGbky7X5gTTxmmSvpdt1IHCsFXxmAefrAOMReTnyB9RBQWaYCAWbgLU
-   PvjZF+ro4WjY8t5OQhJCbjW9NNnAf4/5fN3nggeqqMAA/1vB0sz7Mc0ua
-   n8q1aIbbe2neg6jF1ijZsJcdFYosfC+3nimnwqRKdC4auI9ZsvhJtEHeZ
-   u+B5aJPYamTDPuRw9B+J6MfNOWazJWBni5QX1Bk61TGzfYqaClST6aLfR
-   A==;
-X-CSE-ConnectionGUID: JtiS3UbQQreNN0L6hpYvPw==
-X-CSE-MsgGUID: NH9sQ5MMQMyAhWJF88fcmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="30735489"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="30735489"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2024 07:17:28 -0800
-X-CSE-ConnectionGUID: q5zpUIHNQ1uIppJFfmU35g==
-X-CSE-MsgGUID: 8wsAGz7gQFu9ILeGr/Pv/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="88841092"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Nov 2024 07:17:30 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 5 Nov 2024 07:17:28 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 5 Nov 2024 07:17:28 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.48) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 5 Nov 2024 07:17:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qrVlITW1ZJYrmQrtTiJB+JXeBWGBkrero2BswXZ4LQ9AVwBhkgkTs5m3+WVmEs6UrEvkLPmHIAW9OGyf9HDajJGd06MZ9rCJ8O3O9v/nLRwSKgqFmo/8KmOWI0XdGJbsf8g7xFEOJ0PClDORui5zFx70ubUiTX3MnruPLbk3+ZpDbYi+IkfDuZMVDu1gNHERw2LYSldxJqkvz5n/y0jxeOOvd+qi0EfLklpoyusP+lC4mi9w1wqXJrv9otJxqlQ7bGOxPJRsrPykmsvwP/EP88zIE55qzDKAStbmlDwiWYa2bOwjtUq0eSq0VhcSjdM1bXAQRsNU8swWbXwRiIzwxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lzebFdRejtFMOtsVENKCOlaBvpZ1V8THLFivAoN548Q=;
- b=FAfP4DNRVfKjWMXG6r5/QmVJSHpVog69iRybElKyBpOBezaXLqMp0bnpdqcmCa+IuuZjHpDReYys1WIpV1np8Cn1cHX93W5Re2+cTTW+ns2Il5juIKD32MDG0ctP7lte2ZElUx28WNHF6d3mSO3cM49V0alebdtdtkDKzGKfJsRpekvrOIpG0oRO6sH0U4VTj4LGm8Kn5rzrs3xeDaU5fpmjaPtVbkvu4QxRvj73mh+qytvsfHuuufCw2+V6KDm4WN8qf77HC4NjPG2BVnpDpLjSFfT5VPqV9skqDJ77krkuwPjRAYmKLqeG/9NnbXiCw9uU3yNCgNDL30vw1W1e6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MN0PR11MB6183.namprd11.prod.outlook.com (2603:10b6:208:3c5::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Tue, 5 Nov
- 2024 15:17:25 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%3]) with mapi id 15.20.8114.028; Tue, 5 Nov 2024
- 15:17:25 +0000
-Date: Tue, 5 Nov 2024 09:17:20 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Huang Ying <ying.huang@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Huang Ying
-	<ying.huang@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Gregory Price <gourry@gourry.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Alejandro Lucero
-	<alucerop@amd.com>, Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
-Message-ID: <672a37005ec2a_14ccd729427@iweiny-mobl.notmuch>
-References: <20241104084110.583710-1-ying.huang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241104084110.583710-1-ying.huang@intel.com>
-X-ClientProxiedBy: MW4PR04CA0284.namprd04.prod.outlook.com
- (2603:10b6:303:89::19) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9Iq4Wg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F5CC4CECF;
+	Tue,  5 Nov 2024 15:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730820411;
+	bh=OyFK8z5qd2PX1b2mFjzhp33XMWRNRnaVbtklFXmouuA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=S9Iq4Wg+y13VlLFXaCQFBHoEgqCWwKO3J18E6ea4A9GXtutCKimycjyX2UFxyAhoF
+	 V4zfgXb+m4cZ7L2DVprXpqm4toiyK4X3fHoT0bFJC1hfvM+d29JMkfSCUtDadGZ1mM
+	 gT0lycJy0BIpkCVswsVeI1OtIeIJ6mh/cAV5ueBJEksXiYYTLfI2txEbP+TVdv+InM
+	 k+R+IoMimw7bxRmY3j+VQL++psf2Y8wUojmN2FH2obDVCN3oClU+GQmcZHilH7wLQo
+	 Uq5K49ASfVd1DC1B9B9WpCVygRAayMBQMhrPc0fqW+EnQJzM392ryKWN7Ckjb77xSI
+	 s/iv9g17O3mZw==
+Date: Tue, 5 Nov 2024 09:26:50 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Frederic Barrat <fbarrat@linux.ibm.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback of
+ bin_is_visible()
+Message-ID: <20241105152650.GA1472729@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MN0PR11MB6183:EE_
-X-MS-Office365-Filtering-Correlation-Id: 895ed979-3bd1-4d2c-b7ec-08dcfdacf459
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SnbUNVfaO8gNwjQdMYfLHTq8U122qeGQ+xUgrJwJrMP5enqNK1eVWNYhw5WK?=
- =?us-ascii?Q?xVXtRe8fHMnWr+4VF9X8cmlcPb5a32xcnR+Hvo9PfSlsQNzlsK7UseciRUxc?=
- =?us-ascii?Q?bKC2Rzxox37V9qdA1WmueZy7YAUYkddwmDswuarZUbQcLA0Qu6K4oISURClC?=
- =?us-ascii?Q?LTtq1K/SaTS3uj4bV2l3sEhVFPrusdN95SsWq5wRCqJp58lUeNfMQOaQh6+3?=
- =?us-ascii?Q?EsdpBaYdH6Q7r3K/LbJY8oTc1cZ9EyDgRyegZ0NFuuOqvcVKRce6LaSD2Wd2?=
- =?us-ascii?Q?h3cudZ2MuK/TQsv0WbaLP1YKnXrtXhpyZn9c53MBXMI7LhN5uPJ/V3Yg4l4X?=
- =?us-ascii?Q?YCVgGozAXO4In5eeUBJlHQ0m8KtNmEYaTeWcIgS4sgWynlko6DAmkP8/BSs/?=
- =?us-ascii?Q?YTDATzFFjy9S8EFXT0SLZkh4ulIWKA/sINEGUD02q3VAU1OUlFK+9ClZAn2q?=
- =?us-ascii?Q?bRrs1as8QJ1glOf1P2nqT7aFS0KpdWwf2JXkVVyozyCvx/USP822cs6tBgoN?=
- =?us-ascii?Q?Vo+l/PDL7ZJ08zYzfhVWTyNHkKdm2NvfFyxWe9ZcfLtNAmHpVfDQsDddDwsq?=
- =?us-ascii?Q?06X0DK2Wsp1BZo0oDrTTbNyudTe7BznyWqcFGF5Enor0vI2937Nh/vqHlI1C?=
- =?us-ascii?Q?b1bsvNZutApeOwoM42BuybowUmNY/UYYZqQSe3Jcrstw02nQZVu66CG1DSg2?=
- =?us-ascii?Q?0rjre4ri63+9+m9S/Y9Pze8b0cK1fEIIvBFJ1NMVv+sq17HpztqtxSHi0z6d?=
- =?us-ascii?Q?wwSL1Prj53Zt/Rrf6cqnHtnYTfPYfwXBtF1gbbmrSHcxAiRPGSf6NgdkJU7b?=
- =?us-ascii?Q?mrqtDfYuX/JXKo1YKYIqRBNmBtgqiilywMYOpZBrZP2J52S10tP9mGFEVMaR?=
- =?us-ascii?Q?EYBDS+OR8b2arcAHpEwsNMCTA03lbqWgmtv3t7059JRUF0QSMP8WySdGMzIl?=
- =?us-ascii?Q?XxBTTIEkpTuZSUQd4xlBoBLM4WZCwRbrUXtDs7+01sPKoBX8RAwXqJPx6OG9?=
- =?us-ascii?Q?Zw1QZgCOwR08yojUj2Zlz+k5CHcA3plq3Sa/2KZpJ/lYuztoXwyxpy9KRYXh?=
- =?us-ascii?Q?RrDPYXht+55utMN+2lBEcm7geGO9GX/aog9Ks3NoV9+wCnDI3VQvMPuY9KmH?=
- =?us-ascii?Q?rvKJse8eqBJ0T72XwRHj31zz2+GxkolI3jPnInsp8XMHQ4QNKHYpurc2sdzI?=
- =?us-ascii?Q?lnG0Bjj4Y5zbnXP0edHV/+RFa19Wv3qkJQ1LaPSRxsapX0wfnob20Ga9rDbt?=
- =?us-ascii?Q?p15MkRUCN/CIOOfNFaxPE1taWl7Mp6Lc4ovd0HxbCKgeMe5lT6mvs3qcGOnp?=
- =?us-ascii?Q?TSr+6UyAE8VlqOr4n5d2oQdb?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?huuQ6SdUsAqxGZ/tLhcYGCr1UiqVfufrE6nSwFH2zljamonAWCqoVDYjMhd4?=
- =?us-ascii?Q?Ss37U9OLKQ54qwKmJf1NuSOzA1PeWjiSj4Ew0KS/mM/8LIX+wkzgEsNAOJW3?=
- =?us-ascii?Q?5eoNpD5+QqotpQB0de3Mdp6RE4XZOy3QFD+sUrrvxOWMCLtMGdnfi0k/GHdW?=
- =?us-ascii?Q?c5kTWBkiixdtsn2wyy7lpSOoponm+N0UKRHwLTBwQ87SbV9BXXtYU7nF0R77?=
- =?us-ascii?Q?Pp/5yl/T78wdYWC2WzMAs798R6HtSJcQWdvbbGhQl3VYm0slL7myL6ZR5WYy?=
- =?us-ascii?Q?WoFyGMRJV2zZ37TUIhtEXlJSOCrJGQ3KqrRN3tdOoJPLfG4rADH8Vj6HHqmP?=
- =?us-ascii?Q?GOe/Mfxfxf+4DHEk2YNJKJuhR1Mfq3/Umh3RLj815WnY2H7m01sop7FpZJbG?=
- =?us-ascii?Q?oBF0X6clXCdFBozQ+Dtpus0XcnrKr3up1yUX7BOn8HwV5SAhbpFSxUtaBnEf?=
- =?us-ascii?Q?CRUsmiJJifVDtFfXSpa/ZMUumgjyi0aYCQ0kmC9wvK/14t1mpGuE+TbX8LSF?=
- =?us-ascii?Q?nqQlqJy79TjtbJonGGs8VvHUHEAJvK4AO7MRXn9vw/HfILo3xLz9x7S0DUIJ?=
- =?us-ascii?Q?Pb9bDT0Hdlt9W4I1DaPzsDPw1gsK8Q6Csd7i/Juq3qR0vzCCWYSpqCou2OMl?=
- =?us-ascii?Q?Hb/3nkAovL1hZgzsqc9VgK4vfYBB33wNSVV8VXn2YPbmE7IJzMfr9P+nfwkN?=
- =?us-ascii?Q?wA1Z5A8OPaEgQb/Fg2bTw2lE0/boDb8rmayQUBAKaRPL8ZLLLGc4U8lNfq6v?=
- =?us-ascii?Q?OrdtGHI78CM03vNDeUcCi9Y0fEjJQsN6BUxWqE5nk8/z4CXlBJi6aMopurzB?=
- =?us-ascii?Q?w5LuoRPdZX7Crxb91+0Gpw/iByd0vfBZecBsbhJvgjL/IXJsq7BzoNzQOvqq?=
- =?us-ascii?Q?AOfNkYETWx9BgFbK9SoCoM3aRv2tL7Tsx3AhYiGonJ4VgM70Wr0UVDebUPYq?=
- =?us-ascii?Q?yg+W2j3lS91fkKtXTjrWATJMQ6Hzx2Z8jHWf0NgfKOdNi5gcu8Vc3Erps4NX?=
- =?us-ascii?Q?gI+PVqPUYwiEPqcZ5lDYmwZcHGeGDApiDVFWzsBpMwxTgXmwX0DWEJ5/Ja8i?=
- =?us-ascii?Q?2U7c31iPbc0KwTHSUPHsFInxR+ci2XmmBkoS85/5qHwfxNtcj9qsO+7sxtCw?=
- =?us-ascii?Q?z3eyOe16nkoa7En1hEl6bZVegoE6oTrdAufteTqkdTET2n/NJWMA9i41W4k4?=
- =?us-ascii?Q?X5wxOOY36yVsDq379I6Ba9gX/6qrsBQ51C12Au/vEICVUU27tCwlB03pmCNJ?=
- =?us-ascii?Q?0sTYAQ0apencpsHhbQ1FQs+7EWKYGnK3mTcdCfyvdGZJaWbl1+CZYnpKRWQ5?=
- =?us-ascii?Q?KrUCOHDBWpNOklC12lIn/NblM+cU6XC9BV5x7LGzAyU/aznFZFWuSYOlLctB?=
- =?us-ascii?Q?/6vlyRqHzJ97ew6lypRbbGjKrP4m1aEP0Ac5LI9sVbKqm37hMDQbNqSVaBvR?=
- =?us-ascii?Q?TDNBHKiy0SgTBug18oLsppwoVgFQBmQnPfbFsM8wNzflOPpIuXI7fmlXjE7b?=
- =?us-ascii?Q?pWiY74pCq4HxES/U+ML0g2F8sFSw64VebPWCRufz3EwMMc2k3/PbBOrFU0TD?=
- =?us-ascii?Q?W0DJOGDXlK3yLbFkk5FKAWaHuj6OYZT/YWvjjhEz?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 895ed979-3bd1-4d2c-b7ec-08dcfdacf459
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 15:17:25.7021
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QiwZ60qun9lV8HEwA6A0fyKc5ebDKqVzdDVlq3jbSJNnuYZsO7KT95xRHKuY8vff5vQmWzOIVSa+K5mdwGVbqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6183
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
 
-Huang Ying wrote:
-> According to the description of the "Window Restrictions" field of
-> "CFMWS Structure" in the CXL spec v3.1 section 9.18.1.3: CXL Fixed
-> Memory Window Structure (CFMWS), the bit 0 of "Window Restrictions" is
-> formerly known as "CXL Type 2 Memory" and renamed to "Device
-> Coherent", while the bit 1 is formerly known as "CXL Type 3 Memory"
-> and renamed to "Host-only Coherent".  Because type 3 memory can only
-> be host-only coherent before, while it can be host-only coherent or
-> device coherent with "Back-Invalidate" now.
+On Sun, Nov 03, 2024 at 05:03:34PM +0000, Thomas Weißschuh wrote:
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
 > 
-> To avoid confusion about type 2/3 memory and device/host-only coherent
-> in Linux kernel, the patch renames corresponding bit definition from
-> ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3 to
-> ACPI_CEDT_CFMWS_RESTRICT_DEVMEM/HOSTONLYMEM.  This makes the kernel
-> code consistent with the spec too.
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
 > 
-> The patch also renames the corresponding cxl_decoder flags
-> CXL_DECODER_F_TYPE2/TYPE3 to CXL_DECODER_F_DEVMEM/HOSTONLYMEM.
-> 
-> No functionality change is expected.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
+
+> ---
+>  drivers/cxl/port.c                      |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>  drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>  drivers/mtd/spi-nor/sysfs.c             |  2 +-
+>  drivers/nvmem/core.c                    |  3 ++-
+>  drivers/pci/pci-sysfs.c                 |  2 +-
+>  drivers/pci/vpd.c                       |  2 +-
+>  drivers/platform/x86/amd/hsmp.c         |  2 +-
+>  drivers/platform/x86/intel/sdsi.c       |  2 +-
+>  drivers/scsi/scsi_sysfs.c               |  2 +-
+>  drivers/usb/core/sysfs.c                |  2 +-
+>  include/linux/sysfs.h                   | 30 +++++++++++++++---------------
+>  12 files changed, 27 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 9dc394295e1fcd1610813837b2f515b66995eb25..24041cf85cfbe6c54c467ac325e48c775562b938 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -173,7 +173,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>  static BIN_ATTR_ADMIN_RO(CDAT, 0);
+>  
+>  static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int i)
+> +					    const struct bin_attribute *attr, int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct cxl_port *port = to_cxl_port(dev);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> index 0b28b2cf1517d130da01989df70b9dff6433edc4..c1c329eb920b52af100a93bdf00df450e25608c4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> @@ -3999,7 +3999,7 @@ static umode_t amdgpu_flash_attr_is_visible(struct kobject *kobj, struct attribu
+>  }
+>  
+>  static umode_t amdgpu_bin_flash_attr_is_visible(struct kobject *kobj,
+> -						struct bin_attribute *attr,
+> +						const struct bin_attribute *attr,
+>  						int idx)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+> diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+> index 53ec7510e4ebfb144e79884ca7dd7d0c873bd8a7..ba2cd68b53e6c240f1afc65c64012c75ccf488e0 100644
+> --- a/drivers/infiniband/hw/qib/qib_sysfs.c
+> +++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+> @@ -283,7 +283,7 @@ static struct bin_attribute *port_ccmgta_attributes[] = {
+>  };
+>  
+>  static umode_t qib_ccmgta_is_bin_visible(struct kobject *kobj,
+> -				 struct bin_attribute *attr, int n)
+> +				 const struct bin_attribute *attr, int n)
+>  {
+>  	struct qib_pportdata *ppd = qib_get_pportdata_kobj(kobj);
+>  
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 96064e4babf01f6950c81586764386e7671cbf97..5e9eb268073d18e0a46089000f18a3200b4bf13d 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -87,7 +87,7 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject *kobj,
+>  }
+>  
+>  static umode_t spi_nor_sysfs_is_bin_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int n)
+> +					    const struct bin_attribute *attr, int n)
+>  {
+>  	struct spi_device *spi = to_spi_device(kobj_to_dev(kobj));
+>  	struct spi_mem *spimem = spi_get_drvdata(spi);
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 63370c76394ee9b8d514da074779617cef67c311..73e44d724f90f4cd8fe8cafb9fa0c0fb23078e61 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -298,7 +298,8 @@ static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
+>  }
+>  
+>  static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+> -					 struct bin_attribute *attr, int i)
+> +					 const struct bin_attribute *attr,
+> +					 int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct nvmem_device *nvmem = to_nvmem_device(dev);
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 040f01b2b999175e8d98b05851edc078bbabbe0d..13912940ed2bb66c0086e5bea9a3cb6417ac14dd 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1326,7 +1326,7 @@ static struct bin_attribute *pci_dev_rom_attrs[] = {
+>  };
+>  
+>  static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
+> -					   struct bin_attribute *a, int n)
+> +					   const struct bin_attribute *a, int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>  
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index e4300f5f304f3ca55a657fd25a1fa5ed919737a7..a469bcbc0da7f7677485c7f999f8dfb58b8ae8a3 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -325,7 +325,7 @@ static struct bin_attribute *vpd_attrs[] = {
+>  };
+>  
+>  static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> -				   struct bin_attribute *a, int n)
+> +				   const struct bin_attribute *a, int n)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>  
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 8fcf38eed7f00ee01aade6e3e55e20402458d5aa..8f00850c139fa8d419bc1c140c1832bf84b2c3bd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -620,7 +620,7 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>  }
+>  
+>  static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> -					 struct bin_attribute *battr, int id)
+> +					 const struct bin_attribute *battr, int id)
+>  {
+>  	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>  		return battr->attr.mode;
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 9d137621f0e6e7a23be0e0bbc6175c51c403169f..33f33b1070fdc949c1373251c3bca4234d9da119 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -541,7 +541,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
+>  };
+>  
+>  static umode_t
+> -sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
+> +sdsi_battr_is_visible(struct kobject *kobj, const struct bin_attribute *attr, int n)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct sdsi_priv *priv = dev_get_drvdata(dev);
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index 32f94db6d6bf5d2bd289c1a121da7ffc6a7cb2ff..f3a1ecb42128a2b221ca5c362e041eb59dba0f20 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -1274,7 +1274,7 @@ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+>  }
+>  
+>  static umode_t scsi_sdev_bin_attr_is_visible(struct kobject *kobj,
+> -					     struct bin_attribute *attr, int i)
+> +					     const struct bin_attribute *attr, int i)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct scsi_device *sdev = to_scsi_device(dev);
+> diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+> index 61b6d978892c799e213018bed22d9fb12a19d429..b4cba23831acd2d7d395b9f7683cd3ee3a8623c8 100644
+> --- a/drivers/usb/core/sysfs.c
+> +++ b/drivers/usb/core/sysfs.c
+> @@ -925,7 +925,7 @@ static struct bin_attribute *dev_bin_attrs[] = {
+>  };
+>  
+>  static umode_t dev_bin_attrs_are_visible(struct kobject *kobj,
+> -		struct bin_attribute *a, int n)
+> +		const struct bin_attribute *a, int n)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct usb_device *udev = to_usb_device(dev);
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 4746cccb95898b24df6f53de9421ea7649b5568f..d1b22d56198b55ee39fe4c4fc994f5b753641992 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -101,7 +101,7 @@ struct attribute_group {
+>  	umode_t			(*is_visible)(struct kobject *,
+>  					      struct attribute *, int);
+>  	umode_t			(*is_bin_visible)(struct kobject *,
+> -						  struct bin_attribute *, int);
+> +						  const struct bin_attribute *, int);
+>  	size_t			(*bin_size)(struct kobject *,
+>  					    const struct bin_attribute *,
+>  					    int);
+> @@ -199,22 +199,22 @@ struct attribute_group {
+>   * attributes, the group visibility is determined by the function
+>   * specified to is_visible() not is_bin_visible()
+>   */
+> -#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                             \
+> -	static inline umode_t sysfs_group_visible_##name(                \
+> -		struct kobject *kobj, struct bin_attribute *attr, int n) \
+> -	{                                                                \
+> -		if (n == 0 && !name##_group_visible(kobj))               \
+> -			return SYSFS_GROUP_INVISIBLE;                    \
+> -		return name##_attr_visible(kobj, attr, n);               \
+> +#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                                   \
+> +	static inline umode_t sysfs_group_visible_##name(                      \
+> +		struct kobject *kobj, const struct bin_attribute *attr, int n) \
+> +	{                                                                      \
+> +		if (n == 0 && !name##_group_visible(kobj))                     \
+> +			return SYSFS_GROUP_INVISIBLE;                          \
+> +		return name##_attr_visible(kobj, attr, n);                     \
+>  	}
+>  
+> -#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                   \
+> -	static inline umode_t sysfs_group_visible_##name(             \
+> -		struct kobject *kobj, struct bin_attribute *a, int n) \
+> -	{                                                             \
+> -		if (n == 0 && !name##_group_visible(kobj))            \
+> -			return SYSFS_GROUP_INVISIBLE;                 \
+> -		return a->mode;                                       \
+> +#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                         \
+> +	static inline umode_t sysfs_group_visible_##name(                   \
+> +		struct kobject *kobj, const struct bin_attribute *a, int n) \
+> +	{                                                                   \
+> +		if (n == 0 && !name##_group_visible(kobj))                  \
+> +			return SYSFS_GROUP_INVISIBLE;                       \
+> +		return a->mode;                                             \
+>  	}
+>  
+>  #define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
+> 
+> -- 
+> 2.47.0
+> 
