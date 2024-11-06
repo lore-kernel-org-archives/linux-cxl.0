@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6A21991DD;
-	Wed,  6 Nov 2024 02:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF07B18F2C1;
+	Wed,  6 Nov 2024 02:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730858975; cv=none; b=FN3opRGh5pkvmKp2wIjBGRJyNxFpyetEycooV7eqbquHKYlUsFcv2we2S0+0ePOqZRjqeIFdhzjz2oJfqUdc6X6iB8Hc556U+RZ1Eu00U0aPtTNXeNfbXTf++DRWvL9GDEQKGMFpqFWipT4cid8d47g593MDPPZm5sMdeFrCGcs=
+	t=1730859037; cv=none; b=WR3KkhdR8jxiULVGoqz3QW+aziT0eMZSXtD0OLTSf85qiMIHgtQBHC4+TynkEeRnaKRp8gCu3dctniXWfA0Hl3QO0Bt9/dMnZpbqCiLYXy9wP/jCTJ2OsWoX3MnZFMv43h0Sao07fk4p9eZkbXKs24DmWQTQ/WGJgR8gtHaHmfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730858975; c=relaxed/simple;
-	bh=VwRkToClopDoC3qQkobNq7Bo7X0ROJRnsg+iQK1qmsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NJBM4YMFfV21mXdsh+IZVpcvHU3bcu0RKZW0yVD3CIXNjO5wPJc5eYYhTyUK7Skx31zyviB8mWuO1LMOpW9cRC7X9F0BRB3jut0ShjSRSgEWmJiY8FqNt0Q9Wv6jQl8zGWQXFpTT7mLagn1elYOKmy9rar1HsZUx5QA4obE7wm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Su/gNFFg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730859037; c=relaxed/simple;
+	bh=64rxGGHOzJlUyvWRWPZyt2BQTMQWnxD9Wzt/FVelKs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZXp4LbX+82tt2YGaHUc6yUIz8Ls/02mAWsLiTs9XwFI0T9u9rVUsobL9OPfLPr76FwTBbaELtuiPzTSwo7wEwmAjBNA52k99vJhxgm8eScFJHDBZvmqpTrv9DtSKwVeYXPHj4iVBqlx7cZ/f2xFX2ibtSqaRxn53k9fFlL0/xzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Px42WH8Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Su/gNFFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6864DC4CECF;
-	Wed,  6 Nov 2024 02:09:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Px42WH8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE558C4CECF;
+	Wed,  6 Nov 2024 02:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730858975;
-	bh=VwRkToClopDoC3qQkobNq7Bo7X0ROJRnsg+iQK1qmsI=;
+	s=k20201202; t=1730859037;
+	bh=64rxGGHOzJlUyvWRWPZyt2BQTMQWnxD9Wzt/FVelKs8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Su/gNFFgs1tLTcmCpuQtd6WE01txDb34SBZYki1KaJP6qr1DUB5QRrOkEg+PkDbD7
-	 TO34OlW5eEMQiAgpn1PxWFDMJtBnB++IkVp7tkanon04ZLzYX0/qFsMzLYlmalfC6C
-	 1Hp32n9MzY+tvQRbCVD0mCqOY466f0AAiUsOUrL9xOt+26gEtHLHxbjn9Oz+yhExkr
-	 f6VdbtRotfOt5hQ6cfxTU3NXdepN2kO7uUhoXuI7KMdb+xuY/Fu4mAyqZrI48U/lA3
-	 g3zs9cukyFwWIH2248D6mKKJ6E73RaZIwwc8yq8K+S9/LhV3bC/wOpyEz5d1lrIrbk
-	 q0hYMl3Is1FIw==
+	b=Px42WH8ZPWiZ2bmZUf/drxOOiv+poAtDxe9TczArmZotR9JmwdJGxzXhfzKTQqsEe
+	 KVd2RlY4yRXYwN9/d8/jex0kuVkyYTgB8aBKTSbw+HfRwB7fman65IILMLYn4so45r
+	 UCaFnd++nG7cBW82HvNtfGzR538I5p90s+pGeSAnwtefMefEXZcJ5l+bJNw+YluhQQ
+	 D+ErFu5G9tBMQTkX0nlhXEGg+XxHT78oHj2RT7zfbtSceWqYKfW/0aF88n0DkaOAE0
+	 256RZps5WVlX8Q1768fMU8DNmd1wM7a5ZJgD8DMpGdb9TagL4wlWLk0naN7bnig5Z5
+	 Tr+Ln14M9GvIw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	dan.j.williams@intel.com
@@ -39,9 +39,9 @@ Cc: Gregory Price <gourry@gourry.net>,
 	Alejandro Lucero <alucerop@amd.com>,
 	linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "cxl/port: Fix CXL port initialization order when the subsystem is built-in" failed to apply to v6.6-stable tree
-Date: Tue,  5 Nov 2024 21:09:30 -0500
-Message-ID: <20241106020931.165802-1-sashal@kernel.org>
+Subject: FAILED: Patch "cxl/port: Fix CXL port initialization order when the subsystem is built-in" failed to apply to v6.1-stable tree
+Date: Tue,  5 Nov 2024 21:10:33 -0500
+Message-ID: <20241106021034.181613-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -53,7 +53,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the v6.6-stable tree.
+The patch below does not apply to the v6.1-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
