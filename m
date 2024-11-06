@@ -1,137 +1,205 @@
-Received: from isrv.corpit.ru (isrv.corpit.ru [86.62.121.231])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BEB1DF992
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Nov 2024 12:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.62.121.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FD21D2784
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Nov 2024 12:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730895847; cv=none; b=mgOUQXGV0RJQD1blpuF5Moac2CMCCS3nBz9g2kyVmBxkm8LqZJ0wkMrD8cfiS8Lxl7KKi9bl27XF+V02AdYMBadVYXFRPbNh+Z3fA/3XOLWwIfPsyqWBbn/zQuGM8mwyUUwwjojGpQ8SdP0s0mB2eXEHfR6sGYMmVTGc9V54Xcc=
+	t=1730896036; cv=none; b=LlXGcyPhBJRgiP+LhpOJdWBgz204H51Zhu5NwtliXj9aWAhoxDdwdr7E35jujjBO8VZnhie2w0HB6ZiPxqrb/pSB2M8X1t/75/L7VDVHioMH2SjSi0V4fZbVDa2igNeKDO5xJDa2Ub8WzHtDXdcaXTQaiEFq7BQ+Zd/DhS9Njyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730895847; c=relaxed/simple;
-	bh=j08prGzgKompsNZ4K5JQFTa3yusNaz53iwId2fDioEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d8VvTpD/YGlhEyLdOxvpZ31tD53UWSJshVkOn2wdBYRga1i8M7Z6rL3BmhqT5cq+HiuHGiSBpeRTFRTrCj/Q/tDB12OnKr0u3zxJ8fgaRHvRxKHfnBKcU1lzfckRnmKgm32HmURj44raCs8CvTxNvreNS+1GD1qE8YjPMJ84vv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru; spf=pass smtp.mailfrom=tls.msk.ru; arc=none smtp.client-ip=86.62.121.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tls.msk.ru
-Received: from tsrv.corpit.ru (tsrv.tls.msk.ru [192.168.177.2])
-	by isrv.corpit.ru (Postfix) with ESMTP id 86642A0407;
-	Wed,  6 Nov 2024 15:16:30 +0300 (MSK)
-Received: from [192.168.177.130] (mjt.wg.tls.msk.ru [192.168.177.130])
-	by tsrv.corpit.ru (Postfix) with ESMTP id D24851658A3;
-	Wed,  6 Nov 2024 15:17:20 +0300 (MSK)
-Message-ID: <88755100-7629-4207-80d7-6a7f8f7f0403@tls.msk.ru>
-Date: Wed, 6 Nov 2024 15:17:20 +0300
+	s=arc-20240116; t=1730896036; c=relaxed/simple;
+	bh=OpOMP0t5jMWyRlsKShIWDlKzfRV8zYBuEL2xGGy/2bM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UmCFofyn7i/D0WPpX3KDCyvXbPWFzqFlrnlH5sCoS09r1N2hxAC3A8R6KR4K0cXs6eD2CK5meOCnlCk2UjeBLNi2Tqhz/nQz3bvJ/E8knxFnKTyYsSo3vt+oqqi6dcT4r6Na4shlPnaZC8vS03/TkMms72ZxFwdbZQMta1q5S5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xk4DD13bWz6JBGf;
+	Wed,  6 Nov 2024 20:25:32 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 62C9D140B2F;
+	Wed,  6 Nov 2024 20:27:09 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 6 Nov
+ 2024 13:27:08 +0100
+Date: Wed, 6 Nov 2024 12:27:07 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+CC: <imammedo@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <linuxarm@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <marcel.apfelbaum@gmail.com>,
+	<philmd@linaro.org>, Richard Henderson <richard.henderson@linaro.org>, Dave
+ Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, <eduardo@habkost.net>, Michael Roth
+	<michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>
+Subject: Re: [PATCH v6 14/15] bios-tables-test: Add complex SRAT / HMAT test
+ for GI GP
+Message-ID: <20241106122707.00007552@Huawei.com>
+In-Reply-To: <20241104110025-mutt-send-email-mst@kernel.org>
+References: <20240916171017.1841767-1-Jonathan.Cameron@huawei.com>
+	<20240916174449.1843258-1-Jonathan.Cameron@huawei.com>
+	<20241104110025-mutt-send-email-mst@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/15] hw/acpi: Fix ordering of BDF in Generic
- Initiator PCI Device Handle.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, imammedo@redhat.com,
- mst@redhat.com, Markus Armbruster <armbru@redhat.com>,
- qemu-devel@nongnu.org, ankita@nvidia.com
-Cc: linuxarm@huawei.com, linux-cxl@vger.kernel.org,
- marcel.apfelbaum@gmail.com, philmd@linaro.org,
- Richard Henderson <richard.henderson@linaro.org>,
- Dave Jiang <dave.jiang@intel.com>, Huang Ying <ying.huang@intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, eduardo@habkost.net,
- Michael Roth <michael.roth@amd.com>, Ani Sinha <anisinha@redhat.com>,
- qemu-stable <qemu-stable@nongnu.org>
-References: <20240916171017.1841767-1-Jonathan.Cameron@huawei.com>
- <20240916171017.1841767-2-Jonathan.Cameron@huawei.com>
-Content-Language: en-US, ru-RU
-From: Michael Tokarev <mjt@tls.msk.ru>
-Autocrypt: addr=mjt@tls.msk.ru; keydata=
- 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
-In-Reply-To: <20240916171017.1841767-2-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-16.09.2024 20:10, Jonathan Cameron via wrote:
-> The ordering in ACPI specification [1] has bus number in the lowest byte.
-> As ACPI tables are little endian this is the reverse of the ordering
-> used by PCI_BUILD_BDF().  As a minimal fix split the QEMU BDF up
-> into bus and devfn and write them as single bytes in the correct
-> order.
+On Mon, 4 Nov 2024 11:00:59 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
+
+> On Mon, Sep 16, 2024 at 06:44:49PM +0100, Jonathan Cameron wrote:
+> > Add a test with 6 nodes to exercise most interesting corner cases of SRAT
+> > and HMAT generation including the new Generic Initiator and Generic Port
+> > Affinity structures.  More details of the set up in the following patch
+> > adding the table data.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
 > 
-> [1] ACPI Spec 6.3, Table 5.80
+Was traveling for last few days, sorry for delay!
 > 
-> Fixes: 0a5b5acdf2d8 ("hw/acpi: Implement the SRAT GI affinity structure")
-> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
-> Tested-by: "Huang, Ying" <ying.huang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-I'm picking this up for stable-9.0 and stable-9.1 series.
-Please let me know if I shouldn't.
-
-Please don't forget to Cc: qemu-stable@ for other changes which
-are relevant for qemu stable series - this is what happens them
-possible.
-
-Thanks,
-
-/mjt
-
->   hw/acpi/acpi_generic_initiator.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> I could not yet figure out why, but it fails on i686 (32 bit):
 > 
-> diff --git a/hw/acpi/acpi_generic_initiator.c b/hw/acpi/acpi_generic_initiator.c
-> index 17b9a052f5..3d2b567999 100644
-> --- a/hw/acpi/acpi_generic_initiator.c
-> +++ b/hw/acpi/acpi_generic_initiator.c
-> @@ -92,7 +92,8 @@ build_srat_generic_pci_initiator_affinity(GArray *table_data, int node,
->   
->       /* Device Handle - PCI */
->       build_append_int_noprefix(table_data, handle->segment, 2);
-> -    build_append_int_noprefix(table_data, handle->bdf, 2);
-> +    build_append_int_noprefix(table_data, PCI_BUS_NUM(handle->bdf), 1);
-> +    build_append_int_noprefix(table_data, PCI_BDF_TO_DEVFN(handle->bdf), 1);
->       for (index = 0; index < 12; index++) {
->           build_append_int_noprefix(table_data, 0, 1);
->       }
+> https://gitlab.com/mstredhat/qemu/-/jobs/8262608614
+> 
+> any idea?
+
+Nothing immediately comes to mind. 
+I'll see what I can figure out from the generated binaries. 
+
+Jonathan
+
+> 
+> > ---
+> >  tests/qtest/bios-tables-test.c | 97 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 97 insertions(+)
+> > 
+> > diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
+> > index 36e5c0adde..f568c4a21c 100644
+> > --- a/tests/qtest/bios-tables-test.c
+> > +++ b/tests/qtest/bios-tables-test.c
+> > @@ -1910,6 +1910,101 @@ static void test_acpi_q35_tcg_acpi_hmat_noinitiator(void)
+> >      free_test_data(&data);
+> >  }
+> >  
+> > +/* Test intended to hit corner cases of SRAT and HMAT */
+> > +static void test_acpi_q35_tcg_acpi_hmat_generic_x(void)
+> > +{
+> > +    test_data data = {};
+> > +
+> > +    data.machine = MACHINE_Q35;
+> > +    data.arch    = "x86";
+> > +    data.variant = ".acpihmat-generic-x";
+> > +    test_acpi_one(" -machine hmat=on,cxl=on"
+> > +                  " -smp 3,sockets=3"
+> > +                  " -m 128M,maxmem=384M,slots=2"
+> > +                  " -device pcie-root-port,chassis=1,id=pci.1"
+> > +                  " -device pci-testdev,bus=pci.1,"
+> > +                  "multifunction=on,addr=00.0"
+> > +                  " -device pci-testdev,bus=pci.1,addr=00.1"
+> > +                  " -device pci-testdev,bus=pci.1,id=gidev,addr=00.2"
+> > +                  " -device pxb-cxl,bus_nr=64,bus=pcie.0,id=cxl.1"
+> > +                  " -object memory-backend-ram,size=64M,id=ram0"
+> > +                  " -object memory-backend-ram,size=64M,id=ram1"
+> > +                  " -numa node,nodeid=0,cpus=0,memdev=ram0"
+> > +                  " -numa node,nodeid=1"
+> > +                  " -object acpi-generic-initiator,id=gi0,pci-dev=gidev,node=1"
+> > +                  " -numa node,nodeid=2"
+> > +                  " -object acpi-generic-port,id=gp0,pci-bus=cxl.1,node=2"
+> > +                  " -numa node,nodeid=3,cpus=1"
+> > +                  " -numa node,nodeid=4,memdev=ram1"
+> > +                  " -numa node,nodeid=5,cpus=2"
+> > +                  " -numa hmat-lb,initiator=0,target=0,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=10"
+> > +                  " -numa hmat-lb,initiator=0,target=0,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=800M"
+> > +                  " -numa hmat-lb,initiator=0,target=2,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=100"
+> > +                  " -numa hmat-lb,initiator=0,target=2,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=0,target=4,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=100"
+> > +                  " -numa hmat-lb,initiator=0,target=4,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=0,target=5,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=200"
+> > +                  " -numa hmat-lb,initiator=0,target=5,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > +                  " -numa hmat-lb,initiator=1,target=0,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=500"
+> > +                  " -numa hmat-lb,initiator=1,target=0,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=100M"
+> > +                  " -numa hmat-lb,initiator=1,target=2,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=50"
+> > +                  " -numa hmat-lb,initiator=1,target=2,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > +                  " -numa hmat-lb,initiator=1,target=4,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=50"
+> > +                  " -numa hmat-lb,initiator=1,target=4,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=800M"
+> > +                  " -numa hmat-lb,initiator=1,target=5,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=500"
+> > +                  " -numa hmat-lb,initiator=1,target=5,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=100M"
+> > +                  " -numa hmat-lb,initiator=3,target=0,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=20"
+> > +                  " -numa hmat-lb,initiator=3,target=0,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > +                  " -numa hmat-lb,initiator=3,target=2,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=80"
+> > +                  " -numa hmat-lb,initiator=3,target=2,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=3,target=4,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=80"
+> > +                  " -numa hmat-lb,initiator=3,target=4,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=3,target=5,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=20"
+> > +                  " -numa hmat-lb,initiator=3,target=5,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > +                  " -numa hmat-lb,initiator=5,target=0,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=20"
+> > +                  " -numa hmat-lb,initiator=5,target=0,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > +                  " -numa hmat-lb,initiator=5,target=2,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=80"
+> > +                  " -numa hmat-lb,initiator=5,target=4,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=5,target=4,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=80"
+> > +                  " -numa hmat-lb,initiator=5,target=2,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > +                  " -numa hmat-lb,initiator=5,target=5,hierarchy=memory,"
+> > +                  "data-type=access-latency,latency=10"
+> > +                  " -numa hmat-lb,initiator=5,target=5,hierarchy=memory,"
+> > +                  "data-type=access-bandwidth,bandwidth=800M",
+> > +                  &data);
+> > +    free_test_data(&data);
+> > +}
+> > +
+> >  #ifdef CONFIG_POSIX
+> >  static void test_acpi_erst(const char *machine, const char *arch)
+> >  {
+> > @@ -2388,6 +2483,8 @@ int main(int argc, char *argv[])
+> >              qtest_add_func("acpi/q35/nohpet", test_acpi_q35_tcg_nohpet);
+> >              qtest_add_func("acpi/q35/acpihmat-noinitiator",
+> >                             test_acpi_q35_tcg_acpi_hmat_noinitiator);
+> > +            qtest_add_func("acpi/q35/acpihmat-genericx",
+> > +                           test_acpi_q35_tcg_acpi_hmat_generic_x);
+> >  
+> >              /* i386 does not support memory hotplug */
+> >              if (strcmp(arch, "i386")) {
+> > -- 
+> > 2.43.0  
+> 
+> 
 
