@@ -1,138 +1,133 @@
-Received: from isrv.corpit.ru (isrv.corpit.ru [86.62.121.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B321BDAA2
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Nov 2024 19:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=86.62.121.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B2F209F38;
+	Wed,  6 Nov 2024 20:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730923064; cv=none; b=T9QjnMdGFE6haRGC0fM+Gw4LdZiBJBKFI9TA8Wt9GOcE8roFP2DHrvJhCnI2LXWCfjEj+dUBWZUhsz6EXAMYSyBHGHsOBBBsULblAP830zWeL9K5Jys3NxVjhCMSwWD9E2gc4vY3IVva2TD0jyfpJx8W11bjAacEZnMRouomoCw=
+	t=1730923519; cv=none; b=WPfdJQzs+bGYcw4DrPKVHv0CJHJekHF4ejGtyQvxYmKFRBDYFs1bM/H2yJi+amwdh1g0Copmf/VBH/TwxHd5JBfObn5Yl2b4mesOWgnceP3qj0vkTF44D0u03EAynGF1RnldNtsPpevjZZbIssfj8hLnO5az3eadUI7wqiRjZWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730923064; c=relaxed/simple;
-	bh=vZwwDtNcu9KEG7dIvrVC0xSwqeM4rau/bLveW3DULUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HO4Trf+edu6tdHuJ/7JmrgCbY3Mc7hEErUzhC1cPtQBzUuYUf1JfOzDRO9DucYIh8P9PpLqrR+d/i4ZlL+Z7MNU5EURo+ew2UVlts0Sf3OJuAfd3fVjeYObvwCs94MJDyI58PDs93jCSurHiSUWAAB8phIOWT89/1Ilfkaqi7x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru; spf=pass smtp.mailfrom=tls.msk.ru; arc=none smtp.client-ip=86.62.121.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tls.msk.ru
-Received: from tsrv.corpit.ru (tsrv.tls.msk.ru [192.168.177.2])
-	by isrv.corpit.ru (Postfix) with ESMTP id 88779A063A;
-	Wed,  6 Nov 2024 22:56:34 +0300 (MSK)
-Received: from [192.168.177.130] (mjt.wg.tls.msk.ru [192.168.177.130])
-	by tsrv.corpit.ru (Postfix) with ESMTP id 5B6E5165E73;
-	Wed,  6 Nov 2024 22:57:25 +0300 (MSK)
-Message-ID: <722b0825-abe3-436a-ab6c-625e1b4a6ce6@tls.msk.ru>
-Date: Wed, 6 Nov 2024 22:57:25 +0300
+	s=arc-20240116; t=1730923519; c=relaxed/simple;
+	bh=EQyA/ww37V7yAawtBTPhDySHgSA0BwaQRKu2lAhQyPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNC5YuEtsXnctuBFhL5irfpmG4aU0PFZs1scf1DNmq5T1gZyiUZQs97ACDLywuaBbAPtP6u/k6lkd5i6WZflbK4PJ5AX2qkAhDvHXx6EikLT1RZ/IYGOG0gBQw2E5bvcEWOssYsue9DGU10dmZrT5aZDQgYxvi2kTxKCWWBM1oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2113da91b53so1654785ad.3;
+        Wed, 06 Nov 2024 12:05:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730923516; x=1731528316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=57haWgxVK3Bhz2CTFQJdY/J31Debho+HXpt9b6frcmw=;
+        b=qfQaU53HzKBFTrK0c6g7QuZTQZcv0eDF0o/puRxunjb5tSd1zbHdzDcE7hqEAO+UFp
+         PxZQgwfoN+0lyimRni4rZvwOWdp6xZuNJV3JCY+85JRh1/Heq9nyN0FK7m1RKdv0BvvV
+         GRM6WNNjBwOkDM9xbZ/Y8eXlD0YFBhio0OE10qmrKgu4Qx/8Hh6tMKyrKpOC/P1cwTtI
+         DWxdv45irbyihb3lhvqa8b5gCfiMgissLtxHPnA/mJYzB4y3m3xyBuQ9f1Yf2dOkEdjJ
+         22VXGDmGaQXZ56RcMDkBKuYhPzmG2AmBTqttjDylsmp5TscccQgb8H5CBvjZMvdOseiR
+         aO0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU0GDEsAiWFCEst9CSN9/DmbbxduKYZZk7rhqGFukbdKq1TCX7Gf0ouH6aW3xON+HbZzV6P+51AL4lggnM0@vger.kernel.org, AJvYcCU3bK/dnS61xtactLsUT/H8ceWq2QAY9X5ttnwMR6MLthbsACW1vMC5bvgp3WGjx88B8CXFEi7HHX3+VVdsc61bewfeXg==@vger.kernel.org, AJvYcCUTWrBxj8Vtryya959PAL1lt/E8WgcXQoXN9o2r5PLabJpHEjLKo4AKZZzsTyrgKqyOGtkOEaC5CuNS@vger.kernel.org, AJvYcCUmWVTlNwrWN6pKVgypvY5Q89csehOTfRkPaRI103wotpJsHYP8o9vWWOGFRqvOtl2TGsl2vq1UQEgx@vger.kernel.org, AJvYcCVKJ139WZ9zOvaUcuEOBoS/OYD3vxot8UDqchV+ZsU4YsFkYlHreuxaucdHC91NLD9S3G5MBMI3HcY70g==@vger.kernel.org, AJvYcCWyWpKjacsMLD2XKDtaRNGwD3uS1Hz3FH3g0415XD1NylBv+jHhxbx5QT//lndYw7nNo+5IF+Wb6W5cUg==@vger.kernel.org, AJvYcCX/RGyludkZbuL0ELUN5L/nMt5WQ+bUcX7Gul+KuIisNTSm5Bhnu7TjrBzmSryLkxNp3aDM/rTD1lEjKA==@vger.kernel.org, AJvYcCXBeghjvHd/iZVVl9GSUb00OGlFIfDYHghaZHijw/+7fQ/EL2PMww96L1scKGB78gCySbaZJ/hQ8bQr@vger.kernel.org, AJvYcCXb5VHrjkRtCQ6CNtuQ36/NhyfIrMJNGLQQs22D/PcpyNbCrFoVSldaiPopIw9TxsTMjES1j+zdq30JFlh+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk4xaEQeTM8S2Ack0oUZV412sLvANUkNCJ3VS5NDapaKXm7oZm
+	WNaTVw9e/07eEb3zVwkNkAtfpuIwf7OPDGUGJmOzY3KvcpoJeqhP
+X-Google-Smtp-Source: AGHT+IFmoIbZw8g1IipDn3Lp+ri/9C7OdJSPor3hPH1pRa7RYRF3y6lGuH/8ZaeEQ1eFo8eAFPaCWQ==
+X-Received: by 2002:a17:902:cecd:b0:20c:a97d:cc7f with SMTP id d9443c01a7336-210c6c3ec78mr567878865ad.41.1730923515866;
+        Wed, 06 Nov 2024 12:05:15 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057c076bsm99997795ad.197.2024.11.06.12.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 12:05:15 -0800 (PST)
+Date: Thu, 7 Nov 2024 05:05:13 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Frederic Barrat <fbarrat@linux.ibm.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] sysfs: introduce callback
+ attribute_group::bin_size
+Message-ID: <20241106200513.GB174958@rocinante>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+ <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] hw/cxl: Round up of fixes.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, mst@redhat.com,
- qemu-devel@nongnu.org
-Cc: Dmitry Frolov <frolov@swemel.ru>, Ajay Joshi <ajay.opensrc@micron.com>,
- Yao Xingtao <yaoxt.fnst@fujitsu.com>, Fan Ni <fan.ni@samsung.com>,
- Shiju Jose <shiju.jose@huawei.com>, linux-cxl@vger.kernel.org,
- linuxarm@huawei.com
-References: <20241014121902.2146424-1-Jonathan.Cameron@huawei.com>
-Content-Language: en-US, ru-RU
-From: Michael Tokarev <mjt@tls.msk.ru>
-Autocrypt: addr=mjt@tls.msk.ru; keydata=
- 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
-In-Reply-To: <20241014121902.2146424-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
 
-14.10.2024 15:18, Jonathan Cameron via wrote:
-> A mixed bag of fixes that have all been on the list already with the
-> exception of:
-> "hw/pci-bridge: Make pxb_dev_realize_common() return if it succeeded"
-> (so that's the one that needs more eyes).
-> 
-> I've tweaked the others to fix typos and correct Fixes tags (adding
-> them where missing and fixing formatting), but they are fundamentally
-> the same that has been reviewed on list.
-> 
-> Ajay Joshi (1):
->    hw/cxl: Fix background completion percentage calculation
-> 
-> Dmitry Frolov (1):
->    hw/cxl: Fix uint32 overflow cxl-mailbox-utils.c
-> 
-> Fan Ni (1):
->    hw/mem/cxl_type3: Fix More flag setting for dynamic capacity event
->      records
-> 
-> Jonathan Cameron (2):
->    hw/cxl: Fix indent of structure member
->    hw/pci-bridge: Make pxb_dev_realize_common() return if it succeeded
-> 
-> Shiju Jose (1):
->    hw/cxl/cxl-mailbox-utils: Fix for device DDR5 ECS control feature
->      tables
-> 
-> Yao Xingtao (1):
->    mem/cxl_type3: Fix overlapping region validation error
+Hello,
 
-Is anything in there for qemu-stable?
-
-Thanks,
-
-/mjt
-
->   include/hw/cxl/cxl_device.h         | 36 ++++++++++++++++++-----------
->   hw/cxl/cxl-mailbox-utils.c          | 31 +++++++++++--------------
->   hw/mem/cxl_type3.c                  | 15 +++++-------
->   hw/pci-bridge/pci_expander_bridge.c | 13 +++++++----
->   4 files changed, 49 insertions(+), 46 deletions(-)
+> Several drivers need to dynamically calculate the size of an binary
+> attribute. Currently this is done by assigning attr->size from the
+> is_bin_visible() callback.
 > 
+> This has drawbacks:
+> * It is not documented.
+> * A single attribute can be instantiated multiple times, overwriting the
+>   shared size field.
+> * It prevents the structure to be moved to read-only memory.
+> 
+> Introduce a new dedicated callback to calculate the size of the
+> attribute.
 
--- 
-GPG Key transition (from rsa2048 to rsa4096) since 2024-04-24.
-New key: rsa4096/61AD3D98ECDF2C8E  9D8B E14E 3F2A 9DD7 9199  28F1 61AD 3D98 ECDF 2C8E
-Old key: rsa2048/457CE0A0804465C5  6EE1 95D1 886E 8FFB 810D  4324 457C E0A0 8044 65C5
-Transition statement: http://www.corpit.ru/mjt/gpg-transition-2024.txt
+Would it be possible to have a helper that when run against a specific
+kobject reference, then it would refresh or re-run the size callbacks?
 
+We have an use case where we resize BARs on demand via sysfs, and currently
+the only way to update the size of each resource sysfs object is to remove
+and added them again, which is a bit crude, and can also be unsafe.
+
+Hence the question.
+
+There exist the sysfs_update_groups(), but the BAR resource sysfs objects
+are currently, at least not yet, added to any attribute group.
+
+Thank you!
+
+	Krzysztof
