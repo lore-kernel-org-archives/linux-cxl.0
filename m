@@ -1,123 +1,116 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FBA200B99
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 15:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C126029CF4;
+	Thu,  7 Nov 2024 15:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730993970; cv=none; b=clyp/ZSVlMkILEZmnbWTLUGudJTaUXvDiAZX0elXXcpJwOsgHUhslbehfFp8dsj7KEH9YAYp81PPZMPdjN+H+ugyBCiIfgZ2OVxHB3DmzAQ4AzivMGrIiGJJHdPe3CP1pW44GIZ8uOsCssDKe0oc8Is9W1qUdRk1xY2QBpsd3OU=
+	t=1730994649; cv=none; b=Epy+ZvsWI79y3rBmaWsJu6OwssRqOzfLsz18WFruSPUfGg5JnP68PK51MCzh5mz7RHuq9bAA0TUwWCcaiFQLsqc08DGn3vt3lwH5O3x1G8IFPljvKwKba6Bx5MK1CgyhZ4ttU/5wcJ4JiEEVvr81wJ3xajW6A+6nzilYkhUjerQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730993970; c=relaxed/simple;
-	bh=XjQoRgda8BqxE/xsIHhPObHA+b7oTgnKQts29S3NmbI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qzsVg8YaE2Mw4Gvs+n5OqllG4v4cSxrS2giqT3o+nlTfb0bGmgxgmB1N8PKZQUK0aCPEejAFrSGnaKgkNWlDa5vfHnfaOED08IGs23n7lbZGo/l/sfCL9vBu4CsURJleZFj1kU6CfcWADRxJaf9gdK8qY/quWhSsQq73B57P+Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XqsAxS1r; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XqsAxS1r"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ceca7df7f0so1274779a12.1
-        for <linux-cxl@vger.kernel.org>; Thu, 07 Nov 2024 07:39:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730993964; x=1731598764; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1ojgGMe04oTpXQ5H/CMjh7ambNOZIyTDE3vys0YK64=;
-        b=XqsAxS1rfCyW8Lu+X48Iwb4sznwbBEykddsv9WBjHAOqB4lZT+8ZKOJg90cqctbsUE
-         WEc1tdxv32bAai8EwryxfR61r2Se3f+FGnl1UtJ3DOqqUE+TXu4gs7yo7pckYgZKN2Oi
-         FR4r4bNqHCWF26epGL+hHfkPWk/VOk+nYM28rVkxU+eIZGoEI/NtJQETcxzIJH2dF0gv
-         MhVV9LdMBH7W/3gJ9/8ihf4S6G7uW3mc63BxFkUeHLOBCWAEAwqj1WUurNWe8BvhxS/J
-         niH1NkmBXwsizMQ8QlZq8+A0cO1Jyc3MB227939gIhY/24zZcNNesi95DRTYx/2hsTsj
-         ozMw==
+	s=arc-20240116; t=1730994649; c=relaxed/simple;
+	bh=o9oRCatZXqdJ9UeL2Tpm/oUaI9r2qvvElx6SkP3OLIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jo5xILaE70s3Oh2ApR4Lc7kYsbDppBrR809ToO8KgXAitJJEs4sZpbI5anzBWRlQqHyuMqcLxYcL87PfkgngjI6ibcEQKREDBHQR7EpfuV5vT8OV+fE630NsXejDMiyssySeMqp4olEJGUSLjwKmNlmy4TuiJEycQjIjvwuHHCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20c803787abso10192205ad.0;
+        Thu, 07 Nov 2024 07:50:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730993964; x=1731598764;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S1ojgGMe04oTpXQ5H/CMjh7ambNOZIyTDE3vys0YK64=;
-        b=QqftXNyDz3AYOT+FV0PmwsscKSaGLlBHdIBa/m4oqGhegjSOd37qxYlrPO4HXd+ly0
-         1qz0BXW1qKOZ3jLJN7C9H19NckpIlwiiPzNjjYEFojEvOEvUTaEkC5SwVwR7GULqTuZw
-         VgwpCqeLaxTLf5pUiIVJq7pwDkBFN1hVN0xPKZo/wc35sInXWAmddBq81zKVsqIwzidw
-         WCOHrsQdfFNxNHn44nPBuZI8o1O1cg/Z2SrktvlyG3E6jJQ7zM2QgWRnIVMedPbEvkgs
-         5RDt2ddWKpbdg+AIWBB6//UcrEMPD976WDZEji3UW+UwfQ7iXyD7kOWMhO7RwmbvrKXe
-         pL0Q==
-X-Gm-Message-State: AOJu0YwC9sBsUgFzIixG0M8N4vgeL7M+yS+IXa3rjPYnEHOUXq9lhA/M
-	4jWgK5FbH/pB3tZvD0p2iFnF0IHTvdGj2YnlONkBzplhU+ty3O0sgD82A1TVywTMtKn87Vltjpp
-	E9KviCWqElbcPlwtDO41yZWNPRWa3mxDfE2jSvg==
-X-Google-Smtp-Source: AGHT+IGXOrtkRVrCYc75d33lyAV/3LiQk52p2PPpTahHjZKRW22P6Mji6/gzk/OmarJ3qb3dvfOp40D+9g82vg9Bxz4=
-X-Received: by 2002:a05:6402:42c9:b0:5ce:fa29:5938 with SMTP id
- 4fb4d7f45d1cf-5cefa295c74mr3861608a12.8.1730993964398; Thu, 07 Nov 2024
- 07:39:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1730994647; x=1731599447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y4g9pTMBWn8NYG8DJqu2aF9WChjDh3es1iM4dJmMreI=;
+        b=vKlWUQWv+b5vEqIfiQ8OpTfq5x3oThAEGeEL1qukxslGtyYq3fCzcb6CWDdYFLYM0S
+         OhhDKZxogOhtPj2TkY/RBa5VZW6QQR3OA4kPq0jfi1wWQ3WAGJq77QTLE2JLC61STzGB
+         Go2T2YNUE+mthY9fMygn+t+WPTpwTWa8/1kv4FxvAW53Ow5GroAg8bzx9DhuonPge/LY
+         PhvRFDBDVnRwAmNq5HvZQYYyhB9B7d14EGmqMouHYd3SdRdKuBHRBrTyvmOcLmGNe6Uz
+         wi0OZxuAgt59x5bX7ZoiI+TRjjUoGN01m8JDi9eBODAcEc0Q2jOuZoDG6pEG5M3yt3qK
+         HReQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QdtR1NkurVFSF2BRDd9KOHD27CCjrOPW42ixRhW2NcYsd4ZlykC6aT7CzyauA4GJoaGk1ydVTROF@vger.kernel.org, AJvYcCUZnLWZ3NCvgIY2zpg9pJyCbDHV7PXloeKgzPOukJIMTcZNlTt7l9+ftmbei1BOe1rABhzy5dgFM48J1SHa@vger.kernel.org, AJvYcCVNmD1x/+REE/wH4XKfV82FXys/ctC1wx7xesSbBaoI9CVTpxTx+tHFHSiC4YpMLqa4LBS1MPqfsCogGQ==@vger.kernel.org, AJvYcCVU/tAZDBZvmiShZuS/3oKZILjfPT0gyLggIKEmnclDoq9ALWXemwe/RMF5+DNsYS1aZBJT6LVg2VLChJ8r@vger.kernel.org, AJvYcCW/SFWlhvhxaHpvkeKDOch6IviefR/lnxz+ziMQnpvhC2Kzs2zE4GFSgdg5MHfx6cbFULullwXa1tEOJg==@vger.kernel.org, AJvYcCWxK4UXb0KL2zPMzrmmN9yRehERL664nvb+ytwIOOJxTau3Oz5un+Y8+r5smxm4ayIWnJ8uBaurs65t@vger.kernel.org, AJvYcCX33al0KNbbpoPWXzMcPfco5QsDU3nbsAf3EusbqiD92/PB4yah472R14qvM1V/qSHVl0DClPR1U+WMaw==@vger.kernel.org, AJvYcCXNSDoa7iERoi5xNkCp3wZ+EcPaD433RMHsGnB/uAQvbK77iWfcJsCk8PlmwUQIqkYGVjztH7kGrl0CC1ioUENpbtnmXg==@vger.kernel.org, AJvYcCXsR6YGjvb8fYUonymj3DN85JimVuO7AevrxdUl87HWCAzCdEQTDRGCQ4PwZqFlgWFgIMGTa+25tLuc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGpecljfOZn2VUX+afxn+Pd6nn0r2JKofJHORbXpkbpKDB7YKg
+	OVYzhBL38gEut0etLZm07llZTPGhixGcznTJS/HCfetPsW7kPF9U
+X-Google-Smtp-Source: AGHT+IEfW8mc6K7WMilatY4cRGrx/jJrVZ2Go8Ums63B2x6oVuXb+zNT4RZMBtIqDecZElfJ9fn+6w==
+X-Received: by 2002:a17:903:183:b0:210:e760:77e with SMTP id d9443c01a7336-21181184b51mr5235045ad.7.1730994647037;
+        Thu, 07 Nov 2024 07:50:47 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177e6c2ecsm13637145ad.252.2024.11.07.07.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2024 07:50:46 -0800 (PST)
+Date: Fri, 8 Nov 2024 00:50:44 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Frederic Barrat <fbarrat@linux.ibm.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] sysfs: introduce callback
+ attribute_group::bin_size
+Message-ID: <20241107155044.GA1297107@rocinante>
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+ <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
+ <20241106200513.GB174958@rocinante>
+ <2024110726-hasty-obsolete-3780@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241101133917.27634-1-Jonathan.Cameron@huawei.com> <20241101133917.27634-9-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20241101133917.27634-9-Jonathan.Cameron@huawei.com>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Thu, 7 Nov 2024 15:39:13 +0000
-Message-ID: <CAFEAcA8LB3t0n_BqjBeEejfmVVYMbQ1rT9qwEbsNEoUDbkym9A@mail.gmail.com>
-Subject: Re: [PATCH qemu 08/10] hw/cxl: Check that writes do not go beyond end
- of target attributes
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org, 
-	Esifiel <esifiel@gmail.com>, Fan Ni <fan.ni@samsung.com>, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024110726-hasty-obsolete-3780@gregkh>
 
-On Fri, 1 Nov 2024 at 13:43, Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
->
-> In cmd_features_set_feature() the an offset + data size schemed
-> is used to allow for large features.  Ensure this does not write
-> beyond the end fo the buffers used to accumulate the full feature
-> attribute set.
->
-> Reported-by: Esifiel <esifiel@gmail.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index a40d81219c..078782e8b9 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -1292,6 +1292,11 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
->
->          ps_set_feature = (void *)payload_in;
->          ps_write_attrs = &ps_set_feature->feat_data;
-> +
-> +        if ((uint32_t)hdr->offset + bytes_to_copy >
-> +            sizeof(ct3d->patrol_scrub_wr_attrs)) {
-> +            return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-> +        }
+Hello,
 
-Coverity complains about this code (CID 1564900, 1564901).
-Essentially it does not like that this check permits
-the memcpy for the case where hdr->offset is 2 and
-bytes_to_copy is 0, because memcpy(invalid_dest, src, 0)
-is still UB even though you might logically expect it
-to do nothing.
+[...]
+> > There exist the sysfs_update_groups(), but the BAR resource sysfs objects
+> > are currently, at least not yet, added to any attribute group.
+> 
+> then maybe they should be added to one :)
 
->          memcpy((uint8_t *)&ct3d->patrol_scrub_wr_attrs + hdr->offset,
->                 ps_write_attrs,
->                 bytes_to_copy);
+Yeah. There is work in progress that will take care of some of this.
 
-> @@ -1314,6 +1319,11 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
->
->          ecs_set_feature = (void *)payload_in;
->          ecs_write_attrs = ecs_set_feature->feat_data;
-> +
-> +        if ((uint32_t)hdr->offset + bytes_to_copy >
-> +            sizeof(ct3d->ecs_wr_attrs)) {
-> +            return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-> +        }
->          memcpy((uint8_t *)&ct3d->ecs_wr_attrs + hdr->offset,
->                 ecs_write_attrs,
->                 bytes_to_copy);
-
-Similarly here.
-
-thanks
--- PMM
+	Krzysztof
