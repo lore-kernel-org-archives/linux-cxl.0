@@ -1,45 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17D720A5DF;
-	Thu,  7 Nov 2024 11:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350C320B1FF
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 11:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730979133; cv=none; b=pyiyTSXRzCkGpXlPoY5Mj2anCxfpV0SfprPQZTbkM8i9uQuBT+hRaMj1SdzvxmRPKIfOG8nXshZB3BY0AjiAw/cRtLtfVoz2yl32wadIKrm9Mf8DyIH6eTtRS2EB4RzVs4b6xoUP/j21fTugZ6Cym9tqyfWA2FMC9Ev+tkXAfu8=
+	t=1730980104; cv=none; b=fnfascolUL5OcduzJGI4+miPm31/UtSyEfc4t6bEzotgq8st9KGAennrn0CKzXXp8p+Ch7ONi0PObubg+cstQ9J0no1CzGo33lSqdwAckU3ujbfqgpqgsMicZuFnZQHrn+qO1N4Ji+iG0ocioG6nNILmUmU5ZmXbH78YRXspwS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730979133; c=relaxed/simple;
-	bh=oWZpsdzL8+Oft8QnzpI3UMaHxsB9xIpuOeSvk8blJiE=;
+	s=arc-20240116; t=1730980104; c=relaxed/simple;
+	bh=xXmlzEmTdNNfF8SFOn2nsm8R6YbF5bSbnsYmxncjmSc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rRDxUO5coTbYkQQXvMU3S74qVe+hvwMMk7zt438gMnaM6mSSdPGxyJYkZMzXhmJ87pNBaI1OGyXsKlPOD2eSJtogUI5PrzMVPdNCrqAQmycMVo/X7NbAxh3Ey7PU9xQI3n1qz6aUalEs7uWy9ehiBmwlWxGlECKuX1NW2huKFzc=
+	 MIME-Version:Content-Type; b=uEknewyD+HViT2Usqx28Lw/Orh613gz3V8ErPmFUQVCldWLh7mSuwGwJjTR4N4JeYqwvRISUimsoVNXEt70lFMnxApsZ8BdfehQZkBDUn7PEbu7Nb/MVn7xWt0hCONkc2bOl9ASyRZfCx0DzjTS0XWli27onM1H/UwjQuQq75hI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xkg0401xQz6LD8H;
-	Thu,  7 Nov 2024 19:32:04 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XkgJv4F4Jz6K5vr;
+	Thu,  7 Nov 2024 19:46:39 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D48DC1400DD;
-	Thu,  7 Nov 2024 19:32:07 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A4D141400DD;
+	Thu,  7 Nov 2024 19:48:19 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 7 Nov
- 2024 12:32:07 +0100
-Date: Thu, 7 Nov 2024 11:32:05 +0000
+ 2024 12:48:18 +0100
+Date: Thu, 7 Nov 2024 11:48:16 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
- Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 23/27] dax/region: Create resources on sparse DAX
- regions
-Message-ID: <20241107113205.00007f53@Huawei.com>
-In-Reply-To: <20241105-dcd-type2-upstream-v6-23-85c7fa2140fe@intel.com>
-References: <20241105-dcd-type2-upstream-v6-0-85c7fa2140fe@intel.com>
-	<20241105-dcd-type2-upstream-v6-23-85c7fa2140fe@intel.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, <linuxarm@huawei.com>
+CC: <imammedo@redhat.com>, Markus Armbruster <armbru@redhat.com>,
+	<qemu-devel@nongnu.org>, <ankita@nvidia.com>, <linux-cxl@vger.kernel.org>,
+	<marcel.apfelbaum@gmail.com>, <philmd@linaro.org>, Richard Henderson
+	<richard.henderson@linaro.org>, Dave Jiang <dave.jiang@intel.com>, "Huang
+ Ying" <ying.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
+	<eduardo@habkost.net>, Michael Roth <michael.roth@amd.com>, Ani Sinha
+	<anisinha@redhat.com>
+Subject: Re: [PATCH v6 14/15] bios-tables-test: Add complex SRAT / HMAT test
+ for GI GP
+Message-ID: <20241107114816.00004195@Huawei.com>
+In-Reply-To: <20241106122707.00007552@Huawei.com>
+References: <20240916171017.1841767-1-Jonathan.Cameron@huawei.com>
+	<20240916174449.1843258-1-Jonathan.Cameron@huawei.com>
+	<20241104110025-mutt-send-email-mst@kernel.org>
+	<20241106122707.00007552@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -50,62 +52,171 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 05 Nov 2024 12:38:45 -0600
-ira.weiny@intel.com wrote:
+On Wed, 6 Nov 2024 12:27:07 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> From: Navneet Singh <navneet.singh@intel.com>
+> On Mon, 4 Nov 2024 11:00:59 -0500
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
 > 
-> DAX regions which map dynamic capacity partitions require that memory be
-> allowed to come and go.  Recall sparse regions were created for this
-> purpose.  Now that extents can be realized within DAX regions the DAX
-> region driver can start tracking sub-resource information.
+> > On Mon, Sep 16, 2024 at 06:44:49PM +0100, Jonathan Cameron wrote:  
+> > > Add a test with 6 nodes to exercise most interesting corner cases of SRAT
+> > > and HMAT generation including the new Generic Initiator and Generic Port
+> > > Affinity structures.  More details of the set up in the following patch
+> > > adding the table data.
+> > > 
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>    
+> >   
+> Was traveling for last few days, sorry for delay!
+> > 
+> > I could not yet figure out why, but it fails on i686 (32 bit):
+> > 
+> > https://gitlab.com/mstredhat/qemu/-/jobs/8262608614
+> > 
+> > any idea?  
 > 
-> The tight relationship between DAX region operations and extent
-> operations require memory changes to be controlled synchronously with
-> the user of the region.  Synchronize through the dax_region_rwsem and by
-> having the region driver drive both the region device as well as the
-> extent sub-devices.
+> Nothing immediately comes to mind. 
+> I'll see what I can figure out from the generated binaries. 
+
+My dumb bug from a messed up refactor :(  Anyhow I'm just rerunning the
+test and if all fixed I'll send a series with the docs fix this and
+the tests.  Pick up whatever combination makes sense now we are in
+the soft freeze.
+
+make docker-test-quick@debian-i686-cross
+is not quick :)
+
+Jonathan
+
 > 
-> Recall requests to remove extents can happen at any time and that a host
-> is not obligated to release the memory until it is not being used.  If
-> an extent is not used allow a release response.
+> Jonathan
 > 
-> When extents are eligible for release.  No mappings exist but data may
-> reside in caches not yet written to the device.  Call
-> cxl_region_invalidate_memregion() to write back data to the device prior
-> to signaling the release complete.
+> >   
+> > > ---
+> > >  tests/qtest/bios-tables-test.c | 97 ++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 97 insertions(+)
+> > > 
+> > > diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
+> > > index 36e5c0adde..f568c4a21c 100644
+> > > --- a/tests/qtest/bios-tables-test.c
+> > > +++ b/tests/qtest/bios-tables-test.c
+> > > @@ -1910,6 +1910,101 @@ static void test_acpi_q35_tcg_acpi_hmat_noinitiator(void)
+> > >      free_test_data(&data);
+> > >  }
+> > >  
+> > > +/* Test intended to hit corner cases of SRAT and HMAT */
+> > > +static void test_acpi_q35_tcg_acpi_hmat_generic_x(void)
+> > > +{
+> > > +    test_data data = {};
+> > > +
+> > > +    data.machine = MACHINE_Q35;
+> > > +    data.arch    = "x86";
+> > > +    data.variant = ".acpihmat-generic-x";
+> > > +    test_acpi_one(" -machine hmat=on,cxl=on"
+> > > +                  " -smp 3,sockets=3"
+> > > +                  " -m 128M,maxmem=384M,slots=2"
+> > > +                  " -device pcie-root-port,chassis=1,id=pci.1"
+> > > +                  " -device pci-testdev,bus=pci.1,"
+> > > +                  "multifunction=on,addr=00.0"
+> > > +                  " -device pci-testdev,bus=pci.1,addr=00.1"
+> > > +                  " -device pci-testdev,bus=pci.1,id=gidev,addr=00.2"
+> > > +                  " -device pxb-cxl,bus_nr=64,bus=pcie.0,id=cxl.1"
+> > > +                  " -object memory-backend-ram,size=64M,id=ram0"
+> > > +                  " -object memory-backend-ram,size=64M,id=ram1"
+> > > +                  " -numa node,nodeid=0,cpus=0,memdev=ram0"
+> > > +                  " -numa node,nodeid=1"
+> > > +                  " -object acpi-generic-initiator,id=gi0,pci-dev=gidev,node=1"
+> > > +                  " -numa node,nodeid=2"
+> > > +                  " -object acpi-generic-port,id=gp0,pci-bus=cxl.1,node=2"
+> > > +                  " -numa node,nodeid=3,cpus=1"
+> > > +                  " -numa node,nodeid=4,memdev=ram1"
+> > > +                  " -numa node,nodeid=5,cpus=2"
+> > > +                  " -numa hmat-lb,initiator=0,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=10"
+> > > +                  " -numa hmat-lb,initiator=0,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=800M"
+> > > +                  " -numa hmat-lb,initiator=0,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=100"
+> > > +                  " -numa hmat-lb,initiator=0,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=0,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=100"
+> > > +                  " -numa hmat-lb,initiator=0,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=0,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=200"
+> > > +                  " -numa hmat-lb,initiator=0,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > > +                  " -numa hmat-lb,initiator=1,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=500"
+> > > +                  " -numa hmat-lb,initiator=1,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=100M"
+> > > +                  " -numa hmat-lb,initiator=1,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=50"
+> > > +                  " -numa hmat-lb,initiator=1,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > > +                  " -numa hmat-lb,initiator=1,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=50"
+> > > +                  " -numa hmat-lb,initiator=1,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=800M"
+> > > +                  " -numa hmat-lb,initiator=1,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=500"
+> > > +                  " -numa hmat-lb,initiator=1,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=100M"
+> > > +                  " -numa hmat-lb,initiator=3,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=20"
+> > > +                  " -numa hmat-lb,initiator=3,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > > +                  " -numa hmat-lb,initiator=3,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=80"
+> > > +                  " -numa hmat-lb,initiator=3,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=3,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=80"
+> > > +                  " -numa hmat-lb,initiator=3,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=3,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=20"
+> > > +                  " -numa hmat-lb,initiator=3,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > > +                  " -numa hmat-lb,initiator=5,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=20"
+> > > +                  " -numa hmat-lb,initiator=5,target=0,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=400M"
+> > > +                  " -numa hmat-lb,initiator=5,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=80"
+> > > +                  " -numa hmat-lb,initiator=5,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=5,target=4,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=80"
+> > > +                  " -numa hmat-lb,initiator=5,target=2,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=200M"
+> > > +                  " -numa hmat-lb,initiator=5,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-latency,latency=10"
+> > > +                  " -numa hmat-lb,initiator=5,target=5,hierarchy=memory,"
+> > > +                  "data-type=access-bandwidth,bandwidth=800M",
+> > > +                  &data);
+> > > +    free_test_data(&data);
+> > > +}
+> > > +
+> > >  #ifdef CONFIG_POSIX
+> > >  static void test_acpi_erst(const char *machine, const char *arch)
+> > >  {
+> > > @@ -2388,6 +2483,8 @@ int main(int argc, char *argv[])
+> > >              qtest_add_func("acpi/q35/nohpet", test_acpi_q35_tcg_nohpet);
+> > >              qtest_add_func("acpi/q35/acpihmat-noinitiator",
+> > >                             test_acpi_q35_tcg_acpi_hmat_noinitiator);
+> > > +            qtest_add_func("acpi/q35/acpihmat-genericx",
+> > > +                           test_acpi_q35_tcg_acpi_hmat_generic_x);
+> > >  
+> > >              /* i386 does not support memory hotplug */
+> > >              if (strcmp(arch, "i386")) {
+> > > -- 
+> > > 2.43.0    
+> > 
+> >   
 > 
-> Speculative writes after a release may dirty the cache such that a read
-> from a newly surfaced extent may not come from the device.  Call
-> cxl_region_invalidate_memregion() prior to bringing a new extent online
-> to ensure the cache is marked invalid.
 > 
-> While these invalidate calls are inefficient they are the best we can do
-> to ensure cache consistency without back invalidate.  Furthermore this
-> should occur infrequently with sufficiently large extents and work loads
-> to not be too bad of an impact.
-> 
-> The DAX layer has no need for the details of the CXL memory extent
-> devices.  Expose extents to the DAX layer as device children of the DAX
-> region device.  A single callback from the driver aids the DAX layer to
-> determine if the child device is an extent.  The DAX layer also
-> registers a devres function to automatically clean up when the device is
-> removed from the region.
-> 
-> There is a race between extents being surfaced and the dax_cxl driver
-> being loaded.  The driver must therefore scan for any existing extents
-> while still under the device lock.
-> 
-> Respond to extent notifications.  Manage the DAX region resource tree
-> based on the extents lifetime.  Return the status of remove
-> notifications to lower layers such that it can manage the hardware
-> appropriately.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Same again.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
