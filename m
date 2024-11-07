@@ -1,116 +1,142 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E15A212D12
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 14:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD8E212F0E;
+	Thu,  7 Nov 2024 15:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730990630; cv=none; b=rtjs9YtU/+C0Vs5ic18ySDEcre1GRI3VFvjceN0mSZUg+Q3WmQE+Dbp8eH06HlQBFEyzWXYrmLVTnI1dP23o7ZVxaJNsBKuANR47muKbRslMVBYhLyrEvRk5xId+fxmAo8JHSJjd5doSL51qd8vhtmRrkUoWXrf/DKSyGwLzI74=
+	t=1730993012; cv=none; b=mAg8SBZ1S1rzVoiOjIA4ixmBgybrgQnxp6u00eJHVi6gK2WbcBride+zfxsbUiOvj0AXqvbM5S2XlVlR18S7aUTZjJqhpaQ5+ibItjIs4hCsbmA0AFetZJKRKYqaipCbikS7OxZcm1//N8iVWxmmwxsvLRVsDAcZU864eBYbxY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730990630; c=relaxed/simple;
-	bh=u/UibkWukm8QVSh5GSo+c+62ziGUL4DF2iQ/BqbFg1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mlz9FS7D8Wb9i+SDXVgTMgNReyn80SPm97EcVDuShiet9wmPKNVQLIihzLrCgiUgnntF4xB5pXZTbfpymEuvxhwuc05uvjIX7b7TCEEpAiXCQTZTmjHqs8hUj8g8OBMPQ3Vw1zAijvtnoOgjz5aeu2WhAeQ23sfHmiEP8tJPi2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CQgJF8Zj; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1730993012; c=relaxed/simple;
+	bh=a6YO6KBaqcu7LFhMRbW9fAMjs8PEYS9W1YAnHz1KhxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y9DV2CE/GNSE5LX2DaW1eHv1RBtb16XNGlR4fdjLKXW5ddlMjARzvQEFzJ4Xh7UFk3xgxfLGOB8zaOwBgsK99rU4LI7yquDsikvW7i4AUXu70jH8uL3jblwO17DJIxk9i36dxAahUYMQ76wXgcjAPrmf3lOC4x7Vxdk6euksR8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A6uVHInw; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CQgJF8Zj"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43155afca99so12573685e9.1
-        for <linux-cxl@vger.kernel.org>; Thu, 07 Nov 2024 06:43:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1730990626; x=1731595426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3cGH6XjgAeljYo8IyTePdbXv29oLDJnLSASBiasK6k=;
-        b=CQgJF8ZjW7z+XNziw5C67PhXckA68Y9GH93kK0NplJ9HPftB3LA8vRXpDC0kLrCvlK
-         fx9qaV61oEe2wxHObaEPPqhACCBz97PTYIj9P9CdCx612+P6marjKQ3UYMd2c67a5zQv
-         HRPf6Li/qZv+rffwXUVPx1Wq5Kt96XA153uokkNV+nifKnnmwiSx847KuIiw6Ow6cDHh
-         8BrK5oRQolAvi5Iif580q0d8hYKZT7f+2r/gpZOTkIELQli5GiFqoKs7eMnCzKi7z5hq
-         lOYsxQUD2NQXry0tk8/L91iqen0Adf2C3Qq6gyQFtx1fgK1xNCvyM8M1psUT/FAB3CdT
-         +l6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730990626; x=1731595426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K3cGH6XjgAeljYo8IyTePdbXv29oLDJnLSASBiasK6k=;
-        b=IenfG+ZuYkpYCze50VKWCXe+ViOI1dKq3CGMQT/kxYD/Q6mjs0xI8T/0RwVW3jPQME
-         SigHxjDcDbc+g3AFKcdpJZqm/C7ppBYkzcTUoJBf0QCvmI2bbZonda2cuNq5xJbRXrkO
-         /vRCRYqOB7rJyGNuiju/0hoKf16AN9PWqLZydu35F2+RClBxJNgla+6fUUmDOlpxn/sx
-         CQ9A5OzNkqL4/e4Glx4N+Co5CfEcUYE24FDqXemOBg73g3XicdY17kbTWTrkj4sJnNhz
-         9i5avXeokLLa3oQlsbxWE7gRLek7yYb142cNnzdczJrvLcHQXbwkKCP4PkBqJUCFhOtZ
-         2Xpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU420LDa6n1BFI4YHP3B83CSe5xXCBxfsoJ491Azse+Nany+35PXw1TDXbyt5DEgesdibVbdv+xewA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxujE3RU855oZnU+bm/u2tVseJADDH70Tw/xXtW0wXbaKVG7kHS
-	VFPKuZdr+dreYC81tBU4/HaLS+y8WG6zKfGDlIBTDj7bAa2vD0214zfXfueAQ5I=
-X-Google-Smtp-Source: AGHT+IGhzDR7keUmd6bQp19ov+4IRWvETVRPa552MarSidF2G2tCRWC9KHmpiAN33CFuWpsfUB76gg==
-X-Received: by 2002:a05:6000:1a88:b0:374:c21a:9dd4 with SMTP id ffacd0b85a97d-381f0aeb76emr176470f8f.20.1730990626513;
-        Thu, 07 Nov 2024 06:43:46 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381eda0604bsm1887520f8f.105.2024.11.07.06.43.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 06:43:46 -0800 (PST)
-Date: Thu, 7 Nov 2024 15:43:43 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: metux <metux@gmx.de>
-Cc: Ira Weiny <ira.weiny@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Fan Ni <fan.ni@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] printf: Add struct range print specifier
-Message-ID: <ZyzSHxq8WuPp_Ewx@pathway.suse.cz>
-References: <20241025-cxl-pra-v2-0-123a825daba2@intel.com>
- <18854680-4ab7-4453-85ff-78351d4d4ec9@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A6uVHInw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730993010; x=1762529010;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=a6YO6KBaqcu7LFhMRbW9fAMjs8PEYS9W1YAnHz1KhxQ=;
+  b=A6uVHInwOBUTpOl1IKsw1ao328HpdB5vGeQS91Xn2OoNCuDsp0vkrNTA
+   +imdkIZSgTWozVWUUfdDrY5AnKLjrnBMYhG/wSpi+1YAmmKlBkEESvwLK
+   Z69nIZo59WgfkMehKEY7jyfb/01Czliy8uT+HqdUEJO5wnsnuQb/iMOJQ
+   eynOeTsS9Jd9Dam7McFQY8frUHDSZF1Xxr/0DQae32+3sfZBzqv241gTA
+   Db3P6TQ4yKLBNZUe4LSgudcQ72VQ1UKtIuJ7Q+An9OH+ZFk4d55+Fl9/E
+   PP+54rMeOrVxve65ub6yafBtK64OUvx5MjYV1NJ2qDZzabk4mFQT4sJ8t
+   Q==;
+X-CSE-ConnectionGUID: q1PHWFV6S22optL58g07Ng==
+X-CSE-MsgGUID: AxRs3/Y6TLGk0FmUxoxT+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="30945950"
+X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
+   d="scan'208";a="30945950"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:23:29 -0800
+X-CSE-ConnectionGUID: Sq9ASEhSSCu24nQM+IXOwA==
+X-CSE-MsgGUID: ZjhDXQfkR5+08ObUA85/jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
+   d="scan'208";a="85213249"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.165]) ([10.125.110.165])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:23:29 -0800
+Message-ID: <1f05ccef-5b45-4eac-b3ca-588b1e5ec6f5@intel.com>
+Date: Thu, 7 Nov 2024 08:23:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18854680-4ab7-4453-85ff-78351d4d4ec9@gmx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] [RFC] cxl/region: Fix region creation for greater than x2
+ switches
+To: Dan Williams <dan.j.williams@intel.com>,
+ "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
+ Huaisheng Ye <huaisheng.ye@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "pei.p.jia@intel.com" <pei.p.jia@intel.com>
+References: <20241027075717.3714821-1-huaisheng.ye@intel.com>
+ <80415a29-14dd-4108-aa02-4b0b5e1f2baf@fujitsu.com>
+ <672c13b19a530_10bc6294bd@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <672c13b19a530_10bc6294bd@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed 2024-10-30 11:51:54, metux wrote:
-> On 26.10.24 02:46, Ira Weiny wrote:
-> > Support for the Compute Express Link (CXL) Dynamic Capacity Devices
-> > (DCD) have grown a number of uses to print struct range.[1]  Support for
-> > a printf specifier '%pra' was being worked within a large series and has
-> > garnered a number of comments and discussion.
+
+
+On 11/6/24 6:11 PM, Dan Williams wrote:
+> [ add Dave so you 
 > 
-> This is just printing out hex dump of a memory range, correct ?
+> Zhijian Li (Fujitsu) wrote:
+>>
+>>
+>> On 27/10/2024 15:57, Huaisheng Ye wrote:
+>>> The cxl_port_setup_targets() algorithm fails to identify valid target list
+>>> ordering in the presence of 4-way and above switches resulting in
+>>> 'cxl create-region' failures of the form:
+>>>
+>>>    # cxl create-region -d decoder0.0 -g 1024 -s 2G -t ram -w 8 -m mem4 mem1 mem6 mem3 mem2 mem5 mem7 mem0
+>>>    cxl region: create_region: region0: failed to set target7 to mem0
+>>>    cxl region: cmd_create_region: created 0 regions
+>>>
+>>>    [kernel debug message]
+>>>    check_last_peer:1213: cxl region0: pci0000:0c:port1: cannot host mem6:decoder7.0 at 2
+>>>    bus_remove_device:574: bus: 'cxl': remove device region0
+>>>
+>>> QEMU can create this failing topology:
+>>>
+>>>                         ACPI0017:00 [root0]
+>>>                             |
+>>>                           HB_0 [port1]
+>>>                          /             \
+>>>                       RP_0             RP_1
+>>>                        |                 |
+>>>                  USP [port2]           USP [port3]
+>>>              /    /    \    \        /   /    \    \
+>>>            DSP   DSP   DSP   DSP   DSP  DSP   DSP  DSP
+>>>             |     |     |     |     |    |     |    |
+>>>            mem4  mem6  mem2  mem7  mem1 mem3  mem5  mem0
+>>>   Pos:      0     2     4     6     1    3     5    7
+>>
+>> Yeah, I tried this topology long long ago, it didn't work. At that time, I thought it
+>> might be just like that. Until recently that I saw this [1] in section
+>> 2.13.15.1 Region Spanning 2 HB Root Ports Example Configuration Checks
+>>
+>> I once tried to understand why the code used "distance" to determine the order of the target,
+>> but in the end, I still couldn't figure it out (and I still don't understand it now).
+>> IIRC, neither the CXL spec nor this document mentioned the keyword "distance" at all.
 > 
-> What I'm looking for quite some time is a sane way for dumping structs
-> in a human readable form (field: value pairs, using their actual types
-> eg. int vs string, ...).
+> Oh, that means this needs a comment or a better variable name.
+> 
+> In this patch discussion [1] Jim came up with the term "ancestral_ways"
+> to describe the same concept of what is the offset ("distance") between
+> consecutive indices in the target list.
+> 
+> [1]: http://lore.kernel.org/ZUHeTLZb+od8q4EE@ubuntu
+> 
+> Does "ancestral_ways" more clearly convey the math that is being
+> performed at each level of the hierarchy?
+> 
+> Now, "ancestral_ways" also does not show up in the CXL specification,
+> but that is because the CXL specification leaves at as an exercise for
+> software to figure out an algorithm to validate that a proposed ordering
+> of memory-device-decoders in a region can be supported by the given CXL
+> topology.
+> 
+> In the meantime I have flagged this patch to Dave for consideration in
+> the next cxl-fixes pull request, but I suspect it will need to be
+> updated with a comment and/or rename to resovle the "distance"
+> confusion.
+> 
+> https://patchwork.kernel.org/bundle/cxllinux/cxl-fixes/
 
-You like to print it similar way like "gdb" or other debugging tools do.
-Do I get it correctly, please?
+If we can get it respin and tagged by next week, there's time to get it into the 6.13 merge window. Otherwise it can wait until 6.13-rc fixes.
+> 
 
-> Any idea to do that in a generic way ?
-> (potentially using debug info ?)
-
-I am afraid that a generic solution would really need to work with
-a debuginfo.
-
-That said, there exists some generic approaches for printing various
-values in the trace code, for example, see
-
-    Documentation/trace/kprobetrace.rst
-    Documentation/trace/events.rst
-
-Best Regards,
-Petr
