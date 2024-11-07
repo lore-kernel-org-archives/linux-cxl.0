@@ -1,341 +1,376 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FE02170C0;
-	Thu,  7 Nov 2024 20:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304F9216E02;
+	Thu,  7 Nov 2024 20:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731011772; cv=none; b=DqtxZYW/0Pfn56svgtAMK1sGHBciIbiRWsZS2Db4KU99io/JO1oKs2hO6mxmvvdg+O7DRuJWVfptD0ctb6kodNCweBTjnTPW+euv0cUGBL7m5DL3d3g2sXgzMbDSkZaM5TSOLuqE/EccImfcmPNOHRduPBW8Iclw9SwiQtPiduA=
+	t=1731013111; cv=none; b=DIIvYIVhLFYaT/Pizhuez+LBPVCoEo+efZ2qv9PdkGC/og6vv6MpKMrOQEpuZ6+5eBOhAJWOl0G53AIKbp4Er7MaLv4etBU0oT6aEdo9XLhyu0Bxi07X5RXMSIXsSvYoJhwNVWJHiGGPLjyCXStKY5cWtWN5IlMtAw8OmSUgIuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731011772; c=relaxed/simple;
-	bh=XfqqrtBGoSGJ2BwEfPXR/s3qyCN+FjRyQHY0z68HSak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXlkvFPbwo6E81AdVLMnaRcgyfyCp8P/bg9KFGG+GIPKdRQQrk7Rk3vxlKxPhmC7cX8yxDIp+NqYhvXO/Eq8VExAPaXF04gysqDUdlg4qm1fR3GGui+2O05ELse7n+zwx2T11DXZN7fgKCIrQTg4sHT1xuncFeH3MqoFZnGjWQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eWu+cpfm; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1731013111; c=relaxed/simple;
+	bh=ISSjU9gASPTnzALkZkG0O/9o7hIhs8ah0+I4oSQNhqk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FPnczXcFKjbSdZ9Qz4zKrtAvFMYJm4NEWYBosx/Dc1CgIKZGG9FQ3jJaIeY7G9PTrTSTIS4S4fEGPivMiGIJLdfv2GG3XpAQPSMX7R2DnkPttjwDABybPmglvwfdRRpPxavNoeoeJIClt+Sk8rihQOT790cuGMi28l7slw91MtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8Z9IMXN; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eWu+cpfm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8Z9IMXN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731011771; x=1762547771;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XfqqrtBGoSGJ2BwEfPXR/s3qyCN+FjRyQHY0z68HSak=;
-  b=eWu+cpfmzKwgF0I6y0RrefIUklJ/x9LzzZMsMKD7TbVye0nNwOUq5WUE
-   ukw/Yi9NZ5b3FUtlrp3E93i5EMcTdUzf9U+OsPhLcrqPPfWbPnJELF36f
-   Ige/jCBn2BQ2Z78cnDrOQ6mRuVOUAvaE6HmFv+x7VkdAmrvPvSgPAM2qE
-   oYw4tcfIe99VTHDaOfa1z/sSdNu+V01Um+Px1dYYpe8Kd6uFIUO4O81N+
-   NM8VFcqBHtDjlH9XtBZhT7iqP+vhlQjmPYG/NBjDtHjwYbUAxqoxAGsgL
-   k0fSCjcK57dKx1+u7TIm6t+34NKbBJWsG7AYNMKfm9Tskiv/PuVqjMC+c
-   g==;
-X-CSE-ConnectionGUID: rTEn5CG5RduTTUMkvK3z1g==
-X-CSE-MsgGUID: MGMd/teGSv2I4p3A/PFkEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="41439442"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="41439442"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 12:36:10 -0800
-X-CSE-ConnectionGUID: HAtO8oC8QT6krMNPj4K8JA==
-X-CSE-MsgGUID: nhO0GC84RjmtJKwCFbdd+w==
+  t=1731013109; x=1762549109;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=ISSjU9gASPTnzALkZkG0O/9o7hIhs8ah0+I4oSQNhqk=;
+  b=R8Z9IMXNFRaAcpSvs+7cA7Mk07FIPRFH4lfUXRGK+VP4aK++TNQIyuSP
+   5gv+7Ov/4xPFtCThKnI7FBuW684MxR/xiBkpUsK6MmfP4kU58ftzYhtWP
+   RnO519bgTymUli7SAd7/L+FC2iBL8mTPW/Obl32MuyC5TSBr2qgun/kF9
+   TwdKjtT020zdclYuScpnQkSEQJpStPx5wonMXA22FuQGnoU6vY7BDPRZv
+   GVWrFigHlOUvo+xjCjEkuHlcDCRR0SaCbN6AJYVLVYwB5ePFNVtbzkvAQ
+   UAtNPK6y+FvpOiZFGcZBmgiarH9ye+aq7wfM9g2U7Qxsv1T/mDA4o3BPz
+   A==;
+X-CSE-ConnectionGUID: wJbZYzpNQJuHoO0oMtaNog==
+X-CSE-MsgGUID: W9pqoohuSeKbZrM7b+uC6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="30300290"
+X-IronPort-AV: E=Sophos;i="6.12,136,1728975600"; 
+   d="scan'208";a="30300290"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 12:58:28 -0800
+X-CSE-ConnectionGUID: AESPcAeiSFeDMvMMIJ0/1g==
+X-CSE-MsgGUID: lkv4zfX3RQ6bw1cSbLp0BA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,136,1728975600"; 
-   d="scan'208";a="122739705"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.171])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 12:36:09 -0800
-Date: Thu, 7 Nov 2024 12:36:07 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: "Huang, Ying" <ying.huang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Gregory Price <gourry@gourry.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alejandro Lucero <alucerop@amd.com>,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
-Message-ID: <Zy0kt2i9C6eirhPN@aschofie-mobl2.lan>
-References: <20241104084110.583710-1-ying.huang@intel.com>
- <ZyrUFMutrN_uJvPe@aschofie-mobl2.lan>
- <878qtx6q0d.fsf@yhuang6-desk2.ccr.corp.intel.com>
+   d="scan'208";a="90093541"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.195])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 12:58:26 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v7 00/27] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Date: Thu, 07 Nov 2024 14:58:18 -0600
+Message-Id: <20241107-dcd-type2-upstream-v7-0-56a84e66bc36@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878qtx6q0d.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOopLWcC/4XP206EMBAG4FfZcG3N9DRd9sr3MF70MEgTBdIic
+ bPh3S0kKhLUy7+Z/5vprcqUIuXqcrpViaaYY9+VYO5OlW9t90wshpIrAUICgmLBBzZeBxLsbch
+ jIvvKwAeuGxQcm1CVorOZmEu28+1S/Tm9DAyJmvi+bn18KrmNeezTdT1i4svrn/smzoAZ7lAq7
+ ixp9RC7kV7ufb/qpapAit+rzjiAgEKi0Jvqcskk/t8uCtEYBV4ZMjXHPSE/CQVnjoeEXD7ga1e
+ jdxaD2RPqi+AA5pBQhfACORESBQp7Qm8IUR8SuhBnI2vv0Hhp1J7Ab4KDPiRwIbQ3jRVcQUNbY
+ p7nD4JXBV1fAgAA
+X-Change-ID: 20230604-dcd-type2-upstream-0cd15f6216fd
+To: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Navneet Singh <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>, 
+ Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, 
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+ linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+ Li Ming <ming4.li@intel.com>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-hardening@vger.kernel.org
+X-Mailer: b4 0.15-dev-2a633
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731013104; l=12803;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=ISSjU9gASPTnzALkZkG0O/9o7hIhs8ah0+I4oSQNhqk=;
+ b=CYm1GWNe8ZhyqS+rCjxHrMOOYynYVY/9WPWsp8COYc+EmO/8uYNyyyO3/hLRGeutFl4K4Q+pH
+ Cv00CPB7e4IC+LFsB2WAiP+jsVfK1QgIyEcUeOgIuq4AOszRp57lpVO
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-On Wed, Nov 06, 2024 at 10:43:30AM +0800, Ying Huang wrote:
-> Alison Schofield <alison.schofield@intel.com> writes:
-> 
-> > On Mon, Nov 04, 2024 at 04:41:10PM +0800, Ying Huang wrote:
-> >> According to the description of the "Window Restrictions" field of
-> >> "CFMWS Structure" in the CXL spec v3.1 section 9.18.1.3: CXL Fixed
-> >> Memory Window Structure (CFMWS), the bit 0 of "Window Restrictions" is
-> >> formerly known as "CXL Type 2 Memory" and renamed to "Device
-> >> Coherent", while the bit 1 is formerly known as "CXL Type 3 Memory"
-> >> and renamed to "Host-only Coherent".  Because type 3 memory can only
-> >> be host-only coherent before, while it can be host-only coherent or
-> >> device coherent with "Back-Invalidate" now.
-> >> 
-> >> To avoid confusion about type 2/3 memory and device/host-only coherent
-> >> in Linux kernel, the patch renames corresponding bit definition from
-> >> ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3 to
-> >> ACPI_CEDT_CFMWS_RESTRICT_DEVMEM/HOSTONLYMEM.  This makes the kernel
-> >> code consistent with the spec too.
-> >> 
-> >> The patch also renames the corresponding cxl_decoder flags
-> >> CXL_DECODER_F_TYPE2/TYPE3 to CXL_DECODER_F_DEVMEM/HOSTONLYMEM.
-> >> 
-> >> No functionality change is expected.
-> >> 
-> >> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> >> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> >> Reviewed-by: Gregory Price <gourry@gourry.net>
-> >> Cc: Dan Williams <dan.j.williams@intel.com>
-> >> Cc: Dave Jiang <dave.jiang@intel.com>
-> >> Cc: Alison Schofield <alison.schofield@intel.com>
-> >> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> >> Cc: Ira Weiny <ira.weiny@intel.com>
-> >> Cc: Alejandro Lucero <alucerop@amd.com>
-> >> Cc: Ben Cheatham <benjamin.cheatham@amd.com>
-> >> ---
-> >>  drivers/cxl/acpi.c           |  8 ++++----
-> >>  drivers/cxl/core/port.c      |  8 ++++----
-> >>  drivers/cxl/cxl.h            | 14 +++++++-------
-> >>  include/acpi/actbl1.h        | 10 +++++-----
-> >>  tools/testing/cxl/test/cxl.c | 18 +++++++++---------
-> >>  5 files changed, 29 insertions(+), 29 deletions(-)
-> >> 
-> >> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> >> index 82b78e331d8e..aca8cbb7540d 100644
-> >> --- a/drivers/cxl/acpi.c
-> >> +++ b/drivers/cxl/acpi.c
-> >> @@ -115,10 +115,10 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
-> >>  {
-> >>  	unsigned long flags = CXL_DECODER_F_ENABLE;
-> >>  
-> >> -	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2)
-> >> -		flags |= CXL_DECODER_F_TYPE2;
-> >> -	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3)
-> >> -		flags |= CXL_DECODER_F_TYPE3;
-> >> +	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)
-> >> +		flags |= CXL_DECODER_F_DEVMEM;
-> >> +	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM)
-> >> +		flags |= CXL_DECODER_F_HOSTONLYMEM;
-> >>  	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
-> >>  		flags |= CXL_DECODER_F_RAM;
-> >>  	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM)
-> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> >> index a5e6f3d23cfb..8524714968fd 100644
-> >> --- a/drivers/cxl/core/port.c
-> >> +++ b/drivers/cxl/core/port.c
-> >> @@ -125,8 +125,8 @@ static DEVICE_ATTR_RO(name)
-> >>  
-> >>  CXL_DECODER_FLAG_ATTR(cap_pmem, CXL_DECODER_F_PMEM);
-> >>  CXL_DECODER_FLAG_ATTR(cap_ram, CXL_DECODER_F_RAM);
-> >> -CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_TYPE2);
-> >> -CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_TYPE3);
-> >> +CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_DEVMEM);
-> >> +CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_HOSTONLYMEM);
-> >>  CXL_DECODER_FLAG_ATTR(locked, CXL_DECODER_F_LOCK);
-> >>  
-> > Hi Ying,
-> 
-> Hi, Alison,
-> 
-> >
-> > The commit log explains that type3 can now be 'either/or', so does
-> > cap_type3_show() need to emit true for either:
-> > 	(flags & CXL_DECODER_F_HOSTONLYMEM)
-> > 	or
-> > 	(flags & CXL_DECODER_F_DEVMEM) & 'back invalidate')
-> >
-> > Does this explanation in the ABI need updating:
-> > What:           /sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,type2,type3}
-> > Date:           June, 2021
-> > KernelVersion:  v5.14
-> > Contact:        linux-cxl@vger.kernel.org
-> > Description:
-> >                 (RO) When a CXL decoder is of devtype "cxl_decoder_root", it
-> >                 represents a fixed memory window identified by platform
-> >                 firmware. A fixed window may only support a subset of memory
-> >                 types. The 'cap_*' attributes indicate whether persistent
-> >                 memory, volatile memory, accelerator memory, and / or expander
-> >                 memory may be mapped behind this decoder's memory window.
-> 
-> I think so too.  However, I prefer to keep this patch just mechanic
-> renaming and do these changes in another patch.  Do you agree?
-> 
+A git tree of this series can be found here:
 
-I don't know. I was just questioning where and how far the naming scheme
-needs to change.
+	https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-11-07
 
-Maybe Jonathan, as the Suggested-by, can chime in and move this ahead.
+This is a quick spin with minor clean ups Dave was going to apply as
+well as a couple of clean ups I had slated for after V4 landed.
 
+Series info
+===========
 
-> --
-> Best Regards,
-> Huang, Ying
-> 
-> >
-> >>  static ssize_t target_type_show(struct device *dev,
-> >> @@ -326,14 +326,14 @@ static struct attribute *cxl_decoder_root_attrs[] = {
-> >>  
-> >>  static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
-> >>  {
-> >> -	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
-> >> +	unsigned long flags = CXL_DECODER_F_HOSTONLYMEM | CXL_DECODER_F_PMEM;
-> >>  
-> >>  	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> >>  }
-> >>  
-> >>  static bool can_create_ram(struct cxl_root_decoder *cxlrd)
-> >>  {
-> >> -	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-> >> +	unsigned long flags = CXL_DECODER_F_HOSTONLYMEM | CXL_DECODER_F_RAM;
-> >>  
-> >>  	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> >>  }
-> >> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> >> index 0fc96f8bf15c..b9083ce1cf74 100644
-> >> --- a/drivers/cxl/cxl.h
-> >> +++ b/drivers/cxl/cxl.h
-> >> @@ -315,13 +315,13 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
-> >>   * Additionally indicate whether decoder settings were autodetected,
-> >>   * user customized.
-> >>   */
-> >> -#define CXL_DECODER_F_RAM   BIT(0)
-> >> -#define CXL_DECODER_F_PMEM  BIT(1)
-> >> -#define CXL_DECODER_F_TYPE2 BIT(2)
-> >> -#define CXL_DECODER_F_TYPE3 BIT(3)
-> >> -#define CXL_DECODER_F_LOCK  BIT(4)
-> >> -#define CXL_DECODER_F_ENABLE    BIT(5)
-> >> -#define CXL_DECODER_F_MASK  GENMASK(5, 0)
-> >> +#define CXL_DECODER_F_RAM         BIT(0)
-> >> +#define CXL_DECODER_F_PMEM        BIT(1)
-> >> +#define CXL_DECODER_F_DEVMEM      BIT(2)
-> >> +#define CXL_DECODER_F_HOSTONLYMEM BIT(3)
-> >> +#define CXL_DECODER_F_LOCK        BIT(4)
-> >> +#define CXL_DECODER_F_ENABLE      BIT(5)
-> >> +#define CXL_DECODER_F_MASK        GENMASK(5, 0)
-> >>  
-> >>  enum cxl_decoder_type {
-> >>  	CXL_DECODER_DEVMEM = 2,
-> >> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> >> index 199afc2cd122..e195909928df 100644
-> >> --- a/include/acpi/actbl1.h
-> >> +++ b/include/acpi/actbl1.h
-> >> @@ -551,11 +551,11 @@ struct acpi_cedt_cfmws_target_element {
-> >>  
-> >>  /* Values for Restrictions field above */
-> >>  
-> >> -#define ACPI_CEDT_CFMWS_RESTRICT_TYPE2      (1)
-> >> -#define ACPI_CEDT_CFMWS_RESTRICT_TYPE3      (1<<1)
-> >> -#define ACPI_CEDT_CFMWS_RESTRICT_VOLATILE   (1<<2)
-> >> -#define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
-> >> -#define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
-> >> +#define ACPI_CEDT_CFMWS_RESTRICT_DEVMEM        (1)
-> >> +#define ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM   (1<<1)
-> >> +#define ACPI_CEDT_CFMWS_RESTRICT_VOLATILE      (1<<2)
-> >> +#define ACPI_CEDT_CFMWS_RESTRICT_PMEM          (1<<3)
-> >> +#define ACPI_CEDT_CFMWS_RESTRICT_FIXED         (1<<4)
-> >>  
-> >>  /* 2: CXL XOR Interleave Math Structure */
-> >>  
-> >> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> >> index 90d5afd52dd0..9d919fc99f6b 100644
-> >> --- a/tools/testing/cxl/test/cxl.c
-> >> +++ b/tools/testing/cxl/test/cxl.c
-> >> @@ -209,7 +209,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 0,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 4UL,
-> >> @@ -224,7 +224,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 1,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 8UL,
-> >> @@ -239,7 +239,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 0,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 4UL,
-> >> @@ -254,7 +254,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 1,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 8UL,
-> >> @@ -269,7 +269,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 0,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 4UL,
-> >> @@ -284,7 +284,7 @@ static struct {
-> >>  			},
-> >>  			.interleave_ways = 0,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M,
-> >> @@ -301,7 +301,7 @@ static struct {
-> >>  			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-> >>  			.interleave_ways = 0,
-> >>  			.granularity = 4,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 8UL,
-> >> @@ -317,7 +317,7 @@ static struct {
-> >>  			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-> >>  			.interleave_ways = 1,
-> >>  			.granularity = 0,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 8UL,
-> >> @@ -333,7 +333,7 @@ static struct {
-> >>  			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-> >>  			.interleave_ways = 2,
-> >>  			.granularity = 0,
-> >> -			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> >>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >>  			.qtg_id = FAKE_QTG_ID,
-> >>  			.window_size = SZ_256M * 16UL,
-> >> -- 
-> >> 2.39.2
-> >> 
+This series has 4 parts:
+
+Patch 1: Add core range_overlaps() function
+Patch 2-6: CXL clean up/prelim patches
+Patch 7-25: Core DCD support
+Patch 26-27: cxl_test support
+
+Patches 1-6 have received a lot of review and can be applied to cxl-next
+straight away.  While 7-27 may need to wait for Dan review.
+
+Background
+==========
+
+A Dynamic Capacity Device (DCD) (CXL 3.1 sec 9.13.3) is a CXL memory
+device that allows memory capacity within a region to change
+dynamically without the need for resetting the device, reconfiguring
+HDM decoders, or reconfiguring software DAX regions.
+
+One of the biggest use cases for Dynamic Capacity is to allow hosts to
+share memory dynamically within a data center without increasing the
+per-host attached memory.
+
+The general flow for the addition or removal of memory is to have an
+orchestrator coordinate the use of the memory.  Generally there are 5
+actors in such a system, the Orchestrator, Fabric Manager, the Logical
+device, the Host Kernel, and a Host User.
+
+Typical work flows are shown below.
+
+Orchestrator      FM         Device       Host Kernel    Host User
+
+    |             |           |            |              |
+    |-------------- Create region ----------------------->|
+    |             |           |            |              |
+    |             |           |            |<-- Create ---|
+    |             |           |            |    Region    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create --->|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |             |           |            |              |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Accept -|<- Accept  -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |-- Remove -->|- Release->|- Release ->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |              |
+    |-- Add ----->|-- Add --->|--- Add --->|              |
+    |  Capacity   |  Extent   |   Extent   |              |
+    |             |           |            |<- Create ----|
+    |             |           |            |   DAX dev    |-- Use memory
+    |             |           |            |              |   |
+    |-- Remove -->|- Release->|- Release ->|              |   |
+    |  Capacity   |  Extent   |   Extent   |              |   |
+    |             |           |            |              |   |
+    |             |           |     (Release Ignored)     |   |
+    |             |           |            |              |   |
+    |             |           |            |<- Release ---| <-+
+    |             |           |            |   DAX dev    |
+    |<------------- Signal done --------------------------|
+    |             |           |            |              |
+    |             |- Release->|- Release ->|              |
+    |             |  Extent   |   Extent   |              |
+    |             |           |            |              |
+    |             |<- Release-|<- Release -|              |
+    |             |   Extent  |   Extent   |              |
+    |             |           |            |<- Destroy ---|
+    |             |           |            |   Region     |
+    |             |           |            |              |
+
+Implementation
+==============
+
+The series still requires the creation of regions and DAX devices to be
+closely synchronized with the Orchestrator and Fabric Manager.  The host
+kernel will reject extents if a region is not yet created.  It also
+ignores extent release if memory is in use (DAX device created).  These
+synchronizations are not anticipated to be an issue with real
+applications.
+
+In order to allow for capacity to be added and removed a new concept of
+a sparse DAX region is introduced.  A sparse DAX region may have 0 or
+more bytes of available space.  The total space depends on the number
+and size of the extents which have been added.
+
+Initially it is anticipated that users of the memory will carefully
+coordinate the surfacing of additional capacity with the creation of DAX
+devices which use that capacity.  Therefore, the allocation of the
+memory to DAX devices does not allow for specific associations between
+DAX device and extent.  This keeps allocations very similar to existing
+DAX region behavior.
+
+To keep the DAX memory allocation aligned with the existing DAX devices
+which do not have tags extents are not allowed to have tags.  Future
+support for tags is planned.
+
+Great care was taken to keep the extent tracking simple.  Some xarray's
+needed to be added but extra software objects were kept to a minimum.
+
+Region extents continue to be tracked as sub-devices of the DAX region.
+This ensures that region destruction cleans up all extent allocations
+properly.
+
+Some review tags were kept if a patch did not change.
+
+The major functionality of this series includes:
+
+- Getting the dynamic capacity (DC) configuration information from cxl
+  devices
+
+- Configuring the DC partitions reported by hardware
+
+- Enhancing the CXL and DAX regions for dynamic capacity support
+	a. Maintain a logical separation between hardware extents and
+	   software managed region extents.  This provides an
+	   abstraction between the layers and should allow for
+	   interleaving in the future
+
+- Get hardware extent lists for endpoint decoders upon
+  region creation.
+
+- Adjust extent/region memory available on the following events.
+        a. Add capacity Events
+	b. Release capacity events
+
+- Host response for add capacity
+	a. do not accept the extent if:
+		If the region does not exist
+		or an error occurs realizing the extent
+	b. If the region does exist
+		realize a DAX region extent with 1:1 mapping (no
+		interleave yet)
+	c. Support the event more bit by processing a list of extents
+	   marked with the more bit together before setting up a
+	   response.
+
+- Host response for remove capacity
+	a. If no DAX device references the extent; release the extent
+	b. If a reference does exist, ignore the request.
+	   (Require FM to issue release again.)
+
+- Modify DAX device creation/resize to account for extents within a
+  sparse DAX region
+
+- Trace Dynamic Capacity events for debugging
+
+- Add cxl-test infrastructure to allow for faster unit testing
+  (See new ndctl branch for cxl-dcd.sh test[1])
+
+- Only support 0 value extent tags
+
+Fan Ni's upstream of Qemu DCD was used for testing.
+
+Remaining work:
+
+	1) Allow mapping to specific extents (perhaps based on
+	   label/tag)
+	   1a) devise region size reporting based on tags
+	2) Interleave support
+
+Possible additional work depending on requirements:
+
+	1) Accept a new extent which extends (but overlaps) an existing
+	   extent(s)
+	2) Release extents when DAX devices are released if a release
+	   was previously seen from the device
+	3) Rework DAX device interfaces, memfd has been explored a bit
+
+[1] https://github.com/weiny2/ndctl/tree/dcd-region2-2024-10-01
+
+---
+Changes in v7:
+- Pick up review tags
+- Ming: Fix setting the more flag
+- Link to v6: https://patch.msgid.link/20241105-dcd-type2-upstream-v6-0-85c7fa2140fe@intel.com
+
+---
+Ira Weiny (13):
+      range: Add range_overlaps()
+      ACPI/CDAT: Add CDAT/DSMAS shared and read only flag values
+      dax: Document struct dev_dax_range
+      cxl/pci: Delay event buffer allocation
+      cxl/hdm: Use guard() in cxl_dpa_set_mode()
+      cxl/region: Refactor common create region code
+      cxl/cdat: Gather DSMAS data for DCD regions
+      cxl/events: Split event msgnum configuration from irq setup
+      cxl/pci: Factor out interrupt policy check
+      cxl/core: Return endpoint decoder information from region search
+      dax/bus: Factor out dev dax resize logic
+      tools/testing/cxl: Make event logs dynamic
+      tools/testing/cxl: Add DC Regions to mock mem data
+
+Navneet Singh (14):
+      cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+      cxl/mem: Read dynamic capacity configuration from the device
+      cxl/core: Separate region mode from decoder mode
+      cxl/region: Add dynamic capacity decoder and region modes
+      cxl/hdm: Add dynamic capacity size support to endpoint decoders
+      cxl/mem: Expose DCD partition capabilities in sysfs
+      cxl/port: Add endpoint decoder DC mode support to sysfs
+      cxl/region: Add sparse DAX region support
+      cxl/mem: Configure dynamic capacity interrupts
+      cxl/extent: Process DCD events and realize region extents
+      cxl/region/extent: Expose region extent information in sysfs
+      dax/region: Create resources on sparse DAX regions
+      cxl/region: Read existing extents on region creation
+      cxl/mem: Trace Dynamic capacity Event Record
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  125 +++-
+ drivers/cxl/core/Makefile               |    2 +-
+ drivers/cxl/core/cdat.c                 |   45 +-
+ drivers/cxl/core/core.h                 |   34 +-
+ drivers/cxl/core/extent.c               |  502 +++++++++++++++
+ drivers/cxl/core/hdm.c                  |  231 ++++++-
+ drivers/cxl/core/mbox.c                 |  610 +++++++++++++++++-
+ drivers/cxl/core/memdev.c               |  128 +++-
+ drivers/cxl/core/port.c                 |   19 +-
+ drivers/cxl/core/region.c               |  185 ++++--
+ drivers/cxl/core/trace.h                |   65 ++
+ drivers/cxl/cxl.h                       |  122 +++-
+ drivers/cxl/cxlmem.h                    |  132 +++-
+ drivers/cxl/pci.c                       |  122 +++-
+ drivers/dax/bus.c                       |  356 +++++++++--
+ drivers/dax/bus.h                       |    4 +-
+ drivers/dax/cxl.c                       |   71 ++-
+ drivers/dax/dax-private.h               |   66 +-
+ drivers/dax/hmem/hmem.c                 |    2 +-
+ drivers/dax/pmem.c                      |    2 +-
+ fs/btrfs/ordered-data.c                 |   10 +-
+ include/acpi/actbl1.h                   |    2 +
+ include/cxl/event.h                     |   32 +
+ include/linux/ioport.h                  |    3 +
+ include/linux/range.h                   |    8 +
+ tools/testing/cxl/Kbuild                |    3 +-
+ tools/testing/cxl/test/mem.c            | 1019 +++++++++++++++++++++++++++----
+ 27 files changed, 3568 insertions(+), 332 deletions(-)
+---
+base-commit: c2ee9f594da826bea183ed14f2cc029c719bf4da
+change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
