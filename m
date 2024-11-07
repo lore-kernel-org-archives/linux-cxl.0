@@ -1,142 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD8E212F0E;
-	Thu,  7 Nov 2024 15:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FBA200B99
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 15:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730993012; cv=none; b=mAg8SBZ1S1rzVoiOjIA4ixmBgybrgQnxp6u00eJHVi6gK2WbcBride+zfxsbUiOvj0AXqvbM5S2XlVlR18S7aUTZjJqhpaQ5+ibItjIs4hCsbmA0AFetZJKRKYqaipCbikS7OxZcm1//N8iVWxmmwxsvLRVsDAcZU864eBYbxY8=
+	t=1730993970; cv=none; b=clyp/ZSVlMkILEZmnbWTLUGudJTaUXvDiAZX0elXXcpJwOsgHUhslbehfFp8dsj7KEH9YAYp81PPZMPdjN+H+ugyBCiIfgZ2OVxHB3DmzAQ4AzivMGrIiGJJHdPe3CP1pW44GIZ8uOsCssDKe0oc8Is9W1qUdRk1xY2QBpsd3OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730993012; c=relaxed/simple;
-	bh=a6YO6KBaqcu7LFhMRbW9fAMjs8PEYS9W1YAnHz1KhxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y9DV2CE/GNSE5LX2DaW1eHv1RBtb16XNGlR4fdjLKXW5ddlMjARzvQEFzJ4Xh7UFk3xgxfLGOB8zaOwBgsK99rU4LI7yquDsikvW7i4AUXu70jH8uL3jblwO17DJIxk9i36dxAahUYMQ76wXgcjAPrmf3lOC4x7Vxdk6euksR8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A6uVHInw; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1730993970; c=relaxed/simple;
+	bh=XjQoRgda8BqxE/xsIHhPObHA+b7oTgnKQts29S3NmbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qzsVg8YaE2Mw4Gvs+n5OqllG4v4cSxrS2giqT3o+nlTfb0bGmgxgmB1N8PKZQUK0aCPEejAFrSGnaKgkNWlDa5vfHnfaOED08IGs23n7lbZGo/l/sfCL9vBu4CsURJleZFj1kU6CfcWADRxJaf9gdK8qY/quWhSsQq73B57P+Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XqsAxS1r; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A6uVHInw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730993010; x=1762529010;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=a6YO6KBaqcu7LFhMRbW9fAMjs8PEYS9W1YAnHz1KhxQ=;
-  b=A6uVHInwOBUTpOl1IKsw1ao328HpdB5vGeQS91Xn2OoNCuDsp0vkrNTA
-   +imdkIZSgTWozVWUUfdDrY5AnKLjrnBMYhG/wSpi+1YAmmKlBkEESvwLK
-   Z69nIZo59WgfkMehKEY7jyfb/01Czliy8uT+HqdUEJO5wnsnuQb/iMOJQ
-   eynOeTsS9Jd9Dam7McFQY8frUHDSZF1Xxr/0DQae32+3sfZBzqv241gTA
-   Db3P6TQ4yKLBNZUe4LSgudcQ72VQ1UKtIuJ7Q+An9OH+ZFk4d55+Fl9/E
-   PP+54rMeOrVxve65ub6yafBtK64OUvx5MjYV1NJ2qDZzabk4mFQT4sJ8t
-   Q==;
-X-CSE-ConnectionGUID: q1PHWFV6S22optL58g07Ng==
-X-CSE-MsgGUID: AxRs3/Y6TLGk0FmUxoxT+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="30945950"
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="30945950"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:23:29 -0800
-X-CSE-ConnectionGUID: Sq9ASEhSSCu24nQM+IXOwA==
-X-CSE-MsgGUID: ZjhDXQfkR5+08ObUA85/jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="85213249"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.165]) ([10.125.110.165])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 07:23:29 -0800
-Message-ID: <1f05ccef-5b45-4eac-b3ca-588b1e5ec6f5@intel.com>
-Date: Thu, 7 Nov 2024 08:23:28 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XqsAxS1r"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ceca7df7f0so1274779a12.1
+        for <linux-cxl@vger.kernel.org>; Thu, 07 Nov 2024 07:39:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730993964; x=1731598764; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S1ojgGMe04oTpXQ5H/CMjh7ambNOZIyTDE3vys0YK64=;
+        b=XqsAxS1rfCyW8Lu+X48Iwb4sznwbBEykddsv9WBjHAOqB4lZT+8ZKOJg90cqctbsUE
+         WEc1tdxv32bAai8EwryxfR61r2Se3f+FGnl1UtJ3DOqqUE+TXu4gs7yo7pckYgZKN2Oi
+         FR4r4bNqHCWF26epGL+hHfkPWk/VOk+nYM28rVkxU+eIZGoEI/NtJQETcxzIJH2dF0gv
+         MhVV9LdMBH7W/3gJ9/8ihf4S6G7uW3mc63BxFkUeHLOBCWAEAwqj1WUurNWe8BvhxS/J
+         niH1NkmBXwsizMQ8QlZq8+A0cO1Jyc3MB227939gIhY/24zZcNNesi95DRTYx/2hsTsj
+         ozMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730993964; x=1731598764;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S1ojgGMe04oTpXQ5H/CMjh7ambNOZIyTDE3vys0YK64=;
+        b=QqftXNyDz3AYOT+FV0PmwsscKSaGLlBHdIBa/m4oqGhegjSOd37qxYlrPO4HXd+ly0
+         1qz0BXW1qKOZ3jLJN7C9H19NckpIlwiiPzNjjYEFojEvOEvUTaEkC5SwVwR7GULqTuZw
+         VgwpCqeLaxTLf5pUiIVJq7pwDkBFN1hVN0xPKZo/wc35sInXWAmddBq81zKVsqIwzidw
+         WCOHrsQdfFNxNHn44nPBuZI8o1O1cg/Z2SrktvlyG3E6jJQ7zM2QgWRnIVMedPbEvkgs
+         5RDt2ddWKpbdg+AIWBB6//UcrEMPD976WDZEji3UW+UwfQ7iXyD7kOWMhO7RwmbvrKXe
+         pL0Q==
+X-Gm-Message-State: AOJu0YwC9sBsUgFzIixG0M8N4vgeL7M+yS+IXa3rjPYnEHOUXq9lhA/M
+	4jWgK5FbH/pB3tZvD0p2iFnF0IHTvdGj2YnlONkBzplhU+ty3O0sgD82A1TVywTMtKn87Vltjpp
+	E9KviCWqElbcPlwtDO41yZWNPRWa3mxDfE2jSvg==
+X-Google-Smtp-Source: AGHT+IGXOrtkRVrCYc75d33lyAV/3LiQk52p2PPpTahHjZKRW22P6Mji6/gzk/OmarJ3qb3dvfOp40D+9g82vg9Bxz4=
+X-Received: by 2002:a05:6402:42c9:b0:5ce:fa29:5938 with SMTP id
+ 4fb4d7f45d1cf-5cefa295c74mr3861608a12.8.1730993964398; Thu, 07 Nov 2024
+ 07:39:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RFC] cxl/region: Fix region creation for greater than x2
- switches
-To: Dan Williams <dan.j.williams@intel.com>,
- "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
- Huaisheng Ye <huaisheng.ye@intel.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "pei.p.jia@intel.com" <pei.p.jia@intel.com>
-References: <20241027075717.3714821-1-huaisheng.ye@intel.com>
- <80415a29-14dd-4108-aa02-4b0b5e1f2baf@fujitsu.com>
- <672c13b19a530_10bc6294bd@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <672c13b19a530_10bc6294bd@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241101133917.27634-1-Jonathan.Cameron@huawei.com> <20241101133917.27634-9-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20241101133917.27634-9-Jonathan.Cameron@huawei.com>
+From: Peter Maydell <peter.maydell@linaro.org>
+Date: Thu, 7 Nov 2024 15:39:13 +0000
+Message-ID: <CAFEAcA8LB3t0n_BqjBeEejfmVVYMbQ1rT9qwEbsNEoUDbkym9A@mail.gmail.com>
+Subject: Re: [PATCH qemu 08/10] hw/cxl: Check that writes do not go beyond end
+ of target attributes
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, mst@redhat.com, qemu-devel@nongnu.org, 
+	Esifiel <esifiel@gmail.com>, Fan Ni <fan.ni@samsung.com>, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 1 Nov 2024 at 13:43, Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+>
+> In cmd_features_set_feature() the an offset + data size schemed
+> is used to allow for large features.  Ensure this does not write
+> beyond the end fo the buffers used to accumulate the full feature
+> attribute set.
+>
+> Reported-by: Esifiel <esifiel@gmail.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index a40d81219c..078782e8b9 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -1292,6 +1292,11 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+>
+>          ps_set_feature = (void *)payload_in;
+>          ps_write_attrs = &ps_set_feature->feat_data;
+> +
+> +        if ((uint32_t)hdr->offset + bytes_to_copy >
+> +            sizeof(ct3d->patrol_scrub_wr_attrs)) {
+> +            return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> +        }
 
+Coverity complains about this code (CID 1564900, 1564901).
+Essentially it does not like that this check permits
+the memcpy for the case where hdr->offset is 2 and
+bytes_to_copy is 0, because memcpy(invalid_dest, src, 0)
+is still UB even though you might logically expect it
+to do nothing.
 
-On 11/6/24 6:11 PM, Dan Williams wrote:
-> [ add Dave so you 
-> 
-> Zhijian Li (Fujitsu) wrote:
->>
->>
->> On 27/10/2024 15:57, Huaisheng Ye wrote:
->>> The cxl_port_setup_targets() algorithm fails to identify valid target list
->>> ordering in the presence of 4-way and above switches resulting in
->>> 'cxl create-region' failures of the form:
->>>
->>>    # cxl create-region -d decoder0.0 -g 1024 -s 2G -t ram -w 8 -m mem4 mem1 mem6 mem3 mem2 mem5 mem7 mem0
->>>    cxl region: create_region: region0: failed to set target7 to mem0
->>>    cxl region: cmd_create_region: created 0 regions
->>>
->>>    [kernel debug message]
->>>    check_last_peer:1213: cxl region0: pci0000:0c:port1: cannot host mem6:decoder7.0 at 2
->>>    bus_remove_device:574: bus: 'cxl': remove device region0
->>>
->>> QEMU can create this failing topology:
->>>
->>>                         ACPI0017:00 [root0]
->>>                             |
->>>                           HB_0 [port1]
->>>                          /             \
->>>                       RP_0             RP_1
->>>                        |                 |
->>>                  USP [port2]           USP [port3]
->>>              /    /    \    \        /   /    \    \
->>>            DSP   DSP   DSP   DSP   DSP  DSP   DSP  DSP
->>>             |     |     |     |     |    |     |    |
->>>            mem4  mem6  mem2  mem7  mem1 mem3  mem5  mem0
->>>   Pos:      0     2     4     6     1    3     5    7
->>
->> Yeah, I tried this topology long long ago, it didn't work. At that time, I thought it
->> might be just like that. Until recently that I saw this [1] in section
->> 2.13.15.1 Region Spanning 2 HB Root Ports Example Configuration Checks
->>
->> I once tried to understand why the code used "distance" to determine the order of the target,
->> but in the end, I still couldn't figure it out (and I still don't understand it now).
->> IIRC, neither the CXL spec nor this document mentioned the keyword "distance" at all.
-> 
-> Oh, that means this needs a comment or a better variable name.
-> 
-> In this patch discussion [1] Jim came up with the term "ancestral_ways"
-> to describe the same concept of what is the offset ("distance") between
-> consecutive indices in the target list.
-> 
-> [1]: http://lore.kernel.org/ZUHeTLZb+od8q4EE@ubuntu
-> 
-> Does "ancestral_ways" more clearly convey the math that is being
-> performed at each level of the hierarchy?
-> 
-> Now, "ancestral_ways" also does not show up in the CXL specification,
-> but that is because the CXL specification leaves at as an exercise for
-> software to figure out an algorithm to validate that a proposed ordering
-> of memory-device-decoders in a region can be supported by the given CXL
-> topology.
-> 
-> In the meantime I have flagged this patch to Dave for consideration in
-> the next cxl-fixes pull request, but I suspect it will need to be
-> updated with a comment and/or rename to resovle the "distance"
-> confusion.
-> 
-> https://patchwork.kernel.org/bundle/cxllinux/cxl-fixes/
+>          memcpy((uint8_t *)&ct3d->patrol_scrub_wr_attrs + hdr->offset,
+>                 ps_write_attrs,
+>                 bytes_to_copy);
 
-If we can get it respin and tagged by next week, there's time to get it into the 6.13 merge window. Otherwise it can wait until 6.13-rc fixes.
-> 
+> @@ -1314,6 +1319,11 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+>
+>          ecs_set_feature = (void *)payload_in;
+>          ecs_write_attrs = ecs_set_feature->feat_data;
+> +
+> +        if ((uint32_t)hdr->offset + bytes_to_copy >
+> +            sizeof(ct3d->ecs_wr_attrs)) {
+> +            return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> +        }
+>          memcpy((uint8_t *)&ct3d->ecs_wr_attrs + hdr->offset,
+>                 ecs_write_attrs,
+>                 bytes_to_copy);
 
+Similarly here.
+
+thanks
+-- PMM
