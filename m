@@ -1,63 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A69C216DE8
-	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 18:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00ED21732B
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Nov 2024 18:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731002415; cv=none; b=EWyN2INM+ZSN/kd3HpVPYsLwkN/Nh40a9dfC8ezDUj2uq+hDUf2KY/z7PqTlZsw08dZYbCISF2MGWdbLOrGyWLO9gr3rx98/BIzZtVLgKqs5hN40ki+8+eDZ3U3mu2A+9yPcE4m3rSpuKLsfhKgDFquJDFaVGmVxhQSkmreAP28=
+	t=1731003205; cv=none; b=W8kb4+LWV/qS6/Y+0kL3onBToMchViTstaYhGg8BDXpwErPbXuYKTMTlSqCQk2F73KJDQfQ6/jiJ6KEWON0WkrOpVjO2JQOFFTEBnbXQGAkc4lrzlDU7C6/eXmQ4B4kIIpC8UNPgmzObrdvma1klVLVoRrBTTSS/P2+ryhFBEgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731002415; c=relaxed/simple;
-	bh=WsxZ53RjvOBINHqsu2X4toB9Qt9oOdplVRD4pMX+TyU=;
+	s=arc-20240116; t=1731003205; c=relaxed/simple;
+	bh=aPtEu9k3m/4zpImRkS7CYgAoKe3PrpC0FeeN3I+IYC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+9vnsYC/tlIj78qflPtJPcP08mlcS5GSwjgHOITHzeAIwCTYpELBjBYuEMHvV6YB1C1/ypCkpW7pfWpKAKCHW8bZOqMQjKFA2qlike4MI13LAwP0GoHOdoUg9XlxBvMpBWS5yZbk1TMLtlI5T13Lxe9r+0gwNlSAxMbAdz5MD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vp+TwJVb; arc=none smtp.client-ip=198.175.65.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=Drbsv199jnarZtf2K+3mc/MQU/tPkHrobUpHbf3ZuOeiXdzznFk758joWQo4obuPczhIOfdKtlNsrhCtoKPDbw6og0szEVJ8cAn64sRZpfbK5S3SY1fA798KLM057cLfFWpTCTTDPnO2GIK3+wxX5G7dRA+GLk6RxqPYQTMNyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SpV2imv6; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vp+TwJVb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SpV2imv6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731002414; x=1762538414;
+  t=1731003203; x=1762539203;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=WsxZ53RjvOBINHqsu2X4toB9Qt9oOdplVRD4pMX+TyU=;
-  b=Vp+TwJVbcAL5CsCGNDWXiP2iQpRM5zWlWYvU8mP/wZuXKqSyvK8naNEH
-   7ez+syji8iQF+6EhCkzirtPV8OwFY1E8/FuacMIDxGo3QJmrPlsLcrI7C
-   qYsnXeUvt0FmGEJU7/iIOKTqcXLjpYuZnevZv5rqgQqBwT9O2xCrKDs2W
-   cRxNEHOWvfHMmSgGS1VoAfD7E+7Yr3v/FCx3Z3BUADRENWKCsIOlVdV1A
-   8nDbxozX69vwOYLzzccg5EGJtNi68Gv49Ia59Cnp1e+4vI7lmEc7WN/PE
-   YVGdLOxnrycRndZ1s4knFiYZWIAkhyNAmXL1pOJRvThUjXL5NHzqxgToP
-   Q==;
-X-CSE-ConnectionGUID: DQAOSbYHSvWSsoQK8CRrxg==
-X-CSE-MsgGUID: DgBPufjPSR6oaj1116pDkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31026679"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="31026679"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 10:00:14 -0800
-X-CSE-ConnectionGUID: Y09Lzfm6ScuET2d94oFDuQ==
-X-CSE-MsgGUID: PrrqJL8STnmapJPcMRwxRw==
+  bh=aPtEu9k3m/4zpImRkS7CYgAoKe3PrpC0FeeN3I+IYC4=;
+  b=SpV2imv6tziyPVkGma4Fp437C8Cdshita+MuyyUXQCRSHiSkZe1YwonX
+   bYynjyZrjbGEC5LBPiG2LMX0l0TRkdZSUf3Cp2SGqX/A7iB1jBxLuwnL9
+   Q1X3nVuJjWhawXyL4A6Eh3qrmnwx2DwrGNkXC1Cp2sNlvGt2yXGD8/LYj
+   GZz5AInBSABcSd99FhxieAlf2/5PVl4rzh7z5fIr4fmfzwdX6BzjLhXbZ
+   UB2wUND80Z8p/qIonf+0EavPPayzk4HqnxBawON4NLVu4ip36vqVDmZke
+   o4zXD2KXNcWdObQkhzKcp+WwHSOMDHctLxUGof8kaL0k8aVFPfs6Ypyus
+   A==;
+X-CSE-ConnectionGUID: Q2CxycPKQDmheKG1ODhy1Q==
+X-CSE-MsgGUID: OPqK0Y6XSdaBb/WR1X6jhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11249"; a="41464305"
+X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
+   d="scan'208";a="41464305"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 10:13:23 -0800
+X-CSE-ConnectionGUID: bRoHKoorR2iVD6ywPcK/pA==
+X-CSE-MsgGUID: IX9kzJbYQHSTbBFamFg/OQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,135,1728975600"; 
-   d="scan'208";a="89819851"
+   d="scan'208";a="122702562"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.171])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 10:00:13 -0800
-Date: Thu, 7 Nov 2024 10:00:11 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 10:13:22 -0800
+Date: Thu, 7 Nov 2024 10:13:20 -0800
 From: Alison Schofield <alison.schofield@intel.com>
-To: ira.weiny@intel.com
+To: Ira Weiny <ira.weiny@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Fan Ni <fan.ni@samsung.com>,
 	Navneet Singh <navneet.singh@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, Sushant1 Kumar <sushant1.kumar@intel.com>
-Subject: Re: [ndctl PATCH v2 4/6] cxl/region: Add creation of Dynamic
- capacity regions
-Message-ID: <Zy0AK9FHMvst9fm3@aschofie-mobl2.lan>
+	nvdimm@lists.linux.dev
+Subject: Re: [ndctl PATCH v2 5/6] ndctl/cxl: Add extent output to region query
+Message-ID: <Zy0DQJK8opX4K16p@aschofie-mobl2.lan>
 References: <20241104-dcd-region2-v2-0-be057b479eeb@intel.com>
- <20241104-dcd-region2-v2-4-be057b479eeb@intel.com>
+ <20241104-dcd-region2-v2-5-be057b479eeb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,117 +65,159 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104-dcd-region2-v2-4-be057b479eeb@intel.com>
+In-Reply-To: <20241104-dcd-region2-v2-5-be057b479eeb@intel.com>
 
-On Mon, Nov 04, 2024 at 08:10:48PM -0600, Ira Weiny wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
+On Mon, Nov 04, 2024 at 08:10:49PM -0600, Ira Weiny wrote:
+> DCD regions have 0 or more extents.  The ability to list those and their
+> properties is useful to end users.
 > 
-> CXL Dynamic Capacity Devices (DCDs) optionally support dynamic capacity
-> with up to eight partitions (Regions) (dc0-dc7).  CXL regions can now be
-> spare and defined as dynamic capacity (dc).
+
+Should we describe those new useful properties in the man page...see
+below...
+
+> Add extent output to region queries.
 > 
-> Add support for DCD devices.  Query for DCD capabilities.  Add the
-> ability to add DC partitions to a CXL DC region.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-authored-by: Sushant1 Kumar <sushant1.kumar@intel.com>
-> Signed-off-by: Sushant1 Kumar <sushant1.kumar@intel.com>
-> Co-authored-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
 > ---
-> Changes:
-> [Fan: Properly initialize index]
-> ---
->  cxl/json.c         | 26 +++++++++++++++
->  cxl/lib/libcxl.c   | 95 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  cxl/lib/libcxl.sym |  3 ++
->  cxl/lib/private.h  |  6 +++-
->  cxl/libcxl.h       | 55 +++++++++++++++++++++++++++++--
->  cxl/memdev.c       |  7 +++-
->  cxl/region.c       | 49 ++++++++++++++++++++++++++--
->  7 files changed, 234 insertions(+), 7 deletions(-)
+>  Documentation/cxl/cxl-list.txt |   4 ++
+>  cxl/filter.h                   |   3 +
+>  cxl/json.c                     |  47 ++++++++++++++
+>  cxl/json.h                     |   3 +
+>  cxl/lib/libcxl.c               | 138 +++++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym             |   5 ++
+>  cxl/lib/private.h              |  11 ++++
+>  cxl/libcxl.h                   |  11 ++++
+>  cxl/list.c                     |   3 +
+>  util/json.h                    |   1 +
+>  10 files changed, 226 insertions(+)
 > 
-> diff --git a/cxl/json.c b/cxl/json.c
-> index dcd3cc28393faf7e8adf299a857531ecdeaac50a..915b2716a524fa8929ed34b01a7cb6590b61d4b7 100644
-> --- a/cxl/json.c
-> +++ b/cxl/json.c
-> @@ -754,10 +754,12 @@ err_free:
->  	return jpoison;
+> diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+> index 9a9911e7dd9bba561c6202784017db1bb4b9f4bd..71fd313cfec2509c79f8ad1e0f64857d0d804c13 100644
+> --- a/Documentation/cxl/cxl-list.txt
+> +++ b/Documentation/cxl/cxl-list.txt
+> @@ -411,6 +411,10 @@ OPTIONS
 >  }
+>  ----
 >  
-> +#define DC_SIZE_NAME_LEN 64
->  struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
->  		unsigned long flags)
->  {
->  	const char *devname = cxl_memdev_get_devname(memdev);
-> +	char size_name[DC_SIZE_NAME_LEN];
->  	struct json_object *jdev, *jobj;
->  	unsigned long long serial, size;
->  	const char *fw_version;
-> @@ -800,6 +802,17 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
->  		}
->  	}
->  
-> +	for (int index = 0; index < MAX_NUM_DC_REGIONS; index++) {
-> +		size = cxl_memdev_get_dc_size(memdev, index);
-> +		if (size) {
-> +			jobj = util_json_object_size(size, flags);
-> +			if (jobj) {
-> +				sprintf(size_name, "dc%d_size", index);
-> +				json_object_object_add(jdev,
-> +						       size_name, jobj);
-> +			}
-> +		}
-> +	}
+> +-N::
+> +--extents::
+> +	Extend Dynamic Capacity region listings extent information.
+> +
 
-how about reducing above indentation -
-
-		if (!size)
-			continue;
-		jobj = util_json_object_size(size, flags);
-		if (!jobj)
-			continue;
-		sprintf(size_name, "dc%d_size", index);
-		json_object_object_add(jdev, size_name, jobj);
-
-
-
-
->  	if (flags & UTIL_JSON_HEALTH) {
->  		jobj = util_cxl_memdev_health_to_json(memdev, flags);
->  		if (jobj)
-> @@ -948,11 +961,13 @@ struct json_object *util_cxl_bus_to_json(struct cxl_bus *bus,
->  	return jbus;
->  }
->  
-> +#define DC_CAPABILITY_NAME_LEN 16
->  struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
->  					     unsigned long flags)
->  {
->  	const char *devname = cxl_decoder_get_devname(decoder);
->  	struct cxl_port *port = cxl_decoder_get_port(decoder);
-> +	char dc_capable_name[DC_CAPABILITY_NAME_LEN];
->  	struct json_object *jdecoder, *jobj;
->  	struct cxl_region *region;
->  	u64 val, size;
-> @@ -1059,6 +1074,17 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
->  				json_object_object_add(
->  					jdecoder, "volatile_capable", jobj);
->  		}
-> +		for (int index = 0; index < MAX_NUM_DC_REGIONS; index++) {
-> +			if (cxl_decoder_is_dc_capable(decoder, index)) {
-> +				jobj = json_object_new_boolean(true);
-> +				if (jobj) {
-> +					sprintf(dc_capable_name, "dc%d_capable", index);
-> +					json_object_object_add(jdecoder,
-> +							       dc_capable_name,
-> +							       jobj);
-> +				}
-> +			}
-
-and similar above.
+a sample perhaps?  or some verbage on  what to expect.
 
 
 snip
 
+>  
+> +static void cxl_extents_init(struct cxl_region *region)
+> +{
+> +	const char *devname = cxl_region_get_devname(region);
+> +	struct cxl_ctx *ctx = cxl_region_get_ctx(region);
+> +	char *extent_path, *dax_region_path;
+> +	struct dirent *de;
+> +	DIR *dir = NULL;
+> +
+> +	if (region->extents_init)
+> +		return;
+> +	region->extents_init = 1;
+> +
+> +	dbg(ctx, "Checking extents: %s\n", region->dev_path);
+
+Rather than emit the above which makes me assume success if
+no err message follows, how about emitting the success debug
+msg when all is done below.
+
+> +
+> +	dax_region_path = calloc(1, strlen(region->dev_path) + 64);
+> +	if (!dax_region_path) {
+> +		err(ctx, "%s: allocation failure\n", devname);
+> +		return;
+> +	}
+> +
+> +	extent_path = calloc(1, strlen(region->dev_path) + 100);
+> +	if (!extent_path) {
+> +		err(ctx, "%s: allocation failure\n", devname);
+> +		free(dax_region_path);
+> +		return;
+> +	}
+> +
+> +	sprintf(dax_region_path, "%s/dax_region%d",
+> +		region->dev_path, region->id);
+> +	dir = opendir(dax_region_path);
+> +	if (!dir) {
+> +		err(ctx, "no extents found: %s\n", dax_region_path);
+> +		free(extent_path);
+> +		free(dax_region_path);
+> +		return;
+> +	}
+> +
+> +	while ((de = readdir(dir)) != NULL) {
+> +		struct cxl_region_extent *extent;
+> +		char buf[SYSFS_ATTR_SIZE];
+> +		u64 offset, length;
+> +		int id, region_id;
+> +
+> +		if (sscanf(de->d_name, "extent%d.%d", &region_id, &id) != 2)
+> +			continue;
+> +
+> +		sprintf(extent_path, "%s/extent%d.%d/offset",
+> +			dax_region_path, region_id, id);
+> +		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
+> +			err(ctx, "%s: failed to read extent%d.%d/offset\n",
+> +				devname, region_id, id);
+> +			continue;
+> +		}
+> +
+> +		offset = strtoull(buf, NULL, 0);
+> +		if (offset == ERANGE) {
+> +			err(ctx, "%s extent%d.%d: failed to read offset\n",
+> +				devname, region_id, id);
+> +			continue;
+> +		}
+> +
+> +		sprintf(extent_path, "%s/extent%d.%d/length",
+> +			dax_region_path, region_id, id);
+> +		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
+> +			err(ctx, "%s: failed to read extent%d.%d/length\n",
+> +				devname, region_id, id);
+> +			continue;
+> +		}
+> +
+> +		length = strtoull(buf, NULL, 0);
+> +		if (length == ERANGE) {
+> +			err(ctx, "%s extent%d.%d: failed to read length\n",
+> +				devname, region_id, id);
+> +			continue;
+> +		}
+> +
+> +		sprintf(extent_path, "%s/extent%d.%d/tag",
+> +			dax_region_path, region_id, id);
+> +		buf[0] = '\0';
+> +		if (sysfs_read_attr(ctx, extent_path, buf) != 0)
+> +			dbg(ctx, "%s extent%d.%d: failed to read tag\n",
+> +				devname, region_id, id);
+> +
+> +		extent = calloc(1, sizeof(*extent));
+> +		if (!extent) {
+> +			err(ctx, "%s extent%d.%d: allocation failure\n",
+> +				devname, region_id, id);
+> +			continue;
+> +		}
+> +		if (strlen(buf) && uuid_parse(buf, extent->tag) < 0)
+> +			err(ctx, "%s:%s\n", extent_path, buf);
+> +		extent->region = region;
+> +		extent->offset = offset;
+> +		extent->length = length;
+> +
+> +		list_node_init(&extent->list);
+> +		list_add(&region->extents, &extent->list);
+> +	}
+
+	Here - dbg the success message
+
+> +	free(dax_region_path);
+> +	free(extent_path);
+> +	closedir(dir);
+> +}
+> 
