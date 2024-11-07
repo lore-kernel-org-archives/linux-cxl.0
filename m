@@ -1,125 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE777F9;
-	Thu,  7 Nov 2024 05:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191421F12F9;
+	Thu,  7 Nov 2024 11:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730956880; cv=none; b=LENYGg9hdEDWuy1wvheYJ/544oaV4tMKP//gXXHhWPoaYJXiJetWQSCWpALra8mXrI3i+rvGStRehiJqO8gjfJsV1/SzUPZtK5htckjmXYfYZZfrZInz2Le1fluze4xFCqKvSBFaV5wgUtvGKlavxwerC6XakolkLF5EkKf8k2g=
+	t=1730977711; cv=none; b=lSZ2VIrrFz+JtwtZ0K2rHXBpfaO8XQixD1Tg07e3ncPeJnEWde7QfyPqgPp3RRFkua5Gutd+3X8f8dK8m2WxsuFvVgIVmzfGWJB4w152Wc0iFFR38I4np5ytRwARi5B+nkFebGQSjrqKOU+I7LnA0YTVXXL2lfBCt5hZ1u03R2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730956880; c=relaxed/simple;
-	bh=LcTJNuAS+0u64bln2s0a89deCwW+g5Nrojs1Slddt/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LO99nVgrqp4dw8p7qVK2jfBGh9eIGIKpk+5etsZf8dDM4FuysxBcQqw9KiQ50cVPfbyh+tkJ0iWPxTiNl4jjq32Jd09oczcLL3oO5hJbTM4BO+AGpzvwEMvd2nIpBFFZkARR2Qc3MqlHhUGPsC0kbPNRCn7myndMAHw2yhsTfVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LqZ6urMl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LqZ6urMl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064BBC4CECC;
-	Thu,  7 Nov 2024 05:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1730956880;
-	bh=LcTJNuAS+0u64bln2s0a89deCwW+g5Nrojs1Slddt/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LqZ6urMldxlvEBhdUM/g9ay6JBw8MxGPCgUReHarZ5Rrrup6qtaAMbkDd8Ut3yIvJ
-	 TB3aWEUF8ij6xyiKo01mFPXSemUmYSpWT2Gfca8HAeh7vk2NMp5wXiqsR3jTvujmXl
-	 Vml1yQf1y5lU0zvuowqmi415BENx3kOsFR8a5uB8=
-Date: Thu, 7 Nov 2024 06:21:00 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Frederic Barrat <fbarrat@linux.ibm.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] sysfs: introduce callback
- attribute_group::bin_size
-Message-ID: <2024110726-hasty-obsolete-3780@gregkh>
-References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
- <20241103-sysfs-const-bin_attr-v2-2-71110628844c@weissschuh.net>
- <20241106200513.GB174958@rocinante>
+	s=arc-20240116; t=1730977711; c=relaxed/simple;
+	bh=Z7Xqgehlx8wZTxjCgV/aoC/vyS4B8U7q2wXoaRWeyiE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HW52O0iM4xHDaJJ/G9K4rwh36qFCQ8TyznPiH9uPASSDootQIiPHGO7JntIR+4vXWfN1oodKs1ezgjVpPpB6cZpv5ELHu7xeT3QpQAaRBKq1oC6lKutgunndcaPtEg/8ibyqfdEgcnz5stz8mdg2HLr47vqxdEtrkacnUMfPHsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XkfST2ntzz6LDGF;
+	Thu,  7 Nov 2024 19:08:09 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3660A140CB9;
+	Thu,  7 Nov 2024 19:08:13 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 7 Nov
+ 2024 12:08:12 +0100
+Date: Thu, 7 Nov 2024 11:08:10 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
+ Singh" <navneet.singh@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, "Alison Schofield"
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 05/27] cxl/hdm: Use guard() in cxl_dpa_set_mode()
+Message-ID: <20241107110810.00000fc1@Huawei.com>
+In-Reply-To: <20241105-dcd-type2-upstream-v6-5-85c7fa2140fe@intel.com>
+References: <20241105-dcd-type2-upstream-v6-0-85c7fa2140fe@intel.com>
+	<20241105-dcd-type2-upstream-v6-5-85c7fa2140fe@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241106200513.GB174958@rocinante>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Nov 07, 2024 at 05:05:13AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
+On Tue, 05 Nov 2024 12:38:27 -0600
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> Additional DCD functionality is being added to this call which will be
+> simplified by the use of guard() with the cxl_dpa_rwsem.
 > 
-> > Several drivers need to dynamically calculate the size of an binary
-> > attribute. Currently this is done by assigning attr->size from the
-> > is_bin_visible() callback.
-> > 
-> > This has drawbacks:
-> > * It is not documented.
-> > * A single attribute can be instantiated multiple times, overwriting the
-> >   shared size field.
-> > * It prevents the structure to be moved to read-only memory.
-> > 
-> > Introduce a new dedicated callback to calculate the size of the
-> > attribute.
+> Convert the function to use guard() prior to adding DCD functionality.
 > 
-> Would it be possible to have a helper that when run against a specific
-> kobject reference, then it would refresh or re-run the size callbacks?
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+You missed some RBs from v5 and I don't think this changed.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Davidlohr also gave one.
+
+> ---
+>  drivers/cxl/core/hdm.c | 21 ++++++---------------
+>  1 file changed, 6 insertions(+), 15 deletions(-)
 > 
-> We have an use case where we resize BARs on demand via sysfs, and currently
-> the only way to update the size of each resource sysfs object is to remove
-> and added them again, which is a bit crude, and can also be unsafe.
-
-How is it unsafe?
-
-> Hence the question.
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 3df10517a3278f228c7535fcbdb607d7b75bc879..463ba2669cea55194e2be2c26d02af75dde8d145 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -424,7 +424,6 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>  	struct device *dev = &cxled->cxld.dev;
+> -	int rc;
+>  
+>  	switch (mode) {
+>  	case CXL_DECODER_RAM:
+> @@ -435,11 +434,9 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  		return -EINVAL;
+>  	}
+>  
+> -	down_write(&cxl_dpa_rwsem);
+> -	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+> +	guard(rwsem_write)(&cxl_dpa_rwsem);
+> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
+> +		return -EBUSY;
+>  
+>  	/*
+>  	 * Only allow modes that are supported by the current partition
+> @@ -447,21 +444,15 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>  	 */
+>  	if (mode == CXL_DECODER_PMEM && !resource_size(&cxlds->pmem_res)) {
+>  		dev_dbg(dev, "no available pmem capacity\n");
+> -		rc = -ENXIO;
+> -		goto out;
+> +		return -ENXIO;
+>  	}
+>  	if (mode == CXL_DECODER_RAM && !resource_size(&cxlds->ram_res)) {
+>  		dev_dbg(dev, "no available ram capacity\n");
+> -		rc = -ENXIO;
+> -		goto out;
+> +		return -ENXIO;
+>  	}
+>  
+>  	cxled->mode = mode;
+> -	rc = 0;
+> -out:
+> -	up_write(&cxl_dpa_rwsem);
+> -
+> -	return rc;
+> +	return 0;
+>  }
+>  
+>  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
 > 
-> There exist the sysfs_update_groups(), but the BAR resource sysfs objects
-> are currently, at least not yet, added to any attribute group.
 
-then maybe they should be added to one :)
-
-thanks,
-
-greg k-h
