@@ -1,509 +1,339 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291C0BA27;
-	Fri,  8 Nov 2024 00:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AEE1E1C16
+	for <linux-cxl@vger.kernel.org>; Fri,  8 Nov 2024 09:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731026185; cv=none; b=l+Rhg5fjabG7/hlP0owz3U+HcUQWH4de8IIlFAZrBlNQG7D89s6+6l+iqfHhotigDGDIW+pi8yQfeZ8LSaLnTCugWW176S7j3+f9ULwEcK2/aOpp2gQNx0kDV3C2iPNVGNrn4mT4K8bLKRiktPi4lVUKQzfEkJNmNHD8kN7UkgA=
+	t=1731059852; cv=none; b=UnmCvvuIGeiOpCDmf1E2Iite8RRekie0oSMdjEDpwN1UpHSW02wQKZxZYbKwqG3z0/RFKL9UxuRWmC8G1CzVRY48px/tgphQz+HeDOZKPJTnFsUcw9dVGLCFUKJJG14oYWD86BXEQU2d08mmS+WmgJGY2RpuD8zUiz2FJ07CsXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731026185; c=relaxed/simple;
-	bh=mxe6s/Gxf58O5Bv1Uja9mwxgeNp5mq6+g11SngRjXnA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ic7juJECtRCyilFn4Uyiuw5qDIR7eyu3cNfYoN5lUS57jmoj41svP5FTHYn+9lfpuTd2p4VUmD19HDt/3WRKazWJMBZYGI/jU2WV9xBAqIsABk6TNg4fiR4IVQvfzS3lHNcfKj4m5SXQcJ10isIW7T5WKcPxH41J3icUnF4jXNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oo0axgXJ; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731059852; c=relaxed/simple;
+	bh=8fI1kWvz6hGfQzWAO2sB4JOqTLhejAN4OfQdn+uncMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F3uRpGJSzwoiwYu24MYfwBeD/RVEYehEA/rwat44cyW6enmHW8vB77dGR4iT7bjXrxzd4pVod7D7CBtx2N1yiuD8sIlATdlT4GguigqtTdmdAXXzjEP2MAb82ETyHdn7csf8vXXi6w8vwWXp0M4Y6ThdVPB6McVXNBiejLCiIVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r+EmRHg9; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oo0axgXJ"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-720c2db824eso1619838b3a.0;
-        Thu, 07 Nov 2024 16:36:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+EmRHg9"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43152b79d25so16196625e9.1
+        for <linux-cxl@vger.kernel.org>; Fri, 08 Nov 2024 01:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731026182; x=1731630982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjUJNAqUSD0fpIJN7hsUnikhrlQCt4BCY1mQOMqITlo=;
-        b=Oo0axgXJPLcRa1GqH4WuiQToa0RxKTStTFSqcqhIOgoEryj0/H93cbMnP9RFLtoSLO
-         Fc44zgbkPgNw2YqKT6BZC9xo/wr+VHT2P8dJd5CMYzzG8DW0cAASZO9m85T/Qe32bSV9
-         WVZ67Gqsk+eI/xWoF8lMFDcG5uZKw9P43jlwJ+av80S9BVZgSGSbax66cEK6BknPsQO4
-         59KJILT/hCTaNHMGrkSfTvBo1Rgw6Dj+rw1iFMX4ftcZl79ArtN4OzfX6md84mGQlnAA
-         XfLTIMuOx5TgBy5qbw9akYeFqAhJlVuL+irZ7pCWwO9m5b+Xgg4pZTP0LXWojWJpQ9DE
-         cqTA==
+        d=linaro.org; s=google; t=1731059849; x=1731664649; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1qvSjFgT9QigLmSV7E1Bd8DDsmjWl8PjqBY+cyP/Rbk=;
+        b=r+EmRHg9Wio3I2CXfbejiEK7TYa+vBhJNccbX2yRyz5L8tYR8b4YkVDkmJF2rSAGqf
+         yeKCEEXSR22yA+MxHXnIm78RcdKuowWxl4t3MjX+EfSlc20OZ64o39uogROjxOGr0Kmf
+         jS5vf2OYMNmBmP9hA8owbCs2/R+M4peff78zfaoDuX14zWwruWkV2SnjZlvB8nFSaiB8
+         W0S/B/LpgIsEEBgyNN5GHcRUMu92u2yNWaffZYnTezcfGPCbtgAJb5/f/Ziva4/vqOLc
+         7+wkQI+cpjUTjXb5Vvr9zSI+oVslva2iTYPsodGIuPguPl1jgEVbl8nj/NKy9PxjsSA+
+         qQew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731026182; x=1731630982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CjUJNAqUSD0fpIJN7hsUnikhrlQCt4BCY1mQOMqITlo=;
-        b=Z5tSpzgj//uRWhTb2BDRdEw+Z0NefwXMzpL7/YSDiWMkWZ6EW1lLu3mjP8/LPEs3K3
-         2TcLwZtf945dbhdFkTQ8zMs2ntw5tceP1V0UPlHhsG292mFXLD2uTAyu5Mr0QGqEQ08B
-         lGCNvbCQLf2OBPSg9b6+mxD+R5AypVNGcsN7c21iMuu13hmBY2Qa5VH9FRKhNugnE2zk
-         lhMK74BQ8BueOBGytshMtkqf8Daa+CJe2MWM15xCsVzEcoQxDsyTxSE6L26RKZHdA26t
-         ZNfWMVU1b3UHjc2uYY08IZOhI21Nd2iVpmKzruz3ACoRH5K2chnkPjjc5/hmb8rivhjY
-         JraQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUE8JYIATFqUZXlhIOFqMTVXOo1gQXHvqfXDZKKRWlDPrwywkXWo9yF5oNIXwHhJXXuZsj+zkdvsthL@vger.kernel.org, AJvYcCVPBHh5Bih0YwM4Pn5VOJBBVjB4DVYoiGGZk5TOHM90ARG7yex+jjzJXb1KtYuxLs9wMq95MRZCg0yFTGsV@vger.kernel.org, AJvYcCXBQ1yYHR2JJtNONwVbT8ymURDuGORiX/d6w91O4xAKxbN9ctCQ0YMXHBNWODf08PCbp+67okT2cY4j@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjMgb66fKpOJof024dxtNeDWp3el9VmAtKzSPqdIZL8MZ21hm0
-	/r2jcRESQU/FyqQMIFLoWURA/xs+6B9uc8jeHEgLjiARmeV69eOd
-X-Google-Smtp-Source: AGHT+IGSNyH5XzLu6nhj/EOmVCetKhN54ggz5hDC7V0Mbx8kGXnmU8chmzVyuRxDOUtddvysNrWqxQ==
-X-Received: by 2002:aa7:8882:0:b0:71e:6c67:2ebf with SMTP id d2e1a72fcca58-724132bff58mr1393036b3a.11.1731026182280;
-        Thu, 07 Nov 2024 16:36:22 -0800 (PST)
-Received: from fan ([2601:646:8f03:9fee:6ed1:b454:5fd2:3850])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724079a3d38sm2429530b3a.122.2024.11.07.16.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 16:36:21 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 7 Nov 2024 16:36:17 -0800
-To: shiju.jose@huawei.com
-Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, gregkh@linuxfoundation.org,
-	sudeep.holla@arm.com, jassisinghbrar@gmail.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
-	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
-	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
-	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	gthelen@google.com, wschwartz@amperecomputing.com,
-	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
-	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
-	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [PATCH v15 02/15] EDAC: Add scrub control feature
-Message-ID: <Zy1dAazN9OPR0POI@fan>
-References: <20241101091735.1465-1-shiju.jose@huawei.com>
- <20241101091735.1465-3-shiju.jose@huawei.com>
+        d=1e100.net; s=20230601; t=1731059849; x=1731664649;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1qvSjFgT9QigLmSV7E1Bd8DDsmjWl8PjqBY+cyP/Rbk=;
+        b=nNB3xdcZGtTcz6vGfh+UMcOwehMItoeUgujt/89Im+7fdB+Nv2+rCCe+OM+0WzMNGC
+         CX/9pUUr2g4aJy0O1WZ2qvha3iguDDY0WYf6bpR9g4OEeXFKPtmH6DzQed1wZ5q+XeeX
+         t1KUN5DnJKa2g55RLX9Dl/T0lorL3jvTxsXvlMbxRoPg7eDfM3/Jr3r8s9x8mObiTMTK
+         sirz7AFHwnsphuhyHa/LvCwXlm1+m+u8/JvsEBdUG0dFVwdoDFswCkLHDLrAreF9gltM
+         mWbqSvmcEv9hoVNGVK6ZxyACcda4Xt6b09+nZjOIqaGwY7OiR3789cRaXIgahMPRKLsZ
+         YlRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbIT45mORvjlcr1MtXH8DnT2PJfu34DI2HvJIg15mOkDG51f7jl8AbKYaKEGtA8T49cQphJwsz+PM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyqykCNDnHV4anLgYLrvY39tsgZU2UjPw8Eff7jb7mLtFp66N4
+	Eh94fhcceNJsfArQeRgsXnxWE/HCVymZ+DMm9iDyIhDCpOX82Rw3E1f/D2F4t1s=
+X-Google-Smtp-Source: AGHT+IGSM0YIoIJwn4bQFLUSfQjkco2eSXc7cP/BCeCrt62cX0r5HN3g5uOpTFuxNeCM9lxmmGx4PQ==
+X-Received: by 2002:a05:600c:4448:b0:430:52ec:1e41 with SMTP id 5b1f17b1804b1-432b7509c5fmr17646005e9.17.1731059848755;
+        Fri, 08 Nov 2024 01:57:28 -0800 (PST)
+Received: from [172.20.143.194] ([89.101.134.25])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-432aa70a234sm94913735e9.34.2024.11.08.01.57.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2024 01:57:28 -0800 (PST)
+Message-ID: <5bd704c3-88c1-4b6f-82ec-25f9d7a6e92b@linaro.org>
+Date: Fri, 8 Nov 2024 09:57:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241101091735.1465-3-shiju.jose@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/10] sysfs: treewide: constify attribute callback of
+ bin_is_visible()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Carlos Bilbao <carlos.bilbao.osdev@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>,
+ Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+ Logan Gunthorpe <logang@deltatee.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org
+References: <20241103-sysfs-const-bin_attr-v2-0-71110628844c@weissschuh.net>
+ <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20241103-sysfs-const-bin_attr-v2-5-71110628844c@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 01, 2024 at 09:17:20AM +0000, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+
+
+On 03/11/2024 17:03, Thomas Weißschuh wrote:
+> The is_bin_visible() callbacks should not modify the struct
+> bin_attribute passed as argument.
+> Enforce this by marking the argument as const.
 > 
-> Add a generic EDAC scrub control to manage memory scrubbers in the system.
-> Devices with a scrub feature register with the EDAC device driver, which
-> retrieves the scrub descriptor from the EDAC scrub driver and exposes the
-> sysfs scrub control attributes for a scrub instance to userspace at
-> /sys/bus/edac/devices/<dev-name>/scrubX/.
+> As there are not many callback implementers perform this change
+> throughout the tree at once.
 > 
-> The common sysfs scrub control interface abstracts the control of
-> arbitrary scrubbing functionality into a common set of functions. The
-> sysfs scrub attribute nodes are only present if the client driver has
-> implemented the corresponding attribute callback function and passed the
-> operations(ops) to the EDAC device driver during registration.
-> 
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > ---
+>   drivers/cxl/port.c                      |  2 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |  2 +-
+>   drivers/infiniband/hw/qib/qib_sysfs.c   |  2 +-
+>   drivers/mtd/spi-nor/sysfs.c             |  2 +-
 
-Minor comments inline.
+thanks for the patch.
 
->  Documentation/ABI/testing/sysfs-edac-scrub |  74 ++++++++
->  drivers/edac/Makefile                      |   1 +
->  drivers/edac/edac_device.c                 |  40 +++-
->  drivers/edac/scrub.c                       | 209 +++++++++++++++++++++
->  include/linux/edac.h                       |  34 ++++
->  5 files changed, 354 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-edac-scrub
->  create mode 100755 drivers/edac/scrub.c
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> #nvmem
+
+
+--srini
+>   drivers/nvmem/core.c                    |  3 ++-
+>   drivers/pci/pci-sysfs.c                 |  2 +-
+>   drivers/pci/vpd.c                       |  2 +-
+>   drivers/platform/x86/amd/hsmp.c         |  2 +-
+>   drivers/platform/x86/intel/sdsi.c       |  2 +-
+>   drivers/scsi/scsi_sysfs.c               |  2 +-
+>   drivers/usb/core/sysfs.c                |  2 +-
+>   include/linux/sysfs.h                   | 30 +++++++++++++++---------------
+>   12 files changed, 27 insertions(+), 26 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-edac-scrub b/Documentation/ABI/testing/sysfs-edac-scrub
-> new file mode 100644
-> index 000000000000..d8d11165ff2a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-edac-scrub
-  
-...
-
-> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-> index e9229b5f8afe..cd700a64406e 100644
-> --- a/drivers/edac/edac_device.c
-> +++ b/drivers/edac/edac_device.c
-> @@ -576,6 +576,7 @@ static void edac_dev_release(struct device *dev)
->  {
->  	struct edac_dev_feat_ctx *ctx = container_of(dev, struct edac_dev_feat_ctx, dev);
->  
-> +	kfree(ctx->scrub);
->  	kfree(ctx->dev.groups);
->  	kfree(ctx);
->  }
-> @@ -609,6 +610,8 @@ int edac_dev_register(struct device *parent, char *name,
->  		      const struct edac_dev_feature *ras_features)
->  {
->  	const struct attribute_group **ras_attr_groups;
-> +	int scrub_cnt = 0, scrub_inst = 0;
-> +	struct edac_dev_data *dev_data;
->  	struct edac_dev_feat_ctx *ctx;
->  	int attr_gcnt = 0;
->  	int ret, feat;
-> @@ -619,7 +622,10 @@ int edac_dev_register(struct device *parent, char *name,
->  	/* Double parse to make space for attributes */
->  	for (feat = 0; feat < num_features; feat++) {
->  		switch (ras_features[feat].ft_type) {
-> -		/* Add feature specific code */
-> +		case RAS_FEAT_SCRUB:
-> +			attr_gcnt++;
-> +			scrub_cnt++;
-> +			break;
->  		default:
->  			return -EINVAL;
->  		}
-> @@ -635,13 +641,37 @@ int edac_dev_register(struct device *parent, char *name,
->  		goto ctx_free;
->  	}
->  
-> +	if (scrub_cnt) {
-> +		ctx->scrub = kcalloc(scrub_cnt, sizeof(*ctx->scrub), GFP_KERNEL);
-> +		if (!ctx->scrub) {
-> +			ret = -ENOMEM;
-> +			goto groups_free;
-> +		}
-> +	}
-> +
->  	attr_gcnt = 0;
-
-If we use scrub_cnt the same way as we use attr_gcnt, we do not need
-scrub_inst.
-
-Fan
->  	for (feat = 0; feat < num_features; feat++, ras_features++) {
->  		switch (ras_features->ft_type) {
-> -		/* Add feature specific code */
-> +		case RAS_FEAT_SCRUB:
-> +			if (!ras_features->scrub_ops ||
-> +			    scrub_inst != ras_features->instance)
-> +				goto data_mem_free;
-> +
-> +			dev_data = &ctx->scrub[scrub_inst];
-> +			dev_data->instance = scrub_inst;
-> +			dev_data->scrub_ops = ras_features->scrub_ops;
-> +			dev_data->private = ras_features->ctx;
-> +			ret = edac_scrub_get_desc(parent, &ras_attr_groups[attr_gcnt],
-> +						  ras_features->instance);
-> +			if (ret)
-> +				goto data_mem_free;
-> +
-> +			scrub_inst++;
-> +			attr_gcnt++;
-> +			break;
->  		default:
->  			ret = -EINVAL;
-> -			goto groups_free;
-> +			goto data_mem_free;
->  		}
->  	}
->  
-> @@ -654,7 +684,7 @@ int edac_dev_register(struct device *parent, char *name,
->  
->  	ret = dev_set_name(&ctx->dev, name);
->  	if (ret)
-> -		goto groups_free;
-> +		goto data_mem_free;
->  
->  	ret = device_register(&ctx->dev);
->  	if (ret) {
-> @@ -664,6 +694,8 @@ int edac_dev_register(struct device *parent, char *name,
->  
->  	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
->  
-> +data_mem_free:
-> +	kfree(ctx->scrub);
->  groups_free:
->  	kfree(ras_attr_groups);
->  ctx_free:
-> diff --git a/drivers/edac/scrub.c b/drivers/edac/scrub.c
-> new file mode 100755
-> index 000000000000..3978201c4bfc
-> --- /dev/null
-> +++ b/drivers/edac/scrub.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * The generic EDAC scrub driver controls the memory scrubbers in the
-> + * system. The common sysfs scrub interface abstracts the control of
-> + * various arbitrary scrubbing functionalities into a unified set of
-> + * functions.
-> + *
-> + * Copyright (c) 2024 HiSilicon Limited.
-> + */
-> +
-> +#include <linux/edac.h>
-> +
-> +enum edac_scrub_attributes {
-> +	SCRUB_ADDRESS,
-> +	SCRUB_SIZE,
-> +	SCRUB_ENABLE_BACKGROUND,
-> +	SCRUB_MIN_CYCLE_DURATION,
-> +	SCRUB_MAX_CYCLE_DURATION,
-> +	SCRUB_CUR_CYCLE_DURATION,
-> +	SCRUB_MAX_ATTRS
-> +};
-> +
-> +struct edac_scrub_dev_attr {
-> +	struct device_attribute dev_attr;
-> +	u8 instance;
-> +};
-> +
-> +struct edac_scrub_context {
-> +	char name[EDAC_FEAT_NAME_LEN];
-> +	struct edac_scrub_dev_attr scrub_dev_attr[SCRUB_MAX_ATTRS];
-> +	struct attribute *scrub_attrs[SCRUB_MAX_ATTRS + 1];
-> +	struct attribute_group group;
-> +};
-> +
-> +#define TO_SCRUB_DEV_ATTR(_dev_attr)      \
-> +		container_of(_dev_attr, struct edac_scrub_dev_attr, dev_attr)
-> +
-> +#define EDAC_SCRUB_ATTR_SHOW(attrib, cb, type, format)				\
-> +static ssize_t attrib##_show(struct device *ras_feat_dev,			\
-> +			     struct device_attribute *attr, char *buf)		\
-> +{										\
-> +	u8 inst = TO_SCRUB_DEV_ATTR(attr)->instance;				\
-> +	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
-> +	const struct edac_scrub_ops *ops = ctx->scrub[inst].scrub_ops;		\
-> +	type data;								\
-> +	int ret;								\
-> +										\
-> +	ret = ops->cb(ras_feat_dev->parent, ctx->scrub[inst].private, &data);	\
-> +	if (ret)								\
-> +		return ret;							\
-> +										\
-> +	return sysfs_emit(buf, format, data);					\
-> +}
-> +
-> +EDAC_SCRUB_ATTR_SHOW(addr, read_addr, u64, "0x%llx\n")
-> +EDAC_SCRUB_ATTR_SHOW(size, read_size, u64, "0x%llx\n")
-> +EDAC_SCRUB_ATTR_SHOW(enable_background, get_enabled_bg, bool, "%u\n")
-> +EDAC_SCRUB_ATTR_SHOW(min_cycle_duration, get_min_cycle, u32, "%u\n")
-> +EDAC_SCRUB_ATTR_SHOW(max_cycle_duration, get_max_cycle, u32, "%u\n")
-> +EDAC_SCRUB_ATTR_SHOW(current_cycle_duration, get_cycle_duration, u32, "%u\n")
-> +
-> +#define EDAC_SCRUB_ATTR_STORE(attrib, cb, type, conv_func)			\
-> +static ssize_t attrib##_store(struct device *ras_feat_dev,			\
-> +			      struct device_attribute *attr,			\
-> +			      const char *buf, size_t len)			\
-> +{										\
-> +	u8 inst = TO_SCRUB_DEV_ATTR(attr)->instance;				\
-> +	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
-> +	const struct edac_scrub_ops *ops = ctx->scrub[inst].scrub_ops;		\
-> +	type data;								\
-> +	int ret;								\
-> +										\
-> +	ret = conv_func(buf, 0, &data);						\
-> +	if (ret < 0)								\
-> +		return ret;							\
-> +										\
-> +	ret = ops->cb(ras_feat_dev->parent, ctx->scrub[inst].private, data);	\
-> +	if (ret)								\
-> +		return ret;							\
-> +										\
-> +	return len;								\
-> +}
-> +
-> +EDAC_SCRUB_ATTR_STORE(addr, write_addr, u64, kstrtou64)
-> +EDAC_SCRUB_ATTR_STORE(size, write_size, u64, kstrtou64)
-> +EDAC_SCRUB_ATTR_STORE(enable_background, set_enabled_bg, unsigned long, kstrtoul)
-> +EDAC_SCRUB_ATTR_STORE(current_cycle_duration, set_cycle_duration, unsigned long, kstrtoul)
-> +
-> +static umode_t scrub_attr_visible(struct kobject *kobj, struct attribute *a, int attr_id)
-> +{
-> +	struct device *ras_feat_dev = kobj_to_dev(kobj);
-> +	struct device_attribute *dev_attr = container_of(a, struct device_attribute, attr);
-> +	u8 inst = TO_SCRUB_DEV_ATTR(dev_attr)->instance;
-> +	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
-> +	const struct edac_scrub_ops *ops = ctx->scrub[inst].scrub_ops;
-> +
-> +	switch (attr_id) {
-> +	case SCRUB_ADDRESS:
-> +		if (ops->read_addr) {
-> +			if (ops->write_addr)
-> +				return a->mode;
-> +			else
-> +				return 0444;
-> +		}
-> +		break;
-> +	case SCRUB_SIZE:
-> +		if (ops->read_size) {
-> +			if (ops->write_size)
-> +				return a->mode;
-> +			else
-> +				return 0444;
-> +		}
-> +		break;
-> +	case SCRUB_ENABLE_BACKGROUND:
-> +		if (ops->get_enabled_bg) {
-> +			if (ops->set_enabled_bg)
-> +				return a->mode;
-> +			else
-> +				return 0444;
-> +		}
-> +		break;
-> +	case SCRUB_MIN_CYCLE_DURATION:
-> +		if (ops->get_min_cycle)
-> +			return a->mode;
-> +		break;
-> +	case SCRUB_MAX_CYCLE_DURATION:
-> +		if (ops->get_max_cycle)
-> +			return a->mode;
-> +		break;
-> +	case SCRUB_CUR_CYCLE_DURATION:
-> +		if (ops->get_cycle_duration) {
-> +			if (ops->set_cycle_duration)
-> +				return a->mode;
-> +			else
-> +				return 0444;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#define EDAC_SCRUB_ATTR_RO(_name, _instance)       \
-> +	((struct edac_scrub_dev_attr) { .dev_attr = __ATTR_RO(_name), \
-> +					.instance = _instance })
-> +
-> +#define EDAC_SCRUB_ATTR_WO(_name, _instance)       \
-> +	((struct edac_scrub_dev_attr) { .dev_attr = __ATTR_WO(_name), \
-> +					.instance = _instance })
-> +
-> +#define EDAC_SCRUB_ATTR_RW(_name, _instance)       \
-> +	((struct edac_scrub_dev_attr) { .dev_attr = __ATTR_RW(_name), \
-> +					.instance = _instance })
-> +
-> +static int scrub_create_desc(struct device *scrub_dev,
-> +			     const struct attribute_group **attr_groups, u8 instance)
-> +{
-> +	struct edac_scrub_context *scrub_ctx;
-> +	struct attribute_group *group;
-> +	int i;
-> +	struct edac_scrub_dev_attr dev_attr[] = {
-> +		[SCRUB_ADDRESS] = EDAC_SCRUB_ATTR_RW(addr, instance),
-> +		[SCRUB_SIZE] = EDAC_SCRUB_ATTR_RW(size, instance),
-> +		[SCRUB_ENABLE_BACKGROUND] = EDAC_SCRUB_ATTR_RW(enable_background, instance),
-> +		[SCRUB_MIN_CYCLE_DURATION] = EDAC_SCRUB_ATTR_RO(min_cycle_duration, instance),
-> +		[SCRUB_MAX_CYCLE_DURATION] = EDAC_SCRUB_ATTR_RO(max_cycle_duration, instance),
-> +		[SCRUB_CUR_CYCLE_DURATION] = EDAC_SCRUB_ATTR_RW(current_cycle_duration, instance)
-> +	};
-> +
-> +	scrub_ctx = devm_kzalloc(scrub_dev, sizeof(*scrub_ctx), GFP_KERNEL);
-> +	if (!scrub_ctx)
-> +		return -ENOMEM;
-> +
-> +	group = &scrub_ctx->group;
-> +	for (i = 0; i < SCRUB_MAX_ATTRS; i++) {
-> +		memcpy(&scrub_ctx->scrub_dev_attr[i], &dev_attr[i], sizeof(dev_attr[i]));
-> +		scrub_ctx->scrub_attrs[i] = &scrub_ctx->scrub_dev_attr[i].dev_attr.attr;
-> +	}
-> +	sprintf(scrub_ctx->name, "%s%d", "scrub", instance);
-> +	group->name = scrub_ctx->name;
-> +	group->attrs = scrub_ctx->scrub_attrs;
-> +	group->is_visible  = scrub_attr_visible;
-> +
-> +	attr_groups[0] = group;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * edac_scrub_get_desc - get EDAC scrub descriptors
-> + * @scrub_dev: client device, with scrub support
-> + * @attr_groups: pointer to attribute group container
-> + * @instance: device's scrub instance number.
-> + *
-> + * Return:
-> + *  * %0	- Success.
-> + *  * %-EINVAL	- Invalid parameters passed.
-> + *  * %-ENOMEM	- Dynamic memory allocation failed.
-> + */
-> +int edac_scrub_get_desc(struct device *scrub_dev,
-> +			const struct attribute_group **attr_groups, u8 instance)
-> +{
-> +	if (!scrub_dev || !attr_groups)
-> +		return -EINVAL;
-> +
-> +	return scrub_create_desc(scrub_dev, attr_groups, instance);
-> +}
-> diff --git a/include/linux/edac.h b/include/linux/edac.h
-> index e19706311ec0..3620a09c0476 100644
-> --- a/include/linux/edac.h
-> +++ b/include/linux/edac.h
-> @@ -668,11 +668,43 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
->  
->  /* RAS feature type */
->  enum edac_dev_feat {
-> +	RAS_FEAT_SCRUB,
->  	RAS_FEAT_MAX
->  };
->  
-> +/**
-> + * struct edac_scrub_ops - scrub device operations (all elements optional)
-> + * @read_addr: read base address of scrubbing range.
-> + * @read_size: read offset of scrubbing range.
-> + * @write_addr: set base address of the scrubbing range.
-> + * @write_size: set offset of the scrubbing range.
-> + * @get_enabled_bg: check if currently performing background scrub.
-> + * @set_enabled_bg: start or stop a bg-scrub.
-> + * @get_min_cycle: get minimum supported scrub cycle duration in seconds.
-> + * @get_max_cycle: get maximum supported scrub cycle duration in seconds.
-> + * @get_cycle_duration: get current scrub cycle duration in seconds.
-> + * @set_cycle_duration: set current scrub cycle duration in seconds.
-> + */
-> +struct edac_scrub_ops {
-> +	int (*read_addr)(struct device *dev, void *drv_data, u64 *base);
-> +	int (*read_size)(struct device *dev, void *drv_data, u64 *size);
-> +	int (*write_addr)(struct device *dev, void *drv_data, u64 base);
-> +	int (*write_size)(struct device *dev, void *drv_data, u64 size);
-> +	int (*get_enabled_bg)(struct device *dev, void *drv_data, bool *enable);
-> +	int (*set_enabled_bg)(struct device *dev, void *drv_data, bool enable);
-> +	int (*get_min_cycle)(struct device *dev, void *drv_data,  u32 *min);
-> +	int (*get_max_cycle)(struct device *dev, void *drv_data,  u32 *max);
-> +	int (*get_cycle_duration)(struct device *dev, void *drv_data, u32 *cycle);
-> +	int (*set_cycle_duration)(struct device *dev, void *drv_data, u32 cycle);
-> +};
-> +
-> +int edac_scrub_get_desc(struct device *scrub_dev,
-> +			const struct attribute_group **attr_groups,
-> +			u8 instance);
-> +
->  /* EDAC device feature information structure */
->  struct edac_dev_data {
-> +	const struct edac_scrub_ops *scrub_ops;
->  	u8 instance;
->  	void *private;
->  };
-> @@ -680,11 +712,13 @@ struct edac_dev_data {
->  struct edac_dev_feat_ctx {
->  	struct device dev;
->  	void *private;
-> +	struct edac_dev_data *scrub;
->  };
->  
->  struct edac_dev_feature {
->  	enum edac_dev_feat ft_type;
->  	u8 instance;
-> +	const struct edac_scrub_ops *scrub_ops;
->  	void *ctx;
->  };
->  
-> -- 
-> 2.34.1
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 9dc394295e1fcd1610813837b2f515b66995eb25..24041cf85cfbe6c54c467ac325e48c775562b938 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -173,7 +173,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>   static BIN_ATTR_ADMIN_RO(CDAT, 0);
+>   
+>   static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int i)
+> +					    const struct bin_attribute *attr, int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct cxl_port *port = to_cxl_port(dev);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> index 0b28b2cf1517d130da01989df70b9dff6433edc4..c1c329eb920b52af100a93bdf00df450e25608c4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+> @@ -3999,7 +3999,7 @@ static umode_t amdgpu_flash_attr_is_visible(struct kobject *kobj, struct attribu
+>   }
+>   
+>   static umode_t amdgpu_bin_flash_attr_is_visible(struct kobject *kobj,
+> -						struct bin_attribute *attr,
+> +						const struct bin_attribute *attr,
+>   						int idx)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+> diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+> index 53ec7510e4ebfb144e79884ca7dd7d0c873bd8a7..ba2cd68b53e6c240f1afc65c64012c75ccf488e0 100644
+> --- a/drivers/infiniband/hw/qib/qib_sysfs.c
+> +++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+> @@ -283,7 +283,7 @@ static struct bin_attribute *port_ccmgta_attributes[] = {
+>   };
+>   
+>   static umode_t qib_ccmgta_is_bin_visible(struct kobject *kobj,
+> -				 struct bin_attribute *attr, int n)
+> +				 const struct bin_attribute *attr, int n)
+>   {
+>   	struct qib_pportdata *ppd = qib_get_pportdata_kobj(kobj);
+>   
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 96064e4babf01f6950c81586764386e7671cbf97..5e9eb268073d18e0a46089000f18a3200b4bf13d 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -87,7 +87,7 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject *kobj,
+>   }
+>   
+>   static umode_t spi_nor_sysfs_is_bin_visible(struct kobject *kobj,
+> -					    struct bin_attribute *attr, int n)
+> +					    const struct bin_attribute *attr, int n)
+>   {
+>   	struct spi_device *spi = to_spi_device(kobj_to_dev(kobj));
+>   	struct spi_mem *spimem = spi_get_drvdata(spi);
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 63370c76394ee9b8d514da074779617cef67c311..73e44d724f90f4cd8fe8cafb9fa0c0fb23078e61 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -298,7 +298,8 @@ static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
+>   }
+>   
+>   static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+> -					 struct bin_attribute *attr, int i)
+> +					 const struct bin_attribute *attr,
+> +					 int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct nvmem_device *nvmem = to_nvmem_device(dev);
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 040f01b2b999175e8d98b05851edc078bbabbe0d..13912940ed2bb66c0086e5bea9a3cb6417ac14dd 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1326,7 +1326,7 @@ static struct bin_attribute *pci_dev_rom_attrs[] = {
+>   };
+>   
+>   static umode_t pci_dev_rom_attr_is_visible(struct kobject *kobj,
+> -					   struct bin_attribute *a, int n)
+> +					   const struct bin_attribute *a, int n)
+>   {
+>   	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>   
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index e4300f5f304f3ca55a657fd25a1fa5ed919737a7..a469bcbc0da7f7677485c7f999f8dfb58b8ae8a3 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -325,7 +325,7 @@ static struct bin_attribute *vpd_attrs[] = {
+>   };
+>   
+>   static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> -				   struct bin_attribute *a, int n)
+> +				   const struct bin_attribute *a, int n)
+>   {
+>   	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+>   
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 8fcf38eed7f00ee01aade6e3e55e20402458d5aa..8f00850c139fa8d419bc1c140c1832bf84b2c3bd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -620,7 +620,7 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>   }
+>   
+>   static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> -					 struct bin_attribute *battr, int id)
+> +					 const struct bin_attribute *battr, int id)
+>   {
+>   	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>   		return battr->attr.mode;
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 9d137621f0e6e7a23be0e0bbc6175c51c403169f..33f33b1070fdc949c1373251c3bca4234d9da119 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -541,7 +541,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
+>   };
+>   
+>   static umode_t
+> -sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
+> +sdsi_battr_is_visible(struct kobject *kobj, const struct bin_attribute *attr, int n)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct sdsi_priv *priv = dev_get_drvdata(dev);
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index 32f94db6d6bf5d2bd289c1a121da7ffc6a7cb2ff..f3a1ecb42128a2b221ca5c362e041eb59dba0f20 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -1274,7 +1274,7 @@ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+>   }
+>   
+>   static umode_t scsi_sdev_bin_attr_is_visible(struct kobject *kobj,
+> -					     struct bin_attribute *attr, int i)
+> +					     const struct bin_attribute *attr, int i)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct scsi_device *sdev = to_scsi_device(dev);
+> diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+> index 61b6d978892c799e213018bed22d9fb12a19d429..b4cba23831acd2d7d395b9f7683cd3ee3a8623c8 100644
+> --- a/drivers/usb/core/sysfs.c
+> +++ b/drivers/usb/core/sysfs.c
+> @@ -925,7 +925,7 @@ static struct bin_attribute *dev_bin_attrs[] = {
+>   };
+>   
+>   static umode_t dev_bin_attrs_are_visible(struct kobject *kobj,
+> -		struct bin_attribute *a, int n)
+> +		const struct bin_attribute *a, int n)
+>   {
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct usb_device *udev = to_usb_device(dev);
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 4746cccb95898b24df6f53de9421ea7649b5568f..d1b22d56198b55ee39fe4c4fc994f5b753641992 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -101,7 +101,7 @@ struct attribute_group {
+>   	umode_t			(*is_visible)(struct kobject *,
+>   					      struct attribute *, int);
+>   	umode_t			(*is_bin_visible)(struct kobject *,
+> -						  struct bin_attribute *, int);
+> +						  const struct bin_attribute *, int);
+>   	size_t			(*bin_size)(struct kobject *,
+>   					    const struct bin_attribute *,
+>   					    int);
+> @@ -199,22 +199,22 @@ struct attribute_group {
+>    * attributes, the group visibility is determined by the function
+>    * specified to is_visible() not is_bin_visible()
+>    */
+> -#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                             \
+> -	static inline umode_t sysfs_group_visible_##name(                \
+> -		struct kobject *kobj, struct bin_attribute *attr, int n) \
+> -	{                                                                \
+> -		if (n == 0 && !name##_group_visible(kobj))               \
+> -			return SYSFS_GROUP_INVISIBLE;                    \
+> -		return name##_attr_visible(kobj, attr, n);               \
+> +#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                                   \
+> +	static inline umode_t sysfs_group_visible_##name(                      \
+> +		struct kobject *kobj, const struct bin_attribute *attr, int n) \
+> +	{                                                                      \
+> +		if (n == 0 && !name##_group_visible(kobj))                     \
+> +			return SYSFS_GROUP_INVISIBLE;                          \
+> +		return name##_attr_visible(kobj, attr, n);                     \
+>   	}
+>   
+> -#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                   \
+> -	static inline umode_t sysfs_group_visible_##name(             \
+> -		struct kobject *kobj, struct bin_attribute *a, int n) \
+> -	{                                                             \
+> -		if (n == 0 && !name##_group_visible(kobj))            \
+> -			return SYSFS_GROUP_INVISIBLE;                 \
+> -		return a->mode;                                       \
+> +#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name)                         \
+> +	static inline umode_t sysfs_group_visible_##name(                   \
+> +		struct kobject *kobj, const struct bin_attribute *a, int n) \
+> +	{                                                                   \
+> +		if (n == 0 && !name##_group_visible(kobj))                  \
+> +			return SYSFS_GROUP_INVISIBLE;                       \
+> +		return a->mode;                                             \
+>   	}
+>   
+>   #define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
 > 
-
--- 
-Fan Ni
