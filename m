@@ -1,200 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B50FC08;
-	Thu,  7 Nov 2024 21:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731015329; cv=fail; b=Tr8BhmXF3xErQ11jWZfWt4b3qrKLrYhazpNsm9Xt0Ihripiiuh+BSCHDbAJQehFQf6+qkPPHdEFWAxdJkifprvtKCKcuGuXn/q/8RoYJS1V7C6G7aQ5Quxco5aMFNR0Plkc7AsR2FnFpVVYsaJxDknL+++DTpi30CGh201maW90=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731015329; c=relaxed/simple;
-	bh=Uc40RcKr4ovPkBu4wKk4ImFsVzhv0F45hRSgTjv5sUY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LqJypGb6IBjWGDI7XFw+pqTk0PcrRyECoMDWMqEFrk9n+hFYbfx9Nl5c/y8K9Ve/hFqHz4RvN6ufnlMOQrbi1Bz/Z/XIJCX4TFYkFrAmg+n+n/uM3SvJ6ujYR9lkCQaeZr5FAur01Km5oOIjO4+RsDal5q0PZ1J19fj7u6qTU+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nhnEtErx; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6903964A;
+	Fri,  8 Nov 2024 00:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731025031; cv=none; b=A9PX9vytHG7Q4uAbKvCJwrx3kt9N5a0dOzt5/PKUXPZdHB65ZUfFEtkhViWQS/H3BIqVvhq96maKWMktm2DW/0tMBU8pvMNEWzEFXRJPQdoWLbhYkJbZpbUwcTwXj+nxXNa41UpPuXpqwT0OXmH1u03yNBYL5APCtDPBJxtaBX8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731025031; c=relaxed/simple;
+	bh=SqWgJ4hm51ed+f1/VfQjX/x/DJppAZXyr0Z0K9vD9fU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rnepCBG3F5niQn/p5A04cx/wTl8Vvetky9T4WdiY2h/0+IL1V0qPfFaRnnn0oTp+au1z+8gTr3VHW//xyB3OeLfgbp6MkUvo9M0WTWGN+8T26MP0OCDf+AUM6YCu7i9DRqhf/d7P+4+n622vosB+GQ03McXOKVV33jQLqyV6Cdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFgtzVMD; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nhnEtErx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731015328; x=1762551328;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Uc40RcKr4ovPkBu4wKk4ImFsVzhv0F45hRSgTjv5sUY=;
-  b=nhnEtErxukYAxtxmNvqjJCivIazyKnLk5SJ2bmDnCq4qZTZ8FfduiWYm
-   5CO7Y2o1XLZlcmTNL2Up07q+g2bMrpTboeQdvkrwH12SzaVeEynFWspCx
-   7sgFVVxRt4wHn31mNdUD5EGyrl0k9ekTb4OVyboV6b3qFM0dDgclpIXnz
-   NAMV/3iTewz1mqdqY3G0iu0kY2whkHwA19Xee7GH/KETYfPdcvhwXre1c
-   gMcKjrr1n8HPq9TOKImEccs65jt6nlvDCJ0KF+xGnynFAFpKpj4BkVMQr
-   zvTkmd+jzG+n9kCydGVta41XYwbQBSzq9qWbT0MiQftPpKQ4eR2lXZPF0
-   A==;
-X-CSE-ConnectionGUID: k2ubAhNaQHGdDv/bS/sR3A==
-X-CSE-MsgGUID: RzyGWF1vQoKnLrmwh5mobQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="48343070"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="48343070"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 13:35:20 -0800
-X-CSE-ConnectionGUID: 72XvflOwTPaSr9PglobzeQ==
-X-CSE-MsgGUID: zlucg9zJSJuvkFuGCBymeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,136,1728975600"; 
-   d="scan'208";a="85243218"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Nov 2024 13:35:19 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 7 Nov 2024 13:35:17 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 7 Nov 2024 13:35:17 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.48) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 7 Nov 2024 13:35:17 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XIHOPeWahCe/JBQekkOEYa8hlBhKC9ZFwHvhb8wtcn3e5yQkex7iPSai6mW1nKCm9azPYyIKHw4RrZAayYqTCr3C8IzX5MIZEXvda6hlblmgblFHSCs4SVWlrSY7dvrLTQ9PphrYiunwO/uy8hzVo5uhXYU/f806cvn+D7bcy0ds0EjPiGY60NZ1iVtPSYaNb5Nz5zmMoEnHHDyZ8KhXkc9IqbCpiPSk6Id7z6OjBy+CJgTzFtfGoJoFc7qqBixIx5+QUsM28Aikiv03ZRbQwAfV63AqQVIT7uWuBjKbtQTyW8S348SvimIEZp4CpWalkf69UUw193BSzK2Mm/snbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0AwpT6qUw3rc2mCmz82EVj7NxfbMZUJL9gzRaUwkU6Q=;
- b=wJqhUzwy4y6mYav6fiXIzU68ozGdAVKGQExsJOL7MlDCMncvxyRwQ3wIAqU6Aux+B58GmAfV9Asd+W2i7C+PLwG5erHjBHSAG5PHjEuplYJ73yMUIU+UExnA8IYFAXsf8PA7xj2PlPVIr9DxPQ9cRZt85UWQQXCElCi0HWe6G5d+03euoNonfS66qQh07f3qqZ6DkGgMLmPXV5UbKwpR40sHTq+8/3aCAaZDdU1S9vNdVRiTnXxlGy8YpHhkpo9FDKvgQetzynYs8bAEYtzYpS0/EpuOvF5gtMEzI6B960t2TXz8/TXb7A6CuWs6DBNXf1/wSQeckTF+64yfBwCvWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB7457.namprd11.prod.outlook.com (2603:10b6:8:140::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Thu, 7 Nov
- 2024 21:35:15 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8137.018; Thu, 7 Nov 2024
- 21:35:15 +0000
-Date: Thu, 7 Nov 2024 13:35:13 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>, "Huang, Ying"
-	<ying.huang@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>, "Gregory
- Price" <gourry@gourry.net>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Alejandro Lucero <alucerop@amd.com>, Ben
- Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH] cxl: Rename ACPI_CEDT_CFMWS_RESTRICT_TYPE2/TYPE3
-Message-ID: <672d329119d63_10bb7294cc@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241104084110.583710-1-ying.huang@intel.com>
- <ZyrUFMutrN_uJvPe@aschofie-mobl2.lan>
- <878qtx6q0d.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <Zy0kt2i9C6eirhPN@aschofie-mobl2.lan>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Zy0kt2i9C6eirhPN@aschofie-mobl2.lan>
-X-ClientProxiedBy: MW4PR04CA0178.namprd04.prod.outlook.com
- (2603:10b6:303:85::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFgtzVMD"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7ea9739647bso1209580a12.0;
+        Thu, 07 Nov 2024 16:17:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731025028; x=1731629828; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F+Do7zzo+KFbLuMYOM1790nmyhHrHI1nMAaNQb+68y4=;
+        b=KFgtzVMDkWzQvjqxuU1JCv6Hd/2K3hskJPnbnKW+4whQrDZXz6SjrgwujPEAvIt7GG
+         cqtu0+GDYiINl05TQQLkKTauvcmOw/8X/HrzXq8y/yc7lzuB43T2MImm6TAkoJxz5Azn
+         tc0Htcg+Xpt+54S3AUto4RPJ3Iew561Yp5EX4QqXrLrIK1ROktjt1FUaDkm/xezhZGE7
+         zKdXW5McUslWcMaMH/9Ld5nHqEKjIHXATQ12ivT5UHcLH+i+z+10eAJomwcFzZANO4pM
+         9hXLkPEHytEl2xOv3Uh1emDMmCJ1OsAd/PGpdJ4y4i6aKSuLZN5zEFwM1dJblg68p7ef
+         hvfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731025028; x=1731629828;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F+Do7zzo+KFbLuMYOM1790nmyhHrHI1nMAaNQb+68y4=;
+        b=b8rNXrhqiGlF7WpYQpAboDGOQdmupPougV5+ec9ZlQuLkco0ABt9naWNwq60TBwcX+
+         TKMvn1bT9+YZjIRnU7E4fWHYDyz7wYIFlwoUcHB3O3oz/JbiG2Guo7xjHvG3LZgvhZjU
+         xffNK3PaOXbVwGb2vrFpLJ/LTu68zhyO7rT/tXDNB8ImyolnI39e2Gtp6R6LTaNGeZ6f
+         qY2o252Ok+371GjAyH9s+0QQ+fYAboWNcIe5vaFG1MXUvkz+Biqnj4az+qbE8bjUWP/f
+         fy9/HRtaHz8+eCOmdXC0BxZaBthFsy3zAhKw1TO/3LIR0ZLiQu/Dl+mDej7Fkse5VwTC
+         J4Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2SoIfjnI1caxnKEOHvMQw2c13USuDRDhP1c7rRIMG1KKsvDGKiRf/fLDTu7IWzcOz1sQpDH09LSgP+qWp@vger.kernel.org, AJvYcCWt5SpYowoeQMJUH3Cw3mUbmbpOrt5s/+paoDngY0Vqj1MoDcxpt28zNZQMjyg8puTK9w+N9e4JTznA@vger.kernel.org, AJvYcCXqdN6nNOMWfIh1Wen/NKl73ekDR7ZlZeUmZJ2rXEL2WD6yjI/47PqblgMIEpfs0vS8Hyki5amEH3KO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0jKSx5U0FE146ZvwbtFKoDXiC+ujI5OwIJ1vKXHrHn774WhNh
+	Mt1iKuA0EYRMgHASZiy8SrzsC6mEqvEcFk2vfkUX7QsDoT7RAnvq
+X-Google-Smtp-Source: AGHT+IHx1CO0T4w9TtTYGzXOtCQnF3M6HiVi4INvxoMblwadJozIaZRzoVFV6fbzFBdcXMIqlR4KGA==
+X-Received: by 2002:a17:90b:1f8e:b0:2e0:d957:1b9d with SMTP id 98e67ed59e1d1-2e9b17163cbmr1575389a91.13.1731025028446;
+        Thu, 07 Nov 2024 16:17:08 -0800 (PST)
+Received: from fan ([2601:646:8f03:9fee:6ed1:b454:5fd2:3850])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e9a5fd180fsm2187666a91.33.2024.11.07.16.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2024 16:17:07 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 7 Nov 2024 16:17:03 -0800
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
+	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+	dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, gregkh@linuxfoundation.org,
+	sudeep.holla@arm.com, jassisinghbrar@gmail.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
+	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v15 01/15] EDAC: Add support for EDAC device features
+ control
+Message-ID: <Zy1Yf5wfc9aYVGwA@fan>
+References: <20241101091735.1465-1-shiju.jose@huawei.com>
+ <20241101091735.1465-2-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7457:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec8fd7fe-8b12-4147-9863-08dcff741188
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Kzs4AZuRnxSrYm8GTTj9xuYw45iX2hMKBmsgwWe9ERl4qFIibprNSppZUqHi?=
- =?us-ascii?Q?TNP3kF/u4dzxReV+W2ysvfWQnl/7YkCmpB3SZHvxxFuI4qDwYI1yOefBCVjO?=
- =?us-ascii?Q?i3nzq+98jyix0z885T0RTctA7/LromvIciVifYqyLWfOB9IHhRLyOLSDHJaC?=
- =?us-ascii?Q?G/az0Q/9QgOtEXo9bWjZxC5VPXFCZtC1Dknw4SQWD8w3qQNPGrAculdaplrE?=
- =?us-ascii?Q?oh0WW6rHid0JZjYFwOae52S278Y0ZrQpK+rxEJLgvv9REnzmUHhsJS++K0/o?=
- =?us-ascii?Q?Hro+7eHfS+0Z5FBZdPKgbUhWiXon6IvPuBnwY8CrJXokBEQkun1YK1QS4Rzv?=
- =?us-ascii?Q?00eEkvmblvKagUt4wLCZ0AaQ1OZPsKabiF2pX8pSeBcXxT2Ss8JKzHk8p2KY?=
- =?us-ascii?Q?4dCPiWz4wkU+qFw2bHSkjrwvs4BFgED15WchqnPjQpnXZcYMRjgPK+ozNdRZ?=
- =?us-ascii?Q?4UoUkgfD4kIlqyXhBg333Z2cUJkvei0q8wbIK3xs3ndcmAHXHCJgVed110vL?=
- =?us-ascii?Q?S/U7vlU0GtvbBmyLhihoPeAgCE+GFRCIIszmPnlSLda1k8iDyS1YougEfwKs?=
- =?us-ascii?Q?ePybeMypBw7KqoAHDHBiTfITH6m5jVLXHkK60HgQDEaw97GqkTLKVRSvYyhb?=
- =?us-ascii?Q?gzPFo1/TbsSEI3I0bnPnmfZQLxbHfg3jWyHFrMr/0AGxg1Uw8w8L6ZNRANOX?=
- =?us-ascii?Q?QSZ7mvqOkvPmKdQUOkNXqKs5gtZODHpv9FVkV3/c9pLUf44b197Ib3OfA3/n?=
- =?us-ascii?Q?MS0rSFtWKCGoW02iM1hiTcmMNMdnYVX22XxtxEqZ3m6Cx9B7YDH8XlZU9nwB?=
- =?us-ascii?Q?IPcSwpCnQPeKXM2O65a0Oq7Eaqs2QtmJ54pIV/1Sm/Y4nA9W4+WdvX6D0w6p?=
- =?us-ascii?Q?9VlI5HKLy4GSS5quLZhuyPXdl/rA0tjxeUKJScH0VEUUHUD10DRsp6z/kMzG?=
- =?us-ascii?Q?f1do41UO0c7t/iK4EZSDJ+JQDhqNjCvjkQBZbI3WQ9itQcfNDzA8kgGSj3RB?=
- =?us-ascii?Q?Jf763wWwLZGV+t2raeOFUqgkuSmZqSwva4xcYRQZlpBIF+HPmCNAc9wPmbCW?=
- =?us-ascii?Q?qcLzlfKFDmMFBAvm2mDX2zlSGTPsvbFQwRvIYZKaMGk4cUpQIqL+3QmZsB+Q?=
- =?us-ascii?Q?Rl4QsayC+50yV+VX5oHICEIfOCg5AFO1Zfycgx2PO4m1BG5p8fgjhX2ONaaU?=
- =?us-ascii?Q?fUI4HI+vo7qJHpZu46TdTvw//xYPEElQdLom/UPPP0uzwPEoOFpjArU1V/v6?=
- =?us-ascii?Q?wnqwPbAbTTohvzz66g7k88fTOHrGdEoay6YXNM/HFQ/D54g7efui/1FkEWk8?=
- =?us-ascii?Q?x3bX/0pVBLzwGBHi3P3et4id?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?E8urjCfil7pPJDFOXa+SIlhye7SmBGLplOOKeLxG+3VPiFyLbebByAJN3aL0?=
- =?us-ascii?Q?/shI9bI6oUEwZPQzZ1UtNExS+IGVQUmALhIZfGttgE77rOMSjrZWDM3szOHS?=
- =?us-ascii?Q?jtM/JrtKB8KbYFHwP8huW6R+ZbKXNNqA7Xz8OTpt6ym/BHFykR17aHj26nXk?=
- =?us-ascii?Q?ZFpR8mbSQnixqkQgHTvrimeSNmLFISVxA++3wu6LgiJFwLZqxNc1DJl+2XPy?=
- =?us-ascii?Q?qjqb85Q0i09akSsk2EFOpQeV1Zapa9hWALQb6H/JGGi6+vfs+jlPfHnGDgdC?=
- =?us-ascii?Q?BMnjZYAO9PnPyGohukhFp7vNvP8W9ctSdIyJscOML82jtyxPVBRy/o08jRC6?=
- =?us-ascii?Q?/EQfiB7rC2iWRCSk63+pXjxt5Ap6c/GfdHS31WTAs1vrZZE3eonGmAvM/Sw+?=
- =?us-ascii?Q?plipJXUwpZMLCh1y6QVG85Le/topHfww8rnQlfxU2W7iUZktLIGs4OWV64io?=
- =?us-ascii?Q?xPud6iHTGI6B2l9uLoWCNK6Kfog/54IwDUS8lb5tLzwjmY3CRy9JJTq6yjCK?=
- =?us-ascii?Q?y7kkt2ADQVPBu+FDvXvrsQjwNGPQ2qCJlh+RXIlYMVsQ8mBCfoU8daIrhghw?=
- =?us-ascii?Q?zE3vA8SdDAjEVlBIoGAUflDIRDaGnYS0iys9MizAP+9NoYLGKgRQeZFAkupE?=
- =?us-ascii?Q?FcmJwzuAlkAL3gr2pJK9bkhGuClScQEYOgF4K9wFu9cFILiZQq3RlT+ycCP5?=
- =?us-ascii?Q?DbFnuy5j5OE9BzbDS2r+iaOEQII0s0p8d7YTd2HBave5xR2a3zYEcPAfrtJN?=
- =?us-ascii?Q?bDjeYME96auq0UrTV6qEAdtnAyIawCimjgVaDdA7sGrQ2w/8pclZzOTf9quN?=
- =?us-ascii?Q?WCHuTn5BaQl+TjtqJvE95oS8qQxB7G7/poteMAPTuKCRz/r6emXPML03SkXU?=
- =?us-ascii?Q?1mODxem7tziK4RFsAid4vl5E+THHTbmgKAh8COBwBvCazgscX6j7TlgUDxJD?=
- =?us-ascii?Q?M+ftZPoAnXpXNcS1IOw01tuiST5lseEgWEohZ2AKhdSHmlosWC85HdnjArtM?=
- =?us-ascii?Q?vEOYA+fp50UZ4xsPWFaKUWnY0vLz9cIXmkJCIfgC58PYdr4xRvqNl3RwGCrO?=
- =?us-ascii?Q?OBiIAEdiEzrR7EhdYZNWtY3FIjK/bCez3JMQUG7D6TeLlQe8xpFHoGJIK8er?=
- =?us-ascii?Q?Ek9kshFLt7+ZejduLoNOJMOq+/Z9ZxV/2TNhESoiQVDXeXWlvANRYqgKmd5C?=
- =?us-ascii?Q?SFu6GEJzEa4nwkgViRmQP+HgQFoWaEAtLWkkfUpp0CXvvM7S9xI89HdHqfts?=
- =?us-ascii?Q?ouPmhhioiM2ov80m2IQXpyfEY89AYOnGHFWxfd5FZ8yvK1PSkEcH8VH/4WzP?=
- =?us-ascii?Q?pawnJmhBut9NqYGhpTcw2k9MRq+LGNfC1pDZCa9z/5I1ZFie6edrqM2GAvnT?=
- =?us-ascii?Q?//OypdK6YmYc7VJS9o1iw0RhFauHB/4IRJBTBXC0TJVXVkKNVPezyWJL/G3g?=
- =?us-ascii?Q?CYUOQ6DLFoKR6eGdYejDpfmICqWTDnliwOow5zxsjd9le7NxL0OM4tCYShKx?=
- =?us-ascii?Q?yFKPQa+CHIZqL9v3iS4/f1maWpntB7oBLpai71iqo+Ahd7d6biKdTAUh4mVj?=
- =?us-ascii?Q?sE5232+bgBoRXP7kv72aqKj1ANj1x911CdBiZBJIgw5ExvVmw/hTgdnKf6bV?=
- =?us-ascii?Q?tQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec8fd7fe-8b12-4147-9863-08dcff741188
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 21:35:15.6664
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o7PqvCWLux17yLhITxOwIPXHaLKvpYDVky31KjE/jSWznCLbhYbtICVP+kxyNYPlcyOPFv6xxKOabMQkaJjWZr3Iu/xh6kw4fN4N9RamE3Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7457
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241101091735.1465-2-shiju.jose@huawei.com>
 
-Alison Schofield wrote:
-[..]
-> > I think so too.  However, I prefer to keep this patch just mechanic
-> > renaming and do these changes in another patch.  Do you agree?
-> > 
+On Fri, Nov 01, 2024 at 09:17:19AM +0000, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> I don't know. I was just questioning where and how far the naming scheme
-> needs to change.
+> Add generic EDAC device feature controls supporting the registration
+> of RAS features available in the system. The driver exposes control
+> attributes for these features to userspace in
+> /sys/bus/edac/devices/<dev-name>/<ras-feature>/
 > 
-> Maybe Jonathan, as the Suggested-by, can chime in and move this ahead.
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/edac/edac_device.c | 101 +++++++++++++++++++++++++++++++++++++
+>  include/linux/edac.h       |  30 +++++++++++
+>  2 files changed, 131 insertions(+)
+> 
+> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+> index 621dc2a5d034..e9229b5f8afe 100644
+> --- a/drivers/edac/edac_device.c
+> +++ b/drivers/edac/edac_device.c
+> @@ -570,3 +570,104 @@ void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
+>  		      block ? block->name : "N/A", count, msg);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
+> +
+> +/* EDAC device feature */
 
-I feel like we are going to be living with the ghosts of the original
-"Type2 / Type3" naming problem for the rest of the subsystem's lifespan
-especially since they were encoded in the ABI and ABI is forever.
+The comment is not very helpful to me, seems not quite relevant to what
+the function below does.
 
-I am not opposed to this localized rename in drivers/cxl/acpi.c on
-principal, but in terms of incremental value relative to the thrash, it's
-questionable.
+Fan
+> +static void edac_dev_release(struct device *dev)
+> +{
+> +	struct edac_dev_feat_ctx *ctx = container_of(dev, struct edac_dev_feat_ctx, dev);
+> +
+> +	kfree(ctx->dev.groups);
+> +	kfree(ctx);
+> +}
+> +
+> +const struct device_type edac_dev_type = {
+> +	.name = "edac_dev",
+> +	.release = edac_dev_release,
+> +};
+> +
+> +static void edac_dev_unreg(void *data)
+> +{
+> +	device_unregister(data);
+> +}
+> +
+> +/**
+> + * edac_dev_register - register device for RAS features with EDAC
+> + * @parent: parent device.
+> + * @name: parent device's name.
+> + * @private: parent driver's data to store in the context if any.
+> + * @num_features: number of RAS features to register.
+> + * @ras_features: list of RAS features to register.
+> + *
+> + * Return:
+> + *  * %0       - Success.
+> + *  * %-EINVAL - Invalid parameters passed.
+> + *  * %-ENOMEM - Dynamic memory allocation failed.
+> + *
+> + */
+> +int edac_dev_register(struct device *parent, char *name,
+> +		      void *private, int num_features,
+> +		      const struct edac_dev_feature *ras_features)
+> +{
+> +	const struct attribute_group **ras_attr_groups;
+> +	struct edac_dev_feat_ctx *ctx;
+> +	int attr_gcnt = 0;
+> +	int ret, feat;
+> +
+> +	if (!parent || !name || !num_features || !ras_features)
+> +		return -EINVAL;
+> +
+> +	/* Double parse to make space for attributes */
+> +	for (feat = 0; feat < num_features; feat++) {
+> +		switch (ras_features[feat].ft_type) {
+> +		/* Add feature specific code */
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ras_attr_groups = kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), GFP_KERNEL);
+> +	if (!ras_attr_groups) {
+> +		ret = -ENOMEM;
+> +		goto ctx_free;
+> +	}
+> +
+> +	attr_gcnt = 0;
+> +	for (feat = 0; feat < num_features; feat++, ras_features++) {
+> +		switch (ras_features->ft_type) {
+> +		/* Add feature specific code */
+> +		default:
+> +			ret = -EINVAL;
+> +			goto groups_free;
+> +		}
+> +	}
+> +
+> +	ctx->dev.parent = parent;
+> +	ctx->dev.bus = edac_get_sysfs_subsys();
+> +	ctx->dev.type = &edac_dev_type;
+> +	ctx->dev.groups = ras_attr_groups;
+> +	ctx->private = private;
+> +	dev_set_drvdata(&ctx->dev, ctx);
+> +
+> +	ret = dev_set_name(&ctx->dev, name);
+> +	if (ret)
+> +		goto groups_free;
+> +
+> +	ret = device_register(&ctx->dev);
+> +	if (ret) {
+> +		put_device(&ctx->dev);
+> +		return ret;
+> +	}
+> +
+> +	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
+> +
+> +groups_free:
+> +	kfree(ras_attr_groups);
+> +ctx_free:
+> +	kfree(ctx);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(edac_dev_register);
+> diff --git a/include/linux/edac.h b/include/linux/edac.h
+> index b4ee8961e623..e19706311ec0 100644
+> --- a/include/linux/edac.h
+> +++ b/include/linux/edac.h
+> @@ -661,4 +661,34 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+>  
+>  	return mci->dimms[index];
+>  }
+> +
+> +/* EDAC device features */
+> +
+> +#define EDAC_FEAT_NAME_LEN	128
+> +
+> +/* RAS feature type */
+> +enum edac_dev_feat {
+> +	RAS_FEAT_MAX
+> +};
+> +
+> +/* EDAC device feature information structure */
+> +struct edac_dev_data {
+> +	u8 instance;
+> +	void *private;
+> +};
+> +
+> +struct edac_dev_feat_ctx {
+> +	struct device dev;
+> +	void *private;
+> +};
+> +
+> +struct edac_dev_feature {
+> +	enum edac_dev_feat ft_type;
+> +	u8 instance;
+> +	void *ctx;
+> +};
+> +
+> +int edac_dev_register(struct device *parent, char *dev_name,
+> +		      void *parent_pvt_data, int num_features,
+> +		      const struct edac_dev_feature *ras_features);
+>  #endif /* _LINUX_EDAC_H_ */
+> -- 
+> 2.34.1
+> 
 
-For example changes to include/acpi/actbl1.h need to be chased through
-ACPICA, at which point is this rename really worth it?
+-- 
+Fan Ni
