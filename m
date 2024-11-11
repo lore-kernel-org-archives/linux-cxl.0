@@ -1,171 +1,108 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79802AF1C;
-	Mon, 11 Nov 2024 17:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A868A1BC9ED
+	for <linux-cxl@vger.kernel.org>; Mon, 11 Nov 2024 22:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731344480; cv=none; b=dq9cpQd15AZQ/gU6nMiG6ImAiGnOneas47cMC742DSmt+UtupN3EkiKCLNy91S10gzVTMOeZpPJFooapAZ9EuOc/zPqBNndAnqM2cTG/2Wqjfx6W/uiP2z0k3e4U2lbSCU5E3BUJ6gbzk0kSnGv6R0y4LQbe0P04MPwZqVJ7w3Q=
+	t=1731364661; cv=none; b=pVRU5JCRSpyNadYit2kpWefBS3oImU+Aj4uqTe+tR+ttayIyB8lYlwRxQJ2HgOThbnfc7w/r0y3d0BYhh+LxWHk4u8n1YKKaWbwUTxlAqnW3yK6MjxVIJmwswcXOicp79tjWRcBlWE0CUoL7fONa+MgzDf07xqojOtB7dkq1yF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731344480; c=relaxed/simple;
-	bh=T3LxACEy2Zjds7035OyJciNR2kucRD7O/RPJ2VLWR/Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=crtQV7ezc5g6/0FzEXBy82LJ30GegkYddeYniRjiLrn923Hdj/x4GEa9ubsLEtK4YPk1wBPbcLAbiOYVg8thF+N4BRgLgii6zkYzUDQZD5TFTSNGF3uoYpl7M1Rg/pwGr80qWtYxPFSdjo8L3v0P4jtVYWSwmHH/Swe4iCUP+7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XnG5r6N5vz6L72m;
-	Tue, 12 Nov 2024 01:01:04 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id 12AB6140B3C;
-	Tue, 12 Nov 2024 01:01:15 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 11 Nov 2024 18:01:14 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 11 Nov 2024 18:01:14 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "jassisinghbrar@gmail.com"
-	<jassisinghbrar@gmail.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
-	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
-	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
-	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
-	<gthelen@google.com>, "wschwartz@amperecomputing.com"
-	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
-	<wbs@os.amperecomputing.com>, tanxiaofei <tanxiaofei@huawei.com>, "Zengtao
- (B)" <prime.zeng@hisilicon.com>, "Roberto Sassu" <roberto.sassu@huawei.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
-	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v15 11/15] EDAC: Add memory repair control feature
-Thread-Topic: [PATCH v15 11/15] EDAC: Add memory repair control feature
-Thread-Index: AQHbLD8AfemaRx1ca0GejEwzrXB007Ktlc0AgATHjxA=
-Date: Mon, 11 Nov 2024 17:01:14 +0000
-Message-ID: <c849dc3f43b14d26acc9c920b2247c40@huawei.com>
-References: <20241101091735.1465-1-shiju.jose@huawei.com>
- <20241101091735.1465-12-shiju.jose@huawei.com> <Zy5DXjsbsm4cQGaS@fan>
-In-Reply-To: <Zy5DXjsbsm4cQGaS@fan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1731364661; c=relaxed/simple;
+	bh=m9dHkd326dJknoBTUfDG9L/benzgGToUCDC3raIi1hc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P94wNu9Gzs++h0iMF3FSWQVZS50XffD5LG6TdUW+vFeR+csj4CZMwfJz4bZo1PHHp42TMJ3noOSXQ07hkuv7xLy/4Qx3qTxyKDK1zP8Og7NFxYu9RI4TrfPgKgcEdz6hK5tLI2Umer0DrTQ85HxgJxobv9EN7wvxB/HvKDG5sGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUdELOsa; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUdELOsa"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e35bf59cf6so54113597b3.0
+        for <linux-cxl@vger.kernel.org>; Mon, 11 Nov 2024 14:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731364658; x=1731969458; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rIo50m0in8Z4wlkZ0261BWOCfXUT7KLdlhX4Ym2Pe1k=;
+        b=SUdELOsab+j/pvpLon4K/0wtprYKH0FMpqBZ6YuROdeDuJT/ST79m1vmvuFRbUokCZ
+         3rQDNxhVWgU7X1IjXfvpjQ5o6ywxDrId+d14sosrtMYSO5+/GulkSvqTGBKerO3akwCM
+         8uJMkLc1lmhPpz9TZCDRZM8MowdMkUKW6i23RVAh0HEwtkFyAxL3DlbIYFPiNXBxjcRs
+         QvdGmWOekuhpKvP96s9K56+a1CDnf6jtFqat9btrexm/RKlcUEac2FCgpVGCRuHBzLV0
+         tY1f3l/LwDq1FonJZqH+td9aBsJdsxh5bHjLDtgNRyfAFzi0uxnEABZIyJzQconkxRvr
+         IR9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731364658; x=1731969458;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rIo50m0in8Z4wlkZ0261BWOCfXUT7KLdlhX4Ym2Pe1k=;
+        b=dDmkMBUvOJD0XKhi60Lmssp3h89fm6b5CJcfro6l+Xv5179AHPXFPEQYZQ3TloSzOx
+         x9yuP/DA5R3SWeaN7Eunq9w/wTyZhXIkJhTyOQiondt7GE77S5rx/5elBQtvAfoompKC
+         DLH260bGkhNsCSrDJU2b8JNs9rM4RltBpKV3EAvEmQCNmlCicH3ufcLBL4YeF3HmumRC
+         AiEqUa+9dDCXp9ihYfZ3yDfOqRL0i8DYqzq1udNpQFY4p4rCNvbHpVJdEzmj8MyHledn
+         SI8lxfGQ8e4iloO5q3P6a1mEu1BY+y0qZ++abRth8WTo77bfEDN/bkYH1mhZRn80Ggus
+         cYXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXthqzUQdrcgJDActbmPKRBQmTFcA3ptUAvFG5dXSmbDtUCFMhmZqcjLkR/m+7KF/vZwpBTytKo3Ik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK+NTkZEI/PrXjf9DZZuvo1QJd7jQDfYmn1aHlwPwV1ciX2xHx
+	iLwr+sTlCCxkPwIfvr30jg1asO/IkNXIgUyC2nY7DmdROuSWra5N
+X-Google-Smtp-Source: AGHT+IHUTtEUNPkruAHlebfeluDRcnDJ4V3w2CfmWj/VH5Ik9RanGwO9toGON2FgbbQMdWt8M+M82w==
+X-Received: by 2002:a05:690c:fcf:b0:6e2:451c:df02 with SMTP id 00721157ae682-6eade50eb4amr114154657b3.16.1731364658581;
+        Mon, 11 Nov 2024 14:37:38 -0800 (PST)
+Received: from fan ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6eaceb65b76sm22250647b3.71.2024.11.11.14.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2024 14:37:38 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Mon, 11 Nov 2024 14:37:35 -0800
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, linux-cxl@vger.kernel.org,
+	Peter Maydell <peter.maydell@linaro.org>, shiju.jose@huwei.com,
+	qemu-devel@nongnu.org, linuxarm@huawei.com
+Subject: Re: [PATCH qemu] hw/cxl: Check for zero length features in
+ cmd_features_set_feature()
+Message-ID: <ZzKHL9msnqMSv8WE@fan>
+References: <20241108175814.1248278-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241108175814.1248278-1-Jonathan.Cameron@huawei.com>
 
->-----Original Message-----
->From: Fan Ni <nifan.cxl@gmail.com>
->Sent: 08 November 2024 16:59
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
->acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
->bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; gregkh@linuxfoundation.org;
->sudeep.holla@arm.com; jassisinghbrar@gmail.com; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: Re: [PATCH v15 11/15] EDAC: Add memory repair control feature
->
->On Fri, Nov 01, 2024 at 09:17:29AM +0000, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add generic EDAC memory repair control, eg. PPR(Post Package Repair),
->> memory sparing etc, control driver in order to control memory repairs
->> in the system. Supports sPPR(soft PPR), hPPR(hard PPR), soft/hard
->> memory sparing, memory sparing at cacheline/row/bank/rank granularity et=
-c.
->> Device with memory repair features registers with EDAC device driver,
->> which retrieves memory repair descriptor from EDAC memory repair
->> driver and exposes the sysfs repair control attributes to userspace in
->> /sys/bus/edac/devices/<dev-name>/mem_repairX/.
->>
->> The common memory repair control interface abstracts the control of
->> arbitrary memory repair functionality into a standardized set of functio=
-ns.
->> The sysfs memory repair attribute nodes are only available if the
->> client driver has implemented the corresponding attribute callback
->> function and provided operations to the EDAC device driver during
->registration.
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  .../ABI/testing/sysfs-edac-memory-repair      | 168 ++++++++
->>  drivers/edac/Makefile                         |   2 +-
->>  drivers/edac/edac_device.c                    |  32 ++
->>  drivers/edac/mem_repair.c                     | 367 ++++++++++++++++++
->>  include/linux/edac.h                          |  87 +++++
->>  5 files changed, 655 insertions(+), 1 deletion(-)  create mode 100644
->> Documentation/ABI/testing/sysfs-edac-memory-repair
->>  create mode 100755 drivers/edac/mem_repair.c
->>
->> diff --git a/Documentation/ABI/testing/sysfs-edac-memory-repair
->> b/Documentation/ABI/testing/sysfs-edac-memory-repair
->> new file mode 100644
->> index 000000000000..393206b8d418
-[...]
->>
->> +	if (mem_repair_cnt) {
->> +		ctx->mem_repair =3D kcalloc(mem_repair_cnt, sizeof(*ctx-
->>mem_repair), GFP_KERNEL);
->> +		if (!ctx->mem_repair) {
->> +			ret =3D -ENOMEM;
->> +			goto groups_free;
->
->If the function returns here, we will have a leak from memory pointed by c=
-tx-
->>scrub.
-Thanks Fan for reporting.=20
-Fixed.
->
->Fan
->> +		}
->> +	}
->> +
-[...]
->--
->Fan Ni
+On Fri, Nov 08, 2024 at 05:58:14PM +0000, Jonathan Cameron wrote:
+> Zero length data for features doesn't make any sense so exclude that case
+> early. This fixes the undefined behavior reported by coverity for a zero
+> length memcpy().
+> 
+> Resolves CID 1564900 and 1564901
+> 
+> Reported-by: Peter Maydell <peter.maydell@linaro.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Thanks,
-Shiju
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 2d4d62c454..ce9aa18364 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -1288,6 +1288,10 @@ static CXLRetCode cmd_features_set_feature(const struct cxl_cmd *cmd,
+>      set_feat_info->data_offset = hdr->offset;
+>      bytes_to_copy = len_in - sizeof(CXLSetFeatureInHeader);
+>  
+> +    if (bytes_to_copy == 0) {
+> +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> +    }
+> +
+>      if (qemu_uuid_is_equal(&hdr->uuid, &patrol_scrub_uuid)) {
+>          if (hdr->version != CXL_MEMDEV_PS_SET_FEATURE_VERSION) {
+>              return CXL_MBOX_UNSUPPORTED;
+
+-- 
+Fan Ni
