@@ -1,18 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B84521A4A7;
-	Tue, 12 Nov 2024 22:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEE62185AD;
+	Tue, 12 Nov 2024 22:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731449618; cv=none; b=EJSQxwHFBbkJfQX2VROyFRtFBjcAS9QND/+vHoGWyKGUQNlbDNouCeD6J2hGqlkXaEWaiRy7LJgRhUGS5UVhcAUnV1ceMQ2kFL1TWjwdyUzHGIsgWyuTjkVcZb+KgiVNQKkkD3C6x8hoJ5H3/FkH3Ulx9tCT4CMXzok8mZgCKOg=
+	t=1731449619; cv=none; b=KUCT6pEau4FaCYkSBsUrCpWnZZmqWO60tEelHL3feBukbYMwnJRN4bivLZcw1KGEjR/T/Bf01RSMsHdrFngiqN/q+C0RhExcB0tz+z5YPAwZ9czJf9ZwFpyZq1YMU6NDR3y8ZzMs9xFprBNSNQKeUYyf2hp1ZRl3aHkXnBjfW2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731449618; c=relaxed/simple;
-	bh=r3gSCVx4mBfi39/3Mhartg80r4Jb6NJ4NVBvFg3cL7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTaVaVuVxvCv9I+izPi2S02cvNdd5fKs3jdRFH7qsVIq3HJdZ2PVuiraIlqMLUpTBXPN55lYR7sxqGLIIr0P19UzQ80Fnn7cB3lrfIUtTbWMCKm4FKOwGoOHb31hpWs/+VZO6rgncM5ha8bXNxcluGlBcl/PQ8GKpiaoXA4BGvA=
+	s=arc-20240116; t=1731449619; c=relaxed/simple;
+	bh=wTxxNzWa8Mu7uOblNEsC+a/wDknxjwIQwRom5dkRg9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IeD1XqSp5RhOA1ImHSXbNQjNPWBaqmEPHmcz9eIGTwksJZuU6n4M94U9bgHKUh/Hxqgyx46A7bS6lRLJtnUSERPqfHa+1+N5qzg3TZtZ36q8KducOXS+7PVkuxSppexrF5j5LuG5cry+Hdt8AeN3P8dpRglh1c6rs2UYsdHgMXo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D1AC4CECD;
-	Tue, 12 Nov 2024 22:13:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B835C4CECD;
+	Tue, 12 Nov 2024 22:13:38 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-acpi@vger.kernel.org
@@ -24,10 +25,12 @@ Cc: rafael@kernel.org,
 	jonathan.cameron@huawei.com,
 	alison.schofield@intel.com,
 	ira.weiny@intel.com
-Subject: [RFC PATCH v2 0/6] acpi/hmat / cxl: Add exclusive caching enumeration and RAS support
-Date: Tue, 12 Nov 2024 15:12:32 -0700
-Message-ID: <20241112221335.432583-1-dave.jiang@intel.com>
+Subject: [RFC PATCH v2 1/5] acpi: numa: Add support to enumerate and store extended linear address mode
+Date: Tue, 12 Nov 2024 15:12:33 -0700
+Message-ID: <20241112221335.432583-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241112221335.432583-1-dave.jiang@intel.com>
+References: <20241112221335.432583-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -36,105 +39,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2:
-- Dropped 1/6 (ACPICA definition merged)
-- Change UNKNOWN to RESERVED for cache definition. (Jonathan)
-- Fix spelling errors (Jonathan)
-- Rename region_res_match_range() to region_res_match_cxl_range(). (Jonathan)
-- Add warning when cache is not 1:1 with backing region. (Jonathan)
-- Code and comments cleanup. (Jonathan)
-- Make MCE code access in CXL arch independent. (Jonathan)
-- Fixup 0-day reports.
+Store the address mode as part of the cache attriutes. Export the mode
+attribute to sysfs as all other cache attributes.
 
-I'm looking for comments on the approach and the implementation of dealing with
-this exclusive caching configuration. I have concerns with the discovering and
-handling of the PCIe MMIO space in the memory mapping (MMIO hole) and looking
-for suggestions on if there are better ways to do it. One example of MMIO hole
-can possibly look like:
-0 - 2G: RAM
-2G-4G: MMIO
-4G-end of memory: RAM
-end of memory-infinity: 64-bit MMIO
-
-Certain systems provide an exclusive caching memory configurations where a
-1:1 layout of DRAM and far memory (FM) such as CXL memory is utilized. In
-this configuration, the memory region is provided as a single memory region
-to the OS. For example such as below:
-
-             128GB DRAM                         128GB CXL memory
-|------------------------------------|------------------------------------|
-
-The kernel sees the region as a 256G system memory region. Data can reside
-in either DRAM or FM with no replication. Hot data is swapped into DRAM by
-the hardware behind the scenes.
-
-This kernel series introduces code to enumerate the side cache by the kernel
-when configured in a exclusive-cache configuration. It also adds RAS support
-to deal with the aliased memory addresses.
-
-A new ECN [1] to ACPI HMAT table was introduced and was approved to describe
-the "extended-linear" addressing for direct-mapped memory-side caches. A
-reserved field in the Memory Side Cache Information Structure of HMAT is
-redefined as "Address Mode" where a value of 1 is defined as Extended-linear
-mode. This value is valid if the cache is direct mapped. "It indicates that
-the associated address range (SRAT.MemoryAffinityStructure.Length) is
-comprised of the backing store capacity extended by the cache capacity." By
-augmenting the HMAT and SRAT parsing code, this new information can be stored
-by the HMAT handling code.
-
-Current CXL region enumeration code is not enlightened with the side cache
-configuration and therefore only presents the region size as the size of the
-CXL region. Add support to allow CXL region enumeration code to query the HMAT 
-handling code and retrieve the information regarding the side cache and adjust
-the region size accordingly. This should allow the CXL CLI to display the
-full region size rather than just the CXL only region size.
-
-There are 3 sources where the kernel may be notified that error is detected for
-memory.
-1. CXL DRAM event. This is a CXL event that is generated when an error is
-   detected by the CXL device patrol or demand scrubber. The trace_event is
-   augmented to display the aliased System Phyiscal Address (SPA) in addition
-   to the alerted address.  However, reporting of memory failure is TBD until
-   the discussion [2] of failure reporting is settled upstream.
-2. UCNA event from DRAM patrol or demand scrubber. This should eventually go
-   through the MCE callback chain.
-3. MCE from kernel consume poison.
-
-It is possible that all 3 sources may report at the same time and all report
-at the error.
-
-For 2 and 3, a MCE notifier callback is registered by the CXL on a per device
-basis. The callback will determine if the reported address is in one of the
-special regions and offline the aliased address if that is the case.
-
-[1]: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-[2]: https://lore.kernel.org/linux-cxl/20240808151328.707869-2-ruansy.fnst@fujitsu.com/
-
+Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
+v2:
+- Fix spelling errors (Jonathan)
+- Change UNKNOWN to RESERVED (Jonathan)
+---
+ Documentation/ABI/stable/sysfs-devices-node | 6 ++++++
+ drivers/acpi/numa/hmat.c                    | 3 +++
+ drivers/base/node.c                         | 2 ++
+ include/linux/node.h                        | 7 +++++++
+ 4 files changed, 18 insertions(+)
 
-Dave Jiang (5):
-      acpi: numa: Add support to enumerate and store extended linear address mode
-      acpi/hmat / cxl: Add extended linear cache support for CXL
-      acpi/hmat: Add helper functions to provide extended linear cache translation
-      cxl: Add extended linear cache address alias emission for cxl events
-      cxl: Add mce notifier to emit aliased address for extended linear cache
+diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
+index 402af4b2b905..725ef0e1e01f 100644
+--- a/Documentation/ABI/stable/sysfs-devices-node
++++ b/Documentation/ABI/stable/sysfs-devices-node
+@@ -177,6 +177,12 @@ Description:
+ 		The cache write policy: 0 for write-back, 1 for write-through,
+ 		other or unknown.
+ 
++What:		/sys/devices/system/node/nodeX/memory_side_cache/indexY/mode
++Date:		September 2024
++Contact:	Dave Jiang <dave.jiang@intel.com>
++Description:
++		The address mode: 0 for reserved, 1 for extended-linear.
++
+ What:		/sys/devices/system/node/nodeX/x86/sgx_total_bytes
+ Date:		November 2021
+ Contact:	Jarkko Sakkinen <jarkko@kernel.org>
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 1a902a02390f..39524f36be5b 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -506,6 +506,9 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
+ 	switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
+ 	case ACPI_HMAT_CA_DIRECT_MAPPED:
+ 		tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
++		/* Extended Linear mode is only valid if cache is direct mapped */
++		if (cache->address_mode == ACPI_HMAT_CACHE_MODE_EXTENDED_LINEAR)
++			tcache->cache_attrs.mode = NODE_CACHE_MODE_EXTENDED_LINEAR;
+ 		break;
+ 	case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+ 		tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index eb72580288e6..744be5470728 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -244,12 +244,14 @@ CACHE_ATTR(size, "%llu")
+ CACHE_ATTR(line_size, "%u")
+ CACHE_ATTR(indexing, "%u")
+ CACHE_ATTR(write_policy, "%u")
++CACHE_ATTR(mode, "%u")
+ 
+ static struct attribute *cache_attrs[] = {
+ 	&dev_attr_indexing.attr,
+ 	&dev_attr_size.attr,
+ 	&dev_attr_line_size.attr,
+ 	&dev_attr_write_policy.attr,
++	&dev_attr_mode.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(cache);
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 9a881c2208b3..fdecb760ef49 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -57,6 +57,11 @@ enum cache_write_policy {
+ 	NODE_CACHE_WRITE_OTHER,
+ };
+ 
++enum cache_mode {
++	NODE_CACHE_MODE_RESERVED,
++	NODE_CACHE_MODE_EXTENDED_LINEAR,
++};
++
+ /**
+  * struct node_cache_attrs - system memory caching attributes
+  *
+@@ -65,6 +70,7 @@ enum cache_write_policy {
+  * @size:		Total size of cache in bytes
+  * @line_size:		Number of bytes fetched on a cache miss
+  * @level:		The cache hierarchy level
++ * @mode:		The address mode
+  */
+ struct node_cache_attrs {
+ 	enum cache_indexing indexing;
+@@ -72,6 +78,7 @@ struct node_cache_attrs {
+ 	u64 size;
+ 	u16 line_size;
+ 	u8 level;
++	u16 mode;
+ };
+ 
+ #ifdef CONFIG_HMEM_REPORTING
+-- 
+2.47.0
 
- Documentation/ABI/stable/sysfs-devices-node |   6 ++
- arch/x86/include/asm/mce.h                  |   1 +
- arch/x86/mm/pat/set_memory.c                |   1 +
- drivers/acpi/numa/hmat.c                    | 195 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/base/node.c                         |   2 +
- drivers/cxl/core/Makefile                   |   2 +
- drivers/cxl/core/acpi.c                     |  21 ++++++
- drivers/cxl/core/core.h                     |  10 +++
- drivers/cxl/core/mbox.c                     |  45 ++++++++++-
- drivers/cxl/core/mce.c                      |  52 +++++++++++++
- drivers/cxl/core/mce.h                      |  14 ++++
- drivers/cxl/core/region.c                   | 107 +++++++++++++++++++++++++-
- drivers/cxl/core/trace.h                    |  24 ++++--
- drivers/cxl/cxl.h                           |   8 ++
- drivers/cxl/cxlmem.h                        |   2 +
- include/linux/acpi.h                        |  25 +++++++
- include/linux/node.h                        |   7 ++
- tools/testing/cxl/Kbuild                    |   1 +
- 18 files changed, 508 insertions(+), 15 deletions(-)
