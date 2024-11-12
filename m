@@ -1,238 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B08219E5F;
-	Tue, 12 Nov 2024 21:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731447738; cv=fail; b=VWdfAO+i+V9Ry4+ZszfzMKP7U4PmVkOdrWnvAuUBX5IwzF5vBKZdG7zZDTED0RA+nm9j9Lu5OozZ3/CqNQSlUhn/9ad3VAIX3yVxtekQiYeWE48UfZBzcI9wn7hI8t7VvxwO8OuycwsKVe7YAHR9bS/ySGrfeO5u3lzlNm5PXs0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731447738; c=relaxed/simple;
-	bh=oB49ytUmxatmffVBPuu92ADpmfzOrBFCNPaOlyI2Zeg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=giLEznkvq4G9MOZZ0nqlI2vr0L/nqJIiCQhUybxDmtO4Yn8//kTNsmNxLG+h0fD0iQCSW26JEO0H2LP+ZWmQEy/oJSWfeO7oqLQcc6djGwvJE/ud+/y9rwOFTZNo6KlvFzVX2iyOfyJxKeDe7xBLq9O7tCBMg4mdAl9KzyKmdSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0jGwwZ/; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0jGwwZ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731447737; x=1762983737;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oB49ytUmxatmffVBPuu92ADpmfzOrBFCNPaOlyI2Zeg=;
-  b=B0jGwwZ/abMoPs92KzlxCzIThiFlQuVYvgVrNDgAz2waQfk2r0vmFbHz
-   oT2AvGDI5AM8eTNE3NTEyq2cISaVervf+dVeMmmiU3OfQv1wXB7VI0ycr
-   Ucgkbr8blpHNqQOuelHhPTV4eulQKf6hO+1UXMmE85+mz4jEURRPAEHmU
-   6oXsaDpsMfiZnI+WbrK9PIClfNLqw3fVLopc0cegiaOxhDTiFAA28d4FJ
-   sWreOIjHyhiidITP0vUpmowY3/pnhl44BkbuNFzulJRpuqvsqhnl2zAKC
-   qz+7Nu0vKhkeVahl3gVF8c32h6p7cj5T9fPcYHNlvyUWpd/vJpFqLSY6a
-   w==;
-X-CSE-ConnectionGUID: AcVBWZrZSxaiHDo5uLOeFQ==
-X-CSE-MsgGUID: 6GAEunuVQfeRUwpFJPomRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31081486"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="31081486"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 13:42:14 -0800
-X-CSE-ConnectionGUID: SsojwrxoRP2Bqzr95LiZTw==
-X-CSE-MsgGUID: nOSVc860QZGPos2SHmEO8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,149,1728975600"; 
-   d="scan'208";a="87817107"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Nov 2024 13:42:08 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 12 Nov 2024 13:42:07 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 12 Nov 2024 13:42:07 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 12 Nov 2024 13:42:07 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mDr+cp8FExKGCNEprCXJGwwmy+2kGhO1mo0FEKctYbvvW6fsn8epdJ9zjh6EpK5ZskA0kfUVNbGRj90HkDQj3pqVo17d2SAf/9valYtMd4rDh2hFHGXiNxWu7vuEkgaj2/heIFr7t7CH40UgW/jjOCxJcnO5flARn84su2kCDRncC257RcSAoBCfCkEo66rPwdzgm9DI6HX+lblb9yWfRo91srPhBGbztuIJFQWbPvrvoUExre5KsEfYH387HN6t13/eiHbyIUgvpnH2TIKP6XuRerkI8iP6C7Psy1hP+Lx13HjvUx2Zd7jvwoqImHkoJgt9NAIaANdYw66Poe2Djw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=97+VqzIvg55akLOvL0zhR9UMJ2Zzsa2a24VbP1PcrjE=;
- b=tQD6iZscpdwOMaUd7q9IRrCV5UjRUMRfKJc6z2s5PpqAc/zRZTUTr3waWVZUIhdPxS/hHfN5KGSWaCsrhQJXInRLZwMXSE/BBebt0VVgXF88aROPMi2PRQSfXyf4+SP3s7jg/Y3DaGT8G3D7YE/0uYJNryj/7h4wwRhPM35/Aojhh7+Kqls7Lrg3J30sZWI8UHngS2OIPdWAPcQ+chHrfWiSBoj4t8jBfUv553hCfgb3QeaE9csAEA5PYR6RKa0wmfqFh9tPIyJztmW2N9e41JeiijQlocpE/yWcv2jYJvZt96oAE1U+IxdXmM+UNKu/ql3D/Y73Utozmi3gXd7jYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SN7PR11MB7705.namprd11.prod.outlook.com (2603:10b6:806:32f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.27; Tue, 12 Nov
- 2024 21:41:59 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8137.027; Tue, 12 Nov 2024
- 21:41:59 +0000
-Date: Tue, 12 Nov 2024 13:41:55 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Gregory Price <gourry@gourry.net>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: <linux-cxl@vger.kernel.org>, <kernel-team@meta.com>,
-	<Jonathan.Cameron@huawei.com>, <dan.j.williams@intel.com>,
-	<rrichter@amd.com>, <Terry.Bowman@amd.com>, <dave.jiang@intel.com>,
-	<ira.weiny@intel.com>, <alison.schofield@intel.com>, <gourry@gourry.net>,
-	<dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <david@redhat.com>,
-	<osalvador@suse.de>, <gregkh@linuxfoundation.org>,
-	<akpm@linux-foundation.org>, <rppt@kernel.org>
-Subject: Re: [PATCH v6 3/3] acpi,srat: give memory block size advice based on
- CFMWS alignment
-Message-ID: <6733cba395c30_10bc6294df@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241106155847.7985-1-gourry@gourry.net>
- <20241106155847.7985-4-gourry@gourry.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241106155847.7985-4-gourry@gourry.net>
-X-ClientProxiedBy: MW4PR04CA0317.namprd04.prod.outlook.com
- (2603:10b6:303:82::22) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B84521A4A7;
+	Tue, 12 Nov 2024 22:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731449618; cv=none; b=EJSQxwHFBbkJfQX2VROyFRtFBjcAS9QND/+vHoGWyKGUQNlbDNouCeD6J2hGqlkXaEWaiRy7LJgRhUGS5UVhcAUnV1ceMQ2kFL1TWjwdyUzHGIsgWyuTjkVcZb+KgiVNQKkkD3C6x8hoJ5H3/FkH3Ulx9tCT4CMXzok8mZgCKOg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731449618; c=relaxed/simple;
+	bh=r3gSCVx4mBfi39/3Mhartg80r4Jb6NJ4NVBvFg3cL7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTaVaVuVxvCv9I+izPi2S02cvNdd5fKs3jdRFH7qsVIq3HJdZ2PVuiraIlqMLUpTBXPN55lYR7sxqGLIIr0P19UzQ80Fnn7cB3lrfIUtTbWMCKm4FKOwGoOHb31hpWs/+VZO6rgncM5ha8bXNxcluGlBcl/PQ8GKpiaoXA4BGvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D1AC4CECD;
+	Tue, 12 Nov 2024 22:13:37 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	tony.luck@intel.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com
+Subject: [RFC PATCH v2 0/6] acpi/hmat / cxl: Add exclusive caching enumeration and RAS support
+Date: Tue, 12 Nov 2024 15:12:32 -0700
+Message-ID: <20241112221335.432583-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7705:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c223e98-e040-45d2-f3b2-08dd0362d616
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?OWjcqhUnMhj6GcdVYJc8QtVYd/k4wxYjEwwU4ENpC0oReVjGv4XYMmzTIMtJ?=
- =?us-ascii?Q?PutGmw6fiJ438rByOLEK80VfLr5tr9CxKMrdzEGivDqMpg826xdFh6jUR0pU?=
- =?us-ascii?Q?XMDbJ2fN2fL69aG4XqicQt4vdh2wDJkfRFbYHEdXjojZFgpdfn6giKmRW2Nv?=
- =?us-ascii?Q?xNphGANheY8ChcJEL1Vl4AbfLZ3+x+xuS9WVPABL587g7il0A8a07dnFRfCm?=
- =?us-ascii?Q?Q/NMo847VFmhJD9cgyxad01tKVlNZcmU/aQnT/SLkigbdxPZQbPPLSJGF1l3?=
- =?us-ascii?Q?nVGwge0tA64Hz6jujmmm9uG1sMba8HlfiDd73a1dYBYOz6lpPyVm3RvH8Upc?=
- =?us-ascii?Q?pn5XOIJvEKVKRNVcg6UbWTycIybOaRce0fY9BEKySsgbtH/Covcl9IlntpJw?=
- =?us-ascii?Q?aVooKOaQ+159fO8FDSBJ7xZqVglPCI+0Vy/yQeBFBnEDijauUlG9UBJnG+uI?=
- =?us-ascii?Q?5oxTaJrtZzCBeltH0mb7Cw5/pZeWAQP8Jc4Xv2xKKZ0u4w8g5WL75z8EwodC?=
- =?us-ascii?Q?ngxtTsuiDgEnsfjQXZBRlnTwLP5UvPlvfpsnUOCF7TQ0dyths9EOlY4j2YDo?=
- =?us-ascii?Q?8LALj4Yk5NMlqD8RjzfCW+P1A0Dn/06htB+PKNajuPK93tqYhi9dItC7fD+r?=
- =?us-ascii?Q?tiK6UpISXY+9MqRPB1pDVCGtUiL3QsprlF7KbwErx17vWXw4jCxmwpKs4huU?=
- =?us-ascii?Q?UyAU2D4A4C1dA+nXoFPtYmWBYmVGT43tQd5HH8jcOQ+GxNaHzLMCXHR+R8Z7?=
- =?us-ascii?Q?PsqXj7vQdvlTzExBGQXaN3ZtxTF+TUkY79/9Z+0tpTvpvTmF7t8/y5KMaMVN?=
- =?us-ascii?Q?VmPEfg7dALhglZMXnrgfQkjdNBXWIp/i1qVBbm7Pu/xQKwjiBJ2BmYUdFLZP?=
- =?us-ascii?Q?npt/wA+f7Me71coRlhfSBI9FJuOGofS3encG1mSMX/paDELVkTmPHxagcthc?=
- =?us-ascii?Q?b3d8VY7ghoEBVGQEFExx4aFxcUkgA1K9jOW2+gQCtyIjKv8RFvN3IN5pfdZe?=
- =?us-ascii?Q?FtVYUl94qPgld359UkRZwQwezKR8LaYYcToItsogl6GVDn0WqN3xr97tEmN0?=
- =?us-ascii?Q?esjNAzUjCZghMX5dr0Zen33xs8WpD0CDjVBytbLJYqFPzV3GzST7rRVY84vY?=
- =?us-ascii?Q?+oCRIHE1FNffDQEpV+SqAhVvCMMEUGL/Y1uFOb/9iFdAGp2gCsSXW9kjTAuo?=
- =?us-ascii?Q?rK/fFTbCAPG/FNodNj/cxnNGJ/WPOeyLL1P1AYK/l0lgXG/5zglvPGfSZx93?=
- =?us-ascii?Q?hQDNg6fBzgVdmcOhoTgsP4NVkwNHX25TzhmffR/uLoVsgpF3C4gje9lRelT9?=
- =?us-ascii?Q?tDM=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?plOOpkgCSBvEwnPDUNf0RjmYQ4o7PZWp9EZjEBpre4jYmmBVVFG9xtq9AWVJ?=
- =?us-ascii?Q?/e3jDWxlTdJYR5xoTrc0k8LLvqQRmlsz0xfxML0WLXhWsbFVIE4Izy2wYqhq?=
- =?us-ascii?Q?siq6ZfEfX7jbiRnJWUiHglBu6qCR1wQ2DKQe/XBuPJ62OfLwGq+PAGQV2W2u?=
- =?us-ascii?Q?HvmmSH0ZZepQRVk3gSAdXMVV078Zht+xlm8GslHy8Fxgi3AJdjn8pyIqOZ+A?=
- =?us-ascii?Q?X239P8l8fIrGUVwYVusevFs7yYROkoo3eiyWrAw4j9zdM5ffwHhsRa/FNKp5?=
- =?us-ascii?Q?t78Bq8gGAPFEwpq7On92a249GQa2ETbozSMlYhM+5FBC4sGUDZmS/xGsM+bv?=
- =?us-ascii?Q?xPYhsYQo9zxzqQCIdMAOVxSfDwbtirf8oeume+NTMjO1TqTzGA21iCwUgGRc?=
- =?us-ascii?Q?Qc44XLUgaiaW+zLKAJaiNNTQMyz/V6+jrDtPiN6BsChzhk38+sfS67W1zWHh?=
- =?us-ascii?Q?+Y+GVyJIFy5FLJ5A7OcmYtp896z82rdV9GBUxIIXOho8OewtetPrBgsrlhdd?=
- =?us-ascii?Q?A6WO7OJanLrt/RznYnstXPAwBUJ8hpVa+78+V+Trk0OCFN2H+fhQxbOWA54u?=
- =?us-ascii?Q?fvkJSk/WuJBtaLjRPjnkpYmcYVCghQGXfhLzR/wm3roGr8XxLFWACyCX6YM4?=
- =?us-ascii?Q?QghNH8OR02Yu+fXauCHlva62P3bNwyhUbljf8qUTSMzXBkoJeeXdZg68ERm8?=
- =?us-ascii?Q?Agq4UJKIswzhC7bbhhIN2HjvKfLUnr1cVHLmXhH9vmIYeOgA3M+CVGoH4SjJ?=
- =?us-ascii?Q?fQItJ9bjOiNcI9PplqQzmcrxEJX97pFwlbFJjTqEWOaNJpNFv+1WYTiFEZKH?=
- =?us-ascii?Q?OMN1ro1AuuJQKtvwy1mnlDIdrM7enas+Zl7lxYtHTPJnaAAQkjd1asQqLLgj?=
- =?us-ascii?Q?VkqZLKasDWyGEItEQ4L81GAX3v4wnmq7/C4YHGlHYNZk8SG+A0s+w0xbKSeg?=
- =?us-ascii?Q?LUD1PI1NBIh+ZJ6Tqn3mO6xj+7gBy5BZU9ahxnQ+XJKZtExWcT9yp+YQdjmY?=
- =?us-ascii?Q?hKGnzoaa3w1yHm/lpR4ZS+kM7rHoIKInsP5N2T/tuWk2mx86vYw9lOWEAwK1?=
- =?us-ascii?Q?+SPdtyp6nREp8vKyQh6e/3k4+SOJH4y46JJSrS2DcF35J8YLJ03/+F4ydt4w?=
- =?us-ascii?Q?Wap08btA+/nO4V2aMujEuao4Aa0jIUukEIORQKOpXrIkuwzX6yWZXomJcrsE?=
- =?us-ascii?Q?cH4vLSe4ZnBRu43Ng+kFrbkMDTwwYQ6Gs6/9kXCQGKKzYAFsS23IdMEim3L+?=
- =?us-ascii?Q?dl5sJ0cfj0zOWvK0MacZeWbbCCsyjq1M3aNIrTsBWHCmPd9/kBmA6HK7eM7l?=
- =?us-ascii?Q?GBiugX8OGacorsFrqawgQhH3aAWxoPZNWgn1XCRbz70pfrfctNgaX/yRc6Lp?=
- =?us-ascii?Q?chQ3poHEd2j2MG+hteMJ23YbuaQa6gUrhFunI3sPawd9STwjtia4Jo+4cW8U?=
- =?us-ascii?Q?bZK9vsmbC8FVMbm/zjFRMai1wzpUzBe1tm6SfT0ii0+sAU5RWzPoyD+7OJl3?=
- =?us-ascii?Q?oz+NbyB9BNtxyTYaxQz7G4M2SJICbftrBCyCiU8GDu8DkTqQG6igMtWddqAd?=
- =?us-ascii?Q?Q4ZeFXCTmUgwc8ycDZeie5JosnDBMlvAwQCPcZ26sOFmi/NRDTPq5q16KdmL?=
- =?us-ascii?Q?rQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c223e98-e040-45d2-f3b2-08dd0362d616
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 21:41:59.1664
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2qGWHDB5wxDtvCbUGNA9yGhZv8/FO+O5joCN3vg/wdhU5txasuBCAFdgrfhHNjbP7N3pto20t2EvKROMHOiWuGESM9Oq6lfpdriet96K/kw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7705
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Gregory Price wrote:
-> Capacity is stranded when CFMWS regions are not aligned to block size.
-> On x86, block size increases with capacity (2G blocks @ 64G capacity).
-> 
-> Use CFMWS base/size to report memory block size alignment advice.
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/acpi/numa/srat.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 44f91f2c6c5d..34b6993e7d6c 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -14,6 +14,7 @@
->  #include <linux/errno.h>
->  #include <linux/acpi.h>
->  #include <linux/memblock.h>
-> +#include <linux/memory.h>
->  #include <linux/numa.h>
->  #include <linux/nodemask.h>
->  #include <linux/topology.h>
-> @@ -338,13 +339,22 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  {
->  	struct acpi_cedt_cfmws *cfmws;
->  	int *fake_pxm = arg;
-> -	u64 start, end;
-> +	u64 start, end, align;
->  	int node;
->  
->  	cfmws = (struct acpi_cedt_cfmws *)header;
->  	start = cfmws->base_hpa;
->  	end = cfmws->base_hpa + cfmws->window_size;
->  
-> +	/* Align memblock size to CFMW regions if possible */
-> +	align = 1UL << __ffs(start | end);
-> +	if (align >= SZ_256M) {
-> +		if (memory_block_advise_max_size(align) < 0)
-> +			pr_warn("CFMWS: memblock size advise failed\n");
+v2:
+- Dropped 1/6 (ACPICA definition merged)
+- Change UNKNOWN to RESERVED for cache definition. (Jonathan)
+- Fix spelling errors (Jonathan)
+- Rename region_res_match_range() to region_res_match_cxl_range(). (Jonathan)
+- Add warning when cache is not 1:1 with backing region. (Jonathan)
+- Code and comments cleanup. (Jonathan)
+- Make MCE code access in CXL arch independent. (Jonathan)
+- Fixup 0-day reports.
 
-Oh, this made me go back to look at what happens if CFMWS has multiple
-alignment suggestions. Should not memory_block_advise_max_size() be
-considering the max advice?
+I'm looking for comments on the approach and the implementation of dealing with
+this exclusive caching configuration. I have concerns with the discovering and
+handling of the PCIe MMIO space in the memory mapping (MMIO hole) and looking
+for suggestions on if there are better ways to do it. One example of MMIO hole
+can possibly look like:
+0 - 2G: RAM
+2G-4G: MMIO
+4G-end of memory: RAM
+end of memory-infinity: 64-bit MMIO
 
-    if (memory_block_advised_size) {
-        ...    
-    } else {
-            memory_block_advised_size = max(memory_block_advised_size, size);
-    }
+Certain systems provide an exclusive caching memory configurations where a
+1:1 layout of DRAM and far memory (FM) such as CXL memory is utilized. In
+this configuration, the memory region is provided as a single memory region
+to the OS. For example such as below:
 
-For example, if region0 is an x4 region and region1 is an x1 region then
-the memory block size should be 1GB, not 256M. I.e. CFMWS alignment
-follows CXL hardware decoder alignment of "256M * InterleaveWays".
+             128GB DRAM                         128GB CXL memory
+|------------------------------------|------------------------------------|
+
+The kernel sees the region as a 256G system memory region. Data can reside
+in either DRAM or FM with no replication. Hot data is swapped into DRAM by
+the hardware behind the scenes.
+
+This kernel series introduces code to enumerate the side cache by the kernel
+when configured in a exclusive-cache configuration. It also adds RAS support
+to deal with the aliased memory addresses.
+
+A new ECN [1] to ACPI HMAT table was introduced and was approved to describe
+the "extended-linear" addressing for direct-mapped memory-side caches. A
+reserved field in the Memory Side Cache Information Structure of HMAT is
+redefined as "Address Mode" where a value of 1 is defined as Extended-linear
+mode. This value is valid if the cache is direct mapped. "It indicates that
+the associated address range (SRAT.MemoryAffinityStructure.Length) is
+comprised of the backing store capacity extended by the cache capacity." By
+augmenting the HMAT and SRAT parsing code, this new information can be stored
+by the HMAT handling code.
+
+Current CXL region enumeration code is not enlightened with the side cache
+configuration and therefore only presents the region size as the size of the
+CXL region. Add support to allow CXL region enumeration code to query the HMAT 
+handling code and retrieve the information regarding the side cache and adjust
+the region size accordingly. This should allow the CXL CLI to display the
+full region size rather than just the CXL only region size.
+
+There are 3 sources where the kernel may be notified that error is detected for
+memory.
+1. CXL DRAM event. This is a CXL event that is generated when an error is
+   detected by the CXL device patrol or demand scrubber. The trace_event is
+   augmented to display the aliased System Phyiscal Address (SPA) in addition
+   to the alerted address.  However, reporting of memory failure is TBD until
+   the discussion [2] of failure reporting is settled upstream.
+2. UCNA event from DRAM patrol or demand scrubber. This should eventually go
+   through the MCE callback chain.
+3. MCE from kernel consume poison.
+
+It is possible that all 3 sources may report at the same time and all report
+at the error.
+
+For 2 and 3, a MCE notifier callback is registered by the CXL on a per device
+basis. The callback will determine if the reported address is in one of the
+special regions and offline the aliased address if that is the case.
+
+[1]: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+[2]: https://lore.kernel.org/linux-cxl/20240808151328.707869-2-ruansy.fnst@fujitsu.com/
+
+---
+
+Dave Jiang (5):
+      acpi: numa: Add support to enumerate and store extended linear address mode
+      acpi/hmat / cxl: Add extended linear cache support for CXL
+      acpi/hmat: Add helper functions to provide extended linear cache translation
+      cxl: Add extended linear cache address alias emission for cxl events
+      cxl: Add mce notifier to emit aliased address for extended linear cache
+
+ Documentation/ABI/stable/sysfs-devices-node |   6 ++
+ arch/x86/include/asm/mce.h                  |   1 +
+ arch/x86/mm/pat/set_memory.c                |   1 +
+ drivers/acpi/numa/hmat.c                    | 195 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/base/node.c                         |   2 +
+ drivers/cxl/core/Makefile                   |   2 +
+ drivers/cxl/core/acpi.c                     |  21 ++++++
+ drivers/cxl/core/core.h                     |  10 +++
+ drivers/cxl/core/mbox.c                     |  45 ++++++++++-
+ drivers/cxl/core/mce.c                      |  52 +++++++++++++
+ drivers/cxl/core/mce.h                      |  14 ++++
+ drivers/cxl/core/region.c                   | 107 +++++++++++++++++++++++++-
+ drivers/cxl/core/trace.h                    |  24 ++++--
+ drivers/cxl/cxl.h                           |   8 ++
+ drivers/cxl/cxlmem.h                        |   2 +
+ include/linux/acpi.h                        |  25 +++++++
+ include/linux/node.h                        |   7 ++
+ tools/testing/cxl/Kbuild                    |   1 +
+ 18 files changed, 508 insertions(+), 15 deletions(-)
