@@ -1,296 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6748221A4D0;
-	Tue, 12 Nov 2024 22:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF99E21CF9F
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Nov 2024 23:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731449625; cv=none; b=lkempZFudFjOYSKyKSQyehiRZr/4yiJCHtEUV3+6DTjmuRfACNW210F2InFL5ojnR1L3d295VJpqKe+xMZxDfJ4fWl7znLd4hqApFQp4lUlBrtbBNVFv5UnBYyHD+X8fQC/azdqs8W9TpnmMploZZVGnky9uE37zi32QkxSm4MQ=
+	t=1731455281; cv=none; b=UmQmv7taubIJf/fmICa6Jeh8eIR10JpBcRMXnKAr4M+grnxbwl6PFKs2kT6Sq/casPuT9D8NJG0uibVf9gBxLbcFGfmF5XSDfEzug2rfhve0xRUnZoKYkgHdwyhBlbWrWk3dl+3eO700EyWYGkRli45IXDFwDwbCX+dbSn2r9Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731449625; c=relaxed/simple;
-	bh=4yXJzY/uA6FPtaMBqtrwIL+v8IUP3W6xKxZ4p2ooj/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q4a4n1ebXD7gZxNG6IFGimwavPg9CWLCmeTOXVFpQR0IPJm0ddgEhrkFYadgexEF84AyZiEEZ/UM5liUPNt1OqJuaIIV7jZdLVtuUxeNOIlqMHgFSwujByH00bAz7KHFzBGDXnFXpnwusn+wLeWaRKJivJq5fyBKvu5e4MadssA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F4DC4CECD;
-	Tue, 12 Nov 2024 22:13:44 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	tony.luck@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com
-Subject: [RFC PATCH v2 5/5] cxl: Add mce notifier to emit aliased address for extended linear cache
-Date: Tue, 12 Nov 2024 15:12:37 -0700
-Message-ID: <20241112221335.432583-6-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241112221335.432583-1-dave.jiang@intel.com>
-References: <20241112221335.432583-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1731455281; c=relaxed/simple;
+	bh=N7dFYszMXv8mOrLoOkSsYfFtGY+5VlTWGDWy+wCc/Fw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PgY1trzdRuQY19vuYmaph6Of2PTuNBV7LshXmo1AmmFeNV03680s2ZjLhouJnjwrrWGlobC8qxj0FS3sUk01TRtXtYYCV9HKg32ARo0VJdXyIacvz88tZmzCTcESnv8pf/GE4W/EmMoXVbteA45hmEKZ8qmi8efP1oSs+Wkbyyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aMQnJ4BO; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aMQnJ4BO"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6cbe68f787dso40539446d6.2
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Nov 2024 15:47:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1731455278; x=1732060078; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOX9DSgNLbyzHMkGOIxDMiwsq1o4f6ejGQOhBxaCHpU=;
+        b=aMQnJ4BOncOEUbjunI/ZUQTc01EBixAoSiqs6gb0lLss+sR65ega/+nqMc2vrZD4tI
+         qtBrJ4Qb5XcS2kHa3lQEq7tgX+HkZENJtaYFFekrlCWFgAfTtwzlP2n+dOjjoT/EOm2+
+         tXq5dcGpYzgr+cd8pgA0N4xr8xmDUHaHF59lCYjj7XLHjt70hFFpK7cwLD3G3xZd0d/s
+         EYfD10szDlD+m0I17jj/ifLMpGV4ONz8u/YBPWnpLJj1anqaV161w+sqWK3Xcn3/mK1V
+         PQGio9H+XsNZrUhiIa1YjzzIHUKPQTv7JYAZWVbhbyPHQ1IPjnXXhfKKuZvN0YtVgVIK
+         7PlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731455278; x=1732060078;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nOX9DSgNLbyzHMkGOIxDMiwsq1o4f6ejGQOhBxaCHpU=;
+        b=Yq7GPq8lQocCeopKWuzHL7NMaSDTJ63s12irstgI3a/2ARYhPP3YgcWA0mRfS/lfOp
+         1Cy9i+TueaaUmixGe8A+Ega/YDDzRbbMqDOBK+6vJ4sphC7+7KB/PGuSyjoU7IWQ8hBp
+         Ce+NZ0rBI+yf14mVQHKWmnOdWi79v6umwRcZMUlNil70CrI2kTnMeAQeNY7eJZI/A/Qu
+         ParXyNTe5FLHzgrGUdt3LLY2nDYRkLfJT4UEUux2lev2rN51peGC0b9rJTaOT73016OE
+         GUKxSHCw8lkG0J3P30o8eGXoE90wESVISBIkwrFluThUF52ALKPRI/EXneiLLlw2Hx/a
+         B0Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxH79dcbfQVQ7rMOkBXeetUPBRqhDsyfV+D5yccGe6O+TaMDjovriswuLGuAgxB9Rnx2EqUoS1q7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrcm1QuAQayv60lq6+Kfde20ffmvhHbqCAyV5u80YJg+sM5+2O
+	qFKh55CLagbCDVG8FtLSA83vt+TpEj1QrSIiL/9fx1CEpRJgusXDEJhZpPbzOvI=
+X-Google-Smtp-Source: AGHT+IESCbVOvkdTgqqmwdwGBZDyO5gMTGBHvzuur/6mM+yLjVaQptGL8/RUONrYdiW+pZ1cU+a0nw==
+X-Received: by 2002:a05:6214:5b87:b0:6cb:f16f:65d5 with SMTP id 6a1803df08f44-6d3dd039d0emr15720396d6.12.1731455278579;
+        Tue, 12 Nov 2024 15:47:58 -0800 (PST)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d39643b678sm77555456d6.97.2024.11.12.15.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2024 15:47:58 -0800 (PST)
+Date: Tue, 12 Nov 2024 18:47:35 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, kernel-team@meta.com,
+	Jonathan.Cameron@huawei.com, rrichter@amd.com, Terry.Bowman@amd.com,
+	dave.jiang@intel.com, ira.weiny@intel.com,
+	alison.schofield@intel.com, dave.hansen@linux.intel.com,
+	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rafael@kernel.org,
+	lenb@kernel.org, david@redhat.com, osalvador@suse.de,
+	gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+	rppt@kernel.org
+Subject: Re: [PATCH v6 3/3] acpi,srat: give memory block size advice based on
+ CFMWS alignment
+Message-ID: <ZzPpFzdzu-cis114@PC2K9PVX.TheFacebook.com>
+References: <20241106155847.7985-1-gourry@gourry.net>
+ <20241106155847.7985-4-gourry@gourry.net>
+ <6733cba395c30_10bc6294df@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6733cba395c30_10bc6294df@dwillia2-xfh.jf.intel.com.notmuch>
 
-Below is a setup with extended linear cache configuration with an example
-layout of memory region shown below presented as a single memory region
-consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-The kernel sees a region of total 256G of system memory.
+On Tue, Nov 12, 2024 at 01:41:55PM -0800, Dan Williams wrote:
+> Gregory Price wrote:
+> > Capacity is stranded when CFMWS regions are not aligned to block size.
+> > On x86, block size increases with capacity (2G blocks @ 64G capacity).
+> > 
+> > Use CFMWS base/size to report memory block size alignment advice.
+> > 
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  drivers/acpi/numa/srat.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > index 44f91f2c6c5d..34b6993e7d6c 100644
+> > --- a/drivers/acpi/numa/srat.c
+> > +++ b/drivers/acpi/numa/srat.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/errno.h>
+> >  #include <linux/acpi.h>
+> >  #include <linux/memblock.h>
+> > +#include <linux/memory.h>
+> >  #include <linux/numa.h>
+> >  #include <linux/nodemask.h>
+> >  #include <linux/topology.h>
+> > @@ -338,13 +339,22 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> >  {
+> >  	struct acpi_cedt_cfmws *cfmws;
+> >  	int *fake_pxm = arg;
+> > -	u64 start, end;
+> > +	u64 start, end, align;
+> >  	int node;
+> >  
+> >  	cfmws = (struct acpi_cedt_cfmws *)header;
+> >  	start = cfmws->base_hpa;
+> >  	end = cfmws->base_hpa + cfmws->window_size;
+> >  
+> > +	/* Align memblock size to CFMW regions if possible */
+> > +	align = 1UL << __ffs(start | end);
+> > +	if (align >= SZ_256M) {
+> > +		if (memory_block_advise_max_size(align) < 0)
+> > +			pr_warn("CFMWS: memblock size advise failed\n");
+> 
+> Oh, this made me go back to look at what happens if CFMWS has multiple
+> alignment suggestions. Should not memory_block_advise_max_size() be
+> considering the max advice?
+> 
+>     if (memory_block_advised_size) {
+>         ...    
+>     } else {
+>             memory_block_advised_size = max(memory_block_advised_size, size);
+>     }
+> 
+> For example, if region0 is an x4 region and region1 is an x1 region then
+> the memory block size should be 1GB, not 256M. I.e. CFMWS alignment
+> follows CXL hardware decoder alignment of "256M * InterleaveWays".
 
-              128G DRAM                          128G CXL memory
-|-----------------------------------|-------------------------------------|
+Max size to minimize capacity loss to due alignment truncation.
 
-Data resides in either DRAM or far memory (FM) with no replication. Hot
-data is swapped into DRAM by the hardware behind the scenes. When error is
-detected in one location, it is possible that error also resides in the
-aliased location. Therefore when a memory location that is flagged by MCE
-is part of the special region, the aliased memory location needs to be
-offlined as well.
+If CFMW-0 is aligned at 1GB and CFMW-1 is aligned at 256MB, if you select 1GB
+then some portion of CFMW-1 will be unmappable.
 
-Add an mce notify callback to identify if the MCE address location is part
-of an extended linear cache region and handle accordingly.
+so you want min(memory_block_advised_size, size) to ensure the hotplug memblock
+size aligns to the *smallest* CFMW (or any other source) alignment.
 
-Added symbol export to set_mce_nospec() in x86 code in order to call
-set_mce_nospec() from the CXL MCE notify callback.
+Unless I'm misunderstanding your feedback here.
 
-Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- Move mce code to core/mce.c and add arch wrappers for CONFIG_X86_64. (Jonathan)
----
- arch/x86/include/asm/mce.h   |  1 +
- arch/x86/mm/pat/set_memory.c |  1 +
- drivers/cxl/core/Makefile    |  1 +
- drivers/cxl/core/mbox.c      |  3 +++
- drivers/cxl/core/mce.c       | 52 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/mce.h       | 14 ++++++++++
- drivers/cxl/core/region.c    | 25 +++++++++++++++++
- drivers/cxl/cxl.h            |  6 +++++
- drivers/cxl/cxlmem.h         |  2 ++
- 9 files changed, 105 insertions(+)
- create mode 100644 drivers/cxl/core/mce.c
- create mode 100644 drivers/cxl/core/mce.h
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 3b9970117a0f..a8ad140d5692 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -182,6 +182,7 @@ enum mce_notifier_prios {
- 	MCE_PRIO_NFIT,
- 	MCE_PRIO_EXTLOG,
- 	MCE_PRIO_UC,
-+	MCE_PRIO_CXL,
- 	MCE_PRIO_EARLY,
- 	MCE_PRIO_CEC,
- 	MCE_PRIO_HIGHEST = MCE_PRIO_CEC
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 44f7b2ea6a07..1f85c29e118e 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2083,6 +2083,7 @@ int set_mce_nospec(unsigned long pfn)
- 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(set_mce_nospec);
- 
- /* Restore full speculative operation to the pfn. */
- int clear_mce_nospec(unsigned long pfn)
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1a0c9c6ca818..d619fb11febd 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,3 +17,4 @@ cxl_core-y += cdat.o
- cxl_core-y += acpi.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-+cxl_core-$(CONFIG_X86_MCE) += mce.o
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 3fa9c658a253..2304786a1333 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -11,6 +11,7 @@
- 
- #include "core.h"
- #include "trace.h"
-+#include "mce.h"
- 
- static bool cxl_raw_allow_all;
- 
-@@ -1489,6 +1490,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 
-+	cxl_register_mce_notifier(&mds->mce_notifier);
-+
- 	return mds;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, CXL);
-diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-new file mode 100644
-index 000000000000..801e4e4ef91a
---- /dev/null
-+++ b/drivers/cxl/core/mce.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#include <linux/notifier.h>
-+#include <linux/set_memory.h>
-+#include <asm/mce.h>
-+#include <cxlmem.h>
-+#include "mce.h"
-+
-+static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
-+			  void *data)
-+{
-+	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
-+						    mce_notifier);
-+	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct mce *mce = (struct mce *)data;
-+	u64 spa, spa_alias;
-+	unsigned long pfn;
-+
-+	if (!mce || !mce_usable_address(mce))
-+		return NOTIFY_DONE;
-+
-+	spa = mce->addr & MCI_ADDR_PHYSADDR;
-+
-+	pfn = spa >> PAGE_SHIFT;
-+	if (!pfn_valid(pfn))
-+		return NOTIFY_DONE;
-+
-+	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
-+	if (!spa_alias)
-+		return NOTIFY_DONE;
-+
-+	pfn = spa_alias >> PAGE_SHIFT;
-+
-+	/*
-+	 * Take down the aliased memory page. The original memory page flagged
-+	 * by the MCE will be taken cared of by the standard MCE handler.
-+	 */
-+	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address: %#llx\n",
-+		  spa_alias);
-+	if (!memory_failure(pfn, 0))
-+		set_mce_nospec(pfn);
-+
-+	return NOTIFY_OK;
-+}
-+
-+void cxl_register_mce_notifier(struct notifier_block *mce_notifier)
-+{
-+	mce_notifier->notifier_call = cxl_handle_mce;
-+	mce_notifier->priority = MCE_PRIO_CXL;
-+	mce_register_decode_chain(mce_notifier);
-+}
-diff --git a/drivers/cxl/core/mce.h b/drivers/cxl/core/mce.h
-new file mode 100644
-index 000000000000..1d747618bbc0
---- /dev/null
-+++ b/drivers/cxl/core/mce.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#ifndef _CXL_CORE_MCE_H_
-+#define _CXL_CORE_MCE_H_
-+
-+#include <linux/notifier.h>
-+
-+#ifdef CONFIG_X86_MCE
-+void cxl_register_mce_notifier(struct notifier_block *mce_notifer);
-+#else
-+static inline void cxl_register_mce_notifier(struct notifier_block *mce_notifier) {}
-+#endif
-+
-+#endif
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index a7479b4aad8d..d141ab11f784 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3440,6 +3440,31 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, CXL);
- 
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
-+{
-+	struct cxl_region_ref *iter;
-+	unsigned long index;
-+
-+	guard(rwsem_write)(&cxl_region_rwsem);
-+
-+	xa_for_each(&endpoint->regions, index, iter) {
-+		struct cxl_region_params *p = &iter->region->params;
-+
-+		if (p->res->start <= spa && spa <= p->res->end) {
-+			if (!p->cache_size)
-+				return 0;
-+
-+			if (spa > p->res->start + p->cache_size)
-+				return spa - p->cache_size;
-+
-+			return spa + p->cache_size;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, CXL);
-+
- static int is_system_ram(struct resource *res, void *arg)
- {
- 	struct cxl_region *cxlr = arg;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 26466807fa7a..6b612a87469d 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -866,6 +866,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
- int cxl_add_to_region(struct cxl_port *root,
- 		      struct cxl_endpoint_decoder *cxled);
- struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
- {
-@@ -884,6 +885,11 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- {
- 	return NULL;
- }
-+static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
-+					       u64 spa)
-+{
-+	return 0;
-+}
- #endif
- 
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..55752cbf408c 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -477,6 +477,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-+ * @mce_notifier: MCE notifier
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -503,6 +504,7 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
-+	struct notifier_block mce_notifier;
- };
- 
- static inline struct cxl_memdev_state *
--- 
-2.47.0
+I'm not clear on why the interleave data is relevant here - that just tells us
+how decoders line up with the memory region described in the CFMW.  The window
+still gets chopped up into N memblocks of memory_block_advised_size.
 
+~Gregory
