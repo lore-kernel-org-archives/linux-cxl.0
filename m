@@ -1,114 +1,90 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1501D433CE
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Nov 2024 04:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD8617C22E;
+	Wed, 13 Nov 2024 08:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731471323; cv=none; b=dg/+9C2AJ+/i0/z7eUarNDXc4a6yqe1E73kdAeqPh/F8TloNe59dbTp725DQI32W2etPGdvBiuegUZ+M0tFABKiROhIK64qzrfZx6OmPAO07LRF1tYXjFUr0XrdH+K+r6s3Hecw1q8gGc4hLxEGBFIqoG3Hm+VDjWrf4Qyhqx2E=
+	t=1731485519; cv=none; b=NvHuVChJ/qsNCYOQM3zcSxj1/S5oD5T6ZGgz86WMnIU4o/N5NynnBxWoR1KicQ6tCmfHvT32nApiCzAbuOUobMUcEu0WYSrjS/gH1GLuq/iYK1bVDBh4+sWnKUrfX3+u2uhkTnUd0weOpd8SYKHwVfcjGYWmITLUs7+HMLp1Myo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731471323; c=relaxed/simple;
-	bh=T2rdd7tXYgiIrzYHzCAL/PU41GbaxiH5Y8Q/Zohq1FE=;
+	s=arc-20240116; t=1731485519; c=relaxed/simple;
+	bh=kL8BEddGxGjH0DpB/eYrS+fgIjTmq8xsQ61kbgnAESI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DN6W+5kEmwYpf/GtTXVF8i+yR13uRQG3cPyFyILkPMgKq/XyYc4Tb/+UzLjkpMuAncOdTYrWQ/dVcWoZC1Za7kIuuhQ2Zgz4YlzIqFhpqBE5s5dXbowkJO7lsuUdsyZJbMJ1J/DIupPNQKA2k2PnKIvo1Va6CQTNYwDBRwS1IQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=I2rqHbmU; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=OcfjmJIBVN9EP69oUOLiJOT4yyK2PHb9uUZOecDobcDStUp5lhXpUDOC8Q+4fY1XI3srmQkOJf6vNd0LNaRwICaE2y4BtA1zs5PJ0NTFiBsTHOq6eIVSq7YCoi94P4uiepOmgW4W5y1pCg9z204hPBgIfz/uzmM+yBS5bnzb5Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ERnhJVt9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="I2rqHbmU"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6cbe68f787dso41704876d6.2
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Nov 2024 20:15:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1731471321; x=1732076121; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUb1WojSD+HhOKe+sBVX703ySuQYQJYEhxr/ZtFrr20=;
-        b=I2rqHbmUPI8ue4wAeGFlxm4cr/jRTxxfKfLtbSaTS2FjnXx1w9RNgVGXWBs1icirL3
-         JKiE4XuouyoF3a+HT2Jj2GL70sEtwkAYZDmtzRM6F9xJcq5xA5bwQVcA4DUzgmi5KKJD
-         ySfDc8lieJklBiOzxSYFQSLlEOz5hBgPA+/TYQ2YWOqJmvCegWOEzjHlBicqkERK6ibp
-         MIULWyX9+46qR/9c1IOZIY63yd08OM6uBZkdz/W1iDyzlOCj/di32v7lxTPSIjuPUmxt
-         84vH3qPysyJwoCL/XS97MgvdiXkL7yDxOIh/hyrcsqi9OJs4sfdVY8GApmYzHQWrSZs6
-         5PLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731471321; x=1732076121;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CUb1WojSD+HhOKe+sBVX703ySuQYQJYEhxr/ZtFrr20=;
-        b=QlYeGUHfY8XMI360RDzLPNKh8qe5P1zsI7qBCoHdDgXeaw+1bzxau+l+UtOCAOj9JX
-         IBNHN/hlic9vpd4cOjdeMg2bSY9zzkLpjmONtTMpf8JMQwG18iJdITvNCNgBr93U8iuQ
-         DbOTBuJkJkbfLCO1fKmsILbFmmdaYrMKV/8MZ5+H8u6gZMmkPq+5JHRV2k/Ydle/HIlc
-         K4k6/o6zlkqRZOciPRYrh9PId3OZdY+Uf4fWbVqObC5PvC41zK1HFh519Rvog1CaeuYh
-         UTgFSWjzpoB/X56zfFanWGE/q+K+X8B618ZtS6ht850812ujEDgDXX6rHo0zdKiLvH5S
-         knyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Hi1Kz22s3RFtbzQD4qiZJllRhdW3ei1kZgXv9DQELSvBX7KavEnfEsMBEM3E2ZjeDQWKQJUjc7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk8mtAJag9Gy8skeWKS+ECoJKRRxwtHOKXytyaUp6K4/5gR6Iz
-	BWJyvYtNH1d+SPIwLW3kQsMN2tip/pRxua9FKfdTT3DhEWEkEBmb4hjhxAxznrw=
-X-Google-Smtp-Source: AGHT+IFZHlowe441qeuXq5e14Sj+kjnoWxQVfmLizMJ+32RwzXsN2gXKawIsTikUmXrXXVOr5Z+7Jw==
-X-Received: by 2002:a05:6214:2f03:b0:6d3:cebc:4cd2 with SMTP id 6a1803df08f44-6d3dd06b5b9mr18850226d6.34.1731471320966;
-        Tue, 12 Nov 2024 20:15:20 -0800 (PST)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b32ac44082sm652302085a.38.2024.11.12.20.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 20:15:20 -0800 (PST)
-Date: Tue, 12 Nov 2024 23:14:55 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, kernel-team@meta.com,
-	Jonathan.Cameron@huawei.com, rrichter@amd.com, Terry.Bowman@amd.com,
-	dave.jiang@intel.com, ira.weiny@intel.com,
-	alison.schofield@intel.com, dave.hansen@linux.intel.com,
-	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rafael@kernel.org,
-	lenb@kernel.org, david@redhat.com, osalvador@suse.de,
-	gregkh@linuxfoundation.org, akpm@linux-foundation.org,
-	rppt@kernel.org
-Subject: Re: [PATCH v6 1/3] memory: implement
- memory_block_advise/probe_max_size
-Message-ID: <ZzQnvzPLsamSs7i4@PC2K9PVX.TheFacebook.com>
-References: <20241106155847.7985-1-gourry@gourry.net>
- <20241106155847.7985-2-gourry@gourry.net>
- <6733c86390c40_10bc62945f@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ERnhJVt9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F0A1540E0274;
+	Wed, 13 Nov 2024 08:11:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id sDRDGvMn3k-t; Wed, 13 Nov 2024 08:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1731485507; bh=ntDhYIuR89H0HGdl+nPO/Nsn3+rUYjQTq2I7rdXCSQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ERnhJVt9iW3AjjhQodEB2KxxnYxzDg70j3Hooccs0RBjPqABlCiAPGwE0jCF+fVO1
+	 WoUXbNe5zqlWNACBJnpz0Ev/9Nx//ERUuefLnOuPi+5m6yep6j8zp1NgjulgTmi07H
+	 DrusJydoazWq9qGyGdvYTvcgdtdMxYraraYfJgXnyc4jxS8J7s+x1QRKKTJ0TgbCKT
+	 GT6vBfCOZ+zwPuMurJ1ofeIo4NIySbuneT+B/mDNp925UXwZfyqfoJS2OZD+Wfok4E
+	 U7b7AoDL3oMnKMz9SY9CXTi9dqoZTmaOyy+Rc2BtS3/5eboghRagQemEE5FJeq7BVQ
+	 4O+dn3aHm9+plfMrSVeU5CFy6RfnC0JJY+zSs936oRzcR60ujIPVmjlFIoiziIRUT3
+	 MK+8jQOsQQZvYYT+CxwbKvXB0O0pOs5vR/BmROB44ImqKesGU86Nm9c8t/ulb6mYjd
+	 6lgdU0TKLhz8b+6TZ1ctJn46SAEDto4hLRWfx+2bB0ziXgkZwEyC7f171eClG6kbe0
+	 vqP+1fhH2xFAntRxupF2saULxYjLYlqSp8+DZiS9/YWLPTN8vWoyLnm1vSR4sso1Fq
+	 qFqKDHp8g8DLUAS/4Sl539DxEao7vlCF3is1oinTz8P54qmLQDonxzvZTK7R90vOFq
+	 Gv/6GkPicP9f9zJeDHZc/J2E=
+Received: from zn.tnic (p200300ea973a3157329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:973a:3157:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 18E7D40E015F;
+	Wed, 13 Nov 2024 08:11:37 +0000 (UTC)
+Date: Wed, 13 Nov 2024 09:11:28 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	rafael@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com
+Subject: Re: [RFC PATCH v2 5/5] cxl: Add mce notifier to emit aliased address
+ for extended linear cache
+Message-ID: <20241113081128.GAZzRfMIuLpzwHY_R7@fat_crate.local>
+References: <20241112221335.432583-1-dave.jiang@intel.com>
+ <20241112221335.432583-6-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6733c86390c40_10bc62945f@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20241112221335.432583-6-dave.jiang@intel.com>
 
-On Tue, Nov 12, 2024 at 01:28:03PM -0800, Dan Williams wrote:
-> Gregory Price wrote:
-> > Hotplug memory sources may have opinions on what the memblock size
-> > should be - usually for alignment purposes.  For example, CXL memory
-> > extents can be 256MB with a matching alignment. If this size/alignment
-> > is smaller than the block size, it can result in stranded capacity.
-> > 
-> > Implement memory_block_advise_max_size for use prior to allocator init,
-> > for software to advise the system on the max block size.
-> > 
-> > Implement memory_block_probe_max_size for use by arch init code to
-> > calculate the best block size. Use of advice is architecture defined.
-> > 
-> > The probe value can never change after first probe. Calls to advise
-> > after probe will return -EBUSY to aid debugging.
-> > 
-> > On systems without hotplug, always return -ENODEV and 0 respectively.
-> 
-> Should the advice just succeed when the result does not matter?
-> 
+On Tue, Nov 12, 2024 at 03:12:37PM -0700, Dave Jiang wrote:
+> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+> index 3b9970117a0f..a8ad140d5692 100644
+> --- a/arch/x86/include/asm/mce.h
+> +++ b/arch/x86/include/asm/mce.h
+> @@ -182,6 +182,7 @@ enum mce_notifier_prios {
+>  	MCE_PRIO_NFIT,
+>  	MCE_PRIO_EXTLOG,
+>  	MCE_PRIO_UC,
+> +	MCE_PRIO_CXL,
+>  	MCE_PRIO_EARLY,
+>  	MCE_PRIO_CEC,
+>  	MCE_PRIO_HIGHEST = MCE_PRIO_CEC
 
-I figure at some point during __init the value will be probed and subsequent
-calls will be ignored. I'd rather fail explicitly in that case to assist
-debugging - otherwise it might be a little maddening to discover your callsite
-is too late in the process.
+Why this priority exactly?
 
-> Otherwise, it depends on the caller to not care based on config.
-> 
-> I do not feel that strongly about it, so either way:
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
