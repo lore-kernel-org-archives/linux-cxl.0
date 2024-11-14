@@ -1,92 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E4E7DA66;
-	Thu, 14 Nov 2024 15:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D1F126C03;
+	Thu, 14 Nov 2024 16:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731599559; cv=none; b=mwt5AB2JiHsknb9rHRVXC6roXi7NjTApaDCZdaTgXsgNrtfNd+RbjDHSh08krb/8f9LYnNT7Whb59rkecazZJVanSNa+IQ8TSUKg/JQMyeCQY8iBJ+fLs/l1ON/SOLYcAJCtRE64cfZNRFyWjzMnIK2Ce00zzLv7qfh7d1lKsYY=
+	t=1731602674; cv=none; b=QTVyCnvEitj5i8Bi7eGkUEoO1v74mKrhDWLlHMlqpllUUARwUvIktaPCtT94ESwW+l56Y4WG80rcoy6ygF/7qQRufTq46gL3TDIonfmKpjjzFOr+iuv5VrO6sa/Vuqk0/0r7oEr/UE4grg0xqyYyfCjdbZ3xrpscVXImifP+Ch0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731599559; c=relaxed/simple;
-	bh=e1ZQd5YARcU5Hvx35DjyE2bgdZJpyejVaDrJBO5aiOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K9g4K0vsqNDdJTZaa3Hzn9KvQ4nQXVZbWzUSOjRO0tIqY0qTrMQ+eMJ3eOcATQy7dWEAo/Nrc0oN7n7PbuG9qAsIGafzDmL0zgasRrV0xrt7RegN6s03ajkhMY2iavzsxS7LnwCw0uFHqmuA0qgdDV8U5VU35z509qhquhg+UOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nCLlFrDg; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nCLlFrDg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731599558; x=1763135558;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=e1ZQd5YARcU5Hvx35DjyE2bgdZJpyejVaDrJBO5aiOA=;
-  b=nCLlFrDgOWRzysy6tExZZg+3iF9hHdRRwHKKfBD+PXTSkNfVS6g+4I3C
-   075bap5gmXLVOOFRmvqMT35OeUWhpwQe6nceGrYAlY6a0xmpoaVtIrAsO
-   H+CgKJqyKIvpdBLfT9Akt51yite+MPH7OPm28kimauDP35GNlHgZlcZUx
-   ARQP3ye4cz39cgvrxhtWOQb7GYQ2VD0da3jtfKOkLzgTfQfRAVPp6fCXe
-   jyAlTARmcNIr6Ohv+vVWtutA6hJG4v2FZoqXZ8vai8DuvcWEbiwPByatE
-   IuLkgOW9+1szMND/U8aYPMSkRc5U90A5bKKsconZ+nBejOSzDsGXAC+bH
-   g==;
-X-CSE-ConnectionGUID: dBabqjKKQa6tvKi1dPbbTA==
-X-CSE-MsgGUID: FeO6JtvnRMitz90m5rS8mA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="34408558"
-X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
-   d="scan'208";a="34408558"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 07:52:37 -0800
-X-CSE-ConnectionGUID: umsSu1FIQ1KX3rp+SI0g7w==
-X-CSE-MsgGUID: Usp726aQS2yHN322MdJmMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
-   d="scan'208";a="93206310"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.62]) ([10.125.108.62])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 07:52:36 -0800
-Message-ID: <86208fd4-2628-446c-bda5-fe3c79706f68@intel.com>
-Date: Thu, 14 Nov 2024 08:52:35 -0700
+	s=arc-20240116; t=1731602674; c=relaxed/simple;
+	bh=yTTebUgilUcScFJvsEz7xDxnwIE2WJs/ED3QOn9Z1oI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7I+n0Tlhn+VX5H4yqm5Qax1lAnDMz7r2lEAHUsPbj05lgsikniUzccyP+AZrdb0xdzazxSPcCoxLP327AD58R72jBqv24S4shn9xdQgELZg7uLYoWGM7UeHiHPIDet6FBaYF9fw3PQUhfw4/jw1iGaky7OP0O9hkErLdMLmUGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id EBAA82800A273;
+	Thu, 14 Nov 2024 17:44:22 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D2A893C3D3B; Thu, 14 Nov 2024 17:44:22 +0100 (CET)
+Date: Thu, 14 Nov 2024 17:44:22 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
+	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
+Subject: Re: [PATCH v3 05/15] PCI/AER: Add CXL PCIe port correctable error
+ support in AER service driver
+Message-ID: <ZzYo5hNkcIjKAZ4i@wunner.de>
+References: <20241113215429.3177981-1-terry.bowman@amd.com>
+ <20241113215429.3177981-6-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 5/5] cxl: Add mce notifier to emit aliased address
- for extended linear cache
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- dan.j.williams@intel.com, tony.luck@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com
-References: <20241112221335.432583-1-dave.jiang@intel.com>
- <20241112221335.432583-6-dave.jiang@intel.com>
- <20241113081128.GAZzRfMIuLpzwHY_R7@fat_crate.local>
- <9cbccaa0-f83e-4e92-bfbd-65a7ec08b2bd@intel.com>
- <20241114093217.GBZzXDoVnBPiAhVOvJ@fat_crate.local>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241114093217.GBZzXDoVnBPiAhVOvJ@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241113215429.3177981-6-terry.bowman@amd.com>
+
+On Wed, Nov 13, 2024 at 03:54:19PM -0600, Terry Bowman wrote:
+> @@ -1115,8 +1131,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	cxl_handle_error(dev, info);
+> -	pci_aer_handle_error(dev, info);
+> +	if (is_internal_error(info) && handles_cxl_errors(dev))
+> +		cxl_handle_error(dev, info);
+> +	else
+> +		pci_aer_handle_error(dev, info);
+> +
+>  	pci_dev_put(dev);
+>  }
+
+If you just do this at the top of cxl_handle_error()...
+
+	if (!is_internal_error(info))
+		return;
+
+...you avoid the need to move is_internal_error() around and the
+patch becomes simpler and easier to review.
 
 
+> The AER service driver supports handling downstream port protocol errors in
+> restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
+> functionality for CXL PCIe ports operating in virtual hierarchy (VH)
+> mode.[1]
 
-On 11/14/24 2:32 AM, Borislav Petkov wrote:
-> On Wed, Nov 13, 2024 at 08:27:35AM -0700, Dave Jiang wrote:
->> I'm actually looking for recommendation on what the proper one is. The
->> handler is expected to offline the aliased address of the reported MCE if
->> there is one.
-> 
-> Well, MCE_PRIO_EARLY will emit a trace record so that if you have error events
-> consumers like rasdaemon, it'll get that error record for reporting etc.
-> 
-> MCE_PRIO_UC calls memory_failure() on the error and thus offlines the page.
-> Functionality which you're partly replicating in your notifier.
-> 
-> And since you wanna do the same thing, why are you even adding a new priority
-> instead of using MCE_PRIO_UC? amdgpu_bad_page_notifier() uses that same prio
-> because it does a similar thing.
+This is somewhat minor but by convention, patches in the PCI subsystem
+adhere to spec language and capitalization, e.g. "Downstream Port"
+instead of "downstream port".  Makes it easier to connect the commit
+message or code comments to the spec.  So maybe you want to consider
+that if/when respinning.
 
-Ok thanks for the explanation. I will use MCE_PRIO_UC. 
-> 
+Thanks,
 
+Lukas
