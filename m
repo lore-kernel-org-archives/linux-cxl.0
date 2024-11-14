@@ -1,219 +1,91 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE9C18C353;
-	Wed, 13 Nov 2024 21:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731535048; cv=fail; b=qzsNrNruVJE9S5XMgMl5xdJZheK1X9VKEJkBVoMsm++WloIzeNCrUY8UI+v52J36FVhPUCap0fNhuef7Ku1we1iVXb7Qr/r15/4ZdlwZlSxGcokIOW60z5Kdlnm3zQpq+1fDa8Ceabuk7x9vJNNPtuDHP9+cdYdkpUrJQdYH5Rk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731535048; c=relaxed/simple;
-	bh=002E3axX10NWwOscoE8If0labZQsL4xOCkKkWQEdYvY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VA7srIdCBQuzel5EQbkV3S2+U5oIzAI2e8W6JNmYOkAtUJWqe6gpzoj0Y+SuOJ9dhyF0sq1NaV+AqtvUPAm9y+wP2Fk4GbJPv3ZPyQj0eUZPAn0qqGJ6cGnmrAsQsSj0HmQEwDIRE+fPaed1DfMPR5f2sX2w9eSnkyT5jx6ehes=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wGdGsVGL; arc=fail smtp.client-ip=40.107.93.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8152E1DA0ED;
+	Thu, 14 Nov 2024 09:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731576764; cv=none; b=WyHVCeSTW/r1RtU2oifoAEi+iZwgofm3S8GOx1meSO0tbl+STwDb9CcdZjeuYi5TtiwGaal/auJOidHA4MIjzy2yOagzrRw2M+SlbLCLn4z1o/xLRW/5K3d+fSZbkrOxyY/079d4Zads77RxkU2DDJvQ4X0ypPwqDhGGd1/KuKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731576764; c=relaxed/simple;
+	bh=1uBXJ6TSGmiwzNukM03CToLqaGHPss3V2DVeZy/AE1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+dR4f6bnTTPofTSw/HbY2TWgh4wob6hII6wwMveSsvHfaKZQL9DrGpaGGmYO8cuHp8ego3DrzR0zazOMUVWm36TO0SFZfywsOrsjSKv4AIbjzUxhe9sXeRqNsBp8uCAZ9IBh3RUzzmrK33YNGpFmks0obwtrES6p1MiIrQd/PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kWa26J1H; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wGdGsVGL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LduOV1bm9ZG3KaFylspGoxzWkm+3LqobW5/uFuZ5IaqYo5h9mQElFUNnxYEyvB1KClakWKGIqfcVh0fFkLgOyqLOv7rpAQmlcZ0G3sP7cyeYEFBL6KGAMDMrljbi9e8pKT8XDvnsLhIRQj3LvPHm+SXF3EWGHiOU8x6Fmotufv5Xhzu9CgiXU7OshmiRzCcA/EtT3Ri7DuqjLbtRDbJmXzr0WczsmDRJQgv4lQjONyISFZ56HRCCqbPF9+bvlEtTOlmEkYOIkSh/1NgxXc52icnQmtf4tGdbNtAtK/ehqNoMhEEiSgIbDhVjWjv+i5lQlD2ib4fz7Q5b/F+M/DGh5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rYAGzdewKAuza5CtTWGSqPUeFUkzZSd2ZjnH9RcAT4Y=;
- b=DfmBv1G9eoy2/WFeF1rKcfKhldXs6Hw2CFNH5ALcK75IVef9tyDqrvTIizpqU3e9KVp3CNYWx3Q+Hmpms33NrIhRe4ctZkRKC99SnBlm6nvsvdXbaW5p4DzlWdfJyaeNQTtMO4CDIk4Ew7ubVf0LeDNCXy9jFqUpAcRWNU8q+i3DQauZ29GUXfwrip1FIbxX1CCTxG5dqEkXfeWdoYW88Eqzj25YKAaOM7dvKJdULYOgOYD/Pi5w29IyRoQPQgoHic7VDh0m4QGbBIFn4rEgKOBnbodH9O+aEZPJzRLHnaxxciA/K9YsOeGtZzhgyNIpVkVJo75MHpuiJqI6Ak8npQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYAGzdewKAuza5CtTWGSqPUeFUkzZSd2ZjnH9RcAT4Y=;
- b=wGdGsVGLNciykq3HiBeAmvhHeM4bZSasyDISQ3ZcXMtNXjdnbn7lAYLQlHQeGoo3VQmNDge939MQXu7WLk2lQ4pUsITw2feodiXirKyl6+n7V6kNR8lcHEJ5kBuCKJ6KrNMfvflsGNGSPMpFGu+UZkgmDsM4SVOKf8soPWIHUuo=
-Received: from DS0PR17CA0016.namprd17.prod.outlook.com (2603:10b6:8:191::7) by
- SN7PR12MB8172.namprd12.prod.outlook.com (2603:10b6:806:352::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Wed, 13 Nov
- 2024 21:57:24 +0000
-Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
- (2603:10b6:8:191:cafe::e5) by DS0PR17CA0016.outlook.office365.com
- (2603:10b6:8:191::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.18 via Frontend
- Transport; Wed, 13 Nov 2024 21:57:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8158.14 via Frontend Transport; Wed, 13 Nov 2024 21:57:23 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 13 Nov
- 2024 15:57:22 -0600
-From: Terry Bowman <terry.bowman@amd.com>
-To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <ming4.li@intel.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>
-Subject: [PATCH v3 15/15] PCI/AER: Enable internal errors for CXL upstream and downstream switch ports
-Date: Wed, 13 Nov 2024 15:54:29 -0600
-Message-ID: <20241113215429.3177981-16-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241113215429.3177981-1-terry.bowman@amd.com>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kWa26J1H"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E87E940E0220;
+	Thu, 14 Nov 2024 09:32:39 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id WvcG_SBnzOyk; Thu, 14 Nov 2024 09:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1731576754; bh=g/UV2Vl8EVA86rQBI5eN+ioVn6VRTFK99yqErYywcsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kWa26J1HFid4FvzBH8im2y2C0QrkMom6aONHZFy4vTiIddPAg7/SrWrj9qo17et52
+	 gOD7ufib6OJNDqgYBZObP57B9ctHBrVCIf99gJ81RbCuE30pwQSgCC/RzfIpPFbclS
+	 CjzsG2k+je45mAvHY+mFd7VcOIbNa0XNdPPb+imNyJ/nOSaXGZrKzc431BLWvYiOgo
+	 d0m59FRwZ9CpC/3NNHuxKLSMEloRcCMe+rSmoS6jlxDgnal63B56tVyo/PiTKAqA5M
+	 gfVa24uRfWPWRXyySSOV70z1kmbfKNjxpNlB9JwXvWE5yA2CEUrdcXBA84YEzCh9fL
+	 lTHyx15HzAVqIg0GhyFVsYTwbPBMob2k19nTCLZIN6pRkblFHW3al6EOUS+tGWSlWp
+	 G5oxZyN5ojgtduNJ3wvPbWuPyl54w7Fqkvjirpf+APVrP/YK6hlttAq+YZ84+zl5DX
+	 NMEjQqY1eQz/nKTXa4kF+Wi3xp18BgGKIBdRiM1Ug99DKdnkpeNNlF6bQbIUl8qLRP
+	 qvxSzzKNm/WaX3Rs5sf5LNoaFOtjk+dPZ5a64h6hX0RDJ/mGXsTQn+ue+NH83lpgj/
+	 J79ebJsd9KXENjU5KCyyD5+8aa6sKhl7U8HOxu4sr0tPFil8gOC8UzFCMIjr8SCmmo
+	 mP4p/sRsxOUi3iMZL5VGBpgI=
+Received: from zn.tnic (p200300ea973a31a9329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:973a:31a9:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2054E40E0219;
+	Thu, 14 Nov 2024 09:32:24 +0000 (UTC)
+Date: Thu, 14 Nov 2024 10:32:17 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	rafael@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com
+Subject: Re: [RFC PATCH v2 5/5] cxl: Add mce notifier to emit aliased address
+ for extended linear cache
+Message-ID: <20241114093217.GBZzXDoVnBPiAhVOvJ@fat_crate.local>
+References: <20241112221335.432583-1-dave.jiang@intel.com>
+ <20241112221335.432583-6-dave.jiang@intel.com>
+ <20241113081128.GAZzRfMIuLpzwHY_R7@fat_crate.local>
+ <9cbccaa0-f83e-4e92-bfbd-65a7ec08b2bd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|SN7PR12MB8172:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6e7dbb0-2c60-431c-216b-08dd042e2803
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b+B+qh+WCQURa1s/Jcx0djwOmhHTZteGI+I39UJDuGy1/bK90YhG/helZIxk?=
- =?us-ascii?Q?i77cX9TD/5yg7oABA/hqxvzEpwTrxAjoqMZryTwtLa1KMSUXiJUUh2TrhXek?=
- =?us-ascii?Q?HAP9P3U4rIZqKpkgLMMl8qMn4cZoOLFLb0okwzQ+yxKaKQr03xlPGc98JkhM?=
- =?us-ascii?Q?weB9UVo7T41eMDCpAKd52+qExQQS7wrW8fRh5TUGtt3vq8t+I1SVLy/oz5dn?=
- =?us-ascii?Q?lLBWKfRgM7jq4aENuvqde5kftVeaWtx3APryMe2TM6mvpQro7Tn7GcYQi7ad?=
- =?us-ascii?Q?kHB1wQONpK4wUOVeoq5QyRjkuSHeGzUugYulNPeSu2NV6NFmbcckKN7FJDrk?=
- =?us-ascii?Q?IGGKVp+2GBRZw9dMh+I3kUiu98TfG9wx+PRCKfkP6wPl5FK8Tz82bheQzQ9D?=
- =?us-ascii?Q?oxBP15smVvvw33DcKKBWNNLSDpD5Agu0FAX9qGBxdvzLpkmr9x0zDyxXVJJu?=
- =?us-ascii?Q?X93Wr32viuLWuRWejjJDDTuKNAZqnc2ZwogWufPN65EStAQ26Fn+pmMZu+dK?=
- =?us-ascii?Q?3KDdo7M3TbhtjiTvKkd+w6RP1lApwFNqol1RTEzTGDvdt56U1qaEKpZtwxaI?=
- =?us-ascii?Q?m5DVECSNZXsJejSjFJSVRJXPYDnpABwyKexufLaPrEauGNFLz2Z5UWOktmb8?=
- =?us-ascii?Q?LceD+xGObMj4My/7x6Kgzii6baZV0ALXN3Ui6bhSrqQV5eZvh4tT/t20YJCq?=
- =?us-ascii?Q?fmK6Ys5kA0JQFvjlisJQMlAvlJV8duhKCs4c4P/nJjlNoapczWlhLWGjbtgW?=
- =?us-ascii?Q?V160xqLXLuCmRBeRzBi2QYAvXEz+S0FDCySSXwnJlQ4T06/1T27pdkvMd2IL?=
- =?us-ascii?Q?zyQG4dnvbMSQ+tov63BaOY18OHdWiFAToW6tM+5C/pIgvp+cX3iD/Gpc3zkc?=
- =?us-ascii?Q?FT6iCbuYDZxV500SrFmapbKyuuL7tSXFoEWcNIQuTzxqypp3YvqWhW4/MFme?=
- =?us-ascii?Q?mIVDRjX6/TIhGoiF9j5ZctlSWRcS1unsLhgtoV667IhpPqFlwvABd5uHhPfC?=
- =?us-ascii?Q?260aNGaOiJVM9mqj/kWghRVMMNG5ovaSSgt77mqqF6Qd3Ii1HU0RYi8qJ6si?=
- =?us-ascii?Q?MXKdp0gQgnzyBgDZ8+E9EUaivNV60BTpnbFMphHIRcEZSn3J6hNBrdpZ4kpz?=
- =?us-ascii?Q?XXWzfJbogmlKbeminJVb5vjggQA8TYAJK2n57lfACI43899jWfqIXjZzwZkN?=
- =?us-ascii?Q?jS7+ukDIv8QQWuqi1MK1BU4dTz0YwKCyzmIjRhgCdMe7VF5LdDlRCBkHwl3E?=
- =?us-ascii?Q?Lth8FEvZdtRPYASAXJ12dBXEY2whP+XWzfwasj3RNdVG7ojGysl/b/mEtITf?=
- =?us-ascii?Q?+0rh83TbTXGzaRUXHPz/fIgFfhDUIf1QgbLWysEMpQJdlK5PKkHbpkVIT7Fo?=
- =?us-ascii?Q?UHBW2ujbdsM9jXJHBRCxJTPEMy3Sz9RBzu9FtkX1zIyOAmY/Oj5HVxJUOFHv?=
- =?us-ascii?Q?cL3PIhBfbiY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2024 21:57:23.9810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6e7dbb0-2c60-431c-216b-08dd042e2803
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8172
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <9cbccaa0-f83e-4e92-bfbd-65a7ec08b2bd@intel.com>
 
-The AER service driver enables uncorrectable internal errors (UIE) and
-correctable internal errors (CIE) for CXL root ports and CXL RCEC's. The
-UIE and CIE are used in reporting CXL protocol errors. The same UIE/CIE
-enablement is needed for CXL PCIe upstream and downstream ports inorder to
-notify the associated root port and OS.[1]
+On Wed, Nov 13, 2024 at 08:27:35AM -0700, Dave Jiang wrote:
+> I'm actually looking for recommendation on what the proper one is. The
+> handler is expected to offline the aliased address of the reported MCE if
+> there is one.
 
-Export the AER service driver's pci_aer_unmask_internal_errors() function
-to CXL namsespace.
+Well, MCE_PRIO_EARLY will emit a trace record so that if you have error events
+consumers like rasdaemon, it'll get that error record for reporting etc.
 
-Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
-because it is now an exported function.
+MCE_PRIO_UC calls memory_failure() on the error and thus offlines the page.
+Functionality which you're partly replicating in your notifier.
 
-Call pci_aer_unmask_internal_errors() during RAS initialization in:
-cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
+And since you wanna do the same thing, why are you even adding a new priority
+instead of using MCE_PRIO_UC? amdgpu_bad_page_notifier() uses that same prio
+because it does a similar thing.
 
-[1] PCIe Base Spec r6.2-1.0, 6.2.3.2.2 Masking Individual Errors
-
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
----
- drivers/cxl/core/pci.c | 2 ++
- drivers/pci/pcie/aer.c | 5 +++--
- include/linux/aer.h    | 1 +
- 3 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index af2ff6936a09..4ede038a7148 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -887,6 +887,7 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
- 
- 	cxl_assign_port_error_handlers(pdev);
- 	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
-+	pci_aer_unmask_internal_errors(pdev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
- 
-@@ -919,6 +920,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
- 
- 	cxl_assign_port_error_handlers(pdev);
- 	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
-+	pci_aer_unmask_internal_errors(pdev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 87fddd514030..1028814379e4 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -949,7 +949,6 @@ static bool is_internal_error(struct aer_err_info *info)
- 	return info->status & PCI_ERR_UNC_INTN;
- }
- 
--#ifdef CONFIG_PCIEAER_CXL
- /**
-  * pci_aer_unmask_internal_errors - unmask internal errors
-  * @dev: pointer to the pcie_dev data structure
-@@ -960,7 +959,7 @@ static bool is_internal_error(struct aer_err_info *info)
-  * Note: AER must be enabled and supported by the device which must be
-  * checked in advance, e.g. with pcie_aer_is_native().
-  */
--static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-+void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
- 	u32 mask;
-@@ -973,7 +972,9 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- 	mask &= ~PCI_ERR_COR_INTERNAL;
- 	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
- }
-+EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, CXL);
- 
-+#ifdef CONFIG_PCIEAER_CXL
- static bool is_cxl_mem_dev(struct pci_dev *dev)
- {
- 	/*
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 4b97f38f3fcf..093293f9f12b 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -55,5 +55,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
-+void pci_aer_unmask_internal_errors(struct pci_dev *dev);
- #endif //_AER_H_
- 
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
