@@ -1,116 +1,79 @@
-Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537F31D435C
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 17:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731692882; cv=pass; b=e2/1QpLsba4pfqH3R0iD+/B2gkMe/9WN5myg0Nzlm/j1YwkULVmb09I/SDpW76jJk3DQMfvRWNdcHp3K24YEvpBC9YX4VTgECWOsdJ/uVjMeXnDEPv2o3nEUV2gtcuTT90WM2rkP7nX/k1dTTa7ROWQuykkJmYHWnlCZ7mwIpDc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731692882; c=relaxed/simple;
-	bh=55j9nk+yfPJybTeNpai2YpNDm1xcPIoEdpaX4HwnEeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OYvpd4QycxevX6UqnKP7RLbWFUMIJLX/r+C0J+kIyTErYR9WrCk1sS2iXdfKF23QE93M/ANG9FOIlqIb6CfW53i4G4+ldvvwSJQCfEYe0YmGk+kfPYFvFIP4TUoP/ji2JcGK81eTMeXGT8TOwTj6ksq6jJBXm+WqNaC7N2axxfs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ajIWrkYU; arc=pass smtp.client-ip=23.83.223.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC50171658;
+	Fri, 15 Nov 2024 17:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731693228; cv=none; b=NfymJ2Pc1TVyMKNHrA9PiH4YTsAJwxJJKxnEb1eVq75ppKISd8Woq0FP3P9Sjwzlp/7tO6z0oLGIz+mOAJMaZ2v2Y3hrpVZYic7ZUgAdpA2DFGWdIvPL7sKwca8G2eyPcvoqQlzyQSDQQK4zdxLU0ic5/EV44YIv+lZvvJbA/T4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731693228; c=relaxed/simple;
+	bh=rYI8EaYodfdmH37kAApuPQ41T6bd+YLA/SYg6lziQSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QdPBaMUUMBHn+1IaC4SV5eK/aLv1lBLUVOWxFPRmz4E8sSzBbPkynQGRRU+zBA0lttGvHxvRAiFJ7qimNY4LkjZtE+if2zg1Ct1S6vYRLXTcJGgLZBEtM3BawB02LaRhLLErQdxeYaNr+J/ViDmuDtpy7/9+OKQIxWOLTjykbhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PX9jIUTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ajIWrkYU"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 17E1FC1DE8;
-	Fri, 15 Nov 2024 16:53:05 +0000 (UTC)
-Received: from pdx1-sub0-mail-a291.dreamhost.com (trex-1.trex.outbound.svc.cluster.local [100.112.138.222])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 1A5AEC1A27;
-	Fri, 15 Nov 2024 16:53:04 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1731689584; a=rsa-sha256;
-	cv=none;
-	b=SHY7/7zDkoBhy9Gelp3+h3Guj26BM4NiKre1/jc9rASxvlConrjRqk72GE5U4vnZeYGeqR
-	lrM8nfUTMvr7FhCNTrRTI2TpFNBR52LKWSnWJuscwlDQ2p9pChypfkFaSsaEkY0dhSLOe+
-	YUI8S5vNcjs23Ra32ZCTOvIw75AT9G/zAPrxpQuvAjo/FBIXDrU4+4pL9aOI6424J/ES/X
-	pgxL3+P0tcI0bEmh/yCeTsIg7vkAR/sAr91TrDCS2qGOLU9oWcH1rauKPX5O+dYm5u3Xy2
-	kwK+84YD5O1L0pOFaaZ+IQwmAQiKaz3PwR/yvto4zY2CnI08RvAuQo/N8fdXsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1731689584;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=O4UnejLeVEGebiK25TXGbrrXiE1Ov2QlC2DjDb86E6c=;
-	b=pK2POjpKd6W4c0sMnIvRdPI2rfu0iCfIMAl9pGuFP0FbhIoAw9EM5iKKdKwHCzSfWsMlYa
-	3z6+d/ibXVVbhB7KcKMhwpvGrQ8nzpqeLIMhtLPCVGnhpdJEAMhMsjjF9EyCkvQgPUhZk2
-	XQFIQyvLd/4sIIvo+/UGDLuqcvkKZOVF/JL0gC8yKpXugzdmWRq7YbC4KWDRmxBdYgOQMB
-	R8uvgXxfBCPRJnRoYcXq715zccqAWdx8V2XVIrhvwgfJy9Mxbxes7nt/OZQQJIfjr5BCGU
-	cDE3mC3t1aU4Nd8TEvCl0YIUHCHBQqzjZGwxqQ1CEUx91yqzTBaFquWTxTkSYA==
-ARC-Authentication-Results: i=1;
-	rspamd-7456989c76-xgklb;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Thread-Decisive: 5978ef136ab4cee6_1731689584388_413964471
-X-MC-Loop-Signature: 1731689584388:3008821120
-X-MC-Ingress-Time: 1731689584388
-Received: from pdx1-sub0-mail-a291.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.112.138.222 (trex/7.0.2);
-	Fri, 15 Nov 2024 16:53:04 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a291.dreamhost.com (Postfix) with ESMTPSA id 4Xqjkl3Hpnz6x;
-	Fri, 15 Nov 2024 08:53:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1731689583;
-	bh=O4UnejLeVEGebiK25TXGbrrXiE1Ov2QlC2DjDb86E6c=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=ajIWrkYUbWCd3+KadbWEx6Hc/mIX8THcm2ngeZuthDITwPqMO+k6oddS2boL8+cwD
-	 38WC0stIOw0/wy/Ec+P6OLfwtunlonBcaJ2tIL3E0dkqkFPjpNmuRGSFz9n7K4VRW6
-	 OeMqyTOdYwqTwJAbQjXXNY4U6FYDk3bzSlTB6s095yEybbyZ2d735+5+Kc3/j0i6NE
-	 0ISlRyIORwrSLsKQk5jRgFGN66v0Cs0rR3r7sN8LdQq5+Akhw6Ub/2uziyaPmBglzS
-	 +TZG2PMeHo34zuJd+upeSYfLi0TMPYoRMY7+IOxzqqNI/Rf6FYjeDf3A9uUkJAhK2a
-	 qrLELFa9loWpw==
-Date: Fri, 15 Nov 2024 08:49:01 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave.jiang@intel.com, dan.j.williams@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/pci: Fix potential bogus return value upon
- successful probing
-Message-ID: <2eau46txsxb7l4fgmaeope7i7odsjbipjjsjc7mvjiqzhg4llw@iiobkioccdap>
-References: <20241114213439.6022-1-dave@stgolabs.net>
- <Zza4YONsVxWa8rpL@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PX9jIUTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF801C4CECF;
+	Fri, 15 Nov 2024 17:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731693227;
+	bh=rYI8EaYodfdmH37kAApuPQ41T6bd+YLA/SYg6lziQSA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=PX9jIUTe7ymC63rKfXezkcocPgtH59QMjSU241aSWkZOl//7yF0Ub7KI6o104yvQw
+	 7/wlAdTO6o5bKlKfvNvkaDa39yUEqjr3FkeOin5SybrEn9Y7TPpMpTdOMQG6VSE2pu
+	 onij9pAsYR+P5GHw9NtQsMUlP+xAi4qz7axuo9jvWKCJWdlkhktWsSyVfY74xKG0G5
+	 jMLhEGgDrUlxNPfAN3DDVWYglgnHtC0+MKPvqvcwetXjUvCXx7HShpZxqnSAmox0az
+	 y7XYWiPhipHcJjjMjU1qTOxKbEyJDfzqWCsn9Wn81u1I/WxdWHjvwsAXJ6F37bJOlI
+	 uiRQCmiN5rQPg==
+Date: Fri, 15 Nov 2024 11:53:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alistair Francis <alistair@alistair23.me>
+Cc: lukas@wunner.de, Jonathan.Cameron@huawei.com,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	bjorn3_gh@protonmail.com, ojeda@kernel.org, tmgross@umich.edu,
+	boqun.feng@gmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+	wilfred.mallawa@wdc.com, alistair23@gmail.com,
+	alex.gaynor@gmail.com, gary@garyguo.net, aliceryhl@google.com
+Subject: Re: [RFC 1/6] rust: bindings: Support SPDM bindings
+Message-ID: <20241115175346.GA2045933@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zza4YONsVxWa8rpL@aschofie-mobl2.lan>
-User-Agent: NeoMutt/20240425
+In-Reply-To: <20241115054616.1226735-2-alistair@alistair23.me>
 
-On Thu, 14 Nov 2024, Alison Schofield wrote:\n
->This can be:
->
->	if (cxl_pci_ras_unmask(pdev))
->		dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
+On Fri, Nov 15, 2024 at 03:46:11PM +1000, Alistair Francis wrote:
+> In preparation for a Rust SPDM library we need to include the SPDM
+> functions in the Rust bindings.
+> 
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> ---
+>  rust/bindings/bindings_helper.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> index 7847b2b3090b..8283e6a79ac9 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -24,6 +24,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/slab.h>
+> +#include <linux/spdm.h>
 
-Yeah, it later occured to me that this was better. Will send a v2.
+Usually an additional #include goes in the same patch that makes use
+of the new .h file.  Maybe there's a different convention in rust/?
 
->
->There are a bunch that follow this pattern in that function, mostly in
->the pmu_count loop.
->
->How about tidying up the rc pattern throughout the function?
-
-I think since this is an actual fix, any tidying up can come later.
-
-Thanks,
-Davidlohr
+>  #include <linux/uaccess.h>
+>  #include <linux/wait.h>
+>  #include <linux/workqueue.h>
+> -- 
+> 2.47.0
+> 
