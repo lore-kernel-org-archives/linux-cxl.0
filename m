@@ -1,183 +1,116 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3654C15573A;
-	Fri, 15 Nov 2024 17:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731690952; cv=none; b=cs+QxDjQnAbYVlPj88oCKX0iolNNvc/vG2RpMiW8BfhQei84je73v2ShhHYqOyua8KA7dIBjlZITvQvQmyg9R9bWH/PVoAxEznkZahN04RyyRUPo+hHbREC7YCXgQbYAaR2JfPEZYuupEyxICthnqWAbP6fSzMl64oi1Ehh3L/0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731690952; c=relaxed/simple;
-	bh=5MnfwGwjjZ5e3fIepXk3xCVSfgNw+NvODegrk9C883E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rb20zSPWS45CaWW92JrQq07dIW/l7evwraYc/jzkOm1geXeTBVRkPK/KmyQOP9sKTxCghZD5dzv9kuxv+Wwu8Axq7sImkGf3XafkFohe/9so9KabMgWZdAs9fsMuiAR0FyrLOfxEphN4/5OdzJmTUBwjem6q1473fbocMGkzWVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J59Euu/g; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537F31D435C
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 17:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731692882; cv=pass; b=e2/1QpLsba4pfqH3R0iD+/B2gkMe/9WN5myg0Nzlm/j1YwkULVmb09I/SDpW76jJk3DQMfvRWNdcHp3K24YEvpBC9YX4VTgECWOsdJ/uVjMeXnDEPv2o3nEUV2gtcuTT90WM2rkP7nX/k1dTTa7ROWQuykkJmYHWnlCZ7mwIpDc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731692882; c=relaxed/simple;
+	bh=55j9nk+yfPJybTeNpai2YpNDm1xcPIoEdpaX4HwnEeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OYvpd4QycxevX6UqnKP7RLbWFUMIJLX/r+C0J+kIyTErYR9WrCk1sS2iXdfKF23QE93M/ANG9FOIlqIb6CfW53i4G4+ldvvwSJQCfEYe0YmGk+kfPYFvFIP4TUoP/ji2JcGK81eTMeXGT8TOwTj6ksq6jJBXm+WqNaC7N2axxfs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ajIWrkYU; arc=pass smtp.client-ip=23.83.223.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J59Euu/g"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e9ecb67701so303349a91.1;
-        Fri, 15 Nov 2024 09:15:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731690950; x=1732295750; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BwEDCmCjDAFPLessQ1VxzKc/71Q2iWV02aJqLKUeeu8=;
-        b=J59Euu/glW/c2OAo+cyEYK+gtMxkpHiVLtd5Eb1uOc/qGrhAPIp1LSFQ84MArrmxmK
-         HHXegIkVUSsgWGW29OBrFXg1mr8A+EIb7zmrbQLxnIloj5rWpX7zCoT33r1UNFgxAEno
-         uM0OSOz77QSVmUkjA7zEOOJU4EKrd4qRFgqXRIUgnyjJbvlTeZKhHDUXkwKrOWZMVhIO
-         BinPMsSvivVV6e6Ww6vkeVz2zbpZ64Ch+VjXZGq++yNSSby6WNGV1wsvgj3FpT1YjYpP
-         SwFJXf55SUogCUGdJLg/FMVhY9y+v/De3TZEM4OeSWh4PX8r7O9BMzgW0g42QLfhzi23
-         xt9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731690950; x=1732295750;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BwEDCmCjDAFPLessQ1VxzKc/71Q2iWV02aJqLKUeeu8=;
-        b=e0X+YQB6ckIVkwmkeOqEutxyOYnq/N1imW+KgnRMcsLNUiu2KedX/YKIA+R7CzpojR
-         Pct9nIMMpmwEOp5JxZB5W7Jnq4nCIcyOJ5wSs6TdozkLcjcAObgsgxGN0cQwcx/NiM9j
-         qA33Y4mTOhE99qwJb5ve1ii5lOLxgy5YW2P2s6AJJB8mnZ6RrkuHmVSMdhgSe74BBSWm
-         xvXSz7WEVI1rgfOxdSizmT/7OxIM73BylrSL3YNx2WZ+wL5pU+J2coYHi2Nlku35d5dp
-         Xw05SVu6veOCtChVBYIqmz6j96snA/Ka7li/DBRDaSGjzE8GCPDniF2A+pfeCHunXAKN
-         kSMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU74ZsfOXf2JHpmRhIZ6cFvQc2106rKFRxd3QqpGPD9AwCEp6MbrvXeurwzEVoGwZ0OXa0PXsjwekFhtFEL@vger.kernel.org, AJvYcCVq3dIubsi2ti3u73Zo3tZvrk+Jwb5A71FS8+ioN31Eswgl1Cov7AgJ2JliOFcURu2P8G14cT4gOMM=@vger.kernel.org, AJvYcCWxw4+bUvb+LNt+LIR9W0x7yJcKWy5qViyyNpk3bLwd+Acv6jXbNIxds/z6o+Yl4yYuRMeUtTUis3NQ@vger.kernel.org, AJvYcCXayCpZIC7HP0SljoWJ/BNd8rXUJ4eslzvBPP7ZPmNdVGpGbolc9M+1H4pNRBcGjzRqOasdQy5USsxAYW9wYpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2Hh8epHaCDdlJ15OPpbojIZcExXv23DLntsWS2EADP65Aeu/O
-	y3GrleMT3xTgnuicJoEuYz+UpB2kc/OkNKaHf2EitRT3Z1oOBXJ6K3m3FY4B0lXUuiEPojMj5U6
-	jz5zZYJWV9D+amfzWZgApMVv2JE8=
-X-Gm-Gg: ASbGnctpYznuc+kj2pnCk/9TREK80b+yugDCrXSsiF7Vl7CqTtwURbVpm6JptOzdp1s
-	nSRJ6nOL4B52YZ8DXMcKunevDRiEsHQ==
-X-Google-Smtp-Source: AGHT+IEMA27ToWetHcKHOD4q2Ez8uWpsjU80vnlXvxOsubs0bToSiqQ3t/nzHMIQrl7xRONsJLIJF1jxXEKP5JlZ0mo=
-X-Received: by 2002:a17:90b:1a91:b0:2e2:abab:c456 with SMTP id
- 98e67ed59e1d1-2ea154c3e0dmr1848576a91.1.1731690950377; Fri, 15 Nov 2024
- 09:15:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ajIWrkYU"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 17E1FC1DE8;
+	Fri, 15 Nov 2024 16:53:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a291.dreamhost.com (trex-1.trex.outbound.svc.cluster.local [100.112.138.222])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1A5AEC1A27;
+	Fri, 15 Nov 2024 16:53:04 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1731689584; a=rsa-sha256;
+	cv=none;
+	b=SHY7/7zDkoBhy9Gelp3+h3Guj26BM4NiKre1/jc9rASxvlConrjRqk72GE5U4vnZeYGeqR
+	lrM8nfUTMvr7FhCNTrRTI2TpFNBR52LKWSnWJuscwlDQ2p9pChypfkFaSsaEkY0dhSLOe+
+	YUI8S5vNcjs23Ra32ZCTOvIw75AT9G/zAPrxpQuvAjo/FBIXDrU4+4pL9aOI6424J/ES/X
+	pgxL3+P0tcI0bEmh/yCeTsIg7vkAR/sAr91TrDCS2qGOLU9oWcH1rauKPX5O+dYm5u3Xy2
+	kwK+84YD5O1L0pOFaaZ+IQwmAQiKaz3PwR/yvto4zY2CnI08RvAuQo/N8fdXsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1731689584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=O4UnejLeVEGebiK25TXGbrrXiE1Ov2QlC2DjDb86E6c=;
+	b=pK2POjpKd6W4c0sMnIvRdPI2rfu0iCfIMAl9pGuFP0FbhIoAw9EM5iKKdKwHCzSfWsMlYa
+	3z6+d/ibXVVbhB7KcKMhwpvGrQ8nzpqeLIMhtLPCVGnhpdJEAMhMsjjF9EyCkvQgPUhZk2
+	XQFIQyvLd/4sIIvo+/UGDLuqcvkKZOVF/JL0gC8yKpXugzdmWRq7YbC4KWDRmxBdYgOQMB
+	R8uvgXxfBCPRJnRoYcXq715zccqAWdx8V2XVIrhvwgfJy9Mxbxes7nt/OZQQJIfjr5BCGU
+	cDE3mC3t1aU4Nd8TEvCl0YIUHCHBQqzjZGwxqQ1CEUx91yqzTBaFquWTxTkSYA==
+ARC-Authentication-Results: i=1;
+	rspamd-7456989c76-xgklb;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Thread-Decisive: 5978ef136ab4cee6_1731689584388_413964471
+X-MC-Loop-Signature: 1731689584388:3008821120
+X-MC-Ingress-Time: 1731689584388
+Received: from pdx1-sub0-mail-a291.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.112.138.222 (trex/7.0.2);
+	Fri, 15 Nov 2024 16:53:04 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a291.dreamhost.com (Postfix) with ESMTPSA id 4Xqjkl3Hpnz6x;
+	Fri, 15 Nov 2024 08:53:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1731689583;
+	bh=O4UnejLeVEGebiK25TXGbrrXiE1Ov2QlC2DjDb86E6c=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=ajIWrkYUbWCd3+KadbWEx6Hc/mIX8THcm2ngeZuthDITwPqMO+k6oddS2boL8+cwD
+	 38WC0stIOw0/wy/Ec+P6OLfwtunlonBcaJ2tIL3E0dkqkFPjpNmuRGSFz9n7K4VRW6
+	 OeMqyTOdYwqTwJAbQjXXNY4U6FYDk3bzSlTB6s095yEybbyZ2d735+5+Kc3/j0i6NE
+	 0ISlRyIORwrSLsKQk5jRgFGN66v0Cs0rR3r7sN8LdQq5+Akhw6Ub/2uziyaPmBglzS
+	 +TZG2PMeHo34zuJd+upeSYfLi0TMPYoRMY7+IOxzqqNI/Rf6FYjeDf3A9uUkJAhK2a
+	 qrLELFa9loWpw==
+Date: Fri, 15 Nov 2024 08:49:01 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave.jiang@intel.com, dan.j.williams@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl/pci: Fix potential bogus return value upon
+ successful probing
+Message-ID: <2eau46txsxb7l4fgmaeope7i7odsjbipjjsjc7mvjiqzhg4llw@iiobkioccdap>
+References: <20241114213439.6022-1-dave@stgolabs.net>
+ <Zza4YONsVxWa8rpL@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241115054616.1226735-1-alistair@alistair23.me> <20241115054616.1226735-4-alistair@alistair23.me>
-In-Reply-To: <20241115054616.1226735-4-alistair@alistair23.me>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 15 Nov 2024 18:15:38 +0100
-Message-ID: <CANiq72=3p50vyA5MsqZD6_Ma53DSLyrqyKYUwH9o-+Bq=REaQQ@mail.gmail.com>
-Subject: Re: [RFC 3/6] lib: rspdm: Initial commit of Rust SPDM
-To: Alistair Francis <alistair@alistair23.me>
-Cc: lukas@wunner.de, Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	bjorn3_gh@protonmail.com, ojeda@kernel.org, tmgross@umich.edu, 
-	boqun.feng@gmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	wilfred.mallawa@wdc.com, alistair23@gmail.com, alex.gaynor@gmail.com, 
-	gary@garyguo.net, aliceryhl@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Zza4YONsVxWa8rpL@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20240425
 
-Hi Alistair,
-
-It is nice to see more Rust, thanks!
-
-Some quick consistency nits I noticed for future non-RFC versions (I
-didn't check the code). Some apply in several cases.
-
-On Fri, Nov 15, 2024 at 6:46=E2=80=AFAM Alistair Francis <alistair@alistair=
-23.me> wrote:
+On Thu, 14 Nov 2024, Alison Schofield wrote:\n
+>This can be:
 >
-> +#[allow(dead_code)]
+>	if (cxl_pci_ras_unmask(pdev))
+>		dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
 
-It may be possible to use `expect` here instead of `allow` -- e.g. if
-it does not depend on conditional compilation.
+Yeah, it later occured to me that this was better. Will send a v2.
 
-Also, later in the series, is it used? (I imagine it is a temporary
-`allow`? If so, please delete it when you introduce the first use.
-`expect` can help here to not forget to delete it.
+>
+>There are a bunch that follow this pattern in that function, mostly in
+>the pmu_count loop.
+>
+>How about tidying up the rc pattern throughout the function?
 
-> +#[repr(u8)]
+I think since this is an actual fix, any tidying up can come later.
 
-It is probably a good idea to mention why it needs this `repr`. I
-imagine it is related to `SpdmErrorRsp` being `packed` and so on, but
-it wouldn't hurt documenting it.
-
-> +    InvalidRequest =3D 0x01,
-
-Please feel free to ignore this one (especially if the idea is to
-replace the C implementation eventually, or to just showcase how it
-would look like if the C one was removed), but one idea here would be
-to pick the values from a common C header? i.e. moving that `enum` to
-its own header that both use.
-
-> +//! Top level library, including C compatible public functions to be cal=
-led
-> +//! from other subsytems.
-
-Typo.
-
-> +/// spdm_create() - Allocate SPDM session
-
-I think these are copied from the C one, so it is fine for the RFC,
-but the subsystem ends up accepting this, then please use the usual
-Markdown style of the rest of the Rust code, instead of kernel-doc
-style. While we don't render the docs of these just yet, we will start
-doing it at some point, and e.g. IDEs may do so too. Even if we
-didn't, the comments could be copied into other docs at some point, so
-it is always useful to have them formatted properly.
-
-> +    /* Negotiated state */
-> +    pub(crate) version: u8,
-
-Please use `//`.
-
-> +                bindings::EINVAL
-> +            }
-> +        };
-> +
-> +        to_result(-(ret as i32))
-
-These are errors you create directly, so you can do directly e.g.
-`Err(EINVAL)`, i.e. please avoid `bindings::`.
-
-> +        let length =3D unsafe {
-
-Missing `SAFETY` comment.
-
-If you based this on top of `rust-next` as you noted in the cover
-letter, you should be getting a warning under `CLIPPY=3D1`. There may be
-other cleanups under `CLIPPY=3D1` if you weren't using it so far.
-
-> +            return Ok(length); /* Truncated response is handled by calle=
-rs */
-
-Please use `//` for comments.
-
-> +// SPDX-License-Identifier: GPL-2.0
-
-New line between SPDX and the crate docs.
-
-> +//! Rust implementation of the DMTF Security Protocol and Data Model (SP=
-DM)
-> +//! https://www.dmtf.org/dsp/DSP0274
-
-This should be a link (using <>) or a link for the "DMTF Security
-Protocol and Data Model (SPDM)" text.
-
-> +//! Rust sysfs helper functions
-
-This should be the title, at the top. In Rust the first paragraph
-(which typically should be short, e.g. a single line) is considered
-the "short description"  and used e.g. for lists.
-
-> +//! Copyright (C) 2024 Western Digital
-
-This should be a comment (likely near the SPDX), rather than part of
-the documentation -- see e.g. how it is done in `rust/kernel/list.rs`.
-
-> +pub unsafe extern "C" fn rust_authenticated_show(
-
-`unsafe` functions should have a `# Safety` section.
-
-Thanks again!
-
-Cheers,
-Miguel
+Thanks,
+Davidlohr
