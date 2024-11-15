@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9AB1FB3CF
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6065E1FB3F5
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731706083; cv=none; b=qecLJtgyHDTOJr6a/2n6PPE0Nds0wAYpMhnrJi44SS+L49nrTToj6KDaUL/2/mchzJE4inVnRObwzbnHOYSZCM2H5ETiMoQ+t1lB9onzwMOoZOITt+qnVKberFcRzUgcPw66FgsnuhmhkUAPmILpUa6TDbTm9e6tOqmrV2jzx8w=
+	t=1731706084; cv=none; b=gP9rgDL7+exPqWaOhDTxdJ+6wD0v9oB4Am52sp5mI7HeiKqfGLhynb8nZAPBwrbKQ6hI2tJZ/A8oFZLs1WMp0OaJ3r0xpYeaJoSkURGmfG6O/bUaBuatk0wx3vO5gNygvnwcA/Pga5K1fV7dUeMpmnBj9kstB3ht5y72GLUDB7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731706083; c=relaxed/simple;
-	bh=5f34DlUEiXdQEyWZe3WO9xzFVT135Bgjz52N124eNjE=;
+	s=arc-20240116; t=1731706084; c=relaxed/simple;
+	bh=dVEThEJbJl4cF7dZgmCIVrswqNbztqZ3ouzQeLytH7s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=laIWqlNHBCqKG6cie6vHKJTDcjeMhr6Gor7ehz517yuITAWDMVu4BaPTCg17c8erpkKMI9U9gQcc7E9Co3QbgPabJd6BfPCaZyZ4m8QOQonoVXxODZpG6KarEBuZN86SebrbePtXFxYTEckEs3iFJG9w0MZaGY/4l48prOqJb0I=
+	 MIME-Version; b=HTkEkETpDaSecmduGBPiC/R6xVFkyphfRKYwLqcrNdcRxIN82mfSrkalyx4dpP+Oku5Mq1xfjDXO2erAiRD3VVLQDO4AWiKqYmy7RS3qs0Tu3nWAHOv7Exla44sJs53UEByavdCecPzz+stuqq0IEJZqP6SF9W/+cZskgTwb4mQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4ABC4CECF;
-	Fri, 15 Nov 2024 21:28:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AD6C4CECF;
+	Fri, 15 Nov 2024 21:28:03 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [RFC PATCH v2 10/20] fwctl/cxl: Add support for get driver information
-Date: Fri, 15 Nov 2024 14:25:43 -0700
-Message-ID: <20241115212745.869552-11-dave.jiang@intel.com>
+Subject: [RFC PATCH v2 11/20] fwctl: FWCTL_HW_INFO to return hardware information
+Date: Fri, 15 Nov 2024 14:25:44 -0700
+Message-ID: <20241115212745.869552-12-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241115212745.869552-1-dave.jiang@intel.com>
 References: <20241115212745.869552-1-dave.jiang@intel.com>
@@ -38,187 +38,164 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add definition for fwctl_ops->info() to return driver information. The
-function will return the number of device mailbox commands supported by the
-fwctl char device.
+Add an optional ioctl FWCTL_HW_INFO to pass command specific information
+to user space. An array of 'struct fwctl_command_info' will be returned
+from the ioctl. These commands are send to the driver via FWCTL_RPC call.
+The command info struct contains the command id, the related hardware
+opcode, input and output size for the command, and the effects the command
+has if it's a write command.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v2:
-- Change driver info to report number of commands supported by the driver and device.
----
- drivers/cxl/core/mbox.c  | 46 ++++++++++++++++++++++++++++++++++++++++
- drivers/fwctl/cxl/cxl.c  | 23 ++++++++++++++++++--
- include/cxl/cxl.h        |  2 ++
- include/cxl/mailbox.h    |  1 +
- include/uapi/fwctl/cxl.h | 22 +++++++++++++++++++
- 5 files changed, 92 insertions(+), 2 deletions(-)
- create mode 100644 include/uapi/fwctl/cxl.h
+ drivers/fwctl/main.c       | 33 ++++++++++++++++++++++
+ include/linux/fwctl.h      |  6 ++++
+ include/uapi/fwctl/fwctl.h | 58 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 96 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 12758e763650..f464eb42f08a 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -118,6 +118,14 @@ static u8 security_command_sets[] = {
- 	0x46, /* Security Passthrough */
- };
- 
-+#define FWCTL_CXL_MAX_COMMANDS 3
-+/* Command set that is allowed with FWCTL-CXL */
-+static u16 fwctl_command_sets[] = {
-+	CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
-+	CXL_MBOX_OP_GET_FEATURE,
-+	CXL_MBOX_OP_SET_FEATURE,
-+};
-+
- static bool cxl_is_security_command(u16 opcode)
- {
- 	int i;
-@@ -527,6 +535,44 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 				 send_cmd->in.payload);
+diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
+index 54a7356e586c..073e3d20558b 100644
+--- a/drivers/fwctl/main.c
++++ b/drivers/fwctl/main.c
+@@ -77,6 +77,38 @@ static int fwctl_cmd_info(struct fwctl_ucmd *ucmd)
+ 	return ucmd_respond(ucmd, sizeof(*cmd));
  }
  
-+static struct cxl_mem_command *
-+fwctl_cxl_find_command(struct cxl_mailbox *cxl_mbox, u16 opcode)
++static int fwctl_hw_cmd_info(struct fwctl_ucmd *ucmd)
 +{
-+	struct cxl_command_info *info;
-+	struct cxl_mem_command *cmd;
++	struct fwctl_device *fwctl = ucmd->uctx->fwctl;
++	struct fwctl_hw_info *cmd = ucmd->cmd;
++	size_t out_len;
++	int nr_cmds;
 +
-+	cmd = cxl_mem_find_command(opcode);
-+	if (!cmd)
-+		return NULL;
++	if (cmd->flags)
++		return -EOPNOTSUPP;
 +
-+	info = &cmd->info;
-+	if (test_bit(info->id, cxl_mbox->enabled_cmds) &&
-+	    !test_bit(info->id, cxl_mbox->exclusive_cmds))
-+		return cmd;
++	nr_cmds = cmd->nr_cmds;
++	if (!nr_cmds)
++		return -EINVAL;
 +
-+	return NULL;
++	out_len = sizeof(struct fwctl_hw_info_out);
++	out_len += sizeof(struct fwctl_command_info) * nr_cmds;
++
++	if (cmd->device_data_len < out_len)
++		return -EINVAL;
++
++	void *outbuf __free(kvfree) = fwctl->ops->hw_info(ucmd->uctx, nr_cmds,
++							  &out_len);
++	if (IS_ERR(outbuf))
++		return PTR_ERR(outbuf);
++
++	if (copy_to_user(u64_to_user_ptr(cmd->out_device_data), outbuf, out_len))
++		return -EFAULT;
++
++	cmd->device_data_len = out_len;
++	return ucmd_respond(ucmd, sizeof(*cmd));
 +}
 +
-+/**
-+ * cxl_mailbox_user_commands_supported() - Return number of user mailbox
-+ *                                         commands supported.
-+ * @cxl_mbox: cxl mailbox context
-+ *
-+ * Return: number of commands supported
-+ */
-+int cxl_mailbox_user_commands_supported(struct cxl_mailbox *cxl_mbox)
-+{
-+	int nr_cmds = 0;
-+
-+	for (int i = 0; i < FWCTL_CXL_MAX_COMMANDS; i++) {
-+		nr_cmds += !!fwctl_cxl_find_command(cxl_mbox,
-+						    fwctl_command_sets[i]);
-+	}
-+
-+	return nr_cmds;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mailbox_user_commands_supported, CXL);
-+
- int cxl_query_cmd(struct cxl_mailbox *cxl_mbox,
- 		  struct cxl_mem_query_commands __user *q)
+ static int fwctl_cmd_rpc(struct fwctl_ucmd *ucmd)
  {
-diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
-index c6a11cbbd937..5eb5eabf2bff 100644
---- a/drivers/fwctl/cxl/cxl.c
-+++ b/drivers/fwctl/cxl/cxl.c
-@@ -6,6 +6,7 @@
- #include <linux/device.h>
- #include <cxl/cxl.h>
- #include <cxl/mailbox.h>
-+#include <uapi/fwctl/cxl.h>
- 
- struct cxlctl_uctx {
- 	struct fwctl_uctx uctx;
-@@ -21,6 +22,15 @@ DEFINE_FREE(cxlctl, struct cxlctl_dev *, if (_T) fwctl_put(&_T->fwctl))
- 
- static int cxlctl_open_uctx(struct fwctl_uctx *uctx)
- {
-+	struct cxlctl_uctx *cxlctl_uctx =
-+		container_of(uctx, struct cxlctl_uctx, uctx);
-+	struct fwctl_device *fwctl = uctx->fwctl;
-+	struct cxlctl_dev *cxlctl =
-+		container_of(fwctl, struct cxlctl_dev, fwctl);
-+
-+	cxlctl_uctx->nr_commands =
-+		cxl_mailbox_user_commands_supported(cxlctl->mbox);
-+
- 	return 0;
- }
- 
-@@ -30,8 +40,17 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
- 
- static void *cxlctl_info(struct fwctl_uctx *uctx, size_t *length)
- {
--	/* Place holder */
--	return ERR_PTR(-EOPNOTSUPP);
-+	struct cxlctl_uctx *cxlctl_uctx =
-+		container_of(uctx, struct cxlctl_uctx, uctx);
-+	struct fwctl_info_cxl *info;
-+
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	info->nr_commands = cxlctl_uctx->nr_commands;
-+
-+	return info;
- }
- 
- static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 6bfd7942a3f7..d0939e3bcbc0 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -3,6 +3,8 @@
- #ifndef __CXL_GLOBAL_H__
- #define __CXL_GLOBAL_H__
- 
-+#include <linux/device.h>
-+
- struct cxl_driver {
- 	const char *name;
- 	int (*probe)(struct device *dev);
-diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-index 16d21f63464c..af01fb78ae10 100644
---- a/include/cxl/mailbox.h
-+++ b/include/cxl/mailbox.h
-@@ -84,5 +84,6 @@ struct cxl_mailbox {
+ 	struct fwctl_device *fwctl = ucmd->uctx->fwctl;
+@@ -156,6 +188,7 @@ struct fwctl_ioctl_op {
+ 	}
+ static const struct fwctl_ioctl_op fwctl_ioctl_ops[] = {
+ 	IOCTL_OP(FWCTL_INFO, fwctl_cmd_info, struct fwctl_info, out_device_data),
++	IOCTL_OP(FWCTL_HW_INFO, fwctl_hw_cmd_info, struct fwctl_info, out_device_data),
+ 	IOCTL_OP(FWCTL_RPC, fwctl_cmd_rpc, struct fwctl_rpc, out),
  };
  
- int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host);
-+int cxl_mailbox_user_commands_supported(struct cxl_mailbox *cxl_mbox);
+diff --git a/include/linux/fwctl.h b/include/linux/fwctl.h
+index 6eac9497ff1a..ccef64da710c 100644
+--- a/include/linux/fwctl.h
++++ b/include/linux/fwctl.h
+@@ -47,6 +47,12 @@ struct fwctl_ops {
+ 	 * ignore length on input, the core code will handle everything.
+ 	 */
+ 	void *(*info)(struct fwctl_uctx *uctx, size_t *length);
++	/**
++	 * @hw_info: Implement FWCTL_HW_INFO. Return a kmalloc() memory that is
++	 * copied to out_device_dataa. On input commands indicates the number
++	 * of command info structs requested.
++	 */
++	void *(*hw_info)(struct fwctl_uctx *uctx, int commands, size_t *out_len);
+ 	/**
+ 	 * @fw_rpc: Implement FWCTL_RPC. Deliver rpc_in/in_len to the FW and
+ 	 * return the response and set out_len. rpc_in can be returned as the
+diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+index 4e4d30104667..7334907e27c1 100644
+--- a/include/uapi/fwctl/fwctl.h
++++ b/include/uapi/fwctl/fwctl.h
+@@ -37,7 +37,8 @@
+ enum {
+ 	FWCTL_CMD_BASE = 0,
+ 	FWCTL_CMD_INFO = 0,
+-	FWCTL_CMD_RPC = 1,
++	FWCTL_CMD_HW_INFO = 1,
++	FWCTL_CMD_RPC = 2,
+ };
  
- #endif
-diff --git a/include/uapi/fwctl/cxl.h b/include/uapi/fwctl/cxl.h
-new file mode 100644
-index 000000000000..a32c4c752db6
---- /dev/null
-+++ b/include/uapi/fwctl/cxl.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (c) 2024, Intel Corporation
-+ *
-+ * These are definitions for the mailbox command interface of CXL subsystem.
-+ */
-+#ifndef _UAPI_FWCTL_CXL_H_
-+#define _UAPI_FWCTL_CXL_H_
-+
-+#include <linux/types.h>
-+
+ enum fwctl_device_type {
+@@ -69,6 +70,61 @@ struct fwctl_info {
+ };
+ #define FWCTL_INFO _IO(FWCTL_TYPE, FWCTL_CMD_INFO)
+ 
 +/**
-+ * struct fwctl_info_cxl - ioctl(FWCTL_INFO) out_device_data
-+ * @uctx_caps: The number of commands the driver and device supports
++ * struct fwctl_command_info - Hardware command information returned from a query.
++ * @id: Driver ID number for the command
++ * @opcode: Hardware command opcode
++ * @set_effects: Effects to the OS and hardware when command is executed.
++ *               Provided by the device.
++ * @size_in: Expected input size, or ~0U if variable length.
++ * @size_out: Expected output size, or ~0U if variable length.
 + *
-+ * Return basic information about the FW interface available.
++ * Represents a single command that is supported by both the driver and the
++ * hardware. This is returned as part of an array from the FWCTL_HW_INFO ioctl.
 + */
-+struct fwctl_info_cxl {
-+	__u32 nr_commands;
++struct fwctl_command_info {
++	__u32 id;
++	__u16 opcode;
++	__u16 effects;
++	__u32 size_in;
++	__u32 size_out;
 +};
 +
-+#endif
++/**
++ * struct fwctl_hw_info_out - output struct for FWCTL_HW_INFO
++ * @nr_cmds: Number of commands for output
++ * @reserved: Reserved u32 for alignment.
++ * @commands: Array of 'struct fwctl_command_info'
++ */
++struct fwctl_hw_info_out {
++	__u32 nr_cmds;
++	__u32 reserved;
++
++	struct fwctl_command_info commands[] __counted_by(nr_cmds);
++};
++
++/**
++ * struct fwctl_hw_info - ioctl(FWCTL_HW_INFO)
++ * @size: sizeof(struct fwctl_hw_info)
++ * @flags: Must be 0
++ * @device_data_len: On input the length of the out_device_data memory. On
++ *	output the size of the kernel's device_data which may be larger or
++ *	smaller than the input. Maybe 0 on input.
++ * @nr_cmds: Number of commands requested. 0 returns only nr_cmds in output.
++ * @out_device_data: Pointer to a memory of device_data_len bytes. Kernel will
++ *	fill the entire memory, zeroing as required.
++ *
++ * Returns hardware commands information about this fwctl instance.
++ */
++struct fwctl_hw_info {
++	__u32 size;
++	__u32 flags;
++	__u32 device_data_len;
++	__u32 nr_cmds;
++	__aligned_u64 out_device_data;
++};
++#define FWCTL_HW_INFO _IO(FWCTL_TYPE, FWCTL_CMD_HW_INFO)
++
+ /**
+  * enum fwctl_rpc_scope - Scope of access for the RPC
+  *
 -- 
 2.47.0
 
