@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF8C1F470B
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEE81FB733
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731706089; cv=none; b=fuk5//grakZpJxeVTODK4kcrFmSoODZxiwZlqxAr25z5yq0muGzMeEPfDSVAYKLHLz9rzgrC0sTK4b0m3M+gVQ4bJLwhhc6AfFmuuXpd9t150WujVKnqa0MzMQAycU1BILEWDVP1heBw/vkwjp4ojB8Og/0Y8qdsN+nvh+OjKeE=
+	t=1731706091; cv=none; b=tR4nLKYAgQU8EWl264Gk+Na0k6ytTDF4dmeORQXEVq/M0tFyYzgDwQVOifsGknOOGT3l+0OUX1QXLK4cCnNsdtsCGaon9ZX9cXZ9TW+xtO9bAvr0rum++maRJhJCjsMb2kV5HD6P/m1mSHbmWYdtt72dOKIddIi18zB/oRctE10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731706089; c=relaxed/simple;
-	bh=kuN+DknImRDX6fkJpCDM3zJdDMjxfUrMnNn1RqbQiss=;
+	s=arc-20240116; t=1731706091; c=relaxed/simple;
+	bh=0pUxAN0rBFPf5K0jx1ZADdSpz4O3Cax0rtRrjZ05JV4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dj59gn6hy/6N/h1u40bgouJxs16nh61Zurrof8jyAvYSvVvu7KuA8LvTuLvaFd4dCPvUWN0SBQYFPWe4lpykHovfz5394k9pYeq2drujPIRuG+Sz/bFofvb7phKa4mw11VHV0JW98LBDomj8q9gcAndyYRwBQmU1jU+Aq+MlUzM=
+	 MIME-Version; b=hKszRttAmDUUWeIm0Us188GeA/69LSo40uHbI73rlIGjVH4G0hLWKpElVxLwqTo2J5qCWJs0SdzwpRGFiwk/nbrwiFyr0itIXyVXHGEs9byVoOUvc1HjzZkWZ9EwnLqv6znSonf2Sgmm1Ams6cXydgRqeRlra5Rv7TGvtN8iacA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8D0C4CECF;
-	Fri, 15 Nov 2024 21:28:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD550C4CECF;
+	Fri, 15 Nov 2024 21:28:10 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [RFC PATCH v2 15/20] fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
-Date: Fri, 15 Nov 2024 14:25:48 -0700
-Message-ID: <20241115212745.869552-16-dave.jiang@intel.com>
+Subject: [RFC PATCH v2 16/20] fwctl/cxl: Add support to filter exclusive features
+Date: Fri, 15 Nov 2024 14:25:49 -0700
+Message-ID: <20241115212745.869552-17-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241115212745.869552-1-dave.jiang@intel.com>
 References: <20241115212745.869552-1-dave.jiang@intel.com>
@@ -38,583 +38,325 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
-to a device. The cxl fwctl driver will start by supporting the CXL
-feature commands: Get Supported Features, Get Feature, and Set Feature.
-
-The fw_rpc() callback provides 'enum fwctl_rpc_scope' parameter where
-it indicates the security scope of the call. The Get Supported Features
-and Get Feature calls can be executed with the scope of
-FWCTL_RPC_DEBUG_READ_ONLY. The Set Feature call is gated by the effects
-of the feature reported by Get Supported Features call for the specific
-feature.
+Add support to allow filtering of CXL features that are exclusive to the
+kernel and make them not visible to user space. The "get supported
+features" mailbox command returned to the userspace is emulated and
+will skip the features that is marked exclusive for the kernel. The
+exclusion allows certain the feature setting of certain commands such
+as claimed by RAS to be exclusive to the kernel.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/core.h      |   5 +-
- drivers/cxl/core/mbox.c      | 260 +++++++++++++++++++++++++++++++----
- drivers/cxl/core/memdev.c    |   4 +-
- drivers/fwctl/cxl/cxl.c      | 101 +++++++++++++-
- include/cxl/mailbox.h        |   6 +
- include/uapi/fwctl/cxl.h     |  29 ++++
- include/uapi/linux/cxl_mem.h |  12 ++
- 7 files changed, 387 insertions(+), 30 deletions(-)
+ drivers/cxl/core/mbox.c | 115 ++++++++++++++++++++++++++++++++++++----
+ drivers/fwctl/cxl/cxl.c |   7 +--
+ include/cxl/features.h  |  52 ++++++++++++++++++
+ include/cxl/mailbox.h   |   8 ++-
+ 4 files changed, 168 insertions(+), 14 deletions(-)
+ create mode 100644 include/cxl/features.h
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index ff30d1c99ca7..2b28fd8845d6 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -6,6 +6,8 @@
- 
- #include <cxl/mailbox.h>
- 
-+extern struct rw_semaphore cxl_memdev_rwsem;
-+
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
- extern const struct device_type cxl_pmu_type;
-@@ -69,7 +71,8 @@ struct cxl_send_command;
- struct cxl_mem_query_commands;
- int cxl_query_cmd(struct cxl_mailbox *cxl_mbox,
- 		  struct cxl_mem_query_commands __user *q);
--int cxl_send_cmd(struct cxl_mailbox *cxl_mailbox, struct cxl_send_command __user *s);
-+int cxl_send_cmd_from_user(struct cxl_mailbox *cxl_mbox,
-+			   struct cxl_send_command __user *s);
- void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
- 				   resource_size_t length);
- 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 65fceabb9fe7..e7c5c709ac79 100644
+index e7c5c709ac79..12ace2951f7c 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
 @@ -5,6 +5,7 @@
  #include <linux/ktime.h>
  #include <linux/mutex.h>
  #include <linux/unaligned.h>
-+#include <cxl/mailbox.h>
++#include <cxl/features.h>
+ #include <cxl/mailbox.h>
  #include <cxlpci.h>
  #include <cxlmem.h>
- #include <cxl.h>
-@@ -225,6 +226,38 @@ static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
- 	return NULL;
- }
- 
-+static struct cxl_mem_command *cxl_mem_find_command_by_id(int id)
-+{
-+	struct cxl_mem_command *c;
-+
-+	cxl_for_each_cmd(c)
-+		if (c->info.id == id)
-+			return c;
-+
-+	return NULL;
-+
-+}
-+
-+struct cxl_mem_command *
-+cxl_get_mem_command_for_fwctl(struct cxl_mailbox *cxl_mbox, u32 id)
-+{
-+	struct cxl_mem_command *cmd;
-+
-+	if (id > CXL_MEM_COMMAND_ID_MAX)
-+		return NULL;
-+
-+	cmd = &cxl_mem_commands[id];
-+
-+	if (!test_bit(cmd->info.id, cxl_mbox->enabled_cmds))
-+		return NULL;
-+
-+	if (test_bit(cmd->info.id, cxl_mbox->exclusive_cmds))
-+		return NULL;
-+
-+	return cmd;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_get_mem_command_for_fwctl, CXL);
-+
- static const char *cxl_mem_opcode_to_name(u16 opcode)
- {
- 	struct cxl_mem_command *c;
-@@ -387,10 +420,13 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox_cmd,
- 	}
- 
- 	/* Prepare to handle a full payload for variable sized output */
--	if (out_size == CXL_VARIABLE_PAYLOAD)
--		mbox_cmd->size_out = cxl_mbox->payload_size;
--	else
-+	if (out_size == CXL_VARIABLE_PAYLOAD) {
-+		/* Adding extra 8 bytes for FWCTL, should not impact operation */
-+		mbox_cmd->size_out = cxl_mbox->payload_size +
-+			sizeof(struct fwctl_rpc_cxl_out);
-+	} else {
- 		mbox_cmd->size_out = out_size;
-+	}
- 
- 	if (mbox_cmd->size_out) {
- 		mbox_cmd->payload_out = kvzalloc(mbox_cmd->size_out, GFP_KERNEL);
-@@ -487,6 +523,73 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
+@@ -897,6 +898,78 @@ static int handle_mailbox_cmd_from_fwctl(struct cxl_mailbox *cxl_mbox,
  	return 0;
  }
  
-+static int cxl_fwctl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
-+				const struct cxl_send_command *send_cmd,
-+				struct cxl_mailbox *cxl_mbox)
-+{
-+	struct cxl_mem_command *c = &cxl_mem_commands[send_cmd->id];
-+	const struct cxl_command_info *info = &c->info;
-+
-+	if (send_cmd->flags & ~CXL_MEM_COMMAND_FLAG_MASK)
-+		return -EINVAL;
-+
-+	if (send_cmd->rsvd)
-+		return -EINVAL;
-+
-+	if (send_cmd->in.rsvd || send_cmd->out.rsvd)
-+		return -EINVAL;
-+
-+	/* Check the input buffer is the expected size */
-+	if (info->size_in != CXL_VARIABLE_PAYLOAD &&
-+	    info->size_in != send_cmd->in.size)
-+		return -ENOMEM;
-+
-+	/* Check the output buffer is at least large enough */
-+	if (info->size_out != CXL_VARIABLE_PAYLOAD &&
-+	    send_cmd->out.size < info->size_out)
-+		return -ENOMEM;
-+
-+	*mem_cmd = (struct cxl_mem_command) {
-+		.info = {
-+			.id = info->id,
-+			.flags = info->flags,
-+			.size_in = send_cmd->in.size,
-+			.size_out = send_cmd->out.size,
-+		},
-+		.opcode = c->opcode
-+	};
-+
-+	return 0;
-+}
-+
-+static int verify_send_command(const struct cxl_send_command *send_cmd,
-+			       struct cxl_mailbox *cxl_mbox)
-+{
-+	if (send_cmd->id == 0 || send_cmd->id >= CXL_MEM_COMMAND_ID_MAX)
-+		return -ENOTTY;
-+
-+	/*
-+	 * The user can never specify an input payload larger than what hardware
-+	 * supports, but output can be arbitrarily large (simply write out as
-+	 * much data as the hardware provides).
-+	 */
-+	if (send_cmd->in.size > cxl_mbox->payload_size)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* Sanitize and construct a cxl_mbox_cmd */
-+static int construct_mbox_cmd(struct cxl_mbox_cmd *mbox_cmd,
-+			      struct cxl_mem_command *mem_cmd,
-+			      struct cxl_mailbox *cxl_mbox,
-+			      const struct cxl_send_command *send_cmd)
-+{
-+	return cxl_mbox_cmd_ctor(mbox_cmd, cxl_mbox, mem_cmd->opcode,
-+				 mem_cmd->info.size_in, mem_cmd->info.size_out,
-+				 send_cmd->in.payload);
-+}
-+
- /**
-  * cxl_validate_cmd_from_user() - Check fields for CXL_MEM_SEND_COMMAND.
-  * @mbox_cmd: Sanitized and populated &struct cxl_mbox_cmd.
-@@ -511,16 +614,9 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 	struct cxl_mem_command mem_cmd;
- 	int rc;
- 
--	if (send_cmd->id == 0 || send_cmd->id >= CXL_MEM_COMMAND_ID_MAX)
--		return -ENOTTY;
--
--	/*
--	 * The user can never specify an input payload larger than what hardware
--	 * supports, but output can be arbitrarily large (simply write out as
--	 * much data as the hardware provides).
--	 */
--	if (send_cmd->in.size > cxl_mbox->payload_size)
--		return -EINVAL;
-+	rc = verify_send_command(send_cmd, cxl_mbox);
-+	if (rc)
-+		return rc;
- 
- 	/* Sanitize and construct a cxl_mem_command */
- 	if (send_cmd->id == CXL_MEM_COMMAND_ID_RAW)
-@@ -531,10 +627,26 @@ static int cxl_validate_cmd_from_user(struct cxl_mbox_cmd *mbox_cmd,
- 	if (rc)
- 		return rc;
- 
--	/* Sanitize and construct a cxl_mbox_cmd */
--	return cxl_mbox_cmd_ctor(mbox_cmd, cxl_mbox, mem_cmd.opcode,
--				 mem_cmd.info.size_in, mem_cmd.info.size_out,
--				 send_cmd->in.payload);
-+	return construct_mbox_cmd(mbox_cmd, &mem_cmd, cxl_mbox, send_cmd);
-+}
-+
-+static int cxl_validate_cmd_from_fwctl(struct cxl_mbox_cmd *mbox_cmd,
-+				       struct cxl_mailbox *cxl_mbox,
-+				       const struct cxl_send_command *send_cmd)
-+{
-+	struct cxl_mem_command mem_cmd;
-+	int rc;
-+
-+	rc = verify_send_command(send_cmd, cxl_mbox);
-+	if (rc)
-+		return rc;
-+
-+	/* Sanitize and construct a cxl_mem_command */
-+	rc = cxl_fwctl_to_mem_cmd(&mem_cmd, send_cmd, cxl_mbox);
-+	if (rc)
-+		return rc;
-+
-+	return construct_mbox_cmd(mbox_cmd, &mem_cmd, cxl_mbox, send_cmd);
- }
- 
- static struct cxl_mem_command *
-@@ -719,7 +831,112 @@ static int handle_mailbox_cmd_from_user(struct cxl_mailbox *cxl_mbox,
- 	return rc;
- }
- 
--int cxl_send_cmd(struct cxl_mailbox *cxl_mbox, struct cxl_send_command __user *s)
-+static int cxl_send_cmd(struct cxl_mailbox *cxl_mbox, struct cxl_send_command *send,
-+			struct cxl_mbox_cmd *mbox_cmd)
-+{
-+	int rc;
-+
-+	rc = cxl_validate_cmd_from_user(mbox_cmd, cxl_mbox, send);
-+	if (rc)
-+		return rc;
-+
-+	rc = handle_mailbox_cmd_from_user(cxl_mbox, mbox_cmd, send->out.payload,
-+					  &send->out.size, &send->retval);
-+	if (rc)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+/**
-+ * handle_mailbox_cmd_from_fwctl() - Dispatch a mailbox command for userspace.
-+ * @cxl_mbox: The mailbox context for the operation.
-+ * @mbox_cmd: The validated mailbox command.
-+ *
-+ * Return:
-+ *  * %0	- Mailbox transaction succeeded. This implies the mailbox
-+ *		  protocol completed successfully not that the operation itself
-+ *		  was successful.
-+ *  * %-ENOMEM  - Couldn't allocate a bounce buffer.
-+ *  * %-EINTR	- Mailbox acquisition interrupted.
-+ *  * %-EXXX	- Transaction level failures.
-+ *
-+ * Dispatches a mailbox command on behalf of a userspace request.
-+ * The output payload is copied to userspace by fwctl.
-+ *
-+ * See cxl_send_cmd().
++/*
++ * Emulate the 'get supported features' mailbox command and only copy out the
++ * features that are not marked as exclusive for kernel.
 + */
-+static int handle_mailbox_cmd_from_fwctl(struct cxl_mailbox *cxl_mbox,
-+					 struct cxl_mbox_cmd *mbox_cmd)
++static void cxl_mbox_get_supported_features_filtered(struct cxl_mailbox *cxl_mbox,
++						     struct cxl_mbox_cmd *mbox_cmd)
 +{
-+	struct device *dev = cxl_mbox->host;
-+	struct fwctl_rpc_cxl_out *orig_out;
-+	int rc;
++	struct cxl_mbox_get_sup_feats_in *feat_in = mbox_cmd->payload_in;
++	struct cxl_mbox_get_sup_feats_out *feat_out = mbox_cmd->payload_out;
++	const int feat_out_size = sizeof(*feat_out);
++	struct cxl_feat_entry *pos;
++	const int feat_ent_size = sizeof(*pos);
++	int out_count, ents, u;
++	u32 count;
++	u16 start;
 +
-+	/*
-+	 * Save the payload_out pointer and move it to where hardware output
-+	 * can be copied to.
-+	 */
-+	orig_out = mbox_cmd->payload_out;
-+	mbox_cmd->payload_out = (void *)orig_out + sizeof(*orig_out);
-+
-+	dev_dbg(dev,
-+		"Submitting %s command for user\n"
-+		"\topcode: %x\n"
-+		"\tsize: %zx\n",
-+		cxl_mem_opcode_to_name(mbox_cmd->opcode),
-+		mbox_cmd->opcode, mbox_cmd->size_in);
-+
-+	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
-+	if (rc)
-+		return rc;
-+
-+	orig_out->retval = mbox_cmd->return_code;
-+	mbox_cmd->payload_out = (void *)orig_out;
-+
-+	return 0;
-+}
-+
-+int cxl_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
-+		      struct fwctl_rpc_cxl *rpc_in,
-+		      struct cxl_mbox_cmd *mbox_cmd, size_t *out_len)
-+{
-+	struct cxl_send_command send_cmd = {
-+		.id = rpc_in->id,
-+		.flags = rpc_in->flags,
-+		.in.size = rpc_in->op_size,
-+		.in.payload = rpc_in->in_payload,
-+		.out.size = *out_len,
-+	};
-+	struct cxl_mem_command *cmd;
-+	int rc;
-+
-+	cmd = cxl_mem_find_command_by_id(rpc_in->id);
-+	if (!cmd)
-+		return -EINVAL;
-+	send_cmd.raw.opcode = cmd->opcode;
-+
-+	rc = cxl_validate_cmd_from_fwctl(mbox_cmd, cxl_mbox, &send_cmd);
-+	if (rc)
-+		return rc;
-+
-+	rc = handle_mailbox_cmd_from_fwctl(cxl_mbox, mbox_cmd);
-+	if (rc)
-+		return rc;
-+
-+	guard(rwsem_read)(&cxl_memdev_rwsem);
-+	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
-+	if (rc)
-+		return rc;
-+
-+	*out_len = mbox_cmd->size_out;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mbox_send_cmd, CXL);
-+
-+int cxl_send_cmd_from_user(struct cxl_mailbox *cxl_mbox,
-+			   struct cxl_send_command __user *s)
- {
- 	struct device *dev = cxl_mbox->host;
- 	struct cxl_send_command send;
-@@ -731,12 +948,7 @@ int cxl_send_cmd(struct cxl_mailbox *cxl_mbox, struct cxl_send_command __user *s
- 	if (copy_from_user(&send, s, sizeof(send)))
- 		return -EFAULT;
- 
--	rc = cxl_validate_cmd_from_user(&mbox_cmd, cxl_mbox, &send);
--	if (rc)
--		return rc;
--
--	rc = handle_mailbox_cmd_from_user(cxl_mbox, &mbox_cmd, send.out.payload,
--					  &send.out.size, &send.retval);
-+	rc = cxl_send_cmd(cxl_mbox, &send, &mbox_cmd);
- 	if (rc)
- 		return rc;
- 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 4d544a55ac3e..7fa16930cd85 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -11,7 +11,7 @@
- #include "trace.h"
- #include "core.h"
- 
--static DECLARE_RWSEM(cxl_memdev_rwsem);
-+DECLARE_RWSEM(cxl_memdev_rwsem);
- 
- /*
-  * An entire PCI topology full of devices should be enough for any
-@@ -667,7 +667,7 @@ static long __cxl_memdev_ioctl(struct cxl_memdev *cxlmd, unsigned int cmd,
- 	case CXL_MEM_QUERY_COMMANDS:
- 		return cxl_query_cmd(cxl_mbox, (void __user *)arg);
- 	case CXL_MEM_SEND_COMMAND:
--		return cxl_send_cmd(cxl_mbox, (void __user *)arg);
-+		return cxl_send_cmd_from_user(cxl_mbox, (void __user *)arg);
- 	default:
- 		return -ENOTTY;
- 	}
-diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
-index ce8960a9beaa..164f6774a2c1 100644
---- a/drivers/fwctl/cxl/cxl.c
-+++ b/drivers/fwctl/cxl/cxl.c
-@@ -77,11 +77,106 @@ static void *cxlctl_hw_info(struct fwctl_uctx *uctx, int commands, size_t *out_l
- 	return_ptr(out);
- }
- 
-+static bool cxlctl_validate_set_features(struct cxl_mailbox *cxl_mbox,
-+					 const struct fwctl_rpc_cxl *rpc_in,
-+					 enum fwctl_rpc_scope scope)
-+{
-+	struct cxl_feat_entry *feat;
-+	bool found = false;
-+	uuid_t uuid;
-+	u16 effects, mask;
-+
-+	if (rpc_in->op_size < sizeof(struct cxl_set_feature_input))
-+		return false;
-+
-+	if (copy_from_user(&uuid, u64_to_user_ptr(rpc_in->in_payload),
-+			   sizeof(uuid)))
-+		return false;
-+
-+	for (int i = 0; i < cxl_mbox->num_features; i++) {
-+		feat = &cxl_mbox->entries[i];
-+		if (uuid_equal(&uuid, &feat->uuid)) {
-+			found = true;
-+			break;
-+		}
++	count = le32_to_cpu(feat_in->count);
++	start = le16_to_cpu(feat_in->start_idx);
++	ents = count / sizeof(struct cxl_feat_entry);
++	ents -= start;
++	if (ents < 0) {
++		mbox_cmd->size_out = 0;
++		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
++		return;
 +	}
 +
-+	if (!found)
-+		return false;
++	if (mbox_cmd->size_out < feat_out_size) {
++		mbox_cmd->size_out = 0;
++		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
++		return;
++	}
 +
-+	effects = le16_to_cpu(feat->effects);
-+	/* Currently no user background command support */
-+	if (effects & CXL_CMD_BACKGROUND)
-+		return false;
++	feat_out->supported_feats =
++		cpu_to_le16(cxl_mbox->num_user_feats);
++	if (ents == 0) {
++		feat_out->num_entries = cpu_to_le16(0);
++		mbox_cmd->size_out = feat_out_size;
++		mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
++		return;
++	}
 +
-+	mask = CXL_CMD_CONFIG_CHANGE_IMMEDIATE |
-+	       CXL_CMD_DATA_CHANGE_IMMEDIATE |
-+	       CXL_CMD_POLICY_CHANGE_IMMEDIATE |
-+	       CXL_CMD_LOG_CHANGE_IMMEDIATE;
-+	if (effects & mask && scope >= FWCTL_RPC_DEBUG_WRITE_FULL)
-+		return true;
++	pos = &feat_out->ents[0];
++	out_count = feat_out_size;
++	for (int i = 0, u = 0; i < cxl_mbox->num_features; i++) {
++		struct cxl_feature *feat = &cxl_mbox->entries[i];
 +
-+	/* These effects supported for all scope */
-+	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
-+	     effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET) &&
-+	    scope >= FWCTL_RPC_DEBUG_WRITE)
-+		return true;
++		if (feat->exclusive)
++			continue;
++
++		if (u < start) {
++			u++;
++			continue;
++		}
++
++		memcpy(pos, &feat->entry, feat_ent_size);
++		out_count += feat_ent_size;
++		pos++;
++		u++;
++
++		if (u == count)
++			break;
++
++		/* Make sure it does not go over total output buffer size */
++		if (out_count + feat_ent_size >= mbox_cmd->size_out)
++			break;
++	}
++
++	feat_out->num_entries = cpu_to_le16(u);
++	mbox_cmd->size_out = out_count;
++	mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
++}
++
+ int cxl_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
+ 		      struct fwctl_rpc_cxl *rpc_in,
+ 		      struct cxl_mbox_cmd *mbox_cmd, size_t *out_len)
+@@ -925,9 +998,13 @@ int cxl_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
+ 		return rc;
+ 
+ 	guard(rwsem_read)(&cxl_memdev_rwsem);
+-	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
+-	if (rc)
+-		return rc;
++	if (send_cmd.raw.opcode != CXL_MBOX_OP_GET_SUPPORTED_FEATURES) {
++		rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
++		if (rc)
++			return rc;
++	} else {
++		cxl_mbox_get_supported_features_filtered(cxl_mbox, mbox_cmd);
++	}
+ 
+ 	*out_len = mbox_cmd->size_out;
+ 
+@@ -1128,6 +1205,18 @@ static int cxl_get_supported_features_count(struct cxl_dev_state *cxlds)
+ 	return 0;
+ }
+ 
++static bool is_feature_exclusive(struct cxl_feature *feat)
++{
++	int i;
++
++	for (i = 0; i < CXL_FEAT_UUID_MAX; i++) {
++		if (uuid_equal(&feat->entry.uuid, &cxl_exclusive_feats[i]))
++			return true;
++	}
 +
 +	return false;
 +}
 +
-+static bool cxlctl_validate_hw_cmds(struct cxl_mailbox *cxl_mbox,
-+				    const struct fwctl_rpc_cxl *rpc_in,
-+				    enum fwctl_rpc_scope scope)
-+{
-+	struct cxl_mem_command *cmd;
-+
-+	/*
-+	 * Only supporting feature commands for now.
-+	 */
-+	if (!cxl_mbox->num_features)
-+		return false;
-+
-+	cmd = cxl_get_mem_command_for_fwctl(cxl_mbox, rpc_in->id);
-+	if (!cmd)
-+		return false;
-+
-+	switch (cmd->opcode) {
-+	case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
-+		if (scope >= FWCTL_RPC_CONFIGURATION)
-+			return true;
-+		return false;
-+	case CXL_MBOX_OP_GET_FEATURE:
-+		if (scope >= FWCTL_RPC_DEBUG_READ_ONLY)
-+			return true;
-+		return false;
-+	case CXL_MBOX_OP_SET_FEATURE:
-+		return cxlctl_validate_set_features(cxl_mbox, rpc_in, scope);
-+	default:
-+		return false;
-+	}
-+}
-+
- static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
--			   void *rpc_in, size_t in_len, size_t *out_len)
-+			   void *in, size_t in_len, size_t *out_len)
+ int cxl_get_supported_features(struct cxl_dev_state *cxlds)
  {
--	/* Place holder */
--	return ERR_PTR(-EOPNOTSUPP);
-+	struct cxlctl_dev *cxlctl =
-+		container_of(uctx->fwctl, struct cxlctl_dev, fwctl);
-+	struct cxl_mailbox *cxl_mbox = cxlctl->mbox;
-+	struct fwctl_rpc_cxl *rpc_in = in;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	int rc;
-+
-+	if (!cxlctl_validate_hw_cmds(cxlctl->mbox, rpc_in, scope))
-+		return ERR_PTR(-EPERM);
-+
-+	rc = cxl_mbox_send_cmd(cxl_mbox, rpc_in, &mbox_cmd, out_len);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	*out_len = mbox_cmd.size_out;
-+
-+	return mbox_cmd.payload_out;
- }
+ 	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) = NULL;
+@@ -1138,7 +1227,7 @@ int cxl_get_supported_features(struct cxl_dev_state *cxlds)
+ 	int hdr_size = sizeof(*mbox_out);
+ 	struct cxl_mbox_cmd mbox_cmd;
+ 	struct cxl_mem_command *cmd;
+-	struct cxl_feat_entry *entry;
++	struct cxl_feature *feat;
  
- static const struct fwctl_ops cxlctl_ops = {
+ 	/* Get supported features is optional, need to check */
+ 	cmd = cxl_mem_find_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
+@@ -1156,7 +1245,7 @@ int cxl_get_supported_features(struct cxl_dev_state *cxlds)
+ 		return 0;
+ 	}
+ 
+-	struct cxl_feat_entry *entries __free(kvfree) =
++	struct cxl_feature *entries __free(kvfree) =
+ 		kvmalloc(cxl_mbox->num_features * feat_size, GFP_KERNEL);
+ 
+ 	if (!entries)
+@@ -1165,7 +1254,7 @@ int cxl_get_supported_features(struct cxl_dev_state *cxlds)
+ 	max_size = cxl_mbox->payload_size - hdr_size;
+ 	/* max feat entries that can fit in mailbox max payload size */
+ 	max_feats = max_size / feat_size;
+-	entry = &entries[0];
++	feat = &entries[0];
+ 
+ 	mbox_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+ 	if (!mbox_out)
+@@ -1228,8 +1317,13 @@ int cxl_get_supported_features(struct cxl_dev_state *cxlds)
+ 			goto err;
+ 		}
+ 
+-		memcpy(entry, mbox_out->ents, retrieved);
+-		entry++;
++		memcpy(&feat->entry, mbox_out->ents, retrieved);
++		if (is_feature_exclusive(feat))
++			feat->exclusive = true;
++		else
++			cxl_mbox->num_user_feats++;
++		feat++;
++
+ 		/*
+ 		 * If the number of output entries is less than expected, add the
+ 		 * remaining entries to the next batch.
+@@ -1256,13 +1350,14 @@ int cxl_get_supported_feature_entry(struct cxl_dev_state *cxlds, const uuid_t *f
+ 				    struct cxl_feat_entry *feat_entry_out)
+ {
+ 	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
+-	struct cxl_feat_entry *feat_entry;
++	struct cxl_feature *feat_entry;
+ 	int count;
+ 
+ 	/* Check CXL dev supports the feature */
+ 	feat_entry = &cxl_mbox->entries[0];
+ 	for (count = 0; count < cxl_mbox->num_features; count++, feat_entry++) {
+-		if (uuid_equal(&feat_entry->uuid, feat_uuid)) {
++		if (uuid_equal(&feat_entry->entry.uuid, feat_uuid) &&
++		    !is_feature_exclusive(feat_entry)) {
+ 			memcpy(feat_entry_out, feat_entry, sizeof(*feat_entry_out));
+ 			return 0;
+ 		}
+diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
+index 164f6774a2c1..3915a59c7408 100644
+--- a/drivers/fwctl/cxl/cxl.c
++++ b/drivers/fwctl/cxl/cxl.c
+@@ -81,7 +81,7 @@ static bool cxlctl_validate_set_features(struct cxl_mailbox *cxl_mbox,
+ 					 const struct fwctl_rpc_cxl *rpc_in,
+ 					 enum fwctl_rpc_scope scope)
+ {
+-	struct cxl_feat_entry *feat;
++	struct cxl_feature *feat;
+ 	bool found = false;
+ 	uuid_t uuid;
+ 	u16 effects, mask;
+@@ -95,7 +95,8 @@ static bool cxlctl_validate_set_features(struct cxl_mailbox *cxl_mbox,
+ 
+ 	for (int i = 0; i < cxl_mbox->num_features; i++) {
+ 		feat = &cxl_mbox->entries[i];
+-		if (uuid_equal(&uuid, &feat->uuid)) {
++		if (uuid_equal(&uuid, &feat->entry.uuid) &&
++		    !feat->exclusive) {
+ 			found = true;
+ 			break;
+ 		}
+@@ -104,7 +105,7 @@ static bool cxlctl_validate_set_features(struct cxl_mailbox *cxl_mbox,
+ 	if (!found)
+ 		return false;
+ 
+-	effects = le16_to_cpu(feat->effects);
++	effects = le16_to_cpu(feat->entry.effects);
+ 	/* Currently no user background command support */
+ 	if (effects & CXL_CMD_BACKGROUND)
+ 		return false;
+diff --git a/include/cxl/features.h b/include/cxl/features.h
+new file mode 100644
+index 000000000000..6074a3f79d70
+--- /dev/null
++++ b/include/cxl/features.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2024 Intel Corporation. */
++#ifndef __CXL_FEATS_H_
++#define __CXL_FEATS_H_
++
++#include <linux/uuid.h>
++
++#define CXL_FEAT_PATROL_SCRUB_UUID						\
++	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,	\
++		  0x06, 0xdb, 0x8a)
++
++#define CXL_FEAT_ECS_UUID							\
++	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,	\
++		  0x89, 0x33, 0x86)
++
++#define CXL_FEAT_SPPR_UUID							\
++	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,	\
++		  0x75, 0x68, 0xbb)
++
++#define CXL_FEAT_HPPR_UUID							\
++	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,	\
++		  0xfb, 0x0e, 0x24)
++
++#define CXL_FEAT_CACHELINE_SPARING_UUID						\
++	UUID_INIT(0x96C33386, 0x91dd, 0x44c7, 0x9e, 0xcb, 0xfd, 0xaf, 0x65,	\
++		  0x03, 0xba, 0xc4)
++
++#define CXL_FEAT_ROW_SPARING_UUID						\
++	UUID_INIT(0x450ebf67, 0xb135, 0x4f97, 0xa4, 0x98, 0xc2, 0xd5, 0x7f,	\
++		  0x27, 0x9b, 0xed)
++
++#define CXL_FEAT_BANK_SPARING_UUID						\
++	UUID_INIT(0x78b79636, 0x90ac, 0x4b64, 0xa4, 0xef, 0xfa, 0xac, 0x5d,	\
++		  0x18, 0xa8, 0x63)
++
++#define CXL_FEAT_RANK_SPARING_UUID						\
++	UUID_INIT(0x34dbaff5, 0x0552, 0x4281, 0x8f, 0x76, 0xda, 0x0b, 0x5e,	\
++		  0x7a, 0x76, 0xa7)
++
++#define CXL_FEAT_UUID_MAX	8
++static uuid_t cxl_exclusive_feats[CXL_FEAT_UUID_MAX] = {
++	CXL_FEAT_PATROL_SCRUB_UUID,
++	CXL_FEAT_ECS_UUID,
++	CXL_FEAT_SPPR_UUID,
++	CXL_FEAT_HPPR_UUID,
++	CXL_FEAT_CACHELINE_SPARING_UUID,
++	CXL_FEAT_ROW_SPARING_UUID,
++	CXL_FEAT_BANK_SPARING_UUID,
++	CXL_FEAT_RANK_SPARING_UUID,
++};
++
++#endif
 diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-index e753d5d1d708..3e5e9c9362f5 100644
+index 3e5e9c9362f5..f44ac93ebdf4 100644
 --- a/include/cxl/mailbox.h
 +++ b/include/cxl/mailbox.h
-@@ -193,5 +193,11 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host);
- int cxl_mailbox_user_commands_supported(struct cxl_mailbox *cxl_mbox);
- int cxl_mailbox_user_commands_info_get(struct cxl_mailbox *cxl_mbox, int nr_cmds,
- 				       void *outbuf, size_t *out_len);
-+struct cxl_mem_command *cxl_get_mem_command(u32 id);
-+struct cxl_mem_command *
-+cxl_get_mem_command_for_fwctl(struct cxl_mailbox *cxl_mbox, u32 id);
-+int cxl_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
-+		      struct fwctl_rpc_cxl *rpc_in,
-+		      struct cxl_mbox_cmd *mbox_cmd, size_t *out_len);
- 
- #endif
-diff --git a/include/uapi/fwctl/cxl.h b/include/uapi/fwctl/cxl.h
-index a32c4c752db6..99804fc72f28 100644
---- a/include/uapi/fwctl/cxl.h
-+++ b/include/uapi/fwctl/cxl.h
-@@ -19,4 +19,33 @@ struct fwctl_info_cxl {
- 	__u32 nr_commands;
+@@ -80,7 +80,8 @@ struct cxl_mailbox {
+ 	struct mutex mbox_mutex; /* lock to protect mailbox context */
+ 	struct rcuwait mbox_wait;
+ 	int num_features;
+-	struct cxl_feat_entry *entries;
++	int num_user_feats;
++	struct cxl_feature *entries;
+ 	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
  };
  
-+/**
-+ * struct fwctl_rpc_cxl - ioctl(FWCTL_RPC) input for CXL
-+ * @id: The command id to send to the memory device. This must be one of the
-+ *	commands returned by the query command.
-+ * @flags: Flags for the command (input).
-+ * @op_size: Size of hw operation
-+ * @reserved: Reserved. Must be 0s.
-+ * @in_payload: User address of the hardware op input
-+ */
-+struct fwctl_rpc_cxl {
-+	__u32 id;
-+	__u32 flags;
-+	__u32 op_size;
-+	__u32 reserved;
-+	__aligned_u64 in_payload;
-+};
-+
-+/**
-+ * struct fwctl_rpc_cxl_out - ioctl9FWCTL_RPC) output for CXL
-+ * @size: Size of the output payload
-+ * @retval: Return value from device
-+ * @payload: Return data from device
-+ */
-+struct fwctl_rpc_cxl_out {
-+	__u32 size;
-+	__u32 retval;
-+	__u8 payload[];
-+};
-+
- #endif
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 9dd37849c450..4e7c8c03cfe8 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -234,4 +234,16 @@ struct cxl_send_command {
- 	} out;
- };
+@@ -165,6 +166,11 @@ struct cxl_feat_entry {
+ 	u8 reserved[18];
+ } __packed;
  
-+/*
-+ * CXL spec r3.1 Table 8-101 Set Feature Input Payload
-+ */
-+struct cxl_set_feature_input {
-+	__u8 uuid[16];
-+	__u32 flags;
-+	__u16 offset;
-+	__u8 version;
-+	__u8 reserved[9];
-+	__u8 data[];
-+} __packed;
++struct cxl_feature {
++	bool exclusive;
++	struct cxl_feat_entry entry;
++};
 +
- #endif
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
 -- 
 2.47.0
 
