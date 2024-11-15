@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D871A1FB3F5
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C391FB3F8
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 21:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731706086; cv=none; b=UHQcUJ7Y39Uu3wh/a4dNyB5sy4UnH3W73hifTzTQj1eS4KUIj1PzDvLuve3SwVgOQm4xmOW+I1lSVKR1JX0bOJROnPR2pv0vkXoShIfxji3C1LOWNrISHe9KowReq8jNjmpOvo+1QIoDDrDW19d9fHnT6sjC8z6rRr4IL5AhpJs=
+	t=1731706086; cv=none; b=oGL22o2s6h124D8v8FlIMI3Y0LQe+fHoC7BI2H8eKcrPI7JWgBp8n1q/fFTkfBHsNDjWBFhuuHJQPoKq/4d/cYCItmN8ko3K6+9Tg7tPz7B/R/vBtDEzijjSao6ydPbOxROH4AdQzS8gTRLKMRCIfBemuJkL3OzZIGajbAF2c0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731706086; c=relaxed/simple;
-	bh=8DrqE4E084lX6hxn4sbU1M2i5AiIWgGsLS8TQJS2ewY=;
+	bh=I+D+Hn2hmqk4QgdVsTxVBuZBTO9ampZTBon06QPd39U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MRTRtgaXfJ9OIbKTQDTRhyhOydPE0zaj1RQJnKHX0v1WQMQkcqtslI80OvRJl7oxrs53goHMMq4IdLVDww6qIjdD6v5SqJMlj3TM59BtOiqqe88V75GUtu1CAx6IONN0TZkgLzVUWC1N1NNkcS7FHLbVcn0OqQGTdfPJ2C6JtFU=
+	 MIME-Version; b=dNT5V784+cZ4BCZooCyJxcS4WzoxOhxdoKBvctLdBtaLesgcz5JqfMU1lJaf+0KMaoxdg6hgnhoP3V84xv32JW1owIkDG2rCxScvPCez2P0FgVT1xQTx0aTo3z1oF+e2sd1wuYXcOQvWj+f8WLDKm80UngMztbTTauHX3CNOZp0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F5BC4CED4;
-	Fri, 15 Nov 2024 21:28:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451B1C4CECF;
+	Fri, 15 Nov 2024 21:28:05 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [RFC PATCH v2 13/20] fwctl/cxl: Add hw_info callback
-Date: Fri, 15 Nov 2024 14:25:46 -0700
-Message-ID: <20241115212745.869552-14-dave.jiang@intel.com>
+Subject: [RFC PATCH v2 12/20] cxl: Save Command Effects Log (CEL) effects for enabled commands
+Date: Fri, 15 Nov 2024 14:25:45 -0700
+Message-ID: <20241115212745.869552-13-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241115212745.869552-1-dave.jiang@intel.com>
 References: <20241115212745.869552-1-dave.jiang@intel.com>
@@ -38,128 +38,71 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Store the command effects via what device provided via the CEL in the
+'struct cxl_command_info' structure. Steal the upper 16 bits to store
+the effects value in order to keep user API compatibility.
+
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/mbox.c | 42 +++++++++++++++++++++++++++++++++++++++++
- drivers/fwctl/cxl/cxl.c | 25 ++++++++++++++++++++++++
- include/cxl/mailbox.h   |  2 ++
- 3 files changed, 69 insertions(+)
+ drivers/cxl/core/mbox.c      | 2 ++
+ include/uapi/fwctl/fwctl.h   | 4 ++--
+ include/uapi/linux/cxl_mem.h | 5 +++--
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index fba6bdd30a82..65fceabb9fe7 100644
+index f464eb42f08a..fba6bdd30a82 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -9,6 +9,8 @@
- #include <cxlmem.h>
- #include <cxl.h>
+@@ -795,6 +795,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 			enabled++;
+ 		}
  
-+#include <uapi/fwctl/fwctl.h>
++		cmd->info.effects = le16_to_cpu(cel_entry[i].effect);
 +
- #include "core.h"
- #include "trace.h"
+ 		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
+ 			enabled ? "enabled" : "unsupported by driver");
+ 	}
+diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+index 7334907e27c1..04da549cd4ae 100644
+--- a/include/uapi/fwctl/fwctl.h
++++ b/include/uapi/fwctl/fwctl.h
+@@ -74,8 +74,8 @@ struct fwctl_info {
+  * struct fwctl_command_info - Hardware command information returned from a query.
+  * @id: Driver ID number for the command
+  * @opcode: Hardware command opcode
+- * @set_effects: Effects to the OS and hardware when command is executed.
+- *               Provided by the device.
++ * @effects: Effects to the OS and hardware when command is executed.
++ *           Provided by the device.
+  * @size_in: Expected input size, or ~0U if variable length.
+  * @size_out: Expected output size, or ~0U if variable length.
+  *
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 469dd481795f..9dd37849c450 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -118,6 +118,7 @@ static const __u8 cxl_deprecated_commands[]
+  *         the label-storage-area can not be written while the kernel is
+  *         actively managing that space.
+  *
++ * @effects: Command effects reported by the device.
+  * @size_in: Expected input size, or ~0 if variable length.
+  * @size_out: Expected output size, or ~0 if variable length.
+  *
+@@ -136,11 +137,11 @@ static const __u8 cxl_deprecated_commands[]
+ struct cxl_command_info {
+ 	__u32 id;
  
-@@ -573,6 +575,46 @@ int cxl_mailbox_user_commands_supported(struct cxl_mailbox *cxl_mbox)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mailbox_user_commands_supported, CXL);
- 
-+/**
-+ * cxl_mailbox_user_commands_info_get() - Retrieve array of command info
-+ * @cxl_mbox: cxl mailbox context
-+ * @nr_cmds: number of commands to retrieve
-+ * @outbuf: Output buffer to store array 'struct fwctl_command_info'
-+ * @out_len: size of final output buffer
-+ *
-+ * Return: 0 for success, or -errno for failure.
-+ */
-+int cxl_mailbox_user_commands_info_get(struct cxl_mailbox *cxl_mbox, int nr_cmds,
-+				       void *outbuf, size_t *out_len)
-+{
-+	struct fwctl_command_info *entry;
-+	struct cxl_command_info *info;
-+	struct cxl_mem_command *cmd;
-+
-+	if (nr_cmds > FWCTL_CXL_MAX_COMMANDS)
-+		return -EINVAL;
-+
-+	entry = outbuf;
-+	for (int i = 0; i < nr_cmds; i++) {
-+		cmd = fwctl_cxl_find_command(cxl_mbox, fwctl_command_sets[i]);
-+		if (!cmd)
-+			continue;
-+		info = &cmd->info;
-+		memset(entry, 0, sizeof(*entry));
-+		entry->id = info->id;
-+		entry->opcode = fwctl_command_sets[i];
-+		entry->effects = info->effects;
-+		entry->size_in = info->size_in;
-+		entry->size_out = info->size_out;
-+		entry++;
-+	}
-+
-+	*out_len = sizeof(*entry) * nr_cmds;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mailbox_user_commands_info_get, CXL);
-+
- int cxl_query_cmd(struct cxl_mailbox *cxl_mbox,
- 		  struct cxl_mem_query_commands __user *q)
- {
-diff --git a/drivers/fwctl/cxl/cxl.c b/drivers/fwctl/cxl/cxl.c
-index 5eb5eabf2bff..ce8960a9beaa 100644
---- a/drivers/fwctl/cxl/cxl.c
-+++ b/drivers/fwctl/cxl/cxl.c
-@@ -53,6 +53,30 @@ static void *cxlctl_info(struct fwctl_uctx *uctx, size_t *length)
- 	return info;
- }
- 
-+static void *cxlctl_hw_info(struct fwctl_uctx *uctx, int commands, size_t *out_len)
-+{
-+	struct cxlctl_uctx *cxlctl_uctx =
-+		container_of(uctx, struct cxlctl_uctx, uctx);
-+	struct fwctl_device *fwctl = uctx->fwctl;
-+	struct cxlctl_dev *cxlctl =
-+		container_of(fwctl, struct cxlctl_dev, fwctl);
-+	int rc;
-+
-+	if (commands > cxlctl_uctx->nr_commands)
-+		return ERR_PTR(-EINVAL);
-+
-+	void *out __free(kvfree) = kvzalloc(*out_len, GFP_KERNEL);
-+	if (!out)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rc = cxl_mailbox_user_commands_info_get(cxlctl->mbox,
-+						commands, out, out_len);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	return_ptr(out);
-+}
-+
- static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
- 			   void *rpc_in, size_t in_len, size_t *out_len)
- {
-@@ -66,6 +90,7 @@ static const struct fwctl_ops cxlctl_ops = {
- 	.open_uctx = cxlctl_open_uctx,
- 	.close_uctx = cxlctl_close_uctx,
- 	.info = cxlctl_info,
-+	.hw_info = cxlctl_hw_info,
- 	.fw_rpc = cxlctl_fw_rpc,
+-	__u32 flags;
++	__u16 flags;
+ #define CXL_MEM_COMMAND_FLAG_MASK		GENMASK(1, 0)
+ #define CXL_MEM_COMMAND_FLAG_ENABLED		BIT(0)
+ #define CXL_MEM_COMMAND_FLAG_EXCLUSIVE		BIT(1)
+-
++	__u16 effects;
+ 	__u32 size_in;
+ 	__u32 size_out;
  };
- 
-diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-index af01fb78ae10..f48eebb855f7 100644
---- a/include/cxl/mailbox.h
-+++ b/include/cxl/mailbox.h
-@@ -85,5 +85,7 @@ struct cxl_mailbox {
- 
- int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host);
- int cxl_mailbox_user_commands_supported(struct cxl_mailbox *cxl_mbox);
-+int cxl_mailbox_user_commands_info_get(struct cxl_mailbox *cxl_mbox, int nr_cmds,
-+				       void *outbuf, size_t *out_len);
- 
- #endif
 -- 
 2.47.0
 
