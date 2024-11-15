@@ -1,95 +1,132 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1DB189F39;
-	Fri, 15 Nov 2024 09:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455271B3942;
+	Fri, 15 Nov 2024 12:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731663319; cv=none; b=GJ4ENXaNZbYg7pavTwsSHmEEQeZMBMiKxYiz0oMHTMrkvSt9eE3gPh21g1GisiwNWDVhtiX55/lvOIvE87IRyIqPw5WwUJJLavXJYyqiBc/VpU/elYzPyNeYBUjqPL7r1NjboQhxaP4HZAUNMO1Rtx1Ed+T+JSIXfzchJ1mMRYw=
+	t=1731672864; cv=none; b=X47Nd9E+DRKf96mNuuVn31+VWfeVSfxxdO/S0+N8lbHJyhWQ4bG1hSnhzoRPtwKu+gvvO9AqTPpKnYRCYPo8bjWCcviWNfoc5RrJ1cGoL8bfXkPjjULN1+vroJNJ66VGJK3idb4fc/eFaTi6rYTEi3gDqIoTn/+xwHamVi5D/M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731663319; c=relaxed/simple;
-	bh=FqFc6TLGuxk07hm5TrVP+dHDlEr4YWXsWODFt2U9+xo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdtvirYAg/aLai3XSQV94yUsN3fvH5Sw47q0QH5xnywyhkG2q/HLpe7wINrG1ibPqrzXsbC0/ycbQETmJvZ9wy4w4bU35Za7Mpg1wPO+Xy6RnCS749D4jr8m+VPjPhS+Xwp/oA2gob7zNtgcPxfHAT2ccJQsn/svl/5AZfwA4DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 905D43000A0D2;
-	Fri, 15 Nov 2024 10:35:10 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7E4703D0A00; Fri, 15 Nov 2024 10:35:10 +0100 (CET)
-Date: Fri, 15 Nov 2024 10:35:10 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v3 06/15] PCI/AER: Change AER driver to read UCE fatal
- status for all CXL PCIe port devices
-Message-ID: <ZzcVzpCXk2IpR7U3@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-7-terry.bowman@amd.com>
+	s=arc-20240116; t=1731672864; c=relaxed/simple;
+	bh=rWmshmSMK3ztYZPMn5WUQGtD4MV6pNS+89ldeBjN4z4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vb91aaK+xSmkwCJErdHT5DLeWPfMVwMn4EUApchfjzSHCFnN2dySqiAKf6opJEuF9ncsM1j7nebpTRQ8L0gX//7PA7HSvsge17e3dMM/2ikbAERB3759PyIEOY4fEAwSHm38sOobtVmp3Y/RWn8td8oBjQ2METpUSILgDOJD+k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XqbXq0CZJz6LD9k;
+	Fri, 15 Nov 2024 20:14:03 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id AF913140A08;
+	Fri, 15 Nov 2024 20:14:18 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 15 Nov
+ 2024 13:14:17 +0100
+Date: Fri, 15 Nov 2024 12:14:15 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Shiju Jose <shiju.jose@huawei.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "jassisinghbrar@gmail.com"
+	<jassisinghbrar@gmail.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"Roberto Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH v15 11/15] EDAC: Add memory repair control feature
+Message-ID: <20241115121415.00005c76@huawei.com>
+In-Reply-To: <20241114133249.GEZzX8ATNyc_Xw1L52@fat_crate.local>
+References: <20241101091735.1465-1-shiju.jose@huawei.com>
+	<20241101091735.1465-12-shiju.jose@huawei.com>
+	<20241104061554.GOZyhmmo9melwI0c6q@fat_crate.local>
+	<1ac30acc16ab42c98313c20c79988349@huawei.com>
+	<20241111112819.GCZzHqUz1Sz-vcW09c@fat_crate.local>
+	<7fd81b442ba3477787f5342e69adbb96@huawei.com>
+	<20241114133249.GEZzX8ATNyc_Xw1L52@fat_crate.local>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113215429.3177981-7-terry.bowman@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Nov 13, 2024 at 03:54:20PM -0600, Terry Bowman wrote:
-> The AER service driver's aer_get_device_error_info() function doesn't read
-> uncorrectable (UCE) fatal error status from PCIe upstream port devices,
-> including CXL upstream switch ports. As a result, fatal errors are not
-> logged or handled as needed for CXL PCIe upstream switch port devices.
+Hi Borislav,
+
+I'll just jump in on one element.
+
+> > This will work for the CXL PPR feature where the result of the query operation for resources  availability
+> > return to the command, however for the CXL memory sparing features,  the result of the query resources 
+> > availability command returned later in a Memory Sparing Event Record from the device. 
+> > Userspace shall issue repair operation with the attributes values received on the Memory Sparing trace event.
+> > Thus for the CXL memory sparing feature, query for resources availability and repair operation 
+> > cannot be combined.  
 > 
-> Update the aer_get_device_error_info() function to read the UCE fatal
-> status for all CXL PCIe port devices. Make the change to not affect
-> non-CXL PCIe devices.
+> What happens if the resources availability changes between the query and the
+> start of the repair operation?
+>
+Short answer, you get an error return. 
+
+The query is an optional step / optimization. You can just skip it.
+There is no point in  querying if you are going to immediately issue the command to repair
+(as that will report an error if you can't do it). 
+
+A typical flow where it might be useful is:
+1) Lots of corrected errors reported on a particular part of the memory.
+2) OS decides enough is enough, that row/bank/nibble should be replaced.
+3) Before doing so it checks it can actually replace it - otherwise maybe we will be disrupting a
+   gigantic page or similar where the perf cost of just off lining is higher than we want.
+4) After query the page is offlined etc (may or may not be necessary depending on the
+   hardware design - we may be able to do it 'live').
+5) 'Try' to repair. Hopefully no one raced with us and used up the remaining resources.
+  Given this is typically only driven by something like RASDaemon that race should be
+  a corner case only (very unlikely)
+6) If repair fails can just bring the memory back - but this dance was expensive and
+   we will carry on working with less than ideal memory (probably schedule some
+   real maintenance to swap out the device).
+7) If repair succeeds bring the memory back as now we have shiny new memory.
+
+We could drop the query for now and bring it back later once more of the surrounding
+infrastructure becomes clearer.  To me it's a useful feature, but I appreciate
+this is early days and we shouldn't always try for all the bells and whistles on
+day 1.
+
+
+> The cat catches fire?
+Dog person? :) Just a nice normal error return to indicate no resources.
+
+Jonathan
+
 > 
-> The fatal error status will be used in future patches implementing
-> CXL PCIe port uncorrectable error handling and logging.
-[...]
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1250,7 +1250,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->  		   type == PCI_EXP_TYPE_RC_EC ||
->  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -		   info->severity == AER_NONFATAL) {
-> +		   info->severity == AER_NONFATAL ||
-> +		   (pcie_is_cxl(dev) && type == PCI_EXP_TYPE_UPSTREAM)) {
->  
->  		/* Link is still healthy for IO reads */
->  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
 
-Just a heads-up, there's another patch pending by Shuai Xue (+cc)
-which touches the same code lines.  It re-enables error reporting
-for PCIe Upstream Ports (as well as Endpoints) under certain
-conditions:
-
-https://lore.kernel.org/all/20241112135419.59491-3-xueshuai@linux.alibaba.com/
-
-That was originally disabled by Keith Busch (+cc) with commit
-9d938ea53b26 ("PCI/AER: Don't read upstream ports below fatal errors").
-
-There's some merge conflict potential here if your series goes into
-the cxl tree and Shuai's patch into the pci tree in the next cycle.
-
-Thanks,
-
-Lukas
