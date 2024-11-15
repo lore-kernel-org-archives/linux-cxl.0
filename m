@@ -1,127 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A6B2F29
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 02:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5611C13C9A3;
+	Fri, 15 Nov 2024 05:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731639405; cv=none; b=VgNPp4HyefGag6QaRQ2WE3dtbqJmnTzikidu11sTZPp7f10vQ6QHk5tziAtkE0ruWeOiAZ+MuXbI8+odT7N/NQP3dFq7pu6A6ycEsxlj6+ODtZc8b/88GIOZ2llU94wdlQYkgeF6aJq7ZdgcjSjWsuDrgi3qyqMz3Ui+I8i+m+c=
+	t=1731649590; cv=none; b=Ihqpb31kRfh9sbeQ/P4WFQnu0a/rkjAhpSv5DFfFqTDoHWSXsCZmBbH70ASQ+SsCjy4ztZj1sSUCWpbAzAnV9Pgeee7pETB9vaTILFEcTXQXgGlosukWOd1/ivgqBxPAWZ0osI6NwP2ReXEopfeeRfTHwEzJKrdTkPtpkcxxasA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731639405; c=relaxed/simple;
-	bh=AaEskmMpBIrS77PRfWnirVLEEjuLDRInw+CJMrYfVAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RVqBAR5hV4D2kZCY83ymGAs62FL76XWs+l0iIJjUxLfRlr5un4IEahhohj4uSOkBy4buqQiU0e7jrXXjGo8ydJOOApMKNLuE52MY9NT5KE2ve0Gy9BqEcLlYuDRrM0yrO7Jh/IDKfDnVUhrUs0sxkDa9moIRJ7adeYga2qcYO3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aodLL71g; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1731649590; c=relaxed/simple;
+	bh=g+TWxp8r0cFE9e5Yx0soVZGR0BkCsV6nwR/mjiL69EE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cW1wHEhsUK2D+A7fLgSgmRJj5Onspmi0PeNbICaJ/3eOByFHmfKU9gjozPpsC96B3yx/N2R2hY+/I7JCvuwo7hNiA3RPKb9X2rIt5jAbpTkPBwSdD2JXMDrMNMEt0D+fzJUBt+F/eWps4olT1p9fOwkOMuYR7SbagfT8V9kVTVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=IJe8p6gb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cBnMliZx; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aodLL71g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731639404; x=1763175404;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AaEskmMpBIrS77PRfWnirVLEEjuLDRInw+CJMrYfVAw=;
-  b=aodLL71gicGEq0LxEcio0aMzv+04N1Khv4PT2dKkxEiMClwnMIygIsZf
-   UjBbs3nhYeio565D9VbX/FXxvMK2NDnTTbqoUE+1bWuiDiXIR6i13pGZu
-   w5LIkX2b1Tush4etyIL9C+EFdtjwJMRDrQgcHpu0MV1G3px7HgQr5lV25
-   9jOUJkvYyWRydd5d8jC890MIBhkyMsRN4UM4ScnyZINElXWyBhY8ZeyqN
-   vwvCYDfFu40NRvGJU9YTTR4+VU6GE46HrjsoKlY6x5z4vA36+qJr8L9LG
-   o57W3FHy5JfUCTZL7g5C/sFZl2/A3ConCjyW9ZSp7GXyG0TSKUZh+qDML
-   Q==;
-X-CSE-ConnectionGUID: Wi2IPXNpQ7K6wK/gXkEN7Q==
-X-CSE-MsgGUID: aCMbR3rXTBi2D/X5mo5QDg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="57030453"
-X-IronPort-AV: E=Sophos;i="6.12,155,1728975600"; 
-   d="scan'208";a="57030453"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 18:56:35 -0800
-X-CSE-ConnectionGUID: q92l7zrkScONqYprVk/98g==
-X-CSE-MsgGUID: CH7HdAVET7uZhf2xmYA8LQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,155,1728975600"; 
-   d="scan'208";a="119330835"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 18:56:34 -0800
-Date: Thu, 14 Nov 2024 18:56:32 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: dave.jiang@intel.com, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="IJe8p6gb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cBnMliZx"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8A45B11400C6;
+	Fri, 15 Nov 2024 00:46:25 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Fri, 15 Nov 2024 00:46:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm3; t=1731649585; x=
+	1731735985; bh=sqvoc3APmGB5tb6niPFOzLw3Iq4+7kJyzp+d/Tks6Kc=; b=I
+	Je8p6gbq3nvB9BgRC5f4A1pfTDvNvVuF0aJxtTcqli/PZYLXzX3oD4m0L72SOrOa
+	+lmvcTCpKlqCimzJjUuZPmx0M8/c1V09dQKcxT/w5jTTyP3rRlHSgS4bTzXwENdr
+	R6fB7aqJh8IcswWbAhmy7cMpgfyXxchWQjTrkGKq/rKJWTzyahigEvmsf9lX2+9u
+	5dbgWcuImUleSslV5SB5/1VNrXx491TSlvnrglzzJRnJdxe36TAcVgbbx/75ZUY3
+	T+vMowkKT/pynqsdfwT8Wk9u95dZYMx9FNwBTxCmIhxr2DCF8Bl/iKhZZBeTHpvN
+	2vwnHbuHTx6fuRX5U4NPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1731649585; x=1731735985; bh=sqvoc3APmGB5tb6niPFOzLw3Iq4+
+	7kJyzp+d/Tks6Kc=; b=cBnMliZxbkCwPPbmV5tc2uyjB/Bdkj6HL77752R0hCsw
+	7L3WagOmJCuw1EC5CmvUecrrruu4mmg1jqgeWBwKdcyvat/bEGiQyzqEyTZS2KPZ
+	F5HfHbB8yiphSZxHuwnlT3FpZV8Kl/A3PH/RXlRccM7caJJ0VMnarEpY6GN/gDNg
+	4jW6JEH5g3s8pFYJYdnar71m5VtRkM7G5OI9376Q25jQObJUo7gI4TH/N2i8NhwC
+	p2ungSsAdB3V/lOI1QuJb+BPLoIx5j2OqQ4lQY9QKKO0MfGhiZ4VIc3am40bYGMJ
+	NVTyVYICo7sw9mwt7mzaFVhIKkO6QfmWyDvC7t5btw==
+X-ME-Sender: <xms:MOA2Z_EuOdSl_QSkyeNpNuVbLRExs8zTkOF2A5lxoRi_yLwgXW-XBg>
+    <xme:MOA2Z8Wep0iIb1VGpmqoLZjbREDv4ODx5ZOcyI1KTA7Af_sHq1sstfv_7wbrvNV-C
+    c-7Y88CbNJ1TaYBqII>
+X-ME-Received: <xmr:MOA2ZxLw_7LraFrDT_zK3UQoZ6jbju_IPz9i9CRHMc3wog1L1ELUYVAzwJzr1J0L3pbpbOOh0hzE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrvdefgdekhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefuff
+    fkofgtggfgsehtkeertdertdejnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghi
+    shcuoegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgeqnecuggftrfgrthhtvg
+    hrnhepieekleektdfhveeludegleefuefffefhfeeuiedthefgheehveeuheekieejjeek
+    necuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdgumhhtfh
+    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgdpnhgspghrtghpthhtohepvd
+    dtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehluhhkrghsseifuhhnnhgvrhdr
+    uggvpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdrtg
+    homhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
+    rdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtph
+    htthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:MOA2Z9HPJFoawqiA_3Tcl0tHN80FJ4Wls83zKgLhXGUJOaa-Ayg-zw>
+    <xmx:MOA2Z1UGUoOuaMUf2Lii_IPOctHlJjFlI1d41zIMja9ojTSz3mfTcQ>
+    <xmx:MOA2Z4Os36g_a0ZgMAx7qfbrJ7nQNKJRPQQF9Y58ukunVTaxBbjQ4Q>
+    <xmx:MOA2Z023m_GzIsIg5iDQbnu8LSCcukDYYqu_cstNZ9bn3HOksPgcgg>
+    <xmx:MeA2Zy1Kqoj4SDh1UXfs18B-ac3YT_oMCaqwehV03Lkuakw5fkFkyw1M>
+Feedback-ID: ifd214418:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 15 Nov 2024 00:46:18 -0500 (EST)
+From: Alistair Francis <alistair@alistair23.me>
+To: lukas@wunner.de,
+	Jonathan.Cameron@huawei.com,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
 	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/pci: Fix potential bogus return value upon
- successful probing
-Message-ID: <Zza4YONsVxWa8rpL@aschofie-mobl2.lan>
-References: <20241114213439.6022-1-dave@stgolabs.net>
+Cc: bjorn3_gh@protonmail.com,
+	ojeda@kernel.org,
+	tmgross@umich.edu,
+	boqun.feng@gmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	wilfred.mallawa@wdc.com,
+	alistair23@gmail.com,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	aliceryhl@google.com,
+	Alistair Francis <alistair@alistair23.me>
+Subject: [RFC 0/6] lib: Rust implementation of SPDM
+Date: Fri, 15 Nov 2024 15:46:10 +1000
+Message-ID: <20241115054616.1226735-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.47.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241114213439.6022-1-dave@stgolabs.net>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 14, 2024 at 01:34:39PM -0800, Davidlohr Bueso wrote:
-> If cxl_pci_ras_unmask() returns non-zero, cxl_pci_probe() will end up
-> returning that value, instead of zero. Found by code inspeaction.
->
+Security Protocols and Data Models (SPDM) [1] is used for authentication,
+attestation and key exchange. SPDM is generally used over a range of
+transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
 
-I agree that the return value should be 0 if we get this far,
-because all rc's that need to be returned, are returned immediately.
+From the kernels perspective SPDM is used to authenticate and attest devices.
+In this threat model a device is considered untrusted until it can be verified
+by the kernel and userspace using SPDM. As such SPDM data is untrusted data
+that can be mallicious.
 
-But...the set and check of 'rc' for the calls cannot lead to a
-'return rc' seems like a bad pattern. Most of those are dev_dbg()
-messages.
+The SPDM specification is also complex, with the 1.2.1 spec being almost 200
+pages and the 1.3.0 spec being almost 250 pages long.
 
-This last one that bit us here, is repeating the same pattern of those
-before it:
+As such we have the kernel parsing untrusted responses from a complex
+specification, which sounds like a possible exploit vector.
 
-	rc = cxl_pci_ras_unmask(pdev);
-        if (rc)
-                dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
+As such this series implements a SPDM requester in Rust.
 
-This can be:
+This is very similar to Lukas' implementation [2]. This series applies on top
+of Lukas' tree [3] and is heavily based on Lukas' work. At build time a user can
+choose to use either the Rust of the C SPDM implementation. The two are
+interchangable, although you can only use one at a time.
 
-	if (cxl_pci_ras_unmask(pdev))
-		dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
+To help with maintaining compatibility it's designed in a way to match Lukas'
+design and the state struct stores the same information, although in a Rust
+struct instead of the original C one.
 
-There are a bunch that follow this pattern in that function, mostly in
-the pmu_count loop.
+The Rust implementation currently supports less features, but my end goal
+is to consolidate to a single Rust implementation eventually. That will
+probably have to wait until Rust in the kernel is no longer experimental
+as SPDM is looking to be an important feature to support for all platforms.
 
-How about tidying up the rc pattern throughout the function?
+This series is based on the latest rust-next tree.
 
---Alison
+This seris depends on the Untrusted abstraction work [4].
 
+This seris also depends on the recent bindgen support for static inlines  [5].
 
-> Fixes: 248529edc86 (cxl: add RAS status unmasking for CXL)
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 188412d45e0d..01092e5b3b46 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -948,7 +948,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  
->  	pci_save_state(pdev);
->  
-> -	return rc;
-> +	return 0;
->  }
+The entire tree can be seen here: https://github.com/alistair23/linux/tree/alistair/spdm-rust
 
+based-on: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+based-on: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
+based-on: https://lore.kernel.org/all/20241114005631.818440-1-alistair@alistair23.me/
 
+1: https://www.dmtf.org/standards/spdm
+2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+3: https://github.com/l1k/linux/commits/spdm-future/
+4: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
+5: https://lore.kernel.org/all/20241114005631.818440-1-alistair@alistair23.me/
 
+Alistair Francis (6):
+  rust: bindings: Support SPDM bindings
+  drivers: pci: Change CONFIG_SPDM to a dependency
+  lib: rspdm: Initial commit of Rust SPDM
+  lib: rspdm: Support SPDM get_version
+  lib: rspdm: Support SPDM get_capabilities
+  lib: rspdm: Support SPDM negotiate_algorithms
 
+ MAINTAINERS                     |   6 +
+ drivers/pci/Kconfig             |   2 +-
+ lib/Kconfig                     |  47 ++-
+ lib/Makefile                    |   1 +
+ lib/rspdm/Makefile              |  11 +
+ lib/rspdm/consts.rs             | 123 +++++++
+ lib/rspdm/lib.rs                | 146 +++++++++
+ lib/rspdm/req-sysfs.c           | 174 ++++++++++
+ lib/rspdm/state.rs              | 556 ++++++++++++++++++++++++++++++++
+ lib/rspdm/sysfs.rs              |  27 ++
+ lib/rspdm/validator.rs          | 301 +++++++++++++++++
+ rust/bindgen_static_functions   |   4 +
+ rust/bindings/bindings_helper.h |   2 +
+ 13 files changed, 1384 insertions(+), 16 deletions(-)
+ create mode 100644 lib/rspdm/Makefile
+ create mode 100644 lib/rspdm/consts.rs
+ create mode 100644 lib/rspdm/lib.rs
+ create mode 100644 lib/rspdm/req-sysfs.c
+ create mode 100644 lib/rspdm/state.rs
+ create mode 100644 lib/rspdm/sysfs.rs
+ create mode 100644 lib/rspdm/validator.rs
 
+-- 
+2.47.0
 
-
->  
->  static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> -- 
-> 2.47.0
-> 
-> 
