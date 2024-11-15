@@ -1,51 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E941DDA0E
-	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 18:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF4A1D47A0
+	for <linux-cxl@vger.kernel.org>; Fri, 15 Nov 2024 18:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731696051; cv=none; b=o33SRPV2Tf/Lof7kxgJNBO3TwaYik6OgN0EZW8YDpzRchhNSbEg2yQUGqXg6ENzN8jdb1+Bg+plA/YZ9eq0lqcWyjjnWjEN44Akw2p5iESYhK5bIN4/JuN/bcO2FO0nBv06fW6m4XECt5zSyqfpyMI5kgF+Zk35rn1Adc6PuiLA=
+	t=1731696052; cv=none; b=NFT4NATjbWNjQze8ZCs3tzq/LgVZ6NMetj6MPzkckpkXxQ7ya/S8xygaDJwlGklO4xD7RiW551pz6qO9vOmHiELF8Jz/6zRGIdFInqlJiiVb3CMT01dv7KS7TC9sKijf34eKH1r0stIm8BqVz3V2mJaFnUtpLmGwL9/77rJiclo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731696051; c=relaxed/simple;
-	bh=HgvcFJJlwID2rYxZWQTHetcFY5nTyif5z/Ba07c9JXA=;
+	s=arc-20240116; t=1731696052; c=relaxed/simple;
+	bh=nX4+TBmzT/8S/6xSSe7TLFYuuRvqvwN/md0J6OgzWuI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Gh8gIQR8LlLXujWY/zAqty8OPyQj8UxSeBDv0a8ndLq1IKedjUx9NlFBBcKNrudxRP7itwAJ1zZe4UqGjhN4ZIm8B6jgIvwa970E7pQHt3sSWByjvVtlgTRK4P7r/mzS9gaOw2QIUEUJ/4WHcymFMdrqRuONNYq634TW1UJxUzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fShWN+jY; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:To:Cc; b=utr0/P7I71xA3AE1ZktBmXNSBfv99BIz0jXkRw1dcGrwW09F55dZjTquXpYORrIYPOnltVFt3FZK/baKxLx2NYb7hQV4pZkhW2CkXv/W2aTQiuWnWTfhuKpR12BECHYe9XeQjrZg+5oqapsVbbss6GqtbcytwipjI0eUM8iwASQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UMw/sIGQ; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fShWN+jY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UMw/sIGQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1731696050; x=1763232050;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=HgvcFJJlwID2rYxZWQTHetcFY5nTyif5z/Ba07c9JXA=;
-  b=fShWN+jYAUv3/XMn3x7Qy4R8dFaeRUUfSV3cZxV7gMa50BioT6fs9lTS
-   xsoNtuyEcc0bj4bSSqquRfic81fSLUDG/rDTVz5RqjnZrLHdEfrBw3GfJ
-   GnDWUbV8OiOTucsjtG6m4V+ehQK/u7uaw7BKzvmoNFCpASwaluuQdtjuM
-   tAgFlPXusEetdkoGduPj+BXaxz4x9g6l4OstsBaUMZhJGRz4pSaCepbSe
-   Y/qUvWsCzwhx44oYNgsGQYD6SdddWya4UtNP7V3gViPmEMb2hDUpg+EIc
-   d/Fo3P1pFRnxHT6c0S9xVlkxm0wCPxYcpY7dCdASmqmsSqH+OTBaPaGSi
-   w==;
-X-CSE-ConnectionGUID: QkCtUlMjSY2xp6bTGe6Wtg==
-X-CSE-MsgGUID: +q1eQ8OlTbCDr3C3EJCcCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11257"; a="31127900"
+  bh=nX4+TBmzT/8S/6xSSe7TLFYuuRvqvwN/md0J6OgzWuI=;
+  b=UMw/sIGQQy+i7IU8PtSNzYzeLSc9Kg44aIELl93U3XXyjIRiX8WHEJBW
+   +Dh+W4kmcewVUDgnTIxjxSol3y1GAquotFaHtKBzwswhZEuaDv+0OoZgb
+   nwY0kySCuu5/WBruvxQEXQ8WXU6SOjLA71h04QQe52/pfA9MsG0S+D/sU
+   ndKJgSk96cFA72MHlAV/fzOBhEYGIJftMlBSIqDR+Fed7Q3gHzDK7XylR
+   Kk24EP7Gu8kva4zAGddLw6ao7eEDJVGxMDgXdMvnaGCavFoIsJw5Oly5Z
+   gzasXPuuMMGy737TP0aybNpF469ygumpBSfFEgvtB7BImppo0H21iolse
+   g==;
+X-CSE-ConnectionGUID: 3j8xYd7sRnqNy1QYSULGmw==
+X-CSE-MsgGUID: BLrsnJmSRcqULgVzdaB9ig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11257"; a="31127891"
 X-IronPort-AV: E=Sophos;i="6.12,157,1728975600"; 
-   d="scan'208";a="31127900"
+   d="scan'208";a="31127891"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 10:40:44 -0800
-X-CSE-ConnectionGUID: 43sXkUWkR9+0pdOkHN3LwQ==
-X-CSE-MsgGUID: O5rn/XxAT36rMzHzCWax0w==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 10:40:43 -0800
+X-CSE-ConnectionGUID: dAwR9vm+RFeOkHCQBEZi6g==
+X-CSE-MsgGUID: N1gTmxJ5RDqeo2FeBSoKOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,157,1728975600"; 
-   d="scan'208";a="88522623"
+   d="scan'208";a="88522617"
 Received: from ehanks-mobl1.amr.corp.intel.com (HELO localhost) ([10.125.108.112])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 10:40:43 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 10:40:42 -0800
 From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 15 Nov 2024 12:40:37 -0600
-Subject: [ndctl PATCH v3 4/9] cxl/region: Use new region mode in cxl-cli
+Date: Fri, 15 Nov 2024 12:40:36 -0600
+Subject: [ndctl PATCH v3 3/9] libcxl: Separate region mode from decoder
+ mode
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,7 +55,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241115-dcd-region2-v3-4-326cd4e34dcd@intel.com>
+Message-Id: <20241115-dcd-region2-v3-3-326cd4e34dcd@intel.com>
 References: <20241115-dcd-region2-v3-0-326cd4e34dcd@intel.com>
 In-Reply-To: <20241115-dcd-region2-v3-0-326cd4e34dcd@intel.com>
 To: Alison Schofield <alison.schofield@intel.com>
@@ -65,11 +66,11 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>,
  linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
  Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.15-dev-2a633
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731696034; l=6905;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731696034; l=9745;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=HgvcFJJlwID2rYxZWQTHetcFY5nTyif5z/Ba07c9JXA=;
- b=qO/rzPWEGA8Ou489arr08zclwOB50wbT+pcrzOjFVw7iWFmsJ0/SWpSt7yES6jS9eW18bG1n3
- 2gMulejD6R9A2WFV1szzaG385DOBABs8MWhSBNTC9Npk/Pr7MooYt/h
+ bh=nX4+TBmzT/8S/6xSSe7TLFYuuRvqvwN/md0J6OgzWuI=;
+ b=BJMvuXuv3JOZyWsNfYSFz8WNEk/50j06Xziu8Hzs0oUtdWC6pyDxHQTsFYosl6Vih1I+6nL5d
+ Ak3xLAi9sjKBgx3t22R7da1Jqq27qVbgKpzwYH5t8cpctXl0tjxhx+l
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
@@ -78,185 +79,240 @@ remain a 1:1 relation.  An interleaved region may be made up of Dynamic
 Capacity partitions with different indexes on each of the target
 devices.
 
-Modify cxl-cli to use the new region mode interface from libcxl.  Modify
-parameter processing and variable name changes for clarity in the
-future.
+Introduce a new region mode enumeration and access function to libcxl.
 
-Functionality remains the same.
+To maintain compatibility with existing software the region mode values
+are defined the same as the current decoder mode.  In addition
+cxl_region_get_mode() is retained.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes:
-[Alison: split libcxl and cxl-cli changes]
-[iweiny: Process region mode based on --type]
-[iweiny: s/mode/decoder_mode for clarity]
+[Alison/iweiny: Ensure correct libcxl symbol export version]
+[Alison/iweiny: Add new libcxl interfaces to documentation]
+[iweiny: Add deprecated cxl_region_get_mode() documentation]
 ---
- cxl/json.c   |  6 +++---
- cxl/region.c | 50 ++++++++++++++++++++++++++++++++------------------
- 2 files changed, 35 insertions(+), 21 deletions(-)
+ Documentation/cxl/lib/libcxl.txt | 20 ++++++++++++++++++--
+ cxl/lib/libcxl.c                 | 25 +++++++++++++++----------
+ cxl/lib/libcxl.sym               |  5 +++++
+ cxl/lib/private.h                |  2 +-
+ cxl/libcxl.h                     | 35 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 74 insertions(+), 13 deletions(-)
 
-diff --git a/cxl/json.c b/cxl/json.c
-index 5066d3bed13f8fcc36ab8f0ea127685c246d94d7..dcd3cc28393faf7e8adf299a857531ecdeaac50a 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -1147,7 +1147,7 @@ void util_cxl_mappings_append_json(struct json_object *jregion,
- struct json_object *util_cxl_region_to_json(struct cxl_region *region,
- 					     unsigned long flags)
- {
--	enum cxl_decoder_mode mode = cxl_region_get_mode(region);
-+	enum cxl_region_mode mode = cxl_region_get_region_mode(region);
- 	const char *devname = cxl_region_get_devname(region);
- 	struct json_object *jregion, *jobj;
- 	u64 val;
-@@ -1174,8 +1174,8 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
- 			json_object_object_add(jregion, "size", jobj);
- 	}
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index 40598a08b9f4840f79e3ab43f62f412d8b2136ed..d5c3558aacecb08d7f5754fdcc77d6e743560601 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -553,11 +553,20 @@ struct cxl_region *cxl_region_get_next(struct cxl_region *region);
  
--	if (mode != CXL_DECODER_MODE_NONE) {
--		jobj = json_object_new_string(cxl_decoder_mode_name(mode));
-+	if (mode != CXL_REGION_MODE_NONE) {
-+		jobj = json_object_new_string(cxl_region_mode_name(mode));
- 		if (jobj)
- 			json_object_object_add(jregion, "type", jobj);
- 	}
-diff --git a/cxl/region.c b/cxl/region.c
-index 207cf2d003148992255c715f286bc0f38de2ca84..527bd6708b162815068a95ddb360fce3914347de 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -49,7 +49,8 @@ struct parsed_params {
- 	int argc;
- 	const char **argv;
- 	struct cxl_decoder *root_decoder;
--	enum cxl_decoder_mode mode;
-+	enum cxl_decoder_mode decoder_mode;
-+	enum cxl_region_mode region_mode;
- 	bool enforce_qos;
- };
- 
-@@ -301,19 +302,28 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
- 		return -ENXIO;
- 	p->num_memdevs = json_object_array_length(p->memdevs);
- 
-+	p->region_mode = CXL_REGION_MODE_NONE;
- 	if (param.type) {
--		p->mode = cxl_decoder_mode_from_ident(param.type);
--		if (p->mode == CXL_DECODER_MODE_RAM && param.uuid) {
-+		p->region_mode = cxl_region_mode_from_ident(param.type);
-+		if (p->region_mode == CXL_REGION_MODE_RAM && param.uuid) {
- 			log_err(&rl,
- 				"can't set UUID for ram / volatile regions");
- 			goto err;
- 		}
--		if (p->mode == CXL_DECODER_MODE_NONE) {
-+		if (p->region_mode == CXL_REGION_MODE_NONE) {
- 			log_err(&rl, "unsupported type: %s\n", param.type);
- 			goto err;
- 		}
--	} else {
--		p->mode = CXL_DECODER_MODE_PMEM;
-+	}
+ ===== REGION: Attributes
+ ----
++enum cxl_region_mode {
++	CXL_REGION_MODE_NONE = CXL_DECODER_MODE_NONE,
++	CXL_REGION_MODE_MIXED = CXL_DECODER_MODE_MIXED,
++	CXL_REGION_MODE_PMEM = CXL_DECODER_MODE_PMEM,
++	CXL_REGION_MODE_RAM = CXL_DECODER_MODE_RAM,
++};
++const char *cxl_region_mode_name(enum cxl_region_mode mode);
++enum cxl_region_mode cxl_region_mode_from_ident(const char *ident);
++enum cxl_region_mode cxl_region_get_region_mode(struct cxl_region *region);
 +
-+	switch (p->region_mode) {
-+	case CXL_REGION_MODE_RAM:
-+		p->decoder_mode = CXL_DECODER_MODE_RAM;
-+		break;
-+	case CXL_REGION_MODE_PMEM:
-+	default:
-+		p->decoder_mode = CXL_DECODER_MODE_PMEM;
-+		break;
- 	}
+ int cxl_region_get_id(struct cxl_region *region);
+ const char *cxl_region_get_devname(struct cxl_region *region);
+ void cxl_region_get_uuid(struct cxl_region *region, uuid_t uu);
+ unsigned long long cxl_region_get_size(struct cxl_region *region);
+-enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region);
+ unsigned long long cxl_region_get_resource(struct cxl_region *region);
+ unsigned int cxl_region_get_interleave_ways(struct cxl_region *region);
+ unsigned int cxl_region_get_interleave_granularity(struct cxl_region *region);
+@@ -576,8 +585,12 @@ int cxl_region_clear_all_targets(struct cxl_region *region);
+ int cxl_region_decode_commit(struct cxl_region *region);
+ int cxl_region_decode_reset(struct cxl_region *region);
+ struct daxctl_region *cxl_region_get_daxctl_region(struct cxl_region *region);
+-----
  
- 	if (param.size) {
-@@ -410,7 +420,7 @@ static void collect_minsize(struct cxl_ctx *ctx, struct parsed_params *p)
- 		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
- 		u64 size = 0;
++DEPRECATED:
++
++enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region);
++
++----
+ A region's resource attribute is the Host Physical Address at which the region's
+ address space starts. The region's address space is a subset of the parent root
+ decoder's address space.
+@@ -601,6 +614,9 @@ where its properties can be interrogated by daxctl. The helper
+ cxl_region_get_daxctl_region() returns an 'struct daxctl_region *' that
+ can be used with other libdaxctl APIs.
  
--		switch(p->mode) {
-+		switch(p->decoder_mode) {
- 		case CXL_DECODER_MODE_RAM:
- 			size = cxl_memdev_get_ram_size(memdev);
- 			break;
-@@ -446,7 +456,7 @@ static int create_region_validate_qos_class(struct parsed_params *p)
- 			json_object_array_get_idx(p->memdevs, i);
- 		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
++Regions now have a mode distinct from decoders.  cxl_region_get_mode() is
++deprecated in favor of cxl_region_get_region_mode().
++
+ include::../../copyright.txt[]
  
--		if (p->mode == CXL_DECODER_MODE_RAM)
-+		if (p->decoder_mode == CXL_DECODER_MODE_RAM)
- 			qos_class = cxl_memdev_get_ram_qos_class(memdev);
- 		else
- 			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
-@@ -475,7 +485,7 @@ static int validate_decoder(struct cxl_decoder *decoder,
- 	const char *devname = cxl_decoder_get_devname(decoder);
- 	int rc;
+ SEE ALSO
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 63aa4ef3acdc2fb3c4ec6c13be5feb802e817d0d..35a40091e8f5813c1b3ef2ffb931c9ec584b02ad 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -431,10 +431,10 @@ CXL_EXPORT bool cxl_region_qos_class_mismatch(struct cxl_region *region)
+ 		if (!memdev)
+ 			continue;
  
--	switch(p->mode) {
-+	switch(p->decoder_mode) {
- 	case CXL_DECODER_MODE_RAM:
- 		if (!cxl_decoder_is_volatile_capable(decoder)) {
- 			log_err(&rl, "%s is not volatile capable\n", devname);
-@@ -512,10 +522,14 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
- 	 * default to pmem if both types are set, otherwise the single
- 	 * capability dominates.
- 	 */
--	if (cxl_decoder_is_volatile_capable(p->root_decoder))
--		p->mode = CXL_DECODER_MODE_RAM;
--	if (cxl_decoder_is_pmem_capable(p->root_decoder))
--		p->mode = CXL_DECODER_MODE_PMEM;
-+	if (cxl_decoder_is_volatile_capable(p->root_decoder)) {
-+		p->decoder_mode = CXL_DECODER_MODE_RAM;
-+		p->region_mode = CXL_REGION_MODE_RAM;
-+	}
-+	if (cxl_decoder_is_pmem_capable(p->root_decoder)) {
-+		p->decoder_mode = CXL_DECODER_MODE_PMEM;
-+		p->region_mode = CXL_REGION_MODE_PMEM;
-+	}
+-		if (region->mode == CXL_DECODER_MODE_RAM) {
++		if (region->mode == CXL_REGION_MODE_RAM) {
+ 			if (root_decoder->qos_class != memdev->ram_qos_class)
+ 				return true;
+-		} else if (region->mode == CXL_DECODER_MODE_PMEM) {
++		} else if (region->mode == CXL_REGION_MODE_PMEM) {
+ 			if (root_decoder->qos_class != memdev->pmem_qos_class)
+ 				return true;
+ 		}
+@@ -619,9 +619,9 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ 
+ 	sprintf(path, "%s/mode", cxlregion_base);
+ 	if (sysfs_read_attr(ctx, path, buf) < 0)
+-		region->mode = CXL_DECODER_MODE_NONE;
++		region->mode = CXL_REGION_MODE_NONE;
+ 	else
+-		region->mode = cxl_decoder_mode_from_ident(buf);
++		region->mode = cxl_region_mode_from_ident(buf);
+ 
+ 	sprintf(path, "%s/modalias", cxlregion_base);
+ 	if (sysfs_read_attr(ctx, path, buf) == 0)
+@@ -748,11 +748,16 @@ CXL_EXPORT unsigned long long cxl_region_get_resource(struct cxl_region *region)
+ 	return region->start;
  }
  
- static int create_region_validate_config(struct cxl_ctx *ctx,
-@@ -685,14 +699,14 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 	if (size > max_extent)
- 		size = ALIGN_DOWN(max_extent, SZ_256M * p->ways);
+-CXL_EXPORT enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region)
++CXL_EXPORT enum cxl_region_mode cxl_region_get_region_mode(struct cxl_region *region)
+ {
+ 	return region->mode;
+ }
  
--	if (p->mode == CXL_DECODER_MODE_PMEM) {
-+	if (p->region_mode == CXL_REGION_MODE_PMEM) {
- 		region = cxl_decoder_create_pmem_region(p->root_decoder);
- 		if (!region) {
- 			log_err(&rl, "failed to create region under %s\n",
- 				param.root_decoder);
- 			return -ENXIO;
- 		}
--	} else if (p->mode == CXL_DECODER_MODE_RAM) {
-+	} else if (p->region_mode == CXL_REGION_MODE_RAM) {
- 		region = cxl_decoder_create_ram_region(p->root_decoder);
- 		if (!region) {
- 			log_err(&rl, "failed to create region under %s\n",
-@@ -714,7 +728,7 @@ static int create_region(struct cxl_ctx *ctx, int *count,
++CXL_EXPORT enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region)
++{
++	return (enum cxl_decoder_mode)cxl_region_get_region_mode(region);
++}
++
+ CXL_EXPORT unsigned int
+ cxl_region_get_interleave_ways(struct cxl_region *region)
+ {
+@@ -2700,7 +2705,7 @@ cxl_decoder_get_region(struct cxl_decoder *decoder)
+ }
  
- 	try(cxl_region, set_interleave_granularity, region, granularity);
- 	try(cxl_region, set_interleave_ways, region, p->ways);
--	if (p->mode == CXL_DECODER_MODE_PMEM) {
-+	if (p->region_mode == CXL_REGION_MODE_PMEM) {
- 		if (!param.uuid)
- 			uuid_generate(p->uuid);
- 		try(cxl_region, set_uuid, region, p->uuid);
-@@ -732,14 +746,14 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 			rc = -ENXIO;
- 			goto out;
- 		}
--		if (cxl_decoder_get_mode(ep_decoder) != p->mode) {
-+		if (cxl_decoder_get_mode(ep_decoder) != p->decoder_mode) {
- 			/*
- 			 * The cxl_memdev_find_decoder() helper returns a free
- 			 * decoder whose size has been checked for 0.
- 			 * Thus it is safe to change the mode here if needed.
- 			 */
- 			try(cxl_decoder, set_dpa_size, ep_decoder, 0);
--			try(cxl_decoder, set_mode, ep_decoder, p->mode);
-+			try(cxl_decoder, set_mode, ep_decoder, p->decoder_mode);
- 		}
- 		try(cxl_decoder, set_dpa_size, ep_decoder, size/p->ways);
- 		rc = cxl_region_set_target(region, i, ep_decoder);
+ static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
+-						    enum cxl_decoder_mode mode)
++						    enum cxl_region_mode mode)
+ {
+ 	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
+ 	char *path = decoder->dev_buf;
+@@ -2708,9 +2713,9 @@ static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
+ 	struct cxl_region *region;
+ 	int rc;
+ 
+-	if (mode == CXL_DECODER_MODE_PMEM)
++	if (mode == CXL_REGION_MODE_PMEM)
+ 		sprintf(path, "%s/create_pmem_region", decoder->dev_path);
+-	else if (mode == CXL_DECODER_MODE_RAM)
++	else if (mode == CXL_REGION_MODE_RAM)
+ 		sprintf(path, "%s/create_ram_region", decoder->dev_path);
+ 
+ 	rc = sysfs_read_attr(ctx, path, buf);
+@@ -2754,13 +2759,13 @@ static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
+ CXL_EXPORT struct cxl_region *
+ cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
+ {
+-	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_PMEM);
++	return cxl_decoder_create_region(decoder, CXL_REGION_MODE_PMEM);
+ }
+ 
+ CXL_EXPORT struct cxl_region *
+ cxl_decoder_create_ram_region(struct cxl_decoder *decoder)
+ {
+-	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_RAM);
++	return cxl_decoder_create_region(decoder, CXL_REGION_MODE_RAM);
+ }
+ 
+ CXL_EXPORT int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder)
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 0c155a40ad4765106f0eab1745281d462af782fe..17a660f508ad1e053af2992824535ccf7ce877b2 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -288,3 +288,8 @@ global:
+ 	cxl_memdev_trigger_poison_list;
+ 	cxl_region_trigger_poison_list;
+ } LIBCXL_7;
++
++LIBCXL_9 {
++global:
++	cxl_region_get_region_mode;
++} LIBECXL_8;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index b6cd910e93359b53cac34427acfe84c7abcb78b0..0f45be89b6a00477d13fb6d7f1906213a3073c48 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -171,7 +171,7 @@ struct cxl_region {
+ 	unsigned int interleave_ways;
+ 	unsigned int interleave_granularity;
+ 	enum cxl_decode_state decode_state;
+-	enum cxl_decoder_mode mode;
++	enum cxl_region_mode mode;
+ 	struct daxctl_region *dax_region;
+ 	struct kmod_module *module;
+ 	struct list_head mappings;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 0a5fd0e13cc24e0032d4a83d780278fbe0038d32..06b87a0924faafec6c80eca83ea7551d4e117256 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -303,6 +303,39 @@ int cxl_memdev_is_enabled(struct cxl_memdev *memdev);
+ 	for (endpoint = cxl_endpoint_get_first(port); endpoint != NULL;        \
+ 	     endpoint = cxl_endpoint_get_next(endpoint))
+ 
++enum cxl_region_mode {
++	CXL_REGION_MODE_NONE = CXL_DECODER_MODE_NONE,
++	CXL_REGION_MODE_MIXED = CXL_DECODER_MODE_MIXED,
++	CXL_REGION_MODE_PMEM = CXL_DECODER_MODE_PMEM,
++	CXL_REGION_MODE_RAM = CXL_DECODER_MODE_RAM,
++};
++
++static inline const char *cxl_region_mode_name(enum cxl_region_mode mode)
++{
++	static const char *names[] = {
++		[CXL_REGION_MODE_NONE] = "none",
++		[CXL_REGION_MODE_MIXED] = "mixed",
++		[CXL_REGION_MODE_PMEM] = "pmem",
++		[CXL_REGION_MODE_RAM] = "ram",
++	};
++
++	if (mode < CXL_REGION_MODE_NONE || mode > CXL_REGION_MODE_RAM)
++		mode = CXL_REGION_MODE_NONE;
++	return names[mode];
++}
++
++static inline enum cxl_region_mode
++cxl_region_mode_from_ident(const char *ident)
++{
++	if (strcmp(ident, "ram") == 0)
++		return CXL_REGION_MODE_RAM;
++	else if (strcmp(ident, "volatile") == 0)
++		return CXL_REGION_MODE_RAM;
++	else if (strcmp(ident, "pmem") == 0)
++		return CXL_REGION_MODE_PMEM;
++	return CXL_REGION_MODE_NONE;
++}
++
+ struct cxl_region;
+ struct cxl_region *cxl_region_get_first(struct cxl_decoder *decoder);
+ struct cxl_region *cxl_region_get_next(struct cxl_region *region);
+@@ -318,6 +351,8 @@ const char *cxl_region_get_devname(struct cxl_region *region);
+ void cxl_region_get_uuid(struct cxl_region *region, uuid_t uu);
+ unsigned long long cxl_region_get_size(struct cxl_region *region);
+ unsigned long long cxl_region_get_resource(struct cxl_region *region);
++enum cxl_region_mode cxl_region_get_region_mode(struct cxl_region *region);
++/* Deprecated: use cxl_region_get_region_mode() */
+ enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region);
+ unsigned int cxl_region_get_interleave_ways(struct cxl_region *region);
+ unsigned int cxl_region_get_interleave_granularity(struct cxl_region *region);
 
 -- 
 2.47.0
