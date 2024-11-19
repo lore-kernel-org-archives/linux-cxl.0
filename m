@@ -1,162 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F732E3EB;
-	Mon, 18 Nov 2024 23:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731972764; cv=none; b=M7avhWEpNKb8gbsrB4N2+EqYgnjDDxaVsnLiZgNuzCj2AC5DGzGdFbU4glAiDNiX/TFqW6f/I9tqpOJJP2Z8TsVOlWIs8Thm2r6f4+EtDEocRN2unFeHyEFa/aF9jz2n+dQ09Gf9uSfZGqKpCb5ybM80HMLaqWkRkk2ZSOHKA0k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731972764; c=relaxed/simple;
-	bh=3UdBLNl/rl20B2CgtKrISn3XLFGd5Aqq+qeFzU6+7tE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=clgNLfBRbjpZJCifg/5ZU5GD6AN2aZL+hY6iUstbAgZ9VHhQUazbakPijz9yG8fQRroa4za9mWLGhRu4XVZGolMPj//QPSj8T+gqvHsYXiWfWQLgHAk/uDcASXsXiY/kiWbnn/2mQHJZJtJATSQ8g+naU7eSAbWb0XjexoNpZ2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I2zKY5TQ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4148825;
+	Tue, 19 Nov 2024 00:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731976771; cv=fail; b=QXZMNuum9vbxKxfm7PEWQO2J14mgyd+klyPP+airbzr12sW8SuXD9rGELJTDJzXXImFWhD3gBHVKfcdRb6We9aUj6zS22csPK5ZmpfqmV1zRr+MfJmtqPXr0jKigEByMWsHDxCn0QXj39VGgU0q42kF3tzWrvpy6nud7HuEyzlA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731976771; c=relaxed/simple;
+	bh=uDMGYcL+XLWGKPyQMmwJ/zGDeZ8pWEQWxwuO+NpzWXg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dvokNX8hz7xRG72fIMhaPqk+km1w4i2Tc/+vsBIF5zLXs90ksqq7f+tvGlskZIqL0U0I5hlpg0GX/rxdqolFYvRAhQUA2QqmQ1O6QyssZI45adw1ch1ygdMBdfd4mG0bMOJ30kMNd5RHTsC6No7DziZOdlzttORwFrKS4td1bDk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Rt6Sx1dq; arc=fail smtp.client-ip=40.107.223.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I2zKY5TQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731972763; x=1763508763;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3UdBLNl/rl20B2CgtKrISn3XLFGd5Aqq+qeFzU6+7tE=;
-  b=I2zKY5TQh2hdk4zo0IN2Hz1yMb4o08nzq2f1tCHA/o1ZG8VLAJA17kvc
-   G2/wNt9olvX6tWMTt4HEIqrWHMkMSUTRxp/haGbdmUxyK/1LOk3/ckmWs
-   G6ruMqwq+Yh6Kp0h9yGTsFrBvEoDZYyuaaS5vAm/s9ujgB3uIcedv/0/t
-   tVVDbfBf0aTr5/K4Z+U+ciwD+pyHjLahbeUAI8aD9JNeN4aDSXMbjWlSe
-   1PSQ8VtXbdc1hCHdb2sETXhuu1xnqJOiy1AfY5949inPJsgj5dmKqfO35
-   vzLAdAby7Tpf78JQNwB7UdFIlFRfm9rXVtGAhspPcQmamzsy0LP4sNCNQ
-   Q==;
-X-CSE-ConnectionGUID: NUV28q2TT1u/zSqAr08cYA==
-X-CSE-MsgGUID: 0F7U07uIRg+VE37CJDxiyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11260"; a="43351499"
-X-IronPort-AV: E=Sophos;i="6.12,165,1728975600"; 
-   d="scan'208";a="43351499"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2024 15:32:41 -0800
-X-CSE-ConnectionGUID: pSm2zkgnTme4QUg/1tD37w==
-X-CSE-MsgGUID: 8cd1c+RwTe6T/Ze6FGs1wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,165,1728975600"; 
-   d="scan'208";a="90174107"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.254]) ([10.125.108.254])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2024 15:32:41 -0800
-Message-ID: <104f5fd2-2519-4497-9ebc-2ad17b415c2b@intel.com>
-Date: Mon, 18 Nov 2024 16:32:39 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Rt6Sx1dq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JTe6zpY6/aIEmuST3UZn65tK2zHvxRj0q0iuCz+7JmyuMz7SbOVBhIdgZCzZW+C57XCXFgMZv1VT/pA4ZF8zn4ZsV7HjqvXoouSt5Y96387pepdzJ8ToOJ2FMWqqhlpGNjC0/R8wBGIa3/jBG6jircQk88OCZWLj2rPOT9XE/TNTnMCTeP5n1qDrTBXMmXBZ+8rz+nIbVqDml9/BaOFDsfxczi1jAynZAz8JhEA5Fj4BDedN9YkYRL8eH4pdjGp1gp4paseCBecnhpFQj3ULxfPX+H06OHiV67M0uxivL5tSRLgq3yhM0hXQu2SmVEXxyPYb1oT4aPAjTJgfRsEglA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=npLRdjlj8mH6FrxgIHDG+pOwFOBIlycwrCsQ1xxMtfI=;
+ b=MwaZbvCZwRKIcTGasDAo30lcghdSlm0fj/JohZ6pzpcE1THD/kwVg/k8yuISvV17s/dmZyW4lpv3UHWY4LfL01l1luKvq7uw4TV8Pp7kliMH++iqYytcaCPPMFEy6X92+d+yJv0kEHsfee9UjaYfwLdrBRlBkrA9v04o5tlpNBJAaJ8PyHEa0MZ6oAHekRwtW2a4Amx2NgEzPXj2gqBy1bryMXMGQcP6PM7tfKOBwvqhaWiU9c7AFtZuAvKcKGo/BKifD9mc0YPP6Cbpixif7+CKbANynto5h+sz8aGpLzLIpQCRSid/OkCQNbv/WFOhnn6E57lNgxJ86xz47zYvBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.12) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=npLRdjlj8mH6FrxgIHDG+pOwFOBIlycwrCsQ1xxMtfI=;
+ b=Rt6Sx1dqd5LDPfLX0Rcp8vwjzIzspwdHg6PzP2912G3CTD5tG+o1qNn1Ntq9NCg1CaItotH8xSEKLW4DfBHijUld75kKkm9XM35Kb9cyLQDVz2tnc9ukvdLJYsjw+MIBVXT+NfYvmpAiInweRPcIyAILq1X5sKo/MUVS07mTNh4=
+Received: from DM6PR10CA0012.namprd10.prod.outlook.com (2603:10b6:5:60::25) by
+ SA0PR12MB7464.namprd12.prod.outlook.com (2603:10b6:806:24b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.22; Tue, 19 Nov
+ 2024 00:39:26 +0000
+Received: from DS1PEPF0001709B.namprd05.prod.outlook.com
+ (2603:10b6:5:60:cafe::ad) by DM6PR10CA0012.outlook.office365.com
+ (2603:10b6:5:60::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23 via Frontend
+ Transport; Tue, 19 Nov 2024 00:39:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.12)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.12 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.12; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.12) by
+ DS1PEPF0001709B.mail.protection.outlook.com (10.167.18.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8158.14 via Frontend Transport; Tue, 19 Nov 2024 00:39:26 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 18 Nov
+ 2024 18:39:24 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v3 0/7] acpi/ghes, cper, cxl: Process CXL CPER Protocol errors
+Date: Tue, 19 Nov 2024 00:39:08 +0000
+Message-ID: <20241119003915.174386-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 06/27] cxl: add function for type2 cxl regs setup
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-7-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241118164434.7551-7-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709B:EE_|SA0PR12MB7464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38d65fd4-84e5-4212-709c-08dd08329ec0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qEMwvRQL8Vzdlv7wwrtoYz5EC1o1tCPME6MRtTfKJR7bLRwOE1sGE5QcIz74?=
+ =?us-ascii?Q?suEql+0W/t+/tva/UUjmFHrU9Xll6p0gJsrTZ8zvm23MuqBQ0vFoPmFeMQ/k?=
+ =?us-ascii?Q?sVHXrKSfPRVBPYatMCWH5cROmnkOq/LA9wKoWOgTHMDUq3omBlY0IHGkqUIU?=
+ =?us-ascii?Q?8eJkruPXCjJc/Or3zIvxyK+slR6nh6n4on/Bn8uguKqzk5QeXC6NidAt164o?=
+ =?us-ascii?Q?yU5P3NqpA448tRsop3BifLtdjGnBCBfU6Zk4ynXlxVS+BvnZh8ZZp7VR/Gv/?=
+ =?us-ascii?Q?af/qxU+j81gJQuYhXmPUBjbDTGTabGONI3Sc+dEQB6SEvVBLlfopQPRjJ+9i?=
+ =?us-ascii?Q?QMqvXnvUYNhUHoKVu0UgEOp++pUcEcdJc++LIr0P8iV/zXPmgxFDagaVqfN7?=
+ =?us-ascii?Q?L4N4YKT49f6c21pJKZbflwJvIrPl1otAdOuzn9q5Ej+VUb5EPpvLDLVypTdW?=
+ =?us-ascii?Q?nUCI55RXwG+h7HgUUkSGKYr5IAjSR6Ra2tn5LTMZQ3Car8X0j/axCm21WM3U?=
+ =?us-ascii?Q?DRMICIL1rhY9ET3VSLBoCO640AJR0ylLksXzBvOJ/wHHBcOwAutiDRKzzOjZ?=
+ =?us-ascii?Q?4UzwnNCoFJmmEX6bMnblECklsv3NNL0VyV9SJ+xo/Y0xpv2o7d3Zd3b/RM2E?=
+ =?us-ascii?Q?3cIL/3U/3BQzMo3ZtKaoAWlr4mgVjmOHIFWsH9IuC9BGuja2qEAepBnVL+H9?=
+ =?us-ascii?Q?dOSiPq5tukn6X522C1tDh9MK5C4+22MD7fMWn93NYd1wcuPuXScI70hIbEeP?=
+ =?us-ascii?Q?13PRI5bP0VWp1PboLJKUiCxMGsEzdTexNsmzmK6HsIOv/aW+lGtaqI4LFhY2?=
+ =?us-ascii?Q?//oB4nUeMby+0eiRt8N44fa10V3aBIogLE76qMpzEiAiV5Nczg7HkCPL/o57?=
+ =?us-ascii?Q?KvDwlNQeRYjLPAr6H5lLbaPSQmhvByDMPMLy0QZyukWDGNlIeyvxepA0dY/A?=
+ =?us-ascii?Q?r3BorW7orkxcZPiokvSZx+hObO6RofNYZ18kJ4mmr5JjComtGlK2r4A+lMod?=
+ =?us-ascii?Q?DTU13vMEOssIeocUceT2RcZaNrjv3QpeLNnx24z4iU/QW4JtRKWdgy9BsQP+?=
+ =?us-ascii?Q?M9KODZVS75G+eucVlYYl3F6kdnyJZT410LAvX0DJO5z3JxTCesbAveejWQgL?=
+ =?us-ascii?Q?xcYAnG5qWWMSWtDURjyZqwWDhQTumkmw8+u9IAAVDR49wFD2mFAkValxkKq5?=
+ =?us-ascii?Q?fX87mp+sPbWLCkIBFPiAg2WvTqk2Pe5VU14nlpcbibb+QnM2R6OyyaE+C0Ek?=
+ =?us-ascii?Q?HOWLMMpBHDf+6mPIO4RlmQK93YnI+KbpDzRJZLaeN9CaAsJpSY7xLIANzqYL?=
+ =?us-ascii?Q?GZc4G+G07GHpzAfrLCaSs0FSZzpUsVyfxZbaIGkASSt7OkEIVysrVL0Paamn?=
+ =?us-ascii?Q?LHs0YxYbPdhVV9jpmV0da2mDcB4EAyxbOxZP416APnwiwNqDQORSLE9Dessd?=
+ =?us-ascii?Q?8SFHydaAZdQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.12;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:atlvpn-bp.amd.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2024 00:39:26.0183
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38d65fd4-84e5-4212-709c-08dd08329ec0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.12];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709B.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7464
 
+This patchset adds logging support for CXL CPER endpoint and port protocol
+errors.
 
+The first 5 patches update the existing codebase to support CXL CPER
+Protocol error reporting.
 
-On 11/18/24 9:44 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Create a new function for a type2 device initialising
-> cxl_dev_state struct regarding cxl regs setup and mapping.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+The last 2 patches introduce recognizing and reporting CXL CPER Protocol
+errors.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Should be based on top of:
+https://lore.kernel.org/linux-cxl/20241113215429.3177981-1-terry.bowman@amd.com
 
-> ---
->  drivers/cxl/core/pci.c | 47 ++++++++++++++++++++++++++++++++++++++++++
->  include/cxl/cxl.h      |  2 ++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index bfc5e96e3cb9..8b9aa2c578e1 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1096,6 +1096,53 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, CXL);
->  
-> +static int cxl_pci_setup_memdev_regs(struct pci_dev *pdev,
-> +				     struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_register_map map;
-> +	int rc;
-> +
-> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
-> +				cxlds->capabilities);
-> +	/*
-> +	 * This call returning a non-zero value is not considered an error since
-> +	 * these regs are not mandatory for Type2. If they do exist then mapping
-> +	 * them should not fail.
-> +	 */
-> +	if (rc)
-> +		return 0;
-> +
-> +	return cxl_map_device_regs(&map, &cxlds->regs.device_regs);
-> +}
-> +
-> +int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds)
-> +{
-> +	int rc;
-> +
-> +	rc = cxl_pci_setup_memdev_regs(pdev, cxlds);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
-> +				&cxlds->reg_map, cxlds->capabilities);
-> +	if (rc) {
-> +		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	if (!test_bit(CXL_CM_CAP_CAP_ID_RAS, cxlds->capabilities))
-> +		return rc;
-> +
-> +	rc = cxl_map_component_regs(&cxlds->reg_map,
-> +				    &cxlds->regs.component,
-> +				    BIT(CXL_CM_CAP_CAP_ID_RAS));
-> +	if (rc)
-> +		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_pci_accel_setup_regs, CXL);
-> +
->  int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
->  {
->  	int speed, bw;
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index ab243ab8024f..a88d3475e551 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -5,6 +5,7 @@
->  #define __CXL_H
->  
->  #include <linux/ioport.h>
-> +#include <linux/pci.h>
->  
->  enum cxl_resource {
->  	CXL_RES_DPA,
-> @@ -52,4 +53,5 @@ bool cxl_pci_check_caps(struct cxl_dev_state *cxlds,
->  			unsigned long *expected_caps,
->  			unsigned long *current_caps,
->  			bool is_subset);
-> +int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
->  #endif
+Link to v2:
+https://lore.kernel.org/linux-cxl/20241001005234.61409-1-Smita.KoralahalliChannabasappa@amd.com/
+
+Changes in v2 -> v3:
+[Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
+reusing existing workqueue which handles CXL CPER events.
+[Dan] Update function and struct names.
+[Ira] Don't define common function get_cxl_devstate().
+[Dan] Use switch cases rather than defining array of structures.
+[Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
+[Dan] Use pr_err_ratelimited().
+[Dan] Use AER_ severities directly. Don't define CXL_ severities.
+[Dan] Limit either to Device ID or Agent Info check.
+[Dan] Validate size of RAS field matches expectations.
+
+Changes in v2 -> v1:
+[Jonathan] Refactor code for trace support. Rename get_cxl_dev()
+to get_cxl_devstate().
+[Jonathan] Cleanups for get_cxl_devstate().
+[Alison, Jonathan]: Define array of structures for Device ID and Serial
+number comparison.
+[Dave] p_err -> rec/p_rec.
+[Jonathan] Remove pr_warn.
+
+Smita Koralahalli (7):
+  efi/cper, cxl: Prefix protocol error struct and function names with
+    cxl_
+  efi/cper, cxl: Make definitions and structures global
+  efi/cper, cxl: Remove cper_cxl.h
+  acpi/ghes, cxl: Rename cxl_cper_register_work to
+    cxl_cper_register_event_work
+  acpi/ghes, cxl: Refactor work registration functions to support
+    multiple workqueues
+  acpi/ghes, cper: Recognize and cache CXL Protocol errors
+  acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
+
+ drivers/acpi/apei/ghes.c        | 129 +++++++++++++++++++++++++++++---
+ drivers/cxl/core/pci.c          |  50 +++++++++++++
+ drivers/cxl/cxlpci.h            |   6 ++
+ drivers/cxl/pci.c               |  59 ++++++++++++++-
+ drivers/firmware/efi/cper.c     |   6 +-
+ drivers/firmware/efi/cper_cxl.c |  39 +---------
+ drivers/firmware/efi/cper_cxl.h |  66 ----------------
+ include/cxl/event.h             | 109 ++++++++++++++++++++++++++-
+ include/linux/cper.h            |   8 ++
+ 9 files changed, 351 insertions(+), 121 deletions(-)
+ delete mode 100644 drivers/firmware/efi/cper_cxl.h
+
+-- 
+2.17.1
 
