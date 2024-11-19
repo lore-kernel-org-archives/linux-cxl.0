@@ -1,179 +1,197 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2046.outbound.protection.outlook.com [40.107.244.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EF41CACED
-	for <linux-cxl@vger.kernel.org>; Tue, 19 Nov 2024 11:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732016591; cv=none; b=SfdpckukVChQ8WM59XYD2NCyfJPy5oV9f0mSyBG6qVfPRdFcII2MZpIu3G3NZ5Ka8uW2HYepjFZytwkT3a6cCCwlGLMOAdS8yPGBavkYd7adtZL8yUXzClRZ1nW2KyyeUCldaPFFZFCov7wk6ItWOaNRYMPvMcVeGPdtogcKyog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732016591; c=relaxed/simple;
-	bh=RwyJuCL/of/eSm/dxd4uiJybd8o2Hj1UvNRo/hpUm8E=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Obe2ao60e9Wqwxx5dMrnllXbLI12huWxEs5lSv7q32YGfk1+LRV8JEJ6q3q7855zFzu09425pdsPkG++X6YCK4XNsRG+ddMiBKQL6xtGBFtW3jiytVD91VBiZtsxAvEx4ZpdOU/g6WAW8m8fr8Vs0b7jZC0+WrllhE3klrinZbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xt2bG0wC0z6K6m4;
-	Tue, 19 Nov 2024 19:39:38 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 156AF140B18;
-	Tue, 19 Nov 2024 19:43:06 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 19 Nov
- 2024 12:43:05 +0100
-Date: Tue, 19 Nov 2024 11:43:04 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>, Borislav Petkov <bp@alien8.de>, Tony Luck
-	<tony.luck@intel.com>, James Morse <james.morse@arm.com>, Mauro Carvalho
- Chehab <mchehab@kernel.org>, "Robert Richter" <rric@kernel.org>
-Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support
- via fwctl
-Message-ID: <20241119114304.000031a4@huawei.com>
-In-Reply-To: <91a093f4-5975-48da-b9a4-5ee31153c1b2@intel.com>
-References: <20240718213446.1750135-1-dave.jiang@intel.com>
-	<20240729130528.0000139b@Huawei.com>
-	<91a093f4-5975-48da-b9a4-5ee31153c1b2@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCCF1CCEFA;
+	Tue, 19 Nov 2024 12:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732018868; cv=fail; b=qE+BFNUI0nKSFuUAaAUox8+/uTZly7aa6Q1M6yqsrKRR0abNgZr/ZcM6hhM84Qu+6q06/CS40ZYh04n9RdtbGgEPEilTMGERFQxZqUx87bo58+Za+IFFJNVYs6mLj92vjt/mMUMyWfGSgiOpDdwsgt4FXEalbe9rrOEnorckyA0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732018868; c=relaxed/simple;
+	bh=+1ZaOR21bnYpnSXlV18MpPkqaSuVaxLT2BPvkud9dts=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=e+kn4I+T59fEvSRm5bhOgnCKHPwNTf3qQoU8Vz/fl6AUry4EhYq2nfpU7JefyoX6YW9CMv4/kzDQ9esJMTsSf/Jk9xhYe3QFL1WIOEPdOpfR0W9c2f7chudmbAZi4NaWXRimec1aIh3NiqO8f0GOqTReLzVeRTluw8LxvUK0V+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=e9ZqbUg1; arc=fail smtp.client-ip=40.107.244.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="e9ZqbUg1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mALGRry3c3FHB8xTMEelTNEZDbPmID2dBMQGUrTwd0y2beU5jKXsYH7NFKcT2QCwhzN+qDrVuRrOsUCyxFik96grzYVEqHr+1pNrsSG4CVgVnrJ2dJ8jn0YAyEZr2hH/7q9XpEkTz5wZRiF1RO6WFmHHxgOt25dKh6XExgfaPE9UDy93RQqSsNQ9yt6tw/aJv+r0cKRvilecFzKqkb+edK2tfCI2ZAK50B5s2sUK8fzN65zQRcl63HYJWJ/b7rg3FcurV0blSSxAwnM9axJrsrbLaYwK10TjmUr1CL3ohmKV/dURZ1+Pkg9V+wp+gK7V6hXITLlnZUSxPZIqAl6ZBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3I/hIKApCa8GET+bAC2T9/nP427QaFyKTYtWv6Nk6uM=;
+ b=YmN9p4tvKlS88l2znDhUvKexIrYcEuBMnXNpymBImbTcOjP7awGwfunVMOYEmlOU84mX95JGKpANU8B9Ibq+ZA29MOMtxrv6V4Iklej625kk5HE2UrUpvMk/v7cuFy4TRsgDwiwwiASWKaGGxjaiugF6V95zw2EYY1BNstwhMqamE00uaUhNGo0LaRpfmMpf02AoUHOfIub0kV2Auv/iwRw/6x+AG4qIhLlyM+LbwLpEZHwhu+KoWt1IqPy4+u6HGhRsof+KON0pJqFuN4SLzW0pDzHoRO0bXsZghgJ4vtYSqrqF/HdLYW516kHa1v90gIwiWOx/fYHHXqul+WMYBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3I/hIKApCa8GET+bAC2T9/nP427QaFyKTYtWv6Nk6uM=;
+ b=e9ZqbUg1OvGdmWA/PgcRZtEleRdAqDIk0kOMaWSy6i54Tk5oIgEEF0qxR16a1Ic73kz1JIV2X2ykydiEpy3aEl9DvSaUlZX/m3KBIB7wKmu1kxlH1d9PejUwpeueldcry2eNM7hzF3QXTv/v42hafKjBSleprG2xIVLDKa8CIBg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DM4PR12MB6493.namprd12.prod.outlook.com (2603:10b6:8:b6::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8158.22; Tue, 19 Nov 2024 12:20:55 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8158.023; Tue, 19 Nov 2024
+ 12:20:55 +0000
+Message-ID: <081886d4-90a6-411d-a234-cba5d5e997ba@amd.com>
+Date: Tue, 19 Nov 2024 06:20:12 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/15] cxl/pci: Introduce PCIe helper functions
+ pcie_is_cxl() and pcie_is_cxl_port()
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com
+References: <20241113215429.3177981-1-terry.bowman@amd.com>
+ <20241113215429.3177981-4-terry.bowman@amd.com> <ZzYbHZvU_RFXZuk0@wunner.de>
+ <ffd740e5-235a-4b74-8bf9-91331b619a7f@amd.com> <ZzYq2GIUoD2kkUyK@wunner.de>
+ <e686016d-2670-4431-ad9d-3c189a48b1e4@amd.com> <ZzcKoOXTVVj3bTnE@wunner.de>
+ <f8fb0737-3450-4dcf-87a1-3b9f03ec94f2@amd.com> <Zzohn1nGk1-ZpMlc@wunner.de>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <Zzohn1nGk1-ZpMlc@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0174.namprd04.prod.outlook.com
+ (2603:10b6:806:125::29) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM4PR12MB6493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9aeffcf0-aa0e-4f59-cfe6-08dd08949dc4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cXc3b0o2RXVEZnl3TlJjWUJNejRXRFhGeEJuSHBSV05xOFhBK0pobzdpa0Z4?=
+ =?utf-8?B?Y3dpZzY4MHNWWUQ1RXUxOFlqTThhUC9zRGVmNnc5eWRzVWJYVHVGdkJ6cGo4?=
+ =?utf-8?B?SklqK1NyTklTcmdsWUFZMEQ1VXV4MWlTRkc5SGdndzBIOGxKZlExMEl2cjFK?=
+ =?utf-8?B?UVNVZTM4V3d6QTk2NkY2TTd4cko0U094WWYxSWxSU05yTHZNOVZzM0pldGM1?=
+ =?utf-8?B?dlJOVXFNZEVTZGZ1Q2xsU1VXVWJFNnUwbmpyOE5DYTRCZ1lGMjJRb21HWGti?=
+ =?utf-8?B?YVRPcXpESG9Ib0FCVmY4OGVlWkMrMVJFclNkYmVNU3FnQ21ZazZTeEwwWVRx?=
+ =?utf-8?B?cDU1OFMzMHI2Uk5ZNVRmbDJrZUNEY1JlSzdsSEdTQWxiUmorTVdFRUtMeTZa?=
+ =?utf-8?B?SUhKOFhnWmQ4QldRcE9uZHhObnpFOXdrT1daSkduV2J1dXRqbVQ0UzUzc042?=
+ =?utf-8?B?cmJYMTk0QmdNVHU4TVZYZFZlLzQ4WHFjQVJBUThmY2JISnQzOHE5TkJHRTZK?=
+ =?utf-8?B?ZkIrZDZsWWtWVTEvU21LQldneDgrKzVjVWJEM0dLRkV0SG1JSnp5SEYzU2lz?=
+ =?utf-8?B?bGZ6ZVRydVUyZ0gvY2krWUFYN1o2VkEvTG1NTmZQSEQyVmtuUGVHaVFtL0dJ?=
+ =?utf-8?B?a3J5OXFSLzk0NnZWZkp0SkRXQzA2Lzl4YUdpd3I3dGVBMFFlUGNQMGNML1Q4?=
+ =?utf-8?B?QVkzT2pxdG5KM2draU1QTFBJQVZSalFOb2QySVlMd2l5MVB2UytXUXpDM0Y2?=
+ =?utf-8?B?Y0NQb2Y3cDMyM2Eyc1I4QnRTTnhvNkJxcWxmNlkxR3FKSHBZdmVMaHhreWJo?=
+ =?utf-8?B?KzdYSVFyNkFFdXFjUXBqZEhNeU11cWw1YWN1dUduMWtYU3h1dVc2cytwd0FW?=
+ =?utf-8?B?MWE1bFJNNkNXT3RPVkVadWgxd3NqK1dkLytuVXQzTTFqeGJ6TDhSdCtlUXdj?=
+ =?utf-8?B?bjVOMS9PZWZaWDFuODl2WXNhQkhKdWdVWmtKWXRTSGVkZFUrbm1ZeDhnV0lp?=
+ =?utf-8?B?bExXRk9ib1pwMUVxY1l0STNhK2RpYXdEUGJ4V0k5WjVKcW5BcDNuNTFFdTU5?=
+ =?utf-8?B?VVkxQS80R0xycVhERlpGeWUydW5wRkRwVlQ0N2FrTUpHK0ZaVnRRd2xqOWk5?=
+ =?utf-8?B?d3NwSGJhcldZTENaQk01S0t1MmpveFVNUi9lVTVEY2tzRzBZZ3hCL1Q4UElt?=
+ =?utf-8?B?TVgzb0QrNUR6N0h3bzEzNHpQb3IyZ292ZndIZDZuQkgzY2hqdnR4SVY1bEVi?=
+ =?utf-8?B?RDRRQ2pPM1J0U0lRMFdUQkpLWWQ2UG16eFZsNTQ0b05ScGF2NXEyVFFqM2xk?=
+ =?utf-8?B?NlJpZkVlNG53bE9kK3NSY3pIZXhYaXZVU1d6TE0vaDZyZnFNOFVXMUVzeWZD?=
+ =?utf-8?B?Ym5Xa3Z5Z1B2UnZBZTczK0NzVjBWWFJEUjQyTEFMbXdVZTRnanlENm8zaHVp?=
+ =?utf-8?B?TEpYN0NVR3A3QWdkSExMWXN3dEtuMUFDSEM5KzlmTWVxTi9hdThxbEFQVjlm?=
+ =?utf-8?B?UllGcVJvOUxSQzJGOWtVYjBZNGhpeEhYMVFyZUJKTHZhQ2pZTXdHdlVLRThI?=
+ =?utf-8?B?TUFZcU1TaHp6cDcyNFR1T1Yrc21NSUlGMDJQTm1ZV2hobnVTUXJldmxzS3RG?=
+ =?utf-8?B?MFVTQ1VMTTh2aTFoNWx1U2Nrc3FJMW53ZWM5K0hveFppSFZEeHpmVEc5THBq?=
+ =?utf-8?B?U1FreVJNWjVaZ2VnL0MydXhjY1ZzY3FDZnYyZjY1WGZyTVdwam9MbmtoS0FD?=
+ =?utf-8?Q?tAdrFPbVqOP2r9mmas=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Tzg1K2dPYitOOHVOZDhXYVBOUTA5MEgvbE8rQzVqNkhBR2k3Zk4vWkxQQnNE?=
+ =?utf-8?B?a1dGOXBNK3lMb1UzQSs5bGlFMnl6WDMxaEtEdi8yREg1SUJSN2RFUTJXdERo?=
+ =?utf-8?B?Y3BmeVppcU1FQmZoWU83TlJwZjRYcVRXSG9TNm5MbWx6ZVNwcEF4Y3pmb2lG?=
+ =?utf-8?B?dE52RVFLUnlCdnRsMEgrUlJ5MVdoWjVUZ1hmdGFEWTdEdjVvUHA5cUFJZHVN?=
+ =?utf-8?B?bmtqbkgzTHJobFFRdE4wV2t0c3U4a3grZWtERUlkTWJjbzdoYTRqcHNTWlRZ?=
+ =?utf-8?B?RWRocHFNOXFRVlNYT3FSaE1kZ3JyengvYkZ4OWFyVmM5c0pGaVdla1JORENM?=
+ =?utf-8?B?ZkNZaENIUEdSTjRiOXJ1MjBRN1Y3RVhYUi9yVlF0WnNvN090K0VGbk5mb3pu?=
+ =?utf-8?B?UlNSeWRySVhjckxnSVhzeU9iMVpvd0lwZVMwMldKSzh4cDQ4K2xSRXdRekFF?=
+ =?utf-8?B?ZnNwNENtRU9SUkZUSnJSZjlmM3RoeTdXMnEwMndpcDVabzFSeitiMk1DaVJ4?=
+ =?utf-8?B?YkE3QWtxSnZSWm1XWXIwbzRSTGRqako3RllqaDM2Z3ZTTlpRZGFlSHcrQnVU?=
+ =?utf-8?B?Z2E0TUZrTzFQYzZVL1EwVnhxbGY1MGJBS0RDaDBEYVBzcmQ3Q3BLV3lqQ043?=
+ =?utf-8?B?MllWeUdUTXhEM2JyOG5kVlVCdjBjanZaUGE3OHpyNTJod2hFckFMT1FhUVBY?=
+ =?utf-8?B?TlhOQWJDWWUzM2M2aHR0cExTaCtuUStTeHhBN1VURTgzRXUwdU1LMTRhV3dD?=
+ =?utf-8?B?K2R3dEVqOHZkSEx3c3lBMjIzL2FzS0tlZ3h0UTYrSXpYUFlXK2VBLzJjQ3ZZ?=
+ =?utf-8?B?ZnRkVDhIL3ZCTzhDM1ZkeVZCSmxEallQK1lxcDdHSXRrbkgralNETHhJQ3p4?=
+ =?utf-8?B?ZTZJbU9qK2FDdVVURjRadjNJNWNJRGhEQTQxYUJlcm9qa1VyRWg4SVBBcHlS?=
+ =?utf-8?B?T2RsNVcwV2oyQmduK21UQ1ErUWY1YmtZT09HOHJROCtVQTl2K1NJdno3WkdZ?=
+ =?utf-8?B?K0VJcjBUMG1NV1RGWXVEK2xTcnJqYWV5elVqQXJacG02WFBvQk1tQWs2OUFU?=
+ =?utf-8?B?Z3NYMThXc2dEN1NMSDFielo0U1cwVGhjbzhrc2MrazVmeHlFQnM0aC9pc3Ns?=
+ =?utf-8?B?V0l4bnlpZkpia0RKTG5LSys5K0U1MXcrU0M5cWErSnJyd1JMakFpMzVjbWRR?=
+ =?utf-8?B?UHYrd29zVWdhU1Z5bGJwMHRERDJIRmhrN2R0U0NwUlVpOERKSmFKZEh6K0Ju?=
+ =?utf-8?B?RHFiRzBJb0tIV2k3TGFaMHhZVGl2WmlBT2Q1RTI0bjVqZVJwdmM0MHBJT052?=
+ =?utf-8?B?R251ei9wcnBReTV5M0lnS0RoM0ZEYTI4S3JHNzVHbm9BRWFlVDQzbTRXWC9Z?=
+ =?utf-8?B?RGlJR1pPRjNsbDNpTU5HemtMUWJXSGFMckkyYTgwZnFUL1psbnpLbElreldQ?=
+ =?utf-8?B?WUNudXR2eVpRQldNSWkyblNzS1JjUXB4ZUZ6MCs1TU5vbjVmaEJoQnRFWkhq?=
+ =?utf-8?B?a0hYZkpqWlg4VnpCUGhtQnp1R054KzdDMWwrYVBKaGVRTjdEZVc5WTZqWDEr?=
+ =?utf-8?B?QVZlTVN1Y2RCOTN1VHpzb21uNVlkRDNtQm1RNm00VStFbVJ0WjllMHV1ODRR?=
+ =?utf-8?B?NXhFZTE1c2FCR0RMSkFZSmo4bDJyaDRzaUVhaXNBN09aV2syT1drY0M3cXpD?=
+ =?utf-8?B?VlFsNkptdnRuWWxWdStXSVE4M1Nsa1B6NnBicks3dFZuTzJaSEY2VEljaytj?=
+ =?utf-8?B?ajg4bzUvdHBUVjdBM09ZWjBzandhQ0V6N25qTFdMRUZUNTRzWEtwalEyY0lw?=
+ =?utf-8?B?NkE4bWszaXNLT24vN1luYmZqYUVzVGhlMXVnRWxlSXpXREtOTzdJTDNjbmpQ?=
+ =?utf-8?B?cENwSGhsUFV4ZUl4RWl3ak1WcU1tOGc1R0RDYUlONkFHRnozZzN4K1dPSWtm?=
+ =?utf-8?B?YjB1U0g0UHRhSmsweWNuYStCSWJMand5UXJveWhvbnNGV1lBQ3pWVUxmY2lK?=
+ =?utf-8?B?Ykh1cG9IN3JINHQ5Z1JoRVZjUWdqK1RXc3VremVaRFU0N1crZmhGcWc0U0lX?=
+ =?utf-8?B?eWs5ZEVuNG9DUHVJS1dlZktZY0ZXc3B5b1h3TUZ3ZzhpczMzUThzSFpYNzJB?=
+ =?utf-8?Q?Zy1NN50q4ejxUY3ebWHwm5xb7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9aeffcf0-aa0e-4f59-cfe6-08dd08949dc4
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2024 12:20:55.2962
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nMkvXz4Df8mj97Sg3z9m9NhxokNOrYQyVESXp19xP8halq88MGb45UDZFDzElPFp+Y+814Z46sSTEArxUossVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6493
 
-On Tue, 12 Nov 2024 17:17:11 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
 
-> On 7/29/24 5:05 AM, Jonathan Cameron wrote:
-> > On Thu, 18 Jul 2024 14:32:18 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> This series add support for CXL feature commands using the FWCTL framework [1].
-> >> The code is untested and I'm looking for architectural and implementation feedback.
-> >> While CXL currently has a chardev for user ioctls to send some mailbox
-> >> commands to a memory device, the fwctl framework provides more security policies
-> >> that can be a potential vehicle to move CXL ioctl path to that.
-> >>
-> >> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
-> >> "Set Feature" commands are implemented. The "get" commands under the
-> >> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
-> >> on the effect of the feature. All mailbox commands for CXL provides an effects
-> >> table that describes the effects of a command when performed on the device.
-> >> For CXL features, there is also an effects field that describes the effects
-> >> a feature write operation has on the device per feature. The security policy
-> >> is checked against this feature specific effects field. Looking for discussion
-> >> on matching the CXL spec defined effects with the FWCTL security policy.  
-> > 
-> > Hi Dave,
-> > 
-> > Great to have this code.
-> > 
-> > My main concern is that, once a feature is exposed by fwctl, it becomes ABI.
-> > Even with the taint, does that mean we can't remove it later? We
-> > may well have userspace code using fwctl that will break kernel driver
-> > support.  
-> 
-> Maybe we can sanitize the return of the get features command on the kernel side and block what we don't want the user to see. That way we can theoretically "remove" things that's within the kernel's control right? 
 
-Hmm. That sort of works, though I think it still would conventionally be
-ABI breakage if we made a feature disappear between kernel versions.
+On 11/17/2024 11:02 AM, Lukas Wunner wrote:
+> On Fri, Nov 15, 2024 at 07:54:37AM -0600, Bowman, Terry wrote:
+>> On 11/15/2024 2:47 AM, Lukas Wunner wrote:
+>>> On Thu, Nov 14, 2024 at 11:07:26AM -0600, Bowman, Terry wrote:
+>>>> I will remove the "if (!pcie_is_cxl(dev))" block as you suggested.
+>>> Ah, this is meant as a speed-up.  Actually that makes sense,
+>>> so feel free to keep it.
+>>>
+>>> If you do remove it, I think you'll have to move the cxl_port_dvsec()
+>>> invocation up in the function, in front of the pci_pcie_type() checks.
+>>> The latter require that one first checks that the device is PCIe.
+>>> That's done implicitly by cxl_port_dvsec() because it returns 0 in
+>>> the non-PCIe case.  (Due to the "if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)"
+>>> check in pci_find_next_ext_capability().)
+>>>
+>>> Another idea would be to put a "if (!pcie_is_cxl(dev)) return 0;" speed-up
+>>> in cxl_port_dvsec() so that the other caller benefits from it as well.
+>> Ok, I'll look at adding the same pcie_is_cxl() call and check in
+>> cxl_port_devsec().
+> If you put "if (!pcie_is_cxl(dev)) return 0;" in cxl_port_devsec()
+> and move the call to cxl_port_devsec() in pcie_is_cxl_port() up in front
+> of the pci_pcie_type() checks, I think you won't need an additional
+> "!pcie_is_cxl(dev)" check in pcie_is_cxl_port().
+>
+> Thanks,
+>
+> Lukas
+Ok. I'll make that change.
 
-Hopefully we are find doing that in the corner case that we don't have
-visibility of a future need to remove a feature from what get feature
-reports.
-
-J
-> 
-> DJ
-> 
-> 
-> > 
-> > As you probably know, for the scrub control you are using as an example,
-> > there is an ongoing effort to generalize that across multiple subsystems.
-> > It's a convenient test as a simple get/set feature in CXL, so maybe
-> > I'm reading too much into that choice.
-> > 
-> > One piece of good feedback we got on that generalization effort was that
-> > this sort of RAS control should all be in one place (we were proposing
-> > a RAS control subsystem at the times, separate from EDAC). The key reason
-> > being to ensure it gets sufficient review by experts in the RAS aspects
-> > (rather than CXL or other implementation).
-> > 
-> > Shiju's latest series puts it all in /sys/bus/edac/
-> > https://lore.kernel.org/linux-cxl/20240726160556.2079-1-shiju.jose@huawei.com/T/#t
-> > 
-> > Even if we make the driver safe to someone else messing with the state under it
-> > (so basically make it stateless) we can't make the same guarantees for any
-> > user space code on top of that interface.  Can we rely on only one path ever
-> > being used? I'm not sure.
-> > 
-> > We could in theory decide to expose all the stuff proposed for the EDAC / rascontrol
-> > as fwctl only, but that's going to get nasty as next set of features we plan to
-> > implement are memory repair related and in at least some cases those require the
-> > memory to be offlined if you don't want nasty side effects. I don't think there
-> > will be appetite for that sort of thing via fwctl.
-> > 
-> > There are a bunch of other get/set features in the CXL spec and I expect to see
-> > more over time so I think this will be an ongoing discussion.
-> > 
-> > Jonathan
-> > 
-> > +CC Edac maintainers etc, as they may have views on using fwctl for this stuff.
-> > 
-> > 
-> >   
-> >>
-> >> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
-> >>
-> >> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
-> >>
-> >> ---
-> >>
-> >> Dave Jiang (13):
-> >>       cxl: Move mailbox related bits to the same context
-> >>       cxl: Fix comment regarding cxl_query_cmd() return data
-> >>       cxl: Refactor user ioctl command path from mds to mailbox
-> >>       cxl: Add Get Supported Features command for kernel usage
-> >>       cxl/test: Add Get Supported Features mailbox command support
-> >>       cxl: Add Get Feature command support
-> >>       cxl: Add Set Feature command support
-> >>       fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
-> >>       fwctl/cxl: Add support for get driver information
-> >>       fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
-> >>       fwctl/cxl: Add query commands software command for ->fw_rpc()
-> >>       cxl/test: Add Get Feature support to cxl_test
-> >>       cxl/test: Add Set Feature support to cxl_test
-> >>
-> >>  MAINTAINERS                  |   8 +
-> >>  drivers/cxl/core/core.h      |   9 +-
-> >>  drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
-> >>  drivers/cxl/core/memdev.c    |  78 +++++---
-> >>  drivers/cxl/cxlmem.h         | 141 +++------------
-> >>  drivers/cxl/pci.c            |  68 ++++---
-> >>  drivers/cxl/pmem.c           |  10 +-
-> >>  drivers/cxl/security.c       |  18 +-
-> >>  drivers/fwctl/Kconfig        |   9 +
-> >>  drivers/fwctl/Makefile       |   1 +
-> >>  drivers/fwctl/cxl/Makefile   |   4 +
-> >>  drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
-> >>  include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
-> >>  include/uapi/fwctl/cxl.h     |  92 ++++++++++
-> >>  include/uapi/fwctl/fwctl.h   |   1 +
-> >>  include/uapi/linux/cxl_mem.h |   3 +
-> >>  tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
-> >>  17 files changed, 1515 insertions(+), 275 deletions(-)  
-> >   
-> 
-> 
-
+Regards,
+Terry
