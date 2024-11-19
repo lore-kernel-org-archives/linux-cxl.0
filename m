@@ -1,149 +1,93 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B7414883F;
-	Tue, 19 Nov 2024 04:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8DE1C876F
+	for <linux-cxl@vger.kernel.org>; Tue, 19 Nov 2024 11:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731990323; cv=none; b=KcCW+LYzYPNGPmtMccMxES6Aux9dj+CSqr7mhYIOwk6304JdNZwERJXSuxrL2+9Fso95fnJFLcV2/ql/h818t1zr4Yzi0P0SFrWnFF05F8hLYUc93e0YV5o6hNmKnEGPw/8oI8JrmIshcqFbpXe81emc4cFdrSFJlc58s5J5l7s=
+	t=1732016511; cv=none; b=i492+AfFWtFJEXxGL6db5xjYzDukemroxbgENqjLn+wjoIerquAtOl2jFf7XjeHekpQ5hXpBYjHRUmjcYxUNAQJ6mkh/5DatYuECudcayz3q6ycQiH4IQX/IVfho24WLpgWuktAQeW9LBK0rlnxEQa7NPULAM3nVnS9EpWa27QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731990323; c=relaxed/simple;
-	bh=ZRevxrcorG7DNt0MLGoUwVY4NqN3vTro8V2wy1v5q54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a+CXNjvTUaIKmNdI3berxgaaJsNuA1fyyDHEeMyDzXsHXP+yDS5xE03XF/mRJqdlT3suZqeJVObNoJrknZhqh80SWhXGS3BzkynbdFZH5AtrLQytvQbTQYP34oJ2XAqUXI3e1LLbuUEpRjV8kA8EUT44KKiyQG2ZTM5JIgRrdUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hc0gzeO6; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hc0gzeO6"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-856e82a32bcso2142580241.1;
-        Mon, 18 Nov 2024 20:25:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731990321; x=1732595121; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lj0tB5qWB5eBVnJSIKjBHXelqo6byuXYMX77lezcMMw=;
-        b=Hc0gzeO6lTcdKzvajaOtzBnl9UcdxXPM0sMN6u2LRWWDOKzsrzayAYAEXvaebMfQrg
-         TB6stQgNhIf1odW/tjfiCxuHzuymOj9qlXe8U8vD7tzgte+EhobnRK9rKbIX2fhDtCdv
-         HK5BSLn3P22Xpr9nXyXCTQ8dhyhAKX9LgbNHc3X/HiamtVv+k+quC59rVpn/ptgarxVw
-         nQCk+ChjC0YRRZjv5B12PwMTul2NhekAP43gseWE+FhW3NZJ6R6qxdlS5zBgZ8wLMfAd
-         LyYDaN638g9/yZXFSPKX148j5O1g2OoByO1r2DaGpED6Q/3QibwcQOnHgkEuZYyUOwo5
-         9sYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731990321; x=1732595121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lj0tB5qWB5eBVnJSIKjBHXelqo6byuXYMX77lezcMMw=;
-        b=Ur2RSNhK2KpP8eO+S9A12C0zn7YY36r7dA6l9eLh/d3tdDLG7QISM2qNgtoovGHNuW
-         KEgvnyu52EMPAl6NsW5cm8jFtpHGi4XNb4xbedTC3Q2YFQUx3IOMA24C93CAE+YNiVYn
-         cC2Hu2G2Z86Gbwsl3lWsN3bOMVgqP+aTfF8Rf1GtDPUW7XrquJCs8+cRlMqGWtsFN5rE
-         SkzIcwSqieZ09neMNUyFjOhWwY/XeuLyhurxoRnjcK9Uk0nsjTgBiHagFuyywZlZmcTw
-         sPJBxDXR1NGmyd3kluS4nEYkFUuV9a+dIaql5HRciFlJwoh5mmEDMlu2KBnfwy1G21z4
-         5nAg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5c38jZZ/DCbeO0sYwucuVLmR7E5dCFHrh7Pwyu/MCXfgCHclrb0yjnwNrz/dfk6D4zY9lXDOEe1GfqY7P@vger.kernel.org, AJvYcCUdMNhXJJDZ9PbXrSxDvFw4ucbmESDGaigUbeLWBDpX2/iYvQFF52sQcswzBaB8KoUVyueTj/njgL1quT79RrY=@vger.kernel.org, AJvYcCVO1Usxthi44BPnVqiFO8MG03Rcx6+dlHyiRWfAKmqDcVa+9+xILc1LuZHPSmO9JiqPEpBSAMCknEg=@vger.kernel.org, AJvYcCWeFm5KRrHYjaCoPge6n2EQWEnJ61H8kQHezAH0oPhfQEg35OuE+80Pukm3HYf3sQBwZZAm9eeiLDlu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+8Kz4EiEHJ1ffaxx6k2KyW5dtswaodNzqioayGFxFqsRRU8vK
-	Z13TBVGkUXjOiRxoDbArp3QeYbM4KVYcARSMP5An1yBPKkGOetjkE7CXi6b1FpBJyvcMZn/O1Xc
-	eJw810SBh41jMIGEbMdqeUDxS0Gg=
-X-Google-Smtp-Source: AGHT+IG9cYL7X7lQrZvN9juAb1bSQkn5t3vl1U1eQFOkiscnlC3aPmlnuxF/hD8Suf18QUYmbd0PyLVmnPwfdDEyxqE=
-X-Received: by 2002:a05:6102:e12:b0:4a4:6fde:d1c5 with SMTP id
- ada2fe7eead31-4ad62b4da71mr15033196137.12.1731990320763; Mon, 18 Nov 2024
- 20:25:20 -0800 (PST)
+	s=arc-20240116; t=1732016511; c=relaxed/simple;
+	bh=+6lVw5fwdIMLqmPLToLC6DxFxua7ewSgSy7hUS8piTQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uU5NpdLQ/SXSfEoTc5bRGo1j11ZNC3dTGYF5MDVethnPhuXDtm/D1c6svadyINmTpm1iPyUQhhxgMTUTMh2giLacbF6ELkoNKzUyaZb23x249Xz1TqWWKW6EwtKNoEq9+CwEGsq8rjgPPkSOilC9mPU1v5++s0UO0ZuOqojmWBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xt2Yh4dtwz6K7KQ;
+	Tue, 19 Nov 2024 19:38:16 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 95307140C72;
+	Tue, 19 Nov 2024 19:41:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 19 Nov
+ 2024 12:41:43 +0100
+Date: Tue, 19 Nov 2024 11:41:42 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [RFC PATCH 10/13] fwctl/cxl: Add support for fwctl RPC command
+ to enable CXL feature commands
+Message-ID: <20241119114142.0000392a@huawei.com>
+In-Reply-To: <240c2264-b0f2-4e8b-b6e5-89c4317d0ba0@intel.com>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+	<20240718213446.1750135-11-dave.jiang@intel.com>
+	<20240729122907.0000540a@Huawei.com>
+	<240c2264-b0f2-4e8b-b6e5-89c4317d0ba0@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241115054616.1226735-1-alistair@alistair23.me>
- <20241115054616.1226735-4-alistair@alistair23.me> <6737d101993ba_5c832943d@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <6737d101993ba_5c832943d@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 19 Nov 2024 14:24:54 +1000
-Message-ID: <CAKmqyKPXo1KdTSVsEZSUt4Fj8gaWgg8XJzf6E+FsuaeMOdFv1w@mail.gmail.com>
-Subject: Re: [RFC 3/6] lib: rspdm: Initial commit of Rust SPDM
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Francis <alistair@alistair23.me>, lukas@wunner.de, Jonathan.Cameron@huawei.com, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, ojeda@kernel.org, 
-	tmgross@umich.edu, boqun.feng@gmail.com, benno.lossin@proton.me, 
-	a.hindborg@kernel.org, wilfred.mallawa@wdc.com, alex.gaynor@gmail.com, 
-	gary@garyguo.net, aliceryhl@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sat, Nov 16, 2024 at 8:54=E2=80=AFAM Dan Williams <dan.j.williams@intel.=
-com> wrote:
->
-> Alistair Francis wrote:
-> > This is the initial commit of the Rust SPDM library. It is based on and
-> > compatible with the C SPDM library in the kernel (lib/spdm).
-> >
-> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> [..]
-> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > index 690a2a38cb52..744d35d28dc7 100644
-> > --- a/drivers/pci/Kconfig
-> > +++ b/drivers/pci/Kconfig
-> > @@ -128,7 +128,7 @@ config PCI_CMA
-> >       select CRYPTO_SHA256
-> >       select CRYPTO_SHA512
-> >       select PCI_DOE
-> > -     depends on SPDM
-> > +     depends on SPDM || RSPDM
-> >       help
-> >         Authenticate devices on enumeration per PCIe r6.2 sec 6.31.
-> >         A PCI DOE mailbox is used as transport for DMTF SPDM based
-> > diff --git a/lib/Kconfig b/lib/Kconfig
-> > index 4db9bc8e29f8..a47650a6757c 100644
-> > --- a/lib/Kconfig
-> > +++ b/lib/Kconfig
-> > @@ -754,6 +754,23 @@ config SPDM
-> >         in .config.  Drivers selecting SPDM therefore need to also sele=
-ct
-> >         any algorithms they deem mandatory.
-> >
-> > +config RSPDM
-> > +     bool "Rust SPDM"
-> > +     select CRYPTO
-> > +     select KEYS
-> > +     select ASYMMETRIC_KEY_TYPE
-> > +     select ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> > +     select X509_CERTIFICATE_PARSER
-> > +     depends on SPDM =3D "n"
->
-> I trust these last 2 diff hunks never actually go upstream, right? I.e.
-> if the kernel has no SPDM today it should not plan to carry 2
-> implementations just for language differences.
->
-> I am not sure if that is already the plan, but the cover letter seemed
-> ambiguous with its "maintaining compatibility" statement. On one hand,
-> that does not make sense when this is brand new upstream code (i.e. C
-> version is not even in linux-next), and there are no chances for
-> regressions. Just embrace the attempt to be a Rust library for C
-> consumers or otherwise help the C version along.
->
-> However, if "maintain compatibility" means "make it easy for the
-> work-in-progress C-effort to switch dependencies", then that makes
-> sense and is worth clarifying in the next posting.
+On Wed, 13 Nov 2024 08:41:15 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-It is ambiguous, because I'm not really sure what the best approach is.
+> On 7/29/24 4:29 AM, Jonathan Cameron wrote:
+> > On Thu, 18 Jul 2024 14:32:28 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
+> >> to a device. The cxl fwctl driver will start by supporting the CXL
+> >> feature commands: Get Supported Features, Get Feature, and Set Feature.  
+> > 
+> > I'll come back to this in reply to the cover letter, but this is
+> > problematic because some of those features will almost certainly be
+> > covered by standard kernel drivers and if Set Feature is enabled
+> > those drivers will need to be hardened against the state mysteriously
+> > changing under them.  
+> 
+> Do we need to have an exclusive_features mask just like exclusive_cmds to block kernel managed features like RAS? That may be the best way to deal with things happening behind kernel's back.
 
-I think everyone agrees SPDM in the kernel is the way to go and there
-is a work in progress C implementation.
+Agreed. Something along those lines should work.
+My understandin is we are fine 'breaking' backwards compatibility in
+FWCTL interfaces if we decide later that something isn't safe for it to access.
 
-I think that SPDM is the exact type of library that would be great to
-be written in Rust. My only worry is that Rust in the kernel is still
-experimental. I don't want to have a Rust SPDM implementation that
-isn't used or enabled by default because Rust is still experimental,
-hence the option of supporting the C or the Rust implementation.
+Mind you we can probably make a reasonable starting guess + restrict anything
+in the non-vendor ranges that isn't yet defined.
+Things get messier for defacto standards if any of them surface as we may
+have kernel support upstream for those in the future but not initially.
 
-If a Rust only implementation is acceptable, then I'm happy to switch
-this series to "make it easy for the work-in-progress C-effort to
-switch dependencies". At which point I can continue to support more
-SPDM features here and work on a better userspace interface as
-discussed at Plumbers.
+> 
+> > 
+> > This corner is the bit that worries me most about fwctl in general.
+> > Anyhow, one for the cover letter / policy discussion not deep
+> > in the patch series.  
+> 
+> Need to add a documentation patch and maybe we can put policies and rules in there?
 
-Alistair
+Even better.
+
+Jonathan
+
