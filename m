@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689841CF2B6;
-	Tue, 19 Nov 2024 15:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD751CEAB8
+	for <linux-cxl@vger.kernel.org>; Tue, 19 Nov 2024 15:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732031589; cv=none; b=RFdViUPoP6+otauH+7jDkVAWeanr+z/D0xg1Z0CmKcY7lW9eUH/gukM/fEwb0iVhW4EQBNy8ANns2IAaqCkFXF7znykHYHiGXkTSag2J1D/uAgsSsL/kM1dX45/+CYZ5loGkVQfzd6WUe/KmMYDqEGTIwk2BMI0kR+ZaWVEgexM=
+	t=1732031931; cv=none; b=jfSxyK7WSm4dTW+amI7icim9dhvBzoeG4mP3p+e8L3K/Z7Gn2YpxqMkXGIYhOnHJsOUvkhMdb+bR4ZnMvjkI5fNZ5XO+4CSaStErJXssTxykRCcZGL1YzY1FWhxd5Qc5UYal/9BcDG8XDCiULRWCDAie7gHXeAki6fkc6+12t7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732031589; c=relaxed/simple;
-	bh=kUezhExMJkBnLgvZ/DWF6MPKz29TCzkHmsuAPCYcnho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ka7YuBOp3BW1v0J6AQ/P3NKTbZYMrTc0jXFUSPSRTN60sYqeW3VLt3oPINW+z/MpqMhnzCtX40vdsbfrHdcYn1BhIFe4y491UjZLdE6XFZY/hPZL5MQiw/smIphmACq6PAzBA1Zu6S9OnXiKf3kSKAu2OXbTh37FtZy5SK3iIVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQYNS8vV; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1732031931; c=relaxed/simple;
+	bh=mf/WzZ52jyvjkJ2o77V6cq3+YOW81JzFgkRSDVjXiQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uikzFZF8NcJ1USE+EIjOrsORaJtyeFLaownvrWSmQSg2dulGsT764PCbI49Y7RkZf0UQT48zhu9/qZkKQVK1jkHTf14nb1NaKnjxfvZ+vLrN+3xOAgOTrKlMnGG3kNBbF+u2Cjd7zHFwxwo5Buwq+IAeZ3r7QepiAaKGeDQZZMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DRTFa/KW; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQYNS8vV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DRTFa/KW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732031587; x=1763567587;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=kUezhExMJkBnLgvZ/DWF6MPKz29TCzkHmsuAPCYcnho=;
-  b=eQYNS8vVWFtDYnTlL1Wn6znFfH5qF5US1kbHmCNeiA72nvcTmRs8+a5K
-   wjhBIqmpI3rkKO9Z5CryFkzYVOX430ky/gGBKe6fWvrVTIde2ydRhViNO
-   wfDU847iVRnmtqVIp8XV4YW4WhcRnm/oNQrmIzwjzRCstt7RrkVdQXbSM
-   t73KmrPmMDUhIoBKR7KIg6Lm/kjHTURafp8+VL696MB9gF8RF6RJkp53f
-   MzA4WTPg65T+EzDFTIa2CIwnpyXi8Rc7E48Ah9nTlWk4oT+VumplPUaCx
-   vTIJVdPjlXgtAA8QNz9gv+kvNydEH32cVXCTce6zvN7NcXb9m+AMcm3h9
+  t=1732031930; x=1763567930;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mf/WzZ52jyvjkJ2o77V6cq3+YOW81JzFgkRSDVjXiQQ=;
+  b=DRTFa/KWp6X8Xv5md8eNbXv+mJHcyS95xiXm02MLpHsl9n/5j3dAbwRR
+   Ld079WpObPKZHKcci756l0WH0Vg/yiv5JdsuujH5hpXzEfIGYh7qf+J+p
+   M6eVXCnpbuGmLFJb1U4Aa108Z9q3EXSqTDZIWMSdxL7nY72KrknQl7cj6
+   WzZ0+VTKWnoelsMVUtetXJn/RspwLgaaaaeJ2CXhrhR8mZDbshcRtfM88
+   lhlwJ8i0iRoGRAP0KSIBmc09+8/BmKp4/BuAnYl6J9QP29CFvbllONSvl
+   wSPGUNbijaRCNao9VIyhpJixTws46xkf7B6PsbyTp/qVlPeg40u2OgBso
    Q==;
-X-CSE-ConnectionGUID: HtFAUaUAS1ekk7VLJaGkPg==
-X-CSE-MsgGUID: sM6E06YQQIO7qlC3O+oSyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11261"; a="32191758"
+X-CSE-ConnectionGUID: /X3ymul1QMuiH1v8yfLnMA==
+X-CSE-MsgGUID: cJ9Z0o0RRPOs921hXQtFNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11261"; a="43426431"
 X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="32191758"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 07:53:06 -0800
-X-CSE-ConnectionGUID: vvfNnoJHTJmo4XRVh6O0Mg==
-X-CSE-MsgGUID: bR+bmpt4T8CJz7+K3s6VQQ==
+   d="scan'208";a="43426431"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 07:58:49 -0800
+X-CSE-ConnectionGUID: ep9RoI8wQniCPEhVD2Iq+w==
+X-CSE-MsgGUID: hgdzXgVrRD+UuGagxPZCdQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="89759152"
+   d="scan'208";a="90417012"
 Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.91]) ([10.125.109.91])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 07:53:05 -0800
-Message-ID: <bfd5e93f-6250-42d5-bf13-b0d57c26acfd@intel.com>
-Date: Tue, 19 Nov 2024 08:53:03 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 07:58:48 -0800
+Message-ID: <9d5a3615-ff0f-4615-882b-430221928a51@intel.com>
+Date: Tue, 19 Nov 2024 08:58:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,362 +52,153 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 03/27] cxl: add capabilities field to cxl_dev_state and
- cxl_port
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-4-alejandro.lucero-palau@amd.com>
- <0ca7d9ba-2d01-4678-b109-ca49091266f4@intel.com>
- <7c988754-fb25-bd8b-49bf-b0dae845e81c@amd.com>
+Subject: Re: [RFC PATCH 0/13] fwctl/cxl: Add CXL feature commands support via
+ fwctl
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com, Borislav Petkov <bp@alien8.de>,
+ Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter <rric@kernel.org>
+References: <20240718213446.1750135-1-dave.jiang@intel.com>
+ <20240729130528.0000139b@Huawei.com>
+ <91a093f4-5975-48da-b9a4-5ee31153c1b2@intel.com>
+ <20241119114304.000031a4@huawei.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <7c988754-fb25-bd8b-49bf-b0dae845e81c@amd.com>
+In-Reply-To: <20241119114304.000031a4@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 11/19/24 5:28 AM, Alejandro Lucero Palau wrote:
+On 11/19/24 4:43 AM, Jonathan Cameron wrote:
+> On Tue, 12 Nov 2024 17:17:11 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> On 11/18/24 22:52, Dave Jiang wrote:
+>> On 7/29/24 5:05 AM, Jonathan Cameron wrote:
+>>> On Thu, 18 Jul 2024 14:32:18 -0700
+>>> Dave Jiang <dave.jiang@intel.com> wrote:
+>>>   
+>>>> This series add support for CXL feature commands using the FWCTL framework [1].
+>>>> The code is untested and I'm looking for architectural and implementation feedback.
+>>>> While CXL currently has a chardev for user ioctls to send some mailbox
+>>>> commands to a memory device, the fwctl framework provides more security policies
+>>>> that can be a potential vehicle to move CXL ioctl path to that.
+>>>>
+>>>> For this RFC, the mailbox commands "Get Supported Features", "Get Feature", and
+>>>> "Set Feature" commands are implemented. The "get" commands under the
+>>>> FWCTL_RPC_DEBUG_READ_ONLY policy, the "set" command checks the policy depending
+>>>> on the effect of the feature. All mailbox commands for CXL provides an effects
+>>>> table that describes the effects of a command when performed on the device.
+>>>> For CXL features, there is also an effects field that describes the effects
+>>>> a feature write operation has on the device per feature. The security policy
+>>>> is checked against this feature specific effects field. Looking for discussion
+>>>> on matching the CXL spec defined effects with the FWCTL security policy.  
+>>>
+>>> Hi Dave,
+>>>
+>>> Great to have this code.
+>>>
+>>> My main concern is that, once a feature is exposed by fwctl, it becomes ABI.
+>>> Even with the taint, does that mean we can't remove it later? We
+>>> may well have userspace code using fwctl that will break kernel driver
+>>> support.  
 >>
->> On 11/18/24 9:44 AM, alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
->>>
->>> Type2 devices have some Type3 functionalities as optional like an mbox
->>> or an hdm decoder, and CXL core needs a way to know what an CXL accelerator
->>> implements.
->>>
->>> Add a new field to cxl_dev_state for keeping device capabilities as discovered
->>> during initialization. Add same field to cxl_port as registers discovery
->>> is also used during port initialization.
->>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> ---
->>>   drivers/cxl/core/port.c | 11 +++++++----
->>>   drivers/cxl/core/regs.c | 21 ++++++++++++++-------
->>>   drivers/cxl/cxl.h       |  9 ++++++---
->>>   drivers/cxl/cxlmem.h    |  2 ++
->>>   drivers/cxl/pci.c       | 10 ++++++----
->>>   include/cxl/cxl.h       | 30 ++++++++++++++++++++++++++++++
->>>   6 files changed, 65 insertions(+), 18 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->>> index af92c67bc954..5bc8490a199c 100644
->>> --- a/drivers/cxl/core/port.c
->>> +++ b/drivers/cxl/core/port.c
->>> @@ -749,7 +749,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
->>>   }
->>>     static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map,
->>> -                   resource_size_t component_reg_phys)
->>> +                   resource_size_t component_reg_phys, unsigned long *caps)
->>>   {
->>>       *map = (struct cxl_register_map) {
->>>           .host = host,
->>> @@ -763,7 +763,7 @@ static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map
->>>       map->reg_type = CXL_REGLOC_RBI_COMPONENT;
->>>       map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
->>>   -    return cxl_setup_regs(map);
->>> +    return cxl_setup_regs(map, caps);
->>>   }
->>>     static int cxl_port_setup_regs(struct cxl_port *port,
->>> @@ -772,7 +772,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
->>>       if (dev_is_platform(port->uport_dev))
->>>           return 0;
->>>       return cxl_setup_comp_regs(&port->dev, &port->reg_map,
->>> -                   component_reg_phys);
->>> +                   component_reg_phys, port->capabilities);
->>>   }
->>>     static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
->>> @@ -789,7 +789,8 @@ static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
->>>        * NULL.
->>>        */
->>>       rc = cxl_setup_comp_regs(dport->dport_dev, &dport->reg_map,
->>> -                 component_reg_phys);
->>> +                 component_reg_phys,
->>> +                 dport->port->capabilities);
->>>       dport->reg_map.host = host;
->>>       return rc;
->>>   }
->>> @@ -851,6 +852,8 @@ static int cxl_port_add(struct cxl_port *port,
->>>           port->reg_map = cxlds->reg_map;
->>>           port->reg_map.host = &port->dev;
->>>           cxlmd->endpoint = port;
->>> +        bitmap_copy(port->capabilities, cxlds->capabilities,
->>> +                CXL_MAX_CAPS);
->>>       } else if (parent_dport) {
->>>           rc = dev_set_name(dev, "port%d", port->id);
->>>           if (rc)
->>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
->>> index e1082e749c69..8287ec45b018 100644
->>> --- a/drivers/cxl/core/regs.c
->>> +++ b/drivers/cxl/core/regs.c
->>> @@ -4,6 +4,7 @@
->>>   #include <linux/device.h>
->>>   #include <linux/slab.h>
->>>   #include <linux/pci.h>
->>> +#include <cxl/cxl.h>
->>>   #include <cxlmem.h>
->>>   #include <cxlpci.h>
->>>   #include <pmu.h>
->>> @@ -36,7 +37,8 @@
->>>    * Probe for component register information and return it in map object.
->>>    */
->>>   void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->>> -                  struct cxl_component_reg_map *map)
->>> +                  struct cxl_component_reg_map *map,
->>> +                  unsigned long *caps)
->>>   {
->>>       int cap, cap_count;
->>>       u32 cap_array;
->>> @@ -84,6 +86,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->>>               decoder_cnt = cxl_hdm_decoder_count(hdr);
->>>               length = 0x20 * decoder_cnt + 0x10;
->>>               rmap = &map->hdm_decoder;
->>> +            *caps |= BIT(CXL_DEV_CAP_HDM);
->>>               break;
->>>           }
->>>           case CXL_CM_CAP_CAP_ID_RAS:
->>> @@ -91,6 +94,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->>>                   offset);
->>>               length = CXL_RAS_CAPABILITY_LENGTH;
->>>               rmap = &map->ras;
->>> +            *caps |= BIT(CXL_DEV_CAP_RAS);
->>>               break;
->>>           default:
->>>               dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
->>> @@ -117,7 +121,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
->>>    * Probe for device register information and return it in map object.
->>>    */
->>>   void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->>> -               struct cxl_device_reg_map *map)
->>> +               struct cxl_device_reg_map *map, unsigned long *caps)
->>>   {
->>>       int cap, cap_count;
->>>       u64 cap_array;
->>> @@ -146,10 +150,12 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->>>           case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
->>>               dev_dbg(dev, "found Status capability (0x%x)\n", offset);
->>>               rmap = &map->status;
->>> +            *caps |= BIT(CXL_DEV_CAP_DEV_STATUS);
->>>               break;
->>>           case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
->>>               dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
->>>               rmap = &map->mbox;
->>> +            *caps |= BIT(CXL_DEV_CAP_MAILBOX_PRIMARY);
->>>               break;
->>>           case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
->>>               dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
->>> @@ -157,6 +163,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->>>           case CXLDEV_CAP_CAP_ID_MEMDEV:
->>>               dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
->>>               rmap = &map->memdev;
->>> +            *caps |= BIT(CXL_DEV_CAP_MEMDEV);
->>>               break;
->>>           default:
->>>               if (cap_id >= 0x8000)
->>> @@ -421,7 +428,7 @@ static void cxl_unmap_regblock(struct cxl_register_map *map)
->>>       map->base = NULL;
->>>   }
->>>   -static int cxl_probe_regs(struct cxl_register_map *map)
->>> +static int cxl_probe_regs(struct cxl_register_map *map, unsigned long *caps)
->>>   {
->>>       struct cxl_component_reg_map *comp_map;
->>>       struct cxl_device_reg_map *dev_map;
->>> @@ -431,12 +438,12 @@ static int cxl_probe_regs(struct cxl_register_map *map)
->>>       switch (map->reg_type) {
->>>       case CXL_REGLOC_RBI_COMPONENT:
->>>           comp_map = &map->component_map;
->>> -        cxl_probe_component_regs(host, base, comp_map);
->>> +        cxl_probe_component_regs(host, base, comp_map, caps);
->>>           dev_dbg(host, "Set up component registers\n");
->>>           break;
->>>       case CXL_REGLOC_RBI_MEMDEV:
->>>           dev_map = &map->device_map;
->>> -        cxl_probe_device_regs(host, base, dev_map);
->>> +        cxl_probe_device_regs(host, base, dev_map, caps);
->>>           if (!dev_map->status.valid || !dev_map->mbox.valid ||
->>>               !dev_map->memdev.valid) {
->>>               dev_err(host, "registers not found: %s%s%s\n",
->>> @@ -455,7 +462,7 @@ static int cxl_probe_regs(struct cxl_register_map *map)
->>>       return 0;
->>>   }
->>>   -int cxl_setup_regs(struct cxl_register_map *map)
->>> +int cxl_setup_regs(struct cxl_register_map *map, unsigned long *caps)
->>>   {
->>>       int rc;
->>>   @@ -463,7 +470,7 @@ int cxl_setup_regs(struct cxl_register_map *map)
->>>       if (rc)
->>>           return rc;
->>>   -    rc = cxl_probe_regs(map);
->>> +    rc = cxl_probe_regs(map, caps);
->>>       cxl_unmap_regblock(map);
->>>         return rc;
->>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->>> index a2be05fd7aa2..e5f918be6fe4 100644
->>> --- a/drivers/cxl/cxl.h
->>> +++ b/drivers/cxl/cxl.h
->>> @@ -4,6 +4,7 @@
->>>   #ifndef __CXL_H__
->>>   #define __CXL_H__
->>>   +#include <cxl/cxl.h>
->>>   #include <linux/libnvdimm.h>
->>>   #include <linux/bitfield.h>
->>>   #include <linux/notifier.h>
->>> @@ -284,9 +285,9 @@ struct cxl_register_map {
->>>   };
->>>     void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->>> -                  struct cxl_component_reg_map *map);
->>> +                  struct cxl_component_reg_map *map, unsigned long *caps);
->>>   void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->>> -               struct cxl_device_reg_map *map);
->>> +               struct cxl_device_reg_map *map, unsigned long *caps);
->>>   int cxl_map_component_regs(const struct cxl_register_map *map,
->>>                  struct cxl_component_regs *regs,
->>>                  unsigned long map_mask);
->>> @@ -300,7 +301,7 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
->>>                      struct cxl_register_map *map, int index);
->>>   int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->>>                 struct cxl_register_map *map);
->>> -int cxl_setup_regs(struct cxl_register_map *map);
->>> +int cxl_setup_regs(struct cxl_register_map *map, unsigned long *caps);
->>>   struct cxl_dport;
->>>   resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->>>                          struct cxl_dport *dport);
->>> @@ -600,6 +601,7 @@ struct cxl_dax_region {
->>>    * @cdat: Cached CDAT data
->>>    * @cdat_available: Should a CDAT attribute be available in sysfs
->>>    * @pci_latency: Upstream latency in picoseconds
->>> + * @capabilities: those capabilities as defined in device mapped registers
->>>    */
->>>   struct cxl_port {
->>>       struct device dev;
->>> @@ -623,6 +625,7 @@ struct cxl_port {
->>>       } cdat;
->>>       bool cdat_available;
->>>       long pci_latency;
->>> +    DECLARE_BITMAP(capabilities, CXL_MAX_CAPS);
->>>   };
->>>     /**
->>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->>> index 2a25d1957ddb..4c1c53c29544 100644
->>> --- a/drivers/cxl/cxlmem.h
->>> +++ b/drivers/cxl/cxlmem.h
->>> @@ -428,6 +428,7 @@ struct cxl_dpa_perf {
->>>    * @serial: PCIe Device Serial Number
->>>    * @type: Generic Memory Class device or Vendor Specific Memory device
->>>    * @cxl_mbox: CXL mailbox context
->>> + * @capabilities: those capabilities as defined in device mapped registers
->>>    */
->>>   struct cxl_dev_state {
->>>       struct device *dev;
->>> @@ -443,6 +444,7 @@ struct cxl_dev_state {
->>>       u64 serial;
->>>       enum cxl_devtype type;
->>>       struct cxl_mailbox cxl_mbox;
->>> +    DECLARE_BITMAP(capabilities, CXL_MAX_CAPS);
->>>   };
->>>     static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
->>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->>> index 0b910ef52db7..528d4ca79fd1 100644
->>> --- a/drivers/cxl/pci.c
->>> +++ b/drivers/cxl/pci.c
->>> @@ -504,7 +504,8 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
->>>   }
->>>     static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->>> -                  struct cxl_register_map *map)
->>> +                  struct cxl_register_map *map,
->>> +                  unsigned long *caps)
->>>   {
->>>       int rc;
->>>   @@ -521,7 +522,7 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->>>       if (rc)
->>>           return rc;
->>>   -    return cxl_setup_regs(map);
->>> +    return cxl_setup_regs(map, caps);
->>>   }
->>>     static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->>> @@ -848,7 +849,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>>         cxl_set_dvsec(cxlds, dvsec);
->>>   -    rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
->>> +    rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map,
->>> +                cxlds->capabilities);
->>>       if (rc)
->>>           return rc;
->>>   @@ -861,7 +863,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>>        * still be useful for management functions so don't return an error.
->>>        */
->>>       rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
->>> -                &cxlds->reg_map);
->>> +                &cxlds->reg_map, cxlds->capabilities);
->>>       if (rc)
->>>           dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
->>>       else if (!cxlds->reg_map.component_map.ras.valid)
->>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->>> index 19e5d883557a..dcc9ec8a0aec 100644
->>> --- a/include/cxl/cxl.h
->>> +++ b/include/cxl/cxl.h
->>> @@ -12,6 +12,36 @@ enum cxl_resource {
->>>       CXL_RES_PMEM,
->>>   };
->>>   +/* Capabilities as defined for:
->>> + *
->>> + *    Component Registers (Table 8-22 CXL 3.1 specification)
->>> + *    Device Registers (8.2.8.2.1 CXL 3.1 specification)
->>> + */
->>> +
->>> +enum cxl_dev_cap {
->>> +    /* capabilities from Component Registers */
->>> +    CXL_DEV_CAP_RAS,
->>> +    CXL_DEV_CAP_SEC,
->> There are a few caps that does not seem to be used yet. Should we not bother defining them until they are being used?
+>> Maybe we can sanitize the return of the get features command on the kernel side and block what we don't want the user to see. That way we can theoretically "remove" things that's within the kernel's control right? 
 > 
+> Hmm. That sort of works, though I think it still would conventionally be
+> ABI breakage if we made a feature disappear between kernel versions.
 > 
-> Jonathan Cameron did suggest it as well, but I think, only when dealing with capabilities discovery and checking.
-> 
-> It is weird to me to mention the specs here and just list a few of the capabilities defined, but I will remove those not used yet if that is the general view.
+> Hopefully we are find doing that in the corner case that we don't have
+> visibility of a future need to remove a feature from what get feature
+> reports.
 
-I think that is perfectly fine not to define them all. In general we want to avoid "dead code" in the kernel if there's no usage yet. When a cap is needed later we can add intentionally. Given this is just enum that is not tied specifically to hardware positions, defining them later on when needed should not impact the current code. 
+Please take a look at the implementation in v2 and see if that would work. To me given that the features are discovery based and we filter the output of "get supported features" command via the kernel, user app should only issue command after verified via discovery and not hard code support.
 
 > 
-> 
->>> +    CXL_DEV_CAP_LINK,
->>> +    CXL_DEV_CAP_HDM,
->>> +    CXL_DEV_CAP_SEC_EXT,
->>> +    CXL_DEV_CAP_IDE,
->>> +    CXL_DEV_CAP_SNOOP_FILTER,
->>> +    CXL_DEV_CAP_TIMEOUT_AND_ISOLATION,
->>> +    CXL_DEV_CAP_CACHEMEM_EXT,
->>> +    CXL_DEV_CAP_BI_ROUTE_TABLE,
->>> +    CXL_DEV_CAP_BI_DECODER,
->>> +    CXL_DEV_CAP_CACHEID_ROUTE_TABLE,
->>> +    CXL_DEV_CAP_CACHEID_DECODER,
->>> +    CXL_DEV_CAP_HDM_EXT,
->>> +    CXL_DEV_CAP_METADATA_EXT,
->>> +    /* capabilities from Device Registers */
->>> +    CXL_DEV_CAP_DEV_STATUS,
->>> +    CXL_DEV_CAP_MAILBOX_PRIMARY,
->>> +    CXL_DEV_CAP_MEMDEV,
->>> +    CXL_MAX_CAPS = 32
->> This is changed to 64 in the next patch. Should it just be set to 64 here? I assume you just wanted a bitmap that's u64 long?
-> 
-> 
-> Oh, yes, I should change it here.
-> 
->  It was suggested to use CXL_MAX_CAPS for clearing/zeroing new allocated bitmaps instead of BITS_PER_TYPE(unsigned long) as in v4, and for that to work, CXL_MAX_CAPS needs to be defined taking into account the size of unsigned long, which is the minimum unit for BITMAP. For x86_64 that is 8 bytes. Otherwise the clearing would leave the upper 32 bits untouched.
-> 
-> Thanks!
-> 
-> 
+> J
+>>
 >> DJ
 >>
->>> +};
->>> +
->>>   struct cxl_dev_state *cxl_accel_state_create(struct device *dev);
->>>     void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
 >>
+>>>
+>>> As you probably know, for the scrub control you are using as an example,
+>>> there is an ongoing effort to generalize that across multiple subsystems.
+>>> It's a convenient test as a simple get/set feature in CXL, so maybe
+>>> I'm reading too much into that choice.
+>>>
+>>> One piece of good feedback we got on that generalization effort was that
+>>> this sort of RAS control should all be in one place (we were proposing
+>>> a RAS control subsystem at the times, separate from EDAC). The key reason
+>>> being to ensure it gets sufficient review by experts in the RAS aspects
+>>> (rather than CXL or other implementation).
+>>>
+>>> Shiju's latest series puts it all in /sys/bus/edac/
+>>> https://lore.kernel.org/linux-cxl/20240726160556.2079-1-shiju.jose@huawei.com/T/#t
+>>>
+>>> Even if we make the driver safe to someone else messing with the state under it
+>>> (so basically make it stateless) we can't make the same guarantees for any
+>>> user space code on top of that interface.  Can we rely on only one path ever
+>>> being used? I'm not sure.
+>>>
+>>> We could in theory decide to expose all the stuff proposed for the EDAC / rascontrol
+>>> as fwctl only, but that's going to get nasty as next set of features we plan to
+>>> implement are memory repair related and in at least some cases those require the
+>>> memory to be offlined if you don't want nasty side effects. I don't think there
+>>> will be appetite for that sort of thing via fwctl.
+>>>
+>>> There are a bunch of other get/set features in the CXL spec and I expect to see
+>>> more over time so I think this will be an ongoing discussion.
+>>>
+>>> Jonathan
+>>>
+>>> +CC Edac maintainers etc, as they may have views on using fwctl for this stuff.
+>>>
+>>>
+>>>   
+>>>>
+>>>> The code is based off of the latest FWCTL series [1] posted by Jason on top of v6.10.
+>>>>
+>>>> [1]: https://lore.kernel.org/linux-cxl/20240624161802.1b7c962d@kernel.org/T/#t
+>>>>
+>>>> ---
+>>>>
+>>>> Dave Jiang (13):
+>>>>       cxl: Move mailbox related bits to the same context
+>>>>       cxl: Fix comment regarding cxl_query_cmd() return data
+>>>>       cxl: Refactor user ioctl command path from mds to mailbox
+>>>>       cxl: Add Get Supported Features command for kernel usage
+>>>>       cxl/test: Add Get Supported Features mailbox command support
+>>>>       cxl: Add Get Feature command support
+>>>>       cxl: Add Set Feature command support
+>>>>       fwctl/cxl: Add driver for CXL mailbox for handling CXL features commands
+>>>>       fwctl/cxl: Add support for get driver information
+>>>>       fwctl/cxl: Add support for fwctl RPC command to enable CXL feature commands
+>>>>       fwctl/cxl: Add query commands software command for ->fw_rpc()
+>>>>       cxl/test: Add Get Feature support to cxl_test
+>>>>       cxl/test: Add Set Feature support to cxl_test
+>>>>
+>>>>  MAINTAINERS                  |   8 +
+>>>>  drivers/cxl/core/core.h      |   9 +-
+>>>>  drivers/cxl/core/mbox.c      | 607 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+>>>>  drivers/cxl/core/memdev.c    |  78 +++++---
+>>>>  drivers/cxl/cxlmem.h         | 141 +++------------
+>>>>  drivers/cxl/pci.c            |  68 ++++---
+>>>>  drivers/cxl/pmem.c           |  10 +-
+>>>>  drivers/cxl/security.c       |  18 +-
+>>>>  drivers/fwctl/Kconfig        |   9 +
+>>>>  drivers/fwctl/Makefile       |   1 +
+>>>>  drivers/fwctl/cxl/Makefile   |   4 +
+>>>>  drivers/fwctl/cxl/cxl.c      | 274 ++++++++++++++++++++++++++++
+>>>>  include/linux/cxl/mailbox.h  | 175 ++++++++++++++++++
+>>>>  include/uapi/fwctl/cxl.h     |  92 ++++++++++
+>>>>  include/uapi/fwctl/fwctl.h   |   1 +
+>>>>  include/uapi/linux/cxl_mem.h |   3 +
+>>>>  tools/testing/cxl/test/mem.c | 292 +++++++++++++++++++++++++++++-
+>>>>  17 files changed, 1515 insertions(+), 275 deletions(-)  
+>>>   
+>>
+>>
+> 
 
