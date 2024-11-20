@@ -1,260 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2056.outbound.protection.outlook.com [40.107.236.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64DF762F7;
-	Wed, 20 Nov 2024 17:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732122965; cv=none; b=ESomZzRA7Qh+1INm3Dntk5SeMkNSU2XkV0HGjZP6pWb4BiFNd4MCr3M0ls/L4KybxBrZC9qqAHsOKVlO+pxvUruq/GOyXLfoXHo7wClXcw4VxBCSiVv+iKLfLyn4qAI+vgNOF6JPUKBc8opd/+mGahTuGBvnXUqKdHs7ei48wHk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732122965; c=relaxed/simple;
-	bh=FuXUjzZrOK3Oo5713C/mQ/5VHWIoRWxN+NW2E1aO92A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UI0hhmMQhamBfMfGV7jnaWFJLVLQ2NQKFypmwqPe+OXIDi/uTfVkoFohLfoFww3U9cIgMlLYZf+VrNCAgBQZmHh3d2ULt32L3O2xPJ3P81e8rkjaUi2S5vITilQsc/vNHNwMss9XdXwBJxr6trQ1OYQqkXFwxELLhdkSvxB+QLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fx1RSNNo; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8192F2A
+	for <linux-cxl@vger.kernel.org>; Wed, 20 Nov 2024 17:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732125145; cv=fail; b=YyTTtZScSgVJJYPSvh8bWZZCU7WcgYQKB5Td/QEiNKiOu/4018bSBRTmxldMnuvyuIeO6rng7QkjZFHEZCvHCX2xo8bqlyXorslDcVVsNVQUqlOAVl4b0pekEG3UGeLouuKVyrPK1iu4V+RdDCxHn4Kuo4BgGUukCAga3zCKVTM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732125145; c=relaxed/simple;
+	bh=HzpZsxP42fqnJkafIdUuIwq0IQ6zd5d3OmpLLrEHhZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NNZw+rVjaQWYGGV9q7chrSUp7AKxNgAryrGSnCQP/TI4FxOo8P6lWZ8AsM9eanSqdpPb8gPPL3yxn1r75jtkiYdgfPD6CWj9sqv6XHqohEwfaQyQVYhk1psVQ62ioflN6jihBtiHqeS4MiDnh2jpJ6BwUjDoG7gZVBY/W2Fk+xo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=biFdYK+O; arc=fail smtp.client-ip=40.107.236.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fx1RSNNo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732122962; x=1763658962;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FuXUjzZrOK3Oo5713C/mQ/5VHWIoRWxN+NW2E1aO92A=;
-  b=fx1RSNNomvLTlhXMmUFLgOUfp6UoEnBoNOEGgYKPiMk0Ug2hUY1x7heJ
-   plk0LaukU9vSeU1PSIbGIO+AXc27a54VdkfgxTn47fWoJ5Du/kBPpiSWg
-   3oMutaL+AAwMjFU4p8huRF/f4i3tfOQhYqI27aBIV3h092T+NhEux/vCz
-   LP8G8rQD4++1GXZdi/peLas6X0KU/swDmRF4WJEiS+XZWQwqcHpfsaZG3
-   y4+3gHgq09EXxtiNvoR+gCVxvgolqiZCuB8cwXNuZ60Ls5xxm9Qd0b0XH
-   g+Qnzqnaky2ZEFwSqhDEDdfvNT5TzhA4nMCWrCUVmVIbaDjJ6PFVDsAIH
-   Q==;
-X-CSE-ConnectionGUID: /B1Rsf71St2ALjHnfpx0nQ==
-X-CSE-MsgGUID: W5Ns517aSrO1IYhqNJv8ig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="32351551"
-X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
-   d="scan'208";a="32351551"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 09:16:01 -0800
-X-CSE-ConnectionGUID: eDDg74a6SzyNNWPg8tgtsw==
-X-CSE-MsgGUID: ck18wf3WSaCQDlCni+vnmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,170,1728975600"; 
-   d="scan'208";a="94046472"
-Received: from bmurrell-mobl.amr.corp.intel.com (HELO [10.125.109.160]) ([10.125.109.160])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 09:16:00 -0800
-Message-ID: <1a788b8b-48b8-4853-906f-97af5952ce21@intel.com>
-Date: Wed, 20 Nov 2024 10:15:59 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="biFdYK+O"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vg6owTjrd/drrmgh6WTgqUbZ7qowxt+j0p+qWmlvXm+04YS78tc+jNofBGBMzCzWI9cVNoxjuVN8PjbjS9sxQxPpXqSUf1HIq3XZxOd7nCTgJ/e6QVLlwazmfpJmKLdSWUcBYNm/ehmJuJXodWgGrQLqMb4SDS8pW/fEhImDjclaK9sTA9TMYKuNO3b+61ajoXeXJsXzpdYD5OyVDwR4Jcu+iDnOV5+puQ8LC0n3sUlQjDuzhIziCbSkLVLu5M1cUbd94HlVamWMpMlEHP/+80ZcNdaT6VK9HdVyu7tmtGuEe8yvO1wcGaBHhtXpUW6kMZNxfiYgbRBOf83gFXiKIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3Mh0OshI24RVjLnOejswxaXkeaIZU5NU3C3/A31eRac=;
+ b=b5Bv5O1bMdeqmKirmFfw4auwkXQM49CxvGwQzGru3/SdLGG18ZuzOz+fac8lMFHv5ePt01xSOeDHB24zNA+zdEN4OJzGbXqAkXXlpFwX2+W6nggLZHzwynuvfq9tTyIAHgqdeSl7nIDAeF4rS1Wo0kIJz+CTUAi/eBtSrNpj6zSLxzoJbMEayOc9lS/tp1T88ILkjnQ+2f8hwDYMb5qPwyIJJQRKORezfzpsbref/QlfUbxmdcWl0jlemODowR6sxXy3flnJlimOo//abEVAXpQb6ejOlWW6Y4//uJ748ZO/JXKLV5plfxFRa034LO0BjLiVEKuXXm6pqYDmARh7qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Mh0OshI24RVjLnOejswxaXkeaIZU5NU3C3/A31eRac=;
+ b=biFdYK+OodKi9ixvEqXBh2a4WzGafOCNsmpsUc1c3UvF8WTcWCHXNwGR76JYO8hq18x9nEMTXU51smQM/cL26KrFiVH/rQHrUYCkFavxLIXg4CEOVPscNa3ZzZvWXJOv09BoZk2OFcHma5yJ9IaH/R1oBj+jaOuy56sTxva2OJ6lkVrm3TSUbTSqkklo75PwPql1pjHaR37viHgSHa7fdIkBcpIPzMPmehqMXx0NqkNWGI8cdIAMabHDF/SALZZ/dbk+t15/CjkyRgzsISBqOhzUc4VJIFgJQtwcimnqgw4sFIocRUvbd3OJgSOAYERQDUw2G8eOkxM1bpv9At8zIQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN0PR12MB6344.namprd12.prod.outlook.com (2603:10b6:208:3d3::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23; Wed, 20 Nov
+ 2024 17:52:14 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8158.019; Wed, 20 Nov 2024
+ 17:52:14 +0000
+Date: Wed, 20 Nov 2024 13:52:13 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net, shiju.jose@huawei.com
+Subject: Re: [RFC PATCH v2 19/20] fwctl: Move fwctl documentation to its own
+ directory
+Message-ID: <20241120175213.GA876522@nvidia.com>
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20241115212745.869552-20-dave.jiang@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241115212745.869552-20-dave.jiang@intel.com>
+X-ClientProxiedBy: BL1P223CA0011.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::16) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/27] cxl: prepare memdev creation for type2
-To: Alejandro Lucero Palau <alucerop@amd.com>, Zhi Wang <zhiw@nvidia.com>
-Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-14-alejandro.lucero-palau@amd.com>
- <75e8c64e-5d0c-4ebf-843e-e5e4dd0aa5ec@intel.com>
- <20241119220605.00005808@nvidia.com>
- <4fc8fd99-f349-47f9-8f5e-d4c393370ada@intel.com>
- <e2e4136c-87ec-7e4a-d576-8c0002572893@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <e2e4136c-87ec-7e4a-d576-8c0002572893@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB6344:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ab89276-6d03-47c4-14b4-08dd098c10c4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?G5T9KCCc9WkowCuQ7mBSeIBs9qFficqGbuVI8XhtB8gsqy+l45n3CsHSXXmh?=
+ =?us-ascii?Q?p4r8VzCx0g47e7PkPJjP/FozrOiHcyUAmpqtgLDQSVj+38QYHvNpy2KHwIUP?=
+ =?us-ascii?Q?+ltdlXsKkN+RLkBrkbhjt1N3sVdK2VPar8JqhL3a9R8CtFNn/I1YLNbvF1Xz?=
+ =?us-ascii?Q?7Hx60FVLBKO+RqlEodVuAy/eSZNTHD9pvhwoEMBcm6UTXcO4tv2Wbh6GIxcq?=
+ =?us-ascii?Q?PUnEP/YK2u9XB5fHExmZsCrQjKRJZzt5wmF9nKboZw8zOydr/j80vtwrzJBh?=
+ =?us-ascii?Q?gxDsGMrkG589RgeqKuef8tbQ7+a5OyyAuAfmPXCqnVtzBlfYsV5bFikIz1wf?=
+ =?us-ascii?Q?srtaNAXZ48Hz0jdC/9OQkRkJ5u4I8SmXbUbPj2FN3ieiUTuDgaSaVcRySywK?=
+ =?us-ascii?Q?V5jKtsPRGFMGdgY0obvEq/UiRqDcmhXCMLBvIDhHX9LUEE5W472GTV6E2r13?=
+ =?us-ascii?Q?UdgwmnHLDpiKoGBeUmOsLBEywo2O+AmOv2S891xF/nGHfPrxJj70YgZcl/jV?=
+ =?us-ascii?Q?Lxl4VxNBt0tS0rn9hq4HExuQB07xtb6FC43ZZqGgiqKCdIVCDo+M9b13MOJQ?=
+ =?us-ascii?Q?A6xTAb5Q8/H9SrNKqdVorh8URM4VGl4LjlYc3V4svC5FB8zXznV6vVJndHcX?=
+ =?us-ascii?Q?zl33fg9KcahVaI6GXxLTQTDxSevKhvTEyMi/NMBRyL+Lx+Ncr4sxP5RiEESY?=
+ =?us-ascii?Q?X7VYOoNVCxE5oQe8pM11W7XwuStEy/w/rC0QuvjO/h+drOoYV4Zuq87cnTeX?=
+ =?us-ascii?Q?+++mEpqd8zzQ2s7ARAo5MdZWUEJUg32asPvi1HLIbje7XJk5pQLtrA9LFIqV?=
+ =?us-ascii?Q?gLYulgpRQuldTbMjc71Oh4q2CuoT+qKgwObYE4v7fibDei7wNXU6aLu5Qnys?=
+ =?us-ascii?Q?hFKINVMFtRLQcBvpFAq5p/4gCxXG3lpVE6lfVgPZW8HV6DCp3p1HJ3IYLJbD?=
+ =?us-ascii?Q?XWoaSc7QIMRF3IDKyguizsAsdqVRzY3RtyHarST5YziZ2bpWDpC+f4CPy5Dv?=
+ =?us-ascii?Q?DxBoyn+chPpT7TVdrFXV4TVPQMm6u0xiAUg9Zbp7yONzkxayrmlVp+GlBk7D?=
+ =?us-ascii?Q?lyBskXD+Mi0mo+slZbA3cQN+h2CM1HvS3XZt7BecXk8zbGWe0TvUK8BRQ84b?=
+ =?us-ascii?Q?RIQTblX6pUBDbxD+n0tO+PyEFGOj9xG3yBwCYnm7t//HMhM3kgobowzFyjYb?=
+ =?us-ascii?Q?jP0ur/CG8HDyEhONADVozzB+fK4I/eDSyrdBXxre9dVqM3gJorC3hM7r5Yj9?=
+ =?us-ascii?Q?gKZUPUNvUb14Ex60lJY54JyLl7z1rqb/H4B83ReTYtQh2Ptnj82VUTyux9Yd?=
+ =?us-ascii?Q?ArEnpUmYhK/okeQT/iWMxIOM?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Q0W8FJXXPvnyXt08ccVlt5+0aZz3P+wu45vvd/T8mTFNfiWYow0UuQZDMCvr?=
+ =?us-ascii?Q?GJw9ntMiqRZQsczArVi3meZex22X/pX9e3kKgE2rSSshsD26C4Z6pxcIHtOi?=
+ =?us-ascii?Q?oHkvy1f4scGKHN2Z+FkyLlzpbAzvgQ6gLCVrQ6m0ovHf7QmYZvx8TZm8fh+O?=
+ =?us-ascii?Q?t83pxLX9HE40/2x/lUkZgR2BfgTtKxUWXMKWW4bPQHylcAPhXfmVbCqZ7Pkt?=
+ =?us-ascii?Q?ZZUskjQ8iOdAUnC1YHc2stmY1nGftQsa5LAu/OP/o/kiMmJzHDv+eyb+XzAk?=
+ =?us-ascii?Q?KfFpsfZttc/VsQ/RD2ZnWDye2i5fNQlvP5XNkKH895s4zNSltXRAGCcdLC6P?=
+ =?us-ascii?Q?pWuDftHQGKcQgXD0egyFaL8MNKeyNKeBPQCHtk2GMyK7fjF1SDjB/KpJcG1G?=
+ =?us-ascii?Q?OcOUYQOKyX2GTFPlDk0kFIs98UaJOo6rIWNuDM8TTTdVhLA9+GrmEy9/kQfh?=
+ =?us-ascii?Q?XzfFw72mgxo8g7eLBg5heS8oojfuiifwmCU8OvccnOV4JByaveGA7SztcTvz?=
+ =?us-ascii?Q?7iBlQYhVvJgtUn1uOJEZDhEnRjsn2SXNW8cWxgnye+vXppfj2bEYMEYeO2M7?=
+ =?us-ascii?Q?A+mSEbvIOjT0m42xNELIiTZ7PliWb6L/HNXMX8QVGg0uEZmGMvYCpApWeNdN?=
+ =?us-ascii?Q?ZnoOAutHzkkpzho3EUTuIS4AyS3/jU1gLrPinmj/CzM1ibxhBFw/TRKTTNoQ?=
+ =?us-ascii?Q?RZ8PRL11hPhnV7zluLLywU9FPrSDbiDTCkBuRNiX01H6zcT685w9NobUi3Yd?=
+ =?us-ascii?Q?srDs14iDXUQRqwji7/ZxZfkRRdpH7m+3hCYMGdXRWgZC5675QISLA71+VEjN?=
+ =?us-ascii?Q?Qh+yTvbg/FsLIoHrHvukf/c9lMsC8CIqIL8OUC1vW3kWXiKrr154HGhYDKUj?=
+ =?us-ascii?Q?DukxV8s7wyoBLmtkyC5hkckgubHe++SYoVgr2uStKAmIS2vir33fhCJkAS3m?=
+ =?us-ascii?Q?AxStqa/tltVceARbxXAbsc5kBsmltS5sBSVXtCwgnOd4wBcxXV86yH9p2qqs?=
+ =?us-ascii?Q?u7ZXO5RpmNRZ6vFIa+YyViaXrl5WJoYRalbriHWh4z7qG3OILcUpuaeMRqXq?=
+ =?us-ascii?Q?Hr3TN2m+/LmhGx1yGxUVa+P6aGZhfRFxLFJGRtPRvGa3+y1RC5ZuxosGvrhh?=
+ =?us-ascii?Q?W2bzLkn+5/uvFcm34M5YUe0UOZ+naCitXka/2fhXrs4/c9CS/b9BUjiq/DZt?=
+ =?us-ascii?Q?JFHNc1xj64chGFL5HnrydIqeRotpEZ4Xtv/HqhQt75TgcKYGM+u+UAAkl4Jf?=
+ =?us-ascii?Q?bTVbXDd7nO7iK1cIHrC0aogpYVlGdPwGLc+4qWEKBWL1G1uymcahJhINOEds?=
+ =?us-ascii?Q?aSmI9mlA8v8A4yXkNOG2K3SB4gq9n8HDjypFJPhHY7MDmRdm2h7y60UYkABx?=
+ =?us-ascii?Q?kswwWQHLWlEYoAiSRCObefG8tBDBRV9iWXYQynqnRgF1nEmWcfo6nSAJz2nx?=
+ =?us-ascii?Q?JJRlDdIFAQdK7jkI/tjNqQBlnUGfYPpGfTFCXZcg/jIfjKZcL95R8UdbH/mF?=
+ =?us-ascii?Q?S+iWSiBqbamr124m+RxMEZ/79cO5DKrJ9z2+HBpPv64fk4DGMLkfKsBD8fgs?=
+ =?us-ascii?Q?250Zhuo/Hv3VMhQqJlJMl6uWwrDVh7bjx6xin2BX?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ab89276-6d03-47c4-14b4-08dd098c10c4
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2024 17:52:13.9541
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QKX4l7P1Adqyhk68BK6LiML786Wun+XRkrXuYb7rE6hV25PobGETBuNki9gOvP1t
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6344
 
-
-
-On 11/20/24 6:57 AM, Alejandro Lucero Palau wrote:
+On Fri, Nov 15, 2024 at 02:25:52PM -0700, Dave Jiang wrote:
+> Move fwctl.rst to its own directory in prepraration for adding more
+> documentation.
 > 
-> On 11/19/24 21:27, Dave Jiang wrote:
->>
->> On 11/19/24 1:06 PM, Zhi Wang wrote:
->>> On Tue, 19 Nov 2024 11:24:44 -0700
->>> Dave Jiang <dave.jiang@intel.com> wrote:
->>>
->>>>
->>>> On 11/18/24 9:44 AM, alejandro.lucero-palau@amd.com wrote:
->>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>
->>>>> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device
->>>>> when creating a memdev leading to problems when obtaining
->>>>> cxl_memdev_state references from a CXL_DEVTYPE_DEVMEM type. This
->>>>> last device type is managed by a specific vendor driver and does
->>>>> not need same sysfs files since not userspace intervention is
->>>>> expected.
->>>>>
->>>>> Create a new cxl_mem device type with no attributes for Type2.
->>>>>
->>>>> Avoid debugfs files relying on existence of clx_memdev_state.
->>>>>
->>>>> Make devm_cxl_add_memdev accesible from a accel driver.
->>>>>
->>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>>>> ---
->>>>>   drivers/cxl/core/cdat.c   |  3 +++
->>>>>   drivers/cxl/core/memdev.c | 15 +++++++++++++--
->>>>>   drivers/cxl/core/region.c |  3 ++-
->>>>>   drivers/cxl/mem.c         | 25 +++++++++++++++++++------
->>>>>   include/cxl/cxl.h         |  2 ++
->>>>>   5 files changed, 39 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->>>>> index e9cd7939c407..192cff18ea25 100644
->>>>> --- a/drivers/cxl/core/cdat.c
->>>>> +++ b/drivers/cxl/core/cdat.c
->>>>> @@ -577,6 +577,9 @@ static struct cxl_dpa_perf
->>>>> *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxle struct
->>>>> cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds); struct
->>>>> cxl_dpa_perf *perf;
->>>>> +    if (!mds)
->>>>> +        return ERR_PTR(-EINVAL);
->>>>> +
->>>>>       switch (mode) {
->>>>>       case CXL_DECODER_RAM:
->>>>>           perf = &mds->ram_perf;
->>>>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->>>>> index d746c8a1021c..df31eea0c06b 100644
->>>>> --- a/drivers/cxl/core/memdev.c
->>>>> +++ b/drivers/cxl/core/memdev.c
->>>>> @@ -547,9 +547,17 @@ static const struct device_type
->>>>> cxl_memdev_type = { .groups = cxl_memdev_attribute_groups,
->>>>>   };
->>>>>   +static const struct device_type cxl_accel_memdev_type = {
->>>>> +    .name = "cxl_memdev",
->>>>> +    .release = cxl_memdev_release,
->>>>> +    .devnode = cxl_memdev_devnode,
->>>>> +};
->>>>> +
->>>>>   bool is_cxl_memdev(const struct device *dev)
->>>>>   {
->>>>> -    return dev->type == &cxl_memdev_type;
->>>>> +    return (dev->type == &cxl_memdev_type ||
->>>>> +        dev->type == &cxl_accel_memdev_type);
->>>>> +
->>>>>   }
->>>>>   EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, CXL);
->>>> Does type2 device also exports a CDAT?
->>>>
->>> Yes. Type2 can also export a CDAT.
->> Thanks! Probably should have the split out helpers regardless.
-> 
-> 
-> Maybe, but should not we wait until that is required? I did not see the need for adding them with this patchset.
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Sure. I think my concern is with paths that apply only to one type but not the other. If you have not encountered any then we can wait.
+I folded this into my tree
 
-DJ
-
-> 
-> 
->>>> I'm also wondering if we should have distinctive helpers:
->>>> is_cxl_type3_memdev()
->>>> is_cxl_type2_memdev()
->>>>
->>>> and is_cxl_memdev() is just calling those two helpers above.
->>>>
->>>> And if no CDAT is exported, we should change the is_cxl_memdev() to
->>>> is_cxl_type3_memdev() in read_cdat_data().
->>>>
->>>> DJ
->>>>
->>>>>   @@ -660,7 +668,10 @@ static struct cxl_memdev
->>>>> *cxl_memdev_alloc(struct cxl_dev_state *cxlds, dev->parent =
->>>>> cxlds->dev; dev->bus = &cxl_bus_type;
->>>>>       dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
->>>>> -    dev->type = &cxl_memdev_type;
->>>>> +    if (cxlds->type == CXL_DEVTYPE_DEVMEM)
->>>>> +        dev->type = &cxl_accel_memdev_type;
->>>>> +    else
->>>>> +        dev->type = &cxl_memdev_type;
->>>>>       device_set_pm_not_required(dev);
->>>>>       INIT_WORK(&cxlmd->detach_work, detach_memdev);
->>>>>   diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>>>> index dff618c708dc..622e3bb2e04b 100644
->>>>> --- a/drivers/cxl/core/region.c
->>>>> +++ b/drivers/cxl/core/region.c
->>>>> @@ -1948,7 +1948,8 @@ static int cxl_region_attach(struct
->>>>> cxl_region *cxlr, return -EINVAL;
->>>>>       }
->>>>>   -    cxl_region_perf_data_calculate(cxlr, cxled);
->>>>> +    if (cxlr->type == CXL_DECODER_HOSTONLYMEM)
->>>>> +        cxl_region_perf_data_calculate(cxlr, cxled);
->>>>>         if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->>>>>           int i;
->>>>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
->>>>> index a9fd5cd5a0d2..cb771bf196cd 100644
->>>>> --- a/drivers/cxl/mem.c
->>>>> +++ b/drivers/cxl/mem.c
->>>>> @@ -130,12 +130,18 @@ static int cxl_mem_probe(struct device *dev)
->>>>>       dentry = cxl_debugfs_create_dir(dev_name(dev));
->>>>>       debugfs_create_devm_seqfile(dev, "dpamem", dentry,
->>>>> cxl_mem_dpa_show);
->>>>> -    if (test_bit(CXL_POISON_ENABLED_INJECT,
->>>>> mds->poison.enabled_cmds))
->>>>> -        debugfs_create_file("inject_poison", 0200, dentry,
->>>>> cxlmd,
->>>>> -                    &cxl_poison_inject_fops);
->>>>> -    if (test_bit(CXL_POISON_ENABLED_CLEAR,
->>>>> mds->poison.enabled_cmds))
->>>>> -        debugfs_create_file("clear_poison", 0200, dentry,
->>>>> cxlmd,
->>>>> -                    &cxl_poison_clear_fops);
->>>>> +    /*
->>>>> +     * Avoid poison debugfs files for Type2 devices as they
->>>>> rely on
->>>>> +     * cxl_memdev_state.
->>>>> +     */
->>>>> +    if (mds) {
->>>>> +        if (test_bit(CXL_POISON_ENABLED_INJECT,
->>>>> mds->poison.enabled_cmds))
->>>>> +            debugfs_create_file("inject_poison", 0200,
->>>>> dentry, cxlmd,
->>>>> +
->>>>> &cxl_poison_inject_fops);
->>>>> +        if (test_bit(CXL_POISON_ENABLED_CLEAR,
->>>>> mds->poison.enabled_cmds))
->>>>> +            debugfs_create_file("clear_poison", 0200,
->>>>> dentry, cxlmd,
->>>>> +
->>>>> &cxl_poison_clear_fops);
->>>>> +    }
->>>>>         rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
->>>>>       if (rc)
->>>>> @@ -219,6 +225,13 @@ static umode_t cxl_mem_visible(struct kobject
->>>>> *kobj, struct attribute *a, int n) struct cxl_memdev *cxlmd =
->>>>> to_cxl_memdev(dev); struct cxl_memdev_state *mds =
->>>>> to_cxl_memdev_state(cxlmd->cxlds);
->>>>> +    /*
->>>>> +     * Avoid poison sysfs files for Type2 devices as they rely
->>>>> on
->>>>> +     * cxl_memdev_state.
->>>>> +     */
->>>>> +    if (!mds)
->>>>> +        return 0;
->>>>> +
->>>>>       if (a == &dev_attr_trigger_poison_list.attr)
->>>>>           if (!test_bit(CXL_POISON_ENABLED_LIST,
->>>>>                     mds->poison.enabled_cmds))
->>>>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->>>>> index 6033ce84b3d3..5608ed0f5f15 100644
->>>>> --- a/include/cxl/cxl.h
->>>>> +++ b/include/cxl/cxl.h
->>>>> @@ -57,4 +57,6 @@ int cxl_pci_accel_setup_regs(struct pci_dev
->>>>> *pdev, struct cxl_dev_state *cxlds); int
->>>>> cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource
->>>>> type); int cxl_release_resource(struct cxl_dev_state *cxlds, enum
->>>>> cxl_resource type); void cxl_set_media_ready(struct cxl_dev_state
->>>>> *cxlds); +struct cxl_memdev *devm_cxl_add_memdev(struct device
->>>>> *host,
->>>>> +                       struct cxl_dev_state
->>>>> *cxlds); #endif
->>>>
-
+Thanks,
+Jason
