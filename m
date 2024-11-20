@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6D4187844;
-	Wed, 20 Nov 2024 09:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC022318;
+	Wed, 20 Nov 2024 09:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732095487; cv=none; b=D8HyyVn5L95bM3s5VrpT9ufhq8GwdDlQDChY/JDHL+RSwyNK9pQC5yeBcxDWYW6HDNhNLNXv47BxYdYKk9qzffnez/IS8zldhyqVqX7RiB1UUl78XlXTzKyESH/XedGsw6XxXcdJBhm4K+DLOEuQRZ+3ojG9OH92naQU2jjZH/g=
+	t=1732095488; cv=none; b=N2e7Oy29qTYIAYnW3265zXZEN4L80KVkrfRBU1UuyolObiqoq5000GCj6lHhgomcvFDvAm0VKshisOd2k7lFUgpx2v1xlP99zpHpumlishXJkhnKt9Cs/WAYJGkcv5uVhrYo3wUsbzIsQcvpCbpJFUnwABR6InN1ULc0MCPvbgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732095487; c=relaxed/simple;
-	bh=RQCpbnI2ElijDM2g3Sr2ukzpIOTf3Z4DZPbpNgbggmA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uM0XWx8kfh9tKIzW6hpS6kh4o5kkt13Usgp1D7Jh3iAqyACvAiWSvF6fc7V7cdeeLnxb604TV3hcPa14ALZ0C8PcPgJhnfEqzrgU7P7VDasZcf7jkvCy98jEdVUA+AA0+siJNcYiq+IJIHEp+Ab8BY75nTeEgbhzPFqlxnpY9vc=
+	s=arc-20240116; t=1732095488; c=relaxed/simple;
+	bh=DQQonO4vxiNzmGiFunpa9aMrIBX3gniqLkcw7eRQt5k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AFqdyA2Zwr2m2GCguV4KL+M0FMoct8f3eXEqdSKPrsd9+LWArpyYSYLVl7YfRvDBbl88wJv07VkwrZcIbBNhZyGFfpAK5oaRwqszBvLSyMTGBvvIij7l6kP4kytDpsjP0Fiw0YZu7FiR/J0UCvtegPrQIU7MxB3kpplJ81ECayw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xtbnl6Psjz6K977;
-	Wed, 20 Nov 2024 17:35:39 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xtbnp07M8z6K98W;
+	Wed, 20 Nov 2024 17:35:42 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 67B03140AB8;
-	Wed, 20 Nov 2024 17:37:56 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 84FD0140856;
+	Wed, 20 Nov 2024 17:37:58 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.247.212) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 20 Nov 2024 10:37:55 +0100
+ 15.1.2507.39; Wed, 20 Nov 2024 10:37:57 +0100
 From: <shiju.jose@huawei.com>
 To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
@@ -30,10 +31,12 @@ To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v4 0/6] Update Event Records to CXL spec rev 3.1
-Date: Wed, 20 Nov 2024 09:37:39 +0000
-Message-ID: <20241120093745.1847-1-shiju.jose@huawei.com>
+Subject: [PATCH v4 2/6] cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
+Date: Wed, 20 Nov 2024 09:37:41 +0000
+Message-ID: <20241120093745.1847-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20241120093745.1847-1-shiju.jose@huawei.com>
+References: <20241120093745.1847-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,62 +50,59 @@ X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add updates for the changes in CXL spec rev 3.1 in the CXL events
-records and CXL trace events implementation.
+Add Component Identifier formatting for CXL spec rev 3.1, Section
+8.2.9.2.1, Table 8-44.
 
-Notes:
-=====
-1. The number of decoded strings in TP_printk() caused parsing error when
-libtraceevent in userspace parses the CXL trace events, for rasdaemon.
-It was found that long decoded strings of field values in the TP_printk()
-caused the issue. As a solution, decoding of some fields in the TP_printk()
-are removed to accommodate the new fields. 
-Decoding of all these fields is added in the userspace tool rasdaemon.
+Examples for Component Identifier format in trace log,
 
-2. Verified with modified CXL error injection in QEMU CXL emulation and
-CXL mock test in kernel.(Thanks to Jonathan for verify with CXL mock test).
+validity_flags='CHANNEL|RANK|DEVICE|COMPONENT|COMPONENT PLDM FORMAT' \
+comp_id=03 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
+comp_id_pldm_valid_flags='PLDM Entity ID | Resource ID' \
+pldm_entity_id=74 c5 08 9a 1a 0b pldm_resource_id=fc d2 7e 2f \
 
-Shiju Jose (6):
-  cxl/events: Update Common Event Record to CXL spec rev 3.1
-  cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
-  cxl/events: Update General Media Event Record to CXL spec rev 3.1
-  cxl/events: Update DRAM Event Record to CXL spec rev 3.1
-  cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
-  cxl/test: Update test code for event records to CXL spec rev 3.1
+validity_flags='COMPONENT|COMPONENT PLDM FORMAT' \
+comp_id=02 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
+comp_id_pldm_valid_flags='Resource ID' \
+pldm_entity_id=0x00 pldm_resource_id=fc d2 7e 2f
 
-Changes:
-V3 -> V4
-1. Changes for the parsing error parsing error when libtraceevent in
-userspace parses the CXL trace events, for rasdaemon.
-It was found that long decoded strings of field values in the TP_printk()
-caused the issue, looks like due to buffer overflow/corruption.
-Increasing known buffer sizes in userspace and kernel did not help.
-As a solution, decoding of some fields in the TP_printk() are removed
-to accommodate the new fields.
-Decoding of these fields is added in the userspace tool rasdaemon.
+If the validity flags for component ID/component ID format or PLDM ID or
+resource ID are not set, then pldm_entity_id=0x00 or pldm_resource_id=0x00
+would be printed.
 
-V2 -> V3
-1. Changes for the feedbacks from Jonathan.
- - Added printing component Id format bit in show_valid_flags()
- - Modified parsing component ID in patch [2] and added logging
-   of raw comp-id, comp_id_pldm_flags, PLDM entity id and
-   PLDM resource id in patches 3 to 4.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/trace.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 7305974e2301..8e9d80e34a28 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -268,6 +268,23 @@ TRACE_EVENT(cxl_generic_event,
+ 	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
+ )
  
-V1 -> V2
-1. Changes for the feedbacks from Jonathan.
-  - Separate patch for Component Identifier formatting.
-  - Moved printing of event sub type after event type.
-  - For memory module event, rename sub_type to event_sub_type. 
-2. Changes for the feedbacks from Alison.
-  - Updated patch's subject
-  - Updated CXL test code for CXL spec rev 3.1 event records.
-3. Changed logic for Component Identifier formatting and other improvements.
-
- drivers/cxl/core/trace.h     | 233 ++++++++++++++++++++++++++---------
- include/cxl/event.h          |  28 +++--
- tools/testing/cxl/test/mem.c |  23 +++-
- 3 files changed, 217 insertions(+), 67 deletions(-)
-
++/*
++ * Component ID Format
++ * CXL 3.1 section 8.2.9.2.1; Table 8-44
++ */
++#define CXL_PLDM_COMPONENT_ID_ENTITY_VALID	BIT(0)
++#define CXL_PLDM_COMPONENT_ID_RES_VALID		BIT(1)
++
++#define show_pldm_entity_id(flags, valid_comp_id, valid_id_format, comp_id)	\
++	(flags & valid_comp_id && flags & valid_id_format) ?			\
++	(comp_id[0] & CXL_PLDM_COMPONENT_ID_ENTITY_VALID) ?			\
++	__print_hex(&comp_id[1], 6) : "0x00" : "0x00"
++
++#define show_pldm_resource_id(flags, valid_comp_id, valid_id_format, comp_id)	\
++	(flags & valid_comp_id && flags & valid_id_format) ?			\
++	(comp_id[0] & CXL_PLDM_COMPONENT_ID_RES_VALID) ?			\
++	__print_hex(&comp_id[7], 4) : "0x00" : "0x00"
++
+ /*
+  * General Media Event Record - GMER
+  * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
 -- 
 2.43.0
 
