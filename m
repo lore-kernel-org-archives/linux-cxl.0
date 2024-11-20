@@ -1,258 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7626913E03E;
-	Tue, 19 Nov 2024 21:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB74D18870C;
+	Wed, 20 Nov 2024 09:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732051665; cv=none; b=Jhd5ojnl58nM46SSxbQNr6yLvYQx1vyg6adfhcGKuTO8wz8YxozxTVHmSoTP7wYKD4AOKzFVpX62macUsyCYU5YgB4Xkj1sNKs9zXeNKNYm1/9HJ8INe78Fsu6JB2pzMF2V/XfSkhfeh/wVOXvBp/p5k8MtOf8hjBr3/jM6amOA=
+	t=1732095487; cv=none; b=cxfA44aUhynbxpi9Ve+U4WDUjtm5ZNmBtQYrpKQpCYY2CpKuUWoYnZ8KJm1zRIwPWBuJhViy7k1dzqBnasMSt7EQCIeSIM1CzPGjHidQTJAUjsDsNmRe+k6IVj3Jh9PH/8qk268w6PEYuw+syBucQMGrbpUjV2rnGUuSN21CDic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732051665; c=relaxed/simple;
-	bh=Cm62sIFdDCUNMhrU760Ga1bSuNxfhfVFdJRd5h69974=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TXsjEDOcsXvPUdXVoMinlU+lfrS0VXx+20V5QyzNvgBfoyEHVyYPfP3bwMFP7FTmYPDJzxsqw/IasER0ArKelUiFA8d74Z0zZZDwxWY+TrKCgQBVWM3W7sHxgu9YHKvO5s789452D/YwTsZdZgFdt51dpSn49E9o0L3Wze0Fyug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dgo6Wggf; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dgo6Wggf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732051664; x=1763587664;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Cm62sIFdDCUNMhrU760Ga1bSuNxfhfVFdJRd5h69974=;
-  b=Dgo6Wggf4FwVl5If4qdeCscv0X+DqAVzWVsVOaAPjadsL7vS4LjGHi7M
-   G4EfoQGlr//V3StTVnmoQozKjSjSOwt+949RZy/VQCCB6WVpTa+C3ngR+
-   jSmaUa6JajzLLJWPrFyuaSp15j6rLk0SUWfMQu+mACx79aAQXWwBskPOL
-   rHLJLaR/4RonDW0FKBNPJiV3ZgLqlPwAlCLxRj6wpaAA8s6BfOCmrO+N5
-   +uNGcwLyBSjhDfB18Onuz+DqawyvhOjTNCfISEpdhe3MjsJSXptBBCH41
-   dgo0ATtXg4oCxTd8iPKp2u5qOqBkc1rnSvfNXVoLaHWXqkNvNU8lrNyON
-   w==;
-X-CSE-ConnectionGUID: Z45/EsWaSu+Qd8W13EqM5w==
-X-CSE-MsgGUID: zwAua655TSuHv5YTnj//+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11261"; a="42593577"
-X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="42593577"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 13:27:43 -0800
-X-CSE-ConnectionGUID: X5gHo/HjTbS5v718jji1Kw==
-X-CSE-MsgGUID: QrusKK2HS4mhPuuv2l+hNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,166,1728975600"; 
-   d="scan'208";a="89685854"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.91]) ([10.125.109.91])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2024 13:27:42 -0800
-Message-ID: <4fc8fd99-f349-47f9-8f5e-d4c393370ada@intel.com>
-Date: Tue, 19 Nov 2024 14:27:41 -0700
+	s=arc-20240116; t=1732095487; c=relaxed/simple;
+	bh=gi9hlOJnVS6BZxdFvTjIfRcB1+u4kDNEiCcQxTI0IIE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NWSyr09Ejz1oj9BJ7rKslHr4VPnfWO4zcmzBHo51F0Og6S3xWcJgMaQhgPwvwD0H2FEEdf7OL2bXlnJ8Qp2JkcbH4MOeL76nYa5bumXW7CCLRC3qf7VuofQ24rqycqXFZs64b4uhCNjSsLDpuKlzFL/zbY8yEhSrFTq9mGzMF0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xtbnt0tR8z6K98c;
+	Wed, 20 Nov 2024 17:35:46 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D1D9140AB8;
+	Wed, 20 Nov 2024 17:38:02 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.247.212) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 20 Nov 2024 10:38:01 +0100
+From: <shiju.jose@huawei.com>
+To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<nifan.cxl@gmail.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v4 6/6] cxl/test: Update test code for event records to CXL spec rev 3.1
+Date: Wed, 20 Nov 2024 09:37:45 +0000
+Message-ID: <20241120093745.1847-7-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20241120093745.1847-1-shiju.jose@huawei.com>
+References: <20241120093745.1847-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/27] cxl: prepare memdev creation for type2
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, Alejandro Lucero <alucerop@amd.com>
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-14-alejandro.lucero-palau@amd.com>
- <75e8c64e-5d0c-4ebf-843e-e5e4dd0aa5ec@intel.com>
- <20241119220605.00005808@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241119220605.00005808@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
+From: Shiju Jose <shiju.jose@huawei.com>
 
+Update test code for General Media, DRAM, Memory Module Event
+Records to CXL spec rev 3.1.
 
-On 11/19/24 1:06 PM, Zhi Wang wrote:
-> On Tue, 19 Nov 2024 11:24:44 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->>
->>
->> On 11/18/24 9:44 AM, alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
->>>
->>> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device
->>> when creating a memdev leading to problems when obtaining
->>> cxl_memdev_state references from a CXL_DEVTYPE_DEVMEM type. This
->>> last device type is managed by a specific vendor driver and does
->>> not need same sysfs files since not userspace intervention is
->>> expected.
->>>
->>> Create a new cxl_mem device type with no attributes for Type2.
->>>
->>> Avoid debugfs files relying on existence of clx_memdev_state.
->>>
->>> Make devm_cxl_add_memdev accesible from a accel driver.
->>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> ---
->>>  drivers/cxl/core/cdat.c   |  3 +++
->>>  drivers/cxl/core/memdev.c | 15 +++++++++++++--
->>>  drivers/cxl/core/region.c |  3 ++-
->>>  drivers/cxl/mem.c         | 25 +++++++++++++++++++------
->>>  include/cxl/cxl.h         |  2 ++
->>>  5 files changed, 39 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->>> index e9cd7939c407..192cff18ea25 100644
->>> --- a/drivers/cxl/core/cdat.c
->>> +++ b/drivers/cxl/core/cdat.c
->>> @@ -577,6 +577,9 @@ static struct cxl_dpa_perf
->>> *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxle struct
->>> cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds); struct
->>> cxl_dpa_perf *perf; 
->>> +	if (!mds)
->>> +		return ERR_PTR(-EINVAL);
->>> +
->>>  	switch (mode) {
->>>  	case CXL_DECODER_RAM:
->>>  		perf = &mds->ram_perf;
->>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->>> index d746c8a1021c..df31eea0c06b 100644
->>> --- a/drivers/cxl/core/memdev.c
->>> +++ b/drivers/cxl/core/memdev.c
->>> @@ -547,9 +547,17 @@ static const struct device_type
->>> cxl_memdev_type = { .groups = cxl_memdev_attribute_groups,
->>>  };
->>>  
->>> +static const struct device_type cxl_accel_memdev_type = {
->>> +	.name = "cxl_memdev",
->>> +	.release = cxl_memdev_release,
->>> +	.devnode = cxl_memdev_devnode,
->>> +};
->>> +
->>>  bool is_cxl_memdev(const struct device *dev)
->>>  {
->>> -	return dev->type == &cxl_memdev_type;
->>> +	return (dev->type == &cxl_memdev_type ||
->>> +		dev->type == &cxl_accel_memdev_type);
->>> +
->>>  }
->>>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, CXL);
->>
->> Does type2 device also exports a CDAT?
->>
-> 
-> Yes. Type2 can also export a CDAT.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ tools/testing/cxl/test/mem.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-Thanks! Probably should have the split out helpers regardless.
-
-> 
->> I'm also wondering if we should have distinctive helpers:
->> is_cxl_type3_memdev()
->> is_cxl_type2_memdev()
->>
->> and is_cxl_memdev() is just calling those two helpers above. 
->>
->> And if no CDAT is exported, we should change the is_cxl_memdev() to
->> is_cxl_type3_memdev() in read_cdat_data(). 
->>
->> DJ
->>
->>>  
->>> @@ -660,7 +668,10 @@ static struct cxl_memdev
->>> *cxl_memdev_alloc(struct cxl_dev_state *cxlds, dev->parent =
->>> cxlds->dev; dev->bus = &cxl_bus_type;
->>>  	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
->>> -	dev->type = &cxl_memdev_type;
->>> +	if (cxlds->type == CXL_DEVTYPE_DEVMEM)
->>> +		dev->type = &cxl_accel_memdev_type;
->>> +	else
->>> +		dev->type = &cxl_memdev_type;
->>>  	device_set_pm_not_required(dev);
->>>  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
->>>  
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index dff618c708dc..622e3bb2e04b 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -1948,7 +1948,8 @@ static int cxl_region_attach(struct
->>> cxl_region *cxlr, return -EINVAL;
->>>  	}
->>>  
->>> -	cxl_region_perf_data_calculate(cxlr, cxled);
->>> +	if (cxlr->type == CXL_DECODER_HOSTONLYMEM)
->>> +		cxl_region_perf_data_calculate(cxlr, cxled);
->>>  
->>>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->>>  		int i;
->>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
->>> index a9fd5cd5a0d2..cb771bf196cd 100644
->>> --- a/drivers/cxl/mem.c
->>> +++ b/drivers/cxl/mem.c
->>> @@ -130,12 +130,18 @@ static int cxl_mem_probe(struct device *dev)
->>>  	dentry = cxl_debugfs_create_dir(dev_name(dev));
->>>  	debugfs_create_devm_seqfile(dev, "dpamem", dentry,
->>> cxl_mem_dpa_show); 
->>> -	if (test_bit(CXL_POISON_ENABLED_INJECT,
->>> mds->poison.enabled_cmds))
->>> -		debugfs_create_file("inject_poison", 0200, dentry,
->>> cxlmd,
->>> -				    &cxl_poison_inject_fops);
->>> -	if (test_bit(CXL_POISON_ENABLED_CLEAR,
->>> mds->poison.enabled_cmds))
->>> -		debugfs_create_file("clear_poison", 0200, dentry,
->>> cxlmd,
->>> -				    &cxl_poison_clear_fops);
->>> +	/*
->>> +	 * Avoid poison debugfs files for Type2 devices as they
->>> rely on
->>> +	 * cxl_memdev_state.
->>> +	 */
->>> +	if (mds) {
->>> +		if (test_bit(CXL_POISON_ENABLED_INJECT,
->>> mds->poison.enabled_cmds))
->>> +			debugfs_create_file("inject_poison", 0200,
->>> dentry, cxlmd,
->>> +
->>> &cxl_poison_inject_fops);
->>> +		if (test_bit(CXL_POISON_ENABLED_CLEAR,
->>> mds->poison.enabled_cmds))
->>> +			debugfs_create_file("clear_poison", 0200,
->>> dentry, cxlmd,
->>> +
->>> &cxl_poison_clear_fops);
->>> +	}
->>>  
->>>  	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
->>>  	if (rc)
->>> @@ -219,6 +225,13 @@ static umode_t cxl_mem_visible(struct kobject
->>> *kobj, struct attribute *a, int n) struct cxl_memdev *cxlmd =
->>> to_cxl_memdev(dev); struct cxl_memdev_state *mds =
->>> to_cxl_memdev_state(cxlmd->cxlds); 
->>> +	/*
->>> +	 * Avoid poison sysfs files for Type2 devices as they rely
->>> on
->>> +	 * cxl_memdev_state.
->>> +	 */
->>> +	if (!mds)
->>> +		return 0;
->>> +
->>>  	if (a == &dev_attr_trigger_poison_list.attr)
->>>  		if (!test_bit(CXL_POISON_ENABLED_LIST,
->>>  			      mds->poison.enabled_cmds))
->>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->>> index 6033ce84b3d3..5608ed0f5f15 100644
->>> --- a/include/cxl/cxl.h
->>> +++ b/include/cxl/cxl.h
->>> @@ -57,4 +57,6 @@ int cxl_pci_accel_setup_regs(struct pci_dev
->>> *pdev, struct cxl_dev_state *cxlds); int
->>> cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource
->>> type); int cxl_release_resource(struct cxl_dev_state *cxlds, enum
->>> cxl_resource type); void cxl_set_media_ready(struct cxl_dev_state
->>> *cxlds); +struct cxl_memdev *devm_cxl_add_memdev(struct device
->>> *host,
->>> +				       struct cxl_dev_state
->>> *cxlds); #endif
->>
->>
-> 
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 71916e0e1546..94e7534581d8 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -401,6 +401,10 @@ struct cxl_test_gen_media gen_media = {
+ 			.channel = 1,
+ 			.rank = 30,
+ 		},
++		.component_id = { 0x3, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.cme_threshold_ev_flags = 3,
++		.cme_count = { 33, 0, 0 },
++		.sub_type = 0x2,
+ 	},
+ };
+ 
+@@ -429,6 +433,11 @@ struct cxl_test_dram dram = {
+ 		.bank_group = 5,
+ 		.bank = 2,
+ 		.column = {0xDE, 0xAD},
++		.component_id = { 0x1, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.sub_channel = 8,
++		.cme_threshold_ev_flags = 2,
++		.cvme_count = { 14, 0, 0 },
++		.sub_type = 0x5,
+ 	},
+ };
+ 
+@@ -456,7 +465,10 @@ struct cxl_test_mem_module mem_module = {
+ 			.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
+ 			.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+ 			.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+-		}
++		},
++		/* .validity_flags = <set below> */
++		.component_id = { 0x2, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.event_sub_type = 0x3,
+ 	},
+ };
+ 
+@@ -478,13 +490,18 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
+ 
+ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+ {
+-	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
++	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK |
++			   CXL_GMER_VALID_COMPONENT | CXL_GMER_VALID_COMPONENT_ID_FORMAT,
+ 			   &gen_media.rec.media_hdr.validity_flags);
+ 
+ 	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
+-			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
++			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN | CXL_DER_VALID_SUB_CHANNEL |
++			   CXL_DER_VALID_COMPONENT | CXL_DER_VALID_COMPONENT_ID_FORMAT,
+ 			   &dram.rec.media_hdr.validity_flags);
+ 
++	put_unaligned_le16(CXL_MMER_VALID_COMPONENT | CXL_MMER_VALID_COMPONENT_ID_FORMAT,
++			   &mem_module.rec.validity_flags);
++
+ 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+ 	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+ 		      (struct cxl_event_record_raw *)&gen_media);
+-- 
+2.43.0
 
