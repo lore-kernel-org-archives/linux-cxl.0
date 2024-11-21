@@ -1,73 +1,61 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE652F2A;
-	Wed, 20 Nov 2024 23:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E1D63A9;
+	Thu, 21 Nov 2024 02:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732144038; cv=none; b=OerGcVR6Equppckv0BcLRH4iuSha3hTmKLVbbJsDXC7M21DCm5Hh+dxz2rhuBXcd9d6l94vQftaZMU1+Mrs7usHLgn0nRnmpWGD97ppuuf2aTBn/F2UO+F1G+i8tloNri3uUp0bsr+PF32T87inDqnxqv3Z5REH5OSZG0o3MeCM=
+	t=1732157224; cv=none; b=cLBMGQ17mxZRuTcs42c0MO6PRd2rxjzmyo483J/eUOx2SH+ok3iaUBIe5uKJb7gWz8si2iwoAeA9UM2fgwZDdvwKcrQYwdFlpJ/xsc4cYwF1/eIdOCiRPcfCsNOmhez5LcnCf8KqfJCXwQUUZISWONA7q1zMXpnnLWfxaJ8r/5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732144038; c=relaxed/simple;
-	bh=3R8g4k2kcVOALc89vy4pirvETfHloJhI+qLbVBwsLlk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ayt7KSeyylDx6pEBMW3KveLo37HNKhU0Jodr/LiqqMFW4Gkq7oh/B8mwdCq4nBOiCDhSRHG/lJ0GFDAvIZM+r1jglWOya/ycDY7bymXgVRUaUr+BPrr9mylwvmNnGRxL+EhTMR+qR6CT1M4vjzQZRcFGn6OffhGHorweQlsIYeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffhH8gHt; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732157224; c=relaxed/simple;
+	bh=A62i+PCQPi9/pVfEwl8iAEDDlZJmY9G4trmTblRlT1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEyZ90rA5WFGsDEv7ecmQ/6TVCxU/HNG0crd/g22yZvC6cwBCojV8kh2F1kLPGQTEQuid1HnNOgmc9cTf1E6j2KvfuPak+ZWr96fi2iGfC48iO6BQqnqszCEx6xScTkeN8ydvZzGTC61OKJ4gmwNF6OpHIanMrKGLmRlTCs00CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QYdK2R1H; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffhH8gHt"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e49ad46b1so261857b3a.1;
-        Wed, 20 Nov 2024 15:07:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732144036; x=1732748836; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQLn4ff1ccC4WGEzLKWembbwGF9SVgUFvpPXGmjZk7s=;
-        b=ffhH8gHtCQ5HX0JRraxZxcBoZMcSif+BeIpEGSnGGZL2xoRTyXRJCTTD452jSmWi/D
-         CsGscTwYr5QADoRwdAbuYQf60ZTnmVWLi64PY81CnJcLl1i/Jj1pOgfwzMloAV6pEe5L
-         HCrlKcX6qlYIp0XzAeVCPt5pZi7N1Nqb/XGKKIY39jP2pReVNGxawoiI6QdL42E+hBFO
-         CAJbj2VCwZnwxejNWYp4uoOkM9jpMC1bUHrZulpBhpX0/LjqB3Ek/p3NZbUfHsM2rAOy
-         2cDxLAOk38J7L50zN6u8fdonWnB0u0XNDpGozw3ix8ohSji2vWQg9r9kaHJi4LbpvDKa
-         gk8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732144036; x=1732748836;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kQLn4ff1ccC4WGEzLKWembbwGF9SVgUFvpPXGmjZk7s=;
-        b=T7/rqKkiqmESHBnYm4TQXNrdik2wUxZm65L5/Qd4/LOweyFihcyd9eQK5BSBft950k
-         hBzLk+/kL3EhnUyV8ihYIXzsqLUF2/DmWNMbalJmBi9pg2zmwtF4Pwcl2ZLg98FIUe35
-         oxKfYAz62BSMlTVYngM9/XXoiMluPuOv5nI3dmnZf2DPQ5Bensz59Wrs/Wkl0WyGb5qc
-         6JxC0n1rm66gw4bEGYumjOn6hHlfjFLwPSeZGib6ImTie9zUFo+SqSyXTJd+JOQovslr
-         9Tde3K+GOJvXGLDNKs2qPD5FAqoLLilF2OHx78vmC+VoWrrtGQ3W4iIKERnD40d7DTXu
-         JKgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGpfMq5/hySsbyEpZ4Ws460Fe3JiKHn6HPl46Q1UWYyeI9ZybvrHEQe+CUXNoe6lKutWe6VmM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiqQRhYzumZOZi8iVoLszo5a5rwkfGYbAFVlxHbypSvm3/H/Hy
-	Zdh+LB3fqhwuLvWUOgQo9m9s57S7QUTxyEJ6KzLlJ8P1yGGc/k2M
-X-Gm-Gg: ASbGncsR/qJGN0ffurRiqqgmJxKG9jldLRNOJcUXGwPYFDU/VRlQNY79SILqduQO5Bl
-	D6L22Ok6wfUOYZz5VgoOzqGyasJIkDQW778N3Vz5vISQJ2NWDhFcqZVx95VnYF80cCSy5pGBRjL
-	nQc26eVCJWDTu/EnMUA4AiLTSpxC31ik8xVy8aLScJ8NNliUV1erhWc+z4iTHR04CzjOEuO9Imo
-	JXy9kBq66U7Y2wmmAU/3txBXkt6HmJBCQxCYAAlR4ZaNvITB26lQQ==
-X-Google-Smtp-Source: AGHT+IEjaDpIp6NUbugGWqApYH6rQvaAlO1tPf6W1mdwjM0dLk22Lvq9F6D09pKLaab15orhmlszZw==
-X-Received: by 2002:a05:6a00:1805:b0:71e:7046:c0f8 with SMTP id d2e1a72fcca58-724bedc646dmr6263320b3a.26.1732144036327;
-        Wed, 20 Nov 2024 15:07:16 -0800 (PST)
-Received: from smc-140338-bm01 ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724bef8da9asm2251576b3a.128.2024.11.20.15.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 15:07:15 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Wed, 20 Nov 2024 23:07:13 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QYdK2R1H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732157223; x=1763693223;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=A62i+PCQPi9/pVfEwl8iAEDDlZJmY9G4trmTblRlT1g=;
+  b=QYdK2R1HFeA7vajtQiwaN3RAWGMvxUcSXQyj9R6qRXGKqYMVm+xE/WRW
+   9KZ+ViLQ6z42/3J8mweM6Rj2RKFsYkljv7KIm6tYD45y66BX9bE3PKA8k
+   JiKP9nthBor6IKJ4K2DrMxMCmT5jpt+dCiVVA4rIl/8Oz2PjmPK7Kvn5L
+   jwqM3CxMTfkjPzEcMx37IOvaXUuyEZI+w903JrKUmSp4HUJ6cKbeCNlyx
+   78+SCLtGY8UyFO3L6wwVAg/26U8MvqIt6FhaX160jvAGY/blYpPPVBXLh
+   5lbRPbzJPDdgK5xei8/kSer7ZKhDjYJHUz0BtXdSkO8kUYNowSC5Ifzg5
+   w==;
+X-CSE-ConnectionGUID: 5lMjc7H3RfKw943eNKkkRw==
+X-CSE-MsgGUID: w+MVOO2uTTubPJzaHoxbdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="35108362"
+X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
+   d="scan'208";a="35108362"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 18:47:02 -0800
+X-CSE-ConnectionGUID: O1RbCacGTiy8VIx3JqGauQ==
+X-CSE-MsgGUID: yuWeEvpKTJSjgi27k++SVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
+   d="scan'208";a="94566387"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.177])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 18:47:01 -0800
+Date: Wed, 20 Nov 2024 18:46:59 -0800
+From: Alison Schofield <alison.schofield@intel.com>
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
 	dan.j.williams@intel.com, martin.habets@xilinx.com,
 	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
 	pabeni@redhat.com, edumazet@google.com,
 	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v5 01/27] cxl: add type2 device basic support
-Message-ID: <Zz5roZFnva7_t7A0@smc-140338-bm01>
+Subject: Re: [PATCH v5 10/27] cxl: harden resource_contains checks to handle
+ zero size resources
+Message-ID: <Zz6fI-EZYdS5Uw0S@aschofie-mobl2.lan>
 References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-2-alejandro.lucero-palau@amd.com>
+ <20241118164434.7551-11-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,248 +64,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241118164434.7551-2-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241118164434.7551-11-alejandro.lucero-palau@amd.com>
 
-On Mon, Nov 18, 2024 at 04:44:08PM +0000, alejandro.lucero-palau@amd.com wrote:
+On Mon, Nov 18, 2024 at 04:44:17PM +0000, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Differentiate Type3, aka memory expanders, from Type2, aka device
-> accelerators, with a new function for initializing cxl_dev_state.
+> For a resource defined with size zero, resource_contains returns
+> always true.
 > 
-> Create accessors to cxl_dev_state to be used by accel drivers.
+I'm not following the premise above -
+
+Looking at resource_contains() and the changes made below,
+it seems the concern is with &cxlds->ram_res or &cxlds->pmem_res
+being zero - because we already checked that the second param
+'res' is not zero a few lines above.
+
+Looking at what happens when r1 is of size 0, I don't see how
+resource_contains() returns always true.
+
+In resource_contains(r1, r2), if r1 is of size 0, r1->start == r1->end.
+The func can only return true if r2 is also of size 0 and located at 
+exactly r1->start. But, in this case, we are not going to get there
+because we never send an r2 of size 0.
+
+For any non-zero size r2 the func will always return false because
+the size 0 r1 cannot encompass any range.
+
+I could be misreading it all ;)
+
+--Alison
+
+
+> Add resource size check before using it.
 > 
-> Based on previous work by Dan Williams [1]
-> 
-> Link: [1] https://lore.kernel.org/linux-cxl/168592160379.1948938.12863272903570476312.stgit@dwillia2-xfh.jf.intel.com/
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-
 > ---
->  drivers/cxl/core/memdev.c | 51 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c    |  1 +
->  drivers/cxl/cxlpci.h      | 16 ------------
->  drivers/cxl/pci.c         | 13 +++++++---
->  include/cxl/cxl.h         | 21 ++++++++++++++++
->  include/cxl/pci.h         | 23 ++++++++++++++++++
->  6 files changed, 105 insertions(+), 20 deletions(-)
->  create mode 100644 include/cxl/cxl.h
->  create mode 100644 include/cxl/pci.h
+>  drivers/cxl/core/hdm.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 84fefb76dafa..d083fd13a6dd 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2020 Intel Corporation. */
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 223c273c0cd1..c58d6b8f9b58 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -327,10 +327,13 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  	cxled->dpa_res = res;
+>  	cxled->skip = skipped;
 >  
-> +#include <cxl/cxl.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/firmware.h>
->  #include <linux/device.h>
-> @@ -616,6 +617,25 @@ static void detach_memdev(struct work_struct *work)
->  
->  static struct lock_class_key cxl_memdev_key;
->  
-> +struct cxl_dev_state *cxl_accel_state_create(struct device *dev)
-> +{
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	cxlds = kzalloc(sizeof(*cxlds), GFP_KERNEL);
-> +	if (!cxlds)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	cxlds->dev = dev;
-> +	cxlds->type = CXL_DEVTYPE_DEVMEM;
-> +
-> +	cxlds->dpa_res = DEFINE_RES_MEM_NAMED(0, 0, "dpa");
-> +	cxlds->ram_res = DEFINE_RES_MEM_NAMED(0, 0, "ram");
-> +	cxlds->pmem_res = DEFINE_RES_MEM_NAMED(0, 0, "pmem");
-> +
-> +	return cxlds;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_state_create, CXL);
-> +
->  static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->  					   const struct file_operations *fops)
->  {
-> @@ -693,6 +713,37 @@ static int cxl_memdev_open(struct inode *inode, struct file *file)
->  	return 0;
->  }
->  
-> +void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec)
-> +{
-> +	cxlds->cxl_dvsec = dvsec;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_dvsec, CXL);
-> +
-> +void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial)
-> +{
-> +	cxlds->serial = serial;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_serial, CXL);
-> +
-> +int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
-> +		     enum cxl_resource type)
-> +{
-> +	switch (type) {
-> +	case CXL_RES_DPA:
-> +		cxlds->dpa_res = res;
-> +		return 0;
-> +	case CXL_RES_RAM:
-> +		cxlds->ram_res = res;
-> +		return 0;
-> +	case CXL_RES_PMEM:
-> +		cxlds->pmem_res = res;
-> +		return 0;
+> -	if (resource_contains(&cxlds->pmem_res, res))
+> +	if (resource_size(&cxlds->pmem_res) &&
+> +	    resource_contains(&cxlds->pmem_res, res)) {
+>  		cxled->mode = CXL_DECODER_PMEM;
+> -	else if (resource_contains(&cxlds->ram_res, res))
+> +	} else if (resource_size(&cxlds->ram_res) &&
+> +		   resource_contains(&cxlds->ram_res, res)) {
+>  		cxled->mode = CXL_DECODER_RAM;
 > +	}
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_resource, CXL);
-> +
->  static int cxl_memdev_release_file(struct inode *inode, struct file *file)
->  {
->  	struct cxl_memdev *cxlmd =
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 420e4be85a1f..ff266e91ea71 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-> +#include <cxl/pci.h>
->  #include <linux/units.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/device.h>
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4da07727ab9c..eb59019fe5f3 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -14,22 +14,6 @@
->   */
->  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
->  
-> -/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> -#define CXL_DVSEC_PCIE_DEVICE					0
-> -#define   CXL_DVSEC_CAP_OFFSET		0xA
-> -#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
-> -#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
-> -#define   CXL_DVSEC_CTRL_OFFSET		0xC
-> -#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
-> -#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
-> -#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
-> -#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
-> -#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
-> -#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
-> -#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
-> -#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
-> -#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
-> -
->  #define CXL_DVSEC_RANGE_MAX		2
->  
->  /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 188412d45e0d..0b910ef52db7 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -1,5 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> +#include <cxl/cxl.h>
-> +#include <cxl/pci.h>
->  #include <linux/unaligned.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/moduleparam.h>
-> @@ -816,6 +818,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct cxl_memdev *cxlmd;
->  	int i, rc, pmu_count;
->  	bool irq_avail;
-> +	u16 dvsec;
->  
->  	/*
->  	 * Double check the anonymous union trickery in struct cxl_regs
-> @@ -836,13 +839,15 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	pci_set_drvdata(pdev, cxlds);
->  
->  	cxlds->rcd = is_cxl_restricted(pdev);
-> -	cxlds->serial = pci_get_dsn(pdev);
-> -	cxlds->cxl_dvsec = pci_find_dvsec_capability(
-> -		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
-> -	if (!cxlds->cxl_dvsec)
-> +	cxl_set_serial(cxlds, pci_get_dsn(pdev));
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_PCIE_DEVICE);
-> +	if (!dvsec)
->  		dev_warn(&pdev->dev,
->  			 "Device DVSEC not present, skip CXL.mem init\n");
->  
-> +	cxl_set_dvsec(cxlds, dvsec);
-> +
->  	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
->  	if (rc)
->  		return rc;
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> new file mode 100644
-> index 000000000000..19e5d883557a
-> --- /dev/null
-> +++ b/include/cxl/cxl.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright(c) 2024 Advanced Micro Devices, Inc. */
-> +
-> +#ifndef __CXL_H
-> +#define __CXL_H
-> +
-> +#include <linux/ioport.h>
-> +
-> +enum cxl_resource {
-> +	CXL_RES_DPA,
-> +	CXL_RES_RAM,
-> +	CXL_RES_PMEM,
-> +};
-> +
-> +struct cxl_dev_state *cxl_accel_state_create(struct device *dev);
-> +
-> +void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
-> +void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
-> +int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
-> +		     enum cxl_resource);
-> +#endif
-> diff --git a/include/cxl/pci.h b/include/cxl/pci.h
-> new file mode 100644
-> index 000000000000..ad63560caa2c
-> --- /dev/null
-> +++ b/include/cxl/pci.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-> +
-> +#ifndef __CXL_ACCEL_PCI_H
-> +#define __CXL_ACCEL_PCI_H
-> +
-> +/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> +#define CXL_DVSEC_PCIE_DEVICE					0
-> +#define   CXL_DVSEC_CAP_OFFSET		0xA
-> +#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
-> +#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
-> +#define   CXL_DVSEC_CTRL_OFFSET		0xC
-> +#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
-> +#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + ((i) * 0x10))
-> +#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + ((i) * 0x10))
-> +#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
-> +#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
-> +#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
-> +#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + ((i) * 0x10))
-> +#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + ((i) * 0x10))
-> +#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
-> +
-> +#endif
+>  	else {
+>  		dev_warn(dev, "decoder%d.%d: %pr mixed mode not supported\n",
+>  			 port->id, cxled->cxld.id, cxled->dpa_res);
 > -- 
 > 2.17.1
 > 
-
--- 
-Fan Ni (From gmail)
+> 
