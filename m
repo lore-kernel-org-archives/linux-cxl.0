@@ -1,85 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0F244C6F;
-	Thu, 21 Nov 2024 03:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257B74068;
+	Thu, 21 Nov 2024 07:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732160025; cv=none; b=Xq9fFL90duYiaOR2mMK67I3R2yN7WyzV8lkYgeZ6A1w7pew1VwcLjQ1peEn2AUDzC/OYeDyYlgU4qwZYolTVqQn/gWsiz15OYQ684Zjt4EEBpPcmC1fwP9zDJDrBKnFPT8zx3CuZclDZCmXADDoxMbbrNhRyVWpDqIuTFUOg7lM=
+	t=1732173235; cv=none; b=K7l2e8DiH8nUeE/2bEPgw0K77oPcoCSp1gkZYL781LBf0AZSfds562pCTF0E12AbiLLc9ZHE6SkTGiYC8t9YWQ74quDKZs1k1lynQP5AvM6XcMvD5vMSZ9A/IyMGKCs1cXxjUbZECybEYFWd9Lav3uN9FJsfiUl7sMKX83ElEx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732160025; c=relaxed/simple;
-	bh=4SlXWeYnu3vXAeYVo+2nF+CT25Fz/dsTeeC2kO0D/Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktInY08jWK0hFuz4ficcSnFYWxLbHCMAjjaZtwTAvsfAtdcPpps7gLnQ9HN/vz/yMq8cax9Mhp+IbOy1ika1fUHYeytfWDgE+lVhdvQayG9kGJfOxfYXA/CuaO1faU6Je80X3VmqPT0dfqtjtnrcGyljx1rjRatSqoxk1dl3i10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nvQDYInd; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1732173235; c=relaxed/simple;
+	bh=8asvzXQgvkNgGEQb9dmSkLgi5OwVK7cchw9YDUp2VTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hyVP0oQZjEc5K9rXFxAkFSUz3UZUCjcEH28Lvq12xtVc/3k5y4Hk5QMkA2NFZLwkrYACePeAvw7dZoTq13KDTrTj7uD79lv+UM0UjJvp22tKWGs5Z5d3L/KO6yTKMvYCMfQ5/fSYvbaXCXO7NgMPtza2uO0HwByN8LlD42w+nek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DeTzLkJ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nvQDYInd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732160024; x=1763696024;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4SlXWeYnu3vXAeYVo+2nF+CT25Fz/dsTeeC2kO0D/Yo=;
-  b=nvQDYIndQa6FWMqchYFqo+AWu43fAaQHZajNrurXLAl2oDQOzr1FKBhv
-   b0CVEf9Q+MCSMdpEdkya60nyvNuHHXoOYK9MPsJRqjdNVWbg+J90q8Ok+
-   x28D+UQbvI00XUCWAI3ELZoWXCf2hb/zrgfdAje6qq+p9iiranaB3ajBe
-   YOvq2Fur14896O3ln7V6FJKB80H9wkEn0N2dEMWTCMbKXwTJaWfFkas6w
-   ZDuVYTPR7uph/unMn0drCaMEU0DtVn+okZgHndGA/Wkk+8rRCTpWF5aEr
-   XdnWzPs7HNVkVGU5lG+PJSkTPcUCkD+HIIeFmE4e0ZXsNT5OJa3BoNAS4
-   A==;
-X-CSE-ConnectionGUID: aAa+0BXkTymI9mwz2/HeNQ==
-X-CSE-MsgGUID: qbqNN4sGSKOmwb8hy5LBFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11262"; a="31997884"
-X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
-   d="scan'208";a="31997884"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 19:33:43 -0800
-X-CSE-ConnectionGUID: AsiVpzqvQK+AlcgHDW79JQ==
-X-CSE-MsgGUID: 0d46H/TNQPevK3ykWpAUVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,171,1728975600"; 
-   d="scan'208";a="90239515"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.177])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2024 19:33:43 -0800
-Date: Wed, 20 Nov 2024 19:33:41 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com
-Subject: Re: [PATCH v5 00/27] cxl: add type2 device basic support
-Message-ID: <Zz6qFaLNs0XmdhMw@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DeTzLkJ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D479EC4CECC;
+	Thu, 21 Nov 2024 07:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732173234;
+	bh=8asvzXQgvkNgGEQb9dmSkLgi5OwVK7cchw9YDUp2VTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DeTzLkJ0XCEkObLOHTAh9p15JuG4I6twejfdRIFVUuQirivuUZre1CnF8dBIct1pN
+	 wfnKI+dumRddNCz3WzlPzXVbXPqWH2hh3Tvez5+RPPY7WpCQvHP8TjgpZz1QF6O3US
+	 CTOdk9yvQc90CnWq3DirkM7xMZUWpIdMjQFHU7INVp3zkLx+ZZRBgqTgVfo/2TvuC2
+	 M6eY2l1zrCQgbsWysmATXWJyjCSMaarsUo36C7u7BPjvj1Sj7YprCZhDcDRdzxzMQN
+	 rmOaJgdY1TT4jyGR+udRgVhc3LOk/qIFktIAsBu6GKX9G/Fl/pQxLEwJ1Pdomy9/Vy
+	 lC4kllDfa25Vw==
+Date: Thu, 21 Nov 2024 09:13:47 +0200
+From: Zhi Wang <zhiwang@kernel.org>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: Zhi Wang <zhiw@nvidia.com>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com
+Subject: Re: [PATCH v5 10/27] cxl: harden resource_contains checks to handle
+ zero size resources
+Message-ID: <20241121091347.0000233c.zhiwang@kernel.org>
+In-Reply-To: <78cfa71b-5501-b79d-477c-c3a67340d60a@amd.com>
 References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
+	<20241118164434.7551-11-alejandro.lucero-palau@amd.com>
+	<20241119215042.0000617b@nvidia.com>
+	<78cfa71b-5501-b79d-477c-c3a67340d60a@amd.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 18, 2024 at 04:44:07PM +0000, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alejandro.lucero-palau@amd.com>
-> 
-> v5 changes:
-
-Hi Alejandro -
-
-What is the base commit for this set?  (I'm trying to apply it)
-
-In future revs please include the base commit. I typically get it
-by setting the upstream branch and then doing --base="auto" when
-formatting the patches.
-
-Thanks!
-Alison
-
-..snip
+On Wed, 20 Nov 2024 13:45:54 +0000
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
 > 
+> On 11/19/24 19:50, Zhi Wang wrote:
+> > On Mon, 18 Nov 2024 16:44:17 +0000
+> > <alejandro.lucero-palau@amd.com> wrote:
+> >
+> >> From: Alejandro Lucero <alucerop@amd.com>
+> >>
+> >> For a resource defined with size zero, resource_contains returns
+> >> always true.
+> >>
+> >> Add resource size check before using it.
+> >>
+> > Does this trigger a bug? Looks like this should be with a Fixes:
+> > tag?
 > 
+> 
+> It seems it does not until the new code for type2 support.
+> 
+
+I see. Then it is not necessary for a Fixes: tag.
+
+> 
+> > Z.
+> >
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >> ---
+> >>   drivers/cxl/core/hdm.c | 7 +++++--
+> >>   1 file changed, 5 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> >> index 223c273c0cd1..c58d6b8f9b58 100644
+> >> --- a/drivers/cxl/core/hdm.c
+> >> +++ b/drivers/cxl/core/hdm.c
+> >> @@ -327,10 +327,13 @@ static int __cxl_dpa_reserve(struct
+> >> cxl_endpoint_decoder *cxled, cxled->dpa_res = res;
+> >>   	cxled->skip = skipped;
+> >>   
+> >> -	if (resource_contains(&cxlds->pmem_res, res))
+> >> +	if (resource_size(&cxlds->pmem_res) &&
+> >> +	    resource_contains(&cxlds->pmem_res, res)) {
+> >>   		cxled->mode = CXL_DECODER_PMEM;
+> >> -	else if (resource_contains(&cxlds->ram_res, res))
+> >> +	} else if (resource_size(&cxlds->ram_res) &&
+> >> +		   resource_contains(&cxlds->ram_res, res)) {
+> >>   		cxled->mode = CXL_DECODER_RAM;
+> >> +	}
+> >>   	else {
+> >>   		dev_warn(dev, "decoder%d.%d: %pr mixed mode not
+> >> supported\n", port->id, cxled->cxld.id, cxled->dpa_res);
+> 
+
