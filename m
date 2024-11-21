@@ -1,143 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D53310A3E;
-	Thu, 21 Nov 2024 16:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760CA157490
+	for <linux-cxl@vger.kernel.org>; Thu, 21 Nov 2024 16:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732206705; cv=none; b=JGxHD5Zy1elOU/VU0rmEtlDbS/1UqnE3XqOCdUkboT/zXIl/rzUf9OGJ60aCacmNNiQmyX+2CBvBRSoSc5buEDzo7jdOiyohLBtMipj8idFBwHN2p/rb5O9wO9EjkVbj+j64gUCIxZ5LeyplHE5GcCZckBJUdkv0DepMn2Q5Rsk=
+	t=1732208167; cv=none; b=d5JsEePjntem+Xv2uzMZO8wWlKCe7V/09ENTNUri8roEhC8MEhHFsZVb9gjLM1H7a3ZHurqROMnPKtQqJw28dXrb8I8HTItlCqP/6I2d7xlxIiomcG22FKkJf+D6Wf39nEk7X1JizS60+Zrs7iqYCWKb3yxXOn3CCM9M0mU4PLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732206705; c=relaxed/simple;
-	bh=KAF9bEyre5NHjdh2UhRFrv5pzpjkr/MHSDumIfunvfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HR7ZB43spZbdy/eiM50ebOro964QAcjMQK87XZ9jB4EWbt4dX1ZNPetkmvZj1SerPCmfNQ1tUYGol+H96ubMRTdP4WUXzLi3+bZVYpqxGQdcXjqbCf2vtsEXX5bOP39AutB6qCCYVS1Sj682TS7CcAF/DiPXy6/0s7mLD2/uJ9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lru/rGMw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lru/rGMw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732206704; x=1763742704;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KAF9bEyre5NHjdh2UhRFrv5pzpjkr/MHSDumIfunvfg=;
-  b=Lru/rGMw1d/mB+JjJi/2Rm80LIW7lHi/jU2SQu+/sxOt2j14y6sDSkeJ
-   /IZH6hTVai3csQtyOG5WOtq+lLnZ+kct2t/TLlqTnYm1dPunsbleT0zFJ
-   8EKL6vWR40I0ECXi65VyXMbetXfEFdB4bTpuq/ZyzJa35HpexZO1rGNTd
-   8vxG3p6kMBU+xcXkwnCNOyI0AQYAmFo4dyUw+flkxDMhDR0ib9IYCAna8
-   3sXAU0EkFcUymyuzdvZVdpzUYTB3Vv+Q76kxrpZlEFWi7pyADjdF8vuni
-   E5sd5u26ibGeuMbkD3JPKPcGfvZiMkk0MSPxwR8HQsI6aXDh3e23XPxYC
-   g==;
-X-CSE-ConnectionGUID: a0CQwT3eQXitzRo8MTcQ3w==
-X-CSE-MsgGUID: dmjmnVBuTcSASRBPf4teGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="42843606"
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="42843606"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:31:43 -0800
-X-CSE-ConnectionGUID: 7nUNTIgVT6KvW78+0svK+w==
-X-CSE-MsgGUID: lPkF5iIOQf2t9TsgPwZB5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
-   d="scan'208";a="90285224"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.245]) ([10.125.109.245])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 08:31:43 -0800
-Message-ID: <57c05646-0d69-45d6-a20b-9447accc9c85@intel.com>
-Date: Thu, 21 Nov 2024 09:31:41 -0700
+	s=arc-20240116; t=1732208167; c=relaxed/simple;
+	bh=SWqEnFj7pAOTtg/1B4LO6LT9GqmosnKVmIRJ+G6VzRA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ya8ahp41A71pPhE4NcnBejE/BLJT1xIdAOXITdFa2tgriRuAzyVmpyk6oW3ie9hU/SqTNyFcluq9yKAq08JaUZeaLgaZ/7gHUkL5lcTxA3ZumR4MKesBeJZqU/Tq5txiam9wwi+yqZV81zjbEV5k6oWq8W8ufFiOtvEgAhXTZqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvPSh2RXrz6K5qR;
+	Fri, 22 Nov 2024 00:53:40 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id ADDA7140A70;
+	Fri, 22 Nov 2024 00:56:00 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov
+ 2024 17:56:00 +0100
+Date: Thu, 21 Nov 2024 16:55:58 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+CC: Yuquan Wang <wangyuquan1236@phytium.com.cn>, <devel@edk2.groups.io>,
+	<ardb+tianocore@kernel.org>, <quic_llindhol@quicinc.com>,
+	<peter.maydell@linaro.org>, <chenbaozi@phytium.com.cn>,
+	<linux-cxl@vger.kernel.org>, <asa-dev@op-lists.linaro.org>,
+	<qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
+Subject: Re: [edk2-devel] [RFC PATCH v2 1/1] hw/arm/sbsa-ref: Support CXL
+ Host Bridge & CFMW
+Message-ID: <20241121165558.00005f1b@huawei.com>
+In-Reply-To: <90513bfa-0888-44fe-8cd0-7b2e7518a41f@linaro.org>
+References: <20241105104346.417102-1-wangyuquan1236@phytium.com.cn>
+	<20241105104346.417102-2-wangyuquan1236@phytium.com.cn>
+	<20241107120457.00006024@Huawei.com>
+	<90513bfa-0888-44fe-8cd0-7b2e7518a41f@linaro.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 26/27] cxl: add function for obtaining params from a
- region
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-27-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241118164434.7551-27-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 12 Nov 2024 18:10:56 +0100
+Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org> wrote:
 
+> W dniu 7.11.2024 o=A013:04, Jonathan Cameron pisze:
+> > On Tue,  5 Nov 2024 18:43:46 +0800
+> > "Yuquan Wang"<wangyuquan1236@phytium.com.cn> wrote:
+> >  =20
+> >> This creates a default pxb-cxl (bus_nr=3D0xc0) bridge with two
+> >> cxl root ports on sbsa-ref. And the memory layout places 64K
+> >> space for the cxl host bridge register regions(CHBCR) in the
+> >> sbsa-ref memmap.
+> >>
+> >> In addition, this support indepentent mmio32(32M) & mmio64(1M)
+> >> space for cxl components. =20
+>=20
+> > Those are too small.  Might work today but not sustainable.
+> >=20
+> > I'm a bit surprised it was this simple to move the MMIO Space away
+> > from what is normally done for PXBs.
+> > I think it might work because the GPEX memory windows are effectively
+> > unlimited in size but I'd like some more eyes on this from people
+> > familiar with how all that works and whether there might be some
+> > corner cases that you haven't seen yet. =20
+>=20
+> I see the same problem as with multiple PCIe buses (for NUMA systems):
+>=20
+> pci 0000:c0:00.0: bridge window [io  size 0x1000]: can't assign; no space
+> pci 0000:c0:00.0: bridge window [io  size 0x1000]: failed to assign
+> pci 0000:c0:01.0: bridge window [io  size 0x1000]: can't assign; no space
+> pci 0000:c0:01.0: bridge window [io  size 0x1000]: failed to assign
+>=20
+> I do not know how it looks on real hardware (all my systems have one
+> PCIe bus) but shouldn't each host bridge have own separate resource
+> windows for config space, buses, mmio etc.?
+>=20
+> Now we squeeze all pcie buses as pcie-pxb devices and this patch adds
+> cxl to the combo.
 
-On 11/18/24 9:44 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> A CXL region struct contains the physical address to work with.
-> 
-> Add a function for given a opaque cxl region struct returns the params
-> to be used for mapping such memory range.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/region.c | 16 ++++++++++++++++
->  drivers/cxl/cxl.h         |  2 ++
->  include/cxl/cxl.h         |  2 ++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index eff3ad788077..fa44a60549f7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2663,6 +2663,22 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
-> +			  resource_size_t *end)
+In theory fine to break them up because each can have a smaller window
+they just happen to be next to each other in this configuration.
 
-Maybe just pass in a 'struct range' ptr and call it cxl_get_region_range()?
+CXL PXB (maybe the pcie one was well) doesn't IIRC support IO regions
+in general.  So that above is kind of normal and shouldn't matter
+unless you emulate an ancient PCI device.
 
-DJ
-
-> +{
-> +	if (!region)
-> +		return -ENODEV;
-> +
-> +	if (!region->params.res)
-> +		return -ENOSPC;
-> +
-> +	*start = region->params.res->start;
-> +	*end = region->params.res->end;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_region_params, CXL);
-> +
->  static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
->  {
->  	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ee3385db5663..7b46d313e581 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -913,6 +913,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
->  
->  bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
->  
-> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
-> +			  resource_size_t *end);
->  /*
->   * Unit test builds overrides this to __weak, find the 'strong' version
->   * of these symbols in tools/testing/cxl/.
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 2a8ebabfc1dd..f14a3f292ad8 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -77,4 +77,6 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->  				     bool avoid_dax);
->  
->  int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled);
-> +int cxl_get_region_params(struct cxl_region *region, resource_size_t *start,
-> +			  resource_size_t *end);
->  #endif
+Jonathan
 
