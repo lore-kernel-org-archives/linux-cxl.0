@@ -1,62 +1,94 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946CE74068;
-	Thu, 21 Nov 2024 13:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBFA1369B4
+	for <linux-cxl@vger.kernel.org>; Thu, 21 Nov 2024 14:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732196879; cv=none; b=SUVGhLPWWhzZG1iwzgQ/iSxTAY3Sqp1l3Ot/JbIPjZz+yrUzJiOtQZokeT9sR3ZRS9XTD0z7YXNRsCZTmY0pHKjsFdcV1fKhWjX/+MoNPoRXILx6mfA9AMOLRW3dmq0m9FxSV95rY2m33UqqNc+DYV4LE1MhQ8y61fT2rB6Y3Rs=
+	t=1732199095; cv=none; b=utS8W3Vvae/hUnez8QEZuGzlhllplxJ4TduksFfjvozoHq6aifdd2hDpoRLdHl2r7eaRJe59zmNu1ZfVeI+CQfoTWZl4/ED+ByJ2o8vxfWBq7TE9kCYiLRl0B99lfMP5HRxYq5/i9vsOv+q5fc4lAHD15BGt7iWcH/spbK0pAU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732196879; c=relaxed/simple;
-	bh=7xcPRh5jKXLkkMxq50QsiUeH8XvFnUNF4Y4WDRQIKMQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BbQShITpva3wxZ+VeX7i1irvVGPlKvbFyzBPRfE3kxWuQ384UpZJeQ/n79y3ll01NWldI68TOcXAFD3cqgcDFPF41jAQ0oIq3+P7Pjt/1cG8gGiJqAvCv+23oQwzrn+xpiXbV1FJGpg9VY/QyLH+8NA3tSGwnbhSFF18ItPDCow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvKKs6FsHz6K7JS;
-	Thu, 21 Nov 2024 21:47:29 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E52A1140133;
-	Thu, 21 Nov 2024 21:47:53 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov
- 2024 14:47:52 +0100
-Date: Thu, 21 Nov 2024 13:47:51 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
-	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
-	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
- Ying <ying.huang@intel.com>
+	s=arc-20240116; t=1732199095; c=relaxed/simple;
+	bh=m1hoQwFKVZP7RgcYrHC1tVHYQpIu5uaXakPcxtp7zSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+lCe+XbhxFlLq6puM+2QDbEaPjFgNE2ogPCxio6A3kQhwvPQsQ9svPcDwlpWmB5BWqT21iTnAgFmBiIKRqSgntyKdkgB02sjNXnz1kMjS2AdJ/EgkoVolLWt02nOmGa2XMv4V3q5HBPdGLlMpjqp5BUMpaUEb89hN0qFPOiz3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XonArbGk; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XonArbGk"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4608e389407so10309481cf.2
+        for <linux-cxl@vger.kernel.org>; Thu, 21 Nov 2024 06:24:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1732199092; x=1732803892; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eXhLVbl4qQpLa0iW3juzrX62f3Q2NQ3mbmEindnM0Eg=;
+        b=XonArbGksyewvJLnRzG9/31sBWkxhrXHaemksJrlGwpmEpqU1+fIMGqwTaO/tGwd5g
+         tO+GieIVDYP7+v+w6VC+9It5hY1+FxFBd2VsytxSb1y/kkUY9nysNoFB/1iTOEJA1M/b
+         Dd0imxashCd8F9/Qt9nuJIMzELcTQsLBIj/Oz/E0cCQMBrMiS/dtLSsKBZG1Aptxzj1F
+         OABkq6UsKFKhDKffAqFwH9yz9uQAwW/jtvQV7BeeKp2YDYJtS+r7bNb7IelVQDjlXqpU
+         gF3vDw/tzsmqyiD4WrPA+1E5BpIxbQnQZiEUlmbmgiggF5bXv2eXuy/jX1IIaRFVQ+OY
+         QGag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732199092; x=1732803892;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eXhLVbl4qQpLa0iW3juzrX62f3Q2NQ3mbmEindnM0Eg=;
+        b=cIhdoFzKSVCpX1SJ7TvZ7BtnNG6RGco9UGYeowPyyhPjWLXcK83NthzFA9YRVD1QYB
+         UuCJVmFhO6KmaO1tHnq+P5lvF8MhuFgPpoK3TQVrJU6I5XpRaK5M8eNPzEVaJhr3g+0f
+         o1qWEKqKwKkXoXR4cA506p+Uk7JrAaQQ4tpmfne1pnXKTRFsnBjSFrYSiJS23me6n/Sl
+         UtvisURY+gH4wiQmaj+FBToGl0sDaVI+zE9F1nXGya1W5wmoymD426rXzbErZb5LZvG5
+         D8qn5vKb8vLC9OjrVtDbBqL/nmgWWeuxloQos6jKwQpH+zuJzbSgn4dkRwy0ntsvN7SK
+         yVvQ==
+X-Gm-Message-State: AOJu0Yzhj71r5S2VzQSKU2WsZqZOddrV2FuXGdcs6FUv8zsOLjhMzpOE
+	C1M0+VnKDyL3PSx2oCH1PNaP/VfcBxOe9VYmLnV81jLv9RVI0JbPWct7vjkhrpE=
+X-Gm-Gg: ASbGncuxSWhu3TioVIOF3PC6qgKs8++Z7XriyEqtYUc3WWSS8g5D8F9WXYaHR5js4wV
+	Fb9Y4nIL8PauDJK5oBC1QFbMcpcEbVuIV+drGQdVNHILBsTlPqL0MdUtmdgnhxgQSXsvX5CaI4z
+	ye1CwuWncYQ0GGfVrZP6vaemt9kSRderJHphibiqLv82RInaJuJl6POWsFku24c2m5q/8EBG9PH
+	nBixQceyRt9uo2Wd8w1KVBbkSP0fxxUnsadWSz1zFzXZgwV/9UF1GooJsL7bpUiknuZyLeGz2Af
+	DVusoNdnWjtPweX4s+leKMWpzBw5266Igck=
+X-Google-Smtp-Source: AGHT+IHRE8aJtExvgniPZRQd10YOsYz8M+WHKPcQyReVFHmfTMTy/svK7inl9phFxt9maInO03X2sw==
+X-Received: by 2002:a05:622a:1b06:b0:463:4bb6:bfe2 with SMTP id d75a77b69052e-46479e23879mr95866461cf.50.1732199092344;
+        Thu, 21 Nov 2024 06:24:52 -0800 (PST)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-464685cee50sm22755671cf.30.2024.11.21.06.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2024 06:24:51 -0800 (PST)
+Date: Thu, 21 Nov 2024 09:24:43 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxarm@huawei.com, tongtiangen@huawei.com,
+	Yicong Yang <yangyicong@huawei.com>,
+	Niyas Sait <niyas.sait@huawei.com>, ajayjoshi@micron.com,
+	Vandana Salve <vsalve@micron.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Huang Ying <ying.huang@intel.com>
 Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Message-ID: <20241121134751.00006e26@huawei.com>
-In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+Message-ID: <Zz9Cq4CPStYGZyt7@PC2K9PVX.TheFacebook.com>
 References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
 
-On Thu, 21 Nov 2024 10:18:41 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-
+On Thu, Nov 21, 2024 at 10:18:41AM +0000, Jonathan Cameron wrote:
 > The CXL specification release 3.2 is now available under a click through at
 > https://computeexpresslink.org/cxl-specification/ and it brings new
 > shiny toys.
@@ -112,105 +144,43 @@ Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 2. Userspace algorithm development, possibly combined with userspace
 >    triggered migration by PA. Working out how to use different levels
 >    of constrained hardware resources will be challenging.
+
+FWIW this is what i was thinking about for this extension:
+
+https://lore.kernel.org/all/20240319172609.332900-1-gregory.price@memverge.com/
+
+At least for testing CHMU stuff. So if anyone is poking at testing such
+things, they can feel free to use that for prototyping. However, I think
+there is general discomfort around userspace handling HPA/DPA.
+
+So it might look more like
+
+echo nr_pages > /sys/.../tiering/nodeN/promote_pages
+
+rather than handling the raw data from the CHMU to make decisions.
+
+
 > 3. Move those algorithms in kernel. Will require generalization across
 >    different hotpage trackers etc.
 > 
+
+In a longer discussion with Dan, we considered something a little more
+abstract - like a system that monitors bandwidth and memory access stalls
+and decide to promote X pages from Y device.  This carries a pretty tall
+generalization cost, but it's pretty exciting to say the least.
+
+Definitely worth a discussion for later.
+
+>
 > So far this driver just gives access to the raw data. I will probably kick
 > of a longer discussion on how to do adaptive sampling needed to actually
 > use these units for tiering etc, sometime soon (if no one one else beats
 > me too it).  There is a follow up topic of how to virtualize this stuff
 > for memory stranding cases (VM gets a fixed mixture of fast and slow
 > memory and should do it's own tiering).
-> 
-> More details in the Documentation patch but typical commands are:
-> 
-> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
->  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
->  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
->  hotness_granual=12
-> 
-> $perf report --dump-raw-traces
-> 
-> Example output.  With a counter_width of 16 (0x10) the least significant
-> 4 bytes are the counter value and the unit index is bits 16-63.
-> Here all units are over the threshold and the indexes are 0,1,2 etc.
-> 
-> . ... CXL_HMU data: size 33512 bytes
-> Header 0: units: 29c counter_width 10
-> Header 1 : deadbeef
-> 0000000000000283
-> 0000000000010364
-> 0000000000020366
-> 000000000003033c
-> 0000000000040343
-> 00000000000502ff
-> 000000000006030d
-> 000000000007031a
-> 
-> Which will produce a list of hotness entries.
-> Bits[N-1:0] counter value
-> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
->   config to get to a Host Physical Address)
-> 
-> Specific RFC questions.
-> - What should be in the header added to the aux buffer.
->   Currently just the minimum is provided. Number of records
->   and the counter width needed to decode them.
-> - Should we reset the counters when doing sampling "-F X"
->   If the frequency is higher than the epoch we never see any hot units.
->   If so, when should we reset them?
-> 
-> Note testing has been light and on emulation only + as perf tool is
-> a pain to build on a striped back VM,  build testing has all be on
-> arm64 so far.  The driver loads though on both arm64 and x86 so
-> any problems are likely in the perf tool arch specific code
-> which is build tested (on wrong machine)
+>
 
-FWIW, runs on x86. However, it triggers a lockdep warning in
-both start and stop due to the spin lock. Something to tidy up for
-RFCv2.
+Without having looked at the patches yet, I would presume this interface
+is at least gated to admin/root? (raw data is physical address info)
 
-J
-
-> 
-> The QEMU emulation needs some cleanup, but I should be able to post
-> that shortly to let people actually play with this.  There are lots
-> of open questions there on how 'right' we want the emulation to be
-> and what counting uarch to emulate.
-> 
-> Jonathan Cameron (4):
->   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
->   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
->   perf: Add support for CXL Hotness Monitoring Units (CHMU)
->   hwtrace: Document CXL Hotness Monitoring Unit driver
-> 
->  Documentation/trace/cxl-hmu.rst     | 197 +++++++
->  Documentation/trace/index.rst       |   1 +
->  drivers/cxl/Kconfig                 |   6 +
->  drivers/cxl/Makefile                |   3 +
->  drivers/cxl/core/Makefile           |   1 +
->  drivers/cxl/core/core.h             |   1 +
->  drivers/cxl/core/hmu.c              |  64 ++
->  drivers/cxl/core/port.c             |   2 +
->  drivers/cxl/core/regs.c             |  14 +
->  drivers/cxl/cxl.h                   |   5 +
->  drivers/cxl/cxlpci.h                |   1 +
->  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
->  drivers/cxl/hmu.h                   |  23 +
->  drivers/cxl/pci.c                   |  26 +-
->  tools/perf/arch/arm/util/auxtrace.c |  58 ++
->  tools/perf/arch/x86/util/auxtrace.c |  76 +++
->  tools/perf/util/Build               |   1 +
->  tools/perf/util/auxtrace.c          |   4 +
->  tools/perf/util/auxtrace.h          |   1 +
->  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
->  tools/perf/util/cxl-hmu.h           |  18 +
->  21 files changed, 1748 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/trace/cxl-hmu.rst
->  create mode 100644 drivers/cxl/core/hmu.c
->  create mode 100644 drivers/cxl/hmu.c
->  create mode 100644 drivers/cxl/hmu.h
->  create mode 100644 tools/perf/util/cxl-hmu.c
->  create mode 100644 tools/perf/util/cxl-hmu.h
-> 
-
+~Gregory
