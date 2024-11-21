@@ -1,46 +1,60 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E3E5695;
-	Thu, 21 Nov 2024 22:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE9D5695;
+	Thu, 21 Nov 2024 22:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732228355; cv=none; b=COpUzA8AKQmk0OUYKLjeKlD4DPgB9A1zCSHGAO3RCqiPPvckabXqRCdlrpUTeRIzEh52sLRc+Y89cOWHIg7FcbOOqmcUkvFi4kviWYy5soNN6n1RgFGsiWf6bje10Wd21lZyy5m+Wfeag0GsC6YXVLUi0CBS2XJOksfxn74Sedg=
+	t=1732228460; cv=none; b=GWzfqDcTOKdrJhVcKOQCXjjdN8ZaLwAEcd17CdAKagWUemzSpQyEuKuCLy5ZsMNBkXGC1pHLn120B4dGgBclHRbB4lak/MLSRBrBpKjwWdO6MsaXi9txojXTf3ofof/Tgu5bbVbZy3P8hO8vFsX8mf5EKe6GLJ/Pg0ksECbw+sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732228355; c=relaxed/simple;
-	bh=OSDP648lDt7Tf3SrrgCOs+h8R2qVThcd7JCYaUNoemU=;
+	s=arc-20240116; t=1732228460; c=relaxed/simple;
+	bh=ifFfp6lVTdk1P/6odOLvYXPfAiEG8yQD5a7mN0hTi78=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVtK2y0tnNH4YDj+VspJ2sL5NUdKZsSfArhShsa4Kj/49BGZa4mDmL4HyPTaeuADUOU8Wgn7f0A28pCqU2J3OQUL0Z3hQNiuxl471TjnXXpkyYWPHhxGZUYQ9CSDRPW1iEibI6sKO3CSAC5OLSZBcLWxnPEtXEQL2VztAbFVJOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A76A13000B9FB;
-	Thu, 21 Nov 2024 23:32:29 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 80A2631BB07; Thu, 21 Nov 2024 23:32:29 +0100 (CET)
-Date: Thu, 21 Nov 2024 23:32:29 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, ming4.li@intel.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v3 15/15] PCI/AER: Enable internal errors for CXL
- upstream and downstream switch ports
-Message-ID: <Zz-0_RJGI0rbPHZx@wunner.de>
-References: <20241113215429.3177981-1-terry.bowman@amd.com>
- <20241113215429.3177981-16-terry.bowman@amd.com>
- <Zzsq6-GN0GFKb3_S@wunner.de>
- <4529f2a2-e655-4906-8e21-8d5d90db4468@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PY19a47Z6RtK2Gp/Bgm+tWsz9PrGrgaV8dsAAQL1TsOcW0BvhF3GpOEp4RuWbckrElk5aPSgEJTKxXhX+WD1prVEb4GaXE3ekgQnvItRfGPqZX+qxyhoMo8UP2DO8QNXKXreLyJ6geAY4c25U1ZrS4ow5WP5ER/uXXBIjJ6J4i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWoTacQn; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWoTacQn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732228457; x=1763764457;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ifFfp6lVTdk1P/6odOLvYXPfAiEG8yQD5a7mN0hTi78=;
+  b=UWoTacQnegcFI1fFIzJb8t6vj/8e1I1NUWJMQFEjv06DwvbSXgCZDLMg
+   4FDjXIJtZvglhvUd32idU5rOzcZ/xAiLvqyGvSo5mRhGTPLMlUvhzv9CK
+   UaUuaxCQnB2W9eTpB2U2lWZZUobNqWKNuHoQob+ggPMDhYXDy3/tSNE7g
+   d8nMIaH87gAR0ZdeHK2V/G9N6Yyf4WmGSnkYKglOl4Qd/ts13p23CU6rX
+   QN3FxQ6hRxOreQxgc9hxOAl+Eb3LQ64ymXCjLcUtpSC+sG+/oamjzx8AS
+   q15Xn3Le1AP6a1LJftY2lcYODa//yFFVTaXS3RByiWgOa7u/mNtDG2Ylx
+   g==;
+X-CSE-ConnectionGUID: wO6gaVivSu2mV0Cfo0qOEw==
+X-CSE-MsgGUID: aJdijWAPR7GtW3C9UYC2MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="32115730"
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="32115730"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 14:34:17 -0800
+X-CSE-ConnectionGUID: AZdJFJb7S9uNLyilgEqH3g==
+X-CSE-MsgGUID: vtVZpa56QHKqing6z4mtZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,173,1728975600"; 
+   d="scan'208";a="127906494"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.253])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 14:34:17 -0800
+Date: Thu, 21 Nov 2024 14:34:15 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	dan.j.williams@intel.com, martin.habets@xilinx.com,
+	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+	pabeni@redhat.com, edumazet@google.com,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v5 06/27] cxl: add function for type2 cxl regs setup
+Message-ID: <Zz-1Z6fzAbl_RCAZ@aschofie-mobl2.lan>
+References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
+ <20241118164434.7551-7-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,28 +63,63 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4529f2a2-e655-4906-8e21-8d5d90db4468@amd.com>
+In-Reply-To: <20241118164434.7551-7-alejandro.lucero-palau@amd.com>
 
-On Thu, Nov 21, 2024 at 04:25:31PM -0600, Bowman, Terry wrote:
-> On 11/18/2024 5:54 AM, Lukas Wunner wrote:
-> > Hm, it seems the reason why you're moving pci_aer_unmask_internal_errors()
-> > outside of "ifdef CONFIG_PCIEAER_CXL" is that drivers/cxl/core/pci.c
-> > is conditional on CONFIG_CXL_BUS, whereas CONFIG_PCIEAER_CXL depends
-> > on CONFIG_CXL_PCI.
-> >
-> > In other words, you need this to avoid build breakage if CONFIG_CXL_BUS
-> > is enabled but CONFIG_CXL_PCI is not.
-> >
-> > I'm wondering (as a CXL ignoramus) why that can happen in the first
-> > place, i.e. why is drivers/cxl/core/pci.c compiled at all if
-> > CONFIG_CXL_PCI is disabled?
-[...]
-> The drivers/cxl/Makefile file shows CONFIG_CXL_PCI gates cxl_pci.c build with:
-> obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+On Mon, Nov 18, 2024 at 04:44:13PM +0000, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Create a new function for a type2 device initialising
+> cxl_dev_state struct regarding cxl regs setup and mapping.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 47 ++++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h      |  2 ++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
 
-I wasn't referring to drivers/cxl/pci.c, but drivers/cxl/core/pci.c.
-That's gated by CONFIG_CXL_BUS, not CONFIG_CXL_PCI, which seems weird.
+snip
 
-Thanks,
+> +
+> +int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds)
+> +{
+> +	int rc;
 
-Lukas
+maybe init to 0
+
+> +
+> +	rc = cxl_pci_setup_memdev_regs(pdev, cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> +				&cxlds->reg_map, cxlds->capabilities);
+> +	if (rc) {
+> +		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	if (!test_bit(CXL_CM_CAP_CAP_ID_RAS, cxlds->capabilities))
+> +		return rc;
+
+init rc to 0 or return 0 directly here
+
+> +
+> +	rc = cxl_map_component_regs(&cxlds->reg_map,
+> +				    &cxlds->regs.component,
+> +				    BIT(CXL_CM_CAP_CAP_ID_RAS));
+> +	if (rc)
+> +		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+> +
+> +	return rc;
+
+init rc to 0 or return 0 directly here
+
+
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_pci_accel_setup_regs, CXL);
+
+snip
+> 
+> 
