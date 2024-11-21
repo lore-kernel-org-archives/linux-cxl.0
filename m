@@ -1,193 +1,205 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2062.outbound.protection.outlook.com [40.107.101.62])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D3D1BD9FC;
-	Thu, 21 Nov 2024 09:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732181265; cv=fail; b=uOdJ7M2wBjzGi5HbIgzD9YlLIlMqDIQKNvnYzBOj9OaNxcmCNKH6GibZhH3jvftDl1BhozkhDR+5Tt3csgRmNyfD7+AZn/eidrPTtyHs4nhYq4wC5uHyJdZxFxXR3Oucf/1/MepLVBCRaeO/WkLN7qSssoe8ei9g4p1GKFG2I9c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732181265; c=relaxed/simple;
-	bh=ZgFyj9RlPKuGqDCIfJel3uMP6W92iQ6Zf51L9bFoMPo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZlfE/sTLKh9iy71t+cBuEiqSJAZDYTKd3vBbv06uvwdBgGsCSqfvDbbGyRLZHreYpqluNueGbTWF3sOiP9vVXhM4rodCxRLDK0+7Mqgo59yttp7E7YRUEA1hjrUwi5c3KRPvFILg7ut/4QVbeJ5n5h9KMqCTvmKOH2gvZ1WQWp0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jFX/Ix1q; arc=fail smtp.client-ip=40.107.101.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jFX/Ix1q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L4ebYVyRjyVfojZO4hyLZqAoxWAM3OU/kEz45fud2VAn4QwJqoPetfaRtG5m3IZl6eGO+JTCKPV/+qbUpV6ADBXSkCdz6Vss3rxafbGfJycmR15dFSrOstfUuNiAmpQxaCuXVzD8HCWoOy/MouYrGKKtYg2Qeri+YFYB6N8vC+PuSvjRujcinKfT7cQvX+4Hu6BW+GkXhjUrjC6TNWDtpdp1wj8cCyisXVKVHJZU7aClyiW1VOV/e5MMZUVpfOQ/apH3YZ1kggmk/FeM1YDphgkgwOg4Ywz0MThgxk009HKPks798U5yulG9u4mxUJGoz6OfBE/fjiFyux7nh6oCUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fFbeN0dN/9NlTojXya6B7ZGFFLEqUj1Rb0OcdnCxWVs=;
- b=OyCJbVuqqwp5GrAhEHmejqDG882d6/jZMZqrOYRfNh0APzRTKR8n767PTis2+cUTA+8u5CCYi8sS3Va/U3gRQiyjPQfpOv2eMWJnN0DgDFI/nO9D9ZXawuF422NMc7q4KWhVte1WhPEHuhmywQrjabcA23x8gbFK9bjetgDZ0dQtvt17Vf4vBmqKCk5Efa6Qr71j8DSmMusCbWsSBCYEAT5HDnLSh95MII/HShz/UOvnLcetSiPBtzC1d6Zx/OyIaZmtV9JT2Va0k8G4JHoKANH1KUmbOmDdfa3y0QfG8H1VG0lP5WKQOb/F9JPlQQ8gcpKKgo4YiXhIglf8vGKqGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fFbeN0dN/9NlTojXya6B7ZGFFLEqUj1Rb0OcdnCxWVs=;
- b=jFX/Ix1qRvLY09B/d/YkykztjRR27gN+pF3O/Ru40weqRkqbsmI3R1mhvUmf2QDQf87k1egkMZcfmJw0+Fl35Uofjysx81plkA526DZd1/QDp1A7LjoXYb5wPHp1uiXpDN26PXweTTLmsxfE6IQgpu3MmGWSjwztIV62kBOLsd4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by MN0PR12MB6269.namprd12.prod.outlook.com (2603:10b6:208:3c3::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23; Thu, 21 Nov
- 2024 09:27:40 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8158.023; Thu, 21 Nov 2024
- 09:27:40 +0000
-Message-ID: <cbaefe66-a5de-47bb-a0ca-ff96fb4a5077@amd.com>
-Date: Thu, 21 Nov 2024 09:27:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 00/27] cxl: add type2 device basic support
-Content-Language: en-US
-To: Alison Schofield <alison.schofield@intel.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <Zz6qFaLNs0XmdhMw@aschofie-mobl2.lan>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <Zz6qFaLNs0XmdhMw@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0536.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:2c5::16) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F091D0E00;
+	Thu, 21 Nov 2024 10:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732184339; cv=none; b=CAnDlOISQ8oWd5GIhlVhQrkBUR73Tp/z2Q8v08d6Suha11iVKXPCMqqnqlmuQKC51uiHgcUIIzJi2l+DrVHhbBuXyR7XRBF+qyUde8EYDK4bfNP9iBSwlzrQXFHZEgAtHz5pZB3BuvYyRuEpmqanD2K9bMHZ9zZwDdQNNTsTK98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732184339; c=relaxed/simple;
+	bh=UTiwnatRcmow/TKEAUjy5NMRcM2d9cuIpujHrnkOFdo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MzfyMge6bYU4WT2mZnd3giPEpPCIoS1mrr15rDkfMrtdj7xlRa0gHHtEks3HzSPRuea2sCBYX7bBRDTCAEV5upOci3kmUi6UHjltiZTP/fd9q1O0D25SyVgG/wsa99Z7/5P6ppj20GNBKmu3g+DjRaoVDDk1KROXgl1Cv98sSXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDcx48K9z6K6CQ;
+	Thu, 21 Nov 2024 18:15:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C0276140A86;
+	Thu, 21 Nov 2024 18:18:47 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 21 Nov 2024 11:18:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
+	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
+	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
+ Ying <ying.huang@intel.com>
+Subject: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
+Date: Thu, 21 Nov 2024 10:18:41 +0000
+Message-ID: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MN0PR12MB6269:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c19d1a9-092d-46d4-1133-08dd0a0ebedc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L0g5SXY4dlR1MnVaWXU1b1BlRm44R0l5Mks2UldpSUtKTU8xU3ZUR3Bsd2tr?=
- =?utf-8?B?UEg0YW5xOGJKdEJSclpXOHl6anhwS3g2S3NubWtESE5HT1NVaEdiam5rYyty?=
- =?utf-8?B?NDdTbWNnRTdCOW1YcmhrRFJsUXdkejNtdVdIb2FsNWFYK0JQOFRDMmRxbG9B?=
- =?utf-8?B?dlJXNXg4aVpLM1pvMTVCMHpCUGZYY2hDbitjZ2FVMHpPbEt5UkM5NFVIZTJF?=
- =?utf-8?B?aFZwTFQxdXhQMlo3M2l3NkxEcis5N0lSdEQ5MkVRNU9ucGNORjdqYm1MUHZT?=
- =?utf-8?B?ZE5DRmFRSXJCY1g5YVFsNWd2V01BQStTVWxEaXNPdURlaFFzeVIvWloxQ2xh?=
- =?utf-8?B?QzJKTFRYcklHUnN4ZEdZVEhieFUrc0E0NEwvMmN3ZHBHRW4yLzdNczlEYjNw?=
- =?utf-8?B?MStWWWxpWjJiSk1xYXFUU3YweDNUYkRsNk00THRvbGtxSzdTdWh5TVd4Qjdr?=
- =?utf-8?B?LytteFMwSzV5Q3lGeHBsZm9LekE1bVdpOEt3cGR2NnZuV2xMTlJtOUFkWWNH?=
- =?utf-8?B?eXFrWThhYjg2c05ab3NZR3owTmxVZ3FaNmFGZ1RLbGlXd2Nlbzcyeld3aEZR?=
- =?utf-8?B?a2o3UGFCVC9rTG9TbnpSU2xkcTBFRHNLb1RiY3l1Ykw3OEVRcm85NzFsMUta?=
- =?utf-8?B?dFFxY0Z0KzR2NG1TcllUNzNzR3NuWHJ1OWxCaVN5OWZPdnR5S1hJSVhVNFNs?=
- =?utf-8?B?WmFVeHM4RndjQnNtYW5GNDhQRDNxSldXRGlzcHpzU21FZEZOcEZ2bVNXanRt?=
- =?utf-8?B?UnBpZmpNTzdsaTRib3kwMzVLUGF1MXE4THk4SklpMWtoK0o5TWpxTzliTitq?=
- =?utf-8?B?QnpreVk5NkJCMitkNUlFa3NNTFo4c2F5d25KWGlpZktmbEFzcDMrRmZORVd0?=
- =?utf-8?B?ZnA4YjZUc05yUjJhNDBadVRudEhPRDhCdlNEaWo1V0VMSWNVL2lZUmhTa1l2?=
- =?utf-8?B?TXNwTkNra0x6bThzbDB1Qm1NbWxYYWhmdGhiOTY3dlNSeHNLVHJKZnVFWFRD?=
- =?utf-8?B?bGNqcGVNbnU4LzZsT29TclFuQ0VHYUdreFJ1NnFNZ1lubE9xTVpqRkFZR1pr?=
- =?utf-8?B?bjZ3Qm1MV2pnT3R1Q2UvTVlwZzI2bDlzNXlHQlhyZzFvVmFKK2UwRVd6cFI4?=
- =?utf-8?B?V3VmUXRpSXVkYjRjZndLVU1YUU1UbkhTTVg5blhBOHMvVDRoaC9ocWZPSEZw?=
- =?utf-8?B?aGoxdGdtbnF4U1RESnVGKzJhajNyM1VNVmFmS01Jb2RUWkUvTlVQbXp1ZVhI?=
- =?utf-8?B?VTJRc20zNU8rOXNQRE5CMTdxTDFQai9wdFBOTHVSVUNBYkg5ZXFPa2NiSTAv?=
- =?utf-8?B?YUdkRVhlRFVSYmxTRnJOSnMrRTFWOXdHYnZRWFpDZDh5WXNGRjNTQjI5OXBS?=
- =?utf-8?B?SHloZmx5OFV5RmlGTml1TFJnVFgwcmo5K1pUUldTdHFLSlRqNHdmSEllVGtH?=
- =?utf-8?B?aG1zYVpZejk2ZU4xZ1BHbC8rd2F5dUVUV2xMU1NGZTJLRVBocC8yMEdFOU5F?=
- =?utf-8?B?NlBaeGhZMTlqdXBDbnFDWEZjcFFLWUpmdjd6UE9VeTdjS09ObndVcWRxV25I?=
- =?utf-8?B?VFJIakNHMEhxcndncVd6OGQ2YVlvSXhXU29WV3F5NWtnT3NpNG5zSFh6TmhZ?=
- =?utf-8?B?ZWF1K0Q1ZFQxQTNzUDZNemZGZnJDUWIrUHo2K1M1ZHB2ZmM2Y0w5cGhhRTNF?=
- =?utf-8?B?ajZDUUMrRkM3dVFnaEF2TWsyTEVKak41b0wxMVlWR2lxWTFuUHZHMEo1ZjBp?=
- =?utf-8?Q?+AQnLPbNlGNN4aF0bJSbtP6TU0wqYPh1hXoTMXH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bitydmliS1kxRGxjOGJpMTlqZDdMcGVNMHY3UzU5QS90YlIyOGNucEY5YVZC?=
- =?utf-8?B?K1Q3VDlBQVg1bEhRU000UWtIUjZJWGtSNmRrMCs0NlY4bFo0U2ZJMWlNSEF5?=
- =?utf-8?B?RUk5TldPR2Z1OWhNdVdsc2VBbXh4bTdwRE1pMG5XaEhJVjNTaE40S1FzTGFV?=
- =?utf-8?B?emVKTWVUemlueUh5b3ZRVTlxbGNmYkI2WWhsVWhTY1kvVGNNdE9yM1RCWW0x?=
- =?utf-8?B?QmFWZlRLRWowc2FlZzh4SnIxS0xtK3p2Nko5L2w0T0ZIQjdTYWVLZ0dibjB2?=
- =?utf-8?B?RGNNVk5pUG02c1BuN1BGZ05XOWFHRWtMOWVoYmZNUTk2ZWpiQStZaWRYZENt?=
- =?utf-8?B?UXR2c3lMQkk4VmVTYWgxMEJjbjlIVlkvTlRqY21oR1hWSW5lbnBJZUFINjZN?=
- =?utf-8?B?djlxd3krZ3JhQjZjYnI0aGZqZlhGVTN3NzBkWGtibEVTamZHcmhsVHZaTG9G?=
- =?utf-8?B?dWhJMkduUEUrcStJSXhueXFHV2lJYWRYZHZMcjR6ZjJuTHB4SisrbGlIbEIx?=
- =?utf-8?B?L3craGxlQ0xaRm5pQ0p6aDZmTTM2WERLQldMWUVjYW5rR0JZSy9wUFBxcEtM?=
- =?utf-8?B?SlFneHhBV1lmQ3ZTbVp0TkJJL1Z5VkFYL3A0dkFjSkZZVnZFcUNRQWtvajJC?=
- =?utf-8?B?OC9lRWVyekpOTld4Mm0zaTQ2S3VxV1Fnek5Sd1Jjb0dsd0pwaENNcCt2bGIv?=
- =?utf-8?B?TXFrcHp6UVprWTRBd3lVd2lDS1FPSDQ0QWhZaUFwaXlTUlliYkJyTUw5VFpy?=
- =?utf-8?B?Z0VLVkVEMEluMVZGcFc3dkRITWFZN0x4WmZCZ2lvdTczOU1zSC9DTW5zcmJ3?=
- =?utf-8?B?cnNQMExrb1FPazZObFBaaWZIdGlyQ0xWcFpVZGNoMFdmYlY1aC9BdjBSZlRn?=
- =?utf-8?B?OFYvaVRoWWJHSDNtVHlvcnMzQzJFd0dCSzVzblZYek90SjBxMGxmLy9HVjJF?=
- =?utf-8?B?NlZObVJlRmUyWFZWLy9hazJMMFVLdDBKM0VFbUozRE1ZcG4vRGFyYWlqZ1Nz?=
- =?utf-8?B?TU50YmE1Vlp4elE0cnhvZkhjMkdSKzI5VmVqMmhVWHcvRE1rOWFwR2N2N0ov?=
- =?utf-8?B?eS9wdzYwSkp4Ynh6MWJ3YVJrWDFaSThyQVlVbjZvb1V0VzVyY2RIZ3NDOThT?=
- =?utf-8?B?M21qM2NhSGpHRnRtVlVpN2dOWCtYa1FCQmdVa3VkUGVCby8rRjkwWlloN2lV?=
- =?utf-8?B?ajBGT2Noa2RSRjlxT1l2RzE2b1crczArK2V6QmU0d0VVTXFYcjl6OVhmLzVS?=
- =?utf-8?B?WEZlQWgrVDc0OTJHOUZoV0diSUdINk1aNlM5MUowNTRvZWtoSmE3UUt3RGky?=
- =?utf-8?B?R29QeEpQS3QwZ3hOL2prUGx4VGsyd0Z2R2NGMFNoYW83VmxtQ3lkZHR0anFj?=
- =?utf-8?B?amVvUUlLUXpTTkNUQ1FVcDFOOHREMHpENjhMeXlrZnFtV1d2d0hBZWJtVnIz?=
- =?utf-8?B?SlFNc1JVUmpzVy9QdjhIeEhadEhodWptTDc5cm9OMExUczdmdyt4ajNkRzdW?=
- =?utf-8?B?eUlnanJja1BtUHcrMVk1Nkh5SW95S3BXcTNsYThzRGdwMWNjWkFVbkFtSGls?=
- =?utf-8?B?MFoza3RMd1BkeE91OFdsMzhNOFA4NWdhMDJSWEJCU1d3cmw3WlZEVzBuZTBW?=
- =?utf-8?B?dVdrS0F2bEY3TTJMSldBbmF2ZDZjMjRDYkpsZGFUSlVtYytIMkkyQW9QUTEw?=
- =?utf-8?B?anZ0RXFJZ2dFbUNjQ05ybFNnUE5KQjN0N3R5U0J3V3VSdHFEMjFYeDlEN3NS?=
- =?utf-8?B?SVV3Q2Q0Ti9ldG1vekk2cFVTSDBJckhxdlVwWnBuSmYxWm1FSVYvam1aZXdl?=
- =?utf-8?B?NHFjazFsT3dSQmhvSEZmcjQrcCtLVmpOV0djVlZacEVxNlJtQW1lVDc5QXcy?=
- =?utf-8?B?aUFvY045TEpJNGxWa2t2Tm1wcXpuOFZHcWxTZzRxRk9tSXRLaXU2SHRnZWcz?=
- =?utf-8?B?TzJsdXp4eldkbCt0a3IwZXd2b3dUSFd1MUdJZzEzOE55aDhvTjVxQ21JS2dH?=
- =?utf-8?B?aXJBcE9saCtBUDU3Q201ZmRubTVyM1ZjQXR0RGI0bCtqVFQ3RWNiZE0wcnl1?=
- =?utf-8?B?VlM2eThuc3dDQXZNRmhpMjU2UmtxQkdpbkpJekdlMVFKZmtjVlBscHFEb3FH?=
- =?utf-8?Q?7Dqu7a/sF+BKimA8DX33Z3hWl?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c19d1a9-092d-46d4-1133-08dd0a0ebedc
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2024 09:27:40.6380
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nAYZwwaY4ibUazA5e9tKEWteSM1C4OFtjfuI60elqTtZhW6GitbU0mPmI8wvY0U/W7M5YaRoeNnRQoJYvIdwMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6269
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+The CXL specification release 3.2 is now available under a click through at
+https://computeexpresslink.org/cxl-specification/ and it brings new
+shiny toys.
 
-On 11/21/24 03:33, Alison Schofield wrote:
-> On Mon, Nov 18, 2024 at 04:44:07PM +0000, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alejandro.lucero-palau@amd.com>
->>
->> v5 changes:
-> Hi Alejandro -
+RFC reason
+- Whilst trace capture with a particular configuration is potentially useful
+  the intent is that CXL HMU units will be used to drive various forms of
+  hotpage migration for memory tiering setups. This driver doesn't do this
+  (yet), but rather provides data capture etc for experimentation and
+  for working out how to mostly put the allocations in the right place to
+  start with by tuning applications.
 
+CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
+of this is to provide a way to establish which units of memory (typically
+pages or larger) in CXL attached memory are hot. The implementation details
+and algorithm are all implementation defined. The specification simply
+describes the 'interface' which takes the form of ring buffer of hotness
+records in a PCI BAR and defined capability, configuration and status
+registers.
 
-Hi Allison,
+The hardware may have constraints on what it can track, granularity etc
+and on how accurately it tracks (e.g. counter exhaustion, inaccurate
+trackers). Some of these constraints are discoverable from the hardware
+registers, others such as loss of accuracy have no universally accepted
+measures as they are typically access pattern dependent. Sadly it is
+very unlikely any hardware will implement a truly precise tracker given
+the large resource requirements for tracking at a useful granularity.
 
+There are two fundamental operation modes:
 
-> What is the base commit for this set?  (I'm trying to apply it)
+* Epoch based. Counters are checked after a period of time (Epoch) and
+  if over a threshold added to the hotlist.
+* Always on. Counters run until a threshold is reached, after that the
+  hot unit is added to the hotlist and the counter released.
 
+Counting can be filtered on:
 
-I'm not using the CXL tree but Linus one, and using 6.12-rc7
+* Region of CXL DPA space (256MiB per bit in a bitmap).
+* Type of access - Trusted and non trusted or non trusted only, R/W/RW
 
+Sampling can be modified by:
 
-> In future revs please include the base commit. I typically get it
-> by setting the upstream branch and then doing --base="auto" when
-> formatting the patches.
+* Downsampling including potentially randomized downsampling.
 
+The driver presented here is intended to be useful in its own right but
+also to act as the first step of a possible path towards hotness monitoring
+based hot page migration. Those steps might look like.
 
-Apologies for the inconveniences. I'll do so for v6, which will use 6.13
+1. Gather data - drivers provide telemetry like solutions to get that
+   data. May be enhanced, for example in this driver by providing the
+   HPA address rather than DPA Unit Address. Userspace can access enough
+   information to do this so maybe not.
+2. Userspace algorithm development, possibly combined with userspace
+   triggered migration by PA. Working out how to use different levels
+   of constrained hardware resources will be challenging.
+3. Move those algorithms in kernel. Will require generalization across
+   different hotpage trackers etc.
 
-Thanks
+So far this driver just gives access to the raw data. I will probably kick
+of a longer discussion on how to do adaptive sampling needed to actually
+use these units for tiering etc, sometime soon (if no one one else beats
+me too it).  There is a follow up topic of how to virtualize this stuff
+for memory stranding cases (VM gets a fixed mixture of fast and slow
+memory and should do it's own tiering).
 
+More details in the Documentation patch but typical commands are:
 
->
-> Thanks!
-> Alison
->
-> ..snip
->
->>
+$perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+ hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
+ range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
+ hotness_granual=12
+
+$perf report --dump-raw-traces
+
+Example output.  With a counter_width of 16 (0x10) the least significant
+4 bytes are the counter value and the unit index is bits 16-63.
+Here all units are over the threshold and the indexes are 0,1,2 etc.
+
+. ... CXL_HMU data: size 33512 bytes
+Header 0: units: 29c counter_width 10
+Header 1 : deadbeef
+0000000000000283
+0000000000010364
+0000000000020366
+000000000003033c
+0000000000040343
+00000000000502ff
+000000000006030d
+000000000007031a
+
+Which will produce a list of hotness entries.
+Bits[N-1:0] counter value
+Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
+  config to get to a Host Physical Address)
+
+Specific RFC questions.
+- What should be in the header added to the aux buffer.
+  Currently just the minimum is provided. Number of records
+  and the counter width needed to decode them.
+- Should we reset the counters when doing sampling "-F X"
+  If the frequency is higher than the epoch we never see any hot units.
+  If so, when should we reset them?
+
+Note testing has been light and on emulation only + as perf tool is
+a pain to build on a striped back VM,  build testing has all be on
+arm64 so far.  The driver loads though on both arm64 and x86 so
+any problems are likely in the perf tool arch specific code
+which is build tested (on wrong machine)
+
+The QEMU emulation needs some cleanup, but I should be able to post
+that shortly to let people actually play with this.  There are lots
+of open questions there on how 'right' we want the emulation to be
+and what counting uarch to emulate.
+
+Jonathan Cameron (4):
+  cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
+  cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
+  perf: Add support for CXL Hotness Monitoring Units (CHMU)
+  hwtrace: Document CXL Hotness Monitoring Unit driver
+
+ Documentation/trace/cxl-hmu.rst     | 197 +++++++
+ Documentation/trace/index.rst       |   1 +
+ drivers/cxl/Kconfig                 |   6 +
+ drivers/cxl/Makefile                |   3 +
+ drivers/cxl/core/Makefile           |   1 +
+ drivers/cxl/core/core.h             |   1 +
+ drivers/cxl/core/hmu.c              |  64 ++
+ drivers/cxl/core/port.c             |   2 +
+ drivers/cxl/core/regs.c             |  14 +
+ drivers/cxl/cxl.h                   |   5 +
+ drivers/cxl/cxlpci.h                |   1 +
+ drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
+ drivers/cxl/hmu.h                   |  23 +
+ drivers/cxl/pci.c                   |  26 +-
+ tools/perf/arch/arm/util/auxtrace.c |  58 ++
+ tools/perf/arch/x86/util/auxtrace.c |  76 +++
+ tools/perf/util/Build               |   1 +
+ tools/perf/util/auxtrace.c          |   4 +
+ tools/perf/util/auxtrace.h          |   1 +
+ tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
+ tools/perf/util/cxl-hmu.h           |  18 +
+ 21 files changed, 1748 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/trace/cxl-hmu.rst
+ create mode 100644 drivers/cxl/core/hmu.c
+ create mode 100644 drivers/cxl/hmu.c
+ create mode 100644 drivers/cxl/hmu.h
+ create mode 100644 tools/perf/util/cxl-hmu.c
+ create mode 100644 tools/perf/util/cxl-hmu.h
+
+-- 
+2.43.0
+
