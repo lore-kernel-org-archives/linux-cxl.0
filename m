@@ -1,97 +1,117 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107895D477;
-	Fri, 22 Nov 2024 15:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F7134A8;
+	Fri, 22 Nov 2024 15:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732289788; cv=none; b=DT+4PEorc8tkK60WLikQJIE6PjNKZedRILW1QZa4etNI79kqTQYSEoPWNe6DLsCCB8qZz7Ri9Mp52COLamFo/h0bqC3+sgHCO2OyAWuth/r1nmHT6IQE71ohAId/vfHaGC4WUZnN24zkp00WWIvm+hUQJlX58Wx90quvRKVVzAU=
+	t=1732290772; cv=none; b=UotLpo4D3VC33JiVH4boXG0iL0sQfQIG2RVCpBP9f9+qj/h7vLRdInLgB+QGufKZwBoEGn7oY5cPG1LVpM24tWvWRPD1R9pPaWTucxXT+SdYjZcnTE7jjz0d693EDk81lKxETfQilx4oY9QaDCc64bYHqt4TfwKSss2PkbpzUwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732289788; c=relaxed/simple;
-	bh=ulkVZrbJ7LXfdpAd6jVryr/bZFOMZdGHRYTROX1Nyxg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j3Brv2eskOXkm+xjg+utdAAXJe/jmOq2GAKGWSnRoCaw5YGoglzEJlNRfw+oks3R5vEsAc0uWGGjCpEk2J/cSxzXSa7TqagGJHM0y6nPJjfDtIDOfLwzRf6aYHJn6q22xCQ/d+DlOqnceJuv99kSoOok8gGsLKBHn3BKP/gmw7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kenpQbti; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732290772; c=relaxed/simple;
+	bh=/nJfmQyJ67nzCNA3z8uStBYy6+t0+JuNtCjhBj64mHQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=N3GTKxL53453Rqyz9xLz9/ZqGb9hfMTi4poT01yip8Gvdq8+qtJZ27KGozGPyVtrChSpj+MBhy9VlF3dke467LW+0a1RLscyXiobuKlKZc1XlffonOTZmTF+LBiDhFmutA92CkIeiXRikysvYrUAKT4unYKMj3oKcPnGQhT8JQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrHNncyg; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kenpQbti"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ea22159119so301459a91.0;
-        Fri, 22 Nov 2024 07:36:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732289786; x=1732894586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VZZhhkaVdntqSbWoUtx77Z41xHVJ20hmKmC+zzkttso=;
-        b=kenpQbti9eChG0FYMgbUs5hgZEGf3bX0QFesH6g+H1xMpmhrPNTp5sx7rem2qp2OOp
-         JWZKdfhYQWV4zAtXL1TiHka6mr2jsOisllSOs59JEwUzn8yptGRI+dd/IERMTYTrcMIj
-         6bR7Fkyx8a7VgGbfG87CvaxjLjfG8ynw0f9Uih/wXq9tuMSM6KaecxDV9n3/HwK8WWSK
-         4TMy1+lb91Xo/YbfcPMaAT98297acxXrlAH0FsD/Q5HgOeHdMKuMwrhLBq6Z4IbLcWba
-         QgElxFHRDxYrTsOE9aq31881lrUExoTo20i345DMlksBrYH8arpF8H3UQgfLC6IJEwi2
-         pLxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732289786; x=1732894586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VZZhhkaVdntqSbWoUtx77Z41xHVJ20hmKmC+zzkttso=;
-        b=Nufw83eERsYvz84DBaIiJoxxxQvjEyXFkDDTOS3IoDbdvnQQ0EjfRYA/5QoMkgaNIn
-         WCDwhHPhJhR4BQ586nCNSFBEGwiz6AYNn26E13krnnWiSfxseOGwkPIQp0/qMf6R8WnD
-         VtZU4aeORUn3uqmH+TfXslYdXME6cr6PXoB1TOxvDB3Dd79k0kHEw9ZcsFd6kU9pkoZM
-         sQofFX15ufxvbxyQw8Fx0I1u7Nci/r41uHq1L6dl7zPwb+3iMcLKGuNzw0hoHYBK7z9D
-         bbyMH5rNX3W33bSeAVq+RLp7uEcHFlZNwlHkk+s4Coht+bWhhoh/jH4J4jiTx7ukuToX
-         GBhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBD4KtsR8K5UmYyj2+FeGCc1ZRm7OEmSdllvc1NDeaOBEFkT/M/OkzNpNSGyOBgMYfLvjftvu1BsMBJevm@vger.kernel.org, AJvYcCUTsdluGEHGPkbpQtkjjnZEZjgoDi8XvXA6Md+SzBHuM00RszFX3i6pHVMjP+eEtmv1VEpwllk09RM=@vger.kernel.org, AJvYcCUdeRPzaBVpLOx26Lv4VYes2WEyhUceE0KHWES9RLZ6+q1oTmfmkWvZQ5i6vREmGTaU265ECGQqnOwVRzcYe70=@vger.kernel.org, AJvYcCXw82q9+iLV/DQTJDYdiC3C2cYfjQDt69PIK1qHUGd5cuywDek3clBAtvYgfWcCGiIKFLTit92LELHG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkbwPh1stQMaU34eGVawF6khSs400F34ROfqKJ1WlVTMSdunof
-	mK/ms0GzaopVlZcHAH/oKw9DZgq580yuxlVkFPXIHwGXvtQPp30nIffAHZ07uecbD9M98pbopnN
-	zF9HjApEKZP3BBZ2zs7CpAhI7mns=
-X-Gm-Gg: ASbGncsEqc/K30LgJGrgM7ZwoI+NFTuK8hKvzYf88IgIN9FjJYw8Y2sGpj1IBlbIh96
-	FWHTPxhfXQv/zFWUocX1NBLOd1hkLrU4=
-X-Google-Smtp-Source: AGHT+IEiXHEmYFiLYnBV5W0lodikfivrMm17pCnk3inuDHM90S+JA+PramY2vQB6wYMHrjiRuzDZfyvwNw/BUL0njCM=
-X-Received: by 2002:a17:90b:38d0:b0:2ea:b2d7:4a24 with SMTP id
- 98e67ed59e1d1-2eb0e8906a4mr1670153a91.8.1732289786210; Fri, 22 Nov 2024
- 07:36:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrHNncyg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732290771; x=1763826771;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/nJfmQyJ67nzCNA3z8uStBYy6+t0+JuNtCjhBj64mHQ=;
+  b=mrHNncyguheNcpE77fdxuvwOc04qUolUE2uTBoF2aVodoSbV60VaoEv1
+   mO+cnADkjedlIyfOBCLomrBVmBf/CbjX27anabAdX6LxMxYvDNR8Nfpwo
+   yxIZE078Agy0YXvat7nO306vcbdyhw85kger8s6fKI8TiY4/E4vGEA19m
+   Jw5Xl6HtQ/73H27yMPQRWls9sRv2BLfzBObbeZ8AK4U5DdbSoHFI/5RgI
+   HQPcuSVPxLRhh3MfgMgl/dV3GZZV/gF1VRc6sdLx3tlCEcI8g9LokoYBb
+   g0mJMfOuD8fx3giK6XVm+yMwbTAPVTd+9UqBjrs62G2S1zxS+fyXpBmZc
+   A==;
+X-CSE-ConnectionGUID: fjB6CCJ5R7qlPAgZupnwWg==
+X-CSE-MsgGUID: /HirSHEVRmulXIbtl82j7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11264"; a="32386555"
+X-IronPort-AV: E=Sophos;i="6.12,176,1728975600"; 
+   d="scan'208";a="32386555"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2024 07:52:50 -0800
+X-CSE-ConnectionGUID: RjKzTc2VRHWS4lG3j66D6A==
+X-CSE-MsgGUID: lXCeWv6TQ4uySPf0cPE7vA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,176,1728975600"; 
+   d="scan'208";a="91408720"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.244.64])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2024 07:52:45 -0800
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>,
+	Li Ming <ming4.li@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH 0/3] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Fri, 22 Nov 2024 16:51:51 +0100
+Message-ID: <20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241115054616.1226735-3-alistair@alistair23.me>
- <20241115175831.GA2046032@bhelgaas> <20241122153040.00006791@huawei.com>
-In-Reply-To: <20241122153040.00006791@huawei.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 22 Nov 2024 16:36:13 +0100
-Message-ID: <CANiq72=oiBwZSMjFonZ=KqMtJ=KQk1B2KU=QtkH6wWUY71ADJA@mail.gmail.com>
-Subject: Re: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Alistair Francis <alistair@alistair23.me>, lukas@wunner.de, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, ojeda@kernel.org, 
-	tmgross@umich.edu, boqun.feng@gmail.com, benno.lossin@proton.me, 
-	a.hindborg@kernel.org, wilfred.mallawa@wdc.com, alistair23@gmail.com, 
-	alex.gaynor@gmail.com, gary@garyguo.net, aliceryhl@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 22, 2024 at 4:30=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> Not sure it will!  Security Protocol and Data Model
-> which to me is completely useless for hinting what it is ;)
->
-> Definitely keep (SPDM) on end of expanded name as I suspect most
-> people can't remember the terms (I had to look it up ;)
+The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+Physical Address (HPA) windows that are associated with each CXL Host
+Bridge. Each window represents a contiguous HPA that may be interleaved
+with one or more targets (CXL v3.1 - 9.18.1.3).
 
-If that is the case, then perhaps it may make sense to put it at the
-beginning if no one knows what the expanded form is:
+The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+memory to which systems cannot send transactions. On those systems, BIOS
+publishes CFMWS which communicate the active System Physical Address (SPA)
+ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+SPA range trims out the hole, and capacity in the endpoint is lost with no
+SPA to map to CXL HPA in that hole.
 
-    bool "SPDM (Security Protocol and Data Model)"
+In the early stages of CXL Regions construction and attach on platforms
+with Low Memory Holes, the driver fails and returns an error because it
+expects that the CXL Endpoint Decoder range is a subset of the Root
+Decoder's.
 
-However, from a quick grep, this "at the beginning" style does not
-seem common...
+Then detect SPA/HPA misalignment and allow CXL Regions construction and 
+attach if and only if the misalignment is due to x86 Low Memory Holes.
 
-Cheers,
-Miguel
+- Patch 1/3 changes the calling conventions of three match_*_by_range()
+  helpers in preparation of 2/3.
+- Patch 2/3 detects x86 LMH and enables CXL Regions construction and
+  attach by trimming HPA by SPA.
+- Patch 3/3 simulates a LMH for running the CXL tests on patched driver.
+
+Many thanks to Alison, Dan, and Ira for their help and for their reviews
+of my RFC on Intel's internal ML.
+
+Fabio M. De Francesco (3):
+  cxl/core: Change match_*_by_range() calling convention
+  cxl/core: Enable Region creation on x86 with Low Memory Hole
+  cxl/test: Simulate an x86 Low Memory Hole for tests
+
+ drivers/cxl/Kconfig          |  5 +++
+ drivers/cxl/core/Makefile    |  1 +
+ drivers/cxl/core/lmh.c       | 58 ++++++++++++++++++++++++++
+ drivers/cxl/core/region.c    | 80 ++++++++++++++++++++++++++++--------
+ drivers/cxl/cxl.h            | 32 +++++++++++++++
+ tools/testing/cxl/Kbuild     |  1 +
+ tools/testing/cxl/test/cxl.c |  4 +-
+ 7 files changed, 161 insertions(+), 20 deletions(-)
+ create mode 100644 drivers/cxl/core/lmh.c
+
+-- 
+2.46.2
+
