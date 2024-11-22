@@ -1,114 +1,144 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3F15CD60;
-	Fri, 22 Nov 2024 18:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2691D90B3
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 19:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732299775; cv=none; b=AK1TV7MDPo2e6EMXpRXUYXM18FrPxm3VXQDQPlqOkQnFPTWnV3T6XOwnJhuvYNFi9vw++MfFhrRWe/kCsXTeU420nd5itlUmctEQy5JB4SnPxYbJaDmg7WcQS2ZXfYgj1eiKtSenhoc6zbXCkoCMvHg5OjL3EDJ22LqUgmJ3pSQ=
+	t=1732304805; cv=none; b=Y6FYESuwKlsOZABvpGcAYAeNR9oCPv4VEyVbxh9tFgkXNaT0uzuqVdGOhWHC3Phg0/6XapIx0lKaFBOri9+nzzmLundNVr/UvNZiuC9eoJ3fT9E6eZ+tmaoLCOfQaGJzGlGsoyknoXX04Kxg607mylm4ZKsIEcI52OThUl1fE2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732299775; c=relaxed/simple;
-	bh=KXwZiJFQRphelGCPCym0D1/HQX9H6TTWlpETErvkVLI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n0gWsKWOJ+0Z5i4avIuDPBUDMor87ulpeBlgRorBOjJ6vh0nbyKiM6uycmeG7uhCnbcYnZD4kMvm6nR3LcHcouXZkbYUwE9yK96ZIfqDfQZyHviRUJ9aeRNsXf25YcaKaAjpGEQi2wqqT9o7Ql2S/kWl/I8dwYweVU/OHOaz6II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xw3Nc04B8z67n0t;
-	Sat, 23 Nov 2024 02:22:24 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CACAD140C72;
-	Sat, 23 Nov 2024 02:22:49 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 22 Nov
- 2024 19:22:48 +0100
-Date: Fri, 22 Nov 2024 18:22:47 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Alistair Francis <alistair@alistair23.me>, <lukas@wunner.de>,
-	<linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<bjorn3_gh@protonmail.com>, <ojeda@kernel.org>, <tmgross@umich.edu>,
-	<boqun.feng@gmail.com>, <benno.lossin@proton.me>, <a.hindborg@kernel.org>,
-	<wilfred.mallawa@wdc.com>, <alistair23@gmail.com>, <alex.gaynor@gmail.com>,
-	<gary@garyguo.net>, <aliceryhl@google.com>
-Subject: Re: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
-Message-ID: <20241122182247.00005ab0@huawei.com>
-In-Reply-To: <20241122172354.GA2430869@bhelgaas>
-References: <20241122153040.00006791@huawei.com>
-	<20241122172354.GA2430869@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1732304805; c=relaxed/simple;
+	bh=BuqKwIhhlq640Tjm6f+46BvN+qD9+ruWJktqKdOD9Wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGfpLKi4WV0/JrVDdRLkV7VFAFAwo61XoIDUzbKbvlg8DOpkn0INvT6tlp0sFviC+Lh1D2ZtPDIBokSNx6XIeENEpywG1ZqNmUVgzXlBguwX91ybDfZALWzzd4ikTTmbwoJN2Vf94SDqn0WAHJfjwROO3MebJPooAS66q+ihLKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uVOoXuTZ; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uVOoXuTZ"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b1418058bbso145408285a.3
+        for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 11:46:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1732304801; x=1732909601; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MO/NjeTFX3gMP5INkTmGbgV+SuU4fgpwtR/cceOFgRQ=;
+        b=uVOoXuTZpCBlkOfih97Sew01pR0pbWEYLQSpDgvwFJQO/TdHgi4BeRPyY1yXeFY6ut
+         yJ1F41CoRQZeTHdSs29+mQsgWY1whZz+JpjcyW2dLVTLhORxTsk/gD2AYiRBxSz21cpX
+         DxmVHmQPDcLrV749cF+12BblPTAnjauEu41SeGfpNM6hRo/tA3L8tJPzcnQ6a3jiMHyA
+         QJQFWcSgBGph2uSPXQoaBMsdrq41j2nKILjySbz0ErWhjip46Cf4SWR1R+EFWa756BRr
+         uIGaXt49R+C1PDNeqoxSM/eNepyoSyYEkfMjypOuMUieabOihmEYHTnf4G68JjWP3sVN
+         Owag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732304801; x=1732909601;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MO/NjeTFX3gMP5INkTmGbgV+SuU4fgpwtR/cceOFgRQ=;
+        b=Qzme6yC9v01fV5yULl6u1mqSdItrISMyvRLXdsgH6eI78Zrwjrrve71sj+QPPaP+hR
+         PePFLmVKQnD0np8P5zI66ckossgDYXZ6P2I4SGA35fX5PT1eBxTpCSiLBO68Nr/BNbXp
+         Zd2v7wjR3AArXl1tb0Ee2WHrz0Qm4tTPiOy8PznCeTi22isVinP/iVjniOfZxaSuV5mZ
+         5UYJIAaphh7GbEwoI6nInajMIP2ZQn/SSY5cgPVt3KRc4pJyWomkn/RKqruZ1am0E8ZD
+         IXlftPs/vrHvUe91D4yO18kBaWre084a171j6kZNiCFh5icLRhZ5XljqLIm8hYchhyyx
+         PXzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPxUawO1OoDbdEKaJ1IR1548WJfGGwPz23hYIH5syIBY2rfICcS69+vFYjUm7MFNJZCQ7QqCxW5Yk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLEj839wF5IOcUaG1B4Wn9W5qtj66d5LAwFlaDB9OQh6xw540f
+	bPUO23pwrUz3NuLuS6IvuPds0JdoxgTvVl+X8FBnQbqp1CKe+OyB3NaqxoEbuR0=
+X-Gm-Gg: ASbGncttHgjzvDfT6UTxLSJ+mUm0yD8kEtrNjxzegdBbqydfybqahcdiI2okN3tdT8x
+	8KNfrCDCo8j5awB2LXKVbWU/llZvf1G6+uV7gnX5hU3icf8llIKZJGNnTBR6a2X/dvXsIv3Cq52
+	j0n2DiLXGmdkBUe3gU1YNy+X9Fz7SSrqiskAx9PHt7Nb3+UFCLInI7uHq6btXqWIYlh2DB+XqiW
+	t2RB9ZLfOKNmcQ/jr6YGlHqHINSVBDJc+/fMPhRS0m2Yg6JloFztQEToR/WwDHPC1ebO3FfNOxo
+	qVCf65ybNjgzg9LLQdGsLHq6P5otVH2hbMQ=
+X-Google-Smtp-Source: AGHT+IFnOTk8hem7XuBaxt0wRk0+67VdCNaogvAT2Yq0WpVnlSL3hP+LBgLBSZ1Yf6goAOlisWVnBQ==
+X-Received: by 2002:a05:6214:4111:b0:6d4:1a1b:f839 with SMTP id 6a1803df08f44-6d45136320dmr57414576d6.49.1732304801650;
+        Fri, 22 Nov 2024 11:46:41 -0800 (PST)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d451b244fdsm13515096d6.77.2024.11.22.11.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2024 11:46:41 -0800 (PST)
+Date: Fri, 22 Nov 2024 14:46:31 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Li Ming <ming4.li@intel.com>,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	rrichter@amd.com, terry.bowman@amd.com
+Subject: Re: [PATCH 0/3] cxl/core: Enable Region creation on x86 with Low Mem
+ Hole
+Message-ID: <Z0Dfl76DIsrmWEZ1@PC2K9PVX.TheFacebook.com>
+References: <20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com>
 
-On Fri, 22 Nov 2024 11:23:54 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Fri, Nov 22, 2024 at 03:30:40PM +0000, Jonathan Cameron wrote:
-> >   
-> > > > diff --git a/lib/Kconfig b/lib/Kconfig
-> > > > index 68f46e4a72a6..4db9bc8e29f8 100644
-> > > > --- a/lib/Kconfig
-> > > > +++ b/lib/Kconfig
-> > > > @@ -739,6 +739,21 @@ config LWQ_TEST
-> > > >  	help
-> > > >            Run boot-time test of light-weight queuing.
-> > > >  
-> > > > +config SPDM
-> > > > +	bool "SPDM"    
-> > > 
-> > > If this appears in a menuconfig or similar menu, I think expanding
-> > > "SPDM" would be helpful to users.  
-> > 
-> > Not sure it will!  Security Protocol and Data Model
-> > which to me is completely useless for hinting what it is ;)
-> > 
-> > Definitely keep (SPDM) on end of expanded name as I suspect most
-> > people can't remember the terms (I had to look it up ;)  
+On Fri, Nov 22, 2024 at 04:51:51PM +0100, Fabio M. De Francesco wrote:
+> The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+> Physical Address (HPA) windows that are associated with each CXL Host
+> Bridge. Each window represents a contiguous HPA that may be interleaved
+> with one or more targets (CXL v3.1 - 9.18.1.3).
 > 
-> Agree that the expansion doesn't add a whole lot, but I do think the
-> unadorned "SPDM" config prompt is not quite enough since this is in
-> the "Library routines" section and there's no useful context at all.
+> The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> memory to which systems cannot send transactions. On those systems, BIOS
+> publishes CFMWS which communicate the active System Physical Address (SPA)
+> ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+> SPA range trims out the hole, and capacity in the endpoint is lost with no
+> SPA to map to CXL HPA in that hole.
 > 
-> Maybe a hint that it's related to PCIe (although I'm not sure it's
-> *only* PCIe?) or device authentication or even some kind of general
-> "security" connection?
+> In the early stages of CXL Regions construction and attach on platforms
+> with Low Memory Holes, the driver fails and returns an error because it
+> expects that the CXL Endpoint Decoder range is a subset of the Root
+> Decoder's.
+> 
+> Then detect SPA/HPA misalignment and allow CXL Regions construction and 
+> attach if and only if the misalignment is due to x86 Low Memory Holes.
 
-It's much broader than PCIe (I believe originated in USB before
-being standardized?)
++cc Robert Richter and Terry Bowman
 
-Maybe something like...
+This is not the only memory-hole possibility. We may need something
+more robust, rather than optimizing for a single memory hole solution.
 
-SPDM for security related message exchange (with devices)
+Robert and Terry may have some additional context here.
 
-Attempting to distill the text in the Introduction of the spec.
-
-"The Security Protocol and Data Model (SPDM) Specification defines messages, data objects, and sequences for
-performing message exchanges over a variety of transport and physical media. The description of message
-exchanges includes authentication and provisioning of hardware identities, measurement for firmware identities,
-session key exchange protocols to enable confidentiality with integrity-protected data communication, and other
-related capabilities. The SPDM enables efficient access to low-level security capabilities and operations. Other
-mechanisms, including non-DMTF-defined mechanisms, can use the SPDM"
-
-So clear as mud ;)
-
-J
-
+~Gregory
 
 > 
-> I admit that you're in good company; "parman" and "objagg" have zero
-> context and not even any help text at all.
+> - Patch 1/3 changes the calling conventions of three match_*_by_range()
+>   helpers in preparation of 2/3.
+> - Patch 2/3 detects x86 LMH and enables CXL Regions construction and
+>   attach by trimming HPA by SPA.
+> - Patch 3/3 simulates a LMH for running the CXL tests on patched driver.
 > 
-> Bjorn
-
+> Many thanks to Alison, Dan, and Ira for their help and for their reviews
+> of my RFC on Intel's internal ML.
+> 
+> Fabio M. De Francesco (3):
+>   cxl/core: Change match_*_by_range() calling convention
+>   cxl/core: Enable Region creation on x86 with Low Memory Hole
+>   cxl/test: Simulate an x86 Low Memory Hole for tests
+> 
+>  drivers/cxl/Kconfig          |  5 +++
+>  drivers/cxl/core/Makefile    |  1 +
+>  drivers/cxl/core/lmh.c       | 58 ++++++++++++++++++++++++++
+>  drivers/cxl/core/region.c    | 80 ++++++++++++++++++++++++++++--------
+>  drivers/cxl/cxl.h            | 32 +++++++++++++++
+>  tools/testing/cxl/Kbuild     |  1 +
+>  tools/testing/cxl/test/cxl.c |  4 +-
+>  7 files changed, 161 insertions(+), 20 deletions(-)
+>  create mode 100644 drivers/cxl/core/lmh.c
+> 
+> -- 
+> 2.46.2
+> 
