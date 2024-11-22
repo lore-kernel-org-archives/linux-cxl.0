@@ -1,41 +1,45 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD034207F
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 15:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED25613AC1;
+	Fri, 22 Nov 2024 15:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732289222; cv=none; b=uJqB3CEnJhFr4CDoM0TooP4MiMZLKviMe0TgOanv4F2lleeCcOd3M3aOG2kVeui6DAH/5T866yK+Ff5YgABNFqsDrv4sOKWIduYrHNtiS2wNG42EyGnbJARg/I3s/80+4+h73GlDOLPsLQelrFU/c8wb4TIUuy7g3dDjuYf1/Ww=
+	t=1732289449; cv=none; b=G7QVSuSVHaczrpaHsgGKZzmtGMalqSUWot7P9Wy50aRM2r6g3L7mLDnYoN5c3L+Q9IGbSBP8jN/J88TQZP0cBZK/RjH32JNMFgUBE/3pdjczZ9tQGVoOMQQUcyIpVOHyrg336D7VZ3Akc1StSxvEf4Z4VN7BRYD6p1RHoLs1dFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732289222; c=relaxed/simple;
-	bh=LWFHKTlFBDI4Q+Xn/db/g3DpQpIVJeHZMJiaoYI9CwM=;
+	s=arc-20240116; t=1732289449; c=relaxed/simple;
+	bh=sSPHFaEhpqcfSwvNTbLH7yXzLTvWt+R8ixkPNq3qPDg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RD8/NLyMKOa2VDBWOhExxtxIuqcBq+2QVf3iwa7mwBBV1rwoZ4XbawM76C2Bd7dif1gJC+Sg3dX/1N0JKq48A8FE81QeRacN6XBgxxh+VwK1BmSXTOJBjaH4i8D+LkC6De3MG9dRSzpxjgBdl5KLt/POTUV45JDb9zACxynA2Co=
+	 MIME-Version:Content-Type; b=nTbsy5a0/QpsBSV93NpSeGRc/hdcFFLCyEsIpklxwOwEYT92C5YCTxt2B1KSB5gTwEliLUVF8aCUIrY7PzA+EgB+5ZF1Ek1C4q/cWUJ9APX3W42dqS5T1Dam6HcdDiS2vu+Y4TrbQOpNG8kNfye1U/j4spOVCWb3JeWTHLqcNmg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvzRQ0z6Vz6K8vt;
-	Fri, 22 Nov 2024 23:24:34 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvzWl387hz6K8n6;
+	Fri, 22 Nov 2024 23:28:19 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2A2E2140134;
-	Fri, 22 Nov 2024 23:26:57 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 76476140A70;
+	Fri, 22 Nov 2024 23:30:42 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 22 Nov
- 2024 16:26:56 +0100
-Date: Fri, 22 Nov 2024 15:26:55 +0000
+ 2024 16:30:41 +0100
+Date: Fri, 22 Nov 2024 15:30:40 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [RFC PATCH v2 20/20] fwctl/cxl: Add documentation to FWCTL CXL
-Message-ID: <20241122152655.0000717d@huawei.com>
-In-Reply-To: <20241115212745.869552-21-dave.jiang@intel.com>
-References: <20241115212745.869552-1-dave.jiang@intel.com>
-	<20241115212745.869552-21-dave.jiang@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Alistair Francis <alistair@alistair23.me>, <lukas@wunner.de>,
+	<linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <bhelgaas@google.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<bjorn3_gh@protonmail.com>, <ojeda@kernel.org>, <tmgross@umich.edu>,
+	<boqun.feng@gmail.com>, <benno.lossin@proton.me>, <a.hindborg@kernel.org>,
+	<wilfred.mallawa@wdc.com>, <alistair23@gmail.com>, <alex.gaynor@gmail.com>,
+	<gary@garyguo.net>, <aliceryhl@google.com>
+Subject: Re: [RFC 2/6] drivers: pci: Change CONFIG_SPDM to a dependency
+Message-ID: <20241122153040.00006791@huawei.com>
+In-Reply-To: <20241115175831.GA2046032@bhelgaas>
+References: <20241115054616.1226735-3-alistair@alistair23.me>
+	<20241115175831.GA2046032@bhelgaas>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,64 +52,27 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 15 Nov 2024 14:25:53 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Add policy and operational documentation for FWCTL CXL.
+> > diff --git a/lib/Kconfig b/lib/Kconfig
+> > index 68f46e4a72a6..4db9bc8e29f8 100644
+> > --- a/lib/Kconfig
+> > +++ b/lib/Kconfig
+> > @@ -739,6 +739,21 @@ config LWQ_TEST
+> >  	help
+> >            Run boot-time test of light-weight queuing.
+> >  
+> > +config SPDM
+> > +	bool "SPDM"  
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  .../userspace-api/fwctl/fwctl-cxl.rst         | 91 +++++++++++++++++++
->  Documentation/userspace-api/fwctl/index.rst   |  1 +
->  2 files changed, 92 insertions(+)
->  create mode 100644 Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> 
-> diff --git a/Documentation/userspace-api/fwctl/fwctl-cxl.rst b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> new file mode 100644
-> index 000000000000..158e9aa45609
-> --- /dev/null
-> +++ b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> @@ -0,0 +1,91 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +================
-> +fwctl cxl driver
-> +================
-> +
-> +:Author: Dave Jiang
-> +
-> +Overview
-> +========
-> +
-> +The CXL spec defines a set of commands that can be issued to the mailbox of a
-> +CXL device or switch. It also left room for vendor specific commands to be
-> +issued to the mailbox as well. fwctl provides a path to issue a set of allowed
-> +mailbox commands from user space to the device moderated by the kernel driver.
-> +
-> +While there are a large set of mailbox commands, only the feature related
-> +commands will be allowed to be issued through fwctl initially. No background
-> +commands will be supported at this time.
-> +
-> +CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
-> +CXL spec r3.1 8.2.9.6.2 Get Feature (Opcode 0501h)
-> +CXL spec r3.1 8.2.9.6.3 Set Feature (Opcode 0502h)
-> +
-> +The "Get Supported Features" return data may be filtered by the kernel driver to
-> +drop any features that are forbidden by the kernel or being exclusively used by
-> +the kernel. The "Get Supported Featuers" command falls under the fwctl policy
-spell check. Features
+> If this appears in a menuconfig or similar menu, I think expanding
+> "SPDM" would be helpful to users.
 
-> +of FWCTL_RPC_CONFIGURATION.
-As per earlier feedback I think we need to reject get/set even if they are not
-listed in get supported features so that bad userspace doesn't get away
-with sending them anyway.  This is particularly necessary as I suspect we'll
-be removing features in the long run from what we let be accessed this way.
+Not sure it will!  Security Protocol and Data Model
+which to me is completely useless for hinting what it is ;)
 
-I'm not sure how we document the potential for removal of a feature that
-was reported by an earlier kernel.
+Definitely keep (SPDM) on end of expanded name as I suspect most
+people can't remember the terms (I had to look it up ;)
 
 Jonathan
-
-
 
 
