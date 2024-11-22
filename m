@@ -1,107 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F27170A01;
-	Fri, 22 Nov 2024 20:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0A91DE2BD
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 20:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732306087; cv=none; b=snQG4hFEnf/5YAssifXxEr2l7vvpmf01ew+MHWm/j6iWnuh9gCT1wPa9wQCAeAlvZFmuOKX53nrrKwDkOfUYBeUgPL2ZA1jzUN0ujhXWdo9Bixxu9SW3bU64Ev38UX0MOGsS3evwWRrEV1+mRjWzh2gPZwg1DVkZqmdnvlEQnmk=
+	t=1732306476; cv=none; b=IHddjvNBIoZ2eC2YIdI3PM3eYL30SSuTeq8sfPvPp0/4YTnXSdrQSmBAlsbwKKVVEU/1dknjR5ZFBH/eRD4bFxLhG/v/H2cN19xA7xwwsez8gtjIoyGgcVr8XIGGIr7M/0j5LRK5B2bfiXDQwWkI1GyOhCfcG2bzWdGPp0Rt7q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732306087; c=relaxed/simple;
-	bh=H0WGmc4fhp39hrLk/vQe7lwz9wX1lQ6E3eONcDXE/oA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A9NCzTSSh7IykUD+w6XvpBsmLMD93CBttv418Gqbp6J9kediD+ifSyl9J4Wfc+4Nt2TV5KFketuJCALw76oPHNcagyACoXm4V+nMGF6syZliZ6f58q1S2ut5EsJiZOAv7N4HlZ5ROvqJv/fWV6KLkVJPjxOCVUVMBJjmFtdN1RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rlYmRLNc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732306476; c=relaxed/simple;
+	bh=w7oNgnGkjUVT8GGjwL0QR+rs8MlieWWuuM9mx4FWY4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eMI+D4q/Ob3k7EcjS7Z5+wa2P7Syfn7dsrOUdFjWpAwA9PCiYMMtu8hBURlRPEHkGB6RbBiWrRwHQFcTtUWpZR4ZjzDAkD/WOS90ZX9aLso8/1D1zlEhG5n7fvTCkhcn+agTFMueE8N3R/StE1PaEuN94MC6dPITuBWa8EWN7s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ym2dfDBx; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rlYmRLNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9AD5C4CECE;
-	Fri, 22 Nov 2024 20:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732306087;
-	bh=H0WGmc4fhp39hrLk/vQe7lwz9wX1lQ6E3eONcDXE/oA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rlYmRLNcffA8BvAM4uw6etJfi/PZzuVciDoR8K2G4yoTG/5mD3yMLjxsgG3TGWANb
-	 3doU9hmKBXdKwDtm8VOPPY3ZSrU1Idx+Cb4qnY4RnHZFRYc0mCS5zJnt2EUZVdkYpk
-	 9LYkwAB6pQqx5JJLgxu8Q/0ImqAUtmjZi4/P1ZOKMgCCk+oqzrgvWTc6I2N++Q0P3q
-	 UujM2u8gxY4fSw0r+LLgdXJIs1+3Q58aTxXI5uJV/aNA5GV9ZLbxZ4hqIUz4bcipFG
-	 4j1d/2tl6uOhhVUFP3q6zy+2Njw9ORvRCLNvMqRcoTeECfobtjuu/vo+a1365PtVpY
-	 NlffSSWBsg9TA==
-From: SeongJae Park <sj@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Gregory Price <gourry@gourry.net>,
-	linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com,
-	tongtiangen@huawei.com,
-	Yicong Yang <yangyicong@huawei.com>,
-	Niyas Sait <niyas.sait@huawei.com>,
-	ajayjoshi@micron.com,
-	Vandana Salve <vsalve@micron.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Arnaldo Carvalho de Melo" <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Huang Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
-Date: Fri, 22 Nov 2024 12:08:03 -0800
-Message-Id: <20241122200803.59369-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241121145852.00000460@huawei.com>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ym2dfDBx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732306475; x=1763842475;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=w7oNgnGkjUVT8GGjwL0QR+rs8MlieWWuuM9mx4FWY4E=;
+  b=Ym2dfDBxg9pYrXttQogsK1mHkv7nO8Lu+1LwVLnJRutgiZnrksX3voFS
+   3hUFHX/K7UlP86gb2+u4BljM/Xk1SLOOYwWedY89GnaIcQLAUMc8j+AT5
+   eD4cwYEHpoBMO4SLghcfay5yu3gzKPpl7+WSARWvhteFC3vfh17G7SsYt
+   grwPMVm05NltuiPl9qap+zgNDF7ETz4o3U9uw5QddGUqu8j0/eiOGEtek
+   9I3VqYy6lkD4FsJrtzK7g9y7JPByhyr5IKKvHs2k6zxJKLrfZPoGnk8mb
+   +GX5lscCDBwsP9hltmG6Z1MWbWPImDC1gX9EfIVpgbPaDryhlnLxDeyzJ
+   Q==;
+X-CSE-ConnectionGUID: Cvt+aH1NQpyxsxRjZBH2aQ==
+X-CSE-MsgGUID: alByLN1ERfu53fgqH+TeVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11264"; a="49895132"
+X-IronPort-AV: E=Sophos;i="6.12,176,1728975600"; 
+   d="scan'208";a="49895132"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2024 12:14:35 -0800
+X-CSE-ConnectionGUID: 5pkuEy5SQQCsqjzIRLVMjw==
+X-CSE-MsgGUID: mf1IFlV5Q6O/Bvsnq9xFxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,176,1728975600"; 
+   d="scan'208";a="90660534"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.70]) ([10.125.110.70])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2024 12:14:34 -0800
+Message-ID: <e461c96c-340e-47b5-9eb0-db2125ed01e2@intel.com>
+Date: Fri, 22 Nov 2024 13:14:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 05/20] cxl: Add Get Feature command support for
+ user submission
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com, Shiju Jose <shiju.jose@huawei.com>
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20241115212745.869552-6-dave.jiang@intel.com>
+ <20241121174748.000046ce@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241121174748.000046ce@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 21 Nov 2024 14:58:52 +0000 Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> On Thu, 21 Nov 2024 09:24:43 -0500
-> Gregory Price <gourry@gourry.net> wrote:
+
+On 11/21/24 10:47 AM, Jonathan Cameron wrote:
+> On Fri, 15 Nov 2024 14:25:38 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> > On Thu, Nov 21, 2024 at 10:18:41AM +0000, Jonathan Cameron wrote:
-[...]
-> Just working out how to tune the hardware to grab useful data is going
-> to take a while to figure out, let alone doing anything much with it.
+>> Add enumeration of Get Feature mailbox command for the kernel to recognize
+>> the command being passed in from user space.
+>>
+>> CXL spec r3.1 8.2.9.6.2 Get Feature (Opcode 0501h)
+>>
+>> The feature requested is identified by specific UUID.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Hmm. Should we push this into Shiju's series if thought is that will land
+> first?  Seems harmless but I find it hard to care that much ;)
+
+Yes if Shiju can fold this into his get feature patch that'd be great.
+
+At some point we should stabilize the common patches between the two series and get that committed to cxl/next.
+
 > 
-> Without care you won't get a meaningful signal for what is actually
-> hot out of the box. Lots of reasons why including:
-> a) Exhaustion of tracking resources, due to looking at too large a window
->    or for too long.  Will probably need some form of auto updating of
->    what is being scanning (coarse to fine might work though I'm doubtful,
->    scanning across small regions maybe).
-> b) Threshold too high, no detections.
-> c) Threshold too low, everything hot.
-> d) Wrong timescales. Hot is not a well defined thing.
-> e) Hardware that won't do tracking at fine enough granularity.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>  drivers/cxl/core/mbox.c      | 1 +
+>>  include/uapi/linux/cxl_mem.h | 1 +
+>>  2 files changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index f70bd7d28ff8..f49665d3b4d6 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -68,6 +68,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+>>  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+>>  	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
+>>  	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+>> +	CXL_CMD(GET_FEATURE, 0x15, CXL_VARIABLE_PAYLOAD, 0),
+>>  };
+>>  
+>>  /*
+>> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+>> index bd2535962f70..90dcb9723997 100644
+>> --- a/include/uapi/linux/cxl_mem.h
+>> +++ b/include/uapi/linux/cxl_mem.h
+>> @@ -51,6 +51,7 @@
+>>  	___C(CLEAR_LOG, "Clear Log"),					  \
+>>  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
+>>  	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
+>> +	___C(GET_FEATURE, "Get Feature"),				  \
+>>  	___C(MAX, "invalid / last command")
+>>  
+>>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> 
 
-Similar questions can be raised to general hotness monitoring including that
-for DAMON.  I'm trying to summarize[1] rules of thumbs for DAMON tuning based
-on my humble experiences.  Once it is done, I will further try automations of
-tunings.
-
-In future, hopefully DAMON can be extended to utilize CXL hotness monitoring
-unit as low level primitive for access check.  Then, the guidance and
-automation of DAMON tuning could be just applied.
-
-Note that I'm not saying DAMON should be the only way to utilize CXL hotness
-monitoring unit.  I'm saying DAMON could be one of the ways :)
-
-[1] https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
-
-
-Thanks,
-SJ
-
-[...]
