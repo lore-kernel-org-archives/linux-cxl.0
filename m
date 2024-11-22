@@ -1,130 +1,120 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7774C187321;
-	Fri, 22 Nov 2024 10:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B4C79FE
+	for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 14:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732272080; cv=none; b=nSSlqTPAKCMHMqWQTE0Pb2AcRYqUAUN2Apg6wZVlu+KbNKGOu85L2nhoxj+ZO52BnyQZCzMe5DafW+uL3/Kd9MyTzeBtVXBnzc/zcARk1XDLlzv/Iv0rrizs1af7uzAz3iBpoT8la5Pc6jN0ArKQJsnjYp1g1OjtJanPMW0578A=
+	t=1732285055; cv=none; b=gTVY8T/G6TxwKoo+fAEROSh7/e3cK40rxMeemUbIiTnJAbC+jz0sNGuSjpclEfaYIJ5IasMM+4kE53FdN7ztOsyG3a/4IMRDntnHtMId8ihv16591vDOHEFLEiINlpKE1vSr/PIcpd1kfEj97jhvNGH4PwHAUAkXpKwQM0ecBQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732272080; c=relaxed/simple;
-	bh=KSYXqdrMRonpXduljyoL1qqI7zpiy/+BxUamLqdoUvU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HqPnMixelfuB2qOD1NpWk8lGUBYPJA5RIJx2Dlc8h2scuX9zGe1JLZMqFYxv9hGMmzJqWmvM3CmJaZnZKT74E0LUj4w7dfwoGqnjriQaS/YU0iq0ikmiiouajidhTUVTUtiWKGIvUSRHUGA2AO8HdYraM95z1jYm79ZFDVJZra4=
+	s=arc-20240116; t=1732285055; c=relaxed/simple;
+	bh=EDfXSJJHCkqcR7MTFoa/jAkAApLT+RR8BFq9lAhBoWc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PRyxWHeE93w47Tg1jNXvjdur2y0zLEDDI6Aaw5HICCajvwMO77SItELYZZct/AtZ5h3Tr+G73lLp4FPS7xc9dlJRK/3OskRD3SblZ3OyhK9yws2PPDKdDlOtlh6oTIjhIWdQgC9cm52NWMsKlKRBFP7MtZ6vEEW+jcdRDblEXx8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xvs4K64MWz6873W;
-	Fri, 22 Nov 2024 18:37:37 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4586C140133;
-	Fri, 22 Nov 2024 18:41:15 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 22 Nov 2024 11:41:15 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Fri, 22 Nov 2024 11:41:15 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: RE: [PATCH 13/13] rasdaemon: ras-mc-ctl: Update logging of CXL memory
- module data to align with CXL spec rev 3.1
-Thread-Topic: [PATCH 13/13] rasdaemon: ras-mc-ctl: Update logging of CXL
- memory module data to align with CXL spec rev 3.1
-Thread-Index: AQHbOzMKWgVy8qd6/k6IUGY4Oph577LBz8AAgAFNg4A=
-Date: Fri, 22 Nov 2024 10:41:14 +0000
-Message-ID: <0fbde50ced8a478aaa4aabd04cb7cb8a@huawei.com>
-References: <20241120095923.1891-1-shiju.jose@huawei.com>
-	<20241120095923.1891-14-shiju.jose@huawei.com>
- <20241121153848.0000079a@huawei.com>
-In-Reply-To: <20241121153848.0000079a@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvxxX6rv6z6L71V;
+	Fri, 22 Nov 2024 22:17:04 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 83091140447;
+	Fri, 22 Nov 2024 22:17:30 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 22 Nov
+ 2024 15:17:29 +0100
+Date: Fri, 22 Nov 2024 14:17:28 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [RFC PATCH v2 07/20] cxl: Add Set Feature command support for
+ user submission
+Message-ID: <20241122141728.000062e7@huawei.com>
+In-Reply-To: <9e3afbf8-80dd-480b-9735-ce8dcf8bbc75@intel.com>
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+	<20241115212745.869552-8-dave.jiang@intel.com>
+	<20241121174935.00003e2b@huawei.com>
+	<9e3afbf8-80dd-480b-9735-ce8dcf8bbc75@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Jonathan,
+On Thu, 21 Nov 2024 11:08:44 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 21 November 2024 15:39
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org;
->mchehab@kernel.org; dave.jiang@intel.com; dan.j.williams@intel.com;
->alison.schofield@intel.com; nifan.cxl@gmail.com; vishal.l.verma@intel.com;
->ira.weiny@intel.com; dave@stgolabs.net; linux-kernel@vger.kernel.org;
->Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>
->Subject: Re: [PATCH 13/13] rasdaemon: ras-mc-ctl: Update logging of CXL
->memory module data to align with CXL spec rev 3.1
->
->On Wed, 20 Nov 2024 09:59:23 +0000
-><shiju.jose@huawei.com> wrote:
->
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> CXL spec 3.1 section 8.2.9.2.1.3 Table 8-47, Memory Module Event
->> Record has updated with following new fields and new info for Device
->> Event Type and Device Health Information fields.
->> 1. Validity Flags
->> 2. Component Identifier
->> 3. Device Event Sub-Type
->>
->> This update modifies ras-mc-ctl to parse and log CXL memory module
->> event data stored in the RAS SQLite database table, reflecting the
->> specification changes introduced in revision 3.1.
->>
->> Example output,
->>
->> ./util/ras-mc-ctl --errors
->> ...
->> CXL memory module events:
->> 1 2024-11-20 00:22:33 +0000 error: memdev=3Dmem0, host=3D0000:0f:00.0,
->> serial=3D0x3, \ log=3DFatal,
->> hdr_uuid=3Dfe927475-dd59-4339-a586-79bab113b774, hdr_flags=3D0x1, , \
->> hdr_handle=3D0x1, hdr_related_handle=3D0x0, hdr_timestamp=3D1970-01-01
->> 00:04:38 +0000, \ hdr_length=3D128, hdr_maint_op_class=3D0,
->> hdr_maint_op_sub_class=3D1, \
->> event_type: Temperature Change, event_sub_type: Unsupported Config
->> Data, \
->> health_status: 'MAINTENANCE_NEEDED' , 'REPLACEMENT_NEEDED' , \
->> media_status: All Data Loss in Event of Power Loss, life_used=3D8, \
->> dirty_shutdown_cnt=3D33, cor_vol_err_cnt=3D25, cor_per_err_cnt=3D45, \
->> device_temp=3D3, add_status=3D3 \
->> component_id:02 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
->> pldm_entity_id:00 00 00 00 00 00 pldm_resource_id:fc d2 7e 2f ...
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->Feels like there is a lot of duplication in here, but you aren't really ma=
-king it any
->worse and maybe it is hard to reduce it.
->
-ras-mc-ctl is a tool(script), used offline, to read, decode and print  the =
-error event's data stored
-by rasdaemon into the SQLite data base. Thus logging here is similar to tho=
-se done in the rasdaemon.
+> On 11/21/24 10:49 AM, Jonathan Cameron wrote:
+> > On Fri, 15 Nov 2024 14:25:40 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> Add enumeration of Set Feature mailbox command for the kernel to recognize
+> >> the command being passed in from user space.  
+> > 
+> > This looks unwise to make available on the ioctl.   
+> 
+> Do you mean the current memdev char dev ioctl? Maybe we can introduce a restricted_commands mask to block that on the legacy ioctl? Trying to make the two ioctl paths co-exist is a bit of a pain right now.
+> 
+Yes - I'd rather we didn't introduce new commands on the legacy ioctl
+at all, but if we do keeping it to the definitely safe ones (GET_xxx etc)
+would be better.
 
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Another mask is a way to solve this, though feels like opt in is
+going to be easier to maintain long term than opt out.
+Mind you we can modify how exactly it is done later as not
+critical yet.
 
-Thanks,
-Shiju
+Jonathan
+
+> DJ
+>  
+> >   
+> >>
+> >> CXL spec r3.1 8.2.9.6.3 Set Feature (Opcode 0502h)
+> >>
+> >> The feature requested is identified by specific UUID.
+> >>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> >> ---
+> >>  drivers/cxl/core/mbox.c      | 1 +
+> >>  include/uapi/linux/cxl_mem.h | 1 +
+> >>  2 files changed, 2 insertions(+)
+> >>
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index 4b9abf9a5b2b..739444d34130 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -69,6 +69,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+> >>  	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
+> >>  	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+> >>  	CXL_CMD(GET_FEATURE, 0x15, CXL_VARIABLE_PAYLOAD, 0),
+> >> +	CXL_CMD(SET_FEATURE, CXL_VARIABLE_PAYLOAD, 0, 0),
+> >>  };
+> >>  
+> >>  /*
+> >> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> >> index 90dcb9723997..469dd481795f 100644
+> >> --- a/include/uapi/linux/cxl_mem.h
+> >> +++ b/include/uapi/linux/cxl_mem.h
+> >> @@ -52,6 +52,7 @@
+> >>  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
+> >>  	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
+> >>  	___C(GET_FEATURE, "Get Feature"),				  \
+> >> +	___C(SET_FEATURE, "Set Feature"),				  \
+> >>  	___C(MAX, "invalid / last command")
+> >>  
+> >>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a  
+> >   
+> 
+> 
+
