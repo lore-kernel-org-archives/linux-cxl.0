@@ -1,209 +1,420 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2063.outbound.protection.outlook.com [40.107.244.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5211586CB
-	for <linux-cxl@vger.kernel.org>; Fri, 22 Nov 2024 01:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732239996; cv=none; b=asu69X48NNRdarnEZ71mRZmYierRdr4M7uPU3c1DPcEgYCUSBMe7xMv4fUB1rexOKYpyU0iCkbNCLP7wa76kSuMqeApD3XNUqO13IbTjcylXXIcPupmB5IKQeCh/4egl6KkjiG9X2bn9TSxJ3WZLeQGn8Blg+pPub2YS2qrcJpA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732239996; c=relaxed/simple;
-	bh=jDlXG1BdKr8C7n733ocAnV/tBd1AO77HAwFvqtg/Wcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6NB/QTJpsTDaV/J7VZmF48Z0DfzB2Yd1CiAJnXx+p+GEZMJW5M8NkcXl5XyE9HOwRPS7cyAsAZzOLNs2jvR0rY2qaGaysBFrL6OOIXPrbKP0Um/yVlPYKyS/WKMK7vlJp4YxBpbPpJXCJ9Puw4R1b1Lo7MGGT5JlN+VLGIOqnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kg0PK0O8; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02494C66;
+	Fri, 22 Nov 2024 02:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732244259; cv=fail; b=HWR1ZNJxEUUc5QFdc53FSNQ2ZNPTqnvekI28/8EXpvxUtdMimcLX85G+cX+r/sZ+u/vV2kUrkwtTbhZ9injxkBqVnsh8vCWBD8HBoB6ZMPVVkfmVIzjesPWO4pUZTm0gUadrZWygFUW2ObesmrUTZMm9wK0v31gowM2dW06XouM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732244259; c=relaxed/simple;
+	bh=q+oeA9+a5rEmoP3J7oNn1zc6pUm6nLo+oOP732lsL8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iOQKH++oS6xLY9bim7nO3g+QC+/QoyFVKwYrlfGhFnMGaMs30uywR85L5Ma9ywqH1mnbFZHWlsCkMpSLpfs60HD/2DTbAxxiE3culk1G3ed5zSBTmXrwKOXQdbHt9vVJZYnIEqQCjdDTsGomyiDw9lqXmGyGtkQcQBA3wME+4ZQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dKQlT9bz; arc=fail smtp.client-ip=40.107.244.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kg0PK0O8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732239994; x=1763775994;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jDlXG1BdKr8C7n733ocAnV/tBd1AO77HAwFvqtg/Wcg=;
-  b=Kg0PK0O81vJ+qXjL3edvdNpCRnQsmGLuV6NOn6hv++iMy22pI7SK57jX
-   AS3Y02VHY3nB9fRgZ+jwoDQbBTUz5hV8JMjzGnwJd1lMK2erH0opsdiEE
-   PZOMHy2+Ufgv1zSL0rkauUuNfeXHQBuYJpWWkhnO7Rxkam4y/IqHl3kIn
-   /R7kW3cs9ymkWQA5RfwdDgAC6ZMIvTJc6DhzO+PTnX6AgKD2Z29ZZSSl7
-   NZC7a4NATeklxPaGqV7p22srAI2lwlUFv2wW7NEyPOKWGpAndU0DPwXCv
-   /BzhOREo7wYqdThk9Cy7SWQ1OLVUEDNYztdH8Vk0mjznKwVE8t8ZJI7O6
-   g==;
-X-CSE-ConnectionGUID: Drz8hWE/R/GQDcwoAdu14w==
-X-CSE-MsgGUID: vX5gBVDrQ5WG1KR+SzIz4g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11263"; a="43447923"
-X-IronPort-AV: E=Sophos;i="6.12,174,1728975600"; 
-   d="scan'208";a="43447923"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2024 17:46:29 -0800
-X-CSE-ConnectionGUID: hFl4TVR6SkKxQtlKOwLjIA==
-X-CSE-MsgGUID: RaOb8TLFQXuS8aworknPHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,174,1728975600"; 
-   d="scan'208";a="113716357"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 21 Nov 2024 17:46:27 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tEIka-0003Yv-1h;
-	Fri, 22 Nov 2024 01:46:24 +0000
-Date: Fri, 22 Nov 2024 09:46:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH v2] cxl: avoid driver data for obtaining cxl_dev_state
- reference
-Message-ID: <202411220917.CiqYJijn-lkp@intel.com>
-References: <20241118163238.6723-1-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dKQlT9bz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VVrpOTTaVbAVA8bHDjpAmP+jh/45eONOyfNF2nYcLkwGkYScF0yat5ielO96VD/olLqpRXbHUaw2SvyaSjObd0cDXX9FC30DK2x82V9O9Jl1LGLQd82f8r3CkzpFPpMZrAiYaBrXrW17XTdh4exbs+xI4BCMnwltTRiGFdneInXQZ3njTX9NyhzqXMCTMlRLOZIvXhjSHi8d4TPiKejpSy7eemnhNgQ5TdkKx+P6b5oYvKms5Pgas7b1PZhO4j7F+H63LDWYB/HvuVSDmDXdSu+5HOD3XupPy6S3bUs8rABw++3cOCh0TKnQW7+38i+FZeJS+Oo4aOrTQ2IeMqZwcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=30VYJrYa9n9dqrOBYLYdPedn8shgxJ7X+TBgLEuqTXI=;
+ b=vp/IacL3neFs5/vWaJaqCfMhrpz9nJ1iQshH6KLjie5hZCDDkPSoMFQXeo+L8V3GFQg5A5gp/hx7v/ZSQCuP/21QTW5DhjNNO+aaMBSyy+Jjac3YfENpzO5Aj8glJeV7YnmumuU0JgpiOmi9GpC3jeuWbaUGnmgI6JtMSXi9NZvxIDp52p9J2rUDNzkDZS90f0J0PR17+AY15Q+ipzc6iH0ddecRsLb8kaVQghu4W4qbFyxyuFaUCb8s0VCzGEWuTBdkZSDw0L/T0vduPCZb9opfRlQCFv+lPrDZrDgLw18fSt3ulVUV1aTXD0EQG/u0UjyvD2WlW5zzQ+rsvztfdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=30VYJrYa9n9dqrOBYLYdPedn8shgxJ7X+TBgLEuqTXI=;
+ b=dKQlT9bzGyIsiHC6BHEQLLmcDVO/dMPvupnkYvluw7wr74GAgXafFsRQ9U0uOlNrroiYLrn50ymhRruW7G9updyOYISXr33HItfxitN8pY4ecWiPMJ1MD1/zeZQYF5JOqq+yArKe01UP0Y1Gohxf020nnDRKN+RcmzHK5dLrJ6FP2H7e6eGgvqbjBmDexHBN3Lc76ZT6GTG3GGWuPuf5bAxtI7Cl+49MhTouOawFshQNnRdirkxj8aaal3c1Ta0EyxxFQ/K/WGCrpBgP8PmTLkesx+ox+VztEuXZIPc2tgHkBx/Fvt/lzpN8wb/oi5QDdlQB9CGDSYFlHtsrJYlr/w==
+Received: from CH2PR08CA0021.namprd08.prod.outlook.com (2603:10b6:610:5a::31)
+ by MN0PR12MB6366.namprd12.prod.outlook.com (2603:10b6:208:3c1::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.23; Fri, 22 Nov
+ 2024 02:57:30 +0000
+Received: from CH2PEPF00000147.namprd02.prod.outlook.com
+ (2603:10b6:610:5a:cafe::9b) by CH2PR08CA0021.outlook.office365.com
+ (2603:10b6:610:5a::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.15 via Frontend
+ Transport; Fri, 22 Nov 2024 02:57:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH2PEPF00000147.mail.protection.outlook.com (10.167.244.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8182.16 via Frontend Transport; Fri, 22 Nov 2024 02:57:30 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 21 Nov
+ 2024 18:57:18 -0800
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 21 Nov
+ 2024 18:57:17 -0800
+Message-ID: <61ff7fe6-9a79-4dd3-8076-7106fe08be5c@nvidia.com>
+Date: Thu, 21 Nov 2024 18:57:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241118163238.6723-1-alejandro.lucero-palau@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/25] fs/dax: Create a common implementation to break
+ DAX layouts
+To: Alistair Popple <apopple@nvidia.com>, <dan.j.williams@intel.com>,
+	<linux-mm@kvack.org>
+CC: <lina@asahilina.net>, <zhang.lyra@gmail.com>,
+	<gerald.schaefer@linux.ibm.com>, <vishal.l.verma@intel.com>,
+	<dave.jiang@intel.com>, <logang@deltatee.com>, <bhelgaas@google.com>,
+	<jack@suse.cz>, <jgg@ziepe.ca>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <dave.hansen@linux.intel.com>,
+	<ira.weiny@intel.com>, <willy@infradead.org>, <djwong@kernel.org>,
+	<tytso@mit.edu>, <linmiaohe@huawei.com>, <david@redhat.com>,
+	<peterx@redhat.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>, <hch@lst.de>,
+	<david@fromorbit.com>
+References: <cover.e1ebdd6cab9bde0d232c1810deacf0bae25e6707.1732239628.git-series.apopple@nvidia.com>
+ <31b18e4f813bf9e661d5d98d928c79556c8c2c57.1732239628.git-series.apopple@nvidia.com>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <31b18e4f813bf9e661d5d98d928c79556c8c2c57.1732239628.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000147:EE_|MN0PR12MB6366:EE_
+X-MS-Office365-Filtering-Correlation-Id: 516fc921-716c-431f-00ff-08dd0aa167fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S2xXS1MvSjdEN0E0WWV3ci9JRDVxM2JUMzVQRWhkYmV1MmpYRkNwTDd3bm12?=
+ =?utf-8?B?cFRHWDJLbkVnYUlLYU5LcXZPUk9kTmFGT3lPRE5nSjZINldQTXlWa2FrdG1a?=
+ =?utf-8?B?S1krdVJEaGhZeGlia085clpicURhOW9TYnZNQ1JNclNZbnRuN1dHeElKWGlD?=
+ =?utf-8?B?cWxpbC9wZ1ZKZFFvQ0dhMUorVTl0Mkc2cE5YdHgyUTVRRHNRWDExcWR3Ymtj?=
+ =?utf-8?B?TTFmQzRIV293N3IvZUhZM0RUMWRGOTVWUmhZM3FobDcrLzBxRncvNVRXbytp?=
+ =?utf-8?B?UiswNGQvcGxGNFFwNW1ZdmQ3WFRIazJPbHJQS0NqZmZVUUhOU1FrOU43NU5V?=
+ =?utf-8?B?TWNPM2pRKzRUeHlWTG84cW5yMFo0NmZaU2VzRGI3UTNYOTc3QUg4NmpjU25U?=
+ =?utf-8?B?akdLYXFpNUhYc0UvUURhUE9zcDhhQm1ZNEhMUzBvaWRNdzFMWjVVTlNlQUhm?=
+ =?utf-8?B?OFB1Z3BKRFRPcHFaUVR2WUVSajJibEZsZ3FLNnFaZzhSMmxrZ0pvUC9mTFNw?=
+ =?utf-8?B?RnJyYkpLRTF5Q2d3NU9qQlgzUjRKU2c1Y00yditlR3FCVi90em9pb1R3TitB?=
+ =?utf-8?B?ZWdnNE9kekh0RnBNUHVxYnBEOTlsNUdkUkljZDlnUGY0ODR5WFZ1TDA4bzNv?=
+ =?utf-8?B?cXhmcFdGZ3d4NklhSmRUZlhGQVpWZUNHbTRNVzZjODNjTlRhdkE0SE5sL3Ax?=
+ =?utf-8?B?VVNzWERJVCsvemMyLzdOT0RwWHJYZElGMGVBVHdQSnN6ODFmRG41dnIrVFht?=
+ =?utf-8?B?eGZ5VzYxa3VXL3I5a2RHdWxIZ05Jd25MaVpkb051TG1LYnpJMzE2N0hmeU1R?=
+ =?utf-8?B?WjdtcEdRUmNGbGkvSzRtVlZ5YjNHYWVTb0VuL2M1OXVCcFhJVVgwL1A4dVJ0?=
+ =?utf-8?B?VU9QRDdTMFQxY2YrMm9qRFZ4TEExK1NpaUNCS1lnQ0xLQ1hVeU9MVkV5SENl?=
+ =?utf-8?B?QmdkU09pVmw1SzJnalp3UU41dHVHb0FpVDZvaTFuZUkwYTBPL3I1NXVNbG9k?=
+ =?utf-8?B?TDNmWUlXOEYzcHlMWTl4ckc4bmJRYnNTWW5kYWJPVmtyNUorS1dyai91R1dI?=
+ =?utf-8?B?dDZGdERGNnpsMDNnQ2FaanFnUWpNRHNDY2RpMm9PUE81ZlhoRHNQTkRIK1lI?=
+ =?utf-8?B?d1dTVGZDVTM3Tm9GcU96cmxKeXVveFJEN3E2QTMxZmZOS2QvREZMYjFLN3pk?=
+ =?utf-8?B?ZzhGMzNRYk00b3dHZnVldE1xcUtrZitqL1pZa1F1cDA3a2V2WEphS05kWXBW?=
+ =?utf-8?B?VTV1UXZQUzB3VE83RWdrZUluekJEbEJXWk1VZzZ2R29oc1A1WUREYnVaM1NV?=
+ =?utf-8?B?Y1U1NlQxcUxRbG1XOEpVNUxWMVNZbUpkYVZJZjVqUW96NVo4YnNneDdIRThC?=
+ =?utf-8?B?VVNaeFlrdE9QTG82U00vc04wNG8wSDZIVE83UThJcXhJdCtyQi85bUI5b2ly?=
+ =?utf-8?B?d2doMFJidFJKd1VkQTRCN1d3LzNKcVhoV3FObEtydm1Sa094bkN0UzYvbEpI?=
+ =?utf-8?B?c0tnZXRjYW9KMU5uSzJJckNqODJPU0JvNS9wenZRbkZ5RmRmd1RxVCs1MUVB?=
+ =?utf-8?B?OGo0L01jRTRKOEZ2RHA1MmljekZNdC95UTMyTlRtc1UwcHA4V1ZXYWE4Rjdn?=
+ =?utf-8?B?LzEwcHBNU2VjanpCazRBcnU0bnM1ellNZi9WZC9pQ3JTcDR1dHFGSWNqSkpT?=
+ =?utf-8?B?eDZyZE5iUXdaYUg2RHZxcCs1SEI1aS83VGIxSDdPdnVvTnd2M3U5RjJzVTFt?=
+ =?utf-8?B?THZjUUl3dTJBNk0xS2tvSUJGZllIem1kMDh3ZE9zNGtOZjNjMCtoaU14elJZ?=
+ =?utf-8?B?cS9KRks4TmpuVWpWSGl3VndPeW5iYmF6SndVKzRFNHVkM0pFSDFuWDVVT3VE?=
+ =?utf-8?B?UXhsNm84K1B5YjFlZW5Kb1h4QzNZVklZY0Vpc01OSER4RkE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2024 02:57:30.5718
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 516fc921-716c-431f-00ff-08dd0aa167fd
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000147.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6366
 
-Hi,
+On 11/21/24 5:40 PM, Alistair Popple wrote:
+> Prior to freeing a block file systems supporting FS DAX must check
+> that the associated pages are both unmapped from user-space and not
+> undergoing DMA or other access from eg. get_user_pages(). This is
+> achieved by unmapping the file range and scanning the FS DAX
+> page-cache to see if any pages within the mapping have an elevated
+> refcount.
+> 
+> This is done using two functions - dax_layout_busy_page_range() which
+> returns a page to wait for the refcount to become idle on. Rather than
+> open-code this introduce a common implementation to both unmap and
+> wait for the page to become idle.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> ---
+>   fs/dax.c            | 29 +++++++++++++++++++++++++++++
+>   fs/ext4/inode.c     | 10 +---------
+>   fs/fuse/dax.c       | 29 +++++------------------------
+>   fs/xfs/xfs_inode.c  | 23 +++++------------------
+>   fs/xfs/xfs_inode.h  |  2 +-
+>   include/linux/dax.h |  7 +++++++
+>   6 files changed, 48 insertions(+), 52 deletions(-)
+> 
+> diff --git a/fs/dax.c b/fs/dax.c
+> index efc1d56..b1ad813 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -845,6 +845,35 @@ int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index)
+>   	return ret;
+>   }
+>   
+> +static int wait_page_idle(struct page *page,
+> +			void (cb)(struct inode *),
+> +			struct inode *inode)
+> +{
+> +	return ___wait_var_event(page, page_ref_count(page) == 1,
+> +				TASK_INTERRUPTIBLE, 0, 0, cb(inode));
+> +}
+> +
+> +/*
+> + * Unmaps the inode and waits for any DMA to complete prior to deleting the
+> + * DAX mapping entries for the range.
+> + */
+> +int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
+> +		void (cb)(struct inode *))
+> +{
+> +	struct page *page;
+> +	int error;
+> +
+> +	do {
+> +		page = dax_layout_busy_page_range(inode->i_mapping, start, end);
+> +		if (!page)
+> +			break;
+> +
+> +		error = wait_page_idle(page, cb, inode);
+> +	} while (error == 0);
+> +
+> +	return error;
+> +}
 
-kernel test robot noticed the following build errors:
+Hi Alistair!
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on linus/master v6.12 next-20241121]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This needs to be EXPORT'ed. In fact so do two others, but I thought I'd
+reply at the exact point that the first fix needs to be inserted, which
+is here. And let you sprinkle the remaining two into the right patches.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-avoid-driver-data-for-obtaining-cxl_dev_state-reference/20241121-141608
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20241118163238.6723-1-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v2] cxl: avoid driver data for obtaining cxl_dev_state reference
-config: mips-randconfig-r061-20241122 (https://download.01.org/0day-ci/archive/20241122/202411220917.CiqYJijn-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241122/202411220917.CiqYJijn-lkp@intel.com/reproduce)
+The overall diff required for me to build the kernel with this series is:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411220917.CiqYJijn-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/cxl/cxlmem.h:12,
-                    from drivers/cxl/pci.c:15:
-   drivers/cxl/cxl.h:830:24: error: storage class specified for parameter 'cxl_bus_type'
-     830 | extern struct bus_type cxl_bus_type;
-         |                        ^~~~~~~~~~~~
->> drivers/cxl/cxl.h:879:20: error: storage class specified for parameter 'is_cxl_pmem_region'
-     879 | static inline bool is_cxl_pmem_region(struct device *dev)
-         |                    ^~~~~~~~~~~~~~~~~~
->> drivers/cxl/cxl.h:879:20: warning: parameter 'is_cxl_pmem_region' declared 'inline'
->> drivers/cxl/cxl.h:880:1: warning: 'gnu_inline' attribute ignored [-Wattributes]
-     880 | {
-         | ^
->> drivers/cxl/cxl.h:879:20: error: 'no_instrument_function' attribute applies only to functions
-     879 | static inline bool is_cxl_pmem_region(struct device *dev)
-         | ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/cxl/cxl.h:880:1: error: expected ';', ',' or ')' before '{' token
-     880 | {
-         | ^
---
-   In file included from drivers/perf/../cxl/cxlpci.h:6,
-                    from drivers/perf/cxl_pmu.c:23:
-   drivers/perf/../cxl/cxl.h:830:24: error: storage class specified for parameter 'cxl_bus_type'
-     830 | extern struct bus_type cxl_bus_type;
-         |                        ^~~~~~~~~~~~
->> drivers/perf/../cxl/cxl.h:879:20: error: storage class specified for parameter 'is_cxl_pmem_region'
-     879 | static inline bool is_cxl_pmem_region(struct device *dev)
-         |                    ^~~~~~~~~~~~~~~~~~
->> drivers/perf/../cxl/cxl.h:879:20: warning: parameter 'is_cxl_pmem_region' declared 'inline'
->> drivers/perf/../cxl/cxl.h:880:1: warning: 'gnu_inline' attribute ignored [-Wattributes]
-     880 | {
-         | ^
->> drivers/perf/../cxl/cxl.h:879:20: error: 'no_instrument_function' attribute applies only to functions
-     879 | static inline bool is_cxl_pmem_region(struct device *dev)
-         | ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/perf/../cxl/cxl.h:880:1: error: expected ';', ',' or ')' before '{' token
-     880 | {
-         | ^
+diff --git a/fs/dax.c b/fs/dax.c
+index 0169b356b975..35e3c41eb517 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -921,6 +921,7 @@ void dax_delete_mapping_range(struct address_space *mapping,
+  	}
+  	xas_unlock_irq(&xas);
+  }
++EXPORT_SYMBOL_GPL(dax_delete_mapping_range);
+  
+  static int wait_page_idle(struct page *page,
+  			void (cb)(struct inode *),
+@@ -961,6 +962,7 @@ int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
+  
+  	return error;
+  }
++EXPORT_SYMBOL_GPL(dax_break_mapping);
+  
+  void dax_break_mapping_uninterruptible(struct inode *inode,
+  				void (cb)(struct inode *))
+@@ -979,6 +981,7 @@ void dax_break_mapping_uninterruptible(struct inode *inode,
+  	if (!page)
+  		dax_delete_mapping_range(inode->i_mapping, 0, LLONG_MAX);
+  }
++EXPORT_SYMBOL_GPL(dax_break_mapping_uninterruptible);
+  
+  /*
+   * Invalidate DAX entry if it is clean.
 
 
-vim +/is_cxl_pmem_region +879 drivers/cxl/cxl.h
+thanks,
+John Hubbard
 
-779dd20cfb56c5 Ben Widawsky       2021-06-08  829  
-b39cb1052a5cf4 Dan Williams       2021-02-16 @830  extern struct bus_type cxl_bus_type;
-6af7139c979474 Dan Williams       2021-06-15  831  
-6af7139c979474 Dan Williams       2021-06-15  832  struct cxl_driver {
-6af7139c979474 Dan Williams       2021-06-15  833  	const char *name;
-6af7139c979474 Dan Williams       2021-06-15  834  	int (*probe)(struct device *dev);
-6af7139c979474 Dan Williams       2021-06-15  835  	void (*remove)(struct device *dev);
-6af7139c979474 Dan Williams       2021-06-15  836  	struct device_driver drv;
-6af7139c979474 Dan Williams       2021-06-15  837  	int id;
-6af7139c979474 Dan Williams       2021-06-15  838  };
-6af7139c979474 Dan Williams       2021-06-15  839  
-d69d804845985c Greg Kroah-Hartman 2024-07-01  840  #define to_cxl_drv(__drv)	container_of_const(__drv, struct cxl_driver, drv)
-6af7139c979474 Dan Williams       2021-06-15  841  
-6af7139c979474 Dan Williams       2021-06-15  842  int __cxl_driver_register(struct cxl_driver *cxl_drv, struct module *owner,
-6af7139c979474 Dan Williams       2021-06-15  843  			  const char *modname);
-6af7139c979474 Dan Williams       2021-06-15  844  #define cxl_driver_register(x) __cxl_driver_register(x, THIS_MODULE, KBUILD_MODNAME)
-6af7139c979474 Dan Williams       2021-06-15  845  void cxl_driver_unregister(struct cxl_driver *cxl_drv);
-6af7139c979474 Dan Williams       2021-06-15  846  
-c57cae78bfa6a8 Ben Widawsky       2022-01-23  847  #define module_cxl_driver(__cxl_driver) \
-c57cae78bfa6a8 Ben Widawsky       2022-01-23  848  	module_driver(__cxl_driver, cxl_driver_register, cxl_driver_unregister)
-c57cae78bfa6a8 Ben Widawsky       2022-01-23  849  
-8fdcb1704f61a8 Dan Williams       2021-06-15  850  #define CXL_DEVICE_NVDIMM_BRIDGE	1
-21083f51521fb0 Dan Williams       2021-06-15  851  #define CXL_DEVICE_NVDIMM		2
-54cdbf845cf719 Ben Widawsky       2022-02-01  852  #define CXL_DEVICE_PORT			3
-54cdbf845cf719 Ben Widawsky       2022-02-01  853  #define CXL_DEVICE_ROOT			4
-8dd2bc0f8e02d3 Ben Widawsky       2022-02-04  854  #define CXL_DEVICE_MEMORY_EXPANDER	5
-8d48817df6ac20 Dan Williams       2021-06-15  855  #define CXL_DEVICE_REGION		6
-04ad63f086d1a9 Dan Williams       2022-01-11  856  #define CXL_DEVICE_PMEM_REGION		7
-09d09e04d2fcf8 Dan Williams       2023-02-10  857  #define CXL_DEVICE_DAX_REGION		8
-1ad3f701c39999 Jonathan Cameron   2023-05-26  858  #define CXL_DEVICE_PMU			9
-8fdcb1704f61a8 Dan Williams       2021-06-15  859  
-6af7139c979474 Dan Williams       2021-06-15  860  #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
-6af7139c979474 Dan Williams       2021-06-15  861  #define CXL_MODALIAS_FMT "cxl:t%d"
-6af7139c979474 Dan Williams       2021-06-15  862  
-8fdcb1704f61a8 Dan Williams       2021-06-15  863  struct cxl_nvdimm_bridge *to_cxl_nvdimm_bridge(struct device *dev);
-8fdcb1704f61a8 Dan Williams       2021-06-15  864  struct cxl_nvdimm_bridge *devm_cxl_add_nvdimm_bridge(struct device *host,
-8fdcb1704f61a8 Dan Williams       2021-06-15  865  						     struct cxl_port *port);
-21083f51521fb0 Dan Williams       2021-06-15  866  struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
-21083f51521fb0 Dan Williams       2021-06-15  867  bool is_cxl_nvdimm(struct device *dev);
-53989fad1286e6 Dan Williams       2021-11-11  868  bool is_cxl_nvdimm_bridge(struct device *dev);
-84ec985944ef34 Li Ming            2024-06-12  869  int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
-84ec985944ef34 Li Ming            2024-06-12  870  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
-04ad63f086d1a9 Dan Williams       2022-01-11  871  
-04ad63f086d1a9 Dan Williams       2022-01-11  872  #ifdef CONFIG_CXL_REGION
-04ad63f086d1a9 Dan Williams       2022-01-11  873  bool is_cxl_pmem_region(struct device *dev);
-04ad63f086d1a9 Dan Williams       2022-01-11  874  struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
-a32320b71f085f Dan Williams       2023-02-10  875  int cxl_add_to_region(struct cxl_port *root,
-a32320b71f085f Dan Williams       2023-02-10  876  		      struct cxl_endpoint_decoder *cxled);
-09d09e04d2fcf8 Dan Williams       2023-02-10  877  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-04ad63f086d1a9 Dan Williams       2022-01-11  878  #else
-04ad63f086d1a9 Dan Williams       2022-01-11 @879  static inline bool is_cxl_pmem_region(struct device *dev)
-04ad63f086d1a9 Dan Williams       2022-01-11 @880  {
-04ad63f086d1a9 Dan Williams       2022-01-11  881  	return false;
-04ad63f086d1a9 Dan Williams       2022-01-11  882  }
-04ad63f086d1a9 Dan Williams       2022-01-11  883  static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-04ad63f086d1a9 Dan Williams       2022-01-11  884  {
-04ad63f086d1a9 Dan Williams       2022-01-11  885  	return NULL;
-04ad63f086d1a9 Dan Williams       2022-01-11  886  }
-a32320b71f085f Dan Williams       2023-02-10  887  static inline int cxl_add_to_region(struct cxl_port *root,
-a32320b71f085f Dan Williams       2023-02-10  888  				    struct cxl_endpoint_decoder *cxled)
-a32320b71f085f Dan Williams       2023-02-10  889  {
-a32320b71f085f Dan Williams       2023-02-10  890  	return 0;
-a32320b71f085f Dan Williams       2023-02-10  891  }
-09d09e04d2fcf8 Dan Williams       2023-02-10  892  static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
-09d09e04d2fcf8 Dan Williams       2023-02-10  893  {
-09d09e04d2fcf8 Dan Williams       2023-02-10  894  	return NULL;
-09d09e04d2fcf8 Dan Williams       2023-02-10  895  }
-04ad63f086d1a9 Dan Williams       2022-01-11  896  #endif
-67dcdd4d3b832a Dan Williams       2021-09-14  897  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+>   /*
+>    * Invalidate DAX entry if it is clean.
+>    */
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index cf87c5b..d42c011 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3885,15 +3885,7 @@ int ext4_break_layouts(struct inode *inode)
+>   	if (WARN_ON_ONCE(!rwsem_is_locked(&inode->i_mapping->invalidate_lock)))
+>   		return -EINVAL;
+>   
+> -	do {
+> -		page = dax_layout_busy_page(inode->i_mapping);
+> -		if (!page)
+> -			return 0;
+> -
+> -		error = dax_wait_page_idle(page, ext4_wait_dax_page, inode);
+> -	} while (error == 0);
+> -
+> -	return error;
+> +	return dax_break_mapping_inode(inode, ext4_wait_dax_page);
+>   }
+>   
+>   /*
+> diff --git a/fs/fuse/dax.c b/fs/fuse/dax.c
+> index af436b5..2493f9c 100644
+> --- a/fs/fuse/dax.c
+> +++ b/fs/fuse/dax.c
+> @@ -665,38 +665,19 @@ static void fuse_wait_dax_page(struct inode *inode)
+>   	filemap_invalidate_lock(inode->i_mapping);
+>   }
+>   
+> -/* Should be called with mapping->invalidate_lock held exclusively */
+> -static int __fuse_dax_break_layouts(struct inode *inode, bool *retry,
+> -				    loff_t start, loff_t end)
+> -{
+> -	struct page *page;
+> -
+> -	page = dax_layout_busy_page_range(inode->i_mapping, start, end);
+> -	if (!page)
+> -		return 0;
+> -
+> -	*retry = true;
+> -	return dax_wait_page_idle(page, fuse_wait_dax_page, inode);
+> -}
+> -
+> -/* dmap_end == 0 leads to unmapping of whole file */
+> +/* Should be called with mapping->invalidate_lock held exclusively.
+> + * dmap_end == 0 leads to unmapping of whole file.
+> + */
+>   int fuse_dax_break_layouts(struct inode *inode, u64 dmap_start,
+>   				  u64 dmap_end)
+>   {
+> -	bool	retry;
+> -	int	ret;
+> -
+> -	do {
+> -		retry = false;
+> -		ret = __fuse_dax_break_layouts(inode, &retry, dmap_start,
+> -					       dmap_end);
+> -	} while (ret == 0 && retry);
+>   	if (!dmap_end) {
+>   		dmap_start = 0;
+>   		dmap_end = LLONG_MAX;
+>   	}
+>   
+> -	return ret;
+> +	return dax_break_mapping(inode, dmap_start, dmap_end,
+> +				fuse_wait_dax_page);
+>   }
+>   
+>   ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index eb12123..120597a 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -2704,21 +2704,17 @@ xfs_mmaplock_two_inodes_and_break_dax_layout(
+>   	struct xfs_inode	*ip2)
+>   {
+>   	int			error;
+> -	bool			retry;
+>   	struct page		*page;
+>   
+>   	if (ip1->i_ino > ip2->i_ino)
+>   		swap(ip1, ip2);
+>   
+>   again:
+> -	retry = false;
+>   	/* Lock the first inode */
+>   	xfs_ilock(ip1, XFS_MMAPLOCK_EXCL);
+> -	error = xfs_break_dax_layouts(VFS_I(ip1), &retry);
+> -	if (error || retry) {
+> +	error = xfs_break_dax_layouts(VFS_I(ip1));
+> +	if (error) {
+>   		xfs_iunlock(ip1, XFS_MMAPLOCK_EXCL);
+> -		if (error == 0 && retry)
+> -			goto again;
+>   		return error;
+>   	}
+>   
+> @@ -2977,19 +2973,11 @@ xfs_wait_dax_page(
+>   
+>   int
+>   xfs_break_dax_layouts(
+> -	struct inode		*inode,
+> -	bool			*retry)
+> +	struct inode		*inode)
+>   {
+> -	struct page		*page;
+> -
+>   	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
+>   
+> -	page = dax_layout_busy_page(inode->i_mapping);
+> -	if (!page)
+> -		return 0;
+> -
+> -	*retry = true;
+> -	return dax_wait_page_idle(page, xfs_wait_dax_page, inode);
+> +	return dax_break_mapping_inode(inode, xfs_wait_dax_page);
+>   }
+>   
+>   int
+> @@ -3007,8 +2995,7 @@ xfs_break_layouts(
+>   		retry = false;
+>   		switch (reason) {
+>   		case BREAK_UNMAP:
+> -			error = xfs_break_dax_layouts(inode, &retry);
+> -			if (error || retry)
+> +			if (xfs_break_dax_layouts(inode))
+>   				break;
+>   			fallthrough;
+>   		case BREAK_WRITE:
+> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> index 97ed912..0db27ba 100644
+> --- a/fs/xfs/xfs_inode.h
+> +++ b/fs/xfs/xfs_inode.h
+> @@ -564,7 +564,7 @@ xfs_itruncate_extents(
+>   	return xfs_itruncate_extents_flags(tpp, ip, whichfork, new_size, 0);
+>   }
+>   
+> -int	xfs_break_dax_layouts(struct inode *inode, bool *retry);
+> +int	xfs_break_dax_layouts(struct inode *inode);
+>   int	xfs_break_layouts(struct inode *inode, uint *iolock,
+>   		enum layout_break_reason reason);
+>   
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 773dfc4..7419c88 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -257,6 +257,13 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
+>   int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
+>   int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
+>   				      pgoff_t index);
+> +int __must_check dax_break_mapping(struct inode *inode, loff_t start,
+> +				loff_t end, void (cb)(struct inode *));
+> +static inline int __must_check dax_break_mapping_inode(struct inode *inode,
+> +						void (cb)(struct inode *))
+> +{
+> +	return dax_break_mapping(inode, 0, LLONG_MAX, cb);
+> +}
+>   int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+>   				  struct inode *dest, loff_t destoff,
+>   				  loff_t len, bool *is_same,
+
+
