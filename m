@@ -1,277 +1,153 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B45B376
-	for <linux-cxl@vger.kernel.org>; Mon, 25 Nov 2024 08:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3C2187FFA;
+	Mon, 25 Nov 2024 08:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732523690; cv=none; b=J8mV2lb0e5Ac7vm9z0T0OlFBQEi7Hwx3JIrthxLaMW02NhqqB8Pcw1r/SD1rP68UPAhvB5ZAv8eIU3oQgT84czl2+UXcwhkQO4ga6T+a0FetccwsyUXtz0WMYhQByNfKHOQQRzZcLlSw/ahFjd6z2eIEHYuX6kAxU8MBQ65wP7s=
+	t=1732524140; cv=none; b=kG9TeraWcuJ0LctdJLnAe67xojXMLnh7LDsqEhAoDNQOABn6uiD2Ny0ZDNV/okaQnioD8VrGckmzDlTIxncJkp4W+NIkrNdpzwdwYygT50wHPi59Dmyrk/O8916Iuap/nH+R0fKB5zDX+Yaf6NIE4npg9qX1gYXar7jqJQerN3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732523690; c=relaxed/simple;
-	bh=sbpto9/ym3G8ccBgVAiTEFuG2T0NqXLn9GDTt7SEZNo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oXY4HIG+WBi4T6B+pAZCyXV8LFgPXOLHCfqk+ZKqOHxGluRS9eBcJxiNNj0QG0rFtVlU6em+syAQxQjQGu3q5lcny9c4ArHPWxgOIQrFOFjcXikUa9lJM9PHJyociduRZ9IeM356IebWffiDekhaZIvgzd+YTP6DlpxkBUakz4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDXzqmUNkRn9vAdBw--.28304S2;
-	Mon, 25 Nov 2024 16:34:28 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwA3jnqJNkRnr8FZAA--.8389S3;
-	Mon, 25 Nov 2024 16:34:18 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: marcin.juszkiewicz@linaro.org,
-	ardb+tianocore@kernel.org,
-	quic_llindhol@quicinc.com,
-	Jonathan.Cameron@Huawei.com
-Cc: chenbaozi@phytium.com.cn,
-	devel@edk2.groups.io,
-	linux-cxl@vger.kernel.org,
-	asa-dev@op-lists.linaro.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [RFC PATCH edk2-platforms v3 0/1] add basic support for CXL on sbsa-ref
-Date: Mon, 25 Nov 2024 16:34:13 +0800
-Message-Id: <20241125083414.53044-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1732524140; c=relaxed/simple;
+	bh=H8dVvaxAfzgmHdBxZDBeyOpaTmlwiqO6Fj5VB1iEfQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWdWvwCSieIWlhEiGayOhCN5XJQCnDFLIo6VZA7g4qj1UGWop40mdSPAWwlbhYL4Z+XMzh+W+nCAOd2OuDlW9LpbeOL57VkBQKPsV0+UuUr5CBlfhk7inLOvqkTHsowUZNY1BbqxEZlgthvtixApwXjxJ/w1AvOk2Oisu5G+N8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0FfkRAu; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0FfkRAu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732524139; x=1764060139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H8dVvaxAfzgmHdBxZDBeyOpaTmlwiqO6Fj5VB1iEfQ0=;
+  b=e0FfkRAuFyCqpbjDpozikBXc2f10z14cVAHivHjymst502MDdP8t+svK
+   Qw9VKXNeaFcu8jcTw284vkOI1zKMOK2Jv4wnBuB7O8ltTE+eOfKAB+wf+
+   MtkQwvWQc1aFWZRXT47LKAI+7522uw71dgkGmG+J50pqxeWAPxPkEq8X8
+   HSTYmp2Bh8YQ8TiCU5bp+iEDeKSIwAA+WiotnBFhyL1dVWRC2fmJ0m7eR
+   Nlc0mSId993r27mfMsKZE301z8Zwf3JZZ5GJXHHghEowm3+HEVnaFcdoh
+   QYghQo2Zy4eH6bj8BkL87JJJQZfGoSUUIGc8iMIFGa7/+7PdKblP6md9l
+   w==;
+X-CSE-ConnectionGUID: 2Rp0JZOGR5Klq/BQiTesew==
+X-CSE-MsgGUID: 8dAJvrqwTyaE3dfoGLcR6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11266"; a="32560324"
+X-IronPort-AV: E=Sophos;i="6.12,182,1728975600"; 
+   d="scan'208";a="32560324"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2024 00:42:18 -0800
+X-CSE-ConnectionGUID: GcAFz0zYRlKfEwYPcw2CTQ==
+X-CSE-MsgGUID: 9pFpg5OST8qVHjnhr/EP5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,182,1728975600"; 
+   d="scan'208";a="91546181"
+Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 25 Nov 2024 00:42:15 -0800
+Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tFUfc-00065N-1l;
+	Mon, 25 Nov 2024 08:42:12 +0000
+Date: Mon, 25 Nov 2024 16:41:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Li Ming <ming4.li@intel.com>,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH 2/3] cxl/core: Enable Region creation on x86 with Low
+ Memory Hole
+Message-ID: <202411251632.4eenIlnF-lkp@intel.com>
+References: <20241122155226.2068287-3-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3jnqJNkRnr8FZAA--.8389S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWdDg3QCaAACs7
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Ar1kWF4DCw1UWr4UtFyUtrb_yoW3Cw4UpF
-	1UtFs0gr4kA347Cr4xuF17Aw13u34SyF4UJr9rJryj9F15Xw15XrZ5JryjgryUAr4kGr1j
-	qFnrtw10q348GaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241122155226.2068287-3-fabio.m.de.francesco@linux.intel.com>
 
-v2 -> v3:
-- PCDs values of pio, mmio32, mmio64 & ecam space for the independent cxl host
-- CXL Bus range: 0x00 ~ 0xff
-- Mcfg ecam structure for cxl
-- Iort RC node for cxl
+Hi Fabio,
 
-RFC because
-- Many contents are ported from Jonathan' patch on qemu virt design
+kernel test robot noticed the following build warnings:
 
-- Bring plenty of PCDs values
+[auto build test WARNING on cxl/next]
+[also build test WARNING on linus/master cxl/pending v6.12 next-20241125]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- Less experience and not particularly confident in ACPI area
+url:    https://github.com/intel-lab-lkp/linux/commits/Fabio-M-De-Francesco/cxl-core-Change-match_-_by_range-calling-convention/20241125-102754
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20241122155226.2068287-3-fabio.m.de.francesco%40linux.intel.com
+patch subject: [PATCH 2/3] cxl/core: Enable Region creation on x86 with Low Memory Hole
+config: i386-buildonly-randconfig-001-20241125 (https://download.01.org/0day-ci/archive/20241125/202411251632.4eenIlnF-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241125/202411251632.4eenIlnF-lkp@intel.com/reproduce)
 
-This series leverages Jonathan's patches[1] to add acpi0016 & acpi0017 objects into the
-previous DSDT table of sbsa-ref. Since my latest acpi0016 implementation model on qemu
-side is a new host bridge qemu object rather than pxb-cxl, the cxl host(Segment 0001)
-would have its own ECAM sapce. Meanwhile, this adds exclusive pio, mmio32 & mmio64 space
-for cxl host.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411251632.4eenIlnF-lkp@intel.com/
 
-As sbsa-ref cxl host has its own ecam space, this defines the bus range of cxl host from
-0x0 to 0xff. Therefore, this adds relevant BASE_ADDRESS_ALLOCATION_STRUCTURE for cxl in Mcfg.
-And to enable msi of cxl components, this add a new RC node in Iort.
+All warnings (new ones prefixed by >>):
 
-Based on the new CEDT definitions patch on edk2[2], this series adds a static Cedt.aslc to
-support the [SBSA_CXL_CHBCR] & [SBSA_CXL_FIXED_WINDOW] space on sbsa-ref.
+   In file included from drivers/cxl/cxlmem.h:12,
+                    from drivers/cxl/port.c:7:
+>> drivers/cxl/cxl.h:921:6: warning: no previous prototype for 'arch_match_spa' [-Wmissing-prototypes]
+     921 | bool arch_match_spa(struct cxl_root_decoder *cxlrd,
+         |      ^~~~~~~~~~~~~~
+>> drivers/cxl/cxl.h:927:6: warning: no previous prototype for 'arch_match_region' [-Wmissing-prototypes]
+     927 | bool arch_match_region(struct cxl_region_params *p,
+         |      ^~~~~~~~~~~~~~~~~
+>> drivers/cxl/cxl.h:933:6: warning: no previous prototype for 'arch_trim_hpa_by_spa' [-Wmissing-prototypes]
+     933 | void arch_trim_hpa_by_spa(struct resource *res,
+         |      ^~~~~~~~~~~~~~~~~~~~
 
-Link:
-[1]: https://lore.kernel.org/linux-cxl/20220616141950.23374-2-Jonathan.Cameron@huawei.com/
-[2]: https://edk2.groups.io/g/devel/topic/rfc_edk2_patch_v3_0_1/109403423#
-
-Below are the new result of acpi tables (the DSDT contents could see the patch itself):
-
-1) MCFG
-[000h 0000 004h]                   Signature : "MCFG"    [Memory Mapped Configuration Table]
-[004h 0004 004h]                Table Length : 0000004C
-[008h 0008 001h]                    Revision : 01
-[009h 0009 001h]                    Checksum : 5A
-[00Ah 0010 006h]                      Oem ID : "LINARO"
-[010h 0016 008h]                Oem Table ID : "SBSAQEMU"
-[018h 0024 004h]                Oem Revision : 20240625
-[01Ch 0028 004h]             Asl Compiler ID : "LNRO"
-[020h 0032 004h]       Asl Compiler Revision : 00000001
-
-[024h 0036 008h]                    Reserved : 0000000000000000
-
-[02Ch 0044 008h]                Base Address : 00000000F0000000
-[034h 0052 002h]        Segment Group Number : 0000
-[036h 0054 001h]            Start Bus Number : 00
-[037h 0055 001h]              End Bus Number : FF
-[038h 0056 004h]                    Reserved : 00000000
-
-[03Ch 0060 008h]                Base Address : 0000000068140000
-[044h 0068 002h]        Segment Group Number : 0001
-[046h 0070 001h]            Start Bus Number : 00
-[047h 0071 001h]              End Bus Number : FF
-[048h 0072 004h]                    Reserved : 00000000
-
-2) IORT
-[000h 0000 004h]                   Signature : "IORT"    [IO Remapping Table]
-[004h 0004 004h]                Table Length : 00000118
-[008h 0008 001h]                    Revision : 06
-[009h 0009 001h]                    Checksum : D3
-[00Ah 0010 006h]                      Oem ID : "LINARO"
-[010h 0016 008h]                Oem Table ID : "SBSAQEMU"
-[018h 0024 004h]                Oem Revision : 20240625
-[01Ch 0028 004h]             Asl Compiler ID : "LNRO"
-[020h 0032 004h]       Asl Compiler Revision : 00000001
-
-[024h 0036 004h]                  Node Count : 00000004
-[028h 0040 004h]                 Node Offset : 00000030
-[02Ch 0044 004h]                    Reserved : 00000000
-
-[030h 0048 001h]                        Type : 00
-[031h 0049 002h]                      Length : 0018
-[033h 0051 001h]                    Revision : 00
-[034h 0052 004h]                  Identifier : 00000000
-[038h 0056 004h]               Mapping Count : 00000000
-[03Ch 0060 004h]              Mapping Offset : 00000000
-
-[040h 0064 004h]                    ItsCount : 00000001
-[044h 0068 004h]                 Identifiers : 00000000
-
-[048h 0072 001h]                        Type : 04
-[049h 0073 002h]                      Length : 0058
-[04Bh 0075 001h]                    Revision : 05
-[04Ch 0076 004h]                  Identifier : 00000000
-[050h 0080 004h]               Mapping Count : 00000001
-[054h 0084 004h]              Mapping Offset : 00000044
-
-[058h 0088 008h]                Base Address : 0000000060050000
-[060h 0096 004h]       Flags (decoded below) : 00000001
-                             COHACC Override : 1
-                               HTTU Override : 0
-                      Proximity Domain Valid : 0
-                              DeviceID Valid : 0
-[064h 0100 004h]                    Reserved : 00000000
-[068h 0104 008h]               VATOS Address : 0000000000000000
-[070h 0112 004h]                       Model : 00000000
-[074h 0116 004h]                  Event GSIV : 0000004A
-[078h 0120 004h]                    PRI GSIV : 0000004B
-[07Ch 0124 004h]                   GERR GSIV : 0000004D
-[080h 0128 004h]                   Sync GSIV : 0000004C
-[084h 0132 004h]            Proximity Domain : 00000000
-[088h 0136 004h]     Device ID Mapping Index : 00000001
-
-[08Ch 0140 004h]                  Input base : 00000000
-[090h 0144 004h]                    ID Count : 0000FFFF
-[094h 0148 004h]                 Output Base : 00000000
-[098h 0152 004h]            Output Reference : 00000030
-[09Ch 0156 004h]       Flags (decoded below) : 00000000
-                              Single Mapping : 0
-
-[0A0h 0160 001h]                        Type : 02
-[0A1h 0161 002h]                      Length : 003C
-[0A3h 0163 001h]                    Revision : 00
-[0A4h 0164 004h]                  Identifier : 00000000
-[0A8h 0168 004h]               Mapping Count : 00000001
-[0ACh 0172 004h]              Mapping Offset : 00000028
-
-[0B0h 0176 008h]           Memory Properties : [IORT Memory Access Properties]
-[0B0h 0176 004h]             Cache Coherency : 00000001
-[0B4h 0180 001h]       Hints (decoded below) : 00
-                                   Transient : 0
-                              Write Allocate : 0
-                               Read Allocate : 0
-                                    Override : 0
-[0B5h 0181 002h]                    Reserved : 0000
-[0B7h 0183 001h] Memory Flags (decoded below) : 01
-                                   Coherency : 1
-                            Device Attribute : 0
-               Ensured Coherency of Accesses : 0
-[0B8h 0184 004h]               ATS Attribute : 00000000
-[0BCh 0188 004h]          PCI Segment Number : 00000000
-[0C0h 0192 001h]           Memory Size Limit : 00
-[0C1h 0193 002h]          PASID Capabilities : 0000
-[0C3h 0195 001h]                    Reserved : 00
-
-[0C8h 0200 004h]                  Input base : 00000000
-[0CCh 0204 004h]                    ID Count : 0000FFFF
-[0D0h 0208 004h]                 Output Base : 00000000
-[0D4h 0212 004h]            Output Reference : 00000048
-[0D8h 0216 004h]       Flags (decoded below) : 00000000
-                              Single Mapping : 0
-
-[0DCh 0220 001h]                        Type : 02
-[0DDh 0221 002h]                      Length : 003C
-[0DFh 0223 001h]                    Revision : 00
-[0E0h 0224 004h]                  Identifier : 00000001
-[0E4h 0228 004h]               Mapping Count : 00000001
-[0E8h 0232 004h]              Mapping Offset : 00000028
-
-[0ECh 0236 008h]           Memory Properties : [IORT Memory Access Properties]
-[0ECh 0236 004h]             Cache Coherency : 00000001
-[0F0h 0240 001h]       Hints (decoded below) : 00
-                                   Transient : 0
-                              Write Allocate : 0
-                               Read Allocate : 0
-                                    Override : 0
-[0F1h 0241 002h]                    Reserved : 0000
-[0F3h 0243 001h] Memory Flags (decoded below) : 01
-                                   Coherency : 1
-                            Device Attribute : 0
-               Ensured Coherency of Accesses : 0
-[0F4h 0244 004h]               ATS Attribute : 00000000
-[0F8h 0248 004h]          PCI Segment Number : 00000001
-[0FCh 0252 001h]           Memory Size Limit : 00
-[0FDh 0253 002h]          PASID Capabilities : 0000
-[0FFh 0255 001h]                    Reserved : 00
-
-[104h 0260 004h]                  Input base : 00000000
-[108h 0264 004h]                    ID Count : 0000FFFF
-[10Ch 0268 004h]                 Output Base : 00010000
-[110h 0272 004h]            Output Reference : 00000030
-[114h 0276 004h]       Flags (decoded below) : 00000000
-                              Single Mapping : 0
-
-3) CEDT
-[000h 0000 004h]                   Signature : "CEDT"    [CXL Early Discovery Table]
-[004h 0004 004h]                Table Length : 000000A8
-[008h 0008 001h]                    Revision : 01
-[009h 0009 001h]                    Checksum : 50
-[00Ah 0010 006h]                      Oem ID : "LINARO"
-[010h 0016 008h]                Oem Table ID : "SBSAQEMU"
-[018h 0024 004h]                Oem Revision : 20240625
-[01Ch 0028 004h]             Asl Compiler ID : "LNRO"
-[020h 0032 004h]       Asl Compiler Revision : 00000001
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [y]:
+   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
 
 
-[024h 0036 001h]               Subtable Type : 00 [CXL Host Bridge Structure]
-[025h 0037 001h]                    Reserved : 00
-[026h 0038 002h]                      Length : 0020
-[028h 0040 004h]      Associated host bridge : 00000001
-[02Ch 0044 004h]       Specification version : 00000001
-[030h 0048 004h]                    Reserved : 00000000
-[034h 0052 008h]               Register base : 0000000060120000
-[03Ch 0060 008h]             Register length : 0000000000010000
+vim +/arch_match_spa +921 drivers/cxl/cxl.h
 
-[044h 0068 001h]               Subtable Type : 01 [CXL Fixed Memory Window Structure]
-[045h 0069 001h]                    Reserved : 00
-[046h 0070 002h]                      Length : 0064
-[048h 0072 004h]                    Reserved : 00000000
-[04Ch 0076 008h]         Window base address : 00000A0000000000
-[054h 0084 008h]                 Window size : 0000010000000000
-[05Ch 0092 001h]          Interleave Members : 00
-[05Dh 0093 001h]       Interleave Arithmetic : 00
-[05Eh 0094 002h]                    Reserved : 0000
-[060h 0096 004h]                 Granularity : 00000000
-[064h 0100 002h]                Restrictions : 000F
-[066h 0102 002h]                       QtgId : 0001
-[068h 0104 004h]                First Target : 00000001
-
-Yuquan Wang (1):
-  SbsaQemu: Support basic CXL enablement
-
- Platform/Qemu/SbsaQemu/SbsaQemu.dsc           |  21 ++
- .../Qemu/SbsaQemu/AcpiTables/AcpiTables.inf   |  24 ++
- Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc    |  69 ++++
- Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl     | 327 ++++++++++++++++++
- Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc    |   9 +-
- .../Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c |  40 ++-
- Silicon/Qemu/SbsaQemu/SbsaQemu.dec            |  28 ++
- 7 files changed, 515 insertions(+), 3 deletions(-)
- create mode 100644 Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
+   912	
+   913	#ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
+   914	bool arch_match_spa(struct cxl_root_decoder *cxlrd,
+   915			    struct cxl_endpoint_decoder *cxled);
+   916	bool arch_match_region(struct cxl_region_params *p,
+   917			       struct cxl_decoder *cxld);
+   918	void arch_trim_hpa_by_spa(struct resource *res,
+   919				  struct cxl_root_decoder *cxlrd);
+   920	#else
+ > 921	bool arch_match_spa(struct cxl_root_decoder *cxlrd,
+   922			    struct cxl_endpoint_decoder *cxled)
+   923	{
+   924		return false;
+   925	}
+   926	
+ > 927	bool arch_match_region(struct cxl_region_params *p,
+   928			       struct cxl_decoder *cxld)
+   929	{
+   930		return false;
+   931	}
+   932	
+ > 933	void arch_trim_hpa_by_spa(struct resource *res,
+   934				  struct cxl_root_decoder *cxlrd)
+   935	{ }
+   936	#endif /* CXL_ARCH_LOW_MEMORY_HOLE */
+   937	
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
