@@ -1,170 +1,737 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DF92500C8;
-	Mon, 25 Nov 2024 05:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA4C1537D7
+	for <linux-cxl@vger.kernel.org>; Mon, 25 Nov 2024 08:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732511170; cv=none; b=GHtOhTx+lp7r/euhFuXHoPcY8KiBGjPaxq+6L0XfP0CsANSae6WbaGWcggKbY4o08U9XBdgyZDLZ9/oVfe8zRP0wMaMUsI1TUmFVQorpweb66Gu5nUE2dQNmbgBqjLIY306D0xyRbihpF8I/11G84HDGqeyG/Cssmxjkz2MIJtU=
+	t=1732523690; cv=none; b=iJS/E2AQP6SEWuoOcpL47D6fWvkRVNzDN7UU5t3srOzPYCgc6GDfl0+fVmP84YCS7xNwMDxaAz7ihFjJciEQ+mAVf9+1s0FB63ki1A3MkMZitGDvqsgRc/janJ5ZRoHuJ3FvfAIVAUuSOYwW5TfIGHXgvDQf0anXl3O1bJY2W8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732511170; c=relaxed/simple;
-	bh=NREGBayAwFFBU4tE1Ma2gDyzoVU71MdcWhe9JFquPAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+4WA70+Lw4Jn85P/Q2fVlraM23chlpABWIpUuPRh8u62n8DkXAO+aLhvZ3rXEWARnIZ8L5X+lYiQ63axHCSea0Gov7pml93DnB/3db70Iqm3zwWIOVauCh9H5+N2llKf0c82w2bPbdxwVA6oHObZraF1/1A60+nZ1ZUSBTecnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ftFMpJDl; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ftFMpJDl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732511168; x=1764047168;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NREGBayAwFFBU4tE1Ma2gDyzoVU71MdcWhe9JFquPAI=;
-  b=ftFMpJDlnfXXH/Hu/Vhxqjml5blzP4+I0d/lcj0WGH4p1y0WPXzEvyzr
-   WHzJjk1gvbEszEukHJgiCqoLZrbCNnHvVv6/+K4FkuR3XPt159cM0LQm6
-   viK5e6FNU2VtIqDL2T1Lt1+Sglw8xnQElK28FvdFoBzMsWVkcEQ0xsbEh
-   ewILnLDrFKbVy3aJlCe5uyjZ5pcNNJ8lOZo6+98wJWv2PmVwW7SsKp33e
-   YynQfN+tMHvcoZF0CSVFUCdeN4vQ6UOeMWJxAP3XYRrtHquBZbvkb7oEi
-   ixevH4JlHSRPd/5IvUbgQtXf2GdNF3wlbDp1lueanMHme1WvYDgsReW1r
-   Q==;
-X-CSE-ConnectionGUID: ZOjcD7E9Qr2+NDNc9g2LCg==
-X-CSE-MsgGUID: ClbcwwH9S5inMSh05yN9RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11266"; a="36515036"
-X-IronPort-AV: E=Sophos;i="6.12,182,1728975600"; 
-   d="scan'208";a="36515036"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2024 21:06:07 -0800
-X-CSE-ConnectionGUID: d/cc0nO9SLOOH97XqPNIkw==
-X-CSE-MsgGUID: suWKtIxOTi+PfZR2YkgwOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="96212099"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 24 Nov 2024 21:06:00 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tFRIL-0005uL-2Z;
-	Mon, 25 Nov 2024 05:05:57 +0000
-Date: Mon, 25 Nov 2024 13:05:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
-	linux-mm@kvack.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alistair Popple <apopple@nvidia.com>, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 11/25] mm: Allow compound zone device pages
-Message-ID: <202411251251.Tjig4oaV-lkp@intel.com>
-References: <f1a93b8a38e14e2ab279ece310175334e973b970.1732239628.git-series.apopple@nvidia.com>
+	s=arc-20240116; t=1732523690; c=relaxed/simple;
+	bh=dgvIgRKoVLr3aMzhs9rLqJ5iazatKeJyqTRCt724498=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rZG0o4gEiH1I7+3mUVVsnkaFT2CJj5tWofqlfiP9ymUoEX4CxPYWAS8CiToZvDwKJaZ4STyl6U2rVjvJYh3YyCpG/ZTfVqw5rFVOJXPbZJkCp6eEXk21WgQeiXZZJpfE9A5T61YxspP3iuBjvIdk141jiiFZDvwDoE9uldNbepI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwCnDg+ZNkRnU_IdBw--.28171S2;
+	Mon, 25 Nov 2024 16:34:33 +0800 (CST)
+Received: from phytium.com.cn (unknown [218.76.62.144])
+	by mail (Coremail) with SMTP id AQAAfwA3jnqJNkRnr8FZAA--.8389S4;
+	Mon, 25 Nov 2024 16:34:26 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: marcin.juszkiewicz@linaro.org,
+	ardb+tianocore@kernel.org,
+	quic_llindhol@quicinc.com,
+	Jonathan.Cameron@Huawei.com
+Cc: chenbaozi@phytium.com.cn,
+	devel@edk2.groups.io,
+	linux-cxl@vger.kernel.org,
+	asa-dev@op-lists.linaro.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [RFC PATCH edk2-platforms v3 1/1] SbsaQemu: Support basic CXL enablement
+Date: Mon, 25 Nov 2024 16:34:14 +0800
+Message-Id: <20241125083414.53044-2-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241125083414.53044-1-wangyuquan1236@phytium.com.cn>
+References: <20241125083414.53044-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1a93b8a38e14e2ab279ece310175334e973b970.1732239628.git-series.apopple@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwA3jnqJNkRnr8FZAA--.8389S4
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWdDg3QELwAAs4
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvAXoWfuw1fGFW7Gr4UCFWxCr1Utrb_yoW8KF4Uto
+	WUt345uF47uF4UZw18CrZFgFn3ZFsxZ3WIkw1SyFyUAa409ryxJry8twnxGr98ArnrtFnI
+	9r4xJas8J3Z5uFZ5n29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
+	UUUUUUU==
 
-Hi Alistair,
+This adds relevant definitions and descriptions of acpi0016, acpi0017
+and CEDT to support CXL.
 
-kernel test robot noticed the following build errors:
+1) With the independent cxl host, this supplies exclusive pio, mmio32,
+mmio64 & ecam space descriptions for cxl host.
 
-[auto build test ERROR on 81983758430957d9a5cb3333fe324fd70cf63e7e]
+2) sbsa-ref cxl host has its own ecam space, so this defines the bus
+range of cxl host from 0x0 to 0xff. Therefore, this adds relevant
+structure in Mcfg.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Popple/fuse-Fix-dax-truncate-punch_hole-fault-path/20241125-094004
-base:   81983758430957d9a5cb3333fe324fd70cf63e7e
-patch link:    https://lore.kernel.org/r/f1a93b8a38e14e2ab279ece310175334e973b970.1732239628.git-series.apopple%40nvidia.com
-patch subject: [PATCH v3 11/25] mm: Allow compound zone device pages
-config: powerpc-ebony_defconfig (https://download.01.org/0day-ci/archive/20241125/202411251251.Tjig4oaV-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241125/202411251251.Tjig4oaV-lkp@intel.com/reproduce)
+3) To enable msi of cxl components, this add relevant descriptions in
+Iort.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411251251.Tjig4oaV-lkp@intel.com/
+4) Provide CXL Early Discovery Table that describes the static CXL
+Platform Components of sbsa-ref, which includes a static CXL Host
+Bridge structure and a CXL Fixed Memory Window structure.
 
-All errors (new ones prefixed by >>):
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
+ Platform/Qemu/SbsaQemu/SbsaQemu.dsc           |  21 ++
+ .../Qemu/SbsaQemu/AcpiTables/AcpiTables.inf   |  24 ++
+ Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc    |  69 ++++
+ Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl     | 327 ++++++++++++++++++
+ Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc    |   9 +-
+ .../Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c |  40 ++-
+ Silicon/Qemu/SbsaQemu/SbsaQemu.dec            |  28 ++
+ 7 files changed, 515 insertions(+), 3 deletions(-)
+ create mode 100644 Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
 
-   In file included from arch/powerpc/kernel/asm-offsets.c:19:
-   In file included from include/linux/mman.h:5:
-   In file included from include/linux/mm.h:32:
->> include/linux/memremap.h:164:3: error: call to undeclared function 'page_pgmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     164 |                 page_pgmap(page)->type == MEMORY_DEVICE_PRIVATE;
-         |                 ^
->> include/linux/memremap.h:164:21: error: member reference type 'int' is not a pointer
-     164 |                 page_pgmap(page)->type == MEMORY_DEVICE_PRIVATE;
-         |                 ~~~~~~~~~~~~~~~~  ^
-   include/linux/memremap.h:176:3: error: call to undeclared function 'page_pgmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     176 |                 page_pgmap(page)->type == MEMORY_DEVICE_PCI_P2PDMA;
-         |                 ^
-   include/linux/memremap.h:176:21: error: member reference type 'int' is not a pointer
-     176 |                 page_pgmap(page)->type == MEMORY_DEVICE_PCI_P2PDMA;
-         |                 ~~~~~~~~~~~~~~~~  ^
-   include/linux/memremap.h:182:3: error: call to undeclared function 'page_pgmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     182 |                 page_pgmap(page)->type == MEMORY_DEVICE_COHERENT;
-         |                 ^
-   include/linux/memremap.h:182:21: error: member reference type 'int' is not a pointer
-     182 |                 page_pgmap(page)->type == MEMORY_DEVICE_COHERENT;
-         |                 ~~~~~~~~~~~~~~~~  ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:19:
-   In file included from include/linux/mman.h:5:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from arch/powerpc/kernel/asm-offsets.c:19:
-   include/linux/mman.h:157:9: warning: division by zero is undefined [-Wdivision-by-zero]
-     157 |                _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:136:21: note: expanded from macro '_calc_vm_trans'
-     136 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
-         |                     ^ ~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:158:9: warning: division by zero is undefined [-Wdivision-by-zero]
-     158 |                _calc_vm_trans(flags, MAP_SYNC,       VM_SYNC      ) |
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:136:21: note: expanded from macro '_calc_vm_trans'
-     136 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
-         |                     ^ ~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:159:9: warning: division by zero is undefined [-Wdivision-by-zero]
-     159 |                _calc_vm_trans(flags, MAP_STACK,      VM_NOHUGEPAGE) |
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:136:21: note: expanded from macro '_calc_vm_trans'
-     136 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
-         |                     ^ ~~~~~~~~~~~~~~~~~
-   4 warnings and 6 errors generated.
-   make[3]: *** [scripts/Makefile.build:102: arch/powerpc/kernel/asm-offsets.s] Error 1
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1203: prepare0] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:224: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:224: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +/page_pgmap +164 include/linux/memremap.h
-
-   159	
-   160	static inline bool is_device_private_page(const struct page *page)
-   161	{
-   162		return IS_ENABLED(CONFIG_DEVICE_PRIVATE) &&
-   163			is_zone_device_page(page) &&
- > 164			page_pgmap(page)->type == MEMORY_DEVICE_PRIVATE;
-   165	}
-   166	
-
+diff --git a/Platform/Qemu/SbsaQemu/SbsaQemu.dsc b/Platform/Qemu/SbsaQemu/SbsaQemu.dsc
+index b2cd2529a966..98e479041a86 100644
+--- a/Platform/Qemu/SbsaQemu/SbsaQemu.dsc
++++ b/Platform/Qemu/SbsaQemu/SbsaQemu.dsc
+@@ -454,6 +454,21 @@ DEFINE NETWORK_HTTP_BOOT_ENABLE       = FALSE
+   gArmTokenSpaceGuid.PcdPciMmio64Size|0xFF00000000
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciMmio64Limit|0xFFFFFFFFFF
+ 
++  #
++  # CXL Host Bridge (pxb-cxl on PCI Root Complex)
++  #
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMin|0
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMax|255
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoBase|0x0
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoSize|0x00010000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoLimit|0x0000ffff
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Base|0x60140000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Size|0x08000000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Limit|0x6813FFFF
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Base|0x90000000000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Size|0x100000000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Limit|0x900FFFFFFFF
++
+   # set PcdPciExpressBaseAddress to MAX_UINT64, which signifies that this
+   # PCD and PcdPciDisableBusEnumeration have not been assigned yet
+   # TODO: PcdPciExpressBaseAddress set to max_uint64
+@@ -461,9 +476,15 @@ DEFINE NETWORK_HTTP_BOOT_ENABLE       = FALSE
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarSize|0x10000000
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarLimit|0xFFFFFFFF
+ 
++  # PCDs complementing CXL ECAM Base & Size
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBaseAddress|0x68140000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarSize|0x10000000
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarLimit|0x7813FFFF
++
+   gEfiMdePkgTokenSpaceGuid.PcdPciIoTranslation|0x7fff0000
+   gEfiMdePkgTokenSpaceGuid.PcdPciMmio32Translation|0x0
+   gEfiMdePkgTokenSpaceGuid.PcdPciMmio64Translation|0x0
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoTranslation|0x60130000
+   ## If TRUE, OvmfPkg/AcpiPlatformDxe will not wait for PCI
+   #  enumeration to complete before installing ACPI tables.
+   gEfiMdeModulePkgTokenSpaceGuid.PcdPciDisableBusEnumeration|FALSE
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf b/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
+index 8d4905362edc..fa1cca0ed16e 100644
+--- a/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/AcpiTables.inf
+@@ -16,6 +16,7 @@
+   VERSION_STRING                 = 1.0
+ 
+ [Sources]
++  Cedt.aslc
+   Dbg2.aslc
+   Dsdt.asl
+   Fadt.aslc
+@@ -44,6 +45,8 @@
+ 
+   gArmTokenSpaceGuid.PcdPciBusMin
+   gArmTokenSpaceGuid.PcdPciBusMax
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMin
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMax
+ 
+   gArmTokenSpaceGuid.PcdPciIoBase
+   gArmTokenSpaceGuid.PcdPciIoSize
+@@ -60,10 +63,31 @@
+   gEfiMdePkgTokenSpaceGuid.PcdPciMmio64Translation
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciMmio64Limit
+ 
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoBase
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoSize
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoTranslation
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoLimit
++
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Base
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Size
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Limit
++
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Base
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Size
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Limit
++
+   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarSize
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarLimit
+ 
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBaseAddress
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarSize
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarLimit
++
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdChbcrBase
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmws0Base
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmws0Size
++
+   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase
+ 
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPlatformAhciBase
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc b/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
+new file mode 100644
+index 000000000000..56d6cf8f48b0
+--- /dev/null
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/Cedt.aslc
+@@ -0,0 +1,69 @@
++/** @file
++*  CXL Early Discovery Table (CEDT)
++*
++*  Copyright (c) 2024, Phytium Technology Co Ltd. All rights reserved.
++*
++**/
++
++#include <IndustryStandard/Cxl30.h>
++#include <IndustryStandard/SbsaQemuAcpi.h>
++
++#pragma pack(1)
++
++typedef struct
++{
++  CXL_EARLY_DISCOVERY_TABLE           Header;
++  CXL_HOST_BRIDGE_STRUCTURE           Chbs;
++  CXL_FIXED_MEMORY_WINDOW_STRUCTURE   Cfmws;
++} SBSA_REF_CEDT;
++
++
++SBSA_REF_CEDT Cedt =
++{
++  // CXL_EARLY_DISCOVERY_TABLE(CEDT Header)
++  {
++     SBSAQEMU_ACPI_HEADER  // EFI_ACPI_DESCRIPTION_HEADER
++     (
++       CXL_EARLY_DISCOVERY_TABLE_SIGNATURE,
++       SBSA_REF_CEDT,
++       CXL_EARLY_DISCOVERY_TABLE_REVISION_01
++     ),
++  },
++  // CXL_HOST_BRIDGE_STRUCTURE
++  {
++    // CEDT_STRUCTURE
++    {
++        CEDT_TYPE_CHBS,                                     // Type
++        0,                                                  // Reserved
++        sizeof (CXL_HOST_BRIDGE_STRUCTURE),                 // Length
++    },
++    0x1,                                   // UID
++    0x1,                                   // CXLVersion
++    0,                                     // Reserved
++    FixedPcdGet32 (PcdChbcrBase),          // CHBCR Base
++    0X10000,                               // Length
++  },
++  // CXL_FIXED_MEMORY_WINDOW_STRUCTURE
++  {
++    // CEDT_STRUCTURE
++    {
++        CEDT_TYPE_CFMWS,                                     // Type
++        0,                                                   // Reserved
++        sizeof (CXL_FIXED_MEMORY_WINDOW_STRUCTURE),          // Length
++    },
++    0,                                     // Reserved
++    FixedPcdGet32 (PcdCfmws0Base),         // BaseHPA
++    FixedPcdGet32 (PcdCfmws0Size),         // WindowSize
++    0,                                     // InterleaveMembers
++    0,                                     // InterleaveArithmetic
++    0,                                     // Reserved1
++    0,                                     // Granularity
++    0xF,                                   // Restrictions
++    1,                                     // QtgId
++    {0x1},                                 // TargetList
++  }
++};
++
++#pragma pack ()
++
++VOID* CONST ReferenceAcpiTable = &Cedt;
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl b/Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl
+index c134fb66e860..ec6decb79df5 100644
+--- a/Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/Dsdt.asl
+@@ -483,5 +483,332 @@ DefinitionBlock ("DsdtTable.aml", "DSDT",
+         }
+       } // End _OSC
+     }
++
++    // CXL Host Bridge (pxb-cxl)
++    Device (CXL0)
++    {
++        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
++        Name (_CID, Package (0x02)  // _CID: Compatible ID
++        {
++            EisaId ("PNP0A08"), /* PCI Express Bus */
++            EisaId ("PNP0A03")  /* PCI Bus */
++        })
++        Name (_SEG, 0x1)  // PCI Segment Group number
++        Name (_BBN, 0x0)  // _BBN: BIOS Bus Number
++        Name (_UID, 0x1)  // _UID: Unique ID
++        Name (_STR, Unicode ("pxb Device"))  // _STR: Description String
++        Name (_CCA, One)  // _CCA: Cache Coherency Attribute
++
++        LINK_DEVICE(0, GSI0, 0x31)
++        LINK_DEVICE(1, GSI1, 0x32)
++        LINK_DEVICE(2, GSI2, 0x33)
++        LINK_DEVICE(3, GSI3, 0x34)
++
++        Name (_PRT, Package (0x80)  // _PRT: PCI Routing Table
++        {
++         PRT_ENTRY(0x0000FFFF, 0, GSI0),
++         PRT_ENTRY(0x0000FFFF, 0, GSI1),
++         PRT_ENTRY(0x0000FFFF, 0, GSI2),
++         PRT_ENTRY(0x0000FFFF, 0, GSI3),
++
++         PRT_ENTRY(0x0001FFFF, 0, GSI1),
++         PRT_ENTRY(0x0001FFFF, 1, GSI2),
++         PRT_ENTRY(0x0001FFFF, 2, GSI3),
++         PRT_ENTRY(0x0001FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x0002FFFF, 0, GSI2),
++         PRT_ENTRY(0x0002FFFF, 1, GSI3),
++         PRT_ENTRY(0x0002FFFF, 2, GSI0),
++         PRT_ENTRY(0x0002FFFF, 3, GSI1),
++
++         PRT_ENTRY(0x0003FFFF, 0, GSI3),
++         PRT_ENTRY(0x0003FFFF, 1, GSI0),
++         PRT_ENTRY(0x0003FFFF, 2, GSI1),
++         PRT_ENTRY(0x0003FFFF, 3, GSI2),
++
++         PRT_ENTRY(0x0004FFFF, 0, GSI0),
++         PRT_ENTRY(0x0004FFFF, 1, GSI1),
++         PRT_ENTRY(0x0004FFFF, 2, GSI2),
++         PRT_ENTRY(0x0004FFFF, 3, GSI3),
++
++         PRT_ENTRY(0x0005FFFF, 0, GSI1),
++         PRT_ENTRY(0x0005FFFF, 1, GSI2),
++         PRT_ENTRY(0x0005FFFF, 2, GSI3),
++         PRT_ENTRY(0x0005FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x0006FFFF, 0, GSI2),
++         PRT_ENTRY(0x0006FFFF, 1, GSI3),
++         PRT_ENTRY(0x0006FFFF, 2, GSI0),
++         PRT_ENTRY(0x0006FFFF, 3, GSI1),
++
++         PRT_ENTRY(0x0007FFFF, 0, GSI3),
++         PRT_ENTRY(0x0007FFFF, 1, GSI0),
++         PRT_ENTRY(0x0007FFFF, 2, GSI1),
++         PRT_ENTRY(0x0007FFFF, 3, GSI2),
++
++         PRT_ENTRY(0x0008FFFF, 0, GSI0),
++         PRT_ENTRY(0x0008FFFF, 1, GSI1),
++         PRT_ENTRY(0x0008FFFF, 2, GSI2),
++         PRT_ENTRY(0x0008FFFF, 3, GSI3),
++
++         PRT_ENTRY(0x0009FFFF, 0, GSI1),
++         PRT_ENTRY(0x0009FFFF, 1, GSI2),
++         PRT_ENTRY(0x0009FFFF, 2, GSI3),
++         PRT_ENTRY(0x0009FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x000AFFFF, 0, GSI2),
++         PRT_ENTRY(0x000AFFFF, 1, GSI3),
++         PRT_ENTRY(0x000AFFFF, 2, GSI0),
++         PRT_ENTRY(0x000AFFFF, 3, GSI1),
++
++         PRT_ENTRY(0x000BFFFF, 0, GSI3),
++         PRT_ENTRY(0x000BFFFF, 1, GSI0),
++         PRT_ENTRY(0x000BFFFF, 2, GSI1),
++         PRT_ENTRY(0x000BFFFF, 3, GSI2),
++
++         PRT_ENTRY(0x000CFFFF, 0, GSI0),
++         PRT_ENTRY(0x000CFFFF, 1, GSI1),
++         PRT_ENTRY(0x000CFFFF, 2, GSI2),
++         PRT_ENTRY(0x000CFFFF, 3, GSI3),
++
++         PRT_ENTRY(0x000DFFFF, 0, GSI1),
++         PRT_ENTRY(0x000DFFFF, 1, GSI2),
++         PRT_ENTRY(0x000DFFFF, 2, GSI3),
++         PRT_ENTRY(0x000DFFFF, 3, GSI0),
++
++         PRT_ENTRY(0x000EFFFF, 0, GSI2),
++         PRT_ENTRY(0x000EFFFF, 1, GSI3),
++         PRT_ENTRY(0x000EFFFF, 2, GSI0),
++         PRT_ENTRY(0x000EFFFF, 3, GSI1),
++
++         PRT_ENTRY(0x000FFFFF, 0, GSI3),
++         PRT_ENTRY(0x000FFFFF, 1, GSI0),
++         PRT_ENTRY(0x000FFFFF, 2, GSI1),
++         PRT_ENTRY(0x000FFFFF, 3, GSI2),
++
++         PRT_ENTRY(0x0010FFFF, 0, GSI0),
++         PRT_ENTRY(0x0010FFFF, 1, GSI1),
++         PRT_ENTRY(0x0010FFFF, 2, GSI2),
++         PRT_ENTRY(0x0010FFFF, 3, GSI3),
++
++         PRT_ENTRY(0x0011FFFF, 0, GSI1),
++         PRT_ENTRY(0x0011FFFF, 1, GSI2),
++         PRT_ENTRY(0x0011FFFF, 2, GSI3),
++         PRT_ENTRY(0x0011FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x0012FFFF, 0, GSI2),
++         PRT_ENTRY(0x0012FFFF, 1, GSI3),
++         PRT_ENTRY(0x0012FFFF, 2, GSI0),
++         PRT_ENTRY(0x0012FFFF, 3, GSI1),
++
++         PRT_ENTRY(0x0013FFFF, 0, GSI3),
++         PRT_ENTRY(0x0013FFFF, 1, GSI0),
++         PRT_ENTRY(0x0013FFFF, 2, GSI1),
++         PRT_ENTRY(0x0013FFFF, 3, GSI2),
++
++         PRT_ENTRY(0x0014FFFF, 0, GSI0),
++         PRT_ENTRY(0x0014FFFF, 1, GSI1),
++         PRT_ENTRY(0x0014FFFF, 2, GSI2),
++         PRT_ENTRY(0x0014FFFF, 3, GSI3),
++
++         PRT_ENTRY(0x0015FFFF, 0, GSI1),
++         PRT_ENTRY(0x0015FFFF, 1, GSI2),
++         PRT_ENTRY(0x0015FFFF, 2, GSI3),
++         PRT_ENTRY(0x0015FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x0016FFFF, 0, GSI2),
++         PRT_ENTRY(0x0016FFFF, 1, GSI3),
++         PRT_ENTRY(0x0016FFFF, 2, GSI0),
++         PRT_ENTRY(0x0016FFFF, 3, GSI1),
++
++         PRT_ENTRY(0x0017FFFF, 0, GSI3),
++         PRT_ENTRY(0x0017FFFF, 1, GSI0),
++         PRT_ENTRY(0x0017FFFF, 2, GSI1),
++         PRT_ENTRY(0x0017FFFF, 3, GSI2),
++
++         PRT_ENTRY(0x0018FFFF, 0, GSI0),
++         PRT_ENTRY(0x0018FFFF, 1, GSI1),
++         PRT_ENTRY(0x0018FFFF, 2, GSI2),
++         PRT_ENTRY(0x0018FFFF, 3, GSI3),
++
++         PRT_ENTRY(0x0019FFFF, 0, GSI1),
++         PRT_ENTRY(0x0019FFFF, 1, GSI2),
++         PRT_ENTRY(0x0019FFFF, 2, GSI3),
++         PRT_ENTRY(0x0019FFFF, 3, GSI0),
++
++         PRT_ENTRY(0x001AFFFF, 0, GSI2),
++         PRT_ENTRY(0x001AFFFF, 1, GSI3),
++         PRT_ENTRY(0x001AFFFF, 2, GSI0),
++         PRT_ENTRY(0x001AFFFF, 3, GSI1),
++
++         PRT_ENTRY(0x001BFFFF, 0, GSI3),
++         PRT_ENTRY(0x001BFFFF, 1, GSI0),
++         PRT_ENTRY(0x001BFFFF, 2, GSI1),
++         PRT_ENTRY(0x001BFFFF, 3, GSI2),
++
++         PRT_ENTRY(0x001CFFFF, 0, GSI0),
++         PRT_ENTRY(0x001CFFFF, 1, GSI1),
++         PRT_ENTRY(0x001CFFFF, 2, GSI2),
++         PRT_ENTRY(0x001CFFFF, 3, GSI3),
++
++         PRT_ENTRY(0x001DFFFF, 0, GSI1),
++         PRT_ENTRY(0x001DFFFF, 1, GSI2),
++         PRT_ENTRY(0x001DFFFF, 2, GSI3),
++         PRT_ENTRY(0x001DFFFF, 3, GSI0),
++
++         PRT_ENTRY(0x001EFFFF, 0, GSI2),
++         PRT_ENTRY(0x001EFFFF, 1, GSI3),
++         PRT_ENTRY(0x001EFFFF, 2, GSI0),
++         PRT_ENTRY(0x001EFFFF, 3, GSI1),
++
++         PRT_ENTRY(0x001FFFFF, 0, GSI3),
++         PRT_ENTRY(0x001FFFFF, 1, GSI0),
++         PRT_ENTRY(0x001FFFFF, 2, GSI1),
++         PRT_ENTRY(0x001FFFFF, 3, GSI2),
++        })
++
++        Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
++        {
++            DWordMemory ( // 32-bit BAR Windows
++              ResourceProducer, PosDecode,
++              MinFixed, MaxFixed,
++              Cacheable, ReadWrite,
++              0x00000000,                              // Granularity
++              FixedPcdGet32 (PcdCxlMmio32Base),        // Min Base Address
++              FixedPcdGet32 (PcdCxlMmio32Limit),       // Max Base Address
++              FixedPcdGet32 (PcdPciMmio32Translation), // Translate
++              FixedPcdGet32 (PcdCxlMmio32Size)         // Length
++              )
++
++            QWordMemory ( // 64-bit BAR Windows
++              ResourceProducer, PosDecode,
++              MinFixed, MaxFixed,
++              Cacheable, ReadWrite,
++              0x00000000,                              // Granularity
++              FixedPcdGet64 (PcdCxlMmio64Base),        // Min Base Address
++              FixedPcdGet64 (PcdCxlMmio64Limit),       // Max Base Address
++              FixedPcdGet64 (PcdPciMmio64Translation), // Translate
++              FixedPcdGet64 (PcdCxlMmio64Size)         // Length
++              )
++
++            WordBusNumber ( // Bus numbers assigned to this root
++                ResourceProducer,
++                MinFixed, MaxFixed, PosDecode,
++                0,   // AddressGranularity
++                FixedPcdGet32 (PcdCxlBusMin),   // AddressMinimum - Minimum Bus Number
++                FixedPcdGet32 (PcdCxlBusMax),   // AddressMaximum - Maximum Bus Number
++                0,    // AddressTranslation - Set to 0
++                256    // RangeLength - Number of Busses
++                )
++
++            DWordIo ( // IO window
++                ResourceProducer,
++                MinFixed,
++                MaxFixed,
++                PosDecode,
++                EntireRange,
++                0x00000000,                              // Granularity
++                FixedPcdGet32 (PcdCxlIoBase),            // Min Base Address
++                FixedPcdGet32 (PcdCxlIoLimit),           // Max Base Address
++                FixedPcdGet32 (PcdCxlIoTranslation),     // Translate
++                FixedPcdGet32 (PcdCxlIoSize),            // Length
++                ,,,TypeTranslation
++          )
++        })
++
++        Device (RES1)
++        {
++          Name (_HID, "PNP0C02" /* PNP Motherboard Resources */)  // _HID: Hardware ID
++          Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
++          {
++             QWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
++             0x0000000000000000,                       // Granularity
++             FixedPcdGet64 (PcdCxlBaseAddress), // Range Minimum
++             FixedPcdGet64 (PcdCxlBarLimit),    // Range Maximum
++             0x0000000000000000,                       // Translation Offset
++             FixedPcdGet64 (PcdCxlBarSize),     // Length
++             ,, , AddressRangeMemory, TypeStatic)
++          })
++          Method (_STA) {
++            Return (0xF)
++          }
++        }
++
++        Name (SUPP, Zero)
++        Name (CTRL, Zero)
++        Name (SUPC, Zero)
++        Name (CTRC, Zero)
++
++        Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
++        {
++            CreateDWordField (Arg3, Zero, CDW1)
++            If (((Arg0 == ToUUID ("33db4d5b-1ff7-401c-9657-7441c03dd766") /* PCI Host Bridge Device */) || (Arg0 == ToUUID ("68f2d50b-c469-4d8a-bd3d-941a103fd3fc") /* Unknown UUID */)))
++            {
++                CreateDWordField (Arg3, 0x04, CDW2)
++                CreateDWordField (Arg3, 0x08, CDW3)
++                Local0 = CDW3 /* \_SB_.PC0C._OSC.CDW3 */
++                Local0 &= 0x1F
++                If ((Arg1 != One))
++                {
++                    CDW1 |= 0x08
++                }
++
++                If ((CDW3 != Local0))
++                {
++                    CDW1 |= 0x10
++                }
++
++                SUPP = CDW2 /* \_SB_.PC0C._OSC.CDW2 */
++                CTRL = CDW3 /* \_SB_.PC0C._OSC.CDW3 */
++                CDW3 = Local0
++                If ((Arg0 == ToUUID ("68f2d50b-c469-4d8a-bd3d-941a103fd3fc") /* Unknown UUID */))
++                {
++                    CreateDWordField (Arg3, 0x0C, CDW4)
++                    CreateDWordField (Arg3, 0x10, CDW5)
++                    SUPC = CDW4 /* \_SB_.PC0C._OSC.CDW4 */
++                    CTRC = CDW5 /* \_SB_.PC0C._OSC.CDW5 */
++                    CDW5 |= One
++                }
++
++                Return (Arg3)
++            }
++            Else
++            {
++                CDW1 |= 0x04
++                Return (Arg3)
++            }
++        }
++    }
++
++    Scope (\_SB)
++    {
++        // CXL Root for OS Driver
++        Device (CXLM)
++        {
++            Name (_HID, "ACPI0017")  // _HID: Hardware ID
++            Method (_STA, 0, NotSerialized)  // _STA: Status
++            {
++                Return (0x0B)
++            }
++
++            Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
++            {
++                If ((Arg0 == ToUUID ("f365f9a6-a7de-4071-a66a-b40c0b4f8e52") /* Retrieve QTG ID */))
++                {
++                    If ((Arg2 == One))
++                    {
++                        Return (Package (0x02)
++                        {
++                            One,
++                            Package (0x01)
++                            {
++                                One
++                            }
++                        })
++                    }
++                }
++            }
++        }
++    }
+   } // Scope (_SB)
+ }
+diff --git a/Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc b/Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc
+index 289f4ad4ea3a..c8b9a00a4eae 100644
+--- a/Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc
++++ b/Silicon/Qemu/SbsaQemu/AcpiTables/Mcfg.aslc
+@@ -14,7 +14,7 @@
+ 
+ typedef struct {
+   EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER Header;
+-  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE Structure[1];
++  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE Structure[2];
+ } EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_SPACE_ACCESS_DESCRIPTION_TABLE;
+ 
+ EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_SPACE_ACCESS_DESCRIPTION_TABLE Mcfg = {
+@@ -32,6 +32,13 @@ EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_SPACE_ACCESS_DESCRIPTION_TABLE Mcfg = {
+       FixedPcdGet32 (PcdPciBusMin),
+       FixedPcdGet32 (PcdPciBusMax),
+       EFI_ACPI_RESERVED_DWORD
++    },
++    {
++      FixedPcdGet32 (PcdCxlBaseAddress),
++      1,
++      FixedPcdGet32 (PcdCxlBusMin),
++      FixedPcdGet32 (PcdCxlBusMax),
++      EFI_ACPI_RESERVED_DWORD
+     }
+   }
+ };
+diff --git a/Silicon/Qemu/SbsaQemu/Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c b/Silicon/Qemu/SbsaQemu/Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c
+index ddf4acdb7032..ffe10caf11c9 100644
+--- a/Silicon/Qemu/SbsaQemu/Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c
++++ b/Silicon/Qemu/SbsaQemu/Drivers/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.c
+@@ -78,7 +78,7 @@ AddIortTable (
+       SBSA_IO_REMAPPING_STRUCTURE,
+       EFI_ACPI_IO_REMAPPING_TABLE_REVISION_06
+       ),
+-    3,
++    4,
+     sizeof (EFI_ACPI_6_0_IO_REMAPPING_TABLE),        // NodeOffset
+     0
+   };
+@@ -115,6 +115,7 @@ AddIortTable (
+     }
+   };
+ 
++  // Initialize Gpex Rc Structure
+   SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE  Rc = {
+     {
+       {
+@@ -145,6 +146,37 @@ AddIortTable (
+     }
+   };
+ 
++  // Initialize Cxl Rc Structure
++  SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE  cxlRc = {
++    {
++      {
++        EFI_ACPI_IORT_TYPE_ROOT_COMPLEX,                            // Type
++        sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE),            // Length
++        0,                                                          // Revision
++        1,                                                          // Identifier
++        1,                                                          // NumIdMappings
++        OFFSET_OF (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE, RcIdMap) // IdReference
++      },
++      1,                                          // CacheCoherentAttribute
++      0,                                          // AllocationHints
++      0,                                          // Reserved
++      1,                                          // MemoryAccessFlags
++      EFI_ACPI_IORT_ROOT_COMPLEX_ATS_UNSUPPORTED, // AtsAttribute
++      0x1,                                        // PciSegmentNumber
++      0,                                          // MemoryAddressSize
++      0,                                          // PasidCapabilities
++      { 0 },                                      // Reserved1[1]
++      0,                                          // Flags
++    },
++    {
++      0x0000,                                             // InputBase
++      0xffff,                                             // NumIds
++      0x10000,                                            // OutputBase
++      OFFSET_OF (SBSA_IO_REMAPPING_STRUCTURE, ItsNode),   // OutputReference
++      0,                                                  // Flags
++    }
++  };
++
+   SBSA_EFI_ACPI_6_0_IO_REMAPPING_ITS_NODE  Its = {
+     // EFI_ACPI_6_0_IO_REMAPPING_ITS_NODE
+     {
+@@ -166,7 +198,7 @@ AddIortTable (
+   TableSize = sizeof (EFI_ACPI_6_0_IO_REMAPPING_TABLE) +
+               sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_ITS_NODE) +
+               sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_SMMU3_NODE) +
+-              sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE);
++              2 * sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE);
+ 
+   Status = gBS->AllocatePages (
+                   AllocateAnyPages,
+@@ -199,6 +231,10 @@ AddIortTable (
+   CopyMem (New, &Rc, sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE));
+   New += sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE);
+ 
++  // CXL RC Node
++  CopyMem (New, &cxlRc, sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE));
++  New += sizeof (SBSA_EFI_ACPI_6_0_IO_REMAPPING_RC_NODE);
++
+   AcpiPlatformChecksum ((UINT8 *)PageAddress, TableSize);
+ 
+   Status = AcpiTable->InstallAcpiTable (
+diff --git a/Silicon/Qemu/SbsaQemu/SbsaQemu.dec b/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
+index 60daeff915c5..87ef05b44757 100644
+--- a/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
++++ b/Silicon/Qemu/SbsaQemu/SbsaQemu.dec
+@@ -48,6 +48,34 @@ HardwareInfoLib|Include/Library/HardwareInfoLib.h
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarSize|0x10000000|UINT64|0x00000009
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdPciExpressBarLimit|0xFFFFFFFF|UINT64|0x00000010
+ 
++  # PCDs complementing CXL layout pulled into ACPI tables
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoBase|0x0|UINT32|0x00000011
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoTranslation|0x60130000|UINT32|0x00000012
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoSize|0x00010000|UINT32|0x00000013
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Base|0x60140000|UINT32|0x00000014
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Size|0x08000000|UINT32|0x00000015
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Base|0x90000000000|UINT64|0x00000016
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Size|0x100000000|UINT64|0x00000017
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlIoLimit|0x0000ffff|UINT32|0x00000018
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio32Limit|0x6813FFFF|UINT32|0x00000019
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlMmio64Limit|0x900FFFFFFFF|UINT64|0x0000001a
++
++  # PCDs complementing CXL ECAM Base & Size
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBaseAddress|0x68140000|UINT64|0x0000001b
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarSize|0x10000000|UINT64|0x0000001c
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBarLimit|0x7813FFFF|UINT64|0x0000001d
++
++  # PCDs complementing CXL Bus Range
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMin|0|UINT32|0x0000001e
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCxlBusMax|255|UINT32|0x0000001f
++
++  # PCDs complementing base address for CXL CHBCR (CXL Host Bridge Component Registers)
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdChbcrBase|0x60120000|UINT64|0x00000020
++
++  # CXL Fixed Memory Window
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmws0Base|0xA0000000000|UINT64|0x00000021
++  gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdCfmws0Size|0x10000000000|UINT64|0x00000022
++
+ [PcdsDynamic.common]
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdSystemManufacturer|L""|VOID*|0x00000110
+   gArmVirtSbsaQemuPlatformTokenSpaceGuid.PcdSystemSerialNumber|L""|VOID*|0x00000111
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
