@@ -1,204 +1,122 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDEA195FD5;
-	Wed, 27 Nov 2024 10:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40872191F99;
+	Wed, 27 Nov 2024 10:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732702537; cv=none; b=tE/rUGSMcoYQ+76X+QPX46oqTeXbbdNCbyVkdCzxzkaC4Jw9tColKOY//hpOiawrLiknlOc56IW3e5hEvXTwfsBj1DbRwV4Mu0ofYx4xMHoKTig1RWfxRu9WMO4wWlzf2R9k8nLU1MpsDPmuvY7gmyJvLyokmUt4u957IK0NKqQ=
+	t=1732703017; cv=none; b=B4EEh26DU5xvguwEiH0Zw0647GQJZLjbMNq/DEyIQ2+kcdcFcZqsCry9O3Wqo1XQ5gsCUFU40rSAQ8ISXe9lQqhu5rbL922EBCQVYqgzZzevvUDN4Lvnst+IkFnbqVJGPPWnL9iiOYgKNHBmFmHaYt93jxLDnaDUoUZhADi+a04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732702537; c=relaxed/simple;
-	bh=h8acZ1y9pK046pivY5M0fVYBosnV0EM/PN5VKLkWe+c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=e8cGGTlt3Vf+1vf+zWDn8F8hVn6onTGKK1pDDPMruzi1L5wz6q1n6A/n+M6FkPHXRUakL9Pod2PIXUMV48llYVCBnT1sqpKtCduU6iGEpODhQ/KKzisLM2UHL/DqdT/liW7t6qO21udKf83sj+b3KpEE4McqRbPce10+LK84KRI=
+	s=arc-20240116; t=1732703017; c=relaxed/simple;
+	bh=R5E2i29yNSZK1YbWxqIGL9nzzEA73c8GnAFir+/J/IA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HqTa6em51tmj3bWtzNa0psZOF2nnlOaFyDL0U1EH+hHcR4Utwv0n2OehvOrjERnCAjiadF1vbpfWOUfE4qLObS9xcmOLg67Lsjnwk59ZOGzhuDk7PRhexrw4ZGvawsPxrcuZQxWpamzkBNz1HAswHVu0Od6a31kWKdqFP8bLYsc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XywG323qJz6K5rj;
-	Wed, 27 Nov 2024 18:11:39 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2137A140133;
-	Wed, 27 Nov 2024 18:15:32 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 27 Nov 2024 11:15:31 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Wed, 27 Nov 2024 11:15:31 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linuxarm
-	<linuxarm@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)"
-	<prime.zeng@hisilicon.com>
-Subject: RE: [PATCH v4 1/6] cxl/events: Update Common Event Record to CXL spec
- rev 3.1
-Thread-Topic: [PATCH v4 1/6] cxl/events: Update Common Event Record to CXL
- spec rev 3.1
-Thread-Index: AQHbOy/hVaHeWoOBMES/mGi8IYplc7LJybMAgAEqHjA=
-Date: Wed, 27 Nov 2024 10:15:31 +0000
-Message-ID: <1187c8e3618d40cc8afc3eb2624ba790@huawei.com>
-References: <20241120093745.1847-1-shiju.jose@huawei.com>
- <20241120093745.1847-2-shiju.jose@huawei.com>
- <Z0YE7C5NkyydjiRR@smc-140338-bm01>
-In-Reply-To: <Z0YE7C5NkyydjiRR@smc-140338-bm01>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XywSl6vyqz6K5sD;
+	Wed, 27 Nov 2024 18:20:55 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 909021400CA;
+	Wed, 27 Nov 2024 18:23:32 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 27 Nov
+ 2024 11:23:32 +0100
+Date: Wed, 27 Nov 2024 10:23:30 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<rafael@kernel.org>, <bp@alien8.de>, <dan.j.williams@intel.com>,
+	<tony.luck@intel.com>, <dave@stgolabs.net>, <alison.schofield@intel.com>,
+	<ira.weiny@intel.com>
+Subject: Re: [RFC PATCH v2 3/5] acpi/hmat: Add helper functions to provide
+ extended linear cache translation
+Message-ID: <20241127102330.00004a1c@huawei.com>
+In-Reply-To: <20241112221335.432583-4-dave.jiang@intel.com>
+References: <20241112221335.432583-1-dave.jiang@intel.com>
+	<20241112221335.432583-4-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 12 Nov 2024 15:12:35 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
->-----Original Message-----
->From: Fan Ni <nifan.cxl@gmail.com>
->Sent: 26 November 2024 17:27
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: dave.jiang@intel.com; dan.j.williams@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
->nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org=
-;
->Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>
->Subject: Re: [PATCH v4 1/6] cxl/events: Update Common Event Record to CXL
->spec rev 3.1
->
->On Wed, Nov 20, 2024 at 09:37:40AM +0000, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> CXL spec 3.1 section 8.2.9.2.1 Table 8-42, Common Event Record format
->> has updated with Maintenance Operation Subclass information.
->The table reference is incorrect, should be Table 8-43 based on spec r3.1,=
- v1.0,
->Auguest 7, 2023.
->
-Hi Fan,=20
+> Add helper functions to help do address translation for either the address
+> of the extended linear cache or its alias address. The translation function
+> attempt to detect an I/O hole in the proximity domain and adjusts the
+> address if the hole impacts the aliasing of the address. The range of the
+> I/O hole is retrieved by walking through the associated memory target
+> resources.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+Trivial comment inline.  I'm far from expert on requirements here but it
+seems to match your description.
 
-Thanks for reviewing.  Will fix.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
->Other than that,
->
->
->Reviewed-by: Fan Ni <fan.ni@samsung.com>
->
->>
->> Add updates for the above spec change in the CXL events record and CXL
->> common trace event implementations.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/cxl/core/trace.h | 13 +++++++++----
->>  include/cxl/event.h      |  3 ++-
->>  2 files changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h index
->> 8389a94adb1a..7305974e2301 100644
->> --- a/drivers/cxl/core/trace.h
->> +++ b/drivers/cxl/core/trace.h
->> @@ -166,11 +166,13 @@ TRACE_EVENT(cxl_overflow,
->>  #define CXL_EVENT_RECORD_FLAG_MAINT_NEEDED	BIT(3)
->>  #define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
->>  #define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
->> +#define CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID	BIT(6)
->>  #define show_hdr_flags(flags)	__print_flags(flags, " | ",
->		   \
->>  	{ CXL_EVENT_RECORD_FLAG_PERMANENT,
->	"PERMANENT_CONDITION"		}, \
->>  	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,
->	"MAINTENANCE_NEEDED"		}, \
->>  	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
->	"PERFORMANCE_DEGRADED"		}, \
->> -	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,
->	"HARDWARE_REPLACEMENT_NEEDED"	}  \
->> +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,
->	"HARDWARE_REPLACEMENT_NEEDED"	},  \
->> +	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,
->	"MAINT_OP_SUB_CLASS_VALID" }	\
->>  )
->>
->>  /*
->> @@ -197,7 +199,8 @@ TRACE_EVENT(cxl_overflow,
->>  	__field(u16, hdr_related_handle)			\
->>  	__field(u64, hdr_timestamp)				\
->>  	__field(u8, hdr_length)					\
->> -	__field(u8, hdr_maint_op_class)
->> +	__field(u8, hdr_maint_op_class)				\
->> +	__field(u8, hdr_maint_op_sub_class)
->>
->>  #define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)
->		\
->>  	__assign_str(memdev);				\
->> @@ -209,17 +212,19 @@ TRACE_EVENT(cxl_overflow,
->>  	__entry->hdr_handle =3D le16_to_cpu((hdr).handle);
->	\
->>  	__entry->hdr_related_handle =3D le16_to_cpu((hdr).related_handle);
->	\
->>  	__entry->hdr_timestamp =3D le64_to_cpu((hdr).timestamp);
->		\
->> -	__entry->hdr_maint_op_class =3D (hdr).maint_op_class
->> +	__entry->hdr_maint_op_class =3D (hdr).maint_op_class;
->	\
->> +	__entry->hdr_maint_op_sub_class =3D (hdr).maint_op_sub_class
->>
->>  #define CXL_EVT_TP_printk(fmt, ...) \
->>  	TP_printk("memdev=3D%s host=3D%s serial=3D%lld log=3D%s : time=3D%llu
->uuid=3D%pUb "	\
->>  		"len=3D%d flags=3D'%s' handle=3D%x related_handle=3D%x "
->	\
->> -		"maint_op_class=3D%u : " fmt,
->	\
->> +		"maint_op_class=3D%u maint_op_sub_class=3D%u : " fmt,
->	\
->>  		__get_str(memdev), __get_str(host), __entry->serial,
->	\
->>  		cxl_event_log_type_str(__entry->log),
->	\
->>  		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry-
->>hdr_length,\
->>  		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,
->	\
->>  		__entry->hdr_related_handle, __entry->hdr_maint_op_class,
->	\
->> +		__entry->hdr_maint_op_sub_class,	\
->>  		##__VA_ARGS__)
->>
->>  TRACE_EVENT(cxl_generic_event,
->> diff --git a/include/cxl/event.h b/include/cxl/event.h index
->> 0bea1afbd747..e1d485ad376b 100644
->> --- a/include/cxl/event.h
->> +++ b/include/cxl/event.h
->> @@ -18,7 +18,8 @@ struct cxl_event_record_hdr {
->>  	__le16 related_handle;
->>  	__le64 timestamp;
->>  	u8 maint_op_class;
->> -	u8 reserved[15];
->> +	u8 maint_op_sub_class;
->> +	u8 reserved[14];
->>  } __packed;
->>
->>  struct cxl_event_media_hdr {
->> --
->> 2.43.0
->>
->
->--
->Fan Ni (From gmail)
+> v2:
+> - Drop extra variable and use 'res' from the loop. (Jonathan)
+> - Break up multiple if statements into single blocks and add comments. (Jonathan)
+> ---
+>  drivers/acpi/numa/hmat.c | 148 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/acpi.h     |  14 ++++
+>  2 files changed, 162 insertions(+)
+> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 92b818b72ecc..6c686d3c7266 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -152,6 +152,154 @@ int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(hmat_get_extended_linear_cache_size, CXL);
+>  
+> +static int alias_address_find_iohole(struct memory_target *target,
+> +				     u64 address, u64 alias, struct range *hole)
+> +{
+> +	struct resource *res, *prev;
+> +
+> +	*hole = (struct range) {
+> +		.start = 0,
+> +		.end = -1,
+> +	};
+> +
+> +	/* First find the resource that the address is in */
+> +	prev = target->memregions.child;
+> +	for (res = target->memregions.child; res; res = res->sibling) {
+> +		if (alias >= res->start && alias <= res->end)
+> +			break;
+> +		prev = res;
+> +	}
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	/* No memory hole */
+> +	if (res == prev)
+> +		return 0;
+> +
+> +	/* If address is within the current resource, no need to deal with memory hole */
 
-Thanks,
-Shiju
+Rather long line that could be easily broken.
+
+> +	if (address >= res->start)
+> +		return 0;
+> +
+> +	*hole = (struct range) {
+> +		.start = prev->end + 1,
+> +		.end = res->start - 1,
+> +	};
+> +
+> +	return 0;
+> +}
