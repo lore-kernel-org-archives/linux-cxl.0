@@ -1,282 +1,222 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0519D190685;
-	Wed, 27 Nov 2024 09:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732699069; cv=fail; b=qfaWv7y6IyhDsWzaAGMAsui3YVyKrSdk7EYw6lnOqRoy94a0KQWgxlzs4IgdB0naWDMOYGq3K+YVgq6K87TQCkJngrAdAauzVpNKArGt58ZiK2Af0g7ZIlaQ92O0VO1F80k5TXLPw5EmDA5vJnmEZq0Sg5bOCfyGST2wdbvlNIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732699069; c=relaxed/simple;
-	bh=oSALaR0/sUF9nje2Ih4Sssmb8DUetbdJdsyB++PYfew=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oUgFBpFWJhMcNJ01D57APpE449zUPyXvJ92yhefgHVxPnlBX3WaQtjXL2JuC5Vl5c5As+vtWUNpNTAy3CJVEaCJH4TK1XOQPci2JwtukU0sC/tWbjAloVabuGKh1FTygreFoSI/0n+RvKUIAulZVA/zPk362r9Hmy0AGZoe5mrY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BnJoL5ZG; arc=fail smtp.client-ip=40.107.223.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BnJoL5ZG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QLcKPXUBLnZOp87J559anUAlLvvmXRMSV+wDheUn4y4uDioaE29pN62ulr9b7dV+III0sVR5bxuJxsWD5M6ocHQN5pWSASS3vizw63pr5lRdct9C4heNQwATAASkFJCUHhSS9udDA5EGWeYh1HDCVQak60eC8mss+AYSxuFNdHqjq3fVbE/Mqi7Uy8wqi6s61rKzTipStXZfdFdmK3AHR5N/EwmkMmTZnvXBqM1s6Oi/5RJdsfYLNdgXmfTtD1Vbs9PGzZuMtS9YFd4VCDPieHT8jKMOH5jvXKrFIb64pHsQkxUIWaB9lR7I7fe6YTW5rlZKsovyh7sF1/hUSFv4xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JDUpRVU6Uv+5t0Ks1oKhrbG3PeRo9puuJuCSOBNZvD4=;
- b=DIsZWXBZPlCcRmdCh5NQvJ7Qtx0qFlAIvga1ljSUiL/HgN8q0O+cAVfktgl8sNT39kiukuhd1kjyaEWDFNKXfr4/AIha8SbLcWbUtJyl4MtEL9BuykqN5PaIRjl8dW7X1BU+2DrSHUIjNf8vvHOiOpd0RgZgtXOhgK3RhmXRd1OYhckILTecneln+d7qxS9tE1TfoFuXwEK7fuU4kRbvrrwjH/hPXwH/2dklRcTsQjDhodJpsn4MOJpgptXzjA/liCK1Km9fdxOpEeFOAjcJzcIJ2O4iGkyesyCfr/5ejAWsoHxC9VFiJ94hE9YzPVnkfBkdfOpzQM1NtIgZj81z1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JDUpRVU6Uv+5t0Ks1oKhrbG3PeRo9puuJuCSOBNZvD4=;
- b=BnJoL5ZG9R+4+CpVO1PMe/c/ptqCiHbje5CRRwZ1jMEMk2STwgG9m/+3rCSEEsrStscDw9OVITRtf1bXhbPiMTlbWIo/cCMeMVvpoylMfdF2a4t6oxypzRnKbhk0ibZLANqgX+4tDaTRjfxat+fdjTeunvZIhl3S0/F1vAKXK1U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by MN0PR12MB5715.namprd12.prod.outlook.com (2603:10b6:208:372::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8182.20; Wed, 27 Nov
- 2024 09:17:44 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8207.010; Wed, 27 Nov 2024
- 09:17:44 +0000
-Message-ID: <a844e2c1-b3ea-4abb-064d-65c005279cc8@amd.com>
-Date: Wed, 27 Nov 2024 09:17:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 02/27] sfc: add cxl support using new CXL API
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699CF140360;
+	Wed, 27 Nov 2024 10:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732702339; cv=none; b=nKgqrTZrUcBZQh2OMWGxx9fEfk9qbFPEhAiwdAvMnIGA7qqq8YCJGL+13Z4ZOmOtOwJ/1KxfPBRg5lvreX5nj0qPd33gYi6QlMEwOWJwbTMkGBEB926W+SkvX/020fONRGxyRJz9EJY1BK8NpwXarrCwysIEoW/gnl0VViFxibA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732702339; c=relaxed/simple;
+	bh=e6lnsTke15tAPeDX+qjTPgwLO/HwREfoYmiMIl73GkY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lwrus+kv4aASDovSn/t01n/UzYjmWjMsGCFRw84y8afJ4nSb+qdrbEDufo+asdAX9EOLnbbLY86Re1/QwnDOTDEaWmRb8Cdtk91yZEMyPHCK99guEn+TEGK0hiehKhLtFT33CdT4kdVKePRVu49i81//2G/r1mgErYVqp2AhT4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XywBC5cGHz6K71C;
+	Wed, 27 Nov 2024 18:08:19 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9810E1400CA;
+	Wed, 27 Nov 2024 18:12:12 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 27 Nov 2024 11:12:12 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 27 Nov 2024 11:12:12 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
+ CXL spec rev 3.1
+Thread-Topic: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
+ CXL spec rev 3.1
+Thread-Index: AQHbOy/jEKs9N8Ou/EWSGme10Yml3rLJc4IQgABPV4CAAS95QA==
+Date: Wed, 27 Nov 2024 10:12:12 +0000
+Message-ID: <a24524dccbf442d5a3c910d7f46c7b6c@huawei.com>
+References: <20241120093745.1847-1-shiju.jose@huawei.com>
+	<20241120093745.1847-4-shiju.jose@huawei.com>
+	<180fcfd623c64cdb86cdc9059f749af0@huawei.com>
+ <20241126120237.1598854d@gandalf.local.home>
+In-Reply-To: <20241126120237.1598854d@gandalf.local.home>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To: Fan Ni <nifan.cxl@gmail.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-3-alejandro.lucero-palau@amd.com>
- <Z0YOju3FaSSCJRRr@smc-140338-bm01>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <Z0YOju3FaSSCJRRr@smc-140338-bm01>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PA7P264CA0015.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2d3::19) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+Content-Type: multipart/mixed;
+	boundary="_002_a24524dccbf442d5a3c910d7f46c7b6chuaweicom_"
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MN0PR12MB5715:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6be757d-d829-4ce5-ea0e-08dd0ec459ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ampmcytqREFCWnNSWkhDZ05hU1VEN3FRUVVrOXlPZnRjSXU5VnFLZ2lQd3lk?=
- =?utf-8?B?cFVyR3l0TDRIcGxjVDZUb3pZZjlCVDd2YnZOUndnZlVVeXNKU0x3aTE0cmdp?=
- =?utf-8?B?Q2tFMkZ2MzBTTkt1cStMeDZObk9wOTI4VGd6WlhtTUtpQ0p5ZS80RTZkbkNn?=
- =?utf-8?B?TVFaWHBCUE1TUmZaSllZZ1kvUUJZVGdzZ29nMW9DaWg1SXNONWV6Mm10OXly?=
- =?utf-8?B?aVBETGhyOHdHTDRDUjF2dnE4VDlQdDdhKzFOd0NtelBvWXpZK0laZU4rOXpQ?=
- =?utf-8?B?S0tFNEZVZ0lJVEc5bXIvLzZ3bzFuRGdkYklESEMwU3NrZkR1amxsdEt0WTV0?=
- =?utf-8?B?QWUxdzdadjdZZUgzbHgrWUxqckYyUVlnMnBuNURDaVV1dU92c084d2hMY0xU?=
- =?utf-8?B?UXBDZVkzTXBzZ0gzV1hrcUtKbmtHY0N5WXJKeEZ2WHMwM0pUbWZ0S25GM2p5?=
- =?utf-8?B?Ri80b0NaaEE3NnRzL2hCMng5WEhBRmRNNlRER0FFZUxyUzRjL3J0S2NndE9K?=
- =?utf-8?B?bnFqb1U0NVpraU1MdlhyY3IzbkQxYThpRitzd2V3U00zSE9EVkJhbGhKTDZJ?=
- =?utf-8?B?c1VrOFQvV1QyNW5YYzh2a0hiNFhycERncDdsZVRWdmRoNVNrWGZPcE5tVitp?=
- =?utf-8?B?bFJGazU2cFcraGFoVmZMN3oyNlp4aWh5T0Uzb1FjaU1YN0puRzk3SHRvMXVD?=
- =?utf-8?B?THpUOHNQcUtjZ3cwcTRLZEg5NmxzVjE4Zk9ZR0xCOWtkZjV2TXRFUGh2QTI0?=
- =?utf-8?B?eTQ5R0txaVdvSzVPbUpyVjg4eENLRnpJNi81Tm42c2FLaU5VbnluM1JiU0FV?=
- =?utf-8?B?ekNuUS9vNU9vOE5MNHoybk5xcDdOV20wWXI5Y2s1ajJWQzFhZDdDZWZjTDJp?=
- =?utf-8?B?Z3FodUY4K005Szd5QUF2SUxueE9HTEJsbTNmMzFHay8vZWdLT1NkbnowcFRI?=
- =?utf-8?B?QllUMVZNZkQrdXdRMEsvWE5zVVBkRWUwdGxhSlV3TVFuNGtZLzBqMHpER0NM?=
- =?utf-8?B?MXZNZmNjOUFoWC9wN0QrK3g1VDZIQ09FcnhZQmdpMVZXM0NrSytjd1JGS2l0?=
- =?utf-8?B?RUlDUStvemdsL3Y3VG1PTjFoSnNYVkJzNWlMNTVXTmVOdjVYSVgzVzlvaXA3?=
- =?utf-8?B?WmczamtjaUNoWXdQZnJyUVpYZTJqL2UyWVdONm1VVzM0eU90UVM4NEtRZ2d1?=
- =?utf-8?B?dFdYYzhpejd2UGtDU1V1MXg5Q3h5TkJNcHEvdWtSelpqRkNKZVV3U1V6WFBu?=
- =?utf-8?B?NTMwYjA4MTR3MjNQcTNxQ0k0aDhUR1JHR0FuQkkwVzM0MjE0dG1YRVA1Z3Jv?=
- =?utf-8?B?V2dCVEhGZzdSQ2E2WkwwUEhnajRiS252ZkhPRFRvc08yL1YzdzlBTkFnRnU4?=
- =?utf-8?B?TTJHVDMxLzdTT2F3cXJJTGoybTRGL0FkVjRkRVJESkdCbGxGOFBxc0VLWlQ5?=
- =?utf-8?B?MTNXaHdZeTR5T0haVVNLSGpXZVo4VXI3MUh4d0tUdTc3QjA5UGlGbHFiYWJO?=
- =?utf-8?B?dDlzRnV2d3pHL3NCR3hkY2dGZkx6VFNxa0hxUmsyaGhyam94RTZoYUpHQW5w?=
- =?utf-8?B?dkE3ODFwQWxRb1JrMDFoQUFCMHc5anRkT0Z3WFZCUGZYcC9Ub1RlRC93dkRt?=
- =?utf-8?B?K1dvUC82ZkhadDMwRE8wMXo2YVNMVGVyT3g5bG1HMm5QMktIWjZlNDJPWmRS?=
- =?utf-8?B?ZldGSTBaNm1DRnRvZTF3UzVmbWs4MURoaW9CVFhZTWh0MjdnTXFpczZNdXRm?=
- =?utf-8?B?RDhBN2ZESHRSejUvUzdyamswdGNZWVM1eGFkMUFtb1hEVjhFZ1ZFWEw2TEdU?=
- =?utf-8?B?TTlLVVdDYmFDSkR1TmY5Zz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b3BKTDNuQzV0RmlrU2RmVmh4VXJvYUNQWFM1MzhxRE9iR3QzSjk5b0dKZjRJ?=
- =?utf-8?B?Y1I1QWx5OHlFcVgxZ1h4elVMakk3enV5bnowZTB3SG10bnBLcUFMYXU4Tjdo?=
- =?utf-8?B?R1A5NnlhMzNWZ2h6c21XVVdSYXhxQWVLK0xsVERXTlJYVjlROVFkQU0wUjN5?=
- =?utf-8?B?RnRzN1lPQm1zdDNCTC9TdGNWRWk1NXZCbjZBR283Qis3S2NlbXluZ3NxbjJz?=
- =?utf-8?B?eFYzWUFENEJhQnd1UzJjWW4yUStHOHVveVVIL0JFNXB6ZjcrbjF1b2Qvelc0?=
- =?utf-8?B?NDUwb3ZRUkg4N2grbDB3M0Nlc1M0enl3b3JiKzRiZitnSmZZWWRVY0tha2hL?=
- =?utf-8?B?UVRFQStFRE5ORlFKSitGei9ReVp5cDNteGFNQzlJeEg1cDdrQ1NXVFdNQ3N2?=
- =?utf-8?B?OFZCMTYvUVVRaTlHV3FNdXg5Qzlta3V1R0pTTlRNbU5sR09COFkwN2hKTEtY?=
- =?utf-8?B?Y2JFYkRBMmQ3MWJJTFNDRDllYzB2R01vVWxsd1o4SUU3d0t3OUp4bmp3Umk3?=
- =?utf-8?B?TWh1MW1ER2pHUyt2dTdyb0hDV21BT0RoRGtadU5QNEw5Y0hZclJtY3IzRXBM?=
- =?utf-8?B?dkRVUDU5V0NSOUJmR0hQb2NoY0tOemZsZnRxN05yQmVLZ1VZZDl0NkFkb3hi?=
- =?utf-8?B?NXdvK2U5TFVXOE1FN0tDb2xTQVdaaTBndjNSdGNyQmh2bng4Y2ZHa1ZPRGh3?=
- =?utf-8?B?VHhwVHJRUjEweHl4eDNwcVA2K0lMYkFGVXVCdEdMdUNkRkZsUWx0YjJVSUZt?=
- =?utf-8?B?WVh0RWdSZGw2UUI5WVZ0aGxPK04zYi9rQnlvR1QvVnIzS1hXbkZSZkFTQ3I4?=
- =?utf-8?B?QldldGFrNHJYbEsxTUpEVW1aT25veUc4V2doN1pUZWRybDZsdVFrRzF2MG9Z?=
- =?utf-8?B?Q1REMXRDQ2VBbUJQcnFBQlI1bmdGbVpFM2tNNGNpd0luMDc5TzJudUlpMytu?=
- =?utf-8?B?aGZlNU04dnl0TlZmWTY4djAzeGYzMzhJMTlxSmRNOTFmSFNDZ0V4c2RGSTdR?=
- =?utf-8?B?OU0xemVBV1Y0ZmFtZTNvUSt6MGVwT1BSQ0VzOUJUbVAxTEh4ZU9mK3JxRDlC?=
- =?utf-8?B?MjdHMk8zQzRNMzJqVy9WcG85RHJKc1NsN3RRc1BaSTB5WW51NHZvZ3dhSWR2?=
- =?utf-8?B?M1Y3KzJ4Mk1uVWl1SWJNVDJScXpDeW42NlRFSG00OFBJbVl2Z2FKc1MycU45?=
- =?utf-8?B?cUdzOGN4STdVQ0NBNGZEeDhjNVlidEFsLy80cVVDZW5PU0JOVTFjMTRjNGE2?=
- =?utf-8?B?c1ZzS3NoM2dVbWZrdGVLSHJTWGlnT3RmOWdtaTZvVEdqakN4bGk5OXJJN1Nr?=
- =?utf-8?B?b1gwZU95NWJrUHlKeGNwaXMwZmRCenAyeGdCb29HWWVqanhGQXV1STNBMVUz?=
- =?utf-8?B?K0l1QnQ4WmtsckhveWFiWE4wTHMxZ3l1ZEc5bGl1S0t5aWNwMWFJMi9oVnlt?=
- =?utf-8?B?WWNsZDdBbXE0RHJVdlRCMzRRZEI4TDBJU3lnN3NkV3poQUJvaGpSVFUvRVdG?=
- =?utf-8?B?dDJIemhJTmFETlNjeFNkMlR0N2NQTlZEdHJBT0xiYjdwM01JeWVCakl2U2ZT?=
- =?utf-8?B?OFAzVXliS3FVOVd5blZKOWNIV0hiUWtDNGVsb0hUbzJVVC9ob3Z2cFBSZDl5?=
- =?utf-8?B?dmJ6MU9scVdWdW8zWXRFRlk0TitONnpBOHpoMnFiK0hzNDc5SkZWSFI5cnU0?=
- =?utf-8?B?clZtdWJ3VzRsakt3RFpvMDNrdWYrcUZYN25ZWTV6S29DcXB0R09lb0tENUpL?=
- =?utf-8?B?TjN1aUhkQXhCcFY1T1lMc0VMVkdMV1cyMTlBb1BwK2hpQWJMK3pGY2NLRUdC?=
- =?utf-8?B?UWNucDVxQTZFQ0htcnZkcGpIbUh0V0hEcWJmTkluM0M2djBKMTlOK01ZaUZC?=
- =?utf-8?B?NUF4QW51UXNVK3lzSVVPWXJERjUvYWdsd1hGaGUzcnBJM0IrUG5CY2k2RGQx?=
- =?utf-8?B?THVpdnNZaWlnZVZ3eTMvUEFDNjV5VWpCVGhzYVNOSTg1WWFOeTBvMlFQclJT?=
- =?utf-8?B?TGJLNWZNU0lwY1FOcmY2emhiUXJtendnc3dybElXMVFLMHA5Z09FR2I3N0tW?=
- =?utf-8?B?SGV0QUlJT3dDMjk0VmlwRWRjd0VVc0RGbGxnQ3d6OCtyUzJSZVlvcTZkTXBY?=
- =?utf-8?Q?udJT1RaWr4H59D/8taLEMYyzj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6be757d-d829-4ce5-ea0e-08dd0ec459ca
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2024 09:17:44.1673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hOT7uzJCaE6O+mSNcw37zgtKsVgYKo8viXFXNk1Qw6hi1tEafF8p88aCNn0dNX0akwYby7/dPnsv64qyiZpMRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5715
 
+--_002_a24524dccbf442d5a3c910d7f46c7b6chuaweicom_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/26/24 18:08, Fan Ni wrote:
-> On Mon, Nov 18, 2024 at 04:44:09PM +0000, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
+>-----Original Message-----
+>From: Steven Rostedt <rostedt@goodmis.org>
+>Sent: 26 November 2024 17:03
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: dave.jiang@intel.com; dan.j.williams@intel.com; Jonathan Cameron
+><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
+>nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org=
+;
+>Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>Zengtao (B) <prime.zeng@hisilicon.com>
+>Subject: Re: [PATCH v4 3/6] cxl/events: Update General Media Event Record =
+to
+>CXL spec rev 3.1
+>
+>On Tue, 26 Nov 2024 11:51:23 +0000
+>Shiju Jose <shiju.jose@huawei.com> wrote:
+>
+>> We are encountering a parsing error ("FAILED TO PARSE") from
+>> libtraceevent  when it tries to parse some of the CXL trace events for t=
+he user-
+>space tool rasdaemon.
+>> This issue appeared after new fields were added to the trace events.
+>> It was found that the issue does not occur when all or some of the
+>> decoded strings for the event's data and flags are removed from the
+>> TP_printk() function in the kernel, and only the values are printed inst=
+ead.
+>> https://elixir.bootlin.com/linux/v6.12/source/drivers/cxl/core/trace.h
+>> https://lore.kernel.org/lkml/20241120093745.1847-1-shiju.jose@huawei.c
+>> om/
 >>
->> Add CXL initialization based on new CXL API for accel drivers and make
->> it dependable on kernel CXL configuration.
+>> Below is the information from the debugging in libtraceevent:
+>> The failure occurs in the following functions and locations within libtr=
+aceevent:
+>> File: src/event-parse.c
+>> Function: event_read_format()
+>> ret =3D event_read_fields(event->tep, event, &event->format.fields); if =
+(ret < 0)
+>>     return ret;
 >>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> ---
->>   drivers/net/ethernet/sfc/Kconfig      |  7 +++
->>   drivers/net/ethernet/sfc/Makefile     |  1 +
->>   drivers/net/ethernet/sfc/efx.c        | 24 +++++++-
->>   drivers/net/ethernet/sfc/efx_cxl.c    | 88 +++++++++++++++++++++++++++
->>   drivers/net/ethernet/sfc/efx_cxl.h    | 28 +++++++++
->>   drivers/net/ethernet/sfc/net_driver.h | 10 +++
->>   6 files changed, 157 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
->>   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
-> ...
->> +	res = DEFINE_RES_MEM_NAMED(0, EFX_CTPIO_BUFFER_SIZE, "ram");
->> +	if (cxl_set_resource(cxl->cxlds, res, CXL_RES_RAM)) {
->> +		pci_err(pci_dev, "cxl_set_resource RAM failed\n");
->> +		rc = -EINVAL;
->> +		goto err2;
->> +	}
->> +
->> +	probe_data->cxl = cxl;
->> +
->> +	return 0;
->> +
->> +err2:
->> +	kfree(cxl->cxlds);
->> +err1:
->> +	kfree(cxl);
->> +	return rc;
->> +
-> Unwanted blank line here.
-
-
-I'll fix it.
-
-Thanks!
-
-
-> Fan
->> +}
->> +
->> +void efx_cxl_exit(struct efx_probe_data *probe_data)
->> +{
->> +	if (probe_data->cxl) {
->> +		kfree(probe_data->cxl->cxlds);
->> +		kfree(probe_data->cxl);
->> +	}
->> +}
->> +
->> +MODULE_IMPORT_NS(CXL);
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
->> new file mode 100644
->> index 000000000000..90fa46bc94db
->> --- /dev/null
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
->> @@ -0,0 +1,28 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/****************************************************************************
->> + * Driver for AMD network controllers and boards
->> + * Copyright (C) 2024, Advanced Micro Devices, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU General Public License version 2 as published
->> + * by the Free Software Foundation, incorporated herein by reference.
->> + */
->> +
->> +#ifndef EFX_CXL_H
->> +#define EFX_CXL_H
->> +
->> +struct efx_nic;
->> +
->> +struct efx_cxl {
->> +	struct cxl_dev_state *cxlds;
->> +	struct cxl_memdev *cxlmd;
->> +	struct cxl_root_decoder *cxlrd;
->> +	struct cxl_port *endpoint;
->> +	struct cxl_endpoint_decoder *cxled;
->> +	struct cxl_region *efx_region;
->> +	void __iomem *ctpio_cxl;
->> +};
->> +
->> +int efx_cxl_init(struct efx_probe_data *probe_data);
->> +void efx_cxl_exit(struct efx_probe_data *probe_data);
->> +#endif
->> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
->> index b85c51cbe7f9..efc6d90380b9 100644
->> --- a/drivers/net/ethernet/sfc/net_driver.h
->> +++ b/drivers/net/ethernet/sfc/net_driver.h
->> @@ -1160,14 +1160,24 @@ struct efx_nic {
->>   	atomic_t n_rx_noskb_drops;
->>   };
->>   
->> +#ifdef CONFIG_SFC_CXL
->> +struct efx_cxl;
->> +#endif
->> +
->>   /**
->>    * struct efx_probe_data - State after hardware probe
->>    * @pci_dev: The PCI device
->>    * @efx: Efx NIC details
->> + * @cxl: details of related cxl objects
->> + * @cxl_pio_initialised: cxl initialization outcome.
->>    */
->>   struct efx_probe_data {
->>   	struct pci_dev *pci_dev;
->>   	struct efx_nic efx;
->> +#ifdef CONFIG_SFC_CXL
->> +	struct efx_cxl *cxl;
->> +	bool cxl_pio_initialised;
->> +#endif
->>   };
->>   
->>   static inline struct efx_nic *efx_netdev_priv(struct net_device *dev)
->> -- 
->> 2.17.1
+>> Function: event_read_fields()
+>> if (test_type_token(type, token, TEP_EVENT_ITEM, "field"))
+>>     goto fail;
 >>
+>> Can you recognize if there are any limitations or issues  that would
+>> prevent libtraceevent from parsing the trace event in the condition desc=
+ribed
+>above?
+>
+>Can you show me the output of the format files for the affected trace even=
+ts:
+>
+> # cat /sys/kernel/tracing/cxl/<affected_event>/format
+>
+>You can attach it too if your email does whitespace mangling.
+
+Hi Steve,=20
+
+Please find attached, output of  format file for the CXL general media trac=
+e event.
+
+>
+>Thanks,
+>
+>-- Steve
+Thanks,
+Shiju
+
+--_002_a24524dccbf442d5a3c910d7f46c7b6chuaweicom_
+Content-Type: text/plain; name="format_cxl_general_media.txt"
+Content-Description: format_cxl_general_media.txt
+Content-Disposition: attachment; filename="format_cxl_general_media.txt";
+	size=4222; creation-date="Wed, 27 Nov 2024 10:10:59 GMT";
+	modification-date="Wed, 27 Nov 2024 10:10:59 GMT"
+Content-Transfer-Encoding: base64
+
+cm9vdEBsb2NhbGhvc3Q6fiMgY2F0IC9zeXMva2VybmVsL2RlYnVnL3RyYWNpbmcvZXZlbnRzL2N4
+bC9jeGxfZ2VuZXJhbF9tZWRpYS9mb3JtYXQgCm5hbWU6IGN4bF9nZW5lcmFsX21lZGlhCklEOiAx
+NDY0CmZvcm1hdDoKCWZpZWxkOnVuc2lnbmVkIHNob3J0IGNvbW1vbl90eXBlOwlvZmZzZXQ6MDsJ
+c2l6ZToyOwlzaWduZWQ6MDsKCWZpZWxkOnVuc2lnbmVkIGNoYXIgY29tbW9uX2ZsYWdzOwlvZmZz
+ZXQ6MjsJc2l6ZToxOwlzaWduZWQ6MDsKCWZpZWxkOnVuc2lnbmVkIGNoYXIgY29tbW9uX3ByZWVt
+cHRfY291bnQ7CW9mZnNldDozOwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6aW50IGNvbW1vbl9w
+aWQ7CW9mZnNldDo0OwlzaXplOjQ7CXNpZ25lZDoxOwoKCWZpZWxkOl9fZGF0YV9sb2MgY2hhcltd
+IG1lbWRldjsJb2Zmc2V0Ojg7CXNpemU6NDsJc2lnbmVkOjA7CglmaWVsZDpfX2RhdGFfbG9jIGNo
+YXJbXSBob3N0OwlvZmZzZXQ6MTI7CXNpemU6NDsJc2lnbmVkOjA7CglmaWVsZDppbnQgbG9nOwlv
+ZmZzZXQ6MTY7CXNpemU6NDsJc2lnbmVkOjE7CglmaWVsZDp1dWlkX3QgaGRyX3V1aWQ7CW9mZnNl
+dDoyMDsJc2l6ZToxNjsJc2lnbmVkOjA7CglmaWVsZDp1NjQgc2VyaWFsOwlvZmZzZXQ6NDA7CXNp
+emU6ODsJc2lnbmVkOjA7CglmaWVsZDp1MzIgaGRyX2ZsYWdzOwlvZmZzZXQ6NDg7CXNpemU6NDsJ
+c2lnbmVkOjA7CglmaWVsZDp1MTYgaGRyX2hhbmRsZTsJb2Zmc2V0OjUyOwlzaXplOjI7CXNpZ25l
+ZDowOwoJZmllbGQ6dTE2IGhkcl9yZWxhdGVkX2hhbmRsZTsJb2Zmc2V0OjU0OwlzaXplOjI7CXNp
+Z25lZDowOwoJZmllbGQ6dTY0IGhkcl90aW1lc3RhbXA7CW9mZnNldDo1NjsJc2l6ZTo4OwlzaWdu
+ZWQ6MDsKCWZpZWxkOnU4IGhkcl9sZW5ndGg7CW9mZnNldDo2NDsJc2l6ZToxOwlzaWduZWQ6MDsK
+CWZpZWxkOnU4IGhkcl9tYWludF9vcF9jbGFzczsJb2Zmc2V0OjY1OwlzaXplOjE7CXNpZ25lZDow
+OwoJZmllbGQ6dTggaGRyX21haW50X29wX3N1Yl9jbGFzczsJb2Zmc2V0OjY2OwlzaXplOjE7CXNp
+Z25lZDowOwoJZmllbGQ6dTY0IGRwYTsJb2Zmc2V0OjcyOwlzaXplOjg7CXNpZ25lZDowOwoJZmll
+bGQ6dTggZGVzY3JpcHRvcjsJb2Zmc2V0OjgwOwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6dTgg
+dHlwZTsJb2Zmc2V0OjgxOwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6dTggdHJhbnNhY3Rpb25f
+dHlwZTsJb2Zmc2V0OjgyOwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6dTggY2hhbm5lbDsJb2Zm
+c2V0OjgzOwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6dTMyIGRldmljZTsJb2Zmc2V0Ojg0Owlz
+aXplOjQ7CXNpZ25lZDowOwoJZmllbGQ6dTggY29tcF9pZFsxNl07CW9mZnNldDo4ODsJc2l6ZTox
+NjsJc2lnbmVkOjA7CglmaWVsZDp1NjQgaHBhOwlvZmZzZXQ6MTA0OwlzaXplOjg7CXNpZ25lZDow
+OwoJZmllbGQ6dXVpZF90IHJlZ2lvbl91dWlkOwlvZmZzZXQ6MTEyOwlzaXplOjE2OwlzaWduZWQ6
+MDsKCWZpZWxkOnUxNiB2YWxpZGl0eV9mbGFnczsJb2Zmc2V0OjEyODsJc2l6ZToyOwlzaWduZWQ6
+MDsKCWZpZWxkOnU4IHJhbms7CW9mZnNldDoxMzA7CXNpemU6MTsJc2lnbmVkOjA7CglmaWVsZDp1
+OCBkcGFfZmxhZ3M7CW9mZnNldDoxMzE7CXNpemU6MTsJc2lnbmVkOjA7CglmaWVsZDpfX2RhdGFf
+bG9jIGNoYXJbXSByZWdpb25fbmFtZTsJb2Zmc2V0OjEzMjsJc2l6ZTo0OwlzaWduZWQ6MDsKCWZp
+ZWxkOnU4IHN1Yl90eXBlOwlvZmZzZXQ6MTM2OwlzaXplOjE7CXNpZ25lZDowOwoJZmllbGQ6dTgg
+Y21lX3RocmVzaG9sZF9ldl9mbGFnczsJb2Zmc2V0OjEzNzsJc2l6ZToxOwlzaWduZWQ6MDsKCWZp
+ZWxkOnUzMiBjbWVfY291bnQ7CW9mZnNldDoxNDA7CXNpemU6NDsJc2lnbmVkOjA7CgpwcmludCBm
+bXQ6ICJtZW1kZXY9JXMgaG9zdD0lcyBzZXJpYWw9JWxsZCBsb2c9JXMgOiB0aW1lPSVsbHUgdXVp
+ZD0lcFViIGxlbj0lZCBmbGFncz0nJXMnIGhhbmRsZT0leCByZWxhdGVkX2hhbmRsZT0leCBtYWlu
+dF9vcF9jbGFzcz0ldSBtYWludF9vcF9zdWJfY2xhc3M9JXUgOiBkcGE9JWxseCBkcGFfZmxhZ3M9
+JyVzJyBkZXNjcmlwdG9yPSclcycgdHlwZT0nJXMnIHRyYW5zYWN0aW9uX3R5cGU9JyVzJyBjaGFu
+bmVsPSV1IHJhbms9JXUgZGV2aWNlPSV4IHZhbGlkaXR5X2ZsYWdzPSclcycgY29tcF9pZD0lc2hw
+YT0lbGx4IHJlZ2lvbj0lcyByZWdpb25fdXVpZD0lcFViIHN1Yl90eXBlPSV1IGNtZV90aHJlc2hv
+bGRfZXZfZmxhZ3M9JXUgY21lX2NvdW50PSV1IiwgX19nZXRfc3RyKG1lbWRldiksIF9fZ2V0X3N0
+cihob3N0KSwgUkVDLT5zZXJpYWwsIF9fcHJpbnRfc3ltYm9saWMoUkVDLT5sb2csIHsgQ1hMX0VW
+RU5UX1RZUEVfSU5GTywgIkluZm9ybWF0aW9uYWwiIH0sIHsgQ1hMX0VWRU5UX1RZUEVfV0FSTiwg
+Ildhcm5pbmciIH0sIHsgQ1hMX0VWRU5UX1RZUEVfRkFJTCwgIkZhaWx1cmUiIH0sIHsgQ1hMX0VW
+RU5UX1RZUEVfRkFUQUwsICJGYXRhbCIgfSksIFJFQy0+aGRyX3RpbWVzdGFtcCwgJlJFQy0+aGRy
+X3V1aWQsIFJFQy0+aGRyX2xlbmd0aCwgX19wcmludF9mbGFncyhSRUMtPmhkcl9mbGFncywgIiB8
+ICIsIHsgKCgoKDFVTCkpKSA8PCAoMikpLCAiUEVSTUFORU5UX0NPTkRJVElPTiIgfSwgeyAoKCgo
+MVVMKSkpIDw8ICgzKSksICJNQUlOVEVOQU5DRV9ORUVERUQiIH0sIHsgKCgoKDFVTCkpKSA8PCAo
+NCkpLCAiUEVSRk9STUFOQ0VfREVHUkFERUQiIH0sIHsgKCgoKDFVTCkpKSA8PCAoNSkpLCAiSEFS
+RFdBUkVfUkVQTEFDRU1FTlRfTkVFREVEIiB9LCB7ICgoKCgxVUwpKSkgPDwgKDYpKSwgIk1BSU5U
+X09QX1NVQl9DTEFTU19WQUxJRCIgfSApLCBSRUMtPmhkcl9oYW5kbGUsIFJFQy0+aGRyX3JlbGF0
+ZWRfaGFuZGxlLCBSRUMtPmhkcl9tYWludF9vcF9jbGFzcywgUkVDLT5oZHJfbWFpbnRfb3Bfc3Vi
+X2NsYXNzLCBSRUMtPmRwYSwgX19wcmludF9mbGFncyhSRUMtPmRwYV9mbGFncywgInwiLCB7ICgo
+KCgxVUwpKSkgPDwgKDApKSwgIlZPTEFUSUxFIiB9LCB7ICgoKCgxVUwpKSkgPDwgKDEpKSwgIk5P
+VF9SRVBBSVJBQkxFIiB9ICksIF9fcHJpbnRfZmxhZ3MoUkVDLT5kZXNjcmlwdG9yLCAifCIsIHsg
+KCgoKDFVTCkpKSA8PCAoMCkpLCAiVU5DT1JSRUNUQUJMRV9FVkVOVCIgfSwgeyAoKCgoMVVMKSkp
+IDw8ICgxKSksICJUSFJFU0hPTERfRVZFTlQiIH0sIHsgKCgoKDFVTCkpKSA8PCAoMikpLCAiUE9J
+U09OX0xJU1RfT1ZFUkZMT1ciIH0gKSwgX19wcmludF9zeW1ib2xpYyhSRUMtPnR5cGUsIHsgMHgw
+MCwgIkVDQyBFcnJvciIgfSwgeyAweDAxLCAiSW52YWxpZCBBZGRyZXNzIiB9LCB7IDB4MDIsICJE
+YXRhIFBhdGggRXJyb3IiIH0sIHsgMHgwMywgIlRFIFN0YXRlIFZpb2xhdGlvbiIgfSwgeyAweDA0
+LCAiU2NydWIgTWVkaWEgRUNDIEVycm9yIiB9LCB7IDB4MDUsICJBZHYgUHJvZyBDTUUgQ291bnRl
+ciBFeHBpcmF0aW9uIiB9LCB7IDB4MDYsICJDS0lEIFZpb2xhdGlvbiIgfSApLCBfX3ByaW50X3N5
+bWJvbGljKFJFQy0+dHJhbnNhY3Rpb25fdHlwZSwgeyAweDAwLCAiVW5rbm93biIgfSwgeyAweDAx
+LCAiSG9zdCBSZWFkIiB9LCB7IDB4MDIsICJIb3N0IFdyaXRlIiB9LCB7IDB4MDMsICJIb3N0IFNj
+YW4gTWVkaWEiIH0sIHsgMHgwNCwgIkhvc3QgSW5qZWN0IFBvaXNvbiIgfSwgeyAweDA1LCAiSW50
+ZXJuYWwgTWVkaWEgU2NydWIiIH0sIHsgMHgwNiwgIkludGVybmFsIE1lZGlhIE1hbmFnZW1lbnQi
+IH0sIHsgMHgwNywgIkludGVybmFsIE1lZGlhIEVycm9yIENoZWNrIFNjcnViIiB9LCB7IDB4MDgs
+ICJNZWRpYSBJbml0aWFsaXphdGlvbiIgfSApLCBSRUMtPmNoYW5uZWwsIFJFQy0+cmFuaywgUkVD
+LT5kZXZpY2UsIF9fcHJpbnRfZmxhZ3MoUkVDLT52YWxpZGl0eV9mbGFncywgInwiLCB7ICgoKCgx
+VUwpKSkgPDwgKDApKSwgIkNIQU5ORUwiIH0sIHsgKCgoKDFVTCkpKSA8PCAoMSkpLCAiUkFOSyIg
+fSwgeyAoKCgoMVVMKSkpIDw8ICgyKSksICJERVZJQ0UiIH0sIHsgKCgoKDFVTCkpKSA8PCAoMykp
+LCAiQ09NUE9ORU5UIiB9LCB7ICgoKCgxVUwpKSkgPDwgKDQpKSwgIkNPTVBPTkVOVCBQTERNIEZP
+Uk1BVCIgfSApLCBfX3ByaW50X2hleChSRUMtPmNvbXBfaWQsIDB4MTApLCBSRUMtPmhwYSwgX19n
+ZXRfc3RyKHJlZ2lvbl9uYW1lKSwgJlJFQy0+cmVnaW9uX3V1aWQsIFJFQy0+c3ViX3R5cGUsIFJF
+Qy0+Y21lX3RocmVzaG9sZF9ldl9mbGFncywgUkVDLT5jbWVfY291bnQKcm9vdEBsb2NhbGhvc3Q6
+fiMKCg==
+
+--_002_a24524dccbf442d5a3c910d7f46c7b6chuaweicom_--
