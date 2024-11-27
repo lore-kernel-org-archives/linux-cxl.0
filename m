@@ -1,278 +1,140 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2045.outbound.protection.outlook.com [40.107.94.45])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82CB17C96;
-	Wed, 27 Nov 2024 16:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732726769; cv=fail; b=AbfoK0yqqGa9ihGFGT3VbExJUiFX7Om3qaGk9r9vmHxKywk3xz+ZUfHfYdbgSehH+ol+0fWbi/c5EoxsT9JU5y7Ic1dazARo0Y9DDxRDtcM2J54Zz1w3jugvoL7lJLrKTDcQbkGXKesNviBgiS3Uxu3aF4nl7tHHxgGxpUBh00k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732726769; c=relaxed/simple;
-	bh=AdLeRb6LmKzbpCAwHZ40U1DRxr/j1hrS7qm+SI8/708=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=G1JHisK6Ojp3OB7OZtMPxGue/zDE64xezijNNFHCfvTxDrPvZwJNeYOc/otPDsREEJFRAdrwPlPpvp68h4L6oH5WYx12lgu4Ii5irGUAwl7xy86z2UHXFNMws6YLUJfUovJTRK12Ks3TlltsBxuiMWHglvYPEauEYrD3HpyQRDE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p3M50/EZ; arc=fail smtp.client-ip=40.107.94.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p3M50/EZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GhzCvwWz5KzlrL8c4nKQfh+z6KWjEVIA7shoW863QbBhDRk8c1kLyBPElA/TA+qfhZ4Nb34cvik0Wet0De/ZTrp0Y/QPGRG1Qs0RLzDHDjSj2CvUXHLhGFr3H0SL4thlRMmk9T7I8NLM3E3t3MF/e3/8f8+jQNbQVRKTY/I/TEXQQ4n1mQG3B1FZHUiwjbm1l/R29Z4OVFIh7y3Gwncn9iZCbKJD+zpwn8iWA2tFNGk7t9XRLLdsciZ+ofNdfhXUlqYXWMnKN/gw2xA/JFfJdX2LU0SkE3SJ9gShz9R+jyedXKYUyMVgZKkk5tPJtFDxhT1rn4kyh8vIXk7VZ08Bvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L0AwgVKRyX2OJ0WLnTDw0tnaPwloyix9SgBJ9ipxSi4=;
- b=sb54IC9uyFB4Ws+zIIkQGWWi8qF6vS2Y+K5Vux7BssLV+kOTja8QXchL8fMyiH3yvdNzhiUtN4JkOHCjgObcvRFHN71j07269InWikveXIiD/hZSXICdtm5vAH0r92pWR7Sj07m1V6dyxluG9MvW21Z77QZ7CjqgQNIDd7D/SizyfopZ3wo2+LAmBjNe1gaLmFaPsPNpYs/dN2RkZ4Yn6r8edJ55G+d4o0Ts+ikGhF4i+QyhfWKKOx43vRA/iLl6YYJ6dqzY6CkAR7wLqRkFiFLFDRl+ioDzN+wID8dHkY9wamRZ407EoC6sK3EILERte1Gxn6LfxnTMr0O83yM8Bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L0AwgVKRyX2OJ0WLnTDw0tnaPwloyix9SgBJ9ipxSi4=;
- b=p3M50/EZIaiX1POdX35dVa/cq4XiuiSFN+k7SAfsMqi/Q0JtXSS/sQIAP11Pvwk/H+nv1AvF8sv/QTSSQsXOwmjYmoGU5xnIRVB37tyDc9y4MPG7cgs5oUl6un7gOL8cSuFvP12GfLaU70OMGo7e2rhGEOHcbAFBU+ixH5aXki0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SN7PR12MB7107.namprd12.prod.outlook.com (2603:10b6:806:2a2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.14; Wed, 27 Nov
- 2024 16:59:21 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8207.010; Wed, 27 Nov 2024
- 16:59:21 +0000
-Message-ID: <229773bc-b81d-7e72-0b4b-3aeb6a7306d8@amd.com>
-Date: Wed, 27 Nov 2024 16:59:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 24/27] cxl: add region flag for precluding a device
- memory to be used for dax
-Content-Language: en-US
-To: Ben Cheatham <benjamin.cheatham@amd.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20241118164434.7551-1-alejandro.lucero-palau@amd.com>
- <20241118164434.7551-25-alejandro.lucero-palau@amd.com>
- <32f4889b-c097-4e72-8a71-511aa06daa58@amd.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <32f4889b-c097-4e72-8a71-511aa06daa58@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO6P123CA0046.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:310::8) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE8B3FB8B;
+	Wed, 27 Nov 2024 17:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732727017; cv=none; b=LO+29DP5l1UwLzhvErPpGUKRt3WcWG7nVKzWHdMbh5Soik50xOtRuI4lLu6tIuPiNn41GFdQyQmrScDVgzOKfxsUtG1OqzEe2THxgVflBTPdtEcU9yNvpjuir5qfHwRRdIXkDI5HvrFDj/pLGnR2StVyyX91cgHY4K5C8xUmG5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732727017; c=relaxed/simple;
+	bh=/MBQrgM9w6T2ANg5OY8gZZ/OJNjy1Rx3PVVK42tUjLY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FvoG1yDT6L0tKNLbchWdoJPe/Voa1ZYSM7Jlq+izppfoSdiKZGdDJc01zLUjAH6d8GzrfabUgsglmMtoZbvawnblMKZUGGjkLAqwiBwy4JisnNguGzE9dKmXghPUsJmQaQGS63gTtnvZ2935PuuFoNrpnwdkEoJxqXeyHMWTPQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xz5Nc559Dz6D971;
+	Thu, 28 Nov 2024 01:02:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 16DDD1400D8;
+	Thu, 28 Nov 2024 01:03:30 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 27 Nov
+ 2024 18:03:28 +0100
+Date: Wed, 27 Nov 2024 17:03:27 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <ming4.li@intel.com>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>
+Subject: Re: [PATCH v3 05/15] PCI/AER: Add CXL PCIe port correctable error
+ support in AER service driver
+Message-ID: <20241127170327.00000374@huawei.com>
+In-Reply-To: <20241113215429.3177981-6-terry.bowman@amd.com>
+References: <20241113215429.3177981-1-terry.bowman@amd.com>
+	<20241113215429.3177981-6-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB7107:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0ee07aee-84a0-4ddc-1065-08dd0f04d6a6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eGRLWkZmZUlMcW92bHhZUnBFTkhlMmVrSGZyTmdhNWJ0eTJibUQ5RkxhTWxt?=
- =?utf-8?B?L3hxSm1aYk0rdkFVT2R1MW5oTG1Gd0lFbE8zd2loQkQ1a01PaCtwVnhKYWpi?=
- =?utf-8?B?NVpoL1hJQnRxWHIxc0lYcXdka2NBS2tvc2REMkNWWndERUlKamhmYXVwa3BM?=
- =?utf-8?B?b3FscUdLQlJUVW9xNDlnSUhnV0ZPSE1HRnQxeGMyUzIvenV0MWtEandmbUtP?=
- =?utf-8?B?dWdaOWxQVUt5VUFoNGZVTzFhTWN6bmFqbWk1NFpYUmpQWFI4M2ljL1FhZGhz?=
- =?utf-8?B?OEdMVzN5c25QWG5OSU5EdWZWeWxLcmtTVkFZTk9sL1AxdDBHcHV1cDVXUHZL?=
- =?utf-8?B?UW4yOEVwSmtjc0ZMcWRoL1lOWG1IaDBHKzJDZElZdklzcU9qMWRkMU9MQWNR?=
- =?utf-8?B?dWh2YTBkb3NRVEZlZWprdmpqT05DSDZhYXFXSmMzMEJPcEVtcXY5aWhNTHIv?=
- =?utf-8?B?c0NxTm1kaWNOc2pKanBvbzRNNlByQklTc0RTMTBSRTdNbk9zTUVKT3NtM2Y5?=
- =?utf-8?B?N3I1ZlIyVlZGTUU2VjBKTWJBU1U4YXMxbnhrV2ViajlmV2pUSWxRbEsySVpr?=
- =?utf-8?B?K3lPUCtkdTZmQkRVTHFnMFJRd1FwYTgyN05TeTdmakJMV1Q1RzFPU1lhQzI4?=
- =?utf-8?B?S0FhdmZuQUJjTHVCdk9FdHlYNjUvcy9rSVVCWExaamVxNHdIR3p0NElESWFC?=
- =?utf-8?B?U2FWZzdxYy9BM21BWFpzcWdYNG5JYVd4VkZGQ20yTGZGTkVvSVpwc044ZGZX?=
- =?utf-8?B?Sm1aNUxldGwvbzFxaU9acG90dlBJbitPRWk5My9LRUhPbVVDN0EyUlBHRXZv?=
- =?utf-8?B?NU9xZGdhZ0J4cXMvQVZJeXlobysyM1ptSURVSzhOdzBTUTBMUUJaNkJya3Vs?=
- =?utf-8?B?b0E3aitTWk5xTGNTY0pBankxNDlGZFl2b0QzNkI4UE4wcFBxUFMrem5DMnc2?=
- =?utf-8?B?WW0rWS8wNURKT1Nzd2lJUmIwdzZiL091enh2N3FYT3UwTnlDejlmZTFxeUNE?=
- =?utf-8?B?QWRMenFLTDlsVzBRMFo4SElTSE1yaDB0V0FCK09SQUlFMlhuNWh6NnNTbHRk?=
- =?utf-8?B?QUtXbXVTRW1aZ2dQSVVUbWFLTzdpaTN6QmI1Z2hiL1RXT3pqS3VpWGtXVzJz?=
- =?utf-8?B?SHB5RzRwd2N4VmNjeVcrVExVMkljdExodEUxOU1oamJnRnJoejNHWFBzdk9Y?=
- =?utf-8?B?bUtBTnp5Rlg5dmx2eTRJNCtMYkZwNkU4L0pFKzUwems3anNhZ2hNODdxQTZ5?=
- =?utf-8?B?TG4zb1pOQkUxMXJ6RktwS1JhL092Q0xNNktZdXNLMENUc2lEbWhERG9oR0x3?=
- =?utf-8?B?ZW5UMEltOEkraUh2OWwxMUFpL0dMZWdKd3pyNWtDRzNFdnF4MkNJR3kvWHpn?=
- =?utf-8?B?RkdhT1F2VTBFQ0JQelIwcHBXdXBPTzVMMU5VVHIyUXd5SW5xdHg5TWJ6bTE1?=
- =?utf-8?B?azh2RHRXZ0o2Y2tMTXNWNEd1cEVpNEtsdWlwWGp2UEp2L3FidUc3YXVqNUgr?=
- =?utf-8?B?TlFTVjRmU3JxTGtRejFONkY1UXEvYkxFY3dWTEtLRVhOajJoekdiK0NhWkxF?=
- =?utf-8?B?OWdNWnhjdWlSVmdVSE00VXlBUlMyMXNJSklEUUFLMzFwMXZkSUtHTTA4OW52?=
- =?utf-8?B?Zk9NVTd0V0RJb3djd1BDM0kwUEhYOStrL2I1VTBDQTdOSGZSVVpvY0VTSFhJ?=
- =?utf-8?B?YUx6UWtQMzhZa3NYcHBnU2dwZkU4dFhpK3Y1S0MrRHJvR08vVUhpVVpTTTUx?=
- =?utf-8?B?QjhZQWFzTGk0S0tPRkNRYkkxRzN3ZjlEQy9pYisrTWh4VTlHb09xMjA5azVw?=
- =?utf-8?B?MlQwQVZzN09UamI4OVZHdz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MmQ3ZGZkdnBua01PWE5NYjc0czVPMHNleU8xdGNiK01waFA5cFlRRnYyWTd1?=
- =?utf-8?B?MlFrRzNzT1F0bktWOGVKY25CdWNBbDZ6YUYwa1VlRDFSazVldHNrTk1NNmc2?=
- =?utf-8?B?czJqUWw0cXRNcWIzYkNnNlh5NUtISkdIWWszTU4vRUJxMVdWR2dNc0JtQ2JX?=
- =?utf-8?B?UnJEL2FZcSt6eUZ3VmJiQ1hlZVBzT2lZK1d2Sng2Tlc0MTY4MW5ua21oQUNt?=
- =?utf-8?B?aWJ1VENUaVRYQkc5bDEvT2pLRXNadVFsbUxsa1FHSFBNblJTTUNrVUlrdkk1?=
- =?utf-8?B?TVZ3bGRQNEtMNUZGTFM0K2ZZNGh5d0ZGM2JkS3d0STJEbVg5aFB0VXdQdlZi?=
- =?utf-8?B?R0VtTnZqNEhtUTFUeVVLbC9Vd2M1V29Oa05IRkhJU2FTZDdObGl2eE5jS2cz?=
- =?utf-8?B?RXppWldJQ0tLbW1ueGM0elBlQmhQZVFaUnJ1K3I2THVTVjBGT0V6aXA0Wjhs?=
- =?utf-8?B?NVVQRVZxbVFhYjJXTWV5Z0RmUGVQZnVLTUVhYi9XOVFKV2FVaEppTk1XaGRa?=
- =?utf-8?B?TTBMdzBqUmVnWTN4N2NONm9tZXczTUpNMVdsS1N6U2xFYnJXM0syS2s4UFow?=
- =?utf-8?B?S09RRGRUeWcxc09mS3FDNDMrcEJPNWJCWDVuVS9UdWpWbTd2dmExRjJRdm5V?=
- =?utf-8?B?RHZScmtsK1Boeldmd1dQR0JHNkRGMGc2Z0ZhcTVsWS9VL0lsbWJRV1pkbC9C?=
- =?utf-8?B?ZlYyYVZVR3FUajZTdnlIMVg1cUJvTmZPQlZLdzJBT1VYZFRJdE9YNXh3V2Fy?=
- =?utf-8?B?bTNYMkxza3FxS1VScmgrSGNBSE9hNFhlajlzVnJjMGZuMVo4UDkwS09LdHY1?=
- =?utf-8?B?eUx3Sk9kY3dBaEZKQ2ZxK3R4akNIMVYyQlJva1VtMHZ4aXZ5UDNpamxDbndO?=
- =?utf-8?B?Um45dG9hcXFrdy9JeEZLUDVxV0xrM2QwUWl6VEY3QTNMdnFRc2VVWXViTWRY?=
- =?utf-8?B?MEZxbnhjOVczY3lpeTgzZ2V6eDlBT0pneDhZZ01ob0Q5c3hzQU41QS8zdGpU?=
- =?utf-8?B?TjNPQWpKUjZRT2dUL2JYYUMyS0VtWVd5VmdxVTY5NFY0WmoyMWx4WEN3bHNG?=
- =?utf-8?B?U1pBcWYyYXJCeisya1g3YXhmUmgrZGxPak1qL09ZaVdtaFp4WVVYeTgvbyt2?=
- =?utf-8?B?d1pFZVJxZ1ZXbi9SeGx5aGdLWm80YWhCVkxPVWE5QzM0bUd2QWllWnd5ZDA4?=
- =?utf-8?B?Vm5vWVNrNitoV05TUE8yTlNPbXR5ajQzWWFKVWpVbXlPdHpSNStrTTJkOXVL?=
- =?utf-8?B?SE5ma1dBeGY3dUt0Qk44SUxTdXExbUdSK3lVdVRERjBXV3NNRG05WDA3U2FZ?=
- =?utf-8?B?S2dBODhpNkhRTXNXUWNuQ2MrNEtwdTlHOENTS2xXdGNCNG5DRktZTWVXV2Y2?=
- =?utf-8?B?S1F4NnRpL0dwbXE5NlRUdVNQVlJ0RGZHZUJidXlZOE1rQ3JBQlpQTWp2ZFZW?=
- =?utf-8?B?SEZqK0pidzZkTWhNNjdxYWwrZ2ZPbkNMSUFMNUE3ekZCQUtHSGpudVpDOEpi?=
- =?utf-8?B?OXU1RnJMaWFkWmRjZDJIcWFjMXNCNnc0V1NoUWNOak15TkJ3VmhmQkQvME1X?=
- =?utf-8?B?cjhMbUJHRzN2T3BBWGNPQW1lK1Y4RUIxMW1qYUxRNnJKQWtndXpJM2hUUkEw?=
- =?utf-8?B?b2dTcjUweTE4YXJQT0V2aXhldUxBUXkxL1NYTGc0UFV4WG5iVlZYTkZDdHl1?=
- =?utf-8?B?SVA2elpTMHNjV01IMjJEdWNEYkdMOFBpanhmMDJCakJsWFpLNzg3Z3dKOTMw?=
- =?utf-8?B?TVJZMnAySGJCOXBpdUFDMmN5bjR6VjJpYm0vMTBxZitjWlFEK2dmVmtBOVNu?=
- =?utf-8?B?bWhBVEJoZVBEWDA0Wlk5QmFLSXZkV0UxY2RYSHRSaW81V3JmV01LQnlRVnVG?=
- =?utf-8?B?dmdkRkJRcWtDSHFHVzdBYXFvWlZ5cHAvbWJ1UlVSVlVzeHFkbTc5STRyamtY?=
- =?utf-8?B?SW9DSFIxUE5MWTBWRSt6ZnlybnFxb0FWcTZRVmUvOFRyWSt1M1FKcXlJclh2?=
- =?utf-8?B?Yy84TVpvbmNhL3AwSjV5K2NoRTJEaWNSelF0RXdyeVlhM2pwZ0RvSmt4aWxW?=
- =?utf-8?B?d0U0aHdTYVQzU1p6dVdKYnpQUTJGc2dvMmJyWm03ekc0NlpsVzNQWkNNeUtE?=
- =?utf-8?Q?plnw1/COufcAxboOsNAey595n?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ee07aee-84a0-4ddc-1065-08dd0f04d6a6
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2024 16:59:21.4436
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xUNIABjICCd6/pJFjjwCL5Ig83fN+/Qi4uFkrpZFR1bZMdljyoiImvF+b3XBkkHivy0SwDT2p8HBwUuA+ktYOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7107
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Wed, 13 Nov 2024 15:54:19 -0600
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-On 11/22/24 20:46, Ben Cheatham wrote:
-> On 11/18/24 10:44 AM, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> By definition a type2 cxl device will use the host managed memory for
->> specific functionality, therefore it should not be available to other
->> uses. However, a dax interface could be just good enough in some cases.
->>
->> Add a flag to a cxl region for specifically state to not create a dax
->> device. Allow a Type2 driver to set that flag at region creation time.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> ---
->>   drivers/cxl/core/region.c | 10 +++++++++-
->>   drivers/cxl/cxl.h         |  3 +++
->>   drivers/cxl/cxlmem.h      |  3 ++-
->>   include/cxl/cxl.h         |  3 ++-
->>   4 files changed, 16 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 70549d42c2e3..eff3ad788077 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3558,7 +3558,8 @@ __construct_new_region(struct cxl_root_decoder *cxlrd,
->>    * cxl_region driver.
->>    */
->>   struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->> -				     struct cxl_endpoint_decoder *cxled)
->> +				     struct cxl_endpoint_decoder *cxled,
->> +				     bool avoid_dax)
->>   {
->>   	struct cxl_region *cxlr;
->>   
->> @@ -3574,6 +3575,10 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->>   		drop_region(cxlr);
->>   		return ERR_PTR(-ENODEV);
->>   	}
->> +
->> +	if (avoid_dax)
->> +		set_bit(CXL_REGION_F_AVOID_DAX, &cxlr->flags);
->> +
->>   	return cxlr;
->>   }
->>   EXPORT_SYMBOL_NS_GPL(cxl_create_region, CXL);
->> @@ -3713,6 +3718,9 @@ static int cxl_region_probe(struct device *dev)
->>   	case CXL_DECODER_PMEM:
->>   		return devm_cxl_add_pmem_region(cxlr);
->>   	case CXL_DECODER_RAM:
->> +		if (test_bit(CXL_REGION_F_AVOID_DAX, &cxlr->flags))
->> +			return 0;
-> I think it's possible for a type 2 device to have pmem as well, and
-> it looks like these are the only two options at the moment, so I would
-> just move this check to before the switch statement.
+> The AER service driver supports handling downstream port protocol errors in
+> restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
+> functionality for CXL PCIe ports operating in virtual hierarchy (VH)
+> mode.[1]
+> 
+> CXL and PCIe protocol error handling have different requirements that
+> necessitate a separate handling path. The AER service driver may try to
+> recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
+> suitable for CXL PCIe port devices because of potential for system memory
+> corruption. Instead, CXL protocol error handling must use a kernel panic
+> in the case of a fatal or non-fatal UCE. The AER driver's PCIe error
+> handling does not panic the kernel in response to a UCE.
+> 
+> Introduce a separate path for CXL protocol error handling in the AER
+> service driver. This will allow CXL protocol errors to use CXL specific
+> handling instead of PCIe handling. Add the CXL specific changes without
+> affecting or adding functionality in the PCIe handling.
+> 
+> Make this update alongside the existing downstream port RCH error handling
+> logic, extending support to CXL PCIe ports in VH mode.
+> 
+> is_internal_error() is currently limited by CONFIG_PCIEAER_CXL kernel
+> config. Update is_internal_error()'s function declaration such that it is
+> always available regardless if CONFIG_PCIEAER_CXL kernel config is enabled
+> or disabled.
+> 
+> The uncorrectable error (UCE) handling will be added in a future patch.
+> 
+> [1] CXL 3.1 Spec, 12.2.2 CXL Root Ports, Downstream Switch Ports, and
+> Upstream Switch Ports
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+I took another look and so a question inline.
 
+Jonathan
 
-Yes, that was also suggested in previous patchsets and I forgot.
+>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  {
+>  	struct aer_err_info *info = (struct aer_err_info *)data;
+> @@ -1033,14 +1032,23 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  
+>  static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	/*
+> -	 * Internal errors of an RCEC indicate an AER error in an
+> -	 * RCH's downstream port. Check and handle them in the CXL.mem
+> -	 * device driver.
+> -	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> -	    is_internal_error(info))
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+>  		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> +
+> +	if (info->severity == AER_CORRECTABLE) {
+> +		struct pci_driver *pdrv = dev->driver;
+> +		int aer = dev->aer_cap;
+> +
+> +		if (aer)
 
-I'll do it for v6.
+How do we get here with no aer?
 
+On a PCIe device AER is optional, but not I think on a CXL device
+(I can't find the text but there is a change log entry that says
+to clarify that it is required for CXL devices)
 
->> +
->>   		/*
->>   		 * The region can not be manged by CXL if any portion of
->>   		 * it is already online as 'System RAM'
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 1e0e797b9303..ee3385db5663 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -512,6 +512,9 @@ struct cxl_region_params {
->>    */
->>   #define CXL_REGION_F_NEEDS_RESET 1
->>   
->> +/* Allow Type2 drivers to specify if a dax region should not be created. */
->> +#define CXL_REGION_F_AVOID_DAX 2
->> +
-> I would like to see flags such that the device could choose the region type
-> (system ram, device-dax, or none). I think that adding the ability
-> for device-dax would add a patch or two, so that may be a good follow up
-> patch.
+Maybe the optionality is why the PCIe code has this check.
 
+Anyhow, I don't really mind keeping it, was just curious.
 
-Not sure the system ram option makes sense when this code can be executed.
+> +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+> +					       info->status);
+> +
+> +		if (pdrv && pdrv->cxl_err_handler &&
+> +		    pdrv->cxl_err_handler->cor_error_detected)
+> +			pdrv->cxl_err_handler->cor_error_detected(dev);
+> +
+> +		pcie_clear_device_status(dev);
+> +	}
+>  }
 
-Anyway, as you say, let's leave this for a follow up.
-
-Thanks
-
-
->>   /**
->>    * struct cxl_region - CXL region
->>    * @dev: This region's device
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->> index 9d874f1cb3bf..cc2e2a295f3d 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -875,5 +875,6 @@ struct seq_file;
->>   struct dentry *cxl_debugfs_create_dir(const char *dir);
->>   void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
->>   struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->> -				     struct cxl_endpoint_decoder *cxled);
->> +				     struct cxl_endpoint_decoder *cxled,
->> +				     bool avoid_dax);
->>   #endif /* __CXL_MEM_H__ */
->> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
->> index d295af4f5f9e..2a8ebabfc1dd 100644
->> --- a/include/cxl/cxl.h
->> +++ b/include/cxl/cxl.h
->> @@ -73,7 +73,8 @@ struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
->>   					     resource_size_t max);
->>   int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
->>   struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->> -				     struct cxl_endpoint_decoder *cxled);
->> +				     struct cxl_endpoint_decoder *cxled,
->> +				     bool avoid_dax);
->>   
->>   int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled);
->>   #endif
