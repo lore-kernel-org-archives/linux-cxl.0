@@ -1,224 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4221BC3F;
-	Wed, 27 Nov 2024 18:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164CA6A8D2;
+	Wed, 27 Nov 2024 19:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732732397; cv=none; b=f0yPKhcmDGOX5sgv1vRVsZUh1tZNYkN0qiRn4aHh3nMkpugCTmfdzPcTNUcPEkT4all3N0AX5+DQwN1gNnaFDmNPIhRYo5OqYO5NcwXlqK8I2IR+0c8dlmFR1lGXzUs5+uHhEUvEU0g61n+C/+0EPQPdK3r+Sa4o7cSBzApJBfU=
+	t=1732735931; cv=none; b=t2gIUWEqmL7qf4ygF/FKPkEeNTyrx+ZLK9c5UtKb2iBmASreoq2lp/gLjUIT3nCU/ieC13j8RCidRw1mZRJGfvydtaXLM4bfpOH6cL8dtY3EB4oCdqxEma59EZz5WaeuXKcwqrhUJcwVYMAdk1U4YpANYyhZzd6B7i5UG3jqLck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732732397; c=relaxed/simple;
-	bh=9zXd8RmiNkmqLklKwkazP0hHcI83JqlwTMxS3ZY+S0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=awPTTr9Hiv5UyBMeSINhGkY8BNxmdOOADu/GO5MYd+dNi09gb1+oaUPbLlqA/cxY+s0Tl+xvEBxRFMkl9+Iy7MR9NZtF0LETDTK+v7RhzNdT7xxJs/J9UAA0QDGAG2jebr2c9xlOxadAWi1VHqazkgh3e9c4NiA9C47WTijW1is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7516FC4CECC;
-	Wed, 27 Nov 2024 18:33:15 +0000 (UTC)
-Date: Wed, 27 Nov 2024 13:34:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "dave.jiang@intel.com" <dave.jiang@intel.com>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, "alison.schofield@intel.com"
- <alison.schofield@intel.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
- "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
- "ira.weiny@intel.com" <ira.weiny@intel.com>, "dave@stgolabs.net"
- <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
- <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
- CXL spec rev 3.1
-Message-ID: <20241127133407.7bc1376a@gandalf.local.home>
-In-Reply-To: <53a299d3cca6417d90d553e8399f834b@huawei.com>
-References: <20241120093745.1847-1-shiju.jose@huawei.com>
-	<20241120093745.1847-4-shiju.jose@huawei.com>
-	<180fcfd623c64cdb86cdc9059f749af0@huawei.com>
-	<20241126120237.1598854d@gandalf.local.home>
-	<a24524dccbf442d5a3c910d7f46c7b6c@huawei.com>
-	<20241127104132.6c1729e1@gandalf.local.home>
-	<53a299d3cca6417d90d553e8399f834b@huawei.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1732735931; c=relaxed/simple;
+	bh=xrciW+EMhZ5UEofbJw9NwB4YNk6WJ7ZsUg3ugalAKtY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JGydcpK62W4yA/BawQoJzSI8k5mru11GP6tVcjQiqEre9YwwCvgb4q05Lv7rmHOeb39M2OArWZoAzxTFIgP+FuOf18ToGWudbNlHuTxmBNsXSbDp0mdl1XFP4zvaEX+zKsRuSD+BB7Glk0+CbMg/qvVVr3g3FquYGbozBK3rp+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2BtrIqN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2BtrIqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD69C4CED2;
+	Wed, 27 Nov 2024 19:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732735930;
+	bh=xrciW+EMhZ5UEofbJw9NwB4YNk6WJ7ZsUg3ugalAKtY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X2BtrIqNGPOvV+49M5YnEnvMfq90m+ylhD7PzWNtlQWXRcWLiIC9o7ibIu7Z+6NCF
+	 kcXzlV4NXbHYexopnI8wyMqZtXl1aARG1Kv+1kHo2QdWtEH8r51A6kx0Z+b8YMEuGQ
+	 KkVWB5pfPFETZ3jygkOvTt1oTUJ7ox8ovqX6d1E+iA+5p2Dg3oRun7qGKNbz7lmsz9
+	 P2yGA8boYanYTYFxQR6QsePoSp98SjRizDnHD/Y6HoJ2E4HX1u+AiXq7pnGqhQjajY
+	 UFL0t9n5dlc0Yh9Rql7BGoHCScG0i7PhlQ+71XDRGrapyLXfaRB16QrJ7c3W0qJT2C
+	 zsuLVCEMA8n/A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tGNlf-00GLsr-Kw;
+	Wed, 27 Nov 2024 19:32:07 +0000
+Date: Wed, 27 Nov 2024 19:32:06 +0000
+Message-ID: <867c8ov5ft.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 24/26] arch_numa: switch over to numa_memblks
+In-Reply-To: <20240807064110.1003856-25-rppt@kernel.org>
+References: <20240807064110.1003856-1-rppt@kernel.org>
+	<20240807064110.1003856-25-rppt@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/gj_VQ.qi4BsFaumOAmUndPT"
-
---MP_/gj_VQ.qi4BsFaumOAmUndPT
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rppt@kernel.org, linux-kernel@vger.kernel.org, agordeev@linux.ibm.com, andreas@gaisler.com, akpm@linux-foundation.org, arnd@arndb.de, bp@alien8.de, catalin.marinas@arm.com, christophe.leroy@csgroup.eu, dan.j.williams@intel.com, dave.hansen@linux.intel.com, david@redhat.com, davem@davemloft.net, dave@stgolabs.net, gregkh@linuxfoundation.org, hca@linux.ibm.com, chenhuacai@kernel.org, mingo@redhat.com, jiaxun.yang@flygoat.com, glaubitz@physik.fu-berlin.de, jonathan.cameron@huawei.com, corbet@lwn.net, mpe@ellerman.id.au, palmer@dabbelt.com, rafael@kernel.org, robh@kernel.org, samuel.holland@sifive.com, tsbogend@alpha.franken.de, tglx@linutronix.de, gor@linux.ibm.com, will@kernel.org, ziy@nvidia.com, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, nvdimm@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org, Jonathan.Cameron@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, 27 Nov 2024 18:20:26 +0000
-Shiju Jose <shiju.jose@huawei.com> wrote:
+Hi Mike,
 
-> I tested removing hdr_uuid and region_uuid from the rasdaemon test setup
-> as you suggested. As a result, libtraceevent parses correctly, as you mentioned.
+Sorry for reviving a rather old thread.
+
+On Wed, 07 Aug 2024 07:41:08 +0100,
+Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> However, I encounter  similar parsing error ("FAILED TO PARSE") when I add two additional
-> decoded strings (%s) to the TP_printk, replacing (%u). Please see the attached format file,
-> "format_cxl_general_media_v3.1_basic", for your reference.
-
-Are you sure. I don't see anything wrong with that one. Which version of
-libtraceevent do you have?
-
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> I've also attached another format file, "format_cxl_general_media_v3.1_full",
-> which contains the complete TP_printk() intended.
+> Until now arch_numa was directly translating firmware NUMA information
+> to memblock.
+> 
+> Using numa_memblks as an intermediate step has a few advantages:
+> * alignment with more battle tested x86 implementation
+> * availability of NUMA emulation
+> * maintaining node information for not yet populated memory
+> 
+> Adjust a few places in numa_memblks to compile with 32-bit phys_addr_t
+> and replace current functionality related to numa_add_memblk() and
+> __node_distance() in arch_numa with the implementation based on
+> numa_memblks and add functions required by numa_emulation.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Tested-by: Zi Yan <ziy@nvidia.com> # for x86_64 and arm64
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> [arm64 + CXL via QEMU]
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/Kconfig       |   1 +
+>  drivers/base/arch_numa.c   | 201 +++++++++++--------------------------
+>  include/asm-generic/numa.h |   6 +-
+>  mm/numa_memblks.c          |  17 ++--
+>  4 files changed, 75 insertions(+), 150 deletions(-)
+>
 
-This one has some complex arguments and also uses the '&' address of an
-argument.
+[...]
 
+>  static int __init numa_register_nodes(void)
+>  {
+>  	int nid;
+> -	struct memblock_region *mblk;
+> -
+> -	/* Check that valid nid is set to memblks */
+> -	for_each_mem_region(mblk) {
+> -		int mblk_nid = memblock_get_region_node(mblk);
+> -		phys_addr_t start = mblk->base;
+> -		phys_addr_t end = mblk->base + mblk->size - 1;
+> -
+> -		if (mblk_nid == NUMA_NO_NODE || mblk_nid >= MAX_NUMNODES) {
+> -			pr_warn("Warning: invalid memblk node %d [mem %pap-%pap]\n",
+> -				mblk_nid, &start, &end);
+> -			return -EINVAL;
+> -		}
+> -	}
 >  
-> Can you please help or else can you share how to debug these errors in the
-> libtraceevent setup?
 
-Basically, I use the attached program (that just links to libtraceevent).
+This hunk has the unfortunate side effect of killing my ThunderX
+extremely early at boot time, as this sorry excuse for a machine
+really relies on the kernel recognising that whatever NUMA information
+the FW offers is BS.
 
-Note, I need to delete the first line of your files, which has the "cat"
-command. But you can run this on the file itself:
+Reverting this hunk restores happiness (sort of).
 
-  ./tep_load_event /sys/kernel/tracing/events/cxl/cxl_general_media/format
+FWIW, I've posted a patch with such revert at [1].
 
-But you may need to be root to do that. If root just copies that file, you
-can then run it as non-root.
+Thanks,
 
- # cp /sys/kernel/tracing/events/cxl/cxl_general_media/format /tmp
- $ ./tep_load_event /tmp/format
+	M.
 
-I run it under gdb and see where it fails. But it should let you know if it
-will pass or not. I put a breakpoint on tep_warning and when it gets hit, I
-examine what it did up to that point.
+[1] https://lore.kernel.org/r/20241127193000.3702637-1-maz@kernel.org
 
--- Steve
-
-
---MP_/gj_VQ.qi4BsFaumOAmUndPT
-Content-Type: text/x-c++src
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename=tep_load_event.c
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-#include <event-parse.h>
-
-static char *argv0;
-
-static char *get_this_name(void)
-{
-	static char *this_name;
-	char *arg;
-	char *p;
-
-	if (this_name)
-		return this_name;
-
-	arg = argv0;
-	p = arg+strlen(arg);
-
-	while (p >= arg && *p != '/')
-		p--;
-	p++;
-
-	this_name = p;
-	return p;
-}
-
-static void usage(void)
-{
-	char *p = get_this_name();
-
-	printf("usage: %s exec\n"
-	       "\n",p);
-	exit(-1);
-}
-
-static void __vdie(const char *fmt, va_list ap, int err)
-{
-	int ret = errno;
-	char *p = get_this_name();
-
-	if (err && errno)
-		perror(p);
-	else
-		ret = -1;
-
-	fprintf(stderr, "  ");
-	vfprintf(stderr, fmt, ap);
-
-	fprintf(stderr, "\n");
-	exit(ret);
-}
-
-void die(const char *fmt, ...)
-{
-	va_list ap;
-
-	va_start(ap, fmt);
-	__vdie(fmt, ap, 0);
-	va_end(ap);
-}
-
-void pdie(const char *fmt, ...)
-{
-	va_list ap;
-
-	va_start(ap, fmt);
-	__vdie(fmt, ap, 1);
-	va_end(ap);
-}
-
-int main (int argc, char **argv)
-{
-	struct tep_handle *tep;
-	off_t size;
-	char *buf;
-	int ret;
-
-	argv0 = argv[0];
-
-	if (argc < 2)
-		usage();
-
-	tep = tep_alloc();
-	if (!tep)
-		pdie("tep_alloc");
-
-	tep_set_loglevel(TEP_LOG_ALL);
-
-	ret = open(argv[1], O_RDONLY);
-	if (ret < 0)
-		pdie(argv[1]);
-	size = lseek(ret, 0, SEEK_END);
-	if (size < 0)
-		pdie("lseek");
-
-	lseek(ret, 0, SEEK_SET);
-	buf = malloc(size);
-	if (!buf)
-		pdie("malloc");
-
-	size = read(ret, buf, size);
-	if (size < 0)
-		pdie("read");
-	close(ret);
-
-	ret = tep_parse_event(tep, buf, size, "sys");
-	if (ret < 0)
-		pdie("tep_parse_event");
-
-	free(buf);
-	tep_free(tep);
-	return 0;
-}
-
---MP_/gj_VQ.qi4BsFaumOAmUndPT--
+-- 
+Without deviation from the norm, progress is not possible.
