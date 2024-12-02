@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C106C1DDC19;
-	Mon,  2 Dec 2024 17:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AA71B6D0A;
+	Mon,  2 Dec 2024 17:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733159575; cv=fail; b=XPyRSKpumUDe2GFtOgatGf5IoFQfaX7v5MmJvGMnfn0Uo2G7yFIbrMywX/gJO/tGwS7Go0v4oMJitPGxoYSbZYr5VAapKWjMH8A+YKX86mmnnZ734nSZqT3LdMHP+J9xj7ZTzLWA91zOZa3qDtC+Kkbll8IK7K46zvXiWtlUHEo=
+	t=1733159576; cv=fail; b=jZBXeKvN55UT40a/l3Pce4SETuG3UQh3gzSwjmHooT4Rk4RepzIlHZACac0jdq+Sx2GJ7RCLr1Cy2Rafk9qmF0LoAv/N+72Fws1Hg0AWVgo2WJTXSgPu8MjiOyFSS2TwaDoLzCB7GFEXtyp1o+USZ3Q3kzog0N7D1Nddnpxf0+w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733159575; c=relaxed/simple;
-	bh=lLARFwF6g53mOBq/njvSOXb3Yet3RfnUxhgLhZX5PLI=;
+	s=arc-20240116; t=1733159576; c=relaxed/simple;
+	bh=8MIy4mhS9InT4qDaJJBoe5oxJ7kQoR8odQLTfvRu9Qg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PekGvXm9eI+LHQw56oGtlJ2VPgJ5EYjo9FoZAD4CjrsniRMiN84+58gUMID0vCNEPvxqeYiHUkYEtK6ywmVEgZOz0PdV86phWCCtItt9KcQimJC7kkFeIHUBhPVWRdVvR887N86W70FFHtZiaqrRzR1C5uqKS3Jn9LOpsJRuUjU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xGd0SVXq; arc=fail smtp.client-ip=40.107.237.80
+	 MIME-Version:Content-Type; b=YitJ3RiHr0tD+7L0QURE6Sb+HuMDQ48dKFxxpocIGss1olNf+qXsMWfRgYWX+qcWD4P75287gYIWCi7vTh457GotkDkkLKVvYXpzLMcH7xNhFGU6/8PMP+bhCGnC0Efgh6RziwiTU/x68OpzKlihwZhXLNx8jSptRNSgbQ3W7ic=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZiH9r2E+; arc=fail smtp.client-ip=40.107.223.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xGd0SVXq"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZiH9r2E+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UVyOc9rKipJZFHTsAZkNVl1NoVpp1dbqx6Jyl+yDuAcIjbIcC8gcFXCGNLV4QY/saCSGRMZLTQnSZ2bA/6cEmScNzzpTnJQ9hfCb/aCOdK0aoKvzfmCEnA/WgwpMfk1icHne3ApSyGAJK68NNOI4FgunpEY3Q+av6kNsAtE3S6iAT7bfvpFM26DchkXmeEOujZEQIz1BHHFx/0MgUZDPKoBLHbgDSd/mEcvhWe+jQNlRmcUph3pRvdlO7MX5sDWUnpVhPcc0anr6BzYDvHUvnnLbi6frrOqlEqV3mrLVb/h6w6HONgrvXfhMkYNwXlFjWTdASHa61Qh/58e7mx1JUw==
+ b=D9BBoa7IDClesJxFyJdBFcJ5Ev45CVYJaYIPSmJTaFMZqYyY/Bu9M0+nRLsH2B46jfzlhJEuxnWKiimH4JQyUOkGF4tGWotmhwNhf9HBZRYvaj6cx6mHP6JjDw1lhlVepFQ0vm9W9YryxkFakRqepKmrQw6i7F7Czg4nDkhc5XQICz+berrIbuqQYYmxQ4yVM9DMVmNhK04g10t/SOxwhZO1UiwVJ/48+ZYYDqX5WTVrERPdfqRTYY5pQ+ed1Zq3+Euh7pyccbJoFolKslo4NtePxZz91TLdC0pH9G6xfr3aUHP+C0R9LXsZMaXCuawjSqBLp8I4W63ZpPsBwDoYtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+ZttrYWVu34GVj5UmrqSMqPhtaYomgmIeq1dO9EjlFM=;
- b=xb8W9O2zUhhC5VtomnpEZxdKkmKZAong4YTQK0Voy1HpZ6KHQK5VtJq97d+0I3JJ0lgELmjOe+KAD6FS5DZTfU/sI+kbTrbmTv8wBvYHkQEhnFW4za1oG/bsZrFAKd8cL1fRkPwEsopwlMJXdebmwFyAHzexJGVOXyzTrnmW6mhyHSRdgaQBfHIYyNCYmErMaSxHf0rrO8sMakF4Wp+irXbH8VVoNs2ErM2MAkI70nxF+f9ARgl0FqFQmZCyde1nRPq4mdD3F3D4Ynr137Tb9WHVMk8ifp6wI0RLLvZbK+Kd+4tORtE1qR996iqEeed0i5K/Lpito16hMlYsD/NmJA==
+ bh=BDqiyOkYzOZw2HTaMKuN+wpL8mBGD6I6C1rH4H+psjA=;
+ b=wjLcmAVo/R33C4VuGls6TEMiuxLOBxzySGetkVH1fCyHc5wFJUyuofMbcPdwv5VKrU43Ob2NcBZcZiH7Rt2taMQZ8l8KK97iLZc3TUNOSra6vOLLekBJrh84ChvOAbfNK1+IrRNPJAOV/5YvOmHEQb14kBLS8a2kDfX+iykdP9rwzXZOzjVs0o5j+5ce07f5rAHI5VPFSpAO+IVWXRfHrslfd9cw8Fo8n2Be/7y6+arskdaZl7euDze33NetkjlTIl3SCPg54j6EGPOQX4G3sBYWUvElVFMi1cfa5LqiXVYOWUL6sZr5hh4G1LU0oKEGAoDAFwd0/umScYw5/9w1vw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+ZttrYWVu34GVj5UmrqSMqPhtaYomgmIeq1dO9EjlFM=;
- b=xGd0SVXqURn+h+K1oCfLc5jUXvOBStOZ4YvwpIXMz4YqlWIO20GoG6PuQi6pnDPJ8v+EfooRNNBMDGghiDpUxwxKpvd/xUREeK1vu8Pds9b+gT2G1K7lemXMMw9rG4Mn7d2tfqH3AXZmz6uiGamrSXCwzXYTI6MDKGZu+i2KSJY=
-Received: from BN9PR03CA0885.namprd03.prod.outlook.com (2603:10b6:408:13c::20)
- by DS0PR12MB9397.namprd12.prod.outlook.com (2603:10b6:8:1bd::15) with
+ bh=BDqiyOkYzOZw2HTaMKuN+wpL8mBGD6I6C1rH4H+psjA=;
+ b=ZiH9r2E+GJs05iQvrxqz2PhfJRct4cXSZ/AL1YU+2DMZsOFOkjyaZIiPBWOymA5Ro2JYOBhs1UIHypwYVHGtjQrkT8rz3aeL/Hwk2WzmdgEcxKhsCyQ7RHezrZorEPDBLL2zcNmbJprMYUsLb1zLf9DEpCfwsG1zIqpKFDOX+TM=
+Received: from BN8PR07CA0031.namprd07.prod.outlook.com (2603:10b6:408:ac::44)
+ by CH3PR12MB8073.namprd12.prod.outlook.com (2603:10b6:610:126::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.17; Mon, 2 Dec
- 2024 17:12:49 +0000
-Received: from BN2PEPF000044A8.namprd04.prod.outlook.com
- (2603:10b6:408:13c:cafe::18) by BN9PR03CA0885.outlook.office365.com
- (2603:10b6:408:13c::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.17 via Frontend Transport; Mon,
- 2 Dec 2024 17:12:49 +0000
+ 2024 17:12:47 +0000
+Received: from BN2PEPF000044A9.namprd04.prod.outlook.com
+ (2603:10b6:408:ac:cafe::55) by BN8PR07CA0031.outlook.office365.com
+ (2603:10b6:408:ac::44) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.16 via Frontend Transport; Mon,
+ 2 Dec 2024 17:12:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,30 +48,30 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN2PEPF000044A8.mail.protection.outlook.com (10.167.243.102) with Microsoft
+ BN2PEPF000044A9.mail.protection.outlook.com (10.167.243.103) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8230.7 via Frontend Transport; Mon, 2 Dec 2024 17:12:49 +0000
+ 15.20.8230.7 via Frontend Transport; Mon, 2 Dec 2024 17:12:47 +0000
 Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Dec
- 2024 11:12:49 -0600
+ 2024 11:12:43 -0600
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
  (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Dec
- 2024 11:12:49 -0600
+ 2024 11:12:42 -0600
 Received: from xcbalucerop41x.xilinx.com (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 2 Dec 2024 11:12:47 -0600
+ 15.1.2507.39 via Frontend Transport; Mon, 2 Dec 2024 11:12:41 -0600
 From: <alejandro.lucero-palau@amd.com>
 To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
 	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <edumazet@google.com>, <dave.jiang@intel.com>
 CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH v6 11/28] cxl: add function for setting media ready by a driver
-Date: Mon, 2 Dec 2024 17:12:05 +0000
-Message-ID: <20241202171222.62595-12-alejandro.lucero-palau@amd.com>
+Subject: [PATCH v6 07/28] sfc: use cxl api for regs setup and checking
+Date: Mon, 2 Dec 2024 17:12:01 +0000
+Message-ID: <20241202171222.62595-8-alejandro.lucero-palau@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
 References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
@@ -84,95 +84,119 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A8:EE_|DS0PR12MB9397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92a129a9-cce5-40ec-30e6-08dd12f48ca4
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A9:EE_|CH3PR12MB8073:EE_
+X-MS-Office365-Filtering-Correlation-Id: d44ca879-0649-416c-c9d0-08dd12f48b57
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|921020;
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tqpKdZa3xxszAwnMvU79L66Wsr2R8ko8NagA/mY13khXb/+57iDXtveltkwy?=
- =?us-ascii?Q?DCN5X5BWQvL10+eIy9JGfEkdwz6nGoljM9ynlf2hCUlwBdNT1dGu1VHwALqy?=
- =?us-ascii?Q?zYq/jMOD/gV7OBjntdnagYS5MTk01QxMKSJda42+Qk5MYR6olFxDVcu62el+?=
- =?us-ascii?Q?wLIqv3oyvbCuFPpOzgaHhqm193dvcosDfpJHBgitOqwR+WWC8elJqOA5vpbB?=
- =?us-ascii?Q?RKPawJjs9qA/MPoyHXisz3B5tgTfsYU7A8nT8nXSF6TfdTfs+UYjhA0751Ng?=
- =?us-ascii?Q?Rx6mslDzLM2DPMPUeAEUzooh0VcTeZ1SjqCWj8gcDgEdJsDK4oWaFTot4MTj?=
- =?us-ascii?Q?eSVJKNAx7SVyCntE9UeDKxiNMO7NyoC8pTVzBS42+Pm1XFhjcy2yLrNcxFhW?=
- =?us-ascii?Q?ZA45ExnwvEtjb0XktfcR9txT1XdIxeAN3pRtZCKUgk7S05M3FTxZmQ9ZYCky?=
- =?us-ascii?Q?Ns8IYdlHPSYY4HkImjb4o5c1ddbjDUDcu55X+X5V+t/6rvSoUuG8K0P6v2bQ?=
- =?us-ascii?Q?/hQcJ4vwdpbBvnWmJCFcGWc5L5Ue7k1utsPreOGfDW6cHfUhD1DTvYufO8oA?=
- =?us-ascii?Q?ghVXjWPAt1ok0FZZjoThpWSBpo8oQVOlMubpPSmp5SbPe6XJyoe0iyymNrXU?=
- =?us-ascii?Q?FGgN7mqkVrYgxLb0lC7QBfD5YKGf6SSC57ADJsggmzvnS1OydmwEDUUir1pX?=
- =?us-ascii?Q?uPQ0+hVhnzxi3B7WshyfVkA/wIo754giS3Hs5XAaFM2p3xe7FBOY8Dk3LvCd?=
- =?us-ascii?Q?dOL64258ISdZKL7nDZLam3G0mm6Yu1vlLB6yv/w4EMfyfZTpl0E+KCDaShUi?=
- =?us-ascii?Q?4JGMxWiX7U62mI4bV7mn7WaVgQzUqxwQSnJPs2t0R6tlgSUBSYy9i+Nhb+ym?=
- =?us-ascii?Q?hUq59sag8qJv4Zp4cQvtTaVz8y4Arr4tPrP9I8Jjjs6BwM0Trs29Dmrmxcja?=
- =?us-ascii?Q?0tFAoklCmNIdmDyFXQPhP3g4F7nw5/FY/PgnpWsdmrgRWP1PsEHDix8UsFBH?=
- =?us-ascii?Q?TTFCLZSn+eqBG6Tf2RpA5TqbjirYlHot0wt3tjHegFnnZSuOOF8VO8J5MmYT?=
- =?us-ascii?Q?PVhbbwLY6tUSOwZ4Z7/bo1uZT7NIdhfem3pz9ksWzgdQVMoQQ8NUGlwfGswj?=
- =?us-ascii?Q?45bMK2saBgqODQurghIHLBd/XDoBWAel4ZuV4sOpucvVSOmP7hxeL0mwJP5c?=
- =?us-ascii?Q?1CxU6xf5r8QroLHBd8VKfnQM1pHEw4rkFueOwSo+aMPwijudG56+RDbZCoJv?=
- =?us-ascii?Q?WD/+azsCXidVuWMUWV05oFJU8Zv3v5LNAEYsV3Wqvssz9qZGNUUE5a8Z0tgS?=
- =?us-ascii?Q?wLZ4R6CcxRizglf46ffgMqs6HSUKIZ7kQLKvhzPEywyI+lqrjxSA2Jdp1ia1?=
- =?us-ascii?Q?Pwd35RaXeNcowAT+BOphX4tF8L+/BttTmy8jgXjujeLPwp3mzx+PcAxnagGp?=
- =?us-ascii?Q?FZw5LMF3+VrqdEu+qDKY4nUn0bYysfu3tZ11i2TZO5LUxrZKRelD2A=3D=3D?=
+	=?us-ascii?Q?2EMAFOAW3xNyH+EspVU2s8SvvWEqFg2u4GStoERoh2C+moKN9yydu2vOIfKe?=
+ =?us-ascii?Q?1S5mPCkxt5r4GRhESJQISBE3Dmtw6fTluets5PlhLHiNDMI74JAIu99/IaTI?=
+ =?us-ascii?Q?PoCBN3N5iZzkhBhHcowlVOra5CW6ArY1fd9FH6rGFPqemKGtbavaRfB8c29h?=
+ =?us-ascii?Q?WGoezwtz1RoViVQM6MVKJgBgYFqZrjpaUGc/eJRffWrXInYYnuOhICyPhnd/?=
+ =?us-ascii?Q?1eehIMihTLwxfAIJu39Cp+HKq61dO48MluCgYYMHmHmWj37ozcO4uVKO0rXv?=
+ =?us-ascii?Q?PgVKBSzHJBFDSBJ4RC6zGtCqBVq6981HdqOikeiMhJQHnJ/gcpXHRSP6/0XB?=
+ =?us-ascii?Q?yAGvnSIrNZJIodHCKM/yGrPHT5qWGyiJFgRPqR0sjg+8XCwtfw2fJsxAP5Rx?=
+ =?us-ascii?Q?Shzl8Jl77TlW2Q275bcNYe6f2jY7z3deUGL8QF8EXuDXr0dmcPhyqhJn0bW9?=
+ =?us-ascii?Q?FiqyayyJkOkvvwdmwYl/PBT4JNehpGhYRlA0Jh23P+uklGCJIl4sLsxlz4w4?=
+ =?us-ascii?Q?Rx0uyenJ029X5CdpRTi3RcXDLDU+dnbH7GVjFB7XzJffHSHF/R7iMiS7R9N5?=
+ =?us-ascii?Q?VSmtfH4YryMeROpBe/dkIGhdjQJxtrapU9DdJDyzFbE9dRRDXuT5kxZ/Arkp?=
+ =?us-ascii?Q?7tLn0T2glR+RVQI/4sLxiAFvPIKodkGtgPAky5KTOXcU/nxnV/qrG5JuwfEC?=
+ =?us-ascii?Q?3TGkc+/8lk63VoxwEp1Wzjwurboe0Zz3ffYIGNlZzshoy5gJI8gfQ4k+Vt+u?=
+ =?us-ascii?Q?tgAV/jf1AlMafQV/yPSFH8lZs2ev6XU6fkufyH978Y5XbqXyW3BU+nBK5qFV?=
+ =?us-ascii?Q?l2Big5bzLyQobCpM1OltxuV8601OE5N0XpNUdNVgLVvyCUYz17P1P4Ddo2x4?=
+ =?us-ascii?Q?oS+yd3ANdXA64C97p8RZH/QPIbqOX3rNGBTxBaEdYP6ORO5CPUMpmCGJbdh7?=
+ =?us-ascii?Q?1buJdApQAZRCWf3NF8vfhMxpP2Wdcn8BSedlcTZmLsNsNG/7C2WIxqeE6tDf?=
+ =?us-ascii?Q?uzWRAIf2QBeTSaPNDRHAnkxIn4FnnYcxZ6brt13hdW2vC7YDZ4YIEqmGCTpF?=
+ =?us-ascii?Q?MsykfLUFK/4QRHjIxHVxQM5pF6WX1MvarR8WEPd+WWdHq0UBWMKtdzwzQr8m?=
+ =?us-ascii?Q?b5X8nMR3fnUgEF2Yv7lXMolZ+wguvdYot5VpVMIDdgDtmFhySenyJNmfU23o?=
+ =?us-ascii?Q?kvfkpH7DRNlLB8SQuZL9rtARmMbZnCOmQII3xT9WCDThXncy/g4blPOp5o3e?=
+ =?us-ascii?Q?BO1Te8k9ac9R1cUW+Y4KHH9w93BRIfyolJJ0tL80JQzydQpP7zlCX/68i3xk?=
+ =?us-ascii?Q?GzjWYrAONgcBGohJs9ellvXmzGjSHrPnIdS2uQBgk0k6N81cuxMqj3VhdBaV?=
+ =?us-ascii?Q?Oz+rk77wvqINDGWaPu8D0MxS/GCVcKO1VgamjgYlkpNGhvlHys1P9wG+Ts0l?=
+ =?us-ascii?Q?IZ57Tdq0qhqqvokc23DuikOByilnrIltBggJTJitKOPL0q25GCEz7w=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2024 17:12:49.6744
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2024 17:12:47.4803
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92a129a9-cce5-40ec-30e6-08dd12f48ca4
+X-MS-Exchange-CrossTenant-Network-Message-Id: d44ca879-0649-416c-c9d0-08dd12f48b57
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A8.namprd04.prod.outlook.com
+	BN2PEPF000044A9.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9397
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8073
 
 From: Alejandro Lucero <alucerop@amd.com>
 
-A Type-2 driver may be required to set the memory availability explicitly,
-for example because there is not a mailbox for doing so through a specific
-command.
+Use cxl code for registers discovery and mapping.
 
-Add a function to the exported CXL API for accelerator drivers having this
-possibility.
+Validate capabilities found based on those registers against expected
+capabilities.
 
 Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 ---
- drivers/cxl/core/memdev.c | 6 ++++++
- include/cxl/cxl.h         | 1 +
- 2 files changed, 7 insertions(+)
+ drivers/net/ethernet/sfc/efx_cxl.c | 19 +++++++++++++++++++
+ include/cxl/cxl.h                  |  2 ++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 1d43fa60525b..b14193eae5fb 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -795,6 +795,12 @@ int cxl_release_resource(struct cxl_dev_state *cxlds, enum cxl_resource type)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_release_resource, CXL);
- 
-+void cxl_set_media_ready(struct cxl_dev_state *cxlds)
-+{
-+	cxlds->media_ready = true;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_set_media_ready, CXL);
-+
- static int cxl_memdev_release_file(struct inode *inode, struct file *file)
+diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+index 9cfb519e569f..44e1061feba1 100644
+--- a/drivers/net/ethernet/sfc/efx_cxl.c
++++ b/drivers/net/ethernet/sfc/efx_cxl.c
+@@ -21,6 +21,8 @@
+ int efx_cxl_init(struct efx_probe_data *probe_data)
  {
- 	struct cxl_memdev *cxlmd =
+ 	struct efx_nic *efx = &probe_data->efx;
++	DECLARE_BITMAP(expected, CXL_MAX_CAPS);
++	DECLARE_BITMAP(found, CXL_MAX_CAPS);
+ 	struct pci_dev *pci_dev;
+ 	struct efx_cxl *cxl;
+ 	struct resource res;
+@@ -65,6 +67,23 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+ 		goto err2;
+ 	}
+ 
++	rc = cxl_pci_accel_setup_regs(pci_dev, cxl->cxlds);
++	if (rc) {
++		pci_err(pci_dev, "CXL accel setup regs failed");
++		goto err2;
++	}
++
++	bitmap_clear(expected, 0, CXL_MAX_CAPS);
++	bitmap_set(expected, CXL_DEV_CAP_HDM, 1);
++	bitmap_set(expected, CXL_DEV_CAP_RAS, 1);
++
++	if (!cxl_pci_check_caps(cxl->cxlds, expected, found)) {
++		pci_err(pci_dev,
++			"CXL device capabilities found(%08lx) not as expected(%08lx)",
++			*found, *expected);
++		goto err2;
++	}
++
+ 	probe_data->cxl = cxl;
+ 
+ 	return 0;
 diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 44664c9928a4..473128fdfb22 100644
+index 05f06bfd2c29..18fb01adcf19 100644
 --- a/include/cxl/cxl.h
 +++ b/include/cxl/cxl.h
-@@ -44,4 +44,5 @@ bool cxl_pci_check_caps(struct cxl_dev_state *cxlds,
- int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
- int cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
- int cxl_release_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
-+void cxl_set_media_ready(struct cxl_dev_state *cxlds);
+@@ -5,6 +5,7 @@
+ #define __CXL_H
+ 
+ #include <linux/ioport.h>
++#include <linux/pci.h>
+ 
+ enum cxl_resource {
+ 	CXL_RES_DPA,
+@@ -40,4 +41,5 @@ int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
+ bool cxl_pci_check_caps(struct cxl_dev_state *cxlds,
+ 			unsigned long *expected_caps,
+ 			unsigned long *current_caps);
++int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
  #endif
 -- 
 2.17.1
