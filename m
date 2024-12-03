@@ -1,62 +1,62 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A351F6671;
-	Tue,  3 Dec 2024 14:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17F81F667E;
+	Tue,  3 Dec 2024 14:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733236514; cv=none; b=nIG+gT+mJsOV+2F7ciSTKxc6+4I0O4VC7DEirolpMSczpA+m02w0BQQOKdLsgNYq6CiUDBYnc2vZJNPnBQ6RmHUoJxhOGDg1S2DSDbIjfxx3teo98aouNLoVvIY62PweGUx5UxWik5TA8ijZ3xai6PjSsetIefzmTpKrvMxeves=
+	t=1733236674; cv=none; b=BO14pLp2K0g9VKrTNfmbe9+A5htcmkNBDjMLSIc/9zASIcEcOpZY7aMd8LmDLrH0VwYy2nS/63O5+v3zQBbT6V135xTM2ji5NOvlwldGg5kGOKkCv5fV8YoMcCWTrVKLDtxo3ALediO69idQhvyxi1r6pwNiB+q7oIkJloXxfMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733236514; c=relaxed/simple;
-	bh=P7rmLi54Mv4d9NoP+T3/y/5bBlleG+RQkSJ86Iy5xdo=;
+	s=arc-20240116; t=1733236674; c=relaxed/simple;
+	bh=DqiY3UAanf00dIqw+RQo8ty085QscpuR2AWemSYwG5M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lD/fczAtS0d4rgQ8HLiC5ekEMN87uNlhsKGGDffFO145u+Bm2tqNOzEj+5oMMm6KiXLr0xYmNNkyqx+XEY7zTX+4EhI1WOYzbN7lOJrZO5oF7kXeThwAjB22WKcok5PaPgOdnTl3lpkHhQZSNFZs2wD491lJv0uRDhM68t4BjwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRUnxdsr; arc=none smtp.client-ip=209.85.128.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=goLYGXT4rNZQp7p7WmGNndnuRr0xKUcPo9v5W3PqHOWNoqxKgZtuOZpgUIxMF+57wMcJBVz6BCho5TwUBmOWY41xxqstNfJJxaFFYAEoSr46/bif8NXID3zCsCYc6evVmhnubYh5E22IcaFrjGTQHwD+XCSB/iOTrOGqY7DG0b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mta84p4f; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRUnxdsr"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-434a2033562so45985815e9.1;
-        Tue, 03 Dec 2024 06:35:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mta84p4f"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso3746817f8f.1;
+        Tue, 03 Dec 2024 06:37:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733236511; x=1733841311; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733236671; x=1733841471; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references
          :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uyu/2pHhMGFLuVestu1in3+WNSRMcaSil5Aa3Z7W0bs=;
-        b=mRUnxdsr19QUHpW8811GpHznfZcVqkNFpPEBij+SMG+6nl+lC+10h8CS2Fs5mTrQ3e
-         VTqj6tsKY0LUUyExL8M/t68bCu9oOeTUmk68pOLazBQnJJGqD1A3Rr+tWd4xcdNRXT9a
-         CNJ9AulG07DSTqFNlg1FTL9H0domSCtriu9l/Tx1cLhfgW8dSDzzXM08Z8xT/DFEG4bv
-         UedPs32iyyVuhJpZ0K/1iizYoCRP6GpjCLYGcBetk719ctNWaRkRU5yPvYPyliHm5lVi
-         vkCkkxgkw4lETCbAcVdDOXMu0vn6Bm4k4o/PK36oK7E48ywds+6YTjE7++RDvkG0xnZW
-         Ay4g==
+        bh=B6VRfPhQBrvJKtWRzpXQC0tO9V9z0NTMxlObez9peLk=;
+        b=Mta84p4fb6YW8S5lyRDwaHdwfAQ5TAWTFLHa/GO/6nS0UxnBSxgcOVtc5rgmxJKRS/
+         wNzVUyw/vWmbMyxQjZEUVUIDMtalI1StqYqL+NfHAo6WI3W0Vj+/2AZ+tXWXh8phILMs
+         xjaBOaSdjkko01bipCSw7oIqZxyYbdTa3SqKcXjW3doM3Kmk4YeoL0qLdWx7mI4DKS3v
+         R+Qiip68AaD1+uo5Lwvva9VmGZ+XS7Nrfy58SfuRDI1z0n4Hzize9jZN9S1XWlINkTi/
+         cHzzTnd93vUJCOtSwblQXPLL1HSw+mqkVcVQXg3sIV+dPSi5vu74d1tMOhGoYNYO+JlZ
+         pcXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733236511; x=1733841311;
+        d=1e100.net; s=20230601; t=1733236671; x=1733841471;
         h=in-reply-to:content-disposition:mime-version:references
          :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uyu/2pHhMGFLuVestu1in3+WNSRMcaSil5Aa3Z7W0bs=;
-        b=wEs++H3uQ30uRGpHfsp9ALvMr9B7CEQLmPo8+mJ2m/YGmPQ5YvqD0IiEV5se0YTZ7w
-         c5K/cx8lAhKibcjxGm8wrYae0q7T9Rr3M6ZLEKTsZTX0QPVZSv+HDW/YAbiIA1v/khIE
-         LOvLVKryYHojHsIOH2X6eklaVskKp9K8csyoTHk60HU+ZusnFNPIb525F/gEf6tU54Kw
-         A8ppaIM25jkKf/qAzD3nNcfjqMDelg04oaVoDPuJfadA3v1p3EjoeGFINVshc3MqVtFp
-         8lVC0zWVoqVYgZIxk04/JBETGMmiObcPK9rTdCH9QYGAzsAkOSc8qPZcGIrnNHq6rQ2i
-         srgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAwNkuR5WoPwgJ3P0vTLNO0J5oSMUdQMUqYE8NAiKmr2Yl+5VtgUvHtcD8lHuDvz73mvjWEjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlxJaktbfOFijMr8GyLuuObRJ/DDCzqibLMBA6HvuX3+fUGNne
-	METVm+/1GAni32hI3m0laArYBedQ7Lz0q/6iwiZ4qZvVuVYAcuMn
-X-Gm-Gg: ASbGncv09AvnyIuef8wknq876p41JO8iYnS8a/asfDV5zA+G9FYDrKtqnjUCT+Dqxer
-	oDS5FyFxJwcxYYi7DqXwVRnU+NMG1x8SV0R3H4FFIvg6sfmMvErqR6FTYJ0j/GMURm4KFOAkMDL
-	MfIl4sZz3eMtpW1YcNh8fly7p9S2rt3QHt27vCFbx3VOhtzLTzPGfMaujLO+NGsHdWJhN5hhhgN
-	ku1Kg0Sj/HfCk9LziX3uZL4PrWa8OWZXSTfjIhS7n/vDhLi1m0=
-X-Google-Smtp-Source: AGHT+IET/tJslwZl+UzIaFNguesHOrVf/GbLRplB6wrG4RvjQRoT5pdmU8u2+P09RfAJIHPrkfGPug==
-X-Received: by 2002:a05:600c:1f91:b0:42c:de2f:da27 with SMTP id 5b1f17b1804b1-434d09a8dd2mr24599945e9.2.1733236510623;
-        Tue, 03 Dec 2024 06:35:10 -0800 (PST)
+        bh=B6VRfPhQBrvJKtWRzpXQC0tO9V9z0NTMxlObez9peLk=;
+        b=FtpbAv1C5hduJWldJ76KGSR+rShIV5M7aBWYJg30vFSNQyRkIVif5QQbXm58CP/YqS
+         g8On4GfBI53H0L60ft3xiurOhRoTAw1Rt63ntFP71C0qfKWY8T2gtdV0vLoPye9eYll2
+         /8XfqaJW+SvrrUdi6mVlG2bPeTWA+wXfvc2SYNjB0B3rGoPfVNqEXUCeJZjUoJ3J7cQ5
+         knT9f+Vpv3HkUpKOBqnsUxWGC2hiOHzuR2EXt541q5A7pPwQNXggtL/gn/I6RH/13g6D
+         F7Z5fVPeQr/zxtTa9MHvjft8OzEaP+E1H+aXQL+kmhh/2Fh37ZNaIhwTHDbWY/mAfWM/
+         kddQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViTjwS9czL1Mb9oWbMKSVkXnU1P3SaxCiQvmwJ/vWpFv7z4ew3OGzuUGLfxYsPS8RmZXKwZR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4cCbI6P3C2RTQmfvPzWmonyK1EdUMwCz9xu4eUMku3ugTV4/o
+	+G00uwS/1zP6jRlV+NuFfdOKbm+9+oY+SLX25IpS5KJgVKkmMBmveIjkij2V
+X-Gm-Gg: ASbGncuZWEelnWe9XzOOvMh8azkNrUCgYkc+HZyYykkLTymyLNChkfe89kE2nlAjGgA
+	fdDJy9Q8zuYiVQlQ2qAr5ryIwVzbRE9gRJzZOLmgtTpkJU5YHWYNhzgpdVkGEJtJvdC6E/xLL89
+	QOJbyjRpCK6G8gpLVH3NZtFjyLxnc5N5TsGK/QXUXbpBEDOfXc+F+WcXIW68tBmRag8Nn9yWR3H
+	3UbUZlr6B3sXZeOqpQBo6Az0yDUHqnp6jjISiZ53ygUmsOfY1Q=
+X-Google-Smtp-Source: AGHT+IHccbbI9yOqiqQRLIlcqcZQgiCcqeKu9khutfVmht5tn9xnmDxEGKNKj6iLJuToaLvCAgyf9w==
+X-Received: by 2002:a5d:5983:0:b0:382:38e6:1eb3 with SMTP id ffacd0b85a97d-385fd3ee6acmr2110079f8f.30.1733236670839;
+        Tue, 03 Dec 2024 06:37:50 -0800 (PST)
 Received: from localhost ([81.168.73.77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434b0f325fdsm196720515e9.30.2024.12.03.06.35.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385e0d4778dsm12098730f8f.45.2024.12.03.06.37.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 06:35:10 -0800 (PST)
-Date: Tue, 3 Dec 2024 14:35:09 +0000
+        Tue, 03 Dec 2024 06:37:50 -0800 (PST)
+Date: Tue, 3 Dec 2024 14:37:49 +0000
 From: Martin Habets <habetsm.xilinx@gmail.com>
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
@@ -64,15 +64,15 @@ Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
 	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
 	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
 	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 18/28] sfc: get endpoint decoder
-Message-ID: <20241203143509.GG778635@gmail.com>
+Subject: Re: [PATCH v6 23/28] sfc: create cxl region
+Message-ID: <20241203143749.GH778635@gmail.com>
 Mail-Followup-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
 	netdev@vger.kernel.org, dan.j.williams@intel.com,
 	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
 	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
 	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>
 References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-19-alejandro.lucero-palau@amd.com>
+ <20241202171222.62595-24-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,50 +81,59 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-19-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241202171222.62595-24-alejandro.lucero-palau@amd.com>
 
-On Mon, Dec 02, 2024 at 05:12:12PM +0000, alejandro.lucero-palau@amd.com wrote:
+On Mon, Dec 02, 2024 at 05:12:17PM +0000, alejandro.lucero-palau@amd.com wrote:
 > 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use cxl api for getting DPA (Device Physical Address) to use through an
-> endpoint decoder.
+> Use cxl api for creating a region using the endpoint decoder related to
+> a DPA range.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
 Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+One comment below.
 
 > ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/net/ethernet/sfc/efx_cxl.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 79b93d92f9c2..6ca23874d0c7 100644
+> index 6ca23874d0c7..3e44c31daf36 100644
 > --- a/drivers/net/ethernet/sfc/efx_cxl.c
 > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -120,6 +120,14 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> @@ -128,10 +128,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
 >  		goto err3;
 >  	}
 >  
-> +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, true, EFX_CTPIO_BUFFER_SIZE,
-> +				     EFX_CTPIO_BUFFER_SIZE);
-> +	if (IS_ERR_OR_NULL(cxl->cxled)) {
-> +		pci_err(pci_dev, "CXL accel request DPA failed");
-> +		rc = PTR_ERR(cxl->cxlrd);
-> +		goto err3;
+> +	cxl->efx_region = cxl_create_region(cxl->cxlrd, cxl->cxled);
+> +	if (!cxl->efx_region) {
+> +		pci_err(pci_dev, "CXL accel create region failed");
+
+This error would be more meaningful if it printed out the region address and size.
+
+> +		rc = PTR_ERR(cxl->efx_region);
+> +		goto err_region;
 > +	}
 > +
 >  	probe_data->cxl = cxl;
 >  
 >  	return 0;
-> @@ -136,6 +144,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  
+> +err_region:
+> +	cxl_dpa_free(cxl->cxled);
+>  err3:
+>  	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
+>  err2:
+> @@ -144,6 +153,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
 >  void efx_cxl_exit(struct efx_probe_data *probe_data)
 >  {
 >  	if (probe_data->cxl) {
-> +		cxl_dpa_free(probe_data->cxl->cxled);
+> +		cxl_accel_region_detach(probe_data->cxl->cxled);
+>  		cxl_dpa_free(probe_data->cxl->cxled);
 >  		cxl_release_resource(probe_data->cxl->cxlds, CXL_RES_RAM);
 >  		kfree(probe_data->cxl->cxlds);
->  		kfree(probe_data->cxl);
 > -- 
 > 2.17.1
 > 
