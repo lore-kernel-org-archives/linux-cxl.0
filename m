@@ -1,190 +1,159 @@
-Received: from esa.hc4959-67.iphmx.com (esa.hc4959-67.iphmx.com [139.138.35.140])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657AE1DEFD2
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Dec 2024 22:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.138.35.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733179845; cv=fail; b=WYZQjpyX2abNWiPuWSG38IkWcMM9XVTCndIFzt5zK/WsxU/Q4nUgjE7eDaA8z7zqj/aiEXNTDjHb/BxjC+gj1coYQ1byXhgkvc9/M8066IyJUlRDGX4EYUH7NjjyedcgFnHg9xGt/dN6hyXECFNAfvQvIF2V/EbDJ25I8v8xtcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733179845; c=relaxed/simple;
-	bh=92ZViDS5K6CVrWTwExPbSW6thPxujHyMchapt0Se1Wo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SbZFmveWXwF7M9z7CuWY4dNyewlG1zwm17XPUTjAbVE07+vCRoX8Fx3l9ziATEDGuZLUO+n0pd/y8yGpN1zAV0mmNotW3RaB5tSsq4jmKYWYQYy65MHZ/z62dC6+GeXQkkL63YZ5VcwPEqJNGUuqM+KrpYQD2IjVXHGjcEfYkZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seagate.com; spf=pass smtp.mailfrom=seagate.com; dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b=kvQSM8s1; dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b=YV6mQ5EM; arc=fail smtp.client-ip=139.138.35.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seagate.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seagate.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438FFAD39
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 00:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733185963; cv=none; b=HAeV8ORt+KuP35hrWBv+eLJDd6Kx4q2Oh/27Ob6x21O0oMUUTtiuiCDlvO2Qkk/PEbxnUmXMtIG0hnP0bJKEPO/xC/lnKV6e/3QSKug2jwJnu+R2SwvIRumjMaATbTyjS2zLVHZi/vUUbAmHDtiPxatUF4Pxey7CqSJHgLRwiYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733185963; c=relaxed/simple;
+	bh=tc4KuYkMaQjD8Yv6z+HG3OsdK2KxchFXkKiWS7msvBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CV4b/8tpp7l9sSIwtS2nTAn6ESvNR/NlDrzm5HnyEaei2xympFRgx2XkDFZw1sBn+80RqfrOCSmrvd4MTTQvatuHFWE8OMMcDSiKnD8EbF9ncVdb0dZulYPyWWDEP0z+XORIPjseC2mYh4Xqkb1c6Mi8jy/LJz92DpW291gPO6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdDp+Mfr; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b="kvQSM8s1";
-	dkim=pass (1024-bit key) header.d=seagate.com header.i=@seagate.com header.b="YV6mQ5EM"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=seagate.com; i=@seagate.com; q=dns/txt; s=stxiport;
-  t=1733179843; x=1764715843;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=92ZViDS5K6CVrWTwExPbSW6thPxujHyMchapt0Se1Wo=;
-  b=kvQSM8s1QJ+qe7aS6RMpws9NSDD889rhk8QobcTf+d+4CmRU0mJV838v
-   ialE2kCYAQZI+oH3T0aT+wXyt9bfaC4FGOXGi+yL6AIzllPbCWlsRyXLs
-   Lk/R9diAAEVecaNLgveZXhUvpkAE8K5nTmmYbjKNR/Nz1Aj7BCDVA+Sff
-   M=;
-X-CSE-ConnectionGUID: dQQLbzpoQYOxCSo6gtEuYg==
-X-CSE-MsgGUID: Q6r+TutrRiGW9JJnlEI+ZA==
-Received: from mail-bn7nam10lp2040.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.40])
-  by ob1.hc4959-67.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 14:49:35 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hZfgb8BV8Y8AZFNcxS/ccCIzzMLPDF+hH/KTuwVJrGAKBz9K8z6KYEXRd9YmyNCyCyeSkBeBCkuGDst9sT1GaIMwV5bii92uuP8wigW5X0c88oeZXXA5h7sMAPeL+3HZl31PKu9MgSsB7R8gfGB7Ao0AnZpGMdxKLVgrxhMVtfk+Xz0C2t7gTXb1SnpG2zU6MVJ+08+OPOz02qi7cgf13UhbYVkKs1t+OGAYVU0aXTFLd7zp4Q97jHnUwdRe1gqP2NN40BDBVb7Qwiu0ZYMy6d+tB2H0Ng/yeA9cwj5V2bnnRFcOPkTzye/4nxr7OJ9CzmbY1HXJbaFHtFDi93z5Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0msWWMp6lNH/OVHvjwB1kEkRiWg3E4iezqN3tCtkZCA=;
- b=XU7TD1Rl/OeL5gm2w+I5UmDHhYxuhVhBoEgAsr3XCHkx6EMtHah9BLf4aY3eZHM+lc4+M6ws7tM8sZb/T9e/pKtZcNCOikNsqNCrRdnRvehWKI0nMIVqbKIMR3p7zKB2qULUcZFHCmNZNRG7+htNrde9Kkudth8/NL1xmTx5QadVT4LYMoHsCro1D3GqZJF4ZXii3fxjxLhtu3sFoPaie+yy4olubYSohWJfUCn194gsOZiyaexfaEwj5XXoX4khmZtf00iyJECUisswKwfsM2qO7/WTS+bwyguy3ApgEUcxehdx/lalbwGsKNyJIliQgR4ir1xRtKOYol1le+UCqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 134.204.222.53) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=seagate.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=seagate.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seagate.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0msWWMp6lNH/OVHvjwB1kEkRiWg3E4iezqN3tCtkZCA=;
- b=YV6mQ5EMGBcMkTvhjIIfeHVrqLBnkMSv8ekAT5AmCQeneuFHT4hjtntPDpp8G8GcaOTKSA+gLSQhkS3wJNKtixSNvDacMfMKa6eIGYn8BAPQtvVsEmhRFtRODXGRuvmQC6TyA7aTDdqAfKNT7MuZeupMg+QRxyqDVuaW/iHNzlY=
-Received: from BN9PR03CA0449.namprd03.prod.outlook.com (2603:10b6:408:113::34)
- by SN7PR20MB5190.namprd20.prod.outlook.com (2603:10b6:806:269::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.8; Mon, 2 Dec
- 2024 22:49:32 +0000
-Received: from BL6PEPF0001AB75.namprd02.prod.outlook.com
- (2603:10b6:408:113:cafe::53) by BN9PR03CA0449.outlook.office365.com
- (2603:10b6:408:113::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.18 via Frontend Transport; Mon,
- 2 Dec 2024 22:49:31 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 134.204.222.53) smtp.mailfrom=seagate.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=seagate.com;
-Received: from lcopzesaa002.seagate.com (134.204.222.53) by
- BL6PEPF0001AB75.mail.protection.outlook.com (10.167.242.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8230.7 via Frontend Transport; Mon, 2 Dec 2024 22:49:31 +0000
-X-CSE-ConnectionGUID: neVcBX68RPOmgzMmaQvKyg==
-X-CSE-MsgGUID: hs+mcCb1TYKaWafYsqsC8A==
-Received: from lcopiesaa002.seagate.com ([10.230.120.53])
-  by lcopzesaa002.seagate.com with ESMTP; 02 Dec 2024 14:54:49 -0800
-X-CSE-ConnectionGUID: DuqMBeEcSL+JlbCmCRv0AQ==
-X-CSE-MsgGUID: klHG5o/WQrCvz1H1hIP7Hg==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdDp+Mfr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733185961; x=1764721961;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tc4KuYkMaQjD8Yv6z+HG3OsdK2KxchFXkKiWS7msvBc=;
+  b=EdDp+MfrpvC4pcfpTgkjGSuNWQCvMrovF4jWO1txYoXK/scbb3VRg/fY
+   amCuOt/zX3lwu2uskL8yeSr4dLXQmA2am/uSxhVFFpfEoa8bHpRj3Pux8
+   K1263yvHsxU+UWhfleyW5p/8QOEtZSvKjIwP1rRcCWrlUQJosytaX+4Bo
+   81lQyiR9d2ePDO6DIILaxA9h9RU16CfeKMzHBYnDd0JKoPkhGAb/VwH+q
+   MHu7sEu9ZEP3l6mKj9mJ3utLxVBhJlSSxBCA+tvUY+ICacADA3TMZ/LOk
+   n88zSu8PM/p1Ztqcj7WtB9X92LyODds+7qrQmtkmTE7kFT3PKJTPNuIqP
+   Q==;
+X-CSE-ConnectionGUID: iMKjxPcPR9G/tmvAi82UCg==
+X-CSE-MsgGUID: 9Z5aWXGDRA6SRDQpLZx6/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="33126954"
 X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="113320196"
-STX-Internal-Mailhost: TRUE
-Received: from mag-tester2.shk.minn.seagate.com ([10.52.21.5])
-  by lcopiesaa002.seagate.com with ESMTP; 02 Dec 2024 14:48:52 -0800
-From: Hongjian Fan <hongjian.fan@seagate.com>
-To: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Cc: jonathan.cameron@huawei.com,
-	fan.ni@samsung.com,
-	Hongjian Fan <hongjian.fan@seagate.com>
-Subject: [PATCH] hw/mem: support zero memory size CXL device
-Date: Mon,  2 Dec 2024 17:03:11 -0600
-Message-Id: <20241202230310.1531219-1-hongjian.fan@seagate.com>
-X-Mailer: git-send-email 2.25.1
+   d="scan'208";a="33126954"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 16:32:41 -0800
+X-CSE-ConnectionGUID: S6x7zoaRQWGs8momJ4WX9A==
+X-CSE-MsgGUID: ZzfdE6t9SR+rHau2C58lfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
+   d="scan'208";a="93157503"
+Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 02 Dec 2024 16:32:39 -0800
+Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tIGq1-00034n-1g;
+	Tue, 03 Dec 2024 00:32:32 +0000
+Date: Tue, 3 Dec 2024 08:31:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nathan Fontenot <nathan.fontenot@amd.com>, alison.schofield@intel.com,
+	dan.j.williams@intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
+Message-ID: <202412030858.l8DbOnRQ-lkp@intel.com>
+References: <20241202155542.22111-1-nathan.fontenot@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB75:EE_|SN7PR20MB5190:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 48493879-7fc5-487e-e1a5-08dd1323960d
-STX-Hosted-IronPort-Oubound: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1aQJ4NAn3+bmM3dfEaVUEsKv+7ATrgMD3hcEsqIIrr1P9lCvDKoP49P3AIV4?=
- =?us-ascii?Q?wblU137knab0eBCKSLKTaPPhppO+srFQKGfnAQNBbKsDlT0Sz/s9wNEX90CK?=
- =?us-ascii?Q?316XsPIek8YU0jvCxaMLi11MWnR/JtSztXB8RULXU+ySHNTDFbd58SWAvHAk?=
- =?us-ascii?Q?C1hRl0baJXfHemqKvX70/DcegbBGIc3m2Z9q+trGFxLOotmV4OdsJnlJ7zoJ?=
- =?us-ascii?Q?m8k6yiNBDAUZ916/p6b5EJ8OA2mHy4FaPOdhBFWtRXo5Zr5Pif9L6IE5Gnby?=
- =?us-ascii?Q?kRzZc1OXrSQIiT4fIwZh3x6ZNnjQtVwau47rW2j0EjW1o/TwMMzxq9R6jeE+?=
- =?us-ascii?Q?N+IHEm8mSrbQ6Z5hmXOkTNgXVpiEfsJdzyiFhZh0rMUOg77QiBuS4xvNNfTm?=
- =?us-ascii?Q?9deHUDRKBZuoomvlkgmngwNOuHQr9+cs558dzXGu3DZeumVrK13zOoAtS5vy?=
- =?us-ascii?Q?pXs7j/8X07CV1ZlmYHNAQyuybFQ2kTMp4nP+w/sh96r3oelucZ/0kETcV60B?=
- =?us-ascii?Q?fZzFhRrdRBJgUVJppTtMDPL49O8WrurcdH9jlpH21QlGILbbbQsNT/FxrOAA?=
- =?us-ascii?Q?CRgPmV5UtKCJ1RlA2k/+8deH56UqC/ZtyeKZlNRKI8zve60zRMObSxS9REoB?=
- =?us-ascii?Q?HXqCTYIdM1FkOGOmIVKZeIbrfJDk8fozMWSYsWBGAla07zLIhcJfTgMH5tWq?=
- =?us-ascii?Q?AfT8YuDcgkmh1C2Yk2mtH4TIoS1XOtmamfuno4shRWFI4Onahmry62HkG1M2?=
- =?us-ascii?Q?O2QMvD6jjdDkP0vMJvrJ2DX1eDjL/hWyRTGoVE+IMb42JHV+lbCMyeWqb2zc?=
- =?us-ascii?Q?5rF12HxDBvIVKIA0kOAVnSmetXxS3XSb0Rxl9Ks1aq+4nu72SjYCjvs5sG3s?=
- =?us-ascii?Q?Vp7v9iMe+SAECU69hfwnOOrFk55wJBxcEsYEpDURU/gPRkmpZE7Y1HEwovGS?=
- =?us-ascii?Q?99mCFggB78EN7K8IrvR83z9R7xhtyWWS1UOeDUHhoPLyTgMahBLktgAmwowb?=
- =?us-ascii?Q?/YajfIwHLiX77VV0mV1j66oGIRlTuStmWSQN7h9XKdhe2oN+Oj0CnTXCiQhQ?=
- =?us-ascii?Q?UzDgtJvI8G8fdTijsMrdKc7HPeYjj91CrxqYkZYmUhs7eX0CGoiyzQ4gfegM?=
- =?us-ascii?Q?PU1G8ojeqUewNrqJgcrBXXgBkJM9DxXb3jaTuavNQApDLu9kndT3MMFiXog9?=
- =?us-ascii?Q?1ug8taht1BHIU2Tnqm5LUB472CzV51xJshqZAnw4zN5sbUtJKJPpZ1nxt61G?=
- =?us-ascii?Q?WX6nMnSCt3nDcIIdKmoF0vKS+Q7CbIaOm2/FeHyA/Zyms2D0FcO9RTP+ys9I?=
- =?us-ascii?Q?cVLnTwjHInpXMZQ1SK6KJAEp8a+d4vsoXMSk0hG5Y7xBbPMmq57LHhUb5fxk?=
- =?us-ascii?Q?dLv37bdV9QOsSGCDmjFQDWmHkpnbjshqst6piDPbjEnwL2BzXb1AJzKguLuf?=
- =?us-ascii?Q?haEXu+0OMMUQPdafr4WYpc9PtNMVtKKw?=
-X-Forefront-Antispam-Report:
-	CIP:134.204.222.53;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:lcopzesaa002.seagate.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	RBTfJqKQowzs1eDgORLL1s9GFNsu/HA4DAxEhgoOJKWHDOWtxmc7sNF8vm+qykwDBzxAogeWOh2ailPvQZYjC/Yv9MUNmq4cHFNVWc8dj4KPymip5zEuZHq/PYewVM97PsAqrAuAU6r1FPc4KstXH4HUxUk+dzWJYLwcCEKIkqo1IOSwiR4Orx9Dw14qZ8fE/yCDYwrySyOu1fgj3Rv45WrACiwieQBvHAtpfp47GiXOkugqUpL8dQv0k9jCa775r45VWJo4OK1hf4nJR+D1UM0gHXo0jJvgpMsHfcaXq29u4e9f7EaIHv9wubdPGOXLp5wdflcm9zZtFr/AQ9lqmEzVZMeSFSMInrzf0efpa1uRgH8iiRi+Wy2es5XM6rcluRZ4VzLlgud8bGiYJJP3f81trmOl89gnCfUZ6MfjRR3LalZMZYAIIlLt347Vz04dyLovzU5m5hOiDpjcGRqHJvKXQwrfal6sHxanVyQJNDde0kmJd5qs7EhLDh8rVkGzLls1UWJQRA+auIp/J3Sr8vbrHZPpjAFgOLhHC+YV/jSEq1qQHiG0X3ZnO01KcT6TPuZBxtHs+7jWKcGEP2jGGYUFwYFLLdtJnrFHYoPGkwBWoI+jKdHSYNRvdii5clZ1
-X-OriginatorOrg: seagate.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2024 22:49:31.6566
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48493879-7fc5-487e-e1a5-08dd1323960d
-X-MS-Exchange-CrossTenant-Id: d466216a-c643-434a-9c2e-057448c17cbe
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d466216a-c643-434a-9c2e-057448c17cbe;Ip=[134.204.222.53];Helo=[lcopzesaa002.seagate.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB75.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR20MB5190
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241202155542.22111-1-nathan.fontenot@amd.com>
 
-According to CXL 3.1 specification, 8.1.3.8 DVSEC CXL Range Registers "A CXL.mem-capable device is permitted to report zero memory size."
-This patch will allow a CXL type3 device to be initialized with zero memory size, when there is no memory device property provided ( neither volatile, persistent, nor dynamic region).
+Hi Nathan,
 
-Signed-off-by: Hongjian Fan <hongjian.fan@seagate.com>
----
- hw/mem/cxl_type3.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 5cf754b38f..35caa186ca 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -159,7 +159,12 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-     int len = 0;
- 
-     if (!ct3d->hostpmem && !ct3d->hostvmem && !ct3d->dc.num_regions) {
--        return 0;
-+        // zero memory size device. Build one entry with size 0
-+        table = g_malloc0(CT3_CDAT_NUM_ENTRIES * sizeof(*table));
-+        ct3_build_cdat_entries_for_mr(&(table[0]), dsmad_handle++,
-+                                0, false, false, 0);
-+        *cdat_table = g_steal_pointer(&table);
-+        return CT3_CDAT_NUM_ENTRIES;
-     }
- 
-     if (ct3d->hostvmem) {
-@@ -712,8 +717,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
- 
-     if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem
-         && !ct3d->dc.num_regions) {
--        error_setg(errp, "at least one memdev property must be set");
--        return false;
-+        // no memdev property provided. Default to zero memory size device
-+        ct3d->cxl_dstate.pmem_size = 0;
-+        ct3d->cxl_dstate.vmem_size = 0;
-+        ct3d->cxl_dstate.static_mem_size = 0;
-+        return true;
-     } else if (ct3d->hostmem && ct3d->hostpmem) {
-         error_setg(errp, "[memdev] cannot be used with new "
-                          "[persistent-memdev] property");
+[auto build test ERROR on cxl/next]
+[also build test ERROR on tip/x86/core]
+[cannot apply to linus/master cxl/pending v6.13-rc1 next-20241128]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nathan-Fontenot/cxl-Update-Soft-Reserved-resources-upon-region-creation/20241202-235757
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20241202155542.22111-1-nathan.fontenot%40amd.com
+patch subject: [PATCH] cxl: Update Soft Reserved resources upon region creation
+config: arm-randconfig-004-20241203 (https://download.01.org/0day-ci/archive/20241203/202412030858.l8DbOnRQ-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241203/202412030858.l8DbOnRQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412030858.l8DbOnRQ-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from kernel/resource.c:21:
+   In file included from include/linux/pseudo_fs.h:4:
+   In file included from include/linux/fs_context.h:14:
+   In file included from include/linux/security.h:33:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> kernel/resource.c:1183:36: warning: declaration of 'union acpi_subtable_headers' will not be visible outside of this function [-Wvisibility]
+    1183 | static int srmem_parse_cfmws(union acpi_subtable_headers *hdr,
+         |                                    ^
+>> kernel/resource.c:1212:2: error: call to undeclared function 'acpi_table_parse_cedt'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1212 |         acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
+         |         ^
+   kernel/resource.c:1212:2: note: did you mean 'acpi_table_parse'?
+   include/linux/acpi.h:914:19: note: 'acpi_table_parse' declared here
+     914 | static inline int acpi_table_parse(char *id,
+         |                   ^
+   2 warnings and 1 error generated.
+
+
+vim +/acpi_table_parse_cedt +1212 kernel/resource.c
+
+  1182	
+> 1183	static int srmem_parse_cfmws(union acpi_subtable_headers *hdr,
+  1184				     void *arg, const unsigned long unused)
+  1185	{
+  1186		struct acpi_cedt_cfmws *cfmws;
+  1187		struct srmem_arg *args = arg;
+  1188		struct resource cfmws_res;
+  1189		struct resource *res;
+  1190	
+  1191		res = args->res;
+  1192	
+  1193		cfmws = (struct acpi_cedt_cfmws *)hdr;
+  1194		cfmws_res = DEFINE_RES_MEM(cfmws->base_hpa,
+  1195					   cfmws->base_hpa + cfmws->window_size);
+  1196	
+  1197		if (resource_overlaps(&cfmws_res, res)) {
+  1198			args->overlaps += 1;
+  1199			return 1;
+  1200		}
+  1201	
+  1202		return 0;
+  1203	}
+  1204	
+  1205	static bool resource_overlaps_cfmws(struct resource *res)
+  1206	{
+  1207		struct srmem_arg arg = {
+  1208			.res = res,
+  1209			.overlaps = 0
+  1210		};
+  1211	
+> 1212		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
+  1213	
+  1214		if (arg.overlaps)
+  1215			return true;
+  1216	
+  1217		return false;
+  1218	}
+  1219	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
