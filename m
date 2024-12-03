@@ -1,283 +1,300 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61C71FCD14
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 18:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB871E868;
+	Tue,  3 Dec 2024 18:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733249206; cv=none; b=C2aUh7te0utbeFEJ7n7NLSHscvgRLMgIm+1CnO2rsSF4F4ZuMmOyDeZRevumq3ooEKh0s35bA+Ce6nGWQqYI9roKcSG9I/Um15ZT+gtO5wQgKoDPNSbnHUEKG2vdTJ23ImxvfDT1rOYETa8oUm8kBgiUivtjX7029YucEj9JGfk=
+	t=1733250219; cv=none; b=Zpsre+aY7aaVTHn4asxvQWk6u5K8iqiF96PZWs6SFQOpmdn0JSwmWXHCQu6RYNYM7FjMnxrmLj2n06zdu8wR4+Ez/L5hGyVeODxDs4rgtq5bssqLksbtRe9yRYdP1rnepm2JzNqC96x+BZwcBqELwJ3UMRQHZHdQrPQFlC0QVoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733249206; c=relaxed/simple;
-	bh=MB5Vyv0GUCOz0eoEb699728K7/UVG0ATso4wgMgsgTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T4p1heK1lJ/OZGtiB+fM1gno+RHSYxuKojB4IfvlwU0lKYdRVVKkeuPDidXlTsUckc3uUEXClxuXvORxIuljx3PDHFvO5nTqyLZwY/WhE0dq14JW27aWNf4FS9nFmnFPVPDclzK7utLR+kzS5y/dmpNzztM1Plw1XEWKW51JWU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmjfxVhs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1733250219; c=relaxed/simple;
+	bh=QzF6Byl04Y7zw2pdSphTHXzXqOVNn8t17tzJb0f//jQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=taqxklzCIV06OSjNQW/4VfDTNUu22A/XjlRynk2wJdOoXwXObGZZrv8c8+r3SduUustP3IBV6vMWeid9b3z2LHofGyyeRkiNgJpYoIW+c2xJa8KeHWEUSFZx8kTHP3tqSatYEwslO3HVmCJXvrhghgtAVc9jpd3rOxhNR0cWmSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUdF73ZA; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmjfxVhs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUdF73ZA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733249204; x=1764785204;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MB5Vyv0GUCOz0eoEb699728K7/UVG0ATso4wgMgsgTQ=;
-  b=DmjfxVhsSu3ZNGjPPqIVw55nXPp8qwTp7hjPFBBjTS9aj8gPaU9SisuP
-   9a1ZcVLpsgWQeDRRm4yaBVl6q7xyQOHS3dHft1Y6FDc7zlKbVl0V7RqPn
-   whcScoBY1Sf9WZ2cdHnZAe3bXvo6gzRYnlpqi6wV2pYP9h6paz2CkA00X
-   R7C4E7lWzzgvgIBX63y+/9g3WC76lsZofUJ/t0Unv3qU6KSKg9FNWts+Q
-   Kq61g126GAcKaEBRzP0ROrf9Brh0E6rp9ePk0Na2zF/ReeTLDcJv9y2qm
-   yzx4/7s+RG08ncufjEYB7NeRM8AS2sge3NBIw7n5y41uFQd0R0spEP1KA
-   A==;
-X-CSE-ConnectionGUID: 6b3NGvGBQVOYz7mZfhgRZg==
-X-CSE-MsgGUID: oHwuMXOfQjK/h+f2ODjhUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="44873353"
+  t=1733250217; x=1764786217;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QzF6Byl04Y7zw2pdSphTHXzXqOVNn8t17tzJb0f//jQ=;
+  b=OUdF73ZAREgJEyQxvfxFn0gp7GS/rkn/X8nofWNsKS4cRWqJIjGbFzn5
+   6l5hCIgG93CCkR3HmAoHQYNYwsLkG25JgS8g4IB5+rQwKc8iAJM0NJcKK
+   ebCPRmZFy4pEMlWNnvHt0va4PUxoc/usWZyB2E6E8E86daWm1CxcML9Cf
+   GqH7tp8gCcTL7lZ9cjyVtuuyCmQBD1LSf6h7RjEc9WPla8uxp2wYTuJBy
+   dmAzXRhnY0/jt2fgx+A39+DVXxLcg6qshbEWfRLVN4se4FdJ+1FQPps2b
+   EB80sxUUO8ZnSFBIMeI/SpRbNIQnsYmJll/8ekrP5AWNKe8TPCX1GN+IE
+   Q==;
+X-CSE-ConnectionGUID: E0w0iJ9pR8ynEduFoA3HQw==
+X-CSE-MsgGUID: rcrXFHodRYKbtXZbSPH8uQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="33615098"
 X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="44873353"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:06:44 -0800
-X-CSE-ConnectionGUID: DRxoMXcxTgusEu5E2g9hpQ==
-X-CSE-MsgGUID: 4LSJNMDtT0aFwzROkL5sUw==
+   d="scan'208";a="33615098"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:23:33 -0800
+X-CSE-ConnectionGUID: +rS42ysjRSqfRI1i6r6ABA==
+X-CSE-MsgGUID: GUomxcKuQGaavVLwWWR/FA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="93364008"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.238]) ([10.125.111.238])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:06:43 -0800
-Message-ID: <52dab42a-ba38-4977-81a5-8be76639871c@intel.com>
-Date: Tue, 3 Dec 2024 11:06:42 -0700
+   d="scan'208";a="130969713"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.245.45])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:23:30 -0800
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>, linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Yao Xingtao <yaoxt.fnst@fujitsu.com>, linux-kernel@vger.kernel.org,
+ Li Ming <ming4.li@outlook.com>
+Subject:
+ Re: [PATCH 0/3] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Tue, 03 Dec 2024 19:23:28 +0100
+Message-ID: <1875878.sHLxoZxqIA@fdefranc-mobl3>
+In-Reply-To: <Z0Tzif55CcHuujJ-@aschofie-mobl2.lan>
+References:
+ <20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com>
+ <Z0Tzif55CcHuujJ-@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 16/20] fwctl/cxl: Add support to filter exclusive
- features
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
- vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20241115212745.869552-1-dave.jiang@intel.com>
- <20241115212745.869552-17-dave.jiang@intel.com>
- <20241122150546.00004b18@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241122150546.00004b18@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+On Monday, November 25, 2024 11:00:41=E2=80=AFPM GMT+1 Alison Schofield wro=
+te:
+> On Fri, Nov 22, 2024 at 04:51:51PM +0100, Fabio M. De Francesco wrote:
+> > The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Ho=
+st
+> > Physical Address (HPA) windows that are associated with each CXL Host
+> > Bridge. Each window represents a contiguous HPA that may be interleaved
+> > with one or more targets (CXL v3.1 - 9.18.1.3).
+> >=20
+> > The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> > memory to which systems cannot send transactions. On those systems, BIOS
+> > publishes CFMWS which communicate the active System Physical Address (S=
+PA)
+> > ranges that map to a subset of the Host Physical Address (HPA) ranges. =
+The
+> > SPA range trims out the hole, and capacity in the endpoint is lost with=
+ no
+> > SPA to map to CXL HPA in that hole.
+> >=20
+> > In the early stages of CXL Regions construction and attach on platforms
+> > with Low Memory Holes, the driver fails and returns an error because it
+> > expects that the CXL Endpoint Decoder range is a subset of the Root
+> > Decoder's.
+> >=20
+> > Then detect SPA/HPA misalignment and allow CXL Regions construction and=
+=20
+> > attach if and only if the misalignment is due to x86 Low Memory Holes.
+> >=20
+>=20
+> Hi Fabio,
+>=20
+> I took this for a test drive in cxl-test - thanks for that patch!
+>=20
+> Here's a couple of observations on what users will see. Just stirring
+> the pot here, not knowing if there is, or even needs to be an explanation
+> to userspace about LMH.
+>=20
+> 1) Users will see that the endpoint decoders intend to map more than the
+> root decoder. Users may question their trimmed region size.
+>=20
+> 2) At least in this example, I don't think users can re-create this
+> region in place, ie via hotplug.  Once this region is destroyed, we
+> default to creating a smaller, aligned region, in its place.
+>=20
+Hi Alison,
+
+Thank you for your valuable comments and suggestions on my series. I will=20
+take them into account for the next version (v2).
+
+I also appreciate your observations regarding the consistency between the t=
+wo=20
+methods of creating regions. I agree that we should aim for more uniformity=
+ in
+this area and we will consider that in the future but we will only create s=
+pec=20
+standard aligned  user created regions now.
+
+Thanks again for your insights.
+
+=46abio
+>
+> cxl-cli output is appended showing the auto created region, it's decoders,
+> and then the creation of a user requested region, not exactly in its
+> place.
+>=20
+>=20
+> Upon load of cxl-test:
+>=20
+> # cxl list -r region0 --decoders -u
+> [
+>   {
+>     "root decoders":[
+>       {
+>         "decoder":"decoder0.0",
+>         "resource":"0xf010000000",
+>         "size":"768.00 MiB (805.31 MB)",
+>         "interleave_ways":1,
+>         "max_available_extent":0,
+>         "volatile_capable":true,
+>         "qos_class":42,
+>         "nr_targets":1
+>       }
+>     ]
+>   },
+>   {
+>     "port decoders":[
+>       {
+>         "decoder":"decoder1.0",
+>         "resource":"0xf010000000",
+>         "size":"1024.00 MiB (1073.74 MB)",
+>         "interleave_ways":1,
+>         "region":"region0",
+>         "nr_targets":1
+>       },
+>       {
+>         "decoder":"decoder6.0",
+>         "resource":"0xf010000000",
+>         "size":"1024.00 MiB (1073.74 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":4096,
+>         "region":"region0",
+>         "nr_targets":2
+>       }
+>     ]
+>   },
+>   {
+>     "endpoint decoders":[
+>       {
+>         "decoder":"decoder10.0",
+>         "resource":"0xf010000000",
+>         "size":"1024.00 MiB (1073.74 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":4096,
+>         "region":"region0",
+>         "dpa_resource":"0",
+>         "dpa_size":"512.00 MiB (536.87 MB)",
+>         "mode":"ram"
+>       },
+>       {
+>         "decoder":"decoder13.0",
+>         "resource":"0xf010000000",
+>         "size":"1024.00 MiB (1073.74 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":4096,
+>         "region":"region0",
+>         "dpa_resource":"0",
+>         "dpa_size":"512.00 MiB (536.87 MB)",
+>         "mode":"ram"
+>       }
+>     ]
+>   }
+> ]
+>=20
+> After destroying the auto region, root decoder show the 768MiB available:
+>=20
+> # cxl list -d decoder0.0 -u
+> {
+>   "decoder":"decoder0.0",
+>   "resource":"0xf010000000",
+>   "size":"768.00 MiB (805.31 MB)",
+>   "interleave_ways":1,
+>   "max_available_extent":"768.00 MiB (805.31 MB)",
+>   "volatile_capable":true,
+>   "qos_class":42,
+>   "nr_targets":1
+> }
+>=20
+>=20
+> # cxl create-region -d decoder0.0 -m mem5 mem4
+> {
+>   "region":"region0",
+>   "resource":"0xf010000000",
+>   "size":"512.00 MiB (536.87 MB)",
+>   "type":"ram",
+>   "interleave_ways":2,
+>   "interleave_granularity":256,
+>   "decode_state":"commit",
+>=20
+> snip
+>=20
+> # cxl list -r region0 --decoders -u
+> [
+>   {
+>     "root decoders":[
+>       {
+>         "decoder":"decoder0.0",
+>         "resource":"0xf010000000",
+>         "size":"768.00 MiB (805.31 MB)",
+>         "interleave_ways":1,
+>         "max_available_extent":"256.00 MiB (268.44 MB)",
+>         "volatile_capable":true,
+>         "qos_class":42,
+>         "nr_targets":1
+>       }
+>     ]
+>   },
+>   {
+>     "port decoders":[
+>       {
+>         "decoder":"decoder1.0",
+>         "resource":"0xf010000000",
+>         "size":"512.00 MiB (536.87 MB)",
+>         "interleave_ways":1,
+>         "region":"region0",
+>         "nr_targets":1
+>       },
+>       {
+>         "decoder":"decoder6.0",
+>         "resource":"0xf010000000",
+>         "size":"512.00 MiB (536.87 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":256,
+>         "region":"region0",
+>         "nr_targets":2
+>       }
+>     ]
+>   },
+>   {
+>     "endpoint decoders":[
+>       {
+>         "decoder":"decoder10.0",
+>         "resource":"0xf010000000",
+>         "size":"512.00 MiB (536.87 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":256,
+>         "region":"region0",
+>         "dpa_resource":"0",
+>         "dpa_size":"256.00 MiB (268.44 MB)",
+>         "mode":"ram"
+>       },
+>       {
+>         "decoder":"decoder13.0",
+>         "resource":"0xf010000000",
+>         "size":"512.00 MiB (536.87 MB)",
+>         "interleave_ways":2,
+>         "interleave_granularity":256,
+>         "region":"region0",
+>         "dpa_resource":"0",
+>         "dpa_size":"256.00 MiB (268.44 MB)",
+>         "mode":"ram"
+>       }
+>     ]
+>   }
+> ]
+>=20
+>=20
 
 
 
-On 11/22/24 8:05 AM, Jonathan Cameron wrote:
-> On Fri, 15 Nov 2024 14:25:49 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Add support to allow filtering of CXL features that are exclusive to the
->> kernel and make them not visible to user space. The "get supported
->> features" mailbox command returned to the userspace is emulated and
->> will skip the features that is marked exclusive for the kernel. The
->> exclusion allows certain the feature setting of certain commands such
->> as claimed by RAS to be exclusive to the kernel.
-> 
-> Well behaved software is only going to issue features that were returned
-> by get_supported_features.  However we need to block badly behaved software
-> too.  So a check is needed in the set_feature() / get_feature() paths.
-> 
-> A few queries inline but basically LGTM other than that.
-> 
-> Jonathan
-> 
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  drivers/cxl/core/mbox.c | 115 ++++++++++++++++++++++++++++++++++++----
->>  drivers/fwctl/cxl/cxl.c |   7 +--
->>  include/cxl/features.h  |  52 ++++++++++++++++++
->>  include/cxl/mailbox.h   |   8 ++-
->>  4 files changed, 168 insertions(+), 14 deletions(-)
->>  create mode 100644 include/cxl/features.h
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index e7c5c709ac79..12ace2951f7c 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -5,6 +5,7 @@
->>  #include <linux/ktime.h>
->>  #include <linux/mutex.h>
->>  #include <linux/unaligned.h>
->> +#include <cxl/features.h>
->>  #include <cxl/mailbox.h>
->>  #include <cxlpci.h>
->>  #include <cxlmem.h>
->> @@ -897,6 +898,78 @@ static int handle_mailbox_cmd_from_fwctl(struct cxl_mailbox *cxl_mbox,
->>  	return 0;
->>  }
->>  
->> +/*
->> + * Emulate the 'get supported features' mailbox command and only copy out the
->> + * features that are not marked as exclusive for kernel.
->> + */
->> +static void cxl_mbox_get_supported_features_filtered(struct cxl_mailbox *cxl_mbox,
->> +						     struct cxl_mbox_cmd *mbox_cmd)
->> +{
->> +	struct cxl_mbox_get_sup_feats_in *feat_in = mbox_cmd->payload_in;
->> +	struct cxl_mbox_get_sup_feats_out *feat_out = mbox_cmd->payload_out;
->> +	const int feat_out_size = sizeof(*feat_out);
-> Worth while?  I'd just use sizeof(*feat_out) inline.
-> Compiler will sort out out and it is self documenting.
-
-ok
-
-> 
->> +	struct cxl_feat_entry *pos;
->> +	const int feat_ent_size = sizeof(*pos);
-> Same for this.
-
-ok
-
-> 
->> +	int out_count, ents, u;
->> +	u32 count;
->> +	u16 start;
->> +
->> +	count = le32_to_cpu(feat_in->count);
->> +	start = le16_to_cpu(feat_in->start_idx);
->> +	ents = count / sizeof(struct cxl_feat_entry);
->> +	ents -= start;
-> 
-> You've lost me on this maths. ents is what?
-
-So I'm trying to validate the number of entries I need to copy out when 'start' index gets thrown in the fray. So it calculates the number of entries the output buffer is capable off, and then minus the start index. Although now I think about it, I should compare that to the (total driver supported features - start). Having to deal with 'start' with this "emulation" is a pain.  
-
-> 
-> 
->> +	if (ents < 0) {
->> +		mbox_cmd->size_out = 0;
->> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
->> +		return;
->> +	}
->> +
->> +	if (mbox_cmd->size_out < feat_out_size) {
->> +		mbox_cmd->size_out = 0;
->> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
->> +		return;
->> +	}
->> +
->> +	feat_out->supported_feats =
->> +		cpu_to_le16(cxl_mbox->num_user_feats);
->> +	if (ents == 0) {
->> +		feat_out->num_entries = cpu_to_le16(0);
->> +		mbox_cmd->size_out = feat_out_size;
->> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
->> +		return;
->> +	}
->> +
->> +	pos = &feat_out->ents[0];
->> +	out_count = feat_out_size;
->> +	for (int i = 0, u = 0; i < cxl_mbox->num_features; i++) {
->> +		struct cxl_feature *feat = &cxl_mbox->entries[i];
->> +
->> +		if (feat->exclusive)
->> +			continue;
->> +
->> +		if (u < start) {
->> +			u++;
->> +			continue;
->> +		}
->> +
->> +		memcpy(pos, &feat->entry, feat_ent_size);
->> +		out_count += feat_ent_size;
->> +		pos++;
->> +		u++;
->> +
->> +		if (u == count)
->> +			break;
->> +
->> +		/* Make sure it does not go over total output buffer size */
->> +		if (out_count + feat_ent_size >= mbox_cmd->size_out)
->> +			break;
->> +	}
->> +
->> +	feat_out->num_entries = cpu_to_le16(u);
->> +	mbox_cmd->size_out = out_count;
->> +	mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
->> +}
-> 
-> 
->> diff --git a/include/cxl/features.h b/include/cxl/features.h
->> new file mode 100644
->> index 000000000000..6074a3f79d70
->> --- /dev/null
->> +++ b/include/cxl/features.h
->> @@ -0,0 +1,52 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/* Copyright(c) 2024 Intel Corporation. */
->> +#ifndef __CXL_FEATS_H_
->> +#define __CXL_FEATS_H_
->> +
->> +#include <linux/uuid.h>
->> +
->> +#define CXL_FEAT_PATROL_SCRUB_UUID						\
->> +	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,	\
->> +		  0x06, 0xdb, 0x8a)
-> 
-> We should figure out ordering for this one to avoid introducing the UUIDs in
-> Shiju's set then pulling them here.   Shiju, maybe just use the UUID
-> part of this file as a patch in your series?
-> 
-> The exclusive array belongs only with this patch.
-> 
-> I guess it doesn't really matter if we end up with repeated UUID definitions
-> and cleanup after though.
-> 
->> +
->> +#define CXL_FEAT_ECS_UUID							\
->> +	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,	\
->> +		  0x89, 0x33, 0x86)
->> +
->> +#define CXL_FEAT_SPPR_UUID							\
->> +	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,	\
->> +		  0x75, 0x68, 0xbb)
->> +
->> +#define CXL_FEAT_HPPR_UUID							\
->> +	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,	\
->> +		  0xfb, 0x0e, 0x24)
->> +
->> +#define CXL_FEAT_CACHELINE_SPARING_UUID						\
->> +	UUID_INIT(0x96C33386, 0x91dd, 0x44c7, 0x9e, 0xcb, 0xfd, 0xaf, 0x65,	\
->> +		  0x03, 0xba, 0xc4)
->> +
->> +#define CXL_FEAT_ROW_SPARING_UUID						\
->> +	UUID_INIT(0x450ebf67, 0xb135, 0x4f97, 0xa4, 0x98, 0xc2, 0xd5, 0x7f,	\
->> +		  0x27, 0x9b, 0xed)
->> +
->> +#define CXL_FEAT_BANK_SPARING_UUID						\
->> +	UUID_INIT(0x78b79636, 0x90ac, 0x4b64, 0xa4, 0xef, 0xfa, 0xac, 0x5d,	\
->> +		  0x18, 0xa8, 0x63)
->> +
->> +#define CXL_FEAT_RANK_SPARING_UUID						\
->> +	UUID_INIT(0x34dbaff5, 0x0552, 0x4281, 0x8f, 0x76, 0xda, 0x0b, 0x5e,	\
->> +		  0x7a, 0x76, 0xa7)
->> +
->> +#define CXL_FEAT_UUID_MAX	8
-> 
-> Why not size automatically and use ARRAY_SIZE() to figure out size?
-
-will do
-
-> 
->> +static uuid_t cxl_exclusive_feats[CXL_FEAT_UUID_MAX] = {
->> +	CXL_FEAT_PATROL_SCRUB_UUID,
->> +	CXL_FEAT_ECS_UUID,
->> +	CXL_FEAT_SPPR_UUID,
->> +	CXL_FEAT_HPPR_UUID,
->> +	CXL_FEAT_CACHELINE_SPARING_UUID,
->> +	CXL_FEAT_ROW_SPARING_UUID,
->> +	CXL_FEAT_BANK_SPARING_UUID,
->> +	CXL_FEAT_RANK_SPARING_UUID,
->> +};
->> +
->> +#endif
-> 
 
