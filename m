@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7B38460;
-	Tue,  3 Dec 2024 23:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA928460;
+	Tue,  3 Dec 2024 23:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733267157; cv=none; b=BldsYSqcZGZPL0kd8aQjAxk8ghe1sRICkuXkeTaw9VUn9pmpQq2aamdd8sSSYrEZMopNRyKOOLjBXSxnsxl3k8kmaNuBkydwK0aD0O1oCwq9xiIO597VoZ7dn8BHCTMgi5M3Wzp4F3qcOBKx6BX/Ds+zbIwW+XaYP6XGOeYwaDE=
+	t=1733267332; cv=none; b=mATviOIdyFgokgp7PsPlpg0yubT92ZmyBeMiiYONCv2P1nPVj7aQgH/UExwJGTNsW7d1PReLns856o/lnn9PqvHDdcboyKRujupZf+0sbq3OiiLN9PHz8s7C4v1bv1ES2+ik1JC//RODj4+rmJrWwFzr4m/jXtphGqsaZQM8rlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733267157; c=relaxed/simple;
-	bh=rVT526fNSvIbb/Xk1Um21/qmPnAbW+h/jglS+K/QzgM=;
+	s=arc-20240116; t=1733267332; c=relaxed/simple;
+	bh=rkEp1O41NocrRkA4h9ZAwh5CCEMQ39biIWMtOUQkeSU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NqnevpTRTIKFhVJGsAbfiGFxMfWC+UM0vAhLmLdgF4VwqZgxxkhNhFcfnqhJhT8U1flCrhUf16z4emluH1Fvi0SeD7AWtxBVXTbhz0BGjz0vTNw7ySHhhiJcN2taHAy8jFN6GE11IZuk//yondRNxyWMRpGN1gvYbIvZ9AYSzWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P69f/2Kg; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=MLSrWUtRxKspTJaJDLuL3DTxFK6Y901NXr020sqdsf8wnC4sNHrCfkqR5ZsIauYgIEbf8pg7+UyvZQhLFn8Ayj774jA+Ne4+349hbn7aEkompAECJ+g0LYQh4l2/vz63XPsF8aQBlYosn8HP2eMdBHX5q4TfYLo2ewSlP+tATyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ULLyg7me; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P69f/2Kg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ULLyg7me"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733267156; x=1764803156;
+  t=1733267331; x=1764803331;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=rVT526fNSvIbb/Xk1Um21/qmPnAbW+h/jglS+K/QzgM=;
-  b=P69f/2KgGM6WQhGKP9P7RX7f8MTWeol8cuHygfPhxS5MHlnzgWIfgoN/
-   70GE+wvVbQXUwpNLWDD539LRQJzFO1mztTeIREmlZa7Ez6DEp2w9fjgt0
-   CEBOLpkQxZCKzK/iv5naW98Iiat8CPsOzK2XEy/wr9n+TJ+W7oRbNaN+e
-   XiykPOkklrXHHrOfw129ta1S0Plr+M0Ws6ygedE8gcrGXDUOO4DuG/qc6
-   QKaYHPR1uTP5M7ykxVe1pdg++7fQTbtDptY/O4lo6gHXHqbYhkytMX23L
-   GGYXjOT/k1wwvOPJUttva6h9A8s5uB+s8dsq+eBAmbHWZius5hEsgXVxf
-   w==;
-X-CSE-ConnectionGUID: cxgLy57tTrKhtVoRg3rEDA==
-X-CSE-MsgGUID: uOqAvVhBSvGki6ZXsBRXlw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="33388177"
+  bh=rkEp1O41NocrRkA4h9ZAwh5CCEMQ39biIWMtOUQkeSU=;
+  b=ULLyg7meGhb3/C8jKPzx+6rxa0L+TWYj/hPTAmAc2LXm0sPVlomCXCHt
+   y/8przoRYLiSQUGpS4XMRaUZEBe0dBtXHCzGxUQoeWm5WSvA/Eo1MCR1F
+   ar+NGr8aLGNaz0bI0n8mWlrVDli1rzgiHUXD22EachV3xmcsKuwYr4d2Z
+   0gB3M8rnmG73aMEA2PspLVsarWdBMHbjXUc5G92YlpeiSR7KdGnJmg3lZ
+   mC9uRGTdJuVZl9WNAJtEhsmbpluTxafRtbLS3j1NgLJnrO61N5qa6VBXg
+   WSXeFw2BKABFJGOlRhSFvxaLWLpYD2J8iexDRaF9iVh2PQNlcSbrBf9ia
+   A==;
+X-CSE-ConnectionGUID: PvD/9QI5RNehTiNpkKIT/Q==
+X-CSE-MsgGUID: X0upzJVwRRCaj1oH+xt5FA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="44893517"
 X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="33388177"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 15:05:56 -0800
-X-CSE-ConnectionGUID: HbQHPJKAQP6CewLMWTB50Q==
-X-CSE-MsgGUID: iM48SLyrQ1+0i9xLBpawBw==
+   d="scan'208";a="44893517"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 15:08:50 -0800
+X-CSE-ConnectionGUID: u6eN/TqeSuyW+5LeSvCW8w==
+X-CSE-MsgGUID: wa36mqrvSiSq6WFtyviRVg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
-   d="scan'208";a="93669878"
+   d="scan'208";a="93471388"
 Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.238]) ([10.125.111.238])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 15:05:55 -0800
-Message-ID: <f5d12829-5a2d-4522-a66b-e32794c97797@intel.com>
-Date: Tue, 3 Dec 2024 16:05:54 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 15:08:49 -0800
+Message-ID: <8d591c40-7954-441a-886d-8621fac16094@intel.com>
+Date: Tue, 3 Dec 2024 16:08:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,84 +52,206 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/5] acpi: numa: Add support to enumerate and store
- extended linear address mode
+Subject: Re: [RFC PATCH v2 2/5] acpi/hmat / cxl: Add extended linear cache
+ support for CXL
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
  bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
  dave@stgolabs.net, alison.schofield@intel.com, ira.weiny@intel.com
 References: <20241112221335.432583-1-dave.jiang@intel.com>
- <20241112221335.432583-2-dave.jiang@intel.com>
- <20241126161622.00005ee8@huawei.com>
+ <20241112221335.432583-3-dave.jiang@intel.com>
+ <20241126162301.0000090c@huawei.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241126161622.00005ee8@huawei.com>
+In-Reply-To: <20241126162301.0000090c@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/26/24 9:16 AM, Jonathan Cameron wrote:
-> On Tue, 12 Nov 2024 15:12:33 -0700
+On 11/26/24 9:23 AM, Jonathan Cameron wrote:
+> On Tue, 12 Nov 2024 15:12:34 -0700
 > Dave Jiang <dave.jiang@intel.com> wrote:
 > 
->> Store the address mode as part of the cache attriutes. Export the mode
->> attribute to sysfs as all other cache attributes.
+>> The current cxl region size only indicates the size of the CXL memory
+>> region without accounting for the extended linear cache size. Retrieve the
+>> cache size from HMAT and append that to the cxl region size for the cxl
+>> region range that matches the SRAT range that has extended linear cache
+>> enabled.
 >>
->> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+>> The SRAT defines the whole memory range that includes the extended linear
+>> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
+>> Cache Information Structure defines the size of the extended linear cache
+>> size and matches to the SRAT Memory Affinity Structure by the memory
+>> proxmity domain. Add a helper to match the cxl range to the SRAT memory
+>> range in order to retrieve the cache size.
+>>
+>> There are several places that checks the cxl region range against the
+>> decoder range. Use new helper to check between the two ranges and address
+>> the new cache size.
+>>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> One trivial suggestion that I don't care that much about.
+> Hi Dave,
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> A few minor comments inline.
+> 
+> Thanks,
+> 
+> Jonathan
 > 
 >> ---
->> v2:
->> - Fix spelling errors (Jonathan)
->> - Change UNKNOWN to RESERVED (Jonathan)
->> ---
->>  Documentation/ABI/stable/sysfs-devices-node | 6 ++++++
->>  drivers/acpi/numa/hmat.c                    | 3 +++
->>  drivers/base/node.c                         | 2 ++
->>  include/linux/node.h                        | 7 +++++++
->>  4 files changed, 18 insertions(+)
+>>  drivers/acpi/numa/hmat.c  | 44 ++++++++++++++++++++++++
+>>  drivers/cxl/core/Makefile |  1 +
+>>  drivers/cxl/core/acpi.c   | 11 ++++++
+>>  drivers/cxl/core/core.h   |  3 ++
+>>  drivers/cxl/core/region.c | 70 ++++++++++++++++++++++++++++++++++++---
+>>  drivers/cxl/cxl.h         |  2 ++
+>>  include/linux/acpi.h      | 19 +++++++++++
+>>  tools/testing/cxl/Kbuild  |  1 +
+>>  8 files changed, 147 insertions(+), 4 deletions(-)
+>>  create mode 100644 drivers/cxl/core/acpi.c
 >>
->> diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
->> index 402af4b2b905..725ef0e1e01f 100644
->> --- a/Documentation/ABI/stable/sysfs-devices-node
->> +++ b/Documentation/ABI/stable/sysfs-devices-node
->> @@ -177,6 +177,12 @@ Description:
->>  		The cache write policy: 0 for write-back, 1 for write-through,
->>  		other or unknown.
+>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> index 39524f36be5b..92b818b72ecc 100644
+>> --- a/drivers/acpi/numa/hmat.c
+>> +++ b/drivers/acpi/numa/hmat.c
+>> @@ -108,6 +108,50 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+>>  	return NULL;
+>>  }
 >>  
->> +What:		/sys/devices/system/node/nodeX/memory_side_cache/indexY/mode
+>> +/**
+>> + * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
+>> + * @backing_res: resource from the backing media
+>> + * @nid: node id for the memory region
+>> + * @cache_size: (Output) size of extended linear cache.
+>> + *
+>> + * Return: 0 on success. Errno on failure.
+>> + *
+>> + */
+>> +int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
+>> +					resource_size_t *cache_size)
+>> +{
+>> +	unsigned int pxm = node_to_pxm(nid);
+>> +	struct memory_target *target;
+>> +	struct target_cache *tcache;
+>> +	bool cache_found = false;
+>> +	struct resource *res;
+>> +
+>> +	target = find_mem_target(pxm);
+>> +	if (!target)
+>> +		return -ENOENT;
+>> +
+>> +	list_for_each_entry(tcache, &target->caches, node) {
+>> +		if (tcache->cache_attrs.mode == NODE_CACHE_MODE_EXTENDED_LINEAR) {
 > 
-> Mode feels perhaps a bit to vague.  Maybe address_mode?
+> I'd flip this for slightly better readability.
 
 ok
 
-DJ
+> 		if (tcache->cache_attrs.mode != NODE_CACHE_MODE_EXTENDED_LINEAR)
+> 			continue;
 > 
->> +Date:		September 2024
->> +Contact:	Dave Jiang <dave.jiang@intel.com>
->> +Description:
->> +		The address mode: 0 for reserved, 1 for extended-linear.
+> 		res = ...
+> 
+> 
+>> +			res = &target->memregions;
+>> +			if (!resource_contains(res, backing_res))
+>> +				continue;
 >> +
->>  What:		/sys/devices/system/node/nodeX/x86/sgx_total_bytes
->>  Date:		November 2021
->>  Contact:	Jarkko Sakkinen <jarkko@kernel.org>
->> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
->> index 1a902a02390f..39524f36be5b 100644
->> --- a/drivers/acpi/numa/hmat.c
->> +++ b/drivers/acpi/numa/hmat.c
->> @@ -506,6 +506,9 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->>  	switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
->>  	case ACPI_HMAT_CA_DIRECT_MAPPED:
->>  		tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
->> +		/* Extended Linear mode is only valid if cache is direct mapped */
->> +		if (cache->address_mode == ACPI_HMAT_CACHE_MODE_EXTENDED_LINEAR)
->> +			tcache->cache_attrs.mode = NODE_CACHE_MODE_EXTENDED_LINEAR;
->>  		break;
->>  	case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
->>  		tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+>> +			cache_found = true;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (!cache_found) {
+>> +		*cache_size = 0;
+>> +		return 0;
+>> +	}
+>> +
+>> +	*cache_size = tcache->cache_attrs.size;
+> 
+> Why not set this and return in the loop?
+> That way no need to have a local variable.
+
+ok
+
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(hmat_get_extended_linear_cache_size, CXL);
+> 
+>> diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+>> new file mode 100644
+>> index 000000000000..f13b4dae6ac5
+>> --- /dev/null
+>> +++ b/drivers/cxl/core/acpi.c
+>> @@ -0,0 +1,11 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+>> +#include <linux/acpi.h>
+>> +#include "cxl.h"
+>> +#include "core.h"
+> 
+> Why do you need the cxl headers?  Maybe a forwards def of
+> struct resource, but I'm not seeing anything else being needed.
+
+The prototype is declared in core.h, and it seems core.h needs cxl.h. I wonder if core.h should just include cxl.h.
+> 
+> 
+>> +
+>> +int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+>> +					    int nid, resource_size_t *size)
+>> +{
+>> +	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+>> +}
+> 
+> 
+>> @@ -3215,6 +3229,42 @@ static int match_region_by_range(struct device *dev, void *data)
+>>  	return rc;
+>>  }
+>>  
+>> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+>> +					    struct resource *res)
+>> +{
+>> +	struct cxl_region_params *p = &cxlr->params;
+>> +	int nid = phys_to_target_node(res->start);
+>> +	resource_size_t size, cache_size;
+>> +	int rc;
+>> +
+>> +	size = resource_size(res);
+>> +	if (!size)
+>> +		return -EINVAL;
+>> +
+>> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	if (!cache_size)
+>> +		return 0;
+>> +
+>> +	if (size != cache_size) {
+>> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Move the start of the range to where the cache range starts. The
+>> +	 * implementation assumes that the cache range is in front of the
+>> +	 * CXL range. This is not dictated by the HMAT spec but is how the
+>> +	 * currently known implementation configured.
+> 
+> is configured
+
+will fix
+
+> 
+>> +	 */
+>> +	res->start -= cache_size;
+>> +	p->cache_size = cache_size;
+>> +
+>> +	return 0;
+>> +}
+> 
 > 
 
