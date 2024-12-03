@@ -1,159 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438FFAD39
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 00:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9029CA5B
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 00:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733185963; cv=none; b=HAeV8ORt+KuP35hrWBv+eLJDd6Kx4q2Oh/27Ob6x21O0oMUUTtiuiCDlvO2Qkk/PEbxnUmXMtIG0hnP0bJKEPO/xC/lnKV6e/3QSKug2jwJnu+R2SwvIRumjMaATbTyjS2zLVHZi/vUUbAmHDtiPxatUF4Pxey7CqSJHgLRwiYE=
+	t=1733186102; cv=none; b=CbtEhn+iXVfoIBBcqeTUywsKctj+EUd0ZNQ5LWvwxlasstHAUnMmja9BhLGJ+VRit/oPNXDlOvrzovAUcZd1szHjs6tGneDllVUITsdYZe+F0JzRRVFs2SAbyh7/7ZiDjD93CLGr59xijXaTem1q5BEbCk9s678eGlqbEwyfAZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733185963; c=relaxed/simple;
-	bh=tc4KuYkMaQjD8Yv6z+HG3OsdK2KxchFXkKiWS7msvBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CV4b/8tpp7l9sSIwtS2nTAn6ESvNR/NlDrzm5HnyEaei2xympFRgx2XkDFZw1sBn+80RqfrOCSmrvd4MTTQvatuHFWE8OMMcDSiKnD8EbF9ncVdb0dZulYPyWWDEP0z+XORIPjseC2mYh4Xqkb1c6Mi8jy/LJz92DpW291gPO6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdDp+Mfr; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1733186102; c=relaxed/simple;
+	bh=90Z3uIVjxiaduJ4fj5p/v/pFRaVs8rKzXxaWEN8s1Fs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bArbQrJ1vyOG+fmGqlhQqoW70BRtChbAJ+M2BRKGyn4FV51kOtwuT5s9DfkXjQhUMdCeM+MsPV2WH452z26+P2E2jt4b2y9s7aqLASTMBgYkIM+jH9hu8PLtEzMqbDhHnioxSxCDpvMxG4u3+pNi5XAsOIqQW1N95jyweA/2STk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=miqyYlVd; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdDp+Mfr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733185961; x=1764721961;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tc4KuYkMaQjD8Yv6z+HG3OsdK2KxchFXkKiWS7msvBc=;
-  b=EdDp+MfrpvC4pcfpTgkjGSuNWQCvMrovF4jWO1txYoXK/scbb3VRg/fY
-   amCuOt/zX3lwu2uskL8yeSr4dLXQmA2am/uSxhVFFpfEoa8bHpRj3Pux8
-   K1263yvHsxU+UWhfleyW5p/8QOEtZSvKjIwP1rRcCWrlUQJosytaX+4Bo
-   81lQyiR9d2ePDO6DIILaxA9h9RU16CfeKMzHBYnDd0JKoPkhGAb/VwH+q
-   MHu7sEu9ZEP3l6mKj9mJ3utLxVBhJlSSxBCA+tvUY+ICacADA3TMZ/LOk
-   n88zSu8PM/p1Ztqcj7WtB9X92LyODds+7qrQmtkmTE7kFT3PKJTPNuIqP
-   Q==;
-X-CSE-ConnectionGUID: iMKjxPcPR9G/tmvAi82UCg==
-X-CSE-MsgGUID: 9Z5aWXGDRA6SRDQpLZx6/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="33126954"
-X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="33126954"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 16:32:41 -0800
-X-CSE-ConnectionGUID: S6x7zoaRQWGs8momJ4WX9A==
-X-CSE-MsgGUID: ZzfdE6t9SR+rHau2C58lfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
-   d="scan'208";a="93157503"
-Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 02 Dec 2024 16:32:39 -0800
-Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tIGq1-00034n-1g;
-	Tue, 03 Dec 2024 00:32:32 +0000
-Date: Tue, 3 Dec 2024 08:31:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nathan Fontenot <nathan.fontenot@amd.com>, alison.schofield@intel.com,
-	dan.j.williams@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
-Message-ID: <202412030858.l8DbOnRQ-lkp@intel.com>
-References: <20241202155542.22111-1-nathan.fontenot@amd.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="miqyYlVd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733186099;
+	bh=oHbx7nufqBC9FciDzS/LGxt7hmN8dQX6iuRN6cbwUA4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:
+	 x-icloud-hme;
+	b=miqyYlVd243flQ1IvVsliQiE9DHrrSD+z1j3Ao2U3BsVp7icRgsik+yX27rSCj4D+
+	 T5K/safPmJG6H2G4WE9j7bBQvaFexypWm7FZEDou1MHIH9tDRRWMiQ1UPriELs/+hg
+	 sXJNUkBBU1moy8uzw4v/v66n2uZ4nRbGFXnHbTcyy0JERpSfQmvHQ8NAx4kDoEqPtw
+	 K44qvDlYPQIBfuW/hOl+sPtWJcXOrD96VbESU02KGCiiJXJdFSzYBJ54ViTlBPnRB9
+	 QOAY9cdzyUWJL5EMG594jIK63Bf2SXcNzUNd7nw2qi11pPaZME4OnmSK9qWoRG15E/
+	 2icgiJHx3EH4g==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id A517C4A0115;
+	Tue,  3 Dec 2024 00:34:38 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v2 00/32] driver core: Constify API device_find_child() and
+ adapt for various existing usages
+Date: Tue, 03 Dec 2024 08:33:22 +0800
+Message-Id: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202155542.22111-1-nathan.fontenot@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANJRTmcC/2XMQQ6CMBCF4auQWVvTFozgynsYQsp0KrOwxRaJh
+ vTuVrYu/5e8b4NEkSnBpdog0sqJgy+hDxXgZPydBNvSoKVulJZKYPBpGazDwQZPwhjCs6J6HMl
+ AOc2RHL938NaXnjgtIX52f1W/dadkq/6oVQkpOtueqHZdU+N4fb4Y2eMRwwP6nPMXYHxV6a4AA
+ AA=
+X-Change-ID: 20241201-const_dfc_done-aaec71e3bbea
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Martin Tuma <martin.tuma@digiteqautomotive.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Andreas Noever <andreas.noever@gmail.com>, 
+ Michael Jamet <michael.jamet@intel.com>, 
+ Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ Yehezkel Bernat <YehezkelShB@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+ Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+ Jiri Slaby <jirislaby@kernel.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>, 
+ Mike Christie <michael.christie@oracle.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Nilesh Javali <njavali@marvell.com>, 
+ Manish Rangankar <mrangankar@marvell.com>, 
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>, 
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>, 
+ Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, 
+ Ard Biesheuvel <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-usb@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev, 
+ linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org, 
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com, 
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: cTyu1VL48UqVhY7zPwUQPPYeAfZYowdo
+X-Proofpoint-ORIG-GUID: cTyu1VL48UqVhY7zPwUQPPYeAfZYowdo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-02_14,2024-12-02_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ clxscore=1011 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412030002
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Hi Nathan,
+This patch series is to constify the following API:
+struct device *device_find_child(struct device *dev, void *data,
+		int (*match)(struct device *dev, void *data));
+To :
+struct device *device_find_child(struct device *dev, const void *data,
+				 device_match_t match);
+typedef int (*device_match_t)(struct device *dev, const void *data);
 
-kernel test robot noticed the following build errors:
+Why to constify the API?
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on tip/x86/core]
-[cannot apply to linus/master cxl/pending v6.13-rc1 next-20241128]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Protect caller's match data @*data which is for comparison and lookup
+  and the API does not actually need to modify @*data.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nathan-Fontenot/cxl-Update-Soft-Reserved-resources-upon-region-creation/20241202-235757
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20241202155542.22111-1-nathan.fontenot%40amd.com
-patch subject: [PATCH] cxl: Update Soft Reserved resources upon region creation
-config: arm-randconfig-004-20241203 (https://download.01.org/0day-ci/archive/20241203/202412030858.l8DbOnRQ-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241203/202412030858.l8DbOnRQ-lkp@intel.com/reproduce)
+- Make the API's parameters (@match)() and @data have the same type as
+  all of other device finding APIs (bus|class|driver)_find_device().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412030858.l8DbOnRQ-lkp@intel.com/
+- All kinds of existing device matching functions can be directly taken
+  as the API's argument, they were exported by driver core.
 
-All error/warnings (new ones prefixed by >>):
+How to constify the API?
 
-   In file included from kernel/resource.c:21:
-   In file included from include/linux/pseudo_fs.h:4:
-   In file included from include/linux/fs_context.h:14:
-   In file included from include/linux/security.h:33:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> kernel/resource.c:1183:36: warning: declaration of 'union acpi_subtable_headers' will not be visible outside of this function [-Wvisibility]
-    1183 | static int srmem_parse_cfmws(union acpi_subtable_headers *hdr,
-         |                                    ^
->> kernel/resource.c:1212:2: error: call to undeclared function 'acpi_table_parse_cedt'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1212 |         acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
-         |         ^
-   kernel/resource.c:1212:2: note: did you mean 'acpi_table_parse'?
-   include/linux/acpi.h:914:19: note: 'acpi_table_parse' declared here
-     914 | static inline int acpi_table_parse(char *id,
-         |                   ^
-   2 warnings and 1 error generated.
+- Now, no (@match)() argument of the API usages is modifying its match
+  data @*data after previous cleanup, so it is easy and safe to make its
+  parameter @data take const void * as type.
 
+- Simplify involved codes further if it is possbile with benefits
+  brought by constifying the API.
 
-vim +/acpi_table_parse_cedt +1212 kernel/resource.c
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v2:
+- Series v1 have no code review comments and are posted a long time ago, so may ignore differences.
+- Link to v1: https://lore.kernel.org/r/20240811-const_dfc_done-v1-0-9d85e3f943cb@quicinc.com
+- Motivation link: https://lore.kernel.org/lkml/917359cc-a421-41dd-93f4-d28937fe2325@icloud.com
 
-  1182	
-> 1183	static int srmem_parse_cfmws(union acpi_subtable_headers *hdr,
-  1184				     void *arg, const unsigned long unused)
-  1185	{
-  1186		struct acpi_cedt_cfmws *cfmws;
-  1187		struct srmem_arg *args = arg;
-  1188		struct resource cfmws_res;
-  1189		struct resource *res;
-  1190	
-  1191		res = args->res;
-  1192	
-  1193		cfmws = (struct acpi_cedt_cfmws *)hdr;
-  1194		cfmws_res = DEFINE_RES_MEM(cfmws->base_hpa,
-  1195					   cfmws->base_hpa + cfmws->window_size);
-  1196	
-  1197		if (resource_overlaps(&cfmws_res, res)) {
-  1198			args->overlaps += 1;
-  1199			return 1;
-  1200		}
-  1201	
-  1202		return 0;
-  1203	}
-  1204	
-  1205	static bool resource_overlaps_cfmws(struct resource *res)
-  1206	{
-  1207		struct srmem_arg arg = {
-  1208			.res = res,
-  1209			.overlaps = 0
-  1210		};
-  1211	
-> 1212		acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
-  1213	
-  1214		if (arg.overlaps)
-  1215			return true;
-  1216	
-  1217		return false;
-  1218	}
-  1219	
+---
+Zijun Hu (32):
+      driver core: Constify API device_find_child()
+      driver core: Introduce device_match_type() to match device with a device type
+      drm/mediatek: Adapt for constified device_find_child()
+      hwmon: Adapt for constified device_find_child()
+      media: pci: mgb4: Adapt for constified device_find_child()
+      thunderbolt: Adapt for constified device_find_child()
+      gpio: sim: Remove gpio_sim_dev_match_fwnode()
+      net: dsa: Adapt for constified device_find_child()
+      pwm: Adapt for constified device_find_child()
+      nvdimm: Adapt for constified device_find_child()
+      libnvdimm: Simplify nd_namespace_store() implementation
+      firewire: core: Adapt for constified device_find_child()
+      serial: core: Adapt for constified device_find_child()
+      usb: typec: class: Remove both cable_match() and partner_match()
+      usb: typec: class: Adapt for constified device_find_child()
+      slimbus: core: Simplify of_find_slim_device() implementation
+      slimbus: core: Constify slim_eaddr_equal()
+      slimbus: core: Adapt for constified device_find_child()
+      scsi: iscsi: Constify API iscsi_find_flashnode_sess()
+      scsi: qla4xxx: Adapt for constified iscsi_find_flashnode_sess()
+      scsi: iscsi: Adapt for constified device_find_child()
+      cxl/region: Adapt for constified device_find_child()
+      cxl/pmem: Remove match_nvdimm_bridge()
+      cxl/core/pci: Adapt for constified device_find_child()
+      cxl/test: Adapt for constified device_find_child()
+      sparc: vio: Adapt for constified device_find_child()
+      bus: fsl-mc: Adapt for constified device_find_child()
+      block: sunvdc: Adapt for constified device_find_child()
+      firmware: arm_scmi: Adapt for constified device_find_child()
+      efi: dev-path-parser: Adapt for constified device_find_child()
+      rpmsg: core: Adapt for constified device_find_child()
+      driver core: Simplify API device_find_child_by_name() implementation
 
+ arch/sparc/kernel/vio.c                |  6 +++---
+ drivers/base/core.c                    | 30 ++++++++++--------------------
+ drivers/block/sunvdc.c                 |  6 +++---
+ drivers/bus/fsl-mc/dprc-driver.c       |  6 +++---
+ drivers/cxl/core/pci.c                 |  4 ++--
+ drivers/cxl/core/pmem.c                |  9 +++------
+ drivers/cxl/core/region.c              | 21 ++++++++++++---------
+ drivers/firewire/core-device.c         |  4 ++--
+ drivers/firmware/arm_scmi/bus.c        |  4 ++--
+ drivers/firmware/efi/dev-path-parser.c |  4 ++--
+ drivers/gpio/gpio-sim.c                |  7 +------
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c |  2 +-
+ drivers/hwmon/hwmon.c                  |  2 +-
+ drivers/media/pci/mgb4/mgb4_core.c     |  4 ++--
+ drivers/nvdimm/bus.c                   |  2 +-
+ drivers/nvdimm/claim.c                 |  9 +--------
+ drivers/pwm/core.c                     |  2 +-
+ drivers/rpmsg/rpmsg_core.c             |  4 ++--
+ drivers/scsi/qla4xxx/ql4_os.c          |  3 ++-
+ drivers/scsi/scsi_transport_iscsi.c    | 10 +++++-----
+ drivers/slimbus/core.c                 | 17 +++++------------
+ drivers/thunderbolt/retimer.c          |  2 +-
+ drivers/thunderbolt/xdomain.c          |  2 +-
+ drivers/tty/serial/serial_core.c       |  4 ++--
+ drivers/usb/typec/class.c              | 31 ++++++++++++++-----------------
+ include/linux/device.h                 |  4 ++--
+ include/linux/device/bus.h             |  1 +
+ include/scsi/scsi_transport_iscsi.h    |  4 ++--
+ net/dsa/dsa.c                          |  2 +-
+ tools/testing/cxl/test/cxl.c           |  2 +-
+ 30 files changed, 89 insertions(+), 119 deletions(-)
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20241201-const_dfc_done-aaec71e3bbea
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Zijun Hu <quic_zijuhu@quicinc.com>
+
