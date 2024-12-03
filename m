@@ -1,276 +1,254 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65D513D521;
-	Tue,  3 Dec 2024 04:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733201443; cv=none; b=P9LDe+F7PwHwffJbONrlXpOR0lpxdE98uM1yQzXqKNF57AQSIEYwALyGDOn55QGOvGzOSyM4Ssl4TTcTM9XhbgjTLIgl/yUwLIG5YvpbDaZwggUiosUDRqLb4Gkxn95MxOIJA+0tWUSV5mJhypy80+jMebAhNMTIphxtzjs1+mI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733201443; c=relaxed/simple;
-	bh=WrgtmSKQRKNhctD+2fMFzQTqOOQkxRBM8FwVH04r7QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WE9CdEVPTtWPmlALzSvgkR64FfN0wVb3Ntgw/4FQ/rZisOKDuh4R7qH1Fp6Gy2flfksR4LsMlz+WgI1vo33AieKB2+b8ZY0HeGyOMI7dPFx11n6+r5lV8e+S0SgPPooc9mLpRfUuAiFAApiD4eUj8tvcZb8yYHnYjeuAc5cHDUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QhiYJSgI; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52859645;
+	Tue,  3 Dec 2024 06:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733205716; cv=fail; b=qTnFdVmGyXOGvnpQxl/D1QzUxyGln+EDzHQ0GtI0LjOwL0t4hY5zwBGvE+NVrAqQVpprEIZJuZS4w31y6lDCTldKUqhraPbvVLEINRnVy+ruOdfKDVZ25Luyf1tXlEwyXk5M0KoajS+1a0tsmVO5TcaUFlL4ZNE2pDhSFYhWFxw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733205716; c=relaxed/simple;
+	bh=vNis/zk9HC9wmGfmVXIRXTB4+nNX7JAGq2xw0r2mfWg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FduceP88eKHak7Umd9BfWQBJfLKd7WUOPbaiyXf6So+bYuX7nEdSOaNNe+MI3/RDZXxkQhITvjsfIf/euWNuDs9pXo3C5t7NDzHmv5lKEtZT24gbpfaO0tayamqPtAv4kSsdMwHN5Lnjk8RtzQJjGBkdGeOa73ho4vkVU1/tfJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o4f/H7zh; arc=fail smtp.client-ip=40.107.93.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QhiYJSgI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733201441; x=1764737441;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WrgtmSKQRKNhctD+2fMFzQTqOOQkxRBM8FwVH04r7QA=;
-  b=QhiYJSgIqm0GVzIwSR1QXBgqiK121tNKQmZmWNfa/XNBqkVdeSC5mJ8g
-   LR0ZrRW1XsV9tsw6teCyoMHyYkUmIb/luWOMzRLu0Kzjrt2YeDJrpnhdD
-   NFY6eloNFr3QBsMxE/Uxllb2kCmuzv5COMbvQ9jGkTImAnoTadfQpzgsp
-   lC1lfGRjWMyfCxpiu/Ub7PRUdzdRErRy3D8BJaK026U2QII3lJc9YPthH
-   6lirW/6PL9StQegwfRm/IRXSNMjW29EQM0bQmw/Au2BX/dNq6or2kY7B2
-   TkZfxwqz0kiJYADtmsuHc33eYRjxwh04ey0681L5IhnEtkkgXbta+8lGF
-   A==;
-X-CSE-ConnectionGUID: MwZ3GphQS0euPzOcirqvDA==
-X-CSE-MsgGUID: aWLxlYibSG28hk4CON2QyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="37172938"
-X-IronPort-AV: E=Sophos;i="6.12,204,1728975600"; 
-   d="scan'208";a="37172938"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 20:50:40 -0800
-X-CSE-ConnectionGUID: IiphBCTkROGTxvo2q/8iTg==
-X-CSE-MsgGUID: HLDjWRr2Q4iQhQTGhMv6Zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,204,1728975600"; 
-   d="scan'208";a="124152615"
-Received: from lkp-server01.sh.intel.com (HELO 388c121a226b) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 02 Dec 2024 20:50:35 -0800
-Received: from kbuild by 388c121a226b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tIKro-00007n-1h;
-	Tue, 03 Dec 2024 04:50:32 +0000
-Date: Tue, 3 Dec 2024 12:50:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	dave.jiang@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 03/28] cxl: add capabilities field to cxl_dev_state
- and cxl_port
-Message-ID: <202412031236.IUDQVzW6-lkp@intel.com>
-References: <20241202171222.62595-4-alejandro.lucero-palau@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o4f/H7zh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qS6nCPJGTUnxnAut+YI9cAFcm2t2ikE/Yhol6S20MVK36kUbpPznp1W8MBWK5vKB+Z6/Dw7SwxSkdO5fN1CjqKTyVPHG+CSM7NXXL8/K674AqlNFSqundLfRQuCG13x5jOgSLClNzeRuqWDOoW3CgMYJxIv7qm+dojKb0T3So6UuIGDgIgS8DAZqTBOgN0d9JHqJJ/rz2h5xiDqEheU5iJwqma/g+CHKjccx4UFBcI9bEJ1gOJu9MQIqy+p+xdDfxiiE76+/Sid8+se0gLPjNwCrl07wZ6cIDL8wk5k5WJ2zng6CGjAfMxp63ZI8jRQJ2Lp74t0g8wzvrv4jBIDtIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=idnF7DX4ohAPyG8m7sBMKE2Ct0PuKV3+nayK7v7BnoE=;
+ b=ghHncKtTyz1TCh9OL2UK9DesRNTVJ59ZotEj5P1t9UTbBMYoYNJJv5Hxt+7eW7u9j3unc9oAPT/LxdHjhXB9EofSyf5wS2mArdEpSJo3SVPDdiijFUNrodgjlyavMJQf46QJnP1VP1ScTiFH5VM7hl2Ix5FHJB/3BA0XEQWnNuHdbbsOp1vimx3warTiX7SGJlIaBA/3qZWwY9m/0THhojhUv+JrF4fBwNKgNDiLP+lcIMSn6PkJ9ZPY2iO4tM+9B9paVXG60ITz8uOd4M4c5T9zS0rYm1A9vLK0auGCt2VHKSOWxh71Pv5ssLaJNmUsSs0YvmCRfhTNwU235/1AOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=idnF7DX4ohAPyG8m7sBMKE2Ct0PuKV3+nayK7v7BnoE=;
+ b=o4f/H7zh2X0W7BXnKvA5erTr+nQeYdC5yZvUANPgcU+XE5FOW5W94eUH9WSIPsZ19fT7NeJKi1rNDUmM32/kfQAgqibTV9OsbWOiQgVvq9O41eN0HTTRN4KzSJxKPV3IUFZLv19B65m3us3y3k3D/Rtpy+LcJKpKrZR7eVPHQZo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
+ by IA1PR12MB7613.namprd12.prod.outlook.com (2603:10b6:208:42a::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Tue, 3 Dec
+ 2024 06:01:50 +0000
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3%4]) with mapi id 15.20.8207.017; Tue, 3 Dec 2024
+ 06:01:50 +0000
+Message-ID: <a7be4e76-bfee-4159-a7a5-880a22230029@amd.com>
+Date: Tue, 3 Dec 2024 11:31:37 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] resource: Fix CXL node not populated issue
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, bharata@amd.com,
+ Huang Ying <ying.huang@intel.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>,
+ David Hildenbrand <david@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Alistair Popple <apopple@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Baoquan He <bhe@redhat.com>, ilpo.jarvinen@linux.intel.com,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Fontenot Nathan <Nathan.Fontenot@amd.com>, Wei Huang <wei.huang2@amd.com>,
+ ying.huang@linux.alibaba.com
+References: <20241202111941.2636613-1-raghavendra.kt@amd.com>
+ <Z03TeSrlI_8y4j89@smile.fi.intel.com>
+Content-Language: en-US
+From: Raghavendra K T <raghavendra.kt@amd.com>
+In-Reply-To: <Z03TeSrlI_8y4j89@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PNYP287CA0056.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:23e::31) To PH7PR12MB5805.namprd12.prod.outlook.com
+ (2603:10b6:510:1d1::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-4-alejandro.lucero-palau@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|IA1PR12MB7613:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90298704-0882-4026-57f8-08dd135ffa21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TWJMNitTS0orc20rakxzYzZDUlBuVnkxcllXVGhXUWsrRndnU2wvYnF4M1RQ?=
+ =?utf-8?B?RXV1Zy82eFhEWnVQN3hzcXlDYkNZS0g5YlRvKzBndURlcklsRDJXNEdaa2ox?=
+ =?utf-8?B?QWpGK2FWZVJCdFhGUlZIWGdYK1BhWGs1REQ1bG9jY2FTeGRHNy9vR2lPeUkr?=
+ =?utf-8?B?bkRaTStSMDFJUjJnYjdlSktNUWtqNXlPTEd4YkdTK2sraWVHeUQ0V0ZOakVD?=
+ =?utf-8?B?VTdPU3J3QWlYbnZqeStaS0pFeUVOTWRuY1ZmNTFieXBIcjNocEtBWWRDUW4v?=
+ =?utf-8?B?ZWxIRXFMV09SbEJKOVJjeFRIUGVIRnRJSFBmMmg4cFpuSkVRMEVRUGVZaFU3?=
+ =?utf-8?B?cWdmYm1NWmsyV2U4Q0ExNisvOFVjdHh4QVgrUGswTUJENStXUjVZallDODdD?=
+ =?utf-8?B?blVHRE5rZk4zV1VJVHBFdjVHVzl1V1RSUXNsQXFrYWNIQmxBVllvZ25reDBv?=
+ =?utf-8?B?N2VaZjM3cmZNN3JzWkVUM083cmVnNXBZSWhjSWt0TVl4bnE5SGx3OXVPWXFK?=
+ =?utf-8?B?N05uTENtTHdPdkt3a1VPcXROTnZWOXBlbnNiNWR2RGdzaTVsVUt6bmpRUGxG?=
+ =?utf-8?B?eHhNZ2VQdTZ4SXNvN3ptZ0F1SGdMRGhVM1FZUjRqaXBrSmw1VWNpQ3BvRjd3?=
+ =?utf-8?B?NlU5SEtpUEhOVnV1TGVvWkdWdldsSWUyVXBqWWZPWlAwcTE0d2c4L0psaHZ3?=
+ =?utf-8?B?bFJKU1lLT2lxdzdxcmpwZnUxRUI1MTZLZW1KelM4WDM3bHZBcGtHUkd6NWU4?=
+ =?utf-8?B?QzR4N0xDSHBDRis1TW5jM3JieDErWVZGVGtXTkVhSzN4RHR1Z0lOSktJQWtO?=
+ =?utf-8?B?OE9wa3gvNUdobXZxb2cwbWVvMFNDaFhpbTlMZW5TNkxDb1JCNUxWMnU5WEpM?=
+ =?utf-8?B?YWpkSDlTaHNVTGJJUXBUeXZzOUhIa1RTVGhGNTRzU3RLYWlpcDBwTjFUWnNp?=
+ =?utf-8?B?VzBpaEhlNDZSdnEzYkUvTURTUGptRjY0WmdWSloyZEhCSG5vbzNYT0RTT3h3?=
+ =?utf-8?B?VWFnUHJxdlpVdXlsZ0REUmwrV1FENTBxVGJzOUtJV0E0ZHUyN3YyZW5Qd2dG?=
+ =?utf-8?B?bGV3K2E0bk5FcW1IK1NhaEdSRnMrdThTaEtWY1dwekl5bWFqVURhaW5Ub1ZH?=
+ =?utf-8?B?bnFPN0hia2ZNVy95QUFmdUJkZnoyWCs5YVlON0RyNVlOOUUyYTNPZlR5ZGtm?=
+ =?utf-8?B?bGJhM2pjK0VHSnQ2OUVHODZ5YW9wcDZTVS80YTRHRkJoVTF1cUdWSFFLeFI0?=
+ =?utf-8?B?SFpOY2xtOG1GSjE1ODVCLzFjTGs1M1Z3dDRqdmxXZW95OUFEREFYaG1DcFNY?=
+ =?utf-8?B?Ym1YZXErNUhKck1pRThhQ0JxY1VyaVArQUIzTmlTUko1M3hyOVJ0K3duczRO?=
+ =?utf-8?B?L0crZGZ5QTJLaHE0L3hJWDVxRXhVeThkdFB3NGRzd0hMdmlWUUhTRkhxS2Uz?=
+ =?utf-8?B?TmpreU90RlhWZm9OUlFITWlYbXVKWU1ZM0doT0h6R3gwZmFOa0ZYMVd5Yitv?=
+ =?utf-8?B?WE85NWxYN1R1RlpUSE5CZlBPSDdhb3djQlhxdmJaRFZienA2dUZRSk1aS2hK?=
+ =?utf-8?B?SXdSaDVXYmZTRlhURlBZUTBHK2c3U2ZXMWlpRjBaOHVCWmJBWTdwcUlDWi94?=
+ =?utf-8?B?b1JFQVZ2ZHhnVWsrVmU5dWRmS2J5dndZU1A4U3F4UjUrUDBqK3ZYM2p6UHBy?=
+ =?utf-8?B?VmZqaXhQN1IyWDBXUmpTaXdqQXAweWpVYmtqTFNaaUFaT0RZeFErTGtJT1dO?=
+ =?utf-8?B?bU9Da2l2NEgyQzc1c3l0Z2FWcVFrM0lneVlkVEo5ZmJYVHVGL2VJa003dUo3?=
+ =?utf-8?Q?iX+uGTElYFce7VU1m9xmkZXC7Z42W1MeXYhQo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OStTaWFvNUxLRHdiZDFZMWZoOE1HMkxuZU1sQmloOGQ0MElxYzJGQ05RMDJZ?=
+ =?utf-8?B?ODAzeEI1R2FrbWpWd1ZvcU1ib1FlOGVsU3Qzd0VmenU0NXVWek05YzJwcS9Q?=
+ =?utf-8?B?NVlwTEFIOHJ5Y05FWE5wa0hieEpZcXozQlRNM1BvTnRUM2RVOGpYeEJNZDVa?=
+ =?utf-8?B?K05TVnVSV3hWZUQvVWozSjFwd3NXbHJWMnliQXFtRGhOeStHcHVUUlowYmhF?=
+ =?utf-8?B?SXFZWHFUbTFBY055RVF0RUNkcWRtK1plbjNOODloRFFlenVUVitVaS9meTZq?=
+ =?utf-8?B?UTFYVDFWZG1kZjJpMHA2d2ZqZk1TbWhSbWlEdWtZTW9rNGlhdzdpQnVGZitq?=
+ =?utf-8?B?STJNUGRIVmEyRnBmY3BRUW5MWnFmSUVYdEhzby9MY3A2eXlZMVY5YlFTWjlm?=
+ =?utf-8?B?ZlVWRXRZeTduK0h2dHFyU1FINytZdEVndC90YzRsOThTTWlVL3VIZGpGT3pv?=
+ =?utf-8?B?UENrdWk5N0w4dU9yNFdzRzFwZmlCK3F6RVRTdUcvd1k0b2xWT2ZaU2dCY3NR?=
+ =?utf-8?B?ZFN4U1RCTldlQ0E4dU81OUFicis4ZURpelNDNzFNa240cVB4WDlsNSthdXRX?=
+ =?utf-8?B?aGFZdjhGSVpJSXd4dlZrN3FEbUQxdmR2bEpFK052VjF5WHczeXM1R2NFbEg0?=
+ =?utf-8?B?SUNqMEZ0T1pFeUkrd05rVXI1dzdYUGZra0Nlc3ZDZnFIa1dkRSswTTVhd1hY?=
+ =?utf-8?B?NFlHbzlTT0h3OWx3S0svb0pvM1VqVnFKNHg2ak5sOSs3NFBncGFZdmkvSkVs?=
+ =?utf-8?B?WnJJeUpTL3htNDY4VUJmaXpYZitDUVF6bGNhZHNWc2ZGWUFGZ3JMUS9HMWtJ?=
+ =?utf-8?B?ZkpLbklxbEZmT1RvUHhhSGI2UlNVRnR4Nm9oaFM4NTFZS0wrb2RROTdURWRB?=
+ =?utf-8?B?NWovcFo0dzdBT3l2eG1mMGZWUVN5RWxyYUYydWRWcG1wMzFxUkljRWVpdGVK?=
+ =?utf-8?B?c1NYNmdCQmxoOWo3R0x1Vk11YndvdlJVTFE2Z0ZNTkdWL21ZYzZIaC9YcTEx?=
+ =?utf-8?B?OFlKK3hVMWh2RmJpaVRnc2RSUkpsNEVOV0lqUFRrMyttSHIyNFY3TjFhdkhD?=
+ =?utf-8?B?eEk1S0ZzL0dTcXlzV2V6cDZ1VW5MYUFCVEkxSE8yc3lEcTlGOTJVTjBXUDdt?=
+ =?utf-8?B?U2ZzNUZLZ1h3NGl6VG4wSmNNRzZHSy9ablZZMHJheStoRStTUFQ5Y0hKeTl3?=
+ =?utf-8?B?S0J1bmdzdE1rZkVYZWVjMlpaZXdIOWw2bWMrUGh1OFoxREdNcldnQmpkMldu?=
+ =?utf-8?B?T2o0UG8rVlNzQlRVMFVqWU5TMnlkYS9xMG85WE8rMk5xR29Lc0JzcXo4T2Nn?=
+ =?utf-8?B?bXBwaDA4ZGZTeUFuSmJoZzNpU3NKVG9aQnhnMHFkL3hxZFVXOERrZ2Yvd0xo?=
+ =?utf-8?B?NFhOdm1zMG01MmhUQ0cyZFVEKzFCVW9DUDEwMXQzdmpDR0U0Y3ZkQVVKQkY5?=
+ =?utf-8?B?TkdiQ2JsMzdCUkMycUNjcnNybFQxbVJzVzVVaWtEM2dXVmEvUDAyQ21rVlRY?=
+ =?utf-8?B?SXc5WlVRNTdpUG16dnhBVDA4cjNUOS9vZC90NmRKOGNaWVgzbFRnQW5qNEpy?=
+ =?utf-8?B?R0FzK21tZW5YdDYzZ1FCQnNLTjhDOS9TUFJvUGx1MFVtNGlRancyTWFOWmR4?=
+ =?utf-8?B?UDQvQjI3Ui9YRUVOSFV1Z2Nnd09wdU1FejMyYUc5QXVhZTdzcDdUZDFxanky?=
+ =?utf-8?B?RUJyUTM0b2hQREJsRDJ4OWhTSHkrOW8xV0JBZEtHRFVEdmVjZU1nT2NZNW84?=
+ =?utf-8?B?TlpBN2FYTUpUS0JZMlRJL20yOHIxQk1xQmZtYlpSU1JaK1RUNWgvZHI4K0Z3?=
+ =?utf-8?B?UThvemJuOUFoNCszWUdmMmFpMy9zcGlvaERDSGhxRkh6akhyb3R2UXZ1Sm8v?=
+ =?utf-8?B?SEFadDRHYkpBNUpSV1dSV2VkcDM3WEdzQlZDN2hQVnI4K1ZoRWoyMDdKTjVk?=
+ =?utf-8?B?dDVhWXVKQmxUdHpBYnNNZktaN1c1WVZOWmJYUG5GZ1cxakYzdmRVdGdaRVhV?=
+ =?utf-8?B?b05BYkNhSnFldlFPclFEV29TQ3R0YXVPZk5paG1KYWE2VmFuMkNoaCtOSFBY?=
+ =?utf-8?B?aVZiMjVISW4yM0ZuOEJDVkV0WkVvcDNjb0plOW53TE16ZnFTOWQyTENROXYy?=
+ =?utf-8?Q?Gk+rl8XdTc24nvCP55HCs03K4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90298704-0882-4026-57f8-08dd135ffa21
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2024 06:01:49.9808
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vbxS+k60Vv+R4HaROEIgGNdNdPIbT5sROf/+FDSKhOigBlPPJWoG0ZLpo2wJxS6P5U/S/aOMmWDbDFToOUlCLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7613
 
-Hi,
+++ Huang new address
+Thank you for looking into patch Andy.
+On 12/2/2024 9:04 PM, Andy Shevchenko wrote:
+> On Mon, Dec 02, 2024 at 11:19:41AM +0000, Raghavendra K T wrote:
+>> Before:
+>> ~]$ numastat -m
+>> ...
+>>                            Node 0          Node 1           Total
+>>                   --------------- --------------- ---------------
+>> MemTotal               128096.18       128838.48       256934.65
+>>
+>> After:
+>> $ numastat -m
+>> .....
+>>                            Node 0          Node 1          Node 2           Total
+>>                   --------------- --------------- --------------- ---------------
+>> MemTotal               128054.16       128880.51       129024.00       385958.67
+>>
+>> Current patch reverts the effect of first commit where the issue is seen.
+>>
+>> git bisect had led to below commit
+> 
+> Missed blank line here.
+> 
 
-kernel test robot noticed the following build warnings:
+Will add.
 
-[auto build test WARNING on e70140ba0d2b1a30467d4af6bcfe761327b9ec95]
+>> Fixes: b4afe4183ec7 ("resource: fix region_intersects() vs add_memory_driver_managed()")
+> 
+>> Cc: Huang Ying <ying.huang@intel.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>> Cc: Dave Jiang <dave.jiang@intel.com>
+>> Cc: Alison Schofield <alison.schofield@intel.com>
+>> Cc: Vishal Verma <vishal.l.verma@intel.com>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Cc: Alistair Popple <apopple@nvidia.com>
+>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: <ilpo.jarvinen@linux.intel.com>
+>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Cc: Fontenot Nathan <Nathan.Fontenot@amd.com>
+>> Cc: Wei Huang <wei.huang2@amd.com>
+> 
+> Isn't it too many to be included in the commit message? Note you may use the
+> same list with --cc in the command line with almost the same effect (almost --
+> no noise in the commit message).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20241203-031134
-base:   e70140ba0d2b1a30467d4af6bcfe761327b9ec95
-patch link:    https://lore.kernel.org/r/20241202171222.62595-4-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v6 03/28] cxl: add capabilities field to cxl_dev_state and cxl_port
-config: arm-randconfig-001-20241203 (https://download.01.org/0day-ci/archive/20241203/202412031236.IUDQVzW6-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241203/202412031236.IUDQVzW6-lkp@intel.com/reproduce)
+Agree. Do not want to add in the final commit message. I took
+the names from the bisected message. will Cc directly next time.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412031236.IUDQVzW6-lkp@intel.com/
+> 
+>> Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
+>> ---
+> 
+> ...
+> 
+>> +		bool is_type = (((p->flags & flags) == flags) &&
+>> +				((desc == IORES_DESC_NONE) ||
+>> +				 (desc == p->desc)));
+>> +
+>> +		if (resource_overlaps(p, &res))
+>> +			is_type ? type++ : other++;
+> 
+> Instead (if you will end up with this approach) please still use is_type_match().
+> 
 
-All warnings (new ones prefixed by >>):
+Sure will do in next iteration unless someone comes with expected fix.
 
->> drivers/cxl/core/regs.c:42: warning: Function parameter or struct member 'caps' not described in 'cxl_probe_component_regs'
->> drivers/cxl/core/regs.c:125: warning: Function parameter or struct member 'caps' not described in 'cxl_probe_device_regs'
+I bumped into this because I was not able to evaluate my patches
+on 6.13 with CXL card. Thought of reporting what worked for me...
+
+Link: : 
+https://lore.kernel.org/all/20241201153818.2633616-1-raghavendra.kt@amd.com/ 
 
 
-vim +42 drivers/cxl/core/regs.c
+I may need some time to go back and understand some history and code.
 
-fa89248e669d589 Robert Richter   2022-10-18   13  
-2b922a9d064f8e8 Dan Williams     2021-09-03   14  /**
-2b922a9d064f8e8 Dan Williams     2021-09-03   15   * DOC: cxl registers
-2b922a9d064f8e8 Dan Williams     2021-09-03   16   *
-2b922a9d064f8e8 Dan Williams     2021-09-03   17   * CXL device capabilities are enumerated by PCI DVSEC (Designated
-2b922a9d064f8e8 Dan Williams     2021-09-03   18   * Vendor-specific) and / or descriptors provided by platform firmware.
-2b922a9d064f8e8 Dan Williams     2021-09-03   19   * They can be defined as a set like the device and component registers
-2b922a9d064f8e8 Dan Williams     2021-09-03   20   * mandated by CXL Section 8.1.12.2 Memory Device PCIe Capabilities and
-2b922a9d064f8e8 Dan Williams     2021-09-03   21   * Extended Capabilities, or they can be individual capabilities
-2b922a9d064f8e8 Dan Williams     2021-09-03   22   * appended to bridged and endpoint devices.
-2b922a9d064f8e8 Dan Williams     2021-09-03   23   *
-2b922a9d064f8e8 Dan Williams     2021-09-03   24   * Provide common infrastructure for enumerating and mapping these
-2b922a9d064f8e8 Dan Williams     2021-09-03   25   * discrete capabilities.
-2b922a9d064f8e8 Dan Williams     2021-09-03   26   */
-2b922a9d064f8e8 Dan Williams     2021-09-03   27  
-0f06157e0135f55 Dan Williams     2021-08-03   28  /**
-0f06157e0135f55 Dan Williams     2021-08-03   29   * cxl_probe_component_regs() - Detect CXL Component register blocks
-0f06157e0135f55 Dan Williams     2021-08-03   30   * @dev: Host device of the @base mapping
-0f06157e0135f55 Dan Williams     2021-08-03   31   * @base: Mapping containing the HDM Decoder Capability Header
-0f06157e0135f55 Dan Williams     2021-08-03   32   * @map: Map object describing the register block information found
-0f06157e0135f55 Dan Williams     2021-08-03   33   *
-0f06157e0135f55 Dan Williams     2021-08-03   34   * See CXL 2.0 8.2.4 Component Register Layout and Definition
-0f06157e0135f55 Dan Williams     2021-08-03   35   * See CXL 2.0 8.2.5.5 CXL Device Register Interface
-0f06157e0135f55 Dan Williams     2021-08-03   36   *
-0f06157e0135f55 Dan Williams     2021-08-03   37   * Probe for component register information and return it in map object.
-0f06157e0135f55 Dan Williams     2021-08-03   38   */
-0f06157e0135f55 Dan Williams     2021-08-03   39  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
-b98956b0195863f Alejandro Lucero 2024-12-02   40  			      struct cxl_component_reg_map *map,
-b98956b0195863f Alejandro Lucero 2024-12-02   41  			      unsigned long *caps)
-0f06157e0135f55 Dan Williams     2021-08-03  @42  {
-0f06157e0135f55 Dan Williams     2021-08-03   43  	int cap, cap_count;
-74b0fe804097330 Jonathan Cameron 2022-02-01   44  	u32 cap_array;
-0f06157e0135f55 Dan Williams     2021-08-03   45  
-0f06157e0135f55 Dan Williams     2021-08-03   46  	*map = (struct cxl_component_reg_map) { 0 };
-0f06157e0135f55 Dan Williams     2021-08-03   47  
-0f06157e0135f55 Dan Williams     2021-08-03   48  	/*
-0f06157e0135f55 Dan Williams     2021-08-03   49  	 * CXL.cache and CXL.mem registers are at offset 0x1000 as defined in
-0f06157e0135f55 Dan Williams     2021-08-03   50  	 * CXL 2.0 8.2.4 Table 141.
-0f06157e0135f55 Dan Williams     2021-08-03   51  	 */
-0f06157e0135f55 Dan Williams     2021-08-03   52  	base += CXL_CM_OFFSET;
-0f06157e0135f55 Dan Williams     2021-08-03   53  
-74b0fe804097330 Jonathan Cameron 2022-02-01   54  	cap_array = readl(base + CXL_CM_CAP_HDR_OFFSET);
-0f06157e0135f55 Dan Williams     2021-08-03   55  
-0f06157e0135f55 Dan Williams     2021-08-03   56  	if (FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, cap_array) != CM_CAP_HDR_CAP_ID) {
-9474d586819940f Coly Li          2024-10-21   57  		dev_dbg(dev,
-d621bc2e7282f99 Dan Williams     2022-01-23   58  			"Couldn't locate the CXL.cache and CXL.mem capability array header.\n");
-0f06157e0135f55 Dan Williams     2021-08-03   59  		return;
-0f06157e0135f55 Dan Williams     2021-08-03   60  	}
-0f06157e0135f55 Dan Williams     2021-08-03   61  
-0f06157e0135f55 Dan Williams     2021-08-03   62  	/* It's assumed that future versions will be backward compatible */
-0f06157e0135f55 Dan Williams     2021-08-03   63  	cap_count = FIELD_GET(CXL_CM_CAP_HDR_ARRAY_SIZE_MASK, cap_array);
-0f06157e0135f55 Dan Williams     2021-08-03   64  
-0f06157e0135f55 Dan Williams     2021-08-03   65  	for (cap = 1; cap <= cap_count; cap++) {
-0f06157e0135f55 Dan Williams     2021-08-03   66  		void __iomem *register_block;
-af2dfef854aa6af Dan Williams     2022-11-29   67  		struct cxl_reg_map *rmap;
-0f06157e0135f55 Dan Williams     2021-08-03   68  		u16 cap_id, offset;
-af2dfef854aa6af Dan Williams     2022-11-29   69  		u32 length, hdr;
-0f06157e0135f55 Dan Williams     2021-08-03   70  
-0f06157e0135f55 Dan Williams     2021-08-03   71  		hdr = readl(base + cap * 0x4);
-0f06157e0135f55 Dan Williams     2021-08-03   72  
-0f06157e0135f55 Dan Williams     2021-08-03   73  		cap_id = FIELD_GET(CXL_CM_CAP_HDR_ID_MASK, hdr);
-0f06157e0135f55 Dan Williams     2021-08-03   74  		offset = FIELD_GET(CXL_CM_CAP_PTR_MASK, hdr);
-0f06157e0135f55 Dan Williams     2021-08-03   75  		register_block = base + offset;
-af2dfef854aa6af Dan Williams     2022-11-29   76  		hdr = readl(register_block);
-0f06157e0135f55 Dan Williams     2021-08-03   77  
-af2dfef854aa6af Dan Williams     2022-11-29   78  		rmap = NULL;
-0f06157e0135f55 Dan Williams     2021-08-03   79  		switch (cap_id) {
-af2dfef854aa6af Dan Williams     2022-11-29   80  		case CXL_CM_CAP_CAP_ID_HDM: {
-af2dfef854aa6af Dan Williams     2022-11-29   81  			int decoder_cnt;
-af2dfef854aa6af Dan Williams     2022-11-29   82  
-0f06157e0135f55 Dan Williams     2021-08-03   83  			dev_dbg(dev, "found HDM decoder capability (0x%x)\n",
-0f06157e0135f55 Dan Williams     2021-08-03   84  				offset);
-0f06157e0135f55 Dan Williams     2021-08-03   85  
-0f06157e0135f55 Dan Williams     2021-08-03   86  			decoder_cnt = cxl_hdm_decoder_count(hdr);
-0f06157e0135f55 Dan Williams     2021-08-03   87  			length = 0x20 * decoder_cnt + 0x10;
-af2dfef854aa6af Dan Williams     2022-11-29   88  			rmap = &map->hdm_decoder;
-b98956b0195863f Alejandro Lucero 2024-12-02   89  			*caps |= BIT(CXL_DEV_CAP_HDM);
-0f06157e0135f55 Dan Williams     2021-08-03   90  			break;
-af2dfef854aa6af Dan Williams     2022-11-29   91  		}
-bd09626b39dff97 Dan Williams     2022-11-29   92  		case CXL_CM_CAP_CAP_ID_RAS:
-bd09626b39dff97 Dan Williams     2022-11-29   93  			dev_dbg(dev, "found RAS capability (0x%x)\n",
-bd09626b39dff97 Dan Williams     2022-11-29   94  				offset);
-bd09626b39dff97 Dan Williams     2022-11-29   95  			length = CXL_RAS_CAPABILITY_LENGTH;
-bd09626b39dff97 Dan Williams     2022-11-29   96  			rmap = &map->ras;
-b98956b0195863f Alejandro Lucero 2024-12-02   97  			*caps |= BIT(CXL_DEV_CAP_RAS);
-0f06157e0135f55 Dan Williams     2021-08-03   98  			break;
-0f06157e0135f55 Dan Williams     2021-08-03   99  		default:
-0f06157e0135f55 Dan Williams     2021-08-03  100  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
-0f06157e0135f55 Dan Williams     2021-08-03  101  				offset);
-0f06157e0135f55 Dan Williams     2021-08-03  102  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  103  		}
-af2dfef854aa6af Dan Williams     2022-11-29  104  
-af2dfef854aa6af Dan Williams     2022-11-29  105  		if (!rmap)
-af2dfef854aa6af Dan Williams     2022-11-29  106  			continue;
-af2dfef854aa6af Dan Williams     2022-11-29  107  		rmap->valid = true;
-a1554e9cac5ea04 Dan Williams     2022-11-29  108  		rmap->id = cap_id;
-af2dfef854aa6af Dan Williams     2022-11-29  109  		rmap->offset = CXL_CM_OFFSET + offset;
-af2dfef854aa6af Dan Williams     2022-11-29  110  		rmap->size = length;
-0f06157e0135f55 Dan Williams     2021-08-03  111  	}
-0f06157e0135f55 Dan Williams     2021-08-03  112  }
-affec782742e08a Dan Williams     2021-11-12  113  EXPORT_SYMBOL_NS_GPL(cxl_probe_component_regs, CXL);
-0f06157e0135f55 Dan Williams     2021-08-03  114  
-0f06157e0135f55 Dan Williams     2021-08-03  115  /**
-0f06157e0135f55 Dan Williams     2021-08-03  116   * cxl_probe_device_regs() - Detect CXL Device register blocks
-0f06157e0135f55 Dan Williams     2021-08-03  117   * @dev: Host device of the @base mapping
-0f06157e0135f55 Dan Williams     2021-08-03  118   * @base: Mapping of CXL 2.0 8.2.8 CXL Device Register Interface
-0f06157e0135f55 Dan Williams     2021-08-03  119   * @map: Map object describing the register block information found
-0f06157e0135f55 Dan Williams     2021-08-03  120   *
-0f06157e0135f55 Dan Williams     2021-08-03  121   * Probe for device register information and return it in map object.
-0f06157e0135f55 Dan Williams     2021-08-03  122   */
-0f06157e0135f55 Dan Williams     2021-08-03  123  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
-b98956b0195863f Alejandro Lucero 2024-12-02  124  			   struct cxl_device_reg_map *map, unsigned long *caps)
-0f06157e0135f55 Dan Williams     2021-08-03 @125  {
-0f06157e0135f55 Dan Williams     2021-08-03  126  	int cap, cap_count;
-0f06157e0135f55 Dan Williams     2021-08-03  127  	u64 cap_array;
-0f06157e0135f55 Dan Williams     2021-08-03  128  
-0f06157e0135f55 Dan Williams     2021-08-03  129  	*map = (struct cxl_device_reg_map){ 0 };
-0f06157e0135f55 Dan Williams     2021-08-03  130  
-0f06157e0135f55 Dan Williams     2021-08-03  131  	cap_array = readq(base + CXLDEV_CAP_ARRAY_OFFSET);
-0f06157e0135f55 Dan Williams     2021-08-03  132  	if (FIELD_GET(CXLDEV_CAP_ARRAY_ID_MASK, cap_array) !=
-0f06157e0135f55 Dan Williams     2021-08-03  133  	    CXLDEV_CAP_ARRAY_CAP_ID)
-0f06157e0135f55 Dan Williams     2021-08-03  134  		return;
-0f06157e0135f55 Dan Williams     2021-08-03  135  
-0f06157e0135f55 Dan Williams     2021-08-03  136  	cap_count = FIELD_GET(CXLDEV_CAP_ARRAY_COUNT_MASK, cap_array);
-0f06157e0135f55 Dan Williams     2021-08-03  137  
-0f06157e0135f55 Dan Williams     2021-08-03  138  	for (cap = 1; cap <= cap_count; cap++) {
-af2dfef854aa6af Dan Williams     2022-11-29  139  		struct cxl_reg_map *rmap;
-0f06157e0135f55 Dan Williams     2021-08-03  140  		u32 offset, length;
-0f06157e0135f55 Dan Williams     2021-08-03  141  		u16 cap_id;
-0f06157e0135f55 Dan Williams     2021-08-03  142  
-0f06157e0135f55 Dan Williams     2021-08-03  143  		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
-0f06157e0135f55 Dan Williams     2021-08-03  144  				   readl(base + cap * 0x10));
-0f06157e0135f55 Dan Williams     2021-08-03  145  		offset = readl(base + cap * 0x10 + 0x4);
-0f06157e0135f55 Dan Williams     2021-08-03  146  		length = readl(base + cap * 0x10 + 0x8);
-0f06157e0135f55 Dan Williams     2021-08-03  147  
-af2dfef854aa6af Dan Williams     2022-11-29  148  		rmap = NULL;
-0f06157e0135f55 Dan Williams     2021-08-03  149  		switch (cap_id) {
-0f06157e0135f55 Dan Williams     2021-08-03  150  		case CXLDEV_CAP_CAP_ID_DEVICE_STATUS:
-0f06157e0135f55 Dan Williams     2021-08-03  151  			dev_dbg(dev, "found Status capability (0x%x)\n", offset);
-af2dfef854aa6af Dan Williams     2022-11-29  152  			rmap = &map->status;
-b98956b0195863f Alejandro Lucero 2024-12-02  153  			*caps |= BIT(CXL_DEV_CAP_DEV_STATUS);
-0f06157e0135f55 Dan Williams     2021-08-03  154  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  155  		case CXLDEV_CAP_CAP_ID_PRIMARY_MAILBOX:
-0f06157e0135f55 Dan Williams     2021-08-03  156  			dev_dbg(dev, "found Mailbox capability (0x%x)\n", offset);
-af2dfef854aa6af Dan Williams     2022-11-29  157  			rmap = &map->mbox;
-b98956b0195863f Alejandro Lucero 2024-12-02  158  			*caps |= BIT(CXL_DEV_CAP_MAILBOX_PRIMARY);
-0f06157e0135f55 Dan Williams     2021-08-03  159  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  160  		case CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX:
-0f06157e0135f55 Dan Williams     2021-08-03  161  			dev_dbg(dev, "found Secondary Mailbox capability (0x%x)\n", offset);
-0f06157e0135f55 Dan Williams     2021-08-03  162  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  163  		case CXLDEV_CAP_CAP_ID_MEMDEV:
-0f06157e0135f55 Dan Williams     2021-08-03  164  			dev_dbg(dev, "found Memory Device capability (0x%x)\n", offset);
-af2dfef854aa6af Dan Williams     2022-11-29  165  			rmap = &map->memdev;
-b98956b0195863f Alejandro Lucero 2024-12-02  166  			*caps |= BIT(CXL_DEV_CAP_MEMDEV);
-0f06157e0135f55 Dan Williams     2021-08-03  167  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  168  		default:
-0f06157e0135f55 Dan Williams     2021-08-03  169  			if (cap_id >= 0x8000)
-0f06157e0135f55 Dan Williams     2021-08-03  170  				dev_dbg(dev, "Vendor cap ID: %#x offset: %#x\n", cap_id, offset);
-0f06157e0135f55 Dan Williams     2021-08-03  171  			else
-0f06157e0135f55 Dan Williams     2021-08-03  172  				dev_dbg(dev, "Unknown cap ID: %#x offset: %#x\n", cap_id, offset);
-0f06157e0135f55 Dan Williams     2021-08-03  173  			break;
-0f06157e0135f55 Dan Williams     2021-08-03  174  		}
-af2dfef854aa6af Dan Williams     2022-11-29  175  
-af2dfef854aa6af Dan Williams     2022-11-29  176  		if (!rmap)
-af2dfef854aa6af Dan Williams     2022-11-29  177  			continue;
-af2dfef854aa6af Dan Williams     2022-11-29  178  		rmap->valid = true;
-a1554e9cac5ea04 Dan Williams     2022-11-29  179  		rmap->id = cap_id;
-af2dfef854aa6af Dan Williams     2022-11-29  180  		rmap->offset = offset;
-af2dfef854aa6af Dan Williams     2022-11-29  181  		rmap->size = length;
-0f06157e0135f55 Dan Williams     2021-08-03  182  	}
-0f06157e0135f55 Dan Williams     2021-08-03  183  }
-affec782742e08a Dan Williams     2021-11-12  184  EXPORT_SYMBOL_NS_GPL(cxl_probe_device_regs, CXL);
-0f06157e0135f55 Dan Williams     2021-08-03  185  
+Thanks and Regards
+- Raghu
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
