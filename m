@@ -1,156 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F891E22E1;
-	Tue,  3 Dec 2024 09:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E26B3398B;
+	Tue,  3 Dec 2024 12:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733219126; cv=none; b=VhGrhkk1fPxyWX5G8Ey3e2a28kCfGSes3QyTXvKYNc6ASqB/I5vPA0CdMA7VnvcQi+QaC5ZnLDscpM9bARERfmiTkK8sdUENT4AB+vPWrN48O006SJH0vXlGuhgdl1cEiJqTlGOn3LS2FO7OZQaXRjEhgNYx6aKnVqfFsmJvd+A=
+	t=1733227262; cv=none; b=FzO7zdcCbOGmFYMs76UesdXZ0Fc7Nl77VPhE/Ky8oPsmxh/+t/NuBngY4P11WQjiQKcoLXZUEeL+oLyj6J/lIYtd2avhg8Q37+X7gzST0DfTkg1ND5XKKKL2m2xNT2XRxgIuOqLRSGQZaCkfxUqnU/RvX7tcXDXl2ecIS5xu6yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733219126; c=relaxed/simple;
-	bh=zbvoUGnSNfCih1kEhklJgBJLXZz9g/QO4/mn1ZyxObw=;
+	s=arc-20240116; t=1733227262; c=relaxed/simple;
+	bh=rlz53vWDp5E/pYVOEj1URbYGt1AREB4Xo9ogjRjCu50=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p9Mx4QNy8AsB01hF5xGx8jtRZKvsEg9rftyCZxBV1kOah3NiD6DKFH6AweuCNsdcTY9JdiA1WT1gXZeEcYop0iuvb9zWq+c/gQxO2iFb27i8gBoWvNHLoMfRBjED4c7KHSRO1z1KzPB10Jna404ZsGKKUYjmHvVSg9XD4EL8OvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fffq2SAs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKPWitPTPIjPGJJtxcIdmX9tRnFLzlNuAIpWz2zE5F6v0tYsKpF7koC+Eb9bnpcfT39KKfLnppZUfH1YZHoE/zenBBuGQYVTNY9OhPRt+8L0D+bhGfVOiUWog413yWrdxB93lVnyAt02SIsC/sAreWOlPPF9/n13xvOgo4IWFA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdDeCtLV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fffq2SAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733219125; x=1764755125;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zbvoUGnSNfCih1kEhklJgBJLXZz9g/QO4/mn1ZyxObw=;
-  b=fffq2SAsU1ECiaypQ5OBBvnkyfdvT9gGI0wvanLn7e1BirhUHjL2qQZ7
-   /TMbUqrQr+/0CpFNYEPVzQaEC1v0Gethz9qivhGgvAsTfjCk9ZgbwA97O
-   lawdQPqLzE2KxUrWBC3eG6D4QX5v2NLOm8u5XKNUl9ifFi9uN4GIcb/Pa
-   cNKWiLWAEG9Zb1DiRKEdO/SYX0Mp/iy9B6GllKwZVQvff8+jsJ4nnR69E
-   R3mvvJgTx1Xz2ofno/LcQf+m+l5QiM8IsYB9QtA49s+wM6MG8yP3deQ/+
-   OZTbRz/X7LhyhlWL4zGh3t4evD/ihha4f1iO1ewB+E3n2PqoPk5C4UGOe
-   g==;
-X-CSE-ConnectionGUID: ngNUJoMDSc2pdzJFM8Ux5Q==
-X-CSE-MsgGUID: RZg2gOrGRryIVLWdwwOKrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="44810932"
-X-IronPort-AV: E=Sophos;i="6.12,204,1728975600"; 
-   d="scan'208";a="44810932"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 01:45:24 -0800
-X-CSE-ConnectionGUID: hfSV4T6JSLqyadMoHxrH7A==
-X-CSE-MsgGUID: k6GSCqcASzKLiz2AC487fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,204,1728975600"; 
-   d="scan'208";a="94217652"
-Received: from lkp-server01.sh.intel.com (HELO 388c121a226b) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 03 Dec 2024 01:45:21 -0800
-Received: from kbuild by 388c121a226b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tIPT4-0000Up-2j;
-	Tue, 03 Dec 2024 09:45:18 +0000
-Date: Tue, 3 Dec 2024 17:44:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	dave.jiang@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 15/28] cxl: define a driver interface for HPA free
- space enumeration
-Message-ID: <202412031722.5L3bVD47-lkp@intel.com>
-References: <20241202171222.62595-16-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdDeCtLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBAF4C4CECF;
+	Tue,  3 Dec 2024 12:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733227261;
+	bh=rlz53vWDp5E/pYVOEj1URbYGt1AREB4Xo9ogjRjCu50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fdDeCtLVqECfRfNoqbCzzD0S2R+ze8fu4xgXlPdQFJQ+STayO+czgml6vxR6gAr9u
+	 SfvYrgXRdRmOjMEDiUcIg8Ywi35riI0nUxeZrJIGAla7/uurms7YmN220IRsCbVxR6
+	 0RLGXO472a27O/MHnrmTkWCsCE1MnHGszPPpy+ATOMh/r4ZUNj1XVz+G2aEnELC83Q
+	 5zXc30+JHwj5J8xXpxDpdRcwIa3kank2REKqd9CMrbu3SZA6RQSEQqgx6shuUaL3BU
+	 er9sxGEV01E1uZex0+a/6+JDYf3SqBVZ3ELFg7wS+IFimmHwT30DsHPjPlqmlPz8Tg
+	 GqLyWYoqGameA==
+Date: Tue, 3 Dec 2024 13:00:58 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Martin Tuma <martin.tuma@digiteqautomotive.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Andreas Noever <andreas.noever@gmail.com>, 
+	Michael Jamet <michael.jamet@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Yehezkel Bernat <YehezkelShB@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>, Jiri Slaby <jirislaby@kernel.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>, 
+	Mike Christie <michael.christie@oracle.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali <njavali@marvell.com>, 
+	Manish Rangankar <mrangankar@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, 
+	Jens Axboe <axboe@kernel.dk>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Cristian Marussi <cristian.marussi@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux1394-devel@lists.sourceforge.net, 
+	linux-serial@vger.kernel.org, linux-sound@vger.kernel.org, open-iscsi@googlegroups.com, 
+	linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-block@vger.kernel.org, arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+Message-ID: <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="35h4iyqfzzpzpkno"
 Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-16-alejandro.lucero-palau@amd.com>
-
-Hi,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on e70140ba0d2b1a30467d4af6bcfe761327b9ec95]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20241203-031134
-base:   e70140ba0d2b1a30467d4af6bcfe761327b9ec95
-patch link:    https://lore.kernel.org/r/20241202171222.62595-16-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v6 15/28] cxl: define a driver interface for HPA free space enumeration
-config: arm-randconfig-001-20241203 (https://download.01.org/0day-ci/archive/20241203/202412031722.5L3bVD47-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241203/202412031722.5L3bVD47-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412031722.5L3bVD47-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/cxl/core/region.c:803: warning: Function parameter or struct member 'cxlmd' not described in 'cxl_get_hpa_freespace'
->> drivers/cxl/core/region.c:803: warning: Excess function parameter 'endpoint' description in 'cxl_get_hpa_freespace'
+In-Reply-To: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
 
 
-vim +803 drivers/cxl/core/region.c
+--35h4iyqfzzpzpkno
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+MIME-Version: 1.0
 
-   782	
-   783	/**
-   784	 * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
-   785	 * @endpoint: an endpoint that is mapped by the returned decoder
-   786	 * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and HDM-H vs HDM-D[B]
-   787	 * @max_avail_contig: output parameter of max contiguous bytes available in the
-   788	 *		      returned decoder
-   789	 *
-   790	 * The return tuple of a 'struct cxl_root_decoder' and 'bytes available given
-   791	 * in (@max_avail_contig))' is a point in time snapshot. If by the time the
-   792	 * caller goes to use this root decoder's capacity the capacity is reduced then
-   793	 * caller needs to loop and retry.
-   794	 *
-   795	 * The returned root decoder has an elevated reference count that needs to be
-   796	 * put with put_device(cxlrd_dev(cxlrd)). Locking context is with
-   797	 * cxl_{acquire,release}_endpoint(), that ensures removal of the root decoder
-   798	 * does not race.
-   799	 */
-   800	struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
-   801						       unsigned long flags,
-   802						       resource_size_t *max_avail_contig)
- > 803	{
-   804		struct cxl_port *endpoint = cxlmd->endpoint;
-   805		struct cxlrd_max_context ctx = {
-   806			.host_bridge = endpoint->host_bridge,
-   807			.flags = flags,
-   808		};
-   809		struct cxl_port *root_port;
-   810		struct cxl_root *root __free(put_cxl_root) = find_cxl_root(endpoint);
-   811	
-   812		if (!is_cxl_endpoint(endpoint)) {
-   813			dev_dbg(&endpoint->dev, "hpa requestor is not an endpoint\n");
-   814			return ERR_PTR(-EINVAL);
-   815		}
-   816	
-   817		if (!root) {
-   818			dev_dbg(&endpoint->dev, "endpoint can not be related to a root port\n");
-   819			return ERR_PTR(-ENXIO);
-   820		}
-   821	
-   822		root_port = &root->port;
-   823		down_read(&cxl_region_rwsem);
-   824		device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
-   825		up_read(&cxl_region_rwsem);
-   826	
-   827		if (!ctx.cxlrd)
-   828			return ERR_PTR(-ENOMEM);
-   829	
-   830		*max_avail_contig = ctx.max_hpa;
-   831		return ctx.cxlrd;
-   832	}
-   833	EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, CXL);
-   834	
+Hello,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Tue, Dec 03, 2024 at 08:33:22AM +0800, Zijun Hu wrote:
+> This patch series is to constify the following API:
+> struct device *device_find_child(struct device *dev, void *data,
+> 		int (*match)(struct device *dev, void *data));
+> To :
+> struct device *device_find_child(struct device *dev, const void *data,
+> 				 device_match_t match);
+> typedef int (*device_match_t)(struct device *dev, const void *data);
+
+This series isn't bisectible. With only the first two patches applied I
+hit:
+
+  CC      drivers/pwm/core.o
+drivers/pwm/core.c: In function =E2=80=98pwm_unexport_child=E2=80=99:
+drivers/pwm/core.c:1292:55: error: passing argument 3 of =E2=80=98device_fi=
+nd_child=E2=80=99 from incompatible pointer type [-Wincompatible-pointer-ty=
+pes]
+ 1292 |         pwm_dev =3D device_find_child(pwmchip_dev, pwm, pwm_unexpor=
+t_match);
+      |                                                       ^~~~~~~~~~~~~=
+~~~~~
+      |                                                       |
+      |                                                       int (*)(struc=
+t device *, void *)
+In file included from include/linux/acpi.h:14,
+                 from drivers/pwm/core.c:11:
+include/linux/device.h:1085:49: note: expected =E2=80=98device_match_t=E2=
+=80=99 {aka =E2=80=98int (*)(struct device *, const void *)=E2=80=99} but a=
+rgument is of type =E2=80=98int (*)(struct device *, void *)=E2=80=99
+ 1085 |                                  device_match_t match);
+      |                                  ~~~~~~~~~~~~~~~^~~~~
+drivers/pwm/core.c: In function =E2=80=98pwm_class_get_state=E2=80=99:
+drivers/pwm/core.c:1386:55: error: passing argument 3 of =E2=80=98device_fi=
+nd_child=E2=80=99 from incompatible pointer type [-Wincompatible-pointer-ty=
+pes]
+ 1386 |         pwm_dev =3D device_find_child(pwmchip_dev, pwm, pwm_unexpor=
+t_match);
+      |                                                       ^~~~~~~~~~~~~=
+~~~~~
+      |                                                       |
+      |                                                       int (*)(struc=
+t device *, void *)
+include/linux/device.h:1085:49: note: expected =E2=80=98device_match_t=E2=
+=80=99 {aka =E2=80=98int (*)(struct device *, const void *)=E2=80=99} but a=
+rgument is of type =E2=80=98int (*)(struct device *, void *)=E2=80=99
+ 1085 |                                  device_match_t match);
+      |                                  ~~~~~~~~~~~~~~~^~~~~
+make[5]: *** [scripts/Makefile.build:194: drivers/pwm/core.o] Error 1
+make[4]: *** [scripts/Makefile.build:440: drivers/pwm] Error 2
+make[3]: *** [scripts/Makefile.build:440: drivers] Error 2
+make[2]: *** [Makefile:1989: .] Error 2
+make[1]: *** [Makefile:372: __build_one_by_one] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+Best regards
+Uwe
+
+--35h4iyqfzzpzpkno
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdO8vgACgkQj4D7WH0S
+/k5hrwgAmMfv4tgQM/zHhRunXZer+6rbqIrp5LbiXSYngMgHSWkkF/Aqcp/Uejmb
+FQwdlGB47gyVlHT5SP4HCDeST+PhX0lg3vHxP2lg0HaHp7/vgJRZAI65iOfy7DY7
+xqXQ+U2+YvtY+lwSneGFeXo9VZZtuu/YfpP8Qg6jH8dGaIojaU57rB+uJCpdvZmt
+VJhc51IAA6eHPcPMGf5mvS8/A7M8uPDwyEgWBDP/MRE0z6oKEjVLPWYFzXjUaVnZ
+MMOmGyzIfvhHTMxlkisgCC+PwmjrO2lZFsM1jD6SVNzMp6XeT2jiGa7lbfXaK9Rk
+7TvM1d7dwtqa42JTuIjTWWBR7AfmBA==
+=Sef0
+-----END PGP SIGNATURE-----
+
+--35h4iyqfzzpzpkno--
