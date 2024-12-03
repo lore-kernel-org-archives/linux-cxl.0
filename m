@@ -1,152 +1,99 @@
-Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84245027
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 00:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F84041C65
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 01:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733186337; cv=none; b=YIMzqH05uaECZcEwBMbxAS4MZxn/M9ssn3rpk6+/dxrCWW9tBU5WpZrGzknv1vwu5vhTgYrWbFUiyDezveM1eHmAOWSVPJRYcECX0Wh4DBxQKlo81urrZLLLt+TenlauOQUJ4zQ4MGEWLJDQdoCugkWj0ASrce1HNnSl8Gi9GiM=
+	t=1733188403; cv=none; b=lmO94BxCTx/9ediHu39i96QDlQqjOEF5NXX2TJXEoSYyc4KNb3/j83r1C8yaYJ1ETJcIZaihoEMlW0ELa+ewH4x0G4xNaTCmt4GXz9UTl4PH4Ugite+BgutFYBEpqDlXZ34dvmfojYZvqAMML+kuvTDuZrMVoHCv9e8SVIz+x3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733186337; c=relaxed/simple;
-	bh=bVxN+FZOfleQVmg6RLp1YA7VWhpbCqAopfI4NI1NFnA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dhggOYgc6i1AcT/pcCq7cZnhy1TU3Kcqk2jvSAtpMHTDga6OLYOaUcSK+M6N88pByUcmn4neMI7fxRWGIQ6G8cMScdi7Hp8S2qgWyH8308IK3C8ifDz0d1sBziN5z9/nt+U2BEnGp4UhC76AeeJ2LSYYTK4+sclGTc2SwY/3T6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=cNZheBgV; arc=none smtp.client-ip=17.58.6.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1733188403; c=relaxed/simple;
+	bh=rRMfud00nJu/mYxQdqFyTRhP8p8EKqi4ZmshJhc64P4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhHg/aE9PDAf/oLS4NNIL0Wx4PnCxXTmMEQYbH5jdgmALIPF1KiT7K8SRRiQLpZMK5GTk74Yqe5VEV54LXsNBTNl9WzzsB+4IzT7rQc4MBDnPpLsnqmjIJJgVDKzeYx7uUmEwk5IyUS/9u2JhyvejGh54nGbCST1HgNXpzf+fpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iXuIDvdm; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="cNZheBgV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733186335;
-	bh=DunB/Cza6j0J9yIEJF1/KVIA9ohiToydy/mrGuBe+NA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
-	 x-icloud-hme;
-	b=cNZheBgVFQmN8bDOAgA1O/6ilvMdUYLWH2rCw2sbVyV42b9UfWahOMUwO6MA2D3wu
-	 PS9ynWuFaT87rd3PD4MocTwkv2r4XCW+znolqO/soTSf67giOwZyPuElgZCsDCGjPD
-	 tlxClv/tibYTlDeYlsonl81S7tf7SmWu6omQ3zz/xG2MhX/msIxPaL9v0oyTyFR9Fw
-	 r7B4k0/vLKdn1SsAxgw6R0/+MQJFM4NioFAG0GKYfjVBsizaRIrVhJ2s4itJxOhsB5
-	 Gigjpj8kjdQqUw86WbyZHXCyybV4R7w7adERzs4Ufil2RPDqc7KxPNEscKwkReaaGX
-	 7Wkla79Wkq4hw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id DD3E54A00A7;
-	Tue,  3 Dec 2024 00:38:34 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 03 Dec 2024 08:33:33 +0800
-Subject: [PATCH v2 11/32] libnvdimm: Simplify nd_namespace_store()
- implementation
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iXuIDvdm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733188401; x=1764724401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rRMfud00nJu/mYxQdqFyTRhP8p8EKqi4ZmshJhc64P4=;
+  b=iXuIDvdmbTcjhOXghsenfXDo9e19lCk5xDrBq2ZawQAiYwukelXoHiD1
+   6BSCKHbPr2wddl9PTqKC85Cp6DHKBSWFjXAxk6dn+qft6d8rdNFm7G9e/
+   26zxc8b4bUmrke8X2MvpS+4fQTgo8qMkCdeBTsfIpWdWbDfnbMeyE8OaB
+   EAJKMTVReCMFv9+yXfkPvtImOfQgWxEs+v5JcZ68iSPK1sciFouxsLLC+
+   QCQvCoQVa/5ML6/AvcE382iszT6YPCCa1M6guSQ2/jrMRNKQnsptS8dLU
+   vMwR7M8r/8YbvQJelLv40vDnGp8x5VQSsyayvmN7IGkQ+j3Yt6UtriLrJ
+   Q==;
+X-CSE-ConnectionGUID: CnkO2V72SnGzm0tb4PtAxw==
+X-CSE-MsgGUID: cwvgdpvbTpGHUHCAl5Z5kQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="32731445"
+X-IronPort-AV: E=Sophos;i="6.12,204,1728975600"; 
+   d="scan'208";a="32731445"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 17:13:20 -0800
+X-CSE-ConnectionGUID: ORl33E53ST68iNeSzGdqcA==
+X-CSE-MsgGUID: wGHzIpLERTqQVDf9hn/9Kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="98292773"
+Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 02 Dec 2024 17:13:18 -0800
+Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tIHTX-00036h-1r;
+	Tue, 03 Dec 2024 01:13:15 +0000
+Date: Tue, 3 Dec 2024 09:12:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nathan Fontenot <nathan.fontenot@amd.com>, alison.schofield@intel.com,
+	dan.j.williams@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
+Message-ID: <202412030840.56S2Dv8L-lkp@intel.com>
+References: <20241202155542.22111-1-nathan.fontenot@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241203-const_dfc_done-v2-11-7436a98c497f@quicinc.com>
-References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
-In-Reply-To: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Martin Tuma <martin.tuma@digiteqautomotive.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Andreas Noever <andreas.noever@gmail.com>, 
- Michael Jamet <michael.jamet@intel.com>, 
- Mika Westerberg <mika.westerberg@linux.intel.com>, 
- Yehezkel Bernat <YehezkelShB@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
- Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
- Jiri Slaby <jirislaby@kernel.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>, 
- Mike Christie <michael.christie@oracle.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Nilesh Javali <njavali@marvell.com>, 
- Manish Rangankar <mrangankar@marvell.com>, 
- GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>, 
- Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>, 
- Sudeep Holla <sudeep.holla@arm.com>, 
- Cristian Marussi <cristian.marussi@arm.com>, 
- Ard Biesheuvel <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
- linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev, 
- linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org, 
- linux-sound@vger.kernel.org, open-iscsi@googlegroups.com, 
- linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org, 
- sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
- arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: Mwb4WO2zvDF-UK70QCmcJRU4qe8f8eTp
-X-Proofpoint-ORIG-GUID: Mwb4WO2zvDF-UK70QCmcJRU4qe8f8eTp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-02_14,2024-12-02_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412030002
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241202155542.22111-1-nathan.fontenot@amd.com>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi Nathan,
 
-Simplify nd_namespace_store() implementation by device_find_child_by_name()
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/nvdimm/claim.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+[auto build test WARNING on cxl/next]
+[also build test WARNING on tip/x86/core]
+[cannot apply to linus/master cxl/pending v6.13-rc1 next-20241128]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-index 030dbde6b0882050c90fb8db106ec15b1baef7ca..9e84ab411564f9d5e7ceb687c6491562564552e3 100644
---- a/drivers/nvdimm/claim.c
-+++ b/drivers/nvdimm/claim.c
-@@ -67,13 +67,6 @@ bool nd_attach_ndns(struct device *dev, struct nd_namespace_common *attach,
- 	return claimed;
- }
- 
--static int namespace_match(struct device *dev, void *data)
--{
--	char *name = data;
--
--	return strcmp(name, dev_name(dev)) == 0;
--}
--
- static bool is_idle(struct device *dev, struct nd_namespace_common *ndns)
- {
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
-@@ -168,7 +161,7 @@ ssize_t nd_namespace_store(struct device *dev,
- 		goto out;
- 	}
- 
--	found = device_find_child(dev->parent, name, namespace_match);
-+	found = device_find_child_by_name(dev->parent, name);
- 	if (!found) {
- 		dev_dbg(dev, "'%s' not found under %s\n", name,
- 				dev_name(dev->parent));
+url:    https://github.com/intel-lab-lkp/linux/commits/Nathan-Fontenot/cxl-Update-Soft-Reserved-resources-upon-region-creation/20241202-235757
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20241202155542.22111-1-nathan.fontenot%40amd.com
+patch subject: [PATCH] cxl: Update Soft Reserved resources upon region creation
+config: arm64-randconfig-001-20241203 (https://download.01.org/0day-ci/archive/20241203/202412030840.56S2Dv8L-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241203/202412030840.56S2Dv8L-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412030840.56S2Dv8L-lkp@intel.com/
+
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+>> WARNING: modpost: vmlinux: section mismatch in reference: insert_soft_reserve_resource+0x90 (section: .text.unlikely) -> acpi_table_parse_cedt (section: .init.text)
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
