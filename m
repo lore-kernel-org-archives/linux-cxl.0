@@ -1,315 +1,186 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1066A2AF05;
-	Tue,  3 Dec 2024 14:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4CA1EF0BA
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 14:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733237568; cv=none; b=OHn7hBapGE1I7O0+hY/5chDdqVh7yxJPqkrzsz+G1dJmA9bR+u9sSwr8zEqD2dCeYSJj+/mw4fqv8CJsTVl7jr2dIlXWfg+uvkPu6/FSCmYqzTdk4580DwV/lm3VpPcWyxv4HTh7YhHoS2URN5tDHbsnIZz4H9sEyy4md88oklg=
+	t=1733237855; cv=none; b=dllwoB5M2pTbEZk3OUB01qFDGeGbuUv7PTlq9zwoBiyd6VHyvCN9PmJai09/Qa/BXN2nR3O6tzMfUDTyHUBHs0+k0xxDYgngJjpJ1iSwP8lZGpJ+rhCg+RrC4bjmIkJuaWBUYSvwiBXT5b1/rvrRiHUrR4qFER7PByUJAcaT9Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733237568; c=relaxed/simple;
-	bh=rS9m36SLoxmegxzRzWLvk9CSWmGpn7zVH4jpkU5s7Bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gn+u0CDoDVTRqwJe3abm/PWlDKGLy6ZX5Q9bL1lwrC0xi0v7Wp8hYYw4d0P7EkXe7NjlDBYQHe+SdsroXanhE+KWpASOBlTEjDDYXLOmXn+5gJoNPK3oQmAK5sLqVJoiI8gn4lZIu3xkAZsndhyackQdSI8+Ets9/HZnnD2qebo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N+YyHfp1; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733237855; c=relaxed/simple;
+	bh=I1QE9YqXRd/95EuZ6shU92lVYpx6jSwp7U8UdDQ+eqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A3X1y+hgAQJw9iepjAu/FOidBLXRzIVP6O+jR7ZmkVaddNBMrVu4CqoxueEq60ms2ftXHxvpl7o3RzgBWMIftJNESt6IF7oPK8UVJrbGf2N/2PG9/bh9ckWvQAZy4X0B0wkmx1E6h0bgRnx25yX427CZBOULFu5VyzaNUT4g9lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=WJoHxyHP; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+YyHfp1"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-434a10588f3so36518085e9.1;
-        Tue, 03 Dec 2024 06:52:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733237564; x=1733842364; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n4xxwe/P+GUjyb6u27Ym0kwJOLqxlZj+XI/nl2u4V+Y=;
-        b=N+YyHfp15KDCpmb/XqymFbplWdT2sEzaqgqrw4ZhHJO/xM0c38RgDYFKt8DyGuahdf
-         0r3qy+s52IwnuUUGN/cdnxeiz+Vd2bULAPcTTb4kMi258tFtntOOi3HZOtNmBwwXg7i7
-         e6rEmHCrW5j66rT7kAmHn4gtB1GYKbNLLKsPuVVLBmdvymGMnPnZm87W8JO2pJffwP1k
-         X9jzd+BP6oz93UOQK7hHpZSKKm7CxY0OzDFYi2ix8ZwCdMJNe3oulS2crarbHR76EzWd
-         rxJ+wTSREZTsXKisdPNtN18Pz46fZSIseV+0KI33yPC4cCzVKP05lB4gfS5m13/doJ6M
-         MD7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733237564; x=1733842364;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n4xxwe/P+GUjyb6u27Ym0kwJOLqxlZj+XI/nl2u4V+Y=;
-        b=K0rnzZmA/zcF+UZAOxJ1y/C9fj1PLqyYwtT4GtXFHycSYUIEK+CrW4MlYb9M+bWtV0
-         u3GeTUrCyKneac5Uz+B2/RQgJd6wZhD7fTrQIqj4wZz1owi81y+qJ7XKDo0B/1MdarSo
-         uXADpkNj55l04iVyFNHsqIvZt/4LENbpt12cOpNuWTFNpAjGXZ7ZDruvAvA2z2w97NTt
-         IJXTBhNT8Q4Yr9RIaBSbxVDbFRY9rFyXenvf2Q+Q5tiz82IKEV30nUf29DLPcrD4hquv
-         OIkJyiG5n7liD9SAhII1zGk9Nj4D9opiMZloDt7WXU5J8AO7cUoSlpC6HzYQ3VAyTvnh
-         JGGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEuhxbFsIfGKALaAAKjfdvJAwiFyoElmI3fkr1bRcRWHjgidntw5ZhnOTSaZvVMXwhOp2bCWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ0/mMBGX8TOwL2k10y1EdmucZzX6SLOPTivZCEEIRfXKcftae
-	wBa3Gp9OjMW32iEqAS81vgvvnwtvgcystEyXRKMbzd3AcdpCvIqg
-X-Gm-Gg: ASbGncvZC1xjN8Vam1gndEtv8G8heqDSANuC6a7PHH1YkF2Xh38NSmSJ2HgyL0iUxRs
-	LWQaBds9lPrjsMrpZCiypKbLQbkS7nobNGKD7uYkcOAuSqdiOG/OtEhE0bmW8sua9R5ZM1rRyOt
-	wzusDOgp3188C2g46iQlrfC9EY+ynu73bEoUuEu3KGglExD4Lh3sxUafiTyyYx0oUsYiQiFptOy
-	VXzj/DgaA//2FQ33+RSFp8M2dqqr3oYOMlx9zhe3jqyCTi0/qw=
-X-Google-Smtp-Source: AGHT+IGQWkFjhBQrlAOa7TfvUGhqt/oQaNUu3UTObZ3txFl+xzooWcUjbQgJkzv99i8xFz8aKH7CXg==
-X-Received: by 2002:a05:600c:4fc5:b0:434:9d36:1f04 with SMTP id 5b1f17b1804b1-434d3f8e4d9mr5150955e9.4.1733237563929;
-        Tue, 03 Dec 2024 06:52:43 -0800 (PST)
-Received: from localhost ([81.168.73.77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434b0dbe2e7sm192141795e9.11.2024.12.03.06.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 06:52:43 -0800 (PST)
-Date: Tue, 3 Dec 2024 14:52:42 +0000
-From: Martin Habets <habetsm.xilinx@gmail.com>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 28/28] sfc: support pio mapping based on cxl
-Message-ID: <20241203145242.GK778635@gmail.com>
-Mail-Followup-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>
-References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-29-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="WJoHxyHP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733237853;
+	bh=zPP2M6RHoQlxRDoHnjCsF/MyKgy2Hv/oTH6yXikXqgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=WJoHxyHPQic0UPYroDs8nCEAWsZm40sH8RhZy74XvLp/u3uVoK8y0NcRam0ip/lrx
+	 bXSlxO0ATLyoBoLBgb1HPjJ6VzOkweGc3d49hUpXLFFHcJz2ky04rRviy7vj4V1Uv0
+	 UrP8xtrDy605sSzzXJfwV92hCnmVSa/In2c5FK+QwsvdkOzwtlVoKR8MfrPuM+OkJ3
+	 kTV9qWoS0uz7z4phORc7Uz1s0gw2Ayri2PFJ13eQLHgrebkECU60pYLHuubiEEJ1y+
+	 pdLr+ixZhVq84c1mKgl9tDNm6hKdk1MRV7Fp8S0cKzjfCmv+0IlvKjaoM5N1+JgTTH
+	 Pur3pBzgfGODA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 367E14A0413;
+	Tue,  3 Dec 2024 14:56:59 +0000 (UTC)
+Message-ID: <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+Date: Tue, 3 Dec 2024 22:56:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-29-alejandro.lucero-palau@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nilesh Javali <njavali@marvell.com>,
+ Manish Rangankar <mrangankar@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Cristian Marussi <cristian.marussi@arm.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
+ <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+ <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
+ <2024120320-manual-jockey-dfd1@gregkh>
+ <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
+ <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
+ <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: JxnDC87bqdECTEQWZZVsnICFx4KSLLiI
+X-Proofpoint-ORIG-GUID: JxnDC87bqdECTEQWZZVsnICFx4KSLLiI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-03_04,2024-12-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 clxscore=1011 malwarescore=0 phishscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412030127
 
-Hi Alejandro,
-
-On Mon, Dec 02, 2024 at 05:12:22PM +0000, alejandro.lucero-palau@amd.com wrote:
+On 2024/12/3 22:07, Thomas Weißschuh wrote:
+> On 2024-12-03 08:58:26-0500, James Bottomley wrote:
+>> On Tue, 2024-12-03 at 21:02 +0800, Zijun Hu wrote:
+>>> On 2024/12/3 20:41, Greg Kroah-Hartman wrote:
+>>>> On Tue, Dec 03, 2024 at 08:23:45PM +0800, Zijun Hu wrote:
+>> [...]
+>>>>> or squash such patch series into a single patch ?
+>>>>>
+>>>>> various subsystem maintainers may not like squashing way.
+>>>>
+>>>> Agreed, so look into either doing it in a bisectable way if at all
+>>>> possible.  As I don't see a full series here, I can't suggest how
+>>>> it needs to happen :(
+>>>>
+>>>
+>>> let me send you a full series later and discuss how to solve this
+>>> issue.
+>>
+>> It's only slightly more complex than what we normally do: modify all
+>> instances and then change the API.  In this case you have an additional
+>> problem because the prototype "const void *" will cause a mismatch if a
+>> function has "void *".  The easiest way to solve this is probably to
+>> make device_find_child a macro that coerces its function argument to
+>> having a non const "void *" and then passes off to the real function. 
+>> If you do that in the first patch, then you can constify all the
+>> consumers and finally remove the macro coercion in the last patch.
 > 
-> From: Alejandro Lucero <alucerop@amd.com>
+> Casting function pointers like that should be detected and trapped by
+> control flow integrity checking (KCFI).
 > 
-> With a device supporting CXL and successfully initialised, use the cxl
-> region to map the memory range and use this mapping for PIO buffers.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/net/ethernet/sfc/ef10.c       | 49 +++++++++++++++++++++++----
->  drivers/net/ethernet/sfc/efx_cxl.c    | 19 ++++++++++-
->  drivers/net/ethernet/sfc/net_driver.h |  2 ++
->  drivers/net/ethernet/sfc/nic.h        |  3 ++
->  4 files changed, 66 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index 452009ed7a43..f2aeffc323c6 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -24,6 +24,7 @@
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  #include <net/udp_tunnel.h>
-> +#include "efx_cxl.h"
->  
->  /* Hardware control for EF10 architecture including 'Huntington'. */
->  
-> @@ -177,6 +178,12 @@ static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
->  			  efx->num_mac_stats);
->  	}
->  
-> +	if (outlen < MC_CMD_GET_CAPABILITIES_V7_OUT_LEN)
-> +		nic_data->datapath_caps3 = 0;
-> +	else
-> +		nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-> +						      GET_CAPABILITIES_V7_OUT_FLAGS3);
-> +
->  	return 0;
->  }
->  
-> @@ -919,6 +926,9 @@ static void efx_ef10_forget_old_piobufs(struct efx_nic *efx)
->  static void efx_ef10_remove(struct efx_nic *efx)
->  {
->  	struct efx_ef10_nic_data *nic_data = efx->nic_data;
-> +#ifdef CONFIG_SFC_CXL
-> +	struct efx_probe_data *probe_data;
-> +#endif
->  	int rc;
->  
->  #ifdef CONFIG_SFC_SRIOV
-> @@ -949,7 +959,12 @@ static void efx_ef10_remove(struct efx_nic *efx)
->  
->  	efx_mcdi_rx_free_indir_table(efx);
->  
-> +#ifdef CONFIG_SFC_CXL
-> +	probe_data = container_of(efx, struct efx_probe_data, efx);
-> +	if (nic_data->wc_membase && !probe_data->cxl_pio_in_use)
-> +#else
->  	if (nic_data->wc_membase)
-> +#endif
->  		iounmap(nic_data->wc_membase);
->  
->  	rc = efx_mcdi_free_vis(efx);
-> @@ -1140,6 +1155,9 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  	unsigned int channel_vis, pio_write_vi_base, max_vis;
->  	struct efx_ef10_nic_data *nic_data = efx->nic_data;
->  	unsigned int uc_mem_map_size, wc_mem_map_size;
-> +#ifdef CONFIG_SFC_CXL
-> +	struct efx_probe_data *probe_data;
-> +#endif
->  	void __iomem *membase;
->  	int rc;
->  
-> @@ -1263,8 +1281,27 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  	iounmap(efx->membase);
->  	efx->membase = membase;
->  
-> -	/* Set up the WC mapping if needed */
-> -	if (wc_mem_map_size) {
-> +	if (!wc_mem_map_size) {
-> +		netif_dbg(efx, probe, efx->net_dev, "wc_mem_map_size is 0\n");
+> Another possibility would be to use a macro and _Generic to dispatch to
+> two different backing functions. See __BIN_ATTR() in
+> include/linux/sysfs.h for an inspiration.
 
-Please still print the details of the memory BAR that the netif_dbg has below.
-It is useful for debugging.
+this way may fix building error issue but does not achieve our purpose.
+our purpose is that there are only constified device_find_child().
 
-> +		return 0;
-> +	}
-> +
-> +	/* Set up the WC mapping */
-> +
-> +#ifdef CONFIG_SFC_CXL
-> +	probe_data = container_of(efx, struct efx_probe_data, efx);
-> +	if ((nic_data->datapath_caps3 &
-> +	    (1 << MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN)) &&
-> +	    probe_data->cxl_pio_initialised) {
-> +		/* Using PIO through CXL mapping? */
-> +		nic_data->pio_write_base = probe_data->cxl->ctpio_cxl +
-> +					   (pio_write_vi_base * efx->vi_stride +
-> +					    ER_DZ_TX_PIOBUF - uc_mem_map_size);
-> +		probe_data->cxl_pio_in_use = true;
-> +	} else
-> +#endif
-> +	{
-> +		/* Using legacy PIO BAR mapping */
->  		nic_data->wc_membase = ioremap_wc(efx->membase_phys +
->  						  uc_mem_map_size,
->  						  wc_mem_map_size);
-> @@ -1279,12 +1316,12 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  			nic_data->wc_membase +
->  			(pio_write_vi_base * efx->vi_stride + ER_DZ_TX_PIOBUF -
->  			 uc_mem_map_size);
-> -
-> -		rc = efx_ef10_link_piobufs(efx);
-> -		if (rc)
-> -			efx_ef10_free_piobufs(efx);
->  	}
->  
-> +	rc = efx_ef10_link_piobufs(efx);
-> +	if (rc)
-> +		efx_ef10_free_piobufs(efx);
-> +
->  	netif_dbg(efx, probe, efx->net_dev,
->  		  "memory BAR at %pa (virtual %p+%x UC, %p+%x WC)\n",
->  		  &efx->membase_phys, efx->membase, uc_mem_map_size,
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 71b32fc48ca7..78eb8aa9702a 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -24,9 +24,10 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	DECLARE_BITMAP(expected, CXL_MAX_CAPS);
->  	DECLARE_BITMAP(found, CXL_MAX_CAPS);
->  	struct pci_dev *pci_dev;
-> +	resource_size_t max;
->  	struct efx_cxl *cxl;
->  	struct resource res;
-> -	resource_size_t max;
-> +	struct range range;
->  	u16 dvsec;
->  	int rc;
->  
-> @@ -135,10 +136,25 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  		goto err_region;
->  	}
->  
-> +	rc = cxl_get_region_range(cxl->efx_region, &range);
-> +	if (rc) {
-> +		pci_err(pci_dev, "CXL getting regions params failed");
-> +		goto err_region_params;
-> +	}
-> +
-> +	cxl->ctpio_cxl = ioremap(range.start, range.end - range.start);
-> +	if (!cxl->ctpio_cxl) {
-> +		pci_err(pci_dev, "CXL ioremap region failed");
 
-This error will be more useful if you print out the start & size. Users can
-the check that against /proc/iomem.
-
-> +		goto err_region_params;
-> +	}
-> +
->  	probe_data->cxl = cxl;
-> +	probe_data->cxl_pio_initialised = true;
->  
->  	return 0;
->  
-> +err_region_params:
-> +	cxl_accel_region_detach(cxl->cxled);
->  err_region:
->  	cxl_dpa_free(cxl->cxled);
->  err3:
-> @@ -153,6 +169,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  void efx_cxl_exit(struct efx_probe_data *probe_data)
->  {
->  	if (probe_data->cxl) {
-> +		iounmap(probe_data->cxl->ctpio_cxl);
->  		cxl_accel_region_detach(probe_data->cxl->cxled);
->  		cxl_dpa_free(probe_data->cxl->cxled);
->  		cxl_release_resource(probe_data->cxl->cxlds, CXL_RES_RAM);
-> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-> index 7f11ff200c25..79b0e6663f23 100644
-> --- a/drivers/net/ethernet/sfc/net_driver.h
-> +++ b/drivers/net/ethernet/sfc/net_driver.h
-> @@ -1209,6 +1209,7 @@ struct efx_cxl;
->   * @efx: Efx NIC details
->   * @cxl: details of related cxl objects
->   * @cxl_pio_initialised: cxl initialization outcome.
-> ++ * @cxl_pio_in_use: PIO using CXL mapping
-
-Extra + sign here isn't right. Please build kdoc, I expect it would have caught this.
-
-Martin
-
->   */
->  struct efx_probe_data {
->  	struct pci_dev *pci_dev;
-> @@ -1216,6 +1217,7 @@ struct efx_probe_data {
->  #ifdef CONFIG_SFC_CXL
->  	struct efx_cxl *cxl;
->  	bool cxl_pio_initialised;
-> +	bool cxl_pio_in_use;
->  #endif
->  };
->  
-> diff --git a/drivers/net/ethernet/sfc/nic.h b/drivers/net/ethernet/sfc/nic.h
-> index 9fa5c4c713ab..c87cc9214690 100644
-> --- a/drivers/net/ethernet/sfc/nic.h
-> +++ b/drivers/net/ethernet/sfc/nic.h
-> @@ -152,6 +152,8 @@ enum {
->   *	%MC_CMD_GET_CAPABILITIES response)
->   * @datapath_caps2: Further Capabilities of datapath firmware (FLAGS2 field of
->   * %MC_CMD_GET_CAPABILITIES response)
-> + * @datapath_caps3: Further Capabilities of datapath firmware (FLAGS3 field of
-> + * %MC_CMD_GET_CAPABILITIES response)
->   * @rx_dpcpu_fw_id: Firmware ID of the RxDPCPU
->   * @tx_dpcpu_fw_id: Firmware ID of the TxDPCPU
->   * @must_probe_vswitching: Flag: vswitching has yet to be setup after MC reboot
-> @@ -186,6 +188,7 @@ struct efx_ef10_nic_data {
->  	bool must_check_datapath_caps;
->  	u32 datapath_caps;
->  	u32 datapath_caps2;
-> +	u32 datapath_caps3;
->  	unsigned int rx_dpcpu_fw_id;
->  	unsigned int tx_dpcpu_fw_id;
->  	bool must_probe_vswitching;
-> -- 
-> 2.17.1
+> This also enables an incremental migration.
 > 
 > 
+
+change the API prototype from:
+device_find_child(..., void *data_0, int (*match)(struct device *dev,
+void *data));
+
+to:
+device_find_child(..., const void *data_0, int (*match)(struct device
+*dev, const void *data));
+
+For @data_0,  void * -> const void * is okay.
+but for @match, the problem is function pointer type incompatibility.
+
+there are two solutions base on discussions.
+
+1) squashing likewise Greg mentioned.
+   Do all of the "prep work" first, and then
+   do the const change at the very end, all at once.
+
+2)  as changing platform_driver's remove() prototype.
+Commit: e70140ba0d2b ("Get rid of 'remove_new' relic from platform
+driver struct")
+
+ introduce extra device_find_child_new() which is constified  -> use
+*_new() replace ALL device_find_child() instances one by one ->  remove
+device_find_child() -> rename *_new() to device_find_child() once.
+
+> Thomas
+
