@@ -1,149 +1,136 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638251A01B9;
-	Tue,  3 Dec 2024 20:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF1F207A01
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 21:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733258030; cv=none; b=cQIddF3arxo0YygqurHtF11B1Hd0Nlk44OHwKLwaRxd7CzWvqOPsGZjnTt9YzKGmAQL7Fo4Jsol77Y6N2nq2DmvoQDIR7kKhmt0mhcNMXQ+34ete2nkHeySpmHjr00X+AbSmbifH88EgcYAJUc/VEVo61xZ5WIF+hdRdyV2VgC0=
+	t=1733260095; cv=none; b=HNnOq/KF5Og2Dl3p1Osbmprpf8Se0dAwWxowZnAP9EQiu71EL66w2K1nrBOgYJ9FaEI0jdP9avcxbgV21MCZ0h3CUfkSpAiXwPUMhjh1cGpJPLnXj+X1VM+kct5GSIZoXyypdhfhtnlfBDgXs53hpRaG6h7Ut8KwsBW+4IoE+vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733258030; c=relaxed/simple;
-	bh=qZYiQEFUY1AkdD/TCr3naI2kgNtzgauRD1TTdlgOxto=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DDQBgVar3go7zHfmNw8DiLDuqv5ZpC+kVvUw6VPGTmyKs4NxNjWPy52S7hCPa1zjHwyq5NpKQBLa1LTgkFR99ILxhcEKU4iPjy4J8xZ/2n0QItmR07BpjpjwM9zfOEyAdGPZ+mRl0nfqihW2wbSZ4RvxxEeO1YYWe+2FxEnAYk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=meUPET/d; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733260095; c=relaxed/simple;
+	bh=IY4XD/vy89LazVmv3e3/73IWifDG5ua0/zxr9O0d2hM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QrOd/shA0iMxh88k9mXFcM/uDMFiv5CJA9YUmpGiWRiOme9lEx5JDKiBqMZk4XQwwt4Aw489eiMoJUQPQx4if4uJuTAqOoqaH8Obv/9VvaWwmNfoOrW/KwmHWFwN67R9e+dSFd85siTg1MHZ4dFafKoIvc+vErAKkxAjZYYL75w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJEtrIbY; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meUPET/d"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-434a10588f3so39177735e9.1;
-        Tue, 03 Dec 2024 12:33:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733258026; x=1733862826; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6n1p9wpP+zs7RFxQ9jZCHg+mp1E022AqD1rZ3rD5wwA=;
-        b=meUPET/dX8MtNUtX5ftk2fURKoFTKom9Oaayi7VSjchR+vKu22oIgKHQ58Gi6e0571
-         VzIO39a7ApgmMFFLv1PDO6nyyEH4TXi8lMFdmqONmGr+wcOs344oMU+GbU8aIgmsTRAX
-         4kTCJfWawU31rYKk1mEr2SMNP736XStzoDpW9DW89fz5lP5ECMnPmKeayn+NLK2Ndo7T
-         kN7/kWAwKapiwujZBWlmwD1PJ3VjxJT+brGOEtBDjHDIP1LcJzCCGdhOOopd+PcEZhcS
-         SoadCL0xjZPtUw86RLZaIltEb7aRbmIOWhyb1f4aZ+YQXMQ5wu8YNjb+5HK9pqntQouz
-         r3Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733258026; x=1733862826;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6n1p9wpP+zs7RFxQ9jZCHg+mp1E022AqD1rZ3rD5wwA=;
-        b=czE7ts7Q/If83wLWgAVEWOV9TQ/H50y+uFYYgFFPTaCksq4B7NCydL3Xmd0/th0yfR
-         2bRL7Mbks70bZRDTkMGW1jKgFGjVvYzmBzn1phRwOOzLUNjLDG9LQ+K6noMGIbw8IMnx
-         GVi/b1UfQyFhcxyL0FNVjIk1fHOW2a2QFIsCkTIpjNtmMIbVA3n9PCWqsg5CzuQRdcLO
-         cHOd9MSpiLkaEYQS2bH8vnrHo5qS4MMOf16W0R0EQukIxdnH8xC7eyWfY5hTp1TBKgMG
-         dSOEvILOI9mos1ynXhTx3JG4542WjkyDmzS4xD/9230qSemzgjxFeUJrbZExTNrR80yf
-         Lzdg==
-X-Forwarded-Encrypted: i=1; AJvYcCULv98VtWQGebMn2BhUCh1pT4nP8tVE28DOp2bSWjfj3T8LtAB42IoxQstl2zhQD5ATD8BGzYmevW0=@vger.kernel.org, AJvYcCWLy+5WdvX3MPrRVrDwrYQNs48JpAS1wB8+TSz/l4j1Wgs7LqWKxIQKYlSa96DAvweTEHpuXPAf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkcawZoTRf81nCyOAk+J6Zuiu2mz5exY7Qa98XFHXN8vT4u9Hx
-	iOcs8529bR9JZd254EpX3D5Q3v1lYKTBNs1ct0NS0uweUguTDbeA
-X-Gm-Gg: ASbGncvgG/yxvcmhDFstFzbli+V546nZ0ieE1YlH8cVI/C/DDuNDLZ6JLd3Yow2vQuE
-	61SjRqFlWDRZidee1xhP6fRV9Gf/UD62H5m2zkM1Pm5Flp/o/UypRZ71OjadqkQYid/7b5jMK5D
-	g2meJbfod1a6kOJIMiskfYQjWMOiL2FWFTi4mcqBigDbHETtslDMkTEYSx5mm9/+8JHEUwGiPcD
-	EJ57VaAk8vjByZaYGezZAMBJ3Ly7VMfZVZ8I5UI/aCqaYHzz/CCrdPjY4Tdwt5ZfhZYCktg8/Td
-	NCynXqr6cVQk9PX82bg2xdLqbySedYZvNLkaoA==
-X-Google-Smtp-Source: AGHT+IFAapOjKvSN5RLi3zaCi5alUp2EfZVmjkLqdbO/sBuhCpCBSXL/9l/AIwLIirQerXKK3u5n1w==
-X-Received: by 2002:a05:6000:4603:b0:382:41ad:d8e2 with SMTP id ffacd0b85a97d-38607c0deadmr1687573f8f.39.1733258026429;
-        Tue, 03 Dec 2024 12:33:46 -0800 (PST)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385e1f3f2desm12020455f8f.87.2024.12.03.12.33.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 12:33:46 -0800 (PST)
-Subject: Re: [PATCH v6 02/28] sfc: add cxl support using new CXL API
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-3-alejandro.lucero-palau@amd.com>
-From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <66ac91f6-b027-3732-882a-4b5f32edfaf5@gmail.com>
-Date: Tue, 3 Dec 2024 20:33:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJEtrIbY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733260093; x=1764796093;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IY4XD/vy89LazVmv3e3/73IWifDG5ua0/zxr9O0d2hM=;
+  b=FJEtrIbYUSV3Vjks6GTc2CJozwJ239JubX1CjUFu/EY1oCo7oAMuE6Y4
+   EF5tY9r5yVmpiiKZ1DXLb8+JhHLHF+LG2khiZzNBEnn9LWzRoWL5cLYKE
+   0S4huSWwQKB/iYvWOTJiHeAf15Tz8wZKSN43WL+kffQp6zb6VJphqt/0U
+   64ouOkBLVI89vdrCQYxrqStxrdQ5e24mjG6nFq8GqX/+jRNLDKWXeIbJU
+   HEH0X65a0St7XLxRXF71WZtdADwyd0wNgZDJIPBSICNLebS+n831el1dr
+   mnkpwxlGvbIchh2/x7SuH39ZzxZSVEBQoP6IdvY4FuqkeLL3rpAKAT+KJ
+   Q==;
+X-CSE-ConnectionGUID: Q93NQ+X6SgW5JCNGWqC4Qg==
+X-CSE-MsgGUID: EQebUzVBQfqcXzkqn4UH4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="44894174"
+X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
+   d="scan'208";a="44894174"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 13:07:59 -0800
+X-CSE-ConnectionGUID: MMc3/tiMQlmYbQWNZWPSLQ==
+X-CSE-MsgGUID: UG3BUli/S72drUNFL0oqIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,206,1728975600"; 
+   d="scan'208";a="131010581"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.238]) ([10.125.111.238])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 13:07:58 -0800
+Message-ID: <26d8e8fc-e631-4ef4-9e04-e1e4fda03ea5@intel.com>
+Date: Tue, 3 Dec 2024 14:07:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241202171222.62595-3-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 20/20] fwctl/cxl: Add documentation to FWCTL CXL
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20241115212745.869552-21-dave.jiang@intel.com>
+ <20241122152655.0000717d@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241122152655.0000717d@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/12/2024 17:11, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+
+
+On 11/22/24 8:26 AM, Jonathan Cameron wrote:
+> On Fri, 15 Nov 2024 14:25:53 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Add CXL initialization based on new CXL API for accel drivers and make
-> it dependable on kernel CXL configuration.
+>> Add policy and operational documentation for FWCTL CXL.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  .../userspace-api/fwctl/fwctl-cxl.rst         | 91 +++++++++++++++++++
+>>  Documentation/userspace-api/fwctl/index.rst   |  1 +
+>>  2 files changed, 92 insertions(+)
+>>  create mode 100644 Documentation/userspace-api/fwctl/fwctl-cxl.rst
+>>
+>> diff --git a/Documentation/userspace-api/fwctl/fwctl-cxl.rst b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
+>> new file mode 100644
+>> index 000000000000..158e9aa45609
+>> --- /dev/null
+>> +++ b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
+>> @@ -0,0 +1,91 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +================
+>> +fwctl cxl driver
+>> +================
+>> +
+>> +:Author: Dave Jiang
+>> +
+>> +Overview
+>> +========
+>> +
+>> +The CXL spec defines a set of commands that can be issued to the mailbox of a
+>> +CXL device or switch. It also left room for vendor specific commands to be
+>> +issued to the mailbox as well. fwctl provides a path to issue a set of allowed
+>> +mailbox commands from user space to the device moderated by the kernel driver.
+>> +
+>> +While there are a large set of mailbox commands, only the feature related
+>> +commands will be allowed to be issued through fwctl initially. No background
+>> +commands will be supported at this time.
+>> +
+>> +CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+>> +CXL spec r3.1 8.2.9.6.2 Get Feature (Opcode 0501h)
+>> +CXL spec r3.1 8.2.9.6.3 Set Feature (Opcode 0502h)
+>> +
+>> +The "Get Supported Features" return data may be filtered by the kernel driver to
+>> +drop any features that are forbidden by the kernel or being exclusively used by
+>> +the kernel. The "Get Supported Featuers" command falls under the fwctl policy
+> spell check. Features
+> 
+>> +of FWCTL_RPC_CONFIGURATION.
+> As per earlier feedback I think we need to reject get/set even if they are not
+> listed in get supported features so that bad userspace doesn't get away
+> with sending them anyway.  This is particularly necessary as I suspect we'll
+> be removing features in the long run from what we let be accessed this way.
+> 
+> I'm not sure how we document the potential for removal of a feature that
+> was reported by an earlier kernel.
 
-You probably mean 'dependent' (or maybe just 'depend').
+Userspace should query the driver for whatever features that are "available". Given one feature may exist for a device while another does not? So maybe the expectation from the app should be feature does not exist unless reported by the driver that it exists. 
 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> 
+> Jonathan
+> 
+> 
+> 
+> 
 
-Some nits to consider for v7, but this already gets my
-Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-
-...
-> @@ -1214,6 +1222,17 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
->  	if (rc)
->  		goto fail2;
->  
-> +#ifdef CONFIG_SFC_CXL
-> +	/* A successful cxl initialization implies a CXL region created to be
-> +	 * used for PIO buffers. If there is no CXL support, or initialization
-> +	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
-> +	 * defined at specific PCI BAR regions will be used.
-> +	 */
-> +	rc = efx_cxl_init(probe_data);
-> +	if (rc)
-> +		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
-> +
-> +#endif
->  	rc = efx_pci_probe_post_io(efx);
->  	if (rc) {
->  		/* On failure, retry once immediately.
-
-nit: weird to have the blank line before the #endif rather than after.
-
-...
-> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-> index 620ba6ef3514..7f11ff200c25 100644
-> --- a/drivers/net/ethernet/sfc/net_driver.h
-> +++ b/drivers/net/ethernet/sfc/net_driver.h
-> @@ -1199,14 +1199,24 @@ struct efx_nic {
->  	atomic_t n_rx_noskb_drops;
->  };
->  
-> +#ifdef CONFIG_SFC_CXL
-> +struct efx_cxl;
-> +#endif
-> +
->  /**
->   * struct efx_probe_data - State after hardware probe
->   * @pci_dev: The PCI device
->   * @efx: Efx NIC details
-> + * @cxl: details of related cxl objects
-> + * @cxl_pio_initialised: cxl initialization outcome.
->   */
->  struct efx_probe_data {
->  	struct pci_dev *pci_dev;
->  	struct efx_nic efx;
-> +#ifdef CONFIG_SFC_CXL
-> +	struct efx_cxl *cxl;
-> +	bool cxl_pio_initialised;
-
-Not clear why this needs to be a separate bool rather than just
- seeing if probe_data->cxl is nonnull; afaict from a quick skim of
- the series it's only used in patch 28, which sets it to true in
- the same place probe_data->cxl is populated.
