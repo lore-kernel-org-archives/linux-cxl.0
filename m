@@ -1,93 +1,283 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9331F76CE;
-	Tue,  3 Dec 2024 17:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61C71FCD14
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Dec 2024 18:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733247512; cv=none; b=JJ75HhQqCsrvnJq8qG9uwPr43Z1T35zEDx2FJfMmIpskubNkyzAcD4csos6Dly2aZU/nkrZTZIPbe/CnsE35YuEfIJU0O58IQ3as8AEcylARuY1eN3CnHjvANCq7cBQGJ+NTAO2iTMFf1mwdeqSLaLI20MRM9zV8I4x9rMf/ur0=
+	t=1733249206; cv=none; b=C2aUh7te0utbeFEJ7n7NLSHscvgRLMgIm+1CnO2rsSF4F4ZuMmOyDeZRevumq3ooEKh0s35bA+Ce6nGWQqYI9roKcSG9I/Um15ZT+gtO5wQgKoDPNSbnHUEKG2vdTJ23ImxvfDT1rOYETa8oUm8kBgiUivtjX7029YucEj9JGfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733247512; c=relaxed/simple;
-	bh=7BrpCZ2JaT8Bn4r+/fZpw3qYVx7AsWh4zajkUXq+CmM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=c4qseTbrPqfdty+E8JESMDsLzbhAfLRkB4XJu4k8bPNmUShUfGrzkP6j/9cUrcDasbpnXMer3U9Y/LTx/Xh0v0BUTOqmAUHJB0p7Ckmx2a24w/N/RHSBCacx2syVZKR35EhqjaXLgq7HZba5cEXVHvPTM7WWsRzOvHj9fbEFyj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hKCgqcW8; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733249206; c=relaxed/simple;
+	bh=MB5Vyv0GUCOz0eoEb699728K7/UVG0ATso4wgMgsgTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T4p1heK1lJ/OZGtiB+fM1gno+RHSYxuKojB4IfvlwU0lKYdRVVKkeuPDidXlTsUckc3uUEXClxuXvORxIuljx3PDHFvO5nTqyLZwY/WhE0dq14JW27aWNf4FS9nFmnFPVPDclzK7utLR+kzS5y/dmpNzztM1Plw1XEWKW51JWU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmjfxVhs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKCgqcW8"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-434a90fed23so49293075e9.1;
-        Tue, 03 Dec 2024 09:38:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733247509; x=1733852309; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2i0QYGRPe31dft8XawdbTPYP5t//UlFP6kTyw2o6LzE=;
-        b=hKCgqcW8O6/q1Ep6u8TXxZShGmePw0sRP3W/V7HgXCcVA0T6ijRLToVXLqU8bKXWN1
-         cr8S6T5VU+gAeO7mL545jKs2pKM/2i0v0v9b+seBHx9m8txUkII8mjRayBGrF9OXssIB
-         XVSRcaUf0VM50hwWFbolSomH/ONmdJcOmzrdV/0jfDW8ddte33Ju9+lU3GLRFHDgVrks
-         YtlJN/npennTV+fvk9mD81OvvVlhgnSJC6Wb9cK3v7FS7H6vJT1LqiZanxQO6APKMLfj
-         iwzAlkiVsnIaAf4Yi37USburfYhqme+J5kL8b8I9hUutxDT4czF5e5JEquo6KLesvm5L
-         NvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733247509; x=1733852309;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2i0QYGRPe31dft8XawdbTPYP5t//UlFP6kTyw2o6LzE=;
-        b=ItGh2mW+hUrFdKBWonH+vJjQPRvC/DXTHnpR+CES6SqfX6QEJE9txn901oxQ/dnMDF
-         WdU7K+RnmF583OAs1dtBF7JFm/VXXIezUfksGPiZQCcHzIoS8H5FeXJFW/tvCTZAByMt
-         +O22lR3NUsMd2ZYIlYaC2qxPeDBighCuxRaTbOaJo1rrG4y78E8Ndd5wQZpkI2lo/Ll+
-         RGBwGTt9R2Ve+Hi7EezwwVDY8Zzx5jeNqz5+nQFDJgRE6n8C1C262A7O+BtuNcySna7p
-         N9I8R/VnwgWOQQbDQxEG0hnaCkDCKOxusIoVFpaeehZ1RHwTEvom5DYJOslPf1hUg614
-         M73w==
-X-Forwarded-Encrypted: i=1; AJvYcCV+N+GRyWmY15qXk6Vyhm9WUWwK+URQQ5F+IFgAZBHjCQUPthCy0TIlPG7AMfReL3rYHkkf9h9R@vger.kernel.org, AJvYcCVPqC4wK4Fr0hlue+kEqy2K6ifRlHpK7U8NwC6ydR776001MCOVr4A4gCc0QpqTBVyoN47ZIF/idOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv/mmACQkbTYWwHG4C8iTs6RVSy6Z53fWTod24iPGU2EyZtT5S
-	uOcfYcTNT8lZjF6GiKFD8lfBzKKUWcrRAuhKBbnoKzl8qGqYJXsO
-X-Gm-Gg: ASbGncvIFHTZ8u/AW/Yj3yOGySkG5xzDLklulMwJRj9c0AJnqJi5zoCeN1FxH2zTlhU
-	ilHxlG235Z/cwc4uJ0jDImJMbs2fmnqTJ9Nzuyuu6vxDE+VdMOXVGvLk7r1qrT9MvT3uwTReOnL
-	Qcsg0342BBEDbYANxDFImhuVz+oF4C0TnK+tMz4owa4e1r0GwvqAYEKhbEd44dk91off8SA+C/O
-	VFXMLJDn0II7c5oJoJBVAeKY/WBYK/G2RlIm7IWUtqwIBRZ1pO4m3TOzFIKgKUo2f4/InUfbohD
-	zGTvhkpuwyM1szggnj9KsrhbpNDMqDZg5jUZIA==
-X-Google-Smtp-Source: AGHT+IELfk/rqiYQ2xFCsty4Po/RDV1kpoZIfmvqPBOS1OiRE8cCwmsd9kkcQ9OLbFX2XtV2i12P0A==
-X-Received: by 2002:a05:6000:4013:b0:385:f638:c67b with SMTP id ffacd0b85a97d-385fd3f774amr2815948f8f.35.1733247508378;
-        Tue, 03 Dec 2024 09:38:28 -0800 (PST)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385e5b10478sm10474748f8f.73.2024.12.03.09.38.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 09:38:27 -0800 (PST)
-Subject: Re: [PATCH v6 27/28] sfc: update MCDI protocol headers
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-28-alejandro.lucero-palau@amd.com>
-From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <8e43ec5e-8ca9-43fe-eb91-f35388a03c1e@gmail.com>
-Date: Tue, 3 Dec 2024 17:38:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmjfxVhs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733249204; x=1764785204;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MB5Vyv0GUCOz0eoEb699728K7/UVG0ATso4wgMgsgTQ=;
+  b=DmjfxVhsSu3ZNGjPPqIVw55nXPp8qwTp7hjPFBBjTS9aj8gPaU9SisuP
+   9a1ZcVLpsgWQeDRRm4yaBVl6q7xyQOHS3dHft1Y6FDc7zlKbVl0V7RqPn
+   whcScoBY1Sf9WZ2cdHnZAe3bXvo6gzRYnlpqi6wV2pYP9h6paz2CkA00X
+   R7C4E7lWzzgvgIBX63y+/9g3WC76lsZofUJ/t0Unv3qU6KSKg9FNWts+Q
+   Kq61g126GAcKaEBRzP0ROrf9Brh0E6rp9ePk0Na2zF/ReeTLDcJv9y2qm
+   yzx4/7s+RG08ncufjEYB7NeRM8AS2sge3NBIw7n5y41uFQd0R0spEP1KA
+   A==;
+X-CSE-ConnectionGUID: 6b3NGvGBQVOYz7mZfhgRZg==
+X-CSE-MsgGUID: oHwuMXOfQjK/h+f2ODjhUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="44873353"
+X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
+   d="scan'208";a="44873353"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:06:44 -0800
+X-CSE-ConnectionGUID: DRxoMXcxTgusEu5E2g9hpQ==
+X-CSE-MsgGUID: 4LSJNMDtT0aFwzROkL5sUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
+   d="scan'208";a="93364008"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.238]) ([10.125.111.238])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:06:43 -0800
+Message-ID: <52dab42a-ba38-4977-81a5-8be76639871c@intel.com>
+Date: Tue, 3 Dec 2024 11:06:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241202171222.62595-28-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 16/20] fwctl/cxl: Add support to filter exclusive
+ features
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20241115212745.869552-17-dave.jiang@intel.com>
+ <20241122150546.00004b18@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241122150546.00004b18@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/12/2024 17:12, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> The script used to generate these now includes CXL definitions.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
-Reviewed-by: Edward Cree <ecree.xilinx@gmail.com>
 
-Thanks.
+On 11/22/24 8:05 AM, Jonathan Cameron wrote:
+> On Fri, 15 Nov 2024 14:25:49 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Add support to allow filtering of CXL features that are exclusive to the
+>> kernel and make them not visible to user space. The "get supported
+>> features" mailbox command returned to the userspace is emulated and
+>> will skip the features that is marked exclusive for the kernel. The
+>> exclusion allows certain the feature setting of certain commands such
+>> as claimed by RAS to be exclusive to the kernel.
+> 
+> Well behaved software is only going to issue features that were returned
+> by get_supported_features.  However we need to block badly behaved software
+> too.  So a check is needed in the set_feature() / get_feature() paths.
+> 
+> A few queries inline but basically LGTM other than that.
+> 
+> Jonathan
+> 
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  drivers/cxl/core/mbox.c | 115 ++++++++++++++++++++++++++++++++++++----
+>>  drivers/fwctl/cxl/cxl.c |   7 +--
+>>  include/cxl/features.h  |  52 ++++++++++++++++++
+>>  include/cxl/mailbox.h   |   8 ++-
+>>  4 files changed, 168 insertions(+), 14 deletions(-)
+>>  create mode 100644 include/cxl/features.h
+>>
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index e7c5c709ac79..12ace2951f7c 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -5,6 +5,7 @@
+>>  #include <linux/ktime.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/unaligned.h>
+>> +#include <cxl/features.h>
+>>  #include <cxl/mailbox.h>
+>>  #include <cxlpci.h>
+>>  #include <cxlmem.h>
+>> @@ -897,6 +898,78 @@ static int handle_mailbox_cmd_from_fwctl(struct cxl_mailbox *cxl_mbox,
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * Emulate the 'get supported features' mailbox command and only copy out the
+>> + * features that are not marked as exclusive for kernel.
+>> + */
+>> +static void cxl_mbox_get_supported_features_filtered(struct cxl_mailbox *cxl_mbox,
+>> +						     struct cxl_mbox_cmd *mbox_cmd)
+>> +{
+>> +	struct cxl_mbox_get_sup_feats_in *feat_in = mbox_cmd->payload_in;
+>> +	struct cxl_mbox_get_sup_feats_out *feat_out = mbox_cmd->payload_out;
+>> +	const int feat_out_size = sizeof(*feat_out);
+> Worth while?  I'd just use sizeof(*feat_out) inline.
+> Compiler will sort out out and it is self documenting.
+
+ok
+
+> 
+>> +	struct cxl_feat_entry *pos;
+>> +	const int feat_ent_size = sizeof(*pos);
+> Same for this.
+
+ok
+
+> 
+>> +	int out_count, ents, u;
+>> +	u32 count;
+>> +	u16 start;
+>> +
+>> +	count = le32_to_cpu(feat_in->count);
+>> +	start = le16_to_cpu(feat_in->start_idx);
+>> +	ents = count / sizeof(struct cxl_feat_entry);
+>> +	ents -= start;
+> 
+> You've lost me on this maths. ents is what?
+
+So I'm trying to validate the number of entries I need to copy out when 'start' index gets thrown in the fray. So it calculates the number of entries the output buffer is capable off, and then minus the start index. Although now I think about it, I should compare that to the (total driver supported features - start). Having to deal with 'start' with this "emulation" is a pain.  
+
+> 
+> 
+>> +	if (ents < 0) {
+>> +		mbox_cmd->size_out = 0;
+>> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
+>> +		return;
+>> +	}
+>> +
+>> +	if (mbox_cmd->size_out < feat_out_size) {
+>> +		mbox_cmd->size_out = 0;
+>> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
+>> +		return;
+>> +	}
+>> +
+>> +	feat_out->supported_feats =
+>> +		cpu_to_le16(cxl_mbox->num_user_feats);
+>> +	if (ents == 0) {
+>> +		feat_out->num_entries = cpu_to_le16(0);
+>> +		mbox_cmd->size_out = feat_out_size;
+>> +		mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
+>> +		return;
+>> +	}
+>> +
+>> +	pos = &feat_out->ents[0];
+>> +	out_count = feat_out_size;
+>> +	for (int i = 0, u = 0; i < cxl_mbox->num_features; i++) {
+>> +		struct cxl_feature *feat = &cxl_mbox->entries[i];
+>> +
+>> +		if (feat->exclusive)
+>> +			continue;
+>> +
+>> +		if (u < start) {
+>> +			u++;
+>> +			continue;
+>> +		}
+>> +
+>> +		memcpy(pos, &feat->entry, feat_ent_size);
+>> +		out_count += feat_ent_size;
+>> +		pos++;
+>> +		u++;
+>> +
+>> +		if (u == count)
+>> +			break;
+>> +
+>> +		/* Make sure it does not go over total output buffer size */
+>> +		if (out_count + feat_ent_size >= mbox_cmd->size_out)
+>> +			break;
+>> +	}
+>> +
+>> +	feat_out->num_entries = cpu_to_le16(u);
+>> +	mbox_cmd->size_out = out_count;
+>> +	mbox_cmd->return_code = CXL_MBOX_CMD_RC_SUCCESS;
+>> +}
+> 
+> 
+>> diff --git a/include/cxl/features.h b/include/cxl/features.h
+>> new file mode 100644
+>> index 000000000000..6074a3f79d70
+>> --- /dev/null
+>> +++ b/include/cxl/features.h
+>> @@ -0,0 +1,52 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/* Copyright(c) 2024 Intel Corporation. */
+>> +#ifndef __CXL_FEATS_H_
+>> +#define __CXL_FEATS_H_
+>> +
+>> +#include <linux/uuid.h>
+>> +
+>> +#define CXL_FEAT_PATROL_SCRUB_UUID						\
+>> +	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,	\
+>> +		  0x06, 0xdb, 0x8a)
+> 
+> We should figure out ordering for this one to avoid introducing the UUIDs in
+> Shiju's set then pulling them here.   Shiju, maybe just use the UUID
+> part of this file as a patch in your series?
+> 
+> The exclusive array belongs only with this patch.
+> 
+> I guess it doesn't really matter if we end up with repeated UUID definitions
+> and cleanup after though.
+> 
+>> +
+>> +#define CXL_FEAT_ECS_UUID							\
+>> +	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,	\
+>> +		  0x89, 0x33, 0x86)
+>> +
+>> +#define CXL_FEAT_SPPR_UUID							\
+>> +	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,	\
+>> +		  0x75, 0x68, 0xbb)
+>> +
+>> +#define CXL_FEAT_HPPR_UUID							\
+>> +	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,	\
+>> +		  0xfb, 0x0e, 0x24)
+>> +
+>> +#define CXL_FEAT_CACHELINE_SPARING_UUID						\
+>> +	UUID_INIT(0x96C33386, 0x91dd, 0x44c7, 0x9e, 0xcb, 0xfd, 0xaf, 0x65,	\
+>> +		  0x03, 0xba, 0xc4)
+>> +
+>> +#define CXL_FEAT_ROW_SPARING_UUID						\
+>> +	UUID_INIT(0x450ebf67, 0xb135, 0x4f97, 0xa4, 0x98, 0xc2, 0xd5, 0x7f,	\
+>> +		  0x27, 0x9b, 0xed)
+>> +
+>> +#define CXL_FEAT_BANK_SPARING_UUID						\
+>> +	UUID_INIT(0x78b79636, 0x90ac, 0x4b64, 0xa4, 0xef, 0xfa, 0xac, 0x5d,	\
+>> +		  0x18, 0xa8, 0x63)
+>> +
+>> +#define CXL_FEAT_RANK_SPARING_UUID						\
+>> +	UUID_INIT(0x34dbaff5, 0x0552, 0x4281, 0x8f, 0x76, 0xda, 0x0b, 0x5e,	\
+>> +		  0x7a, 0x76, 0xa7)
+>> +
+>> +#define CXL_FEAT_UUID_MAX	8
+> 
+> Why not size automatically and use ARRAY_SIZE() to figure out size?
+
+will do
+
+> 
+>> +static uuid_t cxl_exclusive_feats[CXL_FEAT_UUID_MAX] = {
+>> +	CXL_FEAT_PATROL_SCRUB_UUID,
+>> +	CXL_FEAT_ECS_UUID,
+>> +	CXL_FEAT_SPPR_UUID,
+>> +	CXL_FEAT_HPPR_UUID,
+>> +	CXL_FEAT_CACHELINE_SPARING_UUID,
+>> +	CXL_FEAT_ROW_SPARING_UUID,
+>> +	CXL_FEAT_BANK_SPARING_UUID,
+>> +	CXL_FEAT_RANK_SPARING_UUID,
+>> +};
+>> +
+>> +#endif
+> 
+
