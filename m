@@ -1,216 +1,151 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5AF383;
-	Wed,  4 Dec 2024 04:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733287487; cv=fail; b=EiBjpXRv7ckO4eKnf8dyK920wrXpdJOkrJqxsOPeFnC5B0n1+X74c06zv+yy107RBCDRk60X3AC0LLaUEtu5LbrypVcJS9rob/f+GO7/VtNmTDbpYYvtATRvu4J+4XQMf5s3XdKz9us8LJMFYK27G/L1napyzDA/h0YUz7M/9sQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733287487; c=relaxed/simple;
-	bh=gzmpRmatPQxAj/z/5ihQjogQHqlBDrSknHWSOdNzznw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rEwmwwdmC2Ib5YD+o8oqLupO6NaWY1tM0jIKUoU5/iD2MiwWbitU9/5OiKfcNaDOhLrxSG98VVJ6dMRahg7D182C9wOxYckxdIjUZP2E+4EL9tS8Xcc+udcGQ5uSD3+M7uHFY/2Nwowet2jr+DWjwcecKncr+9uSOaouB5BokPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JXCYaUTj; arc=fail smtp.client-ip=40.107.93.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9AE194147;
+	Wed,  4 Dec 2024 08:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733301204; cv=none; b=AjP1dSxGQsQuTU+HmYsQaeaXDoz+IeiU8lr0mDdxh+BtH0x4IcYwvYQC5P9oI7cxQgPsgxK47LkSEdyT4kJ5FzZP9TLfo+vRjPBc6oZYVFckBjkC+qdrq3arbftyMuCs3EMbZGznA1HeqQtWR0siB2EtjSPCQjD5E/8CvREOhbw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733301204; c=relaxed/simple;
+	bh=qtKWy1+3TKEbOo8X493bzRcNN46Y+m4kM9GVR6iOJk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lwhvBZaEWLMrM/qjEYYagxFC4QQIvt+JOdcSykMZ5jejoLfDBw3cclfbGmDV4uhK7snTC+pbpL6pKDRLaC0QvgCMOOQfFJXueq0fCNOZLzXn8POhNO9+9Hqu73ToEcBlMVH7fJ1n3zNSfEkEoeqfW8lzCqSK9ccSSS8vjdWDseM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jejwctSc; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JXCYaUTj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vp1Vc+klsYRZDVxbiuuXeJ3eB3oHF7AsPc4yH831v3keIcBOy78qPDtJdMUbjQncZCLejL+JZKO5CzzTQrFD7QiyCAQMl1IgUGk9TIlemz/q0s72aDHMo/f7OVl1PkQInDBixPbLzn323L6+f3Jf/h3+pvaVacDeLJQv2UYoLQChVa/5LgBLQ05eGHJ9LoZayTGaRgDX8lgheGUWJv9dlsmDvgDMYsmo+Mmxx91rwrQ/tAkrjQSMxS9++TiMW8AjkMXGeFnL6sp1Z6/TdbuCt18Um+SU+qnQ7tfAbyZc4Rs+ridhDA+AQB5FFdjeATb460+f55v7WcTSi1IKHB6KGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=scjaPQd8ZHnSMXb/J/qdc7RXWvq/qx49E++9mBI0UqU=;
- b=RgryX5x9lOITuQ8DgJt4s0zLq717UyF5HozT3IoN7GRUXcIra3rzDE9TZcdw7wRs0ehBriNOV5oNPYcpdsZ8UsBdRJJKHRv9Q25q913vLDkjRaAcUbi4fAOeDYRmCmGNjerwa6NesDpcOmlCIgP6MFeEa2j/l3l9PNcPQBHUkhHiSTAy/as5tPFmAokcQEEaJ4KjEl1l2Ivug+rsxd7+EFK2bMd+V59Nrehu3XXNSf7x6ZyS9msqZMDOqHI7oksqekqNXY6GkuTJ2cb9M+SBM6Hu1PsBGw5wXcTXdrQvwlJhOvrmTrqZtcXEhprX4k1E11vtpnC8HD8q0vJHsn+OmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=scjaPQd8ZHnSMXb/J/qdc7RXWvq/qx49E++9mBI0UqU=;
- b=JXCYaUTjI8+KUXrPOvuWV6dErjCPpA7D++T+LSiHILQrlFJDypEka7Pwa61nJmnVP+CuWmsfffmaWD2x/FJudur0iXw7g7nLhDzAsfyHb020ymbxe3dUrOL35863HnpZJ5GOdhzHbk+UDm36DcQ5EVy7zpmxazn/zuBeNL+5Ovk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
- by MN0PR12MB6224.namprd12.prod.outlook.com (2603:10b6:208:3c0::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Wed, 4 Dec
- 2024 04:44:42 +0000
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3%4]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
- 04:44:42 +0000
-Message-ID: <8fdb21b6-5ea4-4be3-bfac-901ecd638897@amd.com>
-Date: Wed, 4 Dec 2024 10:14:31 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] resource: Fix CXL node not populated issue
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, bharata@amd.com,
- Andrew Morton <akpm@linux-foundation.org>,
- Dan Williams <dan.j.williams@intel.com>, David Hildenbrand
- <david@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Alistair Popple <apopple@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Baoquan He <bhe@redhat.com>, ilpo.jarvinen@linux.intel.com,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Fontenot Nathan <Nathan.Fontenot@amd.com>, Wei Huang <wei.huang2@amd.com>
-References: <20241202111941.2636613-1-raghavendra.kt@amd.com>
- <87frn5wac3.fsf@DESKTOP-5N7EMDA> <Z08KiPwwiw72Vo9R@smile.fi.intel.com>
- <87iks06w17.fsf@DESKTOP-5N7EMDA> <Z0_F8EuGpxPPytFM@smile.fi.intel.com>
-Content-Language: en-US
-From: Raghavendra K T <raghavendra.kt@amd.com>
-In-Reply-To: <Z0_F8EuGpxPPytFM@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0158.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26::13) To PH7PR12MB5805.namprd12.prod.outlook.com
- (2603:10b6:510:1d1::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jejwctSc"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso2189886f8f.0;
+        Wed, 04 Dec 2024 00:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733301201; x=1733906001; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wpH2cFjmsRs5iOKVHt+Ux3PzJGbqCr566H1JMqhK6/k=;
+        b=jejwctScso1ueVsmvk8VrJVhQ9JsosEsaOiKJ10U56YFnhD8XDWA4pWXXyFE9WWp5B
+         qdaJVK7mkJpXaq3WimT1WZo5GWLCQlVSmu/72sVzi8f7DVR2y2XM4itdxbVxvMYtiAJ5
+         33CXkjAOy8SPc7sSGCv3dsfyHBYNk7dArHKAL/YzU1O6cd7cNU45ltPGv2y1Ud0V/VbY
+         3nGJtSvo2fm937H+ptB0pyeWUuiAUyk7wFKcDLMNrWNGm6Hvw3/J3sgxFFT9jKEn6u2C
+         whpSgoLcpTQYKtZc7OasPNe2Wl7fd/7jVp0LVpkN2XG9C8wT97qfsd+BE0EGjENfh/ry
+         +mEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733301201; x=1733906001;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wpH2cFjmsRs5iOKVHt+Ux3PzJGbqCr566H1JMqhK6/k=;
+        b=LvW2fWEEPciMrS+JFYKJUSqNft3rKGJk3co0LtjRykjj2KcWE4l1m8lwEQxFJycn//
+         Pti1SEtzOCK71D9JVgJblN8NgtOxoQuh/20/q+cTdLbCK8SDPfz0dSQT7l1D3I/Jq2mG
+         gd4YxATL8GIDOpHFzHNVejWg6tfrPm86WVc5Wbpn//pug15ixmb7ma7ocgsLTN4paKIJ
+         uVNQ3sG45VZ5qAPlDeT5/UBE17MXc2IenyCdH+dcdBqJjkYMuftnaCfjdVpPa65uhILS
+         aaG8sOyvprIZ5NtsK+d882KS3Y0xibxSMHZaq38liLdvW0OzkYEKo06JoHKoh4ESrxoQ
+         CECg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/q58b5I7dlffo1HFQevzPv35qKlAFbss+AhkISJBVTDpjbbzTlt1cJ26fc6vTp+sJMTkG00qesI4=@vger.kernel.org, AJvYcCXcHTHglj9Bdhsk/C6hM+NfByxtRAyDwmtz9lUH1Z34dtaZobaVfifbypw/DElokg6yBDiA3Vmy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6XtTGZTRcZpGEPapkjlXEPJhRNgI6Vx6SDndI41tdhaHO+8pL
+	khH4HvfMnG0MUsmzP3KFFE3yX3KiHNogHFS5t1V5rrj+J8vFykuUi4rkUw==
+X-Gm-Gg: ASbGncszALUN+YeTUwUhSn/QK/Gz3+TUpRwuDfUoTL/rWq+StSicpI/kWLf4T9+XmqQ
+	+v7u7SWRKn2PbRIrFMTljmaszOYZXe8HQH83NpS6rq9XNgS4FMia/66QHTWkmkvckXGVd2Ebihf
+	WTbkT0QZCau3f0LoYwjvPdTszsYYulcqfoWcP+e/nYi98BvQKdn1SO8w40tznmsWh6uY3fuGIVJ
+	SIeYvyKn8AtT0INmdWJ/GZ3r9a+NY5NHU8LcryrYd6XKtwvLWs=
+X-Google-Smtp-Source: AGHT+IFE2pGcS4AkKwzeCHdkt5QwQXOZnVFjzA1hG6M5E6ERfTgRD/qkS6g0O4V2Po2aTc3HWGoTxQ==
+X-Received: by 2002:a05:6000:1787:b0:385:f16d:48aa with SMTP id ffacd0b85a97d-385fd3e8906mr5088317f8f.15.1733301200805;
+        Wed, 04 Dec 2024 00:33:20 -0800 (PST)
+Received: from localhost ([81.168.73.77])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385e1824ec4sm13228947f8f.108.2024.12.04.00.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2024 00:33:19 -0800 (PST)
+Date: Wed, 4 Dec 2024 08:33:21 +0000
+From: Martin Habets <habetsm.xilinx@gmail.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dan.j.williams@intel.com,
+	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com
+Subject: Re: [PATCH v6 23/28] sfc: create cxl region
+Message-ID: <20241204083321.GA792395@gmail.com>
+Mail-Followup-To: Alejandro Lucero Palau <alucerop@amd.com>,
+	alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dan.j.williams@intel.com,
+	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com
+References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
+ <20241202171222.62595-24-alejandro.lucero-palau@amd.com>
+ <20241203143749.GH778635@gmail.com>
+ <19ccef4d-fcf9-d772-4a5a-4e57779ecae6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|MN0PR12MB6224:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6eb1f19-6436-45ff-d8d3-08dd141e5e60
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bUhob2gwTDk4TWdlaUc5R1gvMnNzdWlxaWtlWk5SOTkrWXc2anBDR3hkdURS?=
- =?utf-8?B?SUlPSTM3ZEpRdWIxaG1JZWVYeG5Zb28yR0tZQm5EekVhd0xTWUgwZ0ZYbGd0?=
- =?utf-8?B?b2ZtWG5xRkN3K1pndkZXcFhBaTE0VENaZkRnQkVkaVV6dFRsUldCc0JIMmh0?=
- =?utf-8?B?SHhyRER2SU5nZ3RhZThsWDFYdlllMnpIRG5LZHFKNWI4Z3dteVd6ZDdTZUcy?=
- =?utf-8?B?ZXpCOUFYeGUyQWh5SVJ4S1NyajFwL2tWWWQrckdSMVhzRENhRE0yK1hZLzFS?=
- =?utf-8?B?Y0dOdjZFMURmNFFrUElEbktBNzdEdEk5YmtGbjNMTkdhd0NOK3U0UzRJcFFi?=
- =?utf-8?B?ZWRxcTBLSnlDRGpxM3FibUNldERXUzAzZnJnV0N6b1lROVg4T0FTQVVnWlFW?=
- =?utf-8?B?SXRJVHhmTFJrVUg4VlFXenlzcHNWaFh5WjYvcnB2aGRiWjJpM251aUl3OTJw?=
- =?utf-8?B?bHJrTEVUWHpCS1JqVThaYVBCeEdRZVk5aFNTT3RsTFZPK2pNU1JTWUUyTm5E?=
- =?utf-8?B?MGZaSDFyYUJaTnJucEQvMlo5dXVWYmJ1N29QdUxaYjlHRTMydHZNZW42czlu?=
- =?utf-8?B?YXQrMk5paTBtU2tBdjFkcGpIUDF1NUpzOGNVSVNLQ0tJN0l5QW5yclVyRUgv?=
- =?utf-8?B?NUczaUN4cWlUQjFmb1NYVjdocjdKNHV1Q25xSzZDK1VXK3F6SkIrS3dOYzVp?=
- =?utf-8?B?Vnp6eVRFd1BTRFVOVXp3TGxFR1R0NEtjaUZOUWF2cjkxNmJMaWh6MWlnVDNS?=
- =?utf-8?B?VVVsWlVVTzEvT0lQa3VDRkFLYkZ6L1hsWEVNbGRZMUF1Wi9NYkwxbkpOdnhn?=
- =?utf-8?B?OXo5Y1FsaUZ5MldNZkRQbnVhZE5seGdaR3hCNHN5ZFM1ejdBYk14QS9qa2I1?=
- =?utf-8?B?VEhZZlFWZC8xcDltaE1peExSazNFdi9pRjhhd0NFYWdrTGRZcEpJbTExaWYy?=
- =?utf-8?B?STlhbmhQVm1UdFF0aXk5bE9RQnhGc1hKbGRDYllBUXNYQ2ZZZXRNOVQ4Mzdh?=
- =?utf-8?B?VEVISkNWTkQwNWhaZ3ZHZktFaWIxRVN0djhkbmprenVITkxyWGNsZVM3OEdJ?=
- =?utf-8?B?aHRWVzJHRU9wVWVIb2lXS3ZnRlJ6c1NMR2pQZm1VN1BkYy9JamtncTMyZm9G?=
- =?utf-8?B?M0cwYkMrUzNtTndtdzBJb3BHd2xQN1ROTExQYVdSM3g2blk1YmJ2M1JGbGcx?=
- =?utf-8?B?TzNTcGVIYkN2ZDlMYlNpcEtBZnFrcHV6d3hvSm9NRG9HWDZHd3hnNlp0N1NB?=
- =?utf-8?B?OFpaK3R3RmJZUTNtVlk4cTdrREhZSFlRZTdNcVdRUGxxMGlSVURDVGdGMWFO?=
- =?utf-8?B?RjM0UG5sZ3NvazlFSGp5cStOTmhWSENPT0d4OUtnTllqQkNmY2hvSTVSQVU0?=
- =?utf-8?B?djFNZlZqdmk4RWsvSFczaGNzVkhqUmtvM3crYXBlOXF6aFoxbFV6Mm4zcVBR?=
- =?utf-8?B?amF6dzg3U3FBQWVhV0gvNEoxcjR4OS9yOEFNcGY2cG9UdUlRNktVV3BkdU9S?=
- =?utf-8?B?TTE3dUpWU0NqSmU4cy9YWlV4bXpWQ1pkdUlEVmw4TVJTODNnS09oeVZpdUNx?=
- =?utf-8?B?eXhscEYrbjdpcUxadnEvRDdDS2dUK0kxd0QxVkFENktMZlM5OGJxalZYUFR3?=
- =?utf-8?B?V1M1UEFHWXBrMExGY1YrT2wzRDhDVTRLcXpHRzNwcGl4d0tBRHVkc2FKZFZq?=
- =?utf-8?B?dW1mWWV4K3RBS3lBV0FkQmhyQkdML1NxQkR0eEwrNng0UzdoVzBjZlpRVDRs?=
- =?utf-8?Q?YVUN1x7CY/O0D7M/kA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a09rRUtiNHhRRW5FMTVrRk01dUg1a2NXVUNtL25KVmpvbzN5cFF1a0ZHR3Uw?=
- =?utf-8?B?emxndEUyS0FCcTNMNFBLdStqL0xpd1lJVml3VHFoUWljeFhJUG5yVkpObXRU?=
- =?utf-8?B?aXZTazRvNldwN0VtR0VTUmovbEFMaUtkZEtsaVIwa2c2L0pTZFZzeTRVdTht?=
- =?utf-8?B?SEZTYTl1clVZWVV2RTFNYTI4L054Y2R4N01oU2lpWjFrd1JiYjF4SUd2TFJC?=
- =?utf-8?B?ckR1aWNUamtKZDRneHpLcXZjelJCNFlSR3paR0NYZU4yQjcyb2l5TVhaWHBS?=
- =?utf-8?B?a2huMWlYVEcwaGtkREd5TGxpT1ZTNkRuVFlSd1FoNmFtQ3g1cmRKdTNEWWxr?=
- =?utf-8?B?Q3V6VG5Td2ZRMTQ0eVdZVXA1NnZERVlNb1ZiL2QwNzUzSWt0Y1lJdHhETDJQ?=
- =?utf-8?B?Nlc3ajZmQXEzVllFVC94TkovcWx0c1VBUTR5cmdWL2ZlZjh4RUZaSmJXL3dG?=
- =?utf-8?B?S3JqbmZMZ0JFL0ZFUloyNWFJYkdPbC9WTHFPV3dOb3h0VXhNSjRvV1lUQTlE?=
- =?utf-8?B?L1A4N1ZsZjBUZmNGanVYMkttMVdUdTdCMHU4eTlLWFBHdHJUZlZpVkxKSDlY?=
- =?utf-8?B?RHVLT3BMdmZGODFkdzZnT2pCWFR6d1EwUzVRbitMUDJSbWZ5cEY0MTlDdUxp?=
- =?utf-8?B?dk44TkRhdnk4dCtZaEpDSXBGREpyWnhhbzBZaWxHZnViQkg4dUU5NGYwYVNS?=
- =?utf-8?B?R01pcWRmcWNVbkxEN3djK2VDOGF2Mk9SNXRwZzF3eHErSG9IWTZIYXpSTzhU?=
- =?utf-8?B?NzBUM2o2c0pxVEJtUWNkcWV1L2RHOXJnbDRab2wrTEJwVHJ0MlZySWZ0MzI2?=
- =?utf-8?B?d3A3MXFvSG1zazBpM0RLZGlibWtxMEYvaTVjTUdMMllYQXgzeWFOY0NCUTlz?=
- =?utf-8?B?SVVDSGlkcEVEdVQybCtlQi81MkM0SmhqTERITktSQkt4Si9oVWx1N3FsZDV2?=
- =?utf-8?B?MVIyV2duR3Y2djliNkw3czlBeTRPN0hRWjVxdUlWU1dBbjBlY3FjdTlJazdn?=
- =?utf-8?B?YzJ5VTZXR2w4Y3k1VGl3MTNac21EZmtMSVlJWXhQRDlCM2NDV0w0NERZK1Mz?=
- =?utf-8?B?UGRmUmJGa0FyN0RuK2RWK2ZsNGo4Snl6a2N4OXNSS0YyMkFRVGhsRE90SEh1?=
- =?utf-8?B?RE4zNklqVHc5THM5MDIyTGh6L0p1eG1XUzhaK1Rpejc1MVRtUndoRU1wNFVB?=
- =?utf-8?B?SWtOdEZGQlN3d2NybXlJaUd1czZNOVZiU2ZWM3ZreE92YWQzeDB5MjBha2dM?=
- =?utf-8?B?T2Jvb0VTRGlhdEk4ekZTZkUzY1ExVjBiM1dSUmdpdnhRdGU5S2FDblFKUGxH?=
- =?utf-8?B?eGlBVEJWcUV2NFVRNEJ3M1pqeE13U0hRemhaMkNUbTlwS0FQeWhDNDJrUmZw?=
- =?utf-8?B?NW5LVTBlSU4yTlVHOFdLK285RTlZbEd3ZHdQNkdTTERGN1prNmRUdVgrR2tV?=
- =?utf-8?B?MW9aZU1Pb3V6d0ZySmYzcGNRNVhpc0lhK285UElvK0ZUOXlJT3pVM25kOGpp?=
- =?utf-8?B?SmptOWU1K2JtU3JSTDNlbVM5QVU1bXJxTTN5ZzNKMG9WeU1lN1ZxU1YwbkNG?=
- =?utf-8?B?dFIrZVFHUURoQ2NoN3dmcDNkdndEUmVqQW1qeTZ1dG5BbTJUTUEvMG1aYUZt?=
- =?utf-8?B?dmdJWWFXL3RnWi95NWpvTEFLU1hSY1NEWGVGUVQwZU54cGpHQ2NOL0ZLZUc4?=
- =?utf-8?B?VzcrSHNReVI1NmhtTzF1QTZYcXVNVjAvdkxGQkY2SzBscGE2UDBjREgza2Zi?=
- =?utf-8?B?S0puV2xOZndHUFVFU0JMWjI2cjhHeEkwWERMa0ZUdG4xa0QwSUg0VnhMYkhC?=
- =?utf-8?B?NEtEY2Z5Y0tMNmtTaHltQXhyVXEweXVoRnp5ZHNGdzFnRFp4TEx3cnFJVS80?=
- =?utf-8?B?WWhwaXhCNFJMem1rN2JkbzVOQXI4ZUN0bVZzeWNiMUtGS0lYWGpqZlNnUE5Y?=
- =?utf-8?B?TTArTXEyNDdsZ3REVGNGejgwWUYvWWh4ZFJpZ1F4aER5TUNnTHpIaWRQMFoy?=
- =?utf-8?B?R2xvSFk4V2NUNTdGRUk1TnlKWmZLZ0YxQWhYQWI3OTlLMm9wOTdmYkJ6MTBw?=
- =?utf-8?B?QnFNSEJCTVRUYW56Q3lPMTBqNmVJVGN1cnVWaVdhR0ZMeHFCTEZhNGtZS1ZB?=
- =?utf-8?Q?dSOMwSbxYEg1WwzV+A/oFBkyO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6eb1f19-6436-45ff-d8d3-08dd141e5e60
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 04:44:42.4968
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CoMJfaMEgvONhBYrx4ang1OcRNEIx96+bJVYOh9gteajBJwM9Pw865QNQgiWgodiqqP0hQFZ6BknMSMB8WWB8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6224
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19ccef4d-fcf9-d772-4a5a-4e57779ecae6@amd.com>
 
-
-
-On 12/4/2024 8:31 AM, Andy Shevchenko wrote:
-> On Wed, Dec 04, 2024 at 10:07:16AM +0800, Huang, Ying wrote:
->> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
->>> On Tue, Dec 03, 2024 at 02:26:52PM +0800, Huang, Ying wrote:
->>>> Raghavendra K T <raghavendra.kt@amd.com> writes:
+On Tue, Dec 03, 2024 at 03:25:27PM +0000, Alejandro Lucero Palau wrote:
 > 
-> ...
 > 
->>>>> git bisect had led to below commit
->>>>> Fixes: b4afe4183ec7 ("resource: fix region_intersects() vs add_memory_driver_managed()")
->>>>
->>>> This breaks you case, sorry about that.  But this also fixed a real bug
->>>> too.  So, it's not appropriate just to revert it blindly.
->>>
->>> Linus was clear about this recently. Even if it fixes a bug, regression is
->>> still regression and might (*) lead to a revert.
->>> https://lwn.net/Articles/990599/
->>>
->>> (*) in general fixes are better than reverts, but depends on the timing in
->>>      the release cycle the revert may be the only option.
->>
->> I don't think that the timing is so tight that we should not work on
->> proper fix firstly.  I'm trying to work with the reporter on this.
+> On 12/3/24 14:37, Martin Habets wrote:
+> > On Mon, Dec 02, 2024 at 05:12:17PM +0000, alejandro.lucero-palau@amd.com wrote:
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > > 
+> > > Use cxl api for creating a region using the endpoint decoder related to
+> > > a DPA range.
+> > > 
+> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+> > One comment below.
+> > 
+> > > ---
+> > >   drivers/net/ethernet/sfc/efx_cxl.c | 10 ++++++++++
+> > >   1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > index 6ca23874d0c7..3e44c31daf36 100644
+> > > --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> > > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > @@ -128,10 +128,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> > >   		goto err3;
+> > >   	}
+> > > +	cxl->efx_region = cxl_create_region(cxl->cxlrd, cxl->cxled);
+> > > +	if (!cxl->efx_region) {
+> > > +		pci_err(pci_dev, "CXL accel create region failed");
+> > This error would be more meaningful if it printed out the region address and size.
+> > 
 > 
-> I agree on this, please do.
+> The region can not be created so we have not that info.
+
+Ahh, ok.
+
+Martin
+
 > 
->> BTW, the commit b4afe4183ec7 ("resource: fix region_intersects() vs
->> add_memory_driver_managed()") fixed a security related bug.  The bug
->> weakened the protection to prevent users read/write system memory via
->> /dev/mem.  So, IMO, we need to be more careful about this.
 > 
-> My point was that the regression is obvious and it needs to be fixed.
-> That's all. Revert is a last resort in this sense.
+> > > +		rc = PTR_ERR(cxl->efx_region);
+> > > +		goto err_region;
+> > > +	}
+> > > +
+> > >   	probe_data->cxl = cxl;
+> > >   	return 0;
+> > > +err_region:
+> > > +	cxl_dpa_free(cxl->cxled);
+> > >   err3:
+> > >   	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
+> > >   err2:
+> > > @@ -144,6 +153,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> > >   void efx_cxl_exit(struct efx_probe_data *probe_data)
+> > >   {
+> > >   	if (probe_data->cxl) {
+> > > +		cxl_accel_region_detach(probe_data->cxl->cxled);
+> > >   		cxl_dpa_free(probe_data->cxl->cxled);
+> > >   		cxl_release_resource(probe_data->cxl->cxlds, CXL_RES_RAM);
+> > >   		kfree(probe_data->cxl->cxlds);
+> > > -- 
+> > > 2.17.1
+> > > 
+> > > 
 > 
-
-I agree in general to both of your comment. (i.e. since this bisected
-commit had security fix, we shall try to get better fix than a close to
-revert).
-
-  I am trying to work on this, but it is a bit slow on my side.
-
-
-Thanks and Regards
-- Raghu
-
-
