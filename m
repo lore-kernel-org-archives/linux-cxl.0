@@ -1,247 +1,287 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2059.outbound.protection.outlook.com [40.107.244.59])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2D018E056;
-	Wed,  4 Dec 2024 09:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733304628; cv=fail; b=j1YCK3PYPRg4SAOxXyFTcRXxevl3opNNtYq7TxyZTgkkJR6YVNKO4OHYagrLamKyiNIz+eTuphXCr7huzc+lmnmzAD9b+hPr18hgs5Qlh5k6gIkgGFJMDz2XJZS5if9nKEFHJxbaYJMwlru7dQ1KGm7mjsl14pDolNtzUG/pE38=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733304628; c=relaxed/simple;
-	bh=rhPg2S2Tjw9LSt9601LU7qr7SU8HoLmrA864J57scDw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AzWXqLh/xTTfB0QBG5hN21dT0jcujhDDxLb5OoKwal6FtqRXfEPRlBzMktvqMoxbYJlPmJoLzqF0ES2lloGGuPy+ZIS391ztUfv06tKqAMhT302GcIzGiZ1pjSIac0ypJayWjm3CU7488vo+yvxhICaxXKnLisdue/tx1lnVjws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sTBYSVPy; arc=fail smtp.client-ip=40.107.244.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sTBYSVPy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QSQlfCvb5OpPD1fyZsvCmpk2x5pymmcSHSTlEFHYIJM877lZ5I32WpeqOWzIZr77ajbx0mRB0ex4Qo9Q0eeEf2D2BRvzRzkKTDgZO6dLWNs4bvhUQH6TdzSXk/tI8TL1x6V4wkrAQ5CSqe0+8qMj5LxItrs+rvWjBxhWVwkJs93/O5gJwnubSYzDihtHivSgxaKb59wbA4vMotOfpK+Fiy0aS8ZmSKOSXShF6qG97AK9z/GtHk0GJUnXUeEuFPvvBwpYWn91Gc7eDPu6Wmu66yYLepFyhLS78wdGqlnvaYffd6qJQH52h82UY8roZvbrh3hegC8m7yrxj9dndQ74Pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HwECQQtOGH/c80qytBAcYr5h0Sj3AUV5pjPzjFb0/QQ=;
- b=QCkjqF7apVSRxGOq5wTnIzYs64d3uG6WgyOxo/fJ2dXM96W//pAO1swarQGhPmtb2HbsXAHHc7l8o3MOvqlOCN0JRIWRVRWwrLfoBS0A85d0+3nIEEwaPOVjC80jD9T9MeJ4qPoXeEfuBoZddmF0bwQwDjSctyfxWCMlBTobkfW+mucmLmUUDhs7Oae64fFJbfrOnhWStDALGDCzCVr7nTKNKV+NMsC4NCYA996AqjoCDEhwPNVIxtq1DQAVHFQs6jgpRzp1PcmJzZO0pmq82wmgra/FLBlyIyY+e6eFwzSqvwdfJzsDt7vLrWxJOqOy7UL5l/yUr5FSAtgppQBK9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwECQQtOGH/c80qytBAcYr5h0Sj3AUV5pjPzjFb0/QQ=;
- b=sTBYSVPyEQaiP304PpKIqKN2XFu4Hh2FxKAAzv3gD/aWxuKEIC25uKeCkSRbFZmgaZqjw4CRmlJ/tRoBkkpjiwQoGpQQUs2cFs+SXwrdGf4vP1yYgzJddNvSFD13WkZtGKOXoBanLbJGXcRkMNnckOcZ8d0NqDoHLwmU0GHxQn4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by CH3PR12MB9170.namprd12.prod.outlook.com (2603:10b6:610:199::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Wed, 4 Dec
- 2024 09:30:23 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8207.017; Wed, 4 Dec 2024
- 09:30:23 +0000
-Message-ID: <ab476f51-de8a-be26-4dbc-f462c858d8f8@amd.com>
-Date: Wed, 4 Dec 2024 09:30:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v6 02/28] sfc: add cxl support using new CXL API
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F68F1AC456;
+	Wed,  4 Dec 2024 11:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733312108; cv=none; b=LTMZmGywCDz0AcDGQsw07A0Eg0m13RLAbjpZ0dJuIGh34JKSP6iZAcuFuNxkpNTw+rYnTKgZvnCEmgD1TpuVj0n0rd+oKAxceNyoFwnvoqfvKC1QQdJ5+lGh2RD+5HIMm4wjBHQFrUrE25eTJCD0fgre3RQh79wQhl1XeBjf9pU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733312108; c=relaxed/simple;
+	bh=NCPtgkOSRmGk52EeOB2IiMnKVoVlPuUFd28dOdYf67k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rpGWFFB4QUPZD1jDAxXnRwAuedf+NN56ec+RacH7vysZKZJpUnE+ZnWsK5CfDemSqM6WP0vQONJ/GFZXnlCLwmRs7x9jdtusRLF6TipHR3hkxi29xqI23pvX8/wlsI7e0tDlOp2kxpQ7tBJxsxDiUyDhbfwQRgsLrT9mnU6JbQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y3FmB6yxmz6K9P6;
+	Wed,  4 Dec 2024 19:34:18 +0800 (CST)
+Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id BF8B2140113;
+	Wed,  4 Dec 2024 19:35:02 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 4 Dec 2024 12:35:02 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 4 Dec 2024 12:35:02 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Shiju Jose <shiju.jose@huawei.com>, Steven Rostedt <rostedt@goodmis.org>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
+ CXL spec rev 3.1
+Thread-Topic: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
+ CXL spec rev 3.1
+Thread-Index: AQHbOy/jEKs9N8Ou/EWSGme10Yml3rLJc4IQgABPV4CAAS95QIAATDQAgAA1zlD///prgIABEYyggAHA21CABm0UcIABWkrw
+Date: Wed, 4 Dec 2024 11:35:02 +0000
+Message-ID: <e20c76c2fb62470485ce8f37c9a5bc27@huawei.com>
+References: <20241120093745.1847-1-shiju.jose@huawei.com>
+	<20241120093745.1847-4-shiju.jose@huawei.com>
+	<180fcfd623c64cdb86cdc9059f749af0@huawei.com>
+	<20241126120237.1598854d@gandalf.local.home>
+	<a24524dccbf442d5a3c910d7f46c7b6c@huawei.com>
+	<20241127104132.6c1729e1@gandalf.local.home>
+	<53a299d3cca6417d90d553e8399f834b@huawei.com>
+	<20241127133407.7bc1376a@gandalf.local.home>
+	<dc8fa73e871949eeaf4117c622d66ac5@huawei.com>
+	<3c9808a694d242cab35bab67602edebf@huawei.com>
+ <e4187844aed14d4897f0071dcfce7455@huawei.com>
+In-Reply-To: <e4187844aed14d4897f0071dcfce7455@huawei.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To: Edward Cree <ecree.xilinx@gmail.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
- martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-3-alejandro.lucero-palau@amd.com>
- <66ac91f6-b027-3732-882a-4b5f32edfaf5@gmail.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <66ac91f6-b027-3732-882a-4b5f32edfaf5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0638.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:296::18) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CH3PR12MB9170:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca1d2a66-43df-4169-0103-08dd14464752
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qkw0VFpocjJDdUdJblBGY29UenIyNjVCNzQ2a2VFMHJPeFVpZmxMT3BseDdo?=
- =?utf-8?B?alRXYXpXSnc1bzM5cTgyK1JXcTBrQ0Y4VkJQSG95dG1KUm85QzFNQ2VISUFo?=
- =?utf-8?B?TitHTSt0bWlBRTZ2cEF0S0pTd0p5cXVsclUzY2Z5VXNpV0E3VEdpZkxkOGRY?=
- =?utf-8?B?ZnNwQkErNUJKMFgrZHcvTG42QmpjalFLWmN6aE9XQWprUUZZVG8rZUk4UkxS?=
- =?utf-8?B?ZDJnNVMza2dzcXgraDZicU5HZ0oyZ1VvOE0yODRXVi9ZSll5TTRGSXpXMWs1?=
- =?utf-8?B?dkYyZW0vbEhtSHhEQmRGd0FJem1LWksxMVVBUXZHUytIeWdvZWdUMHA5TG5G?=
- =?utf-8?B?NVdFaDRHSXF4bEJEaHdYOVo1NUNDUlNLclYwTkhBOHc2ZlFkN1VwUmtJbFBq?=
- =?utf-8?B?Uk54c1RVSDQ5WC9SYUY1R2JtdWMxcGFaYXYwRWhnRjlxRTZpVG4xMnZha2xl?=
- =?utf-8?B?clZrZW1HMEtRMVJUK2EydjdxUWVSUkd6YVZXNTQ2VE9NM29mN0ZIUjdkZVk1?=
- =?utf-8?B?MmRJYWg1bDBYNVZ5OGNhd3hja3h5NjNVcTBXaXJjdTJuMUFLQjB1MzJlSkc4?=
- =?utf-8?B?VUdZVnQrRnBGOFk4NlhhdmVHaTNMTi9NVzBoQUpYOTZqNXpuQmZCQllXeHVv?=
- =?utf-8?B?em9raFpHbkRHWkx4TlZhV3cyQzdtRGs1YW1EcVRlMHI0MGRCWDVOK1ZmaVJX?=
- =?utf-8?B?WnZlUFBtcjJEWGpYenFuelBEOWFGcmtobWFlNFdjQU5icHA0OENINmtDUExu?=
- =?utf-8?B?Qzh3UXRwTnhQWTZBYm80V05selc4RTJaa1BBZW85QmlyRm5aaDFwUkltNUdj?=
- =?utf-8?B?alhCZEhSU2dYRXdjZHZCUWVCWWlqWVVhS2wvaC9XeWYxeGoyK1Q0aTQ1WVRK?=
- =?utf-8?B?SWU4ZEppRWVZMnRUSzNKU21qSnpXc3ZhNlJmU2dUUnY3cmdheUhDQ0JyRXVP?=
- =?utf-8?B?ZHB5UE55SDVXTE9oOXJHSUJFM3JHMVptZTJiNEdkaVAxMktZcVFkUjlSVlM1?=
- =?utf-8?B?Z1RyVmxtY3l2bWZGNm4zR2QyUzZXR2tSRWc4UkVNZFhQOUJUSTYzY0diN1R0?=
- =?utf-8?B?YjZOZEdHd2RtTDZlOVZSR21FTG92RnNBcWxiZzE3UTlVV0ZTSU9xUHk1ajFt?=
- =?utf-8?B?d1hWQ0prWnd1WTNDVlpOVmVXT0RYOGpEOTFBSmdWYWtJTVVOTjRQQlppTnFi?=
- =?utf-8?B?MVFMUXVDd0JocVg2Y3NRMlFIM0tKQ0lOWk1yTXBXM1JUZmlXdDBObWowMXlm?=
- =?utf-8?B?dXA5YkI4VG9JMFkzbWFwUFNNaDBScmRZUEVTd3NNL2xMR05vTEx5amFxRThX?=
- =?utf-8?B?RkVJRUhxTHhQYVVWV2ROK0YxRW9qMGgvOWgvMVMvVGcwalp1RVpkNmpadWN5?=
- =?utf-8?B?WExhSkp0aFlHUkVXTWF2cnplNHdZM3Z4VnNwNG13SWhzU1JvL1J4VmF2eDAy?=
- =?utf-8?B?bURTSktwWjVsd3NlYStIeFRQRU1QUXlqc3VjRlhCd29rcG95K2RjbzgzNERR?=
- =?utf-8?B?L2dOU1JEOU9QY2pJcUFVQUtBUnlqWW5NYnBEeG81UWVJcE5iTnV2aWJqaXJz?=
- =?utf-8?B?b0Q2bi9jK2w0YUIvZDE3T05jWnNaWlFOZzhkMzc4Vk1ucUhzSEtoNmRJT1dp?=
- =?utf-8?B?eGtjMDg4c0YwS255VTYxdWswQTRQdndmSnROM0JjdkswUnE3N055NDhSOHVW?=
- =?utf-8?B?WnRFSUxGclV3U3RqSnFPZHVmVWlESlhmdjVzbVNyS3N0S3JVUjFhRnN3OXEx?=
- =?utf-8?B?V1NlNzV1UVZzK2w3amt0YjV6bWF6QmNXMU9jWUpwMmdYQkpyOUtUT2RGdkVJ?=
- =?utf-8?B?SUxxeUVhTXVMcmdSTHBsYlk3QlBqenpZNENiT0daZ1dYRGRzeTFubS94OEFD?=
- =?utf-8?B?d1RMb2l3T0ZvcjBxenhYZGE0Vm9qVFZ1MDhhN3B6NjN1M3c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0NZUjREOXZ2TjRpUkhibW1LcXZrZnkwMUZLR2VkWFlnd3Qra0dTQWMzb3BQ?=
- =?utf-8?B?K05XdGVKV2YzVDNXdndVWTRoTUd3WFJGMlNSQnV3V2xnZHJIdGdsQ2JFb2NG?=
- =?utf-8?B?b2o0VGNCN1I4UFFZTDlvMFRiQVZUb0ZYVnpMVG9YWW96Zy81dGhXVTE3eGR3?=
- =?utf-8?B?anNaWitqZ3gwSFFXY3JyYUZMVTBqck9jTEVLL0xKZnNUMjJidkNuU0xkYXYr?=
- =?utf-8?B?a2JaY2VsREdMOHhmVmEvWG1pOVFyd0pWZUF3ZjdrTndEdlUrYXJNZWx3QmFo?=
- =?utf-8?B?ZUVuUDJLM2tOaWw4MTdhaXh4dkhrL1QxKzZHR2k1REF2ekFmRWRyUlhqUzBm?=
- =?utf-8?B?RFhKMTRPNEZwZ2xKSlFXdkovY1ZVYjh6bXJjK0pUNTkySktUV2tJQzlINk9q?=
- =?utf-8?B?SkppU1pvc3VkSkx0YnRTMXhLSk5WblVRdUlWbzluaVpFWWdBb3o4M1lNODZY?=
- =?utf-8?B?UTE1cXdLc1UwS2tMWWwvRGxXdnpCVDVtYkh6NmRiNEVhREE1VGtYU2JwZ09P?=
- =?utf-8?B?Sm5vOENWTjh5UG5kZ3k2ZDgrTUpaelQzVEcwRXM4TEJ1bHRnODluQW04OEwy?=
- =?utf-8?B?RFViSE1FQmRldFNHUTlkNWE0a3ErZ2dLTG1uQ2dncGxUTnp0d3U1c2pZQ2ly?=
- =?utf-8?B?UGI3Unc5WGtteFNEeTNOMmFOTVc5aDRXaDV3ZmVBT3crNUlUYjBIcHkycitC?=
- =?utf-8?B?ZHJIV0xDTUdYT2VUSW1qTlF0UkJCQmtmWlFxMlBDaVhCREdzUkhrZzB6SWpM?=
- =?utf-8?B?ZFU3YlhVcncrWTNwL0FoRjVONkl1ekoyUDhxN0IvUlJXTUNwengvQk5KZStM?=
- =?utf-8?B?eGJkME1FTVM3RUlmZDBvSlBSWGdpc2xTQ094b3RlVERnYjNBb1EwVDVsWkNk?=
- =?utf-8?B?KzhOTXcrSEtoN2NEN1FicWd6ajE5MU9ORHdJTURMMVVZWXJtd0phRXU3bVFY?=
- =?utf-8?B?czZJaHMrMytrZ3Zldi9nSm9WUmpsS2VaVHlOWTZVck83UWFKS0RyaHErSTVG?=
- =?utf-8?B?Z0pUSDFoeEx3N1RFZk1TWGhMTDk2S2dUZUxLZ2Q4Q1RZUy9KNEs5RUcvY21n?=
- =?utf-8?B?eVplS1I0R0lDQ00vVjdVd3hRWWRGNlVhellPN3BGMW03MFVNS3EwMWdLdjFi?=
- =?utf-8?B?ZitydWpWbnU5QXpzSFQyMHBqWGxZVzI2ZnR2aUcxMm5YTEV5OU5xZlkwNkw5?=
- =?utf-8?B?SVpLRnh6OEdQNUh4d0lkUmlyWGM4RWxCU0lhU2lqTWYzd1U0U1dINnh1Y3lt?=
- =?utf-8?B?U2x1L1ZCakVwZmp1SnYrTG1ua21WYnVxMXNpUWpDSUdlSFFRQWtPZzByNjRp?=
- =?utf-8?B?MHowWUpHQUZzamQ1bmQ2NjJZNHZ3UmJlVTBSaVBWYSt6UnZwMVpNOTJ5eHlX?=
- =?utf-8?B?MlNhME5YT0NreWlLb1M0K1RwL1FSa0FKVWRzWXdzMnR3WEFsbnljV1B2V2xq?=
- =?utf-8?B?ZTBQcE9TUDVaT0VtdzJFd0czSm9tbWlic0FPbk1JRTRFY0E1VVljMWsvcG5l?=
- =?utf-8?B?R1FoNXVWL3ZERzlLOGtRN3pYV0g5V21scHh5MWh0dERtK0dGKzNNdCs3eGdz?=
- =?utf-8?B?TXZ5RUtxZSt6WVFRamd6V0p3NHh4ZmhyQ1htYWovV1hXWnQ5SlhDKzJISlJn?=
- =?utf-8?B?N1VhS0RMZEJVKzYyU0tJaFVZU0t3QjN1enFlUFoyR3NKekFMKy9pcFNwL3hw?=
- =?utf-8?B?QTBZWVNjdktSdXh2cDVsQVJkSUFEM012WEFtd0hiS2tPWmh0UzU1VEp6RzRa?=
- =?utf-8?B?a1NqbzYwZzNKL2p0U1Y4ZGxJKzUrVE41UjdIOSt1dDhUL210QzlVVi9GVGZT?=
- =?utf-8?B?dFV4TzhMWWJUN3MrNlFSVFlodXUwUFNrbStBaXBHaE1OOXcvTi90bS9JV2N3?=
- =?utf-8?B?cEh2U2hrMmR6NWpTT2grck5VYSs1NU9RZ3NaQkdsU2lXZ0ZTSE9CbGk2R04r?=
- =?utf-8?B?eCsrSjVydFJpTzNRSUpXbU9INXFHZDF4L3poRlVDc05JM1lGUmhmVktaOFNW?=
- =?utf-8?B?c05QenVUekE5VFo3YkloRDFnR001T294WTlKZ2tnaEhZRzV0dVB6WVJ2SlRi?=
- =?utf-8?B?S25FVXFYb1I3RWxqVlg3Y2V5N3dyNnk3Q2p0WlZZczNFNmJKeFpleVNUSFpV?=
- =?utf-8?Q?O5ugZOHsAmSdf1XOffujFTK3R?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca1d2a66-43df-4169-0103-08dd14464752
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 09:30:23.5770
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EDysIdv996EqlZMdjz5tv4izQyHAUqsCPODyWrmBTrW00x/paoAr5dZKis5KkpcvsbE1Ek5NaqAKupSJLsE/Ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9170
 
-
-On 12/3/24 20:33, Edward Cree wrote:
-> On 02/12/2024 17:11, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
+>-----Original Message-----
+>From: Shiju Jose <shiju.jose@huawei.com>
+>Sent: 03 December 2024 15:22
+>To: Steven Rostedt <rostedt@goodmis.org>
+>Cc: dave.jiang@intel.com; dan.j.williams@intel.com; Jonathan Cameron
+><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
+>nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org=
+;
+>Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>Zengtao (B) <prime.zeng@hisilicon.com>
+>Subject: RE: [PATCH v4 3/6] cxl/events: Update General Media Event Record =
+to
+>CXL spec rev 3.1
+>
+>[...]
 >>
->> Add CXL initialization based on new CXL API for accel drivers and make
->> it dependable on kernel CXL configuration.
-> You probably mean 'dependent' (or maybe just 'depend').
-
-
-Right. I'll fix it.
-
-
+>>Hi Steve,
+>>
+>>I debug this case and please find the info, 1. rasdaemon :  read() from
+>>format file return around 1/3rd of the
+>>    actual data in the file only when the total size of the format's file
+>>    is above 4K bytes (page size), For example, in this case, the total
+>>size was 4512 bytes,
+>>    but read only 1674 bytes.
+>>    This partial data resulted  tep_parse_event() in libtraceevent
+>>failed internally in the parse_format()
+>>    and  since __parse_event() does not return error when parse_format() =
+fail,
+>>    thus initialization of the event does not fail.
+>>
+>>   The following  solution in rasdaemon solved the issue,
+>>   (provided if no other fix for the above issue with read()),
+>>    1. read() and accumulate content of format file until EOF reached.
+>>    2. Increased the buffer size from 4K bytes to  8K bytes.
+>>    3. May be __parse_event()  in libtraceevent  and thus
+>>tep_parse_event() return error
+>>        when parse_format() fail so that the initialization would fail
+>>if the input data is
+>>        corrupted or partial?
 >
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Some nits to consider for v7, but this already gets my
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>Hi Steve,
 >
-> ...
->> @@ -1214,6 +1222,17 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
->>   	if (rc)
->>   		goto fail2;
->>   
->> +#ifdef CONFIG_SFC_CXL
->> +	/* A successful cxl initialization implies a CXL region created to be
->> +	 * used for PIO buffers. If there is no CXL support, or initialization
->> +	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
->> +	 * defined at specific PCI BAR regions will be used.
->> +	 */
->> +	rc = efx_cxl_init(probe_data);
->> +	if (rc)
->> +		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
->> +
->> +#endif
->>   	rc = efx_pci_probe_post_io(efx);
->>   	if (rc) {
->>   		/* On failure, retry once immediately.
-> nit: weird to have the blank line before the #endif rather than after.
-
-
-I'll fix it.
-
-
+>Identified the root cause of this issue in the kernel:
+>The read() function for the event's format file calls seq_read() and
+>seq_read_iter() in the kernel, which allocates a buffer of PAGE_SIZE (4 KB=
+) for
+>sequential reads. However, it detects an overflow in the following marked =
+call
+>(seq_has_overflowed()) and returns with partial data read.
 >
-> ...
->> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
->> index 620ba6ef3514..7f11ff200c25 100644
->> --- a/drivers/net/ethernet/sfc/net_driver.h
->> +++ b/drivers/net/ethernet/sfc/net_driver.h
->> @@ -1199,14 +1199,24 @@ struct efx_nic {
->>   	atomic_t n_rx_noskb_drops;
->>   };
->>   
->> +#ifdef CONFIG_SFC_CXL
->> +struct efx_cxl;
->> +#endif
->> +
->>   /**
->>    * struct efx_probe_data - State after hardware probe
->>    * @pci_dev: The PCI device
->>    * @efx: Efx NIC details
->> + * @cxl: details of related cxl objects
->> + * @cxl_pio_initialised: cxl initialization outcome.
->>    */
->>   struct efx_probe_data {
->>   	struct pci_dev *pci_dev;
->>   	struct efx_nic efx;
->> +#ifdef CONFIG_SFC_CXL
->> +	struct efx_cxl *cxl;
->> +	bool cxl_pio_initialised;
-> Not clear why this needs to be a separate bool rather than just
->   seeing if probe_data->cxl is nonnull; afaict from a quick skim of
->   the series it's only used in patch 28, which sets it to true in
->   the same place probe_data->cxl is populated.
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>File : https://elixir.bootlin.com/linux/v6.13-rc1/source/fs/seq_file.c
+>
+>ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter) {
+>	struct seq_file *m =3D iocb->ki_filp->private_data; [...]
+>	/* grab buffer if we didn't have one */
+>	if (!m->buf) {
+>--------->		m->buf =3D seq_buf_alloc(m->size =3D PAGE_SIZE);
+>		if (!m->buf)
+>			goto Enomem;
+>	}
+>	// something left in the buffer - copy it out first [...]
+>	// get a non-empty record in the buffer
+>	m->from =3D 0;
+>	p =3D m->op->start(m, &m->index);
+>	while (1) {
+>		err =3D PTR_ERR(p);
+>		if (!p || IS_ERR(p))	// EOF or an error
+>			break;
+>[...]
+>	}
+>	// EOF or an error
+>	m->op->stop(m, p);
+>	m->count =3D 0;
+>	goto Done;
+>Fill:
+>	// one non-empty record is in the buffer; if they want more,
+>	// try to fit more in, but in any case we need to advance
+>	// the iterator once for every record shown.
+>	while (1) {
+>		size_t offs =3D m->count;
+>		loff_t pos =3D m->index;
+>
+>[...]
+>		err =3D m->op->show(m, p);
+>		if (err > 0) {		// ->show() says "skip it"
+>			m->count =3D offs;
+>---------->	} else if (err || seq_has_overflowed(m)) {
+>			m->count =3D offs;
+>			break;
+>		}
+>	}
+>	m->op->stop(m, p);
+>	n =3D copy_to_iter(m->buf, m->count, iter);
+>	copied +=3D n;
+>	m->count -=3D n;
+>	m->from =3D n;
+>Done:
+>[...]
+>	goto Done;
+>}
+>EXPORT_SYMBOL(seq_read_iter);
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>The following fix in the kernel's seq_read_iter() allows userspace to read=
+ the
+>content of the format file etc in one go if the requested size exceeds PAG=
+E_SIZE,
+>and resolves the parsing error caused by the event's format file exceeding
+>PAGE_SIZE.
+>
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>diff --git a/fs/seq_file.c b/fs/seq_file.c index e676c8b0cf5d..f1f1af18056=
+2
+>100644
+>--- a/fs/seq_file.c
+>+++ b/fs/seq_file.c
+>@@ -207,7 +207,11 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_=
+iter
+>*iter)
+>
+>        /* grab buffer if we didn't have one */
+>        if (!m->buf) {
+>-               m->buf =3D seq_buf_alloc(m->size =3D PAGE_SIZE);
+>+               if (iter->count % PAGE_SIZE)
+>+                       m->size =3D ((iter->count / PAGE_SIZE) + 1) * PAGE=
+_SIZE;
+>+               else
+>+                       m->size =3D (iter->count / PAGE_SIZE) * PAGE_SIZE;
+>+                m->buf =3D seq_buf_alloc(m->size);
+>                if (!m->buf)
+>                        goto Enomem;
+>        }
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>Can you suggest which fix is the right one,  kernel based fix or rasdaemon=
+ based
+>fix (which mentioned in the previous email)?
 
+Following change for reading trace event's format file in the kernel worked=
+ fine to fix
+the parsing error,  which seems better than changing the common seq_read().=
+=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7266ec2a4eea..9cb1c5a1f070 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1674,6 +1674,35 @@ static int trace_format_open(struct inode *inode, st=
+ruct file *file)
+ 	return 0;
+ }
+=20
++/**
++ *	trace_format_read - read() method for format file.
++ *	@file: the file to read from
++ *	@buf: the buffer to read to
++ *	@size: the maximum number of bytes to read
++ *	@ppos: the current position in the file
++ *
++ *  * Return:
++ *  * %0  - No bytes copied (EOF).
++ *  * %>0 - Number of bytes copied.
++ *  * %<0 - Error code.
++ */
++static ssize_t trace_format_read(struct file *file, char __user *buf, size=
+_t size, loff_t *ppos)
++{
++	ssize_t copied =3D 0;
++	ssize_t ret;
++
++	do {
++		ret =3D seq_read(file, buf + copied, size - copied, ppos);
++		if (ret < 0)
++			return ret;
++		copied +=3D ret;
++		if (copied >=3D size)
++			break;
++	} while (ret);
++
++	return copied;
++}
++
+ #ifdef CONFIG_PERF_EVENTS
+ static ssize_t
+ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *pp=
+os)
+@@ -2157,7 +2186,7 @@ static const struct file_operations ftrace_enable_fop=
+s =3D {
+=20
+ static const struct file_operations ftrace_event_format_fops =3D {
+ 	.open =3D trace_format_open,
+-	.read =3D seq_read,
++	.read =3D trace_format_read,
+ 	.llseek =3D seq_lseek,
+ 	.release =3D seq_release,
+ };
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>[...]
+>>>>-- Steve
+>>>
+>>
+>
 
-In a previous version, I think it was v2 or v3, I did use the check of 
-the sfc cxl struct, or maybe the pointer obtained with ioremap if 
-everything was correct, and it was suggested then to use another way 
-instead of that, so I added that variable.
-
-Nothing harmful, I guess.
-
-Thanks!
-
-
+Thanks,
+Shiju
