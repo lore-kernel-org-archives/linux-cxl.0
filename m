@@ -1,287 +1,156 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F68F1AC456;
-	Wed,  4 Dec 2024 11:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637731B87CF
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Dec 2024 12:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733312108; cv=none; b=LTMZmGywCDz0AcDGQsw07A0Eg0m13RLAbjpZ0dJuIGh34JKSP6iZAcuFuNxkpNTw+rYnTKgZvnCEmgD1TpuVj0n0rd+oKAxceNyoFwnvoqfvKC1QQdJ5+lGh2RD+5HIMm4wjBHQFrUrE25eTJCD0fgre3RQh79wQhl1XeBjf9pU=
+	t=1733315228; cv=none; b=t/6QGD4JmUWQBRdbkBZfpPPR6HA2WFyklvqCiOpO4HsubyXBT5ETgeRkiLHBYUL+Bstl5TnicN4kKLYiB8kpp8XukkgRqlf9uWpdVjj2R5pZzh1P/hyZBiITe7FzfVpCvVXEA9m45B6YUg/0vUe8oZj4RlhF3FToSjbvhd/cgbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733312108; c=relaxed/simple;
-	bh=NCPtgkOSRmGk52EeOB2IiMnKVoVlPuUFd28dOdYf67k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rpGWFFB4QUPZD1jDAxXnRwAuedf+NN56ec+RacH7vysZKZJpUnE+ZnWsK5CfDemSqM6WP0vQONJ/GFZXnlCLwmRs7x9jdtusRLF6TipHR3hkxi29xqI23pvX8/wlsI7e0tDlOp2kxpQ7tBJxsxDiUyDhbfwQRgsLrT9mnU6JbQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y3FmB6yxmz6K9P6;
-	Wed,  4 Dec 2024 19:34:18 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id BF8B2140113;
-	Wed,  4 Dec 2024 19:35:02 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 4 Dec 2024 12:35:02 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Wed, 4 Dec 2024 12:35:02 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Shiju Jose <shiju.jose@huawei.com>, Steven Rostedt <rostedt@goodmis.org>
-CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: RE: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
- CXL spec rev 3.1
-Thread-Topic: [PATCH v4 3/6] cxl/events: Update General Media Event Record to
- CXL spec rev 3.1
-Thread-Index: AQHbOy/jEKs9N8Ou/EWSGme10Yml3rLJc4IQgABPV4CAAS95QIAATDQAgAA1zlD///prgIABEYyggAHA21CABm0UcIABWkrw
-Date: Wed, 4 Dec 2024 11:35:02 +0000
-Message-ID: <e20c76c2fb62470485ce8f37c9a5bc27@huawei.com>
-References: <20241120093745.1847-1-shiju.jose@huawei.com>
-	<20241120093745.1847-4-shiju.jose@huawei.com>
-	<180fcfd623c64cdb86cdc9059f749af0@huawei.com>
-	<20241126120237.1598854d@gandalf.local.home>
-	<a24524dccbf442d5a3c910d7f46c7b6c@huawei.com>
-	<20241127104132.6c1729e1@gandalf.local.home>
-	<53a299d3cca6417d90d553e8399f834b@huawei.com>
-	<20241127133407.7bc1376a@gandalf.local.home>
-	<dc8fa73e871949eeaf4117c622d66ac5@huawei.com>
-	<3c9808a694d242cab35bab67602edebf@huawei.com>
- <e4187844aed14d4897f0071dcfce7455@huawei.com>
-In-Reply-To: <e4187844aed14d4897f0071dcfce7455@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1733315228; c=relaxed/simple;
+	bh=b3cKO8E37kdGEfPQBy2NupErjAuGZ0w9V7NN+3pjucc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGWZGh2TzoA6kUdyWGHQGUNCTSwDi6vZ33ukhZCljb8m4CXoxuh1guMuLq7dWO0wHZ5zPXBmeM2bvOirdrIeHR8LtezTebGx++P10uBcmnKMuLF+kUZ0+q7Tk9evLT7LNDXuQCfL+JKGxn/W5Hkb0wvCAjB5aW8nu01YJAGC/A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=aDx0LVkM; arc=none smtp.client-ip=17.58.6.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="aDx0LVkM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733315226;
+	bh=tDbYa+5DWmHdZ9lmVLNA7xMZvJoZ/PCpc6Zau1xliNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=aDx0LVkMUXFI75QpCfQtwEzziTl2NnjdGJ/9Nl6EjkD9AoNOPkj0pNJDmDS0yOxmo
+	 cFAXLbMOmPcOl5uunRBBrqBVYZF5ppxfVoWTl3S1fXUPYvDXVgmxgrfgiOzuzDhljR
+	 JXz5mSklSuuNIhx7A4INyoL4v8SXD0un9r9AkY3EWP5hUjq0cVMBNRe3UAI+WH+UEp
+	 aQcXPRWXKjSKZb3dQybv2/fEczrg8mOY6isUSLdmtOWnHvZ0W1/xlosR4mnRECds2h
+	 6Ay6kSNLijQWwdsoHl1pqn9BntMizpWoDbFHr5J8zkhSqKMjCSXP0KeQ2EZIN5IQ7P
+	 WHMoRxUFUJF5Q==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id B793434BA6BD;
+	Wed,  4 Dec 2024 12:26:37 +0000 (UTC)
+Message-ID: <235ce0a9-1db1-4558-817b-6f92f22be5ab@icloud.com>
+Date: Wed, 4 Dec 2024 20:26:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nilesh Javali <njavali@marvell.com>,
+ Manish Rangankar <mrangankar@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Cristian Marussi <cristian.marussi@arm.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
+ <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+ <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
+ <2024120320-manual-jockey-dfd1@gregkh>
+ <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
+ <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
+ <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+ <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+ <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: Ptou9-aUclkqdkvBrep0JqLqpE5OAxzN
+X-Proofpoint-GUID: Ptou9-aUclkqdkvBrep0JqLqpE5OAxzN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-04_09,2024-12-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412040096
 
->-----Original Message-----
->From: Shiju Jose <shiju.jose@huawei.com>
->Sent: 03 December 2024 15:22
->To: Steven Rostedt <rostedt@goodmis.org>
->Cc: dave.jiang@intel.com; dan.j.williams@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
->nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org=
-;
->Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>
->Subject: RE: [PATCH v4 3/6] cxl/events: Update General Media Event Record =
-to
->CXL spec rev 3.1
->
->[...]
+On 2024/12/3 23:34, James Bottomley wrote:
+>>> This also enables an incremental migration.
+>> change the API prototype from:
+>> device_find_child(..., void *data_0, int (*match)(struct device *dev,
+>> void *data));
 >>
->>Hi Steve,
+>> to:
+>> device_find_child(..., const void *data_0, int (*match)(struct device
+>> *dev, const void *data));
 >>
->>I debug this case and please find the info, 1. rasdaemon :  read() from
->>format file return around 1/3rd of the
->>    actual data in the file only when the total size of the format's file
->>    is above 4K bytes (page size), For example, in this case, the total
->>size was 4512 bytes,
->>    but read only 1674 bytes.
->>    This partial data resulted  tep_parse_event() in libtraceevent
->>failed internally in the parse_format()
->>    and  since __parse_event() does not return error when parse_format() =
-fail,
->>    thus initialization of the event does not fail.
+>> For @data_0,  void * -> const void * is okay.
+>> but for @match, the problem is function pointer type incompatibility.
 >>
->>   The following  solution in rasdaemon solved the issue,
->>   (provided if no other fix for the above issue with read()),
->>    1. read() and accumulate content of format file until EOF reached.
->>    2. Increased the buffer size from 4K bytes to  8K bytes.
->>    3. May be __parse_event()  in libtraceevent  and thus
->>tep_parse_event() return error
->>        when parse_format() fail so that the initialization would fail
->>if the input data is
->>        corrupted or partial?
->
->Hi Steve,
->
->Identified the root cause of this issue in the kernel:
->The read() function for the event's format file calls seq_read() and
->seq_read_iter() in the kernel, which allocates a buffer of PAGE_SIZE (4 KB=
-) for
->sequential reads. However, it detects an overflow in the following marked =
-call
->(seq_has_overflowed()) and returns with partial data read.
->
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->File : https://elixir.bootlin.com/linux/v6.13-rc1/source/fs/seq_file.c
->
->ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter) {
->	struct seq_file *m =3D iocb->ki_filp->private_data; [...]
->	/* grab buffer if we didn't have one */
->	if (!m->buf) {
->--------->		m->buf =3D seq_buf_alloc(m->size =3D PAGE_SIZE);
->		if (!m->buf)
->			goto Enomem;
->	}
->	// something left in the buffer - copy it out first [...]
->	// get a non-empty record in the buffer
->	m->from =3D 0;
->	p =3D m->op->start(m, &m->index);
->	while (1) {
->		err =3D PTR_ERR(p);
->		if (!p || IS_ERR(p))	// EOF or an error
->			break;
->[...]
->	}
->	// EOF or an error
->	m->op->stop(m, p);
->	m->count =3D 0;
->	goto Done;
->Fill:
->	// one non-empty record is in the buffer; if they want more,
->	// try to fit more in, but in any case we need to advance
->	// the iterator once for every record shown.
->	while (1) {
->		size_t offs =3D m->count;
->		loff_t pos =3D m->index;
->
->[...]
->		err =3D m->op->show(m, p);
->		if (err > 0) {		// ->show() says "skip it"
->			m->count =3D offs;
->---------->	} else if (err || seq_has_overflowed(m)) {
->			m->count =3D offs;
->			break;
->		}
->	}
->	m->op->stop(m, p);
->	n =3D copy_to_iter(m->buf, m->count, iter);
->	copied +=3D n;
->	m->count -=3D n;
->	m->from =3D n;
->Done:
->[...]
->	goto Done;
->}
->EXPORT_SYMBOL(seq_read_iter);
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->The following fix in the kernel's seq_read_iter() allows userspace to read=
- the
->content of the format file etc in one go if the requested size exceeds PAG=
-E_SIZE,
->and resolves the parsing error caused by the event's format file exceeding
->PAGE_SIZE.
->
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->diff --git a/fs/seq_file.c b/fs/seq_file.c index e676c8b0cf5d..f1f1af18056=
-2
->100644
->--- a/fs/seq_file.c
->+++ b/fs/seq_file.c
->@@ -207,7 +207,11 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_=
-iter
->*iter)
->
->        /* grab buffer if we didn't have one */
->        if (!m->buf) {
->-               m->buf =3D seq_buf_alloc(m->size =3D PAGE_SIZE);
->+               if (iter->count % PAGE_SIZE)
->+                       m->size =3D ((iter->count / PAGE_SIZE) + 1) * PAGE=
-_SIZE;
->+               else
->+                       m->size =3D (iter->count / PAGE_SIZE) * PAGE_SIZE;
->+                m->buf =3D seq_buf_alloc(m->size);
->                if (!m->buf)
->                        goto Enomem;
->        }
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->Can you suggest which fix is the right one,  kernel based fix or rasdaemon=
- based
->fix (which mentioned in the previous email)?
+>> there are two solutions base on discussions.
+>>
+>> 1) squashing likewise Greg mentioned.
+>>    Do all of the "prep work" first, and then
+>>    do the const change at the very end, all at once.
+>>
+>> 2)  as changing platform_driver's remove() prototype.
+>> Commit: e70140ba0d2b ("Get rid of 'remove_new' relic from platform
+>> driver struct")
+>>
+>>  introduce extra device_find_child_new() which is constified  -> use
+>> *_new() replace ALL device_find_child() instances one by one -> 
+>> remove device_find_child() -> rename *_new() to device_find_child()
+>> once.
+> Why bother with the last step, which churns the entire code base again?
 
-Following change for reading trace event's format file in the kernel worked=
- fine to fix
-the parsing error,  which seems better than changing the common seq_read().=
-=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7266ec2a4eea..9cb1c5a1f070 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1674,6 +1674,35 @@ static int trace_format_open(struct inode *inode, st=
-ruct file *file)
- 	return 0;
- }
-=20
-+/**
-+ *	trace_format_read - read() method for format file.
-+ *	@file: the file to read from
-+ *	@buf: the buffer to read to
-+ *	@size: the maximum number of bytes to read
-+ *	@ppos: the current position in the file
-+ *
-+ *  * Return:
-+ *  * %0  - No bytes copied (EOF).
-+ *  * %>0 - Number of bytes copied.
-+ *  * %<0 - Error code.
-+ */
-+static ssize_t trace_format_read(struct file *file, char __user *buf, size=
-_t size, loff_t *ppos)
-+{
-+	ssize_t copied =3D 0;
-+	ssize_t ret;
-+
-+	do {
-+		ret =3D seq_read(file, buf + copied, size - copied, ppos);
-+		if (ret < 0)
-+			return ret;
-+		copied +=3D ret;
-+		if (copied >=3D size)
-+			break;
-+	} while (ret);
-+
-+	return copied;
-+}
-+
- #ifdef CONFIG_PERF_EVENTS
- static ssize_t
- event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *pp=
-os)
-@@ -2157,7 +2186,7 @@ static const struct file_operations ftrace_enable_fop=
-s =3D {
-=20
- static const struct file_operations ftrace_event_format_fops =3D {
- 	.open =3D trace_format_open,
--	.read =3D seq_read,
-+	.read =3D trace_format_read,
- 	.llseek =3D seq_lseek,
- 	.release =3D seq_release,
- };
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->[...]
->>>>-- Steve
->>>
->>
->
+keep the good API name device_find_child().
 
-Thanks,
-Shiju
+> Why not call the new function device_find_child_const() and simply keep
+> it (it's descriptive of its function).  That way you can have a patch
+> series without merging and at the end simply remove the old function.
+
+device_find_child is a good name for the API, 'find' already means const.
+
