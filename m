@@ -1,118 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3447D1917D7;
-	Wed,  4 Dec 2024 23:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB66D1392
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Dec 2024 00:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733353571; cv=none; b=mJapMWOJ2lcPHi5r1l8GcqBEKURHO0QVL6tspbc2hnuBpAzZXYuCGJCtcPYHYvWLHYixALG74SkAeZJrqa6Uhwv+bvhtXNR6lP+nGCEvtsWr2GDU3REVaKyfi/j9z+T4rj0A3nVuPMDt0DVHTj51QthAMqKeZ339GWvadYY8OGE=
+	t=1733357278; cv=none; b=CgHx3wvnewAcCae13Yth4l8dbGsd7JmP7p0nmhZ3QsFThL5TSwtTgreIDrke5S5vxZkqXlbBKu+S1OGw9jYNA+elz2OFrnDzJiUvvfpNtW1kP+86IQQDW3prKz0tp7LdYi+w9MMfOfDaqS6BQ2ZeAYnfC0BhqksPU40j3tgTZk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733353571; c=relaxed/simple;
-	bh=nq3UPcM/wl/X++1UbycTK10/8mtIH93/EHJYpVsInYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DPQIivolFk2SClHJoi+Ib+Vk6I6hTF6khchmWBPnCMVzF9+Ag8CHYz0est5ynvEj6mDgdISjFCWN+gGBHL7AozWnuHmctlc+53jhNzAazVYt1HFKacEYSapuAgjyyl1PV2mYcHqIjwf108kwOInrk0BGJJgB6cX8j+7MRCkn3Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+kHUQVe; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1733357278; c=relaxed/simple;
+	bh=jXDu8pWjhuYPdMP7VqE1gBu4NrjerabEKnAlH0ltUtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ka/GDZR5STnUm7xk67NmWWDUU3Lduypw1gYZSicxIwbFd4N2z2W8OfM+zbHnh5K/Wf9s9AYyx7tdt++5OaM6sdnxrmmDwhaNZ+OOecsw7XxDnifoifvFzvi46wFOhfkztZ61pB+R1uzMIvZqBOd49OFrl8Q04ClkM+BqnOvrYQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=viUyMPDu; arc=none smtp.client-ip=17.58.6.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+kHUQVe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733353569; x=1764889569;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nq3UPcM/wl/X++1UbycTK10/8mtIH93/EHJYpVsInYc=;
-  b=a+kHUQVeava5QdVA5EQwSbogteaDSRFg6ugDeNgO2FMwMqzS7VvnAHSD
-   vTfcJLeIyWYJX/TMnDyv0JGjTpvTcdG30NpIhn6ndK5jMkppKAu1XyTdX
-   yNOBgqzp0G8xIoExnSC4N7l0m8RugWKtv+a2UGyVv1QVlDElEe0pOn4dB
-   +Aa3SvsUcN0LascjzFcco93Cjmnn8ef3O3swYBWVu343E4es+B7hUZY/l
-   sx8ldDx8PomfH/URm6LjcmNAO+fcfDvxy/bL05k6LRSxOsgFz7H/9lgxl
-   PZoPVbVreB8QHTshU/l4zJtDO/uwW0hkZn64j6u7mpdbKh8zUQUS2Z66u
-   w==;
-X-CSE-ConnectionGUID: WimGkI5JSPWwpevt1o0rUw==
-X-CSE-MsgGUID: I8A/y1sCT3ylL9bhNhLLxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="59050534"
-X-IronPort-AV: E=Sophos;i="6.12,208,1728975600"; 
-   d="scan'208";a="59050534"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 15:06:09 -0800
-X-CSE-ConnectionGUID: I5D4CJ5wQUS+bPsbMXcRSQ==
-X-CSE-MsgGUID: Md7Bev2ZT9KUuGh1zg2Q5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="98938291"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.90])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 15:06:09 -0800
-Date: Wed, 4 Dec 2024 15:06:06 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: alucerop@amd.com
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	bhelgaas@google.com
-Subject: Re: [PATCH] resource: harden resource_contains
-Message-ID: <Z1DgXiqhclSRN4z0@aschofie-mobl2.lan>
-References: <20241129091512.15661-1-alucerop@amd.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="viUyMPDu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733357275;
+	bh=T0i1UIwZu179fqDDvM1SaMgHe4/s268Ao/wTXHvJFpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=viUyMPDupWXi4CsrMrPO0pTZeZeGxPoM+enltzZDnkb+kI0qdByPZT5LU1xBetse2
+	 NtaWPzW2mnfiL0cDcb5AxsMAlW09DyzC74O6RR3cBb+ZzhEN7re48DHO1hdcod+aXb
+	 zbl3rMYxZGrv7wQqdRJsrWCp9PSwtE6uiLaNWgjCRsBT8D1ZUgFnCeCL+arYkrJDex
+	 wriQVWYopBjYxrWk6ouKFvfzOLXBz2VSyl6NuyevHO9GGv1V4cTmquonLgabfDNxjR
+	 5eSkEUOnbtt2Et4RjPSCmjNRxtqblo8cbQN/o+14zsvC0nuehSg5FcL9uofh/yy5ZC
+	 z6tN/Ugl8ZG4Q==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 9CBA68001C9;
+	Thu,  5 Dec 2024 00:07:24 +0000 (UTC)
+Message-ID: <3a4de1bb-3eb2-469a-8ff7-ff706804f5bb@icloud.com>
+Date: Thu, 5 Dec 2024 08:07:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241129091512.15661-1-alucerop@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nilesh Javali <njavali@marvell.com>,
+ Manish Rangankar <mrangankar@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Cristian Marussi <cristian.marussi@arm.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
+ <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+ <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
+ <2024120320-manual-jockey-dfd1@gregkh>
+ <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
+ <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
+ <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+ <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+ <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+ <235ce0a9-1db1-4558-817b-6f92f22be5ab@icloud.com>
+ <5c905df49a332b1136787a524955b46b6153c012.camel@HansenPartnership.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <5c905df49a332b1136787a524955b46b6153c012.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: SnhSPaefh2SqVr4UPg8Q8Npi4W-Py9Af
+X-Proofpoint-ORIG-GUID: SnhSPaefh2SqVr4UPg8Q8Npi4W-Py9Af
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-04_19,2024-12-04_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412040186
 
-+ linux-cxl
-
-On Fri, Nov 29, 2024 at 09:15:12AM +0000, alucerop@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On 2024/12/5 00:42, James Bottomley wrote:
+>>>>  introduce extra device_find_child_new() which is constified  ->
+>>>> use *_new() replace ALL device_find_child() instances one by one
+>>>> -> remove device_find_child() -> rename *_new() to
+>>>> device_find_child() once.
+>>> Why bother with the last step, which churns the entire code base
+>>> again?
+>> keep the good API name device_find_child().
+> Well, I think it's a good opportunity to rename the API better, but if
+> that's the goal, you can still do it with _Generic() without churning
+> the code base a second time.  The example is in
+> slab.h:kmem_cache_create
 > 
-> While resource_contains checks for IORESOURCE_UNSET flag for the
-> resources given, if r1 was initialized with 0 size, the function
-> returns a false positive. This is so because resource start and
-> end fields are unsigned with end initialised to size - 1 by current
-> resource macros.
-> 
-> Make the function to check for the resource size for both resources
-> since r2 with size 0 should not be considered as valid for the function
-> purpose.
-> 
 
-Hi Alejandro,
+i understand these solutions _Generic()/_new/squashing.
+every solutions have its advantages and disadvantages.
 
-Can this patch be included in the CXL Type-2 patchset, as a replacement for:
+i decide to use squashing solution for this concrete scenario after some
+considerations since:
 
-[PATCH v6 10/28] cxl: harden resource_contains checks to handle zero size resources
-https://lore.kernel.org/20241202171222.62595-11-alejandro.lucero-palau@amd.com/T/#u
+1) it has the minimal patch count to achieve target.
+2) every patch is valuable, but other solutions needs to undo beginning
+  patch finally.
+3) for the squashing patch, i will only make the least and simplest
+changes for various match functions, that will compensate its
+disadvantages.
 
-Keeping it in that set also keeps the discussion history.
+>>> Why not call the new function device_find_child_const() and simply
+>>> keep it (it's descriptive of its function).  That way you can have
+>>> a patch series without merging and at the end simply remove the old
+>>> function.
+>> device_find_child is a good name for the API, 'find' already means
+>> const.
+> Not to me it doesn't, but that's actually not what I think is wrong
+> with the API name: it actually only returns the first match, so I'd
+> marginally prefer it to be called device_find_first_child() ... not
+> enough to churn the code to change it, but since you're doing that
+> anyway it might make sense as an update.
 
-DaveJ may be able to take it through the CXL tree with Bjorn's ACK.
+name device_find_child appeared 18 years ago, it is good to keep this
+name developers known about.
 
---Alison
+the API only return one device *, it should be obvious that it is the
+first device which meet matching condition.
 
+Other device finding APIs (bus|class|driver)_find_device() does not have
+concern about 'first'
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+So, IMO, current name is good.
 
-
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  include/linux/ioport.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 6e9fb667a1c5..6cb8a8494508 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -264,6 +264,8 @@ static inline unsigned long resource_ext_type(const struct resource *res)
->  /* True iff r1 completely contains r2 */
->  static inline bool resource_contains(const struct resource *r1, const struct resource *r2)
->  {
-> +	if (!resource_size(r1) || !resource_size(r2))
-> +		return false;
->  	if (resource_type(r1) != resource_type(r2))
->  		return false;
->  	if (r1->flags & IORESOURCE_UNSET || r2->flags & IORESOURCE_UNSET)
-> -- 
-> 2.17.1
-> 
