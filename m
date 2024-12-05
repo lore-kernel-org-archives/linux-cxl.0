@@ -1,139 +1,107 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DA222144D
-	for <linux-cxl@vger.kernel.org>; Thu,  5 Dec 2024 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4575B21C199;
+	Thu,  5 Dec 2024 18:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733415902; cv=none; b=hV/DTfke7bVm+YGjvFMAQrK7+j9RVIopaSp8pMxXxvrymtWQij1gPIpjHdHSFyjrzX00xXQc4DiVLU2NH/wCQCr29xXWGGbfCsmdsdobiLZraNbo1JGD+/rk86hdkLtwAtIcTK2pgzXRRH/DUfuenb2J5BB87JMEoRUZtK23D4Y=
+	t=1733422791; cv=none; b=H9QLjxC4yftfISlqeyheHDRKbMOaaBEVPkO7V++KEXaJji0+kbQ2WH/YuWdFgmCbHeFwirgVB63W1zcb4cxX8P7Bwk4O8qofruiEgx/Zis6GYVMVKMja79to3EOqrMlR0j2F2Uj90SKPtr1x6PjMfX2ImmnDEJOAKo7BtWZaeVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733415902; c=relaxed/simple;
-	bh=R7CVb9LI65y/3Qu32CYYXvSxOe5U0ZYewJNDLJ5FwCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FM5HR8Pgp5Njq4Wo339ucuAt8Nn0faem34HwYyOssFDbeN3+z2ymfGJpKcUE1oqONtINhTSZYXTiBy+xwexXuqVoNuYqpIhtnaqv9KezOdqCJ8DPki6Rq1C5Foabpl/lhpQB/C5JkB/doU3fl6Snfn1/Rjjltk1ho7Dea5f8K5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3ZpoIMZn; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1733422791; c=relaxed/simple;
+	bh=Jb0FZs/6tEaSe6N/baRH3pNDpZvG73bWsNNPlA5VQPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=puUdkcZpjOkeAF4toqb/mXxOYs+rklQL7NOSs/98lKkj+Q4TlMVxTGHpx6n4++Akp9bsmbDEPWQu2mYhsXHspxw8H4IKXWaeTorGyW9RAWEZBCiUOxFvV9rFKkNPXyDQteGZFo2ox5WDZBqTN2W6FCTM4LyoIIZZj4C3YMiSBfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aCaVSzU5; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3ZpoIMZn"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53dd57589c8so2474117e87.1
-        for <linux-cxl@vger.kernel.org>; Thu, 05 Dec 2024 08:24:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733415897; x=1734020697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ItHEVA7I8S1EP8oyTKl1F93KEEHRVDFUauUtw/1Acb0=;
-        b=3ZpoIMZnwjCl4Vv5bu6PGSXVdDmY7k4Cj1zgHc6F/cvtw8CM1rNR1LTJDsCfgmd0g2
-         BceSlvbQiLyYiwl1rdWJ3jv2Ns4UxCWRnsrFu4TQEusFPgx7FkT2UIodCH6L3llBjvZX
-         XNAHzd6Taqadu0P2fGi/yUIsqcbc2LJaCMf0KU5YlqUl8Ra8J04m6hedyjqo7k0PtBfa
-         YzZpvhommBUg5ON/+IUYW1PeMHGPsGOGeDu3G435iCu3IM89jIWqEOC9Hd0bT3dOemUj
-         +5wiSeoDLmTU2wBbs3vqgyCGSboeppp2+z3qZoXORDMgU0UpKaORWbQqfQFXw+JpXtdd
-         NE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733415897; x=1734020697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ItHEVA7I8S1EP8oyTKl1F93KEEHRVDFUauUtw/1Acb0=;
-        b=CCT52C/6ArVOIHPqsv4SuvP3xVZoFMnLHAzBCWMcTWSwFRutmlr33mnU2cczOuoVVd
-         FQ+dokHTqsgNaXMPZ8h5u7zVodsiC18l8YR3Wm+UbLnmCf8DJLRcxQsxvg8Y1M2hWOxU
-         IR0EURyP/89xYoSU84i9kasiWfx74L62657EiT+RA6jOfrOCPMrBCZQer0sOkr+WAxzn
-         d6UKGSWGiOuAa5K7XtEfPRHM1HnhG4DWmlA6jY0CYJv3fpld5rrjw7HLeQK+0mdXc2hP
-         b6Z70BosfudUFUgCE2SGw78U3QzdND2ggAeZlE+C4CHz1iHqUt6XLpZsIriEJTfpOqB9
-         +gJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXz6+xvjxwjh/ggyuaROFJIsRHdrvZJyiSDOPwvtb4hEPnjhP0tMrH5DsSQcJknwUY7heVYJwRXpHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBO3P+9tythd5zT3G3BxWaqE+lm/wNWC1L4zeug+31yEqTXgF0
-	91oa3aOwwz+DK8DdgEOjz9C6FD1GYPYLqP9yG6OMNT9Or8IoZmkDsWtJvCHJCxMsZSmqa8c6+dK
-	QlUE/6Tety6bKhvFmW1tcwKO3PxIfTc5trylh7A==
-X-Gm-Gg: ASbGncsVZrHaB/02Ch792bc9DwHCOoga126xd7IT9J0QY4e9uqcMIq3VAxpqfezV62D
-	ytMhn+2+JgvLlVFqHvbOEvHehOruBEp8uYlP0r/GHLL+zd4KZZkE//R0skEYpQQ==
-X-Google-Smtp-Source: AGHT+IErYJU9bnmgh/S4XgU0jcrMWfkUEiJSX94XfyJ1xliCjLlWQwaDM6P30GxT6teJ6fjjXCYzQKweIZQ1ynm3Yi8=
-X-Received: by 2002:a05:6512:4006:b0:53d:f6bc:23ec with SMTP id
- 2adb3069b0e04-53e216f74ecmr1077273e87.5.1733415897149; Thu, 05 Dec 2024
- 08:24:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aCaVSzU5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733422790; x=1764958790;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jb0FZs/6tEaSe6N/baRH3pNDpZvG73bWsNNPlA5VQPI=;
+  b=aCaVSzU5fMcIP+lbwtmxAllL0+JBkfpmHK1RaLJ8a4aU1vcJB/0dvTMS
+   oaYKRF74IzVW1tTe+dwj5E45nc6nV9K7vSPJ2YuKHhoPLhoYOuTAmA2Et
+   lOARNTk+xzUyHroj6KL/uI897wTO4h7SCkr1FWEgKqCYOM82+83Cc6Nn7
+   SGnBrmeIpcE+MzFOxi3o8ubVkSyg0XFXjDyKdly60LHYTxWVmN2HPvbK2
+   CQ20Aw+mqZFSil5Gu5cnUMn8XQLXewRfg4sth9DlmWFThKlNXCQXzmf5E
+   mejb+yfL/ti2eSYOvP+K6f2UZ1Tmk6pqXHu24bp0Dd3JLmOcFMA+4Myep
+   A==;
+X-CSE-ConnectionGUID: OxteymY0RZOb5Zn4bzyBGQ==
+X-CSE-MsgGUID: gHSeP4OiTOGbJqaeoDbS7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33493331"
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="33493331"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 10:19:49 -0800
+X-CSE-ConnectionGUID: wc7u1Gk1Qrac1rsF7uxroA==
+X-CSE-MsgGUID: /wWG80sCSbGD7P2h7U57+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="93989388"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.157])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 10:19:48 -0800
+Date: Thu, 5 Dec 2024 10:19:46 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Ming <ming.li@zohomail.com>
+Cc: kobayashi.da-06@fujitsu.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/pci: Check dport->regs.rcd_pcie_cap availability
+ before accessing
+Message-ID: <Z1HuwuKf7CYu-7K8@aschofie-mobl2.lan>
+References: <20241129132825.569237-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com> <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
-In-Reply-To: <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 5 Dec 2024 17:24:46 +0100
-Message-ID: <CAMRc=Mf--vRm15N2au-zvP89obcxRuk+3OOLqFtrjgg61_LotA@mail.gmail.com>
-Subject: Re: [PATCH v3 08/11] gpio: sim: Remove gpio_sim_dev_match_fwnode()
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com, 
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241129132825.569237-1-ming.li@zohomail.com>
 
-On Thu, Dec 5, 2024 at 1:15=E2=80=AFAM Zijun Hu <zijun_hu@icloud.com> wrote=
-:
->
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
->
-> gpio_sim_dev_match_fwnode() is a simple wrapper of device_match_fwnode()
-> Remvoe the unnecessary wrapper.
->
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+On Fri, Nov 29, 2024 at 09:28:25PM +0800, Li Ming wrote:
+> RCD Upstream Port's PCI Express Capability is a component registers
+> block stored in RCD Upstream Port RCRB. CXL PCI driver helps to map it
+> during the RCD probing, but mapping failure is allowed for component
+> registers blocks in CXL PCI driver.
+> 
+> dport->regs.rcd_pcie_cap is used to store the virtual address of the RCD
+> Upstream Port's PCI Express Capability, add a dport->regs.rcd_pcie_cap
+> checking in rcd_pcie_cap_emit() just in case user accesses a invalid
+> address via RCD sysfs.
+
+I traced this enough to convince myself that dport cannot be NULL if
+cxl_mem_find_port() succeeds. So, LGTM -
+
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+> 
+> Fixes: c5eaec79fa43 ("cxl/pci: Add sysfs attribute for CXL 1.1 device link status")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 > ---
->  drivers/gpio/gpio-sim.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 370b71513bdb529112e157fa22a5451e02502a17..b1f33cbaaaa78aca324f99c45=
-a868e7e79a9d672 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -413,11 +413,6 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip=
- *chip)
->         return devm_add_action_or_reset(dev, gpio_sim_sysfs_remove, chip)=
-;
->  }
->
-> -static int gpio_sim_dev_match_fwnode(struct device *dev, const void *dat=
-a)
-> -{
-> -       return device_match_fwnode(dev, data);
-> -}
-> -
->  static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device=
- *dev)
->  {
->         struct gpio_sim_chip *chip;
-> @@ -503,7 +498,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *sw=
-node, struct device *dev)
->         if (ret)
->                 return ret;
->
-> -       chip->dev =3D device_find_child(dev, swnode, gpio_sim_dev_match_f=
-wnode);
-> +       chip->dev =3D device_find_child(dev, swnode, device_match_fwnode)=
-;
->         if (!chip->dev)
->                 return -ENODEV;
->
->
-> --
+>  drivers/cxl/pci.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index b2cb81f6d9e7..e53b1c95a248 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -836,6 +836,9 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+>  	if (!root_dev)
+>  		return -ENXIO;
+>  
+> +	if (!dport->regs.rcd_pcie_cap)
+> +		return -ENXIO;
+> +
+>  	guard(device)(root_dev);
+>  	if (!root_dev->driver)
+>  		return -ENXIO;
+> -- 
 > 2.34.1
->
->
-
-Please use get_maintainers.pl to get the complete list of addresses to Cc.
-
-Bartosz
+> 
