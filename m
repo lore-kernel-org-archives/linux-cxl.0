@@ -1,73 +1,73 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F24D20626A;
-	Fri,  6 Dec 2024 16:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA1E206274;
+	Fri,  6 Dec 2024 17:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733504224; cv=none; b=cFhREm63k3qAFWhkchftM2H2pVtqL4qAfTsTMIxRGHD0nroJ7aiyZPnfUoSnzxjmsKMYkPSl3VyBfRw+dXWyrRVgVPMLheF3kZK45LoOzxV0kLPAWkkJIvmdBaj1xygI5uAb1OzjR5E9Dr0TGU5/5vEOkxNmZgy7exezWChyfvQ=
+	t=1733505130; cv=none; b=G7hE9A9qcLhO24vMp88+rqsaisiRJckkXreoWSMRlorYcJPQyaqxm30KYv/r5owSyjvsjDuEQmb8gk0BXgwWriPeGvRsiv6z7HC8TrT1olYFdOJHBGP09H9g000CbdLV8vCkB2sYR9BfWwiiVFD8Vk30ubliw4uARnx6oeo4VOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733504224; c=relaxed/simple;
-	bh=fYfDs6Ir4Q/zYqiT3OeBInTSJD3bFy+vG8QqctHODkg=;
+	s=arc-20240116; t=1733505130; c=relaxed/simple;
+	bh=Z9jpkL9lcPC6GbbHMxn23dCagEYhzC7cGAH8StYauLg=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BrIjU0hMZcKKW3HhqyCTA5Dfl8+NoB2hwxZIQYp/Ldel9sF1QiqHgLu6JsbS8CvaBeMKQI2awwwoIdst6ZIMAzHvxghp4YzTBCDgRUhZv1FsdODI51IfXx7qSkHfJnu89HHj3txAAhn07vu1IPaOnsso/wFu6I2JYc5tTzkh6JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wl1Tu3IF; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=cu4Jjewy3KfhPIQMXbncQR8LOE9uv7zumqvunqnbA/tMqKmXeHJEHAkhtgdOhRIW8IO0A7TR9VZ9ky8LfGVp1mkSPgJwlVfFhwp0Lm48NgsDbiWrYkVocTUnR7K2xlMekv5ylorvOJHwNIpSAz8ed0oQe1ZzhZWrXrYvzo1YxyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmUmbbkG; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wl1Tu3IF"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-215a7e487bfso20398135ad.2;
-        Fri, 06 Dec 2024 08:57:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmUmbbkG"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-725abf74334so1935036b3a.3;
+        Fri, 06 Dec 2024 09:12:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733504222; x=1734109022; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733505128; x=1734109928; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgyEGKZZotV30KQ+1xi/b8vy9kNqZrcn4m6Kl44Br/A=;
-        b=Wl1Tu3IFFIczLk4ZUPdFLmp9itUBnW73CjfETuMQmFbGyByU+Efl1JZLubDaqmD9Ur
-         IFd8LQ/qOt2u8U3PIBjwKSylIKGPXwxPHtL7/yAz1yViM+1JQCJB2Hj0sxqB1xd9zCgN
-         hmyPqYWfJ9eSLPMuX7Z9G/lzl1SjjhhmDA1JIYjq2L3pbc6/VB0SRDaveSQBVK5BZa+V
-         AcTCVp++JQe3PirOWwMhAmlsPfS+sS9rg0SD534eEhjCETMOfTvYSCQ+p5svYneTrbbN
-         vaDdMGndqBWiVRBi3GlDSXBO3ObZJHixw2q2fALadHxVrXaKYVy9GHHea7AuVeG43Vwk
-         A0zw==
+        bh=uyRjfFVucsezeCVsFiNo9bFijXbZ7Qu5ifeQgImd5Gw=;
+        b=EmUmbbkG0lcrsTyXM90Mk7O2b5sXR5STAco/+SezzQd7W22KAWL+vYr6RgEzVi1Aw2
+         lzA5GwzbvnKUVDgnpaC3/GMCh1aTCJCZ2eDaLzaHe3mVjqpzTUaqcjVAGLtoEYZZkpWU
+         OK9zLADcqvH/faYcGI6uptXrBtIPh/FA/bVhnPzhwHhn9mcLr0w4AQnzi+ZwDNjohxg+
+         fm06HxxOaOdLoJrJdhvhPozklOkGsRV2CrEZoxZ8Nnau2tkMENLKhL54L5a43Bi1Iuah
+         Nkj1iGqzL96Yn4OzoqOHMysC+ILC/TZ2TRUDlIpMoDQWop3RZk0dWsKKVU+DjSwHBS/F
+         JxYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733504222; x=1734109022;
+        d=1e100.net; s=20230601; t=1733505128; x=1734109928;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LgyEGKZZotV30KQ+1xi/b8vy9kNqZrcn4m6Kl44Br/A=;
-        b=IRIeqqBNa25km6FFiqL+5WXTF7KINtJ7HYlNnZcJKULNBnCjiRAm4GkVxr+9RKU+Ta
-         Q+E7mulAvvBjeTOhairqmkGPwHd9vo/BvLR3QHXXqR1T+CJGfOVsIwcC89CXBMsokJ3s
-         SRzTix54BCWOfLclJQkNwLTp0oG5ap+Wx1vLcHsKMrTFAhlp2ylP/6D1qfos32xv7XFV
-         WQaBocarHvpSKJcrvY3huDzyeYraUlZ85wzJtAHDctj3ZzVEN61X0hClvp/rm/Yth/M8
-         QDwK7oF0kr365AzpLz9qj/6ojAqTLq+J5jcKx0AioQtdZ21ULZWcZ/af4Qgga/oosnzc
-         dm1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1oCkZRDIytyRc5RNB7pkoj/XlqmJ0a3iaxH4MMImj/Pp2b5p82Y8vqsV44sSI1Sh8bVTOMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXYmy2UxyoIUreY72VWYbZgfMIOINOw8EIeveEzoIwx66d7my3
-	/xQTKsCIG+1CBIR9tBd3/iZMMMxsNzdOl+61+vcRimov8jqkFfxa
-X-Gm-Gg: ASbGncuV24SUs3oyvgNPR8t3umNXlOChyV55Qg1O5ya0Sqfb+0I2cRwR3FK6yFmNZHI
-	k8oRttQxM1evjn9AsG4OFsfJMQ48n1y9l0PG+iAXiXmdSLaOkS6e8pJcrgA5weWgtIYdGWbaPTf
-	hZ9zdkpghzEhS5E2djFzvBLDTjCRIPHISoJwXLWJd3pPCqI9hxyE118Jh5o2JvUp7SRtaPsa1fV
-	S6lmyjBgJEhyNipYhRLaXEe9vSlgEALSgoDvb/g
-X-Google-Smtp-Source: AGHT+IGTDNLKuEIfGYOiaJhCLt5gDIfGmTGEqfTO9YLdpL72zBy5mbgvEClN7mF8d/Zc/ZKEq1Ab0A==
-X-Received: by 2002:a17:902:f60b:b0:215:8270:77e2 with SMTP id d9443c01a7336-2161394468dmr58738625ad.0.1733504221523;
-        Fri, 06 Dec 2024 08:57:01 -0800 (PST)
-Received: from fan ([2601:646:8f03:9fee:3118:55bb:e021:3a22])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8e3e452sm31064765ad.43.2024.12.06.08.57.00
+        bh=uyRjfFVucsezeCVsFiNo9bFijXbZ7Qu5ifeQgImd5Gw=;
+        b=F16A0ZT0e7bBa0adS4N5HkxqVjR4Heusq2xmVjcYaXe+JrXHNOUjS8wm+ZW/8GyNnn
+         WxEE2oYlIyaBOleGmsyYeXg2GFBh9H8UCsPJ+i3aSLxYShmS7lBVsoV30wlv2saQcTAm
+         TchfUQSt9zmHG7oJYH8MoufdCxvsX1xQwD2R19A4+JP/K1y4T47gNOigf79Yvcf1+158
+         jaC48dUeqF9qOCzxLmx2kNLYdWjJJjtULgbEIPqzj6WBBeaHVr4/Ls7ti7zjMphGEtT4
+         Xhc90i9/7LDlCRjREjPgmHmjuK4mhCUPXa+DsyKEMOVgzxmy5/hg6wKKbKuw7WO4xhdk
+         iWYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfc5fANyzUcxiM3LDWh5gDmYHqkJOl8nrqarzep4CBOwyxjGE/16pmvYvCAYufMGqNib8Ly6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUMGoPAzJh8vOVo1DlPrhQ/jC06v99oTXD1bMtkkAJ5LcDQaL8
+	UEoSmsXRii0tK9f2Rxm+Y1LDIkCdA68T1zfMkNu8xSJxbuiFpWfx
+X-Gm-Gg: ASbGncsj/QVf4U2iE7wFwSR/V9xwsNcQRaB4AHjhBtaI8kxrC01EOrscCaPLsKrn1+E
+	HVn+pShwpYiwcMWzebm9Su1NB8xYRuhztixf1ZwM217t7hiWX+zQg4k1Y7LK2Jyp5bmXYVOIR0c
+	iUH7snLIYCSLrwJUbWPAhbs4GnX+w+trQGKORANXn2avituz7OxHGUpMm2UfALYaJs+PXkTWRm5
+	hR0kj3xUPa3P4qTbmCAvV/5RibqQSfBvxXECVJn
+X-Google-Smtp-Source: AGHT+IG9aEh8xVegdDO9gt9ImoRXQBRnk/rAL1B7XxdyWT8laEnBfVNFQzj9E7Siq3OTiqKo+q8xpw==
+X-Received: by 2002:a05:6a00:2e87:b0:725:b347:c3cd with SMTP id d2e1a72fcca58-725b8118dbfmr4233383b3a.9.1733505128252;
+        Fri, 06 Dec 2024 09:12:08 -0800 (PST)
+Received: from mini ([2601:646:8f03:9fe0:713e:4b65:ca0:73a7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd1569b751sm3277372a12.5.2024.12.06.09.12.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 08:57:01 -0800 (PST)
+        Fri, 06 Dec 2024 09:12:07 -0800 (PST)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Fri, 6 Dec 2024 08:56:57 -0800
+Date: Fri, 6 Dec 2024 09:12:04 -0800
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
 	dan.j.williams@intel.com, martin.habets@xilinx.com,
 	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
 	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
 	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 13/28] cxl: prepare memdev creation for type2
-Message-ID: <Z1Ms2YRAMFxmd11Y@fan>
+Subject: Re: [PATCH v6 14/28] sfc: create type2 cxl memdev
+Message-ID: <Z1MwZHGBfkgi9X1i@mini>
 References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-14-alejandro.lucero-palau@amd.com>
+ <20241202171222.62595-15-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,155 +76,46 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-14-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241202171222.62595-15-alejandro.lucero-palau@amd.com>
 
-On Mon, Dec 02, 2024 at 05:12:07PM +0000, alejandro.lucero-palau@amd.com wrote:
+On Mon, Dec 02, 2024 at 05:12:08PM +0000, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device when
-> creating a memdev leading to problems when obtaining cxl_memdev_state
-> references from a CXL_DEVTYPE_DEVMEM type. This last device type is
-> managed by a specific vendor driver and does not need same sysfs files
-> since not userspace intervention is expected.
-> 
-> Create a new cxl_mem device type with no attributes for Type2.
-> 
-> Avoid debugfs files relying on existence of clx_memdev_state.
-> 
-> Make devm_cxl_add_memdev accesible from a accel driver.
+> Use cxl API for creating a cxl memory device using the type2
+> cxl_dev_state struct.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/cdat.c   |  3 +++
->  drivers/cxl/core/memdev.c | 15 +++++++++++++--
->  drivers/cxl/core/region.c |  3 ++-
->  drivers/cxl/mem.c         | 25 +++++++++++++++++++------
->  include/cxl/cxl.h         |  2 ++
->  5 files changed, 39 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 2a1f164db98e..f1c5b77cb6a0 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -577,6 +577,9 @@ static struct cxl_dpa_perf *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxle
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
->  	struct cxl_dpa_perf *perf;
->  
-> +	if (!mds)
-> +		return ERR_PTR(-EINVAL);
-> +
->  	switch (mode) {
->  	case CXL_DECODER_RAM:
->  		perf = &mds->ram_perf;
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index b14193eae5fb..4bc946388384 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -547,9 +547,17 @@ static const struct device_type cxl_memdev_type = {
->  	.groups = cxl_memdev_attribute_groups,
->  };
->  
-> +static const struct device_type cxl_accel_memdev_type = {
-> +	.name = "cxl_accel_memdev",
-> +	.release = cxl_memdev_release,
-> +	.devnode = cxl_memdev_devnode,
-> +};
-> +
->  bool is_cxl_memdev(const struct device *dev)
->  {
-> -	return dev->type == &cxl_memdev_type;
-> +	return (dev->type == &cxl_memdev_type ||
-> +		dev->type == &cxl_accel_memdev_type);
-> +
-Unwanted blank line.
 
-Fan
->  }
->  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, CXL);
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+> ---
+>  drivers/net/ethernet/sfc/efx_cxl.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index aa65f227c80d..d03fa9f9c421 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -95,10 +95,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	 */
+>  	cxl_set_media_ready(cxl->cxlds);
 >  
-> @@ -660,7 +668,10 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->  	dev->parent = cxlds->dev;
->  	dev->bus = &cxl_bus_type;
->  	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-> -	dev->type = &cxl_memdev_type;
-> +	if (cxlds->type == CXL_DEVTYPE_DEVMEM)
-> +		dev->type = &cxl_accel_memdev_type;
-> +	else
-> +		dev->type = &cxl_memdev_type;
->  	device_set_pm_not_required(dev);
->  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
->  
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 70d0a017e99c..2a34393e216d 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1948,7 +1948,8 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		return -EINVAL;
->  	}
->  
-> -	cxl_region_perf_data_calculate(cxlr, cxled);
-> +	if (cxlr->type == CXL_DECODER_HOSTONLYMEM)
-> +		cxl_region_perf_data_calculate(cxlr, cxled);
->  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		int i;
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index a9fd5cd5a0d2..cb771bf196cd 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -130,12 +130,18 @@ static int cxl_mem_probe(struct device *dev)
->  	dentry = cxl_debugfs_create_dir(dev_name(dev));
->  	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
->  
-> -	if (test_bit(CXL_POISON_ENABLED_INJECT, mds->poison.enabled_cmds))
-> -		debugfs_create_file("inject_poison", 0200, dentry, cxlmd,
-> -				    &cxl_poison_inject_fops);
-> -	if (test_bit(CXL_POISON_ENABLED_CLEAR, mds->poison.enabled_cmds))
-> -		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
-> -				    &cxl_poison_clear_fops);
-> +	/*
-> +	 * Avoid poison debugfs files for Type2 devices as they rely on
-> +	 * cxl_memdev_state.
-> +	 */
-> +	if (mds) {
-> +		if (test_bit(CXL_POISON_ENABLED_INJECT, mds->poison.enabled_cmds))
-> +			debugfs_create_file("inject_poison", 0200, dentry, cxlmd,
-> +					    &cxl_poison_inject_fops);
-> +		if (test_bit(CXL_POISON_ENABLED_CLEAR, mds->poison.enabled_cmds))
-> +			debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
-> +					    &cxl_poison_clear_fops);
+> +	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, cxl->cxlds);
+> +	if (IS_ERR(cxl->cxlmd)) {
+> +		pci_err(pci_dev, "CXL accel memdev creation failed");
+> +		rc = PTR_ERR(cxl->cxlmd);
+> +		goto err3;
 > +	}
->  
->  	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
->  	if (rc)
-> @@ -219,6 +225,13 @@ static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
->  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
->  
-> +	/*
-> +	 * Avoid poison sysfs files for Type2 devices as they rely on
-> +	 * cxl_memdev_state.
-> +	 */
-> +	if (!mds)
-> +		return 0;
 > +
->  	if (a == &dev_attr_trigger_poison_list.attr)
->  		if (!test_bit(CXL_POISON_ENABLED_LIST,
->  			      mds->poison.enabled_cmds))
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 473128fdfb22..26d7735b5f31 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -45,4 +45,6 @@ int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
->  int cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
->  int cxl_release_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
->  void cxl_set_media_ready(struct cxl_dev_state *cxlds);
-> +struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
-> +				       struct cxl_dev_state *cxlds);
->  #endif
+>  	probe_data->cxl = cxl;
+>  
+>  	return 0;
+>  
+> +err3:
+> +	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
+>  err2:
+>  	kfree(cxl->cxlds);
+>  err1:
 > -- 
 > 2.17.1
 > 
-
--- 
-Fan Ni
