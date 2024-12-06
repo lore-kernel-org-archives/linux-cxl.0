@@ -1,96 +1,127 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A3611EF0B7
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 09:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A03D1FC116
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733478655; cv=none; b=dx8q7H7Aknb+zfC4tTELMD2p0lyaWTu6Bxh6r7szSOO2SgyJQkXzfTmtFatrNOIfGcpzMDHXChOYJuf9Jh4C26KLGPsOq42ABqs2LUxUM9CAqqLMEqQzMSC4sfNm/Dya4NPTpHrwmEIfiotSaOJfSfFspedKWurApyTJqXBlzgY=
+	t=1733483334; cv=none; b=BJQZezHSSWxy+X6KOVgFJQSXiPi8aTUGfaVfh6JpdiNOvshM6GeCZxxxhY8XAshuzistBJyScHt44nkPcWpgSnucTmzNlkMizMsWwI1RMnussZRyrnm/xPzENv0zvfgSyLFXdXJJHXcr7/rQuI+MSEDein/dy9Xx5kKAw6KFuHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733478655; c=relaxed/simple;
-	bh=ZizzLeWUM8jDW36W355hDb72lRZ8mvCIUM18tGM4OQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rj3vOrqW3AGwHhRLbGpCYQ/EBchSH5AttClgmAOaPh/ZBJ8FbsTQTPVKbdpTXCd3X91sfCCh0EUbp5DxwouxE0C64viUziDrvZQZG5KPJlAOv4kJKeLwVz34NkySoeg488u5yAFzb1MUQObrO9DhOPxRxgZGOXhaocd16Up1+YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXYHrbyFJnXnSGBw--.17063S2;
-	Fri, 06 Dec 2024 17:50:19 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwAHWHTUyFJnPuhjAA--.7499S3;
-	Fri, 06 Dec 2024 17:50:13 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: jonathan.cameron@huawei.com,
-	fan.ni@samsung.com,
-	mst@redhat.com,
-	marcel.apfelbaum@gmail.com
-Cc: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org,
-	chenbaozi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH 0/1] cxl/cxl-host: Support creation of a new CXL Host Bridge
-Date: Fri,  6 Dec 2024 17:49:38 +0800
-Message-Id: <20241206094939.921781-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733483334; c=relaxed/simple;
+	bh=W4VuhT+Jm07xuaoOKTSneZ6zXj4xO3p37XsQxo6QhR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GR66Iy+sAzsUXvSs2XwHPdXXiMM51vY2/1urcDCMQ1bW154BX2gXhNbFB+2+EMGkpB51DCJ+hFDiaWicSqfBB/f4BaDXfZlDY2YhXVM171tPv8zMWFcvPHemtcUS9ab3krfRalPRgymIYkTZ5W3k0VcZBX7wQdNwRcthLLcn+GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=MgjiqdzZ; arc=none smtp.client-ip=17.58.6.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="MgjiqdzZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733483330;
+	bh=NhyG+EmDBcuL7ITc5tFv2+rP51hoW90ADGxMFzERI+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=MgjiqdzZfTmb/mVFTbzsypOWruuPXKPmqalwnrapBSSPRX9ZBXWuKx/rXEQNHK2pa
+	 Owdt0fT/DfIcknjmrc9RiPQm03DTgyCIfZaA0Ct84DRgRPn41GH/9ATt9WarD4oB7Z
+	 kp1tye/lvFsVtcUt9wEaRY3KIi4c4XR2lvGXACZO95dn1BzrfkmojzfeVy6LNqPP4n
+	 cuKwE61BSO3ibR5Zaj2OZLFYfkZ3aOGDENNFUeS+do+P7PcdFzPCx3SylOoxqhlQzu
+	 3vBrnTd0dnstMjHvqU/2HZ8ig8tIq43Kbs7RsrkBBEg+Xa3q76Kaj+3nG3pAqDsniz
+	 8LIg8qyWiAoMg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 604B31801BD;
+	Fri,  6 Dec 2024 11:08:42 +0000 (UTC)
+Message-ID: <71d9c99f-aa7d-4697-8561-17b54cfe97c6@icloud.com>
+Date: Fri, 6 Dec 2024 19:08:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
+ then adapt for various usages
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+ netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+ <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+ <7ylfj462lf6g3ej6d2cmsxadawsmajogbimi7cl4pjemb7df4h@snr73pd7vaid>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <7ylfj462lf6g3ej6d2cmsxadawsmajogbimi7cl4pjemb7df4h@snr73pd7vaid>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwAHWHTUyFJnPuhjAA--.7499S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQALAWdSBAwFUQACsg
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uFWxtry8GF4fJF1fZF13urg_yoW8CF15p3
-	WDGrWfGr1DCry3Jws3A3yUJa1rWrs5WFW5Zr1I9w18AF15tF4DJr1kKa1ava4DC345uw1f
-	tFnFqrn5K3WUZ37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-Proofpoint-ORIG-GUID: UViy4Z1HSo-8jLvn8-7u7fwR8c_nYln5
+X-Proofpoint-GUID: UViy4Z1HSo-8jLvn8-7u7fwR8c_nYln5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-06_07,2024-12-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 suspectscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2412060082
 
-Background
-==========
-Currently the base CXL support for arm platforms is only on Jonathan's
-patches[1] which have not yet merged into upstream. Some platform like
-SBSA-REF can be more like a real machine, thus the support of cxl could
-be meaningful. However, the pxb-cxl-host realization on this platform
-seems not satisfying their requirements[2].
+On 2024/12/6 15:21, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Thu, Dec 05, 2024 at 08:10:13AM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Constify the following API:
+>> struct device *device_find_child(struct device *dev, void *data,
+>> 		int (*match)(struct device *dev, void *data));
+>> To :
+>> struct device *device_find_child(struct device *dev, const void *data,
+>>                                  device_match_t match);
+>> typedef int (*device_match_t)(struct device *dev, const void *data);
+>> with the following reasons:
+>>
+>> - Protect caller's match data @*data which is for comparison and lookup
+>>   and the API does not actually need to modify @*data.
+>>
+>> - Make the API's parameters (@match)() and @data have the same type as
+>>   all of other device finding APIs (bus|class|driver)_find_device().
+>>
+>> - All kinds of existing device match functions can be directly taken
+>>   as the API's argument, they were exported by driver core.
+>>
+>> Constify the API and adapt for various existing usages by simply making
+>> various match functions take 'const void *' as type of match data @data.
+> 
+> With the discussion that a new name would ease the conversion, maybe
+> consider device_find_child_device() to also align the name (somewhat) to
+> the above mentioned (bus|class|driver)_find_device()?
+> i finally select this squashing method after considerations as shown by
+link below:
+https://lore.kernel.org/all/3a4de1bb-3eb2-469a-8ff7-ff706804f5bb@icloud.com
 
-New CXL HOST design
-===================
-This work defines a new cxl host bridge type (TYPE_CXL_HOST). This
-could be considered as a prototype of an independent cxl host bridge
-which combines gpex features (ecam, mmio windows & irq) and pxb-cxl
-features(CHBCR) at meanwhile.
+device_find_child() is consist with existing device_find_child_by_name()
+and device_find_any_child, device's child is also a device, so we may
+not need the tail _device().
 
-The root bus path of CXL_HOST is "0001:00", that would not affect the
-original pcie host topology. In the previous, the pxb-cxl-host with
-any cxl root ports and cxl endpoint devices would occupy the BDF
-number of the original pcie domain. This new type provide a solution
-to resolve the problem.
+> Do you have a merge plan already? I guess this patch will go through
+> Greg's driver core tree?
+> 
 
-Also the CXLFixedWindow struct adds a new member 'target_chb' to
-record the target list of CXLHostBridge. And necessary is to adjust
-the logic of 'cxl_cfmws_find_device' and 'cxl_fmws_link_targets' to
-allow different types of cxl host bridge.
+this patch series is already squashing solution.
 
-Move 'cxl_get_hb_cstate' & 'cxl_get_hb_passthrough' from pxb code
-into cxl-host code.
+yes. hope it move toward mainline by Greg's driver core tree.
 
-Link:
-[1]: https://lore.kernel.org/linux-cxl/20220616141950.23374-1-Jonathan.Cameron@huawei.com/
-[2]: https://lists.nongnu.org/archive/html/qemu-arm/2024-11/msg00522.html
+(^^)(^^)
 
-Yuquan Wang (1):
-  cxl/cxl-host: Support creation of a new CXL Host Bridge
-
- hw/cxl/cxl-host-stubs.c             |   2 +
- hw/cxl/cxl-host.c                   | 220 ++++++++++++++++++++++++++--
- hw/pci-bridge/pci_expander_bridge.c |  20 +--
- include/hw/cxl/cxl.h                |  23 +++
- include/hw/cxl/cxl_component.h      |   4 +-
- include/hw/cxl/cxl_host.h           |   6 +
- 6 files changed, 242 insertions(+), 33 deletions(-)
-
--- 
-2.34.1
+> Best regards
+> Uwe
 
