@@ -1,121 +1,104 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA1E206274;
-	Fri,  6 Dec 2024 17:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733791D515D
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 18:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733505130; cv=none; b=G7hE9A9qcLhO24vMp88+rqsaisiRJckkXreoWSMRlorYcJPQyaqxm30KYv/r5owSyjvsjDuEQmb8gk0BXgwWriPeGvRsiv6z7HC8TrT1olYFdOJHBGP09H9g000CbdLV8vCkB2sYR9BfWwiiVFD8Vk30ubliw4uARnx6oeo4VOQ=
+	t=1733510347; cv=none; b=OemzpRp93pL+6Bk0EU6NcQMeivM2g0F3sUQvHZBYIsrsni3guP2WRSlY4nb58W8cBu6g3X07GY4cQqBEb1y6uxT343FqXJqfHMi+rlys91TMK7wibW8s0vGD8o5N022EddhrKFs7e8dv9yQxRrKi7gtni+MuV2iv+FnuneibMQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733505130; c=relaxed/simple;
-	bh=Z9jpkL9lcPC6GbbHMxn23dCagEYhzC7cGAH8StYauLg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cu4Jjewy3KfhPIQMXbncQR8LOE9uv7zumqvunqnbA/tMqKmXeHJEHAkhtgdOhRIW8IO0A7TR9VZ9ky8LfGVp1mkSPgJwlVfFhwp0Lm48NgsDbiWrYkVocTUnR7K2xlMekv5ylorvOJHwNIpSAz8ed0oQe1ZzhZWrXrYvzo1YxyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmUmbbkG; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733510347; c=relaxed/simple;
+	bh=fHQ9FZOAz/oqx2orPJ4AKd6uRjQ1J8jwnh5hoyUgvP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uR6l9MjKBh/xH5LvvpYtFIkV91EPPuSxHg0j3lVM7m87meQVXmG3Keh/BqxIFhpNYnKyws35z7BObtgKqXNnYskl3x/aD27025OU1SMdX6WBjxn7Cn1OY8TIT8CY0Y4ztp+Mz+QieEolasU9nv5RHhrQhnwRonyCSITmCulJjo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eNfPwap3; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmUmbbkG"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-725abf74334so1935036b3a.3;
-        Fri, 06 Dec 2024 09:12:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733505128; x=1734109928; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uyRjfFVucsezeCVsFiNo9bFijXbZ7Qu5ifeQgImd5Gw=;
-        b=EmUmbbkG0lcrsTyXM90Mk7O2b5sXR5STAco/+SezzQd7W22KAWL+vYr6RgEzVi1Aw2
-         lzA5GwzbvnKUVDgnpaC3/GMCh1aTCJCZ2eDaLzaHe3mVjqpzTUaqcjVAGLtoEYZZkpWU
-         OK9zLADcqvH/faYcGI6uptXrBtIPh/FA/bVhnPzhwHhn9mcLr0w4AQnzi+ZwDNjohxg+
-         fm06HxxOaOdLoJrJdhvhPozklOkGsRV2CrEZoxZ8Nnau2tkMENLKhL54L5a43Bi1Iuah
-         Nkj1iGqzL96Yn4OzoqOHMysC+ILC/TZ2TRUDlIpMoDQWop3RZk0dWsKKVU+DjSwHBS/F
-         JxYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733505128; x=1734109928;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uyRjfFVucsezeCVsFiNo9bFijXbZ7Qu5ifeQgImd5Gw=;
-        b=F16A0ZT0e7bBa0adS4N5HkxqVjR4Heusq2xmVjcYaXe+JrXHNOUjS8wm+ZW/8GyNnn
-         WxEE2oYlIyaBOleGmsyYeXg2GFBh9H8UCsPJ+i3aSLxYShmS7lBVsoV30wlv2saQcTAm
-         TchfUQSt9zmHG7oJYH8MoufdCxvsX1xQwD2R19A4+JP/K1y4T47gNOigf79Yvcf1+158
-         jaC48dUeqF9qOCzxLmx2kNLYdWjJJjtULgbEIPqzj6WBBeaHVr4/Ls7ti7zjMphGEtT4
-         Xhc90i9/7LDlCRjREjPgmHmjuK4mhCUPXa+DsyKEMOVgzxmy5/hg6wKKbKuw7WO4xhdk
-         iWYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfc5fANyzUcxiM3LDWh5gDmYHqkJOl8nrqarzep4CBOwyxjGE/16pmvYvCAYufMGqNib8Ly6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUMGoPAzJh8vOVo1DlPrhQ/jC06v99oTXD1bMtkkAJ5LcDQaL8
-	UEoSmsXRii0tK9f2Rxm+Y1LDIkCdA68T1zfMkNu8xSJxbuiFpWfx
-X-Gm-Gg: ASbGncsj/QVf4U2iE7wFwSR/V9xwsNcQRaB4AHjhBtaI8kxrC01EOrscCaPLsKrn1+E
-	HVn+pShwpYiwcMWzebm9Su1NB8xYRuhztixf1ZwM217t7hiWX+zQg4k1Y7LK2Jyp5bmXYVOIR0c
-	iUH7snLIYCSLrwJUbWPAhbs4GnX+w+trQGKORANXn2avituz7OxHGUpMm2UfALYaJs+PXkTWRm5
-	hR0kj3xUPa3P4qTbmCAvV/5RibqQSfBvxXECVJn
-X-Google-Smtp-Source: AGHT+IG9aEh8xVegdDO9gt9ImoRXQBRnk/rAL1B7XxdyWT8laEnBfVNFQzj9E7Siq3OTiqKo+q8xpw==
-X-Received: by 2002:a05:6a00:2e87:b0:725:b347:c3cd with SMTP id d2e1a72fcca58-725b8118dbfmr4233383b3a.9.1733505128252;
-        Fri, 06 Dec 2024 09:12:08 -0800 (PST)
-Received: from mini ([2601:646:8f03:9fe0:713e:4b65:ca0:73a7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fd1569b751sm3277372a12.5.2024.12.06.09.12.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 09:12:07 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Fri, 6 Dec 2024 09:12:04 -0800
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v6 14/28] sfc: create type2 cxl memdev
-Message-ID: <Z1MwZHGBfkgi9X1i@mini>
-References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
- <20241202171222.62595-15-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eNfPwap3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733510345; x=1765046345;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fHQ9FZOAz/oqx2orPJ4AKd6uRjQ1J8jwnh5hoyUgvP8=;
+  b=eNfPwap3A6udCJ/E2gR6IDRC7BBlmmjPqhZMOLNJfSow5cDZpZy5rSHp
+   rEhxfQntcbH/WCziL8ZKPxnBsN4A3rR5X7EoIaUX0Vvv4/o8AlYF2+XGQ
+   ofsXsK3ABKBUZ2IGkuL6dPUYPgvt6lCzo3YHP24vUxG62OgmbQpsH8DKP
+   bp/ymw74Lqbt6VexfD75BX8isk9wGltmQxM0YD+JEfVmfk68KrlNGRjtN
+   D3uVfB1/zEsGQ3LqdXOFvWActEvJwMxpVO57qJkhNnsSvKupMsdxLU9uk
+   VbS4xRhkip1ySiLCFEP31Ayj7GXREd7AQ79PJCi0lO32qz2FTJXPHCzqs
+   g==;
+X-CSE-ConnectionGUID: JBTd0H+OTUWDe9MG7LPhJA==
+X-CSE-MsgGUID: u4PVyIOPRRy8G4kfZCf/QA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11278"; a="33999836"
+X-IronPort-AV: E=Sophos;i="6.12,214,1728975600"; 
+   d="scan'208";a="33999836"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2024 10:39:05 -0800
+X-CSE-ConnectionGUID: 0ZTz8G3xRYCh1bputLVtqw==
+X-CSE-MsgGUID: q9UsVG89S7mZRrh1jeVEFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,214,1728975600"; 
+   d="scan'208";a="98541918"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.242]) ([10.125.108.242])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2024 10:39:04 -0800
+Message-ID: <49ec1992-8b45-4281-aabb-781e1e8ec1dd@intel.com>
+Date: Fri, 6 Dec 2024 11:39:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202171222.62595-15-alejandro.lucero-palau@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 11/20] fwctl: FWCTL_HW_INFO to return hardware
+ information
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20241115212745.869552-12-dave.jiang@intel.com>
+ <67528c573b189_25073294db@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <67528c573b189_25073294db@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 02, 2024 at 05:12:08PM +0000, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Use cxl API for creating a cxl memory device using the type2
-> cxl_dev_state struct.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+On 12/5/24 10:32 PM, Dan Williams wrote:
+> Dave Jiang wrote:
+>> Add an optional ioctl FWCTL_HW_INFO to pass command specific information
+>> to user space. An array of 'struct fwctl_command_info' will be returned
+>> from the ioctl. These commands are send to the driver via FWCTL_RPC call.
+>> The command info struct contains the command id, the related hardware
+>> opcode, input and output size for the command, and the effects the command
+>> has if it's a write command.
 > 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index aa65f227c80d..d03fa9f9c421 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -95,10 +95,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	 */
->  	cxl_set_media_ready(cxl->cxlds);
->  
-> +	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, cxl->cxlds);
-> +	if (IS_ERR(cxl->cxlmd)) {
-> +		pci_err(pci_dev, "CXL accel memdev creation failed");
-> +		rc = PTR_ERR(cxl->cxlmd);
-> +		goto err3;
-> +	}
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
->  
-> +err3:
-> +	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
->  err2:
->  	kfree(cxl->cxlds);
->  err1:
-> -- 
-> 2.17.1
+> Maybe this made more immediate sense to Jason, but I do not see why CXL
+> needs a FWCTL_CMD_HWINFO when FWCTL_CMD_RPC can just convey the GET
+> SUPPORTED FEATURES payload?
+
+That is because I wrote the code with intention of supporting the existing chardev commands in addition to features. If we are only supporting feature commands fwctl, then we can drop this and make things simpler.
+
+So heads up for Jason, we can drop this common ioctl.
+
+DJ
+
 > 
+> Now, if we ever want to support more commands outside FEATURES, I expect
+> that will need to look like synthetic "feature" that the driver
+> publishes to fit it into the existing paradigm.
+> 
+> In other words CXL tools are already going to need to have knowledge of
+> feature payload formats, why does fwctl need to package it up in another
+> form?
+> 
+> If, for example, I was looking to support GET TIMESTAMP over CXL fwctl,
+> which I am not, I would say that would be a synthetic Linux Kernel CXL
+> feature UUID that gets documented and synthesized and fwctl core is none
+> the wiser.
+
