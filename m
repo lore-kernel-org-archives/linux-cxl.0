@@ -1,67 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D057B38384
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 00:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56774256E
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 00:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733445199; cv=fail; b=H5zPLgeI6WjzjH1gh3ULMvMu1tkmxe8E3cUBmlhijetY6EgBxRiVxFx2IJkuxG71qUlcUvLUFiA0Himp2JHjZdWeNeTJv3xczDEMfYOje+3FVmKQPR3py2wbJIl366jqEBiE0B3L7bvCwqMs52Io/xibpJFf7p4Lvh3VS4jRuNg=
+	t=1733445403; cv=fail; b=SoljMH2su0wMMZY45TQyWZgjTJfq2v5SYRs00r6/RWoq6TvFMMdwKERTT9yXDxmrd4s3qxd3/NGr9rZNWNvHptS2FvS39TiH/F/GVfYXFZamubGxwKBDq0A1mmwpOlx+iNGXwSqjhr78WKrJv8cNbDm5iWxuawRV/JtOi3xO+8o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733445199; c=relaxed/simple;
-	bh=OQQi5PT4IN0eAMl7xgQSO1gkdlIK8CJb500WFgOLxuQ=;
+	s=arc-20240116; t=1733445403; c=relaxed/simple;
+	bh=/JOrFfIRbma2VayHNfY95gvO6NraEJnq4l5B5dr+zas=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Qc7egj40MZDTK9lkIJyTofFwIuLaIPiQJMbrMtUW3ZzQg5nhKP1kUkOLsB7eaDxCtGZyg0tyzh3/EwGOwv+n3ET+ogLbi7yZpwV7/wBLZK6uC3Hjhkp/iAlhFXBg6uMtpxx6pTIefu2wYmNT5oGHzaaN++w1hHTLL9bV3ZrmIwk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqtv0aIC; arc=fail smtp.client-ip=192.198.163.18
+	 Content-Disposition:In-Reply-To:MIME-Version; b=q734dSgrHQfiLPC+13ow+BqQlPVWk/32E9KiOMWNPLIZp1qrLUngvsewjk7eZ9f11Qv5O6ghtj+9uXENlUG3N9v/ok3T7svKj6gLjr79ZVYh/AxS6qtOtydDA9FXZYItzOKLhsnyjKXSZObUcwecUcFalS5ojI/o5st0Cmzi5EI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2laH+bY; arc=fail smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqtv0aIC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2laH+bY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733445196; x=1764981196;
+  t=1733445402; x=1764981402;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=OQQi5PT4IN0eAMl7xgQSO1gkdlIK8CJb500WFgOLxuQ=;
-  b=lqtv0aIC8YgeA9QD41zqAYfa57G4W19cf4kdxzXYaL8dKcKbJZkabshR
-   sgJUXXAurOlci4vz5Co6oZIPvG0/cHsKDFiHVpBWkyHAxsWfBilRchVt5
-   5BiEXdFMYUxX0vJq4NuH2VpyXpuVKIslnZalyyj3V04nQrEGz81cmVFY2
-   BWOEPdmztb4YymtlVtXqLX8rumNNAef6LC1GHxiNrTbSpYopK1sCnpyFF
-   iIA/Z9H1vL6OiJF4D70dSW1Eqda6ltdSpg1ggKkqLJXQmINiinXr/OTFz
-   H+GRsvv7a0oXclR6dBKjj+AlzLXkdS0KDKR+FW7MBGZez/O0VGdNaPKRa
-   A==;
-X-CSE-ConnectionGUID: MwmfndIJQBuuvSdkNkrYaA==
-X-CSE-MsgGUID: Yb3qylBFT8KqGFvUcEYJUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33137453"
+  bh=/JOrFfIRbma2VayHNfY95gvO6NraEJnq4l5B5dr+zas=;
+  b=j2laH+bY6GiB1gan+kV9ttuswi3eGFSX1HhL2Wb+ukWPhXEHF4yarT/Z
+   yk7g9Min8InUIKvErpyE42CtO632b7Kj88PKJIGs3jamUqXEoolktx2o8
+   zAqoyGzemqW6CdClM5aQbknt8+zUAck6fVx1sqx6vRNsAMucrP/FKbxte
+   /9qcRNTlJQ/3OJFu4fhp4vZnDc90m+V7IEekg9ofTEIqjbgJQE/KqxbS0
+   NzA4FW+06rf8azH3PUir+r3RiQa2HS08rdV4oWjGAMtYI0TBsgc/LqpCu
+   RQGQYdoHuCzsUaZY843kQhyd95SgWIbgnyAbZ3zN/djxsXJi7ZPOulk1O
+   g==;
+X-CSE-ConnectionGUID: YaFLqf7iSEK6c5U31HOQ8Q==
+X-CSE-MsgGUID: AkftRHJ6Q62KhVHa4wSgXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="51203714"
 X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="33137453"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 16:33:16 -0800
-X-CSE-ConnectionGUID: WWceM5EgQlqxOr2tfUKZ8A==
-X-CSE-MsgGUID: c1LXxdtvQrCmwWskVEvi6g==
+   d="scan'208";a="51203714"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 16:36:41 -0800
+X-CSE-ConnectionGUID: 4SiKmAgwTHagGzGPZqa0Rw==
+X-CSE-MsgGUID: uC8Yq+TaSwu71jDVRm4sQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="94732223"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2024 16:33:06 -0800
+   d="scan'208";a="94125613"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2024 16:36:42 -0800
 Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 5 Dec 2024 16:33:06 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ 15.1.2507.39; Thu, 5 Dec 2024 16:36:40 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
  fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 5 Dec 2024 16:33:06 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Thu, 5 Dec 2024 16:36:40 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.43) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 5 Dec 2024 16:33:05 -0800
+ 15.1.2507.39; Thu, 5 Dec 2024 16:36:40 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zFXmGDRGvYloMbL22UjyOWTFTr2dBLhaVf9FRPjux/WPo/6GloaFiKNaBs6t0b+ou0pUmkMZ2nYtEWtU0rY4m57+ZT9RFyZbdcOwLPxdA710hqKINgu8qpeRl9WoYQmS3MJatb2JQnzbEfCu9D7THJT7kLJQw6OUIjHRHZTPHpqvlLHPbbStZv4qmQHiw2TwGC5A6ncdIWmIHR1LlVAp9fKsYUwdFt1fwU5gX5SJBrdIIAolqfWU/aSVyN9OZK36JPGjtinC3P/GbkdbnbgzqqwQjJ+an/a+UgjdLXUJubR6viGBQRA5PUbkqDnV+d2tK6gxyh/zmVuUz7JV/wQ2zQ==
+ b=v58apw79VNUSfoEoOJnqffLQUriRx611rMCLyAgtJrCMn0O+oDdPAxZlk1t0dWkXutcJlpevzbDfEAWfzH6ZpaEqZGv1VJA+2TnpxEOtPAjX+wydSZBChC6PgAeJ+fiGGYQXlpaPF8ds5o1Lx8lq9m858Sp1R9H2PEObwRVrwvUuCckmkokoxAAsUWe62Y30vPsuEMGPDpLszddttBgNpY4P+hORHcdEWq3/2hbprw5zK1XSPRLxZ63A29oV6oimQb9Imb92G6zPz4HYScFl05sauuShf5hKVDwF/uoY758qKXMh4xwy56JH3Oz6+4eZ7AHgPB06+1Q1E2+O/UtWQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6bbLolHO0KjrcKaGVIbO6xC7vUq1SlZ2NUPtMeSzx74=;
- b=srJ7ZhSnwkJEwiE3z3hfkrAPDraK8SB6al13KjDph1MUFW8G1ROwyzWmxqmsMRS6M+Bazx5GS+WF2TCHNwjCtEIanpj2wjeVUGqHCWsIbjkm2sY5fSY1evD2WiT0xHog+aM3w3UgzTaAd2N4oQaI90GBv1fz9KoSzNMoqfIpJuAeL/tSjozi/HhDh6OVhNwsqSW+yV4KkC0JDPFVclcTFEEIYFyd4v6VMMe2TKDaXHwDO6l9aFk+R15k/JmUH2t5scRL6crSRwoUlL0OV6UWOQQam1Ti3CWMYbj9C9ajvKoE5S7tJu3ADEyv8501sftbZbBor2dPxw/yX04nlTnokQ==
+ bh=37MRdudx+kt3XfzJoDXEhsFbJ65Bk2Q0baMukKTgwUg=;
+ b=VvgKoybD+E0c9eKfQhJH2B1azv4x61ZRJH7SzIJj/cWjimdOhaagzISvaIFHuxCWNH8M1B+6SfBPCJXKYs3wYJHj2dWyPgFdbr/tLPNZBtixei9roW5ChxXi/7mAcw/9XiO0w1z9o7ScjCtGM8KG7AHo04zTzChL43bXK/q/k3sPrsFVz+9oKoqlwdWOv18eYFfXNUYs8hXrnWQSgSuwlCiSo800aIw65lniKGlpVMvFJy5a1po6fSeArCrFUT9X0aoRUJTZcTofjSKzI4pcTFRGV1B+5GeUJxCl2KBhbZ3qFJWl/cU9vUdT7Wle9Aodit7EYeQfqwbsggD2m26VkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -71,28 +71,28 @@ Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
  by PH7PR11MB7500.namprd11.prod.outlook.com (2603:10b6:510:275::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Fri, 6 Dec
- 2024 00:33:03 +0000
+ 2024 00:36:38 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8230.010; Fri, 6 Dec 2024
- 00:33:03 +0000
-Date: Thu, 5 Dec 2024 16:33:01 -0800
+ 00:36:37 +0000
+Date: Thu, 5 Dec 2024 16:36:34 -0800
 From: Dan Williams <dan.j.williams@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
 CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
 	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
 	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
 	<shiju.jose@huawei.com>
-Subject: Re: [RFC PATCH v2 02/20] cxl: Add Get Supported Features command for
- kernel usage
-Message-ID: <6752463d2710d_250732949d@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [RFC PATCH v2 03/20] cxl/test: Add Get Supported Features
+ mailbox command support
+Message-ID: <675247127d82c_2507329496@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20241115212745.869552-1-dave.jiang@intel.com>
- <20241115212745.869552-3-dave.jiang@intel.com>
+ <20241115212745.869552-4-dave.jiang@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20241115212745.869552-3-dave.jiang@intel.com>
-X-ClientProxiedBy: MW4PR04CA0112.namprd04.prod.outlook.com
- (2603:10b6:303:83::27) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20241115212745.869552-4-dave.jiang@intel.com>
+X-ClientProxiedBy: MW2PR16CA0070.namprd16.prod.outlook.com
+ (2603:10b6:907:1::47) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -102,346 +102,90 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7500:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d1bbe3f-4c8a-48cb-d21c-08dd158d8b87
+X-MS-Office365-Filtering-Correlation-Id: 506b8663-c3f5-4aca-fad0-08dd158e0ac2
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?LKcZ5lcW79II1AV29/i6Kd6qGcnUBHlSdOS37gCDBLmQ2IGGaiCCIsM4O4zr?=
- =?us-ascii?Q?K4sX84NTGDpASqBBo9kvT8o7iv4GrebxtP3VGpYote4ZbxWELEGg7TTCFu1r?=
- =?us-ascii?Q?/suxzYXqwqH/7xB9PhddC+xKbvpuvl2yiGGWPWpdA+VDKHs+grm4FUo3hiGO?=
- =?us-ascii?Q?tN+JCLlFxGNkdwyrbhATsDW9CvO+6Xm/3ej8lqM6LeJ25Ke9fbl0xi1AFctd?=
- =?us-ascii?Q?v9tBYIzODkjJNsH4lRY8LH34fS84zLJW68ExFaNG99iQyoSPtTnLVslaHCW9?=
- =?us-ascii?Q?Jn7puwqv62QVWG3zeOnawIWDxs1oBqGEQHBCJ1AkkJFY+pmpCg8d7T7fYpZX?=
- =?us-ascii?Q?13brdbTwIQzd3JlCOHKFuRl95bP6IXHusySDGq9EgqEAvzy8fZsR3/OPtstL?=
- =?us-ascii?Q?0nu974Luu31rpaacSmlgEkZnbogZHKSiRr120XBFi3mqvH12/UV5SBSIHWZz?=
- =?us-ascii?Q?fMuqY/kcK0WftekbfTyV5QtQn9FCQnG5WryWGT92Qy3souefLcXlvjHkx9Au?=
- =?us-ascii?Q?jXZPdsszlS71/2nNR6TO73K0vypmMXa/brz2cd1a73WaFnt0DkaUaieFOKeU?=
- =?us-ascii?Q?HO4pEVtVBo4wQavPMF5Nw4gKx7jLbLmfbUADewYHSinGfDt4dNcRk+IYdXAW?=
- =?us-ascii?Q?ZcnEVJmKTa0akOdEqg4ynZsgPGh0DYv4123Z6ltht6PPs4bkTUWTyAjngH8s?=
- =?us-ascii?Q?Imq+/6SKvcSFoXgksGH4yAgT1ueahNCi9oz5GiuAn9fSF0ck+fLhfpjW9wLH?=
- =?us-ascii?Q?updMFBjwem7R564KhnLscXXsvrtUDtVZkY1j1G3Hf5WHHoxisUT6mhwV4ogH?=
- =?us-ascii?Q?cipAk+uUhEbItIYNd9SogvfGmtwKddIkwuMB6nlffk5chTKqrSsxAopHlySS?=
- =?us-ascii?Q?hJT6GtyKcQPX1WvATUJnPKeyoW+mMhGeYvG9j6Px4vVtn/vncbWF1xtCrH8z?=
- =?us-ascii?Q?xGilxf50k+Zvlazy5W1UUQA6ZaqtQN7EKAvnKvkg8TGsEendFpKgayhaB8nQ?=
- =?us-ascii?Q?O/cX9xVJj4kPE/T6XUZexmv3HBqNCna4TtYc5xTEpSqtsoXobtoJb12GfYME?=
- =?us-ascii?Q?vQv81i3KEXoKEDUKixHiKTVlerqWrmiHYDx5Xdh4X5Ctt0KZyy3/mvZFbVQ8?=
- =?us-ascii?Q?VOGod4RvUcQvFmN6pHDIrp16HxEUAJjYWIlGuQib6vZMImm7T4gSaEYqQqu+?=
- =?us-ascii?Q?HrlItzD4M48CJhOqIOgofgTSYSjAiNR8Q41JIYY+iy6kUh8mgvfmQIPwOPg6?=
- =?us-ascii?Q?4Jvfhzw8QPPtDP2AEJMFCHL9lZYIsFJN6Zb9zSXQ9wSjqso+Ypkcoxk4ngQ+?=
- =?us-ascii?Q?isI+c3sQEMSxjiJsi2AxmlpjxbMJZg6pwOyPBX/M8xuUIQ=3D=3D?=
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?KekO4RtU+9o660i2cH4hDLzr1VID3oHs3ceqniAVFQBq0sKdqQTzgb00Z+KC?=
+ =?us-ascii?Q?1B3iI9ZjcSgFFQy+VHvJW7pJW+7BFzewlcZioYsOTz0L8KUqtROjop27WTK+?=
+ =?us-ascii?Q?0kAuf00rSTsWnwhlTLlEEZEASVz1/SY1DVpkSJ78Ybq73mYsGtfaBVvSQ6FG?=
+ =?us-ascii?Q?rI9K6hQ83iTegGwBzm0q3PfTSfxNDHlK8EOy9Cg2ZaypEen0e2zTU61G2JDp?=
+ =?us-ascii?Q?WvwFm3oNcGnkU64WvCnKG/j1ntBPhc3NLjB1VklyYB1Muxp6S+4Rfa9orIHo?=
+ =?us-ascii?Q?Y558eE+Ju5fIUyynHeyy3/dLvZHTjLJzykTu50dVXU8MO3YvcKSpd63n0g19?=
+ =?us-ascii?Q?hC5Bgsw0Z5ToWcWpdjB1qWeS/4FK6nClKYBe8s1+l3eW+0lYMLCO5FSk66pA?=
+ =?us-ascii?Q?3ON1YXd3TXa8DWT84S5CP4qHVI8CO6y5Ilhx5HeB8xl+vY6Vr85pTim/Lkkm?=
+ =?us-ascii?Q?W8rkFRZQQ+m0IcF3zY3SFv8uzyLLVWP+I7InvzT+n4kpoBEf10UkQFfyjE6I?=
+ =?us-ascii?Q?ztklUvfrKNiytb+S7AdNhYTLe6W9KRE+H9GgL4yNXzDfR7qCzqoS7KQ8/679?=
+ =?us-ascii?Q?elSMEoAP9MAY6yZMouv47ZiHzROB1jL1fpU46wmOkTpb0ez5V4A3LIQkd4ei?=
+ =?us-ascii?Q?w3HOw8npddrj28oPBW4q3UYqATGdAwdPQ/CYcQUuYnFPVDIUoX2nfzRey7AO?=
+ =?us-ascii?Q?A+pmtx+XpPF5PX3i5d+Ncu4ybyeE8apqD6HfRKuMgGsdCIIJ8SlPCI7ZDEMa?=
+ =?us-ascii?Q?62CxSrmiIsQh9Zb41LWAvW/x8CJcJijjuWhqtUPCrYgA4J+cOWRPkNU/FGzB?=
+ =?us-ascii?Q?JEUD1vGhWJL+g9aGeUhbDmFzJUsTMFZBbkvf/AlzIEM3LLJH3WUmVVUCoa2x?=
+ =?us-ascii?Q?jZYjDgQMo1QA+Y7GGFC9bbyb3XDwVKhF9kAkcKFgvYPOc9fu1SJ/yKTncloC?=
+ =?us-ascii?Q?th+qUiwNwK0az1Ktr5NMybcLyMuVE7J9jQCThawpxOt9oLB6UOZLxVB0GsBf?=
+ =?us-ascii?Q?QPrjM488aTlTp63O5we9hkCyErOpv73uI96L8Iaf+2RunaIgN713JN57IZfn?=
+ =?us-ascii?Q?z+931kdOjnQGGKIdjitagN9EU2CuIDLK3zLbiHkqN4eO8oROE9vKTqOVmHUS?=
+ =?us-ascii?Q?oFxSobT/9y7SXF9HrihC+Fiau1anI7D+VYc6C6GvLKTldZvEcqy3achrdxmx?=
+ =?us-ascii?Q?i3vGTniMs7kBBmau2s5gJP7qvtE+ObxUQ0jf39I5LBMNImDAofuYgabaEnrr?=
+ =?us-ascii?Q?2bzLZHmGdSIZ34rMB5KS2Dpc8UoHL+CK6XR/M9CU4FHiwKiv1Qp2yTOJC9q4?=
+ =?us-ascii?Q?C2fOHSxlpZy+1sH79I2qRF4UvPcz0vmkTRnHLGMd4fn18w=3D=3D?=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2bNxghTmh7qP0BE9HHbISxQ3F5jZCWdMPgJbzKL0JFYeCk1AHVeUkQh0fZK8?=
- =?us-ascii?Q?VYY7AKWsUSGcfElqQvX8TJbCSs3Vy1K1/MtM2qx2zXK9Yii4VlfosTwCLWSc?=
- =?us-ascii?Q?PgZ06srsXgv6Eymkob08/L66r3OLzrflODprlZ1RWt8HgMm/oO9CsttGh8HQ?=
- =?us-ascii?Q?XdwG0O4TxELXBGrEm1HvCPOjbKlsmQBiiPjAKDTA4e6t5oB+XaaMG+TiCYQL?=
- =?us-ascii?Q?6N5z7zwC/7D5qJgy1UvgS/bwZ6rGruOGRlsYyigbY/dfHlhSqYiXXAGqfgtJ?=
- =?us-ascii?Q?bBRcU8WFm3SZ8ziAGkHbIdyfhX8TVb/l5hkCO962sScy5JewZPoG9lTMoeYO?=
- =?us-ascii?Q?U72KG8x9xczKJBwaLzC5iUDo3LAiF550dhNYW2q2zBrRxnn+EZ0gtg4F5j3M?=
- =?us-ascii?Q?n5c2dFMj8VBWu/9Yws1F+iLgd9ghIc8YLhm/ufsojOBxHFK3GLfiEz7AAWds?=
- =?us-ascii?Q?c+pzlRzlgIqPuElvElW0+hiZP7FWZZRsPzTwY9jRh2FxWQWbCurNNiQWjkEL?=
- =?us-ascii?Q?cSkHTLzHGcbwV+TqUCL7TKNU3g+A3OxrE/jdqYodd3/dla7Yl2Cx2WJUUGRY?=
- =?us-ascii?Q?A0izetJ8kJiDxFTFOEg/2dCggl4TVzwWholabuim84RA3EE8Owv9OVorMRSQ?=
- =?us-ascii?Q?S66GiT3drf6YTZbbdb5X9nsWz5bu9ktg1eiS8d3o4CL8byp1xsFHTh1Gvy7Y?=
- =?us-ascii?Q?6Wyy90e+a9f1snIcUg8ki0NwPC4aeQ5XGxZjQA8YYDlgTaPzazV8bLoYVdNY?=
- =?us-ascii?Q?DtFAh5zvsbthPpyikvhaXUZmFW1NSPJGevfqnqS1bAn6Dhgz4xXwKNiUOgYx?=
- =?us-ascii?Q?7cSsd9HDII3XLTOlqr9M0Fxr34F9RnF5WvFlvH+ElGRIR7kCyFkvn7ByZUJ/?=
- =?us-ascii?Q?xEdcuDV6s4/UwBhDLLM6t6nY7rWEEepAx5EKaf21kAuh3apdeSHVMtG1VLAt?=
- =?us-ascii?Q?0tobYsvuahTm8rnwGaqkJWMw4x0PFuAwJBsZtnyTFqyqnD9wBOcGcx3+Dhqk?=
- =?us-ascii?Q?3cdzDzBgAlPDDtSX2+udq0n7+i6xjTvtMdJuZsIcWW60OeFel9ZL2BdgXbrf?=
- =?us-ascii?Q?vwA5H07EeJzS5Xx0HuXhnmlfCJYwa6q3OCSD1bt0kw3ioIHi56UkgAvWA3Ou?=
- =?us-ascii?Q?4MXH4bFA1At6e/OK6kr+kyJiZSOV7+65i1g/BiuuNaHn/jj0rWSTNdysgtmn?=
- =?us-ascii?Q?FAZbw/PDmZTZuCqnyVJvtTNPpE0u92ffkHogTZ9C45xilP4xZpmpyeyJRedm?=
- =?us-ascii?Q?4sZAEYeaPJgyLurL3ME+R7kaVv9UhKQQ5QxttckrT+4QJhzkhk01Jgy59AuO?=
- =?us-ascii?Q?j08ujVu93R/fsPZnsGM5KH9pdqRvpEqwa18+h8BYK+C48wRmmmB/NB5PIvu0?=
- =?us-ascii?Q?jQUD2T+ymJ3Q2GpTpCBTGq4VLNSxO6AxjwNSsGvVT1Riz1hw0/BeTaURAyZc?=
- =?us-ascii?Q?vMB0ys0onB4PZii5QHe+QHqzak7OrRwPFTFLB4Mz84Nl0VYuAgXZof7apjqs?=
- =?us-ascii?Q?mP0rGRFc2hhqXQo7OycFkw/okH5E7W8ltxS6GLgHJaRzGgTAh4sPek9VcPVU?=
- =?us-ascii?Q?ZnMKYb5ztu3wP2Vz81zq1hrFReGbOWG3wYp+vyKcwHFyVlfZM+tupo6SWRz6?=
- =?us-ascii?Q?BA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d1bbe3f-4c8a-48cb-d21c-08dd158d8b87
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FXUPLve1DFtffSYXPSzlIZx6kA+HhigEvRrwcvrAEAc/BClK3f7aMBxx/LPD?=
+ =?us-ascii?Q?tTr/b1FSR8QZiK+q1VJxiEobbNm5aGBDSV2MsBXMIg4nGqJ1g0lvQ+Wu8cLa?=
+ =?us-ascii?Q?dE2SXOC/FRk35GWPbf0aF+07Hr5ctCwuvBV4Q/poLGbOTzY59Y8sLwxidDAQ?=
+ =?us-ascii?Q?uiX7mhhGi2U/ICpbLINB0xHxckMAIZQkdMQp9nQm+Am6L1+sx362g4c9YPx1?=
+ =?us-ascii?Q?05n1f+vf7+pl7Nd9f6o+H60Q11zHscUANdXRqPNyaVs0FGw0LOPwwsaV3b1t?=
+ =?us-ascii?Q?EppXiNrKJyK5kHQnCxVRKrd4aiyrwz0dsHSaOf6/43JhF7Gu0ZtLDPMwz/C0?=
+ =?us-ascii?Q?majNkCIpDspKwj2IN+v40Dm5qkSktqlQ83UilC+Zy3rujMIBHEMu96av9ZQ7?=
+ =?us-ascii?Q?I6I/lUNsYaXdEbAcfpwNSAgWtLTl8Hcpy/XS3ylwmHqOhNcYfjWU2m5OE4r1?=
+ =?us-ascii?Q?dkIeHQM4tB2cIKTYsFzEktpqqGKpGeNlQcUOT8GgF/HPX68+QMxdcGibsHdq?=
+ =?us-ascii?Q?PU7kqpWOr5KppDSzYoJetSAhNchjJ5nonoeM6MoMxK6kmithcL6NA7iAREqD?=
+ =?us-ascii?Q?43AokezqV1iHx4dZ+949PF1KOVv+a6JO0IcMtrH0w6dEURdVs+4znOLAZPnF?=
+ =?us-ascii?Q?hZg8KOKWBm+Q1JuTEeOF0gi3INKRuE8ja0mpHHn17sScuF3bn4QgcvRbAs9H?=
+ =?us-ascii?Q?DSWu+q5DTq2DG1/ZH08eXjg3tPtqwaPuf/HJ2avcIyOcUb7sVj/2aefFIt6E?=
+ =?us-ascii?Q?BX/gEOHxa6Q2+mz62LL+clD/niBUdCQdARwcV4sT0HKDroH4VEtYW94QdiAn?=
+ =?us-ascii?Q?9nTfXvrrQEpc/l4MQ0d6A5IMIIlL4C8TXU9NlwZNJ8ab+whlJBZejBAnyR0v?=
+ =?us-ascii?Q?f9s14BKSCtG2oc4s33omJwkb+GpS2VN+k0nthWohw/mWbdOVho93SLHDxI0l?=
+ =?us-ascii?Q?z4FyeMr+IqyE4uxTPrdpmxcyJ+w/8Ra6vWFVYRzqKXwaoY3kDnXBPCoh7nsZ?=
+ =?us-ascii?Q?vQTRAAYLrpax73Ws7IuBFuTYo1Mb8D6jDmht0WUlYnKwe6E13Lj/ZR+lCzij?=
+ =?us-ascii?Q?slfmDZpAyfyzufpdOPeN1GrTpbHMGhC2Hd0yHToTFdS0jDhPQmqyrK4X2gNh?=
+ =?us-ascii?Q?W4YL/eLybD5Aj3kSTsbaHqWnuO4eoo+WghwsHjXhCpitC97AezN7nNeaXBEb?=
+ =?us-ascii?Q?aSKDY7LR4+JlDuzr5o0yb49p+Jw0vzFo0oXww6uZi89YE9keIz3fAHNhAAY6?=
+ =?us-ascii?Q?REv+ZyHf9VcYJ3TWUzilttt03cWe3tfULck+h2Dx6e+tOAgUQmRLgZASw1uC?=
+ =?us-ascii?Q?rhw79xOPzp+2MuOFmWnNksAS07lrxfFZfoLzldgz+nmnfHAISLMsDF8oISrI?=
+ =?us-ascii?Q?37fT2cUcGV5iWzNzyoLgohw5iOMc/HZyZWC+KYxKXXehok8rqgawJZDu36BR?=
+ =?us-ascii?Q?o9vgtfkfPfsgxEU+kzARuMXQ9DfKfNBOQst2wGvPkGsWskQF02CSFzHgRU6U?=
+ =?us-ascii?Q?5/U7XL68e68jfBe9dZLAjpmWvQYn4FZeccBIGuoVUKO4XY3XAnKfkHRE6IBT?=
+ =?us-ascii?Q?Es4j5eRdQ5knQcSxDAHQIiAZFk0ivsi4eMBXtLwI2ByQSRcUwRzgiq1Wyyp4?=
+ =?us-ascii?Q?UA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 506b8663-c3f5-4aca-fad0-08dd158e0ac2
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 00:33:03.3809
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 00:36:37.1705
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hrKJCsV5vlgEhJKeRfmWgXk4NdwFN9bcOxhKdpunTTkqW6DtwCtLmaf+XNXsEIpNXAbVVGpFxKyFa+4gN7sR1QM9XAWG4EyRN7VGktB5hls=
+X-MS-Exchange-CrossTenant-UserPrincipalName: V6h8Gr8BlLdoVMnqT9Bkavtu4xGY/ajz67cihx28omyi/2voBovttP4ECXXDnSqbWKiCsQWLmECywAvht/iWAIgy+1HVXeqK9Tvn7zGIHJo=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7500
 X-OriginatorOrg: intel.com
 
 Dave Jiang wrote:
-> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
-> The command retrieve the list of supported device-specific features
-> (identified by UUID) and general information about each Feature.
+> Add cxl-test emulation of Get Supported Features mailbox command.
+> Currently only adding a test feature with feature identifier of
+> all f's for testing.
 > 
-> The driver will retrieve the feature entries in order to make checks and
-> provide information for the Get Feature and Set Feature command. One of
-> the main piece of information retrieved are the effects a Set Feature
-> command would have for a particular feature.
-> 
-> Co-developed-by: Shiju Jose <shiju.jose@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
-> 
-> v2:
-> - fix feature entry pointer math.
-> - free mbox_out in cxl_get_supported_features(). (Shiju, Jonathan)
-> - replace sizeof(struct) with feat_size. (Shiju)
-> - replace reserved in feature structs with u8 type. (Shiju)
-> - change cxl_feat_entry->effects to set_effects. (Shiju)
-> - rearrange assigment of cxl_mbox->entries. (Jonathan)
-> - Separate no features from actual error. (Jonathan)
-> - Fix missing kdoc for entries. (Jonathan)
-> ---
->  drivers/cxl/core/mbox.c      | 178 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h         |  31 ++++++
->  drivers/cxl/pci.c            |   4 +
->  include/cxl/mailbox.h        |   4 +
->  include/uapi/linux/cxl_mem.h |   1 +
->  5 files changed, 218 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 880ac1dba3cc..4ba56f3d5a65 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -67,6 +67,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
->  	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
-> +	CXL_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+>  tools/testing/cxl/test/mem.c | 69 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 
-Since this patch is only about internal usage then no need for a
-cxl_mem_commands entry which is the translation from CXL mailbox
-op-codes to user CXL commands ids.
+Looks good to me:
 
-I think ideally CXL features ABI is only ever a fwctl concern. Lets try
-to see if we can get away with never defining a CXL user command code
-for them.
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 
->  };
->  
->  /*
-> @@ -790,6 +791,183 @@ static const uuid_t log_uuid[] = {
->  	[VENDOR_DEBUG_UUID] = DEFINE_CXL_VENDOR_DEBUG_UUID,
->  };
->  
-> +static void cxl_free_features(void *features)
-> +{
-> +	kvfree(features);
-> +}
-> +
-> +static int cxl_get_supported_features_count(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
-> +	struct cxl_mbox_get_sup_feats_out mbox_out;
-> +	struct cxl_mbox_get_sup_feats_in mbox_in;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	int rc;
-> +
-> +	memset(&mbox_in, 0, sizeof(mbox_in));
-> +	mbox_in.count = cpu_to_le32(sizeof(mbox_out));
-> +	memset(&mbox_out, 0, sizeof(mbox_out));
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
-> +		.size_in = sizeof(mbox_in),
-> +		.payload_in = &mbox_in,
-> +		.size_out = sizeof(mbox_out),
-> +		.payload_out = &mbox_out,
-> +		.min_out = sizeof(mbox_out),
-> +	};
-> +	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	cxl_mbox->num_features = le16_to_cpu(mbox_out.supported_feats);
-
-I think this function should return a positive number of features or a
-negative error code, more below...
-
-> +
-> +	return 0;
-> +}
-> +
-> +int cxl_get_supported_features(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) = NULL;
-> +	int remain_feats, max_size, max_feats, start, rc;
-> +	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
-> +	int feat_size = sizeof(struct cxl_feat_entry);
-> +	struct cxl_mbox_get_sup_feats_in mbox_in;
-> +	int hdr_size = sizeof(*mbox_out);
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	struct cxl_mem_command *cmd;
-> +	struct cxl_feat_entry *entry;
-> +
-> +	/* Get supported features is optional, need to check */
-> +	cmd = cxl_mem_find_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
-> +	if (!cmd)
-> +		return -EOPNOTSUPP;
-> +	if (!test_bit(cmd->info.id, cxl_mbox->enabled_cmds))
-> +		return -EOPNOTSUPP;
-> +
-> +	rc = cxl_get_supported_features_count(cxlds);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!cxl_mbox->num_features) {
-> +		dev_dbg(cxl_mbox->host, "No CXL features enumerated.\n");
-> +		return 0;
-> +	}
-> +
-> +	struct cxl_feat_entry *entries __free(kvfree) =
-> +		kvmalloc(cxl_mbox->num_features * feat_size, GFP_KERNEL);
-> +
-> +	if (!entries)
-> +		return -ENOMEM;
-> +
-> +	max_size = cxl_mbox->payload_size - hdr_size;
-> +	/* max feat entries that can fit in mailbox max payload size */
-> +	max_feats = max_size / feat_size;
-> +	entry = &entries[0];
-> +
-> +	mbox_out = kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
-> +	if (!mbox_out)
-> +		return -ENOMEM;
-> +
-> +	start = 0;
-> +	remain_feats = cxl_mbox->num_features;
-> +	do {
-[..]
-> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> +		if (rc < 0)
-> +			return rc;
-
-Hmm, why "return rc" here, but "goto err" below?
-
-> +		if (mbox_cmd.size_out <= hdr_size) {
-> +			rc = -ENXIO;
-> +			goto err;
-
-So one of my new code smells for "needs more care" is cases where
-scoped-based-cleanup functions are still mixed with usage of "goto".
-
-In this case there are two dependent things to cleanup on error, "reset
-cxl_mbox->num_features" and "free @entries". So, to eliminate the goto,
-how about eliminate one of the things to cleanup with something like
-this:
-
-	struct cxl_features {
-		int num_features;
-		struct cxl_feat_entry entries[] __counted_by(num_features);
-	};
-	
-	count = cxl_get_supported_features_count(cxl_mbox);
-	if (count <= 0)
-		return ...
-	
-	struct cxl_features *features = __free(kvfree) =
-	        kvmalloc(struct_size(features, entries, count), GFP_KERNEL);
-	
-	features->num_features = count;
-
-...and then use "cxl_mbox->features == NULL" as your "no features" case.
-
-
-> +		}
-> +
-> +		/*
-> +		 * Make sure retrieved out buffer is multiple of feature
-> +		 * entries.
-> +		 */
-> +		retrieved = mbox_cmd.size_out - hdr_size;
-> +		if (retrieved % feat_size) {
-> +			rc = -ENXIO;
-> +			goto err;
-> +		}
-> +
-> +		num_entries = le16_to_cpu(mbox_out->num_entries);
-> +		/*
-> +		 * If the reported output entries * defined entry size !=
-> +		 * retrieved output bytes, then the output package is incorrect.
-> +		 */
-> +		if (num_entries * feat_size != retrieved) {
-> +			rc = -ENXIO;
-> +			goto err;
-> +		}
-> +
-> +		memcpy(entry, mbox_out->ents, retrieved);
-> +		entry++;
-> +		/*
-> +		 * If the number of output entries is less than expected, add the
-> +		 * remaining entries to the next batch.
-> +		 */
-> +		remain_feats += copy_feats - num_entries;
-> +		start += num_entries;
-> +	} while (remain_feats);
-> +
-> +	cxl_mbox->entries = no_free_ptr(entries);
-> +	rc = devm_add_action_or_reset(cxl_mbox->host, cxl_free_features,
-> +				      cxl_mbox->entries);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return 0;
-> +
-> +err:
-> +	cxl_mbox->num_features = 0;
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_supported_features, CXL);
-> +
-> +int cxl_get_supported_feature_entry(struct cxl_dev_state *cxlds, const uuid_t *feat_uuid,
-> +				    struct cxl_feat_entry *feat_entry_out)
-> +{
-> +	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
-> +	struct cxl_feat_entry *feat_entry;
-> +	int count;
-> +
-> +	/* Check CXL dev supports the feature */
-> +	feat_entry = &cxl_mbox->entries[0];
-> +	for (count = 0; count < cxl_mbox->num_features; count++, feat_entry++) {
-> +		if (uuid_equal(&feat_entry->uuid, feat_uuid)) {
-> +			memcpy(feat_entry_out, feat_entry, sizeof(*feat_entry_out));
-
-Why copy-out? Would it not be sufficient to just return the index in the
-features->entries[] array?
-
-[..]
-> diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-> index cc894f07a435..03c4b8ad84c1 100644
-> --- a/include/cxl/mailbox.h
-> +++ b/include/cxl/mailbox.h
-> @@ -50,6 +50,8 @@ struct cxl_mbox_cmd {
->   *                (CXL 3.1 8.2.8.4.3 Mailbox Capabilities Register)
->   * @mbox_mutex: mutex protects device mailbox and firmware
->   * @mbox_wait: rcuwait for mailbox
-> + * @num_features: number of supported features entries
-> + * @features: list of supported feature entries
->   * @mbox_send: @dev specific transport for transmitting mailbox commands
->   */
->  struct cxl_mailbox {
-> @@ -59,6 +61,8 @@ struct cxl_mailbox {
->  	size_t payload_size;
->  	struct mutex mbox_mutex; /* lock to protect mailbox context */
->  	struct rcuwait mbox_wait;
-> +	int num_features;
-> +	struct cxl_feat_entry *entries;
->  	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
->  };
->  
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index c6c0fe27495d..bd2535962f70 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -50,6 +50,7 @@
->  	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
->  	___C(CLEAR_LOG, "Clear Log"),					  \
->  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
-> +	___C(GET_SUPPORTED_FEATURES, "Get Supported Features"),		  \
-
-Again, for a patch that claims to be kernel internal only enabling, lets
-keep it internal-only.
+I explicitly only ack this because the real review is when the
+corresponding test in cxl-cli is available, but this can go upstream in
+the meantime.
