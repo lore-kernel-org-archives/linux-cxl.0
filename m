@@ -1,217 +1,500 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8841F03C8;
-	Fri,  6 Dec 2024 08:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733473718; cv=fail; b=IBOaQa/UffxOQMzOjmvhdeBYrIv7ntUR4pcZNSJtEFsEJFsESzgtwVzZ6Qf5y+qqz16XMUXRz8FUhbcFY76gIneVZGZMvrYMUakDWi/bG1tlbnqM5Gv//Fkm7EOkqFSglS/jVTic4FWCpEdp96IPb7NXCgTmHEMxRe14h8E60I0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733473718; c=relaxed/simple;
-	bh=hyyAZXP3J068cYE2rbhIRTvwBbzX57TlnjV03T4aoHk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dVXcwj6Mdy2QGnjNrR6lngv0JlbvkrHxJoJgLIdAVWVd3tf+ZycXbbZXztYbuLUgSabwqp53Z3t79SSDAiQdqpbqVoPU7K1LXBXjsZmMqgeWhj464fRHXVdEHFsWmmgj/IOc+0CKsWbBlXF5wf38Um22aHZVUWrZMlg320olDeE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tTt7tAo1; arc=fail smtp.client-ip=40.107.101.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tTt7tAo1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D5EGOEQHS4cdMiN0upmTGwVBZOjiCj+fMuuiY+y0RKPREdabtwTcBcO1ugoqDCGZ8blRkOo/m02a2GR5o3OM6sY2/kI6Tp7vker00Hc3acXkiVT6MXggy+xsCSLopZD+Y/LQp8nOhJ+wV4w6FJhY0SYxp/DG8xJql9dC5RgvZFhVb0VUNmBaEGDpX3HvBQ6ff2E/0hgdWTr5kzCrWPJ1Dm09pA+wucKxdg/P9zmTRCJ0qQhO56/hOqHcDzABY8XuKYqy+FpIiL/Szljfa+516G661TAXKdsC1YZj448yCv9nhXFbOI3jxy5OxuIkUpy40Mas0adYbUu5KNClmSadVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RmGqsIF9aEpfp8JxOCtAMjf1rYdVU836n0F+gClUSuI=;
- b=o068xikb/rqA8cb+zBIa8Me8xHA74N3tpHauTpurB6mokn28AqPmJWsWZgHhOcuDaOjudfEwiVej9Mt1/8EXXpZWdMBSZONjScPmBb+oSSOrXDtipWvP+yifLNkiEL8uuDO/bzm28pQFg3YragcZtRF45oP1t2V0AmwOkULLSytofYf8cbLY2KpqkjVfTWXrS7YxRUSvvUxo5bKDXWKHN4jlfSbHw4crTmSx3YZPG8QccRcMUxX70kIuXRcY96JMCnw0CIghyuwx8zKVhamEYDLcZ4kDR2I/DSOWX2F6v2g5cnlp91ESaAXRPFlA8D4sxym+q5UZpbzs8rbvbtHi5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RmGqsIF9aEpfp8JxOCtAMjf1rYdVU836n0F+gClUSuI=;
- b=tTt7tAo14lWUpxvq7YytNsQF6YAfXP/1JCArEEU0YhRk8ntDJURAYjvwpNzshrb8uv+o+2w4yAwB86AYvqE2SLZQcTolEFEZ/J72eeKf0URziveNUUq9lvi5WnSfmaV6z8N291eRuHjvdqZ/VnLSKJjC/Vbfucli/SX1w6PWvoc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
- by SN7PR12MB7023.namprd12.prod.outlook.com (2603:10b6:806:260::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.11; Fri, 6 Dec
- 2024 08:28:34 +0000
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3%4]) with mapi id 15.20.8230.010; Fri, 6 Dec 2024
- 08:28:34 +0000
-Message-ID: <2b5bb8d8-6a7d-4a58-bde7-ce42d0a23f61@amd.com>
-Date: Fri, 6 Dec 2024 13:58:23 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] resource: Fix CXL node not populated issue
-To: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: bharata@amd.com, Huang Ying <ying.huang@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Alistair Popple <apopple@nvidia.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Baoquan He <bhe@redhat.com>,
- ilpo.jarvinen@linux.intel.com,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Fontenot Nathan <Nathan.Fontenot@amd.com>, Wei Huang <wei.huang2@amd.com>,
- regressions@lists.linux.dev
-References: <20241202111941.2636613-1-raghavendra.kt@amd.com>
- <674fd2b4942f1_3e0f629420@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <33b4b93b-5ab6-4a3b-b3b2-c9b3cbc9d929@amd.com>
- <6752acd92baf0_10a08329424@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Raghavendra K T <raghavendra.kt@amd.com>
-In-Reply-To: <6752acd92baf0_10a08329424@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXP287CA0013.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::35) To PH7PR12MB5805.namprd12.prod.outlook.com
- (2603:10b6:510:1d1::13)
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EA81EF09B
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Dec 2024 09:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733478648; cv=none; b=sXfVrz6gMbwpvEBk64HKevPenmHb9fYKuJowxfCJVQAyHL++uA28BG0trjFO0SWVgD2+3O/UggUfKpbfBmO5nGjSrztK69tqtajgA3S29a+gcYEbF/fDXzU/v7JcwkTqEh0+MwPhb5nXrjLy7SX4GmTkVAWpV5GrqFemlMeXauc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733478648; c=relaxed/simple;
+	bh=SPo2nDR/jvotzb40n+oaWNnLocGCLa9EMSpLvEcTAgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gfFhqgC8JFniKQPb5eOuUw6hIuIIP/Gmxj9l9TTy9N69H45FGoJKdsklanpOLVqy28vafeCnIeOsgWgIk3ozwDhX5TV0tihn2JSl/agcNyUz6WKVvTP7c7EMjiBX+zPWW59ZSzod6NeL7LBAfKh7aEQKxP45JS+TCCIHhrsXw7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3vt7eyFJnx3SGBw--.8160S2;
+	Fri, 06 Dec 2024 17:50:22 +0800 (CST)
+Received: from phytium.com.cn (unknown [218.76.62.144])
+	by mail (Coremail) with SMTP id AQAAfwAHWHTUyFJnPuhjAA--.7499S4;
+	Fri, 06 Dec 2024 17:50:20 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: jonathan.cameron@huawei.com,
+	fan.ni@samsung.com,
+	mst@redhat.com,
+	marcel.apfelbaum@gmail.com
+Cc: qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org,
+	chenbaozi@phytium.com.cn,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 1/1] cxl/cxl-host: Support creation of a new CXL Host Bridge
+Date: Fri,  6 Dec 2024 17:49:39 +0800
+Message-Id: <20241206094939.921781-2-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241206094939.921781-1-wangyuquan1236@phytium.com.cn>
+References: <20241206094939.921781-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|SN7PR12MB7023:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7dbf82fa-30e9-4b4d-a4b2-08dd15cff93d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RVJyY3hxZmhpUitZbHhMMU5oc2xJbmloYnJUY0RVb1pteGU5U05BRXAwUTFz?=
- =?utf-8?B?cGFxaURlN3ZvZDZZZFFHeHlFcmhubVlxRWZncWFqTkhmaksyckthdllLeVo3?=
- =?utf-8?B?bTdRYmdRUE9rNDVwa3NLOHlNV3dXUHBnRTZCZkdMS05qbG1GQ2txLzk0TFJo?=
- =?utf-8?B?cS9GOG9PQTdQRFNrWTU0MWY3WEY4VHNJcll6ek8rMzNVS2ZJcG90elFxQXdu?=
- =?utf-8?B?dTFWM0JXaTVhQTV3T1hHWnFpdlhNMjY0dGdDaHc1d2s3U2FqOG4zSFo0RzBU?=
- =?utf-8?B?bE9lTzhIajhOUjF0NW9JU0RDWTk4TFFTQXpuVmZaWlBMYVdBbEVMV1p5ZWpw?=
- =?utf-8?B?V0hGS0p4c015eDhLUGRSR01peFg2ZDN0RFFOS2IvVkJML1FnRDBpbHlWTjZ2?=
- =?utf-8?B?L3FSWit0SWY4UHZGcVUxOUV0dFhyUXlPeDlxWkUyeWU5RnhKR3cranA5VnRU?=
- =?utf-8?B?L0syclpZTWRwcUNBWC9mY3JnR2lxQ29sZHl1eUJlSWErZ3laaitDd0x1RFRn?=
- =?utf-8?B?cU9tWUU1YnVRR1ZITlpyZU9TM0JCNUNvTmhGWWt2clRPdnR5T00vZlU2NkxF?=
- =?utf-8?B?ZjkvbEN0dFArZnMvcVdnSlNySExkZWprNWo0ZE5rcWo5azVDVWNZMjZKTnpZ?=
- =?utf-8?B?Z1ZKQUtMb2ZYWk92Q3d6K3ZWSkVGUFNrd01UVzR5dFVnTnMvbjdEQ0VJWDds?=
- =?utf-8?B?azVsREtiYW1VczcrcUovd011R3ZZbzQzUUNINVd0dzB6MzJ3b2dQM2grY3k0?=
- =?utf-8?B?UmlCcWgveEVSY005V0lha2FJSWYrNTRnVkhwenVTaHpuKzlFQlZ6c3RISGlE?=
- =?utf-8?B?RWhoQTgzblcwaFNlVDFycDR4MldFT2JoanRCZjZwbmxBTnRiT0RLalZKS0wy?=
- =?utf-8?B?SWdQTDB5Y004QlB6NytoeTAzNnlSYTlqNldGR3BzWnJmOUJqK3JCTEtBVW5x?=
- =?utf-8?B?UVhSWm5WcHZIVkx5S3FvRTNpSk1nVDJieCsyTE8xSVlXNHdvREdWbnNSUmZq?=
- =?utf-8?B?eDRjREZYYVBhYXhBci9Zc0IrRnV6VlBDOTVBdEF1dkg2Q2g0eS9VMmhhNHpL?=
- =?utf-8?B?Wm11VnUyV2tUOGhDdU02ZFdIZ1lVRkFmRVh6YkVOWGpVbmo2bGQ4akxiRUJy?=
- =?utf-8?B?Q3d6WU9MSDZlZ0hqOC9yRGw5bEFIUVdJTjRkbXhyWktrNmpicmd4RFdiU3JQ?=
- =?utf-8?B?bVpwcWxBOVA1N3dxNWpxM1JuRVVrV3R3NitSZ0J3bkxSZ1ZOeEZUdW9LWm1t?=
- =?utf-8?B?ckhkNGFOL0Y2ZE94Sm1zYXpCVDBiTitJQlFURTJNOWR6Yi9NZ1NFaGtpZmVw?=
- =?utf-8?B?YlJoWmpJa1ljZlYrOXB2ekxnSG9TUGJiT2xKdFo1MlU1WjFiT3B1N2Q0ZmNI?=
- =?utf-8?B?QzMzakJFOERFalZOYlRDeWJvTHJPSUs5OThyaDRwM2lwU1BQa3JCcTg1K1NB?=
- =?utf-8?B?VWNHc1NFWmUvaEZzZ1lRTWxEckwyVlBhc2VFd3B1dVdWak1aRlgzWTRsRzQ4?=
- =?utf-8?B?L3ZNeTVzQWZNQWFZOXJVRTFnUFlyM3J0VGZKcmZrMXV3NGVKUDVlVlV1MHZZ?=
- =?utf-8?B?MHR0dHFPVVp2QW5mSDJva2NxWVR1WXJYamdLSkJqaWtrTk8vY2dNdS9JRnIr?=
- =?utf-8?B?YTFJS2ZEUStmVnlnQlBYbzlZMnpOM1p1Q0dLTjlYRVJKT0lBd1RRR1JOWXFI?=
- =?utf-8?B?cDNlQnhTL0M5QTB0OTRpR0hsUXhNWWhJRS95eG05SEI2ekVLVDdVSEo3Y3dy?=
- =?utf-8?B?WVoyN2VWcGR2T21lTGZIVExRSlVnSFRsYlBSaUh6UGpLUEx1blJtL1ZwRGll?=
- =?utf-8?B?MzFUOVNGMGw2Ym9NZ2x5UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UU4vc0V1cEgyYVJiNG1qUUs0Mmk5N3Y5K2hiMHRMdEM0OEhYQVNnRFFrbHR5?=
- =?utf-8?B?Qm90K1Z0MDlwL21HQUVhY3pyNnVDOGVnSlg2eXE2b3phK2lqQnRIWWI2OENU?=
- =?utf-8?B?OUdLSVFMeWt5OUE2Y0o0WWowZ1JSNEphY2VGK3hXY0dFRTFrY3YwOUFsSEsw?=
- =?utf-8?B?cmFUVmc2ZmxwMEdscE9rN2tlNkYzeS90ck1aRHNhOGtlY3BxQnZ2Q1diK3ZU?=
- =?utf-8?B?bVJZVDJmZ3Ntd3RIVjNzaVV1L0xYM2NjTGEvMzRJd21DTkpWbGJieElOSzhC?=
- =?utf-8?B?bG5yR0QvSTZBUVJ4aEhPaDh2K1NXd1NCMnhPbWZFOXFPaTB1T09UOTAxVmg4?=
- =?utf-8?B?Tko0eXBQNkVtbkZrRktnVFViUURWOGZVSkZKSWhVV0ZlVmc4Tkdxb3dDblBE?=
- =?utf-8?B?N2dvczd2ekFFVkJ3RUlLRnNSeEYwNlBCZy9iSTRBM1F2QVlqUTJKa3UzYnk0?=
- =?utf-8?B?dm5OVy9XWGljQjJvMVBTQ3dLVFgrbExWUVRCUS8xN3Z6S216WHBlUkUyQjdW?=
- =?utf-8?B?ZjN1MnlKWTlLZzltcnNNa2x1ZUpONzFKZi9uUTdsUHhuNUErZ1dzMlZWWjZ1?=
- =?utf-8?B?Q0gyczEyUEpvUE5iZGlKcjk0b0ZQbXRDcm80TXV5M0QxQWR5QStDUVlWUGl4?=
- =?utf-8?B?VG9IVFRCNHkrcExuOTR0eWRyN1d2NVJLV2w0TzdscHl3UjNBZm1NZUlDYm5x?=
- =?utf-8?B?anp5c1M3VWNNcU91U1FmZjNjUWdUNm41aVBFSjVzaDIzS0tTcXc0bVhoNXJJ?=
- =?utf-8?B?SHIzRGZZaDJKeVlyNXU4SUx4Wit5M1RDTW1heHExWmViYmkrNmZJQTZJWXA5?=
- =?utf-8?B?eTRxOGYwRGpPaG0yQXE1elZCWGtZNjhVUkhoZ09OamhxWTkwSDRWMThlSTNs?=
- =?utf-8?B?aEVHWU1hT2RlN1g5ZnU5akY5YTV0T3pqZFNXRG5FWGpaRkJXbGpJTWhINGdv?=
- =?utf-8?B?ZUg3TlVYUkZVR2FDc3NrNGg4SzNlNFYwVkR4c2NvczZSVmFtdUZVY281NmFB?=
- =?utf-8?B?bEtQMXNNbEVqZ3Z5M0J4RWZVT2M5OW9yWUFRMVYyNU1YSjN3OHB1a05nclh6?=
- =?utf-8?B?ZmFKSUxUTGs5bnNmc1V3bzViSzJwTEkrdTd3L3lKeVZSTklZZy9ZQk1QNVpD?=
- =?utf-8?B?YXFEaDdYQS9kRHdyUGYzalVzQlVaZ2h2WXdwbGlBd2xGMWxqOFcrT3dnK2xt?=
- =?utf-8?B?UE1wMkErOGliK1NTYnh6bklkQi9xWEc5cmJKYWwvV1BjUTBuUndDSjNreGRk?=
- =?utf-8?B?M3ZyQmxIWER0STM3dW16c3Q1cGlGRkF4U3VVRFhqTkpFZm0wWVlJbm0zbkEx?=
- =?utf-8?B?UG5mUDFRYVpPaEhWM21tNXN3bEtyVnhhTEdHSzRZYnlhQjNPd3RQYUs1dXkx?=
- =?utf-8?B?UGtmN3JraDRGY2gyRmRRT2hRREx5YzhOblRiUURNZytXY2VTSGJxdTY5ZGdr?=
- =?utf-8?B?OFptdTBWcVBXaGFlcm5rbXR6eHpuT0VqamR2ZzhaZEh1anp2dU5WdDZZVjY4?=
- =?utf-8?B?TGhhYW05LzRqb0FwVHdPbldWaHk4RFBZN212cVlpVEtwL00vK2pVaEhrbmE4?=
- =?utf-8?B?WnprdUVHQVBFdDVQcXRWbmRGUGhlZUcxQ0RXMUtMTXFDZWxSOTYrTmNRWmhC?=
- =?utf-8?B?ZG9zN0IzUzFxOXQwaFI3enF2MzdpL3RYeTBoVkdvNTdsVDduQzVBVEtQTGIx?=
- =?utf-8?B?YVdEUGJidlJEdWRzd3ZkREFobmMzaVRvdXVBakI5ZnBuL0J4WjZmMjVraDEw?=
- =?utf-8?B?dWdYM2d5czZjTVRIWkhkUmJSbk9IbFRkZCtXbDZlOGlwK2l2ZzZOdUFtR2xK?=
- =?utf-8?B?RktQdmNhc0V2bm13ajhQWTY5UFd1RDRReU4yUFl2WXBxcVRqUFZPajJoM3Rh?=
- =?utf-8?B?ZzFMM3JpUUwyb3haNmxPby9kUEZDSlNUSUZBS3QwekJUd2NFbGw5amdydzJJ?=
- =?utf-8?B?ZEpPSUZVejdJSm1yKzM3cXIyTWlTQ3hxV2RmTDV0WlJ0NDV0cGRYMC9YSVFz?=
- =?utf-8?B?c3phNk1sdC9OVnErY0xBTDgrT2FvQnZkcUpaTWxMZjRWUW5HekI1THBsamh6?=
- =?utf-8?B?SExoSHE5TnVLclJxT0RhbEtGUDVlUWltNmFqbkhDS3RuUGEwUlAvbURzSUxO?=
- =?utf-8?Q?ESBqAQjTVHeMNyKwMBKxi6Abo?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dbf82fa-30e9-4b4d-a4b2-08dd15cff93d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 08:28:34.4105
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sgvxmGvv+AWq5sVDj+rT8hEJskgghneVVkfrmmYAX/7rwQfu2p58eJu2qiGyJh41x1H6PTTkz9IDgu26B70pNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7023
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwAHWHTUyFJnPuhjAA--.7499S4
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQALAWdSBAwGLwAAsf
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvAXoW3KFyDCF1DKrykCFyxWry5XFb_yoW8Gw1xto
+	W3Xa45Xr48JF1fCFyvkwnayr9rGrWUKF4rXF4FkFWqk3W7CwsxX348tan3Ca9xKF1ftFZ8
+	WrWfA343GFZ7AF18n29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
+	UUUUUUU==
 
+This work defines a new cxl host bridge type (TYPE_CXL_HOST). This
+could be considered as a prototype of an independent cxl host bridge
+which combines gpex features (ecam, mmio windows & irq) and pxb-cxl
+features(CHBCR) at meanwhile.
 
+The root bus path of CXL_HOST is "0001:00", that would not affect the
+original pcie host topology. In the previous, the pxb-cxl-host with
+any cxl root ports and cxl endpoint devices would occupy the BDF
+number of the original pcie domain. This new type provide a solution
+to resolve the problem.
 
-On 12/6/2024 1:20 PM, Dan Williams wrote:
-> Raghavendra K T wrote:
->>
-[...]
->> B. /proc/iomem
->>
->> $ vimdiff success fail
->>
->>    4050000000-604fffffff : Soft Reserved
->>     |  164 4050000000-604fffffff : Soft Reserved
->>     165   4050000000-604fffffff : CXL Window 0
->>          |  165   4050000000-604fffffff : CXL Window 0
->>     166     4080000000-5fffffffff : dax1.0
->>          |
->> ------------------------------------------------------------------------
->>     167       4080000000-5fffffffff : System RAM (kmem)
->>          |
->> --------------------------------------------------------------------
-> 
-> My eyes only know how to read unified diff (diff -u) format. Is this
-> saying that in the failure case the System RAM range for dax1.0 is
-> missing?
+Also the CXLFixedWindow struct adds a new member 'target_chb' to
+record the target list of CXLHostBridge. And necessary is to adjust
+the logic of 'cxl_cfmws_find_device' and 'cxl_fmws_link_targets' to
+allow different types of cxl host bridge.
 
+Move 'cxl_get_hb_cstate' & 'cxl_get_hb_passthrough' from pxb code
+into cxl-host code.
 
-Sorry for that formatting. I realized later.
-Yes. dax1.0 missing in the failure case.
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
+ hw/cxl/cxl-host-stubs.c             |   2 +
+ hw/cxl/cxl-host.c                   | 220 ++++++++++++++++++++++++++--
+ hw/pci-bridge/pci_expander_bridge.c |  20 +--
+ include/hw/cxl/cxl.h                |  23 +++
+ include/hw/cxl/cxl_component.h      |   4 +-
+ include/hw/cxl/cxl_host.h           |   6 +
+ 6 files changed, 242 insertions(+), 33 deletions(-)
 
-Looks like problem is that,
+diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
+index cae4afcdde..aea94933ba 100644
+--- a/hw/cxl/cxl-host-stubs.c
++++ b/hw/cxl/cxl-host-stubs.c
+@@ -11,5 +11,7 @@
+ void cxl_fmws_link_targets(CXLState *stat, Error **errp) {};
+ void cxl_machine_init(Object *obj, CXLState *state) {};
+ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp) {};
++void cxl_fixed_memory_window_config(CXLState *cxl_state,
++                        CXLFixedMemoryWindowOptions *object, Error **errp) {};
+ 
+ const MemoryRegionOps cfmws_ops;
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index e9f2543c43..81a5948874 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -16,15 +16,37 @@
+ #include "qapi/qapi-visit-machine.h"
+ #include "hw/cxl/cxl.h"
+ #include "hw/cxl/cxl_host.h"
++#include "hw/irq.h"
+ #include "hw/pci/pci_bus.h"
+ #include "hw/pci/pci_bridge.h"
+ #include "hw/pci/pci_host.h"
+ #include "hw/pci/pcie_port.h"
+ #include "hw/pci-bridge/pci_expander_bridge.h"
+ 
+-static void cxl_fixed_memory_window_config(CXLState *cxl_state,
+-                                           CXLFixedMemoryWindowOptions *object,
+-                                           Error **errp)
++CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb, int type)
++{
++    if (type == 0) {
++        CXLHost *pxbhost = PXB_CXL_HOST(hb);
++        return &pxbhost->cxl_cstate;
++    } else {
++        CXLHostBridge *cxlhost = CXL_HOST(hb);
++        return &cxlhost->cxl_cstate;
++    }
++}
++
++bool cxl_get_hb_passthrough(PCIHostState *hb, int type)
++{
++    if (type == 0) {
++        CXLHost *pxbhost = PXB_CXL_HOST(hb);
++        return pxbhost->passthrough;
++    } else {
++        return false;
++    }
++}
++
++void cxl_fixed_memory_window_config(CXLState *cxl_state,
++                                    CXLFixedMemoryWindowOptions *object,
++                                    Error **errp)
+ {
+     ERRP_GUARD();
+     g_autofree CXLFixedWindow *fw = g_malloc0(sizeof(*fw));
+@@ -81,18 +103,24 @@ void cxl_fmws_link_targets(CXLState *cxl_state, Error **errp)
+             int i;
+ 
+             for (i = 0; i < fw->num_targets; i++) {
+-                Object *o;
++                Object *pxb_cxl, *cxl_host;
+                 bool ambig;
+ 
+-                o = object_resolve_path_type(fw->targets[i],
++                pxb_cxl = object_resolve_path_type(fw->targets[i],
+                                              TYPE_PXB_CXL_DEV,
+                                              &ambig);
+-                if (!o) {
+-                    error_setg(errp, "Could not resolve CXLFM target %s",
+-                               fw->targets[i]);
++                if (!pxb_cxl) {
++                    cxl_host = object_resolve_path_type(fw->targets[i],
++                                             TYPE_CXL_HOST,
++                                             &ambig);
++                    if (!cxl_host) {
++                        error_setg(errp, "Could not resolve CXLFM target %s",
++                                   fw->targets[i]);
+                     return;
++                    }
++                    fw->target_chb[i] = CXL_HOST(cxl_host);
+                 }
+-                fw->target_hbs[i] = PXB_CXL_DEV(o);
++                fw->target_hbs[i] = PXB_CXL_DEV(pxb_cxl);
+             }
+         }
+     }
+@@ -162,23 +190,36 @@ static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
+     uint8_t target;
+     bool target_found;
+     PCIDevice *rp, *d;
++    int type;
+ 
+     /* Address is relative to memory region. Convert to HPA */
+     addr += fw->base;
+ 
+     rb_index = (addr / cxl_decode_ig(fw->enc_int_gran)) % fw->num_targets;
+-    hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl_host_bridge);
+-    if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
+-        return NULL;
++    if (fw->target_chb[rb_index]) {
++        type = CXL_HOST_BRIDGE_TYPE;
++        hb = PCI_HOST_BRIDGE(fw->target_chb[rb_index]);
++        CXLHostBridge *host = fw->target_chb[rb_index];
++
++        hb_cstate = &host->cxl_cstate;
++        cache_mem = hb_cstate->crb.cache_mem_registers;
++        target_found = cxl_hdm_find_target(cache_mem, addr, &target);
++        rp = pcie_find_port_by_pn(hb->bus, target);
++    } else {
++        type = PXB_CXL_HOST_TYPE;
++        hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl_host_bridge);
++        if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
++            return NULL;
++        }
+     }
+ 
+-    if (cxl_get_hb_passthrough(hb)) {
++    if (cxl_get_hb_passthrough(hb, type)) {
+         rp = pcie_find_port_first(hb->bus);
+         if (!rp) {
+             return NULL;
+         }
+     } else {
+-        hb_cstate = cxl_get_hb_cstate(hb);
++        hb_cstate = cxl_get_hb_cstate(hb, type);
+         if (!hb_cstate) {
+             return NULL;
+         }
+@@ -372,3 +413,154 @@ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp)
+         }
+     }
+ }
++
++static void cxl_host_set_irq(void *opaque, int irq_num, int level)
++{
++    CXLHostBridge *host = opaque;
++
++    qemu_set_irq(host->irq[irq_num], level);
++}
++
++int cxl_host_set_irq_num(CXLHostBridge *host, int index, int gsi)
++{
++    if (index >= CXL_HOST_NUM_IRQS) {
++        return -EINVAL;
++    }
++
++    host->irq_num[index] = gsi;
++    return 0;
++}
++
++static PCIINTxRoute cxl_host_route_intx_pin_to_irq(void *opaque, int pin)
++{
++    PCIINTxRoute route;
++    CXLHostBridge *host = opaque;
++    int gsi = host->irq_num[pin];
++
++    route.irq = gsi;
++    if (gsi < 0) {
++        route.mode = PCI_INTX_DISABLED;
++    } else {
++        route.mode = PCI_INTX_ENABLED;
++    }
++
++    return route;
++}
++
++static const char *cxl_host_root_bus_path(PCIHostState *host_bridge,
++                                          PCIBus *rootbus)
++{
++    return "0001:00";
++}
++
++void cxl_host_hook_up_registers(CXLState *cxl_state, CXLHostBridge *host,
++                                Error **errp)
++{
++    CXLComponentState *cxl_cstate = &host->cxl_cstate;
++    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
++    hwaddr offset;
++
++    offset = memory_region_size(mr) * cxl_state->next_mr_idx;
++    if (offset > memory_region_size(&cxl_state->host_mr)) {
++        error_setg(errp, "Insufficient space for sbsa cxl host register space");
++        return;
++    }
++
++    memory_region_add_subregion(&cxl_state->host_mr, offset, mr);
++    cxl_state->next_mr_idx++;
++}
++
++static void cxl_host_reset(CXLHostBridge *host)
++{
++    CXLComponentState *cxl_cstate = &host->cxl_cstate;
++    uint32_t *reg_state = cxl_cstate->crb.cache_mem_registers;
++    uint32_t *write_msk = cxl_cstate->crb.cache_mem_regs_write_mask;
++
++    cxl_component_register_init_common(reg_state, write_msk, CXL2_RC);
++
++    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT,
++                     8);
++}
++
++static void cxl_host_realize(DeviceState *dev, Error **errp)
++{
++    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
++    CXLHostBridge *host = CXL_HOST(dev);
++    CXLComponentState *cxl_cstate = &host->cxl_cstate;
++    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
++    PCIBus *cxlbus;
++    PCIHostState *pci = PCI_HOST_BRIDGE(dev);
++    PCIExpressHost *pex = PCIE_HOST_BRIDGE(dev);
++    int i;
++
++    /* CHBCR MMIO init */
++    cxl_host_reset(host);
++    cxl_component_register_block_init(OBJECT(dev), cxl_cstate, TYPE_CXL_HOST);
++    sysbus_init_mmio(sbd, mr);
++
++    /* MMFG window init */
++    pcie_host_mmcfg_init(pex, PCIE_MMCFG_SIZE_MAX);
++    sysbus_init_mmio(sbd, &pex->mmio);
++
++    /* mmio window init */
++    memory_region_init(&host->io_mmio, OBJECT(host), "cxl_host_mmio",
++                        UINT64_MAX);
++
++    memory_region_init_io(&host->io_mmio_window, OBJECT(host),
++                              &unassigned_io_ops, OBJECT(host),
++                              "cxl_host_mmio_window", UINT64_MAX);
++
++    memory_region_add_subregion(&host->io_mmio_window, 0, &host->io_mmio);
++    sysbus_init_mmio(sbd, &host->io_mmio_window);
++
++    /* ioport window init, 64K is the legacy size in x86 */
++    memory_region_init(&host->io_ioport, OBJECT(host), "cxl_host_ioport",
++                        64 * 1024);
++
++    memory_region_init_io(&host->io_ioport_window, OBJECT(host),
++                              &unassigned_io_ops, OBJECT(host),
++                              "cxl_host_ioport_window", 64 * 1024);
++
++    memory_region_add_subregion(&host->io_ioport_window, 0, &host->io_ioport);
++    sysbus_init_mmio(sbd, &host->io_ioport_window);
++
++    /* PCIe host bridge use 4 legacy IRQ lines */
++    for (i = 0; i < CXL_HOST_NUM_IRQS; i++) {
++        sysbus_init_irq(sbd, &host->irq[i]);
++        host->irq_num[i] = -1;
++    }
++
++    pci->bus = pci_register_root_bus(dev, "cxlhost.0", cxl_host_set_irq,
++                                 pci_swizzle_map_irq_fn, host, &host->io_mmio,
++                                 &host->io_ioport, 0, 4, TYPE_CXL_BUS);
++    cxlbus = pci->bus;
++    cxlbus->flags |= PCI_BUS_CXL;
++
++    pci_bus_set_route_irq_fn(pci->bus, cxl_host_route_intx_pin_to_irq);
++}
++
++static void cxl_host_class_init(ObjectClass *class, void *data)
++{
++    DeviceClass *dc = DEVICE_CLASS(class);
++    PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(class);
++
++    hc->root_bus_path = cxl_host_root_bus_path;
++    dc->realize = cxl_host_realize;
++    dc->desc = "CXL Host Bridge";
++    set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
++    dc->fw_name = "cxl";
++}
++
++static const TypeInfo cxl_host_info = {
++    .name          = TYPE_CXL_HOST,
++    .parent        = TYPE_PCIE_HOST_BRIDGE,
++    .instance_size = sizeof(CXLHostBridge),
++    .class_init    = cxl_host_class_init,
++};
++
++static void cxl_host_register(void)
++{
++    type_register_static(&cxl_host_info);
++}
++
++type_init(cxl_host_register)
+diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
+index 07d411cff5..2f1b26256b 100644
+--- a/hw/pci-bridge/pci_expander_bridge.c
++++ b/hw/pci-bridge/pci_expander_bridge.c
+@@ -56,20 +56,6 @@ static GList *pxb_dev_list;
+ 
+ #define TYPE_PXB_HOST "pxb-host"
+ 
+-CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb)
+-{
+-    CXLHost *host = PXB_CXL_HOST(hb);
+-
+-    return &host->cxl_cstate;
+-}
+-
+-bool cxl_get_hb_passthrough(PCIHostState *hb)
+-{
+-    CXLHost *host = PXB_CXL_HOST(hb);
+-
+-    return host->passthrough;
+-}
+-
+ static int pxb_bus_num(PCIBus *bus)
+ {
+     PXBDev *pxb = PXB_DEV(bus->parent_dev);
+@@ -240,7 +226,7 @@ static void pxb_cxl_host_class_init(ObjectClass *class, void *data)
+  * This is a device to handle the MMIO for a CXL host bridge. It does nothing
+  * else.
+  */
+-static const TypeInfo cxl_host_info = {
++static const TypeInfo pxb_cxl_host_info = {
+     .name          = TYPE_PXB_CXL_HOST,
+     .parent        = TYPE_PCI_HOST_BRIDGE,
+     .instance_size = sizeof(CXLHost),
+@@ -524,7 +510,7 @@ static void pxb_cxl_dev_class_init(ObjectClass *klass, void *data)
+      * vendor, device, class, etc. ids are intentionally left out.
+      */
+ 
+-    dc->desc = "CXL Host Bridge";
++    dc->desc = "PXB CXL Host Bridge";
+     device_class_set_props(dc, pxb_cxl_dev_properties);
+     set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
+ 
+@@ -551,7 +537,7 @@ static void pxb_register_types(void)
+     type_register_static(&pxb_pcie_bus_info);
+     type_register_static(&pxb_cxl_bus_info);
+     type_register_static(&pxb_host_info);
+-    type_register_static(&cxl_host_info);
++    type_register_static(&pxb_cxl_host_info);
+     type_register_static(&pxb_dev_info);
+     type_register_static(&pxb_pcie_dev_info);
+     type_register_static(&pxb_cxl_dev_info);
+diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+index 75e47b6864..548a1bd28c 100644
+--- a/include/hw/cxl/cxl.h
++++ b/include/hw/cxl/cxl.h
+@@ -17,6 +17,7 @@
+ #include "cxl_pci.h"
+ #include "cxl_component.h"
+ #include "cxl_device.h"
++#include "hw/pci/pcie_host.h"
+ 
+ #define CXL_CACHE_LINE_SIZE 64
+ #define CXL_COMPONENT_REG_BAR_IDX 0
+@@ -24,12 +25,34 @@
+ 
+ #define CXL_WINDOW_MAX 10
+ 
++#define PXB_CXL_HOST_TYPE 0
++#define CXL_HOST_BRIDGE_TYPE 1
++
++#define TYPE_CXL_HOST "cxl-host"
++OBJECT_DECLARE_SIMPLE_TYPE(CXLHostBridge, CXL_HOST)
++
++#define CXL_HOST_NUM_IRQS 4
++
+ typedef struct PXBCXLDev PXBCXLDev;
+ 
++typedef struct CXLHostBridge {
++    PCIExpressHost parent_obj;
++
++    CXLComponentState cxl_cstate;
++
++    MemoryRegion io_ioport;
++    MemoryRegion io_mmio;
++    MemoryRegion io_ioport_window;
++    MemoryRegion io_mmio_window;
++    qemu_irq irq[CXL_HOST_NUM_IRQS];
++    int irq_num[CXL_HOST_NUM_IRQS];
++} CXLHostBridge;
++
+ typedef struct CXLFixedWindow {
+     uint64_t size;
+     char **targets;
+     PXBCXLDev *target_hbs[16];
++    CXLHostBridge *target_chb[16];
+     uint8_t num_targets;
+     uint8_t enc_int_ways;
+     uint8_t enc_int_gran;
+diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+index 945ee6ffd0..953521d601 100644
+--- a/include/hw/cxl/cxl_component.h
++++ b/include/hw/cxl/cxl_component.h
+@@ -270,8 +270,8 @@ uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
+ 
+ hwaddr cxl_decode_ig(int ig);
+ 
+-CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb);
+-bool cxl_get_hb_passthrough(PCIHostState *hb);
++CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb, int type);
++bool cxl_get_hb_passthrough(PCIHostState *hb, int type);
+ 
+ bool cxl_doe_cdat_init(CXLComponentState *cxl_cstate, Error **errp);
+ void cxl_doe_cdat_release(CXLComponentState *cxl_cstate);
+diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
+index c9bc9c7c50..d6d915141a 100644
+--- a/include/hw/cxl/cxl_host.h
++++ b/include/hw/cxl/cxl_host.h
+@@ -16,6 +16,12 @@
+ void cxl_machine_init(Object *obj, CXLState *state);
+ void cxl_fmws_link_targets(CXLState *stat, Error **errp);
+ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
++void cxl_fixed_memory_window_config(CXLState *cxl_state,
++                        CXLFixedMemoryWindowOptions *object, Error **errp);
++
++int cxl_host_set_irq_num(CXLHostBridge *host, int index, int gsi);
++void cxl_host_hook_up_registers(CXLState *cxl_state, CXLHostBridge *host,
++                                Error **errp);
+ 
+ extern const MemoryRegionOps cfmws_ops;
+ 
+-- 
+2.34.1
 
-4050000000-604fffffff : Soft Reserved
-   4050000000-604fffffff : CXL Window 0
-      4080000000-5fffffffff : dax1.0
-         4080000000-5fffffffff : System RAM (kmem)
-
-this use case where,
-
-|A<------------->D|  CXL window
-|..|B<-->C|.......|    kmem
-
-B->C range that falls within A->D as in above somehow
-not covered after the patch.
-
-Thanks and Regards
-- Raghu
