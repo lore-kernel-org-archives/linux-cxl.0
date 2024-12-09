@@ -1,65 +1,66 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2040.outbound.protection.outlook.com [40.107.220.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033EF23314B
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Dec 2024 13:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2F39ACC
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Dec 2024 13:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733751059; cv=fail; b=pHHEXnJyfh/8WhQyDvO6prinvsIg9BsINWlUs0Z3X5qJs93l6sAhljmk68LGStYZwLJA+m/81r1g1lz1I38K/iGIDUOtPTCYTwNf4vi3qNY4HnYGromrx1sLWRtVVAYy60XUALJ+h+uO+k2A3h69J3cioUDk4ArVusqFsfEWB+8=
+	t=1733751173; cv=fail; b=ZDs5HBTY7OIN93eR7SlokekrML48wnf/90mZtNrZ6IFcpyvIAXiz23FClcaNqTM774Fb4jrXZX9n1yOlDXQSWdfY3Yum3D38ZBTsnHPEgpqsJ7GEEeDNebtPVwJ7wMEvtKj32iU6/Ft6dmOISYSPg0N2AFaQl6QA1uyVbrTI+BA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733751059; c=relaxed/simple;
-	bh=h/Les0H4lz9hm4ZBj1mMGC7h7ySjehp+TVcF2R8mjgA=;
+	s=arc-20240116; t=1733751173; c=relaxed/simple;
+	bh=jQDuTnM0BNq720SACc2l5icRy1OV78v2weESZPT++LY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ijpyirwHwhpunyAD4fMPRKSJij47m2diBGpE2fOYcao6fIJPwFP1HfSN3HU/d1t6jnlEKq0wD8fI8powD1I9mZMyobmM5OWHhhN+OVVRq5Q+pRtSZB7K7Lxoja5g24ZMeGFXCKcYC//HsM8gNcLHDzthxeT6YajJqWimoRgiJi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uem88msT; arc=fail smtp.client-ip=40.107.92.47
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ht4RbGmXzBYQ8eTcpED1heRFzaDvSZPw7Hnb4fjsOG0GR+ahNlqAjngDQhmu/5l7kJvo7tOLTCmJKHfcoVlwZ93OI+x6spqPr5aKDudpGaU33RN5eQAklRae9PkpfAoBGKqo4m+ghnKdNCPnecUo279u1QhoO6SRWjRE3dBv1wQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KQ2AoV0+; arc=fail smtp.client-ip=40.107.220.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uem88msT"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KQ2AoV0+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jRJz3lCxR6CpnfUFLkinIt8ml363trOgMwYkMp4X16xxdwNUvR/d0kruYeXg3CrQ7KGhBzp8VBF8L66LOCyXSE2DPaCEgBISEip9V606sRBdo+2j5umRpSuCGzgygc321UsSpEg8hlrQG8HK0cllgI9+tndX/ipgvpfUw2yC3kFC9OeHXJaadWHLYUZZHPYTjKXAlCCUsbpkh/zjNo5QRwnBuoyvAjgPsm+FVVaczmxSYymyXTpMoJ2LHTu4wxn8nEzKtK78Pc3ByaKdueGai4HRZpWmiud4V0u2ypJGkz72JYLg3lfeVzMMydNHboOG9+urL/CQ+U6RIt4Qk/2lgw==
+ b=MVjyLVXLyC3f9xHCtMynLo5BR5HOzY4hvCfbg2zLAQ9ymkOnXDpIM3za01lYIU7tP80zfeRnHEZxvi1vm6bmnPV6z0jkVoMqpaw5TwkvMd3KsaDvP1aeaYRTztoKh5OW3isOd7bIB6mYu+ltOXDOTMV5Au6hyaLJ3IMaOxkAbDbYVdWl4kcAewXYVlXdLjMVW277j6lW549mxa6rH86IvhSNYj2mdUrGkIH+aP/X9tJosktBfihtZk4qSX5Qhq1IKiQuSC7Vtw4H5Y8HqxPndLlg4Pz4T/6lYasOeU7+kDWJhpvEv1J7moVGkyNd0KfTJNU+nzypuaqpTVaXDU4UZw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q5ZYdD87GXpTWHFVCE7AJit8AwUFhAVCIifYbJ5ecXI=;
- b=R/AzO1Ov7brEZAWZ+9sD1GhuBecp1FJkbxL+8757fzgUKgZEV91CH/A8WTxlflFFmZZ/RLNSBrxc1d0wgG3GTJPtyQCkh6yseST/8Jxse9QxQ15MQ8K2to0Y/enZQq2H8HhZbviZPgUDCCj1stbUfi4aLPmwkXCdXdopIikEYc5sWhesr9cPuiI9S9X5hxRZ7rhBTU+E9QAsCKPPz/oqJ+JnMnYO7DyF9+7S1XoTjih1Vpw5MqUMmrK6sghHTQS7DN2TFSvMyMylWOt7x4nh5nx755uoNsPIdHGYdchs42mV5AHWmORzzCXPtycEl2Sdq3gDY3iReLgtf27cq6Ofyw==
+ bh=qloP2doMoQo09juWPnDF5tHop82ZWpi/WHvjPUtRD6M=;
+ b=GsEKiRXU1fnqiz0ItwuaHweQGeyeJXPsNdeLUb87rPftftTE+TbvWzNlU6tpXg0+mSZ6HjUzcqZZbu6gqF42TI/SZxnxsio+M9adTNTAai8hmLj2wr6lXpxiFWgBX0Qpe3Aw6udPGSY2RYa5pUe21nkzAEXyoWru2yrTmPNgmb/WnO96WQnUFTfDdLdFmgUFc5Pyc9Fau0YM3D7PU1gx/LkF8R/Ed6BZvBpcodvyuuTH7nik66/Su44+ZmYfwYOdoYhe2eJV617Jo60HcbWdBQjQpDflqgoZPN2z/oe5xqUkKhKG6QLofYXNiMqBt1KJpsvqbtF+/m/1435WMLxlsA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q5ZYdD87GXpTWHFVCE7AJit8AwUFhAVCIifYbJ5ecXI=;
- b=uem88msTmeOJkeiWVbbgXSeF93ClJ6hQ31ZgLqgYuHmMkXoidsf64/vhD6Jg2FAtAlzcS3SOsPNjQ10wTkJeFKDpf2k0FTsUnfVssHw1XhHPmeH+IFIuRoS+wulu64Ztrs0oEN0/YH3SyR2aRMkMikgsvgDdHt2MBJczXGUh+dTIi9DBIgFHzQg/s06iClmK+vUM+MSgguDXbQOnakfUcdSikJCmAcVyk1/lNoRMfh6BVEEad1F8ZELILa4VTIdeaX7v27jOeoKF/eR5HM4AHXQUQUAeA6SvTuK7vQmAuqkfZRoSBs2VAuAiGEsWSll9111TIGSzz3bI1859Pr+2vA==
+ bh=qloP2doMoQo09juWPnDF5tHop82ZWpi/WHvjPUtRD6M=;
+ b=KQ2AoV0+LMACcC66AVuuouFOsOMpGZ2aI1Ogc88ic888ioBhvvnmqUrbMWWA8NCVmE6t7EFt2MDYritKzwzTO3cuSBIldzgyLrDW0I6kqn4jDLt8+3w43TrjtlHvCN6NTWcqRIVawDRZSViJ3Cuqr6rLCxLLMXYCmW4S8Rz8174JLMyFUM/PCf+yMEeN/nV1tCWi7ZIgVMZfiWyTEhLsBe763Is0gTPZZRqrfyDyMpAUD8JkOGojyQ1hpNpr6idb0HHI2FolSF4JS4vyJcvRlO0cqdzuIPIqUEj5sMXW2C2jySYZZFWyRbzK4fd52EBki7rM50/P85guIqpXGSjxzQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
  by SN7PR12MB7419.namprd12.prod.outlook.com (2603:10b6:806:2a6::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Mon, 9 Dec
- 2024 13:30:54 +0000
+ 2024 13:32:46 +0000
 Received: from CH3PR12MB8659.namprd12.prod.outlook.com
  ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
  ([fe80::6eb6:7d37:7b4b:1732%5]) with mapi id 15.20.8230.010; Mon, 9 Dec 2024
- 13:30:54 +0000
-Date: Mon, 9 Dec 2024 09:30:53 -0400
+ 13:32:43 +0000
+Date: Mon, 9 Dec 2024 09:32:42 -0400
 From: Jason Gunthorpe <jgg@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
 	ira.weiny@intel.com, vishal.l.verma@intel.com,
 	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net, shiju.jose@huawei.com
-Subject: Re: [RFC PATCH v2 09/20] fwctl/cxl: Add driver for CXL mailbox for
- handling CXL features commands
-Message-ID: <20241209133053.GA2347147@nvidia.com>
+Subject: Re: [RFC PATCH v2 11/20] fwctl: FWCTL_HW_INFO to return hardware
+ information
+Message-ID: <20241209133242.GB2347147@nvidia.com>
 References: <20241115212745.869552-1-dave.jiang@intel.com>
- <20241115212745.869552-10-dave.jiang@intel.com>
- <675251891af76_250732949@dwillia2-xfh.jf.intel.com.notmuch>
+ <20241115212745.869552-12-dave.jiang@intel.com>
+ <67528c573b189_25073294db@dwillia2-xfh.jf.intel.com.notmuch>
+ <49ec1992-8b45-4281-aabb-781e1e8ec1dd@intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <675251891af76_250732949@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: BN0PR08CA0027.namprd08.prod.outlook.com
- (2603:10b6:408:142::25) To CH3PR12MB8659.namprd12.prod.outlook.com
+In-Reply-To: <49ec1992-8b45-4281-aabb-781e1e8ec1dd@intel.com>
+X-ClientProxiedBy: BN0PR02CA0035.namprd02.prod.outlook.com
+ (2603:10b6:408:e5::10) To CH3PR12MB8659.namprd12.prod.outlook.com
  (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -69,126 +70,99 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB7419:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0d9d2a8-042d-4d7a-244b-08dd1855b4ec
+X-MS-Office365-Filtering-Correlation-Id: 5502107b-f86e-46ae-55f8-08dd1855f5cf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dJHGc8JkkTXnHHCvUFZzPaRDS2QbWCwsrV3s17UB4cHD7GjJ1AK3zk7Gblig?=
- =?us-ascii?Q?uxKs+Rl7is1fDxlenSRrQj2Odt3KiGPCXsHboaGtoPJz6VzGtOniBhkZfN1D?=
- =?us-ascii?Q?65Etv/Vy60xswaB96iqAzp3fWs32rQd2bLk3tfsJEz3TKTNaxkXu7k5gLxT+?=
- =?us-ascii?Q?7ChP5ZngZ22DBs6N6TuFR0XgBeSPg/vxgJE2K15njGtmmj1IEOlToAdz7dE8?=
- =?us-ascii?Q?iX73wEza0Lu+/p1z9LDKadOHd0LhUSSM5nGEcRbqJmvkWB4Wpa1wI/Fb1GPg?=
- =?us-ascii?Q?DCavygv1kc3+UeMO7KPgMnwh3nFuyipdy189BSGZn9mCbLbsJhC3CtEB0XXb?=
- =?us-ascii?Q?LDyHZANmPo5Ln3lycdCYvFb0JwU/EyJQZfB7eE+U089yCZJ/W2tXFJSfi4u/?=
- =?us-ascii?Q?ETaigRZ+biIS7zlCLP65ej+6QnZ4y4g5zkU3PVaLZdVb+ee+5K7hy4tK6RqB?=
- =?us-ascii?Q?qohzOKuT+yI8M4lq8ageLjxkW2JZZG9yugc7Ij/wtfY5D1mASuv7iKgGdnEA?=
- =?us-ascii?Q?PkE8dIAwwmrprWbWuInrNiA1qiYYKL8d+y2y/bsqorFUAWdeSEAy7MxISBGo?=
- =?us-ascii?Q?oR9dAK273+VD+1NEJeDszi5QUA9+dQPhOmgMsC+Bb4ggO8HXp6UqrUEr5Ax3?=
- =?us-ascii?Q?6D2Eup3J7aSczOlI2HAsCnwIEYfKIACQqGSHDCdB0f3uAh3x+T/J+5PkZl5O?=
- =?us-ascii?Q?9fjNNAJqF+zCGdErLMi4FJ47WJG4P0dcqMc5AdG5UI+mUw8lzOckTYlcBMnz?=
- =?us-ascii?Q?aMm7lqZdeyyeq0nRza/W8/JhNgh636IgVNxOR/raHdE8n47tM4NxH633CiWa?=
- =?us-ascii?Q?wxHjdg+nX2sYT+GKZFUohLFNNgXvratMOcAjVHDXUPL2ZQA8zutCSZeMzRwC?=
- =?us-ascii?Q?YfJs/aXTYuqF57NrLng8Tw6v5uIurLQTna+ZOkHsC0tTcQqjr6Zh21dfg5Wn?=
- =?us-ascii?Q?5LpqiLIy/RxGtACgiGNW4kydEZ7p89MDlxGKT24WIe2X+5jZy/4UASQtApT0?=
- =?us-ascii?Q?YqEkvSNspHQ1xFIt/OKfjRXfZnga0sGVSEMmgm+36zVzrz6fYZ97Rg+a7uJK?=
- =?us-ascii?Q?BSsAzetZwmM1a5Zx5pIIxI4tUwuN4t4NVMTC4TQ+osT+y399htSktq/XiJ3s?=
- =?us-ascii?Q?nrVBWOlAphte/j++twUnCnMw9OOLpHv8CDUxG92RS1MFyWhUBdBAYF0q0FkI?=
- =?us-ascii?Q?N94INFVXUiCIc4T2mIiDuic8jGbffOdkJ5Wi5TWwi2ygTU9AajfnNhiTJtOn?=
- =?us-ascii?Q?8BYEGUzVC/njjlvLKLJ5KuAve8cDGOhDbTa2OxuOrCHCgvCfeslW76LwMixh?=
- =?us-ascii?Q?BPYSD6lY6guzy3l6c1W/INsfEq+c8ehtDIl4uwTqWPkYBA=3D=3D?=
+	=?us-ascii?Q?tQAUkYddGfARpr4QjpbtrihRsx8PtMMOfsrjB8V9swTlKXY8j1aLJxCjSKBv?=
+ =?us-ascii?Q?Dcuytg9miElp6oyI++wlwTE5Xki8DgqZd+poXnmiN5r1RPLv/ABMfQcI+gva?=
+ =?us-ascii?Q?8Vi2cV6J62ier1cszm3mV/3bBRlU5zyHSUMGS6vC7OLXr52u7mwWyzRMwXHf?=
+ =?us-ascii?Q?GcOFmZUl9jQUw3/KFL8qu39LbBCbp21yzaRhs9Hwnu3FkJlu7rBHDENjlG+c?=
+ =?us-ascii?Q?58GM7FgpIw4f1SqLRaOdeqy3vEDrLYjxLlxWIzSZKeGCpf/ybEnBELVDDTbm?=
+ =?us-ascii?Q?yI5vjGRWjQx6b1eR1xp4aszUo2MDlCv6EhHOjeASMA5kq9l5sJDcJNFyYjoE?=
+ =?us-ascii?Q?xvMCtHKhbT8H6Iv0Oj7b4ZcEXprN/UXHWhxGCAbby0mshpA8dyGCpywcE+YY?=
+ =?us-ascii?Q?TMi7DonKBQVptPPd5pDHefu8Vf3TfvvQjTMdGxY/murFMGsf9h9o8a1iVxr0?=
+ =?us-ascii?Q?hYn4GRwXhgh/aEttKoAcrmn0EJwtOWtqxeOGKw20/u092TQm/T3mIgy+uet1?=
+ =?us-ascii?Q?EWsQA1UPsabgMQo0fXyCHnbsAo9CzvfzPyQ63dWoxCJjnWncvdKUD9gp2ffN?=
+ =?us-ascii?Q?Sna6RdfYfj2JWpWXjOZcZ5Mcmx4bv/iDz2EZ6Q1xuu3NWojTxmPNNGPj/oE0?=
+ =?us-ascii?Q?XJHHDaPyQc/IDfMRyNVw7Iol/y51sLcOKi3b3/aw6SU4Vc9IyXNhrZIdNkPu?=
+ =?us-ascii?Q?9I/qMfqBMD3RzZbsH3cKREYhv0xoArIs21doHZ/7zZk0RQocX0YA4ovTbd9b?=
+ =?us-ascii?Q?yI3groWvVf5DYs/dAwKqglfC05K5tG8cM6HFVJPS3suLGasahowEgNR6sEAi?=
+ =?us-ascii?Q?c260TKW1Ff1B28FTz+YV/AHTHrj0DWAy+vIMOK3vKr6SSlGa1EPY1RVNGqBS?=
+ =?us-ascii?Q?4AvJLGUx9A5gbO51swZg1qFoCjeSonaY++WbSTsxFk1OvBydLF7b8oGaDVjU?=
+ =?us-ascii?Q?jyNEJXtGrJtOVCaZzOUAg+VjXUN54mS/jrnfnqH5I2pai0neGmvwstIqia3Y?=
+ =?us-ascii?Q?dPkbxW2APeovJ1UNYdrFaVtT0w2HGeUIO+JVkMU7pZxtCkd01gVRjwCyLVOX?=
+ =?us-ascii?Q?CW4ZrNg35ioCLORcToHaF6GLL83IyR5yjPNaHZbs7oMbD6Ozk8rNyueAjb98?=
+ =?us-ascii?Q?kbmGEuHJNP/XzBSTRNweey4lQZGleUyqAIQzElldsJb4MVHDvBhLesemvtwH?=
+ =?us-ascii?Q?tiWlRwDEz0adJXU8hta20rO2aKmLJh13sgtVTdSYzYOcr2zOsXx/TzIA71hi?=
+ =?us-ascii?Q?ZzmHwWPNS4R8+QzWYCXFwm+gyWA4jP9fCcQFMnViJuP2eBEau/ykuFf0vHv9?=
+ =?us-ascii?Q?SrTAYhMiyjk/xPAnJalMBEfP3+bEmL5rKarYFDr33bkc9Q=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C407rR+NsBPYmUU0eqFY6Ypy9/a1PN0SIq2HtvVhStyQ9JiSDqwVP7lxnDtL?=
- =?us-ascii?Q?MatB47urI8VsAouOrgtDoHemMkeRIkOaUdFXdY/Tt8BlKcJc6Xe6dQ2SgYxB?=
- =?us-ascii?Q?lSEYMcfx4Pkh18lRgCFZpstvCFaFPv5wKPhyuMyMK8UiqjVupTp70ezfRBRh?=
- =?us-ascii?Q?kMXvucTYDtqkCgmPb+Ei28mbw47liqihGwxS3iy095K1xhuBvQ8ckY/qd8Ua?=
- =?us-ascii?Q?RdTqo1jwoprqFqIyzCMLoyU0D2P+z7jmre8PmpHHMgLs3uGYsFS7Icy5BHWT?=
- =?us-ascii?Q?rvVPCg1XTPof0gOoAA87iMpCPlzDSp94zpum3D1ynI7b/6orQW0wt5CeGr0z?=
- =?us-ascii?Q?vkeX9HmePxnJHLbQa77NXTauKFSIcb160FtPmd+j/nh/PDNd6WUNqmzueDir?=
- =?us-ascii?Q?0dSTyqbOL2CoHoFLi3yXkN22cy6aA0/ZrkSLp0Omc7bwpYueakAwCBipRLJc?=
- =?us-ascii?Q?xc0cLX4EQhoPGggjsiveWMj6pdupMUpL6B/sQaOTyWsuriDwO1jjyL9+xZTR?=
- =?us-ascii?Q?Mt8mVAM9p1hEAzgwP3rZIYDa57hCbALo8DZ11+q55OUhZgi8MQPx9maFHOTH?=
- =?us-ascii?Q?juwmLWVLrIwF+4n1V4GVfaxnAq0CSv5T57nUoHQuiy5m2x1fqDmmccME6lVG?=
- =?us-ascii?Q?ksUxaraihif/ihXyhJjhOF3waJuZrRY+YcyzDfBZzyYRc9OnMg+HiHRCnTfp?=
- =?us-ascii?Q?L+dLah+xS4QDsSkm3DGQZboTiGLIhIP/QtGMBQ2BfVaFsQnUlokfeOvaQXjx?=
- =?us-ascii?Q?SMDtdoLYsoCP8aRe6ERC9gJkiGJtlxk/sMfkDvbtzH/d5zeQpXMoZVUzB/Iu?=
- =?us-ascii?Q?EQwwZ1G8GC7UQTzEop6lyr26T6v2IN82EXZVrQTIZgIKvNtbtFOi7YWTsAZy?=
- =?us-ascii?Q?AXXOisIu/lS2G3evXk0FZbKqOeJJXhtmoeQF3Gk3a7CuCP0Z9x7gGINRO4qR?=
- =?us-ascii?Q?uoBTkaiJJC0JoQ8ubgfavzJq3p3GxZ77zYgGOIyFaEzDa5MGSNJeIvwdXLGx?=
- =?us-ascii?Q?kDsCkxN+rrfAwIvdVLgF/hxjyEFEqaEk8qbjbtQmn6FGCoHCR6VlB6fz9JY+?=
- =?us-ascii?Q?MhxIZec1yJkSsINvBTfGVdVYWxBviQ1aYu3tMlG7OKMLhzifodTh6qJOy4jR?=
- =?us-ascii?Q?YregjXRPYlyskkMBNPSEXbKsNhvxxU1xUl3OyVc3GImBun9/AksrH0+5IAU5?=
- =?us-ascii?Q?7fs4wL1byVg+ks5bOliFNKmPAahSbcU/wEf7CbaBQCE61mlBgLfsylNJ2Fvr?=
- =?us-ascii?Q?RFYg5UkYi/6Ak3ewjZ2tu23dvNSw+OxLATU8Zn0kdx9PMi4UIHqaDQWU6z1Y?=
- =?us-ascii?Q?HOmvzsLNXzTBg/8NqlsPFStA3YGEI93YJAnCft+hKB8ngOdvkw15OjKsI0oF?=
- =?us-ascii?Q?dzSVrMiexCynLNRFpoTJl3wIU6TcE1E2terXuMWw0nE8txi37M3Dh5SlKYH8?=
- =?us-ascii?Q?Ze0C5KuOvUjLV4P0GeuRx7REgsO8OotxOexuA2wwpYaQRoRZpXM+MAdxyj4f?=
- =?us-ascii?Q?f4SODN6uMgG5NSJLWho5wCyHjbXwS3WvK2ceq6diwF4wZBFKF6XxjLYMAKyY?=
- =?us-ascii?Q?sRZvb3fQE1ZZTItPJ+A=3D?=
+	=?us-ascii?Q?YP0VqlgmrdqexKqqochTPBX4sbg+6zfAs7laZgo2wshWWLMnNu7F/ZynAvwA?=
+ =?us-ascii?Q?5PfqW8HkhVDsLIeAjd9ZDtkd7yXj1sTEIPhAnqDT7aNM1+1BYglaQeGwUzO2?=
+ =?us-ascii?Q?k0Xo3ykNC5GrtvvYHvYkjG0TPP2GaRzz8Ogt/xTGRLVAirXfcR2JoemrvKlI?=
+ =?us-ascii?Q?NOpEgmjXBepcYW6rwOZ50deHeJhNwl2pMP3J/kvumBW6OHn/1l0ZhNnByLp2?=
+ =?us-ascii?Q?XrLlLxR9+9xX73HDKwpfoza/1VjJ1b6FC5lj7cQ/My2Vv5CV54U67/XANTQE?=
+ =?us-ascii?Q?47NtkI2O1hrU3R+c895Tmrq5qc1b+FwZiUxN6xOcaHkAHnL/enrCU1ePiwhD?=
+ =?us-ascii?Q?tlSxuUUGjL6X6jUlGvheE5SS4uZ+R5j8OZbiNMIw6Wcwu6uyZr7VDcVQ3Q72?=
+ =?us-ascii?Q?fi+LksKGwy2p13LMhjkgEEnIZ6OJRxrIHi9J8PZMububBAhgZLFLhbK5YTg4?=
+ =?us-ascii?Q?nfTSPUcxU5VH64izKf3jyb6hjDmb2KK4qHy2p/DGB/StS2T0nOsGgKxOSTQg?=
+ =?us-ascii?Q?UnMVBQHxhaglxiCU/MUYthUpGIYjBvk9qwMOpoen33g74mlwvDTbPBabLoWs?=
+ =?us-ascii?Q?sKEgGZZVf4yM4YeadfffVHxsPnwDT2wEZjL0z9UAvj+1MA4AFVvnLwDteezf?=
+ =?us-ascii?Q?z4b3WcR11M4JFWTw0RoefLa6404MctYXzQq6rtd4CxGmeu62QhWvdSa0itL1?=
+ =?us-ascii?Q?fXCoZwgSUNIwDRUjRhlmUJ9ITeBNZe9kM0EZ0swuwUgUS9cJxHhPvSanLtqL?=
+ =?us-ascii?Q?esoC2K6aIHEh/Uw3U48Slx69zM5r0V2z7jysS5WV/ClrNyIp8E521RXv26Ie?=
+ =?us-ascii?Q?2dDk8K0AVLdF15gn8nLxAOKqrKGH3VouZIH1t56iLFXT/GZ4JZNrYK6eeXVX?=
+ =?us-ascii?Q?DRTSSdvwJXClGWxpWyBW9L8DDgvyi4jEHXJdaYon17vLKnwrkEjR73sIxaYd?=
+ =?us-ascii?Q?P7Mz3cluH3HqOznOFwTzpXq8u5KYHgDZAbWlbhRruHyFZ2mxODYRc47Qqifk?=
+ =?us-ascii?Q?eKJXrGuhw+2a8t1Xxt0R9BVkMPVa3lsjX8R5zqIYcRvSpnO8Ipc/82OzIo08?=
+ =?us-ascii?Q?00FgNJv2w+yH0kWI/4cQoJk9teyyDbdq0ijOhflt+9agI+YwPUJ7OeW0E+U0?=
+ =?us-ascii?Q?gGNt9dwpgQDQ2ni1fQndPwZkxsLjkIhQAASu/TENyD9Gsh6LaoMzMM6NI2lD?=
+ =?us-ascii?Q?zlYQRUhnWFqNIo3jQc61mY95LBoP4qLhhnK1tPb6vZ3sOw0HS5papokrOGIT?=
+ =?us-ascii?Q?eYvjMj+NU7PLPsnNRmeMJmYz+914nEQm8Wc9jwP4G9IJu1ufD1UCQ8p9TcMA?=
+ =?us-ascii?Q?Yd53ExK7Y6lN7qbJHWX8WqV0QTM+43MK7EkhEzDUr6xsUvmhC4+xUHOwssYO?=
+ =?us-ascii?Q?FIdLAEuMSgyzC4ZJXiesRRy76XkDD1q+4i4ZPdMDlYnFMP4O41lhp8ooxhYo?=
+ =?us-ascii?Q?mhnrSRbrhO+Se3lUy2NxduwIJYKrma1DMmYQ84YsQH2Dzs7qvNTkdtwow0hY?=
+ =?us-ascii?Q?T3YgVHGj9Or4d2TOnQCxnd1BMF+k/n/EaKsItGA9U4kaK6e/XYvGiRqHuqv/?=
+ =?us-ascii?Q?9cHwXFRFmFsWLnfxfNXDIcjq0uF6afSX3FY1nLpe?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0d9d2a8-042d-4d7a-244b-08dd1855b4ec
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5502107b-f86e-46ae-55f8-08dd1855f5cf
 X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2024 13:30:54.5051
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2024 13:32:43.3279
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XEeDCFJJ01Gn2PNNN8AhXX/Eb7IPP+2fzeGKsteo9Rk1Q9qADT52rK50fVv1Qe2R
+X-MS-Exchange-CrossTenant-UserPrincipalName: pCgArBHRbstMUxbHNBjQv2vsZD5Qz886TiNCfW5nDHV719/LHoClDL52g1QYitDl
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7419
 
-On Thu, Dec 05, 2024 at 05:21:13PM -0800, Dan Williams wrote:
-> Dave Jiang wrote:
-> > Add a cxl fwctl driver to allow sending of CXL feature
-> > commands from userspace through as ioctls. Create a driver skeleton for
-> > initial setup.
+On Fri, Dec 06, 2024 at 11:39:03AM -0700, Dave Jiang wrote:
 > 
-> I don't understand why fwctl support of the *existing* mailbox needs
-> yet another sub-device and driver?
-
-It is how to modprobe the fwctl driver independently from the main cxl
-codebase.
-
-You want the fwctl parts to be in their own loadable module even if
-cxl core is built in, and the loadable module should auto load when
-cxl is present in the system.
-
-Spawning a new struct device is the best way to do this.
-
-> In the mlx5 case, as I understand it, multiple families of device can
-> register the common mlx5_fwctl auxiliary device to share a common driver
-> for that piece. For CXL that shared object is the 'struct cxl_mailbox'.
-
-There is only one mlx5_core driver. The use of auxiliary bus in mlx5
-is purely to split the driver up into many modules in many
-subsystems. Each subsystem probes its own driver that autoloads if the
-underlying HW supports that subsystem.
-
-Basically, it creates modularity within the kernel for complex
-multi-subsystem devices.
-
-> Now, I am not opposed to drivers/fwctl/cxl.c as a library that the CXL
-> core can use to implement CXL fwctl support, if it helps to keep all
-> fwctl users co-located, but I don't see a need to make it a new CXL
-> sub-device.
-
-I was expecting that subsystem drivers would reside in the subsystem
-directory, so it shouldn't be a library, it should be the fwctl
-particular parts here.
-
-> @@ -5772,6 +5772,7 @@ L:        linux-cxl@vger.kernel.org
->  S:     Maintained
->  F:     Documentation/driver-api/cxl
->  F:     drivers/cxl/
-> +F:     drivers/fwctl/cxl*
->  F:     include/cxl/
->  F:     include/uapi/linux/cxl_mem.h
 > 
-> ...and call it a day.
+> On 12/5/24 10:32 PM, Dan Williams wrote:
+> > Dave Jiang wrote:
+> >> Add an optional ioctl FWCTL_HW_INFO to pass command specific information
+> >> to user space. An array of 'struct fwctl_command_info' will be returned
+> >> from the ioctl. These commands are send to the driver via FWCTL_RPC call.
+> >> The command info struct contains the command id, the related hardware
+> >> opcode, input and output size for the command, and the effects the command
+> >> has if it's a write command.
+> > 
+> > Maybe this made more immediate sense to Jason, but I do not see why CXL
+> > needs a FWCTL_CMD_HWINFO when FWCTL_CMD_RPC can just convey the GET
+> > SUPPORTED FEATURES payload?
+> 
+> That is because I wrote the code with intention of supporting the
+> existing chardev commands in addition to features. If we are only
+> supporting feature commands fwctl, then we can drop this and make
+> things simpler.
 
-Makes sense
+If that is what this series is doing then lets drop it, if you need it
+later it is easy to add
 
 Jason
