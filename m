@@ -1,207 +1,278 @@
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2043.outbound.protection.outlook.com [40.107.96.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECA221519E;
-	Mon,  9 Dec 2024 08:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1A14A4DD;
+	Mon,  9 Dec 2024 09:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733733184; cv=pass; b=F6guPtc4QJ4gvpa2/7H0J8RTDV5+bm/5eaWB+6YaBHHA4+LBpn0nPNcYV9J9rr1wLTd3e6lyckKWkLcHJZwqmy1T0Gf20oWHYFguFEroCSd2QKSdcboF1OKM11srGehpTRyOoYdLOY4Tt9QSYrvY4nr9/M61jXdz/MSDqeiTim4=
+	t=1733735267; cv=fail; b=XY5fkK6Xl7eCT91ij42hzxM0mAM3JYeyOdX4vEz2Kr4+YvPfqpTt4ehC+KO137HWN9sMH+/5P4sQiHr+gJ1QczCtoJIpVcJYgDwZ4KYA7tLIaJ5/1muEexeYOA4mw6tEfYSKGwJ+Pp/yO11WAr2+DArJ2HH6OW1HlyHi8dIHBFc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733733184; c=relaxed/simple;
-	bh=BWiJKufzv/F7esxI+0lHufeZPNgmfwU233MI1GEovmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JGxfwhA69wdl1r7/7G4Pcps+Pm1BNiTjvoBFf6aBUT9KlRfs52N6Nye/TzUhuPDoz0nzCjRu0yofXrMuvNZS0fZzN7kEBbVPzWiLWbH7Hqya2f3YcmLX0+5uVdaGsruXXDBgOS9oHtzrSIZLBNhzj1kOUcxf/ZkG9NSCa/TYbog=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=c1vsOrD+; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1733735267; c=relaxed/simple;
+	bh=fROXCXD40ZCpxDUT2h/BGRdhJk5PpaSaLa2tlkmSfEE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Hyg3SS2llZkwrKmcwoBgdPj/yD1FQ0MdKiRO+aORrhKMigrjLr8wMVhpaqNAwdqxiXVKeG2yL1LOyI6+T/jtoOKPPhdvxE1qoYlNXa6s/HdAM8z1RsR8A28nCrcqu7gCBjOfWqsGoxur5NNMAav/0qoXe0clnWO8W8l/T4O4kuE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zve197ZG; arc=fail smtp.client-ip=40.107.96.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="c1vsOrD+"
-ARC-Seal: i=1; a=rsa-sha256; t=1733733164; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=H/fhrr/k8GWNRA4j4ja9ejP7VoLCIo826F8CbVEZXTC/RslpL7S8neD4RTHceQ6WRePjSq/NFXCqr3ReEGPeBj0hWyxfPDzeFWYsLCHrMuNM+HP+07s0PbK29V/vduqNURKLIWX/U9uUIgDgtPbY8LOKrY8b/YS7YDW7pgwHV58=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1733733164; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=exzAwh9vuJJZYKGFl8F6lLjMefg+m9szNye3qUBtaAc=; 
-	b=VJz7ap91Jv1tZGHhGkL/V9odlBBShxRp1FlYThX/DkzkYH8Qcn9UiViLKlII8TBwRPMOmIb8o6MmNjjsWkRbxkQItWEb5APz2XnS5Hah6mCRL7VKV5V4hYgQxRvD5LVKmRaQIWObJ4OSUGlq5y11/Yghy/HMZ04W7cnCCOQbTVg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733733164;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=exzAwh9vuJJZYKGFl8F6lLjMefg+m9szNye3qUBtaAc=;
-	b=c1vsOrD+vgyNQ5MknKxN7uWc/fH6Blq/EGI1v7vUKqPladXPpZOhFHm1J+hvg4F3
-	Xtc2e4It4yRhp+mOR6WxZ23up3ywe0a5GWPCtBGAceHBxtMmNMyhZO0RI2STnRtUKr5
-	nTiD9BLsA2rwrtAxfVJHLLx/ImGW8YgSLGHycdmA=
-Received: by mx.zohomail.com with SMTPS id 1733733160909206.39109231527607;
-	Mon, 9 Dec 2024 00:32:40 -0800 (PST)
-Message-ID: <abdb787d-81a7-47a7-8ee4-da250aa5355d@zohomail.com>
-Date: Mon, 9 Dec 2024 16:32:37 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zve197ZG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MNA+4Z1h+YEE7SU/uaXbLIAh3qk22cp+98Di4j8Enffg7jgjYKttIIaVxs8yv139HKfCOyLscDt59FjhBQ2Cq6pY3XDSvZz/M1sCdjwqBLmssb1mWCp6dpCM8QKEm3OFQb4Xcp10MMP0udWpGq+2+W2DKGO05dHFEgxzdIqpt4T3V+UMWPBGGKT9KZKoE0tAYvaPWK8z8+YB8O982bL95BlntUtkv+2QTo6EefpzWRWH553byeK+rIbRiTWl7N3PxiovI34VAEQXr9ChLZP6Ms+HD6M9vXqONuhpN3CLk/+OIfAM1HN2LIi3W1jtgjyivyH+2m+W2cwPpJasDR2g/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rBotfjL3B+kCpcZSCHxeQDcc5Jas9+GqlCHspGnXFyQ=;
+ b=ZfOK2QB6LN+PkQnp1qEScfs7wtiLCz9ue5x7O3g4ajaTMdvcptfanNb+H6vLX0yKJu5AVcCUdz/S7B1gukIbOOS8RuHlQE5XMsVtb40VVwp6tvajaKgXS1Wdlw0yQgKMDEher4Q3+Syr1gsS/sled+nupy37l7PHLUjS+M92nImm24NRCft0NsLBv/SjO1QWa2wvcpCo9Eu6Hstif4nyg65KBLudj54xHytZL9bab3A0AKaGY/5sgJsomuax3a9/usVp2C3cngGynBbg31EK1jpxb9Y7nroMEhrfAt7/cdME7SfU9LM/Gar5xrd7dST0fblh+krF4WT2n1/VgTz3nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rBotfjL3B+kCpcZSCHxeQDcc5Jas9+GqlCHspGnXFyQ=;
+ b=zve197ZGvhOx8/gq1sJRf9nN1uKTbBz0bj6se//JHdDQXwb0Zj+5I+5RiA9scCcCZReO4y3vwN2WYQmKKHJXjOeGwulC9NrLXcR54bM+jNSbPT8E1CLH4cyVeqLOhfH6QHBNH47Z6y+wMEsuOz5yQPS5TAlIB/W4oeuCgXBdil4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by CH3PR12MB8235.namprd12.prod.outlook.com (2603:10b6:610:120::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Mon, 9 Dec
+ 2024 09:07:43 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.8230.016; Mon, 9 Dec 2024
+ 09:07:43 +0000
+Message-ID: <a7782f8b-30a1-97cf-8bf3-707d5b4f0984@amd.com>
+Date: Mon, 9 Dec 2024 09:07:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v6 08/28] cxl: add functions for resource request/release
+ by a driver
+Content-Language: en-US
+To: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, martin.habets@xilinx.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com
+References: <20241202171222.62595-1-alejandro.lucero-palau@amd.com>
+ <20241202171222.62595-9-alejandro.lucero-palau@amd.com>
+ <CAH-L+nNxO2NHG07JOqUnmWLNhVYRKJOHsAN7uiEnAibBTmaATQ@mail.gmail.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <CAH-L+nNxO2NHG07JOqUnmWLNhVYRKJOHsAN7uiEnAibBTmaATQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PR3P189CA0046.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:102:53::21) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] acpi/hmat / cxl: Add extended linear cache support
- for CXL
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
- tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com
-References: <20241204224827.2097263-1-dave.jiang@intel.com>
- <20241204224827.2097263-3-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20241204224827.2097263-3-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227a39993a97540f2f7e4ef51c500005204a570abc3fd60156e35d552ac1a2388ce84b2080ad5ecbf:zu08011227162f4444b4f8d1a06fa95fc40000b63ce1a267dc4665fcc2eb3eb1de176d292df0fcc9e8de197f:rf0801122be3d9be6dc1a89891f866334000000d425160fff8b5bb21c9653fe282a635afd757d8628f32eb1d654a72f0:ZohoMail
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CH3PR12MB8235:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4103c001-7480-43f0-b0fe-08dd1830f079
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Yzh5VDVySTh3OEpvdnFpazFzeU1aTWpsSW4xUUpzVHNTanY3MmFURFZaeUlY?=
+ =?utf-8?B?ODExdktuUzJlbUw0RFg4dDgwRzZvK20rRC9aTHg4cW9NS0xyUTRjeVJxK3k5?=
+ =?utf-8?B?M0t5b0tocXBjdFUzQmhhczJERGlWNDRLTmNDT3psODV3THltaWxPcTlMRnI4?=
+ =?utf-8?B?V1FLSEEyVm5oWGhBN05NSXNZUzRRZExLY3pzYTk2WXd6QStxWFEzN2lvMTds?=
+ =?utf-8?B?OXF0V21CbWNQK1hKT1JvVUhIajd6bTJ0U2xKZlZnc1p1TlIwQVFIcnZmSk1T?=
+ =?utf-8?B?d0JjRjZpNXFPdzM4cWhFYnB6NmlzUlJJT0RQUFpVbEtrK3hTSFVKV1VVdnBW?=
+ =?utf-8?B?SWxsb2pjY1BIYW9pRndocUtiSDdIYytaRXJjR3lqbkJPTGxQZlFJRUVTWVoy?=
+ =?utf-8?B?WDIveUgvOG5BUGJOWHhnNXJ6dC9oZkprb3lvRVJtVTlJbFFXYkNRcmNzRktX?=
+ =?utf-8?B?UzVkRkZpcHlpa2xBS2xsSU5pVktzZEJXWUpPYjlDWEJFVi9Ma2gycFdabk1R?=
+ =?utf-8?B?MkVXNDhodXNuVnpVMXNUa2dvVGNWOWRCdVFGazA2Slc4RmZtdjVUWFZFSStQ?=
+ =?utf-8?B?Z1NZTWc0eXAxMTZ1UWxKbFFIN1Nlb2M4TGhiakZNcnNKekQrUjBmNjZjMU4x?=
+ =?utf-8?B?UXdsWEpvK01UZmhTZ3V6eWlTdC84UzRsOEJxS0VHRnpqbUhxVEEzZjB3aHo2?=
+ =?utf-8?B?WmI2T0dNY1d3Z2RCUFdFMXNDUVpGbUpRSCtrUmYxMGpJSlBWdks0STFmeHlG?=
+ =?utf-8?B?RDdHZ0pxWFhjT2RZVkhSbTZsbkx4UDM0R0JESTBWY3gxOVFlSm1INEpjSE83?=
+ =?utf-8?B?dTZES3VqUUZMc0FsMXFyTjZSZTY3UjNEUkxwb2ZVY2FuZFhJSHB3dkJLUlVT?=
+ =?utf-8?B?TFNLSVdwdVBYNGc0VzZFVUNBblVPeWsxdFN4K0VlYTd0ems1WWhWOTZrKzVp?=
+ =?utf-8?B?aWtvZ0NpQXlEdmpzK2wyTXAzZnpFOUU4UWhwVDBJd0F2NVVkNjBVRC9sK3FI?=
+ =?utf-8?B?U3ZwVHNTdUU4cTBpcTR1ZXZyVUNBSHgvelArTFBad2pvL1psejNZRzRPK1By?=
+ =?utf-8?B?K0hGQklxZDdGMVJyUzVrbFNpR2JyS1ZLYXdpMnhpVmQvMno5KzR2bEZiMll4?=
+ =?utf-8?B?Smw2YTVZTmlSWHE2Z1VCcTBkUi94enNWY2NUR280Tm9ibWxlaGo3V2lKdGVV?=
+ =?utf-8?B?dEpReHdyS2JTcEpmei85MHE5MzQzbFZieUpLa1BtOXpYWlAxQW8xOVNUWEpD?=
+ =?utf-8?B?MmZqV0RDbjU0UzhJbHp6ekJuSmVWblVPc0dNeDdpNTExNXMxaTkzMFdTam5B?=
+ =?utf-8?B?YmhwMCt5dW5kMWJSb1Z3U3lpSkRiZnA1YVVNSnB5Y0VRMFl1S3YwVkJIV09Y?=
+ =?utf-8?B?bHl0YzRpb3kva0E1V2d6ZktkOUozOFQ0YWZPTERDQ1YyQ3BmelUzTzEvSDF3?=
+ =?utf-8?B?RUtNN0VQRTR2MnJJVHZEcGhJVVU0Nm55Q24wVmpMS3hJWFYrTEdyNjg3eGFJ?=
+ =?utf-8?B?UzAvQ09XTDdJcEVobkoxaldVeUw5azhCemhwM05zQVhNM2ordnI0WjZ1K1FB?=
+ =?utf-8?B?RXJnYW9POW92eERnbkwzaldwcS9sYkppV2cxaWtKSjdaSC9BaGV4K3Z6Y05M?=
+ =?utf-8?B?KzhMc3R4bzRxYTh4ejhEUnNsWlU5Vmk2R01aL3k0QVlKR2hJcjRqVFAwUzda?=
+ =?utf-8?B?dURlTWR0b2gwUEtOeWM2U1JIL2RCZDdUemIxeDZ4T29vR3luZndiZytxUHJ3?=
+ =?utf-8?B?Q0RGR3ZzS2ZnTG83MlhHSGpZb2lYcFpRL1FpT3gxUm85OHRydm9Jbk9QemY5?=
+ =?utf-8?B?eEF3SUZ4ak9xNkNVVmlRUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTROWjRDbWl6clk3eGE4YU54YWpQOTR0ZVNMamxpV0Z4ZUllVXgzTWp2KzRp?=
+ =?utf-8?B?ZDVNRmJGMytNR0dDZ3NoOHZvNHR5L3Rsc2JjeUk4N3E5WU5kS3pQRjhxNXVD?=
+ =?utf-8?B?MU1iQWVSY2FpWkJWZDZLdy94VXRWUGRUN3J2TGloSTRGV3IyUzBtTklNTitl?=
+ =?utf-8?B?bmdGOHhPa2E1SHVqL0dCczlkbGYxR1M3S0VYdE9iWWgvc1o2MDlMK2tGSWpi?=
+ =?utf-8?B?ODhDc2R4ekNGZWU1dUplNXpETHpJa0Mwd3pJcyswYlpJM094MGs3Mk9TMWFu?=
+ =?utf-8?B?dmNYUVdWbUI4TFdCK1VlaURiWFVlM3lMWGRUT1hBczkvK3BuQW5ITDYrVU9G?=
+ =?utf-8?B?V054anBXaUJQbUNLaDRmTy9Lb0JDckc1T0I1RlY0UU9LZjkzUWdzZGZJdXpn?=
+ =?utf-8?B?NmJEeEZwQU1oWUIrUlZxZ0Q2ZWxoOWt6MzZHNFVDZzBiUTREcHZmKzdma1VZ?=
+ =?utf-8?B?UWk4VmN2NXl4V2NZcTdVVzJBd3JzUzhoTzlsS2dhZ29pV3N1ZWJjbGoxcXFS?=
+ =?utf-8?B?WnE1aFdSdzRGVUFIOHYzQ2ZiTHVsQXkwbzZGN0FmQWI5bUtzS2tPU1VoaWcz?=
+ =?utf-8?B?cHhqWUNFSjRqY0FObTNJUEhYZ2l1eDZpVkZrSm1ZWHFMQ2FLUU9VSFgwbFda?=
+ =?utf-8?B?QitaZ1RLYzZaM1puZG5ENHlvektXVlF6YlJoaFVUNlh6bkFPVnEvclBBQ0xT?=
+ =?utf-8?B?WndZZzlqaEFZYldoMFh3eGpOWFBpdGFYblhTdVkrdWR3VjdFRUJNVU1Xam92?=
+ =?utf-8?B?QStWRGVzV2VXK09Odmw3U1psSzBZSk5LV1AwanhGSklpU0NNQW90aUpyRG1u?=
+ =?utf-8?B?dFFCdGkvL0x3cXNXVVpwbkQzT3lYTmRTcXpPZTVvRkxBYVM2cjdEaEVtMlBU?=
+ =?utf-8?B?ZFJzWG9vakwyOWlNTVhWSzE3cmQyTlk1QVAxV296V3FHY3pGRGIybmllOVFa?=
+ =?utf-8?B?SDExVUpoNXptcnN1ajVDVHU2QlJSVkd5bWlyREl1bEFaOUMrQk9WNGxLdTBz?=
+ =?utf-8?B?M09ja2lVdXhSZHNvaVUzZCs0Z0VxQWt5S01YejRWQ1VPWVJtZHlGNjVGa29I?=
+ =?utf-8?B?RSttbXM0aXNseHhCM0EzNFRCMC93NkRLTzJoYzRJazcrdi9PU0EzZUlvbWpl?=
+ =?utf-8?B?R0Y2eGJHL1dBL0ozSUhYbm1qdlNPQXpFWTFZQkhyV1JrVXRzY25INXorS2V4?=
+ =?utf-8?B?cGhOZEV0WmRGbm1pbFp1dTVCbksyYXpPVEJRM3F4d2wyNW5SaGxjK21kWWZR?=
+ =?utf-8?B?blZGSHkyZXQrakhYc3dTMFZSLzNTeW1ySVFsN0RwaWh1dUl4SlVaRUJyanVq?=
+ =?utf-8?B?T2dvZCsza0VPdGVtSUpVdWo2Q2xpSS9uRVFjbjF1cVZUcTdMQTIzRmNTQVN3?=
+ =?utf-8?B?OS9ZV0xHMW5lV2M3cVJBcTRkczJhSXc1akR2VndlQ1FFOGsrQ1FiZ2JGMjlm?=
+ =?utf-8?B?dnZEMGQ4aHpUYmlVOGh4WDFmKy8vMkpva3M2aWx1bTlBRzM2RXNWblp2eWRB?=
+ =?utf-8?B?RjJrYUFWRVZ5REFJVkN2WDBidEthNHk1NkIycEtNc0VTNWpMMytPOUdCWmlr?=
+ =?utf-8?B?SVVtZlZFdmd3L0dsU3ZBbm9yS1UvUEx4REN4SGNVWFhLdzdLVW80RkZJTE1L?=
+ =?utf-8?B?ZWtlaWRVbnZtNy9VcGVoRkpvZE8vbHI2K0RLeFpSSC9uOEJjcGR0L2NYMmE2?=
+ =?utf-8?B?NVQyTjhHSnNmOUowWWV6YmZCS0k2T0EycnR2cDJFUmVsSk5Ta2FBR0MxUWdq?=
+ =?utf-8?B?cEQ4NGhXYW0rdjJsYldDOHBaSWN2a29zM255NUt1NHlMUnNEd2Vhc2cyMGd0?=
+ =?utf-8?B?MDQ2cW9DdkxSei9MWG1GcXNTblg0UkUra0QzZ1c2R1hOVjhEcDFnZDNrZkF0?=
+ =?utf-8?B?ejlyNkFxWFNRV1ZGeVVvM3JFTWE0VTFTYkt4VUdJSWZhMmZBUzlERHUxWU9p?=
+ =?utf-8?B?RVFFaHhISWZTZzBHZEZET01BdU5iWGROdnU0YjJSdkwveGpaUXM5WmFTNUU0?=
+ =?utf-8?B?NTNYTXdwSlo5WXp0bGEwL2FLQXlabGYvMkdjZ2s2V1A4cGhCY0NweS96Q2Qr?=
+ =?utf-8?B?ZFMwbEJKcG10T1FlRVo0V04zcVQwMVdIbnZXUFRtTXI0VTZsaVd2eWIyVFZV?=
+ =?utf-8?Q?rzpZlESGu8veeQor326HCcHva?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4103c001-7480-43f0-b0fe-08dd1830f079
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2024 09:07:43.1159
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K2cZ56iFYJtW0UNbbxDzGqXkkd1oA87+fVf2Qlnhi882HYnjs55x4R/np5mKRObONzs+GSNCmO712t1u4AkqIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8235
 
-On 12/5/2024 6:46 AM, Dave Jiang wrote:
-> The current cxl region size only indicates the size of the CXL memory
-> region without accounting for the extended linear cache size. Retrieve the
-> cache size from HMAT and append that to the cxl region size for the cxl
-> region range that matches the SRAT range that has extended linear cache
-> enabled.
+
+On 12/6/24 04:00, Kalesh Anakkur Purayil wrote:
+> On Tue, Dec 3, 2024 at 12:11 AM <alejandro.lucero-palau@amd.com> wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Create accessors for an accel driver requesting and releasing a resource.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>> ---
+>>   drivers/cxl/core/memdev.c | 51 +++++++++++++++++++++++++++++++++++++++
+>>   include/cxl/cxl.h         |  2 ++
+>>   2 files changed, 53 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>> index 8257993562b6..1d43fa60525b 100644
+>> --- a/drivers/cxl/core/memdev.c
+>> +++ b/drivers/cxl/core/memdev.c
+>> @@ -744,6 +744,57 @@ int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_set_resource, CXL);
+>>
+>> +int cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource type)
+>> +{
+>> +       int rc;
+>> +
+>> +       switch (type) {
+>> +       case CXL_RES_RAM:
+>> +               if (!resource_size(&cxlds->ram_res)) {
+>> +                       dev_err(cxlds->dev,
+>> +                               "resource request for ram with size 0\n");
+> This can fit in one line?
+
+
+I do not think so. I goes beyond 80 chars.
+
+
+>> +                       return -EINVAL;
+>> +               }
+>> +
+>> +               rc = request_resource(&cxlds->dpa_res, &cxlds->ram_res);
+>> +               break;
+>> +       case CXL_RES_PMEM:
+>> +               if (!resource_size(&cxlds->pmem_res)) {
+>> +                       dev_err(cxlds->dev,
+>> +                               "resource request for pmem with size 0\n");
+> This can fit in one line?o
+
+
+Same here.
+
+
+>> +                       return -EINVAL;
+>> +               }
+>> +               rc = request_resource(&cxlds->dpa_res, &cxlds->pmem_res);
+> As an optimization, you can return directly from here and thereby
+> avoid the need of local variable "rc". In the default case, you are
+> returning directly anyway.
+
+
+Right. Cleaner code.
+
+I'll do so.
+
+Thanks!
+
+
+>> +               break;
+>> +       default:
+>> +               dev_err(cxlds->dev, "unsupported resource type (%u)\n", type);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       return rc;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_request_resource, CXL);
+>> +
+>> +int cxl_release_resource(struct cxl_dev_state *cxlds, enum cxl_resource type)
+>> +{
+>> +       int rc;
+>> +
+>> +       switch (type) {
+>> +       case CXL_RES_RAM:
+>> +               rc = release_resource(&cxlds->ram_res);
+>> +               break;
+>> +       case CXL_RES_PMEM:
+>> +               rc = release_resource(&cxlds->pmem_res);
+>> +               break;
+>> +       default:
+>> +               dev_err(cxlds->dev, "unknown resource type (%u)\n", type);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       return rc;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_release_resource, CXL);
+>> +
+>>   static int cxl_memdev_release_file(struct inode *inode, struct file *file)
+>>   {
+>>          struct cxl_memdev *cxlmd =
+>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>> index 18fb01adcf19..44664c9928a4 100644
+>> --- a/include/cxl/cxl.h
+>> +++ b/include/cxl/cxl.h
+>> @@ -42,4 +42,6 @@ bool cxl_pci_check_caps(struct cxl_dev_state *cxlds,
+>>                          unsigned long *expected_caps,
+>>                          unsigned long *current_caps);
+>>   int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds);
+>> +int cxl_request_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
+>> +int cxl_release_resource(struct cxl_dev_state *cxlds, enum cxl_resource type);
+>>   #endif
+>> --
+>> 2.17.1
+>>
+>>
 >
-> The SRAT defines the whole memory range that includes the extended linear
-> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
-> Cache Information Structure defines the size of the extended linear cache
-> size and matches to the SRAT Memory Affinity Structure by the memory
-> proxmity domain. Add a helper to match the cxl range to the SRAT memory
-> range in order to retrieve the cache size.
->
-> There are several places that checks the cxl region range against the
-> decoder range. Use new helper to check between the two ranges and address
-> the new cache size.
->
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> RFC:
-> - Minor refactors (Jonathan)
-> - Fix grammar (Jonathan)
-> ---
->  drivers/acpi/numa/hmat.c  | 39 ++++++++++++++++++++++
->  drivers/cxl/core/Makefile |  1 +
->  drivers/cxl/core/acpi.c   | 11 ++++++
->  drivers/cxl/core/core.h   |  3 ++
->  drivers/cxl/core/region.c | 70 ++++++++++++++++++++++++++++++++++++---
->  drivers/cxl/cxl.h         |  2 ++
->  include/linux/acpi.h      | 19 +++++++++++
->  tools/testing/cxl/Kbuild  |  1 +
->  8 files changed, 142 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/cxl/core/acpi.c
->
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 976b3e1a6c2a..1c5b3c37ac29 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -108,6 +108,45 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
->  	return NULL;
->  }
->  
-> +/**
-> + * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
-> + * @backing_res: resource from the backing media
-> + * @nid: node id for the memory region
-> + * @cache_size: (Output) size of extended linear cache.
-> + *
-> + * Return: 0 on success. Errno on failure.
-> + *
-> + */
-> +int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
-> +					resource_size_t *cache_size)
-> +{
-> +	unsigned int pxm = node_to_pxm(nid);
-> +	struct memory_target *target;
-> +	struct target_cache *tcache;
-> +	struct resource *res;
-> +
-> +	target = find_mem_target(pxm);
-> +	if (!target)
-> +		return -ENOENT;
-> +
-> +	list_for_each_entry(tcache, &target->caches, node) {
-> +		if (tcache->cache_attrs.address_mode ==
-> +				NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR)
-> +			continue;
-
-Should continue only when "tcache->cache_attrs.address_mode" is NOT "NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR"?
-
-[snip]
-
-> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
-> +					    struct resource *res)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	int nid = phys_to_target_node(res->start);
-> +	resource_size_t size, cache_size;
-> +	int rc;
-> +
-> +	size = resource_size(res);
-> +	if (!size)
-> +		return -EINVAL;
-> +
-> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!cache_size)
-> +		return 0;
-> +
-> +	if (size != cache_size) {
-> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	/*
-> +	 * Move the start of the range to where the cache range starts. The
-> +	 * implementation assumes that the cache range is in front of the
-> +	 * CXL range. This is not dictated by the HMAT spec but is how the
-> +	 * current known implementation is configured.
-> +	 */
-> +	res->start -= cache_size;
-> +	p->cache_size = cache_size;
-> +
-> +	return 0;
-> +}
-> +
->  /* Establish an empty region covering the given HPA range */
->  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  					   struct cxl_endpoint_decoder *cxled)
-> @@ -3256,6 +3306,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->  				    dev_name(&cxlr->dev));
-> +
-> +	rc = cxl_extended_linear_cache_resize(cxlr, res);
-> +	if (rc) {
-> +		/*
-> +		 * Failing to support extended linear cache region resize does not
-> +		 * prevent the region from functioning. Only cause cxl list showing
-> +		 * incorrect region size.
-> +		 */
-> +		dev_warn(cxlmd->dev.parent,
-> +			 "Failed to support extended linear cache.\n");
-> +	}
-> +
-
-cxl_extended_linear_cache_resize() will adjust res->start if there is an available cache_size.
-
-Is it possible that below insert_resource() failed because "res->start" is less than "cxlrd->res->start"?
-
-My understanding is that the address range of cxlrd->res comes from CFMWS, I don't find any description in patchset about the address range defined in CFMWS including extended linear cache size. So I guess that a CFMWS will not expose a address range with extended linear cache size?
-
-I'm studying this patchset, please correct me if I'm wrong. Thank you.
-
->  	rc = insert_resource(cxlrd->res, res);
->  	if (rc) {
->  		/*
-[snip]
-
-Ming
-
