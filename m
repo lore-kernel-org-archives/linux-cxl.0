@@ -1,43 +1,43 @@
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A4B320B
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Dec 2024 04:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECA221519E;
+	Mon,  9 Dec 2024 08:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733716941; cv=pass; b=A4o0SFL1hdDoyVQb+Gk/JHyo2ZMhxKA/+82wdxNDOixveEGKM7H+xAshyPK8FaINz5lZht96VMLh9PuQQuTUj3GeQGrRHBERdBH2U/UIXjNxqSDXG2+xAwRA1ELwvvohUdx1n6keVl1zGAFfRe0IFP+33XHtEeWgGw8nqOdBmR8=
+	t=1733733184; cv=pass; b=F6guPtc4QJ4gvpa2/7H0J8RTDV5+bm/5eaWB+6YaBHHA4+LBpn0nPNcYV9J9rr1wLTd3e6lyckKWkLcHJZwqmy1T0Gf20oWHYFguFEroCSd2QKSdcboF1OKM11srGehpTRyOoYdLOY4Tt9QSYrvY4nr9/M61jXdz/MSDqeiTim4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733716941; c=relaxed/simple;
-	bh=i0AVdv2HVY0cBJywfMoIC/bEPBBI4Kc8iWkiyFFwwTM=;
+	s=arc-20240116; t=1733733184; c=relaxed/simple;
+	bh=BWiJKufzv/F7esxI+0lHufeZPNgmfwU233MI1GEovmg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O+DRjffNDvKMkrHB6H3QAm37AAwioaWP5GBkD0Wi6BXpk0JoCwdM/WzjQvUbekylXBP/8mmXLF/nQ9XFFsMz5kf1d1P7FY49WuuwBzFbCflISoZ8nV9Mu01d4bkqNnjTKHVL7OvkO6e9QKwJGMPQGzHDnyt9OYgVQsPKVeiA9T0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Cyn2rzbu; arc=pass smtp.client-ip=136.143.188.95
+	 In-Reply-To:Content-Type; b=JGxfwhA69wdl1r7/7G4Pcps+Pm1BNiTjvoBFf6aBUT9KlRfs52N6Nye/TzUhuPDoz0nzCjRu0yofXrMuvNZS0fZzN7kEBbVPzWiLWbH7Hqya2f3YcmLX0+5uVdaGsruXXDBgOS9oHtzrSIZLBNhzj1kOUcxf/ZkG9NSCa/TYbog=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=c1vsOrD+; arc=pass smtp.client-ip=136.143.188.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Cyn2rzbu"
-ARC-Seal: i=1; a=rsa-sha256; t=1733716931; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="c1vsOrD+"
+ARC-Seal: i=1; a=rsa-sha256; t=1733733164; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=PCNvWq9nJMWvWfKBDgodZijmo8auebrYnmkZrZye3TzXWm7LvSoUyBefG8y2CnSa6uQA285OMoF1byVNpdYPvhCqW+o+7ZfeaOWrfSaXmwHSwoIooDgbw30+cvUSNnUkVAOSIFTp1FZPGjcz4XUVOLYNV4kIqfKuFqA9qSEMfNU=
+	b=H/fhrr/k8GWNRA4j4ja9ejP7VoLCIo826F8CbVEZXTC/RslpL7S8neD4RTHceQ6WRePjSq/NFXCqr3ReEGPeBj0hWyxfPDzeFWYsLCHrMuNM+HP+07s0PbK29V/vduqNURKLIWX/U9uUIgDgtPbY8LOKrY8b/YS7YDW7pgwHV58=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1733716931; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=RA9KVV9H/T3fwr9oDUhv9+qG5LPXwAHewKwoee34Wqk=; 
-	b=l9zQo/W2q/K61nVXlOVW2EsAEgQ4ldwiUs4bQe0Cn6CFgfIn0MW86jskZyH2Rq/W3imYGoqufzr12plveX3a5W1ID/pMjtpBGWIp2Q2WwUznat5YLHanGJnueVlmNW2pHfe5X6JjYGofOWcwC3KrnvG/6WX/VYgTlqWk+JkBBjk=
+	t=1733733164; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=exzAwh9vuJJZYKGFl8F6lLjMefg+m9szNye3qUBtaAc=; 
+	b=VJz7ap91Jv1tZGHhGkL/V9odlBBShxRp1FlYThX/DkzkYH8Qcn9UiViLKlII8TBwRPMOmIb8o6MmNjjsWkRbxkQItWEb5APz2XnS5Hah6mCRL7VKV5V4hYgQxRvD5LVKmRaQIWObJ4OSUGlq5y11/Yghy/HMZ04W7cnCCOQbTVg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733716931;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733733164;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=RA9KVV9H/T3fwr9oDUhv9+qG5LPXwAHewKwoee34Wqk=;
-	b=Cyn2rzbuLk1QlyZU3A4vXTdLNVJs2sx06FUM+w5C5mdjpNY8b5hGZe5+cIlpoaoW
-	1qK8jKgmc+2jmsl0qYB91VaIF/ry9n8pb10byQE+5JB1blsQBJx1DcW8iJqj3SWNWl1
-	no8IwNwe8+If+GxjxJ61JspiZnnrf6YoLeJPcNRw=
-Received: by mx.zohomail.com with SMTPS id 1733716928915758.8277959061644;
-	Sun, 8 Dec 2024 20:02:08 -0800 (PST)
-Message-ID: <ecccced3-07a1-4b4a-9319-c6d88518e368@zohomail.com>
-Date: Mon, 9 Dec 2024 12:02:06 +0800
+	bh=exzAwh9vuJJZYKGFl8F6lLjMefg+m9szNye3qUBtaAc=;
+	b=c1vsOrD+vgyNQ5MknKxN7uWc/fH6Blq/EGI1v7vUKqPladXPpZOhFHm1J+hvg4F3
+	Xtc2e4It4yRhp+mOR6WxZ23up3ywe0a5GWPCtBGAceHBxtMmNMyhZO0RI2STnRtUKr5
+	nTiD9BLsA2rwrtAxfVJHLLx/ImGW8YgSLGHycdmA=
+Received: by mx.zohomail.com with SMTPS id 1733733160909206.39109231527607;
+	Mon, 9 Dec 2024 00:32:40 -0800 (PST)
+Message-ID: <abdb787d-81a7-47a7-8ee4-da250aa5355d@zohomail.com>
+Date: Mon, 9 Dec 2024 16:32:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,69 +45,163 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Removing a misleading warning message?
-To: Dan Williams <dan.j.williams@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- Coly Li <colyli@suse.de>
-References: <15237B14-B55B-4737-9A98-D76AEDB4AEAD@suse.de>
- <ZxElg0RC_S1TY2cd@aschofie-mobl2.lan>
- <6712b7bf2c1cd_10a03294b3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Subject: Re: [PATCH 2/4] acpi/hmat / cxl: Add extended linear cache support
+ for CXL
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
+ tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, ira.weiny@intel.com
+References: <20241204224827.2097263-1-dave.jiang@intel.com>
+ <20241204224827.2097263-3-dave.jiang@intel.com>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <6712b7bf2c1cd_10a03294b3@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <20241204224827.2097263-3-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122760383f751de4e337f86a03e80000221daa2c86967e238b2ea4b6139ee1ce48b6857490326dd1a8:zu08011227c9892118f48149ab2326439c0000201441fab27c53b15f071cf642553ad1f953722b26334612a4:rf0801122608557309d5c5baf0c255d2e300008d94b61ab4fb4dfe00e0ce43e692411dcfaee7fa80f0d6b4:ZohoMail
+Feedback-ID: rr08011227a39993a97540f2f7e4ef51c500005204a570abc3fd60156e35d552ac1a2388ce84b2080ad5ecbf:zu08011227162f4444b4f8d1a06fa95fc40000b63ce1a267dc4665fcc2eb3eb1de176d292df0fcc9e8de197f:rf0801122be3d9be6dc1a89891f866334000000d425160fff8b5bb21c9653fe282a635afd757d8628f32eb1d654a72f0:ZohoMail
 X-ZohoMailClient: External
 
+On 12/5/2024 6:46 AM, Dave Jiang wrote:
+> The current cxl region size only indicates the size of the CXL memory
+> region without accounting for the extended linear cache size. Retrieve the
+> cache size from HMAT and append that to the cxl region size for the cxl
+> region range that matches the SRAT range that has extended linear cache
+> enabled.
+>
+> The SRAT defines the whole memory range that includes the extended linear
+> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
+> Cache Information Structure defines the size of the extended linear cache
+> size and matches to the SRAT Memory Affinity Structure by the memory
+> proxmity domain. Add a helper to match the cxl range to the SRAT memory
+> range in order to retrieve the cache size.
+>
+> There are several places that checks the cxl region range against the
+> decoder range. Use new helper to check between the two ranges and address
+> the new cache size.
+>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> RFC:
+> - Minor refactors (Jonathan)
+> - Fix grammar (Jonathan)
+> ---
+>  drivers/acpi/numa/hmat.c  | 39 ++++++++++++++++++++++
+>  drivers/cxl/core/Makefile |  1 +
+>  drivers/cxl/core/acpi.c   | 11 ++++++
+>  drivers/cxl/core/core.h   |  3 ++
+>  drivers/cxl/core/region.c | 70 ++++++++++++++++++++++++++++++++++++---
+>  drivers/cxl/cxl.h         |  2 ++
+>  include/linux/acpi.h      | 19 +++++++++++
+>  tools/testing/cxl/Kbuild  |  1 +
+>  8 files changed, 142 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/cxl/core/acpi.c
+>
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 976b3e1a6c2a..1c5b3c37ac29 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -108,6 +108,45 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+>  	return NULL;
+>  }
+>  
+> +/**
+> + * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
+> + * @backing_res: resource from the backing media
+> + * @nid: node id for the memory region
+> + * @cache_size: (Output) size of extended linear cache.
+> + *
+> + * Return: 0 on success. Errno on failure.
+> + *
+> + */
+> +int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
+> +					resource_size_t *cache_size)
+> +{
+> +	unsigned int pxm = node_to_pxm(nid);
+> +	struct memory_target *target;
+> +	struct target_cache *tcache;
+> +	struct resource *res;
+> +
+> +	target = find_mem_target(pxm);
+> +	if (!target)
+> +		return -ENOENT;
+> +
+> +	list_for_each_entry(tcache, &target->caches, node) {
+> +		if (tcache->cache_attrs.address_mode ==
+> +				NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR)
+> +			continue;
 
+Should continue only when "tcache->cache_attrs.address_mode" is NOT "NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR"?
 
-On 10/19/2024 3:32 AM, Dan Williams wrote:
-> Alison Schofield wrote:
->>
->> + linux-cxl mailing list
-> 
-> Thanks for forwarding...
-> 
->> On Fri, Oct 11, 2024 at 05:58:52PM +0800, Coly Li wrote:
->>> Hi list,
->>>
->>> Recently I have a report for a warning message from CXL subsystem,
->>> [ 48.142342] cxl_port port2: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.144690] cxl_port port3: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.144704] cxl_port port3: HDM decoder capability not found
->>> [ 48.144850] cxl_port port4: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.144859] cxl_port port4: HDM decoder capability not found
->>> [ 48.170374] cxl_port port6: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.172893] cxl_port port7: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.174689] cxl_port port7: HDM decoder capability not found
->>> [ 48.175091] cxl_port port8: Couldn't locate the CXL.cache and CXL.mem capability array header.
->>> [ 48.175105] cxl_port port8: HDM decoder capability not found
->>>
->>> After checking the source code I realize this is not a real bug,
->>> just a warning message that expected device was not detected.  But
->>> from the above warning information itself, users/customers are
->>> worried there is something wrong (IMHO indeed not).
->>>
->>> Is there any chance that we can improve the code logic that only
->>> printing out the warning message when it is really a problem to be
->>> noticed? 
-> 
-> There is a short term fix and a long term fix. The short term fix could
-> be to just delete the warning message, or downgrade it to dev_dbg(), for
-> now since it is more often a false positive than not. The long term fix,
-> and the logic needed to resolve false-positive reports, is to flip the
-> capability discovery until *after* it is clear that there is a
-> downstream endpoint capable of CXL.cachemem.
-> 
-> Without an endpoint there is no point in reporting that a potentially
-> CXL capable port is missing cachemem registers.
-> 
-> So, if you want to send a patch changing that warning to dev_dbg() for
-> now I would support that.
-> 
+[snip]
 
-I noticed the short term solution been merged, may I know if anyone is working on the long term solution? If not, I can work on it.
+> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+> +					    struct resource *res)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int nid = phys_to_target_node(res->start);
+> +	resource_size_t size, cache_size;
+> +	int rc;
+> +
+> +	size = resource_size(res);
+> +	if (!size)
+> +		return -EINVAL;
+> +
+> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (!cache_size)
+> +		return 0;
+> +
+> +	if (size != cache_size) {
+> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	/*
+> +	 * Move the start of the range to where the cache range starts. The
+> +	 * implementation assumes that the cache range is in front of the
+> +	 * CXL range. This is not dictated by the HMAT spec but is how the
+> +	 * current known implementation is configured.
+> +	 */
+> +	res->start -= cache_size;
+> +	p->cache_size = cache_size;
+> +
+> +	return 0;
+> +}
+> +
+>  /* Establish an empty region covering the given HPA range */
+>  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  					   struct cxl_endpoint_decoder *cxled)
+> @@ -3256,6 +3306,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+>  				    dev_name(&cxlr->dev));
+> +
+> +	rc = cxl_extended_linear_cache_resize(cxlr, res);
+> +	if (rc) {
+> +		/*
+> +		 * Failing to support extended linear cache region resize does not
+> +		 * prevent the region from functioning. Only cause cxl list showing
+> +		 * incorrect region size.
+> +		 */
+> +		dev_warn(cxlmd->dev.parent,
+> +			 "Failed to support extended linear cache.\n");
+> +	}
+> +
 
-Thanks
+cxl_extended_linear_cache_resize() will adjust res->start if there is an available cache_size.
+
+Is it possible that below insert_resource() failed because "res->start" is less than "cxlrd->res->start"?
+
+My understanding is that the address range of cxlrd->res comes from CFMWS, I don't find any description in patchset about the address range defined in CFMWS including extended linear cache size. So I guess that a CFMWS will not expose a address range with extended linear cache size?
+
+I'm studying this patchset, please correct me if I'm wrong. Thank you.
+
+>  	rc = insert_resource(cxlrd->res, res);
+>  	if (rc) {
+>  		/*
+[snip]
+
 Ming
+
