@@ -1,61 +1,61 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22CA23D41A
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Dec 2024 22:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC0A23D434
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Dec 2024 22:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733868349; cv=none; b=Yt+lNvzpb04nMcF5QKeYxcv4jeEcwU4Ll9WTocGW5qOcf1Gd87k+kx/D6aedX13cf7GgqefWlANvCn1FLgOPRSCyXRbX+xpAItm2/IlJOqrfzDgtshgLHurYDEU/ScCU7rXBbtWIrrNHoPScM8alHv04RQydWag5hvOfdt7d6ho=
+	t=1733868351; cv=none; b=rm9nm4ZAogHub1yY8BgI4/AaAv7PGYiUvgw+WmJZHqQub6BiUEbozGh/q7PNjW6LAKURV93kBFY7fAyTbyt32Ilkbhe7Yn3+UJsep6f+auqaYaoDBwhc5KEY3VQG1rUfemfKFULPQFtiNGQ+X45YQpxUWSMz6gYNNaGB9j7/LmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733868349; c=relaxed/simple;
-	bh=jfyUSmubMj4b/gkkdGyIXgcZf1BpJ5K73ybeRlCwDBU=;
+	s=arc-20240116; t=1733868351; c=relaxed/simple;
+	bh=NI/VCBA4V00Ps24Jg1XYDOYEuE9C/bHGB4RLm7NSawQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZPdsldiFkbQ4S82D3fP+mHjOf1eFHpu17SN0Ebd9zPFVTefiCvOomH0Pn3ZkSiZviJG4WmXlotr1Lq6kAoFiORvUcFk2JZfoM07J+4AJDcguZ1up4vI9W7100Z3h3qFL1c+yGuWyZ1WS3Jv7XFbjD6ExXWWVmhqLiS0lj4NHYgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=rDXiFPQ9; arc=none smtp.client-ip=209.85.219.51
+	 MIME-Version; b=DtnRWGr1tZBHYdI6RSvNLU5+VLWcEaHzEStEjY4W/gdH7HN9OrL6J3pPwohuGXbzpWnEABSJ7ADJB2KFn6oQeL1d7GIKsMwnXlAPeNhQFELKocyDckasHrv3RDv7UiLGxMrtVxOQES9CRXQvQR+Kh9OOsnfBfQsDRfXS9DEc61k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=m8EdZ7Ew; arc=none smtp.client-ip=209.85.219.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="rDXiFPQ9"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6d88d3d1eb6so945036d6.0
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Dec 2024 14:05:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="m8EdZ7Ew"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d8e8cb8605so28604046d6.0
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Dec 2024 14:05:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1733868347; x=1734473147; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1733868348; x=1734473148; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=60R1hVTxsjiamUbrEoUH7TiaG7L9jG3XfbmxuhEpKo4=;
-        b=rDXiFPQ9qVwB9tFaE6PvzGPx5pe+d4rZHBH72PDtHEZVLyiHNeKw+P0dsgRk+D/C3E
-         LPn6R0SkxWuBpr9Ip0N8VXTVlwkhqi4lJ/6mJnIz1yOTTDWqLEn9+yvs84cCm03CXgTC
-         NsAhn1o7Ap5Jj2gE9M699fPZEC4FLo4nc2+o4W+tiLNMtxTErqNYZJvHdszhTnn12FC6
-         U2+6xnCa+WZyAgy8pdYrBgmsb4+kvTCvMOE9lzJ8xV7HpMgHyPqkk9VWfmPMctRFV+N7
-         Sd3CKcn4efBSHS+qslJfFjQSpwW2XG2+31v5kDRzzLQXvcvpKop8gFXtMn7ldYB07uuz
-         NrTA==
+        bh=oErJky2BLU9Af7jLve7daZWId/j12r2NaH/TqvsN93M=;
+        b=m8EdZ7EwwcXdGFXJXBPI3dPzzacCNllhO+NMPLSyh0+DKq+Zjt7msnsbUWzoYSkOvP
+         L0oRB2iMcGWMfxsVumcowsaaep8TuDD240Ecdzqln+A0sb4I58NdhJZ0d2dyBiuYUl/J
+         MrKRwv8zRYHgDRT3Ba0qs+D7/ClCKODnQM6UGtiDKEyJc5t5x/XmKdlNqnCX2pdE/KVK
+         0T7EaG6Hih5Hw+oTwTqAcIlh8kE44AsThVAX5wqGx74C879aCxLJGv8BMLM2Ll75cbSU
+         6oww03NqRYHfMtn2Qc/j+yyBGZsrYnmi7n7Xzoq4/lrolbXu15ZiAdWLXSGJDcZ3yQX1
+         /a9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733868347; x=1734473147;
+        d=1e100.net; s=20230601; t=1733868348; x=1734473148;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=60R1hVTxsjiamUbrEoUH7TiaG7L9jG3XfbmxuhEpKo4=;
-        b=XS7plPvYNUYZ8N2dEe10oNy8ljfDquD+VjvFhuzSS0DcJguIevlJAL7wb89eD8l9Sa
-         ICCd3lZx4KTeFZGGELEsWyzkS0dKJKjxO4q8OLnuS5u8+N4W7tyzBfDL0nw6hvxwSgAv
-         pFtRfrj5mArCQVCg8JinWaaIwMfEp8wvPAyGDXpPv0xlUgcQ2ktv1V/hsurJ0D1f39vi
-         vUXH6JsHe25AERPX5wVFVm6KUuLfgCTmx/+1YrkcWk+XptZsdF4ztyiireW9V2UA3XY/
-         MT5FgoEfeqgvGiWUilLiO7ww0p7RavnImn/Dwxju1Bkx/zrcZEg1vsJ+Rv10Q5GgB2/7
-         GJAA==
-X-Gm-Message-State: AOJu0YzdH4UYEw4HFwg52H1ICYn73RJNzRJYeiQo6vIMFKKD/Q21OwaH
-	xTXbFHIwLTSlT9niwvW/BAsUBbqTOYj8WzOGx/CVFlCzvSuVLqq3Da93k3mwVBE=
-X-Gm-Gg: ASbGncuMgbl3iy9dChqEFdCnaZZFlSbt/U2ttLq7sx02jWIfaDhzjzpDZqIDBA9rzX2
-	e7BH+VEAEzbtsxbVz6J9OtcAKKi36B9GmA3uqDuTXaw1AT/yR7HQlR1yJoZNtSw/uVeL072ll84
-	SRwZ/6fhoAV+jdSOXULShrpTcuw5H8tVB6y3EgMjryTXoKRiSa78J4Xa24lSZVvShJZ0fZwKF4V
-	CtUtNHNVMZtA/2V5SAcJNqVAEqKYFKfrWo85YiRtI9LhYg1qO+1DvGzLwwidXG4ri5gYWaCSSPx
-	o243d3TGPrZ+S5Udv0vxaTj7K+H16IX3N3TqkhY=
-X-Google-Smtp-Source: AGHT+IHc57rNPDT3ETou4ayUZZMOYLv4oTDJ4vzRb5FMnCPekUkkWfUgKrPMA1hVHVlHX0Bm8hfnCQ==
-X-Received: by 2002:ad4:5de6:0:b0:6d8:f50e:8036 with SMTP id 6a1803df08f44-6d935314e21mr9170026d6.20.1733868346746;
-        Tue, 10 Dec 2024 14:05:46 -0800 (PST)
+        bh=oErJky2BLU9Af7jLve7daZWId/j12r2NaH/TqvsN93M=;
+        b=q8ao3s4XoTyWar9Ec5RTov+5oTDRyiM20OPyJIadv2Q7Yh5cR8hb8VuKX40bauNJVc
+         vEy+/F3doE3/W0nrA6EBxuwjPp2bAR11fTJt/zbPfnACqzfrJLV8kvL2IGpGw+kQNMI4
+         L9tXrDXDrCLinHRJuMoEZpRVlKFsdgY6BT7lKJ+MjF3jTa1Grb6efvjFNa3LpY93R8Xg
+         Ms5O/5x7g3HIUpaEnsdbk+UhDmbbn4iFvcDCikS3Ebw74lKap6H8mMhsdpbD+/KxSF+R
+         JEBHiAJ6mJR53urHrgEPN6vGTCNxBgu+3RNk3Kocj3zl7YaCypsU0oNDUOwX1p7hSEdL
+         HmpA==
+X-Gm-Message-State: AOJu0YwDpM8FvYEZJehiU0mAwvcO7cdXevP/wvpZ2nZ2kDxSfH1pAwti
+	K2f0Wed6B6IpNUYELHtDZvzdJrxudpwE+CsUoDj/F9ze/hkCPvV0GsG9LL9hktA=
+X-Gm-Gg: ASbGncvB2GekWWB3jPdGXFHlK7s/DazZl86BJmgJ8IPLinolBIt9Yf+BvldH+SrcYCG
+	lP4gMLy8FOen1Oi9Cr3Gb48otk1/xOhSjFYC00dL00qDVf1NkXJbY9eM531FnPf+qa6e7DHofAN
+	pVFtUjknzuyyZchRRB8IEO9o6b8zZIaIKXvAVh6F5k6p0q+G2XlmM9d2YZq0pF6ZeVayhP/p+im
+	Qs3/UPKCbLG1TXNc2v5aE46+aMisC8IbCMsXVrLdr7/W+ngNw/y+lwZWz1gAhG1W/Wy9RpbcbnS
+	DIaGPwJggkzAWlD4q26wxSQnvd0j4vXg7CTvv2w=
+X-Google-Smtp-Source: AGHT+IENYQ0oAKQ+kT8P0UCH8ySBpUYpnMabT5K76y4L5ld+Nf2r6CwojmMzmHyhvdr+kBpYd1jW3w==
+X-Received: by 2002:a05:6214:2682:b0:6d4:254f:1c8e with SMTP id 6a1803df08f44-6d934b7cc2amr10515796d6.37.1733868348294;
+        Tue, 10 Dec 2024 14:05:48 -0800 (PST)
 Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8eeb132e1sm49707756d6.35.2024.12.10.14.05.45
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8eeb132e1sm49707756d6.35.2024.12.10.14.05.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 14:05:45 -0800 (PST)
+        Tue, 10 Dec 2024 14:05:47 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -80,9 +80,9 @@ Cc: linux-cxl@vger.kernel.org,
 	lenb@kernel.org,
 	osalvador@suse.de,
 	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v7 1/3] memory: implement memory_block_advise/probe_max_size
-Date: Tue, 10 Dec 2024 17:05:15 -0500
-Message-ID: <20241210220517.3744-2-gourry@gourry.net>
+Subject: [PATCH v7 2/3] x86: probe memory block size advisement value during mm init
+Date: Tue, 10 Dec 2024 17:05:16 -0500
+Message-ID: <20241210220517.3744-3-gourry@gourry.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241210220517.3744-1-gourry@gourry.net>
 References: <20241210220517.3744-1-gourry@gourry.net>
@@ -94,125 +94,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hotplug memory sources may have opinions on what the memblock size
-should be - usually for alignment purposes.  For example, CXL memory
-extents can be 256MB with a matching alignment. If this size/alignment
-is smaller than the block size, it can result in stranded capacity.
+Systems with hotplug may provide an advisement value on what the
+memblock size should be.  Probe this value when the rest of the
+configuration values are considered.
 
-Implement memory_block_advise_max_size for use prior to allocator init,
-for software to advise the system on the max block size.
+The new heuristic is as follows
 
-Implement memory_block_probe_max_size for use by arch init code to
-calculate the best block size. Use of advice is architecture defined.
+1) set_memory_block_size_order value if already set (cmdline param)
+2) minimum block size if memory is less than large block limit
+3) if no hotplug advice: Max block size if system is bare-metal,
+   otherwise use end of memory alignment.
+4) if hotplug advice: lesser of advice and end of memory alignment.
 
-The probe value can never change after first probe. Calls to advise
-after probe will return -EBUSY to aid debugging.
+Convert to cpu_feature_enabled() while at it.[1]
 
-On systems without hotplug, always return -ENODEV and 0 respectively.
+[1] https://lore.kernel.org/all/20241031103401.GBZyNdGQ-ZyXKyzC_z@fat_crate.local/
 
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Suggested-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Gregory Price <gourry@gourry.net>
 Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Acked-by: Dan Williams <dan.j.williams@intel.com>
 Tested-by: Fan Ni <fan.ni@samsung.com>
 ---
- drivers/base/memory.c  | 53 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/memory.h | 10 ++++++++
- 2 files changed, 63 insertions(+)
+ arch/x86/mm/init_64.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 67858eeb92ed..835793150b41 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -110,6 +110,59 @@ static void memory_block_release(struct device *dev)
- 	kfree(mem);
- }
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 01ea7c6df303..58ace82874eb 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1462,16 +1462,21 @@ static unsigned long probe_memory_block_size(void)
+ 	}
  
-+
-+/* Max block size to be set by memory_block_advise_max_size */
-+static unsigned long memory_block_advised_size;
-+static bool memory_block_advised_size_queried;
-+
-+/**
-+ * memory_block_advise_max_size() - advise memory hotplug on the max suggested
-+ *				    block size, usually for alignment.
-+ * @size: suggestion for maximum block size. must be aligned on power of 2.
-+ *
-+ * Early boot software (pre-allocator init) may advise archs on the max block
-+ * size. This value can only decrease after initialization, as the intent is
-+ * to identify the largest supported alignment for all sources.
-+ *
-+ * Use of this value is arch-defined, as is min/max block size.
-+ *
-+ * Return: 0 on success
-+ *	   -EINVAL if size is 0 or not pow2 aligned
-+ *	   -EBUSY if value has already been probed
-+ */
-+int __init memory_block_advise_max_size(unsigned long size)
-+{
-+	if (!size || !is_power_of_2(size))
-+		return -EINVAL;
-+
-+	if (memory_block_advised_size_queried)
-+		return -EBUSY;
-+
-+	if (memory_block_advised_size) {
-+		memory_block_advised_size = min(memory_block_advised_size,
-+						size);
+ 	/*
+-	 * Use max block size to minimize overhead on bare metal, where
+-	 * alignment for memory hotplug isn't a concern.
++	 * When hotplug alignment is not a concern, maximize blocksize
++	 * to minimize overhead. Otherwise, align to the lesser of advice
++	 * alignment and end of memory alignment.
+ 	 */
+-	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
++	bz = memory_block_advised_max_size();
++	if (!bz) {
+ 		bz = MAX_BLOCK_SIZE;
+-		goto done;
++		if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
++			goto done;
 +	} else {
-+		memory_block_advised_size = size;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * memory_block_advised_max_size() - query advised max hotplug block size.
-+ *
-+ * After the first call, the value can never change. Callers looking for the
-+ * actual block size should use memory_block_size_bytes. This interface is
-+ * intended for use by arch-init when initializing the hotplug block size.
-+ *
-+ * Return: advised size in bytes, or 0 if never set.
-+ */
-+unsigned long memory_block_advised_max_size(void)
-+{
-+	memory_block_advised_size_queried = true;
-+	return memory_block_advised_size;
-+}
-+
- unsigned long __weak memory_block_size_bytes(void)
- {
- 	return MIN_MEMORY_BLOCK_SIZE;
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index c0afee5d126e..8202d0efbf46 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -149,6 +149,14 @@ static inline int hotplug_memory_notifier(notifier_fn_t fn, int pri)
- {
- 	return 0;
- }
-+static inline int memory_block_advise_max_size(unsigned long size)
-+{
-+	return -ENODEV;
-+}
-+static inline unsigned long memory_block_advised_max_size(void)
-+{
-+	return 0;
-+}
- #else /* CONFIG_MEMORY_HOTPLUG */
- extern int register_memory_notifier(struct notifier_block *nb);
- extern void unregister_memory_notifier(struct notifier_block *nb);
-@@ -181,6 +189,8 @@ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
- void memory_block_add_nid(struct memory_block *mem, int nid,
- 			  enum meminit_context context);
- #endif /* CONFIG_NUMA */
-+int memory_block_advise_max_size(unsigned long size);
-+unsigned long memory_block_advised_max_size(void);
- #endif	/* CONFIG_MEMORY_HOTPLUG */
++		bz = max(min(bz, MAX_BLOCK_SIZE), MIN_MEMORY_BLOCK_SIZE);
+ 	}
  
- /*
+ 	/* Find the largest allowed block size that aligns to memory end */
+-	for (bz = MAX_BLOCK_SIZE; bz > MIN_MEMORY_BLOCK_SIZE; bz >>= 1) {
++	for (; bz > MIN_MEMORY_BLOCK_SIZE; bz >>= 1) {
+ 		if (IS_ALIGNED(boot_mem_end, bz))
+ 			break;
+ 	}
 -- 
 2.43.0
 
