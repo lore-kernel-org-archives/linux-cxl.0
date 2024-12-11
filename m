@@ -1,211 +1,418 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2086.outbound.protection.outlook.com [40.107.101.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0CA1DD885
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 22:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5078A17838C;
+	Wed, 11 Dec 2024 23:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733957653; cv=fail; b=DUwGHFGulGQV749cCzlGsA2SUP9UCrTTlMamMx8kexWzpRqZPN8T0mSzAyA/6VxZy+nGB6SJ9EUr5CMcgRJZdEfD/JlS4jyMAx3F1DXj6NQxI6F4QMtOyb/m7jPvtHjTB5YQhgorhsgkxAvk22njrbR5XNH8/8mpv2oDt3bcoqI=
+	t=1733960414; cv=fail; b=AH+OJY2ldCodOgPfk3PuKq6k7fUUZ8MFtmL69dkFaaWI4IrrvEtLMKrXMA185vijWnhE5ucPodxVSvu+2Pda4BWaHZIa305i8hmew5xGflddFnKj8U/cMjtjBua8pSkAgLIjJT0v3tZmlCK+CMwRSro7SN/jTKkBJrFszGyIR+s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733957653; c=relaxed/simple;
-	bh=2XZ2BLLtjrElgb/3SNN1BkcPGkEYVxJBOwOfzwepERg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=InuoC5XYK7FxRezF73u3nTWyR7i8YPy/nITmb9rfYqJeNo/tCLKW33KzTBsmanIeqP2AVZY+l99Yp/NBXWAft6IZstcqtBi4uc/p36soLmiyHDyNKERvCRRDdHGcDXWmIYWcX03utM4M96C4KPf4BZhY0pfN9302+Hpa+ZMBAv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gZp320+t; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1733960414; c=relaxed/simple;
+	bh=gUeQTRPxyJwDfejPuJI2Kdnjt+kaD4vjyiLU78pziWE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ruhus3IH/HKaDyz97qXyHisq0T6XcJDQg0JNdgpUpXEvNrEVsMk5AfZg5NJKFNS8u3o99O9UV2GbCmrxsDvrcE1qAIalJ2DRbPyXiikUPCZkhWTIjwOE7Tb6td4uzZ2hMqgalYxY1ldoI+XyOQlJyYYkltBLz5jdVTq2zg+SaNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=c7NMiuCr; arc=fail smtp.client-ip=40.107.101.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gZp320+t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733957651; x=1765493651;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=2XZ2BLLtjrElgb/3SNN1BkcPGkEYVxJBOwOfzwepERg=;
-  b=gZp320+tmwB3AMtYJ8GeJFnQE+G7qZj2Isna9Su0MhFDDjHDvEmbC+rr
-   xaKAtMe3i9I6Z3cW9CNmxGkwQDvCWtDGltPEumLrQDBD1ULq/CNZs11Lq
-   N6Rxq5pVob5akho3BivF8xOk98C+lYeSZJsE02xD3SNtjw+sva6z3fdwX
-   ycw7y8KA7bm/2/KHCtnz/VRRu3hkFIwREjKg8USWsNv5LznympUIwq3Pz
-   wL24vNqECaYXdCfY2xexg7oAAqwZI2frwMuSerhP6UVmpx3xEamVON+wD
-   LgIpm2B3znSeNevkZ1ZtQTjg0pTavAYN0iH6ZMJjSMUgT44+f8FshnNsG
-   Q==;
-X-CSE-ConnectionGUID: qwdQBpmOQKGdkOFgh19JmA==
-X-CSE-MsgGUID: rIcp5mZ4S22+DzCYENai3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11283"; a="51773117"
-X-IronPort-AV: E=Sophos;i="6.12,226,1728975600"; 
-   d="scan'208";a="51773117"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 14:54:10 -0800
-X-CSE-ConnectionGUID: +sGIjLjYQz2Esjp88EW3jQ==
-X-CSE-MsgGUID: cTKRVqAUTzyPUsZDh8Yh3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="100099303"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Dec 2024 14:54:10 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 11 Dec 2024 14:54:09 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 11 Dec 2024 14:54:09 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 11 Dec 2024 14:54:09 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="c7NMiuCr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rB67mnSMz2OH87lGA7cKuKAWfYpJKN+UXI0UvqiXsjL+zH10lUdEmZ0cqPh3WMW+QUU4HmvS/+pWUzwnjsDUbzC3yLruBBujPCahWKoDjtKUWP/+KiwNsQCxbAkznqSsSjnyA0oGN06GtwDav1eSUY6LAKOiBJCTsP9kUF7UBFgM4v0HHFmBsWvPChiSymh9WCmVXfVZI8HNOe1vTdE/s+98YUk1xL9XVD6PIZPofKmX3+TbA8OKfILIWZyGDU5YCG8d6qrLi+mg2jPXwUxAgXGz4FbXHN3BJK3HwMrKyFvaHXBP3+JhGcAMKNVkd6+GQ0+FcNzmZ5xbK0KrH07hBg==
+ b=mqSGTXidYe5LWjsq0GYeXjv3and+Qf4aTaOR0dPUYnUNoR7zgLVT58VFwjHXDwyMgUtFTivEW8z3aoIjW1G+DnDowyv0S4fqbGTYpjIK4QAowBaoCmiJQufrwuSQbos5dsRgfKzDCFfU3KRAVKETwy/RwNUjceCtY7IqVhk8bP8cmB35iRZ+s4m1VBzgZrxqg3e+UiHDLTKUWomG63D0zr7swOx0gS8oazzA+DN4ClLkRVArpDeA6N7aWtY+ITmd9x7g76aosXleCl5Ic+RFySgiWa1xW78mPf/jc7szq2fHFvr/kq2mgf+RQq4ob+Lk9hwvt8xvz6hhVCkqXhXBHQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jWwWI1vraz4bLiM0Y+eYHsT69vyC4E/wwm7UjAaib5I=;
- b=Jhp1r1P9tB/UysNJTrHx17oCeNqqJYrShYNahBMlKBeIDansqawQA+FIena8J9BptTwIUADxIC2g45EpeihUzY4VzXFc3jCLqp3JhE8ZTuHEFnl6M/IKVcY1JWT/gfBCe5PRvGe9iiMv4OOT1o7GkLqiiPk4Ff8X4UNwwZxmmzOeq+q5eQpPrfDb2bmiGUvJ/jHzbF8NRcBATsAbWaGcyQep96bxSoo2/AMOY/98tVNEbW++EKBcTN1AfyKvNzKQudGEIreSMP/r7JgK9c0ag5O5nKOXuhE5XhJ5R+ymeR+0VnUHLhnEXhAjgXy9+E1SpFhtmRjJio+cmUroLs+I0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS7PR11MB6245.namprd11.prod.outlook.com (2603:10b6:8:9a::16) with
+ bh=OISo9dodIMz8sW7VAQrqDdCaCbR7RTc/U3mOuUgMHnI=;
+ b=yNtADZJ7HBa9xEZmzlur9FEP0NtGaGA88PZvPjyGPebgoquUwof80z5fET/XeAaWG1uZNaP9q9P9Lq59HHiIYVsgvnG5ny/kOwST6Ru2MqtIhIZIw34VCbHGcejAIN8qm21YCcDiwlXzCXdvEKbVnwzHEZNbKfhYrd/giPiJh2B1M3psb51SdQCo0kMl0cr5sNQXCiFArtqyLZhIq8UNocLaWMKsy3RPdPIA1ynMF3FtT5Ivn2ATyaO/eGQNVzu8u3DSJCnXJ9PUxNHDBCStpbnjZrHZtP6yZT2Br+xjM8DE4iYgTF+zmw2hIelyvaLC2TGXDcmJysYcTYDRV0ZMhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OISo9dodIMz8sW7VAQrqDdCaCbR7RTc/U3mOuUgMHnI=;
+ b=c7NMiuCrHdgtXWqNDeO0jGfkWL+XMbzoh8ZcggHD+oUPwGtKpxDZIp7KEwALqzKN0Nt17jtxFF84htaiFpMK9uwzau9Fv84ymaGWS+Oe8EC+IaseaMvui8YechxmAAfTCAuSxHxnwa03c/qiZhjjtatrN9cL9ioBl4xoP0/QHbs=
+Received: from BN9PR03CA0771.namprd03.prod.outlook.com (2603:10b6:408:13a::26)
+ by CH3PR12MB9251.namprd12.prod.outlook.com (2603:10b6:610:1bd::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Wed, 11 Dec
- 2024 22:53:53 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8251.008; Wed, 11 Dec 2024
- 22:53:53 +0000
-Date: Wed, 11 Dec 2024 14:53:50 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, Nathan Fontenot
-	<nathan.fontenot@amd.com>, <alison.schofield@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
-Message-ID: <675a17fe8aebf_3e0f629483@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20241202155542.22111-1-nathan.fontenot@amd.com>
- <675a12a3d09d7_10a083294c0@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <675a12a3d09d7_10a083294c0@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: MW4PR04CA0272.namprd04.prod.outlook.com
- (2603:10b6:303:89::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.15; Wed, 11 Dec
+ 2024 23:40:09 +0000
+Received: from BN2PEPF000044A1.namprd02.prod.outlook.com
+ (2603:10b6:408:13a:cafe::cf) by BN9PR03CA0771.outlook.office365.com
+ (2603:10b6:408:13a::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.15 via Frontend Transport; Wed,
+ 11 Dec 2024 23:40:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A1.mail.protection.outlook.com (10.167.243.152) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8251.15 via Frontend Transport; Wed, 11 Dec 2024 23:40:08 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Dec
+ 2024 17:40:07 -0600
+From: Terry Bowman <terry.bowman@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <ming4.li@intel.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
+	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
+	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: [PATCH v4 0/15] Enable CXL PCIe Port protocol error handling and logging
+Date: Wed, 11 Dec 2024 17:39:47 -0600
+Message-ID: <20241211234002.3728674-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS7PR11MB6245:EE_
-X-MS-Office365-Filtering-Correlation-Id: f21ec7fe-27c8-4a46-9680-08dd1a36af5d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A1:EE_|CH3PR12MB9251:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0445121b-b4ae-427f-0f34-08dd1a3d25e7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?jpe+zMoE1ZHLJ+N+HJ7sMZpZX/qeJ76b9xVil+qKYX3nFH5uhBFSViR/QDrS?=
- =?us-ascii?Q?DFYjkH8F0ypjGlTGSErQFt5rLETnE8woKLWVbNBwGSpPs2t9FFys4ba3Ms5h?=
- =?us-ascii?Q?ycsj0NWWdWhNESzZPQgld7rKOyUGroTUaZO5VAC5kScVEhv1ZO6vd/klwsjK?=
- =?us-ascii?Q?XwewVP/ww8nl2vtUgUeYrwc7IZIoRw9dTFkKQcTp4rRVpsg6bF6zfuA0T3HC?=
- =?us-ascii?Q?zDooqChhWtK5o6P8TPHevNsw9blawtyuW0FcfDJaP2AjqLPTN7e5DV99Qsve?=
- =?us-ascii?Q?ytZ71RK1LgfroKZvzuq2iPwZZZEcFutq4F5OvUg9zVAlWHl/2BYFKZ3eiyvH?=
- =?us-ascii?Q?BvrnBrojKXyeQ6UVJusRQiK0f517YhgQReP4UZkHDKVOW2CoE+23KWuqlHvq?=
- =?us-ascii?Q?Y+FTnjIhptFPrX5eOXfJZEc7in+Aqpv8PxzBeo1hk9pXW3JG9Vb0qG/yJCVR?=
- =?us-ascii?Q?N+d0zUO/yYpMGCEX8cPK+Pq1eoYmWTE7JhAxP1eXuLu+BpYsWm76/9F+Kn8G?=
- =?us-ascii?Q?bWoVKML4BvQQ06dOAQM6aOFjaxq1sz9vn0ulHAGSaZUQvkOKRkTTnVpn0+TR?=
- =?us-ascii?Q?68mP09aIY23XxipOybxJIxdWc1clLMqO0CfV2ktYap7IOSO/pduQHlFOxySD?=
- =?us-ascii?Q?G1z1YcS5s74JwnE0QqhF6fAWuw5EFfChmVQhVfi3ivByuctHeBZ1UCnm+DEG?=
- =?us-ascii?Q?5c9BlebSEmJdmY0aQqoO8Pdg/hxZdlQYgIpgEaGg3ee+5+N5c9h7dsJSdwQl?=
- =?us-ascii?Q?2qYBWSMzEc0iEwddCTGQAhn5Zfs0pOQ4jyftLMSy8AcGPA8v3WSC0FnkqfhB?=
- =?us-ascii?Q?As8APx2Ra6DqWaXHfPxzN2EKBpCd+WROJfY/vtyNLrb97yJPIruyH/zy3mgJ?=
- =?us-ascii?Q?z6fwRY9sn7yWks+4z9fo4Qy8TW+FkO9zxt9YrrtnuBOqeKhBbOQ+YaxOyNWk?=
- =?us-ascii?Q?WvudUhyK3rlhKu0Bj3/hEQrWORTn27GEktwYcQgnx+v66bL34uRs+giy5ZLL?=
- =?us-ascii?Q?Aps9I7DzG/f2LxERCc6qq/hIseG+JVpZ/Zy8HV2yiVbYETtPfS76jlG3Tu96?=
- =?us-ascii?Q?FtaBDPMKDL7jobRZ6FZgxNY9Hcl8pVTFdzjhj8FwOt0vfKQlmd2q6TagCBkK?=
- =?us-ascii?Q?E39FzVsDpodNo0zDmB6OwiB6r483c5dGWjYYo09ZQPiocIwfb3gwrzq7t6LZ?=
- =?us-ascii?Q?mGGbjAIpUukolfiNGH9r1MkTzZQuToYdEmL4wTNyWTm4oiyA08A9UgrGqiXV?=
- =?us-ascii?Q?x22Ujpn2o9Cg98JzW3MXQYY5W/gyhQ+dExRxcESgBLYpsCSFxKI/gfcLg44a?=
- =?us-ascii?Q?Swo=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6sDTLqoGV15f6VTmZngmFgR1dfGxxp/9Nt5TF+GszvnQaeYVejWBOPx0tTmf?=
- =?us-ascii?Q?v8z2tIVpqlkpTETw4EoNpnbZJ56HWURbgUWxqkAkw0FGucnLDgPb9JuB0ww8?=
- =?us-ascii?Q?X/fWPC+hwqStgD1GLWulpz15y76ezsRv/w8+6p+o3szRKKwY8kTiHqaLRLOT?=
- =?us-ascii?Q?dp9D+YEBY5lF121gxE4uUo4U2uolwE976B+TYlrXv47JexlfV5yTt+Ct+wj1?=
- =?us-ascii?Q?U8XaO18qwgmz7EyI8x40ePwpVqch2MEhjOOl3ZpaRyfKI534axwLa+f0TZAB?=
- =?us-ascii?Q?vziU9ZU81Z3X4bewoYX0H0OZvs0a5JojhtcVfBrGumUtl1i4YRNctz4EzDTd?=
- =?us-ascii?Q?nMtpuL5H8SlJqJyaRF2eCWrxhna9WtnFtMTwyxQ14SWWk5AQGNr/caLWKcMY?=
- =?us-ascii?Q?S7CBXeD3gxw8FQtpyeLsGgqnKKPqaKtmlv3THLTHpfKcoaeN0dJi39bq6jLv?=
- =?us-ascii?Q?CNQhAwE3FL9itmF4ppeX/nkGAhNr3xDvBcGUTOFIc7TGi2YB0t3a6ddtdg2a?=
- =?us-ascii?Q?8jmr2UCYibhR5NLGUmSxD2AGwtZ19wRMncghLkKqPzAigiVlHxCLZFvwMj0V?=
- =?us-ascii?Q?YCgrDx03XVcd8Gc4g9rylK8sj7yhYus6QN+eNxV8a/Hf0WOpWi0rIUA3GI/+?=
- =?us-ascii?Q?YrT2hdBigbUqJkM1VJgJ7RlA6lVTLSzt1OdWPP9oFcW5f715yZPS+iEAMcGH?=
- =?us-ascii?Q?AiyRLOnBJad7av0JDITyTUQTioXpPJ/jyCVT8qSc8jRxITvdlnGWHlF8q/4a?=
- =?us-ascii?Q?sebywWUVHO9BlaQU4qY0faozRMWUQyo9AsfS2JrB9mWtG+PBJOHfY85jwzQK?=
- =?us-ascii?Q?b4jSSWzznPifDNY9P3UcLocfL9ZR5fgVzDu9qaoPokwA/w/1n/gaFZyreUfF?=
- =?us-ascii?Q?x2FCH4YVKWJJllDe1CWAfOKEA6Bwqkk7w8+p2xZSI7Yaev1Y+QwiolOGMnex?=
- =?us-ascii?Q?oik9k4VZcFobVe355RjEmaGgT2ilWiwlBMthT7Qa2K9X/ueAqiIAQ5AYyGCM?=
- =?us-ascii?Q?omC6w7aPwB+GVs6oOAwYZ42YjsiHtMQArztkxBE/5pUIYjR4MwV6WWmhA3NG?=
- =?us-ascii?Q?ejgv2CvmQnRsT4hGNA6xldVQh40rgPO1CrgYKPu9+sOjO8VrIXi7ZT5TVTBd?=
- =?us-ascii?Q?83NrZxZ2RI+lwju8V0YrZt5fsCIHxXGMccI1Pl2WXyDu8XhA3tJGbHCiINti?=
- =?us-ascii?Q?bjl4HN7FsxUAHmSwzm0/mzlIw7dmPIKpc0Hl8+Ayxk/woBR2mLAta4XKbjCA?=
- =?us-ascii?Q?8Xqd9+ItYUj6baqWIVC+Ex44Tu0j6Mx/ofxAcwPgjQlbl9J+ijhIn5AsZjfY?=
- =?us-ascii?Q?XICsCUSHRAIiENqmXgZ7i9hE627vsGfMDzpe8kkd3y+a8fjt4yWQC1IzHEB1?=
- =?us-ascii?Q?yx7Qf7ZYLLzsml7Y530mAmi+feRiHiBqXkKdboZ8n/ybI0qE2BrCJMV4FKny?=
- =?us-ascii?Q?n2KFIsgfwc+J/Xs+N5BiDRPW2p3mblp6jTeYkx8aAbnFjFyrz8ZsVKvcrXyF?=
- =?us-ascii?Q?f3fDe4n+d0CZ80yBXT5qoOG+p4swdCBuT/s4HHKjknoHM5pQ57jqdloTTii9?=
- =?us-ascii?Q?wpRaIipgyeeWQwonHzSsM8laX/rMced75Mp+wz6yP2Fhw2cthfZJjD3JIP0I?=
- =?us-ascii?Q?EA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f21ec7fe-27c8-4a46-9680-08dd1a36af5d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 22:53:53.0580
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?iX0EBy1YT6l2qbpeQalq29S+YF2PbrDCIyLAVseRceCzOSZ+FpwZbpdwBEFN?=
+ =?us-ascii?Q?o8cGEbuF6Xb9G9rTwWwoai2Tiw3ZoxdgqW5WEqux1Wjqu6x+MVvsJ3y7CIqr?=
+ =?us-ascii?Q?r3xM6FoIRI4Fr9DBPrj+OyeSe3AgbMRzeH8Te42EdkjUSOBRu0HpEHgtLERy?=
+ =?us-ascii?Q?JWL4RcNlqLJsFL4qXw22iAseKoseOf6rXFMl8TgUn9DzlXE5ih91YHH8f2bG?=
+ =?us-ascii?Q?/RmtLL0vxnpe3/SPMD/PNlDrhbFVMQK9TUfB1NRFsRUm3zQbiSmTDbwuuQBN?=
+ =?us-ascii?Q?u+VTPwpU+kLCHzNiEAB2E7NfAMdOYJNzDxk4ZACJuqOS8OvACsRePAHVgWKK?=
+ =?us-ascii?Q?VtsvQi56N/LJ01dHTGCht2CikuFN9Pf1yxYXRDsEtI25kml4+qOVFx5rhgx+?=
+ =?us-ascii?Q?quZUN3Eriq/7B4/uv7qzIji0d8po5Ne7sJF/DSmlkrC7NcQnYj8TzVLoBxGH?=
+ =?us-ascii?Q?oDe+oc7DNVDNKTOAbaVLV0n+2axLugxNmF8G6lqkc2977RIM8jDTlx/Uyvjf?=
+ =?us-ascii?Q?1OP7gBFA5qkDeUUIvRue4uIMDe2XiW4sDndz1lnGbakcE4y6YCYi5t967pwC?=
+ =?us-ascii?Q?eZIeESr+vm+Vw5v1Yj6P4jEgPchg5msSWMvMfxEoDBU/jQSvz+v5tVfBs29i?=
+ =?us-ascii?Q?f68to+9CSCJCrMJpZ3uxFu2zdzXKrSbyxIBEwClTZVQxGnbdBtAc95HJpbv7?=
+ =?us-ascii?Q?YaQrDH341a1yPDZP/4mFslLKelVy5WvILRcAidbvfQn2SiHv2TVHbV4HMUf8?=
+ =?us-ascii?Q?sHtd69fPf3c9amd+WTSPCpiA36tfplt3rXIy5HHRocRUyJ9TbdI5FbYYXWrn?=
+ =?us-ascii?Q?7Qb6GB8EdvZQawwWG4/nv2cnl2R7Q+KVdG4JbY0RqtffNm0VYZ6WqFSpIZVJ?=
+ =?us-ascii?Q?Eoyu3OY/tmaTyOXT0YoeaVnPAk/vzj9irQ0X1yiBYG/36mZgE3InYMr51X7O?=
+ =?us-ascii?Q?aconfMDmTIebFQRtBW6twV4o90ZQxtRCICCRTxk6DVhMGS8gzHpMd+2klUR3?=
+ =?us-ascii?Q?XGtutfWYg1oNOpejA2rqWWg41ER0YDLAKffLiqmt03Qp/e9NvLVTQkxyvnnS?=
+ =?us-ascii?Q?OMfGwcKiz+fKAyGKG7MGEu0XReSynwKwS+TVoAsAtN8IQ3GuTNWG1AqLFBOh?=
+ =?us-ascii?Q?qMupP5aMwt+QaBE9mcegAOpi61rH2NZronhl5tbEfHRtrAf6GUx8NWO2osJ7?=
+ =?us-ascii?Q?/BMuDsYyqfJ0lW2jOl4KZ5O02fyDPswxIWekYNM130DwnMN/OoTbCQRRMBaw?=
+ =?us-ascii?Q?bU6h3UqP0+n/d5buW1yF5D/1D1f1rYD5gOYXj/WnMlT28rbWsgisLD/jyInb?=
+ =?us-ascii?Q?HjgvMxd24HU6BIMXqXOuSdRfYexABWegJ8U3hjTTu0u+pO5uYhC3D0ctQn4J?=
+ =?us-ascii?Q?ArOj3MuRStVx0ry+g3dZHJBz8cmKsvZUGH1bGImiMSiGgq/PoGAnRurAGtFq?=
+ =?us-ascii?Q?5JmtjLbx3u1MDwv+47Y4ehLoMtAkLN8eTBL2gH/K4ZijatDBF4dUQw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 23:40:08.7080
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4QgcxcL/NmYJHavG7O7lM8JRGK6D0yE4XQhr5WY2g6edEv/4r8e9Rf+xtE1D0EKWlgUnoW6+ztFOgv4/k0jBwzHx0+W/G59PkxzvNE456GQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6245
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0445121b-b4ae-427f-0f34-08dd1a3d25e7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A1.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9251
 
-Dan Williams wrote:
-> Nathan Fontenot wrote:
-> > Update handling of SOFT RESERVE iomem resources that intersect with
-> > CXL region resources to remove the intersections from the SOFT RESERVE
-> > resources. The current approach of leaving the SOFT RESERVE
-> > resource as is can cause failures during hotplug replace of CXL
-> > devices because the resource is not available for reuse after
-> > teardown of the CXL device.
-> > 
-> > The approach is to trim out any pieces of SOFT RESERVE resources
-> > that intersect CXL regions. To do this, first set aside any SOFT RESERVE
-> > resources that intersect with a CFMWS into a separate resource tree
-> > during e820__reserve_resources_late() that would have been otherwise
-> > added to the iomem resource tree.
-> > 
-> > As CXL regions are created the cxl resource created for the new
-> > region is used to trim intersections from the SOFT RESERVE
-> > resources that were previously set aside.
-> > 
-> > Once CXL device probe has completed ant remaining SOFT RESERVE resources
-> > remaining are added to the iomem resource tree. As each resource
-> > is added to the oiomem resource tree a new notifier chain is invoked
-> > to notify the dax driver of newly added SOFT RESERVE resources so that
-> > the dax driver can consume them.
-> 
-> Hi Nathan, this patch hit on all the mechanisms I would expect, but upon
-> reading it there is an opportunity to zoom out and do something blunter
-> than the surgical precision of this current proposal.
+This is a continuation of the CXL Port error handling RFC from earlier.[1]
+The RFC resulted in the decision to add CXL PCIe Port error handling to
+the existing RCH Downstream Port handling in the AER service driver. This
+patchset adds the CXL PCIe Port protocol error handling and logging.
 
-Note that the reason I have new / enhanced focus on simplicity is that
-this mechanism is probably our only way to resolve regressions like
-this:
+The first 7 patches update the existing AER service driver to support CXL
+PCIe Port protocol error handling and reporting. This includes AER service
+driver changes for adding correctable and uncorrectable error support, CXL
+specific recovery handling, and addition of CXL driver callback handlers.
 
-http://lore.kernel.org/d8d2c310-2021-431f-adbe-71ad0a17896a@amd.com
+The following 8 patches address CXL driver support for CXL PCIe Port
+protocol errors. This includes the following changes to the CXL drivers:
+mapping CXL Port and Downstream Port RAS registers, interface updates for
+common Restricted CXL Host mode (RCH) and Virtual Hierarchy mode (VH),
+adding Port specific error handlers, and protocol error logging.
 
-In other words, mainline is now failing to enumerate memory in more
-scenarios than it was previously. I do not want to be forcing Linus and
-the -stable team to to review wider changes to kernel/resource.c than is
-necessary. I.e. there is a chance this proposal needs to be seek a
-v6.13-rc consideration.
+Note, this patchset does not address CXL1.1/RCH-RCD error handling. The
+plan is to update CXL1.1 handling in a separate following patchset. Future
+CXL1.1 changes will be needed to reuse the CXL Port changes introduced
+here. The changes in this patchset will not regress behavior or
+functionality.
+
+@Bjorn, can you please help take a look at patch#7 ('Add CXL PCIe Port
+uncorrectable error recovery...')? This introduces cxl_walk_bridge()
+because pci_walk_bridge() doesn't evaluate RP or DSP errors when passed as
+the 'dev' parameter. Should pci_walk_bridge() be updated to evaluate RP and
+DSP errors as done in cxl_walk_bridge()?
+
+[1] - https://lore.kernel.org/linux-cxl/20240617200411.1426554-1-terry.bowman@amd.com/
+
+Testing
+=======
+Below are test results for this patchset using Qemu with CXL Root
+Port(0c:00.0), CXL Upstream Switchport(0d:00.0), CXL Downstream
+Switchport(0e:00.0). 
+
+This was tested using aer-inject updated to support CE and UCE internal
+error injection. CXL RAS was set using a test patch (not upstreamed but can
+provide if needed).
+
+ == Root Port Correctable Error ==
+ root@tbowman-cxl:~/aer-inject# ./root-ce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0c:00.0
+ pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0c:00.0
+ pcieport 0000:0c:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00004000/0000a000
+ pcieport 0000:0c:00.0:    [14] CorrIntErr
+ aer_event: 0000:0c:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+ cxl_port_aer_correctable_error: device=0000:0c:00.0 host=pci0000:0c status='Received Error From Physical Layer'
+
+ == Root Port UnCorrectable Error ==
+ root@tbowman-cxl:~/aer-inject# ./root-uce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0c:00.0
+ pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0c:00.0
+ pcieport 0000:0c:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00400000/02000000
+ pcieport 0000:0c:00.0:    [22] UncorrIntErr
+ aer_event: 0000:0c:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+ cxl_port_aer_uncorrectable_error: device=0000:0c:00.0 host=pci0000:0c status: 'Memory Address Parity Error' first_error: 'Memory Address Parity Error'
+ Kernel panic - not syncing: CXL cachemem error.
+ CPU: 10 UID: 0 PID: 148 Comm: irq/24-aerdrv Tainted: G            E      6.12.0-rc7-cxl-port-err-00016-g7ce90d33afcd #4727
+ Tainted: [E]=UNSIGNED_MODULE
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x27/0x90
+  dump_stack+0x10/0x20
+  panic+0x33e/0x380
+  cxl_do_recovery+0x122/0x130
+  ? srso_return_thunk+0x5/0x5f
+  aer_isr+0x64f/0x700
+  ? free_cpumask_var+0x9/0x10
+  ? kfree+0x259/0x2e0
+  irq_thread_fn+0x28/0x70
+  irq_thread+0x179/0x240
+  ? srso_return_thunk+0x5/0x5f
+  ? __pfx_irq_thread_fn+0x10/0x10
+  ? __pfx_irq_thread_dtor+0x10/0x10
+  ? __pfx_irq_thread+0x10/0x10
+  kthread+0xf5/0x130
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x3c/0x60
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ Kernel Offset: 0x33600000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+ ---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+ == Upstream Port Correctable Error ==
+ root@tbowman-cxl:~/aer-inject# ./us-ce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0d:00.0
+ pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0d:00.0
+ pcieport 0000:0d:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0d:00.0:   device [19e5:a128] error status/mask=00004000/0000a000
+ pcieport 0000:0d:00.0:    [14] CorrIntErr
+ aer_event: 0000:0d:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+ cxl_port_aer_correctable_error: device=0000:0d:00.0 host=0000:0c:00.0 status='Received Error From Physical Layer'
+
+ == Upstream Port UnCorrectable Error ==
+ root@tbowman-cxl:~/aer-inject# ./us-uce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0d:00.0
+ pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0d:00.0
+ pcieport 0000:0d:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0d:00.0:   device [19e5:a128] error status/mask=00400000/02000000
+ pcieport 0000:0d:00.0:    [22] UncorrIntErr
+ aer_event: 0000:0d:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+ cxl_port_aer_uncorrectable_error: device=0000:0d:00.0 host=0000:0c:00.0 status: 'Memory Address Parity Error' first_error: 'Memory Address Parity Error'
+ Kernel panic - not syncing: CXL cachemem error.
+ CPU: 10 UID: 0 PID: 150 Comm: irq/24-aerdrv Tainted: G            E      6.12.0-rc7-cxl-port-err-00016-g7ce90d33afcd #4727
+ Tainted: [E]=UNSIGNED_MODULE
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x27/0x90
+  dump_stack+0x10/0x20
+  panic+0x33e/0x380
+  cxl_do_recovery+0x122/0x130
+  ? srso_return_thunk+0x5/0x5f
+  aer_isr+0x64f/0x700
+  irq_thread_fn+0x28/0x70
+  irq_thread+0x179/0x240
+  ? srso_return_thunk+0x5/0x5f
+  ? __pfx_irq_thread_fn+0x10/0x10
+  ? __pfx_irq_thread_dtor+0x10/0x10
+  ? __pfx_irq_thread+0x10/0x10
+  kthread+0xf5/0x130
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x3c/0x60
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ Kernel Offset: 0x2c400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+ ---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+ == Downstream Port Correctable Error ==
+ root@tbowman-cxl:~/aer-inject# ./ds-ce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0e:00.0
+ pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0e:00.0
+ pcieport 0000:0e:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00004000/0000a000
+ pcieport 0000:0e:00.0:    [14] CorrIntErr
+ aer_event: 0000:0e:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+ cxl_port_aer_correctable_error: device=0000:0e:00.0 host=0000:0d:00.0 status='Received Error From Physical Layer'
+
+ == Downstream Port UnCorrectable Error ==
+ root@tbowman-cxl:~/aer-inject# ./ds-uce-inject.sh
+ pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0e:00.0
+ pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0e:00.0
+ pcieport 0000:0e:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+ pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00400000/02000000
+ pcieport 0000:0e:00.0:    [22] UncorrIntErr
+ aer_event: 0000:0e:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+ cxl_port_aer_uncorrectable_error: device=0000:0e:00.0 host=0000:0d:00.0 status: 'Memory Address Parity Error' first_error: 'Memory Address Parity Error'
+ Kernel panic - not syncing: CXL cachemem error.
+ CPU: 10 UID: 0 PID: 148 Comm: irq/24-aerdrv Tainted: G            E      6.12.0-rc7-cxl-port-err-00016-g7ce90d33afcd #4727
+ Tainted: [E]=UNSIGNED_MODULE
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x27/0x90
+  dump_stack+0x10/0x20
+  panic+0x33e/0x380
+  cxl_do_recovery+0x122/0x130
+  ? srso_return_thunk+0x5/0x5f
+  aer_isr+0x64f/0x700
+  irq_thread_fn+0x28/0x70
+  irq_thread+0x179/0x240
+  ? srso_return_thunk+0x5/0x5f
+  ? __pfx_irq_thread_fn+0x10/0x10
+  ? __pfx_irq_thread_dtor+0x10/0x10
+  ? __pfx_irq_thread+0x10/0x10
+  kthread+0xf5/0x130
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x3c/0x60
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ Kernel Offset: 0x5800000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+ ---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+ Changes
+ =======
+ Changes in v3 -> v4
+ [Lukas] Capitalize PCIe and CXL device names as in specifications
+ [Lukas] Move call to pcie_is_cxl() into cxl_port_devsec()
+ [Lukas] Correct namespace spelling
+ [Lukas] Removed export from pcie_is_cxl_port()
+ [Lukas] Simplify 'if' blocks in cxl_handle_error()
+ [Lukas] Change panic message to remove redundant 'panic' text
+ [Ming] Update to call cxl_dport_init_ras_reporting() in RCH case
+ [lkp@intel] 'host' parameter is already removed. Remove parameter description too.
+ [Terry] Added field description for cxl_err_handlers in pci.h comment block
+
+ Changes in v2 -> v3
+ [Terry] Add UIE/CIE port enablement patch. Needed because only RP are  enabled by AER driver.
+ [DaveJ] Isolate reading upstream port's AER info to only the CXL path
+ [Jonathan, Dan] Add details about separate handling paths for CXL & PCIe
+ [Jonathan] Add details to existing comment in devm_cxl_add_endpoint()
+ about call to cxl_init_ep_ports_aer()
+ [Jonathan] Updated cxl_init_ep_ports_aer() w/ checks for NULL;
+ [Jonathan] Move find_cxl_port() patch immediately before patch to create handlers
+ [Jonathan] Patch title fix: find_cxl_ports() -> find_cxl_port()
+ [Jonathan] Remove 2 unnecessary dev_warns() in cxl_dport_init_ras_reporting() and
+ cxl_uport_init_ras_reporting().
+ [Jonathan] Remove unnecessary filter on PCIe port devices in dev_is_cxl_pci()
+ [Jonathan] Change to use 2 cxl_port declarations in cxl_pci_port_ras()
+ [Jonathan] Fix spacing in 'struct cxl_error_handlers' declaration.
+ 
+ Changes in v1 -> v2
+ [Jonathan] Remove extra NULL check and cleanup in cxl_pci_port_ras()
+ [Jonathan] Update description to DSP map patch description
+ [Jonathan] Update cxl_pci_port_ras() to check for NULL port
+ [Jonathan] Dont call handler before handler port changes are present (patch order)
+ [Bjorn] Fix linebreak in cover sheet URL
+ [Bjorn] Remove timestamps from test logs in cover sheet
+ [Bjorn] Retitle AER commits to use "PCI/AER:"
+ [Bjorn] Retitle patch#3 to use renaming instead of refactoring
+ [Bjorn] Fix base commit-id on cover sheet
+ [Bjorn] Add VH spec reference/citation
+ [Terry] Removed last 2 patches to enable internal errors. Is not needed
+ because internal errors are enabled in AER driver.
+ [Dan] Create cxl_do_recovery() and pci_driver::cxl_err_handlers.
+ [Dan] Use kernel panic in CXL recovery
+ [Dan] cxl_port_hndlrs -> cxl_port_error_handlers
+ [Dan] Move cxl_port_error_handlers to pci_driver. Remove module (un)registration.
+ [Terry] Add patch w/ qcxl_assign_port_error_handlers() and cxl_clear_port_error_handlers()
+ [Terry] Removed PCI_ERS_RESULT_PANIC patch. Is no longer needed because the result type parameter
+ is not used in the CXL_err_handlers callbacks.
+
+ Changes in RFC -> v1:
+ [Dan] Rename cxl_rch_handle_error() becomes cxl_handle_error()
+ [Dan] Add cxl_do_recovery()
+ [Jonathan] Flatten cxl_setup_parent_uport()
+ [Jonathan] Use cxl_component_regs instead of struct cxl_regs regs
+ [Jonathan] Rename cxl_dev_is_pci_type()
+ [Ming] bus_find_device(&cxl_bus_type, NULL, &pdev->dev, match_uport) can
+ replace these find_cxl_port() and device_find_child().
+ [Jonathan] Compact call to cxl_port_map_regs() in cxl_setup_parent_uport()
+ [Ming] Dont use endpoint as host to cxl_map_component_regs()
+ [Bjorn] Use "PCIe UIR/CIE" instesad of "AER UI/CIE"
+ [Bjorn] Dont use Kconfig to enable/disable a CXL external interface
+
+Terry Bowman (15):
+  PCI/AER: Introduce 'struct cxl_err_handlers' and add to 'struct
+    pci_driver'
+  PCI/AER: Rename AER driver's interfaces to also indicate CXL PCIe Port
+    support
+  cxl/pci: Introduce PCIe helper functions pcie_is_cxl() and
+    pcie_is_cxl_port()
+  PCI/AER: Modify AER driver logging to report CXL or PCIe bus error
+    type
+  PCI/AER: Add CXL PCIe Port correctable error support in AER service
+    driver
+  PCI/AER: Change AER driver to read UCE fatal status for all CXL PCIe
+    Port devices
+  PCI/AER: Add CXL PCIe Port Uncorrectable Error recovery in AER service
+    driver
+  cxl/pci: Map CXL PCIe Root Port and Downstream Switch Port RAS
+    registers
+  cxl/pci: Map CXL PCIe Upstream Switch Port RAS registers
+  cxl/pci: Update RAS handler interfaces to also support CXL PCIe Ports
+  cxl/pci: Change find_cxl_port() to non-static
+  cxl/pci: Add error handler for CXL PCIe Port RAS errors
+  cxl/pci: Add trace logging for CXL PCIe Port RAS errors
+  cxl/pci: Add support to assign and clear pci_driver::cxl_err_handlers
+  PCI/AER: Enable internal errors for CXL Upstream and Downstream Switch
+    Ports
+
+ drivers/cxl/core/core.h       |   3 +
+ drivers/cxl/core/pci.c        | 186 +++++++++++++++++++++++++++-------
+ drivers/cxl/core/port.c       |   4 +-
+ drivers/cxl/core/trace.h      |  47 +++++++++
+ drivers/cxl/cxl.h             |  10 +-
+ drivers/cxl/mem.c             |  39 ++++++-
+ drivers/pci/pci.c             |  13 +++
+ drivers/pci/pci.h             |   3 +
+ drivers/pci/pcie/aer.c        | 107 +++++++++++--------
+ drivers/pci/pcie/err.c        |  54 ++++++++++
+ drivers/pci/probe.c           |  10 ++
+ include/linux/aer.h           |   1 +
+ include/linux/pci.h           |  14 +++
+ include/ras/ras_event.h       |   9 +-
+ include/uapi/linux/pci_regs.h |   3 +-
+ 15 files changed, 417 insertions(+), 86 deletions(-)
+
+
+base-commit: 2d5404caa8c7bb5c4e0435f94b28834ae5456623
+-- 
+2.34.1
+
