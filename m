@@ -1,73 +1,74 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88A31FC0F4;
-	Wed, 11 Dec 2024 02:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE9E1AAA1D;
+	Wed, 11 Dec 2024 02:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733883997; cv=none; b=YvyaR7xZI6yrZ3zpW7qdDwhnVFjigZD3EvOv1v1shOfT2vZ6fHxU62klEmOJ8mQd+Z9paszFxOTiJ054j6gpb/N3Rl3/7UrkXUcc77mxwBytSVoWf9Z0izq9MMfzjMZctk6UutTL6O03IhznDntRQmeUiY4qndetHc33wSyZaZ0=
+	t=1733884267; cv=none; b=Rtf9d/1IXeG7YPd8IpJXcW+U0pBqD9T58uNgZQMEv0MMH6vt/jblUFjhxxgjlxCSl8x+7oSqGisWDzqjQeVoPa4WG/YL8JeeWuaalpNn5u8Je1gkyLTnyONjepuT5+XB5tGdBzDv6aQxEtg+Fm0H4G1SnW6JeaNFGIVZoXqSHm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733883997; c=relaxed/simple;
-	bh=E+hBB5pqqfhb7ph/gXl+WOvqvXhrHEPVinJD2eUh2Jc=;
+	s=arc-20240116; t=1733884267; c=relaxed/simple;
+	bh=9/RMUndcExKfIjoAYXiSrUcS/uugTHcL3EUWICRqRuY=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Kfk7ZUJdI1lMN/ioRZHjG9t2zjdbJh16zZaqg7LSTgQUVIBRm+qaUFbEWl/yErbfbF9ImG6zEddWudBkA52l8gbwgJN5k5eRE7ltvSOaW8VbSHf4xw9nBMJbl+PUX3qvlvU5KyQ5xrfHkALId2Vn6WETGyJsFhmoIWzSk7xAl6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byWYlxpt; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:Content-Type; b=iJ4yGKHEa+fK16pXrsXcbijEtPcDeHmZkD1iHHmkYDOhveHqLMLYd07aerfT9lC05Mewuq2/forOHEywnvHBfn+keqew7PzPwmf657qW8xviO5EMmoxTpxT2OIwc1RiF7UIiKPJOtx0l6vVYyyfFbjLtekgnQczLAVhI8/dFuNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMOIxaXL; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byWYlxpt"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso4739367f8f.1;
-        Tue, 10 Dec 2024 18:26:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMOIxaXL"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3863703258fso106743f8f.1;
+        Tue, 10 Dec 2024 18:31:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733883993; x=1734488793; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733884264; x=1734489064; darn=vger.kernel.org;
         h=content-transfer-encoding:content-language:in-reply-to:mime-version
          :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K5mLS8pb+KNJoyuNPuFmK9HlqacVzGWATu/+gYlroLM=;
-        b=byWYlxpttk8wyce4hEqkz2K5sdkKCTAVFvYTap6BxKbO55pFnTf2nVYZwCYlmnbtVA
-         xtNoBG6Eu+g2RvE81nGIz+7GggQISfLVDGIRm4wcGSdhqE1KQFTZ0r584Mq3hn8lYuco
-         1TNL/Y5VK0TK53qviGUt0rMUSUqhpzgeboJVGWva/SreP0xGjve1adYEFap+MuQo6y9Q
-         gjsjUbGuF3tswtuQ6mi41iVoJyUyJr2TRRuVYkRBP/gZUeV58/AQvrFdv5qALCsP0RTt
-         FszsEkfMFTqpK49mYbxnIr5WZ5xgsD3zijX6xU9YgbsxU1EX2pHsh9IgkuHuw7tXvr+T
-         v/iA==
+        bh=gtkADtFaW5vFNsFzmyNYgIm6XeqYy3yV6Xm55WGlKSo=;
+        b=SMOIxaXL5at4fjJW5Idz1MNJBkwDW7pFirDt7hntYRaT1M/8OwpOtnyHCWnmMyW/RW
+         R8UqoXKTmYEXOvcdj2GXwfClrdQB4CO5VvkNKfPd8coFxsoh7yIPx9shE5fNgW1Ugssi
+         ISrCHiy4O+fcFv5ACT9lPHCFr6iosJpzhCfL1sNI6NQRZHIH9lzR6M1nC3g4FlzkVYF8
+         B9oFcSPW4pxFEV311yVbprEm30gaSUj4MH+SE+gteTruVEwdTrwqBOfTHYZ+9yeVXvzu
+         SlqK1uUjqe05Ub7NptmIJcwRRZRYZliIuii8WW3UXn8Jp4VNyVzxWNfUYzCHVHCbzp57
+         6QRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733883993; x=1734488793;
+        d=1e100.net; s=20230601; t=1733884264; x=1734489064;
         h=content-transfer-encoding:content-language:in-reply-to:mime-version
          :user-agent:date:message-id:from:references:cc:to:subject
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5mLS8pb+KNJoyuNPuFmK9HlqacVzGWATu/+gYlroLM=;
-        b=P/icITSUjjVjubU5YX9BC1A9gcgY58pDlLTXhV9V65S9uAwKq06CsHpxTt5YrBxXXC
-         udiIZDIw5M1DjA/MFUgaQRUN2Et6NDGFTo9cVDjknn8icHyfoN0DQZ1bpu+tlOCuq2tI
-         ZRm33htr1D2b9+Add7irVmkNGU8kXkSOoifTkU4tFJg3p7tpuShvmuzer4ZZHC9uospf
-         N1ZNck9WI/8xhSwa6LNiCRpxhEQ/jtNM0A31BfE+olbgDFZnW9/ukJzsclu76PPQGLSR
-         XAIR2TLRNzqHPfpYiHSHm9nYaNsxC74McbEXodM5xxqf8CzqtmlkrlLrNfxKxExsdwUu
-         plBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVl06NIajOK/ze5TNtU6To0CYrEES1T44LK+EMt5avjkVnBQqDad1XzT8mY/3jx40l69wBARzkepkA=@vger.kernel.org, AJvYcCWpSzpNl2iijjqWghYxuvtqqX1bBKfWmzJw1SeHgKW9PWu5kzzCRAlzcmJbsXpyb1y+o0YRYP7x@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBs88EPH10ATt9pJggch+rzhie1eutlRL6xnKoNEZCeK8meqHm
-	1flTP/dVNvWQp0+3ynjOiqAdUbucYQhcXdK4wPPOqdBmdwI/s/Dx
-X-Gm-Gg: ASbGncuqL57c243OZWk32zpnQAodd+CqZsycqc+TC45+GFx0uzYsD9sYG98gbJno3zN
-	fS4W5pNl4mi6P2RK9cI9vAv2uDudwHGYkp/RUkm4M4bOskPWjZNQNFHRwf/SugDMM21XMjIMQAL
-	LOocpOyX1gPF9c2hgqgvfZhy/o+zrBY5lY8qTlT6POXYWzjoHSJ6GUnvsx31zfq5aI/UnavMHBE
-	yriG2V2MfCvUvO/zWW5r4JhwDscsMXoYYX5aK7GnQKyVIhHW9lYJ67J6OTUM9OOY7O5dpv2gApg
-	oRObgzwt5ZHwyNVrU8hKdlIxS0rQKVUuiX63G88CkQ==
-X-Google-Smtp-Source: AGHT+IGQis99JLmrTJSoU3BdriR3JrbkD6EDyruzS8T2GiFiY3vohDo10sOrFvtzp1x2hLuzqsDzbA==
-X-Received: by 2002:a5d:64c2:0:b0:386:3e3c:efd with SMTP id ffacd0b85a97d-3864cec57a2mr804525f8f.44.1733883992594;
-        Tue, 10 Dec 2024 18:26:32 -0800 (PST)
+        bh=gtkADtFaW5vFNsFzmyNYgIm6XeqYy3yV6Xm55WGlKSo=;
+        b=aalItLM1LqqZnFQXHr285KV5FpipBrLiwcUhpM3rXQyC/viWHs3HLpimaRueAdO8P1
+         w3wiTwbeLVHvxLUXBGGjKpqBCZ0AHmnE3um/oJ39Jib5Uxix9i4XgCeaINUHXZM9ETmD
+         Rw7ciZdzRNNp8tk2km4WnuZhpXUDh+3+uT2pRemmhVRzT3FlHnGJ097CIZ5UPjL/rkG7
+         Y70a6Ji0nEJQUU80GhaZ3HmOpI9n/uY/nddQxHfVe/eF/t8Fp+54r75GBffBpQBeOlnc
+         mZYNgfRvBQyX6Y3H+eJKIZafMewKAPy3kjlc4/PNEhSj6V7wAfLLs8o8DGYkc9sv5Kdb
+         3B1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVwm0afzPtgiDx6VE20BF+V9BIOimFydc3uELMV4QVinZCrH3QHSid5Y95MFJgR7YVjp9K77t13pHI=@vger.kernel.org, AJvYcCXpRuABWk5WiCJ5Vg8MhmZIJEkRjPRZB+pjU0KKqDX/NkNEoFqhv0Nl/YqUXtOyH3CWXkCynQfW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvdoTfT8wqxYlp8cvkjr7IwGpLnoW+4yDtKoESQ2H+p2nDOEqz
+	bGX81qWH80orT6dXkzQm7YxZbmKAB/WANSYy62NDMXxxcF0NL79g
+X-Gm-Gg: ASbGnctv45S/jCEgctmw1S3I5MnD7jZIf2JPTenb6nqklWtuDLbeNkfMmQoJh7QFJo+
+	J9coX+ecfx7D+1p71BzWkQlIaOEjAxg7KDALgOacbOyBROLXt7rwFqAgTXkZ6goIfJNgkPf4M+g
+	osvI2vaPH6N8fT6teMDaCgZL6Vx+3zx+WRhHSoRK92j9QmXaXfAxG/tdOabat0GaJMyCvPragY5
+	XxbHcMmROwFoug1kCPWtmArGgD4ZiJIM6Ger+AeIv65N98MaYLjd4ELsQXFRjRSOBsqiwftouUq
+	VLzUYTSEXFVIWmAzY0vvswdTkBlSLe78LqZyWYE/dQ==
+X-Google-Smtp-Source: AGHT+IHLe4oFOwCG1X40I8qdseDXMMpZXgckwUjW58XF1YFf4gxQ3VpvIkheqIOqqd82tcCFO74cOQ==
+X-Received: by 2002:a05:6000:1869:b0:385:fcaf:841 with SMTP id ffacd0b85a97d-3864dee4258mr495319f8f.23.1733884263825;
+        Tue, 10 Dec 2024 18:31:03 -0800 (PST)
 Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4361ec87bc3sm1546175e9.1.2024.12.10.18.26.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3878248f8e1sm141794f8f.18.2024.12.10.18.31.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2024 18:26:31 -0800 (PST)
-Subject: Re: [PATCH v7 23/28] sfc: create cxl region
+        Tue, 10 Dec 2024 18:31:02 -0800 (PST)
+Subject: Re: [PATCH v7 24/28] cxl: add region flag for precluding a device
+ memory to be used for dax
 To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
  netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
  edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
  pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
 Cc: Alejandro Lucero <alucerop@amd.com>
 References: <20241209185429.54054-1-alejandro.lucero-palau@amd.com>
- <20241209185429.54054-24-alejandro.lucero-palau@amd.com>
+ <20241209185429.54054-25-alejandro.lucero-palau@amd.com>
 From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <5aa783dc-ee17-d72d-98cb-0d0a64fbd96b@gmail.com>
-Date: Wed, 11 Dec 2024 02:26:30 +0000
+Message-ID: <455f8e81-fa7b-f416-db0d-4ad9ac158865@gmail.com>
+Date: Wed, 11 Dec 2024 02:31:01 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 Precedence: bulk
@@ -76,7 +77,7 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241209185429.54054-24-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241209185429.54054-25-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -84,47 +85,36 @@ Content-Transfer-Encoding: 7bit
 On 09/12/2024 18:54, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use cxl api for creating a region using the endpoint decoder related to
-> a DPA range.
+> By definition a type2 cxl device will use the host managed memory for
+> specific functionality, therefore it should not be available to other
+> uses. However, a dax interface could be just good enough in some cases.
+> 
+> Add a flag to a cxl region for specifically state to not create a dax
+> device. Allow a Type2 driver to set that flag at region creation time.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
-
-Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-
+> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
 > ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/cxl/core/region.c | 10 +++++++++-
+>  drivers/cxl/cxl.h         |  3 +++
+>  drivers/cxl/cxlmem.h      |  3 ++-
+>  include/cxl/cxl.h         |  3 ++-
+>  4 files changed, 16 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 09827bb9e861..9b34795f7853 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -128,10 +128,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  		goto err3;
->  	}
->  
-> +	cxl->efx_region = cxl_create_region(cxl->cxlrd, cxl->cxled);
-> +	if (!cxl->efx_region) {
-> +		pci_err(pci_dev, "CXL accel create region failed");
-> +		rc = PTR_ERR(cxl->efx_region);
-> +		goto err_region;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b014f2fab789..b39086356d74 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3562,7 +3562,8 @@ __construct_new_region(struct cxl_root_decoder *cxlrd,
+>   * cxl_region driver.
+>   */
+>  struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+> -				     struct cxl_endpoint_decoder *cxled)
+> +				     struct cxl_endpoint_decoder *cxled,
+> +				     bool no_dax)
 
-Little bit weird to have this mixture of numbered and named labels in the
- failure ladder.  Ideally I'd prefer the named kind throughout, in which
- case e.g. err3: would become three labels called something like
- err_memdev:, err_freespace:, and err_dpa:, all pointing to the same stmt
- (the cxl_release_resource call).
-But up to you whether you want to bother.
-
-> +	}
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
->  
-> +err_region:
-> +	cxl_dpa_free(cxl->cxled);
->  err3:
->  	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
->  err2:
+Won't this break bisectability?  sfc won't build as of this commit
+ because it tries to call cxl_create_region with the old signature.
+You could do the whole dance of having an interim API during the
+ conversion, but seems simpler just to reorder the patches so that
+ the no_dax parameter is added first before the caller is introduced.
