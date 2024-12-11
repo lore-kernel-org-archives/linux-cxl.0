@@ -1,205 +1,190 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2041.outbound.protection.outlook.com [40.107.93.41])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3316424632C;
-	Wed, 11 Dec 2024 17:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733939057; cv=fail; b=fhpi/bznf9lymLLOKuaXfhvysWEVJOXTGDUOC4PB/R6Q8usiidJ7qtR6nNLaHx3DmU0l71MHcL9lbZArmHaOtI08kVt2mhviRywTPXbMDKbSYvcQRl3yTRqvb9b5G6sIiObDqQIcPJMPWXAZYNNXugm06U3JeBRYmJoFIX+nIq0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733939057; c=relaxed/simple;
-	bh=md0pVAk5GrsAXtX/xNDRRpl2KXHqMt9De8xJsB8VmfM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J+Wz399SJRt9C2UFrEU4CUiMQJ6mU++usNmTIOoKbh1NZxBthCGwmqx0I507UQ6rMXkrz/osoY/iXe62vSSSlRxmqZLKiEC7e8kTFIk7gwav1RluORs/V9ecyL9NowGh4gPFemICBn/uzFxEte3gql3UQc0uLPufqPetLr6ngWg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=H6Gb+RKl; arc=fail smtp.client-ip=40.107.93.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="H6Gb+RKl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bpRtsGQZa3zwVatzr2A9lNXWfQ+Y+WT334DaVEG8sP6PTAzFOw1fh0rmWQKboC4zemkWBtzUjVCmoIQW/yxfhg1SuapkU2hWsuYXZC+0FBhLtnZR50fwB2xFXPl4FoELckC08ykILW6WKXAnisI0YMf3VA8YVP9vJWGWp4PUeRBnc5Us6PFEhZVO8X2TJWYnMjotmTQZinzTLhFYNk5MSmdfN6vSfLTHxbYeTPnJmj1+UYhYSbh4mfTrcnm+p+ji2aUrCxddQcfs9kafO/jWPimc0bFTNI96DV94n3NjbI5xF/vQ2XkoSweO6yfy0FA9QVY0iE86qtlAUkyK99Lnaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vtv9e/uY9K7ZlnR1iYnPML4tWgyQ44RtySK15gz+erg=;
- b=DrjTH66bpHRZ3mrrZIz5OjBU0TEGosFw1XuccCRVgPvuLs42VKorM7X2VWe4hm+Bo64TjBP5xPriBwdzeGjZ+ajqxEwNMDZWnonjRLKGs+35IXMRizR0/40YhceAPItESFM0ZfpHKVepjf+oLRaqLwyUohjKTkfd+s/gCIgHGCQW6cxHysEdrf9cVWCJPGw+DZKE8rt9yr/l4Q/TscL98TyC4+y8vABcyKoV5SgTb0icuvIq0qZzWNrQr3+rQDhIUg9UYqrXwIBxf/uMYyH5wCGjfholLTjJBVdszVtjxmpJnrumfZZ6FP3ljWDxF3KVUZPOoafhNWkCYDKb4Q4Liw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vtv9e/uY9K7ZlnR1iYnPML4tWgyQ44RtySK15gz+erg=;
- b=H6Gb+RKlSDPCTzcSF+Q48qrSe75/BxoysIykn/SPeZyvXZBH02zWniBNrSrwzL0tjS6pQRaPJAzjTPgX0njKCwF2k1Fc/mHYsvmoNlvNzP3WuM2hyNSMxqe7nuVwY+EqJKpoy7GqZK8oZrQVzGHB6RL0VbCx2itfDKgnGiXnu7cNxPB8KVUv97d/R9ZfrjGtSmxxwllSc7wuN1duAPX4WJ+x4s//vGKuYcu5I8bSdMfnBK1hF1RKJUQB1Rlou54KBdi0do/qPpAk3MfbbTn3uzGGY5fSlw0rRJaAEyMHFxnZ6ph1953WYAYuCNhsxT8VXQzcXvJThw+/Pj+TuVXS/A==
-Received: from BY3PR10CA0010.namprd10.prod.outlook.com (2603:10b6:a03:255::15)
- by CH3PR12MB8910.namprd12.prod.outlook.com (2603:10b6:610:179::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.20; Wed, 11 Dec
- 2024 17:44:12 +0000
-Received: from SJ1PEPF000023D7.namprd21.prod.outlook.com
- (2603:10b6:a03:255:cafe::8b) by BY3PR10CA0010.outlook.office365.com
- (2603:10b6:a03:255::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8251.15 via Frontend Transport; Wed,
- 11 Dec 2024 17:44:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF000023D7.mail.protection.outlook.com (10.167.244.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8272.0 via Frontend Transport; Wed, 11 Dec 2024 17:44:12 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 11 Dec
- 2024 09:44:00 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 11 Dec
- 2024 09:44:00 -0800
-Received: from localhost (10.127.8.13) by mail.nvidia.com (10.129.68.9) with
- Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Wed, 11 Dec 2024
- 09:43:57 -0800
-Date: Wed, 11 Dec 2024 19:43:56 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <martin.habets@xilinx.com>,
-	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <edumazet@google.com>, <dave.jiang@intel.com>,
-	"Alejandro Lucero" <alucerop@amd.com>
-Subject: Re: [PATCH v7 26/28] cxl: add function for obtaining region range
-Message-ID: <20241211194356.00002976@nvidia.com>
-In-Reply-To: <20241209185429.54054-27-alejandro.lucero-palau@amd.com>
-References: <20241209185429.54054-1-alejandro.lucero-palau@amd.com>
-	<20241209185429.54054-27-alejandro.lucero-palau@amd.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3761D6DA4;
+	Wed, 11 Dec 2024 17:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733939925; cv=none; b=RD2jG5B+OeoeyBcIA0j6oDxAdzH4Q0kuiGeZlbLtXwDd/id06pCmv/vpGaMETvTjW6amVaUU0XCfeUmHbre8y/2z8Yv4dBOcX8fGAAaSz4OqhdbC3G+rdE3ULB/xgufBhs7wPHATUiSxAaYTRrmtUEfLhCoPOI4HEZVjVtdkc0I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733939925; c=relaxed/simple;
+	bh=cGUL1g5soNzNs/G21jrfWDbCv/UQ7rxtUG3ID63/8RI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=b/imKcGwB2szwSeHSDiGkEUJTkjnk6Zm1p9ZZPtsUkWjfT1rWQ7M3JqHTm9W7gtNj8F4T7QEQpL8bnNb44hGX+cEAN2mX+PZFJuSJNmcdpkOJ8UdblS1GVS62DjTQEn0IbKcd8D+H56qNlpjRuMIuMTZB76snNmno9BtB7yV+zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y7jtd4XGNz6D8bR;
+	Thu, 12 Dec 2024 01:55:21 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 87E06140442;
+	Thu, 12 Dec 2024 01:58:38 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 11 Dec 2024 18:58:38 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 11 Dec 2024 18:58:38 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Shiju Jose <shiju.jose@huawei.com>, Dan Williams
+	<dan.j.williams@intel.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "bp@alien8.de" <bp@alien8.de>, "tony.luck@intel.com"
+	<tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
+	<mchehab@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>, "Jonathan
+ Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v17 05/18] cxl: Add Get Supported Features command for
+ kernel usage
+Thread-Topic: [PATCH v17 05/18] cxl: Add Get Supported Features command for
+ kernel usage
+Thread-Index: AQHbPQkFb4DhmQwolUmt5xqDd6N+ZLLZxDuAgAQrVZCAA3+90A==
+Date: Wed, 11 Dec 2024 17:58:37 +0000
+Message-ID: <6e9c128e888c4cacb04b5dd53b1d1b79@huawei.com>
+References: <20241122180416.1932-1-shiju.jose@huawei.com>
+	<20241122180416.1932-6-shiju.jose@huawei.com>
+	<67536f6987656_10a08329480@dwillia2-xfh.jf.intel.com.notmuch>
+ <e72011454204462eb8ccf10eef56106c@huawei.com>
+In-Reply-To: <e72011454204462eb8ccf10eef56106c@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D7:EE_|CH3PR12MB8910:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5963e0f-65aa-4d4c-b9a4-08dd1a0b6c60
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|36860700013|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ET1Tkooog7eTg7suMTyD9enKjMdrZ8iULpwafajqp2Yf9auPN5JYFGLdL3Tv?=
- =?us-ascii?Q?GWIbXuq31euFeYMTPIaq2pVqN07joP7M5o0jWaEqNAFfrQAdzoZQfam2IbsP?=
- =?us-ascii?Q?L7mbXc/qOfZNXhHzhmgqbKmYbWlDvEpDiZFLLN6QjQJpRWTa9ukAsx0Bnc9C?=
- =?us-ascii?Q?w+/DzXRkU8VuwG+PLQ7Gkj8PhwUn2iUtxq3HEzsOpGaIpgO1A0dk8uCByPtp?=
- =?us-ascii?Q?nyM2uKTg5UxkOx+mYs8cF8EIoQ9pt79/4C2m0n/k+E2krxSUN7n/93CZbra/?=
- =?us-ascii?Q?MzTECTvecBGQPH6YICGWuKBi0Fe/T8ZUNtYqwygzA/yaQJR6IXwISPo2eQ3i?=
- =?us-ascii?Q?og6Ls/SdzHkZw8DBzNb53FEiYD/bCztmZsVs76SF1qHJ3PYT6zwEY+3fl3J/?=
- =?us-ascii?Q?7Jfw+65bkKXBFR7LsMpTyz+e3jYb2vDnkujsBfIqFYQN2UK4i2SSjB7WQfCT?=
- =?us-ascii?Q?s0XgAR0Mr0o6Qqq23wCxcTn1lgEmixfgrLpdwHLV+ThvpRB3V2pIwdCet5B+?=
- =?us-ascii?Q?F+tB4FxJkdUo6pjcVx2Z9rdM1UyWLZzMCsQjKerCctB14R6oqDA0xZc83YGZ?=
- =?us-ascii?Q?tpwyogPYcPtgiHEWBEhQo/gcOwN9WzeIUC87zPCkLC8T042At3X6X6cX4e6u?=
- =?us-ascii?Q?pQ7yLG1calPtMuM9x8SU9hbaDK9f/2kScOpbtmFgd7yTkIwHKYg+mm4T5iOu?=
- =?us-ascii?Q?jclQpXkmw/VKU1P2Rjs8hQryVKHwYL0K0/sNggHDt/YGRK9O4jWQ7v6+BLwf?=
- =?us-ascii?Q?7ewzQi+rIDNphxK/Lzgo0+R60faW7P1/kCDAseS86nJzdzaePH05VGIFvrxm?=
- =?us-ascii?Q?Nst4MhOePmwjdq1Ko0M48HZIFqk0k/utdNacZdXsT4M/CD02YM88RGkEdwP3?=
- =?us-ascii?Q?u80bnzzs3jeJ7V6CSsOj41VUuPYa2yruexULELZbneZkQxIxhMJu1Wiqr7Sz?=
- =?us-ascii?Q?lVFwuSczHn72VC2VONAl7Fnk5ZLeCYQMbGBcYn0e5q2D6fpEpOoKTVNgAKSB?=
- =?us-ascii?Q?AGvi84hWKH7lQCki2xfeaUkwwEOFMXCC2F37CXZL3TyciXaxT/XgeD5hWRZB?=
- =?us-ascii?Q?QtzclzKLSpSX/zioPPYhgErlZkk0mCWuZQufT05FV2cVyHfx7z/LxL7DCxeQ?=
- =?us-ascii?Q?KWKCSjdBag32gus2AcIljuBhdbxWg0wGXYXWBw73CS9pPy8bxG6kh5eL9jcv?=
- =?us-ascii?Q?jlVQBynke72iRJOwTal6xWQMss127qk5+89QTd+Gu7h6YTy0TIBr5DeQkf27?=
- =?us-ascii?Q?FWDWSK2D7b20XQtvKMlGOyjuHeYNP+w1DUD3Wg6lKF/F9q/hAnmKWNN3BHKs?=
- =?us-ascii?Q?LBOfkMXAvyhzX6QhDpnJyNaoZHHtpBIIHvJdz+YNmRhYMbCeJPepnG/cpGmy?=
- =?us-ascii?Q?2mxPKAqbGz70KfBmFLNDXMeYx0TTL+FgSpxk2YpeWFtf+KFgTzDylBfNzefb?=
- =?us-ascii?Q?3zb1jkcuWhRyWafh4jRmpWX7Y+9FaVvq?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(36860700013)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 17:44:12.1250
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5963e0f-65aa-4d4c-b9a4-08dd1a0b6c60
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D7.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8910
 
-On Mon, 9 Dec 2024 18:54:27 +0000
-<alejandro.lucero-palau@amd.com> wrote:
+>-----Original Message-----
+>From: Shiju Jose <shiju.jose@huawei.com>
+>Sent: 09 December 2024 14:28
+>To: Dan Williams <dan.j.williams@intel.com>; linux-edac@vger.kernel.org;
+>linux-cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org;
+>linux-kernel@vger.kernel.org
+>Cc: bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
+>mchehab@kernel.org; dave@stgolabs.net; Jonathan Cameron
+><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: RE: [PATCH v17 05/18] cxl: Add Get Supported Features command for
+>kernel usage
+>
+>>-----Original Message-----
+>>From: Dan Williams <dan.j.williams@intel.com>
+>>Sent: 06 December 2024 21:41
+>>To: Shiju Jose <shiju.jose@huawei.com>; linux-edac@vger.kernel.org;
+>>linux- cxl@vger.kernel.org; linux-acpi@vger.kernel.org;
+>>linux-mm@kvack.org; linux- kernel@vger.kernel.org
+>>Cc: bp@alien8.de; tony.luck@intel.com; rafael@kernel.org;
+>>lenb@kernel.org; mchehab@kernel.org; dan.j.williams@intel.com;
+>>dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>>dave.jiang@intel.com; alison.schofield@intel.com;
+>>vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
+>>Vilas.Sridharan@amd.com; leo.duran@amd.com; Yazen.Ghannam@amd.com;
+>>rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
+>>dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
+>>james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com;
+>>erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+>>gthelen@google.com; wschwartz@amperecomputing.com;
+>>dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
+>>nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+>><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
+>>kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+>>Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+>>Subject: Re: [PATCH v17 05/18] cxl: Add Get Supported Features command
+>>for kernel usage
+>>
+>>shiju.jose@ wrote:
+>>> From: Dave Jiang <dave.jiang@intel.com>
+>>>
+>>> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h) The
+>>> command retrieve the list of supported device-specific features
+>>> (identified by UUID) and general information about each Feature.
+>>>
+>>> The driver will retrieve the feature entries in order to make checks
+>>> and provide information for the Get Feature and Set Feature command.
+>>> One of the main piece of information retrieved are the effects a Set
+>>> Feature command would have for a particular feature.
+>>>
+>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>> Co-developed-by: Shiju Jose <shiju.jose@huawei.com>
+>>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>>> ---
+>>>  drivers/cxl/core/mbox.c      | 179 +++++++++++++++++++++++++++++++++++
+>>>  drivers/cxl/cxlmem.h         |  44 +++++++++
+>>>  drivers/cxl/pci.c            |   4 +
+>>>  include/cxl/mailbox.h        |   4 +
+>>>  include/uapi/linux/cxl_mem.h |   1 +
+>>>  5 files changed, 232 insertions(+)
+>>
+>>Hi Shiju,
+>>
+>>So I commented yesterday on this patch that is also duplicated in
+>>Dave's series have a merge order ordering plan to propose.
+>
+>Hi Dan,
+>
+>Thanks for the suggestions.
+>I tested your suggestions for CXL features commands in the fwctl series, i=
+n the
+>EDAC CXL features setup, as replied.
 
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
+Please find updated patches for your suggestions are shared here.
+https://github.com/shijujose4/linux/tree/edac-enhancement-ras-features_for_=
+v18
 
-Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+However next version (v18) of EDAC series will send after receiving feedbac=
+ks from Borislav=20
+on v17 EDAC patches.
 
-> A CXL region struct contains the physical address to work with.
-> 
-> Add a function for getting the cxl region range to be used for mapping
-> such memory range.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/region.c | 15 +++++++++++++++
->  drivers/cxl/cxl.h         |  1 +
->  include/cxl/cxl.h         |  1 +
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b39086356d74..910037546a06 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2676,6 +2676,21 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> +int cxl_get_region_range(struct cxl_region *region, struct range *range)
-> +{
-> +	if (WARN_ON_ONCE(!region))
-> +		return -ENODEV;
-> +
-> +	if (!region->params.res)
-> +		return -ENOSPC;
-> +
-> +	range->start = region->params.res->start;
-> +	range->end = region->params.res->end;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_region_range, "CXL");
-> +
->  static ssize_t __create_region_show(struct cxl_root_decoder *cxlrd, char *buf)
->  {
->  	return sysfs_emit(buf, "region%u\n", atomic_read(&cxlrd->region_id));
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index cc9e3d859fa6..32d2bd0520d4 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -920,6 +920,7 @@ void cxl_coordinates_combine(struct access_coordinate *out,
->  
->  bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
->  
-> +int cxl_get_region_range(struct cxl_region *region, struct range *range);
->  /*
->   * Unit test builds overrides this to __weak, find the 'strong' version
->   * of these symbols in tools/testing/cxl/.
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 14be26358f9c..0ed9e32f25dd 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -65,4 +65,5 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
->  				     bool no_dax);
->  
->  int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled);
-> +int cxl_get_region_range(struct cxl_region *region, struct range *range);
->  #endif
+>>
+>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c index
+[...]
+>
 
+Thanks,
+Shiju
