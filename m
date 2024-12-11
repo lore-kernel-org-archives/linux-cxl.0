@@ -1,31 +1,60 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A2D209660
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 10:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CF6238E06
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 11:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733914432; cv=none; b=f9mEk4XlFNrK30i8uCyRtY1X0FJyG4w2TDyKM/fRgfaDeMc9duSRieUR/oCb+WhAL9s0yLwhn2LlFCNbdmagTVuhHpsED+QIlNecw+EVXt0e4nooZykOrFLBWJNLnThX9T9nWVih/OZttqoST8ZwEppZVvmoFpR1z8aTUn1J4Wo=
+	t=1733916725; cv=none; b=HceyWkSeyYuhNuaGYR262cqpIrxJdr4NkpBO9TqjrRO0QO9U0FkzOMjigfI8qpPCjpySnPawGUasim6RqpYzFRH1McPhNlNYhbN1j1T9N5w8O67RiC4qqgUX8lC7hu85BFyOmZCG66nlOOiUWxh1zokUA2nwX/6sD4tf9RJDO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733914432; c=relaxed/simple;
-	bh=PC0sfIx0898vB3f7C5CVxprMMSGSCtCElaKZtQVWoxk=;
+	s=arc-20240116; t=1733916725; c=relaxed/simple;
+	bh=AKTqxmpi4mJNDPKknySvlHdWar61q7LraKA5yizjjz4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g4U5xNUoG28xq+y2tRG8tcV1Vbx/uOzevlgQHbvozZkhix9mee1u4CXLgN9PKvMqcy0r4S1gzWzyBspT1TxXUqufhcikm8KiwQJnefb8AQERFECN3C+scdzNtRGLlefkQZooujHDWB1CbJxhKGTVnrUjatqR1iN7LuEjwLss+sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwDHz28mb1lny6t2CA--.17251S2;
-	Wed, 11 Dec 2024 18:53:26 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBnvnolb1lnX2VnAA--.3931S2;
-	Wed, 11 Dec 2024 18:53:26 +0800 (CST)
-Date: Wed, 11 Dec 2024 18:53:25 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Dan Williams <dan.j.williams@intel.com>, jonathan.cameron@huawei.com
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH] cxl: Support Global Persistent Flush (GPF)
-Message-ID: <Z1lvJWHYJFucba5I@phytium.com.cn>
-References: <20241205082101.1193038-1-dave@stgolabs.net>
- <6758d309c9ddb_10a08329414@dwillia2-xfh.jf.intel.com.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SiVLSXKCx0hGfrzjPZlgpZ9D55ZNoxX1LgHv76zbCxLXuAeP6rm2jRoKyiOtgPonCjNqcsw+4R9pdN7peOhOT8iVJaveI0WwfyV3MbLcqpGBYRUY4VZyTqkvVR73uGD8QHeix2iH1snpZo83gE5kP3ydZRouUHuwJdVL7mh259E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJaX1VUV; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJaX1VUV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733916723; x=1765452723;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AKTqxmpi4mJNDPKknySvlHdWar61q7LraKA5yizjjz4=;
+  b=bJaX1VUVDLQSibUNrr/NdZ41HPHnlkkhRsnTJYDSTkNjLKOhPxHb8B8R
+   j/O81Nlo845tNEehnNzQLK3dDc5nBjnvCw2Dqk05FS49c7/8Z8ZdQoZbT
+   bS1tINTkZZgMj3sYvePEkyOpY8bAG3Ip842II84mwKp+zY18twNws/7ok
+   bqJHAJQIVTFUZrX1tB7ViqiEMDFKUNUh6M4YjHnTrHV8HPVSCtvKlFY3x
+   qGhaLyEcATP0Bbjpsco1YBDdUThVIyQgLepaM7Rm85/OCH1lbASMLPZZ8
+   m9jyQnMIB60Ve/2KjbYaUeyMnpyo24FwRXbY8m7DR6kxx/7iqq5dsTmtD
+   Q==;
+X-CSE-ConnectionGUID: j3FYMQXlReqJsH9J83QndA==
+X-CSE-MsgGUID: 5OkpNo3yScKYs9QjFOj0PA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="34431595"
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="34431595"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 03:32:02 -0800
+X-CSE-ConnectionGUID: X+fvPiiPQqKq4DAY4ZxPMg==
+X-CSE-MsgGUID: zfPiE9JwR7u0HlE9L2+aSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
+   d="scan'208";a="96241618"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 03:32:01 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tLKwf-00000006Vco-2NNL;
+	Wed, 11 Dec 2024 13:31:57 +0200
+Date: Wed, 11 Dec 2024 13:31:57 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Nathan Fontenot <nathan.fontenot@amd.com>
+Cc: alison.schofield@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
+Message-ID: <Z1l4LSIIzmoInQXp@smile.fi.intel.com>
+References: <20241202155542.22111-1-nathan.fontenot@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -34,69 +63,237 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6758d309c9ddb_10a08329414@dwillia2-xfh.jf.intel.com.notmuch>
-X-CM-TRANSID:AQAAfwBnvnolb1lnX2VnAA--.3931S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWdYm48FbwABsQ
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Cw4kuF4DGFyfGFW5Kw13twb_yoW8Kw43pF
-	WUKa4kAFWqqFyxCwn7Zw1UWayrCa97Jay5Jr98J340krn0kFn29r4Iqayj9a4xAw1fK3Wj
-	qF4aq3saqF1DuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+In-Reply-To: <20241202155542.22111-1-nathan.fontenot@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 10, 2024 at 03:47:21PM -0800, Dan Williams wrote:
-> Davidlohr Bueso wrote:
+On Mon, Dec 02, 2024 at 09:55:42AM -0600, Nathan Fontenot wrote:
+> Update handling of SOFT RESERVE iomem resources that intersect with
+> CXL region resources to remove the intersections from the SOFT RESERVE
+> resources. The current approach of leaving the SOFT RESERVE
+> resource as is can cause failures during hotplug replace of CXL
+> devices because the resource is not available for reuse after
+> teardown of the CXL device.
 > 
-> Hi Davidlohr, thanks for this:
+> The approach is to trim out any pieces of SOFT RESERVE resources
+> that intersect CXL regions. To do this, first set aside any SOFT RESERVE
+> resources that intersect with a CFMWS into a separate resource tree
+> during e820__reserve_resources_late() that would have been otherwise
+> added to the iomem resource tree.
 > 
-> > Add support for GPF flows. It is found that the CXL specification
-> > around this to be a bit too involved from the driver side. And while
-> > this should really all handled by the hardware, this patch takes
-> > things with a grain of salt.
-> > 
-> > - Dirty shutdown is not handled, and puts the responsibility on the
-> > Admin to deal with any GPF failure - otherwise the kernel will just
-> > keep using the device upon next boot. Hence no SetShutdownState DIRTY
-> > upon memdev probe (and no need for clearing upon successful flush).
-> > 
-> > - As such, the driver will only update port timeouts throughout the
-> > decode hierarchy, upon device probing and hot-remove. These timeouts
-> > can be over-specified, particularly T1. Set the max and rely on
-> > devices to minimize GPF response times to avoid the worst case wait
-> > times that those timeouts imply.
-> > 
-> > - Energy budgeting is not supported.
+> As CXL regions are created the cxl resource created for the new
+> region is used to trim intersections from the SOFT RESERVE
+> resources that were previously set aside.
 > 
-> The missing detail for me is why are the defaults likely to be broken
-> such that the kernel must get involved in setting them, and how does
-> the kernel determine they are broken?
-> 
-> It is unfortunate that the specification does not recommend default
-> values for this, or even an implementation note about what system
-> software is supposed to do with these registers.
-> 
-> Can you say a bit more about the end user visible effects when the
-> timeouts are violated? Because the critical enabling from my perspective
-> is timeout detection (notifying the sysadmin), not timeout setting. 
-> 
-> A policy for setting the timeouts makes sense, but I am not sure that
-> the kernel should pick "max" as a default policy. Especially when max is
-> 80 seconds which is already longer than lockup detectors would tolerate.
-> Likely anything over 30 seconds the kernel should be active complaining
-> about something being broken. If a configuration needs more time that
-> likely needs a user policy override mechanism.
-> 
-> This would be consistent with what we did for mailbox initialization
-> timeouts. Pick a "kernel reasonable" default and provide an override for
-> outlier cases.
+> Once CXL device probe has completed ant remaining SOFT RESERVE resources
+> remaining are added to the iomem resource tree. As each resource
+> is added to the oiomem resource tree a new notifier chain is invoked
+> to notify the dax driver of newly added SOFT RESERVE resources so that
+> the dax driver can consume them.
 
-Hi, list
+...
 
-Except GPF flows, could we use cxl pmem as a special nvdimm device in kernel
-including using ADR mechanism? As the cxl_pmem module would bridge the cxl
-pmem device from cxl subsystem into the nvdimm subsystem.
+>  void __init e820__reserve_resources_late(void)
+>  {
+> -	int i;
+>  	struct resource *res;
+> +	int i;
 
-Many Thanks
-Yuquan
+Unrelated change.
+
+...
+
+> -	for (i = 0; i < e820_table->nr_entries; i++) {
+
+> +	for (i = 0; i < e820_table->nr_entries; i++, res++) {
+
+
+> -		res++;
+
+Unrelated change.
+
+
+>  	}
+
+...
+
+> +static struct notifier_block hmem_nb = {
+> +	.notifier_call = dax_hmem_cb
+
+It's better to leave trailing comma as it reduces churn in the future is
+anything to add here.
+
+> +};
+
+...
+
+> +++ b/drivers/dax/hmem/hmem.h
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#ifndef _HMEM_H
+> +#define _HMEM_H
+
+This needs a few forward declarations
+
+struct device;
+struct platform_device;
+struct resource;
+
+> +typedef int (*walk_hmem_fn)(struct device *dev, int target_nid,
+> +			    const struct resource *res);
+> +int walk_hmem_resources(struct device *dev, walk_hmem_fn fn);
+> +
+> +extern struct platform_device *hmem_pdev;
+> +
+> +#endif
+
+...
+
+>  #include <linux/compiler.h>
+>  #include <linux/minmax.h>
+>  #include <linux/types.h>
+> +#include <linux/notifier.h>
+
+I would put it before types.h to have more ordered piece.
+
+...
+
+> +extern void trim_soft_reserve_resources(const struct resource *res);
+> +extern void merge_soft_reserve_resources(void);
+> +extern int insert_soft_reserve_resource(struct resource *res);
+> +extern int register_soft_reserve_notifier(struct notifier_block *nb);
+> +extern int unregister_soft_reserve_notifier(struct notifier_block *nb);
+
+Why extern?
+
+...
+
+> +++ b/kernel/resource.c
+> @@ -30,7 +30,7 @@
+>  #include <linux/string.h>
+>  #include <linux/vmalloc.h>
+>  #include <asm/io.h>
+> -
+> +#include <linux/acpi.h>
+
+We don't usually interleave linux and asm headers, moreover the list seems to
+be sorted (ordered, please preserve the ordering).
+
+...
+
+> +struct resource srmem_resource = {
+> +	.name	= "Soft Reserved mem",
+> +	.start	= 0,
+> +	.end	= -1,
+> +	.flags	= IORESOURCE_MEM,
+
+This can use DEFINE_RES_MEM_NAMED() as well.
+
+> +};
+
+...
+
+> +	if (sr_res->start == res->start && sr_res->end == res->end) {
+
+Wondering if we have a helper to exact match the resource by range...
+
+> +		release_resource(sr_res);
+> +		free_resource(sr_res);
+> +	} else if (sr_res->start == res->start) {
+> +		WARN_ON(adjust_resource(sr_res, res->end + 1,
+> +					sr_res->end - res->end));
+> +	} else if (sr_res->end == res->end) {
+> +		WARN_ON(adjust_resource(sr_res, sr_res->start,
+> +					res->start - sr_res->start));
+> +	} else {
+> +		/*
+> +		 * Adjust existing resource to cover the resource
+> +		 * range prior to the range to be trimmed.
+> +		 */
+> +		adjust_resource(sr_res, sr_res->start,
+> +				res->start - sr_res->start);
+> +
+> +		/*
+> +		 * Add new resource to cover the resource range for
+> +		 * the range after the range to be trimmed.
+> +		 */
+> +		new_res = alloc_resource(GFP_KERNEL);
+> +		if (!new_res)
+> +			return;
+> +
+> +		*new_res = DEFINE_RES_NAMED(res->end + 1, sr_res->end - res->end,
+> +					    "Soft Reserved", sr_res->flags);
+> +		new_res->desc = IORES_DESC_SOFT_RESERVED;
+> +		insert_resource(&srmem_resource, new_res);
+> +	}
+
+...
+
+> +void trim_soft_reserve_resources(const struct resource *res)
+> +{
+> +	struct resource *sr_res;
+> +
+> +	write_lock(&srmem_resource_lock);
+> +	for (sr_res = srmem_resource.child; sr_res; sr_res = sr_res->sibling) {
+
+Can this utilise for_each_resource*()?
+Ditto for the rest of open coded for each type of loops.
+
+> +		if (resource_contains(sr_res, res)) {
+> +			trim_soft_reserve(sr_res, res);
+> +			break;
+> +		}
+> +	}
+> +	write_unlock(&srmem_resource_lock);
+> +}
+
+...
+
+> +	cfmws_res = DEFINE_RES_MEM(cfmws->base_hpa,
+> +				   cfmws->base_hpa + cfmws->window_size);
+
+Can be one line.
+But is this correct? The parameters are start,size, and here it seems like start,end.
+
+...
+
+> +static bool resource_overlaps_cfmws(struct resource *res)
+> +{
+> +	struct srmem_arg arg = {
+> +		.res = res,
+
+> +		.overlaps = 0
+Keep trailing comma.
+
+> +	};
+> +
+> +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
+
+> +	if (arg.overlaps)
+> +		return true;
+> +
+> +	return false;
+
+	return arg.overlaps;
+
+> +}
+
+...
+
+> +int insert_soft_reserve_resource(struct resource *res)
+> +{
+> +	if (resource_overlaps_cfmws(res)) {
+> +		pr_info("Reserving Soft Reserve %pr\n", res);
+
+Btw, do we have pr_fmt() defined in this file?
+
+> +		return insert_resource(&srmem_resource, res);
+> +	}
+> +
+> +	return insert_resource(&iomem_resource, res);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
