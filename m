@@ -1,299 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CF6238E06
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 11:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02181A840C
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 13:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733916725; cv=none; b=HceyWkSeyYuhNuaGYR262cqpIrxJdr4NkpBO9TqjrRO0QO9U0FkzOMjigfI8qpPCjpySnPawGUasim6RqpYzFRH1McPhNlNYhbN1j1T9N5w8O67RiC4qqgUX8lC7hu85BFyOmZCG66nlOOiUWxh1zokUA2nwX/6sD4tf9RJDO28=
+	t=1733924946; cv=none; b=S8H277QUJjI1vyl35foSGCuv2eoWY/TJ/WkVfN75V9QCdhHqv+IEYHiemdObqcZZXwU189CL6aRvROiQJCEGcRcRkp+S3trAEiV0DGF+xa+CZ9utiwIPtC1nzj4f25g6oRd03uZIXIFj9vwnfe4nxbdNeI9ulFTyJqSERimd+Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733916725; c=relaxed/simple;
-	bh=AKTqxmpi4mJNDPKknySvlHdWar61q7LraKA5yizjjz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SiVLSXKCx0hGfrzjPZlgpZ9D55ZNoxX1LgHv76zbCxLXuAeP6rm2jRoKyiOtgPonCjNqcsw+4R9pdN7peOhOT8iVJaveI0WwfyV3MbLcqpGBYRUY4VZyTqkvVR73uGD8QHeix2iH1snpZo83gE5kP3ydZRouUHuwJdVL7mh259E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJaX1VUV; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1733924946; c=relaxed/simple;
+	bh=7uGjAymgGEC3oO4wbxNgVIMRu3tD5II/a5V81VpA0ag=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=h5wxMdgbGMvXzWmYy6UocTlIVFFWmougWD2wwiHvKt4K8qB1z9NZKzUDqRCVAIASmY6wlpMtu/IOKS4z+ut06vPCy39FtqXudIjHki5NttPX10WI/R4QJ+t8hoFBtoqsRazSTh+J5H0fRE1RmKYxs6ClfLWPeGLRVnyUmalISmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YBHMD41e; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJaX1VUV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YBHMD41e"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733916723; x=1765452723;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AKTqxmpi4mJNDPKknySvlHdWar61q7LraKA5yizjjz4=;
-  b=bJaX1VUVDLQSibUNrr/NdZ41HPHnlkkhRsnTJYDSTkNjLKOhPxHb8B8R
-   j/O81Nlo845tNEehnNzQLK3dDc5nBjnvCw2Dqk05FS49c7/8Z8ZdQoZbT
-   bS1tINTkZZgMj3sYvePEkyOpY8bAG3Ip842II84mwKp+zY18twNws/7ok
-   bqJHAJQIVTFUZrX1tB7ViqiEMDFKUNUh6M4YjHnTrHV8HPVSCtvKlFY3x
-   qGhaLyEcATP0Bbjpsco1YBDdUThVIyQgLepaM7Rm85/OCH1lbASMLPZZ8
-   m9jyQnMIB60Ve/2KjbYaUeyMnpyo24FwRXbY8m7DR6kxx/7iqq5dsTmtD
-   Q==;
-X-CSE-ConnectionGUID: j3FYMQXlReqJsH9J83QndA==
-X-CSE-MsgGUID: 5OkpNo3yScKYs9QjFOj0PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="34431595"
-X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
-   d="scan'208";a="34431595"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 03:32:02 -0800
-X-CSE-ConnectionGUID: X+fvPiiPQqKq4DAY4ZxPMg==
-X-CSE-MsgGUID: zfPiE9JwR7u0HlE9L2+aSA==
+  t=1733924945; x=1765460945;
+  h=date:from:to:cc:subject:message-id;
+  bh=7uGjAymgGEC3oO4wbxNgVIMRu3tD5II/a5V81VpA0ag=;
+  b=YBHMD41eduUVSV2+Mi4JvbNaAsy1tiykfTYjdJu+Y7zihWzJWFTiOxW1
+   Yj2N+D33wriuvZ9hoNIDgr/LIInk8zU4MDwjQWLxGvMltrBvmOpGJ1cJN
+   a7wls/FNnE5I10UWK6JsWnXBWcw/xT7nS193VPogSQ6kuvMgz0eumsRmG
+   YhX8umyCUnG0LNXDsW26d5TbOGkcgVmXnIJrztYztTAjhdlZXVN+SwKEL
+   OaLm7dx3vqYX9x91zwk90GvYWWGkHymLttwjSw+qKboTVscid0Q+CjGqw
+   Xb57dTUuMWUaQc5TMAcz/vBHoA0ONSvIu93iOcakpZJYkXD8V0rcX+lmo
+   w==;
+X-CSE-ConnectionGUID: PgK69wDKSXmRSzrFUMlQvg==
+X-CSE-MsgGUID: k3kx9wvxTzyJNBX9oIyTdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="45712492"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="45712492"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 05:49:04 -0800
+X-CSE-ConnectionGUID: XYWoBKmOS/STQ5664MSvCw==
+X-CSE-MsgGUID: 8xtpkb0lRYyQwIUVwM+nlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,225,1728975600"; 
-   d="scan'208";a="96241618"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2024 03:32:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tLKwf-00000006Vco-2NNL;
-	Wed, 11 Dec 2024 13:31:57 +0200
-Date: Wed, 11 Dec 2024 13:31:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Nathan Fontenot <nathan.fontenot@amd.com>
-Cc: alison.schofield@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
-Message-ID: <Z1l4LSIIzmoInQXp@smile.fi.intel.com>
-References: <20241202155542.22111-1-nathan.fontenot@amd.com>
+   d="scan'208";a="100852858"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 11 Dec 2024 05:48:57 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tLN5C-0006iT-0j;
+	Wed, 11 Dec 2024 13:48:54 +0000
+Date: Wed, 11 Dec 2024 21:48:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:fixes] BUILD SUCCESS
+ 76467a94810c2aa4dd3096903291ac6df30c399e
+Message-ID: <202412112135.LXoq6aEF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241202155542.22111-1-nathan.fontenot@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Dec 02, 2024 at 09:55:42AM -0600, Nathan Fontenot wrote:
-> Update handling of SOFT RESERVE iomem resources that intersect with
-> CXL region resources to remove the intersections from the SOFT RESERVE
-> resources. The current approach of leaving the SOFT RESERVE
-> resource as is can cause failures during hotplug replace of CXL
-> devices because the resource is not available for reuse after
-> teardown of the CXL device.
-> 
-> The approach is to trim out any pieces of SOFT RESERVE resources
-> that intersect CXL regions. To do this, first set aside any SOFT RESERVE
-> resources that intersect with a CFMWS into a separate resource tree
-> during e820__reserve_resources_late() that would have been otherwise
-> added to the iomem resource tree.
-> 
-> As CXL regions are created the cxl resource created for the new
-> region is used to trim intersections from the SOFT RESERVE
-> resources that were previously set aside.
-> 
-> Once CXL device probe has completed ant remaining SOFT RESERVE resources
-> remaining are added to the iomem resource tree. As each resource
-> is added to the oiomem resource tree a new notifier chain is invoked
-> to notify the dax driver of newly added SOFT RESERVE resources so that
-> the dax driver can consume them.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: 76467a94810c2aa4dd3096903291ac6df30c399e  cxl/region: Fix region creation for greater than x2 switches
 
-...
+elapsed time: 855m
 
->  void __init e820__reserve_resources_late(void)
->  {
-> -	int i;
->  	struct resource *res;
-> +	int i;
+configs tested: 137
+configs skipped: 5
 
-Unrelated change.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-...
+tested configs:
+alpha                            alldefconfig    gcc-14.2.0
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                   randconfig-001-20241211    gcc-13.2.0
+arc                   randconfig-002-20241211    gcc-13.2.0
+arc                           tb10x_defconfig    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-20
+arm                            hisi_defconfig    gcc-14.2.0
+arm                   randconfig-001-20241211    clang-18
+arm                   randconfig-002-20241211    gcc-14.2.0
+arm                   randconfig-003-20241211    clang-20
+arm                   randconfig-004-20241211    gcc-14.2.0
+arm                         socfpga_defconfig    gcc-14.2.0
+arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20241211    gcc-14.2.0
+arm64                 randconfig-002-20241211    clang-18
+arm64                 randconfig-003-20241211    gcc-14.2.0
+arm64                 randconfig-004-20241211    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20241211    gcc-14.2.0
+csky                  randconfig-002-20241211    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                             defconfig    clang-20
+hexagon               randconfig-001-20241211    clang-20
+hexagon               randconfig-002-20241211    clang-17
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20241211    clang-19
+i386        buildonly-randconfig-002-20241211    gcc-11
+i386        buildonly-randconfig-003-20241211    clang-19
+i386        buildonly-randconfig-004-20241211    gcc-11
+i386        buildonly-randconfig-005-20241211    gcc-12
+i386        buildonly-randconfig-006-20241211    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20241211    gcc-14.2.0
+loongarch             randconfig-002-20241211    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                         db1xxx_defconfig    clang-20
+mips                            gpr_defconfig    clang-20
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20241211    gcc-14.2.0
+nios2                 randconfig-002-20241211    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20241211    gcc-14.2.0
+parisc                randconfig-002-20241211    gcc-14.2.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                     kmeter1_defconfig    gcc-14.2.0
+powerpc                      ppc6xx_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20241211    clang-18
+powerpc               randconfig-002-20241211    clang-16
+powerpc               randconfig-003-20241211    gcc-14.2.0
+powerpc64             randconfig-001-20241211    gcc-14.2.0
+powerpc64             randconfig-002-20241211    clang-20
+powerpc64             randconfig-003-20241211    clang-20
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20241211    gcc-14.2.0
+riscv                 randconfig-002-20241211    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20241211    clang-20
+s390                  randconfig-002-20241211    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                         apsh4a3a_defconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20241211    gcc-14.2.0
+sh                    randconfig-002-20241211    gcc-14.2.0
+sh                           se7619_defconfig    gcc-14.2.0
+sh                            shmin_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20241211    gcc-14.2.0
+sparc                 randconfig-002-20241211    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20241211    gcc-14.2.0
+sparc64               randconfig-002-20241211    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-20
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20241211    gcc-12
+um                    randconfig-002-20241211    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20241211    gcc-12
+x86_64      buildonly-randconfig-002-20241211    gcc-11
+x86_64      buildonly-randconfig-003-20241211    gcc-12
+x86_64      buildonly-randconfig-004-20241211    gcc-12
+x86_64      buildonly-randconfig-005-20241211    gcc-12
+x86_64      buildonly-randconfig-006-20241211    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20241211    gcc-14.2.0
+xtensa                randconfig-002-20241211    gcc-14.2.0
 
-> -	for (i = 0; i < e820_table->nr_entries; i++) {
-
-> +	for (i = 0; i < e820_table->nr_entries; i++, res++) {
-
-
-> -		res++;
-
-Unrelated change.
-
-
->  	}
-
-...
-
-> +static struct notifier_block hmem_nb = {
-> +	.notifier_call = dax_hmem_cb
-
-It's better to leave trailing comma as it reduces churn in the future is
-anything to add here.
-
-> +};
-
-...
-
-> +++ b/drivers/dax/hmem/hmem.h
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef _HMEM_H
-> +#define _HMEM_H
-
-This needs a few forward declarations
-
-struct device;
-struct platform_device;
-struct resource;
-
-> +typedef int (*walk_hmem_fn)(struct device *dev, int target_nid,
-> +			    const struct resource *res);
-> +int walk_hmem_resources(struct device *dev, walk_hmem_fn fn);
-> +
-> +extern struct platform_device *hmem_pdev;
-> +
-> +#endif
-
-...
-
->  #include <linux/compiler.h>
->  #include <linux/minmax.h>
->  #include <linux/types.h>
-> +#include <linux/notifier.h>
-
-I would put it before types.h to have more ordered piece.
-
-...
-
-> +extern void trim_soft_reserve_resources(const struct resource *res);
-> +extern void merge_soft_reserve_resources(void);
-> +extern int insert_soft_reserve_resource(struct resource *res);
-> +extern int register_soft_reserve_notifier(struct notifier_block *nb);
-> +extern int unregister_soft_reserve_notifier(struct notifier_block *nb);
-
-Why extern?
-
-...
-
-> +++ b/kernel/resource.c
-> @@ -30,7 +30,7 @@
->  #include <linux/string.h>
->  #include <linux/vmalloc.h>
->  #include <asm/io.h>
-> -
-> +#include <linux/acpi.h>
-
-We don't usually interleave linux and asm headers, moreover the list seems to
-be sorted (ordered, please preserve the ordering).
-
-...
-
-> +struct resource srmem_resource = {
-> +	.name	= "Soft Reserved mem",
-> +	.start	= 0,
-> +	.end	= -1,
-> +	.flags	= IORESOURCE_MEM,
-
-This can use DEFINE_RES_MEM_NAMED() as well.
-
-> +};
-
-...
-
-> +	if (sr_res->start == res->start && sr_res->end == res->end) {
-
-Wondering if we have a helper to exact match the resource by range...
-
-> +		release_resource(sr_res);
-> +		free_resource(sr_res);
-> +	} else if (sr_res->start == res->start) {
-> +		WARN_ON(adjust_resource(sr_res, res->end + 1,
-> +					sr_res->end - res->end));
-> +	} else if (sr_res->end == res->end) {
-> +		WARN_ON(adjust_resource(sr_res, sr_res->start,
-> +					res->start - sr_res->start));
-> +	} else {
-> +		/*
-> +		 * Adjust existing resource to cover the resource
-> +		 * range prior to the range to be trimmed.
-> +		 */
-> +		adjust_resource(sr_res, sr_res->start,
-> +				res->start - sr_res->start);
-> +
-> +		/*
-> +		 * Add new resource to cover the resource range for
-> +		 * the range after the range to be trimmed.
-> +		 */
-> +		new_res = alloc_resource(GFP_KERNEL);
-> +		if (!new_res)
-> +			return;
-> +
-> +		*new_res = DEFINE_RES_NAMED(res->end + 1, sr_res->end - res->end,
-> +					    "Soft Reserved", sr_res->flags);
-> +		new_res->desc = IORES_DESC_SOFT_RESERVED;
-> +		insert_resource(&srmem_resource, new_res);
-> +	}
-
-...
-
-> +void trim_soft_reserve_resources(const struct resource *res)
-> +{
-> +	struct resource *sr_res;
-> +
-> +	write_lock(&srmem_resource_lock);
-> +	for (sr_res = srmem_resource.child; sr_res; sr_res = sr_res->sibling) {
-
-Can this utilise for_each_resource*()?
-Ditto for the rest of open coded for each type of loops.
-
-> +		if (resource_contains(sr_res, res)) {
-> +			trim_soft_reserve(sr_res, res);
-> +			break;
-> +		}
-> +	}
-> +	write_unlock(&srmem_resource_lock);
-> +}
-
-...
-
-> +	cfmws_res = DEFINE_RES_MEM(cfmws->base_hpa,
-> +				   cfmws->base_hpa + cfmws->window_size);
-
-Can be one line.
-But is this correct? The parameters are start,size, and here it seems like start,end.
-
-...
-
-> +static bool resource_overlaps_cfmws(struct resource *res)
-> +{
-> +	struct srmem_arg arg = {
-> +		.res = res,
-
-> +		.overlaps = 0
-Keep trailing comma.
-
-> +	};
-> +
-> +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
-
-> +	if (arg.overlaps)
-> +		return true;
-> +
-> +	return false;
-
-	return arg.overlaps;
-
-> +}
-
-...
-
-> +int insert_soft_reserve_resource(struct resource *res)
-> +{
-> +	if (resource_overlaps_cfmws(res)) {
-> +		pr_info("Reserving Soft Reserve %pr\n", res);
-
-Btw, do we have pr_fmt() defined in this file?
-
-> +		return insert_resource(&srmem_resource, res);
-> +	}
-> +
-> +	return insert_resource(&iomem_resource, res);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
