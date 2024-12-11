@@ -1,216 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE21522C34F
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Dec 2024 23:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733874493; cv=fail; b=j4TdQkJ0zDblJK0bwf2vsKZ0dW5TXSLsmJus1o+6cjZto8OGnJtqvavAj4uh5R+nZ460/zuojdXgTK0tEJVC+du/xXAq55Y48GbSYHmiq60qhOKDgbuZLFXyXY4qBXf/UwH1LJmpR+xS/18r0UOtO6kDoh22agWBkJevRUZghM4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733874493; c=relaxed/simple;
-	bh=B+pwmSX/lJKquebZ3UVSv2qOUEPVSvE4S365OKLiDuI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sPADiPh+MHMpXtkIv1SV6Z80uNqhS+zCL1g3AZA1C1a7Pk4ZOuB6d0iQSL2E+7D4/LzI5n/GGnffyMfPhCcT8t23+uGvQs/9mjLGr2luLqXwNblWsnIuYV2aTZaV5+8LSY9Nb8ATvDIGOrgxbPccConZwSWzMI4+UnwWy9R6p1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ANPkpWWi; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D42ECC
+	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 00:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733875750; cv=none; b=ET46KFAqhwfJlqLwzOFtncxY9ce1aRRf0FFzp9SiRjnETPR+GMWQSaFAo2CkLAUH8B0IENzcaQ4+avBg21zbcbOCpLhWWVAXROPVI5iCx7loP6cn1iGfq4oaxSe0VZaRGg6x0NYeunqnrQpafa+6jnsBK4wr44cqKHdNKIAqBf8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733875750; c=relaxed/simple;
+	bh=GU+BaWTDisXL7emfzpgBZTRnkPnQzCchAn1nV+GvzDA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bVTk5yEUfD93K3YM39P35+qsFxAFTHrfLYvVZrnkeXuu0g0/ZEAJHEj697VkLfqNSL9KNWZN7xzzsDwZimAFrRyptgViU1ejdatiD54Ojd8CDoTf9a2e+z6dAitcmEEqNQK4l2PbrNOl3wtBPwVMMqPTOcW4RAbBaoIyWg2vPOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=TRrI9jgP; arc=none smtp.client-ip=17.58.6.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ANPkpWWi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733874491; x=1765410491;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=B+pwmSX/lJKquebZ3UVSv2qOUEPVSvE4S365OKLiDuI=;
-  b=ANPkpWWiof42NVRNGwTT8djtbK/ybJiYmCi8lNr2gbZnZZf0LHAsaM2n
-   nnbHzrDiFZYapfdcEbaEGw04Mf8bF+i+nYnw0Bc9fXh1jx0hKahkmzL4k
-   K19Jf2oFb5suvL3mP4ZSqXVoD9SN3L0gepU/sgV/jqeGZiudqCzLvO2h+
-   PfQCmKvIq/3Ow5zwzkLHkKd9Yrh6TrE9Gt7VDgPnTUAuqzaA/6b0zUG7x
-   QZKbyzn+bwoaSmjSm2hjByJtt6EhLlz7IpzXSEee3kBteFxFQMPRprclN
-   ASsbGZYvEHqPCwGW7XGMG5j1ThIBe7tyExbppgAZ2ti3f5j6dcZayyvAQ
-   A==;
-X-CSE-ConnectionGUID: 06lFZqjeRYigR0/7gmDcyw==
-X-CSE-MsgGUID: eE8pGyz4RtOK+6ehjSeX5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="45643186"
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="45643186"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 15:47:58 -0800
-X-CSE-ConnectionGUID: 2N9PukHrSQukV73dQHjzDw==
-X-CSE-MsgGUID: xqvWtfK0SMuE828OCws3Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,223,1728975600"; 
-   d="scan'208";a="99633534"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Dec 2024 15:47:56 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 10 Dec 2024 15:47:54 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 10 Dec 2024 15:47:54 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 10 Dec 2024 15:47:54 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vwusq1hrb/WNrxDd7JgEyEiN+jfIimieFC+1GEK2gX8KYol8kdQr6ZI2ScIqjajcYX0UwaBbGrKuBoiN3EdPE9dzrwP9Yrn2wZvnhYficng4T0NZk81DrfXjsRYi9WEGciHjyf41Ip++suh5GPFy1x5eFKgi6wOAZmS/n8nv4mfqD6SkIc6ZvdmoAgs8x+LlzOaYOpDewJcumpEHOKg+7Zlm1fysc5Ma5R7AwdlX2AXIc0/42Q1RsBMHMAig2TntkiALZbuTo5viZgFGdD6xXYWK1A3CEIIGDqilw05f8BpXoMI1EVq66N120Ba2DVknqPIInhNGnw/vaKCVSz9/qA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uyfk4/rB71T+qrHsYTLqxpjZr5WOBzbpRxo510bAYIg=;
- b=CLudYy8qV0dDoE8yFPbiWRfV1nG8wWj6s2XiaF7E/dYkqtHC0tEDWh7zTp+ed5jinOeIpd8xhxJzZ4aMk/UUdcT0TH0gDrADHnnmbELYuHi9jqqeiVaDxxwVBhpD1k7S5h654UIcuO+Mbelj7YOyMyJOVYKhznru1rJWctTee7QLjv91XYAFWv3nXY26tioDDln52zSjNsebIDajjzUYblONYOyiYi8PzBQ87jF01VrnUCJ/oPszXCebGmtQQdjxvKAQqsH/QcBWCxf65Sy8Lgaa3pGjUjUPoz3wry33cu5X/KtDwGbZxd/ayH9PwtuBNiiXKIy6AGg4csPr3RzqQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BL1PR11MB5285.namprd11.prod.outlook.com (2603:10b6:208:309::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.20; Tue, 10 Dec
- 2024 23:47:25 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8230.010; Tue, 10 Dec 2024
- 23:47:25 +0000
-Date: Tue, 10 Dec 2024 15:47:21 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<dan.j.williams@intel.com>
-CC: <jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>,
-	<hch@infradead.org>, <a.manzanares@samsung.com>, <fan.ni@samsung.com>,
-	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH] cxl: Support Global Persistent Flush (GPF)
-Message-ID: <6758d309c9ddb_10a08329414@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241205082101.1193038-1-dave@stgolabs.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241205082101.1193038-1-dave@stgolabs.net>
-X-ClientProxiedBy: MW2PR16CA0024.namprd16.prod.outlook.com (2603:10b6:907::37)
- To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="TRrI9jgP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733875747;
+	bh=CjAhm0T8eabtTbWzEl56h8D/MJjBFmQj5LVqz+i6m/0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:
+	 x-icloud-hme;
+	b=TRrI9jgPRZLkzXZqlbksM2a1UEkJXKYRysRTzr18jNqnNAL5LBmjgtrNTVCiQ7zM5
+	 Mr2u8dkC+/+V17h+FyPa5mlKV7wUr6+36AfbXqarAGf4pzonKnBDcjtswVv4N9TzEu
+	 zj5ECcV9nRkzuNfPL/dDBwg/EWD1j7SiDh8rWulypBf/N3+oAHcNlPloUBghQEHJ29
+	 DJ0mavrO6MBTMeMT18Qgv3sJSrvpQYFGODCOv5BBu9X06thbTc4kvlHYnvp8MXSfy0
+	 urWDJFk+fFZ3dsoxPSKspmSbHgZvo6d4uCMfCJ/6XfToj0I3LqrZahZBK2tmyKTGkV
+	 dkYj7xRMjP9uA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id D49D93A03BB;
+	Wed, 11 Dec 2024 00:08:55 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v4 00/11] driver core: Constify API device_find_child()
+Date: Wed, 11 Dec 2024 08:08:02 +0800
+Message-Id: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL1PR11MB5285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93eb693c-2f40-44e9-ba14-08dd1974ff65
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uKooT3JRd8SLi3MigBfRvnRxRSzMdAKmC9VHM/CSa6qD3uxXNJUmdOIrw05O?=
- =?us-ascii?Q?Yn1N+pPNdTsflnZkSSnCHO+S7heaCsSgqjs7nyaO/kn5PTMAaOVnXPYrRNat?=
- =?us-ascii?Q?d6HyayX1iI2bI65CZf61n2Mnh/cRc9uSGI8u1XXQd+yl7ybfBiQJSOZs9lmQ?=
- =?us-ascii?Q?tXieLQ/WJaXcLGYKFaGZOv7B2VSBDBdN9x5gGQBzbPKKNlfsy4hUf7HM10Vk?=
- =?us-ascii?Q?zYdUz60GbE9IxwFD4CSLH1TsVqK3yHfWw6XAnJ6hZ5bzK/nDK6hp5IE8wXzh?=
- =?us-ascii?Q?MGXeRUhv8CBK1fTzzzl5nvncKm9yF6P27mXdrYUwk29M2BzdEf7gYBlQJdWe?=
- =?us-ascii?Q?bhDFc36uBD+QHOlmbQMwGI9wZp20X6mF7e8uvowU00CWH3vZ07I0S9EpFkCP?=
- =?us-ascii?Q?/s4wM8aNPKMWaR4HnO6g/5jBFM7mzTyR1QNmR7ZTbmP0gp0Q1PkSgNYy8FKt?=
- =?us-ascii?Q?Eb75LqM8jYrMPivnTg1AkkmqXztWzw4DVjd79AGwXOAUFcp4oUNuL/Ll9fB7?=
- =?us-ascii?Q?32fGsKT4s0hc5TwJEJ76eU+CM+NiSP/jnFEENFAhYI1W5Y6Pzk+WUJrnESz5?=
- =?us-ascii?Q?xV7gwq3R/XfGqcTEaCL35bPCsP8URQSLoGEb6N7kEOHvWCANA08tP6ncdzdK?=
- =?us-ascii?Q?HHz/x8/nuVCT/hs9O8Zl6JqqYai6WvnWXNyq4YU2q2IUsqhUcrUQwLVDYwiJ?=
- =?us-ascii?Q?3px7VKC/Z/6XnOoDs1s0rr7GIYuwa7lSnhhi+zWyNT/HAqEO79TQlvUNw/wa?=
- =?us-ascii?Q?0DOsHHIVzTvK4qU1iBt4ON4yzmf38xvDwrv9CelsSvouxHoad8qcYIkRSp3k?=
- =?us-ascii?Q?sfX/rhdAwC5ct8KloJ7lhPX4PVznX00e/J/gsWSMeWxoDzntNJWNYm/39mZz?=
- =?us-ascii?Q?UPoZym1ShDZzFJIN6rSzfic1lDizS2LMcsRDC7aZJItRg1VcbMI7zlFyziHL?=
- =?us-ascii?Q?TdpX1HcwYB8Wh9stNzUq6T2P3r37UCAaf93L6zh8NcwXyfthDKdMIJ1LFaJs?=
- =?us-ascii?Q?R5ov+QPv/pgs4LS7GgZ+4s3DHSzWt0llO5MHa7wDChKC06g+cJ4JWf1iUaSe?=
- =?us-ascii?Q?itKBVLtiYxNuD+PXACLuLk4P0/LPbTcLAm9Z0x0GSrewBT0fpfr/WG+MROL1?=
- =?us-ascii?Q?q0EPyqlG1hYGWj8G/c3mVu53EwxfznirdjQyRUYN3CjrYdUJxnxwxBmldyYN?=
- =?us-ascii?Q?PVqCjlftbyz1iq4UhHGjO/geYTNG6JafzVSZ6E9s/Bmut3C7wOFphNrHq/I1?=
- =?us-ascii?Q?0WgWxSMvqNIi9/H+rLsdutJlF6NxQCEWjg7s9fEiBzsEx4RqCvhL0P5rPMBa?=
- =?us-ascii?Q?U92N8KDAPY5kfLmpdnalXzn8jOnCozk/MijAa6G9v60c7g=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fD6GcRLirpRI1GVgEhAfJ3mvV/3sHP5lk2ZWYyCJDj87WbTJCroRPJTs42x5?=
- =?us-ascii?Q?V2byxodQ71FMGEWW4QZlyaF+83m/lcNsfqlADbiXJX/fi6iN+dzzhWp9TuJm?=
- =?us-ascii?Q?4k1dRWM7RkqhDMA9cuOPEgpdEIE9tLMUSDNlMgnJ9//0Wb70Cj2baF5tZriz?=
- =?us-ascii?Q?kBoltko2FOC7vCKAew5xFpoXu+zYD5zdLocsxZBeFdnYtTXhpOd4FpeFbeav?=
- =?us-ascii?Q?1SGjaYW6WoNbrlqhq446PnyWAJs5XExZk7Rln7VJ0e7dU8lgGHOD0pPg2rTG?=
- =?us-ascii?Q?r+AXhXIFVUlVvq6exHtLOTtbXnm7Z5hoZLfOnYmNoVmDxyEiP1Pra2635pNc?=
- =?us-ascii?Q?qMP/IKYNjyLY5bZ5o/AOvNBXdJt43APfJDx3TshgCAMvds7mH5ZL1qsieNcG?=
- =?us-ascii?Q?+L9EHRlzGiDA0oq0cttt2SmewixtfBaI0H54KKcatdBBr6fimO9fYzzhBR2I?=
- =?us-ascii?Q?ndPhqg8eINvOQYNtZ71m0cADCknYrlBXsaf1n6Tt1PPnTrUFhb0vzUX58f8b?=
- =?us-ascii?Q?eJJvCiwA4puf9r27NpjwRcKROzyGUEhB1EpYiXNCQHqc7SkjAtila2XeQrJO?=
- =?us-ascii?Q?mnGp4t+NsPOS5LuQBOON+91M/KeTqjn+U2NkDmxkIFDcbJhzIHIWs6rZUHVD?=
- =?us-ascii?Q?jiGtljN2LQ+BwZ6ZVHLbA5prGG5+p2yxm1V8VEL73GvShluk/KGTh7apdI0y?=
- =?us-ascii?Q?jQPYaTOA7qJh5nTz0FMqW1u0NC/CCHVj0IgaL9MqFRiHHjZmT+47VVLWXyLx?=
- =?us-ascii?Q?Hikn/VEYXfILyN5D5FVYuJRPaMTTQmpkk5mZGpq4PzUkZVjGlVGsARAqqHOh?=
- =?us-ascii?Q?sySE68rz4LcYvw9/40skKJI1J1Jb47GoKP+ZE1I0jGm+WkXCEA3LbbtgSFER?=
- =?us-ascii?Q?6yPWFgD/KZEd2/Rr1v+4uEwSwvK3lqb21EMgR7YMd4vV3HQarbTnKZbru+1S?=
- =?us-ascii?Q?skV42nkrKjRF0ar+GgI7gkTpiWQ4UHx9gkzTQbWVTXJOhWQXNZOzNWgnqfYA?=
- =?us-ascii?Q?hZQmMdLE0yYzvRFm0qtTg1m7TfsboC4TnHk2IycVpTiIPKrj1O+ZlnBYUPPj?=
- =?us-ascii?Q?BY7uviLr2Y8YQSRA/KElr0gxMgYd5XZ1JTm3a9X2peST6vOt6i40qxVY69lQ?=
- =?us-ascii?Q?WU2s4SLF1D5aRQZrfkic0T2UXGCiSJUXkrvf8coFJMaSbYM4DC4i7VbEFTVJ?=
- =?us-ascii?Q?cteaN2UcOxJdhL1G9tg4qiNoMZ/WhfQQJgjSBp5ZYLgClKkcgWTKKGhGT42Q?=
- =?us-ascii?Q?EXgwIhdFzaCELIeVrzXxs4LqKtqbsoUHuY180AaUg9m+vd8z2g9DxICVZP9w?=
- =?us-ascii?Q?Nj18MkgeqWt3W3irtU9/bbt/9n+FZcC/7NRkMvU/+qi0UVM+95iq/E2e4KNA?=
- =?us-ascii?Q?cxruU3I1FuzjOrUYqixeVehzsFwKtQv4O99ZROSQAPSIW/eYGFJQQINqoeq9?=
- =?us-ascii?Q?E+s0ADJ+qziwa5GBViDxbojPiDE6QKr0j7zod8M2QdwcilZlnaVPUJoXx5hD?=
- =?us-ascii?Q?LvzjPObP7hnDQBlYm5StZfIFdkO8ngCw6PTg/fvXcFpi8hCfHfHy8ytEzjPx?=
- =?us-ascii?Q?CweckIcRuJfKeaEU0SHOJADHuWTaRM5yOegRJj3NloDt7+RsZcRk5hbkf9xm?=
- =?us-ascii?Q?ig=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93eb693c-2f40-44e9-ba14-08dd1974ff65
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 23:47:24.9991
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FPam39rIs0jAmvwm/K7l0LWLcW8eUnbyzHdcdbhq9sy/TK2CZCyXomUCBqIigikiAcD0PP/4l2i36Ei5h38PYjMZu/gbdLWw5/kGrT2x/gg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5285
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOLXWGcC/2XOzWoDIRQF4FcZXNfgHR2jWfU9Sgn+XJu7GE10O
+ rSEvHvMBAoly3PgfJwra1gJGzsMV1ZxpUYl96DeBhZOLn8hp9gzG8WoYBTAQ8ltOcYUjrFk5M5
+ h2ANK79GxPjpXTPSzgR+fPZ+oLaX+bv4Kj3ajhIEXagUuuI1mQpmsksG/X74pUA67UGb2wFb5B
+ /Qv0wsgOwAaIIEy2k/uP3B73qvY20bL8yPzrmGH5pmWwxBilAK9B2+T1DDZqHUSxngNDnHUCrW
+ yce86drsD+D+VdzsBAAA=
+X-Change-ID: 20241201-const_dfc_done-aaec71e3bbea
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ James Bottomley <James.Bottomley@HansenPartnership.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+ Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ nvdimm@lists.linux.dev, linux-sound@vger.kernel.org, 
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, linux1394-devel@lists.sourceforge.net, 
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-mediatek@lists.infradead.org, linux-hwmon@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
+ netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: -alI-XRJ5CvcRnQBKSq5z98wt7DybGq1
+X-Proofpoint-GUID: -alI-XRJ5CvcRnQBKSq5z98wt7DybGq1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-10_13,2024-12-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412100174
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Davidlohr Bueso wrote:
+This patch series is to constify the following API:
+struct device *device_find_child(struct device *dev, void *data,
+		int (*match)(struct device *dev, void *data));
+To :
+struct device *device_find_child(struct device *dev, const void *data,
+				 device_match_t match);
+typedef int (*device_match_t)(struct device *dev, const void *data);
 
-Hi Davidlohr, thanks for this:
+Why to constify the API?
 
-> Add support for GPF flows. It is found that the CXL specification
-> around this to be a bit too involved from the driver side. And while
-> this should really all handled by the hardware, this patch takes
-> things with a grain of salt.
-> 
-> - Dirty shutdown is not handled, and puts the responsibility on the
-> Admin to deal with any GPF failure - otherwise the kernel will just
-> keep using the device upon next boot. Hence no SetShutdownState DIRTY
-> upon memdev probe (and no need for clearing upon successful flush).
-> 
-> - As such, the driver will only update port timeouts throughout the
-> decode hierarchy, upon device probing and hot-remove. These timeouts
-> can be over-specified, particularly T1. Set the max and rely on
-> devices to minimize GPF response times to avoid the worst case wait
-> times that those timeouts imply.
-> 
-> - Energy budgeting is not supported.
+- Protect caller's match data @*data which is for comparison and lookup
+  and the API does not actually need to modify @*data.
 
-The missing detail for me is why are the defaults likely to be broken
-such that the kernel must get involved in setting them, and how does
-the kernel determine they are broken?
+- Make the API's parameters (@match)() and @data have the same type as
+  all of other device finding APIs (bus|class|driver)_find_device().
 
-It is unfortunate that the specification does not recommend default
-values for this, or even an implementation note about what system
-software is supposed to do with these registers.
+- All kinds of existing device matching functions can be directly taken
+  as the API's argument, they were exported by driver core.
 
-Can you say a bit more about the end user visible effects when the
-timeouts are violated? Because the critical enabling from my perspective
-is timeout detection (notifying the sysadmin), not timeout setting. 
+What to do?
 
-A policy for setting the timeouts makes sense, but I am not sure that
-the kernel should pick "max" as a default policy. Especially when max is
-80 seconds which is already longer than lockup detectors would tolerate.
-Likely anything over 30 seconds the kernel should be active complaining
-about something being broken. If a configuration needs more time that
-likely needs a user policy override mechanism.
+- Patches [1/11, 3/11] prepare for constifying the API.
 
-This would be consistent with what we did for mailbox initialization
-timeouts. Pick a "kernel reasonable" default and provide an override for
-outlier cases.
+- Patch 4/11 constifies the API and adapt for its various subsystem usages.
+
+- Remaining do cleanup for several usages with benefits brought above.
+
+---
+Changes in v4:
+- Correct title and commit messages according to review comments
+- Link to v3: https://lore.kernel.org/r/20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com
+
+Changes in v3:
+- Solve build broken issue by squashing changes of various subsystem.
+- Reduce recipients to try to send out full patch serial.
+- Correct tiles and commit messages.
+- Link to v2: https://lore.kernel.org/all/20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com
+
+Changes in v2:
+- Series v1 have no code review comments and are posted a long time ago, so may ignore differences.
+- Link to v1: https://lore.kernel.org/r/20240811-const_dfc_done-v1-0-9d85e3f943cb@quicinc.com
+- Motivation link: https://lore.kernel.org/lkml/917359cc-a421-41dd-93f4-d28937fe2325@icloud.com
+
+---
+Zijun Hu (11):
+      libnvdimm: Replace namespace_match() with device_find_child_by_name()
+      slimbus: core: Constify slim_eaddr_equal()
+      bus: fsl-mc: Constify fsl_mc_device_match()
+      driver core: Constify API device_find_child() then adapt for various usages
+      driver core: Simplify API device_find_child_by_name() implementation
+      driver core: Remove match_any()
+      slimbus: core: Remove of_slim_match_dev()
+      gpio: sim: Remove gpio_sim_dev_match_fwnode()
+      driver core: Introduce an device matching API device_match_type()
+      cxl/pmem: Replace match_nvdimm_bridge() with API device_match_type()
+      usb: typec: class: Remove both cable_match() and partner_match()
+
+ arch/sparc/kernel/vio.c                |  6 +++---
+ drivers/base/core.c                    | 30 ++++++++++--------------------
+ drivers/block/sunvdc.c                 |  6 +++---
+ drivers/bus/fsl-mc/dprc-driver.c       |  8 ++++----
+ drivers/cxl/core/pci.c                 |  4 ++--
+ drivers/cxl/core/pmem.c                |  9 +++------
+ drivers/cxl/core/region.c              | 21 ++++++++++++---------
+ drivers/firewire/core-device.c         |  4 ++--
+ drivers/firmware/arm_scmi/bus.c        |  4 ++--
+ drivers/firmware/efi/dev-path-parser.c |  4 ++--
+ drivers/gpio/gpio-sim.c                |  7 +------
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c |  2 +-
+ drivers/hwmon/hwmon.c                  |  2 +-
+ drivers/media/pci/mgb4/mgb4_core.c     |  4 ++--
+ drivers/nvdimm/bus.c                   |  2 +-
+ drivers/nvdimm/claim.c                 |  9 +--------
+ drivers/pwm/core.c                     |  2 +-
+ drivers/rpmsg/rpmsg_core.c             |  4 ++--
+ drivers/scsi/qla4xxx/ql4_os.c          |  3 ++-
+ drivers/scsi/scsi_transport_iscsi.c    | 10 +++++-----
+ drivers/slimbus/core.c                 | 17 +++++------------
+ drivers/thunderbolt/retimer.c          |  2 +-
+ drivers/thunderbolt/xdomain.c          |  2 +-
+ drivers/tty/serial/serial_core.c       |  4 ++--
+ drivers/usb/typec/class.c              | 31 ++++++++++++++-----------------
+ include/linux/device.h                 |  4 ++--
+ include/linux/device/bus.h             |  1 +
+ include/scsi/scsi_transport_iscsi.h    |  4 ++--
+ net/dsa/dsa.c                          |  2 +-
+ tools/testing/cxl/test/cxl.c           |  2 +-
+ 30 files changed, 90 insertions(+), 120 deletions(-)
+---
+base-commit: cdd30ebb1b9f36159d66f088b61aee264e649d7a
+change-id: 20241201-const_dfc_done-aaec71e3bbea
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
