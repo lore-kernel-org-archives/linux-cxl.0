@@ -1,173 +1,102 @@
-Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ACB13635B
-	for <linux-cxl@vger.kernel.org>; Wed, 11 Dec 2024 00:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF3CECC;
+	Wed, 11 Dec 2024 00:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733875877; cv=none; b=r7JbtQtXvh+tHoTuexAyJ+tHhVuTIuCMvEM9weKYcBe1ZBmci+Yg+dvVuG3iZ4ooFtPgsdZrb/ASdoxR0x9gMShGSBFPAOIKKMhLTyo/N4GT3WZH2DDZb/zGiH/yegF8uZnq0pOo2Y6/WFsdIqA4tndz2FSyLJbk/8LPoPnx8pI=
+	t=1733876758; cv=none; b=RBqQ8D6FtxQEGgFyhvxGwltKtsYb86VpP+KRTc/vlNEswRyRNcsrXiNTEbEKYqA4WOXX1Av/SFlmlf04ZFjod4FDBAIr2NRjGE5BO3F/Rs3uQ6SpxMgbJtKr4+7UlLDmugFddye3Jp0jtqnfmLEx4oGuRwkkZHKjP62nDtFhTUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733875877; c=relaxed/simple;
-	bh=d3RWbfmtjm10GAZA1NaOSKX3f3hNp1vr+fuyWoNuJcw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q29pR2ivc3BI0qbhhXrV6RMN/6RrAxxn5+bGTTe2m/fxacOOj80Iw5E5D+KyYDBhw54e4KIs2SiG8y4ezD4LBF6hvQZAiFFZCvqvQPSWCLGJOqcxwaD4Z7s3NOP1Z3+tk4z1EQRcb2xxn+blRE95imgN3hD1CrdqG4si6FkQifw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=A2G4Fr6G; arc=none smtp.client-ip=17.58.6.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1733876758; c=relaxed/simple;
+	bh=wM0095OKMvKklc/EiHoH/Dogbj+M7ycnYTry719vZrA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kLVZHUSCN8RC2GK3HzbqVZLWFo/GLBfh0sdHuCzI6T6MDtzhj1bCRZvcP0Pm15PAgn3I9T3JHWCjm3sWbdX7RDaG7KOlLs5sBALYF7dO4bjZKWjgsqbGTfML/khDAB5XB1Hqb4VRUUsXyGd0+gWd3oLDECwj5hzs0Gr+8DjteBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2jo4Q7P; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="A2G4Fr6G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733875874;
-	bh=+P6kTmCwDbC0RwMmjYjZfzPZ5o9SCTkxH8bGJ/DVcdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
-	 x-icloud-hme;
-	b=A2G4Fr6Ga6cVgux12r3mj2O9uL5jIcyFXHdjjqLRUtrEdEAwO7iZHiUi5FF6UPVWo
-	 hkulrf+wv/Im1f51OENPnQuBkzjqse1+qZAWDlM/Ma/ogIYBbBc5z987he4q/Jfl/j
-	 jqoFvMwL1Dxn9aXwXtEZHj1xbx0kYWW9yoj14b+sc93PJCVGG73JrsnCffz2e+UQam
-	 moqZ3JxqtqDb6QrUFF3T4ZHUf07FMnmWcCqxambSLziZyyUYRBLY1FDHbpm8nZRlL4
-	 b1ndYET1hWQUqdrGPGb1qMfeSNR//QUsLeZ1GaVoFEHlo6HuTD5NfJJdJ3tCpxtcTt
-	 akO3dQKO/do/A==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id E9BCD3A0349;
-	Wed, 11 Dec 2024 00:11:03 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 11 Dec 2024 08:08:13 +0800
-Subject: [PATCH v4 11/11] usb: typec: class: Remove both cable_match() and
- partner_match()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2jo4Q7P"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-434b3e32e9dso65615535e9.2;
+        Tue, 10 Dec 2024 16:25:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733876755; x=1734481555; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b8/cayzOhsqU4AsjHcoYJNNhPp9zDbVhe0OrNQHtSEU=;
+        b=A2jo4Q7PD1Xxn/qKxNMyI0b6RsCIVfb/seySW6avOtFXVd+3TlKSlNPWzBd59veHPT
+         fKbDwJTZSc1ZJNM6jxC/aH+2n/RNQSXUJ1ZvI2kM3Fl3+e2w5AuAnRWKz5T7B79lSUb3
+         zyqZ7DOVk09j/5r1Ww6mj6u8YNGzvlxmHTrY3yrK51Z1zLEL0KWe56tGlP9hB8s5gfb4
+         xnmx6A9lYgWFe/VCAZC8gG7VLkTg4kv4MgbPNIBNhXrxn/ybms8wPWhGJjnuIGIf1gsv
+         nQeJGkoGW9A7g8jshCIlmj8KXPJ5R/Tatp+dxxiy5mRsJSe6JjmGALukjPhaXyV2ZGzN
+         2QKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733876755; x=1734481555;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b8/cayzOhsqU4AsjHcoYJNNhPp9zDbVhe0OrNQHtSEU=;
+        b=GTeZEg61qHEQZFv9O5x78I9CE3BZPLZ+FRKao6kVwOjtGv4UijNOYmMv5TD/K113VW
+         L9YRqwKHJxrFHb74794cZXqrMf0aTeGoySGjMtc1kcpi4HyrDjUO154Xh3sCrAVET+NF
+         e9DMi2LtVIiQhuL3XRJoOzm/ydA8IqShNZJWZwCXl2rQNY5wPdojLls/XiZ9ZADLkH/4
+         5KXS4yTDDlcV7vRYpxJAWbnOMTRTeAgh3e92QgaCGotA8fNZVFMpgUSP1rvNikz4dTwB
+         Hurb098HJHfilQwL0L0d7lpY9SpqABi5dfipNYmsTHluFsKLJOkpqZAMzsedUo6MTrTd
+         9++w==
+X-Forwarded-Encrypted: i=1; AJvYcCVveNr51Nq/9TWJzv9LM7/9oZeIx8K+FUyiztKxkjoL5OjzDgn6km05s6nXxVR5RTcgGPh5Kv7h4IQ=@vger.kernel.org, AJvYcCXOLINFNMVqr2ZoKZ7KOWjG3PAldxHODFJjB2Xfq0dtIloVwR2IwsmLuXj8gaz4pnMRyZO/ozl+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiwKyoO7mifpuHEIXe7Mavdz1POlMmsbi+8yn6GWovuQGxh3I+
+	v5Oh1zTS1TVg0vr4UcQyJFmP2F5sW/YYIuY2nCWOCFYDDaNxU68y
+X-Gm-Gg: ASbGncsrrLgNMj1iXUR3ko+WdMckHMJ+5gAt2coxiBUoEJ35UV9sfJemHyVd+aPHSKm
+	Uua7NCxEx6Em+A9SkzraPf0rGpm4aVmeL66v2Noihq34mYJ+5e1ii6PPTKLbh/RWPyKYWIa1czI
+	eljpe/wft0zau712ZcuxutTvEw9giiZsf7MM5uluaXHJ2Y2Ef/iiD3crGK+2M7ZkbISefDsfVRR
+	NcZ1KmCIioB6or0541c+zjYhDcKJdogP06guWR50IK6G2vRvmQQQD2DGTChVlsrXB60Cx7KdoMz
+	AqMgML149mG39xw+jcSsh61YtL99WR/GjZ/kJWsGTA==
+X-Google-Smtp-Source: AGHT+IEbklDrWieZb/9EH2a3HH/nUivEqGeY6jHRu3CMCKacFrbHJNqmZGkjSYN3YcEO5JWySX+qNw==
+X-Received: by 2002:a5d:64e8:0:b0:385:fc8c:24b6 with SMTP id ffacd0b85a97d-3864cea22d3mr572955f8f.27.1733876754762;
+        Tue, 10 Dec 2024 16:25:54 -0800 (PST)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434eba653a0sm132327145e9.22.2024.12.10.16.25.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2024 16:25:54 -0800 (PST)
+Subject: Re: [PATCH v7 18/28] sfc: get endpoint decoder
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, martin.habets@xilinx.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+References: <20241209185429.54054-1-alejandro.lucero-palau@amd.com>
+ <20241209185429.54054-19-alejandro.lucero-palau@amd.com>
+From: Edward Cree <ecree.xilinx@gmail.com>
+Message-ID: <d3646edc-281a-1e43-4db3-dd4b29e4ef3f@gmail.com>
+Date: Wed, 11 Dec 2024 00:25:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20241209185429.54054-19-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241211-const_dfc_done-v4-11-583cc60329df@quicinc.com>
-References: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
-In-Reply-To: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- James Bottomley <James.Bottomley@HansenPartnership.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
- Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- nvdimm@lists.linux.dev, linux-sound@vger.kernel.org, 
- sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-cxl@vger.kernel.org, linux1394-devel@lists.sourceforge.net, 
- arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-mediatek@lists.infradead.org, linux-hwmon@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: qwQLilRFtH8fzUdgAlR9P2gaSWkwiO3A
-X-Proofpoint-GUID: qwQLilRFtH8fzUdgAlR9P2gaSWkwiO3A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-10_13,2024-12-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=950 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412100174
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On 09/12/2024 18:54, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Use cxl api for getting DPA (Device Physical Address) to use through an
+> endpoint decoder.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
 
-cable_match(), as matching function of device_find_child(), matches
-a device with device type @typec_cable_dev_type, and its task can be
-simplified by the recently introduced API device_match_type().
+Acked-by: Edward Cree <ecree.xilinx@gmail.com>
 
-partner_match() is similar with cable_match() but with a different
-device type @typec_partner_dev_type.
+> +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, true, EFX_CTPIO_BUFFER_SIZE,
+> +				     EFX_CTPIO_BUFFER_SIZE);
 
-Remove both functions and use the API plus respective device type instead.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/usb/typec/class.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 601a81aa1e1024265f2359393dee531a7779c6ea..3a4e0bd0131774afd0d746d2f0a306190219feec 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -1282,11 +1282,6 @@ const struct device_type typec_cable_dev_type = {
- 	.release = typec_cable_release,
- };
- 
--static int cable_match(struct device *dev, const void *data)
--{
--	return is_typec_cable(dev);
--}
--
- /**
-  * typec_cable_get - Get a reference to the USB Type-C cable
-  * @port: The USB Type-C Port the cable is connected to
-@@ -1298,7 +1293,8 @@ struct typec_cable *typec_cable_get(struct typec_port *port)
- {
- 	struct device *dev;
- 
--	dev = device_find_child(&port->dev, NULL, cable_match);
-+	dev = device_find_child(&port->dev, &typec_cable_dev_type,
-+				device_match_type);
- 	if (!dev)
- 		return NULL;
- 
-@@ -2028,16 +2024,12 @@ const struct device_type typec_port_dev_type = {
- /* --------------------------------------- */
- /* Driver callbacks to report role updates */
- 
--static int partner_match(struct device *dev, const void *data)
--{
--	return is_typec_partner(dev);
--}
--
- static struct typec_partner *typec_get_partner(struct typec_port *port)
- {
- 	struct device *dev;
- 
--	dev = device_find_child(&port->dev, NULL, partner_match);
-+	dev = device_find_child(&port->dev, &typec_partner_dev_type,
-+				device_match_type);
- 	if (!dev)
- 		return NULL;
- 
-@@ -2170,7 +2162,9 @@ void typec_set_pwr_opmode(struct typec_port *port,
- 	sysfs_notify(&port->dev.kobj, NULL, "power_operation_mode");
- 	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
- 
--	partner_dev = device_find_child(&port->dev, NULL, partner_match);
-+	partner_dev = device_find_child(&port->dev,
-+					&typec_partner_dev_type,
-+					device_match_type);
- 	if (partner_dev) {
- 		struct typec_partner *partner = to_typec_partner(partner_dev);
- 
-@@ -2334,7 +2328,9 @@ int typec_get_negotiated_svdm_version(struct typec_port *port)
- 	enum usb_pd_svdm_ver svdm_version;
- 	struct device *partner_dev;
- 
--	partner_dev = device_find_child(&port->dev, NULL, partner_match);
-+	partner_dev = device_find_child(&port->dev,
-+					&typec_partner_dev_type,
-+					device_match_type);
- 	if (!partner_dev)
- 		return -ENODEV;
- 
-@@ -2361,7 +2357,8 @@ int typec_get_cable_svdm_version(struct typec_port *port)
- 	enum usb_pd_svdm_ver svdm_version;
- 	struct device *cable_dev;
- 
--	cable_dev = device_find_child(&port->dev, NULL, cable_match);
-+	cable_dev = device_find_child(&port->dev, &typec_cable_dev_type,
-+				      device_match_type);
- 	if (!cable_dev)
- 		return -ENODEV;
- 
-
--- 
-2.34.1
-
+Just for my education, could you explain what's the difference between
+ cxl_dpa_alloc(..., size) and cxl_request_dpa(..., size, size)?  Since
+ you're not really making use of the min/max flexibility here, I assume
+ there's some other reason for using the latter.  Is it just that it's
+ a convenience wrapper that saves open-coding some of the boilerplate?
