@@ -1,43 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723BB1AAE28;
-	Thu, 12 Dec 2024 21:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A27E1B0F32;
+	Thu, 12 Dec 2024 21:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734038554; cv=none; b=dONibJqmZKZBuJUQqpR22JcvKKPhus7D6btPqbtKf3eGlOE0lydIUAHdbuUIn7JTplNLb0l/zIJl1ao0ypekpXDomiGtbi0U2DnvUJWk+JG2liJQ5NN4xtzsTSwVi/FrcVjppVQg69E/ukTxYQQFQwQAk6AfLR2+s+gjWUu7bNg=
+	t=1734040018; cv=none; b=f0PsASygnCEDF6R8HJZ+8QX4clBozhBiSM/6Twq/dDbwnK9H22HNs9x+hmDtH+r9rNhl/suEEjW31MVTFPRZq49+sXvE2xmo+P5PX0ZWrVvZulqp3Eq4g22bM9EGf0u02uM5auViIR6PjfbxuMje5AM0KxX8PpNV4WWIZjfezIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734038554; c=relaxed/simple;
-	bh=ek95GW+tU8Tylid/kx9coHa0RUVz9tmbmJ7ZUEm1zG4=;
+	s=arc-20240116; t=1734040018; c=relaxed/simple;
+	bh=OY9h37BubdSteB7SLMSe1UN8MTNMzssYQ/2LVWDqGbg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s3nFcBrLHPHdwlgYlJ2OE5UIu/FC4tKA8SpH308hEOkvm8MpeorurHbdjiS6HQbXChvN10djLewXrd8tuzwTcCGFBJUYDqoeCqsMxXy50TD2xdEuzgKrqIrDxX+vPbEvrxzc52bBJBjsUbvTCyz606miVQ8GvJN3zKx6LBD8d4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0UUPPPx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H8EuOh2toPRPH0Kst0EOdJWvs4pg63k4YRhn8ijx5FNlxS8++Ibb5A9sL4jTsc/HlCZDEg8BnUxEU3EceydL4ZIe7vd+w5WTVqITn1CyS9LCb1z1yLkxJVGPBzrOiKGjUkTzyUCvtfx3H0383eE2L3qpuNwktnGP6BOE6yVVodk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bgEmmPta; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0UUPPPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB65DC4CECE;
-	Thu, 12 Dec 2024 21:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734038554;
-	bh=ek95GW+tU8Tylid/kx9coHa0RUVz9tmbmJ7ZUEm1zG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S0UUPPPxuerFCwua/KUSzhx+D6oaZUP0ZuwW6g36ytjW0P4CDc11mTB2PHIWtJCej
-	 /r0aiWNS6j69M0FY4h27VyFslpa0+LPVWfcKlFGdm7J5bRXgirAWMXx821cdQL7KQR
-	 rFMRwlToFNS3jk/6DEsq9O6NEJv0r6gmaKC89j4WEZE2BwnoHh7Y68zMGLntjhVYTu
-	 agVUlFBqW9s5/AVlp4xzu1LFlbV+Jdp132+0U+ukro8BwN1gCap6YFuijRQBx0fS0G
-	 qk9qZB1iFwEkyjf3o6cDMAus0fPuCeJdO/t4+lttcE6n99my3/svObn6xSz2VJW+/G
-	 CRMuz7UsaB0pw==
-Date: Thu, 12 Dec 2024 21:22:29 +0000
-From: Simon Horman <horms@kernel.org>
-To: alejandro.lucero-palau@amd.com
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bgEmmPta"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734040017; x=1765576017;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OY9h37BubdSteB7SLMSe1UN8MTNMzssYQ/2LVWDqGbg=;
+  b=bgEmmPtaVody9LQprrUl4+zW786Zs/p7gnkzHmV/ZuVkO1TuerHseq/F
+   o8RxzwTLznbgF6rlhz6AGmI+54TdGYjp5hceT2rldphKwu+88mri7FWQY
+   fDKTlzqXudMs7HFYqXGl112NHoA6UNmYPDDmtW1i32XfGRZwBCON54nbR
+   zQiMXu9syy29FXfBWkVChcn27dSdAH+ggSGPYGvXk0Tod0UkG0KVBmAfh
+   Fm3dI623zrdsP6hnH4PmJG1+LjpKOCKaXl4YbAd9pAsT8x5PA1RcVZIaK
+   pqNA1on+1qQNLBoNx1VYVbyl712ICfenCA8Az0Ekq8caoxFvxVRdRiqvb
+   w==;
+X-CSE-ConnectionGUID: +0VWLo1jRKK9XvJUnmC+HQ==
+X-CSE-MsgGUID: nvBH65+vTsOrHrTwOWvN+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="38163361"
+X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
+   d="scan'208";a="38163361"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 13:46:57 -0800
+X-CSE-ConnectionGUID: v0ZRXvNXQyWaBcigK0OE5A==
+X-CSE-MsgGUID: xJJ/D7X4Q4yJFoSnPDMLTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
+   d="scan'208";a="96892044"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.122])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 13:46:55 -0800
+Date: Thu, 12 Dec 2024 13:46:53 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: alucerop@amd.com, dave.jiang@intel.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v7 28/28] sfc: support pio mapping based on cxl
-Message-ID: <20241212212229.GD2110@kernel.org>
-References: <20241209185429.54054-1-alejandro.lucero-palau@amd.com>
- <20241209185429.54054-29-alejandro.lucero-palau@amd.com>
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	nifan.cxl@gmail.com
+Subject: Re: [PATCHv4] cxl: avoid driver data for obtaining cxl_dev_state
+ reference
+Message-ID: <Z1tZzf_RqsfRFwvF@aschofie-mobl2.lan>
+References: <20241203162112.5088-1-alucerop@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,100 +61,122 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241209185429.54054-29-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241203162112.5088-1-alucerop@amd.com>
 
-On Mon, Dec 09, 2024 at 06:54:29PM +0000, alejandro.lucero-palau@amd.com wrote:
+On Tue, Dec 03, 2024 at 04:21:12PM +0000, alucerop@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> With a device supporting CXL and successfully initialised, use the cxl
-> region to map the memory range and use this mapping for PIO buffers.
+> CXL Type3 pci driver uses struct device driver_data for keeping
+> cxl_dev_state reference. Type1/2 drivers are not only about CXL so this
+> field should not be used when code requires cxl_dev_state to work with
+> and such a code used for Type2 support.
 > 
+> Change cxl_dvsec_rr_decode for passing cxl_dev_state as a parameter.
+> 
+> Seize the change for removing the unused cxl_port param.
+> 
+
+Dave,
+
+Jonathan previously offered Reviewed-by tag so this looks good to
+apply. I've added another review tag and also massaged the 
+changelog for your consideration.
+
+cxl/pci: Add Type 1/2 support to cxl_dvsec_rr_decode()
+
+In cxl_dvsec_rr_decode() the pci driver expects to retrieve a cxlds,
+struct cxl_dev_state, from the driver_data field of struct device.
+While that works for Type 3, drivers for Type 1/2 devices may not
+put a cxlds in the driver_data field.
+
+In preparation for supporting Type 1/2 devices, replace parameter
+'struct device' with 'struct cxl_dev_state' in cxl_dvsec_rr_decode().
+
+Remove the unused parameter 'cxl_port' in cxl_dvsec_rr_decode().
+
+[as: massaged commit msg and log]
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > ---
->  drivers/net/ethernet/sfc/ef10.c       | 48 +++++++++++++++++++++++----
->  drivers/net/ethernet/sfc/efx_cxl.c    | 19 ++++++++++-
->  drivers/net/ethernet/sfc/net_driver.h |  2 ++
->  drivers/net/ethernet/sfc/nic.h        |  3 ++
->  4 files changed, 65 insertions(+), 7 deletions(-)
+>  drivers/cxl/core/pci.c        | 6 +++---
+>  drivers/cxl/cxl.h             | 3 ++-
+>  drivers/cxl/port.c            | 2 +-
+>  tools/testing/cxl/test/mock.c | 6 +++---
+>  4 files changed, 9 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index 452009ed7a43..4587ca884c03 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -24,6 +24,7 @@
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  #include <net/udp_tunnel.h>
-> +#include "efx_cxl.h"
->  
->  /* Hardware control for EF10 architecture including 'Huntington'. */
->  
-> @@ -177,6 +178,12 @@ static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
->  			  efx->num_mac_stats);
->  	}
-
-Hi Alejandro,
-
-Earlier in efx_ef10_init_datapath_caps, outbuf is declared using:
-
-	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V4_OUT_LEN);
-
-This will result in the following declaration:
-
-	efx_dword_t _name[DIV_ROUND_UP(MC_CMD_GET_CAPABILITIES_V4_OUT_LEN, 4)]
-
-Where MC_CMD_GET_CAPABILITIES_V4_OUT_LEN is defined as 78.
-So outbuf will be an array with DIV_ROUND_UP(78, 4) == 20 elements.
-
->  
-> +	if (outlen < MC_CMD_GET_CAPABILITIES_V7_OUT_LEN)
-> +		nic_data->datapath_caps3 = 0;
-> +	else
-> +		nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-> +						      GET_CAPABILITIES_V7_OUT_FLAGS3);
-> +
->  	return 0;
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 5b46bc46aaa9..420e4be85a1f 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -291,11 +291,11 @@ static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
+>  	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
 >  }
 >  
-
-MC_CMD_GET_CAPABILITIES_V7_OUT_FLAGS3_OFST is defined as 148.
-And the above will result in an access to element 148 / 4 == 37 of
-outbuf. A buffer overflow.
-
-Flagged by gcc-14 W=1 allmodconfig builds as:
-
-In file included from drivers/net/ethernet/sfc/net_driver.h:33,
-                 from drivers/net/ethernet/sfc/ef10.c:7:
-drivers/net/ethernet/sfc/ef10.c: In function 'efx_ef10_init_datapath_caps':
-drivers/net/ethernet/sfc/bitfield.h:167:35: warning: array subscript 37 is above array bounds of 'efx_dword_t[20]' {aka 'union efx_dword[20]'} [-Warray-bounds=]
-  167 |         (EFX_EXTRACT32((dword).u32[0], 0, 31, low, high) &      \
-drivers/net/ethernet/sfc/bitfield.h:129:11: note: in definition of macro 'EFX_EXTRACT_NATIVE'
-  129 |          (native_element) << ((min) - (low)))
-      |           ^~~~~~~~~~~~~~
-./include/linux/byteorder/generic.h:89:21: note: in expansion of macro '__le32_to_cpu'
-   89 | #define le32_to_cpu __le32_to_cpu
-      |                     ^~~~~~~~~~~~~
-drivers/net/ethernet/sfc/bitfield.h:167:10: note: in expansion of macro 'EFX_EXTRACT32'
-  167 |         (EFX_EXTRACT32((dword).u32[0], 0, 31, low, high) &      \
-      |          ^~~~~~~~~~~~~
-drivers/net/ethernet/sfc/bitfield.h:187:9: note: in expansion of macro 'EFX_EXTRACT_DWORD'
-  187 |         EFX_EXTRACT_DWORD(dword, EFX_LOW_BIT(field),            \
-      |         ^~~~~~~~~~~~~~~~~
-drivers/net/ethernet/sfc/mcdi.h:257:9: note: in expansion of macro 'EFX_DWORD_FIELD'
-  257 |         EFX_DWORD_FIELD(*_MCDI_DWORD(_buf, _field), EFX_DWORD_0)
-      |         ^~~~~~~~~~~~~~~
-drivers/net/ethernet/sfc/ef10.c:184:44: note: in expansion of macro 'MCDI_DWORD'
-  184 |                 nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-      |                                            ^~~~~~~~~~
-In file included from drivers/net/ethernet/sfc/ef10.c:12:
-drivers/net/ethernet/sfc/ef10.c:110:26: note: while referencing 'outbuf'
-  110 |         MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V4_OUT_LEN);
-      |                          ^~~~~~
-drivers/net/ethernet/sfc/mcdi.h:187:21: note: in definition of macro '_MCDI_DECLARE_BUF'
-  187 |         efx_dword_t _name[DIV_ROUND_UP(_len, 4)]
-      |                     ^~~~~
-drivers/net/ethernet/sfc/ef10.c:110:9: note: in expansion of macro 'MCDI_DECLARE_BUF'
-  110 |         MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V4_OUT_LEN);
-      |         ^~~~~~~~~~~~~~~~
-
-...
+> -int cxl_dvsec_rr_decode(struct device *dev, struct cxl_port *port,
+> +int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+>  			struct cxl_endpoint_dvsec_info *info)
+>  {
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	struct device *dev = cxlds->dev;
+>  	int hdm_count, rc, i, ranges = 0;
+>  	int d = cxlds->cxl_dvsec;
+>  	u16 cap, ctrl;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index f6015f24ad38..fdac3ddb8635 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -821,7 +821,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>  				struct cxl_endpoint_dvsec_info *info);
+>  int devm_cxl_add_passthrough_decoder(struct cxl_port *port);
+> -int cxl_dvsec_rr_decode(struct device *dev, struct cxl_port *port,
+> +struct cxl_dev_state;
+> +int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+>  			struct cxl_endpoint_dvsec_info *info);
+>  
+>  bool is_cxl_region(struct device *dev);
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 24041cf85cfb..66e18fe55826 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -98,7 +98,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	struct cxl_port *root;
+>  	int rc;
+>  
+> -	rc = cxl_dvsec_rr_decode(cxlds->dev, port, &info);
+> +	rc = cxl_dvsec_rr_decode(cxlds, &info);
+>  	if (rc < 0)
+>  		return rc;
+>  
+> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+> index f4ce96cc11d4..4f82716cfc16 100644
+> --- a/tools/testing/cxl/test/mock.c
+> +++ b/tools/testing/cxl/test/mock.c
+> @@ -228,16 +228,16 @@ int __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(__wrap_cxl_hdm_decode_init, CXL);
+>  
+> -int __wrap_cxl_dvsec_rr_decode(struct device *dev, struct cxl_port *port,
+> +int __wrap_cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+>  			       struct cxl_endpoint_dvsec_info *info)
+>  {
+>  	int rc = 0, index;
+>  	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+>  
+> -	if (ops && ops->is_mock_dev(dev))
+> +	if (ops && ops->is_mock_dev(cxlds->dev))
+>  		rc = 0;
+>  	else
+> -		rc = cxl_dvsec_rr_decode(dev, port, info);
+> +		rc = cxl_dvsec_rr_decode(cxlds, info);
+>  	put_cxl_mock_ops(index);
+>  
+>  	return rc;
+> -- 
+> 2.17.1
+> 
+> 
