@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22861547F5;
-	Thu, 12 Dec 2024 18:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AD31547F5;
+	Thu, 12 Dec 2024 18:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734027735; cv=none; b=Orn9ZUbs8C+HZ2Rj3CSCL6ck/2W8lHeA9mFZevguqz41nWTjeaie/UYDy+P6Y1tQ7xh22kPV+GxrA+35wnEq1L8+12lkst9cN3wIKP5AS4VN8+CDuuF4P+H3wrLKOvqPT7tyCVQVkwZgz4rMpvFQcDCKDa0ahvuhEvh93Y+gbNQ=
+	t=1734028177; cv=none; b=mczyeriBb7BDWLzz5cWrHBr7yylulLqPR85f+s0sp542DeudZ+2VKBrD4j5o0OWGLvNUnHxf5m4R845feEJhOl1BTgSpJVkMnf3CZbA+GolMdad0OrgANNAxtF/F9dCN46b3sVXiwmS56KsjDC++HL0E8G32Y9opBBTu14JS+VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734027735; c=relaxed/simple;
-	bh=6MtRzTaHKXmGJLbXmqDTbn2UkUthBk1sXoUZ9fLjhNU=;
+	s=arc-20240116; t=1734028177; c=relaxed/simple;
+	bh=1PfUjDJ/jJaxCJPYfu1Eokx0VXf5REm0YtGpLhVq/6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIAD7DX8RjqAt8Zgg6PoEFq9gBsp2dgpP7+Oj4zzE+qxEelqbxi1C4RGDQPXJWZYMO58kJPzNP60NtKBzr0cZ+R/q34tiCt34tXjb+hHj27gx2SaekkwtWOHw31FN1uoUGIp/+7W/jR6SuGlF/lr7PBNgQd5DcqaQmeJ0iTzHpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0kIrjIG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IfedBBBwJRkoGtlo0OJOpHPKX3yQjZQF6z8KG2eprCeh+6rj1kSGCiBwaLZoBCZ4pGqhJc80vHmULBZ1+RPCs7sk9DLUlyp2KSZnD49K1UbvLPLRtiJxjCB9tzBelnVkOaLqFPCRRX6PVIbiS2cNht6wjiJLkAHpIErhWqecfjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxG0tJq6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0kIrjIG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383B2C4CECE;
-	Thu, 12 Dec 2024 18:22:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxG0tJq6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2B9C4CED0;
+	Thu, 12 Dec 2024 18:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734027734;
-	bh=6MtRzTaHKXmGJLbXmqDTbn2UkUthBk1sXoUZ9fLjhNU=;
+	s=k20201202; t=1734028177;
+	bh=1PfUjDJ/jJaxCJPYfu1Eokx0VXf5REm0YtGpLhVq/6k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A0kIrjIGJ4b8STlj/Jf8eLk4B0K6US02fhHrn2T/OPwTomQadU3EtF8IDCy8xhO8B
-	 N9CY2ztJGD1PxBEMzWicvJY833HoSw4FTT17K1wFTMkoA9V9UlXgTKTsUr8w0LkDb3
-	 rI25r14DAbnA0joTHpztSv2S3XeXZVHII0kT4VEZFJi74WXpJ+lb8hRunUW9ZjB5QM
-	 BHEYixNYmPM7izSwc4Qfo3lc86Zf8Jnw/ko7oufw7xD+LHpSVYWaz5A4aKn6VkW+5T
-	 kC6ImSPCHeAZ+pF6ViP3lZz13sgHMxYZa0LvVpq/Vclf4ny75rZCzU9xFGOlxYdlCV
-	 f7fqM98k9kwhw==
-Date: Thu, 12 Dec 2024 18:21:10 +0000
+	b=RxG0tJq646SMym6LBfKtrAZOzW3UHHyYUKTWRTfx249maBzBxQD63bvEMBWHZyTqF
+	 ydI9ZPr6JRSdHIGdNbmhbRrwjlCUZ9UmAKAoZuL33r3s+LWcHJBD2y6HGD6Am1TlDx
+	 Ht5jaOAUEH55IVruELPvXKPsTmt4EV4w07LrDt7tYFZP2BxQc8PvttYeCCbfLgVCw/
+	 Drv7DInDgWfiyTRpK+gPxwERznyBwzuD0PpL1RcdjEZndp2UG8WkNWZZev/IblLDbP
+	 qWCKP/R23/DD51aBdBNGebacw4yk7ZleOAr/ZVtsYMJNYHa5SrnbQvQiVvpVWIaBn8
+	 h6SgmJIyNu9VQ==
+Date: Thu, 12 Dec 2024 18:29:33 +0000
 From: Simon Horman <horms@kernel.org>
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
@@ -34,10 +34,10 @@ Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
 	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
 	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
 	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v7 18/28] sfc: get endpoint decoder
-Message-ID: <20241212182110.GA2110@kernel.org>
+Subject: Re: [PATCH v7 23/28] sfc: create cxl region
+Message-ID: <20241212182933.GB2110@kernel.org>
 References: <20241209185429.54054-1-alejandro.lucero-palau@amd.com>
- <20241209185429.54054-19-alejandro.lucero-palau@amd.com>
+ <20241209185429.54054-24-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,61 +46,68 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241209185429.54054-19-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241209185429.54054-24-alejandro.lucero-palau@amd.com>
 
-On Mon, Dec 09, 2024 at 06:54:19PM +0000, alejandro.lucero-palau@amd.com wrote:
+On Mon, Dec 09, 2024 at 06:54:24PM +0000, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use cxl api for getting DPA (Device Physical Address) to use through an
-> endpoint decoder.
+> Use cxl api for creating a region using the endpoint decoder related to
+> a DPA range.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 > Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
 > ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/net/ethernet/sfc/efx_cxl.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index f2dc025c9fbb..09827bb9e861 100644
+> index 09827bb9e861..9b34795f7853 100644
 > --- a/drivers/net/ethernet/sfc/efx_cxl.c
 > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -120,6 +120,14 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> @@ -128,10 +128,19 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
 >  		goto err3;
 >  	}
 >  
-> +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, true, EFX_CTPIO_BUFFER_SIZE,
-> +				     EFX_CTPIO_BUFFER_SIZE);
-> +	if (IS_ERR_OR_NULL(cxl->cxled)) {
+> +	cxl->efx_region = cxl_create_region(cxl->cxlrd, cxl->cxled);
+> +	if (!cxl->efx_region) {
+> +		pci_err(pci_dev, "CXL accel create region failed");
+> +		rc = PTR_ERR(cxl->efx_region);
+> +		goto err_region;
 
 Hi Alejandro,
 
-The Kernel doc for cxl_request_dpa says that it returns either
-a valid pointer or an error pointer. So perhaps IS_ERR() is
-sufficient here.
+This is similar to my feedback on patch 18/28.
 
-> +		pci_err(pci_dev, "CXL accel request DPA failed");
-> +		rc = PTR_ERR(cxl->cxlrd);
+Looking over the implementation of cxl_create_region it seems
+that it returns either a valid pointer or an error pointer, but
+not NULL. If so, I think the correct condition would be
+(completely untested):
 
-Otherwise, if cxl->cxlrd is NULL here, then rc, the return value for
-this function, will be 0 here. Which doesn't seem to align with the
-error message on the line above.
+	if (IS_ERR(cxl->efx_region)
 
-Flagged by Smatch.
+But if cxl->efx_region can be NULL then rc, the return value of this
+function, will be set to zero. Which doesn't seem correct given
+the error message above.
 
-> +		goto err3;
 > +	}
 > +
 >  	probe_data->cxl = cxl;
 >  
 >  	return 0;
-> @@ -136,6 +144,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  
+> +err_region:
+> +	cxl_dpa_free(cxl->cxled);
+>  err3:
+>  	cxl_release_resource(cxl->cxlds, CXL_RES_RAM);
+>  err2:
+> @@ -144,6 +153,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
 >  void efx_cxl_exit(struct efx_probe_data *probe_data)
 >  {
 >  	if (probe_data->cxl) {
-> +		cxl_dpa_free(probe_data->cxl->cxled);
+> +		cxl_accel_region_detach(probe_data->cxl->cxled);
+>  		cxl_dpa_free(probe_data->cxl->cxled);
 >  		cxl_release_resource(probe_data->cxl->cxlds, CXL_RES_RAM);
 >  		kfree(probe_data->cxl->cxlds);
->  		kfree(probe_data->cxl);
 > -- 
 > 2.17.1
 > 
