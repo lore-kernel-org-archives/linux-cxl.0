@@ -1,224 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEF72907
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Dec 2024 01:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734051719; cv=none; b=rafPZyNf/9L/CuXvnEgE6UoXIY7snP7PeoBqk3ahnkk4MIeOKEXWdMiec8yWntJdDJPIdpm0kiolc+TrDmVwK5BlQkkmOkC0l9Evh2s8RENMgHoAS47pM3LXiCb3ec6zbL9jwSPYABMVGgRRflQ+EjkqJZevdy353tx156otGR4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734051719; c=relaxed/simple;
-	bh=gE+XMjlbD6wK0m92eYbAc+ZOzvQchaLYpuEwTXR73rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxeUfNHxx5Omi9Herl8BQyTEpx11Q/JmXaZA8+XIS4z/NcIjRESsIDuDy/FIt4EJ5x2RcycMNaR9dDbGSKTdUcgSObx9hj0s+zYWfAyW9umcuJAVAG7GnTW/9O170Qb6oabZzLK0jBHqCHvVa/pR6dv2coqxePjzPYYd9gpy/SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eUxbmPZk; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D0B7F9
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Dec 2024 03:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734059830; cv=pass; b=iCGw3/tnscleMt3W/Mk+Xd5Dz9Txnv4RuqVXEYTbkobgcdK94oxzGayDhFbxJPIfjB1vysKZx6+Wgmq7sFgdv4Y/CJxG1KnzgqhB1Bpw85OWZ5sMiMNhgVuw5B5AcZiYAzQsBv7sjFVzOodjhHh02vlAAmTinke1J4kLplTYews=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734059830; c=relaxed/simple;
+	bh=OUFRZzuR5IGTWIzp1HDBD5J9M23k4THhkJ8uegjPM6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TyfovOu4/dDp/L5dTSpf2ZYHji9jGg+94C2BH3/r2vlQ/SaKJnwOEX6YT/AtaaS8gQE1KFuF7Fl7WkfstAszzoDBn7WfQ85FJquMadDBE2rf9qFZd+/vmnMAGCmjZYmaIi8+kibgJ8Dt5vzl+mcvGEM4LLHKvc79LX6de+1iUls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=CMYP8vhZ; arc=pass smtp.client-ip=136.143.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eUxbmPZk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734051717; x=1765587717;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gE+XMjlbD6wK0m92eYbAc+ZOzvQchaLYpuEwTXR73rg=;
-  b=eUxbmPZkQ1dVftW78a9gTVA8/0psX3shx1viR1vsEZrnYdf/4jGs1pIl
-   mMSAdZAuY3merf4DpJRH1aWM5xfy5+bvTNcqqJocRqEKXSCnfB/+mkM6s
-   cIpTFoc+lS86yrl3dwPPL6uFKHcyi2VKTJeaXZMFTAzxJ+EvMLnA6SMWC
-   94CbbjXezKXKiCO5eEdKAD8jTwymyFb4fBBgBSgDQD2RbFu8Lg2OxbycQ
-   bFk7QB/ANJGjax1rnDoCFvNQJBsKt1Y/84UFPqCtRSmRvwAeVuIFKjTdE
-   qs2dOi0qtrtCyKvauLHghl8xXA9uGyIBUo4i8/Cj0YSRtmB5vZDuF3rSb
-   w==;
-X-CSE-ConnectionGUID: 93GzmNzLQ/+QLCFaVSgrTQ==
-X-CSE-MsgGUID: sIPw5wHGR96e7I203Yfaxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="56968436"
-X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
-   d="scan'208";a="56968436"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 17:01:56 -0800
-X-CSE-ConnectionGUID: 3Qejn4ZPTnWlKmvSoTPn0w==
-X-CSE-MsgGUID: wqJ+12uFRsOnhQFLRL+5yQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,230,1728975600"; 
-   d="scan'208";a="127199084"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.122])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 17:01:56 -0800
-Date: Thu, 12 Dec 2024 17:01:53 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Nathan Fontenot <nathan.fontenot@amd.com>, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
-Message-ID: <Z1uHgePW0T81r3xC@aschofie-mobl2.lan>
-References: <20241202155542.22111-1-nathan.fontenot@amd.com>
- <Z1tmwOsAtL-wBR3Y@PC2K9PVX.TheFacebook.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="CMYP8vhZ"
+ARC-Seal: i=1; a=rsa-sha256; t=1734059807; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=c4ziE2srahhKGzwAPkKWAPnjm8RtaUQG6DaMMViBB30CkI59ebY/CnQjqxj+WgNYYKCt0+BH/kkQ1B5g35BqUSFfVNtLP5tywEdLDatCIo3fhQEHYTiYHaf6U6+HihrBQMfds43xekWm98pv1k3cSybbIaS3DDL0z0SBSPvgoBM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1734059807; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OUFRZzuR5IGTWIzp1HDBD5J9M23k4THhkJ8uegjPM6o=; 
+	b=ZtwL5ECtekh+9PS2ysf3TrIDHLzMIFE5lmpbxqBXGVgN9YK2vo60HsW98Cdi05l6fxJyjZJpWE49Ll31eoxxWOMC6xW41SRZprlK1mCqQSlL0g8rng6nLAhonagMPGYwT67ovjuWWc0I9RA5Rp+VItmm9ZnAZfz9Qt1yLv66AXM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734059807;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=OUFRZzuR5IGTWIzp1HDBD5J9M23k4THhkJ8uegjPM6o=;
+	b=CMYP8vhZvG+uvGqOgJJQUpVuxjWDpsSDjOrkm8tVhGERCSPNoGhaxn1fFWeR2Nul
+	ivvjUNQ5Ll5YvqDk0TK5TXgqgVZQG382O/X7aVDZvxFzSKWKy6e+UQ/jiXC2cxwTWo/
+	10C7HXgK/gFOtZwu6tJms10/W/mUF61Y+sPh/9DM=
+Received: by mx.zohomail.com with SMTPS id 1734059805388919.392995362785;
+	Thu, 12 Dec 2024 19:16:45 -0800 (PST)
+Message-ID: <a0063e49-d30f-49e0-8176-493866cf0920@zohomail.com>
+Date: Fri, 13 Dec 2024 11:16:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z1tmwOsAtL-wBR3Y@PC2K9PVX.TheFacebook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl: read MEMDEV_STATUS register iff the device has it
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>, Zhi Wang <zhiw@nvidia.com>,
+ linux-cxl@vger.kernel.org
+Cc: alison.schofield@intel.com, dan.j.williams@intel.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ acurrid@nvidia.com, cjia@nvidia.com, smitra@nvidia.com, ankita@nvidia.com,
+ aniketa@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com,
+ zhiwang@kernel.org
+References: <20241212123959.68514-1-zhiw@nvidia.com>
+ <027059b4-fd8e-4477-8537-7865a977eefb@intel.com>
+ <d8772cf9-cdc6-448b-b6b9-be5370b0770b@zohomail.com>
+ <02f5b9ba-82b5-4a7b-852f-f693e53c738b@intel.com>
+ <44788824-eab2-6aa6-1092-54bce1d2937a@amd.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <44788824-eab2-6aa6-1092-54bce1d2937a@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112278de4c105958b7bb29bf3b2520000e0f56b056e950d65a91bff6f29b5de2f0d1b3082a26e293196:zu080112279b4bdeebe3ab7c8d9d9f6f4d0000ec53a1fc85ce31e35087bf58c2862cf53bdf404474856cc44c:rf0801122badfc299ec2d4e337fc7e50980000176b5c2624e5c6270702e2af7cadffa568bb7af3331bf8cc0500b1c6c0:ZohoMail
+X-ZohoMailClient: External
 
-On Thu, Dec 12, 2024 at 05:42:08PM -0500, Gregory Price wrote:
-> On Mon, Dec 02, 2024 at 09:55:42AM -0600, Nathan Fontenot wrote:
-> ... snip ...
-> > diff --git a/kernel/resource.c b/kernel/resource.c
-> > index a83040fde236..8fc4121a1887 100644
-> > --- a/kernel/resource.c
-> > +++ b/kernel/resource.c
-> ... snip ...
-> > +static int srmem_parse_cfmws(union acpi_subtable_headers *hdr,
-> > +			     void *arg, const unsigned long unused)
-> > +{
-> 
-> Chiming in a little late to the party here
-> 
-> I don't think encoding CXL-specific terminology and functionality
-> directly into kernel/resource.c is wise by any measure.
-> 
-> The abstraction here is completely inverted, and this is probably
-> in line with Dan's comments.
-> 
-> The comments in e820.c allude to a similar issue
-> 
->     * Prior to inserting SOFT_RESERVED resources we want to check
->     * for an intersection with potential CXL resources.
-> 
-> This is similarly inverted - e820 doesn't know anthing about CXL
-> and it shouldn't have to be made aware of CXL. Mucking with
-> e820 is *begging* to be bitten elsewhere in parts of the system
-> that depend on it to be a relatively stable source of truth.
-> 
-> 
-> This tells me that this patch is trying to solve the wrong problem.
-> 
-> 
-> Your changelog alludes to supporting hotplug replace
-> 
-> """
->   The current approach of leaving the SOFT RESERVE resource as is can
->   cause failure during hotplug replace of CXL devices because the 
->   resource is not available for reuse after teardown of the CXL device.
-> """
-> 
-> It sounds like we should be making the SR resource available for
-> re-use through proper teardown and cleanup of the resource tree,
-> rather than trying to change fundamental components like e820.
-> 
-> If the driver was capable of using the SOFT_RESERVED region on
-> initial setup, it should be capable of re-using that region.
-> 
-> 
-> Is the issue here that the hotplug-replaced component has a
-> different capacity? It it being assigned a new region entirely?
-> Is it exactly the same, but the resource isn't being cleaned up?
-> 
-> Can you provide more specifics about the exact hotplug interaction
-> that is happening? That might help understand the issue a bit better.
-> 
-> 
-> Much of this sounds like we need additional better tear-down
-> management and possibly additional cxl/acpi features to handle 
-> hotplug of these devices - rather than changing resource.c.
+On 12/13/2024 2:04 AM, Alejandro Lucero Palau wrote:
+>
+> On 12/12/24 17:55, Dave Jiang wrote:
+>>
+>> On 12/12/24 10:14 AM, Li Ming wrote:
+>>> On 12/12/2024 11:45 PM, Dave Jiang wrote:
+>>>> On 12/12/24 5:39 AM, Zhi Wang wrote:
+>>>>> Before accessing the CXL device memory after reset/power-on, the driver
+>>>>> needs to ensure the device memory media is ready.
+>>>>>
+>>>>> However, not every CXL device implements the CXL memory device register
+>>>>> groups. E.g. a CXL type-2 device. Thus calling cxl_await_media_ready()
+>>>>> on these devcie will lead to a kernel panic. This problem was found when
+>>>>> testing the emulated CXL type-2 device without a CXL memory device
+>>>>> register.
+>>>>>
+>>>>> [   97.662720] BUG: kernel NULL pointer dereference, address: 0000000000000000
+>>>>> [   97.663963] #PF: supervisor read access in kernel mode
+>>>>> [   97.664860] #PF: error_code(0x0000) - not-present page
+>>>>> [   97.665753] PGD 0 P4D 0
+>>>>> [   97.666198] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+>>>>> [   97.667053] CPU: 8 UID: 0 PID: 7340 Comm: qemu-system-x86 Tainted: G            E      6.11.0-rc2+ #52
+>>>>> [   97.668656] Tainted: [E]=UNSIGNED_MODULE
+>>>>> [   97.669340] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+>>>>> [   97.671243] RIP: 0010:cxl_await_media_ready+0x1ac/0x1d0
+>>>>> [   97.672157] Code: e9 03 ff ff ff 0f b7 1d d6 80 31 01 48 8b 7d b8 89 da 48 c7 c6 60 52 c6 b0 e8 00 46 f6 ff e9 27 ff ff ff 49 8b 86 a0 00 00 00 <48> 8b 00 83 e0 0c 48 83 f8 04 0f 94 c0 0f b6 c0 8d 44 80 fb e9 0c
+>>>>> [   97.675391] RSP: 0018:ffffb5bac7627c20 EFLAGS: 00010246
+>>>>> [   97.676298] RAX: 0000000000000000 RBX: 000000000000003c RCX: 0000000000000000
+>>>>> [   97.677527] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+>>>>> [   97.678733] RBP: ffffb5bac7627c70 R08: 0000000000000000 R09: 0000000000000000
+>>>>> [   97.679951] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>>>>> [   97.681144] R13: ffff9ef9028a8000 R14: ffff9ef90c1d1a28 R15: 0000000000000000
+>>>>> [   97.682370] FS:  00007386aa4f3d40(0000) GS:ffff9efa77200000(0000) knlGS:0000000000000000
+>>>>> [   97.683721] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>> [   97.684703] CR2: 0000000000000000 CR3: 0000000169a14003 CR4: 0000000000770ef0
+>>>>> [   97.685909] PKRU: 55555554
+>>>>> [   97.686397] Call Trace:
+>>>>> [   97.686819]  <TASK>
+>>>>> [   97.687243]  ? show_regs+0x6c/0x80
+>>>>> [   97.687840]  ? __die+0x24/0x80
+>>>>> [   97.688391]  ? page_fault_oops+0x155/0x570
+>>>>> [   97.689090]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.689973]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.690848]  ? __vunmap_range_noflush+0x420/0x4e0
+>>>>> [   97.691700]  ? do_user_addr_fault+0x4b2/0x870
+>>>>> [   97.692606]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.693502]  ? exc_page_fault+0x82/0x1b0
+>>>>> [   97.694200]  ? asm_exc_page_fault+0x27/0x30
+>>>>> [   97.694975]  ? cxl_await_media_ready+0x1ac/0x1d0
+>>>>> [   97.695816]  vfio_cxl_core_enable+0x386/0x800 [vfio_cxl_core]
+>>>>> [   97.696829]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.697685]  cxl_open_device+0xa6/0xd0 [cxl_accel_vfio_pci]
+>>>>> [   97.698673]  vfio_df_open+0xcb/0xf0
+>>>>> [   97.699313]  vfio_group_fops_unl_ioctl+0x294/0x720
+>>>>> [   97.700149]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.701011]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.701858]  __x64_sys_ioctl+0xa3/0xf0
+>>>>> [   97.702536]  x64_sys_call+0x11ad/0x25f0
+>>>>> [   97.703214]  do_syscall_64+0x7e/0x170
+>>>>> [   97.703878]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.704726]  ? do_syscall_64+0x8a/0x170
+>>>>> [   97.705425]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.706282]  ? kvm_device_ioctl+0xae/0x130 [kvm]
+>>>>> [   97.707135]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.708001]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.708853]  ? syscall_exit_to_user_mode+0x4e/0x250
+>>>>> [   97.709724]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.710609]  ? do_syscall_64+0x8a/0x170
+>>>>> [   97.711300]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>>>> [   97.712132]  ? exc_page_fault+0x93/0x1b0
+>>>>> [   97.712839]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>> [   97.713735] RIP: 0033:0x7386ab124ded
+>>>>> [   97.714382] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+>>>>> [   97.717664] RSP: 002b:00007ffcda2a6480 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>>>> [   97.718965] RAX: ffffffffffffffda RBX: 00006293226d9f20 RCX: 00007386ab124ded
+>>>>> [   97.720222] RDX: 00006293226db730 RSI: 0000000000003b6a RDI: 0000000000000009
+>>>>> [   97.721522] RBP: 00007ffcda2a64d0 R08: 00006293214e9010 R09: 0000000000000007
+>>>>> [   97.722858] R10: 00006293226db730 R11: 0000000000000246 R12: 00006293226e0880
+>>>>> [   97.724193] R13: 00006293226db730 R14: 00007ffcda2a7740 R15: 00006293226d94f0
+>>>>> [   97.725491]  </TASK>
+>>>>> [   97.725883] Modules linked in: cxl_accel_vfio_pci(E) vfio_cxl_core(E) vfio_pci_core(E) snd_seq_dummy(E) snd_hrtimer(E) snd_seq(E) snd_seq_device(E) snd_timer(E) snd(E) soundcore(E) qrtr(E) intel_rapl_msr(E) intel_rapl_common(E) kvm_amd(E) ccp(E) binfmt_misc(E) kvm(E) crct10dif_pclmul(E) crc32_pclmul(E) polyval_clmulni(E) polyval_generic(E) ghash_clmulni_intel(E) sha256_ssse3(E) sha1_ssse3(E) aesni_intel(E) i2c_i801(E) crypto_simd(E) cryptd(E) i2c_smbus(E) lpc_ich(E) joydev(E) input_leds(E) mac_hid(E) serio_raw(E) msr(E) parport_pc(E) ppdev(E) lp(E) parport(E) efi_pstore(E) dmi_sysfs(E) qemu_fw_cfg(E) autofs4(E) bochs(E) e1000e(E) drm_vram_helper(E) psmouse(E) drm_ttm_helper(E) ahci(E) ttm(E) libahci(E)
+>>>>> [   97.736690] CR2: 0000000000000000
+>>>>> [   97.737285] ---[ end trace 0000000000000000 ]---
+>>>>>
+>>>>> Only read MEMDEV_STATUS register for ensuring media ready when the device
+>>>>> has it.
+>>>>>
+>>>>> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>>>
+>>>> I guess since this is unlikely to happen unless type2 support is added, no need to backport as fixes.
+>>> Hi Zhi and Dave,
+>>>
+>>>
+>>> Do you know if memory device status registers are necessary for CXL type2 device?
+>> Type-2 can be a memory device since it can implement optional host-managed device memory. But I believe it's optional vs type-3 it's mandatory. So failing on failure of regs.memdev discovery may not be suitable for type 2. At least that is my understanding.
+>
+>
+> That's correct and what Type2 patchset addresses. Only Type2 mandatory capabilities not found are implying a discovery error, although it depends on the device driver specifying the expected capabilities adding some optional to the mandatory set.
+>
+Thank you all for your explanation.
 
-Hi Gregory,
 
-Never too late, and it serves to revisit and remember to carry
-along some of the why behind this patch as we adopt it to do more.
-Admittedly, the more, has also become the more important here!
+>
+>>> I only found Table 8-35 in CXL r3.1 section 8.2.8.5 which mentions that memory device status registers are mandatory for all CXL memory devices.  But I am not sure if this rule applies to CXL type-2 device.
+>>>
+>>> If CXL type-2 device should have memory device status registers, maybe cxl_await_media_ready() returnning an error if 'cxlds->regs.memdev' is invalid makes more sense?
+>>>
+>>>
+>>> Thanks
+>>>
+>>> Ming
+>>>
+>>>>> ---
+>>>>>   drivers/cxl/core/pci.c | 8 +++++---
+>>>>>   1 file changed, 5 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>>>>> index 51132a575b27..7a8ec4928da6 100644
+>>>>> --- a/drivers/cxl/core/pci.c
+>>>>> +++ b/drivers/cxl/core/pci.c
+>>>>> @@ -203,9 +203,11 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
+>>>>>               return rc;
+>>>>>       }
+>>>>>   -    md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>>>>> -    if (!CXLMDEV_READY(md_status))
+>>>>> -        return -EIO;
+>>>>> +    if (cxlds->regs.memdev) {
+>>>>> +        md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>>>>> +        if (!CXLMDEV_READY(md_status))
+>>>>> +            return -EIO;
+>>>>> +    }
+>>>>>         return 0;
+>>>>>   }
+>>
 
-I'm not sure what Nathan first saw that led him to this issue.
-For me it was - 
-
-BIOS labels a resource Soft Reserved and programs a region using
-that range. Later, the existing cxl path to destroy that region
-does not free up that Soft Reserved range. Users cannot create
-another region in it's place. Resource lost. We considered simply
-removing soft reserved resources on region teardown, and you can
-probably find a patches on lore doing just that.
-
-But - the problem grew. Sometimes BIOS creates an SR that is not
-aligned with the region they go on to program. Stranded resources.
-That's where the trim and give to DAX path originated.
-
-But - the problem grew. Sometimes the CXL driver fails to enumerate
-that BIOS defined region. More stranded resources. Let's find those
-too and give them to DAX. This is something we are seeing in the
-wild now and why Dan raised its priority.
-
-Dan is also suggesting that at that last event - failure to enumerate
-a BIOS defined region, we tear down the entire ACPI0017 toplogy
-and give everything to DAX.
-
-What Dan called, "the minimum requirement": all Soft Reserved ranges
-end up as dax-devices sounds like the right guideline moving forward.
-
-Hope that answers some of your why questions about the SR reuse.
-
-It seems the worst problem, failure to enumerate a region, kind of
-drives the solution now, and we should handle the soft reserveds
-all the same. Even if Nathan doesn't implement it in one final
-sweep through the Soft Reserveds, one way or another, those SR
-ranges must end up as dax-device resources - either CXL managed
-or BIOS Soft Reserved.
-
---Alison
-
-> 
-> 
-> ~Gregory
-> 
-> > +	struct acpi_cedt_cfmws *cfmws;
-> > +	struct srmem_arg *args = arg;
-> > +	struct resource cfmws_res;
-> > +	struct resource *res;
-> > +
-> > +	res = args->res;
-> > +
-> > +	cfmws = (struct acpi_cedt_cfmws *)hdr;
-> > +	cfmws_res = DEFINE_RES_MEM(cfmws->base_hpa,
-> > +				   cfmws->base_hpa + cfmws->window_size);
-> > +
-> > +	if (resource_overlaps(&cfmws_res, res)) {
-> > +		args->overlaps += 1;
-> > +		return 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static bool resource_overlaps_cfmws(struct resource *res)
-> > +{
-> > +	struct srmem_arg arg = {
-> > +		.res = res,
-> > +		.overlaps = 0
-> > +	};
-> > +
-> > +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, srmem_parse_cfmws, &arg);
-> > +
-> > +	if (arg.overlaps)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +int insert_soft_reserve_resource(struct resource *res)
-> > +{
-> > +	if (resource_overlaps_cfmws(res)) {
-> > +		pr_info("Reserving Soft Reserve %pr\n", res);
-> > +		return insert_resource(&srmem_resource, res);
-> > +	}
-> > +
-> > +	return insert_resource(&iomem_resource, res);
-> > +}
-> > +EXPORT_SYMBOL(insert_soft_reserve_resource);
-> > +
-> >  static void __init
-> >  __reserve_region_with_split(struct resource *root, resource_size_t start,
-> >  			    resource_size_t end, const char *name)
-> > -- 
-> > 2.43.0
-> > 
