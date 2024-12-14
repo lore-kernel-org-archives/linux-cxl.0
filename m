@@ -1,43 +1,73 @@
-Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4F863C;
-	Sat, 14 Dec 2024 13:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734183323; cv=pass; b=Fe7xDTcXoKujYlHt4ifgCt1dMbx4BEd7jyu1rNuIFyawTs/ZwhZNdg80V+hEL+Q/yJqYbeHr84ljbxqQcz6Hb8C6XsmTaHd83dK1kdA12DFaTJU6G6ouKYTflZq3cHjRdemPt/CBlEYGzjE+QlAYkLBNgWKjghNbFD7hfmWvykI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734183323; c=relaxed/simple;
-	bh=DNp5NyLYjpTHovQ1y6WoZ3lMswAME79gMoNY2Rnnwb8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FFswwetTbLKPmZXwggEFWZzaaAdMgdeTcHrWbpVhO4+WN1ZpZCH3DLAsT0IBo/m+8OlW/uOE0NNONdHoijz+ni9ZvZZZimB2Fa/3l2RvEB3BohzOqbsEJ8ngucLkP9DwdtSdosM4by2wGFpJzPR4SNEqt9IiYrfKWDrnMM9NIUg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=crs4yI3V; arc=pass smtp.client-ip=136.143.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160F019340F
+	for <linux-cxl@vger.kernel.org>; Sat, 14 Dec 2024 15:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734189789; cv=none; b=frIUZradu7XRDzCACV3LeT5412NRgybMqZ8pNRCWcvgU5zXOlutLRy02hjfwJU1r2L1+DKZ1QI5tiK7c0wqzDP0AFHGiOcLbnwNhzdDXH9lgQILTKzUotfkvEebsbEBsjjTWeNBIWLGpSUQhCYwRNhqLKWek+xjj4YExw0P8Oms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734189789; c=relaxed/simple;
+	bh=jkdG9VVa/wTY2yy0geXHQ0O4Psz84VzAmqde2au0yKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tJUkyWst5Qz1XerSe2aQhGZM3qHFMVYE2ZHdpKHo92r8Dh0B/u///X9XdCV89/BGI7UEo0E4E6DmWKMfAYrSQO28jGpZ0VBLK0HDosFukFQVGPR229Uyn35i2rJU+VClqODG8VVxgz8gGWmI3/PVEIMoq4AToXx3HPFR5yccDd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PVxNFLLI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="crs4yI3V"
-ARC-Seal: i=1; a=rsa-sha256; t=1734183302; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AELDF5dDitodFZd2a7439oMtPNMM/AWuhQsFhmw8SCiuDDfANpyInItNd4ZxiUw8XJMz4Krk9exppn9HrclkZBeLTIMMOg/Uff0vcX7bOmo+kWIgS/uZaCzyd5+CtRBvDUXcf41PopeP6A2y9qTe7XaHgkOJxRdfxzbrX58Yx5w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1734183302; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=MuQDYAnAiCnupF2c2O/j5fvSk5ZV3CYb+uG6AjERERg=; 
-	b=DYUwN6eEMYU0xQ7jtk75RmlvccABACCuCSgtlymDaic9pWhhlsA4fZikWuzczQ7j0JzrYeTf6cPYM87JKqkSceQQ6jKUxAEPqGWqYmti1eJ5t7WhLpdeYmq1ZJJM5SGQolVbrYymgSv60ahnB+EOpC3O1Ph+qIjUhD7LcUue+kI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734183302;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
-	bh=MuQDYAnAiCnupF2c2O/j5fvSk5ZV3CYb+uG6AjERERg=;
-	b=crs4yI3VTG5e0wH1OwGzfdLHMgw8OCGbvoX1cn64Z5C4mOcUGVZTss9VCW7MClFR
-	sNWZQc2DtiVNYVOQ2fb+a2KnPQIK/AuZZJCcCldkNZqKqIb7dNljGq835s9sCRqu4oi
-	fLimkkm4kbQMY8+gUcOzn8eTplRFLPHbb3y3bqsI=
-Received: by mx.zohomail.com with SMTPS id 173418329954737.32446005016391;
-	Sat, 14 Dec 2024 05:34:59 -0800 (PST)
-Message-ID: <d5bf9c4f-fde5-475c-9e4f-600b35508cb8@zohomail.com>
-Date: Sat, 14 Dec 2024 21:34:49 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PVxNFLLI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734189787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WzJW0Dxa8i83uf13tdPe4mY1mNQ+O1FvKqm+giPK/c8=;
+	b=PVxNFLLIZ8ckeORn0BbM0TPZLvWvhCSoFEHpsg2oeJCM0mnZp+S5qC20NvJq8FSAruPqW6
+	/vny9JsamR3m0vJA07TTkks5E+LWM3GI9UuLrxwShP/FWK9DzJ4c2k/X5j+QJkzyFvrHQ2
+	COAysVGHZz9FZ8FQzIWcsl0tSnNyQ50=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-eSIIfeQPNzSDfH3ARYph_A-1; Sat, 14 Dec 2024 10:23:04 -0500
+X-MC-Unique: eSIIfeQPNzSDfH3ARYph_A-1
+X-Mimecast-MFC-AGG-ID: eSIIfeQPNzSDfH3ARYph_A
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4362153dcd6so15415805e9.2
+        for <linux-cxl@vger.kernel.org>; Sat, 14 Dec 2024 07:23:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734189783; x=1734794583;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WzJW0Dxa8i83uf13tdPe4mY1mNQ+O1FvKqm+giPK/c8=;
+        b=P1A9+D2vfO9o3wa6oUhViUaZddjZYZy8x7BFl28HkxlcGFbGt11OPs5nmyX0RCXZaL
+         X25ZdV2VTrqjhbSAuN8v1E/4zzJjMMcEdHsK+TTMLdgWwGVoTK28GDO0XonnN/sPq5Cz
+         D06cN77JUcZAT8bW4QToixzD0taBVJIyB2Q4aGeVM4uJMXLw/pZZWPfqEpsf89g1NB0B
+         /JG0HZ6Laof/i+7rj7GDb6BmCO1FTYQ8eluxuKF+EnAJela85ANJmXH8e2KynWKwQBYO
+         cGL7cqTT8Q7z5TXZabgbIM2CUaLp8tgvUvVOqT9VbFUkPQAS/oq2s5RRkew16WSQGURe
+         8/zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiaoKAVlcWP/MbVD8ICnDdYEfvUxf/xDtm6j9z6bk61PMs3UXmdoO2/gvp0FYkLxSB9Q0d/Ie0CKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZKQygdTI1z3OFGjRgZgxpR93itDKzFssW0u9fsN+Tyy9YqAPS
+	OVB6VdXAvKZS4NvbJShpU33Aog2vcUb3T0Qe8ccJnoqLJzGY1VBXdd2W4CivmHMFwZu73dOqZVi
+	lO+Z1eN7ZivT5st6zV12Hhk1ACcKNJcmiZw0v6mOQ3Q858nsBtKCNR92F4A==
+X-Gm-Gg: ASbGncs4VQU1g4c//Ij8Us39nwpUdAhW8VheJrzDxZ0qZkR/ZekGeFx6h6nYFqWu5k6
+	S+ONVv6vwJyiKGLazDrg4AAbIERwOw7cMQH13EfmpoX72fm83/nAnXQG56Z5PIBlvQnJx3Acx7G
+	aRAmrj04f9kMunM+wM5jVfnyLOso6LK5tZFEPlTQlUvJ4eq/w4S0fMEqKf0kn9xSYVevF07iYGC
+	rMwWEuCT34M7ONyaQS8TjRWtZeMwbfIpuK84e6Ak5p66dJkFaaUAYOsoeaGMcWgXIO3zd4HCkFO
+	J4pq1xuxR9CcqHEMi7U+7zq/i9o82VQh/F/qludgkRW7ViZBVAyljFayoIFLbTDNEGg4qN2VuwF
+	b5fitSa9M
+X-Received: by 2002:a05:600c:1c07:b0:434:a968:89a3 with SMTP id 5b1f17b1804b1-4362aa2e544mr63037805e9.9.1734189783521;
+        Sat, 14 Dec 2024 07:23:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFroEMk6tFJ9Cy5+aMYXPulXjntj5yFN5KYCR5CVhsKcoZETtTRpp5EY+z8zXmRnRx7Xb1Kzg==
+X-Received: by 2002:a05:600c:1c07:b0:434:a968:89a3 with SMTP id 5b1f17b1804b1-4362aa2e544mr63037545e9.9.1734189783051;
+        Sat, 14 Dec 2024 07:23:03 -0800 (PST)
+Received: from ?IPV6:2003:cb:c711:6400:d1b9:21c5:b517:5f4e? (p200300cbc7116400d1b921c5b5175f4e.dip0.t-ipconnect.de. [2003:cb:c711:6400:d1b9:21c5:b517:5f4e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43625550518sm82347835e9.5.2024.12.14.07.22.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2024 07:23:01 -0800 (PST)
+Message-ID: <45555f72-e82a-4196-94af-22d05d6ac947@redhat.com>
+Date: Sat, 14 Dec 2024 16:22:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,182 +75,158 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/15] PCI/AER: Modify AER driver logging to report CXL
- or PCIe bus error type
-To: "Bowman, Terry" <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- PradeepVineshReddy.Kodamati@amd.com
-References: <20241211234002.3728674-1-terry.bowman@amd.com>
- <20241211234002.3728674-5-terry.bowman@amd.com>
- <ef7d45cc-d5ed-4a76-a9af-52c2a423ead0@zohomail.com>
- <208e6639-a394-428f-bfe9-a3b8d48d6144@amd.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <208e6639-a394-428f-bfe9-a3b8d48d6144@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112271c8d1833567dfefef03c7cf600002e50a68bfccd368470f93d8ca3c200031c9f46a82d6a31686e:zu080112278e854838a7a0ec0bf31e1ca20000e2709ff0c6002f061ae2ef3e3e0f5a51527a88dd9d7822d32a:rf0801122b7e45eafa645a239bf48f77690000fb1547e023d3a302104576ee2bf8b13728d3fa9c2fac99f8fce135e78c:ZohoMail
-X-ZohoMailClient: External
+Subject: Re: [PATCH v3 00/25] fs/dax: Fix ZONE_DEVICE page reference counts
+To: Dan Williams <dan.j.williams@intel.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
+Cc: lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, akpm@linux-foundation.org, sfr@canb.auug.org.au
+References: <cover.e1ebdd6cab9bde0d232c1810deacf0bae25e6707.1732239628.git-series.apopple@nvidia.com>
+ <675ce1e5a3d68_fad0294d0@dwillia2-xfh.jf.intel.com.notmuch>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <675ce1e5a3d68_fad0294d0@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: USJVFOWwyfL_YTgVvaYHJyGzrcfa4iVUa9dirTMXL5Q_1734189784
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 12/13/2024 3:59 AM, Bowman, Terry wrote:
->
->
-> On 12/11/2024 7:34 PM, Li Ming wrote:
->> On 12/12/2024 7:39 AM, Terry Bowman wrote:
->>> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
->>> for all errors.
->>>
->>> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL
->>> device errors.
->>>
->>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
->>> ---
->>>  drivers/pci/pcie/aer.c  | 14 ++++++++------
->>>  include/ras/ras_event.h |  9 ++++++---
->>>  2 files changed, 14 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index fe6edf26279e..53e9a11f6c0f 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -699,13 +699,14 @@ static void __aer_print_error(struct pci_dev *dev,
->>>  
->>>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->>>  {
->>> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->>>  	int layer, agent;
->>>  	int id = pci_dev_id(dev);
->>>  	const char *level;
->>>  
->>>  	if (!info->status) {
->>> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
->>> -			aer_error_severity_string[info->severity]);
->>> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
->>> +			bus_type, aer_error_severity_string[info->severity]);
->>>  		goto out;
->>>  	}
->>>  
->>> @@ -714,8 +715,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->>>  
->>>  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
->>>  
->>> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
->>> -		   aer_error_severity_string[info->severity],
->>> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
->>> +		   bus_type, aer_error_severity_string[info->severity],
->>>  		   aer_error_layer[layer], aer_agent_string[agent]);
->>>  
->>>  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
->>> @@ -730,7 +731,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->>>  	if (info->id && info->error_dev_num > 1 && info->id == id)
->>>  		pci_err(dev, "  Error of this Agent is reported first\n");
->>>  
->>> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
->>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
->>>  			info->severity, info->tlp_header_valid, &info->tlp);
->>>  }
->>>  
->>> @@ -764,6 +765,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->>>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>>  		   struct aer_capability_regs *aer)
->>>  {
->>> +	const char *bus_type = pcie_is_cxl(dev) ? "CXL"  : "PCIe";
->>>  	int layer, agent, tlp_header_valid = 0;
->>>  	u32 status, mask;
->>>  	struct aer_err_info info;
->>> @@ -798,7 +800,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>>  	if (tlp_header_valid)
->>>  		__print_tlp_header(dev, &aer->header_log);
->>>  
->>> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
->>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
->>>  			aer_severity, tlp_header_valid, &aer->header_log);
->>>  }
->>>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
->>> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
->>> index e5f7ee0864e7..1bf8e7050ba8 100644
->>> --- a/include/ras/ras_event.h
->>> +++ b/include/ras/ras_event.h
->>> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->>>  
->>>  TRACE_EVENT(aer_event,
->>>  	TP_PROTO(const char *dev_name,
->>> +		 const char *bus_type,
->>>  		 const u32 status,
->>>  		 const u8 severity,
->>>  		 const u8 tlp_header_valid,
->>>  		 struct pcie_tlp_log *tlp),
->>>  
->>> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
->>> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->>>  
->>>  	TP_STRUCT__entry(
->>>  		__string(	dev_name,	dev_name	)
->>> +		__string(	bus_type,	bus_type	)
->>>  		__field(	u32,		status		)
->>>  		__field(	u8,		severity	)
->>>  		__field(	u8, 		tlp_header_valid)
->>> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->>>  
->>>  	TP_fast_assign(
->>>  		__assign_str(dev_name);
->>> +		__assign_str(bus_type);
->>>  		__entry->status		= status;
->>>  		__entry->severity	= severity;
->>>  		__entry->tlp_header_valid = tlp_header_valid;
->>> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->>>  		}
->>>  	),
->>>  
->>> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
->>> -		__get_str(dev_name),
->>> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
->>> +		__get_str(dev_name), __get_str(bus_type),
->>>  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->>>  			__entry->severity == AER_FATAL ?
->>>  			"Fatal" : "Uncorrected, non-fatal",
->> Hi Terry,
+On 14.12.24 02:39, Dan Williams wrote:
+> [ add akpm and sfr for next steps ]
+> 
+> Alistair Popple wrote:
+>> Main updates since v2:
 >>
+>>   - Rename the DAX specific dax_insert_XXX functions to vmf_insert_XXX
+>>     and have them pass the vmf struct.
 >>
->> Patch #3 is using flexbus dvsec to identify CXL RP/USP/DSP. But per CXL r3.1 section 9.12.3 "Enumerating CXL RPs and DSPs", there may be a flexbus dvsec if CXL RP/DSP is in disconnect state or connecting to a PCIe device.
+>>   - Seperate out the device DAX changes.
 >>
->> If a PCIe device connects to a CXL RP/DSP, and the CXL RP/DSP reports an error, the error log will be also "CXL Bus Type", is it expected? My understanding is that the CXL RP/DSP is working on PCIe mode.
+>>   - Restore the page share mapping counting and associated warnings.
 >>
->> If not, I think that setting "pci_dev->is_cxl" during cxl port enumeration and CXL device probing is another option.
+>>   - Rework truncate to require file-systems to have previously called
+>>     dax_break_layout() to remove the address space mapping for a
+>>     page. This found several bugs which are fixed by the first half of
+>>     the series. The motivation for this was initially to allow the FS
+>>     DAX page-cache mappings to hold a reference on the page.
 >>
+>>     However that turned out to be a dead-end (see the comments on patch
+>>     21), but it found several bugs and I think overall it is an
+>>     improvement so I have left it here.
 >>
->> Thanks
+>> Device and FS DAX pages have always maintained their own page
+>> reference counts without following the normal rules for page reference
+>> counting. In particular pages are considered free when the refcount
+>> hits one rather than zero and refcounts are not added when mapping the
+>> page.
 >>
->> Ming
+>> Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
+>> mechanism for allowing GUP to hold references on the page (see
+>> get_dev_pagemap). However there doesn't seem to be any reason why FS
+>> DAX pages need their own reference counting scheme.
 >>
-> Hi Ming,
->
-> aer_print_error() logs the AER details (including bus type) for the device that detected the error
-> not the RPAER reporting agent unless the error is detected in the RP. The bus type is determined
-> using the 'dev' parameter and in your example is a PCIe device not a CXL device. aer_print_error()
-> will log "PCI bus" because the flexbus DVSEC will not be present in 'dev' config space.
->
-> I agree in your example the RP and downstream device will train to PCIe mode and not CXL mode. But, the
-> flexbus DVSEC will still be present in the RP PCIe configuration space. The pci_dev::is_cxl structure
-> member indicates CXL support and is not reflective of the current training state.
->
-> Regards,
-> Terry
->
->
-Got it, thanks for your explanation.
+>> By treating the refcounts on these pages the same way as normal pages
+>> we can remove a lot of special checks. In particular pXd_trans_huge()
+>> becomes the same as pXd_leaf(), although I haven't made that change
+>> here. It also frees up a valuable SW define PTE bit on architectures
+>> that have devmap PTE bits defined.
+>>
+>> It also almost certainly allows further clean-up of the devmap managed
+>> functions, but I have left that as a future improvment. It also
+>> enables support for compound ZONE_DEVICE pages which is one of my
+>> primary motivators for doing this work.
+> 
+> So this is feeling ready for -next exposure, and ideally merged for v6.14. I
+> see the comments from John and Bjorn and that you were going to respin for
+> that, but if it's just those details things they can probably be handled
+> incrementally.
+> 
+> Alistair, are you ready for this to hit -next?
+> 
+> As for which tree...
+> 
+> Andrew, we could take this through -mm, but my first instinct would be to try
+> to take it through nvdimm.git mainly to offload any conflict wrangling work and
+> small fixups which are likely to be an ongoing trickle.
+> 
+> However, I am not going to put up much of a fight if others prefer this go
+> through -mm.
+> 
+> Thoughts?
 
+I'm in the process of preparing v2 of [1] that will result in conflicts 
+with this series in the rmap code (in particular [PATCH v3 14/25] 
+huge_memory: Allow mappings of PUD sized pages).
 
-Thanks
+I'll be away for 2 weeks over Christmas, but I assume I'll manage to 
+post v2 shortly.
 
-Ming
+Which reminds me that I still have to take a closer look at some things 
+in this series :) Especially also #14 regarding accounting.
 
+I wonder if we could split out the rmap changes in #14, and have that 
+patch simply in two trees? No idea.
+
+[1] 
+https://lore.kernel.org/all/20240829165627.2256514-1-david@redhat.com/T/#u
+
+-- 
+Cheers,
+
+David / dhildenb
 
