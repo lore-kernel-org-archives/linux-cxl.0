@@ -1,74 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D551C5480;
-	Mon, 16 Dec 2024 06:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34851304AB;
+	Mon, 16 Dec 2024 15:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734330418; cv=none; b=kI4X9ibUvdgya9Yup6bgN216Hzlg+ILjBbSqvYl+fncwvdPQXl/Ewl/uRybEPHK1p7Cuk5r278DIfxMZ/vADh2a8wm+PffCMg05SmltJ6emdEDf05LtmBvlyKgRogGugL+drmasWPCSPQxPNTmq8RnB7OenSfQx+TB1f224jgNU=
+	t=1734362048; cv=none; b=Lfkhj99sZUZxxtiVqgf3EkK3o+FTEmgd7DZ1OQBYtTcxF/27lzylJjcZYeFZycY2iI1J6YnVH/CtjzZsUMOgdSg5+/Xi1PkWvLbMSeBVTBs2n4sGeKPpkj9GJVQjvKr1IULidCWe2uHr4BEbsyFSXlln/jV0v/o0HKB2wFflneQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734330418; c=relaxed/simple;
-	bh=YTeuGSh1CGSThRU7myc0e4PzU/URwKkheVQYIA9QTkw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n++DPFlq8HbvQMS8HNmpdwajmZu3ktJt9NpDNJYulifq2uAtM+UOa1hSimrVGatToQuCxVKOT8+JW5QA+yowIl/wC3vLtue9YWQOy3sNzj5BNN1+oWwa9xRmnh6PtiFD1QcH6W5TzO7SB89uwJ+l8YkV2QpfQAFecXJI2x2LWAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GY0AZMxm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GY0AZMxm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 640B9C4CED0;
-	Mon, 16 Dec 2024 06:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1734330417;
-	bh=YTeuGSh1CGSThRU7myc0e4PzU/URwKkheVQYIA9QTkw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GY0AZMxmMTcjeSKYZE7GmeuX3SKjxwb/58gdhtCO5ezpDtS7gHlr8h702y1OHXEf3
-	 vY6Jr3J4GAa6Wcr8zvbFGqgmpilb6SPi4mi0P9Bicw+/iyZasNONa8WkQjjSoDOyRm
-	 3Dc5fonxtLGVn5tPwYlTUYvPZ0flblYJeuQt5VAY=
-Date: Sun, 15 Dec 2024 22:26:55 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, Dan Williams
- <dan.j.williams@intel.com>, linux-mm@kvack.org, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, sfr@canb.auug.org.au
-Subject: Re: [PATCH v3 00/25] fs/dax: Fix ZONE_DEVICE page reference counts
-Message-Id: <20241215222655.ef0b15148120a2e2b06b2234@linux-foundation.org>
-In-Reply-To: <wysuus23bqmjtwkfu3zutqtmkse3ki3erf45x32yezlrl24qto@xlqt7qducyld>
-References: <cover.e1ebdd6cab9bde0d232c1810deacf0bae25e6707.1732239628.git-series.apopple@nvidia.com>
-	<675ce1e5a3d68_fad0294d0@dwillia2-xfh.jf.intel.com.notmuch>
-	<45555f72-e82a-4196-94af-22d05d6ac947@redhat.com>
-	<wysuus23bqmjtwkfu3zutqtmkse3ki3erf45x32yezlrl24qto@xlqt7qducyld>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734362048; c=relaxed/simple;
+	bh=UTmAQ3gsUGW+ygdC2778WAcuFjzVeA37GZ135sqL5b0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=trrHWt+Xx7nWCTrG5rlBgStLqMMiwjXqLPBgh+JxHPik8PDRbKg1gsVYZRJNfDRXsaDuSABZCqRraIbrxa5pbG039DqpmeWLLlw1aaaOLjXew/q1hO3XEUgN8Pq/cOQ1JPlqkurTSfaQbWIhzR9+/M8Fh2Ab0mmSnziXkyQMy10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YBk303lNxz6LDXj;
+	Mon, 16 Dec 2024 23:13:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8B2BC140A90;
+	Mon, 16 Dec 2024 23:14:02 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 16 Dec
+ 2024 16:14:01 +0100
+Date: Mon, 16 Dec 2024 15:14:00 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Tejun Heo <tj@kernel.org>, Josef Bacik
+	<josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>, Boris Burkov
+	<boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH v3 3/9] driver core: bus: Move true expression out of if
+ condition in API bus_find_device()
+Message-ID: <20241216151400.00006242@huawei.com>
+In-Reply-To: <20241212-class_fix-v3-3-04e20c4f0971@quicinc.com>
+References: <20241212-class_fix-v3-0-04e20c4f0971@quicinc.com>
+	<20241212-class_fix-v3-3-04e20c4f0971@quicinc.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 16 Dec 2024 11:55:30 +1100 Alistair Popple <apopple@nvidia.com> wrote:
+On Thu, 12 Dec 2024 21:38:39 +0800
+Zijun Hu <zijun_hu@icloud.com> wrote:
 
-> The remainder are more -mm focussed. However they do depend on the fs/dax
-> cleanups in the first half so the trick would be making sure Andrew only takes
-> them if the nvdimm.git changes have made it into -next. I'm happy with either
-> approach, so let me know if I should split the series or not.
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> For bus_find_device(), get_device() in the if condition always returns
+> true, move it to if body to make the API's logic more clearer.
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+I agree this is easier to read and the reasoning is sound.
 
-My inclination is to put it all into the nvdimm tree, with appropriate
-MM developer acks.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/base/bus.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+> index 657c93c38b0dc2a2247e5f482fadd3a9376a58e8..73a56f376d3a05962ce0931a2fe8b4d8839157f2 100644
+> --- a/drivers/base/bus.c
+> +++ b/drivers/base/bus.c
+> @@ -402,9 +402,12 @@ struct device *bus_find_device(const struct bus_type *bus,
+>  
+>  	klist_iter_init_node(&sp->klist_devices, &i,
+>  			     (start ? &start->p->knode_bus : NULL));
+> -	while ((dev = next_device(&i)))
+> -		if (match(dev, data) && get_device(dev))
+> +	while ((dev = next_device(&i))) {
+> +		if (match(dev, data)) {
+> +			get_device(dev);
+>  			break;
+> +		}
+> +	}
+>  	klist_iter_exit(&i);
+>  	subsys_put(sp);
+>  	return dev;
+> 
 
-But I'm having difficulty determining how practical that is because the
-v3 series is almost a month old so my test merging was quite ugly.
-
-Perhaps you could prepare a new-doesn't-need-to-be-final version for
-people to look at and to aid with this head-scratching?
