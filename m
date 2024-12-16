@@ -1,138 +1,86 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A55360;
-	Mon, 16 Dec 2024 15:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A281B4124;
+	Mon, 16 Dec 2024 15:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734363378; cv=none; b=OIppoqvEoE6hnyr8bF9SjjOrnipa8jzg4C9P65dHv95YC8vePDNssao2zX+B4ir32ljcheMKEOcP1Up/s5zh5C8av8+gc7Rw245flZNGn+v4KZjXhhPcWxqYRQrZSC4e3WpsP6hl75igCeBxcH3TkK9/pAaQcZrCTqLSVt4I96Q=
+	t=1734364454; cv=none; b=TfrN2r+W000G/MN6/ZMJjEYvzW3iveSRctF+xCS/RI46ezg6PwD9vouGdlrqOa5856PjM8KEeneX6YbbiaOK5QVLfD3j5WpMpaLf8MzGeuJZjpM7OwheIS+zshord6ZHDFPAHG7m0qM6mnuC1BE6sbSQEYmZhnkCw2WiTJWHXak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734363378; c=relaxed/simple;
-	bh=aVJwPXYV8smhlm+7YHShsDvbuRDDKCVinkc4KwZWYag=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jpX2C9JMgWf5S5A63VQRHAXTyeV2F6nOIO4jkoxN4wd1g1KjHX6SozZoLotRA7Ltcu2y36sI5XxKQIoCrDdS4jXsFoYpg0J+UVjIBV98/zGAbBufqkBQWkGPelMUkokdFtBYE1sOL3ASXksGxa1uXK6LUyA3hAYSa3bwUrUpK5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YBkTl6c2cz6JB2C;
-	Mon, 16 Dec 2024 23:32:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5AE51140C98;
-	Mon, 16 Dec 2024 23:36:14 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 16 Dec
- 2024 16:36:13 +0100
-Date: Mon, 16 Dec 2024 15:36:11 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Tejun Heo <tj@kernel.org>, Josef Bacik
-	<josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>, Boris Burkov
-	<boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-	<cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v3 1/9] driver core: class: Fix wild pointer
- dereferences in API class_dev_iter_next()
-Message-ID: <20241216153611.00007f26@huawei.com>
-In-Reply-To: <20241212-class_fix-v3-1-04e20c4f0971@quicinc.com>
-References: <20241212-class_fix-v3-0-04e20c4f0971@quicinc.com>
-	<20241212-class_fix-v3-1-04e20c4f0971@quicinc.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1734364454; c=relaxed/simple;
+	bh=mdpQ1Rr6Q4/C6X6rpYbc+vmlgVo8HaKT44pMGF+PkNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nZNDn7Z3FsP9GvymE+qVbRyiXlKOGtoGQCQ3/rU4/EjEvswWu40qN31VyHbKWFqhfcTEFt0aThVqS0rGTZfK3FzrF4rSJ90PbNQKUk/iBegG/7gzIfWFPAziL9YErsYiS5oG5TIJ0CYmV8/0VrCzX5mwwehY+2v+m3EmenMGkWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QRspj2HJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QRspj2HJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=rBBpd22PJzLLmPajy8p7zWHGVvG5LBG4Sj90qfpefx0=; b=QRspj2HJzQ59iy5Ci553SMSMuO
+	OpXDIMj4ZSvlXoCYN03XnzN6ZFvokxsuE07B78w44YAdCG4uoQP7ne4uYQVtvJ6Fp0G+KH/MHLMSO
+	r+WK18nJ4hPxUe34Xd3V0v2r60xi/SVkxxmoUec7Uztzmh2gZYsmXANof2/YTzIJz/kl4ispSox8d
+	UVyk6ltKQrRQXBtak8bbmXoZsR22pyG3z4Nz6zMVkenVyxprmo2LWknrCbK155VRWNMKKDY5Lxtx1
+	Zmxy20RDozu4q2jQnlHlFmK0nu7jdbAndAmNFX1PjXK8nOd87wrH56Z0/hGw1c15b+4RY6yzPV2ye
+	PLjdJjqQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tNDQA-000000002B3-0vvD;
+	Mon, 16 Dec 2024 15:54:10 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 1/2] dax: Remove access to page->index
+Date: Mon, 16 Dec 2024 15:53:55 +0000
+Message-ID: <20241216155408.8102-1-willy@infradead.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Dec 2024 21:38:37 +0800
-Zijun Hu <zijun_hu@icloud.com> wrote:
+This looks like a complete mess (why are we setting page->index at page
+fault time?), but I no longer care about DAX, and there's no reason to
+let DAX hold us back from removing page->index.
 
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> There are a potential wild pointer dereferences issue regarding APIs
-> class_dev_iter_(init|next|exit)(), as explained by below typical usage:
-> 
-> // All members of @iter are wild pointers.
-> struct class_dev_iter iter;
-> 
-> // class_dev_iter_init(@iter, @class, ...) checks parameter @class for
-> // potential class_to_subsys() error, and it returns void type and does
-> // not initialize its output parameter @iter, so caller can not detect
-> // the error and continues to invoke class_dev_iter_next(@iter) even if
-> // @iter still contains wild pointers.
-> class_dev_iter_init(&iter, ...);
-> 
-> // Dereference these wild pointers in @iter here once suffer the error.
-> while (dev = class_dev_iter_next(&iter)) { ... };
-> 
-> // Also dereference these wild pointers here.
-> class_dev_iter_exit(&iter);
-> 
-> Actually, all callers of these APIs have such usage pattern in kernel tree.
-> Fix by:
-> - Initialize output parameter @iter by memset() in class_dev_iter_init()
->   and give callers prompt by pr_crit() for the error.
-> - Check if @iter is valid in class_dev_iter_next().
-> 
-> Fixes: 7b884b7f24b4 ("driver core: class.c: convert to only use class_to_subsys")
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ drivers/dax/device.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-This looks fine in general, but over to the core device model folk for which
-element they think should be used as the sentinel and whether zeroing the
-whole thing makes sense or just the one being used as a flag, or even setting
-it to an error pointer.
-
-> 
-> ---
-> Alternative fix solutions ever thought about:
-> 
-> 1) Use BUG_ON(!sp) instead of error return in class_dev_iter_init().
-> 2) Change class_dev_iter_init()'s type to int, lots of jobs to do.
-> 
-> This issue is APIs themself issues, and regardless of how various API
-> users use them, and silent wild pointer dereferences are not what API
-> users expect for the error absolutely.
-> ---
->  drivers/base/class.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/class.c b/drivers/base/class.c
-> index 582b5a02a5c410113326601fe00eb6d7231f988f..d57f277978dc9033fba3484b4620bcf884a4029f 100644
-> --- a/drivers/base/class.c
-> +++ b/drivers/base/class.c
-> @@ -323,8 +323,12 @@ void class_dev_iter_init(struct class_dev_iter *iter, const struct class *class,
->  	struct subsys_private *sp = class_to_subsys(class);
->  	struct klist_node *start_knode = NULL;
->  
-> -	if (!sp)
-> +	memset(iter, 0, sizeof(*iter));
-> +	if (!sp) {
-> +		pr_crit("%s: class %p was not registered yet\n",
-> +			__func__, class);
->  		return;
-> +	}
->  
->  	if (start)
->  		start_knode = &start->p->knode_class;
-> @@ -351,6 +355,9 @@ struct device *class_dev_iter_next(struct class_dev_iter *iter)
->  	struct klist_node *knode;
->  	struct device *dev;
->  
-> +	if (!iter->sp)
-> +		return NULL;
-> +
->  	while (1) {
->  		knode = klist_next(&iter->ki);
->  		if (!knode)
-> 
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index 6d74e62bbee0..bc871a34b9cd 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -89,14 +89,13 @@ static void dax_set_mapping(struct vm_fault *vmf, pfn_t pfn,
+ 			ALIGN_DOWN(vmf->address, fault_size));
+ 
+ 	for (i = 0; i < nr_pages; i++) {
+-		struct page *page = pfn_to_page(pfn_t_to_pfn(pfn) + i);
++		struct folio *folio = pfn_folio(pfn_t_to_pfn(pfn) + i);
+ 
+-		page = compound_head(page);
+-		if (page->mapping)
++		if (folio->mapping)
+ 			continue;
+ 
+-		page->mapping = filp->f_mapping;
+-		page->index = pgoff + i;
++		folio->mapping = filp->f_mapping;
++		folio->index = pgoff + i;
+ 	}
+ }
+ 
+-- 
+2.45.2
 
