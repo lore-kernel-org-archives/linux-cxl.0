@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD2B1D31AE
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 22:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56D01F8AD2
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 22:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734474694; cv=none; b=Pqo3F63aoWPrIRDYHEzHfIIoA1BKzu6YdrYdysXk/8mmrAmRUVhjXiGmOj6hp+bhgg9JNd1cICh1zfXYAwHoT3NBHO4m/MFwSCE4Guo05DbJxAyoLaATS5CSQ9ItfRtjl5soYndojJ9pfYwggE1DLrFEv/Ko1FwDQxYcoHGf3ew=
+	t=1734474799; cv=none; b=LQQrG2LiGdJ8IP0JFUG0CmCy6jroGc8l435esj3mtL7f23mnjA0vpeJZqrTOz4bM8Bld2IO8FnobGogZkNE/3RxtGgt2BwqRcEnJ3Y8VEa9GuqQU9PG9kHD9wygzSrZ4EUUJ9AhMGDA2OZElczV6u6KEl0xDTVsfRv6KQK1kXus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734474694; c=relaxed/simple;
-	bh=JZPV+Rdue6qaDY10NWyx4+0EHsb8/mQ53pzmV8r9o9U=;
+	s=arc-20240116; t=1734474799; c=relaxed/simple;
+	bh=MBDsfeVpZYYIxL21t6Nf1RWI9Ay/NC4iydLktnvMq5o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UedYlosjastLKquX+DNSkzRxnT2H6WVhOcoGRO7MJs+c8aijmtMK8hb6GJ9k4m5A1fgmoXVONIekfaa79AN0a7KjQa4Zp/zcpU+vfX6IZYR6Vfg25MFAalB4hsdwCJ8pczkQM86oFNEbrpMT5/iwZxSclW/cK+jwom1ZGn4L1Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UACIaBk3; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=O6dI7KyOuox2xtC0JxYHcVvNSbj1RK98+Evv4AF4i1qwg0UGDlgdOOL4cIXWxC2XI7+XTXdbIpvGLmBH3SKdnQM4XfPIEfQHMH+d+wFYRfPwtN6G5eulkyaZeLUvWyWi9/hWcs5bfexHJziefv4J0kXmQjl6p0LB25xTQAbi8dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZBmHBVvr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UACIaBk3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBmHBVvr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734474691;
+	s=mimecast20190719; t=1734474796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XiLljyALg1fM2VreFU+kaDTSYWKU4UrG1GGEjFwMl+I=;
-	b=UACIaBk3OlQj7nEfEXJRjPQm3gsXG64lPOxSqMOIp+xWIecRZsHPti69McsgugfXGx/dOM
-	L1q2p+JXmqJP6Mv+bgFaVIFhPmIGgVS18V8jfOrp0EGsBTSmb8il81qctMCNGpeSF9H1+h
-	3f0s8EK8yEd9TpNjjevMICO9uRGawEc=
+	bh=oasFH9YS/5nOK6GsM6YHhbVvy+xnvzjUtw4Gpik0lY0=;
+	b=ZBmHBVvrvR68mOcuPGMFymXCM2v6HyNByq81jQtYlnHPfMDtR02TEwSi8W/dQgSmVA5pnj
+	qz/HUQuQ1Q/90KH5OhBCLI1oe3nIqUe2W/hDstR1W5osqNvVTzNMnI1RIHfepTV0+LeqpQ
+	D3keSgB3TS4iHGBzcmoB5Ud6wCKuiYk=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-687-fjVQLYQWNx-sLtXNZM_SIg-1; Tue, 17 Dec 2024 17:31:30 -0500
-X-MC-Unique: fjVQLYQWNx-sLtXNZM_SIg-1
-X-Mimecast-MFC-AGG-ID: fjVQLYQWNx-sLtXNZM_SIg
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43626224274so27043605e9.0
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 14:31:30 -0800 (PST)
+ us-mta-134-JTFVF4xLMUaScnBYDIHsJQ-1; Tue, 17 Dec 2024 17:33:13 -0500
+X-MC-Unique: JTFVF4xLMUaScnBYDIHsJQ-1
+X-Mimecast-MFC-AGG-ID: JTFVF4xLMUaScnBYDIHsJQ
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4361ac607b6so47823395e9.0
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 14:33:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734474689; x=1735079489;
+        d=1e100.net; s=20230601; t=1734474792; x=1735079592;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=XiLljyALg1fM2VreFU+kaDTSYWKU4UrG1GGEjFwMl+I=;
-        b=HHR0Sg9nAAOgyLC79pfpSmP/yF+ceQsvd12mp2Zp2iNioW0u4/Wn9oeEKMLvvsNwbh
-         VIYulcOz8witdjbtWjweraceaZGLgx3TENPITDzZMb56XAKOHViUdVZrmGioHnnOreqz
-         Kjy3D9TlcUZLBLMocoo0ElySof14fmwnPp6l4EDouNR4APINOOjZbFLIN+HcZgda5emm
-         HdSq3PXqAK88LaPQfx014o4bPhRSneAli69z6Cm/YmOoq8jquQCpYyxo6x3GtbjyPEor
-         T0hFgb3jmw/LyJPQVCvsPKzwaE7OxQVgCjK3M+y15siumgagJcAf0gnP4cW4hTrtnkLj
-         6AFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPgHC8NzUI8TocJHPFkwsmkP5koAI7WU88P4MugXdPBclq5HE9he6F19euKv4EDoW4X1JMQ1XySkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFSW0LNM7+tUXJQ4dRz7q0q5OHh6u352ZYELDE+o2tqlmgQYTu
-	rTSAAdHqLORwypYXIs5B6OMowhU6IUR++xBs1MFvhCElg/1o7hAI7PU+a7Yp3ZiJilylZTNwsc2
-	UGpDOuWp+j9gGUbzW3190lOhe/Qf/+5j2cSU42uZderkkQNRkIc6UkeRAzw==
-X-Gm-Gg: ASbGncv/NyNQF6oX7BQ5XIzwGhLh2Ss24QoJU4zEQMyl2SMDLP7I2CRAx8RPN4WVfNg
-	2MBC+b4S8ufkQUK17kyRtMx0OkoU/n8s+Gb2hN79KagcKGjRcCiIHL6KL04F+8ELBlTmWqKuZ54
-	l/6FP4xE4EMD6AN4nsZ6OzlQIdij14P0dbeaBcnKJRtHTfLeoPZZDeIzGbX7UTRWACRQoubVWO+
-	WoGZPK7tim9DrT0p4NF4PzFMl0piQIeF2upidHvELSpck6f8Ph+V5q9MBl8ytzlT3YhdCILdv5Q
-	NLdG4iZSt8u28klpsYpwo7JyqFoayDL03+ykAeTrQbuw45El5V5iQ0ga1rmtwCWDqFVIfateJhe
-	iAl7VGUi0
-X-Received: by 2002:a05:600c:5103:b0:434:ff9d:a3a1 with SMTP id 5b1f17b1804b1-436553445f5mr3532915e9.2.1734474689201;
-        Tue, 17 Dec 2024 14:31:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGMpkNWSDjSv+iIYkeduZssHVTB6HwkoYhZzex1R7it6KzpFTUsFNkIA9cgdJx8YijN/SwZMQ==
-X-Received: by 2002:a05:600c:5103:b0:434:ff9d:a3a1 with SMTP id 5b1f17b1804b1-436553445f5mr3532555e9.2.1734474688806;
-        Tue, 17 Dec 2024 14:31:28 -0800 (PST)
+        bh=oasFH9YS/5nOK6GsM6YHhbVvy+xnvzjUtw4Gpik0lY0=;
+        b=pHY+dxecZY0ikG08B88uU14yHePvArx/qjcns/53OK+LMlh6UCAK0hOkQJ4b3+Uwe1
+         nGbbDqVUGdm89ymIof8b2xZ5rs+XXpu2q9StajLV1xkrEEAthQ10h29ZOvg7mc4jTeds
+         y2WZJhAS06mtuQWm5E2rWA8ZSIPKWOTF39gS6uMHcTdqf2iOgvJwrp8AGyRrDIbIGL70
+         /kCqbZ4j9Fyu/tVDbd73yP9l4H5dBqmjNhQ0hICwvjJU94SeU9uhnbTYmUrY567TjPg5
+         NStAPyWI9T5xwPA/kd4jLGmMz1Q6qHF4pBnBbt+hdpequ7ZGtmvSTYeFdrFl+eURHsPc
+         DTHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtRcUzG8sP/beUqoI4kYU3QsNs/9LJwT8C4rmjCSzEX7U2sFjuStGlD2CmXpRs0E4L9hyBgi/5B2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMPj76Tq8oL4VEVCyvCO0DV5jDnWUfe4SdrxjtSiqComA7HbmW
+	v3n40PkODOS1DXWpqWo0zW5fd1FM577vgvBHFo1jiJNkWKzJ4cDWHmzuNzA+G/PUcUSQ5mmGomn
+	CyK54YKjC8hmRkDiHcTLC0kl9dzXT/eLUOMXXpNY1m+0/1vPSjEihsUbF3g==
+X-Gm-Gg: ASbGnctrz089nRFU3G8kHS3mLcdai9jImITlvKQDphxymPD6hpLFidLQQEYec18gKW0
+	Nb7gX9dwxJUquhKW5TTeLrVH3FKHNSqc4R4xl6ItyChCN8WmAE5AEyJp3Cj9kd4eDb09Q4d2iFn
+	J5VUb1EPbk6bpzQnoF5aHYQeXobsTLPqK7e44nN9kL1uEBYGPWF7gZrPKmoK1NDvvtKmr687MGg
+	iXl2vAZIjwpuXZo/d+RdTItv1hdN3SzCK4LgBDNM1g9G4blC8g+LLcB0gJHCAib6zovlZCEHI2V
+	+40CBFvI0zW0+f33kpR3+nIoujOdM/BUixRX+MfxKSIJZQOic1ZOpWNwPRXTC0PcBVZERBJ8VVt
+	sbJr+Tlix
+X-Received: by 2002:a05:600c:4448:b0:434:a90b:94fe with SMTP id 5b1f17b1804b1-4365535b4e6mr4138035e9.10.1734474792404;
+        Tue, 17 Dec 2024 14:33:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHu5Rpx/75DKHPvdCspqV2eTg6oVqu83uuIMN0kGm64YISiw1ESXOe+JcsaDrCGOH1qe5B+Gg==
+X-Received: by 2002:a05:600c:4448:b0:434:a90b:94fe with SMTP id 5b1f17b1804b1-4365535b4e6mr4137665e9.10.1734474792038;
+        Tue, 17 Dec 2024 14:33:12 -0800 (PST)
 Received: from ?IPV6:2003:cb:c73b:5600:c716:d8e0:609d:ae92? (p200300cbc73b5600c716d8e0609dae92.dip0.t-ipconnect.de. [2003:cb:c73b:5600:c716:d8e0:609d:ae92])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-388c801208csm12474132f8f.1.2024.12.17.14.31.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b1a195sm190205e9.36.2024.12.17.14.33.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2024 14:31:27 -0800 (PST)
-Message-ID: <c7bd9b00-6920-4dc0-8e2e-36c16ef7ad5a@redhat.com>
-Date: Tue, 17 Dec 2024 23:31:25 +0100
+        Tue, 17 Dec 2024 14:33:10 -0800 (PST)
+Message-ID: <e7f9433e-bd4b-4284-990b-9ea074064f0a@redhat.com>
+Date: Tue, 17 Dec 2024 23:33:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,7 +75,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/25] proc/task_mmu: Ignore ZONE_DEVICE pages
+Subject: Re: [PATCH v4 18/25] gup: Don't allow FOLL_LONGTERM pinning of FS DAX
+ pages
 To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
  dan.j.williams@intel.com, linux-mm@kvack.org
 Cc: lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
@@ -91,7 +92,7 @@ Cc: lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
  linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
  david@fromorbit.com
 References: <cover.18cbcff3638c6aacc051c44533ebc6c002bf2bd9.1734407924.git-series.apopple@nvidia.com>
- <f3ebda542373feb70ed3e5d83b276a2e8347609f.1734407924.git-series.apopple@nvidia.com>
+ <f315b61169d0671301e4a793ecbb1a6c46b69bef.1734407924.git-series.apopple@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -138,47 +139,47 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <f3ebda542373feb70ed3e5d83b276a2e8347609f.1734407924.git-series.apopple@nvidia.com>
+In-Reply-To: <f315b61169d0671301e4a793ecbb1a6c46b69bef.1734407924.git-series.apopple@nvidia.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ly8DeJsSTrYlJgoExrZwVAmHduFJQcfxbS27L5Dn6pI_1734474689
+X-Mimecast-MFC-PROC-ID: IVRH5TyQc-zWIVbIQFRE6kvQ01W3KJzOD5tFgrV-mGw_1734474792
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 17.12.24 06:13, Alistair Popple wrote:
-> The procfs mmu files such as smaps currently ignore device dax and fs
-> dax pages because these pages are considered special. To maintain
-> existing behaviour once these pages are treated as normal pages and
-> returned from vm_normal_page() add tests to explicitly skip them.
+> Longterm pinning of FS DAX pages should already be disallowed by
+> various pXX_devmap checks. However a future change will cause these
+> checks to be invalid for FS DAX pages so make
+> folio_is_longterm_pinnable() return false for FS DAX pages.
+
+Nit: I'd consistently use "mm/gup:" as prefix for GUP-related patches. 
+(similarly, mm/huge_memory and mm/rmap in the other patches)
+
 > 
 > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->   fs/proc/task_mmu.c | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
+>   include/linux/mm.h | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 38a5a3e..c9b227a 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -801,6 +801,8 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index f267b06..01edca9 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2078,6 +2078,10 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
+>   	if (folio_is_device_coherent(folio))
+>   		return false;
 >   
->   	if (pte_present(ptent)) {
->   		page = vm_normal_page(vma, addr, ptent);
-> +		if (page && (is_device_dax_page(page) || is_fsdax_page(page)))
+> +	/* DAX must also always allow eviction. */
+> +	if (folio_is_fsdax(folio))
+> +		return false;
+> +
+>   	/* Otherwise, non-movable zone folios can be pinned. */
+>   	return !folio_is_zone_movable(folio);
+>   
 
-This "is_device_dax_page(page) || is_fsdax_page(page)" is a common theme 
-here, likely we should have a special helper?
-
-
-But, don't we actually want to include them in the smaps output now? I 
-think we want.
-
-The rmap code will indicate these pages in /proc/meminfo, per-node info, 
-in the memcg ... as "Mapped:" etc.
-
-So likely we just want to also indicate them here, or is there any 
-downsides we know of?
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
