@@ -1,268 +1,195 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF48A1D618E;
-	Mon, 16 Dec 2024 22:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FC313DBB6;
+	Tue, 17 Dec 2024 02:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734387960; cv=fail; b=UsY1er3uAy4bonrEpkOwZdOSXi9d5MZWr+esSixMcYir3ySOnt8wi83HZL64odLHtzCf42vSaBba3WiWeqa79X6lvIRGwyY7sKodhBK0PxrNQ+kgCTvWZnEk/lnMihKeNB/Sbkt/hHtN4GyiUxQzF/InFrmD4Io/mt9+iizmX7w=
+	t=1734402145; cv=fail; b=I3uoIQEfD9Gjot3Jivzd+/6UvHZnow+hzPKH2vXFgD6nBZ5QVEg/+3wd64IPsQHFuW4Ou4N6jdp4MuwfpeOAKif7miCCiGA13AuyNjn7Kei1NzbEeNRLdJ8gAYeUkS7nPv2Xc3dhHS1MsxwHAKj8slSxD8vX0VfiDE8hInr+OcE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734387960; c=relaxed/simple;
-	bh=rPlnGDQZgGpvmkTex3U/UGT/virSJj9UnhmSzv6n5p4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=q1761E5Lr/y3XWqAanEZqpADeoo2JGJq2ORkjAT47xf5YIae7LVLP4D7UEtkG0EsFgQ1A1GpiiPyamqEPBdkSsiJBVTqW3kBH28laB0K9Mck4qt7Pj+xWrMfhPo1H8A5cxUMs5Ma60dDTOO6t4/0dpUq+e97caHfWJ2ox+QjZIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JVlrNm2L; arc=fail smtp.client-ip=40.107.223.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1734402145; c=relaxed/simple;
+	bh=KEGN8Cqgakjmmin93a9lJ/VAX8582ZOmhChhzHp/CLI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kwK+5YN6iMC+zTnIiPZWKrkpAr2KZtn7uN0LtIjFOPTpihNZRiX0ERl2qrBW54NR8ZN//X9YabKsBJ3xzHinTZ2udTZt13RciuG4bEYYeo0BTLHLXwIM+VwPuhYCpCPGkBxLxF+mN8qd9YahxctssngatoJtGj8jVWX/9RlkH7s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sjwPnnQe; arc=fail smtp.client-ip=40.107.237.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JVlrNm2L"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sjwPnnQe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bbj8WlvJLcFePR9p7wdFNx9xl2Q/dvqFPB2oIsRqKccWntvlxFFoQdZWxNeH01Edk9CPYSP/WfBBK2WOZ8teRNq2sNbO16QnHkwX1eyop8diVplCSf7YkRlvVk0MHq58mYAaNJcOa/fri7RgnwBMXfhNx7jWIOVFitVcKvyAIAVxxoAbv5hpdDJmFs/3KCW+1QxYA99tQ6QrAr3yKzcDvEZ1NelxwdbonpMtkRyhihrOKqWsEu69819oAORQ/e+KLIY9O5KZ+8Gd4Lll39znizdyAWPIjRGtRkAijFfAaCKywUQIXXLMKA5HXNXE/gVJ30o2bwc1+DvSCGQNtOmvRQ==
+ b=YzKrx/AJS4O1TnjeNNfYssrfxcOvbAEUvH+XP1UsfVdFxrruKO2UQ1lFlphF/9Ol9+K/yxle3iCD26neTzZrgGMlXzttwjxFRH3mCUWrYVVT0XMg5o1O6+iXItiC0T4JPjWmwhYMkvUzFt7QQz3UYfRcgi7ESS2nus+Aqfl9cjk1YU5oPnD+mQ49c+gqIzCbb18Xvu7nQ6CXLyaIo6BOEykSOBw3Cvr4eX7t/OlFOtS7ehaf0BxRtUKPMRIpRQo2Ds0YM+j3Lj3/oTNOcy+sCW/l3UKAaZR39RJ7S6eiUQsaKcLhjvU5PR9zaqleBOARgbZEuR8mz2unq7lV+zoifg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eqRGHL+/CZ9ul6m9fa4uXoLIlClOUBWGCbvLUpMs960=;
- b=vVlckW8ZUIXdk3tIyMYKwmHt/H/HEAJR0QG4fbBsJp0EBvJ5eBRBBMoJUGPNWbJV+h1Zf9WH7aWsl+KM5Xr0bHxrdYL7VDf+++No7CD1CG7ByRq/BqwioU8HEWfdyv4On4vlzOjA0PyTGWMCmJe9s9H9o21eVTPryrnWFxHXpTe12LdyWyqdALYWu4J3spPaYzSsq0GBrXz+oMHtU+mFWrbNq72l7eM6ImplnqUihkaFVZrMiUglBpx/0oC950FhsMRVk0YN6ak+XE2WDjcecf/FN4mH9kqMbvANu27cT6PBOLKHgQxfsn2M5KBRWZz1uYpvpKeKP+BX7DZqxvM6/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=Oa8x101QXXGHPXVUXRy/2Lohv8/rFeSvceo22497Zp4=;
+ b=wiPsXQLPxozh5g5+phVklMZD+KHY8LbGrDy8NVyw1TW20FUei6kphNqhN/h8vKge1JpySv8ZRSgVnqXQvbDDxCFBjluHSJN1/AwGPjyLyjhcs2CyxsJ4wIwc0/ujH4YykCuB76gjWGoIBxW3uelaLv1QEfichb/7ed5fgfCrB/mDH5YxZP3vF0apyNRDEq2GJHe63A4VcCEUTX0cvk+da04Fed0Ns3VGXlIzSG8OcogTg9DhGX9wE4kKCeyzpQTEVc2+I8n1flhiv2BqPcTbbc2xkYbMuMzke7OgiCs5fbX7K2JfWqMS8Q4jCyCm21JiBbxVbGxqHGBvK0xHRV5Heg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eqRGHL+/CZ9ul6m9fa4uXoLIlClOUBWGCbvLUpMs960=;
- b=JVlrNm2LwOyf8GT0Bc6eda/ryKSzq/boMmohgaoxdf4IaKvlErfe4ET/d+QgnmOWxxkFtmjV95SwR7S/3iRzEueWbOCUDuwyWAzsKElwdoztI7h8nhkVY4uoCMba95eeJKfaCZBw64zMYMhGbnl9xrGXDomtGoTmc89UQqiczcd8RNduuK0ET0INOG6zyJ/kprnruu7rUFCQ97EGCm4524lE8OS6g4Tx95STguCAaPI940GErq0pcsEgO+H9DrKZOJaLqX8ydyAkR2V519VyEF7XBokFwotDKcSZWslTZvaZJcq5au6Wwz28YnvzBp5jvwRKuUWwPblUI+qlVCUxrw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- SA1PR12MB8143.namprd12.prod.outlook.com (2603:10b6:806:333::10) with
+ bh=Oa8x101QXXGHPXVUXRy/2Lohv8/rFeSvceo22497Zp4=;
+ b=sjwPnnQelLSKf8SepYQAX8qMfz68GCjlEDqz3GyY7Gnoc45wy39HFrcdtICobW3/TSqncNgA4IYJCeOCNCgh8kb70KjXuSdl8mvngI3L249i2Q1ATgat3A/cNnFMQwMOEWAYf8QAH05IvI0aIsaZdBWzirwi7AoB1qzx1nk8aS4=
+Received: from MW2PR2101CA0009.namprd21.prod.outlook.com (2603:10b6:302:1::22)
+ by MN2PR12MB4486.namprd12.prod.outlook.com (2603:10b6:208:263::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.22; Mon, 16 Dec
- 2024 22:25:55 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%4]) with mapi id 15.20.8251.015; Mon, 16 Dec 2024
- 22:25:55 +0000
-Date: Tue, 17 Dec 2024 09:25:49 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] dax: Use folios more widely within DAX
-Message-ID: <oepbp7g4qhbovnoquftr4hrddqylfvuxpo5elu2l6wmofiyvuy@ukzkii7dvdie>
-References: <20241216155408.8102-1-willy@infradead.org>
- <20241216155408.8102-2-willy@infradead.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241216155408.8102-2-willy@infradead.org>
-X-ClientProxiedBy: SYBPR01CA0154.ausprd01.prod.outlook.com
- (2603:10c6:10:d::22) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.22; Tue, 17 Dec
+ 2024 02:22:20 +0000
+Received: from CO1PEPF000044F8.namprd21.prod.outlook.com
+ (2603:10b6:302:1:cafe::87) by MW2PR2101CA0009.outlook.office365.com
+ (2603:10b6:302:1::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8272.4 via Frontend Transport; Tue,
+ 17 Dec 2024 02:22:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8272.0 via Frontend Transport; Tue, 17 Dec 2024 02:22:19 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Dec
+ 2024 20:20:43 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v4 0/5] acpi/ghes, cper, cxl: Process CXL CPER Protocol errors
+Date: Tue, 17 Dec 2024 02:20:27 +0000
+Message-ID: <20241217022032.87298-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SA1PR12MB8143:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf2aaa73-79dd-4a0c-e93c-08dd1e209b79
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F8:EE_|MN2PR12MB4486:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53ea7acf-9382-458d-7793-08dd1e41a23c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nJZZBRNwtpTSV+Qg7sY/q9sOysfwJuU6WpP0fgMPcOr9eAyVT0nYsHWOdLP+?=
- =?us-ascii?Q?KB3yklv03JtS78SRA8zyrZsOerIOt8NcIT2Kht/F3rvxAn0jpEthF9TyT4jv?=
- =?us-ascii?Q?9WnCBRQtOUL8Bj9mw7GidXiS7rNfFwUzZhvGtKMIXGFr45PI5Ja34hq4HJx5?=
- =?us-ascii?Q?l8myC1C/2EGYw9XyWAooDOxpgX7CAreifH59fyqfysJumiAVd6i+5stLvhfZ?=
- =?us-ascii?Q?etUXJr5VJP0UlXUHTHkflKAaFvtuNQCBQ2F3bIGEuUmltlWSC0BpNoIRzN++?=
- =?us-ascii?Q?u5Z/9LsrEOB25evVjbvRqQWX6y/vhfc/+FsGB7q+8xv69zMN6GSzhvpbAZcv?=
- =?us-ascii?Q?ZcTKW/siDtxGtCL5OJkMHRvuJOMWD5H1eM5qufFNSj76nN2+R/3ZxaYN5N2C?=
- =?us-ascii?Q?YqUACTH4KrmmkLSosT/y7dbk2dBHiwzFAAMgHmfABomM+PYjXjiC8KRwUpdD?=
- =?us-ascii?Q?XeBEcTYlLWiWQCOI6/yvvUASnRPIfCszJkp3gdTo5wmDGXKyYS4rfEliQ4Hz?=
- =?us-ascii?Q?yplAMC7aNja3gBU+Izl8KVwno1SythxRKIqvSVnbnqTdMWAKqZzNoCERQdFG?=
- =?us-ascii?Q?x8Jku4z8xlNqD1pcXSyZQ2U3zbF4bn0Jgd0Gk3TtoPa7cu1JEQ2wKYdKSeqL?=
- =?us-ascii?Q?LzjCs11B6Ww0vkDsTOv/zANaz+NHPJftXObvUM/A7KKXHLLC4QNeWSQ5MSxV?=
- =?us-ascii?Q?VzpmuNf9Y66fd6G7rZF78gMiXi42nhgaLrKuMRftN/udT3yVuEN1GtpFPSBA?=
- =?us-ascii?Q?AyJGLf6TeDRsE6rM5a4B6WQM4462qx+v4w0u6CFuG3QrDjnCBd2HY5lzoysX?=
- =?us-ascii?Q?HadBf/v/PcNchdcgDResjhTq5Qn/5QFrdcqouAkgDaTr621Q6IoDmmQInCA8?=
- =?us-ascii?Q?hKDGJ7hJlQsPIvQ2ukZT6IwNMqJkTAVZgjG/B8+vLgLkRytqVSwZCTK86mFr?=
- =?us-ascii?Q?tJ23Ii1td+AIn3ZlqfyiXP9oasSTtPR39Np/No079x8iyBIqG60sCG1CgHK4?=
- =?us-ascii?Q?A6k7Ka5qfN+QktP0z6y/Q+sat/8BB1eOXAxoL+eYKt5ifsfeK7RVKrjIxmej?=
- =?us-ascii?Q?pySjaVKdvct77+pOwdUoI+H7nopV6123rQTsCfnWB13F5K3vqbSEnfDNJ50g?=
- =?us-ascii?Q?AJjKAQFuZOO5Ei8smyXYXilNKpORgAdkdrlpdFP4j69avsVHUj5UTHWl4+T3?=
- =?us-ascii?Q?PWFR/6G0B2DtaoB7rkJJ/5qyKeF5S9fMDbueChqIbJ9AQEHQG1el3RUjD5AR?=
- =?us-ascii?Q?nch4IZ5oMQppDNpQhCPmVOBSIOQBO9oD9NBwvYUiM6UQGtLQLfOHUqPworaI?=
- =?us-ascii?Q?eWhHkVWn1L7CsJRU/PGD24HoWWwVfcfwhVsaywZp2LDdU8yhNy8gkhBPAmBV?=
- =?us-ascii?Q?hBCWImb7FudRoSc1pw/owoAxVd58?=
+	=?us-ascii?Q?nBo29L3sjCT73uLy40z/BC+QYaSy18+cW07AoTMyffs0nZDIkUiQPGKu+MB5?=
+ =?us-ascii?Q?+e3+d6U6R5HdrwuOhfRnogswSEFdwQuzX//suzeNM4BPRUvbhbTZHT5Tpkhn?=
+ =?us-ascii?Q?kSem4Z4VDqu9pL/VhMQEX8usp5e7LvAVG/ubU2AGLFI3h9M/a/xIN0oWSU+7?=
+ =?us-ascii?Q?nbdmzVjHCURAvIfLDb8E6NnQkFVR2l17HR0VZyKc023tqJlJOYiqKwN9XDNl?=
+ =?us-ascii?Q?1yCdrofPRbAaybR5ZElXegcHtFKlmBuZ1kwXhzWHJ7eTzkui2rFqMvnhke2h?=
+ =?us-ascii?Q?VhPT462ashn4iYdwKtPVuYnIO0QV6yDy0wXr9dOqpSvARo2q5iNwB1es+Bj4?=
+ =?us-ascii?Q?IZ2x15d9JlPYN8dAYzqh3GYccOzvoZuAMpGbjOJJ66VzRPlMk1b8R99x9Xwq?=
+ =?us-ascii?Q?+8LnActwNTCjPOfsKkK4dRC0BIL08cCiZrFuaVgANrc10wBvfL7V8aW8bm0W?=
+ =?us-ascii?Q?qaT6EuqrvG+oSERChuxyinwsvNlkFRjSTxPe8R2YFfBWpsAzAMlDoaIVYa1i?=
+ =?us-ascii?Q?CBx22+r+icePWR+0u4psOGbfDekPKeCpLMD2iEh3k74ozw1jqPT/Lf0cYS66?=
+ =?us-ascii?Q?AkYBjFas25Xvjd+WvwBKm95jhC644iyqQEqmMwdhSjLYosVWf/O2mJHr9qyv?=
+ =?us-ascii?Q?cnvO3eexSzv2OQkxJSC80GRtFVSu3wFIXBn/nDnEzxIgp45MA1kHnFMZ0cHb?=
+ =?us-ascii?Q?ggJARYhOO/V/AYUwS3lHCPLlwqeVHBwLqbgaoBtBkr/DYRBa6IbkNr+SKWyb?=
+ =?us-ascii?Q?cG23bMTsjvTYWhqLIYi3svL3IJVbrligHt1zhIgAxJwkpQbmy3Y7HGx+rZ8K?=
+ =?us-ascii?Q?IKjMbWEbs7aUyZfqOncR+UYdRza4qNJ83R2hF6Q23Nh/c2fi7MnRFqsstEJB?=
+ =?us-ascii?Q?4Nx8a2GYJgyqg3HegU4MWSlLrJ8NyPNgPpq17QuQh+GVteIOhf9ZbNDBN8hi?=
+ =?us-ascii?Q?1582REatd8uZf/yA6VHyVpQiFyrzffz2qs+RoT5a31RHo0sop++7ILiBSn+7?=
+ =?us-ascii?Q?eVIb7OjLM1hANPp8w4uVSfa/VgifeF5IWP/WsoSUJ2QcwmgzYzP+HbotDLp0?=
+ =?us-ascii?Q?1Ju3FZufokwXdfxjWb4Trm1m2+4q/PKkcrt+3mhiRGYVOciPLZt5w0Sl9HAD?=
+ =?us-ascii?Q?/WFF+Gc6C3MPhNAKX9+Oo9BfqEjmBH1tuwrRibwwRrDhMIyZQi8ux2FlCKwk?=
+ =?us-ascii?Q?PpZvuOXpu01W0sYdUp2fT274i3Rctb5muBViNhRaiBBU4qXXxiN5rfkPtRvh?=
+ =?us-ascii?Q?o/x/aYLiB1awBqxloHxxykAZBrPHUe5ynvmGdDtaMc0+TgkGCNlKQsnr/cCm?=
+ =?us-ascii?Q?wIbIxaLrdsDW9rASwKoo5Jqs7cpizmcBZ67OnO6uENPtDOif6E7S15zOXjKL?=
+ =?us-ascii?Q?ZaDFyDft42kpTZPG5SJKHsc0ag27DRiiodk7gJeda5Jc8cOKuqpDpu3u2Vtq?=
+ =?us-ascii?Q?fUSA/1hPcDXr8lfnMcFdY17xFMblPYEv0HBrooAo5Zbf9TfAss1UI8Ho3lg2?=
+ =?us-ascii?Q?QOJ9LH0rrqRYt2I=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+nKoz6rJiEbDOa+Ird9SQgxTTtsgiLJNT2n3GRobwSEeHwBVAx3qFvWvipu3?=
- =?us-ascii?Q?fNCf74gC4jQPPUKHPXhK2I+O6zE6CmVMOgNDO0D5a3P3rlrUlxr8cIrJdn53?=
- =?us-ascii?Q?zPs4+RAjrOzI/vJcaPmOGlnnvS7tyfuPJaJRdW3utMEwLq2LGbptKa4HV4rJ?=
- =?us-ascii?Q?tMpRE/iiehLoBg5KOrKkJRCociqXN5JXXkmGJya7KykKlihy6LZm9jAllzPS?=
- =?us-ascii?Q?EkBaLOHmdWaf4QM0CbZtnw2W0QAGZoiv8j/bhXsku0L9TJ3dYqWuEGkewOCA?=
- =?us-ascii?Q?TfAa0GbLf0qVl/nk8J1URfmhnD9PcgxKqj+VmyUVVbpz8hmMYl/VIzBihxTN?=
- =?us-ascii?Q?FNaD+y0KXBNid4gh/4yZX/9E/xRsynycWpgEzIY+ayKn4zrl02yEolNqS5Dx?=
- =?us-ascii?Q?gwyq9TxvKKDETcvK7+GfAA9PxaO1kN8A+X4OCyMFmOqTjXy4wahm57++AAew?=
- =?us-ascii?Q?7Z8biHJu7HTMTrpltGZX179AtcJPZPipr25aVpd9kd2GpQwJY6ZEFo2LEefs?=
- =?us-ascii?Q?w673o36xlqWtRQj//dB378qUhLUoknsb4l6o9qZu1H68MAotr+x7/SGgWioV?=
- =?us-ascii?Q?EKvhC3h3ub968Df/9CXWmc1LYsGJpgOSG7qCxg+iZ2NnvNcjrlfe/xZa6bkH?=
- =?us-ascii?Q?scO4RxgAYK2kf/tmChHjYhD8sF7gB5XVU5DifE509nRtWJ3o+ftpcMRYgpk/?=
- =?us-ascii?Q?YqQ55QsIMcxstbhOFpoRO2rxPN4KcDbl3IZwQRvDO+CDbQ3TMx4yekfOyqMu?=
- =?us-ascii?Q?11c8cL2kSpI340gareXnxFjckNVIyfAactFIfEyReGs1mTFtUbW+tj8CgsPA?=
- =?us-ascii?Q?xbsbdKMF/JR3KvQMbZwOH1FW6D/yq0WLCrRsscfyigRGo1tnTtpYRzOIbqBv?=
- =?us-ascii?Q?3P/yteCcyv93fmuKXgsES7GARsdPQiU2HE06XqvapgQINo8iFZzQZtVGDPb+?=
- =?us-ascii?Q?NzERVC/7+3IBNJrRs7XMRxy2iia+MRv3VSh7dRRdSbRzgrS1XTI6RToczCRO?=
- =?us-ascii?Q?QppPzzwI1TDPP3H3gqx6hsJCUKd2RYqDqqVIElxJJ1kmCCkzWQtnZxMv5fVA?=
- =?us-ascii?Q?rZusIMq1ZrPlnKl6UGxm8iFd5cRxnjG0AtPy87z4GnezBCHHAuNn8zG19at9?=
- =?us-ascii?Q?8z7MynTroI85NZ2HUGqJIpJR/eWVr5PyQFHqVJNe9PFwM9MQPK/OPrx+MqB7?=
- =?us-ascii?Q?Pz2KIKpyTT9VzKVX0HhYDv34BSZja9AiRWmMQYVVSbxqeFfExKdmNcUNA6b3?=
- =?us-ascii?Q?pGJmu1atCfq+KnwXkO8w9jjxTnDnHdyrRbA3YZptdac0DNT8WdCMT9iZ/gYT?=
- =?us-ascii?Q?sTKvaFTl9ivvEzsW4VgTJUjInlO9lfFaousrixLFRJ1v6EWKYnquzBMIqrA5?=
- =?us-ascii?Q?S+XTaBbefrgCDXNOK4sWmUm0mFtwaUzYWnRl3taOqHmcgM4HQ2PGTok3ypSQ?=
- =?us-ascii?Q?2Ve0MY6RtELx2HZvi6tnIJd1bI9gA2Cknp91cSE+bdT4nE66B0vCw88u2wgt?=
- =?us-ascii?Q?MOfttY27aOcLAG2piEMT7TXNunMyxOUjw+Rmcq0cqxz7+B179brMr5H6kt19?=
- =?us-ascii?Q?ZcAu7zCiu5nRxdG00GX6yXP93LqU+ej67qOlE3sd?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf2aaa73-79dd-4a0c-e93c-08dd1e209b79
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2024 22:25:55.5832
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2024 02:22:19.8339
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uNIAAR1tZt9F27F5LBHwONtzhLe8DL/YBZWMR6eSDgFhuyYSpBYrkiQNIa6nGo1dDipqyWF2FnwvkNQol8AsTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8143
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53ea7acf-9382-458d-7793-08dd1e41a23c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F8.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4486
 
-On Mon, Dec 16, 2024 at 03:53:56PM +0000, Matthew Wilcox (Oracle) wrote:
-> Convert from pfn to folio instead of page and use those folios
-> throughout to avoid accesses to page->index and page->mapping.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/dax.c | 53 +++++++++++++++++++++++++++--------------------------
->  1 file changed, 27 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 21b47402b3dc..972febc6fb9d 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -320,38 +320,39 @@ static unsigned long dax_end_pfn(void *entry)
->  	for (pfn = dax_to_pfn(entry); \
->  			pfn < dax_end_pfn(entry); pfn++)
->  
-> -static inline bool dax_page_is_shared(struct page *page)
-> +static inline bool dax_folio_is_shared(struct folio *folio)
->  {
-> -	return page->mapping == PAGE_MAPPING_DAX_SHARED;
-> +	return folio->mapping == PAGE_MAPPING_DAX_SHARED;
+This patchset adds logging support for CXL CPER endpoint and port protocol
+errors.
 
-This will conflict with my series which introduces compound ZONE_DEVICE
-pages to free up a PTE bit and allow FS DAX pages to be refcounted
-normally. The main change is here -
-https://lore.kernel.org/ linux-mm/39a896451e59b735f205e34da5510ead5e4cd47d.1732239628.git-series.apopple@nvidia.com/
+The first 3 patches update the existing codebase to support CXL CPER
+Protocol error reporting.
 
-I'm hoping we can get that in linux-next "soon".
+The last 2 patches introduce recognizing and reporting CXL CPER Protocol
+errors.
 
->  }
->  
->  /*
-> - * Set the page->mapping with PAGE_MAPPING_DAX_SHARED flag, increase the
-> + * Set the folio->mapping with PAGE_MAPPING_DAX_SHARED flag, increase the
->   * refcount.
->   */
-> -static inline void dax_page_share_get(struct page *page)
-> +static inline void dax_folio_share_get(struct folio *folio)
->  {
-> -	if (page->mapping != PAGE_MAPPING_DAX_SHARED) {
-> +	if (folio->mapping != PAGE_MAPPING_DAX_SHARED) {
->  		/*
->  		 * Reset the index if the page was already mapped
->  		 * regularly before.
->  		 */
-> -		if (page->mapping)
-> -			page->share = 1;
-> -		page->mapping = PAGE_MAPPING_DAX_SHARED;
-> +		if (folio->mapping)
-> +			folio->page.share = 1;
+Should be based on top of:
+https://lore.kernel.org/linux-cxl/20241211234002.3728674-1-terry.bowman@amd.com
 
-It also moves the share accounting to the folio as well so we could remove the
-whole page->index/share union once that's merged.
+Link to v3:
+https://lore.kernel.org/linux-cxl/20241119003915.174386-1-Smita.KoralahalliChannabasappa@amd.com
 
-> +		folio->mapping = PAGE_MAPPING_DAX_SHARED;
->  	}
-> -	page->share++;
-> +	folio->page.share++;
->  }
->  
-> -static inline unsigned long dax_page_share_put(struct page *page)
-> +static inline unsigned long dax_folio_share_put(struct folio *folio)
->  {
-> -	return --page->share;
-> +	return --folio->page.share;
->  }
->  
->  /*
-> - * When it is called in dax_insert_entry(), the shared flag will indicate that
-> - * whether this entry is shared by multiple files.  If so, set the page->mapping
-> - * PAGE_MAPPING_DAX_SHARED, and use page->share as refcount.
-> + * When it is called in dax_insert_entry(), the shared flag will indicate
-> + * that whether this entry is shared by multiple files.  If so, set
-> + * the folio->mapping PAGE_MAPPING_DAX_SHARED, and use page->share
-> + * as refcount.
->   */
->  static void dax_associate_entry(void *entry, struct address_space *mapping,
->  		struct vm_area_struct *vma, unsigned long address, bool shared)
-> @@ -364,14 +365,14 @@ static void dax_associate_entry(void *entry, struct address_space *mapping,
->  
->  	index = linear_page_index(vma, address & ~(size - 1));
->  	for_each_mapped_pfn(entry, pfn) {
-> -		struct page *page = pfn_to_page(pfn);
-> +		struct folio *folio = pfn_folio(pfn);
->  
->  		if (shared) {
-> -			dax_page_share_get(page);
-> +			dax_folio_share_get(folio);
->  		} else {
-> -			WARN_ON_ONCE(page->mapping);
-> -			page->mapping = mapping;
-> -			page->index = index + i++;
-> +			WARN_ON_ONCE(folio->mapping);
-> +			folio->mapping = mapping;
-> +			folio->index = index + i++;
->  		}
->  	}
->  }
-> @@ -385,17 +386,17 @@ static void dax_disassociate_entry(void *entry, struct address_space *mapping,
->  		return;
->  
->  	for_each_mapped_pfn(entry, pfn) {
-> -		struct page *page = pfn_to_page(pfn);
-> +		struct folio *folio = pfn_folio(pfn);
->  
-> -		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
-> -		if (dax_page_is_shared(page)) {
-> +		WARN_ON_ONCE(trunc && folio_ref_count(folio) > 1);
-> +		if (dax_folio_is_shared(folio)) {
->  			/* keep the shared flag if this page is still shared */
-> -			if (dax_page_share_put(page) > 0)
-> +			if (dax_folio_share_put(folio) > 0)
->  				continue;
->  		} else
-> -			WARN_ON_ONCE(page->mapping && page->mapping != mapping);
-> -		page->mapping = NULL;
-> -		page->index = 0;
-> +			WARN_ON_ONCE(folio->mapping && folio->mapping != mapping);
-> +		folio->mapping = NULL;
-> +		folio->index = 0;
->  	}
->  }
->  
-> -- 
-> 2.45.2
-> 
-> 
+Changes in v3 -> v4:
+[Ira]: Use memcpy() for RAS Cap struct.
+[Jonathan]: Commit description edits.
+[Jonathan]: Use separate work registration functions for protocol and
+component errors.
+[Jonathan, Ira]: Replace flags with separate functions for port and
+device errors.
+[Jonathan]: Use goto for register and unregister calls.
+
+Changes in v2 -> v3:
+[Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
+reusing existing workqueue which handles CXL CPER events.
+[Dan] Update function and struct names.
+[Ira] Don't define common function get_cxl_devstate().
+[Dan] Use switch cases rather than defining array of structures.
+[Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
+[Dan] Use pr_err_ratelimited().
+[Dan] Use AER_ severities directly. Don't define CXL_ severities.
+[Dan] Limit either to Device ID or Agent Info check.
+[Dan] Validate size of RAS field matches expectations.
+
+Changes in v2 -> v1:
+[Jonathan] Refactor code for trace support. Rename get_cxl_dev()
+to get_cxl_devstate().
+[Jonathan] Cleanups for get_cxl_devstate().
+[Alison, Jonathan]: Define array of structures for Device ID and Serial
+number comparison.
+[Dave] p_err -> rec/p_rec.
+[Jonathan] Remove pr_warn.
+
+Smita Koralahalli (5):
+  efi/cper, cxl: Prefix protocol error struct and function names with
+    cxl_
+  efi/cper, cxl: Make definitions and structures global
+  efi/cper, cxl: Remove cper_cxl.h
+  acpi/ghes, cper: Recognize and cache CXL Protocol errors
+  acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
+
+ drivers/acpi/apei/ghes.c        | 101 ++++++++++++++++++++++++++++++++
+ drivers/cxl/core/pci.c          |  62 ++++++++++++++++++++
+ drivers/cxl/cxlpci.h            |   9 +++
+ drivers/cxl/pci.c               |  60 ++++++++++++++++++-
+ drivers/firmware/efi/cper.c     |   6 +-
+ drivers/firmware/efi/cper_cxl.c |  39 +-----------
+ drivers/firmware/efi/cper_cxl.h |  66 ---------------------
+ include/cxl/event.h             | 101 ++++++++++++++++++++++++++++++++
+ include/linux/cper.h            |   8 +++
+ 9 files changed, 346 insertions(+), 106 deletions(-)
+ delete mode 100644 drivers/firmware/efi/cper_cxl.h
+
+-- 
+2.17.1
+
