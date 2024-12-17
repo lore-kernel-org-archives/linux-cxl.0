@@ -1,109 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8FF1DDC1E;
-	Tue, 17 Dec 2024 10:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E071EC00F
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 10:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734432452; cv=none; b=QG4FtxoPlwscP/cLJvvuIOAmQ0UKDhGOxT/L6keGQIyhDT/hWYSKLmkJhazdXilg6NwgEpty39q8NhsFUlTCqC4MgHYAczi0qWpG7NgHXPAwweuyhVyjTVzNLuhJd4DoOWGg0yb2Qz/45u1Did9mytF3MgBuhrhOFM+Kcx+owaI=
+	t=1734432812; cv=none; b=BK16l6AyifBFtz0ZW79IKWXEetCPED1jt4/FzTVM5k9YfK++aGqhqc+Xu5O1pIxMaTeIXoQR0tT2BVpfvxh3idcfmLW3EhailsDrVz4/C0JVT0e7DPK1lGREiwoX2S2opjYeQQA/PzGTHzXa87jPGmg+Ty8bkUbaQJRreRJL/aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734432452; c=relaxed/simple;
-	bh=ms7YSqlptMiVH9QYjWXdWB62kowGUi9g3XIRxmyX34g=;
+	s=arc-20240116; t=1734432812; c=relaxed/simple;
+	bh=A/aM+u9cBp0KR4NFJb/LlpGJ+AOLbCqCZ9EikrcXiNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qICS3PmLitw6yY77RzS0KPv/XGxzvJMwe8Zk2BMCY/abd6xklApXQjVRdcu83bqOrpWsuU+3nRlwpoExbNJqpTJJo2F74+DpEPWizaB7PKozl+ejQnVzabd5MiNC4p5YpWfjH8SXWanQOdU5AVtgOGnobLnbHKAzEPXjdA2VpC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bx+ncNsx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvdHfQIvDYKdL674XM3kFHS+t921etuplov8osHdN+EvaeK+A/90bgiK7WKNSU9OjFTeIw5/FISv2RwQxbIXk3oPr/qEYtmiNbdR0PfNC5ykpdySNz0Th8qVzo7iozGuz0AyfNxC+kWp2OGKJyDBNwQ4CJBJDIyYC7YYWS0Jk0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RuEIcyqL; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bx+ncNsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA5FC4CED3;
-	Tue, 17 Dec 2024 10:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734432452;
-	bh=ms7YSqlptMiVH9QYjWXdWB62kowGUi9g3XIRxmyX34g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bx+ncNsxxmXd8oXq1DoWQQjzd4LIxlGMAOoBw4ILcCSFinAQde9J2MUefonna/JN8
-	 P+TFILRfq7fnfNLPsF1CM7xt1FMpeHRubm/UzfHBvlNoWZkWEVB/kgCR6vUiqWJH+s
-	 qjqZjgV5Q1ziiFU9nd2gc9bR+1tfm5zK7hzEnjxfkMyB5DPR4wESgHXKx1H82rN2T2
-	 UelIn/9bNwprdt8O1KT28ZQ/qc7aKp1kFloFBhgrxcHP2SywbngYoVOiUVTvcSPs+0
-	 vRtovMjXTQI83yGKeK6E5lG5nYHUHqVEoYBCuDYQnc0Kajkpin9aSJj00DNTCkbJOJ
-	 5BDQnVQmFcOZw==
-Date: Tue, 17 Dec 2024 10:47:26 +0000
-From: Simon Horman <horms@kernel.org>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v8 27/27] sfc: support pio mapping based on cxl
-Message-ID: <20241217104726.GQ780307@kernel.org>
-References: <20241216161042.42108-1-alejandro.lucero-palau@amd.com>
- <20241216161042.42108-28-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RuEIcyqL"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso37034305e9.2
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 02:53:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1734432808; x=1735037608; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=akvBumgmgr5EIX4fsmxm3FaGCKKx1kkyhh6tnIk6jL0=;
+        b=RuEIcyqLtXGY0Wia1+4OIYR4i6LOWGRFTaeKSVoZkVd7xBH/+zd0Qxd3IT7QuLo4rl
+         IJmelTW4mz/jLrYgwmTM8SNrchjJHvuJg8kGPcLojkpmAYbJQZyYogOnnxJxIYb9XAMv
+         5Jaqf2hU//XJs2uoDADybpCef7N4v0zDNeXhsbc5TADdwx122vjoP2VfsyOYue/5dxF+
+         Yt/bXYoXiopqFOE799RCVtcbsWkUGqjMaKdHO7IrGfWeOWP5j8auRh6GqzOsyVfrhjZq
+         6PGVh0jXKBJY9qFEqJz6A2cPOWviaIMNDX5wvmDYSfqOjr3Cb/aUqi8lqV1gnlTZ7kNu
+         44XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734432808; x=1735037608;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=akvBumgmgr5EIX4fsmxm3FaGCKKx1kkyhh6tnIk6jL0=;
+        b=O6mOouzxq/N0OLOVLNrXTjbqXp6gRekAMZO5e64DGVml7bUonaQDyvaOvkXZW3fcL1
+         sEfTBUsJmho0cRu17GHlwOQwmEowmLSUidGKzvYFw23oGBuCm1tXQqNbCcKWyqzhsL9C
+         ZNdlJ+ot95YQ6yNrpwGC+HPdqWhp3B3TQT1cU7IwHnOwTu/EzkPOSobWgWW2F4jX047c
+         FzOHpgozKEJv1datZhn0BCST2EEUIv8HkUckdhLppYnueDfHyxDmEX+Kyae7GlXjNHre
+         r2vAISFUOpQqM+YleW0qVxtKGNJuU60mTTAePxaoRLsUTAL/UCG9NZktxJySvg8TjsTB
+         qHuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtRQ5uRe2omN2+VdEbC2NoFp1EeCgJYNE/uDeM02Bx9eiFioNrZx5Qn7gxS+kPYMBEvbPvdUcXkgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH7nn1ErnOKg+wzyjntDNZXCY3aPdZhk9bYUIkTw1DLyIQL9hq
+	xi7pc+YNvgM8uCOsGO7Lo7IDWNwyrn1Ry0eh+dh2NS/wBrCYdAuKhJno+lnCc74=
+X-Gm-Gg: ASbGnctYwV7r/pZN1idK3rSCCqYUKBDTKS+xUIc60Nkp0QbQXgotOfYavqXRmw3cCKF
+	li46xeSCxe+osi+eI7c6FiwdWlzLddVhmmBYJpTvMGv6MezcyqA43D1p8i1BWxP0pbEzixzJDt3
+	YYSrqwpkLtSy59bN0DFKsyE4mx/fa14LvPPpKbaP6ksEIlvLQ88n3BrmKzzO6JwcEKreCvBrPOF
+	YNPk3zwvtxTqZqcSuIVqpnCzsSOEDYcACP0wKlvYCILxzTHHCFm4EKXouU=
+X-Google-Smtp-Source: AGHT+IGp92CezacwNyyBgdqfZsg/E3xcoJ1kubOcalO3L3TCWN+rSaASKAUrZ56PuWjll0XGl+cLFg==
+X-Received: by 2002:a05:600c:1c95:b0:434:f2bf:1708 with SMTP id 5b1f17b1804b1-4364767f07cmr27712575e9.7.1734432808447;
+        Tue, 17 Dec 2024 02:53:28 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4363602cd11sm113466875e9.14.2024.12.17.02.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2024 02:53:28 -0800 (PST)
+Date: Tue, 17 Dec 2024 11:53:26 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+	Jens Axboe <axboe@kernel.dk>, Boris Burkov <boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] blk-cgroup: Fix class @block_class's subsystem
+ refcount leakage
+Message-ID: <xsq3bdzz2tbz64rlvmqrbjkjddiguvveuqo7rrozyyl6srrrsb@aclt6fr2qxvc>
+References: <20241212-class_fix-v3-0-04e20c4f0971@quicinc.com>
+ <20241212-class_fix-v3-2-04e20c4f0971@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="civnhrgjz2qrd32h"
 Content-Disposition: inline
-In-Reply-To: <20241216161042.42108-28-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20241212-class_fix-v3-2-04e20c4f0971@quicinc.com>
 
-On Mon, Dec 16, 2024 at 04:10:42PM +0000, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> With a device supporting CXL and successfully initialised, use the cxl
-> region to map the memory range and use this mapping for PIO buffers.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
 
-...
+--civnhrgjz2qrd32h
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 7367ba28a40f..6eab6dfd7ebd 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -27,6 +27,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	struct pci_dev *pci_dev;
->  	struct efx_cxl *cxl;
->  	struct resource res;
-> +	struct range range;
->  	u16 dvsec;
->  	int rc;
->  
-> @@ -136,10 +137,25 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  		goto err_region;
->  	}
->  
-> +	rc = cxl_get_region_range(cxl->efx_region, &range);
-> +	if (rc) {
-> +		pci_err(pci_dev, "CXL getting regions params failed");
-> +		goto err_region_params;
-> +	}
-> +
-> +	cxl->ctpio_cxl = ioremap(range.start, range.end - range.start);
+On Thu, Dec 12, 2024 at 09:38:38PM GMT, Zijun Hu <zijun_hu@icloud.com> wrot=
+e:
+>  block/blk-cgroup.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-nit: Smatch suggests that resource_size() may be used here.
+Well caught,
+Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
 
-> +	if (!cxl->ctpio_cxl) {
-> +		pci_err(pci_dev, "CXL ioremap region (%pra) pfailed", &range);
+--civnhrgjz2qrd32h
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I think rc should be be set to an error value here.
+-----BEGIN PGP SIGNATURE-----
 
-Also flagged by Smatch.
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ2FYJAAKCRAt3Wney77B
+SY6qAPwOR82VBxA4fcXuVjjlE50/+vko8njeFm9ZpNrkqTGBXgEAhl3ipTTb7Auy
+jtbygdF076YfrTkoHALOll+fPhlPtQI=
+=AXzW
+-----END PGP SIGNATURE-----
 
-> +		goto err_region_params;
-> +	}
-> +
->  	probe_data->cxl = cxl;
-> +	probe_data->cxl_pio_initialised = true;
->  
->  	return 0;
->  
-> +err_region_params:
-> +	cxl_accel_region_detach(cxl->cxled);
->  err_region:
->  	cxl_dpa_free(cxl->cxled);
->  err_memdev:
-
-...
+--civnhrgjz2qrd32h--
