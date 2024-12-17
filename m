@@ -1,110 +1,100 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mr85p00im-hyfv06021401.me.com (mr85p00im-hyfv06021401.me.com [17.58.23.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E071EC00F
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 10:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A111F7545
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 14:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734432812; cv=none; b=BK16l6AyifBFtz0ZW79IKWXEetCPED1jt4/FzTVM5k9YfK++aGqhqc+Xu5O1pIxMaTeIXoQR0tT2BVpfvxh3idcfmLW3EhailsDrVz4/C0JVT0e7DPK1lGREiwoX2S2opjYeQQA/PzGTHzXa87jPGmg+Ty8bkUbaQJRreRJL/aE=
+	t=1734444620; cv=none; b=iQLAwzKyZ2dykirX8Q9nwGDrMbSzMU5eZmmbl/1QlMZWauR5k7G5jM1jbrX3k7MJGKkhxH7lsi8S5a1bvyJ01nfwHRCg2V9IgHkMaJJtO8b8twaDT+AevnWmgpBogl7/+H/xA1CKbAa+fc8jsEitEteW05gip6j4gcMT9sa+3UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734432812; c=relaxed/simple;
-	bh=A/aM+u9cBp0KR4NFJb/LlpGJ+AOLbCqCZ9EikrcXiNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvdHfQIvDYKdL674XM3kFHS+t921etuplov8osHdN+EvaeK+A/90bgiK7WKNSU9OjFTeIw5/FISv2RwQxbIXk3oPr/qEYtmiNbdR0PfNC5ykpdySNz0Th8qVzo7iozGuz0AyfNxC+kWp2OGKJyDBNwQ4CJBJDIyYC7YYWS0Jk0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RuEIcyqL; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1734444620; c=relaxed/simple;
+	bh=VLsnCtafXhDS7hweNxcgJtp3sZLnCmqILMkQI7ZbwxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=egFh9rKl0nr0U1ggZdn0hUaHFsMKkyUc++9EYLD9mAWKAbjT0knUPpzbnMvgTaU9ZGjwsmRLO8EZ7ZJ3Tf9gdoWRVNbbYL/IiIyJeKgrIoMBPMaJTcIgobVZibP/UlUsYt22TcJX42OJP///GFDnO90ZxRNfTS1DemfLo280Ya0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=PeD/ivdh; arc=none smtp.client-ip=17.58.23.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RuEIcyqL"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso37034305e9.2
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Dec 2024 02:53:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1734432808; x=1735037608; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=akvBumgmgr5EIX4fsmxm3FaGCKKx1kkyhh6tnIk6jL0=;
-        b=RuEIcyqLtXGY0Wia1+4OIYR4i6LOWGRFTaeKSVoZkVd7xBH/+zd0Qxd3IT7QuLo4rl
-         IJmelTW4mz/jLrYgwmTM8SNrchjJHvuJg8kGPcLojkpmAYbJQZyYogOnnxJxIYb9XAMv
-         5Jaqf2hU//XJs2uoDADybpCef7N4v0zDNeXhsbc5TADdwx122vjoP2VfsyOYue/5dxF+
-         Yt/bXYoXiopqFOE799RCVtcbsWkUGqjMaKdHO7IrGfWeOWP5j8auRh6GqzOsyVfrhjZq
-         6PGVh0jXKBJY9qFEqJz6A2cPOWviaIMNDX5wvmDYSfqOjr3Cb/aUqi8lqV1gnlTZ7kNu
-         44XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734432808; x=1735037608;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=akvBumgmgr5EIX4fsmxm3FaGCKKx1kkyhh6tnIk6jL0=;
-        b=O6mOouzxq/N0OLOVLNrXTjbqXp6gRekAMZO5e64DGVml7bUonaQDyvaOvkXZW3fcL1
-         sEfTBUsJmho0cRu17GHlwOQwmEowmLSUidGKzvYFw23oGBuCm1tXQqNbCcKWyqzhsL9C
-         ZNdlJ+ot95YQ6yNrpwGC+HPdqWhp3B3TQT1cU7IwHnOwTu/EzkPOSobWgWW2F4jX047c
-         FzOHpgozKEJv1datZhn0BCST2EEUIv8HkUckdhLppYnueDfHyxDmEX+Kyae7GlXjNHre
-         r2vAISFUOpQqM+YleW0qVxtKGNJuU60mTTAePxaoRLsUTAL/UCG9NZktxJySvg8TjsTB
-         qHuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtRQ5uRe2omN2+VdEbC2NoFp1EeCgJYNE/uDeM02Bx9eiFioNrZx5Qn7gxS+kPYMBEvbPvdUcXkgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH7nn1ErnOKg+wzyjntDNZXCY3aPdZhk9bYUIkTw1DLyIQL9hq
-	xi7pc+YNvgM8uCOsGO7Lo7IDWNwyrn1Ry0eh+dh2NS/wBrCYdAuKhJno+lnCc74=
-X-Gm-Gg: ASbGnctYwV7r/pZN1idK3rSCCqYUKBDTKS+xUIc60Nkp0QbQXgotOfYavqXRmw3cCKF
-	li46xeSCxe+osi+eI7c6FiwdWlzLddVhmmBYJpTvMGv6MezcyqA43D1p8i1BWxP0pbEzixzJDt3
-	YYSrqwpkLtSy59bN0DFKsyE4mx/fa14LvPPpKbaP6ksEIlvLQ88n3BrmKzzO6JwcEKreCvBrPOF
-	YNPk3zwvtxTqZqcSuIVqpnCzsSOEDYcACP0wKlvYCILxzTHHCFm4EKXouU=
-X-Google-Smtp-Source: AGHT+IGp92CezacwNyyBgdqfZsg/E3xcoJ1kubOcalO3L3TCWN+rSaASKAUrZ56PuWjll0XGl+cLFg==
-X-Received: by 2002:a05:600c:1c95:b0:434:f2bf:1708 with SMTP id 5b1f17b1804b1-4364767f07cmr27712575e9.7.1734432808447;
-        Tue, 17 Dec 2024 02:53:28 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4363602cd11sm113466875e9.14.2024.12.17.02.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 02:53:28 -0800 (PST)
-Date: Tue, 17 Dec 2024 11:53:26 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
-	Jens Axboe <axboe@kernel.dk>, Boris Burkov <boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/9] blk-cgroup: Fix class @block_class's subsystem
- refcount leakage
-Message-ID: <xsq3bdzz2tbz64rlvmqrbjkjddiguvveuqo7rrozyyl6srrrsb@aclt6fr2qxvc>
-References: <20241212-class_fix-v3-0-04e20c4f0971@quicinc.com>
- <20241212-class_fix-v3-2-04e20c4f0971@quicinc.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="PeD/ivdh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1734444617;
+	bh=Z37RZ5z2SjLpNzhBno1LkTxWUoMuUAtliAQC+gyH/dM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=PeD/ivdh2nr/rPjRF/bS/0P1DswFY+MV9l3xiHsxFEWPcA1gNjEJG2m2neuQEpc0P
+	 x67HAvvd8HOPUqWxxBZW54iWxuGqrX6aA5atN5ACIyB5ciquSEbyKJnmfszrY53dcv
+	 esAlsAHeP/vLNYjxAKfI0VpCrcd2psksBiQHpwGXrd7LzW0TE/QyOYApsF9FwZAMEH
+	 t4OnVFimMLmJ++l56kIi6amuiQuP2vC6ZaPUtmISBgHxpkfi4DrGry2OONddIk5Xgs
+	 x+fMBPMcJMf+R9y3IVq0gFLH4ennoTcQJqSSytTyXy3i4RqFb/sTblDbEIqLGmA3QY
+	 HslSA/MyTygtQ==
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-hyfv06021401.me.com (Postfix) with ESMTPSA id 2BA4330382B0;
+	Tue, 17 Dec 2024 14:10:11 +0000 (UTC)
+Message-ID: <bffb665a-f747-421a-833a-a4820927e86c@icloud.com>
+Date: Tue, 17 Dec 2024 22:09:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="civnhrgjz2qrd32h"
-Content-Disposition: inline
-In-Reply-To: <20241212-class_fix-v3-2-04e20c4f0971@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/9] driver core: class: Fix wild pointer dereferences
+ in API class_dev_iter_next()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+ Boris Burkov <boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241212-class_fix-v3-0-04e20c4f0971@quicinc.com>
+ <20241212-class_fix-v3-1-04e20c4f0971@quicinc.com>
+ <20241216153611.00007f26@huawei.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20241216153611.00007f26@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 30aZxNNOonJSucW78TiIS4UeSm7wEU_U
+X-Proofpoint-ORIG-GUID: 30aZxNNOonJSucW78TiIS4UeSm7wEU_U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-17_08,2024-12-17_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 bulkscore=0 mlxscore=0 clxscore=1011 malwarescore=0
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412170113
+
+On 2024/12/16 23:36, Jonathan Cameron wrote:
+>> Actually, all callers of these APIs have such usage pattern in kernel tree.
+>> Fix by:
+>> - Initialize output parameter @iter by memset() in class_dev_iter_init()
+>>   and give callers prompt by pr_crit() for the error.
+>> - Check if @iter is valid in class_dev_iter_next().
+>>
+>> Fixes: 7b884b7f24b4 ("driver core: class.c: convert to only use class_to_subsys")
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> This looks fine in general, but over to the core device model folk for which
+> element they think should be used as the sentinel and whether zeroing the
+> whole thing makes sense or just the one being used as a flag, or even setting
+> it to an error pointer.
+
+thank you Jonathan for code review.
+
+i actually ever thought about below change and finally dropped it.
+
+-       if (!sp)
++       if (!sp) {
++               iter->sp = NULL;
+                return;
++       }
 
 
---civnhrgjz2qrd32h
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 12, 2024 at 09:38:38PM GMT, Zijun Hu <zijun_hu@icloud.com> wrot=
-e:
->  block/blk-cgroup.c | 1 +
->  1 file changed, 1 insertion(+)
-
-Well caught,
-Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
-
---civnhrgjz2qrd32h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ2FYJAAKCRAt3Wney77B
-SY6qAPwOR82VBxA4fcXuVjjlE50/+vko8njeFm9ZpNrkqTGBXgEAhl3ipTTb7Auy
-jtbygdF076YfrTkoHALOll+fPhlPtQI=
-=AXzW
------END PGP SIGNATURE-----
-
---civnhrgjz2qrd32h--
+For such APIs, they return void, and does not any output parameter to
+feedback operation results.
+it may be good practice to always reset its output parameters firstly.
