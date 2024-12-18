@@ -1,157 +1,122 @@
-Received: from mr85p00im-ztdg06011201.me.com (mr85p00im-ztdg06011201.me.com [17.58.23.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61184317E
-	for <linux-cxl@vger.kernel.org>; Wed, 18 Dec 2024 00:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.181
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F178414E2CF
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Dec 2024 03:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734480196; cv=none; b=pfkbGugXe5PCEEiJQx8t2kq0STgD03yWVIrcso7bq10439JANEVjplpecTBn6LAGn880HANiG3HMtfwQL5LxKReU7oT0Km80WVk74naf21vFpKdxlnRQ8sOlZnRYDRkuKpeL4hK/l5fTnf+SsctwOwRefpSOPFTFeO+3VFIqDD8=
+	t=1734492293; cv=none; b=BhuMdLSTpwT+WRRtOJukkdhZlesM2+dLXP+VHerdt8ceebWFOa1xX+HvDO2SMHMraevDy3F5hwYW/hM/iyU+cMgQI5GN9reEtdxBxr7P7py0rOQipavEjIa3dSHhh3XwOHfoTZ+lJjFHHo12RPdEWh1j4oPio7fCzIK5JkJlnek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734480196; c=relaxed/simple;
-	bh=7c0hWaDRO0lYYPUw3fSJwZidpoLlvEvnQjd/RkahQfY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MBfI5h9TKjhhghIfW8+O22udPhE9srde5iKK+eUNioPEIr7RLH122PlwG83nkqM+il982DlpYx5ifG7OhQhVBVEO3/P74TpL4CK2Rh6deTNigsSRv3Aaf+PbUgs5WnXVJgU5T4rtqSzpfUfybKZ61GqTbrG16d3XHeTOLRbHwP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=MRPctL5d; arc=none smtp.client-ip=17.58.23.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="MRPctL5d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1734480194;
-	bh=dqP9qynvc8yZXa+bnipKSS5T9b0BbFcof3abx8Gc0z8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
-	 x-icloud-hme;
-	b=MRPctL5dFoYQ3LiwnmvxriiGc1QwXzo77zQ8JdWaoYlb27NF2n6sH3ScmReaHbiLq
-	 7WCQ76VcTlQU8AccwKGQYO5H8qogJ/e43Ko0yRgPEZrvKGw+U1/YZ2DCsoB/mbCNqL
-	 rABYg5d9XKnu58OLaNEooQ5le6l9CCwkZkN4sUgu9alT56VobjIuOgznGWiqVwJvNO
-	 camcNBZ03VQC2wyFoHcHtCj47iEZQC9lEcz28hc7HjVPzde7souSaOxe7yKSWGy/G3
-	 /ov97PmMYTfEu6rEN3UvCXey+DvbSVGSGph7dSzK0qutYFeRTG/DdpMh8XllvhriSM
-	 cJbLQV4/fqwIw==
-Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-ztdg06011201.me.com (Postfix) with ESMTPSA id C0DA896019F;
-	Wed, 18 Dec 2024 00:03:07 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 18 Dec 2024 08:01:38 +0800
-Subject: [PATCH v4 8/8] driver core: Move 2 one line device finding APIs to
- header
+	s=arc-20240116; t=1734492293; c=relaxed/simple;
+	bh=fNoISuI0FNVie05AmbHzn+rk6OMEYgHKeQGvDtcIKuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ua+tralQaiyAyMhLBLBCpjsgC/yvrewImppFcZLj151FKu2BpoxUdhnYrSfX1bDpJZl0HdxM6A7B2/uCe9ORnhdGcetVtCmNL35Tnd+FeMjCCiLdw+ltmpHrPyvmiU2pFSeiIq1Eyqz2tKcZPomdtTnXSfdqhS0pAs5ZzrB3orA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDHvGtvQGJn5QNICw--.8785S2;
+	Wed, 18 Dec 2024 11:24:31 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwDnOXZZQGJnm_hqAA--.2769S2;
+	Wed, 18 Dec 2024 11:24:23 +0800 (CST)
+Date: Wed, 18 Dec 2024 11:23:53 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: jonathan.cameron@huawei.com, Benjamin.Cheatham@amd.com
+Cc: marcin.juszkiewicz@linaro.org, ardb+tianocore@kernel.org,
+	quic_llindhol@quicinc.com, Jonathan.Cameron@huawei.com,
+	chenbaozi@phytium.com.cn, devel@edk2.groups.io,
+	linux-cxl@vger.kernel.org
+Subject: Re: [RFC PATCH edk2-platforms v4 0/1] add basic support for CXL on
+ sbsa-ref
+Message-ID: <Z2JASa3YURiPmeuo@phytium.com.cn>
+References: <20241210103632.95960-1-wangyuquan1236@phytium.com.cn>
+ <46b1b4e4-8588-46ae-8331-1ccb40a069ac@amd.com>
+ <Z1pd2nyOs2ryoZXt@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241218-class_fix-v4-8-3c40f098356b@quicinc.com>
-References: <20241218-class_fix-v4-0-3c40f098356b@quicinc.com>
-In-Reply-To: <20241218-class_fix-v4-0-3c40f098356b@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>, 
- Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>, 
- Boris Burkov <boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <dan.j.williams@intel.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-cxl@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: iQ8-mg4aEfHHSs5wuAPGnOfDbU92wXlr
-X-Proofpoint-GUID: iQ8-mg4aEfHHSs5wuAPGnOfDbU92wXlr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-17_12,2024-12-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- malwarescore=0 adultscore=0 bulkscore=0 clxscore=1015 spamscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412170183
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z1pd2nyOs2ryoZXt@phytium.com.cn>
+X-CM-TRANSID:AQAAfwDnOXZZQGJnm_hqAA--.2769S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQADAWdh1gwAZgABs4
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr4fZF1fCryxZw1xWFyxuFg_yoW8tw15pF
+	WYgF1qyFWktr1UuwnFv348Xw4rtws5ZFW8Zr98Z348K3ZF93WaqFW7tayY9a47GFn5Cw43
+	Ca1jv3s7Xayjy3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Thu, Dec 12, 2024 at 11:51:54AM +0800, Yuquan Wang wrote:
+> On Wed, Dec 11, 2024 at 03:40:03PM +0000, Alejandro Lucero Palau wrote:
+> > 
+> > On 12/10/24 10:36, Yuquan Wang wrote:
+> > > v3 -> v4:
+> > > - Align base addresses of CXL relevant Windows
+> > > 
+> > > v2 -> v3:
+> > > - PCDs values of pio, mmio32, mmio64 & ecam space for the independent cxl host
+> > > - CXL Bus range: 0x00 ~ 0xff
+> > > - Mcfg ecam structure for cxl
+> > > - Iort RC node for cxl
+> > > 
+> > > RFC because
+> > > - Many contents are ported from Jonathan' patch on qemu virt design
+> > > 
+> > > - Bring plenty of PCDs values
+> > > 
+> > > - Less experience and not particularly confident in ACPI area
+> > > 
+> > > This series leverages Jonathan's patches[1] to add acpi0016 & acpi0017 objects into the
+> > > previous DSDT table of sbsa-ref. Since my latest acpi0016 implementation model on qemu
+> > > side is a new host bridge qemu object rather than pxb-cxl, the cxl host(Segment 0001)
+> > > would have its own ECAM sapce. Meanwhile, this adds exclusive pio, mmio32 & mmio64 space
+> > > for cxl host.
+> > 
+> > 
+> > Hi Yuquan,
+> > 
+> > 
+> > Is there a roadmap for edk2 supporting other CXL features?
+> > 
+> Hi, Alejandro
+> 
+> Emmm. I have not find such edk2 roadmap (docs/webs/blog) yet. According to
+> what I've learnd, the edk2 upstream only support some head files which
+> define cxl registers structs and no cxl drivers have merged into upstream
+> now, and mostly system software's work haved been done in linux kernel.
+> 
+> Regard to cxl patches in edk2, there is a series of patches in reviewing to
+> support enabling cxl-type3 device as memory expander on Arm/RD platform[1].
+> 
+> Link:
+> [1]: https://edk2.groups.io/g/devel/message/109488
+> > 
+> > I have noticed UEFI extensions are not supported yet, specifically
+> > EFI_ADAPTER_INFO_CDAT_TYPE_GUID as an instance of
+> > EFI_ADAPTER_INFORMATION_PROTOCOL.
+> > 
+> > 
+> > Any feedback would be welcome.
+> > 
+> > 
+> > Thanks
+> > 
+> > 
+>
+Hi, Jonathan & Ben
 
-The following device finding APIs only have one line code in function body
-device_find_child_by_name()
-device_find_any_child()
+Recently I am trying to test EINJ for cxl error on sbsa-ref based on Ben
+Cheatham's patches, but there seems no sample for cxl EINJ table in edk2.
+Hence, I manage to write the EINJ table by what I have learnd in ACPI
+SPEC, but I am struggling with which error injection actions need me to
+build.
 
-Move them to header as static inline function.
+Do you know some limitations on this mechanism in QEMU or any suggestions?
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/base/core.c    | 32 --------------------------------
- include/linux/device.h | 14 +++++++++++---
- 2 files changed, 11 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 930e43a970952b20cd1c71856bdef889698f51b4..3f37a2aecb1d11561f4edd72e973a1c43368de04 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -4100,38 +4100,6 @@ struct device *device_find_child(struct device *parent, const void *data,
- }
- EXPORT_SYMBOL_GPL(device_find_child);
- 
--/**
-- * device_find_child_by_name - device iterator for locating a child device.
-- * @parent: parent struct device
-- * @name: name of the child device
-- *
-- * This is similar to the device_find_child() function above, but it
-- * returns a reference to a device that has the name @name.
-- *
-- * NOTE: you will need to drop the reference with put_device() after use.
-- */
--struct device *device_find_child_by_name(struct device *parent,
--					 const char *name)
--{
--	return device_find_child(parent, name, device_match_name);
--}
--EXPORT_SYMBOL_GPL(device_find_child_by_name);
--
--/**
-- * device_find_any_child - device iterator for locating a child device, if any.
-- * @parent: parent struct device
-- *
-- * This is similar to the device_find_child() function above, but it
-- * returns a reference to a child device, if any.
-- *
-- * NOTE: you will need to drop the reference with put_device() after use.
-- */
--struct device *device_find_any_child(struct device *parent)
--{
--	return device_find_child(parent, NULL, device_match_any);
--}
--EXPORT_SYMBOL_GPL(device_find_any_child);
--
- int __init devices_init(void)
- {
- 	devices_kset = kset_create_and_add("devices", &device_uevent_ops, NULL);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 36d1a1607712f5a6b0668ac02a6cf6b2d0651a2d..d1871a764be62e6857595bc10b9e54862c99dfa2 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1083,9 +1083,17 @@ int device_for_each_child_reverse_from(struct device *parent,
- 				       device_iter_t fn);
- struct device *device_find_child(struct device *parent, const void *data,
- 				 device_match_t match);
--struct device *device_find_child_by_name(struct device *parent,
--					 const char *name);
--struct device *device_find_any_child(struct device *parent);
-+
-+static inline struct device *device_find_child_by_name(struct device *parent,
-+						       const char *name)
-+{
-+	return device_find_child(parent, name, device_match_name);
-+}
-+
-+static inline struct device *device_find_any_child(struct device *parent)
-+{
-+	return device_find_child(parent, NULL, device_match_any);
-+}
- 
- int device_rename(struct device *dev, const char *new_name);
- int device_move(struct device *dev, struct device *new_parent,
-
--- 
-2.34.1
+Many thanks
+Yuquan
 
