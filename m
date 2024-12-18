@@ -1,83 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3941B4230;
-	Wed, 18 Dec 2024 16:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A2B1FCD0F;
+	Wed, 18 Dec 2024 22:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734539976; cv=none; b=r8qNU4q+b0OF1+Mhf0Xj6KB12qHbgnuz+PiCgqnWiM/tekN48+TGK/yAVXdV8RrWjF9y1OLCwN/ss24XNTpMCW/wFXG/6Ok1A2WX+J3El87k+fHyB11Bk1/N0ombmm+CmCAkH46eyNLfaZyC8gxIPoz3B9/z9shXslCLPVXZFJI=
+	t=1734560411; cv=none; b=D95sYAVubyh6KB2wP2WR2Y+2/DJjJ7Hl/Dv/ICaAZfAwF53emWqLVavPUr1jugBTorZLex3Ce3+qbIKa1VwGNW28ZMwNHuVYcESqOZgTT36l2gEWddLM0dFj4NJ00SxZbhyAceyFl6fEXZi2iT4YuZoVLjGhLjDAXGnJUpmePjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734539976; c=relaxed/simple;
-	bh=djvgsoA7QACSsXqh8hpw0OxskfzL9M8iPIwpukN03HM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqjrqxlE4uh9GSLOLXz+/acEoBhL76Z7z/8v3hk/Rfv2gDR1Y3Hm0XaAbmS8Oju507sexJRx2lfuJekr0iokwH2asfXCusk8qOc/s3Irix02aAKsN2XJVK61gSV0Wr0S5NmlvUR5c7GiYQVmYTEYpAvjV69XqNr/pm0I7/ozh0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrG3DcsH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734560411; c=relaxed/simple;
+	bh=2RUnEJwVV1hTAlnkvUBmCV/8UXYNINhbbd6C+r/yyro=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VrJFNkIkn7/Dm2B5zYPj/b+rJkY/UgQwiekodMcjRNLCRZ0fncUNmCzF68QoN+Uabyz3PYZca9WXWcYgmJJ1eSsYxgkwWtNiv8mSCWrjUQ6tipSFLmQ8/rVh7vlQvV/Ht9a/JYKEVD10Uv2gIWwMQG/YooayrdMyeLf89XT1FyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nP8uCC9N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrG3DcsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E24C4CECD;
-	Wed, 18 Dec 2024 16:39:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nP8uCC9N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3702AC4CECD;
+	Wed, 18 Dec 2024 22:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734539975;
-	bh=djvgsoA7QACSsXqh8hpw0OxskfzL9M8iPIwpukN03HM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mrG3DcsHuOtSCH+imXmmzdej2yI8D/y5jNassmJYRhGRH3Sq5ntG0JxfVL2SqEQZK
-	 IojFpakXoiDdt5LF+YUJunkNesIBguX+WQExL804aNkwz+lOX7ox1vWkDDpaY883OY
-	 Z2d9H0aK3WJNZlfkB7gmrJAXab9rpmU3DyfL2jW4UjrLgruL1biflwElZznpdwprOn
-	 lvUSdrnbl1Co/Ya4TdgWWlad9e6ut6jjVT0f857cJZSwEP/be1n6PbQ1DP1+iLOTEf
-	 MRt6mymppAcLmW4BH6wJxztgit38pNNvZxad0R9c+EOhFQV8rriEcZVSDV6W1TL5Ew
-	 rDkwdMmXnyEcg==
-Date: Wed, 18 Dec 2024 06:39:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-	Boris Burkov <boris@bur.io>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4 2/8] blk-cgroup: Fix class @block_class's subsystem
- refcount leakage
-Message-ID: <Z2L6xk1qD-fqUz-J@slm.duckdns.org>
-References: <20241218-class_fix-v4-0-3c40f098356b@quicinc.com>
- <20241218-class_fix-v4-2-3c40f098356b@quicinc.com>
+	s=k20201202; t=1734560411;
+	bh=2RUnEJwVV1hTAlnkvUBmCV/8UXYNINhbbd6C+r/yyro=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=nP8uCC9N1ESvSByb/jHH0shpZpMvCt0ME4S4JEcmI154N6IG2ebjdQqEvS3BQkNH/
+	 gFvY7ALaTYACncDg/gVGWfK7j0v+DtPNK6COZBbEp/NThC0FQ1vdalesFNkmoX2kmO
+	 V4qeL4Wod8JCVGs2D1NDW0ZpH3xzdh/g4ndcLZQN2Q8F4+ZBgWo2oCl/WmVZqQanco
+	 UsGGouItM9TcmKqScF75MnEYl/cjU0Nq34buA1qj+WwbMIsurxMWRMMHCsNP567T94
+	 QIe4GfnBWDQnWhUQ2NVpBjcxLad/jbYQisEKSWJEYZxZfBZ/jE0+MuF5BQJXObycqM
+	 dngV/PeeSDENg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFC03805DB1;
+	Wed, 18 Dec 2024 22:20:29 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 6.13-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <6762e48637297_2bb90329432@iweiny-mobl.notmuch>
+References: <6762e48637297_2bb90329432@iweiny-mobl.notmuch>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <6762e48637297_2bb90329432@iweiny-mobl.notmuch>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.13-rc4
+X-PR-Tracked-Commit-Id: 76467a94810c2aa4dd3096903291ac6df30c399e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b69810f38cb01fbc958190de43f1a02247f56a9c
+Message-Id: <173456042857.1744913.12843609768696670691.pr-tracker-bot@kernel.org>
+Date: Wed, 18 Dec 2024 22:20:28 +0000
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, Li Ming <ming.li@zohomail.com>, Huaisheng Ye <huaisheng.ye@intel.com>, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron <jonathan.cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241218-class_fix-v4-2-3c40f098356b@quicinc.com>
 
-On Wed, Dec 18, 2024 at 08:01:32AM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> blkcg_fill_root_iostats() iterates over @block_class's devices by
-> class_dev_iter_(init|next)(), but does not end iterating with
-> class_dev_iter_exit(), so causes the class's subsystem refcount leakage.
-> 
-> Fix by ending the iterating with class_dev_iter_exit().
-> 
-> Fixes: ef45fe470e1e ("blk-cgroup: show global disk stats in root cgroup io.stat")
-> Reviewed-by: Michal Koutný <mkoutny@suse.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+The pull request you sent on Wed, 18 Dec 2024 09:04:38 -0600:
 
-Acked-by: Tejun Heo <tj@kernel.org>
+> https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.13-rc4
 
-Thanks.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b69810f38cb01fbc958190de43f1a02247f56a9c
+
+Thank you!
 
 -- 
-tejun
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
