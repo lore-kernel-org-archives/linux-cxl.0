@@ -1,578 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C161C5CBC
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Dec 2024 18:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734718958; cv=fail; b=ElXws1nb+uTAMCCj6mXfvL+/W0UlrEAkRxq8nwjNE2MA7rDXQBkxeGZsOz9qO0+ckiCvKMNYW5AXO0rJFHhrNAzzEL9ClN9hA+RxoJnXG2am1V872R14sABqlZhWAvNW3x15SvM6CZ1HwXC3jWcKSMd3ManqN8w+2+rE0avgM0w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734718958; c=relaxed/simple;
-	bh=POEqR21SllP7pP2DfNCofFnKNxXJ0DkqoBepYA1aZpA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oEF7zb6RQ8QHWEYenfA06GyKLLNcoGKErZF0sqq7D9+yIhu2TkpTK8fWYVgWIaM6nRuvRbjJywtMJCH2wC6gILJVw/Gwnk4sqXXGImGs5bkYfjXCe8P7ie5hm0e8WO6TwpvLFYJ9xObKwR4cMsjMe2aV/B51q06Rn7G0fhn06S4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bq68ZGq5; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0D821D596
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Dec 2024 18:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734719368; cv=none; b=Ha+AaQeU7siFdRh0OKpxcQkYLrXMgKnGFGF/YjT7G7qvH8kSoiKrgvvSIcWUe53MIT4dPYJpHdfnf7dNYQqxb4/VGekiK9dNUdb2khhPpLsFm3eyPun0VObmE58HdG7rJz/+ugE9IR/AtbST53xDm4w8IuB04HVZFxvKsV2rT7k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734719368; c=relaxed/simple;
+	bh=Q6SF3tekiNZltEf69RdSkr40RY1p4SR17YuXy/ZBfwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XpTu8jiJqlFAi5KlqhNBDuo4+WGuCABour5a6J8hGxROOlYzNSRUGJIZ34tLWfcv8DhTxMNb8VBnSteREIvDrm7qjoN9RQfm4oLConIS1Ejin+TUYKDEhnhtvX+XkXU9YjuHX6k3aSejHwGwUqiiwop9P5VY8k+tFZNzvlS6/nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PF/Vjwab; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bq68ZGq5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734718955; x=1766254955;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=POEqR21SllP7pP2DfNCofFnKNxXJ0DkqoBepYA1aZpA=;
-  b=Bq68ZGq5BNzbCY68PH5MqjFyEVSzDsy81YnNIIm0XtxhB9T8AkZgeTKi
-   bGS8N63i61tHixASMDDS/E/w38UD6EssxFg+y9RwfTrEpbctKxdP4R8VK
-   j+22vPOiI0tubuITthFo1IxYA38qiqAerLAy36z+K0NHXfNXI0+7IVxgQ
-   +oBBiSOA+nAjF0Nkx2N/oZtDS8ChbEj7//ORS2ANeq1vjDp+wBo7juZno
-   yKEEv2WklPKVb35MsGZeIKxD8k6rsjIB9OkDoSR0ADmfu0GePuZBlMcNU
-   /AK1AROHFxehoZoflwMCyQYkYYHycrOILeG/U0Hn3bF+YfcM/33pFywAb
-   w==;
-X-CSE-ConnectionGUID: Mjq3rEA3RCiN38T2Ah1YwQ==
-X-CSE-MsgGUID: K8j63UvkScOy3vF8aINlpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="46695720"
-X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
-   d="scan'208";a="46695720"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 10:22:33 -0800
-X-CSE-ConnectionGUID: QkBdjvDyQzi1c1jfUhJhhg==
-X-CSE-MsgGUID: iqIAZEeZSdaUFPemVkPkJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
-   d="scan'208";a="103553346"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Dec 2024 10:22:34 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 20 Dec 2024 10:22:32 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Fri, 20 Dec 2024 10:22:32 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 20 Dec 2024 10:22:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bd/Fk3NhMb7uyJVyn5FeelC4WSg07bHVdJ5C8Er3u4K1ZzayruaGe2dCsixVXQYTZqzd0CuHUlDVpjnmN2WXJ1scz8TIIb5h9mOU8gTp8/qYLnviHW8TFgjORkPgxw0EdRCAonF9vZAbrQJim0Y+Yu5kj1eQDmduNr1Z1n02IZH8J7Qb07xeDx/tpwvn8Z71zwkG+slDn2F1urxXz8/nZDJRXqUXY7JJ2jZQ0y0MX+Wt7vMjvXdqSGU1k1Qrrj4p1baYGL8izux4u7Edw88k7drp7Y5Kii8CTg6whxkorHNRx1pNUdWncXdnBS30v929thbJkt6RA05r1woUGl9vjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B047aFpqX5zk6FW3bDcyig/vU58DW6gxqnxHnN3JFnI=;
- b=T6XuHaYrAklWNIwVgxl20eyEqHwn7r2UB1Vd7d0TXE5aOT1LvLCDRBNtqeQrsm9VEqrC9hlrVhO38ZqblpwvoMdc8B7u5DQ/0RIpnX5GAcTcWkXIrPQkmGqtQI1UyaJN/Yy9j0HDWgMlvNedBMFMDpP8moaoQef65+RyFTGacT76YG1hDElMp2B897+E9BDoQwd8BoAAImqf0fcnRRv+6V/kS9rjbJoWSTiOzroUfIsrX8rZqpm/bdi3p2PEhSXqAwyUnDqCfuRxNiOzQOQ2dVOA9Y6S3+Qd93bEKEh7XTmis+mD88blXbJ6VpDBJ+H1Azz44yBrPP2gfZa+2ekQQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MW4PR11MB6739.namprd11.prod.outlook.com (2603:10b6:303:20b::19)
- by SJ0PR11MB5165.namprd11.prod.outlook.com (2603:10b6:a03:2ad::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Fri, 20 Dec
- 2024 18:22:02 +0000
-Received: from MW4PR11MB6739.namprd11.prod.outlook.com
- ([fe80::a7ad:a6e8:fced:3f24]) by MW4PR11MB6739.namprd11.prod.outlook.com
- ([fe80::a7ad:a6e8:fced:3f24%7]) with mapi id 15.20.8251.015; Fri, 20 Dec 2024
- 18:22:02 +0000
-Date: Fri, 20 Dec 2024 12:21:57 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<dan.j.williams@intel.com>
-CC: <jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>,
-	<hch@infradead.org>, <a.manzanares@samsung.com>, <fan.ni@samsung.com>,
-	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH RFC 1/1] cxl/pci: Support Global Persistent Flush (GPF)
-Message-ID: <6765b5c5560e5_2e2afc29467@iweiny-mobl.notmuch>
-References: <20241220164337.204900-1-dave@stgolabs.net>
- <20241220164337.204900-2-dave@stgolabs.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20241220164337.204900-2-dave@stgolabs.net>
-X-ClientProxiedBy: MW4P221CA0005.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::10) To MW4PR11MB6739.namprd11.prod.outlook.com
- (2603:10b6:303:20b::19)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PF/Vjwab"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734719365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ShuO3TfEMw80wDehD7G0N/FfiqkQn0QjW6tjkfqEvXA=;
+	b=PF/VjwabwE497xwinJz7HQIYphlW37QUqsbgJJd7jT4z4p3aoY3B7Eur3BEzFqk/h5rDb6
+	kiBfBC/S17fIWTpvfSFm8LLPrkGe+u7rQXKwh/Ej18aISIHR8vblzz2MzizInIPxXNKSGz
+	GYcI9SpM7zpvAhfw8cLhkcGw71vZdhA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-98-Jhl_k8jON4WW_osz4DfYiw-1; Fri, 20 Dec 2024 13:29:23 -0500
+X-MC-Unique: Jhl_k8jON4WW_osz4DfYiw-1
+X-Mimecast-MFC-AGG-ID: Jhl_k8jON4WW_osz4DfYiw
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38639b4f19cso1558184f8f.0
+        for <linux-cxl@vger.kernel.org>; Fri, 20 Dec 2024 10:29:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734719362; x=1735324162;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ShuO3TfEMw80wDehD7G0N/FfiqkQn0QjW6tjkfqEvXA=;
+        b=rTbH1SQsdvzPhZ8PdlbnpwUELRpheWmzopYBwRLK3uNfw2DAzyJ2Z3EfUAYhV3gT9g
+         pxg4bmHPxgdsyw1+8Umhuy/uzhYZLNA0NWxHxOzeeIiulvq7+rbTfaOol/iRwrl+sElA
+         K7Y4XNDHwZ+lDGe2QvNRBXhjh8CnQBd3QCGylok4BwGScLsM/bo5wMukdThQUMhvHlOr
+         Q2PZHaAJ4X90sPcsBjIegSbch7cRrTQy++RkKw4Vhh1Gh44QkwKEABL/QzTbOX1vOQ8P
+         Ap4+DN4GJ8h/Dxep2U85awbVDTstY7Ch6rUu4Ff3UfaBnIrBaQJz4g2gWEEJy0IRnYAg
+         J8Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCULqavdJIqjwm0UJMil/HAZkEzILrBHwWaUUgaDOF/XnbbMzGC997wmbSsOHJRgcb6yH3bXrxt7rzg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjkpHmwhYheToubHDzRqQRkVojlQk5xE7RGS5XMGrY/xfhK7OD
+	jmjxDiP6vjEriS2v8ZchGKF+hk0igapPADF5xZX6EL6PtTfKpH+9zqW3Sp6CM085IDerE1YPMpy
+	tik2r5enXB9/gTA+9Ky6+6JpaLvRalRwKV/1FS2NQuK4n6up8isuMm7NavQ==
+X-Gm-Gg: ASbGncvbA3svT1xppSriM4xPao48UAfq7aqgelh03EpgMoAD0GVEhdtPbwtqxQdct32
+	7HSzZBD9FveIvUR8jH6eaSbrtf5KIerEc2Eiw0JxobVI/cqCSPgyUdu2CG0zT4pOBSEgG20U7y+
+	RuHwi9YjuyDCbN7KOZSGAulUtDobA22vVM9uifeSn8TT2I4InwS+6gxo1eGhbzFVMh6WSLNVw/4
+	pLNcjribpvqguDNx6ohXLmx8SnRVllm1FlgDYoWElJNFA9lYKz48gO+BEB/Heac50YwvAYcws5n
+	K8sKSyralfWi9+cuaeMYJ9YRlQRsQzZo/6Qh2wD3LqEupb7/4KP3JNCZe1WEucvWg7O6oeGowN5
+	KiyeRka+j
+X-Received: by 2002:a05:6000:18a9:b0:386:3835:9fff with SMTP id ffacd0b85a97d-38a22406d43mr4852364f8f.59.1734719362351;
+        Fri, 20 Dec 2024 10:29:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG4GC48OmfJNltY6Ek7vleCwhpqJySNAWqKHGuZFUvMe2tCVDpmaDR4IIQ/DXZtWNsmnqadZA==
+X-Received: by 2002:a05:6000:18a9:b0:386:3835:9fff with SMTP id ffacd0b85a97d-38a22406d43mr4852317f8f.59.1734719361985;
+        Fri, 20 Dec 2024 10:29:21 -0800 (PST)
+Received: from ?IPV6:2003:cb:c708:9d00:edd9:835b:4bfb:2ce3? (p200300cbc7089d00edd9835b4bfb2ce3.dip0.t-ipconnect.de. [2003:cb:c708:9d00:edd9:835b:4bfb:2ce3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b441bbsm85576885e9.40.2024.12.20.10.29.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2024 10:29:20 -0800 (PST)
+Message-ID: <4446a9c9-613b-4303-9a06-686fb10af363@redhat.com>
+Date: Fri, 20 Dec 2024 19:29:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR11MB6739:EE_|SJ0PR11MB5165:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38887f8e-b0db-42ab-8c9d-08dd2123331b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?0ftMj/rWBJYzEwLtGfgV82EcQYoJiVvk0BPuBRlZqYncn+sFDrHGeQ3ADOO8?=
- =?us-ascii?Q?AMJhmJddrk7G/hhBZyujcKmKo6uLqw1bBZTUdicjLvPni37tMuGIhIgcsAP1?=
- =?us-ascii?Q?XI6zBEx7ZlDmvUKAvfv3WX2Jd/7kQWBFVKeVwpBd4Z/Md2UKmZa+1TbZdDhc?=
- =?us-ascii?Q?O3HxQ7Pg+XJ34voD8LKFXG+a+qH5heqd94i7/5Nn5MXmU8e2NvQl01sgbtB+?=
- =?us-ascii?Q?rx9x6Sv/yPXJNiZP2A5q05+yrjGznGVowftkq7NWBrI546B6SDBykMytxamv?=
- =?us-ascii?Q?Xr+fL56y/fexGQzlHon+a3YuzOwyUcBNE8sWVmR8ZvWiAR8E/Qy7PJDEWiw7?=
- =?us-ascii?Q?tgkwUBGa+L8VrK8fgxZeVm+IMZwy6HU7WkqI1goUwuJ2lZFuLZrrW2FT56+g?=
- =?us-ascii?Q?2ZSpMPrRM5hF5sR6X5WQ8SOeWCjg2OiArQyAe7eHHq0AK2EfsW/q2gh8aqAE?=
- =?us-ascii?Q?oi5q+cWHZCyOXHJypaZjAhwSQpqrdtPezN9rwhqAXtVYVV/OiIw3gcTlMKys?=
- =?us-ascii?Q?WFIhoAzMZpU43fN+sbDDp9YczQXZwF6yhlMtJz9ShdZWl1XKvCW9Vqzx0x6P?=
- =?us-ascii?Q?SiCG4aHjBzGjM9bjPSCo8yWt3SiRzoWZQIQXrWYO3hwCZvzb0Mos2guT++B2?=
- =?us-ascii?Q?C8IvmR1MllMnYA+VftptrjWCS1vsw83eRyvyhJo0/7p3UUFpz4Bpmxfonpdh?=
- =?us-ascii?Q?6k/2EY0osr8zQ+agnlw8Azqrh31YSjIcyiEIkR9G5WO5iueBpHJWbER6Xwwu?=
- =?us-ascii?Q?LW91X/dY5hrcP5GoRujRvpYTCjGA+axunN7GYObye+UhHmkDUEEO1Jz5s14F?=
- =?us-ascii?Q?/1AEvYYeIEh3wn/0bQ9CMGMspsmKX+Zg4jYg9n1AzfDli6ww/+P8MvM+rpiZ?=
- =?us-ascii?Q?cfi48fJCT/8Wrmo189ZZmg01zvpqfCU6+oYfTVxcawYR/CxrcWX9uQteOnCi?=
- =?us-ascii?Q?2QG7sZA0Nca9fEkxXVEVcKaO7eHj2aYTagnZnE5o+z6b6RHRU50IsE1xa9Ry?=
- =?us-ascii?Q?lOatT1QD7oMJH88cJAqDTNLXj2yp/mKaJhSLURqa381UmUDz2yRAlMxgvmg/?=
- =?us-ascii?Q?5eg05yvcJwDmCW7t6ARJ5KL70lydpG0tZYrk4FNHLp++ZLkmmgFGpQqZWl+g?=
- =?us-ascii?Q?lfo3aBbpmdEhcNd34xpMcqN+iQOgz4ddERrS/S9etR4hRZYgix1TLB891AT6?=
- =?us-ascii?Q?UoqLS2a6hQhw36W5Hf1vqqk7cfxWYmktKVl+GiZGpsasrjQh3f3q5MNqUNKG?=
- =?us-ascii?Q?kNEH7zpmnxglzbbzfYHddCQSwulFjmCk0xleVgVMM9cJgxNHJBOvn4oS397V?=
- =?us-ascii?Q?YVhiq6xt5VfoNO5ezGtYW0o7ge3UAlmHruOgsF8gyS3k/6o5KrFhnAYYkrxY?=
- =?us-ascii?Q?ZbnCWcMEZr1FNmVPx8XFKUTSET4S?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB6739.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?enyEOM4taVGftNSYLvGqvic+lisi1mFOxBsNS6AGKG6QgBtBj6PxCHSM1Cy0?=
- =?us-ascii?Q?xa55g3dfH0RYsHfFWXdxNENJj5EmGQxxKb6OKvCQbLGrfqnj+D1u1Z6ELAu7?=
- =?us-ascii?Q?l+wQaEmIM3QNffFJLalfZTEUwylYOsskhbAQRG3YbuWQBry+P02lFbAfmDq7?=
- =?us-ascii?Q?Iy9UEYXKk+tGcv/MlpVI69tzKzHbJBuU86mYuR2r/OmZFYNGvSht+G7Me+57?=
- =?us-ascii?Q?dP+GxBnOxp35l2yqoKRPNnYu4Il2HYOlSnLV4ta1iU5qe/ffLmP9KhMmRGL6?=
- =?us-ascii?Q?ItCsH6KBjMrHhV/AqiB1eZGTQi7xT3BRTbe0PGfX04MCmxdm0tlqn13rwk6S?=
- =?us-ascii?Q?ihrTin83TDudIDxJsdkiOxVxz06yO02EHVLQSgjvvX04gzqfmjkQuJF0Oi6I?=
- =?us-ascii?Q?BKfsQU96WkGg5hWO6d6Ay2lr3iQW89dS/sKKgWdko0PHV/DJcxvLkWn4wPou?=
- =?us-ascii?Q?7+bex3X21lMaT0ch/QO6emW38VLfOpuwNhCPCYRfvWVt+uMoQdNxtHaDsogM?=
- =?us-ascii?Q?r+hOxuzDcvkQx+DkJY3IGmdPpcIBfAQn+jvfgq0mOEMLldajvanniLswxW6f?=
- =?us-ascii?Q?sPGnTzW5qEB/aEvc1oeVD6gen+DmjdHbbmy0Gc4c1GzxxX+DuDmcsNU9Sqqy?=
- =?us-ascii?Q?DfiDNWHmrkW9jLgnLeSa6W+iXzXpes7yvAjuBeVB9z899F2Nfxq5B4l1LqjF?=
- =?us-ascii?Q?cMRwI3KvAy7eyJ5JZoxQw+g+uzo5RKS48P6juDNMyIGblZ8m/qGhSnydByq3?=
- =?us-ascii?Q?D0ObxUMRx2KT0M/1zWIgZd51wObx9/m/BpUVsURkR+8DxnRAACQ8IokeXkxf?=
- =?us-ascii?Q?aodyx4FdEvBnb080T/RSKxi9cBExCZMSLNqo3C6v/M5kPCPNtT6NLq+XzFHp?=
- =?us-ascii?Q?t8O2OJOx7wkAo5HLEGdG9g4vOZtysIq+0ltp/Z51A+b/cdIpODN2GzGv1N7G?=
- =?us-ascii?Q?w4QO7tHQh4oWV8vlnfhYwbj8TcwCBqNX2VHcS0qPMWfwCDz8Lgq3wOhOYb7A?=
- =?us-ascii?Q?NqqiggKxBkgOT1hMsHZTMU9r3RL1Q6x5EilA+2Bksix+HxsBDSAPTPKDH7ho?=
- =?us-ascii?Q?FnYuE79R96NGlplxxVuLt2FCFCa6PGttn/WsEw8QyQy2SwUGA8tuMiwir+Mz?=
- =?us-ascii?Q?vnN56w/2M/TpXKIz0rYE7c3fu31WyCrMMTuHNjOvS+Sq5TXn+9fTgZgCrswG?=
- =?us-ascii?Q?kz437bSTwnRfHVfEQLHfIjbWMwBWvT3J20RnHYdmnggPH0P+pksTIXCzycWw?=
- =?us-ascii?Q?eliGp/3DabwYyGP+Z0iw0M3CQDC6QMrutlY+tCPnM5UxSoy3t2oxauSYy1UZ?=
- =?us-ascii?Q?+aE+t00rQ9nS0tals41bxYW6WEGiGFB4gtGUTYkFVzFOQDqkBiUxDuY0k+Bw?=
- =?us-ascii?Q?YeRVIU5RZXMi102Arnmld5JIvPB55Jq7gg99r/RHVtfSFcDyY60epskQ/ORx?=
- =?us-ascii?Q?fpugJQ8Tcmzsllgtu3Zvmp+8JVJBkJ2Qqyg+ljbcXW/CJNRxVJ0yBWDI9B6x?=
- =?us-ascii?Q?+J1s4xHsGVNMpdLDj+EDGDZCHxdkmTZvKTDlCrcUOwgkiPShN7ym4ukUN23Y?=
- =?us-ascii?Q?OqGEgWEvDqEoJdRTSUJ4fy7VWgmHjezfzUPdZv0Q?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38887f8e-b0db-42ab-8c9d-08dd2123331b
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB6739.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2024 18:22:02.4150
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eYWAk0zjSwQ03nKkk88wooYYYRK8xrBS7s3NdX+ZIWBsiTD3l0NMHK6U4MlV5qs3aikJN7vZx9ahqQxCfyg44g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5165
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/25] mm/mm_init: Move p2pdma page refcount
+ initialisation to p2pdma
+To: Alistair Popple <apopple@nvidia.com>
+Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
+ lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com
+References: <cover.18cbcff3638c6aacc051c44533ebc6c002bf2bd9.1734407924.git-series.apopple@nvidia.com>
+ <aaa23e6f315a2d9b30a422c3769100cdfa42e85a.1734407924.git-series.apopple@nvidia.com>
+ <359a1cf2-c5b0-4682-ba3c-980d77c4cfdb@redhat.com>
+ <bk6cmiubwvor6gevit3wgl4k66xxpfcv6swmfrtvxnjnuojqkx@yow3pmyuxozw>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <bk6cmiubwvor6gevit3wgl4k66xxpfcv6swmfrtvxnjnuojqkx@yow3pmyuxozw>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: -RcDkWzmr-Djxhdf_ceS6roh-s9PJ0zsDcOLyMaN3Iw_1734719362
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Davidlohr Bueso wrote:
-> Add support for GPF flows. It is found that the CXL specification
-> around this to be a bit too involved from the driver side. And while
-> this should really all handled by the hardware, this patch takes
-> things with a grain of salt.
+
+>>
+>>
+>> But that's a bit weird: we call __init_single_page()->init_page_count() to
+>> initialize it to 1, to then set it back to 0.
+>>
+>>
+>> Maybe we can just pass to __init_single_page() the refcount we want to have
+>> directly? Can be a patch on top of course.
 > 
-> Timeout detection is based on dirty Shutdown semantics. The driver
-> will mark it as dirty, expecting that the device clear it upon a
-> successful GPF event. The admin may consult the device Health and
-> check the dirty shutdown counter to see if there was a problem
-> with data integrity.
-> 
-> Timeout arming is done throughout the decode hierarchy, upon device
-> probing and hot-remove. These timeouts can be over-specified,
-> particularly T1. Set the max timeout to 20 seconds for T1, which is
-> the NMI watchdog default for lockup detection. For T2, the policy
-> is to use the largest device T2 available in the hierarchy.
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> Once the dust settles on this series we won't need the pgmap->type check at
+> all because all ZONE_DEVICE pages will get an initial count of 0. I have some
+> follow up clean-ups for after this series is applied (particularly with regards
+> to pgmap refcounts), so if it's ok I'd rather do this as a follow-up.
 
-[snip]
+Sure. For ordinary memory hotplug I'll also convert it to start with 
+refcount=0 soonish, so there we're also simply pass 0 to __init_single_page.
 
->  int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d58ab9d33c5..9b1e110817f2 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1054,3 +1054,107 @@ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
->  
->  	return 0;
->  }
-> +
-> +int cxl_pci_update_gpf_port(struct pci_dev *pdev,
-> +			    struct cxl_memdev *cxlmd, bool remove)
-> +{
-> +	u16 ctrl;
-> +	int port_t1_base, port_t1_scale;
-> +	int port_t2_base, port_t2_scale;
-> +	unsigned long device_tmo, port_tmo;
-> +	int rc, dvsec;
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	dvsec = pci_find_dvsec_capability(
-> +		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PORT_GPF);
-> +	if (!dvsec) {
-> +		dev_warn(&pdev->dev,
-> +			 "GPF Port DVSEC not present\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* check for t1 */
-> +	rc = pci_read_config_word(
-> +		pdev,
-> +		dvsec + CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET,
-> +		&ctrl);
-> +	if (rc)
-> +		return rc;
-> +
-> +	port_t1_base = FIELD_GET(CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK,
-> +				 ctrl);
-> +	port_t1_scale = FIELD_GET(CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK,
-> +				  ctrl);
-> +	if (port_t1_scale > GPF_TIMEOUT_SCALE_MAX) {
-> +		dev_warn(&pdev->dev, "GPF: invalid port phase 1 timeout\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * Set max timeout such that vendors will optimize GPF flow to
-> +	 * avoid the implied worst-case scenario delays.
-> +	 */
-> +	device_tmo = gpf_timeout_us(7, GPF_TIMEOUT_SCALE_MAX);
+-- 
+Cheers,
 
-What is '7' here?  Seems like another define would be good.
+David / dhildenb
 
-> +	port_tmo = gpf_timeout_us(port_t1_base, port_t1_scale);
-> +
-> +	dev_dbg(&pdev->dev, "Port GPF phase 1 timeout: %lu us\n", port_tmo);
-> +
-> +	if ((remove && device_tmo != port_tmo) || device_tmo > port_tmo) {
-> +		/* update the timeout in DVSEC */
-> +		ctrl = FIELD_PREP(CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK,
-> +				   7);
-
-And use it here...
-
-> +		ctrl |= FIELD_PREP(CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK,
-> +				   GPF_TIMEOUT_SCALE_MAX);
-> +		rc = pci_write_config_word(
-> +			pdev,
-> +			dvsec + CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET,
-> +			ctrl);
-> +		if (rc)
-> +			return rc;
-> +
-> +		dev_dbg(&pdev->dev,
-> +			"new GPF Port phase 1 timeout: %lu us\n", device_tmo);
-> +	}
-> +
-> +	/* check for t2 */
-> +	rc = pci_read_config_word(
-> +		pdev,
-> +		dvsec + CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET,
-> +		&ctrl);
-> +	if (rc)
-> +		return rc;
-> +
-> +	port_t2_base = FIELD_GET(CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK,
-> +			    ctrl);
-> +	port_t2_scale = FIELD_GET(CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK,
-> +			     ctrl);
-> +	if (port_t2_scale > GPF_TIMEOUT_SCALE_MAX) {
-> +		dev_warn(&pdev->dev, "GPF: invalid port phase 2 timeout\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	device_tmo = gpf_timeout_us(mds->gpf.t2_base, mds->gpf.t2_scale);
-> +	port_tmo = gpf_timeout_us(port_t2_base, port_t2_scale);
-> +
-> +	dev_dbg(&pdev->dev, "Port GPF phase 2 timeout: %lu us\n", port_tmo);
-> +
-> +	if ((remove && device_tmo != port_tmo) || device_tmo > port_tmo) {
-> +		/* update the timeout in DVSEC */
-> +		ctrl = FIELD_PREP(CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK,
-> +				   mds->gpf.t2_base);
-> +		ctrl |= FIELD_PREP(CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK,
-> +				   mds->gpf.t2_scale);
-> +		rc = pci_write_config_word(
-> +			pdev,
-> +			dvsec + CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET,
-> +			ctrl);
-> +		if (rc)
-> +			return rc;
-> +
-> +		dev_dbg(&pdev->dev,
-> +			"new GPF Port phase 2 timeout: %lu us\n", device_tmo);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_pci_update_gpf_port, "CXL");
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 78a5c2c25982..0bd09669af68 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1370,6 +1370,73 @@ static struct cxl_port *find_cxl_port_at(struct cxl_port *parent_port,
->  	return port;
->  }
->  
-> +static void delete_update_gpf(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_port *port = cxlmd->endpoint;
-> +	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
-> +	struct cxl_memdev *max_cxlmd = NULL;
-> +	struct cxl_memdev_state *mds;
-> +	struct cxl_ep *ep;
-> +	unsigned long index;
-> +
-> +	/* first calculate the new max T2 timeout */
-> +	xa_for_each(&parent_port->endpoints, index, ep) {
-> +		struct cxl_memdev *this_cxlmd;
-> +		struct cxl_memdev_state *max_mds;
-> +
-> +		this_cxlmd = to_cxl_memdev(ep->ep);
-> +		if (cxlmd == this_cxlmd) /* ignore self */
-> +			continue;
-> +		if (!max_cxlmd) {
-> +			max_cxlmd = this_cxlmd;
-> +			continue;
-> +		}
-> +
-> +		mds = to_cxl_memdev_state(this_cxlmd->cxlds);
-> +		max_mds = to_cxl_memdev_state(max_cxlmd->cxlds);
-> +
-> +		if (gpf_timeout_us(mds->gpf.t2_base, mds->gpf.t2_scale) >
-> +		    gpf_timeout_us(max_mds->gpf.t2_base, max_mds->gpf.t2_scale))
-> +			max_cxlmd = this_cxlmd;
-> +	}
-> +
-> +	if (!max_cxlmd) /* no other devices */
-> +		goto clean_shutdown;
-> +
-> +	while (1) {
-> +		struct cxl_dport *dport;
-> +
-> +		parent_port = to_cxl_port(port->dev.parent);
-> +		xa_for_each(&parent_port->dports, index, dport) {
-
-Does this set the dports for all ports on a switch?  Is that the
-intention?
-
-> +			if (!dev_is_pci(dport->dport_dev))
-> +				continue;
-> +
-> +			cxl_pci_update_gpf_port(to_pci_dev(dport->dport_dev),
-> +						max_cxlmd, true);
-> +		}
-> +
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +
-> +		port = parent_port;
-> +	}
-> +
-> +clean_shutdown:
-> +	/*
-> +	 * Device can still dirty the shutdown upon detecting any
-> +	 * failed internal flush.
-> +	 */
-> +	if (resource_size(&cxlmd->cxlds->pmem_res)) {
-> +		mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +		if (mds->dirtied_shutdown) {
-> +			if (cxl_set_shutdown_state(mds, false))
-> +				dev_warn(&cxlmd->dev,
-> +					 "could not clean Shutdown state");
-> +		}
-> +	}
-> +}
-> +
->  /*
->   * All users of grandparent() are using it to walk PCIe-like switch port
->   * hierarchy. A PCIe switch is comprised of a bridge device representing the
-> @@ -1400,6 +1467,7 @@ static void delete_endpoint(void *data)
->  	struct device *host = endpoint_host(endpoint);
->  
->  	scoped_guard(device, host) {
-> +		delete_update_gpf(cxlmd);
->  		if (host->driver && !endpoint->dead) {
->  			devm_release_action(host, cxl_unlink_parent_dport, endpoint);
->  			devm_release_action(host, cxl_unlink_uport, endpoint);
-
-[snip]
-
-> @@ -129,4 +140,57 @@ void read_cdat_data(struct cxl_port *port);
->  void cxl_cor_error_detected(struct pci_dev *pdev);
->  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  				    pci_channel_state_t state);
-> +
-> +#define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
-> +
-> +static inline unsigned long gpf_timeout_us(int base, int scale)
-> +{
-> +	unsigned long tmo, others;
-> +
-> +	switch (scale) {
-> +	case 0: /* 1 us */
-> +		tmo = 1;
-> +		break;
-> +	case 1: /* 10 us */
-> +		tmo = 10UL;
-> +		break;
-> +	case 2: /* 100 us */
-> +		tmo = 100UL;
-> +		break;
-> +	case 3: /* 1 ms */
-> +		tmo = 1000UL;
-> +		break;
-> +	case 4: /* 10 ms */
-> +		tmo = 10000UL;
-> +		break;
-> +	case 5: /* 100 ms */
-> +		tmo = 100000UL;
-> +		break;
-> +	case 6: /* 1 s */
-> +		tmo = 1000000UL;
-> +		break;
-> +	case GPF_TIMEOUT_SCALE_MAX:
-> +		tmo = 10000000UL;
-> +		break;
-> +	default:
-> +		tmo = 0;
-> +		break;
-> +	}
-> +
-> +	tmo *= base;
-> +	/*
-> +	 * The spec is over involved. Do not account for any ad-hoc
-> +	 * host delays. Ie: propagation delay, host-side processing
-> +	 * delays, and any other  host/system-specific delays.
-> +	 */
-> +	others = 0;
-> +	tmo += others;
-> +
-> +	/*
-> +	 * Limit max timeout to 20 seconds (per phase), which is
-> +	 * already the default for the nmi watchdog.
-> +	 */
-> +	return min(20000000UL, tmo);
-> +}
-> +
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 6d94ff4a4f1a..37d5616b6fc8 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -900,6 +900,101 @@ static struct attribute_group cxl_rcd_group = {
->  };
->  __ATTRIBUTE_GROUPS(cxl_rcd);
->  
-> +
-> +static int cxl_gpf_setup(struct pci_dev *pdev)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct cxl_port *port;
-> +	int rc, gpf_dvsec;
-> +	u16 duration;
-> +	u32 power;
-> +	int device_t2_base, device_t2_scale;
-> +
-> +	/* get the timeouts for phase 2, given by the hardware */
-> +	gpf_dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					      CXL_DVSEC_DEVICE_GPF);
-> +	if (!gpf_dvsec) {
-> +		dev_warn(&pdev->dev,
-> +			 "GPF Device DVSEC not present\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	rc = pci_read_config_word(
-> +		pdev,
-> +		gpf_dvsec + CXL_DVSEC_DEVICE_GPF_PHASE_2_DURATION_OFFSET,
-> +		&duration);
-> +	if (rc)
-> +		return rc;
-> +
-> +	device_t2_base = FIELD_GET(CXL_DVSEC_DEVICE_GPF_PHASE_2_TIME_BASE_MASK,
-> +			    duration);
-> +	device_t2_scale = FIELD_GET(CXL_DVSEC_DEVICE_GPF_PHASE_2_TIME_SCALE_MASK,
-> +			     duration);
-> +	if (device_t2_scale > GPF_TIMEOUT_SCALE_MAX) {
-> +		dev_warn(&pdev->dev, "GPF: invalid device timeout\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* cache device GPF timeout and power consumption for phase 2 */
-> +	mds->gpf.t2_base = device_t2_base;
-> +	mds->gpf.t2_scale = device_t2_scale;
-> +
-> +	rc = pci_read_config_dword(
-> +		pdev,
-> +		gpf_dvsec + CXL_DVSEC_DEVICE_GPF_PHASE_2_POWER_OFFSET,
-> +		&power);
-> +	if (rc)
-> +		return rc;
-> +
-> +	mds->gpf.power_mwatts = power;
-> +
-> +	dev_dbg(&pdev->dev, "Device GPF timeout: %lu us (power needed: %dmW)\n",
-> +		gpf_timeout_us(device_t2_base, device_t2_scale),
-> +		mds->gpf.power_mwatts);
-> +
-> +	/* iterate up the hierarchy updating max port timeouts where necessary */
-> +	port = cxlmd->endpoint;
-> +	while (1) {
-> +		struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
-> +		struct cxl_dport *dport;
-> +		unsigned long index;
-> +
-> +		device_lock(&parent_port->dev);
-> +		xa_for_each(&parent_port->dports, index, dport) {
-> +			if (!dev_is_pci(dport->dport_dev))
-> +				continue;
-> +
-> +			cxl_pci_update_gpf_port(to_pci_dev(dport->dport_dev),
-> +						cxlmd, false);
-> +		}
-> +		device_unlock(&parent_port->dev);
-> +
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +
-> +		port = parent_port;
-> +	}
-> +
-> +	/*
-> +	 * Set dirty shutdown now, with the expectation that the device
-> +	 * clear it upon a successful GPF flow. The exception to this
-> +	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
-> +	 *
-> +	 * XXX: For non-fail scenarios, this is cleared by the driver
-> +	 * at hot-unplug. But, what about reboot/shutdown case? Is this
-> +	 * done by hw if no data integrity failure is detected?
-
-Does this path execute on reboot/shutdown as part of delete_endpoint()?
-
-Ira
-
-> +	 */
-> +	if (resource_size(&cxlds->pmem_res)) {
-> +		rc = cxl_set_shutdown_state(mds, true);
-> +		if (!rc)
-> +			mds->dirtied_shutdown = true;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-
-[snip]
