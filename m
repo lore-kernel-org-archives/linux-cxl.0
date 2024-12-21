@@ -1,157 +1,119 @@
-Received: from cornsilk.maple.relay.mailchannels.net (cornsilk.maple.relay.mailchannels.net [23.83.214.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF7E3F9D2
-	for <linux-cxl@vger.kernel.org>; Sat, 21 Dec 2024 04:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.214.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734755056; cv=fail; b=g0E0/zsaouNANMMy0uXN57m3R7ZBZwkNQFPtPyzmoCUJ6o9sFpofClbqXPH6+Zuz3uPd9dRhp+OxF8syHrfqpE+1Od5A2Ka+SMen8SF8nXXKTZJdQRgsoMtJMbj2o4dtddulcTy1tyXfKSwORYnlNQXJf+iX6fWHpsJMS3Cuuqs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734755056; c=relaxed/simple;
-	bh=oTxrEP2t3AYChkHw3MVbUTTefM/BJolKzlq27O0Vi+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJz0ufdR4scSmlW2IJ2yFw9LCif04SX3yD6gFBl41hJCZPWaiwr+8yHfrsTfqMw1upgXwWbgAQJitmuSTq1eqWEt5nIgxSMBEMGYcYwphEfwjcmTp3EtEgc1ntQL5MiflnjH1qwwuo9Ed06arKxs97uR0/L4dSaCQ0o07k6ka94=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=QOMVumYr; arc=fail smtp.client-ip=23.83.214.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CE4290F
+	for <linux-cxl@vger.kernel.org>; Sat, 21 Dec 2024 19:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734807949; cv=none; b=guT5yskcqyKGGJI0wNT6eGeWEjO7F7DBe8nZUqE8kL/ZE/C5Ob7uPY0OxavTNSuA+P3LoQUexls7oh0qkwp7CKo69M/YMwRWW7u0LhmiSNOVXSYA2PQFkqtqv3PUgtAgO6tZFAFqos9nJX20tGzZzWFZF/bxaGk6nIoBmVzjCko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734807949; c=relaxed/simple;
+	bh=09+evprXpASzR+FyZVSc+FI8IIks2DEop/kzphhO0Rc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spRJwcCGdW5EMqbxrdQRH4RZvsaQjzjSfFczC/z3XLvNq7Oyx66lfzO/WlxN8HKvfYitZAUL928RtAo2631V3UQaIfML8HUan9AAzrKi3bNha89WbdtU1PJ0ftRmKs9r/OUqSSM6S7eCctnqRZNBAxCYvsuQRv7u0crulYEnWkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CvkZVg9P; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="QOMVumYr"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B2A852C18DF;
-	Sat, 21 Dec 2024 04:14:43 +0000 (UTC)
-Received: from pdx1-sub0-mail-a303.dreamhost.com (100-108-41-186.trex-nlb.outbound.svc.cluster.local [100.108.41.186])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 197E82C1A9B;
-	Sat, 21 Dec 2024 04:14:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1734754483; a=rsa-sha256;
-	cv=none;
-	b=VKDOkDEVvwDxuPYy5THFigcOFRnRnOdSSXKgwJSu0/GFUp0kDQHX1f4ucPCxQRoBB2hg3P
-	5Pzv3mr4wQMw5OgcBX6qUdlsvMKdJzLs68HZtFIu58s37miPdgssGMpBSvZeEAwuUHng3E
-	8Yk20kKpCZJqcTLLu1JbCnAluaUreCKrL4NbB/1G6nkn/flq5GyuVP6gT74Ng72D+VknoP
-	2B6gnFjcF2HabDLqoPjo/j1Culsz9DP9jfHh6RezmO77bAwD69SIGR5CMed8rfysqg+/jo
-	CsAnr+QfqsFG/T4o6flEQQYJXAleiaRzgNsJKGLY/fuu5LQ/SiV+sCc1NR4ZRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1734754483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=8QTkq4GzhhX26lmv/fkzb6wZUCYSCYX1+Wr/Ip9nCwg=;
-	b=WoWs+FmmtfY/t2+LrHYRxwG5/BZa+EPjfWRZCXnMy4kPZ7TzxWuN2Z2f6DZjkxSvaowNEr
-	gTkZST/4BY1LNoQNNFqatoPQxdjvS6p+zrDVwfaK/K1440UTN42gJ6FtZpR0lVGs4u7ebh
-	CSAMDak6AErnG75Il5IvZfszeTkJFNeWWyttYWJk+rGJF24O2T3WS0DKVaPL8SOs8Rfrl8
-	bI92EqgyJsMEdAe7gzRKLuyC3rz5E4iR/+rob/cXEQtj+/z/WuNIRkgPeLoxmgHrw2REZB
-	DV50QJ4thcAuT2/VrfkH2MOLma4wA4C+sykmVenw9hiFOv602p4tJ26+peT7cg==
-ARC-Authentication-Results: i=1;
-	rspamd-7d788bbf85-f4kp8;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Macabre-Abortive: 504664b0432782cb_1734754483410_2202731017
-X-MC-Loop-Signature: 1734754483410:1433670508
-X-MC-Ingress-Time: 1734754483409
-Received: from pdx1-sub0-mail-a303.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.41.186 (trex/7.0.2);
-	Sat, 21 Dec 2024 04:14:43 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a303.dreamhost.com (Postfix) with ESMTPSA id 4YFWC62R8lzJt;
-	Fri, 20 Dec 2024 20:14:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1734754482;
-	bh=cFi8lQGl5hIt56kvyyQOWIr+Lw4VovWQ4wsU5C+3Zc0=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=QOMVumYrQ9Amp4ezwGoVdEyMU2poeQTFDXhClK2kKwWshWrrnEsQSSHNoNViVq5IJ
-	 MLlmmBGiU566uXR+IhtyxiCpYwKr9ZhRo37o+D1x9u+H3RC1xHrv5LFZokVBosvUZN
-	 UjlnvWtHNOM54xLULOKGXmpASr4BAJzYQ/0ebS6AwOyrszSyrexCG9opRFyt+bX8df
-	 iFglrITVe28x/lL0/+sPN+3qyCsITQvu3TWzHlnne7v4ehh2oHxrw2zsMd33qc3GZ/
-	 krlKb/a8gJpirdUi+R/CsGNMn33imTYEQjGiY7whhm/MssEnQtfwktx+4IuEptSo26
-	 kyvv+Tbo3jkqQ==
-Date: Fri, 20 Dec 2024 20:14:39 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: dave.jiang@intel.com, dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, seven.yi.lee@gmail.com, hch@infradead.org,
-	a.manzanares@samsung.com, fan.ni@samsung.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH RFC 1/1] cxl/pci: Support Global Persistent Flush (GPF)
-Message-ID: <20241221041439.dofjmps6zdqnntap@offworld>
-References: <20241220164337.204900-1-dave@stgolabs.net>
- <20241220164337.204900-2-dave@stgolabs.net>
- <6765b5c5560e5_2e2afc29467@iweiny-mobl.notmuch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvkZVg9P"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fbc65f6c72so2684690a12.1
+        for <linux-cxl@vger.kernel.org>; Sat, 21 Dec 2024 11:05:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734807947; x=1735412747; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JPsVkPT3ViJh4ujo2k9w5Jfz8kRs2+CUlaQ3ekXs9G4=;
+        b=CvkZVg9Pl3Fefz/ze5gOAXOLJC/5j8VsQ8pf//bG/DJ0/TWtrQTILwv1BfbdYkjMgd
+         ch7oQGOiBPbCvIHyOLsOZQBkL2V6JdA0+YOe/aNRe8IzN5WbvuV7fdpHyFtLL5z2LYef
+         B20KX8kmUeqF+VbgboMGU8/8DsCIbhyUp0wj6hfRpzJAp6bF62elcSsLjmkVqQMYGJO0
+         v1fG9VEVqQgbJljkWoNAXDLzV5GEUTPhd5tvT4hQYZKoVOT1STtasqu2mZotZAh+fw0o
+         Egb/HbtnR4XE91YAzCRF3u3E2jFi7eaFxu/D6c1ABdQYZ7uNwBUS8KitqJ0UAJXrEXmD
+         j8wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734807947; x=1735412747;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JPsVkPT3ViJh4ujo2k9w5Jfz8kRs2+CUlaQ3ekXs9G4=;
+        b=CzOvQbt4S9fk9UpwUiGdX95YMFe4wie9QBa5pl2WXM6bkOXBazs0B/1GaIqsBUQylc
+         MhO/yjAI5HVjHUA63ZAi8f5D7zFPhA4gtC9Ri8zt52M+DjxEcl4C8TsVr2kVRh17GUMC
+         nOQAnltjhmYGQYZaqA7et3sOzctnW3ea96IdeSE/NOn/gIlpSQovrZ5keNetp3ecXMgS
+         /R604ayiQmU+Kb/unet9UK0DWmz3OTxptuDZ4P9G333swNvmzsOLGSQTVL3Ykw1pj2dE
+         BWYGXsbbhI9NDAhSko8RMT+TUwIN6tWX/wkGKDBdgIJ4+P8SaYtqskGYtjFCj5MGIgh1
+         n3ww==
+X-Forwarded-Encrypted: i=1; AJvYcCWZEOH4/wsXdOeJUyy9DA+rQPoh4aiJoCu3ZQSIowhi0skD3COYe0krSiLQ1VbzlNfp5IUf76gGhd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZGhIKTk4cYXRc4fgpWUJIhlf9FUAIBgG+iMP7ust2MhHSnks4
+	rAm9O9HcIKjN+jl98QZ8fkVeadA68FaxPfRx+qjxCu0ajD3oC9Ng
+X-Gm-Gg: ASbGncteBZbFQ2bpXaQZXRqRLbZ+r/I/kZKWII7jOQAZUzQmkVTqUlbpZOtlmcErMOZ
+	iWO3F9e2uvtc738lLNXj/K4Se7uhoa9MBx0rnRIkJngaQBCBnPAlGkOAISQYV+KPadk8dp2HRJD
+	VqFwTxqSsB4z9AD1Q0x4EwXM+xpee3LwA8PWKuQub39b/8cZPflMMwDtUUQ4koeLD94wuaHRcSL
+	aCcM4lo/DKPNrF8hUWP7hr96w0ZciHmKtcQhtfrf0+s+KQ=
+X-Google-Smtp-Source: AGHT+IH9Cx0uzUC7UUuD8796opyAjS+WeRFB91COtAXIa/8liVy2YcLQmgeWFs8Ec8X/82TARe/k+A==
+X-Received: by 2002:a17:90b:544f:b0:2ee:d433:7c54 with SMTP id 98e67ed59e1d1-2f452e372e2mr11713098a91.19.1734807946928;
+        Sat, 21 Dec 2024 11:05:46 -0800 (PST)
+Received: from gpd ([2601:646:8f03:9fee:1eca:6066:421d:7396])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f4478accb3sm5359314a91.51.2024.12.21.11.05.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2024 11:05:46 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Sat, 21 Dec 2024 11:05:44 -0800
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jonathan.cameron@huawei.com, dan.j.williams@intel.com,
+	a.manzanares@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/3] cxl: Fix mbox cmd enum order
+Message-ID: <Z2cRiNEmM-lNy8Qt@gpd>
+References: <20241220160026.204055-1-dave@stgolabs.net>
+ <20241220160026.204055-2-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6765b5c5560e5_2e2afc29467@iweiny-mobl.notmuch>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20241220160026.204055-2-dave@stgolabs.net>
 
-On Fri, 20 Dec 2024, Ira Weiny wrote:
+On Fri, Dec 20, 2024 at 08:00:24AM -0800, Davidlohr Bueso wrote:
+> Move the out of place commands into their proper place.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
 
->Davidlohr Bueso wrote:
->> +	/*
->> +	 * Set max timeout such that vendors will optimize GPF flow to
->> +	 * avoid the implied worst-case scenario delays.
->> +	 */
->> +	device_tmo = gpf_timeout_us(7, GPF_TIMEOUT_SCALE_MAX);
->
->What is '7' here?  Seems like another define would be good.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-This is the max for both scale and base components of the timeout,
-and we actually have:
-
-+#define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
-
-... which could be renamed to GPF_TIMEOUT_MAX and use it
-for the cases you mention.
-
-Alternatively, since we limit timeouts to 20 secs, we could
-just set that here and not rely on gpf_timeout_us() to do it.
-
-...
-
->> +	while (1) {
->> +		struct cxl_dport *dport;
->> +
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +		xa_for_each(&parent_port->dports, index, dport) {
->
->Does this set the dports for all ports on a switch?  Is that the
->intention?
-
-Correct. For full output of a CXL Switch example, please see (iii) from
-the tests shown in:
-
-     https://lore.kernel.org/linux-cxl/20241205082101.1193038-1-dave@stgolabs.net/
-
-...
-
->> +	/*
->> +	 * Set dirty shutdown now, with the expectation that the device
->> +	 * clear it upon a successful GPF flow. The exception to this
->> +	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
->> +	 *
->> +	 * XXX: For non-fail scenarios, this is cleared by the driver
->> +	 * at hot-unplug. But, what about reboot/shutdown case? Is this
->> +	 * done by hw if no data integrity failure is detected?
->
->Does this path execute on reboot/shutdown as part of delete_endpoint()?
-
-That was my expectation, but it did not; only for hot-remove. This is
-my main concern about this patch.
-
-Thanks,
-Davidlohr
+>  hw/cxl/cxl-mailbox-utils.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 9c7ea5bc35b8..f6f993e7bc4f 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -86,11 +86,6 @@ enum {
+>          #define GET_PARTITION_INFO     0x0
+>          #define GET_LSA       0x2
+>          #define SET_LSA       0x3
+> -    SANITIZE    = 0x44,
+> -        #define OVERWRITE     0x0
+> -        #define SECURE_ERASE  0x1
+> -    PERSISTENT_MEM = 0x45,
+> -        #define GET_SECURITY_STATE     0x0
+>      MEDIA_AND_POISON = 0x43,
+>          #define GET_POISON_LIST        0x0
+>          #define INJECT_POISON          0x1
+> @@ -98,6 +93,11 @@ enum {
+>          #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+>          #define SCAN_MEDIA             0x4
+>          #define GET_SCAN_MEDIA_RESULTS 0x5
+> +    SANITIZE    = 0x44,
+> +        #define OVERWRITE     0x0
+> +        #define SECURE_ERASE  0x1
+> +    PERSISTENT_MEM = 0x45,
+> +        #define GET_SECURITY_STATE     0x0
+>      DCD_CONFIG  = 0x48,
+>          #define GET_DC_CONFIG          0x0
+>          #define GET_DYN_CAP_EXT_LIST   0x1
+> -- 
+> 2.39.5
+> 
