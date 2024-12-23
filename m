@@ -1,171 +1,191 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2083.outbound.protection.outlook.com [40.107.92.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0101AE01E;
-	Mon, 23 Dec 2024 20:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734987180; cv=none; b=L5J18H2qHdkP0W04n/zjahRpWFjtM0YaqIcaGtjCq4SxHKU9IBMZKD66fDgduibXcPz9qEY6R08bUT4Dogt8mLsN5EsyYNU00arbTG/8kqjIzmnAtqXxE2k39I86FDec2YQxiYfuVFz2ZfNn2d6noqV6HPd07V4qMn377tVAORk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734987180; c=relaxed/simple;
-	bh=rKOBVJ18KO/XxbrIs6wnq7uYvmLiERzT2M7jzyWvEEs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W/G7vkGJfzdeYOK3dfEGpRJjJSbdXfx8tS5ocJpunaDjn5uYiVyiRQgnCDuKJHbEwA/VW5h3BnjrD+oex2MZx4rE8yppAQs7SxViRxfEoEryg9kNCNjtC2RnyObFGGfhvfQVoQ/sZ6h8NhafntrSHxifzOf73sWG7ZfYbDX5kCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YH99X3N2zz6K5Zf;
-	Tue, 24 Dec 2024 04:49:04 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 78F9C14039E;
-	Tue, 24 Dec 2024 04:52:55 +0800 (CST)
-Received: from localhost (10.47.75.118) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Dec
- 2024 21:52:54 +0100
-Date: Mon, 23 Dec 2024 20:52:52 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, James Bottomley
-	<James.Bottomley@HansenPartnership.com>, Thomas =?ISO-8859-1?Q?Wei=DFschu?=
- =?ISO-8859-1?Q?h?= <thomas@t-8ch.de>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-sound@vger.kernel.org>,
-	<sparclinux@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux1394-devel@lists.sourceforge.net>,
-	<arm-scmi@vger.kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-hwmon@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-	<linux-remoteproc@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<netdev@vger.kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v4 11/11] usb: typec: class: Remove both cable_match()
- and partner_match()
-Message-ID: <20241223205252.00003d6b@huawei.com>
-In-Reply-To: <20241211-const_dfc_done-v4-11-583cc60329df@quicinc.com>
-References: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
-	<20241211-const_dfc_done-v4-11-583cc60329df@quicinc.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA79F482ED
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Dec 2024 23:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734997789; cv=fail; b=fpLmsQuoVwmX2EPPfpDtW/AZzQtqMSo56h+CXdcb7ggwVPAr06qwOpLXWJndc3WlxK3W3h6IofdBupwWeTr6SupcE0IWznXfRCB9+m8sBnuB2JvGr2vKAzg/4D1vHEjwlohpF+dbVKbZFhaCuaCuyGEH7eivFobpRapvwJ2E/dw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734997789; c=relaxed/simple;
+	bh=72vydGCI/yOlJk3qDR4CXd23e4ZYBK9xqBZFN0ehlOI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=H8sHdhKODrOg5uWIpXRan3zxFvAPKcPi/c4YB682Pu8/MT1u8Hun0rDsfwXkT/tg8yBvC3yDVRe8h+TOXN2CmWwH1zpPsqqlgb7Qt1/aY245RPZgphZmL2VjKc0SHYkQXCCq9xfePs42b2xMuzyDmuUwNK79/nvlZ2i+HkFuU5s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I0a1rNp9; arc=fail smtp.client-ip=40.107.92.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I0a1rNp9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vsb6+UI3lr6TnoBp2MH9Fz4OTPnb+TtADWXSZAElmFJKCwekRi2trcPf2PcQ8GXLeZriZPu4gfocNRD9TWGgdwRXT1pLvk/1308Hk2b/5mFYXzDeE/mHMCLOvJHaYaejJ73QgP13rKJ++VOPtJXL8dE2N1ZDcqDK7AxbJvOGFZLb320WCvx4nYUbZy30WR0LEwU2tTeBPGViZRShNFZy+uTY/kBePR9UMaior3G9vdhZCvWNYaJoljhLHTPgy3CL4prODiKjvn+kZ1ugenqndNYv7589g/F2FCRjIcl6Qz1rKXHsPNrF6zmyLcpca4yMfEits1Hdy+nkfr/PfWOhzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6RD9ySESUEwevyWVHTNcrvmdMGGATWAq5QP26l+94lM=;
+ b=NoBkH8XN3KJTJDCi8YBqFcnn5Orje/5JmDqmaIjMPjkGDIXpYiPBr3mtAqDA5oJ9DDqTwl4P5I+NJrcg2FQ2NLP0em7ujtM/TGcE8F3lNeMLFKYIl6eom3cMyWVSB+OjMJIpRjXYVxw/PNa4lwm4SCJAMKppF9GB1R3eUd4KYNv9TgxYXWxkILrEcZ1+Wuh1GSnvvI0nQpsXScf7D9qx4OaiAkkmgDyM5YlKmrBQtV1ra9uBXeg4ERMeqvC8vZ5DUgzhaB+vanxpS9ESIGSmz8aW1rBvYT5LKcreyREc+RlDeoXYPkg/cyqwzd1ZUBAn7K7AYUIdUIJ0UIKVZPqYKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6RD9ySESUEwevyWVHTNcrvmdMGGATWAq5QP26l+94lM=;
+ b=I0a1rNp9bPLeI182Bf//ixAZffwCSKBMyGxruDWoqYyXbQGYZRHE8oIcK0jyB5T49MF0qTN4RdzfEgz/nBohaBsjRGco1bPaMcGxcaE+UqaCo7+x7VnrLY07aPki+sVRFUwCRC0gFv251cBrj9c9FS8po/+e6wQOKBDByUy+F8VnGW/aKGiNhlC50XeRntDn7xOQ5jVopZTAsnhf4kzX+0ioWgs0wfHlR4QXijbt8KlJ0RRbWBfu6D1tP6k4qhYzAHs4wX6U4C+bMoboaev5F24c60x7y8rzvDoaKwVLSZivx5pC8Qc30Kc3nAwFz3F+lrz35NoxsBdimhWoZR36jQ==
+Received: from SJ2PR12MB7963.namprd12.prod.outlook.com (2603:10b6:a03:4c1::6)
+ by SN7PR12MB8004.namprd12.prod.outlook.com (2603:10b6:806:341::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Mon, 23 Dec
+ 2024 23:49:44 +0000
+Received: from SJ2PR12MB7963.namprd12.prod.outlook.com
+ ([fe80::c716:516e:5f3c:cd85]) by SJ2PR12MB7963.namprd12.prod.outlook.com
+ ([fe80::c716:516e:5f3c:cd85%7]) with mapi id 15.20.8272.013; Mon, 23 Dec 2024
+ 23:49:44 +0000
+From: Srirangan Madhavan <smadhavan@nvidia.com>
+To: Ira Weiny <ira.weiny@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: Vishal Aslot <vaslot@nvidia.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [RFC PATCH v1] cxl: add support for cxl reset
+Thread-Topic: [RFC PATCH v1] cxl: add support for cxl reset
+Thread-Index: AQHbTTJ+/rGT4upjzU6dhrL8dd5SYrLqsG0AgAT5FvCAADE5AIAEs0hc
+Date: Mon, 23 Dec 2024 23:49:44 +0000
+Message-ID:
+ <SJ2PR12MB7963AC888E432469404E4FC8C3022@SJ2PR12MB7963.namprd12.prod.outlook.com>
+References: <20241213074143.374-1-smadhavan@nvidia.com>
+ <6761ae926757a_2a169f2940@iweiny-mobl.notmuch>
+ <PH7PR12MB796800828DEC6E60D7C7C0F1C3072@PH7PR12MB7968.namprd12.prod.outlook.com>
+ <676603cdee673_2ec99229411@iweiny-mobl.notmuch>
+In-Reply-To: <676603cdee673_2ec99229411@iweiny-mobl.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ2PR12MB7963:EE_|SN7PR12MB8004:EE_
+x-ms-office365-filtering-correlation-id: 3e8328f2-9695-4f5c-6774-08dd23ac7a29
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?X3N7Qg8VGe5Jg3ZsY/OaFjstKbTBGLFFoXWVX1pktFPKmink5fdlcrfRRB?=
+ =?iso-8859-1?Q?CQAloU2yNKW7N8//1aj0Gcjb2fMhlNPgPp1hRVUkvXug6vFJT+wIxgwu8N?=
+ =?iso-8859-1?Q?WOojga+/vZ6j8USW0mTnh2dxPK/u//5r9RD8KlnGhtZo5icLWIT4hJcwGY?=
+ =?iso-8859-1?Q?4zlHavbpWTqFyG5AMPXhWFJ+ZHK6Nv9ud6Yhh1ZGyCtne3ZHVZSvT3WDo5?=
+ =?iso-8859-1?Q?Dg9cG4E+TK5QY9D54+ZofPudVO66MIUVNDncuk8V1kNVEeK/jLq8vMpIxL?=
+ =?iso-8859-1?Q?+pYRl5a58vxvPGOvPlHS+JVS7B8abV2w//omKMPiNxMq2z2cIF9GyGqflM?=
+ =?iso-8859-1?Q?M+VlsdZG82h2v2G1UPrmr8OEWoiVBLF7/6xuID++q5uRnekO7yC+7b7BfT?=
+ =?iso-8859-1?Q?C8Ec78sXTTtqejkvG7xEeYlRXrgYu6WIyu0zfjzNIH6rnfDhaqYTQoPmFe?=
+ =?iso-8859-1?Q?ORMUmfY4Ttrc9hFX2ecdKzovhhVIwDJFPwNS4jZXAId/3CuGsfisBP1Chb?=
+ =?iso-8859-1?Q?WStILK2lGb5LMz0cNFoRuBD74MBiHwHIkijBpGlV2Da1b6U2GW8v9tKjyc?=
+ =?iso-8859-1?Q?If47NRou0gHBZvtQUbyj+ZX8n84GfimeXHThuw91OtzaQWLX6+IWNgST1R?=
+ =?iso-8859-1?Q?8fpmPQoISINzRtisoutOXkSDD2QwquNZTevrlNb/bUO2S7zLE59JIrcn6L?=
+ =?iso-8859-1?Q?B8ItMbwqUT9n51nQjVZRHPo4p/AKfFTZ5NyKGjRB6uA4PdWZ7Cxw8rwBlg?=
+ =?iso-8859-1?Q?pEpl3GK7Vipl70CaLg19zVFBzvEDYHFVcOKYGka77KCcGpOnNUNzUYXUEY?=
+ =?iso-8859-1?Q?63IRWc4VUwvBwXRMjBhMXuVJ7nefwJDagUKv3ygsGHF7cmnUFPki7T937n?=
+ =?iso-8859-1?Q?QCtvn+tk1UacTYTRhBHubH+qR4LM2OQT8LCl1pT4MXj7nDTMDFpaKkA2AB?=
+ =?iso-8859-1?Q?AFhFOwQ6bJewvGPMTjLOxKJYE+JEvBu6XnWdhBiR4HzySggFB/so9SQ9UF?=
+ =?iso-8859-1?Q?Mx0MKrvQC+adDxn1gc5sAGSpl2jgjeewVY8OGJRC1TriYiP2oqUeFhHQ7M?=
+ =?iso-8859-1?Q?xDQSk79TUyHyCMgRZzZx2gTUcfrj6XaD7KP00dTap2AGQBvGRKPrdnzBOm?=
+ =?iso-8859-1?Q?rYd9XmC+RabPk29iLAaL8sxxxpCcGk0OXdifeABZPP3zgHKn+ot5dtUp0r?=
+ =?iso-8859-1?Q?+AsM1P2xdPMKd23TdaqB9mUf6cn6C6jwEMll6ZJ67CEbtqv+5FU/nynHMw?=
+ =?iso-8859-1?Q?Yj2Gm2XdYZTV+tMh+82IhznmfwKOv47GeXoDfNpn1pJIgNNvjjXRQyurgQ?=
+ =?iso-8859-1?Q?7zDoYaYaqaSGhHdnp1aMOfdGYudHDj8G1MGsgrb4FwPi3xMDJcGKbs3w0W?=
+ =?iso-8859-1?Q?8TQ0MsijYCLOcPJ4Vhd+LeBXCuI58yyWDueqo+l4TUJ45C+EviPGj0QA6z?=
+ =?iso-8859-1?Q?31OCflzcAQ5SeYNv/cAhwnMXMqitEpOztKKAEHb0l1m67BxjHGM86BHvBZ?=
+ =?iso-8859-1?Q?7/wpIocHCdAZfJg60EGTun?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB7963.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?oyiv0/+XLYmcnxh5jRMeX+VPe0ynbFmrGl5Ak6m0rm4E46Q/Lj7leE6I2W?=
+ =?iso-8859-1?Q?cQxrOql3DOACttozrrdJ0ZBmPHx+LTQYMqxqbFSgBRwmYNnijLi+/Tf0bH?=
+ =?iso-8859-1?Q?l98cpn891hJhWrGGo0mNN8OG7Qvw64aWZwnZYCzYxHtaWY83Oq7/quMr8T?=
+ =?iso-8859-1?Q?PydNGHkHcQAClsfWEb01co7HZuORC3D/vcxFtaNnOYU6gyvyodEG1zxE8e?=
+ =?iso-8859-1?Q?VhCF3hEi5E/uM7KPfqAvfgcuzankFrzSvD2+HwEebedqZTJoKG23/t23gg?=
+ =?iso-8859-1?Q?4lSViIbVAPmluO/HzTe4Z2Dgv/DBZx92qfXiYZna5qDpWh9x+WFeCRW61r?=
+ =?iso-8859-1?Q?2B6R4zv9X9x2BM+T7epaMhwkJ46KS+YWfTdZ7of3AaBOUBCBEdXRLHs3Ni?=
+ =?iso-8859-1?Q?6Qfiu5xdpcysN7Nf36O+7dxeUFLZIHp7UF5l+NTgZ3M6pC4R43ZZSZ4YXu?=
+ =?iso-8859-1?Q?Orzv7oimRdr92SAZR20H7qYtZ3xkhxVFge1lFmU6mcWWWMRGP8uoZSi7Pv?=
+ =?iso-8859-1?Q?x3OqXoBa/GLoP/TMMguyHBfHgjSUUuvKjWD4aYdI6EYEnrAnl96qneqgmO?=
+ =?iso-8859-1?Q?4/1BgJAEWcV5NQPiK4eFe0ma/KcLVcxIktoa/i8zKPdeIgnLm5y+YqucCw?=
+ =?iso-8859-1?Q?sJRpBgvh9o3ARfeVXu+vvGt9XbhI+6BfQgU2pQSqTCXX/6ZK1hoPO841HT?=
+ =?iso-8859-1?Q?z0k12eZScHQwvZQo8OGW63rVZeU3LtM8gunmhfyqag/7v8jWfhRAzXsgZa?=
+ =?iso-8859-1?Q?nJ54Nx5vkDWv+krhIFFn6g4z/KS7YOEpd8RPJLyeOs12BIxMQYbuhoHjFU?=
+ =?iso-8859-1?Q?toBFWhW2J2qgHeahlLniUMXd8halK0UNjeVfxFJ7OX+/pcx+e5+j/pIsff?=
+ =?iso-8859-1?Q?e9UZU+1JlBMOcVqmhBmmogT3aqtvviswftN9LnifCoTjDXMAE8ExwBgUih?=
+ =?iso-8859-1?Q?HC/3HdxX01lVdB90sD50G+zeLJi258Ci9/S/1cNb73ceM2XXijcDkoEyJ7?=
+ =?iso-8859-1?Q?NcKaHhA8fqjYZkOTgtP8aO/hv0lcP1tPlHhZ5v+S3McODoOCJgAvCA56QK?=
+ =?iso-8859-1?Q?hhvgc91Owca3PKzFbc+eviWjbXngrbxYu97LwGpoQuI+zkO8mHlFYh+kO7?=
+ =?iso-8859-1?Q?FGCC63jQ1zR95llfItb2UHiS37wZ5Tw59CkodLQq+CQDR+Y8K4qmXkfl44?=
+ =?iso-8859-1?Q?mRafqGptspveKKEpbahHbPS60L/pK/x5xYm6z34hRlnzDRW1+rVQyvzudQ?=
+ =?iso-8859-1?Q?Z0FK7Gb4xqJepgAKaJEfHAZbhheT8K4Li3svqo4XkL4tY2wo1yONk18xT/?=
+ =?iso-8859-1?Q?Po5DM7UmXVQrd/Ujyjr8aPO2yN5q5zicMjZQgZ2INDpdTbh088rI99aDWy?=
+ =?iso-8859-1?Q?iR4P0VuBVV6+fL8iM9JcjOOavVcAJkckYVML7ZwnZRA5tVs+mOzEzkl1Wb?=
+ =?iso-8859-1?Q?ZIg/iLYHNXbwr14sNubL05j96ADSzpkLKVrasAdbi/uRj/4zF6EcOP/dih?=
+ =?iso-8859-1?Q?uv5/a5uCxc6u8iMPj7Ww2SHszpVlO+ucikpustmJTp+pmGqN4BEETD0hEy?=
+ =?iso-8859-1?Q?BATDm2j8wj1JYKeABm+StD2buLbnIElZ5X41PdV4v39bl0MG4+kiSQ0s/x?=
+ =?iso-8859-1?Q?7p0qJ+D69Gsmq5cIvyrVn1bdOqWbRlbMPG?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB7963.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e8328f2-9695-4f5c-6774-08dd23ac7a29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2024 23:49:44.7259
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8b+/rzAqfQIJTjf6jJ8UwpqFhT6KgTZnd01rLLzae1cHIptH96G3othGo1Vp8tFYsau7FSXWqtnP+CThP74VBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8004
 
-On Wed, 11 Dec 2024 08:08:13 +0800
-Zijun Hu <zijun_hu@icloud.com> wrote:
-
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> cable_match(), as matching function of device_find_child(), matches
-> a device with device type @typec_cable_dev_type, and its task can be
-> simplified by the recently introduced API device_match_type().
-> 
-> partner_match() is similar with cable_match() but with a different
-> device type @typec_partner_dev_type.
-> 
-> Remove both functions and use the API plus respective device type instead.
-> 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Looks good, but there is the same trade off here between internal
-detail of type identification and reducing the use of helpers
-where the generic ones are fine.  Here is less obvious even than
-the CXL one as the helper macros do have other uses in these
-files.
-
-So, it's on for USB folk to decide on and I won't be giving a tag
-as a result.
-
-Jonathan
-
-> ---
->  drivers/usb/typec/class.c | 27 ++++++++++++---------------
->  1 file changed, 12 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 601a81aa1e1024265f2359393dee531a7779c6ea..3a4e0bd0131774afd0d746d2f0a306190219feec 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1282,11 +1282,6 @@ const struct device_type typec_cable_dev_type = {
->  	.release = typec_cable_release,
->  };
->  
-> -static int cable_match(struct device *dev, const void *data)
-> -{
-> -	return is_typec_cable(dev);
-> -}
-> -
->  /**
->   * typec_cable_get - Get a reference to the USB Type-C cable
->   * @port: The USB Type-C Port the cable is connected to
-> @@ -1298,7 +1293,8 @@ struct typec_cable *typec_cable_get(struct typec_port *port)
->  {
->  	struct device *dev;
->  
-> -	dev = device_find_child(&port->dev, NULL, cable_match);
-> +	dev = device_find_child(&port->dev, &typec_cable_dev_type,
-> +				device_match_type);
->  	if (!dev)
->  		return NULL;
->  
-> @@ -2028,16 +2024,12 @@ const struct device_type typec_port_dev_type = {
->  /* --------------------------------------- */
->  /* Driver callbacks to report role updates */
->  
-> -static int partner_match(struct device *dev, const void *data)
-> -{
-> -	return is_typec_partner(dev);
-> -}
-> -
->  static struct typec_partner *typec_get_partner(struct typec_port *port)
->  {
->  	struct device *dev;
->  
-> -	dev = device_find_child(&port->dev, NULL, partner_match);
-> +	dev = device_find_child(&port->dev, &typec_partner_dev_type,
-> +				device_match_type);
->  	if (!dev)
->  		return NULL;
->  
-> @@ -2170,7 +2162,9 @@ void typec_set_pwr_opmode(struct typec_port *port,
->  	sysfs_notify(&port->dev.kobj, NULL, "power_operation_mode");
->  	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
->  
-> -	partner_dev = device_find_child(&port->dev, NULL, partner_match);
-> +	partner_dev = device_find_child(&port->dev,
-> +					&typec_partner_dev_type,
-> +					device_match_type);
->  	if (partner_dev) {
->  		struct typec_partner *partner = to_typec_partner(partner_dev);
->  
-> @@ -2334,7 +2328,9 @@ int typec_get_negotiated_svdm_version(struct typec_port *port)
->  	enum usb_pd_svdm_ver svdm_version;
->  	struct device *partner_dev;
->  
-> -	partner_dev = device_find_child(&port->dev, NULL, partner_match);
-> +	partner_dev = device_find_child(&port->dev,
-> +					&typec_partner_dev_type,
-> +					device_match_type);
->  	if (!partner_dev)
->  		return -ENODEV;
->  
-> @@ -2361,7 +2357,8 @@ int typec_get_cable_svdm_version(struct typec_port *port)
->  	enum usb_pd_svdm_ver svdm_version;
->  	struct device *cable_dev;
->  
-> -	cable_dev = device_find_child(&port->dev, NULL, cable_match);
-> +	cable_dev = device_find_child(&port->dev, &typec_cable_dev_type,
-> +				      device_match_type);
->  	if (!cable_dev)
->  		return -ENODEV;
->  
-> 
-
+> > > What happens if there are current cxl regions mapped to the device be=
+ing=0A=
+> > > reset?  I don't think it is enough to flush the caches.  Section 9.7=
+=0A=
+> > > talks about system software requirements for the HDMs.  How are those=
+=0A=
+> > > requirements met with this patch?=0A=
+> >=0A=
+> > Considering different platforms might have specific operations to=0A=
+> > effectively clear the regions, some type of optional helper routines in=
+ the=0A=
+> > CXL core would be appropriate.  This way if required, a Type 2 device d=
+river=0A=
+> > for example can choose to use it if required.=0A=
+>=0A=
+> There are a couple of ways to go here.  For memory devices I think this i=
+s=0A=
+> on the user.  But I don't think that is a primary use case as I'm still=
+=0A=
+> unclear of why a user would need to do any reset of the memory device.=0A=
+> =0A=
+> For type 2 devices I think the use case will be device dependant.  The=0A=
+> specific driver in that case will need to tear down their regions (with o=
+r=0A=
+> without user space coordination) and then issue the reset.=0A=
+=0A=
+That makes sense. So in either case, based on this logic, I am assuming=0A=
+it is out of scope for this patch to remove the the memory regions.=0A=
+=0A=
+> All that said I think this patch belongs with a series which implements=
+=0A=
+> some device support.  Or is more general for type 2.  Which is what=0A=
+> Alejandro (cc'ed) is working on.=0A=
+=0A=
+Thanks for the feedback.=0A=
+@Alejandro, if you have any thoughts on this, kindly let me know.=0A=
+I can proceed based on that.=0A=
+=0A=
+Regards,=0A=
+Srirangan.=0A=
+=0A=
+=0A=
