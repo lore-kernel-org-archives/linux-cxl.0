@@ -1,283 +1,165 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBA82AEE0;
-	Thu, 26 Dec 2024 17:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735233585; cv=fail; b=ZjKK1PgRC1L/HYTT8Buif0GMrdlwd5EeHKKPjWCEXD0cNfZhd48pRClk7U5zT9fORjmEmLy6ilKEHGyvsK8uPQSMopHX3j9KsP79WSr9VGZm6waG2+DtlSKIMpzEHaRdpC5dOBP93ool8KLGP7J8OiXD6FCjGA463BU0rE+M1bw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735233585; c=relaxed/simple;
-	bh=JtDgzzij7EyRzRSpG0LhfTahGvL+b2aKPyVZQwpBHaE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bCrnzKw0rhd+CGVaJwDQMw6FPhNKHzRenA/W7ODjMhpJeZBvtgOk5Rkas8xecKOycDObkd3NAWLIp1oHjtrW/R8bGjXuW9MjCsorc4wnlaWZI3DIMgLfXOCaeEq5K5amPTZCBdgI5yyYNSSDIoMuLCswV8R3FurjTWN4783uJ4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lDvhLheJ; arc=fail smtp.client-ip=40.107.237.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49732BAF4
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 19:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735241138; cv=none; b=MbVZRwyFSSG7tUhV1qxwq49f3lUd2QsieLHUEjfBmbRxXEoADytVCCuHtj+aPCA3WTCCUMdVYGVYWG7Whmn8WZpia5I4h01jE6WZ41PyJXG4x8+DYLIx4joU1Qb1Qb79WWOtpKO2rt7ckG/TsDoq8dEqdJKr9liRq+RIgwej9DQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735241138; c=relaxed/simple;
+	bh=TavOlP1RfVMe+4JxuPyZKG1dts4hyvwwPjKtaJCZyy0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RSZNvFxHl8JYmuzR1jgtwDGYn24fzQm/hylaJaX5MDJAormC3tm/F4s/xrP5l/LQC1+OmYUKNFzBNpmWhpt4FCZvQBsSgNk8l0u1CVNTV0PWbd8Yg/RlrCe1dERfqHDg2wsbFencNGydraeS9c6mG4Sc4KdZbXHD0k10Z3kcrPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cSUxbOyh; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lDvhLheJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aa3DEmsmF6/FwBZdHUmBJRMFiTWYSNHcLnTlXZHDwvTnf7x+8yi3L165FsPIq/yj/3A3LafxNdenTBAcEm4PT2b+eSF2BCtERRzXHeDPaxH+Rf4FqW+stBgMrGo/qZjuaItB2V74hGVDKYgD1Zl9ZYkKsZxiBSAS+GZDtBBx8AwL4AfJYB5Xhq18Qni2w3YX5M4wOeKZnlKdxaDnAnHKEAT7cyMqbF2/M33QB29dtfTFhsadFd11gxmh2Ir1DXumWY5iPZ7TV15GQQOFaCerNMaa5lNr7eyZwHkr4n4hhsdXkAdiQ9hjBDgmLS2eiI++N00f1u4oyybSRDl9QnqICA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jBgt7S6BiMPp1a/R7PWuABvVyCGr+++9nOrsVgs7UeI=;
- b=NhU/WvEVsiHUyC2b/P1abqK8JyqOjwdx/fXcu53IwX6GncOjJM6ZYQKUoSxebTs+7HUWofyouNLu28Ehyzv520ry8/c7p9uAPtVI8KTU8uOoHWM6nhOw6CAghu84NVeKcpJosCjdLavtt026PoQljqhkcH7alNKrRXjasncH6W/lpi/pgSuA8Vm71qLyfCp22OK+542lhIGC1tnL3ho/Mo2SfT1h0UkzzIXE6AtWQLDZWmCHuFMrdz9H2kI6z2ucjvqVWinua/4kZL9sdaO889fuipZfrQF6IVRybzQr53svyH6YOJq2jbFuwaO/lL7PClBnPeLD5EyH5bvuqbM2nA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jBgt7S6BiMPp1a/R7PWuABvVyCGr+++9nOrsVgs7UeI=;
- b=lDvhLheJ/2OJIv1oky3Au0LtXvenab7cB3sVrJJRBEQKmcwVJtgMOBlsAi3u7ej5/Wct0MHwBiYF7JBZTnUhKl/d1Vqa7S1+AR8ikC21sWkpjeqhv2Dz6tROpUCCpxIr6HHdjuPSTDoRgb7Zpbl88azUbEhSC7xO87mCLETHYlk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- CH3PR12MB9027.namprd12.prod.outlook.com (2603:10b6:610:120::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8293.14; Thu, 26 Dec
- 2024 17:19:37 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8293.000; Thu, 26 Dec 2024
- 17:19:37 +0000
-Message-ID: <ff6f747a-3d7e-4460-8e71-b7cc50ba8f7e@amd.com>
-Date: Thu, 26 Dec 2024 11:19:34 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/15] PCI/AER: Enable internal errors for CXL Upstream
- and Downstream Switch Ports
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- PradeepVineshReddy.Kodamati@amd.com, Li Ming <ming.li@zohomail.com>
-References: <20241211234002.3728674-1-terry.bowman@amd.com>
- <20241211234002.3728674-16-terry.bowman@amd.com>
- <20241224185346.00000886@huawei.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20241224185346.00000886@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR04CA0086.namprd04.prod.outlook.com
- (2603:10b6:805:f2::27) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cSUxbOyh"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b6fc5bf609so510316385a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 11:25:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1735241136; x=1735845936; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bvHPT0ccY32kPKcwl8x32j2H6trMUV124nGwkwGHE2M=;
+        b=cSUxbOyheMDf47Jrd5V3CstqmZZifE35gBhbABxiGWaB3Sj9OzQpZpos+Kl/ftSWTu
+         T7S1jh8rHjVhiZ5MSvDoQcvkVcZH/DvB2negoTFvWaxcaT16TDssb7rK471n6Y8R5Awi
+         YqdpUg7GZXp7LZM26mXZlnS7L0mQyrLDfITsLmDHw9CjCnnI4tKvjx67uF4S0DuRwY+k
+         SvuIYTP6VoorhxUgH1TQDD2/D6qXUjFr3jNOwMLM32eRgcsp5HT2kshxQdlYlEXrp3f4
+         V3c2Tyn+0YVbU1JEwUUKXR1+hm4WD2KprzvccznMDIsPjW6IdUrzSup7yUzLRaE56pQf
+         K1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735241136; x=1735845936;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bvHPT0ccY32kPKcwl8x32j2H6trMUV124nGwkwGHE2M=;
+        b=CFolPMBg4Kms2OYGQnB5o9SwfA373k22b/RJsfQdBLWsvTv5WJo0BWPeA1SDGOGuFD
+         DYIuy5t8N+1V+R7+m5nzYvR/ikagCb7frNltCk1/yxcBx97coE8S+yvdSEyoep+yn3Gk
+         v0ZzGvZWgnQSvhZlGJWvDVVOVzN7ZKo3RlmTGZ1LPvtlQYO2+0vlCtUasvXa2sWhMT/+
+         qwKsrMn8KoPejYjcNtrzFFZLrwx7UaUsR23LaVVVnqP6Ev9wlnKxx7PW2SxR563vGyBq
+         IKXpLbgo6I5gnme5rTSm0QI8Uf9e8fmj5F+9wzeKcPA18bS946LvelkmUAPhc5AOOIGi
+         TtMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdpJDVYUqdlNQUp3TZLzbAJxHeImza+Up058EOoBIHCTS42PTQl+VReGhbEfhJRiyWUb8qdDxr6L8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQm8zM69i+KrFgTXTOwntjsqRCjbXfbutt5AdnizCxNyQHm4zh
+	rZjj4D92F+9KTy0Sqrc/xczP3rMzyjC7ExRHgG3u9PdHV+pefcSEIh+qOLkRt2Q=
+X-Gm-Gg: ASbGncsKHJ5xn1w9l+wJZo3gNasFWcrHdDWGxN9x0aALgNbMuAovUaLwAQYdfBTI7YB
+	0Q0GQJGvznNqV5XKs7XR3n13XUl6W2vDWLPnLA/9gtr84BgELOAOGcDn5S+Qaf12uiyuoAlgnn7
+	PHlv+LoDClL2lB1cCSFH0Gd7ox6z5aJpuEvn+f75Ph4gfaSCfC4aozl6GYg5feqSn32YOuVZQ6m
+	GRGJD5OUXkJ3HUGjcTy9gtuNlBHKU92EvR3cGsMWALQwYLChiJ8fk0AT3a/CBy9wxCcF5FBGvIA
+	YniV
+X-Google-Smtp-Source: AGHT+IH8lkhAouw1RNl0FDXSDuwCUOie6f3E0Pcyb3IuuD3GIIbIaXZCil62oB59Jbf5u0tpjedBCw==
+X-Received: by 2002:a05:620a:24cd:b0:7b1:11ac:627a with SMTP id af79cd13be357-7b9ba79cdeemr3532496985a.25.1735241135714;
+        Thu, 26 Dec 2024 11:25:35 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F ([184.169.45.4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac2bc85fsm640184785a.7.2024.12.26.11.25.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2024 11:25:34 -0800 (PST)
+From: Gregory Price <gourry@gourry.net>
+X-Google-Original-From: Gregory Price <gourry@gourry-fedora-pf4vcd3f>
+Date: Thu, 26 Dec 2024 12:25:20 -0700
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Gregory Price <gourry@gourry.net>,
+	Nathan Fontenot <nathan.fontenot@amd.com>, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
+Message-ID: <Z22toIWJfsgZJn_a@gourry-fedora-PF4VCD3F>
+References: <20241202155542.22111-1-nathan.fontenot@amd.com>
+ <Z1tmwOsAtL-wBR3Y@PC2K9PVX.TheFacebook.com>
+ <Z1uHgePW0T81r3xC@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CH3PR12MB9027:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38901c24-c51f-4f9f-76a8-08dd25d1795e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VjMzOUdHV3hHU2dPWkxNdFpFaDhkaFdqMitoRHVJbWU3NmZtMDJ6ZVlScGVE?=
- =?utf-8?B?Q2tvcFd3Y0h2VG16YUtrMEhJaDczaitLVHhFU3UzQmlmdDhFWm0rV3QxVDBu?=
- =?utf-8?B?VldpSzgzWHVVQUgyTjlzY2QzU0l2eGNabW03RmFCcmR6RWJ4d3AzcU02eE5l?=
- =?utf-8?B?TVVrOXpXd0ZhTElCbGFUWVNvV1U3dXZ3T1A5OFFjRU9xbUpoRjJaVkNOeDUz?=
- =?utf-8?B?eURQdHAwUzFrdjhjSWpsY082VkNpWUhsYUZjc3lQNVF1aHI4aU5QenJWencz?=
- =?utf-8?B?SzlRME5jcmVDU0p3K2RZdytCNU4wVVpGaHhBNlFmZHFUdXZ6aXBla0hNRFY5?=
- =?utf-8?B?SzhsbDUwSThlSHJpMTF4R2tnbEJuRi9vRjNCQlhtUHIrOHl2N29TRXhFWmlF?=
- =?utf-8?B?cjlQUDc0Q0hHQytJYXMvZXlpdE03d0xiWUlhKzB5WndEQ2V2T2pUdzl0VUVW?=
- =?utf-8?B?T2lSVDgrN0lVUWthT0JhWFFrSWt2Z3crSnpDTmFUVnNhM21nTE02eGRoMFk3?=
- =?utf-8?B?a2xUYkp3REtKcXVLQmFDVTFFK1NRTU9sMG0rc0hocGk3eGovZjd1M2pTOG1z?=
- =?utf-8?B?bHNEUndyRUZJV0s3ZzI0UUdzSnliSG9yUFhWUHd5VTgrSDgyZlAwbTBxMnpm?=
- =?utf-8?B?UFdtKzhyQXEzQmZoYUZpL3NQUTREZVRsWE5mV05xWWtHemtxU2lrRjBhYlky?=
- =?utf-8?B?OEJnNzhUcGlDa20zb21DVGJaYS9Da0RMdnAxSDRPUWMyS1VQaWNIaHNES1FS?=
- =?utf-8?B?b3g2NWJMeW93K2FmNkppSHl4WW9BU04zU1VwT2ZjazRrb2hubElDdFUzNDFp?=
- =?utf-8?B?M0ZQNVd1MHlJVXVDVk94TXFsM0RMS1BQWEFBYlE0cFBibVloeTFUb0hFaHZM?=
- =?utf-8?B?SDI3YTZTc1h0NFRqYXBtS0FHUnJ6OENwaGE0enozU1R0N1JqYzNUMHV4c0Rh?=
- =?utf-8?B?R1N0bis2M3orak8vUVoyZWpRV09IbitNUGRkVmRsbmszZnNWUjdaSnhyQVlx?=
- =?utf-8?B?NDhiR2k1anVmR0JyUW1xbEd5eHdiNTZqYTliTk45YWh2bXdvUGhxeVJZY2Vj?=
- =?utf-8?B?dHphSTllQUFjekpaYk1hNDhDazdZOWd2M1lWc2QrOExBNmxzWHNJZ1crSEhF?=
- =?utf-8?B?VDE2UHk5TEwzM3B6ejBLaExPTmdHUExBbmRxVEZTK3BFeUJVMFQvUHplYXpZ?=
- =?utf-8?B?ZkRreFl4NGFaM0pDQURFdkIrQ1Nua3FFcVVMakEzWXZBczBPMEVwZll0aG9W?=
- =?utf-8?B?Q1Y1YUEvR2U1dnJHM0h3b2YvYjRKR25MUFRRRmlGYThhd280NWZHSVRkMXBw?=
- =?utf-8?B?bHJuQ0FhWk5aTXlPRHZWRTlKWG9vSUQyVjJOZTkwN1Z2REw0UnN6Nm1uKzFv?=
- =?utf-8?B?UHVyUEtXaGJGajBCZG9ZamhBZUpwN21BTE9TQ3FOTkFwMGFRVmtUWUYvRisz?=
- =?utf-8?B?QVNvUXdzSUZpZVZ4NVE2d1d4U0FVdkNsSndxbDdOd2UyL1BHbzN0MWZNdU1n?=
- =?utf-8?B?clFTL2hjT09CbDJlaEt0Z3ExSllsaGJWUXYvRXcwVEF5L1dhYzRzQjlmOUg3?=
- =?utf-8?B?THBySC9tcHFrQUF5VlZqS21KOUJkUG16T1k5NUcvbTJ6L1BDMHh5OFE2N2Ew?=
- =?utf-8?B?ZnpDSytWVDg5V2hLcGlVd3lLejU1cU1FOVd2TXhkc2Z1cGdJNUlBUldOL3ZG?=
- =?utf-8?B?dWVzSlVORWJ1RCtSM25FRTc2akpGZS9lZWFCcWFrTWVqM3RwajhxZXRBRVFM?=
- =?utf-8?B?N3kwYzg4czg3U2xvalNEcXZkdm1SRnQwbWxCRnNPYk5RSTB4L2V1dUZhQzZ3?=
- =?utf-8?B?YUpXaC9LOTAyNEFqNGRFK0NLekpBbUxyVnB0b0FTcTZtaFhzZkdSU0grSkdl?=
- =?utf-8?Q?urCCIugqOCmtz?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UkZqeHJ1elZUYWFXOU5YMkRiclZrYUdyWDMra1BmU2srbUNETU9QMjFEVzZn?=
- =?utf-8?B?R2hZbnlCWExwRENvLzlhVzN0c1RvYm1Bb3IySHZ2SWtvSEtLNGY1RnFuUHBx?=
- =?utf-8?B?S1FBaTVyeFhreWhWOWhWNlVEbjMrajFBT0ppOGVTblovTFVZUElXVGhpQ25L?=
- =?utf-8?B?Qmdrd0NUc2w3YjVSNnpTaERicTJQVUZjN1I0bkNvWmZuRE95N1ZMaEZMaFkw?=
- =?utf-8?B?TnFxY1UyS0ZhQlF0NjkxZzVad2NLcm1VaGU5Ri9SNjZRSWZuWlQ0aFRXcnFV?=
- =?utf-8?B?djRwUE1rYVBNM2FkVzBoQkJZNlM4TlJiK2VNdTRRYVZseXNMZUsrSUlQc1V2?=
- =?utf-8?B?RDA0Z3BMcWJGQzRrZ0gvS1RjdVZaSFBoNFo3ZXBqOHEzZkxYSnN5VDRtczht?=
- =?utf-8?B?b2NCbk9ERGU4U0FTbURTQm42aTVRaHMvNGtBRFE3UDlxaGIxNWh2NmlRWGVC?=
- =?utf-8?B?YjV6UHZPVjhUcVFwMUlzcHJBWTJjd1Nqb001OG41VlhJT2plbDc2WndScTV3?=
- =?utf-8?B?RFZGTXc5blo4dUZlRThDQ3R4bDdjaWg5L2ViN25tZ3pyckpER2F5NDJ5aFZn?=
- =?utf-8?B?Nk05ajR6QmFudHlLaUUwcFVEcTJHK1VQRUpOMGI2QjEvc05pS3RjYjhKcTMx?=
- =?utf-8?B?SEExTDR5K292SEd6MDJuYWRLMTZKZnZMYUdkeTVSbFpUK0hibU5QQlR6bElm?=
- =?utf-8?B?T2xRV2xQaHdIdnhFRUJzN2xjMDZmRnNyTlhDbDdJOHZqK1Y5VVc1MVFrczJ3?=
- =?utf-8?B?UzR6UVJNQTFZYlQvMkNJc2o4emdUUElGVzV5WFc2UzZOallUbjhYUkh4VU01?=
- =?utf-8?B?ai8yaHozcE8wOUZQWHlENVQzKzZjMUF3b2VWREtya0xyWnJ6UzFFUWJub0FG?=
- =?utf-8?B?RUtqRnBoUXo2NFV1V29MSUlTY0RpUHNLUkdpQ3FGejVnczJ1K3RHTGM2eldK?=
- =?utf-8?B?eEZnbmdtdW9qejdzbjFNNmVlbkg1K1hIUFo3eDg5aHhkREFqQm1PT0R6cEJv?=
- =?utf-8?B?dkxML01LN1F2dll0RDgyb0M5YXl2Z0FoeHpHMVdJU1BuYlJsdjlrYW1SVVZ0?=
- =?utf-8?B?NnZIbGVzQXJxQkxmSHc2Y3lxUnNkWThpK3F4NkoxRnVFV0tPNHlVK2hodXg0?=
- =?utf-8?B?bVNZV1lCMkxpNExKdkVQNm42Z0VVelg2MjNiU3diMkF6RkVCOSszOU9TbXBk?=
- =?utf-8?B?VSt4QVRYZDlmZE9IR2N1MVVsKzBDRGcxVWpXbmpyUGVsNkpTbCtEVFN3N2tj?=
- =?utf-8?B?RFJEN0puNFhMaHdLQUhiMTMwRlY3WnlxbXpVR0d0U093KzYyZXozRVdXVGVR?=
- =?utf-8?B?Z2ttZHlscHV1d0hhRzRyaFcyYnVFdlAzbzJudFdxQWpESlFISWpUWTBxZGVE?=
- =?utf-8?B?L29NSzJueUx6dzRRUU9FYzJIb3dZdE9KcTNtd1NRNnV3azc4Qkc4VTlQY2x2?=
- =?utf-8?B?RGk4bFpWWVpnaC9UTmVJcFFuV0MzRzJENHdVdmZrQnU2TTVYZFFjSDNVRisx?=
- =?utf-8?B?RmlzK2w5eXdCTEFRRUFDNVZ3c2NIQlFUc1lUTDg4R1BSanVzK0xWZFl6R2du?=
- =?utf-8?B?UTZobGdHM0pPaldZTGVqVU5lVXhodFpYTU9yQm13OUNFbkl2TWYvbnlyRTNm?=
- =?utf-8?B?V0Zka3VCMTZNY044VFRUTjhYOWVURmpBdWE3K3NQNFJJcTgvTndBVndkYXRp?=
- =?utf-8?B?b0RRVHlCWEtBODRQcS80U0VCVmZqdkJENEZiZ1JtalVIMzVqaTMwa2k1YXM5?=
- =?utf-8?B?Tk9EWW54OUpDUXZxKytvTDRVOXpXYkVXMElzblQ5VmRYN0JVWVpJRm1wTzNK?=
- =?utf-8?B?VlBFbTNDMElHZ2ZIUjhFejZDWXlLMDJVMFVFZlZYd1J6QXlhM3gyN1NESHVj?=
- =?utf-8?B?TFpyM05MaTdXQnRQclMyZS8vQVdyNEdYQy9Fa0ttSjMrRjdlRERBbGxJUk9v?=
- =?utf-8?B?SElZR0Y3c2NLZm1ZSEJpUXlhZzFMZXhJS2VQaWJOQmM3bzkrTnN1a1c1MTYv?=
- =?utf-8?B?WmNtZEwvZzFjRUFOS0J4b2ZaTlB1NS93K0tZUi8xcmppdkdsRStHdnpuRlVw?=
- =?utf-8?B?MTBuOW1RakYyQlRtZWU0UlBzSWRKWlp4cGErNlYxUi9sZHVyT2ZOTVVMN09P?=
- =?utf-8?Q?YR6eicSircJeOzi21Jjzw7kPr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38901c24-c51f-4f9f-76a8-08dd25d1795e
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2024 17:19:37.3256
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CTbOiEF4O+dmOpyCEaGsDk3NSX928D5UuKnDpCJ6Z9kJnVrLkdxHBiIFPOK7hUqMbnN6qGT7JhvyslPOP5uq+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9027
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z1uHgePW0T81r3xC@aschofie-mobl2.lan>
 
+On Thu, Dec 12, 2024 at 05:01:53PM -0800, Alison Schofield wrote:
+> BIOS labels a resource Soft Reserved and programs a region using
+> that range. Later, the existing cxl path to destroy that region
+> does not free up that Soft Reserved range. Users cannot create
+> another region in it's place. Resource lost. We considered simply
+> removing soft reserved resources on region teardown, and you can
+> probably find a patches on lore doing just that.
+> 
+> But - the problem grew. Sometimes BIOS creates an SR that is not
+> aligned with the region they go on to program. Stranded resources.
+> That's where the trim and give to DAX path originated.
+> 
+> But - the problem grew. Sometimes the CXL driver fails to enumerate
+> that BIOS defined region. More stranded resources. Let's find those
+> too and give them to DAX. This is something we are seeing in the
+> wild now and why Dan raised its priority.
+> 
 
+Hm, this makes me concerned for what happens on "full hotplug" (literal
+physical removal/addition) of CXL devices - kind of like we've seen
+proposed with E3.S form factor devices from a variety of vendors.
 
+Like what happens in the following scenario (rhetorical question, I want
+to test this with QEMU - but i'm on a plane right now and want to get
+the experiment process down).
 
-On 12/24/2024 12:53 PM, Jonathan Cameron wrote:
-> On Wed, 11 Dec 2024 17:40:02 -0600
-> Terry Bowman <terry.bowman@amd.com> wrote:
->
->> The AER service driver enables PCIe Uncorrectable Internal Errors (UIE) and
->> Correctable Internal errors (CIE) for CXL Root Ports and CXL RCEC's. The
->> UIE and CIE are used in reporting CXL Protocol Errors. The same UIE/CIE
->> enablement is needed for CXL PCIe Upstream and Downstream Ports inorder to
->> notify the associated Root Port and OS.[1]
->>
->> Export the AER service driver's pci_aer_unmask_internal_errors() function
->> to CXL namespace.
->>
->> Remove the function's dependency on the CONFIG_PCIEAER_CXL kernel config
->> because it is now an exported function.
->>
->> Call pci_aer_unmask_internal_errors() during RAS initialization in:
->> cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
->>
->> [1] PCIe Base Spec r6.2-1.0, 6.2.3.2.2 Masking Individual Errors
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Whilst I'm in favor of just enabling this across all devices I guess
-> I can cope with this more minimal form and it will create fewer bug
-> reports :).
-> It is a little messy because we are tweaking it from the 'wrong' driver
-> but I guess that is fine.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> And on that note, happy Christmas / holidays etc all. My backlog
-> of review looks much less scary now but I need a beer!
->
-> Jonathan
+Boot: No CXL device is present
+
+Post-boot: CXL device is physically hot-plugged
+ - there won't be a resource registered, so I would presume the ACPI
+   / EFI / CXL drivers would register one.
+
+Event 1: CXL device is shutdown and removed
+   - Is the resource deleted?  I would presume yes.
+   - Is this true if the CXL device *was* present at boot time?
+
+     If i'm following correctly ^ this is the present scenario? 
+
+Lets assume the device was present at boot, and the resource is not
+deleted.  Now we have a "stale resource"?
+
+Event 2A: A new CXL device is added
+   - Possibility 1: Same capacity - resource is reused?
+   - Possibility 2: Lower capacity - resource is chopped up?
+   - Possibility 3: Higher capacity - resource is... lost forever?
+                    Fails to map? ???
+
+Event 2B: A new CXL device is added on a different PCI dev id, then
+          Event 2A occurs.
+   - Is the "stale resource" reused here, or is a new one created?
+
+I hadn't really considered the impact of hotplug on the iomem resource
+blocks (soft) reserved at boot, but this is concerning.
+
+I remember ~1.5 years ago I was prototyping with hotplug behavior in
+QEMU and saw that it was possible to do runtime ACPI/PCI add/remove of
+CXL devices - this worked.  But I didn't look at the effects on iomem
+resources - now i'm wondering what happens if I try to hot-unplug a CXL
+device that was present at boot.
+
+This won't affect me for the immediate future, but if we're mucking
+around in this space, might as well ask the question.  I presume we'll
+find even worse corner cases here :D :| :[ :<
+
+I do know servers with front-facing E3.S CXL devices intended for
+hot-replace exist and are a real use-case. I have no idea how that
+is supposed to work the presence of stale iomem resources.
+
+> Dan is also suggesting that at that last event - failure to enumerate
+> a BIOS defined region, we tear down the entire ACPI0017 toplogy
+> and give everything to DAX.
+> 
+> What Dan called, "the minimum requirement": all Soft Reserved ranges
+> end up as dax-devices sounds like the right guideline moving forward.
 >
 
-I'm not aware of a better way to enable the interrupts in this case. But, I am open
-to anyone's ideas for improvement.
+I guess devils in the details here.  I sense an implication that it's
+possible for two distinct pieces of SR-providing hardware (HBM and CXL)
+could end up concatonated into a single SR range? That would obviously
+necessitate the need for chopping up an SR.  So this all makes sense.
 
-Happy holidays everyone!
+But I don't disagree with the need for this, just concerned that we have
+CXL-specific logic landing in mm/ and e820 code.
 
-Regards,
-Terry
-
->
->> ---
->>  drivers/cxl/core/pci.c | 2 ++
->>  drivers/pci/pcie/aer.c | 5 +++--
->>  include/linux/aer.h    | 1 +
->>  3 files changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 9734a4c55b29..740ac5d8809f 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -886,6 +886,7 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
->>  
->>  	cxl_assign_port_error_handlers(pdev);
->>  	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
->> +	pci_aer_unmask_internal_errors(pdev);
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
->>  
->> @@ -920,6 +921,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
->>  
->>  	cxl_assign_port_error_handlers(pdev);
->>  	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
->> +	pci_aer_unmask_internal_errors(pdev);
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
->>  
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 861521872318..0fa1b1ed48c9 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -949,7 +949,6 @@ static bool is_internal_error(struct aer_err_info *info)
->>  	return info->status & PCI_ERR_UNC_INTN;
->>  }
->>  
->> -#ifdef CONFIG_PCIEAER_CXL
->>  /**
->>   * pci_aer_unmask_internal_errors - unmask internal errors
->>   * @dev: pointer to the pcie_dev data structure
->> @@ -960,7 +959,7 @@ static bool is_internal_error(struct aer_err_info *info)
->>   * Note: AER must be enabled and supported by the device which must be
->>   * checked in advance, e.g. with pcie_aer_is_native().
->>   */
->> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->>  {
->>  	int aer = dev->aer_cap;
->>  	u32 mask;
->> @@ -973,7 +972,9 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->>  	mask &= ~PCI_ERR_COR_INTERNAL;
->>  	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
->>  }
->> +EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, CXL);
->>  
->> +#ifdef CONFIG_PCIEAER_CXL
->>  static bool is_cxl_mem_dev(struct pci_dev *dev)
->>  {
->>  	/*
->> diff --git a/include/linux/aer.h b/include/linux/aer.h
->> index 4b97f38f3fcf..093293f9f12b 100644
->> --- a/include/linux/aer.h
->> +++ b/include/linux/aer.h
->> @@ -55,5 +55,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>  int cper_severity_to_aer(int cper_severity);
->>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
->>  		       int severity, struct aer_capability_regs *aer_regs);
->> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->>  #endif //_AER_H_
->>  
-
+~Gregory
