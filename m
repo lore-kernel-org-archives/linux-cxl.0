@@ -1,236 +1,377 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823A715AF6
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 04:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C217C77
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 06:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735188600; cv=pass; b=bvYri/EfwguDNHLcazMu+6+HMUdActWF+zVB5wQSoyHtFfSTKWfvPw2mBoCFwzWabe+G8j0bFtHgQpfDpEQtbYi2FQFcbD+odR+yylKCRURfz9qpQsvF8dTrITCpmXPnfIi8cRoSZVJqQCDXkO68g3hlBQu+FLbCBRBYdzYU6d4=
+	t=1735194102; cv=fail; b=SMBX8gUne+OaxqqmQ1eIp2C1Qn2Wx0NefCNEt49IXOtKWLUV5de44sCHDJG02pOsT9GGuByg/cXfnaQbhpaXpuO9BouHlPAvhxJDTBhqC+kwlb5+gfvKQ/jouZtXOvWZLdkoa2EC6h7aPbzp0/IwksK3FNHhKwXo9J7EmpltKfY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735188600; c=relaxed/simple;
-	bh=RWIJSGAlDElkFY1UjcWuKjrFtqmCP/YQAY0gzfk+jdg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FTEQUoLxX/zPCcXixBSl+SstOcTBU6s6YdQ3gYGPsWRZp4sycZVmQ2Ob/GTWbZS+79ki2CDRE9d3BBWGKzwvwWwSMEqI9fB1k2CG90RlFILY/E/0XeuG8pR9mM+4dvlL7haDWXFWdDdrLQkAD9yQAvIOy6vLAagXYr+SbQg6zn4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=WcjTXOR1; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1735194102; c=relaxed/simple;
+	bh=9Qoeht/rY0+C8EwCCiGj88wGrrfqp4YIumgckhcrQC8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SRmwSS67nU/RAmcpcR2PEroO043wl08+W9d/YeM7B/aa6gO5mOFvJsrxbwjdo4xlK4Oo6wp5I/PZ7+oK9iANdj5FLGYBJvOcnzm7cz9mxVoAy78Rs/vzrP/PRD308RdcsNzzZ5F0ggESK2WPJgy3mxg/QijWygwCFb0b6oC7SbM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AnsJJuNS; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="WcjTXOR1"
-ARC-Seal: i=1; a=rsa-sha256; t=1735188586; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=E6tEGLDIbNtrRFAI0MrdJDlrRLe+Iwa1cr4JRHRlkrJ6w07SReveT3KW+53b5dKcDj/G626RIa5OSjM4IROw0rk0Mu0SvH/zUYaNC2d7/q53Kc1WkUcO6NZpwABwjJ8VlmNso2EOTPXy730+h/UMevw38O853TpYU64NtEXcjtc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1735188586; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qA6jS06IiT0OgZ4Bv6jlcbfkSHP0nGY2ojRxEUeMO4Q=; 
-	b=R9ZYcfXvi+Lxq1AyUSlUtLGI/kdZkCjR52AQqMxt6yxP890BmU4oseiwi74pXaxjyYuQv6oHrEJsX1SIsHUP8E/gxUyX/xz1D5oF9dNg6HBKo9calWItf0cy+kgcLGqhU1NJ9zQ29UQf60t9z8fslk669Bf/tFJh5W/RYLldtN0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1735188586;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:From:From:Subject:Subject:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=qA6jS06IiT0OgZ4Bv6jlcbfkSHP0nGY2ojRxEUeMO4Q=;
-	b=WcjTXOR1c0TiAMzVT3X/sPDGWTB5EiSB4mDqpjn67X7sSelvIdIyZIuLc0+/ZZe0
-	dVuPJPVbQW/JOyAHeJDhdl3RbFW+hRl6hjUa6PgnMvP446DZIkFVIykMGvPnVuB9PRz
-	NSAIolg2W6UHM35fzQ47v+rJHlzrc6D1N7nFQJOQ=
-Received: by mx.zohomail.com with SMTPS id 1735188583528215.2749892275989;
-	Wed, 25 Dec 2024 20:49:43 -0800 (PST)
-Message-ID: <2d7a78c5-8544-4dfc-822c-bae8677c1703@zohomail.com>
-Date: Thu, 26 Dec 2024 10:11:06 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AnsJJuNS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735194100; x=1766730100;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=9Qoeht/rY0+C8EwCCiGj88wGrrfqp4YIumgckhcrQC8=;
+  b=AnsJJuNSUeYD135ojhrKNLVa6IfOZg4FQjAziNBlAsXLV8l+wARvVxxE
+   ALVnmUprKE19jceo5i+umaMW7/Lto2rIKu+AfLoUQA6NdiFSLGt5Wq4mv
+   aSjZEQXKB1jIOqeWY7wAEmFmvmy+PvoiwZwVdzzsvP0hqf7XUCTf7O+/2
+   egkNkr6h2Gxpg/AfhzTK4Wf7bVpVcZ3k8VUHLHipDZwBN1ak1W13zGbLU
+   2XAb/YjveDoeLlOQkLQ6k98n22CWhYxFq6DsWf/JP51y2REFnUDh8TwEe
+   92OZnytuUoclA15FdjgLA0/2m5CJFbUUQ3zotm4R2piYVjvs0/QYS9lpX
+   g==;
+X-CSE-ConnectionGUID: a3eBgNuXSD6efuk0CwBsIQ==
+X-CSE-MsgGUID: gWNUP7z0QS2YzZbDJHXwng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11296"; a="35501493"
+X-IronPort-AV: E=Sophos;i="6.12,265,1728975600"; 
+   d="scan'208";a="35501493"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2024 22:21:37 -0800
+X-CSE-ConnectionGUID: UoLNq7B9TFqakbho+Aa3TQ==
+X-CSE-MsgGUID: RjZeqEVzTTqLzuaGa3B/PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="130835926"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Dec 2024 22:21:37 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 25 Dec 2024 22:21:36 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 25 Dec 2024 22:21:36 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 25 Dec 2024 22:21:34 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X48F9kFOhhS+1jRzZL/lPP8nAxdisHrWF9LWPun7Coj0KdC7HQINhet8UpYwm5TUhyBjFy6xI6Kha6T6NE0pim8PpMBKEB7m9LZD1TFqUu3iV2xhr61JqctNbMbJ7HCiIJFS6c/Xv1dxGewL+vlIbYkOD4upZFQaKYhqUlUKmmAPg/9Ba09/gh+yXr9B0JD0KZxQZHK9/SIzsFoGYYRHy0JpZVChdpcloqCuvTh+motLTEbz+QVDApERfVrQDAQin72OtjnYoh0Ru3fvA3QmOG6GNlZqbKJziIQOlFML0UT+WzCRGB/+29E4m/NaMe0grXIIHLTMtrIf2A7PGKO67Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Qoeht/rY0+C8EwCCiGj88wGrrfqp4YIumgckhcrQC8=;
+ b=XRzJq0RRq+FEWfb0FO/Iyu8LWaBJyANTp/SuzOF23ZmtlJrJkvJiMTD0XzdTComBeqJk9arMTTpoUGOistnbhmrcbcgGnf7P2+QNXEXEcWMO0evM+w7EbGJmbjq0T/kMqt2UD4dTmZ+/x2dXDa4qSCVh3O48B6ISJF8aB/NOL1BNaQ23Sji4jbixACWFIy3APUYcrgXTKhDV30SlJ5iaSUkTor7j4n7Ynmm5bLtthw2TMFzo9rEacDi9R+yWBWx2pqGEYcggG7QTXeEBGBTWtRcdCvJY7ru2NTGFOIiIZkNxpnLJsAy8TqM5GPdI9NjhRVG3lcF9iViy6x72dQMBfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA3PR11MB7461.namprd11.prod.outlook.com (2603:10b6:806:319::17)
+ by BN9PR11MB5242.namprd11.prod.outlook.com (2603:10b6:408:133::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8293.16; Thu, 26 Dec
+ 2024 06:20:47 +0000
+Received: from SA3PR11MB7461.namprd11.prod.outlook.com
+ ([fe80::4ec0:56bc:1ceb:7c06]) by SA3PR11MB7461.namprd11.prod.outlook.com
+ ([fe80::4ec0:56bc:1ceb:7c06%5]) with mapi id 15.20.8272.013; Thu, 26 Dec 2024
+ 06:20:47 +0000
+From: "Ye, Huaisheng" <huaisheng.ye@intel.com>
+To: Li Ming <ming.li@zohomail.com>, "Jonathan.Cameron@huawei.com"
+	<Jonathan.Cameron@huawei.com>, "Williams, Dan J" <dan.j.williams@intel.com>,
+	"Jiang, Dave" <dave.jiang@intel.com>
+CC: "Jia, Pei P" <pei.p.jia@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "Du, Fan" <fan.du@intel.com>
+Subject: RE: [PATCH] [RFC] cxl/core/regs: Refactor out functions to count
+ regblocks of given type
+Thread-Topic: [PATCH] [RFC] cxl/core/regs: Refactor out functions to count
+ regblocks of given type
+Thread-Index: AQHbVqgo/KqwOCW9mkSRJksmhnE9U7L3yYcAgAAyv6A=
+Date: Thu, 26 Dec 2024 06:20:47 +0000
+Message-ID: <SA3PR11MB7461C9DEDF29160B40D5F21F9F0D2@SA3PR11MB7461.namprd11.prod.outlook.com>
+References: <20241225083539.2230150-1-huaisheng.ye@intel.com>
+ <2d7a78c5-8544-4dfc-822c-bae8677c1703@zohomail.com>
+In-Reply-To: <2d7a78c5-8544-4dfc-822c-bae8677c1703@zohomail.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR11MB7461:EE_|BN9PR11MB5242:EE_
+x-ms-office365-filtering-correlation-id: 7a9bc29e-fc54-420c-4bd7-08dd25756fb9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?WmYwai9EakRhSmVaMXpVd2JMc0xGOEhyUDgzYjRzdVJXSUtwZCt1WSsyTHNH?=
+ =?utf-8?B?YU9jZ245ZnREaHdZN0FGb3BJNDljNWk5dExrU0tuUXk4ckhpSythNGt3YWVE?=
+ =?utf-8?B?N09QbTQ2S0hFbWp3cGdta1F1VW5PNWFCZDRuSW5IY0ExNUs4dTluTTVmd3Iv?=
+ =?utf-8?B?bFRiOG5Tb09hc2Z4TituUVRjbzc4eGdRUkh3bENvaUtCVURrTHNteDUwcTJR?=
+ =?utf-8?B?QzhnbTV2SjY5VVh2K3ZYWkp2c0RydU5NNExMOG9KOHg1R2tVK1p0cWF4dktE?=
+ =?utf-8?B?V3VGaVRtY3E5RW5wWHlSR0srRHgweWFlZmowRUZ6WGZJNUtGMUxlUnd6M0Fu?=
+ =?utf-8?B?dlUzR3ZpVG5zYTRzSTE3MDRGTi9QbWQybm1FUzZRUmNWb3pkakZ0R3VpUy9q?=
+ =?utf-8?B?K2d0WkxHd0JhYXFLdDlXcHlxeHloYm9IbGVYenh6M0tzdTI5Vkk1K0NUWmVh?=
+ =?utf-8?B?NHp4cU1ZeXExZzRYY0JyN2Uwc0plSHJ4QnpRR09zaEIzQXFOcG9kNld5ZVhF?=
+ =?utf-8?B?MnRKSi93QkRDMUMrS1pDd2M3bkpkMTl4Znc3a0UxRkFiQVZOcStaYVRCQ0pP?=
+ =?utf-8?B?U2M0RnZFV3BYNGxWUjFHWWErc29qd1ZvSDZCTDBkQUFHUmx0bll4a1FqN0VY?=
+ =?utf-8?B?ZGxKKzgyaGcyYXluNlQzM0JvYjJKektUcXpFUG1lNTNuWEYwMFJaOVhDekJi?=
+ =?utf-8?B?WWZDeXFPaHNrVndpc0hMajZSUTd1S3kxVkVTZVBUSnVNRVhrMWpVMXFnckh2?=
+ =?utf-8?B?MkJBUDNyZmVQT0VPV3Bud0x3VEkzSFpsWjRPYy9HZERrZE9jcEp0czR2K01j?=
+ =?utf-8?B?SlBzUnR0M0RPdm9qa1BIS1JHSlk5RmJJMUdXUWhXWVBjZTJlQjJmdXQwYmk5?=
+ =?utf-8?B?VVhsMHNtY1FrdHFITVFYeGtOUU9jTHFBWHdwSC9VUXpFTmJ2Wm5OQzRmWlJC?=
+ =?utf-8?B?NkZqUVVUZ3BTRDhIeUozOCtBQ0M1RFJqUVNqYi9zKzdQWTlzME8vanJtNFdp?=
+ =?utf-8?B?S1BOSm9ibFgzcTU1UHhGL2tjTDNPZy9sYVFOUTU0NENpQ241a1grS05oS0JU?=
+ =?utf-8?B?NFNWTzZhTitCSzV1eEdSTFprSHRvTHhTNXh1VUh6N2tVd0RCL2djc3IyaEtk?=
+ =?utf-8?B?NzByU2ErTE1yWEZXTW1mVUhLa1B6K2VCZzRYSFlpQ1NkcDNXVXN0ZTdLdUZS?=
+ =?utf-8?B?bVRDWWQ1aFBGNGdMYXBmL094b3VoRllkSmI0TnJzbTNsQzJ5YytZSEp5b1R1?=
+ =?utf-8?B?VTZXa2Q1K3k5amRBZm16SFY3aVdmUG14RzM3aWo2Ulk2c1MyeC9qYm5TdjVy?=
+ =?utf-8?B?N2hscEd1Rk0wbmpmOVZpdHNzcFk1elp4M1BvUmg0YnlPd0lLcEE0TnpGcGZN?=
+ =?utf-8?B?bkdFa1VCaXlKSjBvUTNGcGhkb2ozc3U3MXhucVF5UGZQN0d5M3R2bXZ4M3FF?=
+ =?utf-8?B?WXBEcktrbW1EQ2E0RnFad0p1dXpMdExWSWVRRVRPSDVockZhM2V1aXpvL1hI?=
+ =?utf-8?B?ZjVGdnpMRDJKczNvcmRUODVudzdSV0Y4M3VEMS83QzlxOVRZVXV5c2dMV1lL?=
+ =?utf-8?B?azd2RkdlR2NaYXkrMXlpd1lUdGI3Q2xpVjBnMElkZnpaZkQ4SURFZXVlNEc5?=
+ =?utf-8?B?UGsva0R0eXFuVHBZSGgvYjRHRDV1dnBPMk9xVSttTDFpcjYxL1RRWU1rK0Fh?=
+ =?utf-8?B?LzdaYTdmN01Zd1l0STRTVFIwbHkrUnhOMmpwb04zS1B6eDBFekpnK1lvdjI5?=
+ =?utf-8?B?Y0VOQWVLaFE4N2VzRHl6bVpPdS9YRXdvWndWL1NPU1JTVUZhTlRURlZKVmNH?=
+ =?utf-8?B?OUtMMXJlb1FXTzRaQW5LSW1MRitRTWt4dnB2QWpob3NKKzB3UjJMMjA4SXFx?=
+ =?utf-8?B?TnhtRU5lcXQ4N2I2Yyt0NkhzcVVDaFU4eVNvR2d0dzdrWm1WNENoTXJLQnNu?=
+ =?utf-8?Q?oES8pdkheKEcZ8CGw2CdEzrG7qyHXGP8?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB7461.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cEFhRHkyQldWRGlsL0w3L3BIanpJVWpSOEI4TnBqSjJDV2hGS2hjY0FxMTZw?=
+ =?utf-8?B?bVBmWWs5Y2dBa1EzNno0eVlDNk9tOHlqQ1psSGN5bnZaazhoQnJmVmp6UGdD?=
+ =?utf-8?B?SkFVNHM5RlNoTHY2VDZud1ZuTTNhOGp2Yi9OU3k5UXhjZnNXWm5sd0xISzhB?=
+ =?utf-8?B?VDVVR0FnZ2x3R01id2pUZFZrdUFWbnBNZzU0OGV3cVU3TjNkaGJRdHFSUGFH?=
+ =?utf-8?B?QmpKRWRsYWRlYVVYWjhmT3U5YzdnYW9nSWtlYW82b2xvMGdzajBwcktPeFBz?=
+ =?utf-8?B?dVdnUFBnZ2lDR0dtZUdNTDRLenVkeEVCczkwYTZQdWVRTkYzakNyQm9reUhK?=
+ =?utf-8?B?WDQyZzNTN01qTTg4V2NTKzBSL3J3WUJSSkwyeDV4UlY4d2xidlB6NVV6d0R2?=
+ =?utf-8?B?RWVldHBvalhTc1I1VStLTEgyc1VQWEZVbVBLWWxaTWRFaEgwVG9FY2hiREp1?=
+ =?utf-8?B?UEpFdEZMc1lTcEI0aUFXOCtNU0xIWEQ2SGdQUUtUSlcvV3ZUWjJUVStJSVZX?=
+ =?utf-8?B?L3VRSEQrdDg5amo2a0NmdWIrZ1o5YVlyMERpUkU2WmIyWDY4QlBNMjlxYjNY?=
+ =?utf-8?B?Z2xNOWRNT25JTGxWWm9tbllGTEtIWnFFMzMwc0JwSkg3bVlML0RKZ1U3Lyt5?=
+ =?utf-8?B?Zk8xa1dqYjYxVDFaVmdoeWxjWHAzdUVWd29XTHoxUUU0bDRGbDVsWlZuTVdk?=
+ =?utf-8?B?R0ZOVXM1Z3BiakFKZFZ3YllsRjBGYS9udXMwTjhjdkdJVm9UVmgyY1lqNHhG?=
+ =?utf-8?B?UlRPV05XbE15UjVBRmIyTmZZL1NRY1BtbmRzdW80bjY3Q0R1V3RSZFp1YTdF?=
+ =?utf-8?B?SlF6K2hwWVpiVndCZkF4T3dRVk1ncXdSb1VFVW9US29wVW9aRVVMU1cxMi9s?=
+ =?utf-8?B?RFQvL1hSeFFuWDJtZzNRcDNrcGsvdVpNWlhCamptWUhSc2VGb0MxVUVDSDFm?=
+ =?utf-8?B?U0M2ZzZxdnBhY09CZFJSdEN3M1d4OGJaVzRhM0R1UTVkWno5TFArbzNyUXpm?=
+ =?utf-8?B?ejlHeU5RdkluQmhEZ2RFdEdMQU1Ic0NvRzZvWlZETFQzT2x5TTg4WEFwMlFV?=
+ =?utf-8?B?VnowMjZ6YjZsWmlBeTlxNFRmcFFvV1h1RnRFQW9GTGF2N0ZBRDVXbS9mUUl1?=
+ =?utf-8?B?ZDZyY0oxMVFIRWJqc1JDQkNuelJ2N3pvTWREb3pFbWd6c0NWaXVoSVo2V3JV?=
+ =?utf-8?B?QytxMnlRYzRRQW5LdFM3YzJXOVBWa0pEWm96VERQSU9RUVVmWlRRaTV2V3FL?=
+ =?utf-8?B?WlJzM2ZOVFY4RERTRk5jMXJFbHdYUURTVzJTU1YwaTJuTTdNL245VDlsdmNB?=
+ =?utf-8?B?d0E1ODdHKzRJMEtLODVLYUNwUElRazFXVEdacW5XUHRMYURwZmdieW1sTVov?=
+ =?utf-8?B?WkMwMG9NRmtyMk9SRTRPMmlwdXFuTTI5YVViQVJxaWNPRCtGc3RkWk14WFBP?=
+ =?utf-8?B?N2dhdDQwT0x4L3ZNTGRlZGIxaHQxcEd6QnlTcFZmUTJQbTJGZGNxWVNBVlRN?=
+ =?utf-8?B?aHhWTTd0S0doWWk0STlNQ3RkVVNQN0VYR1A0WjJEUHRjdFhiTXdvRWtTZlIr?=
+ =?utf-8?B?WTRoVzhOakZpbUlLWE1ZL0RiNzV1eDI0Q2VJMEhZV3JyenA3aUsra1BBeEli?=
+ =?utf-8?B?NWtqcDlQcFdyVHR1QUVnU0h0NWZ2MFhmczA5MnZRNjZ5UFRsNDdwUlluWUtW?=
+ =?utf-8?B?QXM4RGZNTHR2MmZpQWN3MThqOFZlUWtkUi9zYWtIai9CUGNzUTRPeG9jcm9p?=
+ =?utf-8?B?cVp4T3dZSW8rcGJDdWplaGZuR3pwckxWWHNKRnFsSTJrR2xkalhYT055N2or?=
+ =?utf-8?B?TXc0U2xJcTdTMVBlNThESTJyVWVRQkdKVWNQalZIcFFjaWxvZGYydDdTdlRI?=
+ =?utf-8?B?TVdkdUxtV2ZjTGpPeTRLOTlmb3grR1J2WTlqTXNycVdtU2hnRGpTc2l6a2d5?=
+ =?utf-8?B?eitLYkwxUWdTd09Yakh3WDZVRGFURzV4NjYybk5RRXQvaTU2ZGxaaTNmeXE5?=
+ =?utf-8?B?VGRSdGVXWCtkZHhFUkt0TnA5QlJkY2wyQkUwVGk5ODdZeFgyQXlHY3I1Mktk?=
+ =?utf-8?B?ZFh4Z2k0bmQzY0NYTWE5SG56QUozRjQ0QlduQ3lwNDFmZ05lcEh3cjdXVFgv?=
+ =?utf-8?Q?boSEQxpHBdCDK66cuXbZI9Rxv?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH] [RFC] cxl/core/regs: Refactor out functions to count
- regblocks of given type
-To: Huaisheng Ye <huaisheng.ye@intel.com>, Jonathan.Cameron@huawei.com,
- dan.j.williams@intel.com, dave.jiang@intel.com
-Cc: pei.p.jia@intel.com, linux-cxl@vger.kernel.org
-References: <20241225083539.2230150-1-huaisheng.ye@intel.com>
-In-Reply-To: <20241225083539.2230150-1-huaisheng.ye@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122799fad64c88aa22d70746b74700005812f985b8f8c3c3b4b5c4461dee4eafc1a429d025669ab14b:zu080112273977cc70d4da53e66d207cb600001b425de431d2e709452e9a78470872c0a8141e89f6df982f6e:rf0801122dadb4d3a57b1366b7c6e4858b000073f9dd50b8b376c5eb39016836057ce2f26fa38fec963c4be982e31d8bef09:ZohoMail
-X-ZohoMailClient: External
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB7461.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a9bc29e-fc54-420c-4bd7-08dd25756fb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Dec 2024 06:20:47.1898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LNAqV5ajdfUoXAdWQ81Suxm/4Q4amDHXTJCOVN7VsUhZz+EBY7CR2uyEsjpstycYPIqmErIDmjpAeCg8wrnCSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5242
+X-OriginatorOrg: intel.com
 
-On 12/25/2024 4:35 PM, Huaisheng Ye wrote:
-> In commit d717d7f3df18494baafd9595fb4bcb9c380d7389, cxl_count_regblock was
-> added for counting regblocks of a given RBI (Register Block Identifier).
-> It is workable, but has two drawbacks that can be improved.
->
-> 1. In order to get the count of instances, cxl_count_regblock has to tentatively
-> repeat the call of cxl_find_regblock_instance by increasing index from 0. It
-> will not stop until an error value is returned. Actually, It needs to search for
-> Register Blocks in dvsec again every time by taking a start from the head. This
-> is a bit inefficient.
->
-> For example, to determine if PMU1 exists, cxl_find_regblock_instance must check
-> all Register Blocks by the type and index from RB1 to RB4. If there are more RBs
-> of the same type in the future, the situation will be even worse.
->
-> 16 81 00 23		PCIe extended Capability Header
-> 02 c0 1e 98		Header 1
-> 00 00 00 08		Header 2
-> --------------------------------------
-> 00 00 01 00		RB 1 - Offset Low	Component
-> 00 00 00 00		RB 1 - Offset High
-> --------------------------------------
-> 00 00 03 02		RB 2 - Offset Low	Device Register
-> 00 00 00 00		RB 2 - Offset High
-> --------------------------------------
-> 00 01 04 02		RB 3 - Offset Low	PMU0
-> 00 00 00 00		RB 3 - Offset High
-> --------------------------------------
-> 00 02 04 02		RB 4 - Offset Low	PMU1
-> 00 00 00 00		RB 4 - Offset High
->
-> RB: Register Block
->
-> 2. cxl_count_regblock blocks the opportunity to get error codes from
-> cxl_find_regblock_instance. cxl_pci_probe has error code checking for almost
-> all function calls. This is a good behavior, but cxl_count_regblock couldn't.
->
-> With this patch, only need to add two lines of code in cxl_find_regblock_instance,
-> which can return the count of regblocks by given RBI in just one call. It is
-> more effective than before. Besides, the error code could be obtained by the
-> called function, here is cxl_pci_probe.
->
-> Based on the above reasons, cxl_count_regblock could be considered to remove.
->
-> This patch is tested by ndctl cxl_test and physical CXL expander card
-> with v6.12.
-
-I think the description about how you tested the patch should be included in cover-letter rather than patch's changelog.
-
-
->
-> Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
-> ---
->  drivers/cxl/core/regs.c | 32 +++++++-------------------------
->  drivers/cxl/cxl.h       |  2 +-
->  drivers/cxl/pci.c       |  7 ++++++-
->  3 files changed, 14 insertions(+), 27 deletions(-)
->
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index e1082e749c69..d6b882a334d5 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -290,17 +290,19 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
->  }
->  
->  /**
-> - * cxl_find_regblock_instance() - Locate a register block by type / index
-> + * cxl_find_regblock_instance() - Locate a register block or count instances by type / index
->   * @pdev: The CXL PCI device to enumerate.
->   * @type: Register Block Indicator id
->   * @map: Enumeration output, clobbered on error
->   * @index: Index into which particular instance of a regblock wanted in the
->   *	   order found in register locator DVSEC.
->   *
-> - * Return: 0 if register block enumerated, negative error code otherwise
-> + * Return: 0 if register block enumerated, non-negative if counting instances,
-> + * negative error code otherwise
->   *
->   * A CXL DVSEC may point to one or more register blocks, search for them
->   * by @type and @index.
-> + * Use CXL_INSTANCES_COUNT for @index if counting instances by @type.
->   */
->  int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
->  			       struct cxl_register_map *map, int index)
-> @@ -341,6 +343,9 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
->  		}
->  	}
->  
-> +	if (index == CXL_INSTANCES_COUNT)
-> +		return instance;
-> +
-
-Above return will skip below 'map->resource = CXL_RESOURCE_NONE'. is it expected?
-
-
->  	map->resource = CXL_RESOURCE_NONE;
->  	return -ENODEV;
->  }
-> @@ -364,29 +369,6 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
->  
-> -/**
-> - * cxl_count_regblock() - Count instances of a given regblock type.
-> - * @pdev: The CXL PCI device to enumerate.
-> - * @type: Register Block Indicator id
-> - *
-> - * Some regblocks may be repeated. Count how many instances.
-> - *
-> - * Return: count of matching regblocks.
-> - */
-> -int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
-> -{
-> -	struct cxl_register_map map;
-> -	int rc, count = 0;
-> -
-> -	while (1) {
-> -		rc = cxl_find_regblock_instance(pdev, type, &map, count);
-> -		if (rc)
-> -			return count;
-> -		count++;
-> -	}
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, CXL);
-> -
->  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
->  {
->  	struct device *dev = map->host;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 5406e3ab3d4a..3fbbd76da819 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -294,8 +294,8 @@ int cxl_map_device_regs(const struct cxl_register_map *map,
->  			struct cxl_device_regs *regs);
->  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
->  
-> +#define CXL_INSTANCES_COUNT -1
->  enum cxl_regloc_type;
-> -int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
->  int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
->  			       struct cxl_register_map *map, int index);
->  int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 188412d45e0d..5aa4dfda4a73 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -915,7 +915,12 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> -	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
-> +	rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_PMU, &map, CXL_INSTANCES_COUNT);
-
-I think that I can clearly understand what cxl_count_regblock() does from the name of it, not sure if repalcing cxl_count_regblock() with cxl_find_regblock_instance() is a good choice.
-
-Let us see if other reviwers have more comments on it.
-
-
-> +	if (rc < 0)
-> +		return rc;
-
-Before this patch, any error happened in cxl_count_regblock() will cause cxl_count_regblock() returning current PMU instance counter, it will not stop cxl pci probing.
-
-But this patch will change this code logic, any error happened during counting PMU instance counter will stop cxl pci probing, is it expected?
-
-My understanding is that cxl_pci driver allows PMU initialization failure(in below loops), so I guess that counting PMU instances failure is allowed, just initializing the number of PMU instances returned by cxl_count_regblock() is OK.
-
-
-> +
-> +	pmu_count = rc;
-> +
->  	for (i = 0; i < pmu_count; i++) {
->  		struct cxl_pmu_regs pmu_regs;
->  
-
-
+DQpGcm9tOiBMaSBNaW5nIDxtaW5nLmxpQHpvaG9tYWlsLmNvbT4NClNlbnQ6IFRodXJzZGF5LCBE
+ZWNlbWJlciAyNiwgMjAyNCAxMDoxMSBBTQ0KPiANCj4gT24gMTIvMjUvMjAyNCA0OjM1IFBNLCBI
+dWFpc2hlbmcgWWUgd3JvdGU6DQo+ID4gSW4gY29tbWl0IGQ3MTdkN2YzZGYxODQ5NGJhYWZkOTU5
+NWZiNGJjYjljMzgwZDczODksIGN4bF9jb3VudF9yZWdibG9jaw0KPiA+IHdhcyBhZGRlZCBmb3Ig
+Y291bnRpbmcgcmVnYmxvY2tzIG9mIGEgZ2l2ZW4gUkJJIChSZWdpc3RlciBCbG9jaw0KPiBJZGVu
+dGlmaWVyKS4NCj4gPiBJdCBpcyB3b3JrYWJsZSwgYnV0IGhhcyB0d28gZHJhd2JhY2tzIHRoYXQg
+Y2FuIGJlIGltcHJvdmVkLg0KPiA+DQo+ID4gMS4gSW4gb3JkZXIgdG8gZ2V0IHRoZSBjb3VudCBv
+ZiBpbnN0YW5jZXMsIGN4bF9jb3VudF9yZWdibG9jayBoYXMgdG8NCj4gPiB0ZW50YXRpdmVseSBy
+ZXBlYXQgdGhlIGNhbGwgb2YgY3hsX2ZpbmRfcmVnYmxvY2tfaW5zdGFuY2UgYnkNCj4gPiBpbmNy
+ZWFzaW5nIGluZGV4IGZyb20gMC4gSXQgd2lsbCBub3Qgc3RvcCB1bnRpbCBhbiBlcnJvciB2YWx1
+ZSBpcw0KPiA+IHJldHVybmVkLiBBY3R1YWxseSwgSXQgbmVlZHMgdG8gc2VhcmNoIGZvciBSZWdp
+c3RlciBCbG9ja3MgaW4gZHZzZWMNCj4gPiBhZ2FpbiBldmVyeSB0aW1lIGJ5IHRha2luZyBhIHN0
+YXJ0IGZyb20gdGhlIGhlYWQuIFRoaXMgaXMgYSBiaXQNCj4gaW5lZmZpY2llbnQuDQo+ID4NCj4g
+PiBGb3IgZXhhbXBsZSwgdG8gZGV0ZXJtaW5lIGlmIFBNVTEgZXhpc3RzLCBjeGxfZmluZF9yZWdi
+bG9ja19pbnN0YW5jZQ0KPiA+IG11c3QgY2hlY2sgYWxsIFJlZ2lzdGVyIEJsb2NrcyBieSB0aGUg
+dHlwZSBhbmQgaW5kZXggZnJvbSBSQjEgdG8gUkI0Lg0KPiA+IElmIHRoZXJlIGFyZSBtb3JlIFJC
+cyBvZiB0aGUgc2FtZSB0eXBlIGluIHRoZSBmdXR1cmUsIHRoZSBzaXR1YXRpb24gd2lsbA0KPiBi
+ZSBldmVuIHdvcnNlLg0KPiA+DQo+ID4gMTYgODEgMDAgMjMJCVBDSWUgZXh0ZW5kZWQgQ2FwYWJp
+bGl0eSBIZWFkZXINCj4gPiAwMiBjMCAxZSA5OAkJSGVhZGVyIDENCj4gPiAwMCAwMCAwMCAwOAkJ
+SGVhZGVyIDINCj4gPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+
+IDAwIDAwIDAxIDAwCQlSQiAxIC0gT2Zmc2V0IExvdwlDb21wb25lbnQNCj4gPiAwMCAwMCAwMCAw
+MAkJUkIgMSAtIE9mZnNldCBIaWdoDQo+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NCj4gPiAwMCAwMCAwMyAwMgkJUkIgMiAtIE9mZnNldCBMb3cJRGV2aWNlIFJlZ2lz
+dGVyDQo+ID4gMDAgMDAgMDAgMDAJCVJCIDIgLSBPZmZzZXQgSGlnaA0KPiA+IC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gMDAgMDEgMDQgMDIJCVJCIDMgLSBPZmZz
+ZXQgTG93CVBNVTANCj4gPiAwMCAwMCAwMCAwMAkJUkIgMyAtIE9mZnNldCBIaWdoDQo+ID4gLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAwMCAwMiAwNCAwMgkJUkIg
+NCAtIE9mZnNldCBMb3cJUE1VMQ0KPiA+IDAwIDAwIDAwIDAwCQlSQiA0IC0gT2Zmc2V0IEhpZ2gN
+Cj4gPg0KPiA+IFJCOiBSZWdpc3RlciBCbG9jaw0KPiA+DQo+ID4gMi4gY3hsX2NvdW50X3JlZ2Js
+b2NrIGJsb2NrcyB0aGUgb3Bwb3J0dW5pdHkgdG8gZ2V0IGVycm9yIGNvZGVzIGZyb20NCj4gPiBj
+eGxfZmluZF9yZWdibG9ja19pbnN0YW5jZS4gY3hsX3BjaV9wcm9iZSBoYXMgZXJyb3IgY29kZSBj
+aGVja2luZyBmb3INCj4gPiBhbG1vc3QgYWxsIGZ1bmN0aW9uIGNhbGxzLiBUaGlzIGlzIGEgZ29v
+ZCBiZWhhdmlvciwgYnV0DQo+IGN4bF9jb3VudF9yZWdibG9jayBjb3VsZG4ndC4NCj4gPg0KPiA+
+IFdpdGggdGhpcyBwYXRjaCwgb25seSBuZWVkIHRvIGFkZCB0d28gbGluZXMgb2YgY29kZSBpbg0K
+PiA+IGN4bF9maW5kX3JlZ2Jsb2NrX2luc3RhbmNlLCB3aGljaCBjYW4gcmV0dXJuIHRoZSBjb3Vu
+dCBvZiByZWdibG9ja3MgYnkNCj4gPiBnaXZlbiBSQkkgaW4ganVzdCBvbmUgY2FsbC4gSXQgaXMg
+bW9yZSBlZmZlY3RpdmUgdGhhbiBiZWZvcmUuIEJlc2lkZXMsDQo+ID4gdGhlIGVycm9yIGNvZGUg
+Y291bGQgYmUgb2J0YWluZWQgYnkgdGhlIGNhbGxlZCBmdW5jdGlvbiwgaGVyZSBpcw0KPiBjeGxf
+cGNpX3Byb2JlLg0KPiA+DQo+ID4gQmFzZWQgb24gdGhlIGFib3ZlIHJlYXNvbnMsIGN4bF9jb3Vu
+dF9yZWdibG9jayBjb3VsZCBiZSBjb25zaWRlcmVkIHRvDQo+IHJlbW92ZS4NCj4gPg0KPiA+IFRo
+aXMgcGF0Y2ggaXMgdGVzdGVkIGJ5IG5kY3RsIGN4bF90ZXN0IGFuZCBwaHlzaWNhbCBDWEwgZXhw
+YW5kZXIgY2FyZA0KPiA+IHdpdGggdjYuMTIuDQo+IA0KPiBJIHRoaW5rIHRoZSBkZXNjcmlwdGlv
+biBhYm91dCBob3cgeW91IHRlc3RlZCB0aGUgcGF0Y2ggc2hvdWxkIGJlIGluY2x1ZGVkDQo+IGlu
+IGNvdmVyLWxldHRlciByYXRoZXIgdGhhbiBwYXRjaCdzIGNoYW5nZWxvZy4NCj4gDQoNCkhpIE1p
+bmcsDQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KDQpUaGlzIGlzIGEgc2luZ2xl
+IHBhdGNoLCBzbyBJIGhhdmVuJ3QgcHJlcGFyZWQgY292ZXItbGV0dGVyLCBidXQgeW91ciBzdWdn
+ZXN0aW9uDQppcyBjb3JyZWN0IEkgc2hvdWxkIHByb3ZpZGUgYSBtb3JlIGRldGFpbGVkIGludHJv
+ZHVjdGlvbiBmb3IgaG93IHRvIHRlc3QuIEkgd2lsbA0KZXhwYW5kIHRoZW0gaW4gbmV4dCB2ZXJz
+aW9uLg0KDQoxLiBOZGN0bCBDWEwgdGVzdCBzdWl0ZSB2ODAgY291bGQgcGFzcyB3aXRoIHRoaXMg
+cGF0Y2ggYXBwbGllZC4gDQoNCiQgbWVzb24gdGVzdCAtQyBidWlsZCAtLXN1aXRlIGN4bA0Kbmlu
+amE6IEVudGVyaW5nIGRpcmVjdG9yeSBgL2hvbWUvd29yay9zb3VyY2UvbmRjdGwvYnVpbGQnDQpb
+MS80OF0gR2VuZXJhdGluZyB2ZXJzaW9uLmggd2l0aCBhIGN1c3RvbSBjb21tYW5kDQogMS8xMSBu
+ZGN0bDpjeGwgLyBjeGwtdG9wb2xvZ3kuc2ggICAgICAgICAgICAgICBPSyAgICAgICAgICAgICAg
+IDMuMjlzDQogMi8xMSBuZGN0bDpjeGwgLyBjeGwtcmVnaW9uLXN5c2ZzLnNoICAgICAgICAgICBP
+SyAgICAgICAgICAgICAgIDIuNTBzDQogMy8xMSBuZGN0bDpjeGwgLyBjeGwtbGFiZWxzLnNoICAg
+ICAgICAgICAgICAgICBPSyAgICAgICAgICAgICAgIDEuNjRzDQogNC8xMSBuZGN0bDpjeGwgLyBj
+eGwtY3JlYXRlLXJlZ2lvbi5zaCAgICAgICAgICBPSyAgICAgICAgICAgICAgIDMuMjlzDQogNS8x
+MSBuZGN0bDpjeGwgLyBjeGwteG9yLXJlZ2lvbi5zaCAgICAgICAgICAgICBPSyAgICAgICAgICAg
+ICAgIDEuNzJzDQogNi8xMSBuZGN0bDpjeGwgLyBjeGwtZXZlbnRzLnNoICAgICAgICAgICAgICAg
+ICBPSyAgICAgICAgICAgICAgIDEuNDVzDQogNy8xMSBuZGN0bDpjeGwgLyBjeGwtc2FuaXRpemUu
+c2ggICAgICAgICAgICAgICBPSyAgICAgICAgICAgICAgIDQuNDdzDQogOC8xMSBuZGN0bDpjeGwg
+LyBjeGwtZGVzdHJveS1yZWdpb24uc2ggICAgICAgICBPSyAgICAgICAgICAgICAgIDEuODRzDQog
+OS8xMSBuZGN0bDpjeGwgLyBjeGwtcW9zLWNsYXNzLnNoICAgICAgICAgICAgICBPSyAgICAgICAg
+ICAgICAgIDIuNTJzDQoxMC8xMSBuZGN0bDpjeGwgLyBjeGwtcG9pc29uLnNoICAgICAgICAgICAg
+ICAgICBPSyAgICAgICAgICAgICAgIDIuODFzDQoxMS8xMSBuZGN0bDpjeGwgLyBjeGwtc2VjdXJp
+dHkuc2ggICAgICAgICAgICAgICBPSyAgICAgICAgICAgICAgIDAuNzlzDQoNCk9rOiAgICAgICAg
+ICAgICAgICAgMTENCkV4cGVjdGVkIEZhaWw6ICAgICAgMA0KRmFpbDogICAgICAgICAgICAgICAw
+DQpVbmV4cGVjdGVkIFBhc3M6ICAgIDANClNraXBwZWQ6ICAgICAgICAgICAgMA0KVGltZW91dDog
+ICAgICAgICAgICAwDQoNCkZ1bGwgbG9nIHdyaXR0ZW4gdG8gL2hvbWUvd29yay9zb3VyY2UvbmRj
+dGwvYnVpbGQvbWVzb24tbG9ncy90ZXN0bG9nLnR4dA0KDQoNCjIuIFRlc3QgcGF0Y2ggd2l0aCBR
+ZW11IHg0IHN3aXRjaCB0b3BvbG9neToNCg0KICAgICAgICAgICAgICAgICAgICAgICBBQ1BJMDAx
+NzowMCBbcm9vdDBdDQogICAgICAgICAgICAgICAgICAgICAgICAgICB8DQogICAgICAgICAgICAg
+ICAgICAgICAgICAgSEJfMCBbcG9ydDFdDQogICAgICAgICAgICAgICAgICAgICAgICAvICAgICAg
+ICAgICAgIFwNCiAgICAgICAgICAgICAgICAgICAgIFJQXzAgICAgICAgICAgICAgUlBfMQ0KICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgIHwNCiAgICAgICAgICAgICAgICBV
+U1AgW3BvcnQyXSAgICAgICAgICANCiAgICAgICAgICAgIC8gICAgLyAgICBcICAgIFwgICAgICAN
+CiAgICAgICAgICBEU1AgICBEU1AgICBEU1AgICBEU1AgICANCiAgICAgICAgICAgfCAgICAgfCAg
+ICAgfCAgICAgfCAgICAgDQogICAgICAgICAgbWVtMSAgbWVtMCAgbWVtMiAgbWVtMyAgDQoNCkV2
+ZXJ5IGNhcmQgaGFzIDIgUE1VIFJCcywgaGVyZSBhcmUgdGhlIHBtdV9tZW0gZGV2aWNlcy4NCg0K
+JCBscyAvc3lzL2J1cy9jeGwvZGV2aWNlcy9wbXVfbWVtKiAtbGgNCmxyd3hyd3hyd3guIDEgcm9v
+dCByb290IDAgRGVjIDI2IDEyOjU5IC9zeXMvYnVzL2N4bC9kZXZpY2VzL3BtdV9tZW0wLjAgLT4g
+Li4vLi4vLi4vZGV2aWNlcy9wY2kwMDAwOjBjLzAwMDA6MGM6MDAuMC8wMDAwOjBkOjAwLjAvMDAw
+MDowZTowMS4wLzAwMDA6MTA6MDAuMC9wbXVfbWVtMC4wDQpscnd4cnd4cnd4LiAxIHJvb3Qgcm9v
+dCAwIERlYyAyNiAxMjo1OSAvc3lzL2J1cy9jeGwvZGV2aWNlcy9wbXVfbWVtMC4xIC0+IC4uLy4u
+Ly4uL2RldmljZXMvcGNpMDAwMDowYy8wMDAwOjBjOjAwLjAvMDAwMDowZDowMC4wLzAwMDA6MGU6
+MDEuMC8wMDAwOjEwOjAwLjAvcG11X21lbTAuMQ0KbHJ3eHJ3eHJ3eC4gMSByb290IHJvb3QgMCBE
+ZWMgMjYgMTI6NTkgL3N5cy9idXMvY3hsL2RldmljZXMvcG11X21lbTEuMCAtPiAuLi8uLi8uLi9k
+ZXZpY2VzL3BjaTAwMDA6MGMvMDAwMDowYzowMC4wLzAwMDA6MGQ6MDAuMC8wMDAwOjBlOjAwLjAv
+MDAwMDowZjowMC4wL3BtdV9tZW0xLjANCmxyd3hyd3hyd3guIDEgcm9vdCByb290IDAgRGVjIDI2
+IDEyOjU5IC9zeXMvYnVzL2N4bC9kZXZpY2VzL3BtdV9tZW0xLjEgLT4gLi4vLi4vLi4vZGV2aWNl
+cy9wY2kwMDAwOjBjLzAwMDA6MGM6MDAuMC8wMDAwOjBkOjAwLjAvMDAwMDowZTowMC4wLzAwMDA6
+MGY6MDAuMC9wbXVfbWVtMS4xDQpscnd4cnd4cnd4LiAxIHJvb3Qgcm9vdCAwIERlYyAyNiAxMjo1
+OSAvc3lzL2J1cy9jeGwvZGV2aWNlcy9wbXVfbWVtMi4wIC0+IC4uLy4uLy4uL2RldmljZXMvcGNp
+MDAwMDowYy8wMDAwOjBjOjAwLjAvMDAwMDowZDowMC4wLzAwMDA6MGU6MDIuMC8wMDAwOjExOjAw
+LjAvcG11X21lbTIuMA0KbHJ3eHJ3eHJ3eC4gMSByb290IHJvb3QgMCBEZWMgMjYgMTI6NTkgL3N5
+cy9idXMvY3hsL2RldmljZXMvcG11X21lbTIuMSAtPiAuLi8uLi8uLi9kZXZpY2VzL3BjaTAwMDA6
+MGMvMDAwMDowYzowMC4wLzAwMDA6MGQ6MDAuMC8wMDAwOjBlOjAyLjAvMDAwMDoxMTowMC4wL3Bt
+dV9tZW0yLjENCmxyd3hyd3hyd3guIDEgcm9vdCByb290IDAgRGVjIDI2IDEyOjU5IC9zeXMvYnVz
+L2N4bC9kZXZpY2VzL3BtdV9tZW0zLjAgLT4gLi4vLi4vLi4vZGV2aWNlcy9wY2kwMDAwOjBjLzAw
+MDA6MGM6MDAuMC8wMDAwOjBkOjAwLjAvMDAwMDowZTowMy4wLzAwMDA6MTI6MDAuMC9wbXVfbWVt
+My4wDQpscnd4cnd4cnd4LiAxIHJvb3Qgcm9vdCAwIERlYyAyNiAxMjo1OSAvc3lzL2J1cy9jeGwv
+ZGV2aWNlcy9wbXVfbWVtMy4xIC0+IC4uLy4uLy4uL2RldmljZXMvcGNpMDAwMDowYy8wMDAwOjBj
+OjAwLjAvMDAwMDowZDowMC4wLzAwMDA6MGU6MDMuMC8wMDAwOjEyOjAwLjAvcG11X21lbTMuMQ0K
+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIdWFpc2hlbmcgWWUgPGh1YWlzaGVuZy55ZUBpbnRl
+bC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY3hsL2NvcmUvcmVncy5jIHwgMzIgKysrKysr
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgZHJpdmVycy9jeGwvY3hsLmggICAgICAg
+fCAgMiArLQ0KPiA+ICBkcml2ZXJzL2N4bC9wY2kuYyAgICAgICB8ICA3ICsrKysrKy0NCj4gPiAg
+MyBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9jb3JlL3JlZ3MuYyBiL2RyaXZlcnMvY3hsL2Nv
+cmUvcmVncy5jIGluZGV4DQo+ID4gZTEwODJlNzQ5YzY5Li5kNmI4ODJhMzM0ZDUgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9jeGwvY29yZS9yZWdzLmMNCj4gPiArKysgYi9kcml2ZXJzL2N4bC9j
+b3JlL3JlZ3MuYw0KPiA+IEBAIC0yOTAsMTcgKzI5MCwxOSBAQCBzdGF0aWMgYm9vbCBjeGxfZGVj
+b2RlX3JlZ2Jsb2NrKHN0cnVjdCBwY2lfZGV2DQo+ID4gKnBkZXYsIHUzMiByZWdfbG8sIHUzMiBy
+ZWdfaGksICB9DQo+ID4NCj4gPiAgLyoqDQo+ID4gLSAqIGN4bF9maW5kX3JlZ2Jsb2NrX2luc3Rh
+bmNlKCkgLSBMb2NhdGUgYSByZWdpc3RlciBibG9jayBieSB0eXBlIC8NCj4gPiBpbmRleA0KPiA+
+ICsgKiBjeGxfZmluZF9yZWdibG9ja19pbnN0YW5jZSgpIC0gTG9jYXRlIGEgcmVnaXN0ZXIgYmxv
+Y2sgb3IgY291bnQNCj4gPiArIGluc3RhbmNlcyBieSB0eXBlIC8gaW5kZXgNCj4gPiAgICogQHBk
+ZXY6IFRoZSBDWEwgUENJIGRldmljZSB0byBlbnVtZXJhdGUuDQo+ID4gICAqIEB0eXBlOiBSZWdp
+c3RlciBCbG9jayBJbmRpY2F0b3IgaWQNCj4gPiAgICogQG1hcDogRW51bWVyYXRpb24gb3V0cHV0
+LCBjbG9iYmVyZWQgb24gZXJyb3INCj4gPiAgICogQGluZGV4OiBJbmRleCBpbnRvIHdoaWNoIHBh
+cnRpY3VsYXIgaW5zdGFuY2Ugb2YgYSByZWdibG9jayB3YW50ZWQgaW4NCj4gdGhlDQo+ID4gICAq
+CSAgIG9yZGVyIGZvdW5kIGluIHJlZ2lzdGVyIGxvY2F0b3IgRFZTRUMuDQo+ID4gICAqDQo+ID4g
+LSAqIFJldHVybjogMCBpZiByZWdpc3RlciBibG9jayBlbnVtZXJhdGVkLCBuZWdhdGl2ZSBlcnJv
+ciBjb2RlDQo+ID4gb3RoZXJ3aXNlDQo+ID4gKyAqIFJldHVybjogMCBpZiByZWdpc3RlciBibG9j
+ayBlbnVtZXJhdGVkLCBub24tbmVnYXRpdmUgaWYgY291bnRpbmcNCj4gPiArIGluc3RhbmNlcywN
+Cj4gPiArICogbmVnYXRpdmUgZXJyb3IgY29kZSBvdGhlcndpc2UNCj4gPiAgICoNCj4gPiAgICog
+QSBDWEwgRFZTRUMgbWF5IHBvaW50IHRvIG9uZSBvciBtb3JlIHJlZ2lzdGVyIGJsb2Nrcywgc2Vh
+cmNoIGZvcg0KPiB0aGVtDQo+ID4gICAqIGJ5IEB0eXBlIGFuZCBAaW5kZXguDQo+ID4gKyAqIFVz
+ZSBDWExfSU5TVEFOQ0VTX0NPVU5UIGZvciBAaW5kZXggaWYgY291bnRpbmcgaW5zdGFuY2VzIGJ5
+IEB0eXBlLg0KPiA+ICAgKi8NCj4gPiAgaW50IGN4bF9maW5kX3JlZ2Jsb2NrX2luc3RhbmNlKHN0
+cnVjdCBwY2lfZGV2ICpwZGV2LCBlbnVtDQo+IGN4bF9yZWdsb2NfdHlwZSB0eXBlLA0KPiA+ICAJ
+CQkgICAgICAgc3RydWN0IGN4bF9yZWdpc3Rlcl9tYXAgKm1hcCwgaW50IGluZGV4KSBAQCAtDQo+
+IDM0MSw2ICszNDMsOQ0KPiA+IEBAIGludCBjeGxfZmluZF9yZWdibG9ja19pbnN0YW5jZShzdHJ1
+Y3QgcGNpX2RldiAqcGRldiwgZW51bQ0KPiBjeGxfcmVnbG9jX3R5cGUgdHlwZSwNCj4gPiAgCQl9
+DQo+ID4gIAl9DQo+ID4NCj4gPiArCWlmIChpbmRleCA9PSBDWExfSU5TVEFOQ0VTX0NPVU5UKQ0K
+PiA+ICsJCXJldHVybiBpbnN0YW5jZTsNCj4gPiArDQo+IA0KPiBBYm92ZSByZXR1cm4gd2lsbCBz
+a2lwIGJlbG93ICdtYXAtPnJlc291cmNlID0gQ1hMX1JFU09VUkNFX05PTkUnLiBpcyBpdA0KPiBl
+eHBlY3RlZD8NCj4gDQoNClllcywgd2hlbiBjb3VudGluZyByZWdibG9ja3Mgd2UgZG9uJ3QgbmVl
+ZCB0byByZXR1cm4gcmVnaXN0ZXJfbWFwLCB3ZSBvbmx5IHdhbnQgdG8ga25vdyB0aGUgbnVtYmVy
+IG9mIHRoZSBnaXZlbiBSQkkuDQpTbywgc2tpcHBpbmcgJ21hcC0+cmVzb3VyY2UgPSBDWExfUkVT
+T1VSQ0VfTk9ORScgYW5kICdyZXR1cm4gLUVOT0RFVicgaXMgb2theS4NCg0KPHNuaXA+DQoNCj4g
+PiAtCXBtdV9jb3VudCA9IGN4bF9jb3VudF9yZWdibG9jayhwZGV2LCBDWExfUkVHTE9DX1JCSV9Q
+TVUpOw0KPiA+ICsJcmMgPSBjeGxfZmluZF9yZWdibG9ja19pbnN0YW5jZShwZGV2LCBDWExfUkVH
+TE9DX1JCSV9QTVUsICZtYXAsDQo+ID4gK0NYTF9JTlNUQU5DRVNfQ09VTlQpOw0KPiANCj4gSSB0
+aGluayB0aGF0IEkgY2FuIGNsZWFybHkgdW5kZXJzdGFuZCB3aGF0IGN4bF9jb3VudF9yZWdibG9j
+aygpIGRvZXMgZnJvbQ0KPiB0aGUgbmFtZSBvZiBpdCwgbm90IHN1cmUgaWYgcmVwYWxjaW5nIGN4
+bF9jb3VudF9yZWdibG9jaygpIHdpdGgNCj4gY3hsX2ZpbmRfcmVnYmxvY2tfaW5zdGFuY2UoKSBp
+cyBhIGdvb2QgY2hvaWNlLg0KPiANCj4gTGV0IHVzIHNlZSBpZiBvdGhlciByZXZpd2VycyBoYXZl
+IG1vcmUgY29tbWVudHMgb24gaXQuDQoNCklmIHlvdSBmZWVsIHRoYXQgY3hsX2NvdW50X3JlZ2Js
+b2NrKCkgaXMgbW9yZSBoZWxwZnVsIGZvciB1bmRlcnN0YW5kaW5nLCBpdCBpcyBhbHNvIHBvc3Np
+YmxlIHRvIGtlZXAgaXQuDQpKdXN0IGNhbGwgY3hsX2ZpbmRfcmVnYmxvY2tfaW5zdGFuY2Ugb25j
+ZSB3aXRoIENYTF9JTlNUQU5DRVNfQ09VTlQgY291bGQgcmV0dXJuIHRoZSBjb3VudC4NCg0KPiAN
+Cj4gPiArCWlmIChyYyA8IDApDQo+ID4gKwkJcmV0dXJuIHJjOw0KPiANCj4gQmVmb3JlIHRoaXMg
+cGF0Y2gsIGFueSBlcnJvciBoYXBwZW5lZCBpbiBjeGxfY291bnRfcmVnYmxvY2soKSB3aWxsIGNh
+dXNlDQo+IGN4bF9jb3VudF9yZWdibG9jaygpIHJldHVybmluZyBjdXJyZW50IFBNVSBpbnN0YW5j
+ZSBjb3VudGVyLCBpdCB3aWxsIG5vdA0KPiBzdG9wIGN4bCBwY2kgcHJvYmluZy4NCj4gDQo+IEJ1
+dCB0aGlzIHBhdGNoIHdpbGwgY2hhbmdlIHRoaXMgY29kZSBsb2dpYywgYW55IGVycm9yIGhhcHBl
+bmVkIGR1cmluZw0KPiBjb3VudGluZyBQTVUgaW5zdGFuY2UgY291bnRlciB3aWxsIHN0b3AgY3hs
+IHBjaSBwcm9iaW5nLCBpcyBpdCBleHBlY3RlZD8NCj4gDQo+IE15IHVuZGVyc3RhbmRpbmcgaXMg
+dGhhdCBjeGxfcGNpIGRyaXZlciBhbGxvd3MgUE1VIGluaXRpYWxpemF0aW9uDQo+IGZhaWx1cmUo
+aW4gYmVsb3cgbG9vcHMpLCBzbyBJIGd1ZXNzIHRoYXQgY291bnRpbmcgUE1VIGluc3RhbmNlcyBm
+YWlsdXJlIGlzDQo+IGFsbG93ZWQsIGp1c3QgaW5pdGlhbGl6aW5nIHRoZSBudW1iZXIgb2YgUE1V
+IGluc3RhbmNlcyByZXR1cm5lZCBieQ0KPiBjeGxfY291bnRfcmVnYmxvY2soKSBpcyBPSy4NCg0K
+SSB0aGluayB0aGlzIHBhdGNoIHdpbGwgaW1wcm92ZSB0aGUgb3JpZ2luYWwgbG9naWMuDQpKdXN0
+IGxpa2UgeW91IGludHJvZHVjZWQsIHRoZXJlIGFyZSB0d28gdHlwZXMgb2YgZXJyb3IgY291bGQg
+aGFwcGVuIGluIGN4bF9jb3VudF9yZWdibG9jaygpIHdoZW4gY291bnRpbmcgUE1VIG9yIG90aGVy
+IGluc3RhbmNlcy4NCg0KVGhlIGZpcnN0IG9uZSBpcyB0aGF0IHJlZ2xvYyBjb3VsZCBmYWlsIHRv
+IGJlIGZvdW5kLCB0aGVuIGN4bF9maW5kX3JlZ2Jsb2NrX2luc3RhbmNlIHNob3VsZCByZXR1cm4g
+Jy1FTlhJTycgdG8gbm90aWZ5IHRoZSBjYWxsZXIuIEJ1dCBjdXJyZW50IGN4bF9jb3VudF9yZWdi
+bG9jaygpIGJsb2NrcyB0aGF0Lg0KSSB0aGluayB0aGlzIGlzIGEgbW9yZSBzZXJpb3VzIG1pc3Rh
+a2UgdGhhbiBubyBQTVUgaW5zdGFuY2VzLg0KDQpUaGUgb3RoZXIgb25lIGlzIHRoYXQgbm8gUE1V
+IGluc3RhbmNlIG9yIG5vIGNvcnJlc3BvbmRpbmcgaW5kZXggY291bGQgYmUgZm91bmQuIFdpdGgg
+dGhpcyBzaXR1YXRpb24sIHRoZSBwYXRjaCB3aWxsIHJldHVybiAwLCB0aGF0IGlzIG5vIGRpZmZl
+cmVuY2Ugd2l0aCBvcmlnaW5hbCBsb2dpYy4NCk9ubHkgd2hlbiB0aGUgcmV0dXJuIHZhbHVlIGlz
+IG5lZ2F0aXZlLCB0aGF0IG1lYW5zIHJlYWwgZXJyb3IgaGFzIG9jY3VycmVkLiBjeGwgcGNpIHBy
+b2Jpbmcgd2lsbCBiZSBzdG9wcGVkIHVuZGVyIHN1Y2ggY2lyY3Vtc3RhbmNlcy4NCg0KSSBhbSBu
+b3Qgb3Bwb3NlZCB0byB0aGUgY29tbWl0IGQ3MTdkN2YzZGYxOCwgSSB0aGluayBpdCBjb3VsZCBi
+ZSBpbXByb3ZlZCBmcm9tIHRoZSBvcmlnaW5hbCBiZWhhdmlvciwgdGhhdCBpcyB0ZW50YXRpdmVs
+eSByZXBlYXRpbmcgdGhlIGNhbGwgb2YgY3hsX2ZpbmRfcmVnYmxvY2tfaW5zdGFuY2UgYnkgaW5j
+cmVhc2luZyBpbmRleCBmcm9tIDAgdG8gdGhlIGhpZ2hlc3QgY291bnQuDQpXaXRoIHRoaXMgcGF0
+Y2gsIGp1c3Qgb25lIGNhbGwgY291bGQgZ2V0IHRoZSBjb3VudCBvZiBpbnN0YW5jZXMuDQoNCkJl
+c3QgUmVnYXJkcywNCkh1YWlzaGVuZyBZZQ0KDQo=
