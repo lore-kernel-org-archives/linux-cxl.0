@@ -1,73 +1,67 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49732BAF4
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 19:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0615C18E1F
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 20:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735241138; cv=none; b=MbVZRwyFSSG7tUhV1qxwq49f3lUd2QsieLHUEjfBmbRxXEoADytVCCuHtj+aPCA3WTCCUMdVYGVYWG7Whmn8WZpia5I4h01jE6WZ41PyJXG4x8+DYLIx4joU1Qb1Qb79WWOtpKO2rt7ckG/TsDoq8dEqdJKr9liRq+RIgwej9DQ=
+	t=1735244366; cv=none; b=HY/WFMk7G5WcbCF6yjSK3slsLTUxEx1uRWbfoZqxDZhOc7+0WBSdiDuqW+E1KOnJ93qEqTV2t6OFciFJ7jVndmZtPwX2eR0zM6KGC4Vp8ebTm3BTu3PcBO3FcddC5iGsgWEikmzcy2047Qa9BuvgufVhO0M/6Y1LXALik7ULY1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735241138; c=relaxed/simple;
-	bh=TavOlP1RfVMe+4JxuPyZKG1dts4hyvwwPjKtaJCZyy0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSZNvFxHl8JYmuzR1jgtwDGYn24fzQm/hylaJaX5MDJAormC3tm/F4s/xrP5l/LQC1+OmYUKNFzBNpmWhpt4FCZvQBsSgNk8l0u1CVNTV0PWbd8Yg/RlrCe1dERfqHDg2wsbFencNGydraeS9c6mG4Sc4KdZbXHD0k10Z3kcrPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cSUxbOyh; arc=none smtp.client-ip=209.85.222.172
+	s=arc-20240116; t=1735244366; c=relaxed/simple;
+	bh=lRgHdMNwk8t7SFgHlM9cwhzzs67i3LH2uk2gnqvP67Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KNyhe0husODXbj9D+BDMJ7jNn6yRTHSxJDMP1H8PxuJShJH7fZVDyUA9xTIJ4dRQVZK34ndI2aThKogjzeb/zgP+jtr9axegf3uUAKuVf+oLmE/ZR3OoxeVbvJyyPJ2NAc/zHdAi8gV0VJhzHm0sAPiYbpq3wAOtQqrLpPnHXak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Hc0Fi4dK; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cSUxbOyh"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b6fc5bf609so510316385a.1
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 11:25:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Hc0Fi4dK"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7b6eb531e13so330441285a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Dec 2024 12:19:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1735241136; x=1735845936; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bvHPT0ccY32kPKcwl8x32j2H6trMUV124nGwkwGHE2M=;
-        b=cSUxbOyheMDf47Jrd5V3CstqmZZifE35gBhbABxiGWaB3Sj9OzQpZpos+Kl/ftSWTu
-         T7S1jh8rHjVhiZ5MSvDoQcvkVcZH/DvB2negoTFvWaxcaT16TDssb7rK471n6Y8R5Awi
-         YqdpUg7GZXp7LZM26mXZlnS7L0mQyrLDfITsLmDHw9CjCnnI4tKvjx67uF4S0DuRwY+k
-         SvuIYTP6VoorhxUgH1TQDD2/D6qXUjFr3jNOwMLM32eRgcsp5HT2kshxQdlYlEXrp3f4
-         V3c2Tyn+0YVbU1JEwUUKXR1+hm4WD2KprzvccznMDIsPjW6IdUrzSup7yUzLRaE56pQf
-         K1uQ==
+        d=gourry.net; s=google; t=1735244364; x=1735849164; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qz5ytK1GRdvKgO8e6oKZGmSzgE/hU2itL0CRU+M0PxQ=;
+        b=Hc0Fi4dKJuxxmDRKSnEsLZ3L4WxyNLPznTuINNBbWWXD9O+pEBCsdRlyRVGL3uuLdn
+         9JVOocNTNxQr4QSHJXAUNZwxASdyFpCa5ZfShoNCFq5O0jM1XbiuZhpdek5UCxQXyKM3
+         sBdhItzleMR299Z2dmQnROqvNDD0tn3UFTfnthb+tGg8Ho0k69Qa8ZKijJMkR4NDRE+5
+         Yw9h2epGR+mztTpCZWqIfvDFGvuIEnagn9HzLDuzE0NwY6yGZWi47Kz3UYOUkRfGaCRn
+         4CWK3LIg5wXPTtpbJPIRjp1Fc3tlGOgE5hR3TDXJ94dFQln5YPDaejrIrenOV01j/hTW
+         2KBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735241136; x=1735845936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bvHPT0ccY32kPKcwl8x32j2H6trMUV124nGwkwGHE2M=;
-        b=CFolPMBg4Kms2OYGQnB5o9SwfA373k22b/RJsfQdBLWsvTv5WJo0BWPeA1SDGOGuFD
-         DYIuy5t8N+1V+R7+m5nzYvR/ikagCb7frNltCk1/yxcBx97coE8S+yvdSEyoep+yn3Gk
-         v0ZzGvZWgnQSvhZlGJWvDVVOVzN7ZKo3RlmTGZ1LPvtlQYO2+0vlCtUasvXa2sWhMT/+
-         qwKsrMn8KoPejYjcNtrzFFZLrwx7UaUsR23LaVVVnqP6Ev9wlnKxx7PW2SxR563vGyBq
-         IKXpLbgo6I5gnme5rTSm0QI8Uf9e8fmj5F+9wzeKcPA18bS946LvelkmUAPhc5AOOIGi
-         TtMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdpJDVYUqdlNQUp3TZLzbAJxHeImza+Up058EOoBIHCTS42PTQl+VReGhbEfhJRiyWUb8qdDxr6L8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQm8zM69i+KrFgTXTOwntjsqRCjbXfbutt5AdnizCxNyQHm4zh
-	rZjj4D92F+9KTy0Sqrc/xczP3rMzyjC7ExRHgG3u9PdHV+pefcSEIh+qOLkRt2Q=
-X-Gm-Gg: ASbGncsKHJ5xn1w9l+wJZo3gNasFWcrHdDWGxN9x0aALgNbMuAovUaLwAQYdfBTI7YB
-	0Q0GQJGvznNqV5XKs7XR3n13XUl6W2vDWLPnLA/9gtr84BgELOAOGcDn5S+Qaf12uiyuoAlgnn7
-	PHlv+LoDClL2lB1cCSFH0Gd7ox6z5aJpuEvn+f75Ph4gfaSCfC4aozl6GYg5feqSn32YOuVZQ6m
-	GRGJD5OUXkJ3HUGjcTy9gtuNlBHKU92EvR3cGsMWALQwYLChiJ8fk0AT3a/CBy9wxCcF5FBGvIA
-	YniV
-X-Google-Smtp-Source: AGHT+IH8lkhAouw1RNl0FDXSDuwCUOie6f3E0Pcyb3IuuD3GIIbIaXZCil62oB59Jbf5u0tpjedBCw==
-X-Received: by 2002:a05:620a:24cd:b0:7b1:11ac:627a with SMTP id af79cd13be357-7b9ba79cdeemr3532496985a.25.1735241135714;
-        Thu, 26 Dec 2024 11:25:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735244364; x=1735849164;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qz5ytK1GRdvKgO8e6oKZGmSzgE/hU2itL0CRU+M0PxQ=;
+        b=tFmVYWyDP+PoqF91guGWyCpglh1GSqiOQNcxNnhC0doAlmpTgVQRIEssWZhix2gGzX
+         JQ4v65/orZqrDvWfwW0gIsOdsv7cIoiP7w1ZwldEEK/G4CMOu+yI+YJanl5ZjjN6o4BJ
+         IuLBkUZIS4Z6LiaFHQAUwa13UPo0hwghgFZcpEU47onuknH8VBzILuRsMN3+UlP9m1RY
+         uHQnPGoC3bxZSWAb6NbEilE3fx9Vst974bHywgFUBNd0QeAloVCrx35Tc9qTT1TD9C19
+         RJYbVUP1/xk5FncVRIrdYgyDW1RyXVDi8n7H7hubP8plUNVun6h4ZAoaJEJOmXelWcxx
+         w65g==
+X-Forwarded-Encrypted: i=1; AJvYcCWPQ7JdRGEQzrYtaaPWwZKh7JY4axLOn90xZ4Or3lbT9qQ0BsCvqXG30HVnyT39t7ufvrdF1mawfzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/V7ZnmJkCL40Vec3fMZJbxwS49BgDvuGzYlJq0UwjtgalTcKQ
+	hn8hw2W7hSKL6BxxemKsUhhN5cZI5W1jpRd1cDeJfDaXQtIWs3/8MQKicGJpeU8=
+X-Gm-Gg: ASbGncuzWOKDefbXHG8JxlNSZ9OxTISpkz96mNdcJ/4XezIyQLwqYXQ/E/drNWtQM2c
+	OuQAtmnwkj3bZWhxVIRQQlBB5ynHwBgUirZJqicFbyvJDrSNhdAIctT941RR8GH4QniFrLeq9jU
+	gYDI1jTqQmJMP4WJx06+sLFKtqHZ1Oz1+LuEdLHRg66O6mr2A6g62SMWRK9oNDiIBUKlbDYXQye
+	dwVsJ3EgEP5UMnxf/SV3SLN5uRNS+C+FsnJ66JmOKKlSxuAtOW1lF2ZAE+S1svJ
+X-Google-Smtp-Source: AGHT+IHwbSBUELCWH88to3eKbIbKFQlIGmiEO20KuDJPlMSg8m7xY1XIjb3s2ATL2I5p1b8aOzoeHQ==
+X-Received: by 2002:a05:620a:4551:b0:7b6:6c46:55b with SMTP id af79cd13be357-7b9ba6efbbamr4034804785a.7.1735244363986;
+        Thu, 26 Dec 2024 12:19:23 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F ([184.169.45.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac2bc85fsm640184785a.7.2024.12.26.11.25.28
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac2d1054sm648499485a.32.2024.12.26.12.19.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2024 11:25:34 -0800 (PST)
+        Thu, 26 Dec 2024 12:19:23 -0800 (PST)
+Date: Thu, 26 Dec 2024 13:19:08 -0700
 From: Gregory Price <gourry@gourry.net>
-X-Google-Original-From: Gregory Price <gourry@gourry-fedora-pf4vcd3f>
-Date: Thu, 26 Dec 2024 12:25:20 -0700
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Gregory Price <gourry@gourry.net>,
-	Nathan Fontenot <nathan.fontenot@amd.com>, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] cxl: Update Soft Reserved resources upon region creation
-Message-ID: <Z22toIWJfsgZJn_a@gourry-fedora-PF4VCD3F>
-References: <20241202155542.22111-1-nathan.fontenot@amd.com>
- <Z1tmwOsAtL-wBR3Y@PC2K9PVX.TheFacebook.com>
- <Z1uHgePW0T81r3xC@aschofie-mobl2.lan>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [LSF/MM] Linux management of volatile CXL memory devices - boot to
+ bash.
+Message-ID: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,90 +70,53 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z1uHgePW0T81r3xC@aschofie-mobl2.lan>
 
-On Thu, Dec 12, 2024 at 05:01:53PM -0800, Alison Schofield wrote:
-> BIOS labels a resource Soft Reserved and programs a region using
-> that range. Later, the existing cxl path to destroy that region
-> does not free up that Soft Reserved range. Users cannot create
-> another region in it's place. Resource lost. We considered simply
-> removing soft reserved resources on region teardown, and you can
-> probably find a patches on lore doing just that.
-> 
-> But - the problem grew. Sometimes BIOS creates an SR that is not
-> aligned with the region they go on to program. Stranded resources.
-> That's where the trim and give to DAX path originated.
-> 
-> But - the problem grew. Sometimes the CXL driver fails to enumerate
-> that BIOS defined region. More stranded resources. Let's find those
-> too and give them to DAX. This is something we are seeing in the
-> wild now and why Dan raised its priority.
-> 
+I'd like to propose a discussion about the variety of CXL configuration
+decisions made by platforms, BIOS, EFI, and linux that have created a
+complex, and sometimes subtly confusing administration environment.
 
-Hm, this makes me concerned for what happens on "full hotplug" (literal
-physical removal/addition) of CXL devices - kind of like we've seen
-proposed with E3.S form factor devices from a variety of vendors.
+In particular, when and how memory configuration occurs have major
+implications for major feature support (interleave, ras, hotplug, etc).
 
-Like what happens in the following scenario (rhetorical question, I want
-to test this with QEMU - but i'm on a plane right now and want to get
-the experiment process down).
+For example, treating CXL memory as "conventional" without marking is
+"special purpose" may limit the applicability of certain RAS features -
+but even marking it "special purpose" may be insufficient for 
+(coordinated) device hotplug compatibility.
 
-Boot: No CXL device is present
+Another example, RAS features like POISON have different end-state
+implications (full system crash vs userland crash) that depend on
+whether the memory was being used by kernel or userland (which is
+actually somewhat controllable, and therefore useful for
+administrators!)
 
-Post-boot: CXL device is physically hot-plugged
- - there won't be a resource registered, so I would presume the ACPI
-   / EFI / CXL drivers would register one.
+Some of this complexity stems from interleave settings and how CXL
+memory is distributed among NUMA nodes (1 per device, 1 per homogeneous
+set, or a single heterogeneous numa node).
 
-Event 1: CXL device is shutdown and removed
-   - Is the resource deleted?  I would presume yes.
-   - Is this true if the CXL device *was* present at boot time?
+Specifically we'll talk about
+  - iomem resource allocation
+    - EFI_CONVENTIONAL_MEMORY, MEMORY_SP, and CONFIG_EFI_SOFT_RESERVE
+    - e820 & EFI mmemory map inclusion
+    - driver-time allocation
+    - hotplug implications
+  - Addressing
+    - SPA == HPA vs SPA != HPA
+    - Boot-time configuration vs Driver Configuration
+  - Interleave configuration
+    - Platform configuration vs Driver configuration
+    - PRMT-provided translation
+    - RAS feature implications
+    - Management implications (hotplug, teardown, etc)
+  - Linux Memory (Block) Hotplug
+    - auto-online vs user-policy
+    - systemd / typical user story
+    - Zone-assignment and Poison
+    
+I'd like to lay out (as best I can, with help!) the current environment in
+linux kernel, the "maintenance implications" of certain configurations
+decisions, and discuss where ambiguities are present / challenging.
 
-     If i'm following correctly ^ this is the present scenario? 
-
-Lets assume the device was present at boot, and the resource is not
-deleted.  Now we have a "stale resource"?
-
-Event 2A: A new CXL device is added
-   - Possibility 1: Same capacity - resource is reused?
-   - Possibility 2: Lower capacity - resource is chopped up?
-   - Possibility 3: Higher capacity - resource is... lost forever?
-                    Fails to map? ???
-
-Event 2B: A new CXL device is added on a different PCI dev id, then
-          Event 2A occurs.
-   - Is the "stale resource" reused here, or is a new one created?
-
-I hadn't really considered the impact of hotplug on the iomem resource
-blocks (soft) reserved at boot, but this is concerning.
-
-I remember ~1.5 years ago I was prototyping with hotplug behavior in
-QEMU and saw that it was possible to do runtime ACPI/PCI add/remove of
-CXL devices - this worked.  But I didn't look at the effects on iomem
-resources - now i'm wondering what happens if I try to hot-unplug a CXL
-device that was present at boot.
-
-This won't affect me for the immediate future, but if we're mucking
-around in this space, might as well ask the question.  I presume we'll
-find even worse corner cases here :D :| :[ :<
-
-I do know servers with front-facing E3.S CXL devices intended for
-hot-replace exist and are a real use-case. I have no idea how that
-is supposed to work the presence of stale iomem resources.
-
-> Dan is also suggesting that at that last event - failure to enumerate
-> a BIOS defined region, we tear down the entire ACPI0017 toplogy
-> and give everything to DAX.
-> 
-> What Dan called, "the minimum requirement": all Soft Reserved ranges
-> end up as dax-devices sounds like the right guideline moving forward.
->
-
-I guess devils in the details here.  I sense an implication that it's
-possible for two distinct pieces of SR-providing hardware (HBM and CXL)
-could end up concatonated into a single SR range? That would obviously
-necessitate the need for chopping up an SR.  So this all makes sense.
-
-But I don't disagree with the need for this, just concerned that we have
-CXL-specific logic landing in mm/ and e820 code.
+I'll add some additional follow-on emails that break down some of these
+scenarios more in-depth over the next few months for some background reading.
 
 ~Gregory
