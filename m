@@ -1,263 +1,350 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2079.outbound.protection.outlook.com [40.107.101.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1892AD3B
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Dec 2024 12:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735561450; cv=none; b=tUUJc0GrjJkepQgrifCdZ2T4K9LJUKG/bFOVJ1DnEHZpGDfrYKLiIauacHC/ptxni8OyXozfVpPxMJj6x9a5xxmr5hETtitk/eHdvfhPDdOKWK4aX6vwJaDjR0xrV7kJVDPzp5kcRXZDptP/ePABkQeUI0RSEIaU/LSGI++1RYo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735561450; c=relaxed/simple;
-	bh=VpCw0HjifuHWa621HvXmywubwmpdUHTMblqiZcqKPJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=i8Cl7R4Y5k2d6TT5Y6E/xfPOVWkRGcXHgpADeTeARYLZMLLJfDLlcJ0zVZON//WtHafd2TNj8KSau+Vp41WL4j1wZB5IlePvPrnP4Ffogs1kWXdcP/AuHOHSWu1qvfFt/QTBj+YBmFgHtp+DCsM+1ZtglADhPf+af7866DGm3Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C8HIyj34; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919EE19CD0B;
+	Mon, 30 Dec 2024 21:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735595105; cv=fail; b=axfqrxl9PltiJMauKkpt+pmM0X0y9PAQIcfKaj8ghaogIzvQmvaCge8e/VsK8EDNoIV/+K/0R2CHjhQyoP0bjTQKw4VGEhx0Uc3J1KaFANAg9HLI1b4FLZlZElHWrdM7EBE76kzWFc4q3V1cHmqOLrQJSystJsSC/yrF+GayuBc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735595105; c=relaxed/simple;
+	bh=RxMlwh5kxtNvZo2gRzZ1DXqBDd3LSI4YHjkHup+PP3c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ecKf21KoZFgsN9BEKzkNVwxrLCsvuyo8t5DAaMZvl9jQnulblrb+8kpR+EBfjmHMsRK05gAL8RJ5x5tfUyUat9/Ipfk7bE0pi4uBla4h9rNTEKjzwn0HCYu9fPgSevjnaSxo57SgurGTHD4KFjLzrrw+LQrqVNQDOfDFedKbeRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AVudEjz7; arc=fail smtp.client-ip=40.107.101.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C8HIyj34"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735561448; x=1767097448;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VpCw0HjifuHWa621HvXmywubwmpdUHTMblqiZcqKPJ8=;
-  b=C8HIyj347zv8IrgOGw//Wf1HrljPcq0DPF1gn8YoC86d7+5fpM2tv0r7
-   WdCqGgObK3eSpSmHtAynr7DdO/57rPbQUoz9sQJ4cuKWVpdBwCaSIFY55
-   jqeBGztIB9vTsiftQ1uLMmAiiGfqJ5r09CEMPtI8i2VDx3CkxKggDR3W+
-   QKnZJzhkmHwvmbwY1S7g9djwAklEgInr2AE+jC9GnKvXkZ0sv8EbRyg+R
-   ZqLs6/nMaB4BYVFLSXkQ1EkpzA9lEmNNPF84twSfs/BN99oOuNl44nUGL
-   OhaXqdnH9leRr0HaGx2Fsu6yc+TRx2Ogr1pgFOiMOyjKKZjET2KF+uuDz
-   Q==;
-X-CSE-ConnectionGUID: wbab8MrCTM2jkQoyQy/tXQ==
-X-CSE-MsgGUID: OV9CiKr9T2KAIYoPORavpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11301"; a="35155210"
-X-IronPort-AV: E=Sophos;i="6.12,276,1728975600"; 
-   d="scan'208";a="35155210"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2024 04:24:08 -0800
-X-CSE-ConnectionGUID: jwimBqPWT/eH8g4zrpCzkw==
-X-CSE-MsgGUID: U6ICZjvES1WqSjg5jOZf4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,276,1728975600"; 
-   d="scan'208";a="101288403"
-Received: from unknown (HELO ixc04.bj.intel.com) ([10.238.153.130])
-  by fmviesa009.fm.intel.com with ESMTP; 30 Dec 2024 04:24:05 -0800
-From: Huaisheng Ye <huaisheng.ye@intel.com>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	ming.li@zohomail.com
-Cc: pei.p.jia@intel.com,
-	linux-cxl@vger.kernel.org,
-	Huaisheng Ye <huaisheng.ye@intel.com>
-Subject: [PATCH v2] cxl/core/regs: Refactor out functions to count regblocks of given type
-Date: Mon, 30 Dec 2024 20:22:39 +0800
-Message-Id: <20241230122239.3445117-1-huaisheng.ye@intel.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AVudEjz7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aufAtDJSZhNpxLA8UG8aSbKixglA7u6UGexrXkEec62/gi9oLU33+vxldtftvYjd24tgJKfIVt/nkbFtgnTiCAHRUIfn2K6dhgu/UoearbtAaDAzwDC7aZIHab6YRM0OT7tmL9FCz3DybfUMQkE+a7x/DktiHLMrbdkM10Px3V7mIcwCXOrrKh8sRSRnbyYcr6m2/YH6YvODX4vK+ya5yocKYDbSrRqAzLeyIYHeGyUP0WeitvWTLgdaYjjEVucPT5mPZtdVg4GAcZg6xw7aiej0C9HmC4IpIj2nLB5mG62rLWpfQf53DgD376KAhVOwy6xhoSj3Yo/SkOV0fLlQvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=psKl+AumfXCoUFyL0OCwa7KHZQvVHkN4qREPG8fSqY8=;
+ b=MAvCuwULziTdf9Hx2TaIZIerUY7y67igmAiletm32stXIH9NU5b0KeI0IlCbyyAa5iNYSCVDzSNoX/NJPJ9XoD5TwGF6whM6ex2PGnG0kgVxpuQO5U/n+o9q0pwcRjDKhZzZCF5EPxkTNCD+0INQKgz5wYi6wWYP2wNKEDHYonrZhW9b/f2vSF8oPPhbaD/psGtV80R+zDRvinjpvt/RMfjNJ/VYu4vzfBbsXijGt4CkznFXRsRdv4BIM6paOvhPnswaHl5xNKouod/Umm1gXp6JxH/iluWLkhKCIyXC/mHNrpG7Z6U+trgoNWahtJ6P9ci8N/Tzq/3a3RsPurGjjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=psKl+AumfXCoUFyL0OCwa7KHZQvVHkN4qREPG8fSqY8=;
+ b=AVudEjz7qcwM7wAqcRtHz0+FV54CVmvYAKEpY7vzX3K7a1nr6SSmv9Yn2SrZTAp5nDPJYTYF3Bvv+CUZ4XodjkbWoxP6RthsPhlWFqj5khqFfcqu8rRk3P1RN8FoRpUYIkh8TL0b/tAVkJA+wtw/LfdhgK9YdWWK3FxBeGmIgrE=
+Received: from SJ0PR13CA0011.namprd13.prod.outlook.com (2603:10b6:a03:2c0::16)
+ by DS0PR12MB9397.namprd12.prod.outlook.com (2603:10b6:8:1bd::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8293.19; Mon, 30 Dec
+ 2024 21:44:55 +0000
+Received: from SJ5PEPF000001E9.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c0:cafe::aa) by SJ0PR13CA0011.outlook.office365.com
+ (2603:10b6:a03:2c0::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8314.7 via Frontend Transport; Mon,
+ 30 Dec 2024 21:44:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SJ5PEPF000001E9.mail.protection.outlook.com (10.167.242.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8314.11 via Frontend Transport; Mon, 30 Dec 2024 21:44:55 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Dec
+ 2024 15:44:54 -0600
+Received: from xcbalucerop41x.xilinx.com (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 30 Dec 2024 15:44:53 -0600
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v9 00/27] cxl: add type2 device basic support
+Date: Mon, 30 Dec 2024 21:44:18 +0000
+Message-ID: <20241230214445.27602-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: alejandro.lucero-palau@amd.com does
+ not designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E9:EE_|DS0PR12MB9397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80dab4b0-02fd-4f58-4f35-08dd291b3306
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Zm5vQ00yYnlIQkdyZzJZQnRKczk4NkZTQUdiRjdpTHhCWGxVSjVKbkRHaUc3?=
+ =?utf-8?B?NWhCVGVGdUFBaVhlYVk1cWJKWUFSNWFJVURycVdxb1lqMTlDQXZTTUd2QnZY?=
+ =?utf-8?B?Snhmb1pTR3UwMjBGSWMrY2xoM1VHeHIyUEVkNUhUZTIwdjlrb1EydDVWMUlp?=
+ =?utf-8?B?YSs3Z3BPa0Fhb1Q1TmJCWWQ1NTRsWklSbUNuT3g2RmpUZExwSXgxUnZIUmti?=
+ =?utf-8?B?VWE2d3ZQSlZXWHpTVHoxcGZVYXJ6QjJsK0FDUktxMVRoSHk4YllCTWxROFcv?=
+ =?utf-8?B?anR2ZFhYeGFhU05uUjQyT1BNRWt1bkYvTlVnaWNUSEtFYmFTZ1hPRFp0TTJ5?=
+ =?utf-8?B?OFlhcUpLZnlSbzJaeG5uQmdSRG9qZ0d2YVdzMTNkMnVFTHI1RHJFSnF5NFNL?=
+ =?utf-8?B?MjlQays2OXdUWUU2SVY1U054ZEViT2pUaHVMQmZSWkpyaHlneGtPU3ROTUhB?=
+ =?utf-8?B?U2NJUUliby8wb3U2Mjd2dzNkeElieUhGclN6RnRBUTJIZ1NiTHFVOXV1dkxB?=
+ =?utf-8?B?dldYVCthbE5tYkFVMEdpTlF6NFUvMTkvQjNxS1ZiVEsvbHRudmxZMWVuL245?=
+ =?utf-8?B?Q2p1ZkpGOC9qY0hDQWpJVnBKSG5keVk5dkgxcUcydUpJUk1WdEx3NmlqdUw5?=
+ =?utf-8?B?bisvVlN3YmNsbXJGR0JxaTE1N1hVZW9qbk96Z2R6aUJ4NC95UFA1T1U2VGRT?=
+ =?utf-8?B?dTVvU0I3TFB0L1V0bW0weUR5SGZQK2doSEd1VlZROWpINFFNYkhyalQxRFpH?=
+ =?utf-8?B?RGRTOVIwODg4dGVKeE1TN2ZEZVpuL0JYbEdZd3JLMnRhWWF5NVJ2RCs2aGF4?=
+ =?utf-8?B?Y29IT09VTElBQ1NHeFZpTmpReE5na05YRUxLOFlFUmJnVmxCOEMrRy83QlRw?=
+ =?utf-8?B?Z01SVzg4T2JmZktiYzlpNDY4TjVXQnZDcHVXNUNtc1dlb1d2bldDaXF0SmVk?=
+ =?utf-8?B?U0htNklrRE85a1VKZS9lWklXVzZwRS9OeDA5ZHVZRmsyTFU2anRvU3poeG1H?=
+ =?utf-8?B?Mm1uUTJtdU1URU91bi9oK3NaZS8xWnFLR2hwOEdBMmRGWUFHNTlrd1k4aGRK?=
+ =?utf-8?B?b3ZWc1VNZ1lKRG1vUGppTE1ERlY2cW9OVWh5b2YvdDlnekxqaVdmZXR2Z05O?=
+ =?utf-8?B?YU9NVTR6Ylp6YUFGbWRMaG5RdWZBU0RHUytzZVoxd25nNU1WOFZGR2NtVGZF?=
+ =?utf-8?B?TGg0bDlnRmJVbEgvOFB3WWNSU1k0bUx1RVEvaVlQUzhGdmlvbEVLUDlOeWkv?=
+ =?utf-8?B?OGN1emoreXM2bjNYNnJUV3VBek4rbVZQQlZrejZVNDhGOEtYWGcrY0ZRRzJG?=
+ =?utf-8?B?VFc5cSt1TlFNN3EyVWNtd0N2cHZLcHhtemdmb1FJb2lHZzdhREhYRWtRd1pX?=
+ =?utf-8?B?R3o2UXJNeldab2UwTEVNV0k5ODJZWi9yTXZtVjBwSFpYMHJ5Y3lnVXpnZGZD?=
+ =?utf-8?B?NFROaGJyNThkekdmdW5JbERLaU5Ub3VDUm9UR001WGNVZ25TaGVQVkRvM1BU?=
+ =?utf-8?B?NUg3SjR4NjMwelZiczlVVkpUYUphZ0RVQWtqb1F6aTdWU2ZOaGVTMzhET1JY?=
+ =?utf-8?B?NzhnMk1UdWJkazhYT0Y5Sk1ma3VabHovT21vUGRzMmNTRGlPZXltcXYvaFZU?=
+ =?utf-8?B?MEZDTnhkMEdmeFZRVlowUlZxZkpvcnJXOVp3aFBqNGxZRDZKT2lnRXE2ZzI5?=
+ =?utf-8?B?QW9RU0s2d0pRQU1HcTg1dGducGUvSEsrR0R0ci95cnN4Mk1zTVNvOGZ0Zm9m?=
+ =?utf-8?B?VCsveGpxVzVuaCtaZkpnN3oxTUZKM3B2cVFWeDZ2UkdXd2o1dUQ0QTJPTmxx?=
+ =?utf-8?B?dTY5VWhSSmZrYlhrcUlmQWNoZ1lLOWJOSElZMmZJZ1R3MVpDcXZRVmFjY3JX?=
+ =?utf-8?B?ODAvcjhQaG83STFjN1AxUVBRV1FXQTRIOWg5dEJnTXhzNDUxVVhLTDZJSnJ2?=
+ =?utf-8?Q?W0st68oAW3E=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2024 21:44:55.1823
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80dab4b0-02fd-4f58-4f35-08dd291b3306
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001E9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9397
 
-In commit d717d7f3df18494baafd9595fb4bcb9c380d7389, cxl_count_regblock was
-added for counting regblocks of a given RBI (Register Block Identifier).
-It is workable, but has two drawbacks that can be improved.
+From: Alejandro Lucero <alucerop@amd.com>
 
-1. In order to get the count of instances, cxl_count_regblock has to tentatively
-repeat the call of cxl_find_regblock_instance by increasing index from 0. It
-will not stop until an error value is returned. Actually, It needs to search for
-Register Blocks in dvsec again every time by taking a start from the head. This
-is a bit inefficient.
+v9 changes:
+ - adding forward definitions (Jonathan Cameron)
+ - using set_bit instead of bitmap_set (Jonathan Cameron)
+ - fix rebase problem (Jonathan Cameron)
+ - Improve error path (Jonathan Cameron)
+ - fix build problems with cxl region dependency (robot)
+ - fix error path (Simon Horman)
 
-For example, to determine if PMU1 exists, cxl_find_regblock_instance must check
-all Register Blocks by the type and index from RB1 to RB4. If there are more RBs
-of the same type in the future, the situation will be even worse.
+v8 changes:
+ - Change error path labeling inside sfc cxl code (Edward Cree)
+ - Properly handling checks and error in sfc cxl code (Simon Horman)
+ - Fix bug when checking resource_size (Simon Horman)
+ - Avoid bisect problems reordering patches (Edward Cree)
+ - Fix buffer allocation size in sfc (Simon Horman)
 
-16 81 00 23             PCIe extended Capability Header
-02 c0 1e 98             Header 1
-00 00 00 08             Header 2
---------------------------------------
-00 00 01 00             RB 1 - Offset Low       Component
-00 00 00 00             RB 1 - Offset High
---------------------------------------
-00 00 03 02             RB 2 - Offset Low       Device Register
-00 00 00 00             RB 2 - Offset High
---------------------------------------
-00 01 04 02             RB 3 - Offset Low       PMU0
-00 00 00 00             RB 3 - Offset High
---------------------------------------
-00 02 04 02             RB 4 - Offset Low       PMU1
-00 00 00 00             RB 4 - Offset High
+v7 changes:
 
-RB: Register Block
+ - fixing kernel test robot complains
+ - fix type with Type3 mandatory capabilities (Zhi Wang)
+ - optimize code in cxl_request_resource (Kalesh Anakkur Purayil)
+ - add sanity check when dealing with resources arithmetics (Fan Ni)
+ - fix typos and blank lines (Fan Ni)
+ - keep previous log errors/warnings in sfc driver (Martin Habets)
+ - add WARN_ON_ONCE if region given is NULL
 
-2. cxl_count_regblock blocks the opportunity to get error codes from
-cxl_find_regblock_instance. cxl_pci_probe has error code checking for almost
-all function calls. This is a good behavior, but cxl_count_regblock couldn't.
+v6 changes:
 
-With this patch, only need to add two lines of code in cxl_find_regblock_instance,
-which can return the count of regblocks by given RBI in just one call. It is
-more effective than before. Besides, the error code could be obtained by the
-called function, here is cxl_pci_probe.
+ - update sfc mcdi_pcol.h with full hardware changes most not related to 
+   this patchset. This is an automatic file created from hardware design
+   changes and not touched by software. It is updated from time to time
+   and it required update for the sfc driver CXL support.
+ - remove CXL capabilities definitions not used by the patchset or
+   previous kernel code. (Dave Jiang, Jonathan Cameron)
+ - Use bitmap_subset instead of reinventing the wheel ... (Ben Cheatham)
+ - Use cxl_accel_memdev for new device_type created (Ben Cheatham)
+ - Fix construct_region use of rwsem (Zhi Wang)
+ - Obtain region range instead of region params (Allison Schofield, Dave
+   Jiang)
 
-Based on the above reasons, refactor out cxl_count_regblock for counting
-instances more efficiently.
+v5 changes:
 
-This patch is tested by ndctl cxl_test and physical CXL expander card
-with v6.13-rc5.
+ - Fix SFC configuration based on kernel CXL configuration
+ - Add subset check for capabilities.
+ - fix region creation when HDM decoders programmed by firmware/BIOS (Ben
+   Cheatham)
+ - Add option for creating dax region based on driver decission (Ben
+   Cheatham)
+ - Using sfc probe_data struct for keeping sfc cxl data
 
-1. Ndctl CXL test suite v80 could pass with this patch applied.
-$ meson test -C build --suite cxl
-ninja: Entering directory `/home/work/source/ndctl/build'
-[1/48] Generating version.h with a custom command
- 1/11 ndctl:cxl / cxl-topology.sh               OK               3.48s
- 2/11 ndctl:cxl / cxl-region-sysfs.sh           OK               2.74s
- 3/11 ndctl:cxl / cxl-labels.sh                 OK               1.75s
- 4/11 ndctl:cxl / cxl-create-region.sh          OK               3.51s
- 5/11 ndctl:cxl / cxl-xor-region.sh             OK               1.89s
- 6/11 ndctl:cxl / cxl-events.sh                 OK               1.63s
- 7/11 ndctl:cxl / cxl-sanitize.sh               OK               4.48s
- 8/11 ndctl:cxl / cxl-destroy-region.sh         OK               1.90s
- 9/11 ndctl:cxl / cxl-qos-class.sh              OK               2.65s
-10/11 ndctl:cxl / cxl-poison.sh                 OK               2.86s
-11/11 ndctl:cxl / cxl-security.sh               OK               0.91s
+v4 changes:
+  
+ - Use bitmap for capabilities new field (Jonathan Cameron)
 
-2. Test patch with Qemu x4 switch topology:
+ - Use cxl_mem attributes for sysfs based on device type (Dave Jian)
 
-                       ACPI0017:00 [root0]
-                           |
-                         HB_0 [port1]
-                        /             \
-                     RP_0             RP_1
-                      |                 |
-                USP [port2]
-            /    /    \    \
-          DSP   DSP   DSP   DSP
-           |     |     |     |
-          mem1  mem0  mem2  mem3
+ - Add conditional cxl sfc compilation relying on kernel CXL config (kernel test robot)
 
-Every card has 2 PMU RBs, here are the pmu_mem devices.
+ - Add sfc changes in different patches for facilitating backport (Jonathan Cameron)
 
-$ pwd
-/sys/bus/cxl/devices
-$ tree
-[snip]
-├── pmu_mem0.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:01.0/0000:10:00.0/pmu_mem0.0
-├── pmu_mem0.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:01.0/0000:10:00.0/pmu_mem0.1
-├── pmu_mem1.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:00.0/0000:0f:00.0/pmu_mem1.0
-├── pmu_mem1.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:00.0/0000:0f:00.0/pmu_mem1.1
-├── pmu_mem2.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:02.0/0000:11:00.0/pmu_mem2.0
-├── pmu_mem2.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:02.0/0000:11:00.0/pmu_mem2.1
-├── pmu_mem3.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:03.0/0000:12:00.0/pmu_mem3.0
-├── pmu_mem3.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:03.0/0000:12:00.0/pmu_mem3.1
+ - Remove patch for dealing with cxl modules dependencies and using sfc kconfig plus
+   MODULE_SOFTDEP instead.
 
-Changes
-=======
-v1 -> v2:
+v3 changes:
 
-1. Reserved cxl_count_regblock() for original function interface
-2. Reset 'map->resource' to 'CXL_RESOURCE_NONE' before returning the count of instances in
-   cxl_find_regblock_instance()
-3. Append results of ndctl test suite and Qemu testing PMU devices to commit log
-4. Rebase patch to v6.13-rc5
+ - cxl_dev_state not defined as opaque but only manipulated by accel drivers
+   through accessors.
 
- [v1] https://lore.kernel.org/all/20241225083539.2230150-1-huaisheng.ye@intel.com/
+ - accessors names not identified as only for accel drivers.
 
-Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
----
- drivers/cxl/core/regs.c | 19 +++++++++----------
- drivers/cxl/cxl.h       |  1 +
- drivers/cxl/pci.c       |  3 +++
- 3 files changed, 13 insertions(+), 10 deletions(-)
+ - move pci code from pci driver (drivers/cxl/pci.c) to generic pci code
+   (drivers/cxl/core/pci.c).
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 59cb35b40c7e..d0db954da0ff 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -290,17 +290,19 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
- }
- 
- /**
-- * cxl_find_regblock_instance() - Locate a register block by type / index
-+ * cxl_find_regblock_instance() - Locate a register block or count instances by type / index
-  * @pdev: The CXL PCI device to enumerate.
-  * @type: Register Block Indicator id
-  * @map: Enumeration output, clobbered on error
-  * @index: Index into which particular instance of a regblock wanted in the
-  *	   order found in register locator DVSEC.
-  *
-- * Return: 0 if register block enumerated, negative error code otherwise
-+ * Return: 0 if register block enumerated, non-negative if instances counted,
-+ * negative error code otherwise
-  *
-  * A CXL DVSEC may point to one or more register blocks, search for them
-  * by @type and @index.
-+ * Use CXL_INSTANCES_COUNT for @index if counting instances by @type and @index.
-  */
- int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
- 			       struct cxl_register_map *map, int index)
-@@ -342,6 +344,9 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	}
- 
- 	map->resource = CXL_RESOURCE_NONE;
-+	if (index == CXL_INSTANCES_COUNT)
-+		return instance;
-+
- 	return -ENODEV;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_find_regblock_instance, "CXL");
-@@ -371,19 +376,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, "CXL");
-  *
-  * Some regblocks may be repeated. Count how many instances.
-  *
-- * Return: count of matching regblocks.
-+ * Return: non-negative count of matching regblocks, negative error code otherwise.
-  */
- int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
- {
- 	struct cxl_register_map map;
--	int rc, count = 0;
- 
--	while (1) {
--		rc = cxl_find_regblock_instance(pdev, type, &map, count);
--		if (rc)
--			return count;
--		count++;
--	}
-+	return cxl_find_regblock_instance(pdev, type, &map, CXL_INSTANCES_COUNT);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, "CXL");
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f6015f24ad38..18bd05f29354 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -302,6 +302,7 @@ int cxl_map_device_regs(const struct cxl_register_map *map,
- 			struct cxl_device_regs *regs);
- int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
- 
-+#define CXL_INSTANCES_COUNT -1
- enum cxl_regloc_type;
- int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
- int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 6d94ff4a4f1a..c68c4a0bdbe0 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1009,6 +1009,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return rc;
- 
- 	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
-+	if (pmu_count < 0)
-+		return pmu_count;
-+
- 	for (i = 0; i < pmu_count; i++) {
- 		struct cxl_pmu_regs pmu_regs;
- 
+ - capabilities field from u8 to u32 and initialised by CXL regs discovering
+   code.
+
+ - add capabilities check and removing current check by CXL regs discovering
+   code.
+
+ - Not fail if CXL Device Registers not found. Not mandatory for Type2.
+
+ - add timeout in acquire_endpoint for solving a race with the endpoint port
+   creation.
+
+ - handle EPROBE_DEFER by sfc driver.
+
+ - Limiting interleave ways to 1 for accel driver HPA/DPA requests.
+
+ - factoring out interleave ways and granularity helpers from type2 region
+   creation patch.
+
+ - restricting region_creation for type2 to one endpoint decoder.
+
+ - add accessor for release_resource.
+
+ - handle errors and errors messages properly.
+
+
+v2 changes:
+
+I have removed the introduction about the concerns with BIOS/UEFI after the
+discussion leading to confirm the need of the functionality implemented, at
+least is some scenarios.
+
+There are two main changes from the RFC:
+
+1) Following concerns about drivers using CXL core without restrictions, the CXL
+struct to work with is opaque to those drivers, therefore functions are
+implemented for modifying or reading those structs indirectly.
+
+2) The driver for using the added functionality is not a test driver but a real
+one: the SFC ethernet network driver. It uses the CXL region mapped for PIO
+buffers instead of regions inside PCIe BARs.
+
+
+
+RFC:
+
+Current CXL kernel code is focused on supporting Type3 CXL devices, aka memory
+expanders. Type2 CXL devices, aka device accelerators, share some functionalities
+but require some special handling.
+
+First of all, Type2 are by definition specific to drivers doing something and not just
+a memory expander, so it is expected to work with the CXL specifics. This implies the CXL
+setup needs to be done by such a driver instead of by a generic CXL PCI driver
+as for memory expanders. Most of such setup needs to use current CXL core code
+and therefore needs to be accessible to those vendor drivers. This is accomplished
+exporting opaque CXL structs and adding and exporting functions for working with
+those structs indirectly.
+
+Some of the patches are based on a patchset sent by Dan Williams [1] which was just
+partially integrated, most related to making things ready for Type2 but none
+related to specific Type2 support. Those patches based on Dan´s work have Dan´s
+signing as co-developer, and a link to the original patch.
+
+A final note about CXL.cache is needed. This patchset does not cover it at all,
+although the emulated Type2 device advertises it. From the kernel point of view
+supporting CXL.cache will imply to be sure the CXL path supports what the Type2
+device needs. A device accelerator will likely be connected to a Root Switch,
+but other configurations can not be discarded. Therefore the kernel will need to
+check not just HPA, DPA, interleave and granularity, but also the available
+CXL.cache support and resources in each switch in the CXL path to the Type2
+device. I expect to contribute to this support in the following months, and
+it would be good to discuss about it when possible.
+
+[1] https://lore.kernel.org/linux-cxl/98b1f61a-e6c2-71d4-c368-50d958501b0c@intel.com/T/
+
+Alejandro Lucero (27):
+  cxl: add type2 device basic support
+  sfc: add cxl support using new CXL API
+  cxl: add capabilities field to cxl_dev_state and cxl_port
+  cxl/pci: add check for validating capabilities
+  cxl: move pci generic code
+  cxl: add function for type2 cxl regs setup
+  sfc: use cxl api for regs setup and checking
+  cxl: add functions for resource request/release by a driver
+  sfc: request cxl ram resource
+  resource: harden resource_contains
+  cxl: add function for setting media ready by a driver
+  sfc: set cxl media ready
+  cxl: prepare memdev creation for type2
+  sfc: create type2 cxl memdev
+  cxl: define a driver interface for HPA free space enumeration
+  sfc: obtain root decoder with enough HPA free space
+  cxl: define a driver interface for DPA allocation
+  sfc: get endpoint decoder
+  cxl: make region type based on endpoint type
+  cxl/region: factor out interleave ways setup
+  cxl/region: factor out interleave granularity setup
+  cxl: allow region creation by type2 drivers
+  cxl: add region flag for precluding a device memory to be used for dax
+  sfc: create cxl region
+  cxl: add function for obtaining region range
+  sfc: update MCDI protocol headers
+  sfc: support pio mapping based on cxl
+
+ drivers/cxl/core/cdat.c               |     3 +
+ drivers/cxl/core/hdm.c                |   153 +-
+ drivers/cxl/core/memdev.c             |   110 +-
+ drivers/cxl/core/pci.c                |   141 +
+ drivers/cxl/core/port.c               |    11 +-
+ drivers/cxl/core/region.c             |   422 +-
+ drivers/cxl/core/regs.c               |    32 +-
+ drivers/cxl/cxl.h                     |    16 +-
+ drivers/cxl/cxlmem.h                  |     7 +-
+ drivers/cxl/cxlpci.h                  |    19 +-
+ drivers/cxl/mem.c                     |    25 +-
+ drivers/cxl/pci.c                     |   112 +-
+ drivers/cxl/port.c                    |     5 +-
+ drivers/net/ethernet/sfc/Kconfig      |     7 +
+ drivers/net/ethernet/sfc/Makefile     |     1 +
+ drivers/net/ethernet/sfc/ef10.c       |    50 +-
+ drivers/net/ethernet/sfc/efx.c        |    23 +-
+ drivers/net/ethernet/sfc/efx_cxl.c    |   183 +
+ drivers/net/ethernet/sfc/efx_cxl.h    |    34 +
+ drivers/net/ethernet/sfc/mcdi_pcol.h  | 13645 +++++++++---------------
+ drivers/net/ethernet/sfc/net_driver.h |    12 +
+ drivers/net/ethernet/sfc/nic.h        |     3 +
+ include/cxl/cxl.h                     |    73 +
+ include/cxl/pci.h                     |    23 +
+ include/linux/ioport.h                |     2 +
+ 25 files changed, 6120 insertions(+), 8992 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/cxl/cxl.h
+ create mode 100644 include/cxl/pci.h
+
+
+base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+prerequisite-patch-id: 91b580e38dc5d1ef2eb4175507d7d3d1fb438958
 -- 
-2.39.3
+2.17.1
 
