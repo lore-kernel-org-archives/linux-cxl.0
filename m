@@ -1,102 +1,93 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B171D189B8D;
-	Thu,  2 Jan 2025 15:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6372D528;
+	Thu,  2 Jan 2025 16:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735832561; cv=none; b=FWX9v5hhwiKvE695NtYPUe9lSI2cMhPbmCCWJLZIWoWdcqIPxeE64DHLg1jUi5ocG6cdS8spwN+P/GcmjsDGm8ebTtpApLAKctDx6NZhdeUwC1o3YZVnltkWFstqoIyZj4X6sjfhicmIcULbIywCnKpfhI33TGBgabgPI7cdKZg=
+	t=1735835930; cv=none; b=DLZ5W+LibwaA0AzjtFJjtF7EAu1P5DNfmUOLnIB2Awn1LYai+yAbgAPf07W6Q3AC917T/XH5Yz+2f4M6oRC6/PX56XI5vYmVkleIHnu98WUWlwIJBjr2LdKgEktaZEWJceD6nGrf+QUHu1XjZGjWCRaFaHKzJa066Ee0GOO+DbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735832561; c=relaxed/simple;
-	bh=nEZ3dqLnKDtRAh/9N7EcCdJaU8kaWy34Nl+Kw/1gmZ0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IH75XCWB9+JL2bxL8ILlY059mir2AJCilSrNI6Nc5nvSePqzvEoSB3waRyZjsOXdljiHAuKSc0zFZj5+05NFFnJ3oaKJewctvBeCpm3Mk+AkNC977eXDhuI6/5DOkBTTC7E6A4had2Amvq5AQMxs+bnPUMvahi1ohkvZEIHDMIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YP9Ql5g1Jz6M4yn;
-	Thu,  2 Jan 2025 23:21:19 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFC4B1401F3;
-	Thu,  2 Jan 2025 23:22:45 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 2 Jan
- 2025 16:22:45 +0100
-Date: Thu, 2 Jan 2025 15:22:43 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v9 22/27] cxl: allow region creation by type2 drivers
-Message-ID: <20250102152243.00006b59@huawei.com>
-In-Reply-To: <20241230214445.27602-23-alejandro.lucero-palau@amd.com>
+	s=arc-20240116; t=1735835930; c=relaxed/simple;
+	bh=rr6WOJGzo4g0fvb5ofoxbIvLntk66OjqZ/Ol6q4A8Uc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YtLlBuGRrzuutuLraxIWXgVNrKalZOteqp/8WURClxKngGFp5u6cz+zhS30EAOJApJ0MA6fpAzB6EofuzFLfaUP6s3WTaMalETkf8TdMnegJV5Oo2EPHZFOn+lpTf+bGpeD36gr6xeJNk5qTAqsk6AFQyj2Xb7cut0CDbPDdP+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ll01mUnB; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll01mUnB"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436ae3e14b4so20033035e9.1;
+        Thu, 02 Jan 2025 08:38:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735835925; x=1736440725; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AEvPCQRzblKdohwXM/4Bz2YjXIjzlQUfS94+Ar1OdsU=;
+        b=ll01mUnBItHCs57nLn6iFTX+L+lpKPh3jiY3HP7u4K3Ge4H3iyH1hmxUuPSVnaQhX1
+         hFfEHZbzaq9R4Jrm22V4ypunHTvgnFao7oCyJX6PT0CUnJbtkEOmS7F8jTIh8jFaI28a
+         IXTkOjNOBFFlABZzhCM0eepdSAWAz5plz77M+MucxRpPjlzytpJrs2iXsN5TmXWMdgia
+         8EYO12Ss8Ol03QkuQNWfBvMHHpmnVinGCBujdlUAGzQ8tVQtbP6TT6C7bCem+cHgFyNy
+         KfQwxBeRiZkeC49wCumpITQ2vHhIYebQpFVRqzuBMeLapG9nmxE7BBe6jn8pPXA71O87
+         p0pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735835925; x=1736440725;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEvPCQRzblKdohwXM/4Bz2YjXIjzlQUfS94+Ar1OdsU=;
+        b=f0HMWX90DY4yxFGhmLYmwZyMnEmkJS1hTUazUO7qmczA/KSr44ViVqe9u4+uockVcH
+         IxOuyo9On0DnXec3bBL/b54vlV6pIzqQ+i8S71Lt9RqvYajBezNJndNUICGLCFWGpy32
+         B3cmnhHj9FqwaSZetVBZDB0pBElXLwXtXrj4ctrlpXVctoBvDuUSFgJnVb/nPeM3Z6Tm
+         m2GC2Xk+Vcd29fd1YyP4kCbA44pp4PpgFJUvRTGfSugMKLPGlmplsjLBfTilYQjcn8cZ
+         wagAvug6bp/2R0C9UwpPgCoAbRjQZwqNO8PgZkpwwGbVOJ14N+ZspI0EQVH2+Hwh1xeh
+         vBIA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3j1DK/m47+d+4e30OGZMMXDRaiv9Yeq1sewFctmUFUWnMIACCW8HuPLHMNRfUCzg9XxgKrtYn@vger.kernel.org, AJvYcCWL7EGEPdql2dkrE4lO/89YT9mut+7lGPP+tlqjYx5qBjHHNPunQOx7Liu161PQlX7EBRydz1VYhBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5YvXDGKejFqJD+VLrax8KGBMzv3EkdewA5YTjlzobV+UIof/+
+	GYesIu4sK1xrJHQd8hkBtDgbHJbBQNB627eO8VRssVqNW5cPocrt
+X-Gm-Gg: ASbGncta2eANGunwz4k2BsYvTtz7+GaZgiIVPDrNZBSEgdBbl8S/U6InswVfb9+nMTl
+	E/fVCK/Dc2SQXIhBkLt6IkVBwszxLzRlGFQ4/Gm8HQuidsDO3oU2LlKw0G0BPjtP4MJyOpa7kpf
+	xNDyr6GmTDtDvjmmI+PAyyCJAI4phkryoZ4oGub9rXcbLj2cSNY9zDRxgMBf5/dStO8vXUtdohb
+	hQz83Y0lz6pEhfmh9qI9pnRmCx47sTlKyzHu1rmqo1Xcrj/Zutr8DfF1N339yWq8e5mqfNHR8zZ
+	97Dm78Cdm5QePj0wuxbLtOOEk6mmoXF0CZUhq6rvRhXB
+X-Google-Smtp-Source: AGHT+IGgdVD90hk0FDSUojdOdxB8m9vg2HJLxagG+PsuYAPNDkkDYPuZB6uTfoQprAW6abY72qs1qg==
+X-Received: by 2002:a05:600c:4f86:b0:434:a802:e99a with SMTP id 5b1f17b1804b1-436685484bamr391770725e9.4.1735835924697;
+        Thu, 02 Jan 2025 08:38:44 -0800 (PST)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8bb4bcsm38687641f8f.111.2025.01.02.08.38.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2025 08:38:44 -0800 (PST)
+Subject: Re: [PATCH v9 18/27] sfc: get endpoint decoder
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>
 References: <20241230214445.27602-1-alejandro.lucero-palau@amd.com>
-	<20241230214445.27602-23-alejandro.lucero-palau@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20241230214445.27602-19-alejandro.lucero-palau@amd.com>
+From: Edward Cree <ecree.xilinx@gmail.com>
+Message-ID: <120839ac-6014-2909-511c-7d9f68e706df@gmail.com>
+Date: Thu, 2 Jan 2025 16:38:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20241230214445.27602-19-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 30 Dec 2024 21:44:40 +0000
-alejandro.lucero-palau@amd.com wrote:
-
+On 30/12/2024 21:44, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Creating a CXL region requires userspace intervention through the cxl
-> sysfs files. Type2 support should allow accelerator drivers to create
-> such cxl region from kernel code.
-> 
-> Adding that functionality and integrating it with current support for
-> memory expanders.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
+> Use cxl api for getting DPA (Device Physical Address) to use through an
+> endpoint decoder.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
 
-Trivial comment inline. Either way
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/region.c | 145 ++++++++++++++++++++++++++++++++++----
->  drivers/cxl/cxlmem.h      |   2 +
->  drivers/cxl/port.c        |   5 +-
->  include/cxl/cxl.h         |   4 ++
->  4 files changed, 141 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1b1d45c44b52..a2b92162edbd 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2270,6 +2270,18 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
->  	return rc;
->  }
->  
-> +int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	int rc;
-> +
-> +	down_write(&cxl_region_rwsem);
-
-Could use a guard here so you can return directly.
-
-> +	cxled->mode = CXL_DECODER_DEAD;
-> +	rc = cxl_region_detach(cxled);
-> +	up_write(&cxl_region_rwsem);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_region_detach, "CXL");
-
-
+Acked-by: Edward Cree <ecree.xilinx@gmail.com>
