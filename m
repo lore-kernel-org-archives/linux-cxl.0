@@ -1,135 +1,106 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009201F8F1C;
-	Fri,  3 Jan 2025 10:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2FB1C9DF0;
+	Fri,  3 Jan 2025 11:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735901415; cv=none; b=McU/74zkhQbwOG2uS7W4tKwKm3oaKfyZFaTb+yRQAF0GheUO02rKOWrB4aKQTKvuzNB1lbFEuLMCGPh1wII+pBd1xNIjNM3Q3ylAaJYZjGJ00e6WukAqH4GflFo/2XRVRt+cP5fpguUY4ZLabBEirL0ex4x7nCyfQ0IAM1SRCa4=
+	t=1735904577; cv=none; b=QNyABIfVKuFkABUkIzZorVFaaWQwK32cOrenaycNeP6/2073QlRudsqeoFp3DbigrVTV1xffOxI/2vEu4wJf0rE4pT0GJ1ByCkNjeCEwq1T7e/SFJGGroDawHe4ep9m5f62Q4OEXJ1CjQZE7Itxf1ztxXLkp2S7p3rf9xo3z9Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735901415; c=relaxed/simple;
-	bh=jzboBMY3OiPBsM+VnBaomV/Tw+FBgps8eGjiJc5kuUs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g01uKLsZtqhhmHwZgOF65nliGiNgVQJ98Mih3yGAEBbFMAZFoemxdTjPK5sJhYndehoYNrenjj4L00oukaCTP0vagGvWMryMFDeyIlwhTP6us+OsbN3Akh7Cjin2pqitaHQJ8ElQzkpNcSie/f7AiAykCsOgcDwtgUi2K3kOtzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YPgKl3Rmqz6M4LR;
-	Fri,  3 Jan 2025 18:48:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A6DE140257;
-	Fri,  3 Jan 2025 18:50:10 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 3 Jan
- 2025 11:50:09 +0100
-Date: Fri, 3 Jan 2025 10:50:08 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <dave.jiang@intel.com>
-Subject: Re: [PATCH v9 03/27] cxl: add capabilities field to cxl_dev_state
- and cxl_port
-Message-ID: <20250103105008.000053bc@huawei.com>
-In-Reply-To: <ffbca9f2-80fa-530a-9ec1-9f811ee61e38@amd.com>
-References: <20241230214445.27602-1-alejandro.lucero-palau@amd.com>
-	<20241230214445.27602-4-alejandro.lucero-palau@amd.com>
-	<20250102143656.000061c9@huawei.com>
-	<ffbca9f2-80fa-530a-9ec1-9f811ee61e38@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1735904577; c=relaxed/simple;
+	bh=Uv99LYTK0zUbacU0U6he7tjsya8rnMgHbBh+fS2b2jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itNAb4TSK+cUsUum3Iwyf4qzPxSVe94Wfrjbjkd1pcT6PuzV95hTIY82E/R31qyVU2qq8TnvmxDXtCc+ukoH2uuHdMfwep8O/a9SIyH8czsCS8W+1jjqO3tx1VI+xmnxl/OziQXQQ2rSjHlNOa75zIw2S2BUrAU0EeBvjHHFlow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aAhBqa4i; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aAhBqa4i"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 28BB840E021C;
+	Fri,  3 Jan 2025 11:42:46 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tnfMMyzi7jTQ; Fri,  3 Jan 2025 11:42:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1735904557; bh=dS9aeDbA2J+XdXLCPiJmDBE8ECZ7zdxygk6M6pb3jI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aAhBqa4iddBtH6YyXT2qQ5M4szH55349aTo4zCkRpwy1ggI/dcZ8APuZSAfRLD7yS
+	 Zf4JcLzQYkibsnDeUclDFD9g99GRvv+b2+vCf6ulJL58ykliLrgjGgJUXvBp+4VpIt
+	 wvbg/tbGpMkWlCcn/sqSSbW8Ygn5DOkHjAhGD/hNyk0XC+mYq12e7OCljJUobTMVON
+	 9G0rEZPQHFvUImHNC1EjJ9waZOokmzhW5GvC+r8mXC1LqpWWb4Ki5uGUz7QCZAMne3
+	 ++5l0w+M3qJONf5e4qohmq43oOI+w6V9NMpWp9n8qgF5m1w3VXMEYFzvgNAJRaD97L
+	 qYU7gCP/41vYeAGqayzNZzgofB5uxhU+/mVurlhIhBjEjb3tp5sKl31uaW9NAwqJyB
+	 hKZRcvhAdOTPjyTaNARMbgFNDAYUTaS0jOuhVBJ/RxFFReeajXjenrFh3tBOVd4tTf
+	 5Bnkw086E/0neelC0ykQXy2p8a8tChVp8LimHSpP++7S7J+w1DpiQNE4SC8aeAModH
+	 7/Mkw8BoBGF8olQirsgkGge+BjDNoSwUKgwzsqV3p4q+AQQ5dU8dFSZPEha7+0OHli
+	 vVkCTmGM47waNZerIHlaqHqtGE4KGknpNWksLnZuCnsaL2vTSIuMQTqRmVC6bqy5QX
+	 ENIoQvgqd9+T4Elpu3Rsz98s=
+Received: from zn.tnic (p200300Ea971F93bA329c23Fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93ba:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F123840E01C5;
+	Fri,  3 Jan 2025 11:41:53 +0000 (UTC)
+Date: Fri, 3 Jan 2025 12:41:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com,
+	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+	dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
+	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
+	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
+	duenwen@google.com, gthelen@google.com,
+	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
+	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+	wanghuiqiang@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH v17 00/18] EDAC: Scrub: introduce generic EDAC RAS
+ control feature driver + CXL/ACPI-RAS2 drivers
+Message-ID: <20250103114109.GAZ3fM1dEsyBSn9lWA@fat_crate.local>
+References: <20241122180416.1932-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241122180416.1932-1-shiju.jose@huawei.com>
 
-On Fri, 3 Jan 2025 07:20:48 +0000
-Alejandro Lucero Palau <alucerop@amd.com> wrote:
+On Fri, Nov 22, 2024 at 06:03:57PM +0000, shiju.jose@huawei.com wrote:
+>  drivers/edac/Makefile                         |    1 +
+>  drivers/edac/ecs.c                            |  207 +++
+>  drivers/edac/edac_device.c                    |  183 ++
+>  drivers/edac/mem_repair.c                     |  492 +++++
+>  drivers/edac/scrub.c                          |  209 +++
+>  drivers/ras/Kconfig                           |   10 +
+>  drivers/ras/Makefile                          |    1 +
+>  drivers/ras/acpi_ras2.c                       |  385 ++++
+>  include/acpi/ras2_acpi.h                      |   45 +
+>  include/cxl/features.h                        |   48 +
+>  include/cxl/mailbox.h                         |   45 +-
+>  include/linux/edac.h                          |  238 +++
+>  include/uapi/linux/cxl_mem.h                  |    3 +
 
-> On 1/2/25 14:36, Jonathan Cameron wrote:
-> > On Mon, 30 Dec 2024 21:44:21 +0000
-> > <alejandro.lucero-palau@amd.com> wrote:
-> >  
-> >> From: Alejandro Lucero <alucerop@amd.com>
-> >>
-> >> Type2 devices have some Type3 functionalities as optional like an mbox
-> >> or an hdm decoder, and CXL core needs a way to know what an CXL accelerator
-> >> implements.
-> >>
-> >> Add a new field to cxl_dev_state for keeping device capabilities as
-> >> discovered during initialization. Add same field to cxl_port as registers
-> >> discovery is also used during port initialization.
-> >>
-> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> >> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> >> Reviewed-by: Fan Ni <fan.ni@samsung.com>  
-> > Comment in thread on v8.  I don't see a reason to have any specific
-> > bitmap length - just use a final entry in the enum without a value set
-> > to let us know how long it actually is.  
-> 
-> 
-> I could do this but it implies to clear/zeroing the bitmaps with the 
-> final entry value and to mask bitmaps with that when comparing them.
+So what's the plan here? Am I supposed to merge the EDAC/RAS bits through the
+RAS tree and then give folks an immutable branch or how do we want to proceed
+here?
 
-Yes but that is automatic if you use the bitmap functions throughout.
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
-> I tried to avoid the masking, and it led to that use of sizeof and then 
-> CXL_MAX_CAPS=64.
-
-Don't avoid it. You are creating maintenance pain for a bit of unnecessary
-micro optimization.  Just make sure to treat this bitmap as a bitmap
-in all paths and there will be not reason for a reviewer to ever have
-to care what this value is and whether enough bits are zero etc.
-
-Jonathan
-
-
-
-
-> 
-> 
-> > Using the bit / bitmap functions should work fine without constraining
-> > that to any particular value - also allowing for greater than 64 entries
-> > with no need to fix up call sites etc.
-> >
-> >  
-> >> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> >> index 59cb35b40c7e..144ae9eb6253 100644
-> >> --- a/drivers/cxl/core/regs.c
-> >> +++ b/drivers/cxl/core/regs.c
-> >> @@ -4,6 +4,7 @@
-> >> +enum cxl_dev_cap {
-> >> +	/* capabilities from Component Registers */
-> >> +	CXL_DEV_CAP_RAS,
-> >> +	CXL_DEV_CAP_HDM,
-> >> +	/* capabilities from Device Registers */
-> >> +	CXL_DEV_CAP_DEV_STATUS,
-> >> +	CXL_DEV_CAP_MAILBOX_PRIMARY,
-> >> +	CXL_DEV_CAP_MEMDEV,
-> >> +	CXL_MAX_CAPS = 64  
-> > As in v8. I'm not seeing any reason for this.  If you need
-> > a bitmap to be a particular number of unsigned longs, then that
-> > code should be fixed. (only exception being compile time constant
-> > bitmaps where this is tricky to do!)
-> >
-> > Obviously I replied with that to v8 after you posted this
-> > so time machines aside no way you could have acted on it yet.
-> >
-> >
-> > Jonathan
-> >  
-> >> +};
-> >> +
-> >>   struct cxl_dev_state;
-> >>   struct device;
-> >>     
-
+https://people.kernel.org/tglx/notes-about-netiquette
