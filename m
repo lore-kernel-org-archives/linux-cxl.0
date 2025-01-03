@@ -1,56 +1,56 @@
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F1918AE2
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Jan 2025 10:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C57C1B4134
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Jan 2025 10:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735899789; cv=none; b=YXV3cQPVAZ8vR7h8lkas2+yC77Yg9bTY4ftQYJPYft9Ir76UYVnkepbsfvhRE9U/e6SuA258QoG+FAn7n/OCnswMuJmUW7dkEMC0T9/5rew6JmI7obTklcZ41ql4O3Rnh+Zc3AHLs5iKdQAVjm/dxro/qL6jTXeYGqPsA7ObhVA=
+	t=1735899907; cv=none; b=LCcODzCKelsy0F8PliaNeLHtuf88no833Ua4o/NkWESNBNmfsUOMlrTtbmyJSucEyxHe2jSl75enwYXucd/wcjGHckkYVUceHtNSDr3KyjywFepH4SMYXjMnJ34iHxMuoxFInEPGPUtYyqe71hD9b5+L5ihLLJ3uwmRmYc0VZ/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735899789; c=relaxed/simple;
-	bh=iVD4Lx+4w6bl3EXKy7NzC8GfJ5W+VUTQap+ImglCWaM=;
+	s=arc-20240116; t=1735899907; c=relaxed/simple;
+	bh=1huyat/rDoE+3jloVqQS4Nw7yB6T7fOrWCFpfsc3Whw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=j4T29EnDh/wm5mn/SYwanygP/bx4v2BthwX9zxg2Y43EQXHNTdwUOrqSXbXlke3rf7pGqNitU5pBMbcOYTTRmx2qBjUWN6dyGRallqN1T6Pw/qd6TGPrgWW+Nc6en5zJj5+BmMSsSa01o9Elct6wEGMch7B8FW6K5Jr9AwTg6ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fxDJoO1E; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=cb/6tx7CG1vlZ2Xzk6JF4lVWrtPLCw5VFsBoH1zZK3IumrgqKwCP9UAkzy2+U4GkpAUYr0wHX0Z4b4EHpTWiFTlFYHmeQphXKy0vwlUVHtB/9BefcCvO7uOkUn8aSVMJji2kWBQ3kCrGM+r7zVk2pO8FdCqWB4fvpqZqZThT1mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lagFeXOW; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fxDJoO1E"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250103102303epoutp03e7c1e1b533f5f57322e2ae0c27b4c576~XJ6gA3FGO1962419624epoutp037
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Jan 2025 10:23:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250103102303epoutp03e7c1e1b533f5f57322e2ae0c27b4c576~XJ6gA3FGO1962419624epoutp037
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lagFeXOW"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250103102503epoutp03fef57f30c51fab0d95923d03e7aa6dc9~XJ8PSck7L2177521775epoutp036
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Jan 2025 10:25:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250103102503epoutp03fef57f30c51fab0d95923d03e7aa6dc9~XJ8PSck7L2177521775epoutp036
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1735899783;
-	bh=fvfyvrq9q8Jl++vQ8mfg9WZLMuBwSaGVi6gxxo7zJkk=;
+	s=mail20170921; t=1735899903;
+	bh=Jl9IBnB0qG+Ux1AJFrxobJ1+wbLR/Bpu/l1Q6vPAscg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fxDJoO1E+IjdldLk4yqT6egfIbG32vWG3ce56tfebKYMdEUCsvrOzwdkWKud6EWTc
-	 YE+WHJhAiXRZkW8GZOYyqyOMB5r5+txx7gR/9s6s1+Wdjfttx0K24YceJdbTejFmgD
-	 IpCnXxQ4xbZB7cvu1l+xKGe14Pt5uWapVUwYNVp0=
+	b=lagFeXOW89Ob4gpQIDYHzHG8zm12JwnodcyXfsw871pu4T6Ni5rJdAnCNE13l4ZXg
+	 bqn3eqdU9AORwyccWK76pRDWacHyvvlTKGkRln5XKJ+SAxe5Rw46PeEYjolnDC568S
+	 6B3+G+Rc+R6IyvnIudmJaOH771mKbJ1YrcWs/Buc=
 Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250103102302epcas5p1619095d7c201ac05ab3e8868e941550a~XJ6ewQRfw2727827278epcas5p18;
-	Fri,  3 Jan 2025 10:23:02 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4YPfm63jVDz4x9Pw; Fri,  3 Jan
-	2025 10:23:02 +0000 (GMT)
+	20250103102502epcas5p192e3e54d5a54e214197296c166bbf52c~XJ8OcPcL40091800918epcas5p1b;
+	Fri,  3 Jan 2025 10:25:02 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4YPfpQ33RBz4x9Px; Fri,  3 Jan
+	2025 10:25:02 +0000 (GMT)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250103052421epcas5p4a1a917ba5d367dfccec91d4522666ca0~XF1sc0qA81042010420epcas5p4n;
-	Fri,  3 Jan 2025 05:24:21 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250103052702epcas5p3f7eea83ac70ba7147e0de7fb30f90a62~XF4CS4d0O1068110681epcas5p3B;
+	Fri,  3 Jan 2025 05:27:02 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
 	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250103052421epsmtrp17a16a66d997a1377e9a54ef10eddacf3~XF1sbldH10733907339epsmtrp1z;
-	Fri,  3 Jan 2025 05:24:21 +0000 (GMT)
-X-AuditID: b6c32a2a-38bf570000004a05-47-67777485a9d8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	22.17.18949.58477776; Fri,  3 Jan 2025 14:24:21 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	20250103052702epsmtrp195ceeea5354adb4809e7486cb92e8ad4~XF4CQlw3l0853008530epsmtrp1F;
+	Fri,  3 Jan 2025 05:27:02 +0000 (GMT)
+X-AuditID: b6c32a29-e5d8824000004929-41-677775260af1
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	87.A4.18729.62577776; Fri,  3 Jan 2025 14:27:02 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
 	(KnoxPortal) with ESMTPA id
-	20250103052417epsmtip25f1a08f8a90e6acc0095d700090023d9~XF1owHm1N1327113271epsmtip2h;
-	Fri,  3 Jan 2025 05:24:17 +0000 (GMT)
-Date: Fri, 3 Jan 2025 10:46:17 +0530
+	20250103052658epsmtip12789f94584f95a43bcf74a64472b38ac~XF3_huf8O0883908839epsmtip1Q;
+	Fri,  3 Jan 2025 05:26:58 +0000 (GMT)
+Date: Fri, 3 Jan 2025 10:49:02 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
@@ -67,303 +67,283 @@ Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
 	Huang Ying <ying.huang@intel.com>, Vishak G <vishak.g@samsung.com>, Krishna
 	Kanth Reddy <krish.reddy@samsung.com>, Alok Rathore
 	<alok.rathore@samsung.com>, gost.dev@samsung.com
-Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness
- Monitoring Units (CHMU)
-Message-ID: <1983025922.01735899782509.JavaMail.epsvc@epcpadp2new>
+Subject: Re: [RFC PATCH 4/4] hwtrace: Document CXL Hotness Monitoring Unit
+ driver
+Message-ID: <1983025922.01735899902414.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20241121101845.1815660-5-Jonathan.Cameron@huawei.com>
 User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se1BMYRjGfeecPXtasxzF7BfJWMYlrGpMPsYo08hhmsEYd8Vqj21HW2s3
-	oURSKFNjQstWO+5lW9FGRVutjbJCFykZYilpKl0okeupMfz3zPP8fu9fL4U7thHjKUVoOKsO
-	lYaISQGRXyaeNCc+fI/cPbbSCSU2FZIoqziej46ZzvLQq3fVJPpcaSZRm3Um0p6uBuhB4yES
-	ZTcaAWq03MbQ11cVfFTa0kogw/l6Ep3PvYKhKt1DAj29k06iJuMvHqq7lUOgstxHGLrcUIOh
-	Wss5DMVrnwBUkWTBUGlpJWek81FJ/k0cGTMbMWTTnSR8XBij3giY40ee8pm4e508Ji/Ljblo
-	bsMYkyGBZEy9KXxGb1vNfLl+jGS6Sp6RTPJNA2BOpx1kPplcVwk3CRbJ2BBFBKueu3ibILil
-	3UaovnntNdsFMcA6JxE4UJCeB29kPyQTgYBypIsALKutJIcHCL9+/wyGsxO8+rOVPww1A9jR
-	dBjnBoKeCvtr7Hwuk/RM2FATx+PyWNoTfnyeAjgBp6/xYVfvDYwbnOgtcKDq4pAgpL1gbXox
-	kQioP1ejYJo2bLgeA21nmwku438QfZ4d5xCcngAzf1Jc7UD7wrc9R4eQcbQLPHO5Dz8Bxuj+
-	s3X/2bp/9jmAG4Azq9Io5UqNh8ozlN0j0UiVmt2hcklQmNIEhr7Bza0QmA3dEivAKGAFkMLF
-	Y4Ub1ofLHYUy6b5IVh22Vb07hNVYwQSKEIuE/e1JMkdaLg1nd7KsilX/XTHKYXwMRvhPGfWd
-	moe/ifFN7iyf3vyxbYfnciScvOS13XbhniVM0PRh/2Bfw7dFcn3vrYzNS+0Hyi/lXcKdlNEh
-	hQOixb5JXVUixck1VWbVdnfXMm9eEulf4ro9MDX6Q0fsNMm0yXrvGJNH1LKIWWY4mLrtvsK1
-	pydnr3mLX0XAL+eS6tXOwiuR6RnRQY/FBwRRP2Qrps/I9CgQBnq1L+mI67szOKW+ddBCd3/Z
-	WLdOqw3yXhuRtnCuF3l/kjVHdDdyQYdsdLfffPcEvd/LAPuZxxNjy83OdfWHTaLglk6FJGWN
-	bNeAT6BLYcEq9fX+jOSE98UrRxedGiFA7bOPp/hEuBetfTGSEBOaYKmHG67WSH8D6Pvi83wD
-	AAA=
-X-CMS-MailID: 20250103052421epcas5p4a1a917ba5d367dfccec91d4522666ca0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsWy7bCSnK5aaXm6wa2rfBZd93awWazY28pu
+	0bFpJqvF3ccX2Cy+nN7DZvHykKbF9KkXGC1O3Gxks1h9cw2jxc0DO5ksft49zm6x/+lzFotV
+	C6+xWSzcuIzJ4vysUywWl3fNYbO4t+Y/q8WVretYLA5vPMNksfT6RSaLSwcWMFm0Tj/HaHG8
+	9wCTxf79p0E65rBb7Nu2hdlizfKbTBYnZ01mcZDxWDNvDaNHd9tldo+WI29ZPTav0PJYvOcl
+	k8emVZ1sHps+TWL3mHcy0OP7+g42j/f7rrJ59G1ZxegxdXa9x+dNcgG8UVw2Kak5mWWpRfp2
+	CVwZWyYbFrxyrdi3uIu1gXGRZRcjJ4eEgInEs+fPGbsYuTiEBHYzSkxY1s4IkZCQ+PnnC5Qt
+	LLHy33N2iKInjBLNt46BJVgEVCTWfXvIDmKzCWhKXL/YwgpiiwgYSby7MQlsKrPAWnaJ9582
+	MIEkhAWCJd5euwmU4ODgFTCTOLRDGiQsJFAtcfPVUbBeXgFBiZMzn7CA2MxAJfM2P2QGKWcW
+	kJZY/o8DJMwp4Cyx9PFfZhBbVEBGYsbSr8wTGAVnIemehaR7FkL3AkbmVYySqQXFuem5xYYF
+	hnmp5XrFibnFpXnpesn5uZsYwalBS3MH4/ZVH/QOMTJxMB5ilOBgVhLhjQgvSRfiTUmsrEot
+	yo8vKs1JLT7EKM3BoiTOK/6iN0VIID2xJDU7NbUgtQgmy8TBKdXAlD0vc+Kz/UVntdzy2/8s
+	Wn3im71/l/KDROeT+ybFPtjduX7Ty5TPjOuD//Q+XX47/vxvAT+V5Rcbb320M5F4IR+ZfmGJ
+	g1Ea09Hs4mPbasqmSij3OrIoB1/fJHHXjWMDw90XMob3uqbrBKaocD5kv70pvcJiOe+mBSGX
+	qib89D/nWNlgkKB6bWXpFIXb087uuZH4LnVz/kS/luaHEVaVdYH33f/83N3ffnlaWFK6wMVr
+	jz1nzvgV8ZOva6XuPy5ZASmGReu49VNt+PcqlOdcupnw2Nup48tlgSM5a3543q959qxwb3g9
+	x4n9/deMujedDHWY5Kflsq6751/4Lab9p/Ztddq3dpfO/7AVax9emKrEUpyRaKjFXFScCADd
+	LLxOfAMAAA==
+X-CMS-MailID: 20250103052702epcas5p3f7eea83ac70ba7147e0de7fb30f90a62
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----YdMQOF_WoWeg2u_t4KSKhNTuhss8l_igc36-I4U5-7l0BmvH=_d503c_"
+	boundary="----lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_d4dc1_"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250103052421epcas5p4a1a917ba5d367dfccec91d4522666ca0
+X-CMS-RootMailID: 20250103052702epcas5p3f7eea83ac70ba7147e0de7fb30f90a62
 References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-	<20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
-	<CGME20250103052421epcas5p4a1a917ba5d367dfccec91d4522666ca0@epcas5p4.samsung.com>
+	<20241121101845.1815660-5-Jonathan.Cameron@huawei.com>
+	<CGME20250103052702epcas5p3f7eea83ac70ba7147e0de7fb30f90a62@epcas5p3.samsung.com>
 
-------YdMQOF_WoWeg2u_t4KSKhNTuhss8l_igc36-I4U5-7l0BmvH=_d503c_
+------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_d4dc1_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
 On 21/11/24 10:18AM, Jonathan Cameron wrote:
->Basic registration using similar approach to how the CPMUs
->are registered.
+>Add basic documentation to describe the CXL HMU and the
+>perf AUX buffer based interfaces.
 >
 >Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 >---
-> drivers/cxl/core/Makefile |  1 +
-> drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
-> drivers/cxl/core/regs.c   | 14 +++++++++
-> drivers/cxl/cxl.h         |  4 +++
-> drivers/cxl/cxlpci.h      |  1 +
-> drivers/cxl/hmu.h         | 23 ++++++++++++++
-> drivers/cxl/pci.c         | 26 +++++++++++++++-
-> 7 files changed, 132 insertions(+), 1 deletion(-)
+> Documentation/trace/cxl-hmu.rst | 197 ++++++++++++++++++++++++++++++++
+> Documentation/trace/index.rst   |   1 +
+> 2 files changed, 198 insertions(+)
 >
->diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->index 9259bcc6773c..d060abb773ae 100644
->--- a/drivers/cxl/core/Makefile
->+++ b/drivers/cxl/core/Makefile
->@@ -12,6 +12,7 @@ cxl_core-y += memdev.o
-> cxl_core-y += mbox.o
-> cxl_core-y += pci.o
-> cxl_core-y += hdm.o
->+cxl_core-y += hmu.o
-> cxl_core-y += pmu.o
-> cxl_core-y += cdat.o
-> cxl_core-$(CONFIG_TRACING) += trace.o
->diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
+>diff --git a/Documentation/trace/cxl-hmu.rst b/Documentation/trace/cxl-hmu.rst
 >new file mode 100644
->index 000000000000..3ee938bb6c05
+>index 000000000000..f07a50ba608c
 >--- /dev/null
->+++ b/drivers/cxl/core/hmu.c
->@@ -0,0 +1,64 @@
->+// SPDX-License-Identifier: GPL-2.0-only
->+/* Copyright(c) 2024 Huawei. All rights reserved. */
+>+++ b/Documentation/trace/cxl-hmu.rst
+>@@ -0,0 +1,197 @@
+>+.. SPDX-License-Identifier: GPL-2.0
 >+
->+#include <linux/device.h>
->+#include <linux/slab.h>
->+#include <linux/idr.h>
->+#include <cxlmem.h>
->+#include <hmu.h>
->+#include <cxl.h>
->+#include "core.h"
+>+==================================
+>+CXL Hotness Monitoring Unit Driver
+>+==================================
 >+
->+static void cxl_hmu_release(struct device *dev)
->+{
->+	struct cxl_hmu *hmu = to_cxl_hmu(dev);
+>+CXL r3.2 introduced the CXL Hotness Monitoring Unit (CHMU). A CHMU allows
+>+software running on a CXL Host to identify hot memory ranges, that is those with
+>+higher access frequency relative to other memory ranges.
 >+
->+	kfree(hmu);
->+}
+>+A given Logical Device (presentation of a CXL memory device seen by a particular
+>+host) can provide 1 or more CHMU each of which supports 1 or more separately
+>+programmable CHMU Instances (CHMUI). These CHMUI are mostly independent with
+>+the exception that there can be restrictions on them tracking the same memory
+>+regions. The CHMUs are always completely independent.
+>+The naming of the units is cxl_hmu_memX.Y.Z where memX matches the naming
+>+of the memory device in /sys/bus/cxl/devices/, Y is the CHMU index and
+>+Z is the CHMUI index with the CHMU.
 >+
->+const struct device_type cxl_hmu_type = {
->+	.name = "cxl_hmu",
->+	.release = cxl_hmu_release,
->+};
+>+Each CHMUI provides a ring buffer structure known as the Hot List from which the
+>+host an read back entries that describe the hotness of particular region of
+>+memory (Hot List Units). The Hot List Unit combines a Unit Address and an access
+>+count for the particular address. Unit address to DPA requires multiplication
+>+by the unit size. Thus, for large unit sizes the device may support higher
+>+counts. It is these Hot List Units that the driver provides via a perf AUX
+>+buffer by copying them from PCI BAR space.
 >+
->+static void remove_dev(void *dev)
->+{
->+	device_unregister(dev);
->+}
+>+The unit size at which hotness is measured is configurable for each CHMUI and
+>+all measurement is done in Device Physical Address space. To relate this to
+>+Host Physical Address space the HDM (Host-Managed Device Memory) decoder
+>+configuration must be taken into account to reflect the placement in a
+>+CXL Fixed Memory Window and any interleaving.
 >+
->+int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
->+		     int assoc_id, int index)
->+{
->+	struct cxl_hmu *hmu;
->+	struct device *dev;
->+	int rc;
+>+The CHMUI can support interrupts on fills above a watermark, or on overflow
+>+of the hotlist.
 >+
->+	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
->+	if (!hmu)
->+		return -ENOMEM;
+>+A CHMUI can support two different basic modes of operation. Epoch and
+>+Always On. These affect what is placed on the hotlist. Note that the actual
+>+implementation of tracking is implementation defined and likely to be
+>+inherently imprecise in that the hottest pages may not be discovered due to
+>+resource exhaustion and the hotness counts may not represent accurately how
+>+hot they are. The specification allows for a very high degree of flexibility
+>+in implementation, important as it is likely that a number of different
+>+hardware implementations will be chosen to suit particular silicon and accuracy
+>+budgets.
 >+
->+	hmu->assoc_id = assoc_id;
->+	hmu->index = index;
->+	hmu->base = regs->hmu;
->+	dev = &hmu->dev;
->+	device_initialize(dev);
->+	device_set_pm_not_required(dev);
->+	dev->parent = parent;
->+	dev->bus = &cxl_bus_type;
->+	dev->type = &cxl_hmu_type;
->+	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
->+	if (rc)
->+		goto err;
+>+Operation and configuration
+>+===========================
 >+
->+	rc = device_add(dev);
->+	if (rc)
->+		goto err;
+>+An example command line is::
 >+
->+	return devm_add_action_or_reset(parent, remove_dev, dev);
+>+  $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+>+  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
+>+  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
+>+  hotness_granual=12
 >+
->+err:
->+	put_device(&hmu->dev);
->+	return rc;
->+}
->+EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
->+
->diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
->index e1082e749c69..c12afaa6ef98 100644
->--- a/drivers/cxl/core/regs.c
->+++ b/drivers/cxl/core/regs.c
->@@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
-> }
-> EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
->
->+int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
->+{
->+	struct device *dev = map->host;
->+	resource_size_t phys_addr;
->+
->+	phys_addr = map->resource;
->+	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
->+	if (!regs->hmu)
->+		return -ENOMEM;
->+
->+	return 0;
->+}
->+EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
->+
-> static int cxl_map_regblock(struct cxl_register_map *map)
-> {
-> 	struct device *host = map->host;
->diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->index 5406e3ab3d4a..8172bc1f7a8d 100644
->--- a/drivers/cxl/cxl.h
->+++ b/drivers/cxl/cxl.h
->@@ -227,6 +227,9 @@ struct cxl_regs {
-> 	struct_group_tagged(cxl_pmu_regs, pmu_regs,
-> 		void __iomem *pmu;
-> 	);
->+	struct_group_tagged(cxl_hmu_regs, hmu_regs,
->+		void __iomem *hmu;
->+	);
->
-> 	/*
-> 	 * RCH downstream port specific RAS register
->@@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
-> 			   unsigned long map_mask);
-> int cxl_map_device_regs(const struct cxl_register_map *map,
-> 			struct cxl_device_regs *regs);
->+int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
-> int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
->
-> enum cxl_regloc_type;
->diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->index 4da07727ab9c..71f5e9620137 100644
->--- a/drivers/cxl/cxlpci.h
->+++ b/drivers/cxl/cxlpci.h
->@@ -67,6 +67,7 @@ enum cxl_regloc_type {
-> 	CXL_REGLOC_RBI_VIRT,
-> 	CXL_REGLOC_RBI_MEMDEV,
-> 	CXL_REGLOC_RBI_PMU,
->+	CXL_REGLOC_RBI_HMU,
-> 	CXL_REGLOC_RBI_TYPES
-> };
->
->diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
->new file mode 100644
->index 000000000000..c4798ed9764b
->--- /dev/null
->+++ b/drivers/cxl/hmu.h
->@@ -0,0 +1,23 @@
->+/* SPDX-License-Identifier: GPL-2.0-only */
->+/*
->+ * Copyright(c) 2024 Huawei
->+ * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
->+ */
->+#ifndef CXL_HMU_H
->+#define CXL_HMU_H
->+#include <linux/device.h>
+>+  $perf report --dump-raw-traces
 
-No compilation errors even by removing this header.
-I think this inclusion is not required.
-Also found similar include at drivers/cxl/pmu.h
+Typo: --dump-raw-trace
 
 >+
->+#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
-
-Above Macro CXL_HMU_REGMAP_SIZE is not used, So we should remove it.
-Its comment is also not appropriate
-
->+struct cxl_hmu {
->+	struct device dev;
->+	void __iomem *base;
->+	int assoc_id;
->+	int index;
->+};
+>+which will produce a list of hotlist entries, one per line with a short header
+>+to provide sufficient information to interpret the entries::
 >+
->+#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
->+struct cxl_hmu_regs;
->+int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
->+		     int assoc_id, int idx);
+>+  . ... CXL_HMU data: size 33512 bytes
+>+  Header 0: units: 29c counter_width 10
+>+  Header 1 : deadbeef
+>+  0000000000000283
+>+  0000000000010364
+>+  0000000000020366
+>+  000000000003033c
+>+  0000000000040343
+>+  00000000000502ff
+>+  000000000006030d
+>+  000000000007031a
+>+  ...
 >+
->+#endif
->diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->index 188412d45e0d..e89ea9d3f007 100644
->--- a/drivers/cxl/pci.c
->+++ b/drivers/cxl/pci.c
->@@ -15,6 +15,7 @@
-> #include "cxlmem.h"
-> #include "cxlpci.h"
-> #include "cxl.h"
->+#include "hmu.h"
-> #include "pmu.h"
->
-> /**
->@@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> 	struct cxl_dev_state *cxlds;
-> 	struct cxl_register_map map;
-> 	struct cxl_memdev *cxlmd;
->-	int i, rc, pmu_count;
->+	int i, rc, hmu_count, pmu_count;
-> 	bool irq_avail;
->
-> 	/*
->@@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> 		}
-> 	}
->
->+	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
->+	for (i = 0; i < hmu_count; i++) {
->+		struct cxl_hmu_regs hmu_regs;
+>+The least significant counter_width bits (here 16, hex 10) are the counter
+>+value, all higher bits are the unit index.  Multiply by the unit size
+>+to get a Device Physical Address.
 >+
->+		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
->+		if (rc) {
->+			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
->+			break;
->+		}
+>+The parameters are as follows:
 >+
->+		rc = cxl_map_hmu_regs(&map, &hmu_regs);
->+		if (rc) {
->+			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
->+			break;
->+		}
+>+epoch_type
+>+----------
 >+
->+		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
->+		if (rc) {
->+			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
->+			break;
->+		}
->+	}
+>+Two values may be supported::
 >+
-> 	rc = cxl_event_config(host_bridge, mds, irq_avail);
-> 	if (rc)
-> 		return rc;
+>+  0 - Epoch based operation
+>+  1 - Always on operation
+>+
+>+
+>+0. Epoch Based Operation
+>+~~~~~~~~~~~~~~~~~~~~~~~~
+>+
+>+An Epoch is a period of time after which a counter is assessed for hotness.
+>+
+>+The device may have a global sense of an Epoch but it may also operate them on
+>+a per counter, or per region of device basis. This is a function of the
+>+implementation and is not controllable, but is discoverable. In a global Epoch
+>+scheme at start of each Epoch all counters are zeroed / deallocated. Counters
+>+are then allocated in a hardware specific manner and accesses counted. At the
+>+completion of the Epoch the counters are compared with a threshold and entries
+>+with a count above a configurable threshold are added to the hotlist. A new
+>+Epoch is then begun with all counters cleared.
+>+
+>+In non-global Epoch scheme, when the Epoch of a given counter begins is not
+>+specified. An example might be an Epoch for counter only starting on first
+>+touch to the relevant memory region.  When a local Epoch ends the counter is
+>+compared to the threshold and if appropriate added to the hotlist.
+>+
+>+Note, in Epoch Based Operation, the counter in the hotlist entry provides
+>+information on how hot the memory is as the counter for the full Epoch is
+>+provided.
+>+
+>+1. Always on Operation
+>+~~~~~~~~~~~~~~~~~~~~~~
+>+
+>+In this mode, counters may all be reset before enabling the CHMUI. Then
+>+counters are allocated to particular memory units via an hardware specific
+>+method, perhaps on first touch.  When a counter passes the configurable
+>+hotness threshold an entry is added to the hotlist and that counter is freed
+>+for reuse.
+>+
+>+In this scheme the count provided in the hotlist entry is not useful as it will
+>+depend only on the configured threshold.
+>+
+>+access_type
+>+-----------
+>+
+>+The parameter controls which access are counted::
+>+
+>+  1 - Non-TEE read only
+>+  2 - Non-TEE write only
+>+  3 - Non-TEE read and write
+>+  4 - TEE and Non-TEE read only
+>+  5 - TEE and Non-TEE write only
+>+  6 - TEE and Non-tee read and write
+>+
+>+
+>+TEE here refers to a trusted execution environment, specifically one that
+>+results in the T bit being set in the CXL transactions.
+>+
+>+
+>+hotness_granual
+>+---------------
+>+
+>+Unit size at which tracking is performed.  Must be at least 256 bytes but
+>+hardware may only support some sizes. Expressed as a power of 2. e.g. 12 = 4kiB.
+>+
+>+hotness_threshold
+>+-----------------
+>+
+>+This is the minimum counter value that must be reached for the unit to count as
+>+hot and be added to the hotlist.
+>+
+>+The possible range may be dependent on the unit size as a larger unit size
+>+requires more bits on the hotlist entry leaving fewer available for the hotness
+>+counter.
+>+
+>+epoch_multiplier and epoch_scale
+>+--------------------------------
+>+
+>+The length of an epoch (in epoch mode) is controlled by these two parameters
+>+with the decoded epoch_scale multiplied by the epoch_multiplier to give the
+>+overall epoch length.
+>+
+>+epoch_scale::
+>+
+>+  1 - 100 usecs
+>+  2 - 1 msec
+>+  3 - 10 msecs
+>+  4 - 100 msecs
+>+  5 - 1 second
+>+
+>+range_base and range_scale
+>+--------------------------
+>+
+>+Expressed in terms of the unit size set via hotness_granual. Each CHMUI has a
+>+bitmap that controls what Device Physical Address spaces is tracked. Each bit
+>+represents 256MiB of DPA space.
+>+
+>+This interface provides a simple base and size in units of 256MiB to configure
+>+this bitmap. All bits in the specified range will be set.
+>+
+>+downsampling_factor
+>+-------------------
+>+
+>+Hardware may be incapable of counting accesses at full speed or it may be
+>+desirable to count over a longer period during which the counters would
+>+overflow.  This control allows selection of a down sampling factor expressed
+>+as a power of 2 between 1 and 32768.  Default is minimum supported downsampling
+>+factor.
+>+
+>+randomized_downsampling
+>+-----------------------
+>+
+>+To avoid problems with downsampling when accesses are periodic this option
+>+allows for an implementation defined randomization of the sampling interval,
+>+whilst remaining close to the specified downsampling_factor.
+>diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+>index 0b300901fd75..b35ed8e9dfa9 100644
+>--- a/Documentation/trace/index.rst
+>+++ b/Documentation/trace/index.rst
+>@@ -36,3 +36,4 @@ Linux Tracing Technologies
+>    user_events
+>    rv/index
+>    hisi-ptt
+>+   cxl-hmu
 >-- 
 >2.43.0
 >
 
-------YdMQOF_WoWeg2u_t4KSKhNTuhss8l_igc36-I4U5-7l0BmvH=_d503c_
+------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_d4dc1_
 Content-Type: text/plain; charset="utf-8"
 
 
-------YdMQOF_WoWeg2u_t4KSKhNTuhss8l_igc36-I4U5-7l0BmvH=_d503c_--
+------lzW.cJR_-6sCvQYD.lREqa.H-32Z9TKwpDxBjmCjs3VZTSBT=_d4dc1_--
 
