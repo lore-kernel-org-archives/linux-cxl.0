@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B01156C76;
-	Mon,  6 Jan 2025 12:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B228A1DC074;
+	Mon,  6 Jan 2025 12:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736165494; cv=none; b=AFQuS3QWh1PpexwUNwUlddGce7ylIo4mKN1MtfOrAYxeEhBgnTBJaQIj4fIPdH2b48X33j5DblLFw2n6h2nWJ81Va3+/hGq6wVGt4FY4chjz3NoUX98JOovFoMx6kMfkpkZPZ1JcIUkWegcSLU4WRr0lcfI0RkRjek/ccDBcav8=
+	t=1736165495; cv=none; b=DwU5CjCoRn4mAgcg5xYF7XHyzJmX2mjKVZ0HK215+25gMiFaQUgM2TuMDjg2VrhNBfV0X41Q1c0Twx4Q2DsGdlCuiVZC1W+u5zCpKbwHEZey6umrIqctIVnEXcfkrZCW0GIutm9nUvAvNJ1cDBCbUrImVrGgc6onsgCpSi1o4j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736165494; c=relaxed/simple;
-	bh=MfQUPoD1vkFDD1O9yWRBQtyLwBKbRYYE0hBOeoB4aAo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ClhIc6eqIdFrgb9rbC4gEzg7XCHkrsE1t5ea3V/HBLuiwcpA9Wag7n71Hb+HF1fT1H4B/DZbqNnX9brjBEzqmWZIBtJ7bvvtFD780iAgjN5IZPVHamBNhDd1eH/zxf5FQm0jeaNdWNF4tqTCYaOS6mvRfKTYC51biJmgbdE/b50=
+	s=arc-20240116; t=1736165495; c=relaxed/simple;
+	bh=6cBEMCYE8lEYmnDVjzQfddqfum2ZAA5pBF5NEyWL62Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUVBW4ujDIlEExZttk35BiHoyrvAKpWuNrXISIga3toxxipqp+38mujFGwD6Dqhb7IFr3pConmQJitQfjndYx4PgbKhJ7qmQnu5NCFy/QGO8e/MMKmrooFm7EJwWdkBkPhBVDYn5sz+2MOCrivWokQfViCsOTzf6iQ1goVOc8M4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YRXwX6Qjfz6K9ZV;
-	Mon,  6 Jan 2025 20:06:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YRXwj1GTpz6K9Zd;
+	Mon,  6 Jan 2025 20:07:01 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7A8FB140A08;
-	Mon,  6 Jan 2025 20:11:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BF1C11408F9;
+	Mon,  6 Jan 2025 20:11:30 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.170.95) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 6 Jan 2025 13:11:20 +0100
+ 15.1.2507.39; Mon, 6 Jan 2025 13:11:28 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -42,10 +43,12 @@ CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
 	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v18 00/19] EDAC: Scrub: introduce generic EDAC RAS control feature driver + CXL/ACPI-RAS2 drivers
-Date: Mon, 6 Jan 2025 12:09:56 +0000
-Message-ID: <20250106121017.1620-1-shiju.jose@huawei.com>
+Subject: [PATCH v18 03/19] EDAC: Add ECS control feature
+Date: Mon, 6 Jan 2025 12:09:59 +0000
+Message-ID: <20250106121017.1620-4-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20250106121017.1620-1-shiju.jose@huawei.com>
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,267 +62,8 @@ X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Previously known as "ras: scrub: introduce subsystem + CXL/ACPI-RAS2 drivers".
-
-Augmenting EDAC for controlling RAS features
-============================================
-The proposed expansion of EDAC for controlling RAS features and
-exposing features control attributes to userspace in sysfs.
-Some Examples:
- - Scrub control
- - Error Check Scrub (ECS) control
- - ACPI RAS2 features
- - Post Package Repair (PPR) control
- - Memory Sparing Repair control etc.
-
-High level design is illustrated in the following diagram.
- 
-         _______________________________________________
-        |   Userspace - Rasdaemon                       |
-        |  ____________                                 |
-        | | RAS CXL    |       _______________          | 
-        | | Err Handler|----->|               |         |
-        | |____________|      | RAS Dynamic   |         |
-        |  ____________       | Scrub, Memory |         |
-        | | RAS Memory |----->| Repair Control|         |
-        | | Err Handler|      |_______________|         |
-        | |____________|           |                    |
-        |__________________________|____________________|                              
-                                   |
-                                   |
-    _______________________________|______________________________
-   |   Kernel EDAC based SubSystem | for RAS Features Control     |
-   | ______________________________|____________________________  |
-   || EDAC Core          Sysfs EDAC| Bus                        | |
-   ||    __________________________|________ _    _____________ | |
-   ||   |/sys/bus/edac/devices/<dev>/scrubX/ |   | EDAC Device || |
-   ||   |/sys/bus/edac/devices/<dev>/ecsX/   |<->| EDAC MC     || |
-   ||   |/sys/bus/edac/devices/<dev>/repairX |   | EDAC Sysfs  || |
-   ||   |____________________________________|   |_____________|| |
-   ||                               | EDAC Bus                  | |
-   ||               Get             |       Get                 | |
-   ||    __________ Features       |   Features __________    | |
-   ||   |          |Descs  _________|______ Descs|          |   | |
-   ||   |EDAC Scrub|<-----| EDAC Device    |     | EDAC Mem |   | |
-   ||   |__________|      | Driver- RAS    |---->| Repair   |   | |
-   ||    __________       | Feature Control|     |__________|   | |
-   ||   |          |<-----|________________|                    | |
-   ||   |EDAC ECS  |   Register RAS | Features                  | |
-   ||   |__________|                |                           | |
-   ||         ______________________|_________                  | |
-   ||_________|_____________|________________|__________________| |
-   |   _______|____    _____|_________   ____|_________           |
-   |  |            |  | CXL Mem Driver| | Client Driver|          |
-   |  | ACPI RAS2  |  | Sparing, PPR, | | Mem Repair   |          |
-   |  | Driver     |  | Scrub, ECS    | | Features     |          |
-   |  |____________|  |_______________| |______________|          |
-   |        |              |              |                       |
-   |________|______________|______________|_______________________|
-            |              |              |                     
-     _______|______________|______________|_______________________
-    |     __|______________|_ ____________|____________ ____      |
-    |    |                                                  |     |
-    |    |            Platform HW and Firmware              |     |
-    |    |__________________________________________________|     |
-    |_____________________________________________________________|                             
-
-1. EDAC RAS Features components - Create feature specific descriptors.
-   for example, EDAC scrub, EDAC ECS, EDAC memory repair in the above
-   diagram. 
-2. EDAC device driver for controlling RAS Features - Get feature's attr
-   descriptors from EDAC RAS feature component and registers device's
-   RAS features with EDAC bus and expose the feature's sysfs attributes
-   under the sysfs EDAC bus.
-3. RAS dynamic scrub controller - Userspace sample module added for scrub
-   control in rasdaemon to issue scrubbing when excess number of memory
-   errors are reported in a short span of time.
-
-The added EDAC feature specific components (e.g. EDAC scrub, EDAC ECS,
-EDAC memory repair etc) do callbacks to  the parent driver (e.g. CXL
-driver, ACPI RAS driver etc) for the controls rather than just letting the
-caller deal with it because of the following reasons.
-1. Enforces a common API across multiple implementations can do that
-   via review, but that's not generally gone well in the long run for
-   subsystems that have done it (several have later moved to callback
-   and feature list based approaches).
-2. Gives a path for 'intercepting' in the EDAC feature driver.
-   An example for this is that we could intercept PPR repair calls
-   and sanity check that the memory in question is offline before
-   passing back to the underlying code.  Sure we could rely on doing
-   that via some additional calls from the parent driver, but the
-   ABI will get messier.
-3. (Speculative) we may get in kernel users of some features in the
-   long run.
-
-More details of the common RAS features are described in the following
-sections.
-
-Memory Scrubbing
-================
-Increasing DRAM size and cost has made memory subsystem reliability
-an important concern. These modules are used where potentially
-corrupted data could cause expensive or fatal issues. Memory errors are
-one of the top hardware failures that cause server and workload crashes.
-
-Memory scrub is a feature where an ECC engine reads data from
-each memory media location, corrects with an ECC if necessary and
-writes the corrected data back to the same memory media location.
-
-The memory DIMMs could be scrubbed at a configurable rate to detect
-uncorrected memory errors and attempts to recover from detected memory
-errors providing the following benefits.
-- Proactively scrubbing memory DIMMs reduces the chance of a correctable
-  error becoming uncorrectable.
-- Once detected, uncorrected errors caught in unallocated memory pages are
-  isolated and prevented from being allocated to an application or the OS.
-- The probability of software/hardware products encountering memory
-  errors is reduced.
-Some details of background can be found in Reference [5].
-
-There are 2 types of memory scrubbing,
-1. Background (patrol) scrubbing of the RAM whilst the RAM is otherwise
-   idle.
-2. On-demand scrubbing for a specific address range/region of memory.
-
-There are several types of interfaces to HW memory scrubbers
-identified such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory
-device patrol scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing.
-
-The scrub control varies between different memory scrubbers. To allow
-for standard userspace tooling there is a need to present these controls
-with a standard ABI.
-
-Introduce generic memory EDAC scrub control which allows user to control
-underlying scrubbers in the system via generic sysfs scrub control
-interface. The common sysfs scrub control interface abstracts the control
-of an arbitrary scrubbing functionality to a common set of functions.
-
-Use case of common scrub control feature
-========================================
-1. There are several types of interfaces to HW memory scrubbers identified
-   such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory device patrol
-   scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing features and software
-   based memory scrubber(discussed in the community Reference [5]).
-   Also some scrubbers support controlling (background) patrol scrubbing
-   (ACPI RAS2, CXL) and/or on-demand scrubbing(ACPI RAS2, ACPI ARS).
-   However the scrub controls varies between memory scrubbers. Thus there
-   is a requirement for a standard generic sysfs scrub controls exposed
-   to userspace for the seamless control of the HW/SW scrubbers in
-   the system by admin/scripts/tools etc.
-2. Scrub controls in user space allow the user to disable the scrubbing
-   in case disabling of the background patrol scrubbing or changing the
-   scrub rate are needed for other purposes such as performance-aware
-   operations which requires the background operations to be turned off
-   or reduced.
-3. Allows to perform on-demand scrubbing for specific address range if
-   supported by the scrubber.
-4. User space tools controls scrub the memory DIMMs regularly at a
-   configurable scrub rate using the sysfs scrub controls discussed help,
-   - to detect uncorrectable memory errors early before user accessing memory,
-     which helps to recover the detected memory errors.
-   - reduces the chance of a correctable error becoming uncorrectable.
-5. Policy control for hotplugged memory. There is not necessarily a system
-   wide bios or similar in the loop to control the scrub settings on a CXL
-   device that wasn't there at boot. What that setting should be is a policy
-   decision as we are trading of reliability vs performance - hence it should
-   be in control of userspace. As such, 'an' interface is needed. Seems more
-   sensible to try and unify it with other similar interfaces than spin
-   yet another one.
-
-The draft version of userspace code added in rasdaemon for dynamic scrub
-control, based on frequency of memory errors reported to userspace, tested
-for CXL device based patrol scrubbing feature and ACPI RAS2 based
-scrubbing feature.
-
-https://github.com/shijujose4/rasdaemon/tree/ras_feature_control
-
-ToDO: For memory repair features, such as PPR, memory sparing, rasdaemon
-collates records and decides to replace a row if there are lots of
-corrected errors, or a single uncorrected error or error record received
-with maintenance request flag set as in some CXL event records.
-
-Comparison of scrubbing features
-================================
- ................................................................
- .              .   ACPI    . CXL patrol.  CXL ECS  .  ARS      .
- .  Name        .   RAS2    . scrub     .           .           .
- ................................................................
- .              .           .           .           .           .
- . On-demand    . Supported . No        . No        . Supported .
- . Scrubbing    .           .           .           .           .
- .              .           .           .           .           .  
- ................................................................
- .              .           .           .           .           .
- . Background   . Supported . Supported . Supported . No        .
- . scrubbing    .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           .
- . Mode of      . Scrub ctrl. per device. per memory.  Unknown  .
- . scrubbing    . per NUMA  .           . media     .           .
- .              . domain.   .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Query scrub  . Supported . Supported . Supported . Supported .       
- . capabilities .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Setting      . Supported . No        . No        . Supported .       
- . address range.           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Setting      . Supported . Supported . No        . No        .       
- . scrub rate   .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Unit for     . Not       . in hours  . No        . No        .       
- . scrub rate   . Defined   .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              . Supported .           .           .           .
- . Scrub        . on-demand . No        . No        . Supported .
- . status/      . scrubbing .           .           .           .
- . Completion   . only      .           .           .           .
- ................................................................
- . UC error     .           .CXL general.CXL general. ACPI UCE  .
- . reporting    . Exception .media/DRAM .media/DRAM . notify and.
- .              .           .event/media.event/media. query     .
- .              .           .scan?      .scan?      . ARS status.
- ................................................................
- .              .           .           .           .           .      
- . Clear UC     .  No       . No        .  No       . Supported .
- . error        .           .           .           .           .
- .              .           .           .           .           .  
- ................................................................
- .              .           .           .           .           .
- . Translate    . No        . No        . No        . Supported .
- . *(1)SPA to   .           .           .           .           .
- . *(2)DPA      .           .           .           .           .  
- ................................................................
-
-*(1) - SPA - System Physical Address. See section 9.19.7.8
-       Function Index 5 - Translate SPA of ACPI spec r6.5.  
-*(2) - DPA - Device Physical Address. See section 9.19.7.8
-       Function Index 5 - Translate SPA of ACPI spec r6.5.  
-
-CXL Memory Scrubbing features
-=============================
-CXL spec r3.1 section 8.2.9.9.11.1 describes the memory device patrol scrub
-control feature. The device patrol scrub proactively locates and makes
-corrections to errors in regular cycle. The patrol scrub control allows the
-request to configure patrol scrubber's input configurations.
-
-The patrol scrub control allows the requester to specify the number of
-hours in which the patrol scrub cycles must be completed, provided that
-the requested number is not less than the minimum number of hours for the
-patrol scrub cycle that the device is capable of. In addition, the patrol
-scrub controls allow the host to disable and enable the feature in case
-disabling of the feature is needed for other purposes such as
-performance-aware operations which require the background operations to be
-turned off.
+Add EDAC ECS (Error Check Scrub) control to manage a memory device's
+ECS feature.
 
 The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
 Specification (JESD79-5) and allows the DRAM to internally read, correct
@@ -330,515 +74,451 @@ The DDR5 device contains number of memory media FRUs per device. The
 DDR5 ECS feature and thus the ECS control driver supports configuring
 the ECS parameters per FRU.
 
-ACPI RAS2 Hardware-based Memory Scrubbing
-=========================================
-ACPI spec 6.5 section 5.2.21 ACPI RAS2 describes ACPI RAS2 table
-provides interfaces for platform RAS features and supports independent
-RAS controls and capabilities for a given RAS feature for multiple
-instances of the same component in a given system.
-Memory RAS features apply to RAS capabilities, controls and operations
-that are specific to memory. RAS2 PCC sub-spaces for memory-specific RAS
-features have a Feature Type of 0x00 (Memory).
+Memory devices support the ECS feature register with the EDAC device
+driver, which retrieves the ECS descriptor from the EDAC ECS driver.
+This driver exposes sysfs ECS control attributes to userspace via
+/sys/bus/edac/devices/<dev-name>/ecs_fruX/.
 
-The platform can use the hardware-based memory scrubbing feature to expose
-controls and capabilities associated with hardware-based memory scrub
-engines. The RAS2 memory scrubbing feature supports following as per spec,
- - Independent memory scrubbing controls for each NUMA domain, identified
-   using its proximity domain.
-   Note: However AmpereComputing has single entry repeated as they have
-         centralized controls.
- - Provision for background (patrol) scrubbing of the entire memory system,
-   as well as on-demand scrubbing for a specific region of memory.
+The common sysfs ECS control interface abstracts the control of an
+arbitrary ECS functionality to a common set of functions.
 
-ACPI Address Range Scrubbing(ARS)
-================================
-ARS allows the platform to communicate memory errors to system software.
-This capability allows system software to prevent accesses to addresses
-with uncorrectable errors in memory. ARS functions manage all NVDIMMs
-present in the system. Only one scrub can be in progress system wide
-at any given time.
-Following functions are supported as per the specification.
-1. Query ARS Capabilities for a given address range, indicates platform
-   supports the ACPI NVDIMM Root Device Unconsumed Error Notification.
-2. Start ARS triggers an Address Range Scrub for the given memory range.
-   Address scrubbing can be done for volatile memory, persistent memory,
-   or both.
-3. Query ARS Status command allows software to get the status of ARS,  
-   including the progress of ARS and ARS error record.
-4. Clear Uncorrectable Error.
-5. Translate SPA
-6. ARS Error Inject etc.
-Note: Support for ARS is not added in this series because to reduce the
-line of code for review and could be added after initial code is merged. 
-We'd like feedback on whether this is of interest to ARS community?
+Support for the ECS feature is added separately because the control
+attributes of the DDR5 ECS feature differ from those of the scrub
+feature.
 
-Post Package Repair(PPR)
-========================
-PPR (Post Package Repair) maintenance operation requests the memory device
-to perform a repair operation on its media if supported. A memory device
-may support two types of PPR: Hard PPR (hPPR), for a permanent row repair,
-and Soft PPR (sPPR), for a temporary row repair. sPPR is much faster than
-hPPR, but the repair is lost with a power cycle. During the execution of a
-PPR maintenance operation, a memory device, may or may not retain data and
-may or may not be able to process memory requests correctly. sPPR maintenance
-operation may be executed at runtime, if data is retained and memory requests
-are correctly processed. hPPR maintenance operation may be executed only at
-boot because data would not be retained.
+The sysfs ECS attribute nodes are only present if the client driver
+has implemented the corresponding attribute callback function and
+passed the necessary operations to the EDAC RAS feature driver during
+registration.
 
-Use cases of common PPR control feature
-=======================================
-1. The Soft PPR (sPPR) and Hard PPR (hPPR) share similar control interfaces,
-thus there is a requirement for a standard generic sysfs PPR controls exposed
-to userspace for the seamless control of the PPR features in the system by the
-admin/scripts/tools etc.
-2. When a CXL device identifies a failure on a memory component, the device
-may inform the host about the need for a PPR maintenance operation by using
-an event record, where the maintenance needed flag is set. The event record
-specifies the DPA that should be repaired. Kernel reports the corresponding
-cxl general media or DRAM trace event to userspace. The userspace tool,
-for reg. rasdaemon initiate a PPR maintenance operation in response to a
-device request using the sysfs PPR control.
-3. User space tools, for eg. rasdaemon, do request PPR on a memory region
-when uncorrected memory error or excess corrected memory errors reported
-on that memory.
-4. Likely multiple instances of PPR present per memory device.
-
-Memory Sparing
-==============
-Memory sparing is defined as a repair function that replaces a portion of
-memory with a portion of functional memory at that same DPA. User space
-tool, e.g. rasdaemon, may request the sparing operation for a given
-address for which the uncorrectable error is reported. In CXL,
-(CXL spec 3.1 section 8.2.9.7.1.4) subclasses for sparing operation vary
-in terms of the scope of the sparing being performed. The cacheline sparing
-subclass refers to a sparing action that can replace a full cacheline.
-Row sparing is provided as an alternative to PPR sparing functions and its
-scope is that of a single DDR row. Bank sparing allows an entire bank to
-be replaced. Rank sparing is defined as an operation in which an entire
-DDR rank is replaced.
-
-Series adds,
-1. EDAC device driver extended for controlling RAS features, EDAC scrub
-   driver, EDAC ECS driver, EDAC memory repair driver supports memory
-   scrub control, ECS control, memory repair(PPR, sparing) control
-   respectively.
-2. Several common patches from Dave's cxl/fwctl series.   
-3. Support for CXL feature mailbox commands, which is used by CXL device
-   scrubbing and memory repair features. 
-4. CXL features driver supporting patrol scrub control (device and
-   region based).
-   
-5. CXL features driver supporting ECS control feature.
-6. ACPI RAS2 driver adds OS interface for RAS2 communication through
-   PCC mailbox and extracts ACPI RAS2 feature table (RAS2) and
-   create platform device for the RAS memory features, which binds
-   to the memory ACPI RAS2 driver.
-7. Memory ACPI RAS2 driver gets the PCC subspace for communicating
-   with the ACPI compliant platform supports ACPI RAS2. Add callback
-   functions and registers with EDAC device to support user to
-   control the HW patrol scrubbers exposed to the kernel via the
-   ACPI RAS2 table.
-8. Support for CXL maintenance mailbox command, which is used by
-   CXL device memory repair feature.   
-9. CXL features driver supporting PPR control feature.
-10. CXL features driver supporting memory sparing control feature.
-    Note: There are other PPR, memory sparing drivers to come.
-
-Open Questions based on feedbacks from the community:
-1. Leo: Standardize unit for scrub rate, for example ACPI RAS2 does not define
-   unit for the scrub rate. RAS2 clarification needed. 
-2. Jonathan:
-   - Any need for discoverability of capability to scan different regions,
-   such as global PA space to userspace. Left as future extension.
-   - For EDAC memory repair, control attribute for granularity(cache/row//bank/rank)
-     is needed?
-
-3. Jiaqi:
-   - STOP_PATROL_SCRUBBER from RAS2 must be blocked and, must not be exposed to
-     OS/userspace. Stopping patrol scrubber is unacceptable for platform where
-     OEM has enabled patrol scrubber, because the patrol scrubber is a key part
-     of logging and is repurposed for other RAS actions.
-   If the OEM does not want to expose this control, they should lock it down so the
-   interface is not exposed to the OS. These features are optional after all.
-   - "Requested Address Range"/"Actual Address Range" (region to scrub) is a
-      similarly bad thing to expose in RAS2.
-   If the OEM does not want to expose this, they should lock it down so the
-   interface is not exposed to the OS. These features are optional after all.
-   As per LPC discussion, support for stop and attributes for addr range
-   to be exposed to the userspace. 
-4. Borislav: 
-   - How the scrub control exposed to userspace will be used?
-     POC added in rasdaemon with dynamic scrub control for CXL memory media
-     errors and memory errors reported to userspace.
-     https://github.com/shijujose4/rasdaemon/tree/scrub_control_6_june_2024
-   - Is the scrub interface is sufficient for the use cases?
-   - Who is going to use scrub controls tools/admin/scripts?
-     1) Rasdaemon for dynamic control
-     2) Udev script for more static 'defaults' on hotplug etc.
-5. PPR   
-   - For PPR, rasdaemon collates records and decides to replace a row if there
-     are lots of corrected errors, or a single uncorrected error or error record
-     received with maintenance request flag set as in CXL DRAM error record.
-   - sPPR more or less startup only (so faking hPPR) or actually useful
-     in a running system (if not the safe version that keeps everything
-     running whilst replacement is ongoing)
-   - Is future proofing for multiple PPR units useful given we've mashed
-     together hPPR and sPPR for CXL.
-
-Implementation
-==============
-1. Linux kernel
-Version 17 of kernel implementations of RAS features control is available in,
-https://github.com/shijujose4/linux.git
-Branch: edac-enhancement-ras-features_v18
-
-Note: Took updated patches for CXL feature infrastructure and feature commands
-   from Dave's cxl/features branch.
-   https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/features
-   
-   Apologise to Dave for not waiting enough for permission to sendout his patches
-   in this series because of rush. 
-
-2. QEMU emulation
-QEMU for CXL RAS features implementation is available in, 
-https://gitlab.com/shiju.jose/qemu.git
-Branch: cxl-ras-features-2024-10-24
-
-3. Userspace rasdaemon
-The draft version of userspace sample code for dynamic scrub control,
-based on frequency of memory errors reported to userspace, is added
-in rasdaemon and enabled, tested for CXL device based patrol scrubbing
-feature and ACPI RAS2 based scrubbing feature. This required updation
-for the latest sysfs scrub interface.
-https://github.com/shijujose4/rasdaemon/tree/ras_feature_control
-
-ToDO: For PPR, rasdaemon collates records and decides to replace a row if there
-are lots of corrected errors, or a single uncorrected error or error
-record received with maintenance request flag set as in CXL DRAM error
-record.
-  
-References:
-1. ACPI spec r6.5 section 5.2.21 ACPI RAS2.
-2. ACPI spec r6.5 section 9.19.7.2 ARS.
-3. CXL spec  r3.1 8.2.9.9.11.1 Device patrol scrub control feature
-4. CXL spec  r3.1 8.2.9.9.11.2 DDR5 ECS feature
-5. CXL spec  r3.1 8.2.9.7.1.1 PPR Maintenance Operations
-6. CXL spec  r3.1 8.2.9.7.2.1 sPPR Feature Discovery and Configuration
-7. CXL spec  r3.1 8.2.9.7.2.2 hPPR Feature Discovery and Configuration
-8. Background information about kernel support for memory scan, memory
-   error detection and ACPI RASF.
-   https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.com/
-9. Discussions on RASF:
-   https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com/#r 
-
-Changes
-=======
-v17 -> v18:
-1. Rebased to kernel version 6.13-rc5
-2. Reordered patches for feedback from Jonathan on v17.
-3.
-3.1 Took updated patches for CXL feature infrastructure and feature commands
-   from Dave's cxl/features branch.
-   https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/features
-   Updated, debug and tested CXL RAS features.
-   
-   Apologise to Dave for not waiting enough for permission to sendout his patches
-   in this series because of rush.    
-   
-3.2. RAS features in the cxl/core/memfeature.c updated for interface
-     changes in the CXL feature commands.
-4. Modified ACPI RAS2 code for the recent interface changes in the
-   PCC mbox code.
-
-v16 -> v17:
-1. 
-1.1 Took several patches for CXL feature commands from Dave's 
-   fwctl/cxl series and add fixes pointed by Jonathan in those patches.
-1.2. cxl/core/memfeature.c updated for interface changes in the
-   Get Supported Feature, Get Feature and Set Feature functions.
-1.3. Used the UUID's for RAS features in CXL features code from
-     include/cxl/features.h    
-2. Changes based on feedbacks from Boris
- - Added attributes in EDAC memory repair to return the range for DPA
-   and other control attributes, and added callback functions for the
-   DPA range in CXL PPR and memory sparing code, which is the only one
-   supported in the CXL.
- - Removed 'query' attribute for memory repair feature.
-
-v15 -> v16:
-1. Changes and Fixes for feedbacks from Boris
- - Modified documentations and interface file for EDAC memory repair
-   to add more details and use cases.
- - Merged documentations to corresponding patches instead of common patch
-   for full documentation for better readability.
- - Removed 'persist_mode_avail' attribute for memory repair feature.
-2. Changes for feedback from Dave Jiang
- - Dave suggested helper function for ECS initialization in cxl/core/memfeature.c,
-   which added for all CXl RAS features, scrub, ECS, PPR and memory sparing features.
- - Fixed endian conversion pointed by Dave in CXL memory sparing. Also I fixed
-     similar in CXL scrub, ECS and PPR features.
-3. Changes for feedback from Ni Fan.
- - Fixed a memory leak in edac_dev_register() for memory repair feature
-   and few suggestions by Ni Fan.
-
-v14 -> v15:
-1. Changes and Fixes for feedbacks from Boris
-  - Added documentations for edac features, scrub and memory_repair etc
-    and placed in a separate patch.
-  - Deleted extra 2 attributes for EDAC ECS log_entry_type_per_* and
-    mode_counts_*.
-  - Rsolved issues reported in Documentation/ABI/testing/sysfs-edac-ecs.
-  - Deleted unused pr_ftmt() from few files.
-  - Fixed some formating issues EDAC ECS code and similar in other files. 
-    etc.
-2. Change for feedback from Dave Jiang
-  - In CXL code for patrol scrub control, Dave suggested replace
-    void *drv_data with a union of parameters in cxl_ps_get_attrs() and
-    similar functions.
-    This is fixed by replacing void *drv_data with corresponding context
-    structure(struct cxl_patrol_scrub_context) in CXL local functions as
-    struct cxl_patrol_scrub_context difficult and can't be visible in
-    generic EDAC control interface. Similar changes are made for CXL ECS,
-    CXL PPR and CXL memory sparing local functions.
-
-v13 -> v14:
-1. Changes and Fixes for feedback from Boris
-  - Check grammar of patch description.
-  - Changed scrub control attributes for memory scrub range to "addr" and "size".
-  - Fixed unreached code in edac_dev_register(). 
-  - Removed enable_on_demand attribute from EDAC scrub control and modified
-    RAS2 driver for the same.
-  - Updated ABI documentation for EDAC scrub control.
-    etc.
-
-2. Changes for feedback from Greg/Rafael/Jonathan for ACPI RAS2
-  - Replaced platform device creation and binding with
-    auxiliary device creation and binding with ACPI RAS2
-    memory auxiliary driver.
-
-3. Changes and Fixes for feedback from Jonathan
-  - Fixed unreached code in edac_dev_register(). 
-  - Optimize callback functions in CXL ECS using macros.
-  - Add readback attributes for the EDAC memory repair feature
-    and add support in the CXL driver for PPR and memory sparing.
-  - Add refactoring in the CXL driver for PPR and memory sparing
-    for query/repair maintenance commands.
-  - Add cxl_dpa_to_region_locked() function.  
-  - Some more cleanups in the ACPI RAS2 and RAS2 memory drivers.
-    etc.
-
-4. Changes and Fixes for feedback from Ni Fan
-   - Fixed compilation error - cxl_mem_ras_features_init refined, when CXL components
-     build as module.
-
-5. Optimize callback functions in CXL memory sparing using macros.
-   etc.
-   
-v12 -> v13:
-1. Changes and Fixes for feedback from Boris
-  - Function edac_dev_feat_init() merge with edac_dev_register()
-  - Add macros in EDAC feature specific code for repeated code.
-  - Correct spelling mistakes.
-  - Removed feature specific code from the patch "EDAC: Add support
-    for EDAC device features control"
-2. Changes for feedbacks from Dave Jiang
-   - Move fields num_features and entries to struct cxl_mailbox,
-     in "cxl: Add Get Supported Features command for kernel usage"
-   - Use series from 
-     https://lore.kernel.org/linux-cxl/20240905223711.1990186-1-dave.jiang@intel.com/   
-3. Changes and Fixes for feedback from Ni Fan
-   - In documentation scrub* to scrubX, ecs_fru* to ecs_fruX
-   - Corrected some grammar mistakes in the patch headers.
-   - Fixed an error print for min_scrub_cycle_hrs in the CXL patrol scrub
-     code.
-   - Improved an error print in the CXL ECS code.
-   - bool -> tristate for config CXL_RAS_FEAT
-4. Add support for CXL memory sparing feature.
-5. Add common EDAC memory repair driver for controlling memory repair
-   features, PPR, memory sparing etc.
-
-v11 -> v12:
-1. Changes and Fixes for feedback from Boris mainly for
-    patch "EDAC: Add support for EDAC device features control"
-    and other generic comments.
-
-2. Took CXL patches from Dave Jiang for "Add Get Supported Features
-   command for kernel usage" and other related patches. Merged helper
-   functions from this series to the above patch. Modifications of
-   CXL code in this series due to refactoring of CXL mailbox in Dave's
-   patches.
-
-3. Modified EDAC scrub control code to support multiple scrub instances
-   per device.
-
-v10 -> v11:
-1. Feedback from Borislav:
-   - Add generic EDAC code for control device features to
-     /drivers/edac/edac_device.c.
-   - Add common structure in edac for device feature's data.
-   
-2. Some more optimizations in generic EDAC code for control
-   device features.
-
-3. Changes for feedback from Fan for ACPI RAS2 memory driver.
-
-4. Add support for control memory PPR (Post Package Repair) features
-   in EDAC.
-   
-5. Add support for maintenance command in the CXL mailbox code,
-   which is needed for support PPR features in CXL driver.  
-
-6. Add support for control memory PPR (Post Package Repair) features
-   and do perform PPR maintenance operation in CXL driver.
-
-7. Rename drivers/cxl/core/memscrub.c to drivers/cxl/core/memfeature.c
-
-v9 -> v10:
-1. Feedback from Mauro Carvalho Chehab:
-   - Changes suggested in EDAC RAS feature driver.
-     use uppercase for enums, if else to switch-case, documentation for
-     static scrub and ecs init functions etc.
-   - Changes suggested in EDAC scrub.
-     unit of scrub cycle hour to seconds.
-     attribute node cycle_in_hours_available to min_cycle_duration and 
-     max_cycle_duration.
-     attribute node cycle_in_hours to current_cycle_duration.
-     Use base 0 for kstrtou64() and kstrtol() functions.
-     etc.
-   - Changes suggested in EDAC ECS.
-     uppercase for enums
-     add ABI documentation. etc
-        
-2. Feedback from Fan:
-   - Changes suggested in EDAC RAS feature driver.
-     use uppercase for enums, change if...else to switch-case. 
-     some optimization in edac_ras_dev_register() function
-     add missing goto free_ctx
-   - Changes suggested in the code for feature commands.  
-   - CXL driver scrub and ECS code
-     use uppercase for enums, fix typo, use enum type for mode
-     fix lonf lines etc.
-       
-v8 -> v9:
-1. Feedback from Borislav:
-   - Add scrub control driver to the EDAC on feedback from Borislav.
-   - Changed DEVICE_ATTR_..() static.
-   - Changed the write permissions for scrub control sysfs files as
-     root-only.
-2. Feedback from Fan:
-   - Optimized cxl_get_feature() function by using min() and removed
-     feat_out_min_size.
-   - Removed unreached return from cxl_set_feature() function.
-   - Changed the term  "rate" to "cycle_in_hours" in all the
-     scrub control code.
-   - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
-     with just a debug warning.
-      
-3. Feedback from Jonathan:
-   - Removed patch __free() based cleanup function for acpi_put_table.
-     and added fix in the acpi RAS2 driver.
-
-4. Feedback from Dan Williams:
-   - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
-     with just a debug warning.
-   - Add support for CXL region based scrub control.
-
-5. Feedback from Daniel Ferguson on RAS2 drivers:
-    In the ACPI RAS2 driver,
-  - Incorporated the changes given for clearing error reported.
-  - Incorporated the changes given for check the Set RAS Capability
-    status and return an appropriate error.
-    In the RAS2 memory driver,
-  - Added more checks for start/stop bg and on-demand scrubbing
-    so that addr range in cache do not get cleared and restrict
-    permitted operations during scrubbing.
-
-History for v1 to v8 is available here.
-https://lore.kernel.org/lkml/20240726160556.2079-1-shiju.jose@huawei.com/
-
-
-
-Dave Jiang (6):
-  cxl: Refactor user ioctl command path from mds to mailbox
-  cxl: Add skeletal features driver
-  cxl: Enumerate feature commands
-  cxl: Add Get Supported Features command for kernel usage
-  cxl: Add features driver attribute to emit number of features
-    supported
-  cxl: Setup exclusive CXL features that are reserved for the kernel
-
-Shiju Jose (13):
-  EDAC: Add support for EDAC device features control
-  EDAC: Add scrub control feature
-  EDAC: Add ECS control feature
-  EDAC: Add memory repair control feature
-  ACPI:RAS2: Add ACPI RAS2 driver
-  ras: mem: Add memory ACPI RAS2 driver
-  cxl/mbox: Add GET_FEATURE mailbox command
-  cxl/mbox: Add SET_FEATURE mailbox command
-  cxl/memfeature: Add CXL memory device patrol scrub control feature
-  cxl/memfeature: Add CXL memory device ECS control feature
-  cxl/mbox: Add support for PERFORM_MAINTENANCE mailbox command
-  cxl/memfeature: Add CXL memory device soft PPR control feature
-  cxl/memfeature: Add CXL memory device memory sparing control feature
-
- Documentation/ABI/testing/sysfs-edac-ecs      |   63 +
- .../ABI/testing/sysfs-edac-memory-repair      |  244 +++
- Documentation/ABI/testing/sysfs-edac-scrub    |   74 +
- Documentation/edac/features.rst               |  102 ++
- Documentation/edac/index.rst                  |   12 +
- Documentation/edac/memory_repair.rst          |  249 +++
- Documentation/edac/scrub.rst                  |  393 ++++
- drivers/acpi/Kconfig                          |   11 +
- drivers/acpi/Makefile                         |    1 +
- drivers/acpi/ras2.c                           |  407 ++++
- drivers/cxl/Kconfig                           |   25 +
- drivers/cxl/Makefile                          |    3 +
- drivers/cxl/core/Makefile                     |    2 +
- drivers/cxl/core/core.h                       |    7 +-
- drivers/cxl/core/features.c                   |  287 +++
- drivers/cxl/core/mbox.c                       |  167 +-
- drivers/cxl/core/memdev.c                     |   22 +-
- drivers/cxl/core/memfeature.c                 | 1631 +++++++++++++++++
- drivers/cxl/core/port.c                       |    3 +
- drivers/cxl/core/region.c                     |    6 +
- drivers/cxl/cxl.h                             |    3 +
- drivers/cxl/cxlmem.h                          |   67 +-
- drivers/cxl/features.c                        |  215 +++
- drivers/cxl/mem.c                             |    5 +
- drivers/cxl/pci.c                             |   19 +
- drivers/edac/Makefile                         |    1 +
- drivers/edac/ecs.c                            |  207 +++
- drivers/edac/edac_device.c                    |  183 ++
- drivers/edac/mem_repair.c                     |  492 +++++
- drivers/edac/scrub.c                          |  209 +++
- drivers/ras/Kconfig                           |   10 +
- drivers/ras/Makefile                          |    1 +
- drivers/ras/acpi_ras2.c                       |  385 ++++
- include/acpi/ras2_acpi.h                      |   45 +
- include/cxl/features.h                        |  171 ++
- include/cxl/mailbox.h                         |   45 +-
- include/linux/edac.h                          |  238 +++
- tools/testing/cxl/Kbuild                      |    1 +
- 38 files changed, 5909 insertions(+), 97 deletions(-)
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ Documentation/ABI/testing/sysfs-edac-ecs |  63 +++++++
+ Documentation/edac/scrub.rst             |   2 +
+ drivers/edac/Makefile                    |   2 +-
+ drivers/edac/ecs.c                       | 207 +++++++++++++++++++++++
+ drivers/edac/edac_device.c               |  17 ++
+ include/linux/edac.h                     |  41 ++++-
+ 6 files changed, 329 insertions(+), 3 deletions(-)
  create mode 100644 Documentation/ABI/testing/sysfs-edac-ecs
- create mode 100644 Documentation/ABI/testing/sysfs-edac-memory-repair
- create mode 100644 Documentation/ABI/testing/sysfs-edac-scrub
- create mode 100644 Documentation/edac/features.rst
- create mode 100644 Documentation/edac/index.rst
- create mode 100644 Documentation/edac/memory_repair.rst
- create mode 100644 Documentation/edac/scrub.rst
- create mode 100755 drivers/acpi/ras2.c
- create mode 100644 drivers/cxl/core/features.c
- create mode 100644 drivers/cxl/core/memfeature.c
- create mode 100644 drivers/cxl/features.c
  create mode 100755 drivers/edac/ecs.c
- create mode 100755 drivers/edac/mem_repair.c
- create mode 100755 drivers/edac/scrub.c
- create mode 100644 drivers/ras/acpi_ras2.c
- create mode 100644 include/acpi/ras2_acpi.h
- create mode 100644 include/cxl/features.h
 
+diff --git a/Documentation/ABI/testing/sysfs-edac-ecs b/Documentation/ABI/testing/sysfs-edac-ecs
+new file mode 100644
+index 000000000000..1160bec0603f
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-edac-ecs
+@@ -0,0 +1,63 @@
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX
++Date:		Jan 2025
++KernelVersion:	6.14
++Contact:	linux-edac@vger.kernel.org
++Description:
++		The sysfs EDAC bus devices /<dev-name>/ecs_fruX subdirectory
++		pertains to the memory media ECS (Error Check Scrub) control
++		feature, where <dev-name> directory corresponds to a device
++		registered with the EDAC device driver for the ECS feature.
++		/ecs_fruX belongs to the media FRUs (Field Replaceable Unit)
++		under the memory device.
++		The sysfs ECS attr nodes are only present if the parent
++		driver has implemented the corresponding attr callback
++		function and provided the necessary operations to the EDAC
++		device driver during registration.
++
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/log_entry_type
++Date:		Jan 2025
++KernelVersion:	6.14
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) The log entry type of how the DDR5 ECS log is reported.
++		0 - per DRAM.
++		1 - per memory media FRU.
++		All other values are reserved.
++
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/mode
++Date:		Jan 2025
++KernelVersion:	6.14
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) The mode of how the DDR5 ECS counts the errors.
++		Error count is tracked based on two different modes
++		selected by DDR5 ECS Control Feature - Codeword mode and
++		Row Count mode. If the ECS is under Codeword mode, then
++		the error count increments each time a codeword with check
++		bit errors is detected. If the ECS is under Row Count mode,
++		then the error counter increments each time a row with
++		check bit errors is detected.
++		0 - ECS counts rows in the memory media that have ECC errors.
++		1 - ECS counts codewords with errors, specifically, it counts
++		the number of ECC-detected errors in the memory media.
++		All other values are reserved.
++
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/reset
++Date:		Jan 2025
++KernelVersion:	6.14
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(WO) ECS reset ECC counter.
++		1 - reset ECC counter to the default value.
++		All other values are reserved.
++
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/threshold
++Date:		Jan 2025
++KernelVersion:	6.14
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) DDR5 ECS threshold count per gigabits of memory cells.
++		The ECS error count is subject to the ECS Threshold count
++		per Gbit, which masks error counts less than the Threshold.
++		Supported values are 256, 1024 and 4096.
++		All other values are reserved.
+diff --git a/Documentation/edac/scrub.rst b/Documentation/edac/scrub.rst
+index 5a5108b744a4..5640f9aeee38 100644
+--- a/Documentation/edac/scrub.rst
++++ b/Documentation/edac/scrub.rst
+@@ -242,3 +242,5 @@ sysfs
+ Sysfs files are documented in
+ 
+ `Documentation/ABI/testing/sysfs-edac-scrub`.
++
++`Documentation/ABI/testing/sysfs-edac-ecs`.
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index a162726cc6b9..3a49304860f0 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -10,7 +10,7 @@ obj-$(CONFIG_EDAC)			:= edac_core.o
+ 
+ edac_core-y	:= edac_mc.o edac_device.o edac_mc_sysfs.o
+ edac_core-y	+= edac_module.o edac_device_sysfs.o wq.o
+-edac_core-y	+= scrub.o
++edac_core-y	+= scrub.o ecs.o
+ 
+ edac_core-$(CONFIG_EDAC_DEBUG)		+= debugfs.o
+ 
+diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+new file mode 100755
+index 000000000000..dae8e5ae881b
+--- /dev/null
++++ b/drivers/edac/ecs.c
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * The generic ECS driver is designed to support control of on-die error
++ * check scrub (e.g., DDR5 ECS). The common sysfs ECS interface abstracts
++ * the control of various ECS functionalities into a unified set of functions.
++ *
++ * Copyright (c) 2024 HiSilicon Limited.
++ */
++
++#include <linux/edac.h>
++
++#define EDAC_ECS_FRU_NAME "ecs_fru"
++
++enum edac_ecs_attributes {
++	ECS_LOG_ENTRY_TYPE,
++	ECS_MODE,
++	ECS_RESET,
++	ECS_THRESHOLD,
++	ECS_MAX_ATTRS
++};
++
++struct edac_ecs_dev_attr {
++	struct device_attribute dev_attr;
++	int fru_id;
++};
++
++struct edac_ecs_fru_context {
++	char name[EDAC_FEAT_NAME_LEN];
++	struct edac_ecs_dev_attr dev_attr[ECS_MAX_ATTRS];
++	struct attribute *ecs_attrs[ECS_MAX_ATTRS + 1];
++	struct attribute_group group;
++};
++
++struct edac_ecs_context {
++	u16 num_media_frus;
++	struct edac_ecs_fru_context *fru_ctxs;
++};
++
++#define TO_ECS_DEV_ATTR(_dev_attr)	\
++	container_of(_dev_attr, struct edac_ecs_dev_attr, dev_attr)
++
++#define EDAC_ECS_ATTR_SHOW(attrib, cb, type, format)				\
++static ssize_t attrib##_show(struct device *ras_feat_dev,			\
++			     struct device_attribute *attr, char *buf)		\
++{										\
++	struct edac_ecs_dev_attr *dev_attr = TO_ECS_DEV_ATTR(attr);		\
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;			\
++	type data;								\
++	int ret;								\
++										\
++	ret = ops->cb(ras_feat_dev->parent, ctx->ecs.private,			\
++		      dev_attr->fru_id, &data);					\
++	if (ret)								\
++		return ret;							\
++										\
++	return sysfs_emit(buf, format, data);					\
++}
++
++EDAC_ECS_ATTR_SHOW(log_entry_type, get_log_entry_type, u32, "%u\n")
++EDAC_ECS_ATTR_SHOW(mode, get_mode, u32, "%u\n")
++EDAC_ECS_ATTR_SHOW(threshold, get_threshold, u32, "%u\n")
++
++#define EDAC_ECS_ATTR_STORE(attrib, cb, type, conv_func)			\
++static ssize_t attrib##_store(struct device *ras_feat_dev,			\
++			      struct device_attribute *attr,			\
++			      const char *buf, size_t len)			\
++{										\
++	struct edac_ecs_dev_attr *dev_attr = TO_ECS_DEV_ATTR(attr);		\
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;			\
++	type data;								\
++	int ret;								\
++										\
++	ret = conv_func(buf, 0, &data);						\
++	if (ret < 0)								\
++		return ret;							\
++										\
++	ret = ops->cb(ras_feat_dev->parent, ctx->ecs.private,			\
++		      dev_attr->fru_id, data);					\
++	if (ret)								\
++		return ret;							\
++										\
++	return len;								\
++}
++
++EDAC_ECS_ATTR_STORE(log_entry_type, set_log_entry_type, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(mode, set_mode, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(reset, reset, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(threshold, set_threshold, unsigned long, kstrtoul)
++
++static umode_t ecs_attr_visible(struct kobject *kobj, struct attribute *a, int attr_id)
++{
++	struct device *ras_feat_dev = kobj_to_dev(kobj);
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;
++
++	switch (attr_id) {
++	case ECS_LOG_ENTRY_TYPE:
++		if (ops->get_log_entry_type)  {
++			if (ops->set_log_entry_type)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case ECS_MODE:
++		if (ops->get_mode) {
++			if (ops->set_mode)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case ECS_RESET:
++		if (ops->reset)
++			return a->mode;
++		break;
++	case ECS_THRESHOLD:
++		if (ops->get_threshold) {
++			if (ops->set_threshold)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++#define EDAC_ECS_ATTR_RO(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RO(_name), \
++				     .fru_id = _fru_id })
++
++#define EDAC_ECS_ATTR_WO(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_WO(_name), \
++				     .fru_id = _fru_id })
++
++#define EDAC_ECS_ATTR_RW(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RW(_name), \
++				     .fru_id = _fru_id })
++
++static int ecs_create_desc(struct device *ecs_dev,
++			   const struct attribute_group **attr_groups, u16 num_media_frus)
++{
++	struct edac_ecs_context *ecs_ctx;
++	u32 fru;
++
++	ecs_ctx = devm_kzalloc(ecs_dev, sizeof(*ecs_ctx), GFP_KERNEL);
++	if (!ecs_ctx)
++		return -ENOMEM;
++
++	ecs_ctx->num_media_frus = num_media_frus;
++	ecs_ctx->fru_ctxs = devm_kcalloc(ecs_dev, num_media_frus,
++					 sizeof(*ecs_ctx->fru_ctxs),
++					 GFP_KERNEL);
++	if (!ecs_ctx->fru_ctxs)
++		return -ENOMEM;
++
++	for (fru = 0; fru < num_media_frus; fru++) {
++		struct edac_ecs_fru_context *fru_ctx = &ecs_ctx->fru_ctxs[fru];
++		struct attribute_group *group = &fru_ctx->group;
++		int i;
++
++		fru_ctx->dev_attr[ECS_LOG_ENTRY_TYPE] =
++					EDAC_ECS_ATTR_RW(log_entry_type, fru);
++		fru_ctx->dev_attr[ECS_MODE] = EDAC_ECS_ATTR_RW(mode, fru);
++		fru_ctx->dev_attr[ECS_RESET] = EDAC_ECS_ATTR_WO(reset, fru);
++		fru_ctx->dev_attr[ECS_THRESHOLD] =
++					EDAC_ECS_ATTR_RW(threshold, fru);
++
++		for (i = 0; i < ECS_MAX_ATTRS; i++)
++			fru_ctx->ecs_attrs[i] = &fru_ctx->dev_attr[i].dev_attr.attr;
++
++		sprintf(fru_ctx->name, "%s%d", EDAC_ECS_FRU_NAME, fru);
++		group->name = fru_ctx->name;
++		group->attrs = fru_ctx->ecs_attrs;
++		group->is_visible  = ecs_attr_visible;
++
++		attr_groups[fru] = group;
++	}
++
++	return 0;
++}
++
++/**
++ * edac_ecs_get_desc - get EDAC ECS descriptors
++ * @ecs_dev: client device, supports ECS feature
++ * @attr_groups: pointer to attribute group container
++ * @num_media_frus: number of media FRUs in the device
++ *
++ * Return:
++ *  * %0	- Success.
++ *  * %-EINVAL	- Invalid parameters passed.
++ *  * %-ENOMEM	- Dynamic memory allocation failed.
++ */
++int edac_ecs_get_desc(struct device *ecs_dev,
++		      const struct attribute_group **attr_groups, u16 num_media_frus)
++{
++	if (!ecs_dev || !attr_groups || !num_media_frus)
++		return -EINVAL;
++
++	return ecs_create_desc(ecs_dev, attr_groups, num_media_frus);
++}
+diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+index 60b20eae01e8..1c1142a2e4e4 100644
+--- a/drivers/edac/edac_device.c
++++ b/drivers/edac/edac_device.c
+@@ -625,6 +625,9 @@ int edac_dev_register(struct device *parent, char *name,
+ 			attr_gcnt++;
+ 			scrub_cnt++;
+ 			break;
++		case RAS_FEAT_ECS:
++			attr_gcnt += ras_features[feat].ecs_info.num_media_frus;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -669,6 +672,20 @@ int edac_dev_register(struct device *parent, char *name,
+ 			scrub_cnt++;
+ 			attr_gcnt++;
+ 			break;
++		case RAS_FEAT_ECS:
++			if (!ras_features->ecs_ops)
++				goto data_mem_free;
++
++			dev_data = &ctx->ecs;
++			dev_data->ecs_ops = ras_features->ecs_ops;
++			dev_data->private = ras_features->ctx;
++			ret = edac_ecs_get_desc(parent, &ras_attr_groups[attr_gcnt],
++						ras_features->ecs_info.num_media_frus);
++			if (ret)
++				goto data_mem_free;
++
++			attr_gcnt += ras_features->ecs_info.num_media_frus;
++			break;
+ 		default:
+ 			ret = -EINVAL;
+ 			goto data_mem_free;
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index ace8b10bb028..979e91426701 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -667,6 +667,7 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+ /* RAS feature type */
+ enum edac_dev_feat {
+ 	RAS_FEAT_SCRUB,
++	RAS_FEAT_ECS,
+ 	RAS_FEAT_MAX
+ };
+ 
+@@ -700,9 +701,40 @@ int edac_scrub_get_desc(struct device *scrub_dev,
+ 			const struct attribute_group **attr_groups,
+ 			u8 instance);
+ 
++/**
++ * struct edac_ecs_ops - ECS device operations (all elements optional)
++ * @get_log_entry_type: read the log entry type value.
++ * @set_log_entry_type: set the log entry type value.
++ * @get_mode: read the mode value.
++ * @set_mode: set the mode value.
++ * @reset: reset the ECS counter.
++ * @get_threshold: read the threshold count per gigabits of memory cells.
++ * @set_threshold: set the threshold count per gigabits of memory cells.
++ */
++struct edac_ecs_ops {
++	int (*get_log_entry_type)(struct device *dev, void *drv_data, int fru_id, u32 *val);
++	int (*set_log_entry_type)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*get_mode)(struct device *dev, void *drv_data, int fru_id, u32 *val);
++	int (*set_mode)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*reset)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*get_threshold)(struct device *dev, void *drv_data, int fru_id, u32 *threshold);
++	int (*set_threshold)(struct device *dev, void *drv_data, int fru_id, u32 threshold);
++};
++
++struct edac_ecs_ex_info {
++	u16 num_media_frus;
++};
++
++int edac_ecs_get_desc(struct device *ecs_dev,
++		      const struct attribute_group **attr_groups,
++		      u16 num_media_frus);
++
+ /* EDAC device feature information structure */
+ struct edac_dev_data {
+-	const struct edac_scrub_ops *scrub_ops;
++	union {
++		const struct edac_scrub_ops *scrub_ops;
++		const struct edac_ecs_ops *ecs_ops;
++	};
+ 	u8 instance;
+ 	void *private;
+ };
+@@ -711,13 +743,18 @@ struct edac_dev_feat_ctx {
+ 	struct device dev;
+ 	void *private;
+ 	struct edac_dev_data *scrub;
++	struct edac_dev_data ecs;
+ };
+ 
+ struct edac_dev_feature {
+ 	enum edac_dev_feat ft_type;
+ 	u8 instance;
+-	const struct edac_scrub_ops *scrub_ops;
++	union {
++		const struct edac_scrub_ops *scrub_ops;
++		const struct edac_ecs_ops *ecs_ops;
++	};
+ 	void *ctx;
++	struct edac_ecs_ex_info ecs_info;
+ };
+ 
+ int edac_dev_register(struct device *parent, char *dev_name,
 -- 
 2.43.0
 
