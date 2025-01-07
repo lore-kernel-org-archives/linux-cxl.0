@@ -1,41 +1,41 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2888632B;
-	Tue,  7 Jan 2025 03:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11768632B;
+	Tue,  7 Jan 2025 03:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736222280; cv=pass; b=gGO4BC4i0oZwMn3reHeCf3dKUfAi7lmCBeipF+9TxEicZdjrZBvkGDTsTXz6zZWRqFEhLrsgCHo8u9TJ/c1cMRvaPI+iFdZtwerw+VNkAuRZ281BvdQP19ihIx+hnZkNKRyZC7S/fkvutAsgQTYlNiKWAjlWzEFcVxi5XEHYxTc=
+	t=1736222292; cv=pass; b=sSADyGNsu7u9H5+HoV+ZRb2RipXhjrWb3/jcQiIJRDEzcwKd/9KvzJpNLTco5BRD0WBNVDuzDDtmrhWFC7q/WT+ud+Ewny11yeBZQs6Lpu6N+l3GR4fdbhxaqsG0bdNIqdPwXGkgz/PAbY6DailzOzuwWzc9FiiNlhgsI5G/3D4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736222280; c=relaxed/simple;
-	bh=ZJ2npi9TOUOUlJvV1ovQxH+NzqKD2NmODV5k8lPVwLQ=;
+	s=arc-20240116; t=1736222292; c=relaxed/simple;
+	bh=zqSHsziad0iLZs6QqxuWE6HhpLK0IvOWGwH5UtPLgQ0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PdiRl2zoB94Yci7xMEYaR4JGJcdIbaBIxYB+kYKnuKYFtCspS3uepwbm0gZT0U0k4tX9bitJ4tLUHZaFJKUaJaMdNfZBA6ta5/alAU+MbN49fEvilruAaGPspIhJrdI6FM4eXthHLG+k9kfzAmqUkOZo3HMdH0hKeRPWq+cYEeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=C7KHlKTP; arc=pass smtp.client-ip=136.143.188.94
+	 MIME-Version; b=GV51yp0RQED5wpaIUsTjtgxXNaJopFXjktzXOc6pt6eRqhkGKr3y1cLqIvGFBJJIo4CZ5TnQMt5GsoKk2PCQCYAZhEyows5wdaQXc8NquJeERRpXH/DsD65KLTKTXxNmtCqHtwDne1PUoXbDHFvznoibwMNJInkbQz8PwS2az20=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Bw7hL/7a; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="C7KHlKTP"
-ARC-Seal: i=1; a=rsa-sha256; t=1736222257; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Bw7hL/7a"
+ARC-Seal: i=1; a=rsa-sha256; t=1736222267; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=eBtDz4OOvfmx8bhkyUHe1XIEQZhEacWP+ZrrZ83ypDazUZdMkhpjVhb2AMAKbAULGFu8P/13f+pP72ohT5vtmqdJzvpopKhPA1/sgiSrN4PRBHZsH4FYgvyly1ItOOX5I26z4iYnlzMkB3MWhXuF7kbQ6z50quk3dHuVzkzP2dk=
+	b=D/tbmD1/1pPU9jGIBH/5COPQtHH1/iXr+e9MpXpJ7lqYaFVuFGty82RSsD5Rz/nYJS5fASAJFmKffpELPtRIQsWhlx773eeNFq09Q3vFHPJuv3qdGVPQn6JGuWxlxfyhuSmGX62Bxh3j3ltJyGsC8Ph2jnk6PdTHi5ejfFIhsIA=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1736222257; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=71Vfq/lr3HI1J1zvQTZQRh2XzJDy5bIV5/bnF/fmRUI=; 
-	b=lQ+pQrPSiuFjkrJglJEvvFYaaXthXumZTmeWmW7x88KFyLqdthCuxgVu/Gvw+U1Dunc+Eof2+IQ3n7H4IOVUfRZPgeUKX//4M+m6FOeIV0WXmJcnCvc09GUQ0ff9h/1ZuxiX+vaOb9mdp6pNUNVPIDL7rPCAdogQSYF81VMN71M=
+	t=1736222267; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=uSVefGGKaTk1sDvzueyHqzcDxxx1WJNakriqtp4cVcY=; 
+	b=SBiODlx+qHS9k5NzkHluW5cnd1FTC7vrWT1hcyP0LPlqqL7kiJVWg9X6P14vbMatJBPmT4uDs623j8N/KvFjDUlsNtGFreZFU17I9NqelmOMX0jhCJOjDGgRNmu6p3KZudr725plCC/PJLIctpTvqUiEl8/Ls6vUCSc8DmX5yug=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1736222257;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1736222267;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=71Vfq/lr3HI1J1zvQTZQRh2XzJDy5bIV5/bnF/fmRUI=;
-	b=C7KHlKTPCfpfLekYLgpmJj7BcQP6YP+UdJxdzWTSubtTwU+XQEa1ZuJP9yhjj7sA
-	cXrU/YIeNXo/zor2EmacIgRzR9cJeUSyeBroKAcSTQt4BlPdpn/oLbkeWSNKWjkMfxI
-	/xZaANbkWZudQTHnj0y/iCQ2DqomlxVzms3NVick=
-Received: by mx.zohomail.com with SMTPS id 1736222256697604.2342245130915;
-	Mon, 6 Jan 2025 19:57:36 -0800 (PST)
+	bh=uSVefGGKaTk1sDvzueyHqzcDxxx1WJNakriqtp4cVcY=;
+	b=Bw7hL/7aly7BLTjGq0mzEJ7G9ADvwBxfjGU94bZ/a7bvYH5fVqWNOXH/WGYGzPDT
+	Bbx+EMYLH+9wLbMWWT4EQk8YdiLEMshtDyoZ0I7uNodW9P5uyUcoJglddYBtB+JSy6w
+	rTuYBzmDEBHVE971jDW4yHHj6+6569JAE5oXHJ7Q=
+Received: by mx.zohomail.com with SMTPS id 1736222265459480.52893116612825;
+	Mon, 6 Jan 2025 19:57:45 -0800 (PST)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -47,9 +47,9 @@ To: dave@stgolabs.net,
 Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>
-Subject: [RFC PATCH 2/8] cxl/port: Delay port HDM setup until port component regs setup done
-Date: Tue,  7 Jan 2025 11:57:02 +0800
-Message-Id: <20250107035708.1134954-3-ming.li@zohomail.com>
+Subject: [RFC PATCH 3/8] cxl/region: Check if dev is a decoder in check_commit_order()
+Date: Tue,  7 Jan 2025 11:57:03 +0800
+Message-Id: <20250107035708.1134954-4-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250107035708.1134954-1-ming.li@zohomail.com>
 References: <20250107035708.1134954-1-ming.li@zohomail.com>
@@ -60,82 +60,55 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122721bf7b18384845fc227a7653000038dcea3b84bf001be3ee9689bc35dd43083f9e8465c96a9383:zu08011227af8fc1d34e5b4178c22d399e0000435e35c5b2af67e7dd3065942f9b4e2c38e93afbd25b8149a2:rf0801122d17b229b88663d808fed0c7470000d6ea91fa81cc05c594e745b3aae6a57a60b2c8a6e9fb226e0fd2d52f6156ee:ZohoMail
+Feedback-ID: rr08011227af502f1a8495808710c3aa39000015bf6d3ef7ba5e42951c0b9c32923616f4a1c640c9d8b583c2:zu080112270161c2dbca105bd02a72bbf90000eed5e76b7e96e1683d62d3b9ad0fdee4bb017b85b11fdd900c:rf0801122d8316552c81ef98b053220e860000b9b7009b32778fb0271da8f4050fe098a0f38548e1dbbedbc950ccbd57cd7a:ZohoMail
 X-ZohoMailClient: External
 
-Currently, devm_cxl_add_endpoint() is responsible for all CXL ports
-component registers enumeration. so HDM setup for the port of host
-bridge/switch also needs to be delayed until componeng registers setup
-finished. So moving CXL host bridge/switch HDM setup implementation out
-of cxl_switch_port_probe(), and let devm_cxl_add_endpoint() help to
-setup HDM on such ports.
+Currently, endpoint port probing helps to enumerate decoders on its
+ancestor ports. it will impact the sequence of port's device child list.
+
+Before that, port's decoders are added to port's device child list
+firstly, then all ports under the port will be added to the port's
+device child list.
+But now, all ports under the port will be added to the port's device
+child list firstly, then the port's decoders will be added.
+
+So when using device_for_each_child_reverse_from() to check decoders
+commit order, needs to check if the child device is decoder, if not,
+that means the first decoder was walked. Returning a positive in such
+case to stop iterator.
 
 Signed-off-by: Li Ming <ming.li@zohomail.com>
 ---
- drivers/cxl/port.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/cxl/core/region.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index ae09bbbe0a17..c59f198f6cb0 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -59,7 +59,6 @@ static int discover_region(struct device *dev, void *root)
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index b98b1ccffd1c..946fca0fe0fe 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -780,8 +780,12 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
  
- static int cxl_switch_port_probe(struct cxl_port *port)
+ static int check_commit_order(struct device *dev, const void *data)
  {
--	struct cxl_hdm *cxlhdm;
- 	int rc;
+-	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	struct cxl_decoder *cxld;
  
- 	/* Cache the data early to ensure is_visible() works */
-@@ -71,6 +70,18 @@ static int cxl_switch_port_probe(struct cxl_port *port)
++	if (!is_switch_decoder(dev))
++		return 1;
++
++	cxld = to_cxl_decoder(dev);
+ 	/*
+ 	 * if port->commit_end is not the only free decoder, then out of
+ 	 * order shutdown has occurred, block further allocations until
+@@ -815,7 +819,7 @@ static int match_free_decoder(struct device *dev, void *data)
  
- 	cxl_switch_parse_cdat(port);
- 
-+	return 0;
-+}
-+
-+static int cxl_switch_port_setup_hdm(struct cxl_port *port)
-+{
-+	struct cxl_hdm *cxlhdm;
-+	int rc;
-+
-+	/* Skip hdm setup if there is a cxlhdm on the port */
-+	if (dev_get_drvdata(&port->dev))
-+		return 0;
-+
- 	cxlhdm = devm_cxl_setup_hdm(port, NULL);
- 	if (!IS_ERR(cxlhdm))
- 		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
-@@ -89,6 +100,17 @@ static int cxl_switch_port_probe(struct cxl_port *port)
- 	return -ENXIO;
- }
- 
-+static int cxl_switch_port_setup(struct cxl_port *port)
-+{
-+	int rc;
-+
-+	rc = cxl_port_setup_regs(port);
-+	if (rc)
-+		return rc;
-+
-+	return cxl_switch_port_setup_hdm(port);
-+}
-+
- static int cxl_endpoint_port_probe(struct cxl_port *port)
- {
- 	struct cxl_port *iter, *parent_port = to_cxl_port(port->dev.parent);
-@@ -109,9 +131,9 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		 */
- 		if (iter != parent_port) {
- 			guard(device)(&iter->dev);
--			rc = cxl_port_setup_regs(iter);
-+			rc = cxl_switch_port_setup(iter);
- 		} else {
--			rc = cxl_port_setup_regs(iter);
-+			rc = cxl_switch_port_setup(iter);
- 		}
- 		if (rc)
- 			return rc;
+ 	rc = device_for_each_child_reverse_from(dev->parent, dev, NULL,
+ 						check_commit_order);
+-	if (rc) {
++	if (rc < 0) {
+ 		dev_dbg(dev->parent,
+ 			"unable to allocate %s due to out of order shutdown\n",
+ 			dev_name(dev));
 -- 
 2.34.1
 
