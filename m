@@ -1,152 +1,135 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B4C1862A;
-	Tue,  7 Jan 2025 07:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB07647;
+	Tue,  7 Jan 2025 09:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736235185; cv=none; b=X8fLdDXPICIkm7cRHnz19aJ0Lc39FbJR3kNOY6TJtkhAhZxu6C0ONAZCLhB6dlX0+1FI9dAPHjYBGMKnaXhGsdBN2HKOzFLVq5kLFfAp6hfbvpEkC4ZQ/1QlHB8kvtHniTr5OWzhcNon9wExpO26knM3Z4rOs6JFihD1vZ64Qzk=
+	t=1736241806; cv=none; b=KXDJPOdxXGyvaQzc/U+XuPIp8ty4Trw08Bh4ljMq4mh/gpea1FQpfgFSpsVCqDXKfmdXV8Fw5TAQrUxwnaG3wLbAHRw7XH8Zb5lu02Xss6LdeqrAxxdrJakeKndVESnVjPAiT/9kxRIzdsFj8B1+2/dZCo4ALsEkNcuyrXVfDhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736235185; c=relaxed/simple;
-	bh=RRoVh0E2t0bccH/iELMMi9eHYgKC1deGS4Mbe0wK4xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WS7DfwMJBcotL8069xEJ2e12s/e3AAiClMVXHBP9PT/v86qqkrHf5+jSWe3S0arFq0l0ZHI5J1CJlNLbddoroPNZwSoaki+fFgSJgX5izAzsgQj4QMYq4eM5kOQRf4jXjLh8gzH/6tPOuP1aCWX6Dn7gD3s+WBO+hjkKRcE4ohE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=a1iy5UTi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="a1iy5UTi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1F57440E0163;
-	Tue,  7 Jan 2025 07:32:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gp_XynEJRAhn; Tue,  7 Jan 2025 07:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1736235169; bh=oWOPrGULgEDzUljnOv0D7y9Z2oqc2AFjwXl92zvjRa0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a1iy5UTiowwHwLV1fi/sYuVddu5lpqsuRs/YEyqpHiHv3k0ON4Sv3yMWFf3DJF3TP
-	 jtki+oxuBKIc/AA4s1FM2bNta348heviDtsXARKRf9xDxlXPeviIeejrNzd4TFYiYm
-	 VDtuQrnDfo+zDzpC918ygGN1JwaH3zMYRPEjGOK9CHD8wAsf3Do03hDEWV8ks/fUI0
-	 AkTWL3KWbtd2NZHP0I7Gnyf0WXuyiP1ZD2lSEanNT491YwVgD8Cb8anESLm0f6Ml/E
-	 cNvfdVSlVaw/FxbkAUT/HgWjuYLGxvRqMx2avEPCF8fggJnsVkrS7FtbgwqobTEEkm
-	 5xOCFv9oSlCT5vfyvNlHSKnohAeDl6OtvMPyJlQ+hp+Ykk7Q1zJe3G9kTJkLSzOhXJ
-	 bdcgamveUkpHh8mNTgZUzbVs7+W+S9dJBxnZ6vAtdQ76yIm4DAdt3oX/HKMbZtBrJY
-	 MVDdlP7PsHBZqS1Wb3E1mUbsCQbPM8dSpOcVUssj1ZAfqm20IYdwCiya7SkEfRqtPX
-	 yt+JYoTPBDpPFmVr2C0umut7sWa+7LoCP4xekvYGI4IQ7W+oVi31i06dexzY3TmNn6
-	 In4tZ0M6Yj02Aeb8dwQqZAnDtEcASRTiCP4uU4BLiC5RmkxKZC2FsPp53k4mJFEgCT
-	 MrPoyx76Fucd0FtQx2Y3UDiw=
-Received: from zn.tnic (p200300ea971F93e8329c23ffFea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:93e8:329c:23ff:fea6:a903])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 80BE340E0266;
-	Tue,  7 Jan 2025 07:32:05 +0000 (UTC)
-Date: Tue, 7 Jan 2025 08:32:04 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	s=arc-20240116; t=1736241806; c=relaxed/simple;
+	bh=PIZYC/3Ty+YjyfGidIWLDZXYkQdxxNH49WPDSunZ9ws=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=j8uRqMQCgAdqfeJoTiFE4YQehmQSq5forEfWJdZLraaT3IcWI2DhhL8m4JyZIvsFMkWkvEmk6mywVveIdAUICRuZF73K6c0weJ/xnnZ9vx8irrRse66vyms9sivGtkClzfHwwWgUhkn8IF00aGH4C+frgd/UBfqmz7bbLaB2BDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YS5CZ6q8lz6M4Lm;
+	Tue,  7 Jan 2025 17:21:46 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 11C9E1403A8;
+	Tue,  7 Jan 2025 17:23:20 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 7 Jan 2025 10:23:19 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Tue, 7 Jan 2025 10:23:19 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
 	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
 	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"gthelen@google.com" <gthelen@google.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
 	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
 	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
 	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
 	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v18 02/19] EDAC: Add scrub control feature
-Message-ID: <20250107073204.GBZ3zYdOtWEbieKXiU@fat_crate.local>
+Subject: RE: [PATCH v18 02/19] EDAC: Add scrub control feature
+Thread-Topic: [PATCH v18 02/19] EDAC: Add scrub control feature
+Thread-Index: AQHbYDQd8xBjK3PZSkqZdrlJ+rHfL7MJ1jmAgABIhvCAALyTAIAALgLg
+Date: Tue, 7 Jan 2025 09:23:19 +0000
+Message-ID: <bb8154e6c78d440bb807ff9b6bfd7a0f@huawei.com>
 References: <20250106121017.1620-1-shiju.jose@huawei.com>
  <20250106121017.1620-3-shiju.jose@huawei.com>
  <20250106155733.GAZ3v9bQspKvdi3lZE@fat_crate.local>
  <36665b7bf4974020a34d08a7ddf6d554@huawei.com>
+ <20250107073204.GBZ3zYdOtWEbieKXiU@fat_crate.local>
+In-Reply-To: <20250107073204.GBZ3zYdOtWEbieKXiU@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <36665b7bf4974020a34d08a7ddf6d554@huawei.com>
 
-On Mon, Jan 06, 2025 at 07:34:41PM +0000, Shiju Jose wrote:
-> My understanding is that you meant the following changes (diff to this
-> patch), for scrub?  (and similar for other features).  Please let me know if
-> you need any corrections.
-
-Yes, something like that except "select" is evil and should be used only when
-the items it selects do not pull in more stuff. And since scrub is all
-optional, it should all be depends.
-
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 06f7b43a6f78..709bd7ad8015 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -9,6 +9,14 @@ config EDAC_ATOMIC_SCRUB
->  config EDAC_SUPPORT
->  	bool
->  
-> +config EDAC_FEAT_SCRUB
-
-EDAC_SCRUB is perfectly fine.
-
-> +	bool
-> +	help
-> +	  The EDAC scrub feature is optional and is designed to control the
-> +	  memory scrubbers in the system. The common sysfs scrub interface
-> +	  abstracts the control of various arbitrary scrubbing functionalities
-> +	  into a unified set of functions.
-
-This should come...
-
-> +
->  menuconfig EDAC
->  	tristate "EDAC (Error Detection And Correction) reporting"
->  	depends on HAS_IOMEM && EDAC_SUPPORT && RAS
-
-... in here as it is part of EDAC.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
+bGllbjguZGU+DQo+U2VudDogMDcgSmFudWFyeSAyMDI1IDA3OjMyDQo+VG86IFNoaWp1IEpvc2Ug
+PHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmFjcGlAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1tbUBrdmFjay5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+dG9u
+eS5sdWNrQGludGVsLmNvbTsgcmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJAa2VybmVsLm9yZzsNCj5t
+Y2hlaGFiQGtlcm5lbC5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2ZUBzdGdvbGFi
+cy5uZXQ7IEpvbmF0aGFuDQo+Q2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsg
+ZGF2ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZpc2hh
+bC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZpZEByZWRoYXQu
+Y29tOyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGVvLmR1cmFuQGFtZC5jb207DQo+WWF6ZW4u
+R2hhbm5hbUBhbWQuY29tOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBnb29nbGUuY29t
+Ow0KPkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb207DQo+bmFv
+eWEuaG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207IGp0aG91Z2h0b25AZ29v
+Z2xlLmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFrdGFzQGdvb2dsZS5jb207
+IHBnb25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsgZ3RoZWxlbkBnb29nbGUu
+Y29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25AYW1wZXJlY29t
+cHV0aW5nLmNvbTsNCj53YnNAb3MuYW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4uY3hsQGdtYWls
+LmNvbTsgdGFueGlhb2ZlaQ0KPjx0YW54aWFvZmVpQGh1YXdlaS5jb20+OyBaZW5ndGFvIChCKSA8
+cHJpbWUuemVuZ0BoaXNpbGljb24uY29tPjsgUm9iZXJ0bw0KPlNhc3N1IDxyb2JlcnRvLnNhc3N1
+QGh1YXdlaS5jb20+OyBrYW5na2FuZy5zaGVuQGZ1dHVyZXdlaS5jb207DQo+d2FuZ2h1aXFpYW5n
+IDx3YW5naHVpcWlhbmdAaHVhd2VpLmNvbT47IExpbnV4YXJtDQo+PGxpbnV4YXJtQGh1YXdlaS5j
+b20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MTggMDIvMTldIEVEQUM6IEFkZCBzY3J1YiBjb250
+cm9sIGZlYXR1cmUNCj4NCj5PbiBNb24sIEphbiAwNiwgMjAyNSBhdCAwNzozNDo0MVBNICswMDAw
+LCBTaGlqdSBKb3NlIHdyb3RlOg0KPj4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHlvdSBtZWFu
+dCB0aGUgZm9sbG93aW5nIGNoYW5nZXMgKGRpZmYgdG8gdGhpcw0KPj4gcGF0Y2gpLCBmb3Igc2Ny
+dWI/ICAoYW5kIHNpbWlsYXIgZm9yIG90aGVyIGZlYXR1cmVzKS4gIFBsZWFzZSBsZXQgbWUNCj4+
+IGtub3cgaWYgeW91IG5lZWQgYW55IGNvcnJlY3Rpb25zLg0KPg0KPlllcywgc29tZXRoaW5nIGxp
+a2UgdGhhdCBleGNlcHQgInNlbGVjdCIgaXMgZXZpbCBhbmQgc2hvdWxkIGJlIHVzZWQgb25seSB3
+aGVuIHRoZQ0KPml0ZW1zIGl0IHNlbGVjdHMgZG8gbm90IHB1bGwgaW4gbW9yZSBzdHVmZi4gQW5k
+IHNpbmNlIHNjcnViIGlzIGFsbCBvcHRpb25hbCwgaXQgc2hvdWxkDQo+YWxsIGJlIGRlcGVuZHMu
+DQoNClN1cmUuDQo+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL0tjb25maWcgYi9kcml2
+ZXJzL2VkYWMvS2NvbmZpZyBpbmRleA0KPj4gMDZmN2I0M2E2Zjc4Li43MDliZDdhZDgwMTUgMTAw
+NjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2VkYWMvS2NvbmZpZw0KPj4gKysrIGIvZHJpdmVycy9lZGFj
+L0tjb25maWcNCj4+IEBAIC05LDYgKzksMTQgQEAgY29uZmlnIEVEQUNfQVRPTUlDX1NDUlVCICBj
+b25maWcgRURBQ19TVVBQT1JUDQo+PiAgCWJvb2wNCj4+DQo+PiArY29uZmlnIEVEQUNfRkVBVF9T
+Q1JVQg0KPg0KPkVEQUNfU0NSVUIgaXMgcGVyZmVjdGx5IGZpbmUuDQoNClN1cmUuIEkgd2lsbCBj
+aGFuZ2UuDQo+DQo+PiArCWJvb2wNCj4+ICsJaGVscA0KPj4gKwkgIFRoZSBFREFDIHNjcnViIGZl
+YXR1cmUgaXMgb3B0aW9uYWwgYW5kIGlzIGRlc2lnbmVkIHRvIGNvbnRyb2wgdGhlDQo+PiArCSAg
+bWVtb3J5IHNjcnViYmVycyBpbiB0aGUgc3lzdGVtLiBUaGUgY29tbW9uIHN5c2ZzIHNjcnViIGlu
+dGVyZmFjZQ0KPj4gKwkgIGFic3RyYWN0cyB0aGUgY29udHJvbCBvZiB2YXJpb3VzIGFyYml0cmFy
+eSBzY3J1YmJpbmcgZnVuY3Rpb25hbGl0aWVzDQo+PiArCSAgaW50byBhIHVuaWZpZWQgc2V0IG9m
+IGZ1bmN0aW9ucy4NCj4NCj5UaGlzIHNob3VsZCBjb21lLi4uDQo+DQo+PiArDQo+PiAgbWVudWNv
+bmZpZyBFREFDDQo+PiAgCXRyaXN0YXRlICJFREFDIChFcnJvciBEZXRlY3Rpb24gQW5kIENvcnJl
+Y3Rpb24pIHJlcG9ydGluZyINCj4+ICAJZGVwZW5kcyBvbiBIQVNfSU9NRU0gJiYgRURBQ19TVVBQ
+T1JUICYmIFJBUw0KPg0KPi4uLiBpbiBoZXJlIGFzIGl0IGlzIHBhcnQgb2YgRURBQy4NCg0KSSB3
+aWxsIG1vdmUgaW4gaGVyZS4gDQo+DQo+VGh4Lg0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4g
+ICAgQm9yaXMuDQo+DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0
+LW5ldGlxdWV0dGUNCg0KVGhhbmtzLA0KU2hpanUNCg0K
