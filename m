@@ -1,62 +1,63 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146911F63DD
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 18:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2601F2C35
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 18:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736275686; cv=none; b=AjhgqRqtWu5IIGLj/EjxfP0g6bUdwtC3pt2GNxxIU+oTh9/apdyr+CA8n8Lc8NkPqDfZjYn0XlvO6iG95+OQUJkpd7/xvw+rkdSM3RkflDwKRDRH1TOBiAvgYT7u8zBlb2DhH4uzvwO4b5/ingVCFbFF8rg0XGQpcD9c4jGKkzs=
+	t=1736275813; cv=none; b=i8BApPzg6J0Ez+z+obqNWAfc9h8KXTpPPRIixVu9rCSr3FBDvy3tFXj1LNSNKwhri40KQL2hawBfwiJAXs2edU875X7hjmidugb4AN1m3/+2yPq3ZGg0Ft8lC02506M7eDbuS8E5A51Otd3xYqJLhU6RY91ZygOqNHWRGJBlzpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736275686; c=relaxed/simple;
-	bh=JlaB30Nv2rxRTki8fHtl8f7BVdCKzpX3Egg7XDNtDjo=;
+	s=arc-20240116; t=1736275813; c=relaxed/simple;
+	bh=gREiA+ExptbMw749WEFg5IFDQ7/buLj4tWY0SU/sl1k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njaBqdXP7rNPr1330CFU5MviHBjvuZnEKnXvZIvmxM3cukTt/SiKmvkNFGFlap/ajyVJkDbiKh8Mt+xBAL3VjZFjbx+TlrbPTBUljbmoam2HvtVLTN0Ue2C9FBlaeLZkuRuwrK57u0jemHkzzD77gLIBBWM/j5CHY0yLQ9PoRQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=plMxIw2R; arc=none smtp.client-ip=209.85.219.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=WMeC7GNNUmAQFrQzagh+uto469ICrl7ZwGHCQAY7n+zmNoJjsFjauv/6NEBisa2fKP8GPQ9YUaiz5hXLRjYwTSK282laF2I7L5Jo1Uigpfpjk39klwLQeZCHLiKxrVYZgCXaXRYpXhzxEDUhmx16BrlhuYRJfya77nszF1qHljM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=p03dc4Zm; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="plMxIw2R"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6d88cb85987so710926d6.1
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 10:48:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="p03dc4Zm"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46788c32a69so19590311cf.2
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 10:50:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736275682; x=1736880482; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1736275808; x=1736880608; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WGEdKSbQdPOKC+EVnDjilYrIiGDkhrjthNwhu3fZDJo=;
-        b=plMxIw2R4x0al1R06xhZwwbUOZ6uHVqNtxI8PWSm1aCEbELDIEKDNzEDV/sgiPhkOt
-         3UhYAs/dInqwWrY2wp2nXK37VZe0DXBSZYAJ6ln51bmGqHSb+5sjv3Rv960DXwXiDpsf
-         nh5WzSsIG7sEe+Lw1fvep6SIpEjdGb+n8QNEkvDJL31zVUdy8pX1h94DMcsIgfXJR1IU
-         Q6kWKHlr7tBBACwwzI98NrTlGpt4KFuUwgFStFhuXAGpHBHJYGgPq02oFs2IYRIj6va7
-         UY/SK5YIZvTcKF9HYeNPMx1GQzPaRi3Tg5A9l/7Orh/Tq39EvLkoqM76eVxFSY7Bqe7y
-         oBlQ==
+        bh=s8b0r0xs2FEWVFpXCikPsrDak4qmX9wO3vzTyS3GWQ4=;
+        b=p03dc4ZmauMBwhLUMdtsG0eaDFi9Glhj91UVO1HSfuh0aO3RHlPmOB4nbMaq17Itrl
+         hxp6TNKii6AY0UbCmf6JVSC8XuzhYgpFrnCsIu7jyxrG6oD/nYv0A5vnwT7TN2qT3+G3
+         VJp2ndMBw6R/ngF0xDvRCJyjRlpyJLV4s+b2ctaRL+j04wlvSOeGBA3FpHLFkFdqf99q
+         of2E7iiGXtZZ6/mr6NRTiB0anTiVGcfAn1C9UrPFjbrM1kXebJhB34pl1ZDtgW1If88h
+         lP9DB/BVy8gFa/7GEUtsXv2iv18MAO8hNrafE8uI9RgZpTMLtGBY/lMJk32PEJLfBVPj
+         z2HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736275682; x=1736880482;
+        d=1e100.net; s=20230601; t=1736275808; x=1736880608;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WGEdKSbQdPOKC+EVnDjilYrIiGDkhrjthNwhu3fZDJo=;
-        b=Z8aOrt2HgSm0VOxCDosBao9wnAsbKThYvQc77wijTy6f1IGxOE1uoNIAhBGu1s6TCM
-         NdKikVnCYr9/kjJFMaVr19GTC94hobUMHsHFYDttA+ncGsz4ebGgl0LgQ6Pb/fmvZjJQ
-         0rpq3oPuVeq9UP5y2VpT+W6tHqA99DEJEod27DWHoLWVQzKteRuHbVN59pemzEm7+7Q6
-         /bPGmtMoUtdtOUTAnE3obiFvk/jmHxuzcr5Q5xN/O5/FwvJk6m5CvmviG7rxfA5q87Cx
-         qCCYW5u9E0sg8l3Ik7E6ZPPT9t+ZLGHxS8s/T6mXBmHJqp3fCGZBvtKOUjmvj+cfsnmJ
-         QBmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBIsdue3HOwoykVDW6JjUXt/oIlIZ6GuD5L6VG5MSkqGIpzRH5Ez64DzoFp6x4gTB9xeYO6yY2WaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzu0EjNAr8nnoemjKI5PIpyymHpkvfy0jyNQ7KVwU+fBvudCgy
-	c0VMzPglLRqLCVRQKdFS6mswOB2spCOpOhdSIB3oOLHl0V32fFgovk7KhkNP0to=
-X-Gm-Gg: ASbGnctL50MZmspizv2buiVhDs2cO2d58ljQjfWigbnHW19S5+NRLdXhovqc6Qq7Gz6
-	IauWBmyHoFgT4QJABnbCrzPKSkZ7FDs0c2Q6ao5UqZvDuwI0FfiH5QgmE3U2ZMRtId5p7PO5t8i
-	ffWkQB5S3M7R0P4lK6fV+uwSRUbVSYdLzcmOXSCL8ZMZdkb3pzbx5pdGRMtuOGtmtRsqKQaRXmK
-	LTjw3uZ+FnomichidKW8HAPNLqEaAP9AUHnAUq+KnXemoPDyBsbLOG4+6BRLf75C+ZIhXs5dZhV
-	xGn/EHHy3PkBJKzkXGE8zyh8ClOQirfQMW80bEA=
-X-Google-Smtp-Source: AGHT+IEUkODvRJRsxlaPutYLF7wRzsj8KCRmrPi29Hy2fHonKlvhSn5RqwI1S6R+hWRcUIq5eEJ/8Q==
-X-Received: by 2002:ad4:5be8:0:b0:6d8:b81c:ecc1 with SMTP id 6a1803df08f44-6df9adf8df5mr3250186d6.13.1736275682069;
-        Tue, 07 Jan 2025 10:48:02 -0800 (PST)
+        bh=s8b0r0xs2FEWVFpXCikPsrDak4qmX9wO3vzTyS3GWQ4=;
+        b=uAVoOWoMUvWMLPRjVvLQpa9s75+mfevRhOyXHmWMuH3torFDBtfup1HWPrZ4ZpsWGc
+         ZojxMHNVC8wXg2a+RG0o+pvqy9NjLo6kgNKpfQp81eS01cGINMWgu/yUXQF6qzwGtMsn
+         63NRBc1ohVbNTMKJMqZyoR3+9QX5iMNeZc2RD9yXeYbZq/tgF9+wv46aqlm8NBg7cLs7
+         QG4XUBp5ZFtyyUq3qkFkTQbcYZfeXmzJcq7mv/tfvbBsqOV75Lob0W9JyDw3krQHjbcs
+         OZveGILn3ykcAUYtupPSdJ3YCbn5IkV+Yn+hl2AKhtWeVYiX9sTOw6GG2BLjPdenNJ/A
+         Ne1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVZr7O78zOxZXW/VPVnpkivVEm6AyPbrz4H2jSU/jQEFFn8EOxh5Dg3J0on89qhvCACiaPa14EoXIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/K9tdYp8vDSBA8qssg4xmw1mPIJmEEGzc9Qu3tPez5GCZir9e
+	lA6mm5OMX8iVvh56Am6nb5VUo+vWnHZN+OgBtbqd1ACZnPIpbC7TIi6kHmz4+HBu61l2u5AUshu
+	r
+X-Gm-Gg: ASbGnctfrVz8m4j7/TdhbZ7Cn4UJCUKI1DWgeh+lRsfCtoTKixp/FNPdMeoOyV5WlnX
+	qDSD/lo3KLNSY4NJ1uZ3rCtNthI77qZ/9J1DDoYu8K+fhEmYnInelDatvHZz0gwMwoXexdVaGeE
+	4emWLjS/aoVm3leB/uuc3O0/QGJyEKTJSO6YgpTk067aN0Mkw1rYoK8opNeE54F1EB5j0ARjuUg
+	Hpe9ljWvV5pr4kMypL7lKoz84/g+saBHJ1UseoSCvEbOzgk7QqHUnEzGLGWIB8y/wi2efQgyiMs
+	gbTMGAK0zwbUSjiQn4IjSrlsAfcEYkUhH1gcyYs=
+X-Google-Smtp-Source: AGHT+IHiLo3Jy3DjTYq1THF2OcLGr1hXmwGScEax5jPL6qTEXjJhVJi25B0Py+N75PYnecfrZb/lLg==
+X-Received: by 2002:a05:622a:190f:b0:466:af35:92d5 with SMTP id d75a77b69052e-46a4a8e83e0mr963287951cf.25.1736275808281;
+        Tue, 07 Jan 2025 10:50:08 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd1810d4ecsm183456586d6.31.2025.01.07.10.48.01
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3eb178a7sm188178281cf.62.2025.01.07.10.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 10:48:01 -0800 (PST)
-Date: Tue, 7 Jan 2025 13:47:59 -0500
+        Tue, 07 Jan 2025 10:50:07 -0800 (PST)
+Date: Tue, 7 Jan 2025 13:50:05 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -69,11 +70,10 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-kernel@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 13/29] cxl: Introduce callback to translate an HPA
- range from a port to its parent
-Message-ID: <Z31230YAaz2OtoG3@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v1 14/29] cxl: Introduce parent_port_of() helper
+Message-ID: <Z313XWZm2IrAIdcM@gourry-fedora-PF4VCD3F>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-14-rrichter@amd.com>
+ <20250107141015.3367194-15-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,53 +82,15 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-14-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-15-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:09:59PM +0100, Robert Richter wrote:
-> To enable address translation, the endpoint's HPA range must be
-> translated to each of the parent port's address ranges up to the root
-> decoder. Traverse the decoder and port hierarchy from the endpoint up
-> to the root port and apply platform specific translation functions to
-> determine the next HPA range of the parent port where needed:
-> 
->   if (cxl_port->to_hpa)
->     hpa = cxl_port->to_hpa(cxl_decoder, hpa)
-> 
-> The root port's HPA range is equivalent to the system's SPA range.
-> 
-> Introduce a callback to translate an HPA range from a port to its
-> parent.
+On Tue, Jan 07, 2025 at 03:10:00PM +0100, Robert Richter wrote:
+> Often a parent port must be determined. Introduce the parent_port_of()
+> helper function for this.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Assuming prior patch holds
+This is a welcome cleanup for readability, wonder if it should be pulled
+ahead to reduce the size of this changeset.
 
 Reviewed-by: Gregory Price <gourry@gourry.net>
-
-> ---
->  drivers/cxl/cxl.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index be7685fe8a23..49280e0f8840 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -601,6 +601,7 @@ struct cxl_dax_region {
->   * @parent_dport: dport that points to this port in the parent
->   * @decoder_ida: allocator for decoder ids
->   * @reg_map: component and ras register mapping parameters
-> + * @to_hpa: Callback to translate a child port's decoder address to the port's HPA address range
->   * @nr_dports: number of entries in @dports
->   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
->   * @commit_end: cursor to track highest committed decoder for commit ordering
-> @@ -621,6 +622,7 @@ struct cxl_port {
->  	struct cxl_dport *parent_dport;
->  	struct ida decoder_ida;
->  	struct cxl_register_map reg_map;
-> +	cxl_to_hpa_fn to_hpa;
->  	int nr_dports;
->  	int hdm_end;
->  	int commit_end;
-> -- 
-> 2.39.5
-> 
