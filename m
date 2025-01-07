@@ -1,165 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15AB225D6;
-	Tue,  7 Jan 2025 19:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E21D3596C
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 22:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736278919; cv=none; b=reVeN5QN2F/6hzWP9+M9u3ChzcpYCjvwsq4hJn6gkB/UfEi5lgBxha6K43jhDbbNTVCxBfJmAKOXUaqxyN2ZGSnJvzXip02ULM8JLFYkW9LLGj+kdy8wFzt02u9vpkgfWr+FRpZZNx6LYGl4HJ1Xo7pcD/4GtzsjCC3AZyHPjkU=
+	t=1736287289; cv=none; b=Q2BWbsJlFiHZP1LTwCFmr+AH5PZRxDRgafUYHwXIwCeHIj29Bqo0XTZsdCeA8OXqmblZa2rYPiGMAz5t5eX4LU6YiAQKFdJyMB8OAURQGKS27D/BNaTNRLgn8EUYkIlKyJdds5VYdQCxQGX2JC/knW7fjKtHBK0SIX7GZ7PT2s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736278919; c=relaxed/simple;
-	bh=1J5prhZ3jGF82gvD2e/zn0E3vSX9GmnJU3BCB4h//Io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jb1XozjVtuy5u4OrYQl3KNgi+I9oVlG7gDZXClMziKQERNuijRlUVg7g1oWPSXdlNIzjXrOEtaHyinMWXFtF3sPG7zZuyVUvyOuVYHSHhTOHEvpJv2FSLRh0n1R0gT79klt792dvh2bk5xJu3dHs/OG2c4DZ9tCwi2hnYUPlJUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BtisyryQ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736287289; c=relaxed/simple;
+	bh=HTd6aNzd+WG4gQYS/ec1UtjMqQBNV7pllBynGdA6iOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+9zMYREzYm1hh2M5n8QRmMAVuyXAHG5PegvL0cOKm4Onf+3q2QDWITVnBhyBz0J0yTwOjIF8vRfG+uWvbb1OQhk8xQrSk8dmLsbMIW/zlW89fsZVRUlTWhPtu4YOgF3AAug0vEFKUzB6x1GTmWg+uHkiqcY1uJYXRjpEHduTIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=G7Xk2R0E; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BtisyryQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736278916; x=1767814916;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1J5prhZ3jGF82gvD2e/zn0E3vSX9GmnJU3BCB4h//Io=;
-  b=BtisyryQm1sNU9w//+/KVgGGcgid5NN1ebvu9b1ZpvUgjhteBbhFjDnU
-   h9MAVvOIhtX8MzQhOtlnKhlQWVmeEfzZ/bCE1WzAXOKoxz7QUa84PN3ka
-   Qr+eFsD3ponn533O4r3K6wUC/y8PThU5TPHH288Q+F+HpnzhQs2EOH4Yz
-   EsaDHCOoQe6HYQAycbw0A+p3RC2fZc+VPePAG91UuuUIiUhgjMtfgolul
-   FpyXAMS/o302o3l7fra4qMLQv1wRx9YZh8U3V8RIq3hS+KR3TiijRIO8o
-   rLKk6VI4iLTDZOLF+Q8f5tQUpIjHzYKyoq/BcPODhRQZ8LTwGojA8e6ZI
-   A==;
-X-CSE-ConnectionGUID: zo6po55GTsKCs5cavGiGRQ==
-X-CSE-MsgGUID: 3zVTq9WsQ22SwDJNqq9j1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="53899857"
-X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
-   d="scan'208";a="53899857"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 11:41:49 -0800
-X-CSE-ConnectionGUID: EScFaYF8TBS0c3XQlqMXqQ==
-X-CSE-MsgGUID: 77pSGjfbQvaJNKpSVOlaNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106881440"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 11:41:47 -0800
-Message-ID: <f3d1b01f-9ed8-4c56-9bb3-409b51b59291@intel.com>
-Date: Tue, 7 Jan 2025 12:41:46 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="G7Xk2R0E"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6f1be1daeso1492889185a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 14:01:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1736287285; x=1736892085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9z8RNkUkt+CcynHF95NF8N98PCbipY/N38UIAM8LaNM=;
+        b=G7Xk2R0E8ra5rHDh2cvQ0d2nXFQitlpjzzjSH9Mwk/m6ZDVR7Bb6SHZPgdP0tlxXIi
+         S7ayMbdxkqS+x5LG5RYpHr4TbB7D+d8x0TTnDt1+eXcTt9AMUeHJa3zGrMFGtZzrPAZX
+         p0DW72YcxVGj+6XZdugUAVQ2XJ8+HXy7J+fnFO5TfaLY0OI9KXCuHL3RFxCMQWNpvUC0
+         gqzs1dJ8jgd666BtSHzgfHkTYnSebINsTqjHuuEFbm6coFXRbFIjYUm1sBaMX382gjYc
+         J6jMHGgWJcQ5avBkjSaaL4T6tjyoDw4QlYZuubhy//te/SETKPRcHVBDJ0jtss8AaLJ3
+         7vIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736287285; x=1736892085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9z8RNkUkt+CcynHF95NF8N98PCbipY/N38UIAM8LaNM=;
+        b=qfQzMx2XFqtlHH9ycC9OXc6Et+1bnu8u3lcecbQfcmbc4jA4/MOTTW5rufmAxDug2Y
+         gCSfL+F9Eds2nBvZjrCBoBTWPcG440DPshFWkm730BG8b9HRCsLaOsVv8anisbJtVf6D
+         E5lDHLdTH/gxMkWjVTEgLDFnS/mDIHE7/sNz1MmLS7+t01071IQVwNHnMTXMz9+o0DUm
+         /9e1a5gX8kj7YnI/kaGfATh/qCyJwOuQcvPF3IGWOq3NHMDP3mjaLlidGda7wVZ2xK2n
+         0IclWDLCeU+X75I5p49MLzY2u1w6JMLiz8Z5PJfA0GOUtgVesGKZriXlwcpbG9aiz0ic
+         CyTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpaYk4rgmpYe395cgESka7e2E0SGyfOkarywwYCbYEcFW3LstzGQ9gQSLly8AlJEvZ/Tdtm/bmeE0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEGkAK/9Q35aexLXhMf83LRwKfaVwkJPKmVhdignQGrnXp5R7v
+	p6FaNe8CsYOrbVwklafIU+3ltp4Rwy8afgW74HdKTj7YP1PtsD7xKl0YinGW7nI=
+X-Gm-Gg: ASbGncsQKt4idAvzR2ut7vD26rYN5EU0np0sbDg8G1/pR3eBWpy8nHmOVY8H6CQbhMT
+	CA/vIWI+PR1EHm6Zrly2JG9O70H7Abzq4WLhxxbZqmJ3kPIWl6ky2Ow3tgw78M1yBrbP5rzzzJs
+	d2g1WVJ/BC+2vEbYzHoqR2jYBkFiKhO0cnR3ba065/esg7CIi5xP1+NtuAdqOxUiOVBmAd0zUvw
+	fad29v8kVuvoCI/Hn4qb7b5NeDq9jLTjK/1YtzJO0iV++MNcziirfDbOnKcTmYMIOvI/th8BSRG
+	jydRYYuQtCF7WmDshG+y0wLdQAhwtO9JJxq1nio=
+X-Google-Smtp-Source: AGHT+IHbOqe2Ef0AYcLsrDlalZWeqM6pd6Eh/2Fncle6Uf/C590+nFuSLbF1ltS+ZHE+yhoYTu6SBA==
+X-Received: by 2002:a05:6214:5782:b0:6d8:8480:27e with SMTP id 6a1803df08f44-6df9b1eb0afmr13222126d6.11.1736287284860;
+        Tue, 07 Jan 2025 14:01:24 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd180ea6fdsm185057416d6.23.2025.01.07.14.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 14:01:24 -0800 (PST)
+Date: Tue, 7 Jan 2025 17:01:22 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v1 16/29] cxl/region: Use translated HPA ranges to
+ calculate the endpoint position
+Message-ID: <Z32kMmH25_qfHhZ5@gourry-fedora-PF4VCD3F>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-17-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] cxl: Add extended linear cache address alias emission
- for cxl events
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
- dave@stgolabs.net, alison.schofield@intel.com, ira.weiny@intel.com
-References: <20241204224827.2097263-1-dave.jiang@intel.com>
- <20241204224827.2097263-4-dave.jiang@intel.com>
- <20241224121113.00007eec@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241224121113.00007eec@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250107141015.3367194-17-rrichter@amd.com>
 
+On Tue, Jan 07, 2025 at 03:10:02PM +0100, Robert Richter wrote:
+> To enable address translation, the calculation of the endpoint
+> position must use translated HPA ranges. The function
+> cxl_endpoint_initialize() already uses translation which could be
+> reused to calculate the endpoint position.
+> 
+> Use translated HPA address ranges for the calculation of endpoint
+> position by moving it to cxl_endpoint_initialize(). Create a function
+> cxl_port_calc_pos() for use in the iterator there, but keep a
+> simplified version of cxl_calc_interleave_pos() for the
+> non-auto-discovery code path without address translation since it is
+> not support there.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
 
+just one inline question
 
-On 12/24/24 5:11 AM, Jonathan Cameron wrote:
-> On Wed, 4 Dec 2024 15:46:48 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Add the aliased address of extended linear cache when emitting event
->> trace for DRAM and general media of CXL events.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> I wonder if you want to future proof the hpa_alias for potential case
-> of there being more than 1?  hpa_alias0 or similar so that we can add
-> more as needed?
+> +static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_port *iter, *port = cxled_to_port(cxled);
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct range *range = &cxled->cxld.hpa_range;
+> +	int pos = 0;
+> +
+> +	/*
+> +	 * Address translation is only supported for auto-discovery of
+> +	 * decoders. There is no need to support address translation
+> +	 * here.
+> +	 */
 
-Do you mean when emitting via the trace? Yeah I can change it to hpa_alias0 in the output string.
+Just clarifying - it's only supported for discovery of already
+programmed decoders (programmed in BIOS)? i.e. driver-programmed
+decoders shouldn't need this translation / won't support this type of
+interleaving?
 
+Comment here begs some questions but not necessarily a review blocker.
 
-> 
-> 
-> Otherwise, looks like there is either a null point dereference or
-> overly paranoid existing code. I haven't checked which but changes
-> needed either way.
-
-I'll move it under the if (cxlr) and also add a check for cxlr in the helper function.
-
-DJ
-
-
-> 
-> Jonathan
-> 
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 5175138c4fb7..4017b7afa78a 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -856,6 +856,24 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
->>  
->> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
-> 
-> Bad idea to unconditionally dereference I think. See below.
-> 
->> +	int nid;
->> +
->> +	if (!p->cache_size)
->> +		return ~0ULL;
->> +
->> +	nid = cxl_region_nid(cxlr);
->> +	if (nid == NUMA_NO_NODE)
->> +		nid = 0;
->> +
->> +	if (hpa >= p->res->start + p->cache_size)
->> +		return hpa - p->cache_size;
->> +
->> +	return hpa + p->cache_size;
->> +}
->> +
->>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  			    enum cxl_event_log_type type,
->>  			    enum cxl_event_type event_type,
->> @@ -871,7 +889,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  	}
->>  
->>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
->> -		u64 dpa, hpa = ULLONG_MAX;
->> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias;
->>  		struct cxl_region *cxlr;
->>  
->>  		/*
->> @@ -887,11 +905,14 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  		if (cxlr)
->>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
->>  
->> +		hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
-> 
-> If there is no region, and hence no hpa does it make sense to call this?
-> Particularly as first thing done in this is to dereference cxlr.
-> 
-> 
->> +
->>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
->>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->> -						&evt->gen_media);
->> +						hpa_alias, &evt->gen_media);
->>  		else if (event_type == CXL_CPER_EVENT_DRAM)
->> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
->> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
->> +				       &evt->dram);
->>  	}
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);
-> 
-
+~Gregory
