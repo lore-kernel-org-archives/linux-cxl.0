@@ -1,88 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBE01E570D;
-	Tue,  7 Jan 2025 16:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA03478F40;
+	Tue,  7 Jan 2025 16:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736267754; cv=none; b=bdBDr35PTjGKjDge4ufekGg0Fsguo9zxpmLPtdx2raINN7qZVaYE563NnkaSnwUs86jKNF3tiVyKnAX5OHlIgke4UOx4KaaBUkWcaS+HHi3SQCQ1i6XgA2paSVLrfvyuPupZdVnua3ajI8TP2liTALpiZXdpUqk/fFhCT6JoL+s=
+	t=1736267868; cv=none; b=dDRJRQrc6T0005CmYXjZoZvNhXVBME7YaPQX1aeWc8BA0tpCoM+JgT3bUrakIN3KwH2X03laRTIqRfIOqyPk+mEqRx3jUQj/Dp1PZh2fu5g75ERofsDV+p/sA2xOxe9DiYNyjN2Kdb/o+Oyv6wb+dLptaSk2SjqoMY74Ua2jB4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736267754; c=relaxed/simple;
-	bh=77BwJhWtOJ6X+HLHj3f9qNzITxOyj3LeX/ee6U+UPO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sTpxSB9WVFl7R1L9jGJXy9OLTgbi6hqibgoMsBRxs1eZGrVnDh1Kaqscur5t7IVkuvAM8kX7qmjD6UwC7YnYLZW/mj6d1pJnB0Ob0NO966isTKE/RIne9A16sPnq8T816dY7NSKeUzcKDcubdjvj62Etq3WdjFxonKJvQ3jS2es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dFJvlZgn; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1736267868; c=relaxed/simple;
+	bh=i3Kz07eu+qo9J9xe554n54uFCbpbydbUPLAhYKEU32A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z89dJqdXnmCLlVsrhlwxgxHUHVhgyYZUiIRHLCfdNDTrAP3bfWfwHOtKzzNun47T+Gxjc4BHY39FRzPELDvovjd+PO+S5Zmp44iPwo3Wz7iiV6uH13OW9udyF2zL/MwuBQ5gr6BiM5VEoo9fMg9pWxUyL4t3XbYQwFxESGMgnUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fbsdHA4c; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFJvlZgn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fbsdHA4c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736267751; x=1767803751;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=77BwJhWtOJ6X+HLHj3f9qNzITxOyj3LeX/ee6U+UPO4=;
-  b=dFJvlZgnSGglB6Kb6wg6eYxmqbESNucxf/tZUSj2dSoUx9FjEHUuy9qG
-   qdz6a+/lRivBWLCLqbdDYPOAWdLBgkebvFmauDrZx0AbzkvlM1Co9JW4v
-   AT17w2dhrZ+u0OH0iCvErF6CsnpKK8OS0jKURSQPeiP1sd5Rpazz2fxs0
-   npPJkmJtYxNFIAqm00X1QEBxYtdmYx0LcvNbZ/6nQRsfynJ4y8iRcyJmD
-   QsPlc6GIZtdQxt7G+Z+Ti6C7DGozMg7+zFqK2vKQe0Ld/BKLrYWt7bryo
-   FIQPmVFfVEdEKX+YRTS7apDvCWEpyyaw8JZbwySwk4BQ9++4KFseBwDjx
+  t=1736267865; x=1767803865;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i3Kz07eu+qo9J9xe554n54uFCbpbydbUPLAhYKEU32A=;
+  b=fbsdHA4cfo8ctULeL30+SekzjPh1RbFej4BOaXAB1YDC5SUKGZDiQ20K
+   wfuWC0NCJg1ipJqParnzz4BVu8BQJuc/Y07I8pYE8AEUWZOIvTrsT/pfG
+   4Xuf8rcfhujXyRwehVFvAF2Fd9938YmQQ42CuBooQ3XtmleQkqu6rMJWu
+   CawFy6oLxccB2A8ZbXElEpiMM0jc13gndgLgOZo79POqkyYogyDRdINMi
+   k5dprgpU7K3Gpgygq+He/mqNwC5QOWbIe38arcDC7IDhWPQ1jemWw4yrQ
+   YnQPccM1ZJ1EP039U8+XLNN/p1m3I43BDgFFboXEh5ehYJ3WhafDjBn/E
    g==;
-X-CSE-ConnectionGUID: xYrNW8aZR6mp+oypF68e9Q==
-X-CSE-MsgGUID: pYN/yWffSGurFsHM9jSzZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="47875481"
+X-CSE-ConnectionGUID: G9fZD9qRQmaZtXpz6LtFJg==
+X-CSE-MsgGUID: arGFOwCPSpKpVcZblZgtTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="36353151"
 X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
-   d="scan'208";a="47875481"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 08:35:50 -0800
-X-CSE-ConnectionGUID: LrKCd00mTUas9mCAeAwcyQ==
-X-CSE-MsgGUID: Qz/jHP6kRvq14+UFLkF0bA==
+   d="scan'208";a="36353151"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 08:37:45 -0800
+X-CSE-ConnectionGUID: kAN0xY1bTKCDcXQoIFtjpA==
+X-CSE-MsgGUID: b7yneOtWSoqEUFKm/vwMrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="107909020"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.187])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 08:35:49 -0800
-Date: Tue, 7 Jan 2025 08:35:48 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, martin.habets@xilinx.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v8 01/27] cxl: add type2 device basic support
-Message-ID: <Z31X5IvFAX5jI8vW@aschofie-mobl2.lan>
-References: <20241216161042.42108-1-alejandro.lucero-palau@amd.com>
- <20241216161042.42108-2-alejandro.lucero-palau@amd.com>
+   d="scan'208";a="140163495"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 08:37:44 -0800
+Message-ID: <d31c9a2d-d650-4b7b-9ec4-2347db07bbdb@intel.com>
+Date: Tue, 7 Jan 2025 09:37:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241216161042.42108-2-alejandro.lucero-palau@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/29] cxl: Remove else after return
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-2-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250107141015.3367194-2-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 16, 2024 at 04:10:16PM +0000, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+
+
+On 1/7/25 7:09 AM, Robert Richter wrote:
+> Remove unnecessary 'else' after return. Improves readability of code.
+> It is easier to place comments. Check and fix all occurrences under
+> drivers/cxl/.
 > 
-> Differentiate CXL memory expanders (type 3) from CXL device accelerators
-> (type 2) with a new function for initializing cxl_dev_state.
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Just send this ahead of the series to reduce this series size. It's trivial enough I can probably take it for 5.13 merge window.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/cxl/core/cdat.c   | 2 +-
+>  drivers/cxl/core/pci.c    | 3 ++-
+>  drivers/cxl/core/region.c | 4 +++-
+>  3 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> Create accessors to cxl_dev_state to be used by accel drivers.
-> 
-> Based on previous work by Dan Williams [1]
->
-> Link: [1] https://lore.kernel.org/linux-cxl/168592160379.1948938.12863272903570476312.stgit@dwillia2-xfh.jf.intel.com/
-
-Dan introduced some cxl-test support in [1]. What are your thoughts
-on including that in this set?
-
-I haven't revisited the circular dependency this patch introduces in
-my cxl-test environment. At the moment, I cannot run the cxl test suite
-for regression purposes. Can you?
-
-Alison
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index 8153f8d83a16..2e69d9f27028 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -28,7 +28,7 @@ static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+>  	 */
+>  	if (entry == 0xffff || !entry)
+>  		return 0;
+> -	else if (base > (UINT_MAX / (entry)))
+> +	if (base > (UINT_MAX / (entry)))
+>  		return 0;
+>  
+>  	/*
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index b3aac9964e0d..3e8d20f8955c 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -415,7 +415,8 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  	 */
+>  	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+> -	else if (!hdm)
+> +
+> +	if (!hdm)
+>  		return -ENODEV;
+>  
+>  	root = to_cxl_port(port->dev.parent);
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b98b1ccffd1c..9b3efa841c8f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1915,7 +1915,9 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  	if (p->state > CXL_CONFIG_INTERLEAVE_ACTIVE) {
+>  		dev_dbg(&cxlr->dev, "region already active\n");
+>  		return -EBUSY;
+> -	} else if (p->state < CXL_CONFIG_INTERLEAVE_ACTIVE) {
+> +	}
+> +
+> +	if (p->state < CXL_CONFIG_INTERLEAVE_ACTIVE) {
+>  		dev_dbg(&cxlr->dev, "interleave config missing\n");
+>  		return -ENXIO;
+>  	}
 
