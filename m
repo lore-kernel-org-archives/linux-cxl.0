@@ -1,173 +1,101 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A141DF73A;
-	Tue,  7 Jan 2025 11:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3011E4110;
+	Tue,  7 Jan 2025 11:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736249569; cv=none; b=DsfSrHpFyRKNUhqEm0yxgIAWNojfR8G0yUUtoLwxhwfeqLfinCfEgKS7P15HeSQ7U3iGH4+jCRBaV7tMoyBW9jJFjsL/PkV+gfdiintf7mukc5lgl2c+SSaPKZk2NIoSyrf99WcCAUpqE5WYYcROvJr3wDqhzLZkxcHLOJHwioE=
+	t=1736249664; cv=none; b=cB3PbnwYHw5+fdA3+vG0FQo+HM16Ha39GkASRsLNYnZmlc0DXr8pKFmkm8rRUD0/o5OkQdj0MGMAHN7QIZC302xpBT8WwZAaoWd/XPo6beWEPqAPEeYpxtW3uiRbgF+HsC11qDN3+K9173aIZyeRhWD2W+9R7IhmrCaVQtYIFPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736249569; c=relaxed/simple;
-	bh=InF2jrVlsuucDKWesCnUio0WNs/om6qiMKJm/t4LKTo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VZoCYV/gEQIxA91DxlYTNn8FF3mL7dmVzpKuk7+nB5SgJ5n0w4GyelKTiC9QCv6Soc9OEYAhI5lmi2k83MiJk+puZkOoD5TgkvG/UhA1GDJfOo2kGGWUJeNtbSltbV3fGftCZQvkCgqa1ATWLJM8kGi1tV07BXsI+Nod7Km67bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YS81Q5yLPz6JBBN;
-	Tue,  7 Jan 2025 19:28:10 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34C6D1409EA;
-	Tue,  7 Jan 2025 19:32:43 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 7 Jan
- 2025 12:32:42 +0100
-Date: Tue, 7 Jan 2025 11:32:40 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <PradeepVineshReddy.Kodamati@amd.com>, Li Ming
-	<ming.li@zohomail.com>
-Subject: Re: [PATCH v4 14/15] cxl/pci: Add support to assign and clear
- pci_driver::cxl_err_handlers
-Message-ID: <20250107113240.00003eda@huawei.com>
-In-Reply-To: <0d552424-150e-4b92-8326-0fe6387e0ce6@amd.com>
-References: <20241211234002.3728674-1-terry.bowman@amd.com>
-	<20241211234002.3728674-15-terry.bowman@amd.com>
-	<20241224185000.00001a5f@huawei.com>
-	<0d552424-150e-4b92-8326-0fe6387e0ce6@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736249664; c=relaxed/simple;
+	bh=GUZFf46UPiqzPrPwgJP/xPQ9lqA1URaAsO8R1+0MaLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJstis5hlAQrrlu2IYeWieD25CHbgxKew90RbBdloqLvjZk6HD9MQhnFZjS+YEt0Nw9PCZUdt6z690qiAVETr1KgEUt5dFnfov06j+WJZhg+TOtrC8siEnXo62XI6i+oX0W4lLx4rl29SnTFET7gZfK67ynhRyJ/piqXX4Kiflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HL1jUOiA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HL1jUOiA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71ABEC4CEE2;
+	Tue,  7 Jan 2025 11:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736249663;
+	bh=GUZFf46UPiqzPrPwgJP/xPQ9lqA1URaAsO8R1+0MaLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HL1jUOiASoq9LAqdgS1lybwiAJ9p1y8B6tdKkvMKVa3v8r236GfyZEL4ht5ZCffMT
+	 E4MlBGXmvUp1oC5NswbO4GQ3L441qsN9gi8pAgMNMSii/AvjeQkepHjm5/G2tgOZD+
+	 9yBjWIkrgWep38SKW6ngXTPUDmV7qjR88lsCNhUrMEIJYDGqJT15WYNKzZxOggl5nT
+	 jcIZ8/utCmO3sJCm4BsXbYyHPBmxNorxSSmOTVct36l8Wb3S/b3cPNvp/4ZPLDHkxC
+	 +YSeHfdPrgfOQT5pxw7sSuX0vIVIoKFCck58fHUrVJaShV1eBUxovlYTR8ieKAiZQ+
+	 R2sE4PbQgp4oA==
+Date: Tue, 7 Jan 2025 11:34:19 +0000
+From: Simon Horman <horms@kernel.org>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dan.j.williams@intel.com,
+	martin.habets@xilinx.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com
+Subject: Re: [PATCH v8 18/27] sfc: get endpoint decoder
+Message-ID: <20250107113419.GF33144@kernel.org>
+References: <20241216161042.42108-1-alejandro.lucero-palau@amd.com>
+ <20241216161042.42108-19-alejandro.lucero-palau@amd.com>
+ <20241217104225.GP780307@kernel.org>
+ <bdb7427b-22f1-9c1d-8990-9f8287fc5fd4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bdb7427b-22f1-9c1d-8990-9f8287fc5fd4@amd.com>
 
-On Thu, 26 Dec 2024 11:07:13 -0600
-"Bowman, Terry" <terry.bowman@amd.com> wrote:
-
-> On 12/24/2024 12:50 PM, Jonathan Cameron wrote:
-> > On Wed, 11 Dec 2024 17:40:01 -0600
-> > Terry Bowman <terry.bowman@amd.com> wrote:
-> >  
-> >> pci_driver::cxl_err_handlers are not currently assigned handler callbacks.
-> >> The handlers can't be set in the pci_driver static definition because the
-> >> CXL PCIe Port devices are bound to the portdrv driver which is not CXL
-> >> driver aware.
-> >>
-> >> Add cxl_assign_port_error_handlers() in the cxl_core module. This
-> >> function will assign the default handlers for a CXL PCIe Port device.
-> >>
-> >> When the CXL Port (cxl_port or cxl_dport) is destroyed the device's
-> >> pci_driver::cxl_err_handlers must be set to NULL indicating they should no
-> >> longer be used.
-> >>
-> >> Create cxl_clear_port_error_handlers() and register it to be called
-> >> when the CXL Port device (cxl_port or cxl_dport) is destroyed.
-> >>
-> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> >> ---
-> >>  drivers/cxl/core/pci.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 40 insertions(+)
-> >>
-> >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> >> index 3294ad5ff28f..9734a4c55b29 100644
-> >> --- a/drivers/cxl/core/pci.c
-> >> +++ b/drivers/cxl/core/pci.c
-> >> @@ -841,8 +841,38 @@ static bool cxl_port_error_detected(struct pci_dev *pdev)
-> >>  	return __cxl_handle_ras(&pdev->dev, ras_base);
-> >>  }
-> >>  
-> >> +static const struct cxl_error_handlers cxl_port_error_handlers = {
-> >> +	.error_detected	= cxl_port_error_detected,
-> >> +	.cor_error_detected = cxl_port_cor_error_detected,
-> >> +};
-> >> +
-> >> +static void cxl_assign_port_error_handlers(struct pci_dev *pdev)
-> >> +{
-> >> +	struct pci_driver *pdrv;
-> >> +
-> >> +	if (!pdev || !pdev->driver)
-> >> +		return;
-> >> +
-> >> +	pdrv = pdev->driver;  
-> > What stops a race here?  It's fiddly to remove that driver but
-> > it can be done.  At least I think we are messing withe portdrv
-> > but this is such a fiddly stack I'm not 100% sure.
-> >  
-> >> +	pdrv->cxl_err_handler = &cxl_port_error_handlers;
-> >> +}
-> >> +
-> >> +static void cxl_clear_port_error_handlers(void *data)
-> >> +{
-> >> +	struct pci_dev *pdev = data;
-> >> +	struct pci_driver *pdrv;
-> >> +
-> >> +	if (!pdev || !pdev->driver)
-> >> +		return;
-> >> +
-> >> +	pdrv = pdev->driver;  
-> > Likewise. Smells like a possible race.
-> >  
-> >> +	pdrv->cxl_err_handler = NULL;
-> >> +}
-> >> +  
+On Wed, Dec 18, 2024 at 08:22:05AM +0000, Alejandro Lucero Palau wrote:
 > 
-> I can add a get_device()/put_device() for both cxl_clear_port_error_handlers() and cxl_assign_port_error_handlers() to prevent operating on a recently destroyed pci_dev. Is that sufficient? Regards, Terry
-
-Probably (by which I mean I think it is, but haven't checked in detail)
-
-Jonathan
-> >>  void cxl_uport_init_ras_reporting(struct cxl_port *port)
-> >>  {
-> >> +	struct pci_dev *pdev = to_pci_dev(port->uport_dev);
-> >> +
-> >>  	/* uport may have more than 1 downstream EP. Check if already mapped. */
-> >>  	if (port->uport_regs.ras)
-> >>  		return;
-> >> @@ -853,6 +883,9 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
-> >>  		dev_err(&port->dev, "Failed to map RAS capability.\n");
-> >>  		return;
-> >>  	}
-> >> +
-> >> +	cxl_assign_port_error_handlers(pdev);
-> >> +	devm_add_action_or_reset(port->uport_dev, cxl_clear_port_error_handlers, pdev);
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, CXL);
-> >>  
-> >> @@ -864,6 +897,7 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
-> >>  {
-> >>  	struct device *dport_dev = dport->dport_dev;
-> >>  	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport_dev);
-> >> +	struct pci_dev *pdev = to_pci_dev(dport_dev);
-> >>  
-> >>  	dport->reg_map.host = dport_dev;
-> >>  	if (dport->rch && host_bridge->native_aer) {
-> >> @@ -880,6 +914,12 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
-> >>  		dev_err(dport_dev, "Failed to map RAS capability.\n");
-> >>  		return;
-> >>  	}
-> >> +
-> >> +	if (dport->rch)
-> >> +		return;
-> >> +
-> >> +	cxl_assign_port_error_handlers(pdev);
-> >> +	devm_add_action_or_reset(dport_dev, cxl_clear_port_error_handlers, pdev);
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, CXL);
-> >>    
+> On 12/17/24 10:42, Simon Horman wrote:
+> > On Mon, Dec 16, 2024 at 04:10:33PM +0000, alejandro.lucero-palau@amd.com wrote:
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > > 
+> > > Use cxl api for getting DPA (Device Physical Address) to use through an
+> > > endpoint decoder.
+> > > 
+> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > > Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+> > > ---
+> > >   drivers/net/ethernet/sfc/efx_cxl.c | 9 +++++++++
+> > >   1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > index 253c82c61f43..724bca59b4d4 100644
+> > > --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> > > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > @@ -121,6 +121,14 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> > >   		goto err_memdev;
+> > >   	}
+> > > +	cxl->cxled = cxl_request_dpa(cxl->cxlmd, true, EFX_CTPIO_BUFFER_SIZE,
+> > > +				     EFX_CTPIO_BUFFER_SIZE);
+> > > +	if (IS_ERR(cxl->cxled)) {
+> > > +		pci_err(pci_dev, "CXL accel request DPA failed");
+> > > +		rc = PTR_ERR(cxl->cxlrd);
+> > Hi Alejandro,
+> > 
+> > Should the line above use cxl->cxled rather than cxl->cxlrd?
 > 
+> 
+> Hi Simon,
+> 
+> 
+> Of course. This one has gone through a lot of eyes undetected!
+> 
+> 
+> BTW, apart from the fact that I should use Smatch from now on :-), out of
+> curiosity, is Smatch only detecting one problem each time? Because this
+> patch had another flagged issue in v7.
 
+Hi Alejandro,
+
+It does seem that this problem was also flagged when I ran Smatch of v7.
+Sorry if I didn't pass that on at the time, it would have most likely
+been an oversight on my part.
+
+In general Smatch can flag more than one problem at a time :)
