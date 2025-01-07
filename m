@@ -1,62 +1,62 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E21D3596C
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 22:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D470618D62A
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 22:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736287289; cv=none; b=Q2BWbsJlFiHZP1LTwCFmr+AH5PZRxDRgafUYHwXIwCeHIj29Bqo0XTZsdCeA8OXqmblZa2rYPiGMAz5t5eX4LU6YiAQKFdJyMB8OAURQGKS27D/BNaTNRLgn8EUYkIlKyJdds5VYdQCxQGX2JC/knW7fjKtHBK0SIX7GZ7PT2s4=
+	t=1736287569; cv=none; b=o5VB+UsQphFconH4dmo7WA5PEtYI84f8Hq94ARwnVhmvArUwLDrHWdNWrnx097q1p8xRRGQm5WyqZdkSgZRAXyNg99lqNMd9cAAOIyeXD+Zbw40ZTj4yf41EA3Fztv1smG5sh3b69e6CWfG+v7bqIscgmaOS3dCi0FEXi6U5IQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736287289; c=relaxed/simple;
-	bh=HTd6aNzd+WG4gQYS/ec1UtjMqQBNV7pllBynGdA6iOQ=;
+	s=arc-20240116; t=1736287569; c=relaxed/simple;
+	bh=gQqmlZ2Qu336X+55S8DKUukQDskPOV40mepiZ7Nyf/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+9zMYREzYm1hh2M5n8QRmMAVuyXAHG5PegvL0cOKm4Onf+3q2QDWITVnBhyBz0J0yTwOjIF8vRfG+uWvbb1OQhk8xQrSk8dmLsbMIW/zlW89fsZVRUlTWhPtu4YOgF3AAug0vEFKUzB6x1GTmWg+uHkiqcY1uJYXRjpEHduTIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=G7Xk2R0E; arc=none smtp.client-ip=209.85.222.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=BHlIQ+a6r4bI1tVroT1m7cY18wkFKATgeNrXoTC2XeJ2M288ghLE0Ve0jY5s/K4LrkyiZB5TL4E6fbNPEwX0W/TdSZKOyKwBO5/bFiL73DWQhjR10m4dDKJDqDG/hms3wK0XwFXJyFO3kifAaMSTqm7dML40T98UfFc3inqDM9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lJIyRokB; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="G7Xk2R0E"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6f1be1daeso1492889185a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 14:01:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lJIyRokB"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b702c3c021so1408158385a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 14:06:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736287285; x=1736892085; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1736287567; x=1736892367; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9z8RNkUkt+CcynHF95NF8N98PCbipY/N38UIAM8LaNM=;
-        b=G7Xk2R0E8ra5rHDh2cvQ0d2nXFQitlpjzzjSH9Mwk/m6ZDVR7Bb6SHZPgdP0tlxXIi
-         S7ayMbdxkqS+x5LG5RYpHr4TbB7D+d8x0TTnDt1+eXcTt9AMUeHJa3zGrMFGtZzrPAZX
-         p0DW72YcxVGj+6XZdugUAVQ2XJ8+HXy7J+fnFO5TfaLY0OI9KXCuHL3RFxCMQWNpvUC0
-         gqzs1dJ8jgd666BtSHzgfHkTYnSebINsTqjHuuEFbm6coFXRbFIjYUm1sBaMX382gjYc
-         J6jMHGgWJcQ5avBkjSaaL4T6tjyoDw4QlYZuubhy//te/SETKPRcHVBDJ0jtss8AaLJ3
-         7vIA==
+        bh=/Z+yvD09Jzs1/yuZRPpghwqxWVUjGbyixinTNjStfAg=;
+        b=lJIyRokBjC/2xEPhFYrWEum344RIT403cdASWFHJ3nFYsnuIcwEUr1XtqsMvq2TFNI
+         eo/TZKWfWvuJ/MPi/tib3FOO4KkJ9ZWrrXGXYf2hXda5Z8HOkHb6h3pUOKzCiyjQxQRR
+         y58VarhCPM7qer/JzNjwFnwrFkkSicb0udJJeXxWYStHSLe2vBJJP5x45nOOlUhrkN92
+         CjtYYlnquObeXz+X9RrYHCINOGYBgbwnT5aqfadySh9VWMWaborcaQB3XDrPmoiKLzjD
+         h/UqbZYd80funnfkxrkMrR/FKzZ0jTOyjibmy+P+BD/oMwbQqkVkI5pclvZN5jbWt2ch
+         jCSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736287285; x=1736892085;
+        d=1e100.net; s=20230601; t=1736287567; x=1736892367;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9z8RNkUkt+CcynHF95NF8N98PCbipY/N38UIAM8LaNM=;
-        b=qfQzMx2XFqtlHH9ycC9OXc6Et+1bnu8u3lcecbQfcmbc4jA4/MOTTW5rufmAxDug2Y
-         gCSfL+F9Eds2nBvZjrCBoBTWPcG440DPshFWkm730BG8b9HRCsLaOsVv8anisbJtVf6D
-         E5lDHLdTH/gxMkWjVTEgLDFnS/mDIHE7/sNz1MmLS7+t01071IQVwNHnMTXMz9+o0DUm
-         /9e1a5gX8kj7YnI/kaGfATh/qCyJwOuQcvPF3IGWOq3NHMDP3mjaLlidGda7wVZ2xK2n
-         0IclWDLCeU+X75I5p49MLzY2u1w6JMLiz8Z5PJfA0GOUtgVesGKZriXlwcpbG9aiz0ic
-         CyTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpaYk4rgmpYe395cgESka7e2E0SGyfOkarywwYCbYEcFW3LstzGQ9gQSLly8AlJEvZ/Tdtm/bmeE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEGkAK/9Q35aexLXhMf83LRwKfaVwkJPKmVhdignQGrnXp5R7v
-	p6FaNe8CsYOrbVwklafIU+3ltp4Rwy8afgW74HdKTj7YP1PtsD7xKl0YinGW7nI=
-X-Gm-Gg: ASbGncsQKt4idAvzR2ut7vD26rYN5EU0np0sbDg8G1/pR3eBWpy8nHmOVY8H6CQbhMT
-	CA/vIWI+PR1EHm6Zrly2JG9O70H7Abzq4WLhxxbZqmJ3kPIWl6ky2Ow3tgw78M1yBrbP5rzzzJs
-	d2g1WVJ/BC+2vEbYzHoqR2jYBkFiKhO0cnR3ba065/esg7CIi5xP1+NtuAdqOxUiOVBmAd0zUvw
-	fad29v8kVuvoCI/Hn4qb7b5NeDq9jLTjK/1YtzJO0iV++MNcziirfDbOnKcTmYMIOvI/th8BSRG
-	jydRYYuQtCF7WmDshG+y0wLdQAhwtO9JJxq1nio=
-X-Google-Smtp-Source: AGHT+IHbOqe2Ef0AYcLsrDlalZWeqM6pd6Eh/2Fncle6Uf/C590+nFuSLbF1ltS+ZHE+yhoYTu6SBA==
-X-Received: by 2002:a05:6214:5782:b0:6d8:8480:27e with SMTP id 6a1803df08f44-6df9b1eb0afmr13222126d6.11.1736287284860;
-        Tue, 07 Jan 2025 14:01:24 -0800 (PST)
+        bh=/Z+yvD09Jzs1/yuZRPpghwqxWVUjGbyixinTNjStfAg=;
+        b=I9zK0XH7H7ljkQax2nWmHnmYUVKvPF0ubAaRnUXM8QItYthJjK3v9afTxd02JPYkwX
+         8vlrhWLQgoGUCoABIVf+hKXJc7OwKFVAOBVIj0cdjD813UentFx4zYRcTVyh4aNwJaIM
+         nDmQ569FUVikoLM76+9YiaFLSD+rnejm9tMuCuEAZaf5T9gC65qnQ3YnTXiOUvoiPGEl
+         OEUsjXAkugMLJS2cYF1as0o48cTdYyAW2oeMgN1rtlpkSTZ1abzJd29s3JDJz7TEFp1k
+         0w9/e26kh+zTtDTH4J7STnRj5t1D6m4nZTM0h9N23IGx5aNCEIy9n8zJ8h6R1FT1M4w4
+         6Pvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+6PMRepLYvcWgHPWRpo1+VCzWi9NAfymXjs3uynHGpH08vQ3PxVyg21W3lpYBMa9/huLRiTG1X3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEVXc4TVb6kUB8RNyoq47nHutlj0mbTYRh6AqxHJMAe5WqqR9h
+	xrYfL7poZMFhqxcUb1AwD3C1Zp5uhD0PmKJVetsHPMaPcgsKC0Il8zpNOrOBfgE=
+X-Gm-Gg: ASbGnctqJRjFUXxMZDpVexOm+TlSluTHpS8t5r58/OFXGVFh5hvIGoLJzBgINX3xT3s
+	dtD8Ju/+in9QzhLvsdbwV8A76AlPtOOrcZWqVUhIow6qgIwN/muo0A31TuIFaNFox+yNc9ghID9
+	pbZ6E9NZGRbzRDY/SeM661CPAJp6gGDHPc4bQB/oomOBsSIleLxkIPki8BYMeF9WReG1YcC02DA
+	udoFygkpzIYQV9kcqqWFuAp14dYxftfKLaPGnoTw6RZdfZSL/A4Q5oO5x0BEZrkG7wnb9T/yCu3
+	MsOmACXJ7tN3f4yaefbArZsuJu5vdDJ3CWGsmK4=
+X-Google-Smtp-Source: AGHT+IEgDZGOqa8TX7wd/PNgsRBnOk+DEoNe71ker3ml/5i1HsRggxv30WWi37TXcHfg48T8s14/Eg==
+X-Received: by 2002:a05:620a:4898:b0:7b6:cb4c:10e8 with SMTP id af79cd13be357-7bcd96e5593mr63273985a.11.1736287566863;
+        Tue, 07 Jan 2025 14:06:06 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd180ea6fdsm185057416d6.23.2025.01.07.14.01.23
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac2bd0a5sm1630202885a.20.2025.01.07.14.06.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 14:01:24 -0800 (PST)
-Date: Tue, 7 Jan 2025 17:01:22 -0500
+        Tue, 07 Jan 2025 14:06:06 -0800 (PST)
+Date: Tue, 7 Jan 2025 17:06:04 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -69,11 +69,11 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-kernel@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 16/29] cxl/region: Use translated HPA ranges to
- calculate the endpoint position
-Message-ID: <Z32kMmH25_qfHhZ5@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v1 17/29] cxl/region: Rename function to
+ cxl_find_decoder_early()
+Message-ID: <Z32lTEVg0qCVtP4i@gourry-fedora-PF4VCD3F>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-17-rrichter@amd.com>
+ <20250107141015.3367194-18-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,44 +82,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-17-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-18-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:10:02PM +0100, Robert Richter wrote:
-> To enable address translation, the calculation of the endpoint
-> position must use translated HPA ranges. The function
-> cxl_endpoint_initialize() already uses translation which could be
-> reused to calculate the endpoint position.
+On Tue, Jan 07, 2025 at 03:10:03PM +0100, Robert Richter wrote:
+> Current function cxl_region_find_decoder() is used to find a port's
+> decoder during region setup. The decoder is later used to attach the
+> port to a region.
 > 
-> Use translated HPA address ranges for the calculation of endpoint
-> position by moving it to cxl_endpoint_initialize(). Create a function
-> cxl_port_calc_pos() for use in the iterator there, but keep a
-> simplified version of cxl_calc_interleave_pos() for the
-> non-auto-discovery code path without address translation since it is
-> not support there.
-> 
+> Rename function to cxl_find_decoder_early() to emphasize its use only
+> during region setup in the early setup stage. Once a port is attached
+> to a region, the region reference can be used to lookup a region's
+> port and decoder configuration (see struct cxl_region_ref).
+>
+
+May want to add a comment preceding the function to record this in the
+code along with the changelog.
+
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
 > ---
-
-just one inline question
-
-> +static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_port *iter, *port = cxled_to_port(cxled);
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct range *range = &cxled->cxld.hpa_range;
-> +	int pos = 0;
-> +
-> +	/*
-> +	 * Address translation is only supported for auto-discovery of
-> +	 * decoders. There is no need to support address translation
-> +	 * here.
-> +	 */
-
-Just clarifying - it's only supported for discovery of already
-programmed decoders (programmed in BIOS)? i.e. driver-programmed
-decoders shouldn't need this translation / won't support this type of
-interleaving?
-
-Comment here begs some questions but not necessarily a review blocker.
-
-~Gregory
+>  drivers/cxl/core/region.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index c1e384e80d10..2bc2028988d3 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -878,9 +878,9 @@ static int match_auto_decoder(struct device *dev, void *data)
+>  }
+>  
+>  static struct cxl_decoder *
+> -cxl_region_find_decoder(struct cxl_port *port,
+> -			struct cxl_endpoint_decoder *cxled,
+> -			struct cxl_region *cxlr)
+> +cxl_find_decoder_early(struct cxl_port *port,
+> +		       struct cxl_endpoint_decoder *cxled,
+> +		       struct cxl_region *cxlr)
+>  {
+>  	struct device *dev;
+>  
+> @@ -944,7 +944,7 @@ alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
+>  		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+>  			struct cxl_decoder *cxld;
+>  
+> -			cxld = cxl_region_find_decoder(port, cxled, cxlr);
+> +			cxld = cxl_find_decoder_early(port, cxled, cxlr);
+>  			if (auto_order_ok(port, iter->region, cxld))
+>  				continue;
+>  		}
+> @@ -1032,7 +1032,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>  {
+>  	struct cxl_decoder *cxld;
+>  
+> -	cxld = cxl_region_find_decoder(port, cxled, cxlr);
+> +	cxld = cxl_find_decoder_early(port, cxled, cxlr);
+>  	if (!cxld) {
+>  		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+>  			dev_name(&port->dev));
+> -- 
+> 2.39.5
+> 
