@@ -1,62 +1,62 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8029619CC17
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 22:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B24F190664
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 22:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736288334; cv=none; b=EyKdEvlDN1aIuh8/dr36xURefR2lB8VHC1e8YCM4XoMIKm8N90c1RgYVsf3bS34iZg3UgvS6C3LKqv9ronsR31o3KyqBFwzOgrgFYn9jxo+7NnBDmHKVfwHNCO0a/sikHrfhEZ/6fU77bOU1ECEMJHpBtphIzM9HdwhL1BdqlA8=
+	t=1736289195; cv=none; b=CiDVRTp+mmL2lLcwZu584WFY+W+qx//MJpXB1DXuQ5kywvTBqKTd2144jONdKDEZA8VC5UF/YuNMvY29kE/Ug/q8l32CVcySmWmgF3QiIDhG6/76s0j3yPQ4DyL1AVpY2MER+qfUHIwUPL0NTTxfLfb92TFyfDxu+sR99aqapLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736288334; c=relaxed/simple;
-	bh=C92n4giowFcJkP9bJoncOBGP6u7vWCoZqQBLoDO8ifk=;
+	s=arc-20240116; t=1736289195; c=relaxed/simple;
+	bh=tNwgxqOT/vI/GIvjoscnIuOyBkzLYkjGKwTFuBByznA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YCioy3BwBQMw6BCalcw/m0jwqw4UJnrRhtEfC77tW0NEZln0eyuJeH4kDaJ1uzDnnU/1MjRMjot8xjX/ByQCqqFEOE2Hp39KmcPbu0t9ZILw+IaURRI9U57vPkEvioeW0xBkNesnoiFgvU3/b5qzcERCr6TcRM4vaQfIH4ctWGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gNR+8sWk; arc=none smtp.client-ip=209.85.222.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQ6o1+pwXegB+qwc5WryipqcA+HV313RmhmR9BIyEW9qlPI/TSfVu0JI6LykzK5vaFZh1JNQwvoOs0jrlX5CuLQTXTjUehR7TO1qgQpI/kdwmyVguDxZrZHg9aOJNkUY+k74yToJ+2fx6n83T9VwQ24C2PPhg2YYCI7Znn/ykps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=CNUoObEj; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gNR+8sWk"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7b6c3629816so829053985a.1
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 14:18:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="CNUoObEj"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b98a2e3b3eso795818585a.2
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 14:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736288331; x=1736893131; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1736289192; x=1736893992; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CHei3rjYaWUC5xmAfbKIWX0f334QfNk2qMw/9plGp/0=;
-        b=gNR+8sWk60oy8HPckBK8QmTZQvThI8zl85uPH9xasrqQY0U8+cZz6lkOZNhyAezhLZ
-         rmRcxDaAMvTYksrjFZnA1n+J7XM91DwShbvJB1CTCeqEouvliBLeMyf9AUCwSvoJszb2
-         BoBqIz38KCipSOotvi2KfFJ3CPW4Oi+YB2P8BWIuyLtUB02sDNKO8FM8DoWRh7HrlW1v
-         JifpxYFyu5+ShXrvQQI1O6fGe2rn7Q6AAZrRtUo6jdmxXZEZGiRLrXUXP0sPVeFbTehZ
-         hG9HWch57qhUw+d9GssMh8dL40emkhQbNlFg6N4kSQ2by/CutOiB4PYicFOIDJUtAcxl
-         XfSA==
+        bh=qpX6JiZ5ixPvDUx6ndbdQvSLHYQ9YjrroJ3HRy4IFyI=;
+        b=CNUoObEjso55Fh6dCeqhr/ZA2Ojq6dUwbSBYCY7dz5MNlfkDsjw9jK+pxEVatkP840
+         WzOIXbhakXurZ9wyHBuEXrRRlMbkc/noWWA5uDS5vNivvQvFXR54ytGGSK5UF8YWPR82
+         FgRVRpEKt/kiZ92CKJ/+KP2evZlHJAeBVcj/PMVicwAAqymUPkHqQWKQP7f1VnTwHipl
+         iTfvS1EIpk/asI2nInOb80e4vTgMWprh4/19zlWNokNe/rAeA4/pfsteQtaUD/OZFJMC
+         v1jUxdf7Iif6dJ/h1cD28g8x3mQd35tgd0voDPUL7kHAq1PbP46+sB0JPnvkYyKrpCu6
+         Nxhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736288331; x=1736893131;
+        d=1e100.net; s=20230601; t=1736289192; x=1736893992;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CHei3rjYaWUC5xmAfbKIWX0f334QfNk2qMw/9plGp/0=;
-        b=RxTaAL64jct12ZZm6IiGG+xBm0VYGRLoRz6kZe6eiQnfRHjowoxVcJIIZPbJmjgNh/
-         DZbVaJdrs0Rpm4oL+WHGk7/3LPni72zWJGhGMtwir7sKYMR5k9VT9Id7TnSlvDr9mUFv
-         h7qmVo0X4Wtv60ipohabacdiMHEJVlmAdVG495BACvoR+mCSHSPTVZPfXFfb5yOMs9qr
-         b99K3LBdGW4iy2llntA9x+hCRbZXl0y4nFJrOtlCzz3EqDRT9UVvwAKbZ8EZGDhvii3x
-         YxZ6CjS8ctfHTROi/dqhdJ00m+FmnP0tSemjB+LHTvyVoWZnhu4KTTdLdYZ88QKm/b6/
-         AeQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZOJ1jugVDHrBayWzSv+Uo3IPg54MOfyS734MppWiLQkOq6fyat4JLX/+330ROacnHDr85txUWvNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRUciIYjnc0kwDCbzq9rJc1rEFKbzGGniSdb1iyCvD0fIzOLs0
-	85jY1l7r77HC/koocjv58/Zu1Gitn1cQxd6LprCywwSTxgtOdxOwcylYZzQWa7o=
-X-Gm-Gg: ASbGncuXjk6ZWim3ZhYEGF6xpoHTodjg2J/h/rXofzj2LTmLvXQ9EyqTmD2+K/RiZLX
-	pNxPz1vm77PhWQ4hh+pugXcJPKAsoF63Ui0spnopv1Ib0+ltxR/1qmPiMHyx6t/z5w4i/LyKVae
-	AsbU/wBHt9u/7362DUBA7cBBXwofjP5LN9qVWl9YUzUi5Y4YmYHyo+vyEyGWJECX38Qkbkq9acx
-	+2aAYKut5hIJjtFgLuI48kFxqckdtAlRieaq3vN3liHd49xX6FyGbEU6RSMR2AILXXyADZfKssb
-	HoWXGcxOY9DO8nFy0AfQabJJgRFssdE26RoDzBE=
-X-Google-Smtp-Source: AGHT+IFsemh/GPR8JW3UqZb+zild0+OAi5y8U5AMjkNe2LVIp5FKuTyyvio2CuL45Y2sK7NqvQI9Og==
-X-Received: by 2002:a05:620a:459e:b0:7b1:ae66:e8cd with SMTP id af79cd13be357-7bcd97622d4mr74060685a.44.1736288331489;
-        Tue, 07 Jan 2025 14:18:51 -0800 (PST)
+        bh=qpX6JiZ5ixPvDUx6ndbdQvSLHYQ9YjrroJ3HRy4IFyI=;
+        b=dJp19MRfIVeVm85YAJRdi8JXuqzZ3qtLt/WWFGhmewcW/QoLYcWWLwl+3v/GLfkOP7
+         5nGNuq5rwa4WOOuLNgEV7CH+kbtvjmeTfGdaXWvEWFiwB+ekDzCx+QWzscJHopRqTZjr
+         TMImWcOzrHXAT9XTuoUteCPTAkuDo4m8vWJiy1h+U9ox5wt43L4lo4LWm8d4GTY7yFaV
+         muzMm7uDxUyN2SjOmhwXKylsqz5S7GfdKWTJF8qEfyBGdLIwZDGPLYF9FP+azrHyQp/J
+         wrV2kwXWKGkuOLJShYj3zRK2h0nSRsP7qPAoAHA2LowsYLwVZtBf9ND/hCC7eXL8G5sD
+         MKzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Y5ApnKiD7twVDpHieYCKPWCoJ1BEJ4kP9kSoKUEknj8h8NeP8QvUyQYypumjuCdWOgOUdsRLfjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyywsuWbd+HRfdLjDogKk4fbsETxJcRMD94333yZKVyWg4c2Shs
+	gWkJIdtKpoiACJJbBwWgLDbcpjCkJ7YFM+lFh2CldqclMuxYexZfWSImXBFS0tM=
+X-Gm-Gg: ASbGncspu1oGPtdG+nMjQjYg6VNgcHRiFSHRz6NhKzt1o9uI0YUepAW3Zy6kCNWbmEH
+	koWOTgnk5lr+DFWx2K1qRcEUQpxNPHN/DaAW21Z2nIvOGf1UetuVDEO0M99H8AhMUolRV0hALzp
+	Ou71+qhDQo1nRxIvrc/9Zn5+LYB3x8637umVwt9OhRuPSp/KZJ2wOWFJOJD0CUGH3DF2TEhuBaB
+	bJBbvJr4VGZTNc9xmFPv46B3TOax82Z0zZwx8k3SK8FKSLTJ2kZMMp5Pi5CnW9um3PSaa/v+pZK
+	A6J35pK9DKpgqsGvd3dUUxtCZMthnOoAJzXL39A=
+X-Google-Smtp-Source: AGHT+IE84BqwkI0EuKCnUHRTjlVelOU1z5n7oTkTtGcNA90GhGXtHXKxlKsG5Wb479y22tMfhN736Q==
+X-Received: by 2002:a05:620a:2454:b0:7b6:db89:2e9a with SMTP id af79cd13be357-7bcd970a86dmr79800085a.22.1736289192395;
+        Tue, 07 Jan 2025 14:33:12 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac480ea7sm1628781885a.94.2025.01.07.14.18.50
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac2bbcfasm1627643885a.25.2025.01.07.14.33.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 14:18:51 -0800 (PST)
-Date: Tue, 7 Jan 2025 17:18:49 -0500
+        Tue, 07 Jan 2025 14:33:11 -0800 (PST)
+Date: Tue, 7 Jan 2025 17:33:09 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -69,11 +69,11 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-kernel@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 19/29] cxl/region: Use endpoint's HPA range to find
+Subject: Re: [PATCH v1 20/29] cxl/region: Use translated HPA ranges to find
  the port's decoder
-Message-ID: <Z32oSTvQL8EmNmxz@gourry-fedora-PF4VCD3F>
+Message-ID: <Z32rpXDLIWnoYc85@gourry-fedora-PF4VCD3F>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-20-rrichter@amd.com>
+ <20250107141015.3367194-21-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,72 +82,54 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-20-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-21-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:10:05PM +0100, Robert Richter wrote:
-> For the implementation of address translation it might not be possible
-> to determine the root decoder in the early enumeration state since the
-> SPA range is still unknown. Instead, the endpoint's HPA range is known
-> and from there the topology can be traversed up to the root port while
-> the memory range is adjusted from one memory domain to the next up to
-> the root port.
+On Tue, Jan 07, 2025 at 03:10:06PM +0100, Robert Richter wrote:
+> This is the second step to find the port's decoder with address
+> translation enabled. The translated HPA range must be used to find a
+> decoder. The port's HPA range is determined by applying address
+> translation when crossing memory domains for the HPA range to each
+> port while traversing the topology from the endpoint up to the port.
 > 
-> In a first step, use endpoint's HPA range to find the port's decoder.
-> Without address translation there is HPA == SPA. Then, the HPA range
-> of the endpoint can be used instead of the root decoder's range as
-> both are the same.
+> Introduce a function cxl_find_auto_decoder() that calculates the
+> port's translated address range to determine the corresponding
+> decoder. Use the existing helper function cxl_port_calc_hpa() for HPA
+> range calculation.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-
-I'll make a note to test up to this patch in particular in HPA==SPA
-mode without the follow ons.
-
-The functional change here is the move from cxlr->params to
-cxled->cxld.hpa_range. 
-
-What was the likely value of cxlr->params previously? Undefined?
-
-Otherwise I don't immediately see any issues.
-
-Reviewed-by: Gregory Price <gourry@gourry.net>
-
 > ---
->  drivers/cxl/core/region.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+>  drivers/cxl/core/region.c | 63 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 61 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b7f6d8a83e4e..23b86de3d4e7 100644
+> index 23b86de3d4e7..8d7893878362 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -861,9 +861,8 @@ static int cxl_port_calc_hpa(struct cxl_port *port, struct cxl_decoder *cxld,
->  
->  static int match_auto_decoder(struct device *dev, void *data)
->  {
-> -	struct cxl_region_params *p = data;
-> +	struct range *r, *hpa = data;
->  	struct cxl_decoder *cxld;
-> -	struct range *r;
->  
->  	if (!is_switch_decoder(dev))
->  		return 0;
-> @@ -871,7 +870,7 @@ static int match_auto_decoder(struct device *dev, void *data)
->  	cxld = to_cxl_decoder(dev);
->  	r = &cxld->hpa_range;
->  
-> -	if (p->res && p->res->start == r->start && p->res->end == r->end)
-> +	if (hpa && hpa->start == r->start && hpa->end == r->end)
->  		return 1;
->  
+> @@ -876,6 +876,66 @@ static int match_auto_decoder(struct device *dev, void *data)
 >  	return 0;
-> @@ -888,7 +887,7 @@ cxl_find_decoder_early(struct cxl_port *port,
->  		return &cxled->cxld;
+>  }
 >  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-> -		dev = device_find_child(&port->dev, &cxlr->params,
-> +		dev = device_find_child(&port->dev, &cxled->cxld.hpa_range,
->  					match_auto_decoder);
->  	else
->  		dev = device_find_child(&port->dev, NULL, match_free_decoder);
-> -- 
-> 2.39.5
-> 
+> +static struct device *
+> +cxl_find_auto_decoder(struct cxl_port *port, struct cxl_endpoint_decoder *cxled,
+> +		      struct cxl_region *cxlr)
+> +{
+> +	struct cxl_port *parent, *iter = cxled_to_port(cxled);
+> +	struct cxl_decoder *cxld = &cxled->cxld;
+> +	struct range hpa = cxld->hpa_range;
+> +	struct cxl_region_ref *rr;
+> +
+> +	while (1) {
+
+Similar to prior patch, probably we should have while(parent) instead of
+while(1) and be at least a bit defensive against (extremely unlikely) loops.
+
+At the very least maybe we can express the condition more explicitly.
+
+> +		parent = parent_port_of(iter);
+> +		if (!parent) {
+> +			dev_warn(&port->dev,
+> +				"port not a parent of endpoint decoder %s\n",
+> +				dev_name(&cxled->cxld.dev));
+> +			return NULL;
+> +		}
+... snip ...
