@@ -1,251 +1,375 @@
-Received: from esa10.fujitsucc.c3s2.iphmx.com (esa10.fujitsucc.c3s2.iphmx.com [68.232.159.247])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2059.outbound.protection.outlook.com [40.107.220.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D1218EAB
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 02:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5467081C;
+	Tue,  7 Jan 2025 03:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736216505; cv=fail; b=DXFNnbP84q2fyZBigWp+BIb+lKEfkNFZTzARFu+IMz/whLHSOuTUppeIPFfVBlNQW4EHETC4RZm3xmoG2rjG3E0mPTVDoF2RJEmV7DTyMy5eBMWzCfFq6+v/WidUfR2VklH8h9u+xRNx+2YU8rkH89WLyLp/lQrT7CYZJhxmZZ0=
+	t=1736221388; cv=fail; b=Zg0Hw4JtD2KjK3vNIxyPjjwtsz1WThyRxv0fSwcxRdYpgjIOvvR5/WXVI2zUaD/6UTYfBVubOxQNhKEh9tFppO62SaEBiaWN+LtuvgeWGBCGZ7XOjoksiZIVVoxoUxSlCCfwPow5bT7SxdqBdLZhILfkzaNFpWyiBT+INfh+hgs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736216505; c=relaxed/simple;
-	bh=OzKBEUGApQGG706ZM6XUkXKm3agfdy1FA2PNFSOHa0w=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Eo1CDhbp4SrKP1Gje9b/FE89iMb7u0uyH6r+Qgw+dtgflP4apSQyNIy4Du8bkifkXW8WhAnfdtyj5nFUgbLxrdO8K2PH3h4DzA72IkfkedcWCgFl1fjTkFrrcZQVCI9/GBbWxY1+sMZLT43LnMw6g6ItWPGaJ72ZD6ferH/3Zyo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=jOQ8UKUh; arc=fail smtp.client-ip=68.232.159.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1736221388; c=relaxed/simple;
+	bh=RVF3vd3vgIe36sq4f3txqO6R1RQVwzZG/AMJ7LEPxfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=p9hV+q+UemQtfqVZdc9ufqwDfqwr5if37+zLTirpNsiLlk3Hj3VfiCmwd3JyfEkpsMCu66y6Isp0QH2AkfYeXOw1iU0EhrOstJ7AE3ql0N3uQQosp8sBafZgV3Ni0xssvFUlVKHLZLs9qSEP9ilYLT/OiLCXNJRr8xTt/ChL2jQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TqZ1yjz/; arc=fail smtp.client-ip=40.107.220.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="jOQ8UKUh"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1736216502; x=1767752502;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=OzKBEUGApQGG706ZM6XUkXKm3agfdy1FA2PNFSOHa0w=;
-  b=jOQ8UKUhtkh9Zn5L4gNu4DFJZZqb/YQZlLyB/D4LwOkI703jrt8vSeV4
-   57v8H1rGlgwi3IwN1QbTeXKRGS1BUsMw6k1n7T7Ntbd6R1IX5kEcEET7s
-   3vQCq6ptuZGfSLyfTji2TyPIIGIjMoLs4jUVd5WJnHX3OTzn8LLl2jHGY
-   VOocbb5lxcanp4lPsQscftago/jHXhka6bwpmB/+Om8AjP1RG+a/RZmYu
-   EdukOgw+dKx70f5sA7izAg784pHCpv0n6ALYsc8LEw6+GIiyz8DsrN7bc
-   SN30YWbF4y2EladW7pNpRZV5xXDGWv7NFn2RrwfVrz6W39wtuwqqqFA2D
-   g==;
-X-CSE-ConnectionGUID: axVomO/JSlyx1jHtierWHg==
-X-CSE-MsgGUID: y9DOr0W/TIicjlCiBonmeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11307"; a="142191284"
-X-IronPort-AV: E=Sophos;i="6.12,294,1728918000"; 
-   d="scan'208";a="142191284"
-Received: from mail-japanwestazlp17010001.outbound.protection.outlook.com (HELO OS0P286CU011.outbound.protection.outlook.com) ([40.93.130.1])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 11:21:33 +0900
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TqZ1yjz/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sZ6OWjDsbN8YF7wMnVtmUFPj/HSyqtm2HtxWtNnIJov6B0eaxvAITcyQ+5NnVZvvlJwxSb/gpqiXaKXqvBbe/qshYMhE29edJbBReOfmPS4Vmkw+f3WJTpUxzy8R4v2h/WPCh1ylAMwDrxxheM7j7LTGLEJTHA2Z+NRNb/0O5RTYRvHbbM4ySGPPLWw0hXxZyPhdatLacP0G7sw4FqKFBFhehSHOSSjmAdU3cPRSodcOMBpIQfpoNKRasU78MUb885I/3Q7CU6ea5wf2giKjhR6P5OIeJowJAqYsvnrrJ5U2oQIFyZFyC1sl2RCW+EgzVs+4ggPhV87EDsBSMDUP0w==
+ b=LAHcBqc0Wj3DnzHirHG2Sf1RldR7g6DHSq1m24G1RbomBvSpBndqG0MW+6PLZhMagaa6SSJ7esK0gI/zF0IAHuIuTwiwWgs2vUafXDiHSi6Un3llbv3ly+6XIiGUf5kjY+kzWxs5IvbCU1ETwkBDQsPLMckKoAAC3e6HewgkNhsEMOWILpzCGGdcTIY1uRNnXki3c9+9qE2SFAAOZEY/GTPEhOA4/Cal18t+oamxfvSUWdThYzZYxyy4YmmeQd845r29KR3QylKmj1p73jG/jiJEveKanv2HEfMjzh/Bm2IU4UKeB46g/ELyHUQjqEIy1tYlf2dPpKcoK516xNpZng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O3cWGlpDdLYXBwatuosBIRI/TCkzlS7CUWNyngGpyIY=;
- b=Zge94yDTZgDV7/IKl1mpafcN2bPwGMIC6+rmL+2JmAMUltyLQtTNCL4Eo1856nmkafexnCwKkvOLYJX2VugwcIRCfkKi8iAji85hLTgiTn4vEnSFtcZCA5stuveNHtmCEV/WRJJYV+IIUpStlFTFT9jmvHHWfcdpzhGrCS6qnoEBFhvfLRGnqpFYqRGb0taNac11AXKNwBDOYM65BnGWPCneEAfof/aHzQHG9ziEQVYE+Kfozkc4xZK/n7hMKNXMzQ99pLGwXJRx25iJANEUVJtRDb/bM0W9ay2lcR47qeyNnmfDfJ1xbDCvpAgMRY3Gi0lLWv3YCN0nPYfrV34Kxg==
+ bh=X43t5dv7g5WgJoP9aPIIljf0v/lCzc213uJ164W4vxs=;
+ b=vOgo5q6M5xo4gexLdSMKUGKdT2bz6HgIvs5GOpFN/lOZo4oRlWzur22swLTKUXzeDEl+ooaOiYldqy3QNbJ53clS+zXnJQLar/P1ii9L2XPglURsKg///EEyOtKz9AMAPCoNdrsw+B3DyDGsDj7wm6fNW9niBoAweoe+UpEYd7z1suVuNs8iAzrr3zvivayXbO7ytXu1/rXf7pKSlYJT4EkEcdAI9AqwVGt2LcxJR4EVkHsa27/Bf4wz6qeszfk5xFRVq/rt7WFa2IRyjovGMCPo5x1dSvERpRyKSGcz0OnvepMoxOGe65YHfeZkk/caSUA0JlbRXu1tqfcNTQCWeQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSYPR01MB5352.jpnprd01.prod.outlook.com (2603:1096:604:84::14)
- by TYCPR01MB11753.jpnprd01.prod.outlook.com (2603:1096:400:3e3::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Tue, 7 Jan
- 2025 02:21:30 +0000
-Received: from OSYPR01MB5352.jpnprd01.prod.outlook.com
- ([fe80::21c:a9f7:3c3f:c7e]) by OSYPR01MB5352.jpnprd01.prod.outlook.com
- ([fe80::21c:a9f7:3c3f:c7e%5]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
- 02:21:30 +0000
-From: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-To: 'Dan Williams' <dan.j.williams@intel.com>, "'linux-cxl@vger.kernel.org'"
-	<linux-cxl@vger.kernel.org>
-CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-Subject: Assistance Needed with CXL Memory Region Creation
-Thread-Topic: Assistance Needed with CXL Memory Region Creation
-Thread-Index: AdtgqoH4aWCS14GjQ5iB7Jig2VQUVw==
-Date: Tue, 7 Jan 2025 02:21:30 +0000
-Message-ID:
- <OSYPR01MB53525FD64A9AFBAEEC1E19A390112@OSYPR01MB5352.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=cbcaba8f-a6a8-414c-9e62-39cbe14c497c;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2025-01-06T10:39:21Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
-x-shieldmailcheckerpolicyversion: FJ-ISEC-20181130-VDI-enc
-x-shieldmailcheckermailid: a53c087ac80142ddbff0425664023d1c
-x-securitypolicycheck: OK by SHieldMailChecker v2.6.2
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSYPR01MB5352:EE_|TYCPR01MB11753:EE_
-x-ms-office365-filtering-correlation-id: d14a149f-3df3-4eb6-eab2-08dd2ec1ff98
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?L3hBNEZwL295QlRIckJhcHcxQk52UlYwenEwV1FwOGJqaEZTSVJMYTcy?=
- =?iso-2022-jp?B?QWFBVkIrZ1FJWFVlWjRvaTJhK0FKTGhBUVJ0QWN3SDU1WU5qL29Jd09C?=
- =?iso-2022-jp?B?ZDJjWXh5Yko3cnpoY1Nud3EwbUJkOG1VZHYzMS9rWUhMUGxjd3IrN3Zt?=
- =?iso-2022-jp?B?cmhva0lhelE4d3grUEdubC9vL21MV0poTW92YmxjY0lrcHpNUXRnVXFF?=
- =?iso-2022-jp?B?bm1Eb04zZW5wS1d4OTlpN3h6ei9pWktSQ2c0ZFR6WEpaTGtuZmMxcE12?=
- =?iso-2022-jp?B?MDA5S3dNTDNwb1ZnRURadVpjanZrVUFteG5oSlZjMSs5b1VvSE5oMjA1?=
- =?iso-2022-jp?B?WWRYR0lySGExNFlvZGNiaTZLd2xFcjZZU3ZyekFvSmljanBPU1NpcERO?=
- =?iso-2022-jp?B?QXM5eU43eFJIT24ya2lpSlVvZFYrWk5pdEhvb3pYTnZBdnpENXJvZmRh?=
- =?iso-2022-jp?B?OW1KQnRRSGV1cUZPR2Z4S2lNc1JLQ3FJcHQvRTQ0TStnbks0Q1Z3N1Fj?=
- =?iso-2022-jp?B?eVhVS3Irb2RWSllscU1KTTVSZDdyclZXMHptWnpCWG5TVzRndXFBbmhq?=
- =?iso-2022-jp?B?c0E5Ym10a0R5eGl6djY1aWU1Q09vdTZPUEJTQ2hnU1NwN01BY1hRQ3l6?=
- =?iso-2022-jp?B?QnhMQ1E2cXRIb3A1ZG9YUXFNNUxzdjlJRnNiR1Z2cEg3SDVHMVQ0M0RQ?=
- =?iso-2022-jp?B?M0FRSFVmNXlPTE1uc2xoNE9ZR1JvN25UYjhYaitjM1ZWKzRCM2M1SU5J?=
- =?iso-2022-jp?B?MDIvZFdYclVBWTl0VVgvSG1TWHZBcWVKUU9CMCs4bUs3aVlWMFBlQ3FV?=
- =?iso-2022-jp?B?ZkxFZlQyVUd1cGFRVVhFRGZWTW45N1hGcmlEQlpCQUM1NmxDSVlsRGQy?=
- =?iso-2022-jp?B?RUNDRUZMbWQ1ZUszcjBNWnNTTCsrMldUaWRnNjBneWVxbHJWZFlxYkZV?=
- =?iso-2022-jp?B?TVBiUlRtY2lkelc1UEZFRXJjVE05RWdWV2ZwUVpFcmgrd2hheWJvOHRL?=
- =?iso-2022-jp?B?elRSdkVmTmdjeTlCdFNJTTc4VDRDVmtSbW53YTR3T3lNbFJ6eHRSNStk?=
- =?iso-2022-jp?B?YytqUW5TTGtkWGp4bGFhMVFkL3dnQlAydGh5aWhLNTJJb1pycUNDMlJt?=
- =?iso-2022-jp?B?REJmNkl4dnpDS0lrTEg2QmRkeU9aWmpXQlFNUUxReUpRblllVHlhdkRw?=
- =?iso-2022-jp?B?bFVpQUM0ZDZ1Vkt2OHYzRkZOQVV4TjBEVFcyNlZpb3lkdkthWW45WTU3?=
- =?iso-2022-jp?B?RzV6WmJnc1BnamlCTHdQQTdXSXh1WmNwMkplbDBINEZNZUNreWxDT1Ey?=
- =?iso-2022-jp?B?NXQ1UzV6WFMrU0o4bFBhdUI3OHJDanVMWFpaV2hySk1JeURDTFk4VW1a?=
- =?iso-2022-jp?B?QW9zcXBNT0E4a1dpS3kyMU10UU1xeU4yQzZ5NDE3bFNGMVp2eW5hOGJi?=
- =?iso-2022-jp?B?MmJjaDBuWFY5ekFwK1ROWmN1THJ0eWRySGdTMXkzUTgxVjVsak1yckJ5?=
- =?iso-2022-jp?B?MUJORUR1ajBqQ2VUKzZjbG16ZzdCUzdkRTZsUU5rOGVLUUpKVW1CdG1a?=
- =?iso-2022-jp?B?UnVsdmZmcUlVcnNvV1hqODUyOVo5T21jYXFCRFkvb0VMa1RZVjVjbytM?=
- =?iso-2022-jp?B?UDgrWUlrbnFLS0dPS1NHK1YySExjTFlDRyt1RFdIOUNQNkxaNXZQK0dm?=
- =?iso-2022-jp?B?aXBFcXJBOHF4bFd2NWlhcGNUdisyMjZsUllxY0FtMDdLN0luTDhWMHph?=
- =?iso-2022-jp?B?cUJ3SFFPU2s1ZXRaR0hoVlhFYUhUWlhRdjdXa0RqSFBFeittSG1qbVhl?=
- =?iso-2022-jp?B?ZWt3Y1RYbWQxeVQzK1lBWDZhbDl4RUJBUllhNXJTMG55cUJCMFZQQWdn?=
- =?iso-2022-jp?B?Tmt5QkhLRDlTWFQ2M1RCS3Q5QitBOVRDY2RrZjF0blVUZWtQUnJQWUFF?=
- =?iso-2022-jp?B?OG13Y3JSaTJQQ2l0c01sVXpTd0tXU2NBSFVJWXh1ek9VOVhKeDY0ZS84?=
- =?iso-2022-jp?B?RCtYWkF2Yzg1S1lKWVIyRmFDQUVqbCtzby82TlJuK29rUjBMUktYZVZO?=
- =?iso-2022-jp?B?d2FZV09KVFBaZTFERVZ2dGpOYVpKemM9?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSYPR01MB5352.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?MVliUW5mZjVYWHg4T0tqVjVlaFZMMDhBeHJ3QTIvQllNczUyRGRHeEFC?=
- =?iso-2022-jp?B?MmhuS1FPa29ZTy9MWlYxbzFrZGRRQ1NFNE1wUlJYTVV0OHg3UlFQL1c0?=
- =?iso-2022-jp?B?R3BnakFCd0p2THJya3pLNGc0bUs0bDZrMmFZMDBMdnZDb2dXYm9WcFRw?=
- =?iso-2022-jp?B?WE5wYWt5LzZiWDdNOWpQclQrczE1aUFtQW9lZ2lUVmtZVnNIRTJlVzZ4?=
- =?iso-2022-jp?B?bTlJNVNwOWpub0V3ZEU1cGlCZG1QdThjMDJNUEdPMGNGZUk5TUxLKzdm?=
- =?iso-2022-jp?B?ZU1xd2RrbUc5cEU2RWZHdXoyKzM3U0tISU5XdnM2cHNSaHYyRStiZnk3?=
- =?iso-2022-jp?B?K21ROHB1ZkRnV3U0cjdxa0RKczV0YWlxcWJuQlM4ckdkU3RzSzJ1cGZx?=
- =?iso-2022-jp?B?VkgvRno4ZzJBK0FkM2MzVzMzOXQyaVBweGhiaDZ4MHh2UkFOUlhVeVVG?=
- =?iso-2022-jp?B?SUxJNXRRSk51N2VsTWVKNTV6a3hEMnlOYVVlOC9uNTRweFVzT1JXL2xo?=
- =?iso-2022-jp?B?ZzBMVWlGbTE0V0JlL2Voc0kxUUd5aU40S3BubVd5OXQzT3BNZE84NkZh?=
- =?iso-2022-jp?B?Ykk1NE5Kc1cvNHZwdjVQMkdBUktWU1VGcGVWWnloN3FpUHpTZzNSSWh0?=
- =?iso-2022-jp?B?cUxQVmllRUxSZm9sUFczSTVWM21RZUs2Qjg4VDdSUXM2U25idTRhaXpK?=
- =?iso-2022-jp?B?RHlsYVNIVVlqbStSTjRLZVpTbWJJWHNRakNHcEpSOXRDd3R1RXVmTzZz?=
- =?iso-2022-jp?B?MW51ZWlqYUhoR0hNN25VUDI2MExqWmtMRmF4MjVsM29tWWh4N2JFRS94?=
- =?iso-2022-jp?B?a203cmsvYXRIN21pUnZnT2c1RnRROXFTTnJiQjNiNmhJSDd4TXBKTWZn?=
- =?iso-2022-jp?B?Mk5MZStqZGVwZjJoVGZFK1lnY3NTYW92eUxHelJKd1loUVZ4ZG42Y1ZP?=
- =?iso-2022-jp?B?Y1VUZFlvMHIxeHhvdE9iQUtCb0krajV0OVV0ZDg0YnovZlBpZGVhMDV0?=
- =?iso-2022-jp?B?R1hYbnBTM3JMNmp1NzJ5UjNicUxsRlptNGJKM1ptMGdoOHhkVzlaK1lt?=
- =?iso-2022-jp?B?OWdYMVVBV3c5K1JTNEhYekdxY1N0R29tY2RrSUxSYzRkY0Y5RUoyVnYz?=
- =?iso-2022-jp?B?ejB6dnVsODlBc1FuYUVGYlBQTmhtSDhqZUI3YkU1V3VBdlpsN01Ncmoz?=
- =?iso-2022-jp?B?WkhtOFhwTWJTNTJWK2JhMVluUWF0bVRvQWNzWUtPdkZhNjRycjlwN1ZQ?=
- =?iso-2022-jp?B?dWNFbEFYNk9lamVPM1VnUW5aOTlvUlJRRFZuM285YnEzUHRSREg4dkQ0?=
- =?iso-2022-jp?B?bGFJckFKSzZwS3hPTVdLZ3hoQUd3K1BwOFBpeGhtNkZQRXc0T1h1eGRX?=
- =?iso-2022-jp?B?b3VBd1RaWXFjek1sd3dPbTZCRFZaQ3ozSklIUktMK2JnVkRvUmVtV0VI?=
- =?iso-2022-jp?B?dG5PV0JZdHJidGxtOFNoTE5oRCtZb0NTZ0VDSTl6R3RSdFdXTEprTWdy?=
- =?iso-2022-jp?B?N1psTUs0TGtJVllMejZpdWQ4NlVyVVI0bE9EN2tKZEJKblBaODBJdzVj?=
- =?iso-2022-jp?B?NkE5VDIwTVg4RHBUSTFjNnhPOENNbm5lY3FpU0swRW5yTFNmUXU3YXlP?=
- =?iso-2022-jp?B?QkY5Sld1dDVLUkxhZUJ3SmRHaDUwY0s1VS9ZR3AxYjUzTmhnK1dSMkIx?=
- =?iso-2022-jp?B?WmQ0bFdFQmI4MXBjQkdsdnk4RXpIWXVpQkVtaU41VTNwakNMQkdvMStm?=
- =?iso-2022-jp?B?Q2V5NXhSdjNYTDV3S3g0QjlEY21Wd0ZXM0x1RGh0ZFBaWHluaDh4Yytk?=
- =?iso-2022-jp?B?QzNvamJJcG5vZ0VybnpLTFZHMEZvYnFudlNWbWNjOStkOEdMdnEzNmZ6?=
- =?iso-2022-jp?B?aEIrU1JueFBpekdiZjZBRXIzNURYTGY3endrYWl6MFdsUXJFNE5IdU9L?=
- =?iso-2022-jp?B?b1RqZ0w1SGhCQnl1anpTUmxtM28rd0RpUlpzeGh3dStvUXZnNE96Mjly?=
- =?iso-2022-jp?B?QzVOMXZJbWs1Z0FCaGdOeG9GNFpZL05SZVBBVFc2cWlldUxzTVEvQmJ3?=
- =?iso-2022-jp?B?Z0NxSDVtVHFCa0RWajNhYXcvS2JOUHF1aVFmRW1McGdsWXhydHRCSkdm?=
- =?iso-2022-jp?B?VDhtZGFMaHNGSmhoMWdIUzhTME56OWpIUVJJbnQzL21CUnhiTEtmSVNB?=
- =?iso-2022-jp?B?bjFmdTdpbGhDNWZ3VVhqYUFISjdxNFlMTklTZlFSUFJ4Wi9IYk1wdXVv?=
- =?iso-2022-jp?B?V2tnQmM4VVJuRHBhdGRVQkNNYVRBcjB3ek9jdkRpZndURERxd2pxeFNY?=
- =?iso-2022-jp?B?elI0UQ==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X43t5dv7g5WgJoP9aPIIljf0v/lCzc213uJ164W4vxs=;
+ b=TqZ1yjz/QkTwcGeyUpy5VjLluVyorCgEIDsX87fD9rVT8nTyYvXCoocEX6+nHInSCbD/J2dcILL7eXItdbU3QRHuL8qMciRTilHitINS5mM5txPyazSY14tGyItq8fLLEVsp0HKxzCf9EzgD+ZsqlblHeQwwonOHsnzPg4KbQoCnvYCJlmlOdgzRs08nyrqhLQlCa20u6KqBQcCUvDsdQW9umtw8DBnWBjpWCw4K4+DUn0I1WXpuU+//oqL78zEtCx1lFrcxW650voNI0fBydRMddFLqom+RQs0F7mw/Hhd9cVP+637KzmweY6r8XoDedO63s9McSR0JhtQmV0NTWA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ CY5PR12MB6129.namprd12.prod.outlook.com (2603:10b6:930:27::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8314.15; Tue, 7 Jan 2025 03:42:58 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
+ 03:42:58 +0000
+From: Alistair Popple <apopple@nvidia.com>
+To: akpm@linux-foundation.org,
+	dan.j.williams@intel.com,
+	linux-mm@kvack.org
+Cc: Alistair Popple <apopple@nvidia.com>,
+	lina@asahilina.net,
+	zhang.lyra@gmail.com,
+	gerald.schaefer@linux.ibm.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	logang@deltatee.com,
+	bhelgaas@google.com,
+	jack@suse.cz,
+	jgg@ziepe.ca,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	dave.hansen@linux.intel.com,
+	ira.weiny@intel.com,
+	willy@infradead.org,
+	djwong@kernel.org,
+	tytso@mit.edu,
+	linmiaohe@huawei.com,
+	david@redhat.com,
+	peterx@redhat.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	jhubbard@nvidia.com,
+	hch@lst.de,
+	david@fromorbit.com
+Subject: [PATCH v5 00/25] fs/dax: Fix ZONE_DEVICE page reference counts
+Date: Tue,  7 Jan 2025 14:42:16 +1100
+Message-ID: <cover.425da7c4e76c2749d0ad1734f972b06114e02d52.1736221254.git-series.apopple@nvidia.com>
+X-Mailer: git-send-email 2.45.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SY6PR01CA0088.ausprd01.prod.outlook.com
+ (2603:10c6:10:110::21) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	JuS6HvGxPyD+stCHkTd6OTMcT4GL1yzgfOo9VOIfdJxlXEKcLqYZPU0otrptIw4kuKowCeRcz/2bdJEcx5ugM1V5SDr6BzNazHcBVMUllZMp6KpkPsKEhdEHKBE+gNDk2xuJ6y6wfEGBALrlgiddb9DIDBmgRkb4+qHPZX8ZDs+DsvEE/xgJNK4jTvMJBOgq6Jlx+TN9nxqJW3NYYV18fAaQj150wx2Uk85s//PzXHDcoUlT4lFy+xynq798jBvvnnML7iXVyj/gGJsQJk6ORLyxz3wLytLYZLCioJ4M4Ft08Q9G8XmxMx4IYWHJXINvJobBmiDhD6kK6sLM5QCKTOuaW1aZjI+B6ZwCt6u3J0TKjk/ir7RIZ1i7pIuCiIRut2FTw4tznUPh5SyhIwVtNaiR15bzwrJrsUtgaVyMaVMZ4I2lccjTamEYmO5MMElGI0HWl4JFv3QeCV4cyLFGQFIVhAXGHmG2YVsGD3qskYzn7C/4wUSkRfppGjFZaEkFTgN59jIYS7ykFvwyQ0zVfCILTOoI2l5/98f3eEUuib9kB1I1WQ8UOfmAO/F/nsI9wj6v5JDT7HzlThp+ZBtpLkCNhTOWzWqcRwV4LAhSAx/wBr2cb3/438dxkCtVRgbY
-X-OriginatorOrg: fujitsu.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|CY5PR12MB6129:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b8aa9e0-9fdc-453b-7c70-08dd2ecd6083
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RG12XH8EZ18D9Qd53itNRacFsW/mM+lY4I2Q5nh5oy6sp8omtQ6tNUsI+4zt?=
+ =?us-ascii?Q?BqKa8QAqrkKKv0Q31MTHfac+2ycW43wrsSHvsMBeOUozq/9w8TevQoJ+L3aG?=
+ =?us-ascii?Q?I0GboJL8MYGr6oB4NueD2utu2xJ+xTy0ECuqTLWPAdJxZjCdmiAei7Y86Y7J?=
+ =?us-ascii?Q?9kGkGUNS+a+aImzr4AmSmuk2rYJFG9pVdrjzhOKNo/0QQ9uoogl+y8txMxmQ?=
+ =?us-ascii?Q?8SyLiDCy91FcEzNXQhlILdKwgbappR8pLBDzAe4AxY8mU3hjq77DDasQms7C?=
+ =?us-ascii?Q?sLdOlnaazhmaSV73q8pVPMJ8wWJ0GAMDMHasSaDmW301ywRNGaCIFc9eAM2B?=
+ =?us-ascii?Q?dSU+j5mvtVZ7UssbgAqqmj7+T+yYnl1H9INwZQT/miuQXdAk8JN2umCNvplO?=
+ =?us-ascii?Q?aEd3f92bLOJXs/3A0dqiyU1h6D8yInmMNq+Zg9L+s6dWpXePMXhSrvayplHq?=
+ =?us-ascii?Q?wJhFVamvpbrFU2iPkhCb4BD3UskaSL5KGhkHUhxTVcjpL5i+Iir210Or091T?=
+ =?us-ascii?Q?7BWb2jXNRFGnPGjqYteFmlHtB51bRvypMehobTYeatm9j2Uh+x+Q1/mhxT49?=
+ =?us-ascii?Q?BwyA/hewXxmmQ4OVRwJXWS8aLbU38jbbjgUBMR8V8989rIZjFanBMtEebfi1?=
+ =?us-ascii?Q?cuA41ZnoDuR/gBJCUEGPdbwGJECam1Au1hIhv6e7HZ8rEFsROVOpSpwo1XWO?=
+ =?us-ascii?Q?ybJpOHTkyKot8sP1ikhGf5uwYoh2YS28Y1SSZEfCfYCrcNI73KHIoas3kXdb?=
+ =?us-ascii?Q?zyngyj2J6uqGaMOVgpEGhIXaiDvnrK6gvzWxvsHTghS5cqvDcToAbYTI/fBl?=
+ =?us-ascii?Q?aHanlOkG/oCogSTUYlIUP9uR0noKIvUMhwktsi4NXOxJi8ErhL4wVGvD5flX?=
+ =?us-ascii?Q?6AMb7WpXNsaMp8mxfWMwV2xGjUveDtnc2WOM6mR6SVuhYJBx1XWa2V7+wCKu?=
+ =?us-ascii?Q?rFcSbSlQA9FuLRiNhMNI8uysUnqC0nhOHx1CSxzS6twO5l9l99Cu1eVxPoKf?=
+ =?us-ascii?Q?be/M7dQoAR9qCfxOXHojNBirBQcey6FQe89sXg2PsV1jm6TZU+V9yu+UpL09?=
+ =?us-ascii?Q?tyOJOvUG678UkYO39qcngb6LkF9OIG7qcV83MzFbFgFldDFm8SQ3YzJhnCc9?=
+ =?us-ascii?Q?ePO95sa75UymrBt0bXLS/cZvaKxuE8IsUId3c7ug0mXQ6Ll0pXMMXYGh0HAJ?=
+ =?us-ascii?Q?jOJjIMxdXeCqRxRIv20ATeAILI1++jL4tKNIoBCZwaO5DA6QlY3wBavn0J0Q?=
+ =?us-ascii?Q?J2ssV3/H/NAQFWSLHLDD8k3DcH1glnmFCmbsflIIV5X4QfrkX8uGx9iOPrFm?=
+ =?us-ascii?Q?R4KSYYH1ryZy9mwnJMG8UoFsCY+htt0obMUloNZ6izbB9TUdFHqJvR72HkWD?=
+ =?us-ascii?Q?GZmNCHHIV72Gfc3vdddowtW0bHEB?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nHMqhHTrqQkcwNQiCbVbZwin0LvCmEkO9+ePw28CmBNY5+gRsZaY45pE6BW1?=
+ =?us-ascii?Q?x+be1CceTjom+7ae/xL9vZGhnD+0lNRfb55jKstKZ0MRvmkQq6Q5x4XNcZ+c?=
+ =?us-ascii?Q?1tT5+vQG+vfKgQZzHIEolvSZvE3lw3X3+OKR2zqKEnwJ9TRCRyfus+khQRe4?=
+ =?us-ascii?Q?/MI4fbhuFI9r5Lum3zMSlz+oBvQFac67NgLqnSEfLgkFpDV5acRDzsAXX3U4?=
+ =?us-ascii?Q?HWRnCGVeFUS2gxvYB1sHYK2lp3CL0iPUZo9EEL4bYPnitpcJXQ/XCQuficuj?=
+ =?us-ascii?Q?OxCF703ZBGBO3y/9nJe0M+5ox7IY0eQ2WwHk37MfLtahfQ4eFU6fMkEqqbuW?=
+ =?us-ascii?Q?opBCNgZ7SrniNTktTEHZFgDgwoJ+SqXpth9ad8zpo/BE28Jup7X0bFt2djDV?=
+ =?us-ascii?Q?PcX/Wcu1vmX+FvfWoa3uEhHH39IzeEaiP0PsNbJ4l7B/uLhhYZRQngS8PraW?=
+ =?us-ascii?Q?5s0vXHHFxjNCFVx/e86Zzc/lSHs5gtIaHHlbjdHgiDavbS88suzfvopuq4g3?=
+ =?us-ascii?Q?I/4+T8LkqA3HUqbG3Zf2qiy/GIgddi0UyRFCsOy42EeDdibgxe9XZ0A5DZJJ?=
+ =?us-ascii?Q?6VYeSrRp/tYz+q2/JULgSO4eHvMeyxb1pdbRz7AFz032iEYel6KxcaUd46+2?=
+ =?us-ascii?Q?DZFpAORHkMgC7w01D9rWHyC8xPS8z474XHL1y9ZJGkmtsmHnQXOeBN/KoJAU?=
+ =?us-ascii?Q?8A8zbRriKjOxBGHVM7W1tpwtXfMyuSA9T6Bvw1/KW4nojP4GYh9IjPrbBNX5?=
+ =?us-ascii?Q?BJaogzSGSqsrbdDK6CR3KmrfqgytBwYYN4Z9AwKCBpBY3Aiy95IyWTEZrLfz?=
+ =?us-ascii?Q?+nZZ+IR68E6PI+FpCWU/tS3ZIJkU0Y1Ps2Pgkmg4eOKpVMKcfK2d8sD+NtTH?=
+ =?us-ascii?Q?MSHQBEyFaGrzoB97dvaUkA2+1H/FacQet8ZysRGV45oCZrViNkOFI3EDFv4E?=
+ =?us-ascii?Q?HU4aGoSes8WRPl6tvcoNgOCFSyZh2lHWYnYT58VFXBGf7FIJKfESPpV4ozwJ?=
+ =?us-ascii?Q?EVFImUTWdTPqIdicrmEY50cIgYsVGhanOYdwbbZcuRBsmVXERIGqubrFB3qF?=
+ =?us-ascii?Q?yCeSrlO4bQgRRQOnsSTnogIpTJ2pLedSUgUNQeLivu3brlu62DWDuLu0eQVP?=
+ =?us-ascii?Q?N28QH1it/358/I6vhRt+B7+1wXwzAzRh4HBWpNFnxdxblf2KJ34qjSNbFmBx?=
+ =?us-ascii?Q?7rrIf0JQCC/aRcxrLc2clHsAIkYQN/SLpxopbDbWwwewDw6bbgYox2xG6xen?=
+ =?us-ascii?Q?AbyvfB6wOdMWFdQDR0TXg8nh6WOwJDS5QFLB7NlJGFc9aL66T51bvyR8K+Qb?=
+ =?us-ascii?Q?ZuZFZiNE06+E5gRim7xFo/N6biDyzD3YibwvsLOgexVYEHAA6X7us93ywITi?=
+ =?us-ascii?Q?KSPEb+wjr0VE3KxXBcatfZ6iQGjq5aLavDgh6RhqBcPC3snXkStx422IXCY0?=
+ =?us-ascii?Q?RM5wMKc7EbFsWh78uQz1UBGPF78o4sNXHfxo29+Zzgd4UU2BnIaz1Gx3PSGA?=
+ =?us-ascii?Q?eOn+AUc/OwM8C0zZFugiYhLNsy26IEtLgX3yYmACW0fIvyFSJ1Hcw7RPL5Gh?=
+ =?us-ascii?Q?HfujfsmRhh9uawAQesOV3oWV97DgGU+ib2vCkCnv?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b8aa9e0-9fdc-453b-7c70-08dd2ecd6083
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSYPR01MB5352.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d14a149f-3df3-4eb6-eab2-08dd2ec1ff98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2025 02:21:30.7693
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 03:42:58.0975
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ujBIMY+OmCIW3pp7sUxiUKAW6qvhRq8ExfA9PW2D8VzdyuTgP0SjpbmTRulpv0gaf/L6aTxzjPdoMobDcEZrlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11753
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EbU9hfeg8hAqrC4MX1phw5kN4H0MhVtNDctpDEILFpF/E2x6YKEXvS9/TrAiYvsuJAy/saQPICBhMxkN2d0EaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6129
 
-Hello,
+Main updates since v4:
 
-I hope this message finds you well. I have a question regarding the use of =
-CXL memory based
-on the v2.0 specification, and I would appreciate any assistance you can pr=
-ovide.
+ - Removed most of the devdax/fsdax checks in fs/proc/task_mmu.c. This
+   means smaps/pagemap may contain DAX pages.
 
-I recently acquired a real machine equipped with actual CXL memory, and I'm=
- attempting to
-create a region using the "cxl create-region" command.
-However, I encountered an issue where the command returns an ERANGE error.
-Upon investigation, I discovered that the get_free_mem_region() function in=
- kernel/resource.c
-is returning this error.
+ - Fixed rmap accounting of PUD mapped pages.
 
-It seems that the function is unable to allocate an area from CXL Window 0 =
-due to it being "Soft Reserved."
-Below is the relevant section from /proc/iomem:
-=3D=3D=3D=3D
-89d500000-89fffffff : Reserved
-8a0000000-189fffffff : CXL Window 0
-  8a0000000-189fffffff : Soft Reserved  ------!!!!
-fd00000000-fd03ffffff : Reserved
-=3D=3D=3D=3D=3D
+ - Minor code clean-ups.
 
-In contrast, when using a QEMU CXL emulation environment, there are no reso=
-urces under CXL Window 0,=20
-allowing get_free_mem_region() to succeed and enabling region creation:
-=3D=3D=3D=3D=3D
-100000000-47fffffff : System RAM
-a90000000-e8fffffff : CXL Window 0 <--- there is no resource.
-ec0000000-bfffffffff : PCI Bus 0000:00
-c000000000-c00000ffff : PCI Bus 0000:0c
-=3D=3D=3D=3D=3D
+Main updates since v3:
 
-From my understanding, the Soft Reserved area originates from EFI_MEMORY_SP=
-.=20
-Additionally, the CXL Memory Device SW Guide Rev1.1(*) says the followings
+ - Rebased onto next-20241216. The rebase wasn't too difficult, but in
+   the interests of getting this out sooner for Andrew to look at as
+   requested by him I have yet to extensively build/run test this
+   version of the series.
+
+ - Fixed a bunch of build breakages reported by John Hubbard and the
+   kernel test robot due to various combinations of CONFIG options.
+
+ - Split the rmap changes into a separate patch as suggested by David H.
+
+ - Reworded the description for the P2PDMA change.
+
+Main updates since v2:
+
+ - Rename the DAX specific dax_insert_XXX functions to vmf_insert_XXX
+   and have them pass the vmf struct.
+
+ - Separate out the device DAX changes.
+
+ - Restore the page share mapping counting and associated warnings.
+
+ - Rework truncate to require file-systems to have previously called
+   dax_break_layout() to remove the address space mapping for a
+   page. This found several bugs which are fixed by the first half of
+   the series. The motivation for this was initially to allow the FS
+   DAX page-cache mappings to hold a reference on the page.
+
+   However that turned out to be a dead-end (see the comments on patch
+   21), but it found several bugs and I think overall it is an
+   improvement so I have left it here.
+
+Device and FS DAX pages have always maintained their own page
+reference counts without following the normal rules for page reference
+counting. In particular pages are considered free when the refcount
+hits one rather than zero and refcounts are not added when mapping the
+page.
+
+Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
+mechanism for allowing GUP to hold references on the page (see
+get_dev_pagemap). However there doesn't seem to be any reason why FS
+DAX pages need their own reference counting scheme.
+
+By treating the refcounts on these pages the same way as normal pages
+we can remove a lot of special checks. In particular pXd_trans_huge()
+becomes the same as pXd_leaf(), although I haven't made that change
+here. It also frees up a valuable SW define PTE bit on architectures
+that have devmap PTE bits defined.
+
+It also almost certainly allows further clean-up of the devmap managed
+functions, but I have left that as a future improvment. It also
+enables support for compound ZONE_DEVICE pages which is one of my
+primary motivators for doing this work.
+
+Signed-off-by: Alistair Popple <apopple@nvidia.com>
+
 ---
-The only cases where it is recommended to omit the EFI_MEMORY_SP attribute =
-are those
-where the system contains exclusively CXL memory, or where CXL memory is in=
-terleaved
-with DDR memory or where the CXL memory is required to boot.
-----
-Therefore I think this /proc/iomem map is natural for the real machine.
-And, I expected a region to be created from the Soft Reserved area, but the=
- actual behavior differs.
 
-I'm confused why the kernel/driver rejects creating a region in the Soft Re=
-served area, and I have
-many questions.
+Cc: lina@asahilina.net
+Cc: zhang.lyra@gmail.com
+Cc: gerald.schaefer@linux.ibm.com
+Cc: dan.j.williams@intel.com
+Cc: vishal.l.verma@intel.com
+Cc: dave.jiang@intel.com
+Cc: logang@deltatee.com
+Cc: bhelgaas@google.com
+Cc: jack@suse.cz
+Cc: jgg@ziepe.ca
+Cc: catalin.marinas@arm.com
+Cc: will@kernel.org
+Cc: mpe@ellerman.id.au
+Cc: npiggin@gmail.com
+Cc: dave.hansen@linux.intel.com
+Cc: ira.weiny@intel.com
+Cc: willy@infradead.org
+Cc: djwong@kernel.org
+Cc: tytso@mit.edu
+Cc: linmiaohe@huawei.com
+Cc: david@redhat.com
+Cc: peterx@redhat.com
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: jhubbard@nvidia.com
+Cc: hch@lst.de
+Cc: david@fromorbit.com
 
-1. Is this behavior is intended?
-2. If so, what steps are necessary to create a region in the Soft Reserved =
-area?
-3. Alternatively, is the Soft Reserved area not meant for region creation?
+Alistair Popple (25):
+  fuse: Fix dax truncate/punch_hole fault path
+  fs/dax: Return unmapped busy pages from dax_layout_busy_page_range()
+  fs/dax: Don't skip locked entries when scanning entries
+  fs/dax: Refactor wait for dax idle page
+  fs/dax: Create a common implementation to break DAX layouts
+  fs/dax: Always remove DAX page-cache entries when breaking layouts
+  fs/dax: Ensure all pages are idle prior to filesystem unmount
+  fs/dax: Remove PAGE_MAPPING_DAX_SHARED mapping flag
+  mm/gup: Remove redundant check for PCI P2PDMA page
+  mm/mm_init: Move p2pdma page refcount initialisation to p2pdma
+  mm: Allow compound zone device pages
+  mm/memory: Enhance insert_page_into_pte_locked() to create writable mappings
+  mm/memory: Add vmf_insert_page_mkwrite()
+  rmap: Add support for PUD sized mappings to rmap
+  huge_memory: Add vmf_insert_folio_pud()
+  huge_memory: Add vmf_insert_folio_pmd()
+  memremap: Add is_devdax_page() and is_fsdax_page() helpers
+  mm/gup: Don't allow FOLL_LONGTERM pinning of FS DAX pages
+  proc/task_mmu: Mark devdax and fsdax pages as always unpinned
+  mm/mlock: Skip ZONE_DEVICE PMDs during mlock
+  fs/dax: Properly refcount fs dax pages
+  device/dax: Properly refcount device dax pages when mapping
+  mm: Remove pXX_devmap callers
+  mm: Remove devmap related functions and page table bits
+  Revert "riscv: mm: Add support for ZONE_DEVICE"
 
-(*)https://cdrdv2-public.intel.com/643805/643805_CXL_Memory_Device_SW_Guide=
-_Rev1_1.pdf
+ Documentation/mm/arch_pgtable_helpers.rst     |   6 +-
+ arch/arm64/Kconfig                            |   1 +-
+ arch/arm64/include/asm/pgtable-prot.h         |   1 +-
+ arch/arm64/include/asm/pgtable.h              |  24 +-
+ arch/powerpc/Kconfig                          |   1 +-
+ arch/powerpc/include/asm/book3s/64/hash-4k.h  |   6 +-
+ arch/powerpc/include/asm/book3s/64/hash-64k.h |   7 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  52 +---
+ arch/powerpc/include/asm/book3s/64/radix.h    |  14 +-
+ arch/powerpc/mm/book3s64/hash_pgtable.c       |   3 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |   8 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |   5 +-
+ arch/powerpc/mm/pgtable.c                     |   2 +-
+ arch/riscv/Kconfig                            |   1 +-
+ arch/riscv/include/asm/pgtable-64.h           |  20 +-
+ arch/riscv/include/asm/pgtable-bits.h         |   1 +-
+ arch/riscv/include/asm/pgtable.h              |  17 +-
+ arch/x86/Kconfig                              |   1 +-
+ arch/x86/include/asm/pgtable.h                |  51 +---
+ arch/x86/include/asm/pgtable_types.h          |   5 +-
+ drivers/dax/device.c                          |  15 +-
+ drivers/gpu/drm/nouveau/nouveau_dmem.c        |   3 +-
+ drivers/nvdimm/pmem.c                         |   4 +-
+ drivers/pci/p2pdma.c                          |  19 +-
+ fs/dax.c                                      | 363 ++++++++++++++-----
+ fs/ext4/inode.c                               |  43 +--
+ fs/fuse/dax.c                                 |  35 +--
+ fs/fuse/virtio_fs.c                           |   3 +-
+ fs/proc/task_mmu.c                            |   2 +-
+ fs/userfaultfd.c                              |   2 +-
+ fs/xfs/xfs_inode.c                            |  40 +-
+ fs/xfs/xfs_inode.h                            |   3 +-
+ fs/xfs/xfs_super.c                            |  18 +-
+ include/linux/dax.h                           |  37 ++-
+ include/linux/huge_mm.h                       |  12 +-
+ include/linux/memremap.h                      |  28 +-
+ include/linux/migrate.h                       |   4 +-
+ include/linux/mm.h                            |  40 +--
+ include/linux/mm_types.h                      |  14 +-
+ include/linux/mmzone.h                        |  12 +-
+ include/linux/page-flags.h                    |   6 +-
+ include/linux/pfn_t.h                         |  20 +-
+ include/linux/pgtable.h                       |  21 +-
+ include/linux/rmap.h                          |  15 +-
+ lib/test_hmm.c                                |   3 +-
+ mm/Kconfig                                    |   4 +-
+ mm/debug_vm_pgtable.c                         |  59 +---
+ mm/gup.c                                      | 176 +---------
+ mm/hmm.c                                      |  12 +-
+ mm/huge_memory.c                              | 220 +++++++-----
+ mm/internal.h                                 |   2 +-
+ mm/khugepaged.c                               |   2 +-
+ mm/madvise.c                                  |   8 +-
+ mm/mapping_dirty_helpers.c                    |   4 +-
+ mm/memory-failure.c                           |   6 +-
+ mm/memory.c                                   | 118 ++++--
+ mm/memremap.c                                 |  59 +--
+ mm/migrate_device.c                           |   9 +-
+ mm/mlock.c                                    |   2 +-
+ mm/mm_init.c                                  |  23 +-
+ mm/mprotect.c                                 |   2 +-
+ mm/mremap.c                                   |   5 +-
+ mm/page_vma_mapped.c                          |   5 +-
+ mm/pagewalk.c                                 |  14 +-
+ mm/pgtable-generic.c                          |   7 +-
+ mm/rmap.c                                     |  65 ++-
+ mm/swap.c                                     |   2 +-
+ mm/truncate.c                                 |  16 +-
+ mm/userfaultfd.c                              |   5 +-
+ mm/vmscan.c                                   |   5 +-
+ 70 files changed, 889 insertions(+), 929 deletions(-)
 
-Thanks,
----
-Yasunori Goto
-
+base-commit: e25c8d66f6786300b680866c0e0139981273feba
+-- 
+git-series 0.9.1
