@@ -1,62 +1,62 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D081F37DD
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 18:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183BC1F2C22
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 18:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736275287; cv=none; b=YwXWk5bwSBebri4MeWrWXQYIv/E5HpD73rWaRFYO2G4yyFmAscnSIdtXekcT+o/r1uKooG2hxvrc3vfPkGZpFfRp7v2eij6OyWzfWTiUxffU7gvccS6TGMy5hfw+WumvIxgx1TtWUBtUV9BOJdmoxhgs1ER2ep+NmaV6EX96Xco=
+	t=1736275501; cv=none; b=f43puCEwYcwXOQuUKB4CoarbEQ2aQYKTORMvbiRboY96V/8s2xA/FP+cTyokGtos3JNvamnvGlM8FTR3NBQMOsWpu8V/+VfEKorMzMuunyX1JDhLGNSPxYNiBs+7PHJB8KcuQXleyFDfJFvFceepU/Pa4juOfAPGPIYy5vUgP2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736275287; c=relaxed/simple;
-	bh=CUhT0qKasm/krOGKnxRhke1zSYMTe8IDIt8D27WS5KQ=;
+	s=arc-20240116; t=1736275501; c=relaxed/simple;
+	bh=OseuZAjSKoHRHFmSV5YXoYm9Axuvzg8EqRYzM5Ic8oI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpXM7Lb/MYKx/c2sOpwAR0kQ962z4k6UJvEE+wtcX5MM6sWAGp329Pgic4PXIU0dXlf63YK5jkO2Fz8i9fW4BUrzDnCaWzhUKkknVsqrYrkK8Wcpbs7xZ6jqDhcabmo879wcgx3wwG0Jpv+QyvVmFHO+DXpETlFzAi8kzAWsvqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=M8shJoam; arc=none smtp.client-ip=209.85.160.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=ueulF7lOAU2OnjCaJE5f2itxl9SVj7qYj6c1Sjg8eYWP+2V5RYccwmNvfml9hASGBnH4sGCvsveqs+64/7L3tKjXnQs0SvSAX5CI/iGIx07+q29EKFbTpyWOYF4xGcB9RMp7QtK+v2YvRjnRAsqP4Je2WW5AjrLEo40JopByi2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=oo71dsmD; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="M8shJoam"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-467bc28277eso132447611cf.1
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 10:41:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="oo71dsmD"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6dd01781b56so90946656d6.0
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 10:44:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736275283; x=1736880083; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1736275499; x=1736880299; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pOa6RldRQLg+SPTe+trTGJEbRJpuxW7J3qUfJvoZNGQ=;
-        b=M8shJoam2T/7TOHtOeViYb2aI3fkorQk58HXE0ATXLi+MT/p4wtJTVP8CMycXhRqoK
-         SrvUj8M2y8MIAEXnk1RTYNcLXTFdFh9qWS2Uws6w3agYz2/QlcFTqeVpXIyriglAxu6l
-         jeUgiksKTK3vYeAUq9jHqX9Fi8Ui2WpkMrANDxWst7DipVg8prCuKs4LUob8vBcgKFGx
-         04t+C00ZJ0dE+1Qm/tRUBwsm2DXhoqRvjum81bTq+vscngjjloNnrmHLIcZg44L5tLWk
-         dA6L4cMPpFVpVIZIP1ED87rvXnMaZAyHT+d04pKjpxRGyETVuTeIwSWoFHmKXcSWCba4
-         OfnQ==
+        bh=sz8+RHY/rv2VkVwYEL7YWz+C8Z9qf02KGrZ5BViTHk4=;
+        b=oo71dsmD3CevBmayauwc1znSehcawkwIu6P12LwiE6S3FrrnXXB/byAwqqGSJg5o2H
+         mzWG+VUvRYA7slni1Y99dG8TXXhwNJshrsjGlURC736mrkm/maiRdbdzZkGSbe/QbJeF
+         i7Qo5TXmEZzjmKPa242wt69LtUEbWEQPcD0U7vCC1xUIemRUzEwiEgW3h6GcE1XOr5u7
+         Pe9UFCpmiV6jG3YaxJnKLVYVnz2/OV4ASuTfP+djNeae3wlcwGwJG+Ce/Hv9MYQQs+yG
+         E4U6Hvu8Q/H2foC7fpOPq9gFRIoa0a/0wCCq7tH8pGKgCHzY2ADsFvoXVMFlWRqGNvHG
+         V+uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736275283; x=1736880083;
+        d=1e100.net; s=20230601; t=1736275499; x=1736880299;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pOa6RldRQLg+SPTe+trTGJEbRJpuxW7J3qUfJvoZNGQ=;
-        b=u3GOXBE6oHsUJq37MubgzY6rkshK70cSVNZHEjTs8eBzhYH3Du1wOKgsH7cujk1VUH
-         YeATYkTuOb2JlwVG8olyklEl+PpR6SHZ7FT54+Cqv/zBUbdcq2eezgOfsqRx4izMqqqR
-         5d9L1jswwe7ENZkUAEp2LcmHfyIBkStC7o8P217ORerqPiuLLGG0Ul2MYqdT3lKgp0TA
-         QBeA0/FbmyWvtWZGjQslY/Jw0LjopPmOu56ZARYRNL2SjjN9+1uVqTDpUt5fqjf3OdTl
-         nGdeBUiE4XQVg4vmnTaqRPfvVOUEEYl6RTDc30RIXYcJpx6KBmewOQOJ63V4SmdcIqf1
-         SbAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKyeGhjRtncCHpnw0i0Sap+oXxz6DqjtKF9Nroie9odHPfmeo+TbFR3kEd5Du3DzdGyYoCwUGef3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLl+ZX1wNwLu0D9yX20KhsSb+Lz6cmOAuYHxg//0iVBB/uAwcp
-	6US3PwfV8s3Wq9vndYUdu1Pb93bOXVJRKA316trwfELRKYjUku6hBQBpJG1ER78=
-X-Gm-Gg: ASbGncuFDMB/jpy6W9AXcNYi3pQoKBzEmHRPOiDFwopy9YMr4MBAIL1OLrO7hMKqwNT
-	oNDTgumvW7cmP+gkB73IGAu3n28So6rKBFE7ApXT+NmUhsNSmTJpWe2FQXHim6pUia6GRgB0I4A
-	+rjcNM2xs26ERaJjDUIk+w4FNSoP+o5JtSwuGpF9kG0ChmYe4/imZD8DLTf+HjGNNzzVNf5sgUB
-	gek/qWAnGlMV2viWWfJmHwa6u8N9+HceNvdjTMAiL9ay+YxggH1VeF5cVQ9KyaSU7y4OBA/PaD4
-	K0uVp6Mw9+cmBedGIRpcPgu2jj1ly7UmWLJFfOg=
-X-Google-Smtp-Source: AGHT+IGH8CVHv0Avna17jMkfb3V14jhcj0KRMPhlO9rptqrNtxqwztrpyCjpSZqfnZM96SDUNNwW/g==
-X-Received: by 2002:a05:622a:28b:b0:467:63a5:fb9c with SMTP id d75a77b69052e-46a4a98a203mr1178673321cf.44.1736275282988;
-        Tue, 07 Jan 2025 10:41:22 -0800 (PST)
+        bh=sz8+RHY/rv2VkVwYEL7YWz+C8Z9qf02KGrZ5BViTHk4=;
+        b=cbU7eBjcT3AFvC05m5kpKhaVm80VI++y7DWUVUzjsBPNl9G8may6598eTwl0P9GWBd
+         LhX2ZNhNy8nIGsUahYIQlCIxCKx2iS6aRVaOjla5ioBguHT/BvcuViejpZ4bLQcuTZxi
+         x/L3tvqRy44oMjsmfUKRlwxc8mZtrN0aaiDVVXtvaYfS+4WiEVyXpxUZd3vxIqoCh1YH
+         IFjgHRVriWSstE2Jt52eeqLaYF/qv/bItBtG+mAU7/mQbyMu05lp10lY/9xxODswEiex
+         wD+t6rMLH2eEQkUPsqJmn/jcJr6RB9JKj6WdN075WS/HMbMBQKRAg2A+Zl1kcPcJ+0ke
+         cheQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcF/ZghCLfZCZEBNKe7dcwkLVhwnEHx6pPzKE4R4kRx7Phs+yTvHQgEucmVbrsuqYLoH5Yb5AG9fo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5laeshptuFWa9v72dY03SstwFhFFbjIJR4Ps2KRLW8uuKAKMw
+	H0qcujc3Yl1TBt8l3+1IetDror2kaoRklpi5gtW4ah6w2hCiWpl4etYkK7qu/24=
+X-Gm-Gg: ASbGncsFyaW3buE2lyp9KEQDk6IRaPzoG0x3riNdUsS4PF8XmbStESIHEcDmWLlneOE
+	Ly9O/1kg4kBFbD9tURlNwzLvVnnaMZ+GALpWebeA/DL5DkUKcjMLvk3Pxd99Roumt6xNOAJ3fYO
+	rSpm8rftMfKimyvvSczPV5tBOjqK+iQTacGK4wqn1BVvlJJ3t6MfEYSZv1vKI5McmAeCPIcYp0i
+	SF7ruc1cK9i8392Lb34eGZQCh1iMPxOCC057MtK+KYUdLYB+ZNdq6RuEB98JjsnNrZVrBXLQQSO
+	V95zTiF3hDANJr4kzjpYMw0I17082835zfDG/Ps=
+X-Google-Smtp-Source: AGHT+IE1HzXui79IVUrq9vqxXHysJOEvg9ndx8cb11Kg5ybSLwjgkPO13YiS2b6T5y17VQ+yoKZKSg==
+X-Received: by 2002:a05:6214:f6b:b0:6d8:9994:ac30 with SMTP id 6a1803df08f44-6df9b2aa3c5mr1776926d6.26.1736275498923;
+        Tue, 07 Jan 2025 10:44:58 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3eb2b0acsm189900291cf.73.2025.01.07.10.41.22
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd181d5adbsm183152316d6.115.2025.01.07.10.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 10:41:22 -0800 (PST)
-Date: Tue, 7 Jan 2025 13:41:20 -0500
+        Tue, 07 Jan 2025 10:44:58 -0800 (PST)
+Date: Tue, 7 Jan 2025 13:44:56 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -69,11 +69,11 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-kernel@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 11/29] cxl/region: Unfold cxl_find_root_decoder() into
- cxl_endpoint_initialize()
-Message-ID: <Z311UHk3D5UiJH8H@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v1 12/29] cxl: Modify address translation callback for
+ generic use
+Message-ID: <Z312KLDlB7Hs1RB5@gourry-fedora-PF4VCD3F>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-12-rrichter@amd.com>
+ <20250107141015.3367194-13-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,18 +82,34 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-12-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-13-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:09:57PM +0100, Robert Richter wrote:
-> To determine other endpoint parameters such as interleaving parameters
-> during endpoint initialization, the iterator function in
-> cxl_find_root_decoder() can be used. Unfold this function into
-> cxl_endpoint_initialize() and make the iterator available there.
+On Tue, Jan 07, 2025 at 03:09:58PM +0100, Robert Richter wrote:
+> The root decoder address translation callback could be reused for
+> other decoders too. For generic use of the callback, change the
+> function interface to use a decoder argument instead of the root
+> decoder.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/acpi.c        | 4 ++--
+>  drivers/cxl/core/region.c | 2 +-
+>  drivers/cxl/cxl.h         | 5 ++---
+>  3 files changed, 5 insertions(+), 6 deletions(-)
+> 
+... snip ...
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index b3989dc58ed1..be7685fe8a23 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -443,8 +443,7 @@ struct cxl_switch_decoder {
+>  	struct cxl_dport *target[];
+>  };
+>  
+> -struct cxl_root_decoder;
+> -typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+> +typedef u64 (*cxl_to_hpa_fn)(struct cxl_decoder *cxld, u64 hpa);
+>  
 
-This makes sense in the context of the prior patch, so long as the
-prior patch holds.
-
-Reviewed-by: Gregory Price <gourry@gourry.net>
-
+changed from _to_spa to _to_hpa? Was the name wrong previously? Maybe at
+least comment on this in the changelog.
