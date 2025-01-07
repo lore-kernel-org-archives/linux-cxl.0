@@ -1,110 +1,55 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18F61E0E16;
-	Tue,  7 Jan 2025 03:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736221982; cv=none; b=nc0zdqo6UK72xhodHLLhALx9O5JFsCuHNEAxxr6PKhRAC0828cFj/1g8eprATDtlBRNJd2Lec1WHPSFlQvO9oSSVcezta5QhfwKMg7FoRVZDvQj7cjw9v4R6TV92ky0Gw4dvJL9fxLvt6iLIgDzvLzfXJHzhKPvLw4xpIysI6tg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736221982; c=relaxed/simple;
-	bh=h/vdAz68f5WBEK+WdATCg2LIYtqAKRgGlxS03XAJoYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I7YTbivcapPZ+wXB2k2Zb0ryeew/i6z72jdppAgaf4EtvchJA6NI87LW7pufE2Idw6tsPT3T8MT2gwd4SUoEbTlS7MUVVVTpWBrHbRj2Ze23Nd3azMAeDseyif8Db/PgxKO6eHr7L9zomh6h7hpnsA7EWOteUfS26rMDVQuHl+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=AbjOH1yi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tOa6TzcJ; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7DB2AF10;
+	Tue,  7 Jan 2025 03:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736222256; cv=pass; b=hHW9zO3gw3151oFD8wL3Vn1HjzYpWoi4aRU1hULwCmQQKr7D9T7XJTC25vQyI5mVJWpbZvwobOe3Q23V60QwgnFDpKn8jXOheiQZ67t4Px0G9MabMOMYc7coAqxqeA7yJnid6BAG0XlMFEP1kK4mFybRbh/PK7zgDVjPohB7IY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736222256; c=relaxed/simple;
+	bh=vHfBce0or100V7vu1/3T4a5d9qILgvUvYgl4Ny+HJXo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U8HnUvVLf6494viEHXXCkfHkwed4Gy89HRlsSv1lNG2LeyoXkPIAVF/SnD/wXRDv8xpKnJrd+7RsowvCI0HdebhzqgbkHkDuwKD0MI5XjdqYQplmRWkDz3sjns5YPY3nZ4oY1j64wovH7MS4Pa3qUsqkkqzVrxUL2eaWvOKBke8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=PyRXc7K+; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="AbjOH1yi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tOa6TzcJ"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 894BC114015D;
-	Mon,  6 Jan 2025 22:52:57 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 06 Jan 2025 22:52:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1736221977; x=
-	1736308377; bh=AZJ1va9BbDkIfSjPw6PRUjwodT7OYt+ydpDIg7Yws0o=; b=A
-	bjOH1yib4RcOWpz/8YHSqn6A4PFeYeS+OFcm/S/DuDeHf8P7h3OMnR8e6EuhkjnO
-	WMxtQ6a6+0blSZJx2U++iWjCM6Sqv13Z/MXzxvvWqd7rlUedMNYM2AezYZyuS4Xf
-	wXhBZ5BA6TblPEd040Nq5brtsdJ7UpGGZU9HFWEc0ezD9jzfEnviwUNqNl/9H0zJ
-	zuYRMETVGhehxhQYkjku4dQ3wDS6d1xZm0NWV439iR8UA67ydtKm2jakiUItKg9D
-	CWtU14woB8Q4xLNm9FhJf9dKwwNx++qPEPYCE6llGjSpPN2SrvfRWYo+96CIkF4y
-	zGNLPQMNLpSjsqO7+zEwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1736221977; x=1736308377; bh=A
-	ZJ1va9BbDkIfSjPw6PRUjwodT7OYt+ydpDIg7Yws0o=; b=tOa6TzcJLsrPL8Gbe
-	NfphB65zDVwL4CxjKdsN9/jjVKj2/lFMOs0Micrr6ULlGL+NY54vWIhuay8vS/S0
-	5p7igg5StEblE6GtV75FLSTpmOnE9VmhG62Oz4Jpl0VksLDmC70Nonv5K85vY3kN
-	DodfMT7wjTBj7SztyzdBMH+mEjneICZ2xRE8C+F9kKkh/98c+TcT3Dlm01oK4zzT
-	62hSDbPRg2N520iRLFf9myXyNEf3kDzN2CnY10T1h2lNqcCtnhQd20ErUUbET0WW
-	rSBXVIWhbIL3Z2sJP+ELe1095Bi3rK3Ih29/fKrqCsbYKVyuMNX/t7bO/gq3gRuU
-	R/Kew==
-X-ME-Sender: <xms:GaV8Z20OpPjLD79NxcDl8X1IOUuRNrkydJx9W1XscRkAMJy9xDXeMg>
-    <xme:GaV8Z5EuQl2QwlOUof2ACSKHNSbpZqB04ObnGjJKTPPRLNH6aIJOVKLDzjqcUHA-s
-    b0oHRzRce-_J7hyzKs>
-X-ME-Received: <xmr:GaV8Z-5xEM65Ab-77HPZSAVTAzrcLV-2baXfKWlnB_6bjCdQKevTlLvoDiJCu9KRgkFQZmRHzW4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeguddgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttden
-    ucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgtihhsuceorghlihhsthgrihhrsegrlh
-    hishhtrghirhdvfedrmhgvqeenucggtffrrghtthgvrhhnpeeitdefkeetledvleevveeu
-    ueejffeugfeuvdetkeevjeejueetudeftefhgfehheenucevlhhushhtvghrufhiiigvpe
-    dunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishhtrghirhesrghlihhsthgrihhr
-    vdefrdhmvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprhhushht
-    qdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hukhgrshesfihunhhnvghrrdguvgdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdr
-    nhgvthdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorh
-    hgpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegs
-    ohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehojhgvuggrsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtgihlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:GaV8Z33CpzOT2IOOQKCA_OezcazBZ_SGO_OIMDH9mPUEZJ-YEQParg>
-    <xmx:GaV8Z5HhqaT9gB1y5hXsLNu5GgGJq6wU5mtkNg4fANGEXs7YHQMdcQ>
-    <xmx:GaV8Zw_tj-0sksn8nbFw3qlWZIk-kFaNd_4dvjs8C_pO27dCxJOelw>
-    <xmx:GaV8Z-n6tHOFU-l_HltvfXuxigRQJSwnJJEvueh_TAeZOUx-aYYzVg>
-    <xmx:GaV8Zwm7_rRE4nk9tkD_FMBJkAk1Yt1gcdyjYcAUzkan57MV2BnAcvOe>
-Feedback-ID: ifd214418:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 6 Jan 2025 22:52:50 -0500 (EST)
-From: Alistair Francis <alistair@alistair23.me>
-To: bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org,
-	lukas@wunner.de,
-	gary@garyguo.net,
-	akpm@linux-foundation.org,
-	tmgross@umich.edu,
-	boqun.feng@gmail.com,
-	ojeda@kernel.org,
-	linux-cxl@vger.kernel.org,
-	bjorn3_gh@protonmail.com,
-	a.hindborg@kernel.org,
-	me@kloenk.dev,
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="PyRXc7K+"
+ARC-Seal: i=1; a=rsa-sha256; t=1736222239; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lfno9F2ET4f6b2XxNPZtW67wvQIWY95pAjyfAwmTLo6fISzPi9RKawl2e4SWu5UsbsiCAs8eMeZy9U0xzhLARsFYwJ3diywhM002HJhHi2GQ9MhxIL729Slb5V6epwyYo4sF0XAb+7LwRgG7kO0x3saDuyfR+8ktHpK+rgBXt2c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1736222239; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0fxGRvNo6qSlmR5wUDNTNE7NOBBzpVNJdnN1I9Qb64U=; 
+	b=KalhkZQteGFBbK9sNqH2pUQ+pTcLHV6COqRAeSqLpJeD3in4B5BK7/rviGcznGNBCrSQniexQi1N6rYyPnCOgSmoYBpeLr6+XzW7ODDVO0PBugCl7kyD6r+HtxrhZoQ5NZVl44R0utEvlOiws56xWoEGM1wHqs/bEHQEZs1XKTs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1736222239;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=0fxGRvNo6qSlmR5wUDNTNE7NOBBzpVNJdnN1I9Qb64U=;
+	b=PyRXc7K+i4xydNDFww3+LVW6odo7vgWPTCDsUxYjQWwGSW7+KLC9Z5cYxFkLOwku
+	EobFJrqV2H5MibftpPK9JfVzPwiHkXW+75/OZ2tV9J/e/8yVS/cKB9n1V+TSqfRd/x/
+	gfMVWD+JNPix4yvofn8vzvodj55nIEljSK6q0fKY=
+Received: by mx.zohomail.com with SMTPS id 1736222238281542.3005677431127;
+	Mon, 6 Jan 2025 19:57:18 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	aliceryhl@google.com,
-	alistair.francis@wdc.com,
-	linux-pci@vger.kernel.org,
-	benno.lossin@proton.me,
-	alex.gaynor@gmail.com,
-	Jonathan.Cameron@huawei.com
-Cc: alistair23@gmail.com,
-	wilfred.mallawa@wdc.com,
-	Alistair Francis <alistair@alistair23.me>,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH v5 11/11] rust: helpers: Remove uaccess helpers
-Date: Tue,  7 Jan 2025 13:50:58 +1000
-Message-ID: <20250107035058.818539-12-alistair@alistair23.me>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250107035058.818539-1-alistair@alistair23.me>
-References: <20250107035058.818539-1-alistair@alistair23.me>
+	Li Ming <ming.li@zohomail.com>
+Subject: [RFC PATCH 0/8] Delay to enumerate ports/dports component registers
+Date: Tue,  7 Jan 2025 11:57:00 +0800
+Message-Id: <20250107035708.1134954-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -112,97 +57,64 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227c1c7c858dc417be14dadf31e0000f2dd31117cd81a05eb7137e6a514b6c6cb4819bf094df8c911:zu080112278ab0e5d132cfcc7640b8633a0000b49bb5115a4d415003bdb246a29405899ee7ac519d1cbb1dc5:rf0801122d80cd81a32ea6f48982a8d3fd00002bc0059ccf9b47d91b9bbaa9331e137dca1bea0543544a80894e32684d792f:ZohoMail
+X-ZohoMailClient: External
 
-Now that we support wrap-static-fns we no longer need the custom helper.
+This patchset implements the long term fix for the locating CXL.CM
+capability failure issue[1].
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
----
- rust/bindgen_static_functions |  3 +++
- rust/helpers/helpers.c        |  6 ++----
- rust/helpers/uaccess.c        | 15 ---------------
- rust/kernel/uaccess.rs        |  5 +++--
- 4 files changed, 8 insertions(+), 21 deletions(-)
- delete mode 100644 rust/helpers/uaccess.c
+In some hardware platform, CXL capable ports and dports will not expose
+component registers if they are not working on CXL mode, but CXL
+subsystem always enumerates component registers on a CXL port/dport
+during it is added to the hierarchy. It causes component registers
+enumeration failure on a CXL port or CXL dport if no CXL device is
+under it when the CXL port or CXL dport is attaching to the hierarchy.
+It will be a problem on the environment with CXL hotplug support.
 
-diff --git a/rust/bindgen_static_functions b/rust/bindgen_static_functions
-index 8bc291a7a799..ec48ad2e8c78 100644
---- a/rust/bindgen_static_functions
-+++ b/rust/bindgen_static_functions
-@@ -27,3 +27,6 @@
- 
- --allowlist-function get_task_struct
- --allowlist-function put_task_struct
-+
-+--allowlist-function copy_from_user
-+--allowlist-function copy_to_user
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 2731ddf736dd..eae067fe2528 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -1,8 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Non-trivial C macros cannot be used in Rust. Similarly, inlined C functions
-- * cannot be called either. This file explicitly creates functions ("helpers")
-- * that wrap those so that they can be called from Rust.
-+ * Non-trivial C macros cannot be used in Rust. This file explicitly creates
-+ * functions ("helpers") that wrap those so that they can be called from Rust.
-  *
-  * Sorted alphabetically.
-  */
-@@ -21,7 +20,6 @@
- #include "slab.c"
- #include "spinlock.c"
- #include "task.c"
--#include "uaccess.c"
- #include "vmalloc.c"
- #include "wait.c"
- #include "workqueue.c"
-diff --git a/rust/helpers/uaccess.c b/rust/helpers/uaccess.c
-deleted file mode 100644
-index f49076f813cd..000000000000
---- a/rust/helpers/uaccess.c
-+++ /dev/null
-@@ -1,15 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <linux/uaccess.h>
--
--unsigned long rust_helper_copy_from_user(void *to, const void __user *from,
--					 unsigned long n)
--{
--	return copy_from_user(to, from, n);
--}
--
--unsigned long rust_helper_copy_to_user(void __user *to, const void *from,
--				       unsigned long n)
--{
--	return copy_to_user(to, from, n);
--}
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index cc044924867b..d8f75de93073 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -226,7 +226,8 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-         }
-         // SAFETY: `out_ptr` points into a mutable slice of length `len`, so we may write
-         // that many bytes to it.
--        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr as *const c_void, len) };
-+        let res =
-+            unsafe { bindings::copy_from_user(out_ptr, self.ptr as *const c_void, len as u64) };
-         if res != 0 {
-             return Err(EFAULT);
-         }
-@@ -330,7 +331,7 @@ pub fn write_slice(&mut self, data: &[u8]) -> Result {
-         }
-         // SAFETY: `data_ptr` points into an immutable slice of length `len`, so we may read
-         // that many bytes from it.
--        let res = unsafe { bindings::copy_to_user(self.ptr as *mut c_void, data_ptr, len) };
-+        let res = unsafe { bindings::copy_to_user(self.ptr as *mut c_void, data_ptr, len as u64) };
-         if res != 0 {
-             return Err(EFAULT);
-         }
+The solution in this patchset is that moving port and dport component
+registers enumeration from devm_cxl_add_port()/devm_cxl_add_dport() into
+cxl_endpoint_port_probe(), delaying port and dport component registers
+enumeration until the first endpoint port probing. When the first
+endpoint port is probing, it represents ancestor ports and dports are
+working on CXL mode.
+
+To support this solution, extra changes are needed in this patchset:
+1. Ancestor ports' HDM initialization also needs to be moved from
+cxl_switch_port_probe() to cxl_endpoint_port_probe(), because HDM
+initialization should be done after component registers are ready.
+
+2. Remove ancestor ports' HDM and reset ancestor ports and dports'
+component registers information when the last endpoint of the hierarchy
+detaching, so that the first endpoint attaching can enumerate ancestor
+ports and dports' component registers and set up HDM on ancestor ports
+next time.
+
+base-commit: 4bbf9020becbfd8fc2c3da790855b7042fad455b v6.13-rc4 
+[1] https://lore.kernel.org/linux-cxl/59EA939D-03E1-40FC-88D2-BCFA4DE5A436@suse.de/
+
+
+Li Ming (8):
+  cxl/port: Enumerate port component regs when endpoint attaching
+  cxl/port: Delay port HDM setup until port component regs setup done
+  cxl/region: Check if dev is a decoder in check_commit_order()
+  cxl/port: Remove port HDM during the last endpoint detaching
+  cxl/port: Remove component_reg_phys parameter from devm_cxl_add_port()
+  cxl/port: Enumerate dport component registers when endpoint attaching
+  cxl/port: Remove component_reg_phys parameter from
+    devm_cxl_add_dport()
+  cxl/mem: Adjust cxl_dport_init_ras_reporting() invoked position
+
+ drivers/cxl/acpi.c            |   6 +-
+ drivers/cxl/core/pci.c        |   8 +-
+ drivers/cxl/core/port.c       | 229 +++++++++++++++++++++-------------
+ drivers/cxl/core/region.c     |   8 +-
+ drivers/cxl/cxl.h             |  10 +-
+ drivers/cxl/mem.c             |   7 +-
+ drivers/cxl/port.c            |  40 +++++-
+ tools/testing/cxl/test/cxl.c  |   4 +-
+ tools/testing/cxl/test/mock.c |   3 +-
+ 9 files changed, 206 insertions(+), 109 deletions(-)
+
 -- 
-2.47.1
+2.34.1
 
