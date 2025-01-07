@@ -1,300 +1,233 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2073.outbound.protection.outlook.com [40.107.96.73])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6421F2383;
-	Tue,  7 Jan 2025 03:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736221507; cv=fail; b=b8WbafBoNI48TiTpdMKZHDA9N7AxB2zPUzOxLjixGeM2psn4GhPTtJR5jRUsJYMyvUwA1/fOkofaDv8VaSrVTEuGSFNY9Ee7JFuo53LMWBMRcTZEePo3spppqZmLKEr2fRCjmg7Qvv9W81Q+YRq5D6X/le4wJLxN6zpislka4Sw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736221507; c=relaxed/simple;
-	bh=/Csrylkm2NidU986QPWqaDZpz+jU+FcWBDetRvEORiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RilaZx+hHb9886TJmdtSZO5Rkc1w+hDMRZsJGKBUE2YkZR63DIjZl5aJcmZrVZ10bd9NnKUpqp0V+YeZZlMYUVZjdzuKGdghSUKrVK63+rr0efEHgyUZZRnY+LvRx3Hhc+/c/PecjTfeFiRrb8Luo9WZ9gj2Nr9tplzDK9cNa+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UhWqHm0w; arc=fail smtp.client-ip=40.107.96.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC6A86355;
+	Tue,  7 Jan 2025 03:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736221878; cv=none; b=taX20neHG2IJG6oIHX4tvE1G65o0ws2P/MqMi4xMXUvXB5mFw/Ag2DH0TF+jIHIlK9BLr0C33BRtE6b4c9wtElU1aB26d9CG60EZSoUkPvpfnsK61ZMMmVBzmXb+JTY7ETozi2xhy91UpBC6tbPOXiTKGE9k0+hSVVPz7Yp18+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736221878; c=relaxed/simple;
+	bh=a7eWzuS4iRVIloChj1QBeF0bIMWYs5e9Ne/q9iDPdaM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=af1T8N0/UlDwpl+4fipWnroeREmEkc2jPdZPNaQuyyemEL+i+DW1kOpwX981AGtgU7mUlpscStiUSOzjiFgf1dd26sVAjHLLnuXL4/xR8EvScROwtY2l2sQU6ARwSzxbJi91zxLtifyrX4rBqPG0AGzCuad/YQQA39ceJAPSEdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=VQcdDkmD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=p5zi/eu/; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UhWqHm0w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pAwdafQgHrkbs9Ka9ucH12AvxcmFUoNKvqKAPBiBFdF/jvUIzYy/IjT0Ou/j09j0ATKaGCRgZba6GWhFGF1Du5aUH99EoClHOTZ5oERIIwk+GeOCj0OV7TjcjW2iiOEu64LtI+Zir6I3VKDUz1ZOSCHhNRZXH4Vdz6C6bEzP6DiQw8EHq88k51w5qjhricxbEk+v7PpwlDn3LVkC0UJ1vj7FY9QMZZ6hKZkHKgtufr2LHzEfLYbvOLCg2XiyfvKFWL4x0CEEq5bFvDRfi2xXbPLtmcL8vIlHP6x/HPdXmS+ToaWIs6zIZULxWda7+EDG5OdSlAb14X3UBmZ2lovNCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ANnS9ugPhWXEhOP/c+FzNHxXqu35Gn0O+fqlriZg1uw=;
- b=K0gJyfR60c/VtjEZcFQh4hLUk0rt1WzvK9wm2wXlIqeMfALQXR2pZLYR59ZKBIjGyxbBcBXO6tx1sqxWXguHHCBFqsljzCxx9GXm+A7VVXq6X+XZFzfg/qk6gkFj9d5cFhq39gUq6ou7DjmmGQi6vNEas2DHm389vh3C8/EEeF66oD5EP/i1knLoHrXZR4JCA8wYTifM5YRzfHhEDjx0dGYoZT6HxD2oxbA2/FSQn7/J2CHHQ0cxROUeO1ndIICrWmTLhuzO4aJ77CgEzBgwxCCw2xqv6mF2QTrVfhqRHxifYwTDajhkt1WbTteOT1QI2Zcjv+fVTQTpil8KRklaag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ANnS9ugPhWXEhOP/c+FzNHxXqu35Gn0O+fqlriZg1uw=;
- b=UhWqHm0wjUU9aCOVk7/E6R+DMTc6E6MCDADiyqSO1ERebhhsO4GyZE95zhc1Yq6t2hwS74YnSstlwWyu3nqbIG4cAg9/1adbcyFWzvrU/gUTjp3qwpsypkSz6nI4LUC9v6kt0mcLWp7AtUUoPezGYaujwP0g8+nKLK7MU5s/iNEJrzEmtN6RIQs8sZGYIYCKqZAEZ+mMCdRPoyb5+naerAkCo+ZI5U2iZfl8nG7CjQ7cCJq8KcLN8DLwq9OgOC/CduiCMHCWyB6b1cooMmudq0T0wqObfHzx54uZrJDoJIUtgdt2kVJWh5wJd+CLM4f0LEKfrmOsDHq6k2/YyrJF4g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- IA1PR12MB6113.namprd12.prod.outlook.com (2603:10b6:208:3eb::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8314.17; Tue, 7 Jan 2025 03:44:51 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.8314.015; Tue, 7 Jan 2025
- 03:44:51 +0000
-From: Alistair Popple <apopple@nvidia.com>
-To: akpm@linux-foundation.org,
-	dan.j.williams@intel.com,
-	linux-mm@kvack.org
-Cc: Alistair Popple <apopple@nvidia.com>,
-	lina@asahilina.net,
-	zhang.lyra@gmail.com,
-	gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	logang@deltatee.com,
-	bhelgaas@google.com,
-	jack@suse.cz,
-	jgg@ziepe.ca,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	dave.hansen@linux.intel.com,
-	ira.weiny@intel.com,
-	willy@infradead.org,
-	djwong@kernel.org,
-	tytso@mit.edu,
-	linmiaohe@huawei.com,
-	david@redhat.com,
-	peterx@redhat.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="VQcdDkmD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p5zi/eu/"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5E6B925400CC;
+	Mon,  6 Jan 2025 22:51:13 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Mon, 06 Jan 2025 22:51:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm2; t=1736221873; x=
+	1736308273; bh=s5LdnuzravPpMyZJ3rXVmIMgg5hQJL9QGfm6/zJbeI4=; b=V
+	QcdDkmDOznEdw8W/ivj587CqnuFnxa8/dexkYEdwKzrlNpTqXd2vNzrJFE9YHbTi
+	lIjUxp0QbKEi+F11hn4KZpEwNBQSyvG/BcqrnaexAEEp1616qQLngyh64umtK/mr
+	ugRmOJklFOebMPJ58j2BV9yQl5McZ7MOikFW7BFQrPO9jOOcVGxqgYR1omCcowQU
+	QnUaRBdT5l4PTOO2XJ2YBa1osJrHJysLKy/BuDeBp8sVyDFzC8X8LPITGeJwr6ZC
+	P/qA7X/5se4eeAl9qagRG2Jgy0NC4Y/TFlNYRIroWyCdnadzm9SSksBOgr0N0ASI
+	PFhohp4OUTeXyWX7kf3zw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1736221873; x=1736308273; bh=s5LdnuzravPpMyZJ3rXVmIMgg5hQ
+	JL9QGfm6/zJbeI4=; b=p5zi/eu/2UchQM/Wzl2ZdgNM0obZFU9MINZF1Um3jQA3
+	cWDXY1Y3s7cXtOBlK06AO458Yg5bSKPPZ99FdeKpBGJmy/g6n1b7QJ56wtfAT7XZ
+	AITXw+MRcb7uKY3juPZSIRQYeNmM7uV/9XmsZuMWMOIZr+vI0Smw6X0/i/0avDTC
+	TPtOnTwTu8tCgu5dMZ5wMq3mxaCrpkeKu14Q1SrOjQR8pG1FZcc+QR4R5dvn2dEi
+	O9bzNFzsm4XGQ9HMCyQZhXGDZaQuYI1EWICmzmGUQQeV72c+5kZjHyHboxMGxvgL
+	5OXsCqLHTIlems2D/BuqB7PmPWB0yhTRCYiU8hfOTw==
+X-ME-Sender: <xms:r6R8Z9GqWmoxk9FzkzUpFNiBttdQNqCH3IwLwBE18zSfa6t6b8NwZg>
+    <xme:r6R8ZyWdtLwMYx5suScKCNEmKNIz6777xF0DHe8pk0ECidqukU9TafEWe3RmuNVqL
+    tmr4xFejYA81HCg6S0>
+X-ME-Received: <xmr:r6R8Z_J-kokoY7XzjjkwVvegz958lEvIcLpSRnKMJXSBIixEiSRe_G07QDZDD8MXdRc53zhkxSo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudeguddgieeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
+    ffkffogggtgfesthekredtredtjeenucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgt
+    ihhsuceorghlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgvqeenucggtffrrghtth
+    gvrhhnpefggfdufedvfeelkeeitdfgteeivdeuvdeivedtkedtuedvvdeffefgieeilefg
+    keenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdv
+    fedrmhgvpdhnsggprhgtphhtthhopedvvddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsthdq
+    fhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluh
+    hkrghsseifuhhnnhgvrhdruggvpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhn
+    vghtpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrgh
+    dprhgtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughupdhrtghpthhtohepsgho
+    qhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrgh
+X-ME-Proxy: <xmx:r6R8ZzHlaFk-bWuwqZp1qbmcd0L-AedpuenrQ1tfLg9xY7ZcMK7zBQ>
+    <xmx:r6R8ZzVgA1NUOh-EkPoECxyMB3swEOr9MZmc27ZFYMJMtMgNPZoGbg>
+    <xmx:r6R8Z-Mwooi_smVLOUJx_knx5s4_yLNZprTpV9Dkx2fdSMKOssLs2A>
+    <xmx:r6R8Zy1U3ELkeZh70EzNfhULhZOgP6Fr7xP7zSTpbEr_7IgQ_AF3-Q>
+    <xmx:saR8Z5GBeka_e7N9GGmSDBUfEXUp-_fe5vfJVIj7gz4FaBYTcFnz63X5>
+Feedback-ID: ifd214418:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 6 Jan 2025 22:51:03 -0500 (EST)
+From: Alistair Francis <alistair@alistair23.me>
+To: bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org,
+	lukas@wunner.de,
+	gary@garyguo.net,
+	akpm@linux-foundation.org,
+	tmgross@umich.edu,
+	boqun.feng@gmail.com,
+	ojeda@kernel.org,
 	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com,
-	hch@lst.de,
-	david@fromorbit.com,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
-Subject: [PATCH v5 25/25] Revert "riscv: mm: Add support for ZONE_DEVICE"
-Date: Tue,  7 Jan 2025 14:42:41 +1100
-Message-ID: <dd557b20d49a08f6172e6cff76753850300fda57.1736221254.git-series.apopple@nvidia.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.425da7c4e76c2749d0ad1734f972b06114e02d52.1736221254.git-series.apopple@nvidia.com>
-References: <cover.425da7c4e76c2749d0ad1734f972b06114e02d52.1736221254.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SY2PR01CA0019.ausprd01.prod.outlook.com
- (2603:10c6:1:14::31) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	bjorn3_gh@protonmail.com,
+	a.hindborg@kernel.org,
+	me@kloenk.dev,
+	linux-kernel@vger.kernel.org,
+	aliceryhl@google.com,
+	alistair.francis@wdc.com,
+	linux-pci@vger.kernel.org,
+	benno.lossin@proton.me,
+	alex.gaynor@gmail.com,
+	Jonathan.Cameron@huawei.com
+Cc: alistair23@gmail.com,
+	wilfred.mallawa@wdc.com,
+	Alistair Francis <alistair@alistair23.me>
+Subject: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
+Date: Tue,  7 Jan 2025 13:50:47 +1000
+Message-ID: <20250107035058.818539-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|IA1PR12MB6113:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4111b1ca-e898-4028-28bd-08dd2ecda415
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Vm5kZDNSK0c0bmxhbWFsTGl4Nm1GYWdlT0lLMWR3MkxmcVBkZ3ZpOXN6djVh?=
- =?utf-8?B?NEIyb1NicEZvUkhadXNnNnpJaTFYWW84dWkrcjVLanhKbmpQUm9IbE1nSHBz?=
- =?utf-8?B?QnZ2Z1ptVkM2NGRnN0plZmMxcS9GZkRLUVpmZEp3UDJJVXgwb3Q2emxDUC80?=
- =?utf-8?B?WlE5Y0kreFhQSER1T3JWZCtTT2REMVVxdm5EZjFvSjlSMU1waXdtanJxY215?=
- =?utf-8?B?cTdCVUJ6Yk55dXB3NGkwSVQ3OWlrMUJDNmZVZXBDblArbi9FMHBTTEdReEg1?=
- =?utf-8?B?d1lsMFlIeXUyZW1GYTE0b3FWVVM4WG1ySDg3dmN5YXFVc1ZxQzlWRnNqR1JV?=
- =?utf-8?B?VXo2cWkzOE92Ny82WUNjbFI5OGNzcEhUb1hlaldaUm93TFppdHdOMDU0ZWV3?=
- =?utf-8?B?Tm1yN0Mvc3NJeHZOTkdWYWc3Vm9tUkFRemxoTzYwRno4dTZPU0kzMXYzR1g4?=
- =?utf-8?B?Tk83c3Y3cnh1TVlNaERWaUhhV1kyQTExSmp6RWE2UHRHcWF3V3hCZlhVbzl4?=
- =?utf-8?B?NG54UE1vVVVHVHAxdGlvNDY1L3c2UGtvZ2g2T0ZWZmMxTHZMRk1PTlZOTjl6?=
- =?utf-8?B?bEphMjlYMk5kVlNhM2g2a0kzeUxzMEZjR3k4S1FYbzFGR0VjbWl3aFByZVpQ?=
- =?utf-8?B?RFM2VkR0UXp5bEx2Z0dwbEd2dXN1TzFRZmhVdDllRzVuSXQzYzkxMFdEbXN3?=
- =?utf-8?B?Mm9ZYys5STNHOGdpSkcyZzVSOTZTc3RuaUF5TmhvaVhOd0l4WEtScXhIY3NS?=
- =?utf-8?B?NUhOS2htR292UjZXd294OFN1QnBGSHNPVGVhMjMzZUZWTjZRUE1jWFBIUU1v?=
- =?utf-8?B?Q2lYSFBJWVJOakZvWGl3cFNNZzVMTnVVUGxmekxGMWpQU2tsNmtta0VaV1d5?=
- =?utf-8?B?c0ZkRFZmVitXc2drV1lEbVpja3AwdHZaRk1hSUNCdTdBYTNOTnRYbVRXZ0U5?=
- =?utf-8?B?YmN0Vnk3MFUyUk5hTzUrbi9ZU0lwV1F4b1BwcHBDQzJZWHFZSUhDWm5IbFJZ?=
- =?utf-8?B?b0hidlFhbG9CYjk1dy9aSlR0YmRTUitxMnh5dTdKR0w4aGI3K1R6VTlYRjds?=
- =?utf-8?B?R3BlZ3JVSy9XS1AwVjlOakk3emMybXp3a0hVOFJOa0lZR1pKcWlBVkhxS1g0?=
- =?utf-8?B?UVFpNnVMMEtQeG4ya2lLZHo3YlB5dWpYT1FnNzZ5cFN5TXcwS0xhVTNUb1RY?=
- =?utf-8?B?V1U1dVhLM2FOb3ZDY2NmaHcrV0FBR3drTUtyR2dIOVVWNjUvblNQM2czNU4v?=
- =?utf-8?B?cmNJZFZkTUxURTg4VGZJSHYyVFI3Y1hqTStKaUVPSUF4ZjdTTGlocXZ2dTVL?=
- =?utf-8?B?djBBKzl0VXQ4YlJqMlBaM2FOcGUzV0VkZ0diNkhQTkE5MlhSM2J4SDkzd0xh?=
- =?utf-8?B?SExaSDRlQnV4YmRXZlkwM2Q3R0lQTEh3T2FQZU1JYWdhR3FxTktFOGU4U2s2?=
- =?utf-8?B?em9PY0ZZT3FJS3p6Zm1WY3EyUmtjNHBKZVRxeHU2MFVyYlc0cFRkMUFLMHg5?=
- =?utf-8?B?TGxGRHNycWljQXNoYU4xeHhJMUwxK1E5QVlxWmNVRTlZMTFXTXRadFprYXkw?=
- =?utf-8?B?Rm15QjJwakxrWDNObVh2L0VrbmxKWUtMVHRQR3dZdkpuc1hMaTVxdFBzUG5R?=
- =?utf-8?B?Tk9VKzFDRkVMQU5NWUZlNnFMWHBxd3NkWDVKMWpybEpCOU1MTXBSWXc1Njda?=
- =?utf-8?B?TC9yNnpqQlFlL09EdG1BVERVSTd4RzIydkY3RDh1MTBrMGZRaW1SYjhhcE9t?=
- =?utf-8?B?RXpFcUdtMUJtaGYzSG1oOFhMWGo0eG40NjZ0YVBnOEF4V2hMTFhDL1V1RmZ5?=
- =?utf-8?B?akhKYk9XL1loRWZsaDB5M3VldktrWkQ2WVJWRmpMc1pkTEw5cGZUTHNzMllZ?=
- =?utf-8?Q?SOGQWY7SSOv1x?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Mk8reVQ1dlJBSXVQZXdhZEZOWlQ1bkZyNHR0c2pmbmdrc0NmdkVUU3E3YXhF?=
- =?utf-8?B?WEJieEVOWVg4WkpjeHlzemJzN1NYWEhzdFVpQ3FoOUdaamNGK1dXR1V1UUY3?=
- =?utf-8?B?cDZaSHhDQmRrQzE1S0lvOFVoK1JKK0RXZTlLWXRVdlBoUlBCTkhUVEFDdGNw?=
- =?utf-8?B?Yk44WG5TYjZ6bEk0K3hxcGdrMlljdFBnUVo0VDNmT1N3UW5ON1I2UTRyMURI?=
- =?utf-8?B?THE0cFVBd1loOEFlUVZnOUtTRWVUSCtrQVVHdkRWQ2RzOVlaUTd2R3pzV0lv?=
- =?utf-8?B?bmpSOXpoQXlVUFgzVWpzbDRSdVczNWVRNHQxbm43aThpY29uQkxlVnVMejly?=
- =?utf-8?B?TjVSVW1ZMWFybEhrK2VuVjBTaXFQam9WQjk0UVpHZDk4WEpuQ25TZEdEbzRO?=
- =?utf-8?B?azMzNnNScVhqd3ExZ2xvTFJVRmZYQ1VBOHRENy91RDJSUFR2QjhmbS9ocVJ2?=
- =?utf-8?B?ZGlRYkV2MDFxRnNZcy9uNEhPekNnZmpyZGlQNk9BS09GZWNDTEpiT3VoSUt3?=
- =?utf-8?B?RWFmQ29sMWFuaU1GMmEzT21GbjBxQXJTdHk5QzlocXZYZ3RVejY5L05Zditv?=
- =?utf-8?B?ZDdzRVIvUmhmc3RoSkMxZUpEcEVkc1RxUGdQNGpEdjJKYUlnQ2tBK1Jkdlc0?=
- =?utf-8?B?dXM4WjVxVUFHMVF0bW5KRFgzWnV2UFY2UHZUTTEwS2MzUWk2U2pKSEJnWTVM?=
- =?utf-8?B?N1g4Z0h5Z2N1MG80S3IwUjBMZ3RVLzBVMzU2SDRDUG5ncmxPTko2NGdaSWQz?=
- =?utf-8?B?WU5QUlJ0ejVaKzFwaUo0YUMyeXk2aE52Y3ZXRnR2TXdZNTJucnJxRURJSHlr?=
- =?utf-8?B?elEwb2FvR0g0ak0wWnprdFc5TzVDTHYvaVNqbXNsQTJOcXVKSnBnMTNxK0VK?=
- =?utf-8?B?Z2Z3eGczZ1o5bm9JQkJpUGczS0c1ZEg2alRjZnd3UEsrNmE1a2Q0RExmUjRM?=
- =?utf-8?B?YjBnRlNnSmdMNWFVcnlsOThRT3JsOVR2czJlLzRMSXA2WWZ3VUNFVGZNWGZQ?=
- =?utf-8?B?N05RN3BDSXNPV1dQbW82bzdaVFZUN3plSkFsVkZielNtN3o4c1JOM08yYTk2?=
- =?utf-8?B?SmxDQnFhUkY5SUs5MVp2Nys1RjR0eWRxaDRGaitQeCtrOWVNWVFmWnk0Tk01?=
- =?utf-8?B?SEhwWXJMVUt2WFhpMkJXUTR2TVNZMTlkbG5JekJrNFQ4KzdzZ2JvVU14ZlB6?=
- =?utf-8?B?WTdBUUVzamU4NEk1NDE5VUlDWFVMTThhL25xcG0rL2pjK01KVVJadFJqaTNj?=
- =?utf-8?B?M0ZQSXMzRHBiL3ZXLzc0R0FMenhWMDVtUk0vbmVaUXFvN3pvd1hPL2ZsVGR6?=
- =?utf-8?B?UFNGMkloa1JzaitPejVxY0RBb0ZWMnVNUkZxeXpYc3JyK1I0Tld0SnlObFh1?=
- =?utf-8?B?aFBVQk9hLzIzeDBaTW0yYXBPNEs3K3lvblRERnVaZjdJVkwyWldJSGZaL21a?=
- =?utf-8?B?c203VzJ0WGppSzdpWU1VWW1VOEh4TGlFYXdQZ3JVSWNyMW80U1VJdkZkSFRD?=
- =?utf-8?B?Y0pld2RDZlZxNU5ydTJ6dkVaN28vblVBK0VNQ0NHWjVwNXpSRVg4SzlKU3du?=
- =?utf-8?B?TzRGc0VxQzAxUlR0SE9QWU9sS01kVDkwKzNCOVB4cERodld2bVd4cnU4cWlm?=
- =?utf-8?B?d1pVMk5hU3JjcTlsQWdEd0dLcDZFSW04MVJnREthdlR3SWlOMXgvVjJ3Qy9L?=
- =?utf-8?B?Nk8wdTdLeWNlMUFDclJxNnpoWmdJZlp5SFdyU0RIemtmSHBSOFlJVm9taHpT?=
- =?utf-8?B?enFKZU1ROFRXeXJaNVZ3bzJ4Z0I4LzVSNFRHWU4rSXdEOXhXQTRGRTU4c2ZN?=
- =?utf-8?B?T1NnbTY2NUJMZ05RWkRTS0R6VURTTnNYSEJjS3Y2T29ISWpieXRDN2h6NVAx?=
- =?utf-8?B?VytJMUVaZmFiRnFnV2Myb1BGb2gwRkI5VnZIMFpSY3FqUEF2WVBFV0lHRVJJ?=
- =?utf-8?B?bmJ0d2tuZ1NQZEI2TUx3YTIxZTdERWgya294SUVXNUJ2K3lqK2p0LzFYMmlw?=
- =?utf-8?B?SGx1RVU2WUhHa1BTbzQzOFJ3Smt4bzFnU1JyQTcyeFpCM2dqamJiZGJmNHZ6?=
- =?utf-8?B?SFdmMDQvWFp2bGZNbkVuSWd5VHVOS0krMmJvU29PUnpMa2Fuc29uTkJDajZ5?=
- =?utf-8?Q?/C0tb5hzcjLU6lM0UwNhpOeQ0?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4111b1ca-e898-4028-28bd-08dd2ecda415
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2025 03:44:51.6183
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CelZs1rLctkjAsUwPwRaEWu35EVMZNXWVsVNEWvpiGkQLMu5aADYigYXbW0uqBYZ67pRIFf82ypOVrIzEVZjOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6113
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-DEVMAP PTEs are no longer required to support ZONE_DEVICE so remove
-them.
+The kernel includes a large number of static inline functions that are
+defined in header files. One example is the crypto_shash_descsize()
+function which is defined in hash.h as
 
-Signed-off-by: Alistair Popple <apopple@nvidia.com>
-Suggested-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/Kconfig                    |  1 -
- arch/riscv/include/asm/pgtable-64.h   | 20 --------------------
- arch/riscv/include/asm/pgtable-bits.h |  1 -
- arch/riscv/include/asm/pgtable.h      | 17 -----------------
- 4 files changed, 39 deletions(-)
+```
+static inline unsigned int crypto_shash_descsize(struct crypto_shash *tfm)
+{
+        return tfm->descsize;
+}
+```
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 7d57186..c285250 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -43,7 +43,6 @@ config RISCV
- 	select ARCH_HAS_PMEM_API
- 	select ARCH_HAS_PREEMPT_LAZY
- 	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
--	select ARCH_HAS_PTE_DEVMAP if 64BIT && MMU
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SET_DIRECT_MAP if MMU
- 	select ARCH_HAS_SET_MEMORY if MMU
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 0897dd9..8c36a88 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -398,24 +398,4 @@ static inline struct page *pgd_page(pgd_t pgd)
- #define p4d_offset p4d_offset
- p4d_t *p4d_offset(pgd_t *pgd, unsigned long address);
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--static inline int pte_devmap(pte_t pte);
--static inline pte_t pmd_pte(pmd_t pmd);
--
--static inline int pmd_devmap(pmd_t pmd)
--{
--	return pte_devmap(pmd_pte(pmd));
--}
--
--static inline int pud_devmap(pud_t pud)
--{
--	return 0;
--}
--
--static inline int pgd_devmap(pgd_t pgd)
--{
--	return 0;
--}
--#endif
--
- #endif /* _ASM_RISCV_PGTABLE_64_H */
-diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-index a8f5205..179bd4a 100644
---- a/arch/riscv/include/asm/pgtable-bits.h
-+++ b/arch/riscv/include/asm/pgtable-bits.h
-@@ -19,7 +19,6 @@
- #define _PAGE_SOFT      (3 << 8)    /* Reserved for software */
- 
- #define _PAGE_SPECIAL   (1 << 8)    /* RSW: 0x1 */
--#define _PAGE_DEVMAP    (1 << 9)    /* RSW, devmap */
- #define _PAGE_TABLE     _PAGE_PRESENT
- 
- /*
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index d4e99ee..9fa9d13 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -399,13 +399,6 @@ static inline int pte_special(pte_t pte)
- 	return pte_val(pte) & _PAGE_SPECIAL;
- }
- 
--#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
--static inline int pte_devmap(pte_t pte)
--{
--	return pte_val(pte) & _PAGE_DEVMAP;
--}
--#endif
--
- /* static inline pte_t pte_rdprotect(pte_t pte) */
- 
- static inline pte_t pte_wrprotect(pte_t pte)
-@@ -447,11 +440,6 @@ static inline pte_t pte_mkspecial(pte_t pte)
- 	return __pte(pte_val(pte) | _PAGE_SPECIAL);
- }
- 
--static inline pte_t pte_mkdevmap(pte_t pte)
--{
--	return __pte(pte_val(pte) | _PAGE_DEVMAP);
--}
--
- static inline pte_t pte_mkhuge(pte_t pte)
- {
- 	return pte;
-@@ -763,11 +751,6 @@ static inline pmd_t pmd_mkdirty(pmd_t pmd)
- 	return pte_pmd(pte_mkdirty(pmd_pte(pmd)));
- }
- 
--static inline pmd_t pmd_mkdevmap(pmd_t pmd)
--{
--	return pte_pmd(pte_mkdevmap(pmd_pte(pmd)));
--}
--
- static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 				pmd_t *pmdp, pmd_t pmd)
- {
+bindgen is currently unable to generate bindings to these functions as
+they are not publically exposed (they are static after all).
+
+The Rust code currently uses rust_helper_* functions, such as
+rust_helper_alloc_pages() for example to call the static inline
+functions. But this is a hassle as someone needs to write a C helper
+function.
+
+Instead we can use the bindgen wrap-static-fns feature. The feature
+is marked as experimental, but has recently been promoted to
+non-experimental (depending on your version of bindgen).
+
+By supporting wrap-static-fns we automatically generate a C file called
+extern.c that exposes the static inline functions, for example like this
+
+```
+unsigned int crypto_shash_descsize__extern(struct crypto_shash *tfm) { return crypto_shash_descsize(tfm); }
+```
+
+The nice part is that this is auto-generated.
+
+We then also get a bindings_generate_static.rs file with the Rust
+binding, like this
+
+```
+extern "C" {
+    #[link_name = "crypto_shash_descsize__extern"]
+    pub fn crypto_shash_descsize(tfm: *mut crypto_shash) -> core::ffi::c_uint;
+}
+```
+
+So now we can use the static inline functions just like normal
+functions.
+
+There are a bunch of static inline functions that don't work though, because
+the C compiler fails to build extern.c:
+ * functions with inline asm generate "operand probably does not match constraints"
+   errors (rip_rel_ptr() for example)
+ * functions with bit masks (u32_encode_bits() and friends) result in
+   "call to ‘__bad_mask’ declared with attribute error: bad bitfield mask"
+   errors
+
+As well as that any static inline function that calls a function that has been
+kconfig-ed out will fail to link as the function being called isn't built
+(mdio45_ethtool_gset_npage for example)
+
+Due to these failures we use a allow-list system (where functions must
+be manually enabled).
+
+This series adds support for bindgen generating wrappers for inline statics and
+then converts the existing helper functions to this new method. This doesn't
+work for C macros, so we can't reamove all of the helper functions, but we
+can remove most.
+
+v5:
+ - Rebase on latest rust-next on top of v6.13-rc6
+ - Allow support for LTO inlining (not in this series, see
+   https://github.com/alistair23/linux/commit/e6b847324b4f5e904e007c0e288c88d2483928a8)
+v4:
+ - Fix out of tree builds
+v3:
+ - Change SoB email address to match from address
+ - Fixup kunit test build failure
+ - Update Rust binding documentation
+v2:
+ - Fixup build failures report by test bots
+ - Rebase on rust-next (ae7851c29747fa376)
+
+Alistair Francis (11):
+  rust: bindings: Support some inline static functions
+  rust: helpers: Remove blk helper
+  rust: helpers: Remove err helper
+  rust: helpers: Remove kunit helper
+  rust: helpers: Remove some page helpers
+  rust: helpers: Remove rbtree helper
+  rust: helpers: Remove some refcount helpers
+  rust: helpers: Remove signal helper
+  rust: helpers: Remove some spinlock helpers
+  rust: helpers: Remove some task helpers
+  rust: helpers: Remove uaccess helpers
+
+ Documentation/rust/general-information.rst | 10 +++---
+ rust/.gitignore                            |  2 ++
+ rust/Makefile                              | 37 ++++++++++++++++++++--
+ rust/bindgen_static_functions              | 32 +++++++++++++++++++
+ rust/bindings/lib.rs                       |  4 +++
+ rust/exports.c                             |  1 +
+ rust/helpers/blk.c                         | 14 --------
+ rust/helpers/err.c                         | 18 -----------
+ rust/helpers/helpers.c                     | 11 ++-----
+ rust/helpers/kunit.c                       |  8 -----
+ rust/helpers/page.c                        |  5 ---
+ rust/helpers/rbtree.c                      |  9 ------
+ rust/helpers/refcount.c                    | 10 ------
+ rust/helpers/signal.c                      |  8 -----
+ rust/helpers/spinlock.c                    | 15 ---------
+ rust/helpers/task.c                        | 10 ------
+ rust/helpers/uaccess.c                     | 15 ---------
+ rust/kernel/uaccess.rs                     |  5 +--
+ 18 files changed, 84 insertions(+), 130 deletions(-)
+ create mode 100644 rust/bindgen_static_functions
+ delete mode 100644 rust/helpers/blk.c
+ delete mode 100644 rust/helpers/err.c
+ delete mode 100644 rust/helpers/kunit.c
+ delete mode 100644 rust/helpers/rbtree.c
+ delete mode 100644 rust/helpers/signal.c
+ delete mode 100644 rust/helpers/uaccess.c
+
 -- 
-git-series 0.9.1
+2.47.1
+
