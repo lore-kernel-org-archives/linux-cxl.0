@@ -1,62 +1,62 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45B5189F57
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 16:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7966189905
+	for <linux-cxl@vger.kernel.org>; Tue,  7 Jan 2025 16:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736269036; cv=none; b=bM1tEQzWuWHn+CEI0fbwCVtc0gv/aeJ7IFctkBh10+zumpCz+9EH+tHjIzEQORP6jfdSHs2eMIyHCm2EPjU6kBNdL9gxnaWlZ6Nt5eFxltCOWHUHI8mqrFqzHbKF4JKL0avlRbS+gZHAYxjinY5r2D7bZAzK+wMW5cGeERn/qk0=
+	t=1736269189; cv=none; b=UPNwohZbbIoqJ/Xq+mRAcB11h8tyEofST8zEqlnYGjrPvqbIa8xleR5kZ/XzCCfyqLeBugwfp2ZsZqAvQe6WRaMa+96fx+PGd08RXfuts/KJ0tiRwGUN+EgCUYIlsKryIQiZV7blCcIDAohD5EEPYuL/Aa79zNgPOWmt5vQlS40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736269036; c=relaxed/simple;
-	bh=EZ0xTPwErZM31eXzmu3co6GihuExPFcC28LkwkhVQBs=;
+	s=arc-20240116; t=1736269189; c=relaxed/simple;
+	bh=OD7fLjBzgJvCol+8Oop6voMXAH2wtyr8HiGRUk7YY3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qpzlHXWg1Pp5S3/sT7TKQjlc2rSspPIqiD8czsIHxF31GJ56p2uckvESI6EO6M0WqvtqJ4+NycJftbw3EHlfgoZvHLurCDWOrZkWN9GZkgYqwZsPlZS+K2A4v/XhPSxa4fJgt9NJof8QX+B/q2B7k+xOyYRHqHfkv4CEZzM28ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Qhhdd7wA; arc=none smtp.client-ip=209.85.160.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUtTbiqAnYeJs4rDqifOeQvv/f8unGElrmeP6craLCgmzKZ/2YbnzZJ+xM+xbyjaRwQOZzDymEhSmJ2c+oSVcdxfST2h5TaPyXETlATwjHYnJNm4ngzoPe7AlcUNsenwJYwfIJa+d7l6OUlt6b/Br4/p0ClONkl/UiXkDZz9wUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Nmtft64w; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Qhhdd7wA"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-467b086e0easo80341481cf.1
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 08:57:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Nmtft64w"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6f7d7e128so1410759185a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 07 Jan 2025 08:59:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736269032; x=1736873832; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1736269186; x=1736873986; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=prJc6J80vM0hXzE72AeZo5gS/5TjG7+GIkTH6dDxyUk=;
-        b=Qhhdd7wAARYDzQqbCcRpd20pUXbPD3uzwSuqbIiPaSI/qF0WZtdLOK2yyKAXZ5f4Ee
-         i0O8r4VlJ80o4wzZ4ydIJjnncjyHxZqcOvP9OnAU+LscChUj7Qj5UeCkMVsz95BXtyu7
-         +TxzgKYm7HFubScU7TAQAh6YKM0dMETlnhENxGKclBXvReui0AsdJfCPsuBYwn2bjgAR
-         f+7WiV2Sb9VhgAU1Go22mLUehxld/7gEFrr2doY7/bSLiVyWcvgMjPlSwvV/gJEWcOab
-         A0OPEw5avPsGEzZk0v17BJEWwVg4yWJ0m8AjvpSMTOWXW9rXfsnCT2QqvCNiyl3M2QLk
-         zwuQ==
+        bh=Mt7WxvlVSNoHvlLP4I52D+d/g/XTQa58yJqTdwgiX2M=;
+        b=Nmtft64wgqD96CtyZVDzp8ywoJYL9/Kfag+cdWAYWGuQkbH4KmC70sUhZvHv22JMNd
+         BnCCOZ53fDihMTYRKQvOM+zGa1c0T0+1xJ1kOMil1r7U2zbAsxLnR9TDJWRwCc6YnpP5
+         Sfi2QTO/tI2rh1bRnOcNpsPDf+BG0hb8u7z8Lr6IdLFV0wudLhzjMjp/0frpmMlEkZvv
+         L2QKe+oYYBh7j4VC3B5DR7MtZLb4uVihhZu+bi9b3utSg/m6z5ygG9U0RpG1gXottH4G
+         xXco3HVqiV0LK+8iH/j0TxKuyjHDznFQime3Zv2XfocnlqaKBk7Mi8ntNQh28tdT3blU
+         SYNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736269032; x=1736873832;
+        d=1e100.net; s=20230601; t=1736269186; x=1736873986;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=prJc6J80vM0hXzE72AeZo5gS/5TjG7+GIkTH6dDxyUk=;
-        b=CWHEHV6QiIWJEhOw/E3PuKqyQuO0GyZYc07jjFsoYgab/00FqbRZ+S9ZziYZASYpir
-         A8VMH48MJyNOFY+3KsThMzqDw8xpD45fR2yjfXcI8f6Tplgl1LDCm08sircRsws22Xv6
-         LytonILassJm1d6dlZJbc8QoV+e/rxyzabCcPTgGSIalqSYnpgiblWp+++CpAh/GF3AO
-         UrqYsN7ES9fBhSdwgWUa1c4k1nIvWs+k5sR/bbQ+QVXROluuFeNjCEGhGdxlT3jFJjb2
-         3HsjU6Sd1HuKDwiusf7/DgCb+VyJxMR78zSCHW2QumLP3zWpydtI+DeDu2XhCeQ+z5U0
-         HvQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxW9cUvu3Wf+0hZ95fdcQ3QjG77IZ340uYR9/fPMmzA+S8Z9JpT7aQOmQRZyzbynhYaO8n6FkQaOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuF7Nc6C2BaCjJS+jk0WUGOmwEGkSpOQ1o3Ey/x6EEGko3qPa1
-	GDf700TyW1PIoTgJQUQidpz3Qe9WXy0SMMspfmnKsn5qIkl0zdy5H8vZPh2vqzo=
-X-Gm-Gg: ASbGncvswmPpBJB7Jw8emyDqAFHhE1+2fxLPfTERuLDkv1+zgXywA0ZoHupOv63Gi9U
-	CAAiS1sueZHqNIgbY5Gt7T33oeDfRs8wT8jWSnkKzUkXy7roC0Wfeytz3rS/qn1PPaabwpjSoJe
-	56G+TrM9WsN1aG15zDG+3srSF5eLomEmXJw/FRQibiOzYtkxUSN8CAXe38duMd8FPdoLQ7lW4qb
-	zS0I4w40Zd3qKLwKEdTb9qmtfDgQfOjAmA3HCsuz5gRvVd8oPxv4Wv8O8X8pwXAmlu0TfM4weuN
-	UmxRI+nNOq0N7vHMdm8UprzXuHRLFvirKga+gUc=
-X-Google-Smtp-Source: AGHT+IF3risnApxZ7Aqw/S5XLX7v+4Bv1R7ttaFTwQXzm0iH8UjfbXLcxMIC+GxXc0kMcv6uMtH89Q==
-X-Received: by 2002:ac8:5981:0:b0:467:5016:57fa with SMTP id d75a77b69052e-46a4a988dd7mr1008159001cf.44.1736269032685;
-        Tue, 07 Jan 2025 08:57:12 -0800 (PST)
+        bh=Mt7WxvlVSNoHvlLP4I52D+d/g/XTQa58yJqTdwgiX2M=;
+        b=fGq15GzHyVkhaq/L6gulq4UncRGo13cYSERo4L+fPy6/qJtE0S/NWoCWPnBGMXU1fc
+         ExnC50iup4PIxf6Rtg0TMRv8tCpo8mnMPC5+9m/Ky4WEjeTR2yaG7+LH3EvFSPVaFmct
+         VUXHnhXgt+hF5EWNf4bkxnhPU7uKvFpIhE/MvvBruTJuHNYvKtlAJ2ZdjJ4R5biFIHaa
+         S+SyrK733qcRlUygSU9sCbivesN/aGZjgZy7xqkiipa79OZBlXD9McVacpjwP1BkzxBo
+         UjFp58xC0HTMShDKQJjliabPOP0Ny0tuYFMniMA/WYLjhDn7GjEy5YcdQwZv+vlMYcOJ
+         QvGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB3QDun++j2VnpSpnsbnuFQaBtp77K7/+dG1cqtReoirM5SqYB0xykor2l6E/X5Ip5cQLQ92e/Nb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Z4FlWEUZXKFAOgyPUG8yvc+5KmWkFPGx1o4ThsU3hyfXMu6l
+	Uc8nEyXFPohuDAiuek9xm0coxXO0vxJUAGLA7GJkkQwaEeubK6cLCWVs+lD/PD0=
+X-Gm-Gg: ASbGncuh7C8o2IoqewXwCp+OVI4ivrNpyIDNVEuHL/m0JSiseb5TZMFWkORjenqlDv/
+	W9pNul+yUjJLALn40Sm3Xt7ZE8G8oKAdpO5+wIviw8nFn515tM5OLUt2VjxJXJZqzO4FJuXqvvz
+	6w2Um4sfYef8JYXeIO+RuDEQgxBgTQBDAXzmCth31lFOFJFJQ1gjmVK4XqdehXHkordCUsa5Kru
+	AXug3dxO94JU1MDX1IK9uezwpK2hNhQNRDtM2bTLN1fU6PPPciF2kaerEn/e2i+j/3lSCwnOU0R
+	m6YDYSskEXOFDM9KrxxWJ9To7sCLKTUMY1tRcb4=
+X-Google-Smtp-Source: AGHT+IHfm5zIVuyMdrgv+Rk2m27gedpgNh9B/JTICZcvopWvsRg0rdFhornv3nZnKe7mjSHWyAXU4g==
+X-Received: by 2002:a05:620a:1d04:b0:7b6:d0be:ca31 with SMTP id af79cd13be357-7bb902fca7emr528177285a.25.1736269185871;
+        Tue, 07 Jan 2025 08:59:45 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3e64cf0fsm187087691cf.18.2025.01.07.08.57.11
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac4cd53fsm1608171885a.112.2025.01.07.08.59.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 08:57:12 -0800 (PST)
-Date: Tue, 7 Jan 2025 11:57:10 -0500
+        Tue, 07 Jan 2025 08:59:45 -0800 (PST)
+Date: Tue, 7 Jan 2025 11:59:43 -0500
 From: Gregory Price <gourry@gourry.net>
 To: Robert Richter <rrichter@amd.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
@@ -69,11 +69,11 @@ Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-kernel@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 06/29] cxl/region: Factor out code to find the root
- decoder
-Message-ID: <Z31c5pekQ3_1JY3G@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v1 07/29] cxl/region: Factor out code to find a root
+ decoder's region
+Message-ID: <Z31df5TuLsdCvEuh@gourry-fedora-PF4VCD3F>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-7-rrichter@amd.com>
+ <20250107141015.3367194-8-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,26 +82,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-7-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-8-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:09:52PM +0100, Robert Richter wrote:
-> In function cxl_add_to_region() there is code to determine the root
-> decoder associated to an endpoint decoder. Factor out that code for
-> later reuse. This also simplifies the function cxl_add_to_region() as
-> the change reduces its size and the number of used variables.
+On Tue, Jan 07, 2025 at 03:09:53PM +0100, Robert Richter wrote:
+> In function cxl_add_to_region() there is code to determine a root
+> decoder's region. Factor that code out. This is in preparation to
+> further rework and simplify function cxl_add_to_region().
 > 
-> The reference of cxlrd_dev can be freed earlier. Since the root
-> decoder exists as long as the root port exists and the endpoint
-> already holds a reference to the root port, this additional reference
-> is not needed. Though it looks obvious to use __free() for the
-> reference of cxlrd_dev here too, this is done in a later rework. So
-> just move the code.
+> No functional changes.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
+>  drivers/cxl/core/region.c | 24 ++++++++++++++++--------
+>  1 file changed, 16 insertions(+), 8 deletions(-)
 > 
+... snip ...
+>  	 * one does the construction and the others add to that.
+>  	 */
+>  	mutex_lock(&cxlrd->range_lock);
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+If the function must be called with the cxlrd range lock held, then the
+function should have a comment/contract that states this.
 
+> -	region_dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
+> -				       match_region_by_range);
+> -	if (!region_dev) {
+> +	cxlr = cxl_find_region_by_range(cxlrd, hpa);
+> +	if (!cxlr)
+>  		cxlr = construct_region(cxlrd, cxled);
+> -		region_dev = &cxlr->dev;
+> -	} else
+> -		cxlr = to_cxl_region(region_dev);
+>  	mutex_unlock(&cxlrd->range_lock);
+>  
