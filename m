@@ -1,115 +1,153 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D69199E88;
-	Wed,  8 Jan 2025 15:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3911FC7C2
+	for <linux-cxl@vger.kernel.org>; Wed,  8 Jan 2025 15:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736351243; cv=none; b=Zy2ADWkPibGnFmLnwTv+qTbyT+cDwv43H2S4QBVZMZbzUME5aSR4/7nx0K0ML4sbsVE3KcyF6C7A+pXiQKfwlqCoRq29v4+YLKUQOt7vRCuFDdo45/XV4RuH6v6wbMMjUvpvyufR54bWlGMWaBmSJ3rpDe9MsQMzD0xyguSO8+8=
+	t=1736351309; cv=none; b=hUpX0hvI+/zPE16EdtnbJL0Zxcei3bQvwA0bc5foY9ytexVymfYsei7QNtJG4CF8UGvwa7vklfdoYstDPidrNPR5EQP/0xiyRF45QYXkkLxG1ZxckoYCa2RB8ojfAHJ7OC8V9OgBivoXQnWp8kCj6h3zk8WYhgcDQRhxIpyEeWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736351243; c=relaxed/simple;
-	bh=zDpT+gRVw3ELu9IymByX8B241qWFr6AedVaSCEJOKhg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=l+nfhTcSyPSqWoGtoOduU0xBC6kT+a1jWNIl34F0bFMM1TIOMKsuR/RKHU2+1sVtRcSjNgmUuEIAV5NP2zCiJG2hFSVQE6/bQFWuZ86Unmn09TLCTwTHe7GEOL4niwq/wTM+fToMReKHn5fwj9UzkfUxJ8o9RoEcU//VuTsPaRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YSscX4smRz6HJTY;
-	Wed,  8 Jan 2025 23:42:36 +0800 (CST)
-Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61C09140C72;
-	Wed,  8 Jan 2025 23:47:12 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 8 Jan 2025 16:47:12 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Wed, 8 Jan 2025 16:47:12 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v18 02/19] EDAC: Add scrub control feature
-Thread-Topic: [PATCH v18 02/19] EDAC: Add scrub control feature
-Thread-Index: AQHbYDQd8xBjK3PZSkqZdrlJ+rHfL7MJ1jmAgABIhvCAALyTAIACKh5w
-Date: Wed, 8 Jan 2025 15:47:12 +0000
-Message-ID: <46b4e35b722740a59b946fa1c0562ac6@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <20250106121017.1620-3-shiju.jose@huawei.com>
- <20250106155733.GAZ3v9bQspKvdi3lZE@fat_crate.local>
- <36665b7bf4974020a34d08a7ddf6d554@huawei.com>
- <20250107073204.GBZ3zYdOtWEbieKXiU@fat_crate.local>
-In-Reply-To: <20250107073204.GBZ3zYdOtWEbieKXiU@fat_crate.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1736351309; c=relaxed/simple;
+	bh=lPPdsgIctYuOR3T65Khi2c+znGNhJ1mUAUANbKJhEYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RK5KetT8YaedOKHI8nJ930jFlGxIi+PrRKZIbsIg66R97tCqXnEh4zN+96pDp3Z7RrlAMMrPYBiSJ8Hn4hMsbt38l3qd/mXYqJ85DNRid39p5YOxK+8F1EGfUNAGEnFbusJ2J9pZd0xgv17yMGrb+FwPU9l0euCSu0TvEtOTQ/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KHSZZB2h; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KHSZZB2h"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6d8a3e99e32so137726656d6.2
+        for <linux-cxl@vger.kernel.org>; Wed, 08 Jan 2025 07:48:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1736351306; x=1736956106; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UMdEnKACleX9uwy7fK5On8764yRNpf5ZlddHv0JPlKk=;
+        b=KHSZZB2hEdrfLjWT0KVFW5cqd5l+DQqMLqejTn0QwHvFExGn6RGnYFfcJWCRtGWf9k
+         ievAl/SfqtDpCJ6Wn4H5aSVWceQ6qjigujCz6CI8184ewYxsc8kQI6RrpWvS7xdadEmK
+         Qmp6zWu/gq34IPkYvZbU7X9NRfEQe5FsFawPiS+vLJPic+QL36JI6tEzmff3w6HvIcFs
+         xce3Oca6KrpWkZHQpbmFpX3QvgWR4/ygI3TYl+0iyl4z5r0QK0nMRb3giFw1XZmqLvLU
+         oYh0it8pmG3oKnzfNxg03xm9S2hfZVmayBEo6x4CiDq7zCyXguTW+mpb4HnEY7WLrqHD
+         4hdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736351306; x=1736956106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UMdEnKACleX9uwy7fK5On8764yRNpf5ZlddHv0JPlKk=;
+        b=DTa1cJ3OtdkP1tOAc7DsDSRkJ1e78EwIEA6knt36fNI8kl1gw+782xn5kAgPp/M1Qk
+         XPLjRRuCPd7G+hdDUPn5aELNzWmeEX19ToEdZn0ZsSO6ZIgiZ1CTNQoCEHr1nhT5OpIK
+         Ky7zM14j8vCBMRg8LJRlGxhZwELSEjJeX2fV0Td6CDU4cMvxvZ+B4dF6R7VM8q1sjG4r
+         TSHY624rC1QSI9dech4w7Dqe0jwsLID65zuKuvvM1ilbpJyGTRyFmoqbaG7P41NJxdfS
+         4oKdbGrIFVhSguTbHHmsc9KBN+r3mu+lBHCDiK9JIr5/IpVcWoyfhj0RRd65Qpi2LaLn
+         KE0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXTjcuVzVRz4zWk8TmLz6me7Q184lt6j21RkRapguGG0ZleurFTfAIxwfOs0NN/ADbR5CNpNZVR+84=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRSu7BkOxCijqCUC+AxI62Y39H+FDSynYYP/fO22olxtdRB6Vf
+	4C7CZQvRiS1FHEI8jwDBGAICdtYa+lwpIqd8nGOP0uDWN+37D3mu7G3e6w9llAQ=
+X-Gm-Gg: ASbGnctV6+u5+jQ1FHCwl3Csk+VnaJ1GUa5NTccaODwp4MHOZQ3ozdf/tKbui5MdOq9
+	BvOED36SYBEwonXJBQkoOrtchHafYIf/gNWWokkR8kWdNYFXBqvqePuWhGTS6qiObi10IFI8LNJ
+	gB8NAYZuaaAojOGTT2pcjm7zhZvsn6LwJ6Dxwy6vADZ6X6ODZzkg8Y1v2N1N+f+3f5nfah8Q64K
+	FGbTNNf+7cgAjH4M/82rMvZYOcouYJk8YjHo+T6WyHAvZrI2O7EAOcjQuEmfz3umRiQ18N3Tb5F
+	Bz7k5A/dEb2Vgkdi2sLcCDVIxs0H75VFKcG8moQ=
+X-Google-Smtp-Source: AGHT+IHKuRmaWamB5gMX5MJhlxXx27TTJMqBv7LOXAn0uwrRIBh1bInm6bKRAgYM32A/jiYm4yNC6Q==
+X-Received: by 2002:a05:6214:20ce:b0:6d8:812e:1fd0 with SMTP id 6a1803df08f44-6df9b1da95amr51261766d6.15.1736351306022;
+        Wed, 08 Jan 2025 07:48:26 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd180eaa0csm192445276d6.5.2025.01.08.07.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2025 07:48:25 -0800 (PST)
+Date: Wed, 8 Jan 2025 10:48:23 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
+ ACPI PRMT
+Message-ID: <Z36eR5oXcv3rpEZ-@gourry-fedora-PF4VCD3F>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-26-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250107141015.3367194-26-rrichter@amd.com>
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
-bGllbjguZGU+DQpbLi4uXQ0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjE4IDAyLzE5XSBFREFDOiBB
-ZGQgc2NydWIgY29udHJvbCBmZWF0dXJlDQo+DQo+T24gTW9uLCBKYW4gMDYsIDIwMjUgYXQgMDc6
-MzQ6NDFQTSArMDAwMCwgU2hpanUgSm9zZSB3cm90ZToNCj4+IE15IHVuZGVyc3RhbmRpbmcgaXMg
-dGhhdCB5b3UgbWVhbnQgdGhlIGZvbGxvd2luZyBjaGFuZ2VzIChkaWZmIHRvIHRoaXMNCj4+IHBh
-dGNoKSwgZm9yIHNjcnViPyAgKGFuZCBzaW1pbGFyIGZvciBvdGhlciBmZWF0dXJlcykuICBQbGVh
-c2UgbGV0IG1lDQo+PiBrbm93IGlmIHlvdSBuZWVkIGFueSBjb3JyZWN0aW9ucy4NCj4NCj5ZZXMs
-IHNvbWV0aGluZyBsaWtlIHRoYXQgZXhjZXB0ICJzZWxlY3QiIGlzIGV2aWwgYW5kIHNob3VsZCBi
-ZSB1c2VkIG9ubHkgd2hlbiB0aGUNCj5pdGVtcyBpdCBzZWxlY3RzIGRvIG5vdCBwdWxsIGluIG1v
-cmUgc3R1ZmYuIEFuZCBzaW5jZSBzY3J1YiBpcyBhbGwgb3B0aW9uYWwsIGl0IHNob3VsZA0KPmFs
-bCBiZSBkZXBlbmRzLg0KPg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZWRhYy9LY29uZmlnIGIv
-ZHJpdmVycy9lZGFjL0tjb25maWcgaW5kZXgNCj4+IDA2ZjdiNDNhNmY3OC4uNzA5YmQ3YWQ4MDE1
-IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9lZGFjL0tjb25maWcNCj4+ICsrKyBiL2RyaXZlcnMv
-ZWRhYy9LY29uZmlnDQo+PiBAQCAtOSw2ICs5LDE0IEBAIGNvbmZpZyBFREFDX0FUT01JQ19TQ1JV
-QiAgY29uZmlnIEVEQUNfU1VQUE9SVA0KPj4gIAlib29sDQo+Pg0KPj4gK2NvbmZpZyBFREFDX0ZF
-QVRfU0NSVUINCj4NCj5FREFDX1NDUlVCIGlzIHBlcmZlY3RseSBmaW5lLg0KPg0KPj4gKwlib29s
-DQo+PiArCWhlbHANCj4+ICsJICBUaGUgRURBQyBzY3J1YiBmZWF0dXJlIGlzIG9wdGlvbmFsIGFu
-ZCBpcyBkZXNpZ25lZCB0byBjb250cm9sIHRoZQ0KPj4gKwkgIG1lbW9yeSBzY3J1YmJlcnMgaW4g
-dGhlIHN5c3RlbS4gVGhlIGNvbW1vbiBzeXNmcyBzY3J1YiBpbnRlcmZhY2UNCj4+ICsJICBhYnN0
-cmFjdHMgdGhlIGNvbnRyb2wgb2YgdmFyaW91cyBhcmJpdHJhcnkgc2NydWJiaW5nIGZ1bmN0aW9u
-YWxpdGllcw0KPj4gKwkgIGludG8gYSB1bmlmaWVkIHNldCBvZiBmdW5jdGlvbnMuDQo+DQo+VGhp
-cyBzaG91bGQgY29tZS4uLg0KPg0KPj4gKw0KPj4gIG1lbnVjb25maWcgRURBQw0KPj4gIAl0cmlz
-dGF0ZSAiRURBQyAoRXJyb3IgRGV0ZWN0aW9uIEFuZCBDb3JyZWN0aW9uKSByZXBvcnRpbmciDQo+
-PiAgCWRlcGVuZHMgb24gSEFTX0lPTUVNICYmIEVEQUNfU1VQUE9SVCAmJiBSQVMNCj4NCj4uLi4g
-aW4gaGVyZSBhcyBpdCBpcyBwYXJ0IG9mIEVEQUMuDQo+DQo+VGh4Lg0KPg0KSGkgQm9yaXMsDQoN
-CkkgIGhhdmUgaW5jb3Jwb3JhdGVkIHlvdXIgc3VnZ2VzdGlvbnMgZm9yIHRoZSBuZXh0IHZlcnNp
-b24uICANCkhvd2V2ZXIgYmVmb3JlIHNlbmRpbmcgbmV4dCB2ZXJzaW9uLCBJIGFtIHdvbmRlcmlu
-ZyBhcmUgeW91IHBsYW5uaW5nIGZvciBmdXJ0aGVyIHJldmlldyBvbg0KdGhpcyB2MTggc2VyaWVz
-IGFuZCBnaXZpbmcgYW55IG90aGVyIGZlZWRiYWNrcz8gICAgIA0KDQpUaGFua3MsDQpTaGlqdQ0K
+On Tue, Jan 07, 2025 at 03:10:11PM +0100, Robert Richter wrote:
+> Add AMD platform specific Zen5 support for address translation.
+> 
+... snip ...
+> 
+> Once the endpoint is attached to a region and its SPA range is know,
+> calling the PRM is no longer needed, the SPA base can be used.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+
+One inline question, but not a blocker
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
+> ---
+>  drivers/cxl/Kconfig       |   4 +
+>  drivers/cxl/core/Makefile |   1 +
+>  drivers/cxl/core/amd.c    | 227 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/core.h   |   6 +
+>  drivers/cxl/core/port.c   |   7 ++
+>  5 files changed, 245 insertions(+)
+>  create mode 100644 drivers/cxl/core/amd.c
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 901555bf4b73..c8176265c15c 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -831,6 +831,11 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>  			    &cxl_einj_inject_fops);
+>  }
+>  
+> +static void cxl_port_platform_setup(struct cxl_port *port)
+> +{
+> +	cxl_port_setup_amd(port);
+> +}
+> +
+
+Assuming this gets expanded (which it may not), should we expect this
+function to end up like so?
+
+static void cxl_port_platform_setup(struct cxl_port *port)
+{
+	cxl_port_setup_amd(port);
+	cxl_port_setup_intel(port);
+	cxl_port_setup_arm(port);
+	... etc ...
+}
+
+I suppose this logic has to exist somewhere in some form, just want to make
+sure this is what we want.  Either way, this is easily modifiable, so
+not a blocker as I said.
+
+>  static int cxl_port_add(struct cxl_port *port,
+>  			resource_size_t component_reg_phys,
+>  			struct cxl_dport *parent_dport)
+> @@ -868,6 +873,8 @@ static int cxl_port_add(struct cxl_port *port,
+>  			return rc;
+>  	}
+>  
+> +	cxl_port_platform_setup(port);
+> +
+>  	rc = device_add(dev);
+>  	if (rc)
+>  		return rc;
+> -- 
+> 2.39.5
+> 
