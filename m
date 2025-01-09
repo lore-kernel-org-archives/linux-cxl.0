@@ -1,270 +1,255 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63352204F7A
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jan 2025 22:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736461520; cv=none; b=cFEGgtARDFe8B68ucaIQnU94mGjzg5zybTOIdKtFdjFKWKmLUpxI/+naffsxeAZkgevD5n7nB9vRQJH8w51yi8v4Y1U/aEoG7GLaaaG7e5J4R+fXgrH5Nr0nNsebTgA36KTi/iuWB2EvclEyd0tlXizM3mk8efEHHjt6vkiarHg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736461520; c=relaxed/simple;
-	bh=XURsEI5RKboGmhnBu9Rd4Q9kxrNZjD3U4/DUGAPuOjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKEvoN/XtAJ6CuKZMbphzNZG8LoRSlquPfp8QkngZkTt9rs9QPhXFfD+aBZmlPSMDffUIv8Y9YR75tHKRDikVx3Jgn7VH40j/jDKSxWSjDo2Clp+r7AGX9YoDSz9IhJUg9jF0TppfNYEP2IGb5fa668g7HcyoBuuHuReV+AEe4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Cs8qJhO9; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10A218132A;
+	Thu,  9 Jan 2025 23:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736466713; cv=fail; b=ARTlJWSr6l+flr/Ej9O+pN12Ajhq2/F6NtykvOEkPIBuWgQTthVgx8nrvfGSUC/Mx/YOahnXC+QejAog0tflKujSr2lwI2t8M2p0zANk2mBLegRcnbjriBnGbEFUIuPvgWuv/JDSgChcs/c7mP5remHVqN1pp8U2daxv9/AQdG0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736466713; c=relaxed/simple;
+	bh=hDXv5ZXic8UzhpmsU8Dhuha7Llxi470A1xfccdqiOXo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=D/kGcnHq9v7gpro11Is6XfNALCrgk/D90SnchKl9pToMCY7PSlE4b35sZ80Go8P/meOhAMV9pBfl0oYPnuv0fmrcB6u38kLyyzxCtw2/81VHlkfqV8o9u45ylzj90NTm5tLnt92PV+GcXjQhPrTy1KBYnMZBIXZfv47ykqtHL3s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcfJP4/u; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Cs8qJhO9"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46783d44db0so12811271cf.1
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Jan 2025 14:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1736461517; x=1737066317; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vq9G9ETbBir89jV8qIj9358O07LvRmxRK93Af9slxLY=;
-        b=Cs8qJhO98pmZ9fuHsrJURKOjaIkv7vmccUU6DX6+glR9D1H5PPQTNax8AVfsSc8Oem
-         7tgpVpmyttZ9ZOU5L0XjXeD3ApdbozkqhbGeVVIeT7VHFk391qey6bDQrV93JhZpLrxR
-         YfgBgucAKtu9VOYrPCBO3Xly+fCa1r+uC9n7aTbehZth3mSNptR1a+j5s2wgedg3bSin
-         dwazNv3bZi6i9tnB3G33agUgeB4DuJWgS5Yyy5Nv1Vegp6S+OqkuGuGVuv5N6Xdv/5Of
-         /w7Yv6VDYPK3IrALzITKAP7dV88lHxMg2/trxonOUC4LKW4l6OhrFjtnaixjUX1Guv22
-         EywA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736461517; x=1737066317;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vq9G9ETbBir89jV8qIj9358O07LvRmxRK93Af9slxLY=;
-        b=CguzIZcdlsg9jLepLoq11tayK0kzRTBv7yLBETQqoG4gJD7OtSToSQZ6sCr/h/TDM9
-         TtjVglD1ZjCt0LzasnVjIzaV2gfMWhs/P+tsUzClxymn3nqAVB5bMa9cNcxC2Qs0FUV8
-         2K+xbTP758d/AxXjn9GCDqPHIuxIrPoUwvNL8WnODzOHetTmxQd/86a71Q9U3EzZxzqp
-         66aFCVlvNzxZ1Im3B2BubyWZt1DNKNUKGPKPavW61UmMgLRtbCSdYFvWJrV9OSmOwdB/
-         LNvDgOMqBcPTRAMG8h1iZk5IqExM5E1VsFxhRFPAbT/PpEVe4H59PkmqObwA7oEqgSCf
-         jLxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKbdlv67yvTOegpqn7e451d1DnRXQ7lXDbYlP4UHXVg1Jg/by930w4jQmwex4vjiSrHlxyptcKIPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Gv8LbdtMcwicOsJczjW5W0e0PdHHGHfi1aKsDPqX/0uaDqzG
-	0zxWvEk0weRiqInQ8gnToLnKgGss8K07WWT0Gc6QNm011uFj4oGK0yCORa2hqOk=
-X-Gm-Gg: ASbGnct9c5z7eC6t5RmWPlwh8DYuDzdbjB3NWv6nRPyCXlVtFwEgH9U8a73FaHJqzC2
-	7x2te1rx0o+6F7ShJtxFpA+zh4n5gMPHf2w2pLw4vLS6ftGPfl+pwWf49vJ2MepMBCz1dyJyuPO
-	J0ngkKEvl00EXXtcPjRhxZ/Itt1aP4o5IAWVBRca6i4kDZeB+2MvfInq+tgVafVhHnOuT32QxEI
-	tpjGDQ3RT5WRg2amcaOGx5pa5h4LTZn6+9lK4bz4RvhrudkniI57xMIGbGEJMZOp9V6VP5qa8Ph
-	KyiJnVLJzM4rfG2iQiQDl7h40FalmoNK7QSK9yA=
-X-Google-Smtp-Source: AGHT+IHl0ZxPZVWv1wOo/lm312/DgZYNNsCEklJfFLn/rdYWKFOzRUw8O0dJCwifNsG244KVCOqIGg==
-X-Received: by 2002:ac8:5f90:0:b0:467:681a:69f4 with SMTP id d75a77b69052e-46c71083e51mr149571491cf.39.1736461517172;
-        Thu, 09 Jan 2025 14:25:17 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46c87321a6csm2977471cf.4.2025.01.09.14.25.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 14:25:16 -0800 (PST)
-Date: Thu, 9 Jan 2025 17:25:13 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
- ACPI PRMT
-Message-ID: <Z4BMyVsz7bLZAFEy@gourry-fedora-PF4VCD3F>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-26-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcfJP4/u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736466712; x=1768002712;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=hDXv5ZXic8UzhpmsU8Dhuha7Llxi470A1xfccdqiOXo=;
+  b=fcfJP4/uAtAHwxVhEuFHSMzXom9rQa15TXbuSl4Qkvp7qmPqsY9b7vYN
+   DzPLO1Ve9NmNVMmfv9UkXrOpQABQa9ltsuL7KIZ54X/L/EJEmVXbsja8T
+   yQTYEltTO6fb9nq4rEGo3ZIE4t/x8e0LxR1zuPqo8atqSmIzHFAg4t+oQ
+   MZLi2DzOikveG5OAK1l2OqZWnFRpuI2u723K2yQ15fSMLkui/IN7RRms4
+   CuTkuNv77AsDIriv8BOJLW5SaFX8bbKdMaP5yESxnqyEd9+4nj0Oedu+t
+   iWhmzEXDYXw7x5yxRHTvKo/lRTLCFU1asX2urwpHLT9az0HImJHm2AwWK
+   w==;
+X-CSE-ConnectionGUID: rkIk6YsLRY+fez32uiYlpg==
+X-CSE-MsgGUID: oL7NKXfpRhSkYapFJ5L4bQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11310"; a="36035918"
+X-IronPort-AV: E=Sophos;i="6.12,302,1728975600"; 
+   d="scan'208";a="36035918"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 15:51:49 -0800
+X-CSE-ConnectionGUID: ic549LJtT1qaSvYjQi3P7A==
+X-CSE-MsgGUID: oO7JVlyFQSyTdV8IdC9B1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="108604479"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jan 2025 15:51:49 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 9 Jan 2025 15:51:48 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 9 Jan 2025 15:51:48 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 9 Jan 2025 15:51:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xr7KV1Ek1uI4lMHJBpASMpT6ELG+OENnQzHBQnn4HIZ9OGtTGIgMe5XjF7STxt1NDFeP66oxnmqWLG14D+QC8IRljCE5CPBxOHNN+M7aTXgRCn6HoYWG9E0BrbARyOc5YFE7gYkAxsUhyvvX0sdqtzHELpYb9RhMpLDNYyqm2gLkiT+3acyZD50SD/E2iey55gMOP5M7n64oQafC4OQUYvuw1BfmDZIgFT6qB2OpGgAAGlSc2V1x/irroRGzfGuXTC6F8/ZzkAV8S7OMzTaVIlP3cHCMl6Ucea38BsQ0NYbm4de6UGCLc1fl0pXubpjEvKQnLBz83Oj6OKx8ajnHPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vOlxWkqqOaeFKa/NzPMh7bKbxaiutdKDhAGkCw3vxTg=;
+ b=YtW5ZrQdGPWrJCYJdXEoEiqoqJZXBX1qq++Uq/XD1HmMjMjfybEgoqNuFoS6j0K7KDW219nDosg0FLud5ZuVjL/vFFIOdwNTsssp9gs5wWwjPLAwJn8q+JkPY7IUOUCWATvH842AfiOHWxSBIYMREWj/0gZEULKynQjbSLk5UP9fAt5dtNl0e727LduK+dyNwwsj9Le6Kh5Df+muirC1PhQAFP9e8LDewD0PstbVkvr723di3wtU8WLNlURyPNpl74gjWtBVNQjH7PpnJCXysy8imMPPrhUbxOLuD1oCjwHpmiS0nIjYKQjr7aQALDpPtCAfAcOlU3FTyh6Go1KW9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB5103.namprd11.prod.outlook.com (2603:10b6:a03:2d3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.12; Thu, 9 Jan
+ 2025 23:51:46 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8314.015; Thu, 9 Jan 2025
+ 23:51:46 +0000
+Date: Thu, 9 Jan 2025 15:51:39 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Borislav Petkov
+	<bp@alien8.de>
+CC: Shiju Jose <shiju.jose@huawei.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
+Message-ID: <6780610bc33e9_9b92294cd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
+ <20250106121017.1620-5-shiju.jose@huawei.com>
+ <20250109091915.GAZ3-Uk3rkuh38cQyy@fat_crate.local>
+ <3b2d4275d1d24dbeacee0f192ac4d69b@huawei.com>
+ <20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
+ <20250109142433.00004ea7@huawei.com>
+ <20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
+ <20250109160159.00002add@huawei.com>
+ <20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
+ <20250109183448.000059ec@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250109183448.000059ec@huawei.com>
+X-ClientProxiedBy: MW4PR03CA0324.namprd03.prod.outlook.com
+ (2603:10b6:303:dd::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-26-rrichter@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5103:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99ea234c-fe44-4edb-721d-08dd31089352
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?8q5oJBXYApkB3pPw20By34JiJUGT8yHnHgMpqN/4F7JEEJ13Mi64idPkAa7T?=
+ =?us-ascii?Q?n2BuZpDHmlgFN6C18gDCwcDiCKXfSWWlvp9wZJtY4r+l7FOthIDmdH67wupR?=
+ =?us-ascii?Q?XRIDRqVQ3MtHjgpKCIKJIWOp6Eu9V+lKfWxTH/MmQDOzLYr67wwk4JIyo5Np?=
+ =?us-ascii?Q?9onoCzUrf78IyhA4Rh1S5Cf/U5n4jrqpukePTz2TostP8IcjB5nQjPKXVEGY?=
+ =?us-ascii?Q?1BC5A0iYr65K/nlnMyzX9WwJFQD49pL8WEzhNkajHwV71tn+kMzmHO/WGFHb?=
+ =?us-ascii?Q?qOQwADHoruLIDW5MMesYebZyhKgbbzb/XdEGjpAu2CEMM/3TJkklnbxsATgN?=
+ =?us-ascii?Q?lwD2Z4wth1ke0C9KBpuhbN8Xcxu4ekyYzYofN+6DRxHKiTOPNbX50aThJcgY?=
+ =?us-ascii?Q?t+XUGhYVk5sLl5YlAokzmlBhsuzqqLVpV5jXJR6Z6Ae71xoaxwK+eeIuQV2P?=
+ =?us-ascii?Q?0UYfgefesMwSJU1tH0zKXpFwY66hH92MZz3CtEsiJdXVrUICCoSIl0eLD9GC?=
+ =?us-ascii?Q?+EsCX7uyLNByaiBwWK3fwS9yhguaKexazMD7UkR5xSGk/i1pzK89cEh7rhuU?=
+ =?us-ascii?Q?/o/LCOzCY2tTR5sJNmDPk2NlU6M51W4KDm4XB2rdHs0RM1Cgrr78nu1QLQWL?=
+ =?us-ascii?Q?toUkr5mT6sYsI+KivxhIIEk2FwdshqRk6qOriQ7Pxp5B5uzJPNmlnR+XoZnL?=
+ =?us-ascii?Q?GwNN6fA79f7/muCQLDElyt4MqFgBKX0fGD+D9onvAqg0hQZYZtRMmz31GcYc?=
+ =?us-ascii?Q?MX3VjO7/l3UPZwe3+DrMY8NotSCZQyPXhOxRfoa71fob5/99Yy0KCRX5DC6Q?=
+ =?us-ascii?Q?XsRrQ8YmLo97+Qo3d3/hXh2p1/XaDgvTE2HF+rzTLWp5hPp5l32UPNx4kkz1?=
+ =?us-ascii?Q?Gh/B+M0kbLpByGAntkl2zXzlqWu71lYpDwxcw+R6VFXvTIYUKmhpqhSOgn+x?=
+ =?us-ascii?Q?N1hQlD8gg6LsznPPnhKI5zIMu1b/xKk1/0YWNlmV/u1RFx7IMZaoMwjqPBKY?=
+ =?us-ascii?Q?jmfpbtcBXhpKstho33Ux5mcTU4YgGDIxbuzPjaCkDOeA3XM2+y+KgbO0ULKD?=
+ =?us-ascii?Q?OYC7vgVEr6BP7m1P1tMviO/1cdlcKK5DsjDRBU0eXYITk73yuYdzrKquLkVN?=
+ =?us-ascii?Q?mvOBiEMB8MCxqakmIF+g+LUlQT1my6ELv3Cboi9sNAxTm7Kd+hEbdHgrbT+Y?=
+ =?us-ascii?Q?/ucULkcC1QzHM6mDoRWiu+n1wgQu/bkIzUJz+pXno/i21NVrGo8LribymuhG?=
+ =?us-ascii?Q?BywrbgyPttX7Mgdi4xFSjVq9izH37Q5qR2l1mjbyf/anOI9CzJDnED2OCuM1?=
+ =?us-ascii?Q?31pZf3TZi4AuiqKICn2zPi+L0TgbOl4jowXlYwpk1clw8RAG/5saX8A6gFdu?=
+ =?us-ascii?Q?GO8/fVcsEk1aF/6ZkqyVfxEEZ3gX?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zEofbUfJXNH0o/atKx6oTP4kQ53NFZPKq4wfE11RWp0tYGiXhvKIdyT/Mnjq?=
+ =?us-ascii?Q?9mA+CZjThKVEIOE7QzmnreDBkEw145OfoLcsGcACR6o5TjabAVQUlDetJDTB?=
+ =?us-ascii?Q?vCOmb2u6wnk5Fe9mao1YccYrhAicH5rIWDj4WjXqXiq5jszIYJsrC86lhOOv?=
+ =?us-ascii?Q?2R4u/oddjg07P88PVXw7F2N91U2iC/27MZxk1GUE55EKpquYSotvLtpE3gLG?=
+ =?us-ascii?Q?KqrApI8aFrgReLRZWfjo42pwoO8zkRqk7KkluxkpPX/UHhyN96z6StGk+YQb?=
+ =?us-ascii?Q?viQ6Yrv3M3xrt6i8qK4A7nKhaZRGibV2WHxFIr40+K83ab8DBc7mn9GtTTRH?=
+ =?us-ascii?Q?+hTx/4VGmhlYdIoX9u+b8liP+4p/WbiUp/JMrgrG/0yYBKOX192pLBczGlTk?=
+ =?us-ascii?Q?UmyY4jQuJMuJxK8BkIZxdo1s20pbK0jdrQtA38x1WKPVhODvfsX3rFogghga?=
+ =?us-ascii?Q?yASkzSpJf0XPL5S/w6rEybtoK+/PW03J+pmeKechK5SF9bhx3jaA+GKTDkAy?=
+ =?us-ascii?Q?Bgi6h1TvhtFuAu/3alO7v3z9fyPiyfYLKTVkaMxh5wKIUz5N1X4M4eyKcBeT?=
+ =?us-ascii?Q?wJt9J1BTCrIaz+yWtfcZN0yFzxGSxj1i/YKq/It7nAqnlhSrAu9/6nCf+508?=
+ =?us-ascii?Q?pN/YwLZB1A1Njtimp5LWF7lVAEDKB3bx6Qg/tTmTAEJ2ecnGEJZDzP9OHuGS?=
+ =?us-ascii?Q?TnHjRWJWUPsJVwr3YGNAXHogifCsskbamSje6uQQKoXBI5DxTEqfiA4ytRGm?=
+ =?us-ascii?Q?U8dSvbOHGtiBHAgh5esUIeXYgX5EgGjxykhOWn192GHzRAkMjvJTmwYTMp5+?=
+ =?us-ascii?Q?8J39wBH9BLJ7npE+k5nEDv/eA2+DWNLD94j2KJiDq42YvRDjEKgPhM05kbW6?=
+ =?us-ascii?Q?/mQdnY8x2loCuMBJEBJ87qHn8FquScaZqT6RTbZmvrVfOq5dkf3+X9vtKOG4?=
+ =?us-ascii?Q?9tlqn7TLt8rX6uOISyjUcezMekKCY5j4jJppc2uyBti8wnj5T7UKwL+C0q2+?=
+ =?us-ascii?Q?fqspHxDvm/PjOkX9AY/55Ir1h8BMgIVZJIr2i6+GKDVO33H4EOfREyg6NtoE?=
+ =?us-ascii?Q?02cvdsWZJDRs9QkbpHccY4GWlwBKXCW3rTF51yyP3VZbk7w2HPhpUG99ex2s?=
+ =?us-ascii?Q?kOfkiNZ+gFUmPA8jESDzAqrgFMDbgA7EgNUHaMY4Jm/5jQMv7b9al3HBBnwA?=
+ =?us-ascii?Q?rKAHrNKCs2J+hwcN+FJKIywGrNQp72vcqNpU4LqEqNo62Kf9Azhg7QJOCeXK?=
+ =?us-ascii?Q?Uoipk0TbT8gn6axeKzcNlFl+6GmsHAHlEWeAcxzUBLnkFS0gLze8aOiCMbqW?=
+ =?us-ascii?Q?RcXe9+NGtb9p4Y2n7gLrudSwI5VnT7XswA3PKz5T3kY054FANu154M1LBhPz?=
+ =?us-ascii?Q?ukc410vhuI/tRjGVtHhXvKunW1QpHI/P64MYsqFsHTHSkBgOg1xYpem+Cg8S?=
+ =?us-ascii?Q?eX6tovKh1QoSf4VqDmbYRj6lFTKGsnp/f7+7T9IkgL+/MolLdPoNb0/Gl2h8?=
+ =?us-ascii?Q?MgXXqiNCdwKqKeOpEVzZ6WCHe32FqDxDBgKfcqYCGZA3IYepQjI429/+9UDn?=
+ =?us-ascii?Q?4SAFUDrWC35qWKKB0hmRp5NRKwSA/Ih1gDWj1LfP980yFQPIoGHyMBs2e/lf?=
+ =?us-ascii?Q?kg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99ea234c-fe44-4edb-721d-08dd31089352
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 23:51:46.0200
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: trtjteCPl0n0iHZ4MQB7pXhvcr/SP7ZLw9VEViOiIIsyPxAsOKIeKbCDx7Ueehn+UH9F4SzX0B+sl60g34kC9R2mpzGXsTCyj7CmzET4evA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5103
+X-OriginatorOrg: intel.com
 
-On Tue, Jan 07, 2025 at 03:10:11PM +0100, Robert Richter wrote:
-> Add AMD platform specific Zen5 support for address translation.
+Jonathan Cameron wrote:
+> Ok. Best path is drop the available range support then (so no min_ max_ or
+> anything to replace them for now).
 
-Doing some testing here and I'm seeing some odd results, also noticing
-some naming inconsistencies
+I think less is more in this case.
 
-> 
-> +static u64 cxl_zen5_to_hpa(struct cxl_decoder *cxld, u64 hpa)
-> +{
+The hpa, dpa, nibble, column, channel, bank, rank, row... ABI looks too
+wide for userspace to have a chance at writing a competent tool. At
+least I am struggling with where to even begin with those ABIs if I was
+asked to write a tool. Does a tool already exist for those?
 
-Function name is _to_hpa, but hpa is an argument?
+Some questions that read on those ABIs are:
 
-Should be dpa as argument? Confusing to convert an hpa to an hpa.
+1/ What if the platform has translation between HPA (CXL decode) and SPA
+(physical addresses reported in trace points that PIO and DMA see)?
 
-... snip ...
+2/ What if memory is interleaved across repair domains? 
 
-> +#define DPA_MAGIC	0xd20000
-> +	base = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC);
-> +	spa  = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC + SZ_16K);
-> +	spa2 = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC + SZ_16K - SZ_256);
+3/ What if the device does not use DDR terminology / topology terms for
+repair?
 
-For two devices interleaved, the base should be the same, correct?
+I expect the flow rasdaemon would want is that the current PFA (leaky
+bucket Pre-Failure Analysis) decides that the number of soft-offlines it
+has performed exceeds some threshold and it wants to attempt to repair
+memory.
 
-example: 2 128GB devices interleaved/normalized:
+However, what is missing today for volatile memory is that some failures
+can be repaired with in-band writes and some failures need heavier
+hammers like Post-Package-Repair to actively swap in whole new banks of
+memory. So don't we need something like "soft-offline-undo" on the way
+to PPR?
 
-dev0: base(0xc051a40000) spa(0xc051a48000) spa2(0xc051a47e00)
-dev1: base(0xc051a40100) spa(0xc051a48100) spa2(0xc051a47f00)
+So, yes, +1 to simpler for now where software effectively just needs to
+deal with a handful of "region repair" buttons and the semantics of
+those are coarse and sub-optimal. Wait for a future where a tool author
+says, "we have had good success getting bulk offlined pages back into
+service, but now we need this specific finer grained kernel interface to
+avoid wasting spare banks prematurely".
 
-I believe these numbers are correct.
+Anything more complex than a set of /sys/devices/system/memory/
+devices has a /sys/bus/edac/devices/devX/repair button, feels like a
+generation ahead of where the initial sophistication needs to lie.
 
-(Note: Using PRMT emulation because I don't have a BIOS with this blob,
- but this is the same emulation i have been using for about 4 months now
- with operational hardware, so unless the translation contract changed
- and this code expects something different, it should be correct).
-
-... snip ...
-> +	len = spa - base;
-> +	len2 = spa2 - base;
-> +
-> +	/* offset = pos * granularity */
-> +	if (len == SZ_16K && len2 == SZ_16K - SZ_256) {
-> +		ways = 1;
-> +		offset = 0;
-> +		granularity = 0;
-> +		pos = 0;
-> +	} else {
-> +		ways = len / SZ_16K;
-> +		offset = spa & (SZ_16K - 1);
-> +		granularity = (len - len2 - SZ_256) / (ways - 1);
-> +		pos = offset / granularity;
-> +	}
-
-the interleave ways and such calculate out correctly
-
-dev0: ways(0x2) offset(0x0)   granularity(0x100) pos(0x0)
-dev1: ways(0x2) offset(0x100) granularity(0x100) pos(0x1)
-
-> +
-> +	base = base - DPA_MAGIC * ways - pos * granularity;
-> +	spa = base + hpa;
-
-DPA(0)
-dev0: base(0xc050000000) spa(0xc050000000)
-dev1: base(0xc050000000) spa(0xc050000000)
-
-DPA(0x1fffffffff)
-dev0: base(0xc050000000) spa(0xe04fffffff)
-dev1: base(0xc050000000) spa(0xe04fffffff)
-
-The bases seems correct, the SPAs looks suspect.
-
-dev1 should have a very different SPA shouldn't it?
-
-> +
-> +	/*
-> +	 * Check SPA using a PRM call for the closest DPA calculated
-> +	 * for the HPA. If the HPA matches a different interleaving
-> +	 * position other than the decoder's, determine its offset to
-> +	 * adjust the SPA.
-> +	 */
-> +
-> +	dpa = (hpa & ~(granularity * ways - 1)) / ways
-> +		+ (hpa & (granularity - 1));
-
-I do not understand this chunk here, we seem to just be chopping the HPA
-in half to acquire the DPA.  But the value passed in is already a DPA.
-
-dpa = (0x1fffffffff & ~(256 * 2 - 1)) / 2 + (0x1fffffffff & (256 - 1))
-    =  0xfffffffff
-
-I don't understand why the DPA address is suddenly half (64GB boundary).
-
-> +	offset = hpa & (granularity * ways - 1) & ~(granularity - 1);
-> +	offset -= pos * granularity;
-> +	spa2 = prm_cxl_dpa_spa(pci_dev, dpa) + offset;
-> +
-> +	dev_dbg(&cxld->dev,
-> +		"address mapping found for %s (dpa -> hpa -> spa): %#llx -> %#llx -> %#llx base: %#llx ways: %d pos: %d granularity: %llu\n",
-> +		pci_name(pci_dev), dpa, hpa, spa, base, ways, pos, granularity);
-> +
-
-This results in a translation that appears to be wrong:
-
-dev0:
-cxl decoder5.0: address mapping found for 0000:e1:00.0
-    (dpa -> hpa -> spa): 0x0 -> 0x0 -> 0xc050000000
-    base: 0xc050000000 ways: 2 pos: 0 granularity: 256
-cxl decoder5.0: address mapping found for 0000:e1:00.0
-    (dpa -> hpa -> spa): 0xfffffffff -> 0x1fffffffff -> 0xe04fffffff
-    base: 0xc050000000 ways: 2 pos: 0 granularity: 256
-
-dev1:
-cxl decoder6.0: address mapping found for 0000:c1:00.0
-	(dpa -> hpa -> spa): 0x0 -> 0x0 -> 0xc050000000 
-	base: 0xc050000000 ways: 2 pos: 1 granularity: 256
-cxl decoder6.0: address mapping found for 0000:c1:00.0
-	(dpa -> hpa -> spa): 0xfffffffff -> 0x1fffffffff -> 0xe04fffffff
-	base: 0xc050000000 ways: 2 pos: 1 granularity: 256
-
-These do not look correct.
-
-Is my understanding of the PRMT translation incorrect?
-I expect the following: (assuming one contiguous CFMW)
-
-dev0 (dpa -> hpa -> spa): 0x0          -> 0x0          -> 0xc050000000
-dev1 (dpa -> hpa -> spa): 0x0          -> 0x100        -> 0xc050000100
-dev0 (dpa -> hpa -> spa): 0x1fffffffff -> 0x3ffffffeff -> 0x1004ffffeff
-dev1 (dpa -> hpa -> spa): 0x1fffffffff -> 0x3fffffffff -> 0x1004fffffff
-
-Extra data: here are the programmed endpoint decoder values
-
-[endpoint5/decoder5.0]# cat start size dpa_size interleave_ways interleave_granularity 
-0x0
-0x2000000000
-0x0000002000000000
-1
-256
-
-[endpoint6/decoder6.0]# cat start size dpa_size interleave_ways interleave_granularity 
-0x0
-0x2000000000
-0x0000002000000000
-1
-256
-
-
-Anyway, yeah I'm a bit confused how this is all supposed to actually
-work given that both devices translate to the same addresses.
-
-In theory this *should* work since the root decoder covers the whole
-space - as this has been working for me previously with some hacked up
-PRMT emulation code.
-
-[decoder0.0]# cat start size interleave_ways interleave_granularity
-0xc050000000
-0x4000000000
-2
-256
-
-[decoder1.0]# cat start size interleave_ways interleave_granularity
-0xc050000000
-0x4000000000
-1
-256
-
-[decoder3.0]# cat start size interleave_ways interleave_granularity 
-0xc050000000
-0x4000000000
-1
-256
-
-[decoder5.0]# cat start size interleave_ways interleave_granularity
-0x0
-0x2000000000
-1
-256
-
-[decoder6.0]# cat start size interleave_ways interleave_granularity 
-0x0
-0x2000000000
-1
-256
-
-~Gregory
+That said, I do not closely follow ras tooling to say whether someone
+has already identified the critical need for a fine grained repair ABI?
