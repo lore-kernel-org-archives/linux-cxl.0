@@ -1,239 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F1413BC26
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jan 2025 15:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE32B219A97;
+	Thu,  9 Jan 2025 15:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736435197; cv=none; b=Teqgc6KNVLHx7AFieK8dkLqhKWAucqlVc4UXUFMaztPkoSKCfaXyhVKMNdLh3hOeVw9n+rnjWUFWUPcpwyjRwUcPlzKcHOrRwTe1mwVZcm3sQI9Vv8bWAFR+GqE/18VAbotv5a7bLk3fLPf9ZCCgRv/AqXbX3NXs+NtvbuEYYeY=
+	t=1736435992; cv=none; b=LAbfDVvq/Ww2Uq8RXn23jENbil6ZZJW+8vV5p36wPwu7jQHNzZgTsKkuGsLhggEQMBtRtdWNplTyiSXg6NZtTE2Cly8baccqnytYshlGFoCQL6Oc8sI2RAjWNIgTQLRgBlV1wBMcTU5VnVNV1aES9tgSMOkC4BvOqlbGd1JBDho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736435197; c=relaxed/simple;
-	bh=jA4Yiiq6qWErSPEid33gIzFHmCmRTsjJmwWwDusdy6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSjW/Qa1SW4ygCchnEbhnSXLXXoWZaTB9pdGQgq9m8t96OjxzS9ZPeqBChYbrHFWPtvfPH2eSpsTTiaWCwAtFGBjASbOkH/JDuuAJ3M3mOTtHH/5L4+Dmb/neXxUG+GNSdc+PxLOKPem9x3zsVq0ShAY6SWhPdUlF3w+/sKSQms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MzcPwquT; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736435992; c=relaxed/simple;
+	bh=LcD8D/O+tjtCsnATnq+o/+QJGJt2DNI3UWtiJj8dbvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0byhXs05yxBIwihulRQclSkMXviqFac+XEzaaNZOX4I7WGEyga2YIN6GgrKljKWz0u3zOYZSDtdMZwUx0VujYlO5vmZJYP5PmFPVyEUFh8IQbTpjIHfM8e64KCzE2nHSx+23TAlzraIvtpRST4TXstROBySPPbJwQZEktppDAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MSMASKI1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzcPwquT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736435196; x=1767971196;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jA4Yiiq6qWErSPEid33gIzFHmCmRTsjJmwWwDusdy6c=;
-  b=MzcPwquTojaQAd6194Zw5HwKSjUfHaPctpj4tycIC5qYUypDBIUUBsfy
-   W1mLISe0wHRoG5IAyAZrQM0sEGUuVX3pH3I5Iw6ivqFyw+Q+77ND8vu2B
-   AGZRRkffQ018emxRy8oKpO4YOJAkC/wM3pOTSXBbYwbk7Jr4PL9fqZYWY
-   RYXH575B30pTV9V3a/GH346IO0gvO7U2EdIgPy8A2SKVIL0P1aGbWrua9
-   l79NBG+LFGDUocuBz6VYf/rzjqMLIiGtmU4hGxeYI0qubd4oE+PyWBnQw
-   yjCt2aIOfT2OoWiCXkIOrwJYQgasJAObUHURX/32bBo1qayPMq1nclmsr
-   g==;
-X-CSE-ConnectionGUID: RREWkJK9RJmK+c4uI7qMsQ==
-X-CSE-MsgGUID: jhuUvFP6RzGiK5PNz7r9Rw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11310"; a="54244071"
-X-IronPort-AV: E=Sophos;i="6.12,301,1728975600"; 
-   d="scan'208";a="54244071"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 07:06:34 -0800
-X-CSE-ConnectionGUID: LHlCbrCcS8yPMPXlKtMPsw==
-X-CSE-MsgGUID: 5P2wOC31QFKaWddb+y1Eaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="108484765"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 07:06:34 -0800
-Message-ID: <878e7d99-6755-463c-9932-93ffebff1573@intel.com>
-Date: Thu, 9 Jan 2025 08:06:32 -0700
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MSMASKI1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0CE2340E01F9;
+	Thu,  9 Jan 2025 15:19:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tuK91XRnwJwF; Thu,  9 Jan 2025 15:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1736435983; bh=eRtSquyKGkO5VxcHauXskkyGRsl2V7wKCAQNwjFunh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MSMASKI15NWKaVfiR4YFLTDuNJcQ7zUoJHND6KyAzhPYBIl7Nej56ZkbflXjDPccw
+	 SwZBaMflm8kkIYwWRdJdSBAk6qoXnWT+tXMcbHAe4oqr3Wevx8TMQ3C5tygnDc4yCI
+	 PxOPgdLj0AiZWKaJIDhkt/cLdoUrimgsahHFuu7muO+6o1e1J/vzx2BcEYtY6fa0D6
+	 62JD39Ez58+GyiMMJcBMWW2yJgWmDDbHEopn6Bpb8a/UU3hObDoFf9QnShcJBLaqs5
+	 3urjdMoyXTmhD8BhQKdQSJ8NXjvURv/J+Uzlk5MrSVpuGqKs8YEF7L5la7nyN6RfSD
+	 7dz7xoPOHR+BsRWtHRzQKwX55Rq1iMHM1A+gUVzI9FB4qFZ9fB2fO9X3wOz903/qM4
+	 VcyAAiDjiSbaTQS42DpS7hiubNZB3st7rxfgRPpsonFzXtMDqQdSpo0wNOSHMYbbya
+	 ZMlGBtQzu5GX2hYEhmVNkz0rlDLV1s4/VPv+X6FpI65+D55Iwszm79L/E7n026ae3D
+	 mY5uxowwdlXEZoLd7dfVW9vN9B+yX1mRQ4eKzrUe6Yd+0LSRcULioL5e6wls/n+PJW
+	 3unbGU24+aG4hvQg9FZWe8LuTep+M1uuejAjE8rtUIeDwmBN69AAZ22coopsw7Ocgi
+	 Nsb2+btJbJBenmpuOo3x69Wk=
+Received: from zn.tnic (p200300eA971f933C329c23fffEA6A903.dip0.t-ipconnect.de [IPv6:2003:ea:971f:933c:329c:23ff:fea6:a903])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3B79440E0288;
+	Thu,  9 Jan 2025 15:19:00 +0000 (UTC)
+Date: Thu, 9 Jan 2025 16:18:54 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Shiju Jose <shiju.jose@huawei.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
+Message-ID: <20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
+ <20250106121017.1620-5-shiju.jose@huawei.com>
+ <20250109091915.GAZ3-Uk3rkuh38cQyy@fat_crate.local>
+ <3b2d4275d1d24dbeacee0f192ac4d69b@huawei.com>
+ <20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
+ <20250109142433.00004ea7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH 1/1] daxctl: Output more information if memblock is
- unremovable
-To: Li Ming <ming.li@zohomail.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-References: <20241204161457.1113419-1-ming.li@zohomail.com>
- <Z1JO7WUKwTcBVIYA@aschofie-mobl2.lan>
- <742c568a-1f78-4325-9521-852900098903@intel.com>
- <0ced507d-1b07-43ac-9cc3-28e651e2aa26@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0ced507d-1b07-43ac-9cc3-28e651e2aa26@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250109142433.00004ea7@huawei.com>
 
+On Thu, Jan 09, 2025 at 02:24:33PM +0000, Jonathan Cameron wrote:
+> To my thinking that would fail the test of being an intuitive interface.
+> To issue a repair command requires that multiple attributes be configured
+> before triggering the actual repair.
+> 
+> Think of it as setting the coordinates of the repair in a high dimensional
+> space.
 
+Why?
 
-On 1/8/25 5:58 PM, Li Ming wrote:
-> On 1/9/2025 12:46 AM, Dave Jiang wrote:
->>
->> On 12/5/24 6:10 PM, Alison Schofield wrote:
->>> On Thu, Dec 05, 2024 at 12:14:56AM +0800, Li Ming wrote:
->>>> If CONFIG_MEMORY_HOTREMOVE is disabled by kernel, memblocks will not be
->>>> removed, so 'dax offline-memory all' will output below error logs:
->>>>
->>>>   libdaxctl: offline_one_memblock: dax0.0: Failed to offline /sys/devices/system/node/node6/memory371/state: Invalid argument
->>>>   dax0.0: failed to offline memory: Invalid argument
->>>>   error offlining memory: Invalid argument
->>>>   offlined memory for 0 devices
->>>>
->>>> The log does not clearly show why the command failed. So checking if the
->>>> target memblock is removable before offlining it by querying
->>>> '/sys/devices/system/node/nodeX/memoryY/removable', then output specific
->>>> logs if the memblock is unremovable, output will be:
->>>>
->>>>   libdaxctl: offline_one_memblock: dax0.0: memory371 is unremovable
->>>>   dax0.0: failed to offline memory: Operation not supported
->>>>   error offlining memory: Operation not supported
->>>>   offlined memory for 0 devices
->>>>
->>> Hi Ming,
->>>
->>> This led me to catch up on movable and removable in DAX context.
->>> Not all 'Movable' DAX memory is 'Removable' right?
->>>
->>> Would it be useful to add 'removable' to the daxctl list json:
->>>
->>> # daxctl list
->>> [
->>>   {
->>>     "chardev":"dax0.0",
->>>     "size":536870912,
->>>     "target_node":0,
->>>     "align":2097152,
->>>     "mode":"system-ram",
->>>     "online_memblocks":4,
->>>     "total_memblocks":4,
->>>     "movable":true
->>>     "removable":false  <----
->> Maybe adding some documentation and explaining the two fields? Otherwise it may get confusing.
->>
->> DJ
-> 
-> Hi Dave,
-> 
-> 
-> Thanks for your review, As my latest comment,
-> 
-> if no "movable" in daxctl list, that means the kernel not supported MEMORY_HOTREMOVE, the meanning is the same as "removable: false".
-> 
-> if a "movable" in daxctl list, that means the kernel supporting MEMORY_HOTREMOVE, and the value of "movable" decides whether the memory block can be removed.
-> 
-> My feeling is that "movable" is enough, may I know if it still is worth to add a new "removable"?
+You can write every attribute in its separate file and have a "commit" or
+"start" file which does that.
 
-Yes "movable" is sufficient. No need to over complicate things. 
+Or you can designate a file which starts the process. This is how I'm
+injecting errors on x86:
 
-DJ
+see readme_msg here: arch/x86/kernel/cpu/mce/inject.c
 
-> 
-> 
-> Ming
-> 
-> 
->>
->>>   }
->>> ]
->>>
->>> You've already added the helper to discover removable.
->>>
->>> Otherwise, LGTM,
->>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->>>
->>>
->>>> Besides, delay to set up string 'path' for offlining memblock operation,
->>>> because string 'path' is stored in 'mem->mem_buf' which is a shared
->>>> buffer, it will be used in memblock_is_removable().
->>>>
->>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
->>>> ---
->>>>  daxctl/lib/libdaxctl.c | 52 ++++++++++++++++++++++++++++++++++++------
->>>>  1 file changed, 45 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
->>>> index 9fbefe2e8329..b7fa0de0b73d 100644
->>>> --- a/daxctl/lib/libdaxctl.c
->>>> +++ b/daxctl/lib/libdaxctl.c
->>>> @@ -1310,6 +1310,37 @@ static int memblock_is_online(struct daxctl_memory *mem, char *memblock)
->>>>  	return 0;
->>>>  }
->>>>  
->>>> +static int memblock_is_removable(struct daxctl_memory *mem, char *memblock)
->>>> +{
->>>> +	struct daxctl_dev *dev = daxctl_memory_get_dev(mem);
->>>> +	const char *devname = daxctl_dev_get_devname(dev);
->>>> +	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
->>>> +	int len = mem->buf_len, rc;
->>>> +	char buf[SYSFS_ATTR_SIZE];
->>>> +	char *path = mem->mem_buf;
->>>> +	const char *node_path;
->>>> +
->>>> +	node_path = daxctl_memory_get_node_path(mem);
->>>> +	if (!node_path)
->>>> +		return -ENXIO;
->>>> +
->>>> +	rc = snprintf(path, len, "%s/%s/removable", node_path, memblock);
->>>> +	if (rc < 0)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	rc = sysfs_read_attr(ctx, path, buf);
->>>> +	if (rc) {
->>>> +		err(ctx, "%s: Failed to read %s: %s\n",
->>>> +			devname, path, strerror(-rc));
->>>> +		return rc;
->>>> +	}
->>>> +
->>>> +	if (strtoul(buf, NULL, 0) == 0)
->>>> +		return -EOPNOTSUPP;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>>  static int online_one_memblock(struct daxctl_memory *mem, char *memblock,
->>>>  		enum memory_zones zone, int *status)
->>>>  {
->>>> @@ -1362,6 +1393,20 @@ static int offline_one_memblock(struct daxctl_memory *mem, char *memblock)
->>>>  	char *path = mem->mem_buf;
->>>>  	const char *node_path;
->>>>  
->>>> +	/* if already offline, there is nothing to do */
->>>> +	rc = memblock_is_online(mem, memblock);
->>>> +	if (rc < 0)
->>>> +		return rc;
->>>> +	if (!rc)
->>>> +		return 1;
->>>> +
->>>> +	rc = memblock_is_removable(mem, memblock);
->>>> +	if (rc) {
->>>> +		if (rc == -EOPNOTSUPP)
->>>> +			err(ctx, "%s: %s is unremovable\n", devname, memblock);
->>>> +		return rc;
->>>> +	}
->>>> +
->>>>  	node_path = daxctl_memory_get_node_path(mem);
->>>>  	if (!node_path)
->>>>  		return -ENXIO;
->>>> @@ -1370,13 +1415,6 @@ static int offline_one_memblock(struct daxctl_memory *mem, char *memblock)
->>>>  	if (rc < 0)
->>>>  		return -ENOMEM;
->>>>  
->>>> -	/* if already offline, there is nothing to do */
->>>> -	rc = memblock_is_online(mem, memblock);
->>>> -	if (rc < 0)
->>>> -		return rc;
->>>> -	if (!rc)
->>>> -		return 1;
->>>> -
->>>>  	rc = sysfs_write_attr_quiet(ctx, path, mode);
->>>>  	if (rc) {
->>>>  		/* check if something raced us to offline (unlikely) */
->>>> -- 
->>>> 2.34.1
->>>>
->>>>
-> 
+More specifically:
 
+"flags:\t Injection type to be performed. Writing to this file will trigger a\n"
+"\t real machine check, an APIC interrupt or invoke the error decoder routines\n"
+"\t for AMD processors.\n"
+
+So you set everything else, and as the last step you set the injection type
+*and* you also trigger it with this one write.
+
+> Sure. In this case the addition of min/max was perhaps a wrong response to
+> your request for a way to those ranges rather than just rejecting a write
+> of something out of range as earlier version did.
+> 
+> We can revisit in future if range discovery becomes necessary.  Personally
+> I don't think it is given we are only taking these actions in response error
+> records that give us precisely what to write and hence are always in range.
+
+My goal here was to make this user-friendly. Because you need some way of
+knowing what valid ranges are and in order to trigger the repair, if it needs
+to happen for a range.
+
+Or, you can teach the repair logic to ignore invalid ranges and "clamp" things
+to whatever makes sense.
+
+Again, I'm looking at it from the usability perspective. I haven't actually
+needed this scrub+repair functionality yet to know whether the UI makes sense.
+So yeah, collecting some feedback from real-life use cases would probably give
+you a lot better understanding of how that UI should be designed... perhaps
+you won't ever need the ranges, whow knows.
+
+So yes, preemptively designing stuff like that "in the dark" is kinda hard.
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
