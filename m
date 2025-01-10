@@ -1,155 +1,145 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449ED20DD74;
-	Fri, 10 Jan 2025 14:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A54B674;
+	Fri, 10 Jan 2025 15:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736521165; cv=none; b=l2lx1MgDt6M5pD4tvpWuwGzBn6GcVHVhrnpNlj65MJ4tuK4VrjkNFAm5Tch0mNMCq7Hw5E6ZAHWAWr/9G+q8Vqhp9yFlhXo2VK1jvlG54SOz1bkEPHz1CTSrOvJTSKC55MvgJ/pIC0+BqJuhYzg+SOZw0gL1Hfcvx+RgqXlCW7k=
+	t=1736522357; cv=none; b=uk3Rz+zYVaE65WwhMdXlUgSpBk9A99aqPL4NjG6QfuOvRxozRsXwE51hCEsCvSZUvJZD/kaynSZiuLIS58dvbz75M2HK8KVef8/n6VrDQRg/1ZyulAjYx13i0Dd0YxYXEBO3n8uQWaxpKhpkiG8EKJm/u2zoZ2pYOdsh5K/S03M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736521165; c=relaxed/simple;
-	bh=qoN4csxcH42JEKIUwkPsIuRENnJhK9htZfI1jnoH3+s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EkulwvQzcfNIX9P+ib9CrqABemCzwNPbGe9eRSrspFDsChJ9FVhXYyTzZ3WKaqBYQYE7XFdpYiAVAClOU8E0vktkfe+qkZM1KNmLRIUkc83ZVL2FQ4t0qA1aKC+qcE4SaPMsTE0DOmkzOmvVJeS7qv76UMdhuIkwpnjUZJF6mFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV4Wn6WSVz6D9CW;
-	Fri, 10 Jan 2025 22:57:41 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C32001403D2;
-	Fri, 10 Jan 2025 22:59:19 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 10 Jan
- 2025 15:59:19 +0100
-Date: Fri, 10 Jan 2025 14:59:17 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<rafael@kernel.org>, <bp@alien8.de>, <dan.j.williams@intel.com>,
-	<tony.luck@intel.com>, <dave@stgolabs.net>, <alison.schofield@intel.com>,
-	<ira.weiny@intel.com>
-Subject: Re: [PATCH 3/4] cxl: Add extended linear cache address alias
- emission for cxl events
-Message-ID: <20250110145917.00006541@huawei.com>
-In-Reply-To: <f3d1b01f-9ed8-4c56-9bb3-409b51b59291@intel.com>
-References: <20241204224827.2097263-1-dave.jiang@intel.com>
-	<20241204224827.2097263-4-dave.jiang@intel.com>
-	<20241224121113.00007eec@huawei.com>
-	<f3d1b01f-9ed8-4c56-9bb3-409b51b59291@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736522357; c=relaxed/simple;
+	bh=iI+zkuPPGC6KVu7GjaczTIH5hOYA56r8kmqssm6oh2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BH1I5+gVSRRyuj99KQUFHwC8dbkCju12AxvcosqBiCVZmC0WJf1WGMv5YIVD/e4ZlbOfBIA74Dl9HXrCqLQ7OmLz+pedXW8n3GU7derOORY12Of9rS9Ra0exbg5+IP6cXNzRrSnLehZ/cZnQoy36PxI3LosY0C8aqWPTdRfFV5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27446C4CEE1;
+	Fri, 10 Jan 2025 15:19:17 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	tony.luck@intel.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com
+Subject: [PATCH v2 0/4] acpi/hmat / cxl: Add exclusive caching enumeration and RAS support
+Date: Fri, 10 Jan 2025 08:17:43 -0700
+Message-ID: <20250110151913.3462283-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue, 7 Jan 2025 12:41:46 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+v2:
+- Fix 0-day issues
+- Fix checking of cache flag. (Ming)
+- Add comment about cache range vs CFMWS. (Ming)
+- Update EXPORT_SYMBOL_(). (Jonathan)
+- Fix various code comments. (Jonathan)
+- Emit hpa_alias0 instead of hpa_alias. (Jonathan)
+- Introduce CONFIG_CXL_MCE to address kernel build dep issues.
 
-> On 12/24/24 5:11 AM, Jonathan Cameron wrote:
-> > On Wed, 4 Dec 2024 15:46:48 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> Add the aliased address of extended linear cache when emitting event
-> >> trace for DRAM and general media of CXL events.
-> >>
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
-> > I wonder if you want to future proof the hpa_alias for potential case
-> > of there being more than 1?  hpa_alias0 or similar so that we can add
-> > more as needed?  
-> 
-> Do you mean when emitting via the trace? Yeah I can change it to hpa_alias0 in the output string.
-> 
+v1:
+- Drop RFC prefix
+- Drop MMIO hole discovery. Will implement if there's real world implementation.
+- Drop MCE_PRI_CXL. Use MCE_PRI_UC. (Boris)
+- Minor refactors and grammar fixes. (Jonathan)
+- Rename 'mode' to 'address_mode'. (Jonathan)
 
-err. Can't entirely remember what I meant but that seems sensible ;)
+RFCv2:
+- Dropped 1/6 (ACPICA definition merged)
+- Change UNKNOWN to RESERVED for cache definition. (Jonathan)
+- Fix spelling errors (Jonathan)
+- Rename region_res_match_range() to region_res_match_cxl_range(). (Jonathan)
+- Add warning when cache is not 1:1 with backing region. (Jonathan)
+- Code and comments cleanup. (Jonathan)
+- Make MCE code access in CXL arch independent. (Jonathan)
+- Fixup 0-day reports.
 
-> 
-> > 
-> > 
-> > Otherwise, looks like there is either a null point dereference or
-> > overly paranoid existing code. I haven't checked which but changes
-> > needed either way.  
-> 
-> I'll move it under the if (cxlr) and also add a check for cxlr in the helper function.
-> 
-> DJ
-> 
-> 
-> > 
-> > Jonathan
-> >   
-> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> >> index 5175138c4fb7..4017b7afa78a 100644
-> >> --- a/drivers/cxl/core/mbox.c
-> >> +++ b/drivers/cxl/core/mbox.c
-> >> @@ -856,6 +856,24 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
-> >>  
-> >> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
-> >> +{
-> >> +	struct cxl_region_params *p = &cxlr->params;  
-> > 
-> > Bad idea to unconditionally dereference I think. See below.
-> >   
-> >> +	int nid;
-> >> +
-> >> +	if (!p->cache_size)
-> >> +		return ~0ULL;
-> >> +
-> >> +	nid = cxl_region_nid(cxlr);
-> >> +	if (nid == NUMA_NO_NODE)
-> >> +		nid = 0;
-> >> +
-> >> +	if (hpa >= p->res->start + p->cache_size)
-> >> +		return hpa - p->cache_size;
-> >> +
-> >> +	return hpa + p->cache_size;
-> >> +}
-> >> +
-> >>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> >>  			    enum cxl_event_log_type type,
-> >>  			    enum cxl_event_type event_type,
-> >> @@ -871,7 +889,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> >>  	}
-> >>  
-> >>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
-> >> -		u64 dpa, hpa = ULLONG_MAX;
-> >> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias;
-> >>  		struct cxl_region *cxlr;
-> >>  
-> >>  		/*
-> >> @@ -887,11 +905,14 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-> >>  		if (cxlr)
-> >>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
-> >>  
-> >> +		hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);  
-> > 
-> > If there is no region, and hence no hpa does it make sense to call this?
-> > Particularly as first thing done in this is to dereference cxlr.
-> > 
-> >   
-> >> +
-> >>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> >>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
-> >> -						&evt->gen_media);
-> >> +						hpa_alias, &evt->gen_media);
-> >>  		else if (event_type == CXL_CPER_EVENT_DRAM)
-> >> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
-> >> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
-> >> +				       &evt->dram);
-> >>  	}
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);  
-> >   
-> 
-> 
+Certain systems provide an exclusive caching memory configurations where a
+1:1 layout of DRAM and far memory (FM) such as CXL memory is utilized. In
+this configuration, the memory region is provided as a single memory region
+to the OS. For example such as below:
 
+             128GB DRAM                         128GB CXL memory
+|------------------------------------|------------------------------------|
+
+The kernel sees the region as a 256G system memory region. Data can reside
+in either DRAM or FM with no replication. Hot data is swapped into DRAM by
+the hardware behind the scenes.
+
+This kernel series introduces code to enumerate the side cache by the kernel
+when configured in a exclusive-cache configuration. It also adds RAS support
+to deal with the aliased memory addresses.
+
+A new ECN [1] to ACPI HMAT table was introduced and was approved to describe
+the "extended-linear" addressing for direct-mapped memory-side caches. A
+reserved field in the Memory Side Cache Information Structure of HMAT is
+redefined as "Address Mode" where a value of 1 is defined as Extended-linear
+mode. This value is valid if the cache is direct mapped. "It indicates that
+the associated address range (SRAT.MemoryAffinityStructure.Length) is
+comprised of the backing store capacity extended by the cache capacity." By
+augmenting the HMAT and SRAT parsing code, this new information can be stored
+by the HMAT handling code.
+
+Current CXL region enumeration code is not enlightened with the side cache
+configuration and therefore only presents the region size as the size of the
+CXL region. Add support to allow CXL region enumeration code to query the HMAT 
+handling code and retrieve the information regarding the side cache and adjust
+the region size accordingly. This should allow the CXL CLI to display the
+full region size rather than just the CXL only region size.
+
+There are 3 sources where the kernel may be notified that error is detected for
+memory.
+1. CXL DRAM event. This is a CXL event that is generated when an error is
+   detected by the CXL device patrol or demand scrubber. The trace_event is
+   augmented to display the aliased System Phyiscal Address (SPA) in addition
+   to the alerted address.  However, reporting of memory failure is TBD until
+   the discussion [2] of failure reporting is settled upstream.
+2. UCNA event from DRAM patrol or demand scrubber. This should eventually go
+   through the MCE callback chain.
+3. MCE from kernel consume poison.
+
+It is possible that all 3 sources may report at the same time and all report
+at the error.
+
+For 2 and 3, a MCE notifier callback is registered by the CXL on a per device
+basis. The callback will determine if the reported address is in one of the
+special regions and offline the aliased address if that is the case.
+
+[1]: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+[2]: https://lore.kernel.org/linux-cxl/20240808151328.707869-2-ruansy.fnst@fujitsu.com/
+
+---
+
+Dave Jiang (4):
+      acpi: numa: Add support to enumerate and store extended linear address mode
+      acpi/hmat / cxl: Add extended linear cache support for CXL
+      cxl: Add extended linear cache address alias emission for cxl events
+      cxl: Add mce notifier to emit aliased address for extended linear cache
+
+ Documentation/ABI/stable/sysfs-devices-node |   6 +++
+ arch/x86/mm/pat/set_memory.c                |   1 +
+ drivers/acpi/numa/hmat.c                    |  44 +++++++++++++++++++
+ drivers/base/node.c                         |   2 +
+ drivers/cxl/Kconfig                         |   4 ++
+ drivers/cxl/core/Makefile                   |   2 +
+ drivers/cxl/core/acpi.c                     |  11 +++++
+ drivers/cxl/core/core.h                     |   8 ++++
+ drivers/cxl/core/mbox.c                     |  36 ++++++++++++++--
+ drivers/cxl/core/mce.c                      |  53 +++++++++++++++++++++++
+ drivers/cxl/core/mce.h                      |  14 ++++++
+ drivers/cxl/core/region.c                   | 110 ++++++++++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/core/trace.h                    |  24 +++++++----
+ drivers/cxl/cxl.h                           |   8 ++++
+ drivers/cxl/cxlmem.h                        |   2 +
+ include/linux/acpi.h                        |  11 +++++
+ include/linux/node.h                        |   7 +++
+ tools/testing/cxl/Kbuild                    |   1 +
+ 18 files changed, 328 insertions(+), 16 deletions(-)
