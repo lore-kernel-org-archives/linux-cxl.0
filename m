@@ -1,185 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D972212D7C;
-	Fri, 10 Jan 2025 16:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D68212D93;
+	Fri, 10 Jan 2025 16:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736526262; cv=none; b=In/LUY/bM74UtdGCXw0lFgCJiVDZSnG1gXbT6j2x3izbYdv+yBoxJ/qltESD5D8XakgxxltXOEy52TOrA8PhF283JXgu+onRxuZ1CgohiSLC+IQXWLOxj1j1u/21omSHhEqce1zeB/q+fCgsKMHkLYfUn1RsqVWbA8sESM6Jyv0=
+	t=1736526331; cv=none; b=oW8M3wss0kILb0Jm0sMWecPgbKO0OEaUBGpkHNmJI5LmOS4PyPDsQ9in2W2FF3EJQYdJGQRqp1sITsbeApjE7y2S16zfJPNV6vy7BnlOLNKZ1SIBMG8/HX94RfGSsEOAcy4Wa7L982Qlwz9IjDk5utXF89lSzxVcPuo9XM9Rw2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736526262; c=relaxed/simple;
-	bh=ycTW+N/fGzdzPCXRpaZyC+j8WT5ekMm5rkXGi1WTylE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pshc8IsFnNUPBqfM48AovgZTrO3+OAhZI3TZKy9wz6wggUsO8jSqQKn33pqapmyJ9q+f7rt+3jQF1qEucRE/jfzR7Pe6fcLo76gS0O5ax2vQDW+TUF3YDFjdB+xlX7QDXo7N+MGjSv6dqrrrd5MggbBXe2kw7YZJ39A9rJ5L97U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bPSGYoH7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bPSGYoH7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736526261; x=1768062261;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ycTW+N/fGzdzPCXRpaZyC+j8WT5ekMm5rkXGi1WTylE=;
-  b=bPSGYoH7+/kCmZiZgPXBkdHiT/Qzud/TxvHlTM5UuLNNJWCjEQJ3eA5T
-   XsrFbsqoMMqYLEQWCwzQkYY4tVgSodynyKw09gYLF0qswVu7KYeslil1e
-   Wx2K8fzL1/xNV8+3vhsyYXW04sPAa76h6IB7TLMPfHTKw35joJaC22mmo
-   MbAIYNL8O50SxwveRkHAnW3TgTsKcVOL0qUJiHkytc+uQAbiTzPvAvMCe
-   T/2y5I0Y3Gi/AaKlIMd0/1qAc0U+vLriebD2HZmTGpJddqYYt1L/tZqCR
-   My2JmTd8PpeC/l1oOBpN2gU7Urk7svBkm9ddy/+19MtPKMa9Wxg8V96UM
-   g==;
-X-CSE-ConnectionGUID: 2kEx4TyXREG0IiRx3Yzm7w==
-X-CSE-MsgGUID: urbSKJ+rRj2TDXk2aXfpcQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="36725429"
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="36725429"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 08:24:21 -0800
-X-CSE-ConnectionGUID: 9PSg+zbsT8KVVlkslWtn1g==
-X-CSE-MsgGUID: 4UiR8MsdQy2Mb+9wTIOQ7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="104335961"
-Received: from ehanks-mobl1.amr.corp.intel.com (HELO [10.125.111.175]) ([10.125.111.175])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 08:24:19 -0800
-Message-ID: <8373bda4-6fb2-4bbb-9d19-9b1369cba666@intel.com>
-Date: Fri, 10 Jan 2025 09:24:18 -0700
+	s=arc-20240116; t=1736526331; c=relaxed/simple;
+	bh=wLjfmgGiu2XrA5lV5v9LtNUSzshUKvHbygKXWknjVu4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hEEjX/vZac/9iifvTVqEue96CnYPZtErq1vpTVWY73AdxMJEx9PT2R5sTv5MdR73APs3olJEcpYdwVzbD1uuEjKdcE29x+aVEh3qFeipVoRGeEVxQwxog46ClaYPYgajTAAKGxxu/45hASWg3uLKAHjjoQQa0jbD2wSIkRpVtLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV6Mc6NKmz6JB2r;
+	Sat, 11 Jan 2025 00:20:44 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C7921408F9;
+	Sat, 11 Jan 2025 00:25:26 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 10 Jan
+ 2025 17:25:25 +0100
+Date: Fri, 10 Jan 2025 16:25:24 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<rafael@kernel.org>, <bp@alien8.de>, <dan.j.williams@intel.com>,
+	<tony.luck@intel.com>, <dave@stgolabs.net>, <alison.schofield@intel.com>,
+	<ira.weiny@intel.com>
+Subject: Re: [PATCH v2 2/4] acpi/hmat / cxl: Add extended linear cache
+ support for CXL
+Message-ID: <20250110162524.00004d1b@huawei.com>
+In-Reply-To: <20250110151913.3462283-3-dave.jiang@intel.com>
+References: <20250110151913.3462283-1-dave.jiang@intel.com>
+	<20250110151913.3462283-3-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] acpi/ghes, cper: Recognize and cache CXL Protocol
- errors
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>
-References: <20241217022032.87298-1-Smita.KoralahalliChannabasappa@amd.com>
- <20241217022032.87298-5-Smita.KoralahalliChannabasappa@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20241217022032.87298-5-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Fri, 10 Jan 2025 08:17:45 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-
-On 12/16/24 7:20 PM, Smita Koralahalli wrote:
-> Add support in GHES to detect and process CXL CPER Protocol errors, as
-> defined in UEFI v2.10, section N.2.13.
+> The current cxl region size only indicates the size of the CXL memory
+> region without accounting for the extended linear cache size. Retrieve the
+> cache size from HMAT and append that to the cxl region size for the cxl
+> region range that matches the SRAT range that has extended linear cache
+> enabled.
 > 
-> Define struct cxl_cper_prot_err_work_data to cache CXL protocol error
-> information, including RAS capabilities and severity, for further
-> handling.
+> The SRAT defines the whole memory range that includes the extended linear
+> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
+> Cache Information Structure defines the size of the extended linear cache
+> size and matches to the SRAT Memory Affinity Structure by the memory
+> proxmity domain. Add a helper to match the cxl range to the SRAT memory
+> range in order to retrieve the cache size.
 > 
-> These cached CXL CPER records will later be processed by workqueues
-> within the CXL subsystem.
+> There are several places that checks the cxl region range against the
+> decoder range. Use new helper to check between the two ranges and address
+> the new cache size.
 > 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-With the issue Ira pointed out fixed,
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/acpi/apei/ghes.c | 52 ++++++++++++++++++++++++++++++++++++++++
->  include/cxl/event.h      |  6 +++++
->  2 files changed, 58 insertions(+)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index ada93cfde9ba..63afef58b3b7 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -676,6 +676,54 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  	schedule_work(&entry->work);
->  }
->  
-> +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> +		return;
-> +	}
-> +
-> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-> +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> +				   prot_err->err_len);
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
-> +
-> +	switch (prot_err->agent_type) {
-> +	case RCD:
-> +	case DEVICE:
-> +	case LD:
-> +	case FMLD:
-> +	case RP:
-> +	case DSP:
-> +	case USP:
-> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +
-> +		dvsec_start = (u8 *)(prot_err + 1);
-> +		cap_start = dvsec_start + prot_err->dvsec_len;
-> +
-> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> +		wd.severity = cper_severity_to_aer(severity);
-> +		break;
-> +	default:
-> +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
-> +				   prot_err->agent_type);
-> +		return;
-> +	}
-> +}
-> +
->  /* Room for 8 entries for each of the 4 event log queues */
->  #define CXL_CPER_FIFO_DEPTH 32
->  DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-> @@ -779,6 +827,10 @@ static bool ghes_do_proc(struct ghes *ghes,
->  		}
->  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
->  			queued = ghes_handle_arm_hw_error(gdata, sev, sync);
-> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-> +			struct cxl_cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
-> +
-> +			cxl_cper_post_prot_err(prot_err, gdata->error_severity);
->  		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
->  			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
->  
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index 66d85fc87701..ee1c3dec62fa 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -232,6 +232,12 @@ struct cxl_ras_capability_regs {
->  	u32 header_log[16];
->  };
->  
-> +struct cxl_cper_prot_err_work_data {
-> +	struct cxl_cper_sec_prot_err prot_err;
-> +	struct cxl_ras_capability_regs ras_cap;
-> +	int severity;
-> +};
-> +
->  #ifdef CONFIG_ACPI_APEI_GHES
->  int cxl_cper_register_work(struct work_struct *work);
->  int cxl_cper_unregister_work(struct work_struct *work);
 
