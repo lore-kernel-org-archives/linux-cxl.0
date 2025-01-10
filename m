@@ -1,321 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F8720E714;
-	Fri, 10 Jan 2025 16:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C401E213255;
+	Fri, 10 Jan 2025 16:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736527479; cv=none; b=QLC0oO1gY10bgwW8wJ/iRg9kCqNDddB9ReY6EnuedEnCg6gG4mo1gOz6IhKBkX2h8rgxb5p4onEhZiFjH7LhuiuWhPVTKHfUmXFVwhh4LpEz0Xu1WJ69w5tS2hV8LhmnLyxan8T5ik063AeG7/NO0PGLEw24pEmgUadAhay572c=
+	t=1736527607; cv=none; b=SVz948suaLPkNbJDx95089zqh+uLnz0mjWWOmoRA5iwurOkIZ1HvII7Z2DSN/0hSu+UHg57TZsbhXpmIllpL/NGrt3hh0B8RbwCloYjnK0M3GdF8OKFeEPeDCzW9Khy74LDVWxeUCkZCwRLgjy+zqKZDZuw3ytotS/n7ZPVU9fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736527479; c=relaxed/simple;
-	bh=C4CeHm6Or5VLGEzPlFMQwU1Lqi8VzWhjclCv/3py67E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JeTyoKJckcn1j18SB8FF/HRCUSvYcf8IHnEp/V/J0ocEKu2JNfvBxGu8ktPLWULWbt7r2p8pb0uPDbeQOOtoOpygLSpcSBkbL34NPo+8/Qwj47ikpjySUxtm6Qy8iFjWu2X5IAkHiV+KmodNK2A9eOBxZpQtFq7Bp9nqkzDZJpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5UR+WQT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5UR+WQT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADD1CC4CED6;
-	Fri, 10 Jan 2025 16:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736527478;
-	bh=C4CeHm6Or5VLGEzPlFMQwU1Lqi8VzWhjclCv/3py67E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O5UR+WQTuOopW+m3Pi1zmwj3sDf93V+XjOFJYBM1RzPO3sDZ1K+ormfip92T4e79w
-	 U7XfSgY+NLYzXu3FSqu6NPO6Duv551jmp1bCI/QrpFZEE2pZI1sr9JEOmCb6BY1OnU
-	 ygd6hC3MnYQ2N+RhjQSfldq11cHroGlaZKiItHVNmIb3DkLT0NVgh6huf2W9+DLo9X
-	 YeINgKpATzcjR+uCpeX3HIxD3GxiQDjsZM7pKUDW6Vf7Go2Sgai6ua3WPKo0H4Ox5B
-	 AqV/p/rvC1rT0uQQGOw0QzXTSq+PszsSgUN9oJlsXQxouGCrMbf3PP8PksxH6qiYUq
-	 YoNvaeUovuyGw==
-Date: Fri, 10 Jan 2025 08:44:38 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
-	alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, tytso@mit.edu, linmiaohe@huawei.com,
-	david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 05/26] fs/dax: Create a common implementation to break
- DAX layouts
-Message-ID: <20250110164438.GJ6156@frogsfrogsfrogs>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <79936ac15c917f4004397027f648d4fc9c092424.1736488799.git-series.apopple@nvidia.com>
+	s=arc-20240116; t=1736527607; c=relaxed/simple;
+	bh=Zii7XqOSGbbXceje4R3ZkaqSRVRGq0FlF0XIASCT+vw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GedtBIEON4MHK/J8MQuNwcL+aJtwhWSFh9WB3g2Z+sKia9G8WxFC7zGuGP7PTZG/Zq75qMk+gdoFqozKm/AjRXFJn6c/XGx+kk4SMUOzNebUeHRlpzwh2HXlComesCiQpmxmFK8b2sU+9wOyvLyMtDScbJ/5wZoHWN4RR9iYqlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV6vh25f2z6M4NM;
+	Sat, 11 Jan 2025 00:45:04 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 468D614039E;
+	Sat, 11 Jan 2025 00:46:42 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 10 Jan 2025 17:46:42 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 10 Jan 2025 17:46:42 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "dave.jiang@intel.com" <dave.jiang@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linuxarm
+	<linuxarm@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)"
+	<prime.zeng@hisilicon.com>
+Subject: RE: [PATCH v5 0/6] Update Event Records to CXL spec rev 3.1
+Thread-Topic: [PATCH v5 0/6] Update Event Records to CXL spec rev 3.1
+Thread-Index: AQHbY1alsZyFrQ7OeU6mHkMzrNfbP7MQG9mAgAAamgA=
+Date: Fri, 10 Jan 2025 16:46:41 +0000
+Message-ID: <1b090d80a49a47e7b220aca07dce4cae@huawei.com>
+References: <20250110115556.1654-1-shiju.jose@huawei.com>
+ <20250110160645.00007b74@huawei.com>
+In-Reply-To: <20250110160645.00007b74@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79936ac15c917f4004397027f648d4fc9c092424.1736488799.git-series.apopple@nvidia.com>
 
-On Fri, Jan 10, 2025 at 05:00:33PM +1100, Alistair Popple wrote:
-> Prior to freeing a block file systems supporting FS DAX must check
-> that the associated pages are both unmapped from user-space and not
-> undergoing DMA or other access from eg. get_user_pages(). This is
-> achieved by unmapping the file range and scanning the FS DAX
-> page-cache to see if any pages within the mapping have an elevated
-> refcount.
-> 
-> This is done using two functions - dax_layout_busy_page_range() which
-> returns a page to wait for the refcount to become idle on. Rather than
-> open-code this introduce a common implementation to both unmap and
-> wait for the page to become idle.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 10 January 2025 16:07
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: dave.jiang@intel.com; dan.j.williams@intel.com; alison.schofield@intel=
+.com;
+>nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org=
+;
+>Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>Zengtao (B) <prime.zeng@hisilicon.com>
+>Subject: Re: [PATCH v5 0/6] Update Event Records to CXL spec rev 3.1
+>
+>On Fri, 10 Jan 2025 11:55:50 +0000
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add updates in the CXL events records and CXL trace events
+>> implementations for the changes in CXL spec rev 3.1.
+>>
+>> Shiju Jose (6):
+>>   cxl/events: Update Common Event Record to CXL spec rev 3.1
+>>   cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
+>>   cxl/events: Update General Media Event Record to CXL spec rev 3.1
+>>   cxl/events: Update DRAM Event Record to CXL spec rev 3.1
+>>   cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
+>>   cxl/test: Update test code for event records to CXL spec rev 3.1
+>>
+>> Changes:
+>> V4 -> V5
+>> 1. Reverted changes made in v4 for overcoming parsing error when
+>> libtraceevent in userspace parses the CXL trace events, for rasdaemon.
+>> This was due to trace event's format file is larger than PAGE_SIZE,
+>> not supported reading complete format file in one go in the kernel and
+>> thus fixed in the rasdaemon.
+>
+>Great to see that resolved.
+>
+>> 2. Rebased to v6.13-rc5.
+>
+>Should probably say why when doing a rebase to something other than rc1.
+>In this case this is what cxl.git/next is based on after some fixes earlie=
+r in the
+>cycle so a sensible choice for this set.
 
-So now that Dan Carpenter has complained, I guess I should look at
-this...
+I checked. These patches applied cleanly in cxl.git/next and buid okay.=20
 
-> ---
-> 
-> Changes for v5:
-> 
->  - Don't wait for idle pages on non-DAX mappings
-> 
-> Changes for v4:
-> 
->  - Fixed some build breakage due to missing symbol exports reported by
->    John Hubbard (thanks!).
-> ---
->  fs/dax.c            | 33 +++++++++++++++++++++++++++++++++
->  fs/ext4/inode.c     | 10 +---------
->  fs/fuse/dax.c       | 27 +++------------------------
->  fs/xfs/xfs_inode.c  | 23 +++++------------------
->  fs/xfs/xfs_inode.h  |  2 +-
->  include/linux/dax.h | 21 +++++++++++++++++++++
->  mm/madvise.c        |  8 ++++----
->  7 files changed, 68 insertions(+), 56 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index d010c10..9c3bd07 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -845,6 +845,39 @@ int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index)
->  	return ret;
->  }
->  
-> +static int wait_page_idle(struct page *page,
-> +			void (cb)(struct inode *),
-> +			struct inode *inode)
-> +{
-> +	return ___wait_var_event(page, page_ref_count(page) == 1,
-> +				TASK_INTERRUPTIBLE, 0, 0, cb(inode));
-> +}
-> +
-> +/*
-> + * Unmaps the inode and waits for any DMA to complete prior to deleting the
-> + * DAX mapping entries for the range.
-> + */
-> +int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
-> +		void (cb)(struct inode *))
-> +{
-> +	struct page *page;
-> +	int error;
-> +
-> +	if (!dax_mapping(inode->i_mapping))
-> +		return 0;
-> +
-> +	do {
-> +		page = dax_layout_busy_page_range(inode->i_mapping, start, end);
-> +		if (!page)
-> +			break;
-> +
-> +		error = wait_page_idle(page, cb, inode);
-> +	} while (error == 0);
-
-You didn't initialize error to 0, so it could be any value.  What if
-dax_layout_busy_page_range returns null the first time through the loop?
-
-> +
-> +	return error;
-> +}
-> +EXPORT_SYMBOL_GPL(dax_break_mapping);
-> +
->  /*
->   * Invalidate DAX entry if it is clean.
->   */
-
-<I'm no expert, skipping to xfs>
-
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 42ea203..295730a 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -2715,21 +2715,17 @@ xfs_mmaplock_two_inodes_and_break_dax_layout(
->  	struct xfs_inode	*ip2)
->  {
->  	int			error;
-> -	bool			retry;
->  	struct page		*page;
->  
->  	if (ip1->i_ino > ip2->i_ino)
->  		swap(ip1, ip2);
->  
->  again:
-> -	retry = false;
->  	/* Lock the first inode */
->  	xfs_ilock(ip1, XFS_MMAPLOCK_EXCL);
-> -	error = xfs_break_dax_layouts(VFS_I(ip1), &retry);
-> -	if (error || retry) {
-> +	error = xfs_break_dax_layouts(VFS_I(ip1));
-> +	if (error) {
->  		xfs_iunlock(ip1, XFS_MMAPLOCK_EXCL);
-> -		if (error == 0 && retry)
-> -			goto again;
-
-Hmm, so the retry loop has moved into xfs_break_dax_layouts, which means
-that we no longer cycle the MMAPLOCK.  Why was the lock cycling
-unnecessary?
-
->  		return error;
->  	}
->  
-> @@ -2988,19 +2984,11 @@ xfs_wait_dax_page(
->  
->  int
->  xfs_break_dax_layouts(
-> -	struct inode		*inode,
-> -	bool			*retry)
-> +	struct inode		*inode)
->  {
-> -	struct page		*page;
-> -
->  	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
->  
-> -	page = dax_layout_busy_page(inode->i_mapping);
-> -	if (!page)
-> -		return 0;
-> -
-> -	*retry = true;
-> -	return dax_wait_page_idle(page, xfs_wait_dax_page, inode);
-> +	return dax_break_mapping_inode(inode, xfs_wait_dax_page);
->  }
->  
->  int
-> @@ -3018,8 +3006,7 @@ xfs_break_layouts(
->  		retry = false;
->  		switch (reason) {
->  		case BREAK_UNMAP:
-> -			error = xfs_break_dax_layouts(inode, &retry);
-> -			if (error || retry)
-> +			if (xfs_break_dax_layouts(inode))
-
-dax_break_mapping can return -ERESTARTSYS, right?  So doesn't this need
-to be:
-			error = xfs_break_dax_layouts(inode);
-			if (error)
-				break;
-
-Hm?
-
---D
-
->  				break;
->  			fallthrough;
->  		case BREAK_WRITE:
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index 1648dc5..c4f03f6 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -593,7 +593,7 @@ xfs_itruncate_extents(
->  	return xfs_itruncate_extents_flags(tpp, ip, whichfork, new_size, 0);
->  }
->  
-> -int	xfs_break_dax_layouts(struct inode *inode, bool *retry);
-> +int	xfs_break_dax_layouts(struct inode *inode);
->  int	xfs_break_layouts(struct inode *inode, uint *iolock,
->  		enum layout_break_reason reason);
->  
-> diff --git a/include/linux/dax.h b/include/linux/dax.h
-> index 9b1ce98..f6583d3 100644
-> --- a/include/linux/dax.h
-> +++ b/include/linux/dax.h
-> @@ -228,6 +228,20 @@ static inline void dax_read_unlock(int id)
->  {
->  }
->  #endif /* CONFIG_DAX */
-> +
-> +#if !IS_ENABLED(CONFIG_FS_DAX)
-> +static inline int __must_check dax_break_mapping(struct inode *inode,
-> +			    loff_t start, loff_t end, void (cb)(struct inode *))
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void dax_break_mapping_uninterruptible(struct inode *inode,
-> +						void (cb)(struct inode *))
-> +{
-> +}
-> +#endif
-> +
->  bool dax_alive(struct dax_device *dax_dev);
->  void *dax_get_private(struct dax_device *dax_dev);
->  long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
-> @@ -251,6 +265,13 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
->  int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
->  int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
->  				      pgoff_t index);
-> +int __must_check dax_break_mapping(struct inode *inode, loff_t start,
-> +				loff_t end, void (cb)(struct inode *));
-> +static inline int __must_check dax_break_mapping_inode(struct inode *inode,
-> +						void (cb)(struct inode *))
-> +{
-> +	return dax_break_mapping(inode, 0, LLONG_MAX, cb);
-> +}
->  int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
->  				  struct inode *dest, loff_t destoff,
->  				  loff_t len, bool *is_same,
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 49f3a75..1f4c99e 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1063,7 +1063,7 @@ static int guard_install_pud_entry(pud_t *pud, unsigned long addr,
->  	pud_t pudval = pudp_get(pud);
->  
->  	/* If huge return >0 so we abort the operation + zap. */
-> -	return pud_trans_huge(pudval) || pud_devmap(pudval);
-> +	return pud_trans_huge(pudval);
->  }
->  
->  static int guard_install_pmd_entry(pmd_t *pmd, unsigned long addr,
-> @@ -1072,7 +1072,7 @@ static int guard_install_pmd_entry(pmd_t *pmd, unsigned long addr,
->  	pmd_t pmdval = pmdp_get(pmd);
->  
->  	/* If huge return >0 so we abort the operation + zap. */
-> -	return pmd_trans_huge(pmdval) || pmd_devmap(pmdval);
-> +	return pmd_trans_huge(pmdval);
->  }
->  
->  static int guard_install_pte_entry(pte_t *pte, unsigned long addr,
-> @@ -1183,7 +1183,7 @@ static int guard_remove_pud_entry(pud_t *pud, unsigned long addr,
->  	pud_t pudval = pudp_get(pud);
->  
->  	/* If huge, cannot have guard pages present, so no-op - skip. */
-> -	if (pud_trans_huge(pudval) || pud_devmap(pudval))
-> +	if (pud_trans_huge(pudval))
->  		walk->action = ACTION_CONTINUE;
->  
->  	return 0;
-> @@ -1195,7 +1195,7 @@ static int guard_remove_pmd_entry(pmd_t *pmd, unsigned long addr,
->  	pmd_t pmdval = pmdp_get(pmd);
->  
->  	/* If huge, cannot have guard pages present, so no-op - skip. */
-> -	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
-> +	if (pmd_trans_huge(pmdval))
->  		walk->action = ACTION_CONTINUE;
->  
->  	return 0;
-> -- 
-> git-series 0.9.1
-> 
+Thanks,
+Shiju
+>
+>As far as I'm concerned this set is ready to go, but more eyes always good=
+ if
+>anyone has time! Same for the ras-daemon series once this is queued for th=
+e
+>kernel.
+>
+>Jonathan
+>
+>> 3. Tested with rasdaemon and ras-mc-ctl tools updated for CXL spec rev 3=
+.1
+>>    event record changes.
