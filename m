@@ -1,42 +1,40 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E193C20B804;
-	Fri, 10 Jan 2025 11:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162D420CCE3;
+	Fri, 10 Jan 2025 12:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736510183; cv=none; b=PRhwsRCWT/v81Z8YiC5y59Pp59YwrkvUnrZVHMxXcWN/+PdbsfQyOblPa2UAbwvyg1plJw0z11gcq5de2zDB2jZGVh4Zoni6wpIOBfz+kv6Q5OtafVevjG7vSjskhVjdgjvRVUE/1CBHbCWHz1s6PNCbmrpCNpH44UWAxgXyhC8=
+	t=1736512021; cv=none; b=VnaB06RfntLoyaEHpav0zwrQ3dmmfKBHp08rTnnGcwQptrv21FsJdfMXQV0aBgaXHvMZ23tT3/hznvwJ5d2u9nNmtBw+Fn/zZbwo7H7BddgUp8q4/8+mgT6sjGrtrFftbz+98fOeRuLf1EXr5vJyl8Rls/5GvxaQZ716EX5yCio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736510183; c=relaxed/simple;
-	bh=6poiPtT2CPxngV/kULawqZawlEABTUj/ln+hKLVyGC8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UrwyQeDvhqQ/2DhEmJdgN406CvCxTTxa46hDpFF6Fj5+LO2iE+sEDgq3fVLvXtbiSmrOjz+huJWUoFUt6s4Lioy9ySX7Cm5hZpfl5AVzHZC0olaZDg9G63QNbGYb8n4E6GYcowlU+xGdXpuB+0yjkv78/PYxtDbxEMbrGDJv4mg=
+	s=arc-20240116; t=1736512021; c=relaxed/simple;
+	bh=CZJ5qVQUmZxjajS+18bJR2Ms/rDK7xzy17Be/a0ILFk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XQ7WKH2HuQGRflxmAI6WNWZmqCnLa3yp9+lVkpPkJuRrhT0fuXYOmjLEnS/8Qc7Yox2RnPLIjWpZZrVZTkKh4p5XVOjvkYwyjiWwIk+QyV/naFo6mHMhRatAOQSVsYmO6HY9jajZB+g9cfXSTuxkyrwL8EWNlFsXXHYBPMFiZwQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV0P60fRPz6K5p4;
-	Fri, 10 Jan 2025 19:51:38 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV18P6Kdfz67Qgw;
+	Fri, 10 Jan 2025 20:25:41 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 064CD140A08;
-	Fri, 10 Jan 2025 19:56:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 22F5F140A08;
+	Fri, 10 Jan 2025 20:26:56 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.170.14) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 10 Jan 2025 12:56:18 +0100
+ 15.1.2507.39; Fri, 10 Jan 2025 13:26:55 +0100
 From: <shiju.jose@huawei.com>
-To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<mchehab@kernel.org>, <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
 	<nifan.cxl@gmail.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
+	<dave@stgolabs.net>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v5 6/6] cxl/test: Update test code for event records to CXL spec rev 3.1
-Date: Fri, 10 Jan 2025 11:55:56 +0000
-Message-ID: <20250110115556.1654-7-shiju.jose@huawei.com>
+Subject: [PATCH v2 00/14]  rasdaemon: cxl: Update CXL event logging and recording to CXL spec rev 3.1
+Date: Fri, 10 Jan 2025 12:26:26 +0000
+Message-ID: <20250110122641.1668-1-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20250110115556.1654-1-shiju.jose@huawei.com>
-References: <20250110115556.1654-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,81 +43,66 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500007.china.huawei.com (7.182.85.172)
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Update test code for General Media, DRAM, Memory Module Event
-Records to CXL spec rev 3.1.
+1. Update CXL event logging and recording for CXL spec rev 3.1 and for the
+following and corresponding kernel CXL trace events changes.
+https://lore.kernel.org/all/20250110115556.1654-1-shiju.jose@huawei.com/
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- tools/testing/cxl/test/mem.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+2. Add following fixes.
+ - Fix logging of memory event type field of DRAM trace event.
+ - Fix mismatch in 'region' field's name with that in kernel DRAM trace
+   event.
+ - Fix for parsing error when trace event's format file is
+    larger than PAGE_SIZE 
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 347c1e7b37bd..8d731bd63988 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -401,6 +401,10 @@ struct cxl_test_gen_media gen_media = {
- 			.channel = 1,
- 			.rank = 30,
- 		},
-+		.component_id = { 0x3, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.cme_threshold_ev_flags = 3,
-+		.cme_count = { 33, 0, 0 },
-+		.sub_type = 0x2,
- 	},
- };
- 
-@@ -429,6 +433,11 @@ struct cxl_test_dram dram = {
- 		.bank_group = 5,
- 		.bank = 2,
- 		.column = {0xDE, 0xAD},
-+		.component_id = { 0x1, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.sub_channel = 8,
-+		.cme_threshold_ev_flags = 2,
-+		.cvme_count = { 14, 0, 0 },
-+		.sub_type = 0x5,
- 	},
- };
- 
-@@ -456,7 +465,10 @@ struct cxl_test_mem_module mem_module = {
- 			.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
- 			.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
- 			.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
--		}
-+		},
-+		/* .validity_flags = <set below> */
-+		.component_id = { 0x2, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
-+		.event_sub_type = 0x3,
- 	},
- };
- 
-@@ -478,13 +490,18 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
- 
- static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- {
--	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
-+	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK |
-+			   CXL_GMER_VALID_COMPONENT | CXL_GMER_VALID_COMPONENT_ID_FORMAT,
- 			   &gen_media.rec.media_hdr.validity_flags);
- 
- 	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
--			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
-+			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN | CXL_DER_VALID_SUB_CHANNEL |
-+			   CXL_DER_VALID_COMPONENT | CXL_DER_VALID_COMPONENT_ID_FORMAT,
- 			   &dram.rec.media_hdr.validity_flags);
- 
-+	put_unaligned_le16(CXL_MMER_VALID_COMPONENT | CXL_MMER_VALID_COMPONENT_ID_FORMAT,
-+			   &mem_module.rec.validity_flags);
-+
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
- 		      (struct cxl_event_record_raw *)&gen_media);
+Shiju Jose (14):
+  rasdaemon: Fix for parsing error when trace event's format file is
+    larger than PAGE_SIZE
+  rasdaemon: cxl: Fix logging of memory event type of DRAM trace event
+  rasdaemon: cxl: Fix mismatch in region field's name with kernel DRAM
+    trace event
+  rasdaemon: cxl: Add automatic indexing for storing CXL fields in
+    SQLite database
+  rasdaemon: cxl: Update common event to CXL spec rev 3.1
+  rasdaemon: cxl: Add Component Identifier formatting for CXL spec rev
+    3.1
+  rasdaemon: cxl: Update CXL general media event to CXL spec rev 3.1
+  rasdaemon: cxl: Update CXL DRAM event to CXL spec rev 3.1
+  rasdaemon: cxl: Update memory module event to CXL spec rev 3.1
+  rasdaemon: ras-mc-ctl: Fix logging of memory event type in CXL DRAM
+    error table
+  rasdaemon: ras-mc-ctl: Update logging of common event data to align
+    with CXL spec rev 3.1
+  rasdaemon: ras-mc-ctl: Update logging of CXL general media event data
+    to align with CXL spec rev 3.1
+  rasdaemon: ras-mc-ctl: Update logging of CXL DRAM event data to align
+    with CXL spec rev 3.1
+  rasdaemon: ras-mc-ctl: Update logging of CXL memory module data to
+    align with CXL spec rev 3.1
+
+Changes
+V1 -> V2
+1. Fixed follwoing comments from Jonathan on V1,
+   - Return negative error code in the patch
+     rasdaemon: cxl: Add automatic indexing for storing CXL fields in SQLite database
+   - Removed line break in the patch description rasdaemon: cxl: Fix mismatch
+     in region field's name with kernel DRAM trace event.
+2. Added fix for parsing error when trace event's format file is
+    larger than PAGE_SIZE.
+3. Rebased to latest code.
+
+ ras-cxl-handler.c  | 262 ++++++++++++++++++++++++++++++++++++++++++---
+ ras-events.c       |  21 ++--
+ ras-record.c       | 192 ++++++++++++++++++++++-----------
+ ras-record.h       |  21 ++++
+ ras-report.c       |  30 ++++--
+ util/ras-mc-ctl.in | 190 +++++++++++++++++++++++++++-----
+ 6 files changed, 600 insertions(+), 116 deletions(-)
+
 -- 
 2.43.0
 
