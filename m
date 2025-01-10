@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2133920D4E0;
-	Fri, 10 Jan 2025 12:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D5620D4E1;
+	Fri, 10 Jan 2025 12:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736512022; cv=none; b=gc+tXr1u1LF+b3Mkeblv53cfdDXND9nZWb/zw/5xYrnQRpL+EYJyHzi3cXsl5+ANlFV4sm8ZZuPjCiGoantIK4s7bwWlxkbCTaP+PlzcoxTEKpWsinoj0RAkFhRLcHs6QT1piHbB9HNTYuoWMrUFRcIx1Y/X58TBpYGnzNmYj0o=
+	t=1736512023; cv=none; b=ROk+Ub13xnMozOdRXSbXvHsk18NKVddeOD6e4M4qTNhuGOenZDHLGu6dgoi533H2KUOmlV4/9g23oS/rjpnRnHDfevqyF7cHGezM4XTnHfJnjU6CjfVu6EKg9938/g02Jj13CfD20sygzbDzxQkzbnA6EUESe0zFkOINJTFBhCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736512022; c=relaxed/simple;
-	bh=5PrNSKiAb94z9S7D8ygUAtw6L2KNH3DdWyRMQ9xN3Gc=;
+	s=arc-20240116; t=1736512023; c=relaxed/simple;
+	bh=EyIzN5hw5gWxxHs3Qj+6T0IsAi7m2FKPlyIvVTbPZ7I=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eECawyC7vZxd2ALIa1zdhVPUph1MC9DBIW0vSUKD82L/v/IZbBJ58FbUUG1odOSA85YCJH/n5qKkT91BfbVR3h5GBvptPEAotA6bKR8yG4+zfl4RjAFtFZ8jSVqeKO+9ThGkazHOAmgcr8IXSMML2vVPsfRw5JIKHnf8ITX11xg=
+	 MIME-Version:Content-Type; b=c0Z9sQ68sZWnpqag/HS1pC30mKDpTEeIneGVlgFcONRhm5rnxPW0lUssMRSOvcSiFh4wCC+uAXeSOVITq/X2YdWr0NHc/qrmQDR+IYgp/owvQfbjg9swIgYzzaVRBhXtAY9Do0fBYYLD3zOCCrhg4jYzBkbt7+WVl1X2iyOtypg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV17z3x4Gz6GFlq;
-	Fri, 10 Jan 2025 20:25:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV14V3JCpz6K5VF;
+	Fri, 10 Jan 2025 20:22:18 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3DF74140A08;
-	Fri, 10 Jan 2025 20:26:57 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 74C1C140A86;
+	Fri, 10 Jan 2025 20:26:59 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.170.14) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 10 Jan 2025 13:26:56 +0100
+ 15.1.2507.39; Fri, 10 Jan 2025 13:26:58 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<mchehab@kernel.org>, <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
@@ -32,9 +32,9 @@ To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<dave@stgolabs.net>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 01/14] rasdaemon: Fix for parsing error when trace event's format file is larger than PAGE_SIZE
-Date: Fri, 10 Jan 2025 12:26:27 +0000
-Message-ID: <20250110122641.1668-2-shiju.jose@huawei.com>
+Subject: [PATCH v2 03/14] rasdaemon: cxl: Fix mismatch in region field's name with kernel DRAM trace event
+Date: Fri, 10 Jan 2025 12:26:29 +0000
+Message-ID: <20250110122641.1668-4-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250110122641.1668-1-shiju.jose@huawei.com>
 References: <20250110122641.1668-1-shiju.jose@huawei.com>
@@ -51,76 +51,28 @@ X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-When a trace event's format file is larger than PAGE_SIZE (4096) then
-libtraceevent returns parsing failed when rasdaemon reads the fields.
-The reason found that tep_parse_event() call in the add_event_handler()
-internally fails in libtraceevent because of the incomplete format file
-data read. However libtraceevent did not return error in this stage,
-which is fixed in the following patch for libtraceevent.
-https://lore.kernel.org/all/20250109102338.6128644d@gandalf.local.home/
+Fix mismatch in 'region' field's name with kernel DRAM trace event.
 
-When rasdaemon reads a trace event format file,the maximum data size
-that can be read is limited to PAGE_SIZE by the seq_read() and
-seq_read_iter() functions in the kernel. This results in userspace
-receiving partial data if the format file is larger than PAGE_SIZE,
-requiring fix in the rasdaemon to read the complete data from the
-format file.
-
-Add fix for reading trace event format files larger than PAGE_SIZE
-in add_event_handler().
-
+Fixes: ea224ad58b37 ("rasdaemon: CXL: Extract, log and record region info from cxl_general_media and cxl_dram events")
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- ras-events.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ ras-cxl-handler.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ras-events.c b/ras-events.c
-index 5d8118a..6692a31 100644
---- a/ras-events.c
-+++ b/ras-events.c
-@@ -376,7 +376,7 @@ static int filter_ras_mc_event(struct ras_events *ras, char *group, char *event,
+diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c
+index 8733b2b..7d4fc9f 100644
+--- a/ras-cxl-handler.c
++++ b/ras-cxl-handler.c
+@@ -966,7 +966,7 @@ int ras_cxl_dram_event_handler(struct trace_seq *s,
+ 	if (trace_seq_printf(s, "hpa:0x%llx ", (unsigned long long)ev.hpa) <= 0)
+ 		return -1;
  
- static int get_pagesize(struct ras_events *ras, struct tep_handle *pevent)
- {
--	int fd, len, page_size = 4096;
-+	int fd, len, page_size = 8192;
- 	char buf[page_size];
- 
- 	fd = open_trace(ras, "events/header_page", O_RDONLY);
-@@ -827,7 +827,8 @@ static int add_event_handler(struct ras_events *ras, struct tep_handle *pevent,
- 			     unsigned int page_size, char *group, char *event,
- 			     tep_event_handler_func func, char *filter_str, int id)
- {
--	int fd, size, rc;
-+	int fd, rc;
-+	int size = 0;
- 	char *page, fname[MAX_PATH + 1];
- 	struct tep_event_filter *filter = NULL;
- 
-@@ -857,13 +858,17 @@ static int add_event_handler(struct ras_events *ras, struct tep_handle *pevent,
- 		return rc;
- 	}
- 
--	size = read(fd, page, page_size);
-+	do {
-+		rc = read(fd, page + size, page_size);
-+		if (rc < 0) {
-+			log(TERM, LOG_ERR, "Can't get arch page size\n");
-+			free(page);
-+			close(fd);
-+			return size;
-+		}
-+		size += rc;
-+	} while (rc > 0);
- 	close(fd);
--	if (size < 0) {
--		log(TERM, LOG_ERR, "Can't get arch page size\n");
--		free(page);
--		return size;
--	}
- 
- 	/* Registers the special event handlers */
- 	rc = tep_register_event_handler(pevent, -1, group, event, func, ras);
+-	ev.region = tep_get_field_raw(s, event, "region", record, &len, 1);
++	ev.region = tep_get_field_raw(s, event, "region_name", record, &len, 1);
+ 	if (!ev.region)
+ 		return -1;
+ 	if (trace_seq_printf(s, "region:%s ", ev.region) <= 0)
 -- 
 2.43.0
 
