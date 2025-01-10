@@ -1,141 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254C5224AE1;
-	Fri, 10 Jan 2025 20:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C0620ADDA
+	for <linux-cxl@vger.kernel.org>; Fri, 10 Jan 2025 22:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736540297; cv=none; b=r2Jqa1xx/J7cFpIbUFwvnO8zr3BCPhFO9Txw2nPFiBFumnTqMP1Wl7FnnqFR9HWNIfH+MR5cegGyj4IUiblLk3/YCjQCXqkf67rCUcYOF/rbLzvrkwZuNlRQZk410pDrbSKxGEZfevNkIckg+QcaAaABcp6xLyLIbgKcgJU5F70=
+	t=1736549320; cv=none; b=T3ZT14gMwzHAVnLjAQ2P3GvYRNWHpLti75vokV+bUx0X+K7wnaRrm8HrQlHJBFk8t0r4YZEzfWU/W8H39NRBRE8PcMu7jAohksnvTFV/GDXVgZ9vcOvm+MzgqERg2jSNeCrs3oRpEAGZAUwJY+KYMB6D/LwCXE14NvNNlGvneTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736540297; c=relaxed/simple;
-	bh=HnTf4myMKb5ekz0cFfVdAqosTnJsDphuocoPlzgRb2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TZLbI67/skjxCcobAvLFfFYA9dhpdvmbWBKdrq4k3mYZuPkZMGIAUlZSUtrIiG79jfeKlDbb/iAhT0z9xwHG75/6aLfF/NURD/l4Utj3cPj2uvX6j3fiIUojprerK+btWutCgY9hHdZCTWMNtmRfbfvItylhgGmo4wk7hFtQ+Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N2aPoYl2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736549320; c=relaxed/simple;
+	bh=tkB0rFjPfcHpbWATNzDdg3kElu7IjVuHK0SSAV+NuIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ldpX02oZMyOro5xRhjTRiQ1KbRGGuOP6ou5gvT1HuOKe7+Fte0Y/oDq5j9Cx4eTys7MZpW4jpgRN42KDagp+1bzPcq9bTvV+bBYbFU0Vwjzlr7oH3AGx6Ef5GfN7W5jBdvTKR52i/wlGfg8wgqx0ugLVM5AELGf4FLa0hTsELco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=O9CD+RFd; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2aPoYl2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736540295; x=1768076295;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HnTf4myMKb5ekz0cFfVdAqosTnJsDphuocoPlzgRb2A=;
-  b=N2aPoYl2OHIEGhCGz12VWMOdEVWfMBAC4PyLEevrmiJFzgTf8Kuld8Sn
-   1JGxArxX+tOvp5cpaKw6FY1e54cxaa+eqv2eCOp0ncbD6g5KX1mRxcII5
-   /d/dKlHfz98/bO62dqpXQF09c41gvbt/svKc71W/aiyeWq2mCwe56DBSV
-   zkj0hUxKYm/nqLtorM+P///LGtT5EyGpW403snvpPfiItcM9bUOKd8FSN
-   j8CJoQsdfzu+TtY4hLMSFozCx0MUbNu1BeswRZlxatyTvsEibiSYmcQZM
-   iIVfnIWvSQ4CFTZKdpUd7ngMG1u3PqGy13vLzmiq5aW9bc2CPEyLpw8Mr
-   g==;
-X-CSE-ConnectionGUID: VQV5Pc0qSSyMAShk1zZQjA==
-X-CSE-MsgGUID: PD1TtrSwRMyU1BYZThWxpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="36130852"
-X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
-   d="scan'208";a="36130852"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 12:18:14 -0800
-X-CSE-ConnectionGUID: yHUk3sfkTaqn7f1XJd8c2g==
-X-CSE-MsgGUID: 41JT+VQ6T5+W7y1e59Em3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="127115138"
-Received: from ehanks-mobl1.amr.corp.intel.com (HELO [10.125.111.175]) ([10.125.111.175])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 12:18:13 -0800
-Message-ID: <ba35a66c-2dcc-4bb6-a0bb-163f4209449e@intel.com>
-Date: Fri, 10 Jan 2025 13:18:11 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="O9CD+RFd"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b6f19a6c04so220789085a.0
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Jan 2025 14:48:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1736549318; x=1737154118; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0dBZXtHVzhR1fGQZI0ah+BrsIk9E/sNlK1+0WwUKNWs=;
+        b=O9CD+RFdHvS5gdOaKfmUcMC0MaG2whc9IKzYBwaAOBC6Xcg+4Ei7hBndfKPhJa7K1g
+         /CNHyojbyd2PInBPCOgyJugFpEmwmmyfgf0v/hGNZitrU27BXPA/dI6lA3FOVnHKINzY
+         1Xha578IJ24++s2iyJuRXqdUqb5Kd69M3DnfAQGEX0C6xWBTcUsHjqe0mbV6+SlgOZcT
+         svQpm/qo8DUqDL+V4Mo4V5a+rq11v/tgxlwOOxwETZr44ohByFPj4h5HAgOtgbeYPaeG
+         k0SSIYfutcAFSmgqCEBChYbY1U3ljy69jhmpbdDRu4qbLre55P07WUfxa4X4McQmUiJ4
+         0Fqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736549318; x=1737154118;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dBZXtHVzhR1fGQZI0ah+BrsIk9E/sNlK1+0WwUKNWs=;
+        b=Mce8PsAyldE6dBBTBsyl5vbQMuuxGSyVKHsKR5KRYoxIwMEi5Zo/TwFU2RRVIHiY3Z
+         /jW5vltvCvhkCwSwuuEBeU0m9sTeEAkwGRkTnNshsU2JORE8H9JM+RgkHmViv/7zGeQh
+         0z8UoU7Z//SsI7qE/I4/PWqCkR4f6x2sNUGDDzO8BqJz6LAscG6kCYiIdJSUsVo+07Y8
+         6337oAZxFbf1MrB4/MNwQsFc27cHTOUoXRR4ol2x15klW1fOxKI7Z2hp0SoFUNw/1GHX
+         ziG+loQuhTWsJs//mheOn9mCv7r/ypRDvyweI0KOhCSvcYyYpKQs87QIwVuKZTH8e+Zy
+         ECog==
+X-Forwarded-Encrypted: i=1; AJvYcCXvbPW6q1Pouuj/541smjDUbGgHDpZNk/noko7tJd8LY45yJvtdll1z/LxFNncQAERwWNFopBwFcVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAsej9Hy9QG2Vt8qkmOlC0Ez9LVEtlqRVz2qwj0QtPsJ3x3fEn
+	MsmA6JtoJfPrGUH8Ml0pikiPaWg+6cH8kZQE1QZYWKk/6YLti/3Dh4t4QwQsVIM=
+X-Gm-Gg: ASbGncvXYIhiWSz2bGDMSAVqn2Ok905TFgZZRVuOcEglOBIZM6sHtD8H16EuWYlDEOj
+	0gb33X/ExIAcraklIRgLgLIcGAjzRs1R1clWF1CFPDakkW1TjfuQMYRnup4D6oPxaU1Z4ZoQY6+
+	qQD9GsYsKtZiBC+p6YmjcaPsatXzSaG8ChD32y6FDtzREqjIvutW2THNprB5P9pZHjPcbDHtw0g
+	cToxce+0Rtk3K6EzOAcjBUpGmsYIcts3MpEtVtCMoy2dYOLVEtrMa16b4q99euuZHyxR96duzpU
+	vDG2qXHearzcGOJ7z90atfLHrhGNRRrUfuk2Z9c=
+X-Google-Smtp-Source: AGHT+IFdmF5uDtjxfu2kZmiXjGugIKcTeGTNZNtyc1uwSfDY/9bdoLLHSX3PoDntn3g2WmqbiNgPSA==
+X-Received: by 2002:a05:620a:462c:b0:7b1:161c:ef58 with SMTP id af79cd13be357-7bcd975aa7emr1743284985a.28.1736549317946;
+        Fri, 10 Jan 2025 14:48:37 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7bce3237f0bsm222057385a.7.2025.01.10.14.48.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2025 14:48:37 -0800 (PST)
+Date: Fri, 10 Jan 2025 17:48:35 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
+ ACPI PRMT
+Message-ID: <Z4Gjw5LGTppFfuAC@gourry-fedora-PF4VCD3F>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-26-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/6] Update Event Records to CXL spec rev 3.1
-To: Shiju Jose <shiju.jose@huawei.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "alison.schofield@intel.com" <alison.schofield@intel.com>,
- "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
- "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
- "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "dave@stgolabs.net" <dave@stgolabs.net>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Linuxarm <linuxarm@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>,
- "Zengtao (B)" <prime.zeng@hisilicon.com>
-References: <20250110115556.1654-1-shiju.jose@huawei.com>
- <20250110160645.00007b74@huawei.com>
- <1b090d80a49a47e7b220aca07dce4cae@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <1b090d80a49a47e7b220aca07dce4cae@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250107141015.3367194-26-rrichter@amd.com>
 
-
-
-On 1/10/25 9:46 AM, Shiju Jose wrote:
->> -----Original Message-----
->> From: Jonathan Cameron <jonathan.cameron@huawei.com>
->> Sent: 10 January 2025 16:07
->> To: Shiju Jose <shiju.jose@huawei.com>
->> Cc: dave.jiang@intel.com; dan.j.williams@intel.com; alison.schofield@intel.com;
->> nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->> dave@stgolabs.net; linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org;
->> Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->> Zengtao (B) <prime.zeng@hisilicon.com>
->> Subject: Re: [PATCH v5 0/6] Update Event Records to CXL spec rev 3.1
->>
->> On Fri, 10 Jan 2025 11:55:50 +0000
->> <shiju.jose@huawei.com> wrote:
->>
->>> From: Shiju Jose <shiju.jose@huawei.com>
->>>
->>> Add updates in the CXL events records and CXL trace events
->>> implementations for the changes in CXL spec rev 3.1.
->>>
->>> Shiju Jose (6):
->>>   cxl/events: Update Common Event Record to CXL spec rev 3.1
->>>   cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
->>>   cxl/events: Update General Media Event Record to CXL spec rev 3.1
->>>   cxl/events: Update DRAM Event Record to CXL spec rev 3.1
->>>   cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
->>>   cxl/test: Update test code for event records to CXL spec rev 3.1
->>>
->>> Changes:
->>> V4 -> V5
->>> 1. Reverted changes made in v4 for overcoming parsing error when
->>> libtraceevent in userspace parses the CXL trace events, for rasdaemon.
->>> This was due to trace event's format file is larger than PAGE_SIZE,
->>> not supported reading complete format file in one go in the kernel and
->>> thus fixed in the rasdaemon.
->>
->> Great to see that resolved.
->>
->>> 2. Rebased to v6.13-rc5.
->>
->> Should probably say why when doing a rebase to something other than rc1.
->> In this case this is what cxl.git/next is based on after some fixes earlier in the
->> cycle so a sensible choice for this set.
+On Tue, Jan 07, 2025 at 03:10:11PM +0100, Robert Richter wrote:
+> Add AMD platform specific Zen5 support for address translation.
 > 
-> I checked. These patches applied cleanly in cxl.git/next and buid okay. 
-
-Hi Shiju,
-Can you please apply Ira's suggestions and respin a v6? Thanks!
-
-> 
-> Thanks,
-> Shiju
->>
->> As far as I'm concerned this set is ready to go, but more eyes always good if
->> anyone has time! Same for the ras-daemon series once this is queued for the
->> kernel.
->>
->> Jonathan
->>
->>> 3. Tested with rasdaemon and ras-mc-ctl tools updated for CXL spec rev 3.1
->>>    event record changes.
+> Zen5 systems may be configured to use 'Normalized addresses'. Then,
+> CXL endpoints use their own physical address space and Host Physical
+> Addresses (HPAs) need address translation from the endpoint to its CXL
+> host bridge. The HPA of a CXL host bridge is equivalent to the System
+> Physical Address (SPA).
 > 
 
+Just adding the note that I've tested this patch set for HPA==SPA and
+found it causes no regressions in my setup.
+
+Still working on testing the normalized address mode due to a few BIOS
+quirks I'm running up against.
+
+~Gregory
