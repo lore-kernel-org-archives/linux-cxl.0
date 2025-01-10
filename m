@@ -1,175 +1,148 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B592B212B25;
-	Fri, 10 Jan 2025 16:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292BB212FB7;
+	Fri, 10 Jan 2025 16:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736525495; cv=none; b=Mtuw2ofsNRetm9SCXCFN1h3qadZHBiY9XWK82/16E51QRRKVsJf+d23h57NsOPlMjyEYv7Cm+VQMbGneldIV127XXz92k/NAiknYyhE4j8PfU0ZP8107kRocrZBKrASF5wx5LZCi+w16u0NfhssiXsDlRdz0MQy7Zg+/Yi2YIkw=
+	t=1736525821; cv=none; b=GV7YHqwbjDVlI42fXPrVMVvXMjKIDZt7ma32o3swqE/8UOaDTnVShZW6aEvii8qy+xkGN+BEFKloiinwgKeoWplkQlAYiw/biiHJVGtUED0+va+6ZO955U+jnE2hC/e5crUPAGwtRBXy/0KmSnwWXGDrPynHQLMHDQ5TEmMsLGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736525495; c=relaxed/simple;
-	bh=61aXJkD15lbAy5elVXi+GkQLAZWB5hVQBqNShlc6UTg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JF83TCQCbE1vbChTGOjYAxRP+IciNvBB0Q/hqdS+9NklnOZ+EAMk33wrfFqKeyngSh4jJcV1UjOL00c6QIUfsIkSvsDuZaxyEr4nq9rZWg4y5iMkMtLGMLI2iRYMHS2tPYJw6kFbjH7o8SuHxFdQ4JIYEseNroblwj8k6a5xEmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV63Z2h0sz6JB3P;
-	Sat, 11 Jan 2025 00:06:50 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA314140CB1;
-	Sat, 11 Jan 2025 00:11:31 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 10 Jan 2025 17:11:31 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Fri, 10 Jan 2025 17:11:31 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: RE: [PATCH v2 01/14] rasdaemon: Fix for parsing error when trace
- event's format file is larger than PAGE_SIZE
-Thread-Topic: [PATCH v2 01/14] rasdaemon: Fix for parsing error when trace
- event's format file is larger than PAGE_SIZE
-Thread-Index: AQHbY1rwGc5G1PO4ekmde8JfW+7B37MQGrEAgAASV2A=
-Date: Fri, 10 Jan 2025 16:11:31 +0000
-Message-ID: <617ab243f9444508bab2ce12218007fa@huawei.com>
-References: <20250110122641.1668-1-shiju.jose@huawei.com>
-	<20250110122641.1668-2-shiju.jose@huawei.com>
- <20250110160244.00006635@huawei.com>
-In-Reply-To: <20250110160244.00006635@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1736525821; c=relaxed/simple;
+	bh=qmOleW+GmQZJO00FFUFPH/v0GiIRiVand8Fs4J6FNYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dk3iYQmQvYFax91dWPhfTteSV4cvmvnSW5OpSO5F203eILNhAdNs2+VjyxV6pOCuUpE1dwhh6ENJWxOxxS08AxXKu1fHIeaYtFodzvnFUgTwp6Wkp7op0jGniGczfSiIEGeTdo333WKjMtmtJuOeuM3dlELw9yPPLICgEBx6jJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cBdDLWf5; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cBdDLWf5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736525820; x=1768061820;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qmOleW+GmQZJO00FFUFPH/v0GiIRiVand8Fs4J6FNYo=;
+  b=cBdDLWf5362Jc4B/t8MlvXlxE6l6CIOHsECMAlFZagRIH9f0Tgqvfekz
+   /AOUkggB8BQFsqxFN3W6Il8Xnft64PtQCg9jDpxlrhn2S04FSA4eLmeMy
+   dEN4zBkvJyA8N3Ab5qVYGq++OkFZzwV7sqpxCl5T97JAb4g3uueYA8dp1
+   JWaE4Lj0aN1Z9njtZm4Jx4Cm0XHeKVCvcHewsIO2r+Ad9gQ+QN0Js2K31
+   n/2NviLtg+lbcNs31tLF+LKx1ZGu8sWZKLPoDGvkXAleUdLGQ7GjpqjrH
+   UY9vNCe7+PfCbCP/6A+K3GEAvuWlukI5EUAu5kDlXhCL2blipVNmj7ZhB
+   A==;
+X-CSE-ConnectionGUID: mKLmdV5MTzmo/0QoDhmfJA==
+X-CSE-MsgGUID: Q7fhIG3lQCabyg+FhUFP0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="62194936"
+X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
+   d="scan'208";a="62194936"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 08:17:00 -0800
+X-CSE-ConnectionGUID: 7fiJ0JT7RfmyxCnCr7yT0A==
+X-CSE-MsgGUID: x8Ks8Mn3Tl6PRryQ52NRXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108407235"
+Received: from ehanks-mobl1.amr.corp.intel.com (HELO [10.125.111.175]) ([10.125.111.175])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 08:16:58 -0800
+Message-ID: <eeecc2ea-0c06-4fca-88bf-2c8a467404e1@intel.com>
+Date: Fri, 10 Jan 2025 09:16:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] efi/cper, cxl: Prefix protocol error struct and
+ function names with cxl_
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>
+References: <20241217022032.87298-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20241217022032.87298-2-Smita.KoralahalliChannabasappa@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241217022032.87298-2-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jonathan,=20
 
-Thanks for the review.
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 10 January 2025 16:03
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org;
->mchehab@kernel.org; dave.jiang@intel.com; dan.j.williams@intel.com;
->alison.schofield@intel.com; nifan.cxl@gmail.com; vishal.l.verma@intel.com;
->ira.weiny@intel.com; dave@stgolabs.net; linux-kernel@vger.kernel.org;
->Linuxarm <linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Zengtao (B) <prime.zeng@hisilicon.com>
->Subject: Re: [PATCH v2 01/14] rasdaemon: Fix for parsing error when trace
->event's format file is larger than PAGE_SIZE
->
->On Fri, 10 Jan 2025 12:26:27 +0000
-><shiju.jose@huawei.com> wrote:
->
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> When a trace event's format file is larger than PAGE_SIZE (4096) then
->> libtraceevent returns parsing failed when rasdaemon reads the fields.
->> The reason found that tep_parse_event() call in the
->> add_event_handler() internally fails in libtraceevent because of the
->> incomplete format file data read. However libtraceevent did not return
->> error in this stage, which is fixed in the following patch for libtracee=
-vent.
->> https://lore.kernel.org/all/20250109102338.6128644d@gandalf.local.home
->> /
->>
->> When rasdaemon reads a trace event format file,the maximum data size
->
->space after that comma if spinning a v3.
-Sure.
-If no v3, then I will fix when the pull request is submitted.
+On 12/16/24 7:20 PM, Smita Koralahalli wrote:
+> Rename the protocol error struct from struct cper_sec_prot_err to
+> struct cxl_cper_sec_prot_err and cper_print_prot_err() to
+> cxl_cper_print_prot_err() to maintain naming consistency. No
+> functional changes.
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Thanks,
-Shiju
->
->> that can be read is limited to PAGE_SIZE by the seq_read() and
->> seq_read_iter() functions in the kernel. This results in userspace
->> receiving partial data if the format file is larger than PAGE_SIZE,
->> requiring fix in the rasdaemon to read the complete data from the
->> format file.
->>
->> Add fix for reading trace event format files larger than PAGE_SIZE in
->> add_event_handler().
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
->> ---
->>  ras-events.c | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/ras-events.c b/ras-events.c index 5d8118a..6692a31 100644
->> --- a/ras-events.c
->> +++ b/ras-events.c
->> @@ -376,7 +376,7 @@ static int filter_ras_mc_event(struct ras_events
->> *ras, char *group, char *event,
->>
->>  static int get_pagesize(struct ras_events *ras, struct tep_handle
->> *pevent)  {
->> -	int fd, len, page_size =3D 4096;
->> +	int fd, len, page_size =3D 8192;
->>  	char buf[page_size];
->>
->>  	fd =3D open_trace(ras, "events/header_page", O_RDONLY); @@ -827,7
->> +827,8 @@ static int add_event_handler(struct ras_events *ras, struct
->tep_handle *pevent,
->>  			     unsigned int page_size, char *group, char *event,
->>  			     tep_event_handler_func func, char *filter_str, int id)
->{
->> -	int fd, size, rc;
->> +	int fd, rc;
->> +	int size =3D 0;
->>  	char *page, fname[MAX_PATH + 1];
->>  	struct tep_event_filter *filter =3D NULL;
->>
->> @@ -857,13 +858,17 @@ static int add_event_handler(struct ras_events *ra=
-s,
->struct tep_handle *pevent,
->>  		return rc;
->>  	}
->>
->> -	size =3D read(fd, page, page_size);
->> +	do {
->> +		rc =3D read(fd, page + size, page_size);
->> +		if (rc < 0) {
->> +			log(TERM, LOG_ERR, "Can't get arch page size\n");
->> +			free(page);
->> +			close(fd);
->> +			return size;
->> +		}
->> +		size +=3D rc;
->> +	} while (rc > 0);
->>  	close(fd);
->> -	if (size < 0) {
->> -		log(TERM, LOG_ERR, "Can't get arch page size\n");
->> -		free(page);
->> -		return size;
->> -	}
->>
->>  	/* Registers the special event handlers */
->>  	rc =3D tep_register_event_handler(pevent, -1, group, event, func,
->> ras);
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/firmware/efi/cper.c     | 4 ++--
+>  drivers/firmware/efi/cper_cxl.c | 3 ++-
+>  drivers/firmware/efi/cper_cxl.h | 5 +++--
+>  3 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index b69e68ef3f02..8e5762f7ef2e 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -624,11 +624,11 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
+>  		else
+>  			goto err_section_too_small;
+>  	} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> -		struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+> +		struct cxl_cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
+>  
+>  		printk("%ssection_type: CXL Protocol Error\n", newpfx);
+>  		if (gdata->error_data_length >= sizeof(*prot_err))
+> -			cper_print_prot_err(newpfx, prot_err);
+> +			cxl_cper_print_prot_err(newpfx, prot_err);
+>  		else
+>  			goto err_section_too_small;
+>  	} else {
+> diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+> index a55771b99a97..cbaabcb7382d 100644
+> --- a/drivers/firmware/efi/cper_cxl.c
+> +++ b/drivers/firmware/efi/cper_cxl.c
+> @@ -55,7 +55,8 @@ enum {
+>  	USP,	/* CXL Upstream Switch Port */
+>  };
+>  
+> -void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err)
+> +void cxl_cper_print_prot_err(const char *pfx,
+> +			     const struct cxl_cper_sec_prot_err *prot_err)
+>  {
+>  	if (prot_err->valid_bits & PROT_ERR_VALID_AGENT_TYPE)
+>  		pr_info("%s agent_type: %d, %s\n", pfx, prot_err->agent_type,
+> diff --git a/drivers/firmware/efi/cper_cxl.h b/drivers/firmware/efi/cper_cxl.h
+> index 86bfcf7909ec..0e3ab0ba17c3 100644
+> --- a/drivers/firmware/efi/cper_cxl.h
+> +++ b/drivers/firmware/efi/cper_cxl.h
+> @@ -18,7 +18,7 @@
+>  #pragma pack(1)
+>  
+>  /* Compute Express Link Protocol Error Section, UEFI v2.10 sec N.2.13 */
+> -struct cper_sec_prot_err {
+> +struct cxl_cper_sec_prot_err {
+>  	u64 valid_bits;
+>  	u8 agent_type;
+>  	u8 reserved[7];
+> @@ -61,6 +61,7 @@ struct cper_sec_prot_err {
+>  
+>  #pragma pack()
+>  
+> -void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_err);
+> +void cxl_cper_print_prot_err(const char *pfx,
+> +			     const struct cxl_cper_sec_prot_err *prot_err);
+>  
+>  #endif //__CPER_CXL_
 
