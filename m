@@ -1,186 +1,155 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1809E2101A9;
-	Fri, 10 Jan 2025 12:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449ED20DD74;
+	Fri, 10 Jan 2025 14:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736512036; cv=none; b=qNuap+3aF01KvL8xm8nyQbx8sJbBOBy0t1kUXJM9D16OElCcoyChxMyoEet7VDjlGz1/+nibUv6sseLHFJsjk62zJGDJQgWy7hmqUaEX0ZPkneb9Er7NHJWvRMuitWVEWT6X2eawDhgsdKNjdB95+lhHMdHwtU1G89gVGJ/r6J8=
+	t=1736521165; cv=none; b=l2lx1MgDt6M5pD4tvpWuwGzBn6GcVHVhrnpNlj65MJ4tuK4VrjkNFAm5Tch0mNMCq7Hw5E6ZAHWAWr/9G+q8Vqhp9yFlhXo2VK1jvlG54SOz1bkEPHz1CTSrOvJTSKC55MvgJ/pIC0+BqJuhYzg+SOZw0gL1Hfcvx+RgqXlCW7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736512036; c=relaxed/simple;
-	bh=4BFJHDiiUAomO+9PvQSWDRz+Hwc8QpA1zTgZtaR+4Ro=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qesl8e/4cAa4qogFNTeog4/CdKaRkUGP77Nc2hkesSqpcDGWnkKBz4zFmehOMyIAjEf1if4XIswergkohgrPzkF9mP6z+wp3gkNsU6QtjhclRLF6y8HRNmmWCWLeokKR2ZiA9D7916Du73aWJMhk/KL8ZO+FG4RZUW3dWKPJ0p4=
+	s=arc-20240116; t=1736521165; c=relaxed/simple;
+	bh=qoN4csxcH42JEKIUwkPsIuRENnJhK9htZfI1jnoH3+s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EkulwvQzcfNIX9P+ib9CrqABemCzwNPbGe9eRSrspFDsChJ9FVhXYyTzZ3WKaqBYQYE7XFdpYiAVAClOU8E0vktkfe+qkZM1KNmLRIUkc83ZVL2FQ4t0qA1aKC+qcE4SaPMsTE0DOmkzOmvVJeS7qv76UMdhuIkwpnjUZJF6mFg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV18k1NrMz6L505;
-	Fri, 10 Jan 2025 20:25:58 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6ECA9140A08;
-	Fri, 10 Jan 2025 20:27:12 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.170.14) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 10 Jan 2025 13:27:11 +0100
-From: <shiju.jose@huawei.com>
-To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<mchehab@kernel.org>, <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<nifan.cxl@gmail.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dave@stgolabs.net>
-CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 14/14] rasdaemon: ras-mc-ctl: Update logging of CXL memory module data to align with CXL spec rev 3.1
-Date: Fri, 10 Jan 2025 12:26:40 +0000
-Message-ID: <20250110122641.1668-15-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20250110122641.1668-1-shiju.jose@huawei.com>
-References: <20250110122641.1668-1-shiju.jose@huawei.com>
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV4Wn6WSVz6D9CW;
+	Fri, 10 Jan 2025 22:57:41 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C32001403D2;
+	Fri, 10 Jan 2025 22:59:19 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 10 Jan
+ 2025 15:59:19 +0100
+Date: Fri, 10 Jan 2025 14:59:17 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<rafael@kernel.org>, <bp@alien8.de>, <dan.j.williams@intel.com>,
+	<tony.luck@intel.com>, <dave@stgolabs.net>, <alison.schofield@intel.com>,
+	<ira.weiny@intel.com>
+Subject: Re: [PATCH 3/4] cxl: Add extended linear cache address alias
+ emission for cxl events
+Message-ID: <20250110145917.00006541@huawei.com>
+In-Reply-To: <f3d1b01f-9ed8-4c56-9bb3-409b51b59291@intel.com>
+References: <20241204224827.2097263-1-dave.jiang@intel.com>
+	<20241204224827.2097263-4-dave.jiang@intel.com>
+	<20241224121113.00007eec@huawei.com>
+	<f3d1b01f-9ed8-4c56-9bb3-409b51b59291@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500007.china.huawei.com (7.182.85.172)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Tue, 7 Jan 2025 12:41:46 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-CXL spec 3.1 section 8.2.9.2.1.3 Table 8-47, Memory Module Event Record
-has updated with following new fields and new info for Device Event Type
-and Device Health Information fields.
-1. Validity Flags
-2. Component Identifier
-3. Device Event Sub-Type
+> On 12/24/24 5:11 AM, Jonathan Cameron wrote:
+> > On Wed, 4 Dec 2024 15:46:48 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> Add the aliased address of extended linear cache when emitting event
+> >> trace for DRAM and general media of CXL events.
+> >>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
+> > I wonder if you want to future proof the hpa_alias for potential case
+> > of there being more than 1?  hpa_alias0 or similar so that we can add
+> > more as needed?  
+> 
+> Do you mean when emitting via the trace? Yeah I can change it to hpa_alias0 in the output string.
+> 
 
-This update modifies ras-mc-ctl to parse and log CXL memory module event
-data stored in the RAS SQLite database table, reflecting the
-specification changes introduced in revision 3.1.
+err. Can't entirely remember what I meant but that seems sensible ;)
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- util/ras-mc-ctl.in | 46 +++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/util/ras-mc-ctl.in b/util/ras-mc-ctl.in
-index 86ea48e..ba48660 100755
---- a/util/ras-mc-ctl.in
-+++ b/util/ras-mc-ctl.in
-@@ -1439,11 +1439,12 @@ sub get_cxl_transaction_type
-     return $types[$_[0]];
- }
- 
-+# CXL rev 3.1 section 8.2.9.2.1.3; Table 8-47
- sub get_cxl_dev_event_type
- {
-     my @types;
- 
--    if ($_[0] < 0 || $_[0] > 5) {
-+    if ($_[0] < 0 || $_[0] > 8) {
- 	return "unknown-type";
-     }
- 
-@@ -1452,15 +1453,37 @@ sub get_cxl_dev_event_type
- 	      "Life Used Change",
- 	      "Temperature Change",
- 	      "Data Path Error",
--	      "LSA Error");
-+	      "LSA Error",
-+	      "Unrecoverable Internal Sideband Bus Error",
-+	      "Memory Media FRU Error",
-+	      "Power Management Fault");
- 
-     return $types[$_[0]];
- }
- 
-+sub get_cxl_dev_event_sub_type
-+{
-+    my @types;
-+
-+    if ($_[0] < 0 || $_[0] > 3) {
-+	return "unknown-type";
-+    }
-+
-+    @types = ("Not Reported",
-+	      "Invalid Config Data",
-+	      "Unsupported Config Data",
-+	      "Unsupported Memory Media FRU");
-+
-+    return $types[$_[0]];
-+}
-+
-+#CXL rev 3.1 section 8.2.9.9.3.1; Table 8-133
- use constant {
-     CXL_DHI_HS_MAINTENANCE_NEEDED => 0x0001,
-     CXL_DHI_HS_PERFORMANCE_DEGRADED => 0x0002,
-     CXL_DHI_HS_HW_REPLACEMENT_NEEDED => 0x0004,
-+    CXL_DHI_HS_HW_REPLACEMENT_NEEDED => 0x0004,
-+    CXL_DHI_HS_MEM_CAPACITY_DEGRADED => 0x0008,
- };
- 
- sub get_cxl_health_status_text
-@@ -1477,6 +1500,9 @@ sub get_cxl_health_status_text
-     if ($flags & CXL_DHI_HS_HW_REPLACEMENT_NEEDED) {
- 	push @out, (sprintf "\'REPLACEMENT_NEEDED\' ");
-     }
-+    if ($flags & CXL_DHI_HS_MEM_CAPACITY_DEGRADED) {
-+	push @out, (sprintf "\'MEM_CAPACITY_DEGRADED\' ");
-+    }
- 
-     return join (", ", @out);
- }
-@@ -1821,7 +1847,7 @@ sub errors
-     my ($hdr_uuid, $hdr_flags, $hdr_handle, $hdr_related_handle, $hdr_ts, $hdr_length, $hdr_maint_op_class, $hdr_maint_op_sub_class, $data);
-     my ($dpa_flags, $descriptor, $mem_event_type, $mem_event_sub_type, $transaction_type, $channel, $rank, $device, $comp_id, $pldm_entity_id, $pldm_res_id);
-     my ($nibble_mask, $bank_group, $row, $column, $cor_mask);
--    my ($event_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status);
-+    my ($event_type, $event_sub_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status);
-     my ($sub_type, $sub_channel, $cme_threshold_ev_flags, $cme_count, $cvme_count);
- 
-     my $dbh = DBI->connect("dbi:SQLite:dbname=$dbname", "", "", {});
-@@ -2155,10 +2181,10 @@ sub errors
- 	}
- 
- 	# CXL memory module errors
--	$query = "select id, timestamp, memdev, host, serial, log_type, hdr_uuid, hdr_flags, hdr_handle, hdr_related_handle, hdr_ts, hdr_length, hdr_maint_op_class, hdr_maint_op_sub_class, event_type, health_status, media_status, life_used, dirty_shutdown_cnt, cor_vol_err_cnt, cor_per_err_cnt, device_temp, add_status from cxl_memory_module_event$conf{opt}{since} order by id";
-+	$query = "select id, timestamp, memdev, host, serial, log_type, hdr_uuid, hdr_flags, hdr_handle, hdr_related_handle, hdr_ts, hdr_length, hdr_maint_op_class, hdr_maint_op_sub_class, event_type, health_status, media_status, life_used, dirty_shutdown_cnt, cor_vol_err_cnt, cor_per_err_cnt, device_temp, add_status, event_sub_type, comp_id, pldm_entity_id, pldm_resource_id from cxl_memory_module_event$conf{opt}{since} order by id";
- 	$query_handle = $dbh->prepare($query);
- 	$query_handle->execute();
--	$query_handle->bind_columns(\($id, $timestamp, $memdev, $host, $serial, $log_type, $hdr_uuid, $hdr_flags, $hdr_handle, $hdr_related_handle, $hdr_ts, $hdr_length, $hdr_maint_op_class, $hdr_maint_op_sub_class, $event_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status));
-+	$query_handle->bind_columns(\($id, $timestamp, $memdev, $host, $serial, $log_type, $hdr_uuid, $hdr_flags, $hdr_handle, $hdr_related_handle, $hdr_ts, $hdr_length, $hdr_maint_op_class, $hdr_maint_op_sub_class, $event_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status, $event_sub_type, $comp_id, $pldm_entity_id, $pldm_res_id));
- 	$out = "";
- 	while($query_handle->fetch()) {
- 	    $out .= "$id $timestamp error: ";
-@@ -2175,6 +2201,7 @@ sub errors
- 	    $out .= sprintf "hdr_maint_op_class=%u, ", $hdr_maint_op_class if (defined $hdr_maint_op_class && length $hdr_maint_op_class);
- 	    $out .= sprintf "hdr_maint_op_sub_class=%u, ", $hdr_maint_op_sub_class if (defined $hdr_maint_op_sub_class && length $hdr_maint_op_sub_class);
- 	    $out .= sprintf "event_type: %s, ", get_cxl_dev_event_type($event_type)  if (defined $event_type && length $event_type);
-+	    $out .= sprintf "event_sub_type: %s, ", get_cxl_dev_event_sub_type($event_sub_type)  if (defined $event_sub_type && length $event_sub_type);
- 	    $out .= sprintf "health_status: %s, ", get_cxl_health_status_text($health_status)  if (defined $health_status && length $health_status);
- 	    $out .= sprintf "media_status: %s, ", get_cxl_media_status($media_status)  if (defined $media_status && length $media_status);
- 	    $out .= sprintf "life_used=%u, ", $life_used  if (defined $life_used && length $life_used);
-@@ -2183,6 +2210,15 @@ sub errors
- 	    $out .= sprintf "cor_per_err_cnt=%u, ", $cor_per_err_cnt  if (defined $cor_per_err_cnt && length $cor_per_err_cnt);
- 	    $out .= sprintf "device_temp=%u, ", $device_temp  if (defined $device_temp && length $device_temp);
- 	    $out .= sprintf "add_status=%u ", $add_status  if (defined $add_status && length $add_status);
-+	    if (defined $comp_id && length $comp_id) {
-+                print_cxl_dev_id("component_id", $comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE, $out);
-+	    }
-+	    if (defined $pldm_entity_id && length $pldm_entity_id) {
-+                print_cxl_dev_id("pldm_entity_id", $pldm_entity_id, CXL_EVENT_GEN_PLDM_ENTITY_ID_SIZE, $out);
-+	    }
-+	    if (defined $pldm_res_id && length $pldm_res_id) {
-+                print_cxl_dev_id("pldm_resource_id", $pldm_res_id, CXL_EVENT_GEN_PLDM_RES_ID_SIZE, $out);
-+	    }
- 	    $out .= "\n";
- 	}
- 	if ($out ne "") {
--- 
-2.43.0
+> 
+> > 
+> > 
+> > Otherwise, looks like there is either a null point dereference or
+> > overly paranoid existing code. I haven't checked which but changes
+> > needed either way.  
+> 
+> I'll move it under the if (cxlr) and also add a check for cxlr in the helper function.
+> 
+> DJ
+> 
+> 
+> > 
+> > Jonathan
+> >   
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index 5175138c4fb7..4017b7afa78a 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -856,6 +856,24 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+> >>  }
+> >>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+> >>  
+> >> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
+> >> +{
+> >> +	struct cxl_region_params *p = &cxlr->params;  
+> > 
+> > Bad idea to unconditionally dereference I think. See below.
+> >   
+> >> +	int nid;
+> >> +
+> >> +	if (!p->cache_size)
+> >> +		return ~0ULL;
+> >> +
+> >> +	nid = cxl_region_nid(cxlr);
+> >> +	if (nid == NUMA_NO_NODE)
+> >> +		nid = 0;
+> >> +
+> >> +	if (hpa >= p->res->start + p->cache_size)
+> >> +		return hpa - p->cache_size;
+> >> +
+> >> +	return hpa + p->cache_size;
+> >> +}
+> >> +
+> >>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> >>  			    enum cxl_event_log_type type,
+> >>  			    enum cxl_event_type event_type,
+> >> @@ -871,7 +889,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> >>  	}
+> >>  
+> >>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+> >> -		u64 dpa, hpa = ULLONG_MAX;
+> >> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias;
+> >>  		struct cxl_region *cxlr;
+> >>  
+> >>  		/*
+> >> @@ -887,11 +905,14 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+> >>  		if (cxlr)
+> >>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+> >>  
+> >> +		hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);  
+> > 
+> > If there is no region, and hence no hpa does it make sense to call this?
+> > Particularly as first thing done in this is to dereference cxlr.
+> > 
+> >   
+> >> +
+> >>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+> >>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+> >> -						&evt->gen_media);
+> >> +						hpa_alias, &evt->gen_media);
+> >>  		else if (event_type == CXL_CPER_EVENT_DRAM)
+> >> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
+> >> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
+> >> +				       &evt->dram);
+> >>  	}
+> >>  }
+> >>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, CXL);  
+> >   
+> 
+> 
 
