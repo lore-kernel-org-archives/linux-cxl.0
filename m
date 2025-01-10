@@ -1,303 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4701211298;
-	Fri, 10 Jan 2025 15:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CACB20B80D
+	for <linux-cxl@vger.kernel.org>; Fri, 10 Jan 2025 15:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736522363; cv=none; b=jgjBITdXyFOB4rsktx0iaKWZMIHbOlZE1YxnrbrqcISPNaaH9T0b4sf9GAWwdOCknpuRwHoxZm4kB834odChGJofVD9bJy8ZB7IpCvR5N2nKA7E1A2udn1U/W6g39iy8GehZX5XPOV77SlCSbLrsSsKjtKKytgRx05LCbEDu5MM=
+	t=1736523879; cv=none; b=gC4FcSRKKjHaBAw0dozka4OkjQ4pilKbHHiqlfa8A6gguhYhLNvEgJ5lHoJ2y0b41m4siXyPxkVBidDdO32Epe0O2h8mghCqTIwxocRbtIM9ZJg05Htfc3WATXhGg8TcxiMUkZn5BBaydJBmloht5i1zMh2EEMENd6VNnjFlQ9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736522363; c=relaxed/simple;
-	bh=V9P0rAFYceLqJqbMQg3EXV6ITYR6hKFKgq6v66Hu9Dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eAPFR2hLPFDVauy/QOgPHk0dILScNc2jZE6aCBFqDj7tN+/117WA/J/3fx3z0zsTnfNU1Ryg6C8OeonJC7MEJna8RCKKAVkBKUFbSTXcdr/2OcogooD5/4qqjjqNXobp1fommMpIB+LqLPVOr5Y0wHi48HQ/RE8U8/L5HxifreY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23297C4CED6;
-	Fri, 10 Jan 2025 15:19:23 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	tony.luck@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 4/4] cxl: Add mce notifier to emit aliased address for extended linear cache
-Date: Fri, 10 Jan 2025 08:17:47 -0700
-Message-ID: <20250110151913.3462283-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250110151913.3462283-1-dave.jiang@intel.com>
-References: <20250110151913.3462283-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1736523879; c=relaxed/simple;
+	bh=tjnbLEfx+nTIaHKO0CBFVBWgJMgYFmoHCzZuQtwywf4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P9uDgJAKuQVjqcHvQkjIbmmAaq7oeK8AHoa2rWGHR1CFD4C2HwWcquicg16U/WnGWu5QRiCpPvmXairA/RmxrDGCb1iJZKg/xvrx7CkPzahmVUu4QZ7kpTKzBzZ2HdtqyZ+LfEZVgr7mnCKURFe7AFY/dl6COVO4g7B7L/HGU64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV5X019Pjz6D9JL;
+	Fri, 10 Jan 2025 23:42:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 13674140CF4;
+	Fri, 10 Jan 2025 23:44:34 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 10 Jan
+ 2025 16:44:33 +0100
+Date: Fri, 10 Jan 2025 15:44:32 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+CC: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2] hw/cxl: Fix msix_notify: Assertion `vector <
+ dev->msix_entries_nr`
+Message-ID: <20250110154432.000031b0@huawei.com>
+In-Reply-To: <20241213093602.3248246-1-lizhijian@fujitsu.com>
+References: <20241213093602.3248246-1-lizhijian@fujitsu.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Below is a setup with extended linear cache configuration with an example
-layout of memory region shown below presented as a single memory region
-consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-The kernel sees a region of total 256G of system memory.
+On Fri, 13 Dec 2024 17:36:02 +0800
+Li Zhijian <lizhijian@fujitsu.com> wrote:
 
-              128G DRAM                          128G CXL memory
-|-----------------------------------|-------------------------------------|
+> This assertion always happens when we sanitize the CXL memory device.
+> $ echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+> 
+> It is incorrect to register an MSIX number beyond the device's capability.
+> 
+> Expand the device's MSIX number and use the enum to maintain the *USED*
+> and MAX MSIX number
+> 
+> Fixes: 43efb0bfad2b ("hw/cxl/mbox: Wire up interrupts for background completion")
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+> V2: just increase msix number and add enum to maintainer their values #
+> Jonathan
 
-Data resides in either DRAM or far memory (FM) with no replication. Hot
-data is swapped into DRAM by the hardware behind the scenes. When error is
-detected in one location, it is possible that error also resides in the
-aliased location. Therefore when a memory location that is flagged by MCE
-is part of the special region, the aliased memory location needs to be
-offlined as well.
+Ah. Sorry I was unclear. Two patches please
 
-Add an mce notify callback to identify if the MCE address location is part
-of an extended linear cache region and handle accordingly.
+1. Make the number bigger to fix the bug. Only this one gets a fixes tag and
+   is suitable for backporting.
 
-Added symbol export to set_mce_nospec() in x86 code in order to call
-set_mce_nospec() from the CXL MCE notify callback.
+2. Add an enum including all numbers currently used and use that throughout the
+   type3 related code. That will prevent use accidentally introducing the
+   bug in future but doesn't need to be backported. 
+ 
+A few other comments inline.
 
-Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- Update new EXPORT_SYMOBOL_() input. (Jonathan)
-- Remove unnecessary pointer cast. (Jonathan)
-- Introduce CONFIG_CXL_MCE to shield from missing CONFIG_MEMORY_FAILURE kbuilds.
-- Emit alias address0 (Jonathan)
----
- arch/x86/mm/pat/set_memory.c |  1 +
- drivers/cxl/Kconfig          |  4 +++
- drivers/cxl/core/Makefile    |  1 +
- drivers/cxl/core/mbox.c      |  3 ++
- drivers/cxl/core/mce.c       | 53 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/mce.h       | 14 ++++++++++
- drivers/cxl/core/region.c    | 25 +++++++++++++++++
- drivers/cxl/cxl.h            |  6 ++++
- drivers/cxl/cxlmem.h         |  2 ++
- 9 files changed, 109 insertions(+)
- create mode 100644 drivers/cxl/core/mce.c
- create mode 100644 drivers/cxl/core/mce.h
+Thanks
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 95bc50a8541c..a0df698f46a2 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2083,6 +2083,7 @@ int set_mce_nospec(unsigned long pfn)
- 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(set_mce_nospec);
- 
- /* Restore full speculative operation to the pfn. */
- int clear_mce_nospec(unsigned long pfn)
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 876469e23f7a..d1c91dacae56 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -146,4 +146,8 @@ config CXL_REGION_INVALIDATION_TEST
- 	  If unsure, or if this kernel is meant for production environments,
- 	  say N.
- 
-+config CXL_MCE
-+	def_bool y
-+	depends on X86_MCE && MEMORY_FAILURE
-+
- endif
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1a0c9c6ca818..61c9332b3582 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,3 +17,4 @@ cxl_core-y += cdat.o
- cxl_core-y += acpi.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-+cxl_core-$(CONFIG_CXL_MCE) += mce.o
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index d7999260f004..4e12f1c17909 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -11,6 +11,7 @@
- 
- #include "core.h"
- #include "trace.h"
-+#include "mce.h"
- 
- static bool cxl_raw_allow_all;
- 
-@@ -1478,6 +1479,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 
-+	cxl_register_mce_notifier(&mds->mce_notifier);
-+
- 	return mds;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
-diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-new file mode 100644
-index 000000000000..bd1c4f46a67f
---- /dev/null
-+++ b/drivers/cxl/core/mce.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#include <linux/mm.h>
-+#include <linux/notifier.h>
-+#include <linux/set_memory.h>
-+#include <asm/mce.h>
-+#include <cxlmem.h>
-+#include "mce.h"
-+
-+static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
-+			  void *data)
-+{
-+	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
-+						    mce_notifier);
-+	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct mce *mce = data;
-+	u64 spa, spa_alias;
-+	unsigned long pfn;
-+
-+	if (!mce || !mce_usable_address(mce))
-+		return NOTIFY_DONE;
-+
-+	spa = mce->addr & MCI_ADDR_PHYSADDR;
-+
-+	pfn = spa >> PAGE_SHIFT;
-+	if (!pfn_valid(pfn))
-+		return NOTIFY_DONE;
-+
-+	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
-+	if (!spa_alias)
-+		return NOTIFY_DONE;
-+
-+	pfn = spa_alias >> PAGE_SHIFT;
-+
-+	/*
-+	 * Take down the aliased memory page. The original memory page flagged
-+	 * by the MCE will be taken cared of by the standard MCE handler.
-+	 */
-+	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address0: %#llx\n",
-+		  spa_alias);
-+	if (!memory_failure(pfn, 0))
-+		set_mce_nospec(pfn);
-+
-+	return NOTIFY_OK;
-+}
-+
-+void cxl_register_mce_notifier(struct notifier_block *mce_notifier)
-+{
-+	mce_notifier->notifier_call = cxl_handle_mce;
-+	mce_notifier->priority = MCE_PRIO_UC;
-+	mce_register_decode_chain(mce_notifier);
-+}
-diff --git a/drivers/cxl/core/mce.h b/drivers/cxl/core/mce.h
-new file mode 100644
-index 000000000000..b3c63bddf14e
---- /dev/null
-+++ b/drivers/cxl/core/mce.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#ifndef _CXL_CORE_MCE_H_
-+#define _CXL_CORE_MCE_H_
-+
-+#include <linux/notifier.h>
-+
-+#ifdef CONFIG_CXL_MCE
-+void cxl_register_mce_notifier(struct notifier_block *mce_notifer);
-+#else
-+static inline void cxl_register_mce_notifier(struct notifier_block *mce_notifier) {}
-+#endif
-+
-+#endif
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5d23bd26d9ba..f866ee2fefed 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3449,6 +3449,31 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
- 
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
-+{
-+	struct cxl_region_ref *iter;
-+	unsigned long index;
-+
-+	guard(rwsem_write)(&cxl_region_rwsem);
-+
-+	xa_for_each(&endpoint->regions, index, iter) {
-+		struct cxl_region_params *p = &iter->region->params;
-+
-+		if (p->res->start <= spa && spa <= p->res->end) {
-+			if (!p->cache_size)
-+				return 0;
-+
-+			if (spa > p->res->start + p->cache_size)
-+				return spa - p->cache_size;
-+
-+			return spa + p->cache_size;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, "CXL");
-+
- static int is_system_ram(struct resource *res, void *arg)
- {
- 	struct cxl_region *cxlr = arg;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6a1fb784f74a..cff98e803722 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -876,6 +876,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
- int cxl_add_to_region(struct cxl_port *root,
- 		      struct cxl_endpoint_decoder *cxled);
- struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
- {
-@@ -894,6 +895,11 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- {
- 	return NULL;
- }
-+static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
-+					       u64 spa)
-+{
-+	return 0;
-+}
- #endif
- 
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..55752cbf408c 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -477,6 +477,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-+ * @mce_notifier: MCE notifier
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -503,6 +504,7 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
-+	struct notifier_block mce_notifier;
- };
- 
- static inline struct cxl_memdev_state *
--- 
-2.47.1
+Jonathan
+
+> ---
+>  hw/cxl/cxl-device-utils.c   |  6 ++----
+>  hw/mem/cxl_type3.c          | 10 +++++-----
+>  include/hw/cxl/cxl_device.h |  7 +++++++
+>  3 files changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+> index 035d034f6d..bc2171e3d4 100644
+> --- a/hw/cxl/cxl-device-utils.c
+> +++ b/hw/cxl/cxl-device-utils.c
+> @@ -354,8 +354,6 @@ static void device_reg_init_common(CXLDeviceState *cxl_dstate)
+>  
+>  static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+>  {
+> -    const uint8_t msi_n = 9;
+> -
+>      /* 2048 payload size */
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+>                       PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
+> @@ -364,8 +362,8 @@ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+>                       BG_INT_CAP, 1);
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+> -                     MSI_N, msi_n);
+> -    cxl_dstate->mbox_msi_n = msi_n;
+> +                     MSI_N, CXL_MSIX_MBOX);
+
+Should be passed in from the type 3 specific call so add a parameter to this
+function and pass this from cxl_device_register_init_t3.
+Even better pass it into there from ct3d_reset()
+
+Will potentially be a different number for the switch CCI passed in from
+the call of cxl_device_register_init_swcci() in switch-mailbox-cci.c
+
+
+> +    cxl_dstate->mbox_msi_n = CXL_MSIX_MBOX;
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+>                       MBOX_READY_TIME, 0); /* Not reported */
+>      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 5cf754b38f..f2f060ed9e 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -843,7 +843,6 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      ComponentRegisters *regs = &cxl_cstate->crb;
+>      MemoryRegion *mr = &regs->component_registers;
+>      uint8_t *pci_conf = pci_dev->config;
+> -    unsigned short msix_num = 6;
+>      int i, rc;
+>      uint16_t count;
+>  
+> @@ -884,16 +883,17 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>                       &ct3d->cxl_dstate.device_registers);
+>  
+>      /* MSI(-X) Initialization */
+> -    rc = msix_init_exclusive_bar(pci_dev, msix_num, 4, NULL);
+> +    rc = msix_init_exclusive_bar(pci_dev, CXL_MSIX_MAX, 4, NULL);
+>      if (rc) {
+>          goto err_address_space_free;
+>      }
+> -    for (i = 0; i < msix_num; i++) {
+> +    for (i = 0; i < CXL_MSIX_MAX; i++) {
+>          msix_vector_use(pci_dev, i);
+>      }
+>  
+>      /* DOE Initialization */
+> -    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true, 0);
+> +    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, true,
+> +                  CXL_MSIX_PCIE_DOE);
+>  
+>      cxl_cstate->cdat.build_cdat_table = ct3_build_cdat_table;
+>      cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
+> @@ -908,7 +908,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      if (rc) {
+>          goto err_release_cdat;
+>      }
+> -    cxl_event_init(&ct3d->cxl_dstate, 2);
+> +    cxl_event_init(&ct3d->cxl_dstate, CXL_MSIX_EVENT_START);
+>  
+>      /* Set default value for patrol scrub attributes */
+>      ct3d->patrol_scrub_attrs.scrub_cycle_cap =
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 561b375dc8..3f89b041ce 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -133,6 +133,13 @@ typedef enum {
+>      CXL_MBOX_MAX = 0x20
+>  } CXLRetCode;
+>  
+> +enum {
+
+Maybe worth naming these to be type3 specific.
+
+> +    CXL_MSIX_PCIE_DOE = 0,
+Name it to include that this is specifically the DOE for the table access protocol.
+
+   CXL_MSIX_PCIE_DOE_TABLE_ACCESS
+
+
+This should be private to cxl_type3.c which should be possible by passing
+it to a few more calls from there. 
+
+> +    CXL_MSIX_EVENT_START = 2,
+> +    CXL_MSIX_MBOX = CXL_MSIX_EVENT_START + CXL_EVENT_TYPE_MAX,
+> +    CXL_MSIX_MAX
+> +};
+> +
+>  typedef struct CXLCCI CXLCCI;
+>  typedef struct cxl_device_state CXLDeviceState;
+>  struct cxl_cmd;
 
