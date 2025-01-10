@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E673D20ADCE;
-	Fri, 10 Jan 2025 11:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8290620C46C;
+	Fri, 10 Jan 2025 11:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736510180; cv=none; b=Gqbw09luenEBKongLVXaJyI0G03vyk9P0k95yTJqAyaSA6XkWCNjjQyRNgdGI4HY3O5BsTlvzT+27SZMd0udkDQthiJltb1jjmk/aokE1kaIduzU2WDVxYH88oxQM4FszWV3wH2WVxkvLcylvvS2Sn/E9qhQIMUWYrJ53xIxH8U=
+	t=1736510182; cv=none; b=q9IM4B3HP1lfpxh5t1K/5j7E3bVrd35Zy3o/phrdgRETZokFRh+51twd1rm0f4XEDXvZJ0LKJCTVERMEFhOLHTKUXR8MDv4TpTvBE0JiBUqgMqvSeE1S1I4F6TyerxON57yj7nKEY6jEkp+rVH1cPGRviQ17xbOXonhMlXfgdj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736510180; c=relaxed/simple;
-	bh=TeBYsnRQlI3fstiUYgE5CwvbLUnmzukavX81Iv1bANY=;
+	s=arc-20240116; t=1736510182; c=relaxed/simple;
+	bh=k29M/AqjyayVtDBr2nkVHXCXazYCCRvmEDs1TemzgsY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TPllNjStt3b2pcyhrq/7vUSraGCDvgLwHdyNCbyvDVbYNHQQx/69PbufHkwyxTBGGvdEmKsg4oL3iKCDLpHaZsInLqiqPzUbf1g8wRqYht11n6ZM5KRYC36Xng4VWxynSKeCwyt3eULV50ounava/9SksJmtcWhtvRvWIa5JtKU=
+	 MIME-Version:Content-Type; b=CpYEtQA7/21pOaAqd1TdOwITDY5zuZp8tGPgclDq/MuaAKvjcLX2N2pW6+7mqt+kOYygdMMCBgXkMinV5wZxGLmn/UJ+cMkP20xNywe5x2nrRg2z5d57sY4VnPSqE6CiVo28uCofTVs4y2dtaWzTn83VZkhvwht11VJ/MAebx0U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV0SZ2bDxz6GFDS;
-	Fri, 10 Jan 2025 19:54:38 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YV0P40fx7z6K5ft;
+	Fri, 10 Jan 2025 19:51:36 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0865C1403D2;
-	Fri, 10 Jan 2025 19:56:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0676614022E;
+	Fri, 10 Jan 2025 19:56:17 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.170.14) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 10 Jan 2025 12:56:15 +0100
+ 15.1.2507.39; Fri, 10 Jan 2025 12:56:16 +0100
 From: <shiju.jose@huawei.com>
 To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
@@ -31,9 +31,9 @@ To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v5 3/6] cxl/events: Update General Media Event Record to CXL spec rev 3.1
-Date: Fri, 10 Jan 2025 11:55:53 +0000
-Message-ID: <20250110115556.1654-4-shiju.jose@huawei.com>
+Subject: [PATCH v5 4/6] cxl/events: Update DRAM Event Record to CXL spec rev 3.1
+Date: Fri, 10 Jan 2025 11:55:54 +0000
+Message-ID: <20250110115556.1654-5-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250110115556.1654-1-shiju.jose@huawei.com>
 References: <20250110115556.1654-1-shiju.jose@huawei.com>
@@ -50,235 +50,208 @@ X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec rev 3.1 section 8.2.9.2.1.1 Table 8-45, General Media Event
-Record has updated with following new fields and new types for Memory
-Event Type and Transaction Type fields.
-1. Advanced Programmable Corrected Memory Error Threshold Event Flags
-2. Corrected Memory Error Count at Event
-3. Memory Event Sub-Type
+CXL spec 3.1 section 8.2.9.2.1.2 Table 8-46, DRAM Event Record has updated
+with following new fields and new types for Memory Event Type, Transaction
+Type and Validity Flags fields.
+1. Component Identifier
+2. Sub-channel
+3. Advanced Programmable Corrected Memory Error Threshold Event Flags
+4. Corrected Memory Error Count at Event
+5. Memory Event Sub-Type
 
-The format of component identifier has changed (CXL spec 3.1 section
-8.2.9.2.1 Table 8-44).
+Update DRAM events record and DRAM trace event for the above spec
+changes. The new fields are inserted in logical places.
+Includes trivial consistency of white space improvements.
 
-Update the general media event record and general media trace event for
-the above spec changes. The new fields are inserted in logical places.
+Example trace print of cxl_dram trace event,
 
-Example trace log of cxl_general_media trace event,
-
-cxl_general_media: memdev=mem0 host=0000:0f:00.0 serial=3 log=Fatal : \
-time=156831237413 uuid=fbcd0a77-c260-417f-85a9-088b1621eba6 len=128 \
-flags='0x1' handle=1 related_handle=0 maint_op_class=2 \
-maint_op_sub_class=4 : dpa=30d40 dpa_flags='' \
-descriptor='UNCORRECTABLE_EVENT|THRESHOLD_EVENT|POISON_LIST_OVERFLOW' \
-type='TE State Violation' sub_type='Media Link Command Training Error' \
-transaction_type='Host Inject Poison' channel=3 rank=33 device=5 \
-validity_flags='CHANNEL|RANK|DEVICE|COMPONENT|COMPONENT PLDM FORMAT' \
-comp_id=03 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
-comp_id_pldm_valid_flags='PLDM Entity ID | Resource ID' \
-pldm_entity_id=74 c5 08 9a 1a 0b pldm_resource_id=fc d2 7e 2f \
-hpa=ffffffffffffffff region= \
-region_uuid=00000000-0000-0000-0000-000000000000 \
-cme_threshold_ev_flags='Corrected Memory Errors in Multiple Media \
-Components|Exceeded Programmable Threshold' cme_count=120
+cxl_dram: memdev=mem0 host=0000:0f:00.0 serial=3 log=Informational : \
+time=54799339519 uuid=601dcbb3-9c06-4eab-b8af-4e9bfb5c9624 len=128 \
+flags='0x1' handle=1 related_handle=0 maint_op_class=1 \
+maint_op_sub_class=3 : dpa=18680 dpa_flags='' \
+descriptor='UNCORRECTABLE_EVENT|THRESHOLD_EVENT' type='Data Path Error' \
+sub_type='Media Link CRC Error' transaction_type='Internal Media Scrub' \
+channel=3 rank=17 nibble_mask=3b00b2 bank_group=7 bank=11 row=2 \
+column=77 cor_mask=21 00 00 00 00 00 00 00 2c 00 00 00 00 00 00 00 37 00 \
+00 00 00 00 00 00 42 00 00 00 00 00 00 00 validity_flags='CHANNEL|RANK|NIBBLE|\
+BANK GROUP|BANK|ROW|COLUMN|CORRECTION MASK|COMPONENT|COMPONENT PLDM FORMAT' \
+comp_id=01 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
+comp_id_pldm_valid_flags='PLDM Entity ID' pldm_entity_id=74 c5 08 9a 1a 0b \
+pldm_resource_id=0x00 hpa=ffffffffffffffff region= \
+region_uuid=00000000-0000-0000-0000-000000000000 sub_channel=5 \
+cme_threshold_ev_flags='Corrected Memory Errors in Multiple Media Components|\
+Exceeded Programmable Threshold' cvme_count=148
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/core/trace.h | 90 ++++++++++++++++++++++++++++++++++------
- include/cxl/event.h      |  7 +++-
- 2 files changed, 83 insertions(+), 14 deletions(-)
+ drivers/cxl/core/trace.h | 71 ++++++++++++++++++++++++++++++----------
+ include/cxl/event.h      |  9 +++--
+ 2 files changed, 60 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index b508873ce426..241c10596f4d 100644
+index 241c10596f4d..cbaf6244d77f 100644
 --- a/drivers/cxl/core/trace.h
 +++ b/drivers/cxl/core/trace.h
-@@ -292,7 +292,7 @@ TRACE_EVENT(cxl_generic_event,
- 
+@@ -478,7 +478,7 @@ TRACE_EVENT(cxl_general_media,
  /*
-  * General Media Event Record - GMER
-- * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ * CXL rev 3.1 Section 8.2.9.2.1.1; Table 8-45
+  * DRAM Event Record - DER
+  *
+- * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
++ * CXL rev 3.1 section 8.2.9.2.1.2; Table 8-46
   */
- #define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
- #define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
-@@ -306,10 +306,18 @@ TRACE_EVENT(cxl_generic_event,
- #define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
- #define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
- #define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
--#define show_gmer_mem_event_type(type)	__print_symbolic(type,			\
--	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
--	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
--	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
-+#define CXL_GMER_MEM_EVT_TYPE_TE_STATE_VIOLATION	0x03
-+#define CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x04
-+#define CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
-+#define CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
-+#define show_gmer_mem_event_type(type)	__print_symbolic(type,				\
-+	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },			\
-+	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }		\
+ /*
+  * DRAM Event Record defines many fields the same as the General Media Event
+@@ -488,11 +488,17 @@ TRACE_EVENT(cxl_general_media,
+ #define CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x01
+ #define CXL_DER_MEM_EVT_TYPE_INV_ADDR			0x02
+ #define CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x03
+-#define show_dram_mem_event_type(type)  __print_symbolic(type,				\
+-	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },			\
+-	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },	\
+-	{ CXL_DER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },		\
+-	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data Path Error" }		\
++#define CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION	0x04
++#define CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
++#define CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
++#define show_dram_mem_event_type(type)	__print_symbolic(type,					\
++	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },				\
++	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },		\
++	{ CXL_DER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },			\
++	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data Path Error" },			\
++	{ CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },			\
++	{ CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
++	{ CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }			\
  )
  
- #define CXL_GMER_TRANS_UNKNOWN				0x00
-@@ -319,6 +327,8 @@ TRACE_EVENT(cxl_generic_event,
- #define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
- #define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
- #define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_ECS		0x07
-+#define CXL_GMER_TRANS_MEDIA_INITIALIZATION		0x08
- #define show_trans_type(type)	__print_symbolic(type,					\
- 	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
- 	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
-@@ -326,18 +336,57 @@ TRACE_EVENT(cxl_generic_event,
- 	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
- 	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
- 	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
--	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" },	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_ECS,		"Internal Media Error Check Scrub" },	\
-+	{ CXL_GMER_TRANS_MEDIA_INITIALIZATION,		"Media Initialization" }	\
+ #define CXL_DER_VALID_CHANNEL				BIT(0)
+@@ -503,15 +509,21 @@ TRACE_EVENT(cxl_general_media,
+ #define CXL_DER_VALID_ROW				BIT(5)
+ #define CXL_DER_VALID_COLUMN				BIT(6)
+ #define CXL_DER_VALID_CORRECTION_MASK			BIT(7)
+-#define show_dram_valid_flags(flags)	__print_flags(flags, "|",			   \
+-	{ CXL_DER_VALID_CHANNEL,			"CHANNEL"		}, \
+-	{ CXL_DER_VALID_RANK,				"RANK"			}, \
+-	{ CXL_DER_VALID_NIBBLE,				"NIBBLE"		}, \
+-	{ CXL_DER_VALID_BANK_GROUP,			"BANK GROUP"		}, \
+-	{ CXL_DER_VALID_BANK,				"BANK"			}, \
+-	{ CXL_DER_VALID_ROW,				"ROW"			}, \
+-	{ CXL_DER_VALID_COLUMN,				"COLUMN"		}, \
+-	{ CXL_DER_VALID_CORRECTION_MASK,		"CORRECTION MASK"	}  \
++#define CXL_DER_VALID_COMPONENT				BIT(8)
++#define CXL_DER_VALID_COMPONENT_ID_FORMAT		BIT(9)
++#define CXL_DER_VALID_SUB_CHANNEL			BIT(10)
++#define show_dram_valid_flags(flags)	__print_flags(flags, "|",			\
++	{ CXL_DER_VALID_CHANNEL,			"CHANNEL"		},	\
++	{ CXL_DER_VALID_RANK,				"RANK"			},	\
++	{ CXL_DER_VALID_NIBBLE,				"NIBBLE"		},	\
++	{ CXL_DER_VALID_BANK_GROUP,			"BANK GROUP"		},	\
++	{ CXL_DER_VALID_BANK,				"BANK"			},	\
++	{ CXL_DER_VALID_ROW,				"ROW"			},	\
++	{ CXL_DER_VALID_COLUMN,				"COLUMN"		},	\
++	{ CXL_DER_VALID_CORRECTION_MASK,		"CORRECTION MASK"	},	\
++	{ CXL_DER_VALID_COMPONENT,			"COMPONENT"		},	\
++	{ CXL_DER_VALID_COMPONENT_ID_FORMAT,		"COMPONENT PLDM FORMAT"	},	\
++	{ CXL_DER_VALID_SUB_CHANNEL,			"SUB CHANNEL"		}	\
  )
  
- #define CXL_GMER_VALID_CHANNEL				BIT(0)
- #define CXL_GMER_VALID_RANK				BIT(1)
- #define CXL_GMER_VALID_DEVICE				BIT(2)
- #define CXL_GMER_VALID_COMPONENT			BIT(3)
-+#define CXL_GMER_VALID_COMPONENT_ID_FORMAT		BIT(4)
- #define show_valid_flags(flags)	__print_flags(flags, "|",		   \
- 	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
- 	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
- 	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
--	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
-+	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}, \
-+	{ CXL_GMER_VALID_COMPONENT_ID_FORMAT,		"COMPONENT PLDM FORMAT"	} \
-+)
-+
-+#define CXL_GMER_CME_EV_FLAG_CME_MULTIPLE_MEDIA		BIT(0)
-+#define CXL_GMER_CME_EV_FLAG_THRESHOLD_EXCEEDED		BIT(1)
-+#define show_cme_threshold_ev_flags(flags)	__print_flags(flags, "|",	\
-+	{									\
-+		CXL_GMER_CME_EV_FLAG_CME_MULTIPLE_MEDIA,			\
-+		"Corrected Memory Errors in Multiple Media Components"		\
-+	}, {									\
-+		CXL_GMER_CME_EV_FLAG_THRESHOLD_EXCEEDED,			\
-+		"Exceeded Programmable Threshold"				\
-+	}									\
-+)
-+
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_NOT_REPORTED				0x00
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_INTERNAL_DATAPATH_ERROR		0x01
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_COMMAND_TRAINING_ERROR	0x02
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CONTROL_TRAINING_ERROR	0x03
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_DATA_TRAINING_ERROR	0x04
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CRC_ERROR			0x05
-+#define show_mem_event_sub_type(sub_type)	__print_symbolic(sub_type,			\
-+	{ CXL_GMER_MEM_EVT_SUB_TYPE_NOT_REPORTED, "Not Reported" },				\
-+	{ CXL_GMER_MEM_EVT_SUB_TYPE_INTERNAL_DATAPATH_ERROR, "Internal Datapath Error" },	\
-+	{											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_COMMAND_TRAINING_ERROR,			\
-+		"Media Link Command Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CONTROL_TRAINING_ERROR,			\
-+		"Media Link Control Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_DATA_TRAINING_ERROR,			\
-+		"Media Link Data Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CRC_ERROR, "Media Link CRC Error"		\
-+	}											\
- )
- 
- TRACE_EVENT(cxl_general_media,
-@@ -353,6 +402,7 @@ TRACE_EVENT(cxl_general_media,
+ TRACE_EVENT(cxl_dram,
+@@ -527,6 +539,7 @@ TRACE_EVENT(cxl_dram,
  		__field(u64, dpa)
  		__field(u8, descriptor)
  		__field(u8, type)
 +		__field(u8, sub_type)
  		__field(u8, transaction_type)
  		__field(u8, channel)
- 		__field(u32, device)
-@@ -364,6 +414,8 @@ TRACE_EVENT(cxl_general_media,
- 		__field(u8, rank)
- 		__field(u8, dpa_flags)
+ 		__field(u16, validity_flags)
+@@ -541,6 +554,10 @@ TRACE_EVENT(cxl_dram,
+ 		__field(u8, bank)	/* Out of order to pack trace record */
+ 		__field(u8, dpa_flags)	/* Out of order to pack trace record */
  		__string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
++		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
++		__field(u8, sub_channel)
 +		__field(u8, cme_threshold_ev_flags)
-+		__field(u32, cme_count)
++		__field(u32, cvme_count)
  	),
  
  	TP_fast_assign(
-@@ -377,6 +429,7 @@ TRACE_EVENT(cxl_general_media,
+@@ -553,6 +570,7 @@ TRACE_EVENT(cxl_dram,
  		__entry->dpa &= CXL_DPA_MASK;
  		__entry->descriptor = rec->media_hdr.descriptor;
  		__entry->type = rec->media_hdr.type;
 +		__entry->sub_type = rec->sub_type;
  		__entry->transaction_type = rec->media_hdr.transaction_type;
+ 		__entry->validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
  		__entry->channel = rec->media_hdr.channel;
- 		__entry->rank = rec->media_hdr.rank;
-@@ -392,20 +445,33 @@ TRACE_EVENT(cxl_general_media,
+@@ -572,23 +590,40 @@ TRACE_EVENT(cxl_dram,
  			__assign_str(region_name);
  			uuid_copy(&__entry->region_uuid, &uuid_null);
  		}
++		memcpy(__entry->comp_id, &rec->component_id,
++		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
++		__entry->sub_channel = rec->sub_channel;
 +		__entry->cme_threshold_ev_flags = rec->cme_threshold_ev_flags;
-+		__entry->cme_count = get_unaligned_le24(rec->cme_count);
++		__entry->cvme_count = get_unaligned_le24(rec->cvme_count);
  	),
  
- 	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
--		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
--		"device=%x comp_id=%s validity_flags='%s' " \
+-	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' descriptor='%s' type='%s' " \
++	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' descriptor='%s' type='%s' sub_type='%s' " \
+ 		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
+ 		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
+ 		"validity_flags='%s' " \
 -		"hpa=%llx region=%s region_uuid=%pUb",
-+		"descriptor='%s' type='%s' sub_type='%s' " \
-+		"transaction_type='%s' channel=%u rank=%u " \
-+		"device=%x validity_flags='%s' " \
 +		"comp_id=%s comp_id_pldm_valid_flags='%s' " \
 +		"pldm_entity_id=%s pldm_resource_id=%s " \
 +		"hpa=%llx region=%s region_uuid=%pUb " \
-+		"cme_threshold_ev_flags='%s' cme_count=%u",
++		"sub_channel=%u cme_threshold_ev_flags='%s' cvme_count=%u",
  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
  		show_event_desc_flags(__entry->descriptor),
- 		show_gmer_mem_event_type(__entry->type),
+ 		show_dram_mem_event_type(__entry->type),
 +		show_mem_event_sub_type(__entry->sub_type),
  		show_trans_type(__entry->transaction_type),
- 		__entry->channel, __entry->rank, __entry->device,
--		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
- 		show_valid_flags(__entry->validity_flags),
+ 		__entry->channel, __entry->rank, __entry->nibble_mask,
+ 		__entry->bank_group, __entry->bank,
+ 		__entry->row, __entry->column,
+ 		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
+ 		show_dram_valid_flags(__entry->validity_flags),
 -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
 +		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
 +		show_comp_id_pldm_flags(__entry->comp_id[0]),
-+		show_pldm_entity_id(__entry->validity_flags, CXL_GMER_VALID_COMPONENT,
-+				    CXL_GMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		show_pldm_resource_id(__entry->validity_flags, CXL_GMER_VALID_COMPONENT,
-+				      CXL_GMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
++		show_pldm_entity_id(__entry->validity_flags, CXL_DER_VALID_COMPONENT,
++				    CXL_DER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
++		show_pldm_resource_id(__entry->validity_flags, CXL_DER_VALID_COMPONENT,
++				      CXL_DER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
 +		__entry->hpa, __get_str(region_name), &__entry->region_uuid,
-+		show_cme_threshold_ev_flags(__entry->cme_threshold_ev_flags), __entry->cme_count
++		__entry->sub_channel, show_cme_threshold_ev_flags(__entry->cme_threshold_ev_flags),
++		__entry->cvme_count
  	)
  );
  
 diff --git a/include/cxl/event.h b/include/cxl/event.h
-index e1d485ad376b..2b07adf39010 100644
+index 2b07adf39010..10815414f376 100644
 --- a/include/cxl/event.h
 +++ b/include/cxl/event.h
-@@ -45,14 +45,17 @@ struct cxl_event_generic {
+@@ -60,7 +60,7 @@ struct cxl_event_gen_media {
  
  /*
-  * General Media Event Record
-- * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ * CXL rev 3.1 Section 8.2.9.2.1.1; Table 8-45
+  * DRAM Event Record - DER
+- * CXL rev 3.0 section 8.2.9.2.1.2; Table 3-44
++ * CXL rev 3.1 section 8.2.9.2.1.2; Table 8-46
   */
- #define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
- struct cxl_event_gen_media {
- 	struct cxl_event_media_hdr media_hdr;
- 	u8 device[3];
- 	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
--	u8 reserved[46];
+ #define CXL_EVENT_DER_CORRECTION_MASK_SIZE	0x20
+ struct cxl_event_dram {
+@@ -71,7 +71,12 @@ struct cxl_event_dram {
+ 	u8 row[3];
+ 	u8 column[2];
+ 	u8 correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
+-	u8 reserved[0x17];
++	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
++	u8 sub_channel;
 +	u8 cme_threshold_ev_flags;
-+	u8 cme_count[3];
++	u8 cvme_count[3];
 +	u8 sub_type;
-+	u8 reserved[41];
++	u8 reserved;
  } __packed;
  
  /*
