@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569E918E023;
-	Sat, 11 Jan 2025 09:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C713E1917C2;
+	Sat, 11 Jan 2025 09:18:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736587099; cv=none; b=hXWwj79j6HO3DrjdFyTkpD6hEnZepYgs4hsc8BIiCrXp4kLJ66XiRQw4hMpnqJwVfQ6az5QbzevICCPNwGZa2ab9H+MnxbQrP3qed6unwKT5WD1niPuyvCu+LDoj8SSLegSoPqtBaJtvNmn/fApsAYSOdWy5sycEl0B0nJYS5xk=
+	t=1736587100; cv=none; b=dNtQUegNVtf27jKXGTETp/MdsrreHa9+rvFLoM36N/A83mg1GDtbflTR2V8xtFKh//fe1vH5xV6q37T2W+FN6WPU5tonGJKkQAwxbej0LjU8pcm5SbN8V7xUFxRMFR3BBgcG81v/IyUn+SRmlfGzQekofkN9dK5gzcmqUjg8myo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736587099; c=relaxed/simple;
-	bh=kAWUpqPL7FvKXyEptaIDkL/Wd2lyIFJFziPIQiAkV5E=;
+	s=arc-20240116; t=1736587100; c=relaxed/simple;
+	bh=kTQM/kEhnZifU4Z0qcQ6CPJm7WtG3sntSNUkcVV5z6o=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UuQO1SghPKMRzhB5w4J9VzIUsMMq+EiDgU5ZcBfLqtwLxbHXW5cvfRS9dNUqvxkG+BI+jzqqzfSih3Mwftx6u+P24039UsOdu6cvfWSrDKEEudxkXCGuVHCiMtbKtKQlODXUUGIXDScsmK7bYUCBNNZlsvmSZAuAvnXSJy9tn/I=
+	 MIME-Version:Content-Type; b=pnCJ4FdNdg1GC8Bl75Y7kc7Kd4A7JhV7KUBBGlE0/d2TZ3mYdn3z/9lUKggAZI1qaF/4qOw5xzedqrc+Wl8JnqKqllnQY80cTXD9UgPh3bHu+PP3L8L5WsdKmvMOqKnvJ37g/Tu6iCEhShNfTntBNCBjjsz/cR/6fVGC6FcY8FM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXrC0jbLz6K9Ll;
-	Sat, 11 Jan 2025 17:13:31 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXvn4c3Wz6M4ML;
+	Sat, 11 Jan 2025 17:16:37 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 918911403D2;
-	Sat, 11 Jan 2025 17:18:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D5BA1401DC;
+	Sat, 11 Jan 2025 17:18:16 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.155) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 11 Jan 2025 10:18:13 +0100
+ 15.1.2507.39; Sat, 11 Jan 2025 10:18:15 +0100
 From: <shiju.jose@huawei.com>
 To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
@@ -31,9 +31,9 @@ To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v6 4/6] cxl/events: Update DRAM Event Record to CXL spec rev 3.1
-Date: Sat, 11 Jan 2025 09:17:54 +0000
-Message-ID: <20250111091756.1682-5-shiju.jose@huawei.com>
+Subject: [PATCH v6 6/6] cxl/test: Update test code for event records to CXL spec rev 3.1
+Date: Sat, 11 Jan 2025 09:17:56 +0000
+Message-ID: <20250111091756.1682-7-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250111091756.1682-1-shiju.jose@huawei.com>
 References: <20250111091756.1682-1-shiju.jose@huawei.com>
@@ -50,205 +50,77 @@ X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec 3.1 section 8.2.9.2.1.2 Table 8-46, DRAM Event Record has updated
-with following new fields and new types for Memory Event Type, Transaction
-Type and Validity Flags fields.
-1. Component Identifier
-2. Sub-channel
-3. Advanced Programmable Corrected Memory Error Threshold Event Flags
-4. Corrected Memory Error Count at Event
-5. Memory Event Sub-Type
-
-Update DRAM events record and DRAM trace event for the above spec
-changes. The new fields are inserted in logical places.
-Includes trivial consistency of white space improvements.
-
-Example trace print of cxl_dram trace event,
-
-cxl_dram: memdev=mem0 host=0000:0f:00.0 serial=3 log=Informational : \
-time=54799339519 uuid=601dcbb3-9c06-4eab-b8af-4e9bfb5c9624 len=128 \
-flags='0x1' handle=1 related_handle=0 maint_op_class=1 \
-maint_op_sub_class=3 : dpa=18680 dpa_flags='' \
-descriptor='UNCORRECTABLE_EVENT|THRESHOLD_EVENT' type='Data Path Error' \
-sub_type='Media Link CRC Error' transaction_type='Internal Media Scrub' \
-channel=3 rank=17 nibble_mask=3b00b2 bank_group=7 bank=11 row=2 \
-column=77 cor_mask=21 00 00 00 00 00 00 00 2c 00 00 00 00 00 00 00 37 00 \
-00 00 00 00 00 00 42 00 00 00 00 00 00 00 validity_flags='CHANNEL|RANK|NIBBLE|\
-BANK GROUP|BANK|ROW|COLUMN|CORRECTION MASK|COMPONENT|COMPONENT PLDM FORMAT' \
-comp_id=01 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
-comp_id_pldm_valid_flags='PLDM Entity ID' pldm_entity_id=74 c5 08 9a 1a 0b \
-pldm_resource_id=0x00 hpa=ffffffffffffffff region= \
-region_uuid=00000000-0000-0000-0000-000000000000 sub_channel=5 \
-cme_threshold_ev_flags='Corrected Memory Errors in Multiple Media Components|\
-Exceeded Programmable Threshold' cvme_count=148
+Update test code for General Media, DRAM, Memory Module Event
+Records to CXL spec rev 3.1.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/core/trace.h | 72 ++++++++++++++++++++++++++++++----------
- include/cxl/event.h      |  9 +++--
- 2 files changed, 61 insertions(+), 20 deletions(-)
+ tools/testing/cxl/test/mem.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 39e83b8543f3..ed41139eaf23 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -478,7 +478,7 @@ TRACE_EVENT(cxl_general_media,
- /*
-  * DRAM Event Record - DER
-  *
-- * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
-+ * CXL rev 3.1 section 8.2.9.2.1.2; Table 8-46
-  */
- /*
-  * DRAM Event Record defines many fields the same as the General Media Event
-@@ -488,11 +488,17 @@ TRACE_EVENT(cxl_general_media,
- #define CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x01
- #define CXL_DER_MEM_EVT_TYPE_INV_ADDR			0x02
- #define CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x03
--#define show_dram_mem_event_type(type)  __print_symbolic(type,				\
--	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },			\
--	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },	\
--	{ CXL_DER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },		\
--	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data Path Error" }		\
-+#define CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION	0x04
-+#define CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
-+#define CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
-+#define show_dram_mem_event_type(type)	__print_symbolic(type,					\
-+	{ CXL_DER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },				\
-+	{ CXL_DER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },		\
-+	{ CXL_DER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },			\
-+	{ CXL_DER_MEM_EVT_TYPE_DATA_PATH_ERROR,		"Data Path Error" },			\
-+	{ CXL_DER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },			\
-+	{ CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
-+	{ CXL_DER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }			\
- )
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 347c1e7b37bd..8d731bd63988 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -401,6 +401,10 @@ struct cxl_test_gen_media gen_media = {
+ 			.channel = 1,
+ 			.rank = 30,
+ 		},
++		.component_id = { 0x3, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.cme_threshold_ev_flags = 3,
++		.cme_count = { 33, 0, 0 },
++		.sub_type = 0x2,
+ 	},
+ };
  
- #define CXL_DER_VALID_CHANNEL				BIT(0)
-@@ -503,15 +509,21 @@ TRACE_EVENT(cxl_general_media,
- #define CXL_DER_VALID_ROW				BIT(5)
- #define CXL_DER_VALID_COLUMN				BIT(6)
- #define CXL_DER_VALID_CORRECTION_MASK			BIT(7)
--#define show_dram_valid_flags(flags)	__print_flags(flags, "|",			   \
--	{ CXL_DER_VALID_CHANNEL,			"CHANNEL"		}, \
--	{ CXL_DER_VALID_RANK,				"RANK"			}, \
--	{ CXL_DER_VALID_NIBBLE,				"NIBBLE"		}, \
--	{ CXL_DER_VALID_BANK_GROUP,			"BANK GROUP"		}, \
--	{ CXL_DER_VALID_BANK,				"BANK"			}, \
--	{ CXL_DER_VALID_ROW,				"ROW"			}, \
--	{ CXL_DER_VALID_COLUMN,				"COLUMN"		}, \
--	{ CXL_DER_VALID_CORRECTION_MASK,		"CORRECTION MASK"	}  \
-+#define CXL_DER_VALID_COMPONENT				BIT(8)
-+#define CXL_DER_VALID_COMPONENT_ID_FORMAT		BIT(9)
-+#define CXL_DER_VALID_SUB_CHANNEL			BIT(10)
-+#define show_dram_valid_flags(flags)	__print_flags(flags, "|",			\
-+	{ CXL_DER_VALID_CHANNEL,			"CHANNEL"		},	\
-+	{ CXL_DER_VALID_RANK,				"RANK"			},	\
-+	{ CXL_DER_VALID_NIBBLE,				"NIBBLE"		},	\
-+	{ CXL_DER_VALID_BANK_GROUP,			"BANK GROUP"		},	\
-+	{ CXL_DER_VALID_BANK,				"BANK"			},	\
-+	{ CXL_DER_VALID_ROW,				"ROW"			},	\
-+	{ CXL_DER_VALID_COLUMN,				"COLUMN"		},	\
-+	{ CXL_DER_VALID_CORRECTION_MASK,		"CORRECTION MASK"	},	\
-+	{ CXL_DER_VALID_COMPONENT,			"COMPONENT"		},	\
-+	{ CXL_DER_VALID_COMPONENT_ID_FORMAT,		"COMPONENT PLDM FORMAT"	},	\
-+	{ CXL_DER_VALID_SUB_CHANNEL,			"SUB CHANNEL"		}	\
- )
+@@ -429,6 +433,11 @@ struct cxl_test_dram dram = {
+ 		.bank_group = 5,
+ 		.bank = 2,
+ 		.column = {0xDE, 0xAD},
++		.component_id = { 0x1, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.sub_channel = 8,
++		.cme_threshold_ev_flags = 2,
++		.cvme_count = { 14, 0, 0 },
++		.sub_type = 0x5,
+ 	},
+ };
  
- TRACE_EVENT(cxl_dram,
-@@ -540,6 +552,12 @@ TRACE_EVENT(cxl_dram,
- 		__field(u8, bank_group)	/* Out of order to pack trace record */
- 		__field(u8, bank)	/* Out of order to pack trace record */
- 		__field(u8, dpa_flags)	/* Out of order to pack trace record */
-+		/* Following are out of order to pack trace record */
-+		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
-+		__field(u32, cvme_count)
-+		__field(u8, sub_type)
-+		__field(u8, sub_channel)
-+		__field(u8, cme_threshold_ev_flags)
- 		__string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
- 	),
+@@ -456,7 +465,10 @@ struct cxl_test_mem_module mem_module = {
+ 			.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
+ 			.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+ 			.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+-		}
++		},
++		/* .validity_flags = <set below> */
++		.component_id = { 0x2, 0x74, 0xc5, 0x8, 0x9a, 0x1a, 0xb, 0xfc, 0xd2, 0x7e, 0x2f, 0x31, 0x9b, 0x3c, 0x81, 0x4d },
++		.event_sub_type = 0x3,
+ 	},
+ };
  
-@@ -553,6 +571,7 @@ TRACE_EVENT(cxl_dram,
- 		__entry->dpa &= CXL_DPA_MASK;
- 		__entry->descriptor = rec->media_hdr.descriptor;
- 		__entry->type = rec->media_hdr.type;
-+		__entry->sub_type = rec->sub_type;
- 		__entry->transaction_type = rec->media_hdr.transaction_type;
- 		__entry->validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
- 		__entry->channel = rec->media_hdr.channel;
-@@ -572,23 +591,40 @@ TRACE_EVENT(cxl_dram,
- 			__assign_str(region_name);
- 			uuid_copy(&__entry->region_uuid, &uuid_null);
- 		}
-+		memcpy(__entry->comp_id, &rec->component_id,
-+		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
-+		__entry->sub_channel = rec->sub_channel;
-+		__entry->cme_threshold_ev_flags = rec->cme_threshold_ev_flags;
-+		__entry->cvme_count = get_unaligned_le24(rec->cvme_count);
- 	),
+@@ -478,13 +490,18 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
  
--	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' descriptor='%s' type='%s' " \
-+	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' descriptor='%s' type='%s' sub_type='%s' " \
- 		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
- 		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
- 		"validity_flags='%s' " \
--		"hpa=%llx region=%s region_uuid=%pUb",
-+		"comp_id=%s comp_id_pldm_valid_flags='%s' " \
-+		"pldm_entity_id=%s pldm_resource_id=%s " \
-+		"hpa=%llx region=%s region_uuid=%pUb " \
-+		"sub_channel=%u cme_threshold_ev_flags='%s' cvme_count=%u",
- 		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
- 		show_event_desc_flags(__entry->descriptor),
- 		show_dram_mem_event_type(__entry->type),
-+		show_mem_event_sub_type(__entry->sub_type),
- 		show_trans_type(__entry->transaction_type),
- 		__entry->channel, __entry->rank, __entry->nibble_mask,
- 		__entry->bank_group, __entry->bank,
- 		__entry->row, __entry->column,
- 		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
- 		show_dram_valid_flags(__entry->validity_flags),
--		__entry->hpa, __get_str(region_name), &__entry->region_uuid
-+		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
-+		show_comp_id_pldm_flags(__entry->comp_id[0]),
-+		show_pldm_entity_id(__entry->validity_flags, CXL_DER_VALID_COMPONENT,
-+				    CXL_DER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		show_pldm_resource_id(__entry->validity_flags, CXL_DER_VALID_COMPONENT,
-+				      CXL_DER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		__entry->hpa, __get_str(region_name), &__entry->region_uuid,
-+		__entry->sub_channel, show_cme_threshold_ev_flags(__entry->cme_threshold_ev_flags),
-+		__entry->cvme_count
- 	)
- );
+ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+ {
+-	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
++	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK |
++			   CXL_GMER_VALID_COMPONENT | CXL_GMER_VALID_COMPONENT_ID_FORMAT,
+ 			   &gen_media.rec.media_hdr.validity_flags);
  
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 2b07adf39010..10815414f376 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -60,7 +60,7 @@ struct cxl_event_gen_media {
+ 	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
+-			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
++			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN | CXL_DER_VALID_SUB_CHANNEL |
++			   CXL_DER_VALID_COMPONENT | CXL_DER_VALID_COMPONENT_ID_FORMAT,
+ 			   &dram.rec.media_hdr.validity_flags);
  
- /*
-  * DRAM Event Record - DER
-- * CXL rev 3.0 section 8.2.9.2.1.2; Table 3-44
-+ * CXL rev 3.1 section 8.2.9.2.1.2; Table 8-46
-  */
- #define CXL_EVENT_DER_CORRECTION_MASK_SIZE	0x20
- struct cxl_event_dram {
-@@ -71,7 +71,12 @@ struct cxl_event_dram {
- 	u8 row[3];
- 	u8 column[2];
- 	u8 correction_mask[CXL_EVENT_DER_CORRECTION_MASK_SIZE];
--	u8 reserved[0x17];
-+	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-+	u8 sub_channel;
-+	u8 cme_threshold_ev_flags;
-+	u8 cvme_count[3];
-+	u8 sub_type;
-+	u8 reserved;
- } __packed;
- 
- /*
++	put_unaligned_le16(CXL_MMER_VALID_COMPONENT | CXL_MMER_VALID_COMPONENT_ID_FORMAT,
++			   &mem_module.rec.validity_flags);
++
+ 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+ 	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+ 		      (struct cxl_event_record_raw *)&gen_media);
 -- 
 2.43.0
 
