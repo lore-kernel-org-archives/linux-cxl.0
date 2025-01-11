@@ -1,168 +1,113 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6EC15666D;
-	Sat, 11 Jan 2025 09:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9181D15666D;
+	Sat, 11 Jan 2025 09:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736586974; cv=none; b=edi0ruj4LH8sZDW6DX8Q0jrJhUvzt0jD4Htbsriv3crO1lqXUPcfi6J1VajzU9Zqeav6MaDSTKeTY4fOwUcgheEav+BFWG6ZozlRzYu+u4xK3YSRnyaTV/xqJC0HI1PFMcfqOjgPWy1eJMi41T++HhIO5YrMw0sVDXeQcBY2FVE=
+	t=1736587094; cv=none; b=kDmSd6O8y44S/fFdIdU2qLpY837XWpELwDcB+OcUAcbKQbvjPFEdapgeWGQDeh89r3kcGjN3z5qHzmbatCiX4Ma5Du3OQkQtyzjoeU66jRg34TK+pnS5z5/aBTkxgawhuwEZMi0Ck48IumDiX7Do52Zv60IOJiZJokXNHYTNGMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736586974; c=relaxed/simple;
-	bh=aidAE5sWIzSlsJ8//HNxNtyVM2SswKgKbRtaNpyGLOg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YktGqQ8gLGBJK5P7KfM2JfSfa5/S951lo3yU4QTH1xcPKHCk2SuiMIIq5iFKMnVR4hfcaMNf2xqmv8shEdgcjd/GCcWhmMbRYziN/wTJ+MyJ4pkbBL49/XUdln6DejQ5iZWApgTP93ld9c/ND1HUJQ5VfCDVmRfwL+aHaylmCYg=
+	s=arc-20240116; t=1736587094; c=relaxed/simple;
+	bh=g3fifVcCYBUWa2qovuY/7qcBh3pScizBKwJNaeZ8xfw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pVj25OPLPxL+u8CcMihoX91UDe7O5ASgLjP79+YMDdCHEXTsIdPno8l7pragOKl6l1wHeKFRLC1G30SxqmReVCyX42aDQtbeI65FaA8eGgZcyplwr/232WqZIkuDCHNyHw5HLL3bYOy6hv6DNOLij9qhghvCqNhJNCd2pA3pse4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXsK6Cmgz6M4Mw;
-	Sat, 11 Jan 2025 17:14:29 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id D7146140442;
-	Sat, 11 Jan 2025 17:16:08 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXw53HQ4z6892k;
+	Sat, 11 Jan 2025 17:16:53 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7BA871403D2;
+	Sat, 11 Jan 2025 17:18:10 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.155) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 11 Jan 2025 10:16:08 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Sat, 11 Jan 2025 10:16:08 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linuxarm
-	<linuxarm@huawei.com>, tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)"
-	<prime.zeng@hisilicon.com>
-Subject: RE: [PATCH v5 4/6] cxl/events: Update DRAM Event Record to CXL spec
- rev 3.1
-Thread-Topic: [PATCH v5 4/6] cxl/events: Update DRAM Event Record to CXL spec
- rev 3.1
-Thread-Index: AQHbY1anZB/wtlQOlUm4MKKpsVLwfLMQQyoAgAEIbVA=
-Date: Sat, 11 Jan 2025 09:16:07 +0000
-Message-ID: <5a0d7679f7d44f07a47eb47651f9b8ca@huawei.com>
-References: <20250110115556.1654-1-shiju.jose@huawei.com>
- <20250110115556.1654-5-shiju.jose@huawei.com>
- <678166907eb67_17789429416@iweiny-mobl.notmuch>
-In-Reply-To: <678166907eb67_17789429416@iweiny-mobl.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 15.1.2507.39; Sat, 11 Jan 2025 10:18:09 +0100
+From: <shiju.jose@huawei.com>
+To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<nifan.cxl@gmail.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v6 0/6] Update Event Records to CXL spec rev 3.1
+Date: Sat, 11 Jan 2025 09:17:50 +0000
+Message-ID: <20250111091756.1682-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
+From: Shiju Jose <shiju.jose@huawei.com>
 
+Add updates in the CXL events records and CXL trace events implementations
+for the changes in CXL spec rev 3.1.
 
->-----Original Message-----
->From: Ira Weiny <ira.weiny@intel.com>
->Sent: 10 January 2025 18:27
->To: Shiju Jose <shiju.jose@huawei.com>; dave.jiang@intel.com;
->dan.j.williams@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; alison.schofield@intel.com;
->nifan.cxl@gmail.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->dave@stgolabs.net; linux-cxl@vger.kernel.org
->Cc: linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>;
->tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>=
-;
->Shiju Jose <shiju.jose@huawei.com>
->Subject: Re: [PATCH v5 4/6] cxl/events: Update DRAM Event Record to CXL sp=
-ec
->rev 3.1
->
->shiju.jose@ wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->
->[snip]
->
->>
->>  TRACE_EVENT(cxl_dram,
->> @@ -527,6 +539,7 @@ TRACE_EVENT(cxl_dram,
->>  		__field(u64, dpa)
->>  		__field(u8, descriptor)
->>  		__field(u8, type)
->> +		__field(u8, sub_type)
->
->I just noticed this with the previous patch too.  To pack the record this =
-should be
->below...
+Shiju Jose (6):
+  cxl/events: Update Common Event Record to CXL spec rev 3.1
+  cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
+  cxl/events: Update General Media Event Record to CXL spec rev 3.1
+  cxl/events: Update DRAM Event Record to CXL spec rev 3.1
+  cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
+  cxl/test: Update test code for event records to CXL spec rev 3.1
 
-Hi Ira,
+Changes:
+V5 -> V6
+1. Modified for feedbacks from Ira Weiny.
+   - Reordered new fields added in trace events cxl_general_media,
+     cxl_dram and (cxl_memory_module to pack the records.  
+   - Added a suggested note in the patch description of patch
+     cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
+	 
+V4 -> V5
+1. Reverted changes made in v4 for overcoming parsing error when
+libtraceevent in userspace parses the CXL trace events, for rasdaemon.
+This was due to trace event's format file is larger than PAGE_SIZE, not
+supported reading complete format file in one go in the kernel and thus
+fixed in the rasdaemon.
+2. Rebased to v6.13-rc5, in which cxl.git/next is based.
+3. Tested with rasdaemon and ras-mc-ctl tools updated for CXL spec rev 3.1
+   event record changes.
 
-Thanks for reviewing and for the feedbacks.=20
-I have modified for your suggestions and will be in the v6.
+V3 -> V4
+1. Changes for the parsing error parsing error when libtraceevent in
+userspace parses the CXL trace events, for rasdaemon.
+It was found that long decoded strings of field values in the TP_printk()
+caused the issue, looks like due to buffer overflow/corruption.
+Increasing known buffer sizes in userspace and kernel did not help.
+As a solution, decoding of some fields in the TP_printk() are removed
+to accommodate the new fields.
+Decoding of these fields is added in the userspace tool rasdaemon.
 
-Thanks,
-Shiju
+V2 -> V3
+1. Changes for the feedbacks from Jonathan.
+ - Added printing component Id format bit in show_valid_flags()
+ - Modified parsing component ID in patch [2] and added logging
+   of raw comp-id, comp_id_pldm_flags, PLDM entity id and
+   PLDM resource id in patches 3 to 4.
+ 
+V1 -> V2
+1. Changes for the feedbacks from Jonathan.
+  - Separate patch for Component Identifier formatting.
+  - Moved printing of event sub type after event type.
+  - For memory module event, rename sub_type to event_sub_type. 
+2. Changes for the feedbacks from Alison.
+  - Updated patch's subject
+  - Updated CXL test code for CXL spec rev 3.1 event records.
+3. Changed logic for Component Identifier formatting and other improvements.
 
->
->>  		__field(u8, transaction_type)
->>  		__field(u8, channel)
->>  		__field(u16, validity_flags)
->> @@ -541,6 +554,10 @@ TRACE_EVENT(cxl_dram,
->>  		__field(u8, bank)	/* Out of order to pack trace record */
->>  		__field(u8, dpa_flags)	/* Out of order to pack trace record */
->
->Here.
->
->>  		__string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
->> +		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
->> +		__field(u8, sub_channel)
->> +		__field(u8, cme_threshold_ev_flags)
->> +		__field(u32, cvme_count)
->>  	),
->
->And these reordered too.  Like this:
->
->diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h index
->cbaf6244d77f..6f4bf4925cbf 100644
->--- a/drivers/cxl/core/trace.h
->+++ b/drivers/cxl/core/trace.h
->@@ -539,7 +539,6 @@ TRACE_EVENT(cxl_dram,
->                __field(u64, dpa)
->                __field(u8, descriptor)
->                __field(u8, type)
->-               __field(u8, sub_type)
->                __field(u8, transaction_type)
->                __field(u8, channel)
->                __field(u16, validity_flags) @@ -553,11 +552,13 @@
->TRACE_EVENT(cxl_dram,
->                __field(u8, bank_group) /* Out of order to pack trace reco=
-rd */
->                __field(u8, bank)       /* Out of order to pack trace reco=
-rd */
->                __field(u8, dpa_flags)  /* Out of order to pack trace reco=
-rd */
->-               __string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
->+               /* The following are out of order to pack the trace
->+ record */
->                __array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
->+               __field(u32, cvme_count)
->+               __field(u8, sub_type)
->                __field(u8, sub_channel)
->                __field(u8, cme_threshold_ev_flags)
->-               __field(u32, cvme_count)
->+               __string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
->        ),
->
->        TP_fast_assign(
->
->
->
->Other than that it looks good.  Perhaps Dave can just squash this hunk?
->
->Ira
->
->[snip]
+ drivers/cxl/core/trace.h     | 259 +++++++++++++++++++++++++++++------
+ include/cxl/event.h          |  28 ++--
+ tools/testing/cxl/test/mem.c |  23 +++-
+ 3 files changed, 257 insertions(+), 53 deletions(-)
+
+-- 
+2.43.0
 
