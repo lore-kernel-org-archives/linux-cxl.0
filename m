@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9181D15666D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B6214F132;
 	Sat, 11 Jan 2025 09:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736587094; cv=none; b=kDmSd6O8y44S/fFdIdU2qLpY837XWpELwDcB+OcUAcbKQbvjPFEdapgeWGQDeh89r3kcGjN3z5qHzmbatCiX4Ma5Du3OQkQtyzjoeU66jRg34TK+pnS5z5/aBTkxgawhuwEZMi0Ck48IumDiX7Do52Zv60IOJiZJokXNHYTNGMM=
+	t=1736587096; cv=none; b=C+5fMMYOMwmYeDr7BlnSW3N/6jtZusg5skrFjX9PCRrG3tIZWKHm/SNeBuUv0ipeglGTlB0sekz5PCSflSRI0RkaizpaecRR3Wz6L9gH0nk9uVLP6yb48xEEfv/3XcgSoHNsriCuTAMC/zdGZpJyrhgjQ1gPcORaXeVOgllS0FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736587094; c=relaxed/simple;
-	bh=g3fifVcCYBUWa2qovuY/7qcBh3pScizBKwJNaeZ8xfw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pVj25OPLPxL+u8CcMihoX91UDe7O5ASgLjP79+YMDdCHEXTsIdPno8l7pragOKl6l1wHeKFRLC1G30SxqmReVCyX42aDQtbeI65FaA8eGgZcyplwr/232WqZIkuDCHNyHw5HLL3bYOy6hv6DNOLij9qhghvCqNhJNCd2pA3pse4=
+	s=arc-20240116; t=1736587096; c=relaxed/simple;
+	bh=92vtLAdek35C7JdAjGfRuXcGLo30KGqOWXcNt2+Qol4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sv9GaN90yUqpzgaF5U2USjC6PY4T2vFN86mCMMmjJU2Bqlemu+FMlHYQmIhEZxg9pn62bWNrphg5eRu01DMEjzlNC3ge1q0KcQ3Oz/ZiwXHqjWIgWOSJsOBy1gu35+v0opidN1BACblmZjEpwGAHZBwRJTRW5Zkv3djRKvpeUJw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXw53HQ4z6892k;
-	Sat, 11 Jan 2025 17:16:53 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXvh2DDlz6M4Lq;
+	Sat, 11 Jan 2025 17:16:32 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7BA871403D2;
-	Sat, 11 Jan 2025 17:18:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4BEB4140A35;
+	Sat, 11 Jan 2025 17:18:11 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.155) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 11 Jan 2025 10:18:09 +0100
+ 15.1.2507.39; Sat, 11 Jan 2025 10:18:10 +0100
 From: <shiju.jose@huawei.com>
 To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
@@ -30,10 +31,12 @@ To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v6 0/6] Update Event Records to CXL spec rev 3.1
-Date: Sat, 11 Jan 2025 09:17:50 +0000
-Message-ID: <20250111091756.1682-1-shiju.jose@huawei.com>
+Subject: [PATCH v6 1/6] cxl/events: Update Common Event Record to CXL spec rev 3.1
+Date: Sat, 11 Jan 2025 09:17:51 +0000
+Message-ID: <20250111091756.1682-2-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20250111091756.1682-1-shiju.jose@huawei.com>
+References: <20250111091756.1682-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,67 +50,86 @@ X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add updates in the CXL events records and CXL trace events implementations
-for the changes in CXL spec rev 3.1.
+CXL spec 3.1 section 8.2.9.2.1 Table 8-42, Common Event Record format has
+updated with Maintenance Operation Subclass information.
 
-Shiju Jose (6):
-  cxl/events: Update Common Event Record to CXL spec rev 3.1
-  cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
-  cxl/events: Update General Media Event Record to CXL spec rev 3.1
-  cxl/events: Update DRAM Event Record to CXL spec rev 3.1
-  cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
-  cxl/test: Update test code for event records to CXL spec rev 3.1
+Add updates for the above spec change in the CXL events record and CXL
+common trace event implementations.
 
-Changes:
-V5 -> V6
-1. Modified for feedbacks from Ira Weiny.
-   - Reordered new fields added in trace events cxl_general_media,
-     cxl_dram and (cxl_memory_module to pack the records.  
-   - Added a suggested note in the patch description of patch
-     cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
-	 
-V4 -> V5
-1. Reverted changes made in v4 for overcoming parsing error when
-libtraceevent in userspace parses the CXL trace events, for rasdaemon.
-This was due to trace event's format file is larger than PAGE_SIZE, not
-supported reading complete format file in one go in the kernel and thus
-fixed in the rasdaemon.
-2. Rebased to v6.13-rc5, in which cxl.git/next is based.
-3. Tested with rasdaemon and ras-mc-ctl tools updated for CXL spec rev 3.1
-   event record changes.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/trace.h | 13 +++++++++----
+ include/cxl/event.h      |  3 ++-
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-V3 -> V4
-1. Changes for the parsing error parsing error when libtraceevent in
-userspace parses the CXL trace events, for rasdaemon.
-It was found that long decoded strings of field values in the TP_printk()
-caused the issue, looks like due to buffer overflow/corruption.
-Increasing known buffer sizes in userspace and kernel did not help.
-As a solution, decoding of some fields in the TP_printk() are removed
-to accommodate the new fields.
-Decoding of these fields is added in the userspace tool rasdaemon.
-
-V2 -> V3
-1. Changes for the feedbacks from Jonathan.
- - Added printing component Id format bit in show_valid_flags()
- - Modified parsing component ID in patch [2] and added logging
-   of raw comp-id, comp_id_pldm_flags, PLDM entity id and
-   PLDM resource id in patches 3 to 4.
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 8389a94adb1a..7305974e2301 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -166,11 +166,13 @@ TRACE_EVENT(cxl_overflow,
+ #define CXL_EVENT_RECORD_FLAG_MAINT_NEEDED	BIT(3)
+ #define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
+ #define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
++#define CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID	BIT(6)
+ #define show_hdr_flags(flags)	__print_flags(flags, " | ",			   \
+ 	{ CXL_EVENT_RECORD_FLAG_PERMANENT,	"PERMANENT_CONDITION"		}, \
+ 	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,	"MAINTENANCE_NEEDED"		}, \
+ 	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"PERFORMANCE_DEGRADED"		}, \
+-	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"HARDWARE_REPLACEMENT_NEEDED"	}  \
++	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"HARDWARE_REPLACEMENT_NEEDED"	},  \
++	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,	"MAINT_OP_SUB_CLASS_VALID" }	\
+ )
  
-V1 -> V2
-1. Changes for the feedbacks from Jonathan.
-  - Separate patch for Component Identifier formatting.
-  - Moved printing of event sub type after event type.
-  - For memory module event, rename sub_type to event_sub_type. 
-2. Changes for the feedbacks from Alison.
-  - Updated patch's subject
-  - Updated CXL test code for CXL spec rev 3.1 event records.
-3. Changed logic for Component Identifier formatting and other improvements.
-
- drivers/cxl/core/trace.h     | 259 +++++++++++++++++++++++++++++------
- include/cxl/event.h          |  28 ++--
- tools/testing/cxl/test/mem.c |  23 +++-
- 3 files changed, 257 insertions(+), 53 deletions(-)
-
+ /*
+@@ -197,7 +199,8 @@ TRACE_EVENT(cxl_overflow,
+ 	__field(u16, hdr_related_handle)			\
+ 	__field(u64, hdr_timestamp)				\
+ 	__field(u8, hdr_length)					\
+-	__field(u8, hdr_maint_op_class)
++	__field(u8, hdr_maint_op_class)				\
++	__field(u8, hdr_maint_op_sub_class)
+ 
+ #define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)					\
+ 	__assign_str(memdev);				\
+@@ -209,17 +212,19 @@ TRACE_EVENT(cxl_overflow,
+ 	__entry->hdr_handle = le16_to_cpu((hdr).handle);			\
+ 	__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle);	\
+ 	__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp);			\
+-	__entry->hdr_maint_op_class = (hdr).maint_op_class
++	__entry->hdr_maint_op_class = (hdr).maint_op_class;			\
++	__entry->hdr_maint_op_sub_class = (hdr).maint_op_sub_class
+ 
+ #define CXL_EVT_TP_printk(fmt, ...) \
+ 	TP_printk("memdev=%s host=%s serial=%lld log=%s : time=%llu uuid=%pUb "	\
+ 		"len=%d flags='%s' handle=%x related_handle=%x "		\
+-		"maint_op_class=%u : " fmt,					\
++		"maint_op_class=%u maint_op_sub_class=%u : " fmt,		\
+ 		__get_str(memdev), __get_str(host), __entry->serial,		\
+ 		cxl_event_log_type_str(__entry->log),				\
+ 		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry->hdr_length,\
+ 		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,	\
+ 		__entry->hdr_related_handle, __entry->hdr_maint_op_class,	\
++		__entry->hdr_maint_op_sub_class,	\
+ 		##__VA_ARGS__)
+ 
+ TRACE_EVENT(cxl_generic_event,
+diff --git a/include/cxl/event.h b/include/cxl/event.h
+index 0bea1afbd747..e1d485ad376b 100644
+--- a/include/cxl/event.h
++++ b/include/cxl/event.h
+@@ -18,7 +18,8 @@ struct cxl_event_record_hdr {
+ 	__le16 related_handle;
+ 	__le64 timestamp;
+ 	u8 maint_op_class;
+-	u8 reserved[15];
++	u8 maint_op_sub_class;
++	u8 reserved[14];
+ } __packed;
+ 
+ struct cxl_event_media_hdr {
 -- 
 2.43.0
 
