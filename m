@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FED18B499;
-	Sat, 11 Jan 2025 09:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3D218FDC8;
+	Sat, 11 Jan 2025 09:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736587098; cv=none; b=e/FxNpy5u+MMk1P0QHRjy/XdlnxLiNe0wBhAm44iOEp1gqksUny/SttvT1jmx8ZUUKIKRq0brHb0DeQRtwVlPXjA9HPC1lYY6elHmv0Cqfj6G5qNxCtizmr4nnNBBfyyiFTnsl2B6nWw9OSzDMqNttiRORpsnR0PGjt/8R5wbds=
+	t=1736587099; cv=none; b=S6OFDLBd8G3sOY1vmRqDPXwohl0JQqm+32rKzTZJi+SoURA3f/4v4GTIAsg24iln5BpprHYdAD6f3LCQlVFQSNsGR08eYIUbpA9R9KLR6JJ2t/E17LGVs3MYN+iNxwqCUSc2ioYU5IpZZptbEBoK0Jzx0bWEduyeyDrm0ik74JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736587098; c=relaxed/simple;
-	bh=Wj/gYTC9foR9pUAbvjQmAl3mjF5HwUlZZH6hasQyoKY=;
+	s=arc-20240116; t=1736587099; c=relaxed/simple;
+	bh=/1Z2lQOpv0bDt2VKm4/zIwfwe5HmUiXIE2+KccKVNHk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kqyUSNc4y+HE8+PpSkuSVXLuhQbMA/wDKOKlyLwR38KIH0e6dIQKhf5ZD494Hp/19Ycjmtt/H2wxYPhZnCUtySLab87YmEfxVsns01lJ4rDrHEe3VUVff0Yi3sh6aYxtXjvt/aqInDvuAEc7pbW262XlkhKB0jD3Gg0KIUXuSCk=
+	 MIME-Version:Content-Type; b=BmkK6JYikQ/Gg3MDMHGzSIgvEkV+lSHQfPHhxRZVzY1T6NccZGAE5x5a6XHtUZuVnvbO+mkamt7cplQF6+k2fFFbfO8Zt1uAXz5zRA9UNaRhdnBMbPNTnbPkluQuIb+eh7YAah6K/N8d8kXdG4KHJ3FXKddWLldYJuZ5GrC+do4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXrB0lqXz6K9Lh;
-	Sat, 11 Jan 2025 17:13:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YVXvm4T9Qz6M4LC;
+	Sat, 11 Jan 2025 17:16:36 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8FA67140A35;
-	Sat, 11 Jan 2025 17:18:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 98A211401DC;
+	Sat, 11 Jan 2025 17:18:15 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.155) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 11 Jan 2025 10:18:12 +0100
+ 15.1.2507.39; Sat, 11 Jan 2025 10:18:14 +0100
 From: <shiju.jose@huawei.com>
 To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
@@ -31,9 +31,9 @@ To: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
 	<dave@stgolabs.net>, <linux-cxl@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v6 3/6] cxl/events: Update General Media Event Record to CXL spec rev 3.1
-Date: Sat, 11 Jan 2025 09:17:53 +0000
-Message-ID: <20250111091756.1682-4-shiju.jose@huawei.com>
+Subject: [PATCH v6 5/6] cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
+Date: Sat, 11 Jan 2025 09:17:55 +0000
+Message-ID: <20250111091756.1682-6-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250111091756.1682-1-shiju.jose@huawei.com>
 References: <20250111091756.1682-1-shiju.jose@huawei.com>
@@ -50,232 +50,209 @@ X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec rev 3.1 section 8.2.9.2.1.1 Table 8-45, General Media Event
-Record has updated with following new fields and new types for Memory
-Event Type and Transaction Type fields.
-1. Advanced Programmable Corrected Memory Error Threshold Event Flags
-2. Corrected Memory Error Count at Event
-3. Memory Event Sub-Type
+CXL spec 3.1 section 8.2.9.2.1.3 Table 8-47, Memory Module Event Record
+has updated with following new fields and new info for Device Event Type
+and Device Health Information fields.
+1. Validity Flags
+2. Component Identifier
+3. Device Event Sub-Type
 
-The format of component identifier has changed (CXL spec 3.1 section
-8.2.9.2.1 Table 8-44).
-
-Update the general media event record and general media trace event for
+Update the Memory Module event record and Memory Module trace event for
 the above spec changes. The new fields are inserted in logical places.
 
-Example trace log of cxl_general_media trace event,
+Example trace print of cxl_memory_module trace event,
 
-cxl_general_media: memdev=mem0 host=0000:0f:00.0 serial=3 log=Fatal : \
-time=156831237413 uuid=fbcd0a77-c260-417f-85a9-088b1621eba6 len=128 \
-flags='0x1' handle=1 related_handle=0 maint_op_class=2 \
-maint_op_sub_class=4 : dpa=30d40 dpa_flags='' \
-descriptor='UNCORRECTABLE_EVENT|THRESHOLD_EVENT|POISON_LIST_OVERFLOW' \
-type='TE State Violation' sub_type='Media Link Command Training Error' \
-transaction_type='Host Inject Poison' channel=3 rank=33 device=5 \
-validity_flags='CHANNEL|RANK|DEVICE|COMPONENT|COMPONENT PLDM FORMAT' \
+cxl_memory_module: memdev=mem3 host=0000:0f:00.0 serial=3 log=Fatal : \
+time=371709344709 uuid=fe927475-dd59-4339-a586-79bab113b774 len=128 \
+flags='0x1' handle=2 related_handle=0 maint_op_class=0 \
+maint_op_sub_class=0 : event_type='Temperature Change' \
+event_sub_type='Unsupported Config Data' \
+health_status='MAINTENANCE_NEEDED|REPLACEMENT_NEEDED' \
+media_status='All Data Loss in Event of Power Loss' as_life_used=0x3 \
+as_dev_temp=Normal as_cor_vol_err_cnt=Normal as_cor_per_err_cnt=Normal \
+life_used=8 device_temp=3 dirty_shutdown_cnt=33 cor_vol_err_cnt=25 \
+cor_per_err_cnt=45 validity_flags='COMPONENT|COMPONENT PLDM FORMAT' \
 comp_id=03 74 c5 08 9a 1a 0b fc d2 7e 2f 31 9b 3c 81 4d \
-comp_id_pldm_valid_flags='PLDM Entity ID | Resource ID' \
-pldm_entity_id=74 c5 08 9a 1a 0b pldm_resource_id=fc d2 7e 2f \
-hpa=ffffffffffffffff region= \
-region_uuid=00000000-0000-0000-0000-000000000000 \
-cme_threshold_ev_flags='Corrected Memory Errors in Multiple Media \
-Components|Exceeded Programmable Threshold' cme_count=120
+comp_id_pldm_valid_flags='Resource ID' \
+pldm_entity_id=0x00 pldm_resource_id=fc d2 7e 2f
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/core/trace.h | 90 ++++++++++++++++++++++++++++++++++------
- include/cxl/event.h      |  7 +++-
- 2 files changed, 83 insertions(+), 14 deletions(-)
+ drivers/cxl/core/trace.h | 62 ++++++++++++++++++++++++++++++++++------
+ include/cxl/event.h      |  9 ++++--
+ 2 files changed, 60 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index b508873ce426..39e83b8543f3 100644
+index ed41139eaf23..cea706b683b5 100644
 --- a/drivers/cxl/core/trace.h
 +++ b/drivers/cxl/core/trace.h
-@@ -292,7 +292,7 @@ TRACE_EVENT(cxl_generic_event,
+@@ -631,7 +631,7 @@ TRACE_EVENT(cxl_dram,
+ /*
+  * Memory Module Event Record - MMER
+  *
+- * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
++ * CXL res 3.1 section 8.2.9.2.1.3; Table 8-47
+  */
+ #define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
+ #define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
+@@ -639,27 +639,35 @@ TRACE_EVENT(cxl_dram,
+ #define CXL_MMER_TEMP_CHANGE			0x03
+ #define CXL_MMER_DATA_PATH_ERROR		0x04
+ #define CXL_MMER_LSA_ERROR			0x05
++#define CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR	0x06
++#define CXL_MMER_MEMORY_MEDIA_FRU_ERROR		0x07
++#define CXL_MMER_POWER_MANAGEMENT_FAULT		0x08
+ #define show_dev_evt_type(type)	__print_symbolic(type,			   \
+ 	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
+ 	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
+ 	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
+ 	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
+ 	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
+-	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}  \
++	{ CXL_MMER_LSA_ERROR,			"LSA Error"		}, \
++	{ CXL_MMER_UNRECOV_SIDEBAND_BUS_ERROR,	"Unrecoverable Internal Sideband Bus Error"	}, \
++	{ CXL_MMER_MEMORY_MEDIA_FRU_ERROR,	"Memory Media FRU Error"	}, \
++	{ CXL_MMER_POWER_MANAGEMENT_FAULT,	"Power Management Fault"	}  \
+ )
  
  /*
-  * General Media Event Record - GMER
-- * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ * CXL rev 3.1 Section 8.2.9.2.1.1; Table 8-45
+  * Device Health Information - DHI
+  *
+- * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
++ * CXL res 3.1 section 8.2.9.9.3.1; Table 8-133
   */
- #define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
- #define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
-@@ -306,10 +306,18 @@ TRACE_EVENT(cxl_generic_event,
- #define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
- #define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
- #define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
--#define show_gmer_mem_event_type(type)	__print_symbolic(type,			\
--	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
--	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
--	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
-+#define CXL_GMER_MEM_EVT_TYPE_TE_STATE_VIOLATION	0x03
-+#define CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR	0x04
-+#define CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE	0x05
-+#define CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION		0x06
-+#define show_gmer_mem_event_type(type)	__print_symbolic(type,				\
-+	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },			\
-+	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_TE_STATE_VIOLATION,	"TE State Violation" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_SCRUB_MEDIA_ECC_ERROR,	"Scrub Media ECC Error" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE,	"Adv Prog CME Counter Expiration" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_CKID_VIOLATION,		"CKID Violation" }		\
+ #define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
+ #define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
+ #define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
++#define CXL_DHI_HS_MEM_CAPACITY_DEGRADED			BIT(3)
+ #define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
+ 	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"MAINTENANCE_NEEDED"	}, \
+ 	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"PERFORMANCE_DEGRADED"	}, \
+-	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}  \
++	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}, \
++	{ CXL_DHI_HS_MEM_CAPACITY_DEGRADED,	"MEM_CAPACITY_DEGRADED"	}  \
  )
  
- #define CXL_GMER_TRANS_UNKNOWN				0x00
-@@ -319,6 +327,8 @@ TRACE_EVENT(cxl_generic_event,
- #define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
- #define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
- #define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_ECS		0x07
-+#define CXL_GMER_TRANS_MEDIA_INITIALIZATION		0x08
- #define show_trans_type(type)	__print_symbolic(type,					\
- 	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
- 	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
-@@ -326,18 +336,57 @@ TRACE_EVENT(cxl_generic_event,
- 	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
- 	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
- 	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
--	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" },	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_ECS,		"Internal Media Error Check Scrub" },	\
-+	{ CXL_GMER_TRANS_MEDIA_INITIALIZATION,		"Media Initialization" }	\
- )
+ #define CXL_DHI_MS_NORMAL							0x00
+@@ -713,6 +721,26 @@ TRACE_EVENT(cxl_dram,
+ #define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
+ #define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
  
- #define CXL_GMER_VALID_CHANNEL				BIT(0)
- #define CXL_GMER_VALID_RANK				BIT(1)
- #define CXL_GMER_VALID_DEVICE				BIT(2)
- #define CXL_GMER_VALID_COMPONENT			BIT(3)
-+#define CXL_GMER_VALID_COMPONENT_ID_FORMAT		BIT(4)
- #define show_valid_flags(flags)	__print_flags(flags, "|",		   \
- 	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
- 	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
- 	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
--	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
-+	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}, \
-+	{ CXL_GMER_VALID_COMPONENT_ID_FORMAT,		"COMPONENT PLDM FORMAT"	} \
++#define CXL_MMER_VALID_COMPONENT			BIT(0)
++#define CXL_MMER_VALID_COMPONENT_ID_FORMAT		BIT(1)
++#define show_mem_module_valid_flags(flags)	__print_flags(flags, "|",	\
++	{ CXL_MMER_VALID_COMPONENT,		"COMPONENT" },			\
++	{ CXL_MMER_VALID_COMPONENT_ID_FORMAT,	"COMPONENT PLDM FORMAT"	}	\
 +)
-+
-+#define CXL_GMER_CME_EV_FLAG_CME_MULTIPLE_MEDIA		BIT(0)
-+#define CXL_GMER_CME_EV_FLAG_THRESHOLD_EXCEEDED		BIT(1)
-+#define show_cme_threshold_ev_flags(flags)	__print_flags(flags, "|",	\
-+	{									\
-+		CXL_GMER_CME_EV_FLAG_CME_MULTIPLE_MEDIA,			\
-+		"Corrected Memory Errors in Multiple Media Components"		\
-+	}, {									\
-+		CXL_GMER_CME_EV_FLAG_THRESHOLD_EXCEEDED,			\
-+		"Exceeded Programmable Threshold"				\
-+	}									\
-+)
-+
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_NOT_REPORTED				0x00
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_INTERNAL_DATAPATH_ERROR		0x01
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_COMMAND_TRAINING_ERROR	0x02
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CONTROL_TRAINING_ERROR	0x03
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_DATA_TRAINING_ERROR	0x04
-+#define CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CRC_ERROR			0x05
-+#define show_mem_event_sub_type(sub_type)	__print_symbolic(sub_type,			\
-+	{ CXL_GMER_MEM_EVT_SUB_TYPE_NOT_REPORTED, "Not Reported" },				\
-+	{ CXL_GMER_MEM_EVT_SUB_TYPE_INTERNAL_DATAPATH_ERROR, "Internal Datapath Error" },	\
++#define CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED			0x00
++#define CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA		0x01
++#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA		0x02
++#define CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU		0x03
++#define show_dev_event_sub_type(sub_type)	__print_symbolic(sub_type,			\
++	{ CXL_MMER_DEV_EVT_SUB_TYPE_NOT_REPORTED,		"Not Reported" },		\
++	{ CXL_MMER_DEV_EVT_SUB_TYPE_INVALID_CONFIG_DATA,	"Invalid Config Data" },	\
++	{ CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_CONFIG_DATA,		"Unsupported Config Data" },	\
 +	{											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_COMMAND_TRAINING_ERROR,			\
-+		"Media Link Command Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CONTROL_TRAINING_ERROR,			\
-+		"Media Link Control Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_DATA_TRAINING_ERROR,			\
-+		"Media Link Data Training Error"						\
-+	}, {											\
-+		CXL_GMER_MEM_EVT_SUB_TYPE_MEDIA_LINK_CRC_ERROR, "Media Link CRC Error"		\
++		CXL_MMER_DEV_EVT_SUB_TYPE_UNSUPP_MEM_MEDIA_FRU,					\
++		"Unsupported Memory Media FRU"							\
 +	}											\
- )
++)
++
+ TRACE_EVENT(cxl_memory_module,
  
- TRACE_EVENT(cxl_general_media,
-@@ -363,6 +412,9 @@ TRACE_EVENT(cxl_general_media,
- 		__field(u16, validity_flags)
- 		__field(u8, rank)
- 		__field(u8, dpa_flags)
-+		__field(u32, cme_count)
-+		__field(u8, sub_type)
-+		__field(u8, cme_threshold_ev_flags)
- 		__string(region_name, cxlr ? dev_name(&cxlr->dev) : "")
+ 	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+@@ -735,6 +763,9 @@ TRACE_EVENT(cxl_memory_module,
+ 		__field(u32, cor_per_err_cnt)
+ 		__field(s16, device_temp)
+ 		__field(u8, add_status)
++		__field(u8, event_sub_type)
++		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
++		__field(u16, validity_flags)
  	),
  
-@@ -377,6 +429,7 @@ TRACE_EVENT(cxl_general_media,
- 		__entry->dpa &= CXL_DPA_MASK;
- 		__entry->descriptor = rec->media_hdr.descriptor;
- 		__entry->type = rec->media_hdr.type;
-+		__entry->sub_type = rec->sub_type;
- 		__entry->transaction_type = rec->media_hdr.transaction_type;
- 		__entry->channel = rec->media_hdr.channel;
- 		__entry->rank = rec->media_hdr.rank;
-@@ -392,20 +445,33 @@ TRACE_EVENT(cxl_general_media,
- 			__assign_str(region_name);
- 			uuid_copy(&__entry->region_uuid, &uuid_null);
- 		}
-+		__entry->cme_threshold_ev_flags = rec->cme_threshold_ev_flags;
-+		__entry->cme_count = get_unaligned_le24(rec->cme_count);
+ 	TP_fast_assign(
+@@ -743,6 +774,7 @@ TRACE_EVENT(cxl_memory_module,
+ 
+ 		/* Memory Module Event */
+ 		__entry->event_type = rec->event_type;
++		__entry->event_sub_type = rec->event_sub_type;
+ 
+ 		/* Device Health Info */
+ 		__entry->health_status = rec->info.health_status;
+@@ -753,13 +785,20 @@ TRACE_EVENT(cxl_memory_module,
+ 		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
+ 		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
+ 		__entry->add_status = rec->info.add_status;
++		__entry->validity_flags = get_unaligned_le16(rec->validity_flags);
++		memcpy(__entry->comp_id, &rec->component_id,
++		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
  	),
  
- 	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
--		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
--		"device=%x comp_id=%s validity_flags='%s' " \
--		"hpa=%llx region=%s region_uuid=%pUb",
-+		"descriptor='%s' type='%s' sub_type='%s' " \
-+		"transaction_type='%s' channel=%u rank=%u " \
-+		"device=%x validity_flags='%s' " \
+-	CXL_EVT_TP_printk("event_type='%s' health_status='%s' media_status='%s' " \
+-		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
++	CXL_EVT_TP_printk("event_type='%s' event_sub_type='%s' health_status='%s' " \
++		"media_status='%s' as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
+ 		"as_cor_per_err_cnt=%s life_used=%u device_temp=%d " \
+-		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u",
++		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u " \
++		"validity_flags='%s' " \
 +		"comp_id=%s comp_id_pldm_valid_flags='%s' " \
-+		"pldm_entity_id=%s pldm_resource_id=%s " \
-+		"hpa=%llx region=%s region_uuid=%pUb " \
-+		"cme_threshold_ev_flags='%s' cme_count=%u",
- 		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
- 		show_event_desc_flags(__entry->descriptor),
- 		show_gmer_mem_event_type(__entry->type),
-+		show_mem_event_sub_type(__entry->sub_type),
- 		show_trans_type(__entry->transaction_type),
- 		__entry->channel, __entry->rank, __entry->device,
--		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
- 		show_valid_flags(__entry->validity_flags),
--		__entry->hpa, __get_str(region_name), &__entry->region_uuid
++		"pldm_entity_id=%s pldm_resource_id=%s",
+ 		show_dev_evt_type(__entry->event_type),
++		show_dev_event_sub_type(__entry->event_sub_type),
+ 		show_health_status_flags(__entry->health_status),
+ 		show_media_status(__entry->media_status),
+ 		show_two_bit_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
+@@ -768,7 +807,14 @@ TRACE_EVENT(cxl_memory_module,
+ 		show_one_bit_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
+ 		__entry->life_used, __entry->device_temp,
+ 		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
+-		__entry->cor_per_err_cnt
++		__entry->cor_per_err_cnt,
++		show_mem_module_valid_flags(__entry->validity_flags),
 +		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
 +		show_comp_id_pldm_flags(__entry->comp_id[0]),
-+		show_pldm_entity_id(__entry->validity_flags, CXL_GMER_VALID_COMPONENT,
-+				    CXL_GMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		show_pldm_resource_id(__entry->validity_flags, CXL_GMER_VALID_COMPONENT,
-+				      CXL_GMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
-+		__entry->hpa, __get_str(region_name), &__entry->region_uuid,
-+		show_cme_threshold_ev_flags(__entry->cme_threshold_ev_flags), __entry->cme_count
++		show_pldm_entity_id(__entry->validity_flags, CXL_MMER_VALID_COMPONENT,
++				    CXL_MMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
++		show_pldm_resource_id(__entry->validity_flags, CXL_MMER_VALID_COMPONENT,
++				      CXL_MMER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id)
  	)
  );
  
 diff --git a/include/cxl/event.h b/include/cxl/event.h
-index e1d485ad376b..2b07adf39010 100644
+index 10815414f376..04edd44bd26f 100644
 --- a/include/cxl/event.h
 +++ b/include/cxl/event.h
-@@ -45,14 +45,17 @@ struct cxl_event_generic {
+@@ -81,7 +81,7 @@ struct cxl_event_dram {
  
  /*
-  * General Media Event Record
-- * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ * CXL rev 3.1 Section 8.2.9.2.1.1; Table 8-45
+  * Get Health Info Record
+- * CXL rev 3.0 section 8.2.9.8.3.1; Table 8-100
++ * CXL rev 3.1 section 8.2.9.9.3.1; Table 8-133
   */
- #define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
- struct cxl_event_gen_media {
- 	struct cxl_event_media_hdr media_hdr;
- 	u8 device[3];
- 	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
--	u8 reserved[46];
-+	u8 cme_threshold_ev_flags;
-+	u8 cme_count[3];
-+	u8 sub_type;
-+	u8 reserved[41];
+ struct cxl_get_health_info {
+ 	u8 health_status;
+@@ -96,13 +96,16 @@ struct cxl_get_health_info {
+ 
+ /*
+  * Memory Module Event Record
+- * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
++ * CXL rev 3.1 section 8.2.9.2.1.3; Table 8-47
+  */
+ struct cxl_event_mem_module {
+ 	struct cxl_event_record_hdr hdr;
+ 	u8 event_type;
+ 	struct cxl_get_health_info info;
+-	u8 reserved[0x3d];
++	u8 validity_flags[2];
++	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
++	u8 event_sub_type;
++	u8 reserved[0x2a];
  } __packed;
  
- /*
+ union cxl_event {
 -- 
 2.43.0
 
