@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DC3240232;
-	Mon, 13 Jan 2025 17:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794F842065;
+	Mon, 13 Jan 2025 17:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736789889; cv=none; b=tRZvbwo0xH4gbmKsuHiJm7YZS4wgRPwWeM/gG54ix2B0P0xEv33u8cy5H/9jFwswDpHUGkb3v1ymmHAQLs9hrBEH3JYphHrav2PpJS6wepdjq9lhfMD+EpLDIofeVJBiJONZH/LqTwKnMmluyGkl1rF8QoDdsGD9s/8KeocNoDE=
+	t=1736790532; cv=none; b=eUO1B7oZr1/dS4NUORc1I2SaSTtgjAPgjesKyCGNq0SWJblnTk6JNxK9B4zyDq1tbexfAdlTpzpeynujiD7Wi0S/6LWXU9G0rEw+42CGRZgqp0Z7USs7Y01zO61TiJsB7L30WKxpEmsO2GPG4B5J6koXLUzeB7NojOK5SkK6p5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736789889; c=relaxed/simple;
-	bh=KrxkQ4xESXwS66P/rii1UuNkT5eKN2mKOSIR7ugZI5g=;
+	s=arc-20240116; t=1736790532; c=relaxed/simple;
+	bh=6gH+bK/GKZBdnBc/yhP8Eg8qMnBd7JSVZZJz8u25QqA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YutzBaq+KZNxh6Ir62HouhW3GjNB+rWnG0LqrZP4s00jmlB3XWvpEjC87p/BOssyY6FpHO0uVHROoCy2GDqRpggoDWcvXSMsphF4yMI5SkJM2QYpSVhDKWMMV99ESIB5eie/NzpfjQfzwVIvyh2e53uqzJlozapSily6YP4acFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4mgAWJE; arc=none smtp.client-ip=192.198.163.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5mu0uAwnQBbtY9PdgFtKlzxXlb+ISPFt0fp00oWXbHmoMgYbkkRFGb+sxr8zBlkJiKGdIT4Q+6OaebLWlURIL7tju3Zfx7Vb/sLvfEY51iS16LrWmHyg6Dd1QpclVr1Mi5w/zE6fk4LhFLiJA9MqLam9Vb1ZFxA0D9h9q837Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeSi1mma; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4mgAWJE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeSi1mma"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736789887; x=1768325887;
+  t=1736790531; x=1768326531;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KrxkQ4xESXwS66P/rii1UuNkT5eKN2mKOSIR7ugZI5g=;
-  b=P4mgAWJESSIpLnzREzTRGzZufDh+gK0sq/SNRvqjKdSZCirwDscWn0iF
-   pLgQmTEASBd5wR+u9Ffpl3WzIBwsFWzuQK4XyD5EX4GfassQYAAvZMR85
-   BdY8erR8j1PGygQ2+zcSn+jjlYYepdUR1fgQYSEoNqgOYlkcoB4oDF2fD
-   0QEOhYjL7iBISFgtTiUFSZ2DpUBkSAQKro1I0/irccCSJX9OPcLPfQEXi
-   J9iSaIlGc4AHTem5NnqhGhYo17jjzy4dK9v+4RYG3XLprnixp02PCW+CP
-   GCtI9Mxvpvi2gazN2ZDezu1sYTdnDnBDjvsnPI9e5LuPjsgyDOQGCwS4C
-   w==;
-X-CSE-ConnectionGUID: Ajbapg8FQcGqSvcCuUVC0w==
-X-CSE-MsgGUID: WYBNJ8mTQ9q+/MG0TuTu/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="36353081"
+  bh=6gH+bK/GKZBdnBc/yhP8Eg8qMnBd7JSVZZJz8u25QqA=;
+  b=QeSi1mmaXxXpl3NyZIDTuTDEVd4RMOLVjtGeQVMG82KvBYqn9q831jt8
+   itvhzaLNxTYwfGGwOFqaOyGShtYf0WukevH0whMLgA8wjszQro6nuqPQS
+   Nt3L9wZA9VuLG0S0andKL1RzCIl27QCgzAhkJwEKwUcJ5txbhylZZtZbD
+   ekhJDze9XFIgrspCkEcKvBkFjOK5Zac9BXY4pPk3P4nxuGYcb1pOQ9TYf
+   kLTAV5JpEI55ND0H0PzjAxJrzZEykRgcaMEQJ5RQGjGW07ebGowp5mLud
+   gBLSjsrtPStmKB+VsGtNA0mX2CSKkghmexuQdG8AkrDQECO54pVHATIeL
+   A==;
+X-CSE-ConnectionGUID: 8MePL9EoQJqo4O/n3x4ygQ==
+X-CSE-MsgGUID: h2wdOHU8SoCv9cU2QSjPUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="47641303"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="36353081"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:38:06 -0800
-X-CSE-ConnectionGUID: 1QvN4tKdTyyPwBuRqy0L9A==
-X-CSE-MsgGUID: 5Lmia9ZUSNKzbBflfo9ziw==
+   d="scan'208";a="47641303"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:48:50 -0800
+X-CSE-ConnectionGUID: McA/JQf+RNKV0C0C+r1pNA==
+X-CSE-MsgGUID: NO49GSj5R/mCr13Eq0E5UQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109176768"
+   d="scan'208";a="109683146"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.60])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:38:06 -0800
-Date: Mon, 13 Jan 2025 09:38:04 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:48:49 -0800
+Date: Mon, 13 Jan 2025 09:48:47 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Robert Richter <rrichter@amd.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>,
@@ -55,11 +55,11 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>,
 	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 24/29] cxl/region: Use endpoint's SPA range to check a
- region
-Message-ID: <Z4VPfGtDiP5sYiIM@aschofie-mobl2.lan>
+Subject: Re: [PATCH v1 23/29] cxl/region: Use root decoders interleaving
+ parameters to create a region
+Message-ID: <Z4VR_8Z1Qx4E8VSS@aschofie-mobl2.lan>
 References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-25-rrichter@amd.com>
+ <20250107141015.3367194-24-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,83 +68,47 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-25-rrichter@amd.com>
+In-Reply-To: <20250107141015.3367194-24-rrichter@amd.com>
 
-On Tue, Jan 07, 2025 at 03:10:10PM +0100, Robert Richter wrote:
-> Endpoints or switches requiring address translation might not be aware
-> of the system's interleaving configuration. Then, the configured
-> endpoint's address range might not match the expected range. In
-> contrast, the SPA range of an endpoint is calculated applying platform
-> specific address translation. That range is correct and can be used to
-> check a region range.
+On Tue, Jan 07, 2025 at 03:10:09PM +0100, Robert Richter wrote:
+> Endpoints requiring address translation might not be aware of the
+> system's interleaving configuration. Instead, interleaving can be
+> configured on an upper memory domain (from an endpoint view) and thus
+> is not visible to the endpoint. For region creation this might cause
+> an invalid interleaving config that does not match the CFMWS entries.
 > 
-> Adjust the region range check and use the endpoint's SPA range to
-> check it.
+> Use the interleaving configuration of the root decoders to create a
+> region which bases on CFMWS entries. This always matches the system's
+> interleaving configuration and is independent of the underlying memory
+> topology.
+
+This sounds like a restriction, more restrictive than present.
+
+Won't it block all region interleave ways greater than root decoder
+interleave ways? ie. disallows 2, 2+2, 2+2+2, 4, etc.
+
+
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/region.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+>  drivers/cxl/core/region.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c3322bae05b9..1dae7d36d37c 100644
+> index e218f0be2409..c3322bae05b9 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1516,22 +1516,26 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
->  		    cxld->interleave_granularity != ig ||
-> -		    cxld->hpa_range.start != p->res->start ||
-> -		    cxld->hpa_range.end != p->res->end ||
-> +		    cxled->spa_range.start != p->res->start ||
-> +		    cxled->spa_range.end != p->res->end ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
->  			dev_err(&cxlr->dev,
->  				"%s:%s %s expected iw: %d ig: %d %pr\n",
->  				dev_name(port->uport_dev), dev_name(&port->dev),
->  				__func__, iw, ig, p->res);
->  			dev_err(&cxlr->dev,
-> -				"%s:%s %s got iw: %d ig: %d state: %s %#llx:%#llx\n",
-> +				"%s:%s %s got iw: %d ig: %d state: %s %#llx-%#llx:%#llx-%#llx(%s):%#llx-%#llx(%s)\n",
->  				dev_name(port->uport_dev), dev_name(&port->dev),
->  				__func__, cxld->interleave_ways,
->  				cxld->interleave_granularity,
->  				(cxld->flags & CXL_DECODER_F_ENABLE) ?
->  					"enabled" :
->  					"disabled",
-> -				cxld->hpa_range.start, cxld->hpa_range.end);
-> +				p->res->start, p->res->end,
-> +				cxled->spa_range.start, cxled->spa_range.end,
-> +				dev_name(&cxled->cxld.dev),
-> +				cxld->hpa_range.start, cxld->hpa_range.end,
-> +				dev_name(&cxld->dev));
->  			return -ENXIO;
->  		}
->  	} else {
-> @@ -2051,13 +2055,12 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		return -ENXIO;
+> @@ -3477,8 +3477,8 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
 >  	}
 >  
-> -	if (resource_size(cxled->dpa_res) * p->interleave_ways !=
-> -	    resource_size(p->res)) {
-> +	if (range_len(&cxled->spa_range) != resource_size(p->res)) {
->  		dev_dbg(&cxlr->dev,
-> -			"%s:%s: decoder-size-%#llx * ways-%d != region-size-%#llx\n",
-> +			"%s:%s: SPA size mismatch: %#llx-%#llx:%#llx-%#llx\n",
-
-The cxled->spa_range is only set in the auto region path, yet this
-path is taken by both auto and user created regions. User created regions
-die here.
-
-
->  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> -			(u64)resource_size(cxled->dpa_res), p->interleave_ways,
-> -			(u64)resource_size(p->res));
-> +			p->res->start, p->res->end,
-> +			cxled->spa_range.start, cxled->spa_range.end);
->  		return -EINVAL;
->  	}
+>  	p->res = res;
+> -	p->interleave_ways = cxled->cxld.interleave_ways;
+> -	p->interleave_granularity = cxled->cxld.interleave_granularity;
+> +	p->interleave_ways = cxlrd->cxlsd.cxld.interleave_ways;
+> +	p->interleave_granularity = cxlrd->cxlsd.cxld.interleave_granularity;
+>  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
 >  
+>  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
 > -- 
 > 2.39.5
 > 
