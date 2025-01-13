@@ -1,114 +1,359 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794F842065;
-	Mon, 13 Jan 2025 17:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA2C1BD01D;
+	Mon, 13 Jan 2025 17:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736790532; cv=none; b=eUO1B7oZr1/dS4NUORc1I2SaSTtgjAPgjesKyCGNq0SWJblnTk6JNxK9B4zyDq1tbexfAdlTpzpeynujiD7Wi0S/6LWXU9G0rEw+42CGRZgqp0Z7USs7Y01zO61TiJsB7L30WKxpEmsO2GPG4B5J6koXLUzeB7NojOK5SkK6p5k=
+	t=1736790737; cv=none; b=FlkCzeBH0pNB9G7kuvBfSV9FWZf6NsdBJ78FLTL3gAQ+xRhe8NHsbbWdCAhrdV6KOZB1HlJ2LReqhoIhzCsRFGIkb/Rg8PWGGce8nlDxpC5ymiJhB73cOUlSVG5TmYRy7iZqZO/wb38Y2JCG0aO4eFvzCPaRloon7zPDr7hbHbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736790532; c=relaxed/simple;
-	bh=6gH+bK/GKZBdnBc/yhP8Eg8qMnBd7JSVZZJz8u25QqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o5mu0uAwnQBbtY9PdgFtKlzxXlb+ISPFt0fp00oWXbHmoMgYbkkRFGb+sxr8zBlkJiKGdIT4Q+6OaebLWlURIL7tju3Zfx7Vb/sLvfEY51iS16LrWmHyg6Dd1QpclVr1Mi5w/zE6fk4LhFLiJA9MqLam9Vb1ZFxA0D9h9q837Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QeSi1mma; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1736790737; c=relaxed/simple;
+	bh=RqH+AC/p3i8K2ifTu5ci52/vtec7Zqe5REvSxBod2lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QB5SLa+AmH+7rl/Of0TiloZ/1kIg60dzjeLwzzSmawK5p89iNXs+ZrnrtSL+r06zsJ3Ai4QYMdKwrDfLdnlno/T0cZLpgzu1kxp8XkJ2L4C6wQuN6/CRzJwGkVq3xrFHR8CHiQCRxueo5hHMk3CDW7uA49uGf6WPBysYEJ7yZU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lKvYhun3; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QeSi1mma"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lKvYhun3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736790531; x=1768326531;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6gH+bK/GKZBdnBc/yhP8Eg8qMnBd7JSVZZJz8u25QqA=;
-  b=QeSi1mmaXxXpl3NyZIDTuTDEVd4RMOLVjtGeQVMG82KvBYqn9q831jt8
-   itvhzaLNxTYwfGGwOFqaOyGShtYf0WukevH0whMLgA8wjszQro6nuqPQS
-   Nt3L9wZA9VuLG0S0andKL1RzCIl27QCgzAhkJwEKwUcJ5txbhylZZtZbD
-   ekhJDze9XFIgrspCkEcKvBkFjOK5Zac9BXY4pPk3P4nxuGYcb1pOQ9TYf
-   kLTAV5JpEI55ND0H0PzjAxJrzZEykRgcaMEQJ5RQGjGW07ebGowp5mLud
-   gBLSjsrtPStmKB+VsGtNA0mX2CSKkghmexuQdG8AkrDQECO54pVHATIeL
+  t=1736790736; x=1768326736;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RqH+AC/p3i8K2ifTu5ci52/vtec7Zqe5REvSxBod2lg=;
+  b=lKvYhun3BTNj7ZqVJdT24veQ+WI/1XDDylDbx8J9xxdUldvUzUBHknMJ
+   +ywySdB7pwMoT4r5DvtZqx7zSCy3p3hm0lhXsGTMb3SFeCOlvUKRfFKVo
+   eIVQFEQHtR8WGgpijNY4OXEqIhGqw3n9N0Ye441/jjTuCzXcJMroROI/P
+   A7omHY9mL2XOO7AJLc6PvPOhFoOLUXetPXSPFXz0z/8equ8jHYH//+F8j
+   0YVR5aHHVNjW26Lf/JneRTR015Q3d+EM3wVCSudNfD4SRPJUJUhqhTrai
+   YKz61mMJm/lmJzoFQK3G6ZQqPnRb9/7Me5EfueZOad+7TxagFJaxpvPSb
    A==;
-X-CSE-ConnectionGUID: 8MePL9EoQJqo4O/n3x4ygQ==
-X-CSE-MsgGUID: h2wdOHU8SoCv9cU2QSjPUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="47641303"
+X-CSE-ConnectionGUID: IpEE1ELwSCaZ3K59EwdgJQ==
+X-CSE-MsgGUID: t9l0nwewT3SK3zfNFGbAaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="47641708"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="47641303"
+   d="scan'208";a="47641708"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:48:50 -0800
-X-CSE-ConnectionGUID: McA/JQf+RNKV0C0C+r1pNA==
-X-CSE-MsgGUID: NO49GSj5R/mCr13Eq0E5UQ==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:52:15 -0800
+X-CSE-ConnectionGUID: HUcrIvJZScaV8+oeTx25BA==
+X-CSE-MsgGUID: JzRTNEfnSUqDqAt80HACRQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109683146"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.60])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:48:49 -0800
-Date: Mon, 13 Jan 2025 09:48:47 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 23/29] cxl/region: Use root decoders interleaving
- parameters to create a region
-Message-ID: <Z4VR_8Z1Qx4E8VSS@aschofie-mobl2.lan>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-24-rrichter@amd.com>
+   d="scan'208";a="109683758"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.41]) ([10.125.108.41])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 09:52:14 -0800
+Message-ID: <6110e6ef-6f12-491b-a0e0-f16db1367050@intel.com>
+Date: Mon, 13 Jan 2025 10:52:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107141015.3367194-24-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] cxl: Add mce notifier to emit aliased address for
+ extended linear cache
+To: Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
+ tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, ira.weiny@intel.com
+References: <20250110151913.3462283-1-dave.jiang@intel.com>
+ <20250110151913.3462283-5-dave.jiang@intel.com>
+ <ddace3b3-009a-4747-95cc-aeb80f5fed33@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ddace3b3-009a-4747-95cc-aeb80f5fed33@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 07, 2025 at 03:10:09PM +0100, Robert Richter wrote:
-> Endpoints requiring address translation might not be aware of the
-> system's interleaving configuration. Instead, interleaving can be
-> configured on an upper memory domain (from an endpoint view) and thus
-> is not visible to the endpoint. For region creation this might cause
-> an invalid interleaving config that does not match the CFMWS entries.
+
+
+On 1/12/25 8:15 PM, Li Ming wrote:
+> On 1/10/2025 11:17 PM, Dave Jiang wrote:
+>> Below is a setup with extended linear cache configuration with an example
+>> layout of memory region shown below presented as a single memory region
+>> consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
+>> The kernel sees a region of total 256G of system memory.
+>>
+>>               128G DRAM                          128G CXL memory
+>> |-----------------------------------|-------------------------------------|
+>>
+>> Data resides in either DRAM or far memory (FM) with no replication. Hot
+>> data is swapped into DRAM by the hardware behind the scenes. When error is
+>> detected in one location, it is possible that error also resides in the
+>> aliased location. Therefore when a memory location that is flagged by MCE
+>> is part of the special region, the aliased memory location needs to be
+>> offlined as well.
+>>
+>> Add an mce notify callback to identify if the MCE address location is part
+>> of an extended linear cache region and handle accordingly.
+>>
+>> Added symbol export to set_mce_nospec() in x86 code in order to call
+>> set_mce_nospec() from the CXL MCE notify callback.
+>>
+>> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v2:
+>> - Update new EXPORT_SYMOBOL_() input. (Jonathan)
+>> - Remove unnecessary pointer cast. (Jonathan)
+>> - Introduce CONFIG_CXL_MCE to shield from missing CONFIG_MEMORY_FAILURE kbuilds.
+>> - Emit alias address0 (Jonathan)
+>> ---
+>>  arch/x86/mm/pat/set_memory.c |  1 +
+>>  drivers/cxl/Kconfig          |  4 +++
+>>  drivers/cxl/core/Makefile    |  1 +
+>>  drivers/cxl/core/mbox.c      |  3 ++
+>>  drivers/cxl/core/mce.c       | 53 ++++++++++++++++++++++++++++++++++++
+>>  drivers/cxl/core/mce.h       | 14 ++++++++++
+>>  drivers/cxl/core/region.c    | 25 +++++++++++++++++
+>>  drivers/cxl/cxl.h            |  6 ++++
+>>  drivers/cxl/cxlmem.h         |  2 ++
+>>  9 files changed, 109 insertions(+)
+>>  create mode 100644 drivers/cxl/core/mce.c
+>>  create mode 100644 drivers/cxl/core/mce.h
+>>
+>> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+>> index 95bc50a8541c..a0df698f46a2 100644
+>> --- a/arch/x86/mm/pat/set_memory.c
+>> +++ b/arch/x86/mm/pat/set_memory.c
+>> @@ -2083,6 +2083,7 @@ int set_mce_nospec(unsigned long pfn)
+>>  		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
+>>  	return rc;
+>>  }
+>> +EXPORT_SYMBOL_GPL(set_mce_nospec);
+>>  
+>>  /* Restore full speculative operation to the pfn. */
+>>  int clear_mce_nospec(unsigned long pfn)
+>> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+>> index 876469e23f7a..d1c91dacae56 100644
+>> --- a/drivers/cxl/Kconfig
+>> +++ b/drivers/cxl/Kconfig
+>> @@ -146,4 +146,8 @@ config CXL_REGION_INVALIDATION_TEST
+>>  	  If unsure, or if this kernel is meant for production environments,
+>>  	  say N.
+>>  
+>> +config CXL_MCE
+>> +	def_bool y
+>> +	depends on X86_MCE && MEMORY_FAILURE
+>> +
+>>  endif
+>> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+>> index 1a0c9c6ca818..61c9332b3582 100644
+>> --- a/drivers/cxl/core/Makefile
+>> +++ b/drivers/cxl/core/Makefile
+>> @@ -17,3 +17,4 @@ cxl_core-y += cdat.o
+>>  cxl_core-y += acpi.o
+>>  cxl_core-$(CONFIG_TRACING) += trace.o
+>>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+>> +cxl_core-$(CONFIG_CXL_MCE) += mce.o
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index d7999260f004..4e12f1c17909 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -11,6 +11,7 @@
+>>  
+>>  #include "core.h"
+>>  #include "trace.h"
+>> +#include "mce.h"
+>>  
+>>  static bool cxl_raw_allow_all;
+>>  
+>> @@ -1478,6 +1479,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>>  	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>  	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>  
+>> +	cxl_register_mce_notifier(&mds->mce_notifier);
+>> +
 > 
-> Use the interleaving configuration of the root decoders to create a
-> region which bases on CFMWS entries. This always matches the system's
-> interleaving configuration and is independent of the underlying memory
-> topology.
+> Hi Dave,
+> 
+> 
+> cxl_memdev_state_create() is invoked in cxl_pci_probe(), at that moment, 'cxlmd->endpoint' is NULL, 'cxlmd->endpoint' will be updated until the endpoint added to hierarchy via devm_cxl_add_endpoint().
+> 
+> If a MCE happened after cxl_memdev_state_create() and before 'cxlmd->endpoint' updated, acessing NULL endpoint pointer could happen in the function cxl_port_get_spa_cache_alias().
+> 
+> So I think maybe you can delay to register mce notifier after devm_cxl_add_endpoint(), or check if cxlmd->endpoint is NULL in cxl_port_get_spa_cache_alias().
 
-This sounds like a restriction, more restrictive than present.
-
-Won't it block all region interleave ways greater than root decoder
-interleave ways? ie. disallows 2, 2+2, 2+2+2, 4, etc.
-
+Thanks. I'll add endpoint checking to the mce_handler and also cxl_port_get_spa_cache_alias().
 
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/cxl/core/region.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e218f0be2409..c3322bae05b9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3477,8 +3477,8 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	}
->  
->  	p->res = res;
-> -	p->interleave_ways = cxled->cxld.interleave_ways;
-> -	p->interleave_granularity = cxled->cxld.interleave_granularity;
-> +	p->interleave_ways = cxlrd->cxlsd.cxld.interleave_ways;
-> +	p->interleave_granularity = cxlrd->cxlsd.cxld.interleave_granularity;
->  	p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
->  
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
-> -- 
-> 2.39.5
+> Besides, seems like missing cxl unregister mce notifier implmentation?
+
+Seems so. I'll add a devm_add_action_or_reset() for unregister.
+
+Thanks for reviewing!
+
 > 
+> 
+> Ming
+> 
+>>  	return mds;
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
+>> diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
+>> new file mode 100644
+>> index 000000000000..bd1c4f46a67f
+>> --- /dev/null
+>> +++ b/drivers/cxl/core/mce.c
+>> @@ -0,0 +1,53 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+>> +#include <linux/mm.h>
+>> +#include <linux/notifier.h>
+>> +#include <linux/set_memory.h>
+>> +#include <asm/mce.h>
+>> +#include <cxlmem.h>
+>> +#include "mce.h"
+>> +
+>> +static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
+>> +			  void *data)
+>> +{
+>> +	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
+>> +						    mce_notifier);
+>> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+>> +	struct cxl_port *endpoint = cxlmd->endpoint;
+>> +	struct mce *mce = data;
+>> +	u64 spa, spa_alias;
+>> +	unsigned long pfn;
+>> +
+>> +	if (!mce || !mce_usable_address(mce))
+>> +		return NOTIFY_DONE;
+>> +
+>> +	spa = mce->addr & MCI_ADDR_PHYSADDR;
+>> +
+>> +	pfn = spa >> PAGE_SHIFT;
+>> +	if (!pfn_valid(pfn))
+>> +		return NOTIFY_DONE;
+>> +
+>> +	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
+>> +	if (!spa_alias)
+>> +		return NOTIFY_DONE;
+>> +
+>> +	pfn = spa_alias >> PAGE_SHIFT;
+>> +
+>> +	/*
+>> +	 * Take down the aliased memory page. The original memory page flagged
+>> +	 * by the MCE will be taken cared of by the standard MCE handler.
+>> +	 */
+>> +	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address0: %#llx\n",
+>> +		  spa_alias);
+>> +	if (!memory_failure(pfn, 0))
+>> +		set_mce_nospec(pfn);
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>> +void cxl_register_mce_notifier(struct notifier_block *mce_notifier)
+>> +{
+>> +	mce_notifier->notifier_call = cxl_handle_mce;
+>> +	mce_notifier->priority = MCE_PRIO_UC;
+>> +	mce_register_decode_chain(mce_notifier);
+>> +}
+>> diff --git a/drivers/cxl/core/mce.h b/drivers/cxl/core/mce.h
+>> new file mode 100644
+>> index 000000000000..b3c63bddf14e
+>> --- /dev/null
+>> +++ b/drivers/cxl/core/mce.h
+>> @@ -0,0 +1,14 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+>> +#ifndef _CXL_CORE_MCE_H_
+>> +#define _CXL_CORE_MCE_H_
+>> +
+>> +#include <linux/notifier.h>
+>> +
+>> +#ifdef CONFIG_CXL_MCE
+>> +void cxl_register_mce_notifier(struct notifier_block *mce_notifer);
+>> +#else
+>> +static inline void cxl_register_mce_notifier(struct notifier_block *mce_notifier) {}
+>> +#endif
+>> +
+>> +#endif
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 5d23bd26d9ba..f866ee2fefed 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -3449,6 +3449,31 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>>  
+>> +u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+>> +{
+>> +	struct cxl_region_ref *iter;
+>> +	unsigned long index;
+>> +
+>> +	guard(rwsem_write)(&cxl_region_rwsem);
+>> +
+>> +	xa_for_each(&endpoint->regions, index, iter) {
+>> +		struct cxl_region_params *p = &iter->region->params;
+>> +
+>> +		if (p->res->start <= spa && spa <= p->res->end) {
+>> +			if (!p->cache_size)
+>> +				return 0;
+>> +
+>> +			if (spa > p->res->start + p->cache_size)
+>> +				return spa - p->cache_size;
+>> +
+>> +			return spa + p->cache_size;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, "CXL");
+>> +
+>>  static int is_system_ram(struct resource *res, void *arg)
+>>  {
+>>  	struct cxl_region *cxlr = arg;
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 6a1fb784f74a..cff98e803722 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -876,6 +876,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
+>>  int cxl_add_to_region(struct cxl_port *root,
+>>  		      struct cxl_endpoint_decoder *cxled);
+>>  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
+>> +u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
+>>  #else
+>>  static inline bool is_cxl_pmem_region(struct device *dev)
+>>  {
+>> @@ -894,6 +895,11 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+>>  {
+>>  	return NULL;
+>>  }
+>> +static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
+>> +					       u64 spa)
+>> +{
+>> +	return 0;
+>> +}
+>>  #endif
+>>  
+>>  void cxl_endpoint_parse_cdat(struct cxl_port *port);
+>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>> index 2a25d1957ddb..55752cbf408c 100644
+>> --- a/drivers/cxl/cxlmem.h
+>> +++ b/drivers/cxl/cxlmem.h
+>> @@ -477,6 +477,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+>>   * @poison: poison driver state info
+>>   * @security: security driver state info
+>>   * @fw: firmware upload / activation state
+>> + * @mce_notifier: MCE notifier
+>>   *
+>>   * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
+>>   * details on capacity parameters.
+>> @@ -503,6 +504,7 @@ struct cxl_memdev_state {
+>>  	struct cxl_poison_state poison;
+>>  	struct cxl_security_state security;
+>>  	struct cxl_fw_state fw;
+>> +	struct notifier_block mce_notifier;
+>>  };
+>>  
+>>  static inline struct cxl_memdev_state *
+> 
+> 
+
