@@ -1,309 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EAD14AA9;
-	Mon, 13 Jan 2025 02:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736736581; cv=none; b=VvNHYS6niMzgJPKiSB3xvJTiJyyOYj5xeijWnfoKWZ8xg6eoJTKxeFaxrTpKwueBCshyKcQ8AEGr2KzeNPjoLIlO0pj4Wnk7SbYhVjSproVnR5fnxZibhW7l18rs5GNMcIZKXFUDJojw7iKBQSWTZ5zAVZ3jTz4cDRsnf8mZAU8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736736581; c=relaxed/simple;
-	bh=lU2h4cDLMS/jwioVlby+F6n8EhqeYkZ/4QblEV9UZk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=slJFlEXE6XfYoCYP+Ko0gP/BK/HsJDmigJ05AnNIYMQL8rVZvrgJFjvb7ngCYRDbYwz2lP3zT911GMdf/lhuAyWpaoW1ZmIXolPNwFLsXv0YTQT5CzsRePZ5lJocvpW1KcdFvjteoD9i7Hl1GHUjKiDNDUfoHiGNq3Yt7piVOrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eywQMnqW; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CB312CD96
+	for <linux-cxl@vger.kernel.org>; Mon, 13 Jan 2025 02:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736736783; cv=pass; b=sd0RJOSnaOtCMXRCOuHNYwno3JiIdCNGV5I5VOUP25xD2oYiRv1hSPZCnzTNpKx8dnVsdjWQEPu7wDl0npBvkMAKwauPykOFLnt3AomAuZQg1PQUiHeCeZ0Ndgz3vD5qhEA3MZNMHJ7nxMjT+9RN5UiN4xU524i+Vi0a89RlA9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736736783; c=relaxed/simple;
+	bh=W5NOwQ5CwChC2bhQhEQ0k0ihUlcnX5sxRURmHEKIpgg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S1xQy3x3I6CIz3tnR8ggNgR0QAjSGJzzdzuHoIDsMQICcyJ0lQbIiQ9hWyZqt52NTQy5kS/1p9IjN+b7DnUAmAbu5HG03a8sDvNr1sMAh2rdrWnAOaDOFQs8EpfbKrrFGuvAbwJ6fZaJ5VmBOlSI1m8IwjkS10p5LYu6sGf5tVA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Fts43AjS; arc=pass smtp.client-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eywQMnqW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E585BC4CEDF;
-	Mon, 13 Jan 2025 02:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736736581;
-	bh=lU2h4cDLMS/jwioVlby+F6n8EhqeYkZ/4QblEV9UZk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eywQMnqWd/nIiMHxu4/+lbTQdRnw/YCCTi9N/MhD2f6CfUxDRBs9efHWijse6PJlW
-	 2nvVjgE+CmtDe+iqoUUsmM6REhLzfJTvBJ0NfFh9lYvFo40mYhcQZ+WQ9W2gSnG2ba
-	 Pi3QA/Wj9g82TVIkyHTzCc8mtlTY8PzwyVFOBHkQMjCjLCw+/Fka2iDyxpxGgv2WRv
-	 WUK9mDeeY7h/KSW/WCE7kqUuInIv9b3PYYa2RN7JPYMIVJjDi2fescDM9VnKpdIApf
-	 J7HizeUFk+GRXPmF9gikOBeMsbLqdxZMgIL1AYylGW1pxcxDgRvWMLQq4Jl2agkt7O
-	 WmoXG0WRM2xTA==
-Date: Sun, 12 Jan 2025 18:49:40 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
-	alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, tytso@mit.edu, linmiaohe@huawei.com,
-	david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com,
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 07/26] fs/dax: Ensure all pages are idle prior to
- filesystem unmount
-Message-ID: <20250113024940.GW1306365@frogsfrogsfrogs>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <704662ae360abeb777ed00efc6f8f232a79ae4ff.1736488799.git-series.apopple@nvidia.com>
- <20250110165019.GK6156@frogsfrogsfrogs>
- <p5vmaqlzge3dkkpnwceewi4io5ngqaczfa7ysujwa45kkevnam@sqc5usu7vgde>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Fts43AjS"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 94C518A4A65;
+	Mon, 13 Jan 2025 02:52:55 +0000 (UTC)
+Received: from pdx1-sub0-mail-a293.dreamhost.com (trex-6.trex.outbound.svc.cluster.local [100.109.45.164])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 27E458A4A94;
+	Mon, 13 Jan 2025 02:52:55 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1736736775; a=rsa-sha256;
+	cv=none;
+	b=4d6hllBt5LJyPtofATWDAs8pXtxhn2M53S/yEzIlue121DjbfsOPyrOlQ7o+VbUpX7raPT
+	l7tsBJnWzKcM5/X/amd/pttHxMTkrMW4pbQMZPZD2T9kU1vXuxQ+j4UYaUQezoq0OkQQdU
+	SNfqK1gVwlTxkUANyS+tIKT6TwyLEJS1eqR/zsG+ljHVApxoXEorhiHA4E9CfTV5FNPVrG
+	Ge3TZheCMJVwzPFffQ4qfbgCgHSMz3XP7NIC3BwcMm1Zc7v8GnwYUv631O1KNNyYwQlE3Y
+	nOTcUWpOMSq/7J7zTfPb0j3p7yk22tTPuH7l6RSqHES86B94Z8dXJvmBsS5aFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1736736775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=GC/GkDJr86Yge9cTKUc0eRwcyVg2Yt9O9veVcL9920k=;
+	b=F4rlkT8rGwgRGzzY4lC8jPB3+HqJkx0WlyBoE8aElsmPkqZw5KvwNvLHlD2+YEW+LYA4WN
+	BTbb5sEoGoIOVidhKwzIvCFoolxQ3PEyjM0raKhn68VdLAs51xoHMYj2+RtIfbR4iHbbNs
+	CHcRuTJkd384/8HyVbkV4nBVKWHiK+8VrNpfHbWEL9SOBO7OcVdzHbMCnPhaO1lxBfR0jL
+	1P0GRD+lA2E4Pb4Qr+Oq79ussectKdfNGLg6YWr4snM9S1qarYmMSAev0H3oprRILcHE9H
+	YgKWmfKaaOs9jMOA6iLm/ZYDb5xcvA34gGpwUxh/Xepa3WWr3Osu20+iQ7QAwg==
+ARC-Authentication-Results: i=1;
+	rspamd-b5645c5d4-tr9xt;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Grain-Scare: 31eb9c9c295cf6c7_1736736775439_3269952311
+X-MC-Loop-Signature: 1736736775438:4262248360
+X-MC-Ingress-Time: 1736736775438
+Received: from pdx1-sub0-mail-a293.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.109.45.164 (trex/7.0.2);
+	Mon, 13 Jan 2025 02:52:55 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a293.dreamhost.com (Postfix) with ESMTPSA id 4YWcJ647lPzd0;
+	Sun, 12 Jan 2025 18:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1736736775;
+	bh=GC/GkDJr86Yge9cTKUc0eRwcyVg2Yt9O9veVcL9920k=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=Fts43AjS4v4kziACtGWxUVOyD+BGJUFHCq6YuJijxfS/rTBjvJQ5oWEsMCf/ZYH7V
+	 0cr534Y1cZfFeOULSPIJG1fAL3j1SbkRnKc6wXbKfr+p6xkXPBdIceNCWjVsePzBVQ
+	 qDJzVmNp7wzksVz+prOAutJa16Ms4PchNRv9DQLk7/QJ98tuvIx61Fu1a174cPDIHZ
+	 CePS+fSDR7N+aE9mpBO4jAEbgQwAm3mJIKIK0ZVKEXG2bV+JBBbMYlCPKeikahhjiV
+	 GjRrLB3K8xuyv1MIZ2j56NWC+ffXy8s2FyvhXJRJ5NYbFtujJxWCAS/9QETF9qiw+G
+	 URHL/74KrUEoA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com
+Cc: dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	ira.weiny@intel.com,
+	alison.schofield@intel.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH 1/2] cxl: Plug typos in ABI doc
+Date: Sun, 12 Jan 2025 18:52:39 -0800
+Message-Id: <20250113025240.327124-2-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250113025240.327124-1-dave@stgolabs.net>
+References: <20250113025240.327124-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <p5vmaqlzge3dkkpnwceewi4io5ngqaczfa7ysujwa45kkevnam@sqc5usu7vgde>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 13, 2025 at 11:57:18AM +1100, Alistair Popple wrote:
-> On Fri, Jan 10, 2025 at 08:50:19AM -0800, Darrick J. Wong wrote:
-> > On Fri, Jan 10, 2025 at 05:00:35PM +1100, Alistair Popple wrote:
-> > > File systems call dax_break_mapping() prior to reallocating file
-> > > system blocks to ensure the page is not undergoing any DMA or other
-> > > accesses. Generally this is needed when a file is truncated to ensure
-> > > that if a block is reallocated nothing is writing to it. However
-> > > filesystems currently don't call this when an FS DAX inode is evicted.
-> > > 
-> > > This can cause problems when the file system is unmounted as a page
-> > > can continue to be under going DMA or other remote access after
-> > > unmount. This means if the file system is remounted any truncate or
-> > > other operation which requires the underlying file system block to be
-> > > freed will not wait for the remote access to complete. Therefore a
-> > > busy block may be reallocated to a new file leading to corruption.
-> > > 
-> > > Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> > > 
-> > > ---
-> > > 
-> > > Changes for v5:
-> > > 
-> > >  - Don't wait for pages to be idle in non-DAX mappings
-> > > ---
-> > >  fs/dax.c            | 29 +++++++++++++++++++++++++++++
-> > >  fs/ext4/inode.c     | 32 ++++++++++++++------------------
-> > >  fs/xfs/xfs_inode.c  |  9 +++++++++
-> > >  fs/xfs/xfs_inode.h  |  1 +
-> > >  fs/xfs/xfs_super.c  | 18 ++++++++++++++++++
-> > >  include/linux/dax.h |  2 ++
-> > >  6 files changed, 73 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/fs/dax.c b/fs/dax.c
-> > > index 7008a73..4e49cc4 100644
-> > > --- a/fs/dax.c
-> > > +++ b/fs/dax.c
-> > > @@ -883,6 +883,14 @@ static int wait_page_idle(struct page *page,
-> > >  				TASK_INTERRUPTIBLE, 0, 0, cb(inode));
-> > >  }
-> > >  
-> > > +static void wait_page_idle_uninterruptible(struct page *page,
-> > > +					void (cb)(struct inode *),
-> > > +					struct inode *inode)
-> > > +{
-> > > +	___wait_var_event(page, page_ref_count(page) == 1,
-> > > +			TASK_UNINTERRUPTIBLE, 0, 0, cb(inode));
-> > > +}
-> > > +
-> > >  /*
-> > >   * Unmaps the inode and waits for any DMA to complete prior to deleting the
-> > >   * DAX mapping entries for the range.
-> > > @@ -911,6 +919,27 @@ int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(dax_break_mapping);
-> > >  
-> > > +void dax_break_mapping_uninterruptible(struct inode *inode,
-> > > +				void (cb)(struct inode *))
-> > > +{
-> > > +	struct page *page;
-> > > +
-> > > +	if (!dax_mapping(inode->i_mapping))
-> > > +		return;
-> > > +
-> > > +	do {
-> > > +		page = dax_layout_busy_page_range(inode->i_mapping, 0,
-> > > +						LLONG_MAX);
-> > > +		if (!page)
-> > > +			break;
-> > > +
-> > > +		wait_page_idle_uninterruptible(page, cb, inode);
-> > > +	} while (true);
-> > > +
-> > > +	dax_delete_mapping_range(inode->i_mapping, 0, LLONG_MAX);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dax_break_mapping_uninterruptible);
-> > > +
-> > >  /*
-> > >   * Invalidate DAX entry if it is clean.
-> > >   */
-> > > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > > index ee8e83f..fa35161 100644
-> > > --- a/fs/ext4/inode.c
-> > > +++ b/fs/ext4/inode.c
-> > > @@ -163,6 +163,18 @@ int ext4_inode_is_fast_symlink(struct inode *inode)
-> > >  	       (inode->i_size < EXT4_N_BLOCKS * 4);
-> > >  }
-> > >  
-> > > +static void ext4_wait_dax_page(struct inode *inode)
-> > > +{
-> > > +	filemap_invalidate_unlock(inode->i_mapping);
-> > > +	schedule();
-> > > +	filemap_invalidate_lock(inode->i_mapping);
-> > > +}
-> > > +
-> > > +int ext4_break_layouts(struct inode *inode)
-> > > +{
-> > > +	return dax_break_mapping_inode(inode, ext4_wait_dax_page);
-> > > +}
-> > > +
-> > >  /*
-> > >   * Called at the last iput() if i_nlink is zero.
-> > >   */
-> > > @@ -181,6 +193,8 @@ void ext4_evict_inode(struct inode *inode)
-> > >  
-> > >  	trace_ext4_evict_inode(inode);
-> > >  
-> > > +	dax_break_mapping_uninterruptible(inode, ext4_wait_dax_page);
-> > > +
-> > >  	if (EXT4_I(inode)->i_flags & EXT4_EA_INODE_FL)
-> > >  		ext4_evict_ea_inode(inode);
-> > >  	if (inode->i_nlink) {
-> > > @@ -3902,24 +3916,6 @@ int ext4_update_disksize_before_punch(struct inode *inode, loff_t offset,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > -static void ext4_wait_dax_page(struct inode *inode)
-> > > -{
-> > > -	filemap_invalidate_unlock(inode->i_mapping);
-> > > -	schedule();
-> > > -	filemap_invalidate_lock(inode->i_mapping);
-> > > -}
-> > > -
-> > > -int ext4_break_layouts(struct inode *inode)
-> > > -{
-> > > -	struct page *page;
-> > > -	int error;
-> > > -
-> > > -	if (WARN_ON_ONCE(!rwsem_is_locked(&inode->i_mapping->invalidate_lock)))
-> > > -		return -EINVAL;
-> > > -
-> > > -	return dax_break_mapping_inode(inode, ext4_wait_dax_page);
-> > > -}
-> > > -
-> > >  /*
-> > >   * ext4_punch_hole: punches a hole in a file by releasing the blocks
-> > >   * associated with the given offset and length
-> > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> > > index 4410b42..c7ec5ab 100644
-> > > --- a/fs/xfs/xfs_inode.c
-> > > +++ b/fs/xfs/xfs_inode.c
-> > > @@ -2997,6 +2997,15 @@ xfs_break_dax_layouts(
-> > >  	return dax_break_mapping_inode(inode, xfs_wait_dax_page);
-> > >  }
-> > >  
-> > > +void
-> > > +xfs_break_dax_layouts_uninterruptible(
-> > > +	struct inode		*inode)
-> > > +{
-> > > +	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
-> > > +
-> > > +	dax_break_mapping_uninterruptible(inode, xfs_wait_dax_page);
-> > > +}
-> > > +
-> > >  int
-> > >  xfs_break_layouts(
-> > >  	struct inode		*inode,
-> > > diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> > > index c4f03f6..613797a 100644
-> > > --- a/fs/xfs/xfs_inode.h
-> > > +++ b/fs/xfs/xfs_inode.h
-> > > @@ -594,6 +594,7 @@ xfs_itruncate_extents(
-> > >  }
-> > >  
-> > >  int	xfs_break_dax_layouts(struct inode *inode);
-> > > +void xfs_break_dax_layouts_uninterruptible(struct inode *inode);
-> > >  int	xfs_break_layouts(struct inode *inode, uint *iolock,
-> > >  		enum layout_break_reason reason);
-> > >  
-> > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > > index 8524b9d..73ec060 100644
-> > > --- a/fs/xfs/xfs_super.c
-> > > +++ b/fs/xfs/xfs_super.c
-> > > @@ -751,6 +751,23 @@ xfs_fs_drop_inode(
-> > >  	return generic_drop_inode(inode);
-> > >  }
-> > >  
-> > > +STATIC void
-> > > +xfs_fs_evict_inode(
-> > > +	struct inode		*inode)
-> > > +{
-> > > +	struct xfs_inode	*ip = XFS_I(inode);
-> > > +	uint			iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
-> > > +
-> > > +	if (IS_DAX(inode)) {
-> > > +		xfs_ilock(ip, iolock);
-> > > +		xfs_break_dax_layouts_uninterruptible(inode);
-> > > +		xfs_iunlock(ip, iolock);
-> > 
-> > If we're evicting the inode, why is it necessary to take i_rwsem and the
-> > mmap invalidation lock?  Shouldn't the evicting thread be the only one
-> > with access to this inode?
-> 
-> Hmm, good point. I think you're right. I can easily stop taking
-> XFS_IOLOCK_EXCL. Not taking XFS_MMAPLOCK_EXCL is slightly more difficult because
-> xfs_wait_dax_page() expects it to be taken. Do you think it is worth creating a
-> separate callback (xfs_wait_dax_page_unlocked()?) specifically for this path or
-> would you be happy with a comment explaining why we take the XFS_MMAPLOCK_EXCL
-> lock here?
+Trivially update where necessary.
 
-There shouldn't be any other threads removing "pages" from i_mapping
-during eviction, right?  If so, I think you can just call schedule()
-directly from dax_break_mapping_uninterruptble.
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ Documentation/ABI/testing/sysfs-bus-cxl | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-(dax mappings aren't allowed supposed to persist beyond unmount /
-eviction, just like regular pagecache, right??)
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 3f5627a1210a..7bdf0eb79d7c 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -1,5 +1,5 @@
+ What:		/sys/bus/cxl/flush
+-Date:		Januarry, 2022
++Date:		January, 2022
+ KernelVersion:	v5.18
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+@@ -33,7 +33,7 @@ Date:		May, 2023
+ KernelVersion:	v6.8
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+-		(RO) For CXL host platforms that support "QoS Telemmetry"
++		(RO) For CXL host platforms that support "QoS Telemetry"
+ 		this attribute conveys a comma delimited list of platform
+ 		specific cookies that identifies a QoS performance class
+ 		for the volatile partition of the CXL mem device. These
+@@ -60,7 +60,7 @@ Date:		May, 2023
+ KernelVersion:	v6.8
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+-		(RO) For CXL host platforms that support "QoS Telemmetry"
++		(RO) For CXL host platforms that support "QoS Telemetry"
+ 		this attribute conveys a comma delimited list of platform
+ 		specific cookies that identifies a QoS performance class
+ 		for the persistent partition of the CXL mem device. These
+@@ -423,7 +423,7 @@ Date:		May, 2023
+ KernelVersion:	v6.5
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+-		(RO) For CXL host platforms that support "QoS Telemmetry" this
++		(RO) For CXL host platforms that support "QoS Telemetry" this
+ 		root-decoder-only attribute conveys a platform specific cookie
+ 		that identifies a QoS performance class for the CXL Window.
+ 		This class-id can be compared against a similar "qos_class"
+-- 
+2.39.5
 
---D
-
->  - Alistair
-> 
-> > --D
-> > 
-> > > +	}
-> > > +
-> > > +	truncate_inode_pages_final(&inode->i_data);
-> > > +	clear_inode(inode);
-> > > +}
-> > > +
-> > >  static void
-> > >  xfs_mount_free(
-> > >  	struct xfs_mount	*mp)
-> > > @@ -1189,6 +1206,7 @@ static const struct super_operations xfs_super_operations = {
-> > >  	.destroy_inode		= xfs_fs_destroy_inode,
-> > >  	.dirty_inode		= xfs_fs_dirty_inode,
-> > >  	.drop_inode		= xfs_fs_drop_inode,
-> > > +	.evict_inode		= xfs_fs_evict_inode,
-> > >  	.put_super		= xfs_fs_put_super,
-> > >  	.sync_fs		= xfs_fs_sync_fs,
-> > >  	.freeze_fs		= xfs_fs_freeze,
-> > > diff --git a/include/linux/dax.h b/include/linux/dax.h
-> > > index ef9e02c..7c3773f 100644
-> > > --- a/include/linux/dax.h
-> > > +++ b/include/linux/dax.h
-> > > @@ -274,6 +274,8 @@ static inline int __must_check dax_break_mapping_inode(struct inode *inode,
-> > >  {
-> > >  	return dax_break_mapping(inode, 0, LLONG_MAX, cb);
-> > >  }
-> > > +void dax_break_mapping_uninterruptible(struct inode *inode,
-> > > +				void (cb)(struct inode *));
-> > >  int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
-> > >  				  struct inode *dest, loff_t destoff,
-> > >  				  loff_t len, bool *is_same,
-> > > -- 
-> > > git-series 0.9.1
-> > > 
-> 
