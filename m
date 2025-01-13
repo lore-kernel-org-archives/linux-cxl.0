@@ -1,136 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0280620F072;
-	Mon, 13 Jan 2025 16:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405EB3A8D0;
+	Mon, 13 Jan 2025 16:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736787317; cv=none; b=S0kqVzPCJ23i22qcvvRH1EmV4EBktiCsL6q2iyIOFuqoJ5z/dxDM8O/H99X9gbdGljfTp5qD/Pm93Kj8X8S+YIWhKwLYsAtNRsjhtJpOh0fIjVoJOsvyfI6NrlbhWTBvGPWiUOQL3+jEx4iLN96Enm3AC2YRuVFpB43E1A1LYxU=
+	t=1736787583; cv=none; b=tyCBOpbQRtkh6wk4NzxKnHk43goslCsuzpOfUUdpAvi8DCmnK+B9Ij5NDJW1MHQNDU7ADnoGclqe4nXwVr++Wc+eJIBWFXM1Eitu04rXlUMU9iYamnVZ0ddx1cuYjJSBCcaYZRferFdptRPJr+4A9djqyNX3uaypge3q+8aY61U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736787317; c=relaxed/simple;
-	bh=s9d2gDx0TpW0Khiae17zFw+yL4e1OATprQNO+K8osq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZME2alDc499V4fO6t+VJ3d8NltgPL8ZQsGu0zFCtgAqrs78Tnazd5WszBjnHJg5ShRA6LGybJHq0yyHE0l0fgQmW8Qn6VXydKvm2vG3JbPdzLLXvNs1qQB5MJxeFzjajGgUW2qefvWI6ZmE/6iJqlrATnbpq7vRzWdGyf5WeMaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNnREEvv; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNnREEvv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736787315; x=1768323315;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=s9d2gDx0TpW0Khiae17zFw+yL4e1OATprQNO+K8osq4=;
-  b=JNnREEvvEo3Kz50RAD382Kic1sqiNcRE7vl288H7U4YLQoKrb9KYw0L6
-   A//60Lg+UgUuhZmyflIquzYF4bqkLXPSRV++TKKoIiLMDf9QBuFJ3w3bl
-   kAvWUJg7n7+hT3H+lrstiTfa1mI+jOvaxwZDMeOAYEXs7O7VOg6ZyXAcS
-   TVTHgrBfdx3Sopo3io1jV+AjC1OCgXj72JSSOp6FXGmKWofrMehLBJDOG
-   T9WTQIDDv/ccILe9fRHF4GxL/r+v8jKN9iExY5D8rcI/iQ2cYAk7HngbX
-   zDrtUxUxxNgWCHNh1Q5B3rSVL2DKBstoT8CINiLkWBZBDdAShOY+RFHHs
-   Q==;
-X-CSE-ConnectionGUID: Cd+omv6fTGOE+k5CEtaGyg==
-X-CSE-MsgGUID: MwBWPCahQ5KZeXq5lyLgcQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="47551385"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="47551385"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 08:55:14 -0800
-X-CSE-ConnectionGUID: 3DBmW6OqTP+/OMscY5Tpgw==
-X-CSE-MsgGUID: jiuFzCK/SAS1zXMYDrbhIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="104495778"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.41]) ([10.125.108.41])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 08:55:13 -0800
-Message-ID: <6238f100-16c4-42d1-8dc6-320e116a7b55@intel.com>
-Date: Mon, 13 Jan 2025 09:55:12 -0700
+	s=arc-20240116; t=1736787583; c=relaxed/simple;
+	bh=siZ0rTNFMpozlsPu/dzzumTrAAArwxQ1076GX2N5v5w=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O4bH2le45AE4TfLR9IBoh99ssOROp9z2IVR30BvE0n6VVf2MfNhxoTIJ3aRWe5ebs4yIqtcne44/u73Fc4eZ89zIe8Q9iBJNjJ6+fWntXHjcklKMGpEUupVlS++37wxbTyK52tInr2eMPq2YPZQVVr4SQ+1VRXobsOzzaXsuzuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YWz3T4Ywyz67Q1X;
+	Tue, 14 Jan 2025 00:58:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EAE33140498;
+	Tue, 14 Jan 2025 00:59:37 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 13 Jan
+ 2025 17:59:37 +0100
+Date: Mon, 13 Jan 2025 16:59:35 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
+ De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH v1 06/29] cxl/region: Factor out code to find the root
+ decoder
+Message-ID: <20250113165935.000021fc@huawei.com>
+In-Reply-To: <20250107141015.3367194-7-rrichter@amd.com>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+	<20250107141015.3367194-7-rrichter@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/6] Update Event Records to CXL spec rev 3.1
-To: shiju.jose@huawei.com, dan.j.williams@intel.com,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- nifan.cxl@gmail.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dave@stgolabs.net, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linuxarm@huawei.com, tanxiaofei@huawei.com,
- prime.zeng@hisilicon.com
-References: <20250111091756.1682-1-shiju.jose@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250111091756.1682-1-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 7 Jan 2025 15:09:52 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
+> In function cxl_add_to_region() there is code to determine the root
+> decoder associated to an endpoint decoder. Factor out that code for
+> later reuse. This also simplifies the function cxl_add_to_region() as
+> the change reduces its size and the number of used variables.
+> 
+> The reference of cxlrd_dev can be freed earlier. Since the root
+> decoder exists as long as the root port exists and the endpoint
+> already holds a reference to the root port, this additional reference
+> is not needed. Though it looks obvious to use __free() for the
+> reference of cxlrd_dev here too, this is done in a later rework. So
+> just move the code.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+One trivial comment inline.
 
-On 1/11/25 2:17 AM, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
 > 
-> Add updates in the CXL events records and CXL trace events implementations
-> for the changes in CXL spec rev 3.1.
-> 
-> Shiju Jose (6):
->   cxl/events: Update Common Event Record to CXL spec rev 3.1
->   cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
->   cxl/events: Update General Media Event Record to CXL spec rev 3.1
->   cxl/events: Update DRAM Event Record to CXL spec rev 3.1
->   cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
->   cxl/test: Update test code for event records to CXL spec rev 3.1
-> 
-> Changes:
-> V5 -> V6
-> 1. Modified for feedbacks from Ira Weiny.
->    - Reordered new fields added in trace events cxl_general_media,
->      cxl_dram and (cxl_memory_module to pack the records.  
->    - Added a suggested note in the patch description of patch
->      cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
-> 	 
-> V4 -> V5
-> 1. Reverted changes made in v4 for overcoming parsing error when
-> libtraceevent in userspace parses the CXL trace events, for rasdaemon.
-> This was due to trace event's format file is larger than PAGE_SIZE, not
-> supported reading complete format file in one go in the kernel and thus
-> fixed in the rasdaemon.
-> 2. Rebased to v6.13-rc5, in which cxl.git/next is based.
-> 3. Tested with rasdaemon and ras-mc-ctl tools updated for CXL spec rev 3.1
->    event record changes.
-> 
-> V3 -> V4
-> 1. Changes for the parsing error parsing error when libtraceevent in
-> userspace parses the CXL trace events, for rasdaemon.
-> It was found that long decoded strings of field values in the TP_printk()
-> caused the issue, looks like due to buffer overflow/corruption.
-> Increasing known buffer sizes in userspace and kernel did not help.
-> As a solution, decoding of some fields in the TP_printk() are removed
-> to accommodate the new fields.
-> Decoding of these fields is added in the userspace tool rasdaemon.
-> 
-> V2 -> V3
-> 1. Changes for the feedbacks from Jonathan.
->  - Added printing component Id format bit in show_valid_flags()
->  - Modified parsing component ID in patch [2] and added logging
->    of raw comp-id, comp_id_pldm_flags, PLDM entity id and
->    PLDM resource id in patches 3 to 4.
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 752440a5c162..448408918def 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3202,6 +3202,38 @@ static int match_root_decoder_by_range(struct device *dev, void *data)
+>  	return range_contains(r1, r2);
+>  }
 >  
-> V1 -> V2
-> 1. Changes for the feedbacks from Jonathan.
->   - Separate patch for Component Identifier formatting.
->   - Moved printing of event sub type after event type.
->   - For memory module event, rename sub_type to event_sub_type. 
-> 2. Changes for the feedbacks from Alison.
->   - Updated patch's subject
->   - Updated CXL test code for CXL spec rev 3.1 event records.
-> 3. Changed logic for Component Identifier formatting and other improvements.
-> 
->  drivers/cxl/core/trace.h     | 259 +++++++++++++++++++++++++++++------
->  include/cxl/event.h          |  28 ++--
->  tools/testing/cxl/test/mem.c |  23 +++-
->  3 files changed, 257 insertions(+), 53 deletions(-)
-> 
+> +static struct cxl_root_decoder *
+> +cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_port *port = cxled_to_port(cxled);
+> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+> +	struct range *hpa = &cxled->cxld.hpa_range;
+> +	struct cxl_decoder *cxld = &cxled->cxld;
 
-Applied to next
+Flip this and the line above and you can have
+
+	struct range *hpa = cxld->hpa_range;
+
+which is both shorter and matches original code save a few moments of
+thinking.
+
+> +	struct device *cxlrd_dev;
+> +
+> +	cxlrd_dev = device_find_child(&cxl_root->port.dev, hpa,
+> +				      match_root_decoder_by_range);
+> +	if (!cxlrd_dev) {
+> +		dev_err(cxlmd->dev.parent,
+> +			"%s:%s no CXL window for range %#llx:%#llx\n",
+> +			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> +			cxld->hpa_range.start, cxld->hpa_range.end);
+> +		return NULL;
+> +	}
+> +
+> +	/*
+> +	 * device_find_child() created a reference to the root
+> +	 * decoder. Since the root decoder exists as long as the root
+> +	 * port exists and the endpoint already holds a reference to
+> +	 * the root port, this additional reference is not needed.
+> +	 * Free it here.
+> +	 */
+> +	put_device(cxlrd_dev);
+> +
+> +	return to_cxl_root_decoder(cxlrd_dev);
+> +}
+> +
+>  static int match_region_by_range(struct device *dev, void *data)
+>  {
+>  	struct cxl_region_params *p;
+> @@ -3309,29 +3341,17 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_port *port = cxled_to_port(cxled);
+> -	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+>  	struct range *hpa = &cxled->cxld.hpa_range;
+> -	struct cxl_decoder *cxld = &cxled->cxld;
+> -	struct device *cxlrd_dev, *region_dev;
+> +	struct device *region_dev;
+>  	struct cxl_root_decoder *cxlrd;
+>  	struct cxl_region_params *p;
+>  	struct cxl_region *cxlr;
+>  	bool attach = false;
+>  	int rc;
+>  
+> -	cxlrd_dev = device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> -		dev_err(cxlmd->dev.parent,
+> -			"%s:%s no CXL window for range %#llx:%#llx\n",
+> -			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> -			cxld->hpa_range.start, cxld->hpa_range.end);
+> +	cxlrd = cxl_find_root_decoder(cxled);
+> +	if (!cxlrd)
+>  		return -ENXIO;
+> -	}
+> -
+> -	cxlrd = to_cxl_root_decoder(cxlrd_dev);
+>  
+>  	/*
+>  	 * Ensure that if multiple threads race to construct_region() for @hpa
+> @@ -3349,7 +3369,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  
+>  	rc = PTR_ERR_OR_ZERO(cxlr);
+>  	if (rc)
+> -		goto out;
+> +		return rc;
+>  
+>  	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+>  
+> @@ -3370,8 +3390,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  	}
+>  
+>  	put_device(region_dev);
+> -out:
+> -	put_device(cxlrd_dev);
+> +
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+
