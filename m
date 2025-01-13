@@ -1,291 +1,423 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2070.outbound.protection.outlook.com [40.107.101.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE77F1A8F6E;
-	Sat, 11 Jan 2025 17:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736615624; cv=none; b=EhEpg7QMAgLeodEsMgcIRNYPRd7/ivCDRBJFyT0mXG4XAT/Z8j+ihb8cH43oFdDsjpDqmS0QSkXiOhBIuDwj0zCdRE9Wjk0PlU/5+mSNwAI8kD9srvcqyQiJZDKRAYJIKvVHyWzm+wCx9tNyz53WP1TbWffiBdx6s9nEsdTN3k4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736615624; c=relaxed/simple;
-	bh=asMUKgsDyIN5F6iw9zNQjAhLvH1K2NVYZ0h+Wrf1VXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cqer4KRF6/FBTayHfqk3noB4UwFm6CNOnPZwCI6EJ4GFgaoBf8NylFhdIgzV5CU5F+kehAbx5mmVyuVq05xLCW4mDj26obx2ORGTaMdpd7fjPqN15lr8qIXuUKJDtaz/K8ojF5qrLxi0La54NDo2K7y5Ssysuio5PDO21SP5jlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OgD4Au04; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8396442C;
+	Mon, 13 Jan 2025 00:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736729274; cv=fail; b=h4KgfyYe/E8dilgWJCYK9ivrEHiBihv+dbKXR8nzIjG38XPTN/Ciwp0VLzNXNVGQCm+MvIRH3ai9ACkSVGfu4h1RhXukdKo8Ivul5ql58ZrcXqmDBxjFqicGaSQdTCn4iEusVCXKcsrJKKorPW7arrOv+ONIvGz9Ckblee+2L+0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736729274; c=relaxed/simple;
+	bh=wSDbGw/HKZLstRAgOLOXzdqfsSeb1c3tJBG305nbxHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Cq51t1yhZO19XNbNtY08Y2bKXQDlHRHbCD3qo+dA09Ag2/Knzsyl2Mmglts8FQbbL01lOIV4SF5g+5FwSyuZU6BLEysG56iZt3Tz+mL9YTqp3d/XLLBvSwS8igLhVXmrIUXMmN4jo3eSWoAKBo5fRobmB6wHmFejMYjnlwptHqY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=olk8baZh; arc=fail smtp.client-ip=40.107.101.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OgD4Au04"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C3A8640E01B5;
-	Sat, 11 Jan 2025 17:13:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tE6Ly5eTuki8; Sat, 11 Jan 2025 17:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1736615614; bh=dy/nLqIHFB1W6aDIAXq0L4N3W+XLgmeHWVFfPlL6OZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OgD4Au04w7yNqKvb1xwuel8mJVIjoFPyfCzdGWssaAU7lktQhh/OxwupNjtI1TFsd
-	 gT/ZemcjG4/wDC7AJjQCIh3LRWWrXGR6G3M3pNRb75/8c/AeIE3d+xVfv8xrjX6s7x
-	 z869j3MfOlzJdOCIxHQdDOHPbLUElbjM2qTDEYLPB5htGJJoDa62JfzpLJ7GN1+IDq
-	 h1vZTYb/QeGbAU+vlBYkQ/Gy1vGCsJLDLzCkLQQEfCWlnCuQwDa5E8m+bXg+AupPH0
-	 MkZXqYuEfI9xhKIkaO/b9ejGfdEn4RENncDCJsdjubNT4h8cBPWAC5xRKukGHHLnm3
-	 cdNQw4sgHFJoWcIy4yp0gzp6DLQsOQ91dRB6CPNasqglSwgCFdBM/5PKBiD2SPxNoE
-	 pZvOlozxkvJeNQUQnoAmCNSGEC88sI37sK/wG/9NcqYGFRhB7JJgJkybbjaC7/tlHH
-	 tJCxbTjsrtDSkypy4NY7BCHs/jOfxs6JhwiEdLrGvQes+Hb8j+HTp917affjX/IuKr
-	 deuuZ7/eqdtlDoMQKAkCTP57V8eFOB6sHwHRGfeEU9GeU6TsirbQIc4V+yw55KlS6G
-	 vY7lAMOChfNTgRVc5Z76KsCg6q837EigHDPhlaBJQWrCRh7O6tloA0nJCkECFlliCL
-	 IoLbsSWJiqc/5YwU9V6HNueU=
-Received: from zn.tnic (pd953008e.dip0.t-ipconnect.de [217.83.0.142])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E015140E02BF;
-	Sat, 11 Jan 2025 17:12:50 +0000 (UTC)
-Date: Sat, 11 Jan 2025 18:12:43 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Shiju Jose <shiju.jose@huawei.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
-Message-ID: <20250111171243.GCZ4Kmi5xMtY2ktCHm@fat_crate.local>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <20250106121017.1620-5-shiju.jose@huawei.com>
- <20250109091915.GAZ3-Uk3rkuh38cQyy@fat_crate.local>
- <3b2d4275d1d24dbeacee0f192ac4d69b@huawei.com>
- <20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
- <20250109142433.00004ea7@huawei.com>
- <20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
- <20250109160159.00002add@huawei.com>
- <20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
- <20250109183448.000059ec@huawei.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="olk8baZh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZFmkpW38E8lyCCI7bN6o+0AsRSnQekQF0da9oohHNlYrvZYOdJEf3Jv/KrnWO7Bycwz7df07I1V9PCCfLvm487iFYLMfz4SHmS1Q6n9lsmnFLw7SZWqhL/amYcdFQxtWDoBcLcxL0IhBG0dcEXioO9iEdgmv2toJvXtC2QG32xf3iVDU/SFsb9sCmyb8oOAQLR92x+x9Gjm15pE2Kqi9IPAZw8dnjqQAWr9VQrePoMIpAVls23jJlZVopBQLdlh+DaUa0kAqqLpOUiLhk6xwK3tZA3p0CNgx97uAmuh+6RMoZiulKjsBVn74MKozT9i/KMMarQex/DXOacRHJxx5qA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jppa53z7I/U4ia4WW1YGd2ijQSHdGH410ZcQQgipM2I=;
+ b=uVHBLHaihCP29SOO6Z+BbdwID18/2dv60V5dFxDoSupYhI6SP/gTV7fA5AcVyGKUxUqlCD+ceqp9wQdBsp3kgjzNKI5/Rh4RFOQkHsRgBR57dcmgzeq6vGq2/0SQ5aDUv5FCDYh+vaPCej4GtYJTFyym56mk3rPVGFAOFNWRi7BnQZD4NiKfue+xpdUmmlnQ/PVqGcUoOXwz5oAbQc3GycVVfivwMt1YfjuMpLG10ZfeHtOkzJN2P5XQyVPaBzyZQQrHcTWAN8w48t1o/O6lxHtURaBlPybMQ1ifLrhvHDM8GI9ZeDwmkYCJZpzYeiLdwY30bHZabixNvp+Gq3FU8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jppa53z7I/U4ia4WW1YGd2ijQSHdGH410ZcQQgipM2I=;
+ b=olk8baZh3CWAlUJbRottD+7f1Q4e+vZoB8txuh1yY2jUqA5RTcXsDBfkyrobr0B3HOa/Lt4rlb3Lncltn4CGINl15AjZ2LztM4vBaNVrfgWqK+wr3r/YTytFp+6gd3VVTHFOvK85l3EjxJpdRXKvLHWOy7YYVixB6PVM01jQVvXfu608f/uD+XsX7HzSIt5V8SSZX7LL5zb+9SSrm2TOKb54dgDwjW2BfEqTV/Y5XTmMQ+OE3Rf5e+Spds8cxaP4AKqGtSDOZEG8RwXvyWvCuuBt0490g0hWijZtx9XU2BKqGWRznGWS/NZ4jSqGqNEWgN69zyZluV1r3UXddykc/Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ SA0PR12MB4463.namprd12.prod.outlook.com (2603:10b6:806:92::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8335.13; Mon, 13 Jan 2025 00:47:50 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8335.015; Mon, 13 Jan 2025
+ 00:47:50 +0000
+Date: Mon, 13 Jan 2025 11:47:41 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, 
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
+	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
+	willy@infradead.org, tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, 
+	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
+Subject: Re: [PATCH v6 05/26] fs/dax: Create a common implementation to break
+ DAX layouts
+Message-ID: <lui7hffmc35dfzwxu3xyybf5pion74fbfxszfopsp6tgyt2ajq@bmpeieroavro>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <79936ac15c917f4004397027f648d4fc9c092424.1736488799.git-series.apopple@nvidia.com>
+ <20250110164438.GJ6156@frogsfrogsfrogs>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110164438.GJ6156@frogsfrogsfrogs>
+X-ClientProxiedBy: SYCPR01CA0029.ausprd01.prod.outlook.com
+ (2603:10c6:10:e::17) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250109183448.000059ec@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SA0PR12MB4463:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a5a2efa-4bf9-47d1-b243-08dd336be79d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|27256017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PokqyeOtu9qpM6AZywo/fulF/hAGwOE0s7idVwDYplNxefq7PruMYEWDFshG?=
+ =?us-ascii?Q?aR00C3DEkExvDLnwmy8k1eOQGi1ROIN009fV32moWP2jM8swBp6xS1Z0nYZY?=
+ =?us-ascii?Q?Kf72OFZvoq49KW1KOuS0tO25UrF2bwrnGsi2KPG9Jj7LguCTuz5yGCO7SZ5r?=
+ =?us-ascii?Q?4XoIkk2TrYVqbkdy84vEWxSBIibGnOGwV43vRY7MhwtLoDFI+hK8j3ajLyAY?=
+ =?us-ascii?Q?Y6GadjFQ7wIWq6vqTj04kx9DXtt7DxNHEKFUVhhW8+xI58YorxGXDEDcG5aK?=
+ =?us-ascii?Q?8GIjfUDu4LxOsGAUZQtV8ieuaEwvsSUzkFFfBHeqN8OCGFRNywDJFmeBQ3JQ?=
+ =?us-ascii?Q?TPPQ1mNhyEYF6+zB3rRT9azj2GNxfJd3mxQbuNzpqjC0oBuR+hAFG5VKbYc5?=
+ =?us-ascii?Q?E0fwPVWw7AS2zk1idHozODhTwp6Crdsk37FFnSqPjGhNVx5g7s9UeCyzlzZZ?=
+ =?us-ascii?Q?ccLfu03jY4HJJhkEr0u+NL3Qbr0xWXekfwosxSyYjiwT/N8yS+wajRIwMAak?=
+ =?us-ascii?Q?vp27lLzMS1QQVgLrPAdnzu030Yb7KChsIHtqIIsvNi2t2ZMiCjC6AGbAfQ4k?=
+ =?us-ascii?Q?88Jj1I3Ao239BYkjeDNPNcvVivKR27rWjFtB7bxKi0qLsGa2AwfqH5q9RR68?=
+ =?us-ascii?Q?mgZMvvw8obBm3dUU+oR7cLhSGkUyboVMxIReN2gWC3EY8bXtfXPZEiClOKoe?=
+ =?us-ascii?Q?LScYX3iSu0AB7fNMdo4Fck74Ay5Ym/i+aCG17/ULKjK435toXmUgFESJS4lw?=
+ =?us-ascii?Q?KIC0MPK1+pkpw6B+jcdvaOntsYtAJB5bGlEQcule7+gjrIDAwbd4ZTqQdvys?=
+ =?us-ascii?Q?5p7KxqPMEc+qYSCtXaFuU/NC4ivegIz/dpSyi4zV8cyaiMu+bSBYhkE8Rv3L?=
+ =?us-ascii?Q?Gn2QoZu7ck2ghtyNI0pXF/uLeeMogwQdlb6YwB/XrL/V05pBg6h4i3MCxhm5?=
+ =?us-ascii?Q?5pMSmGbqz39TWWD+biHqjwjxRvflM+BCf0G9Mj6BJmMv0k5oXlBzmeF6k+wA?=
+ =?us-ascii?Q?+ZpVgPmwGcmGUFpmUA/YHga29Jkjt5rdn/yL7euiWJXijVhIrjCN0qy07XPl?=
+ =?us-ascii?Q?FV59UpFEJ80G07LBEzOvMs+B19TwBC0GkkfH6zzXYAHUV4Jad1gQTJjNZQFq?=
+ =?us-ascii?Q?TgR+ZLE6Xx+lb9wrWovRhFmO87VnvFih/DhYaewIRy04xNlutSaGSaTCHJ14?=
+ =?us-ascii?Q?AC6+0kusmNEByCHuEgi0J8r2bgn7tQJY5g5nB0nmkamCL16ycWSiE5b4tStq?=
+ =?us-ascii?Q?dfr+xyU1G7M900CxMw/P03pF/658ztfsqNUZ7AVZBeaT5LPXRZyoPtV2tgll?=
+ =?us-ascii?Q?l4ziukiSvDAuCSkZpydPqaGb07uyCTWP7TeRdw7QUqlXTaf3ftjgKGzNvZbl?=
+ =?us-ascii?Q?VcwgdsbrCArl38pWAqrALhB1GLn/6cOUkqQcmtN1seqe/ylWme4oWm9tffiH?=
+ =?us-ascii?Q?1pTdu/E54Anf33lml9pSj+nfTNN+kzRt?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(27256017);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Vu/wzkINOv3i3tPbtf+nPahlRr0FuHZMFWpB9PuMeeI1t4vAS+UXv8VXHoy3?=
+ =?us-ascii?Q?v6/5UX6sv6p1vrZ23gcWFSA1XDjh4dBfkq6j0Y+24NjnVv4UElJBdrv3Ktye?=
+ =?us-ascii?Q?4iAsahRvArgMJVinqrMpZaLAWp/iA7wimrDRyKu7odArfLupOOt53ohtMAnQ?=
+ =?us-ascii?Q?Y3zOX0CwNkc8SBIDm0wdGt/XL6t7IJ1jPrMK8kA4sXXw07Dqy2NyzdnCnhjI?=
+ =?us-ascii?Q?SVBMdyqnIuv/0ObexLdQJ8VbHwjOZwEnH7ZM4ss/45FGuNioidLxtpQ+UYL2?=
+ =?us-ascii?Q?e30jO2QytL6PFLoav7Bck0cPlYfVaIGecj5K8xnB/QKS+qRJDBOEl7/IU7Zj?=
+ =?us-ascii?Q?U1LR9n+9WLFt2yET5PmPpjyUeCDILArzj93TWasHL2h7LfdP9fbPW6rJLMF9?=
+ =?us-ascii?Q?ipT17sPUvnS+meI6sCWrRj1NR2He8KnBSnfdTNCIF072Lx5yEdC8aPkcuGLK?=
+ =?us-ascii?Q?5gC7VOl/R9v1bIIN26gCYIC7awPs/5Nt9NtTVa52kdfpNdG4+iX+16oS2gky?=
+ =?us-ascii?Q?IUkEJtx1iPK1t4rCn0zNdeNOxbQZnRvqVC7tmm+zfSlaVv7ZOc6FbjjEtXCO?=
+ =?us-ascii?Q?QN/1eLGokmkEI3pEziSN6z1mt3/iQiH2dGYkVPSYveg+xq44zAoPHfUXM31j?=
+ =?us-ascii?Q?tCzHdtGiGdaoUxnGcfVKGK3wzSOtXa2+CneMG/0JTx4snAXUYstGiUFlMBTc?=
+ =?us-ascii?Q?KITEcvQC4T8TumjL6fNsXcwZkdyIf+awzTxZaYz0X36p3Biz6r7NSbEMeMM5?=
+ =?us-ascii?Q?igxoVPtxmjYWd6RDshlQaJeHWxvXo/p6FCNs10/xy/T8uwhvohXlRnKznyRC?=
+ =?us-ascii?Q?q6vaiqThCNyENGGSumJflTth2sc7MB19Lsx5RA7Ap4p2ygp8ocBFgk2nNKCg?=
+ =?us-ascii?Q?ChtGZ+HpB+T6o5VYw6FI78lH8munRZesBYVPCXFs8jisAb0WO7WXhjrLdGEi?=
+ =?us-ascii?Q?F5nOhRAjrdVCzyTeQbM1+fUG3shFaa1VAnj+6b0uNIJZg6KdXrq1thTG7GL/?=
+ =?us-ascii?Q?dg3+4teUaJGsBxddBIa3UiKRTkxN1EuOekzCPX5JPem+2ffpageLZ2RD5di6?=
+ =?us-ascii?Q?H4n1r3ITqG0MKRo7nsI5YFWFSQIaNsOeRkbqRg5u4Dg4jgPee9qy5qvR9txc?=
+ =?us-ascii?Q?9KYFnTm9T4cAZfVCvjnl/v7vl0Iu6+RJy/ZCyPfeCXZW3svR77zddp21gW3M?=
+ =?us-ascii?Q?4rK/pfqYA87XDUzTwxT6yHPUASHYm/jx/aBuB4cCpzwKOP6NFcBGLch3I+28?=
+ =?us-ascii?Q?nmOFvqX8wR9ep8PkdEP8OWme7xiav8Hqs0HyUcuAnvMBE0Z7vqPn59Ney+zq?=
+ =?us-ascii?Q?wvcJ+8YcZbQ6WWUTZrKRDymIYMXhbb//AK5fgTsLNjMKSG5USV68SPMn0EQd?=
+ =?us-ascii?Q?Ra6FKwrETg6qClCWiCV7QFQDcRLpaRleTQ844YwnXuaZcMPoypdUUyGQso/e?=
+ =?us-ascii?Q?lPB988MNIhFti3ndE43AB6Eo+UdERN09+gJqZngnBKCXaPtfZk6/EF3J1kTU?=
+ =?us-ascii?Q?xr/LT3D3mwYJMSR2xSUiMGn74OYzNwlIfNfoj8wZEKbJVRZrDufudYSLuhsI?=
+ =?us-ascii?Q?Os/lU4LyyCSZxd2nAJsnjKt0223AgJZnFLa6/eAF?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a5a2efa-4bf9-47d1-b243-08dd336be79d
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2025 00:47:50.0529
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ldWV7UJQQLOlMWfJbtWUXG2215XayJocOjutmD5WOoSSVlg/AVNAG91FkQ4wLhp9QkXAUf9F2iz0TKmZCFgKTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4463
 
-On Thu, Jan 09, 2025 at 06:34:48PM +0000, Jonathan Cameron wrote:
-> Today you can.  Seems we are talking cross purposes.
-> 
-> I'm confused. I thought your proposal was for "bank" attribute to present an
-> allowed range on read.
-> "bank" attribute is currently written to and read back as the value of the bank on which
-> to conduct a repair.  Maybe this disconnect is down to the fact max_ and min_
-> attributes should have been marked as RO in the docs. They aren't controls,
-> just presentation of limits to userspace.
-> 
-> Was intent a separate bank_range type attribute rather than max_bank, min_bank?
-
-I don't know - I'm just throwing ideas out there. You could do:
-
-cat /sys/.../bank
-
-and that gives you
-
-[<low> <current_value> <high>]
-
-So you have all the needed information. Dunno if this would be abusing sysfs
-rules too much tho.
-
+On Fri, Jan 10, 2025 at 08:44:38AM -0800, Darrick J. Wong wrote:
+> On Fri, Jan 10, 2025 at 05:00:33PM +1100, Alistair Popple wrote:
+> > Prior to freeing a block file systems supporting FS DAX must check
+> > that the associated pages are both unmapped from user-space and not
+> > undergoing DMA or other access from eg. get_user_pages(). This is
+> > achieved by unmapping the file range and scanning the FS DAX
+> > page-cache to see if any pages within the mapping have an elevated
+> > refcount.
 > > 
-> > > In at least the CXL case I'm fairly sure most of them are not discoverable.
-> > > Until you see errors you have no idea what the memory topology is.  
+> > This is done using two functions - dax_layout_busy_page_range() which
+> > returns a page to wait for the refcount to become idle on. Rather than
+> > open-code this introduce a common implementation to both unmap and
+> > wait for the page to become idle.
 > > 
-> > Ok.
+> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> 
+> So now that Dan Carpenter has complained, I guess I should look at
+> this...
+> 
+> > ---
 > > 
-> > > For that you'd need to have a path to read back what happened.  
+> > Changes for v5:
 > > 
-> > So how is this scrubbing going to work? You get an error, you parse it for all
-:> > the attributes and you go and write those attributes into the scrub interface
-> > and it starts scrubbing?
-> 
-> Repair not scrubbing. They are different things we should keep separate,
-> scrub corrects the value, if it can, but doesn't change the underlying memory to
-> new memory cells to avoid repeated errors. Replacing scrub with repair 
-> (which I think was the intent here)...
-
-Really?
-
-So how is scrubbing defined for CXL? You read memory, do ECC check on it,
-report any potential errors but write back the *original* wrong value?!
-
-I thought the point of scrubbing is to repair it while at it too...
-
-> You get error records that describe the error seen in hardware, write back the
-> values into this interface and tell it to repair the memory.  This is not
-> necessarily a synchronous or immediate thing - instead typically based on
-> trend analysis.
-
-This is just silly: I'm scrubbing, I found an error, I should simply fix it
-while at it. Why would I need an additional command to repair it?!
-
-> As an example, the decision might be that bit of ram threw up 3 errors
-> over a month including multiple system reboots (for other reasons) and
-> that is over some threshold so we use a spare memory line to replace it.
-
-Right.
-
-> Short answer, it needs to be very smart and there isn't a case of one size
-> fits all - hence suggested approach of making it a user space problem.
-
-Making it a userspace problem is pretty much always a sign that the hw design
-failed.
-
-> Given in the systems being considered here, software is triggering the repair,
-> we want to allow for policy in the decision. 
-
-Right, you can leave a high-level decision to userspace: repair only when
-idle, repair only non-correctable errors, blabla but exposing every single
-aspect of every single error... meh.
-
-> In simple cases we could push that policy into the kernel e.g. just repair
-> the moment we see an error record.
-> 
-> These repair resources are very limited in number, so immediately repairing
-> may a bad idea. We want to build up a history of errors before making
-> such a decision.  That can be done in kernel. 
-
-Yap, we are doing this now:
-
-drivers/ras/cec.c
-
-Userspace involvement is minimal, if at all. It is mostly controlling the
-parameters of the leaky bucket.
-
-> The decision to repair memory is heavily influenced by policy and time considerations
-> against device resource constraints.
-> 
-> Some options that are hard to do in kernel.
-> 
-> 1. Typical asynchronous error report for a corrected error.
-> 
->    Tells us memory had an error (perhaps from a scrubbing engine on the device
->    running checks). No need to take action immediately. Instead build up more data
->    over time and if lots of errors occur make decision to repair as no we are sure it
->    is worth doing rather than a single random event. We may tune scrubbing engines
->    to check this memory more frequently and adjust our data analysis to take that
->    into account for setting thresholds etc.
-
-See above.
-
-What happens when your daemon dies and loses all that collected data?
-
-> 2. Soft repair across boots.  We are actually storing the error records, then only
->    applying the fix on reboot before using the memory - so maintaining a list
->    of bad memory and saving it to a file to read back on boot. We could provide
->    another kernel interface to get this info and reinject it after reboot instead
->    of doing it in userspace but that is another ABI to design.
-
-We did something similar recently: drivers/ras/amd/fmpm.c. It basically
-"replays" errors from persistent storage as that memory cannot be replaced.
-
-> 3. Complex policy across fleets.  A lot of work is going on around prediction techniques
->    that may change the local policy on each node dependent on the overall reliability
->    patterns of a particular batch of devices and local characteristics, service guarantees
->    etc. If it is hard repair, then once you've run out you need schedule an engineer
->    out to replace the DIMM. All complex inputs to the decision.
-
-You probably could say here: "repair or report when this and that." or
-"offline page and report error" and similar high-level decisions by leaving
-the details to the kernel instead of looking at every possible error in
-userspace and returning back to the kernel to state your decision.
-
-> Similar cases like CPU offlining on repeated errors are done in userspace (e.g.
-> RAS Daemon) for similar reasons of long term data gathering and potentially
-> complex algorithms.
->   
+> >  - Don't wait for idle pages on non-DAX mappings
 > > 
-> > > Ok. Then can we just drop the range discoverability entirely or we go with
-> > > your suggestion and do not support read back of what has been
-> > > requested but instead have the reads return a range if known or "" /
-> > > return -EONOTSUPP if simply not known?  
+> > Changes for v4:
 > > 
-> > Probably.
+> >  - Fixed some build breakage due to missing symbol exports reported by
+> >    John Hubbard (thanks!).
+> > ---
+> >  fs/dax.c            | 33 +++++++++++++++++++++++++++++++++
+> >  fs/ext4/inode.c     | 10 +---------
+> >  fs/fuse/dax.c       | 27 +++------------------------
+> >  fs/xfs/xfs_inode.c  | 23 +++++------------------
+> >  fs/xfs/xfs_inode.h  |  2 +-
+> >  include/linux/dax.h | 21 +++++++++++++++++++++
+> >  mm/madvise.c        |  8 ++++----
+> >  7 files changed, 68 insertions(+), 56 deletions(-)
+> > 
+> > diff --git a/fs/dax.c b/fs/dax.c
+> > index d010c10..9c3bd07 100644
+> > --- a/fs/dax.c
+> > +++ b/fs/dax.c
+> > @@ -845,6 +845,39 @@ int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index)
+> >  	return ret;
+> >  }
+> >  
+> > +static int wait_page_idle(struct page *page,
+> > +			void (cb)(struct inode *),
+> > +			struct inode *inode)
+> > +{
+> > +	return ___wait_var_event(page, page_ref_count(page) == 1,
+> > +				TASK_INTERRUPTIBLE, 0, 0, cb(inode));
+> > +}
+> > +
+> > +/*
+> > + * Unmaps the inode and waits for any DMA to complete prior to deleting the
+> > + * DAX mapping entries for the range.
+> > + */
+> > +int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
+> > +		void (cb)(struct inode *))
+> > +{
+> > +	struct page *page;
+> > +	int error;
+> > +
+> > +	if (!dax_mapping(inode->i_mapping))
+> > +		return 0;
+> > +
+> > +	do {
+> > +		page = dax_layout_busy_page_range(inode->i_mapping, start, end);
+> > +		if (!page)
+> > +			break;
+> > +
+> > +		error = wait_page_idle(page, cb, inode);
+> > +	} while (error == 0);
 > 
-> Too many options in the above paragraph so just to check...  Probably to which?
-> If it's a separate attribute from the one we write the control so then
-> we do what is already done here and don't present the interface at all if
-> the range isn't discoverable.
+> You didn't initialize error to 0, so it could be any value.  What if
+> dax_layout_busy_page_range returns null the first time through the loop?
 
-Probably means I still don't get a warm and fuzzy feeling about this design.
-As I've noted above.
-
-> Ok. Best path is drop the available range support then (so no min_ max_ or
-> anything to replace them for now).
+Yes. I went down the rabbit hole of figuring out why this didn't produce a
+compiler warning and forgot to go back and fix it. Thanks.
+ 
+> > +
+> > +	return error;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dax_break_mapping);
+> > +
+> >  /*
+> >   * Invalidate DAX entry if it is clean.
+> >   */
 > 
-> Added bonus is we don't have to rush this conversation and can make sure we
-> come to the right solution driven by use cases.
+> <I'm no expert, skipping to xfs>
+> 
+> > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > index 42ea203..295730a 100644
+> > --- a/fs/xfs/xfs_inode.c
+> > +++ b/fs/xfs/xfs_inode.c
+> > @@ -2715,21 +2715,17 @@ xfs_mmaplock_two_inodes_and_break_dax_layout(
+> >  	struct xfs_inode	*ip2)
+> >  {
+> >  	int			error;
+> > -	bool			retry;
+> >  	struct page		*page;
+> >  
+> >  	if (ip1->i_ino > ip2->i_ino)
+> >  		swap(ip1, ip2);
+> >  
+> >  again:
+> > -	retry = false;
+> >  	/* Lock the first inode */
+> >  	xfs_ilock(ip1, XFS_MMAPLOCK_EXCL);
+> > -	error = xfs_break_dax_layouts(VFS_I(ip1), &retry);
+> > -	if (error || retry) {
+> > +	error = xfs_break_dax_layouts(VFS_I(ip1));
+> > +	if (error) {
+> >  		xfs_iunlock(ip1, XFS_MMAPLOCK_EXCL);
+> > -		if (error == 0 && retry)
+> > -			goto again;
+> 
+> Hmm, so the retry loop has moved into xfs_break_dax_layouts, which means
+> that we no longer cycle the MMAPLOCK.  Why was the lock cycling
+> unnecessary?
 
-Yap, that sounds like a prudent idea.
+Because the lock cycling is already happening in the xfs_wait_dax_page()
+callback which is called as part of the retry loop in dax_break_mapping().
 
-What I'm trying to say, basically, is, this interface through sysfs is
-a *lot* of attributes, there's no clear cut use case where we can judge how
-useful it is and as I alluded to above, I really think that you should leave
-the high-level decisions to userspace and let the kernel do its job.
+> >  		return error;
+> >  	}
+> >  
+> > @@ -2988,19 +2984,11 @@ xfs_wait_dax_page(
+> >  
+> >  int
+> >  xfs_break_dax_layouts(
+> > -	struct inode		*inode,
+> > -	bool			*retry)
+> > +	struct inode		*inode)
+> >  {
+> > -	struct page		*page;
+> > -
+> >  	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
+> >  
+> > -	page = dax_layout_busy_page(inode->i_mapping);
+> > -	if (!page)
+> > -		return 0;
+> > -
+> > -	*retry = true;
+> > -	return dax_wait_page_idle(page, xfs_wait_dax_page, inode);
+> > +	return dax_break_mapping_inode(inode, xfs_wait_dax_page);
+> >  }
+> >  
+> >  int
+> > @@ -3018,8 +3006,7 @@ xfs_break_layouts(
+> >  		retry = false;
+> >  		switch (reason) {
+> >  		case BREAK_UNMAP:
+> > -			error = xfs_break_dax_layouts(inode, &retry);
+> > -			if (error || retry)
+> > +			if (xfs_break_dax_layouts(inode))
+> 
+> dax_break_mapping can return -ERESTARTSYS, right?  So doesn't this need
+> to be:
+> 			error = xfs_break_dax_layouts(inode);
+> 			if (error)
+> 				break;
+> 
+> Hm?
 
-This'll make your interface a lot simpler.
+Right. Thanks for the review, have fixed for the next respin.
 
-And if you really need to control every single aspect of scrubbing in
-userspace, then you can always come later with proper design and use case.
+ - Alistair
 
-But again, I really think you should keep as much recovery logic in the kernel
-and as automatic as possible. Only when you really really need user input,
-only then you should allow it...
-
-I hope I'm making sense here...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> --D
+> 
+> >  				break;
+> >  			fallthrough;
+> >  		case BREAK_WRITE:
+> > diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> > index 1648dc5..c4f03f6 100644
+> > --- a/fs/xfs/xfs_inode.h
+> > +++ b/fs/xfs/xfs_inode.h
+> > @@ -593,7 +593,7 @@ xfs_itruncate_extents(
+> >  	return xfs_itruncate_extents_flags(tpp, ip, whichfork, new_size, 0);
+> >  }
+> >  
+> > -int	xfs_break_dax_layouts(struct inode *inode, bool *retry);
+> > +int	xfs_break_dax_layouts(struct inode *inode);
+> >  int	xfs_break_layouts(struct inode *inode, uint *iolock,
+> >  		enum layout_break_reason reason);
+> >  
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index 9b1ce98..f6583d3 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> > @@ -228,6 +228,20 @@ static inline void dax_read_unlock(int id)
+> >  {
+> >  }
+> >  #endif /* CONFIG_DAX */
+> > +
+> > +#if !IS_ENABLED(CONFIG_FS_DAX)
+> > +static inline int __must_check dax_break_mapping(struct inode *inode,
+> > +			    loff_t start, loff_t end, void (cb)(struct inode *))
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static inline void dax_break_mapping_uninterruptible(struct inode *inode,
+> > +						void (cb)(struct inode *))
+> > +{
+> > +}
+> > +#endif
+> > +
+> >  bool dax_alive(struct dax_device *dax_dev);
+> >  void *dax_get_private(struct dax_device *dax_dev);
+> >  long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
+> > @@ -251,6 +265,13 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
+> >  int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
+> >  int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
+> >  				      pgoff_t index);
+> > +int __must_check dax_break_mapping(struct inode *inode, loff_t start,
+> > +				loff_t end, void (cb)(struct inode *));
+> > +static inline int __must_check dax_break_mapping_inode(struct inode *inode,
+> > +						void (cb)(struct inode *))
+> > +{
+> > +	return dax_break_mapping(inode, 0, LLONG_MAX, cb);
+> > +}
+> >  int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+> >  				  struct inode *dest, loff_t destoff,
+> >  				  loff_t len, bool *is_same,
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 49f3a75..1f4c99e 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -1063,7 +1063,7 @@ static int guard_install_pud_entry(pud_t *pud, unsigned long addr,
+> >  	pud_t pudval = pudp_get(pud);
+> >  
+> >  	/* If huge return >0 so we abort the operation + zap. */
+> > -	return pud_trans_huge(pudval) || pud_devmap(pudval);
+> > +	return pud_trans_huge(pudval);
+> >  }
+> >  
+> >  static int guard_install_pmd_entry(pmd_t *pmd, unsigned long addr,
+> > @@ -1072,7 +1072,7 @@ static int guard_install_pmd_entry(pmd_t *pmd, unsigned long addr,
+> >  	pmd_t pmdval = pmdp_get(pmd);
+> >  
+> >  	/* If huge return >0 so we abort the operation + zap. */
+> > -	return pmd_trans_huge(pmdval) || pmd_devmap(pmdval);
+> > +	return pmd_trans_huge(pmdval);
+> >  }
+> >  
+> >  static int guard_install_pte_entry(pte_t *pte, unsigned long addr,
+> > @@ -1183,7 +1183,7 @@ static int guard_remove_pud_entry(pud_t *pud, unsigned long addr,
+> >  	pud_t pudval = pudp_get(pud);
+> >  
+> >  	/* If huge, cannot have guard pages present, so no-op - skip. */
+> > -	if (pud_trans_huge(pudval) || pud_devmap(pudval))
+> > +	if (pud_trans_huge(pudval))
+> >  		walk->action = ACTION_CONTINUE;
+> >  
+> >  	return 0;
+> > @@ -1195,7 +1195,7 @@ static int guard_remove_pmd_entry(pmd_t *pmd, unsigned long addr,
+> >  	pmd_t pmdval = pmdp_get(pmd);
+> >  
+> >  	/* If huge, cannot have guard pages present, so no-op - skip. */
+> > -	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
+> > +	if (pmd_trans_huge(pmdval))
+> >  		walk->action = ACTION_CONTINUE;
+> >  
+> >  	return 0;
+> > -- 
+> > git-series 0.9.1
+> > 
