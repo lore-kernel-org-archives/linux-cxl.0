@@ -1,408 +1,326 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB2A14B07A;
-	Mon, 13 Jan 2025 05:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736747326; cv=fail; b=B8Fgs7XfScKS6G7s6yx6pQ/vt2jmTmiTULGVJrB0ofObCFc1JI/5FPJSWuMU1gKVjohAaCB4HCpTfgpTvXFyVcukpHKL8jVGMPMU2H7U7qPjjYJXpCnH/9SWAhNFaIfFgDGblUjcbCvvEDMAqdF7TEjrxbHqqa7SWgYn6mEOWhw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736747326; c=relaxed/simple;
-	bh=slz+6fF7BGUjSwIVUVURWoWYoUilEzxaXsgr0fyhrxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=N1XS1WnZU3Mm2+onOA8GVmiOJvqWakf5y36y1KB1dJKjT1aL6Gk7VB1SMqv5LewRjXJyHbfW5y2VDJ5OLX0ri+kkRkDR55mIJqX8AFKuVIbx8qiXlZ1N10Q9WwycpX6Z3rEXJh1uy6wf/YNoPNEK/YVpoUQ3RFVaTRcmfqM8tSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Mzg08LgE; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE439191494
+	for <linux-cxl@vger.kernel.org>; Mon, 13 Jan 2025 06:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736750622; cv=none; b=rRkjDWHyGr66qoIlVga7mxtgRtPxj/xCPFDQ3fMCP9Pro1zbuwLwjfGe8bJ+VXUIQBRhRZec4zbbG9DBrb3Ebfaad5BBq/fiSdPnzo8LbVCycFYWXMa5ep4MOLbkoRTWRI9kpTh5PVmri15p/lX1XuYcACD73E7v5uP7d8Nyr18=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736750622; c=relaxed/simple;
+	bh=prsp1a2+ZAPQn/0b0TrbfPsBdOaiaOEtBBC4dHzarXc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fvDpl/q6PnX0X6HJwcmtfNPck71c260P7YzekCp03JKslX2vCAFMgmatA2DWvgzhvzBt/JHrsvKUn3S57PWF6d9D7wkp3hqPG+i3jqQhIM/XeOFjYHPg+mzKYjZc7xCR21NLdPh19Lym2K7PKU1Jqr4mdq/nfyiNwMz4e/YmKN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FzBGTVmD; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Mzg08LgE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cNB5QhAgTWkkkcRv4zPKaQ2RJdELFIiblnOHAJbubudL3LKW/4TSv9kOExawWFrNxQc6upeVb+fL2pOl1dbe4nuRU4rwItkV+LACrdHGnKJdLX0xlQFXLSIRmJ7SqPRiBLoNoQWPwiO72ztX0D5MP0mooNsmpwj6oatX1Z3DESPoe9qEOXLUtEMpQ6h6QHzWm9sjy1gy5HJiZtw23je1uZFjdLx3OE3wp5Ghux+07wQGBewXF8VWwSd8qyebyqg4cw+2YvLsTR404imWeeY94IDJLOUTBJ9DVdBLDYNtnc5xZEGz/pzUYlQVVXdaDV1mHAhEqO8AXiaD4hX5J3izqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nyLBBxDHcOb9935DJaPURz+sg3QRC7hdeLrMTbZsnQk=;
- b=U0Iuz/6eM0NevbolWOCwIa3XJyVKikulCvMaOfD5JlwpK15kkon6HbcF8F6DXwkmCUX6ovGrRExK/s9TSxeO8H6BdkERzrxQ4Xj7r3G+kuNDYXfBz1lvn3IyOwLMY6euyB9ZPWcJzbYBZAIGGxfLD7D5NQ3xjF0ADdSPKfBFHZA8hVfknrgI38U64+rm+dz2d1tDzfrycPMZ6H8JShyO8L5d1draDYreee7NF/f2EugnPADsTm1Hogb3zKXoaG9FrdPZvVl4KWzVUMUXkYJmloJoukSdlC8bdcokuwjVhKHJFo1Zc8KQkoQ+FnLE+2oaKSj8mwu4JKfzVdZSRvkKzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nyLBBxDHcOb9935DJaPURz+sg3QRC7hdeLrMTbZsnQk=;
- b=Mzg08LgEdIXt43i3LqpEaVmIlh/H/XC9aOWT8H/P51nAQr71giXe8IDF2splDyMigHwJ9M62cYhHWBiP8LSsHQ4q4Hih+Gz0/HDKnIEb2qwmK13ku089OwYKvoluxorPjO0aM+Qfd15MgkIgkI3WIieSNCGrS7m1jkMMP6MmeLivNnZ+T4ehSWCVXFfdkfVWILFf2j4cI8P5yEvVsFGXPOOC2FUmoh2iIVqNWU17ebOJCIMtvWkarnyeNTqE11oT7lbQ+/Zc7rQHAvPrF4119okt1vQsqpV7U3LbMoH4SH3PqT6sF/uWb7Or9I9dHN+F9frbHtipRcQ1XYPxrNyjrw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- DS0PR12MB9446.namprd12.prod.outlook.com (2603:10b6:8:192::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8335.18; Mon, 13 Jan 2025 05:48:42 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8335.015; Mon, 13 Jan 2025
- 05:48:41 +0000
-Date: Mon, 13 Jan 2025 16:48:31 +1100
-From: Alistair Popple <apopple@nvidia.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, 
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
-	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
-	willy@infradead.org, tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, 
-	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, 
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 07/26] fs/dax: Ensure all pages are idle prior to
- filesystem unmount
-Message-ID: <o4zau42ynlekxemrzubcmfxhdk7v73ffhevdyle6w6dpqaeziq@5dvnxtrwj25b>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <704662ae360abeb777ed00efc6f8f232a79ae4ff.1736488799.git-series.apopple@nvidia.com>
- <20250110165019.GK6156@frogsfrogsfrogs>
- <p5vmaqlzge3dkkpnwceewi4io5ngqaczfa7ysujwa45kkevnam@sqc5usu7vgde>
- <20250113024940.GW1306365@frogsfrogsfrogs>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250113024940.GW1306365@frogsfrogsfrogs>
-X-ClientProxiedBy: SY5PR01CA0038.ausprd01.prod.outlook.com
- (2603:10c6:10:1f8::17) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FzBGTVmD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736750621; x=1768286621;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=prsp1a2+ZAPQn/0b0TrbfPsBdOaiaOEtBBC4dHzarXc=;
+  b=FzBGTVmDPSR3kV1JTtWGIZi0+P34Xpr6q7s1Qf/b7d/7o6Qf+FIBzj6f
+   ztjkLV+f0joxM1ulB3GaBb3QT3bz5kfeKuKyOMlIsXUZWr9yL6vlcNnZ5
+   Q6DfK2CpFiOG9Z6j/TV0pRTkovI6V+5TVr74gyGKds+mT07ksdV5o6A8F
+   xTRnNxDLKUKZLuFhvKuBJovQ0OryI2qRzfDPpgZYmvw8XyFROOxseM1xK
+   0TX24dj9jb4fBkdiO9IzaaAyXJeTSU9WW47lMNHvJUl+8id7bmH4VKfmF
+   3cdouc2opzGvL+9mTo96ighX2cZa5olEIVz0igPMadmO4sYiB5/XTIzYq
+   A==;
+X-CSE-ConnectionGUID: n+jCl6zaTm+8oMjcqFRTfg==
+X-CSE-MsgGUID: zsnjOzNKQbuRiVJGEX7EfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11313"; a="54539770"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="54539770"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2025 22:43:40 -0800
+X-CSE-ConnectionGUID: erZgTN59TCa2YNbVf2g7fg==
+X-CSE-MsgGUID: S3rfWHPBR26SJtcJAeWZuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="104453906"
+Received: from unknown (HELO ixc04.bj.intel.com) ([10.238.153.130])
+  by orviesa006.jf.intel.com with ESMTP; 12 Jan 2025 22:43:35 -0800
+From: Huaisheng Ye <huaisheng.ye@intel.com>
+To: Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	ming.li@zohomail.com
+Cc: pei.p.jia@intel.com,
+	linux-cxl@vger.kernel.org,
+	Huaisheng Ye <huaisheng.ye@intel.com>
+Subject: [PATCH v3] cxl/core/regs: Refactor out functions to count regblocks of given type
+Date: Mon, 13 Jan 2025 14:43:45 +0800
+Message-Id: <20250113064345.6835-1-huaisheng.ye@intel.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DS0PR12MB9446:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7395742-a74b-406a-6f2d-08dd3395ef48
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VZlBBq5u1aZHCvb1bbWN0/Ks3S0FrFr+EwnRhjCPRvmou9yATlShZORvbbjE?=
- =?us-ascii?Q?IvxyyB4uf3SbJbzgOHk8ogxNv3JMaA4ywHnFZXNGShZAF925ppCPG7BeUh3x?=
- =?us-ascii?Q?0h/mlG/Xwp2nz1FEDbw56fzO+FT5k4onVHJeCeEda8OzIqbhWjypsntevEUG?=
- =?us-ascii?Q?F47WtBw1ELESko3Y2Vrbu/CBL9qboe8Zs/SGrXD8eRj1uccXC+K+Zy8EfF53?=
- =?us-ascii?Q?KgigDfEpSKwB7U0rFAPhCnOD6EoB/pAB6IwOB0kbFhDIIcSSOAVy3PVJhqWM?=
- =?us-ascii?Q?ia0Ib6VnhyrdgpBrJ0eU8srNCBbSVO1Oa1SpYxnGAyBzFz70AUdSKXVdN+cI?=
- =?us-ascii?Q?iFi1VoGSUFTW6s4sHcIQ6AV+YHnUAFBgErf7iCmLU7+ulxqYeNROZcNOvfOS?=
- =?us-ascii?Q?udGgJvT1yCed/395bcmabAoZXc7kfTpKs1lB8yj6CEegQ9UBwko15i8e9Fwp?=
- =?us-ascii?Q?z/mLRcN4/W/MJKvardjCOkivE7lGIDNJM5I5AVHO8Nsz5vpMMhuOn3iZZxGc?=
- =?us-ascii?Q?1WLLloPu+PjixmBj80zEu/237Yny4Hlg4GE2omHeT3wL9qOh7cAxIb2yJ0cb?=
- =?us-ascii?Q?jeCMyUhgJ5/LcydKzyNEaEl4609o6XitshVUimhNFxaxT62c1eCm5Y66mdai?=
- =?us-ascii?Q?Mbm4ZNdXBQg777ggztCd28e2csJiYHT553VCSnsoF7wmCYkUkMrxO0DIUPzD?=
- =?us-ascii?Q?Kee2GJsXSRBxu30KX5oYo6itJMCtSps8DXoLv4v2WX32rSXlDVDFShzDuKiU?=
- =?us-ascii?Q?JWns9JQnLThByX297GzlGixGajfzVeWUea2zxCyWX6+JCccm3A1Ks/OGmBDF?=
- =?us-ascii?Q?o/G1bY3TmQhILVAIBZjMtsbUaS1Lwuxp/Vc38y3CayvHDXJ8bNJMCP+6bUxy?=
- =?us-ascii?Q?TcrotTXK5df8X+v2uA1wRdhdbVyOZRU6ZdILTzDXfcC2Hs14059mkav5oZcE?=
- =?us-ascii?Q?ght5SAaGytL8Ng07LjB+L//C9mOKgdIhcWH2eVkAd+tVvagqADydWFRAPwtl?=
- =?us-ascii?Q?IKa6EPBylugPFsHqiDjmOcTiAZPjbwEfdKxqOVYkdz8wb+/ugWeA3zWd2+Oh?=
- =?us-ascii?Q?xxCNm0qOZ4Bqc4/aOcvoU9uOL1uNcplgGXvl5Jt+Om9SnmDUzmCsbfLA7XnN?=
- =?us-ascii?Q?ZK2/6z4tWCjKqzD7J/cIdF7Rf78INffLsPmNqa7uE7t3GAXT1CKgXnLEOrYJ?=
- =?us-ascii?Q?ouSFJks+OjsGIFf65YdFXPck9CxlTIsD/6kVOZvXLMnyIMDV0hSY/1aFHn5t?=
- =?us-ascii?Q?INmUOSHb2Dw1JUwy5Hp9bkfMQXz66R8LFJhy2m01js1F8kKtQrPXYekr8quF?=
- =?us-ascii?Q?mUSYPQovZG66iP3OeCaYYNZ5Uf8Dg3LF29iJ6JkhBOxJByyrez3nfSG5icjX?=
- =?us-ascii?Q?NH5RLLLJzRKVanQlrbhBPfqraG3X?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vX/WYsjz3sYB/cUQfHKWGkDztq09QdiRjD6wIuKoY2ckoaFa6bNpzIqDpWVt?=
- =?us-ascii?Q?OkNZnf4MXuaj8gBRzVAj51ssEyqDfPCsOYlzrlMHRgeTXyYGNhBkprW5RTgl?=
- =?us-ascii?Q?4lvZ0SiquhivCKL/+IP9HaTPMKMzpGcpNMR/uupIInjiCGX67hPK0N+kEFpH?=
- =?us-ascii?Q?DMoz9xT1BTQ9NWMGnN6os62xMHNQJOjTNBYV7c4DBRP8F+oanqLvBCXJVCZL?=
- =?us-ascii?Q?FCznK46t69+cgbifS3WdJYSroiL9pI21umnuVeUNYXGTwWJdKZ2OodzVA3JJ?=
- =?us-ascii?Q?5f+CQW2nsgO/nW+Wsp4Pit5PJKD41gGm8in4ILmozJ4FzT20Aic7hcLiMjn+?=
- =?us-ascii?Q?Ns/c4HCtvNo44oUDw357UdotrpLg252C52+s5GiYemv2MWDHLym1sa5yxyjy?=
- =?us-ascii?Q?G0MtLrYfz9JAeJ97K9FiWS4v2jHy7LGmUGnllkyfY5G8II+uS+FrU9Wmq4bm?=
- =?us-ascii?Q?osnb+sskFad9CdaTFZmHKfUsr7z3pbarSFM+uxWwgrvVcB2sjoiO7qKka4aH?=
- =?us-ascii?Q?PJMnxMLVoE/KzlDRiFHz5aBKX2CpM7XnqS0lwSklN4uMQ7DVLmL8BDqNvyCy?=
- =?us-ascii?Q?e/Msow/0cskyX0luXCZ6nQmBf6vJlAEAnOjQ0cK745UM9vio1WhipG8slwb0?=
- =?us-ascii?Q?rZFmp2v1RXa1GYZSxAHv1T5fnBTvGxb1Qu4XTX9NVYMZIAq9E0RBYRzZfOWk?=
- =?us-ascii?Q?U7jicKZ0+2yRmr8R+2wf4GDPbnVUjnof+aVaw6/9bzaF9n6AnbFy4ZvZgRmJ?=
- =?us-ascii?Q?JL3qxQr4V7g4dFdVx2tnm2gAuizh3W6j/57VPEFFhq401xikzW3Ly+k32703?=
- =?us-ascii?Q?fdoe7A5SS0PAMUn1aflNky1tHuFJseesd12R0+zx9S3aBBnqRX00Zq+k0Tqy?=
- =?us-ascii?Q?ifwympFVVAl4VgvEJueeV3dXaq5cj3xEtrYR0CG/mU1VmjwREYPB5TWZ2WYg?=
- =?us-ascii?Q?Yudl8XsZ916iYk+sPKqCGfLuau2FmB7K3/Xooj0XXwzrHp7/MQZwVZP7Lln4?=
- =?us-ascii?Q?YdcHofpUoFz8U7gJJQ+UPAZ9iDNpLlGSgKgettzqUNJN6dm4/zqSCKKJqFOM?=
- =?us-ascii?Q?IhlgDZuKvFeSjMcMvwcmzN92a5ZEaxeTequTg+bLQ1HvA/MgSS20k6bWUJMi?=
- =?us-ascii?Q?n+QqG5bZgGUg9R1ToZqoLU9co4d7kuLRJ3JkYOWMTep4MoGagPh8rLpbe8o3?=
- =?us-ascii?Q?CG69HK6WWi4rbRhAf2/jQ34qz05PD0RQ/OR+az+5tj7GpH7maq3sbANs1Nrr?=
- =?us-ascii?Q?xQV/UKH5jK0vsCF/Sa8ho859EmqwEmlcwC8FKXt+/HWtQSWjYz4Sst4y/mSZ?=
- =?us-ascii?Q?hZZIl37Yt3KWgdp/l6B+7txB4fuj2pQFkrc+JJSchIqC3aqobxj8HRFY6mPd?=
- =?us-ascii?Q?k0tv6SRMQkVQWD2zl8JzhuUv2/OiVCFBj8/eT7GHQ+UGPx1hK/lVa5U2k5Z9?=
- =?us-ascii?Q?Qq9O17XorKOdqrBmmLe/7Fj8be4T5fJAyR1k43xzhP6zL0Sj0TV2F16Dc5aw?=
- =?us-ascii?Q?Qwa9PGI5IcJqZbygsUUnpYS+Ko6u0xB7WRfbgQXM/mCLU8vARkyI8Tga+WcM?=
- =?us-ascii?Q?/sweEY/py7NJccRLusphg0Y40WB0frqbqZ4LmcXO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7395742-a74b-406a-6f2d-08dd3395ef48
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2025 05:48:41.9184
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6PJYgRrkhtmF0bArM7LdV/HOhMSea/V1XZ391hMIt15xnleulnW+oDlJ1SYdhXsS/etbIwYblRph36qsCJaqaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9446
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jan 12, 2025 at 06:49:40PM -0800, Darrick J. Wong wrote:
-> On Mon, Jan 13, 2025 at 11:57:18AM +1100, Alistair Popple wrote:
-> > On Fri, Jan 10, 2025 at 08:50:19AM -0800, Darrick J. Wong wrote:
-> > > On Fri, Jan 10, 2025 at 05:00:35PM +1100, Alistair Popple wrote:
-> > > > File systems call dax_break_mapping() prior to reallocating file
-> > > > system blocks to ensure the page is not undergoing any DMA or other
-> > > > accesses. Generally this is needed when a file is truncated to ensure
-> > > > that if a block is reallocated nothing is writing to it. However
-> > > > filesystems currently don't call this when an FS DAX inode is evicted.
-> > > > 
-> > > > This can cause problems when the file system is unmounted as a page
-> > > > can continue to be under going DMA or other remote access after
-> > > > unmount. This means if the file system is remounted any truncate or
-> > > > other operation which requires the underlying file system block to be
-> > > > freed will not wait for the remote access to complete. Therefore a
-> > > > busy block may be reallocated to a new file leading to corruption.
-> > > > 
-> > > > Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> > > > 
-> > > > ---
-> > > > 
-> > > > Changes for v5:
-> > > > 
-> > > >  - Don't wait for pages to be idle in non-DAX mappings
-> > > > ---
-> > > >  fs/dax.c            | 29 +++++++++++++++++++++++++++++
-> > > >  fs/ext4/inode.c     | 32 ++++++++++++++------------------
-> > > >  fs/xfs/xfs_inode.c  |  9 +++++++++
-> > > >  fs/xfs/xfs_inode.h  |  1 +
-> > > >  fs/xfs/xfs_super.c  | 18 ++++++++++++++++++
-> > > >  include/linux/dax.h |  2 ++
-> > > >  6 files changed, 73 insertions(+), 18 deletions(-)
-> > > > 
-> > > > diff --git a/fs/dax.c b/fs/dax.c
-> > > > index 7008a73..4e49cc4 100644
-> > > > --- a/fs/dax.c
-> > > > +++ b/fs/dax.c
-> > > > @@ -883,6 +883,14 @@ static int wait_page_idle(struct page *page,
-> > > >  				TASK_INTERRUPTIBLE, 0, 0, cb(inode));
-> > > >  }
-> > > >  
-> > > > +static void wait_page_idle_uninterruptible(struct page *page,
-> > > > +					void (cb)(struct inode *),
-> > > > +					struct inode *inode)
-> > > > +{
-> > > > +	___wait_var_event(page, page_ref_count(page) == 1,
-> > > > +			TASK_UNINTERRUPTIBLE, 0, 0, cb(inode));
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * Unmaps the inode and waits for any DMA to complete prior to deleting the
-> > > >   * DAX mapping entries for the range.
-> > > > @@ -911,6 +919,27 @@ int dax_break_mapping(struct inode *inode, loff_t start, loff_t end,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(dax_break_mapping);
-> > > >  
-> > > > +void dax_break_mapping_uninterruptible(struct inode *inode,
-> > > > +				void (cb)(struct inode *))
-> > > > +{
-> > > > +	struct page *page;
-> > > > +
-> > > > +	if (!dax_mapping(inode->i_mapping))
-> > > > +		return;
-> > > > +
-> > > > +	do {
-> > > > +		page = dax_layout_busy_page_range(inode->i_mapping, 0,
-> > > > +						LLONG_MAX);
-> > > > +		if (!page)
-> > > > +			break;
-> > > > +
-> > > > +		wait_page_idle_uninterruptible(page, cb, inode);
-> > > > +	} while (true);
-> > > > +
-> > > > +	dax_delete_mapping_range(inode->i_mapping, 0, LLONG_MAX);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(dax_break_mapping_uninterruptible);
-> > > > +
-> > > >  /*
-> > > >   * Invalidate DAX entry if it is clean.
-> > > >   */
-> > > > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > > > index ee8e83f..fa35161 100644
-> > > > --- a/fs/ext4/inode.c
-> > > > +++ b/fs/ext4/inode.c
-> > > > @@ -163,6 +163,18 @@ int ext4_inode_is_fast_symlink(struct inode *inode)
-> > > >  	       (inode->i_size < EXT4_N_BLOCKS * 4);
-> > > >  }
-> > > >  
-> > > > +static void ext4_wait_dax_page(struct inode *inode)
-> > > > +{
-> > > > +	filemap_invalidate_unlock(inode->i_mapping);
-> > > > +	schedule();
-> > > > +	filemap_invalidate_lock(inode->i_mapping);
-> > > > +}
-> > > > +
-> > > > +int ext4_break_layouts(struct inode *inode)
-> > > > +{
-> > > > +	return dax_break_mapping_inode(inode, ext4_wait_dax_page);
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * Called at the last iput() if i_nlink is zero.
-> > > >   */
-> > > > @@ -181,6 +193,8 @@ void ext4_evict_inode(struct inode *inode)
-> > > >  
-> > > >  	trace_ext4_evict_inode(inode);
-> > > >  
-> > > > +	dax_break_mapping_uninterruptible(inode, ext4_wait_dax_page);
-> > > > +
-> > > >  	if (EXT4_I(inode)->i_flags & EXT4_EA_INODE_FL)
-> > > >  		ext4_evict_ea_inode(inode);
-> > > >  	if (inode->i_nlink) {
-> > > > @@ -3902,24 +3916,6 @@ int ext4_update_disksize_before_punch(struct inode *inode, loff_t offset,
-> > > >  	return ret;
-> > > >  }
-> > > >  
-> > > > -static void ext4_wait_dax_page(struct inode *inode)
-> > > > -{
-> > > > -	filemap_invalidate_unlock(inode->i_mapping);
-> > > > -	schedule();
-> > > > -	filemap_invalidate_lock(inode->i_mapping);
-> > > > -}
-> > > > -
-> > > > -int ext4_break_layouts(struct inode *inode)
-> > > > -{
-> > > > -	struct page *page;
-> > > > -	int error;
-> > > > -
-> > > > -	if (WARN_ON_ONCE(!rwsem_is_locked(&inode->i_mapping->invalidate_lock)))
-> > > > -		return -EINVAL;
-> > > > -
-> > > > -	return dax_break_mapping_inode(inode, ext4_wait_dax_page);
-> > > > -}
-> > > > -
-> > > >  /*
-> > > >   * ext4_punch_hole: punches a hole in a file by releasing the blocks
-> > > >   * associated with the given offset and length
-> > > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> > > > index 4410b42..c7ec5ab 100644
-> > > > --- a/fs/xfs/xfs_inode.c
-> > > > +++ b/fs/xfs/xfs_inode.c
-> > > > @@ -2997,6 +2997,15 @@ xfs_break_dax_layouts(
-> > > >  	return dax_break_mapping_inode(inode, xfs_wait_dax_page);
-> > > >  }
-> > > >  
-> > > > +void
-> > > > +xfs_break_dax_layouts_uninterruptible(
-> > > > +	struct inode		*inode)
-> > > > +{
-> > > > +	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
-> > > > +
-> > > > +	dax_break_mapping_uninterruptible(inode, xfs_wait_dax_page);
-> > > > +}
-> > > > +
-> > > >  int
-> > > >  xfs_break_layouts(
-> > > >  	struct inode		*inode,
-> > > > diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> > > > index c4f03f6..613797a 100644
-> > > > --- a/fs/xfs/xfs_inode.h
-> > > > +++ b/fs/xfs/xfs_inode.h
-> > > > @@ -594,6 +594,7 @@ xfs_itruncate_extents(
-> > > >  }
-> > > >  
-> > > >  int	xfs_break_dax_layouts(struct inode *inode);
-> > > > +void xfs_break_dax_layouts_uninterruptible(struct inode *inode);
-> > > >  int	xfs_break_layouts(struct inode *inode, uint *iolock,
-> > > >  		enum layout_break_reason reason);
-> > > >  
-> > > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > > > index 8524b9d..73ec060 100644
-> > > > --- a/fs/xfs/xfs_super.c
-> > > > +++ b/fs/xfs/xfs_super.c
-> > > > @@ -751,6 +751,23 @@ xfs_fs_drop_inode(
-> > > >  	return generic_drop_inode(inode);
-> > > >  }
-> > > >  
-> > > > +STATIC void
-> > > > +xfs_fs_evict_inode(
-> > > > +	struct inode		*inode)
-> > > > +{
-> > > > +	struct xfs_inode	*ip = XFS_I(inode);
-> > > > +	uint			iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
-> > > > +
-> > > > +	if (IS_DAX(inode)) {
-> > > > +		xfs_ilock(ip, iolock);
-> > > > +		xfs_break_dax_layouts_uninterruptible(inode);
-> > > > +		xfs_iunlock(ip, iolock);
-> > > 
-> > > If we're evicting the inode, why is it necessary to take i_rwsem and the
-> > > mmap invalidation lock?  Shouldn't the evicting thread be the only one
-> > > with access to this inode?
-> > 
-> > Hmm, good point. I think you're right. I can easily stop taking
-> > XFS_IOLOCK_EXCL. Not taking XFS_MMAPLOCK_EXCL is slightly more difficult because
-> > xfs_wait_dax_page() expects it to be taken. Do you think it is worth creating a
-> > separate callback (xfs_wait_dax_page_unlocked()?) specifically for this path or
-> > would you be happy with a comment explaining why we take the XFS_MMAPLOCK_EXCL
-> > lock here?
-> 
-> There shouldn't be any other threads removing "pages" from i_mapping
-> during eviction, right?  If so, I think you can just call schedule()
-> directly from dax_break_mapping_uninterruptble.
+In commit d717d7f3df18494baafd9595fb4bcb9c380d7389, cxl_count_regblock was
+added for counting regblocks of a given RBI (Register Block Identifier).
+It is workable, but the implementation can be improved.
 
-Oh right, and I guess you are saying the same would apply to ext4 so no need to
-cycle the filemap lock there either, which I've just noticed is buggy anyway. So
-I can just remove the callback entirely for dax_break_mapping_uninterruptible.
+1. In order to get the count of instances, cxl_count_regblock has to tentatively
+repeat the call of cxl_find_regblock_instance by increasing index from 0. It
+will not stop until an error value is returned. Actually, It needs to search for
+Register Blocks in dvsec again every time by taking a start from the head. The
+operations can be optimized.
 
-> (dax mappings aren't allowed supposed to persist beyond unmount /
-> eviction, just like regular pagecache, right??)
+For example, to determine if PMU1 exists, cxl_find_regblock_instance must check
+all Register Blocks by the type and index from RB1 to RB4, starting from scratch,
+even if PMU0 just has been searched. If there are more RBs of the same type in the
+future, the situation will be even worse.
 
-Right they're not *supposed* to, but until at least this patch is applied they
-can ;-)
+16 81 00 23             PCIe extended Capability Header
+02 c0 1e 98             Header 1
+00 00 00 08             Header 2
+--------------------------------------
+00 00 01 00             RB 1 - Offset Low       Component
+00 00 00 00             RB 1 - Offset High
+--------------------------------------
+00 00 03 02             RB 2 - Offset Low       Device Register
+00 00 00 00             RB 2 - Offset High
+--------------------------------------
+00 01 04 02             RB 3 - Offset Low       PMU0
+00 00 00 00             RB 3 - Offset High
+--------------------------------------
+00 02 04 02             RB 4 - Offset Low       PMU1
+00 00 00 00             RB 4 - Offset High
 
- - Alistair
+RB: Register Block
 
-> --D
-> 
-> >  - Alistair
-> > 
-> > > --D
-> > > 
-> > > > +	}
-> > > > +
-> > > > +	truncate_inode_pages_final(&inode->i_data);
-> > > > +	clear_inode(inode);
-> > > > +}
-> > > > +
-> > > >  static void
-> > > >  xfs_mount_free(
-> > > >  	struct xfs_mount	*mp)
-> > > > @@ -1189,6 +1206,7 @@ static const struct super_operations xfs_super_operations = {
-> > > >  	.destroy_inode		= xfs_fs_destroy_inode,
-> > > >  	.dirty_inode		= xfs_fs_dirty_inode,
-> > > >  	.drop_inode		= xfs_fs_drop_inode,
-> > > > +	.evict_inode		= xfs_fs_evict_inode,
-> > > >  	.put_super		= xfs_fs_put_super,
-> > > >  	.sync_fs		= xfs_fs_sync_fs,
-> > > >  	.freeze_fs		= xfs_fs_freeze,
-> > > > diff --git a/include/linux/dax.h b/include/linux/dax.h
-> > > > index ef9e02c..7c3773f 100644
-> > > > --- a/include/linux/dax.h
-> > > > +++ b/include/linux/dax.h
-> > > > @@ -274,6 +274,8 @@ static inline int __must_check dax_break_mapping_inode(struct inode *inode,
-> > > >  {
-> > > >  	return dax_break_mapping(inode, 0, LLONG_MAX, cb);
-> > > >  }
-> > > > +void dax_break_mapping_uninterruptible(struct inode *inode,
-> > > > +				void (cb)(struct inode *));
-> > > >  int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
-> > > >  				  struct inode *dest, loff_t destoff,
-> > > >  				  loff_t len, bool *is_same,
-> > > > -- 
-> > > > git-series 0.9.1
-> > > > 
-> > 
+2. cxl_count_regblock blocks the opportunity to get error codes from
+cxl_find_regblock_instance. cxl_pci_probe has error code checking for almost
+all function calls. This is a good behavior, but existing cxl_count_regblock
+couldn't return error codes.
+
+With this patch, only need to have minor modifications in
+__cxl_find_regblock_instance, which can return the count of regblocks by given
+RBI in just one call. It is more effective than before. Besides, the error code
+could be obtained by the called function, here is cxl_pci_probe.
+
+Based on the above reasons, refactor out cxl_count_regblock and create
+__cxl_find_regblock_instance for counting instances more efficiently.
+
+This patch is tested by ndctl cxl_test and physical CXL expander card
+with v6.13-rc6.
+
+1. Ndctl CXL test suite v80 could pass with this patch applied.
+$ meson test -C build --suite cxl
+ninja: Entering directory `/home/work/source/ndctl/build'
+[1/48] Generating version.h with a custom command
+ 1/11 ndctl:cxl / cxl-topology.sh               OK               3.48s
+ 2/11 ndctl:cxl / cxl-region-sysfs.sh           OK               2.74s
+ 3/11 ndctl:cxl / cxl-labels.sh                 OK               1.75s
+ 4/11 ndctl:cxl / cxl-create-region.sh          OK               3.51s
+ 5/11 ndctl:cxl / cxl-xor-region.sh             OK               1.89s
+ 6/11 ndctl:cxl / cxl-events.sh                 OK               1.63s
+ 7/11 ndctl:cxl / cxl-sanitize.sh               OK               4.48s
+ 8/11 ndctl:cxl / cxl-destroy-region.sh         OK               1.90s
+ 9/11 ndctl:cxl / cxl-qos-class.sh              OK               2.65s
+10/11 ndctl:cxl / cxl-poison.sh                 OK               2.86s
+11/11 ndctl:cxl / cxl-security.sh               OK               0.91s
+
+2. Test patch with Qemu x4 switch topology:
+
+                       ACPI0017:00 [root0]
+                           |
+                         HB_0 [port1]
+                        /             \
+                     RP_0             RP_1
+                      |                 |
+                USP [port2]
+            /    /    \    \
+          DSP   DSP   DSP   DSP
+           |     |     |     |
+          mem1  mem0  mem2  mem3
+
+Every card has 2 PMU RBs, here are the pmu_mem devices.
+
+$ pwd
+/sys/bus/cxl/devices
+$ tree
+[snip]
+├── pmu_mem0.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:01.0/0000:10:00.0/pmu_mem0.0
+├── pmu_mem0.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:01.0/0000:10:00.0/pmu_mem0.1
+├── pmu_mem1.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:00.0/0000:0f:00.0/pmu_mem1.0
+├── pmu_mem1.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:00.0/0000:0f:00.0/pmu_mem1.1
+├── pmu_mem2.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:02.0/0000:11:00.0/pmu_mem2.0
+├── pmu_mem2.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:02.0/0000:11:00.0/pmu_mem2.1
+├── pmu_mem3.0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:03.0/0000:12:00.0/pmu_mem3.0
+├── pmu_mem3.1 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/0000:0e:03.0/0000:12:00.0/pmu_mem3.1
+
+Changes
+=======
+v2 -> v3:
+
+1. Create static function __cxl_find_regblock_instance() for implementation of
+   locating a register block or counting instances by type / index
+   underneath. (Jonathan Cameron)
+2. cxl_count_regblock() and cxl_find_regblock_instance() respectively call
+   __cxl_find_regblock_instance for the purpose of counting instances and
+   locating RB. (Jonathan Cameron)
+3. Change parameter index's type to 'unsigned int' in cxl_find_regblock_instance (Jonathan Cameron)
+4. Rebase patch to v6.13-rc6
+
+=======
+v1 -> v2:
+
+1. Reserved cxl_count_regblock() for original function interface (Ming Li)
+2. Reset 'map->resource' to 'CXL_RESOURCE_NONE' before returning the count of instances in
+   cxl_find_regblock_instance() (Ming Li)
+3. Append results of ndctl test suite and Qemu testing PMU devices to commit log (Ming Li)
+4. Rebase patch to v6.13-rc5
+
+ [v2] https://lore.kernel.org/all/20241230122239.3445117-1-huaisheng.ye@intel.com/
+
+Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
+---
+ drivers/cxl/core/regs.c | 43 +++++++++++++++++++++++++++++------------
+ drivers/cxl/cxl.h       |  3 ++-
+ drivers/cxl/pci.c       |  6 +++++-
+ 3 files changed, 38 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 59cb35b40c7e..d9c1818acdd5 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -290,19 +290,22 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
+ }
+ 
+ /**
+- * cxl_find_regblock_instance() - Locate a register block by type / index
++ * __cxl_find_regblock_instance() - Locate a register block or count instances by type / index
+  * @pdev: The CXL PCI device to enumerate.
+  * @type: Register Block Indicator id
+  * @map: Enumeration output, clobbered on error
+  * @index: Index into which particular instance of a regblock wanted in the
+  *	   order found in register locator DVSEC.
+  *
+- * Return: 0 if register block enumerated, negative error code otherwise
++ * Return: 0 if register block enumerated, non-negative if instances counted,
++ * negative error code otherwise
+  *
+  * A CXL DVSEC may point to one or more register blocks, search for them
+  * by @type and @index.
++ *
++ * Use CXL_INSTANCES_COUNT for @index if counting instances by @type and @index.
+  */
+-int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
++static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 			       struct cxl_register_map *map, int index)
+ {
+ 	u32 regloc_size, regblocks;
+@@ -342,8 +345,30 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	}
+ 
+ 	map->resource = CXL_RESOURCE_NONE;
++	if (index == CXL_INSTANCES_COUNT)
++		return instance;
++
+ 	return -ENODEV;
+ }
++
++/**
++ * cxl_find_regblock_instance() - Locate a register block by type / index
++ * @pdev: The CXL PCI device to enumerate.
++ * @type: Register Block Indicator id
++ * @map: Enumeration output, clobbered on error
++ * @index: Index into which particular instance of a regblock wanted in the
++ *	   order found in register locator DVSEC.
++ *
++ * Return: 0 if register block enumerated, negative error code otherwise
++ *
++ * A CXL DVSEC may point to one or more register blocks, search for them
++ * by @type and @index.
++ */
++int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
++			struct cxl_register_map *map, unsigned int index)
++{
++	return __cxl_find_regblock_instance(pdev, type, map, index);
++}
+ EXPORT_SYMBOL_NS_GPL(cxl_find_regblock_instance, "CXL");
+ 
+ /**
+@@ -360,7 +385,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_find_regblock_instance, "CXL");
+ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 		      struct cxl_register_map *map)
+ {
+-	return cxl_find_regblock_instance(pdev, type, map, 0);
++	return __cxl_find_regblock_instance(pdev, type, map, 0);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, "CXL");
+ 
+@@ -371,19 +396,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, "CXL");
+  *
+  * Some regblocks may be repeated. Count how many instances.
+  *
+- * Return: count of matching regblocks.
++ * Return: non-negative count of matching regblocks, negative error code otherwise.
+  */
+ int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
+ {
+ 	struct cxl_register_map map;
+-	int rc, count = 0;
+ 
+-	while (1) {
+-		rc = cxl_find_regblock_instance(pdev, type, &map, count);
+-		if (rc)
+-			return count;
+-		count++;
+-	}
++	return __cxl_find_regblock_instance(pdev, type, &map, CXL_INSTANCES_COUNT);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, "CXL");
+ 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f6015f24ad38..7fc456d5b917 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -302,10 +302,11 @@ int cxl_map_device_regs(const struct cxl_register_map *map,
+ 			struct cxl_device_regs *regs);
+ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
+ 
++#define CXL_INSTANCES_COUNT -1
+ enum cxl_regloc_type;
+ int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
+ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+-			       struct cxl_register_map *map, int index);
++			       struct cxl_register_map *map, unsigned int index);
+ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 		      struct cxl_register_map *map);
+ int cxl_setup_regs(struct cxl_register_map *map);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 6d94ff4a4f1a..a96e54c6259e 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -907,7 +907,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct cxl_dev_state *cxlds;
+ 	struct cxl_register_map map;
+ 	struct cxl_memdev *cxlmd;
+-	int i, rc, pmu_count;
++	int rc, pmu_count;
++	unsigned int i;
+ 	bool irq_avail;
+ 
+ 	/*
+@@ -1009,6 +1010,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return rc;
+ 
+ 	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
++	if (pmu_count < 0)
++		return pmu_count;
++
+ 	for (i = 0; i < pmu_count; i++) {
+ 		struct cxl_pmu_regs pmu_regs;
+ 
+-- 
+2.39.3
+
