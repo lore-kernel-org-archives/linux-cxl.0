@@ -1,200 +1,544 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3491C8776
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 16:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736872846; cv=none; b=Jmj8n6UZ26dX+TkxH3CZ12/tPoF8+HP6WNvDN3lB0Pzv99Vyq8gSIvgDj+2p9xDUgkKeLtdJu84MooBV1mERr6MBRQGdMFskJpvZIQxPrCvIDfWThb6cLXvaTJhFB79zjh6InF0N4tTfPMtbeWlgkuVkvETQ5H3XET8Gpil+HBc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736872846; c=relaxed/simple;
-	bh=SWpTIMK8lzFBKRNAU3gX+w9k3JLPq/iF6huli7uPfm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NGU+avXsbkhuI7q62yTysWTVUZzSjIpydi4o7y79zTuGdy9k92vIVpyIyEPcFdZI7Da4ytWiMa+SPXpjwHYq5FRSj425dUiSfatn/VIt7RwU5pRN0xWCnOAsObcrB53NnQKKpIcN/P6GLi4oHSMjBadmnDUO2olL5eT+09FZR0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MlmCo3Jw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91431D31A2;
+	Tue, 14 Jan 2025 16:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736872863; cv=fail; b=YMInW/HpQqdPiGxTUqvsvepl4ic3bVuT6G58uUawqscUJbeh3KWANVqUFdoVpmxaNo1uVDHQglnFowuCxIerV6uoZQkkjOtvhQiKzHVtS/MJWG5y7SpDhBjzslgK/mC4dYa2ArIvyBawcrnt3ZuuDWDctHMuJejpo07SmzYOSIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736872863; c=relaxed/simple;
+	bh=JRT2gmvMDYs32JDESmGglEDllJadQVOsaTIe5EaFPZA=;
+	h=Message-ID:Date:Subject:From:To:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jyn/taMG29q8E66L2Iv4L6zDGGtcx8r+WnDBcAExHC74yR2xDZf5ml8A9w6NPVyu0OAJvMuEDvtROGTifQj7N9I68CqTSpSXe058gfFhNzzp7MIv/mroEcWxOObMpCf2FuhzntiE7HDrMODgW5s+ftt/M4Ml4s0V2v/lZvQ1Sso=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TBwaapYb; arc=fail smtp.client-ip=40.107.244.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MlmCo3Jw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736872844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mczZUoWGAV5QF6Dgux9UR9VFuQW2+GvnXwEwpL5KPSQ=;
-	b=MlmCo3JwkMzEufzQBfAZdNwpACr8d/hdl4+xuRDcyrZJpdUFZuE6tFqb5Lm8bpddSr3s/u
-	lS5WPDayHc9o9NyxMZgOsWwuT9kFRHTtAm/06Edy7Dv6tsF8wxds8n7v2epbJRfU0R+QHY
-	kh1mNEWNdm2KF7E0ykwfcDYbh0sMsBs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-36-GyCn2ycsOG23ncpk-1qSdw-1; Tue, 14 Jan 2025 11:40:42 -0500
-X-MC-Unique: GyCn2ycsOG23ncpk-1qSdw-1
-X-Mimecast-MFC-AGG-ID: GyCn2ycsOG23ncpk-1qSdw
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3862c67763dso2213646f8f.3
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 08:40:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736872841; x=1737477641;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mczZUoWGAV5QF6Dgux9UR9VFuQW2+GvnXwEwpL5KPSQ=;
-        b=vdsZQomOG/6VkJKXGyFtKFiULgifPuPFQGSXL37H+QgHuc6z/a2EaoJr/K0iqiXLNh
-         BgbXOKwjf1A75VJ9TMhNXgR0kMvMJB7EfSwwSYESWTjabg+vNTpogZPCaR9W7OlOa/CV
-         7eugXnqo+4PofPx4Sej49mQmTeza60BMt1ucPy5QzCC5Z2A2HK777TsrMpxl4Ce4OnJn
-         AeBKNBbPlUklzZ6ay3YCiJyhp5gPKefvgStpLbEDiwV6fUoX0VOE1TjcuUydrTTD/m2g
-         A7TQytaAQ3LObxDsQyPrboAhuqiMuoNx6NZ+eVl9cb3hbYRXi/jH67tlXaD/tSIMGy7p
-         1n3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvY4sgGQsWZjWQvxlCjslTBIzjWIo7lfk2V25XkEMLLHolAYytp8ubkdkJley/lE+t9xrOz8EarIQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBO+XogvYdNc3DtfOIIts2gsagg30sOe2lT5gAlFEQEdZ6xOBn
-	u5USspDqrsuVHKMQwEdnd1ReEInX0Sn+2KaSP/oWK6GaEkXCnBvznR6OueV7HdRdc+BsGHffmLc
-	dZxO35/XQ0MaJjHY44/OqvOVA1s7SomrBb8k++BOat2AWDr5cCQmhLWOW0Q==
-X-Gm-Gg: ASbGnctmSSsQ6BDhbi/SwFOSWLsxxsiXn0bOw0PdxrX1C3xuw4TvftdxyOrW8ruB4cg
-	zhZplmRcNvrgY3SK7v2XcErO5dRTYuPp5Cur7B1E4nXFavY63f8SJaaU7VSgnxihV0wIJrZsl+b
-	oq8/tpg7HQ4hvS/UDDwStwfBWhCj1hPMDbnoH6KuLugtXmfeReZgJQGpfW3+HlbauKIi4nGRiif
-	03gRLL9RiR4ng30EXp3ZrjeAq7VJNsN7wpk43TfTvyMU3sT0xJgul6yBB+sgzIwvrUrvu7xMPxE
-	olQQYDw78cr6Xmv2jl8uh0JFo/0+CryNyRQfcOnWUNTyVJm9fw9G7Db9ex6n41cO2fCvA4m1seX
-	2XsZEr3Hs
-X-Received: by 2002:a5d:64a7:0:b0:385:f631:612 with SMTP id ffacd0b85a97d-38a9d0a169fmr10472152f8f.17.1736872841238;
-        Tue, 14 Jan 2025 08:40:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEc1fBtauoetrfyVmlAeLA4qBkDXyQ6HQ3d2cKZ9xBYn1krtsjfIkJAnB30ZUXL+ZF7yLk2tQ==
-X-Received: by 2002:a5d:64a7:0:b0:385:f631:612 with SMTP id ffacd0b85a97d-38a9d0a169fmr10472068f8f.17.1736872839906;
-        Tue, 14 Jan 2025 08:40:39 -0800 (PST)
-Received: from ?IPV6:2003:cb:c738:3100:8133:26cf:7877:94aa? (p200300cbc7383100813326cf787794aa.dip0.t-ipconnect.de. [2003:cb:c738:3100:8133:26cf:7877:94aa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c006sm15191889f8f.46.2025.01.14.08.40.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2025 08:40:38 -0800 (PST)
-Message-ID: <31919e6c-0cec-4e3a-a0c6-a80be53d6ccc@redhat.com>
-Date: Tue, 14 Jan 2025 17:40:35 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TBwaapYb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=umvN0A8yMiHBaCPwbZAbqKgIwwqzZ4pErvdTYqgvRp3d3pr1ZtsZhwyqkjoYVOTkQEcQfre3kjEMIPmEZbvKWAEeiSRvJK+hUpQL1yHFKrKW8b33eBxsitD+lOgbzWCYSs4YmBihiiz6KeFkhrcE5clHonMKMVxxptV2GMya8kCTp46RCjHZSBW/jmFXzYMS2UJRTqzQzEcbDORnWKrg7MUynV34xROuIgbWOZ0ZQDPaQcg1jtaPVZLmCu/aTVuz48Tg7Jn1B0iXSPqT1hbinA0xfBoSxf6YrlSQn0WnnDHxCSA1PHkNiEyznJFGCpM/ZPGdaxcY5+OcS19u1E0wjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O6RHImRRm1gcm8HhAeOGXP+R0VzgtER4HGO0XZA523Q=;
+ b=zR6/4NAsNZ5Zlm44iriMz3ARxdjtDxcWTGeEBQl9BwOGceB+CZJmLNCB06qh9oTpx4yHkcuLaKCHkRoHKsZBjQA2mxxTBrelePDrdyzR0VgFy0SYVsfuIWiApLIGEOqR2xUQ5up7xEOj/D6QBCjoyUgh5dSPgBR4xuiKa+OVzK9vOtLNYNaiyOsFppdyTlFWdjptDeNylzwgi2Cc+SAZVCifZNk/P0AJ+OJtlos3SiFr0SiBQZJf18UjqQXCTPGiXSpZ2KUO9HlsvqfHoLp+K/zZY0Kk29N1dkF3CspxpU7Ruzh+KF3ky0PCik8dNzphuXwaKia7OUHC7jHnhkUTTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O6RHImRRm1gcm8HhAeOGXP+R0VzgtER4HGO0XZA523Q=;
+ b=TBwaapYbd98slkFA/cGNNZtvGGeNbTX4oJwQ2Uu+OkC72+NuOIHWbp/bTh4lHVLti1E6zDp6j7X8J0E173eOJDL6eBwc2XQaN3HqAWL0JvG0HHHcX74qOSgcG2Tj5yPY3gdvs3WFZNqs7MdsDH2Y+jgkuoCI5CBE1NAhhKaHPYw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by SN7PR12MB7023.namprd12.prod.outlook.com (2603:10b6:806:260::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Tue, 14 Jan
+ 2025 16:40:58 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8335.017; Tue, 14 Jan 2025
+ 16:40:58 +0000
+Message-ID: <d1beb594-3bd5-b2c7-9753-4c1d8aeb52db@amd.com>
+Date: Tue, 14 Jan 2025 16:40:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v8 01/27] cxl: add type2 device basic support
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, martin.habets@xilinx.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+References: <20241216161042.42108-1-alejandro.lucero-palau@amd.com>
+ <20241216161042.42108-2-alejandro.lucero-palau@amd.com>
+ <677dbbd46e630_2aff42944@dwillia2-xfh.jf.intel.com.notmuch>
+ <677dd5ea832e6_f58f29444@dwillia2-xfh.jf.intel.com.notmuch>
+ <c3812ef0-dd17-a6f5-432a-93d98aff70b7@amd.com>
+ <92e3b256-b660-5074-f3aa-c8ab158fcb8b@amd.com>
+In-Reply-To: <92e3b256-b660-5074-f3aa-c8ab158fcb8b@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DUZPR01CA0001.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:3c3::10) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 16/26] huge_memory: Add vmf_insert_folio_pmd()
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
- gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
- linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
- hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <02216c30a733ecc84951f9aeb1130cef7497125d.1736488799.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <02216c30a733ecc84951f9aeb1130cef7497125d.1736488799.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zpLbvI8g0hSIHURq5j__NKrSOsgfrpS5mr5CtIHBP0M_1736872841
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB7023:EE_
+X-MS-Office365-Filtering-Correlation-Id: 653475a4-5e15-4869-84f2-08dd34ba38c8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|1800799024|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TUlhV1YrNkluSUdQa2RyTUdUWi9CM1ZCUWhHNzI0UUgrSnVvRnRvWmhCaHBH?=
+ =?utf-8?B?dVVhVW5Da0trbVdHRnFWaWFOcVNvQnhUeE5JNDIyUDMyOGMvMnBmckFGbTZX?=
+ =?utf-8?B?MklFL1BuVkRuZ0FxTG43SWpwVTNLM2ZkMFh3VnhOeElLWVRxbjFhek51cVFO?=
+ =?utf-8?B?cENua1Vlek9XNjZLMHBmbi8weVFpZ0I1T3JXOG5qR0NyRU5Kb2tFODBCeGRu?=
+ =?utf-8?B?UE1xdDhqb1ZIb1NEMXA5NGJheVNLN0xaYWo4RTRQSTUwd0g0T1lMcVowWStU?=
+ =?utf-8?B?MHRwWDVDLzR6c2pwRkVvb1RlSjJPUnZWWDhoK0RmUGVTSlltWXc3N2dtZXAz?=
+ =?utf-8?B?Q2xWWGtzbUc5VEpiNmNFcHdYYUZaK1drRWVVMFhURDd4WVdWbWFzMjB6TXY5?=
+ =?utf-8?B?WXJ2aDdTbVFiVFZCS0RGZ21wdHhUMHNZWjl1TWozU3U0SG1Qc1lWUEFlaHMv?=
+ =?utf-8?B?SFhJdHBPdExiZzN5WTJlZkZMeC9XQWlFeXJ6U21keGIxeGUydEJFWWJpS0R2?=
+ =?utf-8?B?WTJEWXFJQzdkVHhQeWJmOWIrQ2l1ODhoYTFSc0JnN3pLaEFsemVyZ0JnaHBN?=
+ =?utf-8?B?NjlNcUtDV1U2ZUlYTS9RdFJhYlI1YU5rV2JqNjh2ZmcyVWxuVmdCek5FYkw2?=
+ =?utf-8?B?ZVBOYmJyeVdCTnlTZ2lTSnVFc0lmQ1FSV0M3RTBvVStvOUJkTitIV3NlRmY3?=
+ =?utf-8?B?Ym8wbVpZL29YVUhob1BiRGlKL0szUDBvZTNQcFZ5bXZVZzRrZGFSLzZYR0lq?=
+ =?utf-8?B?bmMxS205c0xlamZzWSt2S1BRWmVsTUhBUjJRa3N5eUp5MTVKcWxPTmJ2eU9F?=
+ =?utf-8?B?Um5McXBhZVFRSDFmOHhhS0ZFNE9vL3d2S3VxSWdLQmNtbVNLWFZTTkJiSVlJ?=
+ =?utf-8?B?QXdIVGpHRk9ra2RWTHFZWmRDMkYyd1NkSHM5cWc1SnBtVE9oa3Y5TzBITnNZ?=
+ =?utf-8?B?UHZ1OHB1cW5SRkk3cHJYSURTV2YzUTJvV1VtVjBJWjdzVUlrOERadzNMT2NB?=
+ =?utf-8?B?eGtOSUZNbE03NFZHdCtDbUgwcjFLSUNVTC9hZldkdEtFMmV5UWNWbk5HSWpx?=
+ =?utf-8?B?Q0dNMVhqS0s2SXNWVGMzZXZKcHI3Mkk4cUw0ZGJRU2tacEFjRndzN2hOdThB?=
+ =?utf-8?B?S0V5MkhSZkEwSTNlaFdCOWxSbHpGT2NkWkE0U21lbUw1ZzRIK1NoYkZ5Tk4r?=
+ =?utf-8?B?VnU2MkVPZ1QyUUsrRHN3eThsNXhKQ3pMRzNJR1dnOTVaZkRrWUUyNFJSYTBq?=
+ =?utf-8?B?QnlyRnpJSnhucHNvK3hJNzlhRDdBS25nZDM3bHM1OVByUUw0WHl1NzFFaGhy?=
+ =?utf-8?B?K0ZBcnZmcWwrcjRUekJ5clBwK3NIOGUraXQyeklPV24yMUZnUFNHVVNuc3B4?=
+ =?utf-8?B?WlJ1U1Z4b3lVSXFQcDhvMmFRbk1xMUhSU01aZzZqUG9obmVsQXlpd0lQTWN0?=
+ =?utf-8?B?SzNCdFhralFYV0FIK3cwS1ZKb041WXFndUxhdnNqZFUrM1FWV1lWUmRUL0lG?=
+ =?utf-8?B?anhRRTFXVWNROWcxKyt1UnhwWUdYTTdNMXM3Qk9uSkhrVFIvYmh6bU9WSjAy?=
+ =?utf-8?B?blNlRExHWE5hUkZrRjlQZ3VJNCtRdFQxUFB0ekFvT24za0ZmUVdCdGFCRW1B?=
+ =?utf-8?B?bkZDKzcvQXlXR3hxcjlROWtQN3ZZSHdMd1BNSjBkQ2lJV3F3dEQxR2gwdFFF?=
+ =?utf-8?B?WjU5aExXOFVneXBOMzZEUXljUTRLS1dEQkRid3MvODVYK3pHVUJobVV6Nitj?=
+ =?utf-8?B?Q3FGNkdGSEtJdUdGQnpKK2QwMW1XY0NSdDVvS3FpSER6am5hL0dFcmg4eFpS?=
+ =?utf-8?B?MEVQREl5dEUrTU5qM0ZyUHdyc0o3MUI2Qnd5anRwMm5oaVBNZ3NFdSs3bldM?=
+ =?utf-8?B?cE91NmU3Q1FjSzRDTHdqRmV6RlRaTmpNYXFxektTTzBQK2xuUDBSVVF4L0p4?=
+ =?utf-8?Q?3OKNJN3dKmhDaSWt0yP50YtVrUiPvp6z?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b00ySG5EbjdXSVNvaThlTDRQSUcra3NQeHM3N0lqM1BzM3FHU252K1FGbVlG?=
+ =?utf-8?B?c2VGTE9QdXFHTm1LbFpKVG5oRkE0S1cxcEdhOHRwWmRIS2E5SUt1TVNBOFRJ?=
+ =?utf-8?B?Z1N6QThYdlprWHVSYWl1Ri9QWVJuZTJCWUFtOGhlQlNNWVFnSy83b21OZTM2?=
+ =?utf-8?B?WFJXWVg0aW9FSG1ybjNPNEFGR3VRbE0wUXFZTWhrbnlkTW56d0w0V1JNZnNU?=
+ =?utf-8?B?QXlSWk1ZdVd4LzVpV3MvNlNtYmNmeEQvWXg2L2xKa1dpTjVSSVUreVFoZkJU?=
+ =?utf-8?B?bnJGYzBQdlpxSlkrNkV2bGdId21BZjZaRGpEbVRQaGgzVXdPUnZUMzZDWE9C?=
+ =?utf-8?B?S1B2Ym1vTExYOTdRanNibnVRMDBvRjN6SG54UTFtdUUzWE1lazRlTzhML3hF?=
+ =?utf-8?B?NUVUVWdwSnhNNFcwUklxeUd6ZUJqa1U2d0xYUFd0RFFTaHVtWEFveUtnKzNs?=
+ =?utf-8?B?KzhrS1h2N3VTaVBBRnBoTWRPbUlxL2dBSENWZExYZUowZ290Y1dUeXo0emhO?=
+ =?utf-8?B?czkydGRZKzFZNEsyNWhNZk01Z3psQysyU1FyYUNUcWNjRDRtQm8zZ2g2ZERy?=
+ =?utf-8?B?WGlZNGRzNktMWmhEYzh5T2JWcS8vUzEvT2xkZGFKR2Z0bVRqVEZsNkJyWjVG?=
+ =?utf-8?B?YmJoZytXMDUyTUx5UzE2NEUwWVlvV3g4blI0RGlSTVNYVE1tU0wyTUUzRzJS?=
+ =?utf-8?B?TDRJWklzNDRhWkYyamY3S3A4YVVEVzkyQlZYQkxYaEI5cHR1WjlUT3p1UHZP?=
+ =?utf-8?B?aStZVXhtQm83dVlvUC94N1hQMWlVWWdqMUlCZUtPV2ViNVNFU0s3aE1HYTdw?=
+ =?utf-8?B?RzY2TEIyZkJLUWpUSGJmRlRtZGJhZHhyMzN5WFprTFVkS1lYL05zMzBJVmlj?=
+ =?utf-8?B?cTRCSS94OTk0aWNWRVpiSTlnUkdhVmVlVzdpdkVpQnFuSE9HbCtxelp4NS9u?=
+ =?utf-8?B?VXY2M1VYeTBPOHBsYVgzZ2NzZUJxb3I0djFvTzFsZTVlUHh5Qk9kRWFqSXhv?=
+ =?utf-8?B?QWx3L05mQWUzTjQ4NHoxTVo1TVdiSmxwaG5Kai8vNXhRdTZCK29wZEJzUW10?=
+ =?utf-8?B?ZmFkN0pXeG1UWHZKUGk0YjlNb0RrS2YwdlQyRjQ5U3Qwa1BxUUkyRllCdWRu?=
+ =?utf-8?B?MTV1bi9teVNBOGorV0cwVDMxdGNTamxMNU1ubDV4Yy9RbXZTTWI3d2JrSVNK?=
+ =?utf-8?B?K2ptUzNkKzNyVVg2RUZmMDVYRzJNNFgyM29wR3V0R3dVWkMyaUt3dnpCTUZ2?=
+ =?utf-8?B?Y3huSllSN0kwY00vRS9zZFE1RytMMDlpanlvalUzVzdnWVBZS3pOaFFEMHNx?=
+ =?utf-8?B?cUdxRkRPNHZXSWlSYjMxRkRxVmdQd1Azb09vdlJxRXpGMjVoYlB6NW1GV3Rr?=
+ =?utf-8?B?dGpsZFp0cVY2SVh3U0FNczUxcWJTdHdrSHRWY1VaN1N4NnJ1MEdxbXZxVkpa?=
+ =?utf-8?B?NTZRTHQ1K0ttZG15VkJ3aytYeFUzUDU2SEJ3cW9vTWI4NU5scFhraUNXbkN5?=
+ =?utf-8?B?U0pSamJJTWtYZ1Nva3hycjRpRjZOMWF5dTFSalVaQnlrUDA2UStsWHl1TU04?=
+ =?utf-8?B?TXBtcXRKNWQ5VGYxK2ViSmZITWV5MzNUN3pOTE03bFlJVWxHbEhXdDg2K1o2?=
+ =?utf-8?B?QjBNcklzL3JOL2V2NFlGUzZJTjN1TWFNbFlpdk1UYmNIQkhiTmc2T0tnOHM2?=
+ =?utf-8?B?eHl1UW0rUFg4eEt3ZFYyL1NnZTFuRDZlNnFPNzJPaVJqZlRFZjI4VzJpZVZ1?=
+ =?utf-8?B?SEhOT1BTaE43U091ODBjQlZaMVNLdWVmTGkzdklNb281YVNBeXZTWVJmSmhm?=
+ =?utf-8?B?OVFMd0RLTnhKSlg3R3FnVEFNVnUrWGM5TENQVllFM0ZpcTRMOTAzMlJtc1FT?=
+ =?utf-8?B?MWxHQzVsdG14TmRvdVBRWDA5Nlk4UEJSbGUxNy9ibjNhaVhQQ1d3VXY1cWlp?=
+ =?utf-8?B?NjgxaHQ4RnQwNG12cmpKVzQyY093WUYrajFjdzcvcmduUFc3aHhGK29HY3N3?=
+ =?utf-8?B?cXhGdGZldFNZM01UdERBRStpN05zYnNWYnZVMTRFNWw0OFJPWXBmR1A5eFdj?=
+ =?utf-8?B?RTVuY0F6QXdpemtUNXppMnNXcVFua3d4UVl2SWJxemVlTjNFUHZLbXdBb3F4?=
+ =?utf-8?Q?AvBJi0HfaF5X9INyEVMFBvt75?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 653475a4-5e15-4869-84f2-08dd34ba38c8
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 16:40:58.0363
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e4cr4xWQ10weG81oiUUn0jVyuaKOrJqlQqC/kWmNGxfgjsgJYcAVwneEPErCXIxHXph85LIe6DwI+6D1ZtmpsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7023
 
-> +vm_fault_t vmf_insert_folio_pmd(struct vm_fault *vmf, struct folio *folio, bool write)
-> +{
-> +	struct vm_area_struct *vma = vmf->vma;
-> +	unsigned long addr = vmf->address & PMD_MASK;
-> +	struct mm_struct *mm = vma->vm_mm;
-> +	spinlock_t *ptl;
-> +	pgtable_t pgtable = NULL;
-> +
-> +	if (addr < vma->vm_start || addr >= vma->vm_end)
-> +		return VM_FAULT_SIGBUS;
-> +
-> +	if (WARN_ON_ONCE(folio_order(folio) != PMD_ORDER))
-> +		return VM_FAULT_SIGBUS;
-> +
-> +	if (arch_needs_pgtable_deposit()) {
-> +		pgtable = pte_alloc_one(vma->vm_mm);
-> +		if (!pgtable)
-> +			return VM_FAULT_OOM;
-> +	}
 
-This is interesting and nasty at the same time (only to make ppc64 boo3s 
-with has tables happy). But it seems to be the right thing to do.
+On 1/14/25 14:35, Alejandro Lucero Palau wrote:
+>
+> On 1/8/25 14:32, Alejandro Lucero Palau wrote:
+>>
+>> On 1/8/25 01:33, Dan Williams wrote:
+>>> Dan Williams wrote:
+>>>> alejandro.lucero-palau@ wrote:
+>>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>>
+>>>>> Differentiate CXL memory expanders (type 3) from CXL device 
+>>>>> accelerators
+>>>>> (type 2) with a new function for initializing cxl_dev_state.
+>>>>>
+>>>>> Create accessors to cxl_dev_state to be used by accel drivers.
+>>>>>
+>>>>> Based on previous work by Dan Williams [1]
+>>>>>
+>>>>> Link: [1] 
+>>>>> https://lore.kernel.org/linux-cxl/168592160379.1948938.12863272903570476312.stgit@dwillia2-xfh.jf.intel.com/
+>>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>>> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>>>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+>>>> This patch causes
+>>> Whoops, forgot to complete this thought. Someting in this series 
+>>> causes:
+>>>
+>>> depmod: ERROR: Cycle detected: ecdh_generic
+>>> depmod: ERROR: Cycle detected: tpm
+>>> depmod: ERROR: Cycle detected: cxl_mock -> cxl_core -> cxl_mock
+>>> depmod: ERROR: Cycle detected: encrypted_keys
+>>> depmod: ERROR: Found 2 modules in dependency cycles!
+>>>
+>>> I think the non CXL ones are false likely triggered by the CXL causing
+>>> depmod to exit early.
+>>>
+>>> Given cxl-test is unfamiliar territory to many submitters I always 
+>>> offer
+>>> to fix up the breakage. I came up with the below incremental patch to
+>>> fold in that also addresses my other feedback.
+>>>
+>>> Now the depmod error is something Alison saw too, and while I can also
+>>> see it on patch1 if I do:
+>>>
+>>> - apply whole series
+>>> - build => see the error
+>>> - rollback patch1
+>>> - build => see the error
+>>>
+>>> ...a subsequent build the error goes away, so I think that transient
+>>> behavior is a quirk of how cxl-test is built, but some later patch in
+>>> that series makes the failure permanent.
+>>>
+>>> In any event I figured that out after creating the below fixup and
+>>> realizing that it does not fix the cxl-test build issue:
+>>
+>>
+>> Ok. but it is a good way of showing what you had in your mind about 
+>> the suggested changes.
+>>
+>> I'll use it for v10.
+>>
+>> Thanks
+>>
+>
+> Hi Dan,
+>
+>
+> There's a problem with this approach and it is the need of the driver 
+> having access to internal cxl structs like cxl_dev_state.
+>
+> Your patch does not cover it but for an accel driver that struct needs 
+> to be allocated before using the new cxl_dev_state_init.
+>
+> I think we reached an agreement in initial discussions about avoiding 
+> this need through an API for accel drivers indirectly doing whatever 
+> is needed regarding internal CXL structs. Initially it was stated this 
+> being necessary for avoiding drivers doing wrong things but Jonathan 
+> pointed out the main concern being changing those internal structs in 
+> the future could benefit from this approach. Whatever the reason, that 
+> was the assumption.
+>
+>
+> I could add a function for accel drivers doing the allocation as with 
+> current v9 code, and then using your changes for having common code.
+>
+>
+> Also, I completely agree with merging the serial and dvsec 
+> initializations through arguments to cxl_dev_state_init, but we need 
+> the cxl_set_resource function for accel drivers. The current code for 
+> adding resources with memdev is relying on mbox commands, and although 
+> we could change that code for supporting accel drivers without an 
+> mbox, I would say the function/code added is simple enough for not 
+> requiring that effort. Note my goal is for an accel device without an 
+> mbox, but we will see devices with one in the future, so I bet for 
+> leaving any change there to that moment.
+>
 
-> +
-> +	ptl = pmd_lock(mm, vmf->pmd);
-> +	if (pmd_none(*vmf->pmd)) {
-> +		folio_get(folio);
-> +		folio_add_file_rmap_pmd(folio, &folio->page, vma);
-> +		add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
-> +	}
-> +	insert_pfn_pmd(vma, addr, vmf->pmd, pfn_to_pfn_t(folio_pfn(folio)),
-> +		       vma->vm_page_prot, write, pgtable);
-> +	spin_unlock(ptl);
-> +	if (pgtable)
-> +		pte_free(mm, pgtable);
+I forgot to say that I will send the code setting the resources in 
+another patch, as this seems to be what you prefer, assuming you agree 
+with my previous comment.
 
-Ehm, are you unconditionally freeing the pgtable, even if consumed by 
-insert_pfn_pmd() ?
 
-Note that setting pgtable to NULL in insert_pfn_pmd() when consumed will 
-not be visible here.
-
-You'd have to pass a pointer to the ... pointer (&pgtable).
-
-... unless I am missing something, staring at the diff.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Let me know what you think about these two things. I would like to 
+> send v10 this week.
+>
+>
+> Thank you
+>
+>
+>>
+>>>
+>>> -- 8< --
+>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>>> index 548564c770c0..584766d34b05 100644
+>>> --- a/drivers/cxl/core/mbox.c
+>>> +++ b/drivers/cxl/core/mbox.c
+>>> @@ -1435,7 +1435,7 @@ int cxl_mailbox_init(struct cxl_mailbox 
+>>> *cxl_mbox, struct device *host)
+>>>   }
+>>>   EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+>>>   -struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>>> +struct cxl_memdev_state *cxl_memdev_state_create(struct device 
+>>> *dev, u64 serial, u16 dvsec)
+>>>   {
+>>>       struct cxl_memdev_state *mds;
+>>>   @@ -1445,11 +1445,9 @@ struct cxl_memdev_state 
+>>> *cxl_memdev_state_create(struct device *dev)
+>>>           return ERR_PTR(-ENOMEM);
+>>>       }
+>>>   +    cxl_dev_state_init(&mds->cxlds, dev, CXL_DEVTYPE_CLASSMEM, 
+>>> serial,
+>>> +               dvsec);
+>>>       mutex_init(&mds->event.log_lock);
+>>> -    mds->cxlds.dev = dev;
+>>> -    mds->cxlds.reg_map.host = dev;
+>>> -    mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+>>> -    mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+>>>       mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>>       mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>>   diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>>> index 99f533caae1e..9b8b9b4d1392 100644
+>>> --- a/drivers/cxl/core/memdev.c
+>>> +++ b/drivers/cxl/core/memdev.c
+>>> @@ -617,24 +617,18 @@ static void detach_memdev(struct work_struct 
+>>> *work)
+>>>     static struct lock_class_key cxl_memdev_key;
+>>>   -struct cxl_dev_state *cxl_accel_state_create(struct device *dev)
+>>> +void cxl_dev_state_init(struct cxl_dev_state *cxlds, struct device 
+>>> *dev,
+>>> +            enum cxl_devtype type, u64 serial, u16 dvsec)
+>>>   {
+>>> -    struct cxl_dev_state *cxlds;
+>>> -
+>>> -    cxlds = kzalloc(sizeof(*cxlds), GFP_KERNEL);
+>>> -    if (!cxlds)
+>>> -        return ERR_PTR(-ENOMEM);
+>>> -
+>>>       cxlds->dev = dev;
+>>> -    cxlds->type = CXL_DEVTYPE_DEVMEM;
+>>> +    cxlds->type = type;
+>>> +    cxlds->reg_map.host = dev;
+>>> +    cxlds->reg_map.resource = CXL_RESOURCE_NONE;
+>>>         cxlds->dpa_res = DEFINE_RES_MEM_NAMED(0, 0, "dpa");
+>>>       cxlds->ram_res = DEFINE_RES_MEM_NAMED(0, 0, "ram");
+>>>       cxlds->pmem_res = DEFINE_RES_MEM_NAMED(0, 0, "pmem");
+>>> -
+>>> -    return cxlds;
+>>>   }
+>>> -EXPORT_SYMBOL_NS_GPL(cxl_accel_state_create, "CXL");
+>>>     static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state 
+>>> *cxlds,
+>>>                          const struct file_operations *fops)
+>>> @@ -713,37 +707,6 @@ static int cxl_memdev_open(struct inode *inode, 
+>>> struct file *file)
+>>>       return 0;
+>>>   }
+>>>   -void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec)
+>>> -{
+>>> -    cxlds->cxl_dvsec = dvsec;
+>>> -}
+>>> -EXPORT_SYMBOL_NS_GPL(cxl_set_dvsec, "CXL");
+>>> -
+>>> -void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial)
+>>> -{
+>>> -    cxlds->serial = serial;
+>>> -}
+>>> -EXPORT_SYMBOL_NS_GPL(cxl_set_serial, "CXL");
+>>> -
+>>> -int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
+>>> -             enum cxl_resource type)
+>>> -{
+>>> -    switch (type) {
+>>> -    case CXL_RES_DPA:
+>>> -        cxlds->dpa_res = res;
+>>> -        return 0;
+>>> -    case CXL_RES_RAM:
+>>> -        cxlds->ram_res = res;
+>>> -        return 0;
+>>> -    case CXL_RES_PMEM:
+>>> -        cxlds->pmem_res = res;
+>>> -        return 0;
+>>> -    }
+>>> -
+>>> -    return -EINVAL;
+>>> -}
+>>> -EXPORT_SYMBOL_NS_GPL(cxl_set_resource, "CXL");
+>>> -
+>>>   static int cxl_memdev_release_file(struct inode *inode, struct 
+>>> file *file)
+>>>   {
+>>>       struct cxl_memdev *cxlmd =
+>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>> index 2a25d1957ddb..1e4b64b8f35a 100644
+>>> --- a/drivers/cxl/cxlmem.h
+>>> +++ b/drivers/cxl/cxlmem.h
+>>> @@ -4,6 +4,7 @@
+>>>   #define __CXL_MEM_H__
+>>>   #include <uapi/linux/cxl_mem.h>
+>>>   #include <linux/pci.h>
+>>> +#include <cxl/cxl.h>
+>>>   #include <linux/cdev.h>
+>>>   #include <linux/uuid.h>
+>>>   #include <linux/node.h>
+>>> @@ -380,20 +381,6 @@ struct cxl_security_state {
+>>>       struct kernfs_node *sanitize_node;
+>>>   };
+>>>   -/*
+>>> - * enum cxl_devtype - delineate type-2 from a generic type-3 device
+>>> - * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device 
+>>> implementing HDM-D or
+>>> - *             HDM-DB, no requirement that this device implements a
+>>> - *             mailbox, or other memory-device-standard manageability
+>>> - *             flows.
+>>> - * @CXL_DEVTYPE_CLASSMEM - Common class definition of a CXL Type-3 
+>>> device with
+>>> - *               HDM-H and class-mandatory memory device registers
+>>> - */
+>>> -enum cxl_devtype {
+>>> -    CXL_DEVTYPE_DEVMEM,
+>>> -    CXL_DEVTYPE_CLASSMEM,
+>>> -};
+>>> -
+>>>   /**
+>>>    * struct cxl_dpa_perf - DPA performance property entry
+>>>    * @dpa_range: range for DPA address
+>>> @@ -411,9 +398,9 @@ struct cxl_dpa_perf {
+>>>   /**
+>>>    * struct cxl_dev_state - The driver device state
+>>>    *
+>>> - * cxl_dev_state represents the CXL driver/device state.  It 
+>>> provides an
+>>> - * interface to mailbox commands as well as some cached data about 
+>>> the device.
+>>> - * Currently only memory devices are represented.
+>>> + * cxl_dev_state represents the minimal data about a CXL device to 
+>>> allow
+>>> + * the CXL core to manage common initialization of generic CXL and 
+>>> HDM capabilities of
+>>> + * memory expanders and accelerators with device-memory
+>>>    *
+>>>    * @dev: The device associated with this CXL state
+>>>    * @cxlmd: The device representing the CXL.mem capabilities of @dev
+>>> @@ -426,7 +413,7 @@ struct cxl_dpa_perf {
+>>>    * @pmem_res: Active Persistent memory capacity configuration
+>>>    * @ram_res: Active Volatile memory capacity configuration
+>>>    * @serial: PCIe Device Serial Number
+>>> - * @type: Generic Memory Class device or Vendor Specific Memory device
+>>> + * @type: Generic Memory Class device or an accelerator with CXL.mem
+>>>    * @cxl_mbox: CXL mailbox context
+>>>    */
+>>>   struct cxl_dev_state {
+>>> @@ -819,7 +806,8 @@ int cxl_dev_state_identify(struct 
+>>> cxl_memdev_state *mds);
+>>>   int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>>>   int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>>>   int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
+>>> -struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
+>>> +struct cxl_memdev_state *cxl_memdev_state_create(struct device 
+>>> *dev, u64 serial,
+>>> +                         u16 dvsec);
+>>>   void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>>>                   unsigned long *cmds);
+>>>   void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>> index 36098e2b4235..b51e47fd28b3 100644
+>>> --- a/drivers/cxl/pci.c
+>>> +++ b/drivers/cxl/pci.c
+>>> @@ -922,21 +922,19 @@ static int cxl_pci_probe(struct pci_dev *pdev, 
+>>> const struct pci_device_id *id)
+>>>           return rc;
+>>>       pci_set_master(pdev);
+>>>   -    mds = cxl_memdev_state_create(&pdev->dev);
+>>> -    if (IS_ERR(mds))
+>>> -        return PTR_ERR(mds);
+>>> -    cxlds = &mds->cxlds;
+>>> -    pci_set_drvdata(pdev, cxlds);
+>>> -
+>>> -    cxlds->rcd = is_cxl_restricted(pdev);
+>>> -    cxl_set_serial(cxlds, pci_get_dsn(pdev));
+>>>       dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+>>>                         CXL_DVSEC_PCIE_DEVICE);
+>>>       if (!dvsec)
+>>>           dev_warn(&pdev->dev,
+>>>                "Device DVSEC not present, skip CXL.mem init\n");
+>>>   -    cxl_set_dvsec(cxlds, dvsec);
+>>> +    mds = cxl_memdev_state_create(&pdev->dev, pci_get_dsn(pdev), 
+>>> dvsec);
+>>> +    if (IS_ERR(mds))
+>>> +        return PTR_ERR(mds);
+>>> +    cxlds = &mds->cxlds;
+>>> +    pci_set_drvdata(pdev, cxlds);
+>>> +
+>>> +    cxlds->rcd = is_cxl_restricted(pdev);
+>>>         rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+>>>       if (rc)
+>>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>>> index aa4480d49e48..9db4fb6d2c74 100644
+>>> --- a/include/cxl/cxl.h
+>>> +++ b/include/cxl/cxl.h
+>>> @@ -4,21 +4,25 @@
+>>>   #ifndef __CXL_H
+>>>   #define __CXL_H
+>>>   -#include <linux/ioport.h>
+>>> +#include <linux/types.h>
+>>>   -enum cxl_resource {
+>>> -    CXL_RES_DPA,
+>>> -    CXL_RES_RAM,
+>>> -    CXL_RES_PMEM,
+>>> +/*
+>>> + * enum cxl_devtype - delineate type-2 from a generic type-3 device
+>>> + * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device 
+>>> implementing HDM-D or
+>>> + *             HDM-DB, no requirement that this device implements a
+>>> + *             mailbox, or other memory-device-standard manageability
+>>> + *             flows.
+>>> + * @CXL_DEVTYPE_CLASSMEM - Common class definition of a CXL Type-3 
+>>> device with
+>>> + *               HDM-H and class-mandatory memory device registers
+>>> + */
+>>> +enum cxl_devtype {
+>>> +    CXL_DEVTYPE_DEVMEM,
+>>> +    CXL_DEVTYPE_CLASSMEM,
+>>>   };
+>>>     struct cxl_dev_state;
+>>>   struct device;
+>>>   -struct cxl_dev_state *cxl_accel_state_create(struct device *dev);
+>>> -
+>>> -void cxl_set_dvsec(struct cxl_dev_state *cxlds, u16 dvsec);
+>>> -void cxl_set_serial(struct cxl_dev_state *cxlds, u64 serial);
+>>> -int cxl_set_resource(struct cxl_dev_state *cxlds, struct resource res,
+>>> -             enum cxl_resource);
+>>> +void cxl_dev_state_init(struct cxl_dev_state *cxlds, struct device 
+>>> *dev,
+>>> +            enum cxl_devtype type, u64 serial, u16 dvsec);
+>>>   #endif
+>>> diff --git a/tools/testing/cxl/test/mem.c 
+>>> b/tools/testing/cxl/test/mem.c
+>>> index 347c1e7b37bd..24cac1cc30f9 100644
+>>> --- a/tools/testing/cxl/test/mem.c
+>>> +++ b/tools/testing/cxl/test/mem.c
+>>> @@ -1500,7 +1500,7 @@ static int cxl_mock_mem_probe(struct 
+>>> platform_device *pdev)
+>>>       if (rc)
+>>>           return rc;
+>>>   -    mds = cxl_memdev_state_create(dev);
+>>> +    mds = cxl_memdev_state_create(dev, pdev->id, 0);
+>>>       if (IS_ERR(mds))
+>>>           return PTR_ERR(mds);
+>>>   @@ -1516,7 +1516,6 @@ static int cxl_mock_mem_probe(struct 
+>>> platform_device *pdev)
+>>>       mds->event.buf = (struct cxl_get_event_payload *) 
+>>> mdata->event_buf;
+>>>       INIT_DELAYED_WORK(&mds->security.poll_dwork, 
+>>> cxl_mockmem_sanitize_work);
+>>>   -    cxlds->serial = pdev->id;
+>>>       if (is_rcd(pdev))
+>>>           cxlds->rcd = true;
