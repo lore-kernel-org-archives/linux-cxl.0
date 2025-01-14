@@ -1,247 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3380A24022E;
-	Tue, 14 Jan 2025 06:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D55C3232;
+	Tue, 14 Jan 2025 06:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736835174; cv=fail; b=pjWA1w28CszFWmZgqNoOZkTX3IlFbR2jGmso3wV3zHGW9CLvYyOUp/W7O0cmg+JdO7nWBJQXsCuVId63iJJi2/O+Xh3/+NFA/NN6aL175skBpwOF/NamHfkwxwhWf6CU5QvFjr7nGqeLt8J4IScIzSAAam7nVW/wCQ89ufKIJU0=
+	t=1736837686; cv=pass; b=Jp2FzGXDv/oAER74hg4/aUmIK+uVH67JUM98GuD/kyK/5ZMo0NbZQ18uRjXtjunu3xVXSdiqsCWBJnwb0VSH05fGywKcvl+5tDGNrWcTwIFMRIJQWCvOiWVkdmQGCGC5siw5FfdNQO/0QlJ+OcVEUNcxfBmsEc7XBStQEoyYlG8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736835174; c=relaxed/simple;
-	bh=KEmS1Z299WnqpeOIPpWE9WpBQm5aeOU7PZ93d/CzbY4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=e2GH7FjXwogun4LUvNFA/GqAtmmm2LjwulY8cqw+UOVeg9ggOzOuxm0g4lq5kK6Jk+kMOGbSIXM2uGQcui/gDDsPodJj8zQTQUH+yKw/MGAL5EoS4pFSVQbEDEoVLoRAdbBlUSekeAff8spG3CbwEkzZlqIoXZzlm4i8ZD7tpLo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nlRiEkJG; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1736837686; c=relaxed/simple;
+	bh=Pem+IfeTwpLfRVexAJqwqqS5OWtV4IbBMzwbuT9rpQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DTKSb49OMwjO13EVSCF6yHjBSLl7DL0tcxSOOTiy2l4hGqnAzVtbkWe3HJKFzTgX6l3URbo9+aRr48rmaUx6v4OXVuGZP2KqlXFoLX0XIcHsGS1W5hSjQgGUG/uUW4qbvn27+XFSqz9Hxm9JTtQ39asVTbQqzzwY9FlY++8wUaQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RrP2oKxt; arc=pass smtp.client-ip=136.143.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nlRiEkJG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736835172; x=1768371172;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KEmS1Z299WnqpeOIPpWE9WpBQm5aeOU7PZ93d/CzbY4=;
-  b=nlRiEkJGgZi/gmiqN0NKS28MSCNT0CdOn+C9KFX0B+WiuNipzmUoc9tL
-   YebU91fqOEpPwD8FpdbfW6UP2EX/OpQHuhM63ARF+nLsAmBXc7emI3BUQ
-   5yi4Fwihxq8/UuAY5SWT3DvbFqQ+P3WmZkHW2vl5GZO/L3dvAAcutqJxy
-   iPBSHj0Xt8S35y1w1+hxP9fZPmlniaswqtnHs6cKTiPtD2MaRgoqXi3p2
-   tMya820lc/nEIwnGJS8NR0peRfmUmvsEcvGzthx0BpIcDXkoSjqUsOKtS
-   waPQsLgLZuP+hQoyWGKMJYV4tpe2XNwqH4QYiE3d678Fmpr3rq1u+aqft
-   g==;
-X-CSE-ConnectionGUID: 8eXvamEtQ9Oleq7jeJqdOg==
-X-CSE-MsgGUID: Kk1G+pOXSASCAeQVhk7J5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40796906"
-X-IronPort-AV: E=Sophos;i="6.12,313,1728975600"; 
-   d="scan'208";a="40796906"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 22:12:50 -0800
-X-CSE-ConnectionGUID: O8SaAUFXTs2y/LLUMLcaiQ==
-X-CSE-MsgGUID: bdo4BKOQQVCWJjYvwrPZfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="105589580"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Jan 2025 22:12:49 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 13 Jan 2025 22:12:48 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 13 Jan 2025 22:12:48 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 13 Jan 2025 22:12:48 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FgT5bD1n1UqxcJ1crFhf5RZfepsuq+Z4jyzvG40Pg0wundq6iZ93H0g5AkF7LIKlt5U1o2eWEGMphyE3SXL1Zl6yQgvCC+HiWguZxM5bwU6aT4h74tAds34s6fi2G41sAfyrSii8mpOi91eP3RqCB4WUX0RQl0dzuUNArkn1omfIgev2HCCh0a5bpnzsqsJaMyshjHnymtrl3ut7UivW/SOfetER7TXAnGVjEvn/RAm+S2mhnELrCmO0+RtarkYn7AgWpgWCWTVPj9qaadFpcFAeskaDl3Be2zgJYtePVGWmRXIqRUhehSjZg6ZY0/OaJU15HFr4eXoNYgJrdWMIoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=idlcfja3DeNfVAR7I+buYIPJo1gL4lVASBdfhSZYaqc=;
- b=aEOK8SdTx7pRoJsRpQznzSTSAt1xOK3Ua3Whi+y/XDMIIpMkrGeXqCTk4IL90Zj0Njwsu30ZFteJOnWi/RIcApP6vpqcVtw3b1muEJ9zsUzRF0xPoip/1Ybb7QQC+jsXBwoGObAkpw1RPK1Ckw1m06YG1+rnzzqqvGpbZO21uhmiKOVYbOxf+mEHYegu3PP8L4GxDAbmP+CnozNAdZhOWyE+5tjMiSgKN/SNvEna+fJOviwJiVkr7t7ijJjIT4u+zIPkbqTXzKn8eGQrAL3LlhNQbmwPvdNR8XoofD6+bgM0az1Uijymxa0+sap07ZZgofZJ+W1Ix0kQpAqivvQ4xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM6PR11MB4676.namprd11.prod.outlook.com (2603:10b6:5:2a7::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Tue, 14 Jan
- 2025 06:12:46 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8335.011; Tue, 14 Jan 2025
- 06:12:46 +0000
-Date: Mon, 13 Jan 2025 22:12:41 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Alistair Popple <apopple@nvidia.com>, <akpm@linux-foundation.org>,
-	<dan.j.williams@intel.com>, <linux-mm@kvack.org>
-CC: <alison.schofield@intel.com>, Alistair Popple <apopple@nvidia.com>,
-	<lina@asahilina.net>, <zhang.lyra@gmail.com>,
-	<gerald.schaefer@linux.ibm.com>, <vishal.l.verma@intel.com>,
-	<dave.jiang@intel.com>, <logang@deltatee.com>, <bhelgaas@google.com>,
-	<jack@suse.cz>, <jgg@ziepe.ca>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <dave.hansen@linux.intel.com>,
-	<ira.weiny@intel.com>, <willy@infradead.org>, <djwong@kernel.org>,
-	<tytso@mit.edu>, <linmiaohe@huawei.com>, <david@redhat.com>,
-	<peterx@redhat.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-	<jhubbard@nvidia.com>, <hch@lst.de>, <david@fromorbit.com>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <loongarch@lists.linux.dev>
-Subject: Re: [PATCH v6 22/26] device/dax: Properly refcount device dax pages
- when mapping
-Message-ID: <67860059b200b_20fa294b5@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <7d5416ad49341207e5f3c48d5b9c4b7af5fd9ac6.1736488799.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7d5416ad49341207e5f3c48d5b9c4b7af5fd9ac6.1736488799.git-series.apopple@nvidia.com>
-X-ClientProxiedBy: MW4PR04CA0293.namprd04.prod.outlook.com
- (2603:10b6:303:89::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RrP2oKxt"
+ARC-Seal: i=1; a=rsa-sha256; t=1736837667; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bFeNOzCuCqCoLxStnZvoJmHnJcgWkR29eWumNqKE0kjcGhrygwA6JClXuWs6ARysBfbo0LsP0HDY6wlca4U472LhyVwLsBphYUPuJ8TFjhCd8nnwfMjknUX4hEcDuIHZfoD3wovXQLoLlq23o0sRXUF7gN+hhKBbn5393lRxVig=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1736837667; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=Nt+9mMFElfHnxW11WEM7iKR8PhAMGtVB27+zY8y5FBo=; 
+	b=VfVb+XEDNc2sFq8ceEoaoALz/TgdcZyd0BbSppd6e6fDkjwghDqZgRx5Egb3oe+P89lHLCcnZq6fs5p+6V70c7L5oM5bDuXwsMwjcSeUqBAu+Sy8HmQ6CSJpsWBK4oJOhEXXGes0Kt5Hncu+Gw0ry0F5AhVwDe8+NKDRQjIPkH0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1736837667;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
+	bh=Nt+9mMFElfHnxW11WEM7iKR8PhAMGtVB27+zY8y5FBo=;
+	b=RrP2oKxt0BfnByTsxoHLijWIL67omAQ15rPgHudsTQITf6gNvEVmtsb/J97uuDCl
+	GttENRBCrnwi7ZOeUDL/P6NZEBmnpws8PlDXWUyT//7bbYP9R+2S8S3YqXkp9Sp1Pf7
+	pOV7IYr2adKJF9Wxq7uoYVBkCEUQgEazt4sFySMo=
+Received: by mx.zohomail.com with SMTPS id 1736837665657974.762362696944;
+	Mon, 13 Jan 2025 22:54:25 -0800 (PST)
+Message-ID: <cb087065-f2f3-481c-84cf-aca2c5fd5ac4@zohomail.com>
+Date: Tue, 14 Jan 2025 14:54:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM6PR11MB4676:EE_
-X-MS-Office365-Filtering-Correlation-Id: 397e2004-ec33-4c2d-de14-08dd346276c7
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Ubb35cZFd008eQgbGeHXSwfQx2l9LkE/CzVZ8CXu454g+Z5BkyHj/65VRDN2?=
- =?us-ascii?Q?L3PtsoTtxjijOzIOazA3a6ssovV7mwdiVCWbh6/k1fnO+ucg91JZ/pPeyIv8?=
- =?us-ascii?Q?w5sFRKcgXwCaha26KWhJOxS40xF49OWL908eROXkvwFVVauHaIZQDZYulfwo?=
- =?us-ascii?Q?rhGX7EvS0i1x45wnhtGz8+tph4NWFqHvXpcaijoDnj/0UD6srRhGWi4O4h+g?=
- =?us-ascii?Q?hDqEmvdvY+nrqCC3FvXrB/Fi06cguda9in57OJJOcoGPVWcvt98MzJTiietg?=
- =?us-ascii?Q?sx7kyT9x7nyort90KMAaMgz5uBtSirbRRfI6XesDT0hPKXmxVaWWeORMw6Jt?=
- =?us-ascii?Q?KaIZdXqJAG63MIZVoymryXK862YxkJ6SQCthJOmAVimHksT+qPkRLfZktXKS?=
- =?us-ascii?Q?LXgIUpIE+Occ4UhrpvW1yVOzLJyS9KsjiWhUkxoKhx/aCsK/mhGWST8rDV36?=
- =?us-ascii?Q?Eh5Uhu1CNOp7RIt7Jz61OAf9ENMhoByLzEECwqwqaCYSa+K7ckSQ07/jdzmB?=
- =?us-ascii?Q?1tlQg/k7x2Fx3TNbFgxkk9q/LI7/6ag2u6V0bz4iIWdguAnsYy1kptTpuSLS?=
- =?us-ascii?Q?cEiBgLmejkyhhpjJLtm5/Afn9M1NAJZpttIGC2W/A9S9v87511rlNjvkvIQs?=
- =?us-ascii?Q?db60ov83/T/FLNDMPOcrL+iuzbEJHf7xmMyjjGcfGyrmDZT6HD2kory6Vs/3?=
- =?us-ascii?Q?6P9mV+fX4Nh69/jMB9dX1J0JIPIWMP21DjjaBFBBxRTMDtC+6DarfzoSdlak?=
- =?us-ascii?Q?dVDVuL5p5SebMFhnAAOt2UmOX/wleO/G+roi9Yy2HKXT7kaezfexGpebz13i?=
- =?us-ascii?Q?UBe0ZHDZQ17vGiBmvu6vGhZgkh8Y6Y2CY2lYaYguS6p+c9PaJ0YFwMjbDWxz?=
- =?us-ascii?Q?TWIc7GQqYydnXyzyJsp3yKzyBfcueSSN5/PEQfTAxCgorhPVCwIyoLi+TO20?=
- =?us-ascii?Q?1Xn5cNPry+baM+CJTIktA5Ay2x0nY/I7HMyYcKvve4tuj4lE0YyU6t/fIZjt?=
- =?us-ascii?Q?YrBihU5YUm1kEN7SEiu/BfeNv/+IvsIx/TMYPw+XB9E9jV9A3LsKDzfwOvGd?=
- =?us-ascii?Q?Ms1PZV517DZTpBe8528iMoC9MNqa2cju+yTkJTkXmP+8r3rwugN9rsAkcLiK?=
- =?us-ascii?Q?+nesaPhkZr+UWAKUm8zuFg+lySjsL1GLv8OIacHPagRAmpjyTn11vgepQ/rV?=
- =?us-ascii?Q?V6Mabn7xf9Lirt13o3YofB/ep0M5YGetPJbMrWpO9y/nQ6ouXgB4x6IcQJrt?=
- =?us-ascii?Q?ixm9AfQOyeygA5nZH+if3rdBuGF6L16FOhLCy8sa7uSjlYrsRAOMNg8hhmJN?=
- =?us-ascii?Q?Zx914pckRTZ842j7JnLBcjTyidVo3gI/gVlmfv96nNQwr/XT2+8D4G10o25C?=
- =?us-ascii?Q?LnoQ2EXp8hgB9P9Kl/J5G2/kSDO8?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PN15taGIPKxDFj7EX00hMk5j3tlidozrXVnPi8zaSbhD4w736AthXkiMcmcn?=
- =?us-ascii?Q?upksF/7/R1kSCmTQ4B9+S7AOFdXR5wO2BiQ2KWhmfJpMEKvogXiAcZja956l?=
- =?us-ascii?Q?LduF98oPasMfu4Zau8mEJIvosNTKTgp0DwWlyctgkdAd12JOse+IM8qs4t7J?=
- =?us-ascii?Q?DsSiDR+K/NLY2Q+JKlivpdyrgFDMGOtpniy3+hw5gn/nXKqf+y4xaMDEwKkk?=
- =?us-ascii?Q?Pzhg5sRmFOzdLxe2vh1k+kn8GvjDB5i7RwbGEwMoih69yDwN7hNfabyOhf7Q?=
- =?us-ascii?Q?K/kHwgcspd9Alx7pchtZA3n6X1LMpSeiRYJrUY+O7HK2wcR9B+NMjQFD9UNj?=
- =?us-ascii?Q?w20GG+qtkOfUnMvaSkam6N6/GwvLZclR057r5Z7xHCsPviemfU3Nzu98faZ3?=
- =?us-ascii?Q?X7efoz3YvdS6ecsgZcXFA6Zjtgix8azldEoTOZ7JrADbbgtRXb+o8GC4/Y/o?=
- =?us-ascii?Q?ApQs6gB0yhRwdpxD67pWyHs6to03pILPbv6bny1ARFr8qMX7bep0RKqpvp6w?=
- =?us-ascii?Q?QE9rDo2arFZy879HdU8x4NhdK2HO8d10LvfjQBgsZYnKgdRJ7MZ51/os1pgk?=
- =?us-ascii?Q?C096NUdaavbyBK4/TJWNnWT0Kn45Totu5IBm8P/NDe1T/6RSlJ/Sj/lIpaZH?=
- =?us-ascii?Q?K7v3poo0mXGwbROEOGmVwWLxi4V7ZTchF+kPq34qtGkX6EqAHZExuS2lJ4di?=
- =?us-ascii?Q?eMwEpWWydQmJlKN6dUx+mG4Svmz17hhDPOgWmNud/RuQyf8YlagkwGzC21fq?=
- =?us-ascii?Q?+f0ZEo2BIasMjpwWGUe7wHWa4BwhO6J4S6t2enA7sZABJzSRjvblVJ1hYoUn?=
- =?us-ascii?Q?7yYfQVmqqtBcp0p8U6pXdOrUgy2jubF4ntmYB0MH42LmCTWGk2XMXoAqcXq3?=
- =?us-ascii?Q?Ufq2iKozxT8BNdPcSRIGMd1Kq+WtHSwdUR3hauDXxuo6hQHapt0uvYywtos1?=
- =?us-ascii?Q?7ZXMBrvN7kh0H6wQ4S0/dGSxrhdU1f4X5rIZjL2Jk4cE3h14RozlKJf9uaTJ?=
- =?us-ascii?Q?CiXtAPFd1YtHUAd7QFM0LKeYth/jItvvphC7sVZB3iI8S9RsyS9q3CFGr2Yr?=
- =?us-ascii?Q?zIClGjBjb3ocFewoHcUdZ9YoMbwVtLNWxqVEW/8jssJrxscKM+b0CJ2xl/r1?=
- =?us-ascii?Q?T+iTHnFi5mgCr1lWQ1OBjuUSi0iis1bpY+/3Sg6t4u0q2gCxyT6AJqDNb9ZG?=
- =?us-ascii?Q?ea54+ZACTfQEiBSqUTImIy4zzXBe8ijXwjAWX5pVRL0uKCMkt6ieN/9MtFlO?=
- =?us-ascii?Q?4guLwbu8LWY7m/rRIwm1DQnKgZmhKjU5r8QEjJKUoZNWsacC7eMnQolMBhqj?=
- =?us-ascii?Q?myAwn/N3Pdeg8aZQ9ifL4K/RLwjFEvaLppqv4stDzPP7FTls+Sj14DYvJ5E9?=
- =?us-ascii?Q?Cva+fEH9KY9M8t1BCQ0B4rHiMkMmfVzmS11tAsOhp21dgYYShhzj6GlgSyMK?=
- =?us-ascii?Q?q8SgUANCIPL0aTW20jM7AhaMnD5VpFRoO/1kXFNVOnkGmo3z+9nnqd/UrEiY?=
- =?us-ascii?Q?EJFLMTEbIpOMxCxGQJvAK4e8+gaZkV61OlKbNLrXvs+/rPHKz7COE8s3hAkH?=
- =?us-ascii?Q?ztJbJL7A65LWL8lgLllFtPLCIwCROkBHFTtEZoR0oK3DOYoDX9mycOALGaR5?=
- =?us-ascii?Q?OQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 397e2004-ec33-4c2d-de14-08dd346276c7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 06:12:46.2175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3BCs1YqIUcRnYVk9zwnblXXOdzusAg8xya7tbVu6H2k6HuEP5VbFPqYftN2iSPgiTG5UkMKi355MHPOOgbAay7x+699o7jt3mU1lsO2Sm4Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4676
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
+ support in AER service driver
+To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+ <20250107143852.3692571-6-terry.bowman@amd.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250107143852.3692571-6-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227508e4694c4ca3ceec57cf1b40000f608a761e6b633edfe8cac4ff0c17f979a15ee245037648c54:zu08011227e846396fa53662490b40cda400006db1fe3488dee322436ae68fac80aee0219ac8b827cc839ab1:rf0801122c10bdbc8a4781726de84d1340000085545ddd153e52cd932bc8a2946f1215ed186982a1642f1deacb3ccdf178:ZohoMail
+X-ZohoMailClient: External
 
-Alistair Popple wrote:
-> Device DAX pages are currently not reference counted when mapped,
-> instead relying on the devmap PTE bit to ensure mapping code will not
-> get/put references. This requires special handling in various page
-> table walkers, particularly GUP, to manage references on the
-> underlying pgmap to ensure the pages remain valid.
-> 
-> However there is no reason these pages can't be refcounted properly at
-> map time. Doning so eliminates the need for the devmap PTE bit,
-> freeing up a precious PTE bit. It also simplifies GUP as it no longer
-> needs to manage the special pgmap references and can instead just
-> treat the pages normally as defined by vm_normal_page().
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+On 1/7/2025 10:38 PM, Terry Bowman wrote:
+> The AER service driver supports handling Downstream Port Protocol Errors in
+> Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
+> functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
+> mode.[1]
+>
+> CXL and PCIe Protocol Error handling have different requirements that
+> necessitate a separate handling path. The AER service driver may try to
+> recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
+> suitable for CXL PCIe Port devices because of potential for system memory
+> corruption. Instead, CXL Protocol Error handling must use a kernel panic
+> in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
+> Error handling does not panic the kernel in response to a UCE.
+>
+> Introduce a separate path for CXL Protocol Error handling in the AER
+> service driver. This will allow CXL Protocol Errors to use CXL specific
+> handling instead of PCIe handling. Add the CXL specific changes without
+> affecting or adding functionality in the PCIe handling.
+>
+> Make this update alongside the existing Downstream Port RCH error handling
+> logic, extending support to CXL PCIe Ports in VH mode.
+>
+> is_internal_error() is currently limited by CONFIG_PCIEAER_CXL kernel
+> config. Update is_internal_error()'s function declaration such that it is
+> always available regardless if CONFIG_PCIEAER_CXL kernel config is enabled
+> or disabled.
+>
+> The uncorrectable error (UCE) handling will be added in a future patch.
+>
+> [1] CXL 3.1 Spec, 12.2.2 CXL Root Ports, Downstream Switch Ports, and
+> Upstream Switch Ports
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/dax/device.c | 15 +++++++++------
->  mm/memremap.c        | 13 ++++++-------
->  2 files changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index 6d74e62..fd22dbf 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -126,11 +126,12 @@ static vm_fault_t __dev_dax_pte_fault(struct dev_dax *dev_dax,
->  		return VM_FAULT_SIGBUS;
->  	}
->  
-> -	pfn = phys_to_pfn_t(phys, PFN_DEV|PFN_MAP);
-> +	pfn = phys_to_pfn_t(phys, 0);
->  
->  	dax_set_mapping(vmf, pfn, fault_size);
->  
-> -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
-> +	return vmf_insert_page_mkwrite(vmf, pfn_t_to_page(pfn),
-> +					vmf->flags & FAULT_FLAG_WRITE);
+>  drivers/pci/pcie/aer.c | 61 +++++++++++++++++++++++++++---------------
+>  1 file changed, 40 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f8b3350fcbb4..62be599e3bee 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -942,8 +942,15 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
 >  }
 >  
->  static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
-> @@ -169,11 +170,12 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
->  		return VM_FAULT_SIGBUS;
->  	}
+> -#ifdef CONFIG_PCIEAER_CXL
+> +static bool is_internal_error(struct aer_err_info *info)
+> +{
+> +	if (info->severity == AER_CORRECTABLE)
+> +		return info->status & PCI_ERR_COR_INTERNAL;
 >  
-> -	pfn = phys_to_pfn_t(phys, PFN_DEV|PFN_MAP);
-> +	pfn = phys_to_pfn_t(phys, 0);
+> +	return info->status & PCI_ERR_UNC_INTN;
+> +}
+> +
+> +#ifdef CONFIG_PCIEAER_CXL
+>  /**
+>   * pci_aer_unmask_internal_errors - unmask internal errors
+>   * @dev: pointer to the pcie_dev data structure
+> @@ -995,14 +1002,6 @@ static bool cxl_error_is_native(struct pci_dev *dev)
+>  	return (pcie_ports_native || host->native_aer);
+>  }
 >  
->  	dax_set_mapping(vmf, pfn, fault_size);
+> -static bool is_internal_error(struct aer_err_info *info)
+> -{
+> -	if (info->severity == AER_CORRECTABLE)
+> -		return info->status & PCI_ERR_COR_INTERNAL;
+> -
+> -	return info->status & PCI_ERR_UNC_INTN;
+> -}
+> -
+>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  {
+>  	struct aer_err_info *info = (struct aer_err_info *)data;
+> @@ -1034,14 +1033,23 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
 >  
-> -	return vmf_insert_pfn_pmd(vmf, pfn, vmf->flags & FAULT_FLAG_WRITE);
-> +	return vmf_insert_folio_pmd(vmf, page_folio(pfn_t_to_page(pfn)),
-> +				vmf->flags & FAULT_FLAG_WRITE);
+>  static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	/*
+> -	 * Internal errors of an RCEC indicate an AER error in an
+> -	 * RCH's downstream port. Check and handle them in the CXL.mem
+> -	 * device driver.
+> -	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> -	    is_internal_error(info))
+> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		return pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
+> +
+> +	if (info->severity == AER_CORRECTABLE) {
+> +		struct pci_driver *pdrv = dev->driver;
+> +		int aer = dev->aer_cap;
+> +
+> +		if (aer)
+> +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+> +					       info->status);
+> +
+> +		if (pdrv && pdrv->cxl_err_handler &&
+> +		    pdrv->cxl_err_handler->cor_error_detected)
+> +			pdrv->cxl_err_handler->cor_error_detected(dev);
+> +
+> +		pcie_clear_device_status(dev);
+> +	}
+>  }
+>  
+>  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> @@ -1059,9 +1067,13 @@ static bool handles_cxl_errors(struct pci_dev *dev)
+>  {
+>  	bool handles_cxl = false;
+>  
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> -	    pcie_aer_is_native(dev))
+> +	if (!pcie_aer_is_native(dev))
+> +		return false;
+> +
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+>  		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
+> +	else
+> +		handles_cxl = pcie_is_cxl_port(dev);
 
-This looks suspect without initializing the compound page metadata.
+My understanding is if a cxl RP/USP/DSP is working on PCIe mode, they are also possible to expose a DVSEC ID 3(CXL r3.1 section 9.12.3). In such case, the AER handler should be pci_aer_handle_error() rather than cxl_handle_error().
 
-This might be getting compound pages by default with
-CONFIG_ARCH_WANT_OPTIMIZE_DAX_VMEMMAP. The device-dax unit tests are ok
-so far, but that is not super comforting until I can think about this a
-bit more... but not tonight.
+pcie_is_cxl_port() only checks if there is a DVSEC ID 3, but I think it should also check if the cxl port is working on CXL mode, does it make more sense?
 
-Might as well fix up device-dax refcounts in this series too, but I
-won't ask you to do that, will send you something to include.
+
+Ming
+
+>  
+>  	return handles_cxl;
+>  }
+> @@ -1079,6 +1091,10 @@ static void cxl_enable_internal_errors(struct pci_dev *dev)
+>  static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
+>  static inline void cxl_handle_error(struct pci_dev *dev,
+>  				    struct aer_err_info *info) { }
+> +static bool handles_cxl_errors(struct pci_dev *dev)
+> +{
+> +	return false;
+> +}
+>  #endif
+>  
+>  /**
+> @@ -1116,8 +1132,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	cxl_handle_error(dev, info);
+> -	pci_aer_handle_error(dev, info);
+> +	if (is_internal_error(info) && handles_cxl_errors(dev))
+> +		cxl_handle_error(dev, info);
+> +	else
+> +		pci_aer_handle_error(dev, info);
+> +
+>  	pci_dev_put(dev);
+>  }
+>  
+
+
