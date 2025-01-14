@@ -1,313 +1,213 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCEF1D5145;
-	Tue, 14 Jan 2025 18:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736880024; cv=none; b=X+I+dYSJ0+vcBw01g8i/oVEsFVJ4GlQBrACSlZfkg9ap8Gwh0dxT6X6kgojNAyu0d1l4AKsR1BVDycBEsL8fV3OCY7Ps6EJzXRYOq0ZnKuFdpBHuBQU2hdqu65FdqYDg/9MjjwcByt1hOyjwA2l8lXrHkgwCnExVm0Wht3aXL4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736880024; c=relaxed/simple;
-	bh=iZZztovElKXKF0Qg0GwhnKgma5EIcG1eSzKpbaiou9s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aazKF6FlM69Cf3uUKnKsqOirJMtXzMT2+0iWFOVSZOWf3xcrUEs+n96VPbBv8YW95FLYMkoisQfRlM4rOrz8lOOV6JiQ5/QwVHZUQe4n9QgHRFD9I/5KdXpPSZQ8zbpTYuhUw5gVi33mU8NSQA9/NYJbz+Synw1l0XfNLe065cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXd9B2JL2z6K9Ns;
-	Wed, 15 Jan 2025 02:35:26 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52137140B35;
-	Wed, 15 Jan 2025 02:40:19 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
- 2025 19:40:18 +0100
-Date: Tue, 14 Jan 2025 18:40:17 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, <dan.j.williams@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
-	<sthanneeru.opensrc@micron.com>, <emirakhur@micron.com>,
-	<ajayjoshi@micron.com>, <Ravis.OpenSrc@micron.com>, <sthanneeru@micron.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] cxl/pci: lockless background synchronous polling
-Message-ID: <20250114184017.00002e92@huawei.com>
-In-Reply-To: <831f83fa-01da-42aa-8d9b-c0662e520134@intel.com>
-References: <20241022031809.242591-1-dave@stgolabs.net>
-	<20241022031809.242591-2-dave@stgolabs.net>
-	<831f83fa-01da-42aa-8d9b-c0662e520134@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6B51B21AD;
+	Tue, 14 Jan 2025 18:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736880674; cv=fail; b=b/+RiTADViYzHTG0jYAm4pJTgNmn5Vl9If1WVGMNTMhhkBMzxMg93WZwmTAWhbCVRWxOVq7vcfR89VK46gDBHhJQtznvP+bYhXNxhfwNj9TOSHYEeHRk+vV/oIj322iL7kepvvJo5kFCuQ5HoWtiqviCw3E8I/J5hCO1u5IcxZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736880674; c=relaxed/simple;
+	bh=qHJmo6VUjpqMFbgyBxGwXtfZ98tbI+btb0b5s+A3OKk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=S0PkIoNCnEnH/FqKNl+GWDMfQNeWGc8KdVo7D6H8Rj1mTV/kdhyUqdTig47yaRHRtZxIbGpe0kjxS+Q0Mf6mtVB+nLpgu8xSrdRplVFYLHOJxTkzLOzc10F1mPq+GePSUEfN+nnLI5xzOfnncO1fIs6EYckzHqHdm31xl9s3BEQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5AJO0m9; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5AJO0m9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736880672; x=1768416672;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=qHJmo6VUjpqMFbgyBxGwXtfZ98tbI+btb0b5s+A3OKk=;
+  b=l5AJO0m9cStL5y5va5rzGqcyaTv91aXmr1Hf3xUJOdbAWOlD5oeyVwvC
+   FmLBhfEjMz5zU1/8MtENpRvOzG4KSWOBqdnuXQKk+ia0YVkwmzfigv4L/
+   cPSlYGYajJL1gANTjrP8A9ypvdoHH+Rf6Vm0AT6nGfTqvLqM/OO3id23g
+   b5fhBvsVw9NnxD4wLUFlUevpZAEy0Ljyek0hahFIY6wyznXLwvjZcedmj
+   wRH+zY5DQvo04/QfXao0PdZTUCntlcr6LOze9r3Lr8+tgHZJTFpYGPVUY
+   /TKn4ahSy9CH2gTrvHcorivcixPjbNO1SZT91s7rP+iywHkUBs1z9QAak
+   A==;
+X-CSE-ConnectionGUID: i56DuK4iRRmI8lWMUAASbw==
+X-CSE-MsgGUID: 2oDh24+lRO6ROMQsGauuSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47683206"
+X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
+   d="scan'208";a="47683206"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 10:51:12 -0800
+X-CSE-ConnectionGUID: 2v/CLY4gS+CM4vFB9ugdUQ==
+X-CSE-MsgGUID: 5Sq64L8KRsKKjrrz/cxLcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="104757565"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Jan 2025 10:51:12 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 14 Jan 2025 10:51:11 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 14 Jan 2025 10:51:11 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 14 Jan 2025 10:51:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a+jmBgi58VOMSRPoLJNKrLXnc6NktCIfK9iRruxAdaWehKuhzYxB6B8VTyOyhJWA/tdStHCop/iSyFjOenz4BU+ag7Y0QfuZQkSdgjqVgYhJeaD73c+QB/vIt7gzbgaVzsY84SvLvuYnjRW+wUnglkqlaphFK3/r8+KIGtAYiET97lRpkOZ5HgXJ+WaHMv4rWwCBEln0gc4CtgKPZQI9+++kjgEWj1/C233eDN1zeOGByw/8y2PNc901CTqAQ5zDZ+2Uigxbq8abHi0m0MMg+0QHlbaY6o0Yu5T6LjcRJ3Gi542CnFYhhLT8aphBMZg3pI9unDnly4fBXFdfnR150Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eMryI1ibjV6DCpHmga+rjWzpYcwZmVNzXRWay0XOzPA=;
+ b=wgV5YN7iro9zF8sgDXd3ZknPACdOhX1lhKcW6IK2JGkG7k6ki+6C5zR4X2rlbRSUmYr4QVDp0qjZGhbryasxZDDPZVgbjY0ChHHkX8zxj4f52iz7UxolMg2N20YNppTj0gZyCLZqcEo0S9t1U7CXtTCgLvGBnYkizmVVMmlZN0UbEY0VsnnapeP2pOW3umaPJ6anWQ4SMore1tdtpKaHun9xxLqw4VdILPwqRb8nsvu3rvfuhgl9YlcEcxT3ILe39wKs9G413lR/VArOOvLTWerB1fMwJbmsh0HQ6DUECA5/WL6gAb7dpsReTysdH6VSuUFCoUC+wWM7QVixWH2VGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA0PR11MB7956.namprd11.prod.outlook.com (2603:10b6:208:40b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Tue, 14 Jan
+ 2025 18:50:54 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8356.010; Tue, 14 Jan 2025
+ 18:50:54 +0000
+Date: Tue, 14 Jan 2025 10:50:49 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Alistair Popple <apopple@nvidia.com>, <akpm@linux-foundation.org>,
+	<dan.j.williams@intel.com>, <linux-mm@kvack.org>
+CC: <alison.schofield@intel.com>, Alistair Popple <apopple@nvidia.com>,
+	<lina@asahilina.net>, <zhang.lyra@gmail.com>,
+	<gerald.schaefer@linux.ibm.com>, <vishal.l.verma@intel.com>,
+	<dave.jiang@intel.com>, <logang@deltatee.com>, <bhelgaas@google.com>,
+	<jack@suse.cz>, <jgg@ziepe.ca>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <dave.hansen@linux.intel.com>,
+	<ira.weiny@intel.com>, <willy@infradead.org>, <djwong@kernel.org>,
+	<tytso@mit.edu>, <linmiaohe@huawei.com>, <david@redhat.com>,
+	<peterx@redhat.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+	<jhubbard@nvidia.com>, <hch@lst.de>, <david@fromorbit.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v6 23/26] mm: Remove pXX_devmap callers
+Message-ID: <6786b209929e2_20f32945c@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <78cb5dce28a7895cc606e76b8e072efe18e24de1.1736488799.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <78cb5dce28a7895cc606e76b8e072efe18e24de1.1736488799.git-series.apopple@nvidia.com>
+X-ClientProxiedBy: MW3PR06CA0006.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::11) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7956:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ab07e93-5b81-458f-2c79-08dd34cc5f9a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?YsPMrkNCAOPEkQoCz2IvWulBCFX+fPo65NVNhR0zdzkkyoN+/+o2pj1gcyGa?=
+ =?us-ascii?Q?fs75xZp7iqW79SH6onHmyt2RY5ScnwJTStqORpAh5T+Kewc2XVVguPEkzw+x?=
+ =?us-ascii?Q?XqTluBO5xB9ykH42MAdgoiWX8xzLvPmI+YZLZMwVpcwK00tANml1JFsBkmJt?=
+ =?us-ascii?Q?Rr1KHyb/21TEE2PQiB/vURmhb2uBX38I+JnPvwMik0ZouRXV6V234nByPuQ2?=
+ =?us-ascii?Q?vWU5FdVAqOpwiQybCTSZx9mTFXnBKWoFXQm98XoFCPbKhsv0ysdO+r8RUjBD?=
+ =?us-ascii?Q?2e76b828JYp7SvA/vhoeyD3daNtDwTe9C+A3aqs+o61tnRp5FoahSRLDa+r1?=
+ =?us-ascii?Q?ksiYASDs0N/UKetQW97sSEpL/jIQWnb2w7mxIUjIDTsqkLEVzwXTkXdNqv84?=
+ =?us-ascii?Q?fev2jcz4cGF00JXuVL6ZS+9WHDnhIglsp+Fd2e0MbnY+HYMvnnbcyx6Ujf92?=
+ =?us-ascii?Q?5jboI05WUOHB9FxhotGgFJmghIR4BbtJBUj25LpNAXNRiI8cXDpFbS6W7kbz?=
+ =?us-ascii?Q?z2PWYUXgyZLu6b9M3QKwn84y8YdsFtceGla+HDSC7hW4x9G0zqZj9VdWJDv5?=
+ =?us-ascii?Q?vZjfP9NXhThX/+vBqG7rFVO59264jWDIE7NEE347h9W+PuHL6rOV6cHcYgV4?=
+ =?us-ascii?Q?M0AzlZWs5DO4UxoCjtrZTAI5YoIx9Tk3uDqWRLyHYZj+orW6pYP0WP9qt83o?=
+ =?us-ascii?Q?X3rGDq7UvRcMp9wSRRDQtWW086r2O56DnEwLD/VYeUiVy+Hw5WBMLVURE8pQ?=
+ =?us-ascii?Q?CLn1jfhQI4n2oGcY0oF4ARSanjkJmrCyDAYCKrpNRI9JqGqSe84gk/61hrCc?=
+ =?us-ascii?Q?TyWIjOfNBMRCS9G/afo9JsgrLFJeLbhm9y+hDjh7xSldZRkn3qqx8TGWrtGn?=
+ =?us-ascii?Q?rkuAeKXmicaNyxlWSlPahXP2mLgo47JHHlVFKIY3KyCwDy3dhXsV5jYTLBq1?=
+ =?us-ascii?Q?8hwtZWTq49uBpikgepv6Y+mJAguG2/8QysmcLFqxuIb9EW2ShepgfobWbh6c?=
+ =?us-ascii?Q?d7fXLUOpCaD6dTm0QwuUsuZXE3NFig0UdPQZVyHrfjWCl3sx541sWAVyFDM7?=
+ =?us-ascii?Q?9Rgx2eOl7MSYnnDKSpuTJl8osexiMadiUO+kjwxG8DgitT1BEgGiqMkI1mS+?=
+ =?us-ascii?Q?vmb+gNRpy1OYAtjGT2f0hudhV+b3ImFrKTx9cU78Pf7t8a/VwjJrLIXLiQzk?=
+ =?us-ascii?Q?AKJ7tgwifkqEmUhBF8KkCBnJpfmmf7iJYSIxTbX+550ttUSB2yNeRPESM/3N?=
+ =?us-ascii?Q?/+pOOODhbZjrdK+OdGiA+O6v11Z+G4jdUtq5XHgj2ReFUOuVrjeHakaJHWew?=
+ =?us-ascii?Q?XPZJa8xSwgRAhl8wkxy4y4X6XnaTP4PHr3HQqE8ovzH3eXgmUXbEIeQzzhWb?=
+ =?us-ascii?Q?TvfvHR/ErrTTmVdLSvYBWufnnrnc?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kDBa6yISTMxd/sU136Yzb6z23MJc4SGiRLRjYAxuulYVnX/N1Te9ozm68Z4k?=
+ =?us-ascii?Q?nL6KgJY4YfMCRGV5Ir0/fB6HScC58r6E5zHTqgHctZb3fm52/zpndQT1cpI7?=
+ =?us-ascii?Q?ohCy1/q5NPz9SBpt84bdQetLLRB05U3xHAdfHVbMs/xcYZrWscgIF6Xagcby?=
+ =?us-ascii?Q?84b4ThwzAXry/iE6deVZIQ/PYQ59AOmI/fwyLCxxxWDKfSHhrQ4uXTfS+FAL?=
+ =?us-ascii?Q?pUdn1jFaJukYIzH5TrmBnyDlLAUrWI3c5m7AdpKGhneokMLc+CiuG69o425y?=
+ =?us-ascii?Q?p0roDTw+sK7Tq3vvnG8hQahATW0vAJPC8CNWLUEzpXVBbSn23jcm00T/aHKW?=
+ =?us-ascii?Q?Lg0ZpdcZDpwmXLt1yxLisuQlu5bByPV2RudSWZNrH86tet5jpcaSyTvQqan7?=
+ =?us-ascii?Q?/KwdcqsnM0aYEkLVFo0GqG0m/NkFahYgF6mq//nHTLTYtMJVW8bdDj88v5BD?=
+ =?us-ascii?Q?1ZAnPlakJ9ytrf/x8+uZSXkIb3Kz+0PU66d2YD3bdeHkjjaGF620ClAfN0F8?=
+ =?us-ascii?Q?zXGByp75R3m7jgDUZfKcgerIWTP65rFGty4YuOsIH3tClgHbQu76J4UZzhvd?=
+ =?us-ascii?Q?Xxc0M3iZ0dgtkAJccqG4wLLnSG9eBbQ6+WWGE+nWcKyTzGKkQ7W0mUj+8IvY?=
+ =?us-ascii?Q?v6HUXvCwDrF6DW+6DoNt06rTFKTHpUkIrpVutMEOFj3IdlXFQb6+MR+csB0D?=
+ =?us-ascii?Q?9OqmRQXo6NXVcCXWoxuI+er8d3xKv5qhjjZOm39CHhYzo/ZUwWvxBsCyFhOk?=
+ =?us-ascii?Q?uLqN5zFjYIsgjiQittWDc0fqsZrVokkGCf2zxRBUytpt6FeBHDvl8q6gq8bX?=
+ =?us-ascii?Q?4Q0W87UC5EX+vfc3EtoimKZ2W4OVHb/ajF31oawmrW2pDb59dRhneX4Y0YgM?=
+ =?us-ascii?Q?svLMcx9NhPlDeL7aORcDw1Se+dWb9LXM/a9ADyQOu9SbalfVI0r7xaNcegTG?=
+ =?us-ascii?Q?eIQvG2iShoZb+E8rt+G2iVklb9RUlwGGTm1vFje6z+/btZ6IweEcDTbLoLFR?=
+ =?us-ascii?Q?XNGeQTq7HaZAS9FeZZ/2bE9AIjXf7hTBdLbg1Tohi3zRbRrp/agIwNOWe5XC?=
+ =?us-ascii?Q?+eQ5IQki3AxCr/any3IqeujxsHLTYez2s0+cJECq4dd796UrsgURcxUQjEdI?=
+ =?us-ascii?Q?6xQv4ZANmzRe/KjsDOApgT0/hZbsrKDFB6tOEI0LgXom8vw11P08SXI3jZBQ?=
+ =?us-ascii?Q?qMQLTHf74i5L8MKJaspVmAbpq9ElWDrMK7EqlBA5sSqEKvZmf7YY94LeJO8I?=
+ =?us-ascii?Q?jVK4q+uRn0XLaKBRADG0ZNC4VGrUiNZD19206SGVlKm3gQp2kMADbq62Gpz2?=
+ =?us-ascii?Q?t6Jd/JjDORInzfERTLJenWN8Jf7ukDGKJi5pc3k6di5SrnRDyCDq5BzEnyHg?=
+ =?us-ascii?Q?t0BzxwBmx4fGW1/1Byu9oLQj7t8xcRvKoDwcyqKee5cml8oSquRejdNDwLH5?=
+ =?us-ascii?Q?nPO/3gfy/hUSYd3iqT8gU6Aeot9zS4O9e2EwCx5v62r60lZXfUSRhJIAV3vt?=
+ =?us-ascii?Q?ugPjIyL43mysRhSH7LmB19aoQbVUs9J3dZvDXbgkBedRi0mlgXPSR7QzzuW8?=
+ =?us-ascii?Q?A+gAn6N2JMLI4sgPPhkBsJ9KYehen/4TSs2I/ZSQ/kP5cQpAOIiS3UK8GrIq?=
+ =?us-ascii?Q?aA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ab07e93-5b81-458f-2c79-08dd34cc5f9a
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2025 18:50:53.9954
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uC65HX62NSkSdWpU9FpRTEJVgGeQMgGJDhDTLTfnQWm9/fxXU9AwynTedVW076dIhw/uCilqSf65znv4GbucwREo9jC5knKtDkqsqCn9psY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7956
+X-OriginatorOrg: intel.com
 
-On Tue, 14 Jan 2025 09:12:09 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 10/21/24 8:18 PM, Davidlohr Bueso wrote:
-> > For non-sanitize background commands we rely on holding the mbox_mutex
-> > throughout the duration of the operation. This causes other incoming
-> > commands to queue up behind, and interleaving executions while the
-> > background command is timesliced by the user.
-> > 
-> > However, in order to support the mbox request cancel background
-> > operation command, the lock will need to be available to actually
-> > perform the request. Semantically this allows other commands to
-> > many times be at the mercy of hardware returning the respective error.
-> > Potentially users would be exposed to changes in the form of errors
-> > instead of commands taking longer to run - but this is not forseen
-> > as a problem.
-> > 
-> > In order to not loose sync with the hardware, introduce a mailbox
-> > atomic that blocks any other incoming bg operations while the driver
-> > is still polling (synchronously) on the current one.
-> > 
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > ---
-> >  drivers/cxl/core/mbox.c |   1 +
-> >  drivers/cxl/cxlmem.h    |  13 +++++
-> >  drivers/cxl/pci.c       | 114 +++++++++++++++++++++++-----------------
-> >  include/cxl/mailbox.h   |   2 +
-> >  4 files changed, 82 insertions(+), 48 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 5175138c4fb7..9af3cd16d23d 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -1429,6 +1429,7 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
-> >  
-> >  	cxl_mbox->host = host;
-> >  	mutex_init(&cxl_mbox->mbox_mutex);
-> > +	atomic_set(&cxl_mbox->poll_bgop, 0);
-> >  	rcuwait_init(&cxl_mbox->mbox_wait);
-> >  
-> >  	return 0;
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 2a25d1957ddb..b933fb73ef8a 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -557,6 +557,19 @@ enum cxl_opcode {
-> >  	CXL_MBOX_OP_MAX			= 0x10000
-> >  };
-> >  
-> > +static inline bool cxl_is_background_cmd(u16 opcode)
-> > +{
-> > +	switch (opcode) {
-> > +	case CXL_MBOX_OP_TRANSFER_FW:
-> > +	case CXL_MBOX_OP_ACTIVATE_FW:
-> > +	case CXL_MBOX_OP_SCAN_MEDIA:
-> > +	case CXL_MBOX_OP_SANITIZE:
-> > +		return true;
-> > +	default:
-> > +		return false;
-> > +	}
-> > +}  
+Alistair Popple wrote:
+> The devmap PTE special bit was used to detect mappings of FS DAX
+> pages. This tracking was required to ensure the generic mm did not
+> manipulate the page reference counts as FS DAX implemented it's own
+> reference counting scheme.
 > 
-> Should this information be pulled from the CEL entry? We should add the code to store the 'command effect' field when walking the CEL and store this information for each command. And then we can just check bit6 of the field rather than statically program that in the kernel.
-It might make it easier to maintain.
-
-If nothing else the maintenance command stuff in Shiju's patch set
-will need to be added to here possibly, but they are allowed to not
-be background commands I think depending on the implementation.
-
-So I'm in favor of using the CEL for this as well.
-
-Jonathan
-
+> Now that FS DAX pages have their references counted the same way as
+> normal pages this tracking is no longer needed and can be
+> removed.
 > 
-> DJ
+> Almost all existing uses of pmd_devmap() are paired with a check of
+> pmd_trans_huge(). As pmd_trans_huge() now returns true for FS DAX pages
+> dropping the check in these cases doesn't change anything.
 > 
-> > +
-> >  #define DEFINE_CXL_CEL_UUID                                                    \
-> >  	UUID_INIT(0xda9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, 0x96, 0xb1, 0x62,     \
-> >  		  0x3b, 0x3f, 0x17)
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 188412d45e0d..f2378604669b 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -278,29 +278,15 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
-> >  	mbox_cmd->return_code =
-> >  		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
-> >  
-> > -	/*
-> > -	 * Handle the background command in a synchronous manner.
-> > -	 *
-> > -	 * All other mailbox commands will serialize/queue on the mbox_mutex,
-> > -	 * which we currently hold. Furthermore this also guarantees that
-> > -	 * cxl_mbox_background_complete() checks are safe amongst each other,
-> > -	 * in that no new bg operation can occur in between.
-> > -	 *
-> > -	 * Background operations are timesliced in accordance with the nature
-> > -	 * of the command. In the event of timeout, the mailbox state is
-> > -	 * indeterminate until the next successful command submission and the
-> > -	 * driver can get back in sync with the hardware state.
-> > -	 */
-> >  	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
-> > -		u64 bg_status_reg;
-> > -		int i, timeout;
-> > -
-> >  		/*
-> >  		 * Sanitization is a special case which monopolizes the device
-> >  		 * and cannot be timesliced. Handle asynchronously instead,
-> >  		 * and allow userspace to poll(2) for completion.
-> >  		 */
-> >  		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
-> > +			int timeout;
-> > +
-> >  			if (mds->security.sanitize_active)
-> >  				return -EBUSY;
-> >  
-> > @@ -311,44 +297,19 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
-> >  			schedule_delayed_work(&mds->security.poll_dwork,
-> >  					      timeout * HZ);
-> >  			dev_dbg(dev, "Sanitization operation started\n");
-> > -			goto success;
-> > -		}
-> > -
-> > -		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
-> > -			mbox_cmd->opcode);
-> > -
-> > -		timeout = mbox_cmd->poll_interval_ms;
-> > -		for (i = 0; i < mbox_cmd->poll_count; i++) {
-> > -			if (rcuwait_wait_event_timeout(&cxl_mbox->mbox_wait,
-> > -						       cxl_mbox_background_complete(cxlds),
-> > -						       TASK_UNINTERRUPTIBLE,
-> > -						       msecs_to_jiffies(timeout)) > 0)
-> > -				break;
-> > -		}
-> > -
-> > -		if (!cxl_mbox_background_complete(cxlds)) {
-> > -			dev_err(dev, "timeout waiting for background (%d ms)\n",
-> > -				timeout * mbox_cmd->poll_count);
-> > -			return -ETIMEDOUT;
-> > +		} else {
-> > +			/* pairs with release/acquire semantics */
-> > +			WARN_ON_ONCE(atomic_xchg(&cxl_mbox->poll_bgop,
-> > +						 mbox_cmd->opcode));
-> > +			dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
-> > +				mbox_cmd->opcode);
-> >  		}
-> > -
-> > -		bg_status_reg = readq(cxlds->regs.mbox +
-> > -				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-> > -		mbox_cmd->return_code =
-> > -			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
-> > -				  bg_status_reg);
-> > -		dev_dbg(dev,
-> > -			"Mailbox background operation (0x%04x) completed\n",
-> > -			mbox_cmd->opcode);
-> > -	}
-> > -
-> > -	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
-> > +	} else if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
-> >  		dev_dbg(dev, "Mailbox operation had an error: %s\n",
-> >  			cxl_mbox_cmd_rc2str(mbox_cmd));
-> >  		return 0; /* completed but caller must check return_code */
-> >  	}
-> >  
-> > -success:
-> >  	/* #7 */
-> >  	cmd_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
-> >  	out_len = FIELD_GET(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK, cmd_reg);
-> > @@ -378,11 +339,68 @@ static int cxl_pci_mbox_send(struct cxl_mailbox *cxl_mbox,
-> >  			     struct cxl_mbox_cmd *cmd)
-> >  {
-> >  	int rc;
-> > +	struct cxl_dev_state *cxlds = mbox_to_cxlds(cxl_mbox);
-> > +	struct device *dev = cxlds->dev;
-> >  
-> >  	mutex_lock_io(&cxl_mbox->mbox_mutex);
-> > +	/*
-> > +	 * Ensure cxl_mbox_background_complete() checks are safe amongst
-> > +	 * each other: no new bg operation can occur in between while polling.
-> > +	 */
-> > +	if (cxl_is_background_cmd(cmd->opcode)) {
-> > +		if (atomic_read_acquire(&cxl_mbox->poll_bgop)) {
-> > +			mutex_unlock(&cxl_mbox->mbox_mutex);
-> > +			return -EBUSY;
-> > +		}
-> > +	}
-> > +
-> >  	rc = __cxl_pci_mbox_send_cmd(cxl_mbox, cmd);
-> >  	mutex_unlock(&cxl_mbox->mbox_mutex);
-> >  
-> > +	if (cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
-> > +		return rc;
-> > +
-> > +	/*
-> > +	 * Handle the background command in a synchronous manner. Background
-> > +	 * operations are timesliced in accordance with the nature of the
-> > +	 * command.
-> > +	 */
-> > +	if (cmd->opcode != CXL_MBOX_OP_SANITIZE) {
-> > +		int i, timeout;
-> > +		u64 bg_status_reg;
-> > +
-> > +		timeout = cmd->poll_interval_ms;
-> > +		for (i = 0; i < cmd->poll_count; i++) {
-> > +			if (rcuwait_wait_event_timeout(&cxl_mbox->mbox_wait,
-> > +				       cxl_mbox_background_complete(cxlds),
-> > +				       TASK_UNINTERRUPTIBLE,
-> > +				       msecs_to_jiffies(timeout)) > 0)
-> > +				break;
-> > +		}
-> > +
-> > +		/*
-> > +		 * In the event of timeout, the mailbox state is indeterminate
-> > +		 * until the next successful command submission and the driver
-> > +		 * can get back in sync with the hardware state.
-> > +		 */
-> > +		if (!cxl_mbox_background_complete(cxlds)) {
-> > +			dev_err(dev, "timeout waiting for background (%d ms)\n",
-> > +				timeout * cmd->poll_count);
-> > +			rc = -ETIMEDOUT;
-> > +			goto done;
-> > +		}
-> > +
-> > +		bg_status_reg = readq(cxlds->regs.mbox +
-> > +				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-> > +		cmd->return_code = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
-> > +					     bg_status_reg);
-> > +		dev_dbg(dev,
-> > +			"Mailbox background operation (0x%04x) completed\n",
-> > +			cmd->opcode);
-> > +done:
-> > +		atomic_set_release(&cxl_mbox->poll_bgop, 0);
-> > +	}
-> > +
-> >  	return rc;
-> >  }
-> >  
-> > diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-> > index bacd111e75f1..23282a3c44f1 100644
-> > --- a/include/cxl/mailbox.h
-> > +++ b/include/cxl/mailbox.h
-> > @@ -13,6 +13,7 @@ struct cxl_mbox_cmd;
-> >   *                (CXL 3.1 8.2.8.4.3 Mailbox Capabilities Register)
-> >   * @mbox_mutex: mutex protects device mailbox and firmware
-> >   * @mbox_wait: rcuwait for mailbox
-> > + * @poll_bgop: current background operation being polled on
-> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> >   */
-> >  struct cxl_mailbox {
-> > @@ -20,6 +21,7 @@ struct cxl_mailbox {
-> >  	size_t payload_size;
-> >  	struct mutex mbox_mutex; /* lock to protect mailbox context */
-> >  	struct rcuwait mbox_wait;
-> > +	atomic_t poll_bgop;
-> >  	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
-> >  };
-> >    
-> 
-> 
+> However care needs to be taken because pmd_trans_huge() also checks that
+> a page is not an FS DAX page. This is dealt with either by checking
+> !vma_is_dax() or relying on the fact that the page pointer was obtained
+> from a page list. This is possible because zone device pages cannot
+> appear in any page list due to sharing page->lru with page->pgmap.
 
+While the patch looks straightforward I think part of taking "care" in
+this case is to split it such that any of those careful conversions have
+their own bisect point in the history.
+
+Perhaps this can move to follow-on series to not blow up the patch count
+of the base series? ...but first want to get your reaction to splitting
+for bisect purposes.
