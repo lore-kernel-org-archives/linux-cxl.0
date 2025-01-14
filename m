@@ -1,152 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309F8234CF5;
-	Tue, 14 Jan 2025 11:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F88F234D01;
+	Tue, 14 Jan 2025 11:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736854394; cv=none; b=bSKAAb05KY3J1TNo0IUgvi/aNqEF76CjcaVNbTgRboX7IyUb4NCauRAK3WTpoFj+QU3WnT6rst+LeZzPoBlhF/InZPW6s2FPJPGotenFihBXTIVimCwIYZduhyEH5vUhWp/pVBM7697lNyhHUGc4O+tl5LumDvCPHotUgPXuKaM=
+	t=1736854433; cv=none; b=WTUa/tug+FTEJeV82tNsvufB1VvjQa+LTuMbvPOdErq8OeevxwqZp+rfg56u83sWd1Af4MhbZEENL65GcLdjKS5Qm14HQeamBuLKlRwCqNgOe1J1qWdzkjYJkgK/l74YzMEAusf0AE1woImj1twS1q7lDJF2QZlSyqTfaL5QOxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736854394; c=relaxed/simple;
-	bh=MrivJ/DDz0XYxvN0xXP9ngJ9hdTIa0KM7xnuiQfKegw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kCRyXlmkrukydbvJfwkopXO0ERaJqIuZS+USqWk4f8oMZ3NccEydagSYDLRxaLtW8EZvnicpaTcBRDEJGzVFwZAsBi4vNX1tJonNDhetXuSpWqPYi8732H1AMo5eid2K1gZkkNE03Zs+KL2FeJsHmYYb8Jel9TtHH2fm3zEmO8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxarYMfK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxarYMfK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC21C4CEDD;
-	Tue, 14 Jan 2025 11:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736854393;
-	bh=MrivJ/DDz0XYxvN0xXP9ngJ9hdTIa0KM7xnuiQfKegw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SxarYMfKtM3whO3COpRgQ5tRlIqHXwhCJef8sfGkc1XBI9pmZAZPc/Yv5v2vPz/wg
-	 lanuPJZ7Fe6hHQDXey/rhsOodTJbEiKFI6HEoph4CExODchImkWyDBEI0GWb03+7eW
-	 3CyQWJkYA/gZKmtSYM5Jl+Z9fFzAQjCa4IHCSKtkowRrKKihPa9bgnK0CfUo9+xqiA
-	 Aa3ISK7qRCWly58IA6Xj5vSfRsukGPpDAgRZDRTPfu+pxFtOkbVApc1TQCHVJDs24r
-	 es3fPrRbCks8C+wcHvA78bFYSPdCt+0VNkFkazcoOmXfaWXzc7TIeU2Uo4FxzKbAX7
-	 ZUkYTDpWXO7Sg==
-Date: Tue, 14 Jan 2025 12:33:01 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
- "tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
- <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
- "mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
- <dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
- "Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
- <dave.jiang@intel.com>, "alison.schofield@intel.com"
- <alison.schofield@intel.com>, "vishal.l.verma@intel.com"
- <vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
- <Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
- "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
- <rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
- "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
- <naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
- "jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
- <somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
- "pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
- <duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
- "wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
- "dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
- "wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
- "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
- <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
- <kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
- Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v18 01/19] EDAC: Add support for EDAC device features
- control
-Message-ID: <20250114123301.3665ada8@foz.lan>
-In-Reply-To: <08f67030bb81401688ef8a5505f10c7e@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
-	<20250106121017.1620-2-shiju.jose@huawei.com>
-	<20250113160611.39bdf3b3@foz.lan>
-	<08f67030bb81401688ef8a5505f10c7e@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1736854433; c=relaxed/simple;
+	bh=LMKICDRm1i5WBh0PZvbV99bSGJukLifqdeM1w6UioDQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oYXVM7Z9LqTpNtMg6nhzTDHFRw4JYQqqi2UiUeBoTEoOCDNB2I4Z5D2XOIKJ3vLDfZV4sYA1vAcYPADYtoPcv68oyvzVwSe9EF3mK4vGhb1Lhip8+IYeVen6dMAqtgawyIUXENlaynLhznlMlM3DLR6WKvRptwLTFNpRpTAquPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXRn24hqpz6L5J4;
+	Tue, 14 Jan 2025 19:32:22 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CA9E14022E;
+	Tue, 14 Jan 2025 19:33:49 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
+ 2025 12:33:48 +0100
+Date: Tue, 14 Jan 2025 11:33:47 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
+Subject: Re: [PATCH v5 07/16] PCI/AER: Add CXL PCIe Port uncorrectable error
+ recovery in AER service driver
+Message-ID: <20250114113347.00006865@huawei.com>
+In-Reply-To: <20250107143852.3692571-8-terry.bowman@amd.com>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+	<20250107143852.3692571-8-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Em Tue, 14 Jan 2025 10:08:42 +0000
-Shiju Jose <shiju.jose@huawei.com> escreveu:
+On Tue, 7 Jan 2025 08:38:43 -0600
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-> >> diff --git a/Documentation/edac/features.rst
-> >> b/Documentation/edac/features.rst new file mode 100644 index
-> >> 000000000000..f32f259ce04d
-> >> --- /dev/null
-> >> +++ b/Documentation/edac/features.rst
-> >> @@ -0,0 +1,94 @@
-> >> +.. SPDX-License-Identifier: GPL-2.0  
-> >
-> >SPDX should match what's written there, e. g.
-> >
-> >	.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-no-invariants-or-later
-> >
-> >Please notice that GNU FDL family contains both open source and non-open
-> >source licenses. The open-source one is this:
-> >
-> >	https://spdx.org/licenses/GFDL-1.2-no-invariants-or-later.html
-> >
-> >E.g. it is a the license permits changing the entire document in the future, as
-> >there's no invariant parts on it.  
-> This seems not widely used, have seen this is used in few documents only. 
+> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
+> apply to CXL devices. Recovery can not be used for CXL devices because of
+> potential corruption on what can be system memory. Also, current PCIe UCE
+> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
+> does not begin at the RP/DSP but begins at the first downstream device.
+> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
+> CXL recovery is needed because of the different handling requirements
+> 
+> Add a new function, cxl_do_recovery() using the following.
+> 
+> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
+> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
+> will begin iteration at the RP or DSP rather than beginning at the
+> first downstream device.
 
-This was added after some discussions I had with LF people in charge
-of SPDX: GFDL explicitly allows to have some parts that can't be touched
-by future patches. Those are "invariant" parts of the document.
+I'm still holding out for making pci_walk_bridge() do the same and seeing
+what if anything breaks.
 
-They were designed in a way that the original author's notes
-can't be touched on any further patch from someone's else. 
+Other than that I'm fine with this patch.
 
-You can see more about that at:
-
-	https://www.gnu.org/licenses/fdl-howto-opt.en.html
-
-See:
-
-	"The classical example of an invariant nontechnical section in a free manual
-	 is the GNU Manifesto, which is included in the GNU Emacs Manual. The GNU
-	 Manifesto says nothing about how to edit with Emacs, but it explains the
-	 reason why I wrote GNU Emacs"
-
-And:
-	https://www.gnu.org/gnu/manifesto.html
-
-Due to its nature of being invariant, most people consider it as a
-non-open-source license. See, for instance:
-
-	https://www.debian.org/vote/2006/vote_001
-
-Due to such concerns, after several discussions I had with interested parties,
-this was added to SPDX spec and to the Linux Kernel:
-
-	- GFDL-1.2-no-invariants-only - for GFDL v 1.2 only
-	- GFDL-1.2-no-invariants-or-later - for GFDL v 1.2 or later
-
-(plus variants for other GFDL versions)
-
-You may use either one of them, but you should *not* use GFDL-1.2
-as this is deprecated:
-
-	https://spdx.org/licenses/GFDL-1.2.html
-
-And need to be replaced by either:
-
-	https://spdx.org/licenses/GFDL-1.2-no-invariants-or-later.html
-or:
-	https://spdx.org/licenses/GFDL-1.2-invariants-only.html
-
-Thanks,
-Mauro
+> 
+> Add cxl_report_error_detected() as an analog to report_error_detected().
+> It will call pci_driver::cxl_err_handlers for each iterated downstream
+> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
+> indicating if there was a UCE error detected during handling.
+> 
+> cxl_do_recovery() uses the status from cxl_report_error_detected() to
+> determine how to proceed. Non-fatal CXL UCE errors will be treated as
+> fatal. If a UCE was present during handling then cxl_do_recovery()
+> will kernel panic.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
