@@ -1,219 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F1124634B
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 08:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5C624022A;
+	Tue, 14 Jan 2025 09:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736843069; cv=none; b=I93f5ET82EsTYb8B7IDuKkIuSfC6uYXSYyf+nY5bunvMxcT/cPQPnbKeiOZpeZUxfz59Nb4jhhnsZxxKenQ7S5bgDHlo4Nc2PFTy0NS0cOVuvs/ozjdM2wRtzKdBngw0HH7s+3dylBrQDmNlDjBWBSv6ALT39UtX2AY8TuiN1qg=
+	t=1736848549; cv=none; b=npsR9s4TnBW2lHtTlvzPSZE8J5zKpKQufgfO0sWkRU/nQqD1Y2XVtXrebHGR0Z12Bv0PcINv11UflH1sNSqtYyTcRWvSXAQM6Yrwvtv9KBab8Y+8BjkVZ77NIYnINFiQjx8kEfEmUfMmXxScRvVeDZew9bV5D3yQ9ES/hDT4nus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736843069; c=relaxed/simple;
-	bh=ytPcNXSWlfUvT67CiIcFnBI0aFhmmliPWrABuFJf17c=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Ah4TheA+oFsChDWIhYXAS0s0w7N7wK4zkGs3IF0jtOpdBNh1edjFcr7eDulUnq8TTkYCJYY7At6+lEF5cr2wTvjIeesBwIz/k3VEC9gazF0FWsg+ejmHSWt1H1wwA54nC4jzxOzE7J2Qa6ayS5vWKJis9NiqX6OCNl54UegUJOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DyrpxUX9; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DyrpxUX9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736843068; x=1768379068;
-  h=date:from:to:cc:subject:message-id;
-  bh=ytPcNXSWlfUvT67CiIcFnBI0aFhmmliPWrABuFJf17c=;
-  b=DyrpxUX9i2Vnjd0c00TW4fllYI4hQSaVvfmVXXCoilfpetI+FENm+nCf
-   3JS8zto+Uep/fZ6u8LGqG/In1+TdBtZfGlXXstSeTRV1dMLJchPYg23Rl
-   L5Ism0bPPyEE/KV5sfWbwokRy/y1b7oGkaf88Pu498xbV3yxk8t2s4MFP
-   xbShD1v57pU7nZX5hiFsRmZi54MekEhOfvTYxcZGes6xmHqDi05GbncaI
-   L9qYCoSYM4WQWGVJ5lvvrJsf7FFFjP/7egzO/egmSQJByqWf4w0HE7bM+
-   pz9GWKL+MiBP+VP/xA2eob3qmnqt2UCWG19Nj6y7rcKb1fb1HKbHfb5Nw
-   g==;
-X-CSE-ConnectionGUID: vxEbDWBYSiu/CrBLFwxEFw==
-X-CSE-MsgGUID: 9otEtlH6TwGoqHKCoBFx7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="37285020"
-X-IronPort-AV: E=Sophos;i="6.12,313,1728975600"; 
-   d="scan'208";a="37285020"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 00:24:27 -0800
-X-CSE-ConnectionGUID: J93ojTDDR5eFAl1S9gJJog==
-X-CSE-MsgGUID: XpHmyT2gS5mKcYsefe3wjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,313,1728975600"; 
-   d="scan'208";a="109727167"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 14 Jan 2025 00:24:26 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tXcDn-000OH1-1Y;
-	Tue, 14 Jan 2025 08:24:23 +0000
-Date: Tue, 14 Jan 2025 16:23:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 6cdbd84dc42b5f7e61c0aed67596efa0f4406a20
-Message-ID: <202501141645.u1TNgR0j-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1736848549; c=relaxed/simple;
+	bh=dsLh30IhvkvphPhjqjdBvsc5bfCeMYtIGH3mBHUzOY0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OL47NjTPal6XVd89ucq3V9AdbPBnO+1CKUQR+3P8TtDX4Gzu+ctFnB2T7FPEO9QKe2cLADkZlAyc2hCBHgHRZ8shdTFf7k8BtjupFCQIlWXqklGOyf7trCrMpj97PIsoBktc3FZRfRRZ0fPc1bsy/v/d9mep5VZ2Us26Sx8R7P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXPbY1PMRz6LDKg;
+	Tue, 14 Jan 2025 17:54:01 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D0DE140B3C;
+	Tue, 14 Jan 2025 17:55:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
+ 2025 10:55:42 +0100
+Date: Tue, 14 Jan 2025 09:55:41 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: <shiju.jose@huawei.com>, <linux-edac@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
+	<tony.luck@intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<mchehab@kernel.org>, <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <david@redhat.com>,
+	<Vilas.Sridharan@amd.com>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
+	<rientjes@google.com>, <jiaqiyan@google.com>, <Jon.Grimm@amd.com>,
+	<dave.hansen@linux.intel.com>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
+	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v18 01/19] EDAC: Add support for EDAC device features
+ control
+Message-ID: <20250114095541.000000a1@huawei.com>
+In-Reply-To: <20250113160611.39bdf3b3@foz.lan>
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
+	<20250106121017.1620-2-shiju.jose@huawei.com>
+	<20250113160611.39bdf3b3@foz.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 6cdbd84dc42b5f7e61c0aed67596efa0f4406a20  cxl/test: Update test code for event records to CXL spec rev 3.1
 
-elapsed time: 921m
+> > +int edac_dev_register(struct device *parent, char *name,
+> > +		      void *private, int num_features,
+> > +		      const struct edac_dev_feature *ras_features)
+> > +{
+> > +	const struct attribute_group **ras_attr_groups;
+> > +	struct edac_dev_feat_ctx *ctx;
+> > +	int attr_gcnt = 0;
+> > +	int ret, feat;
+> > +
+> > +	if (!parent || !name || !num_features || !ras_features)
+> > +		return -EINVAL;
+> > +
+> > +	/* Double parse to make space for attributes */
+> > +	for (feat = 0; feat < num_features; feat++) {
+> > +		switch (ras_features[feat].ft_type) {
+> > +		/* Add feature specific code */
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> > +	if (!ctx)
+> > +		return -ENOMEM;
+> > +
+> > +	ras_attr_groups = kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), GFP_KERNEL);
+> > +	if (!ras_attr_groups) {
+> > +		ret = -ENOMEM;
+> > +		goto ctx_free;
+> > +	}
+> > +
+> > +	attr_gcnt = 0;
+> > +	for (feat = 0; feat < num_features; feat++, ras_features++) {
+> > +		switch (ras_features->ft_type) {
+> > +		/* Add feature specific code */
+> > +		default:
+> > +			ret = -EINVAL;
+> > +			goto groups_free;
+> > +		}
+> > +	}
+> > +
+> > +	ctx->dev.parent = parent;
+> > +	ctx->dev.bus = edac_get_sysfs_subsys();
+> > +	ctx->dev.type = &edac_dev_type;
+> > +	ctx->dev.groups = ras_attr_groups;
+> > +	ctx->private = private;
+> > +	dev_set_drvdata(&ctx->dev, ctx);
+> > +
+> > +	ret = dev_set_name(&ctx->dev, name);
+> > +	if (ret)
+> > +		goto groups_free;
+> > +
+> > +	ret = device_register(&ctx->dev);
+> > +	if (ret) {
+> > +		put_device(&ctx->dev);  
+> 
+> > +		return ret;  
+> 
+> As register failed, you need to change it to a goto groups_free,
+> as edac_dev_release() won't be called.
 
-configs tested: 139
-configs skipped: 4
+Boris called this one out as well, so seems it is not that well understood.
+I've also tripped over this in the past and it's one of the most common
+things I catch in reviews of code calling this stuff.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+As discussed offline, it will be called. The device_register() docs
+make it clear that whether or not that call succeeds reference counting
+is enabled and put_device() is the correct way to free resources.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250114    gcc-13.2.0
-arc                   randconfig-002-20250114    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-20
-arm                            dove_defconfig    gcc-14.2.0
-arm                            hisi_defconfig    gcc-14.2.0
-arm                         mv78xx0_defconfig    clang-20
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250114    clang-15
-arm                   randconfig-002-20250114    clang-20
-arm                   randconfig-003-20250114    gcc-14.2.0
-arm                   randconfig-004-20250114    gcc-14.2.0
-arm                        spear3xx_defconfig    clang-16
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250114    clang-17
-arm64                 randconfig-002-20250114    clang-19
-arm64                 randconfig-003-20250114    gcc-14.2.0
-arm64                 randconfig-004-20250114    clang-20
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250114    gcc-14.2.0
-csky                  randconfig-002-20250114    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-20
-hexagon               randconfig-001-20250114    clang-20
-hexagon               randconfig-002-20250114    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250114    gcc-12
-i386        buildonly-randconfig-002-20250114    clang-19
-i386        buildonly-randconfig-003-20250114    clang-19
-i386        buildonly-randconfig-004-20250114    gcc-12
-i386        buildonly-randconfig-005-20250114    clang-19
-i386        buildonly-randconfig-006-20250114    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch                 loongson3_defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250114    gcc-14.2.0
-loongarch             randconfig-002-20250114    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    gcc-14.2.0
-mips                         db1xxx_defconfig    clang-20
-mips                           mtx1_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250114    gcc-14.2.0
-nios2                 randconfig-002-20250114    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250114    gcc-14.2.0
-parisc                randconfig-002-20250114    gcc-14.2.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                        cell_defconfig    gcc-14.2.0
-powerpc                      ppc44x_defconfig    clang-20
-powerpc               randconfig-001-20250114    gcc-14.2.0
-powerpc               randconfig-002-20250114    clang-20
-powerpc               randconfig-003-20250114    gcc-14.2.0
-powerpc                     redwood_defconfig    clang-20
-powerpc64             randconfig-001-20250114    clang-20
-powerpc64             randconfig-002-20250114    clang-15
-powerpc64             randconfig-003-20250114    clang-20
-riscv                            allmodconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250114    gcc-14.2.0
-riscv                 randconfig-002-20250114    clang-20
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250114    clang-18
-s390                  randconfig-002-20250114    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250114    gcc-14.2.0
-sh                    randconfig-002-20250114    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250114    gcc-14.2.0
-sparc                 randconfig-002-20250114    gcc-14.2.0
-sparc64                          alldefconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250114    gcc-14.2.0
-sparc64               randconfig-002-20250114    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-20
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250114    clang-17
-um                    randconfig-002-20250114    gcc-11
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250114    clang-19
-x86_64      buildonly-randconfig-002-20250114    clang-19
-x86_64      buildonly-randconfig-003-20250114    clang-19
-x86_64      buildonly-randconfig-004-20250114    clang-19
-x86_64      buildonly-randconfig-005-20250114    clang-19
-x86_64      buildonly-randconfig-006-20250114    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250114    gcc-14.2.0
-xtensa                randconfig-002-20250114    gcc-14.2.0
-xtensa                         virt_defconfig    gcc-14.2.0
+The actual depends on the fact that device_register() is just a helper
+defined as
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+device_initialize();
+return device_add();
+
+So for reasons lost to history (I guess there are cases where other cleanup
+needs to happen before the release) it does not handle side effects
+of device_initialize() on an error in device_add().  
+
+device_initialize() has called
+-> kobject_init(&dev->kobj, &device_type);
+ -> kref_init_internal(kobj) + sets ktype (which has the release callback)
+
+kref_init_internal() sets the reference counter to 1
+
+Hence when we do a device_put() in the error path, the reference counter drops
+to 0 and the release from the ktype is called.  Here that is edac_dev_release();
+
+If you want to verify replace device_register() with device_initialize() then
+call put_device().
+
+If we were going back in history, I'd suggest device_register() should be side
+effect free and call put_device() on error and any driver that needs to handle
+other stuff before the release should just not use it. I guess that ship
+long sailed and maybe there are other reasons I've not thought of.
+
+I took a quick look and seems to go back into at least the 2.5 era.
+
+Jonathan
+
+
+
