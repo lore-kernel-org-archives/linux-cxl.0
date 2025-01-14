@@ -1,152 +1,160 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692FC20AF8F
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 20:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846701459FD;
+	Tue, 14 Jan 2025 20:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736886651; cv=none; b=DmbhLlkWEnEJ6SaEg6drVDVCVEKN7jJPy1IkH/M6tE02lkJF2NeZR4LrQaNmRoiHWzGIFjIPRQfrEFAdo/EdbIofG731NPJoOv9EbzzyDhMV+xQuNtjuO7CPu9BPd3/WFmGul1syeXk1DDPNDsFXbLPC36gTwjSYirl1W6ib81U=
+	t=1736886710; cv=none; b=YjkaRLv4erxbZqR2FRoRdNBKyhbGgpaBzZWCpMPZlnFWytLw9fvCLbAeXsEU60UKDyCbtWVMZieG3fY80on0dqVC0VOm5vsMNogx1tV8WFooPFPXUceTP2Qm/KxJbN+yoC3jMVxrmSZdG2MR6xLJRp2hPgdUt3fEYbWdMiFc98Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736886651; c=relaxed/simple;
-	bh=Toc0A+TzSE+FxG6ajnHgtpJ9IibyQZlkqWCrC1uAsGM=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=h1x+I92OX4tsrwoAy51ivqBgb0i+PRSr8KnP9SeYoVblUtp4mUwqesgQ8Xu3cy29DfNMAhcP4kYCPKXE8wUnEY8iPAWu21zkxCWdmPki75sTbhSRkzTGZoi0zzs0FEQz5qTp9rQSg9/O8Bf4+/MHubSh/MjNl6BHRQ8z+/CODLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdOBDzrx; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736886710; c=relaxed/simple;
+	bh=+hWfFe9P0jjxAfxf90PKYBqv4LgjtnNgp8cUo26hgXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rgc4uIEnrvljj/0/Uhxx7eEmRAWTqPadGwZkzI2svdius8SQi2BU5rbiiuDTHbYp4sQuMNc49Y/u8x/48/J4JZ4QiA/GvylAKx8+UvPQD9w88H3opfnDm40Ms/5h5sZ0ptiE4fLzznyNld23Xgx05TGgkHs6c/RVtYjSaNZeOEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K4V7MLWQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdOBDzrx"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e5773c5901aso307052276.1
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 12:30:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736886648; x=1737491448; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SPRPm87DXRLusb2FH5q+lErvZ8BzG4Als+1lIxhnTy0=;
-        b=LdOBDzrxxA6pp3hH1NlOvMUB1XJQsdfpWS5vf0/+olsYoMF0Bv6LaFDFBu98Uh3G1Q
-         T4kg53D4xxyAUKC9Ayn4/n193/FcxaYdp/7MtCTigXoPyrGdhtgCPYW70jv/ApDT/Jfj
-         TDCF3sbPBlccy19qDXyBix8K7vd4nawmphNey2TA/HQE55iS0FoLJWJtB6BVrqsan5bm
-         6mOBcFL2Qit82kMfxUTlHFKuUKadczyue5GXBOWvhVB/ukEHHqmlwmRq5dTkqCgUcTfm
-         ChfZ/Pngmz24FXLpu/bdIC2Yw98yPQV26eLqXWHar/FXYzOV9MD8eSLvaY984sK7zVF0
-         LR8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736886648; x=1737491448;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SPRPm87DXRLusb2FH5q+lErvZ8BzG4Als+1lIxhnTy0=;
-        b=Ps69oE2X0REF7/m18iHLtxKKMLUUyVRzgdc4DcM35xRikrtZV2HNu1Ftozoic11UuC
-         oY5AytykxqudgYOG6Uyg5zTNAnKPIQAnlX5IDzQBPYkQzS3en2uePK/vhW1VkZ09N6Wr
-         mAuNAfvuwN59AZuo0QV6JY5lElZOkcogqtTGLJhmdpYplwn7ItLSI3D90A1yGO6GDRla
-         tIBuTG8V+wUenpn7BVjwWz8m9QXB1YG9YqQRI9pV6W8ThJIPyDc2f8pSHMENuhIf0VK6
-         tN9OGZzaBAO+343k5pAepEV0sw0qHOnRoZNpCwFMuO6kOwZMzMCjIdGae5krhdg6II0U
-         FEHw==
-X-Gm-Message-State: AOJu0YyuzwMMVt6LIAiUtTXzSdCvTorpLlU65ncDLWTgzhuoWUK4UbDs
-	Yo6CAZwvN+LzBKqpd1I9N+y6nPk76jUTs8hekbTDS0IsZiOq37P2ljDvOw==
-X-Gm-Gg: ASbGncvCoxWv9nufxm3OgVjIjO1nMS/GNF+5F3uxAjJYwEGIpscpEojaTxHsvQhNcwS
-	ZmpiOkpEaoBd5pR/vCRCZa74ZU24TPC7pHY3NIXGVLUprT8ALoP2xoV9r6LuHcMCh+TJLEswq0X
-	7WoAyL60xzpYho+7ECffEKb4TwkfUQHTmkH7tB4wOkqQ1PeZRigh9OnwERAZEACU3vF5JgYfCra
-	uK7uw6r7NrIZMTd912Ve050jUoNlnpzxjgxmzhCtw==
-X-Google-Smtp-Source: AGHT+IF1uATIZbVz2bKEzNCNIQPbpL6cepYmy3IN5+loU73YgtSjUw3l5MQ9G0H9izryEQvb9fWBzg==
-X-Received: by 2002:a05:690c:7305:b0:6ef:f1be:5b5f with SMTP id 00721157ae682-6f6c9a8f619mr3753547b3.5.1736886647766;
-        Tue, 14 Jan 2025 12:30:47 -0800 (PST)
-Received: from fan ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f546c3dfb3sm22801147b3.30.2025.01.14.12.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 12:30:47 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 14 Jan 2025 12:30:44 -0800
-To: linux-cxl@vger.kernel.org
-Cc: a.manzanares@samsung.com, fan.ni@samsung.com, anisa.su887@gmail.com,
-	dave@stgolabs.net
-Subject: [ISSUE] memdev cannot be enabled after reboot due to failed dvsec
- range check [QEMU setup]
-Message-ID: <Z4bJdCliETI_t2DL@fan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K4V7MLWQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736886709; x=1768422709;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+hWfFe9P0jjxAfxf90PKYBqv4LgjtnNgp8cUo26hgXw=;
+  b=K4V7MLWQvSRhHMIv2aQfW7yxw2qLcFobw86nCHKBPhVZwoOIAyoU4lav
+   WiMvekk+CiIu49RA69H1TXKsYrC3QBbmTP5vn4oan6zecLoKUu/8erX6z
+   AcrkquJe+UjB2Jw5TlhhbnhN763PSjpJhWLZl26OvyD/ShVKam9+widuc
+   QBLaF9TJW3CSM5gdvYA+4Ml6hZKQJQHRwvxTJFUI3DcxmHt8Lwc2p8yK+
+   uxfMKl3nxCMrE31E7Zx5IahPPo/3UF5RZAtgJK+rbueP8MCX2SZT5sE70
+   yG/J4fdiN03ZvLpttJmh9jIb1RoxCOKZty1enXv3o+nBsg2Rt6yT+c2e7
+   Q==;
+X-CSE-ConnectionGUID: mqoF7QxOTUy9on3cLXOQJA==
+X-CSE-MsgGUID: DdlId05CSrmqEEklWAkg3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="54621467"
+X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
+   d="scan'208";a="54621467"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:31:48 -0800
+X-CSE-ConnectionGUID: e6wKEZWhRluNT9Mq8FWjzQ==
+X-CSE-MsgGUID: pgVJ5YjVQb2lg/lw7OLijw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="142184186"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.244.88])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:31:43 -0800
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: Robert Richter <rrichter@amd.com>,
+	ming.li@zohomail.com,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/4] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Tue, 14 Jan 2025 21:31:00 +0100
+Message-ID: <20250114203136.31704-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi,
+The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+Physical Address (HPA) windows that are associated with each CXL Host
+Bridge. Each window represents a contiguous HPA that may be interleaved
+with one or more targets (CXL v3.1 - 9.18.1.3).
 
-Recently, while testing cxl with qemu setup, I found the memdev cannot
-be enabled successfully after reboot. 
+The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+memory to which systems cannot send transactions. On those systems, BIOS
+publishes CFMWS which communicate the active System Physical Address (SPA)
+ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+SPA range trims out the hole, and capacity in the endpoint is lost with no
+SPA to map to CXL HPA in that hole.
 
-Here is the setup and the steps I have tried.
+In the early stages of CXL Regions construction and attach on platforms
+with Low Memory Holes, the driver fails and returns an error because it
+expects that the CXL Endpoint Decoder range is a subset of the Root
+Decoder's (SPA >= HPA). On x86 with LMH's, it happens that SPA < HPA.
 
-QEMU:
-https://gitlab.com/qemu-project/qemu.git
-branch: master
-commit: 8032c78e556cd0baec111740a6c636863f9bd7c8
+Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+Decoders or already made CXL Regions and Decoders to allow the
+construction of new CXL Regions and the attachment of Endpoint Decoders,
+even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Decoder
+range end to match Root Decoder's.
 
-Kernel:
-https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
-branch: next
-2f84d072bdcb7d6ec66cc4d0de9f37a3dc394cd2
+- Patch 1/4 changes the calling conventions of three match_*_by_range()
+  helpers in preparation of 3/4.
+- Patch 2/4 Introduces helpers to detect LMH's and also one to adjust
+  the HPA range end for CXL Regions construction.
+- Patch 3/4 enables CXL Regions construction and Endpoint Decoders
+  attachment by matching Root Decoders or Regions with Endpoint
+  Decoders, adjusting Endpoint Decoders HPA range end, and relaxing
+  constraints while Endpoints decoders' attachment.
+- Patch 4/4 simulates a LMH for the CXL tests on patched CXL driver.
 
-Steps to reproduce the issue.
-1.  start the vm with cxl pmem device attached directly to RP.
-2. Load the cxl drivers cxl_acpi cxl_core cxl_pci cxl_port cxl_mem, etc.
-Everyting works expected, the memory is corrected enabled and shown with
-cxl list.
-3. Reboot the VM (run reboot command inside vm, no shutdown);
-4. Load the cxl drivers as in step 2. the cxl pmem is not correctly enabled. 
+Many thanks to Alison, Dan, and Ira for their help and for their reviews
+of my RFC on Intel's internal ML.
 
-dmesg shows some error as below:
--------------------------------
-[   17.131729] cxl_core:cxl_hdm_decode_init:443: cxl_pci 0000:0d:00.0: DVSEC Range0 denied by platform
-[   17.135267] cxl_pci 0000:0d:00.0: Range register decodes outside platform defined CXL ranges.
-[   17.138428] cxl_core:cxl_bus_probe:2073: cxl_port endpoint2: probe: -6
-[   17.141104] cxl_core:devm_cxl_add_port:936: cxl_mem mem0: endpoint2 added to port1
-[   17.143703] cxl_mem mem0: endpoint2 failed probe
-[   17.145324] cxl_core:cxl_bus_probe:2073: cxl_mem mem0: probe: -6
-[   17.171416] cxl_core:cxl_detach_ep:1499: cxl_mem mem0: disconnect mem0 from port1
-------------------------------
-Compare the step 2 and 4 with debug info. we can see,
-In step 2, when entry function: cxl_hdm_decode_init().
+Commenting on v1, Alison wrote a couple of observations on what users
+will see. I suggest anyone interested to see how this series affect
+users to take a look at her observations.[0] Thank you!
 
-(gdb) p *info
-$2 = {mem_enabled = false, ranges = 0, port = 0xffff8881097eac00, dvsec_range = {{start = 0, end = 0}, {start = 0, end = 0}}}
+Changes for v2:
 
-The info struct is from cxl_dvsec_rr_decode(), where if mem_enabled is
-not enabled, it will return directly without reading dvsec range, so
-ranges == 0.
-This is what happened in step 2: no dvsec ranges are provided to the function for checking.
+  Cover: 
+	Extend and elaborate more on how the series works.
+  1/4:
+	Add Reviewed-by tags (Alison, Ira).
+  2/4:
+	Make a separate patch for LMH helpers. (Alison)
+	Add spaces before final returns. (Alison)
+	Change trim_by_spa() to arch_adjust_region_resource(). (Alison)
+	Check that SPA is below CFMWS range start + 4GB. (Ming)
+	Change storage class of default helpers to "static".[1] (KTR)
+  3/4:
+	Add dev_dbg() logs before and after adjusting resource for Region
+	construction to match the Root Decoder range. (Alison)
+  4/4:
+	Conditionally create a LMH simulation only if
+	CXL_ARCH_LOW_MEMORY_HOLE is set. (Jonathan)
+	Make the start address of the CFMWS range dependent either on
+	real hardware (0x0) or on mock_cfmws[0] for tests. (Alison)
+	Extend the commit message to confirm successful creation of
+	a Region with a LMH on loading of the cxl-test module. (Alison)
+	Define the CFMWS range start on real hardware as
+	LMH_CFMWS_RANGE_START (Alison)
+	
+v1 - https://lore.kernel.org/all/20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com/
 
-When init the hdm decoder in cxl_hdm_decode_init function, the memory enable bit will be set.
+[0] - https://lore.kernel.org/all/Z0Tzif55CcHuujJ-@aschofie-mobl2.lan/
+[1] - https://lore.kernel.org/oe-kbuild-all/202411252126.T7xKY88q-lkp@intel.com/ 
 
-In step 4, after reboot, the enabled memory enable bit sustained and the dvsec range
-register will be read from the device in cxl_dvsec_rr_decode. 
-So when entrying cxl_hdm_decode_init(), 
-------------------------------------
-$2 = {mem_enabled = true, ranges = 1, port = 0xffff888103c77400, dvsec_range = {{start = 0, end = 536870911}, {start = 0, end = 0}}}
-Breakpoint 2 at 0xffffffffc0657bbe: file drivers/cxl/core/pci.c, line 416.
-------------------------------------
-It will cause the dvsec_range_allowed() failing as the range from dvsec range
-registers starts at address zero [0, 512], which does not match the hpa range
-stored in cxld->hpa_range, causing the issue.
+Fabio M. De Francesco (4):
+  cxl/core: Change match_*_by_range() calling convention
+  cxl/core: Add helpers to detect Low memory Holes on x86
+  cxl/core: Enable Region creation on x86 with Low Memory Hole
+  cxl/test: Simulate an x86 Low Memory Hole for tests
 
-------------------------------------
-Thread 1 hit Breakpoint 4, dvsec_range_allowed (dev=0xffff888108af9848,
-    arg=0xffffc9000059f9b0) at drivers/cxl/core/pci.c:265
-265		if (!(cxld->flags & CXL_DECODER_F_RAM))
-(gdb) b 268
-Breakpoint 5 at 0xffffffffc0657d31: file drivers/cxl/core/pci.c, line 271.
-(gdb) p /x cxld->hpa_range
-$5 = {start = 0xa90000000, end = 0xb8fffffff}
-(gdb) p /x *dev_range
-$7 = {start = 0x0, end = 0x1fffffff}
-(gdb)
-------------------------------------
-The hpa_range is set when parsing the cfmws in __cxl_parse_cfmws.
+ drivers/cxl/Kconfig                  |  5 ++
+ drivers/cxl/core/Makefile            |  1 +
+ drivers/cxl/core/lmh.c               | 81 ++++++++++++++++++++++++++++
+ drivers/cxl/core/lmh.h               | 30 +++++++++++
+ drivers/cxl/core/region.c            | 81 +++++++++++++++++++++-------
+ tools/testing/cxl/Kbuild             |  1 +
+ tools/testing/cxl/cxl_core_exports.c |  2 +
+ tools/testing/cxl/test/cxl.c         | 10 ++++
+ 8 files changed, 193 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/cxl/core/lmh.c
+ create mode 100644 drivers/cxl/core/lmh.h
 
-Any throughts?
-
-Open question: do we need to update the dvsec range register after we parse the
-cfmws to make the two above match.
 -- 
-Fan Ni
+2.47.1
+
