@@ -1,239 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279A412C7FD
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 15:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9AD1607B4
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 15:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736867018; cv=none; b=aYcGLRK3cqMErQ14WVcbHbI/oegxFXCCakx8tAuLzHizhKCH4uLKy9eYN/aUexchIc86O6Kx2LkUGsCJWAwkEZTGZlfSrl58ZUnnODHW7sUwaod3H3bP1HqL815/VF0Kkhng06cKIT6l26Yf+VQC7qecuU+UrhBm3yBa/fh15T8=
+	t=1736867050; cv=none; b=JjhvjV75NdgV/0VYM5rUnyBePABdyExVKJlQekhB2y0WrokKbHv257GEwhQwyZjAJWpN3b+3B7nebmV2NLsaPHpo4FD2fPtb0Q6TPaHohveumweO4cRXlj9d4dfvY03Q6FlFZOStC8kwrkT5Sj6QIi3+OU7HL/WOJ10rLhbXaNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736867018; c=relaxed/simple;
-	bh=PkEVrbM1cp8L+UAv6tCljnykZ3h70Hb9k6ZyDysp8t0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BEG5t+GJpY+aEoVARS3VqU8Gj6e9ESmdMFApBsk9b+LYjQlTjtRDABW8Zp7HMtaDl65rZnaLTxISK+upycJdwyZVEaZmx3EFEX01i0obPcPcbbwplWEajKSrS/vxii9lBiDWbARM0luK8wdn+0w/Idg/YEYyWHOkTw0bnfmVoOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ut/rvgi/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736867050; c=relaxed/simple;
+	bh=tfILLtWeqqECk70OUTxBNI4PM4mhfz8zOAEA3KLj1Hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WWFRtGB2fmD22edIBCf+qXW3fHWOCjPx0N/H8wSBGYwgRj3YtLdKEdsHMEYw8GlgsZ/JenIkjrsTZgZoVub/MhqTwI/EjNSWJtMiy3wWktaWfjigIm22EFo/LO193ob5BR45YYlrMFPOnajsyyTvO0CGAyFB944D8O+RHU5xHSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPWqHuka; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ut/rvgi/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736867015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EVcF0mu+oOpfopIC/ZRaz1f1Q3v6efqkEhKRWk3onBA=;
-	b=Ut/rvgi/I7/YgzwZdJpyVMhSHsWaC1/B1xId9c2UNkjPsgIofn5yTqxmq9GaqpfrH+VFne
-	DxUQusXk/m0Dp0Qj3OHWlkrBdcH7K55m2d7eb4BJoAMWfokIPkduHteCMHOsjn+u8/S9WA
-	pn7bqBKomgZ7azV3/K8zlsmNTIVbrN8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-h1qS1euSNhGKPpWqHVm7mA-1; Tue, 14 Jan 2025 10:03:35 -0500
-X-MC-Unique: h1qS1euSNhGKPpWqHVm7mA-1
-X-Mimecast-MFC-AGG-ID: h1qS1euSNhGKPpWqHVm7mA
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385d7611ad3so3163768f8f.2
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 07:03:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736867014; x=1737471814;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EVcF0mu+oOpfopIC/ZRaz1f1Q3v6efqkEhKRWk3onBA=;
-        b=d3197Q8XdbzDjJhA80+aemDNloRE01o056+CwW1MxyToB46RTC8uQ5m6x+fwtzsjDO
-         O3YdCkIgQR5tl4XRmPMYcEjX4VNFR+DWgk427h7vhO8OkSElFW8Qe2ELeaOiGBU/HaVV
-         fMSt+kXx3oiHtG1kAla2zaYH/hdZwaW4BvlDx27qlWRkyqDb8sbvnx1CdJ0doOOovcUg
-         Xvh6rc/cvx5irBTpwAEyMyIGxB3k/Gh0dSjgn4cEYj+AwQ2x6OzUFAXicsrarNPfndwX
-         RCSUvwTk5o41ySwPBET45y4km9yzTqTEWJwXTmmHcptj9X5xvjr2mDmcJ5Pkx/MKMU0s
-         Tafg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVkHXQDhSrikAti6Si2Od3T3DuYG8qfc01FNO9XloavrGgrNA0OTxXsE9fiAx+c7OjUOhHFPAQjzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz44+PaS4t32uKT+Ip7juuxKqLpwWCIMfzjbtU7qLn5L8FRSwN0
-	+0FFJWsl4szvcKfb4n000CaJG6wU0Puzr68H0JaX24Z6/z/fPgcezw+4O3jijPKLTEUXPuNcAPT
-	LQ5h6YzUm/XZCIbEHKKvyWZZ+AmR1jtTA66jobpe5oX/ZEzxgspAknU0Cew==
-X-Gm-Gg: ASbGncv7gETTEnhJcmxHGxhRp6zZ+75CPyzEhROrqaFjHvo8sMqiQX6+New+fkz+0mm
-	pzICjRRQyGCb4ynxO5E+Fd8dcJKL7b6+2/NSWEN1gWsJccf3PVKrJYCb2hn2XwLOkwN7UygCZ2T
-	vuHWakHc2pwLDZDe05H5uJHydglCsT2j6xJOJQ8j0346l7BEdA+zLDS6A7tC8w8PGb8GqRPQ8yx
-	i93UXICnXQYvZHGwHAuPx8PnVvSmDwT9Y07bqIHnvf/1NcY0qE9wifoBNjmMj7EBcbGq9ud3uqB
-	4AMlnZsBPuUkYOTyv6qkXxy5rZA/0RcDMn/Si+Iugh460TX+6DT8aFTlUjOKBZ0/ObMI+qfQRwj
-	e/kLX8aS9
-X-Received: by 2002:adf:c08d:0:b0:38a:87cc:fb42 with SMTP id ffacd0b85a97d-38a87ccfc9cmr18854431f8f.21.1736867012197;
-        Tue, 14 Jan 2025 07:03:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHM3HjhBhsAPB1JfMTMphs8VamtwcWCRs8AeFhEVZ770be4gDgdSn1pqkoBasZXrNwqQMUsQg==
-X-Received: by 2002:adf:c08d:0:b0:38a:87cc:fb42 with SMTP id ffacd0b85a97d-38a87ccfc9cmr18854332f8f.21.1736867011446;
-        Tue, 14 Jan 2025 07:03:31 -0800 (PST)
-Received: from ?IPV6:2003:cb:c738:3100:8133:26cf:7877:94aa? (p200300cbc7383100813326cf787794aa.dip0.t-ipconnect.de. [2003:cb:c738:3100:8133:26cf:7877:94aa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9d8fc51sm180089645e9.7.2025.01.14.07.03.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2025 07:03:31 -0800 (PST)
-Message-ID: <c3df67b5-47f5-4a2c-ba50-cc0de2b937f5@redhat.com>
-Date: Tue, 14 Jan 2025 16:03:29 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPWqHuka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736867049; x=1768403049;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tfILLtWeqqECk70OUTxBNI4PM4mhfz8zOAEA3KLj1Hs=;
+  b=dPWqHukaG2kmRjTotblfiIOFkPx6a4g4Vku/jDufPTs/AQDlMi9jBKMb
+   z3ZIzTKIKvLbFgo7aZuOmV0IIffoNDrb8xi/QHsWD6WevTfB9/STTjiow
+   zrE2YVwyChQw80BtChL2Sh0kq16p/NPvAqDDSHYV52NpNILYaY15bAkTx
+   2IIBd6bZfkqb6xf68/MI5U2KllsdTpqABy8WBTmrrD1HZXA9OD2nwTbeH
+   /z50n2LYSIFGjiaNt23SCm/y5eXwDUK8dLU+HthIzw4wpmCZ1+GWSH9eI
+   uY0dFw5BTMzdsyDxxfGanh7FP6ulyEdahdZI+iFieyw21H5EptpYPj2sb
+   Q==;
+X-CSE-ConnectionGUID: qRN2CEcXT76kAFI369LT5w==
+X-CSE-MsgGUID: tK6jiSdgQ7iu1fVC0rCdvw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="36860436"
+X-IronPort-AV: E=Sophos;i="6.12,314,1728975600"; 
+   d="scan'208";a="36860436"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 07:04:08 -0800
+X-CSE-ConnectionGUID: 8tgsbuSVTr6YwOqbo3go8w==
+X-CSE-MsgGUID: oAJus1taRBKU9deDEbdGZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="104687776"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 14 Jan 2025 07:04:05 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tXiSY-000OgF-2r;
+	Tue, 14 Jan 2025 15:04:02 +0000
+Date: Tue, 14 Jan 2025 23:03:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huaisheng Ye <huaisheng.ye@intel.com>, Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com, dave.jiang@intel.com,
+	ming.li@zohomail.com
+Cc: oe-kbuild-all@lists.linux.dev, pei.p.jia@intel.com,
+	linux-cxl@vger.kernel.org, Huaisheng Ye <huaisheng.ye@intel.com>
+Subject: Re: [PATCH v4 1/1] cxl/core/regs: Refactor out functions to count
+ regblocks of given type
+Message-ID: <202501142243.PmkW84KY-lkp@intel.com>
+References: <20250114131041.17512-2-huaisheng.ye@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 12/26] mm/memory: Enhance insert_page_into_pte_locked()
- to create writable mappings
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
- gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
- linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
- hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <68974d46091eea460f404f8ced3c6de5964c9ec4.1736488799.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <68974d46091eea460f404f8ced3c6de5964c9ec4.1736488799.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LWheVOy3YTwI1xUJ10K1HsUAiQ_UpPWfZYCncQnSvNs_1736867014
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250114131041.17512-2-huaisheng.ye@intel.com>
 
-On 10.01.25 07:00, Alistair Popple wrote:
-> In preparation for using insert_page() for DAX, enhance
-> insert_page_into_pte_locked() to handle establishing writable
-> mappings.  Recall that DAX returns VM_FAULT_NOPAGE after installing a
-> PTE which bypasses the typical set_pte_range() in finish_fault.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> ---
-> 
-> Changes for v5:
->   - Minor comment/formatting fixes suggested by David Hildenbrand
-> 
-> Changes since v2:
-> 
->   - New patch split out from "mm/memory: Add dax_insert_pfn"
-> ---
->   mm/memory.c | 37 +++++++++++++++++++++++++++++--------
->   1 file changed, 29 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 06bb29e..8531acb 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2126,19 +2126,40 @@ static int validate_page_before_insert(struct vm_area_struct *vma,
->   }
->   
->   static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
-> -			unsigned long addr, struct page *page, pgprot_t prot)
-> +				unsigned long addr, struct page *page,
-> +				pgprot_t prot, bool mkwrite)
->   {
->   	struct folio *folio = page_folio(page);
-> +	pte_t entry = ptep_get(pte);
->   	pte_t pteval;
- >
+Hi Huaisheng,
 
-Just drop "entry" and reuse "pteval"; even saves you from one bug below :)
+kernel test robot noticed the following build warnings:
 
-pte_t pteval = ptep_get(pte);
+[auto build test WARNING on cxl/next]
+[also build test WARNING on linus/master v6.13-rc7 next-20250114]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> -	if (!pte_none(ptep_get(pte)))
-> -		return -EBUSY;
-> +	if (!pte_none(entry)) {
-> +		if (!mkwrite)
-> +			return -EBUSY;
-> +
-> +		/* see insert_pfn(). */
-> +		if (pte_pfn(entry) != page_to_pfn(page)) {
-> +			WARN_ON_ONCE(!is_zero_pfn(pte_pfn(entry)));
-> +			return -EFAULT;
-> +		}
-> +		entry = maybe_mkwrite(entry, vma);
-> +		entry = pte_mkyoung(entry);
-> +		if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-> +			update_mmu_cache(vma, addr, pte);
-> +		return 0;
-> +	}
-> +
->   	/* Ok, finally just insert the thing.. */
->   	pteval = mk_pte(page, prot);
->   	if (unlikely(is_zero_folio(folio))) {
->   		pteval = pte_mkspecial(pteval);
->   	} else {
->   		folio_get(folio);
-> +		entry = mk_pte(page, prot);
+url:    https://github.com/intel-lab-lkp/linux/commits/Huaisheng-Ye/cxl-core-regs-Refactor-out-functions-to-count-regblocks-of-given-type/20250114-212025
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20250114131041.17512-2-huaisheng.ye%40intel.com
+patch subject: [PATCH v4 1/1] cxl/core/regs: Refactor out functions to count regblocks of given type
+config: i386-buildonly-randconfig-001-20250114 (https://download.01.org/0day-ci/archive/20250114/202501142243.PmkW84KY-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250114/202501142243.PmkW84KY-lkp@intel.com/reproduce)
 
-we already do "pteval = mk_pte(page, prot);" above?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501142243.PmkW84KY-lkp@intel.com/
 
-And I think your change here does not do what you want, because you
-modify the new "entry" but we do
+All warnings (new ones prefixed by >>):
 
-	set_pte_at(vma->vm_mm, addr, pte, pteval);
+>> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'pdev' not described in '__cxl_find_regblock_instance'
+>> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'type' not described in '__cxl_find_regblock_instance'
+>> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'map' not described in '__cxl_find_regblock_instance'
+>> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'index' not described in '__cxl_find_regblock_instance'
 
-below ...
 
-> +		if (mkwrite) {
-> +			entry = pte_mkyoung(entry);
-> +			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> +		}
+vim +303 drivers/cxl/core/regs.c
 
-So again, better just reuse pteval :)
+303ebc1b1741b6 Ben Widawsky     2022-01-23  291  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  292  /**
+7167af677c5aa1 Huaisheng Ye     2025-01-14  293   * __cxl_find_regblock_instance() - Locate a register block or count instances by type / index
+7167af677c5aa1 Huaisheng Ye     2025-01-14  294   * Use CXL_INSTANCES_COUNT for @index if counting instances.
+303ebc1b1741b6 Ben Widawsky     2022-01-23  295   *
+7167af677c5aa1 Huaisheng Ye     2025-01-14  296   * __cxl_find_regblock_instance() may return:
+7167af677c5aa1 Huaisheng Ye     2025-01-14  297   * 0 - if register block enumerated.
+7167af677c5aa1 Huaisheng Ye     2025-01-14  298   * >= 0 - if counting instances.
+7167af677c5aa1 Huaisheng Ye     2025-01-14  299   * < 0 - error code otherwise.
+303ebc1b1741b6 Ben Widawsky     2022-01-23  300   */
+7167af677c5aa1 Huaisheng Ye     2025-01-14  301  static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+d717d7f3df1849 Jonathan Cameron 2023-05-26  302  			       struct cxl_register_map *map, int index)
+303ebc1b1741b6 Ben Widawsky     2022-01-23 @303  {
+303ebc1b1741b6 Ben Widawsky     2022-01-23  304  	u32 regloc_size, regblocks;
+d717d7f3df1849 Jonathan Cameron 2023-05-26  305  	int instance = 0;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  306  	int regloc, i;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  307  
+573408049b7598 Robert Richter   2023-06-22  308  	*map = (struct cxl_register_map) {
+dd22581f895371 Robert Richter   2023-10-18  309  		.host = &pdev->dev,
+573408049b7598 Robert Richter   2023-06-22  310  		.resource = CXL_RESOURCE_NONE,
+573408049b7598 Robert Richter   2023-06-22  311  	};
+573408049b7598 Robert Richter   2023-06-22  312  
+962f1e79e7acfb Dave Jiang       2024-05-02  313  	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+303ebc1b1741b6 Ben Widawsky     2022-01-23  314  					   CXL_DVSEC_REG_LOCATOR);
+303ebc1b1741b6 Ben Widawsky     2022-01-23  315  	if (!regloc)
+303ebc1b1741b6 Ben Widawsky     2022-01-23  316  		return -ENXIO;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  317  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  318  	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+303ebc1b1741b6 Ben Widawsky     2022-01-23  319  	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+303ebc1b1741b6 Ben Widawsky     2022-01-23  320  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  321  	regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  322  	regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  323  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  324  	for (i = 0; i < regblocks; i++, regloc += 8) {
+303ebc1b1741b6 Ben Widawsky     2022-01-23  325  		u32 reg_lo, reg_hi;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  326  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  327  		pci_read_config_dword(pdev, regloc, &reg_lo);
+303ebc1b1741b6 Ben Widawsky     2022-01-23  328  		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+303ebc1b1741b6 Ben Widawsky     2022-01-23  329  
+6c7f4f1e51c2a2 Dan Williams     2022-11-29  330  		if (!cxl_decode_regblock(pdev, reg_lo, reg_hi, map))
+6c7f4f1e51c2a2 Dan Williams     2022-11-29  331  			continue;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  332  
+d717d7f3df1849 Jonathan Cameron 2023-05-26  333  		if (map->reg_type == type) {
+d717d7f3df1849 Jonathan Cameron 2023-05-26  334  			if (index == instance)
+303ebc1b1741b6 Ben Widawsky     2022-01-23  335  				return 0;
+d717d7f3df1849 Jonathan Cameron 2023-05-26  336  			instance++;
+d717d7f3df1849 Jonathan Cameron 2023-05-26  337  		}
+303ebc1b1741b6 Ben Widawsky     2022-01-23  338  	}
+303ebc1b1741b6 Ben Widawsky     2022-01-23  339  
+6c7f4f1e51c2a2 Dan Williams     2022-11-29  340  	map->resource = CXL_RESOURCE_NONE;
+7167af677c5aa1 Huaisheng Ye     2025-01-14  341  	if (index == CXL_INSTANCES_COUNT)
+7167af677c5aa1 Huaisheng Ye     2025-01-14  342  		return instance;
+7167af677c5aa1 Huaisheng Ye     2025-01-14  343  
+303ebc1b1741b6 Ben Widawsky     2022-01-23  344  	return -ENODEV;
+303ebc1b1741b6 Ben Widawsky     2022-01-23  345  }
+7167af677c5aa1 Huaisheng Ye     2025-01-14  346  
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
