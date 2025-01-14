@@ -1,48 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF81B1459FD;
-	Tue, 14 Jan 2025 20:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B341459FD;
+	Tue, 14 Jan 2025 20:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736886727; cv=none; b=F071GBIUKdhP8VjhNSuTTrb6uGLOkobxGB6Cbb8JrW92r9w3wJyTfLaJV51eDA8Z0fRooxY7cjeI46s4zZRlGoWBRINYovIl2R/qvPsItzljKAmtdSxzhOBzW56YFukGQsR0Bia+Ibogau7fb0s6ttAA79NI89e55TJnJCGJUgQ=
+	t=1736886887; cv=none; b=MAsVawBVDhq98Lk8bb4EMr/Iwc/tG7rVlteHa6wzyJ5bO08D9BJdlGM1nEjMw5UgfWb6pedPZtSosJlDhZj8dUahstPY9WxDy85zeM523zQKhNO8zyw3Cwu1vxPnt2xixwPxKRR84cs4DDIh6gStFOBqLemTUG9K+nSu8jpdE50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736886727; c=relaxed/simple;
-	bh=/APxzXDFKLv/4MMx+aCv6YJHiEB/aU+KzNUx3IBKBME=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jW7sylbmBuxZRjbeVvgk9++/ywMEL3Mgi7E0DicKMjAgD4GgFWX0GRCSaVKpITj5WvWx1/0UmZSj6a80zDoPxTSaa6r60HDqwwRo+HoNFUklCe8FXfFBPB4gez7nxUnGwCsHw9FqwXnJsn/7GH5o+rIjviqcfN8rwBvXYyjd46w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gM8D+lpI; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1736886887; c=relaxed/simple;
+	bh=+hWfFe9P0jjxAfxf90PKYBqv4LgjtnNgp8cUo26hgXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=um7AfwCqJxv6NqXjnq9sHLj47cZU3o0KIyFgk9GjNOSddS816QcnPpbGtxlJXC5PGetnAHpPFdMWSOorzU7bAumyAKNW1HP3GD5BYJUrxFib9Rc4aR8A0am391BpxFrY3Ej13AkNv+Kp6HtPHbWwVbWakubDTIpeX/trN4GacvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MhK/jACR; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gM8D+lpI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MhK/jACR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736886726; x=1768422726;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/APxzXDFKLv/4MMx+aCv6YJHiEB/aU+KzNUx3IBKBME=;
-  b=gM8D+lpIa4DcTXmowohw/245X9ZiRKKD1AS+8jeAskYooArKCkrAW4UR
-   KpV9fz9D66n4rf4xjzbQdh9cgHRA8vH2T3iKD1Qp6+//GkXd9Xar3410+
-   m2NYa+99ZqDdOjHf8bx/AyZrllCbhdf2dacEca9eKXDA7RqVoyjSgiasd
-   Yn/6U8u58wBMVx6ENKM7g2sYGnzrC8cSkjyMd9Cdg/m+foBOxxyaim185
-   lfgm22A1SYSPB4QzA9Uq+H990lEjOofOASK3IwIrm1kCZCXGZsEOio8GP
-   N6/B57w9RxPOg1AzDplIiZUV/15ZJFBniMB+frwi4omqUOwFLnUsLWHfA
-   A==;
-X-CSE-ConnectionGUID: cIys1L7JRFa8ENn9WgKNHA==
-X-CSE-MsgGUID: Fkb39rmWRLecir+JfrguDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="54621510"
+  t=1736886886; x=1768422886;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+hWfFe9P0jjxAfxf90PKYBqv4LgjtnNgp8cUo26hgXw=;
+  b=MhK/jACRjAj4unf1Ryja7hrcDbCcWvXVkYlY2RAr6EGL0F7Mozop0KJw
+   uyf005+ow2JivI7tAGrD1piUTERioyaXdPbZ0s3OW38LK+UILg4KT6gfK
+   YLb9FQHsbqj857K5qNIm/zREwwGVXOMckHhSiR1HmA0XX7kotusvFFQou
+   jC7mWmc+bnIJZ0RTSrAjfp3rDs2E+ZoXFiJRKdNIBrccvPQuBJkuUeVVK
+   C3T5RXbfPCRvHifGlBt5hGCaw4/vPi23X/S0ChSXuRlefACdGEZgGelcS
+   jRnmUKX3hCUkq/i5Emk8EIBzpL5U/7Jm3RCE3RhItTO4TGn1nXaehbzqp
+   w==;
+X-CSE-ConnectionGUID: WIrt9N/ZQb+Q4f6BGu1sLQ==
+X-CSE-MsgGUID: a+PRCEVFSIWB24YktfK/kQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="47693508"
 X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
-   d="scan'208";a="54621510"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:32:06 -0800
-X-CSE-ConnectionGUID: dNu+neEfTeutzsI53D+VXA==
-X-CSE-MsgGUID: 0ScvnQB0TsOwNVdL+7TDbA==
+   d="scan'208";a="47693508"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:34:46 -0800
+X-CSE-ConnectionGUID: fH+s870JQmemGyk8B4gYAA==
+X-CSE-MsgGUID: 3LxHb0lESzmVsts+KB2dNg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="142184225"
+X-IronPort-AV: E=Sophos;i="6.12,315,1728975600"; 
+   d="scan'208";a="135751325"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.244.88])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:32:02 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2025 12:34:41 -0800
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -56,12 +55,10 @@ Cc: Robert Richter <rrichter@amd.com>,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 4/4] cxl/test: Simulate an x86 Low Memory Hole for tests
-Date: Tue, 14 Jan 2025 21:31:04 +0100
-Message-ID: <20250114203136.31704-5-fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/4 v2] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Tue, 14 Jan 2025 21:32:52 +0100
+Message-ID: <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250114203136.31704-1-fabio.m.de.francesco@linux.intel.com>
-References: <20250114203136.31704-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,174 +67,94 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simulate an x86 Low Memory Hole for the CXL tests by changing the first
-mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
-to 1GB.
+The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+Physical Address (HPA) windows that are associated with each CXL Host
+Bridge. Each window represents a contiguous HPA that may be interleaved
+with one or more targets (CXL v3.1 - 9.18.1.3).
 
-Since the auto-created region of cxl-test uses mock_cfmws[0], whose range
-base address is typically different from the one published by the BIOS on
-real hardware, the driver would fail to create and attach CXL Regions if
-it was run on the mock environment created by cxl-tests.
+The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+memory to which systems cannot send transactions. On those systems, BIOS
+publishes CFMWS which communicate the active System Physical Address (SPA)
+ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+SPA range trims out the hole, and capacity in the endpoint is lost with no
+SPA to map to CXL HPA in that hole.
 
-Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
-Root Decoders and Regions with Endpoint Decoders when the driver is run on
-mock devices.
+In the early stages of CXL Regions construction and attach on platforms
+with Low Memory Holes, the driver fails and returns an error because it
+expects that the CXL Endpoint Decoder range is a subset of the Root
+Decoder's (SPA >= HPA). On x86 with LMH's, it happens that SPA < HPA.
 
-Since the auto-created region of cxl-test uses mock_cfmws[0], the
-LMH path in the CXL Driver will be exercised every time the cxl-test
-module is loaded. Executing unit test: cxl-topology.sh, confirms the
-region created successfully with a LMH.
+Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+Decoders or already made CXL Regions and Decoders to allow the
+construction of new CXL Regions and the attachment of Endpoint Decoders,
+even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Decoder
+range end to match Root Decoder's.
 
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/cxl/core/lmh.c               | 32 +++++++++++++++++++++++++---
- drivers/cxl/core/lmh.h               |  2 ++
- tools/testing/cxl/cxl_core_exports.c |  2 ++
- tools/testing/cxl/test/cxl.c         | 10 +++++++++
- 4 files changed, 43 insertions(+), 3 deletions(-)
+- Patch 1/4 changes the calling conventions of three match_*_by_range()
+  helpers in preparation of 3/4.
+- Patch 2/4 Introduces helpers to detect LMH's and also one to adjust
+  the HPA range end for CXL Regions construction.
+- Patch 3/4 enables CXL Regions construction and Endpoint Decoders
+  attachment by matching Root Decoders or Regions with Endpoint
+  Decoders, adjusting Endpoint Decoders HPA range end, and relaxing
+  constraints while Endpoints decoders' attachment.
+- Patch 4/4 simulates a LMH for the CXL tests on patched CXL driver.
 
-diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
-index 232ebea0a8364..b981aeea805d6 100644
---- a/drivers/cxl/core/lmh.c
-+++ b/drivers/cxl/core/lmh.c
-@@ -1,11 +1,28 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/range.h>
-+#include <linux/pci.h>
-+
- #include "lmh.h"
- 
- /* Start of CFMWS range that end before x86 Low Memory Holes */
- #define LMH_CFMWS_RANGE_START 0x0ULL
- 
-+static u64 mock_cfmws0_range_start = ULLONG_MAX;
-+
-+void set_mock_cfmws0_range_start(u64 start)
-+{
-+	mock_cfmws0_range_start = start;
-+}
-+
-+static u64 get_cfmws_range_start(struct device *dev)
-+{
-+	if (dev_is_pci(dev))
-+		return LMH_CFMWS_RANGE_START;
-+
-+	return mock_cfmws0_range_start;
-+}
-+
- /*
-  * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
-  *
-@@ -18,9 +35,14 @@
- bool arch_match_spa(struct cxl_root_decoder *cxlrd,
- 		    struct cxl_endpoint_decoder *cxled)
- {
-+	u64 cfmws_range_start;
- 	struct range *r1, *r2;
- 	int niw;
- 
-+	cfmws_range_start = get_cfmws_range_start(&cxled->cxld.dev);
-+	if (cfmws_range_start == ULLONG_MAX)
-+		return false;
-+
- 	r1 = &cxlrd->cxlsd.cxld.hpa_range;
- 	r2 = &cxled->cxld.hpa_range;
- 	niw = cxled->cxld.interleave_ways;
-@@ -36,13 +58,17 @@ bool arch_match_spa(struct cxl_root_decoder *cxlrd,
- /* Similar to arch_match_spa(), it matches regions and decoders */
- bool arch_match_region(struct cxl_region_params *p, struct cxl_decoder *cxld)
- {
-+	u64 cfmws_range_start;
- 	struct range *r = &cxld->hpa_range;
- 	struct resource *res = p->res;
- 	int niw = cxld->interleave_ways;
- 
--	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
--	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
--	    IS_ALIGNED(range_len(r), niw * SZ_256M))
-+	cfmws_range_start = get_cfmws_range_start(&cxld->dev);
-+	if (cfmws_range_start == ULLONG_MAX)
-+		return false;
-+
-+	if (res->start == cfmws_range_start && res->start == r->start &&
-+	    res->end < r->end && IS_ALIGNED(range_len(r), niw * SZ_256M))
- 		return true;
- 
- 	return false;
-diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
-index ec8907145afe8..d804108fbb41a 100644
---- a/drivers/cxl/core/lmh.h
-+++ b/drivers/cxl/core/lmh.h
-@@ -2,6 +2,8 @@
- 
- #include "cxl.h"
- 
-+void set_mock_cfmws0_range_start(u64 start);
-+
- #ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
- bool arch_match_spa(struct cxl_root_decoder *cxlrd,
- 		    struct cxl_endpoint_decoder *cxled);
-diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
-index f088792a8925f..7b20f9fcf0d75 100644
---- a/tools/testing/cxl/cxl_core_exports.c
-+++ b/tools/testing/cxl/cxl_core_exports.c
-@@ -2,6 +2,8 @@
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- 
- #include "cxl.h"
-+#include "lmh.h"
- 
- /* Exporting of cxl_core symbols that are only used by cxl_test */
- EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
-+EXPORT_SYMBOL_NS_GPL(set_mock_cfmws0_range_start, "CXL");
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index d0337c11f9ee6..6bd305e778687 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -9,6 +9,7 @@
- #include <linux/pci.h>
- #include <linux/mm.h>
- #include <cxlmem.h>
-+#include <core/lmh.h>
- 
- #include "../watermark.h"
- #include "mock.h"
-@@ -212,7 +213,11 @@ static struct {
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
- 			.qtg_id = FAKE_QTG_ID,
-+#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
-+			.window_size = SZ_256M * 3UL,
-+#else
- 			.window_size = SZ_256M * 4UL,
-+#endif
- 		},
- 		.target = { 0 },
- 	},
-@@ -454,6 +459,7 @@ static int populate_cedt(void)
- 			return -ENOMEM;
- 		window->base_hpa = res->range.start;
- 	}
-+	set_mock_cfmws0_range_start(mock_cfmws[0]->base_hpa);
- 
- 	return 0;
- }
-@@ -744,7 +750,11 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	struct cxl_endpoint_decoder *cxled;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *port, *iter;
-+#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
-+	const int size = SZ_1G;
-+#else
- 	const int size = SZ_512M;
-+#endif
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_dport *dport;
- 	struct device *dev;
+Many thanks to Alison, Dan, and Ira for their help and for their reviews
+of my RFC on Intel's internal ML.
+
+Commenting on v1, Alison wrote a couple of observations on what users
+will see. I suggest anyone interested to see how this series affect
+users to take a look at her observations.[0] Thank you!
+
+Changes for v2:
+
+  Cover: 
+	Extend and elaborate more on how the series works.
+  1/4:
+	Add Reviewed-by tags (Alison, Ira).
+  2/4:
+	Make a separate patch for LMH helpers. (Alison)
+	Add spaces before final returns. (Alison)
+	Change trim_by_spa() to arch_adjust_region_resource(). (Alison)
+	Check that SPA is below CFMWS range start + 4GB. (Ming)
+	Change storage class of default helpers to "static".[1] (KTR)
+  3/4:
+	Add dev_dbg() logs before and after adjusting resource for Region
+	construction to match the Root Decoder range. (Alison)
+  4/4:
+	Conditionally create a LMH simulation only if
+	CXL_ARCH_LOW_MEMORY_HOLE is set. (Jonathan)
+	Make the start address of the CFMWS range dependent either on
+	real hardware (0x0) or on mock_cfmws[0] for tests. (Alison)
+	Extend the commit message to confirm successful creation of
+	a Region with a LMH on loading of the cxl-test module. (Alison)
+	Define the CFMWS range start on real hardware as
+	LMH_CFMWS_RANGE_START (Alison)
+	
+v1 - https://lore.kernel.org/all/20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com/
+
+[0] - https://lore.kernel.org/all/Z0Tzif55CcHuujJ-@aschofie-mobl2.lan/
+[1] - https://lore.kernel.org/oe-kbuild-all/202411252126.T7xKY88q-lkp@intel.com/ 
+
+Fabio M. De Francesco (4):
+  cxl/core: Change match_*_by_range() calling convention
+  cxl/core: Add helpers to detect Low memory Holes on x86
+  cxl/core: Enable Region creation on x86 with Low Memory Hole
+  cxl/test: Simulate an x86 Low Memory Hole for tests
+
+ drivers/cxl/Kconfig                  |  5 ++
+ drivers/cxl/core/Makefile            |  1 +
+ drivers/cxl/core/lmh.c               | 81 ++++++++++++++++++++++++++++
+ drivers/cxl/core/lmh.h               | 30 +++++++++++
+ drivers/cxl/core/region.c            | 81 +++++++++++++++++++++-------
+ tools/testing/cxl/Kbuild             |  1 +
+ tools/testing/cxl/cxl_core_exports.c |  2 +
+ tools/testing/cxl/test/cxl.c         | 10 ++++
+ 8 files changed, 193 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/cxl/core/lmh.c
+ create mode 100644 drivers/cxl/core/lmh.h
+
 -- 
 2.47.1
 
