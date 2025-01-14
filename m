@@ -1,319 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBBF155725;
-	Tue, 14 Jan 2025 14:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D90214C59C
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 14:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736865596; cv=none; b=Z02W6lmSZcukwLLcqPfKGuxFoAB5MOcX/Si/qP/5ZiPr8GcRFTfNxUv6mE4Xsj+sn+mEGrRdNKBijpXONLwnfdQgmVuIuBXRGeXftr8+93PJcYfJ1qi2MfRkTCbuAPxRhgZFvj7dfL3qwTafGgAFHWvfnqAsAg4JdstWBsU8Sno=
+	t=1736866074; cv=none; b=tKxQAAOSR5fpi5i8JCW1abbFYvvffQs5lxylno22qyGDXs41BkHwHl2UBkp4ebi4jubpMzFPk7tWDB1fs3+Lr/VMlhG/zvslqJhWLz69YKElSsKdguNvvzXW1YTqYYUJ+sMgzmUCxdmEJaYCxGM5ZkKJhZaXPcKKdfeS5bukMM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736865596; c=relaxed/simple;
-	bh=ExS2XTnmU7QoqvKEZZKQwlQZG7UBPVImqCL3EVuvJ1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pkqbRpn+F+GidSVrZdVvsPh+fI5GuoMrYSqWE5IrwhjI9n6/QosBFaQ8+XZksEIATXxSQMxWFunYM+9F2jfjWDIoe5rsx2mCLlV/bkxJtab9Io7+TJYuDgfbWPD1J7NInNbSIVntEDm9hf/d/KvYUNCMxJLDSpG68Bio7/wnXgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mS+VSPBL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736866074; c=relaxed/simple;
+	bh=n0gFWavEdTvtzvVwm6qJrQDd/tgnPw11Y8Zbx+7YwaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MfFmQpg0fMA59vXp4Sc+8CSBCJuj50JQvs5Fhc+6MsMZyBePXQ3X8QSwaCAxitQe9FeRpf0utmsDyOg7NWndW45quZltm+svksJEfSZKKjItc7U5oexcSyV3DpT/qROi2NrhJ+VR2pVrIMxVdhGMMfgvIhcocHBEKKmQ2lApZ2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4WTnxxr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS+VSPBL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50007C4CEDD;
-	Tue, 14 Jan 2025 14:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736865595;
-	bh=ExS2XTnmU7QoqvKEZZKQwlQZG7UBPVImqCL3EVuvJ1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mS+VSPBLnIh9ocmdfOtRPbEkZcAA4UuraLiRGI8hm4txbPh+o71mExyAniG9VUDps
-	 FwTB5Dr2YxS0UVSqkGlo7HDQTKqWa7tezWwUa0oAK3EiTJW63h1+n/gZJk4ECWe6qK
-	 WIthCuDPPlnAiRVcZGoelTqQ6KOcwgTwWamhAwXs8xZSWbHuroODvNdGcbokikTLYj
-	 5Yi3ezMpvQKpj54cWj9K44AwAgxylCFyUmnoUSYAcoVjRiBF+LExG8olwlOqojMauY
-	 4G4Zu5f5Ew5qhSalw5KjAS1Yy7A9HSJSxyfgZFRjprrk0houA1gihZhHxxH5Iys9ic
-	 boA/dgQXZ1Ajw==
-Date: Tue, 14 Jan 2025 15:39:44 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Borislav Petkov <bp@alien8.de>, Shiju Jose <shiju.jose@huawei.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "tony.luck@intel.com"
- <tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
- "lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
- <mchehab@kernel.org>, "dan.j.williams@intel.com"
- <dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
- <alison.schofield@intel.com>, "vishal.l.verma@intel.com"
- <vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
- <Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
- "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
- <rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
- "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
- <naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
- "jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
- <somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
- "pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
- <duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
- "wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
- "dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
- "wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
- "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
- <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
- <kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
- Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
-Message-ID: <20250114153944.7b525a04@foz.lan>
-In-Reply-To: <20250114130537.0000375b@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
-	<20250106121017.1620-5-shiju.jose@huawei.com>
-	<20250109091915.GAZ3-Uk3rkuh38cQyy@fat_crate.local>
-	<3b2d4275d1d24dbeacee0f192ac4d69b@huawei.com>
-	<20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
-	<20250109142433.00004ea7@huawei.com>
-	<20250114133817.20048aa4@foz.lan>
-	<20250114130537.0000375b@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4WTnxxr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736866071;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
+	b=F4WTnxxrRVt9a4mgGswp1GoxID99wDhJPdsRd/IVAUEyQB+2AtPs1gWh5R6xz7NSQ6oZJy
+	OMcJ8OA6MtwUpNqog1/qupPCe+ZL5Q4x2jFLkyC5iq1Q6Ae5osKSo+qZi/H5Aw6uJj6M17
+	eGOl7I5oHzVEWTCsnszbPlmH/PlRP3Y=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-6bb10XUFOpCAFHvQuIkfiA-1; Tue, 14 Jan 2025 09:47:50 -0500
+X-MC-Unique: 6bb10XUFOpCAFHvQuIkfiA-1
+X-Mimecast-MFC-AGG-ID: 6bb10XUFOpCAFHvQuIkfiA
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43625ceae52so30591995e9.0
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Jan 2025 06:47:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736866069; x=1737470869;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W1UWAgLlJaquYVVEeAD7AobVV/dxlnCJ6eG/I3yuA44=;
+        b=pwoLEUxj9gsmUiRAAfsr9PfWuTXrhG6MEchoNMEG9DZaolzKM66HVBJMMQvb95v7wB
+         UtiuyHv68x8f+MoE0ZsJOIZKt7sTuPr6KgXCdTn2pK/yEHOjxC//tdnr1qUGl04YYkyJ
+         3k+vrwNPRRtQThePk+ebtXeQYfKrN4lC+EoznAEoqn/AmFFzf72SRi/R5o4ZkvQTaWov
+         fWiVyzGGYUuv4TIyydpccg/iXv+jHA9ZoVQXoSv7WesMobtDRXt62XLx9R15jRQFGUeu
+         1wUvj5Q2z7hMlRGwT8Tsuoebvy+EaR7gF9eKfKcEKIXclBWZ8gj5BojIn2lSGTmFV6J9
+         LmGg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9rwoVBSDyAk++kpgMWqeh7ORNw2B3SbXlQA4NgOEptTOAvZaiYAi/yXXvJwc1kZ2Lav8ehylOJmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTfoqWJGbdsW8+hNfkk7eOj/AITFwKC909dsezJW7Lu2+GoJ0q
+	4wTQArLo61mluboel7sUZkFRYlmOGVZNAEhvya5MZcbBar40o7sesXptx+qp21+Gg89iziLEoqQ
+	rKBAotqDlU1VrWJm2+Y4d2Pz00Alm/6C40hOJhN+1IXfd5zeSheb/rPsW2w==
+X-Gm-Gg: ASbGncvo8oIq4XqIM27GrxbcWldIG9BvfHW/QAfiHy4nGX64cQXrsBxlzSSIfF+uLMb
+	grN/iJgLZIDEy7ujwFiuDjjGgLMHagh3n9k5J6982B27t64agyfTz+NInbU49IN7sGvYC5KjFi+
+	o+a/r179x29gqiycwP7qZitE35MmRcMp0qQ5TFa1J7fAkTjENEs0/05zcStsVUFAAebRYaO9beN
+	V+m5SFjVO/kxqvgUy1gQnVrc692c1PqC0dSz56t5maJxWjst3dcsMoOTJBdZTdQw8v02G8WDjxE
+	V2LgA5I7815kv1ryooSa0HhFTfnqfWKuV3i0p27Cgh8L60ak9FyMulidxIF8XO1j67g1hAaL00j
+	W3hM2buNl
+X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219460665e9.3.1736866068921;
+        Tue, 14 Jan 2025 06:47:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEENnT/QV/z/XX4uFBevKHkPxg7NffS9Usi3CNGFfMDEfqLcKcxnlPQgZ2KD/ykp7GZk9Grug==
+X-Received: by 2002:a05:600c:4fc2:b0:434:f3d8:62d0 with SMTP id 5b1f17b1804b1-436e26803f4mr219459495e9.3.1736866067102;
+        Tue, 14 Jan 2025 06:47:47 -0800 (PST)
+Received: from ?IPV6:2003:cb:c738:3100:8133:26cf:7877:94aa? (p200300cbc7383100813326cf787794aa.dip0.t-ipconnect.de. [2003:cb:c738:3100:8133:26cf:7877:94aa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1967sm14681312f8f.86.2025.01.14.06.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2025 06:47:45 -0800 (PST)
+Message-ID: <f696d28c-c3a8-4500-98da-4ddcaa0db41f@redhat.com>
+Date: Tue, 14 Jan 2025 15:47:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/26] fs/dax: Remove PAGE_MAPPING_DAX_SHARED mapping
+ flag
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com,
+ gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+ jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
+ mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+ linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com,
+ hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b8b39849e171c120442963d3fd81c49a8f005bf0.1736488799.git-series.apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: o_OBPTxcXcT_UrOPO76rzfCTt90AyFI7wixIR12eUGU_1736866069
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Em Tue, 14 Jan 2025 13:05:37 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> escreveu:
+On 10.01.25 07:00, Alistair Popple wrote:
+> PAGE_MAPPING_DAX_SHARED is the same as PAGE_MAPPING_ANON. This isn't
+> currently a problem because FS DAX pages are treated
+> specially. However a future change will make FS DAX pages more like
+> normal pages, so folio_test_anon() must not return true for a FS DAX
+> page.
 
-> On Tue, 14 Jan 2025 13:38:31 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
->=20
-> > Em Thu, 9 Jan 2025 14:24:33 +0000
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> escreveu:
-> >  =20
-> > > On Thu, 9 Jan 2025 13:32:22 +0100
-> > > Borislav Petkov <bp@alien8.de> wrote:
-> > >=20
-> > > Hi Boris,
-> > >    =20
-> > > > On Thu, Jan 09, 2025 at 11:00:43AM +0000, Shiju Jose wrote:     =20
-> > > > > The min_ and max_ attributes of the control attributes are added =
- for your
-> > > > > feedback on V15 to expose supported ranges of these control attri=
-butes to the user,=20
-> > > > > in the following links.         =20
-> > > >=20
-> > > > Sure, but you can make that differently:
-> > > >=20
-> > > > cat /sys/bus/edac/devices/<dev-name>/mem_repairX/bank
-> > > > [x:y]
-> > > >=20
-> > > > which is the allowed range.     =20
-> > >=20
-> > > To my thinking that would fail the test of being an intuitive interfa=
-ce.
-> > > To issue a repair command requires that multiple attributes be config=
-ured
-> > > before triggering the actual repair.
-> > >=20
-> > > Think of it as setting the coordinates of the repair in a high dimens=
-ional
-> > > space.
-> > >=20
-> > > In the extreme case of fine grained repair (Cacheline), to identify t=
-he
-> > > relevant subunit of memory (obtained from the error record that we are
-> > > basing the decision to repair on) we need to specify all of:
-> > >=20
-> > > Channel, sub-channel, rank,  bank group, row, column and nibble mask.
-> > > For coarser granularity repair only specify a subset of these applies=
- and
-> > > only the relevant controls are exposed to userspace.
-> > >=20
-> > > They are broken out as specific attributes to enable each to be set b=
-efore
-> > > triggering the action with a write to the repair attribute.
-> > >=20
-> > > There are several possible alternatives:
-> > >=20
-> > > Option 1
-> > >=20
-> > > "A:B:C:D:E:F:G:H:I:J" opaque single write to trigger the repair where
-> > > each number is providing one of those coordinates and where a readback
-> > > let's us known what each number is.
-> > >=20
-> > > That single attribute interface is very hard to extend in an intuitiv=
-e way.
-> > >=20
-> > > History tell us more levels will be introduced in the middle, not just
-> > > at the finest granularity, making such an interface hard to extend in
-> > > a backwards compatible way.
-> > >=20
-> > > Another alternative of a key value list would make for a nasty sysfs
-> > > interface.
-> > >=20
-> > > Option 2=20
-> > > There are sysfs interfaces that use a selection type presentation.
-> > >=20
-> > > Write: "C", Read: "A, B, [C], D" but that only works well for discret=
-e sets
-> > > of options and is a pain to parse if read back is necessary.   =20
-> >=20
-> > Writing it as:
-> >=20
-> > 	a b [c] d
-> >=20
-> > or even:
-> > 	a, b, [c], d
-> >=20
-> > doesn't make it hard to be parse on userspace. Adding a comma makes
-> > Kernel code a little bigger, as it needs an extra check at the loop
-> > to check if the line is empty or not:
-> >=20
-> > 	if (*tmp !=3D '\0')
-> > 		*tmp +=3D snprintf(", ")
-> >=20
-> > Btwm we have an implementation like that on kernelspace/userspace for
-> > the RC API:
-> >=20
-> > - Kernelspace:
-> >   https://github.com/torvalds/linux/blob/master/drivers/media/rc/rc-mai=
-n.c#L1125
-> >   6 lines of code + a const table with names/values, if we use the same=
- example
-> >   for EDAC:
-> >=20
-> > 	const char *name[] =3D { "foo", "bar" };
-> >=20
-> > 	for (i =3D 0; i < ARRAY_SIZE(names); i++) {
-> > 		if (enabled & names[i].type)
-> > 			tmp +=3D sprintf(tmp, "[%s] ", names[i].name);
-> > 		else if (allowed & proto_names[i].type)
-> > 			tmp +=3D sprintf(tmp, "%s ", names[i].name);
-> > 	}
-> >=20
-> >=20
-> > - Userspace:
-> >   https://git.linuxtv.org/v4l-utils.git/tree/utils/keytable/keytable.c#=
-n197
-> >   5 lines of code + a const table, if we use the same example
-> >   for ras-daemon:
-> >=20
-> > 		const char *name[] =3D {=20
-> > 			[EDAC_FOO] =3D "[foo]",
-> > 			[EDAC_BAR] =3D "[bar]",
-> > 		};
-> >=20
-> > 		for (p =3D strtok(arg, " ,"); p; p =3D strtok(NULL, " ,"))
-> > 			for (i =3D 0; i < ARRAY_SIZE(name); i++)
-> > 				if (!strcasecmp(p, name[i])
-> > 					return i;
-> > 		return -1;
-> >=20
-> > 	(strtok handles both space and commas at the above example)
-> >=20
-> > IMO, this is a lot better, as the alternative would be to have separate
-> > sysfs nodes to describe what values are valid for a given edac devnode.
-> >=20
-> > See, userspace needs to know what values are valid for a given
-> > device and support for it may vary depending on the Kernel and
-> > device version. So, we need to have the information about what values
-> > are valid stored on some sysfs devnode, to allow backward compatibility=
-. =20
->=20
-> These aren't selectors from a discrete list so the question is more
-> whether a syntax of
-> <min> value <max>=20
-> is intuitive or not.  I'm not aware of precedence for this one.
+Yes, very nice to see PAGE_MAPPING_DAX_SHARED go!
 
-=46rom my side, I prefer having 3 separate sysfs nodes, as this is a
-very common practice. Doing it on a different way sounds an API violation,
-but if someone insists on dropping min/max, this can be argued at
-https://lore.kernel.org/linux-api/.
+-- 
+Cheers,
 
-On a very quick search:
+David / dhildenb
 
-	$ ./scripts/get_abi.pl search "\bmin.*max"
-
-I can't see any place using min and max at the same devnode.
-
-	$ ./scripts/get_abi.pl search "\b(min|max)"|grep /sys/ |wc -l
-	234
-
-So, it sounds to me that merging those into a single devnode is an
-API violation.
-
->=20
-> There was another branch of the thread where Boris mentioned this as an
-> option. It isn't bad to deal with and an easy change to the code,
-> but I have an open question on what choice we make for representing
-> unknown min / max.  For separate files the absence of the file
-> indicates we don't have any information.
->=20
->=20
-> >  =20
-> > >=20
-> > > So in conclusion, I think the proposed multiple sysfs attribute style
-> > > with them reading back the most recent value written is the least bad
-> > > solution to a complex control interface.
-> > >    =20
-> > > >=20
-> > > > echo ...=20
-> > > >=20
-> > > > then writes in the bank.
-> > > >      =20
-> > > > > ... so we would propose we do not add max_ and min_ for now and s=
-ee how the
-> > > > > use cases evolve.       =20
-> > > >=20
-> > > > Yes, you should apply that same methodology to the rest of the new =
-features
-> > > > you're adding: only add functionality for the stuff that is actuall=
-y being
-> > > > used now. You can always extend it later.
-> > > >=20
-> > > > Changing an already user-visible API is a whole different story and=
- a lot lot
-> > > > harder, even impossible.
-> > > >=20
-> > > > So I'd suggest you prune the EDAC patches from all the hypothetical=
- usage and
-> > > > then send only what remains so that I can try to queue them.     =20
-> > >=20
-> > > Sure. In this case the addition of min/max was perhaps a wrong respon=
-se to
-> > > your request for a way to those ranges rather than just rejecting a w=
-rite
-> > > of something out of range as earlier version did.
-> > >=20
-> > > We can revisit in future if range discovery becomes necessary.  Perso=
-nally
-> > > I don't think it is given we are only taking these actions in respons=
-e error
-> > > records that give us precisely what to write and hence are always in =
-range.   =20
-> >=20
-> > For RO devnodes, there's no need for ranges, but those are likely neede=
-d for
-> > RW, as otherwise userspace may try to write invalid requests and/or have
-> > backward-compatibility issues. =20
->=20
-> Given these parameters are only meaningfully written with values coming
-> ultimately from error records, userspace should never consider writing
-> something that is out of range except during testing.
->=20
-> I don't mind presenting the range where known (in CXL case it is not
-> discoverable for most of them) but I wouldn't expect tooling to ever
-> read it as known correct values to write come from the error records.
-> Checking those values against provided limits seems an unnecessary step
-> given an invalid parameter that slips through will be rejected by the
-> hardware anyway.
-
-I'm fine starting without min/max if there's no current usecase, provided
-that:
-
-1. when needed, we add min/max as separate devnodes;
-2. there won't be any backward issues when min/max gets added.
-
-Regards,
-Mauro
