@@ -1,109 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87A5211278;
-	Wed, 15 Jan 2025 11:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E69248BDD;
+	Wed, 15 Jan 2025 11:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736940934; cv=none; b=tSa4ZV0m+Au4EJUn86LZGvlY+702Sbe/AGRxTf4DVqkwdeFciCySsV+oM1GzUXA+cN7jFW0Fj5Dxwji3SUx19OH2T+gffVQE80BxwV/U4IWql3hLmv3rnN+v8nhCt/fNLv1DyNdxxiwchVJ3F6kqZFjFlAMclH31ED37bMvGHvA=
+	t=1736941083; cv=none; b=JLY9FYctXVJP1ESc5MejPaYZSgV25YGfDdUJwuWH5M7B4Zv1OVa4QAQDTyWrafhdCWlUe9w2p6srkjYHSJ3RmLjaH0H0AhCdEG1n0kpKFrRohX6+ucJ1H0yYmytzHprIwvgsoV9N9gbJkP9osaEUpwCXaRQ+NoWtrkyoqGr0WPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736940934; c=relaxed/simple;
-	bh=0GsDX1/RuLPGLESvD1Mlrazvy4i984P60lfK4cHzDVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nqqaF4BtiOQ/0kQWyyp2QLOfUWUEa6VLGkWIR/a7tcSpHOZPjlO+ANra/frdMpbUqtQMlAfC+pwp6DbSNnlfAICA24DzcrR/nvmjaP/tihGLjrfNJUbKPDZAjzvsQZzOLt7OH+QRgUFvxbQpvptftygneRKmEAQzJHVfXk3Y/GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxAa/fZn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxAa/fZn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10462C4CEDF;
-	Wed, 15 Jan 2025 11:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736940933;
-	bh=0GsDX1/RuLPGLESvD1Mlrazvy4i984P60lfK4cHzDVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cxAa/fZnkgoBmd79zeqbHUiOpU1wthso51T9zsiTKQiFBqoKsRbJYsdABlUu/Bd3p
-	 jIxohZx4PK2YGuyhwce0xSOx9X//1PxTJcveTF2eu0ytA5NAc7bxGL8s148vSbQGjj
-	 NsZuz1fl+wYnOSWG6gUk2Zxmeq6qIToOyYFTT5gU9mjDxBrB0Rkl1ESH3GFiM3Rfj9
-	 uKtXFCDudeOcuuQBRiIj5Cfe41gK1YCfmNta/ghWmP+jSxMNJLEb6bEtBWlWN3wf5K
-	 zrSi9LOJVAyckZf0044niFYEuDsmmjiVd5piqOuvOT6C16dsMCfilmghHV/baPomb5
-	 RibA1bHNoqtwg==
-Date: Wed, 15 Jan 2025 12:35:22 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Borislav Petkov
- <bp@alien8.de>, Shiju Jose <shiju.jose@huawei.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "tony.luck@intel.com"
- <tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
- "lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
- <mchehab@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
- <alison.schofield@intel.com>, "vishal.l.verma@intel.com"
- <vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
- <Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
- "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
- <rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
- "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
- <naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
- "jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
- <somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
- "pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
- <duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
- "wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
- "dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
- "wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
- "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
- <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
- <kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
- Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
-Message-ID: <20250115123522.2c73fa2b@foz.lan>
-In-Reply-To: <6786bc792c66a_20f3294ce@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
-	<20250109142433.00004ea7@huawei.com>
-	<20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
-	<20250109160159.00002add@huawei.com>
-	<20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
-	<20250109183448.000059ec@huawei.com>
-	<6780610bc33e9_9b92294cd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<20250110110106.00006cd5@huawei.com>
-	<6781a3dfa53d6_2aff429471@dwillia2-xfh.jf.intel.com.notmuch>
-	<20250113114026.0000548e@huawei.com>
-	<6786bc792c66a_20f3294ce@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1736941083; c=relaxed/simple;
+	bh=10XO6NeQ2gQ7U9/3Iyhh7c2d5YQjaG9c3qMuTZu6YCs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fjAVKmSk6YthIdmU26c7B5+rdfA6etsTJUOCnVNZTmS+5lZ2cLgE8wBmmm/FPrF/M2k/xFYrgq+me2WsX0Kn2ovnxqTBxB/iJG6evL+JU/DE5nbWIlVU3U9GP6fAjuMFpWbXwE7jlG83z4WBBVUwJfz6NtdiJoQL65YHq/+lM8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YY3qK26CNz6K6Q7;
+	Wed, 15 Jan 2025 19:36:29 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 430CE140257;
+	Wed, 15 Jan 2025 19:37:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 15 Jan
+ 2025 12:37:58 +0100
+Date: Wed, 15 Jan 2025 11:37:56 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>
+Subject: Re: [PATCH v5 07/16] PCI/AER: Add CXL PCIe Port uncorrectable error
+ recovery in AER service driver
+Message-ID: <20250115113756.00005561@huawei.com>
+In-Reply-To: <eba67f31-57cd-49b1-b062-c56fce306a47@amd.com>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+	<20250107143852.3692571-8-terry.bowman@amd.com>
+	<20250114113347.00006865@huawei.com>
+	<eba67f31-57cd-49b1-b062-c56fce306a47@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Em Tue, 14 Jan 2025 11:35:21 -0800
-Dan Williams <dan.j.williams@intel.com> escreveu:
+On Tue, 14 Jan 2025 14:28:13 -0600
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
 
-> > There is no way to tell that the topology hasn't changed.
-> > For the reasons above, I don't think we care. Instead of trying to stop
-> > userspace reparing the wrong memory, make sure it is safe for it to do that.
-> > (The kernel is rarely in the business of preventing the slightly stupid)  
+> On 1/14/2025 5:33 AM, Jonathan Cameron wrote:
+> > On Tue, 7 Jan 2025 08:38:43 -0600
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >  
+> >> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
+> >> apply to CXL devices. Recovery can not be used for CXL devices because of
+> >> potential corruption on what can be system memory. Also, current PCIe UCE
+> >> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
+> >> does not begin at the RP/DSP but begins at the first downstream device.
+> >> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
+> >> CXL recovery is needed because of the different handling requirements
+> >>
+> >> Add a new function, cxl_do_recovery() using the following.
+> >>
+> >> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
+> >> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
+> >> will begin iteration at the RP or DSP rather than beginning at the
+> >> first downstream device.  
+> > I'm still holding out for making pci_walk_bridge() do the same and seeing
+> > what if anything breaks.  
 > 
-> If the policy is "error records with SPA from the current boot can be
-> trusted" and "userspace requests outside of current boot error records
-> must only be submitted to known offline" then I think we are aligned.
+> I can test AER fatal UCE on a PCIe device. Do you have any other ideas for specific
+> testing? A specific device or topology in mind ?
 
-Surely userspace cannot infere if past errors on SPA are for the same DPA
-block, but it may still decide between soft/hard PPR based on different
-criteria adopted by the machine admins - or use instead memory sparing.
+It's the interaction with runtime power management usage that worries me and
+might need wider testing.  Maybe it is just a case of sending a patch marked
+RFT.
 
-So, yeah sanity checks at Kernel level to identify "trust" level based
-on having DPA data or not makes sense, but the final decision about
-the action should be taken on userspace.
+The other paths are no-op where it matters.
 
-Thanks,
-Mauro
+Jonathan
+
+> 
+> Regards,
+> Terry
+> 
+> > Other than that I'm fine with this patch.
+> >  
+> >> Add cxl_report_error_detected() as an analog to report_error_detected().
+> >> It will call pci_driver::cxl_err_handlers for each iterated downstream
+> >> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
+> >> indicating if there was a UCE error detected during handling.
+> >>
+> >> cxl_do_recovery() uses the status from cxl_report_error_detected() to
+> >> determine how to proceed. Non-fatal CXL UCE errors will be treated as
+> >> fatal. If a UCE was present during handling then cxl_do_recovery()
+> >> will kernel panic.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>  
+> 
+
