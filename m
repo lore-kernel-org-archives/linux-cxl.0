@@ -1,199 +1,436 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9071DA305
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jan 2025 21:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736977497; cv=fail; b=XkAtfbH6asiOyWU4wCKI4zlJrIr8HhQ+qoEIp9lo3xt0QJoyQ+YwSVMd4w3zvlibXzpBJFTzmUrKVc4jwrRta/jbnvgJ4vmVIXgXzK+mtO+PmGc20bmB0BMtDdU1CND+if5N4jXqii+/E/LOezqFzlUZjWZ7CJyzto8ECfJb8eM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736977497; c=relaxed/simple;
-	bh=J+hkJeNRiXkE8sR8ncJ23SP5QisigonZFbLvuuLciik=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=km2tLpiSinzcP8TEahEJadOsyBiwnzYAZU15Oz2uF+bLRMnkhGb/FX/cWvOXSxLJlUDoXUNL69E3NZ4B+5M/oSeHMtY9i5yUgfC74KjpwEkiKefCkKEU2wjQS6Wux8rZY6PyWeVOHVjNFgcoTw0sI7QEsmsqWZ1K7V1KvE4f+qA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8XNeuy0; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E3B35944
+	for <linux-cxl@vger.kernel.org>; Wed, 15 Jan 2025 22:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736979900; cv=none; b=mKVJJMRp93gxvjTvvMSyAKVs6dyxSzK8ruaw1xZgk1SS6un4w3dPuTuj1DqAcTvmLJcrF00OPoRC/143SNTCKAaDdSJ1wa7qy33++U7UvcXM4TbbXCf/z8sLGjtJXUxM1FjQC1JTOiKc8fNrc80ePBF7PLwEzU3x75uYDYWYQww=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736979900; c=relaxed/simple;
+	bh=4R8YZc+kDXwEEojtfwbWXx6McjiUNV7Mma88kgdyREE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ff16jG4QgutYz6tgkmuUN9LjbhC04AxCdf5kjaK3xBKLUOZXK+T5KYACFS9BF5sSYluw9FzlN3KWr9rkXXvhMVGHSDwryB8L66V6YBg2nSPETZPLQh/1qLY89TWhtxb6Q0bbj399vgsWTwULIKMa5y0zyFLNJR9z146VXKT5rMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=J41WC6iM; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8XNeuy0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736977496; x=1768513496;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=J+hkJeNRiXkE8sR8ncJ23SP5QisigonZFbLvuuLciik=;
-  b=n8XNeuy0GLOPVKkn61xdHKY/zCT6n5uqjDmgXyXxUEenEZbnh/DM0LBB
-   JzhyyHGw/PQiKPbgPPm3Ibo9x8VCfQcK5GeMYjk5dhiElTpYFlCglpFdy
-   iQcYcYw86fGVbLD4CA6XrEx5cnEpRZrAWftjMeJA9qshu9jRnKsJSOttk
-   sVxkKpeigpFH1FT7oBYfZZ3oJNFIB4GBVpvhTyf39+0akjNR8aGCIp/3w
-   ce36SJBhmgF1OS1PFrf+tnm/VzkqSgyNYnP1tTuIfh9KXJQK4nYGYaUp9
-   adUTkw99tnL8iOopFVo4/4iVB8JDsBr9XMRog5dODXU7f9oi0dazsTbtw
-   g==;
-X-CSE-ConnectionGUID: jQLK0FckT56G/ZfpH7/rZA==
-X-CSE-MsgGUID: WEJXunPGTECtFrflgDA0SA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="47993583"
-X-IronPort-AV: E=Sophos;i="6.13,207,1732608000"; 
-   d="scan'208";a="47993583"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 13:44:55 -0800
-X-CSE-ConnectionGUID: NJbA0ar6SaWtnWdCsttvzw==
-X-CSE-MsgGUID: AcyPEK6KTCGFwo3jzUadEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106123205"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2025 13:44:54 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 15 Jan 2025 13:44:54 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 15 Jan 2025 13:44:54 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 15 Jan 2025 13:44:54 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=py5r05kRp7Fbt89Vp00uGZTdpjLKl1QWeF0tdglWhwMov0GVnMjnj18iR3UU+KAwOt8ywIm0S2EoIqEfatdz0UQnY9xyMGrTgc6x2dRpYNjy8jYYZsG5P+oR7Pbt8db+XadYjw9Yx4MqSISmSqP9mTqaGyqJSGJlpwI2cM+N+/fg+toVpftWafgJH42Hf6vG70K2mMsUAuoGiMNrOhldiuRZOE6A66YqDQ7j2XM2nnXWz9hX4A6LFGI9XzSlnaB08ufQCDdr3iFdMTRFZ6CWbHahq8b5gNx2cbvbX5HfQMXl+lTedXpawoUiwbAZCvvjhvuT63PXy0thk3RJRJUseQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o7OHMbxkRvIphqbSCVeqw2JDYNxO+JnXdqcXDIB/wIc=;
- b=csG6Tx6/JNC8Z3isjqg1jDhuejLXjTxYK2sW6cADD2JNc6Mv8G0nVszQ4It3felEUZtHd+BV03aNlESqctlRw6KYA1ZvHimVlb1MaQD7ovc+aL15azZFkhu6xwmU+8K459Lq1fdwx63NypzXI2QadRuv2X83l4kMnyypdctLsChULjhYKJUlOoFiKAsadXfV/JssIz765akd9Z8EO80zKYGsbugbHbPviV3RRYHR13ZUiWHFAlxFLS663atD1mdrtK2daSnx3WT7avfRsP/EDDofmYfVgzigmmlyK0qgXdEKnSqxgN+dZr/5EuA35OebqsmPLY3N/MOpLY7YswXVlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM6PR11MB4691.namprd11.prod.outlook.com (2603:10b6:5:2a6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Wed, 15 Jan
- 2025 21:44:52 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8356.010; Wed, 15 Jan 2025
- 21:44:52 +0000
-Date: Wed, 15 Jan 2025 13:44:50 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>, 'Dan Williams'
-	<dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-CC: "mj@ucw.cz" <mj@ucw.cz>, "Daisuke Kobayashi (Fujitsu)"
-	<kobayashi.da-06@fujitsu.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>
-Subject: RE: Unable to display link status of CXL1.1 device (RE: [PATCH v18
- 0/2] Export cxl1.1 device link status register value to pci device sysfs.)
-Message-ID: <67882c522a8b8_20f32948f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241002011549.408412-1-kobayashi.da-06@fujitsu.com>
- <670efd5389f6a_3ee22949b@dwillia2-xfh.jf.intel.com.notmuch>
- <OSYPR01MB5352F167B18CC4DFC908D692900D2@OSYPR01MB5352.jpnprd01.prod.outlook.com>
- <OSYPR01MB535257C0AE84CC123A656E1590192@OSYPR01MB5352.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <OSYPR01MB535257C0AE84CC123A656E1590192@OSYPR01MB5352.jpnprd01.prod.outlook.com>
-X-ClientProxiedBy: MW4PR03CA0071.namprd03.prod.outlook.com
- (2603:10b6:303:b6::16) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="J41WC6iM"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7be3f230436so21702185a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Jan 2025 14:24:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1736979897; x=1737584697; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+GJf6iotEBRTZAkzi7WhAm5tsyk1yxN439yNtmncUaQ=;
+        b=J41WC6iMlLDgJHSL92eVShvMpcAY2rm4B4gvVGdJIDfmHZlgQZXkUxXyZw2uEmqN37
+         TbRfKYp9714yHs0f0zXqqNKhOwiF8x/hPb2Pq2705iQ1u9fEwF7GeNdAEoPuUNWoJfdr
+         9U+jS+4L0OyFaTP8tze7T+2vmumuTAi6b2gzOkqqbF/pDpgpi1E/4qPbA7RIjqKyrlG0
+         m22ReXadq3I4hLnwmP91DFop+WDQI5/RJuiJ8BP4hrcqAc0XdD3fHp4k1T5OD8cU7Cno
+         MNRgq/B0/56UsTehq9IsRgzilfKkRCIGRTJ1Qae3err0gR/LU+o9YffgA/l+310F5QNa
+         1xQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736979897; x=1737584697;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GJf6iotEBRTZAkzi7WhAm5tsyk1yxN439yNtmncUaQ=;
+        b=uSVsYENvFuWWj5Zgo0NIkVKRQInrf8uDaAzCFAcOQKqsWJxwgFoL3e7jF5k1lOHgfF
+         EwyKgq1LkpcHVCXGdSVibgQMG9gHrah+AVJwtzwoNOaOehTSFaYXQed6Ptyv9Rr6TO1L
+         GzRNLF51wpjMUE4eBPOBtwvJPfM3XV6ju0ZWLMuh/ObI1MIfA+phbIor7MhTKhIgsys9
+         6pJVE6cEVttR8l/v6HzTWlByXrlY7OW7GGNx2zAugCyq2vQO5hqaIqTqSXge5ssdMe5h
+         LTzXD24dPcLcKLjQSnJReHIHRgVx9vGBrgiYxsOKqe94tcwcurhDGNJVZhA8Sg2INUAs
+         Y5yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcZwzq6Z0C5hCHCtSmWCHxKuxtNeiTCRUPdy2Al6QT0GYTCQKWZzTJS6Oyfl40Ylz1aGzeTdqxxeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtvblWtSE99upHuJkTHaJqg6gI4UJE64hQb3qA7qDD0N2KlfLh
+	ATaxrHaKqVB13Rw4VEY2jnTlP9iaOYWjuxWDSjMo2bCZ3csUcVLbJ52oPI268sU=
+X-Gm-Gg: ASbGncvPc1sDVPCJ34AApMgDJhOeU8QzaYw6q9O4LeMLWBRB63xb11Xwk8M/y6KgJI4
+	+smQlYQ0d1EFtrdevXX+h9Vb8pxFbIheHOtAwMEte7ZLzIG86/8kM7Ni7fFxHK3SZURc4d59dhy
+	O4Gt9r8mWg291JPsLJPdwvuytX3M97023SoTu6yTSFz27bbGZg253y+wCwkjTDIhgjX+FP6KGoG
+	FROfuZN+3USxrgKEQhUr+sVgkgS9BzEywI+kxpr3fhJdPTEDIV3ZLLzdqefd5WzmXp/DYua4vFE
+	X32ToSygUWnTwxwsypfUKFKNZFV+IasdS6sqv+M=
+X-Google-Smtp-Source: AGHT+IHIOwX3lqY7JABK9ue4ALK0Ieqr6do6F0vQsDGjJAsb7acNGR+iIOnYpKxLWKRG0Nu0B/+Z1A==
+X-Received: by 2002:a05:620a:4245:b0:7b6:c462:6b82 with SMTP id af79cd13be357-7bcd97c99c6mr5609208485a.54.1736979897154;
+        Wed, 15 Jan 2025 14:24:57 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7bce3502a91sm761166785a.84.2025.01.15.14.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 14:24:56 -0800 (PST)
+Date: Wed, 15 Jan 2025 17:24:54 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
+ ACPI PRMT
+Message-ID: <Z4g1tmSqsHmClPiw@gourry-fedora-PF4VCD3F>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-26-rrichter@amd.com>
+ <Z4BMyVsz7bLZAFEy@gourry-fedora-PF4VCD3F>
+ <Z4fOrBYzIaIGCq5l@rric.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM6PR11MB4691:EE_
-X-MS-Office365-Filtering-Correlation-Id: 653e14ec-5669-4ce0-8393-08dd35add7bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?p3YQB988mIA10k5WtQOYeA5GdDuMQyuiPKkSP63TZZ/gToyUFIFu3n3ZWcWB?=
- =?us-ascii?Q?eGDhcCBQEOCdT4hb+8OSNpmIXwmO6EiqH3RXgbcIogRwZJK5leqcvUmzrJgs?=
- =?us-ascii?Q?fbhuCHLvqcTKgZhQovIg5uOWgnvHczNANLLoXSFwvhkNVAIVoG7HiG0u01rV?=
- =?us-ascii?Q?bTCY5fxDIbxlxRa6TjUvzS7oDDi/xWXfyBYhB7qqOkYq1LzV1PIBrj5TVrFs?=
- =?us-ascii?Q?zrwSriwUsU98z3xltuB8Mn5UbshjHQsDoSLQGcX0s4g7pwJHyVH7hci97QHU?=
- =?us-ascii?Q?o7IXdvVWWX6kOCSMWNDTqDZOmyRFu7sjlciMXmUkmpFlLO8pKg68IFtVG0jc?=
- =?us-ascii?Q?npbxYIpjlVb1Pudv/x+cTnnSGla/lerlkRj7aOfdQ5Sc1awSrrIYPRuw12jv?=
- =?us-ascii?Q?mGl5OMEj/Z5YvQXv/v57YcYRQgeHTWJWOtU0qaaLcPcX/EsD7q6GW9DRsMlv?=
- =?us-ascii?Q?53eP6qSlYKwedP17jQWO0N1XBChT682mp60V9eq2a+3uQ0Mp9/Goa8VyIaEG?=
- =?us-ascii?Q?YPCqL/LRjkoiblr4BCIfS30i1rYBhsA4Ub5MIG4mZ7vSzfDen9xHB3P9ZV5v?=
- =?us-ascii?Q?GFsQ5232R6/vFK7sEwg7OfnUdY/KZQcgoFMTEsFDM5apoWG6bOawnRGwhYOz?=
- =?us-ascii?Q?xel5Hv+jw3YCff1LvrFJhxwDkoDUzLcOiZcunlFHcFcawYCr2g5sWThT3DQM?=
- =?us-ascii?Q?6o4FT+mD/5kt1LIWHxpXYzDkjWLLChGJBMBoji+zjJz3AOxMLSJfQLKeieLw?=
- =?us-ascii?Q?+eVyuW9pbYDyxpn+M9Mm0oBnZpLsXYRkhp8n6tRmiulGn4eGAogPtz1T+eZj?=
- =?us-ascii?Q?5XHcKqyiZCdLqIOOzcgNiRuNrjsIzpve6CMWn/PPE9mUVG9JdD8oY7Uzd5lw?=
- =?us-ascii?Q?aaZ1PFDjxuN8s4rP0F/CuDgwkOfeWGrPbdxfpmhQIeGToDK16WLu4oomFa6B?=
- =?us-ascii?Q?G/eXEthRbeGUklmyqeN2xpm3bFmrCWxvTd3oA7Tz27nrWoZatLHp04Mu3Pv9?=
- =?us-ascii?Q?NNot49LjaKcGbwwjD9rISWfrPkZbtDc54ql2vZqYxVNJwKqliwJSHFf3/vJ7?=
- =?us-ascii?Q?O1ZppbI8nrSFChgRAtpx+mPUoBEbFV56/5mm+GRQE3/JfJDzoJrW7hDSMRWw?=
- =?us-ascii?Q?2AyYJmZ6F9mV1zPkkxOjxnKqL97FdZS2R0jedAuawciGdC4EMgGZO5xM0lvC?=
- =?us-ascii?Q?2g81DSHyFiUea3MFtdEb2Evv+WeylrOcEL9J96QsWWI4/BHi2/yTMBVOUuXV?=
- =?us-ascii?Q?GrOCLVfJUSzA3w8euHYvLvRmlVWCKf2Qh655V4JfL+8jQ/M6kWNrdh21rSqE?=
- =?us-ascii?Q?4BTLDnHFrO0suV+cOdyoQEllbj5JeauMpSP/tydJUMmbGzKfbejDesTr6JUR?=
- =?us-ascii?Q?vog1b12w49vEDT6nwcrjsk4CgseW?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MRl99tWx3PpwdT01Wr5BOHCm+3zOfo8OWN16tj0UKiXiAZrnAccHU428XQUQ?=
- =?us-ascii?Q?EEKEau/yhmwzPvfsBk0YwFoUcN33SMPztMsFRnegbh1h722HG4WUeU0VacbD?=
- =?us-ascii?Q?5U5Y5KmLvPoZhap3QJdOVsAG83JYyW9uGtGPpUrbFjkXA15Co/foIHFfwJxh?=
- =?us-ascii?Q?MF2A0/GQDgIpxLGByB/aLKDRNeVKLWCAssRGxUsdnjd/Kx5f+txrRmgU0ljh?=
- =?us-ascii?Q?duCwCW3U4tQw7h+y4OdqFzCN78RAnViib/wjqMewQqoNlZR/nrx0j26+rj+I?=
- =?us-ascii?Q?3inQlVXEHRnruXEMkEsrd05F7/Kyk3OLPbzBqBZZb/ulc28afjqxW0U/ue4Y?=
- =?us-ascii?Q?pW/7AeQTgqV5dh9Y1v7gSCX565V/rBTA8p7cyaSVu2A8JFVtdV5ltjb4uXYF?=
- =?us-ascii?Q?S8jxt1y77toOmfle3SyugigbLDCKdiYflYURyBhY3RgopiTKqSexq+TdsQtt?=
- =?us-ascii?Q?U+9/6CjQWT9doz/yz60im++MNOdI9F51pD4aBjRtPjHiPf+FgnCz8bAci1mC?=
- =?us-ascii?Q?StmElcsRuL9k94LSNESmJmH2I2W20HUJDzNsOJa69F8lLKU+NW7zgzWPFErg?=
- =?us-ascii?Q?fyh9FPm0XCs6WkmnIJHrXpWyerJ0fh9SsXbm4nrW3j3gmct1oKCPgExhHKIx?=
- =?us-ascii?Q?RrNBww1gNV3ETX3x7Di44mTmRXr8HgE9ilCSD8eqHEiRp48GpCb94qzWc+26?=
- =?us-ascii?Q?LRKkILVA/80N5XcRgORRjL23g/QdFCOsVxjldd+Vzk5Q3wRLcXW8oi9I5eg4?=
- =?us-ascii?Q?zPTwO7MOmrzj4z7Z2tdovth5rK4FYb0NaCC3/cTPDXfwiXwv4sc0oMcpgfUC?=
- =?us-ascii?Q?hfSl+O+Yg7pgZSq+I54C8Z8zi44Lm1RV4b21anuiqeFFo6CgZdXPSZHxo92B?=
- =?us-ascii?Q?/cBF6hMbxQHptfyxIAzMESfIB4NfCkbnWLsiMFR4qg8QeIRcyra5t4tJaexN?=
- =?us-ascii?Q?+IT2xMhlHLBDC5WlJ0IG1700FVvV9LImwu52vFCbIMvyYX+Ym99sK3FFyiLW?=
- =?us-ascii?Q?GgycU/p5lqrtAvt/tNoGeBZP35PRxAdBryeXeSAwQ2pMz4OngyszvXLJ3Ei/?=
- =?us-ascii?Q?VJI5e/2VCd+a1VFr6Ogur0iGQ/5C0yugz+L5rVuvtRoIryR+x+kLP2VZzErW?=
- =?us-ascii?Q?2P482KBDpUZr3XpX/P42jpR49TF4sBxI9T/O+w+gUlzALp+ZLoSh7pFXsq0m?=
- =?us-ascii?Q?EZ2nRVaFIrgirpI3P3yIz4nSJBx6lMZnCvkDE201YU4OGAwlCG1O1Ui/jp+V?=
- =?us-ascii?Q?hFTWGYunTet7EBtHatfzjWeYFJQGyAXeKJBobt6+shwvE/kOnyWeoowVqaWw?=
- =?us-ascii?Q?wFRu0ax1b6HGbhXwD2a4vXVcDnWAklDhlzfelOVUYAhKONQMMUCGxfMjaaPj?=
- =?us-ascii?Q?l/d/oBBqdcf6Zz34iGqFgV4/2D77xTYSGVsouurA4hg0Hu2KTaceoQFi6LfO?=
- =?us-ascii?Q?HQQqmcL0M9H2BxhIxZ0swOl/IOi1FGj/Gj6NxbPmiI5uQBxTN5K9C2bSmanN?=
- =?us-ascii?Q?OMXuZDHym+gzy5TpktR1q342ojSp4AWRBGJJkEDT9w11CCZMSRovAnawQZxg?=
- =?us-ascii?Q?rIRm99n4NpGDvxYgxD5HtvS1AJp+05qufl7oxcbGa7lG58XDfi4rKVDBaWR+?=
- =?us-ascii?Q?iA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 653e14ec-5669-4ce0-8393-08dd35add7bc
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2025 21:44:52.3237
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RKhZcrL2Oq28DzJoznOKL5HHJ1Td0nGCHRX1imYwwXTsLK/TMCF/kz5xDi6YsQIyKIE4TTliQk5rRmKxqMMl6FGHYwFuxzq1UPZR6svKge8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4691
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4fOrBYzIaIGCq5l@rric.localdomain>
 
-Yasunori Gotou (Fujitsu) wrote:
-[..]
-> > Fortunately, I can use the real CXL1.1 machine for some time.
+On Wed, Jan 15, 2025 at 04:05:16PM +0100, Robert Richter wrote:
+> On 09.01.25 17:25:13, Gregory Price wrote:
+> > > +	dpa = (hpa & ~(granularity * ways - 1)) / ways
+> > > +		+ (hpa & (granularity - 1));
+> > 
+> > I do not understand this chunk here, we seem to just be chopping the HPA
+> > in half to acquire the DPA.  But the value passed in is already a DPA.
+> > 
+> > dpa = (0x1fffffffff & ~(256 * 2 - 1)) / 2 + (0x1fffffffff & (256 - 1))
+> >     =  0xfffffffff
 > 
-> I investigated this issue a little bit and I discovered a significant
-> detail.  The "ACPI0017" is NOT defined in the DSDT of ACPI on my real
-> CXL1.1 system.
+> HPA is:
 > 
-> Consequently, cxl_acpi_probe() is not executed, and I guess this
-> prevents the addition of an entry to klist_device.
+>  HPA = 2 * 0x2000000000 - 1 = 0x3fffffffff
 > 
-> I suppose that the current code assumes ACPI0017 is defined; however,
-> it should handle cases where it is undefined.
+> Should calculate for a 2-way config to:
+> 
+>  DPA = 0x1fffffffff.
+> 
 
-Early CXL 1.1 systems pre-dated the addition of the ACPI0017 definition
-to the CXL specification. 2nd generation CXL 1.1 platforms added the
-ACPI0017 object, i.e. the CXL Root Device via an updated BIOS.
+I'm looking back through all of this again, and I'm not seeing how the
+current code is ever capable of ending up with hpa=0x3fffffffff.
 
-The Linux driver is built upon the cxl_pci driver finding an endpoint,
-and the cxl_acpi driver finding an ACPI0017 device. Then cxl_mem driver
-*connects* a cxl_port hierarchy which triggers enumeration of the RCRB
-etc. Unfortunately, without a BIOS update that provides ACPI0017, the
-Linux code is not prepared to enumerate the CXL topology.
+Taking an example endpoint in my setup:
+
+[decoder5.0]# cat start size interleave_ways interleave_granularity
+0x0
+0x2000000000   <- 128GB (half the total 256GB interleaved range)
+1              <- this decoder does not apply interleave
+256
+
+translating up to a root decoder:
+
+[decoder0.0]# cat start size interleave_ways interleave_granularity
+0xc050000000
+0x4000000000   <- 256GB (total interleaved capacity)
+2              <- interleaved 2 ways, this decoder applies interleave
+256
+
+
+Now looking at the code that actually invokes the translation
+
+static struct device *
+cxl_find_auto_decoder(struct cxl_port *port, struct cxl_endpoint_decoder *cxled,
+                      struct cxl_region *cxlr)
+{
+        struct cxl_decoder *cxld = &cxled->cxld;
+        struct range hpa = cxld->hpa_range;
+	... snip ...
+	if (cxl_port_calc_hpa(parent, cxld, &hpa))
+		return NULL;
+}
+
+or
+
+static int cxl_endpoint_initialize(struct cxl_endpoint_decoder *cxled)
+{
+        struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+        struct cxl_port *parent, *iter = cxled_to_port(cxled);
+        struct range hpa = cxled->cxld.hpa_range;
+        struct cxl_decoder *cxld = &cxled->cxld;
+
+        while (1) {
+                if (is_cxl_endpoint(iter))
+                        cxld = &cxled->cxld;
+		...
+                /* Translate HPA to the next upper memory domain. */
+                if (cxl_port_calc_hpa(parent, cxld, &hpa)) {
+		}
+		...
+	}
+	....
+}
+
+Both of these will call cxl_port_calc_hpa with
+	hpa = [0, 0x1fffffffff]
+
+Resulting in the following
+
+static int cxl_port_calc_hpa(struct cxl_port *port, struct cxl_decoder *cxld,
+                             struct range *hpa_range)
+{
+...
+        /* Translate HPA to the next upper domain. */
+        hpa.start = port->to_hpa(cxld, hpa.start); <---- 0x0
+        hpa.end = port->to_hpa(cxld, hpa.end);     <---- 0x1fffffffff
+}
+
+So we call:
+    to_hpa(decoder5.0, hpa.end)
+    to_hpa(decoder5.0, 0x1fffffffff)
+                       ^^^^^^^^^^^^^ --- hpa will never be 0x3fffffffff
+
+
+Should the to_hpa() code be taking an decoder length as an argument?
+
+to_hpa(decoder5.0, range_length, addr) ?
+
+This would actually let us calculate the end of region with the
+interleave ways and granularity:
+
+upper_hpa_base  = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC) - DPA_MAGIC;
+upper_hpa_end   = upper_hpa_base + (range_length * ways) - 1
+
+Without this, you don't have enough information to actually calculate
+the upper_hpa_end as you suggested.  The result is the math ends up
+chopping the endpoint decoder's range (128GB) in half (64GB).
+
+Below I walk through the translation code with these inputs step by step.
+
+~Gregory
+
+------------------------------------------------------------------------
+
+Walking through the translation code by hand here:
+
+[decoder5.0]# cat start size
+0x0
+0x2000000000
+
+call:  to_hpa(decoder5.0, 0x1fffffffff)
+
+--- code
+    #define DPA_MAGIC       0xd20000
+    base = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC);
+    spa  = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC + SZ_16K);
+    spa2 = prm_cxl_dpa_spa(pci_dev, DPA_MAGIC + SZ_16K - SZ_256);
+
+    len = spa - base;
+    len2 = spa2 - base;
+
+    /* offset = pos * granularity */
+    if (len == SZ_16K && len2 == SZ_16K - SZ_256) {
+        ... snip - not taken ...
+    } else {
+        ways = len / SZ_16K;
+        offset = spa & (SZ_16K - 1);
+        granularity = (len - len2 - SZ_256) / (ways - 1);
+        pos = offset / granularity;
+    }
+--- end code
+
+At this point in the code i have the following values:
+
+base   = 0xc051a40100
+spa    = 0xc051a48100
+spa2   = 0xc051a47f00
+len    = 0x8000
+len2   = 0x7E00
+ways   = 2
+offset = 256
+granularity = 256
+pos    = 1
+
+--- code
+        base = base - DPA_MAGIC * ways - pos * granularity;
+        spa = base + hpa;
+--- end code
+
+base   = 0xc051a40100 - 0xd20000 * 2 - 1 * 256
+       = 0xc050000000
+
+spa    = base + hpa
+       = 0xc050000000 + 0x1fffffffff  <-----
+       = 0xe04fffffff                      |
+
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	 Isn't this just incorrect? Should it be something like:
+
+	 base + ((hpa & ~(granularity - 1)) * pos)
+	      + (hpa & (ways * granularity - 1))
+
+--- code
+        dpa = (hpa & ~(granularity * ways - 1)) / ways
+                + (hpa & (granularity - 1));
+--- end code
+
+dpa = (hpa & ~(granularity * ways - 1)) / ways + (hpa & (granularity - 1));
+       ^^^                                ^^^
+       0x1fffffffff                     /  2
+
+       We are dividing the endpoint decoder HPA by interleave ways.
+       This is how we end up with the truncated size.
+
+ 
+      Full math
+dpa   = (0x1fffffffff & ~(256 * 2 - 1)) / 2 + (0x1fffffffff & (256 - 1))
+      = (0x1fffffffff & (0xF...E00) / 2 + (0x1fffffffff & 0xFF)
+      = (0x1ffffffe00) / 2 + (0xFF)
+      = 0xfffffff00 + 0xff
+      = 0xfffffffff
+
+--- code
+        offset = hpa & (granularity * ways - 1) & ~(granularity - 1);
+        offset -= pos * granularity;
+---
+offset = (0x1fffffffff & (256 * 2 - 1) & ~(256 - 1)) - (1 * 256)
+         (0x1fffffffff & 0x1ff & 0xffffffffffffff00) - 0x100
+         (0x1ff & 0xffffffffffffff00) - 0x100
+	 0x100 - 0x100
+	 0x0
+
+
+Final Result:
+--- code
+        spa2 = prm_cxl_dpa_spa(pci_dev, dpa) + offset;
+---
+     = prm_cxl_dpa_spa(pci_dev, 0xfffffffff) + 0
+     = 0xe04fffffff + 0
+       ^^^ note that in thise case my emulation gives the exact address
+           you seem to suggest that i'll get the closet granularity
+
+	   So if not for my emulation, the offset calculation is wrong?
+
+
+--------------------------------------------------------------------
+
+For the sake of completeness, here is my PRMT emulation code to show
+you that it is doing the translation as-expected.
+
+All this does is just force translation for a particular set of PCI
+devices based on the known static CFMW regions. 
+
+Note for onlookers: This patch is extremely dangerous and only applies
+to my specific system / interleave configuration.
+
+
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index ac74b6f6dad7..8ccf2d5638ed 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -432,6 +432,31 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+        return 0;
+ }
+
++#define MAX_CFMWS (32)
++static unsigned int num_cfmws;
++static unsigned long cfmws_bases[MAX_CFMWS];
++static unsigned long cfmws_sizes[MAX_CFMWS];
++unsigned int cxl_get_num_cfmws(void)
++{
++       return num_cfmws;
++}
++
++unsigned long cxl_get_cfmws_base(unsigned int idx)
++{
++       if (idx >= MAX_CFMWS || idx >= num_cfmws)
++               return ~0;
++
++       return cfmws_bases[idx];
++}
++
++unsigned long cxl_get_cfmws_size(unsigned int idx)
++{
++       if (idx >= MAX_CFMWS || idx >= num_cfmws)
++               return ~0;
++
++       return cfmws_sizes[idx];
++}
++
+ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+                           const unsigned long end)
+ {
+@@ -446,10 +471,16 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+                        "Failed to add decode range: [%#llx - %#llx] (%d)\n",
+                        cfmws->base_hpa,
+                        cfmws->base_hpa + cfmws->window_size - 1, rc);
+-       else
++       else {
+                dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
+                        phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
+                        cfmws->base_hpa + cfmws->window_size - 1);
++               if (num_cfmws < MAX_CFMWS) {
++                       cfmws_bases[num_cfmws] = cfmws->base_hpa;
++                       cfmws_sizes[num_cfmws] = cfmws->window_size;
++                       num_cfmws++;
++               }
++       }
+
+        /* never fail cxl_acpi load for a single window failure */
+        return 0;
+diff --git a/drivers/cxl/core/amd.c b/drivers/cxl/core/amd.c
+index 553b7d0caefd..08a5bfb9fbd6 100644
+--- a/drivers/cxl/core/amd.c
++++ b/drivers/cxl/core/amd.c
+@@ -64,6 +64,10 @@ struct prm_cxl_dpa_spa_data {
+ static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
+ {
+        struct prm_cxl_dpa_spa_data data;
++       unsigned int cfmws_nr;
++       unsigned int idx;
++       unsigned long offset, size;
++       unsigned int dev;
+        u64 spa;
+        int rc;
+
+@@ -75,12 +79,35 @@ static u64 prm_cxl_dpa_spa(struct pci_dev *pci_dev, u64 dpa)
+                .out     = &spa,
+        };
+
++       cfmws_nr = cxl_get_num_cfmws();
++       if (!cfmws_nr)
++               goto try_prmt;
++
++       /* HACK: Calculate the interleaved offset and find the matching base */
++       if (pci_dev->bus->number != 0xe1 && pci_dev->bus->number != 0xc1)
++               goto try_prmt;
++
++       dev = pci_dev->bus->number == 0xe1 ? 0 : 1;
++       offset = (0x100 * (((dpa >> 8) * 2) + dev)) + (dpa & 0xff);
++
++       for (idx = 0; idx < cfmws_nr; idx++) {
++               size = cxl_get_cfmws_size(idx);
++               if (offset < size) {
++                       spa = cxl_get_cfmws_base(idx) + offset;
++                       goto out;
++               }
++               offset -= size;
++       }
++       /* We failed, fall back to calling the PRMT */
++try_prmt:
++
+        rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
+        if (rc) {
+                pci_dbg(pci_dev, "failed to get SPA for %#llx: %d\n", dpa, rc);
+                return ULLONG_MAX;
+        }
+
++out:
+        pci_dbg(pci_dev, "PRM address translation: DPA -> SPA: %#llx -> %#llx\n", dpa, spa);
+
+        return spa;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f93eb464fc97..48cbfa68d739 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -919,6 +919,10 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+
+ struct cxl_mem_command *cxl_find_feature_command(u16 opcode);
+
++unsigned int cxl_get_num_cfmws(void);
++unsigned long cxl_get_cfmws_base(unsigned int idx);
++unsigned long cxl_get_cfmws_size(unsigned int idx);
++
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+  * of these symbols in tools/testing/cxl/.
+
