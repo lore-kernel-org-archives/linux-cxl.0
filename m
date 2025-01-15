@@ -1,42 +1,53 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C924B2459BF
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jan 2025 13:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD7124A7C9;
+	Wed, 15 Jan 2025 13:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736948083; cv=none; b=nTuN/7ERIlyOOn/IFZr6jYPhqonlH4mA12BRF8XrPJRUaDzj9OzaLHRwwWTmunq9hoKYI1jElkexrkAvIJ2DERulO3GSFGC7fOd+imZCGlZMlh1c/Ebm2LQXaybo0cZluPPYjIkiAVcMK+Plhtome/Ry/lLrveEMqlQLh6RJV88=
+	t=1736948536; cv=none; b=UuMMxGzTakjgoRv3WSgGoEovMGnFlftffoqvb0KXCOMla05gCqZv5Qsg/R16SId7YeC6I2dXMRhKKwG6Yphklr0djKdpxuBsUtVkPTwEmihT71XQrMYFRpXXZrkHp4bDs2U5GR8t5Cs4UdIYC2DCPruf3stJUG/kCOui0GSgx4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736948083; c=relaxed/simple;
-	bh=UTmEPbF/laTtPmzFr2BNQEsdiaGFe1O+kj74kGFo+W4=;
+	s=arc-20240116; t=1736948536; c=relaxed/simple;
+	bh=XYPclbGu6jQvmLFAqON9/q/Qu4c+wcxi5uFmLlUBhA4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L1eSLmCZAppt+92dsWudIqy0FLop00CfgSVGwJz4nK9sTA3DJSXoU3qUmuz/A6RDge1gJEJEyU1mimNRrSLuFpKplGmfwYbJHgtrYQEDXhq5DrqwyWruffipTinRoUfnuoHJVNRRW5yuiba7bowo0RHcjPi9SrJit99AQJeSXLQ=
+	 MIME-Version:Content-Type; b=Cp4YDRMLWbc7LsteqsvIOwArNAXHT6XFTXzjw5c3hGmwu70Q+1os65MX+7tvaTSK30Djd4No+hDOYmHL6Sy6XO5bfnmhgK22T/Wr15jB1e0P4vP1EXtpc6uWQu9HWveTmzdqoFluOFN8ZTpQY2Ejg0QI2GLj6MMtE11FjObZBuA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YY6Pd5Tpnz6LD4C;
-	Wed, 15 Jan 2025 21:32:53 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YY6ZK0018z6LD56;
+	Wed, 15 Jan 2025 21:40:24 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E4BED140A35;
-	Wed, 15 Jan 2025 21:34:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+	by mail.maildlp.com (Postfix) with ESMTPS id 284411400F4;
+	Wed, 15 Jan 2025 21:42:10 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 15 Jan
- 2025 14:34:38 +0100
-Date: Wed, 15 Jan 2025 13:34:37 +0000
+ 2025 14:42:09 +0100
+Date: Wed, 15 Jan 2025 13:42:07 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: kernel test robot <lkp@intel.com>
-CC: Huaisheng Ye <huaisheng.ye@intel.com>, <dan.j.williams@intel.com>,
-	<dave.jiang@intel.com>, <ming.li@zohomail.com>,
-	<oe-kbuild-all@lists.linux.dev>, <pei.p.jia@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] cxl/core/regs: Refactor out functions to count
- regblocks of given type
-Message-ID: <20250115133437.00003240@huawei.com>
-In-Reply-To: <202501142243.PmkW84KY-lkp@intel.com>
-References: <20250114131041.17512-2-huaisheng.ye@intel.com>
-	<202501142243.PmkW84KY-lkp@intel.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
+	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
+	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
+ Ying <ying.huang@intel.com>, Vishak G <vishak.g@samsung.com>, Krishna Kanth
+ Reddy <krish.reddy@samsung.com>, "Alok Rathore" <alok.rathore@samsung.com>,
+	<gost.dev@samsung.com>
+Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
+Message-ID: <20250115134207.00002918@huawei.com>
+In-Reply-To: <1296674576.21735899902648.JavaMail.epsvc@epcpadp1new>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+	<20241127163426.00004a65@huawei.com>
+	<CGME20250103053521epcas5p30cd4abba59d695664335b03ba806c56d@epcas5p3.samsung.com>
+	<1296674576.21735899902648.JavaMail.epsvc@epcpadp1new>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,108 +57,239 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 14 Jan 2025 23:03:17 +0800
-kernel test robot <lkp@intel.com> wrote:
+On Fri, 3 Jan 2025 10:57:22 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-> Hi Huaisheng,
+> On 27/11/24 04:34PM, Jonathan Cameron wrote:
+> >On Thu, 21 Nov 2024 10:18:41 +0000
+> >Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >  
+> >> The CXL specification release 3.2 is now available under a click through at
+> >> https://computeexpresslink.org/cxl-specification/ and it brings new
+> >> shiny toys.  
+> >
+> >If anyone wants to play, basic emulation on my CXL QEMU staging tree
+> >https://gitlab.com/jic23/qemu/-/commit/e89b35d264c1bcc04807e7afab1254f35ffc8cb9
+> >
+> >Branch with a few other things on top is:
+> >https://gitlab.com/jic23/qemu/-/commits/cxl-2024-11-27
+> >
+> >Note that this currently doesn't produce real data.  I have a plan
+> >/ initial PoC / hack to hook that up via an addition to the QEMU cache
+> >plugin and an external tool to emulate the hotness tracker counting
+> >hardware. Will be a little while before I get that finished, so in
+> >a meantime the above exercises the driver.
+> >
+> >Jonathan
+> >  
+> >>
+> >> RFC reason
+> >> - Whilst trace capture with a particular configuration is potentially useful
+> >>   the intent is that CXL HMU units will be used to drive various forms of
+> >>   hotpage migration for memory tiering setups. This driver doesn't do this
+> >>   (yet), but rather provides data capture etc for experimentation and
+> >>   for working out how to mostly put the allocations in the right place to
+> >>   start with by tuning applications.
+> >>
+> >> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
+> >> of this is to provide a way to establish which units of memory (typically
+> >> pages or larger) in CXL attached memory are hot. The implementation details
+> >> and algorithm are all implementation defined. The specification simply
+> >> describes the 'interface' which takes the form of ring buffer of hotness
+> >> records in a PCI BAR and defined capability, configuration and status
+> >> registers.
+> >>
+> >> The hardware may have constraints on what it can track, granularity etc
+> >> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
+> >> trackers). Some of these constraints are discoverable from the hardware
+> >> registers, others such as loss of accuracy have no universally accepted
+> >> measures as they are typically access pattern dependent. Sadly it is
+> >> very unlikely any hardware will implement a truly precise tracker given
+> >> the large resource requirements for tracking at a useful granularity.
+> >>
+> >> There are two fundamental operation modes:
+> >>
+> >> * Epoch based. Counters are checked after a period of time (Epoch) and
+> >>   if over a threshold added to the hotlist.
+> >> * Always on. Counters run until a threshold is reached, after that the
+> >>   hot unit is added to the hotlist and the counter released.
+> >>
+> >> Counting can be filtered on:
+> >>
+> >> * Region of CXL DPA space (256MiB per bit in a bitmap).
+> >> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
+> >>
+> >> Sampling can be modified by:
+> >>
+> >> * Downsampling including potentially randomized downsampling.
+> >>
+> >> The driver presented here is intended to be useful in its own right but
+> >> also to act as the first step of a possible path towards hotness monitoring
+> >> based hot page migration. Those steps might look like.
+> >>
+> >> 1. Gather data - drivers provide telemetry like solutions to get that
+> >>    data. May be enhanced, for example in this driver by providing the
+> >>    HPA address rather than DPA Unit Address. Userspace can access enough
+> >>    information to do this so maybe not.
+> >> 2. Userspace algorithm development, possibly combined with userspace
+> >>    triggered migration by PA. Working out how to use different levels
+> >>    of constrained hardware resources will be challenging.
+> >> 3. Move those algorithms in kernel. Will require generalization across
+> >>    different hotpage trackers etc.
+> >>
+> >> So far this driver just gives access to the raw data. I will probably kick
+> >> of a longer discussion on how to do adaptive sampling needed to actually
+> >> use these units for tiering etc, sometime soon (if no one one else beats
+> >> me too it).  There is a follow up topic of how to virtualize this stuff
+> >> for memory stranding cases (VM gets a fixed mixture of fast and slow
+> >> memory and should do it's own tiering).
+> >>
+> >> More details in the Documentation patch but typical commands are:
+> >>
+> >> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+> >>  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
+> >>  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
+> >>  hotness_granual=12  
 > 
-> kernel test robot noticed the following build warnings:
+> Facing issue while executing perf record on x86 emulation environment using following steps
 > 
-> [auto build test WARNING on cxl/next]
-> [also build test WARNING on linus/master v6.13-rc7 next-20250114]
-> [cannot apply to cxl/pending]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 1. Tried applying CHMU Patch on branch cxl-for-6.13 using b4 utility. As
+> base commit is not specified, with minor change able to apply patch.
+> Compiled kernel with CONFIG_CXL_HMU
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Huaisheng-Ye/cxl-core-regs-Refactor-out-functions-to-count-regblocks-of-given-type/20250114-212025
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-> patch link:    https://lore.kernel.org/r/20250114131041.17512-2-huaisheng.ye%40intel.com
-> patch subject: [PATCH v4 1/1] cxl/core/regs: Refactor out functions to count regblocks of given type
-> config: i386-buildonly-randconfig-001-20250114 (https://download.01.org/0day-ci/archive/20250114/202501142243.PmkW84KY-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250114/202501142243.PmkW84KY-lkp@intel.com/reproduce)
+> 2. Compiled jic23/cxl-2024-11-27 for x86_64-softmmu
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501142243.PmkW84KY-lkp@intel.com/
+> 3. Launched Qemu with following CXL topology along with compiled kernel
+> VM="-object memory-backend-ram,id=vmem1,share=on,size=512M \
+>      -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+>      -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+>      -device cxl-type3,bus=root_port13,volatile-memdev=vmem1,id=cxl-vmem1 \
+>      -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k"
 > 
-> All warnings (new ones prefixed by >>):
+> 4. Created region and onlined this memory. Also run top utility on the newly created 
+> numa node using numactl -m<node> top
 > 
-> >> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'pdev' not described in '__cxl_find_regblock_instance'
-> >> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'type' not described in '__cxl_find_regblock_instance'
-> >> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'map' not described in '__cxl_find_regblock_instance'
-> >> drivers/cxl/core/regs.c:303: warning: Function parameter or struct member 'index' not described in '__cxl_find_regblock_instance'  
+> 5. Compiled and installed perf utility in qemu environment, and able to
+> see cxl_hmu_mem* entries in perf list
 > 
-As you've probably gathered from this, kernel-doc needs to be complete.
-I'd just drop the extra *. This isn't stuff we need outside of someone
-reading the actual code.
+> root@QEMUCXL2030mm:~# perf list
+> <snip>
+>   cxl_hmu_mem0.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_hmu_mem0.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_hmu_mem0.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_hmu_mem1.0.0/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_hmu_mem1.0.1/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_hmu_mem1.0.2/hotness_granual=0..0xffffffff,hotness_threshold=0..0xffffffff,downsampling_factor=0..255,.../modifier[Raw ev>
+>   cxl_pmu_mem0.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
+>   cxl_pmu_mem0.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
+>   cxl_pmu_mem1.0/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
+>   cxl_pmu_mem1.1/vid=0..0xffff,edge,mask=0..0xffffffff,.../modifier[Raw event descriptor]
+> <snip>
+> 
+> 6. Tried running perf command mentioned in Documentation/trace/cxl-hmu.rst
+> 
+> root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf -v
+> perf version 6.12.rc5.gc198a4f4a356
+> root@QEMUCXL2030mm:/home/cxl/cxl-linux-mainline/tools/perf# perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12
+> event syntax error: '..ess_granual=12'
+>                                   \___ Unrecognized input
 
-/*
- * __cxl_find_....
+This is probably my mistake when cutting and pasting the example from a terminal.
+Add a trailing / and something to run.
+
+ perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,range_size=1024,randomized_downsampling=0,downsampling_factor=32,hotness_granual=12/ -- sleep 10
+
+Jonathan
 
 > 
-> vim +303 drivers/cxl/core/regs.c
 > 
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  291  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  292  /**
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  293   * __cxl_find_regblock_instance() - Locate a register block or count instances by type / index
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  294   * Use CXL_INSTANCES_COUNT for @index if counting instances.
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  295   *
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  296   * __cxl_find_regblock_instance() may return:
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  297   * 0 - if register block enumerated.
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  298   * >= 0 - if counting instances.
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  299   * < 0 - error code otherwise.
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  300   */
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  301  static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  302  			       struct cxl_register_map *map, int index)
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23 @303  {
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  304  	u32 regloc_size, regblocks;
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  305  	int instance = 0;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  306  	int regloc, i;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  307  
-> 573408049b7598 Robert Richter   2023-06-22  308  	*map = (struct cxl_register_map) {
-> dd22581f895371 Robert Richter   2023-10-18  309  		.host = &pdev->dev,
-> 573408049b7598 Robert Richter   2023-06-22  310  		.resource = CXL_RESOURCE_NONE,
-> 573408049b7598 Robert Richter   2023-06-22  311  	};
-> 573408049b7598 Robert Richter   2023-06-22  312  
-> 962f1e79e7acfb Dave Jiang       2024-05-02  313  	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  314  					   CXL_DVSEC_REG_LOCATOR);
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  315  	if (!regloc)
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  316  		return -ENXIO;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  317  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  318  	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  319  	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  320  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  321  	regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  322  	regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  323  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  324  	for (i = 0; i < regblocks; i++, regloc += 8) {
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  325  		u32 reg_lo, reg_hi;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  326  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  327  		pci_read_config_dword(pdev, regloc, &reg_lo);
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  328  		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  329  
-> 6c7f4f1e51c2a2 Dan Williams     2022-11-29  330  		if (!cxl_decode_regblock(pdev, reg_lo, reg_hi, map))
-> 6c7f4f1e51c2a2 Dan Williams     2022-11-29  331  			continue;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  332  
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  333  		if (map->reg_type == type) {
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  334  			if (index == instance)
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  335  				return 0;
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  336  			instance++;
-> d717d7f3df1849 Jonathan Cameron 2023-05-26  337  		}
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  338  	}
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  339  
-> 6c7f4f1e51c2a2 Dan Williams     2022-11-29  340  	map->resource = CXL_RESOURCE_NONE;
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  341  	if (index == CXL_INSTANCES_COUNT)
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  342  		return instance;
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  343  
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  344  	return -ENODEV;
-> 303ebc1b1741b6 Ben Widawsky     2022-01-23  345  }
-> 7167af677c5aa1 Huaisheng Ye     2025-01-14  346  
+> 
+> Are there any steps i am missing?
+> 
+> Regards,
+> Neeraj	 
+> 
+> >>
+> >> $perf report --dump-raw-traces
+> >>
+> >> Example output.  With a counter_width of 16 (0x10) the least significant
+> >> 4 bytes are the counter value and the unit index is bits 16-63.
+> >> Here all units are over the threshold and the indexes are 0,1,2 etc.
+> >>
+> >> . ... CXL_HMU data: size 33512 bytes
+> >> Header 0: units: 29c counter_width 10
+> >> Header 1 : deadbeef
+> >> 0000000000000283
+> >> 0000000000010364
+> >> 0000000000020366
+> >> 000000000003033c
+> >> 0000000000040343
+> >> 00000000000502ff
+> >> 000000000006030d
+> >> 000000000007031a
+> >>
+> >> Which will produce a list of hotness entries.
+> >> Bits[N-1:0] counter value
+> >> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
+> >>   config to get to a Host Physical Address)
+> >>
+> >> Specific RFC questions.
+> >> - What should be in the header added to the aux buffer.
+> >>   Currently just the minimum is provided. Number of records
+> >>   and the counter width needed to decode them.
+> >> - Should we reset the counters when doing sampling "-F X"
+> >>   If the frequency is higher than the epoch we never see any hot units.
+> >>   If so, when should we reset them?
+> >>
+> >> Note testing has been light and on emulation only + as perf tool is
+> >> a pain to build on a striped back VM,  build testing has all be on
+> >> arm64 so far.  The driver loads though on both arm64 and x86 so
+> >> any problems are likely in the perf tool arch specific code
+> >> which is build tested (on wrong machine)
+> >>
+> >> The QEMU emulation needs some cleanup, but I should be able to post
+> >> that shortly to let people actually play with this.  There are lots
+> >> of open questions there on how 'right' we want the emulation to be
+> >> and what counting uarch to emulate.
+> >>
+> >> Jonathan Cameron (4):
+> >>   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
+> >>   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
+> >>   perf: Add support for CXL Hotness Monitoring Units (CHMU)
+> >>   hwtrace: Document CXL Hotness Monitoring Unit driver
+> >>
+> >>  Documentation/trace/cxl-hmu.rst     | 197 +++++++
+> >>  Documentation/trace/index.rst       |   1 +
+> >>  drivers/cxl/Kconfig                 |   6 +
+> >>  drivers/cxl/Makefile                |   3 +
+> >>  drivers/cxl/core/Makefile           |   1 +
+> >>  drivers/cxl/core/core.h             |   1 +
+> >>  drivers/cxl/core/hmu.c              |  64 ++
+> >>  drivers/cxl/core/port.c             |   2 +
+> >>  drivers/cxl/core/regs.c             |  14 +
+> >>  drivers/cxl/cxl.h                   |   5 +
+> >>  drivers/cxl/cxlpci.h                |   1 +
+> >>  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
+> >>  drivers/cxl/hmu.h                   |  23 +
+> >>  drivers/cxl/pci.c                   |  26 +-
+> >>  tools/perf/arch/arm/util/auxtrace.c |  58 ++
+> >>  tools/perf/arch/x86/util/auxtrace.c |  76 +++
+> >>  tools/perf/util/Build               |   1 +
+> >>  tools/perf/util/auxtrace.c          |   4 +
+> >>  tools/perf/util/auxtrace.h          |   1 +
+> >>  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
+> >>  tools/perf/util/cxl-hmu.h           |  18 +
+> >>  21 files changed, 1748 insertions(+), 1 deletion(-)
+> >>  create mode 100644 Documentation/trace/cxl-hmu.rst
+> >>  create mode 100644 drivers/cxl/core/hmu.c
+> >>  create mode 100644 drivers/cxl/hmu.c
+> >>  create mode 100644 drivers/cxl/hmu.h
+> >>  create mode 100644 tools/perf/util/cxl-hmu.c
+> >>  create mode 100644 tools/perf/util/cxl-hmu.h
+> >>  
+> >  
 > 
 
