@@ -1,372 +1,314 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from esa7.fujitsucc.c3s2.iphmx.com (esa7.fujitsucc.c3s2.iphmx.com [68.232.159.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223F219539F
-	for <linux-cxl@vger.kernel.org>; Thu, 16 Jan 2025 10:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737024611; cv=none; b=BoMUv+V/IFKJVem6xm0m3e7cVX+KQH7SjHdg6xGFvzeQY5eY9u/mIde2A05OenfFhtIYY4WRWTxbvB3J4Cd1AcNLL6BRxX0/kZMt9k52YpC7EL5BYJ/uvtPJGY88icRcHx/WR1P0c7eLggvKK0HZ6g3Lb8I360mFaryleh3uhwA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737024611; c=relaxed/simple;
-	bh=MzZwFO1KrVmDyraKNh0d8wyR47EpUMUGm+ZXv37jo9o=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uCrBpT3M+2WS0FM2824i8Qb36bCqs2uGsWFvH6Lunyj6mVTYcKXlu7D7DrARAqK65/gphen6OUonLrRure4r8J8TmXtao7FbsYwivcAnrMPyuorr8HYj/S8mP0sgwnXkX7EMnDZIzyDbeYqtuLrwReNPfkDNvkR5lGjgdLU8VRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YYfjJ1ghNz6M4nK;
-	Thu, 16 Jan 2025 18:48:20 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id ACCF3140B63;
-	Thu, 16 Jan 2025 18:50:06 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 16 Jan
- 2025 11:50:05 +0100
-Date: Thu, 16 Jan 2025 10:50:04 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Fan Ni
-	<fan.ni@samsung.com>
-Subject: Re: [PATCH] hw/cxl: Introduce CXL_T3_MSIX_VECTOR enumeration
-Message-ID: <20250116105004.0000442a@huawei.com>
-In-Reply-To: <3ae1403f-3a70-4826-b952-3fce27d91407@fujitsu.com>
-References: <20250115075846.167552-1-lizhijian@fujitsu.com>
-	<20250115135135.000066fa@huawei.com>
-	<3ae1403f-3a70-4826-b952-3fce27d91407@fujitsu.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E5C4502B
+	for <linux-cxl@vger.kernel.org>; Thu, 16 Jan 2025 11:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737026098; cv=fail; b=duNxc4dgpaJ7lb2BthtytDe8CFCzAlIayVFafFbjLh+F8gGl/GoRK3er/ckWq4dCUSNxfm53slqP4TNCTuiXxFpsLTm78OH889Ue1CVCFMMCYfXRJHJ5vdxeGiTig+jX44p2N0rXvAyuE+YsavZDI/RgTP9/PIgTZN7E89KnYKU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737026098; c=relaxed/simple;
+	bh=sw61xqJ0RnI6tQQGP/BWtFiB1gW+jPJobKUTWcYEVHA=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sqsl6Pk6NFks7tVjUpzwOviLFKCOIxi0dfWxhcSy4ZI4j5SKU0AhibQpEARrlNAkbKW2wuBe7oue4msXG+f6pCA7naG054HQ8mDbpj/1FyE0dyq2m8ET91Y5PgNxp2Xm7o3ZXTA7ofsh/zKgn70SQURbME1jKTqT/CoDy1EEKlc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Bq6qswTv; arc=fail smtp.client-ip=68.232.159.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Bq6qswTv"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1737026097; x=1768562097;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=sw61xqJ0RnI6tQQGP/BWtFiB1gW+jPJobKUTWcYEVHA=;
+  b=Bq6qswTvFkFL4V1+xBSsikWsH0LJGYJ3aarxWfUSIWSYEQaZ4m8p3IOq
+   C9MoYnNfKYC6Ep0bw/DvwlgfbrORK8TUKsu708EmD17xsEOflg42zTbrF
+   jy5JajssdV6ot3R6k7tehBu7Ln2Zg3N8qY78P3HvO2urWYKGhAzpWKAqF
+   CKTInh/ExJ49ra7kixmcdixewjmNfU2qWZ7/iMzAaL6VA/0iXK/u+E7oI
+   0a/Jp1bIqkGGyMk5kGVhjDIVg+kD4zYmMKVp0fSLDoicbH789KWQIGOVP
+   CDBy6Sb7UgMOcL743SZ9jmxFw3E3CUPM6d4sRZ4pAKtLnkQFK5ifkVInU
+   A==;
+X-CSE-ConnectionGUID: urN2WqK6QaKKwi55RcNvwg==
+X-CSE-MsgGUID: g8iVScx1QV2dBF9t8ra9Eg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="143046061"
+X-IronPort-AV: E=Sophos;i="6.13,209,1732546800"; 
+   d="scan'208";a="143046061"
+Received: from mail-japaneastazlp17010005.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.5])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 20:13:45 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BlcqvsHLAJCVGE333XIX/d5SS9vqqZOroIJN//eQhR2t9ZlI7WqDRK9KPuVFX4J14dh1Dkc4Y4W2vdOSvCswd9NG/X6JhuDmP7HYdakTREilvsAlkEV+VrjyZslt5w6VNJN4KMgw1meXdGEjgOojvsprwPf8NtYqhkDEIjpFNB73uI8bKhwfmCFmLClzZZS4c0DHGOFtMphrNML394dxuUWUXpo9kgIGPfkT2DOEvNM7mYuOYi8l7ltCgSP3OcW++686wqHycVHj/iF+jF4M0dPID5JSJwBL3lF1TRFErK0IcJsfin3iq5CJFBMZ8g55I4Bkbzt1J879PUnIKnoYJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bULdydkByYzPABA3NchrMLQuNWqj4Y1qvxEQLzaO/5Y=;
+ b=f/n/Nrms6NCADhPBzhIuUicjzOjulV51qL+wD8ad3Ojlm5Uv7BZEknQtpCMp7RKxONW5AcSPJT+ukal+gcb+1FL+XOSy0Bwu50iReAMG4WNl2gz6gmFZgJxXL+xnlhQOOeXEAPenIKjZqcFDrw+wGlRpvZMSIj6tKurtOXjzdhL88NIDsxPZ8tl7C42SdaEFZvYKOvGBPFhiJrsE6CObFPVIrKsehvL/aq1CzokosnN6DqYrRv6GuV7p9R9bbcT1B4sA5fYMBZPvFNMn2UN/N1ibce5Z/fzvFs6a5EnXu2Rw27d+P3iDceyWcbHqnWcGd9IJ7D5vi3Cn9PLkm1XlCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSYPR01MB5352.jpnprd01.prod.outlook.com (2603:1096:604:84::14)
+ by OS7PR01MB14987.jpnprd01.prod.outlook.com (2603:1096:604:397::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.14; Thu, 16 Jan
+ 2025 11:13:41 +0000
+Received: from OSYPR01MB5352.jpnprd01.prod.outlook.com
+ ([fe80::21c:a9f7:3c3f:c7e]) by OSYPR01MB5352.jpnprd01.prod.outlook.com
+ ([fe80::21c:a9f7:3c3f:c7e%5]) with mapi id 15.20.8356.010; Thu, 16 Jan 2025
+ 11:13:41 +0000
+From: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
+To: 'Dan Williams' <dan.j.williams@intel.com>, "'linux-cxl@vger.kernel.org'"
+	<linux-cxl@vger.kernel.org>
+Subject: RE: Assistance Needed with CXL Memory Region Creation
+Thread-Topic: Assistance Needed with CXL Memory Region Creation
+Thread-Index: AdtgqoH4aWCS14GjQ5iB7Jig2VQUVwHV4icw
+Date: Thu, 16 Jan 2025 11:13:41 +0000
+Message-ID:
+ <OSYPR01MB535212BCA854FDCC57DFFC1C901A2@OSYPR01MB5352.jpnprd01.prod.outlook.com>
+References:
+ <OSYPR01MB53525FD64A9AFBAEEC1E19A390112@OSYPR01MB5352.jpnprd01.prod.outlook.com>
+In-Reply-To:
+ <OSYPR01MB53525FD64A9AFBAEEC1E19A390112@OSYPR01MB5352.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=cbcaba8f-a6a8-414c-9e62-39cbe14c497c;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2025-01-06T10:39:21Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+x-shieldmailcheckerpolicyversion: FJ-ISEC-20181130-VDI-enc
+x-shieldmailcheckermailid: 6fdf3a4f58f54feaa05a50ff236094c9
+x-securitypolicycheck: OK by SHieldMailChecker v2.6.2
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSYPR01MB5352:EE_|OS7PR01MB14987:EE_
+x-ms-office365-filtering-correlation-id: abc9d3cf-0685-4e98-2014-08dd361ed575
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|1800799024|38070700018|1580799027;
+x-microsoft-antispam-message-info:
+ =?iso-2022-jp?B?cUthU0NEbzBXRVNIdVBSY0NVMzg5R2JyZ0tLS3BQcE9wRWxwVWJXY1dx?=
+ =?iso-2022-jp?B?VEg1Sm1sSEZ4cmI0Nmd6QmE5TW9QT1F1S1NvZ0dtRTl4V2dTVHBWQkEx?=
+ =?iso-2022-jp?B?QzFSTHdPaXovaVdPUjEwZDkrbmw1b3p1NE9KTkMwYStYekVJVkxjQzBK?=
+ =?iso-2022-jp?B?YUhBTWltVXMrOHZXdjN6WUsyZi9oYW5McDRNR1l5eFNVT0U0WXhSN1FX?=
+ =?iso-2022-jp?B?bncvUmNFVGk4SmYwQktaTTdJVVJaQitvZ3ExdXV1M3B6MnJncmkxaTZz?=
+ =?iso-2022-jp?B?bnV0eC9hV28ydUw3ZjlWaDlOZXh6Zk9lNXUya3NCRlppd3hNQXlqTEVh?=
+ =?iso-2022-jp?B?TDhxRDZHTmNYbGU0VmlGMmVpZWlud1haZllCenFiMXkycjduRm9TRkJG?=
+ =?iso-2022-jp?B?Vit6Y3hvNGhMT0Q4aXNGNUo2Vkx2cU01ZkE4Y2JEZTNPV3lucXgzNlpq?=
+ =?iso-2022-jp?B?b2RGb2YxUVR0WUNJcEVSOVpRYnBJK21ueGJVRU9BWE9ycnExdTZlNllB?=
+ =?iso-2022-jp?B?OWZsK2dyR1NsUkFMMnI0V0VJWG1YT0xvQXJtRTZ4OG5yYlRoaHpIN2Jw?=
+ =?iso-2022-jp?B?L2VHZEJSU0NhSTZtdlNmbFZ5UWZaaTlUdjIyU3lhOW1HbTVHY2pnNElR?=
+ =?iso-2022-jp?B?b1NkbFVGVUhHaHMxblBUdWplK0Y0T29ObnF1Mjh6Ykp5VE5ES3BtT1Yz?=
+ =?iso-2022-jp?B?aUtVOEVPTlJGN25HeldZZDMxU3hkVDRhaVNCcC9ReXgvSkRCbmx4amJh?=
+ =?iso-2022-jp?B?YWtSZ2oyV1NrdTVQUUNERDl6QlpiZFV2aUR5S0RBam9JWXhuYUN6RWVZ?=
+ =?iso-2022-jp?B?MzFYd3prdGdqL0hhWkp0Uis2V2F5MjhKQmU3MVJobXpvRkVJQUNzSm9h?=
+ =?iso-2022-jp?B?cHZscGJuS3FsbC91cy9SdFowRGZqakVoWStDY2Q4UGlGeFZqcXM5N3dj?=
+ =?iso-2022-jp?B?VWF6d0piOEEzTmpjOW53N0ZPUTc5dFVrdTBLbE5FeHRTSHl4a0M3KzZ2?=
+ =?iso-2022-jp?B?MlZ2RDdRRFgwSm9TRVFjc0dJSGFDejluOVlUalpibVVXM0E3VGhJd1c0?=
+ =?iso-2022-jp?B?L3NBRXFnQjBzcUw3SjJpcUdkelU1Y2lXOGFkVTlaUW04QVZIemo5NWQ5?=
+ =?iso-2022-jp?B?azZaTnUyZTVYWTgzdlZKQTFvNS9hU2dad3E2YUwzYjlzK3hJNHhBTnJH?=
+ =?iso-2022-jp?B?TnA1elp4NVo5WFZ4d0txYUI3ZWhMR3R5UkJEOGU2czV5MGpUcFh1YXE3?=
+ =?iso-2022-jp?B?NEE0ZGMzTXhkSWNZL25yU05BcWRtT3hFTHZuUmlDSDhVdlYvU2c3Vlly?=
+ =?iso-2022-jp?B?LzZRRWxGOUZYUGlnOWZJOTNrOVd3MUZrbDBsV1JiWlVXTGMvVDJDcU1h?=
+ =?iso-2022-jp?B?MDI1Q3R0Z2NKa0pmSjUvS1VuR3FFYk1UWkg1cXExNWJIb0dISWpXN2w0?=
+ =?iso-2022-jp?B?WW15ekZ5d25zU1pseXA2WlA3a1VzQ1pseTJkRVZYTDNnaFduSDQxaWcz?=
+ =?iso-2022-jp?B?aTZjemF2NEdLMG42MTFqdFphUENhdVpleWdEQzlWdzVtczlRK3JZdjha?=
+ =?iso-2022-jp?B?ZDZvbHFWS3RVbTNDYVJGbVA2WFNELzhzSU1IN2JMdUIrQko4a2ZFcHF2?=
+ =?iso-2022-jp?B?OUdJamFuRFB0TnJSMFhJclhqTmxPVlJPcG45bnUzdVp0S3BVQVZHSDF1?=
+ =?iso-2022-jp?B?M1RtcHZIdkdmRFI2enFOamRBVzhmTXE3aTR3S0N2ejE5ZEhxa1lYS1Ax?=
+ =?iso-2022-jp?B?YlRUamFrbU9yRWhNYlM1cTc5N2c1TjNESVZxWU81eC8rRFFtcnF1QU1s?=
+ =?iso-2022-jp?B?dWZ3TkdyamJYZTdLMDE1WktiMDQyQjVUMkpoT0tacllzbzZNUVdPMGxh?=
+ =?iso-2022-jp?B?ZjN4K1hxT1JXdlg2bHZ3STV1UFRBWjV6SkNHWWZvZXNhbHJkVTJJMzlp?=
+ =?iso-2022-jp?B?K2ZpNFVyZEdnditiVkpsbkx2MG5mdTc2N0RhTGZFTzI2RVh1N2V4OXZk?=
+ =?iso-2022-jp?B?R2ZQd2pmQk9iRnpjZjZIMVZBTkROeUhwTXM2V0EwZzNsd05XNUNqRmxl?=
+ =?iso-2022-jp?B?SmlMY2pPOXFKWmlLOEkwN01CN1lzWGc9?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSYPR01MB5352.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018)(1580799027);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?SWg2ZjZ6akxtUkNlaCtyb0hjT0JBVG9iRUFmTjN0Vmw3cVN5OVpqQlYr?=
+ =?iso-2022-jp?B?dUtZOHpqWk14dlNnbVc2TGY2clNudlhQTkNXV2VEZE9GdW42NkRoK1Bj?=
+ =?iso-2022-jp?B?amtDb0ZoMEZweVlYajNPTkk1YWN3N3IyenZhd2pMMXhWN2M4aktyOWhz?=
+ =?iso-2022-jp?B?eTgzYWJvTXEyUERsTEJzT2YvbjQ2b2I3aENiZ3RNT1MyRHdIL25EUk4v?=
+ =?iso-2022-jp?B?QmhDUHhEbVlDaCtwYUhwMU1nN3l0RGxLdXhxbmlEL1dJRUFGcTM3MitT?=
+ =?iso-2022-jp?B?a254VUVFQy95ckxwUnpJc0VhZFM3SC9raTFQYllkWFJRTFkzN1RuMzlx?=
+ =?iso-2022-jp?B?cXFaRmRPZ2EyNXFMd1NMMVdLejdPUHFwbTVvYU1vQXpudEE4TnpBY0Jk?=
+ =?iso-2022-jp?B?ZlRrR2JJTjU4a2dwMW1BOVdNUVpESmVXbVJKSzNsdzk5c001aGNFQTdQ?=
+ =?iso-2022-jp?B?TDdTQzdwQndSU0NaVEtpWVZ4bXRRVDArQUdiWTVCeDQvWWVYYXRJRU9J?=
+ =?iso-2022-jp?B?YXpmUWx1blZwWjVTK28yZ1ZhaUlYVjJrQjNDTytVajZVUmtaRjdMMGlX?=
+ =?iso-2022-jp?B?QTVTOVdmNmZrM0dlNTBBNk1KVDV0WjlQRGZIV3NTUGNLTHErT2lQeGIz?=
+ =?iso-2022-jp?B?bmN2YUZTaU0rSWJ1M0gvUytMVUJ1SG1WUFMrTjI3Qm1tUzZ5N0s3ZDJ5?=
+ =?iso-2022-jp?B?dCtiRHVaUHpkbFAvazBwVThBNXJjbkdLM1cvVTdhNlhEVlJwTjV2ekVh?=
+ =?iso-2022-jp?B?YXVrVGw5K1grOER2a1VsRWxNcTYySjFKMzdmWmtkb3ROL3FuOUU1Ulhk?=
+ =?iso-2022-jp?B?TmpJTE1rTHNkVDhMYW8yUDc5MWtMdEtDZ1JINUdJUUswRnZMY3QybHdQ?=
+ =?iso-2022-jp?B?M2Y3L0NEVnBhdFlnQjVYeUd2MTlFbmxiQ0R2em1WN29QbzM1VXdCNXZL?=
+ =?iso-2022-jp?B?emQ1YzVCNW9zektkRklvSFhvTnl2QUhYdkhNUGRQeHhNb3NCem13cTFv?=
+ =?iso-2022-jp?B?V0RpamNJYUMvMDFYN1o2K2JFVTdQejlpbzhOcmc0SWgxblRHdkF3Wmd2?=
+ =?iso-2022-jp?B?NVl3VmNETlRQMWdpWTlRS3N5NmJaUkVyaTZJNEozeTUwRldPSDhMWnVZ?=
+ =?iso-2022-jp?B?OGxOOU5sYk9BTnlCOEhjcW1Rc21Ib1BnVDBhUWFUTWtvMjNsQ3dERGtZ?=
+ =?iso-2022-jp?B?d3dnRGZMWWhZQS9HMjhUV2E5NUR4aE1hNVVNek5MbW5KYllyenRsdjRj?=
+ =?iso-2022-jp?B?MUpiOGtadzBrZTJPY0pmVEZXV1AwWHpnVzVPcSs5ZzJiMndZU2Vrem0w?=
+ =?iso-2022-jp?B?ZTN0U1NxSS9SaGQ1Ni90bGIwRENEclJmTWNsTkF5OGtteVJ3eUx5NlB0?=
+ =?iso-2022-jp?B?bU9leWxlVzZ5TTBtN1RiUGFpajNqYmY1cFAvT29jUGdyblRmRGJhQUYw?=
+ =?iso-2022-jp?B?bnUreTJrektwelBRUjA3TUxoK0NyQnlLWnpqSGRHMWs4V041L2pCVnh2?=
+ =?iso-2022-jp?B?U1p4bmN2bC8xcEkyOHY3M1J5U0dDdjFKaHEyWlZBOUoyN3lLVFVSYVFB?=
+ =?iso-2022-jp?B?bkJrYW5lSFlzN0lkT05TUTNzVVBsdnJDb25TN0g5UE0rY3BWQnVPYS94?=
+ =?iso-2022-jp?B?WDIyQlZRdzVmTldzSVIxbng4N0UzcmpVSFZxdWRDSjBBRDl1cFVzT0dW?=
+ =?iso-2022-jp?B?Sjk4ajJiMTdEbDhjRVArRloxOWdzRllPZjlmNWJNMzlDVHhsU2RkYkZm?=
+ =?iso-2022-jp?B?YkJrRHhEbC84RDQ0WG1Gb3l5R1ZhQXRtcjRlOThGb3JuWDJzNTA2aTNm?=
+ =?iso-2022-jp?B?NlBhMnc2ZEJ6aW55ZnhSMDkwL1NQZm1DYUg3dUw3c1lQQi95RGo2cGRm?=
+ =?iso-2022-jp?B?aS91TXEyTURYblN5Z0YzL1hJYlp5VUxnamYzSnZGZWxTL3lDQjdSa1Nz?=
+ =?iso-2022-jp?B?ZmNiMmd3b0FlUTIya0ZxV29iRk9iMTJjbDQ2eEx4S21iVXJETmNrUEZy?=
+ =?iso-2022-jp?B?UDU0dmFnSmZlQ09CSzhzZllmakEzSVhXL3laTUtUSXpxaFRhNGZpNnBO?=
+ =?iso-2022-jp?B?SlBOUVAwZCtDNlM5cDdwOTZ1YUFPZUFFYWpURGt6OGU4QlhHcDJVWjM2?=
+ =?iso-2022-jp?B?ekVlNnVHZkZ0ZXhXakc4N0Y3UFZtbTErRXhlVmo3ODJtV0FXQlpvMkgv?=
+ =?iso-2022-jp?B?NHBiT1pxN1NMUVhpeWswRWxPZ01VdXczcUlJSU9NRlZ3RTRYZ3Zhc0t5?=
+ =?iso-2022-jp?B?VVF6RnNUUDNPYTRhN0hCSGVnNXIrT0tGMFg5SFJJTVJCYlczcGxwMVF0?=
+ =?iso-2022-jp?B?dDRzbg==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	wxiAvTe8zd9IYMLc1bmlVzq6Bk1iHa+dBHLk6dKCuRZq1BdXccoag3dNUf84fldK7iR/ioyIVY40CyuF2ZZHgHc+TvqeAkoP3sxTX7V88yKKsAWQv3kIiv43EHwgMD10617V8ntLTs7K17DPV20OWKb31wFUSth4CynGL2uEaBsdhq3rG3ToUkgoLhWHo3mZft7c4Y3cQ3kyck2OQR2r3aBfAQBPnrL7T2IHFo21cM+Jj0lmK9ufRAC2otWf8fZ+wOT3boM8UBt9GGzrB96cI4uKw4fXtocUVWo1o44KAKrX1PNdeWhLiL/agIwCQr3uKx4KYH+mp7iRmPXHcTICvGu/yo4mXyj04DP8vKTnDd1c85wicTlq/f9jvBbb2zqqS8/34RpxJhnbDIPknB+xHS5Xi+xCyqCSsNp/vsffuJ5/us+7NCcz3EXSa8OVVnnoNxQto31UeL3XMpJZWU8KHPcV2syAFxa914A7SNRds6NWt0t0551GBnp1xjEBLTwsAeAF2CbCa1AoXnZ/uUvwxeedfIyNgQomwUs8IAplaMxOYyU+AUiGnNfnmZIwv/rl4UHST/ZPiAHI9ceXIRMu66F6dS1DA5Z3rmZuU8okX2gZItx2aHRME7gwLtZy13om
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSYPR01MB5352.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abc9d3cf-0685-4e98-2014-08dd361ed575
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2025 11:13:41.3958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8d7vME5dbcw88uXB6xWD1lIY/m3lrr9RCwHggMAnX7Y0OF1CnBxc02MIubvAvwNpQ9b3XbfhBHMHWkm22PdfuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB14987
 
-On Thu, 16 Jan 2025 01:18:28 +0000
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
 
-> On 15/01/2025 21:51, Jonathan Cameron wrote:
-> > On Wed, 15 Jan 2025 15:58:46 +0800
-> > Li Zhijian <lizhijian@fujitsu.com> wrote:
-> >  =20
-> >> Introduce the `CXL_T3_MSIX_VECTOR` enumeration to specify MSIX vector
-> >> assignments specific to the Type 3 (T3) CXL device.
-> >>
-> >> The primary goal of this change is to encapsulate the MSIX vector uses
-> >> that are unique to the T3 device within an enumeration, improving code
-> >> readability and maintenance by avoiding magic numbers. This organizati=
-onal
-> >> change allows for more explicit references to each vector=E2=80=99s ro=
-le, thereby
-> >> reducing the potential for misconfiguration.
-> >>
-> >> It also modified `mailbox_reg_init_common` to accept the `msi_n` param=
-eter,
-> >> reflecting the new MSIX vector setup.
-> >>
-> >> This pertains to the T3 device privately; other endpoints should refra=
-in from
-> >> using it, despite its public accessibility to all of them.
-> >>
-> >> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com> =20
-> > A few things inline. I'll apply this with the following tweak. =20
->=20
-> Thank you!
->=20
-> These changes are good to me.
->=20
-> Thanks
-> Zhijian
->=20
->=20
-> BTW, during making this patch, i noticed that are a few abused cleanup in=
- the error path
-> of xxx_realize() vs xxx_exit()
->=20
-> For example:
-> ct3_realize()
-> {
-> ...
-> err1:
->    cleanup1;
->=20
-> err2:
->    cleanup2;
-> }
->=20
-> ct3_exit()
-> {
->    cleanup1;
->    cleanup2;
-> }
->=20
-> These cleanups will function correctly only if both cleanup1 and cleanup2=
- are reentrant.
-> However, this is not the case in `ct3_realize()` and other CXL-related `x=
-xx_realize()` functions.
->=20
-> When examining other devices, we rarely observe any cleanups in the `xxx_=
-realize()`
-> error path, as the cleanup in `xxx_exit()` alone suffices.
->=20
-> I intend to address these cleanups if you have not yet done so.  @Jonathan
+Ping....
+Is there anyone who can provide information to help resolve this issue?
+I met this issue at kernel 6.13-rc4. Are there any fix for this issue?=20
+Otherwise, are there any kernel version which can create region under the s=
+pecial purpose memory?
 
-You've lost me.  If realize() fails we should exit hard.  Why is ct3_exit()=
- called
-as well.  Perhaps the issue is failure to set errp in some error paths?
-So we give the impression that it is fine to carry on when we should not.
+I'll add some more information below...
 
-Jonathan
+> Hello,
+>=20
+> I hope this message finds you well. I have a question regarding the use o=
+f CXL
+> memory based on the v2.0 specification, and I would appreciate any assist=
+ance
+> you can provide.
+>=20
+> I recently acquired a real machine equipped with actual CXL memory, and I=
+'m
+> attempting to create a region using the "cxl create-region" command.
+> However, I encountered an issue where the command returns an ERANGE error=
+.
+> Upon investigation, I discovered that the get_free_mem_region() function =
+in
+> kernel/resource.c is returning this error.
 
->=20
->=20
-> Thanks
-> Zhijian
->=20
->=20
-> >=20
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index e765edd227..3a0ee7e8e7 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -133,14 +133,6 @@ typedef enum {
-> >       CXL_MBOX_MAX =3D 0x20
-> >   } CXLRetCode;
-> >=20
-> > -/* type3 device private */
-> > -enum CXL_T3_MSIX_VECTOR {
-> > -    CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS =3D 0,
-> > -    CXL_T3_MSIX_EVENT_START =3D 2,
-> > -    CXL_T3_MSIX_MBOX =3D CXL_T3_MSIX_EVENT_START + CXL_EVENT_TYPE_MAX,
-> > -    CXL_T3_MSIX_VECTOR_NR
-> > -};
-> > -
-> >   typedef struct CXLCCI CXLCCI;
-> >   typedef struct cxl_device_state CXLDeviceState;
-> >   struct cxl_cmd;
-> > diff --git a/hw/cxl/switch-mailbox-cci.c b/hw/cxl/switch-mailbox-cci.c
-> > index 762d881588..833b824619 100644
-> > --- a/hw/cxl/switch-mailbox-cci.c
-> > +++ b/hw/cxl/switch-mailbox-cci.c
-> > @@ -17,7 +17,7 @@
-> >   #include "hw/qdev-properties.h"
-> >   #include "hw/cxl/cxl.h"
-> >=20
-> > -#define CXL_SWCCI_MSIX_MBOX CXL_T3_MSIX_MBOX
-> > +#define CXL_SWCCI_MSIX_MBOX 3
-> >=20
-> >   static void cswmbcci_reset(DeviceState *dev)
-> >   {
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index ba1c79afe8..dc163f5b63 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -30,6 +30,14 @@
-> >   #include "hw/cxl/cxl.h"
-> >   #include "hw/pci/msix.h"
-> >=20
-> > +/* type3 device private */
-> > +enum CXL_T3_MSIX_VECTOR {
-> > +    CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS =3D 0,
-> > +    CXL_T3_MSIX_EVENT_START =3D 2,
-> > +    CXL_T3_MSIX_MBOX =3D CXL_T3_MSIX_EVENT_START + CXL_EVENT_TYPE_MAX,
-> > +    CXL_T3_MSIX_VECTOR_NR
-> > +};
-> > +
-> >   #define DWORD_BYTE 4
-> >   #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
-> >=20
-> >  =20
-> >> ---
-> >> V3: new patch to introduce a T3 specific enumeration # Jonathan
-> >> ---
-> >>   hw/cxl/cxl-device-utils.c   | 12 +++++-------
-> >>   hw/cxl/switch-mailbox-cci.c |  4 +++-
-> >>   hw/mem/cxl_type3.c          | 12 ++++++------
-> >>   include/hw/cxl/cxl_device.h | 12 ++++++++++--
-> >>   4 files changed, 24 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> >> index 035d034f6dd8..52ad1e4c3f7a 100644
-> >> --- a/hw/cxl/cxl-device-utils.c
-> >> +++ b/hw/cxl/cxl-device-utils.c
-> >> @@ -352,10 +352,8 @@ static void device_reg_init_common(CXLDeviceState=
- *cxl_dstate)
-> >>       }
-> >>   }
-> >>  =20
-> >> -static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
-> >> +static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate, int m=
-si_n)
-> >>   {
-> >> -    const uint8_t msi_n =3D 9;
-> >> -
-> >>       /* 2048 payload size */
-> >>       ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_C=
-AP,
-> >>                        PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
-> >> @@ -382,7 +380,7 @@ static void memdev_reg_init_common(CXLDeviceState =
-*cxl_dstate)
-> >>       cxl_dstate->memdev_status =3D memdev_status_reg;
-> >>   }
-> >>  =20
-> >> -void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-> >> +void cxl_device_register_init_t3(CXLType3Dev *ct3d, int msi_n)
-> >>   {
-> >>       CXLDeviceState *cxl_dstate =3D &ct3d->cxl_dstate;
-> >>       uint64_t *cap_h =3D cxl_dstate->caps_reg_state64;
-> >> @@ -398,7 +396,7 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-> >>       device_reg_init_common(cxl_dstate);
-> >>  =20
-> >>       cxl_device_cap_init(cxl_dstate, MAILBOX, 2, CXL_DEV_MAILBOX_VERS=
-ION);
-> >> -    mailbox_reg_init_common(cxl_dstate);
-> >> +    mailbox_reg_init_common(cxl_dstate, msi_n);
-> >>  =20
-> >>       cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000,
-> >>           CXL_MEM_DEV_STATUS_VERSION);
-> >> @@ -408,7 +406,7 @@ void cxl_device_register_init_t3(CXLType3Dev *ct3d)
-> >>                                 CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> >>   }
-> >>  =20
-> >> -void cxl_device_register_init_swcci(CSWMBCCIDev *sw)
-> >> +void cxl_device_register_init_swcci(CSWMBCCIDev *sw, int msi_n)
-> >>   {
-> >>       CXLDeviceState *cxl_dstate =3D &sw->cxl_dstate;
-> >>       uint64_t *cap_h =3D cxl_dstate->caps_reg_state64;
-> >> @@ -423,7 +421,7 @@ void cxl_device_register_init_swcci(CSWMBCCIDev *s=
-w)
-> >>       device_reg_init_common(cxl_dstate);
-> >>  =20
-> >>       cxl_device_cap_init(cxl_dstate, MAILBOX, 2, 1);
-> >> -    mailbox_reg_init_common(cxl_dstate);
-> >> +    mailbox_reg_init_common(cxl_dstate, msi_n);
-> >>  =20
-> >>       cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000, 1);
-> >>       memdev_reg_init_common(cxl_dstate);
-> >> diff --git a/hw/cxl/switch-mailbox-cci.c b/hw/cxl/switch-mailbox-cci.c
-> >> index 65cdac6cc139..762d8815880d 100644
-> >> --- a/hw/cxl/switch-mailbox-cci.c
-> >> +++ b/hw/cxl/switch-mailbox-cci.c
-> >> @@ -17,10 +17,12 @@
-> >>   #include "hw/qdev-properties.h"
-> >>   #include "hw/cxl/cxl.h"
-> >>  =20
-> >> +#define CXL_SWCCI_MSIX_MBOX CXL_T3_MSIX_MBOX =20
-> > Hard code this value.  There is no logical reason it has
-> > to match with the type 3 one.  That is just an artifact of how
-> > the code evolved.
-> >  =20
-> >> +
-> >>   static void cswmbcci_reset(DeviceState *dev)
-> >>   {
-> >>       CSWMBCCIDev *cswmb =3D CXL_SWITCH_MAILBOX_CCI(dev);
-> >> -    cxl_device_register_init_swcci(cswmb);
-> >> +    cxl_device_register_init_swcci(cswmb, CXL_SWCCI_MSIX_MBOX);
-> >>   }
-> >>  =20
-> >>   static void cswbcci_realize(PCIDevice *pci_dev, Error **errp)
-> >> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> >> index 0ae1704a345c..f64af19ed6ae 100644
-> >> --- a/hw/mem/cxl_type3.c
-> >> +++ b/hw/mem/cxl_type3.c
-> >> @@ -843,7 +843,6 @@ static void ct3_realize(PCIDevice *pci_dev, Error =
-**errp)
-> >>       ComponentRegisters *regs =3D &cxl_cstate->crb;
-> >>       MemoryRegion *mr =3D &regs->component_registers;
-> >>       uint8_t *pci_conf =3D pci_dev->config;
-> >> -    unsigned short msix_num =3D 10;
-> >>       int i, rc;
-> >>       uint16_t count;
-> >>  =20
-> >> @@ -884,16 +883,17 @@ static void ct3_realize(PCIDevice *pci_dev, Erro=
-r **errp)
-> >>                        &ct3d->cxl_dstate.device_registers);
-> >>  =20
-> >>       /* MSI(-X) Initialization */
-> >> -    rc =3D msix_init_exclusive_bar(pci_dev, msix_num, 4, NULL);
-> >> +    rc =3D msix_init_exclusive_bar(pci_dev, CXL_T3_MSIX_VECTOR_NR, 4,=
- NULL);
-> >>       if (rc) {
-> >>           goto err_address_space_free;
-> >>       }
-> >> -    for (i =3D 0; i < msix_num; i++) {
-> >> +    for (i =3D 0; i < CXL_T3_MSIX_VECTOR_NR; i++) {
-> >>           msix_vector_use(pci_dev, i);
-> >>       }
-> >>  =20
-> >>       /* DOE Initialization */
-> >> -    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, tru=
-e, 0);
-> >> +    pcie_doe_init(pci_dev, &ct3d->doe_cdat, 0x190, doe_cdat_prot, tru=
-e,
-> >> +                  CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS);
-> >>  =20
-> >>       cxl_cstate->cdat.build_cdat_table =3D ct3_build_cdat_table;
-> >>       cxl_cstate->cdat.free_cdat_table =3D ct3_free_cdat_table;
-> >> @@ -908,7 +908,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error =
-**errp)
-> >>       if (rc) {
-> >>           goto err_release_cdat;
-> >>       }
-> >> -    cxl_event_init(&ct3d->cxl_dstate, 2);
-> >> +    cxl_event_init(&ct3d->cxl_dstate, CXL_T3_MSIX_EVENT_START);
-> >>  =20
-> >>       /* Set default value for patrol scrub attributes */
-> >>       ct3d->patrol_scrub_attrs.scrub_cycle_cap =3D
-> >> @@ -1202,7 +1202,7 @@ static void ct3d_reset(DeviceState *dev)
-> >>  =20
-> >>       pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->sp=
-eed);
-> >>       cxl_component_register_init_common(reg_state, write_msk, CXL2_TY=
-PE3_DEVICE);
-> >> -    cxl_device_register_init_t3(ct3d);
-> >> +    cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
-> >>  =20
-> >>       /*
-> >>        * Bring up an endpoint to target with MCTP over VDM.
-> >> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> >> index 561b375dc86d..e765edd22772 100644
-> >> --- a/include/hw/cxl/cxl_device.h
-> >> +++ b/include/hw/cxl/cxl_device.h
-> >> @@ -133,6 +133,14 @@ typedef enum {
-> >>       CXL_MBOX_MAX =3D 0x20
-> >>   } CXLRetCode;
-> >>  =20
-> >> +/* type3 device private */
-> >> +enum CXL_T3_MSIX_VECTOR {
-> >> +    CXL_T3_MSIX_PCIE_DOE_TABLE_ACCESS =3D 0,
-> >> +    CXL_T3_MSIX_EVENT_START =3D 2,
-> >> +    CXL_T3_MSIX_MBOX =3D CXL_T3_MSIX_EVENT_START + CXL_EVENT_TYPE_MAX,
-> >> +    CXL_T3_MSIX_VECTOR_NR
-> >> +};
-> >> + =20
-> > Push this down in to the cxl_type3.c file.
-> >=20
-> > It it is not a global thing but specific choices for the type 3 emulati=
-on.
-> >  =20
-> >>   typedef struct CXLCCI CXLCCI;
-> >>   typedef struct cxl_device_state CXLDeviceState;
-> >>   struct cxl_cmd;
-> >> @@ -264,8 +272,8 @@ void cxl_device_register_block_init(Object *obj, C=
-XLDeviceState *dev,
-> >>   typedef struct CXLType3Dev CXLType3Dev;
-> >>   typedef struct CSWMBCCIDev CSWMBCCIDev;
-> >>   /* Set up default values for the register block */
-> >> -void cxl_device_register_init_t3(CXLType3Dev *ct3d);
-> >> -void cxl_device_register_init_swcci(CSWMBCCIDev *sw);
-> >> +void cxl_device_register_init_t3(CXLType3Dev *ct3d, int msi_n);
-> >> +void cxl_device_register_init_swcci(CSWMBCCIDev *sw, int msi_n);
-> >>  =20
-> >>   /*
-> >>    * CXL r3.1 Section 8.2.8.1: CXL Device Capabilities Array Register =
+When get_free_mem_region() returns the ERANGE error, __region_intersects() =
+does not return REGION_DISJOINT.
+As a result, the following "if" statement evaluates to true, causing the fo=
+r loop to continue through the entire CXL memory window.
+
+------------------------
+static struct resource *
+get_free_mem_region(struct device *dev, struct resource *base,
+  :
+  :
+        for (addr =3D gfr_start(base, size, align, flags);
+             gfr_continue(base, addr, align, flags);
+             addr =3D gfr_next(addr, align, flags)) {
+                if (__region_intersects(base, addr, size, 0, IORES_DESC_NON=
+E) !=3D
+                    REGION_DISJOINT) =20
+                        continue;  <----  !!!!!
+----
+On the other hand, in the CXL emulation environment, there is no EFI_MEMORY=
+_SP area.
+Therefore, __region_intersects() returns REGION_DISJOINT, allowing the code
+in the following "}else{" block to be executed.
+-----
+                } else {
+                        res->start =3D addr;
+                        res->end =3D addr + size - 1;
+                        res->name =3D name;
+                        res->desc =3D desc;
+                        res->flags =3D IORESOURCE_MEM;  <-----!!!!
 =20
-> > =20
+                        /*
+                         * Only succeed if the resource hosts an exclusive
+                         * range after the insert
+                         */
+                        if (__insert_resource(base, res) || res->child)
+                                break;
+=20
+                        write_unlock(&resource_lock);
+                }
+------
 
+I think cxl create-region should succeed in the special purpose memory area=
+, but I cannot
+understand why the above code results in an ERANGE error...
+
+>=20
+> It seems that the function is unable to allocate an area from CXL Window =
+0 due
+> to it being "Soft Reserved."
+> Below is the relevant section from /proc/iomem:
+> =3D=3D=3D=3D
+> 89d500000-89fffffff : Reserved
+> 8a0000000-189fffffff : CXL Window 0
+>   8a0000000-189fffffff : Soft Reserved  ------!!!!
+> fd00000000-fd03ffffff : Reserved
+> =3D=3D=3D=3D=3D
+>=20
+> In contrast, when using a QEMU CXL emulation environment, there are no
+> resources under CXL Window 0, allowing get_free_mem_region() to succeed
+> and enabling region creation:
+> =3D=3D=3D=3D=3D
+> 100000000-47fffffff : System RAM
+> a90000000-e8fffffff : CXL Window 0 <--- there is no resource.
+> ec0000000-bfffffffff : PCI Bus 0000:00
+> c000000000-c00000ffff : PCI Bus 0000:0c
+> =3D=3D=3D=3D=3D
+>=20
+> From my understanding, the Soft Reserved area originates from
+> EFI_MEMORY_SP.
+> Additionally, the CXL Memory Device SW Guide Rev1.1(*) says the following=
+s
+> ---
+> The only cases where it is recommended to omit the EFI_MEMORY_SP
+> attribute are those where the system contains exclusively CXL memory, or
+> where CXL memory is interleaved with DDR memory or where the CXL memory
+> is required to boot.
+> ----
+> Therefore I think this /proc/iomem map is natural for the real machine.
+> And, I expected a region to be created from the Soft Reserved area, but t=
+he
+> actual behavior differs.
+>=20
+> I'm confused why the kernel/driver rejects creating a region in the Soft
+> Reserved area, and I have many questions.
+>=20
+> 1. Is this behavior is intended?
+> 2. If so, what steps are necessary to create a region in the Soft Reserve=
+d area?
+> 3. Alternatively, is the Soft Reserved area not meant for region creation=
+?
+>=20
+> (*)https://cdrdv2-public.intel.com/643805/643805_CXL_Memory_Device_SW
+> _Guide_Rev1_1.pdf
+
+
+Thanks,
+---
+Yasunori Goto
