@@ -1,105 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA503A94A;
-	Thu, 16 Jan 2025 06:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C45A94A;
+	Thu, 16 Jan 2025 06:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737008235; cv=fail; b=qznLkOa8fCvQNAogYKuJQtluvL8N8MDTmQMK/7Sxb2s0pAZ21Ugr9I5SgTtfQLuy0k+xdxDqpdyq+cJ/Z4vBoL00ieqxtCyAIziMnQi5XOvK+nr7K+jZasG+WsazrpWHt6P7TxHW49ydK7xrLyvGCkWxQjUXnZf/s4d8Uss0PDY=
+	t=1737009205; cv=fail; b=IOr7ysP1QshZy21yssspAOj5fWYhyJM62m7JQW+Jn3Pec2IziP2IVWm8r4liIFLOB08YAEnKgM27ae5xrAJnZRAmjf6Vu+XhE0cm5LLO+ZaajMtUCgYglcPvjYjXyjlSG4AqsAK1H22EHm0frOWaPF1jSxFgt4KV1XmyQed0O1I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737008235; c=relaxed/simple;
-	bh=2SMv3/b2ohoNu5jRU26UwfNDHarRlpqdI0R9v38fG7U=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K47jy/LslcEK+6K19xzhywoHLXSoeG96zdYVupOJIMQ1VRP2RyNfm773hd+g1BLYxbLKEoIYCgv1vHvAxJAsTzBNey2sf2uXzs/eDUIf79zrz5LYkYE6xlpUNa3veKdR4PgWqXMCPrc/8M2bW8Ftl+xfMY6aE/2q4wHqMsYMDPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fK4rMjDi; arc=fail smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1737009205; c=relaxed/simple;
+	bh=cfO1t+DQw+8If2lfZ8fLr4XqZzQfsQE3Q7OszMc3aIk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bC9RciZafjdAcIpStRGfAiCCYppr8A8vEszTHISgriwo62xvloDFxqYgSMDAfu7CfgJtihcxAmHL9/Ms4rB9SOhOvMnPhYcnR8uAc1BLrDPP7BNRuNbqq9WRMZYj8IBI+wJB9PUMFWOZFbvjwg+Va2h24/4N006w6I9jnc/vmpk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W+69xn8M; arc=fail smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fK4rMjDi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W+69xn8M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737008233; x=1768544233;
-  h=date:from:to:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=2SMv3/b2ohoNu5jRU26UwfNDHarRlpqdI0R9v38fG7U=;
-  b=fK4rMjDi+eRhy0AgP3yGwEicDfEpex7/75vXp6tm3rVWMOxFgBpeCnw7
-   VnPZtFyeFY6QKQ3LkMu8Ne5Bb8DSKifBNo1MRNELlP0sYORuk6vL8F8tN
-   STQF814ckHfixNIOoVQNzNREf70+11vVKT+TndQRkx9Y/fdSwMjqrao+G
-   8weG29TvpeXCcjv3bl2gkma+f1zh8nDwctY/qYd0gJ0YSVF/uSf7neGeC
-   YBKQWHK6nNKif2ptFw20YJ0OKv/0ziYnAj5Cypp1YdkY72RbhhbLnqmaN
-   jNiEkdHMa/NTVVwpM3APJuVAya0koDM3AReacB3Qyfo58lB0qpeF8Fkw8
-   w==;
-X-CSE-ConnectionGUID: ndcW2rxGTYazNxvQMpR5NQ==
-X-CSE-MsgGUID: d+CF/aNUREyfY80aA1/ucA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="37531443"
+  t=1737009204; x=1768545204;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=cfO1t+DQw+8If2lfZ8fLr4XqZzQfsQE3Q7OszMc3aIk=;
+  b=W+69xn8MKie+J6R8UuVynj7gHpGmhbB0ZebE9sFy6INJzcyTlSKY68T6
+   lvZLIxEUZfa5kPKCK203fBe81nNg4tUE0tg1r/PAsh3d0sj90/keFPGq4
+   kWELUuV86w9LA3F4Nj/rSqMD8dbru9wCpWRJ1e4DzGY+Fpkpej4zovz50
+   k7UEZzATlxNOV2e+J2Y32INXCIIabBBY48rcjMfppeFb+Oc4badmWVWPJ
+   Attvz/wdwLwDDKSAr7ZDcuV17HLj6rqvho6x/k5nqWDimqf2GK8ppKkD5
+   86mzoyoZHcRNfB3IKQMbCkyRjF2JIj8LpHpgkABk+sZSzdzQhv7D7mCdm
+   Q==;
+X-CSE-ConnectionGUID: SH/C2QjoQACjqy6Ddsk7VQ==
+X-CSE-MsgGUID: jBalTBCzShSD9MK5cX0b/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11316"; a="47866629"
 X-IronPort-AV: E=Sophos;i="6.13,208,1732608000"; 
-   d="scan'208";a="37531443"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 22:17:11 -0800
-X-CSE-ConnectionGUID: tgktKgZHTPaEciqR0HxRKA==
-X-CSE-MsgGUID: QFSCR+TIRE+FvEInI8EWtA==
+   d="scan'208";a="47866629"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 22:33:23 -0800
+X-CSE-ConnectionGUID: v9zRKYMbTxSYf6QFwg4aHg==
+X-CSE-MsgGUID: qzfDw9v2SsOY9w6SaCfXGQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,208,1732608000"; 
-   d="scan'208";a="105921339"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2025 22:17:10 -0800
+   d="scan'208";a="105151619"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jan 2025 22:33:23 -0800
 Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 15 Jan 2025 22:17:08 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ 15.1.2507.44; Wed, 15 Jan 2025 22:33:22 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
  orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 15 Jan 2025 22:17:08 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.44 via Frontend Transport; Wed, 15 Jan 2025 22:33:22 -0800
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.48) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 15 Jan 2025 22:17:08 -0800
+ 15.1.2507.44; Wed, 15 Jan 2025 22:33:22 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QyLTiEnBYj96qk8vDkHwwVPpP8rCLrKQq7Y4zMKI7s5obVDkbxih8voZooZH2b3I+xS4NNuHhUnJj8d1RxKoXcAW7IxZBkEjnk4cZ/LiiHK060Jft6xuXLkwMirkPD8Y3adaHeF0jRNo/y3J9clrQFOxGSJ6K9CPDN3k50IvcDoqr+QwPddJdm3xzMGqEhPYDfxAGt2PZbySEhVw5v3roTzaMn77PhpZdQ7Y5vjsWZNQklQRdEWMhEkO209EomDpOeXpSUm8RKay5gzjiYtvFoMsPzs+7a20kql1mNWVKLTy0+bQglvWJi1nKLSX5Cj4GTqncP7DMFmlMM9OSuq4uw==
+ b=FU4ifvGt/u7i9BouWx44IfjmW98C7t7p2y3GqkL763yU3PlMLMJQOlgJ1zAqLGnWaD5k03RsdzFai0WbtYGFvHJP27MSYlHeFJBVfIPCqHK3xhbaceaj8e/1HAYy65d2WQ8fRQhf9dLermMP/2uX8fqxGzcgtnfNK14Z2WUEPTBk+AYiBDdr+fLIhXYVt1pujj2lniRiw2P2Pr/B0clJYGBLZMlHiDp/Mlos2+RKafSSFMrCaGd0GLX4e3Hic7lRAIAW6KoPrrIs2icqiEdO1UeoIYJyKjsXw8MQR+GO2HJUcGfGKMtfcMD4Fvlm+dgh7cFeZxTvY621Exa4VLM/PA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uI1KN8l3Zw+fPmntbWeY0Am10dHujMR6j5UF67wnydc=;
- b=VPUaVKtmVLowz4+PDj6KzIZA1g7ZR3a0P63Xl4jf0PfgTU+gzj0XJVV2kBfEzqSwZgQiSc7RQNQys7rr9qekw5w9/M5D1qIABMeySsZGT36/0DgCa/bG8Z78QNKYvhdatXzYy1h1ZjN3Zn3CaHlXNqb8JJUjXnApCmYriyFbnSz3ArBPCZF7HktSoRgdCuq9BoOaWiybhIZBhIGZUeutMT8bQjQDVa24SI1gzkh5YLhxR8NmxoxTKlK5AZiR73otsRj4y3uS+xl0KuZTw7f4WhHgSdR/CvlP2CSqWfaQ2ttYPkmD6VJ5VumIiuO7fwG7F9DP37X/OGspH9/7UZqyAw==
+ bh=qQcQ44/IYRtBCGlTsXFtfYMsFC6RpUK5ofmkgIiraZ0=;
+ b=I7Y9/n5I5KiZ3TsMO1gleQ+SNc4x49dSSNolL1epwCJtiD+294gO+dNuPzdm2BXrnx2UzlfD59ZJCQTrvbPjlJyUxjgKVau1iEZbflyPH0OBc/PyUhLC0Z/TUJ2LZdKAZcliD5ypMYFExoctZeZSWDew3fAxuV2+2gA37LGqeE7l69ORuZiv7Swb6O13ghoRvdvGWK0dbJIZpHVoG/TMjqJtVZ71tCfHliH+8Dfd+jhz/tCyJDGy3sZzq+xazPDgZr9PYoN+1zL8JcxvKcsgkHGLTE3F+AEo+zH0LQ7zmj95UOBKIEYDMSaDjmfDmA5W/dQF0DArvpZXzhX1m96zzw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH8PR11MB6902.namprd11.prod.outlook.com (2603:10b6:510:229::12) with
+ by SN7PR11MB8284.namprd11.prod.outlook.com (2603:10b6:806:268::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.17; Thu, 16 Jan
- 2025 06:16:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.13; Thu, 16 Jan
+ 2025 06:33:20 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8356.010; Thu, 16 Jan 2025
- 06:16:52 +0000
-Date: Wed, 15 Jan 2025 22:16:49 -0800
+ 06:33:20 +0000
+Date: Wed, 15 Jan 2025 22:33:17 -0800
 From: Dan Williams <dan.j.williams@intel.com>
 To: Alejandro Lucero Palau <alucerop@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <alejandro.lucero-palau@amd.com>,
-	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<martin.habets@xilinx.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-Subject: Re: [PATCH v8 01/27] cxl: add type2 device basic support
-Message-ID: <6788a451b241a_20fa294f9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241216161042.42108-1-alejandro.lucero-palau@amd.com>
- <20241216161042.42108-2-alejandro.lucero-palau@amd.com>
- <677dbbd46e630_2aff42944@dwillia2-xfh.jf.intel.com.notmuch>
- <677dd5ea832e6_f58f29444@dwillia2-xfh.jf.intel.com.notmuch>
- <c3812ef0-dd17-a6f5-432a-93d98aff70b7@amd.com>
- <92e3b256-b660-5074-f3aa-c8ab158fcb8b@amd.com>
- <6786eab3a124c_20f3294f4@dwillia2-xfh.jf.intel.com.notmuch>
- <7fc0b153-9eea-af2c-cd42-c66a2d4087bc@amd.com>
-Content-Type: text/plain; charset="iso-8859-1"
+	<dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, Li Ming <ming.li@zohomail.com>
+Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <6788a82d2455a_20fa294b2@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
+ <20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
+ <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
+ <469ac491-8733-986a-aaae-768ec28ebbec@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7fc0b153-9eea-af2c-cd42-c66a2d4087bc@amd.com>
-X-ClientProxiedBy: MW4PR03CA0358.namprd03.prod.outlook.com
- (2603:10b6:303:dc::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <469ac491-8733-986a-aaae-768ec28ebbec@amd.com>
+X-ClientProxiedBy: MW4PR03CA0287.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::22) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -108,189 +109,206 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6902:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b39efd9-3ace-4fbc-14b8-08dd35f55e49
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB8284:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b1a30ff-e25d-42d1-e0e1-08dd35f7ab0a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?CzhWHl5VldWfOhtrFfrwiWnrjCYyB7x8mYXD6/sP/8ToNJACtQl2uiyHLx?=
- =?iso-8859-1?Q?94+P725CpqE3HY1Vmt6Ll6FVOQE7qcK9OlJ7DTooRIjleTpqBO1qfr2wFP?=
- =?iso-8859-1?Q?jB/Xy0zfHTngnbDKrZ+CDPpe12Akvl9gsFt7y9sOdTVL2Px+IwUPsLeJSR?=
- =?iso-8859-1?Q?BmdvIBmFfxyEaP2fbUDC+cEvV4uDuFwPltVQusewOmwK+SFrFV0Rbg0gth?=
- =?iso-8859-1?Q?QO9Mu3BeLHbr7nIEpcxlU7w60ZlNLcYT3qT/C0uKi+U3YNW1K68SjVDhZj?=
- =?iso-8859-1?Q?kfd4mnJ+WJjENG1nweCtsOVsfdZqowPqCZXEDR1s1gJXo9nfBc2P4VYVHq?=
- =?iso-8859-1?Q?3Q9dL3CYFMdoGAhvIdy36mOAyOayjUG/eZt4wDqOyODhtuZ16pvXBT8P8n?=
- =?iso-8859-1?Q?mNaNlQZGcBAQCrIi9ruHJC8Xx4sNEmTry7oPEbe7Cibl/3VUmJY0F2Bnmt?=
- =?iso-8859-1?Q?yYnAl5uknnk+CRoZnFleSKWemOsNi02GEyYCDn3jJIKv4pTOUZfKqwWz4n?=
- =?iso-8859-1?Q?yWaEGvKXoHSAw6qMzVAyTnFqkrT+9yVCoA2lTUDvEvdUVE7o9cUsQEajEN?=
- =?iso-8859-1?Q?elMrqrSPSN0XRojoaSCDFGepSL41D3JLCEOWOGHWTo5aDK4qngZV/dLzRq?=
- =?iso-8859-1?Q?PmygOJWfpZwspoCBYFWMaZeRolai2f/3bL4B5XK1XCB0/XSi611xTHuWVm?=
- =?iso-8859-1?Q?9JhFFG2TKmGekiHzVdlCqaqDpxE53fFwIOPp/2/KWAIKfXbbwIfl8ZiD9V?=
- =?iso-8859-1?Q?g3wsquU1UhwvTGJJB+zHizm3tUTU+4w5nfofkzqKkWfvpFRKHxi3wflEb+?=
- =?iso-8859-1?Q?4dXVSm4HrPudHhmStkCI4Q8pIbrNX8HsKfX+SmdtGXSDKJ/DfPeoc9DLto?=
- =?iso-8859-1?Q?2XQvGLinil/kaf4tHvTrg+/jBoKGPK0CzldyGSWTTAVESC+ivdL12mVR75?=
- =?iso-8859-1?Q?2rdbN4xxWbZQ38G44eju1C3LT2HJPocVAjyCBQkW/f3iaOBe5XJVOgaYBM?=
- =?iso-8859-1?Q?j0lDPDOiHqfUZdVsVeylQDuWfuyn6z+HUTfVqAviJQA37HzFYb4UUvr3cN?=
- =?iso-8859-1?Q?AhBo4vj7s9Xog0dJY5rACCoV4ymFjxwvVspoEQWmINq3LZCtCJENZ39bR+?=
- =?iso-8859-1?Q?KzeUyNvi0RwAnlQitL1kW5cAKdARbnMmNu3eCZymuf/uG889fRfXT2zsAS?=
- =?iso-8859-1?Q?DDLUVrnq4xcit+K6/153tIKqh3VQsth0NNchN2/Np8+rU2U906TZmnz0PS?=
- =?iso-8859-1?Q?Miav1Mx304U9o7cc2AQs8ppMdH4sSzrHioPgsqSto40IMXiHalWZn3p2KM?=
- =?iso-8859-1?Q?FMD8+7zk6KVK0N/OJ6R333BlxkcUg49Zsh5cWPwwb6LxromzSk83xCZ8Fa?=
- =?iso-8859-1?Q?aEgoVZIcMM8mi/QcE2WhNZv042QI9YF93CGNhgi5qJux6NprgFFDGMVO24?=
- =?iso-8859-1?Q?zMPc0kOM141yFgyKRGNgZ9LWos/v21IePy0JAIpGpqv1qN+6IRp2va8R1A?=
- =?iso-8859-1?Q?0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?gF/uJ6MPp1+Wtuh9Cw0ikGfoIMh+jbajoU8KrP8zyvloiRDa14KTbMCYp6bG?=
+ =?us-ascii?Q?Pp65V3sP06sxERzKgx8E5dMEvu+w8rhGEgXlG/2VUg+vP0k7I4dVZ6trjSqC?=
+ =?us-ascii?Q?UK8CPMgWhXefLKjKMW523Dtp7DLEgC+ou0rgNWKNjta2nWcwKPwbRJcm9jNh?=
+ =?us-ascii?Q?RJV/zaFS49kKhpaHWSVLqZ7S7KVTaiiA4bB1HVaYRiIkxQobtbmEKul8zRNv?=
+ =?us-ascii?Q?HCPZWLm/6ufjLwG2emARom7cnppVCDQ3YOWZqQJClkh5hGR9Hr7+Ue9eD3vw?=
+ =?us-ascii?Q?Xnvtydr6IRWfotYUSnagupLJPKgJH178SNsM1FVCzZXeG0aeWoqNiAY/lx0E?=
+ =?us-ascii?Q?ol5Y4A4s+ZjP4zpFq0INx6L/ls+2uypkb9OWbBBJ4ilRqXr+TXdfPAZYpt/j?=
+ =?us-ascii?Q?qArGzTf4tpP+5HkMrEYYdO24hqAj58BDjlIJd5iwy2+WkXwvatyo0t/SIPaV?=
+ =?us-ascii?Q?HNdMBC4pV8O9ESlzJa8+mroKPCOuKdSL5jcZ46p8PkTmhaSLADmoCwHWToi5?=
+ =?us-ascii?Q?UQhVZO/fb04LlkrN6qPJBzfpZHR3Kxy0sHOA6Popd65uLvodNP92iR8DBmYM?=
+ =?us-ascii?Q?JJHoJHvvvcqXYtnmxKeXTxbN/CUYYN/uyoCv/AYId3ctQ3O9cGjce0GcrvRn?=
+ =?us-ascii?Q?Y02I7edtTKnRG1DiI21TuzazS4AfS9fJm/QdP4QSmdB84KbewPV96YkKuhNO?=
+ =?us-ascii?Q?uFoprGOMTJcXhMLrM5LVUZ2NzgbThVh+JJ8DMVk7DCuLolQKarITi1SklgV/?=
+ =?us-ascii?Q?nKHimRldESH1dNDkq2K8KZGxjtuwpxKWILEU1M7Aq7GC8/jwNcbTwi2dWZ1l?=
+ =?us-ascii?Q?3hpk27GkoP510W3jQ2Zmlinobf1eBSkUeC/HjXw2F7wvsUN8LacgR7txiagv?=
+ =?us-ascii?Q?Zd2XJm54YLlo3rBm22flDZLq/EgY+S+ByPkdqcTI7D3pA3zQeO2JXikacewS?=
+ =?us-ascii?Q?qe0M/TuJWLNpJuqHXT1w8SSmDL+UeewAtZqyIuM99Ypi6J3B7oLUpWCTMX3L?=
+ =?us-ascii?Q?CtjmMMzF76vVe0ZYVxeN+vtXfmYvjIBTJeBt9gGwW9YyINOYsFkOkdR+Y667?=
+ =?us-ascii?Q?zkYMHxmKpY9Fj74PnlQI9p55pTyUmZEnuV6MWFIHc7T2Tx086XIILBwGOQbZ?=
+ =?us-ascii?Q?GEGLBvhX6ddliL436OjCFoxytbV0VzZgT3U65ryBV7J4KOBmp7xHb4OHZx0m?=
+ =?us-ascii?Q?ZkrzyToWUeSpSa9Nn0PZ+2Ls4pRenmes81A6v4CKQzLLb47Jxan2sQ0x+gRT?=
+ =?us-ascii?Q?ohnEgfz42Y6byMvn778QRyYOigt4WYixYw/k/mjq0vf1zAscDyEFSAsdP0Vz?=
+ =?us-ascii?Q?YWJ8k6VUynEU/Yn832PsIETnWEgCdJkE68nGjD2XHtn2038Q8lPyvcWjGBcI?=
+ =?us-ascii?Q?qwVFLkUoddJCVhjJcoEENDW6IPcC59XEzNdRK1nww3YGIWIgXyAMo/Xo4vOC?=
+ =?us-ascii?Q?ogO9dxSUsIk=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?n0u9O3VZYZS/NzDxWd0G2CT/Vu93ADfG5Zfpju3lbLVznpsU47RAXkSZZ8?=
- =?iso-8859-1?Q?7gnI8JzDvAaS2FOVQ7ExBNIGQx8viC6WYgQdL92NS3W2xqsK1VbLnwBOjB?=
- =?iso-8859-1?Q?g8ovBcBULou6Yt7mCZDpX/FUAoRG0w25bScoeUNLIkQ/Eynwm1jzQtfY8U?=
- =?iso-8859-1?Q?8qcquJdKKHuhRvLr3r1Obed7WmHBu+b3z2KMgd1RPVvyd36PFlTng7QA5C?=
- =?iso-8859-1?Q?NowoCBHGuqceWSZCC+ciBhe9I6E+6RHCU3Z9kpzz8vhC2J+rFKPJBa2VV9?=
- =?iso-8859-1?Q?5dPEBhS+UWn5566R0U68wRMqdzjCPPWwdw+qsmOFIohSc63tG0r2XvtHlS?=
- =?iso-8859-1?Q?9WrGEH0c3fDoHgfv8Kv5xushJhERq5/pGK1JiuCs6ac7Z7+IkTR9G6dkOb?=
- =?iso-8859-1?Q?nIzjDVy7yW9Bp3BXUtNXTs4NiWNoIvN3X0t9dNJY52g8dr1iwVMoyPqeOm?=
- =?iso-8859-1?Q?f1V5ji6pvAM2HEwXGkB/FoVQAKpBZaA3bWWvCJFxzVx5PPCNM+dzejNAEf?=
- =?iso-8859-1?Q?WGdBr50fDNHoECxRSHj2UzMfdLK/89mzjsDp6fwFBzCjQchYmc/DAcJuSH?=
- =?iso-8859-1?Q?6wpPrEQyI8Y7KyU2EWxyzKUhZWd89NjSIGMkTPW4ngmi2AdTJem0EHOJeu?=
- =?iso-8859-1?Q?XJEh+CwNXwpWS8il8CSmnta/HWbmv8US4PieyedrshB9vprQGEV+I0skyF?=
- =?iso-8859-1?Q?yIPOVMyuxWYG8e3pvjE8DUr/PV6iJ8wTKM/bNL7rcGpXaMRx882my3d+G4?=
- =?iso-8859-1?Q?eDIE6aNuqbaZTwgYMpLToy0F1bT7GuuzdWWDaTfQGSFv8npQqtnh6oyy+w?=
- =?iso-8859-1?Q?RTyxB/zszYF7zU2UJa4oRG4VosxZZNgArUqjM0sfdjk2wdo4mRF/TUFcef?=
- =?iso-8859-1?Q?BbWujWI/43GgWFMPBtg4Y2IcWXybWEZH46tDIKff7Gx72A2Qn3QvRjWhZR?=
- =?iso-8859-1?Q?l8Me18lZQ70u5fTHeJcEBHHsZnAuJzF+yrBgB1t5ZWFyWmAz/swyEWg1Zr?=
- =?iso-8859-1?Q?nDUmhS8mT1yrUW1Ybad6aRlLunRcec9BF/eChT/bGdCeyNpEFRcH9T9KHh?=
- =?iso-8859-1?Q?2265x/ZRmnjIcdnjP6KiRfY97G5g8om7XjRqRIG+rbd2b77cI2HJmMyXxz?=
- =?iso-8859-1?Q?x7aYw1w7qHqZyKrYVbNZSPfhjrnXib62U72O6f8/FEonxA4KwDp77CYvug?=
- =?iso-8859-1?Q?5X2VwWX5PeIjCnpw2TjfbqezbZbgQoP6uKnv8LZmFq9EmOgP6Pd9CJIYQb?=
- =?iso-8859-1?Q?7y6KHl0xWEBaJYeXkZbxKZauGq4eJwZLZKegciYwkR8x/FsMPHSoZ3fZ3o?=
- =?iso-8859-1?Q?dIbZqdmH/fDxov19jjzM5oJFhhumqnSePpYSJvHK2HTvycDSdnhOianx4x?=
- =?iso-8859-1?Q?4hbaiVV2ds0a3cIcWlliZMuWAZokDEkb2fzpKPG7ZCvOxSkQjxfwsTL7vF?=
- =?iso-8859-1?Q?2CW9Xys0HPMH0HpAg10T1W+CJHGGubxypCsqlp5NFD/iwgLq/rciz7pXg3?=
- =?iso-8859-1?Q?berkgm3nz5gmxzFLedALjAxJtZ5nH/viYOQMZAbhz7xcTgk6HRlHVYD96Q?=
- =?iso-8859-1?Q?P2BLBYMw0SKd38UzVE/TA8WJP1oSTcgxbyGzaK4iDmlBz8VVtL+iXg9uCp?=
- =?iso-8859-1?Q?7KI2TqnN9DY7T9WEEW9WpykJnsOgsrxHWvsSmoI8Mc1WypmcUVise+Iw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b39efd9-3ace-4fbc-14b8-08dd35f55e49
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3zk3UHKvHmnqrQ+CZ97JZtnfqEbaRYXQD2kGo9CJsqqkf4B6HumGvFN1pVWX?=
+ =?us-ascii?Q?HL5DoUHofqTyvC/3LYbG5rp1vJ4s6N1A/v/E1uvYoAKtz7A7GaE7ki7EhB4B?=
+ =?us-ascii?Q?aXu+Zsl2XuEgx4vZi37TbzINj/Q7/shSyP0XWAYwLc/CIoyByAbpH/NnYa/J?=
+ =?us-ascii?Q?2xkIPaH5pnpBSZYxkB3w4BslQdjq4cNgicaF2vrAF0f7a8xZNm1Fhl3uS2+a?=
+ =?us-ascii?Q?PplnkX2OGhffFvjjwS+kxes0Eke8tC7JknMeXf2CdBTQh7QFOrF+Akv1JFd6?=
+ =?us-ascii?Q?N0JjZZE9Bx0P2kp2kv5uQxwW92qk1muKJWmMC7mqr23YSRbbGqY4ff4iIteJ?=
+ =?us-ascii?Q?rFZ4g+CyY/rqtwJ8DvB16DVShFkrgcEdaRULrx0a17V7HByi+YuzxsGVCgoK?=
+ =?us-ascii?Q?8oVOkI7CQXj3kjeJkkkA0fJKOmQMPTtMPUrXhtvcp03TDg85y9t6ZDyVulRt?=
+ =?us-ascii?Q?mW5Tn2zgV3EKA38iP6ejG0zNL3bOYB00sa73ZmIMZQSBj9qNlcJviTsqt7vG?=
+ =?us-ascii?Q?N9lVTHPHy+LArdPv/96HAOxh7MBYHP9Y+xh9XaKS0cTbJyydFgfVVxo1p/BN?=
+ =?us-ascii?Q?iW7YOVj1D0aKubvB+hZKhK3yb5cEQSnHmAJyFobqa2bFIwusixaAlAg40mAo?=
+ =?us-ascii?Q?cAy9X0+OvwcKnjGM6dRJRXWtTrPA8KMr/+sTCehVsO4zGXsAbectUoLKym41?=
+ =?us-ascii?Q?eV2a+Md6/kKYpsphZxkfOykxDSNPHsWzMPB7mMueCi/pubo7tUqaJAR/Jl7T?=
+ =?us-ascii?Q?6/YS9K+9Ev5Sary36Pdrp1VhtxeNUBG7ee1kdmx6kjQjNTbB219SLL0aKLuH?=
+ =?us-ascii?Q?AKWgZLTJFA+5TFx4VOkx5kIpKSkohtPNVV54fSVgNoCSFRaw7GX2kluMQbgQ?=
+ =?us-ascii?Q?pcmamGQgwWk4lTXXhQm9gLWo/f6PsSXAQ4/N71c308pSIcCJiBEyMxDv3AfD?=
+ =?us-ascii?Q?H6D1TkeBXL+Qi2AjCXu0udbBiLe8pz2HESPD9qQFvDdhGHKtFtSVd1lCCo24?=
+ =?us-ascii?Q?mazZld5eSX+d4M0sDK83Spn1vzWr4emUOgu0ylUUjI7y5KT6Kfq+ADUsKuHq?=
+ =?us-ascii?Q?84ouk44lhzZd1YwCE5SzroTcZ8djlG8Ht3qbMffyvZwNtylCq0BwZKUqClzX?=
+ =?us-ascii?Q?7TfAnjJO8JUjfuOdvBzze/L9bK7IAuxVHYmtp0DRVmDRHYTSCK1Q+L7Nu+1Z?=
+ =?us-ascii?Q?VxTAqu8ZvHMdYVR9fejWHtIm5he5rhJU7+Pa+CVNWj6+ZSSjHKF8uzSvf3wr?=
+ =?us-ascii?Q?P3YtDMOtrmxdH35fFlhqNiOrhV+4YNVXRhWkNiRz5UJLqkTzs6U9UqWD54yf?=
+ =?us-ascii?Q?+6gu9y0sSaNV9NiWNINHuqICiorYDR0ilHMBw2w3YkqcRCTdQD7EbbVsFB75?=
+ =?us-ascii?Q?XOrjeTrDWaV07gZ95kwnfX3Cn8u2ulBq2mj9M0rSsKKOxI0n95s2aCHlOG4k?=
+ =?us-ascii?Q?ZNPqq2eTDu7IXyRZjkp+k0/gJs2dM55cB0JmlPQZ+wqDIHTnzG8cZAd90QLQ?=
+ =?us-ascii?Q?nrJPXmRE7STgaKP/U4ecyymyWhBOnh5LTVhLppYOSkvo+fIg54VejwVmso/B?=
+ =?us-ascii?Q?OWDDTfSG4y5A+mzN/uo+bfqwUeb7HUyHvKJq0v+a0oqAr/kf0my1Ov3Vsml7?=
+ =?us-ascii?Q?mQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b1a30ff-e25d-42d1-e0e1-08dd35f7ab0a
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 06:16:52.3325
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2025 06:33:20.0501
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ONDtYCx1IJ26U8DN0A1w2AdCcjEpKlSUFRLxuTeCZ16j0/2tX0fVvwAZ2zAUUNn7hKoiElWKSG+in0abS0dW7O2DmvsEY5tNMLWxUKuEAYk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6902
+X-MS-Exchange-CrossTenant-UserPrincipalName: nFXNCqmu3GmnJ0O/lfS+4PGpTDbFA8jwUN3YdDOSd/jfRLrjPZ1GBN8HmYhy6FR6O0sKLu4X2LblQ0Y2+zgHFs6O71806Rxy/IqajsTd7Hg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8284
 X-OriginatorOrg: intel.com
 
 Alejandro Lucero Palau wrote:
-[..]
-> >> I could add a function for accel drivers doing the allocation as with
-> >> current v9 code, and then using your changes for having common code.
-> > Let me go look at what you have there, but the design principle of the
-> > CXL core is a library and enabling (but not requiring) users to have a container_of()
-> > relationship between the core context and their local context feels the
-> > most maintainable at this point.
+> 
+> On 1/15/25 02:35, Dan Williams wrote:
+> > Ira Weiny wrote:
+> >> Devices which optionally support Dynamic Capacity (DC) are configured
+> >> via mailbox commands.  CXL 3.1 requires the host to issue the Get DC
+> >> Configuration command in order to properly configure DCDs.  Without the
+> >> Get DC Configuration command DCD can't be supported.
+> >>
+> >> Implement the DC mailbox commands as specified in CXL 3.1 section
+> >> 8.2.9.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> >> information.  Disable DCD if DCD is not supported.  Leverage the Get DC
+> >> Configuration command supported bit to indicate if DCD is supported.
+> >>
+> >> Linux has no use for the trailing fields of the Get Dynamic Capacity
+> >> Configuration Output Payload (Total number of supported extents, number
+> >> of available extents, total number of supported tags, and number of
+> >> available tags).  Avoid defining those fields to use the more useful
+> >> dynamic C array.
+> >>
+> >> Based on an original patch by Navneet Singh.
+> >>
+> >> Cc: Li Ming <ming.li@zohomail.com>
+> >> Cc: Kees Cook <kees@kernel.org>
+> >> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >> Cc: linux-hardening@vger.kernel.org
+> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> >>
+> >> ---
+> >> Changes:
+> >> [iweiny: fix EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify)]
+> >> [iweiny: limit variable scope in cxl_dev_dynamic_capacity_identify]
+> >> ---
+> >>   drivers/cxl/core/mbox.c | 166 +++++++++++++++++++++++++++++++++++++++++++++++-
+> >>   drivers/cxl/cxlmem.h    |  64 ++++++++++++++++++-
+> >>   drivers/cxl/pci.c       |   4 ++
+> >>   3 files changed, 232 insertions(+), 2 deletions(-)
+> >>
+> > [snipping the C code to do a data structure review first]
 > >
-> >> Also, I completely agree with merging the serial and dvsec
-> >> initializations through arguments to cxl_dev_state_init, but we need the
-> >> cxl_set_resource function for accel drivers. The current code for adding
-> >> resources with memdev is relying on mbox commands, and although we could
-> >> change that code for supporting accel drivers without an mbox, I would
-> >> say the function/code added is simple enough for not requiring that
-> >> effort. Note my goal is for an accel device without an mbox, but we will
-> >> see devices with one in the future, so I bet for leaving any change
-> >> there to that moment.
-> > ...but the way it was adding those resources was just wrong. This also
-> > collides with some of the changes proposed for DCD partition management.
-> > I needs a rethink in terms of a data structure and API to describe the
-> > DPA address map of a CXL.mem capable device to the core and the core
-> > should not be hard-coding a memory-expander-class device definition to
-> > that layout.
+> >> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> >> index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
+> >> --- a/drivers/cxl/cxlmem.h
+> >> +++ b/drivers/cxl/cxlmem.h
+> >> @@ -403,6 +403,7 @@ enum cxl_devtype {
+> >>   	CXL_DEVTYPE_CLASSMEM,
+> >>   };
+> >>   
+> >> +#define CXL_MAX_DC_REGION 8
+> > Please no, lets not sign up to have the "which cxl 'region' concept are
+> > you referring to?" debate in perpetuity. "DPA partition", "DPA
+> > resource", "DPA capacity" anything but "region".
+> >
+> >
 > 
-> I think you say is wrong because you did not look at patch 8 where the 
-> resources are requested based on the parent resource (dpa).
-
-Patch 8 does not make things better. It leaves in place the confusion of
-cxl_set_resource() which blindly overrides, without locks, the values of
-the DPA resource tree. It further perpetuates this "enum
-cxl_resource_type" proposal which I think is an API mistake given we
-already have "enum cxl_decoder_mode" complication relative to new
-partition types being added by DCD. The usage of release_resource() is
-problematic because that deletes child resources, and static DPA
-resources do not need to be released when ->dpa_res is also being
-destroyed.
-
-Much of this stems from the fact that cxl_pci and the cxl_core have been
-too cozy to date with assumptions like "cxl_mem_create_range_info() can
-be lockless because it is easy to see that the only user does the right
-thing".
-
-In fact part of the motivation for the 'EXPORT_SYMBOL_NS_GPL(..., "CXL")'
-symbol namespace was to flag potential consumers outside
-of cxl_pci to consider that they do not know the cxl_core internal
-rules.
-
-For accelerators, which may be spread across many drivers in the kernel,
-clearer semantics and API safety are needed. I.e. with accelerator
-drivers are entering an era where the cxl_core exported APIs can no
-longer assume a known quantity cxl_pci consumer. It needs to be a
-responsible library that limits API misuse.
-
-> After seeing Ira's DCD patchset regarding the resources allocation 
-> changes, and your comment there, I think I know that you have in mind. 
-> But for Type2 the way resources information is obtained changes, at 
-> least for the case of one without mailbox. In our case we are hardcoding 
-> the resource definitions, although in the future (and likely other 
-> drivers) we will use an internal/firmware path for obtaining the 
-> information. So we have two cases:
+> This next comment is not my main point to discuss in this email 
+> (resources initialization is), but I seize it for giving my view in this 
+> one.
 > 
+> Dan, you say later we (Linux) are not obligated to use "questionable 
+> naming decisions of specifications", but we should not confuse people 
+> either.
 > 
-> 1) accel driver with mailbox: an additional API function should allow 
-> such accel driver to obtain the info or trigger the resource allocation 
-> based on that command.
-> 
-> 2) accel driver without mailbox: a function for allocating the resources 
-> based on hardcoded or driver-dependent dynamically-obtained data.
+> Maybe CXL_MAX_DC_HW_REGION would help here, for differentiating it from 
+> the kernel software cxl region construct. I think we will need a CXL 
+> kernel dictionary sooner or later ...
 
-Lets just make those cases and the memory expander cases all the same.
+I addressed this on the reply to Ira, and yes one of the first entries
+in a Linux CXL terminology document is that "regions" are mapped memory
+and partitions are DPA capacity.
 
-The DPA resource map is always constructed and passed in explicitly, not
-a side effect of other operations. Whether it came from a mailbox, or
-was statically known by the driver ahead of time, the cxl_core should
-not care.
-
-> The current patchset is supporting the second one, and with the linked 
-> use case, the first one should be delayed until some accel driver 
-> requires it.
+> >>   /**
+> >>    * struct cxl_dpa_perf - DPA performance property entry
+> >>    * @dpa_range: range for DPA address
+> >> @@ -434,6 +435,8 @@ struct cxl_dpa_perf {
+> >>    * @dpa_res: Overall DPA resource tree for the device
+> >>    * @pmem_res: Active Persistent memory capacity configuration
+> >>    * @ram_res: Active Volatile memory capacity configuration
+> >> + * @dc_res: Active Dynamic Capacity memory configuration for each possible
+> >> + *          region
+> >>    * @serial: PCIe Device Serial Number
+> >>    * @type: Generic Memory Class device or Vendor Specific Memory device
+> >>    * @cxl_mbox: CXL mailbox context
+> >> @@ -449,11 +452,23 @@ struct cxl_dev_state {
+> >>   	struct resource dpa_res;
+> >>   	struct resource pmem_res;
+> >>   	struct resource ram_res;
+> >> +	struct resource dc_res[CXL_MAX_DC_REGION];
+> > This is throwing off cargo-cult alarms. The named pmem_res and ram_res
+> > served us well up until the point where DPA partitions grew past 2 types
+> > at well defined locations. I like the array of resources idea, but that
+> > begs the question why not put all partition information into an array?
+> >
+> > This would also head off complications later on in this series where the
+> > DPA capacity reservation and allocation flows have "dc" sidecars bolted
+> > on rather than general semantics like "allocating from partition index N
+> > means that all partitions indices less than N need to be skipped and
+> > marked reserved".
 > 
 > 
-> I can adapt the current API for using the resource array exposed by 
-> DCD's patches, and use  add_dpa_res function instead of current patchset 
-> code.
-
-The DCD code is also suffering from the explicit ->ram_res ->pmem_res
-attributes of cxl_dev_state. That needs to cleaned up for both this
-type-2 series and the DCD series to build on top.
-
-> > I am imagining something similar to the way that resource range
-> > resources are transmitted to platform device registration.
+> I guess this is likely how you want to change the type2 resource 
+> initialization issue and where I'm afraid these two patchsets are going 
+> to collide at.
 > 
-> 
-> I guess you mean to have  static/dynamic resource array with __init flag 
-> for freeing the data after initialization, a CXL core function for 
-> processing the array and calling add_dpa_res and aware of DCD patch 
-> needs, and the resources linked to the device and released automatically 
-> when unloading the driver.
+> If that is the case, both are going to miss the next kernel cycle since 
+> it means major changes, but let's discuss it without further delays for 
+> the sake of implementing the accepted changes as soon as possible, and I 
+> guess with a close sync between Ira and I.
 
-The DPA address map is not dynamic. Once it is initialized there is no
-need to release them. The DPA child reservations need to be released, but the
-initial map is released just by freeing the cxl_dev_state. Notice how
-there is no DPA resource release in cxl_pci for the top-level resources.
+Type-2, as far as I can see, is a priority because it is in support of a
+real device that end users can get their hands on today, right?
 
-I am taking a shot at putting code where my mouth is to unblock the
-type-2 and DCD series. I.e. just converting ram and pmem to an array,
-and splitting cxl_mem_create_range_info() into cxl_mem_dpa_fetch() and
-cxl_dpa_setup() where both the accelerator case and expander case will
-share cxl_dpa_setup().
+DCD, as far as I know, has no known product intercepts, just QEMU
+emulation. So there is no rush there. If someone has information to the
+contrary please share, if able.
 
-Going through tests now...
+The Type-2 series can also be prioritized because it is something we can get
+done without cross-subsystem entanglements. So, no I do not think the
+door is closed on Type-2 for v6.14, but it is certainly close which is
+why I am throwing out code suggestions along with the review.
+
+Otherwise, when 2 patch series trip over the same design wart (i.e. the
+no longer suitable explicit ->ram_res and ->pmem_res members of 'struct
+cxl_dev_state'), the cleanup needs to come first.
+
+> BTW, in the case of the Type2, there are more things to discuss which I 
+> do there.
+
+Yes, hopefully it goes smoother after this point.
