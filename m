@@ -1,75 +1,64 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2040.outbound.protection.outlook.com [40.107.220.40])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2076.outbound.protection.outlook.com [40.107.236.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF0E1CD0C;
-	Fri, 17 Jan 2025 14:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C924198A17
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jan 2025 15:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737123069; cv=fail; b=to6D1dBfc8jPlEzaOALCuJihfNpmcxZp2MSlwuTUAHus2/IiNV+or3D6tnyM+JP2XynbD+y289fwA2CB69PNo3sErgGVRTa1WYY8en7RGO5v2oLmV/P+Bnn+d+LCH4pU0OYvpeC8QXa0Fb2/XzmJm0ISr9aKjdFBZQV9Ep0kX+o=
+	t=1737128587; cv=fail; b=bjqjqEQAYwqNFpVoHtLUut2d5Poe0GGO6ETeQn95uYt62QQovmE7goss7UjSiTPgS09/3Q5UpfR2FwD54rMjLREMcPcvAX48qcENclZgaVjJIRN7zHBz2myKPIJ7deDKXS1pyeBP7uuclCsfMicKRQPb3c7SGBfCea4ZSeNcubs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737123069; c=relaxed/simple;
-	bh=gHfhAyhicBP1zfCzspSX0hXDm5fuOpNlb9yY5MDRI+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EsC+oGb6UfAv51s+r4nfNJ4tL/37EeiLmvN5HD4znGnwv7NRID4Lp/KbErh2JtutA+QNc/ftJvFuwLBLKg6MZJTd2dnS0Zi6GAYh/DWhQXnOi0qTw9rRjKABFDYVnqYW7aJCdB+MIdPj1TQ05TSXFunkic86pwmbhoq1uJixLIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lLeyu2zr; arc=fail smtp.client-ip=40.107.220.40
+	s=arc-20240116; t=1737128587; c=relaxed/simple;
+	bh=vHO6C/VVH+B9Z1BJwHeOWkgIcya0cvkCo2VOIdtAUg0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=G1iPhMsoM0VyIi7HIhnMIW9/mfrj4mVOojK1Hr/Tq04fGajinBkOch6hBcOx3KXPU3GQ/Gtrp9AI8hLUCIp93jZhiJLMrdhUBKilUfdsBBfg3VaCbC0kGShQOhj5QalN6JlLaagPGbh5CGKVUARqA/VepZT9H2jW3EaZM1vgkYA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y4C77I9E; arc=fail smtp.client-ip=40.107.236.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lLeyu2zr"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y4C77I9E"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NlB/UBRNUeCPv/PK213CJhbwnDn7XNmxVApV3P/8ekKIolL8O2qfS2XmlAibNzVZET1eZ6WUsTxZ9yYh6iKaEHh7FDs6IFBYGZRiUKRCycP59sgX8adKtUMCsXMGhGxo4FKGEA18ZbJ4Kg/EpYxHHsfKV6orBZLtGnKeasanJMH4vQEdtXgpenyFr7iw8AQi8VznOseLBMGS5nFssdrpg698JArWhXFZP3F14ryDvEB1IJNH0TAPUt6+bxHZSQ7w0PbEOJKjz1ZKuXGT6Me8DUUhItaAvm14zQx51DW/EeSEiYLEcvULbN4ogukJ3ehWvyrLG293xrOtv1OvK+lYvw==
+ b=yci4NAaB8jlCMs0N3ssSoQXj9LR5FGfRglh61OSrXr7dQw6YF2Kb5lvaLz5bHYQ4eZua2m+4O+vLSh3jPip4uRSBClkalrn7jAW0ZgCEFDXgR7i6WRTBlwpIaUOuHiThBlCYV5QX9UnbykNDPx4JiT4NCKTbau/C0SK3NXMe3j0+lN7E5aavO+BoOUMc8WuBRqCOFMVNp5H7Ix6Ep+aX7JhglF8a+/3FCBxggYrqsIGZ2Zl3G+Hkxz1rR6fTA7C+LzWXu2OC5x9wv32u+jkX8s/fNQuaanZG1iqLZy9j81uYqLLW/sssYip60eFabkDNwcaAdxabh1UWBRgbejtp5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nxRt1W1Ip/LkNT4B3NZQ8cAvOUmSaldAc9qn86UErWg=;
- b=BjDxB8mNL7hCpCBIjrH9jxoQaKqDeF8AE5ozthGhRipMWzs6GwgTtcT5TN2znARRfuPBt010SP8rsEYh9aI+bSdXKQ40CNgc7kxy7wLd/DSHUV355mLLPWnKE+OZ/DkSDdQh5HkRSkh5PzdRu4hUaeWY/EfIt1wznFLC3hMANNf3/hRGL1b/YoZZHVVmhv9fjzL4uzOpVU5/Vc0fi9ZmuhSI5qm6QwtlUTPZn7Z9upue0Ruckwz2qXbbSwSE6EE+41m2AOmnejI+1FXSgv7Q1MjSI3jVSoz+J8++qSZHx1Phr0JNECFr2pm2Ruf+wldtK561hxt+PTygpEpcSEZt3A==
+ bh=ulxbOrjTfJG8+Jl5Ed7bWdOwfiQIzKNhjQbjrKuuL2k=;
+ b=gbdNM5xssEvgrunHz3eYNGBxnD8AYvMlAF22divWscrDuJ9AVGuKWvknQn3a/HQ63M9Zky9oJX10yAy+Ib9AIzdu9arf4foWhXCLzW5hfoLdKHsYS8JZzDl0FNY9OdlH7/0AGZ6YheXw9ect+fgfgVdB5bFNZWJ463IG1v2b11WBXpjWdc583wzOu+05C/gImZ9qBtVW/UHVuLeFBEj2WEs7E/nOffM5LIBPJlc4LxAy7Y/ZWA17pXTv5DEPENMF02TwjnvKaAWoTwXuAy3ds4bQoyONtNvxWH6mHYzK2zsTZYyt23opMwIZNRuY8WzGs09+ASuOXwx9qtranmYeOg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nxRt1W1Ip/LkNT4B3NZQ8cAvOUmSaldAc9qn86UErWg=;
- b=lLeyu2zr+5AhlYGNXRv9pvgOvyDycOaHFKdH+AWrZnEvkPd1CQwzhWu4If9QknSWqH4nHX97xr0f7xwrA9rsz6agueFOkFEmsAKUT1Gb/lz3ZIJRhAFWbdx9BwiM9WNqqixvA3EY+9aknWQSNfDQme8gjezGGqPJSdzgNMlrp9Y=
+ bh=ulxbOrjTfJG8+Jl5Ed7bWdOwfiQIzKNhjQbjrKuuL2k=;
+ b=y4C77I9EI7f/nyHJuKXXOf/dlOd8ajJ60r7QxVKORY7F54zqvaKzxuQHD7aQwFjKfim/ZqW/HJXAvKdDL3X/eNHpYgbTTxcJKtklrlem1jinLALT0GJzsRpHLG8mRbcYZhSPa1FAMa/89GuZ2KoDNTnwpDyGiaQsjoNloRl0oEQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by BY5PR12MB4257.namprd12.prod.outlook.com (2603:10b6:a03:20f::16) with
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by SN7PR12MB6888.namprd12.prod.outlook.com (2603:10b6:806:260::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.16; Fri, 17 Jan
- 2025 14:11:04 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%4]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
- 14:11:04 +0000
-Date: Fri, 17 Jan 2025 15:10:55 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Gregory Price <gourry@gourry.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
- ACPI PRMT
-Message-ID: <Z4pk75hJqqGg21qy@rric.localdomain>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-26-rrichter@amd.com>
- <Z36eR5oXcv3rpEZ-@gourry-fedora-PF4VCD3F>
- <Z3-hlYh3voRFLG6o@rric.localdomain>
- <20250114111307.0000028b@huawei.com>
- <Z4oNxLLPg0rRYIrm@rric.localdomain>
- <20250117114642.000000b5@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250117114642.000000b5@huawei.com>
-X-ClientProxiedBy: FR3P281CA0119.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a3::19) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+ 2025 15:43:03 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8356.010; Fri, 17 Jan 2025
+ 15:43:03 +0000
+Message-ID: <53ef6364-4523-05bc-4fa1-8a2110f5fe54@amd.com>
+Date: Fri, 17 Jan 2025 15:42:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 4/4] cxl: Make cxl_dpa_alloc() DPA partition number
+ agnostic
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+References: <173709422664.753996.4091585899046900035.stgit@dwillia2-xfh.jf.intel.com>
+ <173709425022.753996.16667967718406367188.stgit@dwillia2-xfh.jf.intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <173709425022.753996.16667967718406367188.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6PR04CA0031.eurprd04.prod.outlook.com
+ (2603:10a6:20b:92::44) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -77,112 +66,385 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|BY5PR12MB4257:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3315029e-fa4d-4887-8447-08dd3700c771
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB6888:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8412c896-a390-4c68-d1b0-08dd370da0d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?H/HEE+0Oqec3tV6FF89SbEBQOtOi5uSmHp/LamHPH87JohXAMh4AHC49qwFF?=
- =?us-ascii?Q?suSaZlqK227YCo85J4mWuLq48Vq1+bc9/PLyICG7BaVWmqWoo5CjFVd3xuSf?=
- =?us-ascii?Q?aVjmMP7KeOOxTZU/+cnt+rWCSjywDRo3+Lwq9s456CksOsK091qdifofEFrc?=
- =?us-ascii?Q?bomhznYyUc6ahvaZXRrbiqE2F8HTT3GAI3+evGizkElD3Y3nX9zlm5Ub1lVT?=
- =?us-ascii?Q?Ees4fIp2WxDbyO80Jvbhx8TBBsg7mdwnRG30W6aW5mtS37bsbKEhWEisVJo5?=
- =?us-ascii?Q?Uu3edG1Y7FMUNJm5Svsj/4lINrPUMfupWr0VQICk6fv5VeORNdgPNKjUsQku?=
- =?us-ascii?Q?0PgAptQhKbLjTMrh8S1F7XP8GsWuS6JBBHnE3WMJhmPonS6EfHVhkFbpIdir?=
- =?us-ascii?Q?sog4Xk5PaRK9swb5GoDkRKJDHcU5bY10WStj5eEzRLFzere6EfBGj33wcTx7?=
- =?us-ascii?Q?qVpY4+v0tQ15nS4jwogTK1hMcatTRTyDuXryiS0uzmUd/sVCL3qH6/5Vzh4d?=
- =?us-ascii?Q?6XxvRSZLxMDSEKRgMtnlKHT802nZCQTy5Kan8IISBIge8TyW/KenwOJejwYl?=
- =?us-ascii?Q?d5XO/0SbeQkcGqHyxv7EYEC90vIz7WtbaAI2H8l/DARV6S2xDlUeVHhRdQUu?=
- =?us-ascii?Q?8xsr5sSRoPDislwNwpGTE5v42iR+F3eEljPSnN4x4f/+90+h2msi3Icp4ZWY?=
- =?us-ascii?Q?tCgM0JjVrr00VI41FOUZlaNId2+J4o0eu85UjhQA508DYy/zeoQAXgbQHZrU?=
- =?us-ascii?Q?a8+EU6fUdWox5kXonCxpl3yW1CQrH6hvfqSSQjpqo00uI8QhO7K+dvLImHco?=
- =?us-ascii?Q?rod0R7+/GIHPW88akZNFdui7w8/RTAXeXSBoy7IJlJb/A807Y5YRAwjUdmB7?=
- =?us-ascii?Q?w8OtvglKpYxfAL1wfbOVxmqSVuNwHsO+CN0UXc1WIqqc5hadFgkZowTFSa0+?=
- =?us-ascii?Q?bnn6v5uf22+fYiazqEf4+onk71JaqU0vTpuktWCrxJngJq9PKPdcUhKJLdY6?=
- =?us-ascii?Q?qJu9ohKkoj3+qG4r0klHWBYPZKCIkztsDCe+M3G2AzxvIo9RXBR0tMeDUu3w?=
- =?us-ascii?Q?aO3sbaegD7j77TKRmfrYIqZ6wWnQ+A5YwHxL96Y0Bbme3X1/CJDxf+yZsAUp?=
- =?us-ascii?Q?QpcjY6VTTRDV8wvB2XvcJ9CnNiI5u5TnY7Qcc9T+Y6ZkvNRXPlXZPzEQh+Ib?=
- =?us-ascii?Q?Yga9RKFnk8utkNNQYzLPp/1hwUm5ZJ2dzYMuT5NkERFa+N+7Mj62zd1q4bfW?=
- =?us-ascii?Q?ois4GEqlPpOncgoieNmb3v264vMr1yqSbP8hhK535jIpvOa49jepmF2oTh2w?=
- =?us-ascii?Q?10ET7b+OEt8+VavAc2AEHvPGbtrH6Z/JZkEgBfs1LR4T1pCyMGMWKk6lJhw0?=
- =?us-ascii?Q?ZPUz6gcEakdUi/5t3w78YstglFJH?=
+	=?utf-8?B?NE9oWHVXYktwb2c3TXpNSVRvOExoYTVIL0pwbExiUzBHTUlkdDVmbXpuVk55?=
+ =?utf-8?B?U2ExR2N4bGhEQklaQ29tTlpGeWd5V2lnUk5qZGVXK0FWY1lWblRMd2hHaWI4?=
+ =?utf-8?B?RTQwaEpIeHhFaFhNTEUrdm44TlpnS1k1U1ZSay9VdFFVYWd4NjNBRkZyU1dv?=
+ =?utf-8?B?ODVEeVBjLytuR255b29KQ2Rlb2xsTEoxY0R3VUI1RFp0QkgzR2ZpaU5ZWmJt?=
+ =?utf-8?B?Q1BXdjhwWW5lakxlSjJtTFNCV3JvNi9DOVpaa2x4cElqdTRhdEZlbjFzNGNy?=
+ =?utf-8?B?K0RUaFI4Q3d5TmhyUTZTbmZMcTM1RFdLdXdkclhGZkR0dXY4eFk4a1FuT1lu?=
+ =?utf-8?B?bkN1b1pqdW45U1VBcHRYdzA4eERaSm45Q3VHV3J2cGlmSDFLbU41ZWxiTmVT?=
+ =?utf-8?B?ZTk1WDBDMXR0ZVF6UE0rK05ENGtObHBaSzdnaDNWS2RONWFTLzRqM2RBR2Fy?=
+ =?utf-8?B?TWVjWGdDVXFkdTAxNThuQjFJRm5aSVFIai9CTU1tR1hjZDRWTmNRa0F2czJi?=
+ =?utf-8?B?N3JCditXMUp4VDRrSVRCRll2SVdRRlkzUnZFNEpBL0Vud1NrUENJeitqSysv?=
+ =?utf-8?B?N0daQU5kME9NaW5NUUhxclZITDBVaXhqb1RGaTMwNmY4S0ZhZUtabElhZ3hI?=
+ =?utf-8?B?T0IrV3R0dHNVc3doTmRHd3pSUk9CM1RuUGU0aWlzcVFnczUvdTY2WFhOZmVR?=
+ =?utf-8?B?N1ZxZHRmb0FlVkRBWFhzMGJoUTBsZFR6UGE4bDN6ZFh5enAyWHAwWU0yMjRj?=
+ =?utf-8?B?VFlBUzdib0QxeUQ3MXJyTFFzY0Jib1lwa0hBNlQxRS9qTWhTUWxlTFg5MjZH?=
+ =?utf-8?B?cytaUXJ0V1pWbEV5V1pvUTNDOVh1Y3hJa3oxUms4cmdLL2V2d3krSUNZaXNv?=
+ =?utf-8?B?VXhJOWNOTEJvVHczWVJzclBTRVhRSTdPWDAzY2tTVmJqREhVa09XZmxobEJr?=
+ =?utf-8?B?bTE0K0o1UHhCc3FMLzVEbDVhTFJIWVRpTlFHOGtpalZZZjNYZER6RXpPV2JU?=
+ =?utf-8?B?ZVlvMmFNQVpqSkNmdE11N0pGaXA4eVNtNnFkZ01VQUpwQWFsam90RGNSL3o0?=
+ =?utf-8?B?QjFrNWxGeXRvNkdZVFFESFI3ODJ1SmY3YnJmbFRLZkZRWk1VWEprNE8wWCtB?=
+ =?utf-8?B?ZFpyNURRcGN6RnlBUktNblJGZnhaREVsN0ZHNHYwSDhHRWJ0bUhocDUrY3FK?=
+ =?utf-8?B?TDBwTjZzNHZFUkx5VFhpV3gwc2VsMmU4WngxK1ZycTRwYkw3S2V3Q2tXc3JR?=
+ =?utf-8?B?MlB4bnk5L1hlamhCZ0hHRU8wcksxZGJJeVhLTm5vcTAzazF6cksxNXQzOEkr?=
+ =?utf-8?B?ejEwc1RmQWJNWVlGMjhra1haNkRpNHY1YmRrSXhEWVVtQTJQU3ZtRklBSW5x?=
+ =?utf-8?B?N0I5WmhLcnB5enBjSEh1RDM1cWh4MisyQ21rbjVlaklOQnh4VmovZHlzcXR0?=
+ =?utf-8?B?bWtqRHV4U2k1bzdTM05zd3RDdTNrSkd1MVExbzhnY3UrVTIrMEhTTUh6bUhi?=
+ =?utf-8?B?YlIwb1Z3cU9oNXN0WHhNK1RBUk5ieHlaOW1QUU9idmRqajVaYkprVk8rVHNz?=
+ =?utf-8?B?VUdCNHQ0SXoxY0pSQ2VtVG1INVRTNnpxNVdEcUFEdDltSWJIdnhmaXJnVkFG?=
+ =?utf-8?B?V2o3cHVvaVFkOUJaUXU5Vm1VZjc4akRXcHcvRmQvZjZ1YXhjM0IvNVZiYXVl?=
+ =?utf-8?B?SndTUWdtdUMvYTVyNUsvM2NIeVRwclJKZ2tRMlZqbFpjaTFoazQvM2ZUeVhM?=
+ =?utf-8?B?bG01WkIva01lTlpJNXRWWEZybld4elNQS0lPNEhXdVlUYjlTTUJSOVV1aGFR?=
+ =?utf-8?B?TVdvb2M2SWgvOTU4TWdyelduYmNwcVFqNTBrYUpzN013RkUrNkp3V2wvTG5C?=
+ =?utf-8?Q?z+h3h2+5YMv3u?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z8T1EN0sPioTBbSwW8RTHAth3elMploa1CzuCgBjv6WVlEtLI6EnY9oHNjht?=
- =?us-ascii?Q?Jw3ddMJqVoK5Mu3rYbjvSbcan2Pw587I179lEYMv3gQ39B3uomqWZ0Pvawe8?=
- =?us-ascii?Q?bxUdzw84LiXLtKDp0ab8q5Z7cEiLwzMCh6OyKKahdQRNio1S+ZDkVUdSsFZF?=
- =?us-ascii?Q?hQQ8dtZ9JcEPkhJhe4gbxU6eEopyv1rpXERTlwC19JMeCoV5EoaRKMy1i9QQ?=
- =?us-ascii?Q?cWmGhhaKElXhlw27P4emnobPnGoWBwT/PUNblVVHUV3WFLCkY5w3enhY9EXh?=
- =?us-ascii?Q?Y20w3BokQw80+4mKzFJoR2BMBRQQXurGzlTEAqTD4iED0HfIi2QX+j0eNDe4?=
- =?us-ascii?Q?fmOFj+I0aYpzVClgK+UBsd/PNRC2vqpUz0atV0Q9aR/ROneZnt8FyN/UkXRg?=
- =?us-ascii?Q?sU/LdqU4iwDW77VNcxmVVYNU+N+Ily7wAwjYCzx5nMchmpLQRwZPvZIGNmFZ?=
- =?us-ascii?Q?CyRrUx0Mrtk8NmSZBQyqVPp8b+Qhh6TZX6pLdGt4l3YaTUqJWTG3asih84Ic?=
- =?us-ascii?Q?n9M6bYRt+b4pZWP0z+U28HCHj8fYDqKrhEXET027H5WgvwoyZr+F/QaAQW6r?=
- =?us-ascii?Q?hu7Hs83M8otg+LC8c+DuLV/BLHjHksWH4DeeGG2WvPWoKTWCuNQETfu1epEP?=
- =?us-ascii?Q?iGQ9OsVdTUXtPaHbdDKYg/LPEfWMWSzzQhUN81a89jacxyVQ5vjFJVZy987n?=
- =?us-ascii?Q?jfZvjtGJ5OJmteWDYhrw/gniE60AwPNW/YhVpTa0KoH8ewkVxa+gNogCZbaB?=
- =?us-ascii?Q?4NG9UWVV75ATaT+oQiLzIdFukwye7wCFU/lrxCTP+jbIZHSrvGtowQ88IRVJ?=
- =?us-ascii?Q?CAqfuImejpe4fQn83x3Lx6jGh5u+rVmMDe8zMP+oPUqGqjfgvj5X087pbWw3?=
- =?us-ascii?Q?g0mheonWjY13ulr4oyW087MEwOqtNrdkf7+Laeb6wR0r3M/HEqbw9n6RBDR9?=
- =?us-ascii?Q?xBwrySsDPDauOBod1MDOnBfyjstqx2MRHsKu6+e+a559kKPDaadfmMaFbNaT?=
- =?us-ascii?Q?Yn0gBvrYwz9I2oB52tHQv+fESqvztTkNGgqW/HF0Ql1+1AeGwlHJH4G+Nnjc?=
- =?us-ascii?Q?/bnQfU/oL4Qi+vpbYykG+xU2t0cuu8bcjGQ0Yqew69iu+5KUojEu5j0pu3Dt?=
- =?us-ascii?Q?FS7PFT360rbzwtZYCvGOLQrn65ZBVte/VSPfWhZbwiUhDO21C7RbuGoX1YTx?=
- =?us-ascii?Q?QjyDYc+nOMYaSjNzxu8/P8GUoXi/3l6CIGmFNYV+gfPGM3aVEkXL02RMv9Or?=
- =?us-ascii?Q?UejqKhVypOi9RRe/uiAmB+liHo3HaKIGw5kNZO0OmjCqOKbYaGvRHDirtPYi?=
- =?us-ascii?Q?K9F7vnvR9/s+/eBRB+uE6NGPHhsbYi6lyaucWUk9Qgm5rGAlsfEsAW85XQW9?=
- =?us-ascii?Q?h3RnTy3kQBcEbMD99LZJ+eCJRK9E55jKPwqpci7ug/+s1b2NTgWCMn+1uCrB?=
- =?us-ascii?Q?xyJVHKp167sj51ZyovQ3ThlMKeMeTmmRxaa0uYLNKYwtdVLlXvlx/N1BVF5/?=
- =?us-ascii?Q?mHpJpxJo5YLhYw7wCglM42s9ddIP2cQgg1pGqZ93fhSkzGqhrFQZXtnFOWT1?=
- =?us-ascii?Q?8Y72LK91VirpXILaWSbZZmJaV+91b3ppEBIxTFqx?=
+	=?utf-8?B?T2RJTHl4WGVTWDJBQ0tIOEdlekNFVndLQU5CbEpyODR5SGpnWXNjZ3c0S3lT?=
+ =?utf-8?B?MUJLV01tVnJKMW8wdjN1bHdzOGNwUXVzem5OMWxzQUtmTEl1T2lYcEhJRG9k?=
+ =?utf-8?B?bU42OVMxYWY1S25tSXdqN3diSnBqRHMrSGp1MDVtVG00U0Q5SzJpdjhxQ1hm?=
+ =?utf-8?B?cVRWVzg0WnpQd1dON1VRUi8xUlRCM2c0RkxrdzhaKzZpUHZ2YVU3aW1MZGZD?=
+ =?utf-8?B?VjNNZkNkL3BtUW1aWUQ5Z1VnMGYxT0J3bm5EZXhRMC9UQkJ4WHBFY2l6Nmlt?=
+ =?utf-8?B?eXRGUmpOWmVza3ZxeFMxcVNnOHdTU3BsZTgvd0swRUJ2WjZQYndzcGlOcDFh?=
+ =?utf-8?B?NEE0UlFIZFZYNVluRHpxRS9RcU5KWE9ldk5vZEowb0ZncEpYNjRwV2ZEbXZK?=
+ =?utf-8?B?SDNCR3J4YmxMcW45eGhSa2YvVFFCVVg2Q3V4L2ZxTHEvRi9hWjgyejhKd1Rh?=
+ =?utf-8?B?dzd6QTkzcVB5RWp4UUd4RUppaklUUTdrL1V2ekxmVGd6V2FYWkhGS24vNlJF?=
+ =?utf-8?B?aExuVDJPcXFWWU1QckJMaGVaeVEwTVFTcjRJd3FMY1BkUlZvRUdWYUJ2Zmcv?=
+ =?utf-8?B?NnVjK2lNSkV6VjcwUmd2dUI1OTZVSldaZlNTKzZjVlE5WXp3MTV5RmJSeWxD?=
+ =?utf-8?B?UjdxNjM3NnhCclZWQzZBM3pMVHhGaTlPcENJY0tyL1B2elkxeXN1NWZkYUo0?=
+ =?utf-8?B?NzhBSWxDdXNSUlUyN2tMWXZYMjFHT3hVT1cydkp6a2NNb0Z1VE45NlVRaEJN?=
+ =?utf-8?B?T0ZtNkJaSmhYaXNlZTF5Uk1zeUh3V0RjTFRHM1cvOCtSWDRHK24zMCtCS0U2?=
+ =?utf-8?B?RUVTbXpWTXA2TmxLaXZaeHhSaG9tVWtFRVZ0M1FPOWpTZ1hSalVaK1orKzRP?=
+ =?utf-8?B?TnI5ZGZGWENsZEVIVTVndjFlSExscDk0WVpIR2ZyN21PTCtUaTI4V2UvOWVY?=
+ =?utf-8?B?ekFmMVYxcENvOGtvRVhQeWg5dkJncmhISUJCd2xpaTZtOHh1cVR6ckZ2QnF3?=
+ =?utf-8?B?QlkwT1UzOC9TVS9QRjR3ME5vQUVLM0QxUDkrL0E4cTVRdGdPeTdMc3lOUUZB?=
+ =?utf-8?B?QlEvRittNkJheTBUdE1hcmJLZWVmQkZBUnRhMXhoV1VhMjVNRi9wUzE4QStR?=
+ =?utf-8?B?c0FWVmkyUDRyZEJnZWpEVmsyalMrUjdZclNEQk9NN2hPVm1mNEZiN3NuK0lR?=
+ =?utf-8?B?eGNiTUdsN1hCZDI5OFRWZG05c0JZeUI5eWpWdE9hdGZoM1BNcWhPeCt3M0w0?=
+ =?utf-8?B?OWVFK0l2U1VzZFJLb3AwQWZnNjBtMkNUbzRNR2tQZk15SFducUpINDZxWEdN?=
+ =?utf-8?B?dXJHQnIwUmYvYjFXcnFGV1gvN1c5YU9Ia2l6TmN4STQwY2FTQ0R0NkxSSHZE?=
+ =?utf-8?B?QmF2bjdUdUtpWDM2SXloVk1sZGJqNCsvRTFDV1YxaGUrSlgrNlh3dm90T2px?=
+ =?utf-8?B?SUk2L05XRXV2MElkZEhPR2NrazZHRXo3VkI0T2ZnYjJPTG5Dc3N5d0NMbURR?=
+ =?utf-8?B?R2x5cXNGSEVNSTNxRUxCVmJOMWg0b0FHNEV5dEF6M01RVTlwQ2Y4eWVEYVB0?=
+ =?utf-8?B?b2FPU2hqVENWblRvR3dUSlRCSXdScHhZaUJPUzg4THpvRzBndm9VcFZxcXdD?=
+ =?utf-8?B?bDRvU3pBY3k1eVdYWm4xZjh2VFA5NkxyWVhObG1pSzJvNXRBM2F6cW1vUGFQ?=
+ =?utf-8?B?dW8zUDNxVlpQLzBPd2NVc3ptcng4eGxVbEFIRjRROUtwclBXNTQxUFFCdDhX?=
+ =?utf-8?B?TC9vSDhTR0V0eCtNNkRZUlo2NXd2SWU4VkNzdGxyTFJnRGRZQTBZUVJKSVU3?=
+ =?utf-8?B?NmxxRmFkZHNkc3lvRlBGUE1YZGVIRlYrMlBXS212Y3A1OFMvYWRyVnpMOTFi?=
+ =?utf-8?B?Y1d5ckVCYk9qLy9MdlhzQ2FXQ1ZST3luWEFsUWhjZEg5VDNUZmM2Vnl6VURI?=
+ =?utf-8?B?TTlieE8zVkR3MEY0bGtpTmR1THFXSGZidFBCNklPNGV2QUxraU9Rc3V6aXVu?=
+ =?utf-8?B?Y2JEK1JPb3hLL1o0MUI5WVE5TlJ4RkVMeEYrUEVUZW5aL0pKeDl4aG9LY3l6?=
+ =?utf-8?B?TXZSSGEyZE9sdHRNOFJrMW1NelVseXU2djdjRlhKcFhtZG1xODYzbDJKT2Y1?=
+ =?utf-8?Q?A5GLWie7YAgE6Vaw7iMXSVWFB?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3315029e-fa4d-4887-8447-08dd3700c771
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8412c896-a390-4c68-d1b0-08dd370da0d6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 14:11:04.3422
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2025 15:43:03.1226
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W1SZ9u2U5iOcMAYF56ENClY++fLigiDL5/0X+XTLYk/ooGDywhop6vmuXtyBz/E1x9UbqaqQO+qA31Qt98w1kQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4257
+X-MS-Exchange-CrossTenant-UserPrincipalName: HcepAFn1lslra2aVtFbDLWDbuQ0x+MacmUlwiGCwTiKeMmE5SgZMSu3Ym3CiTCCs2pNpNeJw6fqjbJuY7+2tvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6888
 
-On 17.01.25 11:46:42, Jonathan Cameron wrote:
-> On Fri, 17 Jan 2025 08:59:00 +0100
-> Robert Richter <rrichter@amd.com> wrote:
-> > On 14.01.25 11:13:07, Jonathan Cameron wrote:
 
-> > > > > static void cxl_port_platform_setup(struct cxl_port *port)
-> > > > > {
-> > > > > 	cxl_port_setup_amd(port);
-> > > > > 	cxl_port_setup_intel(port);
-> > > > > 	cxl_port_setup_arm(port);
-> > > > > 	... etc ...
-> > > > > }
-> > > > > 
-> > > > > I suppose this logic has to exist somewhere in some form, just want to make
-> > > > > sure this is what we want.  Either way, this is easily modifiable, so
-> > > > > not a blocker as I said.    
-> > > > 
-> > > > Yes, it is exactly designed like that. I will update the patch
-> > > > description.  
-> > > 
-> > > If we need it on ARM then we might wrap this in an arch_cxl_port_platform_setup()
-> > > as never building a kernel that does x86 and arm.  Could rely on stubs but that
-> > > tends to get ugly as things grow.  
-> > 
-> > I could move the function and file to core/x86/amd.c already and add
-> > a:
-> > 
-> >  void __weak arch_cxl_port_platform_setup(struct cxl_port *port) { }
-> Something like that probably makes sense. I don't like x86 calls in what
-> I'm building for arm, even if they are stubbed out ;)
+On 1/17/25 06:10, Dan Williams wrote:
+> cxl_dpa_alloc() is a hard coded nest of assumptions around PMEM
+> allocations being distinct from RAM allocations in specific ways when in
+> practice the allocation rules are only relative to DPA partition index.
+>
+> The rules for cxl_dpa_alloc() are:
+>
+> - allocations can only come from 1 partition
+>
+> - if allocating at partition-index-N, all free space in partitions less
+>    than partition-index-N must be skipped over
 
-Sure, will change that.
 
-Thanks for review,
+In my view, you are mixing the current code with the new code in this 
+explanation. It would be better to say the current code assumption is 
+just two partitions, ram and pmem, but DCD changes the game.
 
--Robert
+
+> Use the new 'struct cxl_dpa_partition' array to support allocation with
+> an arbitrary number of DPA partitions on the device.
+>
+> A follow-on patch can go further to cleanup 'enum cxl_decoder_mode'
+> concept and supersede it with looking up the memory properties from
+> partition metadata.
+>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>   drivers/cxl/core/hdm.c |  167 +++++++++++++++++++++++++++++++++---------------
+>   drivers/cxl/cxlmem.h   |    9 +++
+>   2 files changed, 125 insertions(+), 51 deletions(-)
+>
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 7e1559b3ed88..4a2816102a1e 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -223,6 +223,30 @@ void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_dpa_debug, "CXL");
+>   
+> +static void release_skip(struct cxl_dev_state *cxlds,
+> +			 const resource_size_t skip_base,
+> +			 const resource_size_t skip_len)
+> +{
+> +	resource_size_t skip_start = skip_base, skip_rem = skip_len;
+> +
+> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> +		const struct resource *part_res = &cxlds->part[i].res;
+> +		resource_size_t skip_end, skip_size;
+> +
+> +		if (skip_start < part_res->start || skip_start > part_res->end)
+> +			continue;
+> +
+> +		skip_end = min(part_res->end, skip_start + skip_rem - 1);
+> +		skip_size = skip_end - skip_start + 1;
+> +		__release_region(&cxlds->dpa_res, skip_start, skip_size);
+> +		skip_start += skip_size;
+> +		skip_rem -= skip_size;
+> +
+> +		if (!skip_rem)
+> +			break;
+> +	}
+> +}
+> +
+
+
+This implies the skip can not be based on the last child end as the code 
+implements.
+
+
+>   /*
+>    * Must be called in a context that synchronizes against this decoder's
+>    * port ->remove() callback (like an endpoint decoder sysfs attribute)
+> @@ -241,7 +265,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+>   	skip_start = res->start - cxled->skip;
+>   	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
+>   	if (cxled->skip)
+> -		__release_region(&cxlds->dpa_res, skip_start, cxled->skip);
+> +		release_skip(cxlds, skip_start, cxled->skip);
+>   	cxled->skip = 0;
+>   	cxled->dpa_res = NULL;
+>   	put_device(&cxled->cxld.dev);
+> @@ -268,6 +292,47 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+>   	__cxl_dpa_release(cxled);
+>   }
+>   
+> +static int request_skip(struct cxl_dev_state *cxlds,
+> +			struct cxl_endpoint_decoder *cxled,
+> +			const resource_size_t skip_base,
+> +			const resource_size_t skip_len)
+> +{
+> +	resource_size_t skip_start = skip_base, skip_rem = skip_len;
+> +
+> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> +		const struct resource *part_res = &cxlds->part[i].res;
+> +		struct cxl_port *port = cxled_to_port(cxled);
+> +		resource_size_t skip_end, skip_size;
+> +		struct resource *res;
+> +
+> +		if (skip_start < part_res->start || skip_start > part_res->end)
+> +			continue;
+> +
+> +		skip_end = min(part_res->end, skip_start + skip_rem - 1);
+> +		skip_size = skip_end - skip_start + 1;
+> +
+> +		res = __request_region(&cxlds->dpa_res, skip_start, skip_size,
+> +				       dev_name(&cxled->cxld.dev), 0);
+> +		if (!res) {
+> +			dev_dbg(cxlds->dev,
+> +				"decoder%d.%d: failed to reserve skipped space\n",
+> +				port->id, cxled->cxld.id);
+> +			break;
+> +		}
+> +		skip_start += skip_size;
+> +		skip_rem -= skip_size;
+> +		if (!skip_rem)
+> +			break;
+> +	}
+> +
+> +	if (skip_rem == 0)
+> +		return 0;
+> +
+> +	release_skip(cxlds, skip_base, skip_len - skip_rem);
+> +
+> +	return -EBUSY;
+> +}
+> +
+>   static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   			     resource_size_t base, resource_size_t len,
+>   			     resource_size_t skipped)
+> @@ -277,6 +342,7 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct device *dev = &port->dev;
+>   	struct resource *res;
+> +	int rc;
+>   
+>   	lockdep_assert_held_write(&cxl_dpa_rwsem);
+>   
+> @@ -305,14 +371,9 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   	}
+>   
+>   	if (skipped) {
+> -		res = __request_region(&cxlds->dpa_res, base - skipped, skipped,
+> -				       dev_name(&cxled->cxld.dev), 0);
+> -		if (!res) {
+> -			dev_dbg(dev,
+> -				"decoder%d.%d: failed to reserve skipped space\n",
+> -				port->id, cxled->cxld.id);
+> -			return -EBUSY;
+> -		}
+> +		rc = request_skip(cxlds, cxled, base - skipped, skipped);
+> +		if (rc)
+> +			return rc;
+>   	}
+>   	res = __request_region(&cxlds->dpa_res, base, len,
+>   			       dev_name(&cxled->cxld.dev), 0);
+> @@ -320,16 +381,15 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   		dev_dbg(dev, "decoder%d.%d: failed to reserve allocation\n",
+>   			port->id, cxled->cxld.id);
+>   		if (skipped)
+> -			__release_region(&cxlds->dpa_res, base - skipped,
+> -					 skipped);
+> +			release_skip(cxlds, base - skipped, skipped);
+>   		return -EBUSY;
+>   	}
+>   	cxled->dpa_res = res;
+>   	cxled->skip = skipped;
+>   
+> -	if (resource_contains(to_pmem_res(cxlds), res))
+> +	if (cxl_partition_contains(cxlds, CXL_PARTITION_PMEM, res))
+>   		cxled->mode = CXL_DECODER_PMEM;
+> -	else if (resource_contains(to_ram_res(cxlds), res))
+> +	else if (cxl_partition_contains(cxlds, CXL_PARTITION_RAM, res))
+>   		cxled->mode = CXL_DECODER_RAM;
+>   	else {
+>   		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
+> @@ -527,15 +587,13 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+>   int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>   {
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	resource_size_t free_ram_start, free_pmem_start;
+>   	struct cxl_port *port = cxled_to_port(cxled);
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct device *dev = &cxled->cxld.dev;
+> -	resource_size_t start, avail, skip;
+> +	struct resource *res, *prev = NULL;
+> +	resource_size_t start, avail, skip, skip_start;
+>   	struct resource *p, *last;
+> -	const struct resource *ram_res = to_ram_res(cxlds);
+> -	const struct resource *pmem_res = to_pmem_res(cxlds);
+> -	int rc;
+> +	int part, rc;
+>   
+>   	down_write(&cxl_dpa_rwsem);
+>   	if (cxled->cxld.region) {
+> @@ -551,47 +609,54 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>   		goto out;
+>   	}
+>   
+> -	for (p = ram_res->child, last = NULL; p; p = p->sibling)
+> -		last = p;
+> -	if (last)
+> -		free_ram_start = last->end + 1;
+> +	if (cxled->mode == CXL_DECODER_RAM)
+> +		part = CXL_PARTITION_RAM;
+> +	else if (cxled->mode == CXL_DECODER_PMEM)
+> +		part = CXL_PARTITION_PMEM;
+>   	else
+> -		free_ram_start = ram_res->start;
+> +		part = cxlds->nr_partitions;
+> +
+> +	if (part >= cxlds->nr_partitions) {
+> +		dev_dbg(dev, "partition %d not found\n", part);
+> +		rc = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	res = &cxlds->part[part].res;
+>   
+> -	for (p = pmem_res->child, last = NULL; p; p = p->sibling)
+> +	for (p = res->child, last = NULL; p; p = p->sibling)
+>   		last = p;
+>   	if (last)
+> -		free_pmem_start = last->end + 1;
+> +		start = last->end + 1;
+>   	else
+> -		free_pmem_start = pmem_res->start;
+> +		start = res->start;
+>   
+
+
+As said above, this is not correct if there are holes due to releases.
+
+
+> -	if (cxled->mode == CXL_DECODER_RAM) {
+> -		start = free_ram_start;
+> -		avail = ram_res->end - start + 1;
+> -		skip = 0;
+> -	} else if (cxled->mode == CXL_DECODER_PMEM) {
+> -		resource_size_t skip_start, skip_end;
+> -
+> -		start = free_pmem_start;
+> -		avail = pmem_res->end - start + 1;
+> -		skip_start = free_ram_start;
+> -
+> -		/*
+> -		 * If some pmem is already allocated, then that allocation
+> -		 * already handled the skip.
+> -		 */
+> -		if (pmem_res->child &&
+> -		    skip_start == pmem_res->child->start)
+> -			skip_end = skip_start - 1;
+> -		else
+> -			skip_end = start - 1;
+> -		skip = skip_end - skip_start + 1;
+> -	} else {
+> -		dev_dbg(dev, "mode not set\n");
+> -		rc = -EINVAL;
+> -		goto out;
+> +	/*
+> +	 * To allocate at partition N, a skip needs to be calculated for all
+> +	 * unallocated space at lower partitions indices.
+> +	 *
+> +	 * If a partition has any allocations, the search can end because a
+> +	 * previous cxl_dpa_alloc() invocation is assumed to have accounted for
+> +	 * all previous partitions.
+> +	 */
+
+
+This is right, but the code below is not because ...
+
+
+> +	skip_start = CXL_RESOURCE_NONE;
+> +	for (int i = part; i; i--) {
+> +		prev = &cxlds->part[i - 1].res;
+> +		for (p = prev->child, last = NULL; p; p = p->sibling)
+> +			last = p;
+
+
+... holes ...
+
+
+I think the problem here is we assumed ram and pmem being a child and 
+likely some free space, but a device with multiple HDM decoders implies 
+potentially several child.
+
+The code supported the case of multiple child but I guess we still had 
+in mind the simple case. Otherwise I can not understand all this ...
+
