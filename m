@@ -1,500 +1,109 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6E01F63E0
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Jan 2025 03:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A717555
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jan 2025 06:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737085448; cv=none; b=WauXUTYaoxcr3aW73bUJ59M14iJKDB759w0ZqVHtCWcw2PwoutyG5UCUPuwOeRTh45vrI873rqqhbT8tk0V5DpjGuEAmcSV+6uPpdSBrzzIePf5rLNsaVzahHEosjBjKgoqY3osZAWoDjabhMNRBpoAWui16MD6Y3E6IJpedWpQ=
+	t=1737094232; cv=none; b=eCsI9rxrhIGrk4FYipAyjCkgxyfbiK7/vcPDtc1DKZ2CzPHrIyGgWLT56aFSO4CbsmtnX3GxSNm7gqxsFBqGHQvB5e0Od8bdCU5GektcsUtjJ5HbAUzEoKoekLLdYheV48II9fdzTobGaFeig8lFM9GUGaXYYIxljSybHIkHpn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737085448; c=relaxed/simple;
-	bh=SPo2nDR/jvotzb40n+oaWNnLocGCLa9EMSpLvEcTAgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IARRxvLrFBjEJZO0Pl3uC68tht8MVqVYfJm2ZHr3+bZCEwdUQP68qmkqZqy24y+jCibtfvj4Aa0TqOr/bZGI3WF+dXL8sGxaYhbJ1lnUsL69sKlUg169qnNavmTnCHRHjB3rEHmz9t5AMArnbBhn7Uw6o3hRD2MOs71b6lQGe58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwD3_ib50YlnJrSrAA--.20124S2;
-	Fri, 17 Jan 2025 11:43:53 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwA3Uaf00YlndZYMAA--.1676S4;
-	Fri, 17 Jan 2025 11:43:51 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: jonathan.cameron@huawei.com,
-	fan.ni@samsung.com,
-	mst@redhat.com,
-	marcel.apfelbaum@gmail.com
-Cc: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org,
-	chenbaozi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH 1/1] cxl/cxl-host: Support creation of a new CXL Host Bridge
-Date: Fri, 17 Jan 2025 11:43:43 +0800
-Message-Id: <20250117034343.26356-2-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250117034343.26356-1-wangyuquan1236@phytium.com.cn>
-References: <20250117034343.26356-1-wangyuquan1236@phytium.com.cn>
+	s=arc-20240116; t=1737094232; c=relaxed/simple;
+	bh=+EjjzbdDgSmcl1BY+JiIc0FPDGcuH1NqnqdkWThXOII=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=NBulRElk2BFnfRi12IhfCk2HN6G9R9nALHnTrtgsZWjaS9ld9klRwITq0/lwExqoUq0Bzd6aXBoFa6mpkvKCW5RXmQk7+dT5g3r38Z61eZ7Y4JBdN27ZBxdb/IobdgmzwI7AWZ05j+8CSp1nNgXaVKYuo/kN8PLsEfRDG62F0Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjNDEn14; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjNDEn14"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737094230; x=1768630230;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+EjjzbdDgSmcl1BY+JiIc0FPDGcuH1NqnqdkWThXOII=;
+  b=fjNDEn14xuNCmnAgTylUbu6hGhz093LObVTwDPFLQftoOIiANBOzxJ31
+   1LL4gd+f7ostrSIfxYfb2myw+tjml+051s6hYUBOOvREGCtEQDuy7h7s2
+   7XO5/T3EgqCKNFrWONoocDx25AeTfZJL9beuJ3MOYiJB3Cw48ELs8cFO8
+   kuN61jOhWMJcRJKwEvkgOUkt5oySLrow12eDnaAZ0tK33TKQU59dIOax1
+   RYvgcq3nr53KA3r+xCJ0bh8wLgLMY8Q0mKy29fRpT3ZfZDb2meyM3IPJR
+   t7ADReR0feJozWFE7+bvCtMy1JBXpBgKNnBSJS61RgMXe9WgWN6RFAaJn
+   A==;
+X-CSE-ConnectionGUID: nFQUsAVZTfa01MC5EqASLg==
+X-CSE-MsgGUID: saeYkH36T+CSkAcSiDvpRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11317"; a="41280262"
+X-IronPort-AV: E=Sophos;i="6.13,211,1732608000"; 
+   d="scan'208";a="41280262"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 22:10:28 -0800
+X-CSE-ConnectionGUID: cTfg7tTBTkCZiKzpKaS5jQ==
+X-CSE-MsgGUID: J4rBks2pSFGnIp2KbEk6xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,211,1732608000"; 
+   d="scan'208";a="105897990"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.114])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2025 22:10:27 -0800
+Subject: [PATCH 0/4] cxl: DPA partition metadata is a mess...
+From: Dan Williams <dan.j.williams@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alejandro Lucero <alucerop@amd.com>, dave.jiang@intel.com
+Date: Thu, 16 Jan 2025 22:10:26 -0800
+Message-ID: <173709422664.753996.4091585899046900035.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3Uaf00YlndZYMAA--.1676S4
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQANAWeJYwMBngAAsc
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvAXoW3KFyDCF1DKrykCFyxWry5XFb_yoW8Gw1xto
-	W3Xa45Xr48JF1fCFyvkwnayr9rGrWUKF4rXF4FkFWqk3W7CwsxX348tan3Ca9xKF1ftFZ8
-	WrWfA343GFZ7AF18n29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
-	UUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-This work defines a new cxl host bridge type (TYPE_CXL_HOST). This
-could be considered as a prototype of an independent cxl host bridge
-which combines gpex features (ecam, mmio windows & irq) and pxb-cxl
-features(CHBCR) at meanwhile.
+As noted in patch3, the pending efforts to add CXL Accelerator (type-2)
+device [1], and Dynamic Capacity (DCD) support [2], tripped on the
+no-longer-fit-for-purpose design in the CXL subsystem for tracking
+device-physical-address (DPA) metadata.
 
-The root bus path of CXL_HOST is "0001:00", that would not affect the
-original pcie host topology. In the previous, the pxb-cxl-host with
-any cxl root ports and cxl endpoint devices would occupy the BDF
-number of the original pcie domain. This new type provide a solution
-to resolve the problem.
+In fact there was no design at all, just a couple of open-coded 'struct
+resource' instances for 'ram' and 'pmem' and a pile of explicit code
+referencing those resources directly.
 
-Also the CXLFixedWindow struct adds a new member 'target_chb' to
-record the target list of CXLHostBridge. And necessary is to adjust
-the logic of 'cxl_cfmws_find_device' and 'cxl_fmws_link_targets' to
-allow different types of cxl host bridge.
+See patch3 for more details on the specific problems that caused, and
+patch4 for the eyesore reduction of making the DPA allocation algorithm
+partition number agnostic.
 
-Move 'cxl_get_hb_cstate' & 'cxl_get_hb_passthrough' from pxb code
-into cxl-host code.
+The motivation with this effort is to make it easier to land the Type-2
+and DCD series.
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Next on the cleanup list is 'enum cxl_decoder_mode' which has little to
+exist after partition info is centralized. That cleanup is left as an
+exercise for the DCD series.
+
+This series passes a cxl-test run at every patch.
+
+[1]: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com
+[2]: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com
+
 ---
- hw/cxl/cxl-host-stubs.c             |   2 +
- hw/cxl/cxl-host.c                   | 220 ++++++++++++++++++++++++++--
- hw/pci-bridge/pci_expander_bridge.c |  20 +--
- include/hw/cxl/cxl.h                |  23 +++
- include/hw/cxl/cxl_component.h      |   4 +-
- include/hw/cxl/cxl_host.h           |   6 +
- 6 files changed, 242 insertions(+), 33 deletions(-)
 
-diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
-index cae4afcdde..aea94933ba 100644
---- a/hw/cxl/cxl-host-stubs.c
-+++ b/hw/cxl/cxl-host-stubs.c
-@@ -11,5 +11,7 @@
- void cxl_fmws_link_targets(CXLState *stat, Error **errp) {};
- void cxl_machine_init(Object *obj, CXLState *state) {};
- void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp) {};
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+                        CXLFixedMemoryWindowOptions *object, Error **errp) {};
- 
- const MemoryRegionOps cfmws_ops;
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index e9f2543c43..81a5948874 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -16,15 +16,37 @@
- #include "qapi/qapi-visit-machine.h"
- #include "hw/cxl/cxl.h"
- #include "hw/cxl/cxl_host.h"
-+#include "hw/irq.h"
- #include "hw/pci/pci_bus.h"
- #include "hw/pci/pci_bridge.h"
- #include "hw/pci/pci_host.h"
- #include "hw/pci/pcie_port.h"
- #include "hw/pci-bridge/pci_expander_bridge.h"
- 
--static void cxl_fixed_memory_window_config(CXLState *cxl_state,
--                                           CXLFixedMemoryWindowOptions *object,
--                                           Error **errp)
-+CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb, int type)
-+{
-+    if (type == 0) {
-+        CXLHost *pxbhost = PXB_CXL_HOST(hb);
-+        return &pxbhost->cxl_cstate;
-+    } else {
-+        CXLHostBridge *cxlhost = CXL_HOST(hb);
-+        return &cxlhost->cxl_cstate;
-+    }
-+}
-+
-+bool cxl_get_hb_passthrough(PCIHostState *hb, int type)
-+{
-+    if (type == 0) {
-+        CXLHost *pxbhost = PXB_CXL_HOST(hb);
-+        return pxbhost->passthrough;
-+    } else {
-+        return false;
-+    }
-+}
-+
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+                                    CXLFixedMemoryWindowOptions *object,
-+                                    Error **errp)
- {
-     ERRP_GUARD();
-     g_autofree CXLFixedWindow *fw = g_malloc0(sizeof(*fw));
-@@ -81,18 +103,24 @@ void cxl_fmws_link_targets(CXLState *cxl_state, Error **errp)
-             int i;
- 
-             for (i = 0; i < fw->num_targets; i++) {
--                Object *o;
-+                Object *pxb_cxl, *cxl_host;
-                 bool ambig;
- 
--                o = object_resolve_path_type(fw->targets[i],
-+                pxb_cxl = object_resolve_path_type(fw->targets[i],
-                                              TYPE_PXB_CXL_DEV,
-                                              &ambig);
--                if (!o) {
--                    error_setg(errp, "Could not resolve CXLFM target %s",
--                               fw->targets[i]);
-+                if (!pxb_cxl) {
-+                    cxl_host = object_resolve_path_type(fw->targets[i],
-+                                             TYPE_CXL_HOST,
-+                                             &ambig);
-+                    if (!cxl_host) {
-+                        error_setg(errp, "Could not resolve CXLFM target %s",
-+                                   fw->targets[i]);
-                     return;
-+                    }
-+                    fw->target_chb[i] = CXL_HOST(cxl_host);
-                 }
--                fw->target_hbs[i] = PXB_CXL_DEV(o);
-+                fw->target_hbs[i] = PXB_CXL_DEV(pxb_cxl);
-             }
-         }
-     }
-@@ -162,23 +190,36 @@ static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
-     uint8_t target;
-     bool target_found;
-     PCIDevice *rp, *d;
-+    int type;
- 
-     /* Address is relative to memory region. Convert to HPA */
-     addr += fw->base;
- 
-     rb_index = (addr / cxl_decode_ig(fw->enc_int_gran)) % fw->num_targets;
--    hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl_host_bridge);
--    if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
--        return NULL;
-+    if (fw->target_chb[rb_index]) {
-+        type = CXL_HOST_BRIDGE_TYPE;
-+        hb = PCI_HOST_BRIDGE(fw->target_chb[rb_index]);
-+        CXLHostBridge *host = fw->target_chb[rb_index];
-+
-+        hb_cstate = &host->cxl_cstate;
-+        cache_mem = hb_cstate->crb.cache_mem_registers;
-+        target_found = cxl_hdm_find_target(cache_mem, addr, &target);
-+        rp = pcie_find_port_by_pn(hb->bus, target);
-+    } else {
-+        type = PXB_CXL_HOST_TYPE;
-+        hb = PCI_HOST_BRIDGE(fw->target_hbs[rb_index]->cxl_host_bridge);
-+        if (!hb || !hb->bus || !pci_bus_is_cxl(hb->bus)) {
-+            return NULL;
-+        }
-     }
- 
--    if (cxl_get_hb_passthrough(hb)) {
-+    if (cxl_get_hb_passthrough(hb, type)) {
-         rp = pcie_find_port_first(hb->bus);
-         if (!rp) {
-             return NULL;
-         }
-     } else {
--        hb_cstate = cxl_get_hb_cstate(hb);
-+        hb_cstate = cxl_get_hb_cstate(hb, type);
-         if (!hb_cstate) {
-             return NULL;
-         }
-@@ -372,3 +413,154 @@ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp)
-         }
-     }
- }
-+
-+static void cxl_host_set_irq(void *opaque, int irq_num, int level)
-+{
-+    CXLHostBridge *host = opaque;
-+
-+    qemu_set_irq(host->irq[irq_num], level);
-+}
-+
-+int cxl_host_set_irq_num(CXLHostBridge *host, int index, int gsi)
-+{
-+    if (index >= CXL_HOST_NUM_IRQS) {
-+        return -EINVAL;
-+    }
-+
-+    host->irq_num[index] = gsi;
-+    return 0;
-+}
-+
-+static PCIINTxRoute cxl_host_route_intx_pin_to_irq(void *opaque, int pin)
-+{
-+    PCIINTxRoute route;
-+    CXLHostBridge *host = opaque;
-+    int gsi = host->irq_num[pin];
-+
-+    route.irq = gsi;
-+    if (gsi < 0) {
-+        route.mode = PCI_INTX_DISABLED;
-+    } else {
-+        route.mode = PCI_INTX_ENABLED;
-+    }
-+
-+    return route;
-+}
-+
-+static const char *cxl_host_root_bus_path(PCIHostState *host_bridge,
-+                                          PCIBus *rootbus)
-+{
-+    return "0001:00";
-+}
-+
-+void cxl_host_hook_up_registers(CXLState *cxl_state, CXLHostBridge *host,
-+                                Error **errp)
-+{
-+    CXLComponentState *cxl_cstate = &host->cxl_cstate;
-+    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
-+    hwaddr offset;
-+
-+    offset = memory_region_size(mr) * cxl_state->next_mr_idx;
-+    if (offset > memory_region_size(&cxl_state->host_mr)) {
-+        error_setg(errp, "Insufficient space for sbsa cxl host register space");
-+        return;
-+    }
-+
-+    memory_region_add_subregion(&cxl_state->host_mr, offset, mr);
-+    cxl_state->next_mr_idx++;
-+}
-+
-+static void cxl_host_reset(CXLHostBridge *host)
-+{
-+    CXLComponentState *cxl_cstate = &host->cxl_cstate;
-+    uint32_t *reg_state = cxl_cstate->crb.cache_mem_registers;
-+    uint32_t *write_msk = cxl_cstate->crb.cache_mem_regs_write_mask;
-+
-+    cxl_component_register_init_common(reg_state, write_msk, CXL2_RC);
-+
-+    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, TARGET_COUNT,
-+                     8);
-+}
-+
-+static void cxl_host_realize(DeviceState *dev, Error **errp)
-+{
-+    SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
-+    CXLHostBridge *host = CXL_HOST(dev);
-+    CXLComponentState *cxl_cstate = &host->cxl_cstate;
-+    struct MemoryRegion *mr = &cxl_cstate->crb.component_registers;
-+    PCIBus *cxlbus;
-+    PCIHostState *pci = PCI_HOST_BRIDGE(dev);
-+    PCIExpressHost *pex = PCIE_HOST_BRIDGE(dev);
-+    int i;
-+
-+    /* CHBCR MMIO init */
-+    cxl_host_reset(host);
-+    cxl_component_register_block_init(OBJECT(dev), cxl_cstate, TYPE_CXL_HOST);
-+    sysbus_init_mmio(sbd, mr);
-+
-+    /* MMFG window init */
-+    pcie_host_mmcfg_init(pex, PCIE_MMCFG_SIZE_MAX);
-+    sysbus_init_mmio(sbd, &pex->mmio);
-+
-+    /* mmio window init */
-+    memory_region_init(&host->io_mmio, OBJECT(host), "cxl_host_mmio",
-+                        UINT64_MAX);
-+
-+    memory_region_init_io(&host->io_mmio_window, OBJECT(host),
-+                              &unassigned_io_ops, OBJECT(host),
-+                              "cxl_host_mmio_window", UINT64_MAX);
-+
-+    memory_region_add_subregion(&host->io_mmio_window, 0, &host->io_mmio);
-+    sysbus_init_mmio(sbd, &host->io_mmio_window);
-+
-+    /* ioport window init, 64K is the legacy size in x86 */
-+    memory_region_init(&host->io_ioport, OBJECT(host), "cxl_host_ioport",
-+                        64 * 1024);
-+
-+    memory_region_init_io(&host->io_ioport_window, OBJECT(host),
-+                              &unassigned_io_ops, OBJECT(host),
-+                              "cxl_host_ioport_window", 64 * 1024);
-+
-+    memory_region_add_subregion(&host->io_ioport_window, 0, &host->io_ioport);
-+    sysbus_init_mmio(sbd, &host->io_ioport_window);
-+
-+    /* PCIe host bridge use 4 legacy IRQ lines */
-+    for (i = 0; i < CXL_HOST_NUM_IRQS; i++) {
-+        sysbus_init_irq(sbd, &host->irq[i]);
-+        host->irq_num[i] = -1;
-+    }
-+
-+    pci->bus = pci_register_root_bus(dev, "cxlhost.0", cxl_host_set_irq,
-+                                 pci_swizzle_map_irq_fn, host, &host->io_mmio,
-+                                 &host->io_ioport, 0, 4, TYPE_CXL_BUS);
-+    cxlbus = pci->bus;
-+    cxlbus->flags |= PCI_BUS_CXL;
-+
-+    pci_bus_set_route_irq_fn(pci->bus, cxl_host_route_intx_pin_to_irq);
-+}
-+
-+static void cxl_host_class_init(ObjectClass *class, void *data)
-+{
-+    DeviceClass *dc = DEVICE_CLASS(class);
-+    PCIHostBridgeClass *hc = PCI_HOST_BRIDGE_CLASS(class);
-+
-+    hc->root_bus_path = cxl_host_root_bus_path;
-+    dc->realize = cxl_host_realize;
-+    dc->desc = "CXL Host Bridge";
-+    set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
-+    dc->fw_name = "cxl";
-+}
-+
-+static const TypeInfo cxl_host_info = {
-+    .name          = TYPE_CXL_HOST,
-+    .parent        = TYPE_PCIE_HOST_BRIDGE,
-+    .instance_size = sizeof(CXLHostBridge),
-+    .class_init    = cxl_host_class_init,
-+};
-+
-+static void cxl_host_register(void)
-+{
-+    type_register_static(&cxl_host_info);
-+}
-+
-+type_init(cxl_host_register)
-diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-index 07d411cff5..2f1b26256b 100644
---- a/hw/pci-bridge/pci_expander_bridge.c
-+++ b/hw/pci-bridge/pci_expander_bridge.c
-@@ -56,20 +56,6 @@ static GList *pxb_dev_list;
- 
- #define TYPE_PXB_HOST "pxb-host"
- 
--CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb)
--{
--    CXLHost *host = PXB_CXL_HOST(hb);
--
--    return &host->cxl_cstate;
--}
--
--bool cxl_get_hb_passthrough(PCIHostState *hb)
--{
--    CXLHost *host = PXB_CXL_HOST(hb);
--
--    return host->passthrough;
--}
--
- static int pxb_bus_num(PCIBus *bus)
- {
-     PXBDev *pxb = PXB_DEV(bus->parent_dev);
-@@ -240,7 +226,7 @@ static void pxb_cxl_host_class_init(ObjectClass *class, void *data)
-  * This is a device to handle the MMIO for a CXL host bridge. It does nothing
-  * else.
-  */
--static const TypeInfo cxl_host_info = {
-+static const TypeInfo pxb_cxl_host_info = {
-     .name          = TYPE_PXB_CXL_HOST,
-     .parent        = TYPE_PCI_HOST_BRIDGE,
-     .instance_size = sizeof(CXLHost),
-@@ -524,7 +510,7 @@ static void pxb_cxl_dev_class_init(ObjectClass *klass, void *data)
-      * vendor, device, class, etc. ids are intentionally left out.
-      */
- 
--    dc->desc = "CXL Host Bridge";
-+    dc->desc = "PXB CXL Host Bridge";
-     device_class_set_props(dc, pxb_cxl_dev_properties);
-     set_bit(DEVICE_CATEGORY_BRIDGE, dc->categories);
- 
-@@ -551,7 +537,7 @@ static void pxb_register_types(void)
-     type_register_static(&pxb_pcie_bus_info);
-     type_register_static(&pxb_cxl_bus_info);
-     type_register_static(&pxb_host_info);
--    type_register_static(&cxl_host_info);
-+    type_register_static(&pxb_cxl_host_info);
-     type_register_static(&pxb_dev_info);
-     type_register_static(&pxb_pcie_dev_info);
-     type_register_static(&pxb_cxl_dev_info);
-diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
-index 75e47b6864..548a1bd28c 100644
---- a/include/hw/cxl/cxl.h
-+++ b/include/hw/cxl/cxl.h
-@@ -17,6 +17,7 @@
- #include "cxl_pci.h"
- #include "cxl_component.h"
- #include "cxl_device.h"
-+#include "hw/pci/pcie_host.h"
- 
- #define CXL_CACHE_LINE_SIZE 64
- #define CXL_COMPONENT_REG_BAR_IDX 0
-@@ -24,12 +25,34 @@
- 
- #define CXL_WINDOW_MAX 10
- 
-+#define PXB_CXL_HOST_TYPE 0
-+#define CXL_HOST_BRIDGE_TYPE 1
-+
-+#define TYPE_CXL_HOST "cxl-host"
-+OBJECT_DECLARE_SIMPLE_TYPE(CXLHostBridge, CXL_HOST)
-+
-+#define CXL_HOST_NUM_IRQS 4
-+
- typedef struct PXBCXLDev PXBCXLDev;
- 
-+typedef struct CXLHostBridge {
-+    PCIExpressHost parent_obj;
-+
-+    CXLComponentState cxl_cstate;
-+
-+    MemoryRegion io_ioport;
-+    MemoryRegion io_mmio;
-+    MemoryRegion io_ioport_window;
-+    MemoryRegion io_mmio_window;
-+    qemu_irq irq[CXL_HOST_NUM_IRQS];
-+    int irq_num[CXL_HOST_NUM_IRQS];
-+} CXLHostBridge;
-+
- typedef struct CXLFixedWindow {
-     uint64_t size;
-     char **targets;
-     PXBCXLDev *target_hbs[16];
-+    CXLHostBridge *target_chb[16];
-     uint8_t num_targets;
-     uint8_t enc_int_ways;
-     uint8_t enc_int_gran;
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index 945ee6ffd0..953521d601 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -270,8 +270,8 @@ uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
- 
- hwaddr cxl_decode_ig(int ig);
- 
--CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb);
--bool cxl_get_hb_passthrough(PCIHostState *hb);
-+CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb, int type);
-+bool cxl_get_hb_passthrough(PCIHostState *hb, int type);
- 
- bool cxl_doe_cdat_init(CXLComponentState *cxl_cstate, Error **errp);
- void cxl_doe_cdat_release(CXLComponentState *cxl_cstate);
-diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
-index c9bc9c7c50..d6d915141a 100644
---- a/include/hw/cxl/cxl_host.h
-+++ b/include/hw/cxl/cxl_host.h
-@@ -16,6 +16,12 @@
- void cxl_machine_init(Object *obj, CXLState *state);
- void cxl_fmws_link_targets(CXLState *stat, Error **errp);
- void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
-+void cxl_fixed_memory_window_config(CXLState *cxl_state,
-+                        CXLFixedMemoryWindowOptions *object, Error **errp);
-+
-+int cxl_host_set_irq_num(CXLHostBridge *host, int index, int gsi);
-+void cxl_host_hook_up_registers(CXLState *cxl_state, CXLHostBridge *host,
-+                                Error **errp);
- 
- extern const MemoryRegionOps cfmws_ops;
- 
--- 
-2.34.1
+Dan Williams (4):
+      cxl: Remove the CXL_DECODER_MIXED mistake
+      cxl: Introduce to_{ram,pmem}_{res,perf}() helpers
+      cxl: Introduce 'struct cxl_dpa_partition' and 'struct cxl_range_info'
+      cxl: Make cxl_dpa_alloc() DPA partition number agnostic
 
+
+ drivers/cxl/core/cdat.c      |   63 ++++++-----
+ drivers/cxl/core/hdm.c       |  244 +++++++++++++++++++++++++++++++++---------
+ drivers/cxl/core/mbox.c      |   84 ++++++--------
+ drivers/cxl/core/memdev.c    |   42 ++++---
+ drivers/cxl/core/region.c    |   22 +---
+ drivers/cxl/cxl.h            |    4 -
+ drivers/cxl/cxlmem.h         |   94 ++++++++++++++--
+ drivers/cxl/mem.c            |    2 
+ drivers/cxl/pci.c            |    7 +
+ tools/testing/cxl/test/cxl.c |   22 ++--
+ tools/testing/cxl/test/mem.c |    7 +
+ 11 files changed, 396 insertions(+), 195 deletions(-)
+
+base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
