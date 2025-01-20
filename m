@@ -1,67 +1,65 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2059.outbound.protection.outlook.com [40.107.236.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E191B6CEC
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jan 2025 12:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713C91B86F7
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jan 2025 12:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737375890; cv=fail; b=lSfq1F2Yc91NIOPIZh1j9ADuWYLw4lVWYHlV4AHCmYEZwC73rfZ09Xbu+Tsp8vdct0j9Xl19Mg9jERPbXu4M+jBfDJ2MXa7gctJREnhcZxuuZZXRfMQhbcPEjYdFjshOnf4JgdduzrsHmmyMY7cdwtKekqoGmjyhCtgYIrsQdno=
+	t=1737376795; cv=fail; b=MhRWx0WxOhpwUVRJKyhSjY6OudW8g4og7gCO2bC9lFDidQkbwndEsdtWPzDBMnVS3WrnnySwL2IPNtp1c4Be1hsyDoMvYF424ke8xh1s7GlHpNXU+3oFgrkM9xIZ2HoPosToFhDj9AUH61mJJTNeq08L//gYb/r8mOYmq9XOxz4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737375890; c=relaxed/simple;
-	bh=LXADlfuVgBJa9XP95ROg74VJbpMYxN5+Oc5++5ko+6s=;
+	s=arc-20240116; t=1737376795; c=relaxed/simple;
+	bh=tHH+LidmaCNgOp+ohi2gcBzLHKBK//K3cYXZhTtBDrE=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=M17jruiMYtqLQMiQ7hbXrOww2Sx/uZC6udTn0hHDOpbIJ9zBrf7XuyW2cmhRCd6FNhEkNHATNl+SzeQST3mLhsq4OyJ1plzHY/Q+d/HWCjr3rEv6LTPBbjw4ogBSiV6j78xTrJhq2wLYcTbp/9kjzFUN5kSid9i+jFOXHO69zf8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E20g6JG6; arc=fail smtp.client-ip=40.107.243.42
+	 Content-Type:MIME-Version; b=nmR0F9FOJAsRCXAI4tqCWxNU+rG+5Z+YI+qSiY/BLbwua2YKGZ2IH1Cs1lwEEdWHYos0te0on8xO8Np5tmJkJULpsQ+BftdVVeaz+YLyNoRe46HAL5jlZtpZFBXtLIFpU8LYH0IIw6vyt1c6ql7o+JfogpQYDQzWGK1vO8x6m4k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QK/aBUW8; arc=fail smtp.client-ip=40.107.236.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E20g6JG6"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QK/aBUW8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VScKCRpVul1byT9cxhnlA37gOwLvdhvNF8gLGdygGNjVZJYo3pZNcsdNtRRE1y3y2FmW5zORX3OoxBGix4DF1p79GNHvo59ZEetyyMDLFyu78y+GdPCEyf2cm2d3vM0cgu60faTml0YKQ1/OpdYzMOu5jMHNBmwD8r/T20iJORBwRLqffhDq1e+fN8Ljx5AdiM1pBS7ZVuY+N9bKqadDZxXpzXYfMo+vzMSPSu+EzH/gs4E5ASSa+v+I2/rh00zQAoMPQsSZ7/b8jMRd0BSiD8YlZmDi+0W/qsiaYe3klLxx65dHuy1RRPUG88VFtXcqHQC6jFI8cdH0I4MSSgLWig==
+ b=cK+mviPjvWnCbMrTgF3x7irPmEX0k31IxA/ljYscce3hOhoKVsnNbo1Aa5kDAnCF1p1svh0uyvEJVPgYsIAPLfK936dStMZTdTwMgCP6nyk8QADLZT8cwTuUIHop9JBH/NvHnIZpUXGeow7gFafiyFPaGN2T7l1Xqy51SAY5VINqf9aoAcS4npEKVb77r/9osB0/mooASZg7t3dkmPY3Hi5yDzLs1+W9dr+NAkyUqEXRZbutp+QLcTx+t1Mg/BCFRSsce/wum7VhmFWSmwVRW5DZiYa17/fkjhqDH/KJwyvIY8YdUlrWnyXd3Ygh0DiSJ7VR8R2MfilsLzIgm2FrZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3d6Y1M6Gb6tzt1/4hb2ZINB8uFSKRkHucenBFgs1MPY=;
- b=UMtHgk5T0AjFwNUEZXtYpF8/Te19/g/MBSqj4bNxUacbtH9JUXCAnyzuu/MSsnWPN2bksXvs0t6QAt73V6IPpAn6+HThwPsyoWU6akI1BfFtaT7BxbQEw2d9GkMWvyKZi1OuOHqsaAB/YN0X1S/HHWGi+D1myB+GmGOcifqoBejtlvzkuKA/UCWTILJHSIiXw09Pkb/y4xHXhGD0njS3j1Lw5NjMRDdTEsLMtG4YXP15SDcVQ+7vEIYtjcWbHP6hvjkG4zz4X/Ru/lYJb/Gb7fFJgS5MKlnLgmC6dcBotYkvGheyxgKgEXnNlRQCf5HcRBpPqL/kXXXvVMFuGMoRUQ==
+ bh=IfsSIDpPJJZNA66FVOmgsdPREs1C7LDQMavpkPLw7VY=;
+ b=wKgAS8GuQvYyCGzD91E2QY4801J3a2I2tpQ/WNpOki4zFbHiGWs5l5zA7yJmXGwEk1SbV4dbfEGYvkQ2WNKLbTo8of3MgQCFCY5GQ2HDbrQTutKG2hnopkJ+8yj1kxxG0Cc9f936g90lL8v5GNeMbL1n5Y3VejkNdn8Nd0iGBf3qnI8gaxUEq+7WfHFqcu0mFH9sqnK9jTyBLF5FidZ03KuLVzuwqwv/ixPnviinvDEwfZu2mmyFCr84gNLTreS1taFjJEVDhLGlTcvHNXjmPtHIguDvjLS1veAsDR77ujzX5So4Xm2Tf1xA35vFge8eATrK1Pl0WRRZQhjZ5Dxl8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3d6Y1M6Gb6tzt1/4hb2ZINB8uFSKRkHucenBFgs1MPY=;
- b=E20g6JG6+7W/O18hRTp9CHRWzJCQ1jwwlGVt2WfiJKdJwipACFLbM9F+ZVs59ErqVAtivW4M6c1kO5Q1Re8ZX+Ux+mXhclHi3zRpbI4no6iWLVHo+Wuac1iWoLxPRbfaWOrT8xRNoE3KWtT5RfhQvOoRuDYS/Mwtnbny608uoGg=
+ bh=IfsSIDpPJJZNA66FVOmgsdPREs1C7LDQMavpkPLw7VY=;
+ b=QK/aBUW8/PAO1TBRZ5f54EdknSCVfRSihHOdRNBH5CstOMVmuJoKdNDatJ/GgZYWtvkGuUz+fNvZ9EafNAcQZ/eWgIMcEugqA5y2lwb6+Q/fsNJ5Ll0ho6bPReIgggPazAVtLK7afF9ZQO1e+dY73Cz4gBzMl1aZOkzD4Ey3Z0M=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by LV3PR12MB9117.namprd12.prod.outlook.com (2603:10b6:408:195::10) with
+ by IA0PR12MB7721.namprd12.prod.outlook.com (2603:10b6:208:433::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.20; Mon, 20 Jan
- 2025 12:24:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.21; Mon, 20 Jan
+ 2025 12:39:51 +0000
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8356.017; Mon, 20 Jan 2025
- 12:24:45 +0000
-Message-ID: <30ba3e11-0ba7-6bc6-38ac-1ba0c577f651@amd.com>
-Date: Mon, 20 Jan 2025 12:24:41 +0000
+ 12:39:49 +0000
+Message-ID: <76174723-c8b0-8937-781c-3e46fcf6c0b4@amd.com>
+Date: Mon, 20 Jan 2025 12:39:45 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH 3/4] cxl: Introduce 'struct cxl_dpa_partition' and 'struct
- cxl_range_info'
+Subject: Re: [PATCH 4/4] cxl: Make cxl_dpa_alloc() DPA partition number
+ agnostic
 Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
- Ira Weiny <ira.weiny@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
 References: <173709422664.753996.4091585899046900035.stgit@dwillia2-xfh.jf.intel.com>
- <173709424415.753996.10761098712604763500.stgit@dwillia2-xfh.jf.intel.com>
- <20250117105254.00001dd4@huawei.com>
- <678aa0381324e_20fa2942a@dwillia2-xfh.jf.intel.com.notmuch>
+ <173709425022.753996.16667967718406367188.stgit@dwillia2-xfh.jf.intel.com>
+ <53ef6364-4523-05bc-4fa1-8a2110f5fe54@amd.com>
+ <678ac4316a7f5_20f329456@dwillia2-xfh.jf.intel.com.notmuch>
 From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <678aa0381324e_20fa2942a@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <678ac4316a7f5_20f329456@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB6PR0301CA0076.eurprd03.prod.outlook.com
- (2603:10a6:6:30::23) To DM6PR12MB4202.namprd12.prod.outlook.com
+X-ClientProxiedBy: DB8PR06CA0044.eurprd06.prod.outlook.com
+ (2603:10a6:10:120::18) To DM6PR12MB4202.namprd12.prod.outlook.com
  (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -70,413 +68,158 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|LV3PR12MB9117:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19156947-2d68-481c-bd68-08dd394d6cb6
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA0PR12MB7721:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33ef004b-6196-413f-db87-08dd394f876a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ajN1cHN5WUgwSzFEYjlCaGkxSnd1azNDWmpLMUFTMnEySmtHR3pEQ0NpWXF0?=
- =?utf-8?B?aGYvWjZPcm5yYkJpaTV0UWc4aCtoT0dWdUZNWlBBdC9ITFcwSlRzdk5kaFBH?=
- =?utf-8?B?VngyMk9Wb0kxWWM2VDcrQUc1cEF2RVVrZlFmbGQ1Yml0TzlMdW0rQjlTSjBt?=
- =?utf-8?B?OE5iQU81Rmtwd3BvZ2Z3SFZDc2lsUVpKdjNJYlJoNTBpRWJuUk15dWxjYzhG?=
- =?utf-8?B?cGs5S0FTbTZqRnhGeW01eVJMaE15MWNvRUp2VWtTNHYxemFhVFBseHVjSUg2?=
- =?utf-8?B?ZW8xYkVRa3JiQWhnOTl6TmlpQmFIeGorRjVSUE5VbmQ2UjBnVFpZRVh0d2JP?=
- =?utf-8?B?dHVmVkh1aFc3eVRHVUpFT2JMSVRUSWc5RnhoTm0rSXdIc1oxZURnTlpucmZp?=
- =?utf-8?B?ZDlyLzdHV1VSeVloOHkrUHlZTkZ0QnFaL3lKeVc4SXNqano5SFdBM2I1QVJS?=
- =?utf-8?B?M3ZoeStrY2VoSWl3MUt2UU9JRlByNk1zMlRPL3cxWlNCWXhpcE1TY0NqUytG?=
- =?utf-8?B?TGtLTXZIaVoyN2gxYnFVSWtoeVQ4OCs4ZytadWJuK1NWcEtJYzlobnRZNDgr?=
- =?utf-8?B?S0ZhS00rWDlLUHJDREdhVHVUVzJITWp3dGdDR1plbkJ0Mk81WVdjcEpDWUJ6?=
- =?utf-8?B?aWlHTFVaU2JTYXcyY3h3dEh5aEJ0b0dxZ3JHcWZYUGdNNXFoZ09qTzh2eHdN?=
- =?utf-8?B?cWN2SUVDSkNvaGg1WkhueXpzVFNFSmZORWdpcEZ0NlhpeG83V2pFQ1RwdHlr?=
- =?utf-8?B?QnJJelFVTFo3UHVZM1hNQ2txUXU2L2NqcVNkT2lMUDFSNFAwQTVLUW1wTEFv?=
- =?utf-8?B?ZEFpMThyL01IU2x6TlpadENSSllyQ3hHOTFnUjFkUlNFWXgvdE91RjYzZEJ1?=
- =?utf-8?B?Zmd1TE0xODd5ZExZRldNK3U2TUQ3NmtkUWR5VHhwbHBuTHpkMC9LcmdvTVBM?=
- =?utf-8?B?Vk9FeG1wUWhTU3ErbGRZTSs2K3hKTDBKQThVYUtibitGSURwL3EzRy8zMUt0?=
- =?utf-8?B?bENuK2phbWxKQk8xWERRUWlKSXJFWDBibWdmVGF5L09QYVE1TzJxQjRzd2Jl?=
- =?utf-8?B?ZkU0Qy9ybUxoQm9rQk5COFFHVHp6QTFGN3BWSG5adzBlM3VSVVIxQ1N5a25h?=
- =?utf-8?B?MFRid0JtcEYrUUYrTTIwaHJBV0xrTHhwNm80VW1sdXFPVktaR0M1VEdRT2RE?=
- =?utf-8?B?NWJwbTBHMnQ5cU80RHg1T09UZngwQXNqTjFRRWVFbGMvWDdKNTQ2ZXhHUGtK?=
- =?utf-8?B?WjkydkVMMXRqd05nYUQ3Uk1HT3RlMytic3lPd1lDNm1lblAzK2dveXVDUFpu?=
- =?utf-8?B?ZGpLZktKYnBiaFFhZlRMR2NtWUVDOS90UURSd25GOGNURnRYazVPbUNqbFFN?=
- =?utf-8?B?TWZsTi9XeERPTWcxblZJQkdMeEplRHp5MGFJZ1k3Qm5yRXFibE1ST1B1TlR0?=
- =?utf-8?B?c0FGaVNNc20yMEJKVVFQdms2WjVQck0vSTZwYTVUc3hxbmE5SEJuR0RWOUpr?=
- =?utf-8?B?aEpNQWFlMHV2Sk9tVHlHSnFORjRKd00wUWtpdU5qYXY1cm13dUFUbHAySjMr?=
- =?utf-8?B?VDk3S0wrOEE5TWc5TytraXdWOXBGTFoyeG5CWUI2WTVRUHd6T3pMWTIxSWxi?=
- =?utf-8?B?MndpVmxIdFZEckNsK0w0WkVHbUo5L3RYblo3NDNuRStzSG9ORU1GbzlONGEz?=
- =?utf-8?B?MDl3d0s4VU50ZDNvcHo5TFV6MWEzM0R6aXEyRjJtT242WlpBWU1Td1ZTYXBC?=
- =?utf-8?B?d0tlYmhkN2x0dTM3dkhRZHVDM1ZLQ2FlRW9HWEEyc3dzNVNnYWIzR3BhQTlr?=
- =?utf-8?B?R1Jpa1dsNjUyRUFNa3JWdz09?=
+	=?utf-8?B?bkNCT1lHUXZVK0phc1Uwam9nQlpwMlNLMkZBU2UrQ1hLN1FQd3JFMDNVb2VE?=
+ =?utf-8?B?OXRKQmNlUGVmM280NGtBdENQK1JkakVkQUJsU0h5TTlvdjBObWdLNitLZHNn?=
+ =?utf-8?B?N0pIR1p3T1NkMmlqYU9QTXhjbWE3ZVZHRlJ0WU54Z0RCbC9RYzZ5MldjRHl5?=
+ =?utf-8?B?c3c4UGVEa04vUzdKY1RZMTNxMUd1MWUvOFZjN2pNQ1E0SHhWZGZiczBCOTlu?=
+ =?utf-8?B?WjVWUjJtQmZuMmtUM28zeUc1K3psRVB1WW5SMjZMeUVJUVh4MFlJSFlhS0Vt?=
+ =?utf-8?B?WlhaOUdhYUpyMURneUYyanJ6a29xSituMnJGVlUzWjlCaS85Z1lSY2Vhc1Np?=
+ =?utf-8?B?R1oxNnhVY05aalN3dDZYSVBRN3NYRElWdmc0UmZ4ZnlxU0kvNU5oOFFpb3R5?=
+ =?utf-8?B?TmM3dlA3aFlIMk5kRFFTSDFCcDFPRW90dDFtNzhJZVBzV091ZGFTL3I5dlRp?=
+ =?utf-8?B?L25LMHpmaVlqWjlnTkVVNUl4ZFhNaTBlYU9UbzlabTZ3UTBJQzVsWHU5MkZI?=
+ =?utf-8?B?eUFUb2hkUUZUUFl1dXdJSkVSdG5OSGpPelovU00waHdPRmNhaUY4eDZPYkZI?=
+ =?utf-8?B?eWh3VmhGU3ExbWNPdlN2WjNabXNUSzI4NW5mQVpleEdxZjZXc2NHM3Zxdml4?=
+ =?utf-8?B?ZFFwRHRBS0liMEIzWTVHRVMwbWwrWGRaOHpITThqNnpia0VTYzdRaUZjc1ZS?=
+ =?utf-8?B?LzBVVjQ1L2c2K2xhbkR0RkNMbTBSbE1SYlFwVlVseVV3QnVkSnJQeWtzSFhS?=
+ =?utf-8?B?YWw4N3B0Z2I0WFZNMFJMWHpIZE4wRXFQMVBGaldUSTZjNUFiSGR0eGNPLzJr?=
+ =?utf-8?B?NzR2UGlBVHZSdEtWb3B6S1YxMjAxWC9pV0oreHBZOEJzZE4vTS91VXAvdjNx?=
+ =?utf-8?B?UWNlU0V2ZUpGUSsvYmY0blV1ZnJ0VEJ3bHlxZEFGd0Fpb1ZQNERBZlE3K1Q2?=
+ =?utf-8?B?R0djWk9IQ2pMMERva1BhejhSdnZlajFMODdLZktOMnRXVXlSamNUOVdueTkw?=
+ =?utf-8?B?SGNrd1dCc1BpMXRFZjdxQW80S1R4bDcwaVdEaTdlc2pyQWwvVFdkM1Q0QW5O?=
+ =?utf-8?B?cGxBRWdmZ3JoSng1aFluMDlZQTRvdHhHMVUrZjVXY2RaK0xRdGZuam1ha2kv?=
+ =?utf-8?B?MnY2OG5vN3FJL0xjQ3BzK1ZielQ0RjU4UVI2SVNlK3JYUy9JQ2lhdk5NZnpO?=
+ =?utf-8?B?dlhPM2NHVTVXWmNRK200a21YNEcxRVk2Mk9rdGdTb3RWSm9lTDJtY3VNOFJw?=
+ =?utf-8?B?akplc2t3TDB4dGw3UDZoNWVlQkJMU3IzWmVFQkNrZWZPT3FobGxYaVUxckxa?=
+ =?utf-8?B?c1k2Y3lqOFlaTnZtRzgycUdmVWZJQjZkMnhIQlpVeDFBU2NZZmhqNzBGZ1cy?=
+ =?utf-8?B?c1hxaXhQSEtaMzRKc0dtQmJJME0xeWpaZW81dERxNlhEMW8xcWdDNWNrK1Ir?=
+ =?utf-8?B?VUs4TFFwd0VqeDY0MWF6QlJYelV0bktHVThZdko0ek01MVZpWUg5c1ZYVThq?=
+ =?utf-8?B?bU8yMWEyVlA2MDVFMGdFaEliR0VydTN2anRoWVFOdVFEalJXMmR5MUtRVTFY?=
+ =?utf-8?B?WXVRYW5lTXFwM2F0eXlFelBpaFJwNGx6ZGk0S1RITXg5WUhqQmc1UDNjVVlJ?=
+ =?utf-8?B?N3hBZkt0amQ5ZnZTMnZQOWNaS2w4czhoRUxrRGhFYW0zODhpRUxpNmVncVdM?=
+ =?utf-8?B?L3lqeGJvaVRhWHVydUx6UUZwRXBoSDBsNEhYRGx1SWM2dUhveTB6WTRWRVhS?=
+ =?utf-8?B?bXB4ZytDQlhOanR6SnBsaFo2M01IdkJsbFY4UGFyYWFSWEx3RWUrcTNBVm50?=
+ =?utf-8?B?K2hXbDZwVjF2VnduMnNyZHkrdG1rUFUrWDM2ZThkakoxd2NzcWZ4VElxdzlm?=
+ =?utf-8?Q?niq5E7V/bpGpA?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VFptdU9ncDB5b0ZIdDJPWm9iOXNGNjVvWitKZnRPNHdEdDNtd0VCaWp0VEVY?=
- =?utf-8?B?NXNzaGlmaC9rYnVIN0FMaUp5NjBZSlNIbCs2Wlp3ZXRESDMzZ01meXZHUDZh?=
- =?utf-8?B?NExrS0pvTVVYaVRHRjV2NUw0T3cwQ3pyVVNBU2Evb3RLVkFGcnVlamVhbUs0?=
- =?utf-8?B?ZXc5VGtHelFudnhnTjJNdjM0MDZQNUZoUWJseGdPeU1YWS9hYmlJZ3JadWFG?=
- =?utf-8?B?TWNSRGRBSHFmSXczcHJZSDY4UXJwM2I5bS9vWmpsODFUYk9idmZWOVQ5VG9N?=
- =?utf-8?B?WWV2ZEh1eUNMcDVtOXc2RXlvakRuUnZNZ0R5Skh5OWRzRnNTMGxuYi9RdWU5?=
- =?utf-8?B?QzVBN1NHdEVmbi8zYjRDVXQ1TUQwZlA3eGQxcjZPVURrU0xROXFSc2dZZFdV?=
- =?utf-8?B?Z2wxQ2lpWGVscUNlVVJrY01WbjFNRUJZUytjWkhkdTNxY2s2MHFhRkYrWWU5?=
- =?utf-8?B?SjlTTUZ6VjFOUncrWjhRWkNuME82MzgxZWJnQi9zOE1vSTFiQlZhNTMxWm5H?=
- =?utf-8?B?UEU2NmluYTBscGdGK09CMk42UjQ1VHlnOXY4SC9sMTdxbFpPNXRBNHh2Wi9E?=
- =?utf-8?B?bFF5WEN4a2dpcmhmRGlFZGdONk01Rjg1bCtWQjA0R3NlQU9ZMTVVOVJFVFlE?=
- =?utf-8?B?a2w0ejlPNHV0dWF2Wk9EZk9GSTNUbUJBdXNzZ25aRHUxN3FubXZyZlpWRHhl?=
- =?utf-8?B?VkdISlRuWmFoQnUweXZObTNLZjBzNFd0eEJzRk5TS2VNdUhLaHY0dXVxd3ZJ?=
- =?utf-8?B?eFZhUkRmQjhIT1A2Y2VsYjlwTWcxNTh6Z3FmUFNRVFlQZjFtYmUvQVpaOFJt?=
- =?utf-8?B?RjNsams2MFgwRTdwZVNuTE43MVZpaDV1VzF6amFKYUZlNDJ5dTNrTVU5Z0dw?=
- =?utf-8?B?N1dQRlc2dCtERnlqMWtvUVUydjIxY2pyZjJpM0V3S2E5dkJYKzN2U2tjSUxx?=
- =?utf-8?B?V2hJaWxRZjJYbFVWRDNjbUdhYU9MbVR1cDBQczNQcFZvK3dPc0JWZy9oOWdp?=
- =?utf-8?B?REt0d2pibllWdFRPM1Q0aDJCWngwamhQQUFPM0k5SkhyTEdxY2tZMFdRN1N3?=
- =?utf-8?B?cllDQ2NDTldjNnRuclNmbU9BSkdzd3NjaFVrVS9GdHR0RUxWQ3RPbGU2YTM5?=
- =?utf-8?B?L2tBZWlyV2pycnUyck55Uk9EQUFESi9wK0MzT0FONEhLVjVwZ09Dd1NqVzhw?=
- =?utf-8?B?UE1CdlNjWURYbmZhbkZYd25nQUlhSlRVV1ZTTWJQYjM0bFZJSVlnQk81UW5Q?=
- =?utf-8?B?Lzd0SFRmSUVQUmxMbzJwOGdnSnduVmFtVHdpL1VGREJGZXl4M20zY2Fnb2tj?=
- =?utf-8?B?NGFmWmowbDJOaVYwZVZRTERPZ1h6ck5DdjNEQlVJejJVTDBrZ0szTHh3aTNB?=
- =?utf-8?B?RjhzTDdCWUtZRVZMZnZHWTczMGpSUU90ZW5qRkRTZ3RrWWJlL0VGVGw4L0t0?=
- =?utf-8?B?T1NJRU5FUnJjYzlqWS9ranhmc201REt3Zi96Z2x3c2dhOUMyNFJmQ21UaHUw?=
- =?utf-8?B?VDhDRGIwR0FOTjlLZWV0SmxtZkZnaGpBdXJJVjNIOG80UHNheGYrejIxWFpJ?=
- =?utf-8?B?M3hzNEQzUjd0V2tESzBsdWs2UlFSaW5rMHVKSHdXbzNMbU9DRFFxY1lsZlVX?=
- =?utf-8?B?VkJ0OHBjamVZTFFYZjM2dFRlckUwbWZ3cjNaeEZFaVRKQzBZRnRmQmdMc3l3?=
- =?utf-8?B?MlVlenVEbjl3MkJZRHl4cEFBNUh5NHpDK1p3aDRYTjFTSEM4cUdFSTl6a1Zz?=
- =?utf-8?B?WVhiek1DWEdZMWhkc05sL0I0WHFWbzM2OTFyTVdKNGxrbDFoNlFUVVdqMEpr?=
- =?utf-8?B?TjNBbUdKdmVNVWdGbG5ISmdLU3pQOVgxQXdXWXpRSGljNFVWSDY0QlAwamg4?=
- =?utf-8?B?SklMcFJhekxoNDJCS2Q3OGRzbkdHejdQd1NSQS9JNW1zdGNZYnArTm1VVmVn?=
- =?utf-8?B?UjZGdWNoZEpwQlRKOVN6cmNBYnU5aTE0ZGZIM3lqR3krWEVyK2F1NEZ5NUZi?=
- =?utf-8?B?NFVjSzM0VjJ3cFRUcnF2QVB6eDg1Wk5Sd2RUR2l3Y3pOcnIydnl5anhGaTNp?=
- =?utf-8?B?TWNUdWwvWTh4SFlEUFY3YUQ3MGt1QytsWjJVT2JYRVNoQWZoZjdoZGJ2bUdw?=
- =?utf-8?Q?Xs1BV02lXssOaGRkv9Fa32QM9?=
+	=?utf-8?B?c0VnRnNXL0xFQTFvN0ZVdHhwcWdoRGNFb3VnTkpaSTZxRkh5ai9uTkJyc2Qz?=
+ =?utf-8?B?SW1GQmdWamp3V0hLTFJqeXFVU2lIQmpMN0dnVDNvOTY5amFZN0tscUpTSndy?=
+ =?utf-8?B?Q0Zzc0o1d1lDOUQ4eEl6cTV2SDF1WWl2YnZQZmhNVWNHVHVoeHBCejNyMlhM?=
+ =?utf-8?B?RUdZWEw5clpxc1JvS3Z4OVpscXJpSG0weGg4ZFdBTWYwd2ROS3VlRG1sQTd1?=
+ =?utf-8?B?SStGTndHYWdMMXo1YnNEOW5HMHFPQngwR2JDaGJBTld0d3FzcWlzQWcvQm5v?=
+ =?utf-8?B?ZkpDMnR4L0tPdGlEMUFqWUEvbDlVTHpMd29kSzRFbEhSMDhJTGduemg2SXhP?=
+ =?utf-8?B?d3JpNXFmY09zd1ZPcEpHR2xrT1NaNUgySGw0SFkrLzQyRnFxY0Qya2MxTHBY?=
+ =?utf-8?B?bklpM1NTdGlHRjVyS2dtY3IxUzh5emMrc1Yvd3Fia1ZtNFNZKzFHczJLTStJ?=
+ =?utf-8?B?b1JkdTJlOVlLcDU5WGY2Wlp6MXR2MzBQY1M3Q29iR3hHYVlKdk1qRjFZd3Iw?=
+ =?utf-8?B?NENuc1lzY1k4MlZsdEl2aHZ6Nkp3NDlsdy9RRUFvdERCOW4xS1poVUd2SVlE?=
+ =?utf-8?B?QlBISXBTMkcrQkZtZzVyRXBpUGxQUzUyVkNhY2YyN2I2NHMxZDVWS1VXOU5Q?=
+ =?utf-8?B?L3F1eFEvamQ0VUJXUjNCbURMdlpBYTZlSHZEVk1HM1dBaDNqMThSMCs2NjAy?=
+ =?utf-8?B?cm1UMDNKSjJWTDNOZzMvQi8zcEZvVGM2OVhtL0hFQWdRMmFWS3NBay9tSTlJ?=
+ =?utf-8?B?RjJuNmljazRPU0Q4M1U1Zk9VVStUdFdCNmV2KytzSzRZZmtFMGZCOHJTUkNK?=
+ =?utf-8?B?dVVNT1QvNlgyNWxUbGRjazJwUWVqM3A4M1N2SFlOdUV5UmxwT1FVOTkybkhM?=
+ =?utf-8?B?Vlpad080VXczTy9VSUFrMW5YNUxlR3lLQXl3NG9ycitZYkkzYjR0VVdCWWhY?=
+ =?utf-8?B?SlhrNENVY0ZwakpobkdPQVpDLzZLNW41TS8rOVRGSXBlNmdnZDZma2s4T3o4?=
+ =?utf-8?B?cjJPdU1QT1FYTDVNTWs1MEZmZmVqT0p1Z29LSGxVb0ovSGYvbnB3UFF2NTVL?=
+ =?utf-8?B?aTJnMUh5aHBUNkVEc29PQjQzS0lvT2x2TVJCOWJCcktKdFo2Y1RTYTA3TExk?=
+ =?utf-8?B?MjZaSDNZMjVjQ3dCSk8xSlV1ejRUMGNVd0g2ek54U09Mc0xrNG9mbmpQWlF4?=
+ =?utf-8?B?dFJFOWxYenNVNk5pWFp2QW92K0hCZmdWS3JzZUJPcm5pVmp4NFk4ZTF5ejV6?=
+ =?utf-8?B?anh6cTgrZ0hPL1VqcFJGWlB6RjlHNTlhd01BTzhZbUdUbU9ORVJFY21weUxN?=
+ =?utf-8?B?dnM5NG10cjd3a3VUTzk0Q1VBSkJ5Wkw1WVV4bXN1cVVCdExtZ1pYNHpGNUlJ?=
+ =?utf-8?B?N3pTN0t5dFFIMXhMMFRiOERaeDMyTXRRREhwMnd4YmFsZUtRTm9KaHEzLzZH?=
+ =?utf-8?B?NHI3dUUrNXVPdkZzdGdwWVBlM3hJT1VLbThzMTR3NS9hUDVoRFI4VjlOV1Jz?=
+ =?utf-8?B?WUV2cm1jVk9yaEJPS3RTdytqMEN3MC9IRUpCSDNRVEszaG5USTVGR0NMeTF5?=
+ =?utf-8?B?dDFGK0RoUzRVMXJ2eHk3SW5Kb3lrc1EzbnZvakVzdktDYjFET0J1eUpUSFpE?=
+ =?utf-8?B?WEsxYktNTTRKUnIyZUlyTndqOWR6U0J0QlRlaTF3NUorUFRGMGhwTS9WVlc4?=
+ =?utf-8?B?MGhJTHptVzFHQmU3Z0ppRldTUzF6MTNJckFNazltdnU4QnoydzJCOS9Jb3Br?=
+ =?utf-8?B?ZHJMNS94dStxT1lRakFwNmtTeExwdllrcWZ5djVodk1MZ2lHMDNOMFV2Ym91?=
+ =?utf-8?B?b040VVhPNUE4T3Jrb1dPY2QwUzJsNUlIQXlDWlhNT1FPTGJlMlVmblRmc0VG?=
+ =?utf-8?B?blI4RUZ3RXE1Z0ZhMmFuMVRXT0d1Y2QvaXFXVEtndDlWRjNQK01VNUtLMnVT?=
+ =?utf-8?B?YXo5dDNyZUNaNkhOOGVWRmNzM2l2dE9EbjhuQWNrNnVGdklkYUV5b3pOcmNF?=
+ =?utf-8?B?RVlFZGJTdXRVQ0Z4R01DeUsrV1BlS09ITitvTGNEbjVGcVpYMEduYjZQQVNF?=
+ =?utf-8?B?by9WdmZwQXZxajJ1b2tkTnduSDkySEFkRDF4OFpVbnNtWnVweFdEbE5hc1ZS?=
+ =?utf-8?Q?RvF5xTa0GVDrcV7oHfi/DX0J9?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19156947-2d68-481c-bd68-08dd394d6cb6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33ef004b-6196-413f-db87-08dd394f876a
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2025 12:24:45.7261
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2025 12:39:49.5504
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Sn6N2oZjS1h8+8Uw2lGmDF0GpxmP+4HBxbTF0EIroECCnMSU76dq348NnHbyYOkvIB+e1hxXGehDRVeNkDaB4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9117
+X-MS-Exchange-CrossTenant-UserPrincipalName: DHFp128RPU5rej6NJmhWaZzo47DkVr7x8gFT4CBQ6jm7WmHbQfG7JH0UMaIElMUBrOmy03z6o3uCLBPNFaeIUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7721
 
 
-On 1/17/25 18:23, Dan Williams wrote:
-> Jonathan Cameron wrote:
->> On Thu, 16 Jan 2025 22:10:44 -0800
->> Dan Williams <dan.j.williams@intel.com> wrote:
+On 1/17/25 20:57, Dan Williams wrote:
+> Alejandro Lucero Palau wrote:
+>> On 1/17/25 06:10, Dan Williams wrote:
+>>> cxl_dpa_alloc() is a hard coded nest of assumptions around PMEM
+>>> allocations being distinct from RAM allocations in specific ways when in
+>>> practice the allocation rules are only relative to DPA partition index.
+>>>
+>>> The rules for cxl_dpa_alloc() are:
+>>>
+>>> - allocations can only come from 1 partition
+>>>
+>>> - if allocating at partition-index-N, all free space in partitions less
+>>>     than partition-index-N must be skipped over
 >>
->>> The pending efforts to add CXL Accelerator (type-2) device [1], and
->>> Dynamic Capacity (DCD) support [2], tripped on the
->>> no-longer-fit-for-purpose design in the CXL subsystem for tracking
->>> device-physical-address (DPA) metadata. Trip hazards include:
->>>
->>> - CXL Memory Devices need to consider a PMEM partition, but Accelerator
->>>    devices with CXL.mem likely do not in the common case.
->>>
->>> - CXL Memory Devices enumerate DPA through Memory Device mailbox
->>>    commands like Partition Info, Accelerators devices do not.
->>>
->>> - CXL Memory Devices that support DCD support more than 2 partitions.
->>>    Some of the driver algorithms are awkward to expand to > 2 partition
->>>    cases.
->>>
->>> - DPA performance data is a general capability that can be shared with
->>>    accelerators, so tracking it in 'struct cxl_memdev_state' is no longer
->>>    suitable.
->>>
->>> - 'enum cxl_decoder_mode' is sometimes a partition id and sometimes a
->>>    memory property, it should be phased in favor of a partition id and
->>>    the memory property comes from the partition info.
->>>
->>> Towards cleaning up those issues and allowing a smoother landing for the
->>> aforementioned pending efforts, introduce a 'struct cxl_dpa_partition'
->>> array to 'struct cxl_dev_state', and 'struct cxl_range_info' as a shared
->>> way for Memory Devices and Accelerators to initialize the DPA information
->>> in 'struct cxl_dev_state'.
->>>
->>> For now, split a new cxl_dpa_setup() from cxl_mem_create_range_info() to
->>> get the new data structure initialized, and cleanup some qos_class init.
->>> Follow on patches will go further to use the new data structure to
->>> cleanup algorithms that are better suited to loop over all possible
->>> partitions.
->>>
->>> cxl_dpa_setup() follows the locking expectations of mutating the device
->>> DPA map, and is suitable for Accelerator drivers to use. Accelerators
->>> likely only have one hardcoded 'ram' partition to convey to the
->>> cxl_core.
->>>
->>> Link: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com [1]
->>> Link: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com [2]
->>> Cc: Dave Jiang <dave.jiang@intel.com>
->>> Cc: Alejandro Lucero <alucerop@amd.com>
->>> Cc: Ira Weiny <ira.weiny@intel.com>
->>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->> Hi Dan,
+>> In my view, you are mixing the current code with the new code in this
+>> explanation. It would be better to say the current code assumption is
+>> just two partitions, ram and pmem, but DCD changes the game.
+> There is no mixture in that description. The rules have not changed from
+> old to new, the implementation is updated to reflect that the algorithm
+> never needed to consider ram and pmem explicitly.
+
+
+Well, if I'm not mistaken, until now we did not need to support an 
+arbitrary number N of partitions but just 2.
+
+In fact, your next sentence just confirms this.
+
+
+<snip>
+
+
+>
+>> I think the problem here is we assumed ram and pmem being a child and
+>> likely some free space, but a device with multiple HDM decoders implies
+>> potentially several child.
 >>
->> In basic form this seems fine, but I find the nr_paritions variable usage very
->> counter intuitive.  It's just how many we configured not how many there
->> are, potentially with 0 size (so not a partition).  I'd be happier if we
->> can avoid that by just prefilling the lot with zero size and filling in
->> the ones we want.  So zero size means doesn't exist and use an iterator where
->> appropriate to skip the zero size ones.
-> The PMEM-only device case did give me pause. Is that 2 partitions with a
-> zero-sized first partition, or is that just 1 partition?
+>> The code supported the case of multiple child but I guess we still had
+>> in mind the simple case. Otherwise I can not understand all this ...
+> Holes are not allowed. If you want to delete any decoder capacity you
+> need to tear down all higher DPA allocations. That is a constraint of
+> the hardware definition around how software can assume the value of
+> DPABase. Will add some comments to that effect.
 
 
-I was wrong about the code being broken for this case.
-
-The code would create two partitions, at least for the case of partition 
-alignment being 0, with the first one having 0 size.
-
-This is all based on data/code based on mbox commands. Without mbox this 
-partition info needs to be hardcoded or created somehow by the accel 
-driver by its own means, so it is good to know the code expects such a 
-0-size partition for the pmem-only case and the nr_partitions should be 
-set accordingly. Not what my type2 patchset needs now, but I bet this 
-will need to be set properly by a coming accel driver.
+I have to admit I do not master the case of regions created from user 
+space, but I thought the idea was to allow creation of regions from 
+independent devices for facilitating interleaving and just adding 
+flexibility when needing a memory region bigger than what only one 
+device can offer at some specific time.
 
 
-> Ultimately I do think the code should further evolve to treat that as
-> 1-PMEM-partition, but as far as I can see that depends on 'enum
-> cxl_decoder_mode' being eliminated and teaching all code paths to search
-> for the position of the PMEM partition.
->
->> Without that tidied up, to me this is more confusing than the previous code.
-> I was going to save PMEM at a partition other than 1 for the DCD series,
-> but let me take another pass at adding that to this series.
->
-> [..]
->>> +/* if this fails the caller must destroy @cxlds, there is no recovery */
->>> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
->>> +{
->>> +	struct device *dev = cxlds->dev;
->>> +
->>> +	guard(rwsem_write)(&cxl_dpa_rwsem);
->>> +
->>> +	if (cxlds->nr_partitions)
->>> +		return -EBUSY;
->>> +
->>> +	if (!info->size || !info->nr_partitions) {
->>> +		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
->>> +		cxlds->nr_partitions = 0;
->>> +		return 0;
->>> +	}
->>> +
->>> +	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
->>> +
->>> +	for (int i = 0; i < info->nr_partitions; i++) {
->>> +		const char *desc;
->>> +		int rc;
->>> +
->>> +		if (i == CXL_PARTITION_RAM)
->>> +			desc = "ram";
->>> +		else if (i == CXL_PARTITION_PMEM)
->>> +			desc = "pmem";
->>> +		else
->>> +			desc = "";
->>> +		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
->>> +		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
->>> +				 info->range[i].start,
->>> +				 range_len(&info->range[i]), desc);
->>> +		if (rc)
->>> +			return rc;
->>> +		cxlds->nr_partitions++;
->> I'd just initialize the rest to 0 length similar to what is happening
->> if we have pmem only anyway.  Then this nr_patitions goes away and
->> stops being a possible source of confusion.
-> Modulo teaching other code that wants to ask "what is the size of the
-> PMEM partition" to use a helper that hides the "find the device's PMEM
-> partition".
->
->
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(cxl_dpa_setup);
->>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->>> index 3502f1633ad2..7dca5c8c3494 100644
->>> --- a/drivers/cxl/core/mbox.c
->>> +++ b/drivers/cxl/core/mbox.c
->>> @@ -1241,57 +1241,36 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
->>> -int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
->>> +int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
->>>   {
->>>   	struct cxl_dev_state *cxlds = &mds->cxlds;
->>> -	struct resource *ram_res = to_ram_res(cxlds);
->>> -	struct resource *pmem_res = to_pmem_res(cxlds);
->>>   	struct device *dev = cxlds->dev;
->>>   	int rc;
->>>   
->>>   	if (!cxlds->media_ready) {
->>> -		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
->>> -		*ram_res = DEFINE_RES_MEM(0, 0);
->>> -		*pmem_res = DEFINE_RES_MEM(0, 0);
->>> +		info->size = 0;
->>>   		return 0;
->>>   	}
->>>   
->>> -	cxlds->dpa_res = DEFINE_RES_MEM(0, mds->total_bytes);
->>> +	info->size = mds->total_bytes;
->>>   
->>>   	if (mds->partition_align_bytes == 0) {
->> Obviously nothing to do with your patch as such, but maybe tidy this up
->> by making active values == fixed values when we don't have partition control.
->> That seems logical anyway to me and means we only end up with one lot of
->> range setup in here.  I can't immediately see any side effects of doing this.
-> Yeah, I mentioned this in another thread. There is no reason
-> for 'struct cxl_memdev_state' to carry these values at all. They are
-> just temporary init-data.
->
-> So, cxl_dev_state_identify() becomes cxl_mem_identify(), since
-> it is a memory-device command. Move it inside of cxl_mem_dpa_fetch()
-> since it is just temporary init-data for 'struct cxl_dpa_info'.
->
-> [..]
->>> -		rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
->>> -				 mds->volatile_only_bytes, "ram");
->>> -		if (rc)
->>> -			return rc;
->>> -		return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
->>> -				   mds->volatile_only_bytes,
->>> -				   mds->persistent_only_bytes, "pmem");
->>> +		info->range[CXL_PARTITION_RAM] = (struct range) {
->>> +			.start = 0,
->>> +			.end = mds->volatile_only_bytes - 1,
->>> +		};
->>> +		info->nr_partitions++;
->>> +
->>> +		if (!mds->persistent_only_bytes)
->>> +			return 0;
->>> +
->>> +		info->range[CXL_PARTITION_PMEM] = (struct range) {
->>> +			.start = mds->volatile_only_bytes,
->>> +			.end = mds->volatile_only_bytes +
->>> +			       mds->persistent_only_bytes - 1,
->>> +		};
->>> +		info->nr_partitions++;
->> This nr partitions makes some sense though I'd be tempted to add a type
->> array to info so that we can just not pass empty ones if we don't want to.
->> Makes this code a little more complex, but not a lot and means
->> nr->partitions becomes the ones that actually exist.
-> Agree, that's the end goal.
->
->>> +		return 0;
->>>   	}
->>>   
->>>   	rc = cxl_mem_get_partition_info(mds);
->>> @@ -1300,15 +1279,24 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
->>>   		return rc;
->>>   	}
->>>   
->>> -	rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
->>> -			 mds->active_volatile_bytes, "ram");
->>> -	if (rc)
->>> -		return rc;
->>> -	return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
->>> -			   mds->active_volatile_bytes,
->>> -			   mds->active_persistent_bytes, "pmem");
->>> +	info->range[CXL_PARTITION_RAM] = (struct range) {
->>> +		.start = 0,
->>> +		.end = mds->active_volatile_bytes - 1,
->>> +	};
->>> +	info->nr_partitions++;
->>> +
->>> +	if (!mds->active_persistent_bytes)
->>> +		return 0;
->>> +
->>> +	info->range[CXL_PARTITION_PMEM] = (struct range) {
->>> +		.start = mds->active_volatile_bytes,
->>> +		.end = mds->active_volatile_bytes + mds->active_persistent_bytes - 1,
->>> +	};
->>> +	info->nr_partitions++;
->>> +
->>> +	return 0;
->>>   }
->>> -EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, "CXL");
->>> +EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
->>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->>> index 78e92e24d7b5..2e728d4b7327 100644
->>> --- a/drivers/cxl/cxlmem.h
->>> +++ b/drivers/cxl/cxlmem.h
->>> @@ -97,6 +97,20 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->>>   			 resource_size_t base, resource_size_t len,
->>>   			 resource_size_t skipped);
->>>   
->>> +/* Well known, spec defined partition indices */
->>> +enum cxl_partition {
->>> +	CXL_PARTITION_RAM,
->>> +	CXL_PARTITION_PMEM,
->>> +	CXL_PARTITION_MAX,
->>> +};
->>> +
->>> +struct cxl_dpa_info {
->>> +	u64 size;
->>> +	struct range range[CXL_PARTITION_MAX];
->>> +	int nr_partitions;
->>> +};
->> blank line seems appropriate here.
-> Added.
->
->>> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info);
->>> +
->>>   static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
->>>   					 struct cxl_memdev *cxlmd)
->>>   {
->>> @@ -408,6 +422,16 @@ struct cxl_dpa_perf {
->>>   	int qos_class;
->>>   };
->>>   
->>>   /**
->>>    * struct cxl_dev_state - The driver device state
->>>    *
->>> @@ -423,8 +447,8 @@ struct cxl_dpa_perf {
->>>    * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
->>>    * @media_ready: Indicate whether the device media is usable
->>>    * @dpa_res: Overall DPA resource tree for the device
->>> - * @_pmem_res: Active Persistent memory capacity configuration
->>> - * @_ram_res: Active Volatile memory capacity configuration
->>> + * @part: DPA partition array
->>> + * @nr_partitions: Number of DPA partitions
->> This needs more. It is not the number of partitions present I think, it
->> is the number that a particular driver is potentially interested in.
->>
->>>    * @serial: PCIe Device Serial Number
->>>    * @type: Generic Memory Class device or Vendor Specific Memory device
->>>    * @cxl_mbox: CXL mailbox context
->>> @@ -438,21 +462,39 @@ struct cxl_dev_state {
->>>   	bool rcd;
->>>   	bool media_ready;
->>>   	struct resource dpa_res;
->>> -	struct resource _pmem_res;
->>> -	struct resource _ram_res;
->>> +	struct cxl_dpa_partition part[CXL_PARTITION_MAX];
->>> +	unsigned int nr_partitions;
->>>   	u64 serial;
->>>   	enum cxl_devtype type;
->>>   	struct cxl_mailbox cxl_mbox;
->>>   };
->>>   
->>> -static inline struct resource *to_ram_res(struct cxl_dev_state *cxlds)
->>> +static inline const struct resource *to_ram_res(struct cxl_dev_state *cxlds)
->>>   {
->>> -	return &cxlds->_ram_res;
->>> +	if (cxlds->nr_partitions > 0)
->>> +		return &cxlds->part[CXL_PARTITION_RAM].res;
->>> +	return NULL;
->>>   }
->>>   
->>> -static inline struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
->>> +static inline const struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
->>>   {
->>> -	return &cxlds->_pmem_res;
->>> +	if (cxlds->nr_partitions > 1)
->> This is very confusing as nr_partitions is being used not to indicate
->> number of partitions but whether a driver has filled in the data for them
->> (which may well be empty).
->>
->> I'd rather see that as a bitmap, or a 'not set' value initialized by
->> the core that is then replaced when they are set.
-> ...or even better, not require PMEM to be at partition1.
->
-> [..]
+If so, I would expect cases like two different regions using different 
+ranges inside a device DPA, and the two regions completely independent. 
+If I understand your answer, this is possible but if you want to release 
+one of those regions, you can not use the released DPA until the first 
+one is also released ... my instinct tells me this can not be the case ...
+
+
+If what I'm saying makes no sense, I'll try with a more complex 
+description with a timeline and actions from user space, endpoint 
+decoders, regions and so on, what will definitely helps me to 
+(hopefully) understand the user space case.
+
+
