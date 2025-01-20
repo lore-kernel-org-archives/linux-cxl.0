@@ -1,256 +1,482 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB4D2F30;
-	Mon, 20 Jan 2025 05:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E191B6CEC
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jan 2025 12:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737349714; cv=pass; b=EpErGKjd2OkpRytW9oH2SwoFOF0zrTUuirQ/ZzQj4CXAq5AChWgMs8qP4qg2g10frNwEwk+0eHv3YGOaXIlxIayWj9gu/e87n/iEZ0dprFyZ66kmoSutWJNhFV/cAjpvgP4KE2J8pjrs6za8nlLYLaDQviHA2N87x64aoiYAM0E=
+	t=1737375890; cv=fail; b=lSfq1F2Yc91NIOPIZh1j9ADuWYLw4lVWYHlV4AHCmYEZwC73rfZ09Xbu+Tsp8vdct0j9Xl19Mg9jERPbXu4M+jBfDJ2MXa7gctJREnhcZxuuZZXRfMQhbcPEjYdFjshOnf4JgdduzrsHmmyMY7cdwtKekqoGmjyhCtgYIrsQdno=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737349714; c=relaxed/simple;
-	bh=L5L+rPLH0rrdJx9JIdFvvf3WcfAV2BX+peqrJ4+T1vA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H7jphqTRUh0CE9IHdtUwzCFX3+3hm2GFQyBx2UPqe4FLhic/QtPSWwaNZCIl4rc6RBLQrfSENiOgQDiJTSzfAAcFO+1WD8ZNSk09h3beroCU0e0TxKvFEIEJ4aCf2yXJYesoMOGbH/2ua3LddV1RjIJk0JfcffoZ9awagFqEQZo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=AfwPl5vF; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1737375890; c=relaxed/simple;
+	bh=LXADlfuVgBJa9XP95ROg74VJbpMYxN5+Oc5++5ko+6s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=M17jruiMYtqLQMiQ7hbXrOww2Sx/uZC6udTn0hHDOpbIJ9zBrf7XuyW2cmhRCd6FNhEkNHATNl+SzeQST3mLhsq4OyJ1plzHY/Q+d/HWCjr3rEv6LTPBbjw4ogBSiV6j78xTrJhq2wLYcTbp/9kjzFUN5kSid9i+jFOXHO69zf8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E20g6JG6; arc=fail smtp.client-ip=40.107.243.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="AfwPl5vF"
-ARC-Seal: i=1; a=rsa-sha256; t=1737349565; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dd+LgfPbNgUIr15sPvQu9Yi3FeSd2yiA5CghXwzgF/hJxcbPJChhq+5+b8XdzlsUpBz6x92ee8yEcEV9ySs2wq5/JMjntD4RWFFmQC/CVRC6GsHSzT9Akk9HIJU6iLc/9j2O9OGAwskBKgLyUQF/v/NZU/C/mQIaJexHl6h4NUw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1737349565; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=NjFuB/fstdxeC8VzsYGdqjeEf8Co8tSinnGYnTlY9wc=; 
-	b=DdJv2/KEpczOnhAm1Da5Nm4YxOUDXmG44oZrOwvT/Yjed48F8fJIiWaaYXAJwsNhOWtFxoAZ20rwn+z8qzTW1FGXLIdxxnlJN9bQrzPBJDtlO6MiqDHF6cVk5fqYuM0G4W6LycynPGdgFMo3nAwknfNrKf6V7w73ThVnY2nsVDA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1737349565;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=NjFuB/fstdxeC8VzsYGdqjeEf8Co8tSinnGYnTlY9wc=;
-	b=AfwPl5vFLS4z/R+lWGKI+tamRCepC13l/6yp6iC6VoNgpPdClZ884YaeOMqRaJAV
-	3VsDgiyg1LI/Wp8z7ggjdxL5JiUVBfxqE0iqBSCcjhFY/J5kpDgxJB5wMId/eEWYAFD
-	+IGq/1YwPrOWQ2aBDVuDKp7eVIx8mwY2eebjnuY8=
-Received: by mx.zohomail.com with SMTPS id 1737349562998185.53266009921253;
-	Sun, 19 Jan 2025 21:06:02 -0800 (PST)
-Message-ID: <842f4604-2444-45c3-b8f2-ea97a9299671@zohomail.com>
-Date: Mon, 20 Jan 2025 13:05:58 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E20g6JG6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VScKCRpVul1byT9cxhnlA37gOwLvdhvNF8gLGdygGNjVZJYo3pZNcsdNtRRE1y3y2FmW5zORX3OoxBGix4DF1p79GNHvo59ZEetyyMDLFyu78y+GdPCEyf2cm2d3vM0cgu60faTml0YKQ1/OpdYzMOu5jMHNBmwD8r/T20iJORBwRLqffhDq1e+fN8Ljx5AdiM1pBS7ZVuY+N9bKqadDZxXpzXYfMo+vzMSPSu+EzH/gs4E5ASSa+v+I2/rh00zQAoMPQsSZ7/b8jMRd0BSiD8YlZmDi+0W/qsiaYe3klLxx65dHuy1RRPUG88VFtXcqHQC6jFI8cdH0I4MSSgLWig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3d6Y1M6Gb6tzt1/4hb2ZINB8uFSKRkHucenBFgs1MPY=;
+ b=UMtHgk5T0AjFwNUEZXtYpF8/Te19/g/MBSqj4bNxUacbtH9JUXCAnyzuu/MSsnWPN2bksXvs0t6QAt73V6IPpAn6+HThwPsyoWU6akI1BfFtaT7BxbQEw2d9GkMWvyKZi1OuOHqsaAB/YN0X1S/HHWGi+D1myB+GmGOcifqoBejtlvzkuKA/UCWTILJHSIiXw09Pkb/y4xHXhGD0njS3j1Lw5NjMRDdTEsLMtG4YXP15SDcVQ+7vEIYtjcWbHP6hvjkG4zz4X/Ru/lYJb/Gb7fFJgS5MKlnLgmC6dcBotYkvGheyxgKgEXnNlRQCf5HcRBpPqL/kXXXvVMFuGMoRUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3d6Y1M6Gb6tzt1/4hb2ZINB8uFSKRkHucenBFgs1MPY=;
+ b=E20g6JG6+7W/O18hRTp9CHRWzJCQ1jwwlGVt2WfiJKdJwipACFLbM9F+ZVs59ErqVAtivW4M6c1kO5Q1Re8ZX+Ux+mXhclHi3zRpbI4no6iWLVHo+Wuac1iWoLxPRbfaWOrT8xRNoE3KWtT5RfhQvOoRuDYS/Mwtnbny608uoGg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by LV3PR12MB9117.namprd12.prod.outlook.com (2603:10b6:408:195::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.20; Mon, 20 Jan
+ 2025 12:24:46 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8356.017; Mon, 20 Jan 2025
+ 12:24:45 +0000
+Message-ID: <30ba3e11-0ba7-6bc6-38ac-1ba0c577f651@amd.com>
+Date: Mon, 20 Jan 2025 12:24:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 3/4] cxl: Introduce 'struct cxl_dpa_partition' and 'struct
+ cxl_range_info'
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <173709422664.753996.4091585899046900035.stgit@dwillia2-xfh.jf.intel.com>
+ <173709424415.753996.10761098712604763500.stgit@dwillia2-xfh.jf.intel.com>
+ <20250117105254.00001dd4@huawei.com>
+ <678aa0381324e_20fa2942a@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <678aa0381324e_20fa2942a@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB6PR0301CA0076.eurprd03.prod.outlook.com
+ (2603:10a6:6:30::23) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] cxl: Add mce notifier to emit aliased address for
- extended linear cache
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
- tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com
-References: <20250117173054.4147877-1-dave.jiang@intel.com>
- <20250117173054.4147877-5-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250117173054.4147877-5-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122766e80ba439f4ad05398228710000fb79fde2150372fca3f7b118fe818c78067e90031a13eb3ada:zu08011227c666930302942366d1f481000000a865f425dc3c5ffe689be044e94e4933ada9b7faf6eda9799a:rf0801122ddbf496c40d5b512b7e9c1f390000b7e8d604b9d4fddc267a41d075a92902ba731e47c128b86aa88464d2063e33:ZohoMail
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|LV3PR12MB9117:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19156947-2d68-481c-bd68-08dd394d6cb6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ajN1cHN5WUgwSzFEYjlCaGkxSnd1azNDWmpLMUFTMnEySmtHR3pEQ0NpWXF0?=
+ =?utf-8?B?aGYvWjZPcm5yYkJpaTV0UWc4aCtoT0dWdUZNWlBBdC9ITFcwSlRzdk5kaFBH?=
+ =?utf-8?B?VngyMk9Wb0kxWWM2VDcrQUc1cEF2RVVrZlFmbGQ1Yml0TzlMdW0rQjlTSjBt?=
+ =?utf-8?B?OE5iQU81Rmtwd3BvZ2Z3SFZDc2lsUVpKdjNJYlJoNTBpRWJuUk15dWxjYzhG?=
+ =?utf-8?B?cGs5S0FTbTZqRnhGeW01eVJMaE15MWNvRUp2VWtTNHYxemFhVFBseHVjSUg2?=
+ =?utf-8?B?ZW8xYkVRa3JiQWhnOTl6TmlpQmFIeGorRjVSUE5VbmQ2UjBnVFpZRVh0d2JP?=
+ =?utf-8?B?dHVmVkh1aFc3eVRHVUpFT2JMSVRUSWc5RnhoTm0rSXdIc1oxZURnTlpucmZp?=
+ =?utf-8?B?ZDlyLzdHV1VSeVloOHkrUHlZTkZ0QnFaL3lKeVc4SXNqano5SFdBM2I1QVJS?=
+ =?utf-8?B?M3ZoeStrY2VoSWl3MUt2UU9JRlByNk1zMlRPL3cxWlNCWXhpcE1TY0NqUytG?=
+ =?utf-8?B?TGtLTXZIaVoyN2gxYnFVSWtoeVQ4OCs4ZytadWJuK1NWcEtJYzlobnRZNDgr?=
+ =?utf-8?B?S0ZhS00rWDlLUHJDREdhVHVUVzJITWp3dGdDR1plbkJ0Mk81WVdjcEpDWUJ6?=
+ =?utf-8?B?aWlHTFVaU2JTYXcyY3h3dEh5aEJ0b0dxZ3JHcWZYUGdNNXFoZ09qTzh2eHdN?=
+ =?utf-8?B?cWN2SUVDSkNvaGg1WkhueXpzVFNFSmZORWdpcEZ0NlhpeG83V2pFQ1RwdHlr?=
+ =?utf-8?B?QnJJelFVTFo3UHVZM1hNQ2txUXU2L2NqcVNkT2lMUDFSNFAwQTVLUW1wTEFv?=
+ =?utf-8?B?ZEFpMThyL01IU2x6TlpadENSSllyQ3hHOTFnUjFkUlNFWXgvdE91RjYzZEJ1?=
+ =?utf-8?B?Zmd1TE0xODd5ZExZRldNK3U2TUQ3NmtkUWR5VHhwbHBuTHpkMC9LcmdvTVBM?=
+ =?utf-8?B?Vk9FeG1wUWhTU3ErbGRZTSs2K3hKTDBKQThVYUtibitGSURwL3EzRy8zMUt0?=
+ =?utf-8?B?bENuK2phbWxKQk8xWERRUWlKSXJFWDBibWdmVGF5L09QYVE1TzJxQjRzd2Jl?=
+ =?utf-8?B?ZkU0Qy9ybUxoQm9rQk5COFFHVHp6QTFGN3BWSG5adzBlM3VSVVIxQ1N5a25h?=
+ =?utf-8?B?MFRid0JtcEYrUUYrTTIwaHJBV0xrTHhwNm80VW1sdXFPVktaR0M1VEdRT2RE?=
+ =?utf-8?B?NWJwbTBHMnQ5cU80RHg1T09UZngwQXNqTjFRRWVFbGMvWDdKNTQ2ZXhHUGtK?=
+ =?utf-8?B?WjkydkVMMXRqd05nYUQ3Uk1HT3RlMytic3lPd1lDNm1lblAzK2dveXVDUFpu?=
+ =?utf-8?B?ZGpLZktKYnBiaFFhZlRMR2NtWUVDOS90UURSd25GOGNURnRYazVPbUNqbFFN?=
+ =?utf-8?B?TWZsTi9XeERPTWcxblZJQkdMeEplRHp5MGFJZ1k3Qm5yRXFibE1ST1B1TlR0?=
+ =?utf-8?B?c0FGaVNNc20yMEJKVVFQdms2WjVQck0vSTZwYTVUc3hxbmE5SEJuR0RWOUpr?=
+ =?utf-8?B?aEpNQWFlMHV2Sk9tVHlHSnFORjRKd00wUWtpdU5qYXY1cm13dUFUbHAySjMr?=
+ =?utf-8?B?VDk3S0wrOEE5TWc5TytraXdWOXBGTFoyeG5CWUI2WTVRUHd6T3pMWTIxSWxi?=
+ =?utf-8?B?MndpVmxIdFZEckNsK0w0WkVHbUo5L3RYblo3NDNuRStzSG9ORU1GbzlONGEz?=
+ =?utf-8?B?MDl3d0s4VU50ZDNvcHo5TFV6MWEzM0R6aXEyRjJtT242WlpBWU1Td1ZTYXBC?=
+ =?utf-8?B?d0tlYmhkN2x0dTM3dkhRZHVDM1ZLQ2FlRW9HWEEyc3dzNVNnYWIzR3BhQTlr?=
+ =?utf-8?B?R1Jpa1dsNjUyRUFNa3JWdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VFptdU9ncDB5b0ZIdDJPWm9iOXNGNjVvWitKZnRPNHdEdDNtd0VCaWp0VEVY?=
+ =?utf-8?B?NXNzaGlmaC9rYnVIN0FMaUp5NjBZSlNIbCs2Wlp3ZXRESDMzZ01meXZHUDZh?=
+ =?utf-8?B?NExrS0pvTVVYaVRHRjV2NUw0T3cwQ3pyVVNBU2Evb3RLVkFGcnVlamVhbUs0?=
+ =?utf-8?B?ZXc5VGtHelFudnhnTjJNdjM0MDZQNUZoUWJseGdPeU1YWS9hYmlJZ3JadWFG?=
+ =?utf-8?B?TWNSRGRBSHFmSXczcHJZSDY4UXJwM2I5bS9vWmpsODFUYk9idmZWOVQ5VG9N?=
+ =?utf-8?B?WWV2ZEh1eUNMcDVtOXc2RXlvakRuUnZNZ0R5Skh5OWRzRnNTMGxuYi9RdWU5?=
+ =?utf-8?B?QzVBN1NHdEVmbi8zYjRDVXQ1TUQwZlA3eGQxcjZPVURrU0xROXFSc2dZZFdV?=
+ =?utf-8?B?Z2wxQ2lpWGVscUNlVVJrY01WbjFNRUJZUytjWkhkdTNxY2s2MHFhRkYrWWU5?=
+ =?utf-8?B?SjlTTUZ6VjFOUncrWjhRWkNuME82MzgxZWJnQi9zOE1vSTFiQlZhNTMxWm5H?=
+ =?utf-8?B?UEU2NmluYTBscGdGK09CMk42UjQ1VHlnOXY4SC9sMTdxbFpPNXRBNHh2Wi9E?=
+ =?utf-8?B?bFF5WEN4a2dpcmhmRGlFZGdONk01Rjg1bCtWQjA0R3NlQU9ZMTVVOVJFVFlE?=
+ =?utf-8?B?a2w0ejlPNHV0dWF2Wk9EZk9GSTNUbUJBdXNzZ25aRHUxN3FubXZyZlpWRHhl?=
+ =?utf-8?B?VkdISlRuWmFoQnUweXZObTNLZjBzNFd0eEJzRk5TS2VNdUhLaHY0dXVxd3ZJ?=
+ =?utf-8?B?eFZhUkRmQjhIT1A2Y2VsYjlwTWcxNTh6Z3FmUFNRVFlQZjFtYmUvQVpaOFJt?=
+ =?utf-8?B?RjNsams2MFgwRTdwZVNuTE43MVZpaDV1VzF6amFKYUZlNDJ5dTNrTVU5Z0dw?=
+ =?utf-8?B?N1dQRlc2dCtERnlqMWtvUVUydjIxY2pyZjJpM0V3S2E5dkJYKzN2U2tjSUxx?=
+ =?utf-8?B?V2hJaWxRZjJYbFVWRDNjbUdhYU9MbVR1cDBQczNQcFZvK3dPc0JWZy9oOWdp?=
+ =?utf-8?B?REt0d2pibllWdFRPM1Q0aDJCWngwamhQQUFPM0k5SkhyTEdxY2tZMFdRN1N3?=
+ =?utf-8?B?cllDQ2NDTldjNnRuclNmbU9BSkdzd3NjaFVrVS9GdHR0RUxWQ3RPbGU2YTM5?=
+ =?utf-8?B?L2tBZWlyV2pycnUyck55Uk9EQUFESi9wK0MzT0FONEhLVjVwZ09Dd1NqVzhw?=
+ =?utf-8?B?UE1CdlNjWURYbmZhbkZYd25nQUlhSlRVV1ZTTWJQYjM0bFZJSVlnQk81UW5Q?=
+ =?utf-8?B?Lzd0SFRmSUVQUmxMbzJwOGdnSnduVmFtVHdpL1VGREJGZXl4M20zY2Fnb2tj?=
+ =?utf-8?B?NGFmWmowbDJOaVYwZVZRTERPZ1h6ck5DdjNEQlVJejJVTDBrZ0szTHh3aTNB?=
+ =?utf-8?B?RjhzTDdCWUtZRVZMZnZHWTczMGpSUU90ZW5qRkRTZ3RrWWJlL0VGVGw4L0t0?=
+ =?utf-8?B?T1NJRU5FUnJjYzlqWS9ranhmc201REt3Zi96Z2x3c2dhOUMyNFJmQ21UaHUw?=
+ =?utf-8?B?VDhDRGIwR0FOTjlLZWV0SmxtZkZnaGpBdXJJVjNIOG80UHNheGYrejIxWFpJ?=
+ =?utf-8?B?M3hzNEQzUjd0V2tESzBsdWs2UlFSaW5rMHVKSHdXbzNMbU9DRFFxY1lsZlVX?=
+ =?utf-8?B?VkJ0OHBjamVZTFFYZjM2dFRlckUwbWZ3cjNaeEZFaVRKQzBZRnRmQmdMc3l3?=
+ =?utf-8?B?MlVlenVEbjl3MkJZRHl4cEFBNUh5NHpDK1p3aDRYTjFTSEM4cUdFSTl6a1Zz?=
+ =?utf-8?B?WVhiek1DWEdZMWhkc05sL0I0WHFWbzM2OTFyTVdKNGxrbDFoNlFUVVdqMEpr?=
+ =?utf-8?B?TjNBbUdKdmVNVWdGbG5ISmdLU3pQOVgxQXdXWXpRSGljNFVWSDY0QlAwamg4?=
+ =?utf-8?B?SklMcFJhekxoNDJCS2Q3OGRzbkdHejdQd1NSQS9JNW1zdGNZYnArTm1VVmVn?=
+ =?utf-8?B?UjZGdWNoZEpwQlRKOVN6cmNBYnU5aTE0ZGZIM3lqR3krWEVyK2F1NEZ5NUZi?=
+ =?utf-8?B?NFVjSzM0VjJ3cFRUcnF2QVB6eDg1Wk5Sd2RUR2l3Y3pOcnIydnl5anhGaTNp?=
+ =?utf-8?B?TWNUdWwvWTh4SFlEUFY3YUQ3MGt1QytsWjJVT2JYRVNoQWZoZjdoZGJ2bUdw?=
+ =?utf-8?Q?Xs1BV02lXssOaGRkv9Fa32QM9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19156947-2d68-481c-bd68-08dd394d6cb6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2025 12:24:45.7261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Sn6N2oZjS1h8+8Uw2lGmDF0GpxmP+4HBxbTF0EIroECCnMSU76dq348NnHbyYOkvIB+e1hxXGehDRVeNkDaB4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9117
 
-On 1/18/2025 1:28 AM, Dave Jiang wrote:
-> Below is a setup with extended linear cache configuration with an example
-> layout of memory region shown below presented as a single memory region
-> consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-> The kernel sees a region of total 256G of system memory.
+
+On 1/17/25 18:23, Dan Williams wrote:
+> Jonathan Cameron wrote:
+>> On Thu, 16 Jan 2025 22:10:44 -0800
+>> Dan Williams <dan.j.williams@intel.com> wrote:
+>>
+>>> The pending efforts to add CXL Accelerator (type-2) device [1], and
+>>> Dynamic Capacity (DCD) support [2], tripped on the
+>>> no-longer-fit-for-purpose design in the CXL subsystem for tracking
+>>> device-physical-address (DPA) metadata. Trip hazards include:
+>>>
+>>> - CXL Memory Devices need to consider a PMEM partition, but Accelerator
+>>>    devices with CXL.mem likely do not in the common case.
+>>>
+>>> - CXL Memory Devices enumerate DPA through Memory Device mailbox
+>>>    commands like Partition Info, Accelerators devices do not.
+>>>
+>>> - CXL Memory Devices that support DCD support more than 2 partitions.
+>>>    Some of the driver algorithms are awkward to expand to > 2 partition
+>>>    cases.
+>>>
+>>> - DPA performance data is a general capability that can be shared with
+>>>    accelerators, so tracking it in 'struct cxl_memdev_state' is no longer
+>>>    suitable.
+>>>
+>>> - 'enum cxl_decoder_mode' is sometimes a partition id and sometimes a
+>>>    memory property, it should be phased in favor of a partition id and
+>>>    the memory property comes from the partition info.
+>>>
+>>> Towards cleaning up those issues and allowing a smoother landing for the
+>>> aforementioned pending efforts, introduce a 'struct cxl_dpa_partition'
+>>> array to 'struct cxl_dev_state', and 'struct cxl_range_info' as a shared
+>>> way for Memory Devices and Accelerators to initialize the DPA information
+>>> in 'struct cxl_dev_state'.
+>>>
+>>> For now, split a new cxl_dpa_setup() from cxl_mem_create_range_info() to
+>>> get the new data structure initialized, and cleanup some qos_class init.
+>>> Follow on patches will go further to use the new data structure to
+>>> cleanup algorithms that are better suited to loop over all possible
+>>> partitions.
+>>>
+>>> cxl_dpa_setup() follows the locking expectations of mutating the device
+>>> DPA map, and is suitable for Accelerator drivers to use. Accelerators
+>>> likely only have one hardcoded 'ram' partition to convey to the
+>>> cxl_core.
+>>>
+>>> Link: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com [1]
+>>> Link: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com [2]
+>>> Cc: Dave Jiang <dave.jiang@intel.com>
+>>> Cc: Alejandro Lucero <alucerop@amd.com>
+>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> Hi Dan,
+>>
+>> In basic form this seems fine, but I find the nr_paritions variable usage very
+>> counter intuitive.  It's just how many we configured not how many there
+>> are, potentially with 0 size (so not a partition).  I'd be happier if we
+>> can avoid that by just prefilling the lot with zero size and filling in
+>> the ones we want.  So zero size means doesn't exist and use an iterator where
+>> appropriate to skip the zero size ones.
+> The PMEM-only device case did give me pause. Is that 2 partitions with a
+> zero-sized first partition, or is that just 1 partition?
+
+
+I was wrong about the code being broken for this case.
+
+The code would create two partitions, at least for the case of partition 
+alignment being 0, with the first one having 0 size.
+
+This is all based on data/code based on mbox commands. Without mbox this 
+partition info needs to be hardcoded or created somehow by the accel 
+driver by its own means, so it is good to know the code expects such a 
+0-size partition for the pmem-only case and the nr_partitions should be 
+set accordingly. Not what my type2 patchset needs now, but I bet this 
+will need to be set properly by a coming accel driver.
+
+
+> Ultimately I do think the code should further evolve to treat that as
+> 1-PMEM-partition, but as far as I can see that depends on 'enum
+> cxl_decoder_mode' being eliminated and teaching all code paths to search
+> for the position of the PMEM partition.
 >
->               128G DRAM                          128G CXL memory
-> |-----------------------------------|-------------------------------------|
+>> Without that tidied up, to me this is more confusing than the previous code.
+> I was going to save PMEM at a partition other than 1 for the DCD series,
+> but let me take another pass at adding that to this series.
 >
-> Data resides in either DRAM or far memory (FM) with no replication. Hot
-> data is swapped into DRAM by the hardware behind the scenes. When error is
-> detected in one location, it is possible that error also resides in the
-> aliased location. Therefore when a memory location that is flagged by MCE
-> is part of the special region, the aliased memory location needs to be
-> offlined as well.
+> [..]
+>>> +/* if this fails the caller must destroy @cxlds, there is no recovery */
+>>> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+>>> +{
+>>> +	struct device *dev = cxlds->dev;
+>>> +
+>>> +	guard(rwsem_write)(&cxl_dpa_rwsem);
+>>> +
+>>> +	if (cxlds->nr_partitions)
+>>> +		return -EBUSY;
+>>> +
+>>> +	if (!info->size || !info->nr_partitions) {
+>>> +		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
+>>> +		cxlds->nr_partitions = 0;
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
+>>> +
+>>> +	for (int i = 0; i < info->nr_partitions; i++) {
+>>> +		const char *desc;
+>>> +		int rc;
+>>> +
+>>> +		if (i == CXL_PARTITION_RAM)
+>>> +			desc = "ram";
+>>> +		else if (i == CXL_PARTITION_PMEM)
+>>> +			desc = "pmem";
+>>> +		else
+>>> +			desc = "";
+>>> +		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+>>> +		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
+>>> +				 info->range[i].start,
+>>> +				 range_len(&info->range[i]), desc);
+>>> +		if (rc)
+>>> +			return rc;
+>>> +		cxlds->nr_partitions++;
+>> I'd just initialize the rest to 0 length similar to what is happening
+>> if we have pmem only anyway.  Then this nr_patitions goes away and
+>> stops being a possible source of confusion.
+> Modulo teaching other code that wants to ask "what is the size of the
+> PMEM partition" to use a helper that hides the "find the device's PMEM
+> partition".
 >
-> Add an mce notify callback to identify if the MCE address location is part
-> of an extended linear cache region and handle accordingly.
 >
-> Added symbol export to set_mce_nospec() in x86 code in order to call
-> set_mce_nospec() from the CXL MCE notify callback.
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(cxl_dpa_setup);
+>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>>> index 3502f1633ad2..7dca5c8c3494 100644
+>>> --- a/drivers/cxl/core/mbox.c
+>>> +++ b/drivers/cxl/core/mbox.c
+>>> @@ -1241,57 +1241,36 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>>> -int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+>>> +int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>>   {
+>>>   	struct cxl_dev_state *cxlds = &mds->cxlds;
+>>> -	struct resource *ram_res = to_ram_res(cxlds);
+>>> -	struct resource *pmem_res = to_pmem_res(cxlds);
+>>>   	struct device *dev = cxlds->dev;
+>>>   	int rc;
+>>>   
+>>>   	if (!cxlds->media_ready) {
+>>> -		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
+>>> -		*ram_res = DEFINE_RES_MEM(0, 0);
+>>> -		*pmem_res = DEFINE_RES_MEM(0, 0);
+>>> +		info->size = 0;
+>>>   		return 0;
+>>>   	}
+>>>   
+>>> -	cxlds->dpa_res = DEFINE_RES_MEM(0, mds->total_bytes);
+>>> +	info->size = mds->total_bytes;
+>>>   
+>>>   	if (mds->partition_align_bytes == 0) {
+>> Obviously nothing to do with your patch as such, but maybe tidy this up
+>> by making active values == fixed values when we don't have partition control.
+>> That seems logical anyway to me and means we only end up with one lot of
+>> range setup in here.  I can't immediately see any side effects of doing this.
+> Yeah, I mentioned this in another thread. There is no reason
+> for 'struct cxl_memdev_state' to carry these values at all. They are
+> just temporary init-data.
 >
-> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v3:
-> - Add endpoint pointer check. (Ming)
-> - Add mce notifier removal. (Ming)
-> - Return ~0ULL for no cache alias.
-> ---
->  arch/x86/mm/pat/set_memory.c |  1 +
->  drivers/cxl/Kconfig          |  4 +++
->  drivers/cxl/core/Makefile    |  1 +
->  drivers/cxl/core/mbox.c      |  8 +++++
->  drivers/cxl/core/mce.c       | 63 ++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mce.h       | 16 +++++++++
->  drivers/cxl/core/region.c    | 28 ++++++++++++++++
->  drivers/cxl/cxl.h            |  6 ++++
->  drivers/cxl/cxlmem.h         |  2 ++
->  tools/testing/cxl/Kbuild     |  1 +
->  10 files changed, 130 insertions(+)
->  create mode 100644 drivers/cxl/core/mce.c
->  create mode 100644 drivers/cxl/core/mce.h
+> So, cxl_dev_state_identify() becomes cxl_mem_identify(), since
+> it is a memory-device command. Move it inside of cxl_mem_dpa_fetch()
+> since it is just temporary init-data for 'struct cxl_dpa_info'.
 >
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index 95bc50a8541c..a0df698f46a2 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -2083,6 +2083,7 @@ int set_mce_nospec(unsigned long pfn)
->  		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
->  	return rc;
->  }
-> +EXPORT_SYMBOL_GPL(set_mce_nospec);
->  
->  /* Restore full speculative operation to the pfn. */
->  int clear_mce_nospec(unsigned long pfn)
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 876469e23f7a..d1c91dacae56 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -146,4 +146,8 @@ config CXL_REGION_INVALIDATION_TEST
->  	  If unsure, or if this kernel is meant for production environments,
->  	  say N.
->  
-> +config CXL_MCE
-> +	def_bool y
-> +	depends on X86_MCE && MEMORY_FAILURE
-> +
->  endif
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 1a0c9c6ca818..61c9332b3582 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -17,3 +17,4 @@ cxl_core-y += cdat.o
->  cxl_core-y += acpi.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> +cxl_core-$(CONFIG_CXL_MCE) += mce.o
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index f42c4c56dc43..ad11f49cb117 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -11,6 +11,7 @@
->  
->  #include "core.h"
->  #include "trace.h"
-> +#include "mce.h"
->  
->  static bool cxl_raw_allow_all;
->  
-> @@ -1458,6 +1459,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
->  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
->  {
->  	struct cxl_memdev_state *mds;
-> +	int rc;
->  
->  	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
->  	if (!mds) {
-> @@ -1473,6 +1475,12 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
->  	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
->  	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
->  
-> +	cxl_register_mce_notifier(&mds->mce_notifier);
-> +	rc = devm_add_action_or_reset(dev, cxl_unregister_mce_notifier,
-> +				      &mds->mce_notifier);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-
-maybe we can put this devm release action into cxl_register_mce_notifier() and rename cxl_register_mce_notifier() to devm_cxl_register_mce_notifier()?
-
-
->  	return mds;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
-> diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-> new file mode 100644
-> index 000000000000..dab5acce249e
-> --- /dev/null
-> +++ b/drivers/cxl/core/mce.c
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-> +#include <linux/mm.h>
-> +#include <linux/notifier.h>
-> +#include <linux/set_memory.h>
-> +#include <asm/mce.h>
-> +#include <cxlmem.h>
-> +#include "mce.h"
-> +
-> +static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
-> +			  void *data)
-> +{
-> +	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
-> +						    mce_notifier);
-> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct mce *mce = data;
-> +	u64 spa, spa_alias;
-> +	unsigned long pfn;
-> +
-> +	if (!mce || !mce_usable_address(mce))
-> +		return NOTIFY_DONE;
-> +
-> +	if (!endpoint)
-> +		return NOTIFY_DONE;
-> +
-> +	spa = mce->addr & MCI_ADDR_PHYSADDR;
-> +
-> +	pfn = spa >> PAGE_SHIFT;
-> +	if (!pfn_valid(pfn))
-> +		return NOTIFY_DONE;
-> +
-> +	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
-> +	if (spa_alias == ~0ULL)
-> +		return NOTIFY_DONE;
-> +
-> +	pfn = spa_alias >> PAGE_SHIFT;
-> +
-> +	/*
-> +	 * Take down the aliased memory page. The original memory page flagged
-> +	 * by the MCE will be taken cared of by the standard MCE handler.
-> +	 */
-> +	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address0: %#llx\n",
-> +		  spa_alias);
-> +	if (!memory_failure(pfn, 0))
-> +		set_mce_nospec(pfn);
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +void cxl_register_mce_notifier(struct notifier_block *mce_notifier)
-> +{
-> +	mce_notifier->notifier_call = cxl_handle_mce;
-> +	mce_notifier->priority = MCE_PRIO_UC;
-> +	mce_register_decode_chain(mce_notifier);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_register_mce_notifier, "CXL");
-> +
-> +void cxl_unregister_mce_notifier(void *mce_notifier)
-> +{
-> +	mce_unregister_decode_chain(mce_notifier);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_mce_notifier, "CXL");
-
-My understanding is that these two functions are no need to be exported, because they are invoked inside cxl_core.ko.
-
-I check that they are not exported in v2, any reason for this change?
-
-
-Ming
-
+> [..]
+>>> -		rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
+>>> -				 mds->volatile_only_bytes, "ram");
+>>> -		if (rc)
+>>> -			return rc;
+>>> -		return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
+>>> -				   mds->volatile_only_bytes,
+>>> -				   mds->persistent_only_bytes, "pmem");
+>>> +		info->range[CXL_PARTITION_RAM] = (struct range) {
+>>> +			.start = 0,
+>>> +			.end = mds->volatile_only_bytes - 1,
+>>> +		};
+>>> +		info->nr_partitions++;
+>>> +
+>>> +		if (!mds->persistent_only_bytes)
+>>> +			return 0;
+>>> +
+>>> +		info->range[CXL_PARTITION_PMEM] = (struct range) {
+>>> +			.start = mds->volatile_only_bytes,
+>>> +			.end = mds->volatile_only_bytes +
+>>> +			       mds->persistent_only_bytes - 1,
+>>> +		};
+>>> +		info->nr_partitions++;
+>> This nr partitions makes some sense though I'd be tempted to add a type
+>> array to info so that we can just not pass empty ones if we don't want to.
+>> Makes this code a little more complex, but not a lot and means
+>> nr->partitions becomes the ones that actually exist.
+> Agree, that's the end goal.
+>
+>>> +		return 0;
+>>>   	}
+>>>   
+>>>   	rc = cxl_mem_get_partition_info(mds);
+>>> @@ -1300,15 +1279,24 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+>>>   		return rc;
+>>>   	}
+>>>   
+>>> -	rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
+>>> -			 mds->active_volatile_bytes, "ram");
+>>> -	if (rc)
+>>> -		return rc;
+>>> -	return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
+>>> -			   mds->active_volatile_bytes,
+>>> -			   mds->active_persistent_bytes, "pmem");
+>>> +	info->range[CXL_PARTITION_RAM] = (struct range) {
+>>> +		.start = 0,
+>>> +		.end = mds->active_volatile_bytes - 1,
+>>> +	};
+>>> +	info->nr_partitions++;
+>>> +
+>>> +	if (!mds->active_persistent_bytes)
+>>> +		return 0;
+>>> +
+>>> +	info->range[CXL_PARTITION_PMEM] = (struct range) {
+>>> +		.start = mds->active_volatile_bytes,
+>>> +		.end = mds->active_volatile_bytes + mds->active_persistent_bytes - 1,
+>>> +	};
+>>> +	info->nr_partitions++;
+>>> +
+>>> +	return 0;
+>>>   }
+>>> -EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, "CXL");
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>> index 78e92e24d7b5..2e728d4b7327 100644
+>>> --- a/drivers/cxl/cxlmem.h
+>>> +++ b/drivers/cxl/cxlmem.h
+>>> @@ -97,6 +97,20 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>>>   			 resource_size_t base, resource_size_t len,
+>>>   			 resource_size_t skipped);
+>>>   
+>>> +/* Well known, spec defined partition indices */
+>>> +enum cxl_partition {
+>>> +	CXL_PARTITION_RAM,
+>>> +	CXL_PARTITION_PMEM,
+>>> +	CXL_PARTITION_MAX,
+>>> +};
+>>> +
+>>> +struct cxl_dpa_info {
+>>> +	u64 size;
+>>> +	struct range range[CXL_PARTITION_MAX];
+>>> +	int nr_partitions;
+>>> +};
+>> blank line seems appropriate here.
+> Added.
+>
+>>> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info);
+>>> +
+>>>   static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+>>>   					 struct cxl_memdev *cxlmd)
+>>>   {
+>>> @@ -408,6 +422,16 @@ struct cxl_dpa_perf {
+>>>   	int qos_class;
+>>>   };
+>>>   
+>>>   /**
+>>>    * struct cxl_dev_state - The driver device state
+>>>    *
+>>> @@ -423,8 +447,8 @@ struct cxl_dpa_perf {
+>>>    * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+>>>    * @media_ready: Indicate whether the device media is usable
+>>>    * @dpa_res: Overall DPA resource tree for the device
+>>> - * @_pmem_res: Active Persistent memory capacity configuration
+>>> - * @_ram_res: Active Volatile memory capacity configuration
+>>> + * @part: DPA partition array
+>>> + * @nr_partitions: Number of DPA partitions
+>> This needs more. It is not the number of partitions present I think, it
+>> is the number that a particular driver is potentially interested in.
+>>
+>>>    * @serial: PCIe Device Serial Number
+>>>    * @type: Generic Memory Class device or Vendor Specific Memory device
+>>>    * @cxl_mbox: CXL mailbox context
+>>> @@ -438,21 +462,39 @@ struct cxl_dev_state {
+>>>   	bool rcd;
+>>>   	bool media_ready;
+>>>   	struct resource dpa_res;
+>>> -	struct resource _pmem_res;
+>>> -	struct resource _ram_res;
+>>> +	struct cxl_dpa_partition part[CXL_PARTITION_MAX];
+>>> +	unsigned int nr_partitions;
+>>>   	u64 serial;
+>>>   	enum cxl_devtype type;
+>>>   	struct cxl_mailbox cxl_mbox;
+>>>   };
+>>>   
+>>> -static inline struct resource *to_ram_res(struct cxl_dev_state *cxlds)
+>>> +static inline const struct resource *to_ram_res(struct cxl_dev_state *cxlds)
+>>>   {
+>>> -	return &cxlds->_ram_res;
+>>> +	if (cxlds->nr_partitions > 0)
+>>> +		return &cxlds->part[CXL_PARTITION_RAM].res;
+>>> +	return NULL;
+>>>   }
+>>>   
+>>> -static inline struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
+>>> +static inline const struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
+>>>   {
+>>> -	return &cxlds->_pmem_res;
+>>> +	if (cxlds->nr_partitions > 1)
+>> This is very confusing as nr_partitions is being used not to indicate
+>> number of partitions but whether a driver has filled in the data for them
+>> (which may well be empty).
+>>
+>> I'd rather see that as a bitmap, or a 'not set' value initialized by
+>> the core that is then replaced when they are set.
+> ...or even better, not require PMEM to be at partition1.
+>
+> [..]
