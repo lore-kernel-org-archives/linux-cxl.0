@@ -1,78 +1,101 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020129.outbound.protection.outlook.com [52.101.85.129])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4681714A5;
-	Tue, 21 Jan 2025 23:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377701B6CF9;
+	Tue, 21 Jan 2025 23:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737500497; cv=fail; b=UkFP8fBL4zILqb7B1niJXF3tKvH0GFwzZcxRF0yDE2WWHxJNzmE1uP+zC3j9UsW6EOlIwiXw9HbOeAft+zveD5M88A30f/SITSC/EK38xrjgWf9yFq1L+ZpNIvfTsyZs0g8N7NsMbjEar0wGC3UH4UMUXD1ObPxMgoDcF1M2Ysk=
+	t=1737500564; cv=fail; b=VA8YCN2QMMOEDa61hQnofN/aMFSKlXdIwG1VdwGiY++o/wdvEEOa9b8QdhCy9AKU4Fn41CYF7yfjHxStfT8DxC14ru5iY8c52IuWFtEQZX6pH6fFxfXHTx6IzpLEnHY8Wf7CJj4D+eBoC6+J/6sflf8rTuIEU+8NC7MGTTgek30=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737500497; c=relaxed/simple;
-	bh=hF/wZ6EnzfuvjkiQSxZHqAlo4iZRixrHcUAwNWHKaJw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kZH+8tGpBM6wlsN41hfSF0mPgFbJG9m93u5TZ7FWtcM0+xdRxKmm/0McRpP0rA2gysLm3AR4Oswndc8u1cUv53s7pTDg/WRx4OCqKI75Ow+pcmGtUo2R5wCUl+rzhO7KlisSQWwc0SrhZWnVkytjXLIj59D4Z4IACvM59AoPhto=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=nCG4Er41; arc=fail smtp.client-ip=52.101.85.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1737500564; c=relaxed/simple;
+	bh=7iGysornuE6whB2nBl2su1gPVM3NxOd4WRisgFKyJ3c=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=E8NmCeJT8LjRK5Ozwoi/gklKrcU/hUk2Hb65S5ghI0rIL8SaUcskRvuRZA0u0phlZ1MsPM3be1kfdebVgYQ0iuhhiJJ6QH/IAXLj4LBJnx+wWi36Hi7UvKpoZuA7g96kH481gPHKTKHEQWPb+aDCqxTt5H35S01zncFdlG4Xsxs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QCpWRko7; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="nCG4Er41"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QCpWRko7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737500563; x=1769036563;
+  h=date:from:to:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=7iGysornuE6whB2nBl2su1gPVM3NxOd4WRisgFKyJ3c=;
+  b=QCpWRko7JS5nTsPgO4SAdRlMRaAo01OdVh5SoITo2u1EHGnX7ANiEDFK
+   HGOj8dAnFGFx5afYbflhcYwQtnrXfG1qBFRhTkGMHcJnzl1YT0LH1lm+w
+   2ykAR7qrjEpgFOR+MTqW1rU0RajUKW0OLQ5Z4zGajlnq7sapw1yFmd3v1
+   pOawORIcfaWrvoZvcvQsvaiWM1875zZhSj+lTtksaEm7roQy3a3WcDfHH
+   5XqOyeW/sT/EQ0JeXjOzuzwVvbu8c/ZkZKS7MIe7eYVmsJwiTbG3jJJmr
+   QNOzQix6C111dNA5gC0qYTgOaKH8JR+GG4q1baaAMxc30FO0vp7tll0eu
+   g==;
+X-CSE-ConnectionGUID: q0ruO2QgRAGnKf2EVLzD6A==
+X-CSE-MsgGUID: vj2Vn46cT6iYHB3uUOvXBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37964677"
+X-IronPort-AV: E=Sophos;i="6.13,223,1732608000"; 
+   d="scan'208";a="37964677"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 15:02:42 -0800
+X-CSE-ConnectionGUID: V3ddm+oZSwuC35/kUvHCZg==
+X-CSE-MsgGUID: q6ChsLq8QL+oYBeWi6U8VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="106784958"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Jan 2025 15:02:42 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 21 Jan 2025 15:02:39 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 21 Jan 2025 15:02:39 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 21 Jan 2025 15:02:39 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AZlpiBTdSY6vqYVTWe/GwZnx9/Ms2vKzwScEVGQU6OYZch/wdjwFtJyjWiO3XwZ7ZiF4s21mG00qvl490fKxnlo38KhYBj8PGpbr6F6ttbDxPoeeNq3rKwMjgtpd3oY5nHz7e9fH1gmfNN6CdBb2wPreqwJCDhXOqyZPH7Fpu6ygmMUzO4ZQxatvLV1JGCexwSsMjfKnVKWs/rFM+UB7dDlV5GsNrYswQMdWMXpPNenfnLVfF7D5WJoLZsE1sa+x32WJi2yAk8IamqM59M7aOWlzkelpzP08EG8O+/asv1J/x/BUfGJgxRZAAskvxUCUzU0bJzR4saLcgBstIf5j2A==
+ b=yJJTGxxSqOoJetfXGGxH6Yzc5iiQBLCxpQ2myqQxCLqDdtNHESdoDVixllVxUvFQRqaTFgvmqIpNFP5cGxpLfJ63YMpwIX4wTGXH0RbDfWMqpi1Maf2PB9Dtb73D7SqzulY2SSb4lb2//L6COrIBL0q3PVMUoMvJDfN8wTRuXVtQreuh6sFlYSTe2QrJR9EhRSgyFhAX2B1dAJI7X/PoU/KeHAU79Iz0QXmRFTabz8dM+RhKND/QnQ9KBe06GCJMwMT7Bn/PtkXNl9eYandC9wiprNMT89NipVlBiEypsBKJFKgym+3LCX/DHN/L4Gaj4bL3ngdex//n6R1KAHcZww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XhX/vzLQuwrvZPY9lcTUO5OpizlZJcWnugEpPTzxxVQ=;
- b=qF5D+pEAa1LC+IVWHmz+M54GvMPzC9r5kIlcCRD1UMyUVf1HvM5uoRPIWtXBqfBESKkduAmiyBnOBXVxIlCyL17TWhlwGRXGsWNdDP8gUwr+dDgMo216UgHVXdLaAOfDLKXbZhfDtucxMKSyjmbJdJzuXGiZ2m6Cd8E0jxmhFvED0K1nm7EZZHeWL58rnI3ZaJF/hY5n3ctOOuRuNwbfnXluv8diTIM8NNc2wM+Yya9slOYGyyjnoA8+nPVJ/46bEdKyYWjp93VsbLk2fVJihfGWQ/MKeht2qdkhBxREcFHYmDg479CQ+O6U40GQcg9LWjY5SU2QG4wlRymJl72IYQ==
+ bh=Ti6jtC44N7h1BTw8mNd0xZmaMtYHy/FvK0Ex9T1K6fc=;
+ b=Izj9XnZB5NNI//nWjMYqJkVGVe7M9LIt3kjrfqO6n1ppn+NqXK40XOrU7mQziEHTN591hNpmBEGScP4Xd/szI69HHnghhwg4g7QI4IlJkAmqlS6nvjhCK8hTNAvrfJZrgd0HW+lvA6U1a1SjOXR/l3m+cqWVPRqQax5DTAZ7XpHcPIrZ4wLm2wDspFYtrqL9LEWBfThXE29fI8HhPVWcdwocTMmSOq1rGeSFlCukCaCKZJ2qbKv5SIcjf9aeBLbUaofylmRETzr9QUXCn1TP+A5fsh74QmiaIuzBKCzCiYDpt8l29s4YY2KjCs+/OgjvYydF0eRbG+FSyhhb9LTg/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XhX/vzLQuwrvZPY9lcTUO5OpizlZJcWnugEpPTzxxVQ=;
- b=nCG4Er41GBMHXcY38BEt5ttjXJjBm7oH8Vjo6NDgu8elX0e3Gv+M8Ls7HqJkxkHqrYoXPeKAQUiu6MPhsjPGTT5/FyKNDXuNQwsjAYnzVttRCwkWuL7jA6SkKAByfQk3xVF/WagH87qWe+o+7H8KIlu45n5Wp7zrTj7XVyS0oY0=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from SA3PR01MB8473.prod.exchangelabs.com (2603:10b6:806:397::12) by
- CH2PR01MB9134.prod.exchangelabs.com (2603:10b6:610:27f::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8377.11; Tue, 21 Jan 2025 23:01:33 +0000
-Received: from SA3PR01MB8473.prod.exchangelabs.com
- ([fe80::46d7:1d3a:dc9c:69c3]) by SA3PR01MB8473.prod.exchangelabs.com
- ([fe80::46d7:1d3a:dc9c:69c3%3]) with mapi id 15.20.8377.009; Tue, 21 Jan 2025
- 23:01:33 +0000
-Message-ID: <4c292a95-dec7-4407-98a2-194c73e19a2b@os.amperecomputing.com>
-Date: Tue, 21 Jan 2025 15:01:28 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 06/19] ras: mem: Add memory ACPI RAS2 driver
-To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
- mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
- Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
- Jon.Grimm@amd.com, dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
- james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
- erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
- gthelen@google.com, wschwartz@amperecomputing.com,
- dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
- nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
- roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
- wanghuiqiang@huawei.com, linuxarm@huawei.com
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <20250106121017.1620-7-shiju.jose@huawei.com>
-Content-Language: en-US
-From: Daniel Ferguson <danielf@os.amperecomputing.com>
-In-Reply-To: <20250106121017.1620-7-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0134.namprd03.prod.outlook.com
- (2603:10b6:303:8c::19) To SA3PR01MB8473.prod.exchangelabs.com
- (2603:10b6:806:397::12)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CY8PR11MB6865.namprd11.prod.outlook.com (2603:10b6:930:5f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.17; Tue, 21 Jan
+ 2025 23:01:56 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8356.020; Tue, 21 Jan 2025
+ 23:01:56 +0000
+Date: Tue, 21 Jan 2025 15:01:53 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, <alejandro.lucero-palau@amd.com>,
+	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <dave.jiang@intel.com>
+Subject: Re: [PATCH v9 10/27] resource: harden resource_contains
+Message-ID: <67902761a4869_20fa294c6@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20241230214445.27602-1-alejandro.lucero-palau@amd.com>
+ <20241230214445.27602-11-alejandro.lucero-palau@amd.com>
+ <678b0c0ca40ca_20fa29484@dwillia2-xfh.jf.intel.com.notmuch>
+ <fe48e2e9-5a13-78fe-d8f6-6c3faeecebcc@amd.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fe48e2e9-5a13-78fe-d8f6-6c3faeecebcc@amd.com>
+X-ClientProxiedBy: MW4P223CA0028.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -80,453 +103,139 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR01MB8473:EE_|CH2PR01MB9134:EE_
-X-MS-Office365-Filtering-Correlation-Id: e00d3b2d-c057-4dd1-735f-08dd3a6f8c98
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB6865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b591ce8-ed52-4c79-c08d-08dd3a6f9a91
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eVg1RDBtNFBhOVNla2RqUExiNXpJNjdyU2ZueUgrZzJGZE9HVFF1SENnbzlx?=
- =?utf-8?B?Q2JrVzMxbW5vZ0x0MkIrM1VZN205WG81L3JJTzQzN2E2aW1ubXFZejhCVk00?=
- =?utf-8?B?d0NDZU5xajV4WlppOUR5NnRveGo0UTZCWkpPalk3eWJNMnlHZ0QxUGhUeEMv?=
- =?utf-8?B?VzNTaXlVM1RTbTNqN09YRHM0WlZzL016VzlYcW5BZmhBNC9jd0R5S0VQVTVz?=
- =?utf-8?B?bkFlNUZNaUx5YU5TRllLaU9oYTFkdkd1dzN6OW1CNVdiUkNPWHk5QjVWV0xu?=
- =?utf-8?B?WTExOUFwM3p5NlJwWkl0azc5YnBTN0pTaXhEVmVtQ2RnaUZzVUtWTk9CVjlM?=
- =?utf-8?B?NEpsMlFEN2w3eFhnT2o5cFRPSUFMRkxXN0tXZmdISkZPbitXNWplckFJZExZ?=
- =?utf-8?B?Q1NWNENSNlM4NVFUSEIwKzF4K0ZCWUVTVTlUUUlsV2RNOUVGb3F3dFBRME9V?=
- =?utf-8?B?OUFocFRJZUt3cVEvK2EvTnBwWlVhTmFTME1QajU2NEQ5VVpvK29SQitKV01l?=
- =?utf-8?B?TkxnWjRHeDdvRjBCUGJpRU0xL0IvSHc5U1NGZUNFcUZjNE40QUxOdzliOWYv?=
- =?utf-8?B?bUdHZGtwMUN0WmlJSWpvcngyeXVteURKU2ZLa3AwVWZNNHlHZkFWYzMyV3JX?=
- =?utf-8?B?Y2dnYnpsb3pQOUZiek8ybGpuK0YwNWlJTUdtSkVQdlhFU0w3Y08rQitmVkxv?=
- =?utf-8?B?REJEeEZmTDVGUVFiUUt4ZHVDMlkzUHgwdW5KeTBlQVRDclpCeHBoRGFGYmVF?=
- =?utf-8?B?YlBINzhReVFqU3ppMG0xblFWQnNxcTlaeGRwdHpmdUp2cW9hM3N5NytPQ3My?=
- =?utf-8?B?emtBeTdMVmpNRDRDQXNxQnVsaGR6UkdhT1dGa0NMdGUzb0FpZkhLUjRXYTFL?=
- =?utf-8?B?OHY3aEZrRFhNSDJ1MzVSWi9wUi9vY01JR2RkN01qc2JLa0dCb1VaZlk3ME4y?=
- =?utf-8?B?VkxTdmFSZGh6TGVvbm90R2JFcE80YUdNSlVWUFdabnRXSUpCSFFwaUlIM2to?=
- =?utf-8?B?UmtyZWN6aEd5SUZNZjlINlVrYzFVb2VlYkExbDZYUWQxUW4vcGRwbmQwamd1?=
- =?utf-8?B?QXQ2S3FvbmZJSlZBTHhWZ3NlRHI1ZFlGaUJXU29Tc1RlYmhObndVcDhhZHdY?=
- =?utf-8?B?R3pDUlpZU09LaEV2R2FIdFNWelBVM1d4RHRzd1VXenRSdWxVcjlIcTE4L3JR?=
- =?utf-8?B?VnFxaUlweGdOangrNDBqTWZOU2tLTk1zTERXSjQzTnpQczdTMmR1UzgwYWVG?=
- =?utf-8?B?Y2hjdENvMHJMQ0F5aEtKd2U4N3NFSUo2eG5NdVloemE2R2hJTkEzejhPR0Fz?=
- =?utf-8?B?ZnpabjdCR1lVeGtoRnJrMkYzL3hQbjU0enRVY3hScE5teG8wVXZIdWZ4Z29w?=
- =?utf-8?B?UFU5RXg4Q0xQVUlJK01lTisyTWtJVElHc1ZEOFhPNGdLVklPbElNZ0F3UWFr?=
- =?utf-8?B?eGNBc2Y3eGI0dnZDZkUrcmM1U282YjUwb0g5K2hDN0pUandEbkdYUjVzOFYy?=
- =?utf-8?B?SysxcVFrbk5sUHZFL3V2NW56WjZ4SUtJWkNCd2Zua1Z2Yys4Yy84VnZDd2NV?=
- =?utf-8?B?RnZISkU4STZZK1B6VzNLMExZWXh1Vk9lbDBRWHVtV1hhZCs2dkp4djBtOEhy?=
- =?utf-8?B?eGVCQVJUbGF3R203NDFIMW5td0dheFlxcFY1VFFDUHdWbWJ5NGtVYWNqT0V3?=
- =?utf-8?B?T3U4SjdrUlF6R3EwdFcvRTZjSm9OWUV0b05CUWsvNWF5Si9IaXVyQXplcG5h?=
- =?utf-8?B?eGV6L1B0RTlxYmIyL1BYNEtOMnFVTGdUdFJqQVNzZzY5UEorSVI4NHlrbDQz?=
- =?utf-8?B?MEU2SytIU0gwRk9UQUhjbkErTGJxUTFDTHduNUxXZjhyZlNDYTRiZ29rMDlO?=
- =?utf-8?B?ZkVxZFhiekM0dnZKamVtc3RNWFNydHRiWW1nbi9ySFJ1WG55VDFEZ2pNY2NZ?=
- =?utf-8?Q?gXP6cjlKXuqfmhTm6QUX3gAPeN9+eVbB?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR01MB8473.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?ckqXTh2oEJuHqj1F+X6kNkm69VDFiMXkA/NC5Ic2HHYDaZ6mTlCU8WW3cy?=
+ =?iso-8859-1?Q?+Abkoi03ApSjKJLn/0WZNdq7IQQjYE4FbOlQzDZRhjgEN2j0mOsyDFPs4Q?=
+ =?iso-8859-1?Q?aJZrpEhSPYIcFSlXPbjkb6xnBhAI95zNPJ+2u5WCEHOGpcqGDkL8vYefrc?=
+ =?iso-8859-1?Q?dloJyS1zA7uZsM725+qLLSD2xwGRtjgS/CGY2NwF5sZi692ZPykvBTVyM0?=
+ =?iso-8859-1?Q?POdJkmqhnadtc7GMjnXt7GjFDGEXEZUJfdCWO/UumUAMZu0wQc85IsV4TJ?=
+ =?iso-8859-1?Q?lJSE0WQEtPnAQ2zG/tfx5tBOaJMfLV2xP0BcGTNAQ3qRCvtn5DcGBVCBFx?=
+ =?iso-8859-1?Q?obyzi5ZTPHOvvJCSf93IrOOs5vNjHkdiY6583TBsB7NU5cagA8VjtbUvzc?=
+ =?iso-8859-1?Q?1v09dLm5n2AoXF2gkagPlTscLSjhu2RmwdxKIZhoQMH05VhNVty901erjZ?=
+ =?iso-8859-1?Q?pkAIs1GS9IGf/eK1wqs1VnMkhxzP9FuY9lc2sZV2PAe45hJyNfjWRxtJB4?=
+ =?iso-8859-1?Q?Zar+teA7rN004u8tiPW+LjFA/YIgd4+b7oahr0HH7grRbXxmD7Uas6bbtJ?=
+ =?iso-8859-1?Q?zCLmGVHfN4OridjZtD+Jm35IzN32p3M0OWPXc554LMb4jWgSzEF5LhOKbi?=
+ =?iso-8859-1?Q?NXtnMS1YoY9XnD4Wib91qLi8BntuIXceF+hYJO4aG4CO4tyajQrCb2cYUA?=
+ =?iso-8859-1?Q?lpS/Fv4BRYNUb1no6Qan0eCa3pthEZrmLeo43m9SWirBSBCe7Ddz6eU5Fc?=
+ =?iso-8859-1?Q?FtpPnAABVzefjHriX0G0+6LH+o9VEg4EgUE4A5PSHs1jxnxZFskQ7vt+BY?=
+ =?iso-8859-1?Q?/0ZH7widg45UINdYMWkQA0+AYL6dNEN90YCm+tyZBeyTYaHiDc04jgna4/?=
+ =?iso-8859-1?Q?PNO6VUbkUhwvhQXjRgpy4B3UkJItHrEu27abjrxvhtNsicJYsfBnO1sIQ1?=
+ =?iso-8859-1?Q?rxtZ3Mb6JZq3bA3xkGgjbry15PcNdGN8RvwZ1RrpqQNemwUu+79pgmmucR?=
+ =?iso-8859-1?Q?9ZjDHKwyGy67oecvvVU/X1XhzoqklwCJ3+7VGUpnz0veLGqzSIygvinPbT?=
+ =?iso-8859-1?Q?yPwpzdIXnxqZEfidMEUYiynQonw6dbouyz115hMCP0qrhwGVH8CA53ZQ6l?=
+ =?iso-8859-1?Q?/Z3CakBaHkNBpnhvxrPkJYPaj6VR7NycvFYyw97B5A5T2tpHZrydvYW+gm?=
+ =?iso-8859-1?Q?BkX+QBYdUAzljJEwNheiyGG+UOrCuqzlZewIKsqja2Zc1I2BYg3NabFtE7?=
+ =?iso-8859-1?Q?sNinCoz6FpNGZ2UGaVg+1dlNv98fKI47GI3qcVpD2ern5Pr/+n4FRiMuHW?=
+ =?iso-8859-1?Q?NCQXTH4eMryNYpRYYfa7O6MrM8QLlYVrJVGWTJZY7qyuHTdc0aBy5jfNGD?=
+ =?iso-8859-1?Q?co7RTe+I4quVCYn3b/Kvkf6VhwzUdRLWCPwtwua7Ki7/kGreaS0wpENaoI?=
+ =?iso-8859-1?Q?xZrgGwee15T9NS7J46SbITru+IlAqpqadofQ2ho9f/ov0/NHVaw4dP/BwH?=
+ =?iso-8859-1?Q?A=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVdXUzVvRmd2ekdDakFEcEFZck9uaktvOUk2dVpvbUpLMitreU8rcGh1NEJN?=
- =?utf-8?B?VU1tM2hxMTV0OS8rRWJpOUxFYXg4K08raWxsWW5kcHYydndhRThQTEliYnNQ?=
- =?utf-8?B?VXVJOE1sQXRZb3NYWGszd2JVQ3l1T3l4b3ljYnlFQWM1eTlBejlHcVZjR0s2?=
- =?utf-8?B?NnJXTEJyb1pQanFJQ1VzV2c3dGo4S2UxTk5JaE1mNkRqV3VrQ2NSbk1LVnA1?=
- =?utf-8?B?Qzgzd0ZkWlF1WHRlQk5kdk5XWG1ZSUJPNmo1NGY5SXR2eXljaXZnM29qZEFj?=
- =?utf-8?B?UnBEc3dYK2JKa3RGbkJqemJOekRWcUFkWHIrVm5HaUJkZGhBSHMzb09aZHdw?=
- =?utf-8?B?akZzdjJ0MkE2Uy9QMU9VRWt0WmN2WkFOSndKenI0bmY5N1J6WC9wTmZFTk5V?=
- =?utf-8?B?UFlRYTdUb1ZpZEZUSndDcFVyb2VycUNtNkgvNjVPZlhOWGh2eE9yV3FsRy9M?=
- =?utf-8?B?d1laekNtbFVrUWZKY3BIQ3RLd0Q2VUc0ODFyYlJJZGFWMUtremF4cEEvQkJ3?=
- =?utf-8?B?YVFNOXZkOEdUZUZJaE1rc3VmcnlCYmxSTGt6aGFYZHF2UGFhckdzdEg2VHFX?=
- =?utf-8?B?b1QyTEFxR1lFdm9LVE1JRURWTzdjRTVpc2crT0VuM1U0RURYaDVGZXQveTJT?=
- =?utf-8?B?L3VBRXU5ZXZ3dzNxS0tENjg0SnVFRDJVWXEra2tqb0MvcVNCTmFlZ3dNdnc2?=
- =?utf-8?B?dHJxQkY4RkpwWk45eWhieXFWbFZrU1EvdU1NeGJ1S0s3bE4wdTA3MUVuYUJs?=
- =?utf-8?B?Vm1qcVVFL3dtSVZNeFZXa3VNeS9UR0lxNjRhOHhSa0Zmdm9US1FoOC9LZTJt?=
- =?utf-8?B?T29IbDFzU0pvamhWYllrd2ZZa1pXRHFnZHFZdERlNG5BWkdSWjFVRXpzeXJw?=
- =?utf-8?B?a0dvOUFEZXV3ekE4YjB6SkpMTFVhUjIwa1NGdTdUelpyaUd6eCszNFBmeUhl?=
- =?utf-8?B?WnZtdm5RZlZ0UituLzRvekxyRjQxMlFiTDFRLysrZjMvRXJBMXJmRGpwWUdN?=
- =?utf-8?B?M1dZUllZSXExMHozN1d6bEJaOHZoQmJqVEV4V0hKQlVaS21TVlNXTXNKTGlE?=
- =?utf-8?B?emVsZ1llVGxkZkF2S2N3M0JuTXZsWkp4Y2ZuYzMrbS84cXRxd1JlOUtleC83?=
- =?utf-8?B?TGZtb29iaERZZHhDUldwTDNxTzduNG81dVYzWFdtOU84WWIxdTNiUTlENkkv?=
- =?utf-8?B?Y29KNVZHQUVyZnVBdUZGcmltQW5Na2luNWtjZDBCa3duaG9LdTkyMUFwRTdK?=
- =?utf-8?B?dEVJSVVPeU54cks5ZEdaQXNxaXdsMWJaSGdQaHYvNms0VWNwTGNCZHFtRmNi?=
- =?utf-8?B?L0w2Y1c5djJ3Z1pUNnVVVW4rMXpSbGhmTmVRM3Y2RzBDcjhCZUZBd1RoaXgw?=
- =?utf-8?B?Q3FGbHB2bmpnWWRZNXJ6cEtvZEhGUmxsSlZFSkdIY1pCbFpQR1pEN0FIY2RQ?=
- =?utf-8?B?VGx0OUN1Zm9hNHQ2QTlLS1RWVHA4QWp3NG1UUGxqenBLOURTejJ0aldsR2d3?=
- =?utf-8?B?Z0J5YkM4emNjbmttYlJYWXhlbi8xZ1ZxMzYzMVAwTVhxNUFYNW9pNEZWN3hQ?=
- =?utf-8?B?ZGQvREFqQmYrVDRFUUo3YTdyWTFzaWRZZm1iaThOeWhCdHBmOE9kczVkdWQ2?=
- =?utf-8?B?OTZBS3ZmS0t5N0xHeVY0d2ZtNXNjeGFxSG1KQWJMK3U5blFxc1prVGNjNTdi?=
- =?utf-8?B?UDBrK21QR2lGRjJ3Mk9UVzdhVDZsYXdOaFJjTnlyb3JZSkxuMnF3RVF0WHF3?=
- =?utf-8?B?YUhOckZkRmh0bHc3TTZ3WHVZSDlmaFBUN2praGdKc3h6RnZCb0praEQwb2Vr?=
- =?utf-8?B?dUNMczFNSjEyczdqdFdFNUwvQ1VBemVvYzd1ZEVEeXlCM2plVmsrR29DYll3?=
- =?utf-8?B?QmJzc0tVSTlybVBGOGVlWUd4S1BMTmRMM2swbWtiTmw4T0JGQ0VnQ1BJNGQv?=
- =?utf-8?B?c2dDejlRVS8wMHFDN0llNDY5ZVFHNzB4cDFjS3JyTzQ2dGhiUmRwdFgzRE1H?=
- =?utf-8?B?M2h3bDBnOElHS09iazM3ZEJHWERhZEVFQkhHWW5UNmxrSnBkK0xxWmYrYmlx?=
- =?utf-8?B?clM4SWFNbldFVFFkRUp4cWgzaTBjWGNXR0lWeHdDcjBQQi9FdUhhU0c4ZWRZ?=
- =?utf-8?B?a1l6SFREWmVVYUsrOFgrWlh0Z1dGVHhVZUNubVordkVrYWpkZmovQ3ZHTmV4?=
- =?utf-8?Q?E/cO+KJrD6IPBX1URBmYWos=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e00d3b2d-c057-4dd1-735f-08dd3a6f8c98
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR01MB8473.prod.exchangelabs.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?OPAC42jExKSMee+MnBQhiSIKx9KObvhzjpPa+cjd70dqokZGngGcIU5N29?=
+ =?iso-8859-1?Q?HlcqKcKHOdcUyWI/XbhcwCxtuYa6A/2U3shcKGOIduDxCXeLRrTeI8bleo?=
+ =?iso-8859-1?Q?pFrLTQ1qh8CkUoH8kwaUKAlYAZQc2eYB+kDfmzy97Cm5/X1O8LTRDhAsbA?=
+ =?iso-8859-1?Q?JmkJk4zNnLgikt2lpj1Cw8HH56d4gNpWQjdSOehhyuinlDBwr+7XOCWFl6?=
+ =?iso-8859-1?Q?YbdBNhKrvNco+KG7kwgkZ/fYDBiYpt3SiJKIQhDhelblafRIco5TsTd6r1?=
+ =?iso-8859-1?Q?WZ2RCI5E+2Jijvu12KS7/hOLB3brxvlgr+vHl3wRznxG4ii7nsbX5g4ck3?=
+ =?iso-8859-1?Q?Z3xSrreKhyrQKQZclCh8pgomPqBrkD9tFdknqfzXwY1Cxv0D/5GE69X/6p?=
+ =?iso-8859-1?Q?E37lmsbpI6FG8MnAcSCxzqN+kDRurusFT5zqGtV48rJjMW7w/wsh28PS6j?=
+ =?iso-8859-1?Q?9+WMYH9IuQbKL3gKm690LV5wtIbotYOBDzyT8WM53X5l1/rEh2YO5eBBtX?=
+ =?iso-8859-1?Q?91Bfp0h1LJGgyybhRuFnupIKJ+cxz98PmMms96kvS1fVljMl4ZlwZZb7IK?=
+ =?iso-8859-1?Q?O9BISdmfIJGpQ9oU2tLMBHbnPutnYXrZO7sz4808GBDVUpHNvz7FCv6v/U?=
+ =?iso-8859-1?Q?vzWSyTG5Qk0GvblGUzy8ino9Pj0ucY7le6cfyHacFzZ4EfI9DBskoZhP12?=
+ =?iso-8859-1?Q?69ArBGOOeySyBSLjuE+L1yr5nkQfk0I3M0dkGuGzU8JFRjqtSAYKvm5hRk?=
+ =?iso-8859-1?Q?d+HzQzFJVoXnCRt5CC1soo5nGjQjyj+6TemSdo667ADrbc5CMSkG3whlv4?=
+ =?iso-8859-1?Q?SseEsSeyorX0ymzumy8mfppCNJe0I/JyJKaDQPVJHOxPdQzSWnImwsK+LY?=
+ =?iso-8859-1?Q?gvemHWPqOXne8w2XNsWfjcIquMvpZ8wVGcI8e1Gx0/mJ9CtpEPDCQ97KpD?=
+ =?iso-8859-1?Q?3EQRPgPdON/sfKFTlCbFsip8zLxO/9rcjV1RHONbnHGSPFJsdZDXYIyzc5?=
+ =?iso-8859-1?Q?AWrs+FfWltyeQoTAykBRYDhe+FJHfk1SujqZy+vmhctD1LXwuzEjyAzTJx?=
+ =?iso-8859-1?Q?RzWXflwkCu/EJ4eJyJPrgaAxUYTwJ7p9ambT7WXQyu5XpiQ/NutkPS+IYF?=
+ =?iso-8859-1?Q?qXfQWcNmJF0fOQGHHo9eJCM9ZxEMl2HdM3LpfHF2tJos/OukTyiJt5RxJN?=
+ =?iso-8859-1?Q?KP3GPPYcjo+p24WvZkKnjrt5dMk0CTqk5K4tkRjpzxYm+IMVae6tX5mFBU?=
+ =?iso-8859-1?Q?RfD0J3yo6i59HYkJauUDqBc2LjWXnXcNJzZXxWMrgCB4CBBM4gHvra1VPN?=
+ =?iso-8859-1?Q?emPSuK+dTWqfWUfpGLc28Gi6/YBljaFZ6/bmhqVC20r4LtP+XTdvu7U6xS?=
+ =?iso-8859-1?Q?Xg4wHxEw3Fe8qakIIIrn5Bjb6xuv7zbiP11JDdyk839iZOcyAs/iGy6PZ+?=
+ =?iso-8859-1?Q?00EhLqJrYhRgwCXBCZI2Vtu0hbYFNtxFZkj/b+vhCV22aPpKvi0Fpbcu2m?=
+ =?iso-8859-1?Q?7QUBLxriuAYlbvIKo5GjU0359kDOBnrptjfXUhDMqGxGkp3LzeqZL6PGl9?=
+ =?iso-8859-1?Q?BQ/hxN26kLpQC+Cr2GbWi2lMPjTI61+vXUL3ZUCPytUzDDgpyi5wPnYXvQ?=
+ =?iso-8859-1?Q?FE2jlJG/34rt44kbnYkRM4dq/tcBAUZIH1u50wfOEL4eykKJmfoTsYIg?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b591ce8-ed52-4c79-c08d-08dd3a6f9a91
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2025 23:01:33.1973
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2025 23:01:56.6836
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uyo0C23ra+75YfGr+NXheYbRKL/XaPjzE01kcVgL+fxz1gzVRT2TqBN1kiZgiE9yZX9kbRt9jujBK4AxxWhoYhaU5Vl9/5d3N7We3n/Cyz+yH+Utod12DQkU2VMh/fzu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR01MB9134
+X-MS-Exchange-CrossTenant-UserPrincipalName: +OmdbrFDRznm2uvbibhgLlehMSok8LSY8Yaoy/U6CfMaikl1xI7n7YZ6wrPGJHxsr3uxdsUUts5iIFpB/aTuyRNfx+aOEX1PiRUZeFuv7X0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6865
+X-OriginatorOrg: intel.com
 
+Alejandro Lucero Palau wrote:
+> 
+> On 1/18/25 02:03, Dan Williams wrote:
+> > alejandro.lucero-palau@ wrote:
+> >> From: Alejandro Lucero <alucerop@amd.com>
+> >>
+> >> While resource_contains checks for IORESOURCE_UNSET flag for the
+> >> resources given, if r1 was initialized with 0 size, the function
+> >> returns a false positive. This is so because resource start and
+> >> end fields are unsigned with end initialised to size - 1 by current
+> >> resource macros.
+> >>
+> >> Make the function to check for the resource size for both resources
+> >> since r2 with size 0 should not be considered as valid for the function
+> >> purpose.
+> >>
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> >> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> ---
+> >>   include/linux/ioport.h | 2 ++
+> >>   1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> >> index 5385349f0b8a..7ba31a222536 100644
+> >> --- a/include/linux/ioport.h
+> >> +++ b/include/linux/ioport.h
+> >> @@ -296,6 +296,8 @@ static inline unsigned long resource_ext_type(const struct resource *res)
+> >>   /* True iff r1 completely contains r2 */
+> >>   static inline bool resource_contains(const struct resource *r1, const struct resource *r2)
+> >>   {
+> >> +	if (!resource_size(r1) || !resource_size(r2))
+> >> +		return false;
+> > I just worry that some code paths expect the opposite, that it is ok to
+> > pass zero size resources and get a true result.
+> 
+> 
+> That is an interesting point, I would say close to philosophic 
+> arguments. I guess you mean the zero size resource being the one that is 
+> contained inside the non-zero one, because the other option is making my 
+> vision blurry. In fact, even that one makes me feel trapped in a 
+> window-less room, in summer, with a bunch of economists, I mean 
+> philosophers, and my phone without signal for emergency calls.
 
+The regression risk is not philosophic relative to how long this
+function has returned 'true' for the size == 0 case.
 
-On 1/6/2025 4:10 AM, shiju.jose@huawei.com wrote:
-> +#define pr_fmt(fmt)	"MEMORY ACPI RAS2: " fmt
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/edac.h>
-> +#include <linux/platform_device.h>
-> +#include <acpi/ras2_acpi.h>
-> +
-> +#define RAS2_DEV_NUM_RAS_FEATURES	1
-> +
-> +#define RAS2_SUPPORT_HW_PARTOL_SCRUB	BIT(0)
-> +#define RAS2_TYPE_PATROL_SCRUB	0x0000
-> +
-> +#define RAS2_GET_PATROL_PARAMETERS	0x01
-> +#define	RAS2_START_PATROL_SCRUBBER	0x02
-> +#define	RAS2_STOP_PATROL_SCRUBBER	0x03
-> +
-> +#define RAS2_PATROL_SCRUB_SCHRS_IN_MASK	GENMASK(15, 8)
-> +#define RAS2_PATROL_SCRUB_EN_BACKGROUND	BIT(0)
-> +#define RAS2_PATROL_SCRUB_SCHRS_OUT_MASK	GENMASK(7, 0)
-> +#define RAS2_PATROL_SCRUB_MIN_SCHRS_OUT_MASK	GENMASK(15, 8)
-> +#define RAS2_PATROL_SCRUB_MAX_SCHRS_OUT_MASK	GENMASK(23, 16)
-> +#define RAS2_PATROL_SCRUB_FLAG_SCRUBBER_RUNNING	BIT(0)
-> +
-> +#define RAS2_SCRUB_NAME_LEN      128
-> +#define RAS2_HOUR_IN_SECS    3600
-> +
-> +struct acpi_ras2_ps_shared_mem {
-> +	struct acpi_ras2_shared_memory common;
-> +	struct acpi_ras2_patrol_scrub_parameter params;
-> +};
-> +
+> But maybe it is just  my lack of understanding and there exists a good 
+> reason for this possibility.
 
-If the ACPI change here [1] comes to fruition, then checking for errors
-will/may have to be done by each individual feature. To show how that
-may look, I've included a possible implementation to illustrate what I'm
-trying to convey.
+Questions like the following are good to answer when changing long
+standing behavior:
 
-static int ras2_scrub_map_status_to_error(u32 cap_status)
-{
-	switch (cap_status) {
-	case ACPI_RAS2_NOT_VALID:
-	case ACPI_RAS2_NOT_SUPPORTED:
-		return -EPERM;
-	case ACPI_RAS2_BUSY:
-		return -EBUSY;
-	case ACPI_RAS2_FAILED:
-	case ACPI_RAS2_ABORTED:
-	case ACPI_RAS2_INVALID_DATA:
-		return -EINVAL;
-	default: /* 0 or other, Success */
-		return 0;
-	}
-}
+Did you look at any other resource_contains() user to get a sense of
+that regression risk?
 
-[1] https://github.com/tianocore/edk2/issues/10540
+Is the benefit to changing this higher than that risk?
 
-> +static int ras2_is_patrol_scrub_support(struct ras2_mem_ctx *ras2_ctx)
-> +{
-> +	struct acpi_ras2_shared_memory __iomem *common = (void *)
-> +						ras2_ctx->pcc_comm_addr;
-> +
-> +	guard(mutex)(&ras2_ctx->lock);
-> +	common->set_capabilities[0] = 0;
-> +
-> +	return common->features[0] & RAS2_SUPPORT_HW_PARTOL_SCRUB;
-> +}
-> +
-> +static int ras2_update_patrol_scrub_params_cache(struct ras2_mem_ctx *ras2_ctx)
-> +{
-> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
-> +						ras2_ctx->pcc_comm_addr;
-> +	int ret;
-> +
-> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-> +	ps_sm->params.patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
-> +
-> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-> +	if (ret) {
-> +		dev_err(ras2_ctx->dev, "failed to read parameters\n");
-> +		return ret;
-> +	}
-
-
-ret = ras2_scrub_map_status_to_error(ps_sm->scrub_params.status);
-if (ret != 0)
-	return ret;
-
-> +
-> +	ras2_ctx->min_scrub_cycle = FIELD_GET(RAS2_PATROL_SCRUB_MIN_SCHRS_OUT_MASK,
-> +					      ps_sm->params.scrub_params_out);
-> +	ras2_ctx->max_scrub_cycle = FIELD_GET(RAS2_PATROL_SCRUB_MAX_SCHRS_OUT_MASK,
-> +					      ps_sm->params.scrub_params_out);
-> +	if (!ras2_ctx->bg) {
-> +		ras2_ctx->base = ps_sm->params.actual_address_range[0];
-> +		ras2_ctx->size = ps_sm->params.actual_address_range[1];
-> +	}
-> +	ras2_ctx->scrub_cycle_hrs = FIELD_GET(RAS2_PATROL_SCRUB_SCHRS_OUT_MASK,
-> +					      ps_sm->params.scrub_params_out);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Context - lock must be held */
-> +static int ras2_get_patrol_scrub_running(struct ras2_mem_ctx *ras2_ctx,
-> +					 bool *running)
-> +{
-> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
-> +						ras2_ctx->pcc_comm_addr;
-> +	int ret;
-> +
-> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-> +	ps_sm->params.patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
-> +
-> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-> +	if (ret) {
-> +		dev_err(ras2_ctx->dev, "failed to read parameters\n");
-> +		return ret;
-> +	}
-
-ret = ras2_scrub_map_status_to_error(ps_sm->scrub_params.status);
-if (ret != 0)
-	return ret;
-
-> +
-> +	*running = ps_sm->params.flags & RAS2_PATROL_SCRUB_FLAG_SCRUBBER_RUNNING;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_read_min_scrub_cycle(struct device *dev, void *drv_data,
-> +					      u32 *min)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +
-> +	*min = ras2_ctx->min_scrub_cycle * RAS2_HOUR_IN_SECS;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_read_max_scrub_cycle(struct device *dev, void *drv_data,
-> +					      u32 *max)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +
-> +	*max = ras2_ctx->max_scrub_cycle * RAS2_HOUR_IN_SECS;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_cycle_read(struct device *dev, void *drv_data,
-> +				    u32 *scrub_cycle_secs)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +
-> +	*scrub_cycle_secs = ras2_ctx->scrub_cycle_hrs * RAS2_HOUR_IN_SECS;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_cycle_write(struct device *dev, void *drv_data,
-> +				     u32 scrub_cycle_secs)
-> +{
-> +	u8 scrub_cycle_hrs = scrub_cycle_secs / RAS2_HOUR_IN_SECS;
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	bool running;
-> +	int ret;
-> +
-> +	guard(mutex)(&ras2_ctx->lock);
-> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (running)
-> +		return -EBUSY;
-> +
-> +	if (scrub_cycle_hrs < ras2_ctx->min_scrub_cycle ||
-> +	    scrub_cycle_hrs > ras2_ctx->max_scrub_cycle)
-> +		return -EINVAL;
-> +
-> +	ras2_ctx->scrub_cycle_hrs = scrub_cycle_hrs;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_read_addr(struct device *dev, void *drv_data, u64 *base)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	int ret;
-> +
-> +	/*
-> +	 * When BG scrubbing is enabled the actual address range is not valid.
-> +	 * Return -EBUSY now unless find out a method to retrieve actual full PA range.
-> +	 */
-> +	if (ras2_ctx->bg)
-> +		return -EBUSY;
-> +
-> +	/*
-> +	 * When demand scrubbing is finished firmware must reset actual
-> +	 * address range to 0. Otherwise userspace assumes demand scrubbing
-> +	 * is in progress.
-> +	 */
-> +	ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-> +	if (ret)
-> +		return ret;
-> +	*base = ras2_ctx->base;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_read_size(struct device *dev, void *drv_data, u64 *size)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	int ret;
-> +
-> +	if (ras2_ctx->bg)
-> +		return -EBUSY;
-> +
-> +	ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-> +	if (ret)
-> +		return ret;
-> +	*size = ras2_ctx->size;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_write_addr(struct device *dev, void *drv_data, u64 base)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
-> +						ras2_ctx->pcc_comm_addr;
-> +	bool running;
-> +	int ret;
-> +
-> +	guard(mutex)(&ras2_ctx->lock);
-> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-> +	if (ras2_ctx->bg)
-> +		return -EBUSY;
-> +
-> +	if (!base || !ras2_ctx->size) {
-> +		dev_warn(ras2_ctx->dev,
-> +			 "%s: Invalid address range, base=0x%llx "
-> +			 "size=0x%llx\n", __func__,
-> +			 base, ras2_ctx->size);
-> +		return -ERANGE;
-> +	}
-> +
-> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (running)
-> +		return -EBUSY;
-> +
-> +	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-> +	ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-> +						    ras2_ctx->scrub_cycle_hrs);
-> +	ps_sm->params.requested_address_range[0] = base;
-> +	ps_sm->params.requested_address_range[1] = ras2_ctx->size;
-> +	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
-> +	ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-> +
-> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-> +	if (ret) {
-> +		dev_err(ras2_ctx->dev, "Failed to start demand scrubbing\n");
-> +		return ret;
-> +	}
-ret = ras2_scrub_map_status_to_error(ps_sm->scrub_params.status);
-if (ret != 0)
-	return ret;
-
-> +
-> +	return ras2_update_patrol_scrub_params_cache(ras2_ctx);
-> +}
-> +
-> +static int ras2_hw_scrub_write_size(struct device *dev, void *drv_data, u64 size)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	bool running;
-> +	int ret;
-> +
-> +	guard(mutex)(&ras2_ctx->lock);
-> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (running)
-> +		return -EBUSY;
-> +
-> +	if (!size) {
-> +		dev_warn(dev, "%s: Invalid address range size=0x%llx\n",
-> +			 __func__, size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ras2_ctx->size = size;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ras2_hw_scrub_set_enabled_bg(struct device *dev, void *drv_data, bool enable)
-> +{
-> +	struct ras2_mem_ctx *ras2_ctx = drv_data;
-> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
-> +						ras2_ctx->pcc_comm_addr;
-> +	bool running;
-> +	int ret;
-> +
-> +	guard(mutex)(&ras2_ctx->lock);
-> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-> +	if (ret)
-> +		return ret;
-> +	if (enable) {
-> +		if (ras2_ctx->bg || running)
-> +			return -EBUSY;
-> +		ps_sm->params.requested_address_range[0] = 0;
-> +		ps_sm->params.requested_address_range[1] = 0;
-> +		ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-> +		ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-> +							    ras2_ctx->scrub_cycle_hrs);
-> +		ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-> +	} else {
-> +		if (!ras2_ctx->bg)
-> +			return -EPERM;
-> +		if (!ras2_ctx->bg && running)
-> +			return -EBUSY;
-> +		ps_sm->params.patrol_scrub_command = RAS2_STOP_PATROL_SCRUBBER;
-> +	}
-> +	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
-> +	ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_EN_BACKGROUND,
-> +						    enable);
-> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-> +	if (ret) {
-> +		dev_err(ras2_ctx->dev, "Failed to %s background scrubbing\n",
-> +			enable ? "enable" : "disable");
-> +		return ret;
-> +	}
-ret = ras2_scrub_map_status_to_error(ps_sm->scrub_params.status);
-if (ret != 0)
-	return ret;
-
-> +	if (enable) {
-> +		ras2_ctx->bg = true;
-> +		/* Update the cache to account for rounding of supplied parameters and similar */
-> +		ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-> +	} else {
-> +		ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-> +		ras2_ctx->bg = false;
-> +	}
-> +
-> +	return ret;
-> +}
-
-
+Would it be better to just document the expectation that the caller
+should only pass non-zero sized resources to this function?
