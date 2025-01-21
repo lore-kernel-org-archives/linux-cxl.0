@@ -1,464 +1,366 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2063.outbound.protection.outlook.com [40.107.237.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2846519F424;
-	Tue, 21 Jan 2025 18:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737483404; cv=none; b=I9VmxYPIdMnfmUu/9p/vMb97yNkqI6vZ43xSOJ/i0Pk7gLTxLcSb3UPDXu+2gsQ+2m7vsTdR7qOcReHXngpHTW/wtM8fVH9U3vkIBtK3oK6cTrmH+AuGVDejAnfdfrPxbcozT62x/tbagEHCUyeW5dCol/CQA6iq1rwcqWJjhdg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737483404; c=relaxed/simple;
-	bh=gjwpNw5OGaTBwscHmvWr0PiuOtX46QpIj9dpYx/ror4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T9skBAO2DMXR28mh01J3GIFeoktakOzZlIBLmTjco0QQeKROCSRceUhEruCA+LZxJV8BI22M4UZydJZWRNy6PHxXAw6noQm8X5EQoiahRIgdKrTJe5E9J9kcAHm4yeq8PMJN7IvCTAYPTOZda/wPZxTrtGyO/wA386b6uNMGW0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YcwPy6XZzz6K9K3;
-	Wed, 22 Jan 2025 02:16:22 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8AB7B1400DB;
-	Wed, 22 Jan 2025 02:16:36 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 21 Jan
- 2025 19:16:34 +0100
-Date: Tue, 21 Jan 2025 18:16:32 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: Shiju Jose <shiju.jose@huawei.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>, Vandana Salve <vsalve@micron.com>
-Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
-Message-ID: <20250121181632.0000637c@huawei.com>
-In-Reply-To: <20250121161653.GAZ4_IdYDQ9_-QoEvn@fat_crate.local>
-References: <20250109091915.GAZ3-Uk3rkuh38cQyy@fat_crate.local>
-	<3b2d4275d1d24dbeacee0f192ac4d69b@huawei.com>
-	<20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
-	<20250109142433.00004ea7@huawei.com>
-	<20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
-	<20250109160159.00002add@huawei.com>
-	<20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
-	<20250109183448.000059ec@huawei.com>
-	<20250111171243.GCZ4Kmi5xMtY2ktCHm@fat_crate.local>
-	<20250113110740.00003a7c@huawei.com>
-	<20250121161653.GAZ4_IdYDQ9_-QoEvn@fat_crate.local>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42F51F1527
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 18:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737485366; cv=fail; b=inLiIqwSK68x7LyOyHz8ZpxMZoCOZ3RY493S77sR3RELxvHvMQtX3pBo0UWmzayCousyv6DW2XDvyLt3FBF0y7Vsd0/dMYKW9nJePog0aWGrPCRziM/0/PklD/bOVe9IpXQEEs0sQVVfeZXe3KF6TtN/Wv8XhsMQFRFcGdw3gv8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737485366; c=relaxed/simple;
+	bh=nxBGbdH27dL/ODArB4Uv3RoCiTuPv1jk57XMRQak8+s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lh41u5oO75Kxzcqoi7NST3M3BnMSQojFJVI2krSVCu5SRvIQaYIqrOGcEpj/WMelOqWli2k2QXGD4OvZy+blfdekn3nLh1/TXERd4hWUXPlRc5y2aTTAg0ZXb0W7stjogrzIdnjXNsl/inAiONifCARcNLXXUS/QYHshAk0lJoM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zQn9yTrO; arc=fail smtp.client-ip=40.107.237.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zQn9yTrO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XLDAth7OGSw+owHSndrSWPIo+m3yvItd0/GfhvgltCeKAyewUhU2rdQyRiylqNcnrkxY6xw5ZYRPTyzo8EmGwuJeWzhcP5nS9n4liEby6kew57kijnm6igKplImDZDkpWhCE2HN0/jsaIlrinSJZ0NK/kBOIJnf4AF7O3dJEA3nuVEVx630waU4Khx8haHjP4L7Vd/eG4M/w2vIFOBW2DWk6BJ06rolYkOm7yyhi4ZkM50trq6HZe7Wdv/yNaDlwHgJM31wx8VMaTCQmflMfD9sxKcz4rlcw/MbOSNV5gOSiPOHE1eXVqrdaj79AGixmgzB+CEHUxB6TGRtaMfjUBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ASUCduUuu0Pg6fV+buxrDDmWkbM8mDU3Y7wnSawCfBA=;
+ b=bVTq+kIjjpz4Lt5yzwRE8z62hRfVE+NANOvB6sqg8qVhglMKDK7lMrPjxtbgqA4ifM0/fmlF06r/lDZVm/QPZVB52d9d2P3OvFsVTc7G4JP169a9HJRDK3q3kmp6FwebrUROGgirCwgU/G4IDNrPVibScNR3WRp/ctynCxJVm6k0GlrDFk2MDqa04u13K2dUT5j9zX2k2PvbjzDE+zQV7X+bDs6G31WXpEJbzEHh4pP9AEzOG7MIlIXYEdyUHnkNvb5lrx70re5ljiRC7D/6hcbw0ZBIO9Wn8ZP+Mt/hb/DV9hVpwG1xSGe9QMpcqU8FHtDlRK9YO9QATZsMAPFkIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASUCduUuu0Pg6fV+buxrDDmWkbM8mDU3Y7wnSawCfBA=;
+ b=zQn9yTrOi//Vr2e7OuKPbazBKzi33ei43eRmIgi1kWjevVMtS0Mb9R9BMNDXbYLIgsswRAvG+tOF+wBvuyPKzFEYwAYve1TlQIE7c3Yv6TFa2gcUBRckw00bvOJtqPoKYpD88g35ctLjpoORBKuvhb4xTaoSYJfezaKD+OT8gVM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6222.namprd12.prod.outlook.com (2603:10b6:208:3c2::19)
+ by PH8PR12MB7109.namprd12.prod.outlook.com (2603:10b6:510:22f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.18; Tue, 21 Jan
+ 2025 18:49:21 +0000
+Received: from MN0PR12MB6222.namprd12.prod.outlook.com
+ ([fe80::4044:a263:92a1:6b3e]) by MN0PR12MB6222.namprd12.prod.outlook.com
+ ([fe80::4044:a263:92a1:6b3e%7]) with mapi id 15.20.8356.020; Tue, 21 Jan 2025
+ 18:49:21 +0000
+Message-ID: <fb3eaa1e-0c87-4859-94b0-373ba50e4d78@amd.com>
+Date: Tue, 21 Jan 2025 12:49:19 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] dax: Update hmem resource/device registration
+To: Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, alison.schofield@intel.com, linux-mm@kvack.org,
+ gourry@gourry.net
+References: <cover.1737046620.git.nathan.fontenot@amd.com>
+ <9a41f91ed487ea64e187d84fab3bd69a4a5862f9.1737046620.git.nathan.fontenot@amd.com>
+ <67898815e6280_1c3f7529466@iweiny-mobl.notmuch>
+Content-Language: en-US
+From: "Fontenot, Nathan" <nafonten@amd.com>
+In-Reply-To: <67898815e6280_1c3f7529466@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0113.namprd12.prod.outlook.com
+ (2603:10b6:802:21::48) To MN0PR12MB6222.namprd12.prod.outlook.com
+ (2603:10b6:208:3c2::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|PH8PR12MB7109:EE_
+X-MS-Office365-Filtering-Correlation-Id: ebe1df80-63d0-4c25-a3a7-08dd3a4c515c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MklGMm1lNzl5TEVRUTZaZmtrcVhXZkg5Ymp6cVJnZzQ4UEQ2VWl3ZnVyeXdC?=
+ =?utf-8?B?RWVQdXFGNHlpenpmMzhZQ0VSdEt2T216bUUzUUdnZmtOTWtBRlZsYmNIVmpH?=
+ =?utf-8?B?VjV1UjNFSzlEc09scjZuaFNRVC9BWERLZFhNT2lHTDBoRGNUWWFzanlURnJS?=
+ =?utf-8?B?Sm1jV0N4eUhtQmRwSDNHYUlYOUgxb2hYdFpNc1BwajlVTkdoNE9kUURsUGdB?=
+ =?utf-8?B?RmRtckdzMnVVNnoyYVk0bHBYdkQ1aUFVd2NNZkZIckV4SkxBZHV2WS9kbGE3?=
+ =?utf-8?B?QjNnQVp6emlxT2FBTzltRHJPNVY0OWtEL0NiRElITTN2ZjRiUURVeTRPS080?=
+ =?utf-8?B?THJrMTZtem5yR1kxZWVuRkVYSjhPeXg4dFNZc2NwTTFuN0hTUk5FbHJIK1lL?=
+ =?utf-8?B?VGNWUVNRbjUxbmd6Smo5bkxOV0VRVFNQYmdKQWxUZ2dPTTJtUXBmZjhkcXBy?=
+ =?utf-8?B?eFpwUWVKd01JenJSa3VtZVdnYmVhMENFcWRkTmhxVUtWMFB5amJGVXM5SFJl?=
+ =?utf-8?B?ekF0Mmp6VlRQaW0xWUp4UEhRK3ExNXh2RnN5SVZVMnF6b3ZrVHZMNWcreEJ6?=
+ =?utf-8?B?S3ZKanpPZW5DSFVhQ1NFUjhOWUpaZUw2aE0ybTJnLzBMMkVDTnFmYzFIZmJB?=
+ =?utf-8?B?UmZEcU1LVGZzUjJORWpjd2psSzFDeEJIenh4VmM5bTVvRExKVHNXbFV0aDVZ?=
+ =?utf-8?B?S29HRFV5RWxUU2VodTFhZDhjdkFzZ1JWcFE4RmRjSXljVU1FTDl2VWtmS3Iy?=
+ =?utf-8?B?TkpWcTJQNGRqK3NOamZMWEhzSi9JQkRUMk0vOW1GN0pZUVdnMkxSWHpEYiti?=
+ =?utf-8?B?QitGUFdQcExlYThNREFkRzlxWXB5MktyZ1A4TGZybGp5Z3VRWVBDL1VCN01E?=
+ =?utf-8?B?Q0d3enZ5NndMaXFZcWg0YXVzVVdrVGJmU1NKSFNoclFtdnRDODNjNFl3bGEz?=
+ =?utf-8?B?dEdDbHBKVllTQytZcGJOVjBvUFdsa0l6YXF5Y3poUUl0TFFzUjJHRzQ2dEZ4?=
+ =?utf-8?B?RzgzTEo0UlpjbzBNRkNRbk1GdnFYMkJBZkJ5SlJlaDVrSDgxNS94Y1JnVTZp?=
+ =?utf-8?B?NkNWYVhpRGs2WjY1RDVKNWZ6SSs5Zkt4UXhna3ZzR1ZZRnJ3cGRLTE1IQUlv?=
+ =?utf-8?B?dVR2bmw3b3NTSGZtVm1BZS9tMG5jS21nNE1FdnNtdUpML0M2TmJHUERoRE04?=
+ =?utf-8?B?NWt0amZHbXRuTUJNZHVVdmdLZHhZb3MyZlFUMjVYQjVHN2c5YitadVZSK21q?=
+ =?utf-8?B?U3EwVjl3RDNVZmxQRDNYSnpGbWNpc21QWWR2K25zQmMxMnVOejFmNnpyQ1dH?=
+ =?utf-8?B?L1RoVWdlTUJYaDdiSWU1aitsaDF2UC9raURXNHhzTzcwbHowc0RISi9PMXlS?=
+ =?utf-8?B?U2s2T1Q4MWEvTzRyWjU1dktHaHNPZlo2NUNRSG93WWhBWmJOVVdNbFJ1RGxa?=
+ =?utf-8?B?UGIrem5EMDV0d1hMbWxEVGxyWmkvQUI0Y094NjE4OFBVbXpPOTcvZEdDZ0tP?=
+ =?utf-8?B?eHFmZnB4UnVGTHNpaHRJSFg3SWdqUnNiTEl0dVZvYnRpejgxb1pIVmpDbnB6?=
+ =?utf-8?B?TE1QQVB4Z2RlMVNVT2R4VkovcVMybmtaUDhIaThTUVJvbm1tMGloWitFa25J?=
+ =?utf-8?B?ZVpBQVgrUmdXUDJrTm4xMHJ3YU80ZzNGQ1c4bS9UalUvVUJ4eG9BY1VEZDl3?=
+ =?utf-8?B?Rlp3Rml0Y2FDTDF5RkRGeXZKaTZCdVE1WUZyczBWSVFjOHFxUzNtRmFUSXBm?=
+ =?utf-8?B?bFpTTE9XaFdMNGdhUmtXQVl6RWdlV0J1SVBjZlBJWVRHR2FUaTRiWFFPQTdo?=
+ =?utf-8?B?REdwc2JwNVZIN3RUTHAvZjRHang2UkF2SWo3QXo4d2I0bW0vUGpSYlFxU1NC?=
+ =?utf-8?Q?UymTXKS72kZMp?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6222.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WVkrVmhrb3BRWmlaNDYrbHZHUjhOelBTZ1J6ZzRBeGFhVnFQSXFBQXRKUThm?=
+ =?utf-8?B?RE9kc1VKZUltNkhERVg1RUg5eEVVaDJHaHZkVjdwcy8zMHB1cFVyd3FrVUdz?=
+ =?utf-8?B?cTE3bGVEb0RLcWhhRVp4UzZqZ1ZoOERsTDR5T2MzYjJVUlFpMlUxdGhJWU9o?=
+ =?utf-8?B?Umd2NWo2c0lVWE5RM2tRU0h3NEJ0bVJBamlMVk4rL0JOMlNOUTVoMVpCNGxn?=
+ =?utf-8?B?cjJpenhTWlF3bWhyNVRuclJLYlVKZWs2UnU0Q3ZrUHJGSXdUOTVOUzlFWktY?=
+ =?utf-8?B?YmZ3YUVBaHRGMDZzSWtRN1owcC9KRlI3T241QXlPOTd6MmlnM1dKTzBqWG5i?=
+ =?utf-8?B?Z2k2WXpVUUpKaDVnNTl6VkV0QmYwMHJoaUpwMzRvMmFDdGJUM0Z0RExCcWdN?=
+ =?utf-8?B?b2xqcEtOVmQvWlQ0djN1cDlOU0s3SDRzYktvWXhWaVpUTHBoaHg1OUgyVkw5?=
+ =?utf-8?B?cWJGRzZVNEQvQm1UcHBEdUp6djlEUjZxN1d3ei83NUFJd2k2d2VHd2YyQms0?=
+ =?utf-8?B?VmN3amhDNktRNTM4aVdjWXFvaGxISThnRzhpZWpDVHZ2OFd3QXE2UmVIaTVS?=
+ =?utf-8?B?NnBTOEhLM1JEQmlpNnUvVDFnNVRtQk1VcXFLSHJwV3NUbUVYWjdzSTRiUmZG?=
+ =?utf-8?B?Tm16TjlNV0xoZk9WTUc2Y0h1OTFjWWNqNlZRK0I0R2VQMEpnWVpBQ1B3a2xl?=
+ =?utf-8?B?Y1ZpYmhBcFZTbjBRcDJNcWI5MUR2UDhURTc5UEsxRVNJV05WdjZJYTlPQm5E?=
+ =?utf-8?B?V0RoYXBySHQ5N0R4TXhtcXppZlZVZG9LN2FzYlN2N20zOEtVdExvYTVZdFdY?=
+ =?utf-8?B?MXJmbWM1NHlnSlRVcHh6UjIzQStwVFFVa1F5NzY4czBLei82ZXhNVmVZRHB3?=
+ =?utf-8?B?K3VyaFBqR1QybUl6aGZyU1FQWDI2ZU5pQ3NxTUpjRXEySzVEVEtkMUlXTS9C?=
+ =?utf-8?B?UUROWFNGVmJURFVRRkswVDR5c09GQ3paUVd5VlBhcW5qUGlJaUxBYXg4RGo1?=
+ =?utf-8?B?cnV1b0gwWFM0NmVaS1RNck9UVUFISVdoMVBOMUdPNVNGOVQ0bjI4TGlLY3NP?=
+ =?utf-8?B?YWtlV2JMWjFhN1NoRVF3c1NjOGZ2TnBscHB4YWVERzdrcHVsazdMZ1d3QWpq?=
+ =?utf-8?B?UFpIRWg4cHgzWUEyU3c3S2ZyOVdwMFJyWjVpUS83QS8vTmYyazUxMENySGN6?=
+ =?utf-8?B?MGUyRjBkZi9HMHFqRk1GUHF6RGE2MEtvTkRHWThQVTFkYk9ydUgwelI2V2tM?=
+ =?utf-8?B?U2tOcGx4aERtWklITzBJRkxrRHdPME9SZTRMRDdNOWw3cGR6a0Rkb2haUjhG?=
+ =?utf-8?B?ZGpuaFhTV2NCamZqVHlvYllOM1JYVXRXL1RqM3lBTGF3VnRlODJvY3V1UExJ?=
+ =?utf-8?B?NlVlcnl6YTMvbGpOZnN6YzlMS0U1NmhnaWUvNlNOSG5CMzJNazJzVmZENUdV?=
+ =?utf-8?B?MzVyMW5hM1ordExXN2diWjkrZmVaL1FuMTlaTVZmS0lBVlNCZU4zZ0w4RnhL?=
+ =?utf-8?B?ZVpXcGdJdi9SSkNZRUFiOUZ2NXRmZThEOFAwMWVpM2tqRmkwY3Qrb1kyb1BW?=
+ =?utf-8?B?cHBBeVdraDZLTDZ3VDRMN2dZOWFTODhxV2VDZEdPOHNQUkFMTnhTNTNnRVhG?=
+ =?utf-8?B?dFBxeERyTkx1cGpUL3lYOUttVElWUW5JTmd5cXlVejQ0elY4SVZQSGIrdWFR?=
+ =?utf-8?B?YWxGMkI3MWlQN0xHZDZmQ3dWY0dFa1EzYzExa25UOWYya2p1Y29FZDZTdGhz?=
+ =?utf-8?B?aitnUGpmc3RiSUt2bjUvR3RSbG5ORkVGU0l3QWpUUEpqZUlGL1lMQ0VwWVFB?=
+ =?utf-8?B?NDVXazVDOG1kVkNLb1k0MGVtb25xTjR3L0hjVEp0YVhyeFRnUzIwNnR6cVdY?=
+ =?utf-8?B?UDFTWGdBOVhUM0VNSUo5dFo1Zi81Wi9mNzdEcktjRmNOU3ExRnowYVo1MmtT?=
+ =?utf-8?B?KzNSKzhvSVJaQXJVU0FtVCtxcjFCOWV1ZElINjBtajJheHF5aDZXdE1Wdi9Y?=
+ =?utf-8?B?b2ZWL2RCdmJ4T1NLTEtNNWNaYTNpVE9VUmNPRzZJMUNJOTlYckRZNytpMjhY?=
+ =?utf-8?B?ZlB3L1pCVTh6VGJYMnY1b3ZOS1ZzTHNZZUhvSTJZTG1ORllsVTB6L1VEa2FZ?=
+ =?utf-8?Q?MXBpWhh5s1ENcaTr6gO6HrOIh?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebe1df80-63d0-4c25-a3a7-08dd3a4c515c
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6222.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2025 18:49:21.4736
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FpeQnX9ln7VfWWxn9N99Y1uTyNHs3xqwSReru2m38YTpcghVNLQHp0zvbXEqcLZ9n7Dxv8o/7j0RSssMpxzofw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7109
 
-On Tue, 21 Jan 2025 17:16:53 +0100
-Borislav Petkov <bp@alien8.de> wrote:
-
-> On Mon, Jan 13, 2025 at 11:07:40AM +0000, Jonathan Cameron wrote:
-> > We can do that if you prefer.  I'm not that fussed how this is handled
-> > because, for tooling at least, I don't see why we'd ever read it.
-> > It's for human parsing only and the above is fine.  
+On 1/16/2025 4:28 PM, Ira Weiny wrote:
+> Nathan Fontenot wrote:
+>> In order to handle registering hmem devices for SOFT RESERVE reources
+>                                                               ^^^^^^^^^
+>                                                               resources
 > 
-Note we are dropping the min / max stuff in most cases as it was only
-added as it seems to be our misguided attempt to resolve an earlier
-review comment. That reduces some of the complexity and wasn't useful anyway.
-
-We are also splitting the patch set up differently so maybe we can
-move the discussion on to the 'extended' case for repair without also
-blocking the simple memory address based one.
-
-> Is there even a concrete use case for humans currently? Because if not, we
-> might as well not do it at all and keep it simple.
-
-Clearly we need to provide more evidence of use cases: 'Show us your code'
-seems to apply here.  We'll do that over the next few weeks.
-
-The concrete use case is repair of CXL memory devices using sparing,
-based on simple algorithms applied to the data RAS Daemon already has.
-The interface for the reasons discussed in the long thread with Dan
-is the minimum required to provide the information needed to allow
-for two use cases.  We enumerated them explicitly in the discussion with
-Dan because they possibly affected 'safety'.
-
-1) Power up, pre memory online, (typically non persistent) repair of
-   known bad memory.  There are two interface options for this, inject
-   the prior mapping from device physical address space (host address
-   is not necessarily relevant here as no address decoders have been
-   programmed yet in CXL - that happens as part of the flow to bring
-   the memory up), or use the information that userspace already has
-   (bank, rank etc) to select what memory is to be replaced with
-   spare capacity.
-   
-   Given the injection interface and the repair interface have to
-   convey the same data, the interface complexity is identical and
-   we might as well have a single step 'repair' rather than
-     1. Inject prior records then
-     2. Pass a physical address that is matched to one of those records.
-   
-   There are no security related concerns here as we always treat this
-   as new memory and zero it etc as part of onlining.
-
-2) Online case.  Here the restriction Dan proposed was that we 'check'
-   that we have seen an error record on this boot that matches the full
-   description.  That is matching both the physical address and the
-   topology (as that mapping can change from boot to boot, but not whilst
-   the memory is in use). This doesn't prevent any use case we have
-   come up with yet because, if we are making a post initial onlining
-   decision to repair we can assume there is a new error record that
-   provided new information on which we are acting.  Hence the kernel
-   had the information to check.
-
-   Whilst I wasn't convinced that we had a definite security
-   problem without this protection, it requires minimal changes and doesn't
-   block the flows we care about so we are fine with adding this check.
-
+>> that are added late in boot update the hmem_register_resource(),
+>> hmem_register_device(), and walk_hmem_resources() interfaces.
+>>
+>> Remove the target_nid arg to hmem_register_resource(). The target nid
+>> value is calculated from the resource start address and not used until
+>> registering a device for the resource. Move the target nid calculation
+>> to hmem_register_device().
+>>
+>> To allow for registering hmem devices outside of the hmem dax driver
+>> probe routine save the dax hmem platform driver during probe. The
+>> hmem_register_device() interface can then drop the host and target
+>> nid parameters.
+>>
+>> There should be no functional changes.
+>>
+>> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+>> ---
+>>  drivers/acpi/numa/hmat.c  |  7 ++-----
+>>  drivers/dax/hmem/device.c | 14 ++++++--------
+>>  drivers/dax/hmem/hmem.c   | 12 ++++++++----
+>>  include/linux/dax.h       |  9 ++++-----
+>>  4 files changed, 20 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> index 1a902a02390f..23d4b3ad6d88 100644
+>> --- a/drivers/acpi/numa/hmat.c
+>> +++ b/drivers/acpi/numa/hmat.c
+>> @@ -857,11 +857,8 @@ static void hmat_register_target_devices(struct memory_target *target)
+>>  	if (!IS_ENABLED(CONFIG_DEV_DAX_HMEM))
+>>  		return;
+>>  
+>> -	for (res = target->memregions.child; res; res = res->sibling) {
+>> -		int target_nid = pxm_to_node(target->memory_pxm);
+>> -
+>> -		hmem_register_resource(target_nid, res);
+>> -	}
+>> +	for (res = target->memregions.child; res; res = res->sibling)
+>> +		hmem_register_resource(res);
+>>  }
+>>  
+>>  static void hmat_register_target(struct memory_target *target)
+>> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
+>> index f9e1a76a04a9..ae25e08a636f 100644
+>> --- a/drivers/dax/hmem/device.c
+>> +++ b/drivers/dax/hmem/device.c
+>> @@ -17,14 +17,14 @@ static struct resource hmem_active = {
+>>  	.flags = IORESOURCE_MEM,
+>>  };
+>>  
+>> -int walk_hmem_resources(struct device *host, walk_hmem_fn fn)
+>> +int walk_hmem_resources(walk_hmem_fn fn)
+>>  {
+>>  	struct resource *res;
+>>  	int rc = 0;
+>>  
+>>  	mutex_lock(&hmem_resource_lock);
+>>  	for (res = hmem_active.child; res; res = res->sibling) {
+>> -		rc = fn(host, (int) res->desc, res);
+>> +		rc = fn(res);
+>>  		if (rc)
+>>  			break;
+>>  	}
+>> @@ -33,7 +33,7 @@ int walk_hmem_resources(struct device *host, walk_hmem_fn fn)
+>>  }
+>>  EXPORT_SYMBOL_GPL(walk_hmem_resources);
+>>  
+>> -static void __hmem_register_resource(int target_nid, struct resource *res)
+>> +static void __hmem_register_resource(struct resource *res)
+>>  {
+>>  	struct platform_device *pdev;
+>>  	struct resource *new;
+>> @@ -46,8 +46,6 @@ static void __hmem_register_resource(int target_nid, struct resource *res)
+>>  		return;
+>>  	}
+>>  
+>> -	new->desc = target_nid;
+>> -
+>>  	if (platform_initialized)
+>>  		return;
+>>  
+>> @@ -64,19 +62,19 @@ static void __hmem_register_resource(int target_nid, struct resource *res)
+>>  		platform_initialized = true;
+>>  }
+>>  
+>> -void hmem_register_resource(int target_nid, struct resource *res)
+>> +void hmem_register_resource(struct resource *res)
+>>  {
+>>  	if (nohmem)
+>>  		return;
+>>  
+>>  	mutex_lock(&hmem_resource_lock);
+>> -	__hmem_register_resource(target_nid, res);
+>> +	__hmem_register_resource(res);
+>>  	mutex_unlock(&hmem_resource_lock);
+>>  }
+>>  
+>>  static __init int hmem_register_one(struct resource *res, void *data)
+>>  {
+>> -	hmem_register_resource(phys_to_target_node(res->start), res);
+>> +	hmem_register_resource(res);
+>>  
+>>  	return 0;
+>>  }
+>> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
+>> index 5e7c53f18491..088f4060d4d5 100644
+>> --- a/drivers/dax/hmem/hmem.c
+>> +++ b/drivers/dax/hmem/hmem.c
+>> @@ -9,6 +9,8 @@
+>>  static bool region_idle;
+>>  module_param_named(region_idle, region_idle, bool, 0644);
+>>  
+>> +static struct platform_device *dax_hmem_pdev;
 > 
-> All I see is an avalanche of sysfs nodes and I'm questioning the usefulness of
-> the interface and what's the 30K ft big picture for all this.
-
-Ok. We'll put together an example script / RASdaemon code to show how
-it is used. I think you may be surprised at how simple this is and hopefully
-that will show that the interface is appropriate.
-
+> I don't think you can assume there is only ever 1 hmem platform device.
 > 
-> If this all is just wishful thinking on the part of how this is going to be
-> used, then I agree with Dan: less is more. But I need to read the rest of that
-> thread when there's time.
+> hmat_register_target_devices() in particular iterates multiple memory
+> regions and will create more than one.
 > 
+> What am I missing?
 
-I'll let Dan speak for himself, but my understanding is that what
-Dan is focused on is safety and other than tidying up a little isn't
-proposing an significant interface change.
+You may be correct that there can be more than one hmem platform device.
+I was making this change based on a comment from Dan that it may not matter
+which platform device these are created against.
 
-> ...
-> > Repair cam be a feature of the DIMMs themselves or it can be a feature
-> > of the memory controller. It is basically replacing them with spare
-> > memory from somewhere else (usually elsewhere on same DIMMs that have
-> > a bit of spare capacity for this).  Bit like a hot spare in a RAID setup.  
+I could be wrong in that assumption. If so we'll need to figure lout how to
+determine which platform device a soft reserve resource would be created
+against when they are added later in boot from a notification by the
+srmem notification chain.
+
+-Nathan
+
+> Ira
 > 
-> Ooh, this is what you call repair. That's using a spare rank or so, under
-> which I know it as one example.
+>> +
+>>  static int dax_hmem_probe(struct platform_device *pdev)
+>>  {
+>>  	unsigned long flags = IORESOURCE_DAX_KMEM;
+>> @@ -59,13 +61,13 @@ static void release_hmem(void *pdev)
+>>  	platform_device_unregister(pdev);
+>>  }
+>>  
+>> -static int hmem_register_device(struct device *host, int target_nid,
+>> -				const struct resource *res)
+>> +static int hmem_register_device(const struct resource *res)
+>>  {
+>> +	struct device *host = &dax_hmem_pdev->dev;
+>>  	struct platform_device *pdev;
+>>  	struct memregion_info info;
+>> +	int target_nid, rc;
+>>  	long id;
+>> -	int rc;
+>>  
+>>  	if (IS_ENABLED(CONFIG_CXL_REGION) &&
+>>  	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
+>> @@ -94,6 +96,7 @@ static int hmem_register_device(struct device *host, int target_nid,
+>>  		return -ENOMEM;
+>>  	}
+>>  
+>> +	target_nid = phys_to_target_node(res->start);
+>>  	pdev->dev.numa_node = numa_map_to_online_node(target_nid);
+>>  	info = (struct memregion_info) {
+>>  		.target_node = target_nid,
+>> @@ -125,7 +128,8 @@ static int hmem_register_device(struct device *host, int target_nid,
+>>  
+>>  static int dax_hmem_platform_probe(struct platform_device *pdev)
+>>  {
+>> -	return walk_hmem_resources(&pdev->dev, hmem_register_device);
+>> +	dax_hmem_pdev = pdev;
+>> +	return walk_hmem_resources(hmem_register_device);
+>>  }
+>>  
+>>  static struct platform_driver dax_hmem_platform_driver = {
+>> diff --git a/include/linux/dax.h b/include/linux/dax.h
+>> index 9d3e3327af4c..beaa4bcb515c 100644
+>> --- a/include/linux/dax.h
+>> +++ b/include/linux/dax.h
+>> @@ -276,14 +276,13 @@ static inline int dax_mem2blk_err(int err)
+>>  }
+>>  
+>>  #ifdef CONFIG_DEV_DAX_HMEM_DEVICES
+>> -void hmem_register_resource(int target_nid, struct resource *r);
+>> +void hmem_register_resource(struct resource *r);
+>>  #else
+>> -static inline void hmem_register_resource(int target_nid, struct resource *r)
+>> +static inline void hmem_register_resource(struct resource *r)
+>>  {
+>>  }
+>>  #endif
+>>  
+>> -typedef int (*walk_hmem_fn)(struct device *dev, int target_nid,
+>> -			    const struct resource *res);
+>> -int walk_hmem_resources(struct device *dev, walk_hmem_fn fn);
+>> +typedef int (*walk_hmem_fn)(const struct resource *res);
+>> +int walk_hmem_resources(walk_hmem_fn fn);
+>>  #endif
+>> -- 
+>> 2.43.0
+>>
+>>
 > 
-> What I thought you mean with repair is what you mean with "correct". Ok,
-> I see.
-> 
-> > In some other systems the OS gets the errors and is responsible for making
-> > the decision.  
-> 
-> This decision has been kept away from the OS in my world so far. So yes, the
-> FW doing all the RAS recovery work is more like it. And the FW is the better
-> agent in some sense because it has a lot more intimate knowledge of the
-> platform. However...
-> 
-> > Sticking to the corrected error case (uncorrected handling
-> > is going to require a lot more work given we've lost data, Dan asked about that
-> > in the other branch of the thread), the OS as a whole (kernel + userspace)
-> > gets the error records and makes the policy decision to repair based on
-> > assessment of risk vs resource availability to make a repair.
-> > 
-> > Two reasons for this
-> > 1) Hardware isn't necessarily capable of repairing autonomously as
-> >    other actions may be needed (memory traffic to some granularity of
-> >    memory may need to be stopped to avoid timeouts). Note there are many
-> >    graduations of this from A) can do it live with no visible effect, through
-> >    B) offline a page, to C) offlining the whole device.
-> > 2) Policy can be a lot more sophisticated than a BMC can do.  
-> 
-> ... yes, that's why you can't rely only on the FW to do recovery but involve
-> the OS too. Basically what I've been saying all those years. Oh well...
-
-This we agree on.
-
-> 
-> > In some cases perhaps, but another very strong driver is that policy is involved.
-> > 
-> > We can either try put a complex design in firmware and poke it with N opaque
-> > parameters from a userspace tool or via some out of band method or we can put
-> > the algorithm in userspace where it can be designed to incorporate lessons learnt
-> > over time.  We will start simple and see what is appropriate as this starts
-> > to get used in large fleets.  This stuff is a reasonable target for AI type
-> > algorithms etc that we aren't going to put in the kernel.
-> > 
-> > Doing this at all is a reliability optimization, normally it isn't required for
-> > correct operation.  
-> 
-> I'm not saying you should put an AI engine into the kernel - all I'm saying
-> is, the stuff which the kernel can decide itself without user input doesn't
-> need user input. Only toggle: the kernel should do this correction and/or
-> repair automatically or not.
-
-This we disagree on. For this persistent case in particular these are limited
-resources. Once you have used them all you can't do it again.  Using them
-carefully is key. An exception is mentioned below as a possible extension but
-it relies on a specific subset of allowed device functionality and only
-covers some use cases (so it's an extra, not a replacement for what this
-set does).
-
-> 
-> What is clear here is that you can't design an interface properly right now
-> for algorithms which you don't have yet. And there's experience missing from
-> running this in large fleets.
-
-With the decision algorithms in userspace, we can design the userspace to kernel
-interface because we don't care about the algorithm choice - only what it needs
-to control which is well defined. Algorithms will start simple and then
-we'll iterate but it won't need changes in this interface because none of it
-is connected to how we use the data.
-
-> 
-> But the interface you're adding now will remain forever cast in stone. Just
-> for us to realize one day that we're not really using it but it is sitting out
-> there dead in the water and we can't retract it. Or we're not using it as
-> originally designed but differently and we need this and that hack to make it
-> work for the current sensible use case.
-> 
-> So the way it looks to me right now is, you want this to be in debugfs. You
-> want to go nuts there, collect experience, algorithms, lessons learned etc and
-> *then*, the parts which are really useful and sensible should be moved to
-> sysfs and cast in stone. But not preemptively like that.
-
-In general an ABI that is used is cast in stone. To my understanding there
-is nothing special about debugfs.  If we introduce a regression in tooling
-that uses that interface are we actually any better off than sysfs?
-https://lwn.net/Articles/309298/ was a good article on this a while back.
-
-Maybe there has been a change of opinion on this that I missed.
-
-> 
-> > Offline has no permanent cost and no limit on number of times you can
-> > do it. Repair is definitely a limited resource and may permanently use
-> > up that resource (discoverable as a policy wants to know that too!)
-> > In some cases once you run out of repair resources you have to send an
-> > engineer to replace the memory before you can do it again.  
-> 
-> Yes, and until you can do that and because cloud doesn't want to *ever*
-> reboot, you must do diminished but still present machine capabilities by
-> offlining pages and cordoning off faulty hw, etc, etc.
-
-Absolutely though the performance impact of punching holes in memory over
-time is getting some cloud folk pushing back because they can't get their
-1GIB pages to put under a VM.  Mind you that's not particularly relevant
-to this thread.
-
-> 
-> > Ok. I guess it is an option (I wasn't aware of that work).
-> > 
-> > I was thinking that was far more complex to deal with than just doing it in
-> > userspace tooling. From a quick look that solution seems to rely on ACPI ERSR
-> > infrastructure to provide that persistence that we won't generally have but
-> > I suppose we can read it from the filesystem or other persistent stores.
-> > We'd need to be a lot more general about that as can't make system assumptions
-> > that can be made in AMD specific code.
-> > 
-> > So could be done, I don't think it is a good idea in this case, but that
-> > example does suggest it is possible.  
-> 
-> You can look at this as specialized solutions. Could they be more general?
-> Ofc. But we don't have a general RAS architecture which is vendor-agnostic.
-
-It could perhaps be made more general, but so far I'm not seeing why we would
-do this for this particular feature.  It does seem like an interesting avenue
-to investigate more generally.
-
-The use cases discussed in the thread with Dan do not require injection of
-prior records.  Mauro called out his view that complex policy should not be
-in the kernel as well and as you have gathered I fully agree with him on
-that!
-
-> 
-> > In approach we are targetting, there is no round trip situation.  We let the kernel
-> > deal with any synchronous error just fine and run it's existing logic
-> > to offline problematic memory.  That needs to be timely and to carry on operating
-> > exactly as it always has.
-> > 
-> > In parallel with that we gather the error reports that we will already be
-> > gathering and run analysis on those.  From that we decide if a memory is likely to fail
-> > again and perform a sparing operation if appropriate.
-> > Effectively this is 'free'. All the information is already there in userspace
-> > and already understood by tools like rasdaemon, we are not expanding that
-> > reporting interface at all.  
-> 
-> That is fair. I think you can do that even now if the errors logged have
-> enough hw information to classify them and use them for predictive analysis.
-
-Definitely.  In general (outside of CXL in particular) we think there are
-some gaps that we'll look to address in future, but that's simple stuff
-for another patch series.
-
-> 
-> > Ok.  It seems you correlate number of files with complexity.  
-> 
-> No, wrong. I'm looking at the interface and am wondering how is this going to
-> be used and whether it is worth it to have it cast in stone forever.
-
-Ok.  I'm not concerned by this because of the alignment with old specifications
-going back a long way.  I'm not sure of the history of the CXL definition but
-it is near identical to the UEFI CPER records that have been in use a long time.
-For me that convinces me that this form of device description is pretty general
-and stable.  I'm sure we'll get small new things over time (sub-channel came
-with DDR5 for example) but those are minor additions.
-
-> 
-> > I correlated difficulty of understanding those files with complexity.
-> > Everyone one of the files is clearly defined and aligned with long history
-> > of how to describe DRAM (see how long CPER records have used these
-> > fields for example - they go back to the beginning).  
-> 
-> Ok, then pls point me to the actual use cases how those files are going to be
-> used or they are used already.
-
-For this we'll do as we did for scrub control and send a patch set adding tooling
-to RASdaemon and/or if more appropriate a script along side it.  My fault,
-I falsely thought this one was more obvious and we could leave that until
-this landed. Seems not!
-
-> 
-> > I'm all in favor of building an interface up by providing minimum first
-> > and then adding to it, but here what is proposed is the minimum for basic
-> > functionality and the alternative of doing the whole thing in kernel both
-> > puts complexity in the wrong place and restricts us in what is possible.  
-> 
-> There's another point to consider: if this is the correct and proper solution
-> for *your* fleet, that doesn't necessarily mean it is the correct and
-> generic solution for *everybody* using the kernel. So you can imagine that I'd
-> like to have a generic solution which can maximally include everyone instead
-> of *some* special case only.
-
-This I agree on. However, if CXL takes off (and there seems to be agreement
-it will to some degree at least) then this interface is fully general for any spec
-compliant device. It would be nice to have visibility of more OS managed
-repair interfaces but for now I can only see one other and that is more
-similar to PPR in CXL which is device/host physical address based.
-So we have 3 examples on which to build generalizations, but only one fits
-the model we are discussing here (which is the second part of repair
-support in v19 patch set).
-
-> 
-> > To some degree but I think there is a major mismatch in what we think
-> > this is for.
-> > 
-> > What I've asked Shiju to look at is splitting the repair infrastructure
-> > into two cases so that maybe we can make partial progress:
-> > 
-> > 1) Systems that support repair by Physical Address
-> >  - Covers Post Package Repair for CXL
-> > 
-> > 2) Systems that support repair by description of the underlying hardware
-> > - Covers Memory Sparing interfaces for CXL. 
-> > 
-> > We need both longer term anyway, but maybe 1 is less controversial simply
-> > on basis it has fewer control parameters
-> > 
-> > This still fundamentally puts the policy in userspace where I
-> > believe it belongs.  
-> 
-> Ok, this is more concrete. Let's start with those. Can I have some more
-> details on how this works pls and who does what? Is it generic enough?
-
-Sure. We can definitely do that.  We have this split in v19 (just undergoing
-some final docs tidy up etc, should be posted soon).
-
-> 
-> If not, can it live in debugfs for now? See above what I mean about this.
-> 
-> Big picture: what is the kernel's role here? To be a parrot to carry data
-> back'n'forth or can it simply do clear-cut decisions itself without the need
-> for userspace involvement?
-
-With the additional 'safety' checks Dan has asked for the kernel requirement
-(beyond a standardized interface / place to look for the controls etc) is
-now responsible for ensuring that a request to repair memory that is online
-matches up with an error record that we have received. First instance of this
-will be CXL native error handling based.  For now we've made this device
-specific because exactly what needs checking depends on the type of repair
-implementation.
-
-My intent was that the kernel never makes decisions for this feature.
-
-Potentially in future we could relax that to allow it to do so for a few
-usecases - the non persistent ones, where it could be considered
-a way to avoid offlining a page.  I see that as a much more complex case
-though than the userspace managed handling so one for future work.
-It only applies on some subset of devices and there are not enough in
-the market yet for us to know if that is going to be commonly supported.
-They will support repair, but whether they allow online repair rather
-than only offline is yet to be seen. That question corresponds to a
-single attribute in sysfs and a couple of checks in the driver code
-but changes whether the second usecase above is possible.
-
-Early devices and the ones in a few years time may make different
-decisions on this. All options are covered by this driver (autonomous
-repair is covered for free as nothing to do!)
-
-Online sparing to avoid offline is a cute idea only at the moment.
-
-> 
-> So far I get the idea that this is something for your RAS needs. This should
-> have general usability for the rest of the kernel users - otherwise it should
-> remain a vendor-specific solution until it is needed by others and can be
-> generalized.
-
-CXL is not vendor specific. Our other driver that I keep referring
-to as 'coming soon' is though.  I'll see if I can get a few memory
-device manufacturers to specifically stick their hands up that they
-care about this. As an example we presented on this topic with
-Micron at the LPC CXL uconf (+CC Vandana).  I don't have access
-to Micron parts so this isn't just Huawei using Micron, we simply had two
-proposals on the same topic so combined the sessions.  We have a CXL
-open source sync call in an hour so I'll ask there.
-
-> 
-> Also, can already existing solutions in the kernel be generalized so that you
-> can use them too and others can benefit from your improvements?
-
-Maybe for the follow on topic of non persistent repair as a path to
-avoid offlining memory detected as bad. Maybe that counts
-as generalization (rather than extension).  But that's not covering
-our usecase of restablishing the offline at boot, or the persistent
-usecases.  So it's a value add feature for a follow up effort,
-not a baseline one which is the intent of this patch set.
-
-> 
-> I hope this makes more sense.
-
-Thanks for taking time to continue the discussion and I think we
-are converging somewhat even if there is further to go.
-
-Jonathan
-> 
-> Thx.
 > 
 
