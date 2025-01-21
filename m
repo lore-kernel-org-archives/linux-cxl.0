@@ -1,129 +1,162 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B2B1B808;
-	Tue, 21 Jan 2025 20:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E301B808;
+	Tue, 21 Jan 2025 20:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737491768; cv=none; b=TB07lFnvoHOcBjr6mepYiZhovdM+PjqingPOVQB/HKgE9GzX6rfWQt60w74H/fLRLB+krx6XNsZMl+DpQGQ1SS96emUrlaSht9U4RcjYoZsCTfICeFxV5bbzyLn1ubKES6MHhU5AU4/k4mb0vFuuaeO+oZVos/26HwFStfeEW6U=
+	t=1737491906; cv=none; b=TCRs3hnZM8/vemHM+yo47T7A1QZ8R1V9gXrz/EbwfrWCwK3IplPL7ClEqVMB5pzmBGepRGsyUJKhapLGTw41IBvvaFKJ7pnYV1NK0n+ym/B55rLUazatrDeLSkycexaGfCYHpmoq7UzEYJRVQX4Ruzs4pVs4FJCWUqnGUSQRgJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737491768; c=relaxed/simple;
-	bh=CYiktoIvRH/1Rf8lck9HtXa/tnswxedNLFxQ+ruqXoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nF9tRCZpfK87q+FOJ5bqPS+XqON3b6gnK67IAjQRxxkrBwNf7fJ25tBuLT7fedevHl1UnvWvYBOuB89cqC0KAtNhEUKsn//iXGwZkTGGWrr5/ykXPXU85MfxPfmZcHyIBAhkRYJt0nL2XwTIqg0b7+c40p3r3nbsn7eWVerUdZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=akqzS7Od; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737491906; c=relaxed/simple;
+	bh=e+dFX819daWsRhigdFpl01k4/NZV1QYsLroSQ01P+R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWBNQ6N+YvkNKnGUsMZXFWpB26Y0VnGyy0liRQb0g52QaJSmdBE04oUxQNKgLcYzLMRzImjp21XTpZrrjw6/4+axtfAIQlJuKIp/3PaPjlX0sCMgpdQypnnrAs79Ph/LAss2l5cu7xmsLFhgjMFTnC+ZEKZf14QcNTDq2c0dEPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oFtynvTk; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="akqzS7Od"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oFtynvTk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737491766; x=1769027766;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CYiktoIvRH/1Rf8lck9HtXa/tnswxedNLFxQ+ruqXoI=;
-  b=akqzS7OdpQ0tXUZuBUQvisVxLmBN3MVVm7tBOx+AiSNwKE9kBZ+FbgvA
-   MOcLJTIK3ErZByPGl2/qUnbZCc1pttNLxnAmOa+7ilYDNe3w5rENjxORO
-   iw4aZzE52CxPP4c3V4YvqHnVXH2ni4IzKIqNrp8oktLdsvno4UyOLfhaa
-   5fuMhMUfJGxrRGYtzOdDUnOT9ZiAjZsLEFNxoxJwJ81NVlNErTU/D5Z7T
-   94TxtArjbQ2wYqVor1Isj8aRbRR3hNHu7kpnXUdTTMmaNFaZ/lRTzeI4b
-   Ch2n4Junn1CvZw4nAmQtiHUFhxQkybm6H3g8AaOtXMXue8d1ClWJ88zt0
+  t=1737491905; x=1769027905;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=e+dFX819daWsRhigdFpl01k4/NZV1QYsLroSQ01P+R8=;
+  b=oFtynvTkxDfGvv3wox9R+GayWz1TwPF6z0f5EiAdFFsjNaTD5gowk6g2
+   jH18U67OGqzYWD6+HMw5GVFCnV91lM2U1utQGG9NYfoC/EHv8VlC1yLx8
+   3VasF16aL2xpRdDa7P7HylCoUhulNSwuIYT0aFKheC+6iFvhc3hFZcZFx
+   rTJa1CmyvdXL85uP6wmQoaehJ7/9KpfERapxv1AqcjDQUEEx913s1kzC0
+   TXKWfLZ66Ob4uQmNTzRXa9MdBxKv+CCguWFjPlYJVLpxrZSZweY1x5NM4
+   weCAqimrBaDim5ZeTEZtQ28bmch512zyQArnAt2mJbr5npOgIGoM5pwnX
    g==;
-X-CSE-ConnectionGUID: qL38fytIR8iffHHLVoNDCQ==
-X-CSE-MsgGUID: hheek/plQieeHrcagWKaCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37801431"
+X-CSE-ConnectionGUID: FebSb3iuQDevhRmsdQn6iA==
+X-CSE-MsgGUID: u6ENrYE4QK29jxFcdnWgaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37801588"
 X-IronPort-AV: E=Sophos;i="6.13,223,1732608000"; 
-   d="scan'208";a="37801431"
+   d="scan'208";a="37801588"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:36:06 -0800
-X-CSE-ConnectionGUID: KRCWtFxnQvuskk0IXtnnwQ==
-X-CSE-MsgGUID: ex7/A1DOQIamG5W4GeB9/g==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:38:24 -0800
+X-CSE-ConnectionGUID: KgMm+4BHRhiCjFtZdFzDoQ==
+X-CSE-MsgGUID: WOW83UjlRWilx0amOr1Xrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,223,1732608000"; 
-   d="scan'208";a="107458819"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.245.238])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:36:02 -0800
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Robert Richter <rrichter@amd.com>,
- ming.li@zohomail.com, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject:
- Re: [PATCH 2/4 v2] cxl/core: Add helpers to detect Low memory Holes on x86
-Date: Tue, 21 Jan 2025 21:35:57 +0100
-Message-ID: <2871231.lGaqSPkdTl@fdefranc-mobl3>
-In-Reply-To: <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
-References:
- <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
- <20250114203432.31861-3-fabio.m.de.francesco@linux.intel.com>
- <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
+   d="scan'208";a="107459209"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.76])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:38:23 -0800
+Date: Tue, 21 Jan 2025 12:38:21 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
+	linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com,
+	bhelgaas@google.com
+Subject: Re: [PATCH v9 10/27] resource: harden resource_contains
+Message-ID: <Z5AFvRl87OFtfF8-@aschofie-mobl2.lan>
+References: <20241230214445.27602-1-alejandro.lucero-palau@amd.com>
+ <20241230214445.27602-11-alejandro.lucero-palau@amd.com>
+ <678b0c0ca40ca_20fa29484@dwillia2-xfh.jf.intel.com.notmuch>
+ <fe48e2e9-5a13-78fe-d8f6-6c3faeecebcc@amd.com>
+ <09d6b529-57f3-290f-7e92-0291cdd461cc@amd.com>
+ <a97f50df-5b0f-6ab5-80c6-531d4654c0b3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a97f50df-5b0f-6ab5-80c6-531d4654c0b3@amd.com>
 
-On Wednesday, January 15, 2025 3:23:36=E2=80=AFAM GMT+1 Gregory Price wrote:
-> On Tue, Jan 14, 2025 at 09:32:54PM +0100, Fabio M. De Francesco wrote:
-> > +/*
-> > + * Match CXL Root and Endpoint Decoders by comparing SPA and HPA range=
-s.
-> > + *
-> > + * On x86, CFMWS ranges never intersect memory holes while endpoint de=
-coders
-> > + * HPA range sizes are always guaranteed aligned to NIW * 256MB; there=
-fore,
-> > + * the given endpoint decoder HPA range size is always expected aligne=
-d and
-> > + * also larger than that of the matching root decoder. If there are LM=
-H's,
-> > + * the root decoder range end is always less than SZ_4G.
-> > + */
->=20
-> Is there any reason to limit this memory-hole handling to only low
-> memory holes?=20
+On Mon, Jan 20, 2025 at 04:26:42PM +0000, Alejandro Lucero Palau wrote:
+> 
+> On 1/20/25 16:16, Alejandro Lucero Palau wrote:
+> > Adding Bjorn to the thread. Not sure if he just gets the email being in
+> > an Acked-by line.
+> > 
+> > 
+> > On 1/20/25 16:10, Alejandro Lucero Palau wrote:
+> > > 
+> > > On 1/18/25 02:03, Dan Williams wrote:
+> > > > alejandro.lucero-palau@ wrote:
+> > > > > From: Alejandro Lucero <alucerop@amd.com>
+> > > > > 
+> > > > > While resource_contains checks for IORESOURCE_UNSET flag for the
+> > > > > resources given, if r1 was initialized with 0 size, the function
+> > > > > returns a false positive. This is so because resource start and
+> > > > > end fields are unsigned with end initialised to size - 1 by current
+> > > > > resource macros.
+> > > > > 
+> > > > > Make the function to check for the resource size for both resources
+> > > > > since r2 with size 0 should not be considered as valid for
+> > > > > the function
+> > > > > purpose.
+> > > > > 
+> > > > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > > > > Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> > > > > Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > > ---
+> > > > >   include/linux/ioport.h | 2 ++
+> > > > >   1 file changed, 2 insertions(+)
+> > > > > 
+> > > > > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> > > > > index 5385349f0b8a..7ba31a222536 100644
+> > > > > --- a/include/linux/ioport.h
+> > > > > +++ b/include/linux/ioport.h
+> > > > > @@ -296,6 +296,8 @@ static inline unsigned long
+> > > > > resource_ext_type(const struct resource *res)
+> > > > >   /* True iff r1 completely contains r2 */
+> > > > >   static inline bool resource_contains(const struct resource
+> > > > > *r1, const struct resource *r2)
+> > > > >   {
+> > > > > +    if (!resource_size(r1) || !resource_size(r2))
+> > > > > +        return false;
+> > > > I just worry that some code paths expect the opposite, that it is ok to
+> > > > pass zero size resources and get a true result.
+> > > 
+> > > 
+> > > That is an interesting point, I would say close to philosophic
+> > > arguments. I guess you mean the zero size resource being the one
+> > > that is contained inside the non-zero one, because the other option
+> > > is making my vision blurry. In fact, even that one makes me feel
+> > > trapped in a window-less room, in summer, with a bunch of
+> > > economists, I mean philosophers, and my phone without signal for
+> > > emergency calls.
+> > > 
+> 
+> I forgot to make my strongest point :-). If someone assumes it is or it
+> should be true a zero-size resource is contained inside a non zero-size
+> resource, we do not need to call a function since it is always true
+> regardless of the non zero-size resource ... that headache is starting again
+> ...
+> 
+> 
+
+Maybe start using IORESOURCE_UNSET flag -
+
+Looking back on when we first discussed this -
+https://lore.kernel.org/linux-cxl/Zz-fVWhTOFG4Nek-@aschofie-mobl2.lan/
+where the thought was that checking for zero was helpful to all.
+
+If this path starts using the IORESOURCE_UNSET flag can it accomplish
+the same thing?  No need to touch resource_contains().
+
+Is that an option?
+
+-- Alison
+
+
+
+> > > 
+> > > But maybe it is just  my lack of understanding and there exists a
+> > > good reason for this possibility.
+> > > 
+> > > 
+> > > Bjorn, I guess the ball is in your side ...
+> > > 
+> > > > Did you audit existing callers?
 >
-No I don't see any special reasons to limit this to only low memory holes.
-It's just that I didn't know about others.
->
-> I have observed systems where the following memory
-> hole situation occurs:
->=20
-> (example, not exact sizes)
-> CFMW1:   [  0xc0000000 - 0xdfffffff  ] 512MB range
-> Reserved [  0xe0000000 - 0xffffffff  ] 512MB range
-> CFMW2:   [ 0x100000000 - 0x15fffffff ] 1.5GB range
->=20
-> 2 CXL Memory Devices w/ 1GB capacity each (again, an example).
->=20
-> Note that 1 device has its capacity split across the hole, but
-> if the devices are interleaved then both devices have their capacity
-> split across the hole.
->=20
-> It seems with some mild modification, this patch set could be
-> re-used to handle this memory hole scenario as well
-> (w/ addr translation - Robert's patch set)
->=20
-> Is there a reason not to handle more than just LMH's in this set?
->=20
-> (I may try to hack this up on my test system and report back.)
->
-I'd appreciate it if you want to report back.
-
-Thank you,
-
-=46abio
->=20
-> ~Gregory
->=20
-
-
-
-
