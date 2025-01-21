@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBF91B1D65;
-	Tue, 21 Jan 2025 20:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769441B808
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 20:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737491567; cv=none; b=c/SYV/WAa4ErsS471jiBkYXhOIr3U7sw/fzdOG/mEGfs2sakPIk3Hluuqb+FJvCVV1kMrD355skxsT8dQxgIOoohocSNa2bcQIMULH2OF9qMuEX4v0XeuNiwtJSmEkIVPzpbU1Ato/PL2xtG9UNUweRaaAG7dKgXuD60CLoMh1g=
+	t=1737491692; cv=none; b=hkTYNHNlFNdWjAy+Xrc/oIM2rza6qBlxCBHKo2HRVDHnQ73iv4UyQZSuqknIMnOooh72+ucSltYE9AzPkLHchlmauI5rKOL8EBO8DXS64/cemPDIYIfhqjuLb5Qj65en1jhoghHGx1X9opgQKGjdJLj0swWP4E4kY/DP7EQ7+cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737491567; c=relaxed/simple;
-	bh=rmu+V9oqvedpShhVh6vyXzg8csFty2UJu/7FoOHJdJg=;
+	s=arc-20240116; t=1737491692; c=relaxed/simple;
+	bh=mO0vcmMv6ZHnkaTrUXWNrUk1o5ivRojqGvLu5ZDAIkQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qPNx0N2pX8ASeirzcRshmsOSbI7Cx3o3h8yloWEzTIsH0ULlPXXKDbifupoeU09HEyAu93lZ9ge8EAYfrbJKhrQZx1TodBgLivJjjAvTCSpOkGg9IhkKpTTrdESWvVFXXmD6q7PVA+YS3EELy8OCMBvHSFjDLV3wArQ/uIILrcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mTHFMih6; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=Kp3CybDjpm7i76BK6BJEILodXNbk3kn0c3fvvwDvcktLp9QTRLN/uE+RA/qpBS26s4TmEtaw30YzA26EiY85C1mapgtAdx/2c+38P5xhixMKZjXhKYWUeBFYWb4t2dS/IJ3Y3lxw4AyIHih9KxjyBE2crvLlHM2e20eJM0gle+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1FMGvlE; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mTHFMih6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1FMGvlE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737491565; x=1769027565;
+  t=1737491691; x=1769027691;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=rmu+V9oqvedpShhVh6vyXzg8csFty2UJu/7FoOHJdJg=;
-  b=mTHFMih6ZZpcrdYROlPka/5J3LA3CPS0VQfsrPA1hm5LWWi+LOFVEHzS
-   EOQh8rU06NEyaT+2+LfWy1NF7DOwNjQ2uO2Ve9M4M6/lwfqmtsULsdYYd
-   ZkJc+kQYeWdzAytGwuyhrnJiAU+gRgqujHJAbFcWaB9gDxIE903L+ekPs
-   7FK5pKYBiUQAJ0V+gcobXzjhm3cISVal/vxPCeOWwbg9zDN+HR5Wgvj8s
-   jk6QniUbwsHzJtNGtngwe33ipo5kYVUhyPW7Rd7fBwMEmaT0wLLvEZcmI
-   KBldmEAGgpL5S+AHmN2TX/blLWVZ+J7U2tQxgbYIVhwzphDBfTm2B+Pa7
-   A==;
-X-CSE-ConnectionGUID: XDPLhCUiQ6OhtFx9SOeTgA==
-X-CSE-MsgGUID: 7dsIF+YCRxOR7OccUR0R4g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="37801183"
+  bh=mO0vcmMv6ZHnkaTrUXWNrUk1o5ivRojqGvLu5ZDAIkQ=;
+  b=Y1FMGvlEo4S7Achu9LCkVwU4UQIfj+qRNgHGw0mTNSTsHgXwSwPFSXJu
+   +0qWiyIu1F/AJXRj1Tc83Vxf0soO94ZVQFsDBbmg33zvVQEF476CyS6om
+   1iUYip1xcApFKyAERlWsmW7gdafPOip0mX77ZH2DRHoPwa7+3BUguGn7L
+   mumZcjBAUqTZnzkdLClqqqBhOqtc8Fbzy2lomS34F9HQgUSMfKlSStteS
+   zKoQeFVVik7skxVE33t9bAwMhWXTNVmpqkzoB7tAMwd0tywyv5dni+sp6
+   3jQVlKdf4YUSvZU7tX8zpXXgrW3TAJnIhpxqgC2IDXLUZCaSsT8/A7id1
+   w==;
+X-CSE-ConnectionGUID: svIBYizATbe/XpVAVorlRw==
+X-CSE-MsgGUID: mTGtFIKTQSu6B+n9jfALqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="48917892"
 X-IronPort-AV: E=Sophos;i="6.13,223,1732608000"; 
-   d="scan'208";a="37801183"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:32:44 -0800
-X-CSE-ConnectionGUID: B+A1958ARAOAyCdz9B3GRw==
-X-CSE-MsgGUID: K7P7MwRYQz2IahjK42N+tg==
+   d="scan'208";a="48917892"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:34:50 -0800
+X-CSE-ConnectionGUID: Pyhap5qpTlucz66CjXnrPQ==
+X-CSE-MsgGUID: yUA0hczLS4ij6dxYUBLYPw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,223,1732608000"; 
-   d="scan'208";a="107457590"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111537672"
 Received: from ehanks-mobl1.amr.corp.intel.com (HELO [10.125.110.49]) ([10.125.110.49])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:32:43 -0800
-Message-ID: <977859ca-3971-4d03-b514-9bf37bbceff3@intel.com>
-Date: Tue, 21 Jan 2025 13:32:42 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2025 12:34:49 -0800
+Message-ID: <98d5371d-6663-43e4-ae60-92880c173037@intel.com>
+Date: Tue, 21 Jan 2025 13:34:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,103 +52,39 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/5] acpi/ghes, cper, cxl: Process CXL CPER Protocol
- errors
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>
-References: <20250114120427.149260-1-Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [RFC PATCH v2 0/20] fwctl/cxl: Add CXL feature commands support
+ via fwctl
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, shiju.jose@huawei.com
+References: <20241115212745.869552-1-dave.jiang@intel.com>
+ <20250121203016.GA5556@nvidia.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250114120427.149260-1-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20250121203016.GA5556@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 1/14/25 5:04 AM, Smita Koralahalli wrote:
-> This patchset adds logging support for CXL CPER endpoint and port protocol
-> errors.
+On 1/21/25 1:30 PM, Jason Gunthorpe wrote:
+> On Fri, Nov 15, 2024 at 02:25:33PM -0700, Dave Jiang wrote:
+> 
+>> This series add support for CXL feature commands using the FWCTL framework [1].
+>> The code is untested and I'm looking for architectural and implementation feedback.
+>> While CXL currently has a chardev for user ioctls to send some mailbox
+>> commands to a memory device, the fwctl framework provides more security policies
+>> that can be a potential vehicle to move CXL ioctl path to that.
+> 
+> How are things going on the CXL side here? Do we want to make a push
+> to get this done in 6.14? (ie starting in two weeks?) This is approx
+> the timeline I had in mind for people to get their drivers ready.
 
-Ard,
-Do you mind giving an ACK for the series if it looks ok to you? I can pick up the series through the CXL tree with your ACKs. Thanks!
-
-Smita,
-Can you please respin a v6 based on top of latest upstream instead of Terry's changes? I think we are ready to pick this up before Terry's series. Thank you. 
+Really close. I'm trying to finish testing and wrap up the unit tests on the user side. I'm hoping I can post the v1 post RFC this or next week.
 
 > 
-> The first 3 patches update the existing codebase to support CXL CPER
-> Protocol error reporting.
-> 
-> The last 2 patches introduce recognizing and reporting CXL CPER Protocol
-> errors.
-> 
-> Should be based on top of:
-> https://lore.kernel.org/linux-cxl/20250107143852.3692571-1-terry.bowman@amd.com
-> 
-> Link to v4:
-> https://lore.kernel.org/linux-cxl/20241217022032.87298-1-Smita.KoralahalliChannabasappa@amd.com
-> 
-> Changes in v4 -> v5:
-> [Dave]: Reviewed-by tags.
-> [Jonathan]: Remove blank line.
-> [Jonathan, Ira]: Change CXL -> "CXL".
-> [Ira]: Fix build error for CONFIG_ACPI_APEI_PCIEAER.
-> 
-> Changes in v3 -> v4:
-> [Ira]: Use memcpy() for RAS Cap struct.
-> [Jonathan]: Commit description edits.
-> [Jonathan]: Use separate work registration functions for protocol and
-> component errors.
-> [Jonathan, Ira]: Replace flags with separate functions for port and
-> device errors.
-> [Jonathan]: Use goto for register and unregister calls.
-> 
-> Changes in v2 -> v3:
-> [Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
-> reusing existing workqueue which handles CXL CPER events.
-> [Dan] Update function and struct names.
-> [Ira] Don't define common function get_cxl_devstate().
-> [Dan] Use switch cases rather than defining array of structures.
-> [Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
-> [Dan] Use pr_err_ratelimited().
-> [Dan] Use AER_ severities directly. Don't define CXL_ severities.
-> [Dan] Limit either to Device ID or Agent Info check.
-> [Dan] Validate size of RAS field matches expectations.
-> 
-> Changes in v2 -> v1:
-> [Jonathan] Refactor code for trace support. Rename get_cxl_dev()
-> to get_cxl_devstate().
-> [Jonathan] Cleanups for get_cxl_devstate().
-> [Alison, Jonathan]: Define array of structures for Device ID and Serial
-> number comparison.
-> [Dave] p_err -> rec/p_rec.
-> [Jonathan] Remove pr_warn.
-> 
-> Smita Koralahalli (5):
->   efi/cper, cxl: Prefix protocol error struct and function names with
->     cxl_
->   efi/cper, cxl: Make definitions and structures global
->   efi/cper, cxl: Remove cper_cxl.h
->   acpi/ghes, cper: Recognize and cache CXL Protocol errors
->   acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
-> 
->  drivers/acpi/apei/ghes.c        | 103 ++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c          |  62 +++++++++++++++++++
->  drivers/cxl/cxlpci.h            |   9 +++
->  drivers/cxl/pci.c               |  59 +++++++++++++++++-
->  drivers/firmware/efi/cper.c     |   6 +-
->  drivers/firmware/efi/cper_cxl.c |  39 +-----------
->  drivers/firmware/efi/cper_cxl.h |  66 --------------------
->  include/cxl/event.h             | 101 +++++++++++++++++++++++++++++++
->  include/linux/cper.h            |   8 +++
->  9 files changed, 347 insertions(+), 106 deletions(-)
->  delete mode 100644 drivers/firmware/efi/cper_cxl.h
+> Thanks,
+> Jason
 > 
 
