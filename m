@@ -1,398 +1,174 @@
-Received: from black.aspen.relay.mailchannels.net (black.aspen.relay.mailchannels.net [23.83.221.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EDB15C0
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 04:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.221.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737433540; cv=pass; b=VQvJYnDzilsu1Zr8Med/y5/OgPDWUiYhuYuadbyw1w1+GqbphXMf29FWJYHRk9JMHcnpLxg7O53QUjTLmvm+B/m/C72dlE3M9MrIRxQhCpYFg5Vq3VjfNG28XwuGhNqfq3uvSMegZntq18HyZAbuU6rhjaQSrIsldtuR60AsxQA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737433540; c=relaxed/simple;
-	bh=eAz9RkocehGQwri8yjRZnt6VbbxvDtbn8lYaA9dv8hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tj9rY6t/bkpVEwGGg5NeUYBF8GR1nOxLKQ8+J1fD3T25o7rPaQeRD2XWSzW0zHTjrCrVNyC9PGoPqca9+cmZlGNRHbAINSfIMNOzOeTjgZ2SGRysrS5Za7MkT5tfbNqLIlvDkzZIETdKOUewa0d6N66ArrWEc5Qb2twB3auJcYU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=chm/uAzu; arc=pass smtp.client-ip=23.83.221.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038A51AFB36
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 08:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737447569; cv=none; b=O2EiJ5DvviAVwStXOJXajNTbr510HAjt8csWXE8wNwVAvphbglt/422DitkOrvhdT82LsrbDAvYHqzf2YxMQCMw96NDHoC4TX2AUbEfzUk+Z/6i5WVKG0CH6SxX9kB1Lq0+tuP1z6/h6ksnPLb5v+sof8wzyRdlBYlPhRa1bBx8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737447569; c=relaxed/simple;
+	bh=PVLtA/n+6DO2XVphDCQUZh1/a24J9ioYMMNy/uS60IQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lM7am3oxjNc3veJnZJoTRSOyGDhwDWOnu1ryAX39tMLsDxMTrzM67MVFF9yE711CHz9ujCkhqOEsCGaOCrsRPfI/MxJLF3GUQl9exeP4AdLEpCfmvk05SxZWjskJkbeyfwxFmsfkMJ1njTgQ03nxJte3hnGJ1RQGZo6M451wtSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=feNs0Dgt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="chm/uAzu"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 77AB31C28FF;
-	Tue, 21 Jan 2025 04:25:36 +0000 (UTC)
-Received: from pdx1-sub0-mail-a272.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.117.137.138])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id DCCDF1C2975;
-	Tue, 21 Jan 2025 04:25:35 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1737433536; a=rsa-sha256;
-	cv=none;
-	b=ivu2NPtCTcRfryvEfWRIHhKyiMqkuGFEvdx2d06nG0t6vdUqLcrd5HDgsQBx2zZDCdqYJC
-	IQOLmpAGW81pZMqe/+lk4PkjoGVyYSNHmgfg+YG8N1kDcp5oVtHrYIiieTVL0DVsWQ7Tip
-	6LJxM/smAw52Fdqxqro6oelcL6G5EM6LuhatGDdquWUiMCDgNi42TiT0DHhcJldddo+hhV
-	9w+4Z13Cr4bPLFgFuuo2tdIh3NqxIb7y/pp9EG481PFpQWQD6oBv4KpGAbd5qh8b6uHjFX
-	9rMz4Z6GMj5zxo06ntKBuoJra1/Vof1bD/WkAMsCpbF9ejSyrexcKrvaARz8gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1737433536;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="feNs0Dgt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737447565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=XxhcPqUJD3zDNUfejEgdcJgiN7L32+eQ0b+Qv9DF+Bk=;
-	b=QbHa4CUg3YnhY7FEHGwSImKao7oIm4JAUmrO8prpE6dBD9WyR2xp3b6+X+XR5iKOWflRFe
-	IY796jVIMj1QUfqyP6Cz4OI1fTGqeOfd+0s0Xpt2OrRFFEQ+nY58W9Bvr2CkT+vMT8uxNi
-	+ixvumO4s905zLMznK/Zjh86FQnx5V8MqzPPfINsZ2ID5BSdSfBO9FWBaqbbYN8qRbIJ2c
-	LmDowJXHy3qr5k43YTFWWatyiitzIwFvx0xd2RaIn1LkKACksIDF/fj3Yeg42XZLu+ua1g
-	VbOorvts/xDuXkfqRJxy6ZyxKl9hW7z3S/HYO8DjZyLk4mi6F3gLb6Bfh1MnBQ==
-ARC-Authentication-Results: i=1;
-	rspamd-7c8d66d945-7bdqg;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Bad
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Hysterical-Juvenile: 68f326b507fb8318_1737433536234_88258609
-X-MC-Loop-Signature: 1737433536234:3567446871
-X-MC-Ingress-Time: 1737433536234
-Received: from pdx1-sub0-mail-a272.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.117.137.138 (trex/7.0.2);
-	Tue, 21 Jan 2025 04:25:36 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a272.dreamhost.com (Postfix) with ESMTPSA id 4YcYzL67cVz8w;
-	Mon, 20 Jan 2025 20:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1737433535;
-	bh=XxhcPqUJD3zDNUfejEgdcJgiN7L32+eQ0b+Qv9DF+Bk=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=chm/uAzuYzJPeFvgBdMDsoUBh0y//LH8MmuTNwFSdPvb35dGtQXMa8L+ZNKcbts7V
-	 /mrVJGcqhZVO1HRGb2Ii1FGTgrdoWIe655h8fTX7rTfiHT0dIfKzrWEuLM47k/GVYA
-	 YTjG4NKL9TT2NNPDhLTawUAvqZvKDPmeiPPS74/fWiYOLJBRFjwp4t3/UMOJqzBfub
-	 R4o5oZ4lOyNQ2k240gDmmyW8OK6w2LgfcCfBTC0A2klWvAy2rUOdWIYVQ8W6pci9bp
-	 9assWCtz3F6u7KLx9SlvVfALruvYj7VvvDpIKoQoq5rTPIzTzlDpRrassEoH6MvBIi
-	 3NsooHVmoQZVQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com,
-	dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	seven.yi.lee@gmail.com,
-	hch@infradead.org,
-	a.manzanares@samsung.com,
-	fan.ni@samsung.com,
-	anisa.su@samsung.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v3] cxl/pci: Support Global Persistent Flush (GPF)
-Date: Mon, 20 Jan 2025 20:25:31 -0800
-Message-Id: <20250121042531.776377-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=oWxFfQloQrWxhz6vkTH178/CIdL2k87FeluoUAyrDBU=;
+	b=feNs0DgtTRsOlSBfGGzrGkejfJy7p/RGUNryW+RfZky67X53FmeTOdxBitGvWW6cseuu5N
+	WXemfBL9eVgGjk4DOimwmcYPOaO271RPDQ7EJAeU12tfKEKnop8ANk7208B65Z3wA0NW1K
+	6iy9iyU8C2m/ZbH6kPSEwrP/R7GTaX8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-376-sqwA_95CNYeqaPQgge9wmA-1; Tue, 21 Jan 2025 03:19:24 -0500
+X-MC-Unique: sqwA_95CNYeqaPQgge9wmA-1
+X-Mimecast-MFC-AGG-ID: sqwA_95CNYeqaPQgge9wmA
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385d6ee042eso3427840f8f.0
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 00:19:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737447563; x=1738052363;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oWxFfQloQrWxhz6vkTH178/CIdL2k87FeluoUAyrDBU=;
+        b=tpIz0Oni7DRxo6tXUxX4J5XB+DE7coQfsEWEO5cmQ2DgK3VMxsyKqPa2oGF9ZNgIox
+         Bh8BJ0Zre7lKsEoV2clLBXnIK0palg0UBnydbabzxtY912Pe4vY4VCIY5PMS9xKOX0cb
+         EvJShVP4JpBn82/rhIWH69yKRwawCWutDGDEr4GPSYCYKysik5OHY2LY6q3lXGToolLy
+         KQ8japwh7K1Ugs8f5FQyPpNXVEsvanwQFon7y5zhSg+4JkozbYmJgVvAIgTSeat+roz/
+         /Ni43ljHbhJA5apUcrD74oglMfVurDzBksBPRae76uxzRyZ+qdA5H3Ic0nilJ6S+q7f8
+         Rv6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUi0xeaTYQJx/0EtIWjDTfUbAFIwb1N5KW2mzxbfhx1D1hYk3U6a/TLVW/DIAcC13+vztSkI9IcGuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOucx4OlbDgfHq87eucIRAgxaDZxfTjkWJpGHkkAB/npcOP+B9
+	omws01R8HaDF5ht26uJQjCU6kPX1Nx7rnbYSMyDlo8ycsQnfvfZX9AM12cjZyc3uQcMVv4WABds
+	Csj2nknPnDU+hoMo5ffpStAmBPQIuJpH6AJ5ifDBAnK5VHDCigJTpnZC5zdwXOPJDbg==
+X-Gm-Gg: ASbGncsPEHuWKQALVp4doPBZgQ2dAc8o1Jxhte+msAhYjLOqHGgN3LMHOLfnGlOwza4
+	9zKWwb6gXoOBUS0K4BjkXbdev2RiXMBWRforfkraut5e7TaQk5jY1Xppz4DOf6/qMS12mm/6DU0
+	n1Xa+lzVS4REr3jXAezOC56WXXDbNzWzPOh96rokPJrvmdoW/un7RGhoFdh62z2KKt53ZOXckw4
+	WQNMnzF4u8bcruOhNV2hj7XMnCuahesA8lvpfoOP0Aoid9G5iYOZ13gMjIq7Lhrg7gaJVd+92uk
+	YWLnpmBwU/rLVLEg256ZzLM2M4Xn2WoHP0ziQkU7kjidlobjLqqQb7AgGSKZB/V47Bnyu9mBJ3Q
+	U7m5LznRCdoj+JFvMzHajMg==
+X-Received: by 2002:a05:6000:1a8c:b0:385:e5d8:2bea with SMTP id ffacd0b85a97d-38bf56639c9mr13643409f8f.20.1737447563297;
+        Tue, 21 Jan 2025 00:19:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFw900bC4ZSmXSTcrHZnhNPl9DtuShk5pGkORoBHldXZaUNRdHHeTrgff2+DLeBofC9o14SYw==
+X-Received: by 2002:a05:6000:1a8c:b0:385:e5d8:2bea with SMTP id ffacd0b85a97d-38bf56639c9mr13643385f8f.20.1737447562926;
+        Tue, 21 Jan 2025 00:19:22 -0800 (PST)
+Received: from ?IPV6:2003:cb:c709:6200:16ba:af70:999d:6a1a? (p200300cbc709620016baaf70999d6a1a.dip0.t-ipconnect.de. [2003:cb:c709:6200:16ba:af70:999d:6a1a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c752935csm226281845e9.26.2025.01.21.00.19.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2025 00:19:21 -0800 (PST)
+Message-ID: <4e556200-c790-4e0a-b103-2a1529c81927@redhat.com>
+Date: Tue, 21 Jan 2025 09:19:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] kernel/resource: Introduce managed SOFT RESERVED
+ resources
+To: Nathan Fontenot <nathan.fontenot@amd.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, alison.schofield@intel.com, linux-mm@kvack.org,
+ gourry@gourry.net
+References: <cover.1737046620.git.nathan.fontenot@amd.com>
+ <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: gmI-21x9meP3c5zOHMVAAQSKkaVj9Sba-gkxoue8qeI_1737447563
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add support for GPF flows. It is found that the CXL specification
-around this to be a bit too involved from the driver side. And while
-this should really all handled by the hardware, this patch takes
-things with a grain of salt.
+On 16.01.25 18:42, Nathan Fontenot wrote:
 
-Upon respective port enumeration, both phase timeouts are set to
-a max of 20 seconds, which is the NMI watchdog default for lockup
-detection. The premise is that the kernel does not have enough
-information to set anything better than a max across the board
-and hope devices finish their GPF flows within the platform energy
-budget.
+Hi,
 
-Timeout detection is based on dirty Shutdown semantics. The driver
-will mark it as dirty, expecting that the device clear it upon a
-successful GPF event. The admin may consult the device Health and
-check the dirty shutdown counter to see if there was a problem
-with data integrity.
+> Introduce the ability to manage SOFT RESERVED kernel resources prior to
+> these resources being  placed in the iomem resource tree. This provides
+> the ability for drivers to update SOFT RESERVED resources that intersect
+> with their memory resources.
+> 
+> During boot, any resources marked as IORES_DESC_SOFT_RESERVED are placed
+> on the soft reserve resource tree. Once boot completes all resources
+> are placed on the iomem resource tree. This behavior is gated by a new
+> kernel option CONFIG_SOFT_RESERVED_MANAGED.
+> 
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Changes from v2:
- - Remove RFC tag.
- - Setup T2MAX to 20 secs, just like T1 (Dan).
-   This simplifies the patch significantly: 1) no longer need to 
-   update upon hot-removal, 2) don't need the device max timeouts. 
- - Configure dvsec at port enumeration time, not pci_probe (Dan).
- - Skip RCH.
- - Cosmetic cleanups (Jonathan)
+I'm missing a bit of context here.
 
- Documentation/driver-api/cxl/maturity-map.rst |  2 +-
- drivers/cxl/core/mbox.c                       | 18 ++++
- drivers/cxl/core/pci.c                        | 83 +++++++++++++++++++
- drivers/cxl/core/port.c                       |  2 +
- drivers/cxl/cxl.h                             |  2 +
- drivers/cxl/cxlmem.h                          |  5 ++
- drivers/cxl/cxlpci.h                          | 15 ++++
- drivers/cxl/pci.c                             | 21 +++--
- 8 files changed, 138 insertions(+), 10 deletions(-)
+Why can't we flag these regions in the existing iomem tree, where they 
+can be fixed up (even after boot?)?
 
-diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
-index df8e2ac2a320..99dd2c841e69 100644
---- a/Documentation/driver-api/cxl/maturity-map.rst
-+++ b/Documentation/driver-api/cxl/maturity-map.rst
-@@ -130,7 +130,7 @@ Mailbox commands
- * [0] Switch CCI
- * [3] Timestamp
- * [1] PMEM labels
--* [0] PMEM GPF / Dirty Shutdown
-+* [1] PMEM GPF / Dirty Shutdown
- * [0] Scan Media
- 
- PMU
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 548564c770c0..6b023e81832a 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1308,6 +1308,24 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, "CXL");
- 
-+int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
-+{
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	struct cxl_mbox_set_shutdown_state in = {
-+		.state = 1
-+	};
-+
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_SET_SHUTDOWN_STATE,
-+		.size_in = sizeof(in),
-+		.payload_in = &in,
-+	};
-+
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dirty_shutdown_state, "CXL");
-+
- int cxl_set_timestamp(struct cxl_memdev_state *mds)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index b3aac9964e0d..d2867ea18448 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1054,3 +1054,86 @@ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
- 
- 	return 0;
- }
-+
-+/*
-+ * Set max timeout such that vendors will optimize GPF flow to avoid
-+ * the implied worst-case scenario delays. On a sane platform, all
-+ * devices should always complete GPF within the energy budget of
-+ * the GPF flow. The kernel does not have enough information to pick
-+ * anything better than "maximize timeouts and hope it works".
-+ *
-+ * A misbehaving device could block forward progress of GPF for all
-+ * the other devices, exhausting the energy budget of the platform.
-+ * However, the spec seems to assume that moving on from slow to respond
-+ * devices is a virtue. It is not possible to know that, in actuality,
-+ * the slow to respond device is *the* most critical device in the
-+ * system to wait.
-+ */
-+#define GPF_TIMEOUT_BASE_MAX 2
-+#define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
-+
-+static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
-+{
-+	u16 ctrl;
-+	int rc, offset, base, scale;
-+
-+	switch (phase) {
-+	case 1:
-+		offset = CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET;
-+		base = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK;
-+		scale = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
-+		break;
-+	case 2:
-+		offset = CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET;
-+		base = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK;
-+		scale = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
-+	if (rc)
-+		return rc;
-+
-+	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
-+	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
-+		return rc;
-+
-+	ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
-+	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
-+
-+	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
-+	if (!rc)
-+		dev_dbg(&pdev->dev, "Port GPF phase %d timeout: %d0 secs\n",
-+			phase, GPF_TIMEOUT_BASE_MAX);
-+
-+	return rc;
-+}
-+
-+int cxl_setup_gpf_port(struct device *dport_dev)
-+{
-+	int dvsec;
-+	struct pci_dev *pdev;
-+
-+	if (!dev_is_pci(dport_dev))
-+		return 0;
-+
-+	pdev = to_pci_dev(dport_dev);
-+
-+	if (is_cxl_restricted(pdev))
-+		return 0;
-+
-+	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-+					  CXL_DVSEC_PORT_GPF);
-+	if (!dvsec) {
-+		dev_warn(&pdev->dev, "Port GPF DVSEC not present\n");
-+		return -EINVAL;
-+	}
-+
-+	update_gpf_port_dvsec(pdev, dvsec, 1);
-+	update_gpf_port_dvsec(pdev, dvsec, 2);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_setup_gpf_port, "CXL");
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 78a5c2c25982..1ad6d2e05f09 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1653,6 +1653,8 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
- 		dev_dbg(dev, "scan: iter: %s dport_dev: %s parent: %s\n",
- 			dev_name(iter), dev_name(dport_dev),
- 			dev_name(uport_dev));
-+
-+		cxl_setup_gpf_port(dport_dev);
- 		struct cxl_port *port __free(put_cxl_port) =
- 			find_cxl_port(dport_dev, &dport);
- 		if (port) {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index fdac3ddb8635..c80c2300dee7 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -912,6 +912,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 
- bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
- 
-+int cxl_setup_gpf_port(struct device *dport_dev);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..a085374d52d3 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -693,6 +693,10 @@ struct cxl_mbox_set_partition_info {
- 
- #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
- 
-+struct cxl_mbox_set_shutdown_state {
-+	u8 state;
-+} __packed;
-+
- /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
- struct cxl_mbox_set_timestamp_in {
- 	__le64 timestamp;
-@@ -829,6 +833,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 			    enum cxl_event_log_type type,
- 			    enum cxl_event_type event_type,
- 			    const uuid_t *uuid, union cxl_event *evt);
-+int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds);
- int cxl_set_timestamp(struct cxl_memdev_state *mds);
- int cxl_poison_state_init(struct cxl_memdev_state *mds);
- int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 4da07727ab9c..9b229e3b9a9d 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -40,6 +40,12 @@
- 
- /* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
- #define CXL_DVSEC_PORT_GPF					4
-+#define   CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
-+#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK		GENMASK(3, 0)
-+#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK		GENMASK(11, 8)
-+#define   CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
-+#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK		GENMASK(3, 0)
-+#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK		GENMASK(11, 8)
- 
- /* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
- #define CXL_DVSEC_DEVICE_GPF					5
-@@ -121,6 +127,15 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
- 	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
- }
- 
-+/*
-+ * Assume that any RCIEP that emits the CXL memory expander class code
-+ * is an RCD
-+ */
-+static inline bool is_cxl_restricted(struct pci_dev *pdev)
-+{
-+	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
-+}
-+
- int devm_cxl_port_enumerate_dports(struct cxl_port *port);
- struct cxl_dev_state;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 6d94ff4a4f1a..bad142095279 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -465,15 +465,6 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds, bool irq_avail)
- 	return 0;
- }
- 
--/*
-- * Assume that any RCIEP that emits the CXL memory expander class code
-- * is an RCD
-- */
--static bool is_cxl_restricted(struct pci_dev *pdev)
--{
--	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
--}
--
- static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
- 				  struct cxl_register_map *map,
- 				  struct cxl_dport *dport)
-@@ -1038,6 +1029,18 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (cxl_pci_ras_unmask(pdev))
- 		dev_dbg(&pdev->dev, "No RAS reporting unmasked\n");
- 
-+	/*
-+	 * Set dirty shutdown now, with the expectation that the device
-+	 * clear it upon a successful GPF flow. The exception to this
-+	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
-+	 */
-+	if (resource_size(&cxlds->pmem_res)) {
-+		rc = cxl_dirty_shutdown_state(mds);
-+		if (rc)
-+			dev_warn(&pdev->dev,
-+				 "GPF: could not dirty shutdown state\n");
-+	}
-+
- 	pci_save_state(pdev);
- 
- 	return rc;
+Especially, what about deferred driver loading after boot? Why is that 
+not a concern or why can we reliably handle everything "during boot" ?
+
+> As part of this update two new interfaces are added for management of
+> the SOFT RESERVED resources. The release_srmem_region_adjustable()
+> routine allows for removing pieces of SOFT RESERVED resources. The
+> the merge_srmem_resources() allows drivers to merge any remaining SOFT
+> RESERVED resources into the iomem resource tree once updatea are complete.
+> 
+> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+
 -- 
-2.39.5
+Cheers,
+
+David / dhildenb
 
