@@ -1,203 +1,271 @@
-Received: from esa11.fujitsucc.c3s2.iphmx.com (esa11.fujitsucc.c3s2.iphmx.com [216.71.156.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788D41EB44
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jan 2025 00:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.156.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737507500; cv=fail; b=nKcPGjAxmNrqVeWde3KKIM33L8yHtQo+O1OwGtJvOFMDm583VD91pDJexOkyusoBh3ojxhTODgK1MPsgY+qyLNPsJdsNAYgiLTOycFfemUEHtQxC+/F44WWBCT9XR2kWE0aWU5k96c/ZYCxTBJr8e1a2uUwmA6LOAgiDWEfBqQo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737507500; c=relaxed/simple;
-	bh=B+wSGjSPKFe+TXHy6UEnpG4mCn0h5gVwgzt8Mwy2w2g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QblzD+qPZlh5kO76KShMDW0ptgcxqet3Tt9EGLgtI0J06EuKGIJNy4pN3xwj0FOl8pxMfxDwfiX3Kh5SfCLIT38eLOZu82MqaX553V4abPNW0hDcAwSVoeOzmJUWr1uEXjHLtT3rbuq/X/yJvp2VqZPcryH+LLaWJCR8Fmzm5P0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=eSyAQCbm; arc=fail smtp.client-ip=216.71.156.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F16B9463
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jan 2025 05:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737525166; cv=none; b=MezeVznBKaBsdGoyEm7NRLmnTOV3qikzvF8s4vV7Qm8EsacEFtwtSd4RJwJ0jxJoq7Y04C1WbD3jaZqXGsxrsBjP0KCgLht1AAEe8yOcuck7374oqHt4no0GPoCLq2vr2YrT5vliEkxA2Q2GSXb7dPmBrTLWotU5u/lR2ECfAGk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737525166; c=relaxed/simple;
+	bh=LmYbHfvdjEndiM4q8x27My/sm5mG8IUJNkD+B0dYBfQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GkDRgpvYnmQt/L+ACILMQ5wTalN9ATkKc60s9InzzDTwn+WtuOfXIhRm33MAjgOeuBXJGtrnbqfnciFaeBp37UH8ZOLU8iYmLqCmk7mfrM0uhEQOydqDEvJTKW8RSTI+U0W/jSbhhUVeI9ucUjbK0Fx+R5fdueQ2Xlo9S6SVvwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+IDLcpE; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="eSyAQCbm"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1737507498; x=1769043498;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=B+wSGjSPKFe+TXHy6UEnpG4mCn0h5gVwgzt8Mwy2w2g=;
-  b=eSyAQCbmcyWPztD0Q2H7qBgNedR50G3D9PZfo3bflj4MlC94Xckq6rZq
-   zCzbUVGd3m4acp0pfpWqZZWZmfOSe0MH+Go79m3wTkL2CRe3m3Lk6DIOd
-   NA50cy+TK2QfChZwzxUvEmzOTFQL3Sx3cLZtrI7iAtYu+CIkCloajPJnq
-   fs12UJKm/vr43XGtVsCMPh691Ih39srDUkaTVigGvL4PiBYF8TzVYhLM7
-   DhDc98HmXwpyaGrKC/npmpa365CzL+pVxAP2EYRNtu97E+UKFxPo7YEp7
-   Mc5wAuaQv6WMVltg3M8xxC7prhSihX2Nb3tqP0ARtwgs6Dw0u01T8kLLr
-   A==;
-X-CSE-ConnectionGUID: borTFg5FR8GkYqfP8QzO/g==
-X-CSE-MsgGUID: VFo3lSqyShOTt8kjBqXoMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11322"; a="144526810"
-X-IronPort-AV: E=Sophos;i="6.13,223,1732546800"; 
-   d="scan'208";a="144526810"
-Received: from mail-japanwestazlp17011028.outbound.protection.outlook.com (HELO OS0P286CU010.outbound.protection.outlook.com) ([40.93.130.28])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 09:57:04 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PP/mKbKzb7e2VZLE2oO4nB8IV00BR41xkLhpC0LWJPLvlYmIJYcdrQ2v5BT+jS/76kZN59FakIIx8aO/FaH9rZbEugTMF9y0sJPp+yj4D5yoYu/mkgBPuyGGkZCb0WW/g/vqpmUDL1o9CsLePS9OHEefm1H5sExgN1MLi4rC84i0rZ5x1XQEyiGsMtwUox2qAs0Jafo9gjYFVtJEe8s2yAkKAWU5b5EW6Tuv28x8Lxm8DPlDZUrU4dcAewKlw+ICU6bhIJKN19gUG0FlvP6vBAU39JINbWpG5sOpo0R1vweFaY8A2vzhQeXYClsBsnbOytsjEKysjn5BhUrfMDQ6Eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B+wSGjSPKFe+TXHy6UEnpG4mCn0h5gVwgzt8Mwy2w2g=;
- b=deLSLfORdENS+Hmt/BvdLBXt6TRYpqiVEOt5Sk39W1+uaO6o36I8sD3Fgq3dd9PYWQLRnYTYOS3CB1R20MV8IkzQShwuhg/ulA+UuRMTv/kqQhI9cUhyKOJZC4f3x05HMl/qE2+I1abBAORHtxDALm8BvEIaQtbT07fFu5s29l+pesWWIMRk+5rFfxn/Oa0Q0uXCF+X0if77xhL+l4ohvkdBD7bUE88TFIqfVPMhIr63OurScUNTUu2yaxRItzpKZh8+9S7o5QdYUbCNc8tXRkp0DvqiySVifrJPrVUA41Z77Fcz2XEKN8eVIhuk9bO3TlGBwPOXrNMPXYRRlNcfow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
- by TY4PR01MB13762.jpnprd01.prod.outlook.com (2603:1096:405:1f9::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.16; Wed, 22 Jan
- 2025 00:56:58 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377%4]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
- 00:56:57 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, Fan Ni
-	<fan.ni@samsung.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/3] hw/mem/cxl_type3: Fix special_ops memory leak on
- msix_init_exclusive_bar() failure
-Thread-Topic: [PATCH 2/3] hw/mem/cxl_type3: Fix special_ops memory leak on
- msix_init_exclusive_bar() failure
-Thread-Index: AQHbaujLT8ojyn/IlEKaROJaJPs0XbMhU/YAgAAF3YCAAKFqAA==
-Date: Wed, 22 Jan 2025 00:56:57 +0000
-Message-ID: <c2008f82-f50c-4119-b522-6719e7390947@fujitsu.com>
-References: <20250120030947.254930-1-lizhijian@fujitsu.com>
- <20250120030947.254930-2-lizhijian@fujitsu.com>
- <20250121145812.00004c63@huawei.com> <20250121151911.00002623@huawei.com>
-In-Reply-To: <20250121151911.00002623@huawei.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TY4PR01MB13762:EE_
-x-ms-office365-filtering-correlation-id: 505a0576-10c6-4706-db0a-08dd3a7fabf3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|1580799027|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?RGJkUm5KTlZmd0wrT3lnZENTQUtsKzU5WFAvUk1rS3FHNE91aVpUQkhnUWhI?=
- =?utf-8?B?eEZERHprV2tYZ1Y4Z005Zi9CRlk1WjFTZHRLK0c3SWdrNFhVSHBOaTdmd1FB?=
- =?utf-8?B?Rm9VU2VON0hrS1RBOTBwOWJOcFRkZ1ZwZkFrekJEbDNoU29OWnBjQ0JVRG80?=
- =?utf-8?B?MmlqUk1xV2ZNd0w1WlJ2NkJSVENMTzRNaGhyVnJoQWlZbDhaczhlemRqQ2FG?=
- =?utf-8?B?T0NESDhhZXFXZFUxOWQ0ZUd2Y3l0SmdEcm44T2dQbndCVFcrZzIwS2FDL05x?=
- =?utf-8?B?QVNIS3UwV0NINHJmb3NQUVJTWERuTHBHbGhDUlc2SG1IWGh3Y01YYzZXVGZo?=
- =?utf-8?B?OTl2NzA0QXFjaGdjNm5HS3d0ZFIveXNMaUJQaFo4SHN6UTM2c0pQQk1SbSta?=
- =?utf-8?B?WDdoOFNEdXZnTlFTSm9takhsOXI2empQWVZsS2xEZ3F4VmdMdG5HRVN1WkI2?=
- =?utf-8?B?K1FrQWFzWDQwM0EwbVY0dTk1T05xRDFkNGpGUytybjBldE03L1NZdmYvb2pU?=
- =?utf-8?B?ODF0SkhQV0lsTkhyT1k0STlCbjVEa2NwWVU3aVptQVhMTVZHMFhjc2p6aXZp?=
- =?utf-8?B?VE9wSHRQc3Mxb1J2b1owREtFN094TTNUQWpvbm55bmNrV0dCYVV1VGpSQWtN?=
- =?utf-8?B?Mmt1Rk5hQVIrZGRBU2xGUEQzNnJKYnpsNTY0WWNBS1kydTlWZ2NmSUJTMGMw?=
- =?utf-8?B?U3F6ditkZTk1UjZHalpYNU5NNDdLSGhEeXU2cVpEcnZQMkIrWEg2bjluclht?=
- =?utf-8?B?ZnlWQkVXbStPZTlRTEY1Tkt5NHBiamNFK01YRkxFS1p4ZzM2aUdySGhsczF2?=
- =?utf-8?B?NTdXSTIyUUczSTY0Uzlad3pMOUlNbmFNUVZiSDhtb2p2clFhdklOTmlGZndO?=
- =?utf-8?B?Zk9zRnVnSTAvdFF4TE42dUoxYWxPbzNMQkgrY1YwNnBnakpDRDJOREdJKzlX?=
- =?utf-8?B?YUtPcmNTTU5sQ0J4aUJpd09ZWXpmc1Izd0JtVkRYOTI3SS9EY3V5ZVlqVW1S?=
- =?utf-8?B?YzFxaFhCeHJZK2YwTzY1WUlWOVpPaHhGc1NmL1V5TEdaUHF2cHRYT2Mwekph?=
- =?utf-8?B?Slp6OWg2ODhNZW10NE1yRGxaK3VwT3VQLzJGQVR2a2kzemtSZ0RBb3o0TXZv?=
- =?utf-8?B?Q1VubCt0Zno0WkJzc1BiQTZpVldzTmluTTliWGE1RWREajZjNGxMVXAxaGo4?=
- =?utf-8?B?NHl5aTJvRG9qVlVJRWEwTGkyQ3ZVTHI0TllYdUtCcjdBbU95NGY2ZVY5ZDc5?=
- =?utf-8?B?WDRRUklTeEZtcnpVSXRWZFo5ZGFOWVk0cldNcS9SS1BwSW1YWkw1T1FvQW16?=
- =?utf-8?B?MzR2Rnl1MkJ5VWZIQmVCTWYwemxMUFRZdmN2bFdGOHN6RFRDTHM5V05CajJ2?=
- =?utf-8?B?Qm5KdDc3dFhTY2ZTNnlkSTlxdHpvMmZvSndzUS8yN0dicDAzYkVWWHU1Y2Fx?=
- =?utf-8?B?L2FuQmhrYVR1MkRCN0ZLbDdqQmlGN3NYNnhLb2ZRS1h3VkZqeTdLVUtSTXlZ?=
- =?utf-8?B?bFp6SkQ2bDArMnpyWE1Rd3ErdVpFM2JiZFdNRUEwMXBUQkxYbDQvTHhqS3V3?=
- =?utf-8?B?QkxXSFJxRlVHdkROY2V4bit2QlkvNGhmZEg2OFJNSGFtVjYyYmFOQy81YmlX?=
- =?utf-8?B?eGx5R2tUQ1owUExGcFBpZVh0N3BUTjU4UkpyY1IzOElVc0N4Q2x5SHVEamx4?=
- =?utf-8?B?UXRUQ3V0Y3plTjJCeGlQWmVTcHE4Yy9zRHNNdm1sOG5FR2x1OE1WUHVtL1I2?=
- =?utf-8?B?ZjI0RWxiSTVGV3JKRGJBTFlTdGFmOWU1SE41YWltc1M2YzhrdEQ4ZjJncjRh?=
- =?utf-8?B?K1l6a3ZwbGVYRWZ0aG5jeThiS1JUNjBJZFpQVDlHUStkajJGSzdNZWhGa1F5?=
- =?utf-8?B?VDFNYjVYQXhEdjJleUxxUGQ3YVRkVWl1aTYvSFMrNkJSb29tUlRKYjlZWm82?=
- =?utf-8?B?UWRjSmQxbW83NjJWUDhPc2pQRXpEM25KWXhUaXIza0ErS2tLNENURkxYb1da?=
- =?utf-8?B?Z2NRY1JHQUhRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(1580799027)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?d1JzYlVQMWJkTy9xbzAzREhnVWpLcEgzSDFjdnJyM3VNc1E2M2VubXVPbmZ3?=
- =?utf-8?B?endsRzFJUGN6YlNDUGJBYnVFMnMzTDRtUDIyc0lvdDlJMm1XSEF6UUtweG1S?=
- =?utf-8?B?QW5BS2dZanJad3lvWUwyUFV0M0JKM2NwTlp1cmpvRkdxMDdVMkQ0YWRJNWcz?=
- =?utf-8?B?RlRZeTUxUThkWE5VRUNiMlNXQkJLYzRhWWZKYW40cmhtd2Zibko5eEczamxN?=
- =?utf-8?B?TGVxOUxYdHRVSW1mZitCbTd4UTdOOGliamxXcW4xdGtoTFVWc01rUFlvcFJR?=
- =?utf-8?B?eFFoWU5FRXlJUDQ4WnpnZXhlZ2J5NmN4WVlhR3E0aDNiL0VxSEtoSk9Rc1Aw?=
- =?utf-8?B?MUJjbE5RUHNhY0ViZWhhNm5GVFJBYWpHbFQzZkdCZmpnUEJ1UVdaZlRQa1RE?=
- =?utf-8?B?RTVxaTdVeXhMMENjN2NjaG5BM3R5UlVoczdOZDllaGRsWjdKZDRGblNBa3dB?=
- =?utf-8?B?VjcwODhFYWlpaCtzV3NEQzhOVTY5alpLQXdWTDJmSURLL2lzWTlwZ1pEUGJJ?=
- =?utf-8?B?alNWSzVqbHFEYjY5Q0tVOW1hS0hjWXl0Z0hXOTFMTWVJdEYzMzVIUVk3RHBB?=
- =?utf-8?B?c3grY2xNcWw4RFd0UllsOHpZdHFES2lRc0VrV3RaRVRXOGZ5bXZqNmxnMXNm?=
- =?utf-8?B?V01LVEIrcXQzODJyeTlybWFlamFlaXBJRyt5K0dWU09CeDkxK1hTem83SjR2?=
- =?utf-8?B?ekJ1ejRldnZLY2puUW9QWG41VXd3NkExVTk0N1FqN25wMGVrRVhvcTVBZ2tB?=
- =?utf-8?B?dmpTTVE4d2t3ejNxanl0aklRdHF5NENJZXNpSVBTN3RlT3J1QWt6ZlNsUktR?=
- =?utf-8?B?TXVONndzaW5jelpGekl6VEd6TE5SbWxDNlU5Qld4M2tvTW9XL2YrQXd5Ykdv?=
- =?utf-8?B?andUcFNQemhvdWRCNFVobFVaN1ZVY09tbUJlMnNFQThSbFFXSDBXZDc2R2tt?=
- =?utf-8?B?M1VhaC9wanVETWQwS2pPZmNoazBBOG80TzRuODhnVnVCVGNWcmJBZWpzS09T?=
- =?utf-8?B?R05GcVVsaENadk9RTExXdkxWcHJmVFNCMm5vdmlhbVAvdnQ4ZjJ0ZEhPZzRi?=
- =?utf-8?B?dHZQK1hxdXVLRkhDV3ZXNXVLZmhKcVcycUJzTE8yUVArY0c1ZmgwazVRRVd6?=
- =?utf-8?B?bC9qaVJNWHZjaDVOWnJHcGxSUk8zbm5TV0NmczFRci9UREZqb2FKdUZWNXJF?=
- =?utf-8?B?NnlVaGpGT1lwTU0wYWEzZTZHUkJJY251V3l0b05hMmgzNTVEdUZoL1dhTXI4?=
- =?utf-8?B?U05hRFR2a0wwOWxOaDlWZ0dnTVhJa256cURMdHNkRWFYZGM5bGZockNwWFJQ?=
- =?utf-8?B?b1I4eW9GSG5yQi8ydVRldll5RGx3SEhIT0QzRTZoSFhMa0l6MXdvdWVlZGFJ?=
- =?utf-8?B?dTVMS2RxYk1PMUdPVVZZaXBQSTVmM1FSTklSVnJ5TjJsSVZlN3BadXZ3bWJi?=
- =?utf-8?B?Lzloek9MNTE0dXFZVVNieXNoL1dVNmxIV2VTQTFBczV0bkNPeEtob0NWOHlF?=
- =?utf-8?B?VzF6cGdsbnloSHpMeDVoZ1kzTGxQdGhMcFZtTURSLy9kUXVia1QvKyt1YXpW?=
- =?utf-8?B?bFNGbXRsc2lJckE3QlNxTFcwblYrUGhYeVV6THZsSlRWYW5qSi9qYUZ1cEFG?=
- =?utf-8?B?cS9jTXJWdWZhMktObEkzWXI3dWxtNmhNNGt3VHp6aG9CVTdMZFp4aHBYRnY0?=
- =?utf-8?B?Y0FGdFE0QzBjc2lYNklHYURZOUh5WWIvSTdDdlVBOEQyTXNBNGtqNkZvNmk2?=
- =?utf-8?B?RnJDcUxUTEIwZjQyZm5peVNLSmdER1lDZklHNUFDYUJrd2NCQml5Um5ac3pw?=
- =?utf-8?B?M1hNZnJpT2F2ZG9iV21GaVVsUnp3NXFIcEYzcjNrc1JZSFg5cDRLZG5TZjhU?=
- =?utf-8?B?OEdDWWJoN25SQTIrWnZ1allJWVN3VFdrUlYvZnV1NGNYcXJQMThtcmkzOVd3?=
- =?utf-8?B?Q29RMWNHVkMzS2FnK0lGREhBdDZ0ODJPbCtaR043ODlWTXNTUXZVRDhFVnQ3?=
- =?utf-8?B?a040R2JaTGFLSWY3aFBlMzYrZi9EWC8wcXNobmRPb3puemVMOW1qV3B5TFc4?=
- =?utf-8?B?a1ZISXJVcVYxYUwvTXJCUzdadjZWSElWNkZPY0dQVjR3REFXMFdWK3hpVndZ?=
- =?utf-8?B?dy82NkZxNlkrSEVTQTV0UnRmd2QrL3l0eDZ5ckFuNzhWOTBrMHU3VEhpb2tT?=
- =?utf-8?B?MWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AF0414B7613F144485EC47740CEEA379@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+IDLcpE"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2156e078563so85578895ad.2
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Jan 2025 21:52:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737525164; x=1738129964; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIZ4JWBoERe85R1qokaI80YQhLGY5lo9dktYyry3040=;
+        b=Y+IDLcpE8qxRoGmHYF9dAocj40pRqTUlQ34bVx6EN43+5wGC7Ice4N2cKq0hF/rwmz
+         Mazcd7/IOCVOqSU39e12aO6qSCNiz1MwBPsj0nE5uvEA7WIoySWGvYZ77sBOs4WB3XZd
+         +O5NPKk4lspE7GTzAiOM8wVo/5oT5nyn9Kk44pa1l+HRVzceOk7df2ddkhmR6eZa48fQ
+         DC7pVVQujGfiBfdM50dxJtMK6gHnMCmmKlk6JCqClgjW+NPDLPci0++AxI62B/26WXFQ
+         +N10w9CAvoZ6qcCH9pDJlB1CSojMQ//dqC1hPbrFKgO5D0UHTMSOnxzTcBN0gXymwLKi
+         p2qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737525164; x=1738129964;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIZ4JWBoERe85R1qokaI80YQhLGY5lo9dktYyry3040=;
+        b=KWlUWFk+nURPWz8226yi5KMp6XNQJxWvi+A5I3s5ZXnwdDbEq4YL846V0Oh71Q8CUQ
+         E3uQB0qolR18e8TxKRe4zF3i3mF+sNH9Tlq8UkARvQHVFu5A54fIK6nVorNLP8f4JrrD
+         lwKedk0QFYUoBXHPfcXH8N1ECO8Ba5VnzwuN5aj4Ca4xaz3ObjNL3eZFXI/qlwTPTJjR
+         h3DUAG7uOL/nUe/GVt+CGO0jzJdNsvYbyxL2y1kejI+6mkXKigfExBJftzVK8t90+bu0
+         amX1YLrW5Un1fobpH8EElZs38vmCA0Pk7XRCJJatccPe71s7PzuEII4sYyrznaDnDt69
+         JtOg==
+X-Gm-Message-State: AOJu0YwhR/DbT3ZBhr49MhCaw9bns47JnxL8wXTD9rlDuedDpWqZ4RCS
+	Bcu+x507ehM3KyK5s62051mTthq0e7UM6e72x49m4SrvlmTLYkNb
+X-Gm-Gg: ASbGnctQfN94ovN62Qq1ZU0Z8zp0J6TxLobUmuvFSxhRzSq/RXvhmEajRKnQBZLUrHx
+	a1Am6xkm1WLG2zlrqXOpn+TjVAlU5FpZK+z59Ytr3STfkaSD3SF48ezqEymsmoLf5htEjRw8oKQ
+	PII8Wk+MKA+/NQ6Gu+o2MTEzVMRcv4bAO8mvP0CbZCOhfIQcEN+qDhCcEXWENhKWINccI1a1IMu
+	cDB6Sin+02g/UQsEAr2CjH1gbo61+LJ/8SmPw61dETDWr17e4OTU1Jfk9cn
+X-Google-Smtp-Source: AGHT+IEMERNf0CAbcXPzg/rzGFntCuPDmQzLA9ME8SZaMWHZjXR1p4ty85shv2aBuJWkttmh70Sf/A==
+X-Received: by 2002:a05:6a20:2591:b0:1e1:e2d9:3f31 with SMTP id adf61e73a8af0-1eb2148df72mr29099403637.16.1737525163660;
+        Tue, 21 Jan 2025 21:52:43 -0800 (PST)
+Received: from gpd ([2601:646:8f03:9fee:1eca:6066:421d:7396])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72dab9c8ed3sm10013391b3a.113.2025.01.21.21.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 21:52:43 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 21 Jan 2025 21:52:48 -0800
+To: Nathan Fontenot <nathan.fontenot@amd.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	alison.schofield@intel.com, linux-mm@kvack.org, gourry@gourry.net
+Subject: Re: [PATCH v2 1/4] kernel/resource: Introduce managed SOFT RESERVED
+ resources
+Message-ID: <Z5CHsFgDnrUT789g@gpd>
+References: <cover.1737046620.git.nathan.fontenot@amd.com>
+ <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	bfZ3LzdnN5dK0ZwonVLQ1+Ir/NLPiX//1+GK0+OFM5JV7rC79DqLlZ2qKWbLlxpBqKe4brBnGcL/Ba/I7OszkPhW3IEVgDBkYte0cvEHDMVMufgNAcsjHypqXA3AZ/onLHCwAsTb5x2Z7kI1hin0xFw4s5qf2G6Rv60C8bmgICaK0ApFQGnhVrjSjcLKaHmf3rbRBxCbuk4ndyeGE4w0joywSpqX5hzJGgrUfWcliBgoD5yHhNAprtf+7O7WHQj42VvKT1S9YO3zeFEeW4BRp7AUJ8sQ2iIThgE8lERl3BruFL2ZUG0CvgCtR7FJyCrQRjxzad5t2RUanyYqMeVnAxCJ/hD2vSA3dJBf+LDNKALNhLiwLyGR/oCAzV52yZRx8p5b3DNKuqPqyW0IxxK1Z2uN/TrBbHjt2pO47CUXn2mrFi+hz6Em2GMBikyXmSgAzoVCWM1Pbz7HC8YWHl2KNKHsi3f+juOvcVhuMGw7G1JGzQEzEgQTXlT/Y4MPPcynzE3A/xy7v2neKLNk6RCrQHIx0G2NaKXvHJmox8Y15RD46PuGiacegAXrLvdJbctCj5XKyknX+UR/IVlTh9aicr4PZf9QlOECLSp04omVUoATbCyfu5NAE/mLCkdeWAcJ
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 505a0576-10c6-4706-db0a-08dd3a7fabf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2025 00:56:57.6344
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zBv5z6lBzFvvMvr0sKLvCirdtZUmnL+4ZuqPOM6eyF4eP21RPkk0RVh3vFEKjaxgXfSUt6k87I/2fy2t12m6/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB13762
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
 
-DQoNCk9uIDIxLzAxLzIwMjUgMjM6MTksIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6DQo+Pj4gLSAg
-ICBtc2l4X3VuaW5pdF9leGNsdXNpdmVfYmFyKHBjaV9kZXYpOw0KPj4+ICAgICAgIGdfZnJlZShy
-ZWdzLT5zcGVjaWFsX29wcyk7DQo+Pj4gLWVycl9hZGRyZXNzX3NwYWNlX2ZyZWU6DQo+Pj4gK2Vy
-cl9tc2l4X3VuaW5pdDoNCj4+PiArICAgIG1zaXhfdW5pbml0X2V4Y2x1c2l2ZV9iYXIocGNpX2Rl
-dik7DQo+PiBUaGlzIHJlb3JkZXIgZG9lc24ndCBsb29rIGNvcnJlY3QuDQo+Pg0KPj4gU2hvdWxk
-IGVuZCB1cCBJIHRoaW5rIGFzDQo+PiBlcnJfcmVsZWFzZV9jZGF0YToNCj4+ICAgICAgY3hsX2Rv
-ZV9jZGF0YV9yZWxlYXNlKGN4bF9jc3RhdGUpOw0KPj4gZXJyX21zaXhfdW5pbml0Og0KPj4gICAg
-ICBtc2l4X3VuaW5pdF9lY2x1c2l2ZV9iYXIocGNpX2Rldik7DQo+PiBlcnJfZnJlZV9zcGVjaWFs
-X29wczoNCj4+ICAgICAgZ19mcmVlKHJlZ3MtPnNwZWNpYWxfb3BzKQ0KPj4gZXJyX2FkZHJlc3Nf
-c3BhY2VfZnJlZToNCj4gVGhpcyBsYXN0IGxhYmVsIGNhbiBnbyBhd2F5Lg0KPiANCj4gSSd2ZSBh
-cHBsaWVkIHlvdXIgc2VyaWVzIHdpdGggb3JkZXIgbW9kaWZpZWQgYXMgaGVyZSB0byBteSBDWEwg
-c3RhZ2luZyBnaXQNCj4gdHJlZS4gDQoNClRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHlvdXIgYXNz
-aXN0YW5jZS4NCkluZGVlZCwgdGhlaXIgb3JkZXIgc2hvdWxkIGJlIHJlYXJyYW5nZWQgKEkgc3Vi
-bWl0dGVkIHRoZW0gaW4gdGhlIHNlcXVlbmNlIGluIHdoaWNoIEkgZGlzY292ZXJlZCB0aGUgaXNz
-dWVzKS4NCg0KDQoNCkknbGwgcHVzaCBvdXQgbGF0ZXIgdG9kYXkgaG9wZWZ1bGx5Lg0KPiANCj4g
-VGhhbmtzLA0KPiANCj4gSm9uYXRoYW4NCj4gDQo+PiBldGMu
+On Thu, Jan 16, 2025 at 11:42:05AM -0600, Nathan Fontenot wrote:
+> Introduce the ability to manage SOFT RESERVED kernel resources prior to
+> these resources being  placed in the iomem resource tree. This provides
+> the ability for drivers to update SOFT RESERVED resources that intersect
+> with their memory resources.
+> 
+> During boot, any resources marked as IORES_DESC_SOFT_RESERVED are placed
+> on the soft reserve resource tree. Once boot completes all resources
+> are placed on the iomem resource tree. This behavior is gated by a new
+> kernel option CONFIG_SOFT_RESERVED_MANAGED.
+> 
+> As part of this update two new interfaces are added for management of
+> the SOFT RESERVED resources. The release_srmem_region_adjustable()
+> routine allows for removing pieces of SOFT RESERVED resources. The
+> the merge_srmem_resources() allows drivers to merge any remaining SOFT
+> RESERVED resources into the iomem resource tree once updatea are complete.
+> 
+> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+> ---
+>  include/linux/ioport.h |  9 +++++
+>  kernel/resource.c      | 79 +++++++++++++++++++++++++++++++++++++++---
+>  lib/Kconfig            |  4 +++
+>  3 files changed, 87 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 6e9fb667a1c5..2c95cf0be45e 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -249,6 +249,15 @@ struct resource *lookup_resource(struct resource *root, resource_size_t start);
+>  int adjust_resource(struct resource *res, resource_size_t start,
+>  		    resource_size_t size);
+>  resource_size_t resource_alignment(struct resource *res);
+> +
+> +#ifdef CONFIG_SOFT_RESERVED_MANAGED
+> +void merge_srmem_resources(void);
+> +extern void release_srmem_region_adjustable(resource_size_t start,
+> +					    resource_size_t size);
+> +#else
+> +static inline void merge_srmem_resources(void) { }
+> +#endif
+> +
+>  static inline resource_size_t resource_size(const struct resource *res)
+>  {
+>  	return res->end - res->start + 1;
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index a83040fde236..9db420078a3f 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -48,6 +48,14 @@ struct resource iomem_resource = {
+>  };
+>  EXPORT_SYMBOL(iomem_resource);
+>  
+> +static struct resource srmem_resource = {
+> +	.name	= "Soft Reserved mem",
+> +	.start	= 0,
+> +	.end	= -1,
+> +	.flags	= IORESOURCE_MEM,
+> +	.desc	= IORES_DESC_SOFT_RESERVED,
+> +};
+> +
+>  static DEFINE_RWLOCK(resource_lock);
+>  
+>  static struct resource *next_resource(struct resource *p, bool skip_children)
+> @@ -818,6 +826,19 @@ static struct resource * __insert_resource(struct resource *parent, struct resou
+>  {
+>  	struct resource *first, *next;
+>  
+> +	if (IS_ENABLED(CONFIG_SOFT_RESERVED_MANAGED)) {
+> +		/*
+> +		 * During boot SOFT RESERVED resources are placed on the srmem
+> +		 * resource tree. These resources may be updated later in boot,
+> +		 * for example see the CXL driver, prior to being merged into
+> +		 * the iomem resource tree.
+> +		 */
+> +		if (system_state < SYSTEM_RUNNING &&
+> +		    parent == &iomem_resource &&
+> +		    new->desc == IORES_DESC_SOFT_RESERVED)
+> +			parent = &srmem_resource;
+> +	}
+> +
+>  	for (;; parent = first) {
+>  		first = __request_resource(parent, new);
+>  		if (!first)
+> @@ -1336,11 +1357,12 @@ void __release_region(struct resource *parent, resource_size_t start,
+>  }
+>  EXPORT_SYMBOL(__release_region);
+>  
+> -#ifdef CONFIG_MEMORY_HOTREMOVE
+
+If CONFIG_MEMORY_HOTREMOVE not defined, it seems we do not have a
+user for release_region_adjustable as
+release_mem_region_adjustable() will not exist.
+
+Fan
+>  /**
+> - * release_mem_region_adjustable - release a previously reserved memory region
+> + * release_region_adjustable - release a previously reserved memory region
+> + * @parent: resource tree to release resource from
+>   * @start: resource start address
+>   * @size: resource region size
+> + * @busy_check: check for IORESOURCE_BUSY
+>   *
+>   * This interface is intended for memory hot-delete.  The requested region
+>   * is released from a currently busy memory resource.  The requested region
+> @@ -1356,9 +1378,11 @@ EXPORT_SYMBOL(__release_region);
+>   *   assumes that all children remain in the lower address entry for
+>   *   simplicity.  Enhance this logic when necessary.
+>   */
+> -void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+> +static void release_region_adjustable(struct resource *parent,
+> +				      resource_size_t start,
+> +				      resource_size_t size,
+> +				      bool busy_check)
+>  {
+> -	struct resource *parent = &iomem_resource;
+>  	struct resource *new_res = NULL;
+>  	bool alloc_nofail = false;
+>  	struct resource **p;
+> @@ -1395,7 +1419,7 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  		if (!(res->flags & IORESOURCE_MEM))
+>  			break;
+>  
+> -		if (!(res->flags & IORESOURCE_BUSY)) {
+> +		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+>  			p = &res->child;
+>  			continue;
+>  		}
+> @@ -1445,6 +1469,51 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  	write_unlock(&resource_lock);
+>  	free_resource(new_res);
+>  }
+> +
+> +#ifdef CONFIG_SOFT_RESERVED_MANAGED
+> +/**
+> + * merge_srmem_resources - merge srmem resources into the iomem resource tree
+> + *
+> + * This is intended to allow kernel drivers that manage the SOFT RESERVED
+> + * resources to merge any remaining resources into the iomem resource tree
+> + * once any updates have been made.
+> + */
+> +void merge_srmem_resources(void)
+> +{
+> +	struct resource *res, *next;
+> +	int rc;
+> +
+> +	for (res = srmem_resource.child; res; res = next) {
+> +		next = next_resource(res, true);
+> +
+> +		write_lock(&resource_lock);
+> +
+> +		if (WARN_ON(__release_resource(res, true))) {
+> +			write_unlock(&resource_lock);
+> +			continue;
+> +		}
+> +
+> +		if (WARN_ON(__insert_resource(&iomem_resource, res)))
+> +			__insert_resource(&srmem_resource, res);
+> +
+> +		write_unlock(&resource_lock);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(merge_srmem_resources);
+> +
+> +void release_srmem_region_adjustable(resource_size_t start,
+> +				     resource_size_t size)
+> +{
+> +	release_region_adjustable(&srmem_resource, start, size, false);
+> +}
+> +EXPORT_SYMBOL(release_srmem_region_adjustable);
+> +#endif
+> +
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+> +{
+> +	release_region_adjustable(&iomem_resource, start, size, true);
+> +}
+>  #endif	/* CONFIG_MEMORY_HOTREMOVE */
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index b38849af6f13..4f4011334051 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -777,3 +777,7 @@ config POLYNOMIAL
+>  
+>  config FIRMWARE_TABLE
+>  	bool
+> +
+> +config SOFT_RESERVED_MANAGED
+> +	bool
+> +	default n
+> -- 
+> 2.43.0
+> 
