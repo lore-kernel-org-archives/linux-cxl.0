@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711DE1C5D54
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jan 2025 23:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2F61CD1E4
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jan 2025 23:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737589944; cv=none; b=sIMe06ToZmVQSsh0hMxTiq5sluCBZ6flvuifnIrY71b0NC/E9ayXTxgDozslTUC1cb+wsNAW0d96PY4mXg40jFc55USJ3S9pDRpfY3cQ2iwEQeD0OYMBoHHNgYsvTLajlnR/0Gol9YREYORZMglDWD3Qt3mrNE1QPIW9gTvRzS4=
+	t=1737589945; cv=none; b=RYpf8XqJpybHA92S0wgAIapPMOZdVxHkDQ8dxngnTlqyzAgwDfsjSlzSRJCAXuRErxJahFqAW7qoYC1noT3vKFbV3AHjW0nPceKs4fi6MQieBUX2xY5qE/dbdCUyhrwN0T4JnvOyNBZ9BPESwfrC6tB9ujF+JsomtlxBnp0QhKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737589944; c=relaxed/simple;
-	bh=38RanBwofiKJJw5GPskz1TGMTfcZlJjTEFtaRtc9zGY=;
+	s=arc-20240116; t=1737589945; c=relaxed/simple;
+	bh=X5NjDRcDvcbL/JwgOg2Afb8v9pAhVyRLi5mrQcgKoeU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z5l2qWelevq1HLapqQw0X/T6WkHe0iY+Kr8qt57NNarLRCzaWFuOXY0Dsj13rrAXKgMv9wFsrhCtDjLnGSmC0Uf7xhYVDH9igOltB4BF7y9Iy6Wnc/gThcs9v6/8Q5SHqzfbZAKTtRHE9DVIOrXzLyVNiIZGg94wLSGyoUHyCZY=
+	 MIME-Version; b=eNlk43QezcHx8YbdzyqyadiKx2JkPDrAHT55rYIPm6mgzAKCEy1q8aNRmhtaJrGVo9ktbPzDJtiUJaRXu+lLR4oIb2UZ4OIWJeJQNWPmmZ0slGsDsg69sNV4usRQS14yTpUzyQET0knsbcaGNDPPDToH4t1CiduvTq7nb4Ifswo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A919C4CED2;
-	Wed, 22 Jan 2025 23:52:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90184C4CED2;
+	Wed, 22 Jan 2025 23:52:25 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [PATCH v1 16/19] cxl: Add support to handle user feature commands for set feature
-Date: Wed, 22 Jan 2025 16:50:47 -0700
-Message-ID: <20250122235159.2716036-17-dave.jiang@intel.com>
+Subject: [PATCH v1 17/19] cxl/test: Add Get Feature support to cxl_test
+Date: Wed, 22 Jan 2025 16:50:48 -0700
+Message-ID: <20250122235159.2716036-18-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250122235159.2716036-1-dave.jiang@intel.com>
 References: <20250122235159.2716036-1-dave.jiang@intel.com>
@@ -38,95 +38,126 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add helper function to parse the user data from fwctl RPC ioctl and
-send the parsed input parameters to cxl_set_feature() call.
+Add emulation of Get Feature command to cxl_test. The feature for
+device patrol scrub is returned by the emulation code. This is
+the only feature currently supported by cxl_test. It returns
+the information for the device patrol scrub feature.
 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/features.c      | 48 +++++++++++++++++++++++++++++++++++++
- include/uapi/cxl/features.h |  5 ++++
- 2 files changed, 53 insertions(+)
+ tools/testing/cxl/test/mem.c | 56 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/cxl/features.c b/drivers/cxl/features.c
-index 7c726f1512d0..4c5c93278e58 100644
---- a/drivers/cxl/features.c
-+++ b/drivers/cxl/features.c
-@@ -191,6 +191,53 @@ static void *cxlctl_get_feature(struct cxl_features_state *cfs,
- 	return no_free_ptr(rpc_out);
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 2b111142b2c0..5b7b0420e3a0 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -49,6 +49,10 @@ static struct cxl_cel_entry mock_cel[] = {
+ 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_FEATURES),
+ 		.effect = CXL_CMD_EFFECT_NONE,
+ 	},
++	{
++		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FEATURE),
++		.effect = CXL_CMD_EFFECT_NONE,
++	},
+ 	{
+ 		.opcode = cpu_to_le16(CXL_MBOX_OP_IDENTIFY),
+ 		.effect = CXL_CMD_EFFECT_NONE,
+@@ -150,6 +154,10 @@ struct mock_event_store {
+ 	u32 ev_status;
+ };
+ 
++struct vendor_test_feat {
++	__le32 data;
++} __packed;
++
+ struct cxl_mockmem_data {
+ 	void *lsa;
+ 	void *fw;
+@@ -166,6 +174,7 @@ struct cxl_mockmem_data {
+ 	u8 event_buf[SZ_4K];
+ 	u64 timestamp;
+ 	unsigned long sanitize_timeout;
++	struct vendor_test_feat test_feat;
+ };
+ 
+ static struct mock_event_log *event_find_log(struct device *dev, int log_type)
+@@ -1361,6 +1370,44 @@ static void fill_feature_vendor_test(struct cxl_feat_entry *feat)
+ 				    CXL_CMD_EFFECTS_EXTEND);
  }
  
-+static void *cxlctl_set_feature(struct cxl_features_state *cfs,
-+				const struct fwctl_rpc_cxl *rpc_in,
-+				size_t *out_len)
++static int mock_get_test_feature(struct cxl_mockmem_data *mdata,
++				 struct cxl_mbox_cmd *cmd)
 +{
-+	size_t out_size, data_size;
-+	u16 offset, return_code;
-+	u32 flags;
-+	int rc;
++	struct vendor_test_feat *output = cmd->payload_out;
++	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
++	u16 offset = le16_to_cpu(input->offset);
++	u16 count = le16_to_cpu(input->count);
++	u8 *ptr;
 +
-+	if (rpc_in->op_size <= sizeof(struct cxl_mbox_set_feat_hdr))
-+		return ERR_PTR(-EINVAL);
-+
-+	struct cxl_mbox_set_feat_in *feat_in __free(kvfree) =
-+		kvzalloc(rpc_in->op_size, GFP_KERNEL);
-+	if (!feat_in)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (copy_from_user(feat_in, u64_to_user_ptr(rpc_in->in_payload),
-+			   rpc_in->op_size))
-+		return ERR_PTR(-EFAULT);
-+
-+	offset = le16_to_cpu(feat_in->hdr.offset);
-+	flags = le32_to_cpu(feat_in->hdr.flags);
-+	out_size = *out_len;
-+
-+	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
-+		kvzalloc(out_size, GFP_KERNEL);
-+	if (!rpc_out)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rpc_out->size = 0;
-+
-+	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
-+	rc = cxl_set_feature(cfs->features, feat_in->hdr.uuid,
-+			     feat_in->hdr.version, feat_in->data,
-+			     data_size, flags, offset, &return_code);
-+	if (rc) {
-+		rpc_out->retval = return_code;
-+		return no_free_ptr(rpc_out);
++	if (offset > sizeof(*output)) {
++		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
++		return -EINVAL;
 +	}
 +
-+	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-+	*out_len = sizeof(*rpc_out);
++	if (offset + count > sizeof(*output)) {
++		cmd->return_code = CXL_MBOX_CMD_RC_INPUT;
++		return -EINVAL;
++	}
 +
-+	return no_free_ptr(rpc_out);
++	ptr = (u8 *)&mdata->test_feat + offset;
++	memcpy((u8 *)output + offset, ptr, count);
++
++	return 0;
 +}
 +
- static bool cxlctl_validate_set_features(struct cxl_features_state *cfs,
- 					 const struct fwctl_rpc_cxl *rpc_in,
- 					 enum fwctl_rpc_scope scope)
-@@ -275,6 +322,7 @@ static void *cxlctl_handle_commands(struct cxl_features_state *cfs,
- 	case CXL_MBOX_OP_GET_FEATURE:
- 		return cxlctl_get_feature(cfs, rpc_in, out_len);
- 	case CXL_MBOX_OP_SET_FEATURE:
-+		return cxlctl_set_feature(cfs, rpc_in, out_len);
- 	default:
- 		return ERR_PTR(-EOPNOTSUPP);
- 	}
-diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-index 55fa5b2a5d17..67ed8b08f7e9 100644
---- a/include/uapi/cxl/features.h
-+++ b/include/uapi/cxl/features.h
-@@ -127,4 +127,9 @@ struct cxl_mbox_set_feat_hdr {
- 	__u8 rsvd[9];
- } __attribute__ ((__packed__));
- 
-+struct cxl_mbox_set_feat_in {
-+	struct cxl_mbox_set_feat_hdr hdr;
-+	__u8 data[];
-+} __attribute__ ((__packed__));
++static int mock_get_feature(struct cxl_mockmem_data *mdata,
++			    struct cxl_mbox_cmd *cmd)
++{
++	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
 +
- #endif
++	if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
++		return mock_get_test_feature(mdata, cmd);
++
++	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
++
++	return -EOPNOTSUPP;
++}
++
+ static int mock_get_supported_features(struct cxl_mockmem_data *mdata,
+ 				       struct cxl_mbox_cmd *cmd)
+ {
+@@ -1491,6 +1538,9 @@ static int cxl_mock_mbox_send(struct cxl_mailbox *cxl_mbox,
+ 	case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
+ 		rc = mock_get_supported_features(mdata, cmd);
+ 		break;
++	case CXL_MBOX_OP_GET_FEATURE:
++		rc = mock_get_feature(mdata, cmd);
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -1553,6 +1603,11 @@ static int cxl_mock_setup_features(struct cxl_memdev_state *mds)
+ 	return 0;
+ }
+ 
++static void cxl_mock_test_feat_init(struct cxl_mockmem_data *mdata)
++{
++	mdata->test_feat.data = cpu_to_le32(0xdeadbeef);
++}
++
+ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1644,6 +1699,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 		return rc;
+ 
+ 	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
++	cxl_mock_test_feat_init(mdata);
+ 
+ 	return 0;
+ }
 -- 
 2.47.1
 
