@@ -1,389 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2955182;
-	Wed, 22 Jan 2025 18:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737568955; cv=fail; b=h0R0enuWgZR3b69tz+7LgRnIF/X9hFa7mvHj7m+8nNPBU1+KFKRZQ3nJy7obeTdhaniSvUIRz3sP5FSsU/p4MjM1K/O9V7F8nR20QyXZE3nJ49DbnhRzkj/R8tQ6eoZk6pA4bJjNSb0Fh5G7sSd2aPWQETXuEcab/xb4QUVx2LM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737568955; c=relaxed/simple;
-	bh=FW6iNuy11c9IX+eEHGZwrE0pFfNZ1PTSMsUop+75xqs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZLslcb+vFKlhZJuZWL51CiUHNi2LTjTekY5Lo3K2XU7XG/YMROhSoZh/m61V2ZmyHUc0Pv+k1orccPeUR8+uL7SNoM8EpDBrtFvPsZdvqoskE4/+mIXYOjia/XFiPJhDIhGo6qC9D4TCf0Yh5uesN3OTTz5Mt7albw+Ore2icEQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSdk6zfy; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10875215182;
+	Wed, 22 Jan 2025 19:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737573368; cv=none; b=KwrFcrq/hKcH/JGKx5sTMsRyc03rH/s7F+rhKkOjDEI39u2Rvxtx+PO+jldg8mUTDPPTTRF0FUd5ComYhlJvfbc7dW1Dhr3T3ydPujXu1LqsDH41+gTBlnJmjwci5hZIqU5b0+HCMd07lUwJNBv0SOsYzuc7QWDKwUZ3rHpO6/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737573368; c=relaxed/simple;
+	bh=v6YV9eIDsJMLS4oejIi8jAG2xTfl0sZ+XRNDM7u25to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sALCZJpAviFsPTlvd0zjKG2YsQPPNKd9oxOnIbH7RgcRFgD4GtZ2/ClE++fg7fvtxoQZJBGctKH/1tuzDyI8BA2PzD3WafcQ6XojuvpSjNB6hb+SSW8zVhEwwCBz1LhDTqI8+ZB+NNOEk0L7iWvinC+xV+249J7M+n/DFcBw1AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Scp14krE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSdk6zfy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737568954; x=1769104954;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=FW6iNuy11c9IX+eEHGZwrE0pFfNZ1PTSMsUop+75xqs=;
-  b=GSdk6zfyA0jREiKkcY4GJ0QZAwZhy9KfhuodjlO6unXL6k8rs0PDRBTf
-   0pb7KxLOzYSF0rDAM5zuc25Uc8vlZVWIeX2+avgqF0D+O+bq6yV7F2g82
-   cGEdm2llNzZ12vPEzQln/EHtZBRuhAl7jQdlp/wWqNupvR8ZjMkcsnc/5
-   BLH8QqGztarkItagjH71fxsKSQzZARL+zfiJMHOGEz50DBAy8Znqw9GEk
-   7FCgpLQgPWuFpy5tbDRQxx5yyIEwIDcmlSYXas1F5xf6aIC9OG+n+j15C
-   +V+R5/8k8XdmGMLJqfAEbFg9YGqJFQ8ChV2r0ci6A7Uf9sKNqPjjhdiRu
-   A==;
-X-CSE-ConnectionGUID: v1/KTpmTSUmO9rUEwFjZmA==
-X-CSE-MsgGUID: 09tEvTylT0Wc4r0z+APAug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="37923030"
-X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
-   d="scan'208";a="37923030"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 10:02:33 -0800
-X-CSE-ConnectionGUID: 9yJ5yDhGQQeWhu1IRNPKXA==
-X-CSE-MsgGUID: +EnOOuPJSralHSZR6ADkZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112306891"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Jan 2025 10:02:33 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 22 Jan 2025 10:02:32 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 22 Jan 2025 10:02:32 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 22 Jan 2025 10:02:30 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q/Nv8k/PP1ArVQ1/HioePMH1Nu/Ru6ZYz8fJgIruqArMiCPVW5uBwiXKrjYKLMs8SYnc+wP5uniPyetgn2uxBkQunmXF8tIV5zz7rsWTbImov0ao9a6c8kgDI3RgjOWCB4UxGyR52o+996Fglb18uO1XNybJan2NWzTeDf8N/+ndAYryHDuB3QoOd7kL5G/u1f3c0kLPsk8rI7tepcO7OXoR+lS6+N2x199aEWeQ/fwzzqHc7PeavuMBtZpq4J7u9K0EkHPP0HauWu69GVHp4HG4icbbN+eP21mVWlY2VDUDOI4KFp6dj0yLZEQ/c/yLfvTHl1JeajtGB9I87/nNaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwGS5ekTDvl2AMJyXPfKEa6LxWR7fHQNu507CbCCcOE=;
- b=euYBf+rtuzTQnKrvk6DPS28wKJRz16fzwUmeZ0umoug9cgd/wK5pENCTt8RrPRcuSBKkt1NJtrmLEoPIhvcxr3X+aIlu/K/qXuiN9zmjOi/emX3K17vuonnK3tTFkBhxf1+HcpC4R0gcJQ+qqp4X+seUtai+4kArjHOkDIyh2QH1/1vlRdKWjUaCmoFe2/pIS8a8kFbOaVDDn7NSfrQDBAlSazlyF8g5yKTpBL02PdGTJcq4bHX+FTq8Csdc4DmS++nlVTV/LNB6IsMd4fZ9PZVB48OP08TlgzbdbEqZClr0Dl5Mz0mxntOX/am0evlTcZhCyObu0emR8d5GFHclkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by LV3PR11MB8604.namprd11.prod.outlook.com (2603:10b6:408:1ae::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.21; Wed, 22 Jan
- 2025 18:02:09 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8356.017; Wed, 22 Jan 2025
- 18:02:09 +0000
-Date: Wed, 22 Jan 2025 12:02:03 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v8 02/21] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <6791329b4b44c_1eafc294b6@iweiny-mobl.notmuch>
-References: <20241210-dcd-type2-upstream-v8-0-812852504400@intel.com>
- <20241210-dcd-type2-upstream-v8-2-812852504400@intel.com>
- <67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch>
- <67881b606ca4e_1aa45f2948b@iweiny-mobl.notmuch>
- <678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <678837fcc0ed_20f3294fb@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: MW4PR03CA0089.namprd03.prod.outlook.com
- (2603:10b6:303:b6::34) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Scp14krE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2C9E040E0194;
+	Wed, 22 Jan 2025 19:10:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 7gbpTtE4YNEk; Wed, 22 Jan 2025 19:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1737573007; bh=Tcb2Z6DGVFgByVLZsGDzi5H0qUPxCY9mavsd9VzPlvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Scp14krEEXpmv7pRF0EklohRi6aP0zbh/s92cJ440j7InvtCw0KkFgctx/FlD9gvY
+	 ASsaGlYI5lhfgarZFSME4UptgQVYyVGwg39T+OVXA9T9oi2Pcu7g5A36xnaBxpV3mU
+	 swk5OSaimu3YGKMetCAyA03blAN0B3qx+CiaiAT94ycERupkLgh6zghmFSnDlWMyNh
+	 dARMKMC9LuWhIIZW0rV96Gm+4i2jMahLwzEADxtZTIAR6owiN5aiWR6bEAU18bQRfC
+	 T3snd8Rh/r2uL5TpmXttWgZNy8Kwj/KEAeUyo9sQ9Emyd53bVo6EWPAkWRRGsDYYXk
+	 3KbP2vIncRcJX+L82yUpIN56G3j9IZWDz2t2tFP8RA3EP4qWPvCSmPiIKaOKiS5AQA
+	 SnNcLVEoYq4gIJuAFtFSM65VtjfdKrdEbn6Rz6vo694oHvgdonB6EsKpwMvtat2Hoj
+	 pRyiVOdKcZUh+sxwJp1iLtPmB+Kbm5JW9uRKvLbafbgAtDnyiPbAPH9zgY45Xns93W
+	 DL1vzGD3QDtvPt7R5MAL/SY6bvoC6yGfH79vMl7EA9nAADHraGFb1o1Zkg4TF5g/Pp
+	 jk7X1IhIQ1yh8yvnapK4oJEKRdGnzMSiTw6hOP8jR+McoWEDwBOD/U29KIr7X2zSRq
+	 G1wsyO4EhemY7RkmXtZbAUqs=
+Received: from zn.tnic (pd953008e.dip0.t-ipconnect.de [217.83.0.142])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 365FB40E01C5;
+	Wed, 22 Jan 2025 19:09:23 +0000 (UTC)
+Date: Wed, 22 Jan 2025 20:09:17 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Shiju Jose <shiju.jose@huawei.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>, Vandana Salve <vsalve@micron.com>
+Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
+Message-ID: <20250122190917.GDZ5FCXetp9--djyQ6@fat_crate.local>
+References: <20250109123222.GBZ3_B1g3Esgu1-MPi@fat_crate.local>
+ <20250109142433.00004ea7@huawei.com>
+ <20250109151854.GCZ3_o3rf6S24qUbtB@fat_crate.local>
+ <20250109160159.00002add@huawei.com>
+ <20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
+ <20250109183448.000059ec@huawei.com>
+ <20250111171243.GCZ4Kmi5xMtY2ktCHm@fat_crate.local>
+ <20250113110740.00003a7c@huawei.com>
+ <20250121161653.GAZ4_IdYDQ9_-QoEvn@fat_crate.local>
+ <20250121181632.0000637c@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV3PR11MB8604:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9206cb0-1422-4d87-d734-08dd3b0ee3b1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?wdfOGTUyA6eOoBcKhdt6JViMvXNHs0Y8tJ1XHHzsEMxpTvZ9uWTpLcB2YbjD?=
- =?us-ascii?Q?bL002ULD2cqNByqzx63uoxS8TtoueJacksr+T280abfUHWPlCD3m7hhtiWp+?=
- =?us-ascii?Q?baTjifrA308nG0G0p55b+clTp5gL+WIdCZ3FVMTHeDdGLeXsKD9uNtYajS7y?=
- =?us-ascii?Q?mUvFOhNAN7GMDZj/CfNrKO8blMsmsMCaWu2OTezLe6QjYH9x0vbNEu7wO48N?=
- =?us-ascii?Q?LZ0JSuOxTVYbaX5Yh4JytWbrfqA93bNY5UqSkGM7eLZsmtqW8hLDP1VRBjoB?=
- =?us-ascii?Q?os9k8vbXbZEqVqwPwzLVWbxIbF91Dj81xCL8wnlAFRlpmuYFvhJwKnvZp1fp?=
- =?us-ascii?Q?KoQk845vpe6XuEX0eMHv61p0wYtHxIkMdvBDHyYOxZLSMYAPyhSRI/wt3V7D?=
- =?us-ascii?Q?IQ5GEotReeh/G+LlqOrTChXq394BjiuEWmQ+2/jn45m4kTk3hVw03GhLHIzU?=
- =?us-ascii?Q?Y1iwMBR56BJrrb+u7Y1EScv7oHQm3qgoHiFxA5c4PXunS2snXyXsy4MKP1mq?=
- =?us-ascii?Q?zr43e/CMKrPgohI6f2PCtCQOiKH6Bv5KKLBvMluHzjnRxqju7HMUsc4H1sJs?=
- =?us-ascii?Q?Qtldw/cv9SsToPjKQm6UnGJUKi5sKzOO+HiBs2q4KbrLEUKelrMcqjBgEBkX?=
- =?us-ascii?Q?MaG8Sm6lekXsLieLvuPdpMyObMd8tOez035PMQP4JiFDDblV8wsw3jPvofWf?=
- =?us-ascii?Q?POofxTDDGpeO++V9/pdXQo1T+cbPSECjC8J7JBOAKdFWinmTe85504IgF4M8?=
- =?us-ascii?Q?JE33jc54WAsdGClJHl2ktYLTy8Dym34vn7pWdqGN01yfpAhIJHZ3lZ3seoS/?=
- =?us-ascii?Q?HILWByJpjZjbYpEH7jyO45OV5J2zoD4EOMxBFMrode/IhMS68xqxxrECvTOd?=
- =?us-ascii?Q?Pj5sPYvcvgZDXoS0rxsBPWHxYp0lW34OSs/2MEwqn/WfetJmlqX23eUi7Tka?=
- =?us-ascii?Q?TG8yvrJ/mChRMp0x4xdlZTBvM/SaKEpAEza9FiQE376WUCbyHUmBOu9kp1iN?=
- =?us-ascii?Q?F4tcmRl7u3lklH9CKAx1GSlM9tGY4I0talW/9XTq8IVN8VLzomTH7QPwYAlO?=
- =?us-ascii?Q?EjqwoqyWtf0V5h4v7Y4nClb/Y253kkA+gGh5jLAjCi6zqk34/zaJMYo+PZyk?=
- =?us-ascii?Q?OJ+nKdiuVmaes1haQzjlotwYBNW7it59fbME4ZUoTSFlDP5F+VeieYUfeoc6?=
- =?us-ascii?Q?uXU1ffZcru5DtUT6TWCIfzGicDG9ysQlEwJvFq2E+OeTVUYWvg4S29W/qlcd?=
- =?us-ascii?Q?P1KHz1RL0m8ip0DvYLM8XZNU1+0ArG80yVNaCL/qHBIc6PM270hHL84PJO79?=
- =?us-ascii?Q?mhkeUChi71FrudF1XWdBIf5qAsDSiCoMIgUCbZFPR7IXMTmDanKUASeVXbmW?=
- =?us-ascii?Q?fGuXWXLAIlAgeP4Ms+B4OjzZvvXA?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FW/1Wi+VqEEwIXCLiCWAAAWLqjYrXWIMBGGYUxADZ4CUAwo5rZcbjzbWswqe?=
- =?us-ascii?Q?t6d3oopdY6rv8z0bTgU0va0KC/0JqxHFYQizmgWG/rotqiuR+VSgCGHIKVA9?=
- =?us-ascii?Q?F/0aMnVKuxa8ZLIh6+c14UE9ZRCHxzHlBI70BJT0ybEIEIrillVKFZvFhec4?=
- =?us-ascii?Q?Rh74NKi7rwrb8/vL5zGtxbXFtsGl2fW1kjLpfdKC4BQ2L16Bs7nc/wgBVyLd?=
- =?us-ascii?Q?91jElApwSyaoIvgw51rqyZc9IeGmbg7xG1zyaZsR5lw1M3J+yF0uPejl8RYI?=
- =?us-ascii?Q?CCTwQ3tItQ0JyZhWpUSSM6TlKYyJs33eEXmKjfsslwnLGAnwG3RlUk9w4BdE?=
- =?us-ascii?Q?ynCIiGlHkoCrnqZiRvBYgWg8Uk+oJiC6c6+0nWVUkZ8DAHNUWYvJqS6pEncE?=
- =?us-ascii?Q?wQVItxjDtgiD2hkm1RP+UiFTI+1AlIhjxiXBrEk0AAFfmMIsKwHuMvv94t4I?=
- =?us-ascii?Q?h5HPpCX6Zpwis2rEn4+DWwsjWRJLLEt0rLz2IeFDOw7vEVHTBgT5Rp8TK+Wb?=
- =?us-ascii?Q?nCcdv7GXZSeIaKPk+ASEI32eenWBVHcQpa46VAhTI++wMhLDbLoTbkQoOIen?=
- =?us-ascii?Q?Ydza1Y/J98mPG9OtTubBCeveZBxmJzjMc70QVkcqYtZv6knBpLcC63LxGxKX?=
- =?us-ascii?Q?bTlZbebXQFh/N+jD0v7RQ205jnnIPYL3S7NcIH2JczhTbQHe37khouoxvUNv?=
- =?us-ascii?Q?J2hLb2AqT2Rz3/vS1r3wm+XkbXHEpif/wnN+TEdxUDJp2/hTYsnXr7uMsTr1?=
- =?us-ascii?Q?jHFvybmreKWXMHJyGB7FKabCG351JI62+JQz5g4ZFBh3gMA/oRGVZQ1B8dTI?=
- =?us-ascii?Q?QhzMdTSfMDv5umFzamyX9PmKzJQfM8YN2o+VtfqYU+IuNw6nHaTtx0h03fyF?=
- =?us-ascii?Q?ffk1KAt8ZUuOUkjbM+3oiQeWYrqkrq/Q7e/7daRMpgz8XrmeYpa5PaqnPMlI?=
- =?us-ascii?Q?Da28+GWh/5PZRwOYYzQoBWFZqbMtJt3xYND1/inNqqAHxyU3tg0KO4Sr7oIv?=
- =?us-ascii?Q?oa352RkOY5Crk9AxgpciqrpLigHxj0YwSVzDDrKt9daA3Sf4IbP0DSnJ8D6v?=
- =?us-ascii?Q?lOtoIH8hddV9/6DvxQmfdCSmz86yhBwC49RrAMrJzDH50bpchCKvL178ctg1?=
- =?us-ascii?Q?sVT1zet+NPMJEeB1xwSlym/0o5onO8EPI23eW2Ed//4sY+F0pFgtqZzSZaOP?=
- =?us-ascii?Q?ieveZo7SfbNcHIDUtknjTdxwWUkj4mYJZ30+/KSKfytdRdDJzGJtnmQX5/14?=
- =?us-ascii?Q?JrDgi/uVmtzxV6Qdft+H+Fql4Gt4JPFISxXpLRmrLjeUHd6RbrAuSPq+OBLH?=
- =?us-ascii?Q?UPXD1YMOJch33khcFzx3GQL68ZHovnhi9AlWvgnzcQ/jBKP0FgtlX4S9dy+1?=
- =?us-ascii?Q?r5AR1QpfpJlfpxL4p9DN2UfwcoBM8rKPKAJKruBmJc3Nhj6kQfPyiWWvlh3E?=
- =?us-ascii?Q?XHrMQv+fSC4pf0NzLNxEp5OXBAJWYKVomtWqtzZJ3KcR92IF2RmZn4JmAtZL?=
- =?us-ascii?Q?9cSqDPtGQyizvTogMBDQK9U3uaHX+9STlvEI9X+JTocokiieRE7D7JLzD1v/?=
- =?us-ascii?Q?zF6u/lUQ0c46LXShiaCGJXAZqyNMX7ICF9EmouUU?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9206cb0-1422-4d87-d734-08dd3b0ee3b1
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 18:02:09.5277
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 17Q538ORFmAI3xHpDb1wZqrhL4SDs908ioyek+4Wllf7Q2LDXT7OHzFIJ01JUx7HsXOf2dH3LQ2qUDK9Dk046g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8604
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250121181632.0000637c@huawei.com>
 
-Dan Williams wrote:
-> Ira Weiny wrote:
-> > Dan Williams wrote:
-> > > Ira Weiny wrote:
-> > 
-> > [snip]
-> > 
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index e8907c403edbd83c8a36b8d013c6bc3391207ee6..05a0718aea73b3b2a02c608bae198eac7c462523 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h
-> > > > @@ -403,6 +403,7 @@ enum cxl_devtype {
-> > > >  	CXL_DEVTYPE_CLASSMEM,
-> > > >  };
-> > > >  
-> > > > +#define CXL_MAX_DC_REGION 8
-> > > 
-> > > Please no, lets not sign up to have the "which cxl 'region' concept are
-> > > you referring to?" debate in perpetuity. "DPA partition", "DPA
-> > > resource", "DPA capacity" anything but "region".
-> > > 
-> > 
-> > I'm inclined to agree with Alejandro on this one.  I've walked this
-> > tightrope quite a bit with this series.  But there are other places where
-> > we have chosen to change the verbiage from the spec and it has made it
-> > difficult for new comers to correlate the spec with the code.
-> > 
-> > So I like Alejandro's idea of adding "HW" to the name to indicate that we
-> > are talking about a spec or hardware defined thing.
+On Tue, Jan 21, 2025 at 06:16:32PM +0000, Jonathan Cameron wrote:
+> Clearly we need to provide more evidence of use cases: 'Show us your code'
+> seems to apply here.  We'll do that over the next few weeks.
+
+Thanks.
+
+> based on simple algorithms applied to the data RAS Daemon already has.
+> The interface for the reasons discussed in the long thread with Dan
+> is the minimum required to provide the information needed to allow
+> for two use cases.  We enumerated them explicitly in the discussion with
+> Dan because they possibly affected 'safety'.
 > 
-> See below, the only people that could potentially be bothered by the
-> lack of spec terminology matching are the very same people that are
-> sophisticated enough to have read the spec to know its a problem.
+> 1) Power up, pre memory online, (typically non persistent) repair of
+>    known bad memory.
 
-Honestly at this point I think the code has deviated enough from the spec
-that it is just not worth me saying any more.  I'll change everything to
-partition and field the questions later as they come.
+Lemme make sure I understand this: during boot you simply know from somewhere
+that a certain rank (let's use rank for simplicity's sake) is faulty. Before
+you online the memory, you simply replace that rank in the logic so that the
+system uses the spare rank while the faulty rank is disabled.
 
+>    There are two interface options for this, inject the prior mapping from
+>    device physical address space (host address is not necessarily relevant
+>    here as no address decoders have been programmed yet in CXL - that
+>    happens as part of the flow to bring the memory up), or use the
+>    information that userspace already has (bank, rank etc) to select what
+>    memory is to be replaced with spare capacity.
+
+Ok, so this is all CXL-specific because this use case relies on userspace
+being present. Which means you cannot really use this for DIMMs used during
+boot. So if DIMMs, those should be online-able later, when userspace is there.
+
+>    Given the injection interface and the repair interface have to
+>    convey the same data, the interface complexity is identical and
+>    we might as well have a single step 'repair' rather than
+>      1. Inject prior records then
+
+What exactly is this injecting? The faulty rank? Which then would cause the
+respective driver to go and do that repairing.
+
+Which then means that you can online that device after rasdaemon has loaded
+and has the required info to online it.
+
+Which then means, rasdaemon needs to be part of the device onlining process.
+
+I'm simply conjecturing here - I guess I'll see your detailed use case later.
+
+>      2. Pass a physical address that is matched to one of those records.
+
+I don't know what that one does.
+
+>    There are no security related concerns here as we always treat this
+>    as new memory and zero it etc as part of onlining.
+
+Right, goes without saying.
+
+> 2) Online case.  Here the restriction Dan proposed was that we 'check'
+>    that we have seen an error record on this boot that matches the full
+>    description.  That is matching both the physical address and the
+>    topology (as that mapping can change from boot to boot, but not whilst
+>    the memory is in use). This doesn't prevent any use case we have
+>    come up with yet because, if we are making a post initial onlining
+>    decision to repair we can assume there is a new error record that
+>    provided new information on which we are acting.  Hence the kernel
+>    had the information to check.
 > 
-> > 
-> > That said I am open to changing some names where it is clear it is a
-> > software structure.  I'll audit the series for that.
-> > 
-> > > >  	u64 serial;
-> > > >  	enum cxl_devtype type;
-> > > >  	struct cxl_mailbox cxl_mbox;
-> > > >  };
-> > > >  
-> > > > +#define CXL_DC_REGION_STRLEN 8
-> > > > +struct cxl_dc_region_info {
-> > > > +	u64 base;
-> > > > +	u64 decode_len;
-> > > > +	u64 len;
-> > > 
-> > > Duplicating partition information in multiple places, like
-> > > mds->dc_region[X].base and cxlds->dc_res[X].start, feels like an
-> > > RFC-quality decision for expediency that needs to reconciled on the way
-> > > to upstream.
-> > 
-> > I think this was done to follow a pattern of the mds being passed around
-> > rather than creating resources right when partitions are read.
-> > 
-> > Furthermore this stands to hold this information in CPU endianess rather
-> > than holding an array of region info coming from the hardware.
+>    Whilst I wasn't convinced that we had a definite security
+>    problem without this protection, it requires minimal changes and doesn't
+>    block the flows we care about so we are fine with adding this check.
+
+I need more detail on that 2nd case - lemme read that other subthread.
+
+> Ok. We'll put together an example script / RASdaemon code to show how
+> it is used. I think you may be surprised at how simple this is and hopefully
+> that will show that the interface is appropriate.
+
+That sounds good, thanks.
+
+> This we disagree on. For this persistent case in particular these are limited
+> resources. Once you have used them all you can't do it again.  Using them
+> carefully is key. An exception is mentioned below as a possible extension but
+> it relies on a specific subset of allowed device functionality and only
+> covers some use cases (so it's an extra, not a replacement for what this
+> set does).
+
+By "this persistent case" you mean collecting logs per error address,
+collating them and massaging them or hunting them through a neural network to
+recognize potential patterns and then act upon them?
+
+In any case, I don't mean that - I mean something simple like: "after X errors
+on address Y, offline page Z." Like we do with .../ras/cec.c. Ofc you can't
+put really complex handling in the kernel and why would you - it must be *the*
+best thing after sliced bread to impose that on everyone.
+
+All I'm saying is, simple logic like that can be in the kernel if it is useful
+in the general case. You don't *have* to carry all logic in some userspace
+daemon - the kernel can be smart too :-)
+
+> With the decision algorithms in userspace, we can design the userspace to kernel
+> interface because we don't care about the algorithm choice - only what it needs
+> to control which is well defined. Algorithms will start simple and then
+> we'll iterate but it won't need changes in this interface because none of it
+> is connected to how we use the data.
+
+Are you saying that this interface you have right now is the necessary and
+sufficient set of sysfs nodes which will be enough for most algorithms in
+userspace?
+
+And you won't have to change it because you realize down the road that it is
+not enough?
+
+> In general an ABI that is used is cast in stone. To my understanding there
+> is nothing special about debugfs.  If we introduce a regression in tooling
+> that uses that interface are we actually any better off than sysfs?
+> https://lwn.net/Articles/309298/ was a good article on this a while back.
 > 
-> Yes, the ask is translate all of this into common information that lives
-> at the cxl_dev_state level.
+> Maybe there has been a change of opinion on this that I missed.
 
-yea.  And build on what you have in the DPA rework.
+I don't think so and I can see that article's point. So let's cut to the
+chase: what are we going to do when the sysfs or debugfs nodes you've added
+become insufficient and you or someone else needs to change them in the
+future, for their specific use case?
 
-> 
-> > 
-> > Let see how other changes fall out before I go hacking this though.
-> > 
-> > > 
-> > > > +	u64 blk_size;
-> > > > +	u32 dsmad_handle;
-> > > > +	u8 flags;
-> > > > +	u8 name[CXL_DC_REGION_STRLEN];
-> > > 
-> > > No, lets not entertain:
-> > > 
-> > >     printk("%s\n", mds->dc_region[index].name);
-> > > 
-> > > ...when:
-> > > 
-> > >     printk("dc%d\n", index);
-> > > 
-> > > ...will do.
-> > 
-> > Actually these buffers provide a buffer for the (struct
-> > resource)dc_res[x].name pointers to point to.
-> 
-> I missed that specific detail, but I still challenge whether this
-> precision is needed especially since it makes the data structure
-> messier. Given these names are for debug only and multi-partition DCD
-> devices seem unlikely to ever exist, just use a static shared name for
-> adding to ->dpa_res.
+The last paragraph of that article basically sums it up pretty nicely.
 
-Using a static name is good.
+> Absolutely though the performance impact of punching holes in memory over
+> time is getting some cloud folk pushing back because they can't get their
+> 1GIB pages to put under a VM.  Mind you that's not particularly relevant
+> to this thread.
 
-> 
-> > 
-> > > 
-> > > DCD introduces the concept of "decode size vs usable capacity" into the
-> > > partition information, but I see no reason to conceptually tie that to
-> > > only DCD.  Fabio's memory hole patches show that there is already a
-> > > memory-hole concept in the CXL arena. DCD is just saying "be prepared for
-> > > the concept of DPA partitions with memory holes at the end".
-> > 
-> > I'm not clear how this relates.  ram and pmem partitions can already have
-> > holes at the end if not mapped.
-> 
-> The distinction is "can this DPA capacity be allocated to a region" the
-> new holes introduced by DCD are cases where the partition size is
-> greater than the allocatable size. Contrast to ram and pmem the
-> allocatable size is always identical to the partition size.
+What is relevant to this thread is the fact that you can't simply reboot as
+a RAS recovery action. Not in all cases.
 
-I still don't quite get what you are saying.  The user can always allocate
-a region of the full DCD partition size.  It is just that the memory
-within that region may not be backed yet (no extents).
+> For this we'll do as we did for scrub control and send a patch set adding tooling
+> to RASdaemon and/or if more appropriate a script along side it.  My fault,
+> I falsely thought this one was more obvious and we could leave that until
+> this landed. Seems not!
 
-> 
-> > > > +
-> > > >  	struct cxl_event_state event;
-> > > >  	struct cxl_poison_state poison;
-> > > >  	struct cxl_security_state security;
-> > > > @@ -708,6 +732,32 @@ struct cxl_mbox_set_partition_info {
-> > > >  
-> > > >  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
-> > > >  
-> > > > +/* See CXL 3.1 Table 8-163 get dynamic capacity config Input Payload */
-> > > > +struct cxl_mbox_get_dc_config_in {
-> > > > +	u8 region_count;
-> > > > +	u8 start_region_index;
-> > > > +} __packed;
-> > > > +
-> > > > +/* See CXL 3.1 Table 8-164 get dynamic capacity config Output Payload */
-> > > > +struct cxl_mbox_get_dc_config_out {
-> > > > +	u8 avail_region_count;
-> > > > +	u8 regions_returned;
-> > > > +	u8 rsvd[6];
-> > > > +	/* See CXL 3.1 Table 8-165 */
-> > > > +	struct cxl_dc_region_config {
-> > > > +		__le64 region_base;
-> > > > +		__le64 region_decode_length;
-> > > > +		__le64 region_length;
-> > > > +		__le64 region_block_size;
-> > > > +		__le32 region_dsmad_handle;
-> > > > +		u8 flags;
-> > > > +		u8 rsvd[3];
-> > > > +	} __packed region[] __counted_by(regions_returned);
-> > > 
-> > > Yes, the spec unfortunately uses "region" for this partition info
-> > > payload. This would be a good place to say "CXL spec calls this 'region'
-> > > but Linux calls it 'partition' not to be confused with the Linux 'struct
-> > > cxl_region' or all the other usages of 'region' in the specification".
-> > 
-> > In this case I totally disagree.  This is a structure being filled in by
-> > the hardware and is directly related to the spec.  I think I would rather
-> > change 
-> > 
-> > s/cxl_dc_region_info/cxl_dc_partition_info/
-> > 
-> > And leave this.  Which draws a more distinct line between what is
-> > specified in hardware vs a software construct.
-> > 
-> > > 
-> > > Linux is not obligated to follow the questionable naming decisions of
-> > > specifications.
-> > 
-> > We are not.  But as Alejandro says it can be confusing if we don't make
-> > some association to the spec.
-> > 
-> > What do you think about the HW/SW line I propose above?
-> 
-> Rename to cxl_dc_partition_info and drop the region_ prefixes, sure.
-> 
-> Otherwise, for this init-time only concern I would much rather deal with
-> the confusion of:
-> 
-> "why does Linux call this partition when the spec calls it region?":
+Sorry, I can't always guess the use case by looking solely at the sysfs nodes.
 
-But this is not the question I will get.  The question will be.
+> This I agree on. However, if CXL takes off (and there seems to be agreement
+> it will to some degree at least) then this interface is fully general for any spec
+> compliant device.
 
-"Where is DCD region processed in the code?  I grepped for region and
-found nothing."
+Ok, sounds good.
 
-Or
+> Sure. We can definitely do that.  We have this split in v19 (just undergoing
+> some final docs tidy up etc, should be posted soon).
 
-"I'm searching the spec PDF for DCD partition and can't find that.  Where
-is DCD partition specified?"
+Thx.
 
-> which only trips up people that already know the difference because they read the
-> spec. In that case the comment will answer their confusion.
-> 
-> ...versus:
-> 
-> "why are there multiple region concepts in the CXL subsystem": which
-> trips up everyone that greps through the CXL subsystem especially those
-> that have no intention of ever reading the spec.
+You don't have to rush it - we have merge window anyway.
 
-Ok I've already said more than I intended.  I will change everything to
-partition.
+> Early devices and the ones in a few years time may make different
+> decisions on this. All options are covered by this driver (autonomous
+> repair is covered for free as nothing to do!)
 
-Ira
+Don't forget devices which deviate from the spec because they were implemented
+wrong. It happens and we have to support them because no one else cares but
+people have already paid for them and want to use them.
+
+> CXL is not vendor specific. Our other driver that I keep referring
+> to as 'coming soon' is though.  I'll see if I can get a few memory
+> device manufacturers to specifically stick their hands up that they
+> care about this. As an example we presented on this topic with
+> Micron at the LPC CXL uconf (+CC Vandana).  I don't have access
+> to Micron parts so this isn't just Huawei using Micron, we simply had two
+> proposals on the same topic so combined the sessions.  We have a CXL
+> open source sync call in an hour so I'll ask there.
+
+Having hw vendors agree on a single driver and Linux implementing it would be
+ofc optimal.
+
+> Maybe for the follow on topic of non persistent repair as a path to
+> avoid offlining memory detected as bad. Maybe that counts
+> as generalization (rather than extension).  But that's not covering
+> our usecase of restablishing the offline at boot, or the persistent
+> usecases.  So it's a value add feature for a follow up effort,
+> not a baseline one which is the intent of this patch set.
+
+Ok, I think this whole pile should simply be in two parts: generic, CXL-spec
+implementing, vendor-agnostic pieces and vendor-specific drivers which use
+that.
+
+It'll be lovely if vendors could agree on this interface you're proposing but
+I won't hold my breath...
+
+> Thanks for taking time to continue the discussion and I think we
+> are converging somewhat even if there is further to go.
+
+Yap, I think so. A lot of things got cleared up for me too, so thanks too.
+I'm sure you know what the important things are that we need to pay attention
+when it comes to designing this with a broader audience in mind.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
