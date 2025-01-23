@@ -1,25 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439254A3E
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 00:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3597F4A3E
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 00:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737591954; cv=none; b=Q0hI0FxkHan6FRvOowM+zbosmn8/83E32j+gP2i/aTmzPHQ2pJ0RIelo3RXTA+s+TYIqLfuWz31/f1ehVXxdqBFGubMVZrLPtZxupcQ+mmbyQScZwh6nzc/cHw31aVZqszCSGDDoUt7jb+cbwcQJBe2gzuNtSlbwdqDgWegYbA0=
+	t=1737591955; cv=none; b=KSeoENklEenkzrejTzP3ynS1/XJipI7uZ3XZFszpIIpH6fyJ0r+q0k7F6wryGRWJ1vqr5vLxT0sujy6Qoig9cIO9ZOD+tXc656tPgAWz/mHy4XYp6aBmFLRgkza6bTwhJYoNLS8nCkgX3MfvMeAsGczucaMtbuxbPvl8mmTtu84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737591954; c=relaxed/simple;
-	bh=Vq78CRI10zwZO+NyMwTiIsvPnbLOxVFNl7E/UUi5xoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UwKI2gaJu//vX4946JSEO+Nn0X3cITQh6qOws7kKimcbmZgTGeZrPQyxtVme024Avs8zVptCxq3TQCkKf91L9ysbRJ758bI1DRSuXvEkQL43Vr1HuWcVUcDz6iMrF7VbKaunXSVUQl7I3UhtGK+yraYOdkzlrjqj55c5AVsShTI=
+	s=arc-20240116; t=1737591955; c=relaxed/simple;
+	bh=RV9CJI9+Z9R+mNZ9ouVPIoZ43t/bnwFC5CxHZdAwDME=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WB76HR0vNYMZljLe5/JKZiQLN/Oyq9n6njeppMWoO8GSTU+zXJ/GIufcv7OKrH4YGkNOiEtyy/J447fGBjnC11fdXbcyCfx00WidNONcpihIhmQ9MIenLB1t+QnKbAwFQ1bufBF0HQ8BE5P1+Wk4VObmOYXZXmt5ypriLwfofME=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEB9C4CED2;
-	Thu, 23 Jan 2025 00:25:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE841C4CED2;
+	Thu, 23 Jan 2025 00:25:54 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: alison.schofield@intel.com
-Subject: [NDCTL PATCH resend 0/5] ndctl: Add support and test for CXL features driver
-Date: Wed, 22 Jan 2025 17:24:49 -0700
-Message-ID: <20250123002530.2762440-1-dave.jiang@intel.com>
+Subject: [NDCTL PATCH resend 1/5] cxl: Add cxl_bus_get_by_provider()
+Date: Wed, 22 Jan 2025 17:24:50 -0700
+Message-ID: <20250123002530.2762440-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250123002530.2762440-1-dave.jiang@intel.com>
+References: <20250123002530.2762440-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -28,33 +31,64 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-resend due to missing parts in last patch. Forgot to do stg refresh.
+Add helper function cxl_bus_get_by_provider() in order to support unit
+test that will utilize the API call.
 
-The series provides support of libcxl enumerating the 'features' device
-exported by the CXL kernel driver. It discovers the char device major
-and minor numbers for the CXL features device in order to allow issuing
-of ioctls to the device. libcxl will also associate the 'features' device
-with an 'endpoint' port device in order to allow finding the appropriate
-char dev from the endpoint device. It feels appropriate to associate
-with the endpoint device rather than the memdev since the features device
-comes out of the mailbox of a CLX device that may or may not be a memdev.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ cxl/lib/libcxl.c   | 11 +++++++++++
+ cxl/lib/libcxl.sym |  5 +++++
+ cxl/libcxl.h       |  2 ++
+ 3 files changed, 18 insertions(+)
 
-A unit test is added to locate a feature device exported by the cxl_test
-kernel module and issue all the supported ioctls to verify that all the
-ioctl paths are working as expected.
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 63aa4ef3acdc..bab7343e8a4a 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -3358,6 +3358,17 @@ CXL_EXPORT struct cxl_ctx *cxl_bus_get_ctx(struct cxl_bus *bus)
+ 	return cxl_port_get_ctx(&bus->port);
+ }
+ 
++CXL_EXPORT struct cxl_bus *cxl_bus_get_by_provider(struct cxl_ctx *ctx,
++						   const char *provider)
++{
++	struct cxl_bus *bus;
++
++	cxl_bus_foreach(ctx, bus)
++		if (strcmp(provider, cxl_bus_get_provider(bus)) == 0)
++			return bus;
++	return NULL;
++}
++
+ CXL_EXPORT void cxl_cmd_unref(struct cxl_cmd *cmd)
+ {
+ 	if (!cmd)
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 0c155a40ad47..1fc33cc6e1a4 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -288,3 +288,8 @@ global:
+ 	cxl_memdev_trigger_poison_list;
+ 	cxl_region_trigger_poison_list;
+ } LIBCXL_7;
++
++LIBCXL_9 {
++global:
++	cxl_bus_get_by_provider;
++} LIBECXL_8;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 0a5fd0e13cc2..3b309968a808 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -122,6 +122,8 @@ int cxl_bus_get_id(struct cxl_bus *bus);
+ struct cxl_port *cxl_bus_get_port(struct cxl_bus *bus);
+ struct cxl_ctx *cxl_bus_get_ctx(struct cxl_bus *bus);
+ int cxl_bus_disable_invalidate(struct cxl_bus *bus);
++struct cxl_bus *cxl_bus_get_by_provider(struct cxl_ctx *ctx,
++					const char *provider);
+ 
+ #define cxl_bus_foreach(ctx, bus)                                              \
+ 	for (bus = cxl_bus_get_first(ctx); bus != NULL;                        \
+-- 
+2.47.1
 
-Dave Jiang (5):
-      cxl: Add cxl_bus_get_by_provider()
-      cxl: Enumerate features 'devices'
-      cxl: Add get major and minor for cxl features device
-      cxl: Associate CXL features device with CXL endpoint
-      cxl/test: Add test for cxl features device
-
- cxl/lib/libcxl.c     | 308 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym   |  13 +++
- cxl/lib/private.h    |  16 ++++
- cxl/libcxl.h         |  17 ++++
- test/cxl-features.sh |  17 ++++
- test/fwctl.c         | 362 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- test/meson.build     |  16 ++++
- 7 files changed, 749 insertions(+)
