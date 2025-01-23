@@ -1,161 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F92E1EF01
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 16:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E8113E02E
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 16:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737648255; cv=none; b=cUtF67S3pvZnU6KyslfdbRrOBQyRixK1xfyIJXUo1drdkcRwg4eJy1q1bfpDVLPo5XNJXTxHkduxk52fOpl0ItiEFLltEtRg8irDdoNyxbDQ/oMZk7VHI/sBvY4V3T0sDaN8am9pqjZFXoerG7YEmioCgyKDNbAyk7qZrXWNk2k=
+	t=1737648563; cv=none; b=ovS9nP9cHqv2bATFsLvBMXN+RDE58nzIuv2aDpbNNYfF5d5mCOEAWfREFjcKobtDFRvboVtY6RpW9HiTTbe90R8lxQ5bJc/ZqxHpKGhjxVZwq8wKaBLHvcshc0h0sShYl5xTj4WUFCG/vNLZ8Q3YQnE0Pnmt3nzuQTWr/T+xKRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737648255; c=relaxed/simple;
-	bh=GrDSHVUmjMFJa6wjJiLdGuQNgE23SG3pJnNQQ8BsH7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cgeuhhc8pAKRiVrGCEw45GEeJGPzkbA9a0HpqH+ovbjgr06lfJfsIJinJdE+0ZoQuql9576WfpV/hVd3BIFdya4EPtQm57Io1qDeMqlTwL84Txq7AzMQkIBLEnUmy6QABILCpsN+4TBvbZzMehHGWrJgAFiHhMX3ju2mB2myZYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZyYOFdv/; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZyYOFdv/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737648254; x=1769184254;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GrDSHVUmjMFJa6wjJiLdGuQNgE23SG3pJnNQQ8BsH7Q=;
-  b=ZyYOFdv/+avvsGRhlcuzJBCvCVhyUwHUtql5VlXVrh4WQ6GhezVRwovM
-   gtJ40O1mYsXLPWdH+wAc0ve4TsZSkX/+V7fWx9l55keipNfLRBc6nkcqz
-   hxQdUli0lK/fXvTylQlCWpdOLt+vbGK9vrf4WpvgCLq/j9di28BdsQ95R
-   WoMQA1aNo4Z5XfrAOHn7jWEHNJWHmLmzx0OAX3pt6Y9FlGyG68DbkSRIE
-   a+C1yscX2o+i4FjcjDmPaKFZkyGAttU6oMlp0PRfR4MVMeOy1AaD1JOL7
-   DPGTmYd7MZHJTKfvOfgJKzKfV+dlRcnuFvJMEPX0gbhJaDdQoRSStuKFT
-   w==;
-X-CSE-ConnectionGUID: Lci0DS2jTL68+cBfRi+jOw==
-X-CSE-MsgGUID: TOr518rwQ0yj98gM8IJ9gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="38404813"
-X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
-   d="scan'208";a="38404813"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 08:04:01 -0800
-X-CSE-ConnectionGUID: sCNITyjCS3u0J4vSc3cWWQ==
-X-CSE-MsgGUID: uDtkHxFlS/iJSP64K3NX/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
-   d="scan'208";a="108044746"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.110.229]) ([10.125.110.229])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 08:04:00 -0800
-Message-ID: <53c17311-72c6-4886-b529-7b39b03bfe5d@intel.com>
-Date: Thu, 23 Jan 2025 09:03:59 -0700
+	s=arc-20240116; t=1737648563; c=relaxed/simple;
+	bh=Rbg7FJxIsuISMcyzuM+9XrYip0nbpq5TSPdaMlERdKM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FhiiMAHabEVYfnqEaQY9FQoYuLh+ZGd4PDm9CbFuTwvTHXLHkZkkFrFkUAxE6Gkdhss4UUIAgFPfp4pJdQBJjbt3N/aN8g2iRdugIKaHErcUTDlsOY86CBoBBScsnfHbkcNyu2jxDMQLCCG0daIaiV7PV2IMrbpXfBcQi+WtdAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yf5S93ZnVz6L5Rs;
+	Fri, 24 Jan 2025 00:07:21 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C1181140155;
+	Fri, 24 Jan 2025 00:09:17 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 Jan
+ 2025 17:09:17 +0100
+Date: Thu, 23 Jan 2025 16:09:15 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>, "Alejandro
+ Lucero" <alucerop@amd.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 3/5] cxl: Introduce 'struct cxl_dpa_partition' and
+ 'struct cxl_range_info'
+Message-ID: <20250123160915.00002012@huawei.com>
+In-Reply-To: <173753636727.3849855.464861650807086965.stgit@dwillia2-xfh.jf.intel.com>
+References: <173753635014.3849855.17902348420186052714.stgit@dwillia2-xfh.jf.intel.com>
+	<173753636727.3849855.464861650807086965.stgit@dwillia2-xfh.jf.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] cxl: Remove the CXL_DECODER_MIXED mistake
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: Jonathan.Cameron@huawei.com
-References: <173753635014.3849855.17902348420186052714.stgit@dwillia2-xfh.jf.intel.com>
- <173753635601.3849855.5582594127330525596.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <173753635601.3849855.5582594127330525596.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Wed, 22 Jan 2025 00:59:27 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-
-On 1/22/25 1:59 AM, Dan Williams wrote:
-> CXL_DECODER_MIXED is a safety mechanism introduced for the case where
-> platform firmware has programmed an endpoint decoder that straddles a
-> DPA partition boundary. While the kernel is careful to only allocate DPA
-> capacity within a single partition there is no guarantee that platform
-> firmware, or anything that touched the device before the current kernel,
-> gets that right.
+> The pending efforts to add CXL Accelerator (type-2) device [1], and
+> Dynamic Capacity (DCD) support [2], tripped on the
+> no-longer-fit-for-purpose design in the CXL subsystem for tracking
+> device-physical-address (DPA) metadata. Trip hazards include:
 > 
-> However, __cxl_dpa_reserve() will never get to the CXL_DECODER_MIXED
-> designation because of the way it tracks partition boundaries. A
-> request_resource() that spans ->ram_res and ->pmem_res fails with the
-> following signature:
+> - CXL Memory Devices need to consider a PMEM partition, but Accelerator
+>   devices with CXL.mem likely do not in the common case.
 > 
->     __cxl_dpa_reserve: cxl_port endpoint15: decoder15.0: failed to reserve allocation
+> - CXL Memory Devices enumerate DPA through Memory Device mailbox
+>   commands like Partition Info, Accelerators devices do not.
 > 
-> CXL_DECODER_MIXED is dead defensive programming after the driver has
-> already given up on the device. It has never offered any protection in
-> practice, just delete it.
+> - CXL Memory Devices that support DCD support more than 2 partitions.
+>   Some of the driver algorithms are awkward to expand to > 2 partition
+>   cases.
 > 
+> - DPA performance data is a general capability that can be shared with
+>   accelerators, so tracking it in 'struct cxl_memdev_state' is no longer
+>   suitable.
+> 
+> - Hardcoded assumptions around the PMEM partition always being index-1
+>   if RAM is zero-sized or PMEM is zero sized.
+> 
+> - 'enum cxl_decoder_mode' is sometimes a partition id and sometimes a
+>   memory property, it should be phased in favor of a partition id and
+>   the memory property comes from the partition info.
+> 
+> Towards cleaning up those issues and allowing a smoother landing for the
+> aforementioned pending efforts, introduce a 'struct cxl_dpa_partition'
+> array to 'struct cxl_dev_state', and 'struct cxl_range_info' as a shared
+> way for Memory Devices and Accelerators to initialize the DPA information
+> in 'struct cxl_dev_state'.
+> 
+> For now, split a new cxl_dpa_setup() from cxl_mem_create_range_info() to
+> get the new data structure initialized, and cleanup some qos_class init.
+> Follow on patches will go further to use the new data structure to
+> cleanup algorithms that are better suited to loop over all possible
+> partitions.
+> 
+> cxl_dpa_setup() follows the locking expectations of mutating the device
+> DPA map, and is suitable for Accelerator drivers to use. Accelerators
+> likely only have one hardcoded 'ram' partition to convey to the
+> cxl_core.
+> 
+> Link: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com [1]
+> Link: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com [2]
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+A few trivial comments inline but looking better to me.
+
+One question about what smells to me like our next MIXED mode.
+
 
 > ---
->  drivers/cxl/core/hdm.c    |    6 +++---
->  drivers/cxl/core/region.c |   12 ------------
->  drivers/cxl/cxl.h         |    4 +---
->  3 files changed, 4 insertions(+), 18 deletions(-)
+>  drivers/cxl/core/cdat.c      |   15 ++-----
+>  drivers/cxl/core/hdm.c       |   75 +++++++++++++++++++++++++++++++++-
+>  drivers/cxl/core/mbox.c      |   68 ++++++++++--------------------
+>  drivers/cxl/core/memdev.c    |    2 -
+>  drivers/cxl/cxlmem.h         |   94 +++++++++++++++++++++++++++++-------------
+>  drivers/cxl/pci.c            |    7 +++
+>  tools/testing/cxl/test/cxl.c |   15 ++-----
+>  tools/testing/cxl/test/mem.c |    7 +++
+>  8 files changed, 183 insertions(+), 100 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 28edd5822486..2848d6991d45 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -332,9 +332,9 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->  	else if (resource_contains(&cxlds->ram_res, res))
->  		cxled->mode = CXL_DECODER_RAM;
->  	else {
-> -		dev_warn(dev, "decoder%d.%d: %pr mixed mode not supported\n",
-> -			 port->id, cxled->cxld.id, cxled->dpa_res);
-> -		cxled->mode = CXL_DECODER_MIXED;
-> +		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
-> +			 port->id, cxled->cxld.id, res);
-> +		cxled->mode = CXL_DECODER_NONE;
->  	}
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index b177a488e29b..5400a421ad30 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+
+> +/* if this fails the caller must destroy @cxlds, there is no recovery */
+> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +
+> +	guard(rwsem_write)(&cxl_dpa_rwsem);
+> +
+> +	if (cxlds->nr_partitions)
+> +		return -EBUSY;
+> +
+> +	if (!info->size || !info->nr_partitions) {
+> +		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
+> +		cxlds->nr_partitions = 0;
+> +		return 0;
+> +	}
+> +
+> +	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
+> +
+> +	for (int i = 0; i < info->nr_partitions; i++) {
+> +		const struct cxl_dpa_part_info *part = &info->part[i];
+> +		const char *desc;
+> +		int rc;
+> +
+> +		if (part->mode == CXL_PARTMODE_RAM)
+> +			desc = "ram";
+> +		else if (part->mode == CXL_PARTMODE_PMEM)
+> +			desc = "pmem";
+
+I'd go switch statement now to save having to fix this up later, or
+an array of strings with a bounds check.
+(not important though if you want to shunt that into another day)
+
+> +		else
+> +			desc = "";
+> +		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+> +		cxlds->part[i].mode = part->mode;
+> +		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
+> +				 part->range.start, range_len(&part->range),
+> +				 desc);
+> +		if (rc)
+> +			return rc;
+> +		cxlds->nr_partitions++;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 3502f1633ad2..62bb3653362f 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 78e92e24d7b5..15f549afab7c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -97,6 +97,25 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  			 resource_size_t base, resource_size_t len,
+>  			 resource_size_t skipped);
 >  
->  	port->hdm_end++;
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d77899650798..e4885acac853 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2725,18 +2725,6 @@ static int poison_by_decoder(struct device *dev, void *arg)
->  	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
->  		return rc;
->  
-> -	/*
-> -	 * Regions are only created with single mode decoders: pmem or ram.
-> -	 * Linux does not support mixed mode decoders. This means that
-> -	 * reading poison per endpoint decoder adheres to the requirement
-> -	 * that poison reads of pmem and ram must be separated.
-> -	 * CXL 3.0 Spec 8.2.9.8.4.1
-> -	 */
-> -	if (cxled->mode == CXL_DECODER_MIXED) {
-> -		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
-> -		return rc;
-> -	}
-> -
->  	cxlmd = cxled_to_memdev(cxled);
->  	if (cxled->skip) {
->  		offset = cxled->dpa_res->start - cxled->skip;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f6015f24ad38..4d0550367042 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -379,7 +379,6 @@ enum cxl_decoder_mode {
->  	CXL_DECODER_NONE,
->  	CXL_DECODER_RAM,
->  	CXL_DECODER_PMEM,
-> -	CXL_DECODER_MIXED,
->  	CXL_DECODER_DEAD,
->  };
->  
-> @@ -389,10 +388,9 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
->  		[CXL_DECODER_NONE] = "none",
->  		[CXL_DECODER_RAM] = "ram",
->  		[CXL_DECODER_PMEM] = "pmem",
-> -		[CXL_DECODER_MIXED] = "mixed",
->  	};
->  
-> -	if (mode >= CXL_DECODER_NONE && mode <= CXL_DECODER_MIXED)
-> +	if (mode >= CXL_DECODER_NONE && mode < CXL_DECODER_DEAD)
->  		return names[mode];
->  	return "mixed";
->  }
-> 
+> +enum cxl_partition_mode {
+> +	CXL_PARTMODE_NONE,
+
+What is NONE for?  Given you are now packing the partitions and
+counting them when would we get an 'empty' one?
+
+
+> +	CXL_PARTMODE_RAM,
+> +	CXL_PARTMODE_PMEM,
+> +};
+> +
+> +#define CXL_NR_PARTITIONS_MAX 2
+> +
+> +struct cxl_dpa_info {
+> +	u64 size;
+> +	struct cxl_dpa_part_info {
+> +		struct range range;
+> +		enum cxl_partition_mode mode;
+> +	} part[CXL_NR_PARTITIONS_MAX];
+> +	int nr_partitions;
+> +};
+> +
+> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info);
+
 
