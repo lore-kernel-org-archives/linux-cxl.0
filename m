@@ -1,66 +1,64 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F20288A2
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 15:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A38F4F1
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 15:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737647391; cv=fail; b=GEj8SfytC4kkmStgmeY2UIcXhddCX179Psj77GXUEB52mc/jIZ7g1ATgrb5dGCORadZzYzxYZ0NuIa0F95KDPYADanmaN57LNn5C4TkrLo3cvYtQ5RrvaOr91J/PJBQ3v1jDH/Wafd/nk+LWa5ij6F6PZsUhuhAQ7NOCgLlpb80=
+	t=1737647731; cv=fail; b=eoFi78c4cEjqiViEN2t5KyW8r826vjQ2jWQjm1n1rye8clx3I9IPAWQeNLWWd7FMdpwXky9m4gKVppQSWpc+kgCmrf0NYFNl9bEFO2RBgZn+sVPrB6qcHgECzpI9SEbn44WpU5co1cYtkPQJ3NwyXKGlxwaKwiPUgZnJqdHQiRc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737647391; c=relaxed/simple;
-	bh=r9p5Ge5e8l9AyCVTZAfAMgIJ1E2P/bkrmBiKf3f2a3o=;
+	s=arc-20240116; t=1737647731; c=relaxed/simple;
+	bh=x/7NkYK3z7GLVQ8jLRmfTUZ04Td2huIkctfmJqJZzjg=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KDQG7ljQBG6+JgIyejasMEA0ww/1wZunulp9oMkkpDDMeClixT4ZWkc+K/GbtY8hVIfSxzKMZzMmaAcdUGuurtoIZsZ3V6MmxrqV8xEywW78q2Jrbq+CA6yuIXZdeEWRJZUKtfhl4u4N8nctzY1nl+5a6IxCZWRmiaRYiFiyRqg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gq/Q9vew; arc=fail smtp.client-ip=40.107.243.46
+	 Content-Type:MIME-Version; b=KjCS+PvyVzSnozxlwDIuweO6/xMZFgzWc/+dEXv/6OB8QbijQaVcA26XwmxmyCir2kccfJIbQIDldjkBtf2ywMPM6LmbCcoEv4mPQx6FfAtbor5/BZOPCR4LojbLVATG8xLWhVTzi0Wz4NRKsFt3N367Dz0yd5a7dC0us5/h13I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kdPPDRW5; arc=fail smtp.client-ip=40.107.92.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gq/Q9vew"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kdPPDRW5"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Why6JRFY2qzzt49b1Mpi/YtJi7605SyXfC1eAcqKsiP+9hBh8axZIe9QU+VWKyUVhCjR7JJ8NTOufLAEAJ14JA2RabkOZX8WsHES8SOST0Q+J5YS9XmgFp7MbrdhVsItmqEM0ID26oNmywDqIVD/Ze5rWBy12wPIGcPFfv5Gj3wi8arQSNRZvJ6Cx1Y/HK6wja4bRLtCpnOfgxeocLYhPeJd6X9Z9Xywxdsf/xq34G8cH/nE054tkiPmw+XObGTH7O0RRCnrOabGkPYKsxq1SiIO9XFVWMHlgnI759MhUzcFWXpclvXouCHxF81k1M7wvBAOSY/jOBzsp7QzJs+5jw==
+ b=SpJ67p+R5hwh6lWAS0yVotuYWcfOG5Xos8XRsmfRfbwawCTUQMh724cF1CTjRfFCftVXVyqk8BocP30p31hTJSodmjh8kiay3FuMNclbPWH+TjD5qjat3vcznvvqUWE/mqk6ibPvmAbo/cRcSNXNzKbUAn+KIOIMqbuMNAsyyzSFgt5xBub4X/DySpLKqSkVhxDBDou+9lv9GJN20oxWuTd+o1PPGceUOIG4gF9q+ql1Rwr5Ot7/oUY6MsCNZAgq5kMey2ADc/3a4x2llFgJ4bvJjYoqBLBN4Wv0q4TUKWvteiFe2UMHxAlQsHz5mHRPZ81KZuKFsuBajDd2503ceg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P1aronFzF2d8PfoqZ8JdyTal6mcp7UakhAP+nqkkDvQ=;
- b=y/6TlqR089a8WrCDbSmj2P67KChEMIcLRZX+9Wsq6Nd3OZfe1fO5bAx06M3Od3b7uHTpLZnGZSodUC7vACFvzOUGNBkmmkWTO+4QDn73m7P56AHKnaK5dlNbpxqf+EL3bKQeKKwdKDiXXZbIifJQnxaqhr9m7/to2FIuCc1v7EpmiLOUobPmRq8EWSaGoQxmIny3rWe11b3rDaJca1Ol9D+dleSG5wVnN6a1j+iPbVCs4KHy4ixLvVN7/KU7cgiBgX9OTOr63IdFuEKBCw/izbrWkI16ybfYMiIoAKpD/C6OCGmXFm34GwhsqfoHZMucMobfwS0ecmWexXlEg70Fhg==
+ bh=6GHLgANVDtn4gNXawGez8S/bwEv5pnvKRqS/lKk1hrY=;
+ b=QMQKXde091WOuiaFEwgkidmvSU3m4J2v33eE0t7vTvzlzhJtDKrQEjj5uCgJGoqi03VulMYB2CU/HursigO2S6WxhUkQqDrSFbVFH8Yotyr5EF/7F605xneZ52lYGSHJYepW3okRGGM5jwgUC/Y8rW22NalpWLNEr27bmLgPt7VBfSuiYRUoCGIMjL4vIhSYMfyUbuN7jGTBEq2lJXjjRvKBn2IY5Z+fTjEwWW7+aub4mdyKpMEzUBYgoTqei3okON8ALaj1fBxlSWevrYfFvKpahbOZcNhLzWnBCqouxdrTfSek/1cEA0ABC8ORFj6W6lBU+Ckx6aVCAWEWWMcQLw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P1aronFzF2d8PfoqZ8JdyTal6mcp7UakhAP+nqkkDvQ=;
- b=gq/Q9vewS6EnnxuRkVjyqqGvHgxkMBi3//1qHDrEQg5ijne/JNz3oYUS7lmHdjyNE2Qhfhd8NfBoFneFlT6gIiOi627U/rUQvjI8I3JWX5MWQBDJi765ZNGB5FRTGicPQ0AnOTDVecBbHUJa8OL5TTcLvVbCZVFrKhgO4hCuyE0=
+ bh=6GHLgANVDtn4gNXawGez8S/bwEv5pnvKRqS/lKk1hrY=;
+ b=kdPPDRW5xgYjNGWKvMkD7HKtwtEW3QrcxyoQLKP5wPigqAsH0Tpamposj5BS0T7pX1wca10mqc9Jy9aBewqno75MLEWK7F2Tdg8bHmhlsYrQhwiHoiwJly9BUALQlMcYOCvih8poWNdJZ0Ajl7+hjMWRLDkq0AMrEI9LUplfgcw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6222.namprd12.prod.outlook.com (2603:10b6:208:3c2::19)
- by CH3PR12MB9024.namprd12.prod.outlook.com (2603:10b6:610:176::9) with
+ by IA1PR12MB8310.namprd12.prod.outlook.com (2603:10b6:208:3ff::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.16; Thu, 23 Jan
- 2025 15:49:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Thu, 23 Jan
+ 2025 15:55:26 +0000
 Received: from MN0PR12MB6222.namprd12.prod.outlook.com
  ([fe80::4044:a263:92a1:6b3e]) by MN0PR12MB6222.namprd12.prod.outlook.com
  ([fe80::4044:a263:92a1:6b3e%7]) with mapi id 15.20.8377.009; Thu, 23 Jan 2025
- 15:49:47 +0000
-Message-ID: <5067fda1-c2de-4a20-9025-ebdf90ebba8e@amd.com>
-Date: Thu, 23 Jan 2025 09:49:42 -0600
+ 15:55:26 +0000
+Message-ID: <86c94cac-7fd4-4e5e-8c16-6935dcd2ea1a@amd.com>
+Date: Thu, 23 Jan 2025 09:55:25 -0600
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/4] kernel/resource: Introduce managed SOFT RESERVED
  resources
-To: Fan Ni <nifan.cxl@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-cxl@vger.kernel.org,
- dan.j.williams@intel.com, alison.schofield@intel.com, linux-mm@kvack.org,
- gourry@gourry.net
+To: Fan Ni <nifan.cxl@gmail.com>, Nathan Fontenot <nathan.fontenot@amd.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+ alison.schofield@intel.com, linux-mm@kvack.org, gourry@gourry.net
 References: <cover.1737046620.git.nathan.fontenot@amd.com>
  <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
- <4e556200-c790-4e0a-b103-2a1529c81927@redhat.com>
- <3c7c5b87-f241-482b-9b00-98e2e53d8e9c@amd.com> <Z5CKN57paDmGJH9A@gpd>
+ <Z5CHsFgDnrUT789g@gpd>
 Content-Language: en-US
 From: "Fontenot, Nathan" <nafonten@amd.com>
-In-Reply-To: <Z5CKN57paDmGJH9A@gpd>
+In-Reply-To: <Z5CHsFgDnrUT789g@gpd>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR12CA0018.namprd12.prod.outlook.com
- (2603:10b6:806:6f::23) To MN0PR12MB6222.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR05CA0005.namprd05.prod.outlook.com
+ (2603:10b6:806:2d2::7) To MN0PR12MB6222.namprd12.prod.outlook.com
  (2603:10b6:208:3c2::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -69,170 +67,298 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|CH3PR12MB9024:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88607533-087f-4fd6-60da-08dd3bc59048
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|IA1PR12MB8310:EE_
+X-MS-Office365-Filtering-Correlation-Id: a019e0b9-4551-4967-cf1d-08dd3bc65a90
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MmIwS21kR2ZuNXp3ZHlEM3RrQ3grRlJCY2liMU5sb0JoSWEzVVovMFIvVE1a?=
- =?utf-8?B?L1F6VFpEUlNvenFhd1Yxd1ZWL2MrL3huaUlnamxJc0YycUV5Y3QydDlLbTNH?=
- =?utf-8?B?NHlsVXBRS24wRHU5OVRZbXkxSUNONGRFSkdjbzUzdzZyWXZUNGkybmlXMEJy?=
- =?utf-8?B?RzJnazJQT3NENTYrWnRsOWYwd2kwK1pod2Y5RWl4d29ZcUN0SmlveElWSzhj?=
- =?utf-8?B?ZWIrWnVVU1Z4MmZmT09VSnhnejhkb1YyeHVoUzlWUWNBZUZXbzlENG5xS0dk?=
- =?utf-8?B?UXRyT2o3UUZnYnJvbENMVmVoU3ozVCtMNVQ1MnBVVnhTd3ZCREZRelRuS1Z1?=
- =?utf-8?B?M1BJTFQ3RCtkbkZTM2hvZ2FFT1ExSTNYdVZSZDNEZWtmeW5UdkZSSHd4QkZC?=
- =?utf-8?B?WmJ5RUVtSlVnV0kxdCtqVVM4L3BZMXZLMGFkaElaT1pQcVo5TCtlS25YMSts?=
- =?utf-8?B?WkhGU2huQlRXZjR0SnEvZjRWVXk5TzFqU0ZYQzNBYVJ1ZVdwVmR3ODBpNmN1?=
- =?utf-8?B?NXJTd3NnNEdxcU11UEhXWHNLclkxZ0N0UG45dUNTVyswZHllejdyemVnZlE0?=
- =?utf-8?B?SC9RZCttSEIrK3RiMHdoTnd1V2hwMFdOZDZwd3dUN1VlL3dXeVRCOFBFYXVh?=
- =?utf-8?B?TituNDNKbjVOQ2hLU09JSGdFck84cXN2SHpKaEJNTFl2dXlCMndFUHZYakhl?=
- =?utf-8?B?QzE4Z3p5ZFhaT2U3eDJjNXFsRm5NcTVWbDBnb3BVQnRSUEJqZHhlRHB5Sita?=
- =?utf-8?B?RUxSL0hwTVdTcThvWkZBRHRlcWtOMTRVcGl4NGVtblV0YThiZGwwMjgzN1R3?=
- =?utf-8?B?V25wbXMvbUdIZG1YRG91M29UV2Q5ckNiWjhpaDVGMUtuYnpuMjA4VmM0QUZh?=
- =?utf-8?B?eGlidVhxVXlINU50TjdxZjE4Z0MyNmJuaHUzRnhhUTBOUFFXM3QrZ2IxWGI1?=
- =?utf-8?B?eTh1ckc3VllJZ3I3S3crS2tqQjRxVkdRL1JubENEZ21zb0JDUXB0eG16VmxK?=
- =?utf-8?B?RlprZFUvc1RTUDk5cXptMlk1QkRIZHcwY2l1b1BVODhuQ00zejRtTURJSnk2?=
- =?utf-8?B?cW5QMkFJUkhFcFFhSzJER3ZGcHZaT3FMTGxmVDJOaGtPWjBSblhycXd6Lzk2?=
- =?utf-8?B?NFpucHpEcDFLdnpFZFNVYzV2WFVaaEpsREZIZ3VObnFvN0llV1ljdFpING5n?=
- =?utf-8?B?OGRWZFNDS3ordnRzb1VVWms5NzhHeEFPQisvVjdnYXROT09OKy85bnc5ZEp2?=
- =?utf-8?B?TzZtaU5qdUZpVzdmcWVDVm5KMFVtcitKWm43Tmp5NlNpSUtubnFlaTQyVVBk?=
- =?utf-8?B?NEFtcGdUdWtML0ZHRisyN05KTi90RjMwR1pyQVFGTFl5SjFvRW1xSVdoa1V5?=
- =?utf-8?B?MkdTakgrMUpVOUNoYnpmbVJpRmxrVy9ZZnpCZU9xK1RGRjFHTmNpZ3JSd0Fl?=
- =?utf-8?B?OGZhanR0YmRPTVI5VW54eDV2aFpzeUgwTzBXTkt0V1pRMFVJR2NCTGRFd29K?=
- =?utf-8?B?Y0YrZko5amJESktsSmpQTGhVVWUzTWxaZlBXcEg4ZStpaFgwZjR6OHYwdHAw?=
- =?utf-8?B?dWxVMnV0T1FTTGV5QkFwbGJDVXc1STczelUvMWJFV2VCdXBTRGFjaE53QzNy?=
- =?utf-8?B?cXJCZ0crQW96ZnBmUlZXQ0dLdTBCd2VSSk0wbHp0WG1hWW5uSTUwMnBBL1hn?=
- =?utf-8?B?aC9aVVJzU2w5aFFldm5PNUhmek1ZRFQ1MnhvVUoxbHBvNmVOcnJNc0NrRzdL?=
- =?utf-8?B?M2FKZnJrUG5lK0RjMVFhSDE4NEYwSWlkNERiWTc0TS9jbXc4ZXlLcCtHVGxj?=
- =?utf-8?B?V2c3S1ZSVHVwamc0Q0VmNzRrV3B5Q3FqVStpY01BSS9DdWJ2SXprSWNGK0la?=
- =?utf-8?Q?OtxI2+Gy5Lejv?=
+	=?utf-8?B?b2xqMnVuMWdSaHE2ZDdHN00xQ28yS1VCUFhYa2ZjZDdPS2FKdW1PSFVoeWtN?=
+ =?utf-8?B?Y3FQZ3RrR2NnZE5Xa0pXdU1GZVY5K2J5Tkg2cFdGZFdMMGxsQjJ1YW5rMkF5?=
+ =?utf-8?B?L2JhNGdYQ014SXRoVTk2WHJoaGZwNGdGVHVrM2luRFhSRStRZitaU25Sc1lB?=
+ =?utf-8?B?QUFPVUNDRS92YVZLMDVpLytCREpZQnV1d3pGY0E4YWxyUjBCcWJ6YmVBVm0x?=
+ =?utf-8?B?MWU1UUcrdHVVeFNlUGQ2dzZQUUlXUXc4amJyT2J6bnRDVXQra1N1MzQ3cXNI?=
+ =?utf-8?B?Qkx6QzR2Q3QwSHJyWktXajQvN0JrTjhxNGt0RXRNQ2dUNkRYM2t0c1AraHNT?=
+ =?utf-8?B?aWNUalh5VjUrTE1VaFhkWUttaEVqTjZ3b2JjV2NHL2toeStrVnlBQVNCbEZ3?=
+ =?utf-8?B?K1pMSFBRdXVZUW9zMjRmRkQ0Ylpvclh3Mjlab0UvdlBMQ2tPdjdKc3NTd0dX?=
+ =?utf-8?B?eUNJOVFLcFpvbHFFQzhHY28vTVlQMDA0MFRJenc5UVlEQzRvYmhKOFFXVUFa?=
+ =?utf-8?B?Y25yK3pZUmtHbVR2bEN4VDhsQmV2UG9zWjhBSmlNMGdHd1VLRjh2TUV2dWV4?=
+ =?utf-8?B?WGhsc1pCMENJNzAzanpyNmxWblBDczJLUi8zK040M1NmWTBJWmhvcGJQSjRs?=
+ =?utf-8?B?eFV4UEowQmpIK2p0a21jQUFoaVNyLzhNbHV0ekVRK2xMVHovM1dlU3VPSy96?=
+ =?utf-8?B?Mk5adGQ5eG0xeXp3dC9PdTJ0MVdhN0VMbXNxRzV2TVNmQ3JaeGl0SXpNUUl4?=
+ =?utf-8?B?VEdoK3hyMVVOa0FSMEJhSXJydElNVCtNd2NZNzNBUkVIRWdaNXIzYWx0WnNo?=
+ =?utf-8?B?TS9SRktIVUladGEwQzhONk9UVE41VXM5aHU4SkhiaVpUa1VrT0YrMnh5RXBT?=
+ =?utf-8?B?QzFvNXFmUncyQ1NpdlJDS2dyK0pIMDNTMG84ZUovRnlJbDNJektWK0hXalds?=
+ =?utf-8?B?elA5SFZwWTUwVFVCcW9oRXNURDlCWklKQkVVV29odkVKYXp2eERHZno4RDBP?=
+ =?utf-8?B?U0NoTEFkdlRzOGk4TzZsbEgxNmFvT2JqZzJxTllLQTZxNmUwRCtvZWg1ZHRG?=
+ =?utf-8?B?ZmxyYldOTHhRK3FVck12cGpiRmJmT2kzVUNqN1Z6eWYzL0J4QlMzNlB5MXpr?=
+ =?utf-8?B?STZwTkVINGlMczdSTXNXelQyNkFpVVVnT21NWGkxTHhQeHNYT09TcElMRXpv?=
+ =?utf-8?B?eE4vbzJXOXEvN1BiQzIyY2NTa2tTdTl2VUJpZk4zYlpqVW94YUdWVTVncmRL?=
+ =?utf-8?B?dXR3c202a0ZQZW85MU0zM2doOHdFVWM2dWc1WjVEM3hKZk4xVW5vSzN0K0RY?=
+ =?utf-8?B?OEFReWxkQjdQelhuOEJkRHF6VzVTM2hpWG5GYjY4RVMzMFNDMnZ3OUVFTkVB?=
+ =?utf-8?B?Q2Fzdnh4MlBlK0lHVkpMbWJmeGt2UjF5Wm95aXRWWWxoaGpEN1p3blhZcy91?=
+ =?utf-8?B?dXNzc3YvaWJDcTdwb1VYSjZUNlVwRlZXK2lBQVZKZ3pqdHVFenNieG1lbjNa?=
+ =?utf-8?B?OFMrYnlHQUN1ZzdrLzdrcEFDa2liSzFxeWRuMjFic25PQWY0OFJTWlpGODVQ?=
+ =?utf-8?B?NkxOQ1luNkh0K1FLSSt2b2ZyQjQydDJ4UXRwRVZVeEthSXY0WmVIeVp0M1RL?=
+ =?utf-8?B?cFBvNDZpU05nUkVaYWp5Z0ZHUHJnS252MVh5eFJLN0RocmJyQ0pxaUdVU3Fn?=
+ =?utf-8?B?QmdmK2U1SkhCWFFBK1grM0Y3clBaUTJZaHpQbTlVVVNUL1ZrdnNMbW1JUFk1?=
+ =?utf-8?B?M25oUlhNazl0SXZaR2NWQlYyRGp3MXBta3JoTno3ZnJReGJ2MThMdVNyalFL?=
+ =?utf-8?B?S29ZdEwyTGNUU0cwYWdldGtpVVNla01OYW4zb2tUbkJIdHAyeXJLZmttZGM3?=
+ =?utf-8?Q?+pKVXWTaFCf1E?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6222.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHA5dTJ6M0VvL0R2UEd5Ukk2dzVLM1VWWXZRaHJOczNmcGZPdld0Z29xOHFj?=
- =?utf-8?B?N0JpaERUbmRQcVFqRUoyYTRqZlJxRFhoM2MyQkY4TTNGSU9ndVlleWFFOGto?=
- =?utf-8?B?M3RFTVk0SnlGQ2VEQ3ludzBuTmdSOUVpck9SOEIwNSt6SEhGY0ppWkFjc2h3?=
- =?utf-8?B?eWRQQ2N4N2xzRHVZMzFNSk9JRWdqelphOE9kNjU2WFVodzFCOC8va0V3ZW1Z?=
- =?utf-8?B?ME55OFRWN3VjYXNTOVgvTnc4bTQ0d09HSTJnaVhTNTZpbTVtWmRISnpUMk9C?=
- =?utf-8?B?R1o1dXZ2cmZCWDM3N01tVzkvMjdHUGoxOUJGZ1NLUmR1SjUzTTI4dS9aNW5N?=
- =?utf-8?B?M0tnZGVEb09DTHR4U0IzS0k2cDJYc1ZlSFlxZjJUb08zeXFXNzZZTHZXMVFI?=
- =?utf-8?B?aFNHZXhvSG9CbElEVTAwRW9pZDNJeUZTRnJKQlo5aTNTYjQ0MW5MQUV6QzRi?=
- =?utf-8?B?Mm01ODNURG1IUHloYlRMMStEb2RtYWJpNmh4a1ZpSWNxcmloTmMyOU0yTWhq?=
- =?utf-8?B?aEZ4QnBHaUxsa0ptd1JmRDlUdnpzZzVORjJNVXhiVTc1LzFjSkFKUTZjamQ3?=
- =?utf-8?B?eDQrS0dUbDQ1Mmd4Uy8rZnAraUVLRDFVaGF0OHAzU2REVmdVVXF1SlJTUkJk?=
- =?utf-8?B?Tk5hdzJWMlovT1dqVHdqMC85TU9qT2liTmVFL2RtYWNnSDl5RGdiNjc2MDla?=
- =?utf-8?B?MCtKSDZaclhwZmJqS2tGK09rUm9FeVVmdExCaXVCVzlaVC9WYXFNYVdJTlBB?=
- =?utf-8?B?MmU2cDB6djBmaW1GQ3hrNVBRc2J3amdOMGpJemRrVFVuNURLS2c2NC9CM3lD?=
- =?utf-8?B?ak9hSEE5SUtTb29YaDR2KzdJTVRQZHM5WWZOM0xmRHBSV1EwRlpaVWxzTW56?=
- =?utf-8?B?bDVrTi9Ja2tjMkFUbGxmQ2laY2VEUC8vd1VHT2JoZnNZZ0REa1AyN3poTnp0?=
- =?utf-8?B?Z0xUbjZzblFpNndVZTkrNUd2Z1NRVHFObHBqckRiMEV6WklvelF1cDNhZVRJ?=
- =?utf-8?B?VUtJekplbVRpemIwajlYVkVBc0RFcUUwRVVLNkp6aFpLdXphRFlPZ0VuYVA0?=
- =?utf-8?B?REdpaVFTNk1HV3JsMThnZThzNXFPZ0ZyVStoajR0OXRDR2NNSEJpa0NOMDdI?=
- =?utf-8?B?UU1CN3o0ZVF1dnNNQmQ1N0l3b3VjS2NWWkNwSEJiZUJaK2JNdkEzektPMngv?=
- =?utf-8?B?bEZxeE54STNEVEVPenR6dnpBaDNBam42a2I0TU9DU2hzSFRNNnVjSVZNQkRu?=
- =?utf-8?B?bHBKZHhaaGQxaFNxZFExMFdQcDRQSHFSUHgwSkY5Z0lqN3ZHaXh2eEZXUURp?=
- =?utf-8?B?VENlRG5uVm9QTENVbGUwT3NXZ3g0ajFTTWE5V1BYQnRCbUlxeEcxTWJTRGNX?=
- =?utf-8?B?V1VHVjMrT01iaUtzRnlWZmlqNFduZ3VVK0hvWlV5WUJUQlZ0ZzloYUZPR3Jw?=
- =?utf-8?B?L0tNaVk1ZFgrU3Bid0o5U0YrbjhseElWYmo1cmQvaHhyZW5lQWhWWmZYRVly?=
- =?utf-8?B?YTlyb2FTUlBSRXVnRmNBNnR5dE11UDBvbGthMkNGS3VNUCswZ01ldlc4UEJU?=
- =?utf-8?B?NjZUc2lOdVB4aFpEWVhEUmF0VDRoellDZ0R3K1BmaFJWa3hHMHp2WHJYVHMz?=
- =?utf-8?B?M2FReUpnNjBHZVFDVEZDWWNmclRTR3NHbFRFWFNJWlZuMEJYZTVwVlFEbnlx?=
- =?utf-8?B?dDM1aFMxcnN6dnhURFZKMFd1bzJNbVZ5d2wvNVo1RUh5WngzRTUxeUgwWW1i?=
- =?utf-8?B?Z1dOOHlSckpyYlFxUTd0WGRrYk5hNWRZL1VLQXR0eUY5bzFNbmZDdGl4cEJC?=
- =?utf-8?B?amdrY1FDdkRqR3hIRk1paWxtNCsrbU1TY3ZnK29oTHhZeXdyeGxUWnV6YTlv?=
- =?utf-8?B?WjQ4NGYrMjhUNFBsdmk4R3lpS1Y2WmFCNlJ3YjRDcmtaNDBESlhGRlUyNGxh?=
- =?utf-8?B?Vys3TVZxZDUyRmExNGt5dVk1MUhQZTVWWVRGMU12dG92WkNUdUpDR2c5cU8y?=
- =?utf-8?B?Z2kvaTBsTXVwUXdBU1hnanlQRmVwb0pwWVlTK2dKRHJNUkZFdlc1ZjQ1d3Y2?=
- =?utf-8?B?Zmg0OEVLODRsbTlqaXYxU1IwRThzOFYrTndSYXU5c0F5YVI0YnZSZVRlVGs1?=
- =?utf-8?Q?/GGwu4rDiV23RqcPROhGNbBnu?=
+	=?utf-8?B?REVjSHdhWUluK0h2NVZHUy9GaXZWL0k3WXZvdFBYdVY1cTA5dGxLWFdjRUp3?=
+ =?utf-8?B?VTJsRGo1YUZPYUZLR2JQL0lNZSs5WE1IcU00UnI1SkJOcU54UEViNXozdzlj?=
+ =?utf-8?B?V2VOT0Z6ZGZRWFRkREVMT3B3cWYrSCs5MjBMeExyZXZzOW8xaFlIdytnVUxm?=
+ =?utf-8?B?ZzZXaWZ1UzZ5MXFLUVJEVEdJK3c0cml3MVdNckp0b1FoMTBnQ21oQjdWWUcw?=
+ =?utf-8?B?Y0NrWUcvUVZQOWdTWEtXYlBRdzFRbEhyR1UrUnRldjYxaW44Z01ka3VlZkpZ?=
+ =?utf-8?B?cVJoRmV0TytyMTMzMFBXVHorSHp2clVYTzhmbWczcitlVW1PWWhTOS9raTkz?=
+ =?utf-8?B?bGhKRE13U2Jud3FRQWdhS1p1c05WTk1halNaWjVPN1Q5OG5xOHVTVHkyZ0hv?=
+ =?utf-8?B?L0NaZTFZWGtaVDJOR0pBQXd4akR4dWtXWGJFVnh1VE11N0RidmExK044MWt3?=
+ =?utf-8?B?YVVFWlhBSjNYczRmTjlqNGtpZDBteFZ0SERUZGtvNGN5N1VwUmkyWmNibkt0?=
+ =?utf-8?B?Nm5tVVRmOUdXOUhjZ3kwSjZCbDE2eHhFTXhFZ2huSENKdjFpWFBDSjJOMXQz?=
+ =?utf-8?B?UE45cSt6MzlOeHlwUHZtR21nV0xtVUhMQ1lZUlhzYWg3TXorZEQwUDU2Um1u?=
+ =?utf-8?B?Ym81VWFXZU1HaU9TOWxLWURESFlMdjNScDNLU3puY1lKWVpVcHNodnpGeS9h?=
+ =?utf-8?B?UGtVV0dOUkpvdVZ1bkJMamw3ekpnbWQ4Z0VrOUEzUzVpSzc0MDlISWFnekF1?=
+ =?utf-8?B?L2V3RThnUHBuWTZPSWcwb2FIWGhFUUFhN2ZsZDJ3WkxBWmkvOXhvTFYwNXo3?=
+ =?utf-8?B?Ry9FenU3eExUS2JIWVNmS0p1VFdIK2EwNGkraVhjTzUzTzlsZkQ5QW4yYUNz?=
+ =?utf-8?B?aFc1bjhQTEFuc0w2Um1KY0hTcjBhZ0tnVWVjL0QzdlFlem9FMTZsdXozSUV1?=
+ =?utf-8?B?MkdTa1l6NXVmM0M1K2twRHY5Y3ArMDhUcE5CeG84elNOZG0vM0VSWUoxRE82?=
+ =?utf-8?B?dmNZNEwvbVFqVllCWFd4d2doZGpRTUZJRzYzZVRrZEV4S2JNOUFOaGpCNWJP?=
+ =?utf-8?B?emxkem5yU2k1ZjlrTEFjR29PamE5V0pHV0wvckFoZFZ5QThuQVYzY0YwOTRQ?=
+ =?utf-8?B?OFpIZlpLUU1OcFhKTHBDVHdMa0VxUzduWTNWLzRJODJjTW40V0toN0EyaEIx?=
+ =?utf-8?B?cysyUHFjRHk5K0tJNTFSOHFCWVRPMUEvV0RHcEd5cDJxbjZaV0tmTm5GVjRS?=
+ =?utf-8?B?RC9lVXV6Zlo1ZkRrMVk3UldtZHNpUWp5MGF6dWo5a1g3aWxBaHdER3FmdnRj?=
+ =?utf-8?B?Z21UZXZONWFHU2l4bDFjY1dtT29INldJbXhKWEFFeVNQRWtIbWxzVkNlcVIv?=
+ =?utf-8?B?UEtMc3VXenQ5OCtMRnBYajFCUFFHVUhwQXNkS1B6SjdpS2U1b0h6WGlMeGk3?=
+ =?utf-8?B?RTlOZUY2RW5XYkhqeVlYZE1mV21VNTIyWEFJN2F1MGNkcGNMendPSnFlMTdT?=
+ =?utf-8?B?bjdzc0ZXYU1FVCtNekRBRVA4cmMvclVsTUJ0cW9jOGQ3SGlmQlNnczNsS3BG?=
+ =?utf-8?B?N3hsQnBuc1pGVzNUY2tBd3JKNnlCTnNKRzZVcFBuRWJxUHRzRGt4YnpYOFI2?=
+ =?utf-8?B?cnNpU0hvODF1d1oxNXVZVmZEVkV3WWFMRWo3VzBKU004V0h2ZWtnbXVvSkNH?=
+ =?utf-8?B?Uy9OWTkxSnQ1VWl2Z29GaEwrUDJGVXZScW9JT1Nnam92OXlrbXNKZFp3SnZz?=
+ =?utf-8?B?ZkFzSStNUzlCV05ZcHZDRXh4aXVPWWROS05mQ2Z4QnRFNFNKeUNUMVZXVW9F?=
+ =?utf-8?B?QUp2M1JMSkdOUTYvTDVHK295OWRCRFg1VXJ0VXF1ZG1naWg3dnJudkdDbXpZ?=
+ =?utf-8?B?TW02YytoNUk1eE5lb0hBdTBWZDluVHpXbUJGQVoxMklnM3FWUHpkcG05MHU1?=
+ =?utf-8?B?ZSt2aE96c3hKd1l6SFQydldaWGYzWSt6Zk5JeEk5TzRBZXY4UU55RUNmcWVm?=
+ =?utf-8?B?ZVNSQm1ybjZjSjFKOWJPMFF4ZFFDa01ibTBmS1ZJbHNTdnNZUjh0dERlcnJo?=
+ =?utf-8?B?MkRka3U4V0I4SlMzelR1MGFaV2cxMWs5SDlyRTQvY1B2Y3J4SllaeDZFSEoz?=
+ =?utf-8?Q?Hb0QiIr58hg5icmiV8KJi7oNw?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88607533-087f-4fd6-60da-08dd3bc59048
+X-MS-Exchange-CrossTenant-Network-Message-Id: a019e0b9-4551-4967-cf1d-08dd3bc65a90
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6222.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 15:49:47.2991
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 15:55:26.6567
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cmrFDW7x+wDPM8d8rKcGleEVYXf+oRl5N44dJQuFG4RZolmfL8njuEBlulernGayFR1mHnhfKuw/tuoKlQG3mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9024
+X-MS-Exchange-CrossTenant-UserPrincipalName: 44IThXhDGXD1R7p/1Xz5XQ8kKI/y4iPce9EdDUuFXg/kYgedkntspLPCsqjtcaDv7OSn3aas7OjxZQo4h8oGJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8310
 
-On 1/22/2025 12:03 AM, Fan Ni wrote:
-> On Tue, Jan 21, 2025 at 12:57:19PM -0600, Fontenot, Nathan wrote:
+On 1/21/2025 11:52 PM, Fan Ni wrote:
+> On Thu, Jan 16, 2025 at 11:42:05AM -0600, Nathan Fontenot wrote:
+>> Introduce the ability to manage SOFT RESERVED kernel resources prior to
+>> these resources being  placed in the iomem resource tree. This provides
+>> the ability for drivers to update SOFT RESERVED resources that intersect
+>> with their memory resources.
 >>
+>> During boot, any resources marked as IORES_DESC_SOFT_RESERVED are placed
+>> on the soft reserve resource tree. Once boot completes all resources
+>> are placed on the iomem resource tree. This behavior is gated by a new
+>> kernel option CONFIG_SOFT_RESERVED_MANAGED.
 >>
->> On 1/21/2025 2:19 AM, David Hildenbrand wrote:
->>> On 16.01.25 18:42, Nathan Fontenot wrote:
->>>
->>> Hi,
->>>
->>>> Introduce the ability to manage SOFT RESERVED kernel resources prior to
->>>> these resources being  placed in the iomem resource tree. This provides
->>>> the ability for drivers to update SOFT RESERVED resources that intersect
->>>> with their memory resources.
->>>>
->>>> During boot, any resources marked as IORES_DESC_SOFT_RESERVED are placed
->>>> on the soft reserve resource tree. Once boot completes all resources
->>>> are placed on the iomem resource tree. This behavior is gated by a new
->>>> kernel option CONFIG_SOFT_RESERVED_MANAGED.
->>>>
->>>
->>> I'm missing a bit of context here.
->>>
->>> Why can't we flag these regions in the existing iomem tree, where they can be fixed up (even after boot?)?
->>>
->>> Especially, what about deferred driver loading after boot? Why is that not a concern or why can we reliably handle everything "during boot" ?
+>> As part of this update two new interfaces are added for management of
+>> the SOFT RESERVED resources. The release_srmem_region_adjustable()
+>> routine allows for removing pieces of SOFT RESERVED resources. The
+>> the merge_srmem_resources() allows drivers to merge any remaining SOFT
+>> RESERVED resources into the iomem resource tree once updatea are complete.
 >>
->> That's a good question and one I should have addressed.
+>> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+>> ---
+>>  include/linux/ioport.h |  9 +++++
+>>  kernel/resource.c      | 79 +++++++++++++++++++++++++++++++++++++++---
+>>  lib/Kconfig            |  4 +++
+>>  3 files changed, 87 insertions(+), 5 deletions(-)
 >>
->> The goal is to prevent the dax driver from creating dax devices for soft reserve
->> resources prior to the soft reserve resources being updated for any intersecting
->> cxl regions.
+>> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>> index 6e9fb667a1c5..2c95cf0be45e 100644
+>> --- a/include/linux/ioport.h
+>> +++ b/include/linux/ioport.h
+>> @@ -249,6 +249,15 @@ struct resource *lookup_resource(struct resource *root, resource_size_t start);
+>>  int adjust_resource(struct resource *res, resource_size_t start,
+>>  		    resource_size_t size);
+>>  resource_size_t resource_alignment(struct resource *res);
+>> +
+>> +#ifdef CONFIG_SOFT_RESERVED_MANAGED
+>> +void merge_srmem_resources(void);
+>> +extern void release_srmem_region_adjustable(resource_size_t start,
+>> +					    resource_size_t size);
+>> +#else
+>> +static inline void merge_srmem_resources(void) { }
+>> +#endif
+>> +
+>>  static inline resource_size_t resource_size(const struct resource *res)
+>>  {
+>>  	return res->end - res->start + 1;
+>> diff --git a/kernel/resource.c b/kernel/resource.c
+>> index a83040fde236..9db420078a3f 100644
+>> --- a/kernel/resource.c
+>> +++ b/kernel/resource.c
+>> @@ -48,6 +48,14 @@ struct resource iomem_resource = {
+>>  };
+>>  EXPORT_SYMBOL(iomem_resource);
+>>  
+>> +static struct resource srmem_resource = {
+>> +	.name	= "Soft Reserved mem",
+>> +	.start	= 0,
+>> +	.end	= -1,
+>> +	.flags	= IORESOURCE_MEM,
+>> +	.desc	= IORES_DESC_SOFT_RESERVED,
+>> +};
+>> +
+>>  static DEFINE_RWLOCK(resource_lock);
+>>  
+>>  static struct resource *next_resource(struct resource *p, bool skip_children)
+>> @@ -818,6 +826,19 @@ static struct resource * __insert_resource(struct resource *parent, struct resou
+>>  {
+>>  	struct resource *first, *next;
+>>  
+>> +	if (IS_ENABLED(CONFIG_SOFT_RESERVED_MANAGED)) {
+>> +		/*
+>> +		 * During boot SOFT RESERVED resources are placed on the srmem
+>> +		 * resource tree. These resources may be updated later in boot,
+>> +		 * for example see the CXL driver, prior to being merged into
+>> +		 * the iomem resource tree.
+>> +		 */
+>> +		if (system_state < SYSTEM_RUNNING &&
+>> +		    parent == &iomem_resource &&
+>> +		    new->desc == IORES_DESC_SOFT_RESERVED)
+>> +			parent = &srmem_resource;
+>> +	}
+>> +
+>>  	for (;; parent = first) {
+>>  		first = __request_resource(parent, new);
+>>  		if (!first)
+>> @@ -1336,11 +1357,12 @@ void __release_region(struct resource *parent, resource_size_t start,
+>>  }
+>>  EXPORT_SYMBOL(__release_region);
+>>  
+>> -#ifdef CONFIG_MEMORY_HOTREMOVE
 > 
-> Not an export. Can you explain a little more here?
-> What is the problem if we only flag the resources as "soft
-> reserved" in the iomem tree without creating a separate tree, and
-> process the "soft reserved" resources only when needed? 
+> If CONFIG_MEMORY_HOTREMOVE not defined, it seems we do not have a
+> user for release_region_adjustable as
+> release_mem_region_adjustable() will not exist.
 
-The issue we currently encounter is that the dax driver consumes these soft reserve
-resources and creates dax devices for the soft reserve resources before the cxl driver
-comnpletes device probe and can update the soft reserve resources to remove any
-intersections with cxl regions. We do not want these soft reserves consumed prior
-to them being updated.
+The release_region_adjustable() routine is used by by release_mem_region_adjustable()
+and release_srmem_region_adjustable(). We could put the following around
+release_region_adjustable() to prevent it being present when not used.
 
-If we were to put the soft reserves on the iomem tree we would need to have the
-cxl driver provide a notification that it has completed updates and others (i.e. dax)
-can them go process the soft reserve resources.
+#if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_SOFT_RESERVED_MANAGED)
 
 -Nathan
 
 > 
 > Fan
->>
->> During boot the dax hmem driver walks the iomem tree to save off a copy of all
->> soft reserve resources. The dax driver then later walks this copy to create
->> dax devices for the soft reserve regions. This occurs before the cxl drivers
->> load, create cxl regions, and update any intersecting soft reserve resources.
->>
->> To prevent this the soft reserves are set aside on a separate list during boot
->> so that they can be updated (if needed) and later added to the iomem resource tree.
->> The dax driver is then notified of any soft reserves added to the iomem tree
->> so that it may consume them.
->>
->> Hopefully that answers your question. I'll include this in the next version.
->>
->> -Nathan
->>
->>>
->>>> As part of this update two new interfaces are added for management of
->>>> the SOFT RESERVED resources. The release_srmem_region_adjustable()
->>>> routine allows for removing pieces of SOFT RESERVED resources. The
->>>> the merge_srmem_resources() allows drivers to merge any remaining SOFT
->>>> RESERVED resources into the iomem resource tree once updatea are complete.
->>>>
->>>> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
->>>
+>>  /**
+>> - * release_mem_region_adjustable - release a previously reserved memory region
+>> + * release_region_adjustable - release a previously reserved memory region
+>> + * @parent: resource tree to release resource from
+>>   * @start: resource start address
+>>   * @size: resource region size
+>> + * @busy_check: check for IORESOURCE_BUSY
+>>   *
+>>   * This interface is intended for memory hot-delete.  The requested region
+>>   * is released from a currently busy memory resource.  The requested region
+>> @@ -1356,9 +1378,11 @@ EXPORT_SYMBOL(__release_region);
+>>   *   assumes that all children remain in the lower address entry for
+>>   *   simplicity.  Enhance this logic when necessary.
+>>   */
+>> -void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>> +static void release_region_adjustable(struct resource *parent,
+>> +				      resource_size_t start,
+>> +				      resource_size_t size,
+>> +				      bool busy_check)
+>>  {
+>> -	struct resource *parent = &iomem_resource;
+>>  	struct resource *new_res = NULL;
+>>  	bool alloc_nofail = false;
+>>  	struct resource **p;
+>> @@ -1395,7 +1419,7 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>>  		if (!(res->flags & IORESOURCE_MEM))
+>>  			break;
+>>  
+>> -		if (!(res->flags & IORESOURCE_BUSY)) {
+>> +		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+>>  			p = &res->child;
+>>  			continue;
+>>  		}
+>> @@ -1445,6 +1469,51 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>>  	write_unlock(&resource_lock);
+>>  	free_resource(new_res);
+>>  }
+>> +
+>> +#ifdef CONFIG_SOFT_RESERVED_MANAGED
+>> +/**
+>> + * merge_srmem_resources - merge srmem resources into the iomem resource tree
+>> + *
+>> + * This is intended to allow kernel drivers that manage the SOFT RESERVED
+>> + * resources to merge any remaining resources into the iomem resource tree
+>> + * once any updates have been made.
+>> + */
+>> +void merge_srmem_resources(void)
+>> +{
+>> +	struct resource *res, *next;
+>> +	int rc;
+>> +
+>> +	for (res = srmem_resource.child; res; res = next) {
+>> +		next = next_resource(res, true);
+>> +
+>> +		write_lock(&resource_lock);
+>> +
+>> +		if (WARN_ON(__release_resource(res, true))) {
+>> +			write_unlock(&resource_lock);
+>> +			continue;
+>> +		}
+>> +
+>> +		if (WARN_ON(__insert_resource(&iomem_resource, res)))
+>> +			__insert_resource(&srmem_resource, res);
+>> +
+>> +		write_unlock(&resource_lock);
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(merge_srmem_resources);
+>> +
+>> +void release_srmem_region_adjustable(resource_size_t start,
+>> +				     resource_size_t size)
+>> +{
+>> +	release_region_adjustable(&srmem_resource, start, size, false);
+>> +}
+>> +EXPORT_SYMBOL(release_srmem_region_adjustable);
+>> +#endif
+>> +
+>> +#ifdef CONFIG_MEMORY_HOTREMOVE
+>> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>> +{
+>> +	release_region_adjustable(&iomem_resource, start, size, true);
+>> +}
+>>  #endif	/* CONFIG_MEMORY_HOTREMOVE */
+>>  
+>>  #ifdef CONFIG_MEMORY_HOTPLUG
+>> diff --git a/lib/Kconfig b/lib/Kconfig
+>> index b38849af6f13..4f4011334051 100644
+>> --- a/lib/Kconfig
+>> +++ b/lib/Kconfig
+>> @@ -777,3 +777,7 @@ config POLYNOMIAL
+>>  
+>>  config FIRMWARE_TABLE
+>>  	bool
+>> +
+>> +config SOFT_RESERVED_MANAGED
+>> +	bool
+>> +	default n
+>> -- 
+>> 2.43.0
 >>
 
