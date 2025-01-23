@@ -1,64 +1,63 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2063.outbound.protection.outlook.com [40.107.244.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB83D3F9C5
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 17:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AA66CDAF
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 17:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737652653; cv=fail; b=R72w6866UAZ09oYSl9ghDJ693W+ehVOAmkaC2sZPwweb65IMYKcz7KjX91fMdzd5ffjmZJTfrNGQybjwFCxlQmpf4OpMRbJjFaZ9cWDlIKoKI2KTExCKqhpSecU3DOaxVEaDOqKDdOfPClwP4DT8KfYYAkL5t9EPuU8Vr6r4V0k=
+	t=1737652849; cv=fail; b=CLyNaR8qO3IgYKoX+RQdumc2+y2FvqgjOoSHaXpmrnNPiMruqKnLIaSsuFEtp9XcP236fihpsFEkP8JLFkEAkS9XIHH2+mP/uKtVcWGu65U/3aleLOwsVlNl060WMgGzsTrYnjf9aqI9XLOK18RN1RAE+w9stA2LNAMEYJ3akh0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737652653; c=relaxed/simple;
-	bh=1LMU8iQ4PpWbEhNFVozi0sT8Mx07gTFSRDks8Gz2LmY=;
+	s=arc-20240116; t=1737652849; c=relaxed/simple;
+	bh=RpA71tyKoOrydWGwMY+hFLyIRhfSzecI+Uq7LUT9Hsc=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SW86knOkzHk2eLhegBBaN+m5n/RWETKJW4mBLtnJCrtQ9ZEInREQYE/ofbbJvxMZ6q+Rc5E1FyEO7lBrqElD5suTbm8l4TYgMXsyi2m3i1gTsq11ciwDtslI847+Ti2hGaOgb+tRYXponCmQHA1FtmMXi8Y4qPlSwLagzrJ/ALc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EKWZcnF3; arc=fail smtp.client-ip=40.107.243.88
+	 Content-Type:MIME-Version; b=UBSe0wvuw5quqNFKgAqI567kqTJLxdmP9tkz00ykwKDkrhajk15zpsHJ6rqRTGRJWswEd4FtqLp5gKccBw1c7senv/24TtF8g/fe3fZTFWN2VkGx9MRhBofS+83gdG4ZpRTypHInNw/dXaFU9KbQLBmsUA/G5hbLVFg0aYOS8gE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PoPAM/bp; arc=fail smtp.client-ip=40.107.244.63
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EKWZcnF3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PoPAM/bp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e/Qbj2x6vmDGfQXybjrgrLn4kyrz1aCRveSCs3dDoVDpwDG2Aja7YehmAibyvfO9SOuhHujArFIAslrbI+lOHjJMFs7Si15JTPffW8vJJJGrqEjVW5nwOCNO+wHdTv/Crtz11mvF7/7VsScuqmkwsBxMYJhCxos3ePGbBhPhfvG6eHmiOSRkty1+1b7X/Z/gYM56GRb5GqGRQ9B8CdF8qJznH03uPsHZ2rMDJ+ty0d9guKuFtlRIf3h7oBiPYCzeWpWuaAlUIUpPBuZWcGIv8weWlLzygFjBjhUtNem1CirTBTXZWR6+IdQOmeeVijtScLjFWzoRKaFnRt8nfRd6Xg==
+ b=AISke97gjY1K5/wOswDKgtix5xLQgAMJAET5JQknMu6qmsUJmnznnDSZFItChPxCXMYUhBCzScbMnf0etf9sgsSA1CSyWpkU/ZKuQhzmEApU/kOt7E7Oht4rOziE3ck9WZgo6SEqfXAw3+xSABNel26tc1QWYKLEX6LmZjfQ5k5U8mRxwDziAiKY8ubtNbhDwDw7hcBlE2k7cSO6E0IOp94AdBD5paXFeX+4AVns7sb9qfyqLLXg8+9ZN8YaQPOeJVvlbNN5qWciZM95L74D1ZEVOpR88W9MgKaZNGdXdZ2B+nu2qrR+loqD+4rn6qxWZpt6SYKKBL9olUXpQNJ0sw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k74KVxu24IBSykzamoh2hbeRFgR/h2gQzpHnt0fBYoM=;
- b=rwT48DQsLsC7hdpioHFP2kIM74wNeW8jFRrGb38uMaBRn2sqmeKmFk6CB8WHzGVMRV+rowT1xpBqT8iiN8v01Cf1Jr0Sj4+ap+U6tmSCeGNImPIUElCwZAouI/QlI5+syqve3sT7CkIewwc6khaHulH3dm3AOEmPshAUa9SV4x8Vz1I6tYisscAOabzUoxWO42CneVFuSl/R7+kPVuUBndi9XbQo7sJ1JbdkvuzKAaIebvrXHEHzEZYTWr2lFkcxsCNCLxCC4PDDkk7ibKLw592fWLpnqKH8fgd9aB5jwrBkYR2oE5Mjf+5WZahxLmieiXm4tE23EQgWszTOofn8tg==
+ bh=O4l80jMRzr4LiFw5+gGAqpuBYSYnMYtTXY7jEbXpyBY=;
+ b=OjtSU9CsL48pL7nILbWq0hy4n+hvim6Gce6wS0yuVzjVrHx5SZdiwu75NlTw/N5kd0cvdYDGGmtaAlzQce8psXTcRGT0JlW4PptQ56E0x8rjfY019b4D1LfQ4eoLOZKr+fgWcs3quPb/drGzqo2fBNvhdLIwMwM4c62VI+OiTHnE7Eu+8aQWkvrfsILNI2gy+qY4A9/T3ArHdiLtmOlMSqwhSLrIuwNIZlKxhMFv0VLlvGe8DqGEKk/5GJ031AGwbRS7RgGEbU0ae9coXnGlZB1L7vPvxD/u5695GfQv0r+dzIKivJS+/EtJ74aczvo0qy88I8PTcCOwMVhFWDdJRQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k74KVxu24IBSykzamoh2hbeRFgR/h2gQzpHnt0fBYoM=;
- b=EKWZcnF3q0DDgrBhUBvfISELqEC+SXRXy1YEDFy2tZxHJvM4mPo6SZj2ozwwDJD8gAyOy7INA/cLT1gJDMDDfzx1lCd95PEf+Gv7Nyo6yo5OzHOSeHMDME8/WcMExhBg8zQwxj069Wv8F7xoShdFtRD6YjDvua4E0kZq2SAp6K4=
+ bh=O4l80jMRzr4LiFw5+gGAqpuBYSYnMYtTXY7jEbXpyBY=;
+ b=PoPAM/bphXlgJ+ogCf35hLLJOHjZBzAM7jbjwOqhTxNSzxmQeiSTWbZd9+zomeuGBpDTYryWtSurDvro723e0vS1S6efufn/OpfET2ntLr5psU8tq+OXyrasNnhN+wDQ5Y1Nw/Qa56XHUsbnI09IvRudYmioXJAfFbFBUsTH85Y=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
  by PH8PR12MB6890.namprd12.prod.outlook.com (2603:10b6:510:1ca::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.16; Thu, 23 Jan
- 2025 17:17:28 +0000
+ 2025 17:20:44 +0000
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8377.009; Thu, 23 Jan 2025
- 17:17:28 +0000
-Message-ID: <0020a489-5002-33a9-fc5c-58e46f581199@amd.com>
-Date: Thu, 23 Jan 2025 17:17:23 +0000
+ 17:20:44 +0000
+Message-ID: <8550f618-3934-c671-c1bc-30bbdb56ac3b@amd.com>
+Date: Thu, 23 Jan 2025 17:20:40 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v2 3/5] cxl: Introduce 'struct cxl_dpa_partition' and
- 'struct cxl_range_info'
+Subject: Re: [PATCH v2 5/5] cxl: Kill enum cxl_decoder_mode
 Content-Language: en-US
 To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
 Cc: Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
  Jonathan.Cameron@huawei.com
 References: <173753635014.3849855.17902348420186052714.stgit@dwillia2-xfh.jf.intel.com>
- <173753636727.3849855.464861650807086965.stgit@dwillia2-xfh.jf.intel.com>
+ <173753637863.3849855.16067432468334597297.stgit@dwillia2-xfh.jf.intel.com>
 From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <173753636727.3849855.464861650807086965.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <173753637863.3849855.16067432468334597297.stgit@dwillia2-xfh.jf.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0177.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a0::14) To DM6PR12MB4202.namprd12.prod.outlook.com
+X-ClientProxiedBy: DUZPR01CA0346.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b8::29) To DM6PR12MB4202.namprd12.prod.outlook.com
  (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -68,424 +67,761 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH8PR12MB6890:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36abc83b-0dcc-46e8-5c9c-08dd3bd1cfec
+X-MS-Office365-Filtering-Correlation-Id: 22bd704d-08de-474f-7a9e-08dd3bd24504
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TVFiaFVVQkJlbVZpZ0V2TnBicjBTV3drb2VIYXFuRnk1ZFo5MEh3aWx1Y2ZN?=
- =?utf-8?B?MHZ5MDliSTJyL00yVjZjUTc0K2JDYW0yQldkeHJuNW9JRTVXY3RGbGFJOWNN?=
- =?utf-8?B?UDdFYk9tcDk3bVA2cm1zdStsdjBYSlhxWG9ydHprMTVlcGhyUXRBWGFqZ0FV?=
- =?utf-8?B?SllHbmJMeHh0d2dHWDhyR1BBb29wWlI5MjcrMTN1WXZwT2UyZnhIRHl4SFRH?=
- =?utf-8?B?Ni93bjhWemlER0lqb0NtWldOdUFCakdtbDAybHhWVmh4TXBoanVNaDU0OEIy?=
- =?utf-8?B?OURSeEtBVHF5VjExQm8vK050SFBEeEV5MnpZbk5ISjdxSkpubUs0TVV3Uk80?=
- =?utf-8?B?Q2IwYTUydUhHUHdmWkJ6NURqUG5SK0phSFBWWldiYWZxY1JrMU9rN0ltOXZr?=
- =?utf-8?B?SG9sd2VzWHE2YTVrSFlKRFcxaTYydGorT1ZJZjMyak0yMFh5emw1ZDlVYVo3?=
- =?utf-8?B?Q2Q2Z1pjL2JYdDEwM3NuQWxnakZiekl3TTZyOFNkZmpzNlJKa3l2WFdkWjVr?=
- =?utf-8?B?d1lFZUdsMlNQdkhicC9sUHM1WVNGa1pNTVlXMHB1cDdWL3AzbVlEcTk2a1dv?=
- =?utf-8?B?MTJqeDBlUDdVbWtjMWtPM0hvbHN5dSsxYnJkVmNKK0w1djVVZkhYdXI2Vk5S?=
- =?utf-8?B?Ui82VkRHU3U0NWRWRW93Nm1TMDhNcDYxT2hGNmFYNTh1Y3JIWVRSRnlTZUox?=
- =?utf-8?B?WFpmRUdBUm5SdVM3eENvRHVLRUV0YXV3enhuVzNTNmt0U3J5VkJBMUE4RHJ1?=
- =?utf-8?B?YlBsb1I4eFpKZnl2djJVWExPV0VkZm1jek45bGdyc0xlVjJnOFVad1BhQnlU?=
- =?utf-8?B?WDhJSElPVkhrd0dROTBFU2JKazJBTEVLSUFPYjVoSExwT2hDT0ZrQXZPZGg4?=
- =?utf-8?B?UFBkbXJDN3RRNmoxQnFUbVFhN1hVYmpjcUp4d1ZoblF3STJoQ2lxOWJKRHlE?=
- =?utf-8?B?blY5Z21DQndLUVY3dHh1VFdwWlJJY2REUlkrVXcwblVicENqZkVzUExFSWZn?=
- =?utf-8?B?YW11bVRLNlhobWVSd0JzbFBvMnZYQmRyUzcyc3RUZXcvTU1KZllnQTAvaGh1?=
- =?utf-8?B?TkNRdmVXNGRLaTU5bEFVYVp4blBVVWxVNVFKWDVocEp4S29FSGloS0lxVk5j?=
- =?utf-8?B?K09mek5pblBnaElpem9oN01RTFR1bWRDTGl4OXF6ZEwvaVJzVjhIeWlZK05x?=
- =?utf-8?B?aUtyWGlxMWUzUUIvQnZpN0lCblp4TkZOOHVZSXVYV0hlS2VlYmJHOHZoTUh3?=
- =?utf-8?B?Y2J6YUNnYzE4aHBWakdON3Frc1NtWVJuZU0wUktVMkNpbWR0ak9xUkdkY2E0?=
- =?utf-8?B?cjBqNWJkR0J1cDJqWGEvVXlKRk91SDNhNC9EazFyYk8zTTVZU2xUdGxFUVdz?=
- =?utf-8?B?T2xBbk5hRjk4RVdCakVjdHZMby9JcEE0QUcvNFIwSXRPR3BnZ3N1aXNjRFBj?=
- =?utf-8?B?c3BJeUZmLyt3MHBFeUdFK2wzZ2lmaEdEOU1CWjhNdTJad2lTaFo2LzRqRmIw?=
- =?utf-8?B?OW9ZeCtxNmpBeGt6UHFtRGF6bnBZL1IvWXdpUEYvaVlPQkNNNFRUbWlKbFF3?=
- =?utf-8?B?cFNxeVZkU09QRGdlNUMzU0Jmdm5BWm93aFJNVjgrSk9vbFdQYk9jM3JKcTZD?=
- =?utf-8?B?TFNEVVAyVmhXNmMvbFZLbWhpWEo1Tlp1UWpkcUY1MURGUzlwbE9Kb3JNanBp?=
- =?utf-8?B?S3ZvRGtsUWlsOCtEb3VzQlJMNzRrZzRyUG5NVW5NdWhyYSs3aHM1cmxmeXlQ?=
- =?utf-8?B?SDJ5Z1dWMHdPclFQajVYZ2dlekZoc2cxSWVjWFIrWWpScXc5RXhxeVh0ZU5V?=
- =?utf-8?B?Ry9FNzdmQVdmSmdDOWpUdz09?=
+	=?utf-8?B?NzIvYUw3SVJTcm1OZWlobk5SY3ZXWnJoOEt2OXVWczZaV284QkdnQWtMazBL?=
+ =?utf-8?B?dmlZWlV5QlcrVzVQODRLSnN5RVdoc0Qrczhkd2E1ME1xZDg1WUZXS2orNWZl?=
+ =?utf-8?B?OUgvdTFmdlY1YmJsallCMXo0cDZLem42SmtEbWNXODhIQzBiREc5SXVtb0JX?=
+ =?utf-8?B?UlRydXc0Mi9MY28xdlRGVVhLTVVmR0JzdEMwNHFDSFZPLzJZYTNOcWtMUy9w?=
+ =?utf-8?B?VFMxcFYzNTBNQk10WTY0OEhqUHBiUGZDNEFGNUJCQVozajIvVTVMdytTaFhI?=
+ =?utf-8?B?Nlp6MnA4czZtU1pPMU1saEpWSnhHRU1Dcy9vOWdVMlk2RjRzK0h4OE1URy9O?=
+ =?utf-8?B?MFQvRFRBY0Q4cGNYYVVXWGJ1eXBaUnJFZU1jb0lkWjUrY29ia1QzQzZQcUZ3?=
+ =?utf-8?B?YjZYTXIrbEhLV0xmL1BCSUpZVHIrK0ppMDNCeFBsdjdYK29PK0xNQzYrOTUx?=
+ =?utf-8?B?a0RObFRSMy81dEt6c3JJdFdQNDg0MXNIRWltTFlCVlBaREdvSnFBbVhPcTdl?=
+ =?utf-8?B?UjdEMmZsajl2emZhK2Q4b1JzTVM4TkxoaXUrcWorMDZEelJtNjdnelB2V21B?=
+ =?utf-8?B?NzdLdmZtMGYzV3dOcDh5dDFXQWoycnM0NFFxOTdXK2RoY2cwcHZjS0Z3UXdQ?=
+ =?utf-8?B?dHlCeHZjejJKSzh0UDVVelRJL3VXYkhlNzhMa2s4Mllnb0ljUjhvbjNRMStQ?=
+ =?utf-8?B?aG9DQWdFUmx3ZzZIbkZZSWdYWEJTTEIxc1pnb1JwTXZ0T0x6bGhpN05YT0RV?=
+ =?utf-8?B?OVBEaHA0MUM3b2dZRkZWNTh4MWJnTGdjYnNDYmNDV2VHUE80c3oxMmpYMXFC?=
+ =?utf-8?B?UVhqWnA0WkdaTnpLTHkzYWkzRVRab0s3N2ZBbmw5MXR3clE0NlpQTFhnaE4w?=
+ =?utf-8?B?THdiSDgxSTFwZkd2Rk5YTFFJcGxhME0wNWswcGhCbGdnaGpHT2hMdTBiNllj?=
+ =?utf-8?B?bGdVRE1qeXhlMVZPYWJoa0dNSDhSR2IyR0p2dHROS2k1YURhV1J4SHRScEw5?=
+ =?utf-8?B?U09HaSt4RDlzSWtPUEZrdWNlVytXL1NKMW03S1hYOWM2SjU5cUlobzNhajRE?=
+ =?utf-8?B?ekkraktuMnhobEdCNlVnVXJsVzJMOUdnZVRCbEthZERxaUNoMDRTYk1QeHhD?=
+ =?utf-8?B?TDMwcVF4UlZ1ci9yNlk5bzRYUk5qUUZPT05wenZ5WnFnZGhCYnN6dFgvajdW?=
+ =?utf-8?B?RkgxaFU3L3VIa1FtRjVKZmh3OWhTNE56bUQ3QjgvT0JZUXdEaEl0a2J5MEMw?=
+ =?utf-8?B?a2gvWVFoaXJ6TFdGNlBoUHFkV2tZT1ZiTUdod3pNb0pnRTFKekwyUGliajBC?=
+ =?utf-8?B?RjZwdEVKZUszUlJ0eDZZODIvUzVLVHdkcS9WQjVGN3MyOTFoU0RiSC9pMjlW?=
+ =?utf-8?B?MGJhY3p0blh3TU9jT2NsTFI0YlpYWmt2bXJyOWNTS1FaU2lGR3RQS04xZjlJ?=
+ =?utf-8?B?NjVDelJxZW5wMXEzRlV3c3JXUHpjRllGc0o5ZVpNQ3U5K1Z4RFNvOTN1WUd3?=
+ =?utf-8?B?R2Y5RVhzcGpSc1lCUkJ6ZUZnc1lsL3RTTFRWdXh2d24vUjAwTmdDODZTK2RG?=
+ =?utf-8?B?N0JNMHg3aUtTT1EzV2dVMHlZU01ieHQza1h3NXV3OWU4aW4zeG9VTGJLbk1m?=
+ =?utf-8?B?NE9aMlFTV0YyakpLL0ovWXVNcjdrZnRUTS85Q292bENvS0I1OGN5WXVpVkxu?=
+ =?utf-8?B?M0ExZm04a1JXclhscDNaaGdiL1ZVTHJDTURGM0hvV2NwQTVTVzhPMXdyYTRp?=
+ =?utf-8?B?Rjh3U1EzU043Q3EzWHltOUpoMGh5ckhLS2JGZHNuak4zN0QzejJKY2I2VG9D?=
+ =?utf-8?B?WktPN1dLejBCbXpqbTZwUjdMei9nTHRBMWlTZW5RZFVTdzlaTW1FUXFzc3Zu?=
+ =?utf-8?Q?R4TYAUHQhfhQr?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OTdFdzZrNmNNVHN4ZU9NMVZ6WmxRdlhWN29XMlN6aGlqdGErZFJNa3F2UnZW?=
- =?utf-8?B?VGgrOEEyd1lzS1VWV3crQTBSYXV2R2VXNU8zZURWOGRsckVMa1VoaHRkQ0Fq?=
- =?utf-8?B?Y0lxU2FtRWw2bUxYeER1RU1WVU00d01iemx6bFN0SXZZaEl6NjZsMWxGWHJQ?=
- =?utf-8?B?WnFvZ1hNOEFYMjdMWUN6VEZVVlZROFIya1V2aXozR2RQaDZGWVMybHBmdjhS?=
- =?utf-8?B?ZEhoSTEra0xjSXdyR1dBcThrTGFJVW5CNUJpMDNpZ000VHVJZXE1c1FnL1B1?=
- =?utf-8?B?ZTJKUHlRdjNRMktWQzZJZ2VCRGNrMjd1UGNIRUNiKzhDNGY5a0MyTWRzYjRr?=
- =?utf-8?B?WUc2KzdENTMzY1d6SHd2d0lWeFBRaCtEYW90VFdkbklteWpXZFB1WXBmdWZv?=
- =?utf-8?B?blRtRHNFUU5zTEhPVkFPRTlDazhLa2l1QmU3Mlp5U2NIVmZNZ3VJMFd1bWEx?=
- =?utf-8?B?SEV2VUpwUWFxSjF2TjZoTUdXYlpUKy9lZFpxQ0xrZGFQdyt2aEVKSlNpWkt4?=
- =?utf-8?B?TElWZHBhM2JiaEwzZEowSU1JVDJPZm1nWlV3elBoQjhHVk1RT1RheTZ3dFBQ?=
- =?utf-8?B?a0w0VzlWYWk3ZFk5UHBNRlRZRkxtVTFmMytxWlhja3ZuOU9mM3hzdlgvY2Jl?=
- =?utf-8?B?MkpIM0xzc2FzM1pEbkszaVdYU0tBVEV5TzY4NHFRcVNkT3ZndFRmQWk0YXFL?=
- =?utf-8?B?SmlyUHpkeHZnU1UrY3FVSzZ2WXJKT2h1ZmNqdVhMUk9GeGQwSDZCb3B5UU1y?=
- =?utf-8?B?Ui9KbUFidGloNnVYN1hxYnkySlBWQWY1WmZsUUhJTmtUWDRNQzlVbFpKK1ky?=
- =?utf-8?B?cmw3SzluMUwxWDBKY0FjSlVWZmtadFJiZStBM2E0NEs5eXVOREdmOWJia3k1?=
- =?utf-8?B?cGx6V2FOS2Ftejh5WHJVUGZjQ0c3bENsdEhJWWtlczZmSHI2SE1kalpHdnNP?=
- =?utf-8?B?VndmbzlwakpzWk1xTzdOYUhNTVpyREhEN1pVN0pRaFVEb0hkRktLelQ2Wm9k?=
- =?utf-8?B?SUcwOUdxSHVvQ1MxZUNNZVZSNm9kSUlpRTF4TzA5S1kxZzZTb2FCUzNlcWkr?=
- =?utf-8?B?cVJTVEp3TngybklWaDBDcklOcG1yQ2dTV2RYSEFCQ3k1M09lbDBaTTdwbjhx?=
- =?utf-8?B?SG9zVVlhZmR2ZWVGdnRlSGZ0Tm9ZRFlMNGdoMVBCUXJaSnZkRGdmWlJ3V0cz?=
- =?utf-8?B?STFXWHNGcG9VUVRMZWJDYmhEckdKV29BbVF3SW1IcThJZzVtSkxlNVFRYW9n?=
- =?utf-8?B?NllvWTBuVzh3bE1neE85MHllZVhwaGJGb3lwdEZZL2tNMXZIRE1KZzA3L280?=
- =?utf-8?B?U056aGxSNDB4KzhKSmx1UHZLQXhzM1M2Y1gzcFc2Y21ROUErTjRLeGRzeEUv?=
- =?utf-8?B?VnBCVDdyeUtXUTljSG40KzJNUS9VT2czLzNGa21LdUtmQmlBL05EUjVCRjlH?=
- =?utf-8?B?eWRtSTd1aDZIdzA1Zzl5TG11NHNvbVE2bDlHeDUwUzZyMWlXREtSSE03UG9R?=
- =?utf-8?B?NW5GQkxURGJoSFNydk9DWlB2UFV6VERIVDBUZCtiZnhISHJGeG9mVXZaZWZh?=
- =?utf-8?B?WlFBaEpQUHJkZlNXc2U2R3A5SEZmTDhWTnJNZUxGdGlVMnVXbWg4ZUZhMGc2?=
- =?utf-8?B?a1NJZzN4ZERwbGRLekFGdXU1MWNIQzdISjBNaDBCcU5tbmo0UUozc0ZHTzVW?=
- =?utf-8?B?NjR5T2ZuN1g0RTAxRzNxd1hFSFdqZzUrRHVtYmVDbU12U2JnWjhEMUNOS0pF?=
- =?utf-8?B?S3QvSVNxQVhUUzBHVU5sSjRBWDlwWGJ2Y2pSY2VmS0NoWUJEb21pSm83cnFt?=
- =?utf-8?B?RU04Vkh4YmEvZ3pGaTMxYkRadmR1R1BUSUN6MFZUbXd3d25TZkRZVjhXRi92?=
- =?utf-8?B?VTZhNTh3QjBiNitKN2FtZSttZHp3MTZlT1JNMnU1bjZWN3BYZ0FEVE5Sd3U3?=
- =?utf-8?B?NUNlSXlQZ2pDbzNZcVpWS0IydFJVVCtMeXF0Z0NWdjdlMzNhV1QrV09tTStn?=
- =?utf-8?B?ZUxFMnhxVitQK1Z0Y1dCRnQwSFhoN0cxWHBSOWx4bUpFRzcrT3pub2w3QXp5?=
- =?utf-8?B?eVZ5QVMrQi9KS0dPNUZzSlNYaGNWampLeHFZZjZxWVNvTVloQU53YTVsRVpk?=
- =?utf-8?Q?LVp0DINK5SK4A73XMn8TBVWv9?=
+	=?utf-8?B?K2o2bXZFOVplcWxycXVGNWl4c25zTjlXb3JBQ3RoNlNMaFVpYlo2NnZub2Vh?=
+ =?utf-8?B?R1ZIR1YxSGlGYitVeFhac0Rac0dCME9KUzJwV3VlNlBFdDBHVjlqaEdycUtj?=
+ =?utf-8?B?N0NiT3laL1JoNk54QVh6UndoNnlIai9TTDdZd1E3UHFOU081b090VTV6RjNL?=
+ =?utf-8?B?U01vZUdOSkpmQlJ3TDdTR1dUbkFMYWR6VjVETzZvNGZSbjNMS25WeEZERVVB?=
+ =?utf-8?B?MXRZMHlOWE1XUVFjWHRjc1RNajZWaXFrd0RzMStscEU3OTY3QkZYUXh6TWdt?=
+ =?utf-8?B?VmFyWHNpMHVSaGc3TEdHVFFtSDJVUWkxdlVobC9sbk1BMVlYUGFkbHpPQnAr?=
+ =?utf-8?B?QVZsak1iWHFVTGR0OExrcEtKOVlPNHhoUm9IVkJBZnZRSkZOdUZ4dU5Ba0p1?=
+ =?utf-8?B?dnpNdlRkUVc0MUxRTzFkZjJWNkFjMmhZVVh5cnVlWEZaMzhsS3JoSXJiVjF4?=
+ =?utf-8?B?VmxqVGZWOElTN3ZGWGxBUmVoczlTQU9walR3TWxFZVVQaklJSm1oUlN0K2ha?=
+ =?utf-8?B?NU5iVmRPc01WN3p5MlQ5b21tZ0J3bjg1MHpCYVU3K0Y1TlVTZXA5NFVWY2oz?=
+ =?utf-8?B?d1RvVWl3M0c4N3ZPMm1BOGw0Q2lrZ1J2R2Y4YkR0YVNDUXN3NEFxQmRORlQ3?=
+ =?utf-8?B?OFZ2WkdLdWFjRkpNamNLVTNMbTROZG1jZjBMbE96cXBMaFpHVGcyWEpGR0Yw?=
+ =?utf-8?B?SkRmdzJnS21lblRGYXNvTE9ZNkxkYjltU3dtVUk5SGU3TCtGRXNNWGhMUlhC?=
+ =?utf-8?B?RWFpclBQNVU5Y25ob1VtQXBrL21peW1QVndvTUtrYWJlTEtmeHczS3JmOW51?=
+ =?utf-8?B?eVJ3TmNVUkpod0xkamlIcXRrK0lHZXBhZVBVWWh6b2dKTDZMV3JHdHhvVHRR?=
+ =?utf-8?B?WjZXSmxIWnF4VHhHNHpiaHI1N3gxWW84MWZ5ak5YcjZTMmdYQWJxUUV2YkpB?=
+ =?utf-8?B?aVh1TjZteXZRK3Q5U1FkV01IOWUvWm1ZcDl1cHZHdHBKemFva05LaUdEU0d5?=
+ =?utf-8?B?MEZOUkFQZHJxeElKVEliWjMybUZwb2xTTmZQQWhaTkJQUzJPZEpCc211TjJG?=
+ =?utf-8?B?UnRLclFnQnBFUGVDZzEyWEo5a2R5MUdjMlNBRUtxQUZTMGFpWGNQcDBHUzlY?=
+ =?utf-8?B?YWxiVTU1azBNSHgvaEFDTURpcGpsVFFEWmxrWElSS1VLb0RFVFgydnF5NFNX?=
+ =?utf-8?B?YlFsWUJocjB3eURoNFM3cmhvTWp0ZHdCQVBlbWJrdlgzZ0QzYUVHSThXOUli?=
+ =?utf-8?B?aGtWV3I3L3JzS0hMVGdxQ2tRdUs5bVhUcEh1YWJ3aStJaFJPMndwdzN3YVhN?=
+ =?utf-8?B?QVNobTRmL0dOdm1kR0VicXVYcVBLeHAxa1RYUFRzekdyNHBsekZaRHVHbW1i?=
+ =?utf-8?B?cXdkQVRQTS9EZmZWN0pOZm9MblFmYVlhaDIvME91MlJNa3ZTVFFNMHIvNWlq?=
+ =?utf-8?B?eUM0WGtYTzBiN2JzRk9IUWI5d3RpM1o5VGNFdXppNnVKU0wwazlYaVdaNHNI?=
+ =?utf-8?B?MzVqRkgvVkUyczhEV2syN0VFQ0NxcXhIY25MeVR3ZmptL2hKYU5lQWNPZy81?=
+ =?utf-8?B?UEZOYWd0K29HNGRoaVBhcm0wbDhVSUUvd2orQ1hPMTRlSFhpeis3YUs2Y1Bh?=
+ =?utf-8?B?TnZqUmNqVGNCak1FcFJNQXBvWHVGaDcrWm1QYUV1RXNHamxrTGJjRzc1dGJF?=
+ =?utf-8?B?eWcyNDB5Y3J4TnAwRzVsdVlETGlPL2xYR0o0ZmRMRTZlQTBTTlVRTEFDQmQ1?=
+ =?utf-8?B?ajZPZkppSVZ5TVEyeEZCQnd1cEhUblo1eHhCbTNOSnhsaHFWWU9yK3JUOGw2?=
+ =?utf-8?B?SmRza2JRazhaQ3JsOW9odjhqbkY5cFh4RDM5dW5wWGJ5T2JrN2ZsUzMwbXg0?=
+ =?utf-8?B?NzNWV2ViNHRCOS9HWWpUaXQzK1JCNkRwNUhlWlFaZnl3L0F4dkxBN0d0WlVG?=
+ =?utf-8?B?SEQxVHQrTWRnd09QTi92bG9Tc0ZHNlFlQldubStYbFc0VVVVZk5ORGU5Zml2?=
+ =?utf-8?B?bHIrRXNjM2ltUHA2K0daQXRRSEpndDE2ay9PNFd4VmxxSUplK1c2UXNyR3NE?=
+ =?utf-8?B?aGpHbGsyNW8xRFFEUGpFM1cyMTRMYkJSVjRwVkgxVlNvQVVLOUdqTjkvMzdu?=
+ =?utf-8?Q?MT0h3T4OfkljLkcsZKD4Y+0VQ?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36abc83b-0dcc-46e8-5c9c-08dd3bd1cfec
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22bd704d-08de-474f-7a9e-08dd3bd24504
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 17:17:28.0273
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 17:20:44.5978
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pLk+2ghCfP+QHieQnnVMkl8dt0e9FhuThxisWxy5wWcnWzrsTDxXdOg/C/DnwXISYNc+YUh5wOjUZUrPXX0Mhg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /j6F9dAS0zpDAkSKFDwDSjsrxBWWCIKgQSBLNpd4I17DDfgQ2ja7MRFr2AEln2xOD+mxqS0BcObBgorZ9pTnyg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6890
 
 
 On 1/22/25 08:59, Dan Williams wrote:
-> The pending efforts to add CXL Accelerator (type-2) device [1], and
-> Dynamic Capacity (DCD) support [2], tripped on the
-> no-longer-fit-for-purpose design in the CXL subsystem for tracking
-> device-physical-address (DPA) metadata. Trip hazards include:
+> Now that the operational mode of DPA capacity (ram vs pmem... etc) is
+> tracked in the partition, and no code paths have dependencies on the
+> mode implying the partition index, the ambiguous 'enum cxl_decoder_mode'
+> can be cleaned up, specifically this ambiguity on whether the operation
+> mode implied anything about the partition order.
 >
-> - CXL Memory Devices need to consider a PMEM partition, but Accelerator
->    devices with CXL.mem likely do not in the common case.
+> Endpoint decoders simply reference their assigned partition where the
+> operational mode can be retrieved as partition mode.
 >
-> - CXL Memory Devices enumerate DPA through Memory Device mailbox
->    commands like Partition Info, Accelerators devices do not.
-
-
-Forgot to mention this one. Mailbox is optional for accelerators.
-
-
-So maybe "but this way is optional for accelerators, implying 
-accel-driver defined/hardcoded enumeration".
-
-
-
+> With this in place PMEM can now be partition0 which happens today when
+> the RAM capacity size is zero. Dynamic RAM can appear above PMEM when
+> DCD arrives, etc. Code sequences that hard coded the "PMEM after RAM"
+> assumption can now just iterate partitions and consult the partition
+> mode after the fact.
 >
-> - CXL Memory Devices that support DCD support more than 2 partitions.
->    Some of the driver algorithms are awkward to expand to > 2 partition
->    cases.
->
-> - DPA performance data is a general capability that can be shared with
->    accelerators, so tracking it in 'struct cxl_memdev_state' is no longer
->    suitable.
->
-> - Hardcoded assumptions around the PMEM partition always being index-1
->    if RAM is zero-sized or PMEM is zero sized.
->
-> - 'enum cxl_decoder_mode' is sometimes a partition id and sometimes a
->    memory property, it should be phased in favor of a partition id and
->    the memory property comes from the partition info.
->
-> Towards cleaning up those issues and allowing a smoother landing for the
-> aforementioned pending efforts, introduce a 'struct cxl_dpa_partition'
-> array to 'struct cxl_dev_state', and 'struct cxl_range_info' as a shared
-> way for Memory Devices and Accelerators to initialize the DPA information
-> in 'struct cxl_dev_state'.
->
-> For now, split a new cxl_dpa_setup() from cxl_mem_create_range_info() to
-> get the new data structure initialized, and cleanup some qos_class init.
-> Follow on patches will go further to use the new data structure to
-> cleanup algorithms that are better suited to loop over all possible
-> partitions.
->
-> cxl_dpa_setup() follows the locking expectations of mutating the device
-> DPA map, and is suitable for Accelerator drivers to use. Accelerators
-> likely only have one hardcoded 'ram' partition to convey to the
-> cxl_core.
->
-> Link: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com [1]
-> Link: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com [2]
 > Cc: Dave Jiang <dave.jiang@intel.com>
 > Cc: Alejandro Lucero <alucerop@amd.com>
 > Cc: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+
+Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+
+
 > ---
->   drivers/cxl/core/cdat.c      |   15 ++-----
->   drivers/cxl/core/hdm.c       |   75 +++++++++++++++++++++++++++++++++-
->   drivers/cxl/core/mbox.c      |   68 ++++++++++--------------------
->   drivers/cxl/core/memdev.c    |    2 -
->   drivers/cxl/cxlmem.h         |   94 +++++++++++++++++++++++++++++-------------
->   drivers/cxl/pci.c            |    7 +++
->   tools/testing/cxl/test/cxl.c |   15 ++-----
->   tools/testing/cxl/test/mem.c |    7 +++
->   8 files changed, 183 insertions(+), 100 deletions(-)
+>   drivers/cxl/core/cdat.c   |   21 ++-----
+>   drivers/cxl/core/core.h   |    4 +
+>   drivers/cxl/core/hdm.c    |   64 +++++++----------------
+>   drivers/cxl/core/memdev.c |   15 +----
+>   drivers/cxl/core/port.c   |   20 +++++--
+>   drivers/cxl/core/region.c |  128 +++++++++++++++++++++++++--------------------
+>   drivers/cxl/cxl.h         |   38 ++++---------
+>   drivers/cxl/cxlmem.h      |   20 -------
+>   8 files changed, 127 insertions(+), 183 deletions(-)
 >
 > diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index b177a488e29b..5400a421ad30 100644
+> index 5400a421ad30..ca7fb2b182ed 100644
 > --- a/drivers/cxl/core/cdat.c
 > +++ b/drivers/cxl/core/cdat.c
-> @@ -261,25 +261,18 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
->   	struct device *dev = cxlds->dev;
->   	struct dsmas_entry *dent;
->   	unsigned long index;
-> -	const struct resource *partition[] = {
-> -		to_ram_res(cxlds),
-> -		to_pmem_res(cxlds),
-> -	};
-> -	struct cxl_dpa_perf *perf[] = {
-> -		to_ram_perf(cxlds),
-> -		to_pmem_perf(cxlds),
-> -	};
+> @@ -571,29 +571,18 @@ static bool dpa_perf_contains(struct cxl_dpa_perf *perf,
+>   		.end = dpa_res->end,
+>   	};
 >   
->   	xa_for_each(dsmas_xa, index, dent) {
-> -		for (int i = 0; i < ARRAY_SIZE(partition); i++) {
-> -			const struct resource *res = partition[i];
-> +		for (int i = 0; i < cxlds->nr_partitions; i++) {
-> +			struct resource *res = &cxlds->part[i].res;
->   			struct range range = {
->   				.start = res->start,
->   				.end = res->end,
->   			};
+> -	if (!perf)
+> -		return false;
+> -
+>   	return range_contains(&perf->dpa_range, &dpa);
+>   }
 >   
->   			if (range_contains(&range, &dent->dpa_range))
-> -				update_perf_entry(dev, dent, perf[i]);
-> +				update_perf_entry(dev, dent,
-> +						  &cxlds->part[i].perf);
->   			else
->   				dev_dbg(dev,
->   					"no partition for dsmas dpa: %pra\n",
+> -static struct cxl_dpa_perf *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxled,
+> -					       enum cxl_decoder_mode mode)
+> +static struct cxl_dpa_perf *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxled)
+>   {
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct cxl_dpa_perf *perf;
+>   
+> -	switch (mode) {
+> -	case CXL_DECODER_RAM:
+> -		perf = to_ram_perf(cxlds);
+> -		break;
+> -	case CXL_DECODER_PMEM:
+> -		perf = to_pmem_perf(cxlds);
+> -		break;
+> -	default:
+> +	if (cxled->part < 0)
+>   		return ERR_PTR(-EINVAL);
+> -	}
+> +	perf = &cxlds->part[cxled->part].perf;
+>   
+>   	if (!dpa_perf_contains(perf, cxled->dpa_res))
+>   		return ERR_PTR(-EINVAL);
+> @@ -654,7 +643,7 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
+>   	if (cxlds->rcd)
+>   		return -ENODEV;
+>   
+> -	perf = cxled_get_dpa_perf(cxled, cxlr->mode);
+> +	perf = cxled_get_dpa_perf(cxled);
+>   	if (IS_ERR(perf))
+>   		return PTR_ERR(perf);
+>   
+> @@ -1060,7 +1049,7 @@ void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
+>   
+>   	lockdep_assert_held(&cxl_dpa_rwsem);
+>   
+> -	perf = cxled_get_dpa_perf(cxled, cxlr->mode);
+> +	perf = cxled_get_dpa_perf(cxled);
+>   	if (IS_ERR(perf))
+>   		return;
+>   
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 800466f96a68..22dac79c5192 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -72,8 +72,8 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+>   				   resource_size_t length);
+>   
+>   struct dentry *cxl_debugfs_create_dir(const char *dir);
+> -int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> -		     enum cxl_decoder_mode mode);
+> +int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
+> +		     enum cxl_partition_mode mode);
+>   int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
+>   int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>   resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 7a85522294ad..3f8a54ca4624 100644
+> index 591aeb26c9e1..bb478e7b12f6 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -327,9 +327,9 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> @@ -374,7 +374,6 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   	struct cxl_port *port = cxled_to_port(cxled);
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct device *dev = &port->dev;
+> -	enum cxl_decoder_mode mode;
+>   	struct resource *res;
+>   	int rc;
+>   
+> @@ -421,18 +420,6 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
 >   	cxled->dpa_res = res;
 >   	cxled->skip = skipped;
 >   
-> -	if (resource_contains(to_pmem_res(cxlds), res))
-> +	if (to_pmem_res(cxlds) && resource_contains(to_pmem_res(cxlds), res))
->   		cxled->mode = CXL_DECODER_PMEM;
-> -	else if (resource_contains(to_ram_res(cxlds), res))
-> +	else if (to_ram_res(cxlds) && resource_contains(to_ram_res(cxlds), res))
->   		cxled->mode = CXL_DECODER_RAM;
->   	else {
->   		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
-> @@ -342,6 +342,77 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> -	mode = CXL_DECODER_NONE;
+> -	for (int i = 0; cxlds->nr_partitions; i++)
+> -		if (resource_contains(&cxlds->part[i].res, res)) {
+> -			mode = cxl_part_mode(cxlds->part[i].mode);
+> -			break;
+> -		}
+> -
+> -	if (mode == CXL_DECODER_NONE)
+> -		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
+> -			 port->id, cxled->cxld.id, res);
+> -	cxled->mode = mode;
+> -
+>   	port->hdm_end++;
+>   	get_device(&cxled->cxld.dev);
 >   	return 0;
->   }
->   
-> +static int add_dpa_res(struct device *dev, struct resource *parent,
-> +		       struct resource *res, resource_size_t start,
-> +		       resource_size_t size, const char *type)
-> +{
-> +	int rc;
-> +
-> +	*res = (struct resource) {
-> +		.name = type,
-> +		.start = start,
-> +		.end =  start + size - 1,
-> +		.flags = IORESOURCE_MEM,
-> +	};
-> +	if (resource_size(res) == 0) {
-> +		dev_dbg(dev, "DPA(%s): no capacity\n", res->name);
-> +		return 0;
-> +	}
-> +	rc = request_resource(parent, res);
-> +	if (rc) {
-> +		dev_err(dev, "DPA(%s): failed to track %pr (%d)\n", res->name,
-> +			res, rc);
-> +		return rc;
-> +	}
-> +
-> +	dev_dbg(dev, "DPA(%s): %pr\n", res->name, res);
-> +
-> +	return 0;
-> +}
-> +
-> +/* if this fails the caller must destroy @cxlds, there is no recovery */
-> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
-> +{
-> +	struct device *dev = cxlds->dev;
-> +
-> +	guard(rwsem_write)(&cxl_dpa_rwsem);
-> +
-> +	if (cxlds->nr_partitions)
-> +		return -EBUSY;
-> +
-> +	if (!info->size || !info->nr_partitions) {
-> +		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
-> +		cxlds->nr_partitions = 0;
-> +		return 0;
-> +	}
-> +
-> +	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
-> +
-> +	for (int i = 0; i < info->nr_partitions; i++) {
-> +		const struct cxl_dpa_part_info *part = &info->part[i];
-> +		const char *desc;
-> +		int rc;
-> +
-> +		if (part->mode == CXL_PARTMODE_RAM)
-> +			desc = "ram";
-> +		else if (part->mode == CXL_PARTMODE_PMEM)
-> +			desc = "pmem";
-> +		else
-> +			desc = "";
-> +		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
-> +		cxlds->part[i].mode = part->mode;
-> +		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
-> +				 part->range.start, range_len(&part->range),
-> +				 desc);
-> +		if (rc)
-> +			return rc;
-> +		cxlds->nr_partitions++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_dpa_setup);
-> +
->   int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->   				resource_size_t base, resource_size_t len,
->   				resource_size_t skipped)
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 3502f1633ad2..62bb3653362f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1241,57 +1241,39 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+> @@ -585,40 +572,36 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
 >   	return rc;
 >   }
 >   
-> -static int add_dpa_res(struct device *dev, struct resource *parent,
-> -		       struct resource *res, resource_size_t start,
-> -		       resource_size_t size, const char *type)
-> +static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+> -int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> -		     enum cxl_decoder_mode mode)
+> +int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
+> +		     enum cxl_partition_mode mode)
 >   {
-> -	int rc;
-> +	int i = info->nr_partitions;
->   
-> -	res->name = type;
-> -	res->start = start;
-> -	res->end = start + size - 1;
-> -	res->flags = IORESOURCE_MEM;
-> -	if (resource_size(res) == 0) {
-> -		dev_dbg(dev, "DPA(%s): no capacity\n", res->name);
-> -		return 0;
-> -	}
-> -	rc = request_resource(parent, res);
-> -	if (rc) {
-> -		dev_err(dev, "DPA(%s): failed to track %pr (%d)\n", res->name,
-> -			res, rc);
-> -		return rc;
-> -	}
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct device *dev = &cxled->cxld.dev;
 > -
-> -	dev_dbg(dev, "DPA(%s): %pr\n", res->name, res);
-> +	if (size == 0)
-> +		return;
+> -	switch (mode) {
+> -	case CXL_DECODER_RAM:
+> -	case CXL_DECODER_PMEM:
+> -		break;
+> -	default:
+> -		dev_dbg(dev, "unsupported mode: %d\n", mode);
+> -		return -EINVAL;
+> -	}
+> +	int part;
 >   
-> -	return 0;
-> +	info->part[i].range = (struct range) {
-> +		.start = start,
-> +		.end = start + size - 1,
-> +	};
-> +	info->part[i].mode = mode;
-> +	info->nr_partitions++;
+>   	guard(rwsem_write)(&cxl_dpa_rwsem);
+>   	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
+>   		return -EBUSY;
+>   
+> -	/*
+> -	 * Only allow modes that are supported by the current partition
+> -	 * configuration
+> -	 */
+> -	if (mode == CXL_DECODER_PMEM && !cxl_pmem_size(cxlds)) {
+> -		dev_dbg(dev, "no available pmem capacity\n");
+> -		return -ENXIO;
+> +	part = -1;
+> +	for (int i = 0; i < cxlds->nr_partitions; i++)
+> +		if (cxlds->part[i].mode == mode) {
+> +			part = i;
+> +			break;
+> +		}
+> +
+> +	if (part < 0) {
+> +		dev_dbg(dev, "unsupported mode: %d\n", mode);
+> +		return -EINVAL;
+>   	}
+> -	if (mode == CXL_DECODER_RAM && !cxl_ram_size(cxlds)) {
+> -		dev_dbg(dev, "no available ram capacity\n");
+> +
+> +	if (!resource_size(&cxlds->part[part].res)) {
+> +		dev_dbg(dev, "no available capacity for mode: %d\n", mode);
+>   		return -ENXIO;
+>   	}
+>   
+> -	cxled->mode = mode;
+> +	cxled->part = part;
+>   	return 0;
 >   }
 >   
-> -int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
-> +int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
->   {
->   	struct cxl_dev_state *cxlds = &mds->cxlds;
-> -	struct resource *ram_res = to_ram_res(cxlds);
-> -	struct resource *pmem_res = to_pmem_res(cxlds);
->   	struct device *dev = cxlds->dev;
->   	int rc;
->   
->   	if (!cxlds->media_ready) {
-> -		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
-> -		*ram_res = DEFINE_RES_MEM(0, 0);
-> -		*pmem_res = DEFINE_RES_MEM(0, 0);
-> +		info->size = 0;
->   		return 0;
+> @@ -647,16 +630,9 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+>   		goto out;
 >   	}
 >   
-> -	cxlds->dpa_res = DEFINE_RES_MEM(0, mds->total_bytes);
-> +	info->size = mds->total_bytes;
+> -	part = -1;
+> -	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> -		if (cxled->mode == cxl_part_mode(cxlds->part[i].mode)) {
+> -			part = i;
+> -			break;
+> -		}
+> -	}
+> -
+> +	part = cxled->part;
+>   	if (part < 0) {
+> -		dev_dbg(dev, "partition %d not found\n", part);
+> +		dev_dbg(dev, "partition not set\n");
+>   		rc = -EBUSY;
+>   		goto out;
+>   	}
+> @@ -697,7 +673,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
 >   
->   	if (mds->partition_align_bytes == 0) {
-> -		rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
-> -				 mds->volatile_only_bytes, "ram");
+>   	if (size > avail) {
+>   		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+> -			cxl_decoder_mode_name(cxled->mode), &avail);
+> +			res->name, &avail);
+>   		rc = -ENOSPC;
+>   		goto out;
+>   	}
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index be0eb57086e1..615cbd861f66 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -198,17 +198,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+>   	int rc = 0;
+>   
+>   	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
+> -	if (cxl_pmem_size(cxlds)) {
+> -		const struct resource *res = to_pmem_res(cxlds);
+> -
+> -		offset = res->start;
+> -		length = resource_size(res);
+> -		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
 > -		if (rc)
 > -			return rc;
-> -		return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
-> -				   mds->volatile_only_bytes,
-> -				   mds->persistent_only_bytes, "pmem");
-> +		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
-> +		add_part(info, mds->volatile_only_bytes,
-> +			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
-> +		return 0;
->   	}
+> -	}
+> -	if (cxl_ram_size(cxlds)) {
+> -		const struct resource *res = to_ram_res(cxlds);
+> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> +		const struct resource *res = &cxlds->part[i].res;
 >   
->   	rc = cxl_mem_get_partition_info(mds);
-> @@ -1300,15 +1282,13 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+>   		offset = res->start;
+>   		length = resource_size(res);
+> @@ -217,7 +208,7 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+>   		 * Invalid Physical Address is not an error for
+>   		 * volatile addresses. Device support is optional.
+>   		 */
+> -		if (rc == -EFAULT)
+> +		if (rc == -EFAULT && cxlds->part[i].mode == CXL_PARTMODE_RAM)
+>   			rc = 0;
+>   	}
+>   	return rc;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 78a5c2c25982..f5f2701c8771 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -194,25 +194,35 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
+>   			 char *buf)
+>   {
+>   	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	/* without @cxl_dpa_rwsem, make sure @part is not reloaded */
+> +	int part = READ_ONCE(cxled->part);
+> +	const char *desc;
+> +
+> +	if (part < 0)
+> +		desc = "none";
+> +	else
+> +		desc = cxlds->part[part].res.name;
+>   
+> -	return sysfs_emit(buf, "%s\n", cxl_decoder_mode_name(cxled->mode));
+> +	return sysfs_emit(buf, "%s\n", desc);
+>   }
+>   
+>   static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
+>   			  const char *buf, size_t len)
+>   {
+>   	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
+> -	enum cxl_decoder_mode mode;
+> +	enum cxl_partition_mode mode;
+>   	ssize_t rc;
+>   
+>   	if (sysfs_streq(buf, "pmem"))
+> -		mode = CXL_DECODER_PMEM;
+> +		mode = CXL_PARTMODE_PMEM;
+>   	else if (sysfs_streq(buf, "ram"))
+> -		mode = CXL_DECODER_RAM;
+> +		mode = CXL_PARTMODE_RAM;
+>   	else
+>   		return -EINVAL;
+>   
+> -	rc = cxl_dpa_set_mode(cxled, mode);
+> +	rc = cxl_dpa_set_part(cxled, mode);
+>   	if (rc)
+>   		return rc;
+>   
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 9f0f6fdbc841..83b985d2ba76 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -144,7 +144,7 @@ static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
+>   	rc = down_read_interruptible(&cxl_region_rwsem);
+>   	if (rc)
+>   		return rc;
+> -	if (cxlr->mode != CXL_DECODER_PMEM)
+> +	if (cxlr->mode != CXL_PARTMODE_PMEM)
+>   		rc = sysfs_emit(buf, "\n");
+>   	else
+>   		rc = sysfs_emit(buf, "%pUb\n", &p->uuid);
+> @@ -441,7 +441,7 @@ static umode_t cxl_region_visible(struct kobject *kobj, struct attribute *a,
+>   	 * Support tooling that expects to find a 'uuid' attribute for all
+>   	 * regions regardless of mode.
+>   	 */
+> -	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_DECODER_PMEM)
+> +	if (a == &dev_attr_uuid.attr && cxlr->mode != CXL_PARTMODE_PMEM)
+>   		return 0444;
+>   	return a->mode;
+>   }
+> @@ -603,8 +603,16 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
+>   			 char *buf)
+>   {
+>   	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	const char *desc;
+>   
+> -	return sysfs_emit(buf, "%s\n", cxl_decoder_mode_name(cxlr->mode));
+> +	if (cxlr->mode == CXL_PARTMODE_RAM)
+> +		desc = "ram";
+> +	else if (cxlr->mode == CXL_PARTMODE_PMEM)
+> +		desc = "pmem";
+> +	else
+> +		desc = "";
+> +
+> +	return sysfs_emit(buf, "%s\n", desc);
+>   }
+>   static DEVICE_ATTR_RO(mode);
+>   
+> @@ -630,7 +638,7 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+>   
+>   	/* ways, granularity and uuid (if PMEM) need to be set before HPA */
+>   	if (!p->interleave_ways || !p->interleave_granularity ||
+> -	    (cxlr->mode == CXL_DECODER_PMEM && uuid_is_null(&p->uuid)))
+> +	    (cxlr->mode == CXL_PARTMODE_PMEM && uuid_is_null(&p->uuid)))
+>   		return -ENXIO;
+>   
+>   	div64_u64_rem(size, (u64)SZ_256M * p->interleave_ways, &remainder);
+> @@ -1875,6 +1883,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>   {
+>   	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct cxl_region_params *p = &cxlr->params;
+>   	struct cxl_port *ep_port, *root_port;
+>   	struct cxl_dport *dport;
+> @@ -1889,17 +1898,17 @@ static int cxl_region_attach(struct cxl_region *cxlr,
 >   		return rc;
 >   	}
 >   
-> -	rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
-> -			 mds->active_volatile_bytes, "ram");
-> -	if (rc)
-> -		return rc;
-> -	return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
-> -			   mds->active_volatile_bytes,
-> -			   mds->active_persistent_bytes, "pmem");
-> +	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
-> +	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
-> +		 CXL_PARTMODE_PMEM);
+> -	if (cxled->mode != cxlr->mode) {
+> -		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch: %d\n",
+> -			dev_name(&cxled->cxld.dev), cxlr->mode, cxled->mode);
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (cxled->mode == CXL_DECODER_DEAD) {
+> +	if (cxled->part < 0) {
+>   		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
+>   		return -ENODEV;
+>   	}
+>   
+> +	if (cxlds->part[cxled->part].mode != cxlr->mode) {
+> +		dev_dbg(&cxlr->dev, "%s region mode: %d mismatch\n",
+> +			dev_name(&cxled->cxld.dev), cxlr->mode);
+> +		return -EINVAL;
+> +	}
 > +
-> +	return 0;
->   }
-> -EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
->   
->   int cxl_set_timestamp(struct cxl_memdev_state *mds)
+>   	/* all full of members, or interleave config not established? */
+>   	if (p->state > CXL_CONFIG_INTERLEAVE_ACTIVE) {
+>   		dev_dbg(&cxlr->dev, "region already active\n");
+> @@ -2102,7 +2111,7 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
+>   void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
 >   {
-> @@ -1452,8 +1432,6 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
->   	mds->cxlds.reg_map.host = dev;
->   	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
->   	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
-> -	to_ram_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
-> -	to_pmem_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
->   
->   	return mds;
+>   	down_write(&cxl_region_rwsem);
+> -	cxled->mode = CXL_DECODER_DEAD;
+> +	cxled->part = -1;
+>   	cxl_region_detach(cxled);
+>   	up_write(&cxl_region_rwsem);
 >   }
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index c5f8320ed330..be0eb57086e1 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -80,7 +80,7 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+> @@ -2458,7 +2467,7 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
+>    */
+>   static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+>   					      int id,
+> -					      enum cxl_decoder_mode mode,
+> +					      enum cxl_partition_mode mode,
+>   					      enum cxl_decoder_type type)
 >   {
->   	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>   	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
+> @@ -2512,13 +2521,13 @@ static ssize_t create_ram_region_show(struct device *dev,
+>   }
+>   
+>   static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+> -					  enum cxl_decoder_mode mode, int id)
+> +					  enum cxl_partition_mode mode, int id)
+>   {
+>   	int rc;
+>   
+>   	switch (mode) {
+> -	case CXL_DECODER_RAM:
+> -	case CXL_DECODER_PMEM:
+> +	case CXL_PARTMODE_RAM:
+> +	case CXL_PARTMODE_PMEM:
+>   		break;
+>   	default:
+>   		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
+> @@ -2538,7 +2547,7 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+>   }
+>   
+>   static ssize_t create_region_store(struct device *dev, const char *buf,
+> -				   size_t len, enum cxl_decoder_mode mode)
+> +				   size_t len, enum cxl_partition_mode mode)
+>   {
+>   	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+>   	struct cxl_region *cxlr;
+> @@ -2559,7 +2568,7 @@ static ssize_t create_pmem_region_store(struct device *dev,
+>   					struct device_attribute *attr,
+>   					const char *buf, size_t len)
+>   {
+> -	return create_region_store(dev, buf, len, CXL_DECODER_PMEM);
+> +	return create_region_store(dev, buf, len, CXL_PARTMODE_PMEM);
+>   }
+>   DEVICE_ATTR_RW(create_pmem_region);
+>   
+> @@ -2567,7 +2576,7 @@ static ssize_t create_ram_region_store(struct device *dev,
+>   				       struct device_attribute *attr,
+>   				       const char *buf, size_t len)
+>   {
+> -	return create_region_store(dev, buf, len, CXL_DECODER_RAM);
+> +	return create_region_store(dev, buf, len, CXL_PARTMODE_RAM);
+>   }
+>   DEVICE_ATTR_RW(create_ram_region);
+>   
+> @@ -2665,7 +2674,7 @@ EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, "CXL");
+>   
+>   struct cxl_poison_context {
+>   	struct cxl_port *port;
+> -	enum cxl_decoder_mode mode;
+> +	int part;
+>   	u64 offset;
+>   };
+>   
+> @@ -2673,49 +2682,45 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
+>   				   struct cxl_poison_context *ctx)
+>   {
 >   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> -	unsigned long long len = resource_size(to_ram_res(cxlds));
-> +	unsigned long long len = cxl_ram_size(cxlds);
+> +	const struct resource *res;
+> +	struct resource *p, *last;
+>   	u64 offset, length;
+>   	int rc = 0;
 >   
->   	return sysfs_emit(buf, "%#llx\n", len);
+> +	if (ctx->part < 0)
+> +		return 0;
+> +
+>   	/*
+> -	 * Collect poison for the remaining unmapped resources
+> -	 * after poison is collected by committed endpoints.
+> -	 *
+> -	 * Knowing that PMEM must always follow RAM, get poison
+> -	 * for unmapped resources based on the last decoder's mode:
+> -	 *	ram: scan remains of ram range, then any pmem range
+> -	 *	pmem: scan remains of pmem range
+> +	 * Collect poison for the remaining unmapped resources after
+> +	 * poison is collected by committed endpoints decoders.
+>   	 */
+> -
+> -	if (ctx->mode == CXL_DECODER_RAM) {
+> -		offset = ctx->offset;
+> -		length = cxl_ram_size(cxlds) - offset;
+> +	for (int i = ctx->part; i < cxlds->nr_partitions; i++) {
+> +		res = &cxlds->part[i].res;
+> +		for (p = res->child, last = NULL; p; p = p->sibling)
+> +			last = p;
+> +		if (last)
+> +			offset = last->end + 1;
+> +		else
+> +			offset = res->start;
+> +		length = res->end - offset + 1;
+> +		if (!length)
+> +			break;
+>   		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> -		if (rc == -EFAULT)
+> -			rc = 0;
+> +		if (rc == -EFAULT && cxlds->part[i].mode == CXL_PARTMODE_RAM)
+> +			continue;
+>   		if (rc)
+> -			return rc;
+> -	}
+> -	if (ctx->mode == CXL_DECODER_PMEM) {
+> -		offset = ctx->offset;
+> -		length = resource_size(&cxlds->dpa_res) - offset;
+> -		if (!length)
+> -			return 0;
+> -	} else if (cxl_pmem_size(cxlds)) {
+> -		const struct resource *res = to_pmem_res(cxlds);
+> -
+> -		offset = res->start;
+> -		length = resource_size(res);
+> -	} else {
+> -		return 0;
+> +			break;
+>   	}
+>   
+> -	return cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +	return rc;
 >   }
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 78e92e24d7b5..15f549afab7c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -97,6 +97,25 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->   			 resource_size_t base, resource_size_t len,
->   			 resource_size_t skipped);
+>   
+>   static int poison_by_decoder(struct device *dev, void *arg)
+>   {
+>   	struct cxl_poison_context *ctx = arg;
+>   	struct cxl_endpoint_decoder *cxled;
+> +	enum cxl_partition_mode mode;
+> +	struct cxl_dev_state *cxlds;
+>   	struct cxl_memdev *cxlmd;
+>   	u64 offset, length;
+>   	int rc = 0;
+> @@ -2728,11 +2733,17 @@ static int poison_by_decoder(struct device *dev, void *arg)
+>   		return rc;
+>   
+>   	cxlmd = cxled_to_memdev(cxled);
+> +	cxlds = cxlmd->cxlds;
+> +	if (cxled->part < 0)
+> +		mode = CXL_PARTMODE_NONE;
+> +	else
+> +		mode = cxlds->part[cxled->part].mode;
+> +
+>   	if (cxled->skip) {
+>   		offset = cxled->dpa_res->start - cxled->skip;
+>   		length = cxled->skip;
+>   		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> -		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +		if (rc == -EFAULT && mode == CXL_PARTMODE_RAM)
+>   			rc = 0;
+>   		if (rc)
+>   			return rc;
+> @@ -2741,7 +2752,7 @@ static int poison_by_decoder(struct device *dev, void *arg)
+>   	offset = cxled->dpa_res->start;
+>   	length = cxled->dpa_res->end - offset + 1;
+>   	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
+> -	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +	if (rc == -EFAULT && mode == CXL_PARTMODE_RAM)
+>   		rc = 0;
+>   	if (rc)
+>   		return rc;
+> @@ -2749,7 +2760,7 @@ static int poison_by_decoder(struct device *dev, void *arg)
+>   	/* Iterate until commit_end is reached */
+>   	if (cxled->cxld.id == ctx->port->commit_end) {
+>   		ctx->offset = cxled->dpa_res->end + 1;
+> -		ctx->mode = cxled->mode;
+> +		ctx->part = cxled->part;
+>   		return 1;
+>   	}
+>   
+> @@ -2762,7 +2773,8 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
+>   	int rc = 0;
+>   
+>   	ctx = (struct cxl_poison_context) {
+> -		.port = port
+> +		.port = port,
+> +		.part = -1,
+>   	};
+>   
+>   	rc = device_for_each_child(&port->dev, &ctx, poison_by_decoder);
+> @@ -3206,14 +3218,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   {
+>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>   	struct cxl_port *port = cxlrd_to_port(cxlrd);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	struct range *hpa = &cxled->cxld.hpa_range;
+> +	int rc, part = READ_ONCE(cxled->part);
+>   	struct cxl_region_params *p;
+>   	struct cxl_region *cxlr;
+>   	struct resource *res;
+> -	int rc;
+> +
+> +	if (part < 0)
+> +		return ERR_PTR(-EBUSY);
+>   
+>   	do {
+> -		cxlr = __create_region(cxlrd, cxled->mode,
+> +		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
+>   				       atomic_read(&cxlrd->region_id));
+>   	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
+>   
+> @@ -3416,9 +3432,9 @@ static int cxl_region_probe(struct device *dev)
+>   		return rc;
+>   
+>   	switch (cxlr->mode) {
+> -	case CXL_DECODER_PMEM:
+> +	case CXL_PARTMODE_PMEM:
+>   		return devm_cxl_add_pmem_region(cxlr);
+> -	case CXL_DECODER_RAM:
+> +	case CXL_PARTMODE_RAM:
+>   		/*
+>   		 * The region can not be manged by CXL if any portion of
+>   		 * it is already online as 'System RAM'
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 4d0550367042..cb6f0b761b24 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -371,30 +371,6 @@ struct cxl_decoder {
+>   	void (*reset)(struct cxl_decoder *cxld);
+>   };
+>   
+> -/*
+> - * CXL_DECODER_DEAD prevents endpoints from being reattached to regions
+> - * while cxld_unregister() is running
+> - */
+> -enum cxl_decoder_mode {
+> -	CXL_DECODER_NONE,
+> -	CXL_DECODER_RAM,
+> -	CXL_DECODER_PMEM,
+> -	CXL_DECODER_DEAD,
+> -};
+> -
+> -static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+> -{
+> -	static const char * const names[] = {
+> -		[CXL_DECODER_NONE] = "none",
+> -		[CXL_DECODER_RAM] = "ram",
+> -		[CXL_DECODER_PMEM] = "pmem",
+> -	};
+> -
+> -	if (mode >= CXL_DECODER_NONE && mode < CXL_DECODER_DEAD)
+> -		return names[mode];
+> -	return "mixed";
+> -}
+> -
+>   /*
+>    * Track whether this decoder is reserved for region autodiscovery, or
+>    * free for userspace provisioning.
+> @@ -409,16 +385,16 @@ enum cxl_decoder_state {
+>    * @cxld: base cxl_decoder_object
+>    * @dpa_res: actively claimed DPA span of this decoder
+>    * @skip: offset into @dpa_res where @cxld.hpa_range maps
+> - * @mode: which memory type / access-mode-partition this decoder targets
+>    * @state: autodiscovery state
+> + * @part: partition index this decoder maps
+>    * @pos: interleave position in @cxld.region
+>    */
+>   struct cxl_endpoint_decoder {
+>   	struct cxl_decoder cxld;
+>   	struct resource *dpa_res;
+>   	resource_size_t skip;
+> -	enum cxl_decoder_mode mode;
+>   	enum cxl_decoder_state state;
+> +	int part;
+>   	int pos;
+>   };
+>   
+> @@ -503,6 +479,12 @@ struct cxl_region_params {
+>   	int nr_targets;
+>   };
 >   
 > +enum cxl_partition_mode {
 > +	CXL_PARTMODE_NONE,
@@ -493,237 +829,63 @@ accel-driver defined/hardcoded enumeration".
 > +	CXL_PARTMODE_PMEM,
 > +};
 > +
-> +#define CXL_NR_PARTITIONS_MAX 2
-> +
-> +struct cxl_dpa_info {
-> +	u64 size;
-> +	struct cxl_dpa_part_info {
-> +		struct range range;
-> +		enum cxl_partition_mode mode;
-> +	} part[CXL_NR_PARTITIONS_MAX];
-> +	int nr_partitions;
-> +};
-> +
-> +int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info);
-> +
->   static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
->   					 struct cxl_memdev *cxlmd)
->   {
-> @@ -408,6 +427,18 @@ struct cxl_dpa_perf {
->   	int qos_class;
->   };
->   
-> +/**
-> + * struct cxl_dpa_partition - DPA partition descriptor
-> + * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
-> + * @perf: performance attributes of the partition from CDAT
-> + * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
-> + */
-> +struct cxl_dpa_partition {
-> +	struct resource res;
-> +	struct cxl_dpa_perf perf;
+>   /*
+>    * Indicate whether this region has been assembled by autodetection or
+>    * userspace assembly. Prevent endpoint decoders outside of automatic
+> @@ -522,7 +504,7 @@ struct cxl_region_params {
+>    * struct cxl_region - CXL region
+>    * @dev: This region's device
+>    * @id: This region's id. Id is globally unique across all regions
+> - * @mode: Endpoint decoder allocation / access mode
+> + * @mode: Operational mode of the mapped capacity
+>    * @type: Endpoint decoder target type
+>    * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
+>    * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
+> @@ -535,7 +517,7 @@ struct cxl_region_params {
+>   struct cxl_region {
+>   	struct device dev;
+>   	int id;
+> -	enum cxl_decoder_mode mode;
 > +	enum cxl_partition_mode mode;
-> +};
-> +
->   /**
->    * struct cxl_dev_state - The driver device state
->    *
-> @@ -423,8 +454,8 @@ struct cxl_dpa_perf {
->    * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
->    * @media_ready: Indicate whether the device media is usable
->    * @dpa_res: Overall DPA resource tree for the device
-> - * @_pmem_res: Active Persistent memory capacity configuration
-> - * @_ram_res: Active Volatile memory capacity configuration
-> + * @part: DPA partition array
-> + * @nr_partitions: Number of DPA partitions
->    * @serial: PCIe Device Serial Number
->    * @type: Generic Memory Class device or Vendor Specific Memory device
->    * @cxl_mbox: CXL mailbox context
-> @@ -438,21 +469,47 @@ struct cxl_dev_state {
->   	bool rcd;
->   	bool media_ready;
->   	struct resource dpa_res;
-> -	struct resource _pmem_res;
-> -	struct resource _ram_res;
-> +	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
-> +	unsigned int nr_partitions;
->   	u64 serial;
->   	enum cxl_devtype type;
->   	struct cxl_mailbox cxl_mbox;
->   };
+>   	enum cxl_decoder_type type;
+>   	struct cxl_nvdimm_bridge *cxl_nvb;
+>   	struct cxl_pmem_region *cxlr_pmem;
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index bad99456e901..f218d43dec9f 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -97,12 +97,6 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>   			 resource_size_t base, resource_size_t len,
+>   			 resource_size_t skipped);
 >   
-> -static inline struct resource *to_ram_res(struct cxl_dev_state *cxlds)
-> +
-> +/* Static RAM is only expected at partition 0. */
-> +static inline const struct resource *to_ram_res(struct cxl_dev_state *cxlds)
-> +{
-> +	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
-> +		return NULL;
-> +	return &cxlds->part[0].res;
-> +}
-> +
-> +/*
-> + * Static PMEM may be at partition index 0 when there is no static RAM
-> + * capacity.
-> + */
-> +static inline const struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
-> +{
-> +	for (int i = 0; i < cxlds->nr_partitions; i++)
-> +		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
-> +			return &cxlds->part[i].res;
-> +	return NULL;
-> +}
-> +
-> +static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
->   {
-> -	return &cxlds->_ram_res;
-> +	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
-> +		return NULL;
-> +	return &cxlds->part[0].perf;
+> -enum cxl_partition_mode {
+> -	CXL_PARTMODE_NONE,
+> -	CXL_PARTMODE_RAM,
+> -	CXL_PARTMODE_PMEM,
+> -};
+> -
+>   #define CXL_NR_PARTITIONS_MAX 2
+>   
+>   struct cxl_dpa_info {
+> @@ -530,20 +524,6 @@ static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
+>   	return resource_size(res);
 >   }
 >   
-> -static inline struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
-> +static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
->   {
-> -	return &cxlds->_pmem_res;
-> +	for (int i = 0; i < cxlds->nr_partitions; i++)
-> +		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
-> +			return &cxlds->part[i].perf;
-> +	return NULL;
->   }
->   
->   static inline resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
-> @@ -499,8 +556,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
->    * @active_persistent_bytes: sum of hard + soft persistent
->    * @next_volatile_bytes: volatile capacity change pending device reset
->    * @next_persistent_bytes: persistent capacity change pending device reset
-> - * @_ram_perf: performance data entry matched to RAM partition
-> - * @_pmem_perf: performance data entry matched to PMEM partition
->    * @event: event log driver state
->    * @poison: poison driver state info
->    * @security: security driver state info
-> @@ -524,29 +579,12 @@ struct cxl_memdev_state {
->   	u64 next_volatile_bytes;
->   	u64 next_persistent_bytes;
->   
-> -	struct cxl_dpa_perf _ram_perf;
-> -	struct cxl_dpa_perf _pmem_perf;
-> -
->   	struct cxl_event_state event;
->   	struct cxl_poison_state poison;
->   	struct cxl_security_state security;
->   	struct cxl_fw_state fw;
->   };
->   
-> -static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
+> -/*
+> - * Translate the operational mode of memory capacity with the
+> - * operational mode of a decoder
+> - * TODO: kill 'enum cxl_decoder_mode' to obviate this helper
+> - */
+> -static inline enum cxl_decoder_mode cxl_part_mode(enum cxl_partition_mode mode)
 > -{
-> -	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
-> -
-> -	return &mds->_ram_perf;
+> -	if (mode == CXL_PARTMODE_RAM)
+> -		return CXL_DECODER_RAM;
+> -	if (mode == CXL_PARTMODE_PMEM)
+> -		return CXL_DECODER_PMEM;
+> -	return CXL_DECODER_NONE;
 > -}
 > -
-> -static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
-> -{
-> -	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
-> -
-> -	return &mds->_pmem_perf;
-> -}
-> -
->   static inline struct cxl_memdev_state *
->   to_cxl_memdev_state(struct cxl_dev_state *cxlds)
+>   static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
 >   {
-> @@ -860,7 +898,7 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->   int cxl_dev_state_identify(struct cxl_memdev_state *mds);
->   int cxl_await_media_ready(struct cxl_dev_state *cxlds);
->   int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
-> -int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
-> +int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
->   struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
->   void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->   				unsigned long *cmds);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 0241d1d7133a..47dbfe406236 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -900,6 +900,7 @@ __ATTRIBUTE_GROUPS(cxl_rcd);
->   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->   {
->   	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> +	struct cxl_dpa_info range_info = { 0 };
->   	struct cxl_memdev_state *mds;
->   	struct cxl_dev_state *cxlds;
->   	struct cxl_register_map map;
-> @@ -989,7 +990,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->   	if (rc)
->   		return rc;
->   
-> -	rc = cxl_mem_create_range_info(mds);
-> +	rc = cxl_mem_dpa_fetch(mds, &range_info);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_dpa_setup(cxlds, &range_info);
->   	if (rc)
->   		return rc;
->   
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 7f1c5061307b..ba3d48b37de3 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1001,26 +1001,19 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
->   	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->   	struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
-> -	const struct resource *partition[] = {
-> -		to_ram_res(cxlds),
-> -		to_pmem_res(cxlds),
-> -	};
-> -	struct cxl_dpa_perf *perf[] = {
-> -		to_ram_perf(cxlds),
-> -		to_pmem_perf(cxlds),
-> -	};
->   
->   	if (!cxl_root)
->   		return;
->   
-> -	for (int i = 0; i < ARRAY_SIZE(partition); i++) {
-> -		const struct resource *res = partition[i];
-> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
-> +		struct resource *res = &cxlds->part[i].res;
-> +		struct cxl_dpa_perf *perf = &cxlds->part[i].perf;
->   		struct range range = {
->   			.start = res->start,
->   			.end = res->end,
->   		};
->   
-> -		dpa_perf_setup(port, &range, perf[i]);
-> +		dpa_perf_setup(port, &range, perf);
->   	}
->   
->   	cxl_memdev_update_perf(cxlmd);
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 347c1e7b37bd..ed365e083c8f 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1477,6 +1477,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->   	struct cxl_dev_state *cxlds;
->   	struct cxl_mockmem_data *mdata;
->   	struct cxl_mailbox *cxl_mbox;
-> +	struct cxl_dpa_info range_info = { 0 };
->   	int rc;
->   
->   	mdata = devm_kzalloc(dev, sizeof(*mdata), GFP_KERNEL);
-> @@ -1537,7 +1538,11 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->   	if (rc)
->   		return rc;
->   
-> -	rc = cxl_mem_create_range_info(mds);
-> +	rc = cxl_mem_dpa_fetch(mds, &range_info);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_dpa_setup(cxlds, &range_info);
->   	if (rc)
->   		return rc;
->   
+>   	return dev_get_drvdata(cxl_mbox->host);
 >
