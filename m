@@ -1,388 +1,231 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44457155391
-	for <linux-cxl@vger.kernel.org>; Fri, 24 Jan 2025 17:30:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9990719E975;
+	Fri, 24 Jan 2025 17:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737739844; cv=none; b=dD/DwJFppeOoG1KugN46TkJ3XJAEQEnZS5pVHoiHe/yRUNKlcBB2+5+NZVjdSncuRHoiLDq1NQbr6IbIcCqM0zAfyf96pQTCgFyGQWZwFEsRfIee5TVRJdS2xtgJ6iZbPwnMamtUx7zmrfoVVhe1vEznVKVc8uYSkYJQtRuwtxU=
+	t=1737740448; cv=none; b=TtzDUeg8cvngoX8g4gOzBlrNwLK5izg4YPqNurcEU1ujr++NNZI/cJNBcBDHAyK7tVML0ic72w3c+rRLHmQ1VRR2Sgr8VoVqFaRS3bjHpbUgOe/uS+OmmMoyG3Ui3lTXblK54i+EW4OSXLVnMnPjhKGMKssRYS3QHfKl3kxxIp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737739844; c=relaxed/simple;
-	bh=nT3LUwBBpjUh1eXB/pwpPSVihXPm8ab5XJtb0em6Us8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YNhDZwAKh2MOt6Ft+J73aGIWpnGtp9FaeJC8X2+QWZEWq+S9Vc54SdW9toXvPUXrfnIgrRQwV71DMvLPbwDDj1Cx+Ap2MZ+g1nZRTL9mpkzAaEJFsJvyaDbEsbk/msgHl6SQ0emRUqemTda6cGe+BsthL/Wqm7QJf/ef77F/JSU=
+	s=arc-20240116; t=1737740448; c=relaxed/simple;
+	bh=RsDS9JAJ96wtXm5kgmzArXOFjtjTUPZiuCbiZphKpBQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OgzVdiN70RPDAqDPareNpU6yCvvfDlT6fonN72340jcQpqGxQUxwCHQAeh/U6svsroVyqKGet2+sAFWJMKp0XReUKW2RyjXy1qeVNYvlfSndkT7mW9xboR8h4aLzF0N+kWN43SRqGdeVMm/OBxdda9HOvQJk3swOSMfsjvuUv5A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YflCX4Jmjz6L58F;
-	Sat, 25 Jan 2025 01:28:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YflR705Dcz6M4Rs;
+	Sat, 25 Jan 2025 01:38:43 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 404931402DB;
-	Sat, 25 Jan 2025 01:30:40 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 24 Jan 2025 18:30:39 +0100
+	by mail.maildlp.com (Postfix) with ESMTPS id D76C01400D4;
+	Sat, 25 Jan 2025 01:40:41 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 24 Jan
+ 2025 18:40:40 +0100
+Date: Fri, 24 Jan 2025 17:40:39 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-CC: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>, Alexandre Iooss
-	<erdnaxe@crans.org>, Mahmoud Mandour <ma.mandourr@gmail.com>, Pierrick
- Bouvier <pierrick.bouvier@linaro.org>, <linuxarm@huawei.com>, Niyas Sait
-	<niyas.sait@huawei.com>
-Subject: [RFC PATCH QEMU x3/3] contrib: Add example hotness monitoring unit server
-Date: Fri, 24 Jan 2025 17:29:05 +0000
-Message-ID: <20250124172905.84099-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250124172905.84099-1-Jonathan.Cameron@huawei.com>
-References: <20250124172905.84099-1-Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linxuarm@huawei.com>
+CC: <tongtiangen@huawei.com>, Yicong Yang <yangyicong@huawei.com>, "Niyas
+ Sait" <niyas.sait@huawei.com>, <ajayjoshi@micron.com>, Vandana Salve
+	<vsalve@micron.com>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Price
+	<gourry@gourry.net>, Huang Ying <ying.huang@intel.com>
+Subject: Re: [RFC PATCH 0/4] CXL Hotness Monitoring Unit perf driver
+Message-ID: <20250124174039.00006940@huawei.com>
+In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-This is used inconjuction with the cache plugin (with port
-parameter supplied) and the CXL Type 3 device with a hotness
-monitoring unit (chmu-port parameter supplied).
+On Thu, 21 Nov 2024 10:18:41 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-It implements a very basic oracle with a counter per 4KiB page
-and simple loop to find large counts.  The hotlist length is
-controlled by the QEMU device implementation.
+> The CXL specification release 3.2 is now available under a click through at
+> https://computeexpresslink.org/cxl-specification/ and it brings new
+> shiny toys.
 
-This is only responsible for the data handling events etc are
-a problem for the CXL HMU emulation.
+PoC of qemu plugin based approach to getting real data:
+https://lore.kernel.org/qemu-devel/20250124172905.84099-1-Jonathan.Cameron@huawei.com/
 
-Note that when running this things are fairly slow.
+Also available on gitlab.com/jic23/qemu cxl-2025-01-24
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- contrib/hmu/hmu.c | 312 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 312 insertions(+)
+I have a minor revision to this driver to post after a spec clarification on units
+of one parameter. Will do that next week but for now that PoC ignores the parameter
+anyway :)
 
-diff --git a/contrib/hmu/hmu.c b/contrib/hmu/hmu.c
-new file mode 100644
-index 0000000000..aa47efd98b
---- /dev/null
-+++ b/contrib/hmu/hmu.c
-@@ -0,0 +1,312 @@
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <pthread.h>
-+#include <arpa/inet.h>
-+
-+#define ID_PROVIDER 42
-+#define ID_CONSUMER 41
-+
-+/* Move to shared header */
-+enum consumer_request {
-+    QUERY_TAIL,
-+    QUERY_HEAD,
-+    SET_HEAD,
-+    SET_HOTLIST_SIZE,
-+    QUERY_HOTLIST_ENTRY,
-+    SIGNAL_EPOCH_END,
-+    SET_ENABLED,
-+    SET_NUMBER_GRANUALS,
-+    SET_HPA_BASE,
-+    SET_HPA_SIZE,
-+};
-+
-+struct tracking_instance {
-+    uint64_t base, size;
-+    uint16_t head, tail;
-+    uint16_t hotlist_length;
-+    uint64_t *hotlist;
-+    int32_t *counters;
-+    size_t num_counters;
-+    bool enabled;
-+};
-+
-+#define MAX_INSTANCES 16
-+static int num_tracking_instances;
-+static struct tracking_instance *instances[MAX_INSTANCES] = {};
-+/*
-+ * Instances never removed so this only protects the index against
-+ * parallel creations.
-+ */
-+pthread_mutex_t instances_lock;
-+static int register_tracker(struct tracking_instance *inst)
-+{
-+    pthread_mutex_lock(&instances_lock);
-+    if (num_tracking_instances >= MAX_INSTANCES) {
-+        pthread_mutex_unlock(&instances_lock);
-+        return -1;
-+    }
-+    instances[num_tracking_instances++] = inst;
-+    printf("registered %d\n", num_tracking_instances);
-+    pthread_mutex_unlock(&instances_lock);
-+    return 0;
-+}
-+
-+static void notify_tracker(struct tracking_instance *inst, uint64_t paddr)
-+{
-+    uint64_t offset;
-+
-+    if (paddr < inst->base || paddr >= inst->base + inst->size) {
-+        return;
-+    }
-+    /* Fixme: multiple regions */
-+    offset = (paddr - inst->base) / 4096;
-+
-+    /*  TODO - check masking */
-+
-+    if (!inst->counters) {
-+        printf("No counter storage\n");
-+        return;
-+    }
-+    if (offset >= inst->num_counters) {
-+        printf("out of range? %lx %lx\n", offset, inst->num_counters);
-+        return;
-+    }
-+    inst->counters[offset]++;
-+}
-+
-+/* CHMU instance in QEMU */
-+static void *provider_innerloop(void * _socket)
-+{
-+    int socket = *(int *)_socket;
-+    uint64_t paddr;
-+    int rc;
-+
-+    printf("Provider connected\n");
-+    while (1) {
-+        rc = read(socket, &paddr, sizeof(paddr));
-+        if (rc == 0) {
-+            return NULL;
-+        }
-+       /* Lock not taken as instances only goes up which should be safe */
-+        for (int i = 0; i < num_tracking_instances; i++)
-+            if (instances[i]->enabled) {
-+                notify_tracker(instances[i], paddr);
-+            }
-+    }
-+}
-+
-+
-+/* Cache plugin hopefully squirting us some data */
-+static void *consumer_innerloop(void *_socket)
-+{
-+    int socket = *(int *)_socket;
-+    /* for now all chmu have 3 instances */
-+    struct tracking_instance insts[3] = {};
-+    /* Instance, command, parameter */
-+    uint64_t paddr[3];
-+    int rc;
-+
-+    for (int i = 0; i < 3; i++) {
-+        rc = register_tracker(&insts[i]);
-+        if (rc) {
-+            printf("Failed to register tracker\n");
-+            return NULL;
-+            /* todo cleanup to not have partial trackers registered */
-+        }
-+    }
-+    printf("Consumer connected\n");
-+
-+    while (1) {
-+        uint64_t reply, param;
-+        enum consumer_request request;
-+
-+        struct tracking_instance *inst;
-+
-+        rc = read(socket, paddr, sizeof(paddr));
-+        if (rc < sizeof(paddr)) {
-+            printf("short message %x\n", rc);
-+            return NULL;
-+        }
-+        if (paddr[0] > 3) {
-+            printf("garbage\n");
-+            exit(-1);
-+        }
-+        inst = &insts[paddr[0]];
-+        request = paddr[1];
-+        param = paddr[2];
-+
-+        switch (request) {
-+        case QUERY_TAIL:
-+            reply = inst->tail;
-+            break;
-+        case QUERY_HEAD:
-+            reply = inst->head;
-+            break;
-+        case SET_HEAD:
-+            reply = param;
-+            inst->head = param;
-+            break;
-+        case SET_HOTLIST_SIZE: {
-+            uint64_t *newlist;
-+            reply = param;
-+            inst->hotlist_length = param;
-+            newlist = realloc(inst->hotlist, sizeof(*inst->hotlist) * param);
-+            if (!newlist) {
-+                printf("failed to allocate hotlist\n");
-+                break;
-+            }
-+            inst->hotlist = newlist;
-+            break;
-+        }
-+        case QUERY_HOTLIST_ENTRY:
-+            if (param >= inst->hotlist_length) {
-+                printf("out of range hotlist read?\n");
-+                break;
-+            }
-+            reply = inst->hotlist[param];
-+            break;
-+        case SIGNAL_EPOCH_END: {
-+            int space;
-+            int added = 0;
-+            printf("into epoch end\n");
-+            reply = param;
-+
-+            if (insts->tail > inst->head) {
-+                space = inst->tail - inst->head;
-+            } else {
-+                space = inst->hotlist_length - inst->tail +
-+                    inst->head;
-+            }
-+            if (!inst->counters) {
-+                printf("How did we reach end of an epoque without counters?\n");
-+                break;
-+            }
-+            for (int i = 0; i < inst->num_counters; i++) {
-+                if (!(inst->counters[i] > 0)) {
-+                    continue;
-+                }
-+                inst->hotlist[inst->tail] =
-+                    (uint64_t)inst->counters[i] | ((uint64_t)i << 32);
-+                printf("added hotlist element %lx at %u\n",
-+                       inst->hotlist[inst->tail], inst->tail);
-+                inst->tail = (inst->tail + 1) % inst->hotlist_length;
-+                added++;
-+                if (added == space) {
-+                    break;
-+                }
-+            }
-+            memset(inst->counters, 0,
-+                   inst->num_counters * sizeof(*inst->counters));
-+
-+            printf("End of epoch %u %u\n", inst->head, inst->tail);
-+            /* Overflow hadnling based on fullness detection in qemu */
-+            break;
-+        }
-+        case SET_ENABLED:
-+            reply = param;
-+            inst->enabled = !!param;
-+            printf("enabled? %d\n", inst->enabled);
-+            break;
-+        case SET_NUMBER_GRANUALS: { /* FIXME Should derive from granual size */
-+            uint32_t *newcounters;
-+
-+            reply = param;
-+            newcounters = realloc(inst->counters,
-+                                  sizeof(*inst->counters) *
-+                                  param);
-+            if (!newcounters) {
-+                printf("Failed to allocate counter storage\n");
-+            }
-+            printf("allocated space for %lu counters\n", param);
-+            inst->counters = newcounters;
-+            inst->num_counters = param;
-+            break;
-+        }
-+        case SET_HPA_BASE:
-+            reply = param;
-+            inst->base = param;
-+            break;
-+        case SET_HPA_SIZE: /* Size */
-+            reply = param;
-+            inst->size = param;
-+            break;
-+        default:
-+            printf("No idea yet\n");
-+            break;
-+        }
-+        write(socket, &reply, sizeof(reply));
-+    }
-+}
-+
-+int main(int argc, char **argv)
-+{
-+    int server_fd, new_socket;
-+    struct sockaddr_in address;
-+    int opt = 1;
-+    int addrlen = sizeof(address);
-+    uint64_t paddr;
-+    unsigned short port;
-+
-+    if (argc < 2) {
-+        printf("Please provide port to listen on\n");
-+        return -1;
-+    }
-+    port = atoi(argv[1]);
-+
-+    if ((server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == 0) {
-+        return -1;
-+    }
-+
-+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
-+                   &opt, sizeof(opt))) {
-+        return -1;
-+    }
-+    address.sin_family = AF_INET;
-+    address.sin_addr.s_addr = INADDR_ANY;
-+    address.sin_port = htons(port);
-+
-+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-+        return -1;
-+    }
-+
-+    printf("Listening on port %u\n", port);
-+    if (listen(server_fd, 3) < 0) {
-+        return -1;
-+    }
-+
-+    while (1) {
-+        int rc;
-+        pthread_t thread;
-+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-+                                 (socklen_t *)&addrlen)) < 0) {
-+            exit(-1);
-+        }
-+
-+        rc = read(new_socket, &paddr, sizeof(paddr));
-+        if (rc == 0) {
-+            return 0;
-+        }
-+
-+        if (paddr == ID_PROVIDER) {
-+            if (pthread_create(&thread, NULL, provider_innerloop,
-+                               &new_socket)) {
-+                printf("thread create fail\n");
-+            };
-+        } else if (paddr == ID_CONSUMER) {
-+            if (pthread_create(&thread, NULL, consumer_innerloop,
-+                               &new_socket)) {
-+                printf("thread create fail\n");
-+            };
-+        } else {
-+            printf("No idea what this was - initial value not provider or consumer\n");
-+            close(new_socket);
-+            return 0;
-+        }
-+    }
-+
-+    return 0;
-+}
--- 
-2.43.0
+Hopefully a cleaned up version of the above will provide us with a useful
+platform for algorithm and framework development. I've posted it early as
+there is a fundamental question for the QEMU maintainers on how they
+would prefer the plugin interaction to be done - once that's resolved it's
+just a question of wiring up more parameters and providing additional
+options for the actual counting implementation. For now it's an oracle
+with 32 bit counters for every page.  Hardware folk tell me that might be
+a 'little too expensive'!
+
+It's not even that slow :)
+
+Jonathan
+> 
+> RFC reason
+> - Whilst trace capture with a particular configuration is potentially useful
+>   the intent is that CXL HMU units will be used to drive various forms of
+>   hotpage migration for memory tiering setups. This driver doesn't do this
+>   (yet), but rather provides data capture etc for experimentation and
+>   for working out how to mostly put the allocations in the right place to
+>   start with by tuning applications.
+> 
+> CXL r3.2 introduces a CXL Hotness Monitoring Unit definition. The intent
+> of this is to provide a way to establish which units of memory (typically
+> pages or larger) in CXL attached memory are hot. The implementation details
+> and algorithm are all implementation defined. The specification simply
+> describes the 'interface' which takes the form of ring buffer of hotness
+> records in a PCI BAR and defined capability, configuration and status
+> registers.
+> 
+> The hardware may have constraints on what it can track, granularity etc
+> and on how accurately it tracks (e.g. counter exhaustion, inaccurate
+> trackers). Some of these constraints are discoverable from the hardware
+> registers, others such as loss of accuracy have no universally accepted
+> measures as they are typically access pattern dependent. Sadly it is
+> very unlikely any hardware will implement a truly precise tracker given
+> the large resource requirements for tracking at a useful granularity.
+> 
+> There are two fundamental operation modes:
+> 
+> * Epoch based. Counters are checked after a period of time (Epoch) and
+>   if over a threshold added to the hotlist.
+> * Always on. Counters run until a threshold is reached, after that the
+>   hot unit is added to the hotlist and the counter released.
+> 
+> Counting can be filtered on:
+> 
+> * Region of CXL DPA space (256MiB per bit in a bitmap).
+> * Type of access - Trusted and non trusted or non trusted only, R/W/RW
+> 
+> Sampling can be modified by:
+> 
+> * Downsampling including potentially randomized downsampling.
+> 
+> The driver presented here is intended to be useful in its own right but
+> also to act as the first step of a possible path towards hotness monitoring
+> based hot page migration. Those steps might look like.
+> 
+> 1. Gather data - drivers provide telemetry like solutions to get that
+>    data. May be enhanced, for example in this driver by providing the
+>    HPA address rather than DPA Unit Address. Userspace can access enough
+>    information to do this so maybe not.
+> 2. Userspace algorithm development, possibly combined with userspace
+>    triggered migration by PA. Working out how to use different levels
+>    of constrained hardware resources will be challenging.
+> 3. Move those algorithms in kernel. Will require generalization across
+>    different hotpage trackers etc.
+> 
+> So far this driver just gives access to the raw data. I will probably kick
+> of a longer discussion on how to do adaptive sampling needed to actually
+> use these units for tiering etc, sometime soon (if no one one else beats
+> me too it).  There is a follow up topic of how to virtualize this stuff
+> for memory stranding cases (VM gets a fixed mixture of fast and slow
+> memory and should do it's own tiering).
+> 
+> More details in the Documentation patch but typical commands are:
+> 
+> $perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+>  hotness_threshold=1024,epoch_multiplier=4,epoch_scale=4,range_base=0,\
+>  range_size=1024,randomized_downsampling=0,downsampling_factor=32,\
+>  hotness_granual=12
+> 
+> $perf report --dump-raw-traces
+> 
+> Example output.  With a counter_width of 16 (0x10) the least significant
+> 4 bytes are the counter value and the unit index is bits 16-63.
+> Here all units are over the threshold and the indexes are 0,1,2 etc.
+> 
+> . ... CXL_HMU data: size 33512 bytes
+> Header 0: units: 29c counter_width 10
+> Header 1 : deadbeef
+> 0000000000000283
+> 0000000000010364
+> 0000000000020366
+> 000000000003033c
+> 0000000000040343
+> 00000000000502ff
+> 000000000006030d
+> 000000000007031a
+> 
+> Which will produce a list of hotness entries.
+> Bits[N-1:0] counter value
+> Bits[63:N] Unit ID (combine with unit size and DPA base + HDM decoder
+>   config to get to a Host Physical Address)
+> 
+> Specific RFC questions.
+> - What should be in the header added to the aux buffer.
+>   Currently just the minimum is provided. Number of records
+>   and the counter width needed to decode them.
+> - Should we reset the counters when doing sampling "-F X"
+>   If the frequency is higher than the epoch we never see any hot units.
+>   If so, when should we reset them?
+> 
+> Note testing has been light and on emulation only + as perf tool is
+> a pain to build on a striped back VM,  build testing has all be on
+> arm64 so far.  The driver loads though on both arm64 and x86 so
+> any problems are likely in the perf tool arch specific code
+> which is build tested (on wrong machine)
+> 
+> The QEMU emulation needs some cleanup, but I should be able to post
+> that shortly to let people actually play with this.  There are lots
+> of open questions there on how 'right' we want the emulation to be
+> and what counting uarch to emulate.
+> 
+> Jonathan Cameron (4):
+>   cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
+>   cxl: Hotness Monitoring Unit via a Perf AUX Buffer.
+>   perf: Add support for CXL Hotness Monitoring Units (CHMU)
+>   hwtrace: Document CXL Hotness Monitoring Unit driver
+> 
+>  Documentation/trace/cxl-hmu.rst     | 197 +++++++
+>  Documentation/trace/index.rst       |   1 +
+>  drivers/cxl/Kconfig                 |   6 +
+>  drivers/cxl/Makefile                |   3 +
+>  drivers/cxl/core/Makefile           |   1 +
+>  drivers/cxl/core/core.h             |   1 +
+>  drivers/cxl/core/hmu.c              |  64 ++
+>  drivers/cxl/core/port.c             |   2 +
+>  drivers/cxl/core/regs.c             |  14 +
+>  drivers/cxl/cxl.h                   |   5 +
+>  drivers/cxl/cxlpci.h                |   1 +
+>  drivers/cxl/hmu.c                   | 880 ++++++++++++++++++++++++++++
+>  drivers/cxl/hmu.h                   |  23 +
+>  drivers/cxl/pci.c                   |  26 +-
+>  tools/perf/arch/arm/util/auxtrace.c |  58 ++
+>  tools/perf/arch/x86/util/auxtrace.c |  76 +++
+>  tools/perf/util/Build               |   1 +
+>  tools/perf/util/auxtrace.c          |   4 +
+>  tools/perf/util/auxtrace.h          |   1 +
+>  tools/perf/util/cxl-hmu.c           | 367 ++++++++++++
+>  tools/perf/util/cxl-hmu.h           |  18 +
+>  21 files changed, 1748 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/trace/cxl-hmu.rst
+>  create mode 100644 drivers/cxl/core/hmu.c
+>  create mode 100644 drivers/cxl/hmu.c
+>  create mode 100644 drivers/cxl/hmu.h
+>  create mode 100644 tools/perf/util/cxl-hmu.c
+>  create mode 100644 tools/perf/util/cxl-hmu.h
+> 
 
