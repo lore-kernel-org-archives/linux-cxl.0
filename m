@@ -1,98 +1,98 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1C21D5AAE
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jan 2025 23:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804191991A8
+	for <linux-cxl@vger.kernel.org>; Fri, 24 Jan 2025 00:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737676581; cv=fail; b=LaibMOvlS3w/pS5/HG6AgT0kMchnHS4lwlu5mMyQbTDdUykRYAhA1mFKqlkukxVPeWDjm3W89UxUIrzr59wNy6Bws99/Hr/PpYr/cnO8q/CDEy35f9DrI1iNidEJ8iwWhejGDYpJ3UxFOehueFmFq9s0pjq3gcbSrY4tKFNh77k=
+	t=1737678636; cv=fail; b=I+VLdO9zsNU9pv5mzBf6Tc5ZCsHU05KGa6IrEuGWiWVvvupFnsObprheGJhTrI4nnGmewHUS3rcXDbMUAUapQT8JLo7gH6aV4ZHafRNjGjJu/qW3ihlzu50hwYx+crcIdxfQ4KjyqA917jAcWaH3DLPf1Kt8UmbJs6G79RhgAXE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737676581; c=relaxed/simple;
-	bh=MJKML6LhC4Zj/+W3jsoPehi6F40UwfxdcPq9gPRy0pw=;
+	s=arc-20240116; t=1737678636; c=relaxed/simple;
+	bh=SU82zeLL8OqJuedWvZME25D/7RMhHoz0zp25jc6EEXU=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pM32YnNMQBJ3PESXy087AcB3WzCnYAcEhgsFzMpexRJWilIR2ybc1GESAH/Gc0wMuMBO4awagKcgSd2xsSZRhFbTIXMC/LTsdHoG+HN2I1XwmhoEXw2ARxBWddB98eXbSio3KYL428uP0TlE3Su3dvebHD1MnzvTF5QTKsOlTeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHGz8kOr; arc=fail smtp.client-ip=198.175.65.21
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XxotUSeWbVSiw4gEgG8ypDGCrZDubFYaZ1ismqt1Xzvd1LtletsDYqlITygw45viP5j8RU57Uud3+Rh700s/4k5O29iuIYfI8nnWM/gm96K1W5ubjXESiuTW0xgiMA434MQWb3SP9MYAPNXKmD6AgPHaA3AVHCcqqw+klX+vxac=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gKIkpD69; arc=fail smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHGz8kOr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gKIkpD69"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737676580; x=1769212580;
+  t=1737678635; x=1769214635;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=MJKML6LhC4Zj/+W3jsoPehi6F40UwfxdcPq9gPRy0pw=;
-  b=NHGz8kOrkdnICccOOHMin1X64t6yo3/WqwMBRVInLsuOmCoH1AkDDiAD
-   T7T0pQbkS3Ht7ncuup1RPlBPw7QzRo6PL44w05UuiTqq+2izpRteK1ySc
-   R41Jgl4XgY+UmdittCN6lGwa7HiupMOJYVZxJpNwZ7jFFi27ywTtflXKs
-   ZZmtCLpYGZV/4pP6LYN1XhAN2zmL5oqcmJg7Dz0LOPFqlL5wZJU4NCtyd
-   HZwWfMda0FigyScZGIBTCrLpqMWgQP57a10GBsC6KOMsSZHb2e7PH8qrB
-   lTBpL3hCtD7tyFhk1k3CSdrXUbaslOgOLkCKoUJ0KZYPZpDSVCy3JMBaq
+  bh=SU82zeLL8OqJuedWvZME25D/7RMhHoz0zp25jc6EEXU=;
+  b=gKIkpD69ocpk7td1yaBU85Fi4z5rhERRS9kiTGXSy35/KynWXIRcDpBf
+   vU6xnhqr8GKc6h5KL68ADAiUhpA/ULCiRD6FWSvgvBRvPIvssDsEf/jQJ
+   NKwp2YcXMmqKLudOQLnfI1Pf4lu2tE3PAnawT3mQGVIor1sAGSdhWZVfD
+   agAFj11RD2k58GI8mCkARHGr22meB26OHDbyxOl8gaHsmDZTHJ/i+9/Jj
+   YChYD87msiEB6Re4cuKjFpJBnTGO2EGKb+n5ga15YTc3e3P1W26/idsiP
+   iACp4NMwjczK6hehcVkRCMAoO18Dmw1bF0NAiYiHZ2dqDz8S1WrDdOjV7
    A==;
-X-CSE-ConnectionGUID: QZdaeuFnQqGznOOFhUFbiA==
-X-CSE-MsgGUID: Jv3VvKs1S7ya2eZSD0h0tA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="38093848"
+X-CSE-ConnectionGUID: 0V1ySIEWRXSMtDCBqrt/eA==
+X-CSE-MsgGUID: 5K6X8/J9QnKcXZz5JZBk/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="38097496"
 X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="38093848"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 15:55:56 -0800
-X-CSE-ConnectionGUID: kLaCt4o9QMy7/mLe1Rh5tA==
-X-CSE-MsgGUID: D6iSVfm9RauZpDycSg6CrQ==
+   d="scan'208";a="38097496"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 16:30:27 -0800
+X-CSE-ConnectionGUID: T3cv3ZVeS7Wp27xetv40Cw==
+X-CSE-MsgGUID: Hsx6f+C9S2ubSpB4S9ju7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,229,1732608000"; 
-   d="scan'208";a="107419932"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Jan 2025 15:55:55 -0800
+   d="scan'208";a="108161123"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Jan 2025 16:30:22 -0800
 Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 23 Jan 2025 15:55:53 -0800
+ 15.1.2507.44; Thu, 23 Jan 2025 16:30:21 -0800
 Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
  orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 23 Jan 2025 15:55:53 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.44 via Frontend Transport; Thu, 23 Jan 2025 16:30:21 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 23 Jan 2025 15:55:53 -0800
+ 15.1.2507.44; Thu, 23 Jan 2025 16:30:21 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=atekiOUsHcngcwsjlnyX6Cmz2hk2bz5Z2a9rDBYB8d1pWg0Qi78jwqgZgTszznX//t77KSQE4qj8Cv4Ukd/sBYkzssONLCyL4jEMoAIQFWRDedxTPMZDGM4P9aEhmtPD69/kkrjlUCBhU04zsT/YlI68vvnOReWKhPj+tI4Q8MycaDwv7SJEdIF0RV+JuFlwCmg6WWriR9cCjBB8Sp6tEBZD/Yk7yGtNPmmosd+ryooFggpkDtl86rWPooD91JRj0SZudiNF1o/kuxiO527DXL2QaJoZ/z+JZXDcZ5h0hVYMBbM1wwKgvMZsJ8ykO9TRy6B7ZrSv1AiKPpCtFC/Tyg==
+ b=j2GBpjDihUlwys3cV4pEoodTUlTjA/FexC6aXYSkNuLAOwKPHP6pxS+iq6MjLD8IjWBxC2dn/DDNahtaQno1xVPi+5vvJAF4MQtkDpk6HMx4M6y+NZVSHuA39QBN2zf4A8MQTC9XitkZn+D1tj2xjCB4yxirTWSEmDLNf31wZxzgIKOwPwKtL1WCpP378+iSL1Pr7zqgWdxfvOj0Kwo9dmK5ufQGoaw9v4U0RIwty1K0z0bbBQLm5xC5FMt3vBleZ5kbPl2JiLp6vJGiuVa0ncLQ1jUFWCBeVRjEMw8Q8vGFyGkVkM5YPz5umKrzxwCofhPW/aUFLOmLwDYnOqOssw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0SKRAtlFoxShxpn48UTTDZ85HsndkBy5q1PQKhZxFck=;
- b=aw4QPgg6Jl1oko1k5TaLWAwU3L0DlfEF9QHfqBho37Y+Yt7mDWNbNONBeWomDmKlPRNlTZ8ayad/leqhBWddcyHL8PZh2nOv4Gib1/j5jQqO7T4m3JcEhEJN9Y3HbOFDmVAGsalodzJouw1zA+LEHFWTCAgYsKeyzwnOGvt25YLkDW5P8swiXDeo+50g+p6vrM+7HhVAStJrnAw5d51A6HLyp2NEG/dn0y+H9QqQMQdX6yWdxATXuIdGUWaqchRkdXkSna4Y5mrgO+h9Na/YrKwD2QutmUV0YsVrldWEHASu/v2V970QSvOjpRG+4Eqx7iHo4hJ50FxKUouTTFeOFg==
+ bh=2cg/xjxVnYFqYTs2OR5rx2Ct7I+xmYoMh7s/YshDHP8=;
+ b=rngxPW2lRLlELgcXAxYZI+P0vpXhTkBz34d66zBX4O8hvJSpP0wsoMqbPyznMgFO9tdj+IExKeiJqIY2U5O7rBBvmISx/AeyTV5hJT8dC7O54mhJ9lKeIo37EGwdOMjk58imfJNw8WMJGGtykoVZJ3gpBzaChlI+7HAFL0pN/9Lbd/o8dEEpzMmGVRA1cRzfj46hn4qpogRAo29it/t71uUhYFf4LczKAH4xa9bPz/F45O7McDrdj5lsBTa0fSq4gd0AKCMlAoQ8T3zpnD6mpJu5MKbeDJlS3iO2Nb9Uky4g3r5O1VxprhVLPbfiCh5zRjumFJLvlgYrXio/ISj/Lg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB7580.namprd11.prod.outlook.com (2603:10b6:8:148::21) with
+ by LV8PR11MB8534.namprd11.prod.outlook.com (2603:10b6:408:1f7::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.18; Thu, 23 Jan
- 2025 23:55:38 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Fri, 24 Jan
+ 2025 00:30:20 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8377.009; Thu, 23 Jan 2025
- 23:55:38 +0000
-Date: Thu, 23 Jan 2025 15:55:32 -0800
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8377.009; Fri, 24 Jan 2025
+ 00:30:20 +0000
+Date: Thu, 23 Jan 2025 16:30:17 -0800
 From: Dan Williams <dan.j.williams@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
 CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
 	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
 	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
 	<shiju.jose@huawei.com>
-Subject: Re: [PATCH v1 03/19] cxl: Enumerate feature commands
-Message-ID: <6792d6f4599eb_20fa294e0@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH v1 04/19] cxl: Add Get Supported Features command for
+ kernel usage
+Message-ID: <6792df1982a19_20fa294db@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20250122235159.2716036-1-dave.jiang@intel.com>
- <20250122235159.2716036-4-dave.jiang@intel.com>
+ <20250122235159.2716036-5-dave.jiang@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250122235159.2716036-4-dave.jiang@intel.com>
-X-ClientProxiedBy: MW2PR16CA0048.namprd16.prod.outlook.com
- (2603:10b6:907:1::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <20250122235159.2716036-5-dave.jiang@intel.com>
+X-ClientProxiedBy: MW2PR16CA0001.namprd16.prod.outlook.com (2603:10b6:907::14)
+ To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -100,139 +100,212 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7580:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1ca80d8-3d73-44be-be6b-08dd3c096fa1
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV8PR11MB8534:EE_
+X-MS-Office365-Filtering-Correlation-Id: 733307bf-3813-4fb1-7810-08dd3c0e4873
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?fSv7ecPFR4mIAGDbai8GEKVHO1+p7KUZ/2vGMhfjaEtEiXEQU8259rSuFxTC?=
- =?us-ascii?Q?eH21rMgx0ihv6Plu4MCFn63m1s6FwZF9Q5Y6G96QQ4GQvbFp6ptWOTwHhvNa?=
- =?us-ascii?Q?q6iVAh1JnqkizWV3h0PdROFz1M1JQBuaO8etsgga5BYSHdws84fZoOPf7wCD?=
- =?us-ascii?Q?+lmbRsytsauRvA3GA51EDej329YScZQ97GqEXoUxcImWFVs+qh6aHhlqVwS3?=
- =?us-ascii?Q?JbU9zNpKrgPjbYVHpAx/bp7d5gJZRj+cHHjloCnx9Ocxwl3LUk38llI98U9y?=
- =?us-ascii?Q?EPNWR4bAYwEUnZEXPF3Kb9zOIE13PtgITfYvs68dRkqzOGo/AHTL8xBhx7V0?=
- =?us-ascii?Q?BM7tmrYZuJ6wNWnfEyUYuAsCp/EmQZWYQ80FPSMeDxozI8krtqRjPjRNyKiV?=
- =?us-ascii?Q?mUqF0s6im0xGyOeJHfCux6X3MdPdKplIuPnVfiZjV7DLmZVzNjhBrvWiXh6E?=
- =?us-ascii?Q?Pgpx6LiX2iDeEak87BcKFu/8M5u11CZ3c38TlUTl8gH9ePJOoVQHKEY9Bf4n?=
- =?us-ascii?Q?oZuGvHQF0ECilGykNckkX3eXwdeoRlrvnxtCbRGxIBewnB8GsF4HGvPQGn/l?=
- =?us-ascii?Q?gZwLJoP5FwxzConduaMcXrCy3XIxmayhYOJRZfgvGBhW9rP7c10T7GcvrO/U?=
- =?us-ascii?Q?/OUVnSFgBkWf7nKWeeCRJG8koDMjc/CkhjHsuIkhz31rcJ+h2IbRbzlqfdfE?=
- =?us-ascii?Q?3Wn1TnkyQQANRT8oAg2N8WoIr4pNG6rT8kv7j7kMZuiCOS7TSoHhe2TUXGzM?=
- =?us-ascii?Q?HdEB45B+NzGgedM2npdm5ZgvlQGaSZXR5jK3V0SxTB0HZOkszVd/LMD5Hmwf?=
- =?us-ascii?Q?MbxqNVVnLIDnJ8jlmz2ZUuMaFTY6+rSQueW6BoJa3NNHSz0RDJWNJcHrvM6y?=
- =?us-ascii?Q?aZPNm1gmFk7MfIndd+bt/gjaCnLDYelaG3KtbiQSXtrlYUiB2ooK9eLVfaGE?=
- =?us-ascii?Q?E9Zn1y18N52zScJe2sMImLXzdlbVo5ZqWMen9gVr61sk8iemNoKxmEjYKhag?=
- =?us-ascii?Q?JGwoe6CDLIJ8kqp8Vqc4egUbA9mMz0NE1Ee7B2f8GN66bSx+Pt9+wqZ89wrt?=
- =?us-ascii?Q?+8LJbcd/J+RX3Xpvp4MgpvTzUzfIN0x1AW+P4tRlnKth2uMjy17uc1tlWyR1?=
- =?us-ascii?Q?xuc76qbQzcHWuMWeoqdJsITxWs5EASW+ZAfnZ6gxI+7UYW4COmRqJ/C7vKTU?=
- =?us-ascii?Q?cCoJ2wUOGHhtFNO9hhIO/bJraFfur2N2Q2dw6Gb5q/RM1clVRd7rJoeVdoZQ?=
- =?us-ascii?Q?H9CDehXg3Ll4M+JrbI4WlcncdAk4NCoRO3m/lV3pg21WsxO3oLREfzlFV/tx?=
- =?us-ascii?Q?iTGbtmWPZ3h31+A+3JyvKveV788S8PEiOnsi4J71HiD13A=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ko3pRtKDVyIzQGbvV2zIvrBuwl6lOmIk4N3DfpTEnksViylHwBrR27tzKPZB?=
+ =?us-ascii?Q?BMe23kDI9MGUEvIdXTT9lUleJwpLGyYq0lsK4U6sZQS06NSByRyZpFUFi0/O?=
+ =?us-ascii?Q?2gY5U+GYGECYe1flWQgnbro1EcP73ZY3NOmv1PUhLEVc8cCElABZFJOSrm8N?=
+ =?us-ascii?Q?6CCkEzLfrPm+JIEPIiJIxQxOzfcFPcIqDoe1wipKoUlFGknEs0ReBczy85xP?=
+ =?us-ascii?Q?zFfgrA+GLubGtuKZecLgmlmtDC00vOx3ZVkPeVXm0NU2aCF7ahzkeYoAlJq9?=
+ =?us-ascii?Q?K3KMfz22apJh/JJWVH2s7AQokA92tnkm4h7JRQHxWtw18px3Ru1FGry/A5zY?=
+ =?us-ascii?Q?zYSUsl04vkzEGpFH7lSRp38cEbTOkkJSvYxV/YbBrJmafGl/26ik1Un9KhgR?=
+ =?us-ascii?Q?Xd6AGYh1Bh3OjUF4eQcguOd9qkZd/16XovpbPpVBZ4r6R3QadJ2Ib1kjxBK3?=
+ =?us-ascii?Q?pLofO13LPhoBHm42fcYqzTBzHsGimG1kdDnkkpdV74DbY16L+bm8k+ezf94R?=
+ =?us-ascii?Q?1MedR048FZUtoJd1yg08TpORTgeNyXRsBlCk9XNPVts84tt5G/dROUAIbXiP?=
+ =?us-ascii?Q?9Is+NrEUce6eQRAZF9M35ukWXJU4REt3hAOzpmckBQK1dAh2ehsDpkpgO0O3?=
+ =?us-ascii?Q?XdN1GyLf4j1KxZTwFGyMTF3H07Lo3mL3MwsqZbL9P1vY4taR2eBHQeUC4T2c?=
+ =?us-ascii?Q?fNB6MglvqUg8dq1CK7eISWgZGfloSR18aENFUx4V+Lw+hyoy9x5tJk9NuqqX?=
+ =?us-ascii?Q?1BaPqeoghzgQQGqlsoTeSxlyFv0obFh/6lp41ugESESmHXJAb4ND3RCtxviM?=
+ =?us-ascii?Q?OK9mnNslx6whOfoGepDzM6kW9BNeBzEKftffVMgN+2WOGs1nt55c4OugQ/3F?=
+ =?us-ascii?Q?j3T2CSadyc4hzFL/4leVGZsIg3KgWZbIMiXOurJkqzPmQ/VIkDFKJyqVlvP/?=
+ =?us-ascii?Q?K/FQDla4oGIUUi+UAp4Bs/6aLPIRKz1/64weLWv0m2FhlLn0gbWYMdObcdU7?=
+ =?us-ascii?Q?zyp6DOoVjwBEEUqs2vmPWlZUnnodaZySBRdJhocBvcWiZBBMLCbX3FHGqXuY?=
+ =?us-ascii?Q?WiZwOgkKxGk5Bm5F495ifZCfn3kHzO69pywau5Y88lKbcbZmDPL7yKAbJWyR?=
+ =?us-ascii?Q?qG+IqrfNtiFdQWi6OhEQreVATtwxrRpwtp0qKA/1xat6eWfH3jlgO5Cs88rA?=
+ =?us-ascii?Q?sFw+hQU1XMC584elV8+FaaWg6OnltBWE/PO+UgzTrQzX0FNYeQSszFfAFDgK?=
+ =?us-ascii?Q?wrkjbKOUnMqvuEcSRpdyqRvchQwnYKwotSuwtwGYkkvh9CJPJsoVK1IKwY11?=
+ =?us-ascii?Q?Td75CC6a96z4J+xcvFuRP0l++LX/oD2lVFyGxGNIvMcrUvNBcXh9YPApGcF+?=
+ =?us-ascii?Q?gU5xMjSes2soDSVBl51oRZ73jzME?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DPCxhsyBitX0yW9+jpl3cX6MCIxA/juqrnrWmgVuN0YfP/inWCyEBF6IHLWL?=
- =?us-ascii?Q?rpb03LGs+17dPMl/ysVXSRkGFPK3knhPPK3E3v3yRCJDZ6Q8AlOAzDwk3lme?=
- =?us-ascii?Q?7LrnSbIyW64hRcqesruu49CeCs5DwzrXDHbs0WJ+iNalzPr6CyS5BX8IrOkU?=
- =?us-ascii?Q?KZn2XgQFYU5nKmw3ydXyz7bwUduXhQg9f1D0moimlcmO89H1tL8lsYchHf4b?=
- =?us-ascii?Q?cuQCSjWFOO0It/QDq3IN/7IyUQYC4Z7Hq+PRQ2AcxSU3/2XxMB0p3rmU4Ase?=
- =?us-ascii?Q?XngFSnZ2L7p0hPoAk33IrcetHWfr6lhncOpLDvNMejU2/5Of4BHGxNZtMsEz?=
- =?us-ascii?Q?gElgmOJVAfmgN95qrxzyT/yy6JAdjT0+ZQhjilapx3OMkzkC3EECCKNIcz6I?=
- =?us-ascii?Q?/X8IEPkmjbDT9k4rFKZfIrc4Y7iVPz4CXuOg9nkFUpqA32kqKAxa34O0DQOk?=
- =?us-ascii?Q?RjBH+sananfHK9fzN0CUWDlpR/Yk+ku85/ewHWQ59qeEtNnLIfMjcwNUao3w?=
- =?us-ascii?Q?lptToX6YjwWldzlVgW9VPhgP4KhFrGCLQE8qVAOA6O2ps9xlSnTf+V9eYW5k?=
- =?us-ascii?Q?zJN0m5O8Ck2smOSiumHUceuNniQ4v4felx/xpl2ffEGAagr/XO2RaL2jjsRQ?=
- =?us-ascii?Q?nMa7GgvTNPj1n3Kh8x+Aw/IDx6VCOv8BX43hB1MjjVKF00sv10CESEyV2mR9?=
- =?us-ascii?Q?CMi+1DGyDt/+q34ymrxrdh2++vJ4lCIHURmkXrS13QolRxe4j3TEcWSR1VhV?=
- =?us-ascii?Q?kvryBg0OQ6t8H59CikRb4lMRGxmzTEgcgO9tNe7tKjfBLqiW8cJLXxKhQpM/?=
- =?us-ascii?Q?7LHmF1ncBn/1LR46wYsJV2SaOIDOY+NzsLe1QbuTGDgltTmPPtGPQTHWGMgM?=
- =?us-ascii?Q?DX9Cl7cgUb2dgm8RKknILgUrgepCcAbTqGgUlS51s/NA2t9bDoyeCqQyCQkq?=
- =?us-ascii?Q?r9cuaedvKV/kMoxWVmO/h8Lg1ZN/JqdeScuzp5VpPONqtBFENRenxlPy2Rfv?=
- =?us-ascii?Q?+EkebIkbPOw39f+ffk8GG1w23Pkpy0mGpG36FagQ+l9TUaHSMse2VasSPxb8?=
- =?us-ascii?Q?IZ01c/riwT2YOW5KB4llj3baB7KW6Lf7iVVduuog6MnNLnPKI7hJ18okc58h?=
- =?us-ascii?Q?+ePhq9+MCIUN/Aifv5iQQwi8vSLCzd/gGOAxVav3gRTqZH5EoCeW8IUvpVs4?=
- =?us-ascii?Q?S59ZfdssfufjtAY4aoKu/NQtsWJOi4vxUZFjS7RHe40rj3hbC/tyYJD9gCPe?=
- =?us-ascii?Q?DcQZuK0PixHKB1skEyn8UQxHdMv3Ryi2DGhaswViLeP0LloA6p8ui14RXZt0?=
- =?us-ascii?Q?pkEX30RjbAasseTl7OjVDBglaY2PG7NRXMwKLFN5J/pC+363spC4Gc33tCN0?=
- =?us-ascii?Q?z9WBTT+IsyyzFZENWwA1B1wxpJrkTxmM1A89aAYK7IiPnhsb8x6m3ejtbb0i?=
- =?us-ascii?Q?72K85/jrPLnUtofbCrkH7j/bOWOHs6811ameqsBi8e2qH1G/fTa2OKEpHCQQ?=
- =?us-ascii?Q?9g/shQZ8IJCHozPjh5bxdHR8cXRpecDvTvbqR/phRvWg8FAkN/BLgcw1dG0M?=
- =?us-ascii?Q?qN1i4mcvyaoHktcr47QZvkW7m4owtewRvMURmvcRhZ/wulAbpNLt1eydkWJ3?=
- =?us-ascii?Q?Mw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1ca80d8-3d73-44be-be6b-08dd3c096fa1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9L4RwhemnmbtcOtHMvaLB/NvNIfJAX3NJLxyhFpUHIb/9ZofGhyLMBACo5gQ?=
+ =?us-ascii?Q?xrIW1m573ynpZF9RQSiYX8awBxA8lE1ULQIKRhzPZx03W47V5U8uFpZz4N+M?=
+ =?us-ascii?Q?BjGqJnBtAp5+bqT3lTbHHDeHytvoFl2YHOnbxdiSX8F6mfLFsaOo0osM4XuN?=
+ =?us-ascii?Q?evPUyQjy1+xVfWT5kNg3O/VvmU3P7PhBY6jRs2SBwOgGwFEqSDWBY4Uq06N4?=
+ =?us-ascii?Q?6pTDZW58d+vr7SilrP7dyWNZCWPQXlg7ajZIuKC0TWe6lu6g+IeRvwWrHVPo?=
+ =?us-ascii?Q?y/mH+xONf2wSqiDkfF6rHFcKDcX5NeHHlI5bkeX2PK05r/D1UMrRPXapfs9G?=
+ =?us-ascii?Q?EkSvsEMPXskaOTPNUmD0a/gbgFjtW0VMdtSv02cP76Norj9WF+fkrbMDGNwz?=
+ =?us-ascii?Q?2fTewpwuTWpckwKfj6rOMR1n0Qt8QdKYmtmWtTZlqTmqqGpw1281T1GjoBUB?=
+ =?us-ascii?Q?dEuyaNfykZbMBYHOBX+FGp11p7rri/cD4eX65SuiNWtZriQodt/1p/vudayx?=
+ =?us-ascii?Q?Nh58dzewrTw9N/m43QFbRCUh9E4UC/cLf8yRAu+uaefsde9jX+iZrRqPKDhC?=
+ =?us-ascii?Q?BL/1Zg9O++qkyq7Kxl5u1kdhgAXo8l95Xo0Lfs1x8PqOAbMZ/qO0MMFksPv+?=
+ =?us-ascii?Q?CWZnoxy7filFzbMnXtnXN98BTmXW2vXyYMSViwxNJOBuUeog7BH+I3dF4PJI?=
+ =?us-ascii?Q?fpBqq0WTQR9nLjVSwjVoYnwGCxYh50u4zzCEMnE8TN301aJN0zzodQZJ/AIO?=
+ =?us-ascii?Q?XhgHJf+TNKra2R+Tq7jW0hpbuUp2bN8IQ9tOpCHX5NujXnR7QjVm/FLNRjwh?=
+ =?us-ascii?Q?WJBfjyWApnTJu9UGwdlwxcPY1TlbJnoNJILzOaBcz+WOo/ii/xXsmHxfJTKj?=
+ =?us-ascii?Q?dDMh9ubE2pbKNWovhdV7DhjGqwtovsz8DOXrAKoRQCG9TNF/4i4vSvQsGEmG?=
+ =?us-ascii?Q?pB+KK3aBffanwkuSD02FMhjeMW2rp9qrO8bXp4/KKK+byEhIImGoCu8UL6WP?=
+ =?us-ascii?Q?+hlSXAFEUOKLSNJ6I22SDnQIGcibzGhP9P+FXP1G1B/oyAOKkiWdukwP+GC5?=
+ =?us-ascii?Q?RyUY1G39bocVhEc+WHBhjpW0eUv8wTwb6Dngq1apoy4Ok6NU2u33lz7b4kPf?=
+ =?us-ascii?Q?9oj2Ef7/8tfvWpA3pgyZCU6JQaORYn280c2eFEsuuaxAyCGKJO8mjj/cWJdM?=
+ =?us-ascii?Q?TDsaFcaJX6U6aPLLDMXlDS0TKHWvJcKYlA5Cn8CiE02Gk7lLQaAmJ9MYEEEn?=
+ =?us-ascii?Q?v8+UV9p2GfYHpSiDjme8Qqvuh97iPa3MNT4wu9KBXc0qijFr90RhVkW8MKiv?=
+ =?us-ascii?Q?QfY45oUEoGGsKBm6XBg8bKYkQp9rpCgba9bcT4Uu2EsGSTBtyOojghqZlGv3?=
+ =?us-ascii?Q?5gDSXBo2cAkLWJJC04JHFsS450PTVMyVIgDU/KXUicQgwIbOHXovDZIY/+Nb?=
+ =?us-ascii?Q?1mJaU8t1trcbQXj4azFLE2rslfP07Br8+HDxTsXnPlWUof22n6BFRPHdS5v5?=
+ =?us-ascii?Q?OsJe3Umd5IZsBGCy8Cvl9sNyQQ7WAQCpXUuzCIyLItLCd9ic7vPL7mX5P33e?=
+ =?us-ascii?Q?xLP5eyHA4DhZmJkip0hk5dLo6HTuwL423YGNlg/mMjmpWE+Th3kogL11Hod3?=
+ =?us-ascii?Q?WQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 733307bf-3813-4fb1-7810-08dd3c0e4873
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 23:55:38.3324
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2025 00:30:20.1183
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JqP2+MCzcnn/QFzS0EKnuI/U7x0F+PC8Cj/IN11N9KxAoY0f5lvOoCurnTytrsPidigUBdQgeBIphcryIMthImQqXbmMhA/OHoGNirbYm3A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7580
+X-MS-Exchange-CrossTenant-UserPrincipalName: er0Hk4fOPTWNTDc4f4yr0p6tA4X6j1aMay0MCpmX0nYhmQ2yaJtK0Nf3mpM2wxNdGcMd9rroLwbNaSkZmvqyjX3tAtogkSoN2f2tFZ7Dx3w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8534
 X-OriginatorOrg: intel.com
 
 Dave Jiang wrote:
-> Add feature commands enumeration code in order to detect and enumerate
-> the 3 feature related commands "get supported features", "get feature",
-> and "set feature". The enumeration will help determine whether the driver
-> can issue any of the 3 commands to the device.
-
+> CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+> The command retrieve the list of supported device-specific features
+> (identified by UUID) and general information about each Feature.
 > 
+> The driver will retrieve the feature entries in order to make checks and
+> provide information for the Get Feature and Set Feature command. One of
+> the main piece of information retrieved are the effects a Set Feature
+> command would have for a particular feature.
+> 
+> Co-developed-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/core/mbox.c | 41 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    |  3 +++
->  include/cxl/features.h  |  7 +++++++
->  include/cxl/mailbox.h   |  1 +
->  4 files changed, 52 insertions(+)
+> v1:
+> - Change input param from cxlds to cxl_mbox
+> - Move mbox_out declaration inline. (Jonathan)
+> - Fix __counted_by() input. (Jonathan)
+> - Return count for cxl_get_supported_features_count(). (Dan)
+> - Remove goto from cxl_get_supported_features(). (Dan)
+> - Return cxl_get_supported_feature_entry() directly. (Dan)
+> - Drop user path enumeration. (Dan)
+> - Move to the feature driver model. (Dan)
+> - Add support for 0 feature data requested.
+> - Add missing increment of feature data ptr during copy.
+> ---
+>  drivers/cxl/core/features.c |  28 +++++++
+>  drivers/cxl/core/mbox.c     |   3 +-
+>  drivers/cxl/cxl.h           |   2 +
+>  drivers/cxl/features.c      | 146 +++++++++++++++++++++++++++++++++++-
+>  include/cxl/features.h      |  32 ++++++++
+>  5 files changed, 209 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index bdb8f060f2c1..5e21ff99d70f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -38,6 +38,21 @@ static bool cxl_raw_allow_all;
->  	.flags = _flags,                                                       \
->  	}
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index eb6eb191a32e..66a4b82910e6 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
+>  #include <linux/device.h>
+> +#include <cxl/mailbox.h>
+>  #include "cxl.h"
+>  #include "core.h"
 >  
-> +#define cxl_for_each_feature_cmd(cmd)                                          \
-> +	for ((cmd) = &cxl_feature_commands[0];                                 \
-> +	     ((cmd) - cxl_feature_commands) < ARRAY_SIZE(cxl_feature_commands); (cmd)++)
+> @@ -69,3 +70,30 @@ struct cxl_features *cxl_features_alloc(struct cxl_mailbox *cxl_mbox,
+>  	return ERR_PTR(rc);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_features_alloc, "CXL");
 > +
-> +#define CXL_FEATURE_CMD(_id, sin, sout, _flags)                                \
-> +	[CXL_FEATURE_ID_##_id] = {                                             \
-> +	.info =	{                                                              \
-> +			.id = CXL_FEATURE_ID_##_id,                            \
-> +			.size_in = sin,                                        \
-> +			.size_out = sout,                                      \
-> +		},                                                             \
-> +	.opcode = CXL_MBOX_OP_##_id,                                           \
-> +	.flags = _flags,                                                       \
-> +	}
+> +struct cxl_feat_entry *
+> +cxl_get_supported_feature_entry(struct cxl_features *features,
+> +				const uuid_t *feat_uuid)
+> +{
+> +	struct cxl_feat_entry *feat_entry;
+> +	struct cxl_features_state *cfs;
+> +	int count;
 > +
->  #define CXL_VARIABLE_PAYLOAD	~0U
->  /*
->   * This table defines the supported mailbox commands for the driver. This table
-> @@ -69,6 +84,13 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
->  };
->  
-> +#define CXL_FEATURE_COMMAND_ID_MAX 3
-> +static struct cxl_mem_command cxl_feature_commands[CXL_FEATURE_COMMAND_ID_MAX] = {
-> +	CXL_FEATURE_CMD(GET_SUPPORTED_FEATURES, 0x8, CXL_VARIABLE_PAYLOAD, 0),
-> +	CXL_FEATURE_CMD(GET_FEATURE, 0xf, CXL_VARIABLE_PAYLOAD, 0),
-> +	CXL_FEATURE_CMD(SET_FEATURE, CXL_VARIABLE_PAYLOAD, 0, 0),
-> +};
+> +	cfs = dev_get_drvdata(&features->dev);
+> +	if (!cfs)
+> +		return ERR_PTR(-EOPNOTSUPP);
 
-It's not immediately clear to me what this is far. The
-cxl_mem_commands[] array is to put all the common work of defining new
-commands for the CXL ioctl path into a table. Given these are all
-fronted by FWCTL, does the driver need to do anything more than the
-opcodes are supported.
+How could this function be called outside of the driver being enabled?
 
-In other words, I worry this approach is simply copying the organization
-of cxl_walk_cel() for consistency sake. I had similar feedback on the
-DCD series:
+If the driver might not be enabled when this is called, what stops it
+from being disabled immediately after this check?
 
-http://lore.kernel.org/67786b76a0c5_f58f294b1@dwillia2-xfh.jf.intel.com.notmuch
+Went looking for the caller of this function... none in this patch set.
 
-Just check for the opcodes you need and set a flag.
+If this is for the EDAC use case, that enabling had better be triggered
+from a known context where these questions have a satisfactory answer.
+As it stands I think you can just delete it, right?
+
+This has me thinking that the EDAC integration should just be a feature
+of the cxl_features_driver.
+
+...that last sentence made me itch because I don't want to have to
+untangle future sentences like: A new feature of the features driver
+features a new Feature to complement the existing Features and other
+features.
+
+So I might need to ask you to be explicit about at least using capital
+'Feature' when talking about a command, 'cxl_features_device' when
+talking about the device and 'cxl_features_driver' when talking about
+the driver.
+
+> diff --git a/drivers/cxl/features.c b/drivers/cxl/features.c
+> index 644add26975f..a5949312a4ab 100644
+> --- a/drivers/cxl/features.c
+> +++ b/drivers/cxl/features.c
+[..]
+> +static int cxl_get_supported_features(struct cxl_features_state *cfs)
+> +{
+> +	int remain_feats, max_size, max_feats, start, rc, hdr_size;
+> +	struct cxl_mailbox *cxl_mbox = cfs->features->cxl_mbox;
+> +	int feat_size = sizeof(struct cxl_feat_entry);
+> +	struct cxl_mbox_get_sup_feats_in mbox_in;
+> +	struct cxl_feat_entry *entry;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	struct cxl_mem_command *cmd;
+> +	int count;
+> +
+> +	/* Get supported features is optional, need to check */
+> +	cmd = cxl_find_feature_command(CXL_MBOX_OP_GET_SUPPORTED_FEATURES);
+> +	if (!cmd)
+> +		return -EOPNOTSUPP;
+> +	if (!test_bit(cmd->info.id, cxl_mbox->feature_cmds))
+> +		return -EOPNOTSUPP;
+
+First, who is calling this function without knowing that features are
+supported? Like how did we get here if something already did that first
+level enumeration.
+
+Otherwise, that looks like a lot of work just to ask the question, "did
+the mailbox see CXL_MBOX_OP_GET_SUPPORTED_FEATURES" at init?
+
+That could probably all be boiled down into an enum like:
+
+enum cxl_features_capability {
+	CXL_FEATURES_NONE,
+	CXL_FEATURES_RO,
+	CXL_FEATURES_RW,
+};
+
+...for tracking Feature command enumeration and optional write support.
+
+The cxl_mem_commands organization is quirk of the CXL ioctl
+implementation cxl_features is free to not copy it.
+
+Longer term we need to think about how to make cxl_mailbox more
+independent of the memory expander / cxl_pci use case. Whereby, perhaps
+the consumer of the mailbox passes is in a callback that takes action on
+each found command. Then we get out of this game of how to cache command
+capabilities that are awkward fits depending on command set or driver
+use case.
+
+[..]
