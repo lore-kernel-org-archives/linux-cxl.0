@@ -1,723 +1,202 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7921FF1B3;
-	Mon, 27 Jan 2025 12:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135892D7BF
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Jan 2025 14:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737982404; cv=none; b=nIZ+Nu37WcVVeRFQmNjeIfUAlPCXjUZO3btw3EcXgE5j6XZM49u/WXa5+bDgE6jv88ftILtrUwTElUkpFdy2dFNly3KN1T5iSMJkT3db+4VhvVEqflNrDHmU2ERfi9NS2miLfQkqtGfhFySXku7dRW89GyeIpE5UiDNhDPQpwoU=
+	t=1737988826; cv=none; b=hu6qEHDD6xzJTlO6gOsdAsdNS0dBKal694XR2x9LUz8AzIrFk+UIejVdybkdNAQxu6509TyNWz4PtbdUtjKmrsq5f2sQDwy4fGPGPRVE2pwuK7XA/F/+9k1kvYkmUxGB4j5awX3rMlzcT7A7GQZymYpfSUTdZRM0+w7TOqLLCO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737982404; c=relaxed/simple;
-	bh=R9+1TqlaxJbHcrIp5UR4X8Z4FXOptcuh/x1qwAitdWA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=d9IwyinZXXeko4zzO4GTgOvQczawMW/m7UmIiEfX1/RjiQa8EzdiwfV4n1aleGvuhWexjY+UNeUBBLG73vdBMHxATh61czHetvZA1v2jjZz7NuIAgucQp6QsKLz/J0NsaG4oyAshPZf8m5afHIWfR05W+36cKVyIC9CdS0BnOzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YhSvw0Tndz6L51Q;
-	Mon, 27 Jan 2025 20:51:08 +0800 (CST)
-Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
-	by mail.maildlp.com (Postfix) with ESMTPS id 533D31401F3;
-	Mon, 27 Jan 2025 20:53:17 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 27 Jan 2025 13:53:17 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 27 Jan 2025 13:53:17 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "bp@alien8.de" <bp@alien8.de>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patrol
- scrub control feature
-Thread-Topic: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patrol
- scrub control feature
-Thread-Index: AQHbYDQzwb2+msEnKkOZzkWMDvDlzLMmbr6AgAQZmTA=
-Date: Mon, 27 Jan 2025 12:53:16 +0000
-Message-ID: <637fa0190fe64594954ee4d9e012c39c@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <20250106121017.1620-16-shiju.jose@huawei.com>
- <6793fa5351fc7_20f3294d0@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <6793fa5351fc7_20f3294d0@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1737988826; c=relaxed/simple;
+	bh=eCKNQKTlNju8+3NgJuO48DRX9mxkFe1KMgip9ppG9X4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X4LmsanAzsSo1+44sAP259sJTUQxj6bqlha7PK/5dFgX2ZtjE5xeXumZ6R7GO9aVOZy8eP9zSQ5Yko2xb68+b4MLBRmjXZ92EzGSi3bCdM/YXo84mJmQIVJY5nUpaB6UiHJnNaEpqJiezL17fUx7apo6Y/QORXxLdQue3TYNwfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JXm80M9i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JXm80M9i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737988822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=j+LY8zaaRW7ManqkA8bImcGJ7nd8rdtPjeIf4KgIMV8=;
+	b=JXm80M9iRLxvr4oYJuQAmRJg2RGoU+t2p3r2ssG5wHnWrmYYZiBvMERb6KlbhZicSJqLyy
+	dmYLNXu4trgz9s3aCrZuj7JAZYTG1xpjjuVHqCX/D028Tm9wvVEeF+QYOR10Q1mP2lG7y1
+	EJOnB8SoE4Sf6+lWEbeqU14bDKa0VVQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-KFx6B9eiMK-P27dM8VlfzQ-1; Mon, 27 Jan 2025 09:40:21 -0500
+X-MC-Unique: KFx6B9eiMK-P27dM8VlfzQ-1
+X-Mimecast-MFC-AGG-ID: KFx6B9eiMK-P27dM8VlfzQ
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43619b135bcso22045725e9.1
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Jan 2025 06:40:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737988820; x=1738593620;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=j+LY8zaaRW7ManqkA8bImcGJ7nd8rdtPjeIf4KgIMV8=;
+        b=k+JoXBB8daVn2pOnCTWy5NUG7zbZKYeu7CVbuc+BaQqa01J0eNsmZoQXL5CWBpB9mT
+         wasc1sAwtJAg1Yc8wBnAB5dRh7X5jSuLmsSJ1tpS7ad8+/JfYOEk8LrG/5fJLwNYCBbA
+         Y3iS56Tjeb8KKqCZmjIsHne2IU6oganZIinC+NjWbm6WEAEd5ilJrg5oo2dC0wMCKb41
+         o5xFBf8ivfSxCIgfSmvePePpjZ/aTRSlud5aofA6gerUJ7nyKOgaDiuAxDIjzJIvhjIV
+         2buoeWPQ72xAU/INRFsbVabjUTA4TCZFQYH5vQZGIOS0/HagHZezUbWsRPMNAIGZecfl
+         2MGQ==
+X-Gm-Message-State: AOJu0YyUaacRI8UF8KmplnhsQLSdwpJHaIGAkw6qN9QLYfCO4qFmfzqy
+	lFP5T80VRm/0h9Rv9aeuOJG6buT6tTXffNXYauiRUs1wYdxGRHla51Q8xPcna3+e0OdB00Qei4D
+	R6DZi3lzXszhw01rnC/sFUiMs65xSh2g8VQaICIA8zIjgvcY3LuoxSxSsX96ueDPCSeem
+X-Gm-Gg: ASbGncuhPvHu1QA/TD6l6hjUhOHzDHLXmZqFeNVa8bsOkpXqYzgZCxi5xs0xnoXzorm
+	jD9EG7Lg/pe1z+/0sXK3ik3j2qE2z+PrBJ9PY90T+pxaMmrxbZMAgi9+5atEwERTde9w07cwesc
+	WC6xRKPJm9QkTPgiPvra1lKrAqMA40t0JYufrhnQi7a4vb7Dy2fw9LNJPZ0i7p6xKwyDrVhhy/H
+	5hWyGp8+OkAMOlmhZVPx68duuXR/xBKympT7aTV7C1ZRp3XOVeB3InALPyfW+XKPyILmNvLorvh
+	e7EUTcSiRqRcwlpkhmr0A9vp5Pnut+uEemx04R7O7W7CcAP8f3xNFePbCtccBrgpu/NOHey4qU1
+	3McudwcClGwDUWz1hvK+oPDplIJejSnu7
+X-Received: by 2002:a05:600c:3593:b0:431:55c1:f440 with SMTP id 5b1f17b1804b1-4389144eea8mr457174865e9.30.1737988820521;
+        Mon, 27 Jan 2025 06:40:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEBYeysFdBvN+m4FKahXOG5MkiJQMvnChppGgOxmLEvVQ8l5svEMPycMAUdr1Hp2gAePl93zQ==
+X-Received: by 2002:a05:600c:3593:b0:431:55c1:f440 with SMTP id 5b1f17b1804b1-4389144eea8mr457174535e9.30.1737988820144;
+        Mon, 27 Jan 2025 06:40:20 -0800 (PST)
+Received: from ?IPV6:2003:cb:c736:ca00:b4c3:24bd:c2f5:863c? (p200300cbc736ca00b4c324bdc2f5863c.dip0.t-ipconnect.de. [2003:cb:c736:ca00:b4c3:24bd:c2f5:863c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438bd4d34e3sm134224415e9.39.2025.01.27.06.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2025 06:40:18 -0800 (PST)
+Message-ID: <9b0fa1f7-4133-4111-9142-143c36c42f8d@redhat.com>
+Date: Mon, 27 Jan 2025 15:40:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] kernel/resource: Introduce managed SOFT RESERVED
+ resources
+To: "Fontenot, Nathan" <nafonten@amd.com>, Fan Ni <nifan.cxl@gmail.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+ alison.schofield@intel.com, linux-mm@kvack.org, gourry@gourry.net
+References: <cover.1737046620.git.nathan.fontenot@amd.com>
+ <1800b17449d1c231292c85f59b226aff39a81552.1737046620.git.nathan.fontenot@amd.com>
+ <4e556200-c790-4e0a-b103-2a1529c81927@redhat.com>
+ <3c7c5b87-f241-482b-9b00-98e2e53d8e9c@amd.com> <Z5CKN57paDmGJH9A@gpd>
+ <5067fda1-c2de-4a20-9025-ebdf90ebba8e@amd.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <5067fda1-c2de-4a20-9025-ebdf90ebba8e@amd.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: BHobtJX8zBTlbbm2AxS2zsxxHQYDsSDeb1tTQfUNx1A_1737988820
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+On 23.01.25 16:49, Fontenot, Nathan wrote:
+> On 1/22/2025 12:03 AM, Fan Ni wrote:
+>> On Tue, Jan 21, 2025 at 12:57:19PM -0600, Fontenot, Nathan wrote:
+>>>
+>>>
+>>> On 1/21/2025 2:19 AM, David Hildenbrand wrote:
+>>>> On 16.01.25 18:42, Nathan Fontenot wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>>> Introduce the ability to manage SOFT RESERVED kernel resources prior to
+>>>>> these resources being  placed in the iomem resource tree. This provides
+>>>>> the ability for drivers to update SOFT RESERVED resources that intersect
+>>>>> with their memory resources.
+>>>>>
+>>>>> During boot, any resources marked as IORES_DESC_SOFT_RESERVED are placed
+>>>>> on the soft reserve resource tree. Once boot completes all resources
+>>>>> are placed on the iomem resource tree. This behavior is gated by a new
+>>>>> kernel option CONFIG_SOFT_RESERVED_MANAGED.
+>>>>>
+>>>>
+>>>> I'm missing a bit of context here.
+>>>>
+>>>> Why can't we flag these regions in the existing iomem tree, where they can be fixed up (even after boot?)?
+>>>>
+>>>> Especially, what about deferred driver loading after boot? Why is that not a concern or why can we reliably handle everything "during boot" ?
+>>>
+>>> That's a good question and one I should have addressed.
+>>>
 
-Thanks for the comments.
+Sorry for the late reply.
 
-Please find reply inline.
-
-Thanks,
-Shiju
->-----Original Message-----
->From: Dan Williams <dan.j.williams@intel.com>
->Sent: 24 January 2025 20:39
->To: Shiju Jose <shiju.jose@huawei.com>; linux-edac@vger.kernel.org; linux-
->cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org; linux=
--
->kernel@vger.kernel.org
->Cc: bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
->Subject: Re: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patro=
-l
->scrub control feature
->
->shiju.jose@ wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
+>>> The goal is to prevent the dax driver from creating dax devices for soft reserve
+>>> resources prior to the soft reserve resources being updated for any intersecting
+>>> cxl regions.
 >>
->> CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub
->> control feature. The device patrol scrub proactively locates and makes
->> corrections to errors in regular cycle.
->>
->> Allow specifying the number of hours within which the patrol scrub
->> must be completed, subject to minimum and maximum limits reported by the
->device.
->> Also allow disabling scrub allowing trade-off error rates against
->> performance.
->>
->> Add support for patrol scrub control on CXL memory devices.
->> Register with the EDAC device driver, which retrieves the scrub
->> attribute descriptors from EDAC scrub and exposes the sysfs scrub
->> control attributes to userspace. For example, scrub control for the
->> CXL memory device "cxl_mem0" is exposed in
->/sys/bus/edac/devices/cxl_mem0/scrubX/.
->>
->> Additionally, add support for region-based CXL memory patrol scrub contr=
-ol.
->> CXL memory regions may be interleaved across one or more CXL memory
->> devices. For example, region-based scrub control for "cxl_region1" is
->> exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
->>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  Documentation/edac/scrub.rst  |  66 ++++++
->>  drivers/cxl/Kconfig           |  17 ++
->>  drivers/cxl/core/Makefile     |   1 +
->>  drivers/cxl/core/memfeature.c | 392
->++++++++++++++++++++++++++++++++++
->>  drivers/cxl/core/region.c     |   6 +
->>  drivers/cxl/cxlmem.h          |   7 +
->>  drivers/cxl/mem.c             |   5 +
->>  include/cxl/features.h        |  16 ++
->>  8 files changed, 510 insertions(+)
->>  create mode 100644 drivers/cxl/core/memfeature.c diff --git
->> a/Documentation/edac/scrub.rst b/Documentation/edac/scrub.rst index
->> f86645c7f0af..80e986c57885 100644
->> --- a/Documentation/edac/scrub.rst
->> +++ b/Documentation/edac/scrub.rst
->> @@ -325,3 +325,69 @@ root@localhost:~# cat
->> /sys/bus/edac/devices/acpi_ras_mem0/scrub0/current_cycle_d
->>  10800
->>
->>  root@localhost:~# echo 0 >
->> /sys/bus/edac/devices/acpi_ras_mem0/scrub0/enable_background
->> +
->> +2. CXL memory device patrol scrubber
->> +
->> +2.1 Device based scrubbing
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/min_cycle_duration
->> +
->> +3600
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/max_cycle_duration
->> +
->> +918000
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/current_cycle_duration
->> +
->> +43200
->> +
->> +root@localhost:~# echo 54000 >
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/current_cycle_duration
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/current_cycle_duration
->> +
->> +54000
->> +
->> +root@localhost:~# echo 1 >
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/enable_background
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/enable_background
->> +
->> +1
->> +
->> +root@localhost:~# echo 0 >
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/enable_background
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_mem0/scrub0/enable_background
->> +
->> +0
->> +
->> +2.2. Region based scrubbing
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/min_cycle_duration
->> +
->> +3600
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/max_cycle_duration
->> +
->> +918000
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/current_cycle_duration
->> +
->> +43200
->> +
->> +root@localhost:~# echo 54000 >
->> +/sys/bus/edac/devices/cxl_region0/scrub0/current_cycle_duration
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/current_cycle_duration
->> +
->> +54000
->> +
->> +root@localhost:~# echo 1 >
->> +/sys/bus/edac/devices/cxl_region0/scrub0/enable_background
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/enable_background
->> +
->> +1
->> +
->> +root@localhost:~# echo 0 >
->> +/sys/bus/edac/devices/cxl_region0/scrub0/enable_background
->> +
->> +root@localhost:~# cat
->> +/sys/bus/edac/devices/cxl_region0/scrub0/enable_background
->
->What is this content-free blob of cat and echo statements? Please write ac=
-tual
->documentation with theory of operation, clarification of assumptions, rati=
-onale
->for defaults, guidance on changing defaults...
+>> Not an export. Can you explain a little more here?
+>> What is the problem if we only flag the resources as "soft
+>> reserved" in the iomem tree without creating a separate tree, and
+>> process the "soft reserved" resources only when needed?
+> 
+> The issue we currently encounter is that the dax driver consumes these soft reserve
+> resources and creates dax devices for the soft reserve resources before the cxl driver
+> comnpletes device probe and can update the soft reserve resources to remove any
+> intersections with cxl regions. We do not want these soft reserves consumed prior
+> to them being updated.
+> 
+> If we were to put the soft reserves on the iomem tree we would need to have the
+> cxl driver provide a notification that it has completed updates and others (i.e. dax)
+> can them go process the soft reserve resources.
 
-Jonathan already replied.
+Would there be any blocker to that approach?
 
->
->> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig index
->> 0bc6a2cb8474..6078f02e883b 100644
->> --- a/drivers/cxl/Kconfig
->> +++ b/drivers/cxl/Kconfig
->> @@ -154,4 +154,21 @@ config CXL_FEATURES
->>
->>  	  If unsure say 'y'.
->>
->> +config CXL_RAS_FEATURES
->> +	tristate "CXL: Memory RAS features"
->> +	depends on CXL_PCI
->
->What is the build dependency on CXL_PCI? This enabling does not call back =
-into
->symbols provided by cxl_pci.ko does it?
-Will remove, which is not required.  Initially cxl_mem_ras_features_init() =
-was called from the pci.c
+Adding them all to the resource tree and flagging them as soft-reserved, 
+to then have a signal that allows DAX to work on these, sounds cleaner 
+to me.
 
->
->> +	depends on CXL_MEM
->
->Similar comment, and this also goes away if all of this just moves into th=
-e new
->cxl_features driver.
+-- 
+Cheers,
 
-Agree with  Jonathan told in reply. These are RAS specific features for CXL=
- memory devices and
-thus added in memfeature.c =20
->
->> +	depends on EDAC
->> +	help
->> +	  The CXL memory RAS feature control is optional and allows host to
->> +	  control the RAS features configurations of CXL Type 3 devices.
->> +
->> +	  It registers with the EDAC device subsystem to expose control
->> +	  attributes of CXL memory device's RAS features to the user.
->> +	  It provides interface functions to support configuring the CXL
->> +	  memory device's RAS features.
->> +	  Say 'y/m/n' to enable/disable control of the CXL.mem device's RAS
->features.
->> +	  See section 8.2.9.9.11 of CXL 3.1 specification for the detailed
->> +	  information of CXL memory device features.
->
->Usually the "say X" statement provides a rationale like.
->
->"Say y/m if you have an expert need to change default memory scrub rates
->established by the platform/device, otherwise say n"
-
-Will change.
-
->
->> +
->>  endif
->> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->> index 73b6348afd67..54baca513ecb 100644
->> --- a/drivers/cxl/core/Makefile
->> +++ b/drivers/cxl/core/Makefile
->> @@ -17,3 +17,4 @@ cxl_core-y +=3D cdat.o  cxl_core-y +=3D features.o
->>  cxl_core-$(CONFIG_TRACING) +=3D trace.o
->>  cxl_core-$(CONFIG_CXL_REGION) +=3D region.o
->> +cxl_core-$(CONFIG_CXL_RAS_FEATURES) +=3D memfeature.o
->> diff --git a/drivers/cxl/core/memfeature.c
->> b/drivers/cxl/core/memfeature.c new file mode 100644 index
->> 000000000000..77d1bf6ce45f
->> --- /dev/null
->> +++ b/drivers/cxl/core/memfeature.c
->> @@ -0,0 +1,392 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * CXL memory RAS feature driver.
->> + *
->> + * Copyright (c) 2024 HiSilicon Limited.
->> + *
->> + *  - Supports functions to configure RAS features of the
->> + *    CXL memory devices.
->> + *  - Registers with the EDAC device subsystem driver to expose
->> + *    the features sysfs attributes to the user for configuring
->> + *    CXL memory RAS feature.
->> + */
->> +
->> +#include <linux/cleanup.h>
->> +#include <linux/edac.h>
->> +#include <linux/limits.h>
->> +#include <cxl/features.h>
->> +#include <cxl.h>
->> +#include <cxlmem.h>
->> +
->> +#define CXL_DEV_NUM_RAS_FEATURES	1
->> +#define CXL_DEV_HOUR_IN_SECS	3600
->> +
->> +#define CXL_DEV_NAME_LEN	128
->> +
->> +/* CXL memory patrol scrub control functions */ struct
->> +cxl_patrol_scrub_context {
->> +	u8 instance;
->> +	u16 get_feat_size;
->> +	u16 set_feat_size;
->> +	u8 get_version;
->> +	u8 set_version;
->> +	u16 effects;
->> +	struct cxl_memdev *cxlmd;
->> +	struct cxl_region *cxlr;
->> +};
->> +
->> +/**
->> + * struct cxl_memdev_ps_params - CXL memory patrol scrub parameter data
->structure.
->> + * @enable:     [IN & OUT] enable(1)/disable(0) patrol scrub.
->> + * @scrub_cycle_changeable: [OUT] scrub cycle attribute of patrol scrub=
- is
->changeable.
->> + * @scrub_cycle_hrs:    [IN] Requested patrol scrub cycle in hours.
->> + *                      [OUT] Current patrol scrub cycle in hours.
->> + * @min_scrub_cycle_hrs:[OUT] minimum patrol scrub cycle in hours
->supported.
->> + */
->> +struct cxl_memdev_ps_params {
->> +	bool enable;
->> +	bool scrub_cycle_changeable;
->> +	u8 scrub_cycle_hrs;
->> +	u8 min_scrub_cycle_hrs;
->> +};
->> +
->> +enum cxl_scrub_param {
->> +	CXL_PS_PARAM_ENABLE,
->> +	CXL_PS_PARAM_SCRUB_CYCLE,
->> +};
->> +
->> +#define CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK	BIT(0)
->> +#define
->	CXL_MEMDEV_PS_SCRUB_CYCLE_REALTIME_REPORT_CAP_MASK
->	BIT(1)
->> +#define	CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK	GENMASK(7, 0)
->> +#define	CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK	GENMASK(15,
->8)
->> +#define	CXL_MEMDEV_PS_FLAG_ENABLED_MASK	BIT(0)
->> +
->> +struct cxl_memdev_ps_rd_attrs {
->> +	u8 scrub_cycle_cap;
->> +	__le16 scrub_cycle_hrs;
->> +	u8 scrub_flags;
->> +}  __packed;
->> +
->> +struct cxl_memdev_ps_wr_attrs {
->> +	u8 scrub_cycle_hrs;
->> +	u8 scrub_flags;
->> +}  __packed;
->
->If these are packed to match specification layout, include a specification
->reference comment.
-
-Will add specification reference comment. Added same for memory repair feat=
-ures,
-but missed here.
->
->> +
->> +static int cxl_mem_ps_get_attrs(struct cxl_mailbox *cxl_mbox,
->> +				struct cxl_memdev_ps_params *params) {
->> +	size_t rd_data_size =3D sizeof(struct cxl_memdev_ps_rd_attrs);
->> +	u16 scrub_cycle_hrs;
->> +	size_t data_size;
->> +	u16 return_code;
->> +	struct cxl_memdev_ps_rd_attrs *rd_attrs __free(kfree) =3D
->> +						kmalloc(rd_data_size,
->GFP_KERNEL);
->
->I would feel better with kzalloc() if short reads are possible.
-
-Will change to kzalloc().
-
->
->How big can rd_data_size get? I.e. should this be kvzalloc()?
-
-rd_data_size is 4 bytes for the patrol scrub feature.=20
-
->
->> +	if (!rd_attrs)
->> +		return -ENOMEM;
->> +
->> +	data_size =3D cxl_get_feature(cxl_mbox->features,
->CXL_FEAT_PATROL_SCRUB_UUID,
->> +				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
->> +				    rd_attrs, rd_data_size, 0, &return_code);
->> +	if (!data_size || return_code !=3D CXL_MBOX_CMD_RC_SUCCESS)
->> +		return -EIO;
->> +
->> +	params->scrub_cycle_changeable =3D
->FIELD_GET(CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK,
->> +						   rd_attrs->scrub_cycle_cap);
->> +	params->enable =3D
->FIELD_GET(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
->> +				   rd_attrs->scrub_flags);
->> +	scrub_cycle_hrs =3D le16_to_cpu(rd_attrs->scrub_cycle_hrs);
->> +	params->scrub_cycle_hrs =3D
->FIELD_GET(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
->> +					    scrub_cycle_hrs);
->> +	params->min_scrub_cycle_hrs =3D
->FIELD_GET(CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK,
->> +						scrub_cycle_hrs);
->> +
->> +	return 0;
->> +}
->> +
->> +static int cxl_ps_get_attrs(struct cxl_patrol_scrub_context *cxl_ps_ctx=
-,
->> +			    struct cxl_memdev_ps_params *params) {
->> +	struct cxl_memdev *cxlmd;
->> +	u16 min_scrub_cycle =3D 0;
->> +	int i, ret;
->> +
->> +	if (cxl_ps_ctx->cxlr) {
->> +		struct cxl_region *cxlr =3D cxl_ps_ctx->cxlr;
->> +		struct cxl_region_params *p =3D &cxlr->params;
->> +
->> +		for (i =3D p->interleave_ways - 1; i >=3D 0; i--) {
->> +			struct cxl_endpoint_decoder *cxled =3D p->targets[i];
->
->It looks like this is called directly as a callback from EDAC. Where is th=
-e locking
->that keeps cxl_ps_ctx->cxlr valid, or p->targets content stable?
-Jonathan already replied.
->
->> +
->> +			cxlmd =3D cxled_to_memdev(cxled);
->> +			ret =3D cxl_mem_ps_get_attrs(&cxlmd->cxlds->cxl_mbox,
->params);
->> +			if (ret)
->> +				return ret;
->> +
->> +			if (params->min_scrub_cycle_hrs > min_scrub_cycle)
->> +				min_scrub_cycle =3D params-
->>min_scrub_cycle_hrs;
->> +		}
->> +		params->min_scrub_cycle_hrs =3D min_scrub_cycle;
->> +		return 0;
->> +	}
->> +	cxlmd =3D cxl_ps_ctx->cxlmd;
->> +
->> +	return cxl_mem_ps_get_attrs(&cxlmd->cxlds->cxl_mbox, params); }
->> +
->> +static int cxl_mem_ps_set_attrs(struct device *dev,
->> +				struct cxl_patrol_scrub_context *cxl_ps_ctx,
->> +				struct cxl_mailbox *cxl_mbox,
->> +				struct cxl_memdev_ps_params *params,
->> +				enum cxl_scrub_param param_type)
->> +{
->> +	struct cxl_memdev_ps_wr_attrs wr_attrs;
->> +	struct cxl_memdev_ps_params rd_params;
->> +	u16 return_code;
->> +	int ret;
->> +
->> +	ret =3D cxl_mem_ps_get_attrs(cxl_mbox, &rd_params);
->> +	if (ret) {
->> +		dev_err(dev, "Get cxlmemdev patrol scrub params failed
->ret=3D%d\n",
->> +			ret);
->> +		return ret;
->> +	}
->> +
->> +	switch (param_type) {
->> +	case CXL_PS_PARAM_ENABLE:
->> +		wr_attrs.scrub_flags =3D
->FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
->> +						  params->enable);
->> +		wr_attrs.scrub_cycle_hrs =3D
->FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
->> +
->rd_params.scrub_cycle_hrs);
->> +		break;
->> +	case CXL_PS_PARAM_SCRUB_CYCLE:
->> +		if (params->scrub_cycle_hrs < rd_params.min_scrub_cycle_hrs)
->{
->> +			dev_err(dev, "Invalid CXL patrol scrub cycle(%d) to
->set\n",
->> +				params->scrub_cycle_hrs);
->> +			dev_err(dev, "Minimum supported CXL patrol scrub
->cycle in hour %d\n",
->> +				rd_params.min_scrub_cycle_hrs);
->> +			return -EINVAL;
->> +		}
->> +		wr_attrs.scrub_cycle_hrs =3D
->FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
->> +						      params->scrub_cycle_hrs);
->> +		wr_attrs.scrub_flags =3D
->FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
->> +						  rd_params.enable);
->> +		break;
->> +	}
->> +
->> +	ret =3D cxl_set_feature(cxl_mbox->features,
->CXL_FEAT_PATROL_SCRUB_UUID,
->> +			      cxl_ps_ctx->set_version,
->> +			      &wr_attrs, sizeof(wr_attrs),
->> +			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET,
->> +			      0, &return_code);
->> +	if (ret || return_code !=3D CXL_MBOX_CMD_RC_SUCCESS) {
->> +		dev_err(dev, "CXL patrol scrub set feature failed ret=3D%d
->return_code=3D%u\n",
->> +			ret, return_code);
->
->What can the admin do with this log spam? I would reconsider making all of
->these dev_dbg() and improving the sysfs documentation on what error codes
->mean.
-Sure will change.
->
->[..]
->> +
->> +int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct
->> +cxl_region *cxlr)
->
->Please separate this into a memdev helper and a region helper. It is silly=
- to have
->two arguments to a function where one is expected to be NULL at all times,=
- and
->then have an if else statement inside that to effectively turn it back int=
-o 2 code
->paths.
->
->If there is code to be shared amongst those, make *that* the shared helper=
-.
-I added single function cxl_mem_ras_features_init() for both memdev and reg=
-ion based
-scrubbing to reduce code size as there were feedbacks try reduce code size.=
- =20
->
->> +{
->> +	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
->> +	char cxl_dev_name[CXL_DEV_NAME_LEN];
->> +	int num_ras_features =3D 0;
->> +	u8 scrub_inst =3D 0;
->> +	int rc;
->> +
->> +	rc =3D cxl_memdev_scrub_init(cxlmd, cxlr,
->&ras_features[num_ras_features],
->> +				   scrub_inst);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	scrub_inst++;
->> +	num_ras_features++;
->> +
->> +	if (cxlr)
->> +		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
->> +			 "cxl_region%d", cxlr->id);
->
->Why not pass dev_name(&cxlr->dev) directly?
-Jonathan already replied.=20
->
->> +	else
->> +		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
->> +			 "%s_%s", "cxl", dev_name(&cxlmd->dev));
->
->Can a "cxl" directory be created so that the raw name can be used?
->
->> +
->> +	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->> +				 num_ras_features, ras_features);
->
->I'm so confused... a few lines down in this patch we have:
->
->    rc =3D cxl_mem_ras_features_init(NULL, cxlr);
->
->...so how can this call to edac_dev_register() unconditionally de-referenc=
-e
->@cxlmd?
-Thanks for spotting this. It is a bug, need to fix , cxlmd inited for regio=
-n based scrubbing=20
-was done inside cxl_mem_ras_features_init() previously, which now moved to
-inside cxl_memdev_scrub_init().=20
-Region based scrubbing required better testing because of some difficulty i=
-n running
-this use case in my test setup. Will check with Jonathan how to do.
->
->Are there any tests for this? cxl-test is purpose-built for this kind of b=
-asic
->coverage tests.
-Will check this.
->
->> +EXPORT_SYMBOL_NS_GPL(cxl_mem_ras_features_init, "CXL");
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index b98b1ccffd1c..c2be70cd87f8 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3449,6 +3449,12 @@ static int cxl_region_probe(struct device *dev)
->>  					p->res->start, p->res->end, cxlr,
->>  					is_system_ram) > 0)
->>  			return 0;
->> +
->> +		rc =3D cxl_mem_ras_features_init(NULL, cxlr);
->> +		if (rc)
->> +			dev_warn(&cxlr->dev, "CXL RAS features init for
->region_id=3D%d failed\n",
->> +				 cxlr->id);
->
->There is more to RAS than EDAC memory scrub so this message is misleading.=
- It
->is also unnecessary because the driver continues to load and the admin, if=
- they
->care, will notice that the EDAC attributes are missing.
-This message was added for the debugging purpose in CXL driver. I will chan=
-ge to  dev_dbg().
->
->> +
->>  		return devm_cxl_add_dax_region(cxlr);
->>  	default:
->>  		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n", diff --
->git
->> a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
->> 55c55685cb39..2b02e47cd7e7 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -800,6 +800,13 @@ int cxl_trigger_poison_list(struct cxl_memdev
->> *cxlmd);  int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
->> int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
->>
->> +#if IS_ENABLED(CONFIG_CXL_RAS_FEATURES)
->> +int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct
->> +cxl_region *cxlr); #else static inline int
->> +cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region
->> +*cxlr) { return 0; } #endif
->> +
->>  #ifdef CONFIG_CXL_SUSPEND
->>  void cxl_mem_active_inc(void);
->>  void cxl_mem_active_dec(void);
->> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c index
->> 2f03a4d5606e..d236b4b8a93c 100644
->> --- a/drivers/cxl/mem.c
->> +++ b/drivers/cxl/mem.c
->> @@ -116,6 +116,10 @@ static int cxl_mem_probe(struct device *dev)
->>  	if (!cxlds->media_ready)
->>  		return -EBUSY;
->>
->> +	rc =3D cxl_mem_ras_features_init(cxlmd, NULL);
->> +	if (rc)
->> +		dev_warn(&cxlmd->dev, "CXL RAS features init failed\n");
->> +
->>  	/*
->>  	 * Someone is trying to reattach this device after it lost its port
->>  	 * connection (an endpoint port previously registered by this memdev
->> was @@ -259,3 +263,4 @@
->MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
->>   * endpoint registration.
->>   */
->>  MODULE_SOFTDEP("pre: cxl_port");
->> +MODULE_SOFTDEP("pre: cxl_features");
->
->Why?
-This dependency is no more required. During integration testing, this was a=
-dded when
-cxl_features found was not getting initialized when CXL memdev RAS features=
- are getting
-initialized, which calls features command  function, cxl_get_supported_feat=
-ure_entry,=20
-for the RAS features. The reason was different from this and got fixed.=20
-
-Thanks,
-Shiju
+David / dhildenb
 
