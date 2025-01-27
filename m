@@ -1,43 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C341D540
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Jan 2025 11:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEB425A646
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Jan 2025 11:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737976216; cv=none; b=j30dSjU4ouSIPJimdrpVc0uu3caOXoI5PxTQoTyLDI32LFZnUmk8Dak/TW7OR1/OzkaD24Z7UiKQsJ/vvnxOMlCGBr+dVMkpMcT7e9q0Q85NxNNVOGzyt7AwnPlmJkuCsOKGSnK48zNyr1Xb49qCjsiRfjm1wNr9jp9qELgpPBE=
+	t=1737977218; cv=none; b=iY+CNkvZU4bdCTQsj8+CFlcAErP6VtCCHoecKK4iv4NIz1II1fKCcc+7OoGFBS+vwjHCwTMHzmBTPFnjPjIwo7bPQ4gMD6GwK4v48ZScQLy8mIdn4SoA/nTJdpAMr5RrxE8+lcuKLGTTyi9KGUhuzEvkHYQXSS4COh8RnDgXR1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737976216; c=relaxed/simple;
-	bh=4WPT1Z4Aj/KQZl23Kq0JGIBCLGqJgplk9BV6cGEqQPg=;
+	s=arc-20240116; t=1737977218; c=relaxed/simple;
+	bh=2LXzBcD3lP1Z45W52QsCqvgm7530RMSofuk22LtNzDk=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o0wDKwe4Pjbv09q7zJctm+UB1VaPJQ1tZRBFNL2mSmDbdWlgd94x55fsGIpzORVXiy0VPaEy8t4tJBMusYnU6kALjfEYESGvGhv6lKDYm3y5K8BCCarARWpy0WzkisRigGB5xkIOh5fvIxTo4NcviK4NrU3NwT82vdhShfOxpq4=
+	 MIME-Version:Content-Type; b=f1fx2IKo/tjOJnvppDMCJJOs+t4epHbwXRCAxkLFVgicsS+ErF88mp0kpLxTHsqKCbOSPwhd8HInTc4AJoS9l0pPlEKMOSEqzZ3yTs3vGqyrggOy1ZOIHBVPvgcHNsxGHCyhr70nv+UQYchlmighTTJXVFU1gNOwPuVtoIx/sNc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YhQfr5nxqz6K98x;
-	Mon, 27 Jan 2025 19:09:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YhR0C101Rz67FBw;
+	Mon, 27 Jan 2025 19:24:43 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D21A31400D4;
-	Mon, 27 Jan 2025 19:10:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 38C1F1400D9;
+	Mon, 27 Jan 2025 19:26:52 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 27 Jan
- 2025 12:10:10 +0100
-Date: Mon, 27 Jan 2025 11:10:08 +0000
+ 2025 12:26:51 +0100
+Date: Mon, 27 Jan 2025 11:26:50 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [PATCH v1 04/19] cxl: Add Get Supported Features command for
- kernel usage
-Message-ID: <20250127111008.000002c1@huawei.com>
-In-Reply-To: <6792df1982a19_20fa294db@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250122235159.2716036-1-dave.jiang@intel.com>
-	<20250122235159.2716036-5-dave.jiang@intel.com>
-	<6792df1982a19_20fa294db@dwillia2-xfh.jf.intel.com.notmuch>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<alison.schofield@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>, <hch@infradead.org>,
+	<a.manzanares@samsung.com>, <fan.ni@samsung.com>, <anisa.su@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4] cxl/pci: Support Global Persistent Flush (GPF)
+Message-ID: <20250127112650.00004dd8@huawei.com>
+In-Reply-To: <20250124233533.910535-1-dave@stgolabs.net>
+References: <20250124233533.910535-1-dave@stgolabs.net>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,116 +45,135 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 23 Jan 2025 16:30:17 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 24 Jan 2025 15:35:33 -0800
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Dave Jiang wrote:
-> > CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
-> > The command retrieve the list of supported device-specific features
-> > (identified by UUID) and general information about each Feature.
-> > 
-> > The driver will retrieve the feature entries in order to make checks and
-> > provide information for the Get Feature and Set Feature command. One of
-> > the main piece of information retrieved are the effects a Set Feature
-> > command would have for a particular feature.
-> > 
-> > Co-developed-by: Shiju Jose <shiju.jose@huawei.com>
-> > Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > ---
-> > v1:
-> > - Change input param from cxlds to cxl_mbox
-> > - Move mbox_out declaration inline. (Jonathan)
-> > - Fix __counted_by() input. (Jonathan)
-> > - Return count for cxl_get_supported_features_count(). (Dan)
-> > - Remove goto from cxl_get_supported_features(). (Dan)
-> > - Return cxl_get_supported_feature_entry() directly. (Dan)
-> > - Drop user path enumeration. (Dan)
-> > - Move to the feature driver model. (Dan)
-> > - Add support for 0 feature data requested.
-> > - Add missing increment of feature data ptr during copy.
-> > ---
-> >  drivers/cxl/core/features.c |  28 +++++++
-> >  drivers/cxl/core/mbox.c     |   3 +-
-> >  drivers/cxl/cxl.h           |   2 +
-> >  drivers/cxl/features.c      | 146 +++++++++++++++++++++++++++++++++++-
-> >  include/cxl/features.h      |  32 ++++++++
-> >  5 files changed, 209 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> > index eb6eb191a32e..66a4b82910e6 100644
-> > --- a/drivers/cxl/core/features.c
-> > +++ b/drivers/cxl/core/features.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >  /* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-> >  #include <linux/device.h>
-> > +#include <cxl/mailbox.h>
-> >  #include "cxl.h"
-> >  #include "core.h"
-> >  
-> > @@ -69,3 +70,30 @@ struct cxl_features *cxl_features_alloc(struct cxl_mailbox *cxl_mbox,
-> >  	return ERR_PTR(rc);
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(cxl_features_alloc, "CXL");
-> > +
-> > +struct cxl_feat_entry *
-> > +cxl_get_supported_feature_entry(struct cxl_features *features,
-> > +				const uuid_t *feat_uuid)
-> > +{
-> > +	struct cxl_feat_entry *feat_entry;
-> > +	struct cxl_features_state *cfs;
-> > +	int count;
-> > +
-> > +	cfs = dev_get_drvdata(&features->dev);
-> > +	if (!cfs)
-> > +		return ERR_PTR(-EOPNOTSUPP);  
+> Add support for GPF flows. It is found that the CXL specification
+> around this to be a bit too involved from the driver side. And while
+> this should really all handled by the hardware, this patch takes
+> things with a grain of salt.
 > 
-> How could this function be called outside of the driver being enabled?
+> Upon respective port enumeration, both phase timeouts are set to
+> a max of 20 seconds, which is the NMI watchdog default for lockup
+> detection. The premise is that the kernel does not have enough
+> information to set anything better than a max across the board
+> and hope devices finish their GPF flows within the platform energy
+> budget.
 > 
-> If the driver might not be enabled when this is called, what stops it
-> from being disabled immediately after this check?
+> Timeout detection is based on dirty Shutdown semantics. The driver
+> will mark it as dirty, expecting that the device clear it upon a
+> successful GPF event. The admin may consult the device Health and
+> check the dirty shutdown counter to see if there was a problem
+> with data integrity.
 > 
-> Went looking for the caller of this function... none in this patch set.
-> 
-> If this is for the EDAC use case, that enabling had better be triggered
-> from a known context where these questions have a satisfactory answer.
-> As it stands I think you can just delete it, right?
-> 
-> This has me thinking that the EDAC integration should just be a feature
-> of the cxl_features_driver.
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-I'm not 100% sure I see what you mean here, but if you mean pushing
-the registration code into cxl_features.ko...
+A few minor things inline.
 
-I replied to this in the other thread, but just to add a bit here.
-I think this creates a worse spiders web than we have today. Not
-all EDAC features we might add (e.g. device self test) have anything to do
-with get/set features.  I'm not sure we'll support that one in EDAC soon
-though it might make sense if there is generality with non CXL systems
-(I've been meaning to look into that.)
+Only return 0 definitely wants changing, the others are just comments
+that you can act on if you want.
 
-To me, the CXL features support is providing a service to some of the EDAC
-features, but they use other services from CXL drivers and potentially
-don't use CXL features at all.  For now we have the repair drivers
-that only use the features support for a tiny bit of what they do
-(tweaking device initiated aspects and detailed record generation
- - if we even support those yet).
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-At some point we may have core CXL functionality depending on
-get/set features as well as there are things we definitely don't
-want in either EDAC or fwctl like metabits storage controls.
-So I'd be careful adding any thing to cxl_features beyond stuff
-that is definitely clustered with fwctl bit or helpers.
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index b3aac9964e0d..b0a85f411e7d 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1054,3 +1054,89 @@ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
+>  
+>  	return 0;
+>  }
+> +
+> +/*
+> + * Set max timeout such that platforms will optimize GPF flow to avoid
+> + * the implied worst-case scenario delays. On a sane platform, all
+> + * devices should always complete GPF within the energy budget of
+> + * the GPF flow. The kernel does not have enough information to pick
+> + * anything better than "maximize timeouts and hope it works".
+> + *
+> + * A misbehaving device could block forward progress of GPF for all
+> + * the other devices, exhausting the energy budget of the platform.
+> + * However, the spec seems to assume that moving on from slow to respond
+> + * devices is a virtue. It is not possible to know that, in actuality,
+> + * the slow to respond device is *the* most critical device in the
+> + * system to wait.
+> + */
+> +#define GPF_TIMEOUT_BASE_MAX 2
+> +#define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
+> +
+> +static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+> +{
+> +	u16 ctrl;
+> +	int rc, offset, base, scale;
+> +
+> +	switch (phase) {
+> +	case 1:
+> +		offset = CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET;
+> +		base = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK;
+> +		scale = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
+> +		break;
+> +	case 2:
+> +		offset = CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET;
+> +		base = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK;
+> +		scale = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+> +	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+> +		return rc;
 
-Soon I'd also expect us to add 'features' to fwctl interface
-that aren't using get/set features. I think you suggested that we
-could do this by making up some guids for them and pushing though
-this same interface.
+return 0; // it is zero anyway, so be explicit that this
+          // is a good path.
 
-Jonathan
+> +
+> +	ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
+> +	ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+> +
+> +	rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
+> +	if (!rc)
+> +		pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
 
+It's a bit nasty to assume for this print that the scale is 10 seconds
+but allow the base to vary.
+
+> +			phase, GPF_TIMEOUT_BASE_MAX);
+> +
+> +	return rc;
+> +}
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 2a25d1957ddb..17baced54b3b 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -693,6 +693,10 @@ struct cxl_mbox_set_partition_info {
+>  
+>  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+>  
+> +struct cxl_mbox_set_shutdown_state_in {
+Spec reference maybe to keep inline with other similar structures?
+
+> +	u8 state;
+> +} __packed;
+> +
+>  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>  struct cxl_mbox_set_timestamp_in {
+>  	__le64 timestamp;
+> @@ -829,6 +833,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+>  			    const uuid_t *uuid, union cxl_event *evt);
+> +int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds);
+>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
 
