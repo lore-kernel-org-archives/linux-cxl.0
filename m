@@ -1,163 +1,263 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F406F1DF998;
-	Tue, 28 Jan 2025 09:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738056562; cv=fail; b=ABVfCAuVyt9ys1gwoyVFCkMcU+fv2kAsbj3+kYuT80ghoakL4tPlBRmzow4wJvc5rc+WuQUpSNAe+6ngrhrKGcnN97PJZAzICSpp9WaTGpVP5fYIwiOm+RX8dAjvrYgIVEQtDctsgxJ3VIO4Laoxslv9e6nhILBWyMr4VxwNw1M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738056562; c=relaxed/simple;
-	bh=Upa2nvEpVJ616OiWn4+X1qb4FdgoLxhtVFrU4nyRUzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PY2Ja2f/ZHQuu+7nPxXdK3Jp0DDynNSfo5nlFE1+df6Ltf5EdUdxuPcEc3spSdtWuBCpCH1M3MQBHFYjAISMKAyQhthYEIhjhzLoontcN+bu5FQ6pVvacvBe7nawmigN+y2j9YnJN0fRNv89k0gR7TiTmymDjcmVzAw3xL0UgaI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zxH8pLqE; arc=fail smtp.client-ip=40.107.243.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zxH8pLqE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YFCQkSdHWbvaJdHfbIGHcfps7BM1fjTyB3UhV28jWBAYOMJfZ3fyDcj0XkH9JU/zLsiQGex+eYX+Hvy7pdQMP1GQjezB5toXJsJrK7PTs16jxtqJYdOUvV+ebE5CTaEVX4LzoEYzHt+ibv9hLnLEVhNVboB3+CmXQWz+J/i3QBbPBTIlLgqJIQGMduXDfrkaBFSAUW2HpAp6MGIecU2HI9/SvVuwKWh2qgUD9nXSibem/qtS1mbwza08ITTccjvHD7/srxedFh1oKzRHVXVcNQcO7fTFWhdYSXTrSCr4OYnjkPqB10G225sfJayx7EV8iEry6XiVS6cBt3rMGi+L2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zk61TBa3z8VLgqw3YyKqaXoornLmCjurFWRV0PRMkrQ=;
- b=UmfJo8AecORiHnBJlSYGzlNqnreJ915tjvtvFk5pBKnu7XiEm4Seg/s2N1e+j4Kg/yGo25II49np9+mvtlEXc7P1NncYAn6Y4ZHLHRezgDPpJIxRTa3Rx94gJ3hj0kg2tzOaroVdNHHmjS6wuF4lIp8fSSZNwkssPCUU8Jj2FogsLlkG/AFMz3tDV6RmjGI19waasyorBglbUZSa2PYeUBAqduGrMzE6tUqelEMPas7Aqs2BkSVzhQuW/jd8dKtijPycd47yn0ijzSwR1O2m82EsoAeRCa9O8ildMBzryBvSfh/oaHX0sDQc8DkZ+VrjnrlMPaPZAu6RPjvrieHrLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zk61TBa3z8VLgqw3YyKqaXoornLmCjurFWRV0PRMkrQ=;
- b=zxH8pLqESMl9SEg9pabHsgPE7NyxHPnoKu3TkH7l/kiIeyHlsRslhJg0DhEFewv24NsWwb7ynUG9ZPEIdHGTmylEHqjC5aOZRq0w1ObWdYZEZy0XhD8Vbh5alkzIv4Gs6Su+IdYlaZEkFTJRK0RSiRWjXFui6NlOHv1JAKoSN4s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CY5PR12MB6480.namprd12.prod.outlook.com (2603:10b6:930:33::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Tue, 28 Jan
- 2025 09:29:16 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8377.021; Tue, 28 Jan 2025
- 09:29:15 +0000
-Date: Tue, 28 Jan 2025 10:29:09 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Ben Cheatham <benjamin.cheatham@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 25/29] cxl/amd: Enable Zen5 address translation using
- ACPI PRMT
-Message-ID: <Z5ijZaxrEuKDlpXa@rric.localdomain>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-26-rrichter@amd.com>
- <5620864b-ff79-490d-bcd4-b34b5de6f8ab@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5620864b-ff79-490d-bcd4-b34b5de6f8ab@amd.com>
-X-ClientProxiedBy: FR3P281CA0200.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a5::15) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC69C1CD1E4
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Jan 2025 12:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738065713; cv=none; b=XKtrUOHZxMdMwKG29y9Q9Rn8RdTRKhVPO5BhIKrCMxi26QKsvXQwm0W9WHQcCopuf8sTgMmpNVVWtrerDukHAZ5wvgtUA+Bl4PSNvzYardOhnq0lCq1LCH2JyFFLcRdgdsZGMfcKygMWTW2wgDrtTMBueqUmCIpYW13rPGi6N3U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738065713; c=relaxed/simple;
+	bh=PibtffGkG+H4gaN4LR81r7MZrB429hwyPuMl0ikbtdc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pnj/2dqXdPjWMuXfYSJVKVxucFpspDNRvQrDQD6PkTJJ3HpCXgG6xLCbfYXVTYBJXBmJ8My22qIA1Pnn7KOg8/qRQ2jeeA0s4YPAvHERijx5DdsakNH9FyCRR1Na41f9XGDdUwwhkx1AambDswciXYmHNlQi++RMalD72dMOx1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yj3jr3CGsz6L4yG;
+	Tue, 28 Jan 2025 19:59:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB6C0140B73;
+	Tue, 28 Jan 2025 20:01:40 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 28 Jan
+ 2025 13:01:40 +0100
+Date: Tue, 28 Jan 2025 12:01:38 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [PATCH v1 14/19] cxl: Add support for fwctl RPC command to
+ enable CXL feature commands
+Message-ID: <20250128120138.0000599f@huawei.com>
+In-Reply-To: <67982790e13d1_2d1e294b0@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250122235159.2716036-1-dave.jiang@intel.com>
+	<20250122235159.2716036-15-dave.jiang@intel.com>
+	<6794478dd8026_20f329455@dwillia2-xfh.jf.intel.com.notmuch>
+	<20250127105132.000072dd@huawei.com>
+	<67982790e13d1_2d1e294b0@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CY5PR12MB6480:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb953791-0a63-4334-05bf-08dd3f7e3b93
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?U0A2AGHfdNNLCcTQzViQwYrDx6yGMb+ROUW9iSGwd0niKcTL1WprRq3gQRds?=
- =?us-ascii?Q?xIEY/eVY96cYr/hDEny7GCQBooREsQKXW96KTt0DYh6S8cFkX2OHh/WwQTTe?=
- =?us-ascii?Q?laOkP0u1xygzeQQl8IQjmeaJtABMJq8bujsi4D9vY8NAZ0mfhr7Ect2y0GIR?=
- =?us-ascii?Q?U7pqSxywmXBZ6jPQ+DoZNo8HE/LHFE+sL83LjZmFcBXTxc/nj63vfBQ7yfb7?=
- =?us-ascii?Q?ZrHMo1kJMq6T9AN6Z2+QlmkJd7TsG6X3UPx8fn7EzAFSIyxWw4O5hui+0gdL?=
- =?us-ascii?Q?/ehIA/zm0UxBZRMzWfQJSDwiA8kek+5gmajXIgsp61qWc9q2qdwIRqnDjK1y?=
- =?us-ascii?Q?VkFqBm9RqAODq5sbsL1YXOJ0EwncrnL7m0wJ3/xvghMWPJpfZGmdnGGTapOy?=
- =?us-ascii?Q?wMUHNnonzhGH1igLYTp5PVIWdkZAixfNu3vYJ+IbkYiOzP9jG1UTDsKytTil?=
- =?us-ascii?Q?i3evDDsFSgMOSA66GzRVNBgBRug64HGaPq0G3zWbFP7fCKn25XMFF0UvJajN?=
- =?us-ascii?Q?ZEZ5RXJozbnygHz56gbxPJlv5i75EAoVFmDIOLCNJsRBoMr5ynXfadZZ7uVO?=
- =?us-ascii?Q?Y35/Ph83OnuokpV8EAhngoqX4y1xsA1JreJsKZi/iBKm1Qai3xCFW6iZYdJL?=
- =?us-ascii?Q?tC5KuzWxMIAq3+TsIhdvZXrKR1/gy6evRhMvAzW+AB9PjmThxEjRXmzmLWPa?=
- =?us-ascii?Q?u3nNeQ5oHwA2sjqBcReAa3HtOTX3URJDjf2CZK5nYSfnmTkV7sUyvmIFq00q?=
- =?us-ascii?Q?cdpjrH/7oaqlVcREFqbh4JzZuXTmFV31yIftyZZTRo78cIn4zc6j+VC6+UwU?=
- =?us-ascii?Q?aGg1Q5Q9czRI8oXqF0s9umAv2l7Mdj3RvnIZngWmX3ZPWNae0+rPYXJnpoZb?=
- =?us-ascii?Q?1Yu6Ht71UqBWwA1zKD5V3h0wqYTQfow5vQq24ma1vmlS1T/4aoHquSKo0Llm?=
- =?us-ascii?Q?1hr+OKO5h5OPk1uZVYz7O7m3INTC727cEWZzrxpWWgPdbTX7OoVALPkFKPw6?=
- =?us-ascii?Q?fnJ6Eh6NldJBKIFtYuy0EXm7K27cIEpo3jfNpST1zH/LWf+QW6DMbcBck0aB?=
- =?us-ascii?Q?7BzhmDK14Os4cK4wSv0vxpuUv7U/l4AAnrW77Z10ZA1/+f9Fr48UVAFl4V7S?=
- =?us-ascii?Q?xkgVPgCPmw6sx//nyWtIG1EEH5aX70eIVcPaTPcue0qNe4OY8WjRcszq7iV0?=
- =?us-ascii?Q?WpRmr7KmI8p0EYzv7ZrvRd+Ye4H5huImbkiQU7VQ2Jhhy+x/MtEgmYHgpmTd?=
- =?us-ascii?Q?ANBT7gSH3b7Ji6ui9lHklXgSwjHpyRreGDzazFM2mew2stct0Jz+nAE+iAsK?=
- =?us-ascii?Q?R1zqYbr89lmwk9EWwoFpWHGd06spCfwhESTmZaQ476aSZ6bkaTKxZ1Y3WOcS?=
- =?us-ascii?Q?JTmzwZG/4nS4jyPie06D1o3rJaOD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/tCNwovtEQvDkZS6wQzEOeMoytPLMr2a/0fkwquDWEHqvc4vIuwHh/Qg0cJD?=
- =?us-ascii?Q?ujiaT+Byi3rXUA/ho6S+nS4bcporNavtPq7DkFSUX70BmQpvUs0GjSjibBsk?=
- =?us-ascii?Q?Y0OfdBJfbh+aaRac4rSAe6fkq/VvpDIiDKiKbKRc6TF7LrEmLcG3litSliEY?=
- =?us-ascii?Q?2W3ZoMf8OIlPo5mhACXhn6BxgQrJ84kR9KsHQu3YuJ4yDt7xSTWkLdyeGiNL?=
- =?us-ascii?Q?rPbh3DK+n6O+Smuj2ZIqfmxdPxcQdhx9pXjr+WngCvCwpdzE4wXucLMZOe0r?=
- =?us-ascii?Q?SPhsL5U4orIissO+laTKBon0yHv55ZhM/1S8ltqzYBQgrPP71qAQZaCrrw+V?=
- =?us-ascii?Q?t6FFKvixWAVSwDMyBOk0bk3lO2QDHkOHljE/qSyvotWnMi0qYAqlXnlhIe62?=
- =?us-ascii?Q?ZVnezatH+eUt80W9ZiZ0Qh0UTmZTd01YIkAaOZTg4dvsmIJ4qRzJMehVGmF7?=
- =?us-ascii?Q?mVtVVlLzrevdG/To9WGjDo1pcPlOvS01xEAW3kJej7Dhx4zHjJJxC03fAC72?=
- =?us-ascii?Q?nMeF7DA93/XoSzwFvUkeOTE4cWz5dSW29jonq5rlEvPU33Yhf4BDgLDcnV1z?=
- =?us-ascii?Q?CAXjE9AI/hLB43WtrpfJVpn7GbKaHKtI2vwaTlzd3wWiU+pm6FILTUDLe//z?=
- =?us-ascii?Q?lfysSrw0VmldYGgKci+ws5CJElT+c573mbhwdSe7g1DPcyMxrAHYJfBBkxd1?=
- =?us-ascii?Q?FCk3Q2a7ANPKc0EQc3O/8qW/LXqarrm1AUPGIuVKCeRdHil7M1jHIf4Yihbh?=
- =?us-ascii?Q?iC51V4dnLXFo5q2Taq7nWq+q940tBQaY+yI4eO2Dc6EA1HVmF0hbr5aTih2c?=
- =?us-ascii?Q?zMkTi3UK9MN2MYYPS8gRSVike38606UVI9C+AQLvJLnNaduD/AuzOPx+thLJ?=
- =?us-ascii?Q?OC14RKTrlD1dZnF3YW/Rt33IU1x5BZsFAo6XIXYESu3N9CXAiBxtIBgNZ3y2?=
- =?us-ascii?Q?PVkN4VFwJtZaacvu413Ahku0XIh8uQ/Sz5ot4lmt3yzmURSuD6DJwAQO+QNB?=
- =?us-ascii?Q?naQFgFOveCbgRM1/6QJXbK1fh+Gu5PT3W8oO4WOrnOJ4bDQousXdb4kXUyc/?=
- =?us-ascii?Q?rrxejZWH4AQk3BHqwRdVt04kKHauPQHOsD0HVj6yWHahnsiC5k4Eeqxe1k6X?=
- =?us-ascii?Q?cVC7W+FSTB5k9h7IXtQmDsnT/VpovwJnylVoEpvNoUPWuy2BGQvo9Vg4zJzY?=
- =?us-ascii?Q?tem2tQ0w6sRl5oej5sGzQB6nz7cksp0xhx+L5/HLjYBayRZ0M2flHVV/UulP?=
- =?us-ascii?Q?81cpqxGzNFshpruF8W4fhyQVQCCa0tV4DrheG11LPBzREAbQerz95pMFiOqj?=
- =?us-ascii?Q?nLwlA/hDkkxcMn6MJ1XzBJLMRKSH2lneZaFn/mDhEZS+rV0cz5pZZRsuBAOp?=
- =?us-ascii?Q?2i1sCZ31XNoMmjFdtnSyWIF4uOfR/ky8Ozgkm4nOVos5aTbF/D7NUh6ZeqsC?=
- =?us-ascii?Q?8sjbFvzxJUNibz+c9G2ATPqnuyOW/pYdvf32hropTSm89KhRsxV04zRg0nbC?=
- =?us-ascii?Q?9FSHobfO76gBz9hP5b9l4587Ljzd2iv0rZ8t3YlqosQfrzq3p3B9JAEXrcKA?=
- =?us-ascii?Q?klSldfx5HFhClGLaevs=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb953791-0a63-4334-05bf-08dd3f7e3b93
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2025 09:29:15.6504
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +SLxTRgeJ32UgcDzRUMsWhClaqs2Mq2OnXXSZbNTDPjlK541YxeCtnEcGdEhJ+p1KKulhKTdSOWujjssAnbSBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6480
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 17.01.25 15:32:25, Ben Cheatham wrote:
-> On 1/7/25 8:10 AM, Robert Richter wrote:
+On Mon, 27 Jan 2025 16:40:48 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> > +static u64 cxl_zen5_to_hpa(struct cxl_decoder *cxld, u64 hpa)
+> Jonathan Cameron wrote:
+> >   
+> > > > +}
+> > > > +
+> > > > +static void *cxlctl_get_supported_features(struct cxl_features_state *cfs,
+> > > > +					   const struct fwctl_rpc_cxl *rpc_in,
+> > > > +					   size_t *out_len)
+> > > > +{
+> > > > +	struct cxl_mbox_get_sup_feats_out *feat_out;
+> > > > +	struct cxl_mbox_get_sup_feats_in feat_in;
+> > > > +	struct cxl_feat_entry *saved, *pos;
+> > > > +	int requested, copied;
+> > > > +	size_t out_size;
+> > > > +	u32 count;
+> > > > +	u16 start;
+> > > > +
+> > > > +	if (rpc_in->op_size != sizeof(feat_in))
+> > > > +		return ERR_PTR(-EINVAL);
+> > > > +
+> > > > +	if (copy_from_user(&feat_in, u64_to_user_ptr(rpc_in->in_payload),
+> > > > +			   rpc_in->op_size))
+> > > > +		return ERR_PTR(-EFAULT);
+> > > > +
+> > > > +	count = le32_to_cpu(feat_in.count);
+> > > > +	start = le16_to_cpu(feat_in.start_idx);
+> > > > +	requested = count / sizeof(*pos);
+> > > > +
+> > > > +	/*
+> > > > +	 * Make sure that the total requested number of entries is not greater
+> > > > +	 * than the total number of supported features allowed for userspace.
+> > > > +	 */
+> > > > +	if (start >= cfs->num_user_features)
+> > > > +		return ERR_PTR(-EINVAL);
+> > > > +
+> > > > +	requested = min_t(int, requested, cfs->num_user_features - start);
+> > > > +
+> > > > +	out_size = sizeof(struct fwctl_rpc_cxl_out) + sizeof(*feat_out) +
+> > > > +		   requested * sizeof(*pos);
+> > > > +
+> > > > +	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
+> > > > +		kvzalloc(out_size, GFP_KERNEL);
+> > > > +	if (!rpc_out)
+> > > > +		return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +	rpc_out->size = sizeof(*feat_out) + requested * sizeof(*pos);
+> > > > +	feat_out = (struct cxl_mbox_get_sup_feats_out *)rpc_out->payload;
+> > > > +	if (requested == 0) {
+> > > > +		feat_out->num_entries = cpu_to_le16(requested);
+> > > > +		feat_out->supported_feats = cpu_to_le16(cfs->num_user_features);
+> > > > +		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+> > > > +		*out_len = out_size;
+> > > > +		return no_free_ptr(rpc_out);
+> > > > +	}
+> > > > +
+> > > > +	pos = &feat_out->ents[0];
+> > > > +	saved = &cfs->entries[0];
+> > > > +
+> > > > +	copied = 0;
+> > > > +	for (int i = 0; i < cfs->num_features; i++, saved++) {
+> > > > +		if (is_cxl_feature_exclusive(saved))
+> > > > +			continue;    
+> > > 
+> > > I think it's fine to let userspace see that exclusive features are
+> > > present, just need to return EBUSY if userspace actually tries to use
+> > > them.  
+> > 
+> > To me, a poke it and see interface is really ugly.  
 > 
-> After reading through your discussion with Gregory I'm not confused about the function name
-> anymore, but I would definitely include a comment specifying the expected usage and return value.
+> That smells more like a matter of documentation. "Doctor it hurts when I
+> try to use the documented kernel-exclusive commands?"
 
-I am going to add that description to struct cxl_port where the
-callback is implemented.
+To me this is a nasty interface design.
+If I'm writing a tool to enumerate what is exposed etc then it will
+have to poke every get command just to list if an interface is available.
+Hopefully none of them have side effects!
 
-Thanks for review,
+> 
+> > In many cases we could let "get" through even if the we are using the interface
+> > via some other kernel path and have it as exclusive.
+> > (I don't know how useful that is, but maybe it makes sense).
+> > 
+> > If we ever do that, the only way to discover if an interface is available
+> > will be to try the set interface.  Depending on design of feature
+> > that might have side effects - hopefully get never does!  
+> 
+> I would not put it past some future device to make that mistake.
 
--Robert
+True.  Though I'd be up for a quirk list to block such commands if we
+see them.  Can't deal with them until we know though.
+
+> 
+> > 
+> > Alternatives:
+> > 1. Flag. Maybe add something that makes it discoverable if a feature is
+> >    in exclusive mode or not.  
+> 
+> I notice that all existing defined Features set a non-zero "Get Feature
+> Size" in their Supported Feature Entry. I would not say "no" to just
+> zero-ing out Get Feature Size as a hint that "you might get EBUSY due to
+> kernel exclusivity with this command", but that still feels like
+> overkill compared to documentation.
+
+'might' is no use. Would have to be definitely as otherwise userspace
+can't know the size that field conveyed.
+
+> 
+> > 2. Query type interface.  So a way to actually ask if a given feature is
+> >    usable.  
+> 
+> Not sure we really need a programmatic way to read the documentation.
+> 
+> The CXL_MEM_COMMAND_FLAG_EXCLUSIVE flag is for cases where the
+> exclusivity is transient. For these features the exclusivity is
+> permanent, and I hope we never need to cross that
+> transient-exclusivity-bridge for Features.
+
+It's permanent today, but I can definitely see that not always being
+the case - we may well have future kernel does things in X fashion but
+for legacy support disable that CONFIG option. Not nice but definitely
+plausible.
+
+> 
+> > 3. What we have here.  To me the simplest solution is hide what we can't
+> >    be used.  
+> 
+> It is inconsistent that we do not do this for the other kernel exclusive
+> commands in userspace retreived Command Effects Log. The ABI here is raw
+> Get Supported Features payload.
+
+If they were exposed via similar paths I'd agree consistency matters
+but I 'hope' no one is going to have a tool that mixes fwctl and the
+legacy path.  In my head we add all the useful commands to fwctl
+and that legacy path ends up effectively deprecated.
+
+Anyhow, I don't feel that strongly about this, it's just a case
+of doesn't smell of roses to me.
+
+> 
+> > > > +	/* These effects supported for all scope */
+> > > > +	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
+> > > > +	     (effects & CXL_CMD_EFFECTS_EXTEND &&
+> > > > +	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
+> > > > +	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
+> > > > +	    scope >= FWCTL_RPC_DEBUG_WRITE)
+> > > > +		return true;    
+> > > 
+> > > Looks good for the known bits, but this needs to return false for the
+> > > currently reserved bits because the driver can not assume a security
+> > > model for future effects. If a future spec adds
+> > > FWCTL_RPC_DEBUG_WRITE-safe effects, a new kernel is needed to allow
+> > > those Feature commands through.
+> > > 
+> > > Sidenote: I wonder why the spec wasted one of its bits on an extend bit,
+> > > but here we are. The 'extend' concept is typically something like
+> > > "bit15: go look at this other field in this payload as this 16-bit field
+> > > was exhausted", not "bit9: the bits above this originally defined 16 bit
+> > > field now has more bits", oh well.  
+> > 
+> > It's odd but corner case of going from 'unknown' state for the remaining
+> > pair of bits to 0 means this and 1 means this.  
+> 
+> I don't understand. 0 means no effect to worry about whether it is
+> defined or not.
+> 
+> > Naming though doesn't match the spec that calls it CEL[11:10] valid.
+> > Would be good to name it closer to that as we may well have something
+> > in bits 12 and 15 in future and it doesn't refer to them.  
+> 
+> Hopefully we can head off another "valid2" mistake, and I don't think
+> Linux needs to define anything for this bit. That bit's definition is:
+> 
+>    "Bit[9]: 1 is recommended, 0 is permitted (CEL[11:10] Valid)"
+> 
+> ...which translates to "useless". If 11 or 10 are set, I don't care what
+> value 9 has.
+>
+> If 12:15 are set, I don't care if there is a future valid2
+> bit gating whether or not to use them. Valid bits are for cases that go
+> outside of what Reserved 0 compatibility rules can convey, and I think
+> Reserved 0 compatiblity fully covers us in this case.
+
+Seems the spec authors disagreed. (obviously I can't comment on that
+discussion).
+
+Using just what anyone can see (if they have the spec)
+It was a clear spec hole and there wasn't an obvious default for 0 to
+mean so it was a 'read your device docs and act appropriately' case
+before this stuff was added.
+
+There may be corner cases where the right answer if we know the
+feature is not persisted over a reset but instead panic or take
+some heavy weight action. Same can be true the other way around
+in that we may have to do something heavy to manually reset something
+we don't want to persist over reset. Hopefully not but we'll see.
+
+> 
+> So, if a device use case breaks because they set 10, but clear 9 and
+> expect software to ignore 10 then they get to keep all the pieces
+> because they have already broken the expectations of Reserved 0
+> compat-software created before 9 existed.
+
+True, but a compliance test should have dealt with that (seems they
+are yet to catch up with this though).
+
+Jonathan
+
