@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8DC192B85;
-	Tue, 28 Jan 2025 18:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB141C3BFE;
+	Tue, 28 Jan 2025 18:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738090273; cv=none; b=YYgSPR/1/RbPf770FgXuP9LiZ9Ur4BAOFtkpy/KnL1r7fn4r7GhiGR83KbLHdpPXMTVaHwDCsJFmsWGLPZ0XogsNw1CYEkJ1cK3Lfr0eKqYP61ZgFdYVYrhCjcMRCnmmllrUkBdNYHT4bObUO9+sjaTJaO9lKAKL+0p1vAqMyxA=
+	t=1738090275; cv=none; b=pDJA9Z7C7o811oS9opLQh/deSMFVz10gqlj+KcwELEUuZQ8LT7whbJNXog0ACIX6NjNKc7GdsDj8puSqwBMQrmAbvhOFrVyXQlI0J7wLeRChuEDBFY6NLVsiX7nKpHQRBzFjACKxgoZBSNyhbjoCqBxkhpkRt/vPIw6OTGrP9dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738090273; c=relaxed/simple;
-	bh=0jDCoCi7sLNG57pvNNppomUhK990HzbHjgYk6OU/Ehk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lMBvE++YZAEEQwETPQMQso8cWVvzIyba/I6nXI9/L0LduePjZoFXNeJMCyVjkMKowcBHu5VzZOufK5v+VIrRRDVGxOYMIPxjXf2/phOsLzAzidk4h1QYZuPVrwSTIAavLOAg3iOw9t5yzCq5N/V7Eoh2bGTzK1Lv8DD/kjF28Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KffFnouM; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1738090275; c=relaxed/simple;
+	bh=7qdpJ5zKp8yL7UOyRvar/6bL8J7Blngq6ONjuORg+gM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CzVSgaCxHWHRFwVqmBqOz/X7cRo2D+l1U5Lj1kuXIbpFFgl+yE/mF9C427An+4SInSjowuvGPL/EnlD2R7PpSD0F3lu/kFkfSQWmwY60GXPCBbE3SRrKe+Xb+17OtA4EJ1+wsgLJEMkOywX05WKSSIiuXguW+IhotKR+COVyjT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EW2d+uRS; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KffFnouM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EW2d+uRS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738090271; x=1769626271;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=0jDCoCi7sLNG57pvNNppomUhK990HzbHjgYk6OU/Ehk=;
-  b=KffFnouMMFuQADKrfk0BJlqSs7ssjTWbYUrBpcXAkv4dAP9lvr+3Hd2y
-   WLVL1MdgcngkYkXVgU2Vuicay+V9tz3i54DEb1V2B+5LqKu7nqUJ0m5ok
-   ECt19jrAXoOyYvUeoUHkytlCvi0fj//+ICBK8i4cFoIoGR9xzU1kXez3p
-   OR1UwF/aSBkfsOgOuLBOBAAftJse6Z0dreHkCXwrZkPcy49LXiCUn6ODy
-   gUtkrcEW10fCDEqOFH12Eo9VhTQsTyujR5uM5ujtnnoHfwH7XMzxeF5MV
-   DoaJOeOMibLBBjsFuqqoz4YMtTgs+eOI9dd4Zo/VbDqCYnAzRNlSnoAJx
+  t=1738090273; x=1769626273;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=7qdpJ5zKp8yL7UOyRvar/6bL8J7Blngq6ONjuORg+gM=;
+  b=EW2d+uRSGS1EKeOSrdcLC7tZHVma/1mNdkQbz9UkRZU+PDgBeLwXKwh1
+   ynGK6QQuof7y+hAntSq0Lj9nK4e0bHvBOZo79cB8rV53cUC+0ndP4YeJ/
+   MkJ7PD39bpTxOTpgL0rxLuAGANSLZqB5WlvUKOottiJXOBwKxP1ZQFsLp
+   vbB+RaOZmUr0rkbRlNrraB7WkQ1cLKGPffZEFxzimepSiWri0Q5Q4fCmJ
+   QEEnK6UhvqdMVqh2O5GfPQbeHDHuodJxRvZrDnKV8LHXG8CxHH0tz14n+
+   ZVxjpa6xBz02w7cAG6h9I7UQoGUWw9AppKVEHe/xfoEo5Ys/lmZYCaRSb
    A==;
-X-CSE-ConnectionGUID: jCI8pVItRM+gECd1sxFk3g==
-X-CSE-MsgGUID: dsn6rHqFTEqKtNBRuOdXmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="49177329"
+X-CSE-ConnectionGUID: TkmTcCqeRhOvA/S4RilPBg==
+X-CSE-MsgGUID: K1y7/SLoRfKJrG3I8hJP8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="49177334"
 X-IronPort-AV: E=Sophos;i="6.13,242,1732608000"; 
-   d="scan'208";a="49177329"
+   d="scan'208";a="49177334"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:51:11 -0800
-X-CSE-ConnectionGUID: PGAwLF15Sea1E/W0w3+yXw==
-X-CSE-MsgGUID: GqWTW2hERMC52Z9rMi84hA==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:51:12 -0800
+X-CSE-ConnectionGUID: URsLrgZyTY+304DYXAiwWw==
+X-CSE-MsgGUID: xDxCMx6XTliTmZ/lreQ5vg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="108676675"
+   d="scan'208";a="108676681"
 Received: from puneetse-mobl.amr.corp.intel.com (HELO localhost) ([10.125.108.40])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:51:10 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2025 10:51:12 -0800
 From: Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH RFC 0/2] cxl: Further clean up of memdev state
-Date: Tue, 28 Jan 2025 12:51:06 -0600
-Message-Id: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
+Date: Tue, 28 Jan 2025 12:51:07 -0600
+Subject: [PATCH RFC 1/2] cxl/memdev: Remove unused partition values
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,10 +54,9 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABonmWcC/x2MuwqAMAwAf0UyG7BFRV0FP8BVHGKNmsEHKYgg/
- XeL291w94JnFfbQJC8o3+LlPKKYNAG30bEyyhwdbGaLzJgSdXGoTOo23HmP6DF3U001VdaWBDG
- 8lBd5/ukAfdfCGMIHp9mibmkAAAA=
-X-Change-ID: 20250116-rfc-rearch-mem-res-4cb9a9a8226a
+Message-Id: <20250128-rfc-rearch-mem-res-v1-1-26d1ca151376@intel.com>
+References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
+In-Reply-To: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, 
  Dan Williams <dan.j.williams@intel.com>, 
  Davidlohr Bueso <dave@stgolabs.net>, 
@@ -67,40 +66,63 @@ To: Dave Jiang <dave.jiang@intel.com>,
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Ira Weiny <ira.weiny@intel.com>
 X-Mailer: b4 0.15-dev-2a633
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738090268; l=1229;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738090268; l=2034;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=0jDCoCi7sLNG57pvNNppomUhK990HzbHjgYk6OU/Ehk=;
- b=D69SYslPpOTOjGBeCD0c7NFeFHME2li6p5jNwXD4HQdPtMhFIGvj2my/1PyT/Wm4+uiWg7ckP
- EIvv+qaJkCNCbX2YdHJfF9DVU8DIhrZfHNNQ63ef+0t1FfYVpFl/lY+
+ bh=7qdpJ5zKp8yL7UOyRvar/6bL8J7Blngq6ONjuORg+gM=;
+ b=FmXpIGA5++PQRH7JNc5bHAmDAYE/dYvbACemZ35piKSDbvNJ6zMgJUzzrq86wT4UCDST/cOnE
+ dUbqRjfiEZPCze7XAh6aOE9hL8K1MctsGeJ76zRkvq3pEmvbC3SXPV0
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 
-Dan has identified issues with the way the CXL core manages data within
-the cxl_memdev_state object.[1]  Rather than just change DCD, clean up
-cxl_memdev_state prior to DCD so the addition of DCD is consistent.
+The next volatile and next persistent values are unused and are
+cluttering the cxl_memdev_state.
 
-These clean ups are based on top of Dan's re-architect of the handling
-of DPA partitions. [2]  They are intended to land after his v3 of that
-set which is due out.
+Remove these values.
 
-Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
-Link: https://lore.kernel.org/all/173753635014.3849855.17902348420186052714.stgit@dwillia2-xfh.jf.intel.com/ [2]
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
-Ira Weiny (2):
-      cxl/memdev: Remove unused partition values
-      cxl/memdev: Remove temporary variables from cxl_memdev_state
+ drivers/cxl/core/mbox.c | 4 ----
+ drivers/cxl/cxlmem.h    | 4 ----
+ 2 files changed, 8 deletions(-)
 
- drivers/cxl/core/mbox.c      | 81 ++++++++++++++++----------------------------
- drivers/cxl/cxlmem.h         | 29 ++++++----------
- drivers/cxl/pci.c            | 13 ++++---
- tools/testing/cxl/test/mem.c | 13 ++++---
- 4 files changed, 59 insertions(+), 77 deletions(-)
----
-base-commit: 17f710b7327024d16b9c98672462d603aa821920
-change-id: 20250116-rfc-rearch-mem-res-4cb9a9a8226a
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 62bb3653362f5325cfdab7812633328eac50ab30..998e1df36db673c47c4e87b957df9c29bf3f291a 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1097,10 +1097,6 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
+ 		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+ 	mds->active_persistent_bytes =
+ 		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
+-	mds->next_volatile_bytes =
+-		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+-	mds->next_persistent_bytes =
+-		le64_to_cpu(pi.next_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index f218d43dec9fd89f950af667ff033d0802084345..29817f533e5e408243d361c46ddbf0c295b4fda4 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -548,8 +548,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+  * @partition_align_bytes: alignment size for partition-able capacity
+  * @active_volatile_bytes: sum of hard + soft volatile
+  * @active_persistent_bytes: sum of hard + soft persistent
+- * @next_volatile_bytes: volatile capacity change pending device reset
+- * @next_persistent_bytes: persistent capacity change pending device reset
+  * @event: event log driver state
+  * @poison: poison driver state info
+  * @security: security driver state info
+@@ -570,8 +568,6 @@ struct cxl_memdev_state {
+ 	u64 partition_align_bytes;
+ 	u64 active_volatile_bytes;
+ 	u64 active_persistent_bytes;
+-	u64 next_volatile_bytes;
+-	u64 next_persistent_bytes;
+ 
+ 	struct cxl_event_state event;
+ 	struct cxl_poison_state poison;
 
-Best regards,
 -- 
-Ira Weiny <ira.weiny@intel.com>
+2.48.1
 
