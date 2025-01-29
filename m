@@ -1,362 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B381FC8;
-	Wed, 29 Jan 2025 16:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F71190696;
+	Wed, 29 Jan 2025 18:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738169558; cv=none; b=bpHFaiQosfooF4zrDHPzGXZW/tJLHpbfso8/q0QGr/vakRZ88cQV0MUcTeYC7brXIdo18vIERB9WsIz6TppWdwctMmheIYUlsPtxOUHn29u53nTUChMlTR/l8ND9cIIb8QLpdtxUoe5l21Qd7LcXHOmW71FVxXJOOMDPJ0GZZYQ=
+	t=1738173909; cv=none; b=JDrgat8aOfNF9vU9jUEibf8N9Oyvvres+jfVnGur6FlqU61dSB/aSgLueF3hBXhnaXHlvrf9Ci9B8Eymhmg4ZoM0Tq3wekG7tFqORTr83rVmMMxLWX5mnlJH4ZFD8ty2QdxjYqnCLUfWnCxlvJKwr9LgsIZ2U3bl0nwiFNVKeLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738169558; c=relaxed/simple;
-	bh=GEp2XSJ2XjJICbfTNLs4klClD7Xj8GuVgHG5jLMfZjU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FErnVcxxlltcWh7MjJdlvRpaOmOuVR8RvMLfQ/WVWxukFBODaj0dPj5YOHXJP+ycVxcSfT86+7CtgDWaI6NCW+CM6icMvG4YPaKykFpuhTbHj1rzIRlMnYlEPYdlOtWx+d2e5KscQNR+pX/pX2kCytqJasMpn7QFUzsn4r1ekwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fsMbBj5B; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsMbBj5B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738169555; x=1769705555;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GEp2XSJ2XjJICbfTNLs4klClD7Xj8GuVgHG5jLMfZjU=;
-  b=fsMbBj5BvPgYImX2ZNOCmUxNAKt7NsG0yCXFyKhF7VcYVbPW6UdS+ZOR
-   aW6bqnVb6wxXuzJyfr6t9vMOCNBcFnTkFPFyAQTA91NS5pk7XG9lIH0QZ
-   i68OVtMDKv2GV0tAQrHjH0rM9mQ0g+XIZ0MfLnfUuIgvx1K5Pe9XLux09
-   jcBAqhwJEmjbn5k0XAJyp3qMGPPiVCmpdY0DLp7kolUbaL+86qlvzptvX
-   d+rGDCZsRENhukvWkM87KRdfRUBtYE5RamCB8kZL0jSrOYRxMCWhrq/GT
-   XyX/EksszvHFMLUZYk+afOfeWdQTh8a1nGGEKL6DuU5lOk1GSiSwCyPY2
-   Q==;
-X-CSE-ConnectionGUID: +iD8Np7dT6OXgqKNYpSIZA==
-X-CSE-MsgGUID: DWpWIgeSTR6eGI9g934gqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="49348799"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="49348799"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 08:52:34 -0800
-X-CSE-ConnectionGUID: ZNmiZrrlQVGLcEvHuxEWqQ==
-X-CSE-MsgGUID: 7eWmUKSBRwCXsuoLkYjxjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="108901903"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.127]) ([10.125.108.127])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 08:52:34 -0800
-Message-ID: <453a1ccc-2cb0-4f4a-8e8c-9d04866a11dd@intel.com>
-Date: Wed, 29 Jan 2025 09:52:33 -0700
+	s=arc-20240116; t=1738173909; c=relaxed/simple;
+	bh=aZGxou+o0R4tqkO91xrIH648V+X/6H/44mU0RNpKK/w=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HgLZP1v95bN5BdKo+VYev5LhxFH4HX7FCOHKTcibSKwiCYCoyCG0x0Gr+4x3PaTUUaS81tb9+3QQPuFrynsxajvdfRY6WIi9od5+FA/VP01pSvO/NOeptxMk3FLMI9KKT60NThll0PMwIbQmWQliwoAF2iOZpo8/Sc57bVrFDBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yjqkn6crdz6M4MF;
+	Thu, 30 Jan 2025 02:02:57 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A4759140A35;
+	Thu, 30 Jan 2025 02:05:03 +0800 (CST)
+Received: from localhost (10.195.34.64) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 Jan
+ 2025 19:05:01 +0100
+Date: Wed, 29 Jan 2025 18:04:59 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <alucerop@amd.com>, Shuai Xue
+	<xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v5 06/16] PCI/AER: Change AER driver to read UCE fatal
+ status for all CXL PCIe Port devices
+Message-ID: <20250129180459.00007e2e@huawei.com>
+In-Reply-To: <f9194caf-9dbb-4b2c-b4ac-71bdfda38dc5@amd.com>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+	<20250107143852.3692571-7-terry.bowman@amd.com>
+	<20250114113208.00006d08@huawei.com>
+	<f9194caf-9dbb-4b2c-b4ac-71bdfda38dc5@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-To: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 28 Jan 2025 14:25:54 -0600
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
 
-
-On 1/28/25 11:51 AM, Ira Weiny wrote:
-> As was mentioned by Dan[1] cxl_memdev_state stores values which are only
-> used during device probe.  This clutters the data structure and is a
-> hindrance on code maintenance.  Those values are best handled with
-> temporary variables.
+> On 1/14/2025 5:32 AM, Jonathan Cameron wrote:
+> > On Tue, 7 Jan 2025 08:38:42 -0600
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >  
+> >> The AER service driver's aer_get_device_error_info() function doesn't read
+> >> uncorrectable (UCE) fatal error status from PCIe Upstream Port devices,
+> >> including CXL Upstream Switch Ports. As a result, fatal errors are not
+> >> logged or handled as needed for CXL PCIe Upstream Switch Port devices.
+> >>
+> >> Update the aer_get_device_error_info() function to read the UCE fatal
+> >> status for all CXL PCIe devices. Make the change such that non-CXL devices
+> >> are not affected.
+> >>
+> >> The fatal error status will be used in future patches implementing
+> >> CXL PCIe Port uncorrectable error handling and logging.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>  
+> > This clashes with Shuai's series adding link healthy checks.
+> > Maybe we can reuse that logic to incorporate the condition we
+> > care about here?
+> >  
 > 
-> Adjust the query of memory devices to read byte sizes in one call which
-> takes partition information into account.  Use the values to create
-> partitions for device state initialization.  Take care to separate the
-> mailbox queries from the initialization of device state to steer the
-> mbox code toward taking mailbox objects rather than memdev states.
-> Update spec references while changing these calls.
+> Hi Jonathan, et. al,
 > 
-> Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> After looking at this closer and considering the situation I believe
+> we should remove this patch from the patchset and defer adding these
+> changes to log USP AER and RAS UCE.
+> 
+> I propose we reintroduce this later as a RFC or RFT in a future patchset.
+> This will give more needed time for testing.
+> 
+> The only downside to adding later is in the case of CXL USP fatal UCE. AER and
+> RAS will not be logged but this was the AER driver's existing behavior and as a
+> result isn't a regression.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/mbox.c      | 77 +++++++++++++++++---------------------------
->  drivers/cxl/cxlmem.h         | 25 +++++++-------
->  drivers/cxl/pci.c            | 13 +++++---
->  tools/testing/cxl/test/mem.c | 13 +++++---
->  4 files changed, 59 insertions(+), 69 deletions(-)
+If we have doubts and it is complex then sure. Let's do this in stages.
+
+Jonathan
+
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 998e1df36db673c47c4e87b957df9c29bf3f291a..44618746ad79b0459501bb3001518f6b7d2ceaba 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1068,6 +1068,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
->  /**
->   * cxl_mem_get_partition_info - Get partition info
->   * @mds: The driver data for the operation
-> + * @dev_info: Device info results
->   *
->   * Retrieve the current partition info for the device specified.  The active
->   * values are the current capacity in bytes.  If not 0, the 'next' values are
-> @@ -1075,9 +1076,10 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
->   *
->   * Return: 0 if no error: or the result of the mailbox command.
->   *
-> - * See CXL @8.2.9.5.2.1 Get Partition Info
-> + * See CXL 3.1 @8.2.9.9.2.1 Get Partition Info
->   */
-> -static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
-> +static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds,
-> +				      struct cxl_mem_dev_info *dev_info)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_get_partition_info pi;
-> @@ -1093,9 +1095,9 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
->  	if (rc)
->  		return rc;
->  
-> -	mds->active_volatile_bytes =
-> +	dev_info->volatile_bytes =
->  		le64_to_cpu(pi.active_volatile_cap) * CXL_CAPACITY_MULTIPLIER;
-> -	mds->active_persistent_bytes =
-> +	dev_info->persistent_bytes =
->  		le64_to_cpu(pi.active_persistent_cap) * CXL_CAPACITY_MULTIPLIER;
->  
->  	return 0;
-> @@ -1104,18 +1106,24 @@ static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
->  /**
->   * cxl_dev_state_identify() - Send the IDENTIFY command to the device.
->   * @mds: The driver data for the operation
-> + * @dev_info: Device info results
->   *
->   * Return: 0 if identify was executed successfully or media not ready.
->   *
-> - * This will dispatch the identify command to the device and on success populate
-> - * structures to be exported to sysfs.
-> + * This will dispatch the identify and partition info commands to the device
-> + * and on success populate structures required for the memory device to
-> + * operate.
-> + *
-> + * See CXL 3.1 @8.2.9.9.1.1 Identify Memory Device
->   */
-> -int cxl_dev_state_identify(struct cxl_memdev_state *mds)
-> +int cxl_dev_state_identify(struct cxl_memdev_state *mds,
-> +			   struct cxl_mem_dev_info *dev_info)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> -	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
-> +	struct device *dev = cxl_mbox->host;
->  	struct cxl_mbox_identify id;
->  	struct cxl_mbox_cmd mbox_cmd;
-> +	u64 partition_align_bytes;
->  	u32 val;
->  	int rc;
->  
-> @@ -1131,14 +1139,22 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds)
->  	if (rc < 0)
->  		return rc;
->  
-> -	mds->total_bytes =
-> +	dev_info->total_bytes =
->  		le64_to_cpu(id.total_capacity) * CXL_CAPACITY_MULTIPLIER;
-> -	mds->volatile_only_bytes =
-> +	dev_info->volatile_bytes =
->  		le64_to_cpu(id.volatile_capacity) * CXL_CAPACITY_MULTIPLIER;
-> -	mds->persistent_only_bytes =
-> +	dev_info->persistent_bytes =
->  		le64_to_cpu(id.persistent_capacity) * CXL_CAPACITY_MULTIPLIER;
-> -	mds->partition_align_bytes =
-> +
-> +	partition_align_bytes =
->  		le64_to_cpu(id.partition_align) * CXL_CAPACITY_MULTIPLIER;
-> +	if (partition_align_bytes != 0) {
-> +		rc = cxl_mem_get_partition_info(mds, dev_info);
-> +		if (rc) {
-> +			dev_err(dev, "Failed to query partition information\n");
-> +			return rc;
-> +		}
-> +	}
->  
->  	mds->lsa_size = le32_to_cpu(id.lsa_size);
->  	memcpy(mds->firmware_version, id.fw_revision,
-> @@ -1237,7 +1253,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
->  	return rc;
->  }
->  
-> -static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
-> +void cxl_add_partition(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
->  {
->  	int i = info->nr_partitions;
->  
-> @@ -1251,40 +1267,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
->  	info->part[i].mode = mode;
->  	info->nr_partitions++;
->  }
-> -
-> -int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-> -{
-> -	struct cxl_dev_state *cxlds = &mds->cxlds;
-> -	struct device *dev = cxlds->dev;
-> -	int rc;
-> -
-> -	if (!cxlds->media_ready) {
-> -		info->size = 0;
-> -		return 0;
-> -	}
-> -
-> -	info->size = mds->total_bytes;
-> -
-> -	if (mds->partition_align_bytes == 0) {
-> -		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
-> -		add_part(info, mds->volatile_only_bytes,
-> -			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
-> -		return 0;
-> -	}
-> -
-> -	rc = cxl_mem_get_partition_info(mds);
-> -	if (rc) {
-> -		dev_err(dev, "Failed to query partition information\n");
-> -		return rc;
-> -	}
-> -
-> -	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
-> -	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
-> -		 CXL_PARTMODE_PMEM);
-> -
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_add_partition, "CXL");
->  
->  int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 29817f533e5e408243d361c46ddbf0c295b4fda4..62e641d69eac975bae023f221c40713ad0317d1a 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -542,12 +542,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
->   * @firmware_version: Firmware version for the memory device.
->   * @enabled_cmds: Hardware commands found enabled in CEL.
->   * @exclusive_cmds: Commands that are kernel-internal only
-> - * @total_bytes: sum of all possible capacities
-> - * @volatile_only_bytes: hard volatile capacity
-> - * @persistent_only_bytes: hard persistent capacity
-> - * @partition_align_bytes: alignment size for partition-able capacity
-> - * @active_volatile_bytes: sum of hard + soft volatile
-> - * @active_persistent_bytes: sum of hard + soft persistent
->   * @event: event log driver state
->   * @poison: poison driver state info
->   * @security: security driver state info
-> @@ -562,12 +556,6 @@ struct cxl_memdev_state {
->  	char firmware_version[0x10];
->  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
->  	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
-> -	u64 total_bytes;
-> -	u64 volatile_only_bytes;
-> -	u64 persistent_only_bytes;
-> -	u64 partition_align_bytes;
-> -	u64 active_volatile_bytes;
-> -	u64 active_persistent_bytes;
->  
->  	struct cxl_event_state event;
->  	struct cxl_poison_state poison;
-> @@ -885,10 +873,19 @@ enum {
->  
->  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->  			  struct cxl_mbox_cmd *cmd);
-> -int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> +
-> +struct cxl_mem_dev_info {
-> +	u64 total_bytes;
-> +	u64 volatile_bytes;
-> +	u64 persistent_bytes;
-> +};
-> +
-> +int cxl_dev_state_identify(struct cxl_memdev_state *mds,
-> +			   struct cxl_mem_dev_info *dev_info);
-> +void cxl_add_partition(struct cxl_dpa_info *info, u64 start, u64 size,
-> +		       enum cxl_partition_mode mode);
->  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
->  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
-> -int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
->  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
->  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  				unsigned long *cmds);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index fa30e763a0ce4fd78441f486ce08c81e21207e29..b69ba756e7f722a327c42fb57f843635cf8367a2 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -903,6 +903,7 @@ __ATTRIBUTE_GROUPS(cxl_rcd);
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-> +	struct cxl_mem_dev_info dev_info = { 0 };
->  	struct cxl_dpa_info range_info = { 0 };
->  	struct cxl_memdev_state *mds;
->  	struct cxl_dev_state *cxlds;
-> @@ -989,13 +990,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_dev_state_identify(mds);
-> +	rc = cxl_dev_state_identify(mds, &dev_info);
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_mem_dpa_fetch(mds, &range_info);
-> -	if (rc)
-> -		return rc;
-> +	if (cxlds->media_ready) {
-> +		range_info.size = dev_info.total_bytes;
-> +		cxl_add_partition(&range_info, 0, dev_info.volatile_bytes,
-> +				  CXL_PARTMODE_RAM);
-> +		cxl_add_partition(&range_info, dev_info.volatile_bytes,
-> +				  dev_info.persistent_bytes, CXL_PARTMODE_PMEM);
-> +	}
->  
->  	rc = cxl_dpa_setup(cxlds, &range_info);
->  	if (rc)
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index ed365e083c8f545b6c1308f48b5f4f7bc51135e8..b88bc3fd8122e6dd2969d525e72f1ea8d5069913 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1477,6 +1477,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  	struct cxl_dev_state *cxlds;
->  	struct cxl_mockmem_data *mdata;
->  	struct cxl_mailbox *cxl_mbox;
-> +	struct cxl_mem_dev_info dev_info = { 0 };
->  	struct cxl_dpa_info range_info = { 0 };
->  	int rc;
->  
-> @@ -1534,13 +1535,17 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  		return rc;
->  
->  	cxlds->media_ready = true;
-> -	rc = cxl_dev_state_identify(mds);
-> +	rc = cxl_dev_state_identify(mds, &dev_info);
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_mem_dpa_fetch(mds, &range_info);
-> -	if (rc)
-> -		return rc;
-> +	if (cxlds->media_ready) {
-> +		range_info.size = dev_info.total_bytes;
-> +		cxl_add_partition(&range_info, 0, dev_info.volatile_bytes,
-> +				  CXL_PARTMODE_RAM);
-> +		cxl_add_partition(&range_info, dev_info.volatile_bytes,
-> +				  dev_info.persistent_bytes, CXL_PARTMODE_PMEM);
-> +	}
->  
->  	rc = cxl_dpa_setup(cxlds, &range_info);
->  	if (rc)
+> Your thoughts?
+> 
+> Regards,
+> Terry
+> 
+> >> ---
+> >>  drivers/pci/pcie/aer.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> >> index 62be599e3bee..79c828bdcb6d 100644
+> >> --- a/drivers/pci/pcie/aer.c
+> >> +++ b/drivers/pci/pcie/aer.c
+> >> @@ -1253,7 +1253,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+> >>  	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> >>  		   type == PCI_EXP_TYPE_RC_EC ||
+> >>  		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+> >> -		   info->severity == AER_NONFATAL) {
+> >> +		   info->severity == AER_NONFATAL ||
+> >> +		   (pcie_is_cxl(dev) && type == PCI_EXP_TYPE_UPSTREAM)) {
+> >>  
+> >>  		/* Link is still healthy for IO reads */
+> >>  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,  
+> 
 > 
 
