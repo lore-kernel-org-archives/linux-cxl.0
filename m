@@ -1,249 +1,400 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEB71E0DFE;
-	Wed, 29 Jan 2025 21:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738185423; cv=fail; b=fZFmWUvmSxLKkjMbrc910jUEs0FpHqexFYDN8c7lUP6s0NSygMhNCbMAVPSNiL4u3ja7YWd7fqZznUKxIvW1ObTTftAHzsbO5gHp3IPU8jAxPVhaoz9BwiHO6I2NIII2iKscHDJ9su+RjAP0xrvUmtEFl03TmBCGvmziBX/x9Kw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738185423; c=relaxed/simple;
-	bh=yfQhG+Ef1eX9jNy/B/TqhYQrJdMcxklgMCLbFvL7slg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DG91qo7s7aeA7G/fxPJf203lmWPWlqbNrrnPfuSwOzuDSY+GUiba1Q6OoogqRPefqGJjAxu/qJI93NSgUoghsieGK6LP70bdBAxb2D2zBaXyfjH+gPQJhWxjhyTP0WvvMy2UyUKIS98f0Rdz1oLutiBMSMjNhBhUUPkZFgr9bKs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B7HJzAPW; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CCF1FC8
+	for <linux-cxl@vger.kernel.org>; Wed, 29 Jan 2025 22:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738189874; cv=none; b=OvCS1hkl5jHR8GkZ4AjyfNzXCAZYnGJ+QzjN3JxJxhX3/PCVRaJL30y8aoB9WlkQWaouXR4m8ZnUpblAHGyeR1y9HCjrkfeXzOjsUJq39B64CQfUPqB0d1S96869MYITQJXN4EQDZ7VrBuAv+fzQU8k0bjP+sXjgm+6gSL+ZhDM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738189874; c=relaxed/simple;
+	bh=Clfsrn/UiXmllzHjC7xcLluvcqNfi0CioJjFscDGENs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cQIXvDtxgqpuiuOtT+BTVA+1gfHkPHK2Q/dZcq7Zr/AJB5rYjQGH/figDPnJFnyMiAbfoXr8h2AH62fSOzNNGhM4Zh6pwlmuFxVi7K8YDT4GiG1mtVTezLP+rSd3FPxjYuI57pFZZynr1gCKjs5/FNBeeeBef0KRxHPDm8kMtQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wh5tb6ZA; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B7HJzAPW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738185421; x=1769721421;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=yfQhG+Ef1eX9jNy/B/TqhYQrJdMcxklgMCLbFvL7slg=;
-  b=B7HJzAPWtILSZioRy1pmKT3t7ib9csiK/D9YCeu5rQIcASjiEU6CzuBv
-   YoJkzgedTKGRbOQiofo2XWRaXJ5yqkJ22mTbxw6D9qQk98Xy25Tqyzupd
-   Q132G7vFf8zCeudFcui7Kfx5gSz0JP85kq+J7MHYU5VUFJyBUfKM2ukv4
-   PZW0W4AUE8PN43Bkar8zI7+uP3YefQa0FHe2SYd1gaFUVkMRiQ5v2+Kp9
-   WnM6MxOGUdkjg94R/dOWh2LLBWi0SQ+kIAYhX278E8HKbhambX6qiS2wj
-   dQPzjOOboZ46SP+7X6m77iFCGGC8Fy662owMJiL/+FW+LwPWHKKFIFZe8
-   Q==;
-X-CSE-ConnectionGUID: TBPyT7BiTlSloB5EhpWbrg==
-X-CSE-MsgGUID: bO/Jyll3QxGp3ssN7dQUgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="64082210"
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="64082210"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 13:17:00 -0800
-X-CSE-ConnectionGUID: MU0gVGDwSh2WojufXRjBgQ==
-X-CSE-MsgGUID: RksQPCuKQCuUdhFXvKoRDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,244,1732608000"; 
-   d="scan'208";a="109726627"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2025 13:16:59 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 29 Jan 2025 13:16:59 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 29 Jan 2025 13:16:59 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 29 Jan 2025 13:16:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Og6zul3ufHz9P2aHION3FoMcgc/YvJ4c2Bgo3IAAvXDc7XV1IYO4CjVs7Gugo94A4DC7KaZwivYG5SRZFoJ5PCIEfXM8PwMDrOZ+srym+r5pSsg0BjPWvcG6pwlfK1wyP8mwjXg9dfIXKSMB8SMTI6L7Hw7rVVifcjSUyW1Hel0FO6pE25UDjkvkGwVjJ1NzYX5IDVXNqJC/Fk61ARr+DxlWPPzGZMHfmHbA1mxnWWIdJHcy5R/CbVHXD28dkwQsTZJCt1huIBDq8EcuPMwaRDDB0yMOwGVx7NEGNQW1Yj9zb4sqmATqNWJEiwERiNcveI9JNFKoxa3lHuxXwh3/2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O3+FXq7zd4FVDlSyMlVLPU452uOJqTBfVzeGxaUzAVk=;
- b=UFVuwzSNOYM57rpJWVbISE265mSZhXz7VZa6k8pMPVNLSiUBqGAZ9CSIoBMAE7ea6IPWLQY+QppJHe9kqLKxi7DT0179qCBFPa33nfURm8IBlaeexfaOLGKb4qbdKNaL9O2mma9XxNrBEBCy2Gvr7FFfzu0kkDi7Rb34c33kTwaJw/mOEbPEiMsz/xgv1o0mk17rhbDW2oja5XeJNCBui16gYB2ztNTegC/1x1gVU6eKgKWIoNMFHGU4t9wOVzWRyDgICC28MRCfg7UtUdrCyoXCexbXDQ1OqzKDHlWrmKnf5ps1gRbbf/e76sp9qMXIjgBc7SALe99sfrqYa+VzOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CY8PR11MB7875.namprd11.prod.outlook.com (2603:10b6:930:6c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.17; Wed, 29 Jan
- 2025 21:16:52 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8377.021; Wed, 29 Jan 2025
- 21:16:50 +0000
-Date: Wed, 29 Jan 2025 15:16:46 -0600
-From: Ira Weiny <ira.weiny@intel.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>, Ira Weiny
-	<ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-Message-ID: <679a9abe292a4_210e3e294d@iweiny-mobl.notmuch>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
- <783abee1-e06d-45bf-2dc9-920c729978de@amd.com>
- <679a582927d8b_1e2dd62943e@iweiny-mobl.notmuch>
- <074f421c-1f2b-b92e-3e92-c3974f9f471f@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <074f421c-1f2b-b92e-3e92-c3974f9f471f@amd.com>
-X-ClientProxiedBy: MW4PR04CA0302.namprd04.prod.outlook.com
- (2603:10b6:303:82::7) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wh5tb6ZA"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-216401de828so2229665ad.3
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Jan 2025 14:31:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738189872; x=1738794672; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AfTX0P7CYSRw74/FOnlB2IdFO96Y1VnIkrWYmENqclc=;
+        b=Wh5tb6ZAo3ZjGusMYZWMZx9bJwutwz7EgrWeSVowzLz7Dtp69n8FRnX/icUuFKEwZi
+         ny5+TVEPKgeQ4cz8mYYgdHerR9jI2ReYiyNAutpI5mMvAyrd7TPUEiZydbz/FD0l0jtq
+         7yjwnp4Tr0c1XodkU0c6AcQUOK3yiX3CRQ6qnR9OLEl7IkyKWv/HEc15SLikptumBD8K
+         bVfCxUt///b63nBmuE7o+g/0sxv6IhxZv5M2WzzRI+j77dgsjHLtTP7nOSq0spvNMdvO
+         rw76pdRhvz5HHEYnDd/MxjLAZ5gYtEr7Hu7Ml9w1k5obrh5XA/WjecVheyhSAoNxhB8Z
+         iigQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738189872; x=1738794672;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AfTX0P7CYSRw74/FOnlB2IdFO96Y1VnIkrWYmENqclc=;
+        b=COMNYwkbjM+04N1RjyEkdXlqmhrFVvoe8lhnzO/OszLdz89Tuj1jdBNdllYj/GeUVI
+         n1XBb54q/eHPAowZ0Ur+cPDTHJVW8YG1VpZ/W8DZRIFvuuk+xPCYV1rS17DwmL9TOYm7
+         cuKIFF7BlzvaBrdYHcYSEZO/htnJ/QFfVyf4A/49QxtS7D6ElFAyyVFbE9kHKg593V9j
+         Mtg/KvmKraTjXo0DJYE8ikqP/fdHpvmWzoWaGn3zyhT+RXn0ZxQPlsWiffYR4bBe49lV
+         FpWRTtWWcatVGVPpSh/br0Xcc4Vck8Ut91FuLo9QKX1zSvkBuKsz7NJHxgltFolsBlTi
+         i3LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6XGbgcTo4w3JbAriTpgFMy+J/U5gUpSMH6T6cAGWavM17xxOth8EokPeAsl40hzwj8k3S3zhRmUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyar1Ppy/v93yvLE94tTqvf5PtxGgEX+jIoNNwROqzNMmjmVMEr
+	NKu+zSnKZ0THF1IKrIlGwzJrroZy143U7lPpYGnO1pHbjw644SZE5LLsfP2iqX8=
+X-Gm-Gg: ASbGnctMUoskxtqqKFuBBo0XQtWCXFsfLY7vNTS6Fb6olpPw+USNLtLjMjiyX3S3Sla
+	OBpkBxxV6e+Cw8QtCSCbBuwNjmchT6IoNfWGhT/Q/PrwBaBqsEAHixWBcaqvKRcKxH65qBPoaHV
+	HtdyuPlK83wtPk/75tO/5xTxUfSTu6O0/D59CiqQO1TYu1k+fo6vUUvVVf/xmrOf46vRdnsk/iu
+	RUKX4bX0wEU1p1og5H6fJFwG/QSJrPejC9Bt7iEBZopTOSOcc4rVIXDjM151cFBORJMOP6YEZix
+	DRwgyyxS9yN0vpORFMCnlg1bx+bd
+X-Google-Smtp-Source: AGHT+IEwHibgTKrYxJ55/edQwpyePjjVIZiVji9X4+KGBxU01Dwf2eDfBqrJgUIvJ8nEuOSLsq7Ruw==
+X-Received: by 2002:a17:903:2282:b0:20b:7210:5859 with SMTP id d9443c01a7336-21dd7deecd5mr76860555ad.38.1738189871955;
+        Wed, 29 Jan 2025 14:31:11 -0800 (PST)
+Received: from [192.168.1.67] ([38.39.164.180])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de33076a8sm964975ad.208.2025.01.29.14.31.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2025 14:31:11 -0800 (PST)
+Message-ID: <a2fa6e50-fa3c-49b0-8886-0818a68f8e08@linaro.org>
+Date: Wed, 29 Jan 2025 14:31:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CY8PR11MB7875:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a0e52bc-d39b-4cf3-0858-08dd40aa3f02
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5R37yR/nEsznwCyu05FHvFD8b88l/xLkwq3+3zmc2IrOhZPaF/odba1wQp7m?=
- =?us-ascii?Q?1QaAc3sbzHfN4EghPqzoZ3MwSF+xczStmJGTZl0/S6vGTIf97wQAHtjtWljq?=
- =?us-ascii?Q?HHTVpvE5VA+Nudn0NXvgVLE/iRUqa6Y6h6JOrNmaGlg9oAYLVNaKjdm0c+ak?=
- =?us-ascii?Q?BhEtmoAhWzgvS4QMXmdKt9arvaJvrDbQ4aBgMBDOCt7NwoJgXlGFMOR75c7y?=
- =?us-ascii?Q?hMMuFZfGL+PBnxS22DnKEDEWW9/4qiHyCBffauvWjdhyyzj1Q7Sd9CDGIkae?=
- =?us-ascii?Q?7RHpWrvpk8oD4WQRL3y8+eon70cyd5CXM1T9jG1DQkNrbPb0dKolfCe7AsD1?=
- =?us-ascii?Q?cj5532UOSyAWcOnYSlD3jThrmU1wvfQG2pph0iRj1vJ3i5PNUz+8gNB33XB1?=
- =?us-ascii?Q?BJ5nlqsb+FeCw1JPocl+kMiPvXXGOjfbplr1IrILZ/5IKax0WE+83M5SC8NQ?=
- =?us-ascii?Q?C4/xEp6TL+uM7MIkMizdPIQll9Lps6Am66TdkMlv96dxO6FbyzC0SfieQNRQ?=
- =?us-ascii?Q?ZgD5HxGH4W/7CmFcUyD+nOu8jIO26ZmANO437tQeFXkidzcDUPnO0YkKVhKe?=
- =?us-ascii?Q?lyIC3vOiUSHyz7Vurzc9qH2ZFPlGi2quLbECAOwiQDxBoJ2d29uL6DTj1Pcq?=
- =?us-ascii?Q?TwJJsCtatSsaIxgGsLxwYkaCEVVWarihEEjAnp44XCi/Q5aOe3mplVtpDXrd?=
- =?us-ascii?Q?Bs0rHa3LJS5EFKpoRikL+c8S+YCqgZFV+gowDARKJAQp4eea1vfE5VYrTV3b?=
- =?us-ascii?Q?52zbxeQfyGIMtrpjTMKdE7SPhFvfeI1VteVgZu0ib3N9sqj03F3YsSAIIDCZ?=
- =?us-ascii?Q?mI6WomsLlGkxTlkyJCeaMbtjQNrz8Jn+1Dozfi0BBxB1b7fAkOXkEDD3NIjo?=
- =?us-ascii?Q?XD28nUDHlrIqJ3cqQ5MXyX4lTqhuYLq3v1B/iqiTf9HDKbyNjP5QAJoNdjiF?=
- =?us-ascii?Q?NK9gRCC5QtQ1XUa3bTp93pBNCWGVev8NED8lnFvXDBuAamMdK9bjrtvQh4fB?=
- =?us-ascii?Q?kcH7m2k9FbCz4SyD7Sr8cT61qpL4dsLNt5169xjr07hs54rHxs+QYpNRVusU?=
- =?us-ascii?Q?8dfiWzckD4rglfrJ55YDkKcgBgEvrxtYRCytL15J11yZrg+yK1psgkxmQMe9?=
- =?us-ascii?Q?ztxb/0NhNOCE17TevCfF4V2jviIDr9OnWnfUnDdnk7B+u3bJKTu8UTUUjeHQ?=
- =?us-ascii?Q?/3xDfke56Xpo5pYs4IMxHIKkJiJOU2qozPaNEmlrAaum4hEjhIyDSeXm0OzD?=
- =?us-ascii?Q?LLnZLMB1IMVQmyaARYCkPyjRPtnjpbcwiXuUpIKnxSbuwmY5nP9ELiZ8od1T?=
- =?us-ascii?Q?oWdVoUubsE6IP4xQi3iqJKRwc/2mV0TQoFrDNXNN09EYGjstZ6omEPHTDDuB?=
- =?us-ascii?Q?TPYT9vqw8yAJF4c8yI1Aa+zZvnAr?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Y2brovHwHtWh+MTiZtSuMChNmSxTBEO7cHlxZkjFj6EoTLpzkt0IYbSiCVJq?=
- =?us-ascii?Q?zSAxCwtewfTqM1R4ZSK5KxYLz31QwM4l6J8S/D+4Q7HqMI5Ne5pDiG4xrcv4?=
- =?us-ascii?Q?Oqki2z23YdvnnRTuC4hIC8gHrLzkYyAa+RlKNIEi8Wk9LTqyk6XNJvGUxmVi?=
- =?us-ascii?Q?82qeohf3U1TyvmQpM+sCSAeRmPjfjNlRuqlFhR7JukQc0h+OmWs9DPoPPJRs?=
- =?us-ascii?Q?dJaBbpRvG0jkzrtgFse4dejojr0Zlq9E2WKSFESMP1zussHRGanMWbYSaZA6?=
- =?us-ascii?Q?HWr1m/OTHdWxi8aINXm4q9YLTji7bKXICFHAyjwQdZEEHBpuWB4kCig/e8V4?=
- =?us-ascii?Q?VRBupjb4l+y3ISfkvZZD6fIWchS+cdoDVBvDnAblxJ0lBoP6ozmdkX2uOBGr?=
- =?us-ascii?Q?Lp/ITQAyIX71+rfxNFLfwflnk1Sce8e1aJsvxq1+TbXkQAgxZvjRsBqm5VOj?=
- =?us-ascii?Q?g62IZ7i9VZj08GlP4WA/nILM72HQM5GyTd/YxOJeiBmOu349okD72yBqV5qi?=
- =?us-ascii?Q?/Vj23dywfCMfSpkHDnRAvoAxOF2YrFOni4X7jLn1uAFpzEPwr0WiV5e8tACT?=
- =?us-ascii?Q?ghlUUGaWQ3pqDwz6Af+mL38SdF+kMg/vvFw8m+EUm3Um+On1dVUOU/zoqo5D?=
- =?us-ascii?Q?RTIAqGvdpy98YchIDbaWkjY7ThU7uYgMOOQ1uVb3sAEIU6OoP8va48oxy/9v?=
- =?us-ascii?Q?8/JoxzuPW1fUf0q1RzAXA21Xd9fRRhHz3Ir5gMsEtboeN+SV1KgKJ8UMb4gt?=
- =?us-ascii?Q?2X4bpBGVffvhnGNTo5TtX3ne84RDVyPpWnPwXqsdvDnbvy7Is2yfNPctXcU4?=
- =?us-ascii?Q?CM2jP+z1Dn7C40yd3NTFNmYJsGPt4D8+MrgMmiYfYRVOz8s8M/tlhXwLh28T?=
- =?us-ascii?Q?vhfEY4OrQhKZajwmv8dV+0vt+7aLC4lGO+yN/fiAEXRE454oQbVzGKWBkUXl?=
- =?us-ascii?Q?Jgm0JtdtARxvhuabcLgCPVXd9r19ES69rKtqiYz9kX/prslq2INA1zsrAR1Y?=
- =?us-ascii?Q?Lsc5PTYUhSY0WKJqMhfaIwx3mXxsA2NABOvqDZOFAaV4Qfmn3iejvZeq7V8/?=
- =?us-ascii?Q?EjibRkaq5ejmoKFGqVPYwJ4blO+VBwDA4s5bqsjdckJW4UNYGreaGuwKMMNY?=
- =?us-ascii?Q?ij6rISyI7AD2kTD774UzRFy6XPP1cEcCFsFWro5PufUs5TJ6fPHU+i4jmVlS?=
- =?us-ascii?Q?MibQKPRvXDsvZLdaK9Xzlli2HVaC/rx1svNYKRJx9TOhIm574GewHfcVncuw?=
- =?us-ascii?Q?EpVySaynfPr/N1561wyKZ0+dfagFZAnChR+D5/6VUwrIiaSTBfFBoqFtLsW8?=
- =?us-ascii?Q?r+yhsgXSTt3TxbD2tDTIPbAw2bwc8d0InaNS8I3yiKoZcOoeP+vNRRc0bzNg?=
- =?us-ascii?Q?SJol8/H9tqNMoOfbQaBLhTXH+f9ZOGgAObhY1zVZaT6Ki4Ox0G6T4VWPogjG?=
- =?us-ascii?Q?cULtLh78/JflrCxABPg94baoKkSwPLvFeggoUf31Ln5W+vVyypXTCrRiivJi?=
- =?us-ascii?Q?h4iVyi92FBAwGNxYflFghqdNAXA3IhuaYVSFof7/J2wbsmP8OMDH9YYmzZbh?=
- =?us-ascii?Q?c4iVC8e6hZ5+jYfZ9JCFstLMcZyu/j6+KQpaDCY9?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0e52bc-d39b-4cf3-0858-08dd40aa3f02
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 21:16:50.4663
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b1FrTgCqY2I/UsYCiqCTATUMVUWv4X7VUbPztkkGSuPNbLokBfXtJoWnLBZPErsW7CppZA8GD4B7Vj7OZ1Ty3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7875
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH QEMU 0/3] cxl/plugins: Hotness Monitoring Unit with
+ 'real' data.
+Content-Language: en-US
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: fan.ni@samsung.com, linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+ =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Alexandre Iooss <erdnaxe@crans.org>, Mahmoud Mandour
+ <ma.mandourr@gmail.com>, linuxarm@huawei.com,
+ Niyas Sait <niyas.sait@huawei.com>
+References: <20250124172905.84099-1-Jonathan.Cameron@huawei.com>
+ <5e0876e8-4c2c-4ba5-86dc-d9ca241b743d@linaro.org>
+ <20250127102009.00002dbd@huawei.com>
+ <c595c1c1-63cc-462a-982e-66ac61a2eb9a@linaro.org>
+ <20250129102936.00006782@huawei.com>
+From: Pierrick Bouvier <pierrick.bouvier@linaro.org>
+In-Reply-To: <20250129102936.00006782@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Alejandro Lucero Palau wrote:
-> 
-> <snip>
-> 
-> >
-> >> FWIW, I had (as part of current in-progress v10) similar struct than
-> >> used here for Type2 initialization when there is no mailbox.
-> >>
-> >>
-> >> I had added a specific function for initialising that struct, but my
-> >> idea now with this change is to have cxl_mem_dev_info initialized by the
-> >> driver before calling cxl_dev_state_identify,
-> > Why is the accelerator calling cxl_dev_state_identify?  I did not see that
-> > in v9.  My idea was that was a mailbox only call which is only needed for
-> > memdevs.  And cxl_add_partition() can be called by accelerators as a
-> > convenience function to aid in creating cxl_dpa_info.  (This and cxl_test
-> > needed that function shared so it just got left in mbox.c)
-> 
-> 
-> No in v9 ... that predates Dan's DPA patches.
-> 
-> 
-> Type2 without an mbox needs to give those values obtained from 
-> CXL_MBOX_OP_IDENTIFY. I'm using an struct for passing those values to 
-> cxl_dev_state_identify for having same function serving Type2 with and 
-> without mbox.
+Hi Jonathan,
 
-But in the case of no mbox where does the type2 get those values from
-within cxl_dev_state_identify()?
+On 1/29/25 02:29, Jonathan Cameron wrote:
+> On Tue, 28 Jan 2025 12:04:19 -0800
+> Pierrick Bouvier <pierrick.bouvier@linaro.org> wrote:
+> 
+>> On 1/27/25 02:20, Jonathan Cameron wrote:
+>>> On Fri, 24 Jan 2025 12:55:52 -0800
+>>> Pierrick Bouvier <pierrick.bouvier@linaro.org> wrote:
+>>>    
+>>>> Hi Jonathan,
+>>>>
+>>>> thanks for posting this. It's a creative usage of plugins.
+>>>>
+>>>> I think that your current approach, decoupling plugins, CHMU and device
+>>>> model is a good thing.
+>>>>
+>>>> I'm not familiar with CXL, but one question that comes to my mind is:
+>>>> Is that mandatory to do this analysis during execution (vs dumping
+>>>> binary traces from CHMU and plugin and running an analysis post execution)?
+>>>
+>>> Short answer is that post run analysis isn't of much use for developing the OS
+>>> software story. It works to some degree if you are designing the tracking
+>>> hardware or algorithms to use that hardware capture a snapshot of hotness -
+>>> dealing with lack of counters, that sort of thing.
+>>>
+>>> The main intent of this support is to drive live usage of the data in the OS.
+>>> So it gets this hotness information and migrates more frequently accessed memory
+>>> to a 'nearer'/lower latency memory node.
+>>>
+>>>   From an OS point of view there will be two ways it uses it:
+>>> 1) Offline application optimization  - that aligns with your suggestion of offline
+>>>      analysis but would typically still need to be live because we have to do
+>>>      the reverse maps and work out what was allocated in particular locations.
+>>>      Not impossible to dump that information from QEMU + the guest OS but the usage
+>>>      flow would then look quite different from what makes sense on real hardware
+>>>      where all the data is available to the host OS directly.
+>>> 2) Migration of memory.  This will dynamically change the PA backing a VA whilst
+>>>      applications are running. The aim being to develop how that happens, we need
+>>>      the dynamic state.
+>>>    
+>>
+>> In the end, are you modeling how the real CHMU will work, or simply
+>> gathering data to help designing it (number of counters, line size, ...)?
+> 
+> This work is modeling how a real (ish) CHMU will work - particular interest being
+> use in Linux kernel usecases. Otherwise we wouldn't share! :)
+> 
+> For CHMU hardware design, until people reach the live algorithms in the loop
+> stage, tracing techniques and offline analysis tend to be easier to use.
+> 
+> A annoying corner is that the implementations in QEMU will 'probably' remain
+> simplistic because the detailed designs of CHMUs may be considered sensitive.
+> It's a complex space and there are some really interesting and to me surprising
+> approaches.
+> 
+> What we can implement should be good enough for working out the basics of a
+> general software stack but possible it will need tuning against specific
+> implementations.  Maybe that necessity will result in more openness on the
+> parts of various uarch / arch teams.
+> 
+> There are some academic works on how to build these trackers, and there should
+> be less sensitivity around those.
+> 
+> This is perhaps an odd corner for QEMU because we are emulating an interface
+> accurately but the hardware behind it intentionally does not have a specification
+> defined implementation and the unusual bit is that implementation affects
+> the output.  We can implement a few options that are well defined though.
+> 1) An Oracle ('infinite' counters)
+> 2) Limited counters allocated on first touch in a given epoch (sampling period).
+> 
+> 1 is useful for putting an upper bound on data accuracy.
+> 2 is a typical first thing people will look at when considering a implementation.
+> 
+> So conclusion. This is about enabling software development, not tuning a hardware
+> design.
+> 
 
-The idea with this patch change is to only call cxl_dev_state_identify IFF
-the device has a mailbox.  Are you saying the same thing?
+Ok, thanks for the clarification.
 
-> I could have another function instead and calling that one 
-> for Type2 with mbox. My idea is to keep similar initialization than 
-> Type3 pci driver.
+Considering the approach you followed, as said before, choosing a 
+decoupled solution is the right choice. Plugins should not allow to 
+access internal details of QEMU implementation as a general rule.
 
-Agreed.  But without an mbox I'm hoping you don't need to call
-cxl_dev_state_identify at all if you don't need to query the device...  ie
-don't have a mailbox.
+Did you think about integrating the server directly in the plugin? From 
+what I understand, the CHMU will contact the server on a per request 
+basis, while instrumentation will contact it for every access.
 
-> 
-> 
-> >> and inside that function
-> > I'm not clear which 'that function' you are referring to here.
-> 
-> 
-> cxl_dev_state_identify
-> 
-> 
-> >> checking if total_bytes already != 0 for avoiding call the mbox command
-> >> for getting the info. This will support both cases for Type2, with and
-> >> without mailbox.
-> > I think I agree with you except the != 0 to avoid mailbox commands.
-> >
-> > Unless I am miss-understanding Dan we need to get to a place where mailbox
-> > commands stop filling in structures unless those work for both type 2 and
-> > 3 __and__ are optional.  Because putting in special checks for the type
-> > within a cxl/core/mailbox call is wrong IMO.
-> 
-> 
-> As I said, I can avoid that check with a wrapper for Type2, then only 
-> Type2 with mbox and supporting that command (is it mandatory if an 
-> mbox?) will end up calling cxl_dev_state_identify.
+Beyond communication, the biggest overhead here is to have 
+instrumentation on all memory accesses. Another thing that comes out of 
+my mind is to do a sampling instrumentation. However, it's not easy to 
+do, because the current API does not allow to force a new translation of 
+existing TB, and at translation time, you have no clue whether or not 
+this will be a hot TB.
+What you can do though, is to ignore most of the accesses, and only send 
+information every 1000 memory accesses. (Note: I have no idea if 1000 is 
+a good threshold :)). It would allow you to skip most of the overhead 
+related to communication and hot pages management.
 
-Even if type 2 has a mailbox the partition information may or may not need
-to be in the identify command.
+ From what I understood about using plugins, the goal is to track hot 
+pages. Using the cache one is a possibility, but it might be better to 
+use contrib/plugins/hotpages.c instead, or better, a custom simple 
+plugin, simply reporting reads/writes to the server (and implementing 
+sampling as well).
 
-Why force any type 2 to call that mailbox command?
+Which slow-down factor (order of magnitude) do you have with this series?
 
-Ira
+> Jonathan
+> 
+>>
+>> Pierrick
+>>
+>>> Jonathan
+>>>    
+>>>>
+>>>> Regards,
+>>>> Pierrick
+>>>>
+>>>> On 1/24/25 09:29, Jonathan Cameron wrote:
+>>>>> Hi All,
+>>>>>
+>>>>> This is an RFC mainly to seek feedback on the approach used, particularly
+>>>>> the aspect of how to get data from a TCG plugin into a device model.
+>>>>> Two options that we have tried
+>>>>> 1. Socket over which the plugin sends data to an external server
+>>>>>       (as seen here)
+>>>>> 2. Register and manage a plugin from within a device model
+>>>>>
+>>>>> The external server approach keeps things loosely coupled, but at the cost
+>>>>> of separately maintaining that server, protocol definitions etc and
+>>>>> some overhead.
+>>>>> The closely couple solution is neater, but I suspect might be controversial
+>>>>> (hence I didn't start with that :)
+>>>>>
+>>>>> The code here is at best a PoC to illustrate what we have in mind
+>>>>> It's not nice code at all, feature gaps, bugs and all!  So whilst
+>>>>> review is always welcome I'm not requesting it for now.
+>>>>>
+>>>>> Kernel support was posted a while back but was done against fake data
+>>>>> (still supported here if you don't provide the port parameter to the type3 device)
+>>>>> https://lore.kernel.org/linux-cxl/20241121101845.1815660-1-Jonathan.Cameron@huawei.com/
+>>>>> I'll post a minor update of that driver shortly to take into account
+>>>>> a few specification clarifications but it should work with this without
+>>>>> those.
+>>>>>
+>>>>> Note there are some other patches on the tree I generated this from
+>>>>> so this may not apply to upstream. Easiest is probably to test
+>>>>> using gitlab.com/jic23/qemu cxl-2025-01-24
+>>>>>
+>>>>> Thanks to Niyas for his suggestions on how to make all this work!
+>>>>>
+>>>>> Background
+>>>>> ----------
+>>>>>
+>>>>> What is the Compute eXpress Link Hotness Monitoring unit and what is it for?
+>>>>> - In a tiered memory equipped server with the slow tier being attached via
+>>>>>      CXL the expectation is a given workload will benefit from putting data
+>>>>>      that is frequently fetched from memory in lower latency directly attached
+>>>>>      DRAM.  Less frequently used data can be served from the CXL attached memory
+>>>>>      with no significant loss of performance.  Any data that is hot enough to
+>>>>>      almost always be in cache doesn't matter as it is only fetch from memory
+>>>>>      occasionally.
+>>>>> - Working out which memory is best places where is hard to do and in some
+>>>>>      workloads a dynamic problem. As such we need something we can measure
+>>>>>      to provide some indication of what data is in the wrong place.
+>>>>>      There are existing techniques to do this (page faulting, various
+>>>>>      CPU tracing systems, access bit scanning etc) but they all have significant
+>>>>>      overheads.
+>>>>> - Monitoring accesses on the CXL device provides a path to getting good
+>>>>>      data without those overheads.  These units are known as CXL Hotness
+>>>>>      Monitoring Units or CHMUs.  Loosely speaking they count accesses to
+>>>>>      granuals of data (e.g. 4KiB pages).  Exactly how they do that and
+>>>>>      where they sacrifice data accuracy is an implementation trade off.
+>>>>>
+>>>>> Why do we need a model that gives real data?
+>>>>> - In general there is a need to develop software on top of these units
+>>>>>      to move data to the right place. Hard to evaluate that if we are making
+>>>>>      up the info on what is 'hot'.
+>>>>> - Need to allow for a bunch of 'impdef' solutions. Note that CHMU
+>>>>>      in this patch set is an oracle - it has enough counters to count
+>>>>>      every access.  That's not realistic but it doesn't get me shouted
+>>>>>      at by our architecture teams for giving away any secrets.
+>>>>>      If we move forward with this, I'll probably implement a limited
+>>>>>      counter + full CAM solution (also unrealistic, but closer to real)
+>>>>>      I'd be very interested in contributions of other approaches (there
+>>>>>      are lots in the literature, under the term top-k)
+>>>>> - Resources will be constrained, so whilst a CHMU might in theory
+>>>>>      allow monitoring everything at once, that will come with a big
+>>>>>      accuracy cost.  We need to design the algorithms that give us
+>>>>>      good data given those constraints.
+>>>>>
+>>>>> So we need a solution to explore the design space and develop the software
+>>>>> to take advantage of this hardware (there are various LSF/MM proposals
+>>>>> on how to use this an other ways of tracking hotness).
+>>>>> https://lore.kernel.org/all/20250123105721.424117-1-raghavendra.kt@amd.com/
+>>>>> https://lore.kernel.org/lkml/Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F/T/
+>>>>>
+>>>>> QEMU plugins give us a way to do this.  In particular the existing
+>>>>> Cache plugin can be easily modified to tell use what memory addresses
+>>>>> missed at the last level of emulated cache.  We can then filter those
+>>>>> for the memory address range that maps to CXL and feed them to our
+>>>>> counter implementation. On the other side, each instance of CXL type 3
+>>>>> device can connect to this server and request hotness monitoring
+>>>>> services + provide parameters etc.  Elements such as list threshold
+>>>>> management and overflow detection etc are in the CXL HMU QEMU device mode.
+>>>>> As noted above, we have an alternative approach that can closely couple
+>>>>> things, so the device model registers the plugin directly and there
+>>>>> is no server.
+>>>>>
+>>>>> How to use it!
+>>>>> --------------
+>>>>>
+>>>>> It runs a little slow but it runs and generates somewhat plausible outputs.
+>>>>> I'd definitely suggest running it with the pass through optimization
+>>>>> patch on the CXL staging tree (and a single direct connected device).
+>>>>> Your millage will vary if you try to use other parameters, or
+>>>>> hotness units beyond the first one (implementation far from complete!)
+>>>>>
+>>>>> To run start the server in contrib/hmu/ providing a port number to listen
+>>>>> on.
+>>>>>
+>>>>> ./chmu 4443
+>>>>>
+>>>>> Then launch QEMU with something like the following.
+>>>>>
+>>>>> qemu-system-aarch64 -icount shift=1 \
+>>>>>     -plugin ../qemu/bin/native/contrib/plugins/libcache.so,port=4443,missfilterbase=1099511627776,missfiltersize=1099511627776,dcachesize=8192,dassoc=4,dblksize=64,icachesize=8192,iassoc=4,iblksize=64,l2cachesize=32768,l2assoc=16,l2blksize=64 \
+>>>>>     -M virt,ras=on,nvdimm=on,gic-version=3,cxl=on,hmat=on -m 4g,maxmem=8g,slots=4 -cpu max -smp 4 \
+>>>>>     -kernel Image \
+>>>>>     -drive if=none,file=full.qcow2,format=qcow2,id=hd \
+>>>>>     -device pcie-root-port,id=root_port1 \
+>>>>>     -device virtio-blk-pci,drive=hd,x-max-bounce-buffer-size=512k \
+>>>>>     -nographic -no-reboot -append 'earlycon memblock=debug root=/dev/vda2 fsck.mode=skip maxcpus=4 tp_printk' \
+>>>>>     -monitor telnet:127.0.0.1:1234,server,nowait -bios QEMU_EFI.fd \
+>>>>>     -object memory-backend-ram,size=4G,id=mem0 \
+>>>>>     -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=1G,align=256M \
+>>>>>     -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=1G,align=256M \
+>>>>>     -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M,align=1M \
+>>>>>      -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/t3_cxl3.raw,size=1G,align=256M \
+>>>>>     -object memory-backend-file,id=cxl-mem4,share=on,mem-path=/tmp/t3_cxl4.raw,size=1G,align=256M \
+>>>>>     -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M,align=1M \
+>>>>>     -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true,numa_node=0\
+>>>>>     -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+>>>>>     -device cxl-type3,bus=cxl_rp_port0,volatile-memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3,x-speed=32,x-width=16,chmu-port=4443 \
+>>>>>     -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=8G,cxl-fmw.0.interleave-granularity=1k \
+>>>>>     -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
+>>>>>     -numa node,nodeid=1 \
+>>>>>     -object acpi-generic-initiator,id=bob2,pci-dev=bob,node=1 \
+>>>>>     -numa node,nodeid=2 \
+>>>>>     -object acpi-generic-port,id=bob11,pci-bus=cxl.1,node=2 \
+>>>>>
+>>>>> In the guest, create and bind the region - this brings up the CXL memory
+>>>>> device so accesses go to the memory.
+>>>>>
+>>>>>      cd /sys/bus/cxl/devices/decoder0.0/
+>>>>>      cat create_ram_region
+>>>>>      echo region0 > create_ram_region
+>>>>>      echo ram > /sys/bus/cxl/devices/decoder2.0/mode
+>>>>>      echo ram > /sys/bus/cxl/devices/decoder3.0/mode
+>>>>>      echo $((256 << 21)) > /sys/bus/cxl/devices/decoder2.0/dpa_size
+>>>>>      cd /sys/bus/cxl/devices/region0/
+>>>>>      echo 256 > interleave_granularity
+>>>>>      echo 1 > interleave_ways
+>>>>>      echo $((256 << 21)) > size
+>>>>>      echo decoder2.0 > target0
+>>>>>      echo 1 > commit
+>>>>>      echo region0 > /sys/bus/cxl/drivers/cxl_region/bind
+>>>>>
+>>>>> Finally start perf with something like:
+>>>>>
+>>>>> ./perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
+>>>>> hotness_threshold=635,epoch_multiplier=4,epoch_scale=4,\
+>>>>> range_base=0,range_size=4096/  ./stress.sh
+>>>>>
+>>>>> where stress.sh is
+>>>>>
+>>>>>      sleep 2
+>>>>>      numactl --membind 3 stress-ng --vm 1 --vm-bytes 1M --vm-keep -t 5s
+>>>>>      sleep 2
+>>>>>
+>>>>> See the results with
+>>>>> ./perf report --dump-raw-trace | grep -A 200 HMU
+>>>>>
+>>>>> Enjoy and have a good weekend.
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>> Jonathan
+>>>>>
+>>>>> Jonathan Cameron (3):
+>>>>>      hw/cxl: Initial CXL Hotness Monitoring Unit Emulation
+>>>>>      plugins: Add cache miss reporting over a socket.
+>>>>>      contrib: Add example hotness monitoring unit server
+>>>>>
+>>>>>     include/hw/cxl/cxl.h        |   1 +
+>>>>>     include/hw/cxl/cxl_chmu.h   | 154 ++++++++++++
+>>>>>     include/hw/cxl/cxl_device.h |  13 +-
+>>>>>     include/hw/cxl/cxl_pci.h    |   7 +-
+>>>>>     contrib/hmu/hmu.c           | 312 ++++++++++++++++++++++++
+>>>>>     contrib/plugins/cache.c     |  75 +++++-
+>>>>>     hw/cxl/cxl-chmu.c           | 459 ++++++++++++++++++++++++++++++++++++
+>>>>>     hw/mem/cxl_type3.c          |  25 +-
+>>>>>     hw/cxl/meson.build          |   1 +
+>>>>>     9 files changed, 1035 insertions(+), 12 deletions(-)
+>>>>>     create mode 100644 include/hw/cxl/cxl_chmu.h
+>>>>>     create mode 100644 contrib/hmu/hmu.c
+>>>>>     create mode 100644 hw/cxl/cxl-chmu.c
+>>>>>       
+>>>>   
+>>>    
+>>
+> 
+
