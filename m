@@ -1,397 +1,218 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2062.outbound.protection.outlook.com [40.107.212.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86855887;
-	Wed, 29 Jan 2025 12:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738153698; cv=none; b=BHQwgG9ah8lOCRvi48nLdlyoodZnCw2DiP2UWq3RHrHoSPmXhJ95MxpCr7mOAT99wiLpVJAvW/14Pclrsg9vPm5ZQZ3/G39FvXxKC7kH/iseWuQ4N4zssXZqYH2d/qK7pvGqwCwRcK78eveo1PHzhbmYToe2KuXLvEXpkjgcook=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738153698; c=relaxed/simple;
-	bh=Gj+ibSeI7rkt/86HKoaTaKC0GPhl2/i0gFiRNXig2L8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PZ6oBtu4mG1EhAvqf7yVax6TUVN98TUMlgCCBT3HEIVhJYWofyFLmi8rhowMgLvS8cCD5iSSmMYtsOFsautsoO5uN9P87CabXndtf41oJ30TpiU/Dj8HDSCX8Zcvw/rxL8T1EKcOOSM9PCtZGfJXhvqiAUG7d3I0i5oHz9E4hso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YjhG56mK7z6M4V7;
-	Wed, 29 Jan 2025 20:26:05 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5329C140B30;
-	Wed, 29 Jan 2025 20:28:11 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 29 Jan 2025 13:28:11 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Wed, 29 Jan 2025 13:28:11 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "bp@alien8.de" <bp@alien8.de>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>, "mchehab@kernel.org"
-	<mchehab@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patrol
- scrub control feature
-Thread-Topic: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patrol
- scrub control feature
-Thread-Index: AQHbYDQzwb2+msEnKkOZzkWMDvDlzLMmbr6AgAQZmTCAAMm+AIACfVPQ
-Date: Wed, 29 Jan 2025 12:28:10 +0000
-Message-ID: <6b897863e04e4e588f1af318e4292739@huawei.com>
-References: <20250106121017.1620-1-shiju.jose@huawei.com>
- <20250106121017.1620-16-shiju.jose@huawei.com>
- <6793fa5351fc7_20f3294d0@dwillia2-xfh.jf.intel.com.notmuch>
- <637fa0190fe64594954ee4d9e012c39c@huawei.com>
- <679814068d4d1_2d1e294c4@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <679814068d4d1_2d1e294c4@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAE453A7;
+	Wed, 29 Jan 2025 12:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738154894; cv=fail; b=bYElY0Sy4+xUpWLvH4/eh92AUZeMDy3QXV2zGgk/c4nrEC8lY0Sdo6OIJYVlen/l8T3TBTlJ/2CouaYbNVLTHBTEl+iP+T9C+FUudabRU6dCzSdwhA8gi35FdecBO4Falbs/Hh0ghKCq5ycBQROJapk5VzvWHmsAC4RbuXt2NLg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738154894; c=relaxed/simple;
+	bh=g7dmOwbJibK1PfkxSumpoVVKz6xTvHw+9j/UCp12F9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sskGlWBVFA+Kh1deAN4o6T0jTWTkTUDQcrZd0RWWQsmeXvVSs10A++arGnCijrjQCuPz15N5fUEawjS21FAbxaLpTcNtT7aaQth8Pg0xfwhzLKuLRKplBNeVxF+Z4QGVKcyv43vKmiaGrF4joL/R5o39Ob3n2GUTWVdlIml3dmY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ITJXhYEj; arc=fail smtp.client-ip=40.107.212.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ITJXhYEj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SL90t+bHXLEBH0YLUSSUXGIGqD/4nfaA5bsjRyfH78FLw5+61cAb2uNy7/vD6H1u0w2HQa/VExDhw8ztwi7AvoHgjnureWw8C1Ttp7x7Vq7Kh4CX25dBAVPfVc6frma8QIr7n7oWsRjF8z0v9lVUttvrgbx06UlND3850Rucw/DMZn8w3XC3c7sSipAA5hm21Po63Dpr1dY3z7eRUSjVZ3jGmBpHmr+ssKzFJWzuaVwvoT0T6k4UNQadbUP13/F5zC4zlGzdGiXeKJJJhydLhnwpGPFOgVtxtyvLAN8BFK8bDPhb1aaZnxEoXOaHeYFTQ11lCqXNWPJcHgLaridopA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jyb43Y7bZ/15RGXOe4dtv6Re0eS7EHtJgmVTnUOdw44=;
+ b=ylmJOizJse6hRyRi6Ih3+rn/o+GcNdm1zS8Rv8m0WdXU5M4iwL6CPOXvam1VK+tlDi8i1Uid17r1lINJ+v/rV+xWYbmoR65oAZsDpBQNBhZa8AFH1G4aGt0DTCSZu0aevYXImLTCzchwaTC96H75m8HgdNNxh6rVz8cZebtVzCne+1yZ6NypiOM9m0JRr06WY3m6LIcI0XuH107AWKoPP44yjadov1QkdTd8l9nUGJRRlTLr7xIl/GUijFUmP4ay4tRqFbTAGEUVX5CWdkagkuGAxIWAHptDSAdSWxf+fCMMv/hsC1SvsUgTtsCMDdfWIxg7oP4ryQVSI9oW41T0lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jyb43Y7bZ/15RGXOe4dtv6Re0eS7EHtJgmVTnUOdw44=;
+ b=ITJXhYEjZM3VhBI6lNmMIemUR36jBEVqfXv+9ac9rVgg/+g/+5f+6BXP+RzwNn2khbDVSwhYffb0reArGCpSIx3f6lqaAX+STZJOdbBlnoda4E5WurhEsdONYqw7R2HnH6BrhWE+z+dnrznYtZaxH9WPPMMMaWatJ2dL3OMJqnw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by IA0PR12MB8838.namprd12.prod.outlook.com (2603:10b6:208:483::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Wed, 29 Jan
+ 2025 12:48:09 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8398.017; Wed, 29 Jan 2025
+ 12:48:09 +0000
+Date: Wed, 29 Jan 2025 13:47:01 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v1 02/29] cxl/pci: Moving code in cxl_hdm_decode_init()
+Message-ID: <Z5ojRRa8T5dva5Q9@rric.localdomain>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+ <20250107141015.3367194-3-rrichter@amd.com>
+ <Z31T3xeUytKJGkWF@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z31T3xeUytKJGkWF@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: FR5P281CA0011.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f2::19) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA0PR12MB8838:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8b27b08-685d-405b-dc60-08dd40632eb6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Xc/2sEn46/8z30X39ww6e87yUpHhhJRtRBALkaov108wS2McnrmZV+Fda1yG?=
+ =?us-ascii?Q?HTnavckOhQ/GzmYlpdzIgu9wP+LiQ9rIPjLpaBr//9UH/b+EfhSJiQTMz4Zr?=
+ =?us-ascii?Q?UcbadGHXTEWDgarS2XL99qyjWy8vTZy6Sp+0jMTF5FAscLLamLgi3jVDfEEo?=
+ =?us-ascii?Q?/x2BIX6TlpzbKJ7no2dqadAruLvw+24b3iwPIaxL9YT0kSPcaBZwkXntbX1l?=
+ =?us-ascii?Q?Hrk9B7NvGj8cPJeoWWC8fq1FFs3yGFbUVcMhKohqh+WWarVfhPAf5hDIcifb?=
+ =?us-ascii?Q?0Iguce+ylWVJK2XbVCTTzA6m1l2b0d/VUEdMuKzkQCbShH1Q2tUsRhvdHxwv?=
+ =?us-ascii?Q?chqjHoI+Ch/b0wz5vqbETmLDXlVoVbrBoi8nc7LGMAkuMkl76fibySGCOqmT?=
+ =?us-ascii?Q?EJYR4ht1vBt+zTgSr2JRK2/TqHsUUeUV3X2kOchPQp2/2Rm1h1kqpPJOCu7W?=
+ =?us-ascii?Q?QcuJ8Ea3zZzzUakwkudCQBiYM8brE+CCXRLcS7DvKJMF8E6dNJw7/3RUo6p5?=
+ =?us-ascii?Q?5zF5+23N4/s/Drm5Q9d1cG5Elj7e21XQGCVthh6DeJu2tFpBIYStnCPStO6U?=
+ =?us-ascii?Q?lFd7dtWam5MvzKp5aIDcFOq24NUdZo5+m6uRheJJsiITrUxZT7YXqyhlrc9E?=
+ =?us-ascii?Q?uzxEz7rmpte9UYyBliKOM1dk/FrUggrrVm9o/CqGCTYxHSMTdhkNh7geb/6f?=
+ =?us-ascii?Q?xG7yuAV1kcvUo0+85F5T6QJb87CygpQsHtmiKWNAMXRAn3PnsADvxSWFhgLn?=
+ =?us-ascii?Q?cWf/2rMpNLCM3K4k0rN8QZUj9fgz53jNsiRI8S12asoJdwoKdFRa+YDqsXRf?=
+ =?us-ascii?Q?u/3jmVHuBEY+SG+RMNVKl5Xu/MKTbnjYFteFB+rBigAErVoDC8VFMv2Zee0v?=
+ =?us-ascii?Q?QChWja3VT78QIkW/FyMai/KeKKXa6fvHYfaEWGLKhxvfRdOxv8mvMcxUb05p?=
+ =?us-ascii?Q?INQpbePEfvULI2Gg9HuHyoOZ+kkOcLAc1uUFZyGlTNtCHUwiSRYYjM8qL3sG?=
+ =?us-ascii?Q?TBQZWPaRaOXYghqTewk63es6VrwaIAo/iFUaa8fGGsdJIbxoJJz464Qir3jA?=
+ =?us-ascii?Q?A2c3SofMfGp+Mc09Dl/6L7Up5zWsLGve2LT5B+XDyNsktof9ZILAcN4YY4mH?=
+ =?us-ascii?Q?/JzyxvL22TNwAwRcuj9aFiadtWss/4BaEurMOuWqbQVwhW8JBWO/0TMLBMzQ?=
+ =?us-ascii?Q?ivFZ9UTCDq9H6SsdJGybH1DohzDRIOcxAXQo7l5C51mcmnJMDkLQ1EObRigV?=
+ =?us-ascii?Q?xYPQ2lKfqiiTvgYMov86/5jJ+UA0nk72Wh2vJASPSHkC+tbJPzNpp0cGdZph?=
+ =?us-ascii?Q?zakE7pK2GEfyqJYC1UsCVOCyr7v6ZGXTPq1WFtX0rePUKkTdskzAwyyebcw1?=
+ =?us-ascii?Q?9r5CoNTButK6iipGNClIo0LKuLc6?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tZNAbS73BBiiodfcopS0/DSVXSk8xI3MjdQKY2AmworbuJfFIrrEo/PrN3Bz?=
+ =?us-ascii?Q?9B6r6TefLu6IF8jOfNBf123Ub8ZaGRz3fZk2FcF11J3oCpYLgDBKU46uR5SA?=
+ =?us-ascii?Q?VCnN5PQxhsKsDXacl/BBhqiF9KpnM0qASHwYJW2DoEIZcp5bNI1DuVzM3I3S?=
+ =?us-ascii?Q?blJEebKeRaQPa5Rlj0NG4TKKwTVVjmYfb8KyGHqD0dZJCLeIpF1l1BR+7kF1?=
+ =?us-ascii?Q?eObghuaCzQ+Cra9xQE+7BYnPbk4pMP4nR7loPAiMabFJPOn92E36r0qRRZkb?=
+ =?us-ascii?Q?Gyhw3Vc8mWslXmywHhlgjNaCnsat6JnctdHJDFBnC0HQetlBH1DkMt50Qeic?=
+ =?us-ascii?Q?1wIhWZ2KieDABjsqs/Ufio9Ktg+5CgID90PxcZU6uXlJxD6CsSBjEVUJjJcw?=
+ =?us-ascii?Q?LoCW5IzDh7ruQEn6jnFi+wPTm0d3QKbYzK3VY/Lg1H0lll1F2qOfAVL9DwRz?=
+ =?us-ascii?Q?ODNRo90CA7lLNIfnoTk7Kw2rMQq4tiO42e7OsKKh4YYx9ja2VEy+fy3267Xo?=
+ =?us-ascii?Q?EOZ5qcPeofX6g1dr3h/oTNtNjTqFy1k+vSwOPCJEAqo5SdqGdiCbgfuaWJzn?=
+ =?us-ascii?Q?vgSyWH1M3mmd+9PPELGUguKyRA4uKBmpSspRbwallP1v3aRqmC0SLrR6Eaw6?=
+ =?us-ascii?Q?oe3GOHZ5hhRQ6v+XK39DKhdI3JXu8NoWu88KvBS1FfAeTijB2HDjCTMizMu+?=
+ =?us-ascii?Q?NdYiAZkVgiC5oH91/bQ5zSXaA9oUgnSjVKG/wW0aumzDjT5VWLxAzTc1QtPR?=
+ =?us-ascii?Q?wjPTEUc5Lh/9a3/zv6oV4tGqU3Y/vE29jKA8GpIO1Bk1GJuio7QKmZVE8cmp?=
+ =?us-ascii?Q?v1ENsHNjVRDBpK0JWanJF9KXSCtPWDVPBvDFW7n+P5zeuI6eT6PtY59hvmtl?=
+ =?us-ascii?Q?VeS5oyUlAyXx5f+MXY0Z2FJVAYkT7ZDc09Vk31UIfTdTaCevshkO3xUq4w/m?=
+ =?us-ascii?Q?LKThJr3A/FZPy+VD0TOiPAdkfqpfFBebK06j0qurv00jIdOgQKM5ZeQwWD7t?=
+ =?us-ascii?Q?n1fUDfZdH2MCThRjDrxC8NFNlPc2BtGlblRl5Np76UNQOL1UkkKlokwBkezS?=
+ =?us-ascii?Q?xLzBxgHarOIvDw8iHpzzZFiGARcard0z+WKYJUToRj6lRsPp7NzJ4pJDoZGo?=
+ =?us-ascii?Q?bnfCKdAEAxULdTtTtuhekLmkjzFDHsA6Ol7+3Vsj/PoEyrxFnsAIRTK3Z0Al?=
+ =?us-ascii?Q?tEwwVObcArWF8Yk872IqOGWezlR3CLkZfC3R/V/8NnpYRRbO2GjXcPtPvBTY?=
+ =?us-ascii?Q?yTGha8PmPBd8xf+zplJFSjx6L8sVI5YP32h5PrJi4gzISc2NC0ZIxTkFe4wF?=
+ =?us-ascii?Q?KP6/SI2ayExs3g780lT4N8ftGzz3E12iXgvAF5IuQoPTCl71yDf8wOXnOMmt?=
+ =?us-ascii?Q?RtImPNdTTr91muRoMyj5g84V2cKdY7BnenugULxsBqD+0JvNCxRHsaDUZYaU?=
+ =?us-ascii?Q?14S8Lzoz6oGJlu1kgf8BRCMdztUO9bHHQF+dJ+aWNhi209KnptHrA1yow1Ac?=
+ =?us-ascii?Q?0GTbbdJHtK78+cTxJZu8BkNdlL08KoOmtiAsbtzZviPWDafOO/Cy32thI/FU?=
+ =?us-ascii?Q?agMe/0PTf/aGapadh4RBEym1IZE8mX8EEhBtM7EM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8b27b08-685d-405b-dc60-08dd40632eb6
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2025 12:48:08.9398
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xil4N6G+s6UNalJguh/aGtjSqmQud3EZ51MLKpOOr8RR4/sV6qxBRZfQakwbs2e1Y106xEQyeW+k88jXP8gUKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8838
 
->-----Original Message-----
->From: Dan Williams <dan.j.williams@intel.com>
->Sent: 27 January 2025 23:17
->To: Shiju Jose <shiju.jose@huawei.com>; Dan Williams
-><dan.j.williams@intel.com>; linux-edac@vger.kernel.org; linux-
->cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org; linux=
--
->kernel@vger.kernel.org
->Cc: bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; dave@stgolabs.net; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: RE: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device patro=
-l
->scrub control feature
->
->Shiju Jose wrote:
->> Hi Dan,
->>
->> Thanks for the comments.
->>
->> Please find reply inline.
->>
->> Thanks,
->> Shiju
->> >-----Original Message-----
->> >From: Dan Williams <dan.j.williams@intel.com>
->> >Sent: 24 January 2025 20:39
->> >To: Shiju Jose <shiju.jose@huawei.com>; linux-edac@vger.kernel.org;
->> >linux- cxl@vger.kernel.org; linux-acpi@vger.kernel.org;
->> >linux-mm@kvack.org; linux- kernel@vger.kernel.org
->> >Cc: bp@alien8.de; tony.luck@intel.com; rafael@kernel.org;
->> >lenb@kernel.org; mchehab@kernel.org; dan.j.williams@intel.com;
->> >dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->> >dave.jiang@intel.com; alison.schofield@intel.com;
->> >vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
->> >Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com;
->> >rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->> >dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->> >james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com;
->> >erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->> >gthelen@google.com; wschwartz@amperecomputing.com;
->> >dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
->> >nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
->> ><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->> >kangkang.shen@futurewei.com; wanghuiqiang
-><wanghuiqiang@huawei.com>;
->> >Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
->> >Subject: Re: [PATCH v18 15/19] cxl/memfeature: Add CXL memory device
->> >patrol scrub control feature
->> >
->> >shiju.jose@ wrote:
->> >> From: Shiju Jose <shiju.jose@huawei.com>
->> >>
->> >> CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub
->> >> control feature. The device patrol scrub proactively locates and
->> >> makes corrections to errors in regular cycle.
->> >>
->> >> Allow specifying the number of hours within which the patrol scrub
->> >> must be completed, subject to minimum and maximum limits reported
->> >> by the
->> >device.
->> >> Also allow disabling scrub allowing trade-off error rates against
->> >> performance.
->> >>
->> >> Add support for patrol scrub control on CXL memory devices.
->> >> Register with the EDAC device driver, which retrieves the scrub
->> >> attribute descriptors from EDAC scrub and exposes the sysfs scrub
->> >> control attributes to userspace. For example, scrub control for the
->> >> CXL memory device "cxl_mem0" is exposed in
->> >/sys/bus/edac/devices/cxl_mem0/scrubX/.
->> >>
->> >> Additionally, add support for region-based CXL memory patrol scrub
->control.
->> >> CXL memory regions may be interleaved across one or more CXL memory
->> >> devices. For example, region-based scrub control for "cxl_region1"
->> >> is exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
->> >>
->> >> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> >> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> >> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> >> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> >> ---
->> >>  Documentation/edac/scrub.rst  |  66 ++++++
->> >>  drivers/cxl/Kconfig           |  17 ++
->> >>  drivers/cxl/core/Makefile     |   1 +
->> >>  drivers/cxl/core/memfeature.c | 392
->> >++++++++++++++++++++++++++++++++++
->> >>  drivers/cxl/core/region.c     |   6 +
->> >>  drivers/cxl/cxlmem.h          |   7 +
->> >>  drivers/cxl/mem.c             |   5 +
->> >>  include/cxl/features.h        |  16 ++
->> >>  8 files changed, 510 insertions(+)  create mode 100644
->> >> drivers/cxl/core/memfeature.c diff --git
->> >> a/Documentation/edac/scrub.rst b/Documentation/edac/scrub.rst index
->> >> f86645c7f0af..80e986c57885 100644
->> >> --- a/Documentation/edac/scrub.rst
->> >> +++ b/Documentation/edac/scrub.rst
->[..]
->> >
->> >What is this content-free blob of cat and echo statements? Please
->> >write actual documentation with theory of operation, clarification of
->> >assumptions, rationale for defaults, guidance on changing defaults...
->>
->> Jonathan already replied.
->
->I disagree that any of that is useful to include without rationale, and if=
- the
->rationale is already somewhere else then delete the multiple lines of show=
-ing
->how 'cat' and 'echo' work with sysfs.
-I will discuss with Jonathan on this how to modify.=20
+On 07.01.25 11:18:39, Gregory Price wrote:
+> On Tue, Jan 07, 2025 at 03:09:48PM +0100, Robert Richter wrote:
+> > Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+> > cxl_hdm_decode_init()") changed the code flow in this function. The
+> > root port is determined before a check to leave the function. Since
+> > the root port is not used by the check it can be moved to run the
+> > check first. This improves code readability and avoids unnesessary
+> > code execution.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > ---
+> >  drivers/cxl/core/pci.c | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index 3e8d20f8955c..d206378c4cbc 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> >  	if (!hdm)
+> >  		return -ENODEV;
+> >  
+> > -	root = to_cxl_port(port->dev.parent);
+> > -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> > -		root = to_cxl_port(root->dev.parent);
+> > -	if (!is_cxl_root(root)) {
+> > -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> > -		return -ENODEV;
+> > -	}
+> > -
+> 
+> Can't say definitively, but my reading of the original ordering suggests
+> the intent was to bail out of enabling anything if the cxl root cannot
+> be found (which suggests much larger issues).
+> 
+> This code flow allows the device to have its bits twiddled when the root
+> cannot be found - is that what we want?
 
->
->[..]
->> >> +	depends on CXL_MEM
->> >
->> >Similar comment, and this also goes away if all of this just moves
->> >into the new cxl_features driver.
->>
->> Agree with  Jonathan told in reply. These are RAS specific features
->> for CXL memory devices and thus added in memfeature.c
->
->Apoligies for this comment, I had meant to delete it along with some other
->commentary along this theme after thinking it through.
->
->I am now advocating that Dave drop his cxl_features driver altogether and
->mirror your approach. I.e. EDAC is registered from existing CXL drivers, a=
-nd
->FWCTL can be registered against a cxl_memdev just like the fw_upload ABI.
->
->There was a concern that CXL needed a separate FWCTL driver in case
->distributions wanted to have a policy against FWCTL, but given CXL already=
- has
->CONFIG_CXL_MEM_RAW_COMMANDS at compile-time and a wide array of CXL
->bus devices, a cxl_features device is an awkward fit.
-Ok.=20
->
->[..]
->> >> +static int cxl_ps_get_attrs(struct cxl_patrol_scrub_context *cxl_ps_=
-ctx,
->> >> +			    struct cxl_memdev_ps_params *params) {
->> >> +	struct cxl_memdev *cxlmd;
->> >> +	u16 min_scrub_cycle =3D 0;
->> >> +	int i, ret;
->> >> +
->> >> +	if (cxl_ps_ctx->cxlr) {
->> >> +		struct cxl_region *cxlr =3D cxl_ps_ctx->cxlr;
->> >> +		struct cxl_region_params *p =3D &cxlr->params;
->> >> +
->> >> +		for (i =3D p->interleave_ways - 1; i >=3D 0; i--) {
->> >> +			struct cxl_endpoint_decoder *cxled =3D p->targets[i];
->> >
->> >It looks like this is called directly as a callback from EDAC. Where
->> >is the locking that keeps cxl_ps_ctx->cxlr valid, or p->targets content=
- stable?
->> Jonathan already replied.
->
->I could not find that comment? I *think* it's ok because when the region i=
-s in the
->probe state changes will not be made to this list, but it would be useful =
-to at
->least have commentary to that effect. Protect against someone copying this
->code in isolation and not consider the context.
-Sure. Will do.
->
->[..]
->> >> +
->> >> +int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct
->> >> +cxl_region *cxlr)
->> >
->> >Please separate this into a memdev helper and a region helper. It is
->> >silly to have two arguments to a function where one is expected to be
->> >NULL at all times, and then have an if else statement inside that to
->> >effectively turn it back into 2 code paths.
->> >
->> >If there is code to be shared amongst those, make *that* the shared hel=
-per.
->> I added single function cxl_mem_ras_features_init() for both memdev
->> and region based scrubbing to reduce code size as there were feedbacks t=
-ry
->reduce code size.
->
->"Succint" and "concise" does not necessarily mean less lines. I would grea=
-tly
->prefer a few more lines if it mines not outsourcing complexity to the call=
-ing
->context. Readable code means I do not need to wonder
->what:
->
->   cxl_mem_ras_features_init(NULL, cxlr)
->
->...means. I can just read devm_cxl_region_edac_register(cxlr), and know ex=
-actly
->what is happening without needing to lose my train of thought to go read w=
-hat
->semantics cxl_mem_ras_features_init() is implementing.
->
->Note that all the other _init() calls in drivers/cxl/ (outside of module_i=
-nit
->callbacks), are just purely init work, not object registration. Please kee=
-p that
->local style.
-Sure. Will add  separate functions for region based edac registration.
->
->> >> +{
->> >> +	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
->> >> +	char cxl_dev_name[CXL_DEV_NAME_LEN];
->> >> +	int num_ras_features =3D 0;
->> >> +	u8 scrub_inst =3D 0;
->> >> +	int rc;
->> >> +
->> >> +	rc =3D cxl_memdev_scrub_init(cxlmd, cxlr,
->> >&ras_features[num_ras_features],
->> >> +				   scrub_inst);
->> >> +	if (rc < 0)
->> >> +		return rc;
->> >> +
->> >> +	scrub_inst++;
->> >> +	num_ras_features++;
->> >> +
->> >> +	if (cxlr)
->> >> +		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
->> >> +			 "cxl_region%d", cxlr->id);
->> >
->> >Why not pass dev_name(&cxlr->dev) directly?
->> Jonathan already replied.
->
->That was purely with the cxl_mem observation, cxlr can be passed directly.
-Will check.
->
->> >
->> >> +	else
->> >> +		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
->> >> +			 "%s_%s", "cxl", dev_name(&cxlmd->dev));
->> >
->> >Can a "cxl" directory be created so that the raw name can be used?
->
->In fact we already do something similar for CONFIG_HMEM_REPORTING (i.e.
->an "access%d" device to create a nameed directory of attributes) so it is =
-a
->question for Boris if he wants to tolerate a parent "cxl" device to parent=
- all CXL
->objects in EDAC.
->
->> >
->> >> +
->> >> +	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
->> >> +				 num_ras_features, ras_features);
->> >
->> >I'm so confused... a few lines down in this patch we have:
->> >
->> >    rc =3D cxl_mem_ras_features_init(NULL, cxlr);
->> >
->> >...so how can this call to edac_dev_register() unconditionally
->> >de-reference @cxlmd?
->> Thanks for spotting this. It is a bug, need to fix.
->
->
->[..]
->> >> +EXPORT_SYMBOL_NS_GPL(cxl_mem_ras_features_init, "CXL");
->> >> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> >> index b98b1ccffd1c..c2be70cd87f8 100644
->> >> --- a/drivers/cxl/core/region.c
->> >> +++ b/drivers/cxl/core/region.c
->> >> @@ -3449,6 +3449,12 @@ static int cxl_region_probe(struct device *dev=
-)
->> >>  					p->res->start, p->res->end, cxlr,
->> >>  					is_system_ram) > 0)
->> >>  			return 0;
->> >> +
->> >> +		rc =3D cxl_mem_ras_features_init(NULL, cxlr);
->> >> +		if (rc)
->> >> +			dev_warn(&cxlr->dev, "CXL RAS features init for
->> >region_id=3D%d failed\n",
->> >> +				 cxlr->id);
->> >
->> >There is more to RAS than EDAC memory scrub so this message is
->> >misleading. It is also unnecessary because the driver continues to
->> >load and the admin, if they care, will notice that the EDAC attributes =
-are
->missing.
->> This message was added for the debugging purpose in CXL driver. I will c=
-hange
->to  dev_dbg().
->
->...but also stop calling this functionality with the blanket term "RAS".
->It is "EDAC scrub and repair extensions to all the other RAS functionality=
- the CXL
->subsystem handles directly", name it accordingly.
-Sure. Will change.
+A soon as a port is created, the cxl root should always exist and in
+practice never fails. There is no other ways to allocate the
+port. Variable 'root' is used later below in the code and that is the
+reason to determine it here.
 
-Thanks,
-Shiju
+> 
+> >  	if (!info->mem_enabled) {
+> >  		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+> >  		if (rc)
+> > @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> >  		return devm_cxl_enable_mem(&port->dev, cxlds);
+> >  	}
 
+For the above reasons just enabling the memory without checking root
+is safe.
+
+-Robert
+
+> >  
+> > +	root = to_cxl_port(port->dev.parent);
+> > +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> > +		root = to_cxl_port(root->dev.parent);
+> > +	if (!is_cxl_root(root)) {
+> > +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> >  	for (i = 0, allowed = 0; i < info->ranges; i++) {
+> >  		struct device *cxld_dev;
+> >  
+> > -- 
+> > 2.39.5
+> > 
