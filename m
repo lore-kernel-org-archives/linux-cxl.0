@@ -1,111 +1,131 @@
-Received: from slategray.cherry.relay.mailchannels.net (slategray.cherry.relay.mailchannels.net [23.83.223.169])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918114C83;
-	Wed, 29 Jan 2025 15:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738163398; cv=pass; b=OQt17CeiLL6h5VxuX0Uy+X1KK2CR4Q2rIpMWRW/y+jLmu6aVEjz49TDWiKmLrAlzZ7ej6I0cFn5uOxQuias7y9qjk92yC2eUjCfOfwk17k/Hw5epZQZleOinAzMi2dRkoUyJshRhjyfJeH7+bN/su/qlTFyiiIF6DoK7VQ/Su5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738163398; c=relaxed/simple;
-	bh=KVZuEZOEqrl+x9S9HAJjGoL4xZ6gpIQ4fq2iNnPsVys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYmlpd1cSX2Neg6ckTK5imDhg0M/bE8sA8MNathGVy+FWoqX7jZRRyFHsYcHMcVGUYcZlf12NmeEZ3quPrvXok4gpAkP2CoCQbBR+0NU9jQqAr1TfAIcxpp892BQMn0f9/8/KYUnUHBIKJUnCzLYIFQhZ2KcySHq0l9MC0uwsr0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=eU+Mh4ax; arc=pass smtp.client-ip=23.83.223.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F4F1DF744;
+	Wed, 29 Jan 2025 16:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738168095; cv=none; b=f+BkmLfCfv7gdpZAn2DflFvoViUzbq6sIo3ICfP0/adMCqzOZBEtjRqqiRlWseQpH2fgYBR3mHvpun1SFCJYqPDRVMn8RAyvqRoSLWCTBlp4Gdd8xFyLlmVvlQ19HvLTds+N0lZBYqXB5ojtSaXUWh1hNo02KlOL+sN+esooVs8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738168095; c=relaxed/simple;
+	bh=bLU+NXU88bYMBxYSA0aldNZBNdo9lQaZQZw0KuPoDVs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=pxaA8jApvDrJrGujyTSuWo4OxRBnLaIjJwwucBv4kDpqJDPXz2JdSbheXBvvoQpZtqY5+kAEieS2d10gvyH60kbME4W9wHpmgfvrYnKu6xbOweEApJJhXQ6QammL12rp4ocyNHDerWJbXRD22+NG602HR/puekuQYg9tFr8OcH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDya26Zh; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="eU+Mh4ax"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 06D9A2C3D43;
-	Wed, 29 Jan 2025 15:09:50 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.116.71.244])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5B2542C3B3A;
-	Wed, 29 Jan 2025 15:09:49 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738163389; a=rsa-sha256;
-	cv=none;
-	b=YbcBFZzxdLRwqNWr3BAXBd2FhaQBSPl18+k8bkrhugcWrWGKnwMU2nM3V4M5M3VfzjJWo1
-	QdGo9akkSzW5qNIlUhOdeU3QgSkojVYdjeET1LaqNcqpii1DOlgBYcdAEXok3FDkwjOOCZ
-	3W3idRL8qGclEtQNLGpFhC8gY5eCyjsMpgSl49M5I8qXfZ4CfQaMc750L/qJOX75T/obpY
-	uEuMB9WNNmyqCx7yHIt9dGJa8xCI5PysWCJU8I3NsUbi1Qy62bv0mtyT505INoUv6PB3eO
-	a7LQ2LyEaKW2ToFGhvkjWlYMjmUqHo6eLxeYrROfuQZqdWLelRxD6TXzL+IEIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738163389;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=KVZuEZOEqrl+x9S9HAJjGoL4xZ6gpIQ4fq2iNnPsVys=;
-	b=He//S/Dd0H/bbswDsRwnlF3ogc+3yEaQAJLqWuFSAvV5UEc1QCFi9LAz4jxc3HDq4gG82L
-	gWDsyGShmghNUmF0akcxEcGcHOaHFMNjTn4LelSmOwkJhTDk00Kk0+fLm0sE3KE+F7yhtZ
-	lZPJ7/F1aYyQN+PXaMdtLrqUi0suwD52MA6VWqmJ1NI4y2pMdfhcj9KfgKEjlNFuuEjVNY
-	oouXupmFbcJtB0+80tYGQG2xRls1N4ltrcOL4WR2Ac1edDLVu3tYk/jrS8a5GoVDSPgBA6
-	c1EM1jOeqrKxmmaxVU+9/nRdXKSSnWGKDC3EmuueHX5qqplS4H/9AB8PJy4DCQ==
-ARC-Authentication-Results: i=1;
-	rspamd-7f8bc4ff9f-gvn84;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whimsical-Quick: 3fbc8e9912f56a4c_1738163389682_1346255113
-X-MC-Loop-Signature: 1738163389682:1473457761
-X-MC-Ingress-Time: 1738163389682
-Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.116.71.244 (trex/7.0.2);
-	Wed, 29 Jan 2025 15:09:49 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4Yjlv04BQTz4F;
-	Wed, 29 Jan 2025 07:09:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1738163389;
-	bh=KVZuEZOEqrl+x9S9HAJjGoL4xZ6gpIQ4fq2iNnPsVys=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=eU+Mh4axfwwj+QWLt2izfwzNmrJuEjLSSwsPUKhx1kEXaTks2M7ZW0qnj2x8vTmRv
-	 nsroTpS8rg4OjCs7kjSyXVHPZevd7Dcqwj3nz11Mr/4GThDcbvpnpMsBz2dqii0lOl
-	 tuygnz9J2c/UBc6MwdGyQJQ3znh9izstaNeBHFxc6+EECjrbj+9H6DwZerat6nhTLi
-	 CitBwv0IIBZEsehqK/0IWkrAnkdUjjxO9elYi5HyB3+27EFu5wLzjMtIyL9masZRVN
-	 PBjA3aeF9OgKK7zsMScXApbwaiIJYQg7wsPhHoLQJVxPNOHvPAaddBzRW1LgEiyazE
-	 NdhyeVq9NsjJg==
-Date: Wed, 29 Jan 2025 07:09:45 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] cxl/memdev: Remove unused partition values
-Message-ID: <20250129150945.ozoqocgugn5vapy3@offworld>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-1-26d1ca151376@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDya26Zh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738168093; x=1769704093;
+  h=message-id:date:mime-version:to:cc:from:subject:
+   content-transfer-encoding;
+  bh=bLU+NXU88bYMBxYSA0aldNZBNdo9lQaZQZw0KuPoDVs=;
+  b=KDya26Zh62rxucIuPiAZjAh46mwB7/nKrrfOJxqo5kD0YE+4Z3e1ClCV
+   eAocePZujyqTWCArZoL+2TOeAY69VYEW471ttKAfBpCl4y/NBKpZV/+eG
+   UBRAbyfcZs5ayAYYp1+SyA83L/Y/5dHSs7bjG/LgMsPu0AWjP/K2ypsd+
+   dJrhV7AgrFeC5ZMGngIAeDneO+T8ouxCrlxksCRpR1yAgT3S6/dAKzZAN
+   CudGXXJqPa3QpfYkK5DIhfnwJ2jCb+1nZipSUtgOXtPrP5bJ/UH4eWSZf
+   lvVmQELbvGmrBZQnd0SDWUj4g/ipY3bu1w9n2XhD2x6HpY+YHAeptLJ5G
+   g==;
+X-CSE-ConnectionGUID: GLWfrhCJQZG/V0XL19CnIA==
+X-CSE-MsgGUID: H6baEUzVRQum73AcGYRKuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38793415"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38793415"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 08:28:12 -0800
+X-CSE-ConnectionGUID: QP+89bJmTZuIbm4rgLwk6Q==
+X-CSE-MsgGUID: 1rK6eANyRkqAgi9LzSQvvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="146276355"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.127]) ([10.125.108.127])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 08:28:12 -0800
+Message-ID: <96c924e7-a684-45c9-b23d-6401ae727159@intel.com>
+Date: Wed, 29 Jan 2025 09:28:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250128-rfc-rearch-mem-res-v1-1-26d1ca151376@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) changes for 6.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 28 Jan 2025, Ira Weiny wrote:
+Hi Linus, please pull from
+  
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-6.14
 
->The next volatile and next persistent values are unused and are
->cluttering the cxl_memdev_state.
->
->Remove these values.
->
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+...to receive a small set of changes for CXL for v6.14.  The changes includes
+a tweak to the HMAT output that was acked by Rafael, a prep patch for CXL type2
+devices support that's coming soon, refactoring of the CXL regblock
+enumeration code, and a series of patches to update the event records to CXL
+spec r3.1.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+These all have appeared in -next for a few days with no reported issues.
+
+---
+
+The following changes since commit fc033cf25e612e840e545f8d5ad2edd6ba613ed5:
+
+  Linux 6.13-rc5 (2024-12-29 13:15:45 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-6.14
+
+for you to fetch changes up to 448a60e85ae2afe2cb760f5d2ed2c8a49d2bd1b4:
+
+  cxl/core/regs: Refactor out functions to count regblocks of given type (2025-01-22 08:55:21 -0700)
+
+----------------------------------------------------------------
+cxl changes for v6.14
+
+- Move HMAT printouts to pr_debug()
+- Add CXL type2 support to cxl_dvsec_rr_decode() in preparation for
+  type2 support
+- A series that updates CXL event records to spec r3.1 and related
+  changes
+- Refactoring of cxl_find_regblock_instance() to count regblocks
+
+----------------------------------------------------------------
+Alejandro Lucero (1):
+      cxl/pci: Add CXL Type 1/2 support to cxl_dvsec_rr_decode()
+
+Dan Williams (1):
+      ACPI/HMAT: Move HMAT messages to pr_debug()
+
+Huaisheng Ye (1):
+      cxl/core/regs: Refactor out functions to count regblocks of given type
+
+Shiju Jose (6):
+      cxl/events: Update Common Event Record to CXL spec rev 3.1
+      cxl/events: Add Component Identifier formatting for CXL spec rev 3.1
+      cxl/events: Update General Media Event Record to CXL spec rev 3.1
+      cxl/events: Update DRAM Event Record to CXL spec rev 3.1
+      cxl/events: Update Memory Module Event Record to CXL spec rev 3.1
+      cxl/test: Update test code for event records to CXL spec rev 3.1
+
+ drivers/acpi/numa/hmat.c      |  24 ++--
+ drivers/cxl/core/pci.c        |   6 +-
+ drivers/cxl/core/regs.c       |  56 +++++----
+ drivers/cxl/core/trace.h      | 259 +++++++++++++++++++++++++++++++++++-------
+ drivers/cxl/cxl.h             |   6 +-
+ drivers/cxl/pci.c             |   6 +-
+ drivers/cxl/port.c            |   2 +-
+ include/cxl/event.h           |  28 +++--
+ tools/testing/cxl/test/mem.c  |  23 +++-
+ tools/testing/cxl/test/mock.c |   6 +-
+ 10 files changed, 319 insertions(+), 97 deletions(-)
