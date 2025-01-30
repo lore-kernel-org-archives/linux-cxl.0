@@ -1,493 +1,184 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020135.outbound.protection.outlook.com [52.101.56.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A451E38DD3
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Jan 2025 18:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738261688; cv=none; b=iTSapoU54tkFspGNGTtCfNMeyCkmSPabaG3r2cmYXRyI0jXFuLWwCl712kpbGK5Fiwu/9+LdhR7IiLnDO5130tHwVM7oC5Itq/tTAZCQDyU9nXk08CDCLnAARphGgcaDlir9tt9JNOGWjsOlrHy36Zd62FCT7tyn8odqXyEwMMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738261688; c=relaxed/simple;
-	bh=J9vel0AQyMDYPd3Z8ijKE+K9E9pdPrDrHpuCCUefC1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h2GzGc9ZDAgl0yaf+bbQOxq2qKPA+XBmGOZCiRvTjuffdGsUXYst6DvmKzHp7GsYtarMmCuZstmq7q08Hz1sitPuI91z7OMQQF+GTKePNnrZgM4FZEBABWXBtiJ5hMGtL57jHVimWXJGFJG1B6QkM6WzdrHOZ37jGrXopKU2OI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ij5jFC0t; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA54B660;
+	Thu, 30 Jan 2025 19:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738264709; cv=fail; b=VTwaUmSPeu/OWLfxT7AHMaMkC7oIr/cItavfm74i2GWDb7iaMaYfS8l38dysDP6ixdTRe9TZ3zCSG4Hlfi0/NuczN0VrZ/D9rFELpEf2lM0K2gHfIZberidAa8LJo+k+1yiVAiN+TN/Go3Z+qkZCB9aKi+WRarW1N3QtgWndmFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738264709; c=relaxed/simple;
+	bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ilV6bxLOixrjCL4i+dyt3BU8O57tQJsJ3CrN9p8/5tg80QjCahxWpyzVVKQ239568SMAY47rBuWxkRWxOe6kFwChD5KcAQ/ero27LzvC11k1nkzqzITBXHY+J/BD5hYRPXKFOnP2PEufX64/xqoD+axNT1TLecfH4uHTrX3C/G8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=KlS1ku3I; arc=fail smtp.client-ip=52.101.56.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ij5jFC0t"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21661be2c2dso19965845ad.1
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Jan 2025 10:28:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="KlS1ku3I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yFMmpRFGegIMmp87rt1k2O42PaLUZyFQE7NWkZM7g0SH4c6mLYwsUEegUJoemDTJXBECULaAL5cnmPoCIOjRnI8xeLkdreLv4SFLbnuBqT4gzDgbdEWE7Yak0PgLrKPAhd4zfruB8BnYLrD6l5LPM1Ey/lUum3w2KGW9/leAj5Qo/G4iD5g/za4YvUjkj4RtzDYu1Q9Y8Pzd9JfZ/PLsyaSA/AERzbJjyt2eKtkrpRvGoUfVQZU3RpA48mgrK2RTFe90HgFW4xrm3/nv/zfhFdiztrCpWA5Pyeu6Lv2vIL+5knL+zKYi4M+903DLVYUM6teQ8Kga7PspTbIptWUjWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+ b=LQQj4lILsn+ntTnnRHGunHx+1C1ZUFpQjddDQUNNP656KPKIVf1IiR3NBrBvjXVYWKiQzWldmWYZ1XcvmIbqKZLwGVjOXjoUjJAOCzSOzzvUyhmbqCM1ZBh2i42dcLtHs6XUN5QWbdRrb5L05IdFWs7w3G8hvt219/tjVcrmN/MrEGTVaaOR6l/eFEnNBpEwiz5rJsjHCOhwF9+bcXPoqvAnoiiDWkjPx2piF+zNPoZrQ/OF67dZal/W7hNc+nLaofUrkc4p9RAjh8jHtF9PjKl8sW/VGQwT88EDkV4ngBFt7lVm5kRqiyebKVdh1GpDN/nSk8YwBSvTiV+UDniXKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738261685; x=1738866485; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tvSmySyBN8oxPktT47Gz2Crc64iK6Vc/QutFY81wmBc=;
-        b=Ij5jFC0t89VK6jV4M2ztFcCDyy9ZzM3Ne9e4qbnBM8u+MZLILlEuIrVDZwJDM/pzJk
-         V79IwkATfay33Zp+CY8e475Fa2Hw7U1JJqSD7akWQYgW2zRwowGE5qNshevpdtyTwjBx
-         dlKUl/g9wDqjK3cepefNzkQoiN+bNU20+/SUBjx6n/qO1yoBJMDC4zUGwIryCqK3+ouG
-         3OArh4qrkOGD8fDlo+0rZqkwReLgLY4eR14Ny/MoDp7B5EUCREbtEu+kquJ8i9q5QIzZ
-         h49pBytoT+t3kGxp/eYqbwCkJxgf0EAqkt+iuqmXa2LX1IwE2AHvUaGlLBLXx+yHdeNc
-         mBxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738261685; x=1738866485;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tvSmySyBN8oxPktT47Gz2Crc64iK6Vc/QutFY81wmBc=;
-        b=FzUf5RndrK7b+I7JGyWftlfeh20kvxtGW/eiaX6Cg4HDth5CeWWodCFqHt2PE+7yjd
-         LazBW7Rjnqz5nekvBddIe2W7hi5MOT7YDA0xPFEwJBU/+kz6TfS1AaOeAS/YqMROqHmI
-         WwgQtsz8s0s0OprVLhzk3/SSnKL3SAPtvp+9gUL48jtaurnVv4nRAg6x0DjsjS3J5Gy5
-         bk8LYL9/3IPlTYAwoz/8buWt1KFeqyIITJPF4vBs1t0/U+AXpVn7iUrl8RWm6srUKvX+
-         1rXuKz9TemYcbHhk0iBRjWMYcJacge/cRpZHBHwAchXjxi7dox0WABYFMdtVRwvQfcid
-         kOgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWj1Jgsmb3eefeiSbAFqkO9KrhMkXKpYVNCp/05j3XVPdh1fL0GHR1wggrWRvugL7qL/w6kS+zJbws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJkxg5OTzf8OLm280IjQ4EluyQrLShrt8YkfnW3SMsIyhqJInk
-	L1fFnomIUqUr18mOGXBFS3BU3LcMcWsDM9Zjb9nrRijCOdN0tt1k33rQV4PTTwE=
-X-Gm-Gg: ASbGnctzZGvvzLW4Fs7VBITHN9A6lVR7FY+geUBnP+md/Rk7/TzAhIMGr59LfsG6hBJ
-	DSsm3/FLTxGBBLr/HrtDLG5NDJ/ZO61HBy1PxYcPdh03Pfr8oyhkHjwfQQfWnByytPa7Sa4lKQ1
-	Nk4PEgrKiVOQROzx7OL0iu9W720HGZgp08oItQ2WsAgSSGfXc9GNN3/eAWQAbvk4TWOZw8fVv4g
-	QtoJe67sTkpgVvJ4B7okB2DHl/08Rdbf5mrhdNntaiNCV0Qf55Lpy8Htk60YZyJBueaTIAIBro4
-	8Zwy7paVDVUty74YPHvzmg6PUU5w
-X-Google-Smtp-Source: AGHT+IEutbZZ+vWXDLiu//xxRmFvlz2REvkxiyxDTbmweJ+IFOyCGRuLqfIfc+8Vx90Vfy5xFosBRw==
-X-Received: by 2002:a17:902:cf01:b0:215:7446:2151 with SMTP id d9443c01a7336-21dd7c4c15dmr141430675ad.4.1738261684505;
-        Thu, 30 Jan 2025 10:28:04 -0800 (PST)
-Received: from [192.168.1.67] ([38.39.164.180])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31ee66dsm16920665ad.50.2025.01.30.10.28.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 10:28:04 -0800 (PST)
-Message-ID: <d16c2e90-4e92-4a0e-9fe2-16ece4430a4a@linaro.org>
-Date: Thu, 30 Jan 2025 10:28:03 -0800
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S1iqBEy3dzYEm5PTL2tMof1x8/zIiZ09qP4rVs5rJg4=;
+ b=KlS1ku3IBRc96dJN0NGmrYLoHzN9ZDx0XFQB0Vpp7DZ4m+0B51Ru+wWc6oE1xI6FWYEulxM5jLz6GSKl2j0Ku3lOl54sJtJ0tNfYNrtGyeau9jrPortFi1Gm81Ii1p/fwU0/yfH0+p6kaCKs0rd1fnav7cVJe0zHnPpZNmtX0dE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SA3PR01MB8473.prod.exchangelabs.com (2603:10b6:806:397::12) by
+ MW6PR01MB8599.prod.exchangelabs.com (2603:10b6:303:23e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.5; Thu, 30 Jan 2025 19:18:22 +0000
+Received: from SA3PR01MB8473.prod.exchangelabs.com
+ ([fe80::46d7:1d3a:dc9c:69c3]) by SA3PR01MB8473.prod.exchangelabs.com
+ ([fe80::46d7:1d3a:dc9c:69c3%3]) with mapi id 15.20.8398.014; Thu, 30 Jan 2025
+ 19:18:22 +0000
+Message-ID: <a6af63e2-227a-4909-9b87-8eff96be088b@os.amperecomputing.com>
+Date: Thu, 30 Jan 2025 11:18:18 -0800
+User-Agent: Mozilla Thunderbird
+From: Daniel Ferguson <danielf@os.amperecomputing.com>
+Subject: Re: [PATCH v18 00/19] EDAC: Scrub: introduce generic EDAC RAS control
+ feature driver + CXL/ACPI-RAS2 drivers
+To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: bp@alien8.de, tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+ mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
+ Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
+ Jon.Grimm@amd.com, dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+ james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+ erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+ gthelen@google.com, wschwartz@amperecomputing.com,
+ dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+ nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+ roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+ wanghuiqiang@huawei.com, linuxarm@huawei.com
+References: <20250106121017.1620-1-shiju.jose@huawei.com>
+Content-Language: en-US
+In-Reply-To: <20250106121017.1620-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0358.namprd04.prod.outlook.com
+ (2603:10b6:303:8a::33) To SA3PR01MB8473.prod.exchangelabs.com
+ (2603:10b6:806:397::12)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH QEMU 0/3] cxl/plugins: Hotness Monitoring Unit with
- 'real' data.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: fan.ni@samsung.com, linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Alexandre Iooss <erdnaxe@crans.org>, Mahmoud Mandour
- <ma.mandourr@gmail.com>, linuxarm@huawei.com,
- Niyas Sait <niyas.sait@huawei.com>
-References: <20250124172905.84099-1-Jonathan.Cameron@huawei.com>
- <5e0876e8-4c2c-4ba5-86dc-d9ca241b743d@linaro.org>
- <20250127102009.00002dbd@huawei.com>
- <c595c1c1-63cc-462a-982e-66ac61a2eb9a@linaro.org>
- <20250129102936.00006782@huawei.com>
- <a2fa6e50-fa3c-49b0-8886-0818a68f8e08@linaro.org>
- <20250130155229.00005a8f@huawei.com>
-Content-Language: en-US
-From: Pierrick Bouvier <pierrick.bouvier@linaro.org>
-In-Reply-To: <20250130155229.00005a8f@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR01MB8473:EE_|MW6PR01MB8599:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7514eac-9627-458f-7dd0-08dd4162dccc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dE1FS1k1MXJoRlM0Rng2c0hISmp2WXFFUUNzdHB2UTdVSnB3SmZFeVlmUHhL?=
+ =?utf-8?B?QlhnUU1XR2paUEhCSmdjMU1HSU1ad2VJZWo5VVFXNk5SV3hmT1FJNHV5WkRv?=
+ =?utf-8?B?dkdqUmU4VlZ3WjZuMjBlTnFrZkg1K2VTSE1XTlN0Ym9xMTd5dHRVTTV0Y2d0?=
+ =?utf-8?B?cmtSdHdlSWxHNFU2blY3c09iWW9tUVpnbExqV2xCUy9zUUhRVDBva1RuUFdI?=
+ =?utf-8?B?TSt3Z083ZHNtalJSUjNobWlOZklJejNuMys3QTNPZFIrYTUveXNZYTNlbUEx?=
+ =?utf-8?B?VkFRYWhFb1ZhOEhNaVE0eS9wU2NVdEg0bldMcHYxNFNJL04wUCt0dnBIdHhD?=
+ =?utf-8?B?K3BCY2I3R2dZRlhWNGJ0bGwySkplUjNyeUVScC9CeTBvaFRjZGhDN2I3MWRv?=
+ =?utf-8?B?R0prTHhBU0dHdE90SFFQTVg1V1AyM3UwMHU2UGlhb2drSEVpaUZSSkJnMlRk?=
+ =?utf-8?B?U2pSOVc1N0daZll3dDhINW54SGFKcHhyRHpBTFF4blZsd0lFN2RkR1BKT2lQ?=
+ =?utf-8?B?NFhQZGRKU2lFWXg3RU12a3hiOUFNN2FScmREdHFoNE0xZTVOQ3BSVW4yVFZL?=
+ =?utf-8?B?eEVSWlJnY3R0WHNQaEJDQXlZT0pwVjlKRzZuUVR0U1F6Tkx4OTlFa0lpM08v?=
+ =?utf-8?B?Mzdwa3JIMjhVUzRpekhzUUhUbXhNQitGVktCd2paZEdaUTVRMGVqSHVROW1N?=
+ =?utf-8?B?RzlCajFDSzRKRlkxaENpZnFoc3VDSUl3U1lvNG1oYmtsaEJpU3o3UG5WOWRY?=
+ =?utf-8?B?VlBhbzd6QkVRQTk4T2dsTTVvdG9XUGd5QW4rZHZaWnJkbWNlKytyKzVnOGx6?=
+ =?utf-8?B?Z0hMbllpa2wxWmtGZ0NmR1NqUGpBeFp3alRUZTNtbDJqTWFHSE9KMC9Yd29X?=
+ =?utf-8?B?czQwdDE3RExKaVZ1T3RBaUVTQmw2YVcwYmRLNWRpR0dRTldTU1VGZ2dsR3Ro?=
+ =?utf-8?B?UXZCMStkcDY2cGxnNFVsNzRQSEpqNUJ0cktER0tWbTJreVhEVktrNTM0eE0r?=
+ =?utf-8?B?Mk9FOG4vOFlTb2M4NVJOTFRPdlNCMzJzdFF2NENBYTJuMGpITmJ4VElVQ1E1?=
+ =?utf-8?B?NndYWmVOOUpiR1VvejRudEd2SGNzMkdpRDczeVR0eDNzak9LSXczSXpGamJB?=
+ =?utf-8?B?VWhhOStWeGJ4TmZSZFUyMXNLSkhFalgzb3ZjbzVJQjRaYk1pZmNqTjJ6SWNN?=
+ =?utf-8?B?ZHhOTFdmZTZXNFYwZVRVT1NpY0ZiOFdpeXBTb25sdCtKVFdVdm1KUWs0WU05?=
+ =?utf-8?B?VTQwSGt6dEt5S0xCMjN3a1ZIK01hZ28xMTRXWmc0bG93VncrbGFaS29nUmYv?=
+ =?utf-8?B?dCt0V3Q0VHMxUHF2NGRqOEROVnZvWm5ibDA5ZXArTTVTUGxBRytwb2tSSFkv?=
+ =?utf-8?B?Rk95RUh3cGMrbHRpYUx0TmJYeE56aTRXeW0yMnRqOTlKYUsxV0VYYWpqSnB2?=
+ =?utf-8?B?dHduWTBPNGdLc0ZHZ2FZcU9JWHhFaG5NOXJmdlZrOWc3SEtKTHVYeHRBTWUz?=
+ =?utf-8?B?SlIrbE9CNzdMSTRVUEkxMjhtODNncVBlZ1JpUWJsRjd1aUNXU3Z0d1YveVh2?=
+ =?utf-8?B?Z2o0anVqeFFjUnNSem9mckh5ald3eDl4NkRlaDljaGZ1eWRzOGhKY0pscDNt?=
+ =?utf-8?B?TlF4V0NiY0crTmxOSTVCd2pwNzYzUWZSdjRTUHdGNTh6VEUwZlF3cUhnNHJn?=
+ =?utf-8?B?QVBHc1Fid1N5NEVyQ0tZaW5YMEtFSm9JT3pEdU5zWDUwNEJLMmtETTRvZ0lw?=
+ =?utf-8?B?MWFuMjVIR1pCWUJxUW1xMjNOMGZuSXR0QWtRQjFYdXMyc0dqOGpxZnZLRjJS?=
+ =?utf-8?B?a2dYVWJEUGoxRWtNMEZqU3ZzZEloU3daczRiUTBoRTZwYUw5VFV3RXRqSG5x?=
+ =?utf-8?B?OGhPQUx3czBzZ1lZR2lqWHZBK3dHOVhKNW9KNXZmZzZDdkdZczNrNHhCOGo1?=
+ =?utf-8?Q?f5E6f7hYBq+yHTnSIxN/y7AhwtfTqKMi?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR01MB8473.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YTQydU5tZHlJTHJjMWxVSlY2STNnVkFuZkhRTDNid3pYSUh0YXBhS3VDb1NU?=
+ =?utf-8?B?QXZycHczZWZHN24xZHNid3oxUWsvTVVTeHduTXF4Rk5aNGhQY0RhYkwyQ2JT?=
+ =?utf-8?B?YUwvNCtod0o3TDFnR2RwVjViNEJWV2JjLzJIVHdlSmJhRVArVG9Bb2hzb2Qv?=
+ =?utf-8?B?aVlENmh5Vis0OXArRmxrWkZWdXJHYnRjU2FPWk95V09XL3BSWEJJKzNlalVD?=
+ =?utf-8?B?aUhmeHFuS0MwNGZHMDBEY3dNcmpjU2FtR043TENuYUFqQkpLRWgzcnBjV3pu?=
+ =?utf-8?B?SGthMXNxLzhmK3lNcHZmUXBPa2Y4OTdIdDNtVUx0c2lUdE00SUFuUzRldWpI?=
+ =?utf-8?B?TVdYWERZaytGL3JtKzdzZTFxZ2dESkxBSVF1bzU2N2JlcGc1Zm9XRzNKaElT?=
+ =?utf-8?B?VmpuVUgxRENOSkVNd3ZoWWNEUXVMcGlDWmV2Kzhhck84b1gybnRqSjFRVDB1?=
+ =?utf-8?B?SitEU2p5VjZOcGJYZmxrMjlDWWJEbnNzemlVVjdmdlgyN214TGZPcjRsOHI1?=
+ =?utf-8?B?N0N5Mks0RDBWWUY5S3Yrc05YVVVYdG1UY3dLM0NjRU1jV3QvNmM0ZDJlZkRK?=
+ =?utf-8?B?d0ZpWUpac2RJbGF0OHZ4ZCtheWhxKzZKOXZPZTh4U3c4cmcyUnMyVkFWbVd1?=
+ =?utf-8?B?azMzYzJRbVdUVHp1blVLR09VNXNFZHNLTms4QkxnWUpYNFBDa1BncjdBWGFu?=
+ =?utf-8?B?eGZnekFBd0xIQVZtVXVFVUJOV09aNjVBajhhVldKcjlkVklOUW1La0FBdlFa?=
+ =?utf-8?B?d2VRenVOMm1JVjN4eDVoY254YWJUV3F1TUhqWkVWa3NGR3NkYzcxTVZDL2Ew?=
+ =?utf-8?B?S2tiakNWZUxpS2xoakZqY1l4c1o0SzNnSjhhOVlvWjNiM0tnMTJvOHE5UzU2?=
+ =?utf-8?B?bWZyanllMW1BRWFDMGJOS1JONDYwYkRsNmFuSDN4QmlQN3l4M1hKcm9iS2M2?=
+ =?utf-8?B?STRjdHA2Wmt6dDNjUlAzeS9UNVNTM1ZsVkJETEt0SHdkSWdaZUd0VCt0Snpt?=
+ =?utf-8?B?Nk5aaUV2dUtuR3ZuRGR1cHMwUkM5ODhyMHp3TUtUc001ZWpyL0M0T0xrUkZi?=
+ =?utf-8?B?WDZZdVpWWFFaMTlEYTZ3L05GWGI3Q2F3dS9zR3ZrcjN5b1lNRE9aVE9GdXE2?=
+ =?utf-8?B?WEZheTh1bTBxRFMvU0d4UEhYVlUrOUFxR09sYjhHRWxSMjBKY3dMTFlIY01R?=
+ =?utf-8?B?ZkIzZHRhQnVIUlMzczQwR3MwTXUzOU9DMGw0b1VlcmZCU1ZnaU1CSzFBVHJF?=
+ =?utf-8?B?YXV5SllxWmNtSTZ2bVJBaHB2Y0djVDZSRUxoSEs0dithQXNiRWUxR3NDaXNH?=
+ =?utf-8?B?VmtKNUdtVDJTZXBhWkgyL3lXR21MTFdQcWlicVl0SDRraGZMOEFoTjNJdkJS?=
+ =?utf-8?B?Tk4rUHp3N3ViNjNsRi8vNTJBSlB1WnhQV0x3RUlORDYrS1lsZDdpanJNS1Vt?=
+ =?utf-8?B?LzZSaitSZDA5NDRqdXQwSkIwQTRRdUREb2NjZklSQXlLMlBHb2pkVDV4dllM?=
+ =?utf-8?B?VHpRdmF0K3kzeWU4SlBIazRMUlByWkppbFZKY1Z3WmJGVWJPNlhuLzY2YUpP?=
+ =?utf-8?B?Ujd1dEJ3T0xrSEZSTnFWUzFqK1E3OXNSajZENmcxV0RZM2xoYVVpMVhDTFRn?=
+ =?utf-8?B?dE10NVNRUVZ2NkdlUVZHdXhJTDVzZGRXbGR2ZFdya0Y0NXZheWRZbTkwREhh?=
+ =?utf-8?B?RGhFaWR2N3QrQk1DSjlwWjFwS08yNlkxSUgwUlkzOGRLbDUxZDVGaG9QYXZI?=
+ =?utf-8?B?a2JRSDcrWm85bTgrS0hzNHVxVzVjT0x3cG4xbk5yL3B2U01Zd2Vyc0lKd0Vu?=
+ =?utf-8?B?NEVicmhwd3JnQTFuZVJ2VklnU2ZCWHRvOS9sY3NtSlNBS09HNUppWi9tNjZ1?=
+ =?utf-8?B?VGw2TjBlMUU5Z2V0MWlVbk5haVAwTlovOVpoNElYUFRtMlRNVGJ4dWUzVFIx?=
+ =?utf-8?B?MFNXSVBBR3B1Y2ZJSkFDNzh4RVFMeVdRRnNoRlZEK1E5UWpiOG16OXRZQytK?=
+ =?utf-8?B?OFk2aTVUOWtHZjMxTzdKNzVTUXNBeWNSS3djSnFONElmOVlKSFRFZGJNQTdP?=
+ =?utf-8?B?WmlMUnVDdTVTTmJWVWdEQ1dOdFhGYlBCUTNMeGgwMVdoMGZ1bVdFTFlVRUpi?=
+ =?utf-8?B?R3IvZHppdmFmSUtHS2p5RG1leUROV1dIdk9XdDJNV2tjNnpGelp2c1h6dC80?=
+ =?utf-8?Q?qvIwAQGW1uAMHZBsX27j4nQ=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7514eac-9627-458f-7dd0-08dd4162dccc
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR01MB8473.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2025 19:18:22.6089
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C3nLnvxRCobDJHxTGJJGN4RL7f9/MPKfRl3NH3WTo3neAQJ3koBseKtjo/Gle7E0Qw43BU5TzfxCHtLqSa0NE89izOMQUd53MuEIy7lBbJ+67AZvDndJkO/O0ayFdKNk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR01MB8599
 
-On 1/30/25 07:52, Jonathan Cameron wrote:
-> On Wed, 29 Jan 2025 14:31:10 -0800
-> Pierrick Bouvier <pierrick.bouvier@linaro.org> wrote:
-> 
->> Hi Jonathan,
->>
->> On 1/29/25 02:29, Jonathan Cameron wrote:
->>> On Tue, 28 Jan 2025 12:04:19 -0800
->>> Pierrick Bouvier <pierrick.bouvier@linaro.org> wrote:
->>>    
->>>> On 1/27/25 02:20, Jonathan Cameron wrote:
->>>>> On Fri, 24 Jan 2025 12:55:52 -0800
->>>>> Pierrick Bouvier <pierrick.bouvier@linaro.org> wrote:
->>>>>       
->>>>>> Hi Jonathan,
->>>>>>
->>>>>> thanks for posting this. It's a creative usage of plugins.
->>>>>>
->>>>>> I think that your current approach, decoupling plugins, CHMU and device
->>>>>> model is a good thing.
->>>>>>
->>>>>> I'm not familiar with CXL, but one question that comes to my mind is:
->>>>>> Is that mandatory to do this analysis during execution (vs dumping
->>>>>> binary traces from CHMU and plugin and running an analysis post execution)?
->>>>>
->>>>> Short answer is that post run analysis isn't of much use for developing the OS
->>>>> software story. It works to some degree if you are designing the tracking
->>>>> hardware or algorithms to use that hardware capture a snapshot of hotness -
->>>>> dealing with lack of counters, that sort of thing.
->>>>>
->>>>> The main intent of this support is to drive live usage of the data in the OS.
->>>>> So it gets this hotness information and migrates more frequently accessed memory
->>>>> to a 'nearer'/lower latency memory node.
->>>>>
->>>>>    From an OS point of view there will be two ways it uses it:
->>>>> 1) Offline application optimization  - that aligns with your suggestion of offline
->>>>>       analysis but would typically still need to be live because we have to do
->>>>>       the reverse maps and work out what was allocated in particular locations.
->>>>>       Not impossible to dump that information from QEMU + the guest OS but the usage
->>>>>       flow would then look quite different from what makes sense on real hardware
->>>>>       where all the data is available to the host OS directly.
->>>>> 2) Migration of memory.  This will dynamically change the PA backing a VA whilst
->>>>>       applications are running. The aim being to develop how that happens, we need
->>>>>       the dynamic state.
->>>>>       
->>>>
->>>> In the end, are you modeling how the real CHMU will work, or simply
->>>> gathering data to help designing it (number of counters, line size, ...)?
->>>
->>> This work is modeling how a real (ish) CHMU will work - particular interest being
->>> use in Linux kernel usecases. Otherwise we wouldn't share! :)
->>>
->>> For CHMU hardware design, until people reach the live algorithms in the loop
->>> stage, tracing techniques and offline analysis tend to be easier to use.
->>>
->>> A annoying corner is that the implementations in QEMU will 'probably' remain
->>> simplistic because the detailed designs of CHMUs may be considered sensitive.
->>> It's a complex space and there are some really interesting and to me surprising
->>> approaches.
->>>
->>> What we can implement should be good enough for working out the basics of a
->>> general software stack but possible it will need tuning against specific
->>> implementations.  Maybe that necessity will result in more openness on the
->>> parts of various uarch / arch teams.
->>>
->>> There are some academic works on how to build these trackers, and there should
->>> be less sensitivity around those.
->>>
->>> This is perhaps an odd corner for QEMU because we are emulating an interface
->>> accurately but the hardware behind it intentionally does not have a specification
->>> defined implementation and the unusual bit is that implementation affects
->>> the output.  We can implement a few options that are well defined though.
->>> 1) An Oracle ('infinite' counters)
->>> 2) Limited counters allocated on first touch in a given epoch (sampling period).
->>>
->>> 1 is useful for putting an upper bound on data accuracy.
->>> 2 is a typical first thing people will look at when considering a implementation.
->>>
->>> So conclusion. This is about enabling software development, not tuning a hardware
->>> design.
->>>    
->>
->> Ok, thanks for the clarification.
->>
->> Considering the approach you followed, as said before, choosing a
->> decoupled solution is the right choice. Plugins should not allow to
->> access internal details of QEMU implementation as a general rule.
->>
->> Did you think about integrating the server directly in the plugin? From
->> what I understand, the CHMU will contact the server on a per request
->> basis, while instrumentation will contact it for every access.
-> 
-> Definitely a possibility. I was a little nervous that would put ordering
-> constraints on plugin load and device creation. I suppose we can connect
-> when the device is enabled by the OS though so that should be easily
-> avoided (if it is a problem at all!). The other thought was that we'd
-> do some of the data handling asynchronously, but that hasn't happened
-> yet and maybe never will + maybe we can do that in a plugin anyway.
-> 
+Hi Shiju,
 
-You still need a separate thread triggered from the plugin install 
-function for the server, and initiating the connection first time you 
-need it seems like a good approach.
+I've tested the Scrub specific pieces and the EDAC infrastructure pieces(as far
+as how it relates to the Scrub pieces). I am using an ARM64 platform for this
+testing. I would like to offer my tested-by to those pieces I have personal
+experience with. I will send them as replies to their respective patches.
 
-However, in the plugin itself, you now have to deal with concurrency 
-issues, since several cpus can report memory accesses at the same time, 
-which were sequentialized through the socket before.
-
-> The CHMU device model is responsible for timing signals, so it will
-> signal a regular tick (and read back the buffer state to identify
-> overflow etc). So not quite on request but a lot lower data rate
-> than the plugin to CHMU data flow.
-> 
->>
->> Beyond communication, the biggest overhead here is to have
->> instrumentation on all memory accesses. Another thing that comes out of
->> my mind is to do a sampling instrumentation. However, it's not easy to
->> do, because the current API does not allow to force a new translation of
->> existing TB, and at translation time, you have no clue whether or not
->> this will be a hot TB.
-> 
-> Whilst we will have sampling controls (they are part of the spec, both
-> fixed interval and pseudo random I just haven't wired them up yet),
-> typically sampling and the noise it creates is one of the causes of
-> bad numbers with hot page tracking.
-> 
-> We go to the effort to capture as much data as possible in a short time
-> so that we can move on to focusing the limited tracking resources on another
-> range of the memory.  Pushing knowledge of the sampling to the plugin is
-> definitely an option, but we'd still want full resolution hitting the
-> cache simulator as what we want to sample is what misses in the cache.
-> 
-
-Sure, I was just proposing this to speed up execution. There is a 
-trade-off concerning accuracy. However, I'm surprised you observed such 
-bad numbers (no data locality in your use cases?)
-
->> What you can do though, is to ignore most of the accesses, and only send
->> information every 1000 memory accesses. (Note: I have no idea if 1000 is
->> a good threshold :)). It would allow you to skip most of the overhead
->> related to communication and hot pages management.
-> 
-> Definitely will implement that as an option when I wire up the rest of
-> the control interface.  It can only happen with the knowledge of the
-> OS as it is another thing that will be controlled (or at least taken into
-> account if the device implements only fixed subsampling).
-> 
->>
->>   From what I understood about using plugins, the goal is to track hot
->> pages. Using the cache one is a possibility, but it might be better to
->> use contrib/plugins/hotpages.c instead, or better, a custom simple
->> plugin, simply reporting reads/writes to the server (and implementing
->> sampling as well).
-> 
-> We need the cache part.  Without that the data ends up quite different
-> from what needs to be measured.  Data that is in cache and so not fetched
-> much from main memory as a result is (perhaps confusingly) cold.
-> No point in moving it to faster memory and from CXL point of view
-> we never see the accesses anyway so couldn't if we wanted to.
-> Cache simulation is not perfect as we don't have any simulation of
-> prefetchers etc though not sure how much that will hurt us yet.
-> Current cache plugin is obviously simplistic but it is a
-> reasonable starting point.
-> 
-> Also, in some more interesting cases granual it doesn't align with pages
-> (interleaving across multiple devices, much larger regions than pages)
-> so we'd need to switch back to something like this later anyway.
-> 
-> If bringing the hotness monitoring data capture into the plugin it probably
-> makes sense to fork the code to a new plugin anyway as that will add a
-> lot of complexity wherever we add it.
-> 
-
- From what I understand, the goal is to keep hot pages in a specific CXL 
-cache, located between the cpu cache, and DRAM, and to avoid keeping the 
-same data than in cpu cache.
-However, cache topology will be different for various cpus, with 
-different levels, different sizes, and different associativity.
-Thus, it seems that it will be impossible to model anything, simply 
-based on a generic "cache" algorithm.
-
-The thing that puzzles me in the approach is that we compare a cpu data 
-cache (based on small chunks of data), and a hot page cache (based on a 
-page size). It seems normal to hold the same data, and be able to 
-provide the rest of the page to cpu cache when needed.
-
->>
->> Which slow-down factor (order of magnitude) do you have with this series?
-> 
-> I've not measured it accurately but not too bad.  Maybe 10-20x slow down over
-> TCG (when running arm64 on x86 host). Few minutes to boot a standard distro.
-> 
-> Jonathan
-> 
->>
->>> Jonathan
->>>    
->>>>
->>>> Pierrick
->>>>   
->>>>> Jonathan
->>>>>       
->>>>>>
->>>>>> Regards,
->>>>>> Pierrick
->>>>>>
->>>>>> On 1/24/25 09:29, Jonathan Cameron wrote:
->>>>>>> Hi All,
->>>>>>>
->>>>>>> This is an RFC mainly to seek feedback on the approach used, particularly
->>>>>>> the aspect of how to get data from a TCG plugin into a device model.
->>>>>>> Two options that we have tried
->>>>>>> 1. Socket over which the plugin sends data to an external server
->>>>>>>        (as seen here)
->>>>>>> 2. Register and manage a plugin from within a device model
->>>>>>>
->>>>>>> The external server approach keeps things loosely coupled, but at the cost
->>>>>>> of separately maintaining that server, protocol definitions etc and
->>>>>>> some overhead.
->>>>>>> The closely couple solution is neater, but I suspect might be controversial
->>>>>>> (hence I didn't start with that :)
->>>>>>>
->>>>>>> The code here is at best a PoC to illustrate what we have in mind
->>>>>>> It's not nice code at all, feature gaps, bugs and all!  So whilst
->>>>>>> review is always welcome I'm not requesting it for now.
->>>>>>>
->>>>>>> Kernel support was posted a while back but was done against fake data
->>>>>>> (still supported here if you don't provide the port parameter to the type3 device)
->>>>>>> https://lore.kernel.org/linux-cxl/20241121101845.1815660-1-Jonathan.Cameron@huawei.com/
->>>>>>> I'll post a minor update of that driver shortly to take into account
->>>>>>> a few specification clarifications but it should work with this without
->>>>>>> those.
->>>>>>>
->>>>>>> Note there are some other patches on the tree I generated this from
->>>>>>> so this may not apply to upstream. Easiest is probably to test
->>>>>>> using gitlab.com/jic23/qemu cxl-2025-01-24
->>>>>>>
->>>>>>> Thanks to Niyas for his suggestions on how to make all this work!
->>>>>>>
->>>>>>> Background
->>>>>>> ----------
->>>>>>>
->>>>>>> What is the Compute eXpress Link Hotness Monitoring unit and what is it for?
->>>>>>> - In a tiered memory equipped server with the slow tier being attached via
->>>>>>>       CXL the expectation is a given workload will benefit from putting data
->>>>>>>       that is frequently fetched from memory in lower latency directly attached
->>>>>>>       DRAM.  Less frequently used data can be served from the CXL attached memory
->>>>>>>       with no significant loss of performance.  Any data that is hot enough to
->>>>>>>       almost always be in cache doesn't matter as it is only fetch from memory
->>>>>>>       occasionally.
->>>>>>> - Working out which memory is best places where is hard to do and in some
->>>>>>>       workloads a dynamic problem. As such we need something we can measure
->>>>>>>       to provide some indication of what data is in the wrong place.
->>>>>>>       There are existing techniques to do this (page faulting, various
->>>>>>>       CPU tracing systems, access bit scanning etc) but they all have significant
->>>>>>>       overheads.
->>>>>>> - Monitoring accesses on the CXL device provides a path to getting good
->>>>>>>       data without those overheads.  These units are known as CXL Hotness
->>>>>>>       Monitoring Units or CHMUs.  Loosely speaking they count accesses to
->>>>>>>       granuals of data (e.g. 4KiB pages).  Exactly how they do that and
->>>>>>>       where they sacrifice data accuracy is an implementation trade off.
->>>>>>>
->>>>>>> Why do we need a model that gives real data?
->>>>>>> - In general there is a need to develop software on top of these units
->>>>>>>       to move data to the right place. Hard to evaluate that if we are making
->>>>>>>       up the info on what is 'hot'.
->>>>>>> - Need to allow for a bunch of 'impdef' solutions. Note that CHMU
->>>>>>>       in this patch set is an oracle - it has enough counters to count
->>>>>>>       every access.  That's not realistic but it doesn't get me shouted
->>>>>>>       at by our architecture teams for giving away any secrets.
->>>>>>>       If we move forward with this, I'll probably implement a limited
->>>>>>>       counter + full CAM solution (also unrealistic, but closer to real)
->>>>>>>       I'd be very interested in contributions of other approaches (there
->>>>>>>       are lots in the literature, under the term top-k)
->>>>>>> - Resources will be constrained, so whilst a CHMU might in theory
->>>>>>>       allow monitoring everything at once, that will come with a big
->>>>>>>       accuracy cost.  We need to design the algorithms that give us
->>>>>>>       good data given those constraints.
->>>>>>>
->>>>>>> So we need a solution to explore the design space and develop the software
->>>>>>> to take advantage of this hardware (there are various LSF/MM proposals
->>>>>>> on how to use this an other ways of tracking hotness).
->>>>>>> https://lore.kernel.org/all/20250123105721.424117-1-raghavendra.kt@amd.com/
->>>>>>> https://lore.kernel.org/lkml/Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F/T/
->>>>>>>
->>>>>>> QEMU plugins give us a way to do this.  In particular the existing
->>>>>>> Cache plugin can be easily modified to tell use what memory addresses
->>>>>>> missed at the last level of emulated cache.  We can then filter those
->>>>>>> for the memory address range that maps to CXL and feed them to our
->>>>>>> counter implementation. On the other side, each instance of CXL type 3
->>>>>>> device can connect to this server and request hotness monitoring
->>>>>>> services + provide parameters etc.  Elements such as list threshold
->>>>>>> management and overflow detection etc are in the CXL HMU QEMU device mode.
->>>>>>> As noted above, we have an alternative approach that can closely couple
->>>>>>> things, so the device model registers the plugin directly and there
->>>>>>> is no server.
->>>>>>>
->>>>>>> How to use it!
->>>>>>> --------------
->>>>>>>
->>>>>>> It runs a little slow but it runs and generates somewhat plausible outputs.
->>>>>>> I'd definitely suggest running it with the pass through optimization
->>>>>>> patch on the CXL staging tree (and a single direct connected device).
->>>>>>> Your millage will vary if you try to use other parameters, or
->>>>>>> hotness units beyond the first one (implementation far from complete!)
->>>>>>>
->>>>>>> To run start the server in contrib/hmu/ providing a port number to listen
->>>>>>> on.
->>>>>>>
->>>>>>> ./chmu 4443
->>>>>>>
->>>>>>> Then launch QEMU with something like the following.
->>>>>>>
->>>>>>> qemu-system-aarch64 -icount shift=1 \
->>>>>>>      -plugin ../qemu/bin/native/contrib/plugins/libcache.so,port=4443,missfilterbase=1099511627776,missfiltersize=1099511627776,dcachesize=8192,dassoc=4,dblksize=64,icachesize=8192,iassoc=4,iblksize=64,l2cachesize=32768,l2assoc=16,l2blksize=64 \
->>>>>>>      -M virt,ras=on,nvdimm=on,gic-version=3,cxl=on,hmat=on -m 4g,maxmem=8g,slots=4 -cpu max -smp 4 \
->>>>>>>      -kernel Image \
->>>>>>>      -drive if=none,file=full.qcow2,format=qcow2,id=hd \
->>>>>>>      -device pcie-root-port,id=root_port1 \
->>>>>>>      -device virtio-blk-pci,drive=hd,x-max-bounce-buffer-size=512k \
->>>>>>>      -nographic -no-reboot -append 'earlycon memblock=debug root=/dev/vda2 fsck.mode=skip maxcpus=4 tp_printk' \
->>>>>>>      -monitor telnet:127.0.0.1:1234,server,nowait -bios QEMU_EFI.fd \
->>>>>>>      -object memory-backend-ram,size=4G,id=mem0 \
->>>>>>>      -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=1G,align=256M \
->>>>>>>      -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=1G,align=256M \
->>>>>>>      -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M,align=1M \
->>>>>>>       -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/t3_cxl3.raw,size=1G,align=256M \
->>>>>>>      -object memory-backend-file,id=cxl-mem4,share=on,mem-path=/tmp/t3_cxl4.raw,size=1G,align=256M \
->>>>>>>      -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M,align=1M \
->>>>>>>      -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true,numa_node=0\
->>>>>>>      -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
->>>>>>>      -device cxl-type3,bus=cxl_rp_port0,volatile-memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3,x-speed=32,x-width=16,chmu-port=4443 \
->>>>>>>      -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=8G,cxl-fmw.0.interleave-granularity=1k \
->>>>>>>      -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
->>>>>>>      -numa node,nodeid=1 \
->>>>>>>      -object acpi-generic-initiator,id=bob2,pci-dev=bob,node=1 \
->>>>>>>      -numa node,nodeid=2 \
->>>>>>>      -object acpi-generic-port,id=bob11,pci-bus=cxl.1,node=2 \
->>>>>>>
->>>>>>> In the guest, create and bind the region - this brings up the CXL memory
->>>>>>> device so accesses go to the memory.
->>>>>>>
->>>>>>>       cd /sys/bus/cxl/devices/decoder0.0/
->>>>>>>       cat create_ram_region
->>>>>>>       echo region0 > create_ram_region
->>>>>>>       echo ram > /sys/bus/cxl/devices/decoder2.0/mode
->>>>>>>       echo ram > /sys/bus/cxl/devices/decoder3.0/mode
->>>>>>>       echo $((256 << 21)) > /sys/bus/cxl/devices/decoder2.0/dpa_size
->>>>>>>       cd /sys/bus/cxl/devices/region0/
->>>>>>>       echo 256 > interleave_granularity
->>>>>>>       echo 1 > interleave_ways
->>>>>>>       echo $((256 << 21)) > size
->>>>>>>       echo decoder2.0 > target0
->>>>>>>       echo 1 > commit
->>>>>>>       echo region0 > /sys/bus/cxl/drivers/cxl_region/bind
->>>>>>>
->>>>>>> Finally start perf with something like:
->>>>>>>
->>>>>>> ./perf record -a  -e cxl_hmu_mem0.0.0/epoch_type=0,access_type=6,\
->>>>>>> hotness_threshold=635,epoch_multiplier=4,epoch_scale=4,\
->>>>>>> range_base=0,range_size=4096/  ./stress.sh
->>>>>>>
->>>>>>> where stress.sh is
->>>>>>>
->>>>>>>       sleep 2
->>>>>>>       numactl --membind 3 stress-ng --vm 1 --vm-bytes 1M --vm-keep -t 5s
->>>>>>>       sleep 2
->>>>>>>
->>>>>>> See the results with
->>>>>>> ./perf report --dump-raw-trace | grep -A 200 HMU
->>>>>>>
->>>>>>> Enjoy and have a good weekend.
->>>>>>>
->>>>>>> Thanks,
->>>>>>>
->>>>>>> Jonathan
->>>>>>>
->>>>>>> Jonathan Cameron (3):
->>>>>>>       hw/cxl: Initial CXL Hotness Monitoring Unit Emulation
->>>>>>>       plugins: Add cache miss reporting over a socket.
->>>>>>>       contrib: Add example hotness monitoring unit server
->>>>>>>
->>>>>>>      include/hw/cxl/cxl.h        |   1 +
->>>>>>>      include/hw/cxl/cxl_chmu.h   | 154 ++++++++++++
->>>>>>>      include/hw/cxl/cxl_device.h |  13 +-
->>>>>>>      include/hw/cxl/cxl_pci.h    |   7 +-
->>>>>>>      contrib/hmu/hmu.c           | 312 ++++++++++++++++++++++++
->>>>>>>      contrib/plugins/cache.c     |  75 +++++-
->>>>>>>      hw/cxl/cxl-chmu.c           | 459 ++++++++++++++++++++++++++++++++++++
->>>>>>>      hw/mem/cxl_type3.c          |  25 +-
->>>>>>>      hw/cxl/meson.build          |   1 +
->>>>>>>      9 files changed, 1035 insertions(+), 12 deletions(-)
->>>>>>>      create mode 100644 include/hw/cxl/cxl_chmu.h
->>>>>>>      create mode 100644 contrib/hmu/hmu.c
->>>>>>>      create mode 100644 hw/cxl/cxl-chmu.c
->>>>>>>          
->>>>>>      
->>>>>       
->>>>   
->>>    
->>
->>
-> 
-
+Thank you,
+~Daniel
