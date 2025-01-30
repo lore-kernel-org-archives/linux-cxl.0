@@ -1,120 +1,284 @@
-Received: from weasel.tulip.relay.mailchannels.net (weasel.tulip.relay.mailchannels.net [23.83.218.247])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A65779D2;
-	Thu, 30 Jan 2025 00:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.247
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738196769; cv=pass; b=O/Vph63mEE2JLDGb3S+1FqwS3wNaMmDGx96wpbGXTZkyrBmDhDqCJ0v7ey1fLTDdBOEvBc7ALtuFUG28FFMgvwydx6OzUjZRdCh+keDeOajlzkSa2ND2nTkDDjkpZEMU1Yo2CogDmIq0AecppRlpo5ZCsmqUNTqfbYJOuMGGGyw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738196769; c=relaxed/simple;
-	bh=zyL1FXZ3ilKcMxDzvA88yimgZ4vmF7NZRW1Luv4cv50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxT1vCXO0fkz1sN9EwBVC94mqI4jL3AqTHRJweRKpVd0MyKt4jD9bAlEby1v7Iy3ACqFZl8x9uyA0yRRaclieCFZ0AG3AwJM3DEwURi1RyFVVzFGpmYbvc0tnUZeUqE20y8T5kfZaKCwJnsPosqgFVn5aUCWdpUqf28X8pkqQwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=P+BSPGx7; arc=pass smtp.client-ip=23.83.218.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="P+BSPGx7"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 742AB24299;
-	Thu, 30 Jan 2025 00:15:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a281.dreamhost.com (100-116-64-196.trex-nlb.outbound.svc.cluster.local [100.116.64.196])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5A1F6241DD;
-	Thu, 30 Jan 2025 00:15:53 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738196153; a=rsa-sha256;
-	cv=none;
-	b=Rezd8LutXudnLtUe9UG/b+XNzfJeZ7aGVwosT8IfQCzaTkQTMhCVgtZfphILR8/7AeEGUN
-	zof4gUf14aClR0JBq3YEQYioQp12UbIxbruGldZ1TR2V8xIWskHze5/LVTdxX0jkbx706s
-	D51ISgf4mVxgAPCkO+1KT0jrZBYasp/pWOggrwTWl7Pif782MarfDCzeoAi1daRhWbeXQf
-	tEnrDL3qlroEcpZcKjWI7W4MmVhXMPJFJRi4qvPEH5MrlxZV8GGvsQmX7L3PPWaS/ZKF50
-	Yj+kmUywmBgfNVUNNd9Mco4HoM6dVZQSNFJnPiqkPYiYeDQU8EmunTcW+a/sFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738196153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=tjE/2zHsO+ejHCnERSc8q97eewLtwPYiDgRw3pVgUTI=;
-	b=s5G7q8nGhgQM78KvJQDiQehz6/gNJ0qbWa1tlcUU79Emv8br2dGEk4sM0R3EKFuJh++jj3
-	/Ff2b7jIrgsJviElfx3MX5R63ZNqfEQTssQ1dXbc+k7ORtbyebAJVyDasdrhPz7UKfkvG+
-	Ap6kr0+JVzjZH4XCLOjXt9ShSKYb9/5UbpKleai09ZC+SpQtrXTXEsCOLGzUmc5sXZiDLQ
-	Hz8/ne3Ypwnn7DNOv1xP4NTMaExP4lA6PDCCx2xNUw4G4DvU/rm74Tnfg1B0dA1FPGiL6H
-	FyT8LFvj9gxQF6sSKFM96Tm/QMIGt0/bGNFCW0284qT81teTzQb/hWK9VwVQ3Q==
-ARC-Authentication-Results: i=1;
-	rspamd-8586946c78-gbxbr;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Trail-Abortive: 1db234a2242799b2_1738196153649_911084047
-X-MC-Loop-Signature: 1738196153649:1408816590
-X-MC-Ingress-Time: 1738196153649
-Received: from pdx1-sub0-mail-a281.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.116.64.196 (trex/7.0.2);
-	Thu, 30 Jan 2025 00:15:53 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4Yk0144j9hz2G;
-	Wed, 29 Jan 2025 16:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1738196153;
-	bh=tjE/2zHsO+ejHCnERSc8q97eewLtwPYiDgRw3pVgUTI=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=P+BSPGx72xgPia4aR7934FrNQ8eHxvsyUh0os+ohy2jFz5EXUcelNphHVRlIZT6qo
-	 epfD4EmprdGX5xQePhUXuX/xLXwEsH3+cangS0FnfK57w0DlvPAkxy0IbD5Dlt763k
-	 oBvRsT4D7FpbCbvpafLcYkKrztp7Qt0ldjfa6i8mUvoEjJ6Bea7uFeretFJOTsIrcK
-	 +281NIegqaTFfyerHxpHWO4DLCteYagqEnDTCi/86ZNn5Gss3/q8j3fkh2TAg7FOVm
-	 oSdGAJb0OADBkUBRt15vPZRW5iS9LgHsMxNVnwwJG8K/VOjd+Tw2yCVJjKp25XJrv1
-	 hmY/wMs4gq6Dw==
-Date: Wed, 29 Jan 2025 16:15:49 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/2] cxl/memdev: Remove temporary variables from
- cxl_memdev_state
-Message-ID: <20250130001549.xtvbvgzma43sn6dj@offworld>
-References: <20250128-rfc-rearch-mem-res-v1-0-26d1ca151376@intel.com>
- <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86C01E3772
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Jan 2025 13:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738244566; cv=none; b=swchMdR22+hZ+FwQET4QIyOoy+LHj+80JBLqFTrPhjWsQHzPvgDZJ4SXoeId8z2XtNZn+AuE7bTrCspMb6XDBMfBnU17+sVQm3b2kYmuCBnP3TojBwqVAraUpyiL7q4yd2u7brUyGW2pn4inSA/YlzGFyN/OmnnQo+zuHSRd1Kw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738244566; c=relaxed/simple;
+	bh=YHbKA544LkrW7N9EUYJNhN749CX3c6AkMcNOvAOl89U=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q0ysN1OvCasuIg81EQjYOAzPP6FoZOecD4dFfjSOjL4eSACDHUMBEQrq6bEhQ5oLT6tnKoWiwBuS+rKfgPeILyjRYl4/PS/JI2+8PzwUU25SRBGkwyn3X7x+DsYi+Jr1qNhw/2qq7zhhdDZVxf1kfKBSf7//hQUYrx9rHdYW9Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YkKsJ6lN2z6J6ch;
+	Thu, 30 Jan 2025 21:40:20 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E955B140B63;
+	Thu, 30 Jan 2025 21:42:39 +0800 (CST)
+Received: from localhost (10.47.30.69) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 30 Jan
+ 2025 14:42:39 +0100
+Date: Thu, 30 Jan 2025 13:42:37 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [PATCH v1 14/19] cxl: Add support for fwctl RPC command to
+ enable CXL feature commands
+Message-ID: <20250130134237.00002fa8@huawei.com>
+In-Reply-To: <2e21e93f-8ced-4303-bd43-9fa00aece2a1@intel.com>
+References: <20250122235159.2716036-1-dave.jiang@intel.com>
+	<20250122235159.2716036-15-dave.jiang@intel.com>
+	<6794478dd8026_20f329455@dwillia2-xfh.jf.intel.com.notmuch>
+	<20250127105132.000072dd@huawei.com>
+	<67982790e13d1_2d1e294b0@dwillia2-xfh.jf.intel.com.notmuch>
+	<20250128120138.0000599f@huawei.com>
+	<2e21e93f-8ced-4303-bd43-9fa00aece2a1@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 28 Jan 2025, Ira Weiny wrote:
+On Tue, 28 Jan 2025 08:55:57 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
->As was mentioned by Dan[1] cxl_memdev_state stores values which are only
->used during device probe.  This clutters the data structure and is a
->hindrance on code maintenance.  Those values are best handled with
->temporary variables.
->
->Adjust the query of memory devices to read byte sizes in one call which
->takes partition information into account.  Use the values to create
->partitions for device state initialization.  Take care to separate the
->mailbox queries from the initialization of device state to steer the
->mbox code toward taking mailbox objects rather than memdev states.
->Update spec references while changing these calls.
->
->Link: https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/ [1]
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> On 1/28/25 5:01 AM, Jonathan Cameron wrote:
+> > On Mon, 27 Jan 2025 16:40:48 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >   
+> >> Jonathan Cameron wrote:  
+> >>>     
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void *cxlctl_get_supported_features(struct cxl_features_state *cfs,
+> >>>>> +					   const struct fwctl_rpc_cxl *rpc_in,
+> >>>>> +					   size_t *out_len)
+> >>>>> +{
+> >>>>> +	struct cxl_mbox_get_sup_feats_out *feat_out;
+> >>>>> +	struct cxl_mbox_get_sup_feats_in feat_in;
+> >>>>> +	struct cxl_feat_entry *saved, *pos;
+> >>>>> +	int requested, copied;
+> >>>>> +	size_t out_size;
+> >>>>> +	u32 count;
+> >>>>> +	u16 start;
+> >>>>> +
+> >>>>> +	if (rpc_in->op_size != sizeof(feat_in))
+> >>>>> +		return ERR_PTR(-EINVAL);
+> >>>>> +
+> >>>>> +	if (copy_from_user(&feat_in, u64_to_user_ptr(rpc_in->in_payload),
+> >>>>> +			   rpc_in->op_size))
+> >>>>> +		return ERR_PTR(-EFAULT);
+> >>>>> +
+> >>>>> +	count = le32_to_cpu(feat_in.count);
+> >>>>> +	start = le16_to_cpu(feat_in.start_idx);
+> >>>>> +	requested = count / sizeof(*pos);
+> >>>>> +
+> >>>>> +	/*
+> >>>>> +	 * Make sure that the total requested number of entries is not greater
+> >>>>> +	 * than the total number of supported features allowed for userspace.
+> >>>>> +	 */
+> >>>>> +	if (start >= cfs->num_user_features)
+> >>>>> +		return ERR_PTR(-EINVAL);
+> >>>>> +
+> >>>>> +	requested = min_t(int, requested, cfs->num_user_features - start);
+> >>>>> +
+> >>>>> +	out_size = sizeof(struct fwctl_rpc_cxl_out) + sizeof(*feat_out) +
+> >>>>> +		   requested * sizeof(*pos);
+> >>>>> +
+> >>>>> +	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
+> >>>>> +		kvzalloc(out_size, GFP_KERNEL);
+> >>>>> +	if (!rpc_out)
+> >>>>> +		return ERR_PTR(-ENOMEM);
+> >>>>> +
+> >>>>> +	rpc_out->size = sizeof(*feat_out) + requested * sizeof(*pos);
+> >>>>> +	feat_out = (struct cxl_mbox_get_sup_feats_out *)rpc_out->payload;
+> >>>>> +	if (requested == 0) {
+> >>>>> +		feat_out->num_entries = cpu_to_le16(requested);
+> >>>>> +		feat_out->supported_feats = cpu_to_le16(cfs->num_user_features);
+> >>>>> +		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+> >>>>> +		*out_len = out_size;
+> >>>>> +		return no_free_ptr(rpc_out);
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	pos = &feat_out->ents[0];
+> >>>>> +	saved = &cfs->entries[0];
+> >>>>> +
+> >>>>> +	copied = 0;
+> >>>>> +	for (int i = 0; i < cfs->num_features; i++, saved++) {
+> >>>>> +		if (is_cxl_feature_exclusive(saved))
+> >>>>> +			continue;      
+> >>>>
+> >>>> I think it's fine to let userspace see that exclusive features are
+> >>>> present, just need to return EBUSY if userspace actually tries to use
+> >>>> them.    
+> >>>
+> >>> To me, a poke it and see interface is really ugly.    
+> >>
+> >> That smells more like a matter of documentation. "Doctor it hurts when I
+> >> try to use the documented kernel-exclusive commands?"  
+> > 
+> > To me this is a nasty interface design.
+> > If I'm writing a tool to enumerate what is exposed etc then it will
+> > have to poke every get command just to list if an interface is available.
+> > Hopefully none of them have side effects!
+> >   
+> >>  
+> >>> In many cases we could let "get" through even if the we are using the interface
+> >>> via some other kernel path and have it as exclusive.
+> >>> (I don't know how useful that is, but maybe it makes sense).
+> >>>
+> >>> If we ever do that, the only way to discover if an interface is available
+> >>> will be to try the set interface.  Depending on design of feature
+> >>> that might have side effects - hopefully get never does!    
+> >>
+> >> I would not put it past some future device to make that mistake.  
+> > 
+> > True.  Though I'd be up for a quirk list to block such commands if we
+> > see them.  Can't deal with them until we know though.
+> >   
+> >>  
+> >>>
+> >>> Alternatives:
+> >>> 1. Flag. Maybe add something that makes it discoverable if a feature is
+> >>>    in exclusive mode or not.    
+> >>
+> >> I notice that all existing defined Features set a non-zero "Get Feature
+> >> Size" in their Supported Feature Entry. I would not say "no" to just
+> >> zero-ing out Get Feature Size as a hint that "you might get EBUSY due to
+> >> kernel exclusivity with this command", but that still feels like
+> >> overkill compared to documentation.  
+> > 
+> > 'might' is no use. Would have to be definitely as otherwise userspace
+> > can't know the size that field conveyed.  
+> 
+> We could zero the "Set Feature Size" in the "Get Supported Features Supported Feature Entry". To indicate that the Feature cannot be changed. That would be spec compliant. Or is there concern that reading the feature may do something for some devices decide to be weird?
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Let's hope not.  I'm fine with this suggestion. Seems like a reasonable
+compromise.
+
+Jonathan
+
+> 
+> DJ
+> 
+> 
+> >   
+> >>  
+> >>> 2. Query type interface.  So a way to actually ask if a given feature is
+> >>>    usable.    
+> >>
+> >> Not sure we really need a programmatic way to read the documentation.
+> >>
+> >> The CXL_MEM_COMMAND_FLAG_EXCLUSIVE flag is for cases where the
+> >> exclusivity is transient. For these features the exclusivity is
+> >> permanent, and I hope we never need to cross that
+> >> transient-exclusivity-bridge for Features.  
+> > 
+> > It's permanent today, but I can definitely see that not always being
+> > the case - we may well have future kernel does things in X fashion but
+> > for legacy support disable that CONFIG option. Not nice but definitely
+> > plausible.
+> >   
+> >>  
+> >>> 3. What we have here.  To me the simplest solution is hide what we can't
+> >>>    be used.    
+> >>
+> >> It is inconsistent that we do not do this for the other kernel exclusive
+> >> commands in userspace retreived Command Effects Log. The ABI here is raw
+> >> Get Supported Features payload.  
+> > 
+> > If they were exposed via similar paths I'd agree consistency matters
+> > but I 'hope' no one is going to have a tool that mixes fwctl and the
+> > legacy path.  In my head we add all the useful commands to fwctl
+> > and that legacy path ends up effectively deprecated.
+> > 
+> > Anyhow, I don't feel that strongly about this, it's just a case
+> > of doesn't smell of roses to me.
+> >   
+> >>  
+> >>>>> +	/* These effects supported for all scope */
+> >>>>> +	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
+> >>>>> +	     (effects & CXL_CMD_EFFECTS_EXTEND &&
+> >>>>> +	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
+> >>>>> +	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
+> >>>>> +	    scope >= FWCTL_RPC_DEBUG_WRITE)
+> >>>>> +		return true;      
+> >>>>
+> >>>> Looks good for the known bits, but this needs to return false for the
+> >>>> currently reserved bits because the driver can not assume a security
+> >>>> model for future effects. If a future spec adds
+> >>>> FWCTL_RPC_DEBUG_WRITE-safe effects, a new kernel is needed to allow
+> >>>> those Feature commands through.
+> >>>>
+> >>>> Sidenote: I wonder why the spec wasted one of its bits on an extend bit,
+> >>>> but here we are. The 'extend' concept is typically something like
+> >>>> "bit15: go look at this other field in this payload as this 16-bit field
+> >>>> was exhausted", not "bit9: the bits above this originally defined 16 bit
+> >>>> field now has more bits", oh well.    
+> >>>
+> >>> It's odd but corner case of going from 'unknown' state for the remaining
+> >>> pair of bits to 0 means this and 1 means this.    
+> >>
+> >> I don't understand. 0 means no effect to worry about whether it is
+> >> defined or not.
+> >>  
+> >>> Naming though doesn't match the spec that calls it CEL[11:10] valid.
+> >>> Would be good to name it closer to that as we may well have something
+> >>> in bits 12 and 15 in future and it doesn't refer to them.    
+> >>
+> >> Hopefully we can head off another "valid2" mistake, and I don't think
+> >> Linux needs to define anything for this bit. That bit's definition is:
+> >>
+> >>    "Bit[9]: 1 is recommended, 0 is permitted (CEL[11:10] Valid)"
+> >>
+> >> ...which translates to "useless". If 11 or 10 are set, I don't care what
+> >> value 9 has.
+> >>
+> >> If 12:15 are set, I don't care if there is a future valid2
+> >> bit gating whether or not to use them. Valid bits are for cases that go
+> >> outside of what Reserved 0 compatibility rules can convey, and I think
+> >> Reserved 0 compatiblity fully covers us in this case.  
+> > 
+> > Seems the spec authors disagreed. (obviously I can't comment on that
+> > discussion).
+> > 
+> > Using just what anyone can see (if they have the spec)
+> > It was a clear spec hole and there wasn't an obvious default for 0 to
+> > mean so it was a 'read your device docs and act appropriately' case
+> > before this stuff was added.
+> > 
+> > There may be corner cases where the right answer if we know the
+> > feature is not persisted over a reset but instead panic or take
+> > some heavy weight action. Same can be true the other way around
+> > in that we may have to do something heavy to manually reset something
+> > we don't want to persist over reset. Hopefully not but we'll see.
+> >   
+> >>
+> >> So, if a device use case breaks because they set 10, but clear 9 and
+> >> expect software to ignore 10 then they get to keep all the pieces
+> >> because they have already broken the expectations of Reserved 0
+> >> compat-software created before 9 existed.  
+> > 
+> > True, but a compliance test should have dealt with that (seems they
+> > are yet to catch up with this though).
+> > 
+> > Jonathan
+> >   
+> 
+> 
+
