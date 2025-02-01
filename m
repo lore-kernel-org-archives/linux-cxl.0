@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC84625
-	for <linux-cxl@vger.kernel.org>; Sat,  1 Feb 2025 00:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD632625
+	for <linux-cxl@vger.kernel.org>; Sat,  1 Feb 2025 00:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738370899; cv=none; b=kT5OwV3w4t7tamH7onZ3CXG/Cw4h1iFelcHUvDWeyuYweytN6//JZhJyWgFykUiQLCtcm6rHshV0b9Z2V3V+njrKEiG3FcrhhFq2hyKSmxKm14iASpU9Iukiab87BCS+6US6Kz67Dv6t3a8swJJsgVT1KBj2uO319bxO/qznE1Y=
+	t=1738370900; cv=none; b=HTX8dgI7hi/w0mZmEFgYg0VO8xQCyNNZ/YFNeeapWu5HYDPm/jF3Swn6RJ2KLEdygoHqZL9PjXvE0QOTYdawUzF+UgmRpjrNR4nwVsevzdir5M4QJ7nGEoMEl78jx7CobKtGDT+3TlYRFWZ1zZBWZsuuV0MnbUVyegSjQQ4FOcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738370899; c=relaxed/simple;
-	bh=RlgXTx99TLMTe9dpY8FdJqkEG3sILk446QrE192dGH0=;
+	s=arc-20240116; t=1738370900; c=relaxed/simple;
+	bh=tFViK+KgAmQI3b662C7w78A0G4xr1wEsh2C/04CsDNQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F9zYX6GE+qnD4Vvr96/gM3XgMja0xz/8Ajk4vIeTaNtkjJqIwWkOdzeswZWHMKv32OWJWsuFZ7utgj3b1l/pKkKZhzJ24jsH58IojYfqZrBMxFvvoDSxk8B9+3Q5E9+seW6bctxdv+xj+7blVzZVMBIW4iztq54K5GWfpOJH5Rk=
+	 MIME-Version; b=MXy0fzcYPku1qkkBJQyZHqRG6NiOjdL8U2NCijyHHiJdf/sRe5G3UtHREZzAJk3HqmmbkwUscK1sVb0RCK6M+0cPPCgorWWX6Q+bOPxuNagz4hNezg8y5TLLAOjvSnB4/ray6OGWjwt0qwG/EVMUhJ9Tp8NKtoh9sFOiXNemUuE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05766C4CED1;
-	Sat,  1 Feb 2025 00:48:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A813C4CED3;
+	Sat,  1 Feb 2025 00:48:20 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: alison.schofield@intel.com
-Subject: [NDCTL PATCH resend v2 1/3] cxl: Add cxl_bus_get_by_provider()
-Date: Fri, 31 Jan 2025 17:47:29 -0700
-Message-ID: <20250201004815.474741-2-dave.jiang@intel.com>
+Subject: [NDCTL PATCH resend v2 2/3] cxl: Enumerate major/minor of FWCTL char device
+Date: Fri, 31 Jan 2025 17:47:30 -0700
+Message-ID: <20250201004815.474741-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250201004815.474741-1-dave.jiang@intel.com>
 References: <20250201004815.474741-1-dave.jiang@intel.com>
@@ -31,64 +31,153 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add helper function cxl_bus_get_by_provider() in order to support unit
-test that will utilize the API call.
+Add major/minor discovery for the FWCTL character device that is associated
+with supprting CXL Features under the cxl_memdev. Add libcxl API functions
+to retrieve the major and minor of the FWCTL character device.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/lib/libcxl.c   | 11 +++++++++++
- cxl/lib/libcxl.sym |  5 +++++
+ cxl/lib/libcxl.c   | 74 ++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym |  2 ++
+ cxl/lib/private.h  |  1 +
  cxl/libcxl.h       |  2 ++
- 3 files changed, 18 insertions(+)
+ 4 files changed, 79 insertions(+)
 
 diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 63aa4ef3acdc..bab7343e8a4a 100644
+index bab7343e8a4a..566870acb30a 100644
 --- a/cxl/lib/libcxl.c
 +++ b/cxl/lib/libcxl.c
-@@ -3358,6 +3358,17 @@ CXL_EXPORT struct cxl_ctx *cxl_bus_get_ctx(struct cxl_bus *bus)
- 	return cxl_port_get_ctx(&bus->port);
+@@ -1253,6 +1253,66 @@ static int add_cxl_memdev_fwl(struct cxl_memdev *memdev,
+ 	return -ENOMEM;
  }
  
-+CXL_EXPORT struct cxl_bus *cxl_bus_get_by_provider(struct cxl_ctx *ctx,
-+						   const char *provider)
++static const char fwctl_prefix[] = "fwctl";
++static int get_feature_chardev(const char *base, char *chardev_path)
 +{
-+	struct cxl_bus *bus;
++	char *path = calloc(1, strlen(base) + 100);
++	struct dirent *entry;
++	int rc = 0;
++	DIR *dir;
 +
-+	cxl_bus_foreach(ctx, bus)
-+		if (strcmp(provider, cxl_bus_get_provider(bus)) == 0)
-+			return bus;
-+	return NULL;
++	if (!path)
++		return -ENOMEM;
++
++	sprintf(path, "%s/fwctl/", base);
++	dir = opendir(path);
++	if (!dir) {
++		rc = -errno;
++		goto err;
++	}
++
++	while ((entry = readdir(dir)) != NULL)
++		if (strncmp(entry->d_name, fwctl_prefix, strlen(fwctl_prefix)) == 0)
++			break;
++
++	if (!entry) {
++		rc = -ENOENT;
++		goto read_err;
++	}
++
++	sprintf(chardev_path, "/dev/fwctl/%s", entry->d_name);
++
++read_err:
++	closedir(dir);
++err:
++	free(path);
++	return rc;
 +}
 +
- CXL_EXPORT void cxl_cmd_unref(struct cxl_cmd *cmd)
++static int memdev_get_fwctl_chardev(struct cxl_memdev *memdev,
++				    const char *cxlmem_base)
++{
++	char *path = calloc(1, strlen(cxlmem_base) + 100);
++	struct stat st;
++	int rc;
++
++	rc = get_feature_chardev(cxlmem_base, path);
++	if (rc)
++		goto out;
++
++	if (stat(path, &st) < 0) {
++		rc = -errno;
++		goto out;
++	}
++
++	memdev->fwctl_major = major(st.st_rdev);
++	memdev->fwctl_minor = minor(st.st_rdev);
++
++out:
++	free(path);
++	return rc;
++}
++
+ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
  {
- 	if (!cmd)
+ 	const char *devname = devpath_to_devname(cxlmem_base);
+@@ -1279,6 +1339,10 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 	memdev->major = major(st.st_rdev);
+ 	memdev->minor = minor(st.st_rdev);
+ 
++	/* If this fails, no Features support. */
++	if (memdev_get_fwctl_chardev(memdev, cxlmem_base))
++		dbg(ctx, "%s: no Features support.\n", devname);
++
+ 	sprintf(path, "%s/pmem/size", cxlmem_base);
+ 	if (sysfs_read_attr(ctx, path, buf) == 0)
+ 		memdev->pmem_size = strtoull(buf, NULL, 0);
+@@ -1515,6 +1579,16 @@ CXL_EXPORT int cxl_memdev_get_minor(struct cxl_memdev *memdev)
+ 	return memdev->minor;
+ }
+ 
++CXL_EXPORT int cxl_memdev_get_fwctl_major(struct cxl_memdev *memdev)
++{
++	return memdev->fwctl_major;
++}
++
++CXL_EXPORT int cxl_memdev_get_fwctl_minor(struct cxl_memdev *memdev)
++{
++	return memdev->fwctl_minor;
++}
++
+ CXL_EXPORT unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev)
+ {
+ 	return memdev->pmem_size;
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 0c155a40ad47..1fc33cc6e1a4 100644
+index 1fc33cc6e1a4..b2b51a72673c 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -288,3 +288,8 @@ global:
- 	cxl_memdev_trigger_poison_list;
- 	cxl_region_trigger_poison_list;
- } LIBCXL_7;
-+
-+LIBCXL_9 {
-+global:
-+	cxl_bus_get_by_provider;
-+} LIBECXL_8;
+@@ -292,4 +292,6 @@ global:
+ LIBCXL_9 {
+ global:
+ 	cxl_bus_get_by_provider;
++	cxl_memdev_get_fwctl_major;
++	cxl_memdev_get_fwctl_minor;
+ } LIBECXL_8;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index b6cd910e9335..676bf1573487 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -37,6 +37,7 @@ enum cxl_fwl_loading {
+ struct cxl_endpoint;
+ struct cxl_memdev {
+ 	int id, major, minor;
++	int fwctl_major, fwctl_minor;
+ 	int numa_node;
+ 	void *dev_buf;
+ 	size_t buf_len;
 diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 0a5fd0e13cc2..3b309968a808 100644
+index 3b309968a808..26aa906740af 100644
 --- a/cxl/libcxl.h
 +++ b/cxl/libcxl.h
-@@ -122,6 +122,8 @@ int cxl_bus_get_id(struct cxl_bus *bus);
- struct cxl_port *cxl_bus_get_port(struct cxl_bus *bus);
- struct cxl_ctx *cxl_bus_get_ctx(struct cxl_bus *bus);
- int cxl_bus_disable_invalidate(struct cxl_bus *bus);
-+struct cxl_bus *cxl_bus_get_by_provider(struct cxl_ctx *ctx,
-+					const char *provider);
- 
- #define cxl_bus_foreach(ctx, bus)                                              \
- 	for (bus = cxl_bus_get_first(ctx); bus != NULL;                        \
+@@ -69,6 +69,8 @@ const char *cxl_memdev_get_host(struct cxl_memdev *memdev);
+ struct cxl_bus *cxl_memdev_get_bus(struct cxl_memdev *memdev);
+ int cxl_memdev_get_major(struct cxl_memdev *memdev);
+ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
++int cxl_memdev_get_fwctl_major(struct cxl_memdev *memdev);
++int cxl_memdev_get_fwctl_minor(struct cxl_memdev *memdev);
+ struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
 -- 
 2.48.1
 
