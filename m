@@ -1,65 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9D2194AEC;
-	Mon,  3 Feb 2025 19:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9FE20E022
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Feb 2025 20:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738609409; cv=none; b=hYKAtS9YkFGf2Y2mb4m9+HmcW4hDS9iyd906A/XEW7AllqygcbjKQVTVjcreoUSIa3sw4FmH/JE1lRPgsl3XDpEhHdTQR4OF0BAOwR+My2mgyuD2oUzZd1wOQdS7fNz2QUif1IH/KHYOBmlI5MRqdIsr8Ts/5/D4Kgs0E3c74iU=
+	t=1738613660; cv=none; b=BMF0qDm72YDlw90+ZYD997iw0iNATKdio16OsmqfyWBT0j9Cg6QI2r0IZqtdD9T9AC04F0t0VgJN9c5I2YVAnq5qBA0FPNsk7g5S0qTavZhVEXU07Hf1OU/Im1jF605NjTMdQ9W2rvssiRvHyP8JvTyBHdYn+Fy5tKcJrarWEGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738609409; c=relaxed/simple;
-	bh=XQhXHbhAEDtxueqiSGQTYU0jh9vxvyAdS/Wgrh2l3Kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7GmFuTHgY8j8JLWQz46tPWEMvmthkLte3GPgcqFyc1oPiHiyKoEcPJQ3CZqc2JD6hm2ZBGpr30dLhFfWgxzL4rMcw4nDdLsM8nIj4oRa0pM+Asmy1vBKNWN0Qaz0zhU4OYN5Xc/kF/7IL1YiA3M9t0MdaPhgkoHYPiDJmEf17o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sbija6gW; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1738613660; c=relaxed/simple;
+	bh=bO0RH/40NKRJmpOpsF+P/6Q0TEq3k/d83R3S0FIgn4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HNei8X1+oFLCuXgYSbK2/I4Ss9qRN7hKN2Zq3bVHeCRQPe0jiha+1v7J6EHotYW5OTbBtmjFhzw2Qn1uCut6fRzSrIQQ5QMZFA6Hv/jsXoWNP9Jlue6Ifn1+I4vo43LgaJN9txO2LcctJA9hhuN+eFO5gpAtukT4ZqgiKCFNamA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HEfEz9y8; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sbija6gW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HEfEz9y8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738609406; x=1770145406;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XQhXHbhAEDtxueqiSGQTYU0jh9vxvyAdS/Wgrh2l3Kw=;
-  b=Sbija6gW5xkPxgd8OnjrOiJlto672Pg85nQW4bHfZ7QvEiNgHuTPz2+I
-   UtV3E/XrXfqtpEj76fDyGK6iEVYZqMakSiBrFphq78w1iST2Gn8meYcSH
-   ZGXn69wUxSSWIEXX3s6eb0T7C6P+tQrpu4mCtdNQ1bh9pjbGJ539hru3k
-   8f/Ebofju5S38dZe042bB+FLm/P9xA1aP2Cgw4JbubkVVoOXjEeuSswTr
-   Pg8uEAzwu/N6g/nR89sDpFuHaGK/do9SQ6b+fSD3tK4su6YgFayVlPGch
-   gKllBI+dcfUi2E5VR1VX3NUZxoTcjSHtGTfvKfMyxQKOACwF9D3uEIgoa
-   Q==;
-X-CSE-ConnectionGUID: YfDgAxqLSomT61Bt5ovo0Q==
-X-CSE-MsgGUID: S7sqgUmuTFKwV/Fhi6P0Pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42867451"
+  t=1738613659; x=1770149659;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bO0RH/40NKRJmpOpsF+P/6Q0TEq3k/d83R3S0FIgn4U=;
+  b=HEfEz9y8s1F7KOfjJKsSViwxSQXrL0etZ0MYJsh+qCqCkuxtPI9tzN3j
+   2xHzkHbLd3nTTbqTsGvOWjREhb+lxOxI+5NrI5xf/I3ewijnK0tmQZ1FQ
+   Fx8RF5TzCxqIqo/EDL6bV3HSqtejzVJLMihMLzX9NBA5sKMA+nAIc+UMe
+   bQsdWE0Odlkm4CnM97B1BryO+pygtGRxviBT8ROmqdmlIEcun/em3Eok1
+   rc+nl1dLpYWo2Htd1KfGX2zO1Wmpc/gMJ1ok5db7bQP6ft/fhU+uQ57Kh
+   eINtw3hQlGE7xEkUc924+fea3QX0hACVn8sBLysCi2J/uvLllIHcv24Yh
+   w==;
+X-CSE-ConnectionGUID: sQxDKlzbT7WDOrA34Wjy/g==
+X-CSE-MsgGUID: pvf90E6aTXuFSMEzhNZFVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56658306"
 X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="42867451"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:03:26 -0800
-X-CSE-ConnectionGUID: 8XdfAsNPTi6nDdVLCtJEzA==
-X-CSE-MsgGUID: /Qkl5+twQHq12NhbURUgtg==
+   d="scan'208";a="56658306"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 12:14:18 -0800
+X-CSE-ConnectionGUID: x9lEJ66VR7K5oTaN1JdOEg==
+X-CSE-MsgGUID: OzfKro6RS0q1XrRvORI9kw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114409656"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 11:03:26 -0800
-Date: Mon, 3 Feb 2025 11:03:24 -0800
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
+   d="scan'208";a="115409795"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 03 Feb 2025 12:14:16 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tf2ph-000rRH-2Z;
+	Mon, 03 Feb 2025 20:14:13 +0000
+Date: Tue, 4 Feb 2025 04:13:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: oe-kbuild-all@lists.linux.dev,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 5/6] acpi/ghes, cxl/pci: Process CXL CPER Protocol
- Errors
-Message-ID: <Z6ES_MZy2FuRsfjF@agluck-desk3>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [cxl:next 1/1] drivers/cxl/core/pci.c:1103:9: warning: result of
+ comparison of constant 18446744073709551615 with expression of type 'typeof
+ (_Generic((base), char: (unsigned char)0, unsigned char: (unsigned char)0,
+ signed char: (unsigned char)0, unsigned short: (unsign...
+Message-ID: <202502040454.Jtb55wW7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,293 +69,137 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
 
-On Thu, Jan 23, 2025 at 08:44:20AM +0000, Smita Koralahalli wrote:
-> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
-> CPER records. Introduce support for handling and logging CXL Protocol
-> errors.
-> 
-> The defined trace events cxl_aer_uncorrectable_error and
-> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
-> to trace FW-First Protocol errors.
-> 
-> Since the CXL code is required to be called from process context and
-> GHES is in interrupt context, use workqueues for processing.
-> 
-> Similar to CXL CPER event handling, use kfifo to handle errors as it
-> simplifies queue processing by providing lock free fifo operations.
-> 
-> Add the ability for the CXL sub-system to register a workqueue to
-> process CXL CPER protocol errors.
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 49 ++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c   | 36 +++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h     |  5 ++++
->  drivers/cxl/pci.c        | 46 ++++++++++++++++++++++++++++++++++++-
->  include/cxl/event.h      | 15 ++++++++++++
->  5 files changed, 150 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 4d725d988c43..289e365f84b2 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -674,6 +674,15 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
->  	schedule_work(&entry->work);
->  }
->  
-> +/* Room for 8 entries */
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+head:   0fd158c1ea0cc70434a52b4b812cbec4579b9f66
+commit: 0fd158c1ea0cc70434a52b4b812cbec4579b9f66 [1/1] cxl/pci: Support Global Persistent Flush (GPF)
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250204/202502040454.Jtb55wW7-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502040454.Jtb55wW7-lkp@intel.com/reproduce)
 
-Any science behind the choice of "8" here? This comment is merely
-stating what the #define is used for, not why 8 was chosen.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502040454.Jtb55wW7-lkp@intel.com/
 
-> +#define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
-> +static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
-> +		    CXL_CPER_PROT_ERR_FIFO_DEPTH);
-> +
-> +/* Synchronize schedule_work() with cxl_cper_prot_err_work changes */
-> +static DEFINE_SPINLOCK(cxl_cper_prot_err_work_lock);
-> +struct work_struct *cxl_cper_prot_err_work;
-> +
->  static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  				   int severity)
->  {
-> @@ -700,6 +709,11 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
->  		pr_warn(FW_WARN "CXL CPER no device serial number\n");
->  
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
->  	switch (prot_err->agent_type) {
->  	case RCD:
->  	case DEVICE:
-> @@ -721,9 +735,44 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  				   prot_err->agent_type);
->  		return;
->  	}
-> +
-> +	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
-> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_cper_prot_err_work);
->  #endif
->  }
->  
-> +int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = work;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_register_prot_err_work, "CXL");
-> +
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work != work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	cxl_cper_prot_err_work = NULL;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_prot_err_work, "CXL");
-> +
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	return kfifo_get(&cxl_cper_prot_err_fifo, wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_prot_err_kfifo_get, "CXL");
-> +
->  /* Room for 8 entries for each of the 4 event log queues */
->  #define CXL_CPER_FIFO_DEPTH 32
->  DEFINE_KFIFO(cxl_cper_fifo, struct cxl_cper_work_data, CXL_CPER_FIFO_DEPTH);
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d58ab9d33c5..5840056bb9a3 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -650,6 +650,42 @@ void read_cdat_data(struct cxl_port *port)
->  }
->  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
->  
-> +void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
-> +				  struct cxl_ras_capability_regs ras_cap)
-> +{
-> +	u32 status = ras_cap.cor_status & ~ras_cap.cor_mask;
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	if (!cxlds)
-> +		return;
-> +
-> +	trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_trace_corr_prot_err, "CXL");
-> +
-> +void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
-> +				    struct cxl_ras_capability_regs ras_cap)
-> +{
-> +	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
-> +	struct cxl_dev_state *cxlds;
-> +	u32 fe;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	if (!cxlds)
-> +		return;
-> +
-> +	if (hweight32(status) > 1)
-> +		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK,
-> +				   ras_cap.cap_control));
-> +	else
-> +		fe = status;
-> +
-> +	trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
-> +					  ras_cap.header_log);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cper_trace_uncorr_prot_err, "CXL");
-> +
->  static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
->  				 void __iomem *ras_base)
->  {
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4da07727ab9c..e457616373ed 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -129,4 +129,9 @@ void read_cdat_data(struct cxl_port *port);
->  void cxl_cor_error_detected(struct pci_dev *pdev);
->  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  				    pci_channel_state_t state);
-> +struct cxl_ras_capability_regs;
-> +void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
-> +				  struct cxl_ras_capability_regs ras_cap);
-> +void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
-> +				    struct cxl_ras_capability_regs ras_cap);
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 6d94ff4a4f1a..9d4b5f39b21a 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -1160,6 +1160,37 @@ static void cxl_cper_work_fn(struct work_struct *work)
->  }
->  static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
->  
-> +static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
-> +				       data->prot_err.agent_addr.function);
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_get_domain_bus_and_slot(data->prot_err.agent_addr.segment,
-> +					    data->prot_err.agent_addr.bus,
-> +					    devfn);
-> +
-> +	if (!pdev)
-> +		return;
-> +
-> +	guard(device)(&pdev->dev);
-> +	if (pdev->driver != &cxl_pci_driver)
-> +		return;
-> +
-> +	if (data->severity == AER_CORRECTABLE)
-> +		cxl_cper_trace_corr_prot_err(pdev, data->ras_cap);
-> +	else
-> +		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
-> +}
-> +
-> +static void cxl_cper_prot_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	while (cxl_cper_prot_err_kfifo_get(&wd))
-> +		cxl_cper_handle_prot_err(&wd);
-> +}
-> +static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
-> +
->  static int __init cxl_pci_driver_init(void)
->  {
->  	int rc;
-> @@ -1170,7 +1201,18 @@ static int __init cxl_pci_driver_init(void)
->  
->  	rc = cxl_cper_register_work(&cxl_cper_work);
->  	if (rc)
-> -		pci_unregister_driver(&cxl_pci_driver);
-> +		goto err_unreg;
-> +
-> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	if (rc)
-> +		goto err_unregister_work;
-> +
-> +	return 0;
-> +
-> +err_unregister_work:
-> +	cxl_cper_unregister_work(&cxl_cper_work);
-> +err_unreg:
-> +	pci_unregister_driver(&cxl_pci_driver);
->  
->  	return rc;
->  }
-> @@ -1178,7 +1220,9 @@ static int __init cxl_pci_driver_init(void)
->  static void __exit cxl_pci_driver_exit(void)
->  {
->  	cxl_cper_unregister_work(&cxl_cper_work);
-> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
->  	cancel_work_sync(&cxl_cper_work);
-> +	cancel_work_sync(&cxl_cper_prot_err_work);
->  	pci_unregister_driver(&cxl_pci_driver);
->  }
->  
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index ee1c3dec62fa..359a8f44a2e0 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -242,6 +242,9 @@ struct cxl_cper_prot_err_work_data {
->  int cxl_cper_register_work(struct work_struct *work);
->  int cxl_cper_unregister_work(struct work_struct *work);
->  int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
-> +int cxl_cper_register_prot_err_work(struct work_struct *work);
-> +int cxl_cper_unregister_prot_err_work(struct work_struct *work);
-> +int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd);
->  #else
->  static inline int cxl_cper_register_work(struct work_struct *work)
->  {
-> @@ -256,6 +259,18 @@ static inline int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
->  {
->  	return 0;
->  }
-> +static inline int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	return 0;
-> +}
-> +static inline int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +{
-> +	return 0;
-> +}
-> +static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  #endif /* _LINUX_CXL_EVENT_H */
-> -- 
-> 2.17.1
-> 
+All warnings (new ones prefixed by >>):
 
-Nitpick about the "8" value, but patch can go in like this
-and the value changed if there is later evidence to justify
-some other value.
+   In file included from drivers/cxl/core/pci.c:7:
+   In file included from include/linux/pci.h:1660:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/cxl/core/pci.c:1103:9: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((base), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (base)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+    1103 |         ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
+      72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+      73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      74 |                                  _pfx "type of reg too small for mask"); \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/cxl/core/pci.c:1104:10: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((scale), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (scale)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+    1104 |         ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
+      72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+      73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      74 |                                  _pfx "type of reg too small for mask"); \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   5 warnings generated.
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 
--Tony
+vim +1103 drivers/cxl/core/pci.c
+
+  1074	
+  1075	static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+  1076	{
+  1077		u16 ctrl;
+  1078		int rc, offset, base, scale;
+  1079	
+  1080		switch (phase) {
+  1081		case 1:
+  1082			offset = CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET;
+  1083			base = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK;
+  1084			scale = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
+  1085			break;
+  1086		case 2:
+  1087			offset = CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET;
+  1088			base = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK;
+  1089			scale = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
+  1090			break;
+  1091		default:
+  1092			return -EINVAL;
+  1093		}
+  1094	
+  1095		rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
+  1096		if (rc)
+  1097			return rc;
+  1098	
+  1099		if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+  1100		    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+  1101			return 0;
+  1102	
+> 1103		ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
+> 1104		ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
+  1105	
+  1106		rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
+  1107		if (!rc)
+  1108			pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
+  1109				phase, GPF_TIMEOUT_BASE_MAX);
+  1110	
+  1111		return rc;
+  1112	}
+  1113	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
