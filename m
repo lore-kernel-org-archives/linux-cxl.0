@@ -1,244 +1,324 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B38B3D81
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 05:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A62C171E43
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 05:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738646217; cv=none; b=EPrxXbLmGqCPME+/yhoW+sjUvs1m+ZUOBA5GvR/NShPArtRPRbmr4Usf+y68HVyL1HplyeL2jDh1f6aMyihyo/6wa49JPDgsOjGFkp83EEcPLVXJMbQA2nYpepuGT0rJ03GhcK+Kfb0XgizynmGu710VDrmpv3+hSUdjlJfnovc=
+	t=1738647086; cv=none; b=dKyYfq5FvTC6HH7NIiyfkhNBivBYSJ0w4ahnYfwcRHgtyRYHMDr4Q3H1OiEsBxyrwpbT0MHLGD2KGFdX3x8Z0sQ9NPfbKc6IMfRPS04sZZ70Q9GbUlbm327mfTVRhx3ozGPO5EHmOUBG4H8Pij6JUIF47GWmVxNKvjMHPZPW8dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738646217; c=relaxed/simple;
-	bh=7mY5fIq6ZYnU3zbZDKPURdg9tnLMq/t+25mI31lBPJ4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Sl5eLY9YjwicQ0jFepyFC9oXnibGZJbhRPAV+ZBr/2F8/MgZ+j4JYHwzY+loLPQ3o2BgR7X8V3No3KyqbdjSmfP1OurlY5Nfda3dYGdPNFfxqWTe7nxtTf8o4oLhmBnvJqYT466hyhZ5kON9KcfQX1INF5FdlTpaSPb2FZy3rsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JU0dmxie; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738647086; c=relaxed/simple;
+	bh=Bwp72dFWixWmaEzApNtWPMg0vXARFeWm5sddaCQ3T5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=OpG/aPqNegEAnOlV33R1t8b858Xa52xhxL7W+iNgesSiWXk197xUlGlhdMlOLDYXvJMnpZcCbuX0on4uSILcTeUXOrsehjolRHdCEjgAPUTuUkjj+4MLpfdP0OQ4Hb2Fhkk3wiBys4QLmELVX6BdGpsSnMFQZELV3SW5wFV7CCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tv6kAlw3; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JU0dmxie"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738646206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PVqA3UhwBSLXFAm+nMBBwe/jLdLmHRgKTIJvFdPLXKM=;
-	b=JU0dmxieACGhnV5ML+bjn/C+JT95sPl2KEzn8w2beFCJudpIbUmggzJNg6h69F8WzirNe2
-	1SP9BxoA4Pbgr1fEoRIm0wDI8PfcRaJRKpfY3Kmbpp6fPkDjnmiyk1vnnJDdP25pB75vLs
-	xh+msnG29PdNJEQqYIsyWBwAYaPRhfk=
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tv6kAlw3"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250204053115epoutp02627658d3eea5b8f18a728fec94e7694f~g6k25LPPg1308613086epoutp02m
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 05:31:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250204053115epoutp02627658d3eea5b8f18a728fec94e7694f~g6k25LPPg1308613086epoutp02m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1738647075;
+	bh=REi/vF2W9CZCEJwagJbxZuNbkTO6LlcHQHKpyKxXquI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tv6kAlw3UtasbV3MxdaUj2AsUQ2sTKDDZCapitpasb+hPxSGmP6GLuBohaVc0R0MV
+	 akB6nPV4qm7kFsMW1piLYDmCgyKVQMwC8DTQoIDJXvEfW6tzqDNYTihi5+ZARMqYUd
+	 I2A2wH2rT9GYmspi4QMHw7Xg33i6nsgSlcBqRPvA=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250204053115epcas5p29723ce5b8f7a28822504aaed47904f0a~g6k2nGYR92676526765epcas5p2_;
+	Tue,  4 Feb 2025 05:31:15 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4YnBmf0WLlz4x9Pw; Tue,  4 Feb
+	2025 05:31:14 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7C.06.19710.126A1A76; Tue,  4 Feb 2025 14:31:13 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611~gsB4pbRVC2875328753epcas5p3X;
+	Mon,  3 Feb 2025 11:44:59 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250203114459epsmtrp1ca6e1556f760e7881aadcaf4e43d7c89~gsB4os6bs3216432164epsmtrp1g;
+	Mon,  3 Feb 2025 11:44:59 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-1b-67a1a6219cd2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F7.E9.18949.B3CA0A76; Mon,  3 Feb 2025 20:44:59 +0900 (KST)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250203114458epsmtip2e62f708bb2ac0b062149008a2eea8ed9~gsB3A68411414714147epsmtip2M;
+	Mon,  3 Feb 2025 11:44:57 +0000 (GMT)
+From: Sweta Kumari <s5.kumari@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, Sweta Kumari
+	<s5.kumari@samsung.com>
+Subject: [PATCH 1/1] Added support for get/set alert configuration commands
+Date: Mon,  3 Feb 2025 17:14:45 +0530
+Message-Id: <20250203114445.64088-2-s5.kumari@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250203114445.64088-1-s5.kumari@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [RFC PATCH v12 qemu 2/2] qtest/cxl: Add aarch64 virt test for CXL
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <20250203173040.145763-3-Jonathan.Cameron@huawei.com>
-Date: Tue, 4 Feb 2025 14:16:19 +0900
-Cc: qemu-devel@nongnu.org,
- Fan Ni <fan.ni@samsung.com>,
- Peter Maydell <peter.maydell@linaro.org>,
- mst@redhat.com,
- linux-cxl@vger.kernel.org,
- linuxarm@huawei.com,
- qemu-arm@nongnu.org,
- Yuquan Wang <wangyuquan1236@phytium.com.cn>,
- =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4AEA1355-C6E8-4A9D-8652-607FEBD7EE03@linux.dev>
-References: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
- <20250203173040.145763-3-Jonathan.Cameron@huawei.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmhq7SsoXpBi98LKYfVrT4cnoPm8Xq
+	m2sYLW4e2MlksXDjMiaL87NOsVj83baX0eJ47w4WizXnPrMAxeawO3B57Jx1l93jybXNTB59
+	W1YxekydXe/xeZNcAGtUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6q
+	rZKLT4CuW2YO0ElKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAKTAr3ixNzi0rx0
+	vbzUEitDAwMjU6DChOyMuSc2MxU8tqxomn2FtYHxqFYXIyeHhICJxMtlZ5m6GLk4hAR2M0rM
+	+fgTyvnEKPF6+RxGCOcbo8TH9v3sMC33Vp5nhUjsZZS41/0EqqqBSWL3lKnMIFVsAloSPz4/
+	ALNFBCQlfnedZgYpYhZ4xSixcUMrG0hCWMBbYvfXSYwgNouAqsTKLZ/AGngFrCRmrJvKBrFO
+	XmL/wbNgcU4Ba4mnH3ugagQlTs58wgJiMwPVNG+dzQxR/5Nd4kODBITtIjHtxD2os4UlXh3f
+	AmVLSbzsb4OysyXubu2E2lUi8eH2biYI216i9VQ/0EwOoPmaEut36UOEZSWmnlrHBLGWT6L3
+	9xOocl6JHfNgbGWJLf+Ws0LYkhIrPi+Bsj0kZj5thoZvH6PE19/NrBMYFWYheWcWkndmIaxe
+	wMi8ilEytaA4Nz012bTAMC+1HB7Nyfm5mxjB6VTLZQfjjfn/9A4xMnEwHmKU4GBWEuE9vX1B
+	uhBvSmJlVWpRfnxRaU5q8SFGU2B4T2SWEk3OByb0vJJ4QxNLAxMzMzMTS2MzQyVx3uadLelC
+	AumJJanZqakFqUUwfUwcnFINTEbrXI4p7XybHMLz8pBTou+pJN96OR8vS+7YsNlXb2Sq3Pki
+	qVN+o+V3fqcHx7Ou75OaeixzDY4Yi8xJ+ZUkltR8uqj34N1q5fuez/LO2HSx9Ux9KLp0rcyU
+	RU4nl/L11r/uivBvWSTKf+Xbw/dvFy3/PztA8ZzvgWOndz+I3zZxYsT97gseWptrC/rX7NPc
+	EbpDUvNf5TRphca6zsOOD09+YnrRwFztnpb/6GTdXJWibalP/pyz6XsXV855XkDZRP7N0rUn
+	fH7N3b7IJfL+3AyPY9Ji4T4sf1y0PH/te6jwzf/77H374m9Yar0uMA2b+GvbR9afK8R3hJuK
+	WB0KzdBy+rftp5icbP+1U1Mi1JRYijMSDbWYi4oTAaY29A8wBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsWy7bCSvK71mgXpBqfXqFhMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBZrzn1mAYrNYXfg8tg56y67x5Nrm5k8
+	+rasYvSYOrve4/MmuQDWKC6blNSczLLUIn27BK6MuSc2MxU8tqxomn2FtYHxqFYXIyeHhICJ
+	xL2V51m7GLk4hAR2M0p09i9ghUhISrw9c4kRwhaWWPnvOTtE0T9GiW17JrODJNgEtCR+fH7A
+	DGKLADX87jrNDFLELPCFUWJKw1cmkISwgLfE7q+TwCaxCKhKrNzyCayBV8BKYsa6qWwQG+Ql
+	9h88CxbnFLCWePqxB8wWAqq5uW85C0S9oMTJmU/AbGag+uats5knMArMQpKahSS1gJFpFaNk
+	akFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcMhrae1g3LPqg94hRiYOxkOMEhzMSiK8HIfn
+	pAvxpiRWVqUW5ccXleakFh9ilOZgURLn/fa6N0VIID2xJDU7NbUgtQgmy8TBKdXANMf/0r6d
+	Ur8X+0fz/jDfutjRb49i9vbFuclvdMRWPstfduKW5QP9nSaV8w5rKGyWeFAj3/fOYqv9sRx+
+	y7OOZbMyTepUb3bJPc13F9h0iXOnx3TpDH9/nfPb9miLSytsiFjWfWyRbZLKfDHXe/ftTnVb
+	fbrMbF4ZbeFwxuHcF7aGLy577qXFqm2canPAwbV+UmvBkSU3b1epT5oraz1f+9iHJj3ueaod
+	04uurTsmt69846XbDD2Hr238tLckvfiV+xavzw0ZUVO4P/SLxE/5+in79jvW15wCZcoPr6oo
+	Pzryd8vD9NyDwhZpc3cmc7WeV+IX45Jo2L0+t815l+nSPae6tD+61+Y0X+BaIGJ7WYmlOCPR
+	UIu5qDgRAGYRHYzoAgAA
+X-CMS-MailID: 20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611
+References: <20250203114445.64088-1-s5.kumari@samsung.com>
+	<CGME20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611@epcas5p3.samsung.com>
 
-Jonathan,
+Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
+Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
+---
+ hw/cxl/cxl-mailbox-utils.c  | 91 +++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          | 20 ++++++++
+ include/hw/cxl/cxl_device.h | 24 ++++++++++
+ 3 files changed, 135 insertions(+)
 
-> On Feb 4, 2025, at 2:30, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> Add a single complex case for aarch64 virt machine.
-> Given existing much more comprehensive tests for x86 cover the
-> common functionality, a single test should be enough to verify
-> that the aarch64 part continue to work.
->=20
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
-> tests/qtest/meson.build |  1 +
-> 2 files changed, 47 insertions(+), 13 deletions(-)
->=20
-> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-> index a600331843..c7189d6222 100644
-> --- a/tests/qtest/cxl-test.c
-> +++ b/tests/qtest/cxl-test.c
-> @@ -19,6 +19,12 @@
->     "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->     "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->=20
-> +#define QEMU_VIRT_2PXB_CMD \
-> +    "-machine virt,cxl=3Don -cpu max " \
-> +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
-> +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
-> +    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
-> +
-> #define QEMU_RP \
->     "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
->=20
-> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
->     qtest_end();
->     rmdir(tmpfs);
-> }
-> +
-> +static void cxl_virt_2pxb_4rp_4t3d(void)
-> +{
-> +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
-> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
-> +
-> +    tmpfs =3D mkdtemp(template);
-> +
-> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-> +                    tmpfs, tmpfs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +    rmdir(tmpfs);
-> +}
-> #endif /* CONFIG_POSIX */
->=20
-> int main(int argc, char **argv)
-> {
-> -    g_test_init(&argc, &argv, NULL);
-> +    const char *arch =3D qtest_get_arch();
->=20
-> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
-> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> +    g_test_init(&argc, &argv, NULL);
-> +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D =
-0) {
-> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> +        qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
-> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
-> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> #ifdef CONFIG_POSIX
-> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
-> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", =
-cxl_2pxb_4rp_4t3d);
-> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> +        qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem", =
-cxl_t3d_volatile);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
-> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_2pxb_4rp_4t3d);
-> #endif
-> +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
-> +#ifdef CONFIG_POSIX
-> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_virt_2pxb_4rp_4t3d);
-> +#endif
-> +    }
-> +
->     return g_test_run();
-> }
-> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-> index e60e92fe9d..f5e7fb060e 100644
-> --- a/tests/qtest/meson.build
-> +++ b/tests/qtest/meson.build
-> @@ -257,6 +257,7 @@ qtests_aarch64 =3D \
->   (config_all_accel.has_key('CONFIG_TCG') and                          =
-                  \
->    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? =
-['tpm-tis-i2c-test'] : []) + \
->   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : =
-[]) + \
-> +  qtests_cxl +                                                        =
-                          \
->   ['arm-cpu-features',
->    'numa-test',
->    'boot-serial-test',
-> --=20
-> 2.43.0
->=20
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 9c7ea5bc35..7a054c059d 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -86,6 +86,9 @@ enum {
+         #define GET_PARTITION_INFO     0x0
+         #define GET_LSA       0x2
+         #define SET_LSA       0x3
++    HEALTH_INFO_ALERTS = 0x42,
++        #define GET_ALERT_CONFIGURATION 0x1
++        #define SET_ALERT_CONFIGURATION 0x2
+     SANITIZE    = 0x44,
+         #define OVERWRITE     0x0
+         #define SECURE_ERASE  0x1
+@@ -1625,6 +1628,90 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++/* CXL r3.1 Section 8.2.9.9.3.2 Get Alert Configuration (Opcode 4201h) */
++static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
++                                   uint8_t *payload_in,
++                                   size_t len_in,
++                                   uint8_t *payload_out,
++                                   size_t *len_out,
++                                   CXLCCI *cci)
++{
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    CXLAlertConfig *out = (void *)payload_out;
++    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
++    *len_out = sizeof(ct3d->alert_config);
++    return CXL_MBOX_SUCCESS;
++
++}
++
++/* CXL r3.1 Section 8.2.9.9.3.3 Set Alert Configuration (Opcode 4202h) */
++static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
++                                   uint8_t *payload_in,
++                                   size_t len_in,
++                                   uint8_t *payload_out,
++                                   size_t *len_out,
++                                   CXLCCI *cci)
++{
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    CXLAlertConfig *alert_config = &ct3d->alert_config;
++    struct {
++        CXLValidEnableAlerts valid_alert_actions;
++        CXLValidEnableAlerts enable_alert_actions;
++        uint8_t lupwt;
++        uint8_t reserve;
++        uint16_t dotpwt;
++        uint16_t dutpwt;
++        uint16_t cvmepwt;
++        uint16_t cpmepwt;
++    } QEMU_PACKED *in = (void *)payload_in;
++
++    if (in->valid_alert_actions.lupwt) {
++        if ((in->lupwt > 100) || (in->lupwt >= alert_config->lucat)) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++
++        if (in->enable_alert_actions.lupwt) {
++            alert_config->lupwt = in->lupwt;
++        }
++        alert_config->enable_alerts.lupwt = in->enable_alert_actions.lupwt;
++    }
++
++    if (in->valid_alert_actions.dotpwt) {
++        if (in->dotpwt >= alert_config->dotcat) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        if (in->enable_alert_actions.dotpwt) {
++            alert_config->dotpwt = in->dotpwt;
++        }
++        alert_config->enable_alerts.dotpwt = in->enable_alert_actions.dotpwt;
++    }
++
++    if (in->valid_alert_actions.dutpwt) {
++        if (in->dutpwt < alert_config->dutcat) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        if (in->enable_alert_actions.dutpwt) {
++            alert_config->dutpwt = in->dutpwt;
++        }
++        alert_config->enable_alerts.dutpwt = in->enable_alert_actions.dutpwt;
++    }
++
++    if (in->valid_alert_actions.cvmepwt) {
++        if (in->enable_alert_actions.cvmepwt) {
++            alert_config->cvmepwt = in->cvmepwt;
++        }
++        alert_config->enable_alerts.cvmepwt = in->valid_alert_actions.cvmepwt;
++    }
++
++    if (in->valid_alert_actions.cpmepwt) {
++        if (in->enable_alert_actions.cpmepwt) {
++            alert_config->cpmepwt = in->cpmepwt;
++        }
++        alert_config->enable_alerts.cpmepwt = in->valid_alert_actions.cpmepwt;
++    }
++    return CXL_MBOX_SUCCESS;
++}
++
+ /* Perform the actual device zeroing */
+ static void __do_sanitization(CXLType3Dev *ct3d)
+ {
+@@ -2859,6 +2946,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+     [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+     [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+         ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
++    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
++        cmd_get_alert_config, 0, 0 },
++    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
++        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+     [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+         (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+          CXL_MBOX_SECURITY_STATE_CHANGE |
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 5f365afb4d..ce5a4962da 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -956,6 +956,25 @@ static DOEProtocol doe_comp_prot[] = {
+     { }
+ };
+ 
++/*
++ * Initialize CXL device alerts with default threshold values.
++ */
++static void init_alert_config(CXLType3Dev *ct3d)
++{
++    CXLAlertConfig *alert_config = &ct3d->alert_config;
++
++    memset(&alert_config->valid_alerts, 0, sizeof(CXLValidEnableAlerts));
++    memset(&alert_config->enable_alerts, 0, sizeof(CXLValidEnableAlerts));
++    alert_config->lucat = 75;
++    alert_config->lupwt = 0;
++    alert_config->dotcat = 35;
++    alert_config->dutcat = 10;
++    alert_config->dotpwt = 25;
++    alert_config->dutpwt = 20;
++    alert_config->cvmepwt = 0;
++    alert_config->cpmepwt = 0;
++}
++
+ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ {
+     ERRP_GUARD();
+@@ -1030,6 +1049,7 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+         goto err_free_special_ops;
+     }
+ 
++    init_alert_config(ct3d);
+     pcie_cap_deverr_init(pci_dev);
+     /* Leave a bit of room for expansion */
+     rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, NULL);
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index a64739be25..6acae7d74d 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -581,6 +581,28 @@ typedef struct CXLSetFeatureInfo {
+     size_t data_size;
+ } CXLSetFeatureInfo;
+ 
++typedef struct CXLValidEnableAlerts {
++    uint8_t lupwt:1;
++    uint8_t dotpwt:1;
++    uint8_t dutpwt:1;
++    uint8_t cvmepwt:1;
++    uint8_t cpmepwt:1;
++    uint8_t reserved:3;
++} CXLValidEnableAlerts;
++
++typedef struct CXLAlertConfig {
++    CXLValidEnableAlerts valid_alerts;
++    CXLValidEnableAlerts enable_alerts;
++    uint8_t lucat;
++    uint8_t lupwt;
++    uint16_t dotcat;
++    uint16_t dutcat;
++    uint16_t dotpwt;
++    uint16_t dutpwt;
++    uint16_t cvmepwt;
++    uint16_t cpmepwt;
++} QEMU_PACKED CXLAlertConfig;
++
+ struct CXLType3Dev {
+     /* Private */
+     PCIDevice parent_obj;
+@@ -605,6 +627,8 @@ struct CXLType3Dev {
+     CXLCCI vdm_fm_owned_ld_mctp_cci;
+     CXLCCI ld0_cci;
+ 
++    CXLAlertConfig alert_config;
++
+     /* PCIe link characteristics */
+     PCIExpLinkSpeed speed;
+     PCIExpLinkWidth width;
+-- 
+2.34.1
 
-In Ubuntu 22.04 LTS, cxl-test applied on top of today=E2=80=99s QEMU =
-upstream master branch cxl-test fails:
-
-$ ./tests/qtest/cxl-test
-# random seed: R02S2a8b02df7b32b79d086ce22f7f8ebeab
-1..1
-# Start of aarch64 tests
-# Start of pci tests
-# Start of cxl tests
-# Start of virt tests
-# starting QEMU: exec qemu-system-aarch64 -qtest =
-unix:/tmp/qtest-568421.sock -qtest-log /dev/null -chardev =
-socket,path=3D/tmp/qtest-568421.qmp,id=3Dchar0 -mon =
-chardev=3Dchar0,mode=3Dcontrol -display none -audio none -machine =
-virt,cxl=3Don -cpu max -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52=
- -device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 -M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G -device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 -device =
-cxl-rp,id=3Drp1,bus=3Dcxl.0,chassis=3D0,slot=3D1 -device =
-cxl-rp,id=3Drp2,bus=3Dcxl.1,chassis=3D0,slot=3D2 -device =
-cxl-rp,id=3Drp3,bus=3Dcxl.1,chassis=3D0,slot=3D3 -object =
-memory-backend-file,id=3Dcxl-mem0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp0,persistent-memdev=3Dcxl-mem0,lsa=3Dlsa0,id=3Dp=
-mem0 -object =
-memory-backend-file,id=3Dcxl-mem1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp1,persistent-memdev=3Dcxl-mem1,lsa=3Dlsa1,id=3Dp=
-mem1 -object =
-memory-backend-file,id=3Dcxl-mem2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp2,persistent-memdev=3Dcxl-mem2,lsa=3Dlsa2,id=3Dp=
-mem2 -object =
-memory-backend-file,id=3Dcxl-mem3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp3,persistent-memdev=3Dcxl-mem3,lsa=3Dlsa3,id=3Dp=
-mem3  -accel qtest
-qemu-system-aarch64: -audio: invalid option
-socket_accept failed: Resource temporarily unavailable
-**
-ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion failed: =
-(s->fd >=3D 0 && s->qmp_fd >=3D 0)
-Bail out! ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion =
-failed: (s->fd >=3D 0 && s->qmp_fd >=3D 0)
-../tests/qtest/libqtest.c:199: kill_qemu() tried to terminate QEMU =
-process but encountered exit status 1 (expected 0)
-Aborted (core dumped)
-
-Do I need set env vars when execute this test?
-
-Itaru.=
