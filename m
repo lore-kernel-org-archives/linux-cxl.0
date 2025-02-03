@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9930620B810
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Feb 2025 17:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D683A8CB
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Feb 2025 17:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738603847; cv=none; b=sJzGjS/pRIEOeGYZwxwqz9JKILRX8OUrppBnVoTmfUCa1tvDVd2JdQFPlIpVd8QWxbTQFtxMLHt4nNIRArgqprnJcAU2lZz42afb4dlC+6AF4oMnshEfz5MzLsnWmajzgT0lVgkvRtuFMXsdE+LdA1QyTeEVdrkaVAmXBvih78A=
+	t=1738603879; cv=none; b=TDSl1r/M+hJ61U/gWly6CplE0ivolxAIpY5GO5IKP6OmxLWOz+vl+7cYrlOj+VbiBzyrxpaq++C5fE3FfLmVPfPel6sMf0BTrRCBqxgLZUR+4KTF68G2p09bXAJWornLXzX72CE/npERCkrBsOetvjukCPPt40NN6DQzOq6truw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738603847; c=relaxed/simple;
-	bh=HQEyNdVmY/nXqqoXL+g1Cr+3sTpLqVleVk9IHsiblmY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qDwpfNdWzBcYfB3q3FdkwmIndSyUJhP2CP3mCfzDpPAyFHFC5XzrlhrzevsVkkeUKOg3mFsD3+aoJDKpjZxtem+RPamvRER4LsK3QIf9VePlCG9JTa7F2+onjcLgg75qXBCD8Di1clJ4/uzztp7A0GH1xHOszLaHORDANh0lUMQ=
+	s=arc-20240116; t=1738603879; c=relaxed/simple;
+	bh=qIx/otXMKz4Wd4gBM/jOl0ngIWcsxkn/nixP7+OOXc8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ujt8tP9nTIapAC79RD8VzItRZ69x7cTTodcIVQ2c9UN/rx7rXo8P2ep7p5GZ70k8Eu0kkdNiR9KX7GKlmPdIKVz7PMP0OzlkRe2vSS/Fkhw3VD64KIo68NbBPQc2rIXSyfBvatQ1cwWE5X0KHUOyJSKjQ8MZImCnjAKx1yPyWOI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YmtmH40d6z6K97v;
-	Tue,  4 Feb 2025 01:29:51 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ymtkw1zCCz6L4yq;
+	Tue,  4 Feb 2025 01:28:40 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D18A01400CA;
-	Tue,  4 Feb 2025 01:30:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D32F61400CA;
+	Tue,  4 Feb 2025 01:31:12 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 3 Feb 2025 18:30:41 +0100
+ 15.1.2507.39; Mon, 3 Feb 2025 18:31:12 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
 	<peter.maydell@linaro.org>
@@ -30,10 +31,12 @@ CC: <mst@redhat.com>, <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
 	<qemu-arm@nongnu.org>, Yuquan Wang <wangyuquan1236@phytium.com.cn>, Itaru
  Kitayama <itaru.kitayama@linux.dev>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [RFC PATCH v12 qemu 0/2] arm/virt: CXL support via pxb_cxl
-Date: Mon, 3 Feb 2025 17:30:38 +0000
-Message-ID: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH v12 qemu 1/2] hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances pxb-cxl
+Date: Mon, 3 Feb 2025 17:30:39 +0000
+Message-ID: <20250203173040.145763-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
+References: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,98 +48,261 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-Back in 2022, this series stalled on the absence of a solution to device
-tree support for PCI Expander Bridges (PXB) and we ended up only having
-x86 support upstream. I've been carrying the arm64 support out of tree
-since then, with occasional nasty surprises (e.g. UNIMP + DT issue seen
-a few weeks ago) and a fair number of fiddly rebases.
-gitlab.com/jic23/qemu cxl-<latest date>
+Code based on i386/pc enablement.
+The memory layout places space for 16 host bridge register regions after
+the GIC_REDIST2 in the extended memmap. Note this is in a hole, so
+nothing should move.
 
-A recent discussion with Peter Maydell indicated that there are various
-other ACPI only features now, so in general he might be more relaxed
-about DT support being necessary. The upcoming vSMMUv3 support would
-run into this problem as well.
+The CFMWs are placed above the extended memmap.
 
-I presented the background to the PXB issue at Linaro connect 2022. In
-short the issue is that PXBs steal MMIO space from the main PCI root
-bridge. The challenge is knowing how much to steal.
+Only create the CEDT table if cxl=on set for the machine.
 
-On ACPI platforms, we can rely on EDK2 to perform an enumeration and
-configuration of the PCI topology and QEMU can update the ACPI tables
-after EDK2 has done this when it can simply read the space used by the
-root ports. On device tree, there is no entity to figure out that
-enumeration so we don't know how to size the stolen region.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Three approaches were discussed:
-1) Enumerating in QEMU. Horribly complex and the last thing we want is a
-   3rd enumeration implementation that ends up out of sync with EDK2 and
-   the kernel (there are frequent issues because of how those existing
-   implementations differ.
-2) Figure out how to enumerate in kernel. I never put a huge amount of work
-   into this, but it seemed likely to involve a nasty dance with similar
-   very specific code to that EDK2 is carrying and would very challenging
-   to upstream (given the lack of clarity on real use cases for PXBs and
-   DT).
-3) Hack it based on the control we have which is bus numbers.
-   No one liked this but it worked :)
-
-The other little wrinkle would be the need to define full bindings for CXL
-on DT + implement a fairly complex kernel stack as equivalent in ACPI
-involves a static table, CEDT, new runtime queries via _DSM and a description
-of various components. Doable, but so far there is no interest on physical
-platforms. Worth noting that for now, the QEMU CXL emulation is all about
-testing and developing the OS stack, not about virtualization (performance
-is terrible except in some very contrived situations!)
-
-Back to posting as an RFC because there was some discussion of approach to
-modelling the devices that may need a bit of redesign.
-The discussion kind of died out on the back of DT issue and I doubt anyone
-can remember the details.
-
-https://lore.kernel.org/qemu-devel/20220616141950.23374-1-Jonathan.Cameron@huawei.com/
-
-There is only a very simple test in here, because my intent is not to
-duplicate what we have on x86, but just to do a smoke test that everything
-is hooked up.  In general we need much more comprehensive end to end CXL
-tests but that requires a reaonsably stable guest software stack. A few
-people have expressed interest in working on that, but we aren't there yet.
-
-Note that this series has a very different use case to that in the proposed
-SBSA-ref support:
-https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@phytium.com.cn/
-
-SBSA-ref is a good choice if you want a relatively simple mostly fixed
-configuration.  That works well with the limited host system
-discoverability etc as EDK2 can be build against a known configuration.
-
-My interest with this support in arm/virt is support host software stack
-development (we have a wide range of contributors, most of whom are working
-on emulation + the kernel support). I care about the weird corners. As such
-I need to be able to bring up variable numbers of host bridges, multiple CXL
-Fixed Memory Windows with varying characteristics (interleave etc), complex
-NUMA topologies with wierd performance characteristics etc. We can do that
-on x86 upstream today, or my gitlab tree. Note that we need arm support
-for some arch specific features in the near future (cache flushing).
-Doing kernel development with this need for flexibility on SBSA-ref is not
-currently practical. SBSA-ref CXL support is an excellent thing, just
-not much use to me for this work.
-
-Thanks,
-
-Jonathan
-
-Jonathan Cameron (2):
-  hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
-    pxb-cxl
-  qtest/cxl: Add aarch64 virt test for CXL
-
+---
  include/hw/arm/virt.h    |  4 +++
- hw/arm/virt-acpi-build.c | 34 +++++++++++++++++++++++
- hw/arm/virt.c            | 54 ++++++++++++++++++++++++++++++++++++
- tests/qtest/cxl-test.c   | 59 +++++++++++++++++++++++++++++++---------
- tests/qtest/meson.build  |  1 +
- 5 files changed, 139 insertions(+), 13 deletions(-)
+ hw/arm/virt-acpi-build.c | 34 +++++++++++++++++++++++++
+ hw/arm/virt.c            | 54 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 92 insertions(+)
 
+diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
+index c8e94e6aed..3e83d9e06b 100644
+--- a/include/hw/arm/virt.h
++++ b/include/hw/arm/virt.h
+@@ -36,6 +36,7 @@
+ #include "hw/arm/boot.h"
+ #include "hw/arm/bsa.h"
+ #include "hw/block/flash.h"
++#include "hw/cxl/cxl.h"
+ #include "system/kvm.h"
+ #include "hw/intc/arm_gicv3_common.h"
+ #include "qom/object.h"
+@@ -85,6 +86,7 @@ enum {
+ /* indices of IO regions located after the RAM */
+ enum {
+     VIRT_HIGH_GIC_REDIST2 =  VIRT_LOWMEMMAP_LAST,
++    VIRT_CXL_HOST,
+     VIRT_HIGH_PCIE_ECAM,
+     VIRT_HIGH_PCIE_MMIO,
+ };
+@@ -146,6 +148,7 @@ struct VirtMachineState {
+     bool secure;
+     bool highmem;
+     bool highmem_compact;
++    bool highmem_cxl;
+     bool highmem_ecam;
+     bool highmem_mmio;
+     bool highmem_redists;
+@@ -180,6 +183,7 @@ struct VirtMachineState {
+     char *oem_id;
+     char *oem_table_id;
+     bool ns_el2_virt_timer_irq;
++    CXLState cxl_devices_state;
+ };
+ 
+ #define VIRT_ECAM_ID(high) (high ? VIRT_HIGH_PCIE_ECAM : VIRT_PCIE_ECAM)
+diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+index 3ac8f8e178..339aa60ce5 100644
+--- a/hw/arm/virt-acpi-build.c
++++ b/hw/arm/virt-acpi-build.c
+@@ -39,10 +39,12 @@
+ #include "hw/acpi/aml-build.h"
+ #include "hw/acpi/utils.h"
+ #include "hw/acpi/pci.h"
++#include "hw/acpi/cxl.h"
+ #include "hw/acpi/memory_hotplug.h"
+ #include "hw/acpi/generic_event_device.h"
+ #include "hw/acpi/tpm.h"
+ #include "hw/acpi/hmat.h"
++#include "hw/cxl/cxl.h"
+ #include "hw/pci/pcie_host.h"
+ #include "hw/pci/pci.h"
+ #include "hw/pci/pci_bus.h"
+@@ -119,10 +121,29 @@ static void acpi_dsdt_add_flash(Aml *scope, const MemMapEntry *flash_memmap)
+     aml_append(scope, dev);
+ }
+ 
++static void build_acpi0017(Aml *table)
++{
++    Aml *dev, *scope, *method;
++
++    scope =  aml_scope("_SB");
++    dev = aml_device("CXLM");
++    aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0017")));
++
++    method = aml_method("_STA", 0, AML_NOTSERIALIZED);
++    aml_append(method, aml_return(aml_int(0x0B)));
++    aml_append(dev, method);
++    build_cxl_dsm_method(dev);
++
++    aml_append(scope, dev);
++    aml_append(table, scope);
++}
++
+ static void acpi_dsdt_add_pci(Aml *scope, const MemMapEntry *memmap,
+                               uint32_t irq, VirtMachineState *vms)
+ {
+     int ecam_id = VIRT_ECAM_ID(vms->highmem_ecam);
++    bool cxl_present = false;
++    PCIBus *bus = vms->bus;
+     struct GPEXConfig cfg = {
+         .mmio32 = memmap[VIRT_PCIE_MMIO],
+         .pio    = memmap[VIRT_PCIE_PIO],
+@@ -136,6 +157,14 @@ static void acpi_dsdt_add_pci(Aml *scope, const MemMapEntry *memmap,
+     }
+ 
+     acpi_dsdt_add_gpex(scope, &cfg);
++    QLIST_FOREACH(bus, &vms->bus->child, sibling) {
++        if (pci_bus_is_cxl(bus)) {
++            cxl_present = true;
++        }
++    }
++    if (cxl_present) {
++        build_acpi0017(scope);
++    }
+ }
+ 
+ static void acpi_dsdt_add_gpio(Aml *scope, const MemMapEntry *gpio_memmap,
+@@ -967,6 +996,11 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
+         }
+     }
+ 
++    if (vms->cxl_devices_state.is_enabled) {
++        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
++                       vms->oem_id, vms->oem_table_id, &vms->cxl_devices_state);
++    }
++
+     if (ms->nvdimms_state->is_enabled) {
+         nvdimm_build_acpi(table_offsets, tables_blob, tables->linker,
+                           ms->nvdimms_state, ms->ram_slots, vms->oem_id,
+diff --git a/hw/arm/virt.c b/hw/arm/virt.c
+index 99e0a68b6c..cc16a5750d 100644
+--- a/hw/arm/virt.c
++++ b/hw/arm/virt.c
+@@ -56,6 +56,7 @@
+ #include "qemu/error-report.h"
+ #include "qemu/module.h"
+ #include "hw/pci-host/gpex.h"
++#include "hw/pci-bridge/pci_expander_bridge.h"
+ #include "hw/virtio/virtio-pci.h"
+ #include "hw/core/sysbus-fdt.h"
+ #include "hw/platform-bus.h"
+@@ -84,6 +85,8 @@
+ #include "hw/virtio/virtio-md-pci.h"
+ #include "hw/virtio/virtio-iommu.h"
+ #include "hw/char/pl011.h"
++#include "hw/cxl/cxl.h"
++#include "hw/cxl/cxl_host.h"
+ #include "qemu/guest-random.h"
+ 
+ static GlobalProperty arm_virt_compat[] = {
+@@ -211,6 +214,7 @@ static const MemMapEntry base_memmap[] = {
+ static MemMapEntry extended_memmap[] = {
+     /* Additional 64 MB redist region (can contain up to 512 redistributors) */
+     [VIRT_HIGH_GIC_REDIST2] =   { 0x0, 64 * MiB },
++    [VIRT_CXL_HOST] =           { 0x0, 64 * KiB * 16 }, /* 16 UID */
+     [VIRT_HIGH_PCIE_ECAM] =     { 0x0, 256 * MiB },
+     /* Second PCIe window */
+     [VIRT_HIGH_PCIE_MMIO] =     { 0x0, 512 * GiB },
+@@ -1615,6 +1619,17 @@ static void create_pcie(VirtMachineState *vms)
+     }
+ }
+ 
++static void create_cxl_host_reg_region(VirtMachineState *vms)
++{
++    MemoryRegion *sysmem = get_system_memory();
++    MemoryRegion *mr = &vms->cxl_devices_state.host_mr;
++
++    memory_region_init(mr, OBJECT(vms), "cxl_host_reg",
++                       vms->memmap[VIRT_CXL_HOST].size);
++    memory_region_add_subregion(sysmem, vms->memmap[VIRT_CXL_HOST].base, mr);
++    vms->highmem_cxl = true;
++}
++
+ static void create_platform_bus(VirtMachineState *vms)
+ {
+     DeviceState *dev;
+@@ -1733,6 +1748,12 @@ void virt_machine_done(Notifier *notifier, void *data)
+     struct arm_boot_info *info = &vms->bootinfo;
+     AddressSpace *as = arm_boot_address_space(cpu, info);
+ 
++    cxl_hook_up_pxb_registers(vms->bus, &vms->cxl_devices_state,
++                              &error_fatal);
++
++    if (vms->cxl_devices_state.is_enabled) {
++        cxl_fmws_link_targets(&vms->cxl_devices_state, &error_fatal);
++    }
+     /*
+      * If the user provided a dtb, we assume the dynamic sysbus nodes
+      * already are integrated there. This corresponds to a use case where
+@@ -1785,6 +1806,7 @@ static inline bool *virt_get_high_memmap_enabled(VirtMachineState *vms,
+ {
+     bool *enabled_array[] = {
+         &vms->highmem_redists,
++        &vms->highmem_cxl,
+         &vms->highmem_ecam,
+         &vms->highmem_mmio,
+     };
+@@ -1892,6 +1914,27 @@ static void virt_set_memmap(VirtMachineState *vms, int pa_bits)
+     if (device_memory_size > 0) {
+         machine_memory_devices_init(ms, device_memory_base, device_memory_size);
+     }
++
++    if (vms->cxl_devices_state.fixed_windows) {
++        GList *it;
++
++        base = ROUND_UP(vms->highest_gpa + 1, 256 * MiB);
++        for (it = vms->cxl_devices_state.fixed_windows; it; it = it->next) {
++            CXLFixedWindow *fw = it->data;
++
++            if (base + fw->size <= BIT_ULL(pa_bits)) {
++                vms->highest_gpa = base + fw->size - 1;
++            } else {
++                error_report("CFMWS does not fit under PA limit");
++                exit(EXIT_FAILURE);
++            }
++
++            fw->base = base;
++            memory_region_init_io(&fw->mr, OBJECT(vms), &cfmws_ops, fw,
++                                  "cxl-fixed-memory-region", fw->size);
++            base += fw->size;
++        }
++    }
+ }
+ 
+ static VirtGICType finalize_gic_version_do(const char *accel_name,
+@@ -2346,6 +2389,15 @@ static void machvirt_init(MachineState *machine)
+     memory_region_add_subregion(sysmem, vms->memmap[VIRT_MEM].base,
+                                 machine->ram);
+ 
++    if (vms->cxl_devices_state.fixed_windows) {
++        GList *it;
++        for (it = vms->cxl_devices_state.fixed_windows; it; it = it->next) {
++            CXLFixedWindow *fw = it->data;
++
++            memory_region_add_subregion(sysmem, fw->base, &fw->mr);
++        }
++    }
++
+     virt_flash_fdt(vms, sysmem, secure_sysmem ?: sysmem);
+ 
+     create_gic(vms, sysmem);
+@@ -2401,6 +2453,7 @@ static void machvirt_init(MachineState *machine)
+     create_rtc(vms);
+ 
+     create_pcie(vms);
++    create_cxl_host_reg_region(vms);
+ 
+     if (has_ged && aarch64 && firmware_loaded && virt_is_acpi_enabled(vms)) {
+         vms->acpi_dev = create_acpi_ged(vms);
+@@ -3332,6 +3385,7 @@ static void virt_instance_init(Object *obj)
+ 
+     vms->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
+     vms->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
++    cxl_machine_init(obj, &vms->cxl_devices_state);
+ }
+ 
+ static const TypeInfo virt_machine_info = {
 -- 
 2.43.0
 
