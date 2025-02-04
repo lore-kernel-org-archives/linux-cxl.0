@@ -1,211 +1,312 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE3A2BAF7
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 15:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7BB2163A2
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 17:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738682030; cv=none; b=UryHNkE+WTCTkuZLAEseeBDGazTQEpajhJG6xg++j9bK55J5Rcf8HwPYFoE+M4oneRAT+R5lS2RwrhpBVS77S06/Yp/gVQx799l+MGrxIo+PF1vjdLCE1j9cLIOTtkPZrJY8DM0T0g+DR9/t9bK+9tHRyqfJx2XiVk1tEKTgQMM=
+	t=1738690182; cv=none; b=oNrCri1QhIFA2VFaxJFglH9x7r6/eHvT8CMjaAq7e3iZTS9+S1WVCKQmgnrYL1/sPoivuRvHOVzjOp0BszuE2euLFTr7kF/BZ0QijUmBIHmnMtHLsevgKi6SxDqQ6cyblbGgGZjNo2zINOi/D4U5dvlHs0Lts8/hrSTb48qmsp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738682030; c=relaxed/simple;
-	bh=MNZ2eEoUcjd+c2yhCUrZCuSIP632z45uusR4g8TbTBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aqR5W5ApOEkW/BE6SObQTRTrQNai6A641LH7761LDCg2Lgrnl0DReED32G85IrNvdG52hs8NYadMUTeoOZeVL7me+RIUPs3Hgx/g1CBfHdTITq7ItXdoKAC30JqgIIktasDwrS0mJXkVKfPNq8Z94OnyC7vzdBtpUHsHgdiq1Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z3D3+2yn; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738690182; c=relaxed/simple;
+	bh=HAfpU9YouDpIPr+rwRPa5WVBNdvwzi+S8LeEzEVDg4A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLhYv2xvsozuc32pWl+PrNd6cwIXdCzxkiZlUhAoMclD8WART4VgC04ifTaBJ1DcQM2dx8EX03l6HSwsWrtj/jxaV0UhDbLVyAGNqrxzqfQw4x6+ZhdvhhFcWEYY6vGwCEwbnt3lCRQbl18LqsAJi1bJvGAXN2jfAljMYkoIZVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1pWweMT; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z3D3+2yn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738682028; x=1770218028;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MNZ2eEoUcjd+c2yhCUrZCuSIP632z45uusR4g8TbTBw=;
-  b=Z3D3+2ynghRsG69kWrCNQBhRQjrmJmTjzD/s7dCwIkfxfTMl7Ae6+PfE
-   AhHzxjAMVI5fTdbJmM+rrlDcDJ10ERKfTdO8EpuscdQ5Zx06Kw7alQ8qn
-   zIdU09A7rscA6mVauj7QRGZpU09GMM9MiuXqVH+BvRnIYhIFvSPNP1UKs
-   llOAY6Vy5cjq4fKrifASeOUdwY9rbUKYm5uzC/MEICN3ZFr60Jk0u9Yf4
-   TKrMIZdvjKuEX5RPhl9V/MpANMNTrApUyAK+4WKtqgSc47K5T6vkR526W
-   YqZkOoSEFq2K7yvHfIxpMtGgnCeblGlMTxn3gNcfhqkBLvXB9LvNLki8q
-   w==;
-X-CSE-ConnectionGUID: 5CmQgWNBQkG5SOYPpyBkFQ==
-X-CSE-MsgGUID: Ib/g2tQeShqwK12W8Z69Aw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39319254"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="39319254"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:13:47 -0800
-X-CSE-ConnectionGUID: 0Lof8Po7QjK9dp4vss3/UQ==
-X-CSE-MsgGUID: u+6EvOvwRPudTozwc9X9gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="110457174"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.57]) ([10.125.110.57])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 07:13:45 -0800
-Message-ID: <2ef7503b-1b80-47ce-8ecd-b81fd280e0ae@intel.com>
-Date: Tue, 4 Feb 2025 08:13:44 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1pWweMT"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6d8f65ef5abso44124016d6.3
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Feb 2025 09:29:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738690179; x=1739294979; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BAfNmL7y6wqJRaNH76LKIZ30Wit9wiWMhdHHjS65G34=;
+        b=M1pWweMT9Omn+e0sq2I/Ixqasn9PF3O/yx3KxzzpO6h/l+kDbc1/ic0aCIfjo1l+I7
+         /tWv7dAm29NEUdyQ0ZEd4V8+M0tTux/lFUU8KRTZlGycNsbpWU4AAd//O98emesU4HYR
+         4Ci05v7kL8LMLWtCKjz0OX6e8wdnZhvk/HhrNgE9NOdeqycqOfUjcRkHucRy1P7llYLc
+         kJiSsJj9nTKYjZ71t0GPw2uttCV1F+Ekr9NHplAeaE9QwvaXjO+sFNpPfXcR0SSpVE8I
+         YWq4uvSSA8QavQHJ3sWh9o+IVF2i314YR/xHEwkLDFyJhuGs9qDEGicneSh+Jg96H5TZ
+         qKKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738690179; x=1739294979;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BAfNmL7y6wqJRaNH76LKIZ30Wit9wiWMhdHHjS65G34=;
+        b=os84/9utburewk8NsKDWPCCQmX3p7RycZGjrmSko+xHpDP2YTK8qcakD/RJHPOSd9Y
+         cdTHCacDw2mqaw2ZcYVQbyUpYp+M0E2VtwcqJLUmcEIBwIiLW2tKu1m1lVxTy+js+yFy
+         OTomytJywnRYzzSqnUc1StbEvwLzjz+hRghrZkEEtQlc8F7VJA1GrHbdDP4gy83Ku1GV
+         nVTmWqDzyOTA2lOc3H29NFHS916G6o5VYrZ0ohfzFjF0WI5luEFYeQuNCYYyuQHU1OQW
+         mWWOqeIUlJIPc4JKf10QUhzQNH5BuZjIgJzSIKATlViOrH8rzNeJjKGjO5jquIZu/NQe
+         6cKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY4I5gBLpfA+rVuWvMJJRBw9p4WNA0Sy9J8UO+JSY2StpQRhDSK7k1g2U1cGViYjXvAh3FjNBERKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yycl2TskIP7dtnrubHqS4T8daX7BYXv2ye/9JWDhdgd+0Qm3Flq
+	2hwjdLQEMEw0SHF9SEsRimo/hEh3AnhH7030mcu76re3xGwKVFB3
+X-Gm-Gg: ASbGncv6nF+j+qGKxA7+ZRchO/v/drLM3GYtRgnF6cr+hZ4Cy/zaVDyV04T9n3YMjXu
+	TsVf/p8lQMeQRJkQYpRYNzAp38sgAzBmGU25py7zJB/GyeOY3KImy5XBOd8jZ1Jhy42IZQSeq/I
+	oQdusTliLPig567Y21niv6M+kU3P2mFvj/9vqd2imjiYJ3buCg2x+jJsoLWFfySmqrCgIXV4fnv
+	OexZoLZoDzJL+HZPxojIfDhYq5kuEioctQ5m6jFP/NYcWB71QPN9Ferrlmr22nrghnh1vMBl7fg
+	VyDnmAo90HYnM9mYvu4=
+X-Google-Smtp-Source: AGHT+IEzVSoodXM/NCXHXNDDu+T9eC6RNtpXM2WfpfVSvj6NLj+iqlBUqHhss1en6YCgO1QSj6XV4w==
+X-Received: by 2002:a05:6214:2607:b0:6e4:2b39:3602 with SMTP id 6a1803df08f44-6e42b393b7amr29048936d6.15.1738690179206;
+        Tue, 04 Feb 2025 09:29:39 -0800 (PST)
+Received: from smc-140338-bm01 ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2547f0e00sm64203856d6.24.2025.02.04.09.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 09:29:38 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 4 Feb 2025 17:29:35 +0000
+To: Sweta Kumari <s5.kumari@samsung.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
+	krish.reddy@samsung.com, a.manzanares@samsung.com,
+	alok.rathore@samsung.com
+Subject: Re: [PATCH 1/1] Added support for get/set alert configuration
+ commands
+Message-ID: <Z6JOfy74ujK6r_UB@smc-140338-bm01>
+References: <20250203114445.64088-1-s5.kumari@samsung.com>
+ <CGME20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611@epcas5p3.samsung.com>
+ <20250203114445.64088-2-s5.kumari@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cxl:next 1/1] drivers/cxl/core/pci.c:1103:9: warning: result of
- comparison of constant 18446744073709551615 with expression of type 'typeof
- (_Generic((base), char: (unsigned char)0, unsigned char: (unsigned char)0,
- signed char: (unsigned char)0, unsigned short: (unsign...
-To: kernel test robot <lkp@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-Cc: oe-kbuild-all@lists.linux.dev,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <202502040454.Jtb55wW7-lkp@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <202502040454.Jtb55wW7-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203114445.64088-2-s5.kumari@samsung.com>
 
+On Mon, Feb 03, 2025 at 05:14:45PM +0530, Sweta Kumari wrote:
+> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
+> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
+Hi Sweta,
+Since this series only have one patch, you do not need a cover letter.
+Move the commit comment in the first patch to this one and remove the
+first one.
 
+Fan
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 91 +++++++++++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3.c          | 20 ++++++++
+>  include/hw/cxl/cxl_device.h | 24 ++++++++++
+>  3 files changed, 135 insertions(+)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 9c7ea5bc35..7a054c059d 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -86,6 +86,9 @@ enum {
+>          #define GET_PARTITION_INFO     0x0
+>          #define GET_LSA       0x2
+>          #define SET_LSA       0x3
+> +    HEALTH_INFO_ALERTS = 0x42,
+> +        #define GET_ALERT_CONFIGURATION 0x1
+> +        #define SET_ALERT_CONFIGURATION 0x2
+>      SANITIZE    = 0x44,
+>          #define OVERWRITE     0x0
+>          #define SECURE_ERASE  0x1
+> @@ -1625,6 +1628,90 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.1 Section 8.2.9.9.3.2 Get Alert Configuration (Opcode 4201h) */
+As mentioned by Jonathan, use r3.2.
+> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
+> +                                   uint8_t *payload_in,
+> +                                   size_t len_in,
+> +                                   uint8_t *payload_out,
+> +                                   size_t *len_out,
+> +                                   CXLCCI *cci)
+The code indent here is not right.
++static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
++                                       uint8_t *payload_in,
++                                       size_t len_in,
++                                       uint8_t *payload_out,
++                                       size_t *len_out,
++                                       CXLCCI *cci)
 
-On 2/3/25 1:13 PM, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-> head:   0fd158c1ea0cc70434a52b4b812cbec4579b9f66
-> commit: 0fd158c1ea0cc70434a52b4b812cbec4579b9f66 [1/1] cxl/pci: Support Global Persistent Flush (GPF)
-> config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250204/202502040454.Jtb55wW7-lkp@intel.com/config)
-> compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250204/202502040454.Jtb55wW7-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202502040454.Jtb55wW7-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/cxl/core/pci.c:7:
->    In file included from include/linux/pci.h:1660:
->    In file included from include/linux/dmapool.h:14:
->    In file included from include/linux/scatterlist.h:8:
->    In file included from include/linux/mm.h:2224:
->    include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      505 |                            item];
->          |                            ~~~~
->    include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      512 |                            NR_VM_NUMA_EVENT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      525 |                            NR_VM_NUMA_EVENT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~~
->>> drivers/cxl/core/pci.c:1103:9: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((base), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (base)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
->     1103 |         ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *out = (void *)payload_out;
+> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
+> +    *len_out = sizeof(ct3d->alert_config);
+> +    return CXL_MBOX_SUCCESS;
+> +
+> +}
+> +
+> +/* CXL r3.1 Section 8.2.9.9.3.3 Set Alert Configuration (Opcode 4202h) */
+> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
+> +                                   uint8_t *payload_in,
+> +                                   size_t len_in,
+> +                                   uint8_t *payload_out,
+> +                                   size_t *len_out,
+> +                                   CXLCCI *cci)
+indent issue.
 
-Davidlohr,
-It looks like setting 'base' and 'scale' to u64 quiets the compiler warning. Do you see any issues with that?
+Fan
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+> +    struct {
+> +        CXLValidEnableAlerts valid_alert_actions;
+> +        CXLValidEnableAlerts enable_alert_actions;
+> +        uint8_t lupwt;
+> +        uint8_t reserve;
+> +        uint16_t dotpwt;
+> +        uint16_t dutpwt;
+> +        uint16_t cvmepwt;
+> +        uint16_t cpmepwt;
+> +    } QEMU_PACKED *in = (void *)payload_in;
+> +
+> +    if (in->valid_alert_actions.lupwt) {
+> +        if ((in->lupwt > 100) || (in->lupwt >= alert_config->lucat)) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +
+> +        if (in->enable_alert_actions.lupwt) {
+> +            alert_config->lupwt = in->lupwt;
+> +        }
+> +        alert_config->enable_alerts.lupwt = in->enable_alert_actions.lupwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.dotpwt) {
+> +        if (in->dotpwt >= alert_config->dotcat) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        if (in->enable_alert_actions.dotpwt) {
+> +            alert_config->dotpwt = in->dotpwt;
+> +        }
+> +        alert_config->enable_alerts.dotpwt = in->enable_alert_actions.dotpwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.dutpwt) {
+> +        if (in->dutpwt < alert_config->dutcat) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        if (in->enable_alert_actions.dutpwt) {
+> +            alert_config->dutpwt = in->dutpwt;
+> +        }
+> +        alert_config->enable_alerts.dutpwt = in->enable_alert_actions.dutpwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.cvmepwt) {
+> +        if (in->enable_alert_actions.cvmepwt) {
+> +            alert_config->cvmepwt = in->cvmepwt;
+> +        }
+> +        alert_config->enable_alerts.cvmepwt = in->valid_alert_actions.cvmepwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.cpmepwt) {
+> +        if (in->enable_alert_actions.cpmepwt) {
+> +            alert_config->cpmepwt = in->cpmepwt;
+> +        }
+> +        alert_config->enable_alerts.cpmepwt = in->valid_alert_actions.cpmepwt;
+> +    }
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* Perform the actual device zeroing */
+>  static void __do_sanitization(CXLType3Dev *ct3d)
+>  {
+> @@ -2859,6 +2946,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+>      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+>          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
+> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
+> +        cmd_get_alert_config, 0, 0 },
+> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
+> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+>      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+>          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+>           CXL_MBOX_SECURITY_STATE_CHANGE |
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 5f365afb4d..ce5a4962da 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -956,6 +956,25 @@ static DOEProtocol doe_comp_prot[] = {
+>      { }
+>  };
+>  
+> +/*
+> + * Initialize CXL device alerts with default threshold values.
+> + */
+> +static void init_alert_config(CXLType3Dev *ct3d)
+> +{
+> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+> +
+> +    memset(&alert_config->valid_alerts, 0, sizeof(CXLValidEnableAlerts));
+> +    memset(&alert_config->enable_alerts, 0, sizeof(CXLValidEnableAlerts));
+> +    alert_config->lucat = 75;
+> +    alert_config->lupwt = 0;
+> +    alert_config->dotcat = 35;
+> +    alert_config->dutcat = 10;
+> +    alert_config->dotpwt = 25;
+> +    alert_config->dutpwt = 20;
+> +    alert_config->cvmepwt = 0;
+> +    alert_config->cpmepwt = 0;
+> +}
+> +
+>  void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>  {
+>      ERRP_GUARD();
+> @@ -1030,6 +1049,7 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>          goto err_free_special_ops;
+>      }
+>  
+> +    init_alert_config(ct3d);
+>      pcie_cap_deverr_init(pci_dev);
+>      /* Leave a bit of room for expansion */
+>      rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, NULL);
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index a64739be25..6acae7d74d 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -581,6 +581,28 @@ typedef struct CXLSetFeatureInfo {
+>      size_t data_size;
+>  } CXLSetFeatureInfo;
+>  
+> +typedef struct CXLValidEnableAlerts {
+> +    uint8_t lupwt:1;
+> +    uint8_t dotpwt:1;
+> +    uint8_t dutpwt:1;
+> +    uint8_t cvmepwt:1;
+> +    uint8_t cpmepwt:1;
+> +    uint8_t reserved:3;
+> +} CXLValidEnableAlerts;
+> +
+> +typedef struct CXLAlertConfig {
+> +    CXLValidEnableAlerts valid_alerts;
+> +    CXLValidEnableAlerts enable_alerts;
+> +    uint8_t lucat;
+> +    uint8_t lupwt;
+> +    uint16_t dotcat;
+> +    uint16_t dutcat;
+> +    uint16_t dotpwt;
+> +    uint16_t dutpwt;
+> +    uint16_t cvmepwt;
+> +    uint16_t cpmepwt;
+> +} QEMU_PACKED CXLAlertConfig;
+> +
+>  struct CXLType3Dev {
+>      /* Private */
+>      PCIDevice parent_obj;
+> @@ -605,6 +627,8 @@ struct CXLType3Dev {
+>      CXLCCI vdm_fm_owned_ld_mctp_cci;
+>      CXLCCI ld0_cci;
+>  
+> +    CXLAlertConfig alert_config;
+> +
+>      /* PCIe link characteristics */
+>      PCIExpLinkSpeed speed;
+>      PCIExpLinkWidth width;
+> -- 
+> 2.34.1
+> 
 
-DJ
-
->          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
->      115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
->          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
->       72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
->          |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
->       73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
->          |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       74 |                                  _pfx "type of reg too small for mask"); \
->          |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
->       39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->          |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
->    include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
->      542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->          |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
->      530 |         __compiletime_assert(condition, msg, prefix, suffix)
->          |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
->      522 |                 if (!(condition))                                       \
->          |                       ^~~~~~~~~
->>> drivers/cxl/core/pci.c:1104:10: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((scale), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (scale)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
->     1104 |         ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
->          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
->      115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
->          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
->       72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
->          |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
->       73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
->          |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       74 |                                  _pfx "type of reg too small for mask"); \
->          |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
->       39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->          |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
->    include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
->      542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->          |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
->      530 |         __compiletime_assert(condition, msg, prefix, suffix)
->          |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
->      522 |                 if (!(condition))                                       \
->          |                       ^~~~~~~~~
->    5 warnings generated.
-> 
-> 
-> vim +1103 drivers/cxl/core/pci.c
-> 
->   1074	
->   1075	static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
->   1076	{
->   1077		u16 ctrl;
->   1078		int rc, offset, base, scale;
->   1079	
->   1080		switch (phase) {
->   1081		case 1:
->   1082			offset = CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET;
->   1083			base = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK;
->   1084			scale = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
->   1085			break;
->   1086		case 2:
->   1087			offset = CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET;
->   1088			base = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK;
->   1089			scale = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
->   1090			break;
->   1091		default:
->   1092			return -EINVAL;
->   1093		}
->   1094	
->   1095		rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
->   1096		if (rc)
->   1097			return rc;
->   1098	
->   1099		if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
->   1100		    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
->   1101			return 0;
->   1102	
->> 1103		ctrl = FIELD_PREP(base, GPF_TIMEOUT_BASE_MAX);
->> 1104		ctrl |= FIELD_PREP(scale, GPF_TIMEOUT_SCALE_MAX);
->   1105	
->   1106		rc = pci_write_config_word(pdev, dvsec + offset, ctrl);
->   1107		if (!rc)
->   1108			pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
->   1109				phase, GPF_TIMEOUT_BASE_MAX);
->   1110	
->   1111		return rc;
->   1112	}
->   1113	
-> 
-
+-- 
+Fan Ni (From gmail)
